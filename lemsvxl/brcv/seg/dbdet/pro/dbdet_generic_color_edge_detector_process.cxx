@@ -12,8 +12,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -47,20 +47,20 @@
 //: Constructor
 dbdet_generic_color_edge_detector_process::dbdet_generic_color_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Sobel (1x3)");    //0
   gradient_operator_choices.push_back("Sobel (3x3)");    //1
   gradient_operator_choices.push_back("Gaussian");       //2
   gradient_operator_choices.push_back("h0-operator");    //3
   gradient_operator_choices.push_back("h1-operator");    //4
 
-  vcl_vector<vcl_string> color_conversion_choices;
+  std::vector<std::string> color_conversion_choices;
   color_conversion_choices.push_back("Use RGB");    //0
   color_conversion_choices.push_back("Use IHS");    //1
   color_conversion_choices.push_back("Use Lab");    //2
   color_conversion_choices.push_back("Use Luv");    //3
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -72,7 +72,7 @@ dbdet_generic_color_edge_detector_process::dbdet_generic_color_edge_detector_pro
       !parameters()->add( "Interpolation factor [2^N], N= "  , "-int_factor" , 1 ) ||
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -92,7 +92,7 @@ dbdet_generic_color_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_generic_color_edge_detector_process::name()
 {
   return "Generic Color Edge Detector";
@@ -116,9 +116,9 @@ dbdet_generic_color_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_generic_color_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_generic_color_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool bLoadComps;
   parameters()->get_value( "-bLoadComps", bLoadComps);
@@ -136,9 +136,9 @@ vcl_vector< vcl_string > dbdet_generic_color_edge_detector_process::get_input_ty
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_generic_color_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_generic_color_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -164,17 +164,17 @@ dbdet_generic_color_edge_detector_process::execute()
   parameters()->get_value( "-out_type", out_type );
 
   if (bLoadComps && input_data_.size() != 1 && input_data_[0].size() != 3 ){
-    vcl_cout << "In dbdet_generic_color_edge_detector_process::execute() - 3 images needed! \n";
+    std::cout << "In dbdet_generic_color_edge_detector_process::execute() - 3 images needed! \n";
     return false;
   }
   else if (input_data_.size() != 1 && input_data_[0].size() != 1){
-    vcl_cout << "In dbdet_generic_color_edge_detector_process::execute() - only one color image needed!\n";
+    std::cout << "In dbdet_generic_color_edge_detector_process::execute() - only one color image needed!\n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Generic color edge detection...";
-  vcl_cout.flush();
+  std::cout << "Generic color edge detection...";
+  std::cout.flush();
 
   //2) get image(s) from the storage class
   vil_image_resource_sptr col_image_sptr, comp_image1_sptr, comp_image2_sptr, comp_image3_sptr;
@@ -197,7 +197,7 @@ dbdet_generic_color_edge_detector_process::execute()
 
     //make sure these images are one plane images
     if (comp1_view.nplanes() != 1 || comp2_view.nplanes() != 1 || comp3_view.nplanes() != 1){
-      vcl_cout << "In dbdet_generic_color_edge_detector_process::execute() - component images must be monochromatic! \n";
+      std::cout << "In dbdet_generic_color_edge_detector_process::execute() - component images must be monochromatic! \n";
       return false;
     }
   }
@@ -209,7 +209,7 @@ dbdet_generic_color_edge_detector_process::execute()
 
     //make sure these images are one plane images
     if (col_image.nplanes() != 3){
-      vcl_cout << "In dbdet_generic_color_edge_detector_process::execute() - image must be trichromatic! \n";
+      std::cout << "In dbdet_generic_color_edge_detector_process::execute() - image must be trichromatic! \n";
       return false;
     }
   }
@@ -293,7 +293,7 @@ dbdet_generic_color_edge_detector_process::execute()
     }
     case 2: //Gaussian
     {  
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       dbdet_subpix_convolve_2d(comp1, f1_dx, dbdet_Gx_kernel(sigma), float(), N);
@@ -306,7 +306,7 @@ dbdet_generic_color_edge_detector_process::execute()
     }
     case 3: //h0-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients   
       dbdet_subpix_convolve_2d(comp1, f1_dx, dbdet_h0_Gx_kernel(sigma), float(), N);
@@ -319,7 +319,7 @@ dbdet_generic_color_edge_detector_process::execute()
     }
     case 4:  //h1-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       dbdet_subpix_convolve_2d(comp1, f1_dx, dbdet_h1_Gx_kernel(sigma), float(), N);
@@ -359,7 +359,7 @@ dbdet_generic_color_edge_detector_process::execute()
 
     n1[i] = sqrt((1+c)/2);
     n2[i] = vnl_math::sgn(B)*sqrt((1-c)/2);
-    g_mag[i] = vcl_sqrt((A+C+d)/2/3); //take the square root of the squared norm
+    g_mag[i] = std::sqrt((A+C+d)/2/3); //take the square root of the squared norm
   }
 
 
@@ -367,8 +367,8 @@ dbdet_generic_color_edge_detector_process::execute()
   t.mark(); //reset timer
 
   //Now call the nms code to get the subpixel edge tokens
-  vcl_vector<vgl_point_2d<double> > loc;
-  vcl_vector<double> orientation, mag;
+  std::vector<vgl_point_2d<double> > loc;
+  std::vector<double> orientation, mag;
 
   dbdet_nms NMS(dbdet_nms_params(thresh, (dbdet_nms_params::PFIT_TYPE)parabola_fit), nu1, nu2, grad_mag);
   NMS.apply(true, loc, orientation, mag);
@@ -388,7 +388,7 @@ dbdet_generic_color_edge_detector_process::execute()
   dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(col_image.ni(), 
                                                   col_image.nj());
 
-  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  std::vector<dbdet_edgel*> padded_edges=edge_map->edgels;
   for ( unsigned int i=0; i < padded_edges.size() ; ++i)
   {
 
@@ -414,11 +414,11 @@ dbdet_generic_color_edge_detector_process::execute()
 //  edge_map->unref();
   edge_map=0;
   //double third_order_time = t.real();
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
   
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << padded_edge_map->num_edgels();
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for nms: " << nms_time << " msec" << std::endl;
+  std::cout << "#edgels = " << padded_edge_map->num_edgels();
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();

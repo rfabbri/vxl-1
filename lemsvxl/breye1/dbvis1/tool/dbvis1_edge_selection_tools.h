@@ -38,7 +38,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: handle events
   bool handle( const vgui_event & e, 

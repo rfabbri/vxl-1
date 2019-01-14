@@ -38,8 +38,8 @@ static void test_rot_inv()
   int angle = 180;
   dbrec_sample_and_draw_part_visitor sdpv(img, i, j, angle, 0.8f, rng);
   comp1->accept(&sdpv);
-  vcl_stringstream angle_str; angle_str << angle;
-  vcl_string name = "sampled_comp1_"+angle_str.str()+".png";
+  std::stringstream angle_str; angle_str << angle;
+  std::string name = "sampled_comp1_"+angle_str.str()+".png";
   vil_save(img, name.c_str());
 
   vil_image_view_base_sptr img_bptr = new vil_image_view<vxl_byte>(img);
@@ -83,7 +83,7 @@ static void test_rot_inv()
   angle = 40;
   dbrec_sample_and_draw_part_visitor sdpv2(img, i, j, angle, 0.8f, rng);
   comp2->accept(&sdpv2);
-  vcl_stringstream angle_str2; angle_str2 << angle;
+  std::stringstream angle_str2; angle_str2 << angle;
   name = "sampled_comp2_"+angle_str2.str()+".png";
   vil_save(img, name.c_str());
 
@@ -126,7 +126,7 @@ static void test_rot_inv()
   angle = 45;
   dbrec_sample_and_draw_part_visitor sdpv3(img, i, j, angle, 0.8f, rng);
   comp3->accept(&sdpv3);
-  vcl_stringstream angle_str3; angle_str3 << angle;
+  std::stringstream angle_str3; angle_str3 << angle;
   name = "sampled_comp3_"+angle_str3.str()+".png";
   vil_save(img, name.c_str());
 
@@ -170,7 +170,7 @@ static void test_rot_inv()
   dbrec_write_xml_visitor wxml;
   for (unsigned i = 0; i < hroi->class_cnt(); i++)
     hroi->root(i)->accept(&wxml);
-  vcl_string test_name = "test.xml";
+  std::string test_name = "test.xml";
   wxml.write_doc(test_name);
 
   dbrec_parse_hierarchy_xml parser;

@@ -58,8 +58,8 @@ public:
   dbdet_edgemap_sptr edgemap1_;  ///< the edge map class
   dbdet_edgemap_sptr edgemap2_;  ///< the edge map class
 
-  vcl_vector<int> & matched1_;
-  vcl_vector<int> & matched2_;
+  std::vector<int> & matched1_;
+  std::vector<int> & matched2_;
 
   bool display_points_;  ///< display the edgel centers
   float point_size_;     ///< size of the points displayed

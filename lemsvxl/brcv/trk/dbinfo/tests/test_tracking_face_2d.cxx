@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_tracking_face_2d.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <string>
+#include <cstdlib> // for rand()
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
@@ -24,7 +24,7 @@
 #include <dbinfo/dbinfo_tracking_face_2d.h>
 
 #if 0
-static bool near_eq(double x, double y, double tol){return vcl_fabs(x-y)<tol;}
+static bool near_eq(double x, double y, double tol){return std::fabs(x-y)<tol;}
 #endif
 
 static void construct_faces(const int w, const int h, const int r,
@@ -49,7 +49,7 @@ static void construct_faces(const int w, const int h, const int r,
   vtol_vertex_2d_sptr vh3 = new vtol_vertex_2d(xm, ym);
   vtol_vertex_2d_sptr vh4 = new vtol_vertex_2d(x0, ym);
 
-  vcl_vector<vtol_vertex_sptr> verts, hole_verts;
+  std::vector<vtol_vertex_sptr> verts, hole_verts;
 
   verts.push_back(v1->cast_to_vertex());
   verts.push_back(v2->cast_to_vertex());
@@ -68,7 +68,7 @@ static void construct_faces(const int w, const int h, const int r,
   vtol_one_chain_sptr out_chain, hole_chain;
   out_chain = btol_face_algs::one_chain(verts);
   hole_chain = btol_face_algs::one_chain(hole_verts);
-  vcl_vector<vtol_one_chain_sptr> chains;
+  std::vector<vtol_one_chain_sptr> chains;
   chains.push_back(out_chain);   chains.push_back(hole_chain);
   back_face = new vtol_face_2d(chains);
 }
@@ -119,9 +119,9 @@ static void test_tracking_face_2d(int argc, char* argv[])
 
 #if 0
   vtol_one_chain_sptr outside_chain = btol_face_algs::one_chain(verts);
-  vcl_vector<vtol_vertex_sptr> chain_verts;
+  std::vector<vtol_vertex_sptr> chain_verts;
   outside_chain->vertices(chain_verts);
-  vcl_vector<vtol_one_chain_sptr> chains;
+  std::vector<vtol_one_chain_sptr> chains;
 #endif // 0
   vnl_matrix_fixed<double, 3, 3> T;
   T[0][0] = 1.0;   T[0][1] = 0.0;   T[0][2] = 0.0;
@@ -135,24 +135,24 @@ static void test_tracking_face_2d(int argc, char* argv[])
   for (int x = 0; x<w; ++x)
     for (int y = 0; y<w; ++y)
     {
-      model_image_uni(x,y) = 255.0f*float(vcl_rand()/(RAND_MAX+1.0));
+      model_image_uni(x,y) = 255.0f*float(std::rand()/(RAND_MAX+1.0));
     }
   for (int x = 0; x<w; ++x)
     for (int y = 0; y<w; ++y)
     {
-      obs_image_uni(x,y) = 255.0f*float(vcl_rand()/(RAND_MAX+1.0));
+      obs_image_uni(x,y) = 255.0f*float(std::rand()/(RAND_MAX+1.0));
     }
   vil1_memory_image_of<float> model_image_comb(w, h), obs_image_comb(w, h);
   //fill images random even pixel values (comb). This will test Parzen
   for (int x = 0; x<w; ++x)
     for (int y = 0; y<w; ++y)
     {
-      model_image_comb(x,y) = 16.0f*int(15*(vcl_rand()/(RAND_MAX+1.0)));
+      model_image_comb(x,y) = 16.0f*int(15*(std::rand()/(RAND_MAX+1.0)));
     }
   for (int x = 0; x<w; ++x)
     for (int y = 0; y<w; ++y)
     {
-      obs_image_comb(x,y) = 16.0f*int(15*(vcl_rand()/(RAND_MAX+1.0)));
+      obs_image_comb(x,y) = 16.0f*int(15*(std::rand()/(RAND_MAX+1.0)));
     }
 
   //Testing ...
@@ -168,17 +168,17 @@ static void test_tracking_face_2d(int argc, char* argv[])
 #endif // 0
   vtol_face_2d_sptr out_f, hole_f, back_f;
 
-  vcl_cout << "testing face constructor\n";
+  std::cout << "testing face constructor\n";
   for (int r = 1; r<2; ++r)
   {
-    vcl_cout << "Uniform Random Distribution =\n";
+    std::cout << "Uniform Random Distribution =\n";
     construct_faces(w, h, r, out_f, hole_f, back_f);
     dbinfo_tracking_face_2d_sptr tf = new dbinfo_tracking_face_2d(hole_f,
                                                               model_image_uni,
                                                               null, null,
                                                               null, null,
                                                               0, 0,16,8,8);
-    vcl_cout << "Parzen Sigma = 0\n";
+    std::cout << "Parzen Sigma = 0\n";
     tf->compute_mutual_information(obs_image_uni, null, null, null, null);
     double jent0 = tf->intensity_entropy();
 
@@ -187,12 +187,12 @@ static void test_tracking_face_2d(int argc, char* argv[])
                                    null, null,
                                    null, null,
                                    0, 0.5, 16,8,8);
-    vcl_cout << "Parzen Sigma = 1\n";
+    std::cout << "Parzen Sigma = 1\n";
     tf->compute_mutual_information(obs_image_uni, null, null, null, null);
     double jent1 = tf->intensity_entropy();
     int npix = tf->Npix();
-    vcl_cout << "Nsamples = "<< npix
-             << "  jent0 = " << jent0 << " jent1.0 = " << jent1 << vcl_endl
+    std::cout << "Nsamples = "<< npix
+             << "  jent0 = " << jent0 << " jent1.0 = " << jent1 << std::endl
              << "Random Comb Distribution =\n";
 
     construct_faces(w, h, r, out_f, hole_f, back_f);
@@ -201,7 +201,7 @@ static void test_tracking_face_2d(int argc, char* argv[])
                                    null, null,
                                    null, null,
                                    0, 0,16,8,8);
-    vcl_cout << "Parzen Sigma = 0\n";
+    std::cout << "Parzen Sigma = 0\n";
     tf->compute_mutual_information(obs_image_comb, null, null, null, null);
     jent0 = tf->intensity_entropy();
 
@@ -210,16 +210,16 @@ static void test_tracking_face_2d(int argc, char* argv[])
                                    null, null,
                                    null, null,
                                    0, 0.5,16,8,8);
-    vcl_cout << "Parzen Sigma = 1\n";
+    std::cout << "Parzen Sigma = 1\n";
     tf->compute_mutual_information(obs_image_comb, null, null, null, null);
     jent1 = tf->intensity_entropy();
 
     npix = tf->Npix();
-    vcl_cout << "Nsamples = "<< npix
-             << "  jent0 = " << jent0 << " jent1.0 = " << jent1 << vcl_endl;
+    std::cout << "Nsamples = "<< npix
+             << "  jent0 = " << jent0 << " jent1.0 = " << jent1 << std::endl;
   }
 
-  vcl_cout << "\n\n\nBackground Face Tests\n";
+  std::cout << "\n\n\nBackground Face Tests\n";
   for (int r = 3; r<4; ++r)
   {
     construct_faces(w, h, r, out_f, hole_f, back_f);
@@ -236,7 +236,7 @@ static void test_tracking_face_2d(int argc, char* argv[])
                                  null, null,
                                  0, 0,16,8,8);
      int ob_pix = obf->Npix(), b_pix = bf->Npix();
-     vcl_cout << "Nobs = "<< ob_pix << "  Nbk = " << b_pix << '\n';
+     std::cout << "Nobs = "<< ob_pix << "  Nbk = " << b_pix << '\n';
     obf->intensity_mutual_info_diff(bf, obs_image_uni, true);
   }
 #if 0
@@ -246,7 +246,7 @@ static void test_tracking_face_2d(int argc, char* argv[])
                                     vil1_memory_image_of<float> const& Iy,
                                     vil1_memory_image_of<float> const& hue,
                                     vil1_memory_image_of<float> const& sat);
-  vcl_cout << "testing info computation\n"
+  std::cout << "testing info computation\n"
 
            << "model_intensity_entropy = " << tf->model_intensity_entropy()
            << "\nintensity_entropy = " << tf->intensity_entropy()
@@ -257,7 +257,7 @@ static void test_tracking_face_2d(int argc, char* argv[])
            << "\n\nmodel_color_entropy = " << tf->model_color_entropy()
            << "\ncolor_entropy = " << tf->color_entropy()
            << "\ncolor_joint_entropy = " << tf->color_joint_entropy()
-           << vcl_endl << vcl_endl;
+           << std::endl << std::endl;
   TEST("model intensity entropy ",
        near_eq(tf->model_intensity_entropy(), 4.0, 0.05), true);
   TEST("obs intensity entropy ",

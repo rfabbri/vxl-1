@@ -1,18 +1,18 @@
 #include <proximity_graph/dborl_knn_graph.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <cmath>
+#include <algorithm>
+#include <map>
 #include <boost/graph/graphml.hpp>
-#include <vcl_fstream.h>
+#include <fstream>
 
 void dborl_knn_graph::construct_graph(
-    vcl_string exemplar_dataset_file, 
-    vcl_string exemplar_label_file, 
+    std::string exemplar_dataset_file, 
+    std::string exemplar_label_file, 
     unsigned int neighbors,
-    vcl_string output_file_name,
+    std::string output_file_name,
     bool verbose)
 {
     //Read files first
@@ -32,16 +32,16 @@ void dborl_knn_graph::construct_graph(
 
 }
 
-void dborl_knn_graph::read_files(vcl_string dataset_file, 
-                                       vcl_string node_name_files)
+void dborl_knn_graph::read_files(std::string dataset_file, 
+                                       std::string node_name_files)
 {
 
     // Open the file
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(node_name_files.c_str());
 
     // Read each exemplar name
-    vcl_string temp;
+    std::string temp;
     while(file_opener)
     {
         getline(file_opener,temp);
@@ -79,9 +79,9 @@ void dborl_knn_graph::read_files(vcl_string dataset_file,
 void dborl_knn_graph::build_knn_graph(unsigned int neighbors)
 {
 
-    vcl_cout<<"Creating knn graph with "
+    std::cout<<"Creating knn graph with "
             << neighbors 
-            << " neighbors"<<vcl_endl;
+            << " neighbors"<<std::endl;
 
     //Regardless of graph add in all nodes
 
@@ -107,7 +107,7 @@ void dborl_knn_graph::build_knn_graph(unsigned int neighbors)
     for ( unsigned int i=0; i < number_of_shapes_ ; i++)
     {
         //Create a map to store names with vertex objects
-        vcl_map<double,dborl_proximity_graph::Vertex> distance_map;
+        std::map<double,dborl_proximity_graph::Vertex> distance_map;
 
         for (  unsigned int j=0; j < number_of_shapes_ ; j++)
         {
@@ -123,7 +123,7 @@ void dborl_knn_graph::build_knn_graph(unsigned int neighbors)
         // Returns a pair gets the first element to update
         // property map
         unsigned int n=0;
-        for ( vcl_map<double,dborl_proximity_graph::Vertex>::iterator 
+        for ( std::map<double,dborl_proximity_graph::Vertex>::iterator 
                   it=distance_map.begin() ; it != distance_map.end(); it++ )
         {
             n++;
@@ -131,7 +131,7 @@ void dborl_knn_graph::build_knn_graph(unsigned int neighbors)
             if ( !edge(vertex_objects_[i],it->second,knn_graph_).second &&  
                  !edge(it->second,vertex_objects_[i],knn_graph_).second )
             {
-            vcl_pair<graph_traits<
+            std::pair<graph_traits<
             dborl_proximity_graph::Undirected_Graph>::edge_descriptor,bool> 
                 edge_pair =      add_edge(vertex_objects_[i],
                                           it->second,
@@ -150,12 +150,12 @@ void dborl_knn_graph::build_knn_graph(unsigned int neighbors)
 
     }
 
-    vcl_cout << " Number of Nodes: "<< num_vertices(knn_graph_)<<vcl_endl;
-    vcl_cout << " Number of Edges: "<< num_edges(knn_graph_)<<vcl_endl;
+    std::cout << " Number of Nodes: "<< num_vertices(knn_graph_)<<std::endl;
+    std::cout << " Number of Edges: "<< num_edges(knn_graph_)<<std::endl;
 
 }
 
-void dborl_knn_graph::write_graph(vcl_string output_file_name)
+void dborl_knn_graph::write_graph(std::string output_file_name)
 {
 
     // Write out graph
@@ -164,7 +164,7 @@ void dborl_knn_graph::write_graph(vcl_string output_file_name)
     dp.property("distance",get(edge_weight_t(),knn_graph_));
    
 
-    vcl_ofstream ofile(output_file_name.c_str());
+    std::ofstream ofile(output_file_name.c_str());
     write_graphml(ofile, knn_graph_, dp);
     ofile.close();
 
@@ -186,21 +186,21 @@ void dborl_knn_graph::print_graph()
     // Print out node information 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
         ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
-    vcl_cout << "Number of Nodes: "<< num_vertices(knn_graph_)<<vcl_endl;
+    std::cout << "Number of Nodes: "<< num_vertices(knn_graph_)<<std::endl;
     for (vp = vertices(knn_graph_); vp.first != vp.second; ++vp.first)
     {
-        vcl_cout << "Node Name: "<< node_name[*vp.first] << "  Node Index: " 
-                 << node_index[*vp.first]<<vcl_endl;
+        std::cout << "Node Name: "<< node_name[*vp.first] << "  Node Index: " 
+                 << node_index[*vp.first]<<std::endl;
     }
    
     // Print out edge information
-    vcl_cout << " Number of Edges: "<< num_edges(knn_graph_)<<vcl_endl;
+    std::cout << " Number of Edges: "<< num_edges(knn_graph_)<<std::endl;
 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
         ::edge_iterator edge_iter;
-    vcl_pair<edge_iter, edge_iter> ep;
+    std::pair<edge_iter, edge_iter> ep;
     edge_iter ei, ei_end;
 
     // Create an adjancency matrix
@@ -215,9 +215,9 @@ void dborl_knn_graph::print_graph()
     for (tie(ei, ei_end) = edges(knn_graph_); ei != ei_end; ++ei)
     {
 
-        vcl_cout << edge_distance[*ei] << vcl_endl;
-        vcl_cout << "(" << source(*ei, knn_graph_) 
-                 << "," << target(*ei, knn_graph_) << ")" << vcl_endl;
+        std::cout << edge_distance[*ei] << std::endl;
+        std::cout << "(" << source(*ei, knn_graph_) 
+                 << "," << target(*ei, knn_graph_) << ")" << std::endl;
 
         adjancency_matrix(source(*ei, knn_graph_),
                           target(*ei, knn_graph_))=1;
@@ -233,8 +233,8 @@ void dborl_knn_graph::print_graph()
 
     }
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Matrix form of graph adjancency"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Matrix form of graph adjancency"<<std::endl;
 
     // print matrix form
     // write out matrix form
@@ -242,26 +242,26 @@ void dborl_knn_graph::print_graph()
     {
         if ( k==0 )
         {
-            vcl_cout<<"graph=[";
+            std::cout<<"graph=[";
         }
 
         for ( unsigned int m=0; m < number_of_shapes_ ; m++ )
         {
 
-            vcl_cout<<adjancency_matrix(k,m)<<" ";
+            std::cout<<adjancency_matrix(k,m)<<" ";
         }
         if ( k == number_of_shapes_-1 )
         {
-            vcl_cout<<"];"<<vcl_endl;
+            std::cout<<"];"<<std::endl;
         }
         else
         {
-            vcl_cout<<"; ..."<<vcl_endl;
+            std::cout<<"; ..."<<std::endl;
         }
     }
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Matrix form of graph distances"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Matrix form of graph distances"<<std::endl;
 
     // print matrix form
     // write out matrix form
@@ -269,23 +269,23 @@ void dborl_knn_graph::print_graph()
     {
         if ( k==0 )
         {
-            vcl_cout<<"graph_dist=[";
+            std::cout<<"graph_dist=[";
         }
 
         for ( unsigned int m=0; m < number_of_shapes_ ; m++ )
         {
 
-            vcl_cout<<dist_matrix(k,m)<<" ";
+            std::cout<<dist_matrix(k,m)<<" ";
         }
         if ( k == number_of_shapes_-1 )
         {
-            vcl_cout<<"];"<<vcl_endl;
+            std::cout<<"];"<<std::endl;
         }
         else
         {
-            vcl_cout<<"; ..."<<vcl_endl;
+            std::cout<<"; ..."<<std::endl;
         }
     }
 
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 }

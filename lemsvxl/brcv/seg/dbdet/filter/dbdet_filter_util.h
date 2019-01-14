@@ -1,10 +1,10 @@
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <iostream>
 
 #ifndef _DBDET_FILTER_UTIL_H_
 #define _DBDET_FILTER_UTIL_H_
@@ -12,15 +12,15 @@
 template<typename T>
 bool loadFromTabSpaced(const char * fileName, vnl_matrix<T> & out)
 {
-  vcl_ifstream in(fileName);
-  vcl_vector<T> tempData;
+  std::ifstream in(fileName);
+  std::vector<T> tempData;
   int nRow = 0, nCol = 0;
   if (in.good()) {
     while (!in.eof())
     {
-      vcl_string line;
-      vcl_getline(in, line);
-      vcl_istringstream ss(line);
+      std::string line;
+      std::getline(in, line);
+      std::istringstream ss(line);
       int cols = 0;
       T val;
       while (ss >> val) {

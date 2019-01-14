@@ -10,7 +10,7 @@
 #define SMALL           (1.0E-5)
 #define SMALL_ENOUGH    (1.0E-1)
 #define ROUND(X)        ((int)((X)+0.5))
-#define APPROX_INT(X)   ( vcl_fabs((X)-ROUND(X)) < SMALL ? ROUND(X) : (X) )
+#define APPROX_INT(X)   ( std::fabs((X)-ROUND(X)) < SMALL ? ROUND(X) : (X) )
 
 
 dbcvr_interp_cvmatch::dbcvr_interp_cvmatch(bsold_interp_curve_2d_sptr c1, 
@@ -43,24 +43,24 @@ dbcvr_interp_cvmatch::dbcvr_interp_cvmatch(bsold_interp_curve_2d_sptr c1,
   _delta_eta = delta_eta;
   _delta = delta_ksi;
   
-  //vcl_cout << "delta_eta: " << delta_eta << vcl_endl;
-  //vcl_cout << "delta_ksi: " << _delta << vcl_endl;  
+  //std::cout << "delta_eta: " << delta_eta << std::endl;
+  //std::cout << "delta_ksi: " << _delta << std::endl;  
 
   _cost_threshold = DP_VERY_LARGE_COST;
-  _alpha = vcl_atan2(L2, L1);  
+  _alpha = std::atan2(L2, L1);  
 
   ca = cos(_alpha);
   sa = sin(_alpha);
   ta = tan(_alpha);
-  if (vcl_fabs(_alpha - vnl_math::pi/4.0f) < SMALL) {
+  if (std::fabs(_alpha - vnl_math::pi/4.0f) < SMALL) {
     sa = ca;
     ta = 1.0f;
   }
 
   // ratio (number of discrete orientations that alignment curve can have) 
   // with these delta_ksi and delta_eta values is
-  vcl_cout << "ratio is: " << (_delta/_delta_eta)*(ta + 1/ta);
-  vcl_cout << "L1: " << L1 << " L2: " << L2 << vcl_endl;
+  std::cout << "ratio is: " << (_delta/_delta_eta)*(ta + 1/ta);
+  std::cout << "L1: " << L1 << " L2: " << L2 << std::endl;
 
 }
 
@@ -68,21 +68,21 @@ dbcvr_interp_cvmatch::dbcvr_interp_cvmatch(bsold_interp_curve_2d_sptr c1,
 void dbcvr_interp_cvmatch::construct()
 { 
   double eta, ksi;
-  double L_bar = vcl_sqrt(vcl_pow(L1,2)+vcl_pow(L2,2));
+  double L_bar = std::sqrt(std::pow(L1,2)+std::pow(L2,2));
   double max_diagonal = L_bar;
 
   // determine max i
-  max_i_ = static_cast<int>(vcl_ceil(APPROX_INT(max_diagonal/_delta))+1);
-  vcl_cout << "max_i: " << max_i_ << vcl_endl;
+  max_i_ = static_cast<int>(std::ceil(APPROX_INT(max_diagonal/_delta))+1);
+  std::cout << "max_i: " << max_i_ << std::endl;
 
   // build cells up CU, main diagonal starting from (0,0) will be in CD 
   // find max_j for cells up
-  max_j_up_ = static_cast<int>(vcl_floor(APPROX_INT(L2*ca/_delta_eta)));
-  vcl_cout << "max_j_up: " << max_j_up_ << vcl_endl;
+  max_j_up_ = static_cast<int>(std::floor(APPROX_INT(L2*ca/_delta_eta)));
+  std::cout << "max_j_up: " << max_j_up_ << std::endl;
   
   // initialize grid with max_i and max_j so we have CU[i][0] for each i
   for (int i = 0; i<max_i_; i++) {
-      vcl_vector<dpt_cell> tmp;
+      std::vector<dpt_cell> tmp;
       CU.push_back(tmp);
   }
 
@@ -110,8 +110,8 @@ void dbcvr_interp_cvmatch::construct()
     // find ksi that lies on s1 = 0 for given j
     ksi = eta*sa/ca;
     double temp = ksi/_delta;
-    //int i_start = vcl_floor(ksi/_delta);
-    int i_start = static_cast<int>(vcl_floor(APPROX_INT(temp)));
+    //int i_start = std::floor(ksi/_delta);
+    int i_start = static_cast<int>(std::floor(APPROX_INT(temp)));
 
     // write to CU(i = i_start,j) irregular grid values for s1 and s2
     CU[i_start][j].s1 = 0;
@@ -121,8 +121,8 @@ void dbcvr_interp_cvmatch::construct()
     // find ksi that lies on s2 = L2 for given j (ending point of this row of j)
     ksi = (L2-eta*ca)/sa;
     temp = ksi/_delta;
-    //int i_end = vcl_ceil(ksi/_delta);
-    int i_end = static_cast<int>(vcl_ceil(APPROX_INT(temp)));
+    //int i_end = std::ceil(ksi/_delta);
+    int i_end = static_cast<int>(std::ceil(APPROX_INT(temp)));
     CU[i_end][j].s1 = ksi*ca-eta*sa;
     CU[i_end][j].s2 = L2;
     CU[i_end][j].valid = true;
@@ -148,13 +148,13 @@ void dbcvr_interp_cvmatch::construct()
   // build cells down CD, all the starting points including (0,0) will lie on this down grid
   // find max_j for cells down
   double temp = L1*sa/_delta_eta;
-  //max_j_down_ = vcl_floor(APPROX_INT(L1*sa/_delta_eta));
-  max_j_down_ = static_cast<int>(vcl_floor(APPROX_INT(temp)));
-  vcl_cout << "max_j_down for cells down: " << max_j_down_ << vcl_endl;
+  //max_j_down_ = std::floor(APPROX_INT(L1*sa/_delta_eta));
+  max_j_down_ = static_cast<int>(std::floor(APPROX_INT(temp)));
+  std::cout << "max_j_down for cells down: " << max_j_down_ << std::endl;
   
   // initialize grid with max_i and max_j so we have CD[i][0] for each i
   for (int i = 0; i<max_i_; i++) {
-      vcl_vector<dpt_cell> tmp;
+      std::vector<dpt_cell> tmp;
       CD.push_back(tmp);
   }
 
@@ -181,9 +181,9 @@ void dbcvr_interp_cvmatch::construct()
     // find ksi for s2 = 0 for given j
     ksi = eta*ca/sa;
     double temp = ksi/_delta;
-    //int temp2 = vcl_floor(temp);
-    //int i_start = vcl_floor((double)(ksi/_delta));
-    int i_start = static_cast<int>(vcl_floor(APPROX_INT(temp)));
+    //int temp2 = std::floor(temp);
+    //int i_start = std::floor((double)(ksi/_delta));
+    int i_start = static_cast<int>(std::floor(APPROX_INT(temp)));
 
     // write to CD(i = i_start,j) irregular grid values for s1 and s2
     CD[i_start][j].s1 = eta/sa;
@@ -194,8 +194,8 @@ void dbcvr_interp_cvmatch::construct()
     // end point is for s1 = L1
     ksi = (L1-eta*sa)/ca;   // here eta is negative so + is made into -
     temp = ksi/_delta;
-    //i_end = vcl_ceil(ksi/_delta);
-    i_end = static_cast<int>(vcl_ceil(APPROX_INT(temp)));
+    //i_end = std::ceil(ksi/_delta);
+    i_end = static_cast<int>(std::ceil(APPROX_INT(temp)));
     CD[i_end][j].s1 = L1;
     temp = ksi*sa-eta*ca;    // since eta is negative, sign is changed to - for s2
     //CD[i_end][j].s2 = ksi*sa-eta*ca;   // since eta is negative, sign is changed to - for s2  
@@ -223,35 +223,35 @@ void dbcvr_interp_cvmatch::construct()
   /*
   int j = 50;
   for (int i = 0; i<max_i; i++) {
-    vcl_cout << "CD["<<i<<"]["<<j<<"].s1: " << CD[i][j].s1;
-    vcl_cout << " CD["<<i<<"]["<<j<<"].s2: " << CD[i][j].s2 << vcl_endl;
+    std::cout << "CD["<<i<<"]["<<j<<"].s1: " << CD[i][j].s1;
+    std::cout << " CD["<<i<<"]["<<j<<"].s2: " << CD[i][j].s2 << std::endl;
   }*/
                             
-  //vcl_cout << "start cells size: " << start_cells_.size() << vcl_endl;
-  //vcl_cout << "end cells size: " << end_cells_.size() << vcl_endl;
+  //std::cout << "start cells size: " << start_cells_.size() << std::endl;
+  //std::cout << "end cells size: " << end_cells_.size() << std::endl;
 
   /*for (int k = 0; k<start_cells_.size(); k++) {
     int i = start_cells_[k].first;
     int j = start_cells_[k].second;
-    vcl_cout << "k: " << k << "CD("<<i<<","<<j<<") ";
-    vcl_cout << "s1: " << CD[i][j].s1 << " s2: " << CD[i][j].s2 << vcl_endl;
+    std::cout << "k: " << k << "CD("<<i<<","<<j<<") ";
+    std::cout << "s1: " << CD[i][j].s1 << " s2: " << CD[i][j].s2 << std::endl;
   }
 
   for (int k = 0; k<end_cells_.size(); k++) {
     int i = end_cells_[k].first;
     int j = end_cells_[k].second;
-    vcl_cout << "k: " << k << " CD("<<i<<","<<j<<") ";
-    vcl_cout << "s1: " << CD[i][j].s1 << " s2: " << CD[i][j].s2 << vcl_endl;
+    std::cout << "k: " << k << " CD("<<i<<","<<j<<") ";
+    std::cout << "s1: " << CD[i][j].s1 << " s2: " << CD[i][j].s2 << std::endl;
   }*/
 /*
-  vcl_ofstream fpoo; 
-  fpoo.open("D:\\contours\\Mpeg-7\\temp.out", vcl_ios::app);
+  std::ofstream fpoo; 
+  fpoo.open("D:\\contours\\Mpeg-7\\temp.out", std::ios::app);
 
   fpoo << max_i_ << " " << max_j_up_-1 << "\n";
   for (int i = 0; i<max_i_; i++) {
     for (int j = 0; j<max_j_up_-1; j++) {   // -1 since (0,0) will go to CD
       fpoo << CU[i][j].s1 << " ";
-      fpoo << CU[i][j].s2 << vcl_endl;
+      fpoo << CU[i][j].s2 << std::endl;
     }
   }
 
@@ -259,7 +259,7 @@ void dbcvr_interp_cvmatch::construct()
   for (int i = 0; i<max_i_; i++) {
     for (int j = 0; j<max_j_down_; j++) {   
       fpoo << CD[i][j].s1 << " ";
-      fpoo << CD[i][j].s2 << vcl_endl;
+      fpoo << CD[i][j].s2 << std::endl;
     }
   }
 
@@ -278,7 +278,7 @@ void dbcvr_interp_cvmatch::update_cost(dpt_cell *c, dpt_cell *c_prev, int i_prev
   dt1 = curve_angleDiff (c->theta1, c_prev->theta1);
   dt2 = curve_angleDiff (c->theta2, c_prev->theta2);
   
-  double step_cost = vcl_fabs(ds2-ds1)+_R*vcl_fabs(dt1-dt2);
+  double step_cost = std::fabs(ds2-ds1)+_R*std::fabs(dt1-dt2);
        
   if (c->cost > c_prev->cost + step_cost) {
     c->cost = c_prev->cost + step_cost;
@@ -414,8 +414,8 @@ void dbcvr_interp_cvmatch::come_previous(dpt_cell *c, int i, int j) {
     float eta_up = static_cast<float>(j*_delta_eta + _delta*ta);
     float eta_down = static_cast<float>(j*_delta_eta - _delta/ta);
 
-    int up_max = static_cast<int>(vcl_floor(eta_up/_delta_eta));
-    int down_min = static_cast<int>(vcl_ceil(eta_down/_delta_eta));
+    int up_max = static_cast<int>(std::floor(eta_up/_delta_eta));
+    int down_min = static_cast<int>(std::ceil(eta_down/_delta_eta));
 
     if (eta_up > 0)  {// then in upper cells
       up_max = (up_max > max_j_up_-1) ? max_j_up_-1 : up_max;
@@ -431,7 +431,7 @@ void dbcvr_interp_cvmatch::come_previous(dpt_cell *c, int i, int j) {
     } 
 
     if (eta_down < 0) {  // then in lower cells
-      down_min = static_cast<int>(-vcl_ceil(eta_down/_delta_eta));
+      down_min = static_cast<int>(-std::ceil(eta_down/_delta_eta));
       down_min = (down_min > max_j_down_-1) ? max_j_down_-1 : down_min;
       if (eta_up >= 0)
         up_max = 0;
@@ -461,11 +461,11 @@ void dbcvr_interp_cvmatch::Match() {
   //: initialize cost of starting cell to 0
   CD[0][0].cost = 0;
 
-  //vcl_cout << "checking cost of CD[i_start][j_start], should be 0: " << 
-  //              CD[start_cells_[0].first][start_cells_[0].second].cost << vcl_endl;
+  //std::cout << "checking cost of CD[i_start][j_start], should be 0: " << 
+  //              CD[start_cells_[0].first][start_cells_[0].second].cost << std::endl;
   
   find_path();
-  vcl_cout << "Cost of best path for 0 is: " << finalCost() << vcl_endl;
+  std::cout << "Cost of best path for 0 is: " << finalCost() << std::endl;
 
   int m = 0;
   int s = max_i_-1;
@@ -497,8 +497,8 @@ void dbcvr_interp_cvmatch::Match() {
   int count_saved = count;
  
 
-  vcl_ofstream fpoo; 
-  fpoo.open("D:\\contours\\Mpeg-7\\temp.out", vcl_ios::app);
+  std::ofstream fpoo; 
+  fpoo.open("D:\\contours\\Mpeg-7\\temp.out", std::ios::app);
 
   // find number of valid cells for this starting point
   count = 0;
@@ -512,7 +512,7 @@ void dbcvr_interp_cvmatch::Match() {
     for (int j = 0; j<max_j_up_-1; j++) {   // -1 since (0,0) will go to CD
       if (CU[i][j].valid) {
         fpoo << CU[i][j].s1 << " ";
-        fpoo << CU[i][j].s2 << vcl_endl;
+        fpoo << CU[i][j].s2 << std::endl;
       }
     }
   }
@@ -523,14 +523,14 @@ void dbcvr_interp_cvmatch::Match() {
       if (CD[i][j].valid) 
         count++;
 
-  vcl_cout << "number of valid cells: " << count << vcl_endl;
+  std::cout << "number of valid cells: " << count << std::endl;
 
   fpoo << count << "\n";
   for (int i = 0; i<max_i_; i++) {
     for (int j = 0; j<max_j_down_; j++) {   
       if (CD[i][j].valid) {
         fpoo << CD[i][j].s1 << " ";
-        fpoo << CD[i][j].s2 << vcl_endl;
+        fpoo << CD[i][j].s2 << std::endl;
       }
     }
   }
@@ -545,12 +545,12 @@ void dbcvr_interp_cvmatch::Match() {
       s_prev = CD[s][(-m)].prev_cell_coord.first;
       m_prev = CD[s][(-m)].prev_cell_coord.second;
       fpoo << CD[s][(-m)].s1 << " ";
-      fpoo << CD[s][(-m)].s2 << vcl_endl;
+      fpoo << CD[s][(-m)].s2 << std::endl;
     } else {
       s_prev = CU[s][m-1].prev_cell_coord.first;
       m_prev = CU[s][m-1].prev_cell_coord.second;
       fpoo << CU[s][m-1].s1 << " ";
-      fpoo << CU[s][m-1].s2 << vcl_endl;
+      fpoo << CU[s][m-1].s2 << std::endl;
     }
 
     if (s_prev < 0) break;

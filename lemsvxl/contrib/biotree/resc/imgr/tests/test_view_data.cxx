@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <imgr/imgr_view_data_base.h>
@@ -7,7 +7,7 @@
 static void test_view_data()
 {
   //test dummy_scan
-  vcl_cout << "===========Testing view data ========\n";
+  std::cout << "===========Testing view data ========\n";
 
   //A 2-d view to put in the viewdata block
   vil_image_view<unsigned short>* nv = 
@@ -22,8 +22,8 @@ static void test_view_data()
   //Get it back out
   vil_image_view<unsigned short>  rv = vd->view_2d(0);
   //See if it survived
-  vcl_cout << rv.ni() << '\n';
-  vcl_cout << rv.pixel_format() << '\n';
+  std::cout << rv.ni() << '\n';
+  std::cout << rv.pixel_format() << '\n';
   bool good = rv.ni()==10&&rv(5,5)==100;
   TEST("test cast", good, true);
 }

@@ -52,8 +52,8 @@ class bwm_lidar_manager : public vgui_wrapper_tableau
   static bwm_lidar_manager *instance_;
 
   bmdl_classify<double> classifier_;
-  vcl_vector<double> building_heights_;
-  vcl_vector<unsigned int> building_sizes_;
+  std::vector<double> building_heights_;
+  std::vector<unsigned int> building_sizes_;
   vil_image_view<vxl_byte> color_img_;
   
   imesh_mesh mesh_;

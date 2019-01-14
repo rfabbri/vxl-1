@@ -16,7 +16,7 @@
 // number of image columns and size[1] is the number of image rows. This useage
 // is not to be confused with vbl_array_2d::[unsigned i] which returns the 
 // i+1th array row.  JLM May 29,2006
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_int_2.h>
 #include <vbl/vbl_array_2d.h>
 #include <vil/algo/vil_convolve_1d.h>
@@ -78,13 +78,13 @@ class xmvg_atomic_filter_2d : public xmvg_atomic_filter_2d_base<T>
     }
 
     //: convolve each row of the filter by the given kernel
-    void convolve_rows_with_kernel(vcl_vector<T> kernel)
+    void convolve_rows_with_kernel(std::vector<T> kernel)
     {
       int kernel_center = (kernel.size() - 1) / 2;
       int size_x = s_(0);
       int size_y = s_(1);
-      vcl_vector<T> row(size_x);
-      vcl_vector<T> convolved(size_x, 0.0);
+      std::vector<T> row(size_x);
+      std::vector<T> convolved(size_x, 0.0);
       for(int j=0; j<size_y; j++)
       {
         row.clear();
@@ -101,8 +101,8 @@ class xmvg_atomic_filter_2d : public xmvg_atomic_filter_2d_base<T>
         //row.push_back(5.0);   convolved.push_back(0.0);
         //row.push_back(2.0);   convolved.push_back(0.0);
         /*for(int index=0; index<row.size(); index++)
-          vcl_cout << row[index] << " ";
-        vcl_cout << vcl_endl;*/
+          std::cout << row[index] << " ";
+        std::cout << std::endl;*/
         // convolve it with the kernel
         vil_convolve_1d<T,T,T,T>(&row[0], row.size(), 1, &convolved[0], 1,
                         &kernel[kernel_center], -kernel_center, kernel_center,
@@ -110,8 +110,8 @@ class xmvg_atomic_filter_2d : public xmvg_atomic_filter_2d_base<T>
                         vil_convolve_zero_extend, vil_convolve_zero_extend);
         // put the convolved row back
        /* for(int index=0; index<convolved.size(); index++)
-          vcl_cout << convolved[index] << " ";
-        vcl_cout << vcl_endl;*/
+          std::cout << convolved[index] << " ";
+        std::cout << std::endl;*/
 
         for(int i=0; i<size_x; i++)
           weights_[i][j] = convolved[i];

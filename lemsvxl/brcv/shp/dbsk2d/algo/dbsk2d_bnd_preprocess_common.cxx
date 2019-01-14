@@ -7,7 +7,7 @@
 
 #include "dbsk2d_bnd_preprocess.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_distance.h>
 
@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 //: Remove "unlinked" edges in an edge list
 void dbsk2d_bnd_preprocess::
-remove_unlinked_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+remove_unlinked_edges(std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   bnd_edge_list::iterator eit = edges.begin();
   while (eit != edges.end())
@@ -42,10 +42,10 @@ remove_unlinked_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
 //-----------------------------------------------------------------------------
 //: Separate out the edges into three groups - points, lines, and arcs
 void dbsk2d_bnd_preprocess::
-classify_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges,
-  vcl_list<dbsk2d_bnd_edge_sptr >* bnd_pts, 
-  vcl_list<dbsk2d_bnd_edge_sptr >* bnd_lines, 
-  vcl_list<dbsk2d_bnd_edge_sptr >* bnd_arcs)
+classify_edges(std::list<dbsk2d_bnd_edge_sptr >& edges,
+  std::list<dbsk2d_bnd_edge_sptr >* bnd_pts, 
+  std::list<dbsk2d_bnd_edge_sptr >* bnd_lines, 
+  std::list<dbsk2d_bnd_edge_sptr >* bnd_arcs)
 {
   // clean up
   if (bnd_pts) bnd_pts->clear();
@@ -85,7 +85,7 @@ classify_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges,
 //: Convert too short lines and arcs into points
 // If the points is not stand-alone, the remove it
 void dbsk2d_bnd_preprocess::
-remove_short_curves(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+remove_short_curves(std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   bnd_edge_list::iterator eit = edges.begin();
   while (eit != edges.end())
@@ -130,9 +130,9 @@ remove_short_curves(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
 //----------------------------------------------------------------------------
 //: Merge vertices that are geometrically close
 void dbsk2d_bnd_preprocess::
-merge_close_vertices(vcl_list<dbsk2d_bnd_vertex_sptr >* affected_vertices,
-                     vcl_list<dbsk2d_bnd_vertex_sptr >* vertex_set1,
-                     vcl_list<dbsk2d_bnd_vertex_sptr >* vertex_set2)
+merge_close_vertices(std::list<dbsk2d_bnd_vertex_sptr >* affected_vertices,
+                     std::list<dbsk2d_bnd_vertex_sptr >* vertex_set1,
+                     std::list<dbsk2d_bnd_vertex_sptr >* vertex_set2)
 {
   // clear old stuffs
   affected_vertices->clear();
@@ -196,8 +196,8 @@ merge_close_vertices(vcl_list<dbsk2d_bnd_vertex_sptr >* affected_vertices,
 // The overall edge list will also be updated
 void dbsk2d_bnd_preprocess::
 insert_new_vertices(const vkey_vertex_map & new_vertex_map,
-                    vcl_list<dbsk2d_bnd_edge_sptr >& all_edges,
-                    vcl_list<dbsk2d_bnd_vertex_sptr >& affected_vertices)
+                    std::list<dbsk2d_bnd_edge_sptr >& all_edges,
+                    std::list<dbsk2d_bnd_vertex_sptr >& affected_vertices)
 {
 
   // clear old stuffs
@@ -225,8 +225,8 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
 
 
     // vector of edges (lines or arc) that will be used to replace `cur_edge'
-    vcl_vector<dbsk2d_bnd_edge_sptr > new_edges;
-    vcl_vector<signed char > directions;
+    std::vector<dbsk2d_bnd_edge_sptr > new_edges;
+    std::vector<signed char > directions;
   
     // Treat each of of belm curves (line, arc) differently  
     switch (cur_edge->left_bcurve()->type())
@@ -271,7 +271,7 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
       }
     default:
       {
-        vcl_cerr << "dbsk2d_bnd_preprocess::insert_new_vertices()\n" <<
+        std::cerr << "dbsk2d_bnd_preprocess::insert_new_vertices()\n" <<
           "Can't handle this type of edge\n";
         dbsk2d_assert(false);
       }
@@ -281,8 +281,8 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
 
     // containers for new_edges with reverse order and reverse directions
     // in case they are needed.
-    vcl_vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
-    vcl_vector<signed char > reverse_directions;
+    std::vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
+    std::vector<signed char > reverse_directions;
 
 
     // replace `cur_edge' with new edges, topologically
@@ -303,7 +303,7 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
         if (reverse_new_edges.size() == 0)
         {
           reverse_new_edges.reserve(new_edges.size());
-          vcl_reverse_copy(new_edges.begin(), new_edges.end(), 
+          std::reverse_copy(new_edges.begin(), new_edges.end(), 
             reverse_new_edges.begin());
           reverse_directions.assign(directions.size(), -1);
         }
@@ -314,11 +314,11 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
     }
 
     // replace `cur_edge' with new edges, geographically
-    vcl_list<dbsk2d_bnd_cell* > cells = cur_edge->cells();
+    std::list<dbsk2d_bnd_cell* > cells = cur_edge->cells();
     cur_edge->unlink_from_cells();
 
     // add back the replacement of `cur_edge'
-    for (vcl_list<dbsk2d_bnd_cell* >::iterator cit = cells.begin();
+    for (std::list<dbsk2d_bnd_cell* >::iterator cit = cells.begin();
       cit != cells.end(); ++cit)
     {
       dbsk2d_bnd_cell_sptr cell = *cit;
@@ -356,9 +356,9 @@ insert_new_vertices(const vkey_vertex_map & new_vertex_map,
 //: Dissolve end vertices into curves(lines, arcs) when they are too close
 // Require: the vertex list is unique
 void dbsk2d_bnd_preprocess::
-dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges, 
-                           vcl_list<dbsk2d_bnd_edge_sptr >& bnd_curves,
-                           const vcl_list<dbsk2d_bnd_vertex_sptr >& vertices)
+dissolve_vertices_into_curves(std::list<dbsk2d_bnd_edge_sptr >& tainted_edges, 
+                           std::list<dbsk2d_bnd_edge_sptr >& bnd_curves,
+                           const std::list<dbsk2d_bnd_vertex_sptr >& vertices)
 {
   // A list of modification to the edges to be made at the end 
   vkey_vertex_map modifications;
@@ -372,7 +372,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
     // list of coordinates that the vertex may be moved to (because
     // of curves it is close to)
     // these coordinates will be averaged to determine final position of vertex
-    vcl_vector<vgl_point_2d<double > > target_pts;
+    std::vector<vgl_point_2d<double > > target_pts;
 
     // `weak link' edges, i.e. epsilon < distance < 2*epsilon
     // these edges will be reconsidered after the vertex is moved to its
@@ -468,7 +468,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
         }
       default:
         {
-          vcl_cerr << "dbsk2d_bnd_preprocess::insert_new_vertices()\n" <<
+          std::cerr << "dbsk2d_bnd_preprocess::insert_new_vertices()\n" <<
             "Can't handle this type of edge\n";
           dbsk2d_assert(false);
         }
@@ -577,17 +577,17 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
 // require: the list of edges must be preprocessed
 
 void dbsk2d_bnd_preprocess::
-form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
-    vcl_list<dbsk2d_bnd_contour_sptr >& new_contours)
+form_contours_from_edges(const std::list<dbsk2d_bnd_edge_sptr >& edges,
+    std::list<dbsk2d_bnd_contour_sptr >& new_contours)
 {
   //this->update_vertex_list();
   bnd_vertex_list vertices;
   dbsk2d_bnd_utils::extract_vertex_list(edges, vertices);
   
   // sort the vertices so that vertices with order 2 are at the end of the list
-  vcl_list<dbsk2d_bnd_vertex_sptr > order_2_vertices;
+  std::list<dbsk2d_bnd_vertex_sptr > order_2_vertices;
   
-  for (vcl_list<dbsk2d_bnd_vertex_sptr >::iterator 
+  for (std::list<dbsk2d_bnd_vertex_sptr >::iterator 
     vit = vertices.begin(); vit != vertices.end();)
   {
     // check order of this vertex
@@ -611,13 +611,13 @@ form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
   vertices.splice(vertices.end(), order_2_vertices);
 
   // reset flags on edges and vertices indicating they have been visited
-  for (vcl_list<dbsk2d_bnd_edge_sptr >::const_iterator eit = edges.begin(); 
+  for (std::list<dbsk2d_bnd_edge_sptr >::const_iterator eit = edges.begin(); 
     eit != edges.end(); ++eit)
   {
     (*eit)->unset_user_flag(VSOL_FLAG1);
   }
 
-  for(vcl_list<dbsk2d_bnd_vertex_sptr >::iterator vit = vertices.begin();
+  for(std::list<dbsk2d_bnd_vertex_sptr >::iterator vit = vertices.begin();
     vit != vertices.end(); ++vit)
   {
     (*vit)->unset_user_flag(VSOL_FLAG1);
@@ -631,7 +631,7 @@ form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
   // trace along the edge till hitting an end, i.e. vertex with order different from 2
   // Form a contour from the edges and marked them as traversed.
   // Repeat this for ever vertex
-  for (vcl_list<dbsk2d_bnd_vertex_sptr >::iterator vit_s = 
+  for (std::list<dbsk2d_bnd_vertex_sptr >::iterator vit_s = 
     vertices.begin(); vit_s != vertices.end(); ++vit_s)
   {
     // obtain the list of edges connected to this vertex
@@ -657,7 +657,7 @@ form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
         static_cast<dbsk2d_bnd_edge* >((*eit).ptr());
 
        //vector to hold edges that will be used to form a contour
-      vcl_vector< dbsk2d_bnd_edge_sptr > connected_edges;
+      std::vector< dbsk2d_bnd_edge_sptr > connected_edges;
       bool contour_stopped = false;
       
       while (!contour_stopped)
@@ -665,7 +665,7 @@ form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
         //safety check
         if (! tracing_edge->is_class("dbsk2d_bnd_edge"))
         {
-          vcl_cerr << "Edge is not of class <dbsk2d_bnd_edge>\n";
+          std::cerr << "Edge is not of class <dbsk2d_bnd_edge>\n";
           break;
         };
 
@@ -717,7 +717,7 @@ form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
       if (contour_stopped){
         dbsk2d_bnd_contour_sptr new_con = new dbsk2d_bnd_contour(connected_edges,
           this->boundary()->nextAvailableID());
-        // vcl_cout << "Number of edges of new_con = " << new_con->num_edges() << vcl_endl;
+        // std::cout << "Number of edges of new_con = " << new_con->num_edges() << std::endl;
         if (new_con->num_edges() > 0)
           //this->preproc_contours_.push_back( new_con);
           new_contours.push_back( new_con);

@@ -24,7 +24,7 @@ public:
 
     typedef T3 frequency_type;
 
-    typedef vcl_map<T1, vcl_map<T1, vcl_map<T2,T3> > >
+    typedef std::map<T1, std::map<T1, std::map<T2,T3> > >
         transition_table_type;
 
     dsm2_transition_map(){}
@@ -35,7 +35,7 @@ public:
 
     virtual void b_write( vsl_b_ostream& os ) const;
 
-    virtual void write_txt( vcl_string const& filename ) const;
+    virtual void write_txt( std::string const& filename ) const;
 
     //: add n1 to the table
     void add( node_id_type const& n1 );
@@ -63,6 +63,6 @@ public:
 
 protected:
     //: Relation node id, node id, time, frequency
-    vcl_map<T1, vcl_map<T1, vcl_map<T2, T3> > >transition_table;
+    std::map<T1, std::map<T1, std::map<T2, T3> > >transition_table;
 };
 #endif//DSM2_TRANSITION_TABLE_H_

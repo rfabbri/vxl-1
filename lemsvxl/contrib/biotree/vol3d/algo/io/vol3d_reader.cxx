@@ -8,10 +8,10 @@
 #include <vil3d/vil3d_new.h>
 #include <vil3d/vil3d_image_resource.h>
 #include <vil3d/vil3d_load.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 
-vol3d_reader::vol3d_reader(vcl_vector<vil_image_resource_sptr> &img_vec,
+vol3d_reader::vol3d_reader(std::vector<vil_image_resource_sptr> &img_vec,
                            vgl_box_2d<int> const & roi)
 :res_(0)
 {
@@ -30,7 +30,7 @@ vol3d_reader::vol3d_reader(vcl_vector<vil_image_resource_sptr> &img_vec,
   img_3d_view.fill(0);
 
   unsigned int k = 0;
-  for (vcl_vector<vil_image_resource_sptr>::iterator iter = img_vec.begin();iter != img_vec.end();iter++) {
+  for (std::vector<vil_image_resource_sptr>::iterator iter = img_vec.begin();iter != img_vec.end();iter++) {
     vil_image_view<vxl_uint_16> img_view = *((*iter)->get_copy_view(0,(*iter)->ni(),0,(*iter)->nj()));
     for (unsigned int i = x_min;i<=x_max;i++) {
       for (unsigned int j = y_min;j<=y_max;j++) {
@@ -42,11 +42,11 @@ vol3d_reader::vol3d_reader(vcl_vector<vil_image_resource_sptr> &img_vec,
   res_->put_view(img_3d_view);
 }
   
-vol3d_reader::vol3d_reader(vcl_string input_txt_file)
+vol3d_reader::vol3d_reader(std::string input_txt_file)
 :res_(0)
 {
    
-  vcl_ifstream ifstr(input_txt_file.c_str());
+  std::ifstream ifstr(input_txt_file.c_str());
   
   unsigned int dimx,dimy,dimz;
 
@@ -59,12 +59,12 @@ vol3d_reader::vol3d_reader(vcl_string input_txt_file)
   vil3d_image_view<vxl_uint_16> img_3d_view(dimx,dimy,dimz,1);
   img_3d_view.fill(0);
 
-  //vcl_string txt_file = "C:\\scale_selection\\testing_vol3d_reader.txt";
+  //std::string txt_file = "C:\\scale_selection\\testing_vol3d_reader.txt";
   //
-  //vcl_ofstream ofstr (txt_file.c_str());
+  //std::ofstream ofstr (txt_file.c_str());
 
   double value;
-  vcl_vector<double> val_vec;
+  std::vector<double> val_vec;
   for (unsigned int count = 0;count < dimx*dimy*dimz;count++) {
     ifstr >> value;
     val_vec.push_back(value);
@@ -80,22 +80,22 @@ vol3d_reader::vol3d_reader(vcl_string input_txt_file)
           count++;
           //   ofstr << img_3d_view(i,j,k,0) <<" ";
          }
-          //  ofstr << vcl_endl;
+          //  ofstr << std::endl;
         }
-      // ofstr << "end of slice " << k << vcl_endl;
+      // ofstr << "end of slice " << k << std::endl;
       }
 // ofstr.close();
   res_->put_view(img_3d_view);
 }
   
-vol3d_reader::vol3d_reader(vcl_string input_txt_file, vgl_box_3d<int> const &roi)
+vol3d_reader::vol3d_reader(std::string input_txt_file, vgl_box_3d<int> const &roi)
 {
   
   // read the whole 3D data, if the box is empty
   if (roi.is_empty()) {
     res_ = vil3d_load_image_resource(input_txt_file.data()); 
-    vcl_cout << "ni=" << res_->ni() << " nj=" << res_->nj() << 
-      " nk=" << res_->nk() << vcl_endl;
+    std::cout << "ni=" << res_->ni() << " nj=" << res_->nj() << 
+      " nk=" << res_->nk() << std::endl;
 
   } else {
     int start = roi.min_z(); 
@@ -107,13 +107,13 @@ vol3d_reader::vol3d_reader(vcl_string input_txt_file, vgl_box_3d<int> const &roi
     // the images in the dataset are named in the format ...####.tif
     input_txt_file.erase(cut_point-4,8);
 
-    vcl_vector<vil_image_resource_sptr> img_res_vec;
-    vcl_vector<vcl_string> file_names;
+    std::vector<vil_image_resource_sptr> img_res_vec;
+    std::vector<std::string> file_names;
     for (unsigned i = start;i<=end;i++)
       {
-      vcl_string push_in_str = input_txt_file;
-      vcl_string numstring;
-      vcl_stringstream sstream;
+      std::string push_in_str = input_txt_file;
+      std::string numstring;
+      std::stringstream sstream;
       sstream << i; 
       sstream >> numstring;
       /*

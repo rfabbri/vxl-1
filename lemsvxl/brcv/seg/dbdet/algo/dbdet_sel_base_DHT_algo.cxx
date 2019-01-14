@@ -1,12 +1,12 @@
 #include "dbdet_sel_base.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <map>
+#include <set>
+#include <algorithm>
 
 
 //***********************************************************************//
@@ -29,17 +29,17 @@ void dbdet_sel_base::separate_link_graphs_and_cvlet_maps()
     dbdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
     for (;l_it!=edge_link_graph_.cLinks[i].end(); l_it++){
       (*l_it)->flag = false;
-      link_map.insert(vcl_pair<vcl_pair<int, int>, dbdet_link*>(vcl_pair<int, int>((*l_it)->pe->id, (*l_it)->ce->id), (*l_it)));
+      link_map.insert(std::pair<std::pair<int, int>, dbdet_link*>(std::pair<int, int>((*l_it)->pe->id, (*l_it)->ce->id), (*l_it)));
     }
   }
 
   // 2) next form the link pair map
-  vcl_map<vcl_pair<int, int>, dbdet_link*>::iterator ml_it = link_map.begin();
+  std::map<std::pair<int, int>, dbdet_link*>::iterator ml_it = link_map.begin();
   for (; ml_it != link_map.end(); ml_it++)
   {
-    dbdet_link* pair = link_map[vcl_pair<int, int>(ml_it->first.second, ml_it->first.first)];
+    dbdet_link* pair = link_map[std::pair<int, int>(ml_it->first.second, ml_it->first.first)];
     assert(pair!=0);
-    link_pairs.insert(vcl_pair<dbdet_link*, dbdet_link*>(ml_it->second, pair));
+    link_pairs.insert(std::pair<dbdet_link*, dbdet_link*>(ml_it->second, pair));
   }
 
   // 3) now start the connected components algorithm from the first double unmarked link
@@ -53,7 +53,7 @@ void dbdet_sel_base::separate_link_graphs_and_cvlet_maps()
   }
 
   // 4) move all the curvelets in the cv_set1 to the second cvlet map
-  vcl_set<dbdet_curvelet*>::iterator cvit = cv_set1.begin();
+  std::set<dbdet_curvelet*>::iterator cvit = cv_set1.begin();
   for (; cvit != cv_set1.end(); cvit++){
     //remove it from the main cvlet map
     curvelet_map_.remove_curvelet(*cvit);
@@ -111,7 +111,7 @@ void dbdet_sel_base::DFS_CC_links(dbdet_link* cur_link)
     //visit every link in this curvelet
     for (unsigned i=0; i<cvlet->edgel_chain.size()-1; i++)
     {
-      dbdet_link* new_link = link_map[vcl_pair<int, int>(cvlet->edgel_chain[i]->id, cvlet->edgel_chain[i+1]->id)];
+      dbdet_link* new_link = link_map[std::pair<int, int>(cvlet->edgel_chain[i]->id, cvlet->edgel_chain[i+1]->id)];
 
       // has this link been visited?
       if (!new_link->flag && !link_pairs[new_link]->flag)
@@ -146,7 +146,7 @@ void dbdet_sel_base::BFS_CC_links(dbdet_link* link)
 
         //add all the links from these curvelets to the queue
         for (unsigned i=0; i<cvlet->edgel_chain.size()-1; i++){
-          dbdet_link* new_link = link_map[vcl_pair<int, int>(cvlet->edgel_chain[i]->id, cvlet->edgel_chain[i+1]->id)];
+          dbdet_link* new_link = link_map[std::pair<int, int>(cvlet->edgel_chain[i]->id, cvlet->edgel_chain[i+1]->id)];
 
           // has this link been visited?
           if (!new_link->flag && !link_pairs[new_link]->flag)
@@ -178,7 +178,7 @@ void dbdet_sel_base::clear_HTG()
 //: initialize the hypothesis tree graph (basically mark the root nodes of each tree)
 void dbdet_sel_base::initialize_HTG()
 {
-  vcl_cout << "Initializing the hypothesis trees ... ";
+  std::cout << "Initializing the hypothesis trees ... ";
 
   // 1) preprocess the link graph (if not already done)
 
@@ -259,7 +259,7 @@ void dbdet_sel_base::initialize_HTG()
   //create the right size of container to hold all the links
   HTG.resize_links();
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 //: check to see if here are any bifurcations within the path of this curvelet
@@ -278,30 +278,30 @@ bool dbdet_sel_base::cvlet_has_bifurcations(dbdet_curvelet* cvlet, bool dir)
 //: propagate all the hypothesis trees
 void dbdet_sel_base::propagate_all_HTs()
 {
-  vcl_cout << "Propagating all HTs ...";
+  std::cout << "Propagating all HTs ...";
 
   //next propagate all the trees simultaneously using the same BFS queue 
   while (!BFS_queue_global.empty())
     propagate_HT_from_the_next_leaf_node();
-  vcl_cout << "done!" <<vcl_endl;
+  std::cout << "done!" <<std::endl;
 
 }
 
 void dbdet_sel_base::propagate_HTs_N_steps(int N)
 {
-  vcl_cout << "Propagating " << N << " steps...";
+  std::cout << "Propagating " << N << " steps...";
 
   //next propagate all the trees simultaneously using the same BFS queue 
   while (!BFS_queue_global.empty() && N>0){
     propagate_HT_from_the_next_leaf_node();
     N--;
   }
-  vcl_cout << "done!";
+  std::cout << "done!";
 
   if (BFS_queue_global.empty())
-    vcl_cout << " ---- No more branches to propagate!" << vcl_endl;
+    std::cout << " ---- No more branches to propagate!" << std::endl;
   else
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 }
 
 //: attempt to grow the HTs from the leaf nodes
@@ -315,13 +315,13 @@ void dbdet_sel_base::propagate_HT_from_the_next_leaf_node()
 
   //check to see if this curvelet is already part of some other HT
   //if it is, terminate this branch here and add a link to the HTG signalling HT interaction
-  vcl_set<dbdet_hyp_tree_node*> int_HTs = check_for_interaction(cur_node);
+  std::set<dbdet_hyp_tree_node*> int_HTs = check_for_interaction(cur_node);
   bool terminal_interaction = false;
   
   if (int_HTs.size()>0)//any interaction detected
   {
     //add interactions to HTG
-    vcl_set<dbdet_hyp_tree_node*>::iterator hit = int_HTs.begin();
+    std::set<dbdet_hyp_tree_node*>::iterator hit = int_HTs.begin();
     for (; hit != int_HTs.end(); hit++)
     {
       if ((*hit)->dir != cur_node->dir){     //candidate CPL Link
@@ -365,14 +365,14 @@ void dbdet_sel_base::propagate_HT_from_the_next_leaf_node()
 }
 
 //: if the edgels involved in this curvelet are also claimed by other HTs, check for competitive or completive interaction
-vcl_set<dbdet_hyp_tree_node*> dbdet_sel_base::check_for_interaction(dbdet_hyp_tree_node* node)
+std::set<dbdet_hyp_tree_node*> dbdet_sel_base::check_for_interaction(dbdet_hyp_tree_node* node)
 {
   dbdet_curvelet* cvlet = node->cvlet;
 
-  vcl_set<dbdet_hyp_tree_node*> int_HTs;
+  std::set<dbdet_hyp_tree_node*> int_HTs;
   for (unsigned i=1; i<cvlet->edgel_chain.size()-1; i++){
-    vcl_set<dbdet_hyp_tree_node*>& HT_labels = ELs.labels[cvlet->edgel_chain[i]->id];
-    for (vcl_set<dbdet_hyp_tree_node*>::iterator hit=HT_labels.begin(); hit != HT_labels.end(); hit++){
+    std::set<dbdet_hyp_tree_node*>& HT_labels = ELs.labels[cvlet->edgel_chain[i]->id];
+    for (std::set<dbdet_hyp_tree_node*>::iterator hit=HT_labels.begin(); hit != HT_labels.end(); hit++){
       if ((*hit)->tree_id != node->tree_id)
         int_HTs.insert((*hit));
     }
@@ -388,10 +388,10 @@ bool dbdet_sel_base::C1_CPL_interaction(dbdet_hyp_tree_node* node1, dbdet_hyp_tr
   dbdet_curvelet* cvlet1 = node1->cvlet;
   dbdet_curvelet* cvlet2 = node2->cvlet;
 
-  vcl_vector<dbdet_edgel*> int_edgels;
+  std::vector<dbdet_edgel*> int_edgels;
   for (unsigned i=1; i<cvlet1->edgel_chain.size(); i++){
-    vcl_set<dbdet_hyp_tree_node*>& HT_labels = ELs.labels[cvlet1->edgel_chain[i]->id];
-    for (vcl_set<dbdet_hyp_tree_node*>::iterator hit=HT_labels.begin(); hit != HT_labels.end(); hit++){
+    std::set<dbdet_hyp_tree_node*>& HT_labels = ELs.labels[cvlet1->edgel_chain[i]->id];
+    for (std::set<dbdet_hyp_tree_node*>::iterator hit=HT_labels.begin(); hit != HT_labels.end(); hit++){
       if ((*hit) == node2){
         int_edgels.push_back(cvlet1->edgel_chain[i]);
       }
@@ -459,7 +459,7 @@ void dbdet_sel_base::explore_continuations(dbdet_hyp_tree_node* cur_node, dbdet_
 
   //if this is an unexplored link, order the cvlets by the distance from the current edgel (either bifurcation or terminal edgel)
   //Note: if this is successful, we can do this just ONCE for all the links in the link graph before starting the algorithm or when they are added to the link
-  vcl_map<int, dbdet_curvelet*> sorted_cvlist;
+  std::map<int, dbdet_curvelet*> sorted_cvlist;
 
   //go through all the cvlets pointed to by the link and weed out the illegal ones
   for (cvlet_list_iter cvit = link->curvelets.begin(); cvit != link->curvelets.end(); cvit++)
@@ -474,11 +474,11 @@ void dbdet_sel_base::explore_continuations(dbdet_hyp_tree_node* cur_node, dbdet_
       continue;
 
     //if it passes all the tests, enter it into a sorted list
-    sorted_cvlist.insert(vcl_pair<int, dbdet_curvelet*>(dist_from_edge(*cvit, link->pe), *cvit));
+    sorted_cvlist.insert(std::pair<int, dbdet_curvelet*>(dist_from_edge(*cvit, link->pe), *cvit));
   }
 
   //check each of them for compatibility, add the first one that is compatible
-  vcl_map<int, dbdet_curvelet*>::iterator cv_it = sorted_cvlist.begin();
+  std::map<int, dbdet_curvelet*>::iterator cv_it = sorted_cvlist.begin();
   for (; cv_it != sorted_cvlist.end(); cv_it++)
   {
     dbdet_curvelet* cv = cv_it->second;
@@ -624,7 +624,7 @@ bool dbdet_sel_base::cvlets_overlap_legally(dbdet_curvelet* last_cvlet, dbdet_cu
 dbdet_curvelet* dbdet_sel_base::construct_chopped_cvlet(dbdet_curvelet* cvlet, dbdet_edgel* e)
 {
   //construct a new cvlet out of the non-overlapped edgels
-  vcl_deque<dbdet_edgel*> new_edgel_chain;
+  std::deque<dbdet_edgel*> new_edgel_chain;
   for (unsigned i=0; i<=cvlet->edgel_chain.size(); i++){
     new_edgel_chain.push_back(cvlet->edgel_chain[i]);
 
@@ -636,7 +636,7 @@ dbdet_curvelet* dbdet_sel_base::construct_chopped_cvlet(dbdet_curvelet* cvlet, d
 
   //assert(new_cvlet); //sanity check (this should always be possible!)
   if (!new_cvlet){ //this is a big bug !!! whyis this happening routinely?
-    vcl_cout << "cvlet chopping failed!" << vcl_endl;
+    std::cout << "cvlet chopping failed!" << std::endl;
 
     //for now create a simple copy of the cvlet's CB
     new_cvlet = new dbdet_curvelet(*cvlet);
@@ -705,7 +705,7 @@ void dbdet_sel_base::remove_labels(dbdet_hyp_tree_node* node)
     ELs.labels[node->cvlet->edgel_chain[i]->id].erase(node);
 
   //recursively travel through this branch and remove labels from all the HT nodes
-  vcl_list<dbdet_hyp_tree_node*>::iterator nit = node->children.begin();
+  std::list<dbdet_hyp_tree_node*>::iterator nit = node->children.begin();
   for (; nit != node->children.end(); nit++)
     remove_labels(*nit);
 }
@@ -732,7 +732,7 @@ void dbdet_sel_base::remove_node_if_redundant(dbdet_hyp_tree_node* cur_node)
   if (cur_node->children.size()>0) //has a child node, cannot be duplicate
     return;
 
-  vcl_list<dbdet_hyp_tree_node*>::iterator cit = cur_node->parent->children.begin();
+  std::list<dbdet_hyp_tree_node*>::iterator cit = cur_node->parent->children.begin();
   for (; cit != cur_node->parent->children.end(); cit++)
   {
     if (*cit == cur_node) continue;
@@ -774,19 +774,19 @@ void dbdet_sel_base::remove_node_if_redundant(dbdet_hyp_tree_node* cur_node)
 //: perform gradient descent disambiguation of the HTG to segment the contours and resolve all linking ambiguities
 void dbdet_sel_base::disambiguate_the_HTG()
 {
-  vcl_cout << "Disambiguating the HTG..." << vcl_endl;
+  std::cout << "Disambiguating the HTG..." << std::endl;
 
-  vcl_cout << "1. Resolving completion HTs...";
+  std::cout << "1. Resolving completion HTs...";
   resolve_HTG_completion();
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   //once all the completion edges are handled, resolve the paths of competing edges
-  vcl_cout << "2. Resolving competing HTs...";
+  std::cout << "2. Resolving competing HTs...";
   resolve_HTG_competition();
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   //now prune all the remaining HTs to select the best paths (these are the HTG nodes with no adjacent nodes)
-  vcl_cout << "3. Resolving non-interacting HTs...";
+  std::cout << "3. Resolving non-interacting HTs...";
   for (unsigned i=0; i<HTG.nodes.size(); i++)
     resolve_HT(HTG.nodes[i]);
 
@@ -794,34 +794,34 @@ void dbdet_sel_base::disambiguate_the_HTG()
   while(!BFS_queue_global.empty())
     BFS_queue_global.pop();
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 //: Resolve the CPL links 
 void dbdet_sel_base::resolve_HTG_completion()
 {
   // 1) make a list of all the completion edges
-  vcl_list<dbdet_HTG_link_path*> CPL_links;
-  vcl_set <vcl_pair<int, int> > existing_links;
+  std::list<dbdet_HTG_link_path*> CPL_links;
+  std::set <std::pair<int, int> > existing_links;
   for (unsigned i=0; i<HTG.nodes.size(); i++)
   {
     dbdet_hyp_tree* HT1 = HTG.nodes[i];
 
-    vcl_set<int>::iterator lit = HTG.CPL_links[i].begin();
+    std::set<int>::iterator lit = HTG.CPL_links[i].begin();
     for (; lit != HTG.CPL_links[i].end(); lit++)
     {
       dbdet_hyp_tree* HT2 = HTG.nodes[*lit];
 
       //links are undirected, so this link might already have been considered
-      if (existing_links.find(vcl_pair<int, int>(*lit, i)) == existing_links.end()){
-        existing_links.insert(vcl_pair<int, int>(i, *lit)); //insert it into the list
+      if (existing_links.find(std::pair<int, int>(*lit, i)) == existing_links.end()){
+        existing_links.insert(std::pair<int, int>(i, *lit)); //insert it into the list
         CPL_links.push_back(new dbdet_HTG_link_path(HT1, HT2));
       }
     }
   }
 
   // 2) compute their path metrics
-  vcl_list<dbdet_HTG_link_path*>::iterator HTlit = CPL_links.begin();
+  std::list<dbdet_HTG_link_path*>::iterator HTlit = CPL_links.begin();
   for (; HTlit != CPL_links.end(); HTlit++)
     determine_optimal_HTG_completion_path(*HTlit);
 
@@ -829,7 +829,7 @@ void dbdet_sel_base::resolve_HTG_completion()
   CPL_links.sort(path_metric_less_than);
 
   // 4) gradient descent to resolve ambiguities
-  vcl_vector<dbdet_HTG_link_path*> paths_to_del;
+  std::vector<dbdet_HTG_link_path*> paths_to_del;
   HTlit = CPL_links.begin();
   for (; HTlit != CPL_links.end(); HTlit++)
   {
@@ -849,7 +849,7 @@ void dbdet_sel_base::resolve_HTG_completion()
   paths_to_del.clear();
 
   // 5) once the completions have been sorted out, prune the HTs to retain only the best path
-  vcl_list<dbdet_HTG_link_path*>::iterator pit = CPL_links.begin();
+  std::list<dbdet_HTG_link_path*>::iterator pit = CPL_links.begin();
   for (; pit != CPL_links.end(); pit++)
     resolve_HTG_completion_path(*pit);
 
@@ -862,16 +862,16 @@ void dbdet_sel_base::determine_optimal_HTG_completion_path(dbdet_HTG_link_path* 
 {
   //visit all the leaf nodes of HT1 to determine which ones interact with HT2
   //make a list of all the independent paths
-  vcl_list<vcl_vector<dbdet_curvelet*> > paths;
+  std::list<std::vector<dbdet_curvelet*> > paths;
 
   //traverse the hyp tree to find the leaf nodes
   dbdet_hyp_tree::iterator pit = link->src->begin();
   for ( ; pit != link->src->end(); pit++){
     if ((*pit)->is_leaf()){
       //check to see if it interacts with HT2
-      vcl_set<dbdet_hyp_tree_node*> ints = check_for_interaction(*pit); 
+      std::set<dbdet_hyp_tree_node*> ints = check_for_interaction(*pit); 
 
-      vcl_set<dbdet_hyp_tree_node*>::iterator iit = ints.begin();
+      std::set<dbdet_hyp_tree_node*>::iterator iit = ints.begin();
       for (; iit != ints.end(); iit++)
       {
         //if interaction with HT2 found, record the path
@@ -882,7 +882,7 @@ void dbdet_sel_base::determine_optimal_HTG_completion_path(dbdet_HTG_link_path* 
 
           //record this path
           paths.push_back(pit.get_cur_path());
-          vcl_vector<dbdet_curvelet*>& cur_path = paths.back();
+          std::vector<dbdet_curvelet*>& cur_path = paths.back();
 
           //back track through HT2 to get a list of curvelets from the HT2 path and add it to the current path
           dbdet_hyp_tree_node* parent = (*iit);
@@ -897,7 +897,7 @@ void dbdet_sel_base::determine_optimal_HTG_completion_path(dbdet_HTG_link_path* 
 
   //compute the path cost of all the completion paths found and record the least cost path
   link->cost = 1000;
-  for (vcl_list<vcl_vector<dbdet_curvelet*> >::iterator pit = paths.begin(); pit != paths.end(); pit++){
+  for (std::list<std::vector<dbdet_curvelet*> >::iterator pit = paths.begin(); pit != paths.end(); pit++){
     double path_cost = compute_path_metric(*pit);
     if (path_cost<link->cost){
       link->cost = path_cost; //also save the path cost
@@ -923,8 +923,8 @@ void dbdet_sel_base::resolve_HTG_completion_path(dbdet_HTG_link_path* link)
     claim_edgels(h1);
 
     //delete the branches that do not agree with the optimal path
-    vcl_vector<dbdet_hyp_tree_node*> branches_to_del;
-    vcl_list<dbdet_hyp_tree_node*>::iterator cit = h1->children.begin();
+    std::vector<dbdet_hyp_tree_node*> branches_to_del;
+    std::list<dbdet_hyp_tree_node*>::iterator cit = h1->children.begin();
     for (; cit != h1->children.end(); cit++){
       if ((*cit)->cvlet != link->cvlets[i+1])
         branches_to_del.push_back(*cit); //delete this branch from the tree
@@ -954,8 +954,8 @@ void dbdet_sel_base::resolve_HTG_completion_path(dbdet_HTG_link_path* link)
     claim_edgels(h2);
 
     //delete the branches that do not agree with the optimal path
-    vcl_vector<dbdet_hyp_tree_node*> branches_to_del;
-    vcl_list<dbdet_hyp_tree_node*>::iterator cit = h2->children.begin();
+    std::vector<dbdet_hyp_tree_node*> branches_to_del;
+    std::list<dbdet_hyp_tree_node*>::iterator cit = h2->children.begin();
     for (; cit != h2->children.end(); cit++){
       if ((*cit)->cvlet != link->cvlets[i-1])
         branches_to_del.push_back(*cit); //delete this branch from the tree
@@ -982,7 +982,7 @@ void dbdet_sel_base::resolve_HTG_completion_path(dbdet_HTG_link_path* link)
 
 //: a path is described as a sequence of curvelets for now, but this can be optimized since multiple paths through
 // the HT will have common elements so there is no real need to redo the same computations
-void dbdet_sel_base::back_propagate_solution(vcl_vector<dbdet_curvelet*>& path, vgl_point_2d<double> sol)
+void dbdet_sel_base::back_propagate_solution(std::vector<dbdet_curvelet*>& path, vgl_point_2d<double> sol)
 {
   //we need to resolve the contour to C1 explicitly first
   //We can achieve this by backtracking from the last curvelet
@@ -1022,7 +1022,7 @@ void dbdet_sel_base::back_propagate_solution(vcl_vector<dbdet_curvelet*>& path, 
       if (!prev_cm->cv_bundles[nj].contains(temp_sol))
         continue;
         
-      double local_cost = vcl_fabs(dbdet_k_classes[nj] - cur_cm->k)*(path[i]->length+path[i-1]->length)/2.0 + //Int (dk/ds * l) ds
+      double local_cost = std::fabs(dbdet_k_classes[nj] - cur_cm->k)*(path[i]->length+path[i-1]->length)/2.0 + //Int (dk/ds * l) ds
                           dbdet_k_classes[nj]*dbdet_k_classes[nj]*path[i-1]->length; //Int k^2 ds
 
       if (local_cost < best_local_cost)
@@ -1044,14 +1044,14 @@ void dbdet_sel_base::back_propagate_solution(vcl_vector<dbdet_curvelet*>& path, 
     }
     else { // back tracking went wrong
       sol = prev_cm->compute_best_fit(); //just use the default solution
-      vcl_cout << " Bracktracking solution failed!" << vcl_endl;
+      std::cout << " Bracktracking solution failed!" << std::endl;
     }
   }
 }
 
 //: a path is described as a sequence of curvelets for now, but this can be optimized since multiple paths through
 // the HT will have common elements so there is no real need to redo the same computations
-double dbdet_sel_base::compute_path_metric(vcl_vector<dbdet_curvelet*>& path)
+double dbdet_sel_base::compute_path_metric(std::vector<dbdet_curvelet*>& path)
 {
   ////for now just compute the length of the chain 
   //double cost = 0;
@@ -1109,7 +1109,7 @@ double dbdet_sel_base::compute_path_metric(vcl_vector<dbdet_curvelet*>& path)
       if (!prev_cm->cv_bundles[nj].contains(temp_sol))
         continue;
         
-      double local_cost = 1 + vcl_fabs(dbdet_k_classes[nj] - cur_cm->k)/(path[i]->length+path[i-1]->length) + //Int |dk/ds| ds
+      double local_cost = 1 + std::fabs(dbdet_k_classes[nj] - cur_cm->k)/(path[i]->length+path[i-1]->length) + //Int |dk/ds| ds
                           dbdet_k_classes[nj]*dbdet_k_classes[nj]*path[i-1]->length; //Int k^2 ds
 
       if (local_cost < best_local_cost)
@@ -1132,9 +1132,9 @@ double dbdet_sel_base::compute_path_metric(vcl_vector<dbdet_curvelet*>& path)
     }
     else { // back tracking went wrong
       sol = prev_cm->compute_best_fit(); //just use the default solution
-      vcl_cout << " Bracktracking solution failed!" << vcl_endl;
+      std::cout << " Bracktracking solution failed!" << std::endl;
 
-      double local_cost = 1+ vcl_fabs(prev_cm->k - cur_cm->k)/(path[i]->length+path[i-1]->length) + //Int |dk/ds| ds
+      double local_cost = 1+ std::fabs(prev_cm->k - cur_cm->k)/(path[i]->length+path[i-1]->length) + //Int |dk/ds| ds
                           prev_cm->k*prev_cm->k*path[i-1]->length; //Int k^2 ds
       total_cost += local_cost;
     }
@@ -1149,7 +1149,7 @@ void dbdet_sel_base::resolve_HTG_competition()
   // Assume that all the HT completions have been sorted out and the best paths resolved and claimed
 
   // 1) First make a list of all HTs involved in competitive interactions
-  vcl_vector<dbdet_hyp_tree* > CPT_HTs;
+  std::vector<dbdet_hyp_tree* > CPT_HTs;
   for (unsigned i=0; i<HTG.nodes.size(); i++){
     if (HTG.CPT_links[i].size()>0)
       CPT_HTs.push_back(HTG.nodes[i]);
@@ -1162,20 +1162,20 @@ void dbdet_sel_base::resolve_HTG_competition()
       continue;
 
     //if this HT has already been resolved, prune the other trees
-    vcl_set<int>::iterator lit = HTG.CPT_links[CPT_HTs[i]->tree_id].begin();
+    std::set<int>::iterator lit = HTG.CPT_links[CPT_HTs[i]->tree_id].begin();
     for (; lit != HTG.CPT_links[CPT_HTs[i]->tree_id].end(); lit++)
       prune_HTs_of_claimed(HTG.nodes[*lit]);
   }
 
   // 3) Compute the best paths for each CPT HTs and its cost
-  vcl_map<double, dbdet_hyp_tree*> sorted_CPT_HTs;
+  std::map<double, dbdet_hyp_tree*> sorted_CPT_HTs;
   for (unsigned i=0; i<CPT_HTs.size(); i++){
     //only need to keep the unresolved ones
     if (CPT_HTs[i]->resolved)
       continue;
 
     double cost = determine_best_path(CPT_HTs[i]);
-    sorted_CPT_HTs.insert(vcl_pair<double, dbdet_hyp_tree*>(cost, CPT_HTs[i]));
+    sorted_CPT_HTs.insert(std::pair<double, dbdet_hyp_tree*>(cost, CPT_HTs[i]));
   }
 
   // 4) sort the paths by cost (automatic because of the map structure)
@@ -1192,7 +1192,7 @@ void dbdet_sel_base::resolve_HTG_competition()
 
     // 5c) If the HT node is involved in any CPT links with other HTs, prune the other HTs to shed
     //     the claimed edgels and recompute its cost
-    vcl_set<int>::iterator lit = HTG.CPT_links[cur_HT->tree_id].begin();
+    std::set<int>::iterator lit = HTG.CPT_links[cur_HT->tree_id].begin();
     for (; lit != HTG.CPT_links[cur_HT->tree_id].end(); lit++)
     {
       dbdet_hyp_tree* HT1 = HTG.nodes[*lit];
@@ -1202,7 +1202,7 @@ void dbdet_sel_base::resolve_HTG_competition()
       //if these HTs have not been resolved, check for any pruning required
 
       //find the HT and remove it from the sorted list
-      vcl_map<double, dbdet_hyp_tree*>::iterator tit = sorted_CPT_HTs.find(HT1->least_cost);
+      std::map<double, dbdet_hyp_tree*>::iterator tit = sorted_CPT_HTs.find(HT1->least_cost);
       assert(tit->second == HT1); //sanity check
       sorted_CPT_HTs.erase(tit);
 
@@ -1210,10 +1210,10 @@ void dbdet_sel_base::resolve_HTG_competition()
       if (prune_HTs_of_claimed(HT1))
       {
         double cost = determine_best_path(HT1);
-        sorted_CPT_HTs.insert(vcl_pair<double, dbdet_hyp_tree*>(cost, HT1));
+        sorted_CPT_HTs.insert(std::pair<double, dbdet_hyp_tree*>(cost, HT1));
       }
       else {
-        sorted_CPT_HTs.insert(vcl_pair<double, dbdet_hyp_tree*>(HT1->least_cost, HT1));
+        sorted_CPT_HTs.insert(std::pair<double, dbdet_hyp_tree*>(HT1->least_cost, HT1));
       }
     }
   }
@@ -1305,7 +1305,7 @@ void dbdet_sel_base::claim_best_path(dbdet_hyp_tree* HT)
   assert(HT->best_path != 0); //sanity check
 
   //find the curvelet list corresponding to the best path
-  vcl_vector<dbdet_curvelet*> best_path;
+  std::vector<dbdet_curvelet*> best_path;
   dbdet_hyp_tree::iterator pit = HT->begin();
   for ( ; pit != HT->end(); pit++){
     if ((*pit)==HT->best_path)
@@ -1324,8 +1324,8 @@ void dbdet_sel_base::claim_best_path(dbdet_hyp_tree* HT)
     claim_edgels(h1);
 
     //delete the branches that do not agree with the optimal path
-    vcl_vector<dbdet_hyp_tree_node*> branches_to_del;
-    vcl_list<dbdet_hyp_tree_node*>::iterator cit = h1->children.begin();
+    std::vector<dbdet_hyp_tree_node*> branches_to_del;
+    std::list<dbdet_hyp_tree_node*>::iterator cit = h1->children.begin();
     for (; cit != h1->children.end(); cit++){
       if ((*cit)->cvlet != best_path[i+1])
         branches_to_del.push_back(*cit); //delete this branch from the tree

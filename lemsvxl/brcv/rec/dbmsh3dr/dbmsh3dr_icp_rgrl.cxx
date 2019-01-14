@@ -2,7 +2,7 @@
 //  Ming-Ching Chang
 //  Apr 09, 2007.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <rsdl/rsdl_kd_tree.h>
 
@@ -52,20 +52,20 @@ class command_iteration_update: public rgrl_command
       dynamic_cast<const rgrl_feature_based_registration*>(caller);
     rgrl_transformation_sptr trans = reg_engine->current_transformation();
     rgrl_trans_rigid* r_xform = rgrl_cast<rgrl_trans_rigid*>(trans);
-    vcl_cout<<"xform: R = "<<r_xform->R()<<"t = "<<r_xform->t()<<vcl_endl;
+    std::cout<<"xform: R = "<<r_xform->R()<<"t = "<<r_xform->t()<<std::endl;
   }
 };
 
 //: registration result is the best affine transformation and
 //  the error of convergence.
 //  return true if has final transform.
-bool rgrl_rigid_icp_register (const vcl_vector<rgrl_feature_sptr>& fixedFV, 
-                              const vcl_vector<rgrl_feature_sptr>& movingFV,
+bool rgrl_rigid_icp_register (const std::vector<rgrl_feature_sptr>& fixedFV, 
+                              const std::vector<rgrl_feature_sptr>& movingFV,
                               const vnl_matrix<double>& init_R, 
                               const vnl_vector_fixed<double,3>& init_t,
                               rgrl_trans_rigid& r_xform, double& error)
 {
-  vul_printf (vcl_cout, "rgrl_rigid_icp_register(): %d points to %d points.\n",
+  vul_printf (std::cout, "rgrl_rigid_icp_register(): %d points to %d points.\n",
               movingFV.size(), fixedFV.size());
   
   const unsigned int dimension = 3;
@@ -93,12 +93,12 @@ bool rgrl_rigid_icp_register (const vcl_vector<rgrl_feature_sptr>& fixedFV,
   //Turn on debug info  cp_matcher->set_debug_flag (3);
 
   //Weighter
-  vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  std::unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
   rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(m_est_obj, false, false);
 
   //Scale estimator
   int max_set_size = 1000;  //maximum expected number of features
-  vcl_unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
+  std::unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
 
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est;
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;

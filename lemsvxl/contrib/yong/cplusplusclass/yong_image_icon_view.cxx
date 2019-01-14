@@ -9,8 +9,8 @@
 #include <vil/vil_convert.h>
 #include <vil/io/vil_io_image_view.h>
 
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 #include <vgui/vgui_window.h>
 #include <vgui/vgui_adaptor.h>
 
@@ -61,7 +61,7 @@ yong_image_icon_view::yong_image_icon_view(const char* n, const unsigned icon_wi
 
 //-----------------------------------------------------------------------------
 
-vcl_string yong_image_icon_view::type_name() const
+std::string yong_image_icon_view::type_name() const
 {
     return "yong_image_icon_view";
 }
@@ -94,7 +94,7 @@ void yong_image_icon_view::b_read(vsl_b_istream &is)
         vsl_b_read(is, this->nplanes_);
         break;
     default:
-        vcl_cout << "unsupported binary IO version for yong_image_icon_view!" << vcl_endl;
+        std::cout << "unsupported binary IO version for yong_image_icon_view!" << std::endl;
         break;
     }
 
@@ -103,8 +103,8 @@ void yong_image_icon_view::b_read(vsl_b_istream &is)
 
 void yong_image_icon_view::Output_Icon_Image()
 {
-    vcl_stringstream SS;
-    vcl_string icon_image_name;
+    std::stringstream SS;
+    std::string icon_image_name;
 
     SS << this->image_name_;
     SS << "_icon.jpg";

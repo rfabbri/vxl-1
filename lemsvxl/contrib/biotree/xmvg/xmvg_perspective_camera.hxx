@@ -3,7 +3,7 @@
 #define xmvg_perspective_camera_txx_
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_4x4.h>
 #include <xmvg/xmvg_perspective_camera.h>
@@ -79,7 +79,7 @@ xmvg_svd<T>* xmvg_perspective_camera<T>::get_xmvg_svd() const
 
     // Check that the projection matrix isn't degenerate.
     if( cached_xmvg_svd_->rank() != 3 )
-      vcl_cerr << "vpgl_proj_camera::svd()\n"
+      std::cerr << "vpgl_proj_camera::svd()\n"
                << "  Warning: Projection matrix is not rank 3, errors may occur.\n";
   }
   return cached_xmvg_svd_;

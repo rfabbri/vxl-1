@@ -14,9 +14,9 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
+#include <string>
 #include <bpro1/bpro1_process.h>
 #include <dbinfo/dbinfo_track_sptr.h>
 #include <dbinfo/pro/dbinfo_track_storage_sptr.h>
@@ -31,10 +31,10 @@ class dbinfo_refine_tracks_process : public bpro1_process
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   virtual void clear_output(int resize = -1);
 
@@ -47,8 +47,8 @@ class dbinfo_refine_tracks_process : public bpro1_process
  protected:
   bool first_frame_;
   unsigned start_frame_;
-  vcl_string name_;
-  vcl_vector<dbinfo_track_sptr> optimized_tracks_;
+  std::string name_;
+  std::vector<dbinfo_track_sptr> optimized_tracks_;
   dbinfo_match_optimizer_sptr opt_;
 };
 

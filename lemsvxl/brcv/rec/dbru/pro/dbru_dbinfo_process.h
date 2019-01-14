@@ -47,12 +47,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Observation Info Matching";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );   // 0
     to_return.push_back( "shock" );    // 1
     to_return.push_back( "image" );    // 2
@@ -61,8 +61,8 @@ public:
     to_return.push_back( "image" );    // 5
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
   }
@@ -99,9 +99,9 @@ protected:
   float scurve_sample_ds;
   int increment; 
   bool load1, load2;
-  vcl_string esf_file1;
-  vcl_string esf_file2;
-  vcl_string shgm_file;
+  std::string esf_file1;
+  std::string esf_file2;
+  std::string shgm_file;
   dbskr_tree_sptr tree1, tree2;
 
   bool elastic_splice_cost;

@@ -2,7 +2,7 @@
 #define BIOB_WORLDPT_INDEX_H_
 
 #include <vsl/vsl_binary_io.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 class biob_worldpt_index {
   //  private:
@@ -21,7 +21,7 @@ class biob_worldpt_index {
 };
 
 void vsl_b_write(vsl_b_ostream & os, const biob_worldpt_index & pti);
-void vsl_print_summary(vcl_ostream & os, const biob_worldpt_index & pti);
+void vsl_print_summary(std::ostream & os, const biob_worldpt_index & pti);
 void vsl_b_read(vsl_b_istream & is, biob_worldpt_index& pti);
 
 #endif

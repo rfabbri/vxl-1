@@ -29,7 +29,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const = 0;
+  virtual std::string name() const = 0;
 
 protected:
 

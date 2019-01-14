@@ -53,20 +53,20 @@ void dbdet_lvwr_params::set_defaults()
 }
 
 //: Output stream operator for printing the parameter values
-vcl_ostream& operator<<(vcl_ostream& os, const dbdet_lvwr_params& params)
+std::ostream& operator<<(std::ostream& os, const dbdet_lvwr_params& params)
 {
-  os << "dbdet_lvwr_params:" << vcl_endl << "[---" << vcl_endl;
-  os << "weight_z  " << params.weight_z << vcl_endl;
-  os << "weight_d  " << params.weight_d << vcl_endl;
-  os << "weight_g  " << params.weight_g << vcl_endl;
-  os << "weight_l  " << params.weight_l << vcl_endl;
-  os << "path_norm  " << params.path_norm << vcl_endl;
-  os << "gauss_sigma  " << params.gauss_sigma << vcl_endl;
-  os << "window_w  " << params.window_w << vcl_endl;
-  os << "window_h " << params.window_h << vcl_endl;
-  os << "canny ?" << params.canny << vcl_endl;
-  os << "weight_canny " << params.weight_canny << vcl_endl;
-  os << "weight_canny_l " << params.weight_canny_l << vcl_endl;
-  os << "---]" << vcl_endl;
+  os << "dbdet_lvwr_params:" << std::endl << "[---" << std::endl;
+  os << "weight_z  " << params.weight_z << std::endl;
+  os << "weight_d  " << params.weight_d << std::endl;
+  os << "weight_g  " << params.weight_g << std::endl;
+  os << "weight_l  " << params.weight_l << std::endl;
+  os << "path_norm  " << params.path_norm << std::endl;
+  os << "gauss_sigma  " << params.gauss_sigma << std::endl;
+  os << "window_w  " << params.window_w << std::endl;
+  os << "window_h " << params.window_h << std::endl;
+  os << "canny ?" << params.canny << std::endl;
+  os << "weight_canny " << params.weight_canny << std::endl;
+  os << "weight_canny_l " << params.weight_canny_l << std::endl;
+  os << "---]" << std::endl;
   return os;
 }

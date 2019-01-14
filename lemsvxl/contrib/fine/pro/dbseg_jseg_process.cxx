@@ -13,7 +13,7 @@ dbseg_jseg_process::dbseg_jseg_process() : bpro1_process()
       !parameters()->add( "Merge threshold (between 0.0 and 0.7, lower value for more regions)"   , "-mthresh"    , .4f )
       
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -33,7 +33,7 @@ dbseg_jseg_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_jseg_process::name()
+std::string dbseg_jseg_process::name()
 {
   return "JSEG Segmentation";
 }
@@ -48,10 +48,10 @@ dbseg_jseg_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_jseg_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
 
@@ -60,10 +60,10 @@ dbseg_jseg_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_jseg_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
   
@@ -94,7 +94,7 @@ dbseg_jseg_process::execute()
     vul_timer t;
     t.mark();
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_jseg_process::execute() - "
+    std::cout << "In dbseg_jseg_process::execute() - "
              << "not exactly one input image\n";
     return false;
   }
@@ -120,7 +120,7 @@ dbseg_jseg_process::execute()
     vil_image_resource_sptr resource = vil_new_image_resource_of_view(static_execute(imageView, TQUAN, threshcolor, scale));
     vidpro1_image_storage_sptr segmented_storage = vidpro1_image_storage_new();
     segmented_storage->set_image(resource);
-    vcl_cout << "JSEG segmentation completed. " << "unknown" << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << vcl_endl; 
+    std::cout << "JSEG segmentation completed. " << "unknown" << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << std::endl; 
     output_data_[0].push_back(segmented_storage);
 
   return true;

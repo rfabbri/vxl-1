@@ -181,7 +181,7 @@ extern vul_arg<char const*>   dbmsh3d_cmd_gen_rand_box;
 
 //#####################################################################
 //: dbmsh3d_cmdpara process parameters.
-extern vcl_string             dbmsh3d_app_window_title;
+extern std::string             dbmsh3d_app_window_title;
 extern bool                   dbmsh3d_pro_contiune;
 #endif
 

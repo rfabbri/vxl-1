@@ -26,7 +26,7 @@ public:
 
   vidpro_image_storage();
   virtual ~vidpro_image_storage();
-  virtual vcl_string type() const { return "image"; }
+  virtual std::string type() const { return "image"; }
   
   //: Return IO version number;
   short version() const;
@@ -42,7 +42,7 @@ public:
   virtual bpro_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro_image_storage"; }
+  virtual std::string is_a() const { return "vidpro_image_storage"; }
 
   
 

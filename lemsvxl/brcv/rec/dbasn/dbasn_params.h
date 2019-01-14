@@ -13,7 +13,7 @@
 #ifndef dbasn_params_h_
 #define dbasn_params_h_
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #define GA_COMPARE_NODE     1
 #define GA_COMPARE_LINK     1
@@ -59,6 +59,6 @@ public:
   }
 };
 
-vcl_ostream& operator<<(vcl_ostream& os, const dbasn_params& params);
+std::ostream& operator<<(std::ostream& os, const dbasn_params& params);
 
 #endif

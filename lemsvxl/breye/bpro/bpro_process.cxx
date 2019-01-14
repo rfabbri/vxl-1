@@ -5,8 +5,8 @@
 
 #include <bpro/bpro_process.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 
 #include <bpro/bpro_parameters.h>
 #include <bpro/bpro_storage.h>
@@ -53,7 +53,7 @@ void bpro_process::clear_output(int size)
 }
 
 
-void bpro_process::set_input( const vcl_vector< bpro_storage_sptr >& i , unsigned frame)
+void bpro_process::set_input( const std::vector< bpro_storage_sptr >& i , unsigned frame)
 {
   if (input_data_.size()<frame+1)
     input_data_.resize(frame+1);
@@ -69,14 +69,14 @@ void bpro_process::add_input(const bpro_storage_sptr& i, unsigned frame)
 }
 
 
-vcl_vector< bpro_storage_sptr > const & bpro_process::get_output(unsigned frame)
+std::vector< bpro_storage_sptr > const & bpro_process::get_output(unsigned frame)
 {
   assert(output_data_.size()>frame);
   return output_data_[frame];
 }
 
 
-vcl_vector< bpro_storage_sptr > const & bpro_process::get_input(unsigned frame)
+std::vector< bpro_storage_sptr > const & bpro_process::get_input(unsigned frame)
 {
   assert(input_data_.size()>frame);
   return input_data_[frame];
@@ -103,7 +103,7 @@ bool bpro_process::set_global(unsigned outer_index,
            inner_index >= 0)   {
     // If empty fill it with false (default)
     if (is_output_global_.empty())     {
-      is_output_global_.assign(output_frames(),vcl_vector<bool>(output_frames(),false));
+      is_output_global_.assign(output_frames(),std::vector<bool>(output_frames(),false));
     }
     if (inner_index >=  is_output_global_[outer_index].size())
       is_output_global_[outer_index].resize(inner_index+1,false);
@@ -111,19 +111,19 @@ bool bpro_process::set_global(unsigned outer_index,
     is_output_global_[outer_index][inner_index] = true; // set flag to denote global (true)
     return true;
   } else {
-    vcl_cerr << "\nbpro2_process error: set_global(...) incorrect index range!\n";
+    std::cerr << "\nbpro2_process error: set_global(...) incorrect index range!\n";
     return false;
   }
 }
 
 //: Get the vector of boolean flags to denote global storages
-vcl_vector<vcl_vector<bool> > bpro_process::get_global()
+std::vector<std::vector<bool> > bpro_process::get_global()
 {
   return is_output_global_;
 }
 
 //: Returns a vector of strings with suggested names for output classes
-vcl_vector< vcl_string > bpro_process::suggest_output_names()
+std::vector< std::string > bpro_process::suggest_output_names()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }

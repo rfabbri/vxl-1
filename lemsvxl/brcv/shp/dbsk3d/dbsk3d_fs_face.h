@@ -5,8 +5,8 @@
 #ifndef dbsk3d_fs_face_h_
 #define dbsk3d_fs_face_h_
 
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <set>
+#include <map>
 #include <vgl/vgl_point_3d.h>
 
 #include <dbmsh3d/dbmsh3d_face.h>
@@ -86,7 +86,7 @@ public:
   }
   bool remove_G (const dbmsh3d_vertex* G);
 
-  void get_incoming_Gs (vcl_set<dbmsh3d_vertex*>& incomingG);
+  void get_incoming_Gs (std::set<dbmsh3d_vertex*>& incomingG);
 
   //####### Flow type computation functions #######  
   const vgl_point_3d<double> mid_pt() const {
@@ -103,7 +103,7 @@ public:
   //  i.e., the edge of G0-G1 is a Gabriel edge,
   //  i.e., ball of G0-G1 does not contain any other generator.
   bool contain_A12_2 ();
-  bool contain_A12_2 (const vcl_vector<dbmsh3d_vertex*>& vertices);
+  bool contain_A12_2 (const std::vector<dbmsh3d_vertex*>& vertices);
 
   //: Detect the flow type of this fs_face
   //  For type II fs_face, return the incoming fs_edge.
@@ -133,11 +133,11 @@ public:
   const bool both_sides_meshed (dbsk3d_fs_edge** L1, dbsk3d_fs_edge** L2) const;
 
   //: get the set of boundary shock link with bnd_faces.
-  void get_FEs_with_bnd_F (vcl_set<dbsk3d_fs_edge*>& FE_with_bnd_F_set) const;
+  void get_FEs_with_bnd_F (std::set<dbsk3d_fs_edge*>& FE_with_bnd_F_set) const;
 
   //: Add the boundary fs_edges associated with genes (if any) to the set.
-  void get_bnd_FE_FV_with_Gs (vcl_set<dbsk3d_fs_edge*>& FE_with_G_set,
-                              vcl_set<dbsk3d_fs_vertex*>& FV_with_G_set) const;
+  void get_bnd_FE_FV_with_Gs (std::set<dbsk3d_fs_edge*>& FE_with_G_set,
+                              std::set<dbsk3d_fs_vertex*>& FV_with_G_set) const;
 
   //####### Reconstruction Functions #######
   virtual vgl_vector_3d<double> get_shock_flow (const vgl_point_3d<double>& center_pt);
@@ -155,7 +155,7 @@ public:
   void _clone_FF_G_conn (dbsk3d_fs_face* FF2, dbmsh3d_pt_set* BND2) const;
   virtual dbsk3d_fs_face* clone (dbmsh3d_mesh* M2, dbmsh3d_pt_set* BND2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
 };
 
@@ -182,8 +182,8 @@ inline bool is_FF_inf (dbsk3d_fs_face* FF, const int n_orig_gene)
 
 //####### dbsk3d_fs_face TEXT FILE I/O FUNCTIONS #######
 
-void ff_save_text_file (vcl_FILE* fp, const dbsk3d_fs_face* FF);
-void ff_load_text_file (vcl_FILE* fp, dbsk3d_fs_face* FF, 
-                        vcl_map<int, dbmsh3d_edge*>& edgemap,
-                        vcl_map<int, dbmsh3d_vertex*>& vertexmap);
+void ff_save_text_file (std::FILE* fp, const dbsk3d_fs_face* FF);
+void ff_load_text_file (std::FILE* fp, dbsk3d_fs_face* FF, 
+                        std::map<int, dbmsh3d_edge*>& edgemap,
+                        std::map<int, dbmsh3d_vertex*>& vertexmap);
 #endif

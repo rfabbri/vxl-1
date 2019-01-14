@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 #include <sdet/sdet_harris_detector_params.h>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 class brct_plane_sweeper_params : public gevd_param_mixin
 {
@@ -35,7 +35,7 @@ class brct_plane_sweeper_params : public gevd_param_mixin
 
   bool SanityCheck();
   friend
-    vcl_ostream& operator<<(vcl_ostream&, const brct_plane_sweeper_params& sp);
+    std::ostream& operator<<(std::ostream&, const brct_plane_sweeper_params& sp);
  protected:
   void InitParams(float zmin,
                   float zmax,

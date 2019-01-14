@@ -55,9 +55,9 @@ public:
 
 
   //: Saves a floating point grid in binary format for Drishti Volume Rederer
-  bool save_float_grid_raw(bvxm_voxel_grid_base_sptr grid_base,vcl_string filename);
+  bool save_float_grid_raw(bvxm_voxel_grid_base_sptr grid_base,std::string filename);
  
-  bool save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_base,vcl_string filename);
+  bool save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_base,std::string filename);
   //: Retieves the expected image of a grid  
  /* bool bseg3d_explore_mixtures::expected_image(vpgl_camera_double_sptr const& camera,
                                                vil_image_view_base_sptr &expected,

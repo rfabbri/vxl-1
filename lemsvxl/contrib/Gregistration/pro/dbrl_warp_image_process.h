@@ -17,7 +17,7 @@ class dbrl_warp_image_process:public bpro1_process
         dbrl_warp_image_process();
         ~dbrl_warp_image_process();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process* clone() const;
@@ -25,20 +25,20 @@ class dbrl_warp_image_process:public bpro1_process
         int input_frames();
         int output_frames();
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
 
         bool execute();
         bool finish();
 
     private:
 
-                vcl_vector<dbrl_feature_sptr> warp_grid(dbrl_thin_plate_spline_transformation * tpstform,
-                                                vcl_vector<dbrl_feature_sptr> &f);
-                vcl_vector<dbrl_match_set_sptr >   match_set_list_;
-                      vcl_vector<int> framenums_;
+                std::vector<dbrl_feature_sptr> warp_grid(dbrl_thin_plate_spline_transformation * tpstform,
+                                                std::vector<dbrl_feature_sptr> &f);
+                std::vector<dbrl_match_set_sptr >   match_set_list_;
+                      std::vector<int> framenums_;
 
-                vcl_vector<vil_image_resource_sptr>   image_list_;
+                std::vector<vil_image_resource_sptr>   image_list_;
 
     };
 #endif

@@ -12,8 +12,8 @@
 //differential-geometric stereo
 
 struct mw_stereo_experiments_args : public mw_stereo_app_args {
-  vul_arg<vcl_string> *fname_id;
-  vul_arg<vcl_string> *simulation_type;
+  vul_arg<std::string> *fname_id;
+  vul_arg<std::string> *simulation_type;
   vul_arg<unsigned> *max_nviews;
 };
 
@@ -27,12 +27,12 @@ public:
 
   bool band_statistics();
   void initialize(int argc, char ** argv);
-  void run_ntuplet_test_avg(vcl_string fname_part);
+  void run_ntuplet_test_avg(std::string fname_part);
   bool ntuplet_test_avg(
-      vcl_vector<double> *min_ntup,
-      vcl_vector<double> *max_ntup,
-      vcl_vector<double> *med_ntup,
-      vcl_vector<double> *avg_ntup,
+      std::vector<double> *min_ntup,
+      std::vector<double> *max_ntup,
+      std::vector<double> *med_ntup,
+      std::vector<double> *avg_ntup,
       bool verbose);
 
   bool 
@@ -41,17 +41,17 @@ public:
   static void
   gain_in_epipolar_for_exactly_nviews(
     unsigned n_v,
-    vcl_vector<bool> &is_specified,
-    vcl_vector<vsol_point_2d_sptr> &specified_pts,
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > &vsols,
-    vcl_vector< vcl_vector<becld_epiband *> > &epband_,
-    const vcl_vector <vsol_box_2d_sptr> &bbox_,
-    const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
+    std::vector<bool> &is_specified,
+    std::vector<vsol_point_2d_sptr> &specified_pts,
+    std::vector<std::vector<vsol_point_2d_sptr> > &vsols,
+    std::vector< std::vector<becld_epiband *> > &epband_,
+    const std::vector <vsol_box_2d_sptr> &bbox_,
+    const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm,
     double err_pos,
-    vcl_vector<double> &gain);
+    std::vector<double> &gain);
 };
 
-//static bool band_statistics(mw_stereo_app_args &args, vcl_string &);
+//static bool band_statistics(mw_stereo_app_args &args, std::string &);
 //static void initialize(int argc, char ** argv, mw_stereo_app_args &);
 
 
@@ -86,24 +86,24 @@ initialize(int argc, char ** argv)
 {
   // set default params
 
-  static   vul_arg<vcl_string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./out/"); // < diff from default
-  static   vul_arg<vcl_string> a_out_path("-out_path", "path to output. Defaults to -prefix");
+  static   vul_arg<std::string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./out/"); // < diff from default
+  static   vul_arg<std::string> a_out_path("-out_path", "path to output. Defaults to -prefix");
   
-  static   vul_arg<vcl_string> a_fname1("-image1", "image fname 1","000-maximage.png");
-  static   vul_arg<vcl_string> a_fname2("-image2", "image fname 2","003-maximage.png");
-  static   vul_arg<vcl_string> a_fname3("-image3", "image fname 3","006-maximage.png");
-  static   vul_arg<vcl_vector<vcl_string> > a_fnames("-images","fname's of images (space-separated)");
+  static   vul_arg<std::string> a_fname1("-image1", "image fname 1","000-maximage.png");
+  static   vul_arg<std::string> a_fname2("-image2", "image fname 2","003-maximage.png");
+  static   vul_arg<std::string> a_fname3("-image3", "image fname 3","006-maximage.png");
+  static   vul_arg<std::vector<std::string> > a_fnames("-images","fname's of images (space-separated)");
  
-  static   vul_arg<vcl_string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
-  static   vul_arg<vcl_string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
-  static   vul_arg<vcl_string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
-  static   vul_arg<vcl_string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
+  static   vul_arg<std::string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
+  static   vul_arg<std::string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
+  static   vul_arg<std::string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
+  static   vul_arg<std::string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
 
-  static   vul_arg<vcl_string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
-  static   vul_arg<vcl_string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
-  static   vul_arg<vcl_string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
-  static   vul_arg<vcl_string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
-  static   vul_arg<vcl_vector<vcl_string> > a_edgels("-edgels","fname's of edgels (space-separated)");
+  static   vul_arg<std::string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
+  static   vul_arg<std::string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
+  static   vul_arg<std::string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
+  static   vul_arg<std::string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
+  static   vul_arg<std::vector<std::string> > a_edgels("-edgels","fname's of edgels (space-separated)");
 
   static   vul_arg<bool> a_run_trinocular("-trinocular", "compute trinocular reprojection costs based on point distance",false);
   static   vul_arg<bool> a_run_trinocular_t_diff("-trinocular_tangent_diff", "compute trinocular reprojection costs based on tangent difference",false);
@@ -117,9 +117,9 @@ initialize(int argc, char ** argv)
 
   static   vul_arg<bool> a_run_sel_geometry("-sel_geometry", "compute costs based on differential geometry of Amir's edge linking",false);
   static   vul_arg<bool> a_read_sel("-read_sel", "read edge linking hypotheses from binary files",false);
-  static   vul_arg<vcl_string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
-  static   vul_arg<vcl_string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
-  static   vul_arg<vcl_string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
+  static   vul_arg<std::string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
+  static   vul_arg<std::string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
+  static   vul_arg<std::string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
 
   static   vul_arg<bool> a_synth_data_1("-synthetic_1", "Use synthetic data (ctspheres camera setup)", false);
   static   vul_arg<bool> a_synth_data_2("-synthetic_2", "Use synthetic data (digicam turntable setup)", false);
@@ -131,7 +131,7 @@ initialize(int argc, char ** argv)
   static   vul_arg<double> a_angle1("-angle1", "angle of 1st view in Deg (for synthetic data)", 0);
   static   vul_arg<double> a_angle2("-angle2", "angle of 2nd view in Deg (for synthetic data)", 5);
   static   vul_arg<double> a_angle3("-angle3", "angle of 3rd view in Deg (for synthetic data)", 60);
-  static   vul_arg<vcl_vector<double> > a_angles("-angles","angles of views (for synthetic data)");
+  static   vul_arg<std::vector<double> > a_angles("-angles","angles of views (for synthetic data)");
 
   static   vul_arg<bool> a_perturb_camera("-perturb_camera", "perturb camera for synthetic data. -synthetic_x must be set.", false);
   static   vul_arg<bool> a_write_perturb_camera("-write_perturb_camera", "write perturbed cameras", false);
@@ -139,17 +139,17 @@ initialize(int argc, char ** argv)
   static   vul_arg<double> a_err_pos("-err_pos", "localization error range", 2);
   static   vul_arg<bool> a_remove_epitangency("-no_epitangency",false);
 
-  static   vul_arg<vcl_string> a_fname_id("-fname_id","special name part to be included in filename (e.g. PID)","");
+  static   vul_arg<std::string> a_fname_id("-fname_id","special name part to be included in filename (e.g. PID)","");
 
-  static   vul_arg<vcl_string> a_simulation_type("-simulation_type","simulation name to be run: band_stat or epi_gain","");
-  static   vul_arg<vcl_string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
+  static   vul_arg<std::string> a_simulation_type("-simulation_type","simulation name to be run: band_stat or epi_gain","");
+  static   vul_arg<std::string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
   static   vul_arg<unsigned> a_max_nviews("-max_nviews","maximum number of views to be considered by the #tuplets test",2);
 
   vul_arg_parse(argc,argv);
-  vcl_cout << "Fname id: " << a_fname_id() << vcl_endl;
-  vcl_cout << "Filenames: \n";
-  print_value(vcl_cout, a_fnames);
-  vcl_cout << vcl_endl;
+  std::cout << "Fname id: " << a_fname_id() << std::endl;
+  std::cout << "Filenames: \n";
+  print_value(std::cout, a_fnames);
+  std::cout << std::endl;
 
   args.set(
     a_prefix, 
@@ -205,10 +205,10 @@ initialize(int argc, char ** argv)
 
 /*
 static bool
-direct_ntuplet_test(mw_stereo_app_args &args, const vcl_vector<double> &all_angles, vcl_vector<double> *n_of_tuplets,bool verbose);
+direct_ntuplet_test(mw_stereo_app_args &args, const std::vector<double> &all_angles, std::vector<double> *n_of_tuplets,bool verbose);
 
 bool
-direct_ntuplet_test(mw_stereo_app_args &args, const vcl_vector<double> &all_angles, vcl_vector<double> *n_of_tuplets,bool verbose)
+direct_ntuplet_test(mw_stereo_app_args &args, const std::vector<double> &all_angles, std::vector<double> *n_of_tuplets,bool verbose)
 {
   args.angles->value_.clear();
   args.angles->value_.push_back(all_angles[0]);
@@ -224,9 +224,9 @@ direct_ntuplet_test(mw_stereo_app_args &args, const vcl_vector<double> &all_angl
 
     n_of_tuplets->push_back(ntup);
     if (verbose) {
-      vcl_cout << "-----------------------------------------------------\n" << vcl_endl;
-      vcl_cout << "Number of tuplets: "  << ntup << vcl_endl;
-      vcl_cout << "=====================================================\n" << vcl_endl;
+      std::cout << "-----------------------------------------------------\n" << std::endl;
+      std::cout << "Number of tuplets: "  << ntup << std::endl;
+      std::cout << "=====================================================\n" << std::endl;
     }
   }
   return true;
@@ -235,10 +235,10 @@ direct_ntuplet_test(mw_stereo_app_args &args, const vcl_vector<double> &all_angl
 
 bool mw_stereo_experiments_app::
 ntuplet_test_avg(
-    vcl_vector<double> *min_ntup,
-    vcl_vector<double> *max_ntup,
-    vcl_vector<double> *med_ntup,
-    vcl_vector<double> *avg_ntup,
+    std::vector<double> *min_ntup,
+    std::vector<double> *max_ntup,
+    std::vector<double> *med_ntup,
+    std::vector<double> *avg_ntup,
     bool verbose)
 {
 
@@ -257,9 +257,9 @@ ntuplet_test_avg(
     assert (max_nviews <= args.angles->value_.size());
   }
 
-  vcl_vector<vcl_string> all_fnames; 
-  vcl_vector<vcl_string> all_edgel_fnames;
-  vcl_vector<double> all_angles;
+  std::vector<std::string> all_fnames; 
+  std::vector<std::string> all_edgel_fnames;
+  std::vector<double> all_angles;
 
   if (real_data) {
     all_fnames = args.fnames->value_;
@@ -270,7 +270,7 @@ ntuplet_test_avg(
   }
 
   //: maximum number of tuplets to consider for statistics
-  vcl_vector<unsigned> n_stat(max_nviews+20,1);
+  std::vector<unsigned> n_stat(max_nviews+20,1);
 
   n_stat[1] = 5; // max pairs
   n_stat[2] = 3; // max triplets 
@@ -288,11 +288,11 @@ ntuplet_test_avg(
 
   for (unsigned n_v=2; n_v <= max_nviews; ++n_v) {
     if (verbose) {
-      vcl_cout << "===================================\n";
-      vcl_cout << "Doing ntuplets size: " << n_v << vcl_endl;
-      vcl_cout << "-----------------------------------\n";
+      std::cout << "===================================\n";
+      std::cout << "Doing ntuplets size: " << n_v << std::endl;
+      std::cout << "-----------------------------------\n";
     }
-    vcl_vector<double> ntup_nv;
+    std::vector<double> ntup_nv;
 
     for (unsigned i=0; i <= max_nviews-n_v && i < n_stat[n_v-1]; ++i) {
 
@@ -329,33 +329,33 @@ ntuplet_test_avg(
 }
 
 void mw_stereo_experiments_app::
-run_ntuplet_test_avg(vcl_string fname_part)
+run_ntuplet_test_avg(std::string fname_part)
 {
-  vcl_string fname(fname_part + vcl_string(".txt"));
+  std::string fname(fname_part + std::string(".txt"));
 
-  vcl_vector<double> max_ntup,min_ntup,med_ntup,avg_ntup;
+  std::vector<double> max_ntup,min_ntup,med_ntup,avg_ntup;
 
   bool ret = ntuplet_test_avg(&min_ntup, &max_ntup, &med_ntup, &avg_ntup, true);
   TEST("Terminated ok?",ret,true);
 
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("min") + fname;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("min") + fname;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,min_ntup);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("max") + fname;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("max") + fname;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,max_ntup);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("med") + fname;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("med") + fname;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,med_ntup);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("avg") + fname;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("avg") + fname;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,avg_ntup);
   }
 }
@@ -364,7 +364,7 @@ run_ntuplet_test_avg(vcl_string fname_part)
 bool mw_stereo_experiments_app::
 band_statistics()
 {
-  vcl_string fname_id(args.fname_id->value_);
+  std::string fname_id(args.fname_id->value_);
   args.compute_epipolars->value_ = true;
   args.symmetric_n->value_ = true;
 
@@ -372,19 +372,19 @@ band_statistics()
 
 //  {
 //  args.angles->parse(&a);
-//  vcl_vector<double>   all_angles;
+//  std::vector<double>   all_angles;
 //  all_angles = args.angles->value_;
 
-//  args.precomputed_epip->value_ = vcl_string(a) + vcl_string("-tst.corresp");
+//  args.precomputed_epip->value_ = std::string(a) + std::string("-tst.corresp");
 
-//  vcl_string fname(a);
-//  vcl_string ext(".txt");
-//  fname = args.out_path->value_ + vcl_string("ntups-digicam_turntable-") + vcl_string("err_pos_") + vcl_string(pval) + vcl_string("-angles_") + fname + ext;
-//  vcl_vector<double> n_of_tuplets;
+//  std::string fname(a);
+//  std::string ext(".txt");
+//  fname = args.out_path->value_ + std::string("ntups-digicam_turntable-") + std::string("err_pos_") + std::string(pval) + std::string("-angles_") + fname + ext;
+//  std::vector<double> n_of_tuplets;
 //  bool ret=direct_ntuplet_test(args,all_angles,&n_of_tuplets,/*verbose*/ true);
 //  TEST("Terminated ok?",ret,true);
 
-//  vcl_cout << "Writing " << fname << vcl_endl;
+//  std::cout << "Writing " << fname << std::endl;
 //  mywrite_ascii(fname,n_of_tuplets);
 //  }
 
@@ -392,9 +392,9 @@ band_statistics()
 //  char *a = "0,30,60,90,120,150,15,75";
 //  args.angles->parse(&a);
 
-//  vcl_string fname_part(a);
-//  vcl_string ext(".txt");
-//  fname_part = vcl_string("ntups-digicam_turntable-") + vcl_string("err_pos_") + vcl_string(pval) + vcl_string("-angles_") + fname_part + ext;
+//  std::string fname_part(a);
+//  std::string ext(".txt");
+//  fname_part = std::string("ntups-digicam_turntable-") + std::string("err_pos_") + std::string(pval) + std::string("-angles_") + fname_part + ext;
   run_ntuplet_test_avg(fname_id);
 
   // A permutation
@@ -402,19 +402,19 @@ band_statistics()
 //  char *a = "120,30,60,90,0";
 //  {
 //  args.angles->parse(&a);
-//  vcl_vector<double>   all_angles;
+//  std::vector<double>   all_angles;
 //  all_angles = args.angles->value_;
 
-//  args.precomputed_epip->value_ = vcl_string(a) + vcl_string("-tst.corresp");
+//  args.precomputed_epip->value_ = std::string(a) + std::string("-tst.corresp");
 
-//  vcl_string fname(a);
-//  vcl_string ext(".txt");
-//  fname = args.out_path->value_ + vcl_string("digicam_turntable-") + vcl_string("err_pos_") + vcl_string(pval) + vcl_string("-angles_") + fname + ext;
-//  vcl_vector<double> n_of_tuplets;
+//  std::string fname(a);
+//  std::string ext(".txt");
+//  fname = args.out_path->value_ + std::string("digicam_turntable-") + std::string("err_pos_") + std::string(pval) + std::string("-angles_") + fname + ext;
+//  std::vector<double> n_of_tuplets;
 //  bool ret=direct_ntuplet_test(args,all_angles,&n_of_tuplets,/*verbose*/ true);
 //  TEST("Terminated ok?",ret,true);
 
-//  vcl_cout << "Writing " << fname << vcl_endl;
+//  std::cout << "Writing " << fname << std::endl;
 //  mywrite_ascii(fname,n_of_tuplets);
 //  }
 
@@ -438,7 +438,7 @@ gain_in_epipolar()
   bool ret = app.init(args);
   if (!ret) return false; 
 
-  vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms_lst;
+  std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms_lst;
 
 
   fms_lst.resize(app.nviews_);
@@ -451,7 +451,7 @@ gain_in_epipolar()
     }
   }
 
-  vcl_vector <vsol_box_2d_sptr> bbox_lst(app.nviews_);
+  std::vector <vsol_box_2d_sptr> bbox_lst(app.nviews_);
 
   unsigned total_npts=0;
   for (unsigned i=0; i < app.nviews_; ++i) {
@@ -462,23 +462,23 @@ gain_in_epipolar()
 
 
   if (verbose)
-    vcl_cout << "Done getting bounding box and computing fmatrices\n";
+    std::cout << "Done getting bounding box and computing fmatrices\n";
 
 
   unsigned const max_nviews = app.nviews_;
 
-  vcl_vector<double> max_gain, min_gain, med_gain, avg_gain;
+  std::vector<double> max_gain, min_gain, med_gain, avg_gain;
   for (unsigned n_v=2; n_v <=max_nviews; ++n_v) {
     if (verbose) {
-      vcl_cout << "===================================\n";
-      vcl_cout << "Computing gain in epipolar for #views = " << n_v << vcl_endl;
-      vcl_cout << "-----------------------------------\n";
+      std::cout << "===================================\n";
+      std::cout << "Computing gain in epipolar for #views = " << n_v << std::endl;
+      std::cout << "-----------------------------------\n";
     }
 
-    vcl_vector< vcl_vector<becld_epiband *> > epband;
-    vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
-    vcl_vector< vcl_vector<vsol_point_2d_sptr> > vsols;
-    vcl_vector <vsol_box_2d_sptr> bbox;
+    std::vector< std::vector<becld_epiband *> > epband;
+    std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms;
+    std::vector< std::vector<vsol_point_2d_sptr> > vsols;
+    std::vector <vsol_box_2d_sptr> bbox;
 
     vsols.resize(n_v);
     fms.resize(n_v);
@@ -489,11 +489,11 @@ gain_in_epipolar()
       fms[i].resize(n_v);
     }
 
-    vcl_vector<double> gain;
+    std::vector<double> gain;
     gain.reserve(total_npts*n_v*n_v*(max_nviews-n_v+1));
 
-    vcl_vector<vsol_point_2d_sptr> specified_pts;
-    vcl_vector<bool> is_specified;
+    std::vector<vsol_point_2d_sptr> specified_pts;
+    std::vector<bool> is_specified;
 
     specified_pts.resize(n_v);
     is_specified.resize(n_v,false);
@@ -537,33 +537,33 @@ gain_in_epipolar()
 
   // write to file
 
-  vcl_string fname_id(args.fname_id->value_ + vcl_string(".txt"));
+  std::string fname_id(args.fname_id->value_ + std::string(".txt"));
 
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("min-gain") + fname_id;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("min-gain") + fname_id;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,min_gain);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("max-gain") + fname_id;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("max-gain") + fname_id;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,max_gain);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("med-gain") + fname_id;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("med-gain") + fname_id;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,med_gain);
   }
   {
-  vcl_string fname_tmp  = args.out_path->value_ + vcl_string("avg-gain") + fname_id;
-  vcl_cout << "Writing " << fname_tmp << vcl_endl;
+  std::string fname_tmp  = args.out_path->value_ + std::string("avg-gain") + fname_id;
+  std::cout << "Writing " << fname_tmp << std::endl;
   mywrite_ascii(fname_tmp,avg_gain);
   }
   return true;
 }
 
 
-//: \param[in] is_specified: just a vcl_vector that must be resized to n_v. It is not
+//: \param[in] is_specified: just a std::vector that must be resized to n_v. It is not
 // input nor output.
 // \param[in] specified_pts: similar
 //
@@ -571,27 +571,27 @@ gain_in_epipolar()
 void mw_stereo_experiments_app::
 gain_in_epipolar_for_exactly_nviews(
   unsigned n_v,
-  vcl_vector<bool> &is_specified,
-  vcl_vector<vsol_point_2d_sptr> &specified_pts,
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > &vsols,
-  vcl_vector< vcl_vector<becld_epiband *> > &epband,
-  const vcl_vector <vsol_box_2d_sptr> &bbox,
-  const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
+  std::vector<bool> &is_specified,
+  std::vector<vsol_point_2d_sptr> &specified_pts,
+  std::vector<std::vector<vsol_point_2d_sptr> > &vsols,
+  std::vector< std::vector<becld_epiband *> > &epband,
+  const std::vector <vsol_box_2d_sptr> &bbox,
+  const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm,
   double err_pos,
-  vcl_vector<double> &gain
+  std::vector<double> &gain
 )
 {
   for (unsigned iv=0 ; iv<n_v; ++iv) {
 #ifdef DEBUG
     bool verbose=true;
     if (verbose)
-      vcl_cout << "View FROM : " << iv << vcl_endl;
+      std::cout << "View FROM : " << iv << std::endl;
 #endif
     is_specified[iv] = true;
     for (unsigned k_pts = 0; k_pts < vsols[iv].size(); ++k_pts) {
 #ifdef DEBUG
       if (verbose)
-        vcl_cout << "  pt #" << k_pts << vcl_endl;
+        std::cout << "  pt #" << k_pts << std::endl;
 #endif
 
       specified_pts[iv] = vsols[iv][k_pts];
@@ -618,11 +618,11 @@ gain_in_epipolar_for_exactly_nviews(
         double area_new = epband[m][m]->area();
 #ifdef DEBUG
         if (verbose) {
-          vcl_cout 
+          std::cout 
             << "      View TO: " << m
             << " area_normal: " << area_normal
             << " area_new: " << area_new ;
-          vcl_cout.flush();
+          std::cout.flush();
         }
 #endif
 
@@ -637,8 +637,8 @@ gain_in_epipolar_for_exactly_nviews(
 
 #ifdef DEBUG
         if (verbose) {
-            vcl_cout << " gain: " << thisgain
-            << vcl_endl;
+            std::cout << " gain: " << thisgain
+            << std::endl;
         }
 #endif
       }

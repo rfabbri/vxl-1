@@ -1,7 +1,7 @@
 // This is brcv/shp/dbsk2d/tests/test_ishock_belm.cxx
 
 #include <testlib/testlib_test.h>
-#include <vcl_map.h>
+#include <map>
 
 #include <dbsk2d/dbsk2d_ishock_belm.h>
 #include <dbsk2d/dbsk2d_ishock_bpoint.h>
@@ -40,18 +40,18 @@ void test_all_belm_classes()
   dbsk2d_ishock_bnd_key key6(0.2,dbsk2d_ishock_bnd_key::LEFTCONTACT);
 
   //a map similar to the bnd_ishock_map for testing
-  vcl_multimap<dbsk2d_ishock_bnd_key, int> test_map;
+  std::multimap<dbsk2d_ishock_bnd_key, int> test_map;
 
   //insert the keys into the map
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key1, 1));
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key2, 2));
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key3, 3));
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key4, 4));
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key5, 5));
-  test_map.insert(vcl_pair<dbsk2d_ishock_bnd_key, int>(key6, 6));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key1, 1));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key2, 2));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key3, 3));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key4, 4));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key5, 5));
+  test_map.insert(std::pair<dbsk2d_ishock_bnd_key, int>(key6, 6));
 
   int id[6]; //array to store ids on the keys as they appear on the map
-  vcl_multimap<dbsk2d_ishock_bnd_key, int>::iterator k_it = test_map.begin();
+  std::multimap<dbsk2d_ishock_bnd_key, int>::iterator k_it = test_map.begin();
   for(int i=0; k_it!=test_map.end(); ++k_it, ++i)
     id[i]=k_it->second;
 

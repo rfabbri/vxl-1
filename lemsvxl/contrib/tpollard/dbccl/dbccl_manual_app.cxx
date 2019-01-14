@@ -1,9 +1,9 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include<vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
+#include<cstdio>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_polygon.h>
@@ -18,18 +18,18 @@
 //-------------------------------------------
 int main( int argc, char* argv[] )
 {  
-  vcl_string world_points_file( "D:\\images_multiview\\plasticville\\points.txt" );
-  vcl_string image_points_file( "D:\\images_multiview\\plasticville/sunseq/020_image_pts.txt" );
-  vcl_string camera_file( "D:\\images_multiview\\plasticville/sunseq/020_cameras.txt" );
-  vcl_string refined_world_points_file( "D:\\images_multiview\\plasticville/sunseq/ERROR.txt" );
+  std::string world_points_file( "D:\\images_multiview\\plasticville\\points.txt" );
+  std::string image_points_file( "D:\\images_multiview\\plasticville/sunseq/020_image_pts.txt" );
+  std::string camera_file( "D:\\images_multiview\\plasticville/sunseq/020_cameras.txt" );
+  std::string refined_world_points_file( "D:\\images_multiview\\plasticville/sunseq/ERROR.txt" );
   int num_cameras = 8;
   bool known_calibration = false;
   vpgl_calibration_matrix<double> K( 2100, vgl_point_2d<double>( 640, 360 ) );
   bool bundle_adjust = false;
 
   // Read the world points.
-  vcl_vector<vgl_point_3d<double> > world_points;
-  vcl_ifstream wpsifs( world_points_file.c_str() );
+  std::vector<vgl_point_3d<double> > world_points;
+  std::ifstream wpsifs( world_points_file.c_str() );
   vul_awk wps( wpsifs );
   while( wps ){
     world_points.push_back( vgl_point_3d<double>(
@@ -57,9 +57,9 @@ int main( int argc, char* argv[] )
   }
 
   // Read the image_points
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_vector<vcl_vector<bool> > mask( num_cameras, vcl_vector<bool>(num_world_points,true) );
-  vcl_ifstream ipsifs( image_points_file.c_str() );
+  std::vector<vgl_point_2d<double> > image_points;
+  std::vector<std::vector<bool> > mask( num_cameras, std::vector<bool>(num_world_points,true) );
+  std::ifstream ipsifs( image_points_file.c_str() );
   vul_awk ips( ipsifs );
   for( int c = 0; c < num_cameras; c++ ){
     for( int wp = 0; wp < num_world_points; wp++ ){
@@ -73,15 +73,15 @@ int main( int argc, char* argv[] )
   }
 
   // Get a initial set of cameras.
-  vcl_ofstream cofs( camera_file.c_str() );
-  vcl_vector<vpgl_perspective_camera<double> > cameras;
-  vcl_vector<vpgl_proj_camera<double> > cameras_proj;
+  std::ofstream cofs( camera_file.c_str() );
+  std::vector<vpgl_perspective_camera<double> > cameras;
+  std::vector<vpgl_proj_camera<double> > cameras_proj;
   for( int c = 0; c < num_cameras; c++ ){
     
     // Get a crude camera with its own calibration matrix.
     vpgl_proj_camera<double> this_cam;
-    vcl_vector<vgl_point_2d<double> > these_image_points;
-    vcl_vector<vgl_point_3d<double> > these_world_points;
+    std::vector<vgl_point_2d<double> > these_image_points;
+    std::vector<vgl_point_3d<double> > these_world_points;
     for( int dp = 0; dp < num_world_points; dp++ ){
       if( mask[c][dp] == false ) 
         continue;
@@ -97,7 +97,7 @@ int main( int argc, char* argv[] )
 
     // Get a better initial camera with the known calibration.
     if( known_calibration ){
-      vcl_vector< vgl_homg_point_3d<double> > these_world_points_h;
+      std::vector< vgl_homg_point_3d<double> > these_world_points_h;
       for( int p =0; p < these_world_points.size(); p++ )
         these_world_points_h.push_back( vgl_homg_point_3d<double>( these_world_points[p] ) );
       this_cam_perspective.set_calibration( K );
@@ -118,14 +118,14 @@ int main( int argc, char* argv[] )
         vgl_homg_point_3d<double>( world_points[wp] ) );
       vgl_point_2d<double> proj_wp( proj_wp_h.x()/proj_wp_h.w(), proj_wp_h.y()/proj_wp_h.w() );
       float this_error = vgl_distance( proj_wp, image_points[num_world_points*c+wp] );
-      vcl_cerr << this_error << ' ';
+      std::cerr << this_error << ' ';
     }
-    vcl_cerr << "\n\n";
+    std::cerr << "\n\n";
   }
 
   // Optimize the cameras and world points if needed.
   if( bundle_adjust ){
-    vcl_vector< vgl_point_2d<double> > exp_img_points;
+    std::vector< vgl_point_2d<double> > exp_img_points;
     for( int c = 0; c < num_cameras; c++ ){
       for( int dp = 0; dp < num_world_points; dp++ ){
         if( mask[c][dp] == false ) 
@@ -149,7 +149,7 @@ int main( int argc, char* argv[] )
   scale_matrix(2,3) = -mean_wp.z()/wp_scale;
   scale_matrix(3,3) = 1.0;
 
-  vcl_vector< vpgl_proj_camera<double> > final_cameras;
+  std::vector< vpgl_proj_camera<double> > final_cameras;
   for( int c = 0; c < num_cameras; c++ )
     final_cameras.push_back( vpgl_proj_camera<double>( 
       cameras[c].get_matrix()*scale_matrix ) );
@@ -161,9 +161,9 @@ int main( int argc, char* argv[] )
         vgl_homg_point_3d<double>( world_points[wp] ) );
       vgl_point_2d<double> proj_wp( proj_wp_h.x()/proj_wp_h.w(), proj_wp_h.y()/proj_wp_h.w() );
       float this_error = vgl_distance( proj_wp, image_points[num_world_points*c+wp] );
-      vcl_cerr << this_error << ' ';
+      std::cerr << this_error << ' ';
     }
-    vcl_cerr << "\n\n";
+    std::cerr << "\n\n";
   }
 
   // Write to file.
@@ -173,7 +173,7 @@ int main( int argc, char* argv[] )
   }
   
   if( bundle_adjust ){
-    vcl_ofstream wpofs( refined_world_points_file.c_str() );
+    std::ofstream wpofs( refined_world_points_file.c_str() );
     for( int wp = 0; wp < num_world_points; wp++ )
       wpofs << world_points[wp].x() << ' ' << world_points[wp].y() << ' ' << world_points[wp].z() << '\n';
   }
@@ -185,14 +185,14 @@ int main( int argc, char* argv[] )
 //-------------------------------------------
 int main( int argc, char* argv[] )
 {  
-  vcl_string world_points_file( "D:\\images_multiview\\plasticville\\points.txt" );
-  vcl_string image_points_file( "D:\\images_multiview\\plasticville/sunseq/160_image_pts.txt" );
-  vcl_string camera_file( "D:\\images_multiview\\plasticville/sunseq/160_cameras.txt" );
+  std::string world_points_file( "D:\\images_multiview\\plasticville\\points.txt" );
+  std::string image_points_file( "D:\\images_multiview\\plasticville/sunseq/160_image_pts.txt" );
+  std::string camera_file( "D:\\images_multiview\\plasticville/sunseq/160_cameras.txt" );
   int num_cameras = 8;
 
   // Read the world points.
-  vcl_vector<vgl_point_3d<double> > world_points;
-  vcl_ifstream wpsifs( world_points_file.c_str() );
+  std::vector<vgl_point_3d<double> > world_points;
+  std::ifstream wpsifs( world_points_file.c_str() );
   vul_awk wps( wpsifs );
   while( wps ){
     world_points.push_back( vgl_point_3d<double>(
@@ -202,9 +202,9 @@ int main( int argc, char* argv[] )
   int num_world_points = world_points.size();
 
   // Read the image_points
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_vector<vcl_vector<bool> > mask( num_cameras, vcl_vector<bool>(num_world_points,true) );
-  vcl_ifstream ipsifs( image_points_file.c_str() );
+  std::vector<vgl_point_2d<double> > image_points;
+  std::vector<std::vector<bool> > mask( num_cameras, std::vector<bool>(num_world_points,true) );
+  std::ifstream ipsifs( image_points_file.c_str() );
   vul_awk ips( ipsifs );
   for( int c = 0; c < num_cameras; c++ ){
     for( int wp = 0; wp < num_world_points; wp++ ){
@@ -218,12 +218,12 @@ int main( int argc, char* argv[] )
   }
 
   // Compute cameras.
-  vcl_vector<vpgl_proj_camera<double> > cameras;
+  std::vector<vpgl_proj_camera<double> > cameras;
   for( int c = 0; c < num_cameras; c++ ){
 
     vpgl_proj_camera<double> this_cam;
-    vcl_vector<vgl_point_2d<double> > these_image_points;
-    vcl_vector<vgl_point_3d<double> > these_world_points;
+    std::vector<vgl_point_2d<double> > these_image_points;
+    std::vector<vgl_point_3d<double> > these_world_points;
     for( int dp = 0; dp < num_world_points; dp++ ){
       if( mask[c][dp] == false ) 
         continue;
@@ -242,13 +242,13 @@ int main( int argc, char* argv[] )
         vgl_homg_point_3d<double>( world_points[wp] ) );
       vgl_point_2d<double> proj_wp( proj_wp_h.x()/proj_wp_h.w(), proj_wp_h.y()/proj_wp_h.w() );
       float this_error = vgl_distance( proj_wp, image_points[num_world_points*c+wp] );
-      vcl_cerr << proj_wp << ' ' << this_error << '\n';
+      std::cerr << proj_wp << ' ' << this_error << '\n';
     }
-    vcl_cerr << "\n\n";
+    std::cerr << "\n\n";
   }
 
   // Write to file.
-  vcl_ofstream cofs( camera_file.c_str() );
+  std::ofstream cofs( camera_file.c_str() );
   for( int c = 0; c < num_cameras; c++ )
     cofs << "FRAME " << c << '\n' << cameras[c].get_matrix() << '\n';
   

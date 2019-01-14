@@ -23,7 +23,7 @@
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_cross.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
 
@@ -40,19 +40,19 @@ test_point_reconstruct()
 {
    vgl_homg_point_2d<double> p1,p2,p3;
  
-   vcl_string fname1("curr/p1010049.jpg");
-   vcl_string fname2("curr/p1010053.jpg");
-   vcl_string fname3("curr/p1010069.jpg");
+   std::string fname1("curr/p1010049.jpg");
+   std::string fname2("curr/p1010053.jpg");
+   std::string fname3("curr/p1010069.jpg");
    // Reading cameras
    vpgl_perspective_camera <double> Pr1,Pr2,Pr3;
  
    if (!read_cam(fname1,fname2,&Pr1,&Pr2)) {
-      vcl_cerr << "epip_interactive: error reading cam\n";
+      std::cerr << "epip_interactive: error reading cam\n";
       return;
    }
  
    if (!read_cam(fname3,&Pr3)) {
-      vcl_cerr << "epip_interactive: error reading cam\n";
+      std::cerr << "epip_interactive: error reading cam\n";
       return;
    }
  
@@ -68,7 +68,7 @@ test_point_reconstruct()
    p2.set(1895,307);
  
    p3 = mw_epipolar_point_transfer(p1,p2,f13,f23);
-   vcl_cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
+   std::cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  std::endl;
  
  
    // Now do by least squares and compare:
@@ -79,14 +79,14 @@ test_point_reconstruct()
  
    Pr1.get_rotation_matrix().get(&Rc);
  
-   vcl_cout << "Rotation:\n" << Rc;
+   std::cout << "Rotation:\n" << Rc;
  
    // transpose and reduce to 3x3:
    for (unsigned i=0; i<3; ++i) for (unsigned j=0; j<3; ++j) {
       Rcs(i,j) = Rc(i,j);
       Rct(i,j) = Rc(j,i);
    }
-   vcl_cout << "Rotation transposed 3x3 :\n" << Rct;
+   std::cout << "Rotation transposed 3x3 :\n" << Rct;
  
  
    //
@@ -104,11 +104,11 @@ test_point_reconstruct()
  
  
    e11 = Rct*e11_cam;
-   vcl_cout << "E11:\n" << e11  << vcl_endl;
+   std::cout << "E11:\n" << e11  << std::endl;
    e12 = Rct*e12_cam;
-   vcl_cout << "E12:\n" << e12  << vcl_endl;
+   std::cout << "E12:\n" << e12  << std::endl;
    e13 = F1 = Rct*e13_cam;
-   vcl_cout << "E13:\n" << e13  << vcl_endl;
+   std::cout << "E13:\n" << e13  << std::endl;
  
    double x_scale, y_scale, u, v;
  
@@ -135,7 +135,7 @@ test_point_reconstruct()
    double d=vgl_homg_operators_3d<double>::perp_dist_squared(ray1,w_origin);
    
    // test distance of (0,0,0) to line
-   vcl_cout << "Distance: " << d << vcl_endl;
+   std::cout << "Distance: " << d << std::endl;
  
    //
    // Camera 2 : translate things to 3D common coordinate system
@@ -145,12 +145,12 @@ test_point_reconstruct()
  
    Pr2.get_rotation_matrix().get(&Rc2);
  
-   vcl_cout << "Rotation2:\n" << Rc2;
+   std::cout << "Rotation2:\n" << Rc2;
  
    // transpose and reduce to 3x3:
    for (unsigned i=0; i<3; ++i) for (unsigned j=0; j<3; ++j)
       Rct2(i,j) = Rc2(j,i);
-   vcl_cout << "Rotation transposed 3x3  2 :\n" << Rct2;
+   std::cout << "Rotation transposed 3x3  2 :\n" << Rct2;
  
    vgl_point_3d<double> c2_pt = Pr2.get_camera_center();
  
@@ -162,11 +162,11 @@ test_point_reconstruct()
       e21_cam(1,0,0), e22_cam(0,1,0), e23_cam(0,0,1);
  
    e21 = Rct2*e21_cam;
-   vcl_cout << "E11:\n" << e21  << vcl_endl;
+   std::cout << "E11:\n" << e21  << std::endl;
    e22 = Rct2*e22_cam;
-   vcl_cout << "E12:\n" << e22  << vcl_endl;
+   std::cout << "E12:\n" << e22  << std::endl;
    e23 = F2 = Rct2*e23_cam;
-   vcl_cout << "E13:\n" << e23  << vcl_endl;
+   std::cout << "E13:\n" << e23  << std::endl;
  
    x_scale = Pr2.get_calibration().x_scale();
    y_scale = Pr2.get_calibration().y_scale();
@@ -189,12 +189,12 @@ test_point_reconstruct()
    d=vgl_homg_operators_3d<double>::perp_dist_squared(ray2,w_origin);
    
    // test distance of (0,0,0) to line
-   vcl_cout << "Distance 2: " << d << vcl_endl;
+   std::cout << "Distance 2: " << d << std::endl;
  
-   vcl_cout << "====================================" << vcl_endl;
+   std::cout << "====================================" << std::endl;
  
-   vcl_cout << "Gama1:\n" << gama1 << "\nGama2: \n" <<  gama2 << vcl_endl
-            << "c1:\n " << c1 << "\nc2:\n" << c2 << vcl_endl;
+   std::cout << "Gama1:\n" << gama1 << "\nGama2: \n" <<  gama2 << std::endl
+            << "c1:\n " << c1 << "\nc2:\n" << c2 << std::endl;
  
    // Least squares reconstr.
    vnl_matrix_fixed<double,3,2> A;
@@ -208,22 +208,22 @@ test_point_reconstruct()
    vnl_svd<double> svd(A);
    vnl_vector<double> lambda = svd.solve(c2-c1);
  
-   vcl_cout << "Lambda:\n" << lambda << vcl_endl;
-   vcl_cout << "Norm: " << svd.norm() << vcl_endl
-      << "Mynorm2:" << (A*lambda +c1 - c2).two_norm() << vcl_endl;
+   std::cout << "Lambda:\n" << lambda << std::endl;
+   std::cout << "Norm: " << svd.norm() << std::endl
+      << "Mynorm2:" << (A*lambda +c1 - c2).two_norm() << std::endl;
  
  
    mw_vector_3d Cpt_v = c1 + lambda(0)*gama1;
    vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
-   vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
+   std::cout << "Reconstructed point: " << Cpt << std::endl;
  
    // Project to 3rd:
    vgl_homg_point_2d<double> p3_lsqr; 
  
    p3_lsqr = Pr3.project(Cpt);
-   vcl_cout << "Tranferred origin to 3rd view: \n" 
-      "Least squares: " << p3_lsqr.x()/p3_lsqr.w() << " " << p3_lsqr.y()/p3_lsqr.w() << vcl_endl
-   << "Epip Transfer: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
+   std::cout << "Tranferred origin to 3rd view: \n" 
+      "Least squares: " << p3_lsqr.x()/p3_lsqr.w() << " " << p3_lsqr.y()/p3_lsqr.w() << std::endl
+   << "Epip Transfer: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  std::endl;
  
    //=========== Tangents
  
@@ -234,38 +234,38 @@ test_point_reconstruct()
    mw_vector_2d t1_img;
  
    t1 = T - dot_product(T, F1)*gama1;
-   vcl_cout << "t1: " << t1 << vcl_endl;
+   std::cout << "t1: " << t1 << std::endl;
  
    t1_cam = Rcs * t1; // 3rd component now 0
  
-   vcl_cout << "t1_cam: " << t1_cam << vcl_endl;
-   vcl_cout << "x,y scales: " << x_scale << " " << y_scale << vcl_endl;
+   std::cout << "t1_cam: " << t1_cam << std::endl;
+   std::cout << "x,y scales: " << x_scale << " " << y_scale << std::endl;
  
 
    t1_img[0] = t1_cam[0]*x_scale;
    t1_img[1] = t1_cam[1]*y_scale;
    t1_img.normalize();
  
-   vcl_cout << "t1_img: " << t1_img << vcl_endl;
+   std::cout << "t1_img: " << t1_img << std::endl;
  
-   vcl_cout << "p1: " << p1 << vcl_endl;
+   std::cout << "p1: " << p1 << std::endl;
  
-   vcl_cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << vcl_endl;
+   std::cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << std::endl;
  
-   vcl_cout << "================= Project point test: =======================" << vcl_endl;
+   std::cout << "================= Project point test: =======================" << std::endl;
  
    vgl_homg_point_3d<double> orig(0,0,0), other(53.3,0,0);
    vgl_homg_point_2d<double> aux;
  
    aux = Pr1.project(orig);
-   vcl_cout << "Origin in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << vcl_endl;
+   std::cout << "Origin in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << std::endl;
  
    aux = Pr1.project(other);
-   vcl_cout << "Other in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << vcl_endl;
+   std::cout << "Other in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << std::endl;
  
  
-   vcl_cout << "\n\n\n";
-   vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
+   std::cout << "\n\n\n";
+   std::cout << "================= Tangent reconstruction: =======================" << std::endl;
  
    // Camera 1:
    mw_vector_3d t1_cam_bkwd;
@@ -290,12 +290,12 @@ test_point_reconstruct()
  
    t2_world_bkwd = Rct2*t2_cam_bkwd;
  
-   vcl_cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << vcl_endl << vcl_endl;
-   vcl_cout << "Test t1 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << vcl_endl << vcl_endl;
+   std::cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << std::endl << std::endl;
+   std::cout << "Test t1 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << std::endl << std::endl;
  
    T_rec = vnl_cross_3d( vnl_cross_3d(t1_world_bkwd,gama1), vnl_cross_3d(t2_world_bkwd,gama2) );
  
-   vcl_cout << "T reconstructed: \n" << T_rec << vcl_endl;
+   std::cout << "T reconstructed: \n" << T_rec << std::endl;
 }
 
 
@@ -307,7 +307,7 @@ example_project()
    double t,theta, step=1;
    
    double sz=360/step;
-   vcl_vector< vgl_homg_point_3d<double> > Ps;
+   std::vector< vgl_homg_point_3d<double> > Ps;
    Ps.reserve((int) sz);
       
    for (theta=0; theta<360-step; theta+=step) {
@@ -331,11 +331,11 @@ example_project()
 
    for (int i=0; i<Ps.size(); ++i) {
       vgl_point_2d<double> gama = P.project(Ps[i]);
-      vcl_cout << gama << vcl_endl;
+      std::cout << gama << std::endl;
    }
 
 
-   vcl_cout << "Done!" << vcl_endl;
+   std::cout << "Done!" << std::endl;
 }
 
 // Calls process on a filename, without dialog
@@ -344,16 +344,16 @@ call_show_contours_process(char *fname)
 {
    bpro1_process_sptr pro= MANAGER->process_manager()->get_process_by_name("Show Contours");
 
-   vcl_set<bpro1_storage_sptr> modified;
+   std::set<bpro1_storage_sptr> modified;
 
    // set the parameter
-   vcl_string sfname(fname);
+   std::string sfname(fname);
    bpro1_filepath fp(sfname);
-   vcl_string pname("-image_filename");
+   std::string pname("-image_filename");
    pro->parameters()->set_value(pname,fp);
-   vcl_cout << sfname << vcl_endl;
+   std::cout << sfname << std::endl;
 
-   vcl_vector<vcl_string> out_name(pro->output_names());
+   std::vector<std::string> out_name(pro->output_names());
    out_name.push_back("image0");
    pro->set_output_names(out_name);
 
@@ -361,7 +361,7 @@ call_show_contours_process(char *fname)
    MANAGER->process_manager()->run_process_on_current_frame(pro, &modified);
 
    // update the display for any modified storage objects
-   for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+   for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
          itr != modified.end(); ++itr ) {
      bvis1_manager::instance()->add_to_display(*itr);
    }
@@ -375,8 +375,8 @@ void
 test_point_reconstruct_rig()
 {
  
-   vcl_string fname1("curr/p1010049.jpg");
-   vcl_string fname2("curr/p1010053.jpg");
+   std::string fname1("curr/p1010049.jpg");
+   std::string fname2("curr/p1010053.jpg");
 
    mw_rig rig;
    rig.read(fname1,fname2);
@@ -400,7 +400,7 @@ test_point_reconstruct_rig()
    mw_vector_3d Cpt_v;
    rig.reconstruct_point_lsqr(gama1,gama2,&Cpt_v);
 
-   vcl_cout << "Reconstructed point: " << Cpt_v << vcl_endl;
+   std::cout << "Reconstructed point: " << Cpt_v << std::endl;
 
 
    // Forward tangent projection
@@ -416,11 +416,11 @@ test_point_reconstruct_rig()
    double x,y;
    rig.world_to_img1_vector(t1, &t1_img[0],&t1_img[1]);
 
-   vcl_cout << "t1_img: " << t1_img << vcl_endl;
+   std::cout << "t1_img: " << t1_img << std::endl;
  
-   vcl_cout << "p1: " << p1 << vcl_endl;
+   std::cout << "p1: " << p1 << std::endl;
  
-   vcl_cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << vcl_endl;
+   std::cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << std::endl;
    
    /*
 
@@ -433,6 +433,6 @@ test_point_reconstruct_rig()
 
    rig.reconstruct_tangent(gama1,gama2,t1,t2, &T_rec);
 
-   vcl_cout << "T reconstructed: \n" << T_rec << vcl_endl;
+   std::cout << "T reconstructed: \n" << T_rec << std::endl;
    */
 }

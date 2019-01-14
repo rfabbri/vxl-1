@@ -29,7 +29,7 @@ vgl_vector_3d<unsigned> dbrec3d_test_utils::world_dim_(2,2,2); //number of block
 void dbrec3d_test_utils::init_tree(boct_tree<short,bsta_num_obs<bsta_gauss_sf1> > *tree, unsigned i)
 {
   tree-> split(); //now we have 8 cells
-  vcl_vector<boct_tree_cell<short,bsta_num_obs<bsta_gauss_sf1> >*> leaves = tree->leaf_cells();
+  std::vector<boct_tree_cell<short,bsta_num_obs<bsta_gauss_sf1> >*> leaves = tree->leaf_cells();
   leaves[i]->set_data(bsta_num_obs<bsta_gauss_sf1>(bsta_gauss_sf1(0.9f, 0.04f)));
   leaves[i]->split();
 }
@@ -40,7 +40,7 @@ boxm_scene<boct_tree<short, bsta_num_obs<bsta_gauss_sf1> > >* dbrec3d_test_utils
   unsigned int init_level = 1;
   boxm_scene<boct_tree<short, bsta_num_obs<bsta_gauss_sf1> > > *scene = 
   new boxm_scene<boct_tree<short, bsta_num_obs<bsta_gauss_sf1> > >(lvcs_, origin_, block_dim_, world_dim_, max_tree_level, init_level );
-  vcl_string scene_path("./");
+  std::string scene_path("./");
   scene->set_paths(scene_path, "test_scene");
   
   unsigned cell_index = 7;
@@ -80,7 +80,7 @@ void dbrec3d_test_utils::clean_up()
 
 
 //: creates a scene, runs a kernel and returns the id of the context containing non-maximally suppressed parts
-int dbrec3d_test_utils::find_primitive_parts(bvpl_kernel_sptr kernel_sptr, vcl_string part_scene_path)
+int dbrec3d_test_utils::find_primitive_parts(bvpl_kernel_sptr kernel_sptr, std::string part_scene_path)
 {
   //create scene
   boxm_scene<boct_tree<short, bsta_num_obs<bsta_gauss_sf1> > > *scene = create_scene();
@@ -136,7 +136,7 @@ int dbrec3d_test_utils::find_primitive_parts(bvpl_kernel_sptr kernel_sptr, vcl_s
       boct_tree_cell<short,dbrec3d_part_instance > *cell = *iterator;
       
       if(cell->data().type_id() >=0)
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << vcl_endl;
+        std::cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << std::endl;
 
       ++iterator;
     }
@@ -155,7 +155,7 @@ int dbrec3d_test_utils::find_primitive_pairs()
   kernels_3d.set_angle(0.0f);
   bvpl_kernel_sptr kernel1 = new bvpl_kernel(kernels_3d.create());
   kernel1->print();
-  vcl_string scene_path = "part1_scene";
+  std::string scene_path = "part1_scene";
   int context_id1 = dbrec3d_test_utils::find_primitive_parts(kernel1,scene_path );
   
   DATABASE->print();
@@ -190,7 +190,7 @@ int dbrec3d_test_utils::find_primitive_pairs()
   vnl_float_3 aux_axis;
   vgl_rotation_3d<float> pair_geometry = compositor.compute_rotation(part1->axis(), part1->aux_axis(), part2->axis(), part2->aux_axis(), aux_axis);
   
-  vcl_vector<int> children;
+  std::vector<int> children;
   children.push_back(part1->type_id());
   children.push_back(part2->type_id());
   float max_azimuthal=0; float min_azimuthal=0; float max_polar=0; float min_polar=0;
@@ -210,7 +210,7 @@ int dbrec3d_test_utils::find_primitive_pairs()
   boxm_scene<boct_tree<short, dbrec3d_pair_composite_instance > > *composition_scene = new boxm_scene<boct_tree<short, dbrec3d_pair_composite_instance > >(dbrec3d_test_utils::lvcs_, dbrec3d_test_utils::origin_, 
                                                                                                                                                            dbrec3d_test_utils::block_dim_, dbrec3d_test_utils::world_dim_,
                                                                                                                                                            max_level, init_level);
-  vcl_string parts_scene_path("./");
+  std::string parts_scene_path("./");
   composition_scene->set_paths("./", "composition_scene");
   composition_scene->set_appearance_model(DBREC3D_PAIR_COMPOSITE_INSTANCE);
   composition_scene->write_scene("dbrec3d_composition_scene.xml");

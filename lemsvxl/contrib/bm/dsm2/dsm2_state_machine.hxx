@@ -14,7 +14,7 @@ void dsm2_state_machine<nodeT, transitionT>::b_write( vsl_b_ostream& os ) const
 	//write the number of nodes
 	vsl_b_write(os, this->graph.size());
 
-	vcl_map<unsigned, dsm2_node_base_sptr>::const_iterator
+	std::map<unsigned, dsm2_node_base_sptr>::const_iterator
 		g_itr, g_end = this->graph.end();
 
 	for( g_itr = this->graph.begin(); g_itr != g_end;
@@ -45,10 +45,10 @@ void dsm2_state_machine<nodeT, transitionT>::b_read( vsl_b_istream& is )
 	case 1:
 		{
 			//read number of nodes
-			vcl_size_t nnodes;
+			std::size_t nnodes;
 			vsl_b_read(is, nnodes);
 
-			for( vcl_size_t n = 0; n < nnodes; ++n )
+			for( std::size_t n = 0; n < nnodes; ++n )
 			{
 				//read the id
 				unsigned id;
@@ -71,7 +71,7 @@ void dsm2_state_machine<nodeT, transitionT>::b_read( vsl_b_istream& is )
 		}//end case 1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm2_state_machine::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm2_state_machine::b_read() -- unknown version number." << std::flush;
 			return;
 		}//end default
 	}//end switch(v)
@@ -85,9 +85,9 @@ dsm2_state_machine<nodeT, transitionT>::graph_type::iterator
 {
 	dsm2_node_base_sptr node_sptr = new nodeT();
 
-	vcl_pair<graph_type::iterator,bool> ret;
+	std::pair<graph_type::iterator,bool> ret;
 
-	ret = this->graph.insert(vcl_pair<unsigned, dsm2_node_base_sptr>(
+	ret = this->graph.insert(std::pair<unsigned, dsm2_node_base_sptr>(
 								this->next_node_id++,node_sptr) );
 
 	

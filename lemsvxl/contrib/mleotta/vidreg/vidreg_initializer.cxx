@@ -5,7 +5,7 @@
 
 
 #include "vidreg_initializer.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_double_2.h>
 #include <rgrl/rgrl_view.h>
 #include <rgrl/rgrl_feature.h>
@@ -17,8 +17,8 @@
 
 
 //: Constructor
-vidreg_initializer::vidreg_initializer(const vcl_vector<rgrl_feature_sptr>& fixed,
-                                       const vcl_vector<rgrl_feature_sptr>& moving,
+vidreg_initializer::vidreg_initializer(const std::vector<rgrl_feature_sptr>& fixed,
+                                       const std::vector<rgrl_feature_sptr>& moving,
                                        rgrl_view_sptr view)
   : prior_view_(view)
 {
@@ -27,14 +27,14 @@ vidreg_initializer::vidreg_initializer(const vcl_vector<rgrl_feature_sptr>& fixe
 
   DebugMacro(  1, "fixed size: "<<fixed.size()<<"  moving size: "<<moving.size()<<'\n' );
 
-  vcl_vector<rgrl_feature_sptr> fixed_sorted(fixed);
-  vcl_sort(fixed_sorted.begin(), fixed_sorted.end(),
+  std::vector<rgrl_feature_sptr> fixed_sorted(fixed);
+  std::sort(fixed_sorted.begin(), fixed_sorted.end(),
            vidreg_feature_pt_desc::dec_mag_order);
 
 
-  typedef vcl_vector<rgrl_feature_sptr>::const_iterator Fitr;
+  typedef std::vector<rgrl_feature_sptr>::const_iterator Fitr;
   // build the BBF search tree
-  vcl_vector<vnl_vector_fixed<double,128> > descriptors;
+  std::vector<vnl_vector_fixed<double,128> > descriptors;
   for(Fitr i=fixed_sorted.begin(); i!=fixed_sorted.end(); ++i){
     vidreg_feature_pt_desc* curr_pt = rgrl_cast<vidreg_feature_pt_desc*>(*i);
     if(curr_pt->descriptor().size() == 128)
@@ -51,20 +51,20 @@ vidreg_initializer::vidreg_initializer(const vcl_vector<rgrl_feature_sptr>& fixe
       continue;
 
     //find the two closest matches
-    vcl_vector<int> matches;
+    std::vector<int> matches;
     bbf_tree.n_nearest(curr_pt->descriptor(), matches, 2, 50);
     vidreg_feature_pt_desc* m0 = rgrl_cast<vidreg_feature_pt_desc*>(fixed_sorted[matches[0]]);
     vidreg_feature_pt_desc* m1 = rgrl_cast<vidreg_feature_pt_desc*>(fixed_sorted[matches[1]]);
     double distance2 = vnl_vector_ssd(curr_pt->descriptor(),m0->descriptor());
     double next_distance2 = vnl_vector_ssd(curr_pt->descriptor(),m1->descriptor());
     if( distance2 < next_distance2*0.64){
-      double dist = vcl_sqrt(distance2);
-      double ratio = vcl_sqrt(next_distance2)/dist;
+      double dist = std::sqrt(distance2);
+      double ratio = std::sqrt(next_distance2)/dist;
       matches_.push_back(new match(curr_pt,m0,dist,ratio));
     }
   }
-  vcl_deque<match*>::iterator mid = matches_.begin() + matches_.size()/2;
-  vcl_partial_sort(matches_.begin(), mid, matches_.end(), match_dist_less);
+  std::deque<match*>::iterator mid = matches_.begin() + matches_.size()/2;
+  std::partial_sort(matches_.begin(), mid, matches_.end(), match_dist_less);
   while(matches_.end() != mid){
     delete matches_.back();
     matches_.pop_back();
@@ -78,7 +78,7 @@ vidreg_initializer::vidreg_initializer(const vcl_vector<rgrl_feature_sptr>& fixe
 //: Destructor
 vidreg_initializer::~vidreg_initializer()
 {
-  for(vcl_deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
+  for(std::deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
     delete *i;
 }
 
@@ -137,7 +137,7 @@ vidreg_initializer::remove_covered_matches(const rgrl_match_set_sptr& covered_se
   typedef rgrl_match_set::from_iterator  from_iter;
   typedef from_iter::to_iterator         to_iter;
 
-  for(vcl_deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
+  for(std::deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
   {
     const rgrl_feature_sptr& from_feature = (*i)->from;
     const rgrl_feature_sptr& to_feature = (*i)->to;
@@ -160,7 +160,7 @@ vidreg_initializer::remove_covered_matches(const rgrl_match_set_sptr& covered_se
       matches_.erase((--i)+1);
     }
   }
-  vcl_cout << "Remaining Matches: "<<matches_.size() <<vcl_endl;
+  std::cout << "Remaining Matches: "<<matches_.size() <<std::endl;
 }
 
 
@@ -168,8 +168,8 @@ vidreg_initializer::remove_covered_matches(const rgrl_match_set_sptr& covered_se
 void
 vidreg_initializer::remove_covered_matches(const rgrl_transformation& xform, double thresh)
 {
-  vcl_deque<match*> new_matches;
-  for(vcl_deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
+  std::deque<match*> new_matches;
+  for(std::deque<match*>::iterator i=matches_.begin(); i != matches_.end(); ++i)
   {
     rgrl_feature_sptr xformed_from = (*i)->from->transform(xform);
     assert(xformed_from);
@@ -181,7 +181,7 @@ vidreg_initializer::remove_covered_matches(const rgrl_transformation& xform, dou
       new_matches.push_back(*i);
   }
   matches_ = new_matches;
-  vcl_cout << "Remaining Matches: "<<matches_.size() <<vcl_endl;
+  std::cout << "Remaining Matches: "<<matches_.size() <<std::endl;
 }
 
 

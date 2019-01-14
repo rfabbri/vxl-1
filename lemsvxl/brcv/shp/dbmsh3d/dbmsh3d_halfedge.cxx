@@ -110,7 +110,7 @@ unsigned int count_HEs_in_next_loop (const dbmsh3d_halfedge* headHE)
   return count;
 }
 
-void get_HEvec_next_chain (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_halfedge*>& HEvec)
+void get_HEvec_next_chain (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_halfedge*>& HEvec)
 {
   HEvec.clear();
   if (headHE == NULL)
@@ -128,7 +128,7 @@ void get_HEvec_next_chain (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_ha
   while (HE != headHE);
 }
 
-void get_HEset_next_chain (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_halfedge*>& HEset)
+void get_HEset_next_chain (const dbmsh3d_halfedge* headHE, std::set<dbmsh3d_halfedge*>& HEset)
 {
   HEset.clear();
   if (headHE == NULL)
@@ -146,7 +146,7 @@ void get_HEset_next_chain (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_halfe
   while (HE != headHE);
 }
 
-void get_HEvec_pair_chain (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_halfedge*>& HEvec)
+void get_HEvec_pair_chain (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_halfedge*>& HEvec)
 {
   HEvec.clear();
   if (headHE == NULL)

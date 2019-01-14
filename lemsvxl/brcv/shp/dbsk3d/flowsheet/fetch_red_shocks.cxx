@@ -12,7 +12,7 @@
  *
 \*------------------------------------------------------------*/
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include "fetch_red_shocks.h"
@@ -492,7 +492,7 @@ SetValidVertices(ShockVertex *pShocks, ShockScaffold *pScaffold,
    pShockData = NULL;
    if((pShockData = (ShockData*)
        calloc(1, sizeof(ShockData))) == NULL) {
-      vul_printf (vcl_cout, "ERROR(%s): CALLOC fails on pShockData[1].\n",
+      vul_printf (std::cout, "ERROR(%s): CALLOC fails on pShockData[1].\n",
               pcFName);
       exit(-4); 
    }
@@ -562,7 +562,7 @@ SetValidVertices(ShockVertex *pShocks, ShockScaffold *pScaffold,
       iGreenD = pNewRed->iGreen[3] = pRed->iGreen[3];
       
       if (!GetQuadCoordOfVertex(pInData, pRed, pShockData)) {
-         vul_printf (vcl_cout, "\tWARNING(%s): Quad coords failed on Red shock %d\n",
+         vul_printf (std::cout, "\tWARNING(%s): Quad coords failed on Red shock %d\n",
                   pcFName, i);
          continue;
       }
@@ -585,7 +585,7 @@ SetValidVertices(ShockVertex *pShocks, ShockScaffold *pScaffold,
          iMax = 1 + iNumProxiA * 2;
          if ((pDataA->piRedList = (int *) realloc((int *) pDataA->piRedList,
                iMax * sizeof(int))) == NULL) {
-           vul_printf (vcl_cout,
+           vul_printf (std::cout,
                    "ERROR(%s): ReAlloc on pDataA(%d)->piRedList[%d].\n",
                    pcFName, iGeneA, iMax);
            return(FALSE); 
@@ -601,7 +601,7 @@ SetValidVertices(ShockVertex *pShocks, ShockScaffold *pScaffold,
          iMax = 1 + iNumProxiB * 2;
          if((pDataB->piRedList = (int *) realloc((int *) pDataB->piRedList,
                iMax * sizeof(int))) == NULL) {
-           vul_printf (vcl_cout,
+           vul_printf (std::cout,
                    "ERROR(%s): ReAlloc on pDataB(%d)->piRedList[%d].\n",
                    pcFName, iGeneB, iMax);
            return(FALSE); 

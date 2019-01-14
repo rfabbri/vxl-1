@@ -16,8 +16,8 @@
 //
 
 #include <rec/dbvxm_part_base.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <rec/dbvxm_part_gaussian_sptr.h>
 
 #include <vnl/vnl_vector_fixed.h>
@@ -38,10 +38,10 @@ public:
   virtual vnl_vector_fixed<float,2> direction_vector(void);  // return a unit vector that gives direction of this instance in the image
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const
+  virtual void print_summary(std::ostream &os) const
   {
-    os << "x: " << x_ << " y: " << y_ << " strength: " << strength_ << vcl_endl;
-    os << "lambda0: " << lambda0_ << " lambda1: " << lambda1_ << " theta: " << theta_ << vcl_endl;
+    os << "x: " << x_ << " y: " << y_ << " strength: " << strength_ << std::endl;
+    os << "lambda0: " << lambda0_ << " lambda1: " << lambda1_ << " theta: " << theta_ << std::endl;
   }
 
   virtual dbvxm_part_gaussian* cast_to_gaussian(void);
@@ -55,6 +55,6 @@ public:
 
 //strength_threshold in [0,1] - min strength to declare the part as detected
 //: extracts only one type of primitive and adds to the part vector
-bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float strength_threshold, unsigned type, vcl_vector<dbvxm_part_instance_sptr>& parts);
+bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float strength_threshold, unsigned type, std::vector<dbvxm_part_instance_sptr>& parts);
 
 #endif  // dbvxm_part_gaussian_h_

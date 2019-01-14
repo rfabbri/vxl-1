@@ -15,7 +15,7 @@
 #include <vgui/vgui_command.h>
 #include <vgui/vgui_menu.h>
 #include <vgui/vgui_dialog.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <bil/algo/bil_harr_wavelet_transform.h>
 
@@ -64,7 +64,7 @@ dbbgm_distribution_image_tableau::
 
 //-----------------------------------------------------------------------------
 
-vcl_string
+std::string
 dbbgm_distribution_image_tableau::
 type_name() const
 {
@@ -274,16 +274,16 @@ class dbbgm_fail_color_command : public vgui_command
    
   void execute()
   {
-    vcl_stringstream color_istm;
+    std::stringstream color_istm;
     color_istm << tab_->fail_color_[0]<<' '
                << tab_->fail_color_[1]<<' '
                << tab_->fail_color_[2];
-    vcl_string color = color_istm.str();
+    std::string color = color_istm.str();
     vgui_dialog color_dlg("Select the Failure Color");
     color_dlg.inline_color("Failure Color", color);
     if(!color_dlg.ask())
       return;
-    vcl_stringstream color_ostm;
+    std::stringstream color_ostm;
     color_ostm << color;
     color_ostm >> tab_->fail_color_[0]
                >> tab_->fail_color_[1]
@@ -328,7 +328,7 @@ make_functor_menu(const dbbgm_distribution_image_tableau_sptr& tab,
     f_menu.separator();
     vgui_menu ind_menu;
     for(unsigned int i=0; i<10; ++i){
-      vcl_stringstream num;
+      std::stringstream num;
       if(i==tab->active_idx())
         num << "("<<i<<")";
       else
@@ -364,7 +364,7 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
     functor_menu.separator();
     functor_menu.add("failure color", new dbbgm_fail_color_command(this));
     
-    vcl_string check = (color_space_YUV_)?"[x]":"[ ]";
+    std::string check = (color_space_YUV_)?"[x]":"[ ]";
     functor_menu.add(check+" display YUV", new dbbgm_yuv_command(this));
     menu.add("Distribution Image", functor_menu); 
   }

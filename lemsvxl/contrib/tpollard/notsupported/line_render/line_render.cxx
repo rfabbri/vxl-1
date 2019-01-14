@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 
 #include "line_scene.h"
 
@@ -12,8 +12,8 @@ int main( int argc, char* argv[] )
 {
   line_scene scene;
   create_2_box_scene( &scene );
-  vcl_string image_file1( "c:\\rotation.tif" );
-  vcl_string image_file2( "c:\\fullview.tif" );
+  std::string image_file1( "c:\\rotation.tif" );
+  std::string image_file2( "c:\\fullview.tif" );
   scene.render_2d_scene( image_file2 );
   scene.render_arc( image_file1, 0, 360, 30 );
   return 0;

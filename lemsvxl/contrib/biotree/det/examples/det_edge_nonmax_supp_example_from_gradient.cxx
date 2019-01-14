@@ -7,10 +7,12 @@
 // \author  Can Aras (can@lems.brown.edu)
 // \date    2006-01-26
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
-#include <vcl_new.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
+#include <vcl_compiler.h>
+#include <iostream>
+#include <new>
 
 #include <xmvg/xmvg_composite_filter_descriptor.h>
 #include <det/det_cylinder_map.h>
@@ -40,7 +42,7 @@
 int main(int argc, char *argv[])
 {
   if(argc < 9){
-    vcl_cout << "Usage: "<< argv[0] << "filename_base dimx dimy num_files xmargin ymargin zmargin out_file\n";
+    std::cout << "Usage: "<< argv[0] << "filename_base dimx dimy num_files xmargin ymargin zmargin out_file\n";
     return 1;
   }
 
@@ -60,7 +62,7 @@ int main(int argc, char *argv[])
   // initialize bgui_3d
 //  bgui3d_init();
 
-  vcl_string filename_base = argv[1];
+  std::string filename_base = argv[1];
   int dimx = atoi(argv[2]);
   int dimy = atoi(argv[3]);
   int dimz = atoi(argv[4]);
@@ -104,8 +106,8 @@ int main(int argc, char *argv[])
   {
     char buffer[1024];
     // if the images are of different format, change the sprintf below
-    vcl_sprintf(buffer, "%s%03d.tif",filename_base.data(), k);
-    vcl_cout << buffer << vcl_endl;
+    std::sprintf(buffer, "%s%03d.tif",filename_base.data(), k);
+    std::cout << buffer << std::endl;
     vil_image_view<vil_rgb<vxl_byte> > img;
     vil_image_view<vxl_byte> grey_img;
     img = vil_convert_to_component_order( vil_convert_to_n_planes(3,vil_convert_cast(vxl_byte(),vil_load(buffer))));
@@ -127,15 +129,15 @@ int main(int argc, char *argv[])
     {
       for(int z = -offset; z <= offset; z++)
       {
-        gauss_x[x+offset][y+offset][z+offset] = (x/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_y[x+offset][y+offset][z+offset] = (y/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_z[x+offset][y+offset][z+offset] = (z/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_x[x+offset][y+offset][z+offset] = (x/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_y[x+offset][y+offset][z+offset] = (y/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_z[x+offset][y+offset][z+offset] = (z/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
       }
     }
   }
@@ -143,7 +145,7 @@ int main(int argc, char *argv[])
   // convolve the image with the Gaussian edge detector kernels
   for(int z=0; z<dimz; z++)
   {
-    vcl_cout << "processing slice " << z+1 << " of " << dimz << " slices for gradient" << vcl_endl;
+    std::cout << "processing slice " << z+1 << " of " << dimz << " slices for gradient" << std::endl;
     for(int y=0; y<dimy; y++)
     {
       for(int x=0; x<dimx; x++)
@@ -173,41 +175,41 @@ int main(int argc, char *argv[])
     }
   }
 
-  /*FILE *fp = vcl_fopen("F:\\MyDocs\\Temp\\imgx.pgm","w");
-  vcl_fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
+  /*FILE *fp = std::fopen("F:\\MyDocs\\Temp\\imgx.pgm","w");
+  std::fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
   for(int j=0; j<dimy; j++)
   {
     for(int i=0; i<dimx; i++)
     {
-      vcl_fprintf(fp,"%d ", int(vcl_abs(grad_x[i][j][10])));
+      std::fprintf(fp,"%d ", int(std::abs(grad_x[i][j][10])));
     }
-    vcl_fprintf(fp,"\n");
+    std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 
-  fp = vcl_fopen("F:\\MyDocs\\Temp\\imgy.pgm","w");
-  vcl_fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
+  fp = std::fopen("F:\\MyDocs\\Temp\\imgy.pgm","w");
+  std::fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
   for(int j=0; j<dimy; j++)
   {
     for(int i=0; i<dimx; i++)
     {
-      vcl_fprintf(fp,"%d ", int(vcl_abs(grad_y[i][j][10])));
+      std::fprintf(fp,"%d ", int(std::abs(grad_y[i][j][10])));
     }
-    vcl_fprintf(fp,"\n");
+    std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 
-  fp = vcl_fopen("F:\\MyDocs\\Temp\\imgz.pgm","w");
-  vcl_fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
+  fp = std::fopen("F:\\MyDocs\\Temp\\imgz.pgm","w");
+  std::fprintf(fp,"P2\n%d %d\n%d\n", dimx, dimy, 255);
   for(int j=0; j<dimy; j++)
   {
     for(int i=0; i<dimx; i++)
     {
-      vcl_fprintf(fp,"%d ", int(vcl_abs(grad_x[i][j][10])));
+      std::fprintf(fp,"%d ", int(std::abs(grad_x[i][j][10])));
     }
-    vcl_fprintf(fp,"\n");
+    std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 
   det_edge_map cm(dimx, dimy, dimz, grad_x, grad_y, grad_z);
   cm = cm.nonmaxium_suppression_for_edge_detection();
@@ -227,7 +229,7 @@ int main(int argc, char *argv[])
   }
 
   double threshold = maximum_strength / 3;
-  FILE *fp = vcl_fopen(o_file, "w");
+  FILE *fp = std::fopen(o_file, "w");
   for(int k=0;k<dimz;k++)
   {
     for(int j=0;j<dimy;j++)
@@ -235,11 +237,11 @@ int main(int argc, char *argv[])
       for(int i=0;i<dimx;i++)
       {
         if(cm[i][j][k].strength_ != 0)
-          vcl_fprintf(fp, "%d %d %d %f %f %f %f\n",
+          std::fprintf(fp, "%d %d %d %f %f %f %f\n",
           i, j, k, cm[i][j][k].location_.x(), cm[i][j][k].location_.y(), cm[i][j][k].location_.z(), cm[i][j][k].strength_);
       }
     }
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
   return 0;
 }

@@ -16,9 +16,9 @@
 
 #include <bxml/bxml_read.h>
 #include <vsol/vsol_box_2d.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <string>
+#include <map>
+#include <utility>
 
 
 //: Form Composite Graph algorithm
@@ -29,7 +29,7 @@ public:
 
     //: Constructor
     dbskfg_detect_fragments
-        ( vcl_string input_match_file);
+        ( std::string input_match_file);
 
     //: Destructor
     ~dbskfg_detect_fragments();
@@ -43,7 +43,7 @@ public:
 private:
 
     //: Load match file
-    void load_match_file(vcl_string input_sim_matrix);
+    void load_match_file(std::string input_sim_matrix);
 
     //: Load bounding boxes
     void load_bbox(const bxml_data_sptr& root_xml);
@@ -52,11 +52,11 @@ private:
     void load_matrix(const bxml_data_sptr& root_xml);
 
     //: Keep a map of each row
-    vcl_map<unsigned int,vcl_vector<vcl_pair<double,unsigned int> > > 
+    std::map<unsigned int,std::vector<std::pair<double,unsigned int> > > 
         sim_matrix_;
 
     //: Keep all bounding boxes in another file
-    vcl_map<unsigned int,vsol_box_2d> bbox_;
+    std::map<unsigned int,vsol_box_2d> bbox_;
 
     // Make copy ctor private
     dbskfg_detect_fragments(const dbskfg_detect_fragments&);

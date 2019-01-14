@@ -15,9 +15,9 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_queue.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <queue>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_halfedge.h>
@@ -27,17 +27,17 @@
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/dbmsh3d_hypg.h>
 
-void dbmsh3d_sheet::get_F_set (vcl_set<dbmsh3d_face*>& F_set, const bool skip_shared_F)
+void dbmsh3d_sheet::get_F_set (std::set<dbmsh3d_face*>& F_set, const bool skip_shared_F)
 {
   if (skip_shared_F == false) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
     for (; it != facemap_.end(); it++) {
       dbmsh3d_face* F = (*it).second;
       F_set.insert (F);
     }
   }
   else {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
     for (; it != facemap_.end(); it++) {
       dbmsh3d_face* F = (*it).second;
       if (is_F_shared (F) == false)
@@ -46,17 +46,17 @@ void dbmsh3d_sheet::get_F_set (vcl_set<dbmsh3d_face*>& F_set, const bool skip_sh
   }
 }
 
-void dbmsh3d_sheet::get_fine_scale_vertices (vcl_map<int, dbmsh3d_vertex*>& V_map)
+void dbmsh3d_sheet::get_fine_scale_vertices (std::map<int, dbmsh3d_vertex*>& V_map)
 {
   //Put all vertices of this sheet into a map.
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
-    vcl_vector<dbmsh3d_vertex*> vertices; 
+    std::vector<dbmsh3d_vertex*> vertices; 
     F->get_bnd_Vs (vertices);
     for (unsigned int i=0; i<vertices.size(); i++) {
       dbmsh3d_vertex* V = vertices[i];
-      V_map.insert (vcl_pair<int, dbmsh3d_vertex*> (V->id(), V));
+      V_map.insert (std::pair<int, dbmsh3d_vertex*> (V->id(), V));
     }
   }
 }
@@ -79,7 +79,7 @@ dbmsh3d_face* dbmsh3d_sheet::get_1st_F_incident_E (const dbmsh3d_edge* E)
 //: Return the first found F not in inputF_set of this sheet which is incident to E.
 //  Note that there can exist multiple possible F's incident to E.
 dbmsh3d_face* dbmsh3d_sheet::get_1st_F_incident_E2 (const dbmsh3d_edge* E, 
-                                                    vcl_set<dbmsh3d_face*>& inputF_set) 
+                                                    std::set<dbmsh3d_face*>& inputF_set) 
 {
   //Traverse E's incident faces and find in the facemap_[].
   dbmsh3d_halfedge* HE = E->halfedge();
@@ -114,7 +114,7 @@ bool dbmsh3d_sheet::check_non_shared_Fs_connected ()
 
 dbmsh3d_face* dbmsh3d_sheet::get_1st_non_shared_F ()
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     if (is_F_shared (F) == false)
@@ -132,7 +132,7 @@ bool dbmsh3d_sheet::non_shared_Fs_connected (dbmsh3d_face* seedF, const bool v_c
   reset_traverse_F ();
 
   //Propagate labelling from seedF across E's.
-  vcl_set<dbmsh3d_face*> conn_Fset;
+  std::set<dbmsh3d_face*> conn_Fset;
   bool r;
 
   if (v_conn == false) {
@@ -146,7 +146,7 @@ bool dbmsh3d_sheet::non_shared_Fs_connected (dbmsh3d_face* seedF, const bool v_c
     _prop_label_Fs_e_v_conn (seedF, conn_Fset);
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     if (is_F_shared (F))
@@ -164,7 +164,7 @@ bool dbmsh3d_sheet::non_shared_Fs_connected (dbmsh3d_face* seedF, const bool v_c
 
 void dbmsh3d_sheet::reset_traverse_F ()
 {
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     F->set_i_visited (0);
@@ -319,7 +319,7 @@ int dbmsh3d_sheet::find_bnd_IC_HE (const dbmsh3d_edge* inputE, dbmsh3d_halfedge*
   return 0;
 }
 
-void dbmsh3d_sheet::get_incident_Es (vcl_set<dbmsh3d_edge*>& incident_Es) const
+void dbmsh3d_sheet::get_incident_Es (std::set<dbmsh3d_edge*>& incident_Es) const
 {  
   //1) Add each bnd_curve
   dbmsh3d_face::get_bnd_Es (incident_Es);
@@ -331,7 +331,7 @@ void dbmsh3d_sheet::get_incident_Es (vcl_set<dbmsh3d_edge*>& incident_Es) const
   }
 }
 
-void dbmsh3d_sheet::get_incident_Vs (vcl_set<dbmsh3d_vertex*>& incident_Vs) const
+void dbmsh3d_sheet::get_incident_Vs (std::set<dbmsh3d_vertex*>& incident_Vs) const
 {
   assert (incident_Vs.size() == 0);
 
@@ -345,12 +345,12 @@ void dbmsh3d_sheet::get_incident_Vs (vcl_set<dbmsh3d_vertex*>& incident_Vs) cons
   }
 }
 
-void dbmsh3d_sheet::get_incident_Sset_via_C_N (vcl_set<dbmsh3d_sheet*>& incident_Sset) const
+void dbmsh3d_sheet::get_incident_Sset_via_C_N (std::set<dbmsh3d_sheet*>& incident_Sset) const
 {
-  vcl_set<dbmsh3d_edge*> incident_Es;
+  std::set<dbmsh3d_edge*> incident_Es;
   get_incident_Es (incident_Es);
 
-  vcl_set<dbmsh3d_edge*>::iterator eit = incident_Es.begin();
+  std::set<dbmsh3d_edge*>::iterator eit = incident_Es.begin();
   for (; eit != incident_Es.end(); eit++) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) (*eit);
     dbmsh3d_halfedge* HE = C->halfedge();
@@ -362,16 +362,16 @@ void dbmsh3d_sheet::get_incident_Sset_via_C_N (vcl_set<dbmsh3d_sheet*>& incident
     while (HE != C->halfedge() && HE != NULL);
   }
 
-  vcl_set<dbmsh3d_vertex*> incident_Vs;
+  std::set<dbmsh3d_vertex*> incident_Vs;
   get_incident_Vs (incident_Vs);
 
-  vcl_set<dbmsh3d_vertex*>::iterator vit = incident_Vs.begin();
+  std::set<dbmsh3d_vertex*>::iterator vit = incident_Vs.begin();
   for (; vit != incident_Vs.end(); vit++) {
     dbmsh3d_node* N = (dbmsh3d_node*) (*vit);
-    vcl_set<dbmsh3d_face*> faceset;
+    std::set<dbmsh3d_face*> faceset;
     N->get_incident_Fs (faceset);
 
-    vcl_set<dbmsh3d_face*>::iterator fit = faceset.begin();
+    std::set<dbmsh3d_face*>::iterator fit = faceset.begin();
     for (; fit != faceset.end(); fit++) {
       dbmsh3d_sheet* S = (dbmsh3d_sheet*) (*fit);
       incident_Sset.insert (S);
@@ -422,7 +422,7 @@ int dbmsh3d_sheet::n_bnd_IC_chain_E_inc_V (const dbmsh3d_vertex* inputV) const
 }
 
 //: get the set of i-curve pair curves.
-void dbmsh3d_sheet::get_icurve_pairs (vcl_set<dbmsh3d_edge*>& icurves) const
+void dbmsh3d_sheet::get_icurve_pairs (std::set<dbmsh3d_edge*>& icurves) const
 {
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     const dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
@@ -433,7 +433,7 @@ void dbmsh3d_sheet::get_icurve_pairs (vcl_set<dbmsh3d_edge*>& icurves) const
 }
 
 //: get the set of i-curve pair and loops.
-void dbmsh3d_sheet::get_icurves (vcl_set<dbmsh3d_edge*>& icurves) const
+void dbmsh3d_sheet::get_icurves (std::set<dbmsh3d_edge*>& icurves) const
 {
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
@@ -447,12 +447,12 @@ void dbmsh3d_sheet::get_icurves (vcl_set<dbmsh3d_edge*>& icurves) const
 }
 
 //: get the set of fine-scale vertices in i-curve chains.
-void dbmsh3d_sheet::get_icurve_Vset (vcl_set<dbmsh3d_vertex*>& Vset) const
+void dbmsh3d_sheet::get_icurve_Vset (std::set<dbmsh3d_vertex*>& Vset) const
 {
-  vcl_set<dbmsh3d_edge*> icurves;
+  std::set<dbmsh3d_edge*> icurves;
   get_icurves (icurves);
 
-  vcl_set<dbmsh3d_edge*>::iterator it = icurves.begin();
+  std::set<dbmsh3d_edge*>::iterator it = icurves.begin();
   for (; it != icurves.end(); it++) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) (*it);
     C->get_V_set (Vset);
@@ -460,18 +460,18 @@ void dbmsh3d_sheet::get_icurve_Vset (vcl_set<dbmsh3d_vertex*>& Vset) const
 }
 
 //: Return the set of boundary nodes incident to any i-curves chain (pairs or loops).
-void dbmsh3d_sheet::get_bnd_Ns_inc_ICchain (vcl_set<dbmsh3d_vertex*>& bnd_N_set) const
+void dbmsh3d_sheet::get_bnd_Ns_inc_ICchain (std::set<dbmsh3d_vertex*>& bnd_N_set) const
 {
-  vcl_set<dbmsh3d_vertex*> vertices;
+  std::set<dbmsh3d_vertex*> vertices;
   
-  vcl_vector<dbmsh3d_vertex*> V_vec;
+  std::vector<dbmsh3d_vertex*> V_vec;
   _get_Vs_in_chain (halfedge_, V_vec);
   vertices.insert (V_vec.begin(), V_vec.end());
 
-  vcl_set<dbmsh3d_vertex*>::iterator it = vertices.begin();
+  std::set<dbmsh3d_vertex*>::iterator it = vertices.begin();
   for (; it != vertices.end(); it++) {
     dbmsh3d_vertex* V = (*it);
-    vcl_set<dbmsh3d_edge*> ICchains;
+    std::set<dbmsh3d_edge*> ICchains;
     get_ICchains_inc_N (V, ICchains); //get_ICpairs_inc_N
 
     if (ICchains.empty() == false)
@@ -480,15 +480,15 @@ void dbmsh3d_sheet::get_bnd_Ns_inc_ICchain (vcl_set<dbmsh3d_vertex*>& bnd_N_set)
 }
 
 //: Return the set of boundary and icurve-loop nodes incident to any i-curves.
-void dbmsh3d_sheet::get_bnd_iloop_N_icurve (vcl_set<dbmsh3d_vertex*>& bnd_iloop_N_set) const
+void dbmsh3d_sheet::get_bnd_iloop_N_icurve (std::set<dbmsh3d_vertex*>& bnd_iloop_N_set) const
 {
-  vcl_set<dbmsh3d_vertex*> vertices;
+  std::set<dbmsh3d_vertex*> vertices;
   get_bnd_icurveloop_Ns (vertices);
 
-  vcl_set<dbmsh3d_vertex*>::iterator it = vertices.begin();
+  std::set<dbmsh3d_vertex*>::iterator it = vertices.begin();
   for (; it != vertices.end(); it++) {
     dbmsh3d_vertex* V = (*it);
-    vcl_set<dbmsh3d_edge*> ICpairs;
+    std::set<dbmsh3d_edge*> ICpairs;
     get_ICpairs_inc_N (V, ICpairs);
     if (ICpairs.empty() == false)
       bnd_iloop_N_set.insert (V);
@@ -514,7 +514,7 @@ bool dbmsh3d_sheet::Es_in_same_loop (dbmsh3d_edge* E1, dbmsh3d_edge* E2) const
 }
 
 //: get the set of i-curve pair curves incident to N.
-void dbmsh3d_sheet::get_ICpairs_inc_N (const dbmsh3d_vertex* N, vcl_set<dbmsh3d_edge*>& ICpairs) const
+void dbmsh3d_sheet::get_ICpairs_inc_N (const dbmsh3d_vertex* N, std::set<dbmsh3d_edge*>& ICpairs) const
 {
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     const dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
@@ -528,7 +528,7 @@ void dbmsh3d_sheet::get_ICpairs_inc_N (const dbmsh3d_vertex* N, vcl_set<dbmsh3d_
 }
 
 //: get the set of i-curve chain curves incident to N.
-void dbmsh3d_sheet::get_ICchains_inc_N (const dbmsh3d_vertex* N, vcl_set<dbmsh3d_edge*>& ICchains) const
+void dbmsh3d_sheet::get_ICchains_inc_N (const dbmsh3d_vertex* N, std::set<dbmsh3d_edge*>& ICchains) const
 {
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     const dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
@@ -555,7 +555,7 @@ dbmsh3d_curve* dbmsh3d_sheet::get_incident_C_via_E (dbmsh3d_edge* E) const
 }
 
 //: Get all incident MC's shared_Es.
-bool dbmsh3d_sheet::get_incident_C_shared_Es (vcl_set<dbmsh3d_edge*>& shared_Es) const
+bool dbmsh3d_sheet::get_incident_C_shared_Es (std::set<dbmsh3d_edge*>& shared_Es) const
 {
   _get_chain_C_shared_Es (halfedge_, shared_Es);
 
@@ -587,9 +587,9 @@ dbmsh3d_curve* dbmsh3d_sheet::find_next_bnd_C (const dbmsh3d_node* inputN,
   return NULL;
 }
 
-void dbmsh3d_sheet::get_bnd_icurveloop_Ns (vcl_set<dbmsh3d_vertex*>& N_set) const
+void dbmsh3d_sheet::get_bnd_icurveloop_Ns (std::set<dbmsh3d_vertex*>& N_set) const
 {
-  vcl_vector<dbmsh3d_vertex*> V_vec;
+  std::vector<dbmsh3d_vertex*> V_vec;
   _get_Vs_in_chain (halfedge_, V_vec);
   N_set.insert (V_vec.begin(), V_vec.end());
 
@@ -606,7 +606,7 @@ void dbmsh3d_sheet::get_bnd_icurveloop_Ns (vcl_set<dbmsh3d_vertex*>& N_set) cons
 //Find any duplicate E from icurve-pair in bnd-chain or icurve-loop.
 dbmsh3d_halfedge* dbmsh3d_sheet::_find_dup_Es_icurve_pair () const
 {
-  vcl_set<dbmsh3d_edge*> icurve_pair_Es;
+  std::set<dbmsh3d_edge*> icurve_pair_Es;
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     const dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
     if (is_icurve_pair_HE (headHE)) {
@@ -705,7 +705,7 @@ dbmsh3d_face* dbmsh3d_sheet::get_corner_F (const dbmsh3d_curve* C1, const dbmsh3
 //: Return the first found otherC of this sheet incident to N via F 
 //  with a constraint that F != inputF in the input set.
 dbmsh3d_curve* dbmsh3d_sheet::get_1st_other_C_via_F2 (const dbmsh3d_curve* inputC, const dbmsh3d_node* N,
-                                                      vcl_set<dbmsh3d_face*>& inputF_set)
+                                                      std::set<dbmsh3d_face*>& inputF_set)
 {
   dbmsh3d_edge* E = inputC->get_E_incident_N (N);
   assert (E);
@@ -747,7 +747,7 @@ bool dbmsh3d_sheet::fine_scale_E_incident (const dbmsh3d_edge* E)
 }
 
 bool dbmsh3d_sheet::find_bnd_chain (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV, 
-                                    vcl_vector<dbmsh3d_halfedge*>& HEvec)
+                                    std::vector<dbmsh3d_halfedge*>& HEvec)
 {
   if (_find_in_chain (halfedge_, sV, eV, HEvec))
     return true;
@@ -764,13 +764,13 @@ bool dbmsh3d_sheet::find_bnd_chain (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV,
 }
 
 //: Return true if all shared_F[] are with one of the given set of S's.
-bool dbmsh3d_sheet::shared_F_with_Sset (vcl_set<dbmsh3d_sheet*>& shared_F_Sset) const
+bool dbmsh3d_sheet::shared_F_with_Sset (std::set<dbmsh3d_sheet*>& shared_F_Sset) const
 {
   //Loop through each shared_E of MC and try to remove isolated entry from other curves.
   for (dbmsh3d_ptr_node* cur = shared_F_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_face* F = (dbmsh3d_face*) cur->ptr();
     bool F_in_Sset = false;
-    vcl_set<dbmsh3d_sheet*>::iterator it = shared_F_Sset.begin();
+    std::set<dbmsh3d_sheet*>::iterator it = shared_F_Sset.begin();
     for (; it != shared_F_Sset.end(); it++) {
       dbmsh3d_sheet* S = (*it);
       if (S->is_F_shared (F))
@@ -1005,7 +1005,7 @@ dbmsh3d_halfedge* dbmsh3d_sheet::connect_icurve_pair_E (dbmsh3d_edge* E)
 }
 
 //: Connect a loop of edges as a internal curve chain (1-incidence).
-void dbmsh3d_sheet::connect_icurve_loop_Es (vcl_vector<dbmsh3d_edge*>& icurve_loop_Es)
+void dbmsh3d_sheet::connect_icurve_loop_Es (std::vector<dbmsh3d_edge*>& icurve_loop_Es)
 {
   bool result = _verify_loop_bnd_Es (icurve_loop_Es);
   assert (result);
@@ -1203,7 +1203,7 @@ bool dbmsh3d_sheet::_fix_bnd_icurve_pair ()
   //Swap the bnd_chain with the longest icurve-loop.
   dbmsh3d_ptr_node* icurve_loop_ptr = _find_1st_icurve_loop();
   if (icurve_loop_ptr == NULL) {
-    vul_printf (vcl_cout, "_fix_bnd_icurve_pair() error!\n");
+    vul_printf (std::cout, "_fix_bnd_icurve_pair() error!\n");
     assert (0);
     return false;
   }
@@ -1226,7 +1226,7 @@ bool dbmsh3d_sheet::_fix_bnd_icurve_pair ()
     return true;
   }
 
-  vul_printf (vcl_cout, "_fix_bnd_icurve_pair() error!\n");
+  vul_printf (std::cout, "_fix_bnd_icurve_pair() error!\n");
   assert (0);
   return false;*/
 }
@@ -1314,12 +1314,12 @@ bool dbmsh3d_sheet::detect_fix_2_suc_Es (const dbmsh3d_halfedge* headHE)
       if (headHE == HE2 || headHE == HE3) {
         //Move the chain of HE1 to a new i-curve chain.
         add_icurve_chain_HE (HE1);
-        vul_printf (vcl_cout, "S%d: E%d HE-pair to i-curve, ", id_, HE1->edge()->id());
+        vul_printf (std::cout, "S%d: E%d HE-pair to i-curve, ", id_, HE1->edge()->id());
       }
       else {
         //Move the chain of HE2 and HE3 to a new i-curve chain.
         add_icurve_chain_HE (HE2);
-        vul_printf (vcl_cout, "S%d: E%d HE-pair to i-curve, ", id_, HE2->edge()->id());
+        vul_printf (std::cout, "S%d: E%d HE-pair to i-curve, ", id_, HE2->edge()->id());
       }      
       return true;
     }
@@ -1376,7 +1376,7 @@ unsigned int _get_round (const int sz, int i)
 //  Return true if a change is being made.
 bool dbmsh3d_sheet::detect_fix_2_sep_Es (const dbmsh3d_halfedge* headHE)
 {
-  vcl_vector<dbmsh3d_halfedge*> HE_vec;
+  std::vector<dbmsh3d_halfedge*> HE_vec;
   get_HEvec_next_chain (headHE, HE_vec);
 
   if (HE_vec.size() < 2)
@@ -1406,13 +1406,13 @@ bool dbmsh3d_sheet::detect_fix_2_sep_Es (const dbmsh3d_halfedge* headHE)
         //Add HE_vec[i+1] as a new icurve chain.
         HE_vec[ip]->set_next (NULL);
         add_icurve_chain_HE (HE_vec[ip]);
-        vul_printf (vcl_cout, "S %d: move a single HE of E %d to i-curve, ", id_, HE_vec[ip]->edge()->id());
+        vul_printf (std::cout, "S %d: move a single HE of E %d to i-curve, ", id_, HE_vec[ip]->edge()->id());
       }
       else {
         //Add HE_vec[ip] ... HE_vec[jm] as a new icurve chain.
         HE_vec[jm]->set_next (HE_vec[ip]);
         add_icurve_chain_HE (HE_vec[ip]);
-        vul_printf (vcl_cout, "S %d: move a chain of %d HEs to i-curve, ", id_, jm-i);
+        vul_printf (std::cout, "S %d: move a chain of %d HEs to i-curve, ", id_, jm-i);
       }
       HE_vec[i]->set_next (HE_vec[j]);
 
@@ -1438,7 +1438,7 @@ bool dbmsh3d_sheet::detect_fix_loop_self_int (dbmsh3d_halfedge*& headHE)
     return true;
   }
 
-  vcl_vector<dbmsh3d_halfedge*> HEvec;
+  std::vector<dbmsh3d_halfedge*> HEvec;
   get_HEvec_next_chain (headHE, HEvec);
 
   assert (HEvec.empty() == false);
@@ -1479,8 +1479,8 @@ bool dbmsh3d_sheet::detect_fix_loop_self_int (dbmsh3d_halfedge*& headHE)
 
     //Detect and remove any loop of 2 edges, skipping the 3-incidences.
     bool loop2;
-    vcl_vector<dbmsh3d_halfedge*>::iterator it = HEvec.begin();
-    vcl_vector<dbmsh3d_halfedge*>::iterator itn = it;
+    std::vector<dbmsh3d_halfedge*>::iterator it = HEvec.begin();
+    std::vector<dbmsh3d_halfedge*>::iterator itn = it;
     itn++;
     for (; itn != HEvec.end(); it++, itn++) {
       
@@ -1636,7 +1636,7 @@ bool dbmsh3d_sheet::check_integrity ()
     return false;
   }
 
-  vcl_set<dbmsh3d_halfedge*> HE_set;
+  std::set<dbmsh3d_halfedge*> HE_set;
   
   if (halfedge_->next() == NULL) {    
     if (halfedge_->edge()->is_self_loop() == false) {
@@ -1779,7 +1779,7 @@ bool dbmsh3d_sheet::check_integrity ()
         }
         
         //The general case of loop of > 2 edges.
-        ///vcl_set<dbmsh3d_halfedge*> HE_set;
+        ///std::set<dbmsh3d_halfedge*> HE_set;
         dbmsh3d_halfedge* HE = headHE;
         do {
           dbmsh3d_halfedge* nextHE = HE->next();
@@ -1926,7 +1926,7 @@ void dbmsh3d_sheet::_clone_S_C_conn (dbmsh3d_sheet* S2, dbmsh3d_hypg* HG2) const
     }
     else {
       //deep-copy the internal icurve-chain case.
-      vcl_vector<dbmsh3d_edge*> icurve_loop_Es;
+      std::vector<dbmsh3d_edge*> icurve_loop_Es;
       dbmsh3d_halfedge* HE = headHE;
       do {
         dbmsh3d_edge* C2 = HG2->edgemap(HE->edge()->id());
@@ -1943,7 +1943,7 @@ void dbmsh3d_sheet::_clone_S_C_conn (dbmsh3d_sheet* S2, dbmsh3d_hypg* HG2) const
 void dbmsh3d_sheet::_clone_S_F_conn (dbmsh3d_sheet* S2, dbmsh3d_mesh* M2)
 {
   //clone the fine-scale mesh face connectivity.
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     dbmsh3d_face* F2 = M2->facemap (F->id());
@@ -1960,7 +1960,7 @@ dbmsh3d_sheet* dbmsh3d_sheet::clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2)
   return S2;
 }
 
-void dbmsh3d_sheet::getInfo (vcl_ostringstream& ostrm)
+void dbmsh3d_sheet::getInfo (std::ostringstream& ostrm)
 {
   //not yet implemented.
   assert (0);
@@ -2037,7 +2037,7 @@ dbmsh3d_halfedge* _find_nextE_HE (const dbmsh3d_halfedge* inputHE)
 //  considering the 2-incidence and 3-incidence cases.
 dbmsh3d_halfedge* _find_prevE_HE (const dbmsh3d_halfedge* inputHE)
 {
-  vcl_vector<dbmsh3d_halfedge*> HE_vec;
+  std::vector<dbmsh3d_halfedge*> HE_vec;
   get_HEvec_next_chain (inputHE, HE_vec);
 
   assert (HE_vec.size() > 0);
@@ -2091,7 +2091,7 @@ bool _detect_2_suc_Es (const dbmsh3d_halfedge* headHE)
 }
 
 //: Return true if [i,j] belongs to any conesecutive 3-incident edges.
-bool _check_3_incidence (const vcl_vector<dbmsh3d_halfedge*>& HE_vec, 
+bool _check_3_incidence (const std::vector<dbmsh3d_halfedge*>& HE_vec, 
                          const unsigned int i, const unsigned int j)
 {
   unsigned int m = HE_vec.size();
@@ -2141,10 +2141,10 @@ dbmsh3d_curve* _find_E_in_C_chain (const dbmsh3d_halfedge* headHE, dbmsh3d_edge*
 //: Return true if the headHE next loop contains self intersection.
 bool loop_self_int (const dbmsh3d_halfedge* headHE)
 {
-  vcl_vector<dbmsh3d_halfedge*> HEvec;
+  std::vector<dbmsh3d_halfedge*> HEvec;
   get_HEvec_next_chain (headHE, HEvec);
 
-  vcl_set<dbmsh3d_halfedge*> HEset;
+  std::set<dbmsh3d_halfedge*> HEset;
   HEset.insert (HEvec.begin(), HEvec.end());
 
   if (HEvec.size() == 1)
@@ -2167,8 +2167,8 @@ bool loop_self_int (const dbmsh3d_halfedge* headHE)
 
       //Check if there exists any loop of 2 edges.
       bool loop2;
-      vcl_vector<dbmsh3d_halfedge*>::iterator it = HEvec.begin();
-      vcl_vector<dbmsh3d_halfedge*>::iterator itn = it;
+      std::vector<dbmsh3d_halfedge*>::iterator it = HEvec.begin();
+      std::vector<dbmsh3d_halfedge*>::iterator itn = it;
       itn++;
       for (; itn != HEvec.end(); it++, itn++) {
         //skip the possible 3-incidences.
@@ -2220,7 +2220,7 @@ bool loop_self_int (const dbmsh3d_halfedge* headHE)
 //: Given the inputHE and eV, find the next HE in the HE_loop_vec[].
 //  Return true if exactly one such nextHE is found.
 bool _find_nextHE_in_loop (const dbmsh3d_halfedge* inputHE, const dbmsh3d_vertex* eV, 
-                           const vcl_vector<dbmsh3d_halfedge*>& HE_loop_vec,
+                           const std::vector<dbmsh3d_halfedge*>& HE_loop_vec,
                            dbmsh3d_halfedge*& nextHE)
 {
   nextHE = NULL;
@@ -2244,7 +2244,7 @@ bool _find_nextHE_in_loop (const dbmsh3d_halfedge* inputHE, const dbmsh3d_vertex
 //  Return the nextHE, and return the additional HEnn2 if it is found.
 dbmsh3d_halfedge* _find_nextHE_in_loop_3inc (const dbmsh3d_halfedge* inputHE, 
                                              const dbmsh3d_vertex* eV, 
-                                             const vcl_vector<dbmsh3d_halfedge*>& HEvec,
+                                             const std::vector<dbmsh3d_halfedge*>& HEvec,
                                              dbmsh3d_halfedge*& HEnn2)
 {
   dbmsh3d_halfedge* HEnn = NULL;
@@ -2274,10 +2274,10 @@ dbmsh3d_halfedge* _find_nextHE_in_loop_3inc (const dbmsh3d_halfedge* inputHE,
 }
 
 dbmsh3d_halfedge* _find_lastHE_in_chain (const dbmsh3d_halfedge* startHE, const dbmsh3d_vertex* startV, 
-                                         const dbmsh3d_vertex* endV, const vcl_vector<dbmsh3d_halfedge*>& HEvec)
+                                         const dbmsh3d_vertex* endV, const std::vector<dbmsh3d_halfedge*>& HEvec)
 { 
   //once a halfedge HE is used, remove it from HEset to avoid multiple intersection during tracing.
-  vcl_vector<dbmsh3d_halfedge*> HEvec2;
+  std::vector<dbmsh3d_halfedge*> HEvec2;
   HEvec2.insert (HEvec2.begin(), HEvec.begin(), HEvec.end());
 
   dbmsh3d_halfedge* HE = (dbmsh3d_halfedge*) startHE;
@@ -2295,7 +2295,7 @@ dbmsh3d_halfedge* _find_lastHE_in_chain (const dbmsh3d_halfedge* startHE, const 
     dbmsh3d_halfedge* HEnn2 = NULL;
     dbmsh3d_halfedge* HEnn = _find_nextHE_in_loop_3inc (HE, eV, HEvec2, HEnn2);
     //erase HEnn from HEvec2.
-    vcl_vector<dbmsh3d_halfedge*>::iterator it = HEvec2.begin();
+    std::vector<dbmsh3d_halfedge*>::iterator it = HEvec2.begin();
     for (; it != HEvec2.end(); it++) {
       if ((*it) == HEnn) {
         HEvec2.erase (it);
@@ -2323,7 +2323,7 @@ bool _check_loop_of_2_HEs (const dbmsh3d_halfedge* headHE)
 
 bool _find_in_chain (const dbmsh3d_halfedge* headHE,
                      const dbmsh3d_vertex* sV, const dbmsh3d_vertex* eV, 
-                     vcl_vector<dbmsh3d_halfedge*>& HEvec)
+                     std::vector<dbmsh3d_halfedge*>& HEvec)
 {
   assert (HEvec.empty());
   bool b_sV_found = false;
@@ -2366,10 +2366,10 @@ void _modify_F_icurve_chain (dbmsh3d_halfedge* headHE, dbmsh3d_face* F)
 }
 
 //: Make sure that the loop_bnd_Es[] are problem free (for debugging).
-bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
+bool _verify_loop_bnd_Es (const std::vector<dbmsh3d_edge*>& loop_bnd_Es)
 {
   #if DBMSH3D_DEBUG > 3
-  vul_printf (vcl_cout, "\t loop edges: ");  
+  vul_printf (std::cout, "\t loop edges: ");  
   #endif
   if (loop_bnd_Es.size() == 0) {
     assert (0);
@@ -2380,7 +2380,7 @@ bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
     dbmsh3d_edge* E = loop_bnd_Es[0];
     dbmsh3d_vertex* V = E->vertices(0);
     #if DBMSH3D_DEBUG > 3
-    vul_printf (vcl_cout, "E%d V%d E%d", E->id(), V->id(), E->id());
+    vul_printf (std::cout, "E%d V%d E%d", E->id(), V->id(), E->id());
     #endif
     if (E->is_self_loop() == false) {
       assert (0);
@@ -2394,7 +2394,7 @@ bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
     dbmsh3d_vertex* V1 = E1->vertices(0);
     dbmsh3d_vertex* V2 = E1->vertices(1);
     #if DBMSH3D_DEBUG > 3
-    vul_printf (vcl_cout, "E%d V%d E%d V%d E%d", E1->id(), V1->id(), E2->id(), V2->id(), E1->id());
+    vul_printf (std::cout, "E%d V%d E%d V%d E%d", E1->id(), V1->id(), E2->id(), V2->id(), E1->id());
     #endif
     if (E2->is_V_incident (V1) == false) {
       assert (0);
@@ -2413,7 +2413,7 @@ bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
       dbmsh3d_edge* E2 = loop_bnd_Es[j];
       dbmsh3d_vertex* V = Es_sharing_V (E1, E2);
       #if DBMSH3D_DEBUG > 3
-      vul_printf (vcl_cout, "E%d V%d ", E1->id(), V->id());
+      vul_printf (std::cout, "E%d V%d ", E1->id(), V->id());
       #endif
       if (V == NULL) {
         assert (0);
@@ -2421,18 +2421,18 @@ bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
       }
     }
     #if DBMSH3D_DEBUG > 3
-    vul_printf (vcl_cout, "E%d ", loop_bnd_Es[j]->id());
+    vul_printf (std::cout, "E%d ", loop_bnd_Es[j]->id());
     #endif
   }
 
   #if DBMSH3D_DEBUG > 3
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   #endif
   return true;
 }
 
-bool _find_V_reorder_Es (const dbmsh3d_vertex* Vc, const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es, 
-                         vcl_vector<dbmsh3d_edge*>& reordered_Es)
+bool _find_V_reorder_Es (const dbmsh3d_vertex* Vc, const std::vector<dbmsh3d_edge*>& loop_bnd_Es, 
+                         std::vector<dbmsh3d_edge*>& reordered_Es)
 {
   //1) The case of one single edge.
   if (loop_bnd_Es.size() == 1) {
@@ -2479,7 +2479,7 @@ bool _find_V_reorder_Es (const dbmsh3d_vertex* Vc, const vcl_vector<dbmsh3d_edge
   return true;
 }
 
-void _get_chain_C_Evec (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_edge*>& Evec)
+void _get_chain_C_Evec (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_edge*>& Evec)
 {
   dbmsh3d_halfedge* HE = (dbmsh3d_halfedge*) headHE;
   do {
@@ -2490,7 +2490,7 @@ void _get_chain_C_Evec (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_edge*
   while (HE != headHE && HE != NULL);
 }
 
-void _get_chain_C_shared_Es (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_edge*>& shared_Es)
+void _get_chain_C_shared_Es (const dbmsh3d_halfedge* headHE, std::set<dbmsh3d_edge*>& shared_Es)
 {
   dbmsh3d_halfedge* HE = (dbmsh3d_halfedge*) headHE;
   do {
@@ -2501,7 +2501,7 @@ void _get_chain_C_shared_Es (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_edg
   while (HE != headHE && HE != NULL);
 }
 
-void _get_C_shared_Es (dbmsh3d_curve* C, vcl_set<dbmsh3d_edge*>& shared_Es)
+void _get_C_shared_Es (dbmsh3d_curve* C, std::set<dbmsh3d_edge*>& shared_Es)
 {  
   for (dbmsh3d_ptr_node* cur = C->shared_E_list(); cur != NULL; cur = cur->next()) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
@@ -2559,9 +2559,9 @@ bool _disconnect_bnd3_E_chain (dbmsh3d_halfedge*& headHE, dbmsh3d_edge* E)
     return false;
 }
 
-bool _prop_label_Fs_e_conn (dbmsh3d_face* seedF, vcl_set<dbmsh3d_face*>& conn_Fset)
+bool _prop_label_Fs_e_conn (dbmsh3d_face* seedF, std::set<dbmsh3d_face*>& conn_Fset)
 {
-  vcl_queue<dbmsh3d_face*> frontF_queue;
+  std::queue<dbmsh3d_face*> frontF_queue;
   frontF_queue.push (seedF);
 
   while (frontF_queue.size() > 0) {
@@ -2605,7 +2605,7 @@ bool _prop_label_Fs_e_conn (dbmsh3d_face* seedF, vcl_set<dbmsh3d_face*>& conn_Fs
   return true;
 }
 
-void _prop_label_Fs_e_v_conn (dbmsh3d_face* seedF, vcl_set<dbmsh3d_face*>& Fset)
+void _prop_label_Fs_e_v_conn (dbmsh3d_face* seedF, std::set<dbmsh3d_face*>& Fset)
 {
   assert (0);
 }

@@ -17,9 +17,9 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <vector>
+#include <set>
+#include <map>
 
 #include <dbmsh3d/dbmsh3d_halfedge.h>
 #include <dbmsh3d/dbmsh3d_utils.h>
@@ -203,26 +203,26 @@ public:
 
   unsigned int n_incident_Fs () const;
   bool is_F_incident (const dbmsh3d_face* F) const;
-  bool is_Fset_incident (vcl_set<dbmsh3d_face*>& Fset) const;
+  bool is_Fset_incident (std::set<dbmsh3d_face*>& Fset) const;
 
   dbmsh3d_halfedge* get_HE_of_F (const dbmsh3d_face* F, dbmsh3d_halfedge* startHE = NULL) const;
 
   //: For a geometric hypergraph, there can be multiple of HE_set of a single F.
-  void get_HEset_of_F (const dbmsh3d_face* F, vcl_set<dbmsh3d_halfedge*>& HEset) const;
+  void get_HEset_of_F (const dbmsh3d_face* F, std::set<dbmsh3d_halfedge*>& HEset) const;
 
-  bool only_incident_to_Fset_in_Fmap (vcl_set<dbmsh3d_face*>& F_set, 
-                                      vcl_map<int, dbmsh3d_face*>& F_map) const;
+  bool only_incident_to_Fset_in_Fmap (std::set<dbmsh3d_face*>& F_set, 
+                                      std::map<int, dbmsh3d_face*>& F_map) const;
 
   //: find the inputHE and the prev_pair_HE of this edge.
   //  return false if not found.
   bool _find_HE_prev_pair (const dbmsh3d_halfedge* inputHE, 
                            dbmsh3d_halfedge* & prev_pair_HE) const;
 
-  void get_incident_Fs (vcl_vector<dbmsh3d_face*>& incident_faces) const;
+  void get_incident_Fs (std::vector<dbmsh3d_face*>& incident_faces) const;
 
   bool all_incident_Fs_visited () const;
   bool all_incident_Fs_visited_except (const dbmsh3d_face* inputF) const;
-  const bool all_incident_Fs_in_set (vcl_set<dbmsh3d_face*>& F_set) const;
+  const bool all_incident_Fs_in_set (std::set<dbmsh3d_face*>& F_set) const;
 
   dbmsh3d_face* incident_F_given_E (dbmsh3d_edge* other_incident_E) const;
   dbmsh3d_face* incident_F_given_V (dbmsh3d_vertex* incident_vertex) const;
@@ -249,7 +249,7 @@ public:
   ///const bool is_FF_incident (const dbsk3d_fs_face* inputFF) const;
   const unsigned int count_valid_Fs () const;
   dbmsh3d_face* get_1st_valid_F () const;
-  void get_valid_Fs (vcl_set<dbmsh3d_face*>& valid_F_set) const;
+  void get_valid_Fs (std::set<dbmsh3d_face*>& valid_F_set) const;
 
   //Only work on edge of MANIFOLD type.
   dbmsh3d_face* other_valid_F (const dbmsh3d_face* inputF) const;
@@ -316,7 +316,7 @@ public:
   void _disconnect_all_Fs ();
 
   //: disconnect all incident faces and return the vector of all such faces.
-  void _disconnect_all_Fs (vcl_set<dbmsh3d_face*>& disconn_faces);
+  void _disconnect_all_Fs (std::set<dbmsh3d_face*>& disconn_faces);
 
   void compute_e_type (const bool only_valid_F = true, const bool override_s = true);
 
@@ -331,7 +331,7 @@ public:
   void _clone_E_V_conn (dbmsh3d_edge* E2, dbmsh3d_pt_set* PS2) const;
   virtual dbmsh3d_edge* clone (dbmsh3d_pt_set* PS2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm) const;
+  virtual void getInfo (std::ostringstream& ostrm) const;
 };
 
 //: Return the first found vertex that is incident to both E1 and E2.
@@ -383,9 +383,9 @@ bool _disconnect_remove_HE (dbmsh3d_halfedge* HE);
 
 dbmsh3d_face* get_F_from_E1_E2 (const dbmsh3d_edge* E1, const dbmsh3d_edge* E2);
 
-bool get_digi_curve_E_chain (const vcl_vector<dbmsh3d_edge*>& E_chain, vcl_vector<vgl_point_3d<double> >& curve);
+bool get_digi_curve_E_chain (const std::vector<dbmsh3d_edge*>& E_chain, std::vector<vgl_point_3d<double> >& curve);
 
-void update_digi_curve_E_chain (const vcl_vector<dbmsh3d_edge*>& E_chain, const vcl_vector<vgl_point_3d<double> >& curve);
+void update_digi_curve_E_chain (const std::vector<dbmsh3d_edge*>& E_chain, const std::vector<vgl_point_3d<double> >& curve);
 
 #endif
 

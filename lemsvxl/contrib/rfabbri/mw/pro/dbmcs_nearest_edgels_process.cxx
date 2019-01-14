@@ -11,8 +11,8 @@
 
 #include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -29,7 +29,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
-#include <vcl_limits.h>
+#include <limits>
 
 struct mynearest {
 
@@ -59,12 +59,12 @@ struct mynearest {
       return false;
     }
 
-    double min_d = vcl_numeric_limits<double>::infinity();
+    double min_d = std::numeric_limits<double>::infinity();
     unsigned l = label_(p_i, p_j);
-    const vcl_vector<dbdet_edgel*> &ev = em_->edge_cells.begin()[l];
+    const std::vector<dbdet_edgel*> &ev = em_->edge_cells.begin()[l];
     for (unsigned i=0; i < ev.size(); ++i) {
       // form a vector d betwen pt and ev
-      // project this vcl_vector onto the normal; this is our residual
+      // project this std::vector onto the normal; this is our residual
       double dx = px - ev[i]->pt.x();
       double dy = py - ev[i]->pt.y();
 
@@ -78,10 +78,10 @@ struct mynearest {
 
   void 
   nearest_edgels(
-    const vcl_vector< vcl_vector<vsol_point_2d_sptr> > &contours,
-    vcl_vector<unsigned> *ptr_nearest)
+    const std::vector< std::vector<vsol_point_2d_sptr> > &contours,
+    std::vector<unsigned> *ptr_nearest)
   {
-    vcl_vector<unsigned> &nearest = *ptr_nearest;
+    std::vector<unsigned> &nearest = *ptr_nearest;
 
     for (unsigned i=0; i < contours.size(); ++i)
       for (unsigned k=0; k < contours[i].size(); ++k) {
@@ -99,7 +99,7 @@ dbmcs_nearest_edgels_process::dbmcs_nearest_edgels_process()
 //  if( 
 //      !parameters()->add( "   perturb tangents (deg)" , "-dtan"     , 10.0)
 //      ) {
-//    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+//    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 //  }
 }
 
@@ -119,7 +119,7 @@ dbmcs_nearest_edgels_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbmcs_nearest_edgels_process::name()
 {
   return "Nearest Edgels to Polyline";
@@ -143,9 +143,9 @@ dbmcs_nearest_edgels_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_input_type()
+std::vector< std::string > dbmcs_nearest_edgels_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" ); // curves
   to_return.push_back( "edge_map" );
   to_return.push_back( "image" ); // DT
@@ -155,9 +155,9 @@ vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_output_type()
+std::vector< std::string > dbmcs_nearest_edgels_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" ); // edgels
   return to_return;
 }
@@ -172,17 +172,17 @@ dbmcs_nearest_edgels_process::execute()
 
   // Load polylines.
   // new vector to store the resulting contours
-  vcl_vector< vcl_vector<vsol_point_2d_sptr> > contours;
+  std::vector< std::vector<vsol_point_2d_sptr> > contours;
 
   // cast the storage classes
   vidpro1_vsol2D_storage_sptr input_vsol;
   input_vsol.vertical_cast(input_data_[0][0]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
   {
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
     bool closed = false;
     //POINT
     if( vsol_list[b]->cast_to_point() ) {
@@ -207,7 +207,7 @@ dbmcs_nearest_edgels_process::execute()
       // CIRCULAR ARC
       else if (vsol_list[b]->cast_to_curve()->cast_to_conic())
       {
-        vcl_cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
+        std::cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
         continue;
       }
     }
@@ -237,19 +237,19 @@ dbmcs_nearest_edgels_process::execute()
 
   // Locate nearest edgels and add them to edgels list
 
-  vcl_vector<unsigned> nearest;
+  std::vector<unsigned> nearest;
   mynearest NE(input_edgels->get_edgemap(), input_dt->get_image()->get_view(), input_label->get_image()->get_view());
   NE.nearest_edgels(contours, &nearest);
 
   // transform edgels into lines.
 
-  vcl_vector< vsol_spatial_object_2d_sptr > edgel_lines;
+  std::vector< vsol_spatial_object_2d_sptr > edgel_lines;
 //  const double scale=0.5;
 
   for (unsigned i=0; i < nearest.size(); ++i ) {
     dbdet_edgel *e = input_edgels->get_edgemap()->edgels[nearest[i]];
 
-    vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(e->tangent), vcl_sin(e->tangent)), 
+    vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(e->tangent), std::sin(e->tangent)), 
         e->pt);
 
 //    newLine->set_length(newLine->length()*scale);

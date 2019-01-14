@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "bcal_calibrate_plane.h"
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <fstream>
+#include <iostream>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -21,10 +21,10 @@ bcal_calibrate_plane::~bcal_calibrate_plane()
 
 int bcal_calibrate_plane::readData(const char *fname)
 {
-  vcl_ifstream  in(fname);
+  std::ifstream  in(fname);
 
   if (!in){
-    vcl_cerr<<"cannot open the file: "<<fname << vcl_endl;
+    std::cerr<<"cannot open the file: "<<fname << std::endl;
     return 1;
   }
   if (pts_.size() != 0){
@@ -41,7 +41,7 @@ int bcal_calibrate_plane::readData(const char *fname)
   return 0;
 }
 
-int bcal_calibrate_plane::read_data(vcl_vector<vgl_homg_point_2d<double> > &pts)
+int bcal_calibrate_plane::read_data(std::vector<vgl_homg_point_2d<double> > &pts)
 {
   pts_ = pts;
 

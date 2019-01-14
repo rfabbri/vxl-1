@@ -25,14 +25,14 @@ public:
                                                        theMatrices.push_back( matrix ); 
                                                       };
 
-    vcl_vector< bfrag2D* > getFrags(){ return theFrags; };
-    vcl_vector< double* > getMatrices(){ return theMatrices; };
+    std::vector< bfrag2D* > getFrags(){ return theFrags; };
+    std::vector< double* > getMatrices(){ return theMatrices; };
 
 
 private:
 
-    vcl_vector< bfrag2D* > theFrags;
-    vcl_vector< double* > theMatrices;
+    std::vector< bfrag2D* > theFrags;
+    std::vector< double* > theMatrices;
 
 
 };

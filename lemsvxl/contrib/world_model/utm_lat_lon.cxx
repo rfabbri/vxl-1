@@ -9,7 +9,7 @@
 // A @class{IUE_UTM_geodetic_transform} is one that relates UTM coordinates to a geodetic lat_long coordinate_system (phi, lambda, h) using a reference spheroid to define the shape of the earth (or other celestial object). where in the geodetic lat_long coordinate system, coordinates phi and lambda are the values of latitude and longitude, respectively.
 #include "utm_lat_lon.h"
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 #define DBLLONG 4.61168601e18
 #define EPSLN   1.0e-10
@@ -73,17 +73,17 @@ for(;;)
     if (long(vnl_math_abs(x / (vnl_math::pi))) < 2)
      x = x-(sign(x) * 2*vnl_math::pi);
   else
-  if (long(vnl_math_abs(x / (2*vnl_math::pi))) < vcl_numeric_limits<long>::max())
+  if (long(vnl_math_abs(x / (2*vnl_math::pi))) < std::numeric_limits<long>::max())
      {
      x = x-long((x /(2*vnl_math::pi))*2*vnl_math::pi);
      }
   else
-  if (((long) vnl_math_abs(x / (vcl_numeric_limits<long>::max() * 2*vnl_math::pi))) < vcl_numeric_limits<long>::max())
+  if (((long) vnl_math_abs(x / (std::numeric_limits<long>::max() * 2*vnl_math::pi))) < std::numeric_limits<long>::max())
      {
-     x = x-(((long)(x / (vcl_numeric_limits<long>::max() * 2*vnl_math::pi))) * (2*vnl_math::pi * vcl_numeric_limits<long>::max()));
+     x = x-(((long)(x / (std::numeric_limits<long>::max() * 2*vnl_math::pi))) * (2*vnl_math::pi * std::numeric_limits<long>::max()));
      }
   else
-  if (((long) vnl_math_abs(x / (DBLLONG * 2*vnl_math::pi))) < vcl_numeric_limits<long>::max())
+  if (((long) vnl_math_abs(x / (DBLLONG * 2*vnl_math::pi))) < std::numeric_limits<long>::max())
      {
      x = x-(((long)(x / (DBLLONG * 2*vnl_math::pi))) * (2*vnl_math::pi * DBLLONG));
      }
@@ -108,17 +108,17 @@ for(;;)
  if (((long) vnl_math_abs(x / vnl_math::pi_over_2)) < 2)
      x = x-(sign(x) * vnl_math::pi);
   else
-  if (((long) vnl_math_abs(x / vnl_math::pi)) < vcl_numeric_limits<long>::max())
+  if (((long) vnl_math_abs(x / vnl_math::pi)) < std::numeric_limits<long>::max())
      {
      x = x-(((long)(x / vnl_math::pi))*vnl_math::pi);
      }
   else
-  if (((long) vnl_math_abs(x / (vcl_numeric_limits<long>::max() * vnl_math::pi))) < vcl_numeric_limits<long>::max())
+  if (((long) vnl_math_abs(x / (std::numeric_limits<long>::max() * vnl_math::pi))) < std::numeric_limits<long>::max())
      {
-     x = x-(((long)(x / (vcl_numeric_limits<long>::max() * vnl_math::pi))) * (vnl_math::pi * vcl_numeric_limits<long>::max()));
+     x = x-(((long)(x / (std::numeric_limits<long>::max() * vnl_math::pi))) * (vnl_math::pi * std::numeric_limits<long>::max()));
      }
   else
-  if (((long) vnl_math_abs(x / (DBLLONG * vnl_math::pi))) < vcl_numeric_limits<long>::max())
+  if (((long) vnl_math_abs(x / (DBLLONG * vnl_math::pi))) < std::numeric_limits<long>::max())
      {
      x = x-(((long)(x / (DBLLONG * vnl_math::pi))) * (vnl_math::pi * DBLLONG));
      }
@@ -258,7 +258,7 @@ void utm_lat_lon::transform(int utm_zone, double x, double y, double z,
       if(vnl_math_abs(delta_phi)<1E-6) break;
 
       if (i >= max_iter)
-        vcl_cout << "Transform failed to converge" << vcl_endl;
+        std::cout << "Transform failed to converge" << std::endl;
     }
 
       if (vnl_math_abs(temp_phi) < vnl_math::pi_over_2)

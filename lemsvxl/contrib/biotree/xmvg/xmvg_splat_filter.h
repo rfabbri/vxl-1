@@ -10,7 +10,7 @@
 // \date    2005-12-02
 // 
 
-#include <vcl_vector.h>
+#include <vector>
 
 enum { RAMLAK, SHEPPLOGAN };
 
@@ -30,7 +30,7 @@ class xmvg_splat_filter
     double cutoff_freq() { return cutoff_freq_; };
 
     //: return the kernel values
-    vcl_vector<double> kernel() { return kernel_; };
+    std::vector<double> kernel() { return kernel_; };
     
   protected:
     // kernel size in one direction, full kernel size is 2*kernel_size_+1
@@ -38,7 +38,7 @@ class xmvg_splat_filter
     // cut-off frequency for the filter
     double cutoff_freq_;
     // filter kernel values
-    vcl_vector<double> kernel_;
+    std::vector<double> kernel_;
 };
 
 #endif

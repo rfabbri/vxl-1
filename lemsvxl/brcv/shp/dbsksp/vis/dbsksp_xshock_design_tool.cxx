@@ -124,7 +124,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr)
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsksp_xshock_design_tool::
+std::string dbsksp_xshock_design_tool::
 name() const 
 {
   return "XShock design";
@@ -335,7 +335,7 @@ handle_display_info()
       dbsksp_soview_xshock_chord* chord = 
         static_cast<dbsksp_soview_xshock_chord* >(so);
       dbsksp_xshock_edge_sptr xedge = chord->xedge();
-      xedge->print(vcl_cout);
+      xedge->print(std::cout);
       this->set_selected_xedge(xedge);
       
       // reset the selected xnode to neighbor the newly selected xedge
@@ -364,7 +364,7 @@ handle_display_info()
         static_cast<dbsksp_soview_xshock_node* >(so);
       dbsksp_xshock_node_sptr xnode = so_xnode->xnode();
 
-      xnode->print(vcl_cout);
+      xnode->print(std::cout);
       this->set_selected_xnode(xnode);
 
       // set the selected_edge to neighbor the newly selected node
@@ -389,7 +389,7 @@ handle_translate_xnode(float dx, float dy)
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before translate_xnode operation\n";
+    std::cerr << "ERROR: A node must be selected before translate_xnode operation\n";
     return true;
   }
 
@@ -398,7 +398,7 @@ handle_translate_xnode(float dx, float dy)
   // Check terminal node: its coordinate is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't translate a degree-one node.\n";
+    std::cerr << "ERROR: can't translate a degree-one node.\n";
     return true;
   }
 
@@ -430,7 +430,7 @@ handle_rotate_xnode(float dtheta)
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before translate_xnode operation\n";
+    std::cerr << "ERROR: A node must be selected before translate_xnode operation\n";
     return true;
   }
 
@@ -439,7 +439,7 @@ handle_rotate_xnode(float dtheta)
   // Check terminal node: its orientation is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't rotate a degree-one node.\n";
+    std::cerr << "ERROR: can't rotate a degree-one node.\n";
     return true;
   }
 
@@ -471,13 +471,13 @@ handle_rotate_xtangent(float dtheta)
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before rotate_xtangent operation\n";
+    std::cerr << "ERROR: A node must be selected before rotate_xtangent operation\n";
     return true;
   }
 
   if (!this->selected_xedge())
   {
-    vcl_cerr << "ERROR: An edge must be selected before rotate_xtangent operation\n";
+    std::cerr << "ERROR: An edge must be selected before rotate_xtangent operation\n";
     return true;
   }
 
@@ -486,14 +486,14 @@ handle_rotate_xtangent(float dtheta)
 
   if (!xe->is_vertex(xv))
   {
-    vcl_cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for rotate_xtangent operation\n";
+    std::cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for rotate_xtangent operation\n";
     return true;
   }
 
   // Check terminal node: its orientation is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't rotate a degree-one node.\n";
+    std::cerr << "ERROR: can't rotate a degree-one node.\n";
     return true;
   }
 
@@ -524,13 +524,13 @@ handle_change_phi(double dphi)
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before change_phi operation\n";
+    std::cerr << "ERROR: A node must be selected before change_phi operation\n";
     return true;
   }
 
   if (!this->selected_xedge())
   {
-    vcl_cerr << "ERROR: An edge must be selected before change_phi operation\n";
+    std::cerr << "ERROR: An edge must be selected before change_phi operation\n";
     return true;
   }
 
@@ -539,14 +539,14 @@ handle_change_phi(double dphi)
 
   if (!xe->is_vertex(xv))
   {
-    vcl_cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for change_phi operation\n";
+    std::cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for change_phi operation\n";
     return true;
   }
 
   // Check terminal node: its orientation is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't change phi angle of a degree-one node.\n";
+    std::cerr << "ERROR: can't change phi angle of a degree-one node.\n";
     return true;
   }
 
@@ -587,7 +587,7 @@ handle_change_radius(double dr)
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before translate_xnode operation\n";
+    std::cerr << "ERROR: A node must be selected before translate_xnode operation\n";
     return true;
   }
 
@@ -595,7 +595,7 @@ handle_change_radius(double dr)
   // Check terminal node: its orientation is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't change radius of a degree-one node.\n";
+    std::cerr << "ERROR: can't change radius of a degree-one node.\n";
     return true;
   }
 
@@ -624,14 +624,14 @@ handle_similarity_transform(double dx, double dy, double d_angle, double d_log2s
 {
   if (!this->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before translate_xnode operation\n";
+    std::cerr << "ERROR: A node must be selected before translate_xnode operation\n";
     return true;
   }
   dbsksp_xshock_node_sptr xv = this->selected_xnode();
   dbsksp_xshock_graph_sptr xg = this->storage()->xgraph();
 
   vgl_point_2d<double > ref_pt = xv->pt();
-  double scale = vcl_exp(vnl_math::ln2 * d_log2scale);
+  double scale = std::exp(vnl_math::ln2 * d_log2scale);
   
   // similarity transform of the graph
   xg->similarity_transform(ref_pt, dx, dy, d_angle, scale);
@@ -667,13 +667,13 @@ execute()
   dbsksp_xshock_edge_sptr xe = this->tool()->selected_xedge();
   if (!xe) 
   {
-    vcl_cerr << "ERROR: An edge must be selected before split_an_edge operation. " << vcl_endl;
+    std::cerr << "ERROR: An edge must be selected before split_an_edge operation. " << std::endl;
     return;
   }
 
   if (xe->is_terminal_edge())
   {
-    vcl_cerr << "ERROR: Cannot split an A-infinity edge;\n";
+    std::cerr << "ERROR: Cannot split an A-infinity edge;\n";
     return;
   }
 
@@ -718,7 +718,7 @@ void dbsksp_xshock_delete_an_A12_node_command::execute()
   dbsksp_xshock_node_sptr xv = this->tool()->selected_xnode();
   if (!xv || xv->degree() != 2) 
   {
-    vcl_cerr << "ERROR: A degree-2 node must be selected before a delete_A12_node operation. " << vcl_endl;
+    std::cerr << "ERROR: A degree-2 node must be selected before a delete_A12_node operation. " << std::endl;
     return;
   }
 
@@ -726,7 +726,7 @@ void dbsksp_xshock_delete_an_A12_node_command::execute()
   dbsksp_xshock_edge_sptr new_xe = this->tool()->storage()->xgraph()->remove_A12_node(xv);
   if (!new_xe)
   {
-    vcl_cerr << "ERROR: Deleting degree-2 node (id = " << xv->id() << " ) failed.\n";
+    std::cerr << "ERROR: Deleting degree-2 node (id = " << xv->id() << " ) failed.\n";
   }
   this->tool()->set_selected_xedge(0);
   this->tool()->set_selected_xnode(0);
@@ -750,13 +750,13 @@ execute()
   // preliminary check
   if (!xe) 
   {
-    vcl_cerr << "ERROR: No active edge found." << vcl_endl;
+    std::cerr << "ERROR: No active edge found." << std::endl;
     return;
   }
 
   if (!xe->is_terminal_edge())
   {
-    vcl_cerr << "ERROR: Selected edge is not a terminal edge." << vcl_endl;
+    std::cerr << "ERROR: Selected edge is not a terminal edge." << std::endl;
     return;
   }
 
@@ -780,13 +780,13 @@ execute()
   // preliminary checks
   if (!this->tool()->selected_xnode())
   {
-    vcl_cerr << "ERROR: A node must be selected before insert_A_infty operation\n";
+    std::cerr << "ERROR: A node must be selected before insert_A_infty operation\n";
     return;
   }
 
   if (!this->tool()->selected_xedge())
   {
-    vcl_cerr << "ERROR: An edge must be selected before insert_A_infty operation\n";
+    std::cerr << "ERROR: An edge must be selected before insert_A_infty operation\n";
     return;
   }
 
@@ -795,24 +795,24 @@ execute()
 
   if (!xe->is_vertex(xv))
   {
-    vcl_cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for insert_A_infty operation\n";
+    std::cerr << "ERROR: selected_xnode must be a vertex of selected_xedge for insert_A_infty operation\n";
     return;
   }
 
   // Check terminal node: its orientation is dependent on its adjacent node
   if (xv->degree() == 1)
   {
-    vcl_cerr << "ERROR: can't insert an A_infty branch to a degree-one node.\n";
+    std::cerr << "ERROR: can't insert an A_infty branch to a degree-one node.\n";
     return;
   }
   dbsksp_xshock_graph_sptr xg = this->tool()->storage()->xgraph();
   if (xg->insert_A_infty_branch(xv, xe))
   {
-    vcl_cout << "A new A_infty branch has been created.\n";
+    std::cout << "A new A_infty branch has been created.\n";
   }
   else
   {
-    vcl_cout << "Something goes wrong while creating new A_infty branch.\n"
+    std::cout << "Something goes wrong while creating new A_infty branch.\n"
       << "No branch was created\n";
   }
   this->tool()->storage()->xgraph()->update_degree_1_nodes_around(xv);
@@ -834,7 +834,7 @@ execute()
 {
   if (!this->tool()->selected_xedge() || !this->tool()->selected_xedge()->is_terminal_edge())
   {
-    vcl_cerr << "ERROR: A terminal edge must be selected before delete_A_infty operation\n";
+    std::cerr << "ERROR: A terminal edge must be selected before delete_A_infty operation\n";
     return;
   }
 
@@ -843,7 +843,7 @@ execute()
   dbsksp_xshock_edge_sptr terminal_xe = this->tool()->selected_xedge();
   dbsksp_xshock_node_sptr xv = (terminal_xe->source()->degree()==1) ?
     terminal_xe->target() : terminal_xe->source();
-  vcl_cout << "\nRemoving terminal edge with id = " << terminal_xe->id() << "...";
+  std::cout << "\nRemoving terminal edge with id = " << terminal_xe->id() << "...";
   dbsksp_xshock_edge_sptr xe = 0;
   if (xv->degree() == 3)
   {
@@ -857,7 +857,7 @@ execute()
 
   if (xe)
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
 
     // set active node and edge
     this->tool()->set_selected_xedge(xe);
@@ -873,7 +873,7 @@ execute()
   }
   else
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
   }
   return;
 }
@@ -892,7 +892,7 @@ execute()
 {
   double sample_ds = 3;
 
-  vcl_vector<dbsksp_xshock_node_descriptor >* xsamples = this->tool()->storage()->xsamples();
+  std::vector<dbsksp_xshock_node_descriptor >* xsamples = this->tool()->storage()->xsamples();
   xsamples->clear(); 
   
   // Compute samples for each branch
@@ -903,13 +903,13 @@ execute()
   for (int i =0; i < num_darts; ++i)
   //for (int i =0; i < 1; ++i)
   {
-    vcl_vector<int > dart_list(1, i);
+    std::vector<int > dart_list(1, i);
     dbsksp_xshock_node_sptr start_node;
-    vcl_vector<dbsksp_xshock_edge_sptr > edge_list;
+    std::vector<dbsksp_xshock_edge_sptr > edge_list;
     tree->get_edge_list(dart_list, start_node, edge_list);
 
     // compute samples from the given path
-    vcl_vector<dbsksp_xshock_node_descriptor > dart_xsamples;
+    std::vector<dbsksp_xshock_node_descriptor > dart_xsamples;
 
     dbsksp_shock_path_sptr shock_path = 
       dbsksp_compute_uniform_shock_path(start_node, edge_list, sample_ds);

@@ -9,13 +9,13 @@
 // \author  Kongbin Kang
 // \date    2006-01-16
 // 
-#include <vcl_vector.h>
+#include <vector>
 #include <xmvg/xmvg_filter_descriptor.h>
 
 class xmvg_composite_filter_descriptor{
   public:
     //: constructor
-    xmvg_composite_filter_descriptor(vcl_vector<xmvg_filter_descriptor> const& fds);
+    xmvg_composite_filter_descriptor(std::vector<xmvg_filter_descriptor> const& fds);
 
     //: empty constructor
     xmvg_composite_filter_descriptor() {}
@@ -38,7 +38,7 @@ class xmvg_composite_filter_descriptor{
 
   protected:
 
-    vcl_vector<xmvg_filter_descriptor> fds_;
+    std::vector<xmvg_filter_descriptor> fds_;
 
     // bounding box encompassing all the filters in a composite filter descriptor
     

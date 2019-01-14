@@ -54,7 +54,7 @@ bvis_correspond_point_tool::~bvis_correspond_point_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis_correspond_point_tool::name() const
 {
   return "Correspond Points";
@@ -176,13 +176,13 @@ bvis_correspond_point_tool::handle( const vgui_event & e,
 //  - corresponding points are in the same order in each vector
 //  - one vector is returned for each tableau in \p tabs in the same order
 //  - NULL points are returned for missing correspondences
-vcl_vector<vcl_vector<vsol_point_2d_sptr> >
+std::vector<std::vector<vsol_point_2d_sptr> >
 bvis_correspond_point_tool::correspondences(
-                          const vcl_vector<vgui_displaylist2D_tableau_sptr>& tabs) const
+                          const std::vector<vgui_displaylist2D_tableau_sptr>& tabs) const
 {
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > result(tabs.size());
+  std::vector<std::vector<vsol_point_2d_sptr> > result(tabs.size());
 
-  for ( vcl_set<corr_map>::const_iterator citr = correspondences_.begin();
+  for ( std::set<corr_map>::const_iterator citr = correspondences_.begin();
         citr != correspondences_.end();  ++citr )
   {
     for ( unsigned int i=0; i<tabs.size(); ++i )
@@ -202,7 +202,7 @@ bvis_correspond_point_tool::correspondences(
 bool
 bvis_correspond_point_tool::set_curr_corr(const bgui_vsol_soview2D_point* pt)
 {
-  for ( vcl_set<corr_map>::iterator itr = correspondences_.begin();
+  for ( std::set<corr_map>::iterator itr = correspondences_.begin();
         itr != correspondences_.end();  ++itr )
   {
     corr_map::const_iterator itr2 = itr->find(this->tableau_);
@@ -222,8 +222,8 @@ bool
 bvis_correspond_point_tool::is_visible_child( const bvis_proc_selector_tableau_sptr& selector,
                                               const vgui_tableau_sptr& tableau ) const
 {
-  vcl_vector<vcl_string> names(selector->child_names());
-  for ( vcl_vector<vcl_string>::const_iterator itr = names.begin();
+  std::vector<std::string> names(selector->child_names());
+  for ( std::vector<std::string>::const_iterator itr = names.begin();
         itr != names.end();  ++itr )
   {
     if ( tableau == selector->get_tableau(*itr) ){
@@ -244,10 +244,10 @@ class bvis_fmatrix_command : public vgui_command
   bvis_fmatrix_command(bvis_correspond_point_tool* tool) : tool_(tool) {}
   void execute()
   {
-    vcl_set<vgui_displaylist2D_tableau_sptr> tab_set(tool_->tableaux());
-    vcl_vector<vgui_displaylist2D_tableau_sptr> tabs;
-    vcl_vector<vcl_string> choices;
-    for ( vcl_set<vgui_displaylist2D_tableau_sptr>::iterator itr = tab_set.begin();
+    std::set<vgui_displaylist2D_tableau_sptr> tab_set(tool_->tableaux());
+    std::vector<vgui_displaylist2D_tableau_sptr> tabs;
+    std::vector<std::string> choices;
+    for ( std::set<vgui_displaylist2D_tableau_sptr>::iterator itr = tab_set.begin();
           itr != tab_set.end();  ++itr )
     {
       tabs.push_back(*itr);
@@ -269,17 +269,17 @@ class bvis_fmatrix_command : public vgui_command
     if (!tab_dlg.ask())
       return; // cancelled
 
-    vcl_vector<vgui_displaylist2D_tableau_sptr> selected(2);
+    std::vector<vgui_displaylist2D_tableau_sptr> selected(2);
     selected[0] = tabs[val1];
     selected[1] = tabs[val2];
 
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > corr_pts =
+    std::vector<std::vector<vsol_point_2d_sptr> > corr_pts =
       tool_->correspondences(selected);
 
     FMatrix F;
 
     if(is_skew){
-      vcl_vector<vgl_line_2d<double> > lines;
+      std::vector<vgl_line_2d<double> > lines;
       for ( unsigned int i=0; i<corr_pts[0].size(); ++i ){
         if(corr_pts[0][i] && corr_pts[1][i]){
           lines.push_back(vgl_line_2d<double>(corr_pts[0][i]->get_p(),
@@ -298,7 +298,7 @@ class bvis_fmatrix_command : public vgui_command
         c(i)   = lines[i].c();
       }
       vnl_vector<double> pt = vnl_svd<double>(A).solve(c);
-      vcl_cout << "point = " << pt << vcl_endl;
+      std::cout << "point = " << pt << std::endl;
       vnl_matrix<double> S(3,3);
       S(0,0) = S(1,1) = S(2,2) = 0.0;
       S(1,2) = pt[0];  S(2,1) = -pt[0];
@@ -308,8 +308,8 @@ class bvis_fmatrix_command : public vgui_command
 
     }
     else{
-      vcl_vector< vgl_homg_point_2d< double > > s1;
-      vcl_vector< vgl_homg_point_2d< double > > s2;
+      std::vector< vgl_homg_point_2d< double > > s1;
+      std::vector< vgl_homg_point_2d< double > > s2;
       for ( unsigned int i=0; i<corr_pts[0].size(); ++i ){
         if(corr_pts[0][i] && corr_pts[1][i]){
           s1.push_back(vgl_homg_point_2d<double>(corr_pts[0][i]->get_p()));
@@ -320,11 +320,11 @@ class bvis_fmatrix_command : public vgui_command
       F = fmc.compute(s1,s2);
     }
 
-    vcl_cout << "F = \n"<< F << vcl_endl;
+    std::cout << "F = \n"<< F << std::endl;
     vgl_homg_point_2d< double > e1, e2;
     F.get_epipoles(e1, e2);
-    vcl_cout << "epipole for " << choices[val1] << " " << e1 << vcl_endl;
-    vcl_cout << "epipole for " << choices[val2] << " " << e2 << vcl_endl;
+    std::cout << "epipole for " << choices[val1] << " " << e1 << std::endl;
+    std::cout << "epipole for " << choices[val2] << " " << e2 << std::endl;
 
   }
 

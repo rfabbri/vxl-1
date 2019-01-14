@@ -39,7 +39,7 @@ dbmrf_network_builder_process::dbmrf_network_builder_process()
                           "-nbns" ,          (int)net_params_.Ns_ ) ||
       !parameters()->add( "Maximum difference of reciprocals of s for time neighbors" ,
                           "-nbdrs_min" ,     (float)net_params_.max_delta_recip_s_ ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -68,7 +68,7 @@ dbmrf_network_builder_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_network_builder_process::name()
 {
   return "Build MRF Network";
@@ -76,9 +76,9 @@ dbmrf_network_builder_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_network_builder_process::get_input_type()
+std::vector< std::string > dbmrf_network_builder_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vtol" );
   return to_return;
@@ -86,9 +86,9 @@ vcl_vector< vcl_string > dbmrf_network_builder_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_network_builder_process::get_output_type()
+std::vector< std::string > dbmrf_network_builder_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   return to_return;
 }
@@ -115,7 +115,7 @@ bool
 dbmrf_network_builder_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -153,8 +153,8 @@ dbmrf_network_builder_process::execute()
   vidpro1_vtol_storage_sptr frame_vtol;
   frame_vtol.vertical_cast(input_data_[0][1]);
 
-  vcl_vector<vtol_edge_2d_sptr> edges;
-  for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
+  std::vector<vtol_edge_2d_sptr> edges;
+  for ( std::set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
         itr != frame_vtol->end();  ++itr ) {
     vtol_edge *edge = (*itr)->cast_to_edge();
     if (edge){
@@ -163,15 +163,15 @@ dbmrf_network_builder_process::execute()
         edges.push_back(vtol_edge_2d_sptr(edge_2d));
     }
   }
-  vcl_cout << "num edges = "<< edges.size() << vcl_endl;
+  std::cout << "num edges = "<< edges.size() << std::endl;
   builder_->set_edges(frame, edges);
 
   vul_timer time;
   // Build the network
   builder_->build();
-  vcl_cout << "Done Building network in "<< time.all()<< "msec" << vcl_endl;
+  std::cout << "Done Building network in "<< time.all()<< "msec" << std::endl;
 
-  vcl_cout << "network size = "<< builder_->network()->size() << vcl_endl;
+  std::cout << "network size = "<< builder_->network()->size() << std::endl;
 
   // create the output storage class
   dbmrf_bmrf_storage_sptr output_bmrf = dbmrf_bmrf_storage_new(builder_->network());

@@ -28,7 +28,7 @@ dbdet_edgemap_sptr dbdet_detect_third_order_edges(vil_image_view<vxl_byte> image
 
   //compute image gradients before performing nonmax suppression
   vil_image_view<double> grad_x, grad_y, grad_mag; 
-  int scale = (int) vcl_pow(2.0, N);
+  int scale = (int) std::pow(2.0, N);
 
   //compute gradients
   switch (grad_op)
@@ -82,21 +82,21 @@ dbdet_edgemap_sptr dbdet_detect_third_order_edges(vil_image_view<vxl_byte> image
 
   //compute the gradient magnitude
   for(unsigned long i=0; i<grad_mag.size(); i++)
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
   double conv_time = t.real();  
   t.mark(); //reset timer
 
   //Now call the nms code to determine the set of edgels and their subpixel positions
-  vcl_vector<vgl_point_2d<double> > edge_locs, edge_locations;
-  vcl_vector<vgl_point_2d<int> > pix_locs;
-  vcl_vector<double> orientation, mag, d2f;
+  std::vector<vgl_point_2d<double> > edge_locs, edge_locations;
+  std::vector<vgl_point_2d<int> > pix_locs;
+  std::vector<double> orientation, mag, d2f;
 
   //parameters for reliable NMS
   double noise_sigma = 1.5;
   double rel_thresh = 1.3*noise_sigma/(sigma*sigma*sigma);
   dbdet_nms NMS(dbdet_nms_params(threshold, (dbdet_nms_params::PFIT_TYPE)parabola_fit,
-                                 (unsigned)vcl_pow(2.0,N)*(4*sigma+1), 
+                                 (unsigned)std::pow(2.0,N)*(4*sigma+1), 
                                  rel_thresh, use_adaptive_thresh), 
                 grad_x, grad_y, grad_mag);
 
@@ -110,7 +110,7 @@ dbdet_edgemap_sptr dbdet_detect_third_order_edges(vil_image_view<vxl_byte> image
     edge_locations.push_back(vgl_point_2d<double>(edge_locs[i].x()/scale, edge_locs[i].y()/scale));
 
   //for each edge, compute all the gradients to compute the new orientation
-  vcl_vector<double> Ix, Iy, Ixx, Ixy, Iyy, Ixxy, Ixyy, Ixxx, Iyyy;
+  std::vector<double> Ix, Iy, Ixx, Ixy, Iyy, Ixxy, Ixyy, Ixxx, Iyyy;
 
   switch (grad_op)
   {
@@ -156,7 +156,7 @@ dbdet_edgemap_sptr dbdet_detect_third_order_edges(vil_image_view<vxl_byte> image
   }
       
   //Now, compute and update each edge with its new orientation
-  vcl_vector<double> edge_orientations(edge_locations.size());
+  std::vector<double> edge_orientations(edge_locations.size());
   for (unsigned i=0; i<edge_locations.size();i++)
   {
     //compute F
@@ -169,24 +169,24 @@ dbdet_edgemap_sptr dbdet_detect_third_order_edges(vil_image_view<vxl_byte> image
                 2*Ix[i]*Iyy[i]*Ixy[i]  + 2*Ix[i]*Iy[i]*Ixyy[i] + Ixxy[i]*Ix[i]*Ix[i] + Iyyy[i]*Iy[i]*Iy[i];
 
     //save new orientation
-    edge_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+    edge_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
     //experiment: does the orientation from the detH condition give good orientations? Does'nt look like it
-    //edge_orientations[i] = dbdet_angle0To2Pi(vcl_atan(Ixy[i]*(Ixx[i]+Iyy[i])/(Ixx[i]*Ixx[i]+Ixy[i]*Ixy[i])));
+    //edge_orientations[i] = dbdet_angle0To2Pi(std::atan(Ixy[i]*(Ixx[i]+Iyy[i])/(Ixx[i]*Ixx[i]+Ixy[i]*Ixy[i])));
   }
 
   double third_order_time = t.real();
 
   //report timings
-  vcl_cout << vcl_endl;
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for third-order: " << third_order_time << " msec" << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for nms: " << nms_time << " msec" << std::endl;
+  std::cout << "time taken for third-order: " << third_order_time << " msec" << std::endl;
 
   //------------------------------------------------------------------------------------------
   // Compute the edge uncertainty measures
 
-  vcl_vector<double> edge_uncertainties(edge_locations.size());
+  std::vector<double> edge_uncertainties(edge_locations.size());
   dbdet_edge_uncertainty_measure edge_uncer(grad_x, grad_y, sigma);
   edge_uncer.get_edgel_uncertainties(edge_locs, edge_uncertainties);
 

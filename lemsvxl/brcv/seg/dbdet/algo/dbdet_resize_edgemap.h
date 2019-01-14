@@ -13,9 +13,9 @@
 //
 // \endverbatim
 
-//#include <vcl_fstream.h>
-//#include <vcl_vector.h>
-//#include <vcl_string.h>
+//#include <fstream>
+//#include <vector>
+//#include <string>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
 

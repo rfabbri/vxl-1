@@ -19,11 +19,11 @@
 
 // -----------------------------------------------------------------------------
 //: Assume all the memory have previously been allocated
-bool dbsks_rotate_point_set(const vcl_vector<vgl_point_2d<double > >& source_pts,                                      
-                            const vcl_vector<vgl_vector_2d<double > >& source_tangents,
+bool dbsks_rotate_point_set(const std::vector<vgl_point_2d<double > >& source_pts,                                      
+                            const std::vector<vgl_vector_2d<double > >& source_tangents,
                             const vgl_point_2d<double >& origin, double angle,
-                            vcl_vector<vgl_point_2d<double > >& target_pts,
-                            vcl_vector<vgl_vector_2d<double > >& target_tangents)
+                            std::vector<vgl_point_2d<double > >& target_pts,
+                            std::vector<vgl_vector_2d<double > >& target_tangents)
 {
   unsigned num_pts = source_pts.size();
   assert(num_pts == source_tangents.size());
@@ -45,11 +45,11 @@ bool dbsks_rotate_point_set(const vcl_vector<vgl_point_2d<double > >& source_pts
 // -----------------------------------------------------------------------------
 //: Translate a set of point-tangents
 //: Assume all the memory have previously been allocated
-bool dbsks_translate_point_set(const vcl_vector<vgl_point_2d<double > >& source_pts,
-                               const vcl_vector<vgl_vector_2d<double > >& source_tangents,
+bool dbsks_translate_point_set(const std::vector<vgl_point_2d<double > >& source_pts,
+                               const std::vector<vgl_vector_2d<double > >& source_tangents,
                                const vgl_vector_2d<double >& v,
-                               vcl_vector<vgl_point_2d<double > >& target_pts,
-                               vcl_vector<vgl_vector_2d<double > >& target_tangents)
+                               std::vector<vgl_point_2d<double > >& target_pts,
+                               std::vector<vgl_vector_2d<double > >& target_tangents)
 {
   unsigned num_pts = source_pts.size();
   assert(num_pts == source_tangents.size());
@@ -69,7 +69,7 @@ bool dbsks_translate_point_set(const vcl_vector<vgl_point_2d<double > >& source_
 // -----------------------------------------------------------------------------
 //: Compute bounding box of a set of shapelets
 vsol_box_2d_sptr dbsks_compute_bounding_box(
-  const vcl_vector<dbsksp_shapelet_sptr >& shapelet_list)
+  const std::vector<dbsksp_shapelet_sptr >& shapelet_list)
 {
   vsol_box_2d_sptr bbox = new vsol_box_2d();
   for (unsigned i =0; i < shapelet_list.size(); ++i)
@@ -93,10 +93,10 @@ vsol_box_2d_sptr dbsks_compute_bounding_box(
 // -----------------------------------------------------------------------------
 //: Compute bounding box of a set of xnodes
 vsol_box_2d_sptr dbsks_compute_bounding_box(const
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 {
   vsol_box_2d_sptr bbox = new vsol_box_2d();
-  for (vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
+  for (std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
     it = xnode_map.begin(); it != xnode_map.end(); ++it)
   {
     dbsksp_shock_node_sptr v = it->first;
@@ -115,7 +115,7 @@ vsol_box_2d_sptr dbsks_compute_bounding_box(const
 // -----------------------------------------------------------------------------
 //: Collect the the vertices of same depths and put them into bins
 void dbsks_collect_shock_nodes_by_depth(const dbsksp_shock_graph_sptr& graph,
-    vcl_vector<vcl_vector<dbsksp_shock_node_sptr > >& vertex_bins)
+    std::vector<std::vector<dbsksp_shock_node_sptr > >& vertex_bins)
 {
 
   int max_depth = 0;
@@ -128,7 +128,7 @@ void dbsks_collect_shock_nodes_by_depth(const dbsksp_shock_graph_sptr& graph,
   vertex_bins.clear();
   for (int i=0; i<= max_depth; ++i)
   {
-    vertex_bins.push_back(vcl_vector<dbsksp_shock_node_sptr >() );
+    vertex_bins.push_back(std::vector<dbsksp_shock_node_sptr >() );
   }
 
   // Now assign the vertices to the bins
@@ -196,9 +196,9 @@ float dbsks_deform_cost_shock_edit(const dbsksp_shapelet_sptr& sp_ref,
   // R should be proportional to the size of two fragments
   // since the two have different size, take the average.
 
-  double scale_ref = vcl_sqrt(sp_ref->bounding_quad()->area());
-  double scale_target = vcl_sqrt(sp_target->bounding_quad()->area());
-  double mean_size = vcl_sqrt(scale_ref * scale_target);
+  double scale_ref = std::sqrt(sp_ref->bounding_quad()->area());
+  double scale_target = std::sqrt(sp_target->bounding_quad()->area());
+  double mean_size = std::sqrt(scale_ref * scale_target);
   
   double R = 6 * mean_size / 120;
   
@@ -239,7 +239,7 @@ double dbsks_fragment_size(const dbsksp_shapelet_sptr& s0,
     area += s0->area_rear_arc();
   }
 
-  return vcl_sqrt(area);
+  return std::sqrt(area);
 }
 
 
@@ -255,7 +255,7 @@ double dbsks_compute_graph_size(const dbsksp_shock_graph_sptr& graph)
     dbsksp_shapelet_sptr s = e->fragment()->get_shapelet();
     sum_area += s->area();
   }
-  return vcl_sqrt(sum_area);
+  return std::sqrt(sum_area);
 }
 
 
@@ -273,7 +273,7 @@ float dbsks_deform_cost_log2_scale_diff(const dbsksp_shapelet_sptr& s_ref,
   double length_ref = dbsks_fragment_size(s_ref, include_front_arc, include_rear_arc);
   double length_target = dbsks_fragment_size(s_target, include_front_arc, include_rear_arc);
   double length_ratio = length_ref / length_target;
-  double log2_length_ratio = vcl_log(length_ratio) / vnl_math::ln2;
+  double log2_length_ratio = std::log(length_ratio) / vnl_math::ln2;
   return float(log2_length_ratio);
 }
 
@@ -330,10 +330,10 @@ float dbsks_deform_cost(const dbsksp_shapelet_sptr& s_ref,
 
 // ------------------------------------------------------------------------------
 //: Trace out the boundary of a one-branch graph with its extrinsic nodes
-vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+std::vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 {
-  vcl_vector<bgld_circ_arc > arc_list;
+  std::vector<bgld_circ_arc > arc_list;
   arc_list.clear();
 
   // Collect arcs from boundary of the associated with the fragment
@@ -379,9 +379,9 @@ vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
       bgld_biarc biarc_left;
       if ( biarc_left.compute_biarc_params(
         xnode_parent.bnd_pt_left(), 
-        vcl_atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
+        std::atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
         xnode_child.bnd_pt_left(), 
-        vcl_atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
+        std::atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
       {
         bgld_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
         bgld_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
@@ -391,9 +391,9 @@ vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
 
       bgld_biarc biarc_right;
       if (biarc_right.compute_biarc_params(xnode_parent.bnd_pt_right(), 
-        vcl_atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
+        std::atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
         xnode_child.bnd_pt_right(), 
-        vcl_atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
+        std::atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
       {
         bgld_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
         bgld_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
@@ -409,20 +409,20 @@ vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
 
 // -----------------------------------------------------------------------------
 //: Trace boundary of a one-branch graph
-vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+std::vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 
 {
-  vcl_vector<vsol_spatial_object_2d_sptr > bnd_list;
+  std::vector<vsol_spatial_object_2d_sptr > bnd_list;
 
   // retrieve the boundary arcs
-  vcl_vector<bgld_circ_arc > arc_list = dbsks_bnd_arc_list(graph, xnode_map);
+  std::vector<bgld_circ_arc > arc_list = dbsks_bnd_arc_list(graph, xnode_map);
 
   // convert each arc to polygon
   for (unsigned i =0; i < arc_list.size(); ++i)
   {
     bgld_circ_arc arc = arc_list[i];
-    vcl_vector<vsol_point_2d_sptr > pts;
+    std::vector<vsol_point_2d_sptr > pts;
     
     // sample the arc using 10 segments
     double ds = arc.length() / 10;
@@ -440,19 +440,19 @@ vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock
 
 // -----------------------------------------------------------------------------
 //: Trace contact shocks
-vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_contact_shocks(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+std::vector<vsol_spatial_object_2d_sptr > dbsks_trace_contact_shocks(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 
 {
 
-  vcl_vector<vsol_spatial_object_2d_sptr > contact_shock_list;
+  std::vector<vsol_spatial_object_2d_sptr > contact_shock_list;
 
   // get contact shocks from the xnodes
-  for (vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
+  for (std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
     it = xnode_map.begin(); it != xnode_map.end(); ++it)
   {
     dbsksp_xshock_node_descriptor xnode = it->second;
-    vcl_vector<vsol_point_2d_sptr > pts;
+    std::vector<vsol_point_2d_sptr > pts;
     pts.push_back(new vsol_point_2d(xnode.bnd_pt_left()));
     pts.push_back(new vsol_point_2d(xnode.pt_));
     pts.push_back(new vsol_point_2d(xnode.bnd_pt_right()));
@@ -505,9 +505,9 @@ bool dbsks_is_legal_xfrag(const dbsksp_xshock_node_descriptor& xnode_parent,
 
 // -----------------------------------------------------------------------------
 //: Append a file to an out stream
-vcl_ostream& dbsks_append_text_file(vcl_ostream& os, const vcl_string& filename)
+std::ostream& dbsks_append_text_file(std::ostream& os, const std::string& filename)
 {
-  vcl_ifstream infp(filename.c_str());
+  std::ifstream infp(filename.c_str());
   char linebuffer[1024];
   while (infp.getline(linebuffer,1024)) 
   {

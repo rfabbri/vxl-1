@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_region_thickness_process : public bpro1_process 
@@ -32,10 +32,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Region thickness"; }
+  std::string name() {  return "Region thickness"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -46,8 +46,8 @@ public:
   // Support function
   
   //: Take in the data and execute
-  static bool region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
+  static bool region_thickness_vertex_based(const std::string& thickness_mesh_file,
+    const std::string& cs_file,
     double band_width_ratio,
     double start_angle,
     double end_angle,
@@ -57,8 +57,8 @@ public:
   //: Take in the data and execute
   // compute thickness as weighted average of closest distance to the faces
   // the weights are the areas of the triangle
-  static bool region_thickness_face_based(const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
+  static bool region_thickness_face_based(const std::string& thickness_mesh_file,
+    const std::string& cs_file,
     double band_width_ratio,
     double start_angle,
     double end_angle,
@@ -66,13 +66,13 @@ public:
     double& top_thickness);
 
 
-  static bool crop_mesh_using_cyl_cs(const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
+  static bool crop_mesh_using_cyl_cs(const std::string& thickness_mesh_file,
+    const std::string& cs_file,
     double band_width_ratio,
     double start_angle,
     double end_angle,
-    const vcl_string& top_mesh_file,
-    const vcl_string& bot_mesh_file);
+    const std::string& top_mesh_file,
+    const std::string& bot_mesh_file);
 
 
 };

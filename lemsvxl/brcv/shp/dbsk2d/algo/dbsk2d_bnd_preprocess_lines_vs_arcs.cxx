@@ -21,9 +21,9 @@
 // `tainted_edges' contains all arcs affected by intersection and need
 // further processing
 void dbsk2d_bnd_preprocess::
-intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges, 
-                             vcl_list<dbsk2d_bnd_edge_sptr >* arcset, 
-                             vcl_list<dbsk2d_bnd_edge_sptr >* lineset)
+intersect_lines_against_arcs(std::list<dbsk2d_bnd_edge_sptr >* tainted_edges, 
+                             std::list<dbsk2d_bnd_edge_sptr >* arcset, 
+                             std::list<dbsk2d_bnd_edge_sptr >* lineset)
 {
 
   // clear old stuffs
@@ -67,8 +67,8 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
       double k2 = barc2->curvature();
 
       // potential intersecting locations
-      vcl_vector<double > arc_ratios;
-      vcl_vector<double > line_ratios;
+      std::vector<double > arc_ratios;
+      std::vector<double > line_ratios;
       double d = bgld_closest_point::lineseg_to_circular_arc(
         p11, p12, p21, p22, k2, line_ratios, arc_ratios);
 
@@ -132,24 +132,24 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
 
 
   //// debug //////////////////
-  //for (vcl_list<dbsk2d_bnd_edge_sptr >::iterator it = lineset->begin(); 
+  //for (std::list<dbsk2d_bnd_edge_sptr >::iterator it = lineset->begin(); 
   //  it != lineset->end(); ++it)
   //{
   //  dbsk2d_bnd_edge_sptr line = *it;
   //  if (!line->left_bcurve() || !line->right_bcurve())
   //  {
-  //    vcl_cerr << "ALERT: empty bnd line!!!!! \n";
+  //    std::cerr << "ALERT: empty bnd line!!!!! \n";
   //  }
   //
   //}
 
-  //for (vcl_list<dbsk2d_bnd_edge_sptr >::iterator it = arcset->begin(); 
+  //for (std::list<dbsk2d_bnd_edge_sptr >::iterator it = arcset->begin(); 
   //  it != arcset->end(); ++it)
   //{
   //  dbsk2d_bnd_edge_sptr arc = *it;
   //  if (!arc->left_bcurve() || !arc->right_bcurve())
   //  {
-  //    vcl_cerr << "ALERT: empty bnd line!!!!! \n";
+  //    std::cerr << "ALERT: empty bnd line!!!!! \n";
   //  }
   //
   //}
@@ -172,8 +172,8 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
 //: Remove arcs that share both vertices with another line and the maximum distance
 // between the arc and the line is less than distance threshold
 void dbsk2d_bnd_preprocess::
-remove_arcs_duplicating_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs, 
-                              const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
+remove_arcs_duplicating_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs, 
+                              const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines)
 {
   bnd_edge_list::iterator eit1 = bnd_arcs.begin();
   while (eit1 != bnd_arcs.end())

@@ -117,7 +117,7 @@ int main(int argc, char** argv)
   bae_demo_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 512, h = 512;
-  vcl_string title = "BAE Shadow Demo GUI";
+  std::string title = "BAE Shadow Demo GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->set_statusbar(true);

@@ -10,12 +10,12 @@
 #include <brip/brip_vil_float_ops.h>
 #include <dbctrk/dbctrk_utils.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_random.h>
 struct less_pair
 {
-  bool operator()(vcl_pair<double,vcl_vector<dbetrk_edge_sptr > > x, vcl_pair<double,vcl_vector<dbetrk_edge_sptr > > y)
+  bool operator()(std::pair<double,std::vector<dbetrk_edge_sptr > > x, std::pair<double,std::vector<dbetrk_edge_sptr > > y)
   { return x.first > y.first; }
 };
 dbetrk_track::dbetrk_track()
@@ -25,14 +25,14 @@ dbetrk_track::dbetrk_track()
     std_theta=static_cast<float>(vnl_math::pi/4);
     frame_=0;
 }
-void dbetrk_track::intialize(vcl_vector<dbetrk_edge_sptr>  tracked_dbetrk_edges_)
+void dbetrk_track::intialize(std::vector<dbetrk_edge_sptr>  tracked_dbetrk_edges_)
 {
     tracked_dbetrk_edges.push_back(tracked_dbetrk_edges_);
 }
 bool dbetrk_track::intialize_cells(int w,int h)
 {
     cell_matrix.clear();
-    vcl_vector<cells> temp;
+    std::vector<cells> temp;
     for(int i=0;i<(int)(w/20);i++)
     {
         temp.clear();     
@@ -61,7 +61,7 @@ bool dbetrk_track::fill_dbetrk_edges(int frameno)
     int input_curves_size_int = static_cast<int>(input_curves_.size());
     if(frameno<input_curves_size_int || input_curves_size_int>0)
     {
-        //vcl_vector<dbetrk_edge_sptr> curr_frame_nodes_;       
+        //std::vector<dbetrk_edge_sptr> curr_frame_nodes_;       
         for(unsigned i=0;i<input_curves_.size();i++)
         {   
             vdgl_edgel_chain_sptr ec=input_curves_[i]->curve()->cast_to_vdgl_digital_curve()->get_interpolator()->get_edgel_chain();
@@ -79,7 +79,7 @@ bool dbetrk_track::fill_dbetrk_edges(int frameno)
                 {
                     vdgl_edgel ed = ec->edgel(j);
                     vdgl_edgel en = ec->edgel(j+1);
-                    double theta=vcl_atan2(en.y()-ed.y(),en.x()-ed.x());
+                    double theta=std::atan2(en.y()-ed.y(),en.x()-ed.x());
                     newnode->settheta(theta);
                 }
                 else
@@ -110,11 +110,11 @@ void dbetrk_track::assign_rgb_values(vil_image_view<float> p0,
     double thetap=enode->gettheta()+vnl_math::pi/2;
     double thetan=enode->gettheta()-vnl_math::pi/2;
 
-    int p_x=(int)(enode->point_.x()+r*vcl_cos(thetap));
-    int p_y=(int)(enode->point_.y()+r*vcl_sin(thetap));
+    int p_x=(int)(enode->point_.x()+r*std::cos(thetap));
+    int p_y=(int)(enode->point_.y()+r*std::sin(thetap));
 
-    int n_x=(int)(enode->point_.x()+r*vcl_cos(thetan));
-    int n_y=(int)(enode->point_.y()+r*vcl_sin(thetan));
+    int n_x=(int)(enode->point_.x()+r*std::cos(thetan));
+    int n_y=(int)(enode->point_.y()+r*std::sin(thetan));
 
    
     vbl_bounding_box<double,2> p_box_temp;
@@ -172,9 +172,9 @@ bool dbetrk_track::compute_edges(int frame1,int frame2)
         || input_curves_size_int<0)
         return false;
 
-    vcl_vector<vcl_pair<double,vcl_vector<dbetrk_edge_sptr > > >particledata;
+    std::vector<std::pair<double,std::vector<dbetrk_edge_sptr > > >particledata;
     compute_particles(frame2,particledata,samplenum);
-    vcl_vector<dbetrk_edge_sptr> nodes;
+    std::vector<dbetrk_edge_sptr> nodes;
     tracked_dbetrk_edges.push_back(nodes);
 
     for(unsigned i=0;i<tracked_dbetrk_edges[frame1].size();i++)
@@ -208,8 +208,8 @@ bool dbetrk_track::compute_edges(int frame1,int frame2)
 double dbetrk_track::compute_cost_IHS(dbetrk_edge_sptr e1, dbetrk_edge_sptr e2)
 {
 
-    double cost1=vcl_fabs(e1->pcolor[0]-e2->pcolor[0])+vcl_fabs(e1->ncolor[0]-e2->ncolor[0]);
-    double cost2=vcl_fabs(e1->ncolor[0]-e2->pcolor[0])+vcl_fabs(e1->pcolor[0]-e2->ncolor[0]);
+    double cost1=std::fabs(e1->pcolor[0]-e2->pcolor[0])+std::fabs(e1->ncolor[0]-e2->ncolor[0]);
+    double cost2=std::fabs(e1->ncolor[0]-e2->pcolor[0])+std::fabs(e1->pcolor[0]-e2->ncolor[0]);
 
 
     if(cost1<cost2)
@@ -226,7 +226,7 @@ double dbetrk_track::compute_cost_dist(dbetrk_edge_sptr e1, dbetrk_edge_sptr e2)
 
 }
 
-vgl_point_2d<double> dbetrk_track::mean_point(vcl_vector<dbetrk_edge_sptr> listofedges)
+vgl_point_2d<double> dbetrk_track::mean_point(std::vector<dbetrk_edge_sptr> listofedges)
 {
     double accum_x=0;
     double accum_y=0;
@@ -246,7 +246,7 @@ vgl_point_2d<double> dbetrk_track::mean_point(vcl_vector<dbetrk_edge_sptr> listo
 
 
 void dbetrk_track::compute_particles(int frameno,
-                                    vcl_vector<vcl_pair<double,vcl_vector<dbetrk_edge_sptr> > > &particledata, 
+                                    std::vector<std::pair<double,std::vector<dbetrk_edge_sptr> > > &particledata, 
                                     int particleno)
 {
     
@@ -256,7 +256,7 @@ void dbetrk_track::compute_particles(int frameno,
         
         vnl_random normrandom;
       
-        vcl_vector<vcl_vector<dbetrk_edge_sptr> > samples;
+        std::vector<std::vector<dbetrk_edge_sptr> > samples;
 
         if(frameno==1)
            for(int i=0;i<particleno;i++)
@@ -279,14 +279,14 @@ void dbetrk_track::compute_particles(int frameno,
            double ty=(normrandom.drand32()-0.5)*std_y;
            double theta=normrandom.normal()*std_theta;
 
-           vcl_vector<dbetrk_edge_sptr > predictedpoints;      
+           std::vector<dbetrk_edge_sptr > predictedpoints;      
            double toterror=0;
            for(unsigned int i=0;i<samples[k].size();i++)
            {
               double x=samples[k][i]->point_.x();
               double y=samples[k][i]->point_.y();
-              double newx=(x-p.x())*vcl_cos(theta)-(y-p.y())*vcl_sin(theta)+p.x() +tx;
-              double newy=(x-p.x())*vcl_sin(theta)+(y-p.y())*vcl_cos(theta)+p.y() +ty;
+              double newx=(x-p.x())*std::cos(theta)-(y-p.y())*std::sin(theta)+p.x() +tx;
+              double newy=(x-p.x())*std::sin(theta)+(y-p.y())*std::cos(theta)+p.y() +ty;
               //: function to compute cost for each point
               int xmin=static_cast<int>(newx);
               int ymin=static_cast<int>(newy);
@@ -310,7 +310,7 @@ void dbetrk_track::compute_particles(int frameno,
                         for(unsigned int l=0;l<cell_matrix[j][k].points.size();l++)
                         {
                           double error1=vgl_distance<double>(vgl_point_2d<double>(newx,newy),cell_matrix[j][k].points[l]->point_);
-                          double error2=vcl_fabs(thetanew-cell_matrix[j][k].points[l]->gettheta());
+                          double error2=std::fabs(thetanew-cell_matrix[j][k].points[l]->gettheta());
 
                           double error=error1*weight1+error2*weight2;
                           if(error<min_error)
@@ -334,12 +334,12 @@ void dbetrk_track::compute_particles(int frameno,
 
             }
             toterror/=predictedpoints.size();
-            toterror=vcl_exp(-toterror);
-            particledata.push_back(vcl_make_pair(toterror,predictedpoints));
+            toterror=std::exp(-toterror);
+            particledata.push_back(std::make_pair(toterror,predictedpoints));
  
         }
         
-        vcl_sort(particledata.begin(),particledata.end(),less_pair());
+        std::sort(particledata.begin(),particledata.end(),less_pair());
        
     }
 }
@@ -360,7 +360,7 @@ double dbetrk_track::error_grad(dbetrk_edge_sptr e1,dbetrk_edge_sptr e2, double 
 
     theta1-=theta;
 
-    return vcl_fabs(theta1-theta2);
+    return std::fabs(theta1-theta2);
         
 }
     /*for(int i=0;i<dbetrk_edges[frame1].size();i++)
@@ -388,5 +388,5 @@ double dbetrk_track::error_grad(dbetrk_edge_sptr e1,dbetrk_edge_sptr e2, double 
 
                           }
          }
-        vcl_sort(dbetrk_edges[frame1][i]->in_edges.begin(),dbetrk_edges[frame1][i]->in_edges.end(),less_val());
+        std::sort(dbetrk_edges[frame1][i]->in_edges.begin(),dbetrk_edges[frame1][i]->in_edges.end(),less_val());
     }*/

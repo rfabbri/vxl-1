@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_iomanip.h>
+#include <iostream>
+#include <string>
+#include <iomanip>
 
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -25,7 +25,7 @@ static void test_psm_track_rays()
   bool do_init = false;
 
   vgl_point_3d<float> corner(-220.0, -200.0, -35.0);
-  vcl_string storage_dir = "c:/research/psm/models/capitol_high";
+  std::string storage_dir = "c:/research/psm/models/capitol_high";
   vgl_point_3d<double> scene_origin(corner.x(),corner.y(),corner.z());
   double block_length = 512*0.75;
 
@@ -39,21 +39,21 @@ static void test_psm_track_rays()
   }
  
   // load the camera from file
-  //vcl_string camera_filename = "c:/research/data/CapitolSiteHigh/cameras_KRT/camera_00000.txt";
-  //vcl_string camera_filename = "c:/research/registration/output/capitol_high_train/flyover/cameras_KRT/camera_00116.txt";
-  vcl_vector<unsigned> frames;
+  //std::string camera_filename = "c:/research/data/CapitolSiteHigh/cameras_KRT/camera_00000.txt";
+  //std::string camera_filename = "c:/research/registration/output/capitol_high_train/flyover/cameras_KRT/camera_00116.txt";
+  std::vector<unsigned> frames;
   for (unsigned int i=0; i < 254; i+=50) {
     frames.push_back(i);
   }
   
   for (unsigned int i=0; i < frames.size(); ++i) {
-    vcl_stringstream camera_filename_ss;
-    camera_filename_ss << "c:/research/data/CapitolSiteHigh/cameras_KRT_lores/camera_" << vcl_setw(5) << vcl_setfill('0') << frames[i] << ".txt";
-    vcl_string camera_filename = camera_filename_ss.str();
+    std::stringstream camera_filename_ss;
+    camera_filename_ss << "c:/research/data/CapitolSiteHigh/cameras_KRT_lores/camera_" << std::setw(5) << std::setfill('0') << frames[i] << ".txt";
+    std::string camera_filename = camera_filename_ss.str();
 
-    vcl_ifstream ifs(camera_filename.c_str());
+    std::ifstream ifs(camera_filename.c_str());
     if (!ifs.is_open()) {
-      vcl_cerr << "Failed to open file " << camera_filename << vcl_endl;
+      std::cerr << "Failed to open file " << camera_filename << std::endl;
       return;
     }
     vnl_matrix_fixed<double,3,3> K_matrix;
@@ -71,9 +71,9 @@ static void test_psm_track_rays()
     vpgl_perspective_camera<double> cam(K,camera_center,rot);
     unsigned int ni = 1280/8, nj = 720/8;
 
-    vcl_stringstream track_filename_ss;
-    track_filename_ss << "c:/research/psm/output/ray_tracks_" << vcl_setw(5) << vcl_setfill('0') << frames[i] <<".txt";
-    vcl_string track_filename = track_filename_ss.str();
+    std::stringstream track_filename_ss;
+    track_filename_ss << "c:/research/psm/output/ray_tracks_" << std::setw(5) << std::setfill('0') << frames[i] <<".txt";
+    std::string track_filename = track_filename_ss.str();
     //psm_track_rays<psm_sample<PSM_APM_MOG_GREY> >(scene,cam,0, ni, 0, nj, track_filename);
     psm_track_rays_parallel<psm_sample<PSM_APM_MOG_GREY> >(scene,cam,ni,nj,track_filename);
   }

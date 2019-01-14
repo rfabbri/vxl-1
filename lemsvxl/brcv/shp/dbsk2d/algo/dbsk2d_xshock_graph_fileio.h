@@ -23,11 +23,11 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <map>
+#include <utility>
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
 #include <dbsk2d/dbsk2d_shock_edge_sptr.h>
@@ -38,8 +38,8 @@ class dbsk2d_xshock_graph_fileio
 {
 protected:
   char buffer[2000];
-  vcl_ifstream fp_in;
-  vcl_ofstream fp_out;
+  std::ifstream fp_in;
+  std::ofstream fp_out;
 
   dbsk2d_shock_graph_sptr shock;
   int num_nodes;
@@ -48,14 +48,14 @@ protected:
 
   int version; ///> version of the extrinsic shock file
 
-  vcl_map<int, dbsk2d_xshock_sample_sptr> samples_map;
-  vcl_map<int, dbsk2d_shock_node_sptr> nodes_map;
+  std::map<int, dbsk2d_xshock_sample_sptr> samples_map;
+  std::map<int, dbsk2d_shock_node_sptr> nodes_map;
   
-  //: ozge made into the following vector type //vcl_map<int, vcl_vector<int> > node_adjacency_map;
-  vcl_map<int, vcl_vector<vcl_pair<int, int> > > node_adjacency_map;
-  //: ozge made into the following vector type //vcl_map<vcl_pair<int, int>, dbsk2d_shock_edge_sptr> edges_map;
-  vcl_map<vcl_pair<int, vcl_pair<int, int> >, dbsk2d_shock_edge_sptr> edges_map;
-  vcl_map<dbsk2d_shock_edge_sptr, vcl_vector<int> > edge_samples_map;
+  //: ozge made into the following vector type //std::map<int, std::vector<int> > node_adjacency_map;
+  std::map<int, std::vector<std::pair<int, int> > > node_adjacency_map;
+  //: ozge made into the following vector type //std::map<std::pair<int, int>, dbsk2d_shock_edge_sptr> edges_map;
+  std::map<std::pair<int, std::pair<int, int> >, dbsk2d_shock_edge_sptr> edges_map;
+  std::map<dbsk2d_shock_edge_sptr, std::vector<int> > edge_samples_map;
 
 public:
 
@@ -70,7 +70,7 @@ public:
 
   //: Load an extrinsic shock graph from an .esf file.
   // \relates dbsk2d_shock_graph
-  dbsk2d_shock_graph_sptr load_xshock_graph(vcl_string filename);
+  dbsk2d_shock_graph_sptr load_xshock_graph(std::string filename);
 
   void load_xshock_header();
   void load_xshock_node_description();
@@ -84,7 +84,7 @@ public:
 
   //: Save an extrinsic shock graph to disk (.esf file)
   // \relates dbsk2d_shock_graph
-  bool save_xshock_graph(dbsk2d_shock_graph_sptr shock_graph, vcl_string filename);
+  bool save_xshock_graph(dbsk2d_shock_graph_sptr shock_graph, std::string filename);
 
   void write_xshock_header();
   void write_xshock_node_description();

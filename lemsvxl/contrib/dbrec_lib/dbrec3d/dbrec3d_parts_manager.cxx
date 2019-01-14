@@ -19,7 +19,7 @@ dbrec3d_parts_manager::dbrec3d_parts_manager():names_(3)
   if(!DATABASE->exists(parts_table_name_))
   {
     //define table
-    vcl_vector<vcl_string> types(3);
+    std::vector<std::string> types(3);
     
     names_[0] = "db_id";
     names_[1] = "part_id";
@@ -42,7 +42,7 @@ int dbrec3d_parts_manager::register_kernel( bvpl_kernel_sptr kernel)
 {
   
   //TO DO : the following values are temporary
-  vcl_cerr << "Warning: in dbrec3d_parts_manager::register_kernels the values of class_prior, symmetric, rot_invar are hardcoded, this should be changed \n"; 
+  std::cerr << "Warning: in dbrec3d_parts_manager::register_kernels the values of class_prior, symmetric, rot_invar are hardcoded, this should be changed \n"; 
   float class_prior = 1.0f;
   bool symmetric = true;
   bool rot_invar = false;
@@ -58,7 +58,7 @@ int dbrec3d_parts_manager::register_kernel( bvpl_kernel_sptr kernel)
     current_part_id_++;
   }
   else 
-    vcl_cerr << "in dbrec3d_parts_manager :could not add part to database\n";
+    std::cerr << "in dbrec3d_parts_manager :could not add part to database\n";
    
   return current_part_id_ - 1;
   
@@ -66,17 +66,17 @@ int dbrec3d_parts_manager::register_kernel( bvpl_kernel_sptr kernel)
 
 
 //: Create parts from a vector of bvpl_kernels and return an map of <kernel_id , part_id>
-vcl_map<int,int> 
+std::map<int,int> 
 dbrec3d_parts_manager::register_kernels( bvpl_kernel_vector_sptr kernels)
 {
   
   //TO DO : the following values are temporary
-  vcl_cerr << "Warning: in dbrec3d_parts_manager::register_kernels the values of class_prior, symmetric, rot_invar are hardcoded, this should be changed \n"; 
+  std::cerr << "Warning: in dbrec3d_parts_manager::register_kernels the values of class_prior, symmetric, rot_invar are hardcoded, this should be changed \n"; 
   float class_prior = 1.0f;
   bool symmetric = true;
   bool rot_invar = false;
   
-  vcl_map<int,int> id_map;
+  std::map<int,int> id_map;
   
   //itarate trhough vector of kernels, create parts and add them to the database
   for (unsigned i = 0; i< kernels->kernels_.size(); i++) {
@@ -88,11 +88,11 @@ dbrec3d_parts_manager::register_kernels( bvpl_kernel_vector_sptr kernels)
     //add part to the database
     brdb_tuple_sptr new_tuple = new brdb_tuple(db_id, current_part_id_, p);
     if(DATABASE->add_tuple(parts_table_name_, new_tuple)){
-      id_map.insert(vcl_pair<int, int>(i, current_part_id_));
+      id_map.insert(std::pair<int, int>(i, current_part_id_));
       current_part_id_++;
     }
     else 
-      vcl_cerr << "in dbrec3d_parts_manager :could not add part to database\n";
+      std::cerr << "in dbrec3d_parts_manager :could not add part to database\n";
     
   }
  
@@ -105,7 +105,7 @@ dbrec3d_part_sptr dbrec3d_parts_manager::get_part(int part_id)
 {
   //sanity check
   if(part_id<0){
-    vcl_cerr << " Warning in dbrec3d_parts_manager, requesting part with negative id\n";
+    std::cerr << " Warning in dbrec3d_parts_manager, requesting part with negative id\n";
     return NULL;
   }
   
@@ -114,17 +114,17 @@ dbrec3d_part_sptr dbrec3d_parts_manager::get_part(int part_id)
   
   brdb_selection_sptr selec = DATABASE->select(parts_table_name_, Q);
   if (selec->size()!=1) {
-    vcl_cout << "in dbrec3d_parts_manager :number selections is not 1\n";
+    std::cout << "in dbrec3d_parts_manager :number selections is not 1\n";
     return NULL;
   }
   //the result from a selection is a tuple/row, now get the desired value within the row
   brdb_value_sptr value;
-  if (!selec->get_value(vcl_string("part_sptr"), value)) {
-    vcl_cout << "in dbrec3d_context_manager didn't get value\n";
+  if (!selec->get_value(std::string("part_sptr"), value)) {
+    std::cout << "in dbrec3d_context_manager didn't get value\n";
     return false;
   }
   if (!value) {
-    vcl_cout << "indbrec3d_context_manager null value\n";
+    std::cout << "indbrec3d_context_manager null value\n";
     return false;
   }
   
@@ -135,7 +135,7 @@ dbrec3d_part_sptr dbrec3d_parts_manager::get_part(int part_id)
 }
 
 //: Returns all parts registered in the database
-vcl_vector<dbrec3d_part_sptr> dbrec3d_parts_manager::get_all_parts()
+std::vector<dbrec3d_part_sptr> dbrec3d_parts_manager::get_all_parts()
 {
   // query to get all contexts
   brdb_query_aptr Q = brdb_query_comp_new(names_[1], brdb_query::ALL, -1);
@@ -143,7 +143,7 @@ vcl_vector<dbrec3d_part_sptr> dbrec3d_parts_manager::get_all_parts()
   brdb_selection_sptr selec = DATABASE->select(parts_table_name_, Q);
   if (!selec->empty()) 
   {
-    vcl_vector<dbrec3d_part_sptr> all_parts(selec->size());
+    std::vector<dbrec3d_part_sptr> all_parts(selec->size());
     
     for(unsigned int i=0; i<selec->size(); i++)
     {
@@ -154,8 +154,8 @@ vcl_vector<dbrec3d_part_sptr> dbrec3d_parts_manager::get_all_parts()
     return all_parts;
   }  
   
-  vcl_cerr << "in dbrec3d_context_manager :no selections - returning empty vector\n";
-  return vcl_vector<dbrec3d_part_sptr>(0);
+  std::cerr << "in dbrec3d_context_manager :no selections - returning empty vector\n";
+  return std::vector<dbrec3d_part_sptr>(0);
 }
 
 
@@ -175,7 +175,7 @@ bool dbrec3d_parts_manager::register_part(dbrec3d_part_sptr part)
     }
   }
   else{ 
-    vcl_cerr << "in dbrec3d_parts_manager :could not add part to database\n";
+    std::cerr << "in dbrec3d_parts_manager :could not add part to database\n";
     return false;
   }
 }

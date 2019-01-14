@@ -15,7 +15,7 @@
 // \date     May 20, 2006
 // 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_array_3d.h>
 #include <vnl/vnl_math.h>
 #include <vsol/vsol_cylinder.h>
@@ -25,22 +25,22 @@
 #include <vil3d/vil3d_save.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_image_resource.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 
 //: reads the input file and creates a list of cylinders to be filled in
 // the voxels
-void create_cyls(vcl_string fname, vcl_vector<vsol_cylinder> &cylinders,
+void create_cyls(std::string fname, std::vector<vsol_cylinder> &cylinders,
                  int &xdim, int &ydim, int &zdim, 
                  double &voxel_size)
 {
-  vcl_FILE *fp;
-  fp = vcl_fopen(fname.data(), "r");
+  std::FILE *fp;
+  fp = std::fopen(fname.data(), "r");
   assert(fp != NULL);
   char dummy[80];
-  vcl_fscanf(fp, "%s\n", dummy);
-  assert(!vcl_strcmp(dummy, "synthetic_cylinder_generator_input"));
+  std::fscanf(fp, "%s\n", dummy);
+  assert(!std::strcmp(dummy, "synthetic_cylinder_generator_input"));
 
   double posx, posy, posz;
   double orx, ory, orz;
@@ -50,50 +50,50 @@ void create_cyls(vcl_string fname, vcl_vector<vsol_cylinder> &cylinders,
   int counter = 0;
   while(1)
   {
-    vcl_fscanf(fp, "%c", &start_of_line);
+    std::fscanf(fp, "%c", &start_of_line);
     if(start_of_line == 'e')
       break;
     else if(start_of_line == 'c') //this line is a cylinder input
     {
-      vcl_fscanf(fp, " %c", &check);
+      std::fscanf(fp, " %c", &check);
       assert(check == '(');
-      vcl_fscanf(fp, "%lf%c", &posx, &check);
+      std::fscanf(fp, "%lf%c", &posx, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%lf%c", &posy, &check);
+      std::fscanf(fp, "%lf%c", &posy, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%lf%c", &posz, &check);
+      std::fscanf(fp, "%lf%c", &posz, &check);
       assert(check == ')');
-      vcl_fscanf(fp, "%lf%lf", &radius, &length);
-      vcl_fscanf(fp, " %c", &check);
+      std::fscanf(fp, "%lf%lf", &radius, &length);
+      std::fscanf(fp, " %c", &check);
       assert(check == '(');
-      vcl_fscanf(fp, "%lf%c", &orx, &check);
+      std::fscanf(fp, "%lf%c", &orx, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%lf%c", &ory, &check);
+      std::fscanf(fp, "%lf%c", &ory, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%lf%c\n", &orz, &check);
+      std::fscanf(fp, "%lf%c\n", &orz, &check);
       assert(check == ')');
 
       vgl_point_3d<double> centre(posx, posy, posz);
-      double l = vcl_sqrt((orx*orx) + (ory*ory) + (orz*orz));
+      double l = std::sqrt((orx*orx) + (ory*ory) + (orz*orz));
       vgl_vector_3d<double> orientation(orx/l, ory/l, orz/l);
 
       vsol_cylinder cyl(centre, radius, length);
       cyl.set_orientation(orientation);
-      vcl_cout << cyl << vcl_endl;
+      std::cout << cyl << std::endl;
       cylinders.push_back(cyl);
       
     }
     else if(start_of_line == 'd') //this line is for the dimensions of the box
     {
-      vcl_fscanf(fp, " %c", &check);
+      std::fscanf(fp, " %c", &check);
       assert(check == '(');
-      vcl_fscanf(fp, "%d%c", &xdim, &check);
+      std::fscanf(fp, "%d%c", &xdim, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%d%c", &ydim, &check);
+      std::fscanf(fp, "%d%c", &ydim, &check);
       assert(check == ',');
-      vcl_fscanf(fp, "%d%c", &zdim, &check);
+      std::fscanf(fp, "%d%c", &zdim, &check);
       assert(check == ')');
-      vcl_fscanf(fp, "%lf", &voxel_size);
+      std::fscanf(fp, "%lf", &voxel_size);
     }
   }
   fclose(fp);
@@ -101,7 +101,7 @@ void create_cyls(vcl_string fname, vcl_vector<vsol_cylinder> &cylinders,
 
 //: creates the 3D data by filling out the voxels based on the "inside cylinder"
 // test. 
-vbl_array_3d<double> create_3d_data(vcl_string fname, vcl_vector<vsol_cylinder> objs, 
+vbl_array_3d<double> create_3d_data(std::string fname, std::vector<vsol_cylinder> objs, 
                            int xdim, int ydim, int zdim, double voxel_size)
 {
   vil3d_image_view<unsigned char> view(xdim, ydim, zdim);
@@ -134,45 +134,45 @@ vbl_array_3d<double> create_3d_data(vcl_string fname, vcl_vector<vsol_cylinder> 
   return voxels;
 }
 
-void print_volume(vcl_ofstream& of, vbl_array_3d<double> vol,
+void print_volume(std::ofstream& of, vbl_array_3d<double> vol,
           int xdim, int ydim, int zdim)
 {
   for (int i=0; i<zdim; i++){
-    of << "z=" << i << vcl_endl;
+    of << "z=" << i << std::endl;
       for (int j=0; j<ydim; j++){
       of << "y=" << j << " ";
         for (int k=0; k<xdim; k++){
       of << vol[k][j][i] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 }
 
 int main(int argc, char* argv[])
 {
-  vcl_string in_fname="", out_fname="", txt_fname="";
-  vcl_vector<vsol_cylinder> cylinders;
+  std::string in_fname="", out_fname="", txt_fname="";
+  std::vector<vsol_cylinder> cylinders;
   double voxel_size;
   int xdim, ydim, zdim;
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    if (arg == vcl_string ("-i")) { in_fname = vcl_string(argv[++i]);}
-    else if (arg == vcl_string ("-o")) {out_fname = vcl_string(argv[++i]);}
-  else if (arg == vcl_string ("-t")) {txt_fname = vcl_string(argv[++i]);}
+    std::string arg (argv[i]);
+    if (arg == std::string ("-i")) { in_fname = std::string(argv[++i]);}
+    else if (arg == std::string ("-o")) {out_fname = std::string(argv[++i]);}
+  else if (arg == std::string ("-t")) {txt_fname = std::string(argv[++i]);}
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-i cylinders input file][-o output file][-t txt_file (opt)] " << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-i cylinders input file][-o output file][-t txt_file (opt)] " << std::endl;
       throw -1;
     }
   }
 
   if ((in_fname == "") || (out_fname == "")) {
-    vcl_cerr << "You should provide and input and output file paths" << vcl_endl;
-    vcl_cout << "Usage: " << argv[0] << "[-i cylinders input file][-o output file][-t txt_file (opt)] " << vcl_endl;
+    std::cerr << "You should provide and input and output file paths" << std::endl;
+    std::cout << "Usage: " << argv[0] << "[-i cylinders input file][-o output file][-t txt_file (opt)] " << std::endl;
       return 1;
   }
 
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
   if (txt_fname == "") 
     return 1;
 
-  vcl_ofstream of(txt_fname.data());
+  std::ofstream of(txt_fname.data());
   print_volume(of, vol, xdim, ydim, zdim);
   
 }

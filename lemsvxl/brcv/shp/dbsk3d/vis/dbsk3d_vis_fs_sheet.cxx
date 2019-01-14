@@ -1,9 +1,9 @@
 // MingChing Chang 040226
 // Visualization of the fine-scale shocks
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <sstream>
+#include <cstdlib>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/pro/dbmsh3d_cmdpara.h>
@@ -40,7 +40,7 @@
 SoSeparator* draw_fs_sheet_set (dbsk3d_fs_sheet_set* fs_ss, const int show_inf,
                                 const bool idv, const bool user_defined_class)
 {
-  vul_printf (vcl_cout, "draw_fs_sheet_set(): %d fs_sheets.\n", fs_ss->sheetmap().size());
+  vul_printf (std::cout, "draw_fs_sheet_set(): %d fs_sheets.\n", fs_ss->sheetmap().size());
   SoSeparator* root = new SoSeparator;
   
   SoShapeHints* hints = new SoShapeHints();
@@ -53,7 +53,7 @@ SoSeparator* draw_fs_sheet_set (dbsk3d_fs_sheet_set* fs_ss, const int show_inf,
   unsigned int n_vis_bnd = 0;
   unsigned int n_inf_skipped = 0;
 
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
   for (; it != fs_ss->sheetmap().end(); it++) {
     dbsk3d_fs_sheet* FS = (*it).second;
 
@@ -82,7 +82,7 @@ SoSeparator* draw_fs_sheet_set (dbsk3d_fs_sheet_set* fs_ss, const int show_inf,
     }
   }
 
-  vul_printf (vcl_cout, "\t%d inf_sheets skipped.\n", n_inf_skipped);
+  vul_printf (std::cout, "\t%d inf_sheets skipped.\n", n_inf_skipped);
 
   return root;
 }
@@ -99,23 +99,23 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
                                          const float cube_size)
 {
   SoSeparator* root = new SoSeparator;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > lines;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > lines;
   
-  vcl_set<dbsk3d_fs_edge*> FE_with_G_set; //Set of fs_edges associated with generators.  
-  vcl_set<dbsk3d_fs_vertex*> FV_with_G_set; //Set of fs_vertices associated with generators.
+  std::set<dbsk3d_fs_edge*> FE_with_G_set; //Set of fs_edges associated with generators.  
+  std::set<dbsk3d_fs_vertex*> FV_with_G_set; //Set of fs_vertices associated with generators.
 
   //1) Go through all generators and initialize the G_asso_map_[] to G_ASSO_NONE. 
-  vcl_map<int, char>  G_asso_map;
-  vcl_map<int, dbmsh3d_vertex*>::iterator git = fs_ss->bnd_mesh()->vertexmap().begin();
+  std::map<int, char>  G_asso_map;
+  std::map<int, dbmsh3d_vertex*>::iterator git = fs_ss->bnd_mesh()->vertexmap().begin();
   for (; git != fs_ss->bnd_mesh()->vertexmap().end(); git++) {
     dbmsh3d_vertex* G = (*git).second;
-    G_asso_map.insert (vcl_pair<int, char> (G->id(), G_ASSO_NONE));
+    G_asso_map.insert (std::pair<int, char> (G->id(), G_ASSO_NONE));
   }  
 
   //Go through each shock sheet FS
   unsigned int n_valid_P = 0;
   unsigned int n_PG_asgn = 0;
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator sit = fs_ss->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator sit = fs_ss->sheetmap().begin();
   for (; sit != fs_ss->sheetmap().end(); sit++) {
     dbsk3d_fs_sheet* FS = (*sit).second;
     
@@ -126,9 +126,9 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
       assert (FF->b_valid());
       n_valid_P++;
       vgl_point_3d<double> C = FF->compute_center_pt();
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
       mark_G_asso (FF->genes(0), G_ASSO_PATCH, G_asso_map);
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
       mark_G_asso (FF->genes(1), G_ASSO_PATCH, G_asso_map);
       n_PG_asgn += 2;
 
@@ -136,7 +136,7 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
       FF->get_bnd_FE_FV_with_Gs (FE_with_G_set, FV_with_G_set);
     }
   }
-  vul_printf (vcl_cout, "  %u fs_sheets, %u valid fs_faces, %u patch-to-gene assignment.\n", 
+  vul_printf (std::cout, "  %u fs_sheets, %u valid fs_faces, %u patch-to-gene assignment.\n", 
               fs_ss->sheetmap().size(), n_valid_P, n_PG_asgn);
 
   //Draw fs_face to gene association in Dark Blue.
@@ -146,7 +146,7 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
 
   //2) Go through the FE_with_G_set and draw fs_edge to gene associations.
   unsigned int n_LG_asgn = 0;
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = FE_with_G_set.begin();
+  std::set<dbsk3d_fs_edge*>::iterator lit = FE_with_G_set.begin();
   for (; lit != FE_with_G_set.end(); lit++) {
     dbsk3d_fs_edge* FE = (*lit);
     assert (FE->have_asgn_Gs());
@@ -154,12 +154,12 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
     
     for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
       mark_G_asso (G, G_ASSO_LINK, G_asso_map);
       n_LG_asgn++;
     }
   }
-  vul_printf (vcl_cout, "  %u fs_edges has asgn_genes, %u link-to-gene assignment.\n", 
+  vul_printf (std::cout, "  %u fs_edges has asgn_genes, %u link-to-gene assignment.\n", 
               FE_with_G_set.size(), n_LG_asgn);
   FE_with_G_set.clear();
 
@@ -170,19 +170,19 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
   
   //3) Go through the FV_with_G_set and draw fs_vertex to gene associations.
   unsigned int n_NG_asgn = 0;
-  vcl_set<dbsk3d_fs_vertex*>::iterator nit = FV_with_G_set.begin();
+  std::set<dbsk3d_fs_vertex*>::iterator nit = FV_with_G_set.begin();
   for (; nit != FV_with_G_set.end(); nit++) {
     dbsk3d_fs_vertex* FV = (*nit);
     assert (FV->have_asgn_Gs());
 
     for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
       mark_G_asso (G, G_ASSO_NODE, G_asso_map);
       n_NG_asgn++;
     }
   }
-  vul_printf (vcl_cout, "  %u fs_vertices has asgn_genes, %u node-to-gene assignment.\n", 
+  vul_printf (std::cout, "  %u fs_vertices has asgn_genes, %u node-to-gene assignment.\n", 
               FV_with_G_set.size(), n_NG_asgn);
   FV_with_G_set.clear();
 
@@ -192,14 +192,14 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
   lines.clear();
 
   //4) Go through all generators and draw the un-associated ones (if any).
-  vul_printf (vcl_cout, "  Unassociated generators: ");
+  vul_printf (std::cout, "  Unassociated generators: ");
   unsigned int n_gene_unasso = 0;
-  vcl_map<int, char>::iterator gmit = G_asso_map.begin();
+  std::map<int, char>::iterator gmit = G_asso_map.begin();
   for (; gmit != G_asso_map.end(); gmit++) {
     char asso = (*gmit).second;
     if (asso == G_ASSO_NONE) {
       int id = (*gmit).first;
-      vul_printf (vcl_cout, "%d ", id);
+      vul_printf (std::cout, "%d ", id);
       dbmsh3d_vertex* V = fs_ss->bnd_mesh()->vertexmap(id);
       //Yellow cube for un-asgn generators.
       root->addChild (draw_vertex_vispt_SoCube (V, SbColor (0.5f, 0.0f, 0.0f), cube_size)); 
@@ -207,8 +207,8 @@ SoSeparator* draw_fs_sheet_set_bnd_asgn (dbsk3d_fs_sheet_set* fs_ss, const int o
     }
   }
   if (n_gene_unasso == 0)
-    vul_printf (vcl_cout, "NONE.");
-  vul_printf (vcl_cout, "\n\n"); 
+    vul_printf (std::cout, "NONE.");
+  vul_printf (std::cout, "\n\n"); 
 
   ///assert (n_gene_unasso == 0);
   G_asso_map.clear();
@@ -223,7 +223,7 @@ SoSeparator* draw_fs_sheet_set_bnd_mesh (dbsk3d_fs_sheet_set* fs_ss,
   int n_tris_drawn = 0;
   init_rand_color (DBMSH3D_SHEET_COLOR_SEED);
 
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
   for (; it != fs_ss->sheetmap().end(); it++) {
     dbsk3d_fs_sheet* FS = (*it).second;
 
@@ -243,8 +243,8 @@ int draw_fs_sheet_bnd_mesh (SoSeparator* root, dbsk3d_fs_sheet* FS,
   // Gfaces: set of faces that completely sit on Gset (of points).
   // Gfaces2: set of faces that share 2 points in Gset.
   // Gfaces1: set of faces that share only 1 point in Gset.
-  vcl_set<dbmsh3d_vertex*> Gset;
-  vcl_set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
+  std::set<dbmsh3d_vertex*> Gset;
+  std::set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
   FS->get_bnd_mesh_Fs (Gset, Gfaces, Gfaces2, Gfaces1);
 
   //For option 2, only draw the Gfaces.
@@ -294,9 +294,9 @@ SoSeparator* draw_fs_sheet (dbsk3d_fs_sheet* FS, const SbColor& color, const flo
 void draw_fs_sheet_geom (SoSeparator* root, dbsk3d_fs_sheet* FS,
                          const bool user_defined_class)
 {
-  vcl_set<dbmsh3d_vertex*> IFS_vset;
-  vcl_vector<vgl_point_3d<double> > IFS_pts;
-  vcl_vector<vcl_vector<int> > IFS_faces;
+  std::set<dbmsh3d_vertex*> IFS_vset;
+  std::vector<vgl_point_3d<double> > IFS_pts;
+  std::vector<std::vector<int> > IFS_faces;
 
   //Draw in IFS to speed up visulization.
   //Go through each shock patch and add all vertices into IFS_vset.
@@ -313,7 +313,7 @@ void draw_fs_sheet_geom (SoSeparator* root, dbsk3d_fs_sheet* FS,
   }
 
   //Go through IFS_vset and reset each vid from 0 (used as index in IFS).
-  vcl_set<dbmsh3d_vertex*>::iterator vit = IFS_vset.begin();
+  std::set<dbmsh3d_vertex*>::iterator vit = IFS_vset.begin();
   for (unsigned int i=0; vit != IFS_vset.end(); vit++, i++) {
     (*vit)->set_vid (i);
     IFS_pts.push_back ((*vit)->pt());
@@ -324,7 +324,7 @@ void draw_fs_sheet_geom (SoSeparator* root, dbsk3d_fs_sheet* FS,
   for (dbmsh3d_ptr_node* cur = FS->FF_list(); cur != NULL; cur = cur->next()) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) cur->ptr();
 
-    vcl_vector<int> vids;
+    std::vector<int> vids;
     for (unsigned int i=0; i<FF->vertices().size(); i++) {
       dbmsh3d_vertex* V = FF->vertices(i);
       vids.push_back (V->vid());
@@ -343,8 +343,8 @@ void draw_fs_sheet_geom (SoSeparator* root, dbsk3d_fs_sheet* FS,
 }
 
 void draw_fs_sheet_mesh_geom (SoGroup* root, dbsk3d_fs_sheet* FS,
-                              const vcl_vector<vgl_point_3d<double> >& pts,
-                              const vcl_vector<vcl_vector<int> >& faces)
+                              const std::vector<vgl_point_3d<double> >& pts,
+                              const std::vector<std::vector<int> >& faces)
 {
   //Assign vertices
   int nVertices = pts.size();
@@ -384,9 +384,9 @@ SoSeparator* draw_fs_sheet_A13_A3_bnd_curves (dbsk3d_fs_sheet* FS, const float w
 {
   SoSeparator* root = new SoSeparator;
 
-  ///vcl_ostringstream ostrm;
+  ///std::ostringstream ostrm;
   ///FS->getInfo (ostrm);
-  ///vcl_cout << ostrm.str();
+  ///std::cout << ostrm.str();
   
   //Line width
   SoDrawStyle*  drawStyle = new SoDrawStyle ();
@@ -394,12 +394,12 @@ SoSeparator* draw_fs_sheet_A13_A3_bnd_curves (dbsk3d_fs_sheet* FS, const float w
   root->addChild (drawStyle);
 
   //Visualize the A3_bnd_links and A13_bnd_links.
-  vcl_set<dbsk3d_fs_edge*> A3_bnd_links;
-  vcl_set<dbsk3d_fs_edge*> A13_bnd_links;
+  std::set<dbsk3d_fs_edge*> A3_bnd_links;
+  std::set<dbsk3d_fs_edge*> A13_bnd_links;
   FS->get_bnd_FEs (A3_bnd_links, A13_bnd_links);
 
   //Visualize the A3_bnd_links in Blue.
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = A3_bnd_links.begin();
+  std::set<dbsk3d_fs_edge*>::iterator lit = A3_bnd_links.begin();
   for (; lit != A3_bnd_links.end(); lit++) {
     dbsk3d_fs_edge* FE = (*lit);
     root->addChild (draw_fs_edge (FE, color_from_code(COLOR_BLUE), width, false));
@@ -444,9 +444,9 @@ SoSeparator* draw_fs_sheet_bnd_asgn (dbsk3d_fs_sheet* FS, const bool draw_idv, c
   basecolor->rgb = NG_color;
   root_NG->addChild (basecolor);
 
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > lines;
-  vcl_set<dbsk3d_fs_edge*> FE_with_G_set; //Set of fs_edges associated with generators.  
-  vcl_set<dbsk3d_fs_vertex*> FV_with_G_set; //Set of fs_vertices associated with generators.
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > lines;
+  std::set<dbsk3d_fs_edge*> FE_with_G_set; //Set of fs_edges associated with generators.  
+  std::set<dbsk3d_fs_vertex*> FV_with_G_set; //Set of fs_vertices associated with generators.
 
   //Draw the shock-to-bnd assignment.
   for (dbmsh3d_ptr_node* cur = FS->FF_list(); cur != NULL; cur = cur->next()) {
@@ -459,7 +459,7 @@ SoSeparator* draw_fs_sheet_bnd_asgn (dbsk3d_fs_sheet* FS, const bool draw_idv, c
     vgl_point_3d<double> C = FF->compute_center_pt();
 
     for (unsigned int j=0; j<2; j++) {
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(j)->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(j)->pt()));
       if (draw_idv)
         root_PG->addChild (draw_vertex_geom_vispt_SoCube (FF->genes(j), cube_size));
     }
@@ -471,7 +471,7 @@ SoSeparator* draw_fs_sheet_bnd_asgn (dbsk3d_fs_sheet* FS, const bool draw_idv, c
   lines.clear();
 
   //Draw all LG_asgn.
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = FE_with_G_set.begin();
+  std::set<dbsk3d_fs_edge*>::iterator lit = FE_with_G_set.begin();
   for (; lit != FE_with_G_set.end(); lit++) {
     dbsk3d_fs_edge* FE = (*lit);
     assert (FE->have_asgn_Gs());
@@ -479,7 +479,7 @@ SoSeparator* draw_fs_sheet_bnd_asgn (dbsk3d_fs_sheet* FS, const bool draw_idv, c
     
     for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (LC, G->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (LC, G->pt()));
       if (draw_idv)
         root_LG->addChild (draw_vertex_vispt_SoCube (G, LG_color, cube_size));
     }
@@ -488,14 +488,14 @@ SoSeparator* draw_fs_sheet_bnd_asgn (dbsk3d_fs_sheet* FS, const bool draw_idv, c
   lines.clear();
 
   //Draw all NG_asgn.
-  vcl_set<dbsk3d_fs_vertex*>::iterator nit = FV_with_G_set.begin();
+  std::set<dbsk3d_fs_vertex*>::iterator nit = FV_with_G_set.begin();
   for (; nit != FV_with_G_set.end(); nit++) {
     dbsk3d_fs_vertex* FV = (*nit);
     assert (FV->have_asgn_Gs());
 
     for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
+      lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
       if (draw_idv)
         root_NG->addChild (draw_vertex_vispt_SoCube (G, NG_color, cube_size));
     }
@@ -519,17 +519,17 @@ SoSeparator* draw_fs_sheet_bnd_mesh (dbsk3d_fs_sheet* FS, const int option,
   // Gfaces: set of faces that completely sit on Gset (of points).
   // Gfaces2: set of faces that share 2 points in Gset.
   // Gfaces1: set of faces that share only 1 point in Gset.
-  vcl_set<dbmsh3d_vertex*> Gset;
-  vcl_set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
+  std::set<dbmsh3d_vertex*> Gset;
+  std::set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
   FS->get_bnd_mesh_Fs (Gset, Gfaces, Gfaces2, Gfaces1);
 
-  vcl_set<dbmsh3d_vertex*> Gset2;
+  std::set<dbmsh3d_vertex*> Gset2;
   get_ifs_faces_pts (Gfaces2, Gset2);
-  vcl_set<dbmsh3d_vertex*> Gset1;
+  std::set<dbmsh3d_vertex*> Gset1;
   get_ifs_faces_pts (Gfaces1, Gset1);
 
   if (draw_idv) { //Visualizing each individual associated bnd mesh faces.
-    vcl_set<dbmsh3d_face*>::iterator it = Gfaces.begin();
+    std::set<dbmsh3d_face*>::iterator it = Gfaces.begin();
     for (; it != Gfaces.end(); it++) {
       dbmsh3d_face* F = *it;
       root->addChild (draw_F (F, color_from_code (COLOR_YELLOW)));
@@ -554,7 +554,7 @@ SoSeparator* draw_tabs_bnd_curve (dbsk3d_fs_sheet_set* fs_ss, const float cost_t
   SoSeparator* root = new SoSeparator;
 
   //Go through each tab and draw the boundary curves.
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss->sheetmap().begin();
   for (; it != fs_ss->sheetmap().end(); it++) {
     dbsk3d_fs_sheet* FS = (*it).second;
 

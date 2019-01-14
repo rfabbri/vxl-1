@@ -21,16 +21,16 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 //-----------------------------------------------------
 void Cone::display()
 {
-  vcl_cout << "%Cone info" << vcl_endl;
-  vcl_cout << "%Face " << currface << " Gl_edge "<< gl_edge << vcl_endl;
-  vcl_cout << "% Level " << level << vcl_endl;
-  vcl_cout << "%Parent  LChild " << 
+  std::cout << "%Cone info" << std::endl;
+  std::cout << "%Face " << currface << " Gl_edge "<< gl_edge << std::endl;
+  std::cout << "% Level " << level << std::endl;
+  std::cout << "%Parent  LChild " << 
     ((l!=NULL)?l->currface:-1) <<" RChild " << 
-    ((r!=NULL)?r->currface:-1) << vcl_endl;
-  vcl_cout << "%" << f << vcl_endl;
-  vcl_cout << "%Bounding vertices " << left << " " << right << vcl_endl;
-  vcl_cout << "%Next " << ((next!=NULL)?next->currface:-1) 
-       << " Previous "<< ((prev!=NULL)?prev->currface:-1) << vcl_endl;
+    ((r!=NULL)?r->currface:-1) << std::endl;
+  std::cout << "%" << f << std::endl;
+  std::cout << "%Bounding vertices " << left << " " << right << std::endl;
+  std::cout << "%Next " << ((next!=NULL)?next->currface:-1) 
+       << " Previous "<< ((prev!=NULL)?prev->currface:-1) << std::endl;
 
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }

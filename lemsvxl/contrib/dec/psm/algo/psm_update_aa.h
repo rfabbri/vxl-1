@@ -1,7 +1,7 @@
 #ifndef psm_update_aa_h_
 #define psm_update_aa_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -32,13 +32,13 @@ void psm_update(psm_scene<APM> &scene, vpgl_perspective_camera<double> const& ca
   psm_update_functor<APM> up_functor(cam, img);
   // for the middlebury datasets, the background is black - update background model accordingly
   if (black_background) {
-    vcl_cout << "using black background model" << vcl_endl;
+    std::cout << "using black background model" << std::endl;
     typename psm_apm_traits<APM>::apm_datatype background_apm;
     for (unsigned int i=0; i<4; ++i) {
       psm_apm_traits<APM>::apm_processor::update(background_apm, 0.01f, 1.0f);
       float peak = psm_apm_traits<APM>::apm_processor::prob_density(background_apm,0.0f);
-      vcl_cout << "p(0) = " << peak <<  vcl_endl;
-      vcl_cout << "sigma = " << vnl_math::two_over_sqrtpi * vnl_math::sqrt1_2 / (2*peak) << vcl_endl;
+      std::cout << "p(0) = " << peak <<  std::endl;
+      std::cout << "sigma = " << vnl_math::two_over_sqrtpi * vnl_math::sqrt1_2 / (2*peak) << std::endl;
     }
     up_functor.set_background_model(background_apm);
   }
@@ -65,7 +65,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_UPDATE>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_UPDATE>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
     alpha_img_.fill(0.0f);
@@ -77,10 +77,10 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     for (; cell_it != cells.end(); ++cell_it) {
       //if (cell_it->idx == 0x32f20000) {
-      //  vcl_cout << "debug_break" << vcl_endl;
+      //  std::cout << "debug_break" << std::endl;
       //}
       psm_sample<APM> &cell_value = block[*cell_it];
       // get vertices of cell in the form of a bounding box (cells are always axis-aligned))
@@ -96,9 +96,9 @@ public:
         // get probability density of mean observation
         float cell_PI = psm_apm_traits<APM>::apm_processor::prob_density(cell_value.appearance, cell_mean_obs);
         if (!((cell_PI >= 0) && (cell_PI < 1e8)) ) {
-          vcl_cout << vcl_endl << "cell_PI = " << cell_PI << vcl_endl;
-          vcl_cout << "  cell_obs = " << cell_mean_obs << vcl_endl;
-          vcl_cout << "  cell id = " << *cell_it << vcl_endl; 
+          std::cout << std::endl << "cell_PI = " << cell_PI << std::endl;
+          std::cout << "  cell_obs = " << cell_mean_obs << std::endl;
+          std::cout << "  cell id = " << *cell_it << std::endl; 
         }
         // fill obs probability density image
         cube_fill_value_aa(xverts_2d, yverts_2d, visible_faces, PI_img_, PI_img_weights_, cell_PI);
@@ -152,8 +152,8 @@ public:
 #define PSM_DEBUG
 #ifdef PSM_DEBUG
     if (step_count_ == 150) {
-      vcl_cout << "saving debug images" << vcl_endl;
-      vcl_string output_dir = "c:/research/psm/output/";
+      std::cout << "saving debug images" << std::endl;
+      std::string output_dir = "c:/research/psm/output/";
       vil_save(alpha_img_,(output_dir + "alpha_img.tiff").c_str());
       vil_save(alpha_integral_,(output_dir + "alpha_integral.tiff").c_str());
       vil_save(pix_weights_,(output_dir + "pix_weights.tiff").c_str());
@@ -184,8 +184,8 @@ public:
     vil_save(norm_img, "c:/research/psm/output/norm_img.tiff");
 
     // loop through all blocks
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
     for (; vbit != valid_blocks.end(); ++vbit) {
 
       hsds_fd_tree<psm_sample<APM>,3> &block = scene.get_block(*vbit);
@@ -205,8 +205,8 @@ public:
           if (cube_mean_aa(xverts_2d, yverts_2d, vert_dists, visible_faces, norm_img, mean_norm)) {
             cell.alpha *= aux_cell.update_multiplier * mean_norm;
             float cell_len = float(cell_bb.xmax() - cell_bb.xmin());
-            float max_alpha = -vcl_log(1.0f - max_cell_P_)/cell_len;
-            float min_alpha = -vcl_log(1.0f - min_cell_P_)/cell_len;
+            float max_alpha = -std::log(1.0f - max_cell_P_)/cell_len;
+            float min_alpha = -std::log(1.0f - min_cell_P_)/cell_len;
             if (cell.alpha > max_alpha) {
               cell.alpha = max_alpha;
             }
@@ -214,8 +214,8 @@ public:
               cell.alpha = min_alpha;
             }
             if (!((cell.alpha >= min_alpha) && (cell.alpha <= max_alpha)) ){
-              vcl_cerr << vcl_endl << "error: cell.alpha = " << cell.alpha << vcl_endl;
-              vcl_cerr << "mean_norm = " << mean_norm << vcl_endl;
+              std::cerr << std::endl << "error: cell.alpha = " << cell.alpha << std::endl;
+              std::cerr << "mean_norm = " << mean_norm << std::endl;
             }
           }
         }
@@ -274,7 +274,7 @@ private:
   class image_exp_functor
   {
   public:
-    float operator()(float x)       const { return x<0?vcl_exp(x):1.0f; }
+    float operator()(float x)       const { return x<0?std::exp(x):1.0f; }
   };
 
   class safe_inverse_functor

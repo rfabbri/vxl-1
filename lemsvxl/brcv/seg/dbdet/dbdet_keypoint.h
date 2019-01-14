@@ -44,7 +44,7 @@ class dbdet_keypoint : public vbl_ref_count, public vgl_point_2d<double>
 
   //=============== Binary I/O Methods ========================
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_keypoint"; }
+  virtual std::string is_a() const { return "dbdet_keypoint"; }
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -60,7 +60,7 @@ class dbdet_keypoint : public vbl_ref_count, public vgl_point_2d<double>
   short version() const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
 
 };
 
@@ -78,7 +78,7 @@ void vsl_add_to_binary_loader(const dbdet_keypoint& k);
 
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const dbdet_keypoint* k);
+void vsl_print_summary(std::ostream &os, const dbdet_keypoint* k);
 
 
 

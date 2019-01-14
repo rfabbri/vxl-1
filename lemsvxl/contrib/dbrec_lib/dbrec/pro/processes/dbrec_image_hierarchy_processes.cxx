@@ -27,7 +27,7 @@ bool dbrec_image_create_random_hierarchy_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("int");      // ndirs  // if this is zero, then it creates primitives with orientation = 0 so that rot inv creation is done
   input_types.push_back("float");      // lambda_min
   input_types.push_back("float");      // lambda_max
@@ -38,7 +38,7 @@ bool dbrec_image_create_random_hierarchy_process_cons(bprb_func_process& pro)
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -49,7 +49,7 @@ bool dbrec_image_create_random_hierarchy_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 6) {
-    vcl_cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
+    std::cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
     return false;
   }
 
@@ -82,13 +82,13 @@ bool dbrec_image_hierarchy_factory_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("int");      // id of the hierarchy in the factory class
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -99,7 +99,7 @@ bool dbrec_image_hierarchy_factory_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 1) {
-    vcl_cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
+    std::cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
     return false;
   }
 
@@ -124,7 +124,7 @@ bool dbrec_image_hierarchy_factory_process(bprb_func_process& pro)
     case 12: { h = dbrec_image_hierarchy_factory::construct_detector_rot_inv_roi1_0_prims(); break; } // rot inv hierarchy for satellite Baghdad sewage site ROI1, short vehicles, only the prims of the hierarchy in 10
     case 13: { h = dbrec_image_hierarchy_factory::construct_detector_rot_inv_haifa_prims(); break; } // rot inv hierarchy for satellite Haifa site, short vehicles, only the prims
     case 14: { h = dbrec_image_hierarchy_factory::construct_detector_rot_inv_haifa_prims2(); break; } // rot inv hierarchy for satellite Haifa site, short vehicles, only the prims
-    default: { vcl_cout << "In dbrec_image_hierarchy_factory_process() -- id: " << id << " not recognized!\n"; }
+    default: { std::cout << "In dbrec_image_hierarchy_factory_process() -- id: " << id << " not recognized!\n"; }
   }
   
   pro.set_output_val<dbrec_hierarchy_sptr>(0, h);
@@ -136,12 +136,12 @@ bool dbrec_image_hierarchy_factory_process(bprb_func_process& pro)
 bool dbrec_image_hierarchy_factory_rotated_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("int");      // id of the hierarchy in the factory class
   input_types.push_back("float");      // orientation angle, the factory generates the primitives in the hierarchy with the given orientation angle
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -151,7 +151,7 @@ bool dbrec_image_hierarchy_factory_rotated_process_cons(bprb_func_process& pro)
 bool dbrec_image_hierarchy_factory_rotated_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
+    std::cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -161,7 +161,7 @@ bool dbrec_image_hierarchy_factory_rotated_process(bprb_func_process& pro)
   dbrec_hierarchy_sptr h;
   switch(id) {
     case 0: { h = dbrec_image_hierarchy_factory::construct_detector_haifa(or_angle); break; } //same as roi1_0 detector, the direction for the primitives is set to the passed angle
-    default: { vcl_cout << "In dbrec_image_hierarchy_factory_process() -- id: " << id << " not recognized!\n"; }
+    default: { std::cout << "In dbrec_image_hierarchy_factory_process() -- id: " << id << " not recognized!\n"; }
   }
   
   pro.set_output_val<dbrec_hierarchy_sptr>(0, h);
@@ -177,7 +177,7 @@ bool dbrec_image_hierarchy_factory_rotated_process(bprb_func_process& pro)
 bool dbrec_image_populate_hierarchy_pairwise_central_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");      // original hierarchy
   input_types.push_back("float");      // radius of the new compositional parts (usually depends on depth but may also be customized.)
   input_types.push_back("unsigned");  // number of bins on the angle axis of the joint histogram in the pairwise model
@@ -186,7 +186,7 @@ bool dbrec_image_populate_hierarchy_pairwise_central_process_cons(bprb_func_proc
   input_types.push_back("float");  // maximum distance of the joint histogram in the pairwise model
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -194,7 +194,7 @@ bool dbrec_image_populate_hierarchy_pairwise_central_process_cons(bprb_func_proc
 bool dbrec_image_populate_hierarchy_pairwise_central_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 6) {
-    vcl_cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
+    std::cerr << "dbrec_image_create_random_hierarchy_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -218,12 +218,12 @@ bool dbrec_image_populate_hierarchy_pairwise_central_process(bprb_func_process& 
 bool dbrec_image_populate_sample_hierarchy_pairwise_central_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");      // original hierarchy
   input_types.push_back("unsigned");  // number of compositional parts to create from an existing compositional part through sampling from its distribution
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -231,7 +231,7 @@ bool dbrec_image_populate_sample_hierarchy_pairwise_central_process_cons(bprb_fu
 bool dbrec_image_populate_sample_hierarchy_pairwise_central_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_image_populate_sample_hierarchy_pairwise_central_process - invalid inputs\n";
+    std::cerr << "dbrec_image_populate_sample_hierarchy_pairwise_central_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -246,12 +246,12 @@ bool dbrec_image_populate_sample_hierarchy_pairwise_central_process(bprb_func_pr
 bool dbrec_image_populate_sample_indep_gaus_hierarchy_pairwise_central_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");      // original hierarchy
   input_types.push_back("unsigned");  // number of compositional parts to create from an existing compositional part through sampling from its distribution
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -259,7 +259,7 @@ bool dbrec_image_populate_sample_indep_gaus_hierarchy_pairwise_central_process_c
 bool dbrec_image_populate_sample_indep_gaus_hierarchy_pairwise_central_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_image_populate_sample_indep_gaus_hierarchy_pairwise_central_process - invalid inputs\n";
+    std::cerr << "dbrec_image_populate_sample_indep_gaus_hierarchy_pairwise_central_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;

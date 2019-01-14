@@ -25,7 +25,7 @@
 class dbcl_state_machine_classifier:public dbcl_classifier
 {
 public:
-    typedef vcl_map< unsigned, dbcl_state_machine_node_sptr > graph_type;
+    typedef std::map< unsigned, dbcl_state_machine_node_sptr > graph_type;
 
     typedef dbcl_state_machine_node::time_type time_type;
 
@@ -35,23 +35,23 @@ public:
 
 	typedef dbcl_state_machine_node::transition_table_type transition_table_type;
 
-	typedef vcl_map<node_id_type,vnl_vector<double> > node_id_mean_map_type;
+	typedef std::map<node_id_type,vnl_vector<double> > node_id_mean_map_type;
 
-	typedef vcl_map< time_type, node_id_mean_map_type > frame_mean_map_type;
+	typedef std::map< time_type, node_id_mean_map_type > frame_mean_map_type;
 
-	typedef vcl_map< node_id_type,vnl_matrix<double> > node_id_covar_map_type;
+	typedef std::map< node_id_type,vnl_matrix<double> > node_id_covar_map_type;
 
-	typedef vcl_map< time_type, node_id_covar_map_type > frame_covar_map_type;
+	typedef std::map< time_type, node_id_covar_map_type > frame_covar_map_type;
 
-	typedef vcl_map< time_type, transition_table_type > frame_transition_table_map_type;
+	typedef std::map< time_type, transition_table_type > frame_transition_table_map_type;
 
-	typedef vcl_map< node_id_type, double > node_id_mixture_weight_map_type;
+	typedef std::map< node_id_type, double > node_id_mixture_weight_map_type;
 
-	typedef vcl_map< time_type, node_id_mixture_weight_map_type > frame_mixture_weight_map_type;
+	typedef std::map< time_type, node_id_mixture_weight_map_type > frame_mixture_weight_map_type;
 
-	typedef vcl_map< time_type, double > frame_max_prob_map_type;
+	typedef std::map< time_type, double > frame_max_prob_map_type;
 
-	typedef vcl_map<unsigned, unsigned> frame_state_map_type;
+	typedef std::map<unsigned, unsigned> frame_state_map_type;
 
 
 	
@@ -80,13 +80,13 @@ public:
     unsigned size(){ return graph_.size(); }
 
     //print a summary of the graph
-    //friend vcl_ostream& operator<<(vcl_ostream& os, dbcl_state_machine_classifier&);
+    //friend std::ostream& operator<<(std::ostream& os, dbcl_state_machine_classifier&);
 
     double max_prob() const { return max_prob_; }
 
     dbcl_state_machine_frame_clock_sptr clock_sptr(){ return this->classifier_clk_sptr_; }
 
-    vcl_map<unsigned, bool> frame_change_map(){ return this->frame_change_map_; }
+    std::map<unsigned, bool> frame_change_map(){ return this->frame_change_map_; }
 
 	frame_mean_map_type frame_mean_map(){ return this->frame_mean_map_; }
 
@@ -150,7 +150,7 @@ private:
 
     vnl_matrix_fixed<double,2,2> min_covar_;
 
-    vcl_map<unsigned, bool> frame_change_map_;
+    std::map<unsigned, bool> frame_change_map_;
 
 	frame_state_map_type frame_training_state_map_;
 
@@ -168,11 +168,11 @@ private:
 
 	
 
-	//vcl_map<unsigned, vcl_vector<vnl_vector_fixed<double,2> > > frame_mean_map_;
+	//std::map<unsigned, std::vector<vnl_vector_fixed<double,2> > > frame_mean_map_;
 
-	//vcl_map<unsigned, vcl_vector<vnl_matrix_fixed<double,2,2> > > frame_covar_map_;
+	//std::map<unsigned, std::vector<vnl_matrix_fixed<double,2,2> > > frame_covar_map_;
 
-	//vcl_map<unsigned, transition_table_type> frame_transition_table_map_;
+	//std::map<unsigned, transition_table_type> frame_transition_table_map_;
 };
 
 #endif //DBCL_STATE_MACHINE_CLASSIFIER_H_

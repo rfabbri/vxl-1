@@ -97,7 +97,7 @@ private:
 	char **kd_argv;
 	bool initialized;
 	char buf[8],buf2[400];
-	vcl_vector<char*> args;
+	std::vector<char*> args;
 	image_* cache;
 	float proc_x,proc_y,proc;
 

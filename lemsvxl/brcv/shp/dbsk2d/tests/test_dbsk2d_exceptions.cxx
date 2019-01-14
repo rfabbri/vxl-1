@@ -7,7 +7,7 @@
 
 void test_exceptions()
 {
-  vcl_cout << "****************************\n"
+  std::cout << "****************************\n"
            << "  Testing dbsk2d exceptions \n"
            << "****************************\n";
 
@@ -18,11 +18,11 @@ void test_exceptions()
     {
       dbsk2d_exception_error(dbsk2d_exception_abort("This is just a test"));
       //the following line should never be executed
-      vcl_cout << "Execution continues after exception" << vcl_endl;
+      std::cout << "Execution continues after exception" << std::endl;
     }
     catch (const dbsk2d_exception_abort &e)
     {
-      vcl_cout << e.what() << vcl_endl;
+      std::cout << e.what() << std::endl;
       caught_error = true;
 
       //break if in debug mode
@@ -38,7 +38,7 @@ void test_exceptions()
     }
     catch (const dbsk2d_exception_abort &e)
     {
-      vcl_cout << e.what() << vcl_endl;
+      std::cout << e.what() << std::endl;
       caught_error = true;
     }
     TEST("Caught Exception 2", caught_error, true);

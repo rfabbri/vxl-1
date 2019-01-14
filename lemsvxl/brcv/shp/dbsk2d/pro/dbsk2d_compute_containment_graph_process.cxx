@@ -87,11 +87,11 @@ dbsk2d_compute_containment_graph_process()
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
-                            "-output_prefix", vcl_string(""))
+                            "-output_prefix", std::string(""))
 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 
     }
 
@@ -110,25 +110,25 @@ dbsk2d_compute_containment_graph_process::clone() const
     return new dbsk2d_compute_containment_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbsk2d_compute_containment_graph_process::name()
 {
     return "Compute Containment Graph Process";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbsk2d_compute_containment_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbsk2d_compute_containment_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 
@@ -150,7 +150,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
     double transform_threshold(0.5);
     double path_threshold(0.2);
-    vcl_string output_prefix;
+    std::string output_prefix;
     bool remove_closed(false);
     bool add_bbox(true);
     double preprocess_threshold(0.12);
@@ -165,7 +165,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
     
 
     parameters()->get_value( "-transform_threshold" , transform_threshold );
@@ -195,8 +195,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
     if ( !dbsk2d_transform_manager::Instance().gPb_loaded() )
     {
-	vcl_cout<<"gPb data not loaded, setting all thresholds to negative"
-	       <<vcl_endl;
+	std::cout<<"gPb data not loaded, setting all thresholds to negative"
+	       <<std::endl;
 	
 	transform_threshold  = -1.0;
 	preprocess_threshold = -1.0;
@@ -213,11 +213,11 @@ bool dbsk2d_compute_containment_graph_process::execute()
     {
         image=frame_image->get_image();
 
-        vcl_string output_binary_file = output_folder+"/"+
+        std::string output_binary_file = output_folder+"/"+
             output_prefix+"_regions_binary.bin";
-        vcl_string output_binary_regions_contours_file = output_folder+"/"+
+        std::string output_binary_regions_contours_file = output_folder+"/"+
             output_prefix+"_regions_contours_binary.bin";
-        vcl_string output_region_stats_file = output_folder+"/"+
+        std::string output_region_stats_file = output_folder+"/"+
             output_prefix+"_regions_stats.bin";
   
         dbsk2d_transform_manager::Instance().set_image(image);
@@ -233,12 +233,12 @@ bool dbsk2d_compute_containment_graph_process::execute()
     // Redo input vsol storage
 
     // 2) Set id equivalent to what they are
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
         input_vsol->all_data();
 
     // 3) Keep track of objects to remove
-    vcl_vector< vsol_spatial_object_2d_sptr > objects_to_erase;
-    vcl_map< double, vsol_spatial_object_2d_sptr > low_prob_curves;
+    std::vector< vsol_spatial_object_2d_sptr > objects_to_erase;
+    std::map< double, vsol_spatial_object_2d_sptr > low_prob_curves;
 
     vsol_box_2d_sptr bbox=0;
 
@@ -263,26 +263,26 @@ bool dbsk2d_compute_containment_graph_process::execute()
         double xmax_scaled = ((image->ni()-xcenter)*2)+xcenter;
         double ymax_scaled = ((image->nj()-ycenter)*2)+ycenter;
         
-        vcl_cout<<xmin_scaled<<" "<<ymin_scaled<<vcl_endl;
+        std::cout<<xmin_scaled<<" "<<ymin_scaled<<std::endl;
         bbox->add_point(xmin_scaled,ymin_scaled);
         bbox->add_point(xmax_scaled,ymax_scaled);
 
-        vcl_cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
+        std::cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
                  << "("   << bbox->get_min_x() << ", " << bbox->get_min_y() 
                  << ") (" << bbox->get_max_x() << ", " << bbox->get_max_y() 
                  << ") (" 
                  << bbox->width() << ", " 
-                 << bbox->height() << ")"<<vcl_endl;
+                 << bbox->height() << ")"<<std::endl;
  
         // Add to vidpro storage this new bounding box
         vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
         input_vsol->add_object(box_poly->cast_to_spatial_object());
-        box_poly->print(vcl_cout);
+        box_poly->print(std::cout);
         bbox=0;
     }
    
     double max_gPb_value=0.0;
-    vcl_vector<vgl_polygon<double> > closed_polys;
+    std::vector<vgl_polygon<double> > closed_polys;
 
     for ( unsigned int i=0; i < vsol_list.size() ; ++i)
     {   
@@ -306,7 +306,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
                     objects_to_erase.push_back(vsol_list[i]);
 
                     // Grab all points from vsol
-                    vcl_vector<vgl_point_2d<double> > points;
+                    std::vector<vgl_point_2d<double> > points;
                     for (unsigned p=0; p<curve->size(); p++)
                     {
                         points.push_back( curve->vertex(p)->get_p());
@@ -322,7 +322,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
                     fitter.set_rms_error_tol(0.05f);
                     fitter.add_curve(poly[0]);
 
-                    vcl_vector<vgl_line_segment_2d<double> > segs;
+                    std::vector<vgl_line_segment_2d<double> > segs;
                     fitter.fit();
                     segs= fitter.get_line_segs();
 
@@ -344,7 +344,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
         
     }
 
-    // vcl_map< double, vsol_spatial_object_2d_sptr >::iterator it;
+    // std::map< double, vsol_spatial_object_2d_sptr >::iterator it;
     // for ( it = low_prob_curves.begin() ; it != low_prob_curves.end() ; ++it)
     // {
     //     if ( (*it).first < .13 )
@@ -366,7 +366,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
   
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
         dbsk2d_compute_ishock_process shock_pro;
@@ -400,9 +400,9 @@ bool dbsk2d_compute_containment_graph_process::execute()
             
             for ( ; i < num_iterations; ++i)
             {
-                vcl_cout<<vcl_endl;
-                vcl_cout<<"************ Retry Compute Shock,iter: "
-                        <<i+1<<" *************"<<vcl_endl;
+                std::cout<<std::endl;
+                std::cout<<"************ Retry Compute Shock,iter: "
+                        <<i+1<<" *************"<<std::endl;
                 
                 // Add inputs
                 shock_pro.add_input(frame_image);
@@ -439,13 +439,13 @@ bool dbsk2d_compute_containment_graph_process::execute()
   
     }
 
-    vcl_string filename = output_folder+"/" + output_prefix +"_cgraph.dot";
+    std::string filename = output_folder+"/" + output_prefix +"_cgraph.dot";
 
-    vcl_string stats_filename = output_folder+"/" + output_prefix +
+    std::string stats_filename = output_folder+"/" + output_prefix +
         "_stats_file.txt";
-    vcl_ofstream stats_filestream(stats_filename.c_str());
-    stats_filestream<<"Number of Contours: "<<vsol_list.size()<<vcl_endl;
-    stats_filestream<<vcl_endl;
+    std::ofstream stats_filestream(stats_filename.c_str());
+    stats_filestream<<"Number of Contours: "<<vsol_list.size()<<std::endl;
+    stats_filestream<<std::endl;
 
 
     dbsk2d_shock_storage_sptr shock_storage;
@@ -507,8 +507,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
     double vox_time = t.real()/1000.0;
     t.mark(); 
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
-    stats_filestream<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
+    stats_filestream<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
     stats_filestream.close();
     return status;
 }
@@ -520,12 +520,12 @@ bool dbsk2d_compute_containment_graph_process::finish()
 
 void dbsk2d_compute_containment_graph_process::
 debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
-           vcl_string filename)
+           std::string filename)
 {
 
     // Write out boundary
     {
-        vcl_string bnd_file=filename +"_pre_process.bnd";
+        std::string bnd_file=filename +"_pre_process.bnd";
         dbsk2d_ishock_transform temp_trans(ishock_graph,
                                            dbsk2d_ishock_transform::LOOP);
         temp_trans.write_boundary(bnd_file);
@@ -533,10 +533,10 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
 
     // Lets do loops first
     {
-        vcl_string loop_filename = filename + "_loops.txt";
-        vcl_ofstream loop_stream(loop_filename.c_str());
+        std::string loop_filename = filename + "_loops.txt";
+        std::ofstream loop_stream(loop_filename.c_str());
 
-        vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
+        std::vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
             boundary()->belm_list();
         for (unsigned int i=0;i < belm_list.size() ; ++i)
         {
@@ -555,7 +555,7 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
                     loop_stream<<bpoint->pt().x()<<" "
                                <<bpoint->pt().y()<<" "
                                <<transformer.likelihood()
-                               <<vcl_endl;
+                               <<std::endl;
                 }
             }
 
@@ -568,29 +568,29 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
     // Lets do gaps first
     {
 
-        vcl_string gap_filename = filename + "_gaps.txt";
-        vcl_ofstream gap_stream(gap_filename.c_str());
+        std::string gap_filename = filename + "_gaps.txt";
+        std::ofstream gap_stream(gap_filename.c_str());
 
         dbsk2d_ishock_gap_detector detector(ishock_graph);
-        vcl_vector<
-            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
+        std::vector<
+            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
     
         detector.detect_gap1(gap_pairs);
 
         for ( unsigned int i=0; i < gap_pairs.size(); ++i)
         {
-            int contour_id=vcl_min(gap_pairs[i].first->get_contour_id(),
+            int contour_id=std::min(gap_pairs[i].first->get_contour_id(),
                                    gap_pairs[i].second->get_contour_id());
 
             dbsk2d_ishock_gap_transform trans(ishock_graph,gap_pairs[i],
                                               contour_id);
-            vcl_vector<vgl_point_2d<double> > samples=
+            std::vector<vgl_point_2d<double> > samples=
                 trans.get_es_samples();
-            gap_stream<<samples.size()<<" "<<trans.likelihood()<<vcl_endl;
+            gap_stream<<samples.size()<<" "<<trans.likelihood()<<std::endl;
             
             for ( int i=0; i < samples.size() ; ++i)
             {
-                gap_stream<<samples[i].x()<<" "<<samples[i].y()<<vcl_endl;
+                gap_stream<<samples[i].x()<<" "<<samples[i].y()<<std::endl;
 
             }
 
@@ -601,14 +601,14 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
 
     {
 
-        vcl_string gap_filename = filename + "_gap4s.txt";
-        vcl_ofstream gap_stream(gap_filename.c_str());
+        std::string gap_filename = filename + "_gap4s.txt";
+        std::ofstream gap_stream(gap_filename.c_str());
 
         dbsk2d_ishock_gap_detector detector(ishock_graph);
-        vcl_vector<  
-            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
+        std::vector<  
+            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
         detector.detect_gap4(gap4_pairs);
-        vcl_map<double,int> gap4_con_ids;
+        std::map<double,int> gap4_con_ids;
 
         for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
         {
@@ -630,7 +630,7 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
                       <<gap4_pairs[i].first->pt().y()<<" "
                       <<anchor_pt->pt().x()<<" "
                       <<anchor_pt->pt().y()<<" "
-                      <<trans.likelihood()<<vcl_endl;
+                      <<trans.likelihood()<<std::endl;
         }
 
         gap_stream.close();
@@ -643,14 +643,14 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
 
 void dbsk2d_compute_containment_graph_process::
 debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
-           vcl_string filename)
+           std::string filename)
 {
 
     // Write out boundary
    
-    vcl_string shock_file=filename +"_shock.cem";
-    vcl_string cem_file=filename + "_con.bnd";
-    vcl_string atomic_frags=filename + "_atomic_frags";
+    std::string shock_file=filename +"_shock.cem";
+    std::string cem_file=filename + "_con.bnd";
+    std::string atomic_frags=filename + "_atomic_frags";
     dbsk2d_ishock_transform temp_trans(ishock_graph,
                                        dbsk2d_ishock_transform::LOOP);
     temp_trans.write_shock_boundary(shock_file);
@@ -660,11 +660,11 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     dbsk2d_ishock_grouping_transform grouper(ishock_graph);
     grouper.grow_regions();
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
         frag_edges = grouper.get_region_nodes();
 
-    vcl_vector<vgl_polygon<double> > polygons;
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::vector<vgl_polygon<double> > polygons;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
     {
         // Grab polygon fragment
@@ -678,8 +678,8 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
 
     // Create filename
-    vcl_string coarse_poly=filename+"_coarse_fragments.txt";
-    vcl_string coarse_shock=filename+"_csg.cem";
+    std::string coarse_poly=filename+"_coarse_fragments.txt";
+    std::string coarse_shock=filename+"_csg.cem";
 
     //instantiate an empty coarse shock graph at this time
     //this will be properly defined once the shock is pruned
@@ -694,18 +694,18 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     dbsk2d_ishock_grouping_transform grouper2(ishock_graph);
     grouper2.grow_coarse_regions();
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
         frag_edges2 = grouper2.get_region_nodes();
 
-    vcl_vector<vgl_polygon<double> > type_1_polygons;
-    vcl_vector<vgl_polygon<double> > type_2_polygons;
-    vcl_vector<vgl_polygon<double> > atomic_polygons;
+    std::vector<vgl_polygon<double> > type_1_polygons;
+    std::vector<vgl_polygon<double> > type_2_polygons;
+    std::vector<vgl_polygon<double> > atomic_polygons;
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it2;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it2;
     for ( it2 = frag_edges2.begin() ; it2 != frag_edges2.end() ; ++it2)
     {
 
-        vcl_vector<dbsk2d_ishock_edge*> vec=(*it2).second;
+        std::vector<dbsk2d_ishock_edge*> vec=(*it2).second;
         
         bool flag=false;
         for ( int i=0; i < vec.size() ; ++i)
@@ -734,19 +734,19 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
         }
     }
 
-    vcl_string type1=filename+"_type1_frags.txt";
-    vcl_string type2=filename+"_type2_frags.txt";
-    vcl_string type3=filename+"_type3_frags.txt";
-    vcl_string type4=filename+"_csg_nodes.txt";
+    std::string type1=filename+"_type1_frags.txt";
+    std::string type2=filename+"_type2_frags.txt";
+    std::string type3=filename+"_type3_frags.txt";
+    std::string type4=filename+"_csg_nodes.txt";
 
     temp_trans.write_polygons(type1,type_1_polygons);
     temp_trans.write_polygons(type2,type_2_polygons);
     temp_trans.write_polygons(type3,atomic_polygons);
     grouper2.write_out_file(type4);
     
-    vcl_ofstream file_stream(coarse_poly.c_str());
+    std::ofstream file_stream(coarse_poly.c_str());
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_list;
 
     //draw the edges fragments first
     for ( dbsk2d_shock_graph::edge_iterator curE = 
@@ -762,14 +762,14 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
             continue;
         }
         
-        file_stream<<selm->shock_fragment()->ex_pts().size()<<vcl_endl;
+        file_stream<<selm->shock_fragment()->ex_pts().size()<<std::endl;
 
         for( unsigned int i = 0 ; i < selm->shock_fragment()->ex_pts().size() 
                  ; i++ ) {
             file_stream<<selm->shock_fragment()->ex_pts()[i].x()<<" "<< 
                 selm->shock_fragment()->ex_pts()[i].y() <<" ";
         }
-        file_stream<<vcl_endl;
+        file_stream<<std::endl;
 
         // Add in contours for front 
         vsol_spatial_object_2d_sptr obj=
@@ -777,7 +777,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
         vsol_polyline_2d* curve=obj->cast_to_curve()->cast_to_polyline();
 
-        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        std::vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
         
         
         for ( unsigned int i=0; i < ex_pts.size() ; ++i)
@@ -806,7 +806,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
         
         //traverse the descriptor list and draw the shock fragments for the 
         //degenerate descriptors
-        vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = 
+        std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = 
             snode->descriptor_list().begin();
         for (; p_itr != snode->descriptor_list().end(); ++ p_itr)
         {
@@ -817,7 +817,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
               continue;
           }
           
-          file_stream<<cur_descriptor.fragment->ex_pts().size()<<vcl_endl;
+          file_stream<<cur_descriptor.fragment->ex_pts().size()<<std::endl;
 
           for( unsigned int i = 0 ; i < 
                    cur_descriptor.fragment->ex_pts().size() ; i++ ) {
@@ -825,7 +825,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
                   cur_descriptor.fragment->ex_pts()[i].y()<<" ";
           }
 
-          file_stream<<vcl_endl;
+          file_stream<<std::endl;
      
       }
     }
@@ -841,7 +841,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                      bool train)
 {
     
-    vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
+    std::vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
         boundary()->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
@@ -857,7 +857,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 dbsk2d_ishock_loop_transform transformer(ishock_graph,
                                                          bpoint);
 
-                vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
+                std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
                     transformer.get_contour_pair();
                 double length_of_gap=vgl_distance(pair.first->pt(),
                                                   pair.second->pt());
@@ -873,16 +873,16 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     }
 
     dbsk2d_ishock_gap_detector detector(ishock_graph);
-    vcl_vector<
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
+    std::vector<
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
     
     detector.detect_gap1(gap_pairs);
 
-    vcl_map<double,dbsk2d_ishock_transform_sptr> transforms;
-    vcl_map<int,unsigned int> gaps_visited;
+    std::map<double,dbsk2d_ishock_transform_sptr> transforms;
+    std::map<int,unsigned int> gaps_visited;
     for ( unsigned int i=0; i < gap_pairs.size(); ++i)
     {
-        int contour_id=vcl_min(gap_pairs[i].first->get_contour_id(),
+        int contour_id=std::min(gap_pairs[i].first->get_contour_id(),
                                gap_pairs[i].second->get_contour_id());
 
         dbsk2d_ishock_transform_sptr trans = new 
@@ -910,11 +910,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
         }
     }
 
-    vcl_map<int,vcl_vector<dbsk2d_bnd_contour_sptr> > gap_trans;
-    vcl_map<double,dbsk2d_ishock_transform_sptr>::reverse_iterator it;
+    std::map<int,std::vector<dbsk2d_bnd_contour_sptr> > gap_trans;
+    std::map<double,dbsk2d_ishock_transform_sptr>::reverse_iterator it;
     for ( it = transforms.rbegin() ; it != transforms.rend() ; ++it)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
             (*it).second->get_contour_pair();
 
         double length_of_gap=vgl_distance(pair.first->pt(),pair.second->pt());
@@ -933,19 +933,19 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
                 dbsk2d_ishock_gap_transform* gap_transform
                     = (dbsk2d_ishock_gap_transform*)((*it).second.ptr());
-                vcl_vector<vgl_point_2d<double> > gap_filler
+                std::vector<vgl_point_2d<double> > gap_filler
                     = gap_transform->get_es_samples();
 
                 dbsk2d_ishock_loop_transform loop_trans(
                     ishock_graph,
                     pair.first);
-                vcl_vector<vgl_point_2d<double> > ordered_contour=
+                std::vector<vgl_point_2d<double> > ordered_contour=
                     loop_trans.get_ordered_contour();
 
-                vcl_vector<vgl_point_2d<double> > final_contour;
+                std::vector<vgl_point_2d<double> > final_contour;
                 if ( gap_filler[0] == ordered_contour[0])
                 {
-                    vcl_vector<vgl_point_2d<double> >::reverse_iterator rit;
+                    std::vector<vgl_point_2d<double> >::reverse_iterator rit;
                     for ( rit = gap_filler.rbegin(); rit != gap_filler.rend();
                           ++rit)
                     {
@@ -954,7 +954,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 }
                 else
                 {
-                    vcl_vector<vgl_point_2d<double> >::iterator fit;
+                    std::vector<vgl_point_2d<double> >::iterator fit;
                     for ( fit = gap_filler.begin(); fit != gap_filler.end();
                           ++fit)
                     {
@@ -995,7 +995,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                  
                     if ( remove_closed )
                     {
-                        vcl_vector<dbsk2d_bnd_contour_sptr> cons;
+                        std::vector<dbsk2d_bnd_contour_sptr> cons;
                         cons.push_back(con1);
                         dbsk2d_transform_manager::Instance().write_output_region
                             (cons,gap_filler);
@@ -1040,7 +1040,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 }
                 else
                 {
-                    contour_id=vcl_min(con1->get_id(),con2->get_id());
+                    contour_id=std::min(con1->get_id(),con2->get_id());
                 }
 
                 (*it).second->execute_transform();
@@ -1065,7 +1065,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     {
                         if ( gap_trans.count(con2->get_id()))
                         {
-                            vcl_vector<dbsk2d_bnd_contour_sptr> vec =
+                            std::vector<dbsk2d_bnd_contour_sptr> vec =
                                 gap_trans[con2->get_id()];
                             for ( unsigned int i=0; i < vec.size() ; ++i)
                             {
@@ -1084,7 +1084,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     {
                         if ( gap_trans.count(con1->get_id()))
                         {
-                            vcl_vector<dbsk2d_bnd_contour_sptr> vec =
+                            std::vector<dbsk2d_bnd_contour_sptr> vec =
                                 gap_trans[con1->get_id()];
                             for ( unsigned int i=0; i < vec.size() ; ++i)
                             {
@@ -1115,10 +1115,10 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
  
     transforms.clear();
 
-    vcl_vector<
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
+    std::vector<
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
     detector.detect_gap4(gap4_pairs);
-    vcl_map<double,int> gap4_con_ids;
+    std::map<double,int> gap4_con_ids;
 
     for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
     {
@@ -1141,7 +1141,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
     for ( it = transforms.rbegin() ; it != transforms.rend() ; ++it)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
             (*it).second->get_contour_pair();
         dbsk2d_ishock_gap4_transform* trans=(dbsk2d_ishock_gap4_transform*)
             ((*it).second.ptr());
@@ -1193,19 +1193,19 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     // dbsk2d_ishock_grouping_transform grouper(ishock_graph);
     // grouper.grow_regions();
 
-    // vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    // std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
     //     region_belms = grouper.get_region_belms();
-    // vcl_map<unsigned int,vcl_set<int> >
+    // std::map<unsigned int,std::set<int> >
     //     region_belms_ids=grouper.get_region_belms_ids();
-    // vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    // std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
     //     degree_three_nodes = grouper.get_degree_three_nodes();
-    // vcl_map<unsigned int,vcl_set<int> >
+    // std::map<unsigned int,std::set<int> >
     //     degree_three_node_ids=grouper.get_degree_three_node_ids();
 
-    // vcl_map<vcl_pair<int,int> , vcl_pair<dbsk2d_ishock_bpoint*,
+    // std::map<std::pair<int,int> , std::pair<dbsk2d_ishock_bpoint*,
     //     dbsk2d_ishock_bline* > > degree_three_loops;
 
-    // vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator git;
+    // std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::iterator git;
     // for ( git = degree_three_nodes.begin() ; git != degree_three_nodes.end() ; 
     //       ++git)
     // {
@@ -1220,23 +1220,23 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
     //     if ( (*git).second.size() >= 4 )
     //     {
-    //         vcl_set<int> base_set=degree_three_node_ids[(*git).first];
-    //         vcl_set<int> bline_base_set=region_belms_ids[(*git).first];
+    //         std::set<int> base_set=degree_three_node_ids[(*git).first];
+    //         std::set<int> bline_base_set=region_belms_ids[(*git).first];
 
-    //         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator
+    //         std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::iterator
     //             nit;
     //         nit=git;
     //         ++nit;
     //         for ( ; nit != degree_three_nodes.end() ; ++nit)
     //         {
-    //             vcl_set<int> test_set=degree_three_node_ids[(*nit).first];
-    //             vcl_set<int> bline_test_set=region_belms_ids[(*nit).first];
+    //             std::set<int> test_set=degree_three_node_ids[(*nit).first];
+    //             std::set<int> bline_test_set=region_belms_ids[(*nit).first];
 
-    //             vcl_set<int> intersection;
-    //             vcl_insert_iterator<vcl_set<int> > 
+    //             std::set<int> intersection;
+    //             std::insert_iterator<std::set<int> > 
     //                 inserter(intersection,intersection.begin());
                 
-    //             vcl_set_intersection(base_set.begin(),
+    //             std::set_intersection(base_set.begin(),
     //                                  base_set.end(),
     //                                  test_set.begin(),
     //                                  test_set.end(),
@@ -1245,11 +1245,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
     //             if ( intersection.size() >= 2 )
     //             {
-    //                 vcl_set<int>::iterator sit;
+    //                 std::set<int>::iterator sit;
     //                 for ( sit = intersection.begin() ; 
     //                       sit != intersection.end(); ++sit)
     //                 {
-    //                     vcl_vector<dbsk2d_ishock_belm*> belms=(*git).second;
+    //                     std::vector<dbsk2d_ishock_belm*> belms=(*git).second;
     //                     for ( unsigned int b=0; b < belms.size() ; ++b)
     //                     {
     //                         if ( belms[b]->id() == (*sit) )
@@ -1281,13 +1281,13 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
     //     if ( bline && bpoint )
     //     {
-    //         vcl_pair<int,int> key(bpoint->id(),bline->id());
-    //         degree_three_loops[key]=vcl_make_pair(bpoint,bline);
+    //         std::pair<int,int> key(bpoint->id(),bline->id());
+    //         degree_three_loops[key]=std::make_pair(bpoint,bline);
     //     }
     // }
 
-    // vcl_map<vcl_pair<int,int>,
-    //     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >::iterator lit;
+    // std::map<std::pair<int,int>,
+    //     std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >::iterator lit;
     // for ( lit = degree_three_loops.begin() ; lit != degree_three_loops.end() ; 
     //       ++lit)
     // {
@@ -1324,9 +1324,9 @@ get_contour(dbsk2d_ishock_bpoint* bp)
     }
     it=edges.begin();
 
-    const vcl_list< vtol_topology_object * > * 
+    const std::list< vtol_topology_object * > * 
         superiors  = (*it)->superiors_list();
-    vcl_list<vtol_topology_object*>::const_iterator tit;
+    std::list<vtol_topology_object*>::const_iterator tit;
     tit=(*superiors).begin();
 
     return (dbsk2d_bnd_contour*)(*tit);
@@ -1341,8 +1341,8 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     dbsk2d_ishock_graph_sptr ishock_graph=output_shock->get_ishock_graph();
     dbsk2d_boundary_sptr boundary=ishock_graph->boundary();
 
-    vcl_vector<
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
+    std::vector<
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
     {
         dbsk2d_ishock_gap_detector detector(ishock_graph);
         detector.detect_gap4(gap4_pairs);
@@ -1357,18 +1357,18 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
         get_image();
 
-    vcl_cout<<"Stats before splitting"<<vcl_endl;
+    std::cout<<"Stats before splitting"<<std::endl;
 
-    vcl_cout<<"Numb contours: "<<
+    std::cout<<"Numb contours: "<<
         boundary->preproc_contours().size()+
         boundary->scratch_contours().size()
-            <<vcl_endl;
-    vcl_cout<<"Numb edges: "<<boundary->all_edges().size()
-            <<vcl_endl;
-    vcl_cout<<"Numb belms: "<<boundary->belm_list().size()
-            <<vcl_endl;
+            <<std::endl;
+    std::cout<<"Numb edges: "<<boundary->all_edges().size()
+            <<std::endl;
+    std::cout<<"Numb belms: "<<boundary->belm_list().size()
+            <<std::endl;
 
-    vcl_map<int, vcl_vector<dbsk2d_bnd_edge_sptr> > hash_map;
+    std::map<int, std::vector<dbsk2d_bnd_edge_sptr> > hash_map;
     for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
     {
      
@@ -1399,7 +1399,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
 
         if ( hash_map.count(bline->id()))
         {
-            vcl_vector<dbsk2d_bnd_edge_sptr> edges=hash_map[bline->id()];
+            std::vector<dbsk2d_bnd_edge_sptr> edges=hash_map[bline->id()];
             for ( int i=0; i < edges.size() ; ++i)
             {
          
@@ -1421,7 +1421,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
         }
         else if ( hash_map.count(bline->twinLine()->id()))
         {
-            vcl_vector<dbsk2d_bnd_edge_sptr> edges=hash_map[
+            std::vector<dbsk2d_bnd_edge_sptr> edges=hash_map[
                 bline->twinLine()->id()];
             for ( int i=0; i < edges.size() ; ++i)
             {
@@ -1465,20 +1465,20 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
         dbsk2d_bnd_vertex_sptr anchor_pt=dbsk2d_bnd_utils::new_vertex(
             closest_pt,boundary);
     
-        const vcl_list< vtol_topology_object * > * 
+        const std::list< vtol_topology_object * > * 
             superiors  = edge->superiors_list();
 
         if ( superiors->size() == 0 )
         {
             break;
         }
-        vcl_list<vtol_topology_object*>::const_iterator tit;
+        std::list<vtol_topology_object*>::const_iterator tit;
         tit=(*superiors).begin();
         
         dbsk2d_bnd_contour_sptr contour=(dbsk2d_bnd_contour*)(*tit);
         
         // now link all these vertices into a chain and save as a contour
-        vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges;
+        std::vector<dbsk2d_bnd_edge_sptr > bnd_edges;
         
         bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(
                                 edge->bnd_v1(), 
@@ -1490,7 +1490,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
                                 edge->bnd_v2(),  
                                 boundary));
 
-        vcl_vector<signed char > directions(bnd_edges.size(), 1);
+        std::vector<signed char > directions(bnd_edges.size(), 1);
 
         bool output=contour->replace_edges(bnd_edges,
                                directions,
@@ -1513,18 +1513,18 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
 
     boundary->update_belm_list();
 
-    vcl_cout<<"Stats after splitting"<<vcl_endl;
+    std::cout<<"Stats after splitting"<<std::endl;
 
-    vcl_cout<<"Numb contours: "<<
+    std::cout<<"Numb contours: "<<
         boundary->preproc_contours().size()+
         boundary->scratch_contours().size()
-            <<vcl_endl;
-    vcl_cout<<"Numb edges: "<<boundary->all_edges().size()
-            <<vcl_endl;
-    vcl_cout<<"Numb belms: "<<boundary->belm_list().size()
-            <<vcl_endl;
+            <<std::endl;
+    std::cout<<"Numb edges: "<<boundary->all_edges().size()
+            <<std::endl;
+    std::cout<<"Numb belms: "<<boundary->belm_list().size()
+            <<std::endl;
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_list;
 
     bnd_contour_list all_contours;
     boundary->all_contours(all_contours);
@@ -1589,7 +1589,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
             output_shock->set_boundary(0);
             output_shock->set_ishock_graph(0);
 
-            vcl_cout<<"After preprocessing adding noise"<<vcl_endl;
+            std::cout<<"After preprocessing adding noise"<<std::endl;
 
             for (unsigned int v=0; v < vsol_list.size() ; ++v)
             {

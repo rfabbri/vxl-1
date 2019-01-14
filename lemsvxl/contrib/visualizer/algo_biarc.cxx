@@ -259,8 +259,8 @@ double BiArcParams::_computeFirstTurningAngle()
             //In this case the value of turning angle depends on the 
             //turning angle of the other arc. Hence this cannot be computed here.
             //
-            vcl_cout<<" <_computeFirstTurningAngle> Error : Do not use _computeFirstTurningAngle to compute "
-                    "the turning angle. Use computeTurningAngle() and getFirstTurningAngle instead "<<vcl_endl;
+            std::cout<<" <_computeFirstTurningAngle> Error : Do not use _computeFirstTurningAngle to compute "
+                    "the turning angle. Use computeTurningAngle() and getFirstTurningAngle instead "<<std::endl;
 
            }
        } 
@@ -300,8 +300,8 @@ double BiArcParams::_computeSecondTurningAngle()
             //In this case the value of turning angle depends on the 
             //turning angle of the other arc. Hence this cannot be computed here.
             //
-            vcl_cout<<" <_computeSecondTurningAngle> Error : Do not use _computeSecondTurningAngle to compute "
-                    "the turning angle. Use computeTurningAngle() and getSecondTurningAngle() instead "<<vcl_endl;
+            std::cout<<" <_computeSecondTurningAngle> Error : Do not use _computeSecondTurningAngle to compute "
+                    "the turning angle. Use computeTurningAngle() and getSecondTurningAngle() instead "<<std::endl;
            }
        } 
 
@@ -414,7 +414,7 @@ Point2D<double>  BiArcParams::getCenter(Point2D<double>  start, double angle, do
 //
 
 
-const vcl_vector<BiArcParams>& BiArc::get_bi_arc_params()
+const std::vector<BiArcParams>& BiArc::get_bi_arc_params()
   {
     return bi_arc_params;
    }
@@ -444,7 +444,7 @@ int BiArc::set_end_params(Point2D<double> end_pt, double end_angle)
     return 0;
    }
 
-int BiArc::getParams(vcl_vector<BiArcParams> &params)
+int BiArc::getParams(std::vector<BiArcParams> &params)
   {
     if (bi_arc_params.size()==0)
         compute_biarc_params();
@@ -462,22 +462,22 @@ BiArcParams BiArc::getParams(void)
     return BiArcParams();
    }
 
-vcl_ostream& operator<<(vcl_ostream &os, BiArcParams &params)
+std::ostream& operator<<(std::ostream &os, BiArcParams &params)
   {
-    os<<" Start Point   ="<<params.start_pt<<" End Point   ="<<params.end_pt<<vcl_endl;
-    os<<" Start Tangent ="<<params.start_angle*(180/M_PI)<<" End Tangent ="<<params.end_angle*(180/M_PI)<<" Join Tangent ="<<params.join_angle*(180/M_PI)<<vcl_endl;
-    os<<" K1      ="<<params.K1<<"    K2     ="<<params.K2<<vcl_endl;
-    os<<" K1 Sign ="<<params.k1Sign<<" K2 Sign = "<<params.k2Sign<<vcl_endl;
-    os<<" Length1 ="<<params.Length1<<"    Length2 ="<<params.Length2<<vcl_endl;
+    os<<" Start Point   ="<<params.start_pt<<" End Point   ="<<params.end_pt<<std::endl;
+    os<<" Start Tangent ="<<params.start_angle*(180/M_PI)<<" End Tangent ="<<params.end_angle*(180/M_PI)<<" Join Tangent ="<<params.join_angle*(180/M_PI)<<std::endl;
+    os<<" K1      ="<<params.K1<<"    K2     ="<<params.K2<<std::endl;
+    os<<" K1 Sign ="<<params.k1Sign<<" K2 Sign = "<<params.k2Sign<<std::endl;
+    os<<" Length1 ="<<params.Length1<<"    Length2 ="<<params.Length2<<std::endl;
 
-    os<<"  Net   Turning Angle ="<<params.angle_diff*(180/M_PI)<<vcl_endl;
-    os<<"  First Turning Angle ="<<params.getFirstTurningAngle()*(180/M_PI)<<" Second Turning Angle = "<<params.getSecondTurningAngle()*(180/M_PI)<<vcl_endl;
+    os<<"  Net   Turning Angle ="<<params.angle_diff*(180/M_PI)<<std::endl;
+    os<<"  First Turning Angle ="<<params.getFirstTurningAngle()*(180/M_PI)<<" Second Turning Angle = "<<params.getSecondTurningAngle()*(180/M_PI)<<std::endl;
 
-    os<<" Circle 1 :"<<vcl_endl;
-    os<<"     Start = "<<params.circle1Start<<" End = "<<params.circle1End<<" Radius = "<<params.circle1Radius<<" Center = "<<params.circle1Center<<vcl_endl;
+    os<<" Circle 1 :"<<std::endl;
+    os<<"     Start = "<<params.circle1Start<<" End = "<<params.circle1End<<" Radius = "<<params.circle1Radius<<" Center = "<<params.circle1Center<<std::endl;
     
-    os<<" Circle 2 :"<<vcl_endl;
-    os<<"     Start = "<<params.circle2Start<<" End = "<<params.circle2End<<" Radius = "<<params.circle2Radius<<" Center = "<<params.circle2Center<<vcl_endl;
+    os<<" Circle 2 :"<<std::endl;
+    os<<"     Start = "<<params.circle2Start<<" End = "<<params.circle2End<<" Radius = "<<params.circle2Radius<<" Center = "<<params.circle2Center<<std::endl;
     
     return os;
    }
@@ -507,7 +507,7 @@ double BiArc::compute_join_theta(double k1, double k2)
     else
       {
         //TODO :
-        vcl_cout<<" Error :<compute_join_theta> Division by 0"<<vcl_endl;
+        std::cout<<" Error :<compute_join_theta> Division by 0"<<std::endl;
        }
 
     return theta_temp;
@@ -550,7 +550,7 @@ double BiArc::compute_arclength(double theta0,double theta1,double k)
       {
         //TODO:
 
-        vcl_cout<<" Error :<compute_arclength> Division by 0"<<vcl_endl;
+        std::cout<<" Error :<compute_arclength> Division by 0"<<std::endl;
        }
 
     return L;
@@ -882,7 +882,7 @@ int getSinSign(double angle)
    
     if ((angle>M_PI)&&(angle<2*M_PI))
         return -1;
-    vcl_cout<<" <getSinSign> : Angle out of range. Angle ="<<angle<<" (rads) =="<<angle*(180/M_PI)<<" (deg)"<<vcl_endl;
+    std::cout<<" <getSinSign> : Angle out of range. Angle ="<<angle<<" (rads) =="<<angle*(180/M_PI)<<" (deg)"<<std::endl;
     return 0;
    }
 
@@ -910,7 +910,7 @@ int getCosSign(double angle)
     if ((angle>M_PI*1.5)&&(angle<2*M_PI))
         return 1;
     
-    vcl_cout<<" <getCosSign> : Angle out of range. Angle ="<<angle<<" (rads) =="<<angle*(180/M_PI)<<" (deg)"<<vcl_endl;
+    std::cout<<" <getCosSign> : Angle out of range. Angle ="<<angle<<" (rads) =="<<angle*(180/M_PI)<<" (deg)"<<std::endl;
     return 0;
    }
 

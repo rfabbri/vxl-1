@@ -8,10 +8,10 @@
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
-bool dbcvr_diff_chord_angles(vsol_digital_curve_2d_sptr curve, bool is_closed, vcl_vector<unsigned>& indices,
+bool dbcvr_diff_chord_angles(vsol_digital_curve_2d_sptr curve, bool is_closed, std::vector<unsigned>& indices,
 		vnl_matrix<double>& alpha_prime)
 {
 	int M = curve->size();
@@ -47,7 +47,7 @@ bool dbcvr_diff_chord_angles(vsol_digital_curve_2d_sptr curve, bool is_closed, v
 			vsol_point_2d_sptr p_k = curve->point(k);
 			double dx = p_k->x() - x_i;
 			double dy = p_k->y() - y_i;
-			double angle = vcl_atan2(dy, dx);
+			double angle = std::atan2(dy, dx);
 			if(angle < 0)
 			{
 				angle += vnl_math::pi*2;

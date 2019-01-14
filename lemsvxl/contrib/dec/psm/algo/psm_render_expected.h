@@ -1,7 +1,7 @@
 #ifndef psm_render_expected_h_
 #define psm_render_expected_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <psm/psm_scene.h>
 #include <psm/psm_sample.h>
 #include <psm/psm_apm_traits.h>
@@ -48,12 +48,12 @@ public:
       psm_apm_traits<APM>::apm_processor::expected_color(cell_value.appearance);
 
     alpha_integral_(i,j) += cell_value.alpha * cell_len;
-    float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    float vis_prob_end = std::exp(-alpha_integral_(i,j));
 
     float weight = vis_prob_(i,j) - vis_prob_end;
 
     expected_(i,j) += cell_expected * weight;
-    //vcl_cout << "cell_len = " << cell_len << "alpha = " << cell_value.alpha << " vis_prob = " << vis_prob << " weight = " << weight << vcl_endl;
+    //std::cout << "cell_len = " << cell_len << "alpha = " << cell_value.alpha << " vis_prob = " << vis_prob << " weight = " << weight << std::endl;
 
     // update visibility probabilty
     vis_prob_(i,j) = vis_prob_end;

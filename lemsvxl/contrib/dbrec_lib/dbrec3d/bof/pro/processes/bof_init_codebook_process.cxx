@@ -24,10 +24,10 @@ bool bof_init_codebook_process_cons(bprb_func_process& pro)
 {
   using namespace bof_init_codebook_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";  //path to the k-means file to be used as cosebook
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";  //path to the k-means file to be used as cosebook
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "bof_codebook_sptr";
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -40,7 +40,7 @@ bool bof_init_codebook_process(bprb_func_process& pro)
   using namespace bof_init_codebook_process_globals;
   
   //get inputs
-  vcl_string mean_file = pro.get_input<vcl_string>(0);
+  std::string mean_file = pro.get_input<std::string>(0);
    
   pro.set_output_val<bof_codebook_sptr>(0, new bof_codebook(mean_file));
 

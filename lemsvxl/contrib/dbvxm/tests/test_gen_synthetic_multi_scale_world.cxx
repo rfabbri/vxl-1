@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_box_2d.h>
@@ -32,7 +32,7 @@ const double camera_dist= 500.0;
 //size of the world
 const unsigned nx=200, ny=200, nz=50;
 const float vox_length = 1.35f;
-vcl_vector<vgl_box_3d<double> > boxes;
+std::vector<vgl_box_3d<double> > boxes;
 
 typedef bvxm_voxel_traits<APM_MOG_GREY>::voxel_datatype apm_datatype;
 
@@ -96,7 +96,7 @@ vpgl_rational_camera<double>
 perspective_to_rational(vpgl_perspective_camera<double>& cam_pers)
 {
     vnl_matrix_fixed<double,3,4> cam_pers_matrix = cam_pers.get_matrix();
-    vcl_vector<double> neu_u,den_u,neu_v,den_v;
+    std::vector<double> neu_u,den_u,neu_v,den_v;
     double x_scale = 1.0,
         x_off = 0.0,
         y_scale = 1.0,
@@ -131,7 +131,7 @@ perspective_to_rational(vpgl_perspective_camera<double>& cam_pers)
 }
 
 
-vcl_vector<vpgl_camera_double_sptr >
+std::vector<vpgl_camera_double_sptr >
 generate_cameras_yz(vgl_box_3d<double>& world)
 {
     vgl_point_2d<double> principal_point(IMAGE_U/2., IMAGE_V/2.);
@@ -141,20 +141,20 @@ generate_cameras_yz(vgl_box_3d<double>& world)
     //double alpha = (vnl_math::pi/8.) * 3;
     double alpha = vnl_math::pi/4;
     double delta_alpha = -1*vnl_math::pi/200;
-    vcl_vector<vgl_point_3d<double> > centers;
+    std::vector<vgl_point_3d<double> > centers;
     for (unsigned i=0; i<20; i++) {
-        y = camera_dist*vcl_sin(alpha);
-        z = (camera_dist+z_base_height)*vcl_cos(alpha);
+        y = camera_dist*std::sin(alpha);
+        z = (camera_dist+z_base_height)*std::cos(alpha);
         //centers.push_back(vgl_point_3d<double> (x+centroid.x(), y+centroid.y(), 1e15+centroid.z()));
         centers.push_back(vgl_point_3d<double> (centroid.x(), y+centroid.y(), z+centroid.z()));
 #ifdef DEBUG
-        vcl_cout << centers[i] << vcl_endl;
+        std::cout << centers[i] << std::endl;
 #endif
         alpha += delta_alpha;
     }
 
     vgl_box_2d<double> bb;
-    vcl_vector<vpgl_camera_double_sptr> persp_cameras;
+    std::vector<vpgl_camera_double_sptr> persp_cameras;
     for (unsigned i=0; i<centers.size(); i++)
     {
         vgl_point_3d<double> camera_center  = centers[i];
@@ -165,19 +165,19 @@ generate_cameras_yz(vgl_box_3d<double>& world)
         //vpgl_rational_camera<double>* rat_cam = new vpgl_rational_camera<double>(perspective_to_rational(persp_cam));
         persp_cameras.push_back(persp_cam);
 
-        vcl_vector<vgl_point_3d<double> > corners = bvxm_util::corners_of_box_3d<double>(world);
+        std::vector<vgl_point_3d<double> > corners = bvxm_util::corners_of_box_3d<double>(world);
         for (unsigned i=0; i<corners.size(); i++) {
             vgl_point_3d<double> c = corners[i];
             double u,v, u2, v2;
             persp_cam->project(c.x(), c.y() ,c.z(), u, v);
             bb.add(vgl_point_2d<double> (u,v));
 #ifdef DEBUG
-            vcl_cout << "Perspective [" << u << ',' << v << "]\n"
-                << "Rational [" << u2 << ',' << v2 << "]\n" << vcl_endl;
+            std::cout << "Perspective [" << u << ',' << v << "]\n"
+                << "Rational [" << u2 << ',' << v2 << "]\n" << std::endl;
 #endif
         }
 #ifdef DEBUG
-        vcl_cout << bb << vcl_endl;
+        std::cout << bb << std::endl;
 #endif
     }
     return persp_cameras;
@@ -189,8 +189,8 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
                 bvxm_voxel_grid<float>* intensity_grid,
                 bvxm_voxel_grid<float>* ocp_grid,
                 bvxm_voxel_grid<apm_datatype>* apm_grid,
-                vcl_vector<vpgl_camera_double_sptr>& cameras,
-                vcl_vector <vil_image_view_base_sptr>& image_set,
+                std::vector<vpgl_camera_double_sptr>& cameras,
+                std::vector <vil_image_view_base_sptr>& image_set,
                 unsigned int bin_num)
 {
     apm_datatype sample;
@@ -208,10 +208,10 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
         update_status = processor.update(*apm_slab_it, *obs_it, *weight);
     }
 
-    vcl_string path = "./test_gen_synthetic_multi_scale_world/test_img";
+    std::string path = "./test_gen_synthetic_multi_scale_world/test_img";
 
     unsigned int scale_idx = 0;
-    vcl_vector<vil_image_view_base_sptr> image_set_smooth;
+    std::vector<vil_image_view_base_sptr> image_set_smooth;
 
     //for (unsigned i=0; i<cameras.size(); i++) {
     //    vil_image_view_base_sptr img_arg;
@@ -224,7 +224,7 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
     //    vil_image_view<unsigned char> * expected_copy = new vil_image_view<unsigned char> (IMAGE_U, IMAGE_V);
     //    expected_copy->deep_copy(expected);
 
-    //    vcl_stringstream s;
+    //    std::stringstream s;
     //    s << path << i << "_bin_" << bin_num <<"_scale_" << scale_idx << ".tif";
     //    vil_save(*expected, s.str().c_str());
     //    image_set.push_back(expected);
@@ -237,9 +237,9 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
         for (scale_idx = 0;scale_idx < world->get_params()->max_scale();scale_idx++)
         {
 
-            double factor=vcl_pow(2.0,scale_idx);
+            double factor=std::pow(2.0,scale_idx);
 
-            vcl_stringstream s;
+            std::stringstream s;
             s << path << i << "_bin_" << bin_num <<"_scale_" << scale_idx << ".tif";
 
             vpgl_camera_double_sptr camera = dbvxm_util::downsample_persp_camera(cameras[i],scale_idx);
@@ -268,11 +268,11 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
     return true;
 }
 
-bool reconstruct_world( dbvxm_multi_scale_voxel_world_sptr recon_world, vcl_vector<vpgl_camera_double_sptr>& cameras,
-                       vcl_vector <vil_image_view_base_sptr>& image_set,unsigned int bin_num)
+bool reconstruct_world( dbvxm_multi_scale_voxel_world_sptr recon_world, std::vector<vpgl_camera_double_sptr>& cameras,
+                       std::vector <vil_image_view_base_sptr>& image_set,unsigned int bin_num)
 {
-    vcl_string recon_path = "recon_world/test_img";
-    vcl_string camera_path = "test_gen_cameras/camera";
+    std::string recon_path = "recon_world/test_img";
+    std::string camera_path = "test_gen_cameras/camera";
 
     for (unsigned i = 0;i<cameras.size();i++)
     {
@@ -300,7 +300,7 @@ bool reconstruct_world( dbvxm_multi_scale_voxel_world_sptr recon_world, vcl_vect
     {
         for (unsigned scale_idx = 0;scale_idx < recon_world->get_params()->max_scale();scale_idx++)
         {
-            double factor = vcl_pow(2.0,scale_idx);
+            double factor = std::pow(2.0,scale_idx);
             vil_image_view_base_sptr img_arg;
             vil_image_view<float> mask(IMAGE_U/factor, IMAGE_V/factor);
             vil_image_view_base_sptr expected = new vil_image_view<unsigned char>(IMAGE_U/factor, IMAGE_V/factor);
@@ -312,9 +312,9 @@ bool reconstruct_world( dbvxm_multi_scale_voxel_world_sptr recon_world, vcl_vect
 
             bvxm_image_metadata camera(img_arg,rat_cam);
             recon_world->expected_image<APM_MOG_GREY>(camera, expected, mask, bin_num,scale_idx);
-            vcl_stringstream s;
+            std::stringstream s;
             s << recon_path << i << "_bin_" << bin_num << "_scale_" << scale_idx << ".tif";
-            vcl_stringstream c;
+            std::stringstream c;
             c << camera_path << i << "_scale_" << scale_idx<< ".rpc";
             vil_save(*expected, s.str().c_str());
             // vpgl_rational_camera<double>* cam = static_cast<vpgl_rational_camera<double>*> (rat_cam.as_pointer());
@@ -326,9 +326,9 @@ bool reconstruct_world( dbvxm_multi_scale_voxel_world_sptr recon_world, vcl_vect
 
 
 void gen_texture_map(vgl_box_3d<double> box,
-                     vcl_vector<vcl_vector<float> >& intens_map_bt,
-                     vcl_vector<vcl_vector<float> >& intens_map_side1,
-                     vcl_vector<vcl_vector<float> >& intens_map_side2)
+                     std::vector<std::vector<float> >& intens_map_bt,
+                     std::vector<std::vector<float> >& intens_map_side1,
+                     std::vector<std::vector<float> >& intens_map_side2)
 {
     // generate intensity maps
     intens_map_bt.resize(long(box.width()/8+1));
@@ -336,7 +336,7 @@ void gen_texture_map(vgl_box_3d<double> box,
     intens_map_side2.resize(long(box.width()/8+1));
 
 #ifdef DEBUG
-    vcl_cout << box.width() << ' ' << box.depth() << ' ' << box.height() << vcl_endl;
+    std::cout << box.width() << ' ' << box.depth() << ' ' << box.height() << std::endl;
 #endif
 
     for (unsigned i=0; i<box.width()/8;i++) {
@@ -381,32 +381,32 @@ void gen_voxel_world_2box(vgl_vector_3d<unsigned> grid_size,
 
     //object (essentially two boxes) placed in the voxel world
     bvxm_util::generate_test_boxes<double>(40,40,10,140,140,23,nx,ny,nz,boxes);
-    vcl_ofstream is("test_gen_synthetic_multi_scale_world/intensity_grid.txt");
+    std::ofstream is("test_gen_synthetic_multi_scale_world/intensity_grid.txt");
 
     assert (boxes.size() == 2);
 
     vgl_box_3d<double> box=boxes[0], top_box = boxes[1];
 
     // generate intensity maps
-    vcl_vector<vcl_vector<float> > intens_map_bt;
-    vcl_vector<vcl_vector<float> > intens_map_side1;
-    vcl_vector<vcl_vector<float> > intens_map_side2;
+    std::vector<std::vector<float> > intens_map_bt;
+    std::vector<std::vector<float> > intens_map_side1;
+    std::vector<std::vector<float> > intens_map_side2;
     gen_texture_map(box, intens_map_bt, intens_map_side1, intens_map_side2);
 
-    vcl_vector<vcl_vector<float> > top_intens_map_bt;
-    vcl_vector<vcl_vector<float> > top_intens_map_side1;
-    vcl_vector<vcl_vector<float> > top_intens_map_side2;
+    std::vector<std::vector<float> > top_intens_map_bt;
+    std::vector<std::vector<float> > top_intens_map_side1;
+    std::vector<std::vector<float> > top_intens_map_side2;
     gen_texture_map(top_box, top_intens_map_bt, top_intens_map_side1, top_intens_map_side2);
 
     unsigned z=nz;
     for (ocp_slab_it = ocp_grid->begin();ocp_slab_it != ocp_grid->end();++ocp_slab_it,++intensity_slab_it)
     {
         --z;
-        is << z << "--->" << vcl_endl;
+        is << z << "--->" << std::endl;
 
         for (unsigned i=0; i<nx; i++)
         {
-            is << vcl_endl;
+            is << std::endl;
             for (unsigned j=0; j<ny; j++)
             {
                 int face1 = on_box_surface(box, vgl_point_3d<double>(i,j,z));
@@ -431,7 +431,7 @@ void gen_voxel_world_2box(vgl_vector_3d<unsigned> grid_size,
                             (*intensity_slab_it)(i,j,0) = intens_map_side2[a][b];
                         }
 #ifdef DEBUG
-                        vcl_cout << face1 << '=' << a << ' ' << b << vcl_endl;
+                        std::cout << face1 << '=' << a << ' ' << b << std::endl;
 #endif
                     }
                     else {
@@ -461,7 +461,7 @@ void gen_voxel_world_2box(vgl_vector_3d<unsigned> grid_size,
             }
         }
     }
-    vcl_cout << "grid done." << vcl_endl;
+    std::cout << "grid done." << std::endl;
 }
 
 bool test_reconstructed_ocp(dbvxm_multi_scale_voxel_world_sptr recon_world)
@@ -480,10 +480,10 @@ bool test_reconstructed_ocp(dbvxm_multi_scale_voxel_world_sptr recon_world)
     for (ocp_slab_it = ocp_grid->begin(); ocp_slab_it != ocp_grid->end(); ++ocp_slab_it ) {
         k--;
         float ocp = (*ocp_slab_it)(i,j,0);
-        vcl_cout << "z=" << k << "  " << ocp << vcl_endl;
+        std::cout << "z=" << k << "  " << ocp << std::endl;
         for (unsigned b=0; b<boxes.size(); b++) {
             if (on_box_surface(boxes[b], vgl_point_3d<double>(i,j,k)) != -1)
-                vcl_cout << "ON " << b << vcl_endl;
+                std::cout << "ON " << b << std::endl;
         }
     }
     return true;
@@ -495,10 +495,10 @@ static void test_gen_synthetic_multi_scale_world()
     START("test_gen_synthetic_multi_scale_world test");
 
     // create the directory under build to put the intermediate files and the generated images
-    vcl_string model_dir("./test_gen_synthetic_multi_scale_world");
+    std::string model_dir("./test_gen_synthetic_multi_scale_world");
     vul_file::make_directory(model_dir);
 
-    vcl_string recon_model_dir("./recon_world");
+    std::string recon_model_dir("./recon_world");
     vul_file::make_directory(recon_model_dir);
 
     vul_file::make_directory("./test_gen_cameras");
@@ -549,9 +549,9 @@ static void test_gen_synthetic_multi_scale_world()
 
 
     gen_voxel_world_2box(grid_size, voxel_world, ocp_grid_scale_1, intensity_grid);
-    vcl_vector<vpgl_camera_double_sptr> cameras = generate_cameras_yz(voxel_world);
+    std::vector<vpgl_camera_double_sptr> cameras = generate_cameras_yz(voxel_world);
 
-    vcl_vector <vil_image_view_base_sptr> image_set_1,image_set_2;
+    std::vector <vil_image_view_base_sptr> image_set_1,image_set_2;
 
     // generate images from synthetic world
     gen_images(grid_size, world, intensity_grid, ocp_grid_scale_1, apm_grid_1,

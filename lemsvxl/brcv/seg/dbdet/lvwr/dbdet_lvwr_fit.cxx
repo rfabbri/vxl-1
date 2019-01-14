@@ -11,7 +11,7 @@
 #include <vil/vil_new.h>
 #include <brip/brip_vil_float_ops.h>
 
-#include <vcl_ctime.h>
+#include <ctime>
 
 #include <vgl/vgl_point_2d.h>
 #include <vsol/vsol_point_2d.h>
@@ -35,12 +35,12 @@ dbdet_lvwr_fit::initialize(vsol_polygon_2d_sptr poly, vil_image_resource_sptr im
   poly_ = new vsol_polygon_2d(*poly);
   
   if (!poly || !poly_) {
-    vcl_cout << "Polygon is not set!\n";
+    std::cout << "Polygon is not set!\n";
     return false;
   }
 
   if (poly_->size() <= 0) {
-    vcl_cout << "Empty polygon!\n";
+    std::cout << "Empty polygon!\n";
     return false;
   }
 
@@ -61,10 +61,10 @@ dbdet_lvwr_fit::initialize(vsol_polygon_2d_sptr poly, vil_image_resource_sptr im
     lenx = (topx_+lenx+2*marginx) > w ? (w-topx_-1) : (lenx+2*marginx);
     leny = (topy_+leny+2*marginy) > h ? (h-topy_-1) : (leny+2*marginy);
     image_sptr = vil_crop(image,
-                     (unsigned int)vcl_floor(topx_+0.5),
-                     (unsigned int)vcl_floor(lenx+0.5),
-                     (unsigned int)vcl_floor(topy_+0.5),
-                     (unsigned int)vcl_floor(leny+0.5));
+                     (unsigned int)std::floor(topx_+0.5),
+                     (unsigned int)std::floor(lenx+0.5),
+                     (unsigned int)std::floor(topy_+0.5),
+                     (unsigned int)std::floor(leny+0.5));
   } else {
     image_sptr = image;
     topx_ = 0;
@@ -75,24 +75,24 @@ dbdet_lvwr_fit::initialize(vsol_polygon_2d_sptr poly, vil_image_resource_sptr im
     srand(time(NULL));
     double r = ( (double)rand()/((double)(RAND_MAX)+(double)(1)) ); 
     double x = (r * poly_->size()); 
-    start_index_ = (unsigned int)vcl_floor(x); 
+    start_index_ = (unsigned int)std::floor(x); 
   } else 
     start_index_ = 0;
 
-  int cx = (int)vcl_floor(poly_->get_min_x()-topx_+0.5);
-  int cy = (int)vcl_floor(poly_->get_min_y()-topy_+0.5);
-  int cmx = (int)vcl_floor(poly_->get_max_x()-topx_+0.5);
-  int cmy = (int)vcl_floor(poly_->get_max_y()-topy_+0.5);
+  int cx = (int)std::floor(poly_->get_min_x()-topx_+0.5);
+  int cy = (int)std::floor(poly_->get_min_y()-topy_+0.5);
+  int cmx = (int)std::floor(poly_->get_max_x()-topx_+0.5);
+  int cmy = (int)std::floor(poly_->get_max_y()-topy_+0.5);
   if (cx <= 6 || cy <= 6 || cmx >= (int)(image_sptr->ni()-6) || cmy >= (int)(image_sptr->nj()-6)) {
-    vcl_cout << "Polygon is out of exceptable image area, skipping!\n"; 
+    std::cout << "Polygon is out of exceptable image area, skipping!\n"; 
     return false;
   }
 
-  seed_x_ = (int)vcl_floor(poly_->vertex(start_index_)->x()-topx_+0.5);
-  seed_y_ = (int)vcl_floor(poly_->vertex(start_index_)->y()-topy_+0.5);
+  seed_x_ = (int)std::floor(poly_->vertex(start_index_)->x()-topx_+0.5);
+  seed_y_ = (int)std::floor(poly_->vertex(start_index_)->y()-topy_+0.5);
 
   if (!(seed_x_ >= 0 && seed_x_ < (int)image_sptr->ni() && seed_y_ >= 0 && seed_y_ < (int)image_sptr->nj())) {
-    vcl_cout << "Polygons first point is not a valid seed point on image!!\n"; 
+    std::cout << "Polygons first point is not a valid seed point on image!!\n"; 
     return false;
   }
   
@@ -106,7 +106,7 @@ dbdet_lvwr_fit::initialize(vsol_polygon_2d_sptr poly, vil_image_resource_sptr im
   vil1_memory_image_of<float> img = vil1_from_vil_image_view(float_image);
 
   intsciss_.compute(img, seed_x_, seed_y_);
-  vcl_cout << "Paths are computed, with seed x: " << seed_x_ << " seed y: " << seed_y_ << "...\n";
+  std::cout << "Paths are computed, with seed x: " << seed_x_ << " seed y: " << seed_y_ << "...\n";
 
   contour_.clear();
   return true;
@@ -118,8 +118,8 @@ dbdet_lvwr_fit::fit(bool smooth_flag, float sigma)
 {
   unsigned int end_index = poly_->size()+start_index_;
   for (unsigned int ind = start_index_; ind<end_index; ind++) {
-    int mouse_x = (int)vcl_floor(poly_->vertex(ind%poly_->size())->x()-topx_+0.5);
-    int mouse_y = (int)vcl_floor(poly_->vertex(ind%poly_->size())->y()-topy_+0.5);
+    int mouse_x = (int)std::floor(poly_->vertex(ind%poly_->size())->x()-topx_+0.5);
+    int mouse_y = (int)std::floor(poly_->vertex(ind%poly_->size())->y()-topy_+0.5);
 
     cor_.clear();
 
@@ -159,7 +159,7 @@ dbdet_lvwr_fit::fit(bool smooth_flag, float sigma)
           cost1 = cost2;
         }
 
-        if ( vcl_abs(float(last_x - seed_x_)) > 2 || vcl_abs(float(last_y - seed_y_)) > 2) {
+        if ( std::abs(float(last_x - seed_x_)) > 2 || std::abs(float(last_y - seed_y_)) > 2) {
           seed_x_ = last_x;
           seed_y_ = last_y;
         } else {
@@ -170,7 +170,7 @@ dbdet_lvwr_fit::fit(bool smooth_flag, float sigma)
         intsciss_.get_path(seed_x_, seed_y_, cor_);
 
         if (cor_.size() != 0) {
-          vcl_vector<vcl_pair<int, int> >::iterator p;
+          std::vector<std::pair<int, int> >::iterator p;
           for (p = cor_.end()-1; p != cor_.begin()-1; p--) {
             contour_.push_back(new vsol_point_2d(double(p->second+topx_), double(p->first+topy_)));
           }
@@ -183,7 +183,7 @@ dbdet_lvwr_fit::fit(bool smooth_flag, float sigma)
   }
   //: push back the last portion if any
   if (cor_.size() > 0) {
-    vcl_vector<vcl_pair<int, int> >::iterator p;
+    std::vector<std::pair<int, int> >::iterator p;
     for (p = cor_.end()-1; p != cor_.begin()-1; p--) {
       contour_.push_back(new vsol_point_2d(double(p->second+topx_), double(p->first+topy_)));
     }
@@ -202,7 +202,7 @@ dbdet_lvwr_fit::fit(bool smooth_flag, float sigma)
 bool 
 dbdet_lvwr_fit::smooth(float /*sigma*/)
 {
-  vcl_vector<vgl_point_2d<double> > curve;
+  std::vector<vgl_point_2d<double> > curve;
   curve.clear();
     
   for (unsigned i = 0; i<contour_.size(); i++) {

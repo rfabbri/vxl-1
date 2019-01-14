@@ -4,8 +4,8 @@
 // \author  H. Can Aras
 // \date    2005-10-05
 // 
-#include <vcl_cmath.h>
-#include <vcl_ctime.h>
+#include <cmath>
+#include <ctime>
 
 #include <xmvg/xmvg_gaussian_edge_detector_x_3d.h>
 #include <xmvg/xmvg_gaussian_edge_detector_y_3d.h>
@@ -15,7 +15,7 @@
 #include <proc/bioproc_dummy_splat_resource.h>
 #include <proc/bioproc_filtering_proc.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 int main(int argc, char** argv)
 {
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
   xmvg_gaussian_edge_detector_descriptor edge_det_desc(sigma, centre);
   xmvg_gaussian_edge_detector_z_3d edge_det_z(edge_det_desc);
 
-  vcl_vector<xmvg_gaussian_edge_detector_z_3d> filters;
+  std::vector<xmvg_gaussian_edge_detector_z_3d> filters;
   filters.push_back(edge_det_z);
 
   xmvg_composite_filter_3d<double, xmvg_gaussian_edge_detector_z_3d> comp3d(filters);
@@ -62,13 +62,13 @@ int main(int argc, char** argv)
   //unused variable
   //int num_points = dimx * dimy * dimz;
 
-  vcl_ofstream xml_file("D:/MyDocs/projects/BioTree/daily_news_2006/mar15/r180_h1000_along_z_2/edge_z_res.xml");
-//  vcl_ofstream xml_file("./r180_h1000_along_z_2/edge_x_res.xml");
+  std::ofstream xml_file("D:/MyDocs/projects/BioTree/daily_news_2006/mar15/r180_h1000_along_z_2/edge_z_res.xml");
+//  std::ofstream xml_file("./r180_h1000_along_z_2/edge_x_res.xml");
   // filtering
   time_t t1, t2;
-  t1 = vcl_clock();
+  t1 = std::clock();
   proc.execute();
-  t2 = vcl_clock();
+  t2 = std::clock();
 
   x_write(xml_file, proc);
   

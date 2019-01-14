@@ -77,8 +77,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbskfg_soview_contour_link::
-print(vcl_ostream& os) const
+std::ostream& dbskfg_soview_contour_link::
+print(std::ostream& os) const
 {
 
     link_->print(os);
@@ -151,8 +151,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbskfg_soview_shock_link::
-print(vcl_ostream& os) const
+std::ostream& dbskfg_soview_shock_link::
+print(std::ostream& os) const
 {
 
     link_->print(os);
@@ -222,8 +222,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbskfg_soview_shock_ray::
-print(vcl_ostream& os) const
+std::ostream& dbskfg_soview_shock_ray::
+print(std::ostream& os) const
 {
     
     link_->print(os);

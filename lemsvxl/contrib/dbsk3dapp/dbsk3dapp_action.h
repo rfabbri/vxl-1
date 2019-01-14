@@ -29,8 +29,8 @@ protected:
   dbsk3dapp_view_manager*  view_manager_;
   ACTION                action_;
 
-  vcl_vector<SoGroup*>  _parents;
-  vcl_vector<SoNode*>   _children;
+  std::vector<SoGroup*>  _parents;
+  std::vector<SoNode*>   _children;
 
 public:
   dbsk3dapp_action (dbsk3dapp_view_manager* view) {

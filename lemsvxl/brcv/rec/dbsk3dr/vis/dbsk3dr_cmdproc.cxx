@@ -74,10 +74,10 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     //old code on xform!
     if (dbmsh3d_cmd_align_file()) { //read the alignment from file and perform transformation.
       spvr->pv1()->load_hmatrix (dbmsh3d_cmd_align_file());
-      vcl_cout << "Transforming mesh ...\n"; // transform the reference mesh
+      std::cout << "Transforming mesh ...\n"; // transform the reference mesh
       dbmsh3d_apply_xform (spvr->pv1()->mesh(), spvr->pv1()->hmatrix());
       dbmsh3d_apply_xform (spvr->pv1()->fs_mesh(), spvr->pv1()->hmatrix());
-      vcl_cout << "done.\n";
+      std::cout << "done.\n";
     }
 
     if (dbmsh3d_cmd_gui()) {
@@ -135,7 +135,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
   if (dbmsh3dr_cmd_listfile()) {
     //Read the list file and view each file.
     //-v 0: regular, 1: draw in single color, 2: color each sheet.
-    vcl_string listfile = dbmsh3dr_cmd_listfile();
+    std::string listfile = dbmsh3dr_cmd_listfile();
     _root->addChild (spvr->pv0()->vis_list_file (listfile, 0, dbmsh3d_cmd_v()));
 
     dbmsh3d_app_window_title += " -- " + listfile;
@@ -185,8 +185,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     spvr->p0()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
 
     //Read in the two meshed .PLY files.
-    vcl_string f1_mesh = spvr->p0()->dir_prefix();
-    vcl_string f2_mesh = spvr->p1()->dir_prefix();
+    std::string f1_mesh = spvr->p0()->dir_prefix();
+    std::string f2_mesh = spvr->p1()->dir_prefix();
     if (dbsk3dr_cmd_fuse() == 2) {
       f1_mesh += ".ply";
       f2_mesh += ".ply";
@@ -221,7 +221,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //Estimate the Pt-Mesh dist. d_pt-mesh (A*, B*) of init. alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of init. alignment:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of init. alignment:\n\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_B_mean = spvr->dist_mean();
@@ -236,7 +236,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //Estimate the Pt-Mesh dist. d_pt-mesh (A*, B^*) after Pt-Mesh ICP alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_Bh_mean = spvr->dist_mean();
@@ -246,14 +246,14 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     dbmsh3d_write_xform_file (spvr->p1()->dir_prefix() + "_fixed_new.txt", newH2);
 
     //7) Output summary.
-    vul_printf (vcl_cout, "\n\n Summary: \n\n");
-    vul_printf (vcl_cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "\n\n Summary: \n\n");
+    vul_printf (std::cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
                 pp_icp_dist_th, dbmsh3dr_cmd_icpthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
                 error_dist_th, dbmsh3dr_cmd_dthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
-    vul_printf (vcl_cout, "  Alignment error is reduced by %.3f%%.\n", 
+    vul_printf (std::cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
+    vul_printf (std::cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
+    vul_printf (std::cout, "  Alignment error is reduced by %.3f%%.\n", 
                 (d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean)/d_pt_mesh_A_B_mean * 100);
   }
   //-fuse 5: estimate edge weight (overlapping) of adjacency graph.
@@ -261,8 +261,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     //Read in the list scan file: 'all_scans_init.txt' for data_files[] and align_files[].
     if (dbmsh3d_cmd_fileprefix() == NULL ||
         spvr->read_list_file (dbmsh3d_cmd_fileprefix()) == false) {
-      vcl_string file = dbmsh3d_cmd_fileprefix();
-      vul_printf (vcl_cout, "  Error reading %s.\n", file.c_str());
+      std::string file = dbmsh3d_cmd_fileprefix();
+      vul_printf (std::cout, "  Error reading %s.\n", file.c_str());
     }
     else {
       //if -n1 and -n2 specified, only do the pair of (n1, n2).
@@ -271,7 +271,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
         int i = dbmsh3d_cmd_n1();
         int j = dbmsh3d_cmd_n2();
         if (i>=int(spvr->data_files().size()) || j>=int(spvr->data_files().size())) {
-          vul_printf (vcl_cout, "  Error: -n1, -n2 too large!\n");
+          vul_printf (std::cout, "  Error: -n1, -n2 too large!\n");
           dbmsh3d_cmd_gui() = 0;
         }
         else {
@@ -327,12 +327,12 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     //-f list scan file: 'all_scans_init_gsm.txt' for data_files[] and align_files[].
     if (dbmsh3d_cmd_fileprefix() == NULL ||
         spvr->read_list_file (dbmsh3d_cmd_fileprefix()) == false) {
-      vcl_string file = dbmsh3d_cmd_fileprefix();
-      vul_printf (vcl_cout, "  Error reading %s.\n", file.c_str());
+      std::string file = dbmsh3d_cmd_fileprefix();
+      vul_printf (std::cout, "  Error reading %s.\n", file.c_str());
     }
     else {
       //Specify the MST (sid1, sid2): # overlapping points.
-      vcl_vector<vcl_pair<int, int> > MST;
+      std::vector<std::pair<int, int> > MST;
       MST.resize (19);
       
       //The following is for Q:\knee-cartilage\results\fuse_scans\knee_1133RT\wc_trial_7
@@ -378,8 +378,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     //-f list scan file: 'all_scans_mst_gsm.txt' for data_files[] and align_files[].
     if (dbmsh3d_cmd_fileprefix() == NULL ||
         spvr->read_list_file (dbmsh3d_cmd_fileprefix()) == false) {
-      vcl_string file = dbmsh3d_cmd_fileprefix();
-      vul_printf (vcl_cout, "  Error reading %s.\n", file.c_str());
+      std::string file = dbmsh3d_cmd_fileprefix();
+      vul_printf (std::cout, "  Error reading %s.\n", file.c_str());
     }
     else {
       //Similar to -fuse 5: compute the weight for all edges.
@@ -437,24 +437,24 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     assert (result);
 
     //Estimate d_pt-pt (A, B): Pt-Pt distance after init Pt-Pt ICP registration.      
-    vul_printf (vcl_cout, "\nPt-Pt dist. d_pt-pt(A, B) of alignment of init. input:\n\n");
+    vul_printf (std::cout, "\nPt-Pt dist. d_pt-pt(A, B) of alignment of init. input:\n\n");
     spvr->compute_pp_error (error_dist_th);
 
     //Output final hmatrix to 02_icp1_af.txt      
-    vcl_string out_af_file = "02_icp1_af.txt";
+    std::string out_af_file = "02_icp1_af.txt";
     dbmsh3d_write_xform_file (out_af_file, spvr->hmatrix_01());
 
     //draw the point cloud of -f2 after alignment.
     _root->addChild (spvr->pv1()->vis_ptset (COLOR_RED, dbmsh3d_cmd_idv()!=0));
     
     //Output summary.
-    vul_printf (vcl_cout, "\n Summary:\n");
-    vul_printf (vcl_cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "\n Summary:\n");
+    vul_printf (std::cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
                 pp_icp_dist_th, dbmsh3dr_cmd_icpthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
                 error_dist_th, dbmsh3dr_cmd_dthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  init d_pt-pt (A, B) mean: %f\n", init_pp_mean_error);
-    vul_printf (vcl_cout, "  d_pt-pt (A, B)  mean: %f\n", spvr->dist_mean());
+    vul_printf (std::cout, "  init d_pt-pt (A, B) mean: %f\n", init_pp_mean_error);
+    vul_printf (std::cout, "  d_pt-pt (A, B)  mean: %f\n", spvr->dist_mean());
   }
   else if (dbsk3dr_cmd_smrd()==2) {     
     //-smrd 2: estimate the diff of dist. before/after meshing + Pt-Mesh ICP.
@@ -478,15 +478,15 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //2) Prepare surface meshes.
     //Try to load the mesh surface files if available.
-    vcl_string nosm_mesh_file_0 = spvr->p0()->dir_file() + "_pw_init_nosm";
-    vcl_string nosm_mesh_file_1 = spvr->p1()->dir_file() + "_pw_init_nosm";
+    std::string nosm_mesh_file_0 = spvr->p0()->dir_file() + "_pw_init_nosm";
+    std::string nosm_mesh_file_1 = spvr->p1()->dir_file() + "_pw_init_nosm";
     bool result0 = spvr->p0()->load_ply (nosm_mesh_file_0);
     bool result1 = spvr->p1()->load_ply (nosm_mesh_file_1);
 
     if (result0 && result1) {
-      vul_printf (vcl_cout, "Mesh files %s.ply and %s.ply read successfully.\n",
+      vul_printf (std::cout, "Mesh files %s.ply and %s.ply read successfully.\n",
                   nosm_mesh_file_0.c_str(), nosm_mesh_file_1.c_str());
-      vul_printf (vcl_cout, "  Skip the meshing process.\n\n");
+      vul_printf (std::cout, "  Skip the meshing process.\n\n");
       assert (spvr->p0()->mesh()->vertexmap().size() == spvr->p0()->sg3pi()->get_num_points());
       spvr->p0()->reset_sg3pi ();
       spvr->p0()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
@@ -529,7 +529,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //3) Estimate the Pt-Mesh dist. d_pt-mesh (A*, B*) of init. input.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of alignment of init. input:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of alignment of init. input:\n\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_B_mean = spvr->dist_mean();
@@ -544,22 +544,22 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       spvr->p1()->save_ply (spvr->p1()->dir_file() + "_icp");
 
     //5) Estimate the Pt-Mesh dist. d_pt-mesh (A*, B^*) after Pt-Mesh ICP alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_Bh_mean = spvr->dist_mean();
 
     //6) Output summary.
-    vul_printf (vcl_cout, "\n Summary:\n");
-    vul_printf (vcl_cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "\n Summary:\n");
+    vul_printf (std::cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
                 pp_icp_dist_th, dbmsh3dr_cmd_icpthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
                 error_dist_th, dbmsh3dr_cmd_dthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  No smoothing is performed.\n");
+    vul_printf (std::cout, "  No smoothing is performed.\n");
 
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
-    vul_printf (vcl_cout, "  diff. of mean of d(A*, B*) - d(A*, B^*): %f (%.3f%%)\n", 
+    vul_printf (std::cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
+    vul_printf (std::cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
+    vul_printf (std::cout, "  diff. of mean of d(A*, B*) - d(A*, B^*): %f (%.3f%%)\n", 
                 d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean,
                 (d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean)/d_pt_mesh_A_B_mean * 100);
   }  
@@ -585,7 +585,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //2) Prepare smoothed surface meshes.
     //Try to load the smoothed mesh surface files if available.
-    vcl_string sm_mesh_file_0, sm_mesh_file_1;
+    std::string sm_mesh_file_0, sm_mesh_file_1;
     if (dbsk3dr_cmd_smrd() == 3) { 
       sm_mesh_file_0 = spvr->p0()->dir_file() + "_gsm";
       sm_mesh_file_1 = spvr->p1()->dir_file() + "_gsm";
@@ -599,9 +599,9 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     int nstep;
 
     if (result0 && result1) {
-      vul_printf (vcl_cout, "Smoothed Mesh files %s.ply and %s.ply read successfully.\n",
+      vul_printf (std::cout, "Smoothed Mesh files %s.ply and %s.ply read successfully.\n",
                   sm_mesh_file_0.c_str(), sm_mesh_file_1.c_str());
-      vul_printf (vcl_cout, "  Skip the meshing process.\n\n");
+      vul_printf (std::cout, "  Skip the meshing process.\n\n");
       assert (spvr->p0()->mesh()->vertexmap().size() == spvr->p0()->sg3pi()->get_num_points());
       spvr->p0()->reset_sg3pi ();
       spvr->p0()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
@@ -634,7 +634,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
         //-l: DCS_psi step size.
         //-thr: th_ratio
         float DCS_psi = dbmsh3d_cmd_len(); //default step size: 1      
-        vul_printf (vcl_cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
+        vul_printf (std::cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
                     nstep, DCS_psi, dbmsh3d_cmd_thr());
 
         //Estimate intra- and inter- scanline sample distance.
@@ -707,7 +707,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //3) Estimate the Pt-Mesh dist. d_pt-mesh (A*, B*) of init. Pt-Pt ICP alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of alignment of init. input:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of alignment of init. input:\n\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_B_mean = spvr->dist_mean();
@@ -724,32 +724,32 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       spvr->p1()->save_ply (sm_mesh_file_1 + "_icp.ply");
 
     //5) Estimate the Pt-Mesh dist. d_pt-mesh (A*, B^*) after Pt-Mesh ICP alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
     // -n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     double d_pt_mesh_A_Bh_mean = spvr->dist_mean();
 
     //6) Output summary.
-    vul_printf (vcl_cout, "\n Summary: \n");
-    vul_printf (vcl_cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "\n Summary: \n");
+    vul_printf (std::cout, "  pp_icp_dist_th %f = icp_thr %.2f * avg_samp_dist %f.\n", 
                 pp_icp_dist_th, dbmsh3dr_cmd_icpthr(), avg_samp_dist);
-    vul_printf (vcl_cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
                 error_dist_th, dbmsh3dr_cmd_dthr(), avg_samp_dist);
     if (dbsk3dr_cmd_smrd() == 3) {
       if (result0 && result1)
-        vul_printf (vcl_cout, "  Gaussian smoothing data load from files.\n");
+        vul_printf (std::cout, "  Gaussian smoothing data load from files.\n");
       else
-        vul_printf (vcl_cout, "  Gaussian smoothing: %d steps, sigma_r %f.\n", nstep, dbmsh3d_cmd_gsr());
+        vul_printf (std::cout, "  Gaussian smoothing: %d steps, sigma_r %f.\n", nstep, dbmsh3d_cmd_gsr());
     }
     else if (dbsk3dr_cmd_smrd() == 4) {
       if (result0 && result1)
-        vul_printf (vcl_cout, "  Curve shortening data load from files.\n");
+        vul_printf (std::cout, "  Curve shortening data load from files.\n");
       else
-        vul_printf (vcl_cout, "  Curve shortening smoothing: %d steps.\n", nstep);
+        vul_printf (std::cout, "  Curve shortening smoothing: %d steps.\n", nstep);
     }
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
-    vul_printf (vcl_cout, "  diff. of mean of d(A*, B*) - d(A*, B^*): %f (%.3f%%)\n", 
+    vul_printf (std::cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
+    vul_printf (std::cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
+    vul_printf (std::cout, "  diff. of mean of d(A*, B*) - d(A*, B^*): %f (%.3f%%)\n", 
                 d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean,
                 (d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean)/d_pt_mesh_A_B_mean * 100);
   }
@@ -788,7 +788,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       spvr->xform_hmatrix_01_pro1 ();
 
     //Estimate init. alignment error.
-    vul_printf (vcl_cout, "\nPt-Pt init. alignment error:\n");
+    vul_printf (std::cout, "\nPt-Pt init. alignment error:\n");
     spvr->compute_pp_error (error_dist_th);
 
     //Register using Pt-Pt ICP and keep error for later comparison.
@@ -797,7 +797,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     int n_ICP_iter = (dbmsh3d_cmd_n2() != -1) ? dbmsh3d_cmd_n2() : 50;
     if (spvr->run_pp_icp_regstr (n_ICP_iter, dbmsh3dr_cmd_icpcv(), pp_icp_dist_th)) {
       //Estimate Pt-Pt alignment error after init registration.      
-      vul_printf (vcl_cout, "\nPt-Pt alignment error after init. Pt-Pt ICP:\n");
+      vul_printf (std::cout, "\nPt-Pt alignment error after init. Pt-Pt ICP:\n");
       spvr->compute_pp_error (error_dist_th);
     }
 
@@ -811,15 +811,15 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //Regsiter original surface using Pt-Mesh ICP
     //Store the error estimation of init. Pt-Mesh ICP result for comparison. 
-    vcl_vector<double> di_orig_pp_icp;
-    vcl_vector<double> di_orig_pf_icp;
+    std::vector<double> di_orig_pp_icp;
+    std::vector<double> di_orig_pf_icp;
     if (spvr->run_pf_icp_regstr (n_ICP_iter, dbmsh3dr_cmd_icpcv(), error_dist_th)) {
-      vul_printf (vcl_cout, "\nPt-Pt alignment error after init. Pt-Mesh ICP:\n");
+      vul_printf (std::cout, "\nPt-Pt alignment error after init. Pt-Mesh ICP:\n");
       spvr->compute_pp_error (error_dist_th);
       di_orig_pp_icp.insert (di_orig_pp_icp.begin(), spvr->min_dists().begin(), spvr->min_dists().end());
 
       //Estimate Pt-Mesh alignment error after init registration.      
-      vul_printf (vcl_cout, "\nPt-Plane alignment error after init. Pt-Mesh ICP:\n");
+      vul_printf (std::cout, "\nPt-Plane alignment error after init. Pt-Mesh ICP:\n");
       spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
       di_orig_pf_icp.insert (di_orig_pf_icp.begin(), spvr->min_dists().begin(), spvr->min_dists().end());
     }
@@ -858,7 +858,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       //-l: DCS_psi step size.
       //-thr: th_ratio
       float DCS_psi = dbmsh3d_cmd_len(); //default step size: 1      
-      vul_printf (vcl_cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
+      vul_printf (std::cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
                   nstep, DCS_psi, dbmsh3d_cmd_thr());
 
       //Estimate intra- and inter- scanline sample distance.
@@ -885,8 +885,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //Save the smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
 
       //Save the resulting .3pi after smoothing
       if (dbsk3dr_cmd_smre() == 2) {
@@ -932,8 +932,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     
     //Save the smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
       if (dbsk3dr_cmd_smreo() == 2) { //Save Mesh.
         if (dbsk3dr_cmd_smre() == 1) {
           spvr->p0()->save_ply (outfile1 + ".ply");
@@ -971,11 +971,11 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //Estimate alignment error after smoothing.
-    vul_printf (vcl_cout, "\nPt-Pt alignment error after smoothing: \n");
+    vul_printf (std::cout, "\nPt-Pt alignment error after smoothing: \n");
     // -dthr: dist_th_ratio for error estimation.
     spvr->compute_pp_error (error_dist_th);
     if (dbsk3dr_cmd_smreo() == 2) {
-      vul_printf (vcl_cout, "\nPt-Plane alignment error after smoothing: \n");
+      vul_printf (std::cout, "\nPt-Plane alignment error after smoothing: \n");
       //-n3: search top_n closest vertices for pt-mesh dist.
       spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     }
@@ -1005,8 +1005,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //Save the registered smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
       if (dbsk3dr_cmd_smreo() == 1) { //Save Pt-Set.  
         if (dbsk3dr_cmd_smre() == 1)
           spvr->p1()->save_xyz ();
@@ -1026,24 +1026,24 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //4) Estimate alignment error after registration.
-    vul_printf (vcl_cout, "\nPt-Pt alignment error after registration:\n");
+    vul_printf (std::cout, "\nPt-Pt alignment error after registration:\n");
     // -dthr: dist_th_ratio for error estimation.
     spvr->compute_pp_error (error_dist_th);
     
     //Improvement of Pt-Pt distance compared to dist. without smoothing.    
-    vul_printf (vcl_cout, "\nImprovement of Pt-Pt dists. compared to dists without smoothing:\n");
+    vul_printf (std::cout, "\nImprovement of Pt-Pt dists. compared to dists without smoothing:\n");
     double imprv_min, imprv_mean, imprv_median, imprv_RMS, imprv_max;
     compute_imprv_of_error (di_orig_pp_icp, spvr->min_dists(), error_dist_th,
                             imprv_min, imprv_mean, imprv_median, imprv_RMS, imprv_max);
     di_orig_pp_icp.clear();
 
     if (dbsk3dr_cmd_smreo() == 2) {
-      vul_printf (vcl_cout, "\nPt-Plane alignment error after registration: \n");
+      vul_printf (std::cout, "\nPt-Plane alignment error after registration: \n");
       //-n3: search top_n closest vertices for pt-mesh dist.
       spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
 
       //Improvement of Pt-Mesh distance compared to dist. without smoothing.    
-      vul_printf (vcl_cout, "\nImprovement of Smoothing + Pt-Mesh ICP compared to original Pt-Mesh ICP:\n");
+      vul_printf (std::cout, "\nImprovement of Smoothing + Pt-Mesh ICP compared to original Pt-Mesh ICP:\n");
       double imprv_min, imprv_mean, imprv_median, imprv_RMS, imprv_max;
       compute_imprv_of_error (di_orig_pf_icp, spvr->min_dists(), error_dist_th,
                               imprv_min, imprv_mean, imprv_median, imprv_RMS, imprv_max);
@@ -1104,7 +1104,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       //-l: DCS_psi step size.
       //-thr: th_ratio
       float DCS_psi = dbmsh3d_cmd_len(); //default step size: 1      
-      vul_printf (vcl_cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
+      vul_printf (std::cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
                   nstep, DCS_psi, dbmsh3d_cmd_thr());
 
       //Estimate intra- and inter- scanline sample distance.
@@ -1131,8 +1131,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //Save the smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
 
       //Save the resulting .3pi after smoothing
       if (dbsk3dr_cmd_smre() == 2) {
@@ -1176,8 +1176,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     
     //Save the smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
       if (dbsk3dr_cmd_smreo() == 2) { //Save Mesh.
         if (dbsk3dr_cmd_smre() == 1) {
           spvr->p0()->save_ply (outfile1 + ".ply");
@@ -1215,11 +1215,11 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //Estimate alignment error after smoothing.
-    vul_printf (vcl_cout, "\nPt-Pt alignment error after smoothing: \n");
+    vul_printf (std::cout, "\nPt-Pt alignment error after smoothing: \n");
     // -dthr: dist_th_ratio for error estimation.
     spvr->compute_pp_error (error_dist_th);
     if (dbsk3dr_cmd_smreo() == 2) {
-      vul_printf (vcl_cout, "\nPt-Plane alignment error after smoothing: \n");
+      vul_printf (std::cout, "\nPt-Plane alignment error after smoothing: \n");
       //-n3: search top_n closest vertices for pt-mesh dist.
       spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
     }
@@ -1247,8 +1247,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     
     //Save the registered smoothing results into .xyz and .3pi files.
     if (dbmsh3d_cmd_ofile()>=1) {
-      vcl_string outfile1 = dbmsh3d_cmd_fileprefix1();
-      vcl_string outfile2 = dbmsh3d_cmd_fileprefix2();
+      std::string outfile1 = dbmsh3d_cmd_fileprefix1();
+      std::string outfile2 = dbmsh3d_cmd_fileprefix2();
       if (dbsk3dr_cmd_smreo() == 1) { //Save Pt-Set.  
         if (dbsk3dr_cmd_smre() == 1)
           spvr->p1()->save_xyz ();
@@ -1268,13 +1268,13 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     }
 
     //Estimate alignment error after registration.
-    vul_printf (vcl_cout, "\nPt-Pt alignment error after registration:\n");
+    vul_printf (std::cout, "\nPt-Pt alignment error after registration:\n");
     // -dthr: dist_th_ratio for error estimation.
     spvr->compute_pp_error (error_dist_th);
 
     //Save Pt-Pt distance files after alignment
 
-    vul_printf (vcl_cout, "\nPt-Plane alignment error after registration: \n");
+    vul_printf (std::cout, "\nPt-Plane alignment error after registration: \n");
     //-n3: search top_n closest vertices for pt-mesh dist.
     spvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
 
@@ -1286,7 +1286,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
   //############### Write Affine Transform File ###############  
   if ((dbsk3dr_cmd_smrd() || dbsk3dr_cmd_smre()) && dbmsh3d_cmd_align_ofile()) {
     //write mpvr->hmatrix_ to an alignment file
-    vcl_string xform_file = dbmsh3d_cmd_align_ofile();
+    std::string xform_file = dbmsh3d_cmd_align_ofile();
     dbmsh3d_write_xform_file (xform_file, spvr->hmatrix_01());
   }
 
@@ -1340,7 +1340,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
       if (f1_load_success == false || f2_load_success == false) {
         //Output error message and exit!
         if (dbmsh3d_cmd_verbose())
-          vul_printf (vcl_cout, "\nMatching object file load error!\n");
+          vul_printf (std::cout, "\nMatching object file load error!\n");
         ///dbmsh3d_cmd_gui() = 0;
       }
       else {
@@ -1393,8 +1393,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
           }
         }
 
-        vcl_string file1 = buld_get_file (dbmsh3d_cmd_fileprefix1());
-        vcl_string file2 = buld_get_file (dbmsh3d_cmd_fileprefix2());
+        std::string file1 = buld_get_file (dbmsh3d_cmd_fileprefix1());
+        std::string file2 = buld_get_file (dbmsh3d_cmd_fileprefix2());
         dbmsh3d_app_window_title += " - " + file1;
         dbmsh3d_app_window_title += " to ";
         dbmsh3d_app_window_title += file2;
@@ -1403,11 +1403,11 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
         else
           dbmsh3d_app_window_title += " : Exponential Explosion!!";
 
-        vul_printf (vcl_cout, "  %s to %s %s\n", 
+        vul_printf (std::cout, "  %s to %s %s\n", 
                     spvr->p0()->dir_file().c_str(), 
                     spvr->p1()->dir_file().c_str(),
                     r ? "" : "exp explode!");
-        vul_printf (vcl_cout, "    m%d SN: %.3f (N: %.3f, L: %.3f, C: %.3f) S: %.3f\n", 
+        vul_printf (std::cout, "    m%d SN: %.3f (N: %.3f, L: %.3f, C: %.3f) S: %.3f\n", 
                     dbsk3dr_cmd_smatch(),
                     spvr->shock_match()->ga_match()->norm_similarity (),
                     spvr->shock_match()->ga_match()->norm_sim_node (),
@@ -1416,17 +1416,17 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
                     spvr->shock_match()->ga_match()->similarity());
 
         /*if (dbmsh3d_cmd_verbose()) {
-          vul_printf (vcl_cout, "\nMatching %s (N%d C%d S%d) to ", spvr->p0()->dir_file().c_str(), 
+          vul_printf (std::cout, "\nMatching %s (N%d C%d S%d) to ", spvr->p0()->dir_file().c_str(), 
                       spvr->p0()->ms_hypg()->vertexmap().size(), 
                       spvr->p0()->ms_hypg()->edgemap().size(),
                       spvr->p0()->ms_hypg()->sheetmap().size());
-          vul_printf (vcl_cout, "\n         %s (N%d C%d S%d).\n", spvr->p1()->dir_file().c_str(),
+          vul_printf (std::cout, "\n         %s (N%d C%d S%d).\n", spvr->p1()->dir_file().c_str(),
                       spvr->p1()->ms_hypg()->vertexmap().size(), 
                       spvr->p1()->ms_hypg()->edgemap().size(),
                       spvr->p1()->ms_hypg()->sheetmap().size());
-          vul_printf (vcl_cout, "similarity: %f  ", 
+          vul_printf (std::cout, "similarity: %f  ", 
                       spvr->shock_match()->ga_match()->similarity());
-          vul_printf (vcl_cout, "normalized similarity: %f\n", 
+          vul_printf (std::cout, "normalized similarity: %f\n", 
                       spvr->shock_match()->ga_match()->norm_similarity ());
         }*/
       }
@@ -1478,18 +1478,18 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
 
     //-smatchc 1 : test 3d curve matching.
     //-smatchc 2 : test 3d shock curve matching.
-    vcl_vector< vcl_pair<int,int> > alignment;
+    std::vector< std::pair<int,int> > alignment;
     spvr->shock_match()->test_mc_dp_match (dbsk3dr_cmd_smatchc(), cid1, cid2, flip, alignment);
 
     dbsk3d_ms_curve* MC1 = (dbsk3d_ms_curve*) spvr->p0()->ms_hypg()->edgemap (cid1);
     dbsk3d_ms_curve* MC2 = (dbsk3d_ms_curve*) spvr->p1()->ms_hypg()->edgemap (cid2);   
     
     //Estimate the optimal rigid xform matrices using the alignment.    
-    vcl_vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
+    std::vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
     double Eu_dist = spvr->shock_match()->get_curve_align_avg_Eu_dist (MC1, MC2, alignment, cor_PS1, cor_PS2);
 
     //Rigid transform the location and orientation of curve C1.
-    vcl_vector<dbmsh3d_vertex*> MC1_V_vec;
+    std::vector<dbmsh3d_vertex*> MC1_V_vec;
     MC1->get_V_vec (MC1_V_vec);
     for (unsigned int i=0; i<MC1_V_vec.size(); i++) {
       transform_point_3d (spvr->shock_match()->R(), spvr->shock_match()->Cf(), 
@@ -1507,7 +1507,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
     _root->addChild (draw_points_cor (cor_PS1, cor_PS2, SbColor (1, 0, 0), SbColor (0, 0, 1), SbColor (1, 1, 0)));
 
     print_R_C1_C2 (spvr->shock_match()->R(), spvr->shock_match()->Cf(), spvr->shock_match()->Cm());
-    vul_printf (vcl_cout, "\n\tEu_dist (C%d, C%d) = %f.\n\n", cid1, cid2, Eu_dist);
+    vul_printf (std::cout, "\n\tEu_dist (C%d, C%d) = %f.\n\n", cid1, cid2, Eu_dist);
 
     dbmsh3d_app_window_title += " -- Shock Curve D.P. Matching ";
     dbmsh3d_app_window_title += dbmsh3d_cmd_fileprefix1();

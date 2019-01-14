@@ -3,12 +3,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include "vehicle_model.h"
 #include "Lie_group_operations.h"
 
@@ -89,9 +89,9 @@ vehicle_model transform_model(vehicle_model M,vnl_matrix<double> m1,vnl_matrix<d
     vsol_rectangle_2d tr_body(M.body());
     vsol_rectangle_2d tr_rear(M.rear());
 
-    vcl_cout << m1 << vcl_endl;
-    vcl_cout << m2 << vcl_endl;
-    vcl_cout << m3 << vcl_endl;
+    std::cout << m1 << std::endl;
+    std::cout << m2 << std::endl;
+    std::cout << m3 << std::endl;
 
     transform_box(m1,tr_engine);
     transform_box(m2,tr_body);
@@ -144,10 +144,10 @@ vehicle_model rotate_model(vehicle_model M,double angle)
 
     vnl_matrix<double>R(3,3,0.0); 
 
-    R.put(0,0,vcl_cos(angle));
-    R.put(0,1,-1*vcl_sin(angle));
-    R.put(1,0,vcl_sin(angle));
-    R.put(1,1,vcl_cos(angle));
+    R.put(0,0,std::cos(angle));
+    R.put(0,1,-1*std::sin(angle));
+    R.put(1,0,std::sin(angle));
+    R.put(1,1,std::cos(angle));
     R.put(2,2,1);
 
     vsol_rectangle_2d rotated_engine(M.engine());
@@ -203,25 +203,25 @@ double matrix_log_dist(vnl_matrix<double> M1,vnl_matrix<double> M2)
     vnl_matrix<double>resultant = M1*vnl_matrix_inverse<double>(M2);
 
 
-    double sx = vcl_log(resultant.get(0,0));
-    double sy = vcl_log(resultant.get(1,1));
+    double sx = std::log(resultant.get(0,0));
+    double sy = std::log(resultant.get(1,1));
     double tx = resultant.get(0,2);
     double ty = resultant.get(1,2);
     double distance = 1e10;
 
     // in order to take the log of the scaling factors,they have to be non negative
-    sx = vcl_abs(sx);
-    sy = vcl_abs(sy);
+    sx = std::abs(sx);
+    sy = std::abs(sy);
 
     if (~(sx == 1)&&~(sy == 1))
         {
-        distance = vcl_sqrt(vcl_pow((sx),2) + vcl_pow((sy),2) +
-            vcl_pow((tx*sx)/(resultant.get(0,0)-1),2) + vcl_pow((ty*sy)/(resultant.get(1,1)-1),2));
+        distance = std::sqrt(std::pow((sx),2) + std::pow((sy),2) +
+            std::pow((tx*sx)/(resultant.get(0,0)-1),2) + std::pow((ty*sy)/(resultant.get(1,1)-1),2));
         }
     else
         {
-        distance = vcl_sqrt(vcl_pow((sx),2) + vcl_pow((sy),2) +
-            vcl_pow(tx,2) + vcl_pow(ty,2));
+        distance = std::sqrt(std::pow((sx),2) + std::pow((sy),2) +
+            std::pow(tx,2) + std::pow(ty,2));
         }
 
 
@@ -229,7 +229,7 @@ double matrix_log_dist(vnl_matrix<double> M1,vnl_matrix<double> M2)
     }
 
 double calculate_Lie_distance_between_vectors
-(vcl_vector<vsol_rectangle_2d >model1,vcl_vector<vsol_rectangle_2d  >model2,vcl_vector<vsol_rectangle_2d  >ref_model)
+(std::vector<vsol_rectangle_2d >model1,std::vector<vsol_rectangle_2d  >model2,std::vector<vsol_rectangle_2d  >ref_model)
     {
     vnl_matrix<double> T11 = get_transformation_matrix(model1[0],ref_model[0]);
     vnl_matrix<double> T21 = get_transformation_matrix(model1[1],ref_model[1]);
@@ -239,7 +239,7 @@ double calculate_Lie_distance_between_vectors
     vnl_matrix<double> T22 = get_transformation_matrix(model2[1],ref_model[1]);
     vnl_matrix<double> T32 = get_transformation_matrix(model2[2],ref_model[2]);
 
-    // vcl_cout << T11 << vcl_endl;
+    // std::cout << T11 << std::endl;
 
     double d = matrix_log_dist(T11,T12) + matrix_log_dist(T21,T22) + matrix_log_dist(T31,T32);
     //  double d = 0;
@@ -256,7 +256,7 @@ double calculate_Lie_distance(vehicle_model M1,vehicle_model M2,vehicle_model RM
     vnl_matrix<double> T22 = get_transformation_matrix(M2.body(),RM.body());
     vnl_matrix<double> T32 = get_transformation_matrix(M2.rear(),RM.rear());
 
-    // vcl_cout << T11 << vcl_endl;
+    // std::cout << T11 << std::endl;
 
     double d = matrix_log_dist(T11,T12) + matrix_log_dist(T21,T22) + matrix_log_dist(T31,T32);
     //  double d = 0;
@@ -295,18 +295,18 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     double sin_theta,cos_theta,sx,sy,tx,ty;
 
     //get the scaling,rotation angle and translation values from G
-    sx = vcl_sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
-    sy = vcl_sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
+    sx = std::sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
+    sy = std::sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
 
     if (sy > tol)
         {
         sin_theta = G.get(1,0)/sy;
-        cos_theta = vcl_sqrt(1-sin_theta*sin_theta);
+        cos_theta = std::sqrt(1-sin_theta*sin_theta);
         }
     else if (sx > tol)
         {
         cos_theta = G.get(0,0)/sx;
-        sin_theta = vcl_sqrt(1-cos_theta*cos_theta);
+        sin_theta = std::sqrt(1-cos_theta*cos_theta);
         }
     else
         {
@@ -328,11 +328,11 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     S.put(1,1,sy);
 
     //setting the entries of the Lie algebra element
-    A.put(0,1,-1*vcl_acos(cos_theta));
-    A.put(1,0,vcl_acos(cos_theta));
+    A.put(0,1,-1*std::acos(cos_theta));
+    A.put(1,0,std::acos(cos_theta));
 
     if (sx > tol)
-        g11 = vcl_log(sx);
+        g11 = std::log(sx);
     else
         g11 = 0;
 
@@ -341,7 +341,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     g21 = A.get(1,0);
 
     if (sy > tol)
-        g22 = vcl_log(sy);
+        g22 = std::log(sy);
     else
         g22 = 0;
 
@@ -356,7 +356,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
 
     vnl_matrix<double> Pinv(2,2,0.0);
 
-    if (vcl_abs(det_val) > 1e-6 )
+    if (std::abs(det_val) > 1e-6 )
         Pinv = vnl_matrix_inverse<double>(P);
 
     vnl_matrix<double> result1 = S*R;
@@ -364,7 +364,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     vnl_matrix<double> res_inv = vnl_matrix_inverse<double>(result2);
     vnl_matrix<double> res = res_inv*P;
 
-    if (((vcl_abs(sx -1) < tol)||(vcl_abs(sy -1) < tol))&&(vcl_abs(sin_theta) < tol))
+    if (((std::abs(sx -1) < tol)||(std::abs(sy -1) < tol))&&(std::abs(sin_theta) < tol))
         {
         g13 = tx;
         g23 = ty;
@@ -432,17 +432,17 @@ vnl_matrix<double> get_Lie_group(vnl_matrix<double> g)
     vnl_matrix<double> G(3,3,0.0),I(2,2,0.0),
         S(2,2,0.0),R(2,2,0.0),rot_scale(2,2,0.0),P(2,2,0.0),Pinv(2,2,0.0),res(2,2,0.0);
 
-    sx = vcl_pow(vcl_exp(1.0),g.get(0,0));
-    sy = vcl_pow(vcl_exp(1.0),g.get(1,1));
+    sx = std::pow(std::exp(1.0),g.get(0,0));
+    sy = std::pow(std::exp(1.0),g.get(1,1));
 
     // thet = g.get(1,0);
 
-    thet = (vcl_abs(g.get(1,0))+vcl_abs(g.get(0,1)))/2;
+    thet = (std::abs(g.get(1,0))+std::abs(g.get(0,1)))/2;
 
-    R.put(0,0,vcl_cos(thet));
-    R.put(0,1,-1*vcl_sin(thet));
-    R.put(1,0,vcl_sin(thet));
-    R.put(1,1,vcl_cos(thet));
+    R.put(0,0,std::cos(thet));
+    R.put(0,1,-1*std::sin(thet));
+    R.put(1,0,std::sin(thet));
+    R.put(1,1,std::cos(thet));
 
     S.put(0,0,sx);
     S.put(1,1,sy);
@@ -452,7 +452,7 @@ vnl_matrix<double> get_Lie_group(vnl_matrix<double> g)
 
     rot_scale = S*R;
 
-    // vcl_cout << rot_scale << vcl_endl;
+    // std::cout << rot_scale << std::endl;
 
     for (i = 0;i<2;i++)
         for (j = 0;j<2;j++)
@@ -464,14 +464,14 @@ vnl_matrix<double> get_Lie_group(vnl_matrix<double> g)
 
     det_val = P.get(0,0)*P.get(1,1) - P.get(0,1)*P.get(1,0);
 
-    if (vcl_abs(det_val) > tol )
+    if (std::abs(det_val) > tol )
         Pinv = vnl_matrix_inverse<double>(P);
 
     res = Pinv*(rot_scale - I);
 
     double G13,G23;
 
-    if (((vcl_abs(sx -1) < tol) || (vcl_abs(sy -1) < tol))&&(vcl_abs(thet) < tol))
+    if (((std::abs(sx -1) < tol) || (std::abs(sy -1) < tol))&&(std::abs(thet) < tol))
         {
         G13 = g.get(0,2);
         G23 = g.get(1,2);
@@ -496,9 +496,9 @@ vnl_matrix<double> get_Lie_algebra_3d(vnl_matrix<double> G)
 
     vnl_matrix<double> g(4,4,0.0);
 
-   sx = vcl_log(G.get(0,0));
-   sy = vcl_log(G.get(1,1));
-   sz = vcl_log(G.get(2,2));
+   sx = std::log(G.get(0,0));
+   sy = std::log(G.get(1,1));
+   sz = std::log(G.get(2,2));
 
     g.put(0,0,sx);  
     g.put(1,1,sy); 
@@ -518,9 +518,9 @@ vnl_matrix<double> get_Lie_group_3d(vnl_matrix<double> g)
 
     vnl_matrix<double> G(4,4,0.0);
 
-   sx = vcl_pow(vcl_exp(1.0),g.get(0,0));
-   sy = vcl_pow(vcl_exp(1.0),g.get(1,1));
-   sz = vcl_pow(vcl_exp(1.0),g.get(2,2));
+   sx = std::pow(std::exp(1.0),g.get(0,0));
+   sy = std::pow(std::exp(1.0),g.get(1,1));
+   sz = std::pow(std::exp(1.0),g.get(2,2));
 
     G.put(0,0,sx);  
     G.put(1,1,sy); 
@@ -574,9 +574,9 @@ vnl_matrix<double> get_Lie_group_9x9(vnl_matrix<double> g)
 //the coupled transfomations lead to taking the projection of each of the elements
 //onto a particular sub manifold 
 
-void calculate_coupled_intrinsic_mean(vcl_vector<vnl_matrix<double> > box_one_elements,
-                                      vcl_vector<vnl_matrix<double> > box_two_elements,
-                                      vcl_vector<vnl_matrix<double> > box_three_elements,
+void calculate_coupled_intrinsic_mean(std::vector<vnl_matrix<double> > box_one_elements,
+                                      std::vector<vnl_matrix<double> > box_two_elements,
+                                      std::vector<vnl_matrix<double> > box_three_elements,
                                       double M1_x2,double M1_x4,
                                       vnl_matrix<double> &In_mean_B1,
                                       vnl_matrix<double> &In_mean_B2,
@@ -600,9 +600,9 @@ void calculate_coupled_intrinsic_mean(vcl_vector<vnl_matrix<double> > box_one_el
 
     while ((frob_norm > tol)& (num_iterations <= 1e5))
         {
-        vcl_vector<vnl_matrix<double> >::iterator iter_B1 = box_one_elements.begin();
-        vcl_vector<vnl_matrix<double> >::iterator iter_B2 = box_two_elements.begin();
-        vcl_vector<vnl_matrix<double> >::iterator iter_B3 = box_three_elements.begin();
+        std::vector<vnl_matrix<double> >::iterator iter_B1 = box_one_elements.begin();
+        std::vector<vnl_matrix<double> >::iterator iter_B2 = box_two_elements.begin();
+        std::vector<vnl_matrix<double> >::iterator iter_B3 = box_three_elements.begin();
 
         inv_In_mean_B1 = vnl_matrix_inverse<double>(In_mean_B1);
         inv_In_mean_B2 = vnl_matrix_inverse<double>(In_mean_B2);
@@ -669,16 +669,16 @@ void calculate_coupled_intrinsic_mean(vcl_vector<vnl_matrix<double> > box_one_el
 
         num_iterations++;
 
-        vcl_cout << "iteration: " << num_iterations << vcl_endl;
+        std::cout << "iteration: " << num_iterations << std::endl;
 
         }
     if (num_iterations == 1e5)
-        vcl_cout << "intrinsic mean not converged ! " << vcl_endl;
+        std::cout << "intrinsic mean not converged ! " << std::endl;
 
     }
 
 
-vnl_matrix<double> calculate_intrinsic_mean(vcl_vector<vnl_matrix<double> > group_elements)
+vnl_matrix<double> calculate_intrinsic_mean(std::vector<vnl_matrix<double> > group_elements)
     {
     //create a 3x3 intrinsic mean element and initialize it to identity element
     vnl_matrix<double> in_mean(3,3,0.0),inv_in_mean(3,3,0.0),s(3,3,0.0),s_tot(3,3,0.0);
@@ -690,7 +690,7 @@ vnl_matrix<double> calculate_intrinsic_mean(vcl_vector<vnl_matrix<double> > grou
     in_mean = *(group_elements.begin());
 
 
-    vcl_cout << in_mean << vcl_endl;
+    std::cout << in_mean << std::endl;
 
     while ((frob_norm > tol)& (num_iterations <= 1e5))
         {
@@ -700,44 +700,44 @@ vnl_matrix<double> calculate_intrinsic_mean(vcl_vector<vnl_matrix<double> > grou
             for (j = 0;j<3;j++)
                 s_tot.put(i,j,0.0);
 
-        vcl_vector<vnl_matrix<double> >::iterator iter = group_elements.begin();
+        std::vector<vnl_matrix<double> >::iterator iter = group_elements.begin();
 
 
         for (iter;iter != group_elements.end();iter++)
             {
             s = inv_in_mean*(*iter);
 
-            vcl_cout << " lie algebra of s " << vcl_endl;
-            vcl_cout << get_Lie_algebra(s) << vcl_endl;
+            std::cout << " lie algebra of s " << std::endl;
+            std::cout << get_Lie_algebra(s) << std::endl;
 
             s_tot = s_tot + get_Lie_algebra(s);
             }
 
-        vcl_cout << " s tot " << vcl_endl;
-        vcl_cout << s_tot << vcl_endl;
+        std::cout << " s tot " << std::endl;
+        std::cout << s_tot << std::endl;
 
         s_tot = s_tot*(1/num_elements);
 
-        vcl_cout << " s tot after averaging: " << vcl_endl;
-        vcl_cout << s_tot << vcl_endl;
+        std::cout << " s tot after averaging: " << std::endl;
+        std::cout << s_tot << std::endl;
 
         frob_norm = s_tot.frobenius_norm();
 
         in_mean = in_mean*get_Lie_group(s_tot);
 
-        vcl_cout << in_mean << vcl_endl;
+        std::cout << in_mean << std::endl;
 
         num_iterations++;
-        vcl_cout << "iteration: " << num_iterations << vcl_endl;
+        std::cout << "iteration: " << num_iterations << std::endl;
 
 
         }
     if (num_iterations == 1e5)
-        vcl_cout << "intrinsic mean not converged ! " << vcl_endl;
+        std::cout << "intrinsic mean not converged ! " << std::endl;
     return in_mean;
     }
 
-vnl_matrix<double> calculate_intrinsic_mean_3d(vcl_vector<vnl_matrix<double> > group_elements)
+vnl_matrix<double> calculate_intrinsic_mean_3d(std::vector<vnl_matrix<double> > group_elements)
     {
     //create a 3x3 intrinsic mean element and initialize it to identity element
     vnl_matrix<double> in_mean(4,4,0.0),inv_in_mean(4,4,0.0),s(4,4,0.0),s_tot(4,4,0.0);
@@ -749,7 +749,7 @@ vnl_matrix<double> calculate_intrinsic_mean_3d(vcl_vector<vnl_matrix<double> > g
     in_mean = *(group_elements.begin());
 
 
-    vcl_cout << in_mean << vcl_endl;
+    std::cout << in_mean << std::endl;
 
     while ((frob_norm > tol)& (num_iterations <= 1e5))
         {
@@ -759,53 +759,53 @@ vnl_matrix<double> calculate_intrinsic_mean_3d(vcl_vector<vnl_matrix<double> > g
             for (j = 0;j<4;j++)
                 s_tot.put(i,j,0.0);
 
-        vcl_vector<vnl_matrix<double> >::iterator iter = group_elements.begin();
+        std::vector<vnl_matrix<double> >::iterator iter = group_elements.begin();
 
 
         for (iter;iter != group_elements.end();iter++)
             {
             s = inv_in_mean*(*iter);
 
-            vcl_cout << " lie algebra of s " << vcl_endl;
-            vcl_cout << get_Lie_algebra_3d(s) << vcl_endl;
+            std::cout << " lie algebra of s " << std::endl;
+            std::cout << get_Lie_algebra_3d(s) << std::endl;
 
             s_tot = s_tot + get_Lie_algebra_3d(s);
             }
 
-        vcl_cout << " s tot " << vcl_endl;
-        vcl_cout << s_tot << vcl_endl;
+        std::cout << " s tot " << std::endl;
+        std::cout << s_tot << std::endl;
 
         s_tot = s_tot*(1/num_elements);
 
-        vcl_cout << " s tot after averaging: " << vcl_endl;
-        vcl_cout << s_tot << vcl_endl;
+        std::cout << " s tot after averaging: " << std::endl;
+        std::cout << s_tot << std::endl;
 
         frob_norm = s_tot.frobenius_norm();
 
         in_mean = in_mean*get_Lie_group_3d(s_tot);
 
-        vcl_cout << in_mean << vcl_endl;
+        std::cout << in_mean << std::endl;
 
         num_iterations++;
-        vcl_cout << "iteration: " << num_iterations << vcl_endl;
+        std::cout << "iteration: " << num_iterations << std::endl;
 
 
         }
     if (num_iterations == 1e5)
-        vcl_cout << "intrinsic mean not converged ! " << vcl_endl;
+        std::cout << "intrinsic mean not converged ! " << std::endl;
     return in_mean;
     }
 
 
 //bring all the group elements close to identity by multiplying with inverse of intrinsic mean
 //and then find out the variance
-double get_variance(vcl_vector<vnl_matrix<double> > group_elements,vnl_matrix<double> intrinsic_mean)
+double get_variance(std::vector<vnl_matrix<double> > group_elements,vnl_matrix<double> intrinsic_mean)
     {
     double var = 0;
     vnl_matrix<double>S,lie_alg;
     vnl_matrix<double>inv_In_mean = vnl_matrix_inverse<double>(intrinsic_mean);
 
-    for (vcl_vector<vnl_matrix<double> >::iterator iter = group_elements.begin();iter != group_elements.end();iter++)
+    for (std::vector<vnl_matrix<double> >::iterator iter = group_elements.begin();iter != group_elements.end();iter++)
         {
         S = inv_In_mean*(*iter);
         lie_alg = get_Lie_algebra(S);
@@ -839,7 +839,7 @@ void projection_vnl_least_squares_function::f(vnl_vector<double> const& params, 
     }
 // number of unknowns is group_elements.size()+9
 
-geodesic_vnl_least_squares_function::geodesic_vnl_least_squares_function(vcl_vector<vnl_matrix<double> > group_elements,
+geodesic_vnl_least_squares_function::geodesic_vnl_least_squares_function(std::vector<vnl_matrix<double> > group_elements,
                                                                          vnl_vector<double> params_freeze,vnl_vector<double> fixed_param_values,
                                                                          int num_params)                                                                         
                                                                          :vnl_least_squares_function(num_params,9*group_elements.size(),no_gradient),
@@ -871,14 +871,14 @@ void geodesic_vnl_least_squares_function::f(vnl_vector<double> const& params, vn
             k += 1;
             }
 
-        vcl_cout << "sub manifold generator: " << vcl_endl;
-        vcl_cout << sub_manifold_generator << vcl_endl;
+        std::cout << "sub manifold generator: " << std::endl;
+        std::cout << sub_manifold_generator << std::endl;
 
         k = 0;
         count = 0;
         param_num = 0;
 
-        for (vcl_vector<vnl_matrix<double> >::iterator it = group_elements_.begin();it != group_elements_.end();it++)
+        for (std::vector<vnl_matrix<double> >::iterator it = group_elements_.begin();it != group_elements_.end();it++)
             {
             if (params_freeze_[k] == 0)
                 scalar_val = params[param_num++];
@@ -901,7 +901,7 @@ void geodesic_vnl_least_squares_function::f(vnl_vector<double> const& params, vn
 
     }
 
-geodesic_vnl_least_squares_function_9x9::geodesic_vnl_least_squares_function_9x9(vcl_vector<vnl_matrix<double> > group_elements,
+geodesic_vnl_least_squares_function_9x9::geodesic_vnl_least_squares_function_9x9(std::vector<vnl_matrix<double> > group_elements,
                                                                                  vnl_vector<double> params_freeze,vnl_vector<double> fixed_param_values,
                                                                                  int num_params)                                                                         
                                                                                  :vnl_least_squares_function(num_params,81*group_elements.size(),no_gradient),
@@ -935,16 +935,16 @@ void geodesic_vnl_least_squares_function_9x9::f(vnl_vector<double> const& params
             }
         }
 
-        vcl_cout << "sub manifold generator: " << vcl_endl;
-        vcl_cout << sub_manifold_generator << vcl_endl;
+        std::cout << "sub manifold generator: " << std::endl;
+        std::cout << sub_manifold_generator << std::endl;
 
         k = 0;
         count = 0;
         param_num = 0;
 
-        vcl_cout <<"printing out the frobenius norms" << vcl_endl;
+        std::cout <<"printing out the frobenius norms" << std::endl;
 
-        for (vcl_vector<vnl_matrix<double> >::iterator it = group_elements_.begin();it != group_elements_.end();it++)
+        for (std::vector<vnl_matrix<double> >::iterator it = group_elements_.begin();it != group_elements_.end();it++)
             {
             if (params_freeze_[k] == 0)
                 scalar_val = params[param_num++];
@@ -955,13 +955,13 @@ void geodesic_vnl_least_squares_function_9x9::f(vnl_vector<double> const& params
 
             point_on_sub_manifold = get_Lie_group_9x9(scalar_val*sub_manifold_generator);
 
-             vcl_cout << "point_on_sub_manifold " << point_on_sub_manifold  << vcl_endl;
+             std::cout << "point_on_sub_manifold " << point_on_sub_manifold  << std::endl;
 
             inv_point_on_sub_manifold = vnl_matrix_inverse<double>(point_on_sub_manifold);
 
             // S = inv_group_element*point_on_sub_manifold;
             S = inv_point_on_sub_manifold*(*it);
-            vcl_cout << S << vcl_endl;
+            std::cout << S << std::endl;
 
             lie_alg = get_Lie_algebra_9x9(S);
             
@@ -969,7 +969,7 @@ void geodesic_vnl_least_squares_function_9x9::f(vnl_vector<double> const& params
                 for (j = 0;j<lie_alg.columns();j++)
                     residuals[count++] = lie_alg.get(i,j);
 
-            vcl_cout << "frob norm " << lie_alg.frobenius_norm() << vcl_endl;
+            std::cout << "frob norm " << lie_alg.frobenius_norm() << std::endl;
 
             k += 1;
             }
@@ -979,7 +979,7 @@ void geodesic_vnl_least_squares_function_9x9::f(vnl_vector<double> const& params
 //get the optimal geodesic and for debugging purposes return the scalars associated with
 //projection of each of the points
 
-vnl_matrix<double> get_geodesic(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
+vnl_matrix<double> get_geodesic(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
                                 vnl_vector<double> params_freeze,vnl_vector<double> &params)                              
     {
     double scalar_val,n;
@@ -1033,7 +1033,7 @@ vnl_matrix<double> get_geodesic(vcl_vector<vnl_matrix<double> > group_elements,v
     return  sub_manifold_gen;
     }
 
-vnl_matrix<double> get_geodesic_9x9(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
+vnl_matrix<double> get_geodesic_9x9(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
                                     vnl_vector<double> params_freeze,vnl_vector<double> &params)                              
     {
     double scalar_val,n;
@@ -1105,7 +1105,7 @@ vnl_matrix<double> get_geodesic_9x9(vcl_vector<vnl_matrix<double> > group_elemen
     }
 
 #if 0
-vnl_matrix<double> get_geodesic(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
+vnl_matrix<double> get_geodesic(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
                                 vnl_vector<double> params_freeze,vnl_vector<double> &params)                              
     {
     double scalar_val,n;

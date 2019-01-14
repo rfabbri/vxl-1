@@ -75,13 +75,13 @@ vgui_menu brct_menus::get_menu()
 
 void brct_menus::kalman_go_callback()
 {
-  vcl_cerr<<"goes into kalman_go_callback\n";
+  std::cerr<<"goes into kalman_go_callback\n";
   brct_windows_frame::instance()->go();
 }
 
 void brct_menus::show_predicted_curves()
 {
-  vcl_cerr<<"goes into predicted_curves\n";
+  std::cerr<<"goes into predicted_curves\n";
   brct_windows_frame::instance()->show_predicted_curve();
 }
 

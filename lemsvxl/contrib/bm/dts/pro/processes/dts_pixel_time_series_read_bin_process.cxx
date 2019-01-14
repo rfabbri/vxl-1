@@ -7,10 +7,10 @@
 // Will create a new sptr from a binary file
 //
 // Inputs: 
-//         1. filename		(vcl_string)
-//         2. pixel type	(vcl_string)
-//		   3. time type		(vcl_string)
-//         4. math type		(vcl_string)
+//         1. filename		(std::string)
+//         2. pixel type	(std::string)
+//		   3. time type		(std::string)
+//         4. math type		(std::string)
 //		   5. dimension		(unsigned)
 //
 // Outputs:
@@ -38,14 +38,14 @@ bool dts_pixel_time_series_read_bin_process_cons( bprb_func_process& pro )
 {
     using namespace dts_pixel_time_series_read_bin_process_globals;
 
-    vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+    std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
     unsigned i = 0;
-    input_types_[i++] = "vcl_string";//filename
-	input_types_[i++] = "vcl_string";//pixel type
-	input_types_[i++] = "vcl_string";//time type
-	input_types_[i++] = "vcl_string";//math type
+    input_types_[i++] = vcl_string";//filename
+	input_types_[i++] = vcl_string";//pixel type
+	input_types_[i++] = vcl_string";//time type
+	input_types_[i++] = vcl_string";//math type
 	input_types_[i++] = "unsigned";//dimension
 
 	output_types_[0] = "dts_pixel_time_series_base_sptr";
@@ -65,33 +65,33 @@ bool dts_pixel_time_series_read_bin_process( bprb_func_process& pro )
 
     if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cout << pro.name()
+        std::cout << pro.name()
                  << " dts_pixel_time_series_read_bin_process: "
                  << " The input number should be: "
                  << n_inputs_ << '\n'
                 
-                 << vcl_endl;
+                 << std::endl;
         return false;
     }
 
     //get inputs
     unsigned i = 0;
-    vcl_string filename			= pro.get_input<vcl_string>(i++);
-	vcl_string pixel_type		= pro.get_input<vcl_string>(i++);
-	vcl_string time_type		= pro.get_input<vcl_string>(i++);
-	vcl_string math_type		= pro.get_input<vcl_string>(i++);
+    std::string filename			= pro.get_input<std::string>(i++);
+	std::string pixel_type		= pro.get_input<std::string>(i++);
+	std::string time_type		= pro.get_input<std::string>(i++);
+	std::string math_type		= pro.get_input<std::string>(i++);
 	unsigned dim				= pro.get_input<unsigned>(i++);
 
-    vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+    vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 
     if(!is)
         return false;
 
 	dts_pixel_time_series_base_sptr ts_sptr;
 
-	if( pixel_type == vcl_string("unsigned") &&
-		time_type  == vcl_string("unsigned") &&
-		math_type  == vcl_string("double") )
+	if( pixel_type == std::string("unsigned") &&
+		time_type  == std::string("unsigned") &&
+		math_type  == std::string("double") )
 	{
 		switch(dim)
 		{
@@ -167,24 +167,24 @@ bool dts_pixel_time_series_read_bin_process( bprb_func_process& pro )
 			}//end case 128
 		default:
 			{
-				vcl_cerr << "----ERROR---- "
+				std::cerr << "----ERROR---- "
 						 << "dts_pixel_time_series_read_bin_process: Unknown dimension, "
 						 << " please augment.\n"
 						 << "\tFILE: " << __FILE__ << '\n'
 						 << "\tLINE: " << __LINE__ << '\n'
-						 << vcl_flush;
+						 << std::flush;
 				return false;
 			}//end default
 		}//end switch(dim)
 	}//end if pixel_type=="unsigned" && time_type=="unsigned" && math_type=="double"
 	else
 	{
-		vcl_cerr << "----ERROR---- "
+		std::cerr << "----ERROR---- "
 				 << "dts_pixel_time_series_read_bin_process: pixel,"
 				 << " time, math type combination. Please augment.\n"
 				 << "\tFILE: " << __FILE__ << '\n'
 				 << "\tLINE: " << __LINE__ << '\n'
-				 << vcl_flush;
+				 << std::flush;
 		return false;
 	}
 

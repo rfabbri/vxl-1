@@ -37,12 +37,12 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_ncn* p)
 	}
 }
 
-void vsl_print_summary(vcl_ostream& os, const dsm_ncn *p)
+void vsl_print_summary(std::ostream& os, const dsm_ncn *p)
 {
 	os << "Dummy Impl";
 }
 
-//void write_xml( vcl_ostream& os, const dsm_ncn_sptr ncn_sptr )
+//void write_xml( std::ostream& os, const dsm_ncn_sptr ncn_sptr )
 //{
 //	bxml_document doc;
 //	

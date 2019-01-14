@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro/bpro_process.h>
 #include <brdb/brdb_database_manager.h>
 #include <vidpro/vidpro_process_manager.h>
@@ -34,10 +34,10 @@ class vidpro_open_istream_process : public bpro_process
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -46,19 +46,19 @@ class vidpro_open_istream_process : public bpro_process
   bool finish();
 
    //: Use vgui dialogs to open an image list istream
-  static vidpro_istream_storage_sptr image_list_istream(vcl_string const& );
+  static vidpro_istream_storage_sptr image_list_istream(std::string const& );
       //: Use vgui dialogs to open an image list istream
-  static vidpro_istream_storage_sptr dshow_file_istream(vcl_string const& );
+  static vidpro_istream_storage_sptr dshow_file_istream(std::string const& );
   //: Use vgui dialogs to open an image list istream
-  static vidpro_istream_storage_sptr ffmpeg_istream(vcl_string const& );
+  static vidpro_istream_storage_sptr ffmpeg_istream(std::string const& );
     //: Use vgui dialogs to open an image list istream
-  static vidpro_istream_storage_sptr v4l_istream(vcl_string const& );
+  static vidpro_istream_storage_sptr v4l_istream(std::string const& );
  protected:
- vcl_vector<vcl_string> choices_;
- vcl_vector<int> choice_codes_;
+ std::vector<std::string> choices_;
+ std::vector<int> choice_codes_;
 
  void add_parameters();
- vidpro_istream_storage_sptr open_istream(int type, vcl_string const& path);
+ vidpro_istream_storage_sptr open_istream(int type, std::string const& path);
 
 };
 

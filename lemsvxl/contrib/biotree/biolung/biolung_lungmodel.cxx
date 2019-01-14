@@ -5,10 +5,10 @@
 
 #include "biolung_lungmodel.h"
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <cmath>
 
 void getVector(double x1,double y1,double z1,double x2,double y2,double z2,double &x,double &y,double &z);
 double getDotProduct(double vx1,double vy1,double vz1,double vx2,double vy2,double vz2);
@@ -142,11 +142,11 @@ biolung_lungmodel::biolung_lungmodel(int _zdim)
 }
 
 void
-biolung_lungmodel::saveVolumeInFile(vcl_string filename)
+biolung_lungmodel::saveVolumeInFile(std::string filename)
 {
   int i,j,k;
 
-  vcl_ofstream Ostream(filename.c_str(), vcl_ios::out);
+  std::ofstream Ostream(filename.c_str(), std::ios::out);
 
   //volume file size header info
   Ostream << xdim-1 << " " << ydim-1 << " " << zdim-1 << " ";

@@ -29,10 +29,10 @@ public:
   
   virtual bool equal(const dbrec3d_part& other) const { return type_ == other.type_; }
   
-  virtual vcl_ostream& print(vcl_ostream& out) const { out << "\tpart type: " << type_ << "\n"; return out; }
-  virtual void visualize(bsvg_document& doc, float x, float y, float vis_rad, const vcl_string& color) const;
-  virtual void visualize_models(const vcl_string&suffix) const {}
-  virtual vcl_string string_identifier() const { vcl_stringstream ss; ss << type_; return ss.str(); }
+  virtual std::ostream& print(std::ostream& out) const { out << "\tpart type: " << type_ << "\n"; return out; }
+  virtual void visualize(bsvg_document& doc, float x, float y, float vis_rad, const std::string& color) const;
+  virtual void visualize_models(const std::string&suffix) const {}
+  virtual std::string string_identifier() const { std::stringstream ss; ss << type_; return ss.str(); }
   
   unsigned type() const { return type_; }
   void reset_type(unsigned type) { type_ = type; }
@@ -47,7 +47,7 @@ public:
   
   //: a recursive helper for populate_table() method of the hierarchy
   //  inefficient cause depth() is also recursive and traverses the tree more than once when it calls depth() method on parts
-  virtual void populate_table(vcl_vector<vcl_pair<dbrec3d_part_sptr, int> >& part_table) const { return; }  // do nothing at the base
+  virtual void populate_table(std::vector<std::pair<dbrec3d_part_sptr, int> >& part_table) const { return; }  // do nothing at the base
   
   //: allow for various visitors (encapsulated algos working with the meta-structure) visit the part
   template < typename Visitor >

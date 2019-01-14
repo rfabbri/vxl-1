@@ -1,14 +1,14 @@
 #include "bioproj_nu_gy_filter.h"
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
 #include "bioproj_filter_integrant.h"
 
 bioproj_nu_gy_filter::bioproj_nu_gy_filter(double sigma, double theta, unsigned extent, double increment)
 {
-  double half_extent = int(vcl_ceil(extent * sigma));
-  half_kernel_size_ = int(vcl_ceil(extent * sigma) / increment);
+  double half_extent = int(std::ceil(extent * sigma));
+  half_kernel_size_ = int(std::ceil(extent * sigma) / increment);
   full_kernel_size_ = 2*half_kernel_size_ + 1;
   filter_ = new double[full_kernel_size_];
   int index = 0;
@@ -21,8 +21,8 @@ bioproj_nu_gy_filter::bioproj_nu_gy_filter(double sigma, double theta, unsigned 
       vnl_adaptsimpson_integral simpson_integral;
       integral_val = simpson_integral.integral(&f, 0.0, double(xi), 1e-06);
     }
-    double term1 = -vcl_sin(theta) / (vnl_math::pi*vcl_pow(sigma,4.0));
-    double term2 = (1-vcl_pow(xi,2.0)/vcl_pow(sigma,2.0)) * integral_val;
+    double term1 = -std::sin(theta) / (vnl_math::pi*std::pow(sigma,4.0));
+    double term2 = (1-std::pow(xi,2.0)/std::pow(sigma,2.0)) * integral_val;
     filter_[index++] = term1 * (xi + term2);
   }
 }

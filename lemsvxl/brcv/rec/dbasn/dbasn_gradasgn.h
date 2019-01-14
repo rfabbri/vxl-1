@@ -17,9 +17,9 @@
 #ifndef dbasn_gradasgn_h_
 #define dbasn_gradasgn_h_
 
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <cmath>
+#include <algorithm>
 #include <dbasn/dbasn_graph.h>
 #include <dbasn/dbasn_params.h>
 #include <dbasn/dbasn_softasgn.h>
@@ -181,7 +181,7 @@ double inline abs_dist_wei_max (const float v1, const float v2)
   if (v1 == v2)
     return 0;
   else
-    return vcl_fabs (v1 - v2) / vcl_max (v1, v2);
+    return std::fabs (v1 - v2) / std::max (v1, v2);
 }
 
 double inline sqr_dist_wei_max (const float v1, const float v2)
@@ -189,19 +189,19 @@ double inline sqr_dist_wei_max (const float v1, const float v2)
   if (v1 == v2)
     return 0;
   else 
-    return vcl_sqrt (vcl_fabs (v1 - v2) / vcl_max (v1, v2));
+    return std::sqrt (std::fabs (v1 - v2) / std::max (v1, v2));
 }
 
 double inline abs_dist (const float norm_v1, const float norm_v2)
 {
   //norm_v1 and norm_v2 should be already normalized to beween 0 and 1.
-  return vcl_fabs (norm_v1 - norm_v2);
+  return std::fabs (norm_v1 - norm_v2);
 }
 
 double inline sqr_dist (const float norm_v1, const float norm_v2)
 {
   //norm_v1 and norm_v2 should be already normalized to beween 0 and 1.
-  return vcl_sqrt (vcl_fabs (norm_v1 - norm_v2));
+  return std::sqrt (std::fabs (norm_v1 - norm_v2));
 }
 
 double inline abs_dist_w3 (const float norm_v1, const float norm_v2)
@@ -212,7 +212,7 @@ double inline abs_dist_w3 (const float norm_v1, const float norm_v2)
   //randomly selected from a uniform distribution in the intervbal [0, 1].
   //Because two points chosen from a unifom distribution in the unit interval
   //will be on average 1/3 units apart.
-  return 3* vcl_fabs (norm_v1 - norm_v2);
+  return 3* std::fabs (norm_v1 - norm_v2);
 }
 
 #define SQRT_3 1.7320508075688772935274463415059
@@ -220,7 +220,7 @@ double inline abs_dist_w3 (const float norm_v1, const float norm_v2)
 double inline sqr_dist_w3 (const float norm_v1, const float norm_v2)
 {
   //norm_v1 and norm_v2 should be already normalized to beween 0 and 1.
-  return SQRT_3 * vcl_sqrt (vcl_fabs (norm_v1 - norm_v2));
+  return SQRT_3 * std::sqrt (std::fabs (norm_v1 - norm_v2));
 }
 
 //###################################################################

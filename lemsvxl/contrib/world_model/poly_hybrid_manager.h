@@ -78,7 +78,7 @@ public:
   void save_all();
   void load_mesh_single();
   void load_mesh_multiple();
-  void load_mesh(vcl_string fname);
+  void load_mesh(std::string fname);
   void define_lvcs();
   void save_lvcs();
   void load_lvcs();
@@ -102,15 +102,15 @@ private:
   obj_observable* my_polygon_copy;
 
   obj_observable* my_obj;
-  vcl_list<obj_observable* >objects;
+  std::list<obj_observable* >objects;
   vsol_polygon_2d_sptr poly2d; 
   float mouse_start_x, mouse_start_y;
   float cur_pointx, cur_pointy;
   bool left_button_down, middle_button_down;
   vbl_smart_ptr<bgeo_lvcs> lvcs_;
 
-  vcl_string select_file();
-  void read_world_points(vcl_string fname);
+  std::string select_file();
+  void read_world_points(std::string fname);
   obj_observable* find_polygon_in_3D(unsigned id, vsol_polygon_3d_sptr& poly, unsigned& index);
   void delete_observable(observable* obs);
 
@@ -130,9 +130,9 @@ private:
 
   vpgl_camera<double>* select_camera();
 
-  vpgl_rational_camera<double> read_rational_camera(vcl_string cam_path);
+  vpgl_rational_camera<double> read_rational_camera(std::string cam_path);
 
-  vpgl_proj_camera<double> read_projective_camera(vcl_string cam_path);
+  vpgl_proj_camera<double> read_projective_camera(std::string cam_path);
 
   void get_selection(obj_observable* &obs, unsigned &face_id);
 

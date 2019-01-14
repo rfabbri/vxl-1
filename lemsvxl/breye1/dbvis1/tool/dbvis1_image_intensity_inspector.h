@@ -19,7 +19,7 @@ class  dbvis1_image_intensity_inspector:public bvis1_tool
   //: Destructor
   virtual ~dbvis1_image_intensity_inspector(){}
   //: Returns the string name of this tool
-  virtual vcl_string name() const{return "image inspector";}
+  virtual std::string name() const{return "image inspector";}
   
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );

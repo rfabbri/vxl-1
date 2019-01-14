@@ -26,7 +26,7 @@ public:
   int top_N_;           // use top N matches of the image to each model patch
   int k_;      // put as a constraint that at least k model patches have top_N_ matches less than threshold
 
-  vcl_string output_file_postfix_;
+  std::string output_file_postfix_;
   
   bool parse_from_data(bxml_data_sptr root);
   static bxml_element *create_default_document_data();
@@ -46,10 +46,10 @@ class dbskr_detect_patch_params
                                               // intersection of ground truth box and the detection box is at least half of their union
     bool do_categorization_;          // if a box is detected assign the category, regardless of the overlap
 
-    vcl_string index_file_;
-    vcl_string model_dir_;  // directory of the model object
-    vcl_string model_name_;  // name of the model object
-    vcl_string matches_dir_;
+    std::string index_file_;
+    std::string model_dir_;  // directory of the model object
+    std::string model_name_;  // name of the model object
+    std::string matches_dir_;
 
     dbskr_detect_instance_params det_params_;
 
@@ -57,8 +57,8 @@ class dbskr_detect_patch_params
     dbskr_extract_patch_params query_patch_params_;  // --> will only use patch_data part
     dbskr_extract_patch_params model_patch_params_;  // --> will only use patch_data part
     
-    vcl_string output_file_postfix_;
-    vcl_string out_file_;
+    std::string output_file_postfix_;
+    std::string out_file_;
 
     bool parse_from_data(bxml_data_sptr root);
     static bxml_element *create_default_document_data();

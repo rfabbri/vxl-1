@@ -2,10 +2,10 @@
 //  MingChing Chang 
 //  Sep 4, 2007
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_ctime.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <vector>
+#include <ctime>
+#include <iostream>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
@@ -19,12 +19,12 @@
 //: Build a stand along shock scaffold graph.
 dbsk3d_sg_sa* build_sg_sa (dbsk3d_ms_hypg* ms_hypg)
 {
-  vul_printf (vcl_cout, "build_sg_sa(): %d vertices, %d curves.\n", 
+  vul_printf (std::cout, "build_sg_sa(): %d vertices, %d curves.\n", 
               ms_hypg->vertexmap().size(), ms_hypg->edgemap().size());
   dbsk3d_sg_sa* SG = new dbsk3d_sg_sa;
 
   //Build the coarse-scale shock vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator SV_it = ms_hypg->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator SV_it = ms_hypg->vertexmap().begin();
   for (; SV_it != ms_hypg->vertexmap().end(); SV_it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*SV_it).second;
 
@@ -37,7 +37,7 @@ dbsk3d_sg_sa* build_sg_sa (dbsk3d_ms_hypg* ms_hypg)
   }
 
   //Build the coarse-scale shock curves.
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = ms_hypg->edgemap().begin();
   for (; SC_it != ms_hypg->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*SC_it).second;
 
@@ -62,7 +62,7 @@ dbsk3d_sg_sa* build_sg_sa (dbsk3d_ms_hypg* ms_hypg)
     //For each fs_vertices of the MC, clone a new one and insert it to SG,
     //except the starting and ending ones. Also, put the new fs_vertices into newSC.
     //Be careful to avoid duplication at junctions.
-    vcl_vector<dbmsh3d_vertex*> V_vec;
+    std::vector<dbmsh3d_vertex*> V_vec;
     MC->get_V_vec (V_vec);
     assert (V_vec.size() > 1);
     for (unsigned int j=1; j<V_vec.size()-1; j++) {
@@ -84,10 +84,10 @@ dbsk3d_sg_sa* build_sg_sa (dbsk3d_ms_hypg* ms_hypg)
 
 bool dbsk3d_apply_xform (dbsk3d_sg_sa* SG, const vgl_h_matrix_3d<double>& H)
 {
-  vul_printf (vcl_cout, "  dbmsh3d_apply_xform on SG: %u points", SG->FV_map().size());
+  vul_printf (std::cout, "  dbmsh3d_apply_xform on SG: %u points", SG->FV_map().size());
 
   //Iterate thru all the points in M and compute its image after transformation
-  vcl_map<int, dbsk3d_fs_vertex*>::iterator it = SG->FV_map().begin();
+  std::map<int, dbsk3d_fs_vertex*>::iterator it = SG->FV_map().begin();
   for (; it != SG->FV_map().end(); it++) {
     dbsk3d_fs_vertex* FV = (*it).second;
 
@@ -95,26 +95,26 @@ bool dbsk3d_apply_xform (dbsk3d_sg_sa* SG, const vgl_h_matrix_3d<double>& H)
     vgl_homg_point_3d<double > xPh = H (Ph);
     double vx, vy, vz;
     if (!xPh.get_nonhomogeneous(vx, vy, vz)) {
-      vcl_cerr << "Error in " << __FILE__ << " : Pt at infinity\n";
+      std::cerr << "Error in " << __FILE__ << " : Pt at infinity\n";
       return false;
     }
     FV->get_pt().set(vx, vy, vz);
   }
-  vcl_cout << "  done.\n";
+  std::cout << "  done.\n";
   return true;
 }
 
 void make_sub_graph (dbsk3d_sg_sa* SG, const float R, const bool keep_isolated_vertex)
 {
   vnl_random get_rand_sub;
-  get_rand_sub.reseed ((unsigned int) vcl_time(NULL));
+  get_rand_sub.reseed ((unsigned int) std::time(NULL));
 
   //Randomly remove nER edges from SG.
-  const int nER = (int) vcl_ceil (R * SG->edgemap().size());
+  const int nER = (int) std::ceil (R * SG->edgemap().size());
   int nE_removed = 0;
   while (SG->edgemap().size() > 0 && nE_removed < nER) {
     //Remove a random edge.
-    vcl_map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
     int n = (int) get_rand_sub.drand32 (0.0, SG->edgemap().size());
     for (int i=0; i<n; i++)
       it++;
@@ -133,21 +133,21 @@ void make_sub_graph (dbsk3d_sg_sa* SG, const float R, const bool keep_isolated_v
     nE_removed++;
   }
 
-  vul_printf (vcl_cout, "make_sub_graph(): %d edges removed, %d remain.\n",
+  vul_printf (std::cout, "make_sub_graph(): %d edges removed, %d remain.\n",
               nE_removed, SG->edgemap().size());
 }
 
 float get_avg_V_radius (dbsk3d_sg_sa* SG)
 {
   double avgR = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
   for (; it != SG->vertexmap().end(); it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*it).second;
     double r = MN->radius();
     avgR += r;
   }
   avgR /= SG->vertexmap().size();
-  vul_printf (vcl_cout, "get_avg_V_radius(): %u vertices, avg radius: %f.\n", 
+  vul_printf (std::cout, "get_avg_V_radius(): %u vertices, avg radius: %f.\n", 
               SG->vertexmap().size(), avgR);
   return (float) avgR;
 }
@@ -155,26 +155,26 @@ float get_avg_V_radius (dbsk3d_sg_sa* SG)
 float get_avg_C_len (dbsk3d_sg_sa* SG)
 {
   double avgL = 0;  
-  vcl_map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
   for (; it != SG->edgemap().end(); it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it).second;
     double l = MC->get_length();
     avgL += l;
   }
   avgL /= SG->edgemap().size();
-  vul_printf (vcl_cout, "get_avg_C_len(): %u edges, avg radius: %f.\n", 
+  vul_printf (std::cout, "get_avg_C_len(): %u edges, avg radius: %f.\n", 
               SG->edgemap().size(), avgL);
   return (float) avgL;
 }
 
 void perturb_graph_vertex_radius (dbsk3d_sg_sa* SG, const float nrv)
 {
-  vul_printf (vcl_cout, "perturb_graph_vertex_radius(): nrv %f.\n", nrv);
+  vul_printf (std::cout, "perturb_graph_vertex_radius(): nrv %f.\n", nrv);
   float avgR = get_avg_V_radius (SG);
   vnl_random get_rand;
-  get_rand.reseed ((unsigned int) vcl_time(NULL));
+  get_rand.reseed ((unsigned int) std::time(NULL));
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
   for (; it != SG->vertexmap().end(); it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*it).second;
     double maxr = avgR * nrv;
@@ -185,12 +185,12 @@ void perturb_graph_vertex_radius (dbsk3d_sg_sa* SG, const float nrv)
 
 void perturb_graph_edge_len (dbsk3d_sg_sa* SG, const float nrc)
 {
-  vul_printf (vcl_cout, "perturb_graph_edge_len(): nrc %f.\n", nrc);
+  vul_printf (std::cout, "perturb_graph_edge_len(): nrc %f.\n", nrc);
   float avgL = get_avg_C_len (SG);
   vnl_random get_rand;
-  get_rand.reseed ((unsigned int) vcl_time(NULL));
+  get_rand.reseed ((unsigned int) std::time(NULL));
   
-  vcl_map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
   for (; it != SG->edgemap().end(); it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it).second;
     double maxl = avgL * nrc;
@@ -202,7 +202,7 @@ void perturb_graph_edge_len (dbsk3d_sg_sa* SG, const float nrc)
 int remove_A3_shock_curves (dbsk3d_sg_sa* SG)
 {
   int n_removed = 0;
-  vcl_map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
   while (it != SG->edgemap().end()) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it).second;
     if (MC->c_type() == C_TYPE_RIB) {

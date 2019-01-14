@@ -34,7 +34,7 @@ dbrl_support_process::dbrl_support_process(void): bpro1_process()
             !parameters()->add( "threshold on size to estimate the true edges","-thresh_size", (unsigned) 30 )
             )
           {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
     }
 
     }
@@ -43,7 +43,7 @@ dbrl_support_process::~dbrl_support_process()
     {
     }
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_support_process::name()
     {
     return "Estimating Support";
@@ -62,16 +62,16 @@ dbrl_support_process::output_frames()
 
     }
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_support_process::get_input_type()
+std::vector< std::string > dbrl_support_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
     }
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_support_process::get_output_type()
+std::vector< std::string > dbrl_support_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
     }
@@ -80,7 +80,7 @@ bool
 dbrl_support_process::execute()
     {
         if ( input_data_.size() != 1 ){
-            vcl_cout << "In dbrl_support_process::execute() - "
+            std::cout << "In dbrl_support_process::execute() - "
                 << "not exactly two input images \n";
             return false;
         }
@@ -100,9 +100,9 @@ dbrl_support_process::execute()
         vidpro1_vsol2D_storage_sptr frame_vsols;
         frame_vsols.vertical_cast(input_data_[0][0]);
 
-        vcl_vector< vsol_spatial_object_2d_sptr > lines=frame_vsols->all_data();
+        std::vector< vsol_spatial_object_2d_sptr > lines=frame_vsols->all_data();
 
-        vcl_vector<dbdet_edgel* > all_edgels;
+        std::vector<dbdet_edgel* > all_edgels;
 
         double xmax=0.0;
         double ymax=0.0;
@@ -128,7 +128,7 @@ dbrl_support_process::execute()
             }
         }
 
-    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(vcl_ceil(xmax)+5,vcl_ceil(ymax)+5,all_edgels);
+    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(std::ceil(xmax)+5,std::ceil(ymax)+5,all_edgels);
     //different types of linkers depending on the curve model
     typedef dbdet_sel<dbdet_ES_curve_model> dbdet_sel_ES;
     typedef dbdet_sel<dbdet_CC_curve_model> dbdet_sel_CC;
@@ -136,8 +136,8 @@ dbrl_support_process::execute()
     dbdet_sel_sptr edge_linker= new dbdet_sel_CC(edgemap, nrad, dt*vnl_math::pi/180, dx);
     edge_linker->build_curvelets_greedy(max_size_to_group);
 
-    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
-    vcl_vector<dbdet_edgel*> sedgels;
+    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    std::vector<dbdet_edgel*> sedgels;
     for(unsigned i=0;i<edgels.size();i++)
     {
             curvelet_list_iter cv_it = edgels[i]->curvelets.begin();
@@ -151,14 +151,14 @@ dbrl_support_process::execute()
             }
         
     }
-    //vcl_vector<vsol_line_2d_sptr> supportedges;
+    //std::vector<vsol_line_2d_sptr> supportedges;
 
-    vcl_vector<vsol_spatial_object_2d_sptr> supportedges;
+    std::vector<vsol_spatial_object_2d_sptr> supportedges;
     for(unsigned j=0;j<sedgels.size();j++)
     {
             vsol_point_2d_sptr p=new vsol_point_2d(sedgels[j]->pt);
-            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*vcl_cos(sedgels[j]->tangent),p->y()+0.2*vcl_sin(sedgels[j]->tangent));
-            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*vcl_cos(sedgels[j]->tangent),p->y()-0.2*vcl_sin(sedgels[j]->tangent));
+            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*std::cos(sedgels[j]->tangent),p->y()+0.2*std::sin(sedgels[j]->tangent));
+            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*std::cos(sedgels[j]->tangent),p->y()-0.2*std::sin(sedgels[j]->tangent));
             vsol_line_2d_sptr l=new vsol_line_2d(ps,pe);
             supportedges.push_back(l->cast_to_spatial_object());
     }

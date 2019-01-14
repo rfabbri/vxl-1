@@ -1,6 +1,6 @@
 #include "mw_correspond_point_tool_band.h"
 
-#include <vcl_stack.h>
+#include <stack>
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <bgui/bgui_vsol_soview2D.h>
@@ -35,7 +35,7 @@
 static void 
 get_vertices(
     becld_epiband &eb,
-    vcl_vector<vsol_point_2d_sptr> &v1);
+    std::vector<vsol_point_2d_sptr> &v1);
 
 
 
@@ -54,7 +54,7 @@ mw_correspond_point_tool_band()
 }
 
 //---------------------------------------------------------------------------------------------------------------
-vcl_string mw_correspond_point_tool_band::
+std::string mw_correspond_point_tool_band::
 name() const
 {
   return "Multiview point correspond BAND";
@@ -110,7 +110,7 @@ activate ()
 
   err_pos_   = 2.0;
   if (!get_params(&err_pos_)) {
-    vcl_cerr << "Error: in getting params" << vcl_endl;
+    std::cerr << "Error: in getting params" << std::endl;
     return;
   }
 
@@ -134,7 +134,7 @@ void
 mw_correspond_point_tool_band::
 deactivate ()
 {
-  vcl_cout << "mw_correspond_point_tool_band OFF\n";
+  std::cout << "mw_correspond_point_tool_band OFF\n";
   mw_correspond_point_tool_basic::deactivate ();
 
   fm_.clear();
@@ -153,8 +153,8 @@ handle( const vgui_event & e,
 {
 
   if (e.type == vgui_KEY_PRESS) {
-    vcl_cout << "-------------\n";
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "-------------\n";
+    std::cout << "Frame index: " << view->frame() << std::endl;
     return handle_key(e.key);
   }
 
@@ -183,7 +183,7 @@ handle_key(vgui_key key)
                   return false;
 
                 // toggle if should display+compute all ep0..ep1 in image 3
-                vcl_cout << "Toggling display epipolar band covering pixels\n";
+                std::cout << "Toggling display epipolar band covering pixels\n";
                 vgui::out << "Toggling display epipolar band covering pixels\n";
 
                 display_epiband_covering_= !display_epiband_covering_;
@@ -197,7 +197,7 @@ handle_key(vgui_key key)
 
     default:
               if (!base_stat)
-                vcl_cout << "(corresp_tool_band) Unassigned key: " << key << " pressed.\n";
+                std::cout << "(corresp_tool_band) Unassigned key: " << key << " pressed.\n";
               return base_stat;
   }
 
@@ -218,8 +218,8 @@ handle_mouse_event_whatever_view(
 
   unsigned v = iv_frame_[view->frame()];
 
-  vcl_vector<bool> is_specified(nviews_,false);
-  vcl_vector<vsol_point_2d_sptr> selected_points(nviews_);
+  std::vector<bool> is_specified(nviews_,false);
+  std::vector<vsol_point_2d_sptr> selected_points(nviews_);
 
   for (unsigned iv=0; iv < nviews_; ++iv) {
     if (p_[iv]) {
@@ -250,7 +250,7 @@ update_display_for_epipolar_bands( bool redraw)
 
   for (unsigned v=0; v < nviews_; ++v) {
 
-    vcl_list<vgui_soview2D_point *>::iterator it;
+    std::list<vgui_soview2D_point *>::iterator it;
     for (it = covering_soviews_[v].begin(); it!= covering_soviews_[v].end(); ++it)
       tab_[v]->remove(*it);
     covering_soviews_[v].clear();
@@ -266,7 +266,7 @@ update_display_for_epipolar_bands( bool redraw)
       }
 
       if (epband_[v][i]) {
-        vcl_vector<vsol_point_2d_sptr> v1;
+        std::vector<vsol_point_2d_sptr> v1;
         get_vertices(*(epband_[v][i]), v1);
 
         if (v1.size()) {
@@ -274,7 +274,7 @@ update_display_for_epipolar_bands( bool redraw)
           epband_soview_[v][i] = tab_[i]->add_vsol_polygon_2d(poly, epband_style_[v]);
         }
 
-//        epband_[v][i]->polygon().print(vcl_cout); vcl_cout << vcl_endl;
+//        epband_[v][i]->polygon().print(std::cout); std::cout << std::endl;
       }
     } /* end for i*/
 
@@ -327,7 +327,7 @@ add_params(vgui_dialog *d, double *err_pos)
 void 
 get_vertices(
     becld_epiband &eb,
-    vcl_vector<vsol_point_2d_sptr> &v)
+    std::vector<vsol_point_2d_sptr> &v)
 {
   if (eb.polygon().num_sheets()) { 
     v.resize(eb.polygon()[0].size());

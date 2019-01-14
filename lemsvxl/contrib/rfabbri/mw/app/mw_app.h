@@ -7,7 +7,7 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Sat Apr 16 22:49:00 EDT 2005
 //
-#include <vcl_string.h>
+#include <string>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
 #include <bmcsd/bmcsd_util.h>
@@ -19,7 +19,7 @@ void mw_load_current_working_repository();
 void mw_load_current_working_repository_curve_tracing_tool();
 void mw_load_current_working_repository_edgel_tracing_tool();
 void mw_load_mcs_instance();
-void load_cams_into_frames( const vcl_vector<vcl_string> &cams_fnames, bmcsd_util::camera_file_type cam_type);
+void load_cams_into_frames( const std::vector<std::string> &cams_fnames, bmcsd_util::camera_file_type cam_type);
 
 void load_ct_spheres_dataset();
 void example_project();
@@ -39,9 +39,9 @@ void arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position);
 
 
 void test_formulas(
-  vcl_vector<bdifd_3rd_order_point_3d> &C,
-  vcl_vector<double> &theta,
-  vcl_vector <vsol_point_2d_sptr> &gama1_img
+  std::vector<bdifd_3rd_order_point_3d> &C,
+  std::vector<double> &theta,
+  std::vector <vsol_point_2d_sptr> &gama1_img
   );
 
 void write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix);

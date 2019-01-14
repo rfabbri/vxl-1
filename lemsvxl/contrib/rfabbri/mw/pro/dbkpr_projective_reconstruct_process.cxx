@@ -78,7 +78,7 @@ dbkpr_projective_reconstruct_process::dbkpr_projective_reconstruct_process()
 {
   if( !parameters()->add( "VRML File",          "-vrmlfile",  bpro1_filepath("","wrl")) ||
       !parameters()->add( "Verbose",            "-verbose",   (bool)true)) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -98,7 +98,7 @@ dbkpr_projective_reconstruct_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_projective_reconstruct_process::name()
 {
   return "Projective-Reconstruct Keypoints";
@@ -122,18 +122,18 @@ dbkpr_projective_reconstruct_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_projective_reconstruct_process::get_input_type()
+std::vector< std::string > dbkpr_projective_reconstruct_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_projective_reconstruct_process::get_output_type()
+std::vector< std::string > dbkpr_projective_reconstruct_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
@@ -162,11 +162,11 @@ dbkpr_projective_reconstruct_process::finish()
       dbkpr_corr3d_storage_sptr frame_corr3d;
       frame_corr3d.vertical_cast(input_data_[i][0]);
       if (!frame_corr3d) {
-        vcl_cerr << "Error: unable to get corr3d storage\n";
+        std::cerr << "Error: unable to get corr3d storage\n";
         return false;
       }
       if (!frame_corr3d->has_tree()) {
-        vcl_cerr << "Error: corr3d storage has no spanning tree\n";
+        std::cerr << "Error: corr3d storage has no spanning tree\n";
         return false;
       }
       tree_ptr_ = frame_corr3d->tree();
@@ -197,15 +197,15 @@ dbkpr_projective_reconstruct_process::finish()
   get_initial_reconstruction(v1,v2,corr3d);
   // Returns Pr1,Pr2, corr3d representing correspondences and instantiated 3D points
 
-  vcl_vector<unsigned> view_set;
+  std::vector<unsigned> view_set;
   views.push_back(v1);
   views.push_back(v2);
 
-  vcl_vector<bool> in_view_set(nviews_,false);
+  std::vector<bool> in_view_set(nviews_,false);
   in_view_set[v1] = true;
   in_view_set[v2] = true;
 
-  vcl_vector<vpgld_proj_camera<double> > cam_set;
+  std::vector<vpgld_proj_camera<double> > cam_set;
   cam_set.push_back(Pr1);
   cam_set.push_back(Pr2);
 
@@ -243,10 +243,10 @@ dbkpr_projective_reconstruct_process::finish()
   // OUTPUT --------------------------------------------------------------------------------------- 
 
   // for now, output all corr3d intact, but we might use additional criteria to prune the matches
-  vcl_vector<dbdet_keypoint_corr3d_sptr> corr3d = tree.global_corr3d_points();
+  std::vector<dbdet_keypoint_corr3d_sptr> corr3d = tree.global_corr3d_points();
   
   // Also output camera storages separately so we can visualize epipolar geometry
-  vcl_vector<vpgl_proj_camera<double> *> cameras(input_data_.size());
+  std::vector<vpgl_proj_camera<double> *> cameras(input_data_.size());
   cameras[v1] = new vpgl_proj_camera<double> (Pr1);
   cameras[v2] = new vpgl_proj_camera<double> (Pr2);
 
@@ -269,13 +269,13 @@ dbkpr_projective_reconstruct_process::finish()
   }
 
   if(vrml_file.path != "")  {
-    vcl_cout << "warning: not writing VRML right now...\n";
+    std::cout << "warning: not writing VRML right now...\n";
   }
 //    vpgl_bundle_adjust::write_vrml(vrml_file.path, cameras, pts3d);
 
   */
 
-    vcl_cerr << "WARNING: THIS PROCESS IS STILL BEING IMPLEMENTED\n";
+    std::cerr << "WARNING: THIS PROCESS IS STILL BEING IMPLEMENTED\n";
   return true;
 }
 
@@ -319,7 +319,7 @@ select_best_views(const dbkpr_view_span_tree &tree, unsigned &v1, unsigned &v2, 
 
   v2 = tree.links()[v1].back().to;
 
-  vcl_cout << "Picked key frames with index " << v1 << " and " << v2  << " nmatches = " << nmatches << vcl_endl;
+  std::cout << "Picked key frames with index " << v1 << " and " << v2  << " nmatches = " << nmatches << std::endl;
 }
 
 
@@ -330,7 +330,7 @@ void dbkpr_projective_reconstruct_process::
 get_initial_reconstruction(
     unsigned v1, unsigned v2, 
     vpgl_proj_camera<double> &Pr1, vpgl_proj_camera<double> &Pr2,
-    vcl_vector<dbdet_keypoint_corr3d_sptr> &corr3d)
+    std::vector<dbdet_keypoint_corr3d_sptr> &corr3d)
 {
   const dbkpr_view_span_tree &tree = *tree_ptr_;
   const dbkpr_view_span_link &link = tree.links()[v1].back();
@@ -363,11 +363,11 @@ get_initial_reconstruction(
 
   // for each match between the two views, reconstruct.
 
-  vcl_vector<vgl_point_3d<double> > pts3d;
+  std::vector<vgl_point_3d<double> > pts3d;
   pts3d.reserve(link.matches.size());
 
-  vcl_map<int,int>::const_iterator it = link.matches.begin();
-  vcl_map<vcl_pair<int,int>,int> id_pts3d;
+  std::map<int,int>::const_iterator it = link.matches.begin();
+  std::map<std::pair<int,int>,int> id_pts3d;
   for (; it != link.matches.end(); ++it) {
     const vgl_homg_point_2d<double> p1(*tree.keypoints()[v1][it->first]);
     const vgl_homg_point_2d<double> p2(*tree.keypoints()[v2][it->second]);
@@ -375,7 +375,7 @@ get_initial_reconstruction(
     vgl_homg_point_3d<double> P = triangulate_3d_point( p1, Pr1.get_matrix(), p2, Pr2.get_matrix());
 
     pts3d.push_back(P);
-    id_pts3d[vcl_pair<int,int>(it->first,it->second)] = pts3d.size()-1;
+    id_pts3d[std::pair<int,int>(it->first,it->second)] = pts3d.size()-1;
   }
   
 
@@ -391,9 +391,9 @@ get_initial_reconstruction(
     vgl_point_2d<double> p2_reproj(cameras[v2]->project(vgl_homg_point_3d<double>(pts3d[i])));
     vgl_point_2d<double> p2_reproj_orig(Pr2.project(vgl_homg_point_3d<double>(pts3d[i])));
 
-    vcl_cout << "Reproj error in p1: " << vgl_distance(p1,p1_reproj) << vcl_endl;;
-    vcl_cout << "Reproj error in p2: " << vgl_distance(p2,p2_reproj) << vcl_endl;;
-    vcl_cout << "Reproj error in p2_reproj_orig: " << vgl_distance(p2,p2_reproj_orig) << vcl_endl;;
+    std::cout << "Reproj error in p1: " << vgl_distance(p1,p1_reproj) << std::endl;;
+    std::cout << "Reproj error in p2: " << vgl_distance(p2,p2_reproj) << std::endl;;
+    std::cout << "Reproj error in p2_reproj_orig: " << vgl_distance(p2,p2_reproj_orig) << std::endl;;
 
     ++i;
   }
@@ -401,7 +401,7 @@ get_initial_reconstruction(
 }
 
 unsigned dbkpr_projective_reconstruct_process::
-pick_new_view(const vcl_vector<unsigned> &view_set)
+pick_new_view(const std::vector<unsigned> &view_set)
 {
   // select the view. For now, its anything connected to v1 or v2, whichever has more matches
   //tree.links().[v1] will have at least two, unless its a leaf.
@@ -409,7 +409,7 @@ pick_new_view(const vcl_vector<unsigned> &view_set)
   unsigned max_nmatches = 0; unsigned v_chosen = views[0]; unsigned l_idx = 0;
   bool found_some=false;
   for (unsigned i=0; i < views.size(); ++i) {
-    vcl_vector<>::const_iterator l;
+    std::vector<>::const_iterator l;
     unsigned i=tree.links()[i].size()-1;
     for (l = tree.links()[i].back(); l != tree.links().begin(); --l,--i) {
       if (!in_view_set[l->to] && !in_view_set[l->from])
@@ -424,15 +424,15 @@ pick_new_view(const vcl_vector<unsigned> &view_set)
     }
   }
 
-  vcl_cout << "Picked new view as: " << v_chosen << vcl_endl;
+  std::cout << "Picked new view as: " << v_chosen << std::endl;
   // TODO: test this.
   return v_chosen;
 }
 
 void dbkpr_projective_reconstruct_process::
 add_new_view_to_reconstruction(unsigned v3, 
-    vcl_vector<unsigned> &view_set, 
-    vcl_vector<vpgl_proj_camera<double> > &cam_set,
+    std::vector<unsigned> &view_set, 
+    std::vector<vpgl_proj_camera<double> > &cam_set,
     t_corr_set corr_set)
 {
 
@@ -442,27 +442,27 @@ add_new_view_to_reconstruction(unsigned v3,
   //  - make sure it is more than 6
   //  - TODO see if we can get 6 satisfying triple-wise epipolar constraints by computing fm13
 
-  vcl_vector<vcl_vector<int> > triplets; 
+  std::vector<std::vector<int> > triplets; 
 
   for (it = link12.matches.begin(); it != link12.matches.end(); ++it) {
-    vcl_map<int,int>::const_iterator it23 = link23.matches.begin();
+    std::map<int,int>::const_iterator it23 = link23.matches.begin();
     for (; it23 != link23.matches.end(); ++it23) {
       if (it23.first == it->second) {
         // it->first it->second it23.second is a possible triplet
 
-        triplets.push_back(vcl_vector<int>());
+        triplets.push_back(std::vector<int>());
         triplets.back().resize(3);
         triplets.back()[0] = it->first;
         triplets.back()[1] = it->second;
         triplets.back()[2] = it->third;
 
-        pts3d_triplets.push_back(pts3d(id_pts3d[vcl_pair<int,int>(it->first,it->second)]));
+        pts3d_triplets.push_back(pts3d(id_pts3d[std::pair<int,int>(it->first,it->second)]));
       }
     }
   }
 
   if (triplets.size() < 6)
-    vcl_cout << "Error: number of trinocular matches is too small\n";
+    std::cout << "Error: number of trinocular matches is too small\n";
 
   // Now generate simple least squares solution just to test
 
@@ -478,14 +478,14 @@ add_new_view_to_reconstruction(unsigned v3,
   
   for (unsigned i=0; i < pts3d.size(); ++i) {
     pts3d[i] = reconstruct_3d_points_nviews_linear(pts, cams);
-    //  vgl_point_3d<double> bundle_reconstruct_3d_point(vcl_vector<vnl_double_2> &pts,
-    //                                                   vcl_vector<vnl_double_3x4> &cams);
+    //  vgl_point_3d<double> bundle_reconstruct_3d_point(std::vector<vnl_double_2> &pts,
+    //                                                   std::vector<vnl_double_3x4> &cams);
   }
 
 }
 
 void dbkpr_projective_reconstruct_process::
-projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_set &corr_set)
+projective_bundle_adjust(std::vector<vpgl_proj_camera<double> > &cameras, t_corr_set &corr_set)
 {
   //: Gradient tolerance
   unsigned const gtol = 1e-6;
@@ -528,7 +528,7 @@ projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_
   
   if(usewgt)
   {
-    vcl_vector<double> weights = ba_func.weights();
+    std::vector<double> weights = ba_func.weights();
     const bnl_crs_index& crs = ba_func.residual_indices();
     typedef bnl_crs_index::sparse_vector::iterator sv_itr;
     for(unsigned int i=0; i<cameras.size(); ++i)
@@ -556,13 +556,13 @@ projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_
   }
   avg_dist /= (cameras.size()*(cameras.size()-1))/2.0;
   
-  vcl_vector<int> num_meaningful(corr3d.size());
+  std::vector<int> num_meaningful(corr3d.size());
   for(unsigned int k=0; k<corr3d.size(); ++k){
     num_meaningful[k] = corr3d[k]->size();
   }
   for(unsigned int i=0; i<cameras.size(); ++i){
     vgl_point_3d<double> c1 = cameras[i].camera_center();
-    vcl_vector<bool> meaningful(corr3d.size(),true);
+    std::vector<bool> meaningful(corr3d.size(),true);
     for(unsigned int j=i+1; j<cameras.size(); ++j){
       vgl_point_3d<double> c2 = cameras[j].camera_center();
       if(vgl_distance(c1,c2) < avg_dist*.1){
@@ -578,8 +578,8 @@ projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_
   }
   
   // remove all points without at least minproj meaningful projections
-  vcl_vector<dbdet_keypoint_corr3d_sptr> old_corr3d(corr3d); corr3d.clear(); 
-  vcl_vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
+  std::vector<dbdet_keypoint_corr3d_sptr> old_corr3d(corr3d); corr3d.clear(); 
+  std::vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
   for(unsigned int j=0; j<old_corr3d.size(); ++j)
     if(num_meaningful[j] >= minproj){
       corr3d.push_back(old_corr3d[j]);

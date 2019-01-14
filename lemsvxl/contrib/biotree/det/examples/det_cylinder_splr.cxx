@@ -7,9 +7,9 @@
 // \author    Kongbin Kang (kk at lems.brown.edu) & Gamze Tunali
 // \date        2005-11-01
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 #include <biob/biob_grid_worldpt_roster.h>
 #include <biob/biob_roster_to_grid_mapping.h>
 
@@ -36,7 +36,7 @@
 
 double get_double(char* str){
   double x;
-  vcl_stringstream arg(str);
+  std::stringstream arg(str);
   arg >> x;
   return x;
 }
@@ -46,7 +46,7 @@ const double CYL_LENGTH = 1.0;
 int main(int argc, char *argv[])
 {
   if(argc != 3){
-    vcl_cout << "Usage: "<< argv[0] << " response_file resolution\n";
+    std::cout << "Usage: "<< argv[0] << " response_file resolution\n";
     return 1;
   }
 
@@ -70,9 +70,9 @@ int main(int argc, char *argv[])
   
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "failed to load response file\n";
+    std::cout << "failed to load response file\n";
     return 1;
   }
   double resolution = get_double(argv[2]);
@@ -91,14 +91,14 @@ int main(int argc, char *argv[])
   //  biob_worldpt_field<vgl_vector_3d<double> > interpolated_response = interpolator.apply(orientation_field, .9*resolution, .9*resolution, );
   geom_index_structure geom(interpolated_response.roster(), resolution);
                                                                            
-  /*    vcl_vector<biob_worldpt_index> roster_to_grid;
+  /*    std::vector<biob_worldpt_index> roster_to_grid;
   biob_roster_to_grid_mapping(interpolated_response.roster(), grid, roster_to_grid);
   */
   int filters_size = parser.filter_num();
                                                                            int filter_num = 1;                                                                           
   assert (filter_num <= filters_size);
   biob_worldpt_index not_found = biob_worldpt_index(interpolated_response.roster()->num_points());
-  vcl_vector<double> grid_response_values(grid.num_points());
+  std::vector<double> grid_response_values(grid.num_points());
   for (unsigned int i = 0; i < grid.num_points(); ++i){
     biob_worldpt_index closest_sample_pt = not_found;
     double best_distance = 9e9;//should use infinity
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     }
     double intensity = closest_sample_pt == not_found ? 0. : interpolated_response.values()[closest_sample_pt.index()].length();
     if (intensity > 1e06){
-      vcl_cout << "(det_cylinder_splr.cxx) " << point << "\n";
+      std::cout << "(det_cylinder_splr.cxx) " << point << "\n";
     }
     if(max_intensity < intensity){
       max_intensity = intensity;

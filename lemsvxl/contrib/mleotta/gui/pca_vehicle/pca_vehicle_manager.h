@@ -46,7 +46,7 @@ class pca_vehicle_manager
 {
 public:
   friend class scene_handler_tableau;
-  typedef vcl_map<vcl_string, vgl_polygon<double> > part_map;
+  typedef std::map<std::string, vgl_polygon<double> > part_map;
 
   enum interact_mode { NONE, MOVE };
   
@@ -102,34 +102,34 @@ public:
   void update_projection();
 
   //: Load the image file
-  bool load_image(const vcl_string& filename);
+  bool load_image(const std::string& filename);
   //: Load the camera file
-  bool load_camera(const vcl_string& filename);
+  bool load_camera(const std::string& filename);
   //: Load the mesh file with a matching parts file
-  bool load_mesh(const vcl_string& meshfile,
-                 const vcl_string& partsfile);
+  bool load_mesh(const std::string& meshfile,
+                 const std::string& partsfile);
   //: Load the ground truth mesh file
-  bool load_truth_mesh(const vcl_string& filename);
+  bool load_truth_mesh(const std::string& filename);
   //: Load the parts file
-  bool load_parts(const vcl_string& filename);
+  bool load_parts(const std::string& filename);
   //: Load the PCA data file
-  bool load_pca(const vcl_string& filename);
+  bool load_pca(const std::string& filename);
 
   //: Save the camera to a file
   //  if \a normalize is true then write the camera with normalized image coordinates 
-  bool save_camera(const vcl_string& filename, bool normalize = false) const;
+  bool save_camera(const std::string& filename, bool normalize = false) const;
   
   //: Save a file with the current 3d coordinates of parts
-  bool save_3d_parts(const vcl_string& filename) const;
+  bool save_3d_parts(const std::string& filename) const;
   
   //: Save the projected contours as SVG
-  bool save_svg(const vcl_string& filename) const;
+  bool save_svg(const std::string& filename) const;
   
   //: Save an image of the detected edges
-  bool save_edge_image(const vcl_string& filename) const;
+  bool save_edge_image(const std::string& filename) const;
   
   //: Save an image of the current video frame
-  bool save_video_frame(const vcl_string& filename) const;
+  bool save_video_frame(const std::string& filename) const;
 
   //: Open input video stream
   bool open_istream(const vidl_istream_sptr& istream);
@@ -160,7 +160,7 @@ public:
   //  - [0] is top \a num_pc PCA params
   //  - [1,2,3] is Tx,Ty,Tz respectively
   //  - [4,5,6] is Rx,Ry,Rz respectively
-  void set_fit_options(const vcl_vector<bool>& options, unsigned int num_pc, 
+  void set_fit_options(const std::vector<bool>& options, unsigned int num_pc, 
                        double lambda, double edge_scale);
   
   //: Fits the model parameters: PCA, translation, rotation to the image.
@@ -185,7 +185,7 @@ public:
   void compute_error();
 
   //: change the mesh parameters
-  void change_mesh_params(const vcl_vector<double>& params);
+  void change_mesh_params(const std::vector<double>& params);
   //: update a single mesh parameters
   void update_mesh_param(unsigned int i, double param);
 
@@ -219,10 +219,10 @@ public:
   void capture_view(int view_id, bool start);
   
   //: read and play an animation script from a file
-  void run_animation(const vcl_string& script);
+  void run_animation(const std::string& script);
   
   //: read and play a tracking sequence from a file
-  void run_track_results(const vcl_string& filename);
+  void run_track_results(const std::string& filename);
 
   //: Try to handle vgui messages
   bool handle_message(const vgui_message& m);
@@ -234,10 +234,10 @@ public:
   void draw_current_states();
   
   //: set the vehicle tracking states
-  void set_tracking_states(const vcl_vector<modrec_vehicle_state>& states);
+  void set_tracking_states(const std::vector<modrec_vehicle_state>& states);
   
   //: set the history of vehicle tracking states indexed over frame number
-  void set_state_map(const vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> >& state_map);
+  void set_state_map(const std::map<unsigned int,std::vector<modrec_vehicle_state> >& state_map);
 
 private:
   void draw_texmap();
@@ -251,7 +251,7 @@ private:
   void build_parts_node();
 
   void draw_curves(vgui_easy2D_tableau_sptr tab,
-                   const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves);
+                   const std::vector<std::vector<vgl_point_2d<double> > >& curves);
 
   void compute_vis_edgels();
 
@@ -277,7 +277,7 @@ private:
   
 
   //: recorded tracking states indexed by frame number
-  vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> > state_map_;
+  std::map<unsigned int,std::vector<modrec_vehicle_state> > state_map_;
   
   //: the ground truth vehiclde mesh
   modrec_pca_vehicle truth_mesh_;
@@ -304,7 +304,7 @@ private:
   modrec_vehicle_fit_multiview mv_optimizer_;
   modrec_vehicle_fit_video video_optimizer_;
 
-  vcl_vector<vcl_pair<double,vnl_double_4> > vis_edgels_;
+  std::vector<std::pair<double,vnl_double_4> > vis_edgels_;
 
   vil_image_view<float> debug_;
 

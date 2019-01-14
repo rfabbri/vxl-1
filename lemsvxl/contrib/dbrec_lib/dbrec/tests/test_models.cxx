@@ -9,7 +9,7 @@
 #include <dbrec/dbrec_image_models.h>
 #include <dbrec/dbrec_image_models_sptr.h>
 #include <bsta/bsta_gauss_sf1.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 static void test_models()
 {
@@ -34,7 +34,7 @@ static void test_models()
   dbrec_prior_model_sptr pm2 = new dbrec_loc_prior_model(loc_prior);
   TEST_NEAR("testing dbrec_loc_prior_model", pm2->prior(10, 10), 0.2f, 0.1f);
 
-  vcl_vector<dbrec_prior_model_sptr> models; models.push_back(pm); models.push_back(pm2);
+  std::vector<dbrec_prior_model_sptr> models; models.push_back(pm); models.push_back(pm2);
   dbrec_prior_model_sptr pm3 = new dbrec_indep_prior_model(models);
   TEST_NEAR("testing dbrec_indep_prior_model", pm3->prior(10, 10), 0.2f*0.7f, 0.1f);
 }

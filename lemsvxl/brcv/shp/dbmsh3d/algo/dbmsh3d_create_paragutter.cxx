@@ -14,13 +14,13 @@
 //: Ming: The drand48 subroutine and the erand48 subroutine return 
 //  positive double-precision floating-point values uniformly distributed over the interval [0.0, 1.0).
 
-#include <vcl_cmath.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
+#include <cassert>
+#include <string>
+#include <cstring>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/dbmsh3d_utils.h>
 
@@ -154,47 +154,47 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
   ///opt_parse_args(argc, argv, optab);        
   if(pcFileNameOut == NULL){
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
      "ERROR(%s): Missing output (prefix) filename\n", pcFName);
-    vcl_fprintf(stderr, "\n\t use -h for more help.\n");
+    std::fprintf(stderr, "\n\t use -h for more help.\n");
     exit(-1); }
 
   if(iX < 1 || iX > 100000) {
-    vcl_fprintf(stderr, "ERROR(%s): Incorrect sampling along the X axis = %d\n",
+    std::fprintf(stderr, "ERROR(%s): Incorrect sampling along the X axis = %d\n",
      pcFName, iX);
     exit(-1); }
   if(iY < 1 || iY > 100000) {
-    vcl_fprintf(stderr, "ERROR(%s): Incorrect sampling along the Y axis = %d\n",
+    std::fprintf(stderr, "ERROR(%s): Incorrect sampling along the Y axis = %d\n",
        pcFName, iY);
     exit(-1); }
   if(fA <= 0.0) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
        "ERROR(%s): Parabola parameter a cannot be non-positive: a = %lf\n",
      pcFName, fA);
     exit(-1); }
   if(fB <= 0.0) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
        "ERROR(%s): Roof parameter b cannot be non-positive: b = %lf\n",
       pcFName, fB);
     exit(-1); }
   if(fC <= 0.0) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
        "ERROR(%s): Roof parameter c cannot be non-positive: c = %lf\n",
       pcFName, fC);
     exit(-1); }
   if(fQ > 0.0) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
      "WARNING(%s): Back end parameter q should not be positive: q = %lf\n",
       pcFName, fQ);
   }
   if(fP <= fQ) {
-    vcl_fprintf(stderr, "ERROR(%s): P <= Q\n", pcFName);
+    std::fprintf(stderr, "ERROR(%s): P <= Q\n", pcFName);
     exit(-1); }
 
   fTmp = fB * fQ + fC;
   if(fTmp < 0.0) {
-    vcl_fprintf(stderr, "ERROR(%s):\n",pcFName);
-    vcl_fprintf(stderr,
+    std::fprintf(stderr, "ERROR(%s):\n",pcFName);
+    std::fprintf(stderr,
      "\tBack end q too far w/r paramater a: b.q+c = %lf < 0 = %lf\n",
        fTmp, fA);
     exit(-1); }
@@ -205,15 +205,15 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
   p3dPts = NULL;
   if((p3dPts = (Pt3dCoord *) calloc(iMax, sizeof(Pt3dCoord))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): CALLOC failed on p3dPts[%d].\n",
+    std::fprintf(stderr, "ERROR(%s): CALLOC failed on p3dPts[%d].\n",
        pcFName, iMax);
     return(-2); }
   p3dRGB = NULL;
   if((p3dRGB = (Pt3dCoord *) calloc(iMax, sizeof(Pt3dCoord))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): CALLOC failed on p3dRGB[%d].\n",
+    std::fprintf(stderr, "ERROR(%s): CALLOC failed on p3dRGB[%d].\n",
        pcFName, iMax);
     return(-2); }
-  vcl_fprintf(stderr, "\tThere will be at most %d points generated...\n",
+  std::fprintf(stderr, "\tThere will be at most %d points generated...\n",
     iMax);
   
   fZmin = fYmin = fXmin =  100000.0;
@@ -231,7 +231,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
       for(i = 0; i < iX; i++) { /* Slices along X axis */
          fRadical = (fB * fX + fC) / fA;
-        fYright = (float) vcl_sqrt ((double) fRadical);
+        fYright = (float) std::sqrt ((double) fRadical);
        fYleft = - fYright;
         fRangeY = fYright - fYleft;
          fDeltaY = fRangeY / (float) iY;
@@ -290,7 +290,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
     } /* End of For(i) : Slices along X axis : i++ */
 
-     vul_printf (vcl_cout,
+     vul_printf (std::cout,
              "\t%d uniformly sampled points for parabolic gutter and roof.\n", k);
 
       /* ----- 2nd : front end ----- */
@@ -339,7 +339,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
           fY += fDeltaY;
        } /* End of For(j) : Slices along Y axis : j++ */
 
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
                 "\t%d uniformly sampled points added for front end,\n", l);
     } /* End of If(iFlagFront) */
     
@@ -385,13 +385,13 @@ int CreateParaGutter_main (char* pcFileNameOut)
            /* Next Y step */
           fY += fDeltaY;
        } /* End of For(j) : Slices along Y axis : j++ */
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
                 "\t%d uniformly sampled points added for Back end,\n",
                   (l-iTmp));
      } /* End of If(iFlagEnd) */
 
       iTot = k + l;
-     vcl_fprintf(stderr, "\tfor a total of %d samples.\n", iTot);
+     std::fprintf(stderr, "\tfor a total of %d samples.\n", iTot);
    } /* End of Uniform Sampling case */
    else { /* if(iFlagRand) : Random samplings */
 
@@ -399,7 +399,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
     ///usaSeed[1] = (unsigned short) iY;
     ///usaSeed[2] = (unsigned short) iMax;
     ///seed48(usaSeed);
-    vcl_srand ( (unsigned int) (vcl_time(NULL)) );
+    std::srand ( (unsigned int) (std::time(NULL)) );
 
 
     /* ----- 1st : Parabolic gutter with roof ----- */
@@ -475,7 +475,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
     } /* End of For(i) : Slices along X axis : i++ */
 
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
        "\t%d randomly sampled points for parabolic gutter and roof.\n", k);
 
     /* ----- 2nd : front end ----- */
@@ -525,7 +525,7 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
       } /* End of For(j) : Slices along Y axis : j++ */
 
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "\t%d uniformly sampled points added for front end,\n", l);
 
     } /* End of If(iFlagFront) */
@@ -574,21 +574,21 @@ int CreateParaGutter_main (char* pcFileNameOut)
 
       } /* End of For(j) : Slices along Y axis : j++ */
 
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "\t%d uniformly sampled points added for Back end,\n",
          (l-iTmp));
 
     } /* End of If(iFlagEnd) */
 
     iTot = k + l;
-    vcl_fprintf(stderr, "\tfor a total of %d samples.\n", iTot);
+    std::fprintf(stderr, "\tfor a total of %d samples.\n", iTot);
 
   } /* End of Random Sampling case */
 
   /* #endif */
 
   if(iTot > iMax) {
-    vcl_fprintf(stderr, "ERROR(%s): Overflow in samples > %d\n", pcFName, iMax);
+    std::fprintf(stderr, "ERROR(%s): Overflow in samples > %d\n", pcFName, iMax);
     exit(-2);
   }
 
@@ -611,8 +611,8 @@ int CreateParaGutter_main (char* pcFileNameOut)
     j++;
   }
   if(j != k) {
-    vcl_fprintf(stderr, "ERROR(%s):\n", pcFName);
-    vcl_fprintf(stderr, "\tPainted %d samples instead of total of %d\n", j, k);
+    std::fprintf(stderr, "ERROR(%s):\n", pcFName);
+    std::fprintf(stderr, "\tPainted %d samples instead of total of %d\n", j, k);
     exit(-2);
   }
   for(i = 0; i < l; i++) {
@@ -623,28 +623,28 @@ int CreateParaGutter_main (char* pcFileNameOut)
   }
 #endif
 
-  vcl_fprintf(stderr, "\tRange of coordinates values:\n");
-  vcl_fprintf(stderr, "\t\t%f < X < %f\n", fXmin, fXmax);
-  vcl_fprintf(stderr, "\t\t%f < Y < %f\n", fYmin, fYmax);
-  vcl_fprintf(stderr, "\t\t%f < Z < %f\n", fZmin, fZmax);
+  std::fprintf(stderr, "\tRange of coordinates values:\n");
+  std::fprintf(stderr, "\t\t%f < X < %f\n", fXmin, fXmax);
+  std::fprintf(stderr, "\t\t%f < Y < %f\n", fYmin, fYmax);
+  std::fprintf(stderr, "\t\t%f < Z < %f\n", fZmin, fZmax);
 
   /* ---- Generate g3d file ---- */
 
-  vcl_strcpy(cOutFile, pcFileNameOut);
+  std::strcpy(cOutFile, pcFileNameOut);
   if(iFlagRand)
-    vcl_strcat(cOutFile, "Rand.g3d");
+    std::strcat(cOutFile, "Rand.g3d");
   else
-    vcl_strcat(cOutFile, "Unif.g3d");
+    std::strcat(cOutFile, "Unif.g3d");
   pcOutFile = &cOutFile[0];
 
   fp1 = NULL;
   if((fp1 = fopen(pcOutFile, "w")) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open output file %s\n", pcFName,
+    std::fprintf(stderr, "ERROR(%s): Can't open output file %s\n", pcFName,
       pcOutFile);
     exit(-1); }
   
-  vcl_fprintf(fp1, "3\n");  /* ID (dimensions) */
-  vcl_fprintf(fp1, "%d\n", iTot); /* Number of points */
+  std::fprintf(fp1, "3\n");  /* ID (dimensions) */
+  std::fprintf(fp1, "%d\n", iTot); /* Number of points */
 
   pCol = p3dRGB-1;
   pPt  = p3dPts-1;
@@ -657,21 +657,21 @@ int CreateParaGutter_main (char* pcFileNameOut)
     fColR = pCol->fPosX;
     fColG = pCol->fPosY;
     fColB = pCol->fPosZ;
-    vcl_fprintf(fp1, "%f %f %f %.1f %.1f %.1f\n",
+    std::fprintf(fp1, "%f %f %f %.1f %.1f %.1f\n",
      fX, fY, fZ, fColR, fColG, fColB);
   }
 
-  vcl_fprintf(stderr, "\tScaling factor: s = %lf\n", fS);
-  vcl_fprintf(stderr, "\tScaled Range of coordinates values:\n");
-  vcl_fprintf(stderr, "\t\t%lf < X < %f\n", (fXmin*fS), (fXmax*fS));
-  vcl_fprintf(stderr, "\t\t%lf < Y < %f\n", (fYmin*fS), (fYmax*fS));
-  vcl_fprintf(stderr, "\t\t%lf < Z < %f\n", (fZmin*fS), (fZmax*fS));
+  std::fprintf(stderr, "\tScaling factor: s = %lf\n", fS);
+  std::fprintf(stderr, "\tScaled Range of coordinates values:\n");
+  std::fprintf(stderr, "\t\t%lf < X < %f\n", (fXmin*fS), (fXmax*fS));
+  std::fprintf(stderr, "\t\t%lf < Y < %f\n", (fYmin*fS), (fYmax*fS));
+  std::fprintf(stderr, "\t\t%lf < Z < %f\n", (fZmin*fS), (fZmax*fS));
 
   fclose(fp1);
   free(p3dPts); p3dPts = NULL;
   free(p3dRGB); p3dRGB = NULL;
 
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "MESG(%s): This is it!\n\tThe Parabolic gutter was saved in file %s\n",
     pcFName, pcOutFile);
 

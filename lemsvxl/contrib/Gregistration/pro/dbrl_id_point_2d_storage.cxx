@@ -8,14 +8,14 @@ dbrl_id_point_2d_storage::dbrl_id_point_2d_storage()
         
     }
         
-dbrl_id_point_2d_storage::dbrl_id_point_2d_storage(const vcl_vector<dbrl_id_point_2d_sptr> points)
+dbrl_id_point_2d_storage::dbrl_id_point_2d_storage(const std::vector<dbrl_id_point_2d_sptr> points)
     {
         idpoints_=points;
     }
 dbrl_id_point_2d_storage::~dbrl_id_point_2d_storage()
     {
     }
-void dbrl_id_point_2d_storage::set_id_points(const vcl_vector<dbrl_id_point_2d_sptr> points)
+void dbrl_id_point_2d_storage::set_id_points(const std::vector<dbrl_id_point_2d_sptr> points)
     {
         idpoints_=points;
     }
@@ -52,14 +52,14 @@ void dbrl_id_point_2d_storage::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbctrk_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbctrk_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
     }
 
-vcl_vector<dbrl_id_point_2d_sptr> dbrl_id_point_2d_storage::points()
+std::vector<dbrl_id_point_2d_sptr> dbrl_id_point_2d_storage::points()
     {
         return idpoints_;
     }

@@ -9,7 +9,7 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
+#include<map>
 #include<vnl/vnl_vector.h>
 
 #include<vsl/vsl_binary_io.h>
@@ -19,7 +19,7 @@ class dsm2_state_machine_base: public vbl_ref_count, public dsm2_subject_base
 public:
 	dsm2_state_machine_base():next_node_id(unsigned(0)){}
 
-	typedef vcl_map<unsigned, dsm2_node_base_sptr> graph_type;
+	typedef std::map<unsigned, dsm2_node_base_sptr> graph_type;
 
 	virtual ~dsm2_state_machine_base(){}
 
@@ -27,7 +27,7 @@ public:
 
 	virtual void b_read(vsl_b_istream& is ) = 0;
 
-	virtual vcl_map<unsigned, dsm2_node_base_sptr>::iterator add_node() = 0;
+	virtual std::map<unsigned, dsm2_node_base_sptr>::iterator add_node() = 0;
 
 	virtual bool remove_node( unsigned const& node_id ) = 0;
 

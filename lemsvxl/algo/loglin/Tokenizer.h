@@ -1,10 +1,10 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include <vcl_functional.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <functional>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 //
 //For the case the default is a space.
@@ -63,7 +63,7 @@ class StringTokenizer
   {
     public:
         //The predicate should evaluate to true when applied to a separator.
-        static void Tokenize(vcl_vector<string>& roResult, string const& rostr, Pred const& roPred=Pred())
+        static void Tokenize(std::vector<string>& roResult, string const& rostr, Pred const& roPred=Pred())
           {
             string::const_iterator it = rostr.begin();
             string::const_iterator itTokenEnd = rostr.begin();

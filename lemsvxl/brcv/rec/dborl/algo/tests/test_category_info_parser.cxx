@@ -2,8 +2,8 @@
 #include <dborl/algo/dborl_category_info_parser.h>
 #include <borld/borld_category_info.h>
 
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -16,7 +16,7 @@ static void test_category_info_parser(int argc, char* argv[])
  
   dborl_category_info_parser parser;
   parser.clear();
-  vcl_vector<borld_category_info_sptr> cats;
+  std::vector<borld_category_info_sptr> cats;
   TEST("parse() category info", parse("99-db-description.xml", parser, cats), true);
   TEST("parse() category info", cats.size(), 9);
   

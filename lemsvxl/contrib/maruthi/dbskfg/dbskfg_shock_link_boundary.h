@@ -16,7 +16,7 @@
 
 
 #include <vgl/vgl_point_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class dbskfg_shock_link_boundary
 {
@@ -35,13 +35,13 @@ dbskfg_shock_link_boundary():original_contour_id_(0),point_(0,0){}
     unsigned int original_contour_id_;
 
     // Boundary could be a contour
-    vcl_vector<vgl_point_2d<double> > contour_;
+    std::vector<vgl_point_2d<double> > contour_;
 
     // Boundary could be a point
     vgl_point_2d<double> point_;
 
     // Holds all the node ids that represent the points of the vsol
-    vcl_vector<unsigned int> contour_ids_;
+    std::vector<unsigned int> contour_ids_;
 
     bool operator<( const dbskfg_shock_link_boundary& rhs ) const
     {
@@ -81,12 +81,12 @@ dbskfg_shock_link_boundary():original_contour_id_(0),point_(0,0){}
     {
         if ( contour_.size() )
         {
-            vcl_cout<<"Contour start:  "<<contour_.front()<<" stop: "
-                    <<contour_.back()<<vcl_endl;
+            std::cout<<"Contour start:  "<<contour_.front()<<" stop: "
+                    <<contour_.back()<<std::endl;
         }
 
-        vcl_cout<<"Point: "<<point_<<vcl_endl;
-        vcl_cout<<vcl_endl;
+        std::cout<<"Point: "<<point_<<std::endl;
+        std::cout<<std::endl;
 
     }
 };

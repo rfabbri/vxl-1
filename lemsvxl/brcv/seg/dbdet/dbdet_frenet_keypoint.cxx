@@ -4,7 +4,7 @@
 //
 
 #include "dbdet_frenet_keypoint.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: Binary save self to stream.
 void
@@ -45,9 +45,9 @@ dbdet_frenet_keypoint::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_frenet_keypoint::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_frenet_keypoint::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -72,7 +72,7 @@ dbdet_frenet_keypoint::clone() const
 
 //: Print an ascii summary to the stream
 void
-dbdet_frenet_keypoint::print_summary(vcl_ostream &os) const
+dbdet_frenet_keypoint::print_summary(std::ostream &os) const
 {
   os << "dbdet_frenet_keypoint("<<x()<<", "<<y()<<", "<<
     tx_<<", " <<

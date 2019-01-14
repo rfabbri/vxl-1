@@ -9,7 +9,7 @@
 #include <bgld/algo/bgld_arc_algo.h>
 #include <bgld/algo/bgld_curve_smoothing.h>
 #include <mbl/mbl_stats_1d.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 //: post process to break contours at high curvature points
 void post_process_based_on_curvature(dbdet_curve_fragment_graph& curve_frag_graph, double k_thresh)
@@ -27,8 +27,8 @@ void post_process_based_on_curvature(dbdet_curve_fragment_graph& curve_frag_grap
     if (++cnt>orig_frag_number) //terminate after we have gone over the original list of fragments
       break;
 
-    vcl_vector<double> ks(chain->edgels.size());
-    vcl_vector<unsigned> break_pts;
+    std::vector<double> ks(chain->edgels.size());
+    std::vector<unsigned> break_pts;
 
     for (unsigned j=0; j<chain->edgels.size(); j++)
     {
@@ -44,7 +44,7 @@ void post_process_based_on_curvature(dbdet_curve_fragment_graph& curve_frag_grap
         //compute curvature
         ks[j] = 1/bgld_arc_algo::compute_arc_radius_from_three_points(chain->edgels[k1]->pt, chain->edgels[k1+1]->pt, chain->edgels[k1+2]->pt);
         
-        if (vcl_fabs(ks[j])>k_thresh) 
+        if (std::fabs(ks[j])>k_thresh) 
           break_pts.push_back(j); //needs to be broken here
       }
     }
@@ -110,10 +110,10 @@ void appearance_based_post_processing(dbdet_curve_fragment_graph& curve_frag_gra
     if (++cnt>orig_frag_number) //terminate after we have gone over the original list of fragments
       break;
 
-    vcl_deque<double> Lwin;
-    vcl_deque<double> Rwin;
+    std::deque<double> Lwin;
+    std::deque<double> Rwin;
 
-    vcl_vector<unsigned> break_pts;
+    std::vector<unsigned> break_pts;
 
     for (unsigned j=0; j<chain->edgels.size(); j++)
     {
@@ -126,10 +126,10 @@ void appearance_based_post_processing(dbdet_curve_fragment_graph& curve_frag_gra
       
       mbl_stats_1d Ldata, Rdata;
 
-      for (unsigned i=0; i< vcl_min((size_t)win_len, Lwin.size()); i++) Ldata.obs(Lwin[i]);
-      for (unsigned i=0; i< vcl_min((size_t)win_len, Rwin.size()); i++) Rdata.obs(Rwin[i]);
+      for (unsigned i=0; i< std::min((size_t)win_len, Lwin.size()); i++) Ldata.obs(Lwin[i]);
+      for (unsigned i=0; i< std::min((size_t)win_len, Rwin.size()); i++) Rdata.obs(Rwin[i]);
 
-      if (vcl_fabs(Ldata.mean()-Rdata.mean())< adap_thresh*(Ldata.sd()+Rdata.sd())) 
+      if (std::fabs(Ldata.mean()-Rdata.mean())< adap_thresh*(Ldata.sd()+Rdata.sd())) 
       {
         break_pts.push_back(j); //needs to be broken here
         Lwin.clear(); //reset buffer
@@ -210,7 +210,7 @@ double mean_contrast(dbdet_edgel_chain* chain)
       Rdata.obs(chain->edgels[k]->right_app->value());
     }
 
-    return vcl_fabs(Ldata.mean() - Rdata.mean());
+    return std::fabs(Ldata.mean() - Rdata.mean());
   }
   else if (dynamic_cast<dbdet_color*>(chain->edgels[0]->left_app))
   {
@@ -235,7 +235,7 @@ double mean_contrast(dbdet_edgel_chain* chain)
     double da = Ladata.mean()-Radata.mean();
     double db = Lbdata.mean()-Rbdata.mean();
 
-    return vcl_sqrt(dL*dL+da*da+db*db);
+    return std::sqrt(dL*dL+da*da+db*db);
   }
   else if (dynamic_cast<dbdet_gray_signature*>(chain->edgels[0]->left_app))
   {
@@ -293,7 +293,7 @@ double avg_d2f(dbdet_edgel_chain* chain)
 
   // 1) compute the average edge strength of an edgel chain
   for (unsigned j=0; j<chain->edgels.size(); j++)
-    data.obs(vcl_fabs(chain->edgels[j]->deriv));
+    data.obs(std::fabs(chain->edgels[j]->deriv));
 
   return data.mean();
 }
@@ -307,7 +307,7 @@ void compute_curvatures(dbdet_edgel_chain* chain, mbl_stats_1d &ks)
   }
 
   //create a polyline out of the edgel chain
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   pts.reserve(chain->edgels.size());
   for (unsigned j=0; j<chain->edgels.size(); j++)
     pts.push_back(chain->edgels[j]->pt);
@@ -324,7 +324,7 @@ void compute_curvatures(dbdet_edgel_chain* chain, mbl_stats_1d &ks)
     else                      k1 = j-1;
 
     //compute curvature
-    ks.obs(vcl_fabs(1/bgld_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2])));
+    ks.obs(std::fabs(1/bgld_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2])));
   }
 }
 
@@ -354,7 +354,7 @@ void prune_contours_by_length(dbdet_curve_fragment_graph& curve_frag_graph,
   //  if a prune results in a simple connectivity between the fragments,
   //  they need to be spliced
 
-  vcl_vector<dbdet_edgel_chain*> chains_to_del;
+  std::vector<dbdet_edgel_chain*> chains_to_del;
 
   dbdet_edgel_chain_list_iter f_it = curve_frag_graph.frags.begin();
   for (; f_it != curve_frag_graph.frags.end(); f_it++)
@@ -382,7 +382,7 @@ void prune_contours_by_strength(dbdet_curve_fragment_graph& curve_frag_graph,
   //  if a prune results in a simple connectivity between the fragments,
   //  they need to be spliced
 
-  vcl_vector<dbdet_edgel_chain*> chains_to_del;
+  std::vector<dbdet_edgel_chain*> chains_to_del;
 
   dbdet_edgel_chain_list_iter f_it = curve_frag_graph.frags.begin();
   for (; f_it != curve_frag_graph.frags.end(); f_it++)
@@ -423,7 +423,7 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
   //  if a prune results in a simple connectivity between the fragments,
   //  they need to be spliced
 
-  vcl_vector<dbdet_edgel_chain*> chains_to_del;
+  std::vector<dbdet_edgel_chain*> chains_to_del;
 
   dbdet_edgel_chain_list_iter f_it = curve_frag_graph.frags.begin();
   for (; f_it != curve_frag_graph.frags.end(); f_it++)
@@ -462,13 +462,13 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
     double Lstd = Ldata.sd(); double Rstd = Rdata.sd(); 
 
     // C) Apply mean contrast threshold
-    if (vcl_fabs(Lmean-Rmean)<contrast_thresh){
+    if (std::fabs(Lmean-Rmean)<contrast_thresh){
       chains_to_del.push_back(chain);
       continue;
     }
 
     // D) apply adaptive contrast threshold (saliency test)
-    if (vcl_fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)){
+    if (std::fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)){
       chains_to_del.push_back(chain);
       continue;
     }
@@ -481,14 +481,14 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
     double d2f_mean = Ldata.mean();
 
     // E) apply peakiness threshold
-    if (vcl_fabs(d2f_mean)<d2f_thresh){
+    if (std::fabs(d2f_mean)<d2f_thresh){
       chains_to_del.push_back(chain);
       continue;
     }
 
     //-------------------------------------------------------------------
     //create a polyline out of the edgel chain
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     pts.reserve(chain->edgels.size());
     for (unsigned j=0; j<chain->edgels.size(); j++)
       pts.push_back(chain->edgels[j]->pt);
@@ -496,7 +496,7 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
     // smooth this contour
     bgld_csm(pts, 1.0, 1);
 
-    vcl_vector<double> ks;
+    std::vector<double> ks;
     ks.resize(pts.size());
 
     //compute curvatures
@@ -514,7 +514,7 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
     // F) Apply curvature threshold
     Ldata.clear();
     for (unsigned j=0; j<ks.size(); j++)
-      Ldata.obs(vcl_fabs(ks[j]));
+      Ldata.obs(std::fabs(ks[j]));
 
     if (Ldata.mean()>k_thresh){
       chains_to_del.push_back(chain);

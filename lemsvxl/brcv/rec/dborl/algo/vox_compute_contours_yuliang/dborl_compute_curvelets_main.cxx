@@ -16,7 +16,7 @@
 #include "dborl_edge_det_link_params.h"
 #include "dborl_edge_det_link_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web 
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " << 
-            params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " << 
+            params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -65,12 +65,12 @@ int main(int argc, char *argv[]) {
         return 1;
 
     //load the input image
-    vcl_string input_img = params->input_object_dir_() + "/" 
+    std::string input_img = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_extension_();
 
     if (!vul_file::exists(input_img)) 
     {
-        vcl_cerr << "Cannot find image: " << input_img << vcl_endl;
+        std::cerr << "Cannot find image: " << input_img << std::endl;
         return 1;
     }
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
         vil_load_image_resource(input_img.c_str());
     if (!img_sptr) 
     {
-        vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
+        std::cerr << "Cannot load image: " << input_img << std::endl;
         return 1;
     }
 
@@ -93,10 +93,10 @@ int main(int argc, char *argv[]) {
     // Perform third order edge detection if we are not tracing contours
     
     // Create output storage for edge detection
-    vcl_vector<bpro1_storage_sptr> edge_det_results;
+    std::vector<bpro1_storage_sptr> edge_det_results;
     
     {
-    vcl_cout<<"************ Edge Detection   ************"<<vcl_endl;
+    std::cout<<"************ Edge Detection   ************"<<std::endl;
     /*
     if (img_sptr->nplanes() != 3)
     {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
 
     if (edge_det_results.size() != 1 )
     {
-        vcl_cerr<< "Process output does not contain an edge map"<<vcl_endl;
+        std::cerr<< "Process output does not contain an edge map"<<std::endl;
         return 1;
     
     }
@@ -173,10 +173,10 @@ int main(int argc, char *argv[]) {
     // Perform sel linking if we are not doing contour tracing
 
     // Set up storage for sel results
-    vcl_vector<bpro1_storage_sptr> sel_results;
+    std::vector<bpro1_storage_sptr> sel_results;
 
     {
-    vcl_cout<<"************ Edge Linking     ************"<<vcl_endl;
+    std::cout<<"************ Edge Linking     ************"<<std::endl;
     dbdet_sel_process sel_pro;
     set_process_parameters_of_bpro1(*params, 
                                     sel_pro, 
@@ -204,16 +204,16 @@ int main(int argc, char *argv[]) {
 
     if (sel_results.size() != 1) 
     {
-        vcl_cerr << "Process output does not contain a sel data structure"
-                 << vcl_endl;
+        std::cerr << "Process output does not contain a sel data structure"
+                 << std::endl;
         return 1;
     }
 
     //******************** Saving Section  *******************************
     // From this point forward, saving of edges, curvlets, contours
 
-    vcl_cout<<"************ Saving Curvelets ************"<<vcl_endl;
-    vcl_string output_cvlet_file;
+    std::cout<<"************ Saving Curvelets ************"<<std::endl;
+    std::string output_cvlet_file;
 
     if (params->save_to_object_folder_())
     { 
@@ -256,20 +256,20 @@ int main(int argc, char *argv[]) {
     if ( !write_cv_status )
     {
 
-        vcl_cerr << "Problems in saving .cvlet curvlet file: " 
-                 << output_cvlet_file << vcl_endl;
+        std::cerr << "Problems in saving .cvlet curvlet file: " 
+                 << output_cvlet_file << std::endl;
         return 1;
 
     }
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

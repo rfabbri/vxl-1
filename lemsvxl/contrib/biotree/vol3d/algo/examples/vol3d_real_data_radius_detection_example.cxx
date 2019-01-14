@@ -9,16 +9,16 @@
 #include <vol3d/algo/vol3d_radius_detection.h>
 #include <vil/vil_load.h>
 
-#include <vcl_cstddef.h>
-#include <vcl_cstring.h>
-#include <vcl_limits.h>
+#include <cstddef>
+#include <cstring>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui.h>
 #include <biov/biov_examiner_tableau.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vil3d/algo/vil3d_histogram.h>
 #include <vil3d/vil3d_save.h>
 #include <bsta/bsta_histogram.h>
@@ -66,7 +66,7 @@ SoVolumeRendering::init();
 
 int main(int argc, char * argv[])
     {
-vcl_string input = argv[1];
+std::string input = argv[1];
 unsigned int start = atoi(argv[2]);
 unsigned int end = atoi(argv[3]);
 
@@ -78,17 +78,17 @@ int my_argc = 1;
     vgui::init(my_argc,my_argv);
     delete []my_argv;
 
-vcl_vector<vcl_string>file_names;
+std::vector<std::string>file_names;
 int cut_point = input.find(".tif");
 
 // the images in the dataset are named in the format ...####.tif
   input.erase(cut_point-4,8);
 
-vcl_vector<vil_image_resource_sptr>img_res_vec;
+std::vector<vil_image_resource_sptr>img_res_vec;
 
   for (unsigned i = start;i<=end;i++)
       {
-     vcl_string push_in_str = input;
+     std::string push_in_str = input;
       char buffer[30];
 
       itoa (i,buffer,10);
@@ -126,10 +126,10 @@ vil3d_image_view<vxl_uint_16> img_3d = img_sptr->get_view();
 
  bgui3d_init();
 
-  vcl_vector<double>volume_dat;
+  std::vector<double>volume_dat;
 
-  double min_val = vcl_numeric_limits<float >::max();
-    double max_val = vcl_numeric_limits<float >::min();
+  double min_val = std::numeric_limits<float >::max();
+    double max_val = std::numeric_limits<float >::min();
     double avg;
 
 
@@ -167,13 +167,13 @@ max_val = img_3d(i,j,k,0);
 
   avg = (min_val + max_val)/2;
 
-  vcl_vector<double> count;
+  std::vector<double> count;
  vil3d_histogram(img_3d,count,min_val,max_val,max_val - min_val + 1);
 
  bsta_histogram<double> b_hist(min_val,max_val,count);
  bsta_otsu_threshold<double> b_thresh(b_hist);      
 unsigned int marcate = b_thresh.bin_threshold();
-double std = vcl_sqrt(b_hist.variance(0,marcate));
+double std = std::sqrt(b_hist.variance(0,marcate));
 
 
 
@@ -210,12 +210,12 @@ for(int k = 0; k < img_sptr->nk(); k ++)
         ref = rads[i][j][k];
           }
 
-        vcl_string output = "C:\\scale_selection\\gipl\\mercox_dataset.gipl";
+        std::string output = "C:\\scale_selection\\gipl\\mercox_dataset.gipl";
 
 vil3d_save(output_view,output.c_str());
 
-vcl_string txt_file_2 = "C:\\scale_selection\\radius_labeling_for_mercox_data.txt"; 
-          vcl_ofstream stream(txt_file_2.c_str());
+std::string txt_file_2 = "C:\\scale_selection\\radius_labeling_for_mercox_data.txt"; 
+          std::ofstream stream(txt_file_2.c_str());
 
   
       for(int k = 0; k<rads.get_row3_count(); k++)
@@ -227,9 +227,9 @@ vcl_string txt_file_2 = "C:\\scale_selection\\radius_labeling_for_mercox_data.tx
           
 stream << rads[i][j][k] << " " ;
           }
-      stream << vcl_endl;
+      stream << std::endl;
         }
-stream << "end of row " << k << vcl_endl;
+stream << "end of row " << k << std::endl;
     }
 stream.close();
 

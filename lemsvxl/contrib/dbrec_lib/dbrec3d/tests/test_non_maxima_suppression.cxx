@@ -36,9 +36,9 @@ void test_non_maxima_suppression()
       //if(cell->data().mean() > 0.6)
       {
         boct_loc_code<short> code =cell->get_code();
-        vcl_cout << " Code: " <<code<< vcl_endl;
-        vcl_cout << " At cell located within tree: " <<code.get_point(3)<< vcl_endl;
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " Data: " << cell->data() << vcl_endl;
+        std::cout << " Code: " <<code<< std::endl;
+        std::cout << " At cell located within tree: " <<code.get_point(3)<< std::endl;
+        std::cout << " At cell located at: " << iterator.global_origin() << " Data: " << cell->data() << std::endl;
 
       }
       ++iterator;
@@ -76,7 +76,7 @@ void test_non_maxima_suppression()
     while (!iterator.end()) {
       boct_tree_cell<short,bsta_num_obs<bsta_gauss_sf1> > *cell = *iterator;
       if(cell->data().mean() > 1e-7){
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " Data: " << cell->data() << vcl_endl;
+        std::cout << " At cell located at: " << iterator.global_origin() << " Data: " << cell->data() << std::endl;
       }
       ++iterator;
     }
@@ -86,7 +86,7 @@ void test_non_maxima_suppression()
   //convert response scene to parts scene
   boxm_scene<boct_tree<short, dbrec3d_part_instance > > *parts_scene = 
   new boxm_scene<boct_tree<short, dbrec3d_part_instance > >(scene_out->lvcs(), scene_out->origin(), scene_out->block_dim(), scene_out->world_dim(), scene_out->max_level(), scene_out->init_level());
-  vcl_string parts_scene_path("./");
+  std::string parts_scene_path("./");
   parts_scene->set_paths("./", "parts_scene");
   parts_scene->write_scene("/dbrec3d_parts_scene.xml");
   //convert the scene into a context
@@ -102,7 +102,7 @@ void test_non_maxima_suppression()
     while (!iterator.end()) {
       boct_tree_cell<short,dbrec3d_part_instance > *cell = *iterator;
       if(cell->data().posterior() > 1e-7){
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << vcl_endl;
+        std::cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << std::endl;
       }
       ++iterator;
     }
@@ -115,7 +115,7 @@ void test_non_maxima_suppression()
     context->local_non_maxima_suppression();
   
   //explore  parts scene 
-  vcl_ofstream os("./test.vrml");
+  std::ofstream os("./test.vrml");
   dbrec3d_vrml_visitor vrml_vis(os);
   vgl_box_3d<double> bb = parts_scene->get_world_bbox();
   vrml_vis.write_box(bb);
@@ -129,8 +129,8 @@ void test_non_maxima_suppression()
     while (!iterator.end()) {
       boct_tree_cell<short,dbrec3d_part_instance > *cell = *iterator;
       if(cell->data().type_id() >=0){
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << vcl_endl;
-        if(vcl_abs(cell->data().posterior()- 0.7)>1e-7) result = false;
+        std::cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << std::endl;
+        if(std::abs(cell->data().posterior()- 0.7)>1e-7) result = false;
         //vrml_vis.visit(&cell->data());
         num_parts++;
       }

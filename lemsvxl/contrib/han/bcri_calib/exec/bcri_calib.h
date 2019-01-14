@@ -7,8 +7,8 @@
 
 
 
-#include <vcl_string.h>
-#include <vcl_cstdlib.h> // for vcl_exit()
+#include <string>
+#include <cstdlib> // for std::exit()
 
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vgui/vgui_easy3D_tableau.h>
@@ -82,15 +82,15 @@
 
 
 
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_string.h>
-#include <vcl_ostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h> //vcl_sprintf//
+#include <cstdlib> // for std::exit()
+#include <string>
+#include <ostream>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+#include <cmath>
+#include <iostream>
+#include <cstdio> //std::sprintf//
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_dialog.h>
@@ -178,39 +178,39 @@ class bcri_calib : public vgui_wrapper_tableau
     vgui_composite_tableau_sptr tab_cps_;
     
     
-    //vcl_vector <vgui_image_tableau_sptr> img_2d_;
-    //vcl_vector <vgui_easy2D_tableau_sptr> easy_2d_;
+    //std::vector <vgui_image_tableau_sptr> img_2d_;
+    //std::vector <vgui_easy2D_tableau_sptr> easy_2d_;
    
-    vcl_vector<bgui_vtol2D_tableau_sptr> vtol_tabs_;
-    vcl_vector<bgui_picker_tableau_sptr> tabs_picker_;
+    std::vector<bgui_vtol2D_tableau_sptr> vtol_tabs_;
+    std::vector<bgui_picker_tableau_sptr> tabs_picker_;
     
     vgui_easy3D_tableau_sptr tab_3d_;
     //vgui_rubberband_tableau_sptr tab_rubber_;
     
     vil1_image img_;
     vgui_grid_tableau_sptr grid_;
-    //vcl_string data_file_name_;
+    //std::string data_file_name_;
     
     //: inital epipole
-    vcl_vector<vgl_homg_line_2d<double> > lines_;
+    std::vector<vgl_homg_line_2d<double> > lines_;
     vgl_point_2d<double> *e_;
-    vcl_string status_info_;
+    std::string status_info_;
    
     
     static bcri_calib *instance_;
     
     vgui_window* win_;
-    vcl_vector <VERTEX> S_;
-                vcl_vector <VERTEX> S_selected_;
+    std::vector <VERTEX> S_;
+                std::vector <VERTEX> S_selected_;
    
     vnl_vector_fixed <double,4> x_;
   vnl_vector_fixed <double,4> y_;
   vnl_vector_fixed <double,4> ones_;
   double x_post_,y_post_;
 
-        vcl_vector <double> xall_;
-        vcl_vector <double> yall_;
-        vcl_vector <double> oneall_;
+        std::vector <double> xall_;
+        std::vector <double> yall_;
+        std::vector <double> oneall_;
   vnl_double_3x4  P_;
 
 

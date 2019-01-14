@@ -41,7 +41,7 @@ bpro1_process* vidpro1_new_vsol2d_tablo_process:: clone() const
 }
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_new_vsol2d_tablo_process::name()
 {
   return "Drawing Tablo";
@@ -67,12 +67,12 @@ vidpro1_new_vsol2d_tablo_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_new_vsol2d_tablo_process::get_input_type()
 {
   // this process looks for an image and vsol2D storage class
   // at each input frame
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
  // to_return.push_back( "vtol" );
  // to_return.push_back( "vtol" );
   return to_return;
@@ -80,11 +80,11 @@ vidpro1_new_vsol2d_tablo_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_new_vsol2d_tablo_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -96,8 +96,8 @@ vidpro1_new_vsol2d_tablo_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 0 ){
-    vcl_cout << "In vidpro1_new_vsol2d_tablo_process::execute() - not exactly"
-             << " two input frames" << vcl_endl;
+    std::cout << "In vidpro1_new_vsol2d_tablo_process::execute() - not exactly"
+             << " two input frames" << std::endl;
     return false;
   }
   clear_output();
@@ -115,7 +115,7 @@ vidpro1_new_vsol2d_tablo_process::execute()
   
    // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol2D = vidpro1_vsol2D_storage_new();
-  //vcl_vector<vsol_spatial_object_2d_sptr> point=NULL;
+  //std::vector<vsol_spatial_object_2d_sptr> point=NULL;
   //output_vsol2D->add_vsol_sptr(point);
   output_data_[0].push_back(output_vsol2D);
   

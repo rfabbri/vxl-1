@@ -74,10 +74,10 @@ bool vox_match_shock_graphs_one_to_many::initialize()
 
     if ( !ind_ )
     {
-        vcl_cerr<<"Paring index file failed!!"<<vcl_endl;
+        std::cerr<<"Paring index file failed!!"<<std::endl;
         status = false;
     }
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
     // Determine where in the input shock is coming from
     // either input object dir, or the associated file path
@@ -85,7 +85,7 @@ bool vox_match_shock_graphs_one_to_many::initialize()
     if ( vul_file::exists(params_->query_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params_->query_assoc_dir_()+"/*");
@@ -132,8 +132,8 @@ bool vox_match_shock_graphs_one_to_many::initialize()
     status = vul_file::exists(query_shock_);
     if (! status ) 
     {
-        vcl_cerr << "Cannot find shock (.esf) file: " << 
-            query_shock_ << vcl_endl;
+        std::cerr << "Cannot find shock (.esf) file: " << 
+            query_shock_ << std::endl;
     }
 
     return status;
@@ -149,9 +149,9 @@ bool vox_match_shock_graphs_one_to_many::perform_matching()
     unsigned int number_of_shapes = root->paths().size();
 
     // Indicate the matching state
-    vcl_cout<<"Matching "<< vul_file::strip_directory(query_shock_) <<" to "<< 
-        number_of_shapes << " shapes. "<<vcl_endl;
-    vcl_cout<<vcl_endl;
+    std::cout<<"Matching "<< vul_file::strip_directory(query_shock_) <<" to "<< 
+        number_of_shapes << " shapes. "<<std::endl;
+    std::cout<<std::endl;
 
     // Resize costs to the number of shapes
     final_costs_.resize(number_of_shapes);
@@ -177,8 +177,8 @@ bool vox_match_shock_graphs_one_to_many::perform_matching()
     // Create storage for output of one to many matching 
     bool matchsg_status(false);
     dbskr_shock_match_storage_sptr output_match;
-    vcl_vector<bpro1_storage_sptr> shock_matching_results;
-    vcl_string model_shock;
+    std::vector<bpro1_storage_sptr> shock_matching_results;
+    std::string model_shock;
 
     // Determine type of normalization
     bool write_match_norm = params_->write_matching_norm_();
@@ -192,16 +192,16 @@ bool vox_match_shock_graphs_one_to_many::perform_matching()
 
         if (!vul_file::exists(model_shock)) 
         {
-            vcl_cerr << "Cannot find shock (.esf) files: " << 
-                model_shock << vcl_endl;
+            std::cerr << "Cannot find shock (.esf) files: " << 
+                model_shock << std::endl;
             return false;
         }
 
         // Indicate what we are matching
-        vcl_cout<<"************ "
+        std::cout<<"************ "
                 <<"Matching "<< vul_file::strip_directory(query_shock_)
                 <<" to "<< vul_file::strip_directory(model_shock) 
-                <<" ************"<<vcl_endl;
+                <<" ************"<<std::endl;
        
 
         // Set input shock graphs to compare
@@ -227,7 +227,7 @@ bool vox_match_shock_graphs_one_to_many::perform_matching()
 
         if ( shock_matching_results.size() != 1 )
         {
-            vcl_cerr << "Shock Graph matching failed! "<<vcl_endl;
+            std::cerr << "Shock Graph matching failed! "<<std::endl;
             return false;
         }
 
@@ -250,7 +250,7 @@ bool vox_match_shock_graphs_one_to_many::perform_matching()
         params_->percent_completed = ((float)(i+1)/number_of_shapes)*100.0f;
         params_->print_status_xml();
 
-        vcl_cout<<vcl_endl;
+        std::cout<<std::endl;
     }
 
     return true;
@@ -267,19 +267,19 @@ bool vox_match_shock_graphs_one_to_many::write_out()
     unsigned int i(0);
 
     // Open up file
-    vcl_ofstream tf(output_file_.c_str());
+    std::ofstream tf(output_file_.c_str());
 
     if (!tf) {
-        vcl_cerr << "Unable to open mshgm file " << 
-            output_file_ << " for write " << vcl_endl;
+        std::cerr << "Unable to open mshgm file " << 
+            output_file_ << " for write " << std::endl;
         return false;
     }
     else
     {
         for( ; i<number_of_shapes; i++)
         {
-            tf << root->names()[i] << vcl_endl;
-            tf << final_costs_[i] << vcl_endl;
+            tf << root->names()[i] << std::endl;
+            tf << final_costs_[i] << std::endl;
         }
         tf.close();
         

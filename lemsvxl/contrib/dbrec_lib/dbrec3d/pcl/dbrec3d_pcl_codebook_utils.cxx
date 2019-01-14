@@ -8,22 +8,22 @@
 
 #include <pcl/filters/random_sample.h>
 
-#include <vcl_ctime.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <iostream>
 
 #include <vil/algo/vil_colour_space.h>
 
 
 //: Initialize k-means according to the algorithm in Bradley98
-vcl_vector<vnl_vector_fixed<double,33> > 
+std::vector<vnl_vector_fixed<double,33> > 
 dbrec3d_pcl_codebook_utils::init_codebook(unsigned K, unsigned long nsamples, unsigned J, unsigned max_it,
                                          pcl::PointCloud<pcl::FPFHSignature33>::Ptr cloud)
 { 
   
-  vcl_vector<vnl_vector_fixed<double,33> > rnd_means;
-  vcl_vector<vnl_vector_fixed<double,33> > CM;
-  vcl_vector<vcl_vector<vnl_vector_fixed<double,33> > > FM(J);
-  vcl_vector<vcl_vector<vnl_vector_fixed<double,33> > > initial_means(J);
+  std::vector<vnl_vector_fixed<double,33> > rnd_means;
+  std::vector<vnl_vector_fixed<double,33> > CM;
+  std::vector<std::vector<vnl_vector_fixed<double,33> > > FM(J);
+  std::vector<std::vector<vnl_vector_fixed<double,33> > > initial_means(J);
   
   
   //create the pcl random sample filter
@@ -41,11 +41,11 @@ dbrec3d_pcl_codebook_utils::init_codebook(unsigned K, unsigned long nsamples, un
     
     initial_means[j] = rnd_means;
     
-    vcl_vector<vnl_vector_fixed<double,33> > subsamples;
+    std::vector<vnl_vector_fixed<double,33> > subsamples;
     
     //sample a random subsample from the cloud
     random_filter.setSample(nsamples);
-    random_filter.setSeed(vcl_time(NULL));
+    random_filter.setSeed(std::time(NULL));
     random_filter.filter(*temp_cloud);
     
     //makes a deep copy of the cloud into a vector of vnl vectors
@@ -53,26 +53,26 @@ dbrec3d_pcl_codebook_utils::init_codebook(unsigned K, unsigned long nsamples, un
     temp_cloud->clear();
     
     //perform k-means for subsumples
-    vcl_vector<vcl_vector<unsigned> > clusters;
-    vcl_cout << "Size subsamples: " << subsamples.size() << "\n";
+    std::vector<std::vector<unsigned> > clusters;
+    std::cout << "Size subsamples: " << subsamples.size() << "\n";
        
     unsigned n_iterations = dbcll_fast_k_means<33>(subsamples, clusters, initial_means[j], max_it);
-    vcl_cout << "Number of means: " << initial_means[j].size() << "\n";
+    std::cout << "Number of means: " << initial_means[j].size() << "\n";
     subsamples.clear();
-    vcl_cout <<" Number of iterations for fast-k means is: " << n_iterations << vcl_endl;  
+    std::cout <<" Number of iterations for fast-k means is: " << n_iterations << std::endl;  
     CM.insert(CM.end(), initial_means[j].begin(), initial_means[j].end()); 
     FM[j] = initial_means[j];
   }
   
   int min_j = -1;
-  double min_sse = vcl_numeric_limits<double>::infinity();
+  double min_sse = std::numeric_limits<double>::infinity();
   
   //choose the initial set of means that minimizes sum of square differences between points and means
   for (unsigned j=0; j<J; j++) {
-    vcl_vector<vcl_vector<unsigned> > clusters;
+    std::vector<std::vector<unsigned> > clusters;
     unsigned n_iterations = dbcll_fast_k_means(CM, clusters, FM[j], max_it);
-    vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;
-    vcl_vector<dbcll_euclidean_cluster_light<33> > all_clusters;
+    std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;
+    std::vector<dbcll_euclidean_cluster_light<33> > all_clusters;
     dbcll_init_euclidean_clusters(CM, clusters, FM[j], all_clusters);
     double total_sse = 0.0;
     for(unsigned ci = 0; ci<all_clusters.size(); ci++){
@@ -93,23 +93,23 @@ dbrec3d_pcl_codebook_utils::init_codebook(unsigned K, unsigned long nsamples, un
 void 
 dbrec3d_pcl_codebook_utils::learn_codebook ( unsigned K, float init_fraction,unsigned J, unsigned max_it,
                                             pcl::PointCloud<pcl::FPFHSignature33>::Ptr cloud_in,
-                                            vcl_vector<vnl_vector_fixed<double,33> > &means,
-                                            vcl_vector<dbcll_euclidean_cluster_light<33> > &all_clusters)
+                                            std::vector<vnl_vector_fixed<double,33> > &means,
+                                            std::vector<dbcll_euclidean_cluster_light<33> > &all_clusters)
 {
   unsigned long nsamples = (unsigned long)((float)cloud_in->points.size() * init_fraction);
 
   means = init_codebook(K, nsamples, J, max_it, cloud_in);
   //makes a deep copy of the cloud into a vector of vnl vectors
   
-  vcl_vector<vnl_vector_fixed<double,33> > features;
+  std::vector<vnl_vector_fixed<double,33> > features;
 
   //Fix this, performs a deep copy, it should just operate on the cloud data directly
   dbrec3d_pcd_to_vnl_vector(cloud_in, features);  
   
   //Perform fast-kmeans on all samples
-  vcl_vector<vcl_vector<unsigned> > clusters;
+  std::vector<std::vector<unsigned> > clusters;
   unsigned n_iterations = dbcll_fast_k_means(features, clusters, means, max_it);
-  vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;  
+  std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;  
 
   dbcll_init_euclidean_clusters(features, clusters, means, all_clusters);
     
@@ -120,7 +120,7 @@ dbrec3d_pcl_codebook_utils::learn_codebook ( unsigned K, float init_fraction,uns
 void 
 dbrec3d_pcl_codebook_utils::assign_features_to_cluster(pcl::PointCloud<pcl::FPFHSignature33>::Ptr fpfh_cloud,
                                                       pcl::PointCloud<pcl::PointNormal>::Ptr point_cloud,
-                                                      vcl_vector< vnl_vector_fixed<double, 33> > means,
+                                                      std::vector< vnl_vector_fixed<double, 33> > means,
                                                       pcl::PointCloud<dbrec3d_pcl_point_types::PointClassId>::Ptr id_cloud)
 {
 
@@ -178,13 +178,13 @@ void dbrec3d_pcl_codebook_utils::convert_id_to_rgb(pcl::PointCloud<dbrec3d_pcl_p
     rgb_cloud->push_back(point_rgb);
   }
   
-  vcl_cout<< vcl_endl;
+  std::cout<< std::endl;
   
   for (unsigned id =0 ; id < nmeans; id++) {
     float r, g, b;
     vil_colour_space_HSV_to_RGB<float>(((float)(id)) * hue_interval ,1.0f,255.0f,&r, &g, &b);
      uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
-    vcl_cout << "Id :    " << id << " r: " << r << " g: " << g << " b: " << b << "rgb: " << rgb << "float: " << *reinterpret_cast<float*>(&rgb) << vcl_endl;
+    std::cout << "Id :    " << id << " r: " << r << " g: " << g << " b: " << b << "rgb: " << rgb << "float: " << *reinterpret_cast<float*>(&rgb) << std::endl;
 
   }
 

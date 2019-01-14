@@ -8,7 +8,7 @@
 #include <vgl/vgl_area.h>
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <dbskfg/dbskfg_contour_link.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 // ----------------------------------------------------------------------------
 //: Constructor
@@ -51,8 +51,8 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id)
         // This was a deleted node, it could have broken apart or 
         // have been merged pick the largest
         // Find the correspoinding id in the rag graph
-        vcl_map<unsigned int,vcl_string> regions=region_tree_[rag_id];
-        vcl_map<unsigned int,vcl_string>::iterator nit;
+        std::map<unsigned int,std::string> regions=region_tree_[rag_id];
+        std::map<unsigned int,std::string>::iterator nit;
 
         nit = regions.begin();
         while(region_tree_.count((*nit).first))
@@ -79,7 +79,7 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id)
 }
 
 
-dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(vcl_set<vcl_string>& 
+dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(std::set<std::string>& 
                                                 wavefront)
 {
 
@@ -91,15 +91,15 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(vcl_set<vcl_string>&
          vit != (*this).vertices_end(); ++vit)
     {
        
-        vcl_set<vcl_string> regions_to_compare;
+        std::set<std::string> regions_to_compare;
         (*vit)->wavefront_string(regions_to_compare);
 
-        vcl_vector<vcl_string> intersection(100);
-        vcl_vector<vcl_string>::iterator start_iterator;
+        std::vector<std::string> intersection(100);
+        std::vector<std::string>::iterator start_iterator;
         start_iterator=intersection.begin();
-        vcl_vector<vcl_string>::iterator out_iterator;
+        std::vector<std::string>::iterator out_iterator;
         
-        out_iterator=vcl_set_intersection(wavefront.begin(),
+        out_iterator=std::set_intersection(wavefront.begin(),
                                           wavefront.end(),
                                           regions_to_compare.begin(),
                                           regions_to_compare.end(),
@@ -119,7 +119,7 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(vcl_set<vcl_string>&
 
 
 dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id,
-                                                vcl_set<unsigned int>& 
+                                                std::set<unsigned int>& 
                                                 rag_con_ids)
 {
     
@@ -143,8 +143,8 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id,
         // This was a deleted node, it could have broken apart or 
         // have been merged pick the largest
         // Find the correspoinding id in the rag graph
-        vcl_map<unsigned int,vcl_string> regions=region_tree_[rag_id];
-        vcl_map<unsigned int,vcl_string>::iterator nit;
+        std::map<unsigned int,std::string> regions=region_tree_[rag_id];
+        std::map<unsigned int,std::string>::iterator nit;
 
         nit = regions.begin();
         while(region_tree_.count((*nit).first))
@@ -172,10 +172,10 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id,
                  (*this).vertices_begin(); 
              vit != (*this).vertices_end(); ++vit)
         {
-            vcl_set<unsigned int> test_set;
+            std::set<unsigned int> test_set;
             (*vit)->rag_contour_ids(test_set);
 
-            if ( vcl_includes(test_set.begin(),
+            if ( std::includes(test_set.begin(),
                               test_set.end(),
                               rag_con_ids.begin(),
                               rag_con_ids.end()))
@@ -191,13 +191,13 @@ dbskfg_rag_node_sptr dbskfg_rag_graph::rag_node(unsigned int rag_id,
 }
 
 void dbskfg_rag_graph::
-rag_node(vcl_set<unsigned int> rag_con_ids,
+rag_node(std::set<unsigned int> rag_con_ids,
          dbskfg_transform_descriptor_sptr transform,
-         vcl_vector<dbskfg_rag_node_sptr>& rag_nodes)
+         std::vector<dbskfg_rag_node_sptr>& rag_nodes)
 {
     
     // See if this region is deleted
-    vcl_vector<dbskfg_composite_node_sptr>::iterator nit;
+    std::vector<dbskfg_composite_node_sptr>::iterator nit;
 
     for ( nit = transform->contours_to_remove_.begin(); 
           nit != transform->contours_to_remove_.end() ; 
@@ -208,7 +208,7 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
      
         if ( node->get_composite_degree() < 3 )
         {
-            vcl_set<unsigned int>::iterator fit;
+            std::set<unsigned int>::iterator fit;
             fit = rag_con_ids.find(node->contour_id());
         
             if ( fit != rag_con_ids.end() )
@@ -221,13 +221,13 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
     }
 
 
-    vcl_vector<unsigned int> intersection(100,0);
+    std::vector<unsigned int> intersection(100,0);
     int offset=0;
 
     // Now see if we can find a combination out of 
     if ( rag_con_ids.size() >= 2 )
     {
-        vcl_set<unsigned int>::iterator it;
+        std::set<unsigned int>::iterator it;
         for ( it = rag_con_ids.begin() ; it != rag_con_ids.end() ;
               ++it)
         {
@@ -236,9 +236,9 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
                 continue;
             }
 
-            vcl_set<unsigned int> regions_of_contour =
+            std::set<unsigned int> regions_of_contour =
                 contour_to_region_[(*it)];
-            vcl_set<unsigned int>::iterator hit;
+            std::set<unsigned int>::iterator hit;
             hit=it;
             hit++;
 
@@ -249,14 +249,14 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
                     continue;
                 }
 
-                vcl_set<unsigned int> regions_to_compare =
+                std::set<unsigned int> regions_to_compare =
                     contour_to_region_[(*hit)];
 
-                vcl_vector<unsigned int>::iterator start_iterator;
+                std::vector<unsigned int>::iterator start_iterator;
                 start_iterator=intersection.begin()+offset;
-                vcl_vector<unsigned int>::iterator out_iterator;
+                std::vector<unsigned int>::iterator out_iterator;
 
-                out_iterator=vcl_set_intersection(regions_of_contour.begin(),
+                out_iterator=std::set_intersection(regions_of_contour.begin(),
                                                   regions_of_contour.end(),
                                                   regions_to_compare.begin(),
                                                   regions_to_compare.end(),
@@ -273,7 +273,7 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
     {
 
 
-        vcl_set<unsigned int>::iterator it;
+        std::set<unsigned int>::iterator it;
         for ( it = rag_con_ids.begin() ; it != rag_con_ids.end() ;
               ++it)
         {
@@ -283,9 +283,9 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
                 continue;
             }
 
-            vcl_set<unsigned int> regions_of_contour =
+            std::set<unsigned int> regions_of_contour =
                 contour_to_region_[(*it)];
-            vcl_vector<dbskfg_composite_link_sptr>::iterator hit;
+            std::vector<dbskfg_composite_link_sptr>::iterator hit;
           
             for ( hit=transform->contours_affected_.begin(); hit != 
                       transform->contours_affected_.end(); ++hit)
@@ -308,14 +308,14 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
                     continue;
                 }
 
-                vcl_set<unsigned int> regions_to_compare =
+                std::set<unsigned int> regions_to_compare =
                     contour_to_region_[cid];
   
-                vcl_vector<unsigned int>::iterator start_iterator;
+                std::vector<unsigned int>::iterator start_iterator;
                 start_iterator=intersection.begin()+offset;
-                vcl_vector<unsigned int>::iterator out_iterator;
+                std::vector<unsigned int>::iterator out_iterator;
 
-                out_iterator=vcl_set_intersection(regions_of_contour.begin(),
+                out_iterator=std::set_intersection(regions_of_contour.begin(),
                                                   regions_of_contour.end(),
                                                   regions_to_compare.begin(),
                                                   regions_to_compare.end(),
@@ -333,7 +333,7 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
 
     
     // Remove duplicates
-    vcl_set<unsigned int> unique_frags;
+    std::set<unsigned int> unique_frags;
     for ( unsigned int i=0; i < intersection.size() ; ++i)
     {
         if ( intersection[i]>0)
@@ -342,7 +342,7 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
         }
     }
 
-    vcl_set<unsigned int>::iterator rit;
+    std::set<unsigned int>::iterator rit;
     for ( rit = unique_frags.begin() ; rit != unique_frags.end(); ++rit)
     {
         for (dbskfg_rag_graph::vertex_iterator vit = 
@@ -364,7 +364,7 @@ rag_node(vcl_set<unsigned int> rag_con_ids,
 
 dbskfg_rag_node_sptr 
 dbskfg_rag_graph::find_region(
-    const vcl_map<unsigned int, vgl_point_2d<double> >& wavefront)
+    const std::map<unsigned int, vgl_point_2d<double> >& wavefront)
 {
     // Test if shock ray lies in vertex
     for (dbskfg_rag_graph::vertex_iterator vit = 
@@ -415,13 +415,13 @@ void dbskfg_rag_graph::create_copy(const dbskfg_composite_graph_sptr& cgraph,
              that.vertices_begin(); 
          vit != that.vertices_end(); ++vit)
     {
-        vcl_map<unsigned int,dbskfg_shock_link*> that_shock_links =
+        std::map<unsigned int,dbskfg_shock_link*> that_shock_links =
             (*vit)->get_shock_links();
 
         dbskfg_rag_node_sptr this_rag_node = new dbskfg_rag_node(
             (*vit)->id());
         
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator that_it;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator that_it;
         for ( that_it = that_shock_links.begin(); 
               that_it != that_shock_links.end(); ++that_it)
         {

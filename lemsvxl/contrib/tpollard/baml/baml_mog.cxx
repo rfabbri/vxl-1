@@ -3,7 +3,7 @@
 
 #include "baml_mog.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 //int baml_mog::counter = 0;
 
@@ -226,7 +226,7 @@ baml_mog::expected_color(
 //-------------------------------------------------------
 void 
 baml_mog::draw_x3d(
-  vcl_ofstream& x3d_stream )
+  std::ofstream& x3d_stream )
 {
 
 };

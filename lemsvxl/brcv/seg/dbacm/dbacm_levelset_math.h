@@ -47,32 +47,32 @@ inline void dbacm_levelset_math_compute_curvature(vil_image_view<T >& curvature,
 
   curvature.set_size(ni, nj, np);
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_k=curvature.istep(), 
     jstep_k=curvature.jstep(),
     pstep_k=curvature.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxc=dxc.istep(), 
     jstep_dxc=dxc.jstep(),
     pstep_dxc=dxc.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dyc=dyc.istep(), 
     jstep_dyc=dyc.jstep(),
     pstep_dyc=dyc.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxx=dxx.istep(), 
     jstep_dxx=dxx.jstep(),
     pstep_dxx=dxx.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dyy=dyy.istep(), 
     jstep_dyy=dyy.jstep(),
     pstep_dyy=dyy.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxy=dxy.istep(), 
     jstep_dxy=dxy.jstep(),
     pstep_dxy=dxy.planestep();
@@ -131,7 +131,7 @@ inline void dbacm_levelset_math_compute_curvature(vil_image_view<T >& curvature,
         xy = *pixel_dxy;
         
         numerator = xx*yc*yc - 2*xc*yc*xy + yy*xc*xc;
-        gradient = vcl_sqrt(xc*xc + yc*yc);
+        gradient = std::sqrt(xc*xc + yc*yc);
           
         if(gradient > MIN_GRADIENT)
         {
@@ -178,28 +178,28 @@ inline void dbacm_levelset_math_compute_hj_flux(vil_image_view<T >& hj_flux,
   
   hj_flux.set_size(ni, nj, np);
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_hj=hj_flux.istep(), 
     jstep_hj=hj_flux.jstep(),
     pstep_hj=hj_flux.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxp=dxp.istep(), 
     jstep_dxp=dxp.jstep(),
     pstep_dxp=dxp.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxm=dxm.istep(), 
     jstep_dxm=dxm.jstep(),
     pstep_dxm=dxm.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dyp=dyp.istep(), 
     jstep_dyp=dyp.jstep(),
     pstep_dyp=dyp.planestep();
 
   
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dym=dym.istep(), 
     jstep_dym=dym.jstep(),
     pstep_dym=dym.planestep();
@@ -248,7 +248,7 @@ inline void dbacm_levelset_math_compute_hj_flux(vil_image_view<T >& hj_flux,
         xm = (direction* (*pixel_dxm)) < 0 ? 0 : (*pixel_dxm);
         yp = (direction* (*pixel_dyp)) > 0 ? 0 : (*pixel_dyp);
         ym = (direction* (*pixel_dym)) < 0 ? 0 : (*pixel_dym);
-        *pixel_hj = vcl_sqrt(xp*xp + xm*xm + yp*yp + ym*ym);
+        *pixel_hj = std::sqrt(xp*xp + xm*xm + yp*yp + ym*ym);
       }
     }
   }

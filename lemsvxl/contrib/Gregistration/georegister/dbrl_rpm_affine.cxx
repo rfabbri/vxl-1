@@ -23,22 +23,22 @@ dbrl_rpm_affine_params::dbrl_rpm_affine_params(double initlambda,double Mconvg,d
 
 
 dbrl_rpm_affine::dbrl_rpm_affine(dbrl_rpm_affine_params & params,
-                                 vcl_vector<dbrl_feature_sptr>  f1,
-                                 vcl_vector<dbrl_feature_sptr>  f2)
+                                 std::vector<dbrl_feature_sptr>  f1,
+                                 std::vector<dbrl_feature_sptr>  f2)
     {
     params_=params;
     f1_=f1;
     f2_=f2;
 
     }
-dbrl_match_set_sptr dbrl_rpm_affine::rpm(vcl_string name)
+dbrl_match_set_sptr dbrl_rpm_affine::rpm(std::string name)
     {
 
     dbrl_estimator_point_affine * affine_est= new dbrl_estimator_point_affine();
     dbrl_transformation_sptr tform;
 
-    vcl_vector<dbrl_feature_sptr> f1x(f1_);
-    vcl_vector<dbrl_feature_sptr> f2x(f2_);
+    std::vector<dbrl_feature_sptr> f1x(f1_);
+    std::vector<dbrl_feature_sptr> f2x(f2_);
     
     //: initialize annealing parameters
     double T=params_.initialT();
@@ -62,10 +62,10 @@ dbrl_match_set_sptr dbrl_rpm_affine::rpm(vcl_string name)
 
     dbrl_affine_transformation * affinetform=dynamic_cast<dbrl_affine_transformation *> (tform.ptr());
 
-    //vcl_cout<<"\n Final xform \n";
-    //affinetform->print_summary(vcl_cout);
+    //std::cout<<"\n Final xform \n";
+    //affinetform->print_summary(std::cout);
 
-    vcl_vector<dbrl_feature_sptr> f2xtemp(f2_);
+    std::vector<dbrl_feature_sptr> f2xtemp(f2_);
     affinetform->set_from_features(f2xtemp);
     affinetform->transform();
     f2xtemp.clear();
@@ -83,9 +83,9 @@ dbrl_match_set_sptr dbrl_rpm_affine::rpm(vcl_string name)
 bool dbrl_rpm_affine::rpm_at(double T,dbrl_correspondence & M,
                              dbrl_estimator_point_affine * affine_est,
                              dbrl_transformation_sptr &tform,
-                             vcl_vector<dbrl_feature_sptr> &f1x,
-                             vcl_vector<dbrl_feature_sptr> &f2x,
-                             double l,vcl_string name)
+                             std::vector<dbrl_feature_sptr> &f1x,
+                             std::vector<dbrl_feature_sptr> &f2x,
+                             double l,std::string name)
     {
 
     vul_timer t;
@@ -115,7 +115,7 @@ bool dbrl_rpm_affine::rpm_at(double T,dbrl_correspondence & M,
                 vnl_matrix<double> m_tmp=compute_correspondence_weights(T,f1_,f2x);
                 M.updateM(m_tmp);
                 vnl_matrix<double> m_tmp1=compute_neighborhood_weights(T,f1_,f2x,M.M());
-                //vcl_cout<<"\n Input Matrix \n"<<m_tmp;
+                //std::cout<<"\n Input Matrix \n"<<m_tmp;
                 M.updateM(m_tmp1,params_.annealrate());
             }
             else if(name=="NeighborProjected")
@@ -123,19 +123,19 @@ bool dbrl_rpm_affine::rpm_at(double T,dbrl_correspondence & M,
                 vnl_matrix<double> m_tmp=compute_correspondence_point_tangent_weights(T,f1_,f2x);
                 M.updateM(m_tmp);
                 vnl_matrix<double> m_tmp1=compute_neighborhood_weights(T,f1_,f2x,M.M());
-                //vcl_cout<<"\n Input Matrix \n"<<m_tmp;
+                //std::cout<<"\n Input Matrix \n"<<m_tmp;
                 M.updateM(m_tmp1,params_.annealrate());
             }
-            //vcl_cout<<"\n Correspondence Matrix \n";
-            //M.print_summary(vcl_cout);
+            //std::cout<<"\n Correspondence Matrix \n";
+            //M.print_summary(std::cout);
             
             
             //: estimate the affine parameters
             affine_est->set_lambda(l);  
             tform=affine_est->estimate(f1_,f2x,M);
-            //vcl_cout<<M.M();
-            //vcl_cout<<"\n Affine transform \n";
-            //tform->print_transformation(vcl_cout);
+            //std::cout<<M.M();
+            //std::cout<<"\n Affine transform \n";
+            //tform->print_transformation(std::cout);
             dbrl_affine_transformation *affinetform=dynamic_cast<dbrl_affine_transformation *> (tform.ptr());
             affinetform->set_from_features(f2x);
             affinetform->transform();
@@ -148,8 +148,8 @@ bool dbrl_rpm_affine::rpm_at(double T,dbrl_correspondence & M,
 
     return true;
     }
-double dbrl_rpm_affine::distance(vcl_vector<dbrl_feature_sptr> f1,
-                vcl_vector<dbrl_feature_sptr> f2, dbrl_correspondence & M)
+double dbrl_rpm_affine::distance(std::vector<dbrl_feature_sptr> f1,
+                std::vector<dbrl_feature_sptr> f2, dbrl_correspondence & M)
 {
     double dist=0.0;
     for(unsigned i=0;i<f1.size();i++)

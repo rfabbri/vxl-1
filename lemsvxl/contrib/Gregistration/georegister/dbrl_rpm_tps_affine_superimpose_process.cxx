@@ -47,7 +47,7 @@ dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process
         !parameters()->add( "Scale the points to a grid", "-upscale" , (float) 100 )
         ) 
         {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process()" << std::endl;
         }
 
     }
@@ -60,7 +60,7 @@ dbrl_rpm_tps_affine_superimpose_process::~dbrl_rpm_tps_affine_superimpose_proces
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_rpm_tps_affine_superimpose_process::name()
     {
     return "Rpm TPS AFFINE Superimpose";
@@ -84,9 +84,9 @@ dbrl_rpm_tps_affine_superimpose_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_input_type()
+std::vector< std::string > dbrl_rpm_tps_affine_superimpose_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_id_point_2d" );
     //to_return.push_back( "vsol2D" );
 
@@ -95,9 +95,9 @@ vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_input_type
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_output_type()
+std::vector< std::string > dbrl_rpm_tps_affine_superimpose_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "image" );
 
     to_return.push_back( "dbrl_match_set" );
@@ -112,7 +112,7 @@ bool
 dbrl_rpm_tps_affine_superimpose_process::execute()
     {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_rpm_tps_affine_superimpose_process::execute() - "
+        std::cout << "In dbrl_rpm_tps_affine_superimpose_process::execute() - "
             << "not exactly two input images \n";
         return false;
         }
@@ -120,8 +120,8 @@ clear_output();
 dbrl_id_point_2d_storage_sptr frame_pts;
 frame_pts.vertical_cast(input_data_[0][0]);
 
-vcl_vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
-vcl_vector<dbrl_feature_sptr> feature_list;
+std::vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
+std::vector<dbrl_feature_sptr> feature_list;
 
 for(int i=0;i<list.size();i++)
     {
@@ -177,7 +177,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
     parameters()->get_value("-mconvg",mconvg);
     parameters()->get_value("-moutlier",moutlier);
     static int pivot_frame_no=(int)(point_set_list_.size()/2);
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > xformed_point_set_list=point_set_list_;
+    std::vector<std::vector<dbrl_feature_sptr> > xformed_point_set_list=point_set_list_;
     dbrl_rpm_affine_params affineparams(afflambdainit,affmconvg,affTinit,affTfinal,affmoutlier,affannealrate);
     dbrl_rpm_tps_params tpsparams(lambdainit1,lambdainit2,mconvg,Tinit,Tfinal,moutlier,annealrate);
     dbrl_rpm_tps_affine_params tpsaffineparams(lambdainit2,mconvg,Tinit,Tfinal,moutlier,annealrate);

@@ -1,4 +1,4 @@
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vgl/vgl_distance.h>
 

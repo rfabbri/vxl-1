@@ -7,9 +7,9 @@
 // \author    Kongbin Kang (kk at lems.brown.edu) & Gamze Tunali
 // \date        2005-11-01
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <vil3d/vil3d_image_resource.h>
 #include <vil3d/vil3d_image_view.h>
@@ -79,7 +79,7 @@ convert_to_vbl_array(vil3d_image_view_base_sptr view_sptr,
 int main(int argc, char *argv[])
 {
   if(argc < 7){
-    vcl_cout << "Usage: "<< argv[0] << " fname xmargin ymargin zmargin neighbour_size radius_fname out_file\n";
+    std::cout << "Usage: "<< argv[0] << " fname xmargin ymargin zmargin neighbour_size radius_fname out_file\n";
     return 1;
   }
 
@@ -104,16 +104,16 @@ int main(int argc, char *argv[])
 
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
   int dimx = parser.dim_x();
   int dimy = parser.dim_y();
   int dimz = parser.dim_z(); 
   
-  vcl_vector<xmvg_filter_response<double> > responses = parser.responses();
+  std::vector<xmvg_filter_response<double> > responses = parser.responses();
   
   xmvg_composite_filter_descriptor fds = parser.composite_filter_descr();
 
@@ -122,19 +122,19 @@ int main(int argc, char *argv[])
   det_cylinder_map cm;
 
   vil3d_image_resource_sptr img_res_sptr = vil3d_load_image_resource(rad_file); 
-  vcl_cout << "ni=" << img_res_sptr->ni() << " nj=" << img_res_sptr->nj() << 
-    " nk=" << img_res_sptr->nk() << vcl_endl;
+  std::cout << "ni=" << img_res_sptr->ni() << " nj=" << img_res_sptr->nj() << 
+    " nk=" << img_res_sptr->nk() << std::endl;
   vil3d_image_view_base_sptr view = img_res_sptr->get_view();
   if (view->pixel_format() == VIL_PIXEL_FORMAT_BYTE) {
       vil3d_image_view<unsigned char> radius = *view;
     cm = detector.apply(dimx, dimy, dimz, responses, fds, &radius);
   } else {
-    vcl_cerr << "Unsupported VIL format = " << view->pixel_format() << vcl_endl;
+    std::cerr << "Unsupported VIL format = " << view->pixel_format() << std::endl;
   }
   
   for(int k=0;k<dimz;k++)
     {
-    //fs << "z=" << k << vcl_endl;
+    //fs << "z=" << k << std::endl;
     for(int j=0;j<dimy;j++)
     {
       for(int i=0;i<dimx;i++)
@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
         double intensity = cm[i][j][k].strength_;
         //fs << intensity << " ";
       }
-      //fs << vcl_endl;
+      //fs << std::endl;
     }
-    //fs << vcl_endl;
+    //fs << std::endl;
   }
   
   det_nonmaxium_suppression nms(neighb_size);
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
   }
   //cm = nms.apply(cm);
 
-  vcl_vector<double> field;
+  std::vector<double> field;
   for(int k=0;k<dimz;k++)
   {
     for(int j=0;j<dimy;j++)
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
         
         intensity = cm[i][j][k].strength_;
 
-//        vcl_cout << "[" << cm[i][j][k].location_.x() << "," << cm[i][j][k].location_.y() << "," << cm[i][j][k].location_.z()<< "] ";
+//        std::cout << "[" << cm[i][j][k].location_.x() << "," << cm[i][j][k].location_.y() << "," << cm[i][j][k].location_.z()<< "] ";
         if(i>=marginx && i<dimx-marginx && 
             j>=marginy && j<dimy-marginy &&
             k>=marginz && k<dimz-marginz ){       
@@ -177,14 +177,14 @@ int main(int argc, char *argv[])
             min_intensity = intensity;
         }
       }
-        vcl_cout << "\n";
+        std::cout << "\n";
     }
-    vcl_cout << "\n";
+    std::cout << "\n";
   }
   
   // create cylinder and write to binary stream
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
   vsl_b_ofstream stream(o_file);
   
   for(int k=0;k<dimz;k++)

@@ -5,10 +5,10 @@
 
 #include "dbru_load_osl_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 #include <bpro1/bpro1_process_sptr.h>
 #include <bpro1/bpro1_parameters.h>
@@ -33,7 +33,7 @@ dbru_load_osl_process::dbru_load_osl_process() : bpro1_process(), osl_storage_(0
     !parameters()->add( "number of cols for visualization: " , "-ncols", static_cast<unsigned>(50)) 
     )
     {
-      vcl_cerr << "ERROR: Adding parameters in dbru_load_osl_process::dbru_load_osl_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbru_load_osl_process::dbru_load_osl_process()" << std::endl;
     }
 }
 
@@ -47,7 +47,7 @@ dbru_load_osl_process::clone() const
 
 bool dbru_load_osl_process::execute()
 {
-  vcl_string osl_file_name;
+  std::string osl_file_name;
   bpro1_filepath input_path;
   parameters()->get_value( "-file" , input_path);
   osl_file_name = input_path.path;
@@ -75,10 +75,10 @@ bool dbru_load_osl_process::execute()
   osl_storage_->set_nrows(n_rows);
   osl_storage_->set_ncols(n_cols);
   
-  vcl_cout << "---------------------------------\nTHIS OSL has ";
-  vcl_cout << osl_storage_->get_osl_size() << " objects\n";
-  vcl_cout << "(Each row is an object, columns in a row are prototypes of that particular object)\n";
-  vcl_cout << "---------------------------------\n";
+  std::cout << "---------------------------------\nTHIS OSL has ";
+  std::cout << osl_storage_->get_osl_size() << " objects\n";
+  std::cout << "(Each row is an object, columns in a row are prototypes of that particular object)\n";
+  std::cout << "---------------------------------\n";
   this->finish();
   return true;
 }
@@ -98,7 +98,7 @@ dbru_load_osl_process::finish()
    //Old way of enforcing global
    if(!res->store_data(osl_storage_))
     {
-      vcl_cout << "In dbinfo_osl_display_tool::display_osl() "
+      std::cout << "In dbinfo_osl_display_tool::display_osl() "
                << "store to repository failed\n";
       return false;
     }

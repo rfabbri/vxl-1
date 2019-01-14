@@ -11,14 +11,14 @@
 
 
 
-void modrec_pro_read_models(const vcl_string& path,
-                            vcl_vector<imesh_mesh>& models,
-                            vcl_vector<vcl_string>& names)
+void modrec_pro_read_models(const std::string& path,
+                            std::vector<imesh_mesh>& models,
+                            std::vector<std::string>& names)
 {
   models.clear();
   names.clear();
   bxml_document models_doc = bxml_read(path);
-  vcl_string base_path = vul_file::dirname(path);
+  std::string base_path = vul_file::dirname(path);
   bxml_element* root_elm = static_cast<bxml_element*>(models_doc.root_element().ptr());
   for(bxml_element::const_data_iterator i = root_elm->data_begin();
       i != root_elm->data_end();  ++i)
@@ -28,7 +28,7 @@ void modrec_pro_read_models(const vcl_string& path,
     bxml_element* elm = static_cast<bxml_element*>(i->ptr());
     if(elm->name() != "model")
       continue;
-    vcl_string file = elm->attribute("ply2_file");
+    std::string file = elm->attribute("ply2_file");
     imesh_mesh tmp_mesh;
     if(imesh_read_ply2(base_path+"/"+file,tmp_mesh)){
       models.push_back(tmp_mesh);

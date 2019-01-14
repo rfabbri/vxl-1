@@ -315,11 +315,11 @@ void detect_masked(const dbbgm_distribution_image<T>& dimg,
 //
 //    result.set_size(ni,nj,1);
 //
-//    const vcl_ptrdiff_t r_istep = result.istep();
-//    const vcl_ptrdiff_t r_jstep = result.jstep();
-//    const vcl_ptrdiff_t d_istep = image.istep();
-//    const vcl_ptrdiff_t d_jstep = image.jstep();
-//    const vcl_ptrdiff_t d_pstep = image.planestep();
+//    const std::ptrdiff_t r_istep = result.istep();
+//    const std::ptrdiff_t r_jstep = result.jstep();
+//    const std::ptrdiff_t d_istep = image.istep();
+//    const std::ptrdiff_t d_jstep = image.jstep();
+//    const std::ptrdiff_t d_pstep = image.planestep();
 //
 //    rT temp_val;
 //    _vector sample;

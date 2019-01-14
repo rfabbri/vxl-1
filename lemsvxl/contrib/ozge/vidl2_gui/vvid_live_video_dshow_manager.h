@@ -125,14 +125,14 @@ class vvid_live_video_dshow_manager : public vgui_wrapper_tableau
   unsigned num_cameras_;
   double min_msec_per_frame_;
   vgui_window* win_;
-  vcl_vector <bgui_vtol2D_tableau_sptr> vt2Ds_;
-  //vcl_vector <bgui_vtol2D_tableau_sptr> vi2Ds_;  // to display images
-  vcl_vector <vgui_image_tableau_sptr> vi2Ds_;  // to display images
-  vcl_vector <vvid_live_video_dshow_tableau_sptr> vtabs_;
-  vcl_vector <bgui_histogram_tableau_sptr> htabs_;
+  std::vector <bgui_vtol2D_tableau_sptr> vt2Ds_;
+  //std::vector <bgui_vtol2D_tableau_sptr> vi2Ds_;  // to display images
+  std::vector <vgui_image_tableau_sptr> vi2Ds_;  // to display images
+  std::vector <vvid_live_video_dshow_tableau_sptr> vtabs_;
+  std::vector <bgui_histogram_tableau_sptr> htabs_;
 
   // keep camera calibration matrices if they are computed
-  vcl_vector <vpgl_camera<double>*> cam_calibs_;
+  std::vector <vpgl_camera<double>*> cam_calibs_;
 
   //cmu_1394_camera_params cp_;
   //vidl_dshow_istream_params cp_;

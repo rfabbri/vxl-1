@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../bvaml_supervoxel.h"
 #include "../bvaml_voxel.h"
@@ -14,7 +14,7 @@ static void test_supervoxel()
   params.supervoxel_length = 30;
 
   // Test reading/writing to disk.
-  vcl_vector< vgl_point_3d<int> > pts;
+  std::vector< vgl_point_3d<int> > pts;
   pts.push_back( vgl_point_3d<int>(0, 0, 0 ) );
   pts.push_back( vgl_point_3d<int>( 29, 29, 29 ) );
   pts.push_back( vgl_point_3d<int>( 29, 28, 29 ) );
@@ -26,7 +26,7 @@ static void test_supervoxel()
 
   bvaml_supervoxel sv( &params, "D:\\testing\\voxeltest" );
 
-  vcl_cerr << "Initial data:\n";
+  std::cerr << "Initial data:\n";
   for( unsigned i = 0; i < pts.size(); i++ ){
  
     bvaml_voxel v( &params );
@@ -34,16 +34,16 @@ static void test_supervoxel()
     v.appearance->update((float)( rand()/(float)RAND_MAX ), (float).1, vnl_vector<float>() );
     (*v.occupancy_prob) = rand()/(float)RAND_MAX;
     v.misc_storage[0] = (float)( 55.0*rand()/(float)RAND_MAX );
-    vcl_cerr << v.appearance->prob( .5, vnl_vector<float>() ) << ' ' <<
+    std::cerr << v.appearance->prob( .5, vnl_vector<float>() ) << ' ' <<
       (*v.occupancy_prob) << ' ' << v.misc_storage[0] << '\n';
   }
   sv.save();
 
-  vcl_cerr << "\n\nData reloaded:\n";
+  std::cerr << "\n\nData reloaded:\n";
   for( unsigned i = 0; i < pts.size(); i++ ){
     bvaml_voxel v( &params );
     sv.get_voxel( pts[i], v, true, true, true, &light );
-    vcl_cerr << v.appearance->prob( .5, vnl_vector<float>() ) << ' ' <<
+    std::cerr << v.appearance->prob( .5, vnl_vector<float>() ) << ' ' <<
       (*v.occupancy_prob) << ' ' << v.misc_storage[0] << '\n';
   }
 

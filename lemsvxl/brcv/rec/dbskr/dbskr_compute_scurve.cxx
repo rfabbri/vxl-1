@@ -6,7 +6,7 @@
 #include "dbskr_compute_scurve.h"
 #include "dbskr_scurve.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 #include <dbsk2d/dbsk2d_xshock_sample.h>
 
@@ -14,19 +14,19 @@
 
 //: \relates dbsk2d_shock_graph
 dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
-                                       vcl_vector<dbsk2d_shock_edge_sptr> path,
+                                       std::vector<dbsk2d_shock_edge_sptr> path,
                                        bool leaf_edge, 
                                        bool binterpolate, bool bsub_sample,
                                        double interpolate_ds, double subsample_ds,
                                        double scale_ratio)
 {
-  vcl_vector< vgl_point_2d<double> > sh_pt;
-  vcl_vector<double> time, theta, phi;
+  std::vector< vgl_point_2d<double> > sh_pt;
+  std::vector<double> time, theta, phi;
 
   dbsk2d_shock_node_sptr cur_start_node = start_node;
 
   //traverse through the path, interpolating where necessary
-  for (vcl_vector<dbsk2d_shock_edge_sptr>::iterator e_it = path.begin();
+  for (std::vector<dbsk2d_shock_edge_sptr>::iterator e_it = path.begin();
        e_it != path.end(); e_it++)
   {
     dbsk2d_xshock_edge* cur_edge = dynamic_cast<dbsk2d_xshock_edge*>(e_it->ptr());
@@ -43,7 +43,7 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
         sh_pt.push_back(sample->pt);
         time.push_back(sample->radius); 
         if (sample->speed != 0 && sample->speed < 99990) //100000 signals infinity
-          phi.push_back(vcl_acos(-1/sample->speed));
+          phi.push_back(std::acos(-1/sample->speed));
         else
           phi.push_back(vnl_math::pi/2);
 
@@ -62,7 +62,7 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
         sh_pt.push_back(sample->pt);
         time.push_back(sample->radius); 
         if (sample->speed != 0 && sample->speed < 99990) //100000 signals infinity
-          phi.push_back(vnl_math::pi - vcl_acos(-1/sample->speed));
+          phi.push_back(vnl_math::pi - std::acos(-1/sample->speed));
         else
           phi.push_back(vnl_math::pi/2);
         
@@ -80,7 +80,7 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
   if (leaf_edge)
   {
     double dphi = 0-phi[num_points-1]; //phi at the end is 0
-    double apprxds = vcl_abs(dphi)*time[num_points-1];
+    double apprxds = std::abs(dphi)*time[num_points-1];
     
     //num of extra samples
     int num = int(apprxds/interpolate_ds); 
@@ -111,17 +111,17 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
 /*
 //: \relates dbsk2d_shock_graph
 dbskr_scurve_sptr dbskr_compute_scurve_no_A_inf_samples(dbsk2d_shock_node_sptr start_node,
-                                       vcl_vector<dbsk2d_shock_edge_sptr> path,
+                                       std::vector<dbsk2d_shock_edge_sptr> path,
                                        bool binterpolate, bool bsub_sample,
                                        double interpolate_ds, double subsample_ds)
 {
-  vcl_vector< vgl_point_2d<double> > sh_pt;
-  vcl_vector<double> time, theta, phi;
+  std::vector< vgl_point_2d<double> > sh_pt;
+  std::vector<double> time, theta, phi;
 
   dbsk2d_shock_node_sptr cur_start_node = start_node;
 
   //traverse through the path, interpolating where necessary
-  for (vcl_vector<dbsk2d_shock_edge_sptr>::iterator e_it = path.begin();
+  for (std::vector<dbsk2d_shock_edge_sptr>::iterator e_it = path.begin();
        e_it != path.end(); e_it++)
   {
     dbsk2d_xshock_edge* cur_edge = dynamic_cast<dbsk2d_xshock_edge*>(e_it->ptr());
@@ -140,7 +140,7 @@ dbskr_scurve_sptr dbskr_compute_scurve_no_A_inf_samples(dbsk2d_shock_node_sptr s
           sh_pt.push_back(sample->pt);
           time.push_back(sample->radius); 
           if (sample->speed != 0 && sample->speed < 99990) //100000 signals infinity
-            phi.push_back(vcl_acos(-1/sample->speed));
+            phi.push_back(std::acos(-1/sample->speed));
           else
             phi.push_back(vnl_math::pi/2);
 
@@ -164,7 +164,7 @@ dbskr_scurve_sptr dbskr_compute_scurve_no_A_inf_samples(dbsk2d_shock_node_sptr s
           sh_pt.push_back(sample->pt);
           time.push_back(sample->radius); 
           if (sample->speed != 0 && sample->speed < 99990) //100000 signals infinity
-            phi.push_back(vnl_math::pi - vcl_acos(-1/sample->speed));
+            phi.push_back(vnl_math::pi - std::acos(-1/sample->speed));
           else
             phi.push_back(vnl_math::pi/2);
           

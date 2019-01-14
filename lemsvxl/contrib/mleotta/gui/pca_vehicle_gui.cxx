@@ -46,7 +46,7 @@ class pca_vehicle_manager : public vgui_wrapper_tableau
     static pca_vehicle_manager *instance();
     void init();
 
-    typedef vcl_map<vcl_string, vgl_polygon<double> > part_map;
+    typedef std::map<std::string, vgl_polygon<double> > part_map;
 
     //: access to the window
     vgui_window* get_window(){return win_;}
@@ -61,8 +61,8 @@ class pca_vehicle_manager : public vgui_wrapper_tableau
 
   private:
     void build_mesh_node();
-    void build_parts_node(const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d);
-    void project_parts(const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d);
+    void build_parts_node(const std::vector<std::vector<vgl_point_3d<double> > >& parts3d);
+    void project_parts(const std::vector<std::vector<vgl_point_3d<double> > >& parts3d);
 
     static pca_vehicle_manager *instance_;
     vgui_window* win_;
@@ -155,8 +155,8 @@ void pca_vehicle_manager::init()
 void pca_vehicle_manager::load_mesh()
 {
   vgui_dialog load_mesh_dlg("Load Mesh");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_mesh_dlg.file("Mesh Filename:", ext, filename);
   if (!load_mesh_dlg.ask())
     return;
@@ -176,7 +176,7 @@ void pca_vehicle_manager::load_mesh()
     draw_texmap();
   }
   else{
-    vcl_cerr << "No texture coordinates"<<vcl_endl;
+    std::cerr << "No texture coordinates"<<std::endl;
   }
 
 
@@ -189,7 +189,7 @@ void pca_vehicle_manager::load_mesh()
 //=========================================================================
 void pca_vehicle_manager::draw_texmap()
 {
-  const vcl_vector<vgl_point_2d<double> >& tc = mesh_.tex_coords();
+  const std::vector<vgl_point_2d<double> >& tc = mesh_.tex_coords();
   if(mesh_.has_tex_coords() == imesh_mesh::TEX_COORD_ON_VERT)
   {
     tex_tab_->clear();
@@ -213,7 +213,7 @@ void pca_vehicle_manager::draw_texmap()
     tex_tab_->post_redraw();
   }
   else{
-    vcl_cerr << "Texutre coordinates per corner not supported"<<vcl_endl;
+    std::cerr << "Texutre coordinates per corner not supported"<<std::endl;
   }
 }
 
@@ -223,8 +223,8 @@ void pca_vehicle_manager::draw_texmap()
 void pca_vehicle_manager::load_image()
 {
   vgui_dialog load_image_dlg("Load Image");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext, image_filename);
   if (!load_image_dlg.ask())
     return;
@@ -239,8 +239,8 @@ void pca_vehicle_manager::load_image()
 void pca_vehicle_manager::load_parts()
 {
   vgui_dialog load_parts_dlg("Load Parts");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_parts_dlg.file("Parts Filename:", ext, filename);
   if (!load_parts_dlg.ask())
     return;
@@ -259,7 +259,7 @@ void pca_vehicle_manager::draw_parts()
   tex_tab_->set_foreground(1.0f,0.0f,0.0f);
   for(part_map::const_iterator itr=parts_.begin(); itr!=parts_.end(); ++itr)
   {
-    const vcl_vector<vgl_point_2d<double> >& poly = itr->second[0];
+    const std::vector<vgl_point_2d<double> >& poly = itr->second[0];
     float x[poly.size()], y[poly.size()];
     for(unsigned int i=0; i<poly.size(); ++i)
     {
@@ -277,15 +277,15 @@ void pca_vehicle_manager::draw_parts()
     mesh.build_edge_graph();
     tex_tab_->set_point_radius(3.0);
     tex_tab_->set_foreground(0.0f,1.0f,0.0f);
-    vcl_vector<vcl_vector<vgl_point_3d<double> > > parts3d;
+    std::vector<std::vector<vgl_point_3d<double> > > parts3d;
     for(part_map::const_iterator itr=parts_.begin(); itr!=parts_.end(); ++itr)
     {
-      const vcl_vector<vgl_point_2d<double> >& poly = itr->second[0];
+      const std::vector<vgl_point_2d<double> >& poly = itr->second[0];
 
-      parts3d.push_back( vcl_vector<vgl_point_3d<double> >() );
-      vcl_vector<vgl_point_2d<double> > pts_uv;
-      vcl_vector<unsigned long> idx;
-      vcl_vector<int> map_back;
+      parts3d.push_back( std::vector<vgl_point_3d<double> >() );
+      std::vector<vgl_point_2d<double> > pts_uv;
+      std::vector<unsigned long> idx;
+      std::vector<int> map_back;
       imesh_project_texture_to_barycentric(mesh,poly,pts_uv,idx,map_back);
       for(unsigned int i=0; i<pts_uv.size(); ++i)
       {
@@ -338,7 +338,7 @@ void pca_vehicle_manager::build_mesh_node()
 }
 
 
-void pca_vehicle_manager::build_parts_node(const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d)
+void pca_vehicle_manager::build_parts_node(const std::vector<std::vector<vgl_point_3d<double> > >& parts3d)
 {
   parts_node_->removeAllChildren();
 
@@ -359,7 +359,7 @@ void pca_vehicle_manager::build_parts_node(const vcl_vector<vcl_vector<vgl_point
   for(unsigned int i=0; i<parts3d.size(); ++i)
   {
     unsigned int fidx = cidx;
-    const vcl_vector<vgl_point_3d<double> >& part = parts3d[i];
+    const std::vector<vgl_point_3d<double> >& part = parts3d[i];
     for(unsigned int j=0; j<part.size(); ++j)
     {
       const vgl_point_3d<double>& pt = part[j];
@@ -374,14 +374,14 @@ void pca_vehicle_manager::build_parts_node(const vcl_vector<vcl_vector<vgl_point
 }
 
 
-void pca_vehicle_manager::project_parts(const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d)
+void pca_vehicle_manager::project_parts(const std::vector<std::vector<vgl_point_3d<double> > >& parts3d)
 {
   proj_tab_->clear();
   proj_tab_->set_line_width(1.0);
   proj_tab_->set_foreground(1.0f,0.0f,0.0f);
   for(unsigned int i=0; i<parts3d.size(); ++i)
   {
-    const vcl_vector<vgl_point_3d<double> >& part = parts3d[i];
+    const std::vector<vgl_point_3d<double> >& part = parts3d[i];
     float x[part.size()], y[part.size()];
     for(unsigned int j=0; j<part.size(); ++j)
     {
@@ -396,8 +396,8 @@ void pca_vehicle_manager::project_parts(const vcl_vector<vcl_vector<vgl_point_3d
   proj_tab_->set_foreground(0.0f,1.0f,0.0f);
 
 #if 0
-  vcl_vector<bool> edge = imesh_detect_contours(mesh_, cam_.camera_center());
-  vcl_vector<vcl_vector<unsigned int> > loops;
+  std::vector<bool> edge = imesh_detect_contours(mesh_, cam_.camera_center());
+  std::vector<std::vector<unsigned int> > loops;
   imesh_trace_half_edge_loops(mesh_.half_edges(),edge,loops);
   for(unsigned int i=0; i<2*mesh_.num_edges(); ++i)
   {
@@ -412,11 +412,11 @@ void pca_vehicle_manager::project_parts(const vcl_vector<vcl_vector<vgl_point_3d
     proj_tab_->add_line(pt1.x(),pt1.y(),pt2.x(),pt2.y());
   }
 #else
-  vcl_vector<vcl_vector<unsigned int> > edge_loops =
+  std::vector<std::vector<unsigned int> > edge_loops =
       imesh_detect_contour_generator(mesh_, cam_.camera_center());
   for(unsigned int i=0; i<edge_loops.size(); ++i)
   {
-    const vcl_vector<unsigned int>& loop = edge_loops[i];
+    const std::vector<unsigned int>& loop = edge_loops[i];
     float x[loop.size()], y[loop.size()];
     for(unsigned int j=0; j<loop.size(); ++j)
     {
@@ -496,7 +496,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = pca_vehicle_menus::get_menu();
   unsigned w = 1000, h = 800;
 
-  vcl_string title = "PCA Vehicle GUI";
+  std::string title = "PCA Vehicle GUI";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(pca_vehicle_manager::instance());
   win->set_statusbar(true);

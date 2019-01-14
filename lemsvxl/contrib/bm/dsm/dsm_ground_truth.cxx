@@ -5,57 +5,57 @@ void dsm_ground_truth::build_change_maps(unsigned const& ni, unsigned const& nj)
 {
 	if( this->frame_polygon_map.empty() )
 	{
-		vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
-			     << "\t Error building change maps: gt polygons not yet loaded." << vcl_flush;
+		std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			     << "\t Error building change maps: gt polygons not yet loaded." << std::flush;
 		return; 
 	}
 
 	if( this->frame_polygon_map.size() != this->frame_change_type_map.size() )
 	{
-		vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
-			     << "\t Error building change maps: frame_polygon_map.size() != frame_change_type_map.size()" << vcl_flush;
+		std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			     << "\t Error building change maps: frame_polygon_map.size() != frame_change_type_map.size()" << std::flush;
 		return;
 	}
 
-	vcl_map<unsigned, vcl_vector<vsol_polygon_2d_sptr> >::const_iterator
+	std::map<unsigned, std::vector<vsol_polygon_2d_sptr> >::const_iterator
 		p_itr, p_end = this->frame_polygon_map.end();
 
-	vcl_map<vgl_point_2d<int>, vcl_vector<vcl_string>, dsm_vgl_point_2d_coord_compare<int> > location_change_types;
+	std::map<vgl_point_2d<int>, std::vector<std::string>, dsm_vgl_point_2d_coord_compare<int> > location_change_types;
 
 	unsigned built;
 	for( p_itr = this->frame_polygon_map.begin(), built = 1; p_itr != p_end; ++p_itr, ++built )
 	{
 		unsigned curr_frame = p_itr->first;
 
-		vcl_vector<vgl_point_2d<double> >changes;
+		std::vector<vgl_point_2d<double> >changes;
 
 		vil_image_view<vxl_byte> curr_change_view(ni,nj,1);
 
 		curr_change_view.fill(vxl_byte(0));
 
-		vcl_cout << "Building frame " << built << " out of " << this->frame_polygon_map.size() << vcl_endl;
+		std::cout << "Building frame " << built << " out of " << this->frame_polygon_map.size() << std::endl;
 		
-		vcl_map<unsigned, vcl_vector<vcl_string> >::const_iterator c_itr = this->frame_change_type_map.find(curr_frame);
+		std::map<unsigned, std::vector<std::string> >::const_iterator c_itr = this->frame_change_type_map.find(curr_frame);
 
 		if( c_itr == this->frame_change_type_map.end() )
 		{
-			vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
-			         << "\t Error cannot find the change type vector for frame " << curr_frame << vcl_flush;
+			std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			         << "\t Error cannot find the change type vector for frame " << curr_frame << std::flush;
 			return;
 		}
 
 		if( p_itr->second.size() != c_itr->second.size() )
 		{
-			vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
-			         << "\t Error buildling change maps: There isn't a 1-1 correspondence between polygons and change types for frame: " << curr_frame << vcl_flush;
+			std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			         << "\t Error buildling change maps: There isn't a 1-1 correspondence between polygons and change types for frame: " << curr_frame << std::flush;
 			return;
 		}
 
 		for( unsigned poly_idx = 0; poly_idx < p_itr->second.size(); ++poly_idx )
 		{
-			vcl_string curr_change_type = c_itr->second[poly_idx];
-			vcl_cout << "\tProcessing Polygon: " << poly_idx + 1 << " out of " << p_itr->second.size() << vcl_endl;
-			vcl_cout << "\t\tCurrent Change Type is: " << curr_change_type << vcl_endl;
+			std::string curr_change_type = c_itr->second[poly_idx];
+			std::cout << "\tProcessing Polygon: " << poly_idx + 1 << " out of " << p_itr->second.size() << std::endl;
+			std::cout << "\t\tCurrent Change Type is: " << curr_change_type << std::endl;
 
 			vgl_polygon<double> vgl_poly = bsol_algs::vgl_from_poly(p_itr->second[poly_idx]);
 			
@@ -76,12 +76,12 @@ void dsm_ground_truth::build_change_maps(unsigned const& ni, unsigned const& nj)
 					vgl_point_2d<int> pt(x,y);
 
 					//check if the change type had previously been observed at the location
-					vcl_map< vgl_point_2d<int>, vcl_vector<vcl_string>,
+					std::map< vgl_point_2d<int>, std::vector<std::string>,
 						dsm_vgl_point_2d_coord_compare<int> >::iterator lc_itr = location_change_types.find(pt);
 
 					if( lc_itr != location_change_types.end() )
 					{
-						vcl_vector<vcl_string>::iterator s_itr = vcl_find(lc_itr->second.begin(), lc_itr->second.end(), curr_change_type);
+						std::vector<std::string>::iterator s_itr = std::find(lc_itr->second.begin(), lc_itr->second.end(), curr_change_type);
 
 						if( s_itr == lc_itr->second.end() )
 						{
@@ -101,26 +101,26 @@ void dsm_ground_truth::build_change_maps(unsigned const& ni, unsigned const& nj)
 	}//end frame iteration
 }//end build_change_maps
 
-vcl_map<unsigned, vil_image_view<vxl_byte> > dsm_ground_truth::build_change_map_classical(unsigned const& ni, unsigned const& nj) const
+std::map<unsigned, vil_image_view<vxl_byte> > dsm_ground_truth::build_change_map_classical(unsigned const& ni, unsigned const& nj) const
 {
 	if( this->frame_polygon_map.empty() )
 	{
-		vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_map_classical()\n"
-			     << "\t Error building change maps: gt polygons not yet loaded." << vcl_flush;
+		std::cerr << "---ERROR--- dsm_ground_truth::build_change_map_classical()\n"
+			     << "\t Error building change maps: gt polygons not yet loaded." << std::flush;
 		exit(1); 
 	}
 
 	if( this->frame_polygon_map.size() != this->frame_change_type_map.size() )
 	{
-		vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_map_classical()\n"
-			     << "\t Error building change maps: frame_polygon_map.size() != frame_change_type_map.size()" << vcl_flush;
+		std::cerr << "---ERROR--- dsm_ground_truth::build_change_map_classical()\n"
+			     << "\t Error building change maps: frame_polygon_map.size() != frame_change_type_map.size()" << std::flush;
 		exit(1);
 	}
 
-	vcl_map<unsigned, vcl_vector< vsol_polygon_2d_sptr> >::const_iterator
+	std::map<unsigned, std::vector< vsol_polygon_2d_sptr> >::const_iterator
 		p_itr, p_end = this->frame_polygon_map.end();
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> > change_map;
+	std::map<unsigned, vil_image_view<vxl_byte> > change_map;
 
 	unsigned built;
 	for( p_itr = this->frame_polygon_map.begin(), built = 1; p_itr != p_end; ++p_itr, ++built )
@@ -131,22 +131,22 @@ vcl_map<unsigned, vil_image_view<vxl_byte> > dsm_ground_truth::build_change_map_
 
 		curr_change_view.fill(vxl_byte(0));
 
-		vcl_cout << "Building frame " << built << " out of " << this->frame_polygon_map.size() << vcl_endl;
+		std::cout << "Building frame " << built << " out of " << this->frame_polygon_map.size() << std::endl;
 
-		vcl_map<unsigned, vcl_vector<vcl_string> >::const_iterator c_itr = this->frame_change_type_map.find(curr_frame);
+		std::map<unsigned, std::vector<std::string> >::const_iterator c_itr = this->frame_change_type_map.find(curr_frame);
 
 		if( c_itr == this->frame_change_type_map.end() )
 		{
-			vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
-			         << "\t Error cannot find the change type vector for frame " << curr_frame << vcl_flush;
+			std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			         << "\t Error cannot find the change type vector for frame " << curr_frame << std::flush;
 			exit(1);
 		}
 
 		if( p_itr->second.size() != c_itr->second.size() )
 		{
-			vcl_cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
+			std::cerr << "---ERROR--- dsm_ground_truth::build_change_maps()\n"
 			         << "\t Error buildling change maps: There isn't a 1-1 correspondence"
-					 << " between polygons and change types for frame: " << curr_frame << vcl_flush;
+					 << " between polygons and change types for frame: " << curr_frame << std::flush;
 			exit(1);
 		}
 
@@ -154,9 +154,9 @@ vcl_map<unsigned, vil_image_view<vxl_byte> > dsm_ground_truth::build_change_map_
 		{
 			if( c_itr->second[poly_idx].compare("no change") != 0 )
 			{
-				vcl_cout << "\tProcessing Polygon: " << poly_idx + 1 
-					     << " out of " << p_itr->second.size() << vcl_endl;
-				vcl_cout << "\t\tCurrent Change Type is: " << c_itr->second[poly_idx] << vcl_endl;
+				std::cout << "\tProcessing Polygon: " << poly_idx + 1 
+					     << " out of " << p_itr->second.size() << std::endl;
+				std::cout << "\t\tCurrent Change Type is: " << c_itr->second[poly_idx] << std::endl;
 
 				vgl_polygon<double> vgl_poly = bsol_algs::vgl_from_poly(p_itr->second[poly_idx]);
 
@@ -185,12 +185,12 @@ vcl_map<unsigned, vil_image_view<vxl_byte> > dsm_ground_truth::build_change_map_
 
 void dsm_ground_truth::
 	save_change_maps_classical_tiff(unsigned const& ni, 
-		unsigned const& nj, vcl_string const& result_dir) const
+		unsigned const& nj, std::string const& result_dir) const
 {
-	vcl_map<unsigned, vil_image_view<vxl_byte> > 
+	std::map<unsigned, vil_image_view<vxl_byte> > 
 		change_maps = this->build_change_map_classical(ni,nj);
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> >::const_iterator 
+	std::map<unsigned, vil_image_view<vxl_byte> >::const_iterator 
 		c_itr, c_end = change_maps.end();
 
 	if(!vul_file::is_directory(result_dir))
@@ -198,23 +198,23 @@ void dsm_ground_truth::
 
 	for( c_itr = change_maps.begin(); c_itr != c_end; ++c_itr )
 	{
-		vcl_stringstream filename;
+		std::stringstream filename;
 
 		filename << result_dir << "/classical_change_map_"
-			     << vcl_setfill('0') << vcl_setw(8)
+			     << std::setfill('0') << std::setw(8)
 				 << c_itr->first << ".tiff";
 
-		vcl_cout << "\tSaving classical change map:\n"
-			     << "\t\t" << filename.str() << vcl_endl;
+		std::cout << "\tSaving classical change map:\n"
+			     << "\t\t" << filename.str() << std::endl;
 
 		vil_save(c_itr->second, filename.str().c_str());
 	}//end frame iteration
 
 }//end save_change_maps_classical_tiff
 
-void dsm_ground_truth::save_change_maps_tiff( vcl_string const& result_dir )
+void dsm_ground_truth::save_change_maps_tiff( std::string const& result_dir )
 {
-	vcl_map<unsigned, vil_image_view<vxl_byte> >::const_iterator
+	std::map<unsigned, vil_image_view<vxl_byte> >::const_iterator
 		cm_itr, cm_end = this->change_maps.end();
 
 	if( !vul_file::is_directory(result_dir) )
@@ -223,29 +223,29 @@ void dsm_ground_truth::save_change_maps_tiff( vcl_string const& result_dir )
 	unsigned idx;
 	for( cm_itr = this->change_maps.begin(), idx = 0; cm_itr != cm_end; ++cm_itr, ++idx )
 	{
-		vcl_cout << "Writing Frame: " << idx << " out of " << this->change_maps.size() << vcl_endl;
-		vcl_stringstream filename;
+		std::cout << "Writing Frame: " << idx << " out of " << this->change_maps.size() << std::endl;
+		std::stringstream filename;
 
-		filename << result_dir << "/change_map_" << vcl_setfill('0') << vcl_setw(8) << cm_itr->first << ".tiff";
+		filename << result_dir << "/change_map_" << std::setfill('0') << std::setw(8) << cm_itr->first << ".tiff";
 
 		vil_save(cm_itr->second, filename.str().c_str());
 	}//end change map iteration
 }//end save_change_maps_tiff
 
-void dsm_ground_truth::b_write_bwm_gt(vcl_string const& filename) const
+void dsm_ground_truth::b_write_bwm_gt(std::string const& filename) const
 {
-	vsl_b_ofstream os(filename.c_str(), vcl_ios::out|vcl_ios::binary);
+	vsl_b_ofstream os(filename.c_str(), std::ios::out|std::ios::binary);
 
 	if( frame_polygon_map.size() != this->frame_change_type_map.size() )
 	{
-		vcl_cout << "---ERROR--- dsm_ground_truth::b_write_bwm_gt( vsl_b_ostream& os)\n"
+		std::cout << "---ERROR--- dsm_ground_truth::b_write_bwm_gt( vsl_b_ostream& os)\n"
 			     << "\t Error writing binary files: frame_polygon_map.size() != frame_change_type_map.size()";
 		return;
 	}
 
 	unsigned nframes = frame_polygon_map.size();
 
-	vcl_map<unsigned, vcl_vector<vsol_polygon_2d_sptr> >::const_iterator 
+	std::map<unsigned, std::vector<vsol_polygon_2d_sptr> >::const_iterator 
 		f_itr, f_end = this->frame_polygon_map.end();
 
 	//write the number of frames
@@ -267,7 +267,7 @@ void dsm_ground_truth::b_write_bwm_gt(vcl_string const& filename) const
 			//write the polygon
 			vsl_b_write(os,f_itr->second[i].as_pointer());
 
-			vcl_map<unsigned, vcl_vector<vcl_string> >::const_iterator
+			std::map<unsigned, std::vector<std::string> >::const_iterator
 				c_itr = this->frame_change_type_map.find( fnumber );
 			if( c_itr != this->frame_change_type_map.end() )
 			{
@@ -276,7 +276,7 @@ void dsm_ground_truth::b_write_bwm_gt(vcl_string const& filename) const
 			}
 			else
 			{
-				vcl_cout << "---ERROR--- dsm_ground_truth::b_write( vsl_b_ostream& os)\n"
+				std::cout << "---ERROR--- dsm_ground_truth::b_write( vsl_b_ostream& os)\n"
 						 << "\t Error writing binary files: this->frame_change_type_map.find(fnumber) == this->frame_change_type_map.end()";
 				return;
 			}
@@ -289,10 +289,10 @@ void dsm_ground_truth::b_write_bwm_gt(vcl_string const& filename) const
 }//end b_write
 
 
-void dsm_ground_truth::b_read_bwm_gt(vcl_string const& filename)
+void dsm_ground_truth::b_read_bwm_gt(std::string const& filename)
 {
 
-	vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+	vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 
 	unsigned nframes = 0; 
 
@@ -300,8 +300,8 @@ void dsm_ground_truth::b_read_bwm_gt(vcl_string const& filename)
 
 	if( nframes < 1 )
 	{
-		vcl_cout << "---ERROR--- dsm_ground_truth::b_read( vsl_b_istream& is )\n"
-			     << "\t Error reading binary file: nframes < 1" << vcl_flush;
+		std::cout << "---ERROR--- dsm_ground_truth::b_read( vsl_b_istream& is )\n"
+			     << "\t Error reading binary file: nframes < 1" << std::flush;
 		return;
 	}
 
@@ -319,8 +319,8 @@ void dsm_ground_truth::b_read_bwm_gt(vcl_string const& filename)
 		unsigned nchanges;
 		vsl_b_read(is, nchanges);
 
-		vcl_vector<vsol_polygon_2d_sptr> polygon_vect;
-		vcl_vector<vcl_string> change_type_vect;
+		std::vector<vsol_polygon_2d_sptr> polygon_vect;
+		std::vector<std::string> change_type_vect;
 		for( unsigned i = 0; i < nchanges; ++i )
 		{
 			//read the polygon
@@ -331,7 +331,7 @@ void dsm_ground_truth::b_read_bwm_gt(vcl_string const& filename)
 			polygon_vect.push_back(polygon_sptr);
 
 			//read the change type
-			vcl_string change_type;
+			std::string change_type;
 			vsl_b_read(is,change_type);
 			//this->frame_change_type_map[frame].push_back(change_type);
 			change_type_vect.push_back(change_type);
@@ -350,7 +350,7 @@ void dsm_ground_truth::b_write( vsl_b_ostream& os ) const
 	const short version_no = 1;
 	vsl_b_write(os, version_no);
 
-	vcl_map<unsigned, vcl_vector<vsol_polygon_2d_sptr> >::const_iterator
+	std::map<unsigned, std::vector<vsol_polygon_2d_sptr> >::const_iterator
 		p_itr, p_end = this->frame_polygon_map.end();
 
 	//write the size of the frame_polygon_map
@@ -368,7 +368,7 @@ void dsm_ground_truth::b_write( vsl_b_ostream& os ) const
 			vsl_b_write(os, p_itr->second[i].as_pointer());
 	}//end polygon map iteration
 
-	vcl_map<unsigned, vcl_vector<vcl_string> >::const_iterator
+	std::map<unsigned, std::vector<std::string> >::const_iterator
 		c_itr, c_end = this->frame_change_type_map.end();
 
 	//write the size of the frame change type map
@@ -386,7 +386,7 @@ void dsm_ground_truth::b_write( vsl_b_ostream& os ) const
 			vsl_b_write(os, c_itr->second[i]);
 	}//end change type map iteration
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> >::const_iterator
+	std::map<unsigned, vil_image_view<vxl_byte> >::const_iterator
 		cm_itr, cm_end = this->change_maps.end();
 
 	//write the size of the change_map
@@ -427,7 +427,7 @@ void dsm_ground_truth::b_read( vsl_b_istream& is )
 				unsigned n_polys = 0;
 				vsl_b_read(is,n_polys);
 
-				vcl_vector<vsol_polygon_2d_sptr> poly_vect;
+				std::vector<vsol_polygon_2d_sptr> poly_vect;
 				for( unsigned j = 0; j < n_polys; ++j )
 				{
 					vsol_polygon_2d* poly_ptr = new vsol_polygon_2d;
@@ -451,10 +451,10 @@ void dsm_ground_truth::b_read( vsl_b_istream& is )
 				unsigned n_changes = 0;
 				vsl_b_read(is, n_changes);
 
-				vcl_vector<vcl_string> change_type_vect;
+				std::vector<std::string> change_type_vect;
 				for(unsigned j = 0; j < n_changes; ++j)
 				{
-					vcl_string change_type = "";
+					std::string change_type = "";
 					//read the change type
 					vsl_b_read(is, change_type);
 					change_type_vect.push_back(change_type);
@@ -482,9 +482,9 @@ void dsm_ground_truth::b_read( vsl_b_istream& is )
 		}//end case 
 	default:
 		{
-			vcl_cerr << "----I/O ERROR: dsm_ground_truth::b_read ----\n"
+			std::cerr << "----I/O ERROR: dsm_ground_truth::b_read ----\n"
 				     << "	 UNKNOWN VERSION NUMBER " << v << "\n";
-			is.is().clear(vcl_ios::badbit); //set an unrecoverable IO error on stream
+			is.is().clear(std::ios::badbit); //set an unrecoverable IO error on stream
 			return;
 		}//end default
 	}//end switch(v)

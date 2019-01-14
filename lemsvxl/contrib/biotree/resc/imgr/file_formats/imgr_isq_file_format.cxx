@@ -9,10 +9,10 @@
 //
 //
 #include "imgr_isq_file_format.h"
-#include <vcl_cstring.h>
-#include <vcl_algorithm.h> //  std::swap()
+#include <cstring>
+#include <algorithm> //  std::swap()
 #include <vil/vil_image_view.h>
-#include <vcl_exception.h>
+#include <exception>
  
 const char *imgr_isq_format_tag = "isq";
 
@@ -26,10 +26,10 @@ imgr_isq_file_format :: imgr_isq_file_format(vil_stream* vs)
   stream_ = vs;
 
   if(! stream_)
-    vcl_throw vcl_exception();
+    throw std::exception();
 
   if(! stream_->ok())
-    vcl_throw vcl_exception();
+    throw std::exception();
 
   imgr_isq_header header(stream_);
   
@@ -47,10 +47,10 @@ imgr_isq_file_format :: imgr_isq_file_format(vil_stream* vs)
   }
 }
 
-vcl_vector<vil_image_resource_sptr> 
+std::vector<vil_image_resource_sptr> 
 imgr_isq_file_format :: get_images()
 {
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
 
   images.clear();
 
@@ -178,7 +178,7 @@ vil_image_view_base_sptr imgr_isq_image::get_copy_view(unsigned i0, unsigned ni,
     vxl_byte* data = reinterpret_cast<vxl_byte*>( buf->data());
     
     for(unsigned k=0; k<want_bytes_per_raster*nj; k+=byte_per_pixel){
-      vcl_swap(data[k], data[k+1]);
+      std::swap(data[k], data[k+1]);
     }
 #endif
   

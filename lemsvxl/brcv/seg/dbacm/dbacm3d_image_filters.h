@@ -55,8 +55,8 @@ class dbacm3d_power_functor
 {
 public:
   dbacm3d_power_functor(int p):p_(p){}
-  float operator()(float x) const {return vcl_pow(x, p_); }
-  double operator()(double x) const {return vcl_pow(x, p_); }
+  float operator()(float x) const {return std::pow(x, p_); }
+  double operator()(double x) const {return std::pow(x, p_); }
 private:
   int p_;
 };
@@ -133,10 +133,10 @@ inline void dbacm3d_malladi_image_force(const vil3d_image_view<inT >& src_im,
     for(int z = 0; z < nk; ++z){
     for(int y = 0; y < nj; ++y){
     for(int x = 0; x < ni; ++x){
-            img_gradient_mag        = vcl_sqrt(grad_i(x,y,z)*grad_i(x,y,z) + 
+            img_gradient_mag        = std::sqrt(grad_i(x,y,z)*grad_i(x,y,z) + 
                                                grad_j(x,y,z)*grad_j(x,y,z) + 
                                                grad_k(x,y,z)*grad_k(x,y,z));
-            gmap(x,y,z) = (int)out - direction/(1 + vcl_pow(img_gradient_mag/param_T,exponent));
+            gmap(x,y,z) = (int)out - direction/(1 + std::pow(img_gradient_mag/param_T,exponent));
     }
     }
     }
@@ -167,7 +167,7 @@ inline void dbacm3d_malladi_image_force_with_feature_map(
   vil3d_image_view<outT >& gx,
   vil3d_image_view<outT >& gy)
 {
-vcl_cerr << "Not yet implemented " << vcl_endl;
+std::cerr << "Not yet implemented " << std::endl;
 /*
   unsigned ni = src_im.ni();
   unsigned nj = src_im.nj();

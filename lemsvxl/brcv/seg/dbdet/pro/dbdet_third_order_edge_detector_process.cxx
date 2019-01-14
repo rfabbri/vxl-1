@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -32,16 +32,16 @@
 //: Constructor
 dbdet_third_order_edge_detector_process::dbdet_third_order_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
 
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -55,7 +55,7 @@ dbdet_third_order_edge_detector_process::dbdet_third_order_edge_detector_process
       !parameters()->add( "Output on Interp. Grid "  , "-binterp_grid" , false ) ||
       !parameters()->add( "Reduce edgel tokens "  , "-breduce" , true ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -74,7 +74,7 @@ dbdet_third_order_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_third_order_edge_detector_process::name()
 {
   return "Third Order Edge Detector";
@@ -97,18 +97,18 @@ dbdet_third_order_edge_detector_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_third_order_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_third_order_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_third_order_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_third_order_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -119,14 +119,14 @@ bool
 dbdet_third_order_edge_detector_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_third_order_edge_detector_process::execute() - not exactly one"
+    std::cout << "In dbdet_third_order_edge_detector_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Third_order edge detection...";
-  vcl_cout.flush();
+  std::cout << "Third_order edge detection...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -182,7 +182,7 @@ dbdet_third_order_edge_detector_process::execute()
   dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(image_view.ni(), 
                                                   image_view.nj());
 
-  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  std::vector<dbdet_edgel*> padded_edges=edge_map->edgels;
   for ( unsigned int i=0; i < padded_edges.size() ; ++i)
   {
 
@@ -213,10 +213,10 @@ dbdet_third_order_edge_detector_process::execute()
   output_edgemap->set_edgemap(padded_edge_map);
   output_data_[0].push_back(output_edgemap);
 
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout << "#edgels = " << padded_edge_map->num_edgels() << vcl_endl;
+  std::cout << "done!" << std::endl;
+  std::cout << "#edgels = " << padded_edge_map->num_edgels() << std::endl;
 
-  vcl_cout.flush();
+  std::cout.flush();
 
   return true;
 }

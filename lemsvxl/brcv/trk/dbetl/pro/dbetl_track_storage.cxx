@@ -16,14 +16,14 @@ dbetl_track_storage::clone() const
 
 //: Set the tracks
 void 
-dbetl_track_storage::set_tracks(const vcl_vector<vcl_vector<dbetl_point_track_sptr> >& tracks)
+dbetl_track_storage::set_tracks(const std::vector<std::vector<dbetl_point_track_sptr> >& tracks)
 {
   tracks_ = tracks;
 }
 
 
 //: Access the tracks
-vcl_vector<vcl_vector<dbetl_point_track_sptr> >
+std::vector<std::vector<dbetl_point_track_sptr> >
 dbetl_track_storage::tracks() const
 {
   return tracks_;
@@ -31,14 +31,14 @@ dbetl_track_storage::tracks() const
 
 //: Set the angles
 void 
-dbetl_track_storage::set_angles(const vcl_vector<double>& angles)
+dbetl_track_storage::set_angles(const std::vector<double>& angles)
 {
   angles_ = angles;
 }
 
 
 //: Access the angles
-vcl_vector<double>
+std::vector<double>
 dbetl_track_storage::angles() const
 {
   return angles_;

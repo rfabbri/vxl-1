@@ -22,9 +22,9 @@
 #include <vpgl/bgeo/bgeo_lvcs.h>
 #include <vpgl/bgeo/bgeo_lvcs_sptr.h>
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <boxm/boxm_sample_multi_bin.h>
 #include <boxm/boxm_scene_parser.h>
@@ -43,12 +43,12 @@ bool boxm_create_scene_process_cons(bprb_func_process& pro)
   //set output types
   using namespace boxm_create_scene_process_globals;
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";
   if (!pro.set_input_types(input_types_))
     return false;
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "boxm_scene_base_sptr";
   if (!pro.set_output_types(output_types_))
     return false;
@@ -59,7 +59,7 @@ bool boxm_create_scene_process_cons(bprb_func_process& pro)
 bool boxm_create_scene_process(bprb_func_process& pro)
 {
   using namespace boxm_create_scene_process_globals;
-  vcl_string fname = pro.get_input<vcl_string>(0);
+  std::string fname = pro.get_input<std::string>(0);
 
   boxm_scene_parser parser;
 
@@ -77,7 +77,7 @@ bool boxm_create_scene_process(bprb_func_process& pro)
       typedef boct_tree<short,boxm_sample_multi_bin<BOXM_APM_MOG_GREY> > tree_type;
       boxm_scene<tree_type>* scene = new boxm_scene<tree_type>();
       scene->load_scene(parser);
-      vcl_cout<<"Multi Bin set"<<vcl_endl;
+      std::cout<<"Multi Bin set"<<std::endl;
       scene_ptr = scene;
     }
   } else if (scene_ptr->appearence_model() == BOXM_APM_MOB_GREY) {
@@ -89,7 +89,7 @@ bool boxm_create_scene_process(bprb_func_process& pro)
       scene_ptr = scene;
     }
     else {
-      vcl_cout<<"Multi Bin for BOXM_APM_MOB_GREY is not defined yet "<<vcl_endl;
+      std::cout<<"Multi Bin for BOXM_APM_MOB_GREY is not defined yet "<<std::endl;
     }
   } else if (scene_ptr->appearence_model() == BOXM_APM_SIMPLE_GREY) {
     if (!scene_ptr->multi_bin())
@@ -104,13 +104,13 @@ bool boxm_create_scene_process(bprb_func_process& pro)
       typedef boct_tree<short,boxm_sample_multi_bin<BOXM_APM_SIMPLE_GREY> > tree_type;
       boxm_scene<tree_type>* scene = new boxm_scene<tree_type>();
       scene->load_scene(parser);
-      vcl_cout<<"Multi Bin set"<<vcl_endl;
+      std::cout<<"Multi Bin set"<<std::endl;
       scene_ptr = scene;
     }
 #endif // 0
   }
   else {
-    vcl_cout << "boxm_create_scene_process: undefined APM type" << vcl_endl;
+    std::cout << "boxm_create_scene_process: undefined APM type" << std::endl;
     return false;
   }
 

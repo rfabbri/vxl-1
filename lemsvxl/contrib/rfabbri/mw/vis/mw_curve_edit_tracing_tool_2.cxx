@@ -40,7 +40,7 @@ init()
   o0_query_layer_ = "layer85";
 }
 
-vcl_string
+std::string
 mw_curve_edit_tracing_tool_2::name() const
 {
   return "mcs Corresp. Editor v.2";
@@ -49,7 +49,7 @@ mw_curve_edit_tracing_tool_2::name() const
 void mw_curve_edit_tracing_tool_2::
 activate()
 {
-  vcl_cout << "mw_curve_edit_tracing_tool_2 ON\n";
+  std::cout << "mw_curve_edit_tracing_tool_2 ON\n";
   mw_curve_tracing_tool_2::activate();
 
   lock_corresp_query_ = false;
@@ -67,13 +67,13 @@ get_corresp()
   // Prompt the user to select input/output variable
   vgui_dialog io_dialog("Select Inputs" );
 
-  vcl_vector< vcl_string > input_type_list;
+  std::vector< std::string > input_type_list;
   input_type_list.push_back("mw pt corresp");
 
   io_dialog.message("Select Input(s) From Available ones:");
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
 
   for( unsigned int i = 0 ; i < input_type_list.size(); i++ ) {
     // for this input type allow user to select from available storage classes in the repository
@@ -85,7 +85,7 @@ get_corresp()
   }
 
   if (!io_dialog.ask()) {
-    vcl_cout << "Canceled\n";
+    std::cout << "Canceled\n";
     return;
   } else {
     vgui_dialog null_inputs("Name Missing Inputs");
@@ -104,7 +104,7 @@ get_corresp()
       null_inputs.ask();
   }
 
-  vcl_cout << "Selected input: " << input_names[0] << " ";
+  std::cout << "Selected input: " << input_names[0] << " ";
   
   bpro1_storage_sptr 
     p = MANAGER->repository()->get_data_by_name_at(input_names[0], frame_v_[0]);
@@ -115,9 +115,9 @@ get_corresp()
   if(!p) {
     if (input_names.front().empty())
       input_names.front() = "auto_created_corresp";
-    vcl_cerr << "Required storage of type '" << input_type_list.front() << "' missing. Creating a new blank one with name " 
+    std::cerr << "Required storage of type '" << input_type_list.front() << "' missing. Creating a new blank one with name " 
       << input_names.front()
-      << vcl_endl;
+      << std::endl;
     bpro1_storage_sptr new_data = MANAGER->repository()->new_data(input_type_list.front(), input_names.front());
     c_sto.vertical_cast(new_data);
     assert(c_sto);
@@ -125,47 +125,47 @@ get_corresp()
   
   corr_ = c_sto->corresp();
   if(!corr_) {
-    vcl_cout << "Empty storage - allocating data" << vcl_endl;
+    std::cout << "Empty storage - allocating data" << std::endl;
     corr_ = new bmcsd_discrete_corresp(s_->num_curves(0), s_->num_curves(1));
     corr_->set_checksum(bmcsd_discrete_corresp_algo::compute_checksum(*s_));
     c_sto->set_corresp(corr_); // storage deletes it
   } else {
-    vcl_cout << "Non-empty storage" << vcl_endl;
+    std::cout << "Non-empty storage" << std::endl;
     if (corr_->n_objects_view_0() != s_->num_curves(s_->v0())) {
-      vcl_cerr << "ERROR: input correspondence is not valid for current curves\n" 
-        << vcl_endl;
-      vcl_cerr << "corresp objs v0: " << corr_->n_objects_view_0() << vcl_endl;
-      vcl_cerr << "curve frag map size v0: " << s_->num_curves(s_->v0()) << vcl_endl;
+      std::cerr << "ERROR: input correspondence is not valid for current curves\n" 
+        << std::endl;
+      std::cerr << "corresp objs v0: " << corr_->n_objects_view_0() << std::endl;
+      std::cerr << "curve frag map size v0: " << s_->num_curves(s_->v0()) << std::endl;
       deactivate();
       return;
     }
     if (corr_->n_objects_view_1() != s_->num_curves(s_->v1())) {
-      vcl_cerr << "ERROR: input correspondence is not valid for current curves\n" 
-        << vcl_endl;
-      vcl_cerr << "corresp objs v1: " << corr_->n_objects_view_1() << vcl_endl;
-      vcl_cerr << "curve frag map size v1: " << s_->num_curves(s_->v1()) << vcl_endl;
-      vcl_cerr << "Trying to fix it (be careful - results might be misleading!)" << vcl_endl;
+      std::cerr << "ERROR: input correspondence is not valid for current curves\n" 
+        << std::endl;
+      std::cerr << "corresp objs v1: " << corr_->n_objects_view_1() << std::endl;
+      std::cerr << "curve frag map size v1: " << s_->num_curves(s_->v1()) << std::endl;
+      std::cerr << "Trying to fix it (be careful - results might be misleading!)" << std::endl;
 
       corr_->set_size(s_->num_curves(s_->v0()), s_->num_curves(s_->v1()));
     }
     unsigned long cksum = bmcsd_discrete_corresp_algo::compute_checksum(*s_);
     if (corr_->checksum() != cksum) {
-      vcl_cerr << "********************************************************\n";
-      vcl_cerr << "WARNING: input correspondence checksum doesn't match. This means that either: \n"
+      std::cerr << "********************************************************\n";
+      std::cerr << "WARNING: input correspondence checksum doesn't match. This means that either: \n"
         << "1) is not valid for current curves or 2) it is an old version or 3) whoever produced it didn't set the checksum.\n"
-        << vcl_endl;
-      vcl_cerr << "corresp checksum: " << corr_->checksum() << vcl_endl
-               << "computed checksum: " << cksum << vcl_endl;
-      vcl_cerr << "We will be fixing the checksum, in case it was old.\n";
-      vcl_cerr << "********************************************************\n";
+        << std::endl;
+      std::cerr << "corresp checksum: " << corr_->checksum() << std::endl
+               << "computed checksum: " << cksum << std::endl;
+      std::cerr << "We will be fixing the checksum, in case it was old.\n";
+      std::cerr << "********************************************************\n";
       vgui_dialog d("Warning");
       corr_->set_checksum(cksum);
       d.message("Warning: fixed checksum.");
       d.ask();
     }
   }
-  vcl_cout << "Corresp NAME: " << c_sto->name() << vcl_endl;
-  vcl_cout << "Corresp: " << " : \n" << *corr_ << vcl_endl;
+  std::cout << "Corresp NAME: " << c_sto->name() << std::endl;
+  std::cout << "Corresp: " << " : \n" << *corr_ << std::endl;
 }
 
 void mw_curve_edit_tracing_tool_2::
@@ -216,12 +216,12 @@ color_objs_having_correpondents()
       o0_corresp_soview_[i]->set_style(newstyle);
 
       // Now color curve in second view:
-      vcl_list<bmcsd_attributed_object>::const_iterator itr;
+      std::list<bmcsd_attributed_object>::const_iterator itr;
       itr = corr[i].begin(); unsigned ii=0;
       for (; itr != corr[i].end(); 
            ++itr, ++ii) {
 
-        vcl_cout << "Num_curves: " << s_->num_curves(1) << "itr->obj: " << itr->obj_ << vcl_endl;
+        std::cout << "Num_curves: " << s_->num_curves(1) << "itr->obj: " << itr->obj_ << std::endl;
         o1_corresp_soview_.push_back(
           tab_[1]->add_vsol_polyline_2d(s_->curves(1,itr->obj_)));
 
@@ -237,7 +237,7 @@ void mw_curve_edit_tracing_tool_2::
 deactivate ()
 {
   mw_curve_tracing_tool_2::deactivate();
-  vcl_cout << "mw_curve_edit_tracing_tool_2 OFF\n";
+  std::cout << "mw_curve_edit_tracing_tool_2 OFF\n";
 }
 
 bool
@@ -277,7 +277,7 @@ handle_key(vgui_key key)
   switch (key) {
     case 277: // Del
       if (o1_query_is_corresp_) {
-        vcl_cout << "Removing " <<  o0_query_idx_ << ",  " << *o1_query_itr_ <<  vcl_endl;
+        std::cout << "Removing " <<  o0_query_idx_ << ",  " << *o1_query_itr_ <<  std::endl;
         corr[o0_query_idx_].erase(o1_query_itr_);
         o1_query_is_corresp_ = false;
 
@@ -297,7 +297,7 @@ handle_key(vgui_key key)
         tab_[1]->post_redraw();
         tab_[0]->post_redraw();
       } else {
-        vcl_cout << "Selected correspondence inexistent\n";
+        std::cout << "Selected correspondence inexistent\n";
       }
 
       return true;
@@ -311,7 +311,7 @@ handle_key(vgui_key key)
           corr_->add_unique( bmcsd_attributed_object(o1_query_idx_), o0_query_idx_, &itr);
 
         if (stat) {
-          vcl_cout << "Inserting " << o0_query_idx_ << ",  " << *itr << vcl_endl;
+          std::cout << "Inserting " << o0_query_idx_ << ",  " << *itr << std::endl;
 
           o1_query_is_corresp_ = true;
 
@@ -335,17 +335,17 @@ handle_key(vgui_key key)
           tab_[1]->post_redraw();
           tab_[0]->post_redraw();
         } else {
-          vcl_cout << "Insert: object is already in corresp datastructure; ignoring.\n";
-          vcl_cout << "o1_query_idx_:" << o1_query_idx_ << "  o0_query_idx_:" 
-            << o0_query_idx_ << vcl_endl;
+          std::cout << "Insert: object is already in corresp datastructure; ignoring.\n";
+          std::cout << "o1_query_idx_:" << o1_query_idx_ << "  o0_query_idx_:" 
+            << o0_query_idx_ << std::endl;
         }
       } else {
-        vcl_cout << "Selected correspondence already inserted\n";
+        std::cout << "Selected correspondence already inserted\n";
       }
       break;
 
     case 'p': // print misc info / debug
-      vcl_cout << *corr_ << vcl_endl;
+      std::cout << *corr_ << std::endl;
 
       return true;
       break;
@@ -354,30 +354,30 @@ handle_key(vgui_key key)
       return true;
       break;
     case '7':
-      vcl_cout << "Filling correspondence structure with epiband candidates. (Not implemented)\n";
+      std::cout << "Filling correspondence structure with epiband candidates. (Not implemented)\n";
       //      get_epipolar_candidates();
     break;
     case '8':
-      vcl_cout << "Writing corresp. costs to file... (Not implemented)";
+      std::cout << "Writing corresp. costs to file... (Not implemented)";
       vgui::out << "Writing corresp. costs to file... (Not implemented)";
       // write_energies();
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
       vgui::out << "done!\n";
     break;
 
     case '9':
-      vcl_cout << "Trimming any ones below cost threshold...";
+      std::cout << "Trimming any ones below cost threshold...";
       corr_->threshold_by_cost(tau_cost_);
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
     break;
 
     case '0': // misc. stuff
-      vcl_cout << "Sorting corrresps....";
+      std::cout << "Sorting corrresps....";
       corr_->sort();
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
       break;
     default:
-      vcl_cout << "(curve_edit_tracing_tool) Unassigned key: " << key << " pressed.\n";
+      std::cout << "(curve_edit_tracing_tool) Unassigned key: " << key << " pressed.\n";
       return false;
       break;
   }
@@ -387,7 +387,7 @@ handle_key(vgui_key key)
 void mw_curve_edit_tracing_tool_2::
 toggle_lock_correspondence_query()
 {
-  vcl_string state;
+  std::string state;
   if (lock_corresp_query_) {
     lock_corresp_query_= false;
     state = "off";
@@ -395,8 +395,8 @@ toggle_lock_correspondence_query()
     lock_corresp_query_= true;
     state = "on";
   }
-  vcl_cout << "Inspect correspondence " << state << vcl_endl;;
-  vgui::out << "Inspect correspondence " << state << vcl_endl;;
+  std::cout << "Inspect correspondence " << state << std::endl;;
+  vgui::out << "Inspect correspondence " << state << std::endl;;
 }
 
 //: Returns true if mouse over valid edge in 1st view
@@ -423,21 +423,21 @@ handle_corresp_query_at_view_0
   bool found = s_->get_index_of_curve(selected_obj_in_corresp_, 0, &idx);
 
   if (!found) {
-    vcl_cout << "Error: selected curve not found among vsols in view 0\n";
+    std::cout << "Error: selected curve not found among vsols in view 0\n";
     return false;
   }
 
   o0_query_idx_ = idx;
 
   if (o0_query_idx_ >= s_->num_curves(0)) {
-    vcl_cout << "Error: index is wrong: " << vcl_endl;
-    vcl_cout << "index" << o0_query_idx_ << " out of " 
-              << s_->num_curves(0) << vcl_endl;
+    std::cout << "Error: index is wrong: " << std::endl;
+    std::cout << "index" << o0_query_idx_ << " out of " 
+              << s_->num_curves(0) << std::endl;
     return false;
   }
 
-  //  vcl_cout << "View[0]: mouse over object[" << o0_query_idx_ << "] out of " 
-  //            << s_->num_curves(0) << vcl_endl;
+  //  std::cout << "View[0]: mouse over object[" << o0_query_idx_ << "] out of " 
+  //            << s_->num_curves(0) << std::endl;
 
   // mark selected edgel
   if (o0_query_soview_) {
@@ -456,7 +456,7 @@ handle_corresp_query_at_view_0
   o0_query_soview_->draw();
 
   // add the correspondents in 2nd view
-  for (vcl_list<bgui_vsol_soview2D *>::iterator 
+  for (std::list<bgui_vsol_soview2D *>::iterator 
       itr = correspondents_soview_.begin() ; 
       itr != correspondents_soview_.end(); ++itr) {
     tab_[1]->remove(*itr);
@@ -464,7 +464,7 @@ handle_corresp_query_at_view_0
   correspondents_soview_.clear();
   correspondents_idx_.clear();
 
-  vcl_list<bmcsd_attributed_object>::const_iterator itr;
+  std::list<bmcsd_attributed_object>::const_iterator itr;
   itr = corr[idx].begin(); unsigned ii=0;
   for (; itr != corr[idx].end(); 
        ++itr, ++ii) {
@@ -502,16 +502,16 @@ handle_mouse_event_at_view_1(
     const vgui_event & /*e*/,
     const bvis1_view_tableau_sptr& /*view*/ )
 {
-  vcl_cout << "Clicked----------------------\n" << vcl_endl;
+  std::cout << "Clicked----------------------\n" << std::endl;
   bmcsd_discrete_corresp &corr = *corr_;
 
   o1_query_idx_ = s_->selected_crv_id(1);
-  vcl_cout << "View[1]: mouse click on point[" << o1_query_idx_ << "] out of " 
-            << s_->num_curves(1) << vcl_endl;
+  std::cout << "View[1]: mouse click on point[" << o1_query_idx_ << "] out of " 
+            << s_->num_curves(1) << std::endl;
 
   // find clicked point among current correspondences + print info
 
-  vcl_list<bmcsd_attributed_object>::iterator itr = corr[o0_query_idx_].begin();  
+  std::list<bmcsd_attributed_object>::iterator itr = corr[o0_query_idx_].begin();  
   unsigned  ii=0;
   for (; itr != corr[o0_query_idx_].end(); ++itr, ++ii) {
     if (itr->obj_ == o1_query_idx_)
@@ -519,13 +519,13 @@ handle_mouse_event_at_view_1(
   }
 
   if (itr != corr[o0_query_idx_].end()) {
-    vcl_cout << "Clicked on corresponding curve [" <<  ii << "]"  << " out of " 
-      << corr[o0_query_idx_].size() << " correspondents" << vcl_endl;
-    vcl_cout << "    " << *itr << vcl_endl;
+    std::cout << "Clicked on corresponding curve [" <<  ii << "]"  << " out of " 
+      << corr[o0_query_idx_].size() << " correspondents" << std::endl;
+    std::cout << "    " << *itr << std::endl;
     o1_query_itr_ = itr;
     o1_query_is_corresp_ = true;
   } else {
-    vcl_cout << "Clicked point NOT found among correspondents\n";
+    std::cout << "Clicked point NOT found among correspondents\n";
     o1_query_is_corresp_ = false;
   }
 

@@ -17,9 +17,9 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <utility>
+#include <vector>
+#include <map>
 
 #include <dbmsh3d/dbmsh3d_utils.h>
 #include <dbmsh3d/dbmsh3d_vertex.h>
@@ -38,7 +38,7 @@ protected:
   dbmsh3d_ptr_node* icurve_chain_list_;
 
   //: Dynamic mesh face data structure.
-  vcl_map<int, dbmsh3d_face*> facemap_;
+  std::map<int, dbmsh3d_face*> facemap_;
 
   //: link list to store shared edge elements.
   dbmsh3d_ptr_node* shared_F_list_;
@@ -66,11 +66,11 @@ public:
     icurve_chain_list_ = icurve_chain_list;
   }
 
-  vcl_map<int, dbmsh3d_face*>& facemap() {
+  std::map<int, dbmsh3d_face*>& facemap() {
     return facemap_;
   }
   dbmsh3d_face* facemap (const int i) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.find (i);
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.find (i);
     if (it == facemap_.end())
       return NULL;
     return (*it).second;
@@ -78,12 +78,12 @@ public:
 
   //###### Mesh Face Query Functions ######
   bool contain_F (const int fid) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.find (fid);
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.find (fid);
     return it != facemap_.end();
   }  
-  void get_F_set (vcl_set<dbmsh3d_face*>& F_set, const bool skip_shared_F);
+  void get_F_set (std::set<dbmsh3d_face*>& F_set, const bool skip_shared_F);
 
-  void get_fine_scale_vertices (vcl_map<int, dbmsh3d_vertex*>& V_map);
+  void get_fine_scale_vertices (std::map<int, dbmsh3d_vertex*>& V_map);
 
   //: Return the first found F of this sheet which is incident to E.
   //  Note that there can exist multiple possible F's incident to E.
@@ -92,7 +92,7 @@ public:
   //: Return the first found F not in inputF_set of this sheet which is incident to E.
   //  Note that there can exist multiple possible F's incident to E.
   dbmsh3d_face* get_1st_F_incident_E2 (const dbmsh3d_edge* E, 
-                                       vcl_set<dbmsh3d_face*>& inputF_set);
+                                       std::set<dbmsh3d_face*>& inputF_set);
 
   //: Check if all fine-scale F's are connected.
   //  Start with a non-shared_F as seed.
@@ -113,12 +113,12 @@ public:
     facemap_.erase (F->id());
   }
   void add_F (const dbmsh3d_face* F) {
-    facemap_.insert (vcl_pair<int, dbmsh3d_face*>(F->id(), (dbmsh3d_face*) F));
+    facemap_.insert (std::pair<int, dbmsh3d_face*>(F->id(), (dbmsh3d_face*) F));
   }
   void reset_traverse_F (); 
 
   //###### Handle the internal curve chains ######  
-  unsigned int get_icurve_chains (vcl_set<void*>& icurve_chains) const {
+  unsigned int get_icurve_chains (std::set<void*>& icurve_chains) const {
     return get_all_ptrs (icurve_chain_list_, icurve_chains);
   }
   unsigned int n_icurve_chains() const {
@@ -151,7 +151,7 @@ public:
     shared_F_list_ = shared_F_list;
   }
   
-  unsigned int get_shared_Fs (vcl_set<void*>& shared_Fs) const {
+  unsigned int get_shared_Fs (std::set<void*>& shared_Fs) const {
     return get_all_ptrs (shared_F_list_, shared_Fs);
   }
   unsigned int n_shared_Fs() const {
@@ -194,11 +194,11 @@ public:
   //  Return 0 if not found.
   int find_bnd_IC_HE (const dbmsh3d_edge* inputE, dbmsh3d_halfedge*& foundHE) const;
 
-  void get_incident_Es (vcl_set<dbmsh3d_edge*>& incident_Es) const;
+  void get_incident_Es (std::set<dbmsh3d_edge*>& incident_Es) const;
 
-  void get_incident_Vs (vcl_set<dbmsh3d_vertex*>& incident_Vs) const;
+  void get_incident_Vs (std::set<dbmsh3d_vertex*>& incident_Vs) const;
 
-  void get_incident_Sset_via_C_N (vcl_set<dbmsh3d_sheet*>& incident_Sset) const;
+  void get_incident_Sset_via_C_N (std::set<dbmsh3d_sheet*>& incident_Sset) const;
 
   dbmsh3d_halfedge* get_1st_HE_incident_V (const dbmsh3d_halfedge* startHE, 
                                            dbmsh3d_vertex* V) const;
@@ -209,36 +209,36 @@ public:
   int n_bnd_IC_chain_E_inc_V (const dbmsh3d_vertex* inputV) const;
 
   //: get the set of i-curve pair curves.
-  void get_icurve_pairs (vcl_set<dbmsh3d_edge*>& icurve_pairs) const;
+  void get_icurve_pairs (std::set<dbmsh3d_edge*>& icurve_pairs) const;
 
   //: get the set of i-curve pair and loops.
-  void get_icurves (vcl_set<dbmsh3d_edge*>& icurves) const;
+  void get_icurves (std::set<dbmsh3d_edge*>& icurves) const;
 
   //: get the set of fine-scale vertices in i-curve chains.
-  void get_icurve_Vset (vcl_set<dbmsh3d_vertex*>& Vset) const;
+  void get_icurve_Vset (std::set<dbmsh3d_vertex*>& Vset) const;
   
   //: Return the set of boundary nodes incident to any i-curves chain (pairs or loops).
-  void get_bnd_Ns_inc_ICchain (vcl_set<dbmsh3d_vertex*>& bndN_icurve) const;
+  void get_bnd_Ns_inc_ICchain (std::set<dbmsh3d_vertex*>& bndN_icurve) const;
 
   //: Return the set of boundary and icurve-loop nodes incident to any i-curves.
-  void get_bnd_iloop_N_icurve (vcl_set<dbmsh3d_vertex*>& bndN_icurve) const;
+  void get_bnd_iloop_N_icurve (std::set<dbmsh3d_vertex*>& bndN_icurve) const;
 
   bool Es_in_same_loop (dbmsh3d_edge* E1, dbmsh3d_edge* E2) const;
 
   //: get the set of i-curve pair curves inciden to N.
-  void get_ICpairs_inc_N (const dbmsh3d_vertex* N, vcl_set<dbmsh3d_edge*>& ICpairs) const;
+  void get_ICpairs_inc_N (const dbmsh3d_vertex* N, std::set<dbmsh3d_edge*>& ICpairs) const;
 
-  void get_ICchains_inc_N (const dbmsh3d_vertex* N, vcl_set<dbmsh3d_edge*>& ICchains) const;
+  void get_ICchains_inc_N (const dbmsh3d_vertex* N, std::set<dbmsh3d_edge*>& ICchains) const;
 
   dbmsh3d_curve* get_incident_C_via_E (dbmsh3d_edge* E) const;
 
   //: Get all incident MC's shared_Es.
-  bool get_incident_C_shared_Es (vcl_set<dbmsh3d_edge*>& shared_Es) const;
+  bool get_incident_C_shared_Es (std::set<dbmsh3d_edge*>& shared_Es) const;
 
   dbmsh3d_curve* find_next_bnd_C (const dbmsh3d_node* inputN, 
                                   const dbmsh3d_curve* inputC) const;
 
-  void get_bnd_icurveloop_Ns (vcl_set<dbmsh3d_vertex*>& vertices) const;
+  void get_bnd_icurveloop_Ns (std::set<dbmsh3d_vertex*>& vertices) const;
 
   //Find any duplicate E from icurve-pair in bnd-chain or icurve-loop.
   dbmsh3d_halfedge* _find_dup_Es_icurve_pair () const;  
@@ -253,16 +253,16 @@ public:
   //: Return the first found otherC of this sheet incident to N via F 
   //  with a constraint that F != inputF in the input set.
   dbmsh3d_curve* get_1st_other_C_via_F2 (const dbmsh3d_curve* inputC, const dbmsh3d_node* N,
-                                         vcl_set<dbmsh3d_face*>& inputF_set);
+                                         std::set<dbmsh3d_face*>& inputF_set);
 
   //: Check if any of E's incident F belongs to this sheet.
   bool fine_scale_E_incident (const dbmsh3d_edge* E);
   
   bool find_bnd_chain (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV, 
-                       vcl_vector<dbmsh3d_halfedge*>& HEvec);
+                       std::vector<dbmsh3d_halfedge*>& HEvec);
 
   //: Return true if all shared_F[] are with one of the given set of S's.
-  bool shared_F_with_Sset (vcl_set<dbmsh3d_sheet*>& shared_F_Sset) const;
+  bool shared_F_with_Sset (std::set<dbmsh3d_sheet*>& shared_F_Sset) const;
   
   //###### Connectivity modification functions ######
 
@@ -312,7 +312,7 @@ public:
   dbmsh3d_halfedge* connect_icurve_pair_E (dbmsh3d_edge* E);
 
   //: Connect a loop of edges as a internal curve chain (1-incidence).
-  void connect_icurve_loop_Es (vcl_vector<dbmsh3d_edge*>& icurve_loop_Es);
+  void connect_icurve_loop_Es (std::vector<dbmsh3d_edge*>& icurve_loop_Es);
   
   //: Canonicalization: re-organize this SS's bnd_HE_chain and icurve_HE_chain such that
   //  there are no duplicate HE in bnd_HE_chain and icurve_loop_chain.
@@ -352,7 +352,7 @@ public:
   void _clone_S_F_conn (dbmsh3d_sheet* S2, dbmsh3d_mesh* M2);
   virtual dbmsh3d_sheet* clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2);
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
   //###### Handle Incident Virtual Curves ######
 
@@ -373,7 +373,7 @@ dbmsh3d_halfedge* _find_prevE_HE (const dbmsh3d_halfedge* inputHE);
 bool _detect_2_suc_Es (const dbmsh3d_halfedge* headHE);
 
 //: Return true if [i,j] belongs to any conesecutive 3-incident edges.
-bool _check_3_incidence (const vcl_vector<dbmsh3d_halfedge*>& HE_vec, 
+bool _check_3_incidence (const std::vector<dbmsh3d_halfedge*>& HE_vec, 
                          const unsigned int i, const unsigned int j);
 
 dbmsh3d_curve* _find_E_in_C_chain (const dbmsh3d_halfedge* headHE, dbmsh3d_edge* E);
@@ -385,7 +385,7 @@ bool loop_self_int (const dbmsh3d_halfedge* headHE);
 //: Given the inputHE and eV, find the next HE in the HE_loop_vec[].
 //  Return true if exactly one such nextHE is found.
 bool _find_nextHE_in_loop (const dbmsh3d_halfedge* inputHE, const dbmsh3d_vertex* eV, 
-                           const vcl_vector<dbmsh3d_halfedge*>& HE_loop_vec,
+                           const std::vector<dbmsh3d_halfedge*>& HE_loop_vec,
                            dbmsh3d_halfedge*& nextHE);
 
 //: Given the inputHE and eV, find the next HE in the HE_loop_vec[], considering 
@@ -393,32 +393,32 @@ bool _find_nextHE_in_loop (const dbmsh3d_halfedge* inputHE, const dbmsh3d_vertex
 //  Return the nextHE, and return the additional nextHE2 if it is found.
 dbmsh3d_halfedge* _find_nextHE_in_loop_3inc (const dbmsh3d_halfedge* inputHE, 
                                              const dbmsh3d_vertex* eV, 
-                                             const vcl_vector<dbmsh3d_halfedge*>& HEvet,
+                                             const std::vector<dbmsh3d_halfedge*>& HEvet,
                                              dbmsh3d_halfedge*& HEnn2);
 
 dbmsh3d_halfedge* _find_lastHE_in_chain (const dbmsh3d_halfedge* startHE, const dbmsh3d_vertex* startV, 
-                                         const dbmsh3d_vertex* endV, const vcl_vector<dbmsh3d_halfedge*>& HEvec);
+                                         const dbmsh3d_vertex* endV, const std::vector<dbmsh3d_halfedge*>& HEvec);
 
 bool _check_loop_of_2_HEs (const dbmsh3d_halfedge* headHE);
 
 
 bool _find_in_chain (const dbmsh3d_halfedge* headHE,
                      const dbmsh3d_vertex* sV, const dbmsh3d_vertex* eV, 
-                     vcl_vector<dbmsh3d_halfedge*>& HEvec);
+                     std::vector<dbmsh3d_halfedge*>& HEvec);
 
 //: Go through each icurve HE and modify the face pointer.
 void _modify_F_icurve_chain (dbmsh3d_halfedge* headHE, dbmsh3d_face* F);
 
 //: Make sure that the loop_bnd_Es[] are problem free (for debugging).
-bool _verify_loop_bnd_Es (const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es);
+bool _verify_loop_bnd_Es (const std::vector<dbmsh3d_edge*>& loop_bnd_Es);
 
-bool _find_V_reorder_Es (const dbmsh3d_vertex* Vc, const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es, 
-                         vcl_vector<dbmsh3d_edge*>& reordered_Es);
+bool _find_V_reorder_Es (const dbmsh3d_vertex* Vc, const std::vector<dbmsh3d_edge*>& loop_bnd_Es, 
+                         std::vector<dbmsh3d_edge*>& reordered_Es);
 
-void _get_chain_C_Evec (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_edge*>& Evec);
+void _get_chain_C_Evec (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_edge*>& Evec);
 
-void _get_chain_C_shared_Es (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_edge*>& shared_Es);
-void _get_C_shared_Es (dbmsh3d_curve* C, vcl_set<dbmsh3d_edge*>& shared_Es);
+void _get_chain_C_shared_Es (const dbmsh3d_halfedge* headHE, std::set<dbmsh3d_edge*>& shared_Es);
+void _get_C_shared_Es (dbmsh3d_curve* C, std::set<dbmsh3d_edge*>& shared_Es);
 
 bool _disconnect_bnd3_E_chain (dbmsh3d_halfedge*& headHE, dbmsh3d_edge* E);
 
@@ -439,9 +439,9 @@ inline void remove_Ss_sharing_F (dbmsh3d_sheet* S1, dbmsh3d_sheet* S2, dbmsh3d_f
   S2->del_shared_F (F);
 }
 
-bool _prop_label_Fs_e_conn (dbmsh3d_face* seedF, vcl_set<dbmsh3d_face*>& Fset);
+bool _prop_label_Fs_e_conn (dbmsh3d_face* seedF, std::set<dbmsh3d_face*>& Fset);
 
-void _prop_label_Fs_e_v_conn (dbmsh3d_face* seedF, vcl_set<dbmsh3d_face*>& Fset);
+void _prop_label_Fs_e_v_conn (dbmsh3d_face* seedF, std::set<dbmsh3d_face*>& Fset);
 
 #endif
 

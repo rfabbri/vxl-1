@@ -29,6 +29,6 @@ template<class nodeT, class transitionT>
 void vsl_b_write(vsl_b_ostream &os, const dsm2_state_machine<nodeT, transitionT>* p);
 
 template<class nodeT, class transitionT>
-void vsl_print_summary(vcl_ostream& os, const dsm2_state_machine<nodeT, transitionT> *p);
+void vsl_print_summary(std::ostream& os, const dsm2_state_machine<nodeT, transitionT> *p);
 
 #endif //DSM2_IO_FEATURE_H_

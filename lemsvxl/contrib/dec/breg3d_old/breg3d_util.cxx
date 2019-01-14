@@ -1,8 +1,8 @@
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3x1.h>
@@ -20,9 +20,9 @@
 
 bool breg3d_util::read_cameras(const char *filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 {
-  vcl_ifstream file_inp(filename);
+  std::ifstream file_inp(filename);
   if (!file_inp.good()) {
-    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+    std::cerr << "error opening file "<< filename <<std::endl;
     return false;
   }
   unsigned ncameras;
@@ -47,20 +47,20 @@ bool breg3d_util::read_cameras(const char *filename, std::vector<vnl_double_3x3>
 
 bool breg3d_util::write_cameras(const char *filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 {
-vcl_ofstream file_out(filename);
+std::ofstream file_out(filename);
   if (!file_out.good()) {
-    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+    std::cerr << "error opening file "<< filename <<std::endl;
     return false;
   }
   unsigned ncameras = Ks.size();
 
-  file_out << ncameras << vcl_endl << vcl_endl;
+  file_out << ncameras << std::endl << std::endl;
   for (unsigned i=0; i < ncameras; i++) {
 
-    file_out << Ks[i] << vcl_endl;
-    file_out << Rs[i] << vcl_endl;
-    file_out << Ts[i] << vcl_endl;
-    file_out << vcl_endl;
+    file_out << Ks[i] << std::endl;
+    file_out << Rs[i] << std::endl;
+    file_out << Ts[i] << std::endl;
+    file_out << std::endl;
   }
   file_out.close();
 
@@ -69,7 +69,7 @@ vcl_ofstream file_out(filename);
 }
 
 
-vil_image_view<float> breg3d_util::load_image(vcl_string img_fname)
+vil_image_view<float> breg3d_util::load_image(std::string img_fname)
 {
   vil_image_resource_sptr img_res = vil_load_image_resource(img_fname.c_str());
   vil_image_view<float> frame_view = brip_vil_float_ops::convert_to_float(img_res);
@@ -80,7 +80,7 @@ vil_image_view<float> breg3d_util::load_image(vcl_string img_fname)
 }
 
 
-void breg3d_util::save_image(vil_image_view<float> img, vcl_string img_fname)
+void breg3d_util::save_image(vil_image_view<float> img, std::string img_fname)
 {
   float img_norm_val = 255.0f;
   vil_math_scale_values(img,img_norm_val);

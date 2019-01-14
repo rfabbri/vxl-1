@@ -1,5 +1,5 @@
 #include <vnl/vnl_matrix.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 
 #ifndef _DBDET_TEXTON_CLASSIFIER_H_
@@ -14,7 +14,7 @@ public:
 
   int numClasses();
 
-  vnl_matrix<unsigned> classify(vcl_vector<vil_image_view<double> > decomposed);
+  vnl_matrix<unsigned> classify(std::vector<vil_image_view<double> > decomposed);
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/vgl_distance.h>
 #include <vul/vul_printf.h>
 
@@ -13,14 +13,14 @@
 //: Run the point-point ICP registration.
 //  Return the final homogeneous transformation matrix.
 //
-bool dbmsh3dr_pp_icp_regstr (const vcl_vector<vgl_point_3d<double> >& fixPS, 
-                             vcl_vector<vgl_point_3d<double> >& movPS, 
+bool dbmsh3dr_pp_icp_regstr (const std::vector<vgl_point_3d<double> >& fixPS, 
+                             std::vector<vgl_point_3d<double> >& movPS, 
                              const int max_iter, const float conv_th, const double dist_th,
                              vgl_h_matrix_3d<double>& H)
 {
   #if DBMSH3D_DEBUG > 2
-  vul_printf (vcl_cout, "\ndbmsh3dr_pp_icp_regstr(): fixPS %d, movPS %d.\n", fixPS.size(), movPS.size());
-  vul_printf (vcl_cout, "  max_iter %d, conv_th %f\n", max_iter, conv_th);   
+  vul_printf (std::cout, "\ndbmsh3dr_pp_icp_regstr(): fixPS %d, movPS %d.\n", fixPS.size(), movPS.size());
+  vul_printf (std::cout, "  max_iter %d, conv_th %f\n", max_iter, conv_th);   
   #endif
 
   //Reset H to identity.
@@ -33,8 +33,8 @@ bool dbmsh3dr_pp_icp_regstr (const vcl_vector<vgl_point_3d<double> >& fixPS,
   vnl_vector_fixed<double,3> movC;
 
   //The corresponding point sets.
-  vcl_vector<vgl_point_3d<double> > cor_fixPS;
-  vcl_vector<vgl_point_3d<double> > cor_movPS;
+  std::vector<vgl_point_3d<double> > cor_fixPS;
+  std::vector<vgl_point_3d<double> > cor_movPS;
 
   //:1) Initilization: Build a kd-tree for the fixed set of points.
   rsdl_kd_tree* kdtree = dbmsh3d_build_kdtree_pts (fixPS);
@@ -52,15 +52,15 @@ START_ICP_ITERATION:
 
   nIteration++;
   #if DBMSH3D_DEBUG > 2
-  vul_printf (vcl_cout, "\nPt-Pt ICP Iteration: %d\n", nIteration);
+  vul_printf (std::cout, "\nPt-Pt ICP Iteration: %d\n", nIteration);
   #endif
   
   //Go through each point in the moving set movPS.
   for (unsigned int i=0; i<movPS.size(); i++) {
     //Find closest point on fixed set fixPS as correspondence.
     int top_n = 1;
-    vcl_vector<rsdl_point> near_neighbor_pts;
-    vcl_vector<int> near_neighbor_indices;
+    std::vector<rsdl_point> near_neighbor_pts;
+    std::vector<int> near_neighbor_indices;
     rsdl_point query_pt (3, 0);
     vnl_vector_fixed<double,3> P3 (movPS[i].x(), movPS[i].y(), movPS[i].z());
     query_pt.set_cartesian (P3);
@@ -80,7 +80,7 @@ START_ICP_ITERATION:
   }
 
   #if DBMSH3D_DEBUG > 2
-  vul_printf (vcl_cout, "  Skip %u points out of dist_th.\n", movPS.size() - cor_movPS.size());
+  vul_printf (std::cout, "  Skip %u points out of dist_th.\n", movPS.size() - cor_movPS.size());
   #endif
   assert (cor_movPS.size() != 0);
 
@@ -104,17 +104,17 @@ START_ICP_ITERATION:
   //    Stop iteration if # iter > max_iter or H3x3 converges.
   double H33RMS = estimate_ICP_conv (R);
   #if DBMSH3D_DEBUG > 2
-  vul_printf (vcl_cout, "  Pt-Pt ICP convergence value: %f.\n", H33RMS);
+  vul_printf (std::cout, "  Pt-Pt ICP convergence value: %f.\n", H33RMS);
   #endif
   if (nIteration < max_iter && H33RMS > conv_th)
     goto START_ICP_ITERATION;
   
   #if DBMSH3D_DEBUG > 2
   if (H33RMS <= conv_th)
-    vul_printf (vcl_cout, "\n  Pt-Pt ICP converges.\n\n");
+    vul_printf (std::cout, "\n  Pt-Pt ICP converges.\n\n");
   else
-    vul_printf (vcl_cout, "\n  Pt-Pt ICP does not converge!\n\n");
-  vcl_cout << "    Registration result hmatrix: " << vcl_endl << H;
+    vul_printf (std::cout, "\n  Pt-Pt ICP does not converge!\n\n");
+  std::cout << "    Registration result hmatrix: " << std::endl << H;
   #endif
 
   delete kdtree;
@@ -129,11 +129,11 @@ bool dbmsh3dr_pf_icp_regstr (dbmsh3d_mesh* fixM, dbmsh3d_mesh* movM,
                              const int max_iter, const float conv_th, const double dist_th,
                              vgl_h_matrix_3d<double>& H)
 {
-  vul_printf (vcl_cout, "dbmsh3dr_pf_icp_regstr():\n");
-  vul_printf (vcl_cout, "  fixM (V: %u, F: %u), movM (V: %d, F: %u).\n", 
+  vul_printf (std::cout, "dbmsh3dr_pf_icp_regstr():\n");
+  vul_printf (std::cout, "  fixM (V: %u, F: %u), movM (V: %d, F: %u).\n", 
               fixM->vertexmap().size(), fixM->facemap().size(), 
               movM->vertexmap().size(), movM->facemap().size());
-  vul_printf (vcl_cout, "  max_iter %d, conv_th %f\n", max_iter, conv_th);   
+  vul_printf (std::cout, "  max_iter %d, conv_th %f\n", max_iter, conv_th);   
 
   //The registration parameters.
   vnl_matrix_fixed<double,3,3> R;
@@ -141,8 +141,8 @@ bool dbmsh3dr_pf_icp_regstr (dbmsh3d_mesh* fixM, dbmsh3d_mesh* movM,
   vnl_vector_fixed<double,3> movC;
 
   //The corresponding point sets.
-  vcl_vector<vgl_point_3d<double> > cor_movPS;
-  vcl_vector<vgl_point_3d<double> > cor_fixPS;
+  std::vector<vgl_point_3d<double> > cor_movPS;
+  std::vector<vgl_point_3d<double> > cor_fixPS;
 
   //:1) Initilization: Build a kd-tree for the fixed set of points.
   rsdl_kd_tree* kdtree = dbmsh3d_build_kdtree_vertices (fixM);
@@ -159,10 +159,10 @@ START_ICP_ITERATION:
   cor_fixPS.clear();
 
   nIteration++;
-  vul_printf (vcl_cout, "\nPt-Plane ICP Iteration: %d\n", nIteration);
+  vul_printf (std::cout, "\nPt-Plane ICP Iteration: %d\n", nIteration);
   
   //Go through each vertices in the moving set movM.
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = movM->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = movM->vertexmap().begin();
   for (; it != movM->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
 
@@ -179,7 +179,7 @@ START_ICP_ITERATION:
     }
   }
 
-  vul_printf (vcl_cout, "  Skip %u points out of dist_th.\n", movM->vertexmap().size() - cor_movPS.size());
+  vul_printf (std::cout, "  Skip %u points out of dist_th.\n", movM->vertexmap().size() - cor_movPS.size());
   assert (cor_movPS.size() != 0);
 
   //:3) Find the xform for this iteration.
@@ -203,15 +203,15 @@ START_ICP_ITERATION:
   //:5) Compute convergence and test if iteration is enough.
   //    Stop iteration if # iter > max_iter or H3x3 converges.
   double H33RMS = estimate_ICP_conv (R);
-  vul_printf (vcl_cout, "  Pt-Mesh ICP convergence value: %f.\n", H33RMS);
+  vul_printf (std::cout, "  Pt-Mesh ICP convergence value: %f.\n", H33RMS);
   if (nIteration < max_iter && H33RMS > conv_th)
     goto START_ICP_ITERATION;
 
   if (H33RMS <= conv_th)
-    vul_printf (vcl_cout, "\n  Pt-Mesh ICP converges.\n\n");
+    vul_printf (std::cout, "\n  Pt-Mesh ICP converges.\n\n");
   else
-    vul_printf (vcl_cout, "\n  Pt-Mesh ICP does not converge!\n\n");
-  vcl_cout << "    Registration result hmatrix: " << vcl_endl << H;
+    vul_printf (std::cout, "\n  Pt-Mesh ICP does not converge!\n\n");
+  std::cout << "    Registration result hmatrix: " << std::endl << H;
 
   delete kdtree;
   return H33RMS <= conv_th; //return ICP converge or not
@@ -256,7 +256,7 @@ double estimate_ICP_conv (const vnl_matrix_fixed<double,3,3>& R)
   }
 
   sum /= 9;
-  sum = vcl_sqrt (sum);
+  sum = std::sqrt (sum);
   return sum;
 }
 

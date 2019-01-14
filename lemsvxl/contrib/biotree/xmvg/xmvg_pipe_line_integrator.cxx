@@ -94,7 +94,7 @@ double xmvg_pipe_line_integrator::increment_ray_start_and_integrate(){
     // Handle another special case here where the ray direction is parallel to the cylinder taps
     if(z1_ == 0)
     {
-      if(vcl_abs(z0_) > h_)
+      if(std::abs(z0_) > h_)
         val_inner = 0;
       else
       {
@@ -140,7 +140,7 @@ double xmvg_pipe_line_integrator::increment_ray_start_and_integrate(){
     // Handle another special case here where the ray direction is parallel to the cylinder taps
     if(z1_ == 0)
     {
-      if(vcl_abs(z0_) > h_)
+      if(std::abs(z0_) > h_)
         val_outer = 0;
       else
       {

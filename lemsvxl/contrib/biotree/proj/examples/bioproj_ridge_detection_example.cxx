@@ -8,21 +8,21 @@
 // \date    2005-07-19
 // 
 
-#include <vcl_ctime.h>
-#include <vcl_string.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_fstream.h>
+#include <ctime>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/algo/vil3d_grad_1x3.h>
 #include <vil3d/algo/vil3d_structuring_element.h>
 #include <vil3d/algo/vil3d_binary_erode.h>
 #include <dbil3d/algo/dbil3d_detect_ridges.h>
 #include <dbil3d/algo/dbil3d_gauss_filter.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_cylinder.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <fstream>
+#include <cmath>
 #include <det/det_cylinder_map.h>
 #include <det/det_cylinder_detect.h>
 #include <det/det_nonmaxium_suppression.h>
@@ -36,20 +36,20 @@ int main(int argc, char *argv[])
 {
   if(argc != 6)
   {
-    vcl_cout << "Usage: " << argv[0] << " [input prefix] [output prefix] [epsilon] [aspect_thresh] [lambda_thresh]\n ";
+    std::cout << "Usage: " << argv[0] << " [input prefix] [output prefix] [epsilon] [aspect_thresh] [lambda_thresh]\n ";
     exit(-1);
   }
 
 
-  vcl_string fnamebase = argv[1];
+  std::string fnamebase = argv[1];
 
   int dimx, dimy, dimz, dummy;
   double val;
 
-  vcl_string fname_s = fnamebase + "_s.out";
-  vcl_string fname_x = fnamebase + "_x.out";
-  vcl_string fname_y = fnamebase + "_y.out";
-  vcl_string fname_z = fnamebase + "_z.out";
+  std::string fname_s = fnamebase + "_s.out";
+  std::string fname_x = fnamebase + "_x.out";
+  std::string fname_y = fnamebase + "_y.out";
+  std::string fname_z = fnamebase + "_z.out";
 
   vil3d_image_view<float> I_s = sliceFileManager<float>::read(fname_s);
   vil3d_image_view<float> I_x = sliceFileManager<float>::read(fname_x); 
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
   ////////////////////////////////////////////////////////////
   // ridge detection
-  float epsilon = float(vcl_atof(argv[3]));
+  float epsilon = float(std::atof(argv[3]));
 
   // uses derivatives all computed by the projected method
 //  dbil3d_detect_ridges(I_x, I_y, I_z, I_xx, I_yy, I_zz, I_xy, I_xz, I_yz, epsilon, rho, lambda1, lambda2, eigenv3);
@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
   // not used anymore inside this code
 //  dbil3d_detect_ridges<float> (I, float(50/35.4), float(0.7), rho, lambda1, lambda2, eigenv3);
 
-  double ratio_threshold = double( vcl_atof(argv[4]) );
-  double lambda_threshold = double( vcl_atof(argv[5]) );
+  double ratio_threshold = double( std::atof(argv[4]) );
+  double lambda_threshold = double( std::atof(argv[5]) );
 
   // find the maximum first eigenvalue in absolute value
   float max_lambda = 0;
@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
     {
       for(int i=0;i<dimx;i++)
       {
-        if(max_lambda < vcl_fabs(lambda1(i,j,k)))
-          max_lambda = vcl_fabs(lambda1(i,j,k));
+        if(max_lambda < std::fabs(lambda1(i,j,k)))
+          max_lambda = std::fabs(lambda1(i,j,k));
       }
     }
   }
@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
       {
         float l1 = lambda1(i,j,k);
         float l2 = lambda2(i,j,k);
-        double ratio = vcl_fabs(l1-l2) / (vcl_fabs(l1+l2)/2);
-        if (rho(i,j,k) == 1 && ratio <= ratio_threshold && vcl_fabs(l1) >= lambda_threshold*max_lambda)
+        double ratio = std::fabs(l1-l2) / (std::fabs(l1+l2)/2);
+        if (rho(i,j,k) == 1 && ratio <= ratio_threshold && std::fabs(l1) >= lambda_threshold*max_lambda)
           binary(i,j,k) = true;
         else
           binary(i,j,k) = false;
@@ -126,8 +126,8 @@ int main(int argc, char *argv[])
   det_nonmaxium_suppression nms(neighb_size);
   cm = nms.apply(cm);
 
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
 
   // create the cylinders for the surviving ridge voxels
   for(int k=0;k<dimz;k++)
@@ -138,8 +138,8 @@ int main(int argc, char *argv[])
       {
         if (binary(i,j,k) && cm[i][j][k].location_ != vgl_point_3d<double> (0.,0.,0.))
         {
-          vcl_cout << vgl_point_3d<double>(double(i), double(j), double(k)) << vcl_endl;
-          vcl_cout << 1.0 << vcl_endl;
+          std::cout << vgl_point_3d<double>(double(i), double(j), double(k)) << std::endl;
+          std::cout << 1.0 << std::endl;
 
           double x = i + cm[i][j][k].location_.x();
           double y = j + cm[i][j][k].location_.y();
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 
   ////////////////////////////////////////////////////////////
   // write the cylinders to binary stream
-  vcl_string o_file = argv[2];
+  std::string o_file = argv[2];
   vsl_b_ofstream stream(o_file.c_str());
   // write the version number
   vsl_b_write(stream, (int) 1);

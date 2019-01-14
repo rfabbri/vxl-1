@@ -18,7 +18,7 @@
 #include <dbsks/dbsks_xshock_likelihood.h>
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_map.h>
+#include <map>
 
 // ============================================================================
 // dbsks_xshock_app_likelihood_app
@@ -32,7 +32,7 @@ public:
   // Constructor / destructor -------------------------------------------------
   
   //: default constructor
-  dbsks_xshock_app_likelihood(const vcl_string& queryImage );
+  dbsks_xshock_app_likelihood(const std::string& queryImage );
 
   //: destructor
   /* virtual */ 
@@ -49,7 +49,7 @@ public:
   //: Likelihood of a xshock graph
   /* virtual */ 
   double loglike(const dbsksp_xshock_graph_sptr& xgraph, 
-    const vcl_vector<unsigned >& ignored_edges, bool verbose);
+    const std::vector<unsigned >& ignored_edges, bool verbose);
 
   //: Likelihood of an xshock fragment given the whole shape's boundary
   double f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, 
@@ -58,7 +58,7 @@ public:
 
   //: Likelihood of a xshock graph using whole contour matching
   double f_whole_contour(const dbsksp_xshock_graph_sptr& xgraph, 
-    const vcl_vector<unsigned >& ignored_edges, bool verbose);
+    const std::vector<unsigned >& ignored_edges, bool verbose);
 
  
 private:
@@ -80,10 +80,10 @@ private:
   //  for each fragment of the model
   //  Each histogram of appearance is accessed by the unique shock edge
   //  of the model 
-  vcl_map< unsigned int,vcl_vector<double> > appearance_model_;
+  std::map< unsigned int,std::vector<double> > appearance_model_;
   
   //: Metric: variant on earth mover distance
-  double emd(vcl_vector<double>& model, vcl_vector<double>& query);
+  double emd(std::vector<double>& model, std::vector<double>& query);
 
   
 };

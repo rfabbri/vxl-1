@@ -17,7 +17,7 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
+#include<map>
 
 #include<vsl/vsl_binary_io.h>
 

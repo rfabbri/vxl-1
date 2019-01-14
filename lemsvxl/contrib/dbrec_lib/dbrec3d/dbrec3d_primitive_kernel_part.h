@@ -17,7 +17,7 @@
 
 #include "dbrec3d_part.h"
 #include <bvpl/kernels/bvpl_kernel.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bxml/bxml_document.h>
 
 class dbrec3d_parts_manager;
@@ -35,7 +35,7 @@ private:
   
   
   //: Constructor from: part id, greometry, children, neighborhood radious
-  dbrec3d_primitive_kernel_part(int type_id, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, vnl_float_3 radius, bool symmetric, bool rot_invar, const vcl_vector<dbrec3d_part_sptr>& children) 
+  dbrec3d_primitive_kernel_part(int type_id, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, vnl_float_3 radius, bool symmetric, bool rot_invar, const std::vector<dbrec3d_part_sptr>& children) 
   : dbrec3d_part(type_id, axis, aux_axis, angle, scale,radius, symmetric, rot_invar),class_prior_(-1.0f), kernel_(NULL){}
   
  
@@ -93,7 +93,7 @@ protected:
   
 };
 
-//vcl_ostream & operator<<(vcl_ostream& out, const dbrec3d_primitive_part& p);
+//std::ostream & operator<<(std::ostream& out, const dbrec3d_primitive_part& p);
 
 
 #endif

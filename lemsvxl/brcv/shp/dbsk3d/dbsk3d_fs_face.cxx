@@ -2,11 +2,11 @@
 //: MingChing Chang
 //  Nov. 14, 2004        Creation
 
-#include <vcl_cstring.h>
-#include <vcl_sstream.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
-#include <vcl_iostream.h>
+#include <cstring>
+#include <sstream>
+#include <utility>
+#include <iostream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <vgl/vgl_distance.h>
@@ -62,7 +62,7 @@ double dbsk3d_fs_face::compute_center_pt_time()
 bool dbsk3d_fs_face::is_elongate (const float ratio) const
 {
   //Compute the farthest vertex Vf from centroid Cen.
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   get_bnd_Vs (vertices);
   vgl_point_3d<double> Cen = compute_center_pt (vertices);
   int vfi = -1;
@@ -152,12 +152,12 @@ bool dbsk3d_fs_face::remove_G (const dbmsh3d_vertex* G)
     }
   }
 
-  vul_printf (vcl_cout, "dbsk3d_fs_face %d: ERROR in removing Gene %d\n", id_, G->id());
+  vul_printf (std::cout, "dbsk3d_fs_face %d: ERROR in removing Gene %d\n", id_, G->id());
   assert (0);
   return false;
 }
 
-void dbsk3d_fs_face::get_incoming_Gs (vcl_set<dbmsh3d_vertex*>& incomingG)
+void dbsk3d_fs_face::get_incoming_Gs (std::set<dbmsh3d_vertex*>& incomingG)
 {
   //Add this fs_face's G0 and G1 to incomingG.
   incomingG.insert (genes_[0]);
@@ -185,16 +185,16 @@ void dbsk3d_fs_face::get_incoming_Gs (vcl_set<dbmsh3d_vertex*>& incomingG)
 //: Return true if the shock sheet element contains the A12-2 source point.
 bool dbsk3d_fs_face::contain_A12_2 ()
 {
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   get_bnd_Vs (vertices);
   return contain_A12_2 (vertices);
 }
 
 //: Return true if the shock sheet element contains the A12-2 source point.
-bool dbsk3d_fs_face::contain_A12_2 (const vcl_vector<dbmsh3d_vertex*>& vertices)
+bool dbsk3d_fs_face::contain_A12_2 (const std::vector<dbmsh3d_vertex*>& vertices)
 {
   //Get the projected 2D polygon of this polygon.
-  vcl_vector<double> xs, ys;  
+  std::vector<double> xs, ys;  
   get_2d_polygon (vertices, xs, ys);
 
   //Project the mid point M to the 2D polygon.     
@@ -236,7 +236,7 @@ FF_FLOW_TYPE dbsk3d_fs_face::detect_flow_type (vispt_elm*& elm)
 {
   const dbmsh3d_vertex* G0 = genes_[0];
 
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   get_bnd_Vs (vertices);
 
   //If the A12-2 mid-point is inside the sheet polygon, return FF_FT_I_A12_2.
@@ -389,7 +389,7 @@ const bool dbsk3d_fs_face::both_sides_meshed (dbsk3d_fs_edge** L1,
   return count>1;
 }
 
-void dbsk3d_fs_face::get_FEs_with_bnd_F (vcl_set<dbsk3d_fs_edge*>& FE_with_bnd_F_set) const
+void dbsk3d_fs_face::get_FEs_with_bnd_F (std::set<dbsk3d_fs_edge*>& FE_with_bnd_F_set) const
 {
   dbmsh3d_halfedge* HE = halfedge_;
   do {
@@ -402,8 +402,8 @@ void dbsk3d_fs_face::get_FEs_with_bnd_F (vcl_set<dbsk3d_fs_edge*>& FE_with_bnd_F
 }
 
 //: Add the boundary fs_edges associated with genes (if any) to the set.
-void dbsk3d_fs_face::get_bnd_FE_FV_with_Gs (vcl_set<dbsk3d_fs_edge*>& FE_with_G_set,
-                                            vcl_set<dbsk3d_fs_vertex*>& FV_with_G_set) const 
+void dbsk3d_fs_face::get_bnd_FE_FV_with_Gs (std::set<dbsk3d_fs_edge*>& FE_with_G_set,
+                                            std::set<dbsk3d_fs_vertex*>& FV_with_G_set) const 
 {
   dbmsh3d_halfedge* HE = halfedge_;
   do {
@@ -511,73 +511,73 @@ dbsk3d_fs_face* dbsk3d_fs_face::clone (dbmsh3d_mesh* M2, dbmsh3d_pt_set* BND2) c
   return FF2;
 }
 
-void dbsk3d_fs_face::getInfo (vcl_ostringstream& ostrm) 
+void dbsk3d_fs_face::getInfo (std::ostringstream& ostrm) 
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbsk3d_fs_face id: %d Gene (%d-%d)    ", 
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbsk3d_fs_face id: %d Gene (%d-%d)    ", 
                id_, genes_[0]->id(), genes_[1]->id()); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
-  vcl_sprintf (s, "%s, %s, sheet id %d,\n",
+  std::sprintf (s, "%s, %s, sheet id %d,\n",
                b_valid() ? "Valid" : "Invalid", 
                b_finite() ? "Finite" : "Unbounded",
                i_value_); ostrm<<s;
   vgl_point_3d<double> mid = mid_pt ();
   double time = mid_pt_time ();
-  vcl_sprintf (s, "mid_pt (%.10f %.10f %.10f), mid_pt time: %lf\n",
+  std::sprintf (s, "mid_pt (%.10f %.10f %.10f), mid_pt time: %lf\n",
                mid.x(), mid.y(), mid.z(), time); ostrm<<s;
   
   //incident link-elms in order via halfedges
   unsigned int n_sides = n_bnd_Es ();
-  vcl_sprintf (s, "\n %u fs_edges: ", n_sides); ostrm<<s;
+  std::sprintf (s, "\n %u fs_edges: ", n_sides); ostrm<<s;
 
   if (halfedge_ == NULL) {
-    vcl_sprintf (s, "NONE "); ostrm<<s;
+    std::sprintf (s, "NONE "); ostrm<<s;
   }
   else if (halfedge_->next() == NULL) {
-    vcl_sprintf (s, "%d ", (halfedge_)->edge()->id()); ostrm<<s;
+    std::sprintf (s, "%d ", (halfedge_)->edge()->id()); ostrm<<s;
   }
   else {
     dbmsh3d_halfedge* HE = halfedge_;
     do {
-      vcl_sprintf (s, "%d ", HE->edge()->id()); ostrm<<s;
+      std::sprintf (s, "%d ", HE->edge()->id()); ostrm<<s;
       HE = HE->next();
     }
     while (HE != halfedge_);
   }
 
   //incident fs_vertices in order
-  vcl_sprintf (s, "\n %d fs_vertices: ", n_sides); ostrm<<s;
+  std::sprintf (s, "\n %d fs_vertices: ", n_sides); ostrm<<s;
   if (halfedge_ == NULL) {
-    vcl_sprintf (s, "NONE "); ostrm<<s;
+    std::sprintf (s, "NONE "); ostrm<<s;
   }
   else if (halfedge_->next() == NULL) {
     dbmsh3d_halfedge* HE = halfedge_;
     assert (HE->edge()->sV() == HE->edge()->eV());
-    vcl_sprintf (s, "%d ", HE->edge()->sV()->id()); ostrm<<s;
+    std::sprintf (s, "%d ", HE->edge()->sV()->id()); ostrm<<s;
   }
   else {
     dbmsh3d_halfedge* HE = halfedge_;
     do {
       dbmsh3d_halfedge* next_he = HE->next();
       dbmsh3d_vertex* V = Es_sharing_V (HE->edge(), next_he->edge());
-      vcl_sprintf (s, "%d ", V->id()); ostrm<<s;
+      std::sprintf (s, "%d ", V->id()); ostrm<<s;
       HE = HE->next();
     }
     while (HE != halfedge_);
   }
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //###############################################################
 //####### dbsk3d_fs_face TEXT FILE I/O FUNCTIONS #######
 //###############################################################
 
-void ff_save_text_file (vcl_FILE* fp, const dbsk3d_fs_face* FF)
+void ff_save_text_file (std::FILE* fp, const dbsk3d_fs_face* FF)
 {
   char valid = '?';
   if (FF->b_valid())
@@ -591,36 +591,36 @@ void ff_save_text_file (vcl_FILE* fp, const dbsk3d_fs_face* FF)
   else
     finite = 'I';
 
-  vcl_fprintf (fp, "f %d (%d-%d) %c %c\n", 
+  std::fprintf (fp, "f %d (%d-%d) %c %c\n", 
                FF->id(), FF->genes(0)->id(), FF->genes(1)->id(), valid, finite);
 
   //Incident boundary fs_edges
   int nL = FF->n_bnd_Es ();
-  vcl_fprintf (fp, "\t%u:", nL);
+  std::fprintf (fp, "\t%u:", nL);
   dbmsh3d_halfedge* HE = FF->halfedge();
   do {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) HE->edge();
-    vcl_fprintf (fp, " %d", FE->id());
+    std::fprintf (fp, " %d", FE->id());
     HE = HE->next();
   }
   while (HE != FF->halfedge() && HE != NULL);
 
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
 }
 
-void ff_load_text_file (vcl_FILE* fp, dbsk3d_fs_face* FF, 
-                        vcl_map<int, dbmsh3d_edge*>& edgemap,
-                        vcl_map<int, dbmsh3d_vertex*>& gene_set)
+void ff_load_text_file (std::FILE* fp, dbsk3d_fs_face* FF, 
+                        std::map<int, dbmsh3d_edge*>& edgemap,
+                        std::map<int, dbmsh3d_vertex*>& gene_set)
 {
   //For each dbsk3d_fs_face
   int   id;
   int   geneIds[2];
   char  valid, finite;
-  vcl_fscanf (fp, "f %d (%d-%d) %c %c\n", 
+  std::fscanf (fp, "f %d (%d-%d) %c %c\n", 
               &id, &geneIds[0], &geneIds[1], &valid, &finite);
   FF->set_id (id);
   for (unsigned int j=0; j<2; j++) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = gene_set.find (geneIds[j]);
+    std::map<int, dbmsh3d_vertex*>::iterator it = gene_set.find (geneIds[j]);
     if (it != gene_set.end()) {
       dbmsh3d_vertex* G = (*it).second;
       FF->set_G (j, G);
@@ -643,17 +643,17 @@ void ff_load_text_file (vcl_FILE* fp, dbsk3d_fs_face* FF,
 
   //Inident boundary fs_edges
   unsigned int nL;
-  vcl_fscanf (fp, "\t%u:", &nL);
+  std::fscanf (fp, "\t%u:", &nL);
   for (unsigned int j=0; j<nL; j++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
 
     dbsk3d_fs_edge* FE = NULL;
-    vcl_map<int, dbmsh3d_edge*>::iterator lit = edgemap.find (id);
+    std::map<int, dbmsh3d_edge*>::iterator lit = edgemap.find (id);
     if (lit != edgemap.end()) {
       FE = (dbsk3d_fs_edge*) (*lit).second;
       //Connect the face to the edge through the half-edge
       FF->connect_bnd_E_end (FE);
     }
   }
-  vcl_fscanf(fp, "\n");
+  std::fscanf(fp, "\n");
 }

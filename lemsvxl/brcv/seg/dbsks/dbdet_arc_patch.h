@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -61,7 +61,7 @@ public:
   vgl_line_segment_2d<double > center_line() const;
 
   //: Print an ascii summary to the stream
-  vcl_ostream& print_summary(vcl_ostream &os) const {return os;}
+  std::ostream& print_summary(std::ostream &os) const {return os;}
 
 protected:
   bgld_circ_arc axis_;

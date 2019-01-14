@@ -26,12 +26,12 @@ bool pcl_read_and_filter_ply_normals_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_read_and_filter_ply_normals_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //input .ply file
-  input_types_[1] = "vcl_string"; //output .pcl file
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //input .ply file
+  input_types_[1] = vcl_string"; //output .pcl file
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -43,15 +43,15 @@ bool pcl_read_and_filter_ply_normals_process(bprb_func_process& pro)
   using namespace pcl_read_and_filter_ply_normals_process_globals;
   
   //get inputs
-  vcl_string ply_fname = pro.get_input<vcl_string>(0);
+  std::string ply_fname = pro.get_input<std::string>(0);
   
   pcl::PointCloud<pcl::PointNormal> point_cloud;
   
   pcl::PLYReader reader;
   reader.read (ply_fname, point_cloud);
 
-  vcl_cout << " Done:" <<  point_cloud.width * point_cloud.height << " points\n";
-  vcl_cout << "Available dimensions: " << getFieldsList(point_cloud).c_str ();
+  std::cout << " Done:" <<  point_cloud.width * point_cloud.height << " points\n";
+  std::cout << "Available dimensions: " << getFieldsList(point_cloud).c_str ();
   
    
   return true;

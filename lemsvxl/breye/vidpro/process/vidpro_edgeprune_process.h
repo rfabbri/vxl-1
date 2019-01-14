@@ -21,7 +21,7 @@
 #include <vidpro/storage/vidpro_vtol_storage.h>
 #include <vidpro/storage/vidpro_vtol_storage_sptr.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 class vidpro_edgeprune_process : public bpro_process
 {
@@ -32,12 +32,12 @@ public:
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Prune Edges";
   }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames() {
     return 1;

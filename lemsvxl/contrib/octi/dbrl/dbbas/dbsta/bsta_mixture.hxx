@@ -29,7 +29,7 @@ bsta_mixture<dist_> bsta_mixture<dist_>::operator + (const bsta_mixture<dist_>& 
 	T sum=0;
 	for (unsigned int i=0;i<mix.num_components();sum+=mix.weight(i),i++);
 	
-		//vcl_cout<<"sum (duplicate removal )of the means is not 1 but "<<sum<<"\n"<<mix<<vcl_endl;
+		//std::cout<<"sum (duplicate removal )of the means is not 1 but "<<sum<<"\n"<<mix<<std::endl;
 #endif
 	    mix.removeDuplicates();
 		switch(this->compactify)
@@ -128,7 +128,7 @@ template <class dist_>
 #ifdef DEBUG		
 		 for (unsigned int i=0;i<this->num_components();sum+=this->weight(i),i++);
 		if (abs(sum-1)>0.001)
-		vcl_cout<<"sum of the means is not 1 but "<<sum<<"\n"<<*this<<vcl_endl;	
+		std::cout<<"sum of the means is not 1 but "<<sum<<"\n"<<*this<<std::endl;	
 #endif
 		return true;
 	}
@@ -169,14 +169,14 @@ template <class dist_>
 	 if (components_.size()>this->max_components)
 	 {
 		 
-		 //vcl_sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
+		 //std::sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
 		 //float sum=1-weight(components_.size()-1);
 		 while (components_.size()>max_components)
 		 {
 		 
 		 bool tiny_weight=false;
 		 float eps=1e-5f;
-		 vcl_vector<component*>::iterator it1;
+		 std::vector<component*>::iterator it1;
 		 
 		 if (!reversal)
 			it1=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
@@ -193,7 +193,7 @@ template <class dist_>
 			tiny_weight=true;
 			continue;
 		 } 
-		 vcl_vector<component*>::iterator it2;
+		 std::vector<component*>::iterator it2;
 
 		 if (!reversal)
 			it2=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
@@ -209,7 +209,7 @@ template <class dist_>
 			 //until we have at most @max_components components
 		}
 		 /*float sum=0;
-		 typedef typename vcl_vector<component*>::const_iterator comp_itr;
+		 typedef typename std::vector<component*>::const_iterator comp_itr;
 		 for (comp_itr i=components_.begin();i!=components_.end();i++)
 		 sum+= (*i)->weight;  */
 		
@@ -224,14 +224,14 @@ template <class dist_>
 	 if (components_.size()>this->max_components)
 	 {
 		 
-		 vcl_sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
+		 std::sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
 		 //float sum=1-weight(components_.size()-1);
 		 while (components_.size()>max_components)
 		 {
 		 
 		 bool tiny_weight=false;
 		 float eps=1e-5f;
-		 vcl_vector<component*>::iterator it1=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
+		 std::vector<component*>::iterator it1=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
 		 component *c1=*it1;
 		 T w1=c1->weight;
 		 dist_ tmp_dist1=c1->distribution;
@@ -244,7 +244,7 @@ template <class dist_>
 		 } 
 		 
 
-		 vcl_vector<component*>::iterator it2=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
+		 std::vector<component*>::iterator it2=min_element(components_.begin(),components_.end(),sort_adaptor<sort_entropy>(sort_entropy()));
 		 component *c2=*it2;
 		 T w2=c2->weight;
 		 dist_ tmp_dist2=c2->distribution;
@@ -255,7 +255,7 @@ template <class dist_>
 			 //until we have at most @max_components components
 		}
 		 /*float sum=0;
-		 typedef typename vcl_vector<component*>::const_iterator comp_itr;
+		 typedef typename std::vector<component*>::const_iterator comp_itr;
 		 for (comp_itr i=components_.begin();i!=components_.end();i++)
 		 sum+= (*i)->weight;  */
 		
@@ -301,9 +301,9 @@ template <class dist_>
 	 unsigned int extra_comps=n%max_components;
 	 unsigned int n2=max_components*num_partitions;
 	 
-	 vcl_vector<component*> tmpVec;
-	 //vcl_sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
-	 //vcl_sort(components_.begin(), components_.end(), sort_weight() );
+	 std::vector<component*> tmpVec;
+	 //std::sort(components_.begin(), components_.end(), sort_adaptor<sort_entropy>(sort_entropy()));
+	 //std::sort(components_.begin(), components_.end(), sort_weight() );
 	 for (unsigned int partInd=0;partInd<n2;partInd+=max_components)
 	 {
 		dist_ tempDist=components_[partInd]->distribution;
@@ -337,20 +337,20 @@ template <class dist_>
 	 components_.clear();
 	 //assign the new vector
 	 components_=tmpVec;
-	 vcl_sort(components_.begin(), components_.end(), sort_weight());
+	 std::sort(components_.begin(), components_.end(), sort_weight());
 	 return true;
  }
 
  template <class dist_>
- vcl_vector<typename bsta_mixture<dist_>::component*> bsta_mixture<dist_>::recursiveMerge(vcl_vector<typename bsta_mixture<dist_>::component* > vec)
+ std::vector<typename bsta_mixture<dist_>::component*> bsta_mixture<dist_>::recursiveMerge(std::vector<typename bsta_mixture<dist_>::component* > vec)
  {
 	if (vec.size()<=this->max_components)
 	{
 		return vec;
 	}
-	vcl_vector<component*> tmpVec;
+	std::vector<component*> tmpVec;
 	unsigned int n=vec.size();
-	vcl_sort(vec.begin(), vec.end(), sort_weight() );
+	std::sort(vec.begin(), vec.end(), sort_weight() );
 	unsigned int start=0;
 	if (vec.size()%2!=0)		 //transfer the largest weighted mixture if the number of elements is odd
 	{

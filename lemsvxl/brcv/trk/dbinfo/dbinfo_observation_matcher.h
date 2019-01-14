@@ -18,14 +18,14 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_image_resource_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <dbinfo/dbinfo_feature_data_base_sptr.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 class dbinfo_observation_matcher : public vbl_ref_count
@@ -59,7 +59,7 @@ class dbinfo_observation_matcher : public vbl_ref_count
   //  using the explicit correspondence of region points
   static float minfo(dbinfo_feature_data_base_sptr const& d0,
                      dbinfo_feature_data_base_sptr const& d1,
-                     vcl_vector<vcl_pair<unsigned, unsigned> > const& correspondences,
+                     std::vector<std::pair<unsigned, unsigned> > const& correspondences,
                      bool verbose,
                      float max_value = 255.0f);
   
@@ -69,13 +69,13 @@ class dbinfo_observation_matcher : public vbl_ref_count
   //       is mapped to the region1 point (location/pixel) with id correspondences[i].second 
   static float minfo(dbinfo_observation_sptr const& obs0,
                      dbinfo_observation_sptr const& obsi,
-                     vcl_vector<vcl_pair<unsigned, unsigned> > const& correspondences,
+                     std::vector<std::pair<unsigned, unsigned> > const& correspondences,
                      bool verbose,
                      float max_value = 255.0f);
 
   //: cluster observation sets, determining the number of clusters
-  static bool cluster(vcl_vector<dbinfo_observation_sptr> const& obvs,
-                      vcl_vector<vcl_vector<dbinfo_observation_sptr> >& clusters,
+  static bool cluster(std::vector<dbinfo_observation_sptr> const& obvs,
+                      std::vector<std::vector<dbinfo_observation_sptr> >& clusters,
                  bool verbose = false);
 
   //: compute mutual information between two image regions

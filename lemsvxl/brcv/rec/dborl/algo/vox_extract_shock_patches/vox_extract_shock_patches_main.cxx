@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -57,13 +57,13 @@ int main(int argc, char *argv[])
     //Determine which input object we are going to use
     //Either from the input_object_dir or the associated file
     //The associated file always takes precendence
-    vcl_string input_esf_fn;
+    std::string input_esf_fn;
 
     // Use associated file
     if ( vul_file::exists(params->input_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params->input_assoc_dir_()+"/*");
@@ -89,22 +89,22 @@ int main(int argc, char *argv[])
     
     if (!vul_file::exists(input_esf_fn)) 
     {
-        vcl_cerr << "Cannot find esf file: " << input_esf_fn << vcl_endl;
+        std::cerr << "Cannot find esf file: " << input_esf_fn << std::endl;
         return 1;
     }
 
     //Make sure the input image exists
-    vcl_string input_image_fn = params->input_object_dir_() + "/" 
+    std::string input_image_fn = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_image_extension_();
     
     if (!vul_file::exists(input_image_fn)) 
     {
-        vcl_cerr << "Cannot find image file: " << input_image_fn << vcl_endl;
+        std::cerr << "Cannot find image file: " << input_image_fn << std::endl;
         return 1;
     }
 
     // Lets create directory of where output shock patches will go
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_())
     { 
         output_file = params->output_shock_patch_folder_();
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     else
     {
         //Delete curent directory and start over
-        vcl_string file_glob = "-r " + output_file;
+        std::string file_glob = "-r " + output_file;
         vul_file::delete_file_glob(file_glob);
         
         // Now remake directory
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     }
 
     //******************** Extract Shock Patches ****************************
-    vcl_cout<<"************  Extract Shock Patches  *************"<<vcl_endl;
+    std::cout<<"************  Extract Shock Patches  *************"<<std::endl;
     
     dbskr_extract_subgraph_and_find_shock_patches_process esp_pro;
     set_process_parameters_of_bpro1(*params, 
@@ -168,8 +168,8 @@ int main(int argc, char *argv[])
 
     if (!esp_status) 
     {
-        vcl_cerr << "Extracting of shock patches failed !"
-                 << vcl_endl;
+        std::cerr << "Extracting of shock patches failed !"
+                 << std::endl;
         return 1;
     }
 
@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

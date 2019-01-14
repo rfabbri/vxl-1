@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 
 //: 
@@ -32,10 +32,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -43,7 +43,7 @@ public:
   bool execute();
   bool finish();
 
-  bool parse_lines_from_file(vcl_string fname, vcl_vector<vcl_string>& strings);
+  bool parse_lines_from_file(std::string fname, std::vector<std::string>& strings);
 };
 
 #endif

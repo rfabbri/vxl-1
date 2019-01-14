@@ -2,9 +2,9 @@
 #define STYLE_H_INCLUDED
 
 #include <basegui_color.h>
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <vector>
+#include <algorithm>
 
 /* A StyleSet is an object which can specify all the style properties
  * we care about. For now, only color, line width, point size, and hidden

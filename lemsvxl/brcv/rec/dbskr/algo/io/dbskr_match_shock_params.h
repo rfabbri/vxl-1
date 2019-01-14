@@ -25,7 +25,7 @@ class dbskr_match_shock_params
   dbskr_tree_edit_params edit_params_;
 
   bool save_shgms_;
-  vcl_string shgm_folder_;
+  std::string shgm_folder_;
 
   bool orl_format_folders_;
 
@@ -37,10 +37,10 @@ class dbskr_match_shock_params
 
 
   bool generate_output_;
-  vcl_string output_file_;
-  //vcl_string output_file_postfix_;
+  std::string output_file_;
+  //std::string output_file_postfix_;
 
-  vcl_string train_dir_, train_list_, db_dir_, db_list_;
+  std::string train_dir_, train_list_, db_dir_, db_list_;
 
   bool parse_from_data(bxml_data_sptr root);
   bool parse_from_match_data(bxml_data_sptr result);

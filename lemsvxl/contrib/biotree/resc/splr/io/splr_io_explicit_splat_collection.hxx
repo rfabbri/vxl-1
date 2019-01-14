@@ -16,7 +16,7 @@ template<class T, class F> void vsl_b_read(vsl_b_istream & is,
         vsl_b_read(is, splat_collection.map_);
   }
 
-typedef vcl_pair<orbit_index, biob_worldpt_index> splr_io_explicit_splat_collection_h_key;
+typedef std::pair<orbit_index, biob_worldpt_index> splr_io_explicit_splat_collection_h_key;
 
 #define SPLR_IO_EXPLICIT_SPLAT_COLLECTION_INSTANTIATE(T, F) \
 template void vsl_b_write(vsl_b_ostream & os, const splr_explicit_splat_collection<T, F> & splat_collection); \

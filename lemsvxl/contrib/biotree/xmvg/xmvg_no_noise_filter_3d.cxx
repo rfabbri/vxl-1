@@ -8,7 +8,7 @@ xmvg_no_noise_filter_3d::xmvg_no_noise_filter_3d()
 
 xmvg_no_noise_filter_3d::xmvg_no_noise_filter_3d(xmvg_no_noise_filter_descriptor & descriptor)
 {
-  assert(descriptor.name() == vcl_string("no_noise_filter"));
+  assert(descriptor.name() == std::string("no_noise_filter"));
   descriptor_ = descriptor;
 }
 
@@ -19,8 +19,8 @@ xmvg_no_noise_filter_3d::~xmvg_no_noise_filter_3d()
 vgl_box_2d<int> xmvg_no_noise_filter_3d::get_box_2d(xmvg_perspective_camera<double>  cam,
                                                     vgl_box_3d<double> const & box){
     vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(cam, box);
-    int min_x = int(vcl_floor(box_2d.min_x()));   int max_x = int(vcl_ceil(box_2d.max_x()));
-    int min_y = int(vcl_floor(box_2d.min_y()));   int max_y = int(vcl_ceil(box_2d.max_y()));
+    int min_x = int(std::floor(box_2d.min_x()));   int max_x = int(std::ceil(box_2d.max_x()));
+    int min_y = int(std::floor(box_2d.min_y()));   int max_y = int(std::ceil(box_2d.max_y()));
     return vgl_box_2d<int>(min_x, max_x, min_y, max_y);
 }
 
@@ -115,7 +115,7 @@ double xmvg_no_noise_filter_3d::line_integral(vgl_point_3d<double> ray_start, vg
     // Handle another special case here where the ray direction is parallel to the cylinder taps
     if(z1 == 0)
     {
-      if(vcl_abs(z0) > h)
+      if(std::abs(z0) > h)
         return 0;
       else
       {
@@ -170,7 +170,7 @@ double xmvg_no_noise_filter_3d::line_integral(vgl_point_3d<double> ray_start, vg
   }
 }
 
-void x_write(vcl_ostream& os, xmvg_no_noise_filter_3d f)
+void x_write(std::ostream& os, xmvg_no_noise_filter_3d f)
 {
   xmvg_no_noise_filter_descriptor fd = f.descriptor();
   x_write(os, static_cast<xmvg_filter_descriptor&>(fd));

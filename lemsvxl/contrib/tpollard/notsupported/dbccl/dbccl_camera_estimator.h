@@ -9,7 +9,7 @@
 // 
 //   This is....
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -29,10 +29,10 @@ public:
 
   // Estimate the cameras and world points.
   bool estimate(
-    const vcl_vector< vcl_vector< vgl_point_2d<double> > >& tracks,
-    const vcl_vector< vcl_vector<bool> >& track_masks,
+    const std::vector< std::vector< vgl_point_2d<double> > >& tracks,
+    const std::vector< std::vector<bool> >& track_masks,
     const vpgl_calibration_matrix<double>& K,
-    vcl_vector< vpgl_perspective_camera<double> >& cameras );
+    std::vector< vpgl_perspective_camera<double> >& cameras );
 
 
   // Helper Functions:--------------------------
@@ -40,8 +40,8 @@ public:
   // Find the scale of the translation of camera so that the points best line up.
   double find_best_camera(
     vpgl_perspective_camera<double>& camera,
-    const vcl_vector< vgl_point_3d<double> >& world_points,
-    const vcl_vector< vgl_point_2d<double> >& image_points );
+    const std::vector< vgl_point_3d<double> >& world_points,
+    const std::vector< vgl_point_2d<double> >& image_points );
 
 };
 

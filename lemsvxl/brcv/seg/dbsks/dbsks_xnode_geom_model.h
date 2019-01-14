@@ -15,10 +15,10 @@
 
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 #include <pdf1d/pdf1d_flat.h>
 
@@ -57,17 +57,17 @@ public:
 
 
   //: Set data for a geometric attribute. If existing, old data will be overwritten
-  void set_attr_data(const vcl_string& attr_name, const vcl_vector<double >& attr_values)
+  void set_attr_data(const std::string& attr_name, const std::vector<double >& attr_values)
   {
     this->attr_data_[attr_name] = attr_values;
   }
 
   //: Get data values for a geometric attribute
   // Return false if the attribute does not exist
-  bool get_attr_data(const vcl_string& attr_name, vcl_vector<double >& attr_values) const; 
+  bool get_attr_data(const std::string& attr_name, std::vector<double >& attr_values) const; 
 
   //: Return const reference to the attribute data map
-  const vcl_map<vcl_string, vcl_vector<double > >& attr_data() const 
+  const std::map<std::string, std::vector<double > >& attr_data() const 
   {return this->attr_data_; };
 
   //: Clear the list of attribute data
@@ -92,7 +92,7 @@ public:
   // I/O =======================================================================
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
 protected:
   // min and max of each parameter
@@ -111,7 +111,7 @@ protected:
 
 
   // list of data related to the fragments
-  vcl_map<vcl_string, vcl_vector<double > > attr_data_;
+  std::map<std::string, std::vector<double > > attr_data_;
   double graph_size_for_attr_data_;
 
 };

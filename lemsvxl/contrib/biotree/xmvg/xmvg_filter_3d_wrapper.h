@@ -12,7 +12,7 @@ class xmvg_filter_3d_wrapper {
 };
 
 template <class filter_3d>
-void x_write(vcl_ostream& os, xmvg_filter_3d_wrapper<filter_3d> f){
+void x_write(std::ostream& os, xmvg_filter_3d_wrapper<filter_3d> f){
   x_write(os, f.filter_);
 }
 

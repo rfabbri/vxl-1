@@ -18,7 +18,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
 //: This process loads a .EDG file into the current frame
@@ -32,9 +32,9 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name();
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::string name();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -48,7 +48,7 @@ public:
     return true;
   }
   
-  bool loadEDG(vcl_string filename);
+  bool loadEDG(std::string filename);
 
 
 protected:

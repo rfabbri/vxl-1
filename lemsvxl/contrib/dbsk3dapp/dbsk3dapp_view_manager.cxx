@@ -164,7 +164,7 @@ void dbsk3dapp_view_manager::resize_grid (unsigned int rows, unsigned int cols)
 void dbsk3dapp_view_manager::choose_nxn_grid (unsigned int num)
 {
   vgui_dialog params("Rows and Columns");
-  vcl_vector<vcl_string> choices;
+  std::vector<std::string> choices;
   int pick;
 
   switch (num) {
@@ -317,13 +317,13 @@ void dbsk3dapp_view_manager::add_tableaus_to_grid ()
 // takes the selected grid tableaus and displays them by themselves
 void dbsk3dapp_view_manager::view_selected_tableaus ()
 {
-  vcl_vector<int> col;
-  vcl_vector<int> row;
-  vcl_vector<int> times;
+  std::vector<int> col;
+  std::vector<int> row;
+  std::vector<int> times;
   
   unsigned int num = grid_tableau_->get_selected_positions (&col, &row, &times);
   
-  vcl_vector<bgui3d_examiner_tableau*> tabs;
+  std::vector<bgui3d_examiner_tableau*> tabs;
   for (unsigned int i=0; i<num; i++) {
     vgui_tableau_sptr vtab_ptr = grid_tableau_->get_tableau_at( col[i], row[i] );
     vgui_tableau* vtab = vtab_ptr.ptr();
@@ -356,7 +356,7 @@ void dbsk3dapp_view_manager::unselect_all_tableaus ()
 }
 
 // set the text in the active tableau
-void dbsk3dapp_view_manager::set_active_tableau_text (const vcl_string & string)
+void dbsk3dapp_view_manager::set_active_tableau_text (const std::string & string)
 {
   unsigned int col;
   unsigned int row;

@@ -18,7 +18,7 @@
 
 #include <modrec/modrec_pca_vehicle_projector.h>
 #include <modrec/modrec_edgel.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vpgl/vpgl_perspective_camera.h>
@@ -45,7 +45,7 @@ public:
   //  - [0] is top \a num_pc PCA params
   //  - [1,2,3] is Tx,Ty,Tz respectively
   //  - [4,5,6] is Rx,Ry,Rz respectively
-  void set_options(const vcl_vector<bool>& options, 
+  void set_options(const std::vector<bool>& options, 
                    unsigned int num_pc);
   
   //: Return the number of principal components to optimize
@@ -102,9 +102,9 @@ public:
   // This is primarily for debugging
   void last_edgel_matches(const modrec_pca_vehicle_projector& projector, 
                           const vil_image_view<float>& edge_map,
-                          vcl_vector<vgl_point_2d<double> >& edgel_snaps,
-                          vcl_vector<vgl_point_2d<double> >& edgels,
-                          vcl_vector<double>& edgel_weights) const;
+                          std::vector<vgl_point_2d<double> >& edgel_snaps,
+                          std::vector<vgl_point_2d<double> >& edgels,
+                          std::vector<double>& edgel_weights) const;
   
   //: Compute the number of pixel size edge points with an edge neighbor within \a dist_thresh
   // return the total samples and number of matches for both contours and part boundaries
@@ -133,13 +133,13 @@ protected:
   void compute_line_matches(const vgl_point_2d<double>& p0, 
                             const vgl_point_2d<double>& p1,
                             const vil_image_view<float>& edge_map,
-                            vcl_vector<vnl_vector_fixed<double,3> >& matches) const;
+                            std::vector<vnl_vector_fixed<double,3> >& matches) const;
   
   //: Compute the terms for optimization from a set of curves and Jacobians
   //  adds to the matrix \a M and vector \a b passed in
   void 
-  compute_curve_opt_terms(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
-                          const vcl_vector<vcl_vector<vnl_matrix<double> > >& J,
+  compute_curve_opt_terms(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
+                          const std::vector<std::vector<vnl_matrix<double> > >& J,
                           const vil_image_view<float>& edge_map,
                           vnl_matrix<double>& M,
                           vnl_vector<double>& b,
@@ -148,7 +148,7 @@ protected:
   
   //: Compute the residuals of the optimization
   void
-  compute_curve_residuals(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
+  compute_curve_residuals(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
                           const vil_image_view<float>& edge_map,
                           double& total_weight,
                           double& wgt_residual) const;
@@ -184,15 +184,15 @@ protected:
   
   //: Compute the edgel matches and weights from a set of curves 
   // This is primarily for debugging
-  void compute_edgel_matches(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
+  void compute_edgel_matches(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
                              const vil_image_view<float>& edge_map,
-                             vcl_vector<vgl_point_2d<double> >& edgel_snaps,
-                             vcl_vector<vgl_point_2d<double> >& edgels,
-                             vcl_vector<double>& edgel_weights) const;
+                             std::vector<vgl_point_2d<double> >& edgel_snaps,
+                             std::vector<vgl_point_2d<double> >& edgels,
+                             std::vector<double>& edgel_weights) const;
 
   //: Compute the number of pixel size edge points with an edge neighbor within \a dist_thresh
   // return the total samples and number of matches
-  void compute_edgel_coverage(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves, 
+  void compute_edgel_coverage(const std::vector<std::vector<vgl_point_2d<double> > >& curves, 
                               const vil_image_view<float>& edge_map,
                               double dist_thresh,
                               unsigned int& num_match,
@@ -206,7 +206,7 @@ protected:
   
   //: estimate the initial scale given the set of Jacobians
   double estimate_initial_scale(const vnl_vector<double>& sigma,
-                                const vcl_vector<vcl_vector<vnl_matrix<double> > >& J);
+                                const std::vector<std::vector<vnl_matrix<double> > >& J);
  
   
   //: the minimum edge strength considered for weighting
@@ -226,7 +226,7 @@ protected:
   //: number of shape principal components to optimize
   unsigned int num_pc_;
   //: the options vector
-  vcl_vector<bool> options_;
+  std::vector<bool> options_;
   //: indicies for extrinsic parameters (-1 for disabled)
   int txi_, tyi_, tzi_, rxi_, ryi_, rzi_;
   

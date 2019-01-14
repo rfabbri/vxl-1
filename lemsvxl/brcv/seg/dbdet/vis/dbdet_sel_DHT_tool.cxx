@@ -1,8 +1,8 @@
 #include "dbdet_sel_DHT_tool.h"
 
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
-#include <vcl_queue.h>
+#include <limits>
+#include <algorithm>
+#include <queue>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -62,7 +62,7 @@ dbdet_sel_DHT_tool::dbdet_sel_DHT_tool():
 }
 
 
-vcl_string dbdet_sel_DHT_tool::name() const
+std::string dbdet_sel_DHT_tool::name() const
 {
   return "SEL DHT Linking Tool";
 }
@@ -202,7 +202,7 @@ bool dbdet_sel_DHT_tool::handle( const vgui_event & e,
     if (cur_edgel) //if edgel selected, draw the curvelets anchored on it
     {
       //display all the groupings of the current edgel
-      vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
+      std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
       for ( ; cv_it!=CM->curvelets(cur_edgel->id).end(); cv_it++)
         sel_tab_->draw_selected_cvlet((*cv_it));
 
@@ -225,11 +225,11 @@ bool dbdet_sel_DHT_tool::handle( const vgui_event & e,
       glBegin( GL_LINE_STRIP );
       for (int th=0; th<=20; th++){
         double theta = cur_edgel->tangent - vnl_math::pi/2 + th*2*vnl_math::pi/20.0;
-        glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(theta), 
-                   cur_edgel->pt.y() + rad*vcl_sin(theta));
+        glVertex2f(cur_edgel->pt.x() + rad*std::cos(theta), 
+                   cur_edgel->pt.y() + rad*std::sin(theta));
       }
-      //glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(cur_edgel->tangent - vnl_math::pi/2), 
-      //           cur_edgel->pt.y() + rad*vcl_sin(cur_edgel->tangent - vnl_math::pi/2));
+      //glVertex2f(cur_edgel->pt.x() + rad*std::cos(cur_edgel->tangent - vnl_math::pi/2), 
+      //           cur_edgel->pt.y() + rad*std::sin(cur_edgel->tangent - vnl_math::pi/2));
       glEnd();
 
     }
@@ -266,7 +266,7 @@ void dbdet_sel_DHT_tool::construct_hyp_tree(dbdet_curvelet* cvlet)
 
   ////trace as far as possible
   ////breadth-first search through the tree
-  //vcl_queue<dbdet_hyp_tree_node*> BFS_queue;
+  //std::queue<dbdet_hyp_tree_node*> BFS_queue;
 
   ////BFS_queue.push(HT->root);
   ////while (!BFS_queue.empty())
@@ -293,10 +293,10 @@ void dbdet_sel_DHT_tool::draw_CC_segment(vgl_point_2d<double> pt, double theta, 
   //gl2psLineWidth(3.0);
   
   if (forward){
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
       glVertex2f(sx, sy);
-      glVertex2f(sx + L*vcl_cos(theta), sy+L*vcl_sin(theta));
+      glVertex2f(sx + L*std::cos(theta), sy+L*std::sin(theta));
       glEnd();
       return;
     }
@@ -304,16 +304,16 @@ void dbdet_sel_DHT_tool::draw_CC_segment(vgl_point_2d<double> pt, double theta, 
     glBegin(GL_LINE_STRIP);
     for (double s=0; s<L; s+=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
   else {
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
       glVertex2f(sx, sy);
-      glVertex2f(sx - L*vcl_cos(theta), sy-L*vcl_sin(theta));
+      glVertex2f(sx - L*std::cos(theta), sy-L*std::sin(theta));
       glEnd();
       return;
     }
@@ -321,8 +321,8 @@ void dbdet_sel_DHT_tool::draw_CC_segment(vgl_point_2d<double> pt, double theta, 
     glBegin(GL_LINE_STRIP);
     for (double s=0; s>-L; s-=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
@@ -396,12 +396,12 @@ void dbdet_sel_DHT_tool::draw_HTG()
     vgl_point_2d<double> pt = HT1->root->cvlet->ref_edgel->pt;
     for (int th=0; th<=20; th++){
       double theta = th*2*vnl_math::pi/20.0;
-      glVertex2f(pt.x() + 1*vcl_cos(theta), pt.y() + 1*vcl_sin(theta));
+      glVertex2f(pt.x() + 1*std::cos(theta), pt.y() + 1*std::sin(theta));
     }
     glEnd();
   
     //now draw the CPL links from this node
-    vcl_set<int>::iterator lit = edge_linker->HTG.CPL_links[i].begin();
+    std::set<int>::iterator lit = edge_linker->HTG.CPL_links[i].begin();
     for (; lit != edge_linker->HTG.CPL_links[i].end(); lit++)
     {
       dbdet_hyp_tree* HT2 = edge_linker->HTG.nodes[*lit];
@@ -430,26 +430,26 @@ void dbdet_sel_DHT_tool::draw_HTG()
 
 void dbdet_sel_DHT_tool::print_cvlet_info(dbdet_curvelet* cvlet, double cost)
 {
-  vcl_cout << "Chain: ";
-  if (cvlet->forward) vcl_cout << "F : ";
-  else                vcl_cout << "B : ";
+  std::cout << "Chain: ";
+  if (cvlet->forward) std::cout << "F : ";
+  else                std::cout << "B : ";
 
   for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i)
-    vcl_cout << "\t" << cvlet->edgel_chain[i]->id;
+    std::cout << "\t" << cvlet->edgel_chain[i]->id;
 
   //print curve params
   cvlet->curve_model->print_info();
 
   //print curvelet quality info
-  vcl_cout << ", L= " << cvlet->length << ", Q= " << cvlet->quality << ", cost = " << cost ;
-  vcl_cout << vcl_endl;
+  std::cout << ", L= " << cvlet->length << ", Q= " << cvlet->quality << ", cost = " << cost ;
+  std::cout << std::endl;
 }
 
 
 void dbdet_sel_DHT_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                 vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   if (edge_linker)
     menu.add(((edge_linker->propagate_constraints)?on:off)+" Propagate C1 constraints", 

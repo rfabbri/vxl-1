@@ -26,7 +26,7 @@ MAIN( test_render_image )
   scene.set_appearence_model(BOXM_APM_MOG_GREY);
   scene.set_paths("./boxm_scene1", "block");
   vul_file::make_directory("./boxm_scene1");
-  vcl_ofstream os("scene1.xml");
+  std::ofstream os("scene1.xml");
   x_write(os, scene, "scene");
   os.close();
 

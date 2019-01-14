@@ -29,22 +29,22 @@ bpro1_process* dbsk2d_assign_image_process::clone() const
 }
 
 
-vcl_string dbsk2d_assign_image_process::name()
+std::string dbsk2d_assign_image_process::name()
 {
   return "Assign an Image";
 }
 
-vcl_vector< vcl_string > dbsk2d_assign_image_process::get_input_type()
+std::vector< std::string > dbsk2d_assign_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbsk2d_assign_image_process::get_output_type()
+std::vector< std::string > dbsk2d_assign_image_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 

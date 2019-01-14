@@ -19,6 +19,6 @@ void vsl_b_read(vsl_b_istream &is, modrec_desc_feature_3d<n> & f);
 
 //: Print human readable summary of object to a stream
 template <unsigned n>
-void vsl_print_summary(vcl_ostream& os, const modrec_desc_feature_3d<n> & f);
+void vsl_print_summary(std::ostream& os, const modrec_desc_feature_3d<n> & f);
 
 #endif // modrec_io_desc_feature_3d_h

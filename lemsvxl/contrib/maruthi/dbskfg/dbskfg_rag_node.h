@@ -26,7 +26,7 @@
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_box_2d.h>
 // vcl headers
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_box_2d.h>
 class dbskfg_rag_link;
 class dbskfg_shock_node;
@@ -72,7 +72,7 @@ public:
     void prune_wavefront_nodes();
 
     //: Get wavefront
-    vcl_map<unsigned int, dbskfg_shock_node*> get_wavefront()
+    std::map<unsigned int, dbskfg_shock_node*> get_wavefront()
     {return wavefront_;}
 
     //: part of wavefront
@@ -81,7 +81,7 @@ public:
 
     //: Return all shock links of this node
     //: inline function
-    vcl_map<unsigned int,dbskfg_shock_link*>
+    std::map<unsigned int,dbskfg_shock_link*>
         get_shock_links(){return shock_links_;}
     
     //: Test if these two nodes are adjancent
@@ -124,28 +124,28 @@ public:
     bool node_within_rag(unsigned int id);
 
     //: Return information about this node
-    void print(vcl_ostream& os);
+    void print(std::ostream& os);
 
     //: determine all shock rays
-    vcl_vector< vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+    std::vector< std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
         determine_shock_rays(vgl_polygon<double>& polygon);
 
     //: determine contour endpoints
-    void determine_contour_points(vcl_vector<dbskfg_composite_node_sptr>&
+    void determine_contour_points(std::vector<dbskfg_composite_node_sptr>&
                                   con_endpoints);
 
     // Determine all contour ids affecting this rag node
-    void rag_contour_ids(vcl_set<unsigned int>& con_id);
+    void rag_contour_ids(std::set<unsigned int>& con_id);
 
     // See if wavefront exisits in this region
     bool wavefront_exists(
-        const vcl_map<unsigned int, vgl_point_2d<double> >& wavefront);
+        const std::map<unsigned int, vgl_point_2d<double> >& wavefront);
 
     // Transform affects regions
     bool transform_local_context(dbskfg_transform_descriptor_sptr transform);
 
     // Return a string representing wavefront based on contour endpoints
-    void wavefront_string(vcl_set<vcl_string>& wavefront);
+    void wavefront_string(std::set<std::string>& wavefront);
 
 protected:
 
@@ -158,16 +158,16 @@ private:
     // Attributes
 
     // Keep a map of all shock links for easy access
-    vcl_map<unsigned int,dbskfg_shock_link*> shock_links_;
+    std::map<unsigned int,dbskfg_shock_link*> shock_links_;
 
     // Keep an expanding wavefront of nodes to consider
-    vcl_map<unsigned int,dbskfg_shock_node*> wavefront_;
+    std::map<unsigned int,dbskfg_shock_node*> wavefront_;
 
     // Keep an ordered collection of nodes for counts
-    vcl_map<unsigned int,unsigned int> nodes_visited_;
+    std::map<unsigned int,unsigned int> nodes_visited_;
 
     // Keep a set of degree 1 nodes
-    vcl_map<unsigned int,dbskfg_shock_node*> degree_1_nodes_;
+    std::map<unsigned int,dbskfg_shock_node*> degree_1_nodes_;
 
     // Id of this node
     unsigned int id_;

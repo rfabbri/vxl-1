@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_observation_matcher.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vbl/vbl_array_1d.h>
 #include <vul/vul_timer.h>
 #include <dbinfo/dbinfo_region_geometry.h>
@@ -43,11 +43,11 @@ static void test_observation_matcher(int argc, char* argv[])
   dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly);
   dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
   dbinfo_feature_base_sptr gradf = new dbinfo_gradient_feature();
-  vcl_vector<dbinfo_feature_base_sptr> features;
+  std::vector<dbinfo_feature_base_sptr> features;
   features.push_back(intf);   features.push_back(gradf);
   obs->set_features(features);
   obs->scan(0, imgr);
-  vcl_cout << "Total Mutual Information " 
+  std::cout << "Total Mutual Information " 
            << dbinfo_observation_matcher::minfo(obs, obs) << '\n';
 
   TEST_NEAR("Test total observation mutual information ",
@@ -63,9 +63,9 @@ static void test_observation_matcher(int argc, char* argv[])
       temp->scan(0, imgr);
       //temp->minfo();
     }
-  vcl_cout << "Construct and evaluate ("
+  std::cout << "Construct and evaluate ("
            << i  << ") observations in "
-           << t.real() << " msecs.\n"<< vcl_flush;
+           << t.real() << " msecs.\n"<< std::flush;
 #endif
 }
 TESTMAIN_ARGS(test_observation_matcher);

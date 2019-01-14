@@ -13,9 +13,9 @@
 //  Modifications <none>
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <cassert>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_array_1d.h>
 #include <vbl/vbl_array_2d.h>
@@ -26,7 +26,7 @@ class dbinfo_feature_data : public dbinfo_feature_data_base
  protected:
   //:The actual stored data.  Vector storage to support Markov representations.
   //for now, just a single sample
-  vcl_vector<T> feature_data_;
+  std::vector<T> feature_data_;
 
 
  public:
@@ -49,7 +49,7 @@ class dbinfo_feature_data : public dbinfo_feature_data_base
   dbinfo_feature_data(const vil_pixel_format pix_format,
                       const unsigned nplanes,
                       const dbinfo_feature_format format,
-                      vcl_vector<T> const& data);
+                      std::vector<T> const& data);
 
   //:  copy constructor
   dbinfo_feature_data(const dbinfo_feature_data<T> & rhs);
@@ -90,7 +90,7 @@ class dbinfo_feature_data : public dbinfo_feature_data_base
   inline  T& data(unsigned frame)
     {assert(index(frame)<size());return feature_data_[index(frame)];}
 
-  inline vcl_vector<T> data(){return feature_data_;}
+  inline std::vector<T> data(){return feature_data_;}
 
   inline T& single_data(){assert(size()==1);return feature_data_[0];}
 //: This operator de-references an image_view sptr, returning an empty view if the pointer is null.
@@ -107,14 +107,14 @@ class dbinfo_feature_data : public dbinfo_feature_data_base
     {return new dbinfo_feature_data<T>(*this);}
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const;
+  virtual void print(std::ostream& os = std::cout) const;
 
   // Binary I/O------------------------------------------------------------------
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return vcl_string("dbinfo_feature_data");}
+  virtual std::string is_a() const {return std::string("dbinfo_feature_data");}
 
-  bool is_class(vcl_string const& cls) const
+  bool is_class(std::string const& cls) const
     { return cls==is_a();}
 
    //: Binary save self to stream.
@@ -134,7 +134,7 @@ inline void vsl_b_write(vsl_b_ostream &os, const dbinfo_feature_data<T> & v)
 
 
 template <class T>
-inline void vsl_print_summary(vcl_ostream& os,
+inline void vsl_print_summary(std::ostream& os,
                               const dbinfo_feature_data<T> & b)
 {os << b;}
 
@@ -203,10 +203,10 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_feature_data_base* &fd)
 }
 
 template <class T>
-vcl_ostream &operator<<(vcl_ostream &, dbinfo_feature_data<T> const&);
+std::ostream &operator<<(std::ostream &, dbinfo_feature_data<T> const&);
 #if 0
 template <class T>
-vcl_ostream &operator<<(vcl_ostream &, dbinfo_feature_data<T> const*);
+std::ostream &operator<<(std::ostream &, dbinfo_feature_data<T> const*);
 #endif
 
 

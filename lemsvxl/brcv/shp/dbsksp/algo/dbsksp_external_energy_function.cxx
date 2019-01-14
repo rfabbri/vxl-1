@@ -358,7 +358,7 @@ f(const dbsksp_shapelet_sptr& s, int which_side)
 
 //: Sum of energy at a set of points
 float dbsksp_potential_integrator::
-f(const vcl_vector<vgl_point_2d<double > >& pts, float default_value)
+f(const std::vector<vgl_point_2d<double > >& pts, float default_value)
 {
   // this->default_value_ = default_value;
   float sum = 0; 

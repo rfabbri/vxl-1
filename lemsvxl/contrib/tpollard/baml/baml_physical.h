@@ -8,9 +8,9 @@
 // \date 7/31/07
 
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 
 

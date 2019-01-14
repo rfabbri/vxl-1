@@ -2,7 +2,7 @@
 // Ming-Ching Chang
 // Oct 04, 2007.
 
-#include <vcl_queue.h>
+#include <queue>
 #include <dbmsh3d/algo/dbmsh3d_graph_sh_path.h>
 
 //: find the graph shortest path on a mesh using Dijkstra.
@@ -12,8 +12,8 @@
 //    - a map of PrevV[vid, prevV] for backtracking from each vertex.
 //
 bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
-                        vcl_map<int, float>& Dist,
-                        vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                        std::map<int, float>& Dist,
+                        std::map<int, dbmsh3d_vertex*>& PrevV,
                         const dbmsh3d_vertex* Dest)
 {
   //1) Check if input is valid.
@@ -29,12 +29,12 @@ bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
   // - reset all V's dist to infinity, set all V to unvisited.
   assert (Dist.size() == 0);
   assert (PrevV.size() == 0);
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_i_visited (0);
-    Dist.insert (vcl_pair<int, float> (V->id(), FLT_MAX));
-    PrevV.insert (vcl_pair<int, dbmsh3d_vertex*> (V->id(), NULL));
+    Dist.insert (std::pair<int, float> (V->id(), FLT_MAX));
+    PrevV.insert (std::pair<int, dbmsh3d_vertex*> (V->id(), NULL));
   }
   assert (Dist.size() == M->vertexmap().size());
   assert (PrevV.size() == M->vertexmap().size());
@@ -43,8 +43,8 @@ bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
   Dist[Src->id()] = 0;
 
   // - initilize the priority queue PW <-dist, V>.
-  vcl_priority_queue<vcl_pair<float, dbmsh3d_vertex*> > PQ;
-  PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[Src->id()], (dbmsh3d_vertex*) Src));
+  std::priority_queue<std::pair<float, dbmsh3d_vertex*> > PQ;
+  PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[Src->id()], (dbmsh3d_vertex*) Src));
 
   //3) Main Loop:
   while (PQ.size() != 0) {
@@ -76,7 +76,7 @@ bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
       if (d < Dist[V->id()]) {
         Dist[V->id()] = float (d);
         PrevV[V->id()] = U;
-        PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
+        PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
       }
     }
   }
@@ -88,10 +88,10 @@ bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
 }
                         
 bool find_shortest_Es_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src, const dbmsh3d_vertex* Dest,
-                            vcl_vector<dbmsh3d_edge*>& Evec_path)
+                            std::vector<dbmsh3d_edge*>& Evec_path)
 {  
-  vcl_map<int, float> Dist;
-  vcl_map<int, dbmsh3d_vertex*> PrevV;
+  std::map<int, float> Dist;
+  std::map<int, dbmsh3d_vertex*> PrevV;
 
   bool result = find_sh_path_on_M (M, Src, Dist, PrevV, Dest);
   if (result == false)
@@ -116,10 +116,10 @@ bool find_shortest_Es_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src, const db
 //: A special version of shortest path avoiding set of mesh edges.
 
 bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
-                          vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                          vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                          vcl_map<int, float>& Dist,
-                          vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                          std::set<dbmsh3d_edge*>& avoid_Eset,
+                          std::set<dbmsh3d_vertex*>& avoid_Vset,
+                          std::map<int, float>& Dist,
+                          std::map<int, dbmsh3d_vertex*>& PrevV,
                           const dbmsh3d_vertex* Dest)
 {  
   //1) Check if input is valid.
@@ -136,12 +136,12 @@ bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
   // - reset all V's dist to infinity, set all V to unvisited.
   assert (Dist.size() == 0);
   assert (PrevV.size() == 0);
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_i_visited (0);
-    Dist.insert (vcl_pair<int, float> (V->id(), FLT_MAX));
-    PrevV.insert (vcl_pair<int, dbmsh3d_vertex*> (V->id(), NULL));
+    Dist.insert (std::pair<int, float> (V->id(), FLT_MAX));
+    PrevV.insert (std::pair<int, dbmsh3d_vertex*> (V->id(), NULL));
   }
   assert (Dist.size() == M->vertexmap().size());
   assert (PrevV.size() == M->vertexmap().size());
@@ -150,8 +150,8 @@ bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
   Dist[Src->id()] = 0;
 
   // - initilize the priority queue PW <-dist, V>.
-  vcl_priority_queue<vcl_pair<float, dbmsh3d_vertex*> > PQ;
-  PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[Src->id()], (dbmsh3d_vertex*) Src));
+  std::priority_queue<std::pair<float, dbmsh3d_vertex*> > PQ;
+  PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[Src->id()], (dbmsh3d_vertex*) Src));
 
   //3) Main Loop:
   while (PQ.size() != 0) {
@@ -188,7 +188,7 @@ bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
       if (d < Dist[V->id()]) {
         Dist[V->id()] = float (d);
         PrevV[V->id()] = U;
-        PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
+        PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
       }
     }
   }
@@ -201,12 +201,12 @@ bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
 
 bool find_shortest_Es_on_M_restrained (dbmsh3d_mesh* M, 
                                        const dbmsh3d_vertex* Src, const dbmsh3d_vertex* Dest,
-                                       vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                       vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                                       vcl_vector<dbmsh3d_edge*>& Evec_path)
+                                       std::set<dbmsh3d_edge*>& avoid_Eset,
+                                       std::set<dbmsh3d_vertex*>& avoid_Vset,
+                                       std::vector<dbmsh3d_edge*>& Evec_path)
 {
-  vcl_map<int, float> Dist;
-  vcl_map<int, dbmsh3d_vertex*> PrevV;
+  std::map<int, float> Dist;
+  std::map<int, dbmsh3d_vertex*> PrevV;
   if (Dest == NULL)
     return false; //No destination specified.
   bool result = find_sh_path_on_M_restrained (M, Src, avoid_Eset, avoid_Vset, Dist, PrevV, Dest);
@@ -234,17 +234,17 @@ bool find_shortest_Es_on_M_restrained (dbmsh3d_mesh* M,
 //    3) stop if any given destination vertex is reached.
 
 bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M, 
-                                           vcl_set<dbmsh3d_vertex*>& src_set,
-                                           vcl_set<dbmsh3d_vertex*>& dest_set,
-                                           vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                           vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                                           vcl_map<int, float>& Dist,
-                                           vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                                           std::set<dbmsh3d_vertex*>& src_set,
+                                           std::set<dbmsh3d_vertex*>& dest_set,
+                                           std::set<dbmsh3d_edge*>& avoid_Eset,
+                                           std::set<dbmsh3d_vertex*>& avoid_Vset,
+                                           std::map<int, float>& Dist,
+                                           std::map<int, dbmsh3d_vertex*>& PrevV,
                                            dbmsh3d_vertex*& destV)
 {
   //1) Check if input is valid.
   assert (M->is_MHE());
-  vcl_set<dbmsh3d_vertex*>::iterator it = src_set.begin();
+  std::set<dbmsh3d_vertex*>::iterator it = src_set.begin();
   for (; it != src_set.end(); it++) {
     dbmsh3d_vertex* src = (*it);
     assert (avoid_Vset.find (src) == avoid_Vset.end());
@@ -264,12 +264,12 @@ bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M,
   // - reset all V's dist to infinity, set all V to unvisited.
   assert (Dist.size() == 0);
   assert (PrevV.size() == 0);
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_i_visited (0);
-    Dist.insert (vcl_pair<int, float> (V->id(), FLT_MAX));
-    PrevV.insert (vcl_pair<int, dbmsh3d_vertex*> (V->id(), NULL));
+    Dist.insert (std::pair<int, float> (V->id(), FLT_MAX));
+    PrevV.insert (std::pair<int, dbmsh3d_vertex*> (V->id(), NULL));
   }
   assert (Dist.size() == M->vertexmap().size());
   assert (PrevV.size() == M->vertexmap().size());
@@ -277,12 +277,12 @@ bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M,
 
   // - initilize the priority queue PW <-dist, V>.
   // - initialize the Src vertices.
-  vcl_priority_queue<vcl_pair<float, dbmsh3d_vertex*> > PQ;
+  std::priority_queue<std::pair<float, dbmsh3d_vertex*> > PQ;
   it = src_set.begin();
   for (; it != src_set.end(); it++) {
     dbmsh3d_vertex* src = (*it);
     Dist[src->id()] = 0;
-    PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[src->id()], src));
+    PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[src->id()], src));
   }  
 
   //3) Main Loop:
@@ -322,7 +322,7 @@ bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M,
       if (d < Dist[V->id()]) {
         Dist[V->id()] = float (d);
         PrevV[V->id()] = U;
-        PQ.push (vcl_pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
+        PQ.push (std::pair<float, dbmsh3d_vertex*> (-Dist[V->id()], V));
       }
     }
   }
@@ -334,15 +334,15 @@ bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M,
 }
 
 bool find_shortest_Es_on_M_restrained_targets (dbmsh3d_mesh* M, 
-                                               vcl_set<dbmsh3d_vertex*>& src_set, 
-                                               vcl_set<dbmsh3d_vertex*>& dest_set,
-                                               vcl_set<dbmsh3d_edge*>& avoid_Eset, 
-                                               vcl_set<dbmsh3d_vertex*>& avoid_Vset, 
-                                               vcl_vector<dbmsh3d_edge*>& Evec_path, 
+                                               std::set<dbmsh3d_vertex*>& src_set, 
+                                               std::set<dbmsh3d_vertex*>& dest_set,
+                                               std::set<dbmsh3d_edge*>& avoid_Eset, 
+                                               std::set<dbmsh3d_vertex*>& avoid_Vset, 
+                                               std::vector<dbmsh3d_edge*>& Evec_path, 
                                                dbmsh3d_vertex*& srcV, dbmsh3d_vertex*& destV)
 {
-  vcl_map<int, float> Dist;
-  vcl_map<int, dbmsh3d_vertex*> PrevV;
+  std::map<int, float> Dist;
+  std::map<int, dbmsh3d_vertex*> PrevV;
 
   if (dest_set.empty())
     return false; //No destination specified.

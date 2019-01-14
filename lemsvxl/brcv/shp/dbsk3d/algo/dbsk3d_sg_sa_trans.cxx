@@ -2,9 +2,9 @@
 //  MingChing Chang
 //  040420 MingChing Chang
 
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_ms_curve.h>
@@ -18,12 +18,12 @@
 
 bool dbsk3d_sg_sa_trans::graph_trans_A5 (float A5_th)
 {
-  vul_printf (vcl_cout, "graph_trans_A5(): A5_th %f.\n", A5_th);
+  vul_printf (std::cout, "graph_trans_A5(): A5_th %f.\n", A5_th);
 
   //1) Go through all A13 ms_curves and find candidate A5 transition
   //   with cost under threshold.
-  vcl_vector<int> A5_A13curve_ids;
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
+  std::vector<int> A5_A13curve_ids;
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
   for (; SC_it != sg_sa_->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*SC_it).second;
     assert (MC->data_type() == C_DATA_TYPE_VERTEX);
@@ -116,14 +116,14 @@ bool dbsk3d_sg_sa_trans::graph_trans_A5 (float A5_th)
 
 bool dbsk3d_sg_sa_trans::graph_trans_A15 (float A15_th)
 {
-  vul_printf (vcl_cout, "graph_trans_A15(): A15_th %f.\n", A15_th);
+  vul_printf (std::cout, "graph_trans_A15(): A15_th %f.\n", A15_th);
 
   //: Make the transition an iterative approach.
   int count = 0;
   dbsk3d_ms_curve* A13 = _detect_next_A15 (A15_th);
   while (A13 != NULL) {
     count++;
-    vul_printf (vcl_cout, "\nA15 iteration: %d, A13 id: %d\n", count, A13->id());
+    vul_printf (std::cout, "\nA15 iteration: %d, A13 id: %d\n", count, A13->id());
     _run_trans_A15 (A13);
     A15_Transition_List_.erase (A15_Transition_List_.begin());
 
@@ -131,9 +131,9 @@ bool dbsk3d_sg_sa_trans::graph_trans_A15 (float A15_th)
   }
 
   //: Remove any zero-length A13 curve if any (bad but needed)
-  vcl_vector<int> A13_self_loop_ids;
+  std::vector<int> A13_self_loop_ids;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
   for (; SC_it != sg_sa_->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*SC_it).second;
     if (MC->c_type() != C_TYPE_AXIAL)
@@ -167,12 +167,12 @@ bool lessLength (const dbsk3d_ms_curve* x, const dbsk3d_ms_curve* y)
 //  If there's no next one, return NULL.
 dbsk3d_ms_curve* dbsk3d_sg_sa_trans::_detect_next_A15 (float A15_th)
 {
-  vul_printf (vcl_cout, "\ndbsk3d_ms_graph_sa::_detect_next_A15()\n");
+  vul_printf (std::cout, "\ndbsk3d_ms_graph_sa::_detect_next_A15()\n");
 
   A15_Transition_List_.clear ();
 
   //:1) go through all shock curves and look for A13 axials whose arclength less than the threshold
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa_->edgemap().begin();
   for (; SC_it != sg_sa_->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*SC_it).second;
     if (MC->c_type() != C_TYPE_AXIAL)
@@ -190,12 +190,12 @@ dbsk3d_ms_curve* dbsk3d_sg_sa_trans::_detect_next_A15 (float A15_th)
   }
 
   //:2) Sort the A15_Transition_List_ 
-  vcl_sort (A15_Transition_List_.begin(), A15_Transition_List_.end(), lessLength);
+  std::sort (A15_Transition_List_.begin(), A15_Transition_List_.end(), lessLength);
 
-  ///vul_printf (vcl_cout, "\nA15_Transition_List_ after sorting:\n");
+  ///vul_printf (std::cout, "\nA15_Transition_List_ after sorting:\n");
   ///for (unsigned int i=0; i<A15_Transition_List_.size() && i<5; i++) {
   ///  dbsk3d_ms_curve* MC = A15_Transition_List_[i];
-  ///  vul_printf (vcl_cout, "%d(%2.2f) ", MC->id(), MC->length());
+  ///  vul_printf (std::cout, "%d(%2.2f) ", MC->id(), MC->length());
   ///}
 
   //: return the next shortest dbsk3d_ms_curve to do transition.
@@ -296,7 +296,7 @@ bool dbsk3d_sg_sa_trans::graph_trans_remove_dummy_nodes ()
 {
   bool dummy_note_removed = false;
   //Loop through all nodes.
-  vcl_map<int, dbmsh3d_vertex*>::iterator SN_it = sg_sa_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator SN_it = sg_sa_->vertexmap().begin();
   for (; SN_it != sg_sa_->vertexmap().end(); SN_it++) {
     dbsk3d_ms_node* SN = (dbsk3d_ms_node*) (*SN_it).second;
 

@@ -20,7 +20,7 @@ dbru_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Return a NULL tableau if the types don't match
   if( storage->type() != this->type() )
     {
-      vcl_cout << "In dbru_osl_displayer::make_tableau -"
+      std::cout << "In dbru_osl_displayer::make_tableau -"
                << " types don't match\n";
       return NULL;
     }
@@ -37,17 +37,17 @@ dbru_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
   if(osl->n_objects()==0)
     return grid;
   unsigned row = 0;
-  vcl_cout << "CAUTION: Prototypes of each object occupies 2 rows:\n";
-  vcl_cout << "         first row displays observation images,\n";
-  vcl_cout << "         second row displayes middle multiple instance images if an instance is available.\n";
+  std::cout << "CAUTION: Prototypes of each object occupies 2 rows:\n";
+  std::cout << "         first row displays observation images,\n";
+  std::cout << "         second row displayes middle multiple instance images if an instance is available.\n";
 
   for ( ; row < nrows && row < 2*osl->n_objects(); row+=2) {
     dbru_object_sptr obj = osl->get_object(row/2);
-    vcl_cout << "obj at row: " << row << " ";
+    std::cout << "obj at row: " << row << " ";
     unsigned np = obj->n_polygons();
     
     for (unsigned col = 0, nn = 0; nn < np && col < ncols; nn++) {
-      vcl_cout << nn << " ";
+      std::cout << nn << " ";
       if (obj->get_polygon(nn)->size() == 0) 
         continue;
       
@@ -67,7 +67,7 @@ dbru_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
         vil_image_resource_sptr image = vil_new_image_resource_of_view(ins->get_image_i(ins->imgs_size()/2));
         //: get image of observation of the middle image to see if polygon of multiple instance is better than foreground polygon
         
-        vcl_vector<vsol_point_2d_sptr> new_points;
+        std::vector<vsol_point_2d_sptr> new_points;
         vsol_polygon_2d_sptr ins_poly = ins->get_poly();
         vsol_box_2d_sptr box = ins->get_img_box();
         vgl_vector_2d<double> trans(-box->get_min_x(), -box->get_min_y());
@@ -91,7 +91,7 @@ dbru_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
       col++;
     
     } 
-    vcl_cout << "...done!\n";
+    std::cout << "...done!\n";
   }
     
   return grid; 

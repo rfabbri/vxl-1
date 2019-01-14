@@ -29,32 +29,32 @@ class dborl_graph_categorization_params : public dborl_algo_params
 public:
 
   //: Constructor
-  dborl_graph_categorization_params(vcl_string algo_name);
+  dborl_graph_categorization_params(std::string algo_name);
 
   // MEMBER VARIABLES
 
   //: Name of graph file that holds proximity graph
-  dborl_parameter<vcl_string> graph_file_;
+  dborl_parameter<std::string> graph_file_;
 
   //: Name of file that holds similarity matrix
-  dborl_parameter<vcl_string> exemplar_sim_matrix_;
+  dborl_parameter<std::string> exemplar_sim_matrix_;
   
   //: Name of file that holds similarity matrix
-  dborl_parameter<vcl_string> query_sim_matrix_;
+  dborl_parameter<std::string> query_sim_matrix_;
   
   //: Name of file that holds category names
-  dborl_parameter<vcl_string> query_label_file_;
+  dborl_parameter<std::string> query_label_file_;
 
   //: Beta needed for beta skeletons
   dborl_parameter<double> beta_;
   
   //: Passes the folder of the dataset directory
   //: will write straight to the dataset folder
-  dborl_parameter<vcl_string> dataset_dir_;    
+  dborl_parameter<std::string> dataset_dir_;    
 
   //: Passes the folder of the output directory
   //: of where results should go
-  dborl_parameter<vcl_string> output_dir_;    
+  dborl_parameter<std::string> output_dir_;    
 
 };
 

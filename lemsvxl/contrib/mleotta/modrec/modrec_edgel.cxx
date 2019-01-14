@@ -26,7 +26,7 @@ inline double angle_diff(double a1, double a2)
 inline void scan_edgels(const vil_image_view<float>& edge_map,
                         double angle, double ang_t,
                         vgl_triangle_scan_iterator<double>& tsi,
-                        vcl_vector<modrec_edgel>& edgels)
+                        std::vector<modrec_edgel>& edgels)
 {
   int ni = edge_map.ni();
   int nj = edge_map.nj();
@@ -43,8 +43,8 @@ inline void scan_edgels(const vil_image_view<float>& edge_map,
       {
         double theta = edge_map(x,y,1);
         double offset = edge_map(x,y,2);
-        double gx = vcl_cos(theta);
-        double gy = vcl_sin(theta);
+        double gx = std::cos(theta);
+        double gy = std::sin(theta);
         edgels.push_back(modrec_edgel(x+gx*offset, y+gy*offset,
                                       theta, edge_map(x,y,0)));
       }
@@ -56,10 +56,10 @@ inline void scan_edgels(const vil_image_view<float>& edge_map,
 
 
 //: Return a vector of all edgels in the edge map
-vcl_vector<modrec_edgel>
+std::vector<modrec_edgel>
 modrec_find_all_edgels(const vil_image_view<float>& edge_map)
 {
-  vcl_vector<modrec_edgel> edgels;
+  std::vector<modrec_edgel> edgels;
   
   const unsigned ni = edge_map.ni();
   const unsigned nj = edge_map.nj();
@@ -68,8 +68,8 @@ modrec_find_all_edgels(const vil_image_view<float>& edge_map)
       if(edge_map(i,j,0) > 0.0){
         double theta = edge_map(i,j,1);
         double offset = edge_map(i,j,2);
-        double gx = vcl_cos(theta);
-        double gy = vcl_sin(theta);
+        double gx = std::cos(theta);
+        double gy = std::sin(theta);
         edgels.push_back(modrec_edgel(i+gx*offset, j+gy*offset,
                                       theta, edge_map(i,j,0)));
       }
@@ -83,12 +83,12 @@ modrec_find_all_edgels(const vil_image_view<float>& edge_map)
 //  return a vector of edgels found within \a ndist pixel in the normal direction,
 //  with a \a edist pixel padding added in the line direction.
 //  Edgel orientation must form an angle with the line less than \a ang_t (modulo pi radians)
-vcl_vector<modrec_edgel>
+std::vector<modrec_edgel>
 modrec_find_edgel_neighbors(const vil_image_view<float>& edge_map,
                             const vgl_line_segment_2d<double>& line,
                             int ndist, int edist, double ang_t)
 {
-  vcl_vector<modrec_edgel> edgels;
+  std::vector<modrec_edgel> edgels;
 
   vgl_vector_2d<double> v = line.direction();
   double angle = atan2(-v.x(),v.y());

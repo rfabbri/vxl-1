@@ -9,7 +9,7 @@
 //
 // Inputs: 
 //         1. dts_pixel_time_series_base_sptr
-//         2. output file (vcl_string)
+//         2. output file (std::string)
 //	       3. x coordinate (unsigned)
 //         4. y coordinate (unsigned)
 //
@@ -36,11 +36,11 @@ bool dts_pixel_time_series_write_txt_process_cons( bprb_func_process& pro )
 {
 	using namespace dts_pixel_time_series_write_txt_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dts_pixel_time_series_base_sptr"; //from db
-	input_types_[i++] = "vcl_string";//the output filename
+	input_types_[i++] = vcl_string";//the output filename
 	input_types_[i++] = "unsigned";//target x coordinate
 	input_types_[i++] = "unsigned";//target y coordinate
 
@@ -56,13 +56,13 @@ bool dts_pixel_time_series_write_txt_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() 
+		std::cout << pro.name() 
             << " dts_pixel_time_series_write_txt_process: "
             << " The input number should be " 
             << n_inputs_ << "\n"
 			<< "FILE: " << __FILE__ << '\n'
 			<< "LINE: " << __LINE__ << '\n'
-            << vcl_endl;
+            << std::endl;
         return false;
 	}
 
@@ -71,8 +71,8 @@ bool dts_pixel_time_series_write_txt_process( bprb_func_process& pro )
 	dts_pixel_time_series_base_sptr dts_sptr = 
 		pro.get_input<dts_pixel_time_series_base_sptr>(i++);
 
-	vcl_string filename =
-		pro.get_input<vcl_string>(i++);
+	std::string filename =
+		pro.get_input<std::string>(i++);
 
 	unsigned target_x = 
 		pro.get_input<unsigned>(i++);

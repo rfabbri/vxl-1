@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_wavelet.h>
@@ -7,7 +7,7 @@
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <brdb/brdb_value.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vil/vil_image_view.h>
@@ -33,10 +33,10 @@ typedef bsta_num_obs<mix_gauss_type3> obs_mix_gauss_type3;
 
 bool bbgm_wavelet_utils_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(5), out_types(1);
-  in_types[0]= "vcl_string"; //type
+  std::vector<std::string> in_types(5), out_types(1);
+  in_types[0]= vcl_string"; //type
   in_types[1]="int"; //nplanes
-  in_types[2]= "vcl_string";//the subband. must be LL,LH,HL,HH,inverse or forward.
+  in_types[2]= vcl_string";//the subband. must be LL,LH,HL,HH,inverse or forward.
   in_types[3]= "int"; //the depth
   in_types[4]= "bbgm_wavelet_sptr"; // the actual image.
   pro.set_input_types(in_types);
@@ -47,18 +47,18 @@ bool bbgm_wavelet_utils_process(bprb_func_process& pro)
 {
 
 	if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_wavelet_utils_process::execute() -"
+    std::cerr << "In bbgm_wavelet_utils_process::execute() -"
              << " invalid inputs\n";
     return false;
     }
 	
-	vcl_string type=pro.get_input<vcl_string>(0);
+	std::string type=pro.get_input<std::string>(0);
 	int nplanes=pro.get_input<int>(1);
-	vcl_string subband_type=pro.get_input<vcl_string>(2);
+	std::string subband_type=pro.get_input<std::string>(2);
 	int depth=pro.get_input<int>(3);
 	bbgm_wavelet_sptr input_wavelet = pro.get_input<bbgm_wavelet_sptr>(4);
 	if(!input_wavelet) {
-	   vcl_cerr << "In bbgm_wavelet_utils_process::execute() -"
+	   std::cerr << "In bbgm_wavelet_utils_process::execute() -"
 	   << " invalid subband\n";
 	   return false;
 	}
@@ -76,7 +76,7 @@ bool bbgm_wavelet_utils_process(bprb_func_process& pro)
 	else if	(subband_type=="inverse");
 	else if (subband_type=="forward");
 	else{
-		vcl_cerr << "In bbgm_wavelet_utils_process::execute() -"
+		std::cerr << "In bbgm_wavelet_utils_process::execute() -"
              << " invalid subband; must be LL,LH,HL,HH,inverse or forward\n";
 		return false;
 	}  
@@ -97,7 +97,7 @@ bool bbgm_wavelet_utils_process(bprb_func_process& pro)
 					output_model =wavelet->getSubband(current_band,depth);
 		   	 }
 		 //commit the output
-		 vcl_vector<vcl_string> output_types(1);
+		 std::vector<std::string> output_types(1);
 		 output_types[0]= "bbgm_image_sptr";
          pro.set_output_types(output_types);
          brdb_value_sptr output =
@@ -113,7 +113,7 @@ bool bbgm_wavelet_utils_process(bprb_func_process& pro)
 			else
 				output_image =image->getSubband(current_band,depth);
 
-			vcl_vector<vcl_string> output_types(1);
+			std::vector<std::string> output_types(1);
 			output_types[0]= "vil_image_view_base_sptr";
 			pro.set_output_types(output_types);
 			brdb_value_sptr output =

@@ -11,7 +11,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vul/vul_file.h>
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -35,17 +35,17 @@ bool bseg3d_l2distance_process_cons(bprb_func_process& pro)
   // 3. nx (grid size)
   // 4. ny
   // 5. nz
-  vcl_vector<vcl_string> input_types_(6);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
-  input_types_[2] = "vcl_string";
+  std::vector<std::string> input_types_(6);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
+  input_types_[2] = vcl_string";
   input_types_[3] = "unsigned";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";
 
 
   // No outputs to the database. The resulting grid is stored on disk
-  vcl_vector<vcl_string> output_types_(0);
+  std::vector<std::string> output_types_(0);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -63,13 +63,13 @@ bool bseg3d_l2distance_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != 6)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << 6 << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << 6 << std::endl;
     return false;
   }
 
-  vcl_string apm_path = pro.get_input<vcl_string>(0);
-  vcl_string mask_path = pro.get_input<vcl_string>(1);
-  vcl_string output_path = pro.get_input<vcl_string>(2);
+  std::string apm_path = pro.get_input<std::string>(0);
+  std::string mask_path = pro.get_input<std::string>(1);
+  std::string output_path = pro.get_input<std::string>(2);
   unsigned nx = pro.get_input<unsigned>(3);
   unsigned ny = pro.get_input<unsigned>(4);
   unsigned nz = pro.get_input<unsigned>(5);
@@ -90,7 +90,7 @@ bool bseg3d_l2distance_process(bprb_func_process& pro)
 
   bvxm_voxel_grid<float> *mask_base = new bvxm_voxel_grid<float>(mask_path, grid_size);
   if (!mask_exists){
-    vcl_cout<< "Mask file does not exist, creating dummy mask\n";
+    std::cout<< "Mask file does not exist, creating dummy mask\n";
     mask_base->initialize_data(float(1));
   }
 

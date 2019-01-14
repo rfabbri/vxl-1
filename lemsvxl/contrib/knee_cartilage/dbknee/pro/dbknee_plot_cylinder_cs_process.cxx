@@ -32,7 +32,7 @@ vgl_point_3d<double > ellipse_point(const dbknee_cylinder_based_coord& coord,
 dbknee_plot_cylinder_cs_process::
 dbknee_plot_cylinder_cs_process()
 {
-  vcl_vector<vcl_string > knee_sides;
+  std::vector<std::string > knee_sides;
   knee_sides.push_back("left");
   knee_sides.push_back("right");
 
@@ -49,7 +49,7 @@ dbknee_plot_cylinder_cs_process()
     //"-end_angle", double(130) )    
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -71,20 +71,20 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_plot_cylinder_cs_process::
+std::vector< std::string > dbknee_plot_cylinder_cs_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("image");
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_plot_cylinder_cs_process::
+std::vector< std::string > dbknee_plot_cylinder_cs_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("vsol2D");
   return to_return;
 }
@@ -143,7 +143,7 @@ execute()
   else if (left_right != 0)
   {
     // unknown option:
-    vcl_cout << "ERROR: Unknown knee side option.\n";
+    std::cout << "ERROR: Unknown knee side option.\n";
     return false;
   }
 
@@ -193,8 +193,8 @@ execute()
 
   double theta0 = conic->ellipse_angular_position(p1);
   double theta5 = conic->ellipse_angular_position(p5);
-  vsol_point_2d_sptr start = new vsol_point_2d(center + vcl_cos(theta0)*major + vcl_sin(theta0)*minor);
-  vsol_point_2d_sptr end = new vsol_point_2d(center + vcl_cos(theta5)*major + vcl_sin(theta5)*minor);
+  vsol_point_2d_sptr start = new vsol_point_2d(center + std::cos(theta0)*major + std::sin(theta0)*minor);
+  vsol_point_2d_sptr end = new vsol_point_2d(center + std::cos(theta5)*major + std::sin(theta5)*minor);
 
   if (angle_sign < 0)
   {
@@ -243,7 +243,7 @@ vgl_point_3d<double > ellipse_point(const dbknee_cylinder_based_coord& coord,
 {
   theta = theta / 180 * vnl_math::pi;
   vgl_cylinder<double > cylinder = coord.cylinder();
-  double x0 = cylinder.radius()*vcl_cos(theta);
+  double x0 = cylinder.radius()*std::cos(theta);
   vgl_point_3d<double > p1a(x0, 1, 1);
   vgl_point_3d<double > p1b(x0, 0, 1);
   vgl_point_3d<double > p1c(x0, 1, 0);
@@ -251,7 +251,7 @@ vgl_point_3d<double > ellipse_point(const dbknee_cylinder_based_coord& coord,
     coord.local_to_wcs(p1b), 
     coord.local_to_wcs(p1c));
 
-  double y0 = cylinder.radius()*vcl_sin(theta);
+  double y0 = cylinder.radius()*std::sin(theta);
   vgl_point_3d<double > p2a(1, y0, 1);
   vgl_point_3d<double > p2b(0, y0, 1);
   vgl_point_3d<double > p2c(1, y0, 0);

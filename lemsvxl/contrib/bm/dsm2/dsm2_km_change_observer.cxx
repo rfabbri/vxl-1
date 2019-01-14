@@ -6,11 +6,11 @@
 #include<dsm2/dsm2_state_machine_base_sptr.h>
 
 //for exit
-#include<vcl_cstdlib.h>
+#include<cstdlib>
 
 #include<vsl/vsl_vector_io.h>
 
-void dsm2_km_change_observer::update( dsm2_subject_base* s, vcl_string const& interest )
+void dsm2_km_change_observer::update( dsm2_subject_base* s, std::string const& interest )
 {
     if( interest == "update" )
     {
@@ -19,10 +19,10 @@ void dsm2_km_change_observer::update( dsm2_subject_base* s, vcl_string const& in
 
         if( s == NULL )
         {
-            vcl_cerr << "----ERROR---- dsm_km_change_observer::update:\n"
+            std::cerr << "----ERROR---- dsm_km_change_observer::update:\n"
                      << "\tdynamic_cast<dsm2_state_machine_base*>(dsm2_subject_base*) failed.\n"
                      << __FILE__ << '\n'
-                     << __LINE__ << '\n' << vcl_flush;
+                     << __LINE__ << '\n' << std::flush;
             exit(-1);
         }//end if s == NULL
         else
@@ -75,19 +75,19 @@ void dsm2_km_change_observer::b_read( vsl_b_istream& is )
         }//end case 1
     default:
         {
-            vcl_cerr << "----ERROR---- dsm2_km_change_observer::b_read:\n"
+            std::cerr << "----ERROR---- dsm2_km_change_observer::b_read:\n"
                      << "\t UNKNOWN VERSION NUMBER: " << v << '\n'
                      << __FILE__ << '\n'
-                     << __LINE__ << '\n' << vcl_flush;
+                     << __LINE__ << '\n' << std::flush;
             exit(-1);
         }//end default
     }//end switch
 }//end b_read
 #endif //DSM2_KM_CHANGE_OBSERVER_TXX_
 
-void dsm2_km_change_observer::write_txt( vcl_string const& filename ) const
+void dsm2_km_change_observer::write_txt( std::string const& filename ) const
 {
-    vcl_ofstream of( filename.c_str(), vcl_ios::out );
+    std::ofstream of( filename.c_str(), std::ios::out );
 
     for( unsigned i = 0; i < this->change_.size(); ++i )
     {

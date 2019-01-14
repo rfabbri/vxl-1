@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbgdt3d/dbgdt3d_manager.h>
 
@@ -699,34 +699,34 @@ void gdt_ws_manager::SE_setup_nWa_nWb (const gdt_shock* S, const SOT_TYPE SOtype
     assert (nWb->edge() == S->prjE());
 
   if (n_verbose_>3) {
-    vul_printf (vcl_cout, " Advance S %d (v %d) to prjE %d at tauE %f, endtime %f.\n", 
+    vul_printf (std::cout, " Advance S %d (v %d) to prjE %d at tauE %f, endtime %f.\n", 
                  S->id(), S->Snode()->id(), S->prjE()->id(), S->tauE(), S->edgeT()); 
   
     char astring[64], bstring[64];
-    vcl_sprintf (astring, "%s", pWa->_is_RF() ? "irf " : "");
-    vcl_sprintf (bstring, "%s", pWb->_is_RF() ? "irf " : "");
-    vul_printf (vcl_cout, "  pWa %s%d (%.3f, %.3f), pWb %s%d (%.3f, %.3f),\n", 
+    std::sprintf (astring, "%s", pWa->_is_RF() ? "irf " : "");
+    std::sprintf (bstring, "%s", pWb->_is_RF() ? "irf " : "");
+    vul_printf (std::cout, "  pWa %s%d (%.3f, %.3f), pWb %s%d (%.3f, %.3f),\n", 
                  astring, pWa->edge()->id(), pWa->stau(), pWa->etau(),
                  bstring, pWb->edge()->id(), pWb->stau(), pWb->etau());
 
     if (nWa)
-      vcl_sprintf (astring, "%s%d (%.3f, %.3f)", nWa->is_dege() ? "dege " : "",
+      std::sprintf (astring, "%s%d (%.3f, %.3f)", nWa->is_dege() ? "dege " : "",
                    nWa->edge()->id(), nWa->stau(), nWa->etau());
     else
-      vcl_sprintf (astring, "NULL");
+      std::sprintf (astring, "NULL");
     if (nWb)
-      vcl_sprintf (bstring, "%s%d (%.3f, %.3f)", nWb->is_dege() ? "dege " : "",
+      std::sprintf (bstring, "%s%d (%.3f, %.3f)", nWb->is_dege() ? "dege " : "",
                    nWb->edge()->id(), nWb->stau(), nWb->etau());
     else
-      vcl_sprintf (bstring, "NULL");
-    vul_printf (vcl_cout, "  nWa %s, nWb %s.\n", astring, bstring);
+      std::sprintf (bstring, "NULL");
+    vul_printf (std::cout, "  nWa %s, nWb %s.\n", astring, bstring);
   }
 #endif
 }
 
 void gdt_ws_manager::_del_childW_on_edge (gdt_welm* W, const dbmsh3d_gdt_edge* edge)
 {
-  vcl_vector<gdt_interval*>::iterator it = W->nextIs().begin();
+  std::vector<gdt_interval*>::iterator it = W->nextIs().begin();
   while (it != W->nextIs().end()) {
     gdt_welm* nW = (gdt_welm*) (*it);
 
@@ -737,7 +737,7 @@ void gdt_ws_manager::_del_childW_on_edge (gdt_welm* W, const dbmsh3d_gdt_edge* e
         it = W->nextIs().begin();
       }
       else {
-        vcl_vector<gdt_interval*>::iterator nit = it;
+        std::vector<gdt_interval*>::iterator nit = it;
         nit--;
         delete_W_from_structure (nW);
         nit++;
@@ -1036,7 +1036,7 @@ void gdt_ws_manager::SE_update_pWa_pWb (const gdt_shock* S)
 
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
+        vul_printf (std::cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
                      pWa->edge()->id(), pWa->stau(), pWa->etau());
       #endif
     }
@@ -1058,7 +1058,7 @@ void gdt_ws_manager::SE_update_pWa_pWb (const gdt_shock* S)
 
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
+        vul_printf (std::cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
                      pWb->edge()->id(), pWb->stau(), pWb->etau());
       #endif
     }
@@ -1180,7 +1180,7 @@ bool gdt_ws_manager::_try_finalize (gdt_welm* W)
 
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
+      vul_printf (std::cout, "  Finalize_I psrcW %d (%.3f, %.3f).\n", 
                    W->edge()->id(), W->stau(), W->etau());
     #endif
     return true;
@@ -1225,7 +1225,7 @@ void gdt_ws_manager::SE_s_to_vL (gdt_shock* S, gdt_welm* nWa, const bool nWa_det
 
   //Handle the S-V sink case:
   //If there exists an active vertex (v, pWa, pWb) in Qv, remove it.
-  vcl_multimap<double, gdt_active_vertex*>::iterator vit = _find_in_Qv (v);
+  std::multimap<double, gdt_active_vertex*>::iterator vit = _find_in_Qv (v);
   if (vit != Qv_.end()) {
     gdt_active_vertex* av = (*vit).second;
     if ((av->Wa_ == pWa && av->Wb_ == pWb) || (av->Wa_ == pWb && av->Wb_ == pWa))
@@ -1275,7 +1275,7 @@ void gdt_ws_manager::SE_s_to_vR (gdt_shock* S, gdt_welm* nWb, const bool nWb_det
 
   //Handle the S-V sink case:
   //If there exists an active vertex (v, pWa, pWb) in Qv, remove it.
-  vcl_multimap<double, gdt_active_vertex*>::iterator vit = _find_in_Qv (v);
+  std::multimap<double, gdt_active_vertex*>::iterator vit = _find_in_Qv (v);
   if (vit != Qv_.end()) {    
     gdt_active_vertex* av = (*vit).second;
     if ((av->Wa_ == pWa && av->Wb_ == pWb) || (av->Wa_ == pWb && av->Wb_ == pWa))

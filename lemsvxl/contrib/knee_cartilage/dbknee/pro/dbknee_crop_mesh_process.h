@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_crop_mesh_process : public bpro1_process 
@@ -32,10 +32,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Crop mesh"; }
+  std::string name() {  return "Crop mesh"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -44,11 +44,11 @@ public:
   bool finish();
 
   // Support function
-  bool crop_mesh(const vcl_string& data_file,
-                  const vcl_string& crop_direction,
+  bool crop_mesh(const std::string& data_file,
+                  const std::string& crop_direction,
                   float crop_ratio,
-                  const vcl_string& cropped_mesh_1,
-                  const vcl_string& cropped_mesh_2);
+                  const std::string& cropped_mesh_1,
+                  const std::string& cropped_mesh_2);
 };
 
 #endif

@@ -7,7 +7,7 @@
 MAIN_ARGS( test_boxm_rational_camera_utils )
 {
   START ("BOXM RATIONAL CAMERA UTILS");
-  vcl_string filename="camera0.txt";
+  std::string filename="camera0.txt";
   
   vpgl_local_rational_camera<double>* rcam=read_local_rational_camera<double>( "./" + filename);
   vgl_plane_3d<double> top(0,0,1,-200);

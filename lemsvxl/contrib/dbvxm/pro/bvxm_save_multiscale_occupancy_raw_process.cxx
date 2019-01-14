@@ -18,7 +18,7 @@ bvxm_save_multiscale_occupancy_raw_process::bvxm_save_multiscale_occupancy_raw_p
   input_data_.resize(3,brdb_value_sptr(0));
   input_types_.resize(3);
   input_types_[0] = "dbvxm_multi_scale_voxel_world_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
 
   // process has 0 outputs.
@@ -38,9 +38,9 @@ bool bvxm_save_multiscale_occupancy_raw_process::execute()
     static_cast<brdb_value_t<dbvxm_multi_scale_voxel_world_sptr>* >(input_data_[0].ptr());
   dbvxm_multi_scale_voxel_world_sptr world = input0->value();
 
-  brdb_value_t<vcl_string>* input1 =
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[1].ptr());
-  vcl_string filename = input1->value();
+  brdb_value_t<std::string>* input1 =
+    static_cast<brdb_value_t<std::string>* >(input_data_[1].ptr());
+  std::string filename = input1->value();
   brdb_value_t<unsigned>* input2 =
     static_cast<brdb_value_t<unsigned>* >(input_data_[2].ptr());
   unsigned int scale = input2->value();

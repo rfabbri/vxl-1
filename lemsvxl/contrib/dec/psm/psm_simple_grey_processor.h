@@ -47,14 +47,14 @@ public:
 
   static void init_appearance(psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype const& mean, float variance, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model);
 
-  static void compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void compute_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void update_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void update_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model);
+  static void finalize_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model);
 
 private:
-  static void compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs, vcl_vector<float> weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma);
+  static void compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs, std::vector<float> weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma);
  
   static float sigma_norm_factor(unsigned int nobs);
 
@@ -62,7 +62,7 @@ private:
 
 };
 
-vcl_ostream& operator<<(vcl_ostream &os, psm_simple_grey const& apm);
+std::ostream& operator<<(std::ostream &os, psm_simple_grey const& apm);
 
 
 #endif // psm_simple_grey_processor_h_

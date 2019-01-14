@@ -4,7 +4,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 class xmvg_cylinder_line_integrator
  {

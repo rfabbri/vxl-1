@@ -78,8 +78,8 @@ double dbsksp_compute_shapelet_chord_cost_function::
 f(const vnl_vector<double >& x)
 {
   double theta = x[0];
-  double m_start = vcl_sin(this->start_psi_ - theta) / sin_start_phi_;
-  double m_end = vcl_sin(this->end_psi_ - theta) / sin_end_phi_;
+  double m_start = std::sin(this->start_psi_ - theta) / sin_start_phi_;
+  double m_end = std::sin(this->end_psi_ - theta) / sin_end_phi_;
 
   // ideally, the two should be opposite of each other
   return (m_start + m_end) * (m_start + m_end);
@@ -181,7 +181,7 @@ x_to_xsample(const vnl_vector<double >& x) const
 
   // tangent vector
   double psi = x[1];
-  vgl_vector_2d<double > orient(vcl_cos(psi), vcl_sin(psi));
+  vgl_vector_2d<double > orient(std::cos(psi), std::sin(psi));
 
   // shock point
   double b = x[2];
@@ -194,7 +194,7 @@ x_to_xsample(const vnl_vector<double >& x) const
   double radius = vnl_math::hypot(h, b);
 
   // phi
-  double phi = vcl_acos(-b/radius);
+  double phi = std::acos(-b/radius);
 
   return dbsksp_xshock_node_descriptor(shock_pt.x(), shock_pt.y(), psi, phi, radius);
 }
@@ -211,7 +211,7 @@ initial_x() const
 
   // x[1]: tangent angle at the shock point
   vgl_vector_2d<double > orient = rotated(bnd_pt[1]-bnd_pt[0], vnl_math::pi_over_2);
-  x[1] = vcl_atan2(orient.y(), orient.x());
+  x[1] = std::atan2(orient.y(), orient.x());
 
   // x[2]: signed distance (from chordal point, along the tangent vector) of the shock point
   x[2] = 0;

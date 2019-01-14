@@ -9,7 +9,7 @@
 //
 //\endverbatim
 
-#include <vcl_map.h>
+#include <map>
 #include <vbl/vbl_ref_count.h>
 
 #include <dbdet/sel/dbdet_curvelet_map.h>
@@ -24,7 +24,7 @@ public:
     ~dbdet_spatial_temporal_options(){}
 
     //: options map indexed by curvelets
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >  st_options_;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >  st_options_;
     
     void normalize_weights();
     bool compute_max_k();

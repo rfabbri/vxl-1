@@ -1,8 +1,8 @@
 #ifndef breg3d_util_h_
 #define breg3d_util_h_
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3x1.h>
@@ -18,12 +18,12 @@ class breg3d_util
 {
 public:
 
-  static bool read_cameras(const char* filename, vcl_vector<vnl_double_3x3> &Ks, vcl_vector<vnl_double_3x3> &Rs, vcl_vector<vnl_double_3x1> &Ts);
+  static bool read_cameras(const char* filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts);
 
-  static bool write_cameras(const char* filename, vcl_vector<vnl_double_3x3> &Ks, vcl_vector<vnl_double_3x3> &Rs, vcl_vector<vnl_double_3x1> &Ts);
+  static bool write_cameras(const char* filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts);
 
-  static vil_image_view<float> load_image(vcl_string img_fname);
-  static void save_image(vil_image_view<float> img, vcl_string img_fname);
+  static vil_image_view<float> load_image(std::string img_fname);
+  static void save_image(vil_image_view<float> img, std::string img_fname);
 
   template<class T>
   static bool resample_image(vil_image_view<T> const& in_view, vil_image_view<T> &out_view, vimt_transform_2d &xform, double off_x = 0.0, double off_y = 0.0);
@@ -43,7 +43,7 @@ bool breg3d_util::resample_image(vil_image_view<T> const& in_view, vil_image_vie
   vnl_vector<T> out_vec(out_view.size());
   // seeing something weird here
   if (!out_vec.data_block()) {
-    vcl_cerr << "failed to create vector of size " << out_view.size() << ". " << vcl_endl;
+    std::cerr << "failed to create vector of size " << out_view.size() << ". " << std::endl;
   }
 
 

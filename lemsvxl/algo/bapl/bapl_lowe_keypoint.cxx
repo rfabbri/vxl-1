@@ -3,8 +3,8 @@
 // \file
 
 #include "bapl_lowe_keypoint.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdlib>
 #include <bapl/bapl_lowe_pyramid_set.h>
 
 //: Constructor
@@ -12,7 +12,7 @@ bapl_lowe_keypoint::bapl_lowe_keypoint()
 {
   // make a random keypoint
   for( int i=0; i<128; ++i){
-    descriptor_[i] = vcl_rand();
+    descriptor_[i] = std::rand();
   }
   this->normalize();
 }
@@ -70,8 +70,8 @@ bapl_lowe_keypoint::normalize()
 
 //: Print a summary of the keypoint data to a stream
 void
-bapl_lowe_keypoint::print_summary(vcl_ostream& os) const
+bapl_lowe_keypoint::print_summary(std::ostream& os) const
 {
-  os << "Lowe keypoint: ("<<location_i_<<','<<location_j_<<") scale="<<scale_<<" orientation="<<orientation_<<vcl_endl;
-  //os << "               desc="<< descriptor_ << vcl_endl;
+  os << "Lowe keypoint: ("<<location_i_<<','<<location_j_<<") scale="<<scale_<<" orientation="<<orientation_<<std::endl;
+  //os << "               desc="<< descriptor_ << std::endl;
 }

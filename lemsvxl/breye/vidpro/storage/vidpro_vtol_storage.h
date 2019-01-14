@@ -18,7 +18,7 @@
 #include <bpro/bpro_storage.h>
 #include <vidpro/storage/vidpro_vtol_storage_sptr.h>
 #include <vtol/vtol_topology_object_sptr.h>
-#include <vcl_set.h>
+#include <set>
 
 
 class vidpro_vtol_storage : public bpro_storage {
@@ -27,14 +27,14 @@ public:
 
   vidpro_vtol_storage();
   virtual ~vidpro_vtol_storage();
-  virtual vcl_string type() const { return "vtol"; }
+  virtual std::string type() const { return "vtol"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro_storage* clone() const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro_vtol_storage"; }
+  virtual std::string is_a() const { return "vidpro_vtol_storage"; }
 
   //: Clear all vtol topology objects
   void clear();
@@ -47,15 +47,15 @@ public:
   int size() const;
 
   //: Return a const iterator to the beginning of the data
-  vcl_set<vtol_topology_object_sptr>::const_iterator begin() const;
+  std::set<vtol_topology_object_sptr>::const_iterator begin() const;
   //: Return a const iterator to the end of the data
-  vcl_set<vtol_topology_object_sptr>::const_iterator end() const;
+  std::set<vtol_topology_object_sptr>::const_iterator end() const;
   
 protected:
 
 private:
 
-  vcl_set<vtol_topology_object_sptr> data_set_;
+  std::set<vtol_topology_object_sptr> data_set_;
   
 };
 

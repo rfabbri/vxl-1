@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_associate_groundtruth_xgraphs_params::vox_associate_groundtruth_xgraphs_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_associate_groundtruth_xgraphs_params::vox_associate_groundtruth_xgraphs_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
     //: Name of input object
     this->input_object_name_.set_values(

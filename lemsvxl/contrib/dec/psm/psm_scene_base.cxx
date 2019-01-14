@@ -1,6 +1,6 @@
-#include <vcl_set.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <set>
+#include <cmath>
+#include <iostream>
 
 #include <hsds/hsds_fd_tree.h>
 
@@ -26,13 +26,13 @@ void psm_scene_base::set_block_valid(vgl_point_3d<int> block_idx, bool isvalid)
 vgl_point_3d<int> psm_scene_base::block_index(vgl_point_3d<double> pt) const
 {
   vgl_vector_3d<double> pt_norm = (pt - origin_) / block_len_;
-  return vgl_point_3d<int>((int)vcl_floor(pt_norm.x()),(int)vcl_floor(pt_norm.y()),(int)vcl_floor(pt_norm.z()));
+  return vgl_point_3d<int>((int)std::floor(pt_norm.x()),(int)std::floor(pt_norm.y()),(int)std::floor(pt_norm.z()));
 }
 
 //: return true if the specified block should be populated
 bool psm_scene_base::valid_block(vgl_point_3d<int> block_idx) const
 {
-  vcl_set<vgl_point_3d<int>,vgl_point_3d_cmp<int> >::const_iterator vbit = valid_blocks_.find(block_idx);
+  std::set<vgl_point_3d<int>,vgl_point_3d_cmp<int> >::const_iterator vbit = valid_blocks_.find(block_idx);
   return (vbit != valid_blocks_.end());
 }
 
@@ -75,7 +75,7 @@ bool psm_scene_base::operator < (psm_scene_base const& that) const
 }
 
 //: output description of voxel world to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, psm_scene_base const& scene)
+std::ostream&  operator<<(std::ostream& s, psm_scene_base const& scene)
 {
   s << "psm_scene_base: origin = " << scene.origin() <<", block_len = " << scene.block_len();
 

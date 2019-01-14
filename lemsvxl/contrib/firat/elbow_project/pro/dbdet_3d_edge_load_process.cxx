@@ -20,7 +20,7 @@ dbdet_3d_edge_load_process()
 	if( !parameters()->add( "Edge file" , "-edgefile",
 			bpro1_filepath("")) )
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -41,26 +41,26 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbdet_3d_edge_load_process::
+std::string dbdet_3d_edge_load_process::
 name()
 {
 	return "Load 3D edges";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_3d_edge_load_process::
+std::vector< std::string > dbdet_3d_edge_load_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_3d_edge_load_process::
+std::vector< std::string > dbdet_3d_edge_load_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("3d_edges");
 	return to_return;
 }
@@ -90,10 +90,10 @@ execute()
 
 	bpro1_filepath edgefile;
 	parameters()->get_value( "-edgefile" , edgefile );
-	vcl_vector<dbdet_3d_edge_sptr> edgemap;
+	std::vector<dbdet_3d_edge_sptr> edgemap;
 	if(!dbdet_load_3d_edges(edgefile.path, edgemap))
 	{
-		vcl_cout << "Cannot load edges!" << vcl_endl;
+		std::cout << "Cannot load edges!" << std::endl;
 		return false;
 	}
 
@@ -103,7 +103,7 @@ execute()
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 }
 
 

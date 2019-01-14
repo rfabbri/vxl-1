@@ -36,7 +36,7 @@ public:
   dbsk2d_ishock_node* ishock_node() { return ishock_node_; }
 
   //: return the extrinsic points for rendering this geometry
-  virtual vcl_vector<vgl_point_2d<double> >& ex_pts() { return ishock_node_->ex_pts(); }
+  virtual std::vector<vgl_point_2d<double> >& ex_pts() { return ishock_node_->ex_pts(); }
 
 protected:
   dbsk2d_ishock_node* ishock_node_;

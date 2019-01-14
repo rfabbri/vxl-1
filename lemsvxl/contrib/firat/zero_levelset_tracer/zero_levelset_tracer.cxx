@@ -5,10 +5,10 @@
 // \date Jul 20, 2011
 
 #include <dbdet/tracer/dbdet_contour_tracer.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsol/algo/dbsol_geno.h>
 
 void flip_phi(vil_image_view<float >& surface, vil_image_view<float >& surface2, int width, int height)
@@ -22,11 +22,11 @@ void flip_phi(vil_image_view<float >& surface, vil_image_view<float >& surface2,
 	}
 }
 
-void flip_contours(vcl_vector<vcl_vector<vsol_point_2d_sptr> >& contours, int width, int height)
+void flip_contours(std::vector<std::vector<vsol_point_2d_sptr> >& contours, int width, int height)
 {
 	for(int i = 0 ; i < contours.size(); i++)
 	{
-		vcl_vector<vsol_point_2d_sptr> contour = contours[i];
+		std::vector<vsol_point_2d_sptr> contour = contours[i];
 		for(int j = 0; j < contour.size(); j++ )
 		{
 			vsol_point_2d_sptr pt = contour[j];
@@ -52,7 +52,7 @@ int main()
 		{
 			for(int j = 0; j < width; j++)
 			{
-				surface(j,i) = vcl_sqrt((i-center)*(i-center) + (j-center)*(j-center)) - 19.68;
+				surface(j,i) = std::sqrt((i-center)*(i-center) + (j-center)*(j-center)) - 19.68;
 			}
 		}
 	}
@@ -66,8 +66,8 @@ int main()
 		{
 			for(int j = 0; j < width; j++)
 			{
-				double d1 = vcl_sqrt((i-25)*(i-25) + (j-center1)*(j-center1))-radius1;
-				double d2 = vcl_sqrt((i-25)*(i-25) + (j-center2)*(j-center2))-radius2;
+				double d1 = std::sqrt((i-25)*(i-25) + (j-center1)*(j-center1))-radius1;
+				double d2 = std::sqrt((i-25)*(i-25) + (j-center2)*(j-center2))-radius2;
 				if(d1 < d2)
 				{
 					surface(j,i) = d1;
@@ -83,9 +83,9 @@ int main()
 		}
 		for(int i = 0; i < width; i++)
 		{
-			vcl_cout << surface(i,25) << " ";
+			std::cout << surface(i,25) << " ";
 		}
-		vcl_cout <<vcl_endl;
+		std::cout <<std::endl;
 	}
 	else
 	{
@@ -97,7 +97,7 @@ int main()
 			for(int x = 0; x < width; x++)
 			{
 
-				double dist_to_center = vcl_sqrt((x-center_x)*(x-center_x) + (y-center_y)*(y-center_y));
+				double dist_to_center = std::sqrt((x-center_x)*(x-center_x) + (y-center_y)*(y-center_y));
 				double d_outer = radius_outer - dist_to_center;
 				double d_inner = dist_to_center - radius_inner;
 				if(dist_to_center > radius_outer)
@@ -122,28 +122,28 @@ int main()
 	dbdet_contour_tracer tracer;
 	tracer.set_curvature_smooth_nsteps(0);
 	tracer.trace_sedt_image_with_shock_capturing(surface);
-	vcl_vector<vcl_vector<vsol_point_2d_sptr> > contours1 = tracer.contours();
+	std::vector<std::vector<vsol_point_2d_sptr> > contours1 = tracer.contours();
 
 	dbdet_contour_tracer tracer2;
 	tracer2.set_curvature_smooth_nsteps(0);
 	tracer2.trace_sedt_image_with_shock_capturing(surface2);
-	vcl_vector<vcl_vector<vsol_point_2d_sptr> > contours2 = tracer2.contours();
+	std::vector<std::vector<vsol_point_2d_sptr> > contours2 = tracer2.contours();
 	flip_contours(contours2, width, height);
 
-	vcl_vector<vcl_vector<vsol_point_2d_sptr> > contours;
+	std::vector<std::vector<vsol_point_2d_sptr> > contours;
 	contours.reserve(contours1.size() + contours2.size());
 	contours.insert(contours.end(), contours1.begin(), contours1.end());
 	contours.insert(contours.end(), contours2.begin(), contours2.end());
 
 
-	vcl_ofstream ofs("/home/firat/Desktop/subpixeltrace3.txt");
+	std::ofstream ofs("/home/firat/Desktop/subpixeltrace3.txt");
 	for(int i = 0 ; i < contours.size(); i++)
 	{
-		vcl_vector<vsol_point_2d_sptr> contour = contours[i];
-		ofs << contour.size() << " " << 0 << vcl_endl;
+		std::vector<vsol_point_2d_sptr> contour = contours[i];
+		ofs << contour.size() << " " << 0 << std::endl;
 		for(int j = 0; j < contour.size(); j++)
 		{
-			ofs << contour[j]->x() << " " << contour[j]->y() << vcl_endl;
+			ofs << contour[j]->x() << " " << contour[j]->y() << std::endl;
 		}
 
 	}

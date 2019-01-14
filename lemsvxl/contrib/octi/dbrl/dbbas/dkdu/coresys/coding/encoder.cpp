@@ -535,8 +535,8 @@ void
           block->missing_msbs = K;
           block->num_passes = 0;
 #ifdef _DEBUG
-		  vcl_cout<<"num passes are 0 in "<<this->band.which()
-			  <<" with size "<<this->subband_cols<<vcl_endl;
+		  std::cout<<"num passes are 0 in "<<this->band.which()
+			  <<" with size "<<this->subband_cols<<std::endl;
 #endif
         }
       else

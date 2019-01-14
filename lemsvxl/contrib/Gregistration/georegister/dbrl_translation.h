@@ -11,7 +11,7 @@ class dbrl_translation:public dbrl_transformation
     ~dbrl_translation(){}
 
     virtual bool transform();
-    virtual void print_transformation(vcl_ostream &os){}
+    virtual void print_transformation(std::ostream &os){}
 
      //: Binary save self to stream.
   void b_write(vsl_b_ostream &os) const;
@@ -23,10 +23,10 @@ class dbrl_translation:public dbrl_transformation
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_affine_transformation";}
+  virtual std::string is_a() const {return "dbrl_affine_transformation";}
 
   virtual dbrl_transformation * clone() const;
     protected:

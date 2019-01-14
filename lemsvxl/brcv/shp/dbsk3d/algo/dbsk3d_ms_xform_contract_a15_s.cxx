@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Nov. 11, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -22,7 +22,7 @@ bool MS_valid_for_A15_contract_xform (dbsk3d_ms_sheet* MS)
     return false;
   
   //1-2) MS can not have incident A3 ribs.
-  vcl_set<dbsk3d_ms_node*> MNset;
+  std::set<dbsk3d_ms_node*> MNset;
   int count = 0;
   dbmsh3d_halfedge* HE = MS->halfedge();
   do {
@@ -53,7 +53,7 @@ bool MS_valid_for_A15_contract_xform (dbsk3d_ms_sheet* MS)
     return false;
 
   //1-5) Determine the merging sheets (MS1, MS2, ...).
-  vcl_vector<dbmsh3d_halfedge*> MS_merge_HE;
+  std::vector<dbmsh3d_halfedge*> MS_merge_HE;
   HE = MCd->halfedge();
   do {
     dbsk3d_ms_sheet* MSi = (dbsk3d_ms_sheet*) HE->face();
@@ -80,9 +80,9 @@ bool MS_valid_for_A15_contract_xform (dbsk3d_ms_sheet* MS)
   dbsk3d_ms_node* MNA15 = (dbsk3d_ms_node*) MCq->other_V (Vpq);
 
   //1-8) Determine the MCpm[i] and MCqm[i] for each MSi to be merged.
-  vcl_set<dbmsh3d_face*> FFpm_set_visited, FFqm_set_visited;
-  vcl_vector<dbsk3d_ms_curve*> MCpm_vec, MCqm_vec;
-  vcl_set<dbmsh3d_sheet*> MS_merge_set;
+  std::set<dbmsh3d_face*> FFpm_set_visited, FFqm_set_visited;
+  std::vector<dbsk3d_ms_curve*> MCpm_vec, MCqm_vec;
+  std::set<dbmsh3d_sheet*> MS_merge_set;
   for (unsigned int i=0; i<MS_merge_HE.size(); i++) {
     dbsk3d_ms_sheet* MSi = (dbsk3d_ms_sheet*) MS_merge_HE[i]->face();
     MS_merge_set.insert (MSi);
@@ -120,7 +120,7 @@ bool MS_valid_for_A15_contract_xform (dbsk3d_ms_sheet* MS)
 
   //1-9) If MCd has shared_E[], check if they are only with MCpm[] and MCqm[].
   if (MCd->have_shared_Es()) {
-    vcl_set<dbmsh3d_curve*> shared_E_Cset;
+    std::set<dbmsh3d_curve*> shared_E_Cset;
     for (unsigned int i=0; i<MCpm_vec.size(); i++)
       shared_E_Cset.insert (MCpm_vec[i]);
     for (unsigned int i=0; i<MCqm_vec.size(); i++)

@@ -23,7 +23,7 @@ dbavl_manual_camera_process::dbavl_manual_camera_process() : bpro1_process()
     "World points file" , "-dbavlwpf" , bpro1_filepath("","*") ) ||
     !parameters()->add( 
     "Camera file" , "-dbavlcf" , bpro1_filepath("","*") ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ dbavl_manual_camera_process::clone() const
 
 
 //------------------------------------------
-vcl_string
+std::string
 dbavl_manual_camera_process::name()
 {
   return "Manual Camera Computation";
@@ -51,18 +51,18 @@ dbavl_manual_camera_process::name()
 
 
 //-----------------------------------------------
-vcl_vector< vcl_string > dbavl_manual_camera_process::get_input_type()
+std::vector< std::string > dbavl_manual_camera_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //----------------------------------------------------
-vcl_vector< vcl_string > dbavl_manual_camera_process::get_output_type()
+std::vector< std::string > dbavl_manual_camera_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -73,7 +73,7 @@ bool
 dbavl_manual_camera_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_harris_corner_process::execute() - not exactly one"
+    std::cout << "In vidpro1_harris_corner_process::execute() - not exactly one"
           << " input image \n";
     return false;
   }
@@ -82,10 +82,10 @@ dbavl_manual_camera_process::execute()
   // Get the world points.
   bpro1_filepath wp_path;
   parameters()->get_value( "-dbavlwpf" , wp_path );
-  vcl_string world_point_file = wp_path.path;
+  std::string world_point_file = wp_path.path;
 
-  vcl_vector< vgl_point_3d<double> > all_world_points;
-  vcl_ifstream wp_stream( world_point_file.c_str() );
+  std::vector< vgl_point_3d<double> > all_world_points;
+  std::ifstream wp_stream( world_point_file.c_str() );
   vul_awk awk( wp_stream );
   while( awk ){
     vgl_point_3d<double> new_point( atof(awk[0]), atof(awk[1]), atof(awk[2]) );
@@ -96,21 +96,21 @@ dbavl_manual_camera_process::execute()
   // Get the image points and lines.
   vidpro1_vsol2D_storage_sptr image_points_storage;
   image_points_storage.vertical_cast(input_data_[0][0]);
-  vcl_vector< vsol_spatial_object_2d_sptr > image_points_vsol = 
+  std::vector< vsol_spatial_object_2d_sptr > image_points_vsol = 
     image_points_storage->all_data();
   // Do nothing if not enough points supplied.
   if( image_points_vsol.size() < all_world_points.size() ){
-    vcl_cerr << "ERROR: not enough image constraints provided.\n";
+    std::cerr << "ERROR: not enough image constraints provided.\n";
     return true;
   }
 
-  vcl_vector< vgl_point_2d<double> > image_points;
-  vcl_vector< vgl_point_3d<double> > world_points;
-  vcl_vector< vgl_line_segment_2d<double> > up_lines;
+  std::vector< vgl_point_2d<double> > image_points;
+  std::vector< vgl_point_3d<double> > world_points;
+  std::vector< vgl_line_segment_2d<double> > up_lines;
   int c;
   for( c = 0; c < all_world_points.size(); c++ ){
     if( image_points_vsol[c]->cast_to_point() == NULL ){
-      vcl_cerr << "ERROR: expected a vsol_point.\n";
+      std::cerr << "ERROR: expected a vsol_point.\n";
       continue;
     }
     vgl_point_2d<double> new_image_point( 
@@ -123,7 +123,7 @@ dbavl_manual_camera_process::execute()
   }
   for( c; c < image_points_vsol.size(); c++ ){
     if( image_points_vsol[c]->cast_to_curve() == NULL ) {
-      vcl_cerr << "\nERROR: expected a vsol_line.";
+      std::cerr << "\nERROR: expected a vsol_line.";
       continue;
     }
     vsol_line_2d* new_line_vsol = 
@@ -134,12 +134,12 @@ dbavl_manual_camera_process::execute()
     up_lines.push_back( new_line );
   }
 
-  vcl_cerr << "\nThis frame's constraints:\n Image-world point pairs:\n";
+  std::cerr << "\nThis frame's constraints:\n Image-world point pairs:\n";
   for( int i = 0; i < image_points.size(); i++ )
-    vcl_cerr << "  " << image_points[i] << world_points[i] << '\n';
-  vcl_cerr << " Up lines:\n";
+    std::cerr << "  " << image_points[i] << world_points[i] << '\n';
+  std::cerr << " Up lines:\n";
   for( int i = 0; i < up_lines.size(); i++ )
-    vcl_cerr << "  " << up_lines[i] << '\n';
+    std::cerr << "  " << up_lines[i] << '\n';
 
   // Compute the camera and store it.
   vpgl_proj_camera<double> camera;
@@ -151,7 +151,7 @@ dbavl_manual_camera_process::execute()
   computed_cameras.push_back( camera );
 
   // Reproject the world points for verification.
-  vcl_vector< vsol_spatial_object_2d_sptr > reproj_world_points;
+  std::vector< vsol_spatial_object_2d_sptr > reproj_world_points;
   for( int i = 0; i < all_world_points.size(); i++ ){
     vgl_homg_point_2d<double> ip = camera.project( 
       vgl_homg_point_3d<double>( all_world_points[i] ) );
@@ -173,9 +173,9 @@ dbavl_manual_camera_process::finish()
 {
   bpro1_filepath camera_path;
   parameters()->get_value( "-dbavlcf" , camera_path );
-  vcl_string camera_file = camera_path.path;
+  std::string camera_file = camera_path.path;
 
-  vcl_ofstream camera_stream( camera_file.c_str() );
+  std::ofstream camera_stream( camera_file.c_str() );
   for( int i = 0; i < computed_cameras.size(); i++ )
     camera_stream << "Frame " << i << '\n' << computed_cameras[i].get_matrix() << '\n';
   return true;

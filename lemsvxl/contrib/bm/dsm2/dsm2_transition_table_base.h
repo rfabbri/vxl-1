@@ -3,8 +3,8 @@
 #define DSM2_TRANSITION_TABLE_BASE_H_
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_string.h>
+#include<map>
+#include<string>
 
 #include<vsl/vsl_binary_io.h>
 class dsm2_transition_table_base: public vbl_ref_count
@@ -18,7 +18,7 @@ public:
 
 	virtual void b_read( vsl_b_istream& is ) = 0;
 
-	virtual void write_txt( vcl_string const& filename ) const = 0;
+	virtual void write_txt( std::string const& filename ) const = 0;
 };
 
 #endif //DSM2_TRANSITION_TABLE_BASE_H_

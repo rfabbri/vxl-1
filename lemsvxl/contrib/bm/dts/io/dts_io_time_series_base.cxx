@@ -36,7 +36,7 @@ void vsl_b_write(vsl_b_ostream &os, const dts_time_series_base* p)
     }
 }
 
-void vsl_print_summary(vcl_ostream& os, const dts_time_series_base *p)
+void vsl_print_summary(std::ostream& os, const dts_time_series_base *p)
 {
     os << "dsm_io_pixel_time_series_base -- vsl_print_summary not implemented.\n";
 }

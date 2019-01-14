@@ -3,7 +3,7 @@
 
 #include <splr/splr_map.h>
 #include <vsl/vsl_map_io.hxx>
-#include <vcl_functional.h>
+#include <functional>
 
 //Code for instantiation
 #undef SPLR_MAP_INSTANTIATE

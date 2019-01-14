@@ -14,7 +14,7 @@
 
 #include "dborl_categorization_evaluate.h"
 #include "dborl_categorization_evaluate_params.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 int main(int argc, char *argv[]) {

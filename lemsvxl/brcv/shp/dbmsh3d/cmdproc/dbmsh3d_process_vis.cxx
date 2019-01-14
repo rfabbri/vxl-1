@@ -1,7 +1,7 @@
 //: This is lemsvxlsrc/brcv/shp/dbmsh3d/pro/dbmsh3d_process.cxx
 //  Creation: Feb 12, 2007   Ming-Ching Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgui3d/bgui3d_file_io.h>
@@ -75,7 +75,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh (const bool b_draw_idv,
                                         const int colorcode,
                                         const bool b_draw_isolated_pts)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
 
@@ -101,7 +101,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh (const bool b_draw_idv,
     root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -138,7 +138,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh_color ()
 //: Visualize the reconstructed surface mesh according to the input option.
 SoSeparator* dbmsh3d_pro_vis::vis_mesh_options (int option, const bool draw_idv, const bool showid)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
   SoSeparator* root = new SoSeparator;
@@ -169,7 +169,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh_options (int option, const bool draw_idv,
   root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -177,11 +177,11 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh_options (int option, const bool draw_idv,
 //: Visualize the reconstructed surface mesh in animation
 SoSeparator* dbmsh3d_pro_vis::vis_mesh_anim (const int nF_batch)
 {
-  vul_printf (vcl_cout, "vis_mesh_anim(): V: %d, E: %d, F: %d.\n", 
+  vul_printf (std::cout, "vis_mesh_anim(): V: %d, E: %d, F: %d.\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
-  vul_printf (vcl_cout, "  Options:\n");
-  vul_printf (vcl_cout, "    -n1: # faces shown in batch: %d\n", nF_batch);
+  vul_printf (std::cout, "  Options:\n");
+  vul_printf (std::cout, "    -n1: # faces shown in batch: %d\n", nF_batch);
 
   SoSeparator* root = new SoSeparator;
   root->addChild (draw_M_bnd_faces_anim (mesh_, nF_batch));
@@ -191,12 +191,12 @@ SoSeparator* dbmsh3d_pro_vis::vis_mesh_anim (const int nF_batch)
 //###############################################################
 
 //: result in mesh_vertex_color_set_[]
-void dbmsh3d_pro_vis::compute_mesh_vertex_color_set (const vcl_vector<double>& values)
+void dbmsh3d_pro_vis::compute_mesh_vertex_color_set (const std::vector<double>& values)
 {
   if (mesh_vertex_color_set_.size() == values.size()) {
     return;
   }
-  vul_printf (vcl_cout, "  compute_mesh_vertex_color_set(): %d points.\n", values.size());
+  vul_printf (std::cout, "  compute_mesh_vertex_color_set(): %d points.\n", values.size());
 
   SbColor color;
   unsigned n_over_limit = 0;
@@ -210,22 +210,22 @@ void dbmsh3d_pro_vis::compute_mesh_vertex_color_set (const vcl_vector<double>& v
     }
     mesh_vertex_color_set_.push_back (color);
   }
-  vul_printf (vcl_cout, "    %d (%.2f%%) non-overlapping points in pink.\n", 
+  vul_printf (std::cout, "    %d (%.2f%%) non-overlapping points in pink.\n", 
               n_over_limit, double(n_over_limit)/values.size()*100);
 }
 
 //: After running compute_mesh_vertex_color_set(), color the faces.
 //  result in mesh_face_color_set_[]
-void dbmsh3d_pro_vis::compute_face_color_by_value (const vcl_vector<double>& values)
+void dbmsh3d_pro_vis::compute_face_color_by_value (const std::vector<double>& values)
 {
-  vul_printf (vcl_cout, "  compute_face_color_by_value(): %d points, %d faces.\n", 
+  vul_printf (std::cout, "  compute_face_color_by_value(): %d points, %d faces.\n", 
               values.size(), mesh_->facemap().size());
 
   unsigned n_over_limit = 0;
   mesh_face_color_set_.clear();
   SbColor color;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
   for (; it != mesh_->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
 
@@ -246,14 +246,14 @@ void dbmsh3d_pro_vis::compute_face_color_by_value (const vcl_vector<double>& val
     mesh_face_color_set_.push_back (color);
   }
 
-  vul_printf (vcl_cout, "    %d (%.2f%%) non-overlapping faces in pink.\n", 
+  vul_printf (std::cout, "    %d (%.2f%%) non-overlapping faces in pink.\n", 
               n_over_limit, double(n_over_limit)/mesh_->facemap().size()*100);
 }
 
 //########################################################################
 
 //: load the color info into gene_color_set_
-bool dbmsh3d_pro_vis::load_g3d (vcl_string filename)
+bool dbmsh3d_pro_vis::load_g3d (std::string filename)
 {
   if (filename == "")
     filename = dir_prefix() + ".g3d";
@@ -263,7 +263,7 @@ bool dbmsh3d_pro_vis::load_g3d (vcl_string filename)
   return dbmsh3d_load_g3d (mesh_, mesh_vertex_color_set_, filename.c_str());
 }
 
-void dbmsh3d_pro_vis::save_g3d (vcl_string filename)
+void dbmsh3d_pro_vis::save_g3d (std::string filename)
 {
   if (filename == "")
     filename = dir_prefix() + ".g3d";
@@ -274,7 +274,7 @@ void dbmsh3d_pro_vis::save_g3d (vcl_string filename)
 
 // ###################################################################
 
-SoSeparator* dbmsh3d_pro_vis::view_xyz (vcl_string filename, const int colorcode)
+SoSeparator* dbmsh3d_pro_vis::view_xyz (std::string filename, const int colorcode)
 {
   if (filename == "")
     filename = dir_file() + ".xyz";
@@ -287,7 +287,7 @@ SoSeparator* dbmsh3d_pro_vis::view_xyz (vcl_string filename, const int colorcode
     return NULL;
 }
 
-SoSeparator* dbmsh3d_pro_vis::view_p3d (vcl_string filename, const int colorcode)
+SoSeparator* dbmsh3d_pro_vis::view_p3d (std::string filename, const int colorcode)
 {
   if (filename == "")
     filename = dir_file() + ".p3d";
@@ -300,7 +300,7 @@ SoSeparator* dbmsh3d_pro_vis::view_p3d (vcl_string filename, const int colorcode
     return NULL;
 }
 
-SoSeparator* dbmsh3d_pro_vis::view_g3d (vcl_string filename)
+SoSeparator* dbmsh3d_pro_vis::view_g3d (std::string filename)
 {
   if (filename == "")
     filename = dir_file() + ".g3d";
@@ -313,7 +313,7 @@ SoSeparator* dbmsh3d_pro_vis::view_g3d (vcl_string filename)
     return NULL;
 }
 
-SoSeparator* dbmsh3d_pro_vis::view_ply (vcl_string filename, bool b_shape_hints,
+SoSeparator* dbmsh3d_pro_vis::view_ply (std::string filename, bool b_shape_hints,
                                         const int colorcode,
                                         const bool b_draw_isolated_pts)
 {
@@ -328,7 +328,7 @@ SoSeparator* dbmsh3d_pro_vis::view_ply (vcl_string filename, bool b_shape_hints,
     return NULL;
 }
 
-SoSeparator* dbmsh3d_pro_vis::view_ply2 (vcl_string filename, bool b_shape_hints,
+SoSeparator* dbmsh3d_pro_vis::view_ply2 (std::string filename, bool b_shape_hints,
                                          const int colorcode,
                                          const bool b_draw_isolated_pts)
 {
@@ -344,7 +344,7 @@ SoSeparator* dbmsh3d_pro_vis::view_ply2 (vcl_string filename, bool b_shape_hints
 }
 
 
-SoSeparator* dbmsh3d_pro_vis::view_iv (vcl_string filename)
+SoSeparator* dbmsh3d_pro_vis::view_iv (std::string filename)
 {
   if (filename == "")
     filename = dir_file() + ".iv";
@@ -353,7 +353,7 @@ SoSeparator* dbmsh3d_pro_vis::view_iv (vcl_string filename)
   return (SoSeparator*) bgui3d_import_file (filename);
 }
 
-SoSeparator* dbmsh3d_pro_vis::view_wrl (vcl_string filename)
+SoSeparator* dbmsh3d_pro_vis::view_wrl (std::string filename)
 {
   if (filename == "")
     filename = dir_file() + ".wrl";
@@ -375,7 +375,7 @@ SoSeparator* dbmsh3d_pro_vis::view_wrl (vcl_string filename)
 //    - vis_option ==0 : show each file in random color.
 //                 ==1 : show all files in a single color (silver).
 //
-SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename, 
+SoSeparator* dbmsh3d_pro_vis::vis_list_file (std::string filename, 
                                              const int option, const int vis_option)
 {
   SoSeparator* root = new SoSeparator;
@@ -383,13 +383,13 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
   if (buld_get_suffix (filename) == "")
     filename += ".txt";
 
-  vul_printf (vcl_cout, "vis_list_file(): %s.\n", filename.c_str());
+  vul_printf (std::cout, "vis_list_file(): %s.\n", filename.c_str());
 
-  vcl_ifstream  in;
-  vcl_string    linestr;
+  std::ifstream  in;
+  std::string    linestr;
   in.open (filename.c_str());
   if (in == false) {
-    vul_printf (vcl_cout, "Can't open listfile %s\n", filename.c_str());
+    vul_printf (std::cout, "Can't open listfile %s\n", filename.c_str());
     return root; 
   }
 
@@ -406,21 +406,21 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
   int n_total_faces = 0;
   while (in) {
     linestr.clear();
-    vcl_getline (in, linestr);
+    std::getline (in, linestr);
 
-    if (linestr.length() == 0 || vcl_strncmp (linestr.c_str(), "#", 1) == 0)
+    if (linestr.length() == 0 || std::strncmp (linestr.c_str(), "#", 1) == 0)
       continue; //skip empty line and comments.
 
     char file[256] = "", file_af[256] = "";
-    vcl_sscanf (linestr.c_str(), "%s %s", file, file_af);
+    std::sscanf (linestr.c_str(), "%s %s", file, file_af);
     DBMSH3D_FILE_TYPE type;
     
     //1) Read in the data file
-    if (vcl_strcmp (file, "") != 0) {
+    if (std::strcmp (file, "") != 0) {
       reset_data (); //clean up the datastructure before loading.
       pro_data_ = PD_MESH;
       
-      vcl_string suffix = buld_get_suffix (file);
+      std::string suffix = buld_get_suffix (file);
       if (suffix == ".p3d") {
         type = DBMSH3D_FILE_P3D;
         load_p3d (file);
@@ -449,7 +449,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
     }
 
     //2) Read in the alignment file (if any)
-    if (vcl_strcmp (file_af, "") != 0) {      
+    if (std::strcmp (file_af, "") != 0) {      
       load_hmatrix (file_af); //read in the alignment file.
       apply_xform_hmatrix (); //xform the dataset.
       af_count++;
@@ -477,7 +477,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
       n_total_faces += mesh_->facemap().size();
     }
 
-    vul_printf (vcl_cout, "\t Currently %u points %u faces loaded.\n", 
+    vul_printf (std::cout, "\t Currently %u points %u faces loaded.\n", 
                 n_total_pts, n_total_faces);
   }
 
@@ -485,10 +485,10 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
   if (option==1)
     assert (pts_.size() == n_total_pts);
 
-  vul_printf (vcl_cout, "\n====================================================\n");
-  vul_printf (vcl_cout, "  vis_list_file(): %d files (%d align. files) shown from %s.\n", 
+  vul_printf (std::cout, "\n====================================================\n");
+  vul_printf (std::cout, "  vis_list_file(): %d files (%d align. files) shown from %s.\n", 
               file_count, af_count, filename.c_str());
-  vul_printf (vcl_cout, "\tTotally %u points, %u faces.\n", 
+  vul_printf (std::cout, "\tTotally %u points, %u faces.\n", 
               n_total_pts, n_total_faces);
   return root;
 }

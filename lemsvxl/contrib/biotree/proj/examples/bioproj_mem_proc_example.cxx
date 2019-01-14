@@ -11,8 +11,8 @@
 #include <slice/sliceFileManager.h>
 #include <proj/bioproj_mem_io.h>
 #include <proj/bioproj_mem_proc.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
+#include <ctime>
+#include <cstdlib>
 #include <vul/vul_file.h>
 #include <vil/vil_save.h>
 #include <vil/vil_math.h>
@@ -23,25 +23,25 @@ int main(int argc, char *argv[])
 {
   if(argc != 5)
   {
-    vcl_cout << "Usage: " << argv[0] << " [log name] [scan file] [box file] [sigma]\n ";
+    std::cout << "Usage: " << argv[0] << " [log name] [scan file] [box file] [sigma]\n ";
     exit(-1);
   }
 
-  vcl_string outnamebase = vul_file::strip_directory(argv[2]);
+  std::string outnamebase = vul_file::strip_directory(argv[2]);
   outnamebase += "_";
   outnamebase += vul_file::strip_directory(argv[3]);
-  vcl_cout  << "outfiles will be prefixed: " << outnamebase << "\n";
+  std::cout  << "outfiles will be prefixed: " << outnamebase << "\n";
 
-  double sigma = double(vcl_atof(argv[4]));
+  double sigma = double(std::atof(argv[4]));
 
   //TODO how do we determine grid spacing?
  float voxel_size = 24; 
 
  clock_t start, end;
  double elapsed;
- start = vcl_clock();
+ start = std::clock();
 
- vcl_string image_fname_pattern(argv[1]);
+ std::string image_fname_pattern(argv[1]);
  int cut_point = image_fname_pattern.find(".log");
  image_fname_pattern.replace(cut_point, 8, "####.tif"); 
 
@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
 
  bioproj_mem_proc proj_mem_proc(&proj_mem_io);
 
-  vcl_string out_s = outnamebase + "_s.out";
-  vcl_string out_x = outnamebase + "_x.out";
-  vcl_string out_y = outnamebase + "_y.out";
-  vcl_string out_z = outnamebase + "_z.out";
+  std::string out_s = outnamebase + "_s.out";
+  std::string out_x = outnamebase + "_x.out";
+  std::string out_y = outnamebase + "_y.out";
+  std::string out_z = outnamebase + "_z.out";
 
 
 
@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
   proj_mem_proc.execute(NU_G, G_Z, 1);     // first derivative along z
   sliceFileManager<float>::write(proj_mem_io.grid_,out_z);
   
-  end = vcl_clock();
+  end = std::clock();
   elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is " << elapsed << vcl_endl;
+  std::cout << "Elapsed time is " << elapsed << std::endl;
 
   return 0;
 }

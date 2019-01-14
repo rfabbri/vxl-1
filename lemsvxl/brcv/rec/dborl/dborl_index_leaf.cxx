@@ -22,7 +22,7 @@ void dborl_index_leaf::b_write()
 
 }
 
-void dborl_index_leaf::write_xml(vcl_ostream& os)
+void dborl_index_leaf::write_xml(std::ostream& os)
 {
   os << "<leaf><name>" << name_ << "</name></leaf>\n";
 }

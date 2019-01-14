@@ -16,13 +16,13 @@ class dbmsh3dr_pro_base
 {
 protected: 
   //: Array of process objects.
-  vcl_vector<dbmsh3d_pro_base*> pro_;
+  std::vector<dbmsh3d_pro_base*> pro_;
 
   //: Data files
-  vcl_vector<vcl_string> data_files_;
+  std::vector<std::string> data_files_;
 
   //: Alignment files
-  vcl_vector<vcl_string> align_files_;
+  std::vector<std::string> align_files_;
 
   //: store the best affine xform from pro_[1] to pro_[0].
   vgl_h_matrix_3d<double> hmatrix_01_;
@@ -42,10 +42,10 @@ protected:
 
   //: store the min_dist from meshp2 to meshp
   //  dimension as # points in meshp2.
-  vcl_vector<double>    min_dists_;
+  std::vector<double>    min_dists_;
 
-  vcl_vector<int>       min_ids_;
-  vcl_vector<vgl_point_3d<double> > closest_pts_;
+  std::vector<int>       min_ids_;
+  std::vector<vgl_point_3d<double> > closest_pts_;
 
   int                   verbose_;
 
@@ -74,23 +74,23 @@ public:
   }
 
   //====== Data access functions ======
-  vcl_vector<dbmsh3d_pro_base*>& pro() {
+  std::vector<dbmsh3d_pro_base*>& pro() {
     return pro_;
   }
   dbmsh3d_pro_base* pro (const int i) {
     return pro_[i];
   }
 
-  vcl_vector<vcl_string>& data_files() {
+  std::vector<std::string>& data_files() {
     return data_files_;
   }
-  const vcl_string& data_files (const int i) {
+  const std::string& data_files (const int i) {
     return data_files_[i];
   }
-  vcl_vector<vcl_string>& align_files() {
+  std::vector<std::string>& align_files() {
     return align_files_;
   }
-  const vcl_string& align_files (const int i) {
+  const std::string& align_files (const int i) {
     return align_files_[i];
   }
 
@@ -118,7 +118,7 @@ public:
     }
     return true;
   }
-  const vcl_vector<double>& min_dists() {
+  const std::vector<double>& min_dists() {
     return min_dists_;
   }  
   const double& min_dists(const int i) const {
@@ -145,7 +145,7 @@ public:
   }
   
   //====== Processing ======
-  virtual bool load_hmatrix_01 (vcl_string dirfile);
+  virtual bool load_hmatrix_01 (std::string dirfile);
 
   //: Transform pro[1]'s data (depending on PD_PTS or PD_MESH, etc) using hmatrix_01_
   void xform_hmatrix_01_pro1 ();
@@ -178,7 +178,7 @@ public:
   
   //: Fuse scans using pt-mesh ICP following MST.
   //  Save results to alignment file scan_##_mst.txt
-  bool fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MST, 
+  bool fuse_scan_MST (const std::vector<std::pair<int, int> >& MST, 
                       const int root_sid, const float dthr,
                       const int max_ICP_iter, const float icpcv);
 
@@ -188,8 +188,8 @@ public:
   //  Return true if any qualified such edge is found and set 
   //    cur_sid = already fused scan and next_sid = un-visited scan.
   //  Return false if such edge is not found (Fusing is done).
-  bool find_next_scan_to_fuse (const vcl_vector<vcl_pair<int, int> >& MST, 
-                               const vcl_vector<bool>& fusion_idx,                             
+  bool find_next_scan_to_fuse (const std::vector<std::pair<int, int> >& MST, 
+                               const std::vector<bool>& fusion_idx,                             
                                int& cur_sid, int& next_sid);
 
   //: Estimate surface variance along surface normal.
@@ -223,12 +223,12 @@ public:
   //  This allows removing the kd-tree & keep only the closest pt for each mesh (of each vertex).
   void move_surf_avg_closest_pt_1v (const double& dist_th);
   
-  void setup_M_V_CV (vcl_vector<vcl_vector<dbmsh3d_vertex*> > * M_V_CV);
+  void setup_M_V_CV (std::vector<std::vector<dbmsh3d_vertex*> > * M_V_CV);
 
   //: Reduce surfaces thickness by moving toward avg. closest point using bucketing.
   void move_surf_avg_closest_pt_bkt (const int top_n, const double& dist_th);
 
-  void setup_M_V_CV_bkt (vcl_vector<vcl_vector<dbmsh3d_vertex*> > * M_V_CV);
+  void setup_M_V_CV_bkt (std::vector<std::vector<dbmsh3d_vertex*> > * M_V_CV);
 
   //: Loop through each pro_[].mesh and compute mesh-mesh avg-dist using bucketing.
   double compute_M_M_avg_dist_bkt (const int top_n, const double& dist_th);

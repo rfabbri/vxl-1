@@ -9,7 +9,7 @@
 // \author Vishal Jain, (vj@lems.brown.edu)
 // \date 08/31/04
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/vil1_image.h>
 #include <vnl/vnl_matrix.h>
 #include <dbrct/dbrct_wide_dense_match_params.h>
@@ -50,8 +50,8 @@ class dbrct_wide_dense_match
     vil1_image imgr_;
 
 
-        vcl_vector<vil1_image> scaledimgsl;
-        vcl_vector<vil1_image> scaledimgsr;
+        std::vector<vil1_image> scaledimgsl;
+        std::vector<vil1_image> scaledimgsr;
 
     dbrct_wide_dense_match_params params;
 

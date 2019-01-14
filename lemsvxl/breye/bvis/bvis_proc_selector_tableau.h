@@ -11,8 +11,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 #include <bgui/bgui_selector_tableau.h>
 #include <bvis/bvis_proc_selector_tableau_sptr.h>
 #include <vgui/vgui_tableau.h>
@@ -32,14 +32,14 @@ class bvis_proc_selector_tableau : public bgui_selector_tableau
 
   //: Constructor - don't use this, use bvis_proc_selector_tableau_new.
   //  Takes a vector of child tableaux.
-  bvis_proc_selector_tableau(vcl_vector<vgui_tableau_sptr> const& children);
+  bvis_proc_selector_tableau(std::vector<vgui_tableau_sptr> const& children);
 
   //: Handle all events sent to this tableau.
   //  Key-press '?' prints info on this file, before being sent to the children.
   virtual bool handle(const vgui_event&);
 
   //: Returns the type of this tableau ('bvis_proc_selector_tableau').
-  vcl_string type_name() const { return "bvis_proc_selector_tableau"; }
+  std::string type_name() const { return "bvis_proc_selector_tableau"; }
 
   //: Enable the selector for processing
   void enable_processing(){enabled_for_processing_=true;}
@@ -70,7 +70,7 @@ struct bvis_proc_selector_tableau_new : public bvis_proc_selector_tableau_sptr
 
   //: Constructor - creates pointer to a composite with the given children.
   //  Takes a vector of child tableaux.
-  bvis_proc_selector_tableau_new(vcl_vector<vgui_tableau_sptr> const& children)
+  bvis_proc_selector_tableau_new(std::vector<vgui_tableau_sptr> const& children)
     : base(new bvis_proc_selector_tableau(children)) {}
 };
 

@@ -21,9 +21,9 @@ dbskfg_shock_node::~dbskfg_shock_node()
   
 }
 
-void dbskfg_shock_node::print(vcl_ostream& os)
+void dbskfg_shock_node::print(std::ostream& os)
 {
     this->dbskfg_composite_node::print(os);
-    os<<"Radius: "<<radius_<<vcl_endl;
+    os<<"Radius: "<<radius_<<std::endl;
 }
 

@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <gdt/gdt_manager.h>
 
@@ -181,37 +181,37 @@ void gdt_ws_manager::perform_WW_strike (gdt_welm* Wa, gdt_welm* Wb,
   #if GDT_DEBUG_MSG
   if (n_verbose_>1) {
     char tmp[32], pe[32];
-    vul_printf (vcl_cerr, "\n 2nd-order source %d created on face %d.\n", 
+    vul_printf (std::cerr, "\n 2nd-order source %d created on face %d.\n", 
                  src->id(), Wa->curF()->id());
-    vul_printf (vcl_cerr, "    Wa1 (%.3f, %.3f) and Wa2 (%.3f, %.3f).\n", //0x%x
+    vul_printf (std::cerr, "    Wa1 (%.3f, %.3f) and Wa2 (%.3f, %.3f).\n", //0x%x
                  Wa1->stau(), Wa1->etau(), Wa2->stau(), Wa2->etau());
-    vul_printf (vcl_cerr, "    Wb1 (%.3f, %.3f) and Wb2 (%.3f, %.3f).\n", //0x%x 
+    vul_printf (std::cerr, "    Wb1 (%.3f, %.3f) and Wb2 (%.3f, %.3f).\n", //0x%x 
                  Wb1->stau(), Wb1->etau(), Wb2->stau(), Wb2->etau());
 
     if (S1->b2() == 0)
-      vcl_sprintf (tmp, "contact");
+      std::sprintf (tmp, "contact");
     else if (S1->a() == 0)
-      vcl_sprintf (tmp, "line");
+      std::sprintf (tmp, "line");
     else
-      vcl_sprintf (tmp, "hypb");
+      std::sprintf (tmp, "hypb");
     if (S1->prjE())
-      vcl_sprintf (pe, "%d at tau %f", S1->prjE()->id(), S1->tauE());
+      std::sprintf (pe, "%d at tau %f", S1->prjE()->id(), S1->tauE());
     else
-      vcl_sprintf (pe, "NULL");
-    vul_printf (vcl_cerr, "\n  Create S1 %s %d, prjE %s, endtime %f, bSVE %s.\n", 
+      std::sprintf (pe, "NULL");
+    vul_printf (std::cerr, "\n  Create S1 %s %d, prjE %s, endtime %f, bSVE %s.\n", 
                  tmp, S1->id(), pe, S1->endT(),
                  S1->bSVE() ? "true" : "false");
     if (S2->b2() == 0)
-      vcl_sprintf (tmp, "contact");
+      std::sprintf (tmp, "contact");
     else if (S2->a() == 0)
-      vcl_sprintf (tmp, "line");
+      std::sprintf (tmp, "line");
     else
-      vcl_sprintf (tmp, "hypb");
+      std::sprintf (tmp, "hypb");
     if (S2->prjE())
-      vcl_sprintf (pe, "%d at tau %f", S2->prjE()->id(), S2->tauE());
+      std::sprintf (pe, "%d at tau %f", S2->prjE()->id(), S2->tauE());
     else
-      vcl_sprintf (pe, "NULL");
-    vul_printf (vcl_cerr, "  Create S2 %s %d, prjE %s, endtime %f, bSVE %s.\n", 
+      std::sprintf (pe, "NULL");
+    vul_printf (std::cerr, "  Create S2 %s %d, prjE %s, endtime %f, bSVE %s.\n", 
                  tmp, S2->id(), pe, S2->endT(),
                  S2->bSVE() ? "true" : "false");
   }

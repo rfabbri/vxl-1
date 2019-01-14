@@ -14,7 +14,7 @@
 //   <none yet>
 // \endverbatim
 #include<vsl/vsl_binary_io.h>
-#include<vcl_iostream.h>
+#include<iostream>
 #include"../dsm_pixel_time_series_map.h"
 
 //: Binary save parameters to stream.
@@ -22,6 +22,6 @@ void vsl_b_read(vsl_b_istream &is, dsm_pixel_time_series_map &pixel_time_series_
 void vsl_b_write(vsl_b_ostream &os, dsm_pixel_time_series_map const& pixel_time_series_map);
 void vsl_b_read(vsl_b_istream &is, dsm_pixel_time_series_map* &p);
 void vsl_b_write(vsl_b_ostream &os, const dsm_pixel_time_series_map* p);
-void vsl_print_summary(vcl_ostream& os, const dsm_pixel_time_series_map *p);
+void vsl_print_summary(std::ostream& os, const dsm_pixel_time_series_map *p);
 
 #endif//DSM_IO_PIXEL_TIME_SERIES_MAP_H_

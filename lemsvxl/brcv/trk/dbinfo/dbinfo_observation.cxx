@@ -15,7 +15,7 @@
 void dbinfo_observation::set_margin()
 {
   margin_=0;
-  for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
+  for(std::vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
       fit != features_.end(); ++fit)
     if((*fit)->margin()>margin_)
       margin_ = (*fit)->margin();
@@ -39,7 +39,7 @@ void dbinfo_observation::set_margin(unsigned m)
 // no cached data, just stored data in the feature set
 dbinfo_observation::
 dbinfo_observation(dbinfo_region_geometry_sptr const& geom,
-                   vcl_vector<dbinfo_feature_base_sptr> const& features)
+                   std::vector<dbinfo_feature_base_sptr> const& features)
   : id_(0), score_(0), doc_(""), current_frame_(0), geom_(geom), features_(features), image_cached_(0), image_crp_cached_(0)
 {
   this->set_margin();
@@ -49,8 +49,8 @@ dbinfo_observation(dbinfo_region_geometry_sptr const& geom,
 dbinfo_observation::
 dbinfo_observation(const unsigned frame,
                    vil_image_resource_sptr const& image,
-                   vcl_vector<vsol_polygon_2d_sptr> const& polys,
-                   vcl_vector<dbinfo_feature_base_sptr> const& features)
+                   std::vector<vsol_polygon_2d_sptr> const& polys,
+                   std::vector<dbinfo_feature_base_sptr> const& features)
   :  id_(0), score_(0), doc_(""), image_cached_(0), image_crp_cached_(0)
 {
   assert(image);
@@ -67,7 +67,7 @@ dbinfo_observation::
 dbinfo_observation(const unsigned frame,
                    vil_image_resource_sptr const& image, 
                    vsol_polygon_2d_sptr const& poly,
-                   vcl_vector<dbinfo_feature_base_sptr> const& features):
+                   std::vector<dbinfo_feature_base_sptr> const& features):
   id_(0),  score_(0), doc_(""), image_cached_(0), image_crp_cached_(0)
 {
   assert(image);
@@ -81,7 +81,7 @@ dbinfo_observation(const unsigned frame,
 //: constructor from multiple polygons, no features specified
 dbinfo_observation::dbinfo_observation(const unsigned frame,
                                        vil_image_resource_sptr const& image,
-                                       vcl_vector<vsol_polygon_2d_sptr> const& polys)
+                                       std::vector<vsol_polygon_2d_sptr> const& polys)
   : id_(0), score_(0), doc_(""), margin_(0), current_frame_(frame), image_cached_(0), image_crp_cached_(0)
 {
   assert(image);
@@ -102,7 +102,7 @@ dbinfo_observation::dbinfo_observation(const unsigned frame,
 //: constructor from multiple polygons, features constructed according to spec
 dbinfo_observation::dbinfo_observation(const unsigned frame,
                                        vil_image_resource_sptr const& image,
-                                       vcl_vector<vsol_polygon_2d_sptr> const& polys,
+                                       std::vector<vsol_polygon_2d_sptr> const& polys,
                                        bool intensity_info,
                                        bool gradient_info,
                                        bool color_info)
@@ -174,8 +174,8 @@ dbinfo_observation::dbinfo_observation(const unsigned frame,
 }
 
 void 
-dbinfo_observation::image_to_roi(vcl_vector<vgl_point_2d<unsigned> >& points,
-                                 vcl_vector<bool>& valid)
+dbinfo_observation::image_to_roi(std::vector<vgl_point_2d<unsigned> >& points,
+                                 std::vector<bool>& valid)
 {
   assert(geom_);
   unsigned npts = geom_->size();
@@ -211,11 +211,11 @@ bool dbinfo_observation::scan(const unsigned frame,
   if(temp->ni()<min_length||temp->nj()<min_length)
     return false;
 
-  vcl_vector<vgl_point_2d<unsigned> > points;
-  vcl_vector<bool> valid;
+  std::vector<vgl_point_2d<unsigned> > points;
+  std::vector<bool> valid;
   this->image_to_roi(points, valid);
 
-  for(vcl_vector<dbinfo_feature_base_sptr>::const_iterator fit =
+  for(std::vector<dbinfo_feature_base_sptr>::const_iterator fit =
         features_.begin(); fit != features_.end(); ++fit)
     {
       valid_scan = valid_scan && (*fit)->scan(frame, points, valid, temp);
@@ -230,8 +230,8 @@ vil_image_resource_sptr dbinfo_observation::image(bool background_noise)
   dbinfo_feature_base_sptr feat = features_[0];
   if(feat->format()!=DBINFO_INTENSITY_FEATURE)
     return 0;
-  vcl_vector<vgl_point_2d<float> > points = geom_->points();
-  vcl_vector<bool> valid = geom_->masks();
+  std::vector<vgl_point_2d<float> > points = geom_->points();
+  std::vector<bool> valid = geom_->masks();
   unsigned n_i = geom_->cols(), n_j = geom_->rows();
   image_cached_ = feat->image(points, valid, n_i, n_j, 0, 0, background_noise);
   return image_cached_;
@@ -253,10 +253,10 @@ vil_image_resource_sptr dbinfo_observation::image_cropped()
     big_region->add_point(box->get_min_x(), box->get_min_y());
     big_region->add_point(box->get_max_x(), box->get_max_y());
   }
-  unsigned int topx = int(vcl_floor(big_region->get_min_x()+0.5));
-  unsigned int topy = int(vcl_floor(big_region->get_min_y()+0.5));
-  unsigned int lenx = int(vcl_floor(big_region->width()+0.5));
-  unsigned int leny = int(vcl_floor(big_region->height()+0.5));
+  unsigned int topx = int(std::floor(big_region->get_min_x()+0.5));
+  unsigned int topy = int(std::floor(big_region->get_min_y()+0.5));
+  unsigned int lenx = int(std::floor(big_region->width()+0.5));
+  unsigned int leny = int(std::floor(big_region->height()+0.5));
   image_crp_cached_ = vil_crop(big,topx, lenx, topy, leny);
   return image_crp_cached_;
 }
@@ -276,8 +276,8 @@ vil_image_resource_sptr dbinfo_observation::image_cropped(bool background_noise)
   dbinfo_feature_base_sptr feat = features_[0];
   if(feat->format()!=DBINFO_INTENSITY_FEATURE)
     return 0;
-  vcl_vector<vgl_point_2d<float> > points = geom_->points();
-  vcl_vector<bool> valid = geom_->masks();
+  std::vector<vgl_point_2d<float> > points = geom_->points();
+  std::vector<bool> valid = geom_->masks();
  // unsigned n_i = geom_->cols(), n_j = geom_->rows();
   
   vsol_box_2d_sptr big_region = geom_->roi()->region(0);
@@ -288,8 +288,8 @@ vil_image_resource_sptr dbinfo_observation::image_cropped(bool background_noise)
   }
   float topx = float(big_region->get_min_x());
   float topy = float(big_region->get_min_y());
-  unsigned int lenx = int(vcl_floor(big_region->width()+0.5));
-  unsigned int leny = int(vcl_floor(big_region->height()+0.5));
+  unsigned int lenx = int(std::floor(big_region->width()+0.5));
+  unsigned int leny = int(std::floor(big_region->height()+0.5));
 
   image_crp_cached_ = feat->image(points, valid, lenx, leny, -topx, -topy, background_noise);
   
@@ -297,7 +297,7 @@ vil_image_resource_sptr dbinfo_observation::image_cropped(bool background_noise)
 }
 
 
-void dbinfo_observation::print(vcl_ostream& os) const
+void dbinfo_observation::print(std::ostream& os) const
 {
   os << this->is_a() << " [\n"
      << "id " << id_ << '\n'
@@ -306,7 +306,7 @@ void dbinfo_observation::print(vcl_ostream& os) const
   os << "frame " << current_frame_ << '\n';
   if(geom_)
     os << *geom_ << '\n';
-  for(vcl_vector<dbinfo_feature_base_sptr>::const_iterator fit =
+  for(std::vector<dbinfo_feature_base_sptr>::const_iterator fit =
         features_.begin(); fit != features_.end(); ++fit)
     os << *(*fit) ;
   os << "]\n";
@@ -314,7 +314,7 @@ void dbinfo_observation::print(vcl_ostream& os) const
 //Is intensity information channel used?
 bool dbinfo_observation::intensity_info()
 {
-  for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
+  for(std::vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
       fit != features_.end(); ++fit)
     if((*fit)->format()==DBINFO_INTENSITY_FEATURE)
       return true;
@@ -324,7 +324,7 @@ bool dbinfo_observation::intensity_info()
 //:Is gradient information channel used?
 bool dbinfo_observation::gradient_info()
 {
-  for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
+  for(std::vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
       fit != features_.end(); ++fit)
     if((*fit)->format()==DBINFO_GRADIENT_FEATURE)
       return true;
@@ -335,18 +335,18 @@ bool dbinfo_observation::gradient_info()
 //:Is color information channel used?
 bool dbinfo_observation::color_info()
 {
-  for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
+  for(std::vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
       fit != features_.end(); ++fit)
     if((*fit)->format()==DBINFO_IHS_FEATURE)
       return true;
   return false;
 }
-void dbinfo_observation::set_edge_points(vcl_vector<vgl_point_2d<double> > edgeps)
+void dbinfo_observation::set_edge_points(std::vector<vgl_point_2d<double> > edgeps)
 {
     for(int i=0;i<edgeps.size();i++)
         edgepoints.push_back(edgeps[i]);
 }
-void dbinfo_observation::set_edge_dirs(vcl_vector<double> edgeds)
+void dbinfo_observation::set_edge_dirs(std::vector<double> edgeds)
 {
     for(int i=0;i<edgeds.size();i++)
         edgedirs.push_back(edgeds[i]);
@@ -387,9 +387,9 @@ void dbinfo_observation::b_read(vsl_b_istream &is)
         vsl_b_read(is, margin_);
         vsl_b_read(is, current_frame_);
         vsl_b_read(is, geom_);
-        vcl_vector<dbinfo_feature_base_sptr> features;
+        std::vector<dbinfo_feature_base_sptr> features;
         vsl_b_read(is, features);
-        for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit =
+        for(std::vector<dbinfo_feature_base_sptr>::iterator fit =
               features.begin(); fit != features.end(); ++fit)
           {
             dbinfo_feature_format fmt = (*fit)->format();
@@ -419,9 +419,9 @@ void dbinfo_observation::b_read(vsl_b_istream &is)
         vsl_b_read(is, margin_);
         vsl_b_read(is, current_frame_);
         vsl_b_read(is, geom_);
-        vcl_vector<dbinfo_feature_base_sptr> features;
+        std::vector<dbinfo_feature_base_sptr> features;
         vsl_b_read(is, features);
-        for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit =
+        for(std::vector<dbinfo_feature_base_sptr>::iterator fit =
               features.begin(); fit != features.end(); ++fit)
           {
             dbinfo_feature_format fmt = (*fit)->format();

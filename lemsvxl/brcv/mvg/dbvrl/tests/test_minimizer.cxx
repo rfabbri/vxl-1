@@ -3,7 +3,7 @@
 #include <dbvrl/dbvrl_lsqr_cost_func.h>
 #include <dbvrl/dbvrl_cost_func.h>
 #include <dbvrl/dbvrl_minimizer.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_amoeba.h>
 #include <vimt/vimt_transform_2d.h>
@@ -34,9 +34,9 @@ void test_lsqr_min( const vil_image_view<float>& img1,
   for(int i=0; i<50; ++i){
     for(int j=0; j<50; ++j){
       param[1] = (i-25)/4.0-5;  param[2] = (j-25)/4.0-5;
-      vcl_cout << param << "   \t -> ";
+      std::cout << param << "   \t -> ";
       test_cost_func.f(param,fx);
-      vcl_cout << fx.rms() << vcl_endl;
+      std::cout << fx.rms() << std::endl;
       result[i][j] = fx.rms();
     }
   }
@@ -90,9 +90,9 @@ void test_amoeba_min( const vil_image_view<float>& img1,
   for(int i=0; i<50; ++i){
     for(int j=0; j<50; ++j){
       param[0] = (i-25)/4.0-5;  param[1] = (j-25)/4.0-5;
-      vcl_cout << param << "   \t -> ";
+      std::cout << param << "   \t -> ";
       double cost = test_cost_func.f(param);
-      vcl_cout << cost << vcl_endl;
+      std::cout << cost << std::endl;
       result[i][j] = cost;
     }
   }*/
@@ -121,9 +121,9 @@ void test_amoeba_min( const vil_image_view<float>& img1,
   vul_timer time;
   test_minimizer.minimize(init_params);
 
-  vcl_cout << "result " << init_params << vcl_endl;
-  vcl_cout << " in " << test_minimizer.get_num_evaluations() << " iterations"
-           << " and " << time.real() << " msec" << vcl_endl;
+  std::cout << "result " << init_params << std::endl;
+  std::cout << " in " << test_minimizer.get_num_evaluations() << " iterations"
+           << " and " << time.real() << " msec" << std::endl;
 
   TEST("Amoeba",true,true);
 
@@ -149,8 +149,8 @@ void test_minimizer( const vil_image_view<float>& img1,
   vul_timer time;
   minimizer.minimize(init_xform);
 
-  vcl_cout << "result " << init_xform << vcl_endl;
-  vcl_cout << " in " << time.real() << " msec" << vcl_endl;
+  std::cout << "result " << init_xform << std::endl;
+  std::cout << " in " << time.real() << " msec" << std::endl;
 
   TEST("Minimizer",true,true);
 
@@ -171,9 +171,9 @@ MAIN( test_minimizer )
   unsigned off_i = 7;
   for (unsigned j=0;j<255+off_j;++j){
     for (unsigned i=0;i<255+off_i;++i){
-      unsigned char rand_I = (unsigned char)(vcl_rand());
-      char noise= char(vcl_rand())/32;
-      //vcl_cout << int(noise) << ", ";
+      unsigned char rand_I = (unsigned char)(std::rand());
+      char noise= char(std::rand())/32;
+      //std::cout << int(noise) << ", ";
       if(i<255 && j<255)
         frame1(i,j) = rand_I;
       if(i>=off_i && j>=off_j)

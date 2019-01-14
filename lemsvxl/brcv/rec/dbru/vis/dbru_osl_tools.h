@@ -19,7 +19,7 @@
 #include <vgui/vgui_grid_tableau.h>
 #include <dbru/dbru_osl_sptr.h>
 #include <dbru/pro/dbru_osl_storage_sptr.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <vidl1/vidl1_movie_sptr.h>
 
 
@@ -35,7 +35,7 @@ public:
   virtual ~dbru_osl_add_objects_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -51,7 +51,7 @@ public:
 
   virtual void activate();
   //:Tool utilities
-  bool add_objects(vcl_string const& objects_file, int const videoid, vcl_string const& image_file,int movie_id, int start_frame);
+  bool add_objects(std::string const& objects_file, int const videoid, std::string const& image_file,int movie_id, int start_frame);
   
   //: To generate an OSL where edgel based recognition methods can be run,
   //  Vishal's processes to find foreground polygons, track them and create multiple instances should be run initially,
@@ -76,11 +76,11 @@ public:
   //               get to declare that they belong to the same vehicle
   //               typically 0.5 (half of width of bounding box of the vehicle)
   //               If a warning is issued regarding this threshold, lower the ratio
-  bool add_objects_with_ins(vcl_string const& objects_file, 
+  bool add_objects_with_ins(std::string const& objects_file, 
                             int const movie_id, 
-                            vcl_string const& video_file, 
-                            vcl_string const& poly_file, 
-                            vcl_string const& multiple_ins_file,
+                            std::string const& video_file, 
+                            std::string const& poly_file, 
+                            std::string const& multiple_ins_file,
                             int offset,
                             int start_frame,
                             double ratio = 0.5f,
@@ -112,7 +112,7 @@ public:
   virtual ~dbru_osl_delete_observations_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -152,7 +152,7 @@ public:
   virtual ~dbru_osl_save_db_file_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -199,7 +199,7 @@ public:
   virtual ~dbru_osl_match_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -216,7 +216,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the osl
-  //bool load_query(vcl_string const& path, const bool expand = false,
+  //bool load_query(std::string const& path, const bool expand = false,
   //                const float coef = 0.6f);
   
   //: match the query against the current database
@@ -225,9 +225,9 @@ public:
                    const float ratio, const float valid_thresh,
                    const unsigned Nob, bool use_int, bool use_grad,
                    bool forward_and_reverse,
-  //                 vcl_vector<vcl_string>& classes,
-                   vcl_vector<float>& match_scores,
-                   vcl_vector<vil_image_resource_sptr>& match_images);
+  //                 std::vector<std::string>& classes,
+                   std::vector<float>& match_scores,
+                   std::vector<vil_image_resource_sptr>& match_images);
 
   //: match the query against the current datbase in transform intervals
   bool match_query_interval(const float xmin, const float xmax,
@@ -238,15 +238,15 @@ public:
                             const unsigned n_intervals,
                             const float valid_thresh,
                             bool forward_and_reverse,
-    //                        vcl_vector<vcl_string>& classes,
-                            vcl_vector<float>& match_scores,
-                            vcl_vector<vil_image_resource_sptr>& match_images);
+    //                        std::vector<std::string>& classes,
+                            std::vector<float>& match_scores,
+                            std::vector<vil_image_resource_sptr>& match_images);
 
   //: match the query against the current database
   bool match_query_opt(const float dx, const float dr,
                        const float ds, const float ratio, 
-                       vcl_vector<float>& match_scores,
-                       vcl_vector<vil_image_resource_sptr>& match_images);
+                       std::vector<float>& match_scores,
+                       std::vector<vil_image_resource_sptr>& match_images);
 
   //: match the query using edge based method
   // OZGE TODO
@@ -263,7 +263,7 @@ protected:
   //: query image
   //vil_image_resource_sptr image_;
   
-  vcl_pair<unsigned, unsigned> query_obs_ids_;
+  std::pair<unsigned, unsigned> query_obs_ids_;
   bool query_set_;
 private:
   bool active_;
@@ -285,7 +285,7 @@ public:
   virtual ~dbru_osl_transform_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -302,7 +302,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the osl
-  bool load(vcl_string const& path,
+  bool load(std::string const& path,
             const bool query = true,
             const bool expand = false,
             const float coef = 0.6f);

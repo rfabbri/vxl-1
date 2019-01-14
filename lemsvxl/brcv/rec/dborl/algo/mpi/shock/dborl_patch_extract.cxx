@@ -17,9 +17,9 @@
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dborl/algo/dborl_utilities.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <dborl/algo/dborl_index_parser.h>
@@ -52,7 +52,7 @@
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-bool dborl_patch_extract::parse_command_line(vcl_vector<vcl_string>& argv)
+bool dborl_patch_extract::parse_command_line(std::vector<std::string>& argv)
 {
 
   if (!params_.parse_command_line_args(argv))
@@ -60,7 +60,7 @@ bool dborl_patch_extract::parse_command_line(vcl_vector<vcl_string>& argv)
 
   //: always print the params file if an executable to work with ORL web interface
   if (!params_.print_params_xml(params_.print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params_.print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params_.print_params_file() << std::endl;
 
   param_file_ = params_.input_param_filename_;
   return true;
@@ -80,20 +80,20 @@ bool dborl_patch_extract::parse(const char* param_file)
 }
 
 //: this method is run on each processor
-bool dborl_patch_extract::parse_index(vcl_string index_file)
+bool dborl_patch_extract::parse_index(std::string index_file)
 {
   dborl_index_parser parser;
   parser.clear();
 
-  vcl_FILE *xmlFile = vcl_fopen(index_file.c_str(), "r");
+  std::FILE *xmlFile = std::fopen(index_file.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- error on opening" << vcl_endl;
+    std::cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
 
@@ -103,11 +103,11 @@ bool dborl_patch_extract::parse_index(vcl_string index_file)
   if (!ind_)
     return false;
 
-  vcl_cout << "parsed the index file with name: " << ind_->name_ << vcl_endl;
+  std::cout << "parsed the index file with name: " << ind_->name_ << std::endl;
 
   root_ = ind_->root_->cast_to_index_node();
   if (root_->names().size() != root_->paths().size()) {
-    vcl_cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- number of names not equal number of paths!!" << vcl_endl;
+    std::cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- number of names not equal number of paths!!" << std::endl;
     return false;
   }
 
@@ -118,23 +118,23 @@ bool dborl_patch_extract::parse_index(vcl_string index_file)
 //  run the algorithm to generate this file, then modify it  
 void dborl_patch_extract::print_default_file(const char* def_file)
 {
-  params_.print_default_input_xml(vcl_string(def_file));
+  params_.print_default_input_xml(std::string(def_file));
 }
 
 //: this method is run on each processor
-bool dborl_patch_extract::initialize(vcl_vector<dborl_patch_extract_input>& t)
+bool dborl_patch_extract::initialize(std::vector<dborl_patch_extract_input>& t)
 {
   //: parse the index file 
   if (!parse_index(params_.db_index_()))
     return false;
 
   unsigned D = root_->names().size();
-  vcl_cout << "db size: " << D << vcl_endl;
+  std::cout << "db size: " << D << std::endl;
 
   //: initialize the input vector for each pair
   for (unsigned i = 0; i<D; i++) {
 
-    vcl_string output_name = params_.patch_folder_() + "/" + params_.patch_folder_.file_type() +
+    std::string output_name = params_.patch_folder_() + "/" + params_.patch_folder_.file_type() +
               "/" + root_->names()[i] + "/" + root_->names()[i] + params_.extract_patch_.output_file_postfix() + "/" +
               root_->names()[i] + params_.extract_patch_.output_file_postfix() + "-patch_strg.bin";
   
@@ -145,7 +145,7 @@ bool dborl_patch_extract::initialize(vcl_vector<dborl_patch_extract_input>& t)
         return true;
 
     } else {
-      vcl_cout << output_name << " exists, skipping!\n";
+      std::cout << output_name << " exists, skipping!\n";
     }
 
   }
@@ -159,23 +159,23 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
   dbsk2d_shock_graph_sptr final_sg;
   dbsk2d_xshock_graph_fileio loader;
   vsol_box_2d_sptr box = new vsol_box_2d();;
-  vcl_vector<vsol_spatial_object_2d_sptr> conts;
+  std::vector<vsol_spatial_object_2d_sptr> conts;
 
-  vcl_string esf_file;
+  std::string esf_file;
   if (params_.use_object_shock_()) {
     esf_file = inp.full_name + ".esf";
-    vcl_string bnd_file = inp.full_name + "_boundary.bnd";
+    std::string bnd_file = inp.full_name + "_boundary.bnd";
     
     if (!vul_file::exists(esf_file)) {
-      vcl_cout << "In dborl_patch_extract::process() -- cannot find: " << esf_file << vcl_endl;
+      std::cout << "In dborl_patch_extract::process() -- cannot find: " << esf_file << std::endl;
       return false;
     }  
 
     final_sg = loader.load_xshock_graph(esf_file.c_str());
 
     if (!vul_file::exists(bnd_file)) {
-      vcl_cout << "In dborl_patch_extract::process() -- WARNING cannot find: " << bnd_file << " bounding box won't be computed!" << vcl_endl;
-      vcl_cout.flush();
+      std::cout << "In dborl_patch_extract::process() -- WARNING cannot find: " << bnd_file << " bounding box won't be computed!" << std::endl;
+      std::cout.flush();
     } else {
       //: find the bounding box 
       dbsk2d_file_io::load_bnd_v3_0(bnd_file, conts);
@@ -196,18 +196,18 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
   } else {
 
     esf_file = params_.assoc_shock_folder_() + "/" + params_.assoc_shock_folder_.file_type() + "/" + inp.name + "/" + inp.name + ".esf";
-    vcl_string bnd_file = params_.assoc_shock_folder_() + "/" + params_.assoc_shock_folder_.file_type() + "/" + inp.name + "/" + inp.name + "_boundary.bnd";
+    std::string bnd_file = params_.assoc_shock_folder_() + "/" + params_.assoc_shock_folder_.file_type() + "/" + inp.name + "/" + inp.name + "_boundary.bnd";
 
     if (!vul_file::exists(esf_file)) {
-      vcl_cout << "In dborl_patch_extract::process() -- cannot find: " << esf_file << vcl_endl;
+      std::cout << "In dborl_patch_extract::process() -- cannot find: " << esf_file << std::endl;
       return false;
     }  
 
     final_sg = loader.load_xshock_graph(esf_file.c_str());
 
     if (!vul_file::exists(bnd_file)) {
-      vcl_cout << "In dborl_patch_extract::process() -- WARNING cannot find: " << bnd_file << " bounding box won't be computed!" << vcl_endl;
-      vcl_cout.flush();
+      std::cout << "In dborl_patch_extract::process() -- WARNING cannot find: " << bnd_file << " bounding box won't be computed!" << std::endl;
+      std::cout.flush();
     } else {
       //: find the bounding box 
       dbsk2d_file_io::load_bnd_v3_0(bnd_file, conts);
@@ -229,20 +229,20 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
 
   //if (!test_shock_graph_for_rec(final_sg)) {
   if (!test_xshock_graph(final_sg)) {
-    vcl_cout << "In dborl_patch_extract::process() -- shock graph: " << esf_file << " failed the test!!\n";
+    std::cout << "In dborl_patch_extract::process() -- shock graph: " << esf_file << " failed the test!!\n";
     f = 0;
     return false;
   }
 
-  vcl_cout << "process: " << inp.name << ", " << final_sg->number_of_vertices() << " vertices in the shock graph\n";
-  vcl_cout.flush();
+  std::cout << "process: " << inp.name << ", " << final_sg->number_of_vertices() << " vertices in the shock graph\n";
+  std::cout.flush();
   
   
   //: extract the patches
   // create the output storage class
   dbskr_shock_patch_storage_sptr output = dbskr_shock_patch_storage_new();
 
-  vcl_string output_name_prefix = params_.patch_folder_();
+  std::string output_name_prefix = params_.patch_folder_();
   if (!vul_file::exists(output_name_prefix))
     vul_file::make_directory(output_name_prefix);
 
@@ -258,10 +258,10 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
   if (!vul_file::exists(output_name_prefix))
     vul_file::make_directory(output_name_prefix);
 
-  vcl_string output_name = output_name_prefix + inp.name + params_.extract_patch_.output_file_postfix() + "-patch_strg.bin";
+  std::string output_name = output_name_prefix + inp.name + params_.extract_patch_.output_file_postfix() + "-patch_strg.bin";
   
   if (vul_file::exists(output_name)) {
-    vcl_cout << "\t" << inp.name << " patch storage exists\n";
+    std::cout << "\t" << inp.name << " patch storage exists\n";
     f = 1;
     return true;
   }
@@ -278,16 +278,16 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
       selector.prune_same_patches(dummy_tree->size());
       selector.add_to_storage(dummy_tree->size(), output);
       if (output->size() != 1)
-        vcl_cout << "WARNING: trying to put ONLY tree but there are more than one patches in the storage!!!!!!!!!\n";
+        std::cout << "WARNING: trying to put ONLY tree but there are more than one patches in the storage!!!!!!!!!\n";
 
     } else {
       dbskr_shock_patch_model_selector selector(final_sg);
     
       for (int d = params_.extract_patch_.start_depth_(); d <= params_.extract_patch_.end_depth_(); d += params_.extract_patch_.depth_interval_()) {
-        //vcl_cout << " depth: " << d << " ..";
+        //std::cout << " depth: " << d << " ..";
         selector.extract(d, params_.extract_patch_.circular_ends_());
         selector.prune_same_patches(d);
-        //vcl_cout << " DONE! ";
+        //std::cout << " DONE! ";
       }
       selector.prune_same_patches_at_all_depths();
 
@@ -302,30 +302,30 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
     output->b_write(bfs);
     bfs.close();
 
-    //vcl_cout << output->size() << " patches, saving shocks..";
+    //std::cout << output->size() << " patches, saving shocks..";
     //: save esfs for each patch to load later
     for (unsigned i = 0; i < output->size(); i++) {
       dbskr_shock_patch_sptr sp = output->get_patch(i);
-      vcl_ostringstream oss;
+      std::ostringstream oss;
       oss << sp->id();
-      vcl_string patch_esf_name = output_name_prefix + "-" + oss.str() + ".esf";
+      std::string patch_esf_name = output_name_prefix + "-" + oss.str() + ".esf";
       dbsk2d_xshock_graph_fileio file_io;
       file_io.save_xshock_graph(sp->shock_graph(), patch_esf_name);
     }
-    //vcl_cout << output->size() << " DONE!\n";
+    //std::cout << output->size() << " DONE!\n";
 
   } else {
 
     if (!(box->area() > 0)) {
-      vcl_cout << " In dborl_patch_extract::process() -- box area is zero, quitting!\n";
+      std::cout << " In dborl_patch_extract::process() -- box area is zero, quitting!\n";
       f = 0;
       return false;
     }
         
-    vcl_string image_file = inp.full_name + params_.image_extention_();
-    vcl_string kept_dir_name = output_name_prefix + "kept/";
+    std::string image_file = inp.full_name + params_.image_extention_();
+    std::string kept_dir_name = output_name_prefix + "kept/";
     vul_file::make_directory_path(kept_dir_name);
-    vcl_string discarded_dir_name = output_name_prefix + "discarded/";
+    std::string discarded_dir_name = output_name_prefix + "discarded/";
     vul_file::make_directory_path(discarded_dir_name);
 
     if (!find_shock_patches(image_file, final_sg, box, kept_dir_name, discarded_dir_name, output_name, 
@@ -334,7 +334,7 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
       params_.extract_patch_.start_depth_(), params_.extract_patch_.end_depth_(), params_.extract_patch_.depth_interval_(), 
       params_.extract_patch_.pruning_depth_(), params_.extract_patch_.sort_threshold_(), params_.extract_patch_.keep_pruned_(),
       params_.extract_patch_.save_images_(), params_.extract_patch_.save_discarded_images_())) {
-      vcl_cout << " In dborl_patch_extract::process() -- problems in find_shock_patches method, quitting!\n";
+      std::cout << " In dborl_patch_extract::process() -- problems in find_shock_patches method, quitting!\n";
       f = 0;
       return false;
     }
@@ -346,12 +346,12 @@ bool dborl_patch_extract::process(dborl_patch_extract_input inp, char& f)
 
 void dborl_patch_extract::print_time()
 {
-  vcl_cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
-  vcl_cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
+  std::cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
 }
 
 //: this method is run on the lead processor once after results are collected from each processor
-bool dborl_patch_extract::finalize(vcl_vector<char>& results)
+bool dborl_patch_extract::finalize(std::vector<char>& results)
 {
   return true;
 }

@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <gdt/gdt_manager.h>
 #include <gdt/gdt_mesh.h>
@@ -31,7 +31,7 @@ void gdt_fs_manager::ws_retract_edge (dbmsh3d_halfedge* prop_he)
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>2)
-    vul_printf (vcl_cerr, "    Retract propagation of edge %d at face %d\n", prop_edge->id(), prop_face->id());
+    vul_printf (std::cerr, "    Retract propagation of edge %d at face %d\n", prop_edge->id(), prop_face->id());
 #endif
 
   //: For all three edges of the face, remove all halfedges from the front.
@@ -63,7 +63,7 @@ void gdt_fs_manager::_ws_retract_shock_on_edge (dbmsh3d_gdt_edge* input_edge,
                                                 dbmsh3d_gdt_edge* from_edge1,
                                                 dbmsh3d_gdt_edge* from_edge2)
 {
-  vcl_map<double, gdt_shock*>::iterator sit = input_edge->shock_section()->S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = input_edge->shock_section()->S_map()->begin();
   for (; sit != input_edge->shock_section()->S_map()->end(); sit++) {
     gdt_shock* S = (*sit).second;
 
@@ -74,9 +74,9 @@ void gdt_fs_manager::_ws_delete_interval_on_edge (dbmsh3d_gdt_edge* input_edge,
                                                   dbmsh3d_gdt_edge* from_edge1,
                                                   dbmsh3d_gdt_edge* from_edge2)
 {
-  vcl_set<gdt_ibase*> intervals_to_detele;
+  std::set<gdt_ibase*> intervals_to_detele;
 
-  vcl_map<double, gdt_ibase*>::iterator it = input_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = input_edge->interval_section()->I_map()->begin();
   while (it != input_edge->interval_section()->I_map()->end()) {
     gdt_ibase* II = (*it).second;
 
@@ -128,7 +128,7 @@ void gdt_fs_manager::_ws_delete_interval_on_edge (dbmsh3d_gdt_edge* input_edge,
   }
 
   //: !! SLOW !! delete all intervals in intervals_to_detele[]
-  vcl_set<gdt_ibase*>::iterator iit = intervals_to_detele.begin();
+  std::set<gdt_ibase*>::iterator iit = intervals_to_detele.begin();
   while (iit != intervals_to_detele.end()) {
     gdt_ibase* II = *iit;
 

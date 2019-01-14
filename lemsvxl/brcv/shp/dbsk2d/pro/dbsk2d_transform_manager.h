@@ -20,14 +20,14 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vil1/vil1_colour_space.h>
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_polygon.h>
 #include <dbsk2d/dbsk2d_bnd_contour_sptr.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <dbsk2d/dbsk2d_ishock_bpoint.h>
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_set.h>
+#include <set>
 #include <bsold/bsold_interp_curve_2d_sptr.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
 #include <vil/vil_math.h>
@@ -97,7 +97,7 @@ public:
             }
         }
 
-        diag_=vcl_sqrt(vcl_pow((float)image_->ni(),2)+vcl_pow((float)image_->nj(),2));
+        diag_=std::sqrt(std::pow((float)image_->ni(),2)+std::pow((float)image_->nj(),2));
 
 
         vil_image_view<vxl_byte> vv=image_->get_view();
@@ -132,83 +132,83 @@ public:
     void set_threshold(double threshold){threshold_ = threshold;}
 
     // Set output folder
-    void set_output_frag_folder(vcl_string folder){out_folder_= folder;}
+    void set_output_frag_folder(std::string folder){out_folder_= folder;}
 
     // Set output prefix
-    void set_output_prefix(vcl_string prefix){out_prefix_=prefix;}
+    void set_output_prefix(std::string prefix){out_prefix_=prefix;}
 
     // Set prob normalization
     void set_normalization(double normalization){normalization_=normalization;}
 
     // Start binary file output
-    void start_binary_file(vcl_string binary_file_output);
+    void start_binary_file(std::string binary_file_output);
 
     // Start binary file output
-    void start_region_file(vcl_string binary_file_output);
+    void start_region_file(std::string binary_file_output);
 
     // Start region stats file
-    void start_region_stats_file(vcl_string binary_file_output)
+    void start_region_stats_file(std::string binary_file_output)
     {output_region_stats_file_=binary_file_output;}
 
     // Get image
     vil_image_resource_sptr get_image()
     {return image_;}
 
-    void get_appearance_stats(vcl_vector<dbsk2d_ishock_edge*>& region,
-                              vcl_vector<dbsk2d_ishock_belm*>& belms,
+    void get_appearance_stats(std::vector<dbsk2d_ishock_edge*>& region,
+                              std::vector<dbsk2d_ishock_belm*>& belms,
                               double area,
-                              vcl_vector<double>& app_stats);
+                              std::vector<double>& app_stats);
 
     // Get threshold cost
     double get_threshold(){return threshold_;}
 
     // Get extra belms
-    void get_extra_belms(vcl_vector<dbsk2d_ishock_belm*>& region,
-                         vcl_set<int>& key,
-                         vcl_set<int>& closed_region_key,
-                         vcl_map<int,dbsk2d_ishock_bline*>& final_belms);
+    void get_extra_belms(std::vector<dbsk2d_ishock_belm*>& region,
+                         std::set<int>& key,
+                         std::set<int>& closed_region_key,
+                         std::map<int,dbsk2d_ishock_bline*>& final_belms);
 
     // Get output folder
-    vcl_string get_output_frag_folder(){return out_folder_;}
+    std::string get_output_frag_folder(){return out_folder_;}
 
     // Get output prefix
-    vcl_string get_output_prefix(){return out_prefix_;}
+    std::string get_output_prefix(){return out_prefix_;}
 
     // Get output stream
     void write_output_polygon(vgl_polygon<double>& poly);
  
     // Write output region stats
-    void write_output_region_stats(vcl_vector<double>& region_stats);
+    void write_output_region_stats(std::vector<double>& region_stats);
 
     // Get output stream
-    void write_output_region(vcl_vector<dbsk2d_ishock_belm*>& region);
+    void write_output_region(std::vector<dbsk2d_ishock_belm*>& region);
 
     // Get output stream
-    void write_output_region(vcl_vector<dbsk2d_bnd_contour_sptr>& contours,
-                             vcl_vector<vgl_point_2d<double> >& gap_filler);
+    void write_output_region(std::vector<dbsk2d_bnd_contour_sptr>& contours,
+                             std::vector<vgl_point_2d<double> >& gap_filler);
 
     // Get output stream
-    void write_output_polygon(vcl_vector<dbsk2d_bnd_contour_sptr>& contours,
-                              vcl_vector<vgl_point_2d<double> >& gap_filler);
+    void write_output_polygon(std::vector<dbsk2d_bnd_contour_sptr>& contours,
+                              std::vector<vgl_point_2d<double> >& gap_filler);
 
     // Get output stream
     void write_output_region(vgl_polygon<double>& poly);
 
     // Save individual fragment to image
     void save_image_poly(vgl_polygon<double>& poly,
-                         vcl_string filename);
+                         std::string filename);
 
     // Destroy singleton 
     void destroy_singleton();
 
     // Read in training data
-    void read_in_training_data(vcl_string filename);
+    void read_in_training_data(std::string filename);
 
     // Read in training data
-    void read_in_gpb_data(vcl_string filename);
+    void read_in_gpb_data(std::string filename);
 
     // Read in texton data
-    void read_in_texton_data(vcl_string filename);
+    void read_in_texton_data(std::string filename);
 
     // Set beta0 for logitic function
     void set_beta0_logit(double beta0){logistic_beta0_ = beta0;}
@@ -221,13 +221,13 @@ public:
                                  double length);
 
     // Determine cost
-    double likelihood(vcl_vector<vgl_point_2d<double> >& curve);
+    double likelihood(std::vector<vgl_point_2d<double> >& curve);
 
     // Determin cost
     double likelihood(vsol_polyline_2d_sptr& curve);
 
     // Determine gap cost
-    double transform_probability(vcl_vector<vgl_point_2d<double> >& curve,
+    double transform_probability(std::vector<vgl_point_2d<double> >& curve,
                                  bool use_length=true);
 
     // Determine gap cost
@@ -235,9 +235,9 @@ public:
                                   bool use_length=true);
 
     // Determine loop cost
-    double transform_probability( vcl_vector<vgl_point_2d<double> >& 
+    double transform_probability( std::vector<vgl_point_2d<double> >& 
                                   foreground_grid,
-                                  vcl_vector<vgl_point_2d<double> >&
+                                  std::vector<vgl_point_2d<double> >&
                                   background_grid);
                                   
     //: increment the id counter and return new id
@@ -247,10 +247,10 @@ public:
     void write_stats_closed(vgl_polygon<double>& closed);
 
     //: compute stats closed polygon
-    void write_stats_closed(vcl_vector<dbsk2d_ishock_belm*>& belms);
+    void write_stats_closed(std::vector<dbsk2d_ishock_belm*>& belms);
 
     // : get closest point
-    dbsk2d_ishock_bpoint* get_anchor_pt(vcl_pair<dbsk2d_ishock_bpoint*,
+    dbsk2d_ishock_bpoint* get_anchor_pt(std::pair<dbsk2d_ishock_bpoint*,
                                         dbsk2d_ishock_bline*>& pair );
 
     //: see if gpb data loaded
@@ -285,19 +285,19 @@ private:
     vil_image_view<double> texton_image_;
 
     // Keep output folder for fragments
-    vcl_string out_folder_;
+    std::string out_folder_;
 
     // Keep output prefix for fragments
-    vcl_string out_prefix_;
+    std::string out_prefix_;
 
     // Keep binary file
-    vcl_string output_binary_file_;
+    std::string output_binary_file_;
 
     // Keep binary file
-    vcl_string output_region_file_;
+    std::string output_region_file_;
 
     // Keep binary file
-    vcl_string output_region_stats_file_;
+    std::string output_region_stats_file_;
 
     //: First Coefficient of logistic function 
     double logistic_beta0_;
@@ -333,21 +333,21 @@ private:
     vil_image_view<double> v_img_;
 
     // get internal grid points
-    void grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
-                     vcl_vector<dbsk2d_ishock_belm*>& belms,
-                     vcl_vector<vgl_point_2d<double> >& foreground_grid,
-                     vcl_vector<vgl_point_2d<double> >& background_grid);
+    void grid_points(std::vector<dbsk2d_ishock_edge*>& region,
+                     std::vector<dbsk2d_ishock_belm*>& belms,
+                     std::vector<vgl_point_2d<double> >& foreground_grid,
+                     std::vector<vgl_point_2d<double> >& background_grid);
 
     // edge gpb value
-    double contour_gpb_value(vcl_vector<dbsk2d_ishock_belm*>& frag_belms);
+    double contour_gpb_value(std::vector<dbsk2d_ishock_belm*>& frag_belms);
     
     // area gpb value
-    double region_gpb_value(vcl_vector<vgl_point_2d<double> >& grid);
+    double region_gpb_value(std::vector<vgl_point_2d<double> >& grid);
 
     // chi squared distance
     double chi_squared_color_distance(
-        vcl_vector<vgl_point_2d<double> >& foreground,
-        vcl_vector<vgl_point_2d<double> >& background,
+        std::vector<vgl_point_2d<double> >& foreground,
+        std::vector<vgl_point_2d<double> >& background,
         vil_image_view<double>& channel,
         double min, double max,unsigned int nbins,bool flip=false);
 
@@ -356,14 +356,14 @@ private:
 
     // compute average LAB difference
     double mean_LAB_distance(        
-        vcl_vector<vgl_point_2d<double> >& foreground,
-        vcl_vector<vgl_point_2d<double> >& background);
+        std::vector<vgl_point_2d<double> >& foreground,
+        std::vector<vgl_point_2d<double> >& background);
 
     bool gap_endpoint(dbsk2d_ishock_bpoint* bp);
 
     void ellipse_fitting(  
-        vcl_vector<vgl_point_2d<double> >& foreground,
-        vcl_vector<double>& stats);
+        std::vector<vgl_point_2d<double> >& foreground,
+        std::vector<double>& stats);
 
 
     // Make default constructor private

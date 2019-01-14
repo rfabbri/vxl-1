@@ -38,7 +38,7 @@ dbbgm_hmm_detect_process::dbbgm_hmm_detect_process()
       !parameters()->add( "Field Weight" ,         "-fieldw" ,    9.0f        ) ||
       !parameters()->add( "Single Mixture" ,       "-singmix" ,   false       ) ||
       !parameters()->add( "Debug"          ,       "-debug" ,     false       ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -58,7 +58,7 @@ dbbgm_hmm_detect_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_hmm_detect_process::name()
 {
   return "HMM Detect";
@@ -82,9 +82,9 @@ dbbgm_hmm_detect_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_hmm_detect_process::get_input_type()
+std::vector< std::string > dbbgm_hmm_detect_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
@@ -98,9 +98,9 @@ vcl_vector< vcl_string > dbbgm_hmm_detect_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_hmm_detect_process::get_output_type()
+std::vector< std::string > dbbgm_hmm_detect_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   bool debug = false;
   parameters()->get_value( "-debug" ,  debug);
@@ -119,7 +119,7 @@ bool
 dbbgm_hmm_detect_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_hmm_detect_process::execute() - "
+    std::cout << "In dbbgm_hmm_detect_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -259,7 +259,7 @@ dbbgm_hmm_detect_process::execute()
 
   double time3 = timer.user()/1000.0;
   if(debug)
-    vcl_cout << "detect in "<<time1<<" ms  and " << time2<<" ms  and " << time3<<" ms"<<vcl_endl;
+    std::cout << "detect in "<<time1<<" ms  and " << time2<<" ms  and " << time3<<" ms"<<std::endl;
 
 
   vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

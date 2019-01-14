@@ -10,7 +10,7 @@
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>
 
-#include <vcl_utility.h>
+#include <utility>
 
 
 
@@ -42,12 +42,12 @@ bool x_read(bxml_element* elm, bsta_histogram<double >& histogram);
 //==============================================================================
 
 
-const vcl_string tag_xgraph_ccm_model = "dbsks_xgraph_ccm_model";
-const vcl_string tag_ccm_params = "ccm_params";
-const vcl_string tag_xgraph_info = "xgraph_info";
-const vcl_string tag_list_bfrag_cost_models = "list_bfrag_cost_models";
-const vcl_string tag_bfrag_cost_model = "bfrag_cost_model";
-const vcl_string tag_user_override = "user_override";
+const std::string tag_xgraph_ccm_model = "dbsks_xgraph_ccm_model";
+const std::string tag_ccm_params = "ccm_params";
+const std::string tag_xgraph_info = "xgraph_info";
+const std::string tag_list_bfrag_cost_models = "list_bfrag_cost_models";
+const std::string tag_bfrag_cost_model = "bfrag_cost_model";
+const std::string tag_user_override = "user_override";
 
 //==============================================================================
 // WRITE
@@ -56,7 +56,7 @@ const vcl_string tag_user_override = "user_override";
 
 ///// ----------------------------------------------------------------------------
 ////:  Write xgraph contour ocm model to a stream
-//bool x_write(vcl_ostream& os, const dbsks_xgraph_ccm_model_sptr& xgraph_ocm);
+//bool x_write(std::ostream& os, const dbsks_xgraph_ccm_model_sptr& xgraph_ocm);
 
 
 
@@ -65,7 +65,7 @@ const vcl_string tag_user_override = "user_override";
 //==============================================================================
 
 //: Read xgraph contour ocm model from a file
-bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
+bool x_read(const std::string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 {
   // House-cleaning
   xgraph_ccm = 0;
@@ -75,7 +75,7 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 
   if (!doc.root_element())
   {
-    vcl_cout << "\nERROR: couldn't read XML file: " << filepath << vcl_endl;
+    std::cout << "\nERROR: couldn't read XML file: " << filepath << std::endl;
     return false;
   }
 
@@ -84,7 +84,7 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 
   if (!root)
   {
-    vcl_cout << "ERROR: could not find node '" << tag_xgraph_ccm_model << "'.\n";
+    std::cout << "ERROR: could not find node '" << tag_xgraph_ccm_model << "'.\n";
     return false;
   }
 
@@ -100,7 +100,7 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
   }
   else
   {
-    vcl_cout << "ERROR: Unknown dbsks_xgraph_ccm_model XML version. Quit now.\n";
+    std::cout << "ERROR: Unknown dbsks_xgraph_ccm_model XML version. Quit now.\n";
     return false;
   }
 }
@@ -111,7 +111,7 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 
 
 //: Read xgraph contour ocm model from a file
-bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
+bool x_read(const std::string& filepath, const std::string& param_filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 {
   // House-cleaning
   xgraph_ccm = 0;
@@ -121,7 +121,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
   if (!doc.root_element())
   {
-    vcl_cout << "\nERROR: couldn't read XML file: " << filepath << vcl_endl;
+    std::cout << "\nERROR: couldn't read XML file: " << filepath << std::endl;
     return false;
   }
   
@@ -130,7 +130,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
   if (!root)
   {
-    vcl_cout << "ERROR: could not find node '" << tag_xgraph_ccm_model << "'.\n";
+    std::cout << "ERROR: could not find node '" << tag_xgraph_ccm_model << "'.\n";
     return false;
   }
 
@@ -148,14 +148,14 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
     if (!param_root)
     {
-      vcl_cout << "ERROR: could not find node '" << tag_ccm_params << "'.\n";
+      std::cout << "ERROR: could not find node '" << tag_ccm_params << "'.\n";
       return false;
     }
     return x_read_v2_1(root, param_root, xgraph_ccm);
   }
   else
   {
-    vcl_cout << "ERROR: Unknown dbsks_xgraph_ccm_model XML version. Quit now.\n";
+    std::cout << "ERROR: Unknown dbsks_xgraph_ccm_model XML version. Quit now.\n";
     return false;  
   }
 }
@@ -174,7 +174,7 @@ bool x_read_v1(const bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm
 {
   // Prepare space to store the xgraph geometry model
   xgraph_ccm = new dbsks_xgraph_ccm_model();
-  vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr > map_edge2ocm;
+  std::map<unsigned, dbsks_xfrag_ccm_model_sptr > map_edge2ocm;
 
 
   // Read graph tree info: root node
@@ -225,7 +225,7 @@ bool x_read_v1(const bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm
 
       // create a place holder for the xfrag's data
       dbsks_xfrag_ccm_model_sptr xfrag_ccm = new dbsks_xfrag_ccm_model();
-      xgraph_ccm->map_edge2ccm().insert(vcl_make_pair(edge_id, xfrag_ccm));
+      xgraph_ccm->map_edge2ccm().insert(std::make_pair(edge_id, xfrag_ccm));
 
       for (bxml_element::const_data_iterator it2 = frag_elm->data_begin(); it2 != frag_elm->data_end(); ++it2)
       {
@@ -244,7 +244,7 @@ bool x_read_v1(const bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm
 
           if (side_id != 0 && side_id != 1)
           {
-            vcl_cout << "\nERROR: Unknown side id, skipping this fg_dist.\n";
+            std::cout << "\nERROR: Unknown side id, skipping this fg_dist.\n";
             continue;
           }
 
@@ -296,7 +296,7 @@ bool x_read_v2(bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
   bxml_element* elm_ccm_params = dbxml_algos::find_by_name(root, tag_ccm_params);
   if (!elm_ccm_params)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_ccm_params << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_ccm_params << "' element in XML file.\n";
     return false;
   }
   else
@@ -311,7 +311,7 @@ bool x_read_v2(bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
   int num_bfrags = 0;
   if (!elm_xgraph_info)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_xgraph_info << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_xgraph_info << "' element in XML file.\n";
     return false;
   }
   else
@@ -336,7 +336,7 @@ bool x_read_v2(bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
   bxml_element* elm_list_bfrags = dbxml_algos::find_by_name(root, tag_list_bfrag_cost_models);
   if (!elm_list_bfrags)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_list_bfrag_cost_models << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_list_bfrag_cost_models << "' element in XML file.\n";
     return false;
   }
   else
@@ -373,7 +373,7 @@ bool x_read_v2(bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
   bxml_element* elm_user_override = dbxml_algos::find_by_name(root, tag_user_override);
   if (!elm_user_override)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_user_override << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_user_override << "' element in XML file.\n";
     return false;
   }
   else
@@ -383,7 +383,7 @@ bool x_read_v2(bxml_element* root, dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
       dbxml_algos::find_by_name(root, "list_bfrags_to_ignore");
     if (elm_list_bfrags_to_ignore)
     {
-      vcl_string list_bfrags_str;
+      std::string list_bfrags_str;
       if (xml_parse(elm_list_bfrags_to_ignore, list_bfrags_str))
       {
         xgraph_ccm->override_cfrag_with_constant_distribution(list_bfrags_str, ',');
@@ -409,7 +409,7 @@ bool x_read_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_ccm_
   //bxml_element* elm_ccm_params = param_root;
   /*if (!elm_ccm_params)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_ccm_params << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_ccm_params << "' element in XML file.\n";
     return false;
   }
   else*/
@@ -424,7 +424,7 @@ bool x_read_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_ccm_
   int num_bfrags = 0;
   if (!elm_xgraph_info)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_xgraph_info << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_xgraph_info << "' element in XML file.\n";
     return false;
   }
   else
@@ -449,7 +449,7 @@ bool x_read_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_ccm_
   bxml_element* elm_list_bfrags = dbxml_algos::find_by_name(root, tag_list_bfrag_cost_models);
   if (!elm_list_bfrags)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_list_bfrag_cost_models << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_list_bfrag_cost_models << "' element in XML file.\n";
     return false;
   }
   else
@@ -486,7 +486,7 @@ bool x_read_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_ccm_
   bxml_element* elm_user_override = dbxml_algos::find_by_name(root, tag_user_override);
   if (!elm_user_override)
   {
-    vcl_cout << "\nERROR: Missing '" << tag_user_override << "' element in XML file.\n";
+    std::cout << "\nERROR: Missing '" << tag_user_override << "' element in XML file.\n";
     return false;
   }
   else
@@ -496,7 +496,7 @@ bool x_read_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_ccm_
       dbxml_algos::find_by_name(root, "list_bfrags_to_ignore");
     if (elm_list_bfrags_to_ignore)
     {
-      vcl_string list_bfrags_str;
+      std::string list_bfrags_str;
       if (xml_parse(elm_list_bfrags_to_ignore, list_bfrags_str))
       {
         xgraph_ccm->override_cfrag_with_constant_distribution(list_bfrags_str, ',');
@@ -524,45 +524,45 @@ bool x_read(bxml_element* element, dbsks_ccm_params& ccm_params)
   if (element->name() != tag_ccm_params)
     return false;
 
-  vcl_cout << vcl_endl << "CCM Model Parameters:" << vcl_endl;
-  vcl_cout << "-------------------------" << vcl_endl;
+  std::cout << std::endl << "CCM Model Parameters:" << std::endl;
+  std::cout << "-------------------------" << std::endl;
 
   bxml_element* temp = 0;
   temp = dbxml_algos::find_by_name(element, "distance_threshold");
   xml_parse(temp, ccm_params.distance_threshold_);
-  vcl_cout << "CCM Distance Threshold: " << ccm_params.distance_threshold_ << vcl_endl;
+  std::cout << "CCM Distance Threshold: " << ccm_params.distance_threshold_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "distance_tol_near_zero");
   xml_parse(temp, ccm_params.distance_tol_near_zero_);
-  vcl_cout << "CCM Distance Tolerance Near Zero: " << ccm_params.distance_tol_near_zero_ << vcl_endl;
+  std::cout << "CCM Distance Tolerance Near Zero: " << ccm_params.distance_tol_near_zero_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "orient_threshold");
   xml_parse(temp, ccm_params.orient_threshold_);
-  vcl_cout << "CCM Orientation Threshold: " << ccm_params.orient_threshold_ << vcl_endl;
+  std::cout << "CCM Orientation Threshold: " << ccm_params.orient_threshold_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "orient_tol_near_zero");
   xml_parse(temp, ccm_params.orient_tol_near_zero_);
-  vcl_cout << "CCM Orientation Tolerance Near Zero: " << ccm_params.orient_tol_near_zero_ << vcl_endl;
+  std::cout << "CCM Orientation Tolerance Near Zero: " << ccm_params.orient_tol_near_zero_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "weight_chamfer"); 
   xml_parse(temp, ccm_params.weight_chamfer_);
-  vcl_cout << "CCM Weight Chamfer: " << ccm_params.weight_chamfer_ << vcl_endl;
+  std::cout << "CCM Weight Chamfer: " << ccm_params.weight_chamfer_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "weight_edge_orient"); 
   xml_parse(temp, ccm_params.weight_edge_orient_);
-  vcl_cout << "CCM Weight Edge Orientation: " << ccm_params.weight_edge_orient_ << vcl_endl;
+  std::cout << "CCM Weight Edge Orientation: " << ccm_params.weight_edge_orient_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "weight_contour_orient"); 
   xml_parse(temp, ccm_params.weight_contour_orient_);
-  vcl_cout << "CCM Weight Contour Orientation: " << ccm_params.weight_contour_orient_ << vcl_endl;
+  std::cout << "CCM Weight Contour Orientation: " << ccm_params.weight_contour_orient_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "nbins_0topi");
   xml_parse(temp, ccm_params.nbins_0topi_);
-  vcl_cout << "CCM Number of Bins 0 - pi: " << ccm_params.nbins_0topi_ << vcl_endl;
+  std::cout << "CCM Number of Bins 0 - pi: " << ccm_params.nbins_0topi_ << std::endl;
 
   temp = dbxml_algos::find_by_name(element, "local_window_width");
   xml_parse(temp, ccm_params.local_window_width_);
-  vcl_cout << "CCM Local Window Width: " << ccm_params.local_window_width_ << vcl_endl;
+  std::cout << "CCM Local Window Width: " << ccm_params.local_window_width_ << std::endl;
 
   return true;
 }
@@ -583,7 +583,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
   elm->get_attribute("edge_id", edge_id);
 
   // get side_id
-  vcl_string side_id_str;
+  std::string side_id_str;
   elm->get_attribute("side_id", side_id_str);
   side_idx = (side_id_str == "L") ? 0 : 1;
 
@@ -598,7 +598,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
 
   // parse the distribution
   {
-    vcl_string active_dist_type = "";
+    std::string active_dist_type = "";
     bxml_element* temp = 0;
     temp = dbxml_algos::find_by_name(elm_dist, "active_dist_type");
     xml_parse(temp, active_dist_type);
@@ -610,7 +610,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
       bxml_element* elm_hist = dbxml_algos::find_by_name(elm_dist, "bsta_histogram");
       if (!elm_hist)
       {
-        vcl_cout << "\nERROR: could not find element of type 'bsta_histogram'.\n";
+        std::cout << "\nERROR: could not find element of type 'bsta_histogram'.\n";
         return false;
       }
 
@@ -620,7 +620,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
     }
     else
     {
-      vcl_cout << "\nERROR: Unknown distribution type [ " << active_dist_type << " ]\n";
+      std::cout << "\nERROR: Unknown distribution type [ " << active_dist_type << " ]\n";
       return false;
     }
   }
@@ -635,7 +635,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
 
   // parse the active distribution
   {
-    vcl_string active_dist_type = "";
+    std::string active_dist_type = "";
     bxml_element* temp = 0;
     temp = dbxml_algos::find_by_name(elm_dist, "active_dist_type");
     xml_parse(temp, active_dist_type);
@@ -647,7 +647,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
       bxml_element* elm_hist = dbxml_algos::find_by_name(elm_dist, "bsta_histogram");
       if (!elm_hist)
       {
-        vcl_cout << "\nERROR: could not find element of type 'bsta_histogram'.\n";
+        std::cout << "\nERROR: could not find element of type 'bsta_histogram'.\n";
         return false;
       }
 
@@ -657,7 +657,7 @@ bool x_read(bxml_element* elm, dbsks_bfrag_cost_model& bfrag_model,
     }
     else
     {
-      vcl_cout << "\nERROR: Unknown distribution type [ " << active_dist_type << " ]\n";
+      std::cout << "\nERROR: Unknown distribution type [ " << active_dist_type << " ]\n";
       return false;
     }
   }
@@ -694,30 +694,30 @@ bool x_read(bxml_element* elm, bsta_histogram<double >& histogram)
   // vector of values
   // example vector: [0.2 0.3 10]
   temp = dbxml_algos::find_by_name(elm, "values");
-  vcl_string values_str;
+  std::string values_str;
   xml_parse(temp, values_str);
-  vcl_string::size_type start = values_str.find_first_of('[', 0);
-  vcl_string::size_type end = values_str.find_first_of(']', start);
+  std::string::size_type start = values_str.find_first_of('[', 0);
+  std::string::size_type end = values_str.find_first_of(']', start);
   if (start == values_str.npos || end == values_str.npos)
   {
     return false;
   }
   
   values_str = values_str.substr(start+1, end-start-1);
-  vcl_istringstream values_istream(values_str);
+  std::istringstream values_istream(values_str);
   vnl_vector<double > values(nbins, 0);
   if (!values.read_ascii(values_istream))
     return false;
 
   temp = dbxml_algos::find_by_name(elm, "counts");
-  vcl_string counts_str;
+  std::string counts_str;
   xml_parse(temp, counts_str);
   start = counts_str.find_first_of('[', 0);
   end = counts_str.find_first_of(']', start);
   if (end == counts_str.npos)
     return false;
   counts_str = counts_str.substr(start+1, end-start-1);
-  vcl_istringstream counts_istream(counts_str);
+  std::istringstream counts_istream(counts_str);
   vnl_vector<double > counts(nbins, 0);
   if (!counts.read_ascii(counts_istream))
     return false;

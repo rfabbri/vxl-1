@@ -17,7 +17,7 @@ class dbrl_rpm_tps_affine_superimpose_fgbg_process:public bpro1_process
         dbrl_rpm_tps_affine_superimpose_fgbg_process();
         ~dbrl_rpm_tps_affine_superimpose_fgbg_process();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process* clone() const;
@@ -25,34 +25,34 @@ class dbrl_rpm_tps_affine_superimpose_fgbg_process:public bpro1_process
         int input_frames();
         int output_frames();
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
 
         bool execute();
         bool finish();
 
 
-        vcl_vector<dbrl_feature_sptr> generate_grid();
-        vcl_vector<dbrl_feature_sptr> warp_grid(dbrl_thin_plate_spline_transformation * tpstform,
-                                                vcl_vector<dbrl_feature_sptr> &f);
+        std::vector<dbrl_feature_sptr> generate_grid();
+        std::vector<dbrl_feature_sptr> warp_grid(dbrl_thin_plate_spline_transformation * tpstform,
+                                                std::vector<dbrl_feature_sptr> &f);
 
 
-        vcl_vector<vsol_spatial_object_2d_sptr>feature_to_vsol(vcl_vector<dbrl_feature_sptr> & f);
-        vcl_vector<vsol_spatial_object_2d_sptr> draw_grid(vcl_vector<dbrl_feature_sptr> grid_pts, int rows, int cols);
+        std::vector<vsol_spatial_object_2d_sptr>feature_to_vsol(std::vector<dbrl_feature_sptr> & f);
+        std::vector<vsol_spatial_object_2d_sptr> draw_grid(std::vector<dbrl_feature_sptr> grid_pts, int rows, int cols);
 
 
-        void get_corresponding_pairs_fg(vcl_vector<dbrl_feature_sptr> &f1in,vcl_vector<dbrl_feature_sptr> &f2in, 
-                                        dbrl_correspondence * M,vcl_vector<dbrl_feature_sptr> &f1,
-                                        vcl_vector<dbrl_feature_sptr> &f2);
+        void get_corresponding_pairs_fg(std::vector<dbrl_feature_sptr> &f1in,std::vector<dbrl_feature_sptr> &f2in, 
+                                        dbrl_correspondence * M,std::vector<dbrl_feature_sptr> &f1,
+                                        std::vector<dbrl_feature_sptr> &f2);
         void get_corresponding_pairs_bg(vil_image_view<unsigned char> & img1,vil_image_view<unsigned char> & img2,
-                                        vcl_vector<dbrl_feature_sptr> &f1,vcl_vector<dbrl_feature_sptr> &f2);
+                                        std::vector<dbrl_feature_sptr> &f1,std::vector<dbrl_feature_sptr> &f2);
 
 
 
     private:
-      vcl_vector<vil_image_view<unsigned char> >   bg_image_list_;
-      vcl_vector<vcl_vector<dbrl_feature_sptr> >   fg_point_set_list_;
-      vcl_vector<int> framenums_;
+      std::vector<vil_image_view<unsigned char> >   bg_image_list_;
+      std::vector<std::vector<dbrl_feature_sptr> >   fg_point_set_list_;
+      std::vector<int> framenums_;
 
     };
 #endif

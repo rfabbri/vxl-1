@@ -37,13 +37,13 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 
                        const bvis1_view_tableau_sptr& view );
 
-  void change_params_message(int direction, vcl_string param_name, double old_value, double new_value);
+  void change_params_message(int direction, std::string param_name, double old_value, double new_value);
 
 private:
 

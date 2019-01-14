@@ -28,11 +28,11 @@
 #define MANAGER bvis1_manager::instance()
 
 void dbdet_bvis1_util::
-load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
+load_edgemaps_into_frames(const std::vector<std::string> &edgemaps_fnames,
     bool use_filename)
 {
   for (unsigned v=0; v < edgemaps_fnames.size(); ++v) {
-    vcl_cout << "Reading " << edgemaps_fnames[v] << vcl_endl;
+    std::cout << "Reading " << edgemaps_fnames[v] << std::endl;
     bool bSubPixel = true;
     double scale=1.0;
     dbdet_edgemap_sptr em;
@@ -44,10 +44,10 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
         em);
 
     if (!retval) {
-      vcl_cerr << "Could not open edge file " << edgemaps_fnames[v] << vcl_endl;
+      std::cerr << "Could not open edge file " << edgemaps_fnames[v] << std::endl;
       return;
     }
-    vcl_cout << "N edgels: " << em->num_edgels() << vcl_endl;
+    std::cout << "N edgels: " << em->num_edgels() << std::endl;
 
     dbdet_edgemap_storage_sptr es = dbdet_edgemap_storage_new();
     es->set_edgemap(em);
@@ -64,20 +64,20 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
 }
 
 void dbdet_bvis1_util::
-load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames)
+load_curve_frags_into_frames(const std::vector<std::string> &cfrags_fnames, bool use_filenames)
 {
   for (unsigned v=0; v < cfrags_fnames.size(); ++v) {
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    std::vector< vsol_spatial_object_2d_sptr > contours;
 
-    vcl_string ext = vul_file::extension(cfrags_fnames[v]);
+    std::string ext = vul_file::extension(cfrags_fnames[v]);
     if (ext == ".vsl") { // binary format
       vsl_b_ifstream bp_in(cfrags_fnames[v].c_str());
       if (!bp_in) {
-        vcl_cout << " Error opening file  " << cfrags_fnames[v] << vcl_endl;
+        std::cout << " Error opening file  " << cfrags_fnames[v] << std::endl;
         return;
       }
 
-      vcl_cout << "Opened vsl file " << cfrags_fnames[v] <<  " for reading" << vcl_endl;
+      std::cout << "Opened vsl file " << cfrags_fnames[v] <<  " for reading" << std::endl;
 
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->b_read(bp_in);
@@ -102,7 +102,7 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool u
       os->set_EM(EM);
 
       if (!EM) { 
-        vcl_cerr << "SEL storage read problem" << vcl_endl;
+        std::cerr << "SEL storage read problem" << std::endl;
         return;
       }
       
@@ -125,10 +125,10 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool u
       // use .cemv on the same files
       bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
       if (!retval) {
-        vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;
+        std::cerr << "Could not open frag file " << cfrags_fnames[v] << std::endl;
         return;
       }
-      vcl_cout << "N curves: " << contours.size() << vcl_endl;
+      std::cout << "N curves: " << contours.size() << std::endl;
 
       vidpro1_vsol2D_storage_sptr cs = vidpro1_vsol2D_storage_new();
       cs->add_objects(contours, cfrags_fnames[v]);

@@ -1,9 +1,9 @@
 #include "dbru_run_osl_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -60,16 +60,16 @@ bool dbru_run_osl_process::get_tree(dbskr_tree_sptr& tree1, vsol_polygon_2d_sptr
     //  if this length halves, use 0.2/4
     //  if this length doubles use 0.2*4
     poly1->compute_bounding_box();
-    int w = (int)vcl_floor(poly1->get_max_x()-poly1->get_min_x()+0.5);
-    int h = (int)vcl_floor(poly1->get_max_y()-poly1->get_min_y()+0.5);
-    vcl_cout << "w: " << w << " h: " << h << vcl_endl;
-    pruning_threshold = float(vcl_pow((2*(w+h))/100.0f, 2)*base_thres_);
+    int w = (int)std::floor(poly1->get_max_x()-poly1->get_min_x()+0.5);
+    int h = (int)std::floor(poly1->get_max_y()-poly1->get_min_y()+0.5);
+    std::cout << "w: " << w << " h: " << h << std::endl;
+    pruning_threshold = float(std::pow((2*(w+h))/100.0f, 2)*base_thres_);
   }
 
   if (use_Amir_shock_extraction_)
     sg1 = dbsk2d_compute_shocks(poly1, pruning_threshold);
   else {  // do the ugly system call for now
-    vcl_ofstream of(TEMP_CON);
+    std::ofstream of(TEMP_CON);
     of << "CONTOUR\nCLOSE\n";  of << poly1->size() << "\n";
     for (unsigned int i = 0; i<poly1->size(); i++) {
       vgl_point_2d<double> p = poly1->vertex(i)->get_p();
@@ -78,16 +78,16 @@ bool dbru_run_osl_process::get_tree(dbskr_tree_sptr& tree1, vsol_polygon_2d_sptr
     of.close();
 
     char command[1000];       
-    vcl_sprintf(command, COMMAND, pruning_threshold);
-    vcl_cout << "command: " << command << vcl_endl;
+    std::sprintf(command, COMMAND, pruning_threshold);
+    std::cout << "command: " << command << std::endl;
     system(command);
 
     dbsk2d_xshock_graph_fileio loader;
     sg1 = loader.load_xshock_graph(TEMP_ESF);
   }   
-  vcl_cout << "Number of vertices in shock graph1: " << sg1->number_of_vertices() << vcl_endl;
+  std::cout << "Number of vertices in shock graph1: " << sg1->number_of_vertices() << std::endl;
   if (sg1->number_of_vertices() == 0) {
-    vcl_cout << "shock graph has 0 vertices!! exiting\n";
+    std::cout << "shock graph has 0 vertices!! exiting\n";
     return false;
   }
   tree1->acquire(sg1);
@@ -125,7 +125,7 @@ dbru_run_osl_process::dbru_run_osl_process()
       !parameters()->add( "if rigid alignment, number of obs to try randomly: " , "-Nob", 10 ) 
       //!parameters()->add( "Camera image pixel range (in bits): " , "-imagebits" , 8) 
       ) {
-    vcl_cerr << "ERROR: Adding parameters in dbru_run_osl_process::dbru_run_osl_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbru_run_osl_process::dbru_run_osl_process()" << std::endl;
   }
 }
 
@@ -152,7 +152,7 @@ bool dbru_run_osl_process::execute()
   parameters()->get_value( "-increment" , increment_ );
   int image_bits = 8;
   parameters()->get_value("-imagebits", image_bits);
-  max_value_ = float(vcl_pow(double(2.0), double(image_bits))-1);
+  max_value_ = float(std::pow(double(2.0), double(image_bits))-1);
   
   parameters()->get_value( "-rms" , rms_ );
   R_ = 10.0f;
@@ -180,11 +180,11 @@ bool dbru_run_osl_process::execute()
  
   unsigned int size = osl_storage->get_osl_size();
   if (query_object_id_ < 0 || query_object_id_ >= size) {
-    vcl_cout << "query object id " << query_object_id_ << " is not valid, OSL size is: " << size <<vcl_endl;
+    std::cout << "query object id " << query_object_id_ << " is not valid, OSL size is: " << size <<std::endl;
     return false;
   }
   if (database_object_id_ < 0 || database_object_id_ >= size) {
-    vcl_cout << "database object id " << database_object_id_ << " is not valid, OSL size is: " << size <<vcl_endl;
+    std::cout << "database object id " << database_object_id_ << " is not valid, OSL size is: " << size <<std::endl;
     return false;
   }
   
@@ -192,11 +192,11 @@ bool dbru_run_osl_process::execute()
   dbru_object_sptr d_obj = osl_storage->get_object(database_object_id_);
 
   if (q_obj->n_observations() <= 0) {
-    vcl_cout << "Observations of query object with id " << query_object_id_ << " are not created, exiting!\n";
+    std::cout << "Observations of query object with id " << query_object_id_ << " are not created, exiting!\n";
     return false;
   }
   if (d_obj->n_observations() <= 0) {
-    vcl_cout << "Observations of database object with id " << database_object_id_ << " are not created, exiting!\n";
+    std::cout << "Observations of database object with id " << database_object_id_ << " are not created, exiting!\n";
     return false;
   }
   vsol_polygon_2d_sptr poly1 = q_obj->get_polygon(query_polygon_id_);
@@ -208,11 +208,11 @@ bool dbru_run_osl_process::execute()
   dbskr_tree_sptr tree1, tree2;
   if (shock_ || shock_pmi_) {
     if (!get_tree(tree1, poly1)) {
-      vcl_cout << "Unable to generate tree for query object\n";
+      std::cout << "Unable to generate tree for query object\n";
       return false;
     }
     if (!get_tree(tree2, poly2)) {
-      vcl_cout << "Unable to generate tree for database object\n";
+      std::cout << "Unable to generate tree for database object\n";
       return false;
     }
   }
@@ -241,7 +241,7 @@ bool dbru_run_osl_process::execute()
   else                                             //query //database
     //info = dbskr_object_matcher::minfo_rigid_alignment(obs1, obs2, dx_, dr_, ds_, output_sptr1, output_sptr2, output_sptr3, true);
     info = dbskr_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, dx_, dr_, ds_, ratio_, Nob_, output_sptr1, output_sptr2, output_sptr3, true);
-  vcl_cout << "Mutual info: " << info << vcl_endl;
+  std::cout << "Mutual info: " << info << std::endl;
 
   clear_output();
   dbru_rcor_storage_sptr rcor_storage = dbru_rcor_storage_new();

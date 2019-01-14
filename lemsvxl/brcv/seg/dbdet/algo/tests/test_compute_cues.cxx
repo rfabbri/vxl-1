@@ -1,8 +1,8 @@
 // This is brcv/seg/dbdet/tests/test_compute_cues.cxx
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vil/vil_convert.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -24,12 +24,12 @@ static const double tolerance=1e-3;
 void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap_edg, dbdet_edgemap_sptr &edgemap_cem)
 {
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
+  std::string root = dbtest_root_dir();
+  std::string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
 
-  vcl_string image_path = base_path + "2018.jpg";
-  vcl_string frags_path = base_path + "2018.cem";
-  vcl_string edge_path = base_path + "2018.edg";
+  std::string image_path = base_path + "2018.jpg";
+  std::string frags_path = base_path + "2018.cem";
+  std::string edge_path = base_path + "2018.edg";
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
@@ -48,8 +48,8 @@ void cues_test()
 
   dbdet_curve_fragment_cues cues(img, (*edgemap_sptr));
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string cues_path = root + "/brcv/seg/dbdet/algo/tests/test_data/cues.txt";
+  std::string root = dbtest_root_dir();
+  std::string cues_path = root + "/brcv/seg/dbdet/algo/tests/test_data/cues.txt";
   
   vnl_matrix<double> gt_cues =
     static_cast<vnl_matrix<double> > (vnl_file_matrix<double>(cues_path.c_str()));

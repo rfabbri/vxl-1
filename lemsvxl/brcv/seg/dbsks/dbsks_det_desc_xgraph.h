@@ -20,7 +20,7 @@
 #include <dborl/dborl_det_desc.h>
 #include <dbsks/dbsks_det_desc_xgraph_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 // ============================================================================
@@ -44,7 +44,7 @@ public:
   //: destructor
   virtual ~dbsks_det_desc_xgraph(){};
 
-  virtual vcl_string is_a() const { return "dbsks_det_desc_xgraph"; }
+  virtual std::string is_a() const { return "dbsks_det_desc_xgraph"; }
 
   //: Return bounding box of the detection
   virtual vsol_box_2d_sptr bbox();
@@ -63,8 +63,8 @@ public:
     this->xgraph_ = xgraph;
   }
 
-  vcl_vector<double> conf_vec(){return this->conf_vec_;}
-  void set_conf_vec(vcl_vector<double> conf_vec)
+  std::vector<double> conf_vec(){return this->conf_vec_;}
+  void set_conf_vec(std::vector<double> conf_vec)
   {
 	this->conf_vec_ = conf_vec;
   }
@@ -77,7 +77,7 @@ protected:
   vsol_box_2d_sptr bbox_;
   double confidence_;
   dbsksp_xshock_graph_sptr xgraph_; 
-  vcl_vector<double> conf_vec_;
+  std::vector<double> conf_vec_;
 };
 
 

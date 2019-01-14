@@ -43,7 +43,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: handle events
   bool handle( const vgui_event & e, 
@@ -63,9 +63,9 @@ protected:
   vgui_image_tableau_sptr tableau_;
   vidpro1_image_storage_sptr storage_;
 
-  vcl_vector< vsol_point_2d_sptr > bound_box_vert;
-  vcl_vector< vgl_point_2d<double> > drawnvert;
-  vcl_vector< vsol_point_2d_sptr > drawnvert_so;
+  std::vector< vsol_point_2d_sptr > bound_box_vert;
+  std::vector< vgl_point_2d<double> > drawnvert;
+  std::vector< vsol_point_2d_sptr > drawnvert_so;
 
   vgui_event_condition gesture_add_vert_;
   vgui_event_condition gesture_close_polyg_;

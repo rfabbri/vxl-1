@@ -57,7 +57,7 @@ dbcri_whole_process::dbcri_whole_process()
     //!parameters()->add( "Include Borders" ,   "-sinclude_borders" ,   (bool)dp.borderp ) 
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -85,7 +85,7 @@ dbcri_whole_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbcri_whole_process::name()
 {
   return "dbcri_whole";
@@ -93,9 +93,9 @@ dbcri_whole_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbcri_whole_process::get_input_type()
+std::vector< std::string > dbcri_whole_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vsol2D" );
   to_return.push_back( "image" );
@@ -105,9 +105,9 @@ vcl_vector< vcl_string > dbcri_whole_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbcri_whole_process::get_output_type()
+std::vector< std::string > dbcri_whole_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vtol2D" );
   to_return.push_back( "vsol2D" );
@@ -154,10 +154,10 @@ dbcri_whole_process::execute()
 {
   if(0)
     for (int i=7;i<12;i++) {
-      vcl_cout<<"--------N is: "<<i<<vcl_endl;
+      std::cout<<"--------N is: "<<i<<std::endl;
       genarate_table(i) ;
 
-      vcl_cout<<"------------------------"<<vcl_endl;
+      std::cout<<"------------------------"<<std::endl;
     }
     if (0) {
       int frame_N;
@@ -178,10 +178,10 @@ dbcri_whole_process::execute()
 
     if (!default_wc_flag&&wc_path.path=="") return 0;
     if (!default_wc_flag && 0 /************/) {
-      vcl_string wc_filename = wc_path.path;
-      vcl_ifstream fp(wc_filename.c_str());
+      std::string wc_filename = wc_path.path;
+      std::ifstream fp(wc_filename.c_str());
       if (!fp) {
-        vcl_cout<<" Unable to Open "<< wc_filename <<vcl_endl;
+        std::cout<<" Unable to Open "<< wc_filename <<std::endl;
         return false;
       }
       vnl_double_3x4 C;
@@ -210,8 +210,8 @@ dbcri_whole_process::execute()
     }
     else if (!default_wc_flag ){
 
-      //    vcl_cout<<vul_file::dirname(wc_path);
-      vcl_string wc_filename = wc_path.path;
+      //    std::cout<<vul_file::dirname(wc_path);
+      std::string wc_filename = wc_path.path;
       // test if fname is a directory
       //vul_file::exists
 
@@ -223,13 +223,13 @@ dbcri_whole_process::execute()
 
       for ( ; fn; ++fn) 
       {
-        vcl_string input_file = fn();
+        std::string input_file = fn();
 
         if (r1.find(input_file.c_str())&&r2.find(input_file.c_str())||r11.find(input_file.c_str())&&r2.find(input_file.c_str()) )
         {
-          vcl_ifstream fp(input_file.c_str());
+          std::ifstream fp(input_file.c_str());
           if (!fp) {
-            vcl_cout<<" Unable to Open "<< wc_filename <<vcl_endl;
+            std::cout<<" Unable to Open "<< wc_filename <<std::endl;
             return false;
           }
           vnl_double_3x4 C;
@@ -252,13 +252,13 @@ dbcri_whole_process::execute()
           //P1=C;
           WC_=C;
 
-          vcl_cout<<"World Camera: "<<WC_<<vcl_endl;
+          std::cout<<"World Camera: "<<WC_<<std::endl;
         }
 
         else
         {
 
-          // vcl_cout<<" error # 12: Unable to Open "<< wc_filename<<vcl_endl;
+          // std::cout<<" error # 12: Unable to Open "<< wc_filename<<std::endl;
           // return false;
           //  
         }
@@ -271,18 +271,18 @@ dbcri_whole_process::execute()
     }
     // if(vnl_det(vnl_double_3x3(WC_.extract(3,3))) < 0) {
     //     WC_ *= -1;
-    //     vcl_cout<<"WC_ *= -1 ***** right hand camera *****"<<vcl_endl;
-    //     vcl_cout<<WC_<<vcl_endl;
+    //     std::cout<<"WC_ *= -1 ***** right hand camera *****"<<std::endl;
+    //     std::cout<<WC_<<std::endl;
     // }
 
 
 
     ////////////////////////
 
-    vcl_cout<<  input_data_.size() <<vcl_endl;
+    std::cout<<  input_data_.size() <<std::endl;
     if ( input_data_.size() != 1 ){
-      vcl_cout<<  input_data_.size() <<vcl_endl;
-      vcl_cout << "In dbcri_whole_process::execute() - "
+      std::cout<<  input_data_.size() <<std::endl;
+      std::cout << "In dbcri_whole_process::execute() - "
         << "not exactly one input images \n";
       return false;
     }
@@ -298,7 +298,7 @@ dbcri_whole_process::execute()
     // get image from the storage class
     vidpro_image_storage_sptr frame_image;
     frame_image.vertical_cast(input_data_[0][1]);
-    vcl_cout<<input_data_[0][1]<<vcl_endl;
+    std::cout<<input_data_[0][1]<<std::endl;
 
 
     //Dongjin Han 7-10-06 convert color image into grey
@@ -316,7 +316,7 @@ dbcri_whole_process::execute()
     else if ( image_view.nplanes() == 1 ) {
       image_rsc = image_view;
     } else {
-      vcl_cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << vcl_endl;
+      std::cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << std::endl;
       return false;
     }
 
@@ -349,10 +349,10 @@ dbcri_whole_process::execute()
       double left_x=100000.0f, left_y=100000.00f,right_x=-100000.0f,right_y=-100000.0f;
 
       // parse through all the vsol classes and save curve objects only
-      vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
+      std::vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
 
       // test if only one region
-      // vcl_cout<<frame<<" "<<vsol_list.size()<<vcl_endl;
+      // std::cout<<frame<<" "<<vsol_list.size()<<std::endl;
 
 
 
@@ -384,7 +384,7 @@ dbcri_whole_process::execute()
             for (unsigned int i=1; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
             {
 
-              //vcl_cout<<"b: "<<b<<" "<<"i: "<<i<<vcl_endl;
+              //std::cout<<"b: "<<b<<" "<<"i: "<<i<<std::endl;
               vsol_point_2d_sptr p1 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i-1);
               vsol_point_2d_sptr p2 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
               ////psfile1.line((float)p1->x(), (float)p1->y(), (float)p2->x(), (float)p2->y());
@@ -441,7 +441,7 @@ dbcri_whole_process::execute()
         vil_convert_to_grey_using_rgb_weighting(image_sptr->get_view()) );
 
       if(grey_view.nplanes() != 1) {
-        vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+        std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
         return false;
       }
 
@@ -453,13 +453,13 @@ dbcri_whole_process::execute()
       detector.SetImage(img);
       //process edges
       detector.DoContour();
-      vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+      std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
 
       if (!edges)
         return false;
 
 
-      vcl_cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << vcl_endl;
+      std::cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << std::endl;
 
       // create the output storage class
       vidpro_vtol_storage_sptr output_vtol = vidpro_vtol_storage_new();
@@ -468,7 +468,7 @@ dbcri_whole_process::execute()
 
 
 
-      for ( vcl_vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
+      for ( std::vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
         e_itr != edges->end();  ++e_itr ) {
           vtol_topology_object_sptr edge = e_itr->ptr();  
 
@@ -500,7 +500,7 @@ dbcri_whole_process::execute()
 
 static bool approx_equal(double a, double b, double thresh=1e-12)
 {
-  return vcl_abs(b-a) < thresh;
+  return std::abs(b-a) < thresh;
 }
 
 
@@ -515,8 +515,8 @@ dbcri_whole_process::finish()
 
   if(vnl_det(vnl_double_3x3(WC_.extract(3,3))) < 0) {
     WC_ *= -1;
-    vcl_cout<<"WC_ *= -1 ***** right hand camera *****"<<vcl_endl;
-    vcl_cout<<WC_<<vcl_endl;
+    std::cout<<"WC_ *= -1 ***** right hand camera *****"<<std::endl;
+    std::cout<<WC_<<std::endl;
   }
 
 
@@ -538,9 +538,9 @@ dbcri_whole_process::finish()
   if(frame >= input_data_.size())
     return false;
 
-  //vcl_vector<vil_image_view<float> > images;
-  vcl_vector <vgl_point_2d <double> >pts_upper;
-  vcl_vector <vgl_point_2d <double> >pts_lower;
+  //std::vector<vil_image_view<float> > images;
+  std::vector <vgl_point_2d <double> >pts_upper;
+  std::vector <vgl_point_2d <double> >pts_lower;
 
 
   //4-21-07
@@ -548,8 +548,8 @@ dbcri_whole_process::finish()
   pts_lower_line_.clear();
   //
 
-  //vcl_vector <vsol_digital_curve_2d_sptr> dcl;
-  vcl_vector <dbecl_episeg_sptr> episegl;
+  //std::vector <vsol_digital_curve_2d_sptr> dcl;
+  std::vector <dbecl_episeg_sptr> episegl;
   int N;
   double *x1,*y1;
 
@@ -570,10 +570,10 @@ dbcri_whole_process::finish()
     double left_x=100000.0f, left_y=100000.00f,right_x=-100000.0f,right_y=-100000.0f;
 
     // parse through all the vsol classes and save curve objects only
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
 
     // test if only one region
-    // vcl_cout<<frame<<" "<<vsol_list.size()<<vcl_endl;
+    // std::cout<<frame<<" "<<vsol_list.size()<<std::endl;
 
 
 
@@ -636,7 +636,7 @@ dbcri_whole_process::finish()
             for (unsigned int i=1; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
             {
 
-              //vcl_cout<<"b: "<<b<<" "<<"i: "<<i<<vcl_endl;
+              //std::cout<<"b: "<<b<<" "<<"i: "<<i<<std::endl;
               vsol_point_2d_sptr p1 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i-1);
               vsol_point_2d_sptr p2 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
               ////psfile1.line((float)p1->x(), (float)p1->y(), (float)p2->x(), (float)p2->y());
@@ -645,7 +645,7 @@ dbcri_whole_process::finish()
               y1[i]=p2->y();
 
 
-              //     vcl_cout<<p1->x()<<" "<<p1->y()<<" "<<p2->x()<<" "<<p2->y()<<vcl_endl;
+              //     std::cout<<p1->x()<<" "<<p1->y()<<" "<<p2->x()<<" "<<p2->y()<<std::endl;
 
               //episeg generation
               //
@@ -689,7 +689,7 @@ dbcri_whole_process::finish()
     // small y number -> upper line
     vgl_point_2d <double> p_lower(max_x,max_y);
     vgl_point_2d <double> p_upper(min_x,min_y);
-    vcl_cout<<p_upper<<" "<<p_lower<<vcl_endl;
+    std::cout<<p_upper<<" "<<p_lower<<std::endl;
     pts_upper.push_back(p_upper);
     pts_lower.push_back(p_lower);
 
@@ -728,7 +728,7 @@ dbcri_whole_process::finish()
 
   reg_upper.fit();
   reg_lower.fit();
-  //vcl_cout << "fitting error " << reg.get_rms_error() << '\n'
+  //std::cout << "fitting error " << reg.get_rms_error() << '\n'
   //         << "fitted line " << reg.get_line() << '\n';
 
   //
@@ -743,7 +743,7 @@ dbcri_whole_process::finish()
   line_upper_=line_upper;
   line_lower_=line_lower;
 
-  vcl_cout<<"line upper and lower: "<<line_upper_<<" and "<<line_lower_<<vcl_endl;
+  std::cout<<"line upper and lower: "<<line_upper_<<" and "<<line_lower_<<std::endl;
   double a,b,c,d;
   a=line_upper.b()/line_upper.a(); b=line_upper.c()/line_upper.a();
   c=line_lower.b()/line_lower.a(); d=line_lower.c()/line_lower.a();
@@ -788,8 +788,8 @@ dbcri_whole_process::finish()
     epi_x_WC_=epi_x_;
     epi_y_WC_=epi_y_;
 
-    vcl_cout<<"epipole from camera used"<<vcl_endl;
-    vcl_cout<< epi_x_<<" "<<epi_y_<<vcl_endl;
+    std::cout<<"epipole from camera used"<<std::endl;
+    std::cout<< epi_x_<<" "<<epi_y_<<std::endl;
 
 
   }
@@ -809,8 +809,8 @@ dbcri_whole_process::finish()
     epi_x_= manual_epi_x;
     epi_y_= manual_epi_y;
 
-    vcl_cout<<"Manual epipole used"<<vcl_endl;
-    vcl_cout<< epi_x_<<" "<<epi_y_<<vcl_endl;
+    std::cout<<"Manual epipole used"<<std::endl;
+    std::cout<< epi_x_<<" "<<epi_y_<<std::endl;
 
 
   }
@@ -831,26 +831,26 @@ dbcri_whole_process::finish()
   parameters()->get_value( "-epi_offset_flag" , epi_offset_flag );
   double epi_offset=(epi_x_WC_-epi_x_)*(epi_x_WC_-epi_x_)+
     (epi_y_WC_-epi_y_)*(epi_y_WC_-epi_y_);
-  vcl_cout<<"epi WC: "<<epi_x_WC_<<" "<<epi_y_WC_<<" || epi con tangent: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
-  vcl_cerr<<"epi WC: "<<epi_x_WC_<<" "<<epi_y_WC_<<" || epi con tangent: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
-  vcl_cerr<<"*%* epi_offset: "<<vcl_sqrt(epi_offset)<<vcl_endl;
-  vcl_cout<<"*%* epi_offset: "<<vcl_sqrt(epi_offset)<<vcl_endl;
+  std::cout<<"epi WC: "<<epi_x_WC_<<" "<<epi_y_WC_<<" || epi con tangent: "<<epi_x_<<" "<<epi_y_<<std::endl;
+  std::cerr<<"epi WC: "<<epi_x_WC_<<" "<<epi_y_WC_<<" || epi con tangent: "<<epi_x_<<" "<<epi_y_<<std::endl;
+  std::cerr<<"*%* epi_offset: "<<std::sqrt(epi_offset)<<std::endl;
+  std::cout<<"*%* epi_offset: "<<std::sqrt(epi_offset)<<std::endl;
 
   if (epi_offset>100000.0 && epi_offset_flag)  //default NOT use
   {
     epi_x_=epi_x_WC_;
     epi_y_=epi_y_WC_;
-    vcl_cerr<<"**big epi_offset** using WC epipole"<<vcl_endl;
-    vcl_cout<<"**big epi_offset** using WC epipole"<<vcl_endl;
+    std::cerr<<"**big epi_offset** using WC epipole"<<std::endl;
+    std::cout<<"**big epi_offset** using WC epipole"<<std::endl;
   }
   else
   {
-    vcl_cerr<<" epi_offset small enough to use tangential epipole"<<vcl_endl;
-    vcl_cout<<" epi_offset small enough to use tangential epipole"<<vcl_endl;
+    std::cerr<<" epi_offset small enough to use tangential epipole"<<std::endl;
+    std::cout<<" epi_offset small enough to use tangential epipole"<<std::endl;
   }
 
   vgl_point_2d<double> epipole(epi_x_,epi_y_);
-  vcl_cout<<"epipole: "<<epipole<<vcl_endl;
+  std::cout<<"epipole: "<<epipole<<std::endl;
   vgl_point_2d <double> uppoint(1000.0,(-1000.0f*line_upper_.a()-line_upper_.c())/line_upper_.b());
   vgl_point_2d <double> lowpoint(1000.0,(-1000.0f*line_lower_.a()-line_lower_.c())/line_lower_.b());
   vsol_line_2d_sptr newhline_upper= new vsol_line_2d(epipole,uppoint);
@@ -859,9 +859,9 @@ dbcri_whole_process::finish()
 
   //get angle..
 
-  vcl_cout<<uppoint<<" "<<lowpoint<<vcl_endl;
-  theta_pos_=-vcl_atan((uppoint.y()-epi_y_)/(1000.0f-epi_x_));
-  theta_neg_=-vcl_atan((lowpoint.y()-epi_y_)/(1000.0f-epi_x_));
+  std::cout<<uppoint<<" "<<lowpoint<<std::endl;
+  theta_pos_=-std::atan((uppoint.y()-epi_y_)/(1000.0f-epi_x_));
+  theta_neg_=-std::atan((lowpoint.y()-epi_y_)/(1000.0f-epi_x_));
 
   //4-21-07
   angle_modify();
@@ -882,13 +882,13 @@ dbcri_whole_process::finish()
   /////////////////////////////////////////////////////////////////////////////////////
 
   //generate polygon again...TT..
-  vcl_vector <double *> veh_con_pol_x,veh_con_pol_y;
-  vcl_vector <int> Nl;
+  std::vector <double *> veh_con_pol_x,veh_con_pol_y;
+  std::vector <int> Nl;
   for (unsigned con_i=0;con_i<veh_cons_.size();con_i++)
   {
 
     //66////for epi seg for con file..bbbb
-    vcl_vector <vsol_digital_curve_2d_sptr>  dclist;
+    std::vector <vsol_digital_curve_2d_sptr>  dclist;
     vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d;
 
 
@@ -907,7 +907,7 @@ dbcri_whole_process::finish()
         vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d;
         //dc->add_vertex(new vsol_point_2d(px[p],py[p]));
 
-        // vcl_cout<<px[p]<<" "<<py[p]<<vcl_endl;
+        // std::cout<<px[p]<<" "<<py[p]<<std::endl;
       }
 
 
@@ -942,19 +942,19 @@ dbcri_whole_process::finish()
     // output_data_[frame].push_back(output_vsol);
 
 
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
 
     vidpro_vtol_storage_sptr frame_vtol;
 
     ////frame_image.vertical_cast(input_data_[frame][0]);
-    vcl_cout<<output_data_.size()<<vcl_endl;
-    vcl_cout<<output_data_[frame].size()<<vcl_endl;
-    vcl_cout<<input_data_[frame][0]<<vcl_endl;
+    std::cout<<output_data_.size()<<std::endl;
+    std::cout<<output_data_[frame].size()<<std::endl;
+    std::cout<<input_data_[frame][0]<<std::endl;
     frame_vtol.vertical_cast(input_data_[frame][2]);
-    vcl_cout<<frame_vtol<<vcl_endl;
-    vcl_vector <vsol_digital_curve_2d_sptr>  dclist;
+    std::cout<<frame_vtol<<std::endl;
+    std::vector <vsol_digital_curve_2d_sptr>  dclist;
 
-    vcl_vector<vtol_edge_2d_sptr> edges;
+    std::vector<vtol_edge_2d_sptr> edges;
 
 
     bool distance_measure;
@@ -964,7 +964,7 @@ dbcri_whole_process::finish()
     float ec_size=4.0;
     parameters()->get_value( "-ec_size" , ec_size );
 
-    for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
+    for ( std::set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
       itr != frame_vtol->end();  ++itr ) {
 
         vtol_edge *edge = (*itr)->cast_to_edge();
@@ -1001,8 +1001,8 @@ dbcri_whole_process::finish()
 
                 double xx=(*ec)[i].get_x();double yy=(*ec)[i].get_y();
 
-                //vcl_cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<vcl_endl;
-                //vcl_cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<vcl_endl;
+                //std::cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<std::endl;
+                //std::cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<std::endl;
 
 
 
@@ -1031,13 +1031,13 @@ dbcri_whole_process::finish()
 
                 }
                 dc->add_vertex(new vsol_point_2d(ec->edgel(i).get_pt()));
-                // vcl_cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<vcl_endl;
+                // std::cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<std::endl;
 
                 sh_pts.push_back(new vsol_point_2d(ec->edgel(i).get_pt()));
               }
               // Cover the digital curve with episegs
-              /*  vcl_vector<dbecl_episeg_sptr> eps = factory.convert_curve(dc);
-              for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
+              /*  std::vector<dbecl_episeg_sptr> eps = factory.convert_curve(dc);
+              for(std::vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
               itr != eps.end();  ++itr)
               episegs.push_back(*itr);
               }*/
@@ -1113,8 +1113,8 @@ dbcri_whole_process::finish()
           epi_x_WC_=epi_x_;
           epi_y_WC_=epi_y_;
 
-          vcl_cout<<"epipole from camera used"<<vcl_endl;
-          vcl_cout<< epi_x_<<" "<<epi_y_<<vcl_endl;
+          std::cout<<"epipole from camera used"<<std::endl;
+          std::cout<< epi_x_<<" "<<epi_y_<<std::endl;
 
 
         }
@@ -1193,7 +1193,7 @@ dbcri_whole_process::finish()
       }
 
       /// epi constraint onto plane..
-      /*vcl_vector <vnl_double_2> epi_const=epi_constraint_on_the_plane(  epi_x_, epi_y_, 100, 2);
+      /*std::vector <vnl_double_2> epi_const=epi_constraint_on_the_plane(  epi_x_, epi_y_, 100, 2);
       //read epi pole from old result to file to save searching time.. 5-26-07
       bool epi_from_result_file;
       parameters()->get_value( "-epi_from_result_file" , epi_from_result_file );
@@ -1237,8 +1237,8 @@ dbcri_whole_process::finish()
 
 
 
-      vcl_cout<<"epi plane constraint"<<vcl_endl;
-      vcl_cout<<"linear search max val epi is : "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+      std::cout<<"epi plane constraint"<<std::endl;
+      std::cout<<"linear search max val epi is : "<<epi_x_<<" "<<epi_y_<<std::endl;
       }*/
 
     }
@@ -1261,7 +1261,7 @@ dbcri_whole_process::finish()
       if (manual_epi_x!=0.0 && manual_epi_y!=0.0) {
         epi_x_= manual_epi_x;
         epi_y_= manual_epi_y;
-        vcl_cout << "**manual epi** " << epi_x_<<" "<<epi_y_ << " for test" << vcl_endl;
+        std::cout << "**manual epi** " << epi_x_<<" "<<epi_y_ << " for test" << std::endl;
 
       }
 
@@ -1275,8 +1275,8 @@ dbcri_whole_process::finish()
     //temp end
 
 
-    vcl_cout << "**search process** " <<  t.real() << " msecs." << vcl_endl;
-    vcl_cerr << "**search process** " <<  t.real() << " msecs." << vcl_endl;
+    std::cout << "**search process** " <<  t.real() << " msecs." << std::endl;
+    std::cerr << "**search process** " <<  t.real() << " msecs." << std::endl;
 
 
     frame = 0;
@@ -1333,7 +1333,7 @@ dbcri_whole_process::finish()
 
         double test_b=display_sample_front_[i].fm2;
 
-        //8-1-2006// vcl_cout<<vcl_sqrt(x_dist*x_dist+y_dist*y_dist)<<" "<<c<<vcl_endl;
+        //8-1-2006// std::cout<<std::sqrt(x_dist*x_dist+y_dist*y_dist)<<" "<<c<<std::endl;
 
         double temp_r=0;
 
@@ -1347,7 +1347,7 @@ dbcri_whole_process::finish()
 
         vsol_point_2d_sptr point_mid=new vsol_point_2d(epipole.x()+b/c*x_dist,epipole.y()+b/c*y_dist);
 
-        //8-1-2006//vcl_cout<<(epipole.x()+b/c*x_dist)<<" "<<epipole.y()+b/c*y_dist<<vcl_endl;
+        //8-1-2006//std::cout<<(epipole.x()+b/c*x_dist)<<" "<<epipole.y()+b/c*y_dist<<std::endl;
         //output_vsol->add_object( line_mid->cast_to_spatial_object() ,"output_midline" );
         output_vsol->add_object( point_mid->cast_to_spatial_object() ,"output_midpoint" );
 
@@ -1378,41 +1378,41 @@ dbcri_whole_process::finish()
     ///******************************************
 
 
-    vcl_vector <vgl_point_3d<double> > point_3d_for_out;
+    std::vector <vgl_point_3d<double> > point_3d_for_out;
     double real_scale;
 
     for (unsigned d3_rec=0;d3_rec<2;d3_rec++) {
 
       /////////////////////////////
-      vcl_cout<<"RECON ============================================== "<<vcl_endl;
-      vcl_cout<<"RECON METHOD: "<< d3_rec<<" epipole used:"<<epi_x_<<" "<<epi_y_<<vcl_endl;
-      vcl_cout<<"RECON ============================================== "<<vcl_endl;
+      std::cout<<"RECON ============================================== "<<std::endl;
+      std::cout<<"RECON METHOD: "<< d3_rec<<" epipole used:"<<epi_x_<<" "<<epi_y_<<std::endl;
+      std::cout<<"RECON ============================================== "<<std::endl;
       init_cameras(tnew_selected);
 
       ////////////////////////////
 
       pts_3d_a_.clear();pts_3d_.clear();
-      vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+      std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
-      d3_build_points(vcl_numeric_limits<double>::infinity(), point_3d_mean_pts); //no threshold
+      d3_build_points(std::numeric_limits<double>::infinity(), point_3d_mean_pts); //no threshold
 
       ///////////get bb and orentation and scale 
 
-      vcl_cout<<"Delete Contour 1============================================== "<<vcl_endl;
+      std::cout<<"Delete Contour 1============================================== "<<std::endl;
       delete_contour();
-      vcl_cout<<"Delete Contour 1 END======================================== "<<vcl_endl;
+      std::cout<<"Delete Contour 1 END======================================== "<<std::endl;
       pts_3d_.clear();
       int point_counter=0;
       for (unsigned i=0;i <pts_3d_a_.size();i++) {
         point_3d_for_out.push_back(pts_3d_a_[i].pt3d);
-        //vcl_cout<<point_3d_mean_pts_with_scale[i]<<vcl_endl;
+        //std::cout<<point_3d_mean_pts_with_scale[i]<<std::endl;
 
         if (0) {
-          vcl_cout<<pts_3d_a_[i].pt3d<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].position<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].angle<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].weight<<vcl_endl;
-          vcl_cout<<vcl_endl;
+          std::cout<<pts_3d_a_[i].pt3d<<std::endl;
+          std::cout<<pts_3d_a_[i].position<<std::endl;
+          std::cout<<pts_3d_a_[i].angle<<std::endl;
+          std::cout<<pts_3d_a_[i].weight<<std::endl;
+          std::cout<<std::endl;
 
         }
 
@@ -1426,21 +1426,21 @@ dbcri_whole_process::finish()
         }
       }
 
-      vcl_cout<<"## step0 ## points used(all-> weight..) counter 1: "<<point_counter<<vcl_endl;
+      std::cout<<"## step0 ## points used(all-> weight..) counter 1: "<<point_counter<<std::endl;
 
-      vcl_cout<<"get BB and scale # 1.5============================================== "<<vcl_endl;
+      std::cout<<"get BB and scale # 1.5============================================== "<<std::endl;
       get_BB_and_scale(pts_3d_,pts_3d_);
-      vcl_cout<<"get BB and scale # 1.5     end   =================================== "<<vcl_endl;
+      std::cout<<"get BB and scale # 1.5     end   =================================== "<<std::endl;
 
       init_cameras(tnew_selected,scale_);
 
       ////////////////////////////
 
       pts_3d_a_.clear();pts_3d_.clear();
-      //      vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
-      // vcl_vector <vgl_point_3d<double> > point_3d_for_out;
+      //      std::vector <vgl_point_3d<double> > point_3d_mean_pts;
+      // std::vector <vgl_point_3d<double> > point_3d_for_out;
       //*//d3_build_points(10000000000000.0, point_3d_mean_pts);
-      d3_build_points(vcl_numeric_limits<double>::infinity(), point_3d_mean_pts); //no threshold
+      d3_build_points(std::numeric_limits<double>::infinity(), point_3d_mean_pts); //no threshold
       //d3_build_points_edge_con(10000000000000.0, point_3d_mean_pts);
       //d3_build_points_edge(10000000000000.0, point_3d_mean_pts);
 
@@ -1448,14 +1448,14 @@ dbcri_whole_process::finish()
       point_counter=0;
       for (unsigned i=0;i <pts_3d_a_.size();i++) {
         point_3d_for_out.push_back(pts_3d_a_[i].pt3d);
-        //vcl_cout<<point_3d_mean_pts_with_scale[i]<<vcl_endl;
+        //std::cout<<point_3d_mean_pts_with_scale[i]<<std::endl;
 
         if (0) {
-          vcl_cout<<pts_3d_a_[i].pt3d<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].position<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].angle<<vcl_endl;
-          vcl_cout<<pts_3d_a_[i].weight<<vcl_endl;
-          vcl_cout<<vcl_endl;
+          std::cout<<pts_3d_a_[i].pt3d<<std::endl;
+          std::cout<<pts_3d_a_[i].position<<std::endl;
+          std::cout<<pts_3d_a_[i].angle<<std::endl;
+          std::cout<<pts_3d_a_[i].weight<<std::endl;
+          std::cout<<std::endl;
 
         }
 
@@ -1468,19 +1468,19 @@ dbcri_whole_process::finish()
 
         }
       }
-      vcl_cout<<"## step1.5 ## points used(all-> weight..) counter 1:"<<point_counter<<vcl_endl;
+      std::cout<<"## step1.5 ## points used(all-> weight..) counter 1:"<<point_counter<<std::endl;
 
 
 
       ///////////get bb and orentation and scale 
 
-      vcl_cout<<"Delete Contour 1.5============================================== "<<vcl_endl;
+      std::cout<<"Delete Contour 1.5============================================== "<<std::endl;
       delete_contour();
-      vcl_cout<<"Delete Contour 1.5 END======================================== "<<vcl_endl;
+      std::cout<<"Delete Contour 1.5 END======================================== "<<std::endl;
 
 
       ////////////////////////////////////////////////////////
-      vcl_cout<<"RECON METHOD: "<< d3_rec<<" SCALE: "<<scale_<<vcl_endl; //this is real scale.../////
+      std::cout<<"RECON METHOD: "<< d3_rec<<" SCALE: "<<scale_<<std::endl; //this is real scale.../////
       real_scale=scale_;   // so i copy and save  /////
       ///////     use it out_pts = out_pts x real scale  /////
       ////////////////////////////////////////////////////////
@@ -1489,11 +1489,11 @@ dbcri_whole_process::finish()
 
 
       // redo it with new scale
-      vcl_cout<<"init camera with correct scale ==================================== "<<vcl_endl;
+      std::cout<<"init camera with correct scale ==================================== "<<std::endl;
       init_cameras(tnew_selected,scale_);
-      vcl_cout<<"init camera with correct scale end   ============================== "<<vcl_endl;
+      std::cout<<"init camera with correct scale end   ============================== "<<std::endl;
 
-      vcl_vector <vgl_point_3d<double> > point_3d_mean_pts_with_scale;
+      std::vector <vgl_point_3d<double> > point_3d_mean_pts_with_scale;
 
 
 
@@ -1511,18 +1511,18 @@ dbcri_whole_process::finish()
       // this can result in something strange...
       ///******************************************
 
-      vcl_cout<<" d3_build_points(error_recon, point_3d_mean_pts_with_scale,true)============ "<<vcl_endl;
+      std::cout<<" d3_build_points(error_recon, point_3d_mean_pts_with_scale,true)============ "<<std::endl;
       d3_build_points(error_recon, point_3d_mean_pts_with_scale,true); // here pts_3d_a_ is   cleared
-      vcl_cout<<"d3_build_points(------> recon method id "<<d3_rec<<"    pts_3d_a_ size "<<pts_3d_a_.size()<<vcl_endl;
-      vcl_cout<<" d3_build_points(error_recon, point_3d_mean_pts_with_scale,true)  end  ===== "<<vcl_endl;
+      std::cout<<"d3_build_points(------> recon method id "<<d3_rec<<"    pts_3d_a_ size "<<pts_3d_a_.size()<<std::endl;
+      std::cout<<" d3_build_points(error_recon, point_3d_mean_pts_with_scale,true)  end  ===== "<<std::endl;
 
       int recon_flag;
       parameters()->get_value( "-recon_flag" , recon_flag );//int
       recon_flag=d3_rec;
-      vcl_cout<<"recon_flag: "<<recon_flag<<vcl_endl;
+      std::cout<<"recon_flag: "<<recon_flag<<std::endl;
 
 
-      vcl_cout<<"Final Reconstruction ========================================= "<<vcl_endl;
+      std::cout<<"Final Reconstruction ========================================= "<<std::endl;
 
       if (recon_flag==1) //both aabb
         d3_build_points_edge_con(error_recon, point_3d_mean_pts_with_scale,false); // here pts_3d_a_ is not  cleared, just addition
@@ -1542,19 +1542,19 @@ dbcri_whole_process::finish()
       //return false;
 
 
-      vcl_cout<<"*&*&*&* recon method id "<<d3_rec<<"    pts_3d_a_ size "<<pts_3d_a_.size()<<vcl_endl;
+      std::cout<<"*&*&*&* recon method id "<<d3_rec<<"    pts_3d_a_ size "<<pts_3d_a_.size()<<std::endl;
       if (0) for (unsigned i=0;i <pts_3d_a_.size();i++) {//d3_build_points  clear pts_3_a_
 
 
 
 
         if (1){ 
-          vcl_cout<<"recon method id "<<d3_rec<<"   aa#a"<<pts_3d_a_[i].pt3d<<vcl_endl;
-          vcl_cout<<"aapos   # "<<pts_3d_a_[i].position<<vcl_endl;
-          vcl_cout<<"aaangle # "<<pts_3d_a_[i].angle<<vcl_endl;
-          vcl_cout<<"aaweight# "<<pts_3d_a_[i].weight<<vcl_endl;
-          vcl_cout<<"aausage # "<<pts_3d_a_[i].usage<<vcl_endl;
-          vcl_cout<<vcl_endl;
+          std::cout<<"recon method id "<<d3_rec<<"   aa#a"<<pts_3d_a_[i].pt3d<<std::endl;
+          std::cout<<"aapos   # "<<pts_3d_a_[i].position<<std::endl;
+          std::cout<<"aaangle # "<<pts_3d_a_[i].angle<<std::endl;
+          std::cout<<"aaweight# "<<pts_3d_a_[i].weight<<std::endl;
+          std::cout<<"aausage # "<<pts_3d_a_[i].usage<<std::endl;
+          std::cout<<std::endl;
 
         }
       }
@@ -1564,29 +1564,29 @@ dbcri_whole_process::finish()
 
 
 
-      vcl_cout<<"# Delete Contour 2 (0.5 ft delete)  ========================================= "<<vcl_endl;
-      vcl_cout<<"*&*&*&* recon method id "<<d3_rec<<" pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
+      std::cout<<"# Delete Contour 2 (0.5 ft delete)  ========================================= "<<std::endl;
+      std::cout<<"*&*&*&* recon method id "<<d3_rec<<" pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
       //delete_contour(.5);//delete 1 feet high too.
       delete_contour_05(.5);//delete 1 feet high too.
-      vcl_cout<<"# Delete Contour 2 (0.5 ft delete) end  ========================================= "<<vcl_endl;
+      std::cout<<"# Delete Contour 2 (0.5 ft delete) end  ========================================= "<<std::endl;
 
-      vcl_cout<<"=+=+=+=+=+=+"<<vcl_endl;
+      std::cout<<"=+=+=+=+=+=+"<<std::endl;
       pts_3d_.clear(); point_counter=0;
       pts_3d_front_.clear();pts_3d_rear_.clear();
-      vcl_cout<<"##final recon points size: "<<pts_3d_a_.size()<<vcl_endl;
-      vcl_cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
+      std::cout<<"##final recon points size: "<<pts_3d_a_.size()<<std::endl;
+      std::cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
       for (unsigned i=0;i <pts_3d_a_.size();i++) {//d3_build_points  clear pts_3_a_
 
-        //vcl_cout<<point_3d_mean_pts_with_scale[i]<<vcl_endl;
+        //std::cout<<point_3d_mean_pts_with_scale[i]<<std::endl;
 
 
         if (1){ 
-          vcl_cout<<"#"<<pts_3d_a_[i].pt3d<<vcl_endl;
-          vcl_cout<<"pos   # "<<pts_3d_a_[i].position<<vcl_endl;
-          vcl_cout<<"angle # "<<pts_3d_a_[i].angle<<vcl_endl;
-          vcl_cout<<"weight# "<<pts_3d_a_[i].weight<<vcl_endl;
-          vcl_cout<<"usage # "<<pts_3d_a_[i].usage<<vcl_endl;
-          vcl_cout<<vcl_endl;
+          std::cout<<"#"<<pts_3d_a_[i].pt3d<<std::endl;
+          std::cout<<"pos   # "<<pts_3d_a_[i].position<<std::endl;
+          std::cout<<"angle # "<<pts_3d_a_[i].angle<<std::endl;
+          std::cout<<"weight# "<<pts_3d_a_[i].weight<<std::endl;
+          std::cout<<"usage # "<<pts_3d_a_[i].usage<<std::endl;
+          std::cout<<std::endl;
 
         }
 
@@ -1602,9 +1602,9 @@ dbcri_whole_process::finish()
             pts_3d_front_.push_back(pts_3d_a_[i].pt3d);
         }
       } 
-      vcl_cout<<"points used counter del05 2: "<<point_counter<<vcl_endl;
-      vcl_cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
-      vcl_cout<<"=+=+=+=+=+=+"<<vcl_endl;
+      std::cout<<"points used counter del05 2: "<<point_counter<<std::endl;
+      std::cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
+      std::cout<<"=+=+=+=+=+=+"<<std::endl;
 
 
 
@@ -1616,7 +1616,7 @@ dbcri_whole_process::finish()
 
         pts_3d_front_.clear();pts_3d_rear_.clear();
         for (unsigned i=0;i <pts_3d_a_.size();i++) {//d3_build_points  clear pts_3_a_
-          //vcl_cout<<point_3d_mean_pts_with_scale[i]<<vcl_endl;
+          //std::cout<<point_3d_mean_pts_with_scale[i]<<std::endl;
           ////////////
           if (pts_3d_a_[i].usage) {
 
@@ -1633,10 +1633,10 @@ dbcri_whole_process::finish()
 
 
 
-      vcl_cout<<"get BB and scale # 2  ============================================ "<<vcl_endl;
-      vcl_cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
+      std::cout<<"get BB and scale # 2  ============================================ "<<std::endl;
+      std::cout<<"*&*&*&* recon method id "<<d3_rec<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
       get_BB_and_scale(pts_3d_,pts_3d_);
-      vcl_cout<<"get BB and scale # 2 end  ======================================== "<<vcl_endl;
+      std::cout<<"get BB and scale # 2 end  ======================================== "<<std::endl;
 
 
 
@@ -1647,12 +1647,12 @@ dbcri_whole_process::finish()
       parameters()->get_value( "-wc_filename" , wc_path );
 
 
-      vcl_string out_file_dir=vul_file::dirname(wc_path.path);
+      std::string out_file_dir=vul_file::dirname(wc_path.path);
 
 
 
-      vcl_string vr_dir;
-      vcl_string mode;
+      std::string vr_dir;
+      std::string mode;
       if (recon_flag==0) { vr_dir="contour_0_"; mode="0";}
       else if (recon_flag==1) {vr_dir="correct_1_";mode="1";}
       else if (recon_flag==2) {vr_dir="messy_2_";mode="2";}
@@ -1687,28 +1687,28 @@ dbcri_whole_process::finish()
 
       //_strtime( tmpbuf );
 
-      vcl_string strDate;
+      std::string strDate;
       strDate=tmpbuf;
       //_strdate(dateStr);
       //strDate=dateStr;
       //strDate= strDate.replace("/","-");
 
-      vcl_cout<<"date is: "<<today<<" "<<strDate<<vcl_endl;
+      std::cout<<"date is: "<<today<<" "<<strDate<<std::endl;
 
       vr_dir+=strDate;
 
       vul_file::make_directory(vr_dir);
 
 
-      vcl_string vrml_file =out_file_dir+"//"+vr_dir+"//"+"del-AEC-"+mode+".wrl";
-      vcl_string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
-      vcl_string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
-      vcl_string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
+      std::string vrml_file =out_file_dir+"//"+vr_dir+"//"+"del-AEC-"+mode+".wrl";
+      std::string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
+      std::string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
+      std::string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
 
-      vcl_ofstream vrml(vrml_file.c_str());
-      vcl_ofstream vrmlf(vrml_filef.c_str());
-      vcl_ofstream vrmlr(vrml_filer.c_str());
-      vcl_ofstream vrml3(vrml_file3.c_str());
+      std::ofstream vrml(vrml_file.c_str());
+      std::ofstream vrmlf(vrml_filef.c_str());
+      std::ofstream vrmlr(vrml_filer.c_str());
+      std::ofstream vrml3(vrml_file3.c_str());
 
       write_vrml_2(vrml,pts_3d_);
       write_vrml_2(vrmlf,pts_3d_front_);
@@ -1768,7 +1768,7 @@ dbcri_whole_process::finish()
       //aTube.set_length(4.0);
       //aTube.ranger(pts_3d_rear_);
 
-      vcl_string bb_dir =out_file_dir+"//"+vr_dir;
+      std::string bb_dir =out_file_dir+"//"+vr_dir;
 
 
       // solve_z has to come before bb_box camera writing routine. 
@@ -1813,13 +1813,13 @@ dbcri_whole_process::finish()
       vrml3.close();
 
 
-      vcl_cout<<"RECON END============================================== "<<vcl_endl;
-      vcl_cout<<"RECON END============================================== "<<vcl_endl;
-      vcl_cout<<"RECON END============================================== "<<vcl_endl;
+      std::cout<<"RECON END============================================== "<<std::endl;
+      std::cout<<"RECON END============================================== "<<std::endl;
+      std::cout<<"RECON END============================================== "<<std::endl;
 
     }/// d3_recon loop end
 
-    //vcl_cout << "process " << t.real() << " msecs." << vcl_endl;
+    //std::cout << "process " << t.real() << " msecs." << std::endl;
 
 
     // print_bb_and_camera();
@@ -1829,7 +1829,7 @@ dbcri_whole_process::finish()
 
     /////////// vrml generation
     //  return(1);
-    vcl_ofstream out("out-AEC.wrl");
+    std::ofstream out("out-AEC.wrl");
 
     if(!out.is_open()){
       std::cerr<<"Cannot open the input file.\n";
@@ -1875,7 +1875,7 @@ dbcri_whole_process::finish()
 
     for (unsigned i=0;i <point_3d_for_out.size();i++) {
       //point_3d_mean_pts[i].set(scale_*point_3d_mean_pts[i].x(),scale_*point_3d_mean_pts[i].y(),scale_*point_3d_mean_pts[i].z());
-      //vcl_cout<<point_3d_mean_pts[i]<<vcl_endl;
+      //std::cout<<point_3d_mean_pts[i]<<std::endl;
 
 
 
@@ -1902,11 +1902,11 @@ dbcri_whole_process::finish()
       out<<" } \n"; 
       out<<"} \n"; 
 
-    }vcl_cout<<"#### end ####"<<vcl_endl;
+    }std::cout<<"#### end ####"<<std::endl;
 
 
 
-    vcl_cout<<"epipole used was_ "<< epi_x_<<" "<<epi_y_<<vcl_endl;
+    std::cout<<"epipole used was_ "<< epi_x_<<" "<<epi_y_<<std::endl;
     return true;
 
 }
@@ -1919,8 +1919,8 @@ dbcri_whole_process::finish()
 ///// cross ratio calculetion
 
 double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
-                                    vcl_vector <vsol_digital_curve_2d_sptr> &dcl_,
-                                    vcl_vector <vcl_vector <dbecl_episeg_sptr> > &episeglist,
+                                    std::vector <vsol_digital_curve_2d_sptr> &dcl_,
+                                    std::vector <std::vector <dbecl_episeg_sptr> > &episeglist,
                                     dbecl_epipole_sptr &epipole)
 {
 
@@ -1962,12 +1962,12 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
 
   C=WC_;
 
-  //vcl_cout<<C<<vcl_endl;
+  //std::cout<<C<<std::endl;
   vnl_double_3x3 M = C.extract(3,3);
 
   //T = vnl_inverse(M_in) * epi;
   T = vnl_inverse(M) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -1990,13 +1990,13 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
 
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1,selected2;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
   dbecl_episeg_point  x0pt,x1pt,x2pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
 
@@ -2017,11 +2017,11 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=-100.0f;x1=-100.0f;x2=-100.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang){
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -2034,7 +2034,7 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)>x1) {
@@ -2046,7 +2046,7 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)>x2) {
@@ -2055,8 +2055,8 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
           x2pt.set_point(episeglist[fm3][i2],episeglist[fm3][i2]->index(ang));
 
           ///////////////debug
-          //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
-          //vcl_cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<vcl_endl;
+          //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
+          //std::cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<std::endl;
         }
       }
     }
@@ -2074,26 +2074,26 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     /////////////////////////
     /////////////////////////
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    /////  vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    /////  std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     /// dont have camera yet.. 3d reconstruction is wrong..
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
 
-    //// 9-21-2006 commented out ///// vcl_cout<<"contour point:"<<point_3d<<vcl_endl;
+    //// 9-21-2006 commented out ///// std::cout<<"contour point:"<<point_3d<<std::endl;
     point_3d_front_list.push_back(point_3d);
     ratios temp_ratios;
     temp_ratios.angle=ang;
@@ -2128,11 +2128,11 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=10000.0f;x1=10000.0f;x2=10000.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang) {
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -2147,7 +2147,7 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)<x1) {
@@ -2160,7 +2160,7 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)<x2) {
@@ -2174,25 +2174,25 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
     // if 3 points are not determined continue
     if (!selected0 || !selected1 || !selected2) continue;
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    //vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    //std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
-    //vcl_cout<<point_3d<<vcl_endl;
-    //vcl_cout<<"1 vs 3: "<<point_3d<<vcl_endl;
+    //std::cout<<point_3d<<std::endl;
+    //std::cout<<"1 vs 3: "<<point_3d<<std::endl;
     point_3d_rear_list.push_back(point_3d);
 
     ratios temp_ratios;
@@ -2227,9 +2227,9 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
 
 
 
-  //for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
+  //for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
   //  C_itr != cameras_.end();  ++C_itr )
-  //vcl_cout << "Camera " << C_itr->first << "\n" << C_itr->second << vcl_endl;
+  //std::cout << "Camera " << C_itr->first << "\n" << C_itr->second << std::endl;
 
 
   double r=histogram_method_for_finding_cross_ratio(ratios_front_list,ratios_rear_list);
@@ -2273,8 +2273,8 @@ double dbcri_whole_process::cameras(int fm1, int fm2, int fm3,
 ///// accurate.....cross ratio calculetion
 
 double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
-                                         vcl_vector <vcl_vector <vsol_digital_curve_2d_sptr> >&dcl_edge_,
-                                         vcl_vector <vcl_vector <dbecl_episeg_sptr> > &episeglist_edge_,
+                                         std::vector <std::vector <vsol_digital_curve_2d_sptr> >&dcl_edge_,
+                                         std::vector <std::vector <dbecl_episeg_sptr> > &episeglist_edge_,
                                          dbecl_epipole_sptr &epipole, double r_from_contour,double tiny_number)
 {
 
@@ -2316,12 +2316,12 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 
   C=WC_;
 
-  //vcl_cout<<C<<vcl_endl;
+  //std::cout<<C<<std::endl;
   vnl_double_3x3 M = C.extract(3,3);
 
   //T = vnl_inverse(M_in) * epi;
   T = vnl_inverse(M) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -2344,15 +2344,15 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
   good_ratios_edge net;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_front_list;
 
 
-  //vcl_vector <ratios> ratios_rear_list;
+  //std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1,selected2;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
   dbecl_episeg_point  x0pt,x1pt,x2pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
 
@@ -2367,18 +2367,18 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
   angle_modify();
   for (double ang=-theta_pos_-MARGIN_ ; ang<-theta_neg_+MARGIN_ ; ang+=ang_ /*was .002*/) { ////angle goes clockwise..
 
-    //vcl_vector <vcl_vector <double> >network_vectvect;
+    //std::vector <std::vector <double> >network_vectvect;
     angle_index++;
     selected0=false; 
     selected1=false;
     selected2=false;
     x0=-100.0f;x1=-100.0f;x2=-100.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
       selected0=false;
 
-      //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
       if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
 
         if (episeglist_edge_[fm1][i0]->dist(ang)){
@@ -2394,7 +2394,7 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 
       for (unsigned i1=0;i1<episeglist_edge_[fm2].size();i1++) {
         selected1=false;
-        //vcl_cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<vcl_endl;
+        //std::cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<std::endl;
         if (episeglist_edge_[fm2][i1]->min_angle() <=ang&&episeglist_edge_[fm2][i1]->max_angle() >=ang) {
           //if (episeglist_edge_[fm2][i1]->index(ang)) {
           if (episeglist_edge_[fm2][i1]->dist(ang)) {
@@ -2408,7 +2408,7 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 
         for (unsigned i2=0;i2<episeglist_edge_[fm3].size();i2++) {
           selected2=false;
-          //vcl_cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<std::endl;
           if (episeglist_edge_[fm3][i2]->min_angle() <=ang&&episeglist_edge_[fm3][i2]->max_angle() >=ang) {
             //if (episeglist_edge_[fm3][i2]->index(ang)) {
             if (episeglist_edge_[fm3][i2]->dist(ang)) {
@@ -2417,8 +2417,8 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
               x2pt.set_point(episeglist_edge_[fm3][i2],episeglist_edge_[fm3][i2]->index(ang));
 
               ///////////////debug
-              //vcl_cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<vcl_endl;
-              //vcl_cout<<episeglist_edge_[fm3][i2]<<" "<<episeglist_edge_[fm3][i2]->index(ang)<<vcl_endl;
+              //std::cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<std::endl;
+              //std::cout<<episeglist_edge_[fm3][i2]<<" "<<episeglist_edge_[fm3][i2]->index(ang)<<std::endl;
             }
           }
           else continue;
@@ -2431,16 +2431,16 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 
           double c=x2; double  b=x1;double a=x0;
 
-          double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-          double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-          double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+          double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+          double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+          double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
           ratio=(b-a)/(c-a)*c/b;
 
-          //..//vcl_cout<<ratio-r_from_contour<<vcl_endl;
-          if ( vcl_fabs(ratio-r_from_contour) < tiny_number) {
+          //..//std::cout<<ratio-r_from_contour<<std::endl;
+          if ( std::fabs(ratio-r_from_contour) < tiny_number) {
 
-            vcl_vector <double> net_vector;
+            std::vector <double> net_vector;
 
             //////****************///////
             net_vector.push_back(ang);
@@ -2460,7 +2460,7 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 
             vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
 
-            // vcl_cout<<"3d point from edge element:"<<point_3d<<vcl_endl;
+            // std::cout<<"3d point from edge element:"<<point_3d<<std::endl;
             point_3d_front_list.push_back(point_3d);
             ratios temp_ratios;
             temp_ratios.angle=ang;
@@ -2477,13 +2477,13 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
             temp_ratios.fm3=fm3;
 
             ratios_front_list.push_back(temp_ratios);
-            //vcl_cout<<"[x0~x2pt.pt()]: "<<x0pt.pt()<<" "<<x1pt.pt()<<" "<<x2pt.pt()<<vcl_endl;
+            //std::cout<<"[x0~x2pt.pt()]: "<<x0pt.pt()<<" "<<x1pt.pt()<<" "<<x2pt.pt()<<std::endl;
 
           }
           else continue;
 
-          if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-          /////  vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+          if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+          /////  std::cout<< ang <<" "<<ratio<<std::endl;
 
         } //fm3
 
@@ -2505,7 +2505,7 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
   ///////////
 
 
-  vcl_cout<<fm1<<" "<<fm2<<" "<<fm3<<" "<<ratios_front_list.size()<<vcl_endl;
+  std::cout<<fm1<<" "<<fm2<<" "<<fm3<<" "<<ratios_front_list.size()<<std::endl;
   double r=histogram_method_for_finding_cross_ratio_finer(ratios_front_list);
 
 
@@ -2537,8 +2537,8 @@ double dbcri_whole_process::cameras_accu(int fm1, int fm2, int fm3,
 ///// cross ratio calculetion
 
 double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
-                                         vcl_vector <vsol_digital_curve_2d_sptr> &dcl_,
-                                         vcl_vector <vcl_vector <dbecl_episeg_sptr> > &episeglist,
+                                         std::vector <vsol_digital_curve_2d_sptr> &dcl_,
+                                         std::vector <std::vector <dbecl_episeg_sptr> > &episeglist,
                                          dbecl_epipole_sptr &epipole)
 {
 
@@ -2576,12 +2576,12 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
 
   C=WC_;
 
-  //vcl_cout<<C<<vcl_endl;
+  //std::cout<<C<<std::endl;
   vnl_double_3x3 M = C.extract(3,3);
 
   //T = vnl_inverse(M_in) * epi;
   T = vnl_inverse(M) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -2604,13 +2604,13 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
 
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1,selected2;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
   dbecl_episeg_point  x0pt,x1pt,x2pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
 
@@ -2627,11 +2627,11 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=-100.0f;x1=-100.0f;x2=-100.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang){
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -2644,7 +2644,7 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)>x1) {
@@ -2656,7 +2656,7 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)>x2) {
@@ -2665,8 +2665,8 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
           x2pt.set_point(episeglist[fm3][i2],episeglist[fm3][i2]->index(ang));
 
           ///////////////debug
-          //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
-          //vcl_cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<vcl_endl;
+          //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
+          //std::cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<std::endl;
         }
       }
     }
@@ -2684,26 +2684,26 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     /////////////////////////
     /////////////////////////
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    /////  vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    /////  std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     /// dont have camera yet.. 3d reconstruction is wrong..
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
 
-    //// 9-21-2006 commented out ///// vcl_cout<<"contour point:"<<point_3d<<vcl_endl;
+    //// 9-21-2006 commented out ///// std::cout<<"contour point:"<<point_3d<<std::endl;
     point_3d_front_list.push_back(point_3d);
     ratios temp_ratios;
     temp_ratios.angle=ang;
@@ -2738,11 +2738,11 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=10000.0f;x1=10000.0f;x2=10000.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang) {
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -2757,7 +2757,7 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)<x1) {
@@ -2770,7 +2770,7 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)<x2) {
@@ -2784,25 +2784,25 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
     // if 3 points are not determined continue
     if (!selected0 || !selected1 || !selected2) continue;
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    //vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    //std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
-    //vcl_cout<<point_3d<<vcl_endl;
-    //vcl_cout<<"1 vs 3: "<<point_3d<<vcl_endl;
+    //std::cout<<point_3d<<std::endl;
+    //std::cout<<"1 vs 3: "<<point_3d<<std::endl;
     point_3d_rear_list.push_back(point_3d);
 
     ratios temp_ratios;
@@ -2837,9 +2837,9 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
 
 
 
-  //for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
+  //for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
   //  C_itr != cameras_.end();  ++C_itr )
-  //vcl_cout << "Camera " << C_itr->first << "\n" << C_itr->second << vcl_endl;
+  //std::cout << "Camera " << C_itr->first << "\n" << C_itr->second << std::endl;
 
 
   double r=histogram_method_for_finding_cross_ratio(ratios_front_list,ratios_rear_list);
@@ -2884,9 +2884,9 @@ double dbcri_whole_process::cameras_fast(int fm1, int fm2, int fm3,
 
 ///// accurate.....cross ratio calculetion
 
-double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl_vector <vnl_float_3> > > & simple_wedge_list, int fm1, int fm2, int fm3,
-                                              vcl_vector <vcl_vector <vsol_digital_curve_2d_sptr> >&dcl_edge_,
-                                              vcl_vector <vcl_vector <dbecl_episeg_sptr> > &episeglist_edge_,
+double dbcri_whole_process::cameras_accu_fast(const std::vector < std::vector <std::vector <vnl_float_3> > > & simple_wedge_list, int fm1, int fm2, int fm3,
+                                              std::vector <std::vector <vsol_digital_curve_2d_sptr> >&dcl_edge_,
+                                              std::vector <std::vector <dbecl_episeg_sptr> > &episeglist_edge_,
                                               dbecl_epipole_sptr &epipole, double r_from_contour,double tiny_number)
 {
 
@@ -2923,12 +2923,12 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
 
   C=WC_;
 
-  //vcl_cout<<C<<vcl_endl;
+  //std::cout<<C<<std::endl;
   vnl_double_3x3 M = C.extract(3,3);
 
   //T = vnl_inverse(M_in) * epi;
   T = vnl_inverse(M) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -2951,15 +2951,15 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
   good_ratios_edge net;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_front_list;
 
 
-  //vcl_vector <ratios> ratios_rear_list;
+  //std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1,selected2;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
   //dbecl_episeg_point  x0pt,x1pt,x2pt;
 
 
@@ -2977,27 +2977,27 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
   angle_modify();
   for (double ang=-theta_pos_-MARGIN_ ; ang<-theta_neg_+MARGIN_ ; ang+=ang_ /*was .002*/) { ////angle goes clockwise..
 
-    //vcl_vector <vcl_vector <double> >network_vectvect;
+    //std::vector <std::vector <double> >network_vectvect;
     angle_index++;
     selected0=false; 
     selected1=false;
     selected2=false;
     x0=-100.0f;x1=-100.0f;x2=-100.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     ////////////////////
     ////////////////////  11-30-2007
-    vcl_vector <vnl_float_3> sw1=simple_wedge_list[fm1][angle_index];
-    vcl_vector <vnl_float_3> sw2=simple_wedge_list[fm2][angle_index];
-    vcl_vector <vnl_float_3> sw3=simple_wedge_list[fm3][angle_index];
+    std::vector <vnl_float_3> sw1=simple_wedge_list[fm1][angle_index];
+    std::vector <vnl_float_3> sw2=simple_wedge_list[fm2][angle_index];
+    std::vector <vnl_float_3> sw3=simple_wedge_list[fm3][angle_index];
 
-    //vcl_cerr<<ang<< "\t"<<sw1.size()<<"\t "<<sw2.size()<<" \t"<<sw3.size()<<vcl_endl;
+    //std::cerr<<ang<< "\t"<<sw1.size()<<"\t "<<sw2.size()<<" \t"<<sw3.size()<<std::endl;
     if (sw1.size()==0||sw2.size()==0||sw3.size()==0) continue;
 
     for (unsigned i0=0;i0<sw1.size();i0++) {
       //selected0=false;
 
-      //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
       // if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
 
       x0=sw1[i0][2];//dist
@@ -3023,8 +3023,8 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
           x2=sw3[i2][2];
 
           ///////////////debug
-          //vcl_cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<vcl_endl;
-          //vcl_cout<<episeglist_edge_[fm3][i2]<<" "<<episeglist_edge_[fm3][i2]->index(ang)<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm3][i2]->min_angle()<<" "<<episeglist_edge_[fm3][i2]->max_angle()<<std::endl;
+          //std::cout<<episeglist_edge_[fm3][i2]<<" "<<episeglist_edge_[fm3][i2]->index(ang)<<std::endl;
 
 
 
@@ -3035,16 +3035,16 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
 
           double c=x2; double  b=x1;double a=x0;
 
-          double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-          double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-          double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+          double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+          double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+          double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
           ratio=(b-a)/(c-a)*c/b;
 
-          //..//vcl_cout<<ratio-r_from_contour<<vcl_endl;
-          if ( vcl_fabs(ratio-r_from_contour) < tiny_number) {
+          //..//std::cout<<ratio-r_from_contour<<std::endl;
+          if ( std::fabs(ratio-r_from_contour) < tiny_number) {
 
-            vcl_vector <double> net_vector;
+            std::vector <double> net_vector;
 
             //////****************///////
             net_vector.push_back(ang);
@@ -3064,7 +3064,7 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
 
             vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt, P1, x2pt, P3);
 
-            // vcl_cout<<"3d point from edge element:"<<point_3d<<vcl_endl;
+            // std::cout<<"3d point from edge element:"<<point_3d<<std::endl;
             point_3d_front_list.push_back(point_3d);
             ratios temp_ratios;
             temp_ratios.angle=ang;
@@ -3081,13 +3081,13 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
             temp_ratios.fm3=fm3;
 
             ratios_front_list.push_back(temp_ratios);
-            //vcl_cout<<"[x0~x2pt.pt()]: "<<x0pt.pt()<<" "<<x1pt.pt()<<" "<<x2pt.pt()<<vcl_endl;
+            //std::cout<<"[x0~x2pt.pt()]: "<<x0pt.pt()<<" "<<x1pt.pt()<<" "<<x2pt.pt()<<std::endl;
 
           }
           else continue;
 
-          if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-          /////  vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+          if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+          /////  std::cout<< ang <<" "<<ratio<<std::endl;
 
         } //fm3
 
@@ -3109,7 +3109,7 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
   ///////////
 
 
-  vcl_cout<<fm1<<" "<<fm2<<" "<<fm3<<" "<<ratios_front_list.size()<<vcl_endl;
+  std::cout<<fm1<<" "<<fm2<<" "<<fm3<<" "<<ratios_front_list.size()<<std::endl;
   double r=histogram_method_for_finding_cross_ratio_finer(ratios_front_list);
 
 
@@ -3144,10 +3144,10 @@ double dbcri_whole_process::cameras_accu_fast(const vcl_vector < vcl_vector <vcl
 
 
 
-double dbcri_whole_process::episeg_simplify(vcl_vector <vcl_vector <vcl_vector <vnl_float_3> > >& epi_wedge_list_N)
+double dbcri_whole_process::episeg_simplify(std::vector <std::vector <std::vector <vnl_float_3> > >& epi_wedge_list_N)
 {
 
-  //vcl_vector <vcl_vector <float> > epi_wedge_list;
+  //std::vector <std::vector <float> > epi_wedge_list;
 
   vnl_double_3 epi;
 
@@ -3176,24 +3176,24 @@ double dbcri_whole_process::episeg_simplify(vcl_vector <vcl_vector <vcl_vector <
   angle_modify();
   for (unsigned fm1=0;fm1<episeglist_edge_.size();fm1++) {
 
-    vcl_vector <vcl_vector <vnl_float_3> >epi_wedge_list_angle;
+    std::vector <std::vector <vnl_float_3> >epi_wedge_list_angle;
 
     for (double ang=-theta_pos_-MARGIN_ ; ang<-theta_neg_+MARGIN_ ; ang+=ang_ /*was .002*/) { ////angle goes clockwise..
 
-      //vcl_vector <vcl_vector <double> >network_vectvect;
+      //std::vector <std::vector <double> >network_vectvect;
       angle_index++;
       selected0=false; 
       selected1=false;
       selected2=false;
       x0=-100.0f;x1=-100.0f;x2=-100.f;
-      //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+      //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
-      vcl_vector <vnl_float_3> epi_wedge_point;
+      std::vector <vnl_float_3> epi_wedge_point;
 
       for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
         selected0=false;
 
-        //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+        //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
         if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
 
           if (episeglist_edge_[fm1][i0]->dist(ang)){
@@ -3247,11 +3247,11 @@ double dbcri_whole_process::cross_ratio(dbecl_epipole_sptr &epipole,dbecl_episeg
 
 //: Write cameras and points to a file in VRML 2.0 for debugging
 void 
-dbcri_whole_process::write_vrml(const vcl_string& filename,
-                                //vcl_vector<vpgl_perspective_camera<double> >& cameras,
-                                vcl_vector<vgl_point_3d<double> > world_points)
+dbcri_whole_process::write_vrml(const std::string& filename,
+                                //std::vector<vpgl_perspective_camera<double> >& cameras,
+                                std::vector<vgl_point_3d<double> > world_points)
 {
-  vcl_ofstream os(filename.c_str());
+  std::ofstream os(filename.c_str());
   os << "#VRML V2.0 utf8\n\n";
   /*
   for(unsigned int i=0; i<cameras.size(); ++i){
@@ -3262,7 +3262,7 @@ dbcri_whole_process::write_vrml(const vcl_string& filename,
   R.set_row(2,-1.0*R.get_row(2));
   vgl_point_3d<double> ctr = cameras[i].get_camera_center();
   vnl_quaternion<double> ornt(R);
-  double fov = 2.0*vcl_max(vcl_atan(K[1][2]/K[1][1]), vcl_atan(K[0][2]/K[0][0]));
+  double fov = 2.0*std::max(std::atan(K[1][2]/K[1][1]), std::atan(K[0][2]/K[0][0]));
   os  << "Viewpoint {\n"
   << "  position    "<< ctr.x() << ' ' << ctr.y() << ' ' << ctr.z() << '\n'
   << "  orientation "<< ornt.axis() << ' '<< ornt.angle() << '\n'
@@ -3286,11 +3286,11 @@ dbcri_whole_process::write_vrml(const vcl_string& filename,
 }
 
 
-void dbcri_whole_process::write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
-                                       vcl_vector<vgl_point_3d<double> > pts_3d)
+void dbcri_whole_process::write_vrml_2(std::ofstream& out,//const std::string& filename,
+                                       std::vector<vgl_point_3d<double> > pts_3d)
 {
 
-  //  vcl_ofstream out(filename.c_str());
+  //  std::ofstream out(filename.c_str());
   //    if(!out.is_open()){
   //      std::cerr<<"Cannot open the input file.\n";
   //      return;
@@ -3335,7 +3335,7 @@ void dbcri_whole_process::write_vrml_2(vcl_ofstream& out,//const vcl_string& fil
 
   for (unsigned i=0;i <pts_3d.size();i++) {
     //point_3d_mean_pts[i].set(scale_*point_3d_mean_pts[i].x(),scale_*point_3d_mean_pts[i].y(),scale_*point_3d_mean_pts[i].z());
-    //vcl_cout<<point_3d_mean_pts[i]<<vcl_endl;
+    //std::cout<<point_3d_mean_pts[i]<<std::endl;
 
 
 
@@ -3366,16 +3366,16 @@ void dbcri_whole_process::write_vrml_2(vcl_ofstream& out,//const vcl_string& fil
   }
 
 
-  vcl_cout<<"#### write_vrml_2 end ####"<<vcl_endl;
+  std::cout<<"#### write_vrml_2 end ####"<<std::endl;
 }
 
 
 
 
-void dbcri_whole_process::write_vrml_3(vcl_ofstream& out)
+void dbcri_whole_process::write_vrml_3(std::ofstream& out)
 {
 
-  //  vcl_ofstream out(filename.c_str());
+  //  std::ofstream out(filename.c_str());
   //    if(!out.is_open()){
   //      std::cerr<<"Cannot open the input file.\n";
   //      return;
@@ -3417,10 +3417,10 @@ void dbcri_whole_process::write_vrml_3(vcl_ofstream& out)
 
   double radius=0.05;
   blue=1.0;
-  //vcl_vector <pts_3d_attribute>
+  //std::vector <pts_3d_attribute>
   for (unsigned i=0;i <pts_3d_a_.size();i++) {
     //point_3d_mean_pts[i].set(scale_*point_3d_mean_pts[i].x(),scale_*point_3d_mean_pts[i].y(),scale_*point_3d_mean_pts[i].z());
-    //vcl_cout<<point_3d_mean_pts[i]<<vcl_endl;
+    //std::cout<<point_3d_mean_pts[i]<<std::endl;
 
 
     radius=0.05;
@@ -3484,7 +3484,7 @@ void dbcri_whole_process::write_vrml_3(vcl_ofstream& out)
   }
 
 
-  vcl_cout<<"#### write_vrml_3 end ####"<<vcl_endl;
+  std::cout<<"#### write_vrml_3 end ####"<<std::endl;
 }
 
 
@@ -3492,19 +3492,19 @@ void dbcri_whole_process::write_vrml_3(vcl_ofstream& out)
 
 
 double 
-dbcri_whole_process::histogram_method_for_finding_cross_ratio(vcl_vector <ratios >& ratios_front_list, vcl_vector < ratios >& ratios_rear_list) 
+dbcri_whole_process::histogram_method_for_finding_cross_ratio(std::vector <ratios >& ratios_front_list, std::vector < ratios >& ratios_rear_list) 
 {
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin(BIN_SIZE_,0);
+  std::vector<int> bin(BIN_SIZE_,0);
   for (unsigned i=0;i<ratios_front_list.size(); i++) {
 
     ratios_front_list[i].label=false;
     double r=ratios_front_list[i].ratio;
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
-      bin[(int) vcl_floor(BIN_SIZE_*r)]++;
-    ratios_front_list[i].bin_number=vcl_floor(BIN_SIZE_*r);
-    if (DEBUG) vcl_cout<< ratios_front_list[i].bin_number<<vcl_endl;
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
+      bin[(int) std::floor(BIN_SIZE_*r)]++;
+    ratios_front_list[i].bin_number=std::floor(BIN_SIZE_*r);
+    if (DEBUG) std::cout<< ratios_front_list[i].bin_number<<std::endl;
   }
   // find max bin
   int max_bin=-100;
@@ -3536,9 +3536,9 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio(vcl_vector <ratios
   for (unsigned i=0;i<ratios_rear_list.size(); i++) {
     ratios_rear_list[i].label=false;
     double r=ratios_rear_list[i].ratio;
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
-      bin[(int) vcl_floor(BIN_SIZE_*r)]++;
-    ratios_rear_list[i].bin_number=vcl_floor(BIN_SIZE_*r);
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
+      bin[(int) std::floor(BIN_SIZE_*r)]++;
+    ratios_rear_list[i].bin_number=std::floor(BIN_SIZE_*r);
   }
   // find max bin
   max_bin=-100;
@@ -3566,7 +3566,7 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio(vcl_vector <ratios
 
   }
 
-  //vcl_cout<<mean_r/(double)counter<<vcl_endl;
+  //std::cout<<mean_r/(double)counter<<std::endl;
 
 
   //display_0_frame_=false; // display sample needed for 0 frame once..
@@ -3577,7 +3577,7 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio(vcl_vector <ratios
 
 
 double 
-dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(vcl_vector <ratios >& ratios_list) 
+dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(std::vector <ratios >& ratios_list) 
 {
 
 
@@ -3598,20 +3598,20 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(vcl_vector <
 
 
   double diff_r=max_r-min_r;
-  vcl_cout<<max_r<<" "<<min_r<<" "<<BIN_SIZE_/diff_r<<" "<<ratios_list.size()<<vcl_endl;
+  std::cout<<max_r<<" "<<min_r<<" "<<BIN_SIZE_/diff_r<<" "<<ratios_list.size()<<std::endl;
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin(BIN_SIZE_,0);
+  std::vector<int> bin(BIN_SIZE_,0);
   for (unsigned i=0;i<ratios_list.size(); i++) {
 
     ratios_list[i].label=false;
     double r=ratios_list[i].ratio-min_r;
 
-    //..// vcl_cout<<BIN_SIZE_*r/diff_r<<vcl_endl;
-    if (vcl_floor(BIN_SIZE_*r/diff_r)>=0&&vcl_floor(BIN_SIZE_*r/diff_r)<=99)
-      bin[(int) vcl_floor(BIN_SIZE_*r/diff_r)]++;
-    ratios_list[i].bin_number=vcl_floor(BIN_SIZE_*r/diff_r);
-    if (DEBUG) vcl_cout<< ratios_list[i].bin_number<<vcl_endl;
+    //..// std::cout<<BIN_SIZE_*r/diff_r<<std::endl;
+    if (std::floor(BIN_SIZE_*r/diff_r)>=0&&std::floor(BIN_SIZE_*r/diff_r)<=99)
+      bin[(int) std::floor(BIN_SIZE_*r/diff_r)]++;
+    ratios_list[i].bin_number=std::floor(BIN_SIZE_*r/diff_r);
+    if (DEBUG) std::cout<< ratios_list[i].bin_number<<std::endl;
   }
   // find max bin
   int max_bin=-100,second_max_bin=-100;
@@ -3625,10 +3625,10 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(vcl_vector <
       max_bin=bin[i];
       max_bin_id=i;
     }
-    vcl_cout<<bin[i]<<" ";
+    std::cout<<bin[i]<<" ";
   }
 
-  vcl_cout<<"->all # is:"<<bin_counter<<vcl_endl;
+  std::cout<<"->all # is:"<<bin_counter<<std::endl;
 
   /////////////////////
   /////////////////////
@@ -3664,14 +3664,14 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(vcl_vector <
   if (first_minus_second_>3) first_minus_second_=1.0;
   else first_minus_second_=0.0;
   first_minus_second_=max_bin;  //just using best one..
-  vcl_cout<<"distribution check:-->***  "<<first_minus_second_<<vcl_endl;
+  std::cout<<"distribution check:-->***  "<<first_minus_second_<<std::endl;
 
 
   bool histo_normal_flag;
   parameters()->get_value( "-histo_normal_flag" , histo_normal_flag );//int
   if (histo_normal_flag) {
     first_minus_second_=max_bin/bin_counter;  //normaization of histogram
-    vcl_cout<<"normalized distribution check: "<<first_minus_second_<<vcl_endl;
+    std::cout<<"normalized distribution check: "<<first_minus_second_<<std::endl;
   }
   ////////////////
   ////////////////
@@ -3696,7 +3696,7 @@ dbcri_whole_process::histogram_method_for_finding_cross_ratio_finer(vcl_vector <
 
   for (unsigned i=0;i<ratios_list.size(); i++) {
 
-    if (vcl_abs(ratios_list[i].ratio-mean_r/counter)<0.0001) {
+    if (std::abs(ratios_list[i].ratio-mean_r/counter)<0.0001) {
       ratios_list[i].label=true;
       //mean_r+=ratios_list[i].ratio;
       //counter++;
@@ -3747,7 +3747,7 @@ void dbcri_whole_process::init_cameras(vnl_vector <double> t,double scale)
   vnl_double_3 T;
 
   T = vnl_inverse(M_in) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -3785,7 +3785,7 @@ void dbcri_whole_process::init_cameras(vnl_vector <double> t,double scale)
     vnl_double_3x3 M = C.extract(3,3);
     //T = vnl_inverse(M_in) * epi;
     T = vnl_inverse(M) * epi;
-    T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+    T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
     T /= T_normal;
     //T*=0.0111554;//test
     // T=-T;
@@ -3798,8 +3798,8 @@ void dbcri_whole_process::init_cameras(vnl_vector <double> t,double scale)
   }
 
   cameras_.push_back(P1);
-  vcl_cout<<"camera scale:" <<scale<<vcl_endl;
-  vcl_cout<<"\n"<<P1<<vcl_endl;
+  std::cout<<"camera scale:" <<scale<<std::endl;
+  std::cout<<"\n"<<P1<<std::endl;
 
 
   for(; (frame < input_data_.size()-1) && input_data_[frame][0]; ++frame){
@@ -3836,24 +3836,24 @@ void dbcri_whole_process::init_cameras(vnl_vector <double> t,double scale)
 
     //vnl_double_3x4 P1 = E1;
     cameras_.push_back(P1);
-    vcl_cout<<P1<<vcl_endl;
+    std::cout<<P1<<std::endl;
   }
 
 
-  vcl_cout<<"t: "<<t<<" T: "<<T<<vcl_endl;
+  std::cout<<"t: "<<t<<" T: "<<T<<std::endl;
   ///////////////reverse camera
 
 
-  //vcl_reverse(cameras_.begin(), cameras_.end());
+  //std::reverse(cameras_.begin(), cameras_.end());
   //for (unsigned i=0;i<cameras_.size();i++)
-  //vcl_cout<<cameras_[i]<<vcl_endl;
+  //std::cout<<cameras_[i]<<std::endl;
   ///////////////
 }
 
 
 
-void dbcri_whole_process::d3_build(vcl_vector <vsol_digital_curve_2d_sptr> &dcl_,
-                                   vcl_vector< vcl_vector <dbecl_episeg_sptr> >&episegl)
+void dbcri_whole_process::d3_build(std::vector <vsol_digital_curve_2d_sptr> &dcl_,
+                                   std::vector< std::vector <dbecl_episeg_sptr> >&episegl)
 
 {
 }
@@ -3873,19 +3873,19 @@ void dbcri_whole_process::d3_build()
   if(frame >= input_data_.size())
     return ;
 
-  //vcl_vector<vil_image_view<float> > images;
-  vcl_vector <vgl_point_2d <double> >pts_upper;
-  vcl_vector <vgl_point_2d <double> >pts_lower;
+  //std::vector<vil_image_view<float> > images;
+  std::vector <vgl_point_2d <double> >pts_upper;
+  std::vector <vgl_point_2d <double> >pts_lower;
 
-  vcl_vector <float * > pxl;
-  vcl_vector <float * > pyl;
-  vcl_vector <unsigned> num;
+  std::vector <float * > pxl;
+  std::vector <float * > pyl;
+  std::vector <unsigned> num;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
 
 
-    vcl_vector <double >px_tmp;
-    vcl_vector <double >py_tmp;
+    std::vector <double >px_tmp;
+    std::vector <double >py_tmp;
 
 
 
@@ -3894,7 +3894,7 @@ void dbcri_whole_process::d3_build()
     double max_x=-100.0f,max_y=-100.0f,min_x=100000.0f,min_y=100000.0f;
 
     // parse through all the vsol classes and save curve objects only
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
     for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
     {
       if( vsol_list[b]->cast_to_curve())
@@ -3972,7 +3972,7 @@ void dbcri_whole_process::d3_build()
   for (unsigned ii=0;ii<num.size();ii++) {
 
 
-    vcl_cout<<num[ii]<<vcl_endl;
+    std::cout<<num[ii]<<std::endl;
 
   }
 
@@ -3989,7 +3989,7 @@ void dbcri_whole_process::d3_build()
 
 
 
-  vcl_vector <float> ptx1,ptx2,ptx3,ptx4;
+  std::vector <float> ptx1,ptx2,ptx3,ptx4;
   //for (double x=-3;x<0;x+=.1)
   //  for (double y=-1;y<1;y+=.1)
   //    for (double z=13;z<26;z+=1) {
@@ -4010,27 +4010,27 @@ void dbcri_whole_process::d3_build()
   //double tmp_p2p=vgl_distance(vgl_point_2d<T >const&,vgl_point_2d<T >const&);
 
 
-  if (1) vcl_cout<<pxl[1][2]<<" " <<pyl[1][2]<<" "<<tmp_p2l<<vcl_endl;
+  if (1) std::cout<<pxl[1][2]<<" " <<pyl[1][2]<<" "<<tmp_p2l<<std::endl;
 
   vgl_point_2d<double> pd1(634.0,329.0);
-  vcl_cout<<is_inwedge(pd1,0)<<vcl_endl;
+  std::cout<<is_inwedge(pd1,0)<<std::endl;
 
   vgl_point_2d<double> pd2(554.0,523.0);
-  vcl_cout<<is_inwedge(pd2,0)<<vcl_endl;
+  std::cout<<is_inwedge(pd2,0)<<std::endl;
 
   vgl_point_2d<double> pd3(566.0,257.0);
-  vcl_cout<<is_inwedge(pd3,0)<<vcl_endl;
+  std::cout<<is_inwedge(pd3,0)<<std::endl;
 
 
   vgl_point_2d<double> pd4(566.0,250.0);
-  vcl_cout<<is_inwedge(pd4,0)<<vcl_endl;
+  std::cout<<is_inwedge(pd4,0)<<std::endl;
 
   /*for (double jj=0.0;jj<1000.0;jj+=20.0)
   for (double kk=0.0;kk<700.0;kk+=20.0) {
 
 
   vgl_point_2d<double> pdjjkk(jj,kk);
-  vcl_cout<<is_inwedge(pdjjkk,0)<<vcl_endl;
+  std::cout<<is_inwedge(pdjjkk,0)<<std::endl;
 
 
   }*/
@@ -4044,7 +4044,7 @@ void dbcri_whole_process::d3_build()
         //      for (double z=55;z<55.1;z+=1) {
 
         //x=-2.0; y=0; z=23;
-        if (DEBUG) vcl_cout<<"=== \n"<<x<<" "<<y<<" "<<z<<"\n"<<vcl_endl;
+        if (DEBUG) std::cout<<"=== \n"<<x<<" "<<y<<" "<<z<<"\n"<<std::endl;
         double value=1.0;
         frame = 0;
         for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
@@ -4066,10 +4066,10 @@ void dbcri_whole_process::d3_build()
           //double tmp_p2p=vgl_distance(vgl_point_2d<T >const&,vgl_point_2d<T >const&);
 
 
-          if (DEBUG) vcl_cout<<frame<<" "<<tx<<" "<<ty<<" "<<tmp_p2l<<vcl_endl;
+          if (DEBUG) std::cout<<frame<<" "<<tx<<" "<<ty<<" "<<tmp_p2l<<std::endl;
 
 
-          value*=vcl_exp(-tmp_p2l*tmp_p2l/100.0);
+          value*=std::exp(-tmp_p2l*tmp_p2l/100.0);
         }
         if (value<0.00001f) continue;
 
@@ -4086,7 +4086,7 @@ void dbcri_whole_process::d3_build()
 
 
 
-      //vcl_cout<<
+      //std::cout<<
 
 
 
@@ -4104,8 +4104,8 @@ void dbcri_whole_process::d3_build()
       //if (!show_model_dlg.ask())
       //   return;
 
-      vcl_ofstream out("out.wrl");
-      //out<<vcl_ofstream(out_filename);
+      std::ofstream out("out.wrl");
+      //out<<std::ofstream(out_filename);
 
       //std::ofstream out(out_filename, std::ios_base::out | std::ios_base::app);
 
@@ -4206,7 +4206,7 @@ bool dbcri_whole_process::is_inwedge(vgl_point_2d<double> p, int frame)
   c1=line_upper_.c(); c2=line_lower_.c();
   c1+=15; c2-=15;
 
-  // vcl_cout<<a1*p.x()+b1*p.y()+c1<<" "<<a2*p.x()+b2*p.y()+c2<<vcl_endl;
+  // std::cout<<a1*p.x()+b1*p.y()+c1<<" "<<a2*p.x()+b2*p.y()+c2<<std::endl;
   if (a1*p.x()+b1*p.y()+c1<0&&a2*p.x()+b2*p.y()+c2>0) return true;
   // a=line_upper.b()/line_upper.a(); b=line_upper.c()/line_upper.a();
   // c=line_lower.b()/line_lower.a(); d=line_lower.c()/line_lower.a();
@@ -4216,12 +4216,12 @@ bool dbcri_whole_process::is_inwedge(vgl_point_2d<double> p, int frame)
 
 
 
-void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<double> >& point_3d_mean_pts, bool clear) 
+void dbcri_whole_process::d3_build_points(double err, std::vector <vgl_point_3d<double> >& point_3d_mean_pts, bool clear) 
 {
-  vcl_cout<<"---------------------------"<<vcl_endl;
-  vcl_cout<<"d3_build_points("<<err<<","<<clear<<")"<<vcl_endl;
-  vcl_cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
-  vcl_cout<<"---------------------------"<<vcl_endl;
+  std::cout<<"---------------------------"<<std::endl;
+  std::cout<<"d3_build_points("<<err<<","<<clear<<")"<<std::endl;
+  std::cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
+  std::cout<<"---------------------------"<<std::endl;
 
   if (clear)
     pts_3d_a_.clear();
@@ -4236,14 +4236,14 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
   double x0,x1,x2;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
-  // vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  // std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
   dbecl_episeg_point  x0pt,x1pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
@@ -4287,11 +4287,11 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
         selected1=false;
 
         x0=-100.0f;x1=-100.0f;x2=-100.f;
-        //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
           if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang){
             //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -4306,14 +4306,14 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
 
         if (!selected0) continue;
         for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-          //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
           if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
             //if (episeglist[fm2][i1]->index(ang)) {
             if (episeglist[fm2][i1]->dist(ang)>x1) {
               x1=episeglist[fm2][i1]->dist(ang);
               selected1=true;
               x1pt.set_point(episeglist[fm2][i1],episeglist[fm2][i1]->index(ang));
-              //vcl_cout<<episeglist[fm2][i1]<<" "<<episeglist[fm2][i1]->index(ang)<<vcl_endl;
+              //std::cout<<episeglist[fm2][i1]<<" "<<episeglist[fm2][i1]->index(ang)<<std::endl;
             }
           }
         }
@@ -4324,14 +4324,14 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<vcl_endl;
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<std::endl;
+        //std::cout<<point_3d<<std::endl;
 
         // vgl_point_2d <double> test1pt(425,370),test2pt(502,387);
         //vgl_point_3d<double> point_3d1 = brct_algos::triangulate_3d_point( test1pt, cameras_[4],test2pt, cameras_[3]);
 
-        //vcl_cout<<cameras_[4]<<cameras_[3]<<vcl_endl;
-        //vcl_cout<<point_3d1<<vcl_endl;
+        //std::cout<<cameras_[4]<<cameras_[3]<<std::endl;
+        //std::cout<<point_3d1<<std::endl;
 
         point_3d_front_list.push_back(point_3d);
         /*ratios temp_ratios;
@@ -4378,7 +4378,7 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
       }
 
       radius=5;
-      vcl_cout<<"f1 "<<ang<<" (error/count):"<<(error/count)<<" "<<count<<" "<<xx<<" "<<yy<<" "<<zz<<vcl_endl;
+      std::cout<<"f1 "<<ang<<" (error/count):"<<(error/count)<<" "<<count<<" "<<xx<<" "<<yy<<" "<<zz<<std::endl;
 
       if (error/count< err&& count>nframes_*(nframes_-1)*.25/2.0) {   
 
@@ -4434,11 +4434,11 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
         selected1=false;
 
         x0=10000.0f;x1=10000.0f;x2=10000.f;
-        //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
           if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang){
             //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -4451,7 +4451,7 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
         }
 
         for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-          //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
           if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
             //if (episeglist[fm2][i1]->index(ang)) {
             if (episeglist[fm2][i1]->dist(ang)<x1) {
@@ -4468,7 +4468,7 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<point_3d<<std::endl;
         point_3d_rear_list.push_back(point_3d);
 
 
@@ -4501,7 +4501,7 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
       }
 
       radius=4;
-      vcl_cout<<"r1 "<<ang<<" (error/count): " <<(error/count)<<" "<<count<<" "<<xx<<" "<<yy<<" "<<zz<<vcl_endl;
+      std::cout<<"r1 "<<ang<<" (error/count): " <<(error/count)<<" "<<count<<" "<<xx<<" "<<yy<<" "<<zz<<std::endl;
 
       if (error/count< err&& count>nframes_*(nframes_-1)*.25/2.0) {   
 
@@ -4536,15 +4536,15 @@ void dbcri_whole_process::d3_build_points(double err, vcl_vector <vgl_point_3d<d
 }
 
 
-void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_point_3d<double> >& point_3d_mean_pts,bool clear) 
+void dbcri_whole_process::d3_build_points_edge_con(double err, std::vector <vgl_point_3d<double> >& point_3d_mean_pts,bool clear) 
 {
   if (clear)// false
     pts_3d_a_.clear();
 
-  vcl_cout<<"---------------------------"<<vcl_endl;
-  vcl_cout<<"d3_build_points_edge_con("<<err<<","<<clear<<")"<<vcl_endl;
-  vcl_cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
-  vcl_cout<<"---------------------------"<<vcl_endl;
+  std::cout<<"---------------------------"<<std::endl;
+  std::cout<<"d3_build_points_edge_con("<<err<<","<<clear<<")"<<std::endl;
+  std::cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
+  std::cout<<"---------------------------"<<std::endl;
   pts_3d_attribute p_att;
   p_att.usage=true;
   p_att.error=0.0;
@@ -4557,14 +4557,14 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
   double x0,x1,x2;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
-  // vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  // std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
   dbecl_episeg_point  x0pt,x1pt;
   //dbecl_episeg_point  x0pt(episeglist_edge_[fm1][i0], episeglist_edge_[fm1][i0]->index(ang));
@@ -4612,11 +4612,11 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         selected1=false;
 
         x0=-100.0f;x1=-100.0f;x2=-100.f;
-        //vcl_cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
           if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
             //if (episeglist_edge_[fm1][i0]->index(ang)) {
 
@@ -4630,14 +4630,14 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         }
 
         for (unsigned i1=0;i1<episeglist_edge_[fm2].size();i1++) {
-          //vcl_cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<std::endl;
           if (episeglist_edge_[fm2][i1]->min_angle() <=ang&&episeglist_edge_[fm2][i1]->max_angle() >=ang) {
             //if (episeglist_edge_[fm2][i1]->index(ang)) {
             if (episeglist_edge_[fm2][i1]->dist(ang)>x1) {
               x1=episeglist_edge_[fm2][i1]->dist(ang);
               selected1=true;
               x1pt.set_point(episeglist_edge_[fm2][i1],episeglist_edge_[fm2][i1]->index(ang));
-              //vcl_cout<<episeglist_edge_[fm2][i1]<<" "<<episeglist_edge_[fm2][i1]->index(ang)<<vcl_endl;
+              //std::cout<<episeglist_edge_[fm2][i1]<<" "<<episeglist_edge_[fm2][i1]->index(ang)<<std::endl;
             }
           }
         }
@@ -4648,14 +4648,14 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<vcl_endl;
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<std::endl;
+        //std::cout<<point_3d<<std::endl;
 
         // vgl_point_2d <double> test1pt(425,370),test2pt(502,387);
         //vgl_point_3d<double> point_3d1 = brct_algos::triangulate_3d_point( test1pt, cameras_[4],test2pt, cameras_[3]);
 
-        //vcl_cout<<cameras_[4]<<cameras_[3]<<vcl_endl;
-        //vcl_cout<<point_3d1<<vcl_endl;
+        //std::cout<<cameras_[4]<<cameras_[3]<<std::endl;
+        //std::cout<<point_3d1<<std::endl;
 
         point_3d_front_list.push_back(point_3d);
 
@@ -4688,19 +4688,19 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
       }
 
       radius=5;
-      vcl_cout<<"--f--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": f2 "<<"(error/count):"<<(error/count)<<" "<<count;
+      std::cout<<"--f--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": f2 "<<"(error/count):"<<(error/count)<<" "<<count;
 
       cluster C;
       if (cluster_flag_)
         if (point_3d_front_list.size()>1) {
           cluster dummy;
           dummy  =outliers(point_3d_front_list,.75*err,C);
-          //vcl_cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<vcl_endl;
+          //std::cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<std::endl;
 
-          vcl_cout<<"error is "<<C.error<<" "<<"C.index:"<<C.index<<" "<<vcl_endl;
+          std::cout<<"error is "<<C.error<<" "<<"C.index:"<<C.index<<" "<<std::endl;
           for (unsigned k=0;k<C.pts.size();k++)
-            vcl_cout<<C.pts[k]<<vcl_endl;
-          vcl_cout<<C.size<<" "<<C.mean_pt<<vcl_endl;
+            std::cout<<C.pts[k]<<std::endl;
+          std::cout<<C.size<<" "<<C.mean_pt<<std::endl;
         }
         bool check1=false,check2=false;
 
@@ -4710,12 +4710,12 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         //3-16-2008 non-linearity of spoliled # of frames.
         if (C.size>.5*nframes_*(.5*nframes_-1)/2.0) check2=true;   
         
-        vcl_cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<vcl_endl;
+        std::cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<std::endl;
         
         if (check1||check2) {
 
 
-          vcl_cout<< "*"<<vcl_endl;
+          std::cout<< "*"<<std::endl;
 
 
 
@@ -4741,7 +4741,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
           int index_con=angle_check(ang,true);
 
 
-          vcl_cout<<"point type: "<<p_att.type<<" "<<index_con<<vcl_endl;
+          std::cout<<"point type: "<<p_att.type<<" "<<index_con<<std::endl;
 
           // if already exist in contour.. substitute or add
           if (index_con!=-999) //true-> front
@@ -4750,7 +4750,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
           }
           else pts_3d_a_.push_back(p_att);
         }
-        else vcl_cout<< " No good pt== "<<vcl_endl;
+        else std::cout<< " No good pt== "<<std::endl;
 
 
 
@@ -4792,11 +4792,11 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         selected1=false;
 
         x0=10000.0f;x1=10000.0f;x2=10000.f;
-        //vcl_cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
           if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
             //if (episeglist_edge_[fm1][i0]->index(ang)) {
 
@@ -4809,7 +4809,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         }
 
         for (unsigned i1=0;i1<episeglist_edge_[fm2].size();i1++) {
-          //vcl_cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<std::endl;
           if (episeglist_edge_[fm2][i1]->min_angle() <=ang&&episeglist_edge_[fm2][i1]->max_angle() >=ang) {
             //if (episeglist_edge_[fm2][i1]->index(ang)) {
             if (episeglist_edge_[fm2][i1]->dist(ang)<x1) {
@@ -4826,7 +4826,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<point_3d<<std::endl;
         point_3d_rear_list.push_back(point_3d);
 
 
@@ -4859,7 +4859,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
       }
 
       radius=4;
-      vcl_cout<<"--r--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": r2 "<<"(error/count): " <<(error/count)<<" "<<count;
+      std::cout<<"--r--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": r2 "<<"(error/count): " <<(error/count)<<" "<<count;
 
 
 
@@ -4868,12 +4868,12 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
         if (point_3d_rear_list.size()>1) {
           cluster dummy;
           dummy  =outliers(point_3d_rear_list,0.75*err,C);
-          //vcl_cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<vcl_endl;
+          //std::cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<std::endl;
 
-          vcl_cout<<"error(rear) is"<<C.error<<" "<<C.index<<" ";
+          std::cout<<"error(rear) is"<<C.error<<" "<<C.index<<" ";
           for (unsigned k=0;k<C.pts.size();k++)
-            vcl_cout<<C.pts[k];
-          vcl_cout<<C.size<<" "<<C.mean_pt<<vcl_endl;
+            std::cout<<C.pts[k];
+          std::cout<<C.size<<" "<<C.mean_pt<<std::endl;
         }
 
 
@@ -4884,12 +4884,12 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
 
         //3-16-2008 non-linearity of spoliled # of frames.
         if (C.size>.5*nframes_*(.5*nframes_-1)/2.0) check2=true;   
-        vcl_cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<vcl_endl;
+        std::cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<std::endl;
 
         if (check1||check2) {
           //if (error/count< err&& count>nframes_*(nframes_-1)*.25/2.0||C.size>nframes_*(nframes_-1)*.5/2.0-1) {   
 
-          vcl_cout<< "*"<<vcl_endl;
+          std::cout<< "*"<<std::endl;
 
           //only selected points
           vgl_point_3d <double> mean_point_3d(xx,yy,zz);
@@ -4910,8 +4910,8 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
           else p_att.type=1; // just using edge(correct apprant contour)
 
           int index_con=angle_check(ang,false);// here false means position rear
-          vcl_cout<<"point type: "<<p_att.type<<" "<<index_con<<vcl_endl;
-          vcl_cout<<"ang: "<< ang<<" "<<index_con<<vcl_endl;
+          std::cout<<"point type: "<<p_att.type<<" "<<index_con<<std::endl;
+          std::cout<<"ang: "<< ang<<" "<<index_con<<std::endl;
           // if already exist in contour.. substitute or add
           if (index_con!=-999) //true-> front
           {
@@ -4919,7 +4919,7 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
           }
           else pts_3d_a_.push_back(p_att);
         }
-        else vcl_cout<< " No good pt== "<<vcl_endl;
+        else std::cout<< " No good pt== "<<std::endl;
 
 
 
@@ -4942,15 +4942,15 @@ void dbcri_whole_process::d3_build_points_edge_con(double err, vcl_vector <vgl_p
 //3-17-2008
 // inside the car reconstruction
 //
-void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector <vgl_point_3d<double> >& point_3d_mean_pts,bool clear) 
+void dbcri_whole_process::d3_build_points_edge_con_inside(double err, std::vector <vgl_point_3d<double> >& point_3d_mean_pts,bool clear) 
 {
   if (clear)// false
     pts_3d_a_.clear();
 
-  vcl_cout<<"---------------------------"<<vcl_endl;
-  vcl_cout<<"d3_build_points_edge_con_inside("<<err<<","<<clear<<")"<<vcl_endl;
-  vcl_cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<vcl_endl;
-  vcl_cout<<"---------------------------"<<vcl_endl;
+  std::cout<<"---------------------------"<<std::endl;
+  std::cout<<"d3_build_points_edge_con_inside("<<err<<","<<clear<<")"<<std::endl;
+  std::cout<<"pts_3d_a_.size() "<<pts_3d_a_.size()<<std::endl;
+  std::cout<<"---------------------------"<<std::endl;
   pts_3d_attribute p_att;
   p_att.usage=true;
   p_att.error=0.0;
@@ -4963,14 +4963,14 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
   double x0,x1,x2;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
-  // vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  // std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
   dbecl_episeg_point  x0pt,x1pt;
   //dbecl_episeg_point  x0pt(episeglist_edge_[fm1][i0], episeglist_edge_[fm1][i0]->index(ang));
@@ -5007,11 +5007,11 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         selected1=false;
 
         x0=-100.0f;x1=-100.0f;x2=-100.f;
-        //vcl_cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
           if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
             //if (episeglist_edge_[fm1][i0]->index(ang)) {
 
@@ -5025,14 +5025,14 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         }
 
         for (unsigned i1=0;i1<episeglist_edge_[fm2].size();i1++) {
-          //vcl_cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<std::endl;
           if (episeglist_edge_[fm2][i1]->min_angle() <=ang&&episeglist_edge_[fm2][i1]->max_angle() >=ang) {
             //if (episeglist_edge_[fm2][i1]->index(ang)) {
             if (episeglist_edge_[fm2][i1]->dist(ang)>x1) {
               x1=episeglist_edge_[fm2][i1]->dist(ang);
               selected1=true;
               x1pt.set_point(episeglist_edge_[fm2][i1],episeglist_edge_[fm2][i1]->index(ang));
-              //vcl_cout<<episeglist_edge_[fm2][i1]<<" "<<episeglist_edge_[fm2][i1]->index(ang)<<vcl_endl;
+              //std::cout<<episeglist_edge_[fm2][i1]<<" "<<episeglist_edge_[fm2][i1]->index(ang)<<std::endl;
             }
           }
         }
@@ -5043,14 +5043,14 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<vcl_endl;
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<x0pt.pt()<<x1pt.pt()<<fm1<<" "<<fm2<<"\n"<<cameras_[fm1]<<cameras_[fm2]<<std::endl;
+        //std::cout<<point_3d<<std::endl;
 
         // vgl_point_2d <double> test1pt(425,370),test2pt(502,387);
         //vgl_point_3d<double> point_3d1 = brct_algos::triangulate_3d_point( test1pt, cameras_[4],test2pt, cameras_[3]);
 
-        //vcl_cout<<cameras_[4]<<cameras_[3]<<vcl_endl;
-        //vcl_cout<<point_3d1<<vcl_endl;
+        //std::cout<<cameras_[4]<<cameras_[3]<<std::endl;
+        //std::cout<<point_3d1<<std::endl;
 
         point_3d_front_list.push_back(point_3d);
 
@@ -5083,19 +5083,19 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
       }
 
       radius=5;
-      vcl_cout<<"--f--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": f2 "<<"(error/count):"<<(error/count)<<" "<<count;
+      std::cout<<"--f--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": f2 "<<"(error/count):"<<(error/count)<<" "<<count;
 
       cluster C;
       if (cluster_flag_)
         if (point_3d_front_list.size()>1) {
           cluster dummy;
           dummy  =outliers(point_3d_front_list,.75*err,C);
-          //vcl_cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<vcl_endl;
+          //std::cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<std::endl;
 
-          vcl_cout<<"error is "<<C.error<<" "<<"C.index:"<<C.index<<" "<<vcl_endl;
+          std::cout<<"error is "<<C.error<<" "<<"C.index:"<<C.index<<" "<<std::endl;
           for (unsigned k=0;k<C.pts.size();k++)
-            vcl_cout<<C.pts[k]<<vcl_endl;
-          vcl_cout<<C.size<<" "<<C.mean_pt<<vcl_endl;
+            std::cout<<C.pts[k]<<std::endl;
+          std::cout<<C.size<<" "<<C.mean_pt<<std::endl;
         }
         bool check1=false,check2=false;
 
@@ -5105,12 +5105,12 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         //3-16-2008 non-linearity of spoliled # of frames.
         if (C.size>.5*nframes_*(.5*nframes_-1)/2.0) check2=true;   
         
-        vcl_cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<vcl_endl;
+        std::cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<std::endl;
         
         if (check1||check2) {
 
 
-          vcl_cout<< "*"<<vcl_endl;
+          std::cout<< "*"<<std::endl;
 
 
 
@@ -5136,7 +5136,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
           int index_con=angle_check(ang,true);
 
 
-          vcl_cout<<"point type: "<<p_att.type<<" "<<index_con<<vcl_endl;
+          std::cout<<"point type: "<<p_att.type<<" "<<index_con<<std::endl;
 
           // if already exist in contour.. substitute or add
           if (index_con!=-999) //true-> front
@@ -5145,7 +5145,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
           }
           else pts_3d_a_.push_back(p_att);
         }
-        else vcl_cout<< " No good pt== "<<vcl_endl;
+        else std::cout<< " No good pt== "<<std::endl;
 
 
 
@@ -5187,11 +5187,11 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         selected1=false;
 
         x0=10000.0f;x1=10000.0f;x2=10000.f;
-        //vcl_cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<vcl_endl;
+        //std::cout<<ang<<" "<<episeglist_edge_[fm1].size()<<" "<<episeglist_edge_[fm2].size()<<" "<<episeglist_edge_[fm3].size()<<std::endl;
 
         for (unsigned i0=0;i0<episeglist_edge_[fm1].size();i0++) {
 
-          //vcl_cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm1][i0]->min_angle()<<" "<<episeglist_edge_[fm1][i0]->max_angle()<<std::endl;
           if (episeglist_edge_[fm1][i0]->min_angle() <=ang&&episeglist_edge_[fm1][i0]->max_angle() >=ang){
             //if (episeglist_edge_[fm1][i0]->index(ang)) {
 
@@ -5204,7 +5204,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         }
 
         for (unsigned i1=0;i1<episeglist_edge_[fm2].size();i1++) {
-          //vcl_cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<vcl_endl;
+          //std::cout<<episeglist_edge_[fm2][i1]->min_angle()<<" "<<episeglist_edge_[fm2][i1]->max_angle()<<std::endl;
           if (episeglist_edge_[fm2][i1]->min_angle() <=ang&&episeglist_edge_[fm2][i1]->max_angle() >=ang) {
             //if (episeglist_edge_[fm2][i1]->index(ang)) {
             if (episeglist_edge_[fm2][i1]->dist(ang)<x1) {
@@ -5221,7 +5221,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
 
         vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), cameras_[fm1], x1pt.pt(), cameras_[fm2]);
 
-        //vcl_cout<<point_3d<<vcl_endl;
+        //std::cout<<point_3d<<std::endl;
         point_3d_rear_list.push_back(point_3d);
 
 
@@ -5254,7 +5254,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
       }
 
       radius=4;
-      vcl_cout<<"--r--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": r2 "<<"(error/count): " <<(error/count)<<" "<<count;
+      std::cout<<"--r--\n recon1 \t"<<"ang: "<<ang<<"count:#  "<<count<<": r2 "<<"(error/count): " <<(error/count)<<" "<<count;
 
 
 
@@ -5263,12 +5263,12 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
         if (point_3d_rear_list.size()>1) {
           cluster dummy;
           dummy  =outliers(point_3d_rear_list,0.75*err,C);
-          //vcl_cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<vcl_endl;
+          //std::cout<<" "<<C.error<<" "<<C.size<<" "<<C.mean_pt<<std::endl;
 
-          vcl_cout<<"error(rear) is"<<C.error<<" "<<C.index<<" ";
+          std::cout<<"error(rear) is"<<C.error<<" "<<C.index<<" ";
           for (unsigned k=0;k<C.pts.size();k++)
-            vcl_cout<<C.pts[k];
-          vcl_cout<<C.size<<" "<<C.mean_pt<<vcl_endl;
+            std::cout<<C.pts[k];
+          std::cout<<C.size<<" "<<C.mean_pt<<std::endl;
         }
 
 
@@ -5279,12 +5279,12 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
 
         //3-16-2008 non-linearity of spoliled # of frames.
         if (C.size>.5*nframes_*(.5*nframes_-1)/2.0) check2=true;   
-        vcl_cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<vcl_endl;
+        std::cout<<"nframes_*(nframes_-1)*.25/2.0: "<<nframes_*(nframes_-1)*.25/2.0<<" check1 & cheack2 "<<check1<< " "<<check2<<std::endl;
 
         if (check1||check2) {
           //if (error/count< err&& count>nframes_*(nframes_-1)*.25/2.0||C.size>nframes_*(nframes_-1)*.5/2.0-1) {   
 
-          vcl_cout<< "*"<<vcl_endl;
+          std::cout<< "*"<<std::endl;
 
           //only selected points
           vgl_point_3d <double> mean_point_3d(xx,yy,zz);
@@ -5305,8 +5305,8 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
           else p_att.type=1; // just using edge(correct apprant contour)
 
           int index_con=angle_check(ang,false);// here false means position rear
-          vcl_cout<<"point type: "<<p_att.type<<" "<<index_con<<vcl_endl;
-          vcl_cout<<"ang: "<< ang<<" "<<index_con<<vcl_endl;
+          std::cout<<"point type: "<<p_att.type<<" "<<index_con<<std::endl;
+          std::cout<<"ang: "<< ang<<" "<<index_con<<std::endl;
           // if already exist in contour.. substitute or add
           if (index_con!=-999) //true-> front
           {
@@ -5314,7 +5314,7 @@ void dbcri_whole_process::d3_build_points_edge_con_inside(double err, vcl_vector
           }
           else pts_3d_a_.push_back(p_att);
         }
-        else vcl_cout<< " No good pt== "<<vcl_endl;
+        else std::cout<< " No good pt== "<<std::endl;
         point_3d_rear_list.clear();
   }
   return;
@@ -5327,12 +5327,12 @@ int dbcri_whole_process::angle_check(double ang,bool position) {
 
 
   for (unsigned i=0;i<pts_3d_a_.size();i++) {
-    if (vcl_fabs(pts_3d_a_[i].angle-ang)<0.00001 &&pts_3d_a_[i].position==position ) return i;
+    if (std::fabs(pts_3d_a_[i].angle-ang)<0.00001 &&pts_3d_a_[i].position==position ) return i;
   }
 
   return -999;
 }
-void dbcri_whole_process::d3_build_points_edge(double err, vcl_vector <vgl_point_3d<double> >& point_3d_mean_pts) 
+void dbcri_whole_process::d3_build_points_edge(double err, std::vector <vgl_point_3d<double> >& point_3d_mean_pts) 
 {
   pts_3d_a_.clear();
 
@@ -5355,14 +5355,14 @@ void dbcri_whole_process::d3_build_points_edge(double err, vcl_vector <vgl_point
   double x0,x1,x2;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
-  // vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  // std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
   dbecl_episeg_point  x0pt,x1pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
@@ -5375,7 +5375,7 @@ void dbcri_whole_process::d3_build_points_edge(double err, vcl_vector <vgl_point
 
   double radius=0;
 
-  vcl_cout<<"good_3d_curves_.size: "<<good_3d_curves_.size()<<vcl_endl;
+  std::cout<<"good_3d_curves_.size: "<<good_3d_curves_.size()<<std::endl;
   for (unsigned i=0;i<good_3d_curves_.size();i++) {
 
 
@@ -5454,7 +5454,7 @@ void dbcri_whole_process::d3_build_points_edge(double err, vcl_vector <vgl_point
   return;
 }
 
-void dbcri_whole_process::d3_build_network(double err, vcl_vector <vgl_point_3d<double> >& point_3d_mean_pts) 
+void dbcri_whole_process::d3_build_network(double err, std::vector <vgl_point_3d<double> >& point_3d_mean_pts) 
 {
 
   pts_3d_a_.clear();
@@ -5478,14 +5478,14 @@ void dbcri_whole_process::d3_build_network(double err, vcl_vector <vgl_point_3d<
   double x0,x1,x2;
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
-  // vcl_vector <vgl_point_3d<double> > point_3d_mean_pts;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  // std::vector <vgl_point_3d<double> > point_3d_mean_pts;
 
   dbecl_episeg_point  x0pt,x1pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
@@ -5498,7 +5498,7 @@ void dbcri_whole_process::d3_build_network(double err, vcl_vector <vgl_point_3d<
 
   double radius=0;
 
-  vcl_cout<<"good_3d_curves_.size: "<<good_3d_curves_.size()<<vcl_endl;
+  std::cout<<"good_3d_curves_.size: "<<good_3d_curves_.size()<<std::endl;
   vnl_matrix <double> BB((int)combination,C-2,0.0);
   for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ ///) { 
 
@@ -5620,7 +5620,7 @@ bool node_edge::compare_and_add(node_edge *a)
 int index;
 // int fm1,fm2,fm3;
 //double x1,x2,x3,y1,y2,y3;
-vcl_vector <vgl_point_3d <double> >pts;
+std::vector <vgl_point_3d <double> >pts;
 double mean;
 bool label;
 double error;//variance
@@ -5632,10 +5632,10 @@ int size;
 typedef struct cluster cluster;*/
 
 
-cluster  dbcri_whole_process::outliers(vcl_vector <vgl_point_3d<double> > point_3d_list,double th,cluster & sel_D) {
+cluster  dbcri_whole_process::outliers(std::vector <vgl_point_3d<double> > point_3d_list,double th,cluster & sel_D) {
 
   int N=point_3d_list.size();
-  vcl_vector <cluster>CL;
+  std::vector <cluster>CL;
   for (unsigned i=0;i<N;i++) {
     cluster C;
     C.pts.push_back(point_3d_list[i]);
@@ -5671,7 +5671,7 @@ cluster  dbcri_whole_process::outliers(vcl_vector <vgl_point_3d<double> > point_
     }
 
     if (min_error < th) {
-      vcl_vector<cluster>::iterator it;
+      std::vector<cluster>::iterator it;
       it = CL.begin();
       CL.erase(it+sel_j); //sel_j is alway bigger than sel_i so erase sel_j first
       CL.erase(it+sel_i);
@@ -5690,10 +5690,10 @@ cluster  dbcri_whole_process::outliers(vcl_vector <vgl_point_3d<double> > point_
   float max_size=0;int max_index=-1;
   for (unsigned i=0;i<CL.size();i++) {
 
-    vcl_cout<<"\n CL[i] index: "<<i<<"*: "<<CL[i].mean_pt<<vcl_endl;
+    std::cout<<"\n CL[i] index: "<<i<<"*: "<<CL[i].mean_pt<<std::endl;
     if (CL[i].pts.size()>1)
       for (unsigned j=0;j<CL[i].pts.size();j++)
-        vcl_cout<<i<<"'th "<<j<<": "<<CL[i].pts[j]<<vcl_endl;
+        std::cout<<i<<"'th "<<j<<": "<<CL[i].pts[j]<<std::endl;
 
     int  size=CL[i].size;
     if (size>max_size) {
@@ -5715,10 +5715,10 @@ cluster  dbcri_whole_process::outliers(vcl_vector <vgl_point_3d<double> > point_
   //if (max_size> (float)N/4.0) {  //7-01-07 N/2.0->N/4.0
   if (max_size> max_control) {  //3-18-2008
     cluster_copy(CL[max_index],sel_D);
-    vcl_cout<<"\n==> mean pt: "<<sel_D.mean_pt<<vcl_endl;
-    vcl_cout<<"sel_D error: "<<sel_D.error<<" "<<"index: "<<sel_D.index<<" size:"<<sel_D.size<<vcl_endl;
+    std::cout<<"\n==> mean pt: "<<sel_D.mean_pt<<std::endl;
+    std::cout<<"sel_D error: "<<sel_D.error<<" "<<"index: "<<sel_D.index<<" size:"<<sel_D.size<<std::endl;
     for (unsigned k=0;k<sel_D.pts.size();k++)
-      vcl_cout<<sel_D.pts[k]<<vcl_endl;
+      std::cout<<sel_D.pts[k]<<std::endl;
     return CL[max_index];
   }
 
@@ -5835,7 +5835,7 @@ double dbcri_whole_process::cluster_cmp_distance(cluster A,cluster B, cluster &C
     for (unsigned j=0;j<B.size;j++)
 
     {
-      dist=vcl_sqrt ((A.pts[i].x()-B.pts[j].x())*(A.pts[i].x()-B.pts[j].x()) +
+      dist=std::sqrt ((A.pts[i].x()-B.pts[j].x())*(A.pts[i].x()-B.pts[j].x()) +
         (A.pts[i].y()-B.pts[j].y())*(A.pts[i].y()-B.pts[j].y()) + 
         (A.pts[i].z()-B.pts[j].z())*(A.pts[i].z()-B.pts[j].z()));
       if (dist<min_distance) {
@@ -5900,7 +5900,7 @@ bool dbcri_accu_edge_cmp_z(const vnl_double_3& rhs, const vnl_double_3& lhs)
 
 
 
-void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > point_3d_list_f,vcl_vector <vgl_point_3d<double> > point_3d_list_r) {
+void dbcri_whole_process::get_BB_and_scale(std::vector <vgl_point_3d<double> > point_3d_list_f,std::vector <vgl_point_3d<double> > point_3d_list_r) {
 
   vnl_double_3x4 C;
 
@@ -5925,13 +5925,13 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
   e[0] =nep[0]/nep[2];
   e[1] =nep[1]/nep[2];
 
-  vcl_cout<<e<<vcl_endl;
+  std::cout<<e<<std::endl;
   //epipole from 2 tangent line
   e[0] = epi_x_;
   e[1]=  epi_y_;
 
   e[2] = 1.0;
-  vcl_cout<<e<<vcl_endl;
+  std::cout<<e<<std::endl;
 
 
   vnl_double_3 dir = vnl_inverse(M)*e;
@@ -5974,7 +5974,7 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
     vnl_double_3 xy_proj(direction.x(), direction.y(), 0.0);
     xy_proj.normalize();
     double ang = angle(xy_proj, -x_axis_here);
-    vcl_cerr << "bbox rotation angle: " <<ang << vcl_endl;
+    std::cerr << "bbox rotation angle: " <<ang << std::endl;
     vnl_double_3 rot_axis(0.0, 0.0, ang);
 
     rot = vnl_identity_3x3();
@@ -5985,24 +5985,24 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
   rot_=rot; //
 
 
-  vcl_cout<<"rot: "<<rot<<vcl_endl;
-  vcl_vector<vnl_double_3> pts_z;
+  std::cout<<"rot: "<<rot<<std::endl;
+  std::vector<vnl_double_3> pts_z;
   for (unsigned i=0;i<point_3d_list_f.size();i++) {
     vnl_double_3 p(point_3d_list_f[i].x(),point_3d_list_f[i].y(),point_3d_list_f[i].z());
 
     pts_z.push_back(rot*p);
-    //vcl_cout<<rot*p<<vcl_endl;
+    //std::cout<<rot*p<<std::endl;
   }
 
 
 
-  vcl_cout<<"checking pts # delivered to get bb: "<<point_3d_list_f.size()<<vcl_endl;
+  std::cout<<"checking pts # delivered to get bb: "<<point_3d_list_f.size()<<std::endl;
   if (point_3d_list_f.size()==0) return;
-  vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-  vcl_vector<vnl_double_3> pts_x;
+  std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+  std::vector<vnl_double_3> pts_x;
 
   // only consider points in x and y above 0.5 feet  //i don't use it..
-  for ( vcl_vector<vnl_double_3>::const_iterator itr = pts_z.begin();
+  for ( std::vector<vnl_double_3>::const_iterator itr = pts_z.begin();
     itr != pts_z.end();  ++itr)
   {
     //if ((*itr)[2] > 0.5) { pts_x.push_back(*itr); }
@@ -6012,16 +6012,16 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
     pts_x = pts_z;
   }
 
-  vcl_vector<vnl_double_3> pts_y = pts_x;
+  std::vector<vnl_double_3> pts_y = pts_x;
 
-  vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
-  vcl_sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
+  std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  std::sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
 
-  /* vcl_cout<<"::get_BB_and_scale ### pts_y start ###"<<vcl_endl;
-  for (vcl_vector<vnl_double_3>::const_iterator itr = pts_y.begin();
+  /* std::cout<<"::get_BB_and_scale ### pts_y start ###"<<std::endl;
+  for (std::vector<vnl_double_3>::const_iterator itr = pts_y.begin();
   itr != pts_y.end();  ++itr)
-  vcl_cout<<(*itr)<<vcl_endl;
-  vcl_cout<<"::get_BB_and_scale ### pts_y end ###"<<vcl_endl;*/
+  std::cout<<(*itr)<<std::endl;
+  std::cout<<"::get_BB_and_scale ### pts_y end ###"<<std::endl;*/
 
   unsigned int min_ind_x = 0, min_ind_y = 0, min_ind_z = 0;
   unsigned int max_ind_x = pts_x.size()-1, max_ind_y = pts_y.size()-1, max_ind_z = pts_z.size()-1;
@@ -6045,7 +6045,7 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
   min_point_=min_point;
   max_point_=max_point;
 
-  vcl_cout<<"::get_BB_and_scale min_point:"<<min_point<<" "<<"max_point:"<< max_point<<vcl_endl;
+  std::cout<<"::get_BB_and_scale min_point:"<<min_point<<" "<<"max_point:"<< max_point<<std::endl;
 
   vnl_double_3 diag_vector = max_point - min_point;
   vnl_vector_fixed<double,3> x_axis(0.0), y_axis(0.0), z_axis(0.0);
@@ -6074,8 +6074,8 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
   bb_xform(0,3)=origin[0]; bb_xform(1,3)=origin[1]; bb_xform(2,3)=origin[2];
 
 
-  vcl_cout<<"bb_xform"<<vcl_endl;
-  vcl_cout<<bb_xform<<vcl_endl;
+  std::cout<<"bb_xform"<<std::endl;
+  std::cout<<bb_xform<<std::endl;
 
   bb_xform_=bb_xform;
 
@@ -6087,7 +6087,7 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
 
   //builder.compute_bounding_box(inlier);
   //vnl_double_4x4 bb_xform = builder.bb_xform();
-  double min_z = vcl_numeric_limits<double>::infinity();
+  double min_z = std::numeric_limits<double>::infinity();
   for(int i=0; i<8; ++i){ // for each corner
     vnl_double_4 corner = bb_xform*vnl_double_4(double(i/4),double((i/2)%2),double(i%2),1.0);
     double z = corner[2]/corner[3];
@@ -6098,12 +6098,12 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
   //SCALE
   // find a scale that puts the bottom of bounding box at z=0.0 
   double scale = (cam_height-0.0)/(cam_height - min_z );
-  vcl_cout<<"cam_height: "<<cam_height<<vcl_endl;
-  vcl_cerr << "scale = " << scale << "  min z = " << min_z << vcl_endl;
+  std::cout<<"cam_height: "<<cam_height<<std::endl;
+  std::cerr << "scale = " << scale << "  min z = " << min_z << std::endl;
 
   //         scale = (cam_height-0.0)/(cam_height - min_z );
-  //    vcl_cout<<"cam_height: "<<cam_height<<vcl_endl;
-  //    vcl_cerr << "scale = " << scale << "  min z = " << min_z << vcl_endl;
+  //    std::cout<<"cam_height: "<<cam_height<<std::endl;
+  //    std::cerr << "scale = " << scale << "  min z = " << min_z << std::endl;
 
   if(bool reverse=false)
     scale *= -1;
@@ -6118,12 +6118,12 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
 
   ///////////final printing
 
-  vcl_cout<<"\nBounding Box Transform\n"<<scale_*bb_xform<<vcl_endl;
+  std::cout<<"\nBounding Box Transform\n"<<scale_*bb_xform<<std::endl;
 
 
   //vnl_double_3x4 Ef = cameras_[0];
   vnl_double_3x4 Ef = C_;
-  vcl_cout<<Ef<<vcl_endl;
+  std::cout<<Ef<<std::endl;
   double dt=0.0;
   for (unsigned i=1; i<cameras_.size();i++) {
 
@@ -6133,8 +6133,8 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
     //Ef.set_column(3,Ef.get_column(3) - dt*e);
     Ef.set_column(3,C_.get_column(3) + scale_*dt*e);  //peositive directionn ???????????
     // Ef.set_column(3,Ef.get_column(3)*scale_);
-    //  vcl_cout<< Ef <<vcl_endl;
-    //vcl_cout<< cameras_[i] <<vcl_endl;
+    //  std::cout<< Ef <<std::endl;
+    //std::cout<< cameras_[i] <<std::endl;
 
   }
 
@@ -6142,7 +6142,7 @@ void dbcri_whole_process::get_BB_and_scale(vcl_vector <vgl_point_3d<double> > po
 }
 
 
-void dbcri_whole_process::left_right_line_bb(vcl_vector <vgl_point_3d<double> > &point_3d_left_list,vcl_vector <vgl_point_3d<double> > &point_3d_right_list) {
+void dbcri_whole_process::left_right_line_bb(std::vector <vgl_point_3d<double> > &point_3d_left_list,std::vector <vgl_point_3d<double> > &point_3d_right_list) {
 
 
 
@@ -6161,7 +6161,7 @@ void dbcri_whole_process::left_right_line_bb(vcl_vector <vgl_point_3d<double> > 
       vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(left_pts_[fm1], cameras_[fm1], second_pt, cameras_[fm2]);
 
 
-      vcl_cout<<point_3d<<vcl_endl;
+      std::cout<<point_3d<<std::endl;
       point_3d_left_list.push_back(point_3d);
 
       //right points
@@ -6173,7 +6173,7 @@ void dbcri_whole_process::left_right_line_bb(vcl_vector <vgl_point_3d<double> > 
 
 
 
-      vcl_cout<<point_3d<<vcl_endl;
+      std::cout<<point_3d<<std::endl;
       point_3d_right_list.push_back(point_3d);
 
 
@@ -6193,21 +6193,21 @@ void dbcri_whole_process::contour() {
   vgl_point_3d <double> max_y_pts_3d,min_y_pts_3d;
   vgl_point_3d <double> max_z_pts_3d,min_z_pts_3d;
 
-  double max_x=vcl_numeric_limits<double>::min();
-  double min_x=vcl_numeric_limits<double>::infinity();
-  double max_y=vcl_numeric_limits<double>::min();
-  double min_y=vcl_numeric_limits<double>::infinity();
-  double max_z=vcl_numeric_limits<double>::min();
-  double min_z=vcl_numeric_limits<double>::infinity();
+  double max_x=std::numeric_limits<double>::min();
+  double min_x=std::numeric_limits<double>::infinity();
+  double max_y=std::numeric_limits<double>::min();
+  double min_y=std::numeric_limits<double>::infinity();
+  double max_z=std::numeric_limits<double>::min();
+  double min_z=std::numeric_limits<double>::infinity();
 
   int size=pts_3d_.size();
 
-  vcl_cout<<"before deletion size is: "<<size<<vcl_endl;
+  std::cout<<"before deletion size is: "<<size<<std::endl;
 
   for (unsigned i=0;i< size; i++)
   {  
 
-    vcl_cout<< pts_3d_[i].z()<<vcl_endl;
+    std::cout<< pts_3d_[i].z()<<std::endl;
     if (threshold>pts_3d_[i].z()) {
       pts_3d_.erase(pts_3d_.begin()+(int)i);
       i--;
@@ -6216,7 +6216,7 @@ void dbcri_whole_process::contour() {
 
   }
 
-  vcl_cout<<"after deletion the number of pts  is: "<<size<<vcl_endl;
+  std::cout<<"after deletion the number of pts  is: "<<size<<std::endl;
 
   for (unsigned i=0;i< pts_3d_.size(); i++)
   {  
@@ -6229,10 +6229,10 @@ void dbcri_whole_process::contour() {
       min_x=pts_3d_[i].x();
       min_x_pts_3d=pts_3d_[i];
     }
-    //vcl_cout<< pts_3d_[i].x()<<vcl_endl;
+    //std::cout<< pts_3d_[i].x()<<std::endl;
 
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
   for (unsigned i=0;i< pts_3d_.size(); i++)
   {  
 
@@ -6244,11 +6244,11 @@ void dbcri_whole_process::contour() {
       min_y=pts_3d_[i].y();
       min_y_pts_3d=pts_3d_[i];
     }
-    //vcl_cout<< pts_3d_[i].y()<<vcl_endl;
+    //std::cout<< pts_3d_[i].y()<<std::endl;
 
   }
 
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
 
   //  int size=pts_3d_.size();
@@ -6263,7 +6263,7 @@ void dbcri_whole_process::contour() {
       min_z_pts_3d=pts_3d_[i];
     }
 
-    vcl_cout<< pts_3d_[i].z()<<vcl_endl;
+    std::cout<< pts_3d_[i].z()<<std::endl;
 
   }
 }
@@ -6273,11 +6273,11 @@ void dbcri_whole_process::delete_contour(double thresh)
 
 
   // pts_3d_.clear();
-  vcl_vector <vgl_point_3d  <double> > pts_3d;
+  std::vector <vgl_point_3d  <double> > pts_3d;
   vgl_point_3d <double> p;
   for (unsigned i=0;i<pts_3d_a_.size();i++) {
 
-    vcl_cout<<pts_3d_a_[i].pt3d<<" usage: "<<pts_3d_a_[i].usage<<" pos: "<<pts_3d_a_[i].position<<" weight:"<< pts_3d_a_[i].weight<<vcl_endl;
+    std::cout<<pts_3d_a_[i].pt3d<<" usage: "<<pts_3d_a_[i].usage<<" pos: "<<pts_3d_a_[i].position<<" weight:"<< pts_3d_a_[i].weight<<std::endl;
     //pts_3d_a_[i].usage=true;
     if (pts_3d_a_[i].position&& pts_3d_a_[i].weight>.5)// use lower wedge points only  //angle goes clockwise
     {
@@ -6294,17 +6294,17 @@ void dbcri_whole_process::delete_contour(double thresh)
   vgl_point_3d <double> max_y_pts_3d,min_y_pts_3d;
   vgl_point_3d <double> max_z_pts_3d,min_z_pts_3d;
 
-  double max_x=vcl_numeric_limits<double>::min();
-  double min_x=vcl_numeric_limits<double>::infinity();
-  double max_y=vcl_numeric_limits<double>::min();
-  double min_y=vcl_numeric_limits<double>::infinity();
-  double max_z=vcl_numeric_limits<double>::min();
-  double min_z=vcl_numeric_limits<double>::infinity();
+  double max_x=std::numeric_limits<double>::min();
+  double min_x=std::numeric_limits<double>::infinity();
+  double max_y=std::numeric_limits<double>::min();
+  double min_y=std::numeric_limits<double>::infinity();
+  double max_z=std::numeric_limits<double>::min();
+  double min_z=std::numeric_limits<double>::infinity();
 
   //6-30-07 if (pts_3d.size()<10) return;
-  vcl_cout<<"Before out_removal points size: "<<pts_3d.size()<<vcl_endl;
+  std::cout<<"Before out_removal points size: "<<pts_3d.size()<<std::endl;
   if (pts_3d.size()<10) {
-    vcl_cout<<"too small num of points delvered to del con\n just returning"<<vcl_endl;
+    std::cout<<"too small num of points delvered to del con\n just returning"<<std::endl;
     return;
   }
   out_removal(pts_3d);
@@ -6319,7 +6319,7 @@ void dbcri_whole_process::delete_contour(double thresh)
       min_z=pts_3d[i].z();
       min_z_pts_3d=pts_3d[i];
     }
-    //vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+    //std::cout<< pts_3d[i].z()<<std::endl;   
   }
 
 
@@ -6331,22 +6331,22 @@ void dbcri_whole_process::delete_contour(double thresh)
   float max_count=0;
   double di_max=-1000.0;
 
-  vcl_cout<<"-----------------delete loop---------------------"<<vcl_endl;   
-  vcl_cout<<"***max_count: "<<max_count<<": "<<di_max<<vcl_endl;
+  std::cout<<"-----------------delete loop---------------------"<<std::endl;   
+  std::cout<<"***max_count: "<<max_count<<": "<<di_max<<std::endl;
   for (double di=min_z;di<max_z;di+=(max_z-min_z)/100.0 )
   {
     for (unsigned j=0;j< pts_3d_a_.size(); j++) {
-      if (vcl_fabs(pts_3d_a_[j].pt3d.z()-di)<2.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
+      if (std::fabs(pts_3d_a_[j].pt3d.z()-di)<2.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
       {
 
-        //vcl_cout<<"weight:"<<pts_3d_a_[j].weight<<vcl_endl;
+        //std::cout<<"weight:"<<pts_3d_a_[j].weight<<std::endl;
         if (pts_3d_a_[j].position&&pts_3d_a_[j].weight>.5)
           //count+=5.0*pts_3d_a_[j].weight;  //adding linear bias to prefer high wedge angle
           count++;
       }
     }
 
-    vcl_cout<<di<<" "<< count<<vcl_endl;
+    std::cout<<di<<" "<< count<<std::endl;
     if (count>max_count) {
       max_count=count;
       di_max=di;
@@ -6355,18 +6355,18 @@ void dbcri_whole_process::delete_contour(double thresh)
   }
 
 
-  vcl_cout<<"max_count: "<<max_count<<": "<<di_max<<vcl_endl;
+  std::cout<<"max_count: "<<max_count<<": "<<di_max<<std::endl;
 
 
   for (unsigned j=0;j< pts_3d_a_.size(); j++) {
-    vcl_cout<<pts_3d_a_[j].angle<<" "<<pts_3d_a_[j].pt3d;
+    std::cout<<pts_3d_a_[j].angle<<" "<<pts_3d_a_[j].pt3d;
 
     if (0)  //don't use it
-      if (vcl_fabs(pts_3d_a_[j].pt3d.z()-di_max)<3.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
+      if (std::fabs(pts_3d_a_[j].pt3d.z()-di_max)<3.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
       {
         pts_3d_a_[j].usage=false;
 
-        vcl_cout<<"*** deleted (in the slot)"<<vcl_endl;
+        std::cout<<"*** deleted (in the slot)"<<std::endl;
         continue;
       }
 
@@ -6376,7 +6376,7 @@ void dbcri_whole_process::delete_contour(double thresh)
       {
         pts_3d_a_[j].usage=false;
 
-        vcl_cout<<"*** deleted (negative)"<<vcl_endl;
+        std::cout<<"*** deleted (negative)"<<std::endl;
         continue;
       }
 
@@ -6387,7 +6387,7 @@ void dbcri_whole_process::delete_contour(double thresh)
         {
           pts_3d_a_[j].usage=false;
 
-          vcl_cout<<"*** deleted (0.5 negative)"<<vcl_endl;
+          std::cout<<"*** deleted (0.5 negative)"<<std::endl;
           continue;
         }
         //////////////
@@ -6399,11 +6399,11 @@ void dbcri_whole_process::delete_contour(double thresh)
           if (pts_3d_a_[j].weight<.1 || pts_3d_a_[j].weight>.9) //weight is angle..
           {
             pts_3d_a_[j].usage=false;
-            vcl_cout<<"*** deleted due to weight"<<vcl_endl;
+            std::cout<<"*** deleted due to weight"<<std::endl;
             continue;
           }
 
-          vcl_cout<<vcl_endl;
+          std::cout<<std::endl;
           //
 
   }
@@ -6423,14 +6423,14 @@ void dbcri_whole_process::delete_contour_05(double thresh)
 {
 
 
-  vcl_cout<<"::delete_contour_05 " <<vcl_endl;
+  std::cout<<"::delete_contour_05 " <<std::endl;
 
   // pts_3d_.clear();
-  vcl_vector <vgl_point_3d  <double> > pts_3d;
+  std::vector <vgl_point_3d  <double> > pts_3d;
   vgl_point_3d <double> p;
   for (unsigned i=0;i<pts_3d_a_.size();i++) {
 
-    vcl_cout<<pts_3d_a_[i].pt3d<<pts_3d_a_[i].position<<" "<< pts_3d_a_[i].weight<<vcl_endl;
+    std::cout<<pts_3d_a_[i].pt3d<<pts_3d_a_[i].position<<" "<< pts_3d_a_[i].weight<<std::endl;
     //pts_3d_a_[i].usage=true;
     if (pts_3d_a_[i].position&& pts_3d_a_[i].weight>.5)// use lower wedge points only  //angle goes clockwise
     {
@@ -6447,23 +6447,23 @@ void dbcri_whole_process::delete_contour_05(double thresh)
   vgl_point_3d <double> max_y_pts_3d,min_y_pts_3d;
   vgl_point_3d <double> max_z_pts_3d,min_z_pts_3d;
 
-  double max_x=vcl_numeric_limits<double>::min();
-  double min_x=vcl_numeric_limits<double>::infinity();
-  double max_y=vcl_numeric_limits<double>::min();
-  double min_y=vcl_numeric_limits<double>::infinity();
-  double max_z=vcl_numeric_limits<double>::min();
-  double min_z=vcl_numeric_limits<double>::infinity();
+  double max_x=std::numeric_limits<double>::min();
+  double min_x=std::numeric_limits<double>::infinity();
+  double max_y=std::numeric_limits<double>::min();
+  double min_y=std::numeric_limits<double>::infinity();
+  double max_z=std::numeric_limits<double>::min();
+  double min_z=std::numeric_limits<double>::infinity();
 
   //6-30-07 if (pts_3d.size()<10) return;
-  /*vcl_cout<<"out_removal points size: "<<pts_3d.size()<<vcl_endl;
+  /*std::cout<<"out_removal points size: "<<pts_3d.size()<<std::endl;
   if (pts_3d.size()<10) {
-  vcl_cout<<"too small num of points delvered to del con\n just returning"<<vcl_endl;
+  std::cout<<"too small num of points delvered to del con\n just returning"<<std::endl;
   return;
   }
   out_removal(pts_3d);*/
 
   //10-20-07 
-  vcl_cout<<"*==*"<<pts_3d.size()<<vcl_endl;
+  std::cout<<"*==*"<<pts_3d.size()<<std::endl;
 
   if (pts_3d.size()>5)
     out_removal_1(pts_3d);  
@@ -6478,7 +6478,7 @@ void dbcri_whole_process::delete_contour_05(double thresh)
       min_z=pts_3d[i].z();
       min_z_pts_3d=pts_3d[i];
     }
-    vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+    std::cout<< pts_3d[i].z()<<std::endl;   
   }
 
 
@@ -6490,22 +6490,22 @@ void dbcri_whole_process::delete_contour_05(double thresh)
   float max_count=0;
   double di_max=-1000.0;
 
-  vcl_cout<<"------05-----------delete loop---------------------"<<vcl_endl;   
-  vcl_cout<<"***max_count: "<<max_count<<": "<<di_max<<vcl_endl;
+  std::cout<<"------05-----------delete loop---------------------"<<std::endl;   
+  std::cout<<"***max_count: "<<max_count<<": "<<di_max<<std::endl;
   for (double di=min_z;di<max_z;di+=(max_z-min_z)/100.0 )
   {
     for (unsigned j=0;j< pts_3d_a_.size(); j++) {
-      if (vcl_fabs(pts_3d_a_[j].pt3d.z()-di)<2.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
+      if (std::fabs(pts_3d_a_[j].pt3d.z()-di)<2.0*(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
       {
 
-        //vcl_cout<<"weight:"<<pts_3d_a_[j].weight<<vcl_endl;
+        //std::cout<<"weight:"<<pts_3d_a_[j].weight<<std::endl;
         if (pts_3d_a_[j].position&&pts_3d_a_[j].weight>.5)
           //count+=5.0*pts_3d_a_[j].weight;  //adding linear bias to prefer high wedge angle
           count++;
       }
     }
 
-    vcl_cout<<di<<" "<< count<<vcl_endl;
+    std::cout<<di<<" "<< count<<std::endl;
     if (count>max_count) {
       max_count=count;
       di_max=di;
@@ -6514,18 +6514,18 @@ void dbcri_whole_process::delete_contour_05(double thresh)
   }
 
 
-  vcl_cout<<"max_count: "<<max_count<<": "<<di_max<<vcl_endl;
+  std::cout<<"max_count: "<<max_count<<": "<<di_max<<std::endl;
 
 
   for (unsigned j=0;j< pts_3d_a_.size(); j++) {
-    vcl_cout<<pts_3d_a_[j].angle<<" "<<pts_3d_a_[j].pt3d;
+    std::cout<<pts_3d_a_[j].angle<<" "<<pts_3d_a_[j].pt3d;
 
 
     if (pts_3d_a_[j].pt3d.z()-di_max<thresh-(max_z-min_z)/100.0) //2.0*(max_z-min_z)/100.0 ==>bin size
     {
       pts_3d_a_[j].usage=false;
 
-      vcl_cout<<"*** deleted (negative)"<<vcl_endl;
+      std::cout<<"*** deleted (negative)"<<std::endl;
       continue;
     }
 
@@ -6536,7 +6536,7 @@ void dbcri_whole_process::delete_contour_05(double thresh)
       {
         pts_3d_a_[j].usage=false;
 
-        vcl_cout<<"*** deleted (0.5 negative)"<<vcl_endl;
+        std::cout<<"*** deleted (0.5 negative)"<<std::endl;
         continue;
       }
       //////////////
@@ -6548,11 +6548,11 @@ void dbcri_whole_process::delete_contour_05(double thresh)
         if (pts_3d_a_[j].weight<.1 || pts_3d_a_[j].weight>.9) //weight is angle..
         {
           pts_3d_a_[j].usage=false;
-          vcl_cout<<"*** deleted due to weight"<<vcl_endl;
+          std::cout<<"*** deleted due to weight"<<std::endl;
           continue;
         }
 
-        vcl_cout<<vcl_endl;
+        std::cout<<std::endl;
         //
 
   }
@@ -6560,7 +6560,7 @@ void dbcri_whole_process::delete_contour_05(double thresh)
 }
 
 
-void dbcri_whole_process::write_vrml_bbox( vcl_ofstream& str,
+void dbcri_whole_process::write_vrml_bbox( std::ofstream& str,
                                           const vnl_double_4x4& bbox_xform )
 {
   str << "DEF BoundingBox Shape {\n"
@@ -6587,13 +6587,13 @@ void dbcri_whole_process::write_vrml_bbox( vcl_ofstream& str,
 
 }
 
-void dbcri_whole_process::print_bb_and_camera(vcl_string bb_dir)
+void dbcri_whole_process::print_bb_and_camera(std::string bb_dir)
 {
 
 
 
-  vcl_vector<vnl_double_3x4> cameras;
-  vcl_vector <int> nums_list;
+  std::vector<vnl_double_3x4> cameras;
+  std::vector <int> nums_list;
   int counter=0;
 
 
@@ -6603,17 +6603,17 @@ void dbcri_whole_process::print_bb_and_camera(vcl_string bb_dir)
 
   char tf[20];char f11[22]; 
 
-  vcl_string input_file_path=".";
+  std::string input_file_path=".";
   vul_file_iterator fn=input_file_path+"/*.con";//nframes_=5;
   for ( ; fn; ++fn) 
   {
-    vcl_string input_file = fn();
-    vcl_cout<<input_file<<vcl_endl;
+    std::string input_file = fn();
+    std::cout<<input_file<<std::endl;
 
 
-    vcl_string aaa=vul_file::strip_directory(input_file);
-    vcl_string nums1=vul_file::strip_extension(aaa);
-    vcl_cout<<nums1<<vcl_endl;
+    std::string aaa=vul_file::strip_directory(input_file);
+    std::string nums1=vul_file::strip_extension(aaa);
+    std::cout<<nums1<<std::endl;
     nums_list.push_back(atoi(nums1.c_str()));
 
     if (counter==0)  fram_start= atoi(nums1.c_str());
@@ -6627,10 +6627,10 @@ void dbcri_whole_process::print_bb_and_camera(vcl_string bb_dir)
 
 
 
-  //vcl_ofstream bbout(vcl_string(out_dir+"/bbox_cam.txt").c_str());
-  vcl_string bb_file=bb_dir+"/bbox_cam_my.txt";
-  //vcl_ofstream bbout(vcl_string("bbox_cam_my.txt").c_str());
-  vcl_ofstream bbout(bb_file.c_str());
+  //std::ofstream bbout(std::string(out_dir+"/bbox_cam.txt").c_str());
+  std::string bb_file=bb_dir+"/bbox_cam_my.txt";
+  //std::ofstream bbout(std::string("bbox_cam_my.txt").c_str());
+  std::ofstream bbout(bb_file.c_str());
   bbout << "Bounding Box Transform\n" << bb_xform_ << '\n';
 
 
@@ -6685,10 +6685,10 @@ void dbcri_whole_process::print_bb_and_camera(vcl_string bb_dir)
 }
 
 
-void dbcri_whole_process::print_con_probe(vcl_string bb_dir)
+void dbcri_whole_process::print_con_probe(std::string bb_dir)
 {
-  vcl_string bb_file=bb_dir+"/con_probe.txt";
-  vcl_ofstream bbout(bb_file.c_str());
+  std::string bb_file=bb_dir+"/con_probe.txt";
+  std::ofstream bbout(bb_file.c_str());
   bbout<< p7_[0]<<" "<<p7_[1]<<" "<<p7_[2]<<'\n';
   bbout<< p0_[0]<<" "<<p0_[1]<<" "<<p0_[2]<<'\n';
   bbout<< solve_z_<<'\n';
@@ -6727,14 +6727,14 @@ void dbcri_whole_process::read_WC()
 
   WC_=-C;
 
-  vcl_cout<<WC_<<vcl_endl;
+  std::cout<<WC_<<std::endl;
 
 
   // cam1 HD
   C[0][0]=3.18664;    C[0][1]=19.0478;    C[0][2]=0;        C[0][3]=224.502;
   C[1][0]=-0.958451;  C[1][1]=1.07767;    C[1][2]=-17.0004; C[1][3]=145.466;
   C[2][0]=-0.0102312; C[2][1]=0.00647459; C[2][2]=0;        C[2][3]=0.204632;
-  vcl_cout<<WC_<<vcl_endl;
+  std::cout<<WC_<<std::endl;
 
 
 
@@ -6755,14 +6755,14 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
 
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > points;
     for (int i=0; i<8; ++i){
       vnl_double_4 p((i/4)%2, (i/2)%2, i%2, 1);
-      //vcl_cout<<p<<vcl_endl;
+      //std::cout<<p<<std::endl;
       vnl_double_4 pt = bb_xform * p;
 
       vnl_double_3 pt2=cameras_[frame]*pt;
-      //vcl_cout<<pt2<<vcl_endl;
+      //std::cout<<pt2<<std::endl;
       vgl_point_2d<double> p2d(pt2[0]/pt2[2],pt2[1]/pt2[2]);
       points.push_back(p2d);
 
@@ -6808,7 +6808,7 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
       count +=points_inside_of_the_box(frame,  bb_xform_reformed);
     }
 
-    vcl_cout<<count<<vcl_endl;
+    std::cout<<count<<std::endl;
     if (!y1_flag) {
       if (count < ref_num-500)  {
         y1_flag=true;
@@ -6827,7 +6827,7 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
       if (count < ref_num)  {
 
 
-        //vcl_cout<<count<<" "<< x0<<" "<<y0<<vcl_endl;
+        //std::cout<<count<<" "<< x0<<" "<<y0<<std::endl;
         //y1_flag=true;
         //y1_sel=y1_just_before;
         //y1_escape=1000.0;
@@ -6862,7 +6862,7 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
     ref_num_x0 +=points_inside_of_the_box(frame,  bb_xform_y1_fixed);
   }
 
-  vcl_cout<<"ref: "<<ref_num_x0<<vcl_endl;
+  std::cout<<"ref: "<<ref_num_x0<<std::endl;
   double x0_escape=0.0;
   for (double x0=0.0;x0<=40.0;x0+=1.0+x0_escape) {
     for (double y0=0.0;y0<=0.0;y0+=1.0) {
@@ -6878,7 +6878,7 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
         count +=points_inside_of_the_box(frame,  bb_xform_reformed);
       }
 
-      vcl_cout<<count<<vcl_endl;
+      std::cout<<count<<std::endl;
 
       if (!x0_flag) {
         if (count < ref_num_x0-1)  {
@@ -6905,14 +6905,14 @@ void dbcri_whole_process::Estimation_BB_shift_using_convex_hull_in_2D() {
 
   frame=0;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > points;
     for (int i=0; i<8; ++i){
       vnl_double_4 p((i/4)%2, (i/2)%2, i%2, 1);
-      //vcl_cout<<p<<vcl_endl;
+      //std::cout<<p<<std::endl;
       vnl_double_4 pt = bb_xform_reformed * p;
 
       vnl_double_3 pt2=cameras_[frame]*pt;
-      //vcl_cout<<pt2<<vcl_endl;
+      //std::cout<<pt2<<std::endl;
       vgl_point_2d<double> p2d(pt2[0]/pt2[2],pt2[1]/pt2[2]);
       points.push_back(p2d);
 
@@ -6945,7 +6945,7 @@ vnl_double_4x4 dbcri_whole_process::bb_reform(double x0, double y0, double z0, d
   min_point(0)+=x0; min_point(1)+=y0; min_point(2)+=z0;
   max_point[0]+=x1; max_point[1]+=y1; max_point[2]+=z1;
 
-  //vcl_cout<<min_point<<" "<< max_point<<vcl_endl;
+  //std::cout<<min_point<<" "<< max_point<<std::endl;
 
   vnl_double_3 diag_vector = max_point - min_point;
   vnl_vector_fixed<double,3> x_axis(0.0), y_axis(0.0), z_axis(0.0);
@@ -6959,8 +6959,8 @@ vnl_double_4x4 dbcri_whole_process::bb_reform(double x0, double y0, double z0, d
   y_axis = inv_rot * y_axis;
   z_axis = inv_rot * z_axis;
 
-  //vcl_cout<<y_axis<<vcl_endl;
-  //vcl_cout<<z_axis<<vcl_endl;
+  //std::cout<<y_axis<<std::endl;
+  //std::cout<<z_axis<<std::endl;
   vnl_double_3 origin = inv_rot * min_point;
 
 
@@ -6973,7 +6973,7 @@ vnl_double_4x4 dbcri_whole_process::bb_reform(double x0, double y0, double z0, d
   bb_xform_deform(0,2)=z_axis[0]; bb_xform_deform(1,2)=z_axis[1]; bb_xform_deform(2,2)=z_axis[2];
   bb_xform_deform(0,3)=origin[0]; bb_xform_deform(1,3)=origin[1]; bb_xform_deform(2,3)=origin[2];
 
-  //vcl_cout<<bb_xform_deform<<bb_xform<<vcl_endl;
+  //std::cout<<bb_xform_deform<<bb_xform<<std::endl;
 
 
   return bb_xform_deform;
@@ -6981,15 +6981,15 @@ vnl_double_4x4 dbcri_whole_process::bb_reform(double x0, double y0, double z0, d
 
 int dbcri_whole_process::points_inside_of_the_box(int index, vnl_double_4x4 bb_xform) {
 
-  vcl_vector<vgl_point_2d<double> > points;
+  std::vector<vgl_point_2d<double> > points;
 
   for (int i=0; i<8; ++i){
     vnl_double_4 p((i/4)%2, (i/2)%2, i%2, 1);
-    //vcl_cout<<p<<vcl_endl;
+    //std::cout<<p<<std::endl;
     vnl_double_4 pt = bb_xform * p;
 
     vnl_double_3 pt2=cameras_[index]*pt;
-    //vcl_cout<<pt2<<vcl_endl;
+    //std::cout<<pt2<<std::endl;
     vgl_point_2d<double> p2d(pt2[0]/pt2[2],pt2[1]/pt2[2]);
     points.push_back(p2d);
 
@@ -7005,9 +7005,9 @@ int dbcri_whole_process::points_inside_of_the_box(int index, vnl_double_4x4 bb_x
 
       double temp_x= (dcl_[index]->point(i)->x()-epi_x_);
       double temp_y= (dcl_[index]->point(i)->y()-epi_y_);
-      double ang=vcl_atan(temp_y/(temp_x));
+      double ang=std::atan(temp_y/(temp_x));
 
-      // vcl_cout<<ang<<vcl_endl;
+      // std::cout<<ang<<std::endl;
       if  (ang>-theta_pos_+.03 && ang<-theta_neg_-.03 ) 
         count++ ;
 
@@ -7015,11 +7015,11 @@ int dbcri_whole_process::points_inside_of_the_box(int index, vnl_double_4x4 bb_x
     }
   }
 
-  //vcl_cout<<count<<vcl_endl;
+  //std::cout<<count<<std::endl;
   return count;
 }
 
-void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_3d <double> > pts) {
+void dbcri_whole_process::statitical_filtering(double &r, std::vector <vgl_point_3d <double> > pts) {
 
 
   vnl_double_3 min_point(min_point_);
@@ -7033,21 +7033,21 @@ void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_
 
   double max_y=max_point(1);
   double min_y=min_point(1);
-  vcl_cout<<min_point<<vcl_endl;
+  std::cout<<min_point<<std::endl;
 
 
-  max_y=-vcl_numeric_limits<double>::infinity();
+  max_y=-std::numeric_limits<double>::infinity();
 
-  min_y= vcl_numeric_limits<double>::infinity();
+  min_y= std::numeric_limits<double>::infinity();
 
-  vcl_cout<<pts.size()<<vcl_endl;
+  std::cout<<pts.size()<<std::endl;
   //normalization of y
   for (unsigned i=0;i<pts.size();i++) {
     //pts[i].set(pts[i].x(),(pts[i].y()-min_y)*(max_y-min_y),pts[i].z());
     if (pts[i].y()>max_y) max_y=pts[i].y();
     if (pts[i].y()<min_y) min_y=pts[i].y();
 
-    vcl_cout<<pts[i]<<vcl_endl;
+    std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -7056,12 +7056,12 @@ void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_
   vnl_double_3 p(point_3d_list_f[i].x(),point_3d_list_f[i].y(),point_3d_list_f[i].z());
 
   pts_z.push_back(rot*p);
-  vcl_cout<<rot*p<<vcl_endl;
+  std::cout<<rot*p<<std::endl;
   }*/
 
 
-  vcl_vector<vnl_double_3> pts_z;
-  vcl_vector<vnl_double_3> pts_y;
+  std::vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_y;
   for (unsigned i=0;i<pts.size();i++) {
     vnl_double_3 p0(pts[i].x(),pts[i].y(),pts[i].z());
     vnl_double_3 p1=rot_*p0;
@@ -7072,34 +7072,34 @@ void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_
 
 
 
-  //vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-  //vcl_vector<vnl_double_3> pts_x;
+  //std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+  //std::vector<vnl_double_3> pts_x;
 
   // only consider points in x and y above 0.5 feet  //i don't use it..
-  for ( vcl_vector<vnl_double_3>::const_iterator itr = pts_z.begin();
+  for ( std::vector<vnl_double_3>::const_iterator itr = pts_z.begin();
     itr != pts_z.end();  ++itr)
   {
     //if ((*itr)[2] > 0.5) { pts_x.push_back(*itr); }
     pts_y.push_back(*itr); 
   }
 
-  //vcl_vector<vnl_double_3> pts_y = pts_x;
+  //std::vector<vnl_double_3> pts_y = pts_x;
 
-  // vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
-  vcl_sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
+  // std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  std::sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
 
 
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin(BIN_SIZE_,0);
+  std::vector<int> bin(BIN_SIZE_,0);
   for (unsigned i=0;i<pts_y.size(); i++) {
 
 
     double r=(pts_y[i])[1];
 
 
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
-      bin[(int) vcl_floor(BIN_SIZE_*r)]++;
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
+      bin[(int) std::floor(BIN_SIZE_*r)]++;
 
 
   }
@@ -7114,13 +7114,13 @@ void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_
   //***************// BIN_SIZE_/2 avoid driver side ...**********
   for (unsigned i=0;i<(int)(BIN_SIZE_/2.0);i++) {
 
-    vcl_cout<<bin[i]<<vcl_endl;
+    std::cout<<bin[i]<<std::endl;
     if (bin[i]>max_bin) {
       max_bin=bin[i];
       max_bin_id=i;
     }
   }
-  //vcl_cout<<mean_r/(double)counter<<vcl_endl;
+  //std::cout<<mean_r/(double)counter<<std::endl;
 
   // check !!! fix later..// min_point and min_y is different
   r=max_bin_id*(max_y-min_y)/100.0+min_y-min_point(1);// min_point and min_y is different
@@ -7132,7 +7132,7 @@ void dbcri_whole_process::statitical_filtering(double &r, vcl_vector <vgl_point_
 }
 
 
-void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d <double> > pts) {
+void dbcri_whole_process::spacial_filtering(double &r, std::vector <vgl_point_3d <double> > pts) {
 
 
   vnl_double_3 min_point(min_point_);
@@ -7146,22 +7146,22 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
 
   double max_y=max_point(1);
   double min_y=min_point(1);
-  vcl_cout<<"::space_filtering"<<vcl_endl;
-  vcl_cout<<min_point<<vcl_endl;
+  std::cout<<"::space_filtering"<<std::endl;
+  std::cout<<min_point<<std::endl;
 
 
-  max_y=-vcl_numeric_limits<double>::infinity();
+  max_y=-std::numeric_limits<double>::infinity();
 
-  min_y= vcl_numeric_limits<double>::infinity();
+  min_y= std::numeric_limits<double>::infinity();
 
-  vcl_cout<<pts.size()<<vcl_endl;
+  std::cout<<pts.size()<<std::endl;
   //normalization of y
   for (unsigned i=0;i<pts.size();i++) {
     //pts[i].set(pts[i].x(),(pts[i].y()-min_y)*(max_y-min_y),pts[i].z());
     if (pts[i].y()>max_y) max_y=pts[i].y();
     if (pts[i].y()<min_y) min_y=pts[i].y();
 
-    vcl_cout<<pts[i]<<vcl_endl;
+    std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -7169,8 +7169,8 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
 
 
 
-  vcl_vector<vnl_double_3> pts_z;
-  vcl_vector<vnl_double_3> pts_y;
+  std::vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_y;
   for (unsigned i=0;i<pts.size();i++) {
     vnl_double_3 p0(pts[i].x(),pts[i].y(),pts[i].z());
     vnl_double_3 p1=rot_*p0;
@@ -7181,34 +7181,34 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
 
 
 
-  //vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-  //vcl_vector<vnl_double_3> pts_x;
+  //std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+  //std::vector<vnl_double_3> pts_x;
 
   // only consider points in x and y above 0.5 feet  //i don't use it..
-  for ( vcl_vector<vnl_double_3>::const_iterator itr = pts_z.begin();
+  for ( std::vector<vnl_double_3>::const_iterator itr = pts_z.begin();
     itr != pts_z.end();  ++itr)
   {
     //if ((*itr)[2] > 0.5) { pts_x.push_back(*itr); }
     pts_y.push_back(*itr); 
   }
 
-  //vcl_vector<vnl_double_3> pts_y = pts_x;
+  //std::vector<vnl_double_3> pts_y = pts_x;
 
-  // vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
-  vcl_sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
+  // std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  std::sort(pts_y.begin(), pts_y.end(), dbcri_accu_edge_cmp_y);
 
 
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin(BIN_SIZE_,0);
+  std::vector<int> bin(BIN_SIZE_,0);
   for (unsigned i=0;i<pts_y.size(); i++) {
 
 
     double r=(pts_y[i])[1];
 
 
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
-      bin[(int) vcl_floor(BIN_SIZE_*r)]++;
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
+      bin[(int) std::floor(BIN_SIZE_*r)]++;
 
 
   }
@@ -7225,13 +7225,13 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
   for (unsigned i=0;i<(int)(BIN_SIZE_/2.0);i++) {// BIN_SIZE_/2 avoid driver side ...**********
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    vcl_cout<<bin[i]<<vcl_endl;
+    std::cout<<bin[i]<<std::endl;
     if (bin[i]>max_bin) {
       max_bin=bin[i];
       max_bin_id=i;
     }
   }
-  //vcl_cout<<mean_r/(double)counter<<vcl_endl;
+  //std::cout<<mean_r/(double)counter<<std::endl;
 
   // check !!! fix later..// min_point and min_y is different
   r=max_bin_id*(max_y-min_y)/100.0+min_y-min_point(1);// min_point and min_y is different
@@ -7240,55 +7240,55 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
   //display_0_frame_=false; // display sample needed for 0 frame once..
 
 
-  vcl_vector<vnl_double_3> sel_pts_y;
+  std::vector<vnl_double_3> sel_pts_y;
 
   for (unsigned i=0;i<pts_y.size(); i++) {
 
 
     double near=(pts_y[i])[1];
 
-    vcl_cout<<vcl_fabs(near-max_bin_id/100.0)<<vcl_endl;
+    std::cout<<std::fabs(near-max_bin_id/100.0)<<std::endl;
 
-    if ( vcl_fabs(near-max_bin_id/100.0)<0.1) {
+    if ( std::fabs(near-max_bin_id/100.0)<0.1) {
       sel_pts_y.push_back(pts_y[i]);
     }
 
 
   }
 
-  vcl_sort(sel_pts_y.begin(), sel_pts_y.end(), dbcri_accu_edge_cmp_x);
+  std::sort(sel_pts_y.begin(), sel_pts_y.end(), dbcri_accu_edge_cmp_x);
 
-  double max_x=-vcl_numeric_limits<double>::infinity();
+  double max_x=-std::numeric_limits<double>::infinity();
 
-  double min_x= vcl_numeric_limits<double>::infinity();
+  double min_x= std::numeric_limits<double>::infinity();
 
-  vcl_cout<<sel_pts_y.size()<<vcl_endl;
+  std::cout<<sel_pts_y.size()<<std::endl;
   //normalization of y
   for (unsigned i=0;i<sel_pts_y.size();i++) {
     //pts[i].set(pts[i].x(),(pts[i].y()-min_y)*(max_y-min_y),pts[i].z());
     if (sel_pts_y[i][0]>max_x) max_x=sel_pts_y[i][0];
     if (sel_pts_y[i][0]<min_x) min_x=sel_pts_y[i][0];
 
-    vcl_cout<<sel_pts_y[i]<<vcl_endl;
+    std::cout<<sel_pts_y[i]<<std::endl;
   }
 
 
-  vcl_vector<int> binx(21,0);
+  std::vector<int> binx(21,0);
   for (unsigned i=0;i<sel_pts_y.size(); i++) {
 
 
     double r=((sel_pts_y[i])[0]-min_x)/(max_x-min_x);
 
-    vcl_cout<<r<<vcl_endl;
+    std::cout<<r<<std::endl;
 
-    binx[(int) vcl_floor(20*r)]++;
+    binx[(int) std::floor(20*r)]++;
   }
 
 
   max_bin=-1000;
   for (unsigned i=0;i<(21);i++) {
 
-    vcl_cout<<binx[i]<<vcl_endl;
+    std::cout<<binx[i]<<std::endl;
     if (binx[i]>max_bin) {
       max_bin=binx[i];
       max_bin_id=i;
@@ -7297,17 +7297,17 @@ void dbcri_whole_process::spacial_filtering(double &r, vcl_vector <vgl_point_3d 
 
 
 
-  vcl_cout<<"r: "<<r<<" ::space_filtering end"<<vcl_endl;
+  std::cout<<"r: "<<r<<" ::space_filtering end"<<std::endl;
   // return;
 
 }
 
 
-void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector <vgl_point_3d <double> > pts) {
+void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, std::vector <vgl_point_3d <double> > pts) {
 
-  vcl_cout<<"==========================================================="<<vcl_endl;
-  vcl_cout<<"r1& r2: "<<r1<<" "<<r2<<" ::space_filtering_x start"<<vcl_endl;
-  vcl_cout<<"==========================================================="<<vcl_endl;
+  std::cout<<"==========================================================="<<std::endl;
+  std::cout<<"r1& r2: "<<r1<<" "<<r2<<" ::space_filtering_x start"<<std::endl;
+  std::cout<<"==========================================================="<<std::endl;
   vnl_double_3 min_point(min_point_);
   vnl_double_3 max_point(max_point_);
 
@@ -7319,23 +7319,23 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
 
   double max_y=max_point(1);
   double min_y=min_point(1);
-  // vcl_cout<<min_point<<vcl_endl;
+  // std::cout<<min_point<<std::endl;
   double max_z0,min_z0;
 
   double max_x=max_point(0);
   double min_x=min_point(0);
-  vcl_cout<<"min_point:"<<min_point<<vcl_endl;
-  vcl_cout<<"max_point:"<<max_point<<vcl_endl;
+  std::cout<<"min_point:"<<min_point<<std::endl;
+  std::cout<<"max_point:"<<max_point<<std::endl;
 
 
-  max_y=-vcl_numeric_limits<double>::infinity();
+  max_y=-std::numeric_limits<double>::infinity();
 
-  min_y= vcl_numeric_limits<double>::infinity();
-  max_x=-vcl_numeric_limits<double>::infinity();
+  min_y= std::numeric_limits<double>::infinity();
+  max_x=-std::numeric_limits<double>::infinity();
 
-  min_x= vcl_numeric_limits<double>::infinity();
+  min_x= std::numeric_limits<double>::infinity();
 
-  vcl_cout<<"spacial filtering x pts.size: "<<pts.size()<<vcl_endl;
+  std::cout<<"spacial filtering x pts.size: "<<pts.size()<<std::endl;
   //normalization of y
   for (unsigned i=0;i<pts.size();i++) {
     //pts[i].set(pts[i].x(),(pts[i].y()-min_y)*(max_y-min_y),pts[i].z());
@@ -7344,7 +7344,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
 
     if (pts[i].z()>max_z0) max_z0=pts[i].z();
     if (pts[i].z()<min_z0) min_z0=pts[i].z();
-    //  vcl_cout<<pts[i]<<vcl_endl;
+    //  std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -7352,14 +7352,14 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   vnl_double_3 p(point_3d_list_f[i].x(),point_3d_list_f[i].y(),point_3d_list_f[i].z());
 
   pts_z.push_back(rot*p);
-  vcl_cout<<rot*p<<vcl_endl;
+  std::cout<<rot*p<<std::endl;
   }*/
 
 
-  vcl_vector<vnl_double_3> pts_x;
-  vcl_vector<vnl_double_3> pts_temp;
-  vcl_vector<vnl_double_3> pts_z;
-  vcl_vector<vnl_double_3> pts_y;
+  std::vector<vnl_double_3> pts_x;
+  std::vector<vnl_double_3> pts_temp;
+  std::vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_y;
   for (unsigned i=0;i<pts.size();i++) {
     vnl_double_3 p0(pts[i].x(),pts[i].y(),pts[i].z());
     vnl_double_3 p1=rot_*p0;
@@ -7377,7 +7377,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
     if (pts_temp[i][0]>max_x) max_x=pts_temp[i][0];
     if (pts_temp[i][0]<min_x) min_x=pts_temp[i][0];
 
-    //vcl_cout<<pts[i]<<vcl_endl;
+    //std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -7391,52 +7391,52 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
 
   }
 
-  //vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-  //vcl_vector<vnl_double_3> pts_x;
+  //std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+  //std::vector<vnl_double_3> pts_x;
 
   // only consider points in x and y above 0.5 feet  //i don't use it..
-  for ( vcl_vector<vnl_double_3>::const_iterator itr = pts_z.begin();
+  for ( std::vector<vnl_double_3>::const_iterator itr = pts_z.begin();
     itr != pts_z.end();  ++itr)
   {
     //if ((*itr)[2] > 0.5) { pts_x.push_back(*itr); }
     pts_y.push_back(*itr); 
   }
 
-  //vcl_vector<vnl_double_3> pts_y = pts_x;
+  //std::vector<vnl_double_3> pts_y = pts_x;
 
-  // vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
-  vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  // std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
 
 
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin_1(BIN_SIZE_,0);
-  for (unsigned i=0;i<vcl_floor(pts_x.size()/5.0); i++) {// 6-22-07 if there is outlier, problem!
+  std::vector<int> bin_1(BIN_SIZE_,0);
+  for (unsigned i=0;i<std::floor(pts_x.size()/5.0); i++) {// 6-22-07 if there is outlier, problem!
     // i,e. if x={-100, 0, 1,1, 2, 3, 4, 5, 6,6,6,7.1,10,11}
     // x=-100 makes problem.... since it search only 1/5 portion..
     double r=(pts_x[i])[0];
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
     {
-      if ( (int) vcl_floor(BIN_SIZE_*r-1)>=0)
-        bin_1[(int) vcl_floor(BIN_SIZE_*r)-1]++;
+      if ( (int) std::floor(BIN_SIZE_*r-1)>=0)
+        bin_1[(int) std::floor(BIN_SIZE_*r)-1]++;
 
-      bin_1[(int) vcl_floor(BIN_SIZE_*r)]++;bin_1[(int) vcl_floor(BIN_SIZE_*r)]++;
-      if ((int) vcl_floor(BIN_SIZE_*r+1)<=99)
-        bin_1[(int) vcl_floor(BIN_SIZE_*r)+1]++;
+      bin_1[(int) std::floor(BIN_SIZE_*r)]++;bin_1[(int) std::floor(BIN_SIZE_*r)]++;
+      if ((int) std::floor(BIN_SIZE_*r+1)<=99)
+        bin_1[(int) std::floor(BIN_SIZE_*r)+1]++;
     }
   }
 
-  vcl_vector<int> bin_2(BIN_SIZE_,0);
-  for (unsigned i=vcl_floor(pts_x.size()*4/5.0);i<pts_x.size(); i++) {
+  std::vector<int> bin_2(BIN_SIZE_,0);
+  for (unsigned i=std::floor(pts_x.size()*4/5.0);i<pts_x.size(); i++) {
     double r=(pts_x[i])[0];
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
     {
-      if ((int) vcl_floor(BIN_SIZE_*r-1)>=0)
-        bin_2[(int) vcl_floor(BIN_SIZE_*r)-1]++;
+      if ((int) std::floor(BIN_SIZE_*r-1)>=0)
+        bin_2[(int) std::floor(BIN_SIZE_*r)-1]++;
 
-      bin_2[(int) vcl_floor(BIN_SIZE_*r)]++;bin_2[(int) vcl_floor(BIN_SIZE_*r)]++;
-      if ((int) vcl_floor(BIN_SIZE_*r+1)<=99)
-        bin_2[(int) vcl_floor(BIN_SIZE_*r)+1]++;
+      bin_2[(int) std::floor(BIN_SIZE_*r)]++;bin_2[(int) std::floor(BIN_SIZE_*r)]++;
+      if ((int) std::floor(BIN_SIZE_*r+1)<=99)
+        bin_2[(int) std::floor(BIN_SIZE_*r)+1]++;
     }
 
   }
@@ -7454,7 +7454,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   //***************// BIN_SIZE_/2 avoid driver side ...**********
   for (unsigned i=0;i<(int)(BIN_SIZE_/2.0);i++) {
 
-    vcl_cout<<bin_1[i]<<vcl_endl;
+    std::cout<<bin_1[i]<<std::endl;
     if (bin_1[i]>max_bin_1) {
       max_bin_1=bin_1[i];
       max_bin_id_1=i;
@@ -7462,12 +7462,12 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   }
 
 
-  vcl_cout<<"====front and top ==================="<<vcl_endl;
+  std::cout<<"====front and top ==================="<<std::endl;
   //NOTICE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //***************// BIN_SIZE_/2 avoid rear side ...**********
   for (unsigned i=(int)(BIN_SIZE_/2.0);i<BIN_SIZE_;i++) {
 
-    vcl_cout<<bin_2[i]<<vcl_endl;
+    std::cout<<bin_2[i]<<std::endl;
     if (bin_2[i]>max_bin_2) {
       max_bin_2=bin_2[i];
       max_bin_id_2=i;
@@ -7475,7 +7475,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   }
 
 
-  //vcl_cout<<mean_r/(double)counter<<vcl_endl;
+  //std::cout<<mean_r/(double)counter<<std::endl;
 
   // check !!! fix later..// min_point and min_y is different
   r1=max_bin_id_1*(max_x-min_x)/100.0+min_x-min_point(0);// min_point and min_y is different
@@ -7493,7 +7493,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   for (unsigned i=0;i<pts_x.size();i++) {
 
     double r=(pts_x[i])[0];
-    if ((int) vcl_floor(BIN_SIZE_*r)<max_bin_id_1+1&&(int) vcl_floor(BIN_SIZE_*r)>max_bin_id_1-1)
+    if ((int) std::floor(BIN_SIZE_*r)<max_bin_id_1+1&&(int) std::floor(BIN_SIZE_*r)>max_bin_id_1-1)
     {
 
       double temp_x=(max_x-min_x)*r+min_x;
@@ -7505,7 +7505,7 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
     }
 
 
-    if ((int) vcl_floor(BIN_SIZE_*r)<max_bin_id_2+1&&(int) vcl_floor(BIN_SIZE_*r)>max_bin_id_2-1)
+    if ((int) std::floor(BIN_SIZE_*r)<max_bin_id_2+1&&(int) std::floor(BIN_SIZE_*r)>max_bin_id_2-1)
     {
 
       double temp_x=(max_x-min_x)*r+min_x;
@@ -7525,8 +7525,8 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   vnl_double_3 pm2_temp(m_x_2/count2,m_y_2/count2,max_z); //use maximum z for probe 7'th z location
   vnl_double_3 pm2=inv_rot*pm2_temp;
 
-  vcl_cout<<"front & rear points:"<<pm1<<" "<<pm2<<vcl_endl;
-  vcl_cout<<"max z- probe 7'th z:"<<max_z-pm2(2)<<vcl_endl;
+  std::cout<<"front & rear points:"<<pm1<<" "<<pm2<<std::endl;
+  std::cout<<"max z- probe 7'th z:"<<max_z-pm2(2)<<std::endl;
 
   p7_=pm1;// actually, this is probe 0
   p0_=pm2;// actually, this is probe 7
@@ -7537,10 +7537,10 @@ void dbcri_whole_process::spacial_filtering_x(double &r1,double &r2, vcl_vector 
   //
 
 
-  vcl_cout<<"r1& r2: "<<r1<<" "<<r2<<" ::space_filtering_x end"<<vcl_endl;
+  std::cout<<"r1& r2: "<<r1<<" "<<r2<<" ::space_filtering_x end"<<std::endl;
 
-  vcl_cout<<"==========================================================="<<vcl_endl;
-  vcl_cout<<"==========================================================="<<vcl_endl;
+  std::cout<<"==========================================================="<<std::endl;
+  std::cout<<"==========================================================="<<std::endl;
 
   return;
 
@@ -7678,7 +7678,7 @@ void dbcri_whole_process::read_bb_and_probe(float scale, double &cube_x, double 
 
   X.set(-scale*x,-scale*z,-scale*y); 
   cube_x*=scale;cube_y*=scale;cube_z*=scale;
-  //     vcl_cout<<probe_id<<X<<cube_x<<" "<<cube_y<<" "<<cube_z<<vcl_endl;
+  //     std::cout<<probe_id<<X<<cube_x<<" "<<cube_y<<" "<<cube_z<<std::endl;
 }
 
 void dbcri_whole_process::read_bb_and_probe_test(float scale, double &cube_x, double &cube_y, double &cube_z,  //test for same cube_size
@@ -7764,7 +7764,7 @@ void dbcri_whole_process::read_bb_and_probe_test(float scale, double &cube_x, do
 
   X.set(-scale*x,-scale*z,-scale*y); 
   cube_x*=scale;cube_y*=scale;cube_z*=scale;
-  //     vcl_cout<<probe_id<<X<<cube_x<<" "<<cube_y<<" "<<cube_z<<vcl_endl;
+  //     std::cout<<probe_id<<X<<cube_x<<" "<<cube_y<<" "<<cube_z<<std::endl;
 }
 
 
@@ -7780,7 +7780,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
   t[0][0]=0; t[1][0]=0;t[2][0]=7;
 
 
-  vcl_vector <vnl_matrix<float> >p_list;
+  std::vector <vnl_matrix<float> >p_list;
   vgl_point_3d<double> X;
 
 
@@ -7796,7 +7796,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
   vnl_vector_fixed <double,4 > x2(1,1,0,1);
   vnl_vector <double> center_3d(.5*RT*(x1+x2));
 
-  if (debug_1) vcl_cout<<RT<<vcl_endl;
+  if (debug_1) std::cout<<RT<<std::endl;
 
 
   ///////////
@@ -7818,7 +7818,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
   vnl_double_3x3 R_out(0.0);
 
   rotate_bb(R, R_out,theta_x*vnl_math::pi/180.0,  theta_y*vnl_math::pi/180.0,theta_z*vnl_math::pi/180.0);
-  if (debug_1) vcl_cout<<R_out<<vcl_endl;
+  if (debug_1) std::cout<<R_out<<std::endl;
   R=R_out;
   float Rx_new=-Rx,Ry_new=-Rz,Rz_new=-Ry;
   Rx=Rx_new;Ry=Ry_new;Rz=Rz_new;
@@ -7828,33 +7828,33 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 
   // normalize R along columns..
 
-  Rx=vcl_sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
-  Ry=vcl_sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
-  Rz=vcl_sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
+  Rx=std::sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
+  Ry=std::sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
+  Rz=std::sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
 
 
-  //Scale=Rz/vcl_abs(-28.0527 -18.6547);
-  if (debug_1) vcl_cout<<"suggested scale"<<Rx/(vcl_abs( 198.7+130.053)/2.0)<<vcl_endl;
-  if (debug_1) vcl_cout<<"Scale: "<<scale_<<"Rx: "<<Rx<<"Ry: "<<Ry<<"Rz: "<<Rz<<vcl_endl;
+  //Scale=Rz/std::abs(-28.0527 -18.6547);
+  if (debug_1) std::cout<<"suggested scale"<<Rx/(std::abs( 198.7+130.053)/2.0)<<std::endl;
+  if (debug_1) std::cout<<"Scale: "<<scale_<<"Rx: "<<Rx<<"Ry: "<<Ry<<"Rz: "<<Rz<<std::endl;
 
   //model dimension.. 9-17-04
-  double Mx=vcl_abs( 198.7+130.053)/2.0;
-  double My=vcl_abs(20.6846+37.5776);
-  double Mz=vcl_abs(32.2621+24.6169);
-  if (debug_1) vcl_cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-  if (debug_1) vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
-  Mx=vcl_abs( 198.7);
-  My=vcl_abs(20.6846)*2.0;
-  Mz=vcl_abs(32.2621)*2.0;
-  if (debug_1) vcl_cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-  if (debug_1) vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
+  double Mx=std::abs( 198.7+130.053)/2.0;
+  double My=std::abs(20.6846+37.5776);
+  double Mz=std::abs(32.2621+24.6169);
+  if (debug_1) std::cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+  if (debug_1) std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
+  Mx=std::abs( 198.7);
+  My=std::abs(20.6846)*2.0;
+  Mz=std::abs(32.2621)*2.0;
+  if (debug_1) std::cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+  if (debug_1) std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
   //return;
   // model dimension ends..
   R.normalize_columns();
 
-  if (debug_1) vcl_cout<<R<<vcl_endl;
+  if (debug_1) std::cout<<R<<std::endl;
   //R.normalize_rows();
-  //vcl_cout<<"after normalization\n"<<R<<vcl_endl;
+  //std::cout<<"after normalization\n"<<R<<std::endl;
   //shift_x=RT[0][3];shift_y=RT[1][3];shift_z=RT[2][3];
 
   // 2-5-2005 shift insert
@@ -7870,11 +7870,11 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
   double max_val=-100.0;
   double max_shift_x_arg, max_shift_y_arg, max_shift_z_arg;
   vnl_matrix <double> p8_max(3,8,0.0);
-  // vcl_vector <vcl_vector <vgl_point_3d <double> > > p_list;
-  vcl_vector <vnl_matrix <double> > p8_max_list;
+  // std::vector <std::vector <vgl_point_3d <double> > > p_list;
+  std::vector <vnl_matrix <double> > p8_max_list;
   double total_val=-1000.0;
-  vcl_vector <double> val_list;
-  vcl_vector <vcl_vector <vgl_point_3d <double> > >p8_list;  //for all baby box projection
+  std::vector <double> val_list;
+  std::vector <std::vector <vgl_point_3d <double> > >p8_list;  //for all baby box projection
   for (shift_z_arg=0; shift_z_arg<=0; shift_z_arg+=6)  //at least z should move same way
     for (shift_x_arg=-24; shift_x_arg<=24; shift_x_arg+=6)
       for (shift_y_arg=-12; shift_y_arg<=12; shift_y_arg+=6){
@@ -7888,9 +7888,9 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 
         //1-14-2005
 
-        double Scale=vcl_fabs(1.0*Rx/(Mx));
+        double Scale=std::fabs(1.0*Rx/(Mx));
 
-        vcl_cout<<"Scale: "<<Scale<<vcl_endl;
+        std::cout<<"Scale: "<<Scale<<std::endl;
 
         ///////////////////////////
         */
@@ -7906,7 +7906,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 
         int class_sweep=0; int probe_id=1; //test
 
-        vcl_vector <vgl_point_3d <double> > p8;
+        std::vector <vgl_point_3d <double> > p8;
         p8_list.clear(); total_val=0.0;
         val_list.clear();
 
@@ -7937,7 +7937,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 
             //d3_search_trip_2( X,cube_x_times*cube_x_pos,cube_x_times*cube_x_neg,cube_y_pos,cube_y_neg,cube_z_pos,cube_z_neg);
 
-            ////vcl_vector <vgl_point_3d <double> > p8; //p8 bb corner points..
+            ////std::vector <vgl_point_3d <double> > p8; //p8 bb corner points..
 
             p8.clear();
             for (double mix=x_center_3d-cube_x_neg;mix<=x_center_3d+cube_x_pos+0.01;mix+=cube_x_neg+cube_x_pos) {
@@ -7950,8 +7950,8 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
                   vnl_matrix<double> tt4=(R*t);
                   X.set(tt4[0][0]+shift_x,tt4[1][0]+shift_y,tt4[2][0]+shift_z);
                   vgl_point_3d <double> p(X);
-                  //vcl_cout<<p<<vcl_endl;
-                  //vcl_cout<<mix<<" "<<miy<<" "<<miz<<vcl_endl;
+                  //std::cout<<p<<std::endl;
+                  //std::cout<<mix<<" "<<miy<<" "<<miz<<std::endl;
                   p8.push_back(p);
 
 
@@ -7968,13 +7968,13 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 
             total_val+=val;
           }//calss sweep, but it does not play
-          ///vcl_cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<vcl_endl;
+          ///std::cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<std::endl;
         } ////probe_id
 
         //double val_check=val_list_check(val_list);
         // total_val=val_check;
 
-        // vcl_cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<vcl_endl;
+        // std::cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<std::endl;
         if (max_val<total_val) {
           max_val=total_val;
           p8_max_list.clear();
@@ -7993,7 +7993,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
         }
       }
 
-      vcl_cout<<"**max_val:"<<max_val<<"============== "<<max_shift_x_arg<<" "<<max_shift_y_arg<<" "<<max_shift_z_arg<<" "<<vcl_endl;
+      std::cout<<"**max_val:"<<max_val<<"============== "<<max_shift_x_arg<<" "<<max_shift_y_arg<<" "<<max_shift_z_arg<<" "<<std::endl;
 
 
 
@@ -8006,7 +8006,7 @@ double dbcri_whole_process::Estimation_BB_and_bb_using_convex_hull_in2D(int some
 }
 
 
-double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<double> > points) {
+double dbcri_whole_process::bb_box_contour_measure(std::vector<vgl_point_3d<double> > points) {
 
   //: Distance between point \a (x,y,z) and closest point on closed polygon \a (px[i],py[i]),pz[i]
   //template <class T>
@@ -8023,15 +8023,15 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<doubl
     //  ref_num +=points_inside_of_the_box(frame,  bb_xform);
     //  }
 
-    vcl_vector<vgl_point_2d<double> > p2d;
+    std::vector<vgl_point_2d<double> > p2d;
     for (unsigned i=0;i<points.size();i++)
     {
       vnl_double_4 pt(points[i].x(),points[i].y(),points[i].z(),1.0);
       vnl_double_3 pt2=cameras_[frame]*pt;
 
-      //vcl_cout<<pt2<<vcl_endl;
+      //std::cout<<pt2<<std::endl;
       vgl_point_2d<double> pt3(pt2[0]/pt2[2],pt2[1]/pt2[2]);
-      //vcl_cout<<pt3<<vcl_endl;
+      //std::cout<<pt3<<std::endl;
       p2d.push_back(pt3);
     }
     vgl_convex_hull_2d<double> ch(p2d);
@@ -8050,7 +8050,7 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<doubl
         px[p]=polygon[s][p].x();
         py[p]=polygon[s][p].y();
 
-        //     vcl_cout<<px[p]<<" "<<py[p]<<vcl_endl;
+        //     std::cout<<px[p]<<" "<<py[p]<<std::endl;
       }
 
       int count=0;
@@ -8062,9 +8062,9 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<doubl
 
           double temp_x= (dcl_[frame]->point(i)->x());
           double temp_y= (dcl_[frame]->point(i)->y());
-          //double ang=vcl_atan(temp_y/(temp_x));
+          //double ang=std::atan(temp_y/(temp_x));
 
-          // vcl_cout<<ang<<vcl_endl;
+          // std::cout<<ang<<std::endl;
           // if  (ang>-theta_pos_+.03 && ang<-theta_neg_-.03 ) 
           count++ ;
 
@@ -8084,7 +8084,7 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<doubl
       ///sum/=count;
 
       if (count==0) sum=0;
-      ////////// vcl_cout<<sum<<" "<<count<<vcl_endl;;
+      ////////// std::cout<<sum<<" "<<count<<std::endl;;
       all_sum+=sum;
       max_distance_sum+=max_distance;
   }
@@ -8094,48 +8094,48 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector<vgl_point_3d<doubl
   //return max_distance_sum;
 }
 
-double dbcri_whole_process::val_list_check(vcl_vector <double> val_list)
+double dbcri_whole_process::val_list_check(std::vector <double> val_list)
 {
 
   double mean=0.0,var=0.0;
   for (unsigned i=0;i<val_list.size();i++) {
     mean+=val_list[i];
-    // vcl_cout<<mean<<" ";
+    // std::cout<<mean<<" ";
   }
   mean/=val_list.size();
 
   for (unsigned i=0;i<val_list.size();i++) {
     var+=(val_list[i]-mean)*(val_list[i]-mean);
-    //  vcl_cout<<var<<" ";
+    //  std::cout<<var<<" ";
   }
   var/=val_list.size();
 
-  //vcl_cout<<"\n"<<var<<vcl_endl;
+  //std::cout<<"\n"<<var<<std::endl;
 
   double prob=0;
-  vcl_vector <double> prob_list;
+  std::vector <double> prob_list;
   for (unsigned i=0;i<val_list.size();i++) {
     prob=(val_list[i]-mean)*(val_list[i]-mean)/var;
-    ///vcl_cout<<prob<<" ";
+    ///std::cout<<prob<<" ";
     prob_list.push_back(prob);
   }
-  ///vcl_cout<<vcl_endl;
+  ///std::cout<<std::endl;
 
 
-  vcl_sort(prob_list.begin(), prob_list.end(), dbcri_accu_edge_sort);
+  std::sort(prob_list.begin(), prob_list.end(), dbcri_accu_edge_sort);
 
   /////return mean/var;
-  vcl_cout<<prob_list[0]-prob_list[4]<<vcl_endl;
+  std::cout<<prob_list[0]-prob_list[4]<<std::endl;
   return (prob_list[0]-prob_list[4]);
 }
 
-void dbcri_whole_process::draw_vsol(vcl_vector <vnl_matrix <double> >p8_max_list) {
+void dbcri_whole_process::draw_vsol(std::vector <vnl_matrix <double> >p8_max_list) {
 
   int        frame=0;
   if (p8_max_list.size()==6) 
     for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
       vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-      vcl_vector <vgl_point_2d<double> > points8;
+      std::vector <vgl_point_2d<double> > points8;
       for (unsigned j=0;j<p8_max_list.size();j++) {
 
         vnl_matrix <double>  p8;
@@ -8143,13 +8143,13 @@ void dbcri_whole_process::draw_vsol(vcl_vector <vnl_matrix <double> >p8_max_list
 
         //for (int i=0; i<6; ++i){
         //vnl_double_4 p((i/4)%2, (i/2)%2, i%2, 1);
-        //vcl_cout<<p<<vcl_endl;
+        //std::cout<<p<<std::endl;
 
         vnl_double_4 pt(p8[0][0],p8[1][0],p8[2][0],1.0);
 
-        //vcl_cout<<pt<<vcl_endl;
+        //std::cout<<pt<<std::endl;
         vnl_double_3 pt2=cameras_[frame]*pt;
-        //vcl_cout<<pt2<<vcl_endl;
+        //std::cout<<pt2<<std::endl;
         vgl_point_2d<double> p2d(pt2[0]/pt2[2],pt2[1]/pt2[2]);
         points8.push_back(p2d);
 
@@ -8172,15 +8172,15 @@ void dbcri_whole_process::draw_vsol(vcl_vector <vnl_matrix <double> >p8_max_list
 
         vnl_matrix <double>  p8;
         p8=p8_max_list[j];
-        vcl_vector <vgl_point_2d<double> > points8;
+        std::vector <vgl_point_2d<double> > points8;
         for (int i=0; i<8; ++i){
           //vnl_double_4 p((i/4)%2, (i/2)%2, i%2, 1);
-          //vcl_cout<<p<<vcl_endl;
+          //std::cout<<p<<std::endl;
 
           vnl_double_4 pt(p8[0][i],p8[1][i],p8[2][i],1.0);
 
           vnl_double_3 pt2=cameras_[frame]*pt;
-          //vcl_cout<<pt2<<vcl_endl;
+          //std::cout<<pt2<<std::endl;
           vgl_point_2d<double> p2d(pt2[0]/pt2[2],pt2[1]/pt2[2]);
           points8.push_back(p2d);
 
@@ -8210,25 +8210,25 @@ void dbcri_whole_process::rotate_bb( vnl_double_3x3 R_in, vnl_double_3x3 & R_out
 
   //float theta_x=theta_x*vnl_math::pi/180.0;
   //z-axis
-  Rz(0,0)=vcl_cos(theta_z);
-  Rz(0,1)=vcl_sin(theta_z);
-  Rz(1,0)=-vcl_sin(theta_z);
-  Rz(1,1)=vcl_cos(theta_z);
+  Rz(0,0)=std::cos(theta_z);
+  Rz(0,1)=std::sin(theta_z);
+  Rz(1,0)=-std::sin(theta_z);
+  Rz(1,1)=std::cos(theta_z);
   Rz(2,2)=1.0;
 
   //along y_axis
-  Ry(0,0)=vcl_cos(theta_y);
-  Ry(0,2)=-vcl_sin(theta_y);
-  Ry(2,0)=vcl_sin(theta_y);
-  Ry(2,2)=vcl_cos(theta_y);
+  Ry(0,0)=std::cos(theta_y);
+  Ry(0,2)=-std::sin(theta_y);
+  Ry(2,0)=std::sin(theta_y);
+  Ry(2,2)=std::cos(theta_y);
   Ry(1,1)=1.0;
 
 
   //along x_axis
-  Rx(1,1)=vcl_cos(theta_x);
-  Rx(1,2)=vcl_sin(theta_x);
-  Rx(2,1)=-vcl_sin(theta_x);
-  Rx(2,2)=vcl_cos(theta_x);
+  Rx(1,1)=std::cos(theta_x);
+  Rx(1,2)=std::sin(theta_x);
+  Rx(2,1)=-std::sin(theta_x);
+  Rx(2,2)=std::cos(theta_x);
   Rx(0,0)=1.0;
 
   R_out=R_in*Rz*Ry*Rx;
@@ -8249,7 +8249,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
   t[0][0]=0; t[1][0]=0;t[2][0]=7;
 
 
-  vcl_vector <vnl_matrix<float> >p_list;
+  std::vector <vnl_matrix<float> >p_list;
   vgl_point_3d<double> X;
 
 
@@ -8258,7 +8258,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
   vnl_vector_fixed <double,4 > x2(1,1,0,1);
   vnl_vector <double> center_3d(.5*RT*(x1+x2));
 
-  if (debug_1) vcl_cout<<RT<<vcl_endl;
+  if (debug_1) std::cout<<RT<<std::endl;
 
 
   ///////////
@@ -8280,7 +8280,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
   vnl_double_3x3 R_out(0.0);
 
   rotate_bb(R, R_out,theta_x*vnl_math::pi/180.0,  theta_y*vnl_math::pi/180.0,theta_z*vnl_math::pi/180.0);
-  if (debug_1) vcl_cout<<R_out<<vcl_endl;
+  if (debug_1) std::cout<<R_out<<std::endl;
   R=R_out;
   float Rx_new=-Rx,Ry_new=-Rz,Rz_new=-Ry;
   Rx=Rx_new;Ry=Ry_new;Rz=Rz_new;
@@ -8290,33 +8290,33 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
 
   // normalize R along columns..
 
-  Rx=vcl_sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
-  Ry=vcl_sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
-  Rz=vcl_sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
+  Rx=std::sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
+  Ry=std::sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
+  Rz=std::sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
 
 
-  //Scale=Rz/vcl_abs(-28.0527 -18.6547);
-  if (debug_1) vcl_cout<<"suggested scale"<<Rx/(vcl_abs( 198.7+130.053)/2.0)<<vcl_endl;
-  if (debug_1) vcl_cout<<"Scale: "<<scale_<<"Rx: "<<Rx<<"Ry: "<<Ry<<"Rz: "<<Rz<<vcl_endl;
+  //Scale=Rz/std::abs(-28.0527 -18.6547);
+  if (debug_1) std::cout<<"suggested scale"<<Rx/(std::abs( 198.7+130.053)/2.0)<<std::endl;
+  if (debug_1) std::cout<<"Scale: "<<scale_<<"Rx: "<<Rx<<"Ry: "<<Ry<<"Rz: "<<Rz<<std::endl;
 
   //model dimension.. 9-17-04
-  double Mx=vcl_abs( 198.7+130.053)/2.0;
-  double My=vcl_abs(20.6846+37.5776);
-  double Mz=vcl_abs(32.2621+24.6169);
-  if (debug_1) vcl_cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-  if (debug_1) vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
-  Mx=vcl_abs( 198.7);
-  My=vcl_abs(20.6846)*2.0;
-  Mz=vcl_abs(32.2621)*2.0;
-  if (debug_1) vcl_cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-  if (debug_1) vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
+  double Mx=std::abs( 198.7+130.053)/2.0;
+  double My=std::abs(20.6846+37.5776);
+  double Mz=std::abs(32.2621+24.6169);
+  if (debug_1) std::cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+  if (debug_1) std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
+  Mx=std::abs( 198.7);
+  My=std::abs(20.6846)*2.0;
+  Mz=std::abs(32.2621)*2.0;
+  if (debug_1) std::cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+  if (debug_1) std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
   //return;
   // model dimension ends..
   R.normalize_columns();
 
-  if (debug_1) vcl_cout<<R<<vcl_endl;
+  if (debug_1) std::cout<<R<<std::endl;
   //R.normalize_rows();
-  //vcl_cout<<"after normalization\n"<<R<<vcl_endl;
+  //std::cout<<"after normalization\n"<<R<<std::endl;
   //shift_x=RT[0][3];shift_y=RT[1][3];shift_z=RT[2][3];
 
   // 2-5-2005 shift insert
@@ -8332,10 +8332,10 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
   double min_val=1000000000.0;
   double min_shift_x_arg, min_shift_y_arg, min_shift_z_arg;
   vnl_matrix <double> p8_min(3,8,0.0);
-  // vcl_vector <vcl_vector <vgl_point_3d <double> > > p_list;
-  vcl_vector <vnl_matrix <double> > p8_min_list;
+  // std::vector <std::vector <vgl_point_3d <double> > > p_list;
+  std::vector <vnl_matrix <double> > p8_min_list;
   double total_val=-1000.0;
-  vcl_vector <vcl_vector <vgl_point_3d <double> > >p8_list;  //for all baby box projection
+  std::vector <std::vector <vgl_point_3d <double> > >p8_list;  //for all baby box projection
   for (shift_z_arg=0; shift_z_arg<=0; shift_z_arg+=6)  //at least z should move same way
     for (shift_x_arg=-48; shift_x_arg<=12; shift_x_arg+=6)
       for (shift_y_arg=-12; shift_y_arg<=12; shift_y_arg+=6){
@@ -8349,9 +8349,9 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
 
         //1-14-2005
 
-        double Scale=vcl_fabs(1.0*Rx/(Mx));
+        double Scale=std::fabs(1.0*Rx/(Mx));
 
-        vcl_cout<<"Scale: "<<Scale<<vcl_endl;
+        std::cout<<"Scale: "<<Scale<<std::endl;
 
         ///////////////////////////
         */
@@ -8367,10 +8367,10 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
 
         int class_sweep=0; int probe_id=1; //test
 
-        vcl_vector <vgl_point_3d <double> > p8;
+        std::vector <vgl_point_3d <double> > p8;
         p8_list.clear(); total_val=0.0;
         p8.clear();
-        vcl_vector<int> probe_list;
+        std::vector<int> probe_list;
         probe_list.push_back(0);
         probe_list.push_back(2);
         probe_list.push_back(1);
@@ -8396,7 +8396,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
           double y_center_3d=X.y();
           double z_center_3d=X.z();
 
-          ////vcl_vector <vgl_point_3d <double> > p8; //p8 bb corner points..
+          ////std::vector <vgl_point_3d <double> > p8; //p8 bb corner points..
 
           double mix=x_center_3d;
           double miy=y_center_3d;
@@ -8408,8 +8408,8 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
           vnl_matrix<double> tt4=(R*t);
           X.set(tt4[0][0]+shift_x,tt4[1][0]+shift_y,tt4[2][0]+shift_z);
           vgl_point_3d <double> p(X);
-          //vcl_cout<<p<<vcl_endl;
-          //vcl_cout<<mix<<" "<<miy<<" "<<miz<<vcl_endl;
+          //std::cout<<p<<std::endl;
+          //std::cout<<mix<<" "<<miy<<" "<<miz<<std::endl;
           p8.clear() ;
           p8.push_back(p);
 
@@ -8426,7 +8426,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
 
         total_val=val;
 
-        if (debug_1) vcl_cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<vcl_endl;
+        if (debug_1) std::cout<<total_val<<"        "<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<" "<<std::endl;
         ////
         if (min_val>total_val) {
           min_val=total_val;
@@ -8441,14 +8441,14 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
               p8_min[2][j]=(p8_list[i])[j].z();
             }
             p8_min_list.push_back(p8_min);
-            //vcl_cout<<p8_min<<vcl_endl;
+            //std::cout<<p8_min<<std::endl;
           }
 
 
         }
       }
 
-      vcl_cout<<"chosen****************"<<min_val<<" "<<min_shift_x_arg<<" "<<min_shift_y_arg<<" "<<min_shift_z_arg<<" "<<vcl_endl;
+      std::cout<<"chosen****************"<<min_val<<" "<<min_shift_x_arg<<" "<<min_shift_y_arg<<" "<<min_shift_z_arg<<" "<<std::endl;
 
 
 
@@ -8465,7 +8465,7 @@ double dbcri_whole_process::generate_mean_contour_model(int class_index) {
 
 
 
-double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_point_3d<double> > >points) {
+double dbcri_whole_process::bb_box_contour_measure(std::vector< std::vector<vgl_point_3d<double> > >points) {
 
 
   int frame=0;double all_sum=0.0;double max_distance_sum=0.0;
@@ -8473,15 +8473,15 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_po
     //  ref_num +=points_inside_of_the_box(frame,  bb_xform);
     //  }
 
-    vcl_vector<vgl_point_2d<double> > p2d;
+    std::vector<vgl_point_2d<double> > p2d;
     for (unsigned i=0;i<points.size();i++)
     {
       vnl_double_4 pt(points[i][0].x(),points[i][0].y(),points[i][0].z(),1.0);
       vnl_double_3 pt2=cameras_[frame]*pt;
 
-      //vcl_cout<<pt2<<vcl_endl;
+      //std::cout<<pt2<<std::endl;
       vgl_point_2d<double> pt3(pt2[0]/pt2[2],pt2[1]/pt2[2]);
-      //vcl_cout<<pt3<<vcl_endl;
+      //std::cout<<pt3<<std::endl;
       p2d.push_back(pt3);
     }
     vgl_convex_hull_2d<double> ch(p2d);
@@ -8499,7 +8499,7 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_po
     px[p]=polygon[s][p].x();
     py[p]=polygon[s][p].y();
 
-    //vcl_cout<<px[p]<<" "<<py[p]<<vcl_endl;
+    //std::cout<<px[p]<<" "<<py[p]<<std::endl;
     }
     */
     int count=0;
@@ -8509,8 +8509,8 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_po
       //if ( polygon.contains(dcl_[frame]->point(i)->x(),dcl_[frame]->point(i)->y() ) ) { 
       double temp_x= (dcl_[frame]->point(i)->x()-epi_x_);
       double temp_y= (dcl_[frame]->point(i)->y()-epi_y_);
-      double ang=vcl_atan(temp_y/(temp_x));
-      // vcl_cout<<ang<<vcl_endl;
+      double ang=std::atan(temp_y/(temp_x));
+      // std::cout<<ang<<std::endl;
       //if  (ang>-theta_pos_+.03 )//&& ang<-theta_neg_-.03 ) 
       if  (ang<1*(-theta_pos_-theta_neg_)/3.0 ) 
       {
@@ -8530,7 +8530,7 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_po
 
     sum/=count;
     if (count==0) sum=0;
-    ////////// vcl_cout<<sum<<" "<<count<<vcl_endl;;
+    ////////// std::cout<<sum<<" "<<count<<std::endl;;
     all_sum+=sum;
     max_distance_sum+=max_distance;
   }
@@ -8543,7 +8543,7 @@ double dbcri_whole_process::bb_box_contour_measure(vcl_vector< vcl_vector<vgl_po
 }
 
 
-double dbcri_whole_process::bb_box_contour_measure_clip(vcl_vector<vgl_point_3d<double> > points) {
+double dbcri_whole_process::bb_box_contour_measure_clip(std::vector<vgl_point_3d<double> > points) {
 
   int frame=0;double all_sum=0.0;double max_distance_sum=0.0;
   bool con_in_box_flag=0; float penalty=0; float value=0.0;
@@ -8552,15 +8552,15 @@ double dbcri_whole_process::bb_box_contour_measure_clip(vcl_vector<vgl_point_3d<
     //  }
 
 
-    vcl_vector<vgl_point_2d<double> > p2d;
+    std::vector<vgl_point_2d<double> > p2d;
     for (unsigned i=0;i<points.size();i++)
     {
       vnl_double_4 pt(points[i].x(),points[i].y(),points[i].z(),1.0);
       vnl_double_3 pt2=cameras_[frame]*pt;
 
-      //vcl_cout<<pt2<<vcl_endl;
+      //std::cout<<pt2<<std::endl;
       vgl_point_2d<double> pt3(pt2[0]/pt2[2],pt2[1]/pt2[2]);
-      //vcl_cout<<pt3<<vcl_endl;
+      //std::cout<<pt3<<std::endl;
       p2d.push_back(pt3);
     }
     vgl_convex_hull_2d<double> ch(p2d);
@@ -8573,7 +8573,7 @@ double dbcri_whole_process::bb_box_contour_measure_clip(vcl_vector<vgl_point_3d<
 
     float r=area2/area1;
 
-    // vcl_cout<<area2<<vcl_endl;
+    // std::cout<<area2<<std::endl;
 
     /*if (r<0.0001) con_in_box_flag=false;
     else con_in_box_flag=true;
@@ -8584,7 +8584,7 @@ double dbcri_whole_process::bb_box_contour_measure_clip(vcl_vector<vgl_point_3d<
 
     if (r<0.0001) value=-.5;
     else if (r>.9) value=-.5;
-    else value=vcl_exp(-(r-.5)*(r-.5));
+    else value=std::exp(-(r-.5)*(r-.5));
     //value-=penalty;
     all_sum+=value;
   }
@@ -8598,7 +8598,7 @@ double dbcri_whole_process::bb_box_contour_measure_clip(vcl_vector<vgl_point_3d<
 double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float epi_search_range_x,float epi_search_range_y,float epi_search_interval) {
 
 
-  //vcl_cout.precision(4);
+  //std::cout.precision(4);
 
 
   //newly added
@@ -8610,23 +8610,23 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
   ///newly added comment out//vnl_vector <double> tnew_selected;
 
   vnl_vector <double> tnew_max;
-  vcl_vector <vnl_vector <double> >tnew_list;
-  vcl_vector <double> sum_f_minus_s;
-  vcl_vector <double> epi_x_l,epi_y_l;
+  std::vector <vnl_vector <double> >tnew_list;
+  std::vector <double> sum_f_minus_s;
+  std::vector <double> epi_x_l,epi_y_l;
 
   double epi_x_save=epi_x_;double epi_y_save=epi_y_;
 
 
 
 
-  vcl_cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<vcl_endl;
+  std::cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<std::endl;
 
   for(double epi_y_loop=-epi_search_range_y;epi_y_loop<=epi_search_range_y;epi_y_loop+=epi_search_interval)
     for(double epi_x_loop=-epi_search_range_x;epi_x_loop<=epi_search_range_x;epi_x_loop+=epi_search_interval) {// before -60:20:60{//-60:20:60
 
-      vcl_cout<<"\===================================================================="<<vcl_endl;
+      std::cout<<"\===================================================================="<<std::endl;
       epi_x_=epi_x_loop+epi_x_save;epi_y_=epi_y_loop+epi_y_save;
-      vcl_cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+      std::cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<std::endl;
       frame=0;
       episeglist.clear();
       episeglist_edge_.clear();
@@ -8638,21 +8638,21 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
         dbecl_episeg_from_curve_converter factory(epipole1);
         //for(int i = 0; i < _curves.size(); i++) {
         vsol_digital_curve_2d_sptr curve = dcl_[frame];
-        vcl_vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
+        std::vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
 
 
         dbecl_epipole_sptr epipole11 = new dbecl_epipole(epi_x_,epi_y_);
-        vcl_vector<dbecl_episeg_sptr> episegs_edge;
+        std::vector<dbecl_episeg_sptr> episegs_edge;
 
 
-        vcl_vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
-        //vcl_cout<<"curve_edge_list size:"<<curve_edge_list.size()<<vcl_endl;
+        std::vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
+        //std::cout<<"curve_edge_list size:"<<curve_edge_list.size()<<std::endl;
         for (unsigned j=0;j<curve_edge_list.size();j++) {
           dbecl_episeg_from_curve_converter factory_edge(epipole11);
           vsol_digital_curve_2d_sptr dc_edge=curve_edge_list[j];
 
-          vcl_vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
-          for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
+          std::vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
+          for(std::vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
             itr != eps.end();  ++itr)
             episegs_edge.push_back(*itr);
         }
@@ -8676,7 +8676,7 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
       dbecl_epipole_sptr epipole2 = new dbecl_epipole(epi_x_,epi_y_);
       // double r=cameras(0,1,2,dcl_,episeglist,epipole2);
 
-      vcl_cout<<"\n---------------------------------------"<<vcl_endl;
+      std::cout<<"\n---------------------------------------"<<std::endl;
       int C=episeglist.size();
       int combination=C*(C-1)*(C-2);
       combination/=6;
@@ -8690,8 +8690,8 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
       int counter=0;
 
 
-      // vcl_cout<<ang<<" episeglist.size() "<<episeglist.size()<<vcl_endl;
-      // vcl_cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<vcl_endl;
+      // std::cout<<ang<<" episeglist.size() "<<episeglist.size()<<std::endl;
+      // std::cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<std::endl;
 
 
       double sum_fisrt_second_diff=0.0;
@@ -8706,10 +8706,10 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
 
 
             //generate vector 
-            //vcl_cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<vcl_endl;
-            // vcl_cout<<"-------------------- "<<vcl_endl;
+            //std::cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<std::endl;
+            // std::cout<<"-------------------- "<<std::endl;
 
             double r_con=cameras(i,j,k,dcl_,episeglist,epipole2);
             double r=cameras_accu(i,j,k,dcl_edge_,episeglist_edge_,epipole2,r_con,.1);
@@ -8717,28 +8717,28 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
             sum_fisrt_second_diff+=first_minus_second_;
 
 
-            vcl_cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<vcl_endl;
+            std::cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<std::endl;
             //double r=r_con;
             for (unsigned mi=i;mi<j;mi++) {
               //B(counter,mi) =100.0f-r;
               // B(counter,mi) =r;
               //B(counter,mi) =-100.0f+r;
               B(counter,mi) =-1.0f+r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
             for (unsigned mj=j;mj<k;mj++) {
               //B(counter,mj) =r;
               //B(counter,mj) =-100.0f+r;
               B(counter,mj) =r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
 
             counter++;
 
-            //vcl_cout<< i<<" "<<j<<" "<<k<<" "<<r<<vcl_endl;
+            //std::cout<< i<<" "<<j<<" "<<k<<" "<<r<<std::endl;
 
 
           }
@@ -8757,12 +8757,12 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
 
       }
 
-      vcl_cout<<B<<"\n---------------------------------------"<<vcl_endl;
-      vcl_cout<<BB<<vcl_endl;
+      std::cout<<B<<"\n---------------------------------------"<<std::endl;
+      std::cout<<BB<<std::endl;
 
 
       if (BB.min_value()<-100) {
-        vcl_cout<<"**bad histogram**"<<vcl_endl; //escape when 0 histogram
+        std::cout<<"**bad histogram**"<<std::endl; //escape when 0 histogram
         sum_f_minus_s.push_back(-1);
         vnl_vector <double> dummy_tnew(1,0.0);
         tnew_list.push_back(dummy_tnew);
@@ -8779,7 +8779,7 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
         vnl_matrix<double> B1 =svd.inverse();
         vnl_vector <double> t=B1*BB.transpose()*bb ;
 
-        vcl_cout<<t<<vcl_endl;
+        std::cout<<t<<std::endl;
 
 
         double total_t=0.0;
@@ -8797,7 +8797,7 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
         tnew[0]=1.0;tnew_[0]=1.0;
 
 
-        vcl_cout<<tnew<<vcl_endl;
+        std::cout<<tnew<<std::endl;
         //getting all cameras
         init_cameras(tnew); //here tnew and tnew_ are equal.
         //
@@ -8807,7 +8807,7 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
       tnew_list.push_back(tnew_);// tnew_ ? or tnew?
       epi_x_l.push_back(epi_x_);
       epi_y_l.push_back(epi_y_);
-      vcl_cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<vcl_endl;
+      std::cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<std::endl;
 
     }
     ////////////////////
@@ -8819,12 +8819,12 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
     ////////////////////
     //return true;
     double max_sum=-1000.0; int max_index=99999;
-    vcl_cout<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<vcl_endl;
+    std::cout<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<std::endl;
     for (unsigned iii=0;iii<sum_f_minus_s.size();iii++)  {
-      vcl_cout<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<vcl_endl;
-      vcl_cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<vcl_endl;
+      std::cout<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<std::endl;
+      std::cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<std::endl;
       if (sum_f_minus_s[iii]>max_sum) {
         max_sum=sum_f_minus_s[iii];
         max_index=iii;
@@ -8836,10 +8836,10 @@ double dbcri_whole_process::epi_search(vnl_vector <double> & tnew_selected,float
 
     }
 
-    vcl_cout<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<vcl_endl;
-    vcl_cerr<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<vcl_endl;
-    vcl_cout<<"=====epipole search end==========="<<vcl_endl;
-    vcl_cerr<<"=====epipole search end==========="<<vcl_endl;
+    std::cout<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<std::endl;
+    std::cerr<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<std::endl;
+    std::cout<<"=====epipole search end==========="<<std::endl;
+    std::cerr<<"=====epipole search end==========="<<std::endl;
     init_cameras(tnew_selected);
 
     /////////////////////
@@ -8868,9 +8868,9 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
   ///newly added comment out//vnl_vector <double> tnew_selected;
 
   vnl_vector <double> tnew_max;
-  vcl_vector <vnl_vector <double> >tnew_list;
-  vcl_vector <double> sum_f_minus_s;
-  vcl_vector <double> epi_x_l,epi_y_l;
+  std::vector <vnl_vector <double> >tnew_list;
+  std::vector <double> sum_f_minus_s;
+  std::vector <double> epi_x_l,epi_y_l;
 
   double epi_x_save=epi_x_;double epi_y_save=epi_y_;
 
@@ -8883,14 +8883,14 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
   ///newly added comment out//  parameters()->get_value( "-epi_search_interval" , epi_search_interval );
   ///newly added comment out//  parameters()->get_value( "-MARGIN" , MARGIN_ );
 
-  vcl_cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<vcl_endl;
+  std::cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<std::endl;
 
   for(double epi_y_loop=-epi_search_range_y;epi_y_loop<=epi_search_range_y;epi_y_loop+=epi_search_interval)
     for(double epi_x_loop=-epi_search_range_x;epi_x_loop<=epi_search_range_x;epi_x_loop+=epi_search_interval) {// before -60:20:60{//-60:20:60
 
-      vcl_cout<<"\===================================================================="<<vcl_endl;
+      std::cout<<"\===================================================================="<<std::endl;
       epi_x_=epi_x_loop+epi_x_save;epi_y_=epi_y_loop+epi_y_save;
-      vcl_cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+      std::cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<std::endl;
       frame=0;
       episeglist.clear();
       episeglist_edge_.clear();
@@ -8902,21 +8902,21 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
         dbecl_episeg_from_curve_converter factory(epipole1);
         //for(int i = 0; i < _curves.size(); i++) {
         vsol_digital_curve_2d_sptr curve = dcl_[frame];
-        vcl_vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
+        std::vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
 
 
         dbecl_epipole_sptr epipole11 = new dbecl_epipole(epi_x_,epi_y_);
-        vcl_vector<dbecl_episeg_sptr> episegs_edge;
+        std::vector<dbecl_episeg_sptr> episegs_edge;
 
 
-        vcl_vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
-        //vcl_cout<<"curve_edge_list size:"<<curve_edge_list.size()<<vcl_endl;
+        std::vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
+        //std::cout<<"curve_edge_list size:"<<curve_edge_list.size()<<std::endl;
         for (unsigned j=0;j<curve_edge_list.size();j++) {
           dbecl_episeg_from_curve_converter factory_edge(epipole11);
           vsol_digital_curve_2d_sptr dc_edge=curve_edge_list[j];
 
-          vcl_vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
-          for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
+          std::vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
+          for(std::vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
             itr != eps.end();  ++itr)
             episegs_edge.push_back(*itr);
         }
@@ -8940,7 +8940,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
       dbecl_epipole_sptr epipole2 = new dbecl_epipole(epi_x_,epi_y_);
       // double r=cameras(0,1,2,dcl_,episeglist,epipole2);
 
-      vcl_cout<<"\n---------------------------------------"<<vcl_endl;
+      std::cout<<"\n---------------------------------------"<<std::endl;
       int C=episeglist.size();
       int combination=C*(C-1)*(C-2);
       combination/=6;
@@ -8954,8 +8954,8 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
       int counter=0;
 
 
-      // vcl_cout<<ang<<" episeglist.size() "<<episeglist.size()<<vcl_endl;
-      // vcl_cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<vcl_endl;
+      // std::cout<<ang<<" episeglist.size() "<<episeglist.size()<<std::endl;
+      // std::cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<std::endl;
 
 
       double sum_fisrt_second_diff=0.0;
@@ -8971,7 +8971,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
 
             /*if (k==j+1&& j==i+1) continue;
             double random01 = (double)rand() / (double)RAND_MAX;
-            vcl_cout <<"***random :" <<random01<<vcl_endl;
+            std::cout <<"***random :" <<random01<<std::endl;
             if (random01> rand_th) continue;*/
 
             if (Table[i*C*C+j*C+k][0]==0) continue;
@@ -8985,10 +8985,10 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
 
 
             //generate vector 
-            //vcl_cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<vcl_endl;
-            // vcl_cout<<"-------------------- "<<vcl_endl;
+            //std::cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<std::endl;
+            // std::cout<<"-------------------- "<<std::endl;
 
             double r_con=cameras(i,j,k,dcl_,episeglist,epipole2);
             double r=cameras_accu(i,j,k,dcl_edge_,episeglist_edge_,epipole2,r_con,.1);
@@ -8996,28 +8996,28 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
             sum_fisrt_second_diff+=first_minus_second_;
 
 
-            vcl_cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<vcl_endl;
+            std::cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<std::endl;
             //double r=r_con;
             for (unsigned mi=i;mi<j;mi++) {
               //B(counter,mi) =100.0f-r;
               // B(counter,mi) =r;
               //B(counter,mi) =-100.0f+r;
               B(counter,mi) =-1.0f+r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
             for (unsigned mj=j;mj<k;mj++) {
               //B(counter,mj) =r;
               //B(counter,mj) =-100.0f+r;
               B(counter,mj) =r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
 
             counter++;
 
-            //vcl_cout<< i<<" "<<j<<" "<<k<<" "<<r<<vcl_endl;
+            //std::cout<< i<<" "<<j<<" "<<k<<" "<<r<<std::endl;
 
 
           }
@@ -9047,12 +9047,12 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
 
       }
 
-      vcl_cout<<B_new<<"\n---------------------------------------"<<vcl_endl;
-      vcl_cout<<BB_new<<vcl_endl;
+      std::cout<<B_new<<"\n---------------------------------------"<<std::endl;
+      std::cout<<BB_new<<std::endl;
 
 
       if (BB_new.min_value()<-100) {
-        vcl_cout<<"**bad histogram**"<<vcl_endl; //escape when 0 histogram
+        std::cout<<"**bad histogram**"<<std::endl; //escape when 0 histogram
         sum_f_minus_s.push_back(-1);
         vnl_vector <double> dummy_tnew(1,0.0);
         tnew_list.push_back(dummy_tnew);
@@ -9069,7 +9069,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
         vnl_matrix<double> B1 =svd.inverse();
         vnl_vector <double> t=B1*BB_new.transpose()*bb ;
 
-        vcl_cout<<t<<vcl_endl;
+        std::cout<<t<<std::endl;
 
 
         double total_t=0.0;
@@ -9087,7 +9087,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
         tnew[0]=1.0;tnew_[0]=1.0;
 
 
-        vcl_cout<<tnew<<vcl_endl;
+        std::cout<<tnew<<std::endl;
         //getting all cameras
         init_cameras(tnew); //here tnew and tnew_ are equal.
         //
@@ -9098,7 +9098,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
       epi_x_l.push_back(epi_x_);
       epi_y_l.push_back(epi_y_);
 
-      vcl_cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<vcl_endl;
+      std::cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<std::endl;
 
     }
     ////////////////////
@@ -9110,12 +9110,12 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
     ////////////////////
     //return true;
     double max_sum=-1000.0; int max_index=99999;
-    vcl_cout<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<vcl_endl;
+    std::cout<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<std::endl;
     for (unsigned iii=0;iii<sum_f_minus_s.size();iii++)  {
-      vcl_cout<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<vcl_endl;
-      vcl_cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<vcl_endl;
+      std::cout<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<std::endl;
+      std::cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<std::endl;
       if (sum_f_minus_s[iii]>max_sum) {
         max_sum=sum_f_minus_s[iii];
         max_index=iii;
@@ -9127,10 +9127,10 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
 
     }
 
-    vcl_cout<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<vcl_endl;
-    vcl_cerr<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<vcl_endl;
-    vcl_cout<<"=====epipole search end==========="<<vcl_endl;
-    vcl_cerr<<"=====epipole search end==========="<<vcl_endl;
+    std::cout<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<std::endl;
+    std::cerr<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<std::endl;
+    std::cout<<"=====epipole search end==========="<<std::endl;
+    std::cerr<<"=====epipole search end==========="<<std::endl;
     init_cameras(tnew_selected);
 
     /////////////////////
@@ -9153,7 +9153,7 @@ double dbcri_whole_process::epi_search_lite(vnl_vector <double> & tnew_selected,
 double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,float epi_search_range_x,float epi_search_range_y,float epi_search_interval) {
 
 
-  //vcl_cout.precision(4);
+  //std::cout.precision(4);
 
 
   //newly added
@@ -9165,34 +9165,34 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
   ///newly added comment out//vnl_vector <double> tnew_selected;
 
   vnl_vector <double> tnew_max;
-  vcl_vector <vnl_vector <double> >tnew_list;
-  vcl_vector <double> sum_f_minus_s;
-  vcl_vector <double> epi_x_l,epi_y_l;
+  std::vector <vnl_vector <double> >tnew_list;
+  std::vector <double> sum_f_minus_s;
+  std::vector <double> epi_x_l,epi_y_l;
 
   double epi_x_save=epi_x_;double epi_y_save=epi_y_;
 
 
 
 
-  vcl_cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<vcl_endl;
+  std::cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<std::endl;
 
   float display_count=0;
   for(double epi_y_loop=-epi_search_range_y;epi_y_loop<=epi_search_range_y;epi_y_loop+=epi_search_interval)
     for(double epi_x_loop=-epi_search_range_x;epi_x_loop<=epi_search_range_x;epi_x_loop+=epi_search_interval) {// before -60:20:60{//-60:20:60
 
-      vcl_cout<<"\===================================================================="<<vcl_endl;
+      std::cout<<"\===================================================================="<<std::endl;
       epi_x_=epi_x_loop+epi_x_save;epi_y_=epi_y_loop+epi_y_save;
-      vcl_cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+      std::cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<std::endl;
 
-      vcl_cout<<display_count<<vcl_endl;
-      vcl_cerr<<display_count<<vcl_endl;
+      std::cout<<display_count<<std::endl;
+      std::cerr<<display_count<<std::endl;
       display_count++;
       frame=0;
       episeglist.clear();
       episeglist_edge_.clear();
 
 
-      vcl_vector <float> vl; 
+      std::vector <float> vl; 
 
 
       for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
@@ -9202,21 +9202,21 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
         dbecl_episeg_from_curve_converter factory(epipole1);
         //for(int i = 0; i < _curves.size(); i++) {
         vsol_digital_curve_2d_sptr curve = dcl_[frame];
-        vcl_vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
+        std::vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
 
 
         dbecl_epipole_sptr epipole11 = new dbecl_epipole(epi_x_,epi_y_);
-        vcl_vector<dbecl_episeg_sptr> episegs_edge;
+        std::vector<dbecl_episeg_sptr> episegs_edge;
 
 
-        vcl_vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
-        //vcl_cout<<"curve_edge_list size:"<<curve_edge_list.size()<<vcl_endl;
+        std::vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
+        //std::cout<<"curve_edge_list size:"<<curve_edge_list.size()<<std::endl;
         for (unsigned j=0;j<curve_edge_list.size();j++) {
           dbecl_episeg_from_curve_converter factory_edge(epipole11);
           vsol_digital_curve_2d_sptr dc_edge=curve_edge_list[j];
 
-          vcl_vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
-          for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
+          std::vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
+          for(std::vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
             itr != eps.end();  ++itr)
             episegs_edge.push_back(*itr);
         }
@@ -9242,7 +9242,7 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
       dbecl_epipole_sptr epipole2 = new dbecl_epipole(epi_x_,epi_y_);
       // double r=cameras(0,1,2,dcl_,episeglist,epipole2);
 
-      vcl_cout<<"\n---------------------------------------"<<vcl_endl;
+      std::cout<<"\n---------------------------------------"<<std::endl;
       int C=episeglist.size();
       int combination=C*(C-1)*(C-2);
       combination/=6;
@@ -9258,7 +9258,7 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
 
 
       //11-29-2007
-      vcl_vector <vcl_vector <vcl_vector <vnl_float_3> > > simple_wedge_list_N;
+      std::vector <std::vector <std::vector <vnl_float_3> > > simple_wedge_list_N;
       episeg_simplify(simple_wedge_list_N);
 
       double sum_fisrt_second_diff=0.0;
@@ -9273,10 +9273,10 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
 
 
             //generate vector 
-            //vcl_cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<vcl_endl;
-            // vcl_cout<<"-------------------- "<<vcl_endl;
+            //std::cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<std::endl;
+            // std::cout<<"-------------------- "<<std::endl;
 
             double r_con=cameras_fast(i,j,k,dcl_,episeglist,epipole2);
             double r=cameras_accu_fast(simple_wedge_list_N,i,j,k,dcl_edge_,episeglist_edge_,epipole2,r_con,.1);
@@ -9284,28 +9284,28 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
             sum_fisrt_second_diff+=first_minus_second_;
 
 
-            vcl_cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<vcl_endl;
+            std::cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<std::endl;
             //double r=r_con;
             for (unsigned mi=i;mi<j;mi++) {
               //B(counter,mi) =100.0f-r;
               // B(counter,mi) =r;
               //B(counter,mi) =-100.0f+r;
               B(counter,mi) =-1.0f+r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
             for (unsigned mj=j;mj<k;mj++) {
               //B(counter,mj) =r;
               //B(counter,mj) =-100.0f+r;
               B(counter,mj) =r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
 
             counter++;
 
-            //vcl_cout<< i<<" "<<j<<" "<<k<<" "<<r<<vcl_endl;
+            //std::cout<< i<<" "<<j<<" "<<k<<" "<<r<<std::endl;
 
 
           }
@@ -9324,12 +9324,12 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
 
       }
 
-      vcl_cout<<B<<"\n---------------------------------------"<<vcl_endl;
-      vcl_cout<<BB<<vcl_endl;
+      std::cout<<B<<"\n---------------------------------------"<<std::endl;
+      std::cout<<BB<<std::endl;
 
 
       if (BB.min_value()<-100) {
-        vcl_cout<<"**bad histogram**"<<vcl_endl; //escape when 0 histogram
+        std::cout<<"**bad histogram**"<<std::endl; //escape when 0 histogram
         sum_f_minus_s.push_back(-1);
         vnl_vector <double> dummy_tnew(1,0.0);
         tnew_list.push_back(dummy_tnew);
@@ -9346,7 +9346,7 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
         vnl_matrix<double> B1 =svd.inverse();
         vnl_vector <double> t=B1*BB.transpose()*bb ;
 
-        vcl_cout<<t<<vcl_endl;
+        std::cout<<t<<std::endl;
 
 
         double total_t=0.0;
@@ -9364,7 +9364,7 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
         tnew[0]=1.0;tnew_[0]=1.0;
 
 
-        vcl_cout<<tnew<<vcl_endl;
+        std::cout<<tnew<<std::endl;
         //getting all cameras
         init_cameras(tnew); //here tnew and tnew_ are equal.
         //
@@ -9374,7 +9374,7 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
       tnew_list.push_back(tnew_);// tnew_ ? or tnew?
       epi_x_l.push_back(epi_x_);
       epi_y_l.push_back(epi_y_);
-      vcl_cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<vcl_endl;
+      std::cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<std::endl;
 
     }
     ////////////////////
@@ -9386,12 +9386,12 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
     ////////////////////
     //return true;
     double max_sum=-1000.0; int max_index=99999;
-    vcl_cout<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<vcl_endl;
+    std::cout<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<std::endl;
     for (unsigned iii=0;iii<sum_f_minus_s.size();iii++)  {
-      vcl_cout<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<vcl_endl;
-      vcl_cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<vcl_endl;
+      std::cout<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<std::endl;
+      std::cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<'\t'<<epi_x_l[iii]<<'\t'<<epi_y_l[iii]<<std::endl;
       if (sum_f_minus_s[iii]>max_sum) {
         max_sum=sum_f_minus_s[iii];
         max_index=iii;
@@ -9403,10 +9403,10 @@ double dbcri_whole_process::epi_search_fast(vnl_vector <double> & tnew_selected,
 
     }
 
-    vcl_cout<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<vcl_endl;
-    vcl_cerr<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<vcl_endl;
-    vcl_cout<<"=====epipole search end==========="<<vcl_endl;
-    vcl_cerr<<"=====epipole search end==========="<<vcl_endl;
+    std::cout<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<std::endl;
+    std::cerr<<"max index: \t"<<max_index <<'\t'<<max_sum<<" *"<<epi_x_<<'\t'<<epi_y_<<std::endl;
+    std::cout<<"=====epipole search end==========="<<std::endl;
+    std::cerr<<"=====epipole search end==========="<<std::endl;
     init_cameras(tnew_selected);
 
     /////////////////////
@@ -9435,9 +9435,9 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
   ///newly added comment out//vnl_vector <double> tnew_selected;
 
   vnl_vector <double> tnew_max;
-  vcl_vector <vnl_vector <double> >tnew_list;
-  vcl_vector <double> sum_f_minus_s;
-  vcl_vector <double> epi_x_l,epi_y_l;
+  std::vector <vnl_vector <double> >tnew_list;
+  std::vector <double> sum_f_minus_s;
+  std::vector <double> epi_x_l,epi_y_l;
 
   double epi_x_save=epi_x_;double epi_y_save=epi_y_;
 
@@ -9450,18 +9450,18 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
   ///newly added comment out//  parameters()->get_value( "-epi_search_interval" , epi_search_interval );
   ///newly added comment out//  parameters()->get_value( "-MARGIN" , MARGIN_ );
 
-  vcl_cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<vcl_endl;
+  std::cout<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<std::endl;
 
   float display_count=0;
   for(double epi_y_loop=-epi_search_range_y;epi_y_loop<=epi_search_range_y;epi_y_loop+=epi_search_interval)
     for(double epi_x_loop=-epi_search_range_x;epi_x_loop<=epi_search_range_x;epi_x_loop+=epi_search_interval) {// before -60:20:60{//-60:20:60
 
-      vcl_cout<<"\===================================================================="<<vcl_endl;
+      std::cout<<"\===================================================================="<<std::endl;
       epi_x_=epi_x_loop+epi_x_save;epi_y_=epi_y_loop+epi_y_save;
-      vcl_cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+      std::cout<<"epi search: "<<epi_x_<<" "<<epi_y_<<std::endl;
 
-      vcl_cout<<display_count<<vcl_endl;
-      vcl_cerr<<display_count<<vcl_endl;
+      std::cout<<display_count<<std::endl;
+      std::cerr<<display_count<<std::endl;
       display_count++;
 
 
@@ -9476,21 +9476,21 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
         dbecl_episeg_from_curve_converter factory(epipole1);
         //for(int i = 0; i < _curves.size(); i++) {
         vsol_digital_curve_2d_sptr curve = dcl_[frame];
-        vcl_vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
+        std::vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
 
 
         dbecl_epipole_sptr epipole11 = new dbecl_epipole(epi_x_,epi_y_);
-        vcl_vector<dbecl_episeg_sptr> episegs_edge;
+        std::vector<dbecl_episeg_sptr> episegs_edge;
 
 
-        vcl_vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
-        //vcl_cout<<"curve_edge_list size:"<<curve_edge_list.size()<<vcl_endl;
+        std::vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
+        //std::cout<<"curve_edge_list size:"<<curve_edge_list.size()<<std::endl;
         for (unsigned j=0;j<curve_edge_list.size();j++) {
           dbecl_episeg_from_curve_converter factory_edge(epipole11);
           vsol_digital_curve_2d_sptr dc_edge=curve_edge_list[j];
 
-          vcl_vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
-          for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
+          std::vector<dbecl_episeg_sptr> eps = factory_edge.convert_curve(dc_edge);
+          for(std::vector<dbecl_episeg_sptr>::iterator itr = eps.begin();
             itr != eps.end();  ++itr)
             episegs_edge.push_back(*itr);
         }
@@ -9514,7 +9514,7 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
       dbecl_epipole_sptr epipole2 = new dbecl_epipole(epi_x_,epi_y_);
       // double r=cameras(0,1,2,dcl_,episeglist,epipole2);
 
-      vcl_cout<<"\n---------------------------------------"<<vcl_endl;
+      std::cout<<"\n---------------------------------------"<<std::endl;
       int C=episeglist.size();
       int combination=C*(C-1)*(C-2);
       combination/=6;
@@ -9528,13 +9528,13 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
       int counter=0;
 
 
-      // vcl_cout<<ang<<" episeglist.size() "<<episeglist.size()<<vcl_endl;
-      // vcl_cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<vcl_endl;
+      // std::cout<<ang<<" episeglist.size() "<<episeglist.size()<<std::endl;
+      // std::cout<<ang<<" episeglist_edge_.size() "<<episeglist_edge_.size()<<std::endl;
 
 
 
       //11-29-2007
-      vcl_vector <vcl_vector <vcl_vector <vnl_float_3> > > simple_wedge_list_N;
+      std::vector <std::vector <std::vector <vnl_float_3> > > simple_wedge_list_N;
       episeg_simplify(simple_wedge_list_N);
 
 
@@ -9552,7 +9552,7 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
 
             /*if (k==j+1&& j==i+1) continue;
             double random01 = (double)rand() / (double)RAND_MAX;
-            vcl_cout <<"***random :" <<random01<<vcl_endl;
+            std::cout <<"***random :" <<random01<<std::endl;
             if (random01> rand_th) continue;*/
 
             if (Table[i*C*C+j*C+k][0]==0) continue;
@@ -9566,10 +9566,10 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
 
 
             //generate vector 
-            //vcl_cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<vcl_endl;
-            // vcl_cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<vcl_endl;
-            // vcl_cout<<"-------------------- "<<vcl_endl;
+            //std::cout<<ang<<" "<<episeglist[i].size()<<" "<<episeglist[j].size()<<" "<<episeglist[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i].size()<<" "<<episeglist_edge_[j].size()<<" "<<episeglist_edge_[k].size()<<std::endl;
+            // std::cout<<ang<<" "<<episeglist_edge_[i][33].size()<<" "<<episeglist_edge_[j][33].size()<<" "<<episeglist_edge_[k][33].size()<<std::endl;
+            // std::cout<<"-------------------- "<<std::endl;
 
             double r_con=cameras(i,j,k,dcl_,episeglist,epipole2);
             //double r=cameras_accu(i,j,k,dcl_edge_,episeglist_edge_,epipole2,r_con,.1);
@@ -9579,28 +9579,28 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
             sum_fisrt_second_diff+=first_minus_second_;
 
 
-            vcl_cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<vcl_endl;
+            std::cout<<"r from contour is: "<<r_con<<" r from all edge is: "<<r<<std::endl;
             //double r=r_con;
             for (unsigned mi=i;mi<j;mi++) {
               //B(counter,mi) =100.0f-r;
               // B(counter,mi) =r;
               //B(counter,mi) =-100.0f+r;
               B(counter,mi) =-1.0f+r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
             for (unsigned mj=j;mj<k;mj++) {
               //B(counter,mj) =r;
               //B(counter,mj) =-100.0f+r;
               B(counter,mj) =r;
-              vcl_cout<<r<<" ";
+              std::cout<<r<<" ";
             }
 
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
 
             counter++;
 
-            //vcl_cout<< i<<" "<<j<<" "<<k<<" "<<r<<vcl_endl;
+            //std::cout<< i<<" "<<j<<" "<<k<<" "<<r<<std::endl;
 
 
           }
@@ -9630,12 +9630,12 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
 
       }
 
-      vcl_cout<<B_new<<"\n---------------------------------------"<<vcl_endl;
-      vcl_cout<<BB_new<<vcl_endl;
+      std::cout<<B_new<<"\n---------------------------------------"<<std::endl;
+      std::cout<<BB_new<<std::endl;
 
 
       if (BB_new.min_value()<-100) {
-        vcl_cout<<"**bad histogram**"<<vcl_endl; //escape when 0 histogram
+        std::cout<<"**bad histogram**"<<std::endl; //escape when 0 histogram
         sum_f_minus_s.push_back(-1);
         vnl_vector <double> dummy_tnew(1,0.0);
         tnew_list.push_back(dummy_tnew);
@@ -9652,7 +9652,7 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
         vnl_matrix<double> B1 =svd.inverse();
         vnl_vector <double> t=B1*BB_new.transpose()*bb ;
 
-        vcl_cout<<t<<vcl_endl;
+        std::cout<<t<<std::endl;
 
 
         double total_t=0.0;
@@ -9670,7 +9670,7 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
         tnew[0]=1.0;tnew_[0]=1.0;
 
 
-        vcl_cout<<tnew<<vcl_endl;
+        std::cout<<tnew<<std::endl;
         //getting all cameras
         init_cameras(tnew); //here tnew and tnew_ are equal.
         //
@@ -9681,7 +9681,7 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
       epi_x_l.push_back(epi_x_);
       epi_y_l.push_back(epi_y_);
 
-      vcl_cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<vcl_endl;
+      std::cout<<epi_x_loop<<" "<<epi_y_loop<<" sum: "<<sum_fisrt_second_diff<<std::endl;
 
     }
     ////////////////////
@@ -9693,12 +9693,12 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
     ////////////////////
     //return true;
     double max_sum=-1000.0; int max_index=99999;
-    vcl_cout<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"=====epipole search=============="<<vcl_endl;
-    vcl_cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<vcl_endl;
+    std::cout<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"=====epipole search=============="<<std::endl;
+    std::cerr<<"search range: "<<epi_search_range_x<<" "<<epi_search_range_y<<" "<<epi_search_interval<<std::endl;
     for (unsigned iii=0;iii<sum_f_minus_s.size();iii++)  {
-      vcl_cout<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<vcl_endl;
-      vcl_cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<vcl_endl;
+      std::cout<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<std::endl;
+      std::cerr<<iii<<'\t'<<sum_f_minus_s[iii]<<" "<<epi_x_l[iii]<<" "<<epi_y_l[iii]<<std::endl;
       if (sum_f_minus_s[iii]>max_sum) {
         max_sum=sum_f_minus_s[iii];
         max_index=iii;
@@ -9710,10 +9710,10 @@ double dbcri_whole_process::epi_search_fast_lite(vnl_vector <double> & tnew_sele
 
     }
 
-    vcl_cout<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<vcl_endl;
-    vcl_cerr<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<vcl_endl;
-    vcl_cout<<"=====epipole search end==========="<<vcl_endl;
-    vcl_cerr<<"=====epipole search end==========="<<vcl_endl;
+    std::cout<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<std::endl;
+    std::cerr<<"max index: "<<max_index <<" "<<max_sum<<" *"<<epi_x_<<" "<<epi_y_<<std::endl;
+    std::cout<<"=====epipole search end==========="<<std::endl;
+    std::cerr<<"=====epipole search end==========="<<std::endl;
     init_cameras(tnew_selected);
 
     /////////////////////
@@ -9779,13 +9779,13 @@ vnl_matrix <int> dbcri_whole_process::genarate_table(int N)
         // if (bin.min_value() > count/N-1) {
         if (bin.min_value() > bin_min&&bin_counter<min_Comb) {
           bin_flag=true;
-          vcl_cout<<bin<<"\n--------"<<vcl_endl;
-          // vcl_cout<<table<<vcl_endl;
+          std::cout<<bin<<"\n--------"<<std::endl;
+          // std::cout<<table<<std::endl;
         }
 
         else table.fill(0);
   }
-  // vcl_cout <<"***random :" <<random01<<vcl_endl;
+  // std::cout <<"***random :" <<random01<<std::endl;
 
   int row_counter=0;
   for (unsigned i=0;i<N*N*N;i++)
@@ -9802,9 +9802,9 @@ vnl_matrix <int> dbcri_whole_process::genarate_table(int N)
       j++;
     }
   }
-  vcl_cout<<j<<vcl_endl;
+  std::cout<<j<<std::endl;
   for(unsigned i=0;i<j;i++) {
-    vcl_cout<<" TB["<<i<<"][0]="<<table_to_return[i][0]<<"; TB["<<i<<"][1]="<<table_to_return[i][1]<<";  TB["<<i<<"][2]="<<table_to_return[i][2]<<";  TB["<<i<<"][3]= 1;"<<vcl_endl;
+    std::cout<<" TB["<<i<<"][0]="<<table_to_return[i][0]<<"; TB["<<i<<"][1]="<<table_to_return[i][1]<<";  TB["<<i<<"][2]="<<table_to_return[i][2]<<";  TB["<<i<<"][3]= 1;"<<std::endl;
   }
   return table_to_return;
 }
@@ -9971,7 +9971,7 @@ vnl_matrix <int> dbcri_whole_process::read_table(int N)
 
 
   }
-  vcl_cout<<TB;
+  std::cout<<TB;
 
 
 
@@ -10198,18 +10198,18 @@ bool  ddd(const float& rhs, const float& lhs)
   return rhs < lhs;
 };
 
-void dbcri_whole_process::out_removal(vcl_vector <vgl_point_3d <double> > & pts_3d) 
+void dbcri_whole_process::out_removal(std::vector <vgl_point_3d <double> > & pts_3d) 
 {
 
   vgl_point_3d <double> max_x_pts_3d,min_x_pts_3d;
   vgl_point_3d <double> max_y_pts_3d,min_y_pts_3d;
   vgl_point_3d <double> max_z_pts_3d,min_z_pts_3d;
-  double max_x=vcl_numeric_limits<double>::min();
-  double min_x=vcl_numeric_limits<double>::infinity();
-  double max_y=vcl_numeric_limits<double>::min();
-  double min_y=vcl_numeric_limits<double>::infinity();
-  double max_z=vcl_numeric_limits<double>::min();
-  double min_z=vcl_numeric_limits<double>::infinity();
+  double max_x=std::numeric_limits<double>::min();
+  double min_x=std::numeric_limits<double>::infinity();
+  double max_y=std::numeric_limits<double>::min();
+  double min_y=std::numeric_limits<double>::infinity();
+  double max_z=std::numeric_limits<double>::min();
+  double min_z=std::numeric_limits<double>::infinity();
 
   double mean_dist=0.0;
   int N=0;
@@ -10236,21 +10236,21 @@ void dbcri_whole_process::out_removal(vcl_vector <vgl_point_3d <double> > & pts_
     {
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       mean_dist+=d;
 
     }
   }
   //mean_dist=2.0*mean_dist/N*(N-1);
   mean_dist/=d_counter;
-  vcl_cout<<"out removal ->mean distance:"<< mean_dist<<vcl_endl;
-  vcl_cout<<mean_dist<<"N: "<< N<<vcl_endl;
+  std::cout<<"out removal ->mean distance:"<< mean_dist<<std::endl;
+  std::cout<<mean_dist<<"N: "<< N<<std::endl;
 
 
 
 
 
-  vcl_vector <float> d_list;
+  std::vector <float> d_list;
   double global_min_d=0.0;
   for (unsigned i=0;i< pts_3d.size(); i++){
 
@@ -10259,64 +10259,64 @@ void dbcri_whole_process::out_removal(vcl_vector <vgl_point_3d <double> > & pts_
       if (i==j) continue;
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       // d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       // mean_dist+=d;
       d_list.push_back( d);
       if (global_min_d>d) global_min_d=d;
     }
   }
 
-  vcl_sort(d_list.begin(), d_list.end(), ddd);
+  std::sort(d_list.begin(), d_list.end(), ddd);
 
-  int mid_index=vcl_floor(d_list.size()/3.0);
+  int mid_index=std::floor(d_list.size()/3.0);
   double mid_distance=d_list[mid_index];
 
-  vcl_cout<<"mid index and distace :" << mid_index<<" "<<mid_distance<<vcl_endl;
+  std::cout<<"mid index and distace :" << mid_index<<" "<<mid_distance<<std::endl;
   d_counter=0;
   for (unsigned i=0;i< pts_3d.size(); i++){
-    double min_d=vcl_numeric_limits<double>::infinity();
+    double min_d=std::numeric_limits<double>::infinity();
     for (unsigned j=0;j< pts_3d.size(); j++)
     {
       if (i==j) continue;
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       // d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       // mean_dist+=d;
       if (min_d>d) min_d=d;
     }
 
     if (min_d> 5*mid_distance) {
-      vcl_vector<vgl_point_3d <double> >::iterator it;
+      std::vector<vgl_point_3d <double> >::iterator it;
       it = pts_3d.begin();
-      vcl_cout<<"removed min dist: "<<min_d<<" "<<pts_3d[i]<<vcl_endl;
+      std::cout<<"removed min dist: "<<min_d<<" "<<pts_3d[i]<<std::endl;
       pts_3d.erase(it+i); //sel_j is alway bigger than sel_i so erase sel_j first
       i--;
     }
   }
 
-  vcl_cout<<"reduced_size -+-+-="<<pts_3d.size()<<vcl_endl;
-  vcl_cout<<"*&* --- After deletion ---"<<vcl_endl;
+  std::cout<<"reduced_size -+-+-="<<pts_3d.size()<<std::endl;
+  std::cout<<"*&* --- After deletion ---"<<std::endl;
   if (0)
     for (unsigned i=0;i< pts_3d.size(); i++){
-      vcl_cout<<pts_3d[i]<<vcl_endl;
+      std::cout<<pts_3d[i]<<std::endl;
     }
 
-    vcl_cout<<"*&* --- After deletion End ---"<<vcl_endl;
+    std::cout<<"*&* --- After deletion End ---"<<std::endl;
 }
 
 
-void dbcri_whole_process::out_removal_1(vcl_vector <vgl_point_3d <double> > & pts_3d) 
+void dbcri_whole_process::out_removal_1(std::vector <vgl_point_3d <double> > & pts_3d) 
 {
 
   vgl_point_3d <double> max_x_pts_3d,min_x_pts_3d;
   vgl_point_3d <double> max_y_pts_3d,min_y_pts_3d;
   vgl_point_3d <double> max_z_pts_3d,min_z_pts_3d;
-  double max_x=vcl_numeric_limits<double>::min();
-  double min_x=vcl_numeric_limits<double>::infinity();
-  double max_y=vcl_numeric_limits<double>::min();
-  double min_y=vcl_numeric_limits<double>::infinity();
-  double max_z=vcl_numeric_limits<double>::min();
-  double min_z=vcl_numeric_limits<double>::infinity();
+  double max_x=std::numeric_limits<double>::min();
+  double min_x=std::numeric_limits<double>::infinity();
+  double max_y=std::numeric_limits<double>::min();
+  double min_y=std::numeric_limits<double>::infinity();
+  double max_z=std::numeric_limits<double>::min();
+  double min_z=std::numeric_limits<double>::infinity();
 
   double mean_dist=0.0;
   int N=0;
@@ -10343,21 +10343,21 @@ void dbcri_whole_process::out_removal_1(vcl_vector <vgl_point_3d <double> > & pt
     {
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       mean_dist+=d;
 
     }
   }
   //mean_dist=2.0*mean_dist/N*(N-1);
   mean_dist/=d_counter;
-  vcl_cout<<"out removal ->mean distance:"<< mean_dist<<vcl_endl;
-  vcl_cout<<mean_dist<<"N: "<< N<<vcl_endl;
+  std::cout<<"out removal ->mean distance:"<< mean_dist<<std::endl;
+  std::cout<<mean_dist<<"N: "<< N<<std::endl;
 
 
 
 
 
-  vcl_vector <float> d_list;
+  std::vector <float> d_list;
   double global_min_d=0.0;
   for (unsigned i=0;i< pts_3d.size(); i++){
 
@@ -10366,39 +10366,39 @@ void dbcri_whole_process::out_removal_1(vcl_vector <vgl_point_3d <double> > & pt
       if (i==j) continue;
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       // d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       // mean_dist+=d;
       d_list.push_back( d);
       if (global_min_d>d) global_min_d=d;
     }
   }
 
-  vcl_sort(d_list.begin(), d_list.end(), ddd);
+  std::sort(d_list.begin(), d_list.end(), ddd);
 
-  int mid_index=vcl_floor(d_list.size()/3.0);
+  int mid_index=std::floor(d_list.size()/3.0);
   double mid_distance=d_list[mid_index];
 
-  vcl_cout<<"mid index and distace :" << mid_index<<" "<<mid_distance<<vcl_endl;
+  std::cout<<"mid index and distace :" << mid_index<<" "<<mid_distance<<std::endl;
   d_counter=0;
   for (unsigned i=0;i< pts_3d.size(); i++){
-    double min_d=vcl_numeric_limits<double>::infinity();
+    double min_d=std::numeric_limits<double>::infinity();
     for (unsigned j=0;j< pts_3d.size(); j++)
     {
       if (i==j) continue;
       double d=vgl_distance(pts_3d[i],pts_3d[j]);
       // d_counter++;
-      // vcl_cout<< pts_3d[i].z()<<vcl_endl;   
+      // std::cout<< pts_3d[i].z()<<std::endl;   
       // mean_dist+=d;
       if (min_d>d) min_d=d;
     }
 
     if (min_d> 5*mid_distance) {
-      vcl_vector<vgl_point_3d <double> >::iterator it;
+      std::vector<vgl_point_3d <double> >::iterator it;
       it = pts_3d.begin();
-      vcl_cout<<"removed min dist: "<<min_d<<" "<<pts_3d[i]<<vcl_endl;
+      std::cout<<"removed min dist: "<<min_d<<" "<<pts_3d[i]<<std::endl;
       pts_3d.erase(it+i); //sel_j is alway bigger than sel_i so erase sel_j first
 
-      vcl_vector <pts_3d_attribute>::iterator it_a;
+      std::vector <pts_3d_attribute>::iterator it_a;
       it_a = pts_3d_a_.begin();
       pts_3d_a_.erase(it_a+i);
 
@@ -10408,13 +10408,13 @@ void dbcri_whole_process::out_removal_1(vcl_vector <vgl_point_3d <double> > & pt
     }
   }
 
-  vcl_cout<<"reduced_size -+-+-="<<pts_3d.size()<<vcl_endl;
-  vcl_cout<<"*&* --- After deletion ---"<<vcl_endl;
+  std::cout<<"reduced_size -+-+-="<<pts_3d.size()<<std::endl;
+  std::cout<<"*&* --- After deletion ---"<<std::endl;
   for (unsigned i=0;i< pts_3d.size(); i++){
-    vcl_cout<<pts_3d[i]<<vcl_endl;
+    std::cout<<pts_3d[i]<<std::endl;
   }
 
-  vcl_cout<<"*&* --- out removal_1 After deletion End ---"<<vcl_endl;
+  std::cout<<"*&* --- out removal_1 After deletion End ---"<<std::endl;
 }
 
 
@@ -10427,15 +10427,15 @@ void dbcri_whole_process::angle_modify() {
   if (adaptive_angle_adjustment) {
     vgl_point_2d <double> top_p=*(pts_upper_line_.end()-1);
     vgl_point_2d <double> bot_p=*(pts_lower_line_.end()-1);
-    //theta_pos_=-vcl_atan((uppoint.y()-epi_y_)/(1000.0f-epi_x_));
-    //theta_neg_=-vcl_atan((lowpoint.y()-epi_y_)/(1000.0f-epi_x_));
+    //theta_pos_=-std::atan((uppoint.y()-epi_y_)/(1000.0f-epi_x_));
+    //theta_neg_=-std::atan((lowpoint.y()-epi_y_)/(1000.0f-epi_x_));
 
-    vcl_cout<<"*&* "<<-theta_pos_<<" "<<-theta_neg_;
-    theta_pos_=-vcl_atan((top_p.y()-epi_y_)/(top_p.x()-epi_x_));
-    theta_neg_=-vcl_atan((bot_p.y()-epi_y_)/(bot_p.x()-epi_x_));
+    std::cout<<"*&* "<<-theta_pos_<<" "<<-theta_neg_;
+    theta_pos_=-std::atan((top_p.y()-epi_y_)/(top_p.x()-epi_x_));
+    theta_neg_=-std::atan((bot_p.y()-epi_y_)/(bot_p.x()-epi_x_));
 
     ang_=(-theta_neg_-(-theta_pos_))/200.0;
-    vcl_cout<<"--> thera_pos_ and neg_ changed to: "<<-theta_pos_<<" "<<-theta_neg_<<"ang_: "<<ang_<<vcl_endl;
+    std::cout<<"--> thera_pos_ and neg_ changed to: "<<-theta_pos_<<" "<<-theta_neg_<<"ang_: "<<ang_<<std::endl;
   }
 
   else  ang_=.002; 
@@ -10453,8 +10453,8 @@ bool dbcri_whole_process::read_epi_search()
 
 
 
-  //    vcl_cout<<vul_file::dirname(wc_path);
-  vcl_string wc_filename = wc_path.path;
+  //    std::cout<<vul_file::dirname(wc_path);
+  std::string wc_filename = wc_path.path;
   // test if fname is a directory
   //vul_file::exists
 
@@ -10469,20 +10469,20 @@ bool dbcri_whole_process::read_epi_search()
 
   for ( ; fn; ++fn) 
   {
-    vcl_string input_file = fn();
+    std::string input_file = fn();
 
     if (
       r1.find(input_file.c_str()) && r3.find(input_file.c_str()) ||
       r1.find(input_file.c_str()) && r4.find(input_file.c_str()) 
       )
     {
-      vcl_ifstream fp(input_file.c_str());
+      std::ifstream fp(input_file.c_str());
       if (!fp) {
-        vcl_cout<<" Unable to Open "<< wc_filename <<vcl_endl;
+        std::cout<<" Unable to Open "<< wc_filename <<std::endl;
         return false;
       }
 
-      vcl_string hhh;
+      std::string hhh;
       while(!fp.eof()) {
         fp>>hhh;
         if (hhh=="was_") {
@@ -10496,8 +10496,8 @@ bool dbcri_whole_process::read_epi_search()
   }
 
   if (epi_found) {
-    vcl_cout<<"epipole found in previous result file and used!! "<<epi_x_<<" "<<epi_y_<<vcl_endl;
-    vcl_cerr<<"epipole found in previous result file and used!! "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+    std::cout<<"epipole found in previous result file and used!! "<<epi_x_<<" "<<epi_y_<<std::endl;
+    std::cerr<<"epipole found in previous result file and used!! "<<epi_x_<<" "<<epi_y_<<std::endl;
   }
   return epi_found;
 }
@@ -10506,9 +10506,9 @@ vnl_vector <double> dbcri_whole_process::epi_constraint_on_the_plane(
   double epi_x, double epi_y, double search_range, double search_step_size)
 {
 
-  vcl_cout<<"dbcri_whole_process::epi_constraint_on_the_plane()"<<vcl_endl;
-  vcl_cerr<<"dbcri_whole_process::epi_constraint_on_the_plane()"<<vcl_endl;
-  vcl_cout<<"epi in epi const: "<<epi_x<<" "<<epi_y<<vcl_endl;
+  std::cout<<"dbcri_whole_process::epi_constraint_on_the_plane()"<<std::endl;
+  std::cerr<<"dbcri_whole_process::epi_constraint_on_the_plane()"<<std::endl;
+  std::cout<<"epi in epi const: "<<epi_x<<" "<<epi_y<<std::endl;
   vnl_double_3x4 WC=WC_;
   vnl_double_3 xep = WC.get_column(0);   
   double epi_x_x= (xep[0]/xep[2]); //point of infinity -x direction
@@ -10526,8 +10526,8 @@ vnl_vector <double> dbcri_whole_process::epi_constraint_on_the_plane(
   vgl_line_2d <double> l(epi_point_x, epi_point_y);
 
   double a=l.a(),b=l.b(),c=l.c();
-  vcl_cout<<"epi line equation"<<l<<vcl_endl;
-  vcl_vector <vnl_double_2> epi_list;
+  std::cout<<"epi line equation"<<l<<std::endl;
+  std::vector <vnl_double_2> epi_list;
   for (double x=-search_range+epi_x;x<=search_range+epi_x;x+=search_step_size) {
     //ax+by+c=0;
     //y=-1/b(ax+c)
@@ -10535,7 +10535,7 @@ vnl_vector <double> dbcri_whole_process::epi_constraint_on_the_plane(
     double y=-1/b*(a*x+c);
     vnl_double_2 epi(x,y);
     epi_list.push_back(epi);
-    vcl_cout<<epi<<vcl_endl;
+    std::cout<<epi<<std::endl;
 
   }
 
@@ -10573,8 +10573,8 @@ vnl_vector <double> dbcri_whole_process::epi_constraint_on_the_plane(
   epi_y_=max_epi_y;
 
 
-  vcl_cout<<"epi plane constraint"<<vcl_endl;
-  vcl_cout<<"linear search max val epi is : "<<epi_x_<<" "<<epi_y_<<vcl_endl;
+  std::cout<<"epi plane constraint"<<std::endl;
+  std::cout<<"linear search max val epi is : "<<epi_x_<<" "<<epi_y_<<std::endl;
 
 
   return tnew_selected;
@@ -10582,13 +10582,13 @@ vnl_vector <double> dbcri_whole_process::epi_constraint_on_the_plane(
 
 
 
-float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,vcl_vector <vgl_point_2d <double> >pts_lower)
+float dbcri_whole_process::solve_z(std::vector <vgl_point_2d <double> >pts_upper,std::vector <vgl_point_2d <double> >pts_lower)
 {
 
   double z_ave_1=0;
   double z_ave_2=0;
 
-  vcl_cout<<"---solve Z from tangent line---"<<vcl_endl;
+  std::cout<<"---solve Z from tangent line---"<<std::endl;
   vnl_double_3x4 A=WC_;
   double Y1=mean_y_1_;double Y2=mean_y_2_;
   A[0][1]*=mean_y_1_;
@@ -10600,7 +10600,7 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
   //line_upper_=line_upper;
   //line_lower_=line_lower;
 
-  vcl_cout<<line_upper_<<" "<<line_lower_<<vcl_endl;
+  std::cout<<line_upper_<<" "<<line_lower_<<std::endl;
 
 
   //double epi_x=(a*d-b*c)/(c-a);
@@ -10625,7 +10625,7 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
       double Z=-(C1-D1)/(C2-D2);
       double X=C1+C2*Z;
       double Y=mean_y_1_;
-      vcl_cout<<i<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+      std::cout<<i<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
       z_ave_1+=Z;counter1++;
     }
 
@@ -10642,7 +10642,7 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
     //line_upper_=line_upper;
     //line_lower_=line_lower;
 
-    vcl_cout<<line_upper_<<" "<<line_lower_<<vcl_endl;
+    std::cout<<line_upper_<<" "<<line_lower_<<std::endl;
 
 
     //double epi_x=(a*d-b*c)/(c-a);
@@ -10666,7 +10666,7 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
         double Z=-(C1-D1)/(C2-D2);
         double X=C1+C2*Z;
         double Y=mean_y_2_;
-        vcl_cout<<i<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+        std::cout<<i<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
         z_ave_2+=Z;counter2++;
       }
 
@@ -10687,7 +10687,7 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
       solve_z_.clear();
       z_ave_1/=counter1;
       z_ave_2/=counter2;
-      vcl_cout<<z_ave_1<<" "<<z_ave_2<<vcl_endl;
+      std::cout<<z_ave_1<<" "<<z_ave_2<<std::endl;
       solve_z_.set_size(2);
       solve_z_[0]=(z_ave_1);
       solve_z_[1]=(z_ave_2);
@@ -10696,14 +10696,14 @@ float dbcri_whole_process::solve_z(vcl_vector <vgl_point_2d <double> >pts_upper,
 
 
 
-float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <double> >pts_upper,vcl_vector <vgl_point_2d <double> >pts_lower)
+float dbcri_whole_process::solve_front_windshield(std::vector <vgl_point_2d <double> >pts_upper,std::vector <vgl_point_2d <double> >pts_lower)
 {
 
 
 
-  /* vcl_cout<<"*&* "<<-theta_pos_<<" "<<-theta_neg_;
-  theta_pos_=-vcl_atan((top_p.y()-epi_y_)/(top_p.x()-epi_x_));
-  theta_neg_=-vcl_atan((bot_p.y()-epi_y_)/(bot_p.x()-epi_x_));
+  /* std::cout<<"*&* "<<-theta_pos_<<" "<<-theta_neg_;
+  theta_pos_=-std::atan((top_p.y()-epi_y_)/(top_p.x()-epi_x_));
+  theta_neg_=-std::atan((bot_p.y()-epi_y_)/(bot_p.x()-epi_x_));
 
   double angle_temp=(-theta_neg_-(-theta_pos_))/200.0; */
   // for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
@@ -10714,10 +10714,10 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
   double z_ave_1=0;
   double z_ave_2=0;
 
-  vcl_cout<<"---solve_front_windshield---"<<vcl_endl;
+  std::cout<<"---solve_front_windshield---"<<std::endl;
 
 
-  // vcl_cout<<line_upper_<<" "<<line_lower_<<vcl_endl;
+  // std::cout<<line_upper_<<" "<<line_lower_<<std::endl;
 
 
   /* for (unsigned con_i=0;con_i<veh_cons_.size();con_i++)
@@ -10735,10 +10735,10 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
   */
   int counter1=0;int counter2=0;
 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
-  vcl_vector <vgl_point_3d<double> > pts_3d_here;
-  //vcl_vector <vgl_point_3d<double> > pts_3d_here_2;
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
+  std::vector <vgl_point_3d<double> > pts_3d_here;
+  //std::vector <vgl_point_3d<double> > pts_3d_here_2;
 
   int s=0;
   for (unsigned con_i=0;con_i<veh_cons_.size();con_i++) //front...so max x...
@@ -10754,7 +10754,7 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
     int N=veh_cons_[con_i][0].size();
     for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
       double x_1=2000.0;
-      double y_1=epi_y_+vcl_tan(ang)*(x_1-epi_x_);
+      double y_1=epi_y_+std::tan(ang)*(x_1-epi_x_);
       //      double cont2[] = { epi_x_,epi_y_, x_2,y_2 ,x_2,y_2+2000, epi_x_,epi_y_+2000};
       //      vgl_polygon<double> poly2(cont2, 4);
       double cont1[] = { epi_x_,epi_y_, x_1,y_1 , x_1+.0000001,y_1+.0000001 ,epi_x_+.0000001,epi_y_+.0000001};
@@ -10763,10 +10763,10 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
       vgl_polygon<double> result = vgl_clip( veh_cons_[con_i], poly1, vgl_clip_type_intersect );
 
 
-      vcl_cout<<"result: "<<result;//<<vcl_endl;
+      std::cout<<"result: "<<result;//<<std::endl;
       if (result.num_sheets()!=1||result.num_vertices() == 0) continue;
 
-      if (result[0].size()!=4) vcl_cout<<"result polygon size wrong !!!"<<vcl_endl;
+      if (result[0].size()!=4) std::cout<<"result polygon size wrong !!!"<<std::endl;
       int im=-1;
       double xm=10000000;
       //first, find minimum x 
@@ -10798,7 +10798,7 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
 
       vgl_point_3d <double> pt(X,Y,Z);
       pts_3d_here.push_back(pt);
-      vcl_cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl<<vcl_endl;
+      std::cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl<<std::endl;
       z_ave_1+=Z;counter1++;
     }
     pts_3d_here_list_1.push_back(pts_3d_here);
@@ -10823,19 +10823,19 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
     int N=veh_cons_[con_i][0].size();
     for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
       double x_2=2000.0;
-      double y_2=epi_y_+vcl_tan(ang)*(x_2-epi_x_);
+      double y_2=epi_y_+std::tan(ang)*(x_2-epi_x_);
       // double cont2[] = { epi_x_,epi_y_, x_1,y_1 ,x_1,y_1+2000, epi_x_,epi_y_+2000};
       // vgl_polygon<double> poly2(cont2, 4);
       double cont2[] = { epi_x_,epi_y_, x_2,y_2 , x_2+.0000001, y_2+.0000001,epi_x_+.0000001,epi_y_+.0000001};
       vgl_polygon<double> poly2(cont2, 4);
-      vcl_cout<<x_2<<" "<<y_2<<vcl_endl;
+      std::cout<<x_2<<" "<<y_2<<std::endl;
       vgl_polygon<double> result = vgl_clip( veh_cons_[con_i], poly2, vgl_clip_type_intersect );
 
 
-      vcl_cout<<"result: "<<result;
+      std::cout<<"result: "<<result;
       if (result.num_sheets()!=1||result.num_vertices() == 0) continue;
 
-      if (result[0].size()!=4) vcl_cout<<"result polygon size wrong !!!"<<vcl_endl;
+      if (result[0].size()!=4) std::cout<<"result polygon size wrong !!!"<<std::endl;
       int im=-1;
       double xm=10000000;
       //first, find minimum x 
@@ -10872,7 +10872,7 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
       double Z=-(C1-D1)/(C2-D2);
       double X=C1+C2*Z;
       double Y=mean_y_2_;
-      vcl_cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl<<vcl_endl;
+      std::cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl<<std::endl;
       z_ave_2+=Z;counter2++;
 
 
@@ -10896,8 +10896,8 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
 
 
 
-  vcl_ofstream vrml1("test1.wrl");
-  vcl_ofstream vrml2("test2.wrl");
+  std::ofstream vrml1("test1.wrl");
+  std::ofstream vrml2("test2.wrl");
   world_color_flag_=true;
 
   float m=pts_3d_here_list_1.size();
@@ -10918,7 +10918,7 @@ float dbcri_whole_process::solve_front_windshield(vcl_vector <vgl_point_2d <doub
   /* solve_z_.clear();
   z_ave_1/=counter1;
   z_ave_2/=counter2;
-  vcl_cout<<z_ave_1<<" "<<z_ave_2<<vcl_endl;
+  std::cout<<z_ave_1<<" "<<z_ave_2<<std::endl;
   solve_z_.set_size(2);
   solve_z_[0]=(z_ave_1);
   solve_z_[1]=(z_ave_2);*/
@@ -10935,23 +10935,23 @@ float dbcri_whole_process::solve_front_windshield()
   double z_ave_1=0;
   double z_ave_2=0;
 
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
-  vcl_cout<<"---solve_front_windshield-2-subtraction-"<<vcl_endl;
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
+  std::cout<<"----------------------------------------"<<std::endl;
+  std::cout<<"---solve_front_windshield-2-subtraction-"<<std::endl;
+  std::cout<<"----------------------------------------"<<std::endl;
 
 
   int counter1=0;int counter2=0;
 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1_before_rot; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2_before_rot; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_1;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_2;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_1_before_rot;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_2_before_rot;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_sub;
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1_before_rot; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2_before_rot; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
+  std::vector <vgl_point_3d<double> > pts_3d_here_1;
+  std::vector <vgl_point_3d<double> > pts_3d_here_2;
+  std::vector <vgl_point_3d<double> > pts_3d_here_1_before_rot;
+  std::vector <vgl_point_3d<double> > pts_3d_here_2_before_rot;
+  std::vector <vgl_point_3d<double> > pts_3d_here_sub;
 
   int s=0;
   double cabin_length_x_average=0;
@@ -11004,7 +11004,7 @@ float dbcri_whole_process::solve_front_windshield()
 
     for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
       double x_1=2000.0;
-      double y_1=epi_y_+vcl_tan(ang)*(x_1-epi_x_);
+      double y_1=epi_y_+std::tan(ang)*(x_1-epi_x_);
       //      double cont2[] = { epi_x_,epi_y_, x_2,y_2 ,x_2,y_2+2000, epi_x_,epi_y_+2000};
       //      vgl_polygon<double> poly2(cont2, 4);
       double cont1[] = { epi_x_,epi_y_, x_1,y_1 , x_1+.0000001,y_1+.0000001 ,epi_x_+.0000001,epi_y_+.0000001};
@@ -11013,14 +11013,14 @@ float dbcri_whole_process::solve_front_windshield()
       vgl_polygon<double> result = vgl_clip( veh_cons_[con_i], poly1, vgl_clip_type_intersect );
 
 
-      vcl_cout<<"result: "<<result;//<<vcl_endl;
+      std::cout<<"result: "<<result;//<<std::endl;
       if (result.num_sheets()!=1||result.num_vertices() == 0) {
-        vcl_cout<<"-----"<<vcl_endl;
+        std::cout<<"-----"<<std::endl;
         continue;
       }
       if (result[0].size()!=4) {
-        vcl_cout<<"result polygon size wrong !!!"<<vcl_endl;
-        vcl_cout<<"-_-_-_-_-"<<vcl_endl;
+        std::cout<<"result polygon size wrong !!!"<<std::endl;
+        std::cout<<"-_-_-_-_-"<<std::endl;
         continue;
       }
       int im=-1;
@@ -11051,7 +11051,7 @@ float dbcri_whole_process::solve_front_windshield()
       double Z=-(C1-D1)/(C2-D2);
       double X=C1+C2*Z;
       double Y=mean_y_1_;
-      vcl_cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+      std::cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
       z_ave_1+=Z;counter1++;
 
       vgl_point_3d <double> pt1_before_rot(X,Y,Z);
@@ -11066,7 +11066,7 @@ float dbcri_whole_process::solve_front_windshield()
 
       vgl_point_3d <double> pt1(p11[0],p11[1],p11[2]);
 
-      vcl_cout<<"   "<<pt1<<vcl_endl;
+      std::cout<<"   "<<pt1<<std::endl;
 
 
 
@@ -11081,7 +11081,7 @@ float dbcri_whole_process::solve_front_windshield()
       Z=-(C1-D1)/(C2-D2);
       X=C1+C2*Z;
       Y=mean_y_2_;
-      vcl_cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+      std::cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
       vgl_point_3d <double> pt2_before_rot(X,Y,Z);
 
       //rotation==> real length  and make it shorter..
@@ -11091,7 +11091,7 @@ float dbcri_whole_process::solve_front_windshield()
       z_ave_2+=Z;counter2++;
       vgl_point_3d <double> pt2(p21[0],p21[1],p21[2]);
 
-      vcl_cout<<"   "<<pt2<<vcl_endl;
+      std::cout<<"   "<<pt2<<std::endl;
 
 
       vgl_point_3d <double> pt_sub(pt1.x()-pt2.x(),pt1.y()-pt2.y(),(pt1.z()+pt2.z())/2.0);
@@ -11105,7 +11105,7 @@ float dbcri_whole_process::solve_front_windshield()
       if (ang>-theta_pos_+.1*wedge && ang<-theta_pos_+.25*wedge)////////?????????????????/////good number????
       {
 
-        //vcl_cout<<"<--** top .05-.20 wedge changed to .1-.25"<<vcl_endl;
+        //std::cout<<"<--** top .05-.20 wedge changed to .1-.25"<<std::endl;
         cabin_length_x+=pt1.x()-pt2.x();
 
         cabin_1_front(0)+=pt1.x();
@@ -11118,9 +11118,9 @@ float dbcri_whole_process::solve_front_windshield()
         cabin_1_front(2)=pt1.z();
         cabin_2_rear(2)=pt2.z();
 
-        cabin_width_y=vcl_abs(pt1.y()-pt2.y());
+        cabin_width_y=std::abs(pt1.y()-pt2.y());
         cabin_height_z=(pt1.z()+pt2.z())/2.0;
-        vcl_cout<<"cabin counting--"<<count_cabin<<" "<< ang<< " "<<cabin_2_rear(0)<< " "<< (float)(cabin_2_rear(0)/count_cabin)<<vcl_endl;
+        std::cout<<"cabin counting--"<<count_cabin<<" "<< ang<< " "<<cabin_2_rear(0)<< " "<< (float)(cabin_2_rear(0)/count_cabin)<<std::endl;
       }
 
       //11-15-2007 rear of vehicle..
@@ -11128,7 +11128,7 @@ float dbcri_whole_process::solve_front_windshield()
 
       if (ang>-theta_pos_+.5*wedge && ang<-theta_pos_+.9*wedge)////////?????????????????/////good number????
       {
-        vcl_cout<<"*rear end--contour method.."<<vcl_endl;
+        std::cout<<"*rear end--contour method.."<<std::endl;
         // cabin_length_x+=pt1.x()-pt2.x();
 
         // cabin_1_front(0)+=pt1.x();
@@ -11141,7 +11141,7 @@ float dbcri_whole_process::solve_front_windshield()
         //cabin_1_front(2)=pt1.z();
         //cabin_2_rear(2)=pt2.z();
 
-        //cabin_width_y=vcl_abs(pt1.y()-pt2.y());
+        //cabin_width_y=std::abs(pt1.y()-pt2.y());
         //cabin_height_z=(pt1.z()+pt2.z())/2.0;
 
 
@@ -11153,12 +11153,12 @@ float dbcri_whole_process::solve_front_windshield()
         con_p0(1)=pt2.y();
         con_p7(2)=pt1.z();
         con_p0(2)=pt2.z();
-        vcl_cout<<"con p0 counting--"<<count_con_p0<<" "<< ang<< " "<<con_p0<<vcl_endl;
+        std::cout<<"con p0 counting--"<<count_con_p0<<" "<< ang<< " "<<con_p0<<std::endl;
       }
 
 
 
-      vcl_cout<<"----------------------------------------"<<vcl_endl;
+      std::cout<<"----------------------------------------"<<std::endl;
 
 
     }
@@ -11186,9 +11186,9 @@ float dbcri_whole_process::solve_front_windshield()
     x1+=cabin_1_front(0)/( count_cabin*veh_cons_.size() );
     x2+=cabin_2_rear(0)/( count_cabin*veh_cons_.size() );
 
-    vcl_cout<<con_i<<"'th cabin length "<< cabin_length_x/count_cabin <<" "<<count_cabin<<vcl_endl;
-    vcl_cout<<con_i<<"'th cabin  front "<< cabin_1_front(0)/count_cabin<<vcl_endl;
-    vcl_cout<<con_i<<"'th cabin  rear  "<< cabin_2_rear(0)/count_cabin<<vcl_endl;
+    std::cout<<con_i<<"'th cabin length "<< cabin_length_x/count_cabin <<" "<<count_cabin<<std::endl;
+    std::cout<<con_i<<"'th cabin  front "<< cabin_1_front(0)/count_cabin<<std::endl;
+    std::cout<<con_i<<"'th cabin  rear  "<< cabin_2_rear(0)/count_cabin<<std::endl;
 
     pts_3d_here_list_1.push_back(pts_3d_here_1);
     pts_3d_here_list_2.push_back(pts_3d_here_2);
@@ -11212,8 +11212,8 @@ float dbcri_whole_process::solve_front_windshield()
 
 
   {
-    vcl_ofstream vrml1("test1.wrl");
-    vcl_ofstream vrml2("test2.wrl");
+    std::ofstream vrml1("test1.wrl");
+    std::ofstream vrml2("test2.wrl");
     world_color_flag_=true;
 
     float m=pts_3d_here_list_1.size();
@@ -11234,8 +11234,8 @@ float dbcri_whole_process::solve_front_windshield()
 
   //before ratation
   {
-    vcl_ofstream vrml1("test1_before_rot.wrl");
-    vcl_ofstream vrml2("test2_before_rot.wrl");
+    std::ofstream vrml1("test1_before_rot.wrl");
+    std::ofstream vrml2("test2_before_rot.wrl");
     world_color_flag_=true;
 
     float m=pts_3d_here_list_1.size();
@@ -11253,8 +11253,8 @@ float dbcri_whole_process::solve_front_windshield()
     vrml1.close();
     vrml2.close();
   }
-  vcl_ofstream vrml3("test3.wrl");
-  //vcl_ofstream vrml2("test2.wrl");
+  std::ofstream vrml3("test3.wrl");
+  //std::ofstream vrml2("test2.wrl");
   world_color_flag_=true;
 
   float m=pts_3d_here_list_sub.size();
@@ -11274,24 +11274,24 @@ float dbcri_whole_process::solve_front_windshield()
 
   for (unsigned k=0;k<pts_3d_here_list_1.size();k++) 
   {
-    vcl_cout<<k<<"----pt1 asas---"<<k<<vcl_endl;
+    std::cout<<k<<"----pt1 asas---"<<k<<std::endl;
     for (unsigned i=0;i<  pts_3d_here_list_1[k].size();i++) {
-      vcl_cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<vcl_endl;
+      std::cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<std::endl;
     }
-    vcl_cout<<"----pt1 asasend---"<<vcl_endl;
+    std::cout<<"----pt1 asasend---"<<std::endl;
   }
 
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
 
   for (unsigned k=0;k<pts_3d_here_list_sub.size();k++) 
   {
-    vcl_cout<<k<<"----asas---"<<k<<vcl_endl;
+    std::cout<<k<<"----asas---"<<k<<std::endl;
     for (unsigned i=0;i<  pts_3d_here_list_sub[k].size();i++) {
-      vcl_cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<vcl_endl;
+      std::cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<std::endl;
     }
-    vcl_cout<<"----asasend---"<<vcl_endl;
+    std::cout<<"----asasend---"<<std::endl;
   }
 
 
@@ -11307,18 +11307,18 @@ float dbcri_whole_process::solve_front_windshield1()
   double z_ave_1=0;
   double z_ave_2=0;
 
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
-  vcl_cout<<"---solve_front_windshield-3-contour-"<<vcl_endl;
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
+  std::cout<<"----------------------------------------"<<std::endl;
+  std::cout<<"---solve_front_windshield-3-contour-"<<std::endl;
+  std::cout<<"----------------------------------------"<<std::endl;
 
   int counter1=0;int counter2=0;
 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_1;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_2;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_sub;
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
+  std::vector <vgl_point_3d<double> > pts_3d_here_1;
+  std::vector <vgl_point_3d<double> > pts_3d_here_2;
+  std::vector <vgl_point_3d<double> > pts_3d_here_sub;
 
   int s=0;
   for (unsigned con_i=0;con_i<veh_cons_.size();con_i++) //front...so max x...
@@ -11355,7 +11355,7 @@ float dbcri_whole_process::solve_front_windshield1()
     bool first=true;
     for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
       double x_1=2000.0;
-      double y_1=epi_y_+vcl_tan(ang)*(x_1-epi_x_);
+      double y_1=epi_y_+std::tan(ang)*(x_1-epi_x_);
 
       double cont1[] = { epi_x_,epi_y_, x_1,y_1 , x_1+.0000001,y_1+.0000001 ,epi_x_+.0000001,epi_y_+.0000001};
       vgl_polygon<double> poly1(cont1, 4);
@@ -11363,10 +11363,10 @@ float dbcri_whole_process::solve_front_windshield1()
       vgl_polygon<double> result = vgl_clip( veh_cons_[con_i], poly1, vgl_clip_type_intersect );
 
 
-      vcl_cout<<"result: "<<result;//<<vcl_endl;
+      std::cout<<"result: "<<result;//<<std::endl;
       if (result.num_sheets()!=1||result.num_vertices() == 0) continue;
 
-      if (result[0].size()!=4) vcl_cout<<"result polygon size wrong !!!"<<vcl_endl;
+      if (result[0].size()!=4) std::cout<<"result polygon size wrong !!!"<<std::endl;
       int im=-1;
       double xm=10000000;
       //first, find minimum x 
@@ -11401,7 +11401,7 @@ float dbcri_whole_process::solve_front_windshield1()
       bot_pt_2[1]=result[0][im].y();
     }
 
-    vcl_cout<<top_pt_1<<" "<<top_pt_2<<" "<<bot_pt_1<<" "<<bot_pt_2<<vcl_endl;
+    std::cout<<top_pt_1<<" "<<top_pt_2<<" "<<bot_pt_1<<" "<<bot_pt_2<<std::endl;
 
     //2. generate subsequence of right(1) and left(2) .
     double *px,*py;
@@ -11420,8 +11420,8 @@ float dbcri_whole_process::solve_front_windshield1()
     int bot_pt_idx1= vgl_closest_point_to_closed_polygon(bot_pt_1[0], bot_pt_1[1], px, py, N,  bot_pt_1[0], bot_pt_1[1]);//cccc
     int bot_pt_idx2= vgl_closest_point_to_closed_polygon(bot_pt_2[0], bot_pt_2[1], px, py, N,  bot_pt_2[0], bot_pt_2[1]);//cccc
 
-    vcl_cout<<top_pt_1<<" "<<top_pt_2<<" "<<bot_pt_1<<" "<<bot_pt_2<<vcl_endl;
-    vcl_cout<<"idx: "<<top_pt_idx1<<" "<<top_pt_idx2<<" "<<bot_pt_idx1<<" "<<bot_pt_idx2<<vcl_endl;
+    std::cout<<top_pt_1<<" "<<top_pt_2<<" "<<bot_pt_1<<" "<<bot_pt_2<<std::endl;
+    std::cout<<"idx: "<<top_pt_idx1<<" "<<top_pt_idx2<<" "<<bot_pt_idx1<<" "<<bot_pt_idx2<<std::endl;
     free(px);free(py);
 
 
@@ -11435,7 +11435,7 @@ float dbcri_whole_process::solve_front_windshield1()
     double Z=-(C1-D1)/(C2-D2);
     double X=C1+C2*Z;
     double Y=mean_y_1_;
-    vcl_cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+    std::cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
     z_ave_1+=Z;counter1++;
     vgl_point_3d <double> pt1(X,Y,Z);
 
@@ -11450,8 +11450,8 @@ float dbcri_whole_process::solve_front_windshield1()
     Z=-(C1-D1)/(C2-D2);
     X=C1+C2*Z;
     Y=mean_y_2_;
-    vcl_cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
-    vcl_cout<<"----------------------------------------"<<vcl_endl;
+    std::cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
+    std::cout<<"----------------------------------------"<<std::endl;
 
     z_ave_2+=Z;counter2++;
     vgl_point_3d <double> pt2(X,Y,Z);
@@ -11474,8 +11474,8 @@ float dbcri_whole_process::solve_front_windshield1()
 
   /*
 
-  vcl_ofstream vrml3("test3.wrl");
-  //vcl_ofstream vrml2("test2.wrl");
+  std::ofstream vrml3("test3.wrl");
+  //std::ofstream vrml2("test2.wrl");
   world_color_flag_=true;
 
   float m=pts_3d_here_list_1.size();
@@ -11491,24 +11491,24 @@ float dbcri_whole_process::solve_front_windshield1()
 
   for (unsigned k=0;k<pts_3d_here_list_1.size();k++) 
   {
-  vcl_cout<<k<<"----pt1 asas---"<<k<<vcl_endl;
+  std::cout<<k<<"----pt1 asas---"<<k<<std::endl;
   for (unsigned i=0;i<  pts_3d_here_list_1[k].size();i++) {
-  vcl_cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<vcl_endl;
+  std::cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<std::endl;
   }
-  vcl_cout<<"----pt1 asasend---"<<vcl_endl;
+  std::cout<<"----pt1 asasend---"<<std::endl;
   }
 
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
 
   for (unsigned k=0;k<pts_3d_here_list_sub.size();k++) 
   {
-  vcl_cout<<k<<"----asas---"<<k<<vcl_endl;
+  std::cout<<k<<"----asas---"<<k<<std::endl;
   for (unsigned i=0;i<  pts_3d_here_list_sub[k].size();i++) {
-  vcl_cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<vcl_endl;
+  std::cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<std::endl;
   }
-  vcl_cout<<"----asasend---"<<vcl_endl;
+  std::cout<<"----asasend---"<<std::endl;
   }
   */
 
@@ -11528,25 +11528,25 @@ float dbcri_whole_process::solve_pickup()
   double z_ave_1=0;
   double z_ave_2=0;
 
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
-  vcl_cout<<"---solve_pickup-"<<vcl_endl;
-  vcl_cout<<"----------------------------------------"<<vcl_endl;
+  std::cout<<"----------------------------------------"<<std::endl;
+  std::cout<<"---solve_pickup-"<<std::endl;
+  std::cout<<"----------------------------------------"<<std::endl;
 
 
   //dcl_edge_.push_back(dclist);    <-- contour distance edges
 
   int counter1=0;int counter2=0;
 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_1_before_rot; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_2_before_rot; 
-  vcl_vector <vcl_vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_1;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_2;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_1_before_rot;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_2_before_rot;
-  vcl_vector <vgl_point_3d<double> > pts_3d_here_sub;
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_1_before_rot; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_2_before_rot; 
+  std::vector <std::vector <vgl_point_3d<double> > >pts_3d_here_list_sub; 
+  std::vector <vgl_point_3d<double> > pts_3d_here_1;
+  std::vector <vgl_point_3d<double> > pts_3d_here_2;
+  std::vector <vgl_point_3d<double> > pts_3d_here_1_before_rot;
+  std::vector <vgl_point_3d<double> > pts_3d_here_2_before_rot;
+  std::vector <vgl_point_3d<double> > pts_3d_here_sub;
 
   int s=0;
   double cabin_length_x_average=0;
@@ -11587,7 +11587,7 @@ float dbcri_whole_process::solve_pickup()
 
     for (double ang=-theta_pos_ ; ang<-theta_neg_ ; ang+=ang_ /*was .002*/) {
       double x_1=2000.0;
-      double y_1=epi_y_+vcl_tan(ang)*(x_1-epi_x_);
+      double y_1=epi_y_+std::tan(ang)*(x_1-epi_x_);
       //      double cont2[] = { epi_x_,epi_y_, x_2,y_2 ,x_2,y_2+2000, epi_x_,epi_y_+2000};
       //      vgl_polygon<double> poly2(cont2, 4);
       double cont1[] = { epi_x_,epi_y_, x_1,y_1 , x_1+.0000001,y_1+.0000001 ,epi_x_+.0000001,epi_y_+.0000001};
@@ -11596,14 +11596,14 @@ float dbcri_whole_process::solve_pickup()
       vgl_polygon<double> result = vgl_clip( veh_cons_[con_i], poly1, vgl_clip_type_intersect );
 
 
-      vcl_cout<<"result: "<<result;//<<vcl_endl;
+      std::cout<<"result: "<<result;//<<std::endl;
       if (result.num_sheets()!=1||result.num_vertices() == 0) {
-        vcl_cout<<"-----"<<vcl_endl;
+        std::cout<<"-----"<<std::endl;
         continue;
       }
       if (result[0].size()!=4) {
-        vcl_cout<<"result polygon size wrong !!!"<<vcl_endl;
-        vcl_cout<<"-_-_-_-_-"<<vcl_endl;
+        std::cout<<"result polygon size wrong !!!"<<std::endl;
+        std::cout<<"-_-_-_-_-"<<std::endl;
         continue;
       }
       int im=-1;
@@ -11634,7 +11634,7 @@ float dbcri_whole_process::solve_pickup()
       double Z=-(C1-D1)/(C2-D2);
       double X=C1+C2*Z;
       double Y=mean_y_1_;
-      vcl_cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+      std::cout<<con_i<< "1 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
       z_ave_1+=Z;counter1++;
 
       vgl_point_3d <double> pt1_before_rot(X,Y,Z);
@@ -11649,7 +11649,7 @@ float dbcri_whole_process::solve_pickup()
 
       vgl_point_3d <double> pt1(p11[0],p11[1],p11[2]);
 
-      vcl_cout<<"   "<<pt1<<vcl_endl;
+      std::cout<<"   "<<pt1<<std::endl;
 
 
 
@@ -11664,7 +11664,7 @@ float dbcri_whole_process::solve_pickup()
       Z=-(C1-D1)/(C2-D2);
       X=C1+C2*Z;
       Y=mean_y_2_;
-      vcl_cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<vcl_endl;
+      std::cout<<con_i<< "2 "<<ang<<": X Y Z= "<<X<<" "<<Y<<" "<<Z<<std::endl;
       vgl_point_3d <double> pt2_before_rot(X,Y,Z);
 
       //rotation==> real length  and make it shorter..
@@ -11674,7 +11674,7 @@ float dbcri_whole_process::solve_pickup()
       z_ave_2+=Z;counter2++;
       vgl_point_3d <double> pt2(p21[0],p21[1],p21[2]);
 
-      vcl_cout<<"   "<<pt2<<vcl_endl;
+      std::cout<<"   "<<pt2<<std::endl;
 
 
       vgl_point_3d <double> pt_sub(pt1.x()-pt2.x(),pt1.y()-pt2.y(),(pt1.z()+pt2.z())/2.0);
@@ -11687,7 +11687,7 @@ float dbcri_whole_process::solve_pickup()
       //if (ang>-theta_pos_+.05*wedge && ang<-theta_pos_+.2*wedge)////////?????????????????/////good number????
       if (ang>-theta_pos_+.1*wedge && ang<-theta_pos_+.25*wedge)////////?????????????????/////good number????
       {
-        vcl_cout<<"<--** top .05-.20 wedge changed to .1-.25"<<vcl_endl;
+        std::cout<<"<--** top .05-.20 wedge changed to .1-.25"<<std::endl;
         cabin_length_x+=pt1.x()-pt2.x();
 
         cabin_1_front(0)+=pt1.x();
@@ -11700,11 +11700,11 @@ float dbcri_whole_process::solve_pickup()
         cabin_1_front(2)=pt1.z();
         cabin_2_rear(2)=pt2.z();
 
-        cabin_width_y=vcl_abs(pt1.y()-pt2.y());
+        cabin_width_y=std::abs(pt1.y()-pt2.y());
         cabin_height_z=(pt1.z()+pt2.z())/2.0;
 
       }
-      vcl_cout<<"----------------------------------------"<<vcl_endl;
+      std::cout<<"----------------------------------------"<<std::endl;
 
 
     }
@@ -11723,9 +11723,9 @@ float dbcri_whole_process::solve_pickup()
     x1+=cabin_1_front(0)/( count_cabin*veh_cons_.size() );
     x2+=cabin_2_rear(0)/( count_cabin*veh_cons_.size() );
 
-    vcl_cout<<con_i<<"'th cabin length "<< cabin_length_x/count_cabin <<" "<<count_cabin<<vcl_endl;
-    vcl_cout<<con_i<<"'th cabin  front "<< cabin_1_front(0)/count_cabin<<vcl_endl;
-    vcl_cout<<con_i<<"'th cabin  rear  "<< cabin_2_rear(0)/count_cabin<<vcl_endl;
+    std::cout<<con_i<<"'th cabin length "<< cabin_length_x/count_cabin <<" "<<count_cabin<<std::endl;
+    std::cout<<con_i<<"'th cabin  front "<< cabin_1_front(0)/count_cabin<<std::endl;
+    std::cout<<con_i<<"'th cabin  rear  "<< cabin_2_rear(0)/count_cabin<<std::endl;
 
     pts_3d_here_list_1.push_back(pts_3d_here_1);
     pts_3d_here_list_2.push_back(pts_3d_here_2);
@@ -11743,8 +11743,8 @@ float dbcri_whole_process::solve_pickup()
 
 
   {
-    vcl_ofstream vrml1("test1.wrl");
-    vcl_ofstream vrml2("test2.wrl");
+    std::ofstream vrml1("test1.wrl");
+    std::ofstream vrml2("test2.wrl");
     world_color_flag_=true;
 
     float m=pts_3d_here_list_1.size();
@@ -11765,8 +11765,8 @@ float dbcri_whole_process::solve_pickup()
 
   //before ratation
   {
-    vcl_ofstream vrml1("test1_before_rot.wrl");
-    vcl_ofstream vrml2("test2_before_rot.wrl");
+    std::ofstream vrml1("test1_before_rot.wrl");
+    std::ofstream vrml2("test2_before_rot.wrl");
     world_color_flag_=true;
 
     float m=pts_3d_here_list_1.size();
@@ -11784,8 +11784,8 @@ float dbcri_whole_process::solve_pickup()
     vrml1.close();
     vrml2.close();
   }
-  vcl_ofstream vrml3("test3.wrl");
-  //vcl_ofstream vrml2("test2.wrl");
+  std::ofstream vrml3("test3.wrl");
+  //std::ofstream vrml2("test2.wrl");
   world_color_flag_=true;
 
   float m=pts_3d_here_list_sub.size();
@@ -11805,24 +11805,24 @@ float dbcri_whole_process::solve_pickup()
 
   for (unsigned k=0;k<pts_3d_here_list_1.size();k++) 
   {
-    vcl_cout<<k<<"----pt1 asas---"<<k<<vcl_endl;
+    std::cout<<k<<"----pt1 asas---"<<k<<std::endl;
     for (unsigned i=0;i<  pts_3d_here_list_1[k].size();i++) {
-      vcl_cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<vcl_endl;
+      std::cout<<pts_3d_here_list_1[k][i].x()<<" "<<pts_3d_here_list_2[k][i].x()<<" "<<(pts_3d_here_list_1[k][i].z()+pts_3d_here_list_2[k][i].z())/2.0<<std::endl;
     }
-    vcl_cout<<"----pt1 asasend---"<<vcl_endl;
+    std::cout<<"----pt1 asasend---"<<std::endl;
   }
 
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
-  vcl_cout<<"----------------------"<<vcl_endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
+  std::cout<<"----------------------"<<std::endl;
 
   for (unsigned k=0;k<pts_3d_here_list_sub.size();k++) 
   {
-    vcl_cout<<k<<"----asas---"<<k<<vcl_endl;
+    std::cout<<k<<"----asas---"<<k<<std::endl;
     for (unsigned i=0;i<  pts_3d_here_list_sub[k].size();i++) {
-      vcl_cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<vcl_endl;
+      std::cout<<pts_3d_here_list_sub[k][i].x()<<" "<<pts_3d_here_list_sub[k][i].y()<<" "<<pts_3d_here_list_sub[k][i].z()<<std::endl;
     }
-    vcl_cout<<"----asasend---"<<vcl_endl;
+    std::cout<<"----asasend---"<<std::endl;
   }
 
 
@@ -11833,7 +11833,7 @@ float dbcri_whole_process::solve_pickup()
 
 
 //not used yet 6-22-07
-void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_vector <vgl_point_3d <double> > pts) {
+void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, std::vector <vgl_point_3d <double> > pts) {
 
   vnl_double_3 min_point(min_point_);
   vnl_double_3 max_point(max_point_);
@@ -11846,22 +11846,22 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
 
   double max_y=max_point(1);
   double min_y=min_point(1);
-  // vcl_cout<<min_point<<vcl_endl;
+  // std::cout<<min_point<<std::endl;
   double max_z0,min_z0;
 
   double max_x=max_point(0);
   double min_x=min_point(0);
-  vcl_cout<<"min_point:"<<min_point<<vcl_endl;
+  std::cout<<"min_point:"<<min_point<<std::endl;
 
 
-  max_y=-vcl_numeric_limits<double>::infinity();
+  max_y=-std::numeric_limits<double>::infinity();
 
-  min_y= vcl_numeric_limits<double>::infinity();
-  max_x=-vcl_numeric_limits<double>::infinity();
+  min_y= std::numeric_limits<double>::infinity();
+  max_x=-std::numeric_limits<double>::infinity();
 
-  min_x= vcl_numeric_limits<double>::infinity();
+  min_x= std::numeric_limits<double>::infinity();
 
-  vcl_cout<<"spacial filtering x pts.size: "<<pts.size()<<vcl_endl;
+  std::cout<<"spacial filtering x pts.size: "<<pts.size()<<std::endl;
   //normalization of y
   for (unsigned i=0;i<pts.size();i++) {
     //pts[i].set(pts[i].x(),(pts[i].y()-min_y)*(max_y-min_y),pts[i].z());
@@ -11870,7 +11870,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
 
     if (pts[i].z()>max_z0) max_z0=pts[i].z();
     if (pts[i].z()<min_z0) min_z0=pts[i].z();
-    //  vcl_cout<<pts[i]<<vcl_endl;
+    //  std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -11878,14 +11878,14 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
   vnl_double_3 p(point_3d_list_f[i].x(),point_3d_list_f[i].y(),point_3d_list_f[i].z());
 
   pts_z.push_back(rot*p);
-  vcl_cout<<rot*p<<vcl_endl;
+  std::cout<<rot*p<<std::endl;
   }*/
 
 
-  vcl_vector<vnl_double_3> pts_x;
-  vcl_vector<vnl_double_3> pts_temp;
-  vcl_vector<vnl_double_3> pts_z;
-  vcl_vector<vnl_double_3> pts_y;
+  std::vector<vnl_double_3> pts_x;
+  std::vector<vnl_double_3> pts_temp;
+  std::vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_y;
   for (unsigned i=0;i<pts.size();i++) {
     vnl_double_3 p0(pts[i].x(),pts[i].y(),pts[i].z());
     vnl_double_3 p1=rot_*p0;
@@ -11903,7 +11903,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
     if (pts_temp[i][0]>max_x) max_x=pts_temp[i][0];
     if (pts_temp[i][0]<min_x) min_x=pts_temp[i][0];
 
-    //vcl_cout<<pts[i]<<vcl_endl;
+    //std::cout<<pts[i]<<std::endl;
   }
 
 
@@ -11918,52 +11918,52 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
 
   }
 
-  //vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-  //vcl_vector<vnl_double_3> pts_x;
+  //std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+  //std::vector<vnl_double_3> pts_x;
 
   // only consider points in x and y above 0.5 feet  //i don't use it..
-  for ( vcl_vector<vnl_double_3>::const_iterator itr = pts_z.begin();
+  for ( std::vector<vnl_double_3>::const_iterator itr = pts_z.begin();
     itr != pts_z.end();  ++itr)
   {
     //if ((*itr)[2] > 0.5) { pts_x.push_back(*itr); }
     pts_y.push_back(*itr); 
   }
 
-  //vcl_vector<vnl_double_3> pts_y = pts_x;
+  //std::vector<vnl_double_3> pts_y = pts_x;
 
-  // vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
-  vcl_sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  // std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
+  std::sort(pts_x.begin(), pts_x.end(), dbcri_accu_edge_cmp_x);
 
 
 
   //#mothod 1... find out lier
-  vcl_vector<int> bin_1(BIN_SIZE_,0);
-  for (unsigned i=0;i<vcl_floor(pts_x.size()/5.0); i++) {// 6-22-07 if there is outlier, problem!
+  std::vector<int> bin_1(BIN_SIZE_,0);
+  for (unsigned i=0;i<std::floor(pts_x.size()/5.0); i++) {// 6-22-07 if there is outlier, problem!
     // i,e. if x={-100, 0, 1,1, 2, 3, 4, 5, 6,6,6,7.1,10,11}
     // x=-100 makes problem.... since it search only 1/5 portion..
     double r=(pts_x[i])[0];
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
     {
-      if ( (int) vcl_floor(BIN_SIZE_*r-1)>=0)
-        bin_1[(int) vcl_floor(BIN_SIZE_*r)-1]++;
+      if ( (int) std::floor(BIN_SIZE_*r-1)>=0)
+        bin_1[(int) std::floor(BIN_SIZE_*r)-1]++;
 
-      bin_1[(int) vcl_floor(BIN_SIZE_*r)]++;bin_1[(int) vcl_floor(BIN_SIZE_*r)]++;
-      if ((int) vcl_floor(BIN_SIZE_*r+1)<=99)
-        bin_1[(int) vcl_floor(BIN_SIZE_*r)+1]++;
+      bin_1[(int) std::floor(BIN_SIZE_*r)]++;bin_1[(int) std::floor(BIN_SIZE_*r)]++;
+      if ((int) std::floor(BIN_SIZE_*r+1)<=99)
+        bin_1[(int) std::floor(BIN_SIZE_*r)+1]++;
     }
   }
 
-  vcl_vector<int> bin_2(BIN_SIZE_,0);
-  for (unsigned i=vcl_floor(pts_x.size()*4/5.0);i<pts_x.size(); i++) {
+  std::vector<int> bin_2(BIN_SIZE_,0);
+  for (unsigned i=std::floor(pts_x.size()*4/5.0);i<pts_x.size(); i++) {
     double r=(pts_x[i])[0];
-    if (vcl_floor(BIN_SIZE_*r)>=0&&vcl_floor(BIN_SIZE_*r)<=99)
+    if (std::floor(BIN_SIZE_*r)>=0&&std::floor(BIN_SIZE_*r)<=99)
     {
-      if ((int) vcl_floor(BIN_SIZE_*r-1)>=0)
-        bin_2[(int) vcl_floor(BIN_SIZE_*r)-1]++;
+      if ((int) std::floor(BIN_SIZE_*r-1)>=0)
+        bin_2[(int) std::floor(BIN_SIZE_*r)-1]++;
 
-      bin_2[(int) vcl_floor(BIN_SIZE_*r)]++;bin_2[(int) vcl_floor(BIN_SIZE_*r)]++;
-      if ((int) vcl_floor(BIN_SIZE_*r+1)<=99)
-        bin_2[(int) vcl_floor(BIN_SIZE_*r)+1]++;
+      bin_2[(int) std::floor(BIN_SIZE_*r)]++;bin_2[(int) std::floor(BIN_SIZE_*r)]++;
+      if ((int) std::floor(BIN_SIZE_*r+1)<=99)
+        bin_2[(int) std::floor(BIN_SIZE_*r)+1]++;
     }
 
   }
@@ -11981,7 +11981,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
   //***************// BIN_SIZE_/2 avoid driver side ...**********
   for (unsigned i=0;i<(int)(BIN_SIZE_/2.0);i++) {
 
-    vcl_cout<<bin_1[i]<<vcl_endl;
+    std::cout<<bin_1[i]<<std::endl;
     if (bin_1[i]>max_bin_1) {
       max_bin_1=bin_1[i];
       max_bin_id_1=i;
@@ -11989,12 +11989,12 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
   }
 
 
-  vcl_cout<<"====front and top ==================="<<vcl_endl;
+  std::cout<<"====front and top ==================="<<std::endl;
   //NOTICE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //***************// BIN_SIZE_/2 avoid rear side ...**********
   for (unsigned i=(int)(BIN_SIZE_/2.0);i<BIN_SIZE_;i++) {
 
-    vcl_cout<<bin_2[i]<<vcl_endl;
+    std::cout<<bin_2[i]<<std::endl;
     if (bin_2[i]>max_bin_2) {
       max_bin_2=bin_2[i];
       max_bin_id_2=i;
@@ -12002,7 +12002,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
   }
 
 
-  //vcl_cout<<mean_r/(double)counter<<vcl_endl;
+  //std::cout<<mean_r/(double)counter<<std::endl;
 
   // check !!! fix later..// min_point and min_y is different
   r1=max_bin_id_1*(max_x-min_x)/100.0+min_x-min_point(0);// min_point and min_y is different
@@ -12023,7 +12023,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
 
 
     double r=(pts_x[i])[0];
-    if ((int) vcl_floor(BIN_SIZE_*r)<max_bin_id_1+1&&(int) vcl_floor(BIN_SIZE_*r)>max_bin_id_1-1)
+    if ((int) std::floor(BIN_SIZE_*r)<max_bin_id_1+1&&(int) std::floor(BIN_SIZE_*r)>max_bin_id_1-1)
     {
 
       double temp_x=(max_x-min_x)*r+min_x;
@@ -12036,7 +12036,7 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
     }
 
 
-    if ((int) vcl_floor(BIN_SIZE_*r)<max_bin_id_2+1&&(int) vcl_floor(BIN_SIZE_*r)>max_bin_id_2-1)
+    if ((int) std::floor(BIN_SIZE_*r)<max_bin_id_2+1&&(int) std::floor(BIN_SIZE_*r)>max_bin_id_2-1)
     {
 
       double temp_x=(max_x-min_x)*r+min_x;
@@ -12061,8 +12061,8 @@ void dbcri_whole_process::spacial_filtering_x_with_z(double &r1,double &r2, vcl_
   vnl_double_3 pm2=inv_rot*pm2_temp;
 
 
-  vcl_cout<<"front & rear points:"<<pm1<<" "<<pm2<<vcl_endl;
-  vcl_cout<<"max z- probe 7'th z:"<<max_z-pm2(2)<<vcl_endl;
+  std::cout<<"front & rear points:"<<pm1<<" "<<pm2<<std::endl;
+  std::cout<<"max z- probe 7'th z:"<<max_z-pm2(2)<<std::endl;
 
 
 

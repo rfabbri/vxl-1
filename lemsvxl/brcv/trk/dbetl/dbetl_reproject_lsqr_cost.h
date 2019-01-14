@@ -26,8 +26,8 @@ public:
   dbetl_reproject_lsqr_cost(const vnl_matrix<double>& E, const vnl_matrix<double>& P3);
 
   //: Constructor - using cameras and correspondence points
-  dbetl_reproject_lsqr_cost( const vcl_vector<vnl_double_3x4>& cameras, 
-                            const vcl_vector<vgl_point_2d<double> >& pts);
+  dbetl_reproject_lsqr_cost( const std::vector<vnl_double_3x4>& cameras, 
+                            const std::vector<vgl_point_2d<double> >& pts);
 
   //: Destructor
   virtual ~dbetl_reproject_lsqr_cost() {}

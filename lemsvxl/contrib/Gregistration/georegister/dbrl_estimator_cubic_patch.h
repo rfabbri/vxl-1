@@ -1,7 +1,7 @@
 #ifndef _dbrl_estimator_cubic_patch_h_
 #define _dbrl_estimator_cubic_patch_h_
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include "dbrl_feature_sptr.h"
 #include "dbrl_correspondence.h"
 #include "dbrl_transformation_sptr.h"
@@ -15,19 +15,19 @@ class dbrl_estimator_cubic_patch: public dbrl_estimator
         dbrl_estimator_cubic_patch();
         virtual ~dbrl_estimator_cubic_patch(){};
 
-        virtual dbrl_transformation_sptr estimate( vcl_vector<dbrl_feature_sptr> f1,
-                                                   vcl_vector<dbrl_feature_sptr> f2,
+        virtual dbrl_transformation_sptr estimate( std::vector<dbrl_feature_sptr> f1,
+                                                   std::vector<dbrl_feature_sptr> f2,
                                                    dbrl_correspondence & M) const;
-        dbrl_transformation_sptr build_cubic_patches( vcl_vector<dbrl_feature_sptr> f1,
-                                                      vcl_vector<dbrl_feature_sptr> f2) const;
+        dbrl_transformation_sptr build_cubic_patches( std::vector<dbrl_feature_sptr> f1,
+                                                      std::vector<dbrl_feature_sptr> f2) const;
         virtual
-            double residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                            const vcl_vector<dbrl_feature_sptr>& f2,
+            double residual(const std::vector<dbrl_feature_sptr>& f1,
+                            const std::vector<dbrl_feature_sptr>& f2,
                             const dbrl_correspondence &M,
                             const dbrl_transformation_sptr& tform) const;
-        vcl_vector<dbrl_clough_tocher_patch>  estimate_cubic(vnl_matrix<double> xy, vnl_vector<double> zs)const;
+        std::vector<dbrl_clough_tocher_patch>  estimate_cubic(vnl_matrix<double> xy, vnl_vector<double> zs)const;
 
-        vcl_vector<dbrl_feature_sptr> normalize_point_set( vcl_vector<dbrl_feature_sptr>  f2,
+        std::vector<dbrl_feature_sptr> normalize_point_set( std::vector<dbrl_feature_sptr>  f2,
                                   dbrl_correspondence  M) const;
 
         //: Binary save self to stream.
@@ -40,10 +40,10 @@ class dbrl_estimator_cubic_patch: public dbrl_estimator
         short version() const;
 
         //: Print an ascii summary to the stream
-        void print_summary(vcl_ostream &os) const;
+        void print_summary(std::ostream &os) const;
 
         //: Return a platform independent string identifying the class
-        virtual vcl_string is_a() const {return "dbrl_estimator_cubic_patch";}
+        virtual std::string is_a() const {return "dbrl_estimator_cubic_patch";}
 
         virtual dbrl_estimator * clone() const;
     protected:

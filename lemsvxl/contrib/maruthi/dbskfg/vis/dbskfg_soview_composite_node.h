@@ -45,11 +45,11 @@ class dbskfg_soview_composite_node : public vgui_soview2D
 
     //: Returns the type of this class
     /* virtual */ 
-    vcl_string type_name() const {return "dbskfg_soview_composite_node"; }
+    std::string type_name() const {return "dbskfg_soview_composite_node"; }
  
     //: Print details about this object to the given stream.
     /* virtual */ 
-    vcl_ostream& print(vcl_ostream& os) const;
+    std::ostream& print(std::ostream& os) const;
  
  
 protected:

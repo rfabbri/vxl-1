@@ -59,9 +59,9 @@ public:
   bool    curve_show_id_;
   bool    sheet_show_id_;
 
-  vcl_vector<SbColor>   vertices_ctable_;
-  vcl_vector<SbColor>   curves_ctable_;
-  vcl_vector<SbColor>   sheets_ctable_;
+  std::vector<SbColor>   vertices_ctable_;
+  std::vector<SbColor>   curves_ctable_;
+  std::vector<SbColor>   sheets_ctable_;
 
   dbsk3d_ms_vis_param () {
     A1A3_color_ = SbColor (0.5f, 1.0f, 0.0f);
@@ -214,10 +214,10 @@ public:
   //###### Visualization of Files ######
   
   SoSeparator* view_vor ();
-  SoSeparator* view_cms (vcl_string filename = "");
-  SoSeparator* view_sg (vcl_string filename = "");
+  SoSeparator* view_cms (std::string filename = "");
+  SoSeparator* view_sg (std::string filename = "");
   
-  SoSeparator* vis_list_file (vcl_string filename, 
+  SoSeparator* vis_list_file (std::string filename, 
                               const int option, const int vis_option);
   
   void parse_run_file (const char* run_file);
@@ -227,38 +227,38 @@ public:
 //###########################################################################
 //  The Bucketing+Stitching Wrapping Function.
 
-SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                                     vcl_vector<vcl_vector<int> >& finalM_faces,
-                                     const vcl_string prefix,
+SoSeparator* run_seg_adpt_bucketing (const std::vector<vgl_point_3d<double> >& input_pts,
+                                     std::vector<std::vector<int> >& finalM_faces,
+                                     const std::string prefix,
                                      const int npbkt, const bool b_check_dup,
                                      const float bdsphr_rr, const int bdsphr_sr,
                                      const float seg_msr, const int seg_topo_opt);
 
-void run_seg_adpt_bucketing_2 (vcl_vector<vgl_point_3d<double> >& pts,
-                             const int M, const vcl_string prefix,
+void run_seg_adpt_bucketing_2 (std::vector<vgl_point_3d<double> >& pts,
+                             const int M, const std::string prefix,
                              const bool b_check_dup, const float bktbr,
                              const float msr);
 
 
-void run_seg_adpt_bucketing_3 (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                               const int npbkt, const vcl_string& dirprefix,
+void run_seg_adpt_bucketing_3 (const std::vector<vgl_point_3d<double> >& input_pts,
+                               const int npbkt, const std::string& dirprefix,
                                const bool b_check_dup, const float bktbr,
                                const float bdsphr_rr, const float bdsphr_sr, 
                                const float seg_msr, const int seg_topo_opt);
 
-void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                                  vcl_vector<vcl_vector<int> >& finalM_faces,
-                                  const vcl_string& dirprefix,
+void run_seg_adpt_bucketing_4 (const std::vector<vgl_point_3d<double> >& input_pts,
+                                  std::vector<std::vector<int> >& finalM_faces,
+                                  const std::string& dirprefix,
                                   const int npbkt, const bool b_check_dup, const float bktbr,
                                   const float bdsphr_rr, const int bdsphr_sr,
                                   const float seg_msr, const int seg_topo_opt,
                                   const int n_erode);
 
-void run_seg_cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
+void run_seg_cell_bucketing (dbmsh3d_pt_set* pt_set, const std::string prefix,
                              const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ,
                              const float msr);
 
-void run_seg_cell_bucketing_2 (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
+void run_seg_cell_bucketing_2 (dbmsh3d_pt_set* pt_set, const std::string prefix,
                                const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ,
                                const float msr);
 

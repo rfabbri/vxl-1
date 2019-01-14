@@ -7,21 +7,21 @@
 #include <QApplication>
 
 #include <vul/vul_arg.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_vector.h>
 
 #include <dbrec3d/gui/dbrec3d_line_plot.h>
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string> y_file("-y_file", "filename of y values", "");
+  vul_arg<std::string> y_file("-y_file", "filename of y values", "");
 
   vul_arg_parse(argc, argv);
   
-  vcl_ifstream y_ofs(y_file().c_str());
+  std::ifstream y_ofs(y_file().c_str());
   if(!y_ofs)
   {
-    vcl_cerr << "Y values file is not valid" << vcl_endl;
+    std::cerr << "Y values file is not valid" << std::endl;
     return -1;
   }
   vnl_vector<double> y_vals;

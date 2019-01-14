@@ -42,11 +42,11 @@ BaseGUIGeometry* bvis_curve_tableau::select( int ax , int ay )
   int num_hits = vgui_utils::leave_pick_mode();
 
   // get all hits
-  vcl_vector<vcl_vector<unsigned> > hits;
+  std::vector<std::vector<unsigned> > hits;
   vgui_utils::process_hits(num_hits, ptr, hits);
 
   // for each hit get the name of the soview if it is
-  // being managed by this vcl_list
+  // being managed by this std::list
   //
   // Each hit from a display list has two entries. The first is the id
   // of the display list, and the second is the id of the soview. See
@@ -54,17 +54,17 @@ BaseGUIGeometry* bvis_curve_tableau::select( int ax , int ay )
   // belongs to this display list iff the first hit number is this
   // list's id.
 
-  vcl_vector<GLuint> my_hits;
+  std::vector<GLuint> my_hits;
   
-  for (vcl_vector<vcl_vector<unsigned> >::iterator i=hits.begin();
+  for (std::vector<std::vector<unsigned> >::iterator i=hits.begin();
        i != hits.end(); ++i)
   {
-    vcl_vector<unsigned> const& names = *i;
+    std::vector<unsigned> const& names = *i;
     assert( names.size() == 1 );
     my_hits.push_back( names[0] );
   }
 
-  //vcl_cout << "my_hits.size() = " << my_hits.size() << vcl_endl; 
+  //std::cout << "my_hits.size() = " << my_hits.size() << std::endl; 
   
   if( my_hits.size() == 1 ) {
 
@@ -76,7 +76,7 @@ BaseGUIGeometry* bvis_curve_tableau::select( int ax , int ay )
     float ix, iy;
     pi.window_to_image_coordinates(ax,ay, ix,iy);
 
-    // vcl_cout << "getting closest" << vcl_endl; 
+    // std::cout << "getting closest" << std::endl; 
 
     float smallest = FLT_MAX;
     int smallest_i = 0;
@@ -132,11 +132,11 @@ BaseGUIGeometry* bvis_curve_tableau::select( int ax , int ay )
 
       }
       else {
-        vcl_cout << "Error" << vcl_endl;
+        std::cout << "Error" << std::endl;
       }
 
     }
-    //vcl_cout<< "smallest_i: " << smallest_i << vcl_endl; 
+    //std::cout<< "smallest_i: " << smallest_i << std::endl; 
     return (BaseGUIGeometry *) my_hits[ smallest_i ];
   }
   return NULL;

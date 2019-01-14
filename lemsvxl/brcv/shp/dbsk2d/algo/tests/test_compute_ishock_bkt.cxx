@@ -10,14 +10,14 @@
 // Amir Tamrakar
 // 02/06/2005
 
-extern vcl_string file_base;
+extern std::string file_base;
 
 //: test shock computation using buckting
 bool load_bnd_and_compute_shock_bkt()
 {
   dbsk2d_ishock_boundary_bkt_sptr bnd = new dbsk2d_ishock_boundary_bkt(NO_LIMIT);
 
-  vcl_string filename = file_base + "file_io_data/3points.bnd";
+  std::string filename = file_base + "file_io_data/3points.bnd";
   bnd->LoadFile(filename.c_str());
 
   dbsk2d_ishock_detector_bkt my_detector(bnd);

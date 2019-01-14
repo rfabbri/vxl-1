@@ -4,7 +4,7 @@
 #include "bvaml_world_viewer.h"
 #include "bvaml_log_writer.h"
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
@@ -17,10 +17,10 @@
 void 
 bvaml_world_viewer::write_raw_world(
   bvaml_world* world,
-  const vcl_string& filename )
+  const std::string& filename )
 {
   // Write header.
-  vcl_ofstream ofs( filename.c_str(), vcl_ofstream::binary );
+  std::ofstream ofs( filename.c_str(), std::ofstream::binary );
   unsigned char t = 0; ofs.write( (char*)&t, 1 );
   unsigned int nx = params_->num_voxels().x(); ofs.write( (char*)&nx, 4 );
   unsigned int ny = params_->num_voxels().y(); ofs.write( (char*)&ny, 4 );
@@ -45,7 +45,7 @@ bvaml_world_viewer::write_raw_world(
 void 
 bvaml_world_viewer::write_x3d_world(
   bvaml_world* world,
-  const vcl_string& filename,
+  const std::string& filename,
   float threshold,
   float scale )
 {
@@ -58,14 +58,14 @@ bvaml_world_viewer::write_x3d_world(
 void 
 bvaml_world_viewer::write_x3d_world(
   bvaml_world* world,
-  const vcl_string& filename,
+  const std::string& filename,
   float threshold,
   float scale )
 {
   scale = (float)(1.0/scale);
   bvaml_log_writer log( "bvaml_world_viewer::write_world" );
 
-  vcl_ofstream file_stream( filename.c_str() );
+  std::ofstream file_stream( filename.c_str() );
   file_stream <<
     "<X3D version='3.0' profile='Immersive'>\n" <<
     " <Scene>\n" <<
@@ -77,7 +77,7 @@ bvaml_world_viewer::write_x3d_world(
     for(int svy = 0; svy < params_->num_supervoxels.y(); svy++ ){
       for(int svz = 0; svz < params_->num_supervoxels.z(); svz++ ){
 
-        vcl_stringstream svname; svname << svx << ' ' << svy << ' ' << svz;
+        std::stringstream svname; svname << svx << ' ' << svy << ' ' << svz;
         log.print_msg( "writing supervoxel " + svname.str() );
         
         vgl_point_3d<int> corner( params_->supervoxel_length*svx, 
@@ -177,7 +177,7 @@ bvaml_world_viewer::write_x3d_world(
 void 
 bvaml_world_viewer::write_world(
     bvaml_world* world,
-    const vcl_string& slice_dir,
+    const std::string& slice_dir,
     float scale )
 {
   int nx_scaled = (int)ceil(params_->num_voxels().x()*scale);
@@ -202,7 +202,7 @@ bvaml_world_viewer::write_world(
 
     // Set up the image for this slice.
     vil_image_view<vxl_byte> this_slice( nx_scaled, ny_scaled, 1 );
-    vcl_stringstream slice_name;
+    std::stringstream slice_name;
     slice_name << slice_dir << "/";
     if( z < 10 ) slice_name << '0';
     if( z < 100 ) slice_name << '0';
@@ -245,7 +245,7 @@ bvaml_world_viewer::start_inspection_file()
 //------------------------------------------------
 void 
 bvaml_world_viewer::add_inspection_ray(
-  const vcl_vector< vgl_point_3d<int> >& voxel_indices,
+  const std::vector< vgl_point_3d<int> >& voxel_indices,
   const bvaml_ray& ray,
   bool before_update )
 {
@@ -305,7 +305,7 @@ bvaml_world_viewer::add_inspection_ray(
 //---------------------------------------------
 void 
 bvaml_world_viewer::save_inspection_file(
-  const vcl_string& filename )
+  const std::string& filename )
 {
   bvaml_log_writer log( "bvaml_world_viewer::save_inspection_file" );
   log.print_msg( "saving" );
@@ -314,7 +314,7 @@ bvaml_world_viewer::save_inspection_file(
     " </Scene>\n" <<
     "</X3D>";
 
-  vcl_ofstream file_stream( filename.c_str() );
+  std::ofstream file_stream( filename.c_str() );
   file_stream << inspection_file_.str();
 };
 
@@ -322,7 +322,7 @@ bvaml_world_viewer::save_inspection_file(
 //--------------------------------------------
 void 
 bvaml_world_viewer::draw_world_axis(
-  vcl_ostream& stream )
+  std::ostream& stream )
 {
   stream << 
   "  <Transform translation='" << params_->num_voxels().x()/2.0 << " 0 0'>\n" <<

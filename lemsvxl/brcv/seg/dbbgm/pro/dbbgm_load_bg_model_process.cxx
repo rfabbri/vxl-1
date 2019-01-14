@@ -4,7 +4,7 @@
 // \file
 
 #include "dbbgm_load_bg_model_process.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bpro1/bpro1_storage.h>
 #include <bpro1/bpro1_parameters.h>
 #include <bvis1/bvis1_manager.h>
@@ -16,7 +16,7 @@ dbbgm_load_bg_model_process::dbbgm_load_bg_model_process() : bpro1_process(),  m
 {
   if( !parameters()->add( "Backgrounf Model file <filename...>" , "-bgmodel_filename", bpro1_filepath("","*") ))
     {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -36,7 +36,7 @@ dbbgm_load_bg_model_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbbgm_load_bg_model_process::name()
+std::string dbbgm_load_bg_model_process::name()
 {
   return "Load Background Model";
 }
@@ -45,10 +45,10 @@ vcl_string dbbgm_load_bg_model_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbbgm_load_bg_model_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
       to_return.clear();
 
 
@@ -57,10 +57,10 @@ dbbgm_load_bg_model_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbbgm_load_bg_model_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
       to_return.push_back( "dbbgm_distribution_image" );
 
 
@@ -91,7 +91,7 @@ dbbgm_load_bg_model_process::execute()
   // read the tracks from the storage file  
   bpro1_filepath track_path;
   parameters()->get_value( "-bgmodel_filename" , track_path );
-  vcl_string path = track_path.path;
+  std::string path = track_path.path;
   vsl_b_ifstream is(path);
   model_storage_ =  dbbgm_distribution_image_storage_new();
   model_storage_->b_read(is);
@@ -113,7 +113,7 @@ res->initialize_global();
 // frame index of -2 should indicate global storage
 if(!res->store_data_at(model_storage_, -2))
     {
-    vcl_cout << "In dbbgm_load_bg_model_process "
+    std::cout << "In dbbgm_load_bg_model_process "
         << "store to repository failed\n";
     return false;
     }

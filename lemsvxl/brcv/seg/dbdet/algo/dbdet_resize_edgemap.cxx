@@ -8,7 +8,7 @@
 
 #include <dbdet/edge/dbdet_edgemap.h>
 
-#include <vcl_string.h>
+#include <string>
 
 
 
@@ -26,7 +26,7 @@ bool dbdet_resize_edgemap(const dbdet_edgemap_sptr& edgemap, double scale_up_fac
   int new_rows = vnl_math::ceil( edgemap->edge_cells.rows() * scale_up_factor);
 
   // duplicate the edgel list
-  vcl_vector<dbdet_edgel* > edgels = edgemap->edgels;
+  std::vector<dbdet_edgel* > edgels = edgemap->edgels;
 
   // clear the existing edgemap
   edgemap->edge_cells.clear();
@@ -36,7 +36,7 @@ bool dbdet_resize_edgemap(const dbdet_edgemap_sptr& edgemap, double scale_up_fac
   edgemap->edge_cells.resize(new_rows, new_cols);
 
   // re-insert the edgels back to the edgemap
-  for (vcl_vector<dbdet_edgel* >::iterator it = edgels.begin(); it != edgels.end(); ++it)
+  for (std::vector<dbdet_edgel* >::iterator it = edgels.begin(); it != edgels.end(); ++it)
   {
     dbdet_edgel* edgel = *it;
     edgel->pt.set(scale_up_factor * edgel->pt.x(), scale_up_factor * edgel->pt.y());

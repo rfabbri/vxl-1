@@ -26,16 +26,16 @@ bool bof_make_cluster_id_scene_process_cons(bprb_func_process& pro)
 {
   using namespace bof_make_cluster_id_scene_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
-  input_types_[i++] = "vcl_string"; //path to bof_info_file
+  input_types_[i++] = vcl_string"; //path to bof_info_file
   input_types_[i++] = "bof_codebook_sptr" ;  //class containing the means
   input_types_[i++] = "int";   //scene_id 
   input_types_[i++] = "int";   //block Indeces
   input_types_[i++] = "int";
   input_types_[i++] = "int";
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
 
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -49,7 +49,7 @@ bool bof_make_cluster_id_scene_process(bprb_func_process& pro)
   
   //get inputs
   unsigned i = 0;
-  vcl_string bof_path = pro.get_input<vcl_string>(i++);
+  std::string bof_path = pro.get_input<std::string>(i++);
   bof_codebook_sptr codebook = pro.get_input<bof_codebook_sptr>(i++);
   int scene_id = pro.get_input<int>(i++);
   int block_i = pro.get_input<int>(i++);

@@ -6,7 +6,7 @@
 dbdet_eval_result dbdet_eval_edge_det(dbdet_eval_edge_det_params params, dbdet_edgemap_sptr edge_map, vil_image_view<vxl_byte>& GT_image)
 {
   //read the list of thresholds to evaluate the algorithm from the params
-  vcl_vector<double>& thresh = params.thresh;
+  std::vector<double>& thresh = params.thresh;
 
   //create an eval structure for storing the ROC data
   dbdet_eval_result res(params.thresh.size());
@@ -38,8 +38,8 @@ dbdet_eval_result dbdet_eval_edge_det(dbdet_eval_edge_det_params params, dbdet_e
       if (edge_map->edgels[e]->strength<threshold)
         continue;
 
-      int x = (int) vcl_floor(edge_map->edgels[e]->pt.x()+0.5);
-      int y = (int) vcl_floor(edge_map->edgels[e]->pt.y()+0.5);
+      int x = (int) std::floor(edge_map->edgels[e]->pt.x()+0.5);
+      int y = (int) std::floor(edge_map->edgels[e]->pt.y()+0.5);
 
       if (x<0 || x>=GT.ni() || y<0 || y>=GT.nj())
         continue; //outside the image
@@ -62,7 +62,7 @@ dbdet_eval_result dbdet_eval_edge_det(dbdet_eval_edge_det_params params, dbdet_e
             //if the pixel is marked as edge
             if (GT(x+xx,y+yy)<params.no_edge_label){
               //compute distance
-              double d = vcl_sqrt(double(xx*xx + yy*yy));
+              double d = std::sqrt(double(xx*xx + yy*yy));
 
               if (d<=params.T_match && d<dist){
                 dist = d;
@@ -138,8 +138,8 @@ dbdet_eval_result dbdet_eval_edge_linking(dbdet_eval_edge_det_params params, dbd
       //go over all the edgels of the contour 
       for (unsigned j=0; j<chain->edgels.size(); j++)
       {
-        int x = (int) vcl_floor(chain->edgels[j]->pt.x()+0.5);
-        int y = (int) vcl_floor(chain->edgels[j]->pt.y()+0.5);
+        int x = (int) std::floor(chain->edgels[j]->pt.x()+0.5);
+        int y = (int) std::floor(chain->edgels[j]->pt.y()+0.5);
 
         if (x<0 || x>=GT.ni() || y<0 || y>=GT.nj())
           continue; //outside the image
@@ -162,7 +162,7 @@ dbdet_eval_result dbdet_eval_edge_linking(dbdet_eval_edge_det_params params, dbd
               //if the pixel is marked as edge
               if (GT(x+xx,y+yy)<params.no_edge_label){
                 //compute distance
-                double d = vcl_sqrt(double(xx*xx + yy*yy));
+                double d = std::sqrt(double(xx*xx + yy*yy));
 
                 if (d<=params.T_match && d<dist){
                   dist = d;

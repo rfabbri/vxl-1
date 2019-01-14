@@ -27,20 +27,20 @@ class dborl_eval_sel_edge_linker_params : public dborl_algo_params
 public:
   
   //io parameters
-  dborl_parameter<vcl_string> input_object_name_;
+  dborl_parameter<std::string> input_object_name_;
 
-  dborl_parameter<vcl_string> input_object_dir_;    // passes the folder of the input object
-  dborl_parameter<vcl_string> input_extension_;     // extension of the input image
-  dborl_parameter<vcl_string> GT_extension_;        // extension of the Ground Truth image
+  dborl_parameter<std::string> input_object_dir_;    // passes the folder of the input object
+  dborl_parameter<std::string> input_extension_;     // extension of the input image
+  dborl_parameter<std::string> GT_extension_;        // extension of the Ground Truth image
 
-  dborl_parameter<vcl_string> edg_output_extension_;    //extension of the edge file
-  dborl_parameter<vcl_string> cem_output_extension_;    //extension of the contour file
-  dborl_parameter<vcl_string> ROC_output_extension_;    //extension of the ROC file
+  dborl_parameter<std::string> edg_output_extension_;    //extension of the edge file
+  dborl_parameter<std::string> cem_output_extension_;    //extension of the contour file
+  dborl_parameter<std::string> ROC_output_extension_;    //extension of the ROC file
 
-  dborl_parameter<vcl_string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
+  dborl_parameter<std::string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
                                                     // if nothing is written here, nothing gets associated
 
-  vcl_string algo_abbreviation_;
+  std::string algo_abbreviation_;
 
   //general parameters
 
@@ -69,7 +69,7 @@ public:
   dborl_parameter<double> len_thresh_;       //base length threshold (not the one for the ROC)
 
   //: constructor
-  dborl_eval_sel_edge_linker_params(vcl_string algo_name) : dborl_algo_params(algo_name) 
+  dborl_eval_sel_edge_linker_params(std::string algo_name) : dborl_algo_params(algo_name) 
   { 
     algo_abbreviation_ = "sel_eval";
 

@@ -37,7 +37,7 @@ void dbdet_curvelet_map::clear()
 //: clear all the curvelets in the graph
 void dbdet_curvelet_map::clear_all_curvelets()
 {
-  vcl_set<dbdet_curvelet*> deleted;
+  std::set<dbdet_curvelet*> deleted;
   //delete all the curvelets in the map
   for (unsigned i=0; i<map_.size(); i++)
   {
@@ -112,7 +112,7 @@ void dbdet_curvelet_map::delete_all_curvelets(dbdet_edgel* e)
 }
 
 //: does the current curvelet exist?
-dbdet_curvelet* dbdet_curvelet_map::does_curvelet_exist(dbdet_edgel* e, vcl_deque<dbdet_edgel*> & chain)
+dbdet_curvelet* dbdet_curvelet_map::does_curvelet_exist(dbdet_edgel* e, std::deque<dbdet_edgel*> & chain)
 {
   //go over all the curvelets of the current size formed by the current edgel
   curvelet_list_iter cv_it = map_[e->id].begin();

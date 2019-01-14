@@ -1,9 +1,9 @@
 #ifndef yong_image_icon_view_h_
 #define yong_image_icon_view_h_
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <utility>
 #include <vil/vil_image_view.h>
 #include <cplusplusclass/yong_image_icon_view_sptr.h>
 #include <vxl_config.h> // for vxl_byte
@@ -29,11 +29,11 @@ class yong_image_icon_view : public vbl_ref_count
 
 
     ~yong_image_icon_view() { }
-    vcl_string yong_image_icon_view::type_name() const;
+    std::string yong_image_icon_view::type_name() const;
     
 
     //: Name of this tableau.
-    vcl_string image_name_;
+    std::string image_name_;
 
     //: Binary save self to stream.
     void b_write(vsl_b_ostream &os) const;

@@ -35,7 +35,7 @@ dvidpro_affine_homog_est_process::dvidpro_affine_homog_est_process()
   // Set up the parameters for this process
   if( !parameters()->add( "No of frames in reconstruction" , "-num_input_frames" , (int)10 )
  //         ||(
- //  !parameters()->add( "VRML Filename" , "-vrml_fname" , (vcl_string)"d://surfptsnew.txt" ) 
+ //  !parameters()->add( "VRML Filename" , "-vrml_fname" , (std::string)"d://surfptsnew.txt" ) 
  //           )
           ||(
      !parameters()->add( "No of planes" , "-numplanes" , (int)4 ) 
@@ -46,7 +46,7 @@ dvidpro_affine_homog_est_process::dvidpro_affine_homog_est_process()
         )
 
   {
-    vcl_cerr << "ERROR: Adding parameters in dvidpro_affine_homog_est_process::dvidpro_affine_homog_est_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dvidpro_affine_homog_est_process::dvidpro_affine_homog_est_process()" << std::endl;
   }
 }
 
@@ -63,7 +63,7 @@ vidpro_process* dvidpro_affine_homog_est_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dvidpro_affine_homog_est_process::name()
 {
   return "Affine Transform Estimation";
@@ -97,12 +97,12 @@ parameters()->get_value("-num_input_frames",framenum);
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 dvidpro_affine_homog_est_process::get_input_type()
 {
   // this process looks for a vsol2D storage class
   // at each input frame
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   bool image_;
@@ -115,11 +115,11 @@ dvidpro_affine_homog_est_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 dvidpro_affine_homog_est_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  // to_return.push_back( "vsol3D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -131,23 +131,23 @@ bool
 dvidpro_affine_homog_est_process::execute()
 {
 int num_of_frames;
-  vcl_string vrml_fname;
+  std::string vrml_fname;
   parameters()->get_value("-num_input_frames", num_of_frames);
   
-  vcl_vector<vcl_vector<vsol_point_2d_sptr > >  obs_matrix;
+  std::vector<std::vector<vsol_point_2d_sptr > >  obs_matrix;
   int no_pts;
  // if (num_of_frames>2)
    //  {
   // verify that the number of input frames is correct
   if ( input_data_.size() != num_of_frames ){
-    vcl_cout << "In dvidpro_affine_homog_est_process::execute() - not exactly one"
-             << " input frames" << vcl_endl;
+    std::cout << "In dvidpro_affine_homog_est_process::execute() - not exactly one"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
 
   // get images from the storage classes
-  vcl_vector<vidpro_vsol2D_storage_sptr> feat_pts(num_of_frames); 
+  std::vector<vidpro_vsol2D_storage_sptr> feat_pts(num_of_frames); 
   
   for (int i = 0; i<num_of_frames; i++)
       feat_pts[i].vertical_cast(input_data_[i][0]);
@@ -156,14 +156,14 @@ int num_of_frames;
 
 
   
-  vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator feat;
+  std::vector<vsol_spatial_object_2d_sptr>::const_iterator feat;
 
   
-  vcl_vector<vsol_spatial_object_2d_sptr> feat_sovec;
-  vcl_vector<vsol_point_2d_sptr> feat_pointvec;
-  vcl_vector<vsol_point_2d_sptr> ref_feat_pointvec;
-  vcl_vector<vsol_spatial_object_2d_sptr> ref_view;
-  vcl_vector<vnl_double_3x3 > affine_list;
+  std::vector<vsol_spatial_object_2d_sptr> feat_sovec;
+  std::vector<vsol_point_2d_sptr> feat_pointvec;
+  std::vector<vsol_point_2d_sptr> ref_feat_pointvec;
+  std::vector<vsol_spatial_object_2d_sptr> ref_view;
+  std::vector<vnl_double_3x3 > affine_list;
   
 
   feat_sovec = (feat_pts[num_of_frames-1])->all_data();
@@ -189,7 +189,7 @@ int num_of_frames;
      
 
      int j = 0;
-     vcl_cout<<i<<"Num of points"<<feat_sovec.size()<<"\n";
+     std::cout<<i<<"Num of points"<<feat_sovec.size()<<"\n";
      for (feat = feat_sovec.begin(); (j<no_pts); feat++)
          {
          feat_pointvec.push_back( feat->ptr()->cast_to_point()  );
@@ -200,7 +200,7 @@ int num_of_frames;
      bool affine = true;
      int num_planes =3;
      bprt_homog_interface Homography_Calc(ref_feat_pointvec , feat_pointvec, dof,&num_planes, scale, affine );
-     Homography_Calc.set_method((vcl_string)"muset" );
+     Homography_Calc.set_method((std::string)"muset" );
      Homography_Calc.compute_homog();
      vnl_double_3x3 AffH;
      for (int p =0; p<num_planes; p++)
@@ -221,7 +221,7 @@ int num_of_frames;
   // Do something here with all of this data
  
     // create the output storage class
-  vcl_vector<vidpro_vsol2D_storage_sptr> output_vsol(num_of_frames);
+  std::vector<vidpro_vsol2D_storage_sptr> output_vsol(num_of_frames);
   for ( int i = 0; i<num_of_frames; i++)
    output_vsol[i] = vidpro_vsol2D_storage_new();
 

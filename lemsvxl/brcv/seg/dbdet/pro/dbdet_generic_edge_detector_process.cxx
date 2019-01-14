@@ -12,9 +12,9 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_complex.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <complex>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -46,7 +46,7 @@
 //: Constructor
 dbdet_generic_edge_detector_process::dbdet_generic_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Sobel (1x3)");    //0
   gradient_operator_choices.push_back("Sobel (3x3)");    //1
   gradient_operator_choices.push_back("Gaussian");       //2
@@ -55,11 +55,11 @@ dbdet_generic_edge_detector_process::dbdet_generic_edge_detector_process()
   gradient_operator_choices.push_back("F-operator");     //5
   gradient_operator_choices.push_back("R-operator");     //6
 
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -71,7 +71,7 @@ dbdet_generic_edge_detector_process::dbdet_generic_edge_detector_process()
       !parameters()->add( "Subpixel Edges"  , "-bsubpix_edges" , true ) ||
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0)) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -91,7 +91,7 @@ dbdet_generic_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_generic_edge_detector_process::name()
 {
   return "Generic Edge Detector";
@@ -115,18 +115,18 @@ dbdet_generic_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_generic_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_generic_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_generic_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_generic_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -137,14 +137,14 @@ bool
 dbdet_generic_edge_detector_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_generic_edge_detector_process::execute() - not exactly one"
+    std::cout << "In dbdet_generic_edge_detector_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Generic edge detection...";
-  vcl_cout.flush();
+  std::cout << "Generic edge detection...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -223,7 +223,7 @@ int padding=10;
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -241,13 +241,13 @@ int padding=10;
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
     case 2: //Gaussian
     {  
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
@@ -269,13 +269,13 @@ int padding=10;
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
     case 3: //h0-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
@@ -297,13 +297,13 @@ int padding=10;
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
     case 4:  //h1-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
@@ -325,13 +325,13 @@ int padding=10;
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
     case 5:  //F-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       vil_image_view<double> Ix, Iy, Ixx, Ixy, Iyy, Ixxx, Ixxy, Ixyy, Iyyy;
@@ -366,7 +366,7 @@ int padding=10;
 
       //compute the gradient magnitude and assign the third order orientation as the gradient
       for(unsigned long i=0; i<grad_mag.size(); i++){
-        g_mag[i] = vcl_sqrt(ix[i]*ix[i] + iy[i]*iy[i]);
+        g_mag[i] = std::sqrt(ix[i]*ix[i] + iy[i]*iy[i]);
 
         //compute Fx and Fy
         double Fx = 2*ix[i]*ixx[i]*ixx[i] + 2*ix[i]*ixy[i]*ixy[i] + 2*ixx[i]*iy[i]*ixy[i] + 
@@ -382,7 +382,7 @@ int padding=10;
     }
     case 6:  //R-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       dbdet_subpix_convolve_2d(padded_img, grad_mag,   dbdet_G_kernel(sigma),   double(), N);
 
@@ -437,9 +437,9 @@ int padding=10;
   t.mark(); //reset timer
 
   //Now call the nms code to get the subpixel edge tokens
-  vcl_vector<vgl_point_2d<double> > loc;
-  vcl_vector<double> orientation, mag, d2f;
-  vcl_vector<vgl_point_2d<int> > pix_loc;
+  std::vector<vgl_point_2d<double> > loc;
+  std::vector<double> orientation, mag, d2f;
+  std::vector<vgl_point_2d<int> > pix_loc;
 
   dbdet_nms NMS(dbdet_nms_params(thresh, (dbdet_nms_params::PFIT_TYPE)parabola_fit), grad_x, grad_y, grad_mag);
   NMS.apply(true, loc, orientation, mag, d2f, pix_loc);
@@ -466,10 +466,10 @@ int padding=10;
       vgl_point_2d<double> pt(loc[i].x()/scale, loc[i].y()/scale);
 
       // for now get the appearance parameter in a coarse fashion from the image
-      vgl_point_2d<double> ptL(loc[i].x()/scale - sigma*vcl_cos(orientation[i]-vnl_math::pi_over_2), 
-                               loc[i].y()/scale - sigma*vcl_sin(orientation[i]-vnl_math::pi_over_2));
-      vgl_point_2d<double> ptR(loc[i].x()/scale + sigma*vcl_cos(orientation[i]-vnl_math::pi_over_2), 
-                               loc[i].y()/scale + sigma*vcl_sin(orientation[i]-vnl_math::pi_over_2));
+      vgl_point_2d<double> ptL(loc[i].x()/scale - sigma*std::cos(orientation[i]-vnl_math::pi_over_2), 
+                               loc[i].y()/scale - sigma*std::sin(orientation[i]-vnl_math::pi_over_2));
+      vgl_point_2d<double> ptR(loc[i].x()/scale + sigma*std::cos(orientation[i]-vnl_math::pi_over_2), 
+                               loc[i].y()/scale + sigma*std::sin(orientation[i]-vnl_math::pi_over_2));
       
       //we could get these values from
       ////(a)from the original image or
@@ -490,7 +490,7 @@ int padding=10;
   dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(greyscale_view.ni(), 
                                                   greyscale_view.nj());
 
-  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  std::vector<dbdet_edgel*> padded_edges=edge_map->edgels;
   for ( unsigned int i=0; i < padded_edges.size() ; ++i)
   {
 
@@ -517,11 +517,11 @@ int padding=10;
   edge_map=0;
 
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
   
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << padded_edge_map->num_edgels();
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for nms: " << nms_time << " msec" << std::endl;
+  std::cout << "#edgels = " << padded_edge_map->num_edgels();
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();

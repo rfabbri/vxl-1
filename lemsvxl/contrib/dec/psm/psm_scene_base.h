@@ -1,7 +1,7 @@
 #ifndef psm_scene_base_h_
 #define psm_scene_base_h_
 
-#include <vcl_set.h>
+#include <set>
 #include <vbl/vbl_bounding_box.h>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -39,7 +39,7 @@ public:
   double block_len() const {return block_len_;}
 
   //: access valid blocks
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks(){return valid_blocks_;}
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks(){return valid_blocks_;}
 
   // Operators that allow psm_scene's to be placed in a brdb database
 
@@ -52,7 +52,7 @@ public:
   //: return the appearance model type
   virtual psm_apm_type appearance_model_type() const = 0;
 
-  typedef vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator block_index_iterator;
+  typedef std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator block_index_iterator;
   block_index_iterator block_index_begin() { return valid_blocks_.begin(); }
   block_index_iterator block_index_end() { return valid_blocks_.end(); }
 
@@ -71,14 +71,14 @@ protected:
   double block_len_;
   bgeo_lvcs_sptr lvcs_;
 
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks_;
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks_;
 
 };
 
 typedef vbl_smart_ptr<psm_scene_base> psm_scene_base_sptr;
 
 //: output description of voxel world to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, psm_scene_base const& scene);
+std::ostream&  operator<<(std::ostream& s, psm_scene_base const& scene);
 
 
 #endif

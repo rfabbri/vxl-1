@@ -56,7 +56,7 @@ void dbrl_rigid_transformation::b_read(vsl_b_istream &is)
             vsl_b_read(is, scale_);
             break;
         default:
-            vcl_cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -64,7 +64,7 @@ short dbrl_rigid_transformation::version() const
     {
     return 1;
     }
-void dbrl_rigid_transformation::print_summary(vcl_ostream &os) const
+void dbrl_rigid_transformation::print_summary(std::ostream &os) const
 {
   
 }

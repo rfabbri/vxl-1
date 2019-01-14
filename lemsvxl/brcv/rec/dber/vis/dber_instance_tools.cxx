@@ -3,7 +3,7 @@
 // \file
 
 #include "dber_instance_tools.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -56,21 +56,21 @@ static bpro1_storage_sptr storage()
 bool dber_instance_label_tool::label_all_selected(void)
 {
   if (!tableau_) {
-    vcl_cout << " get_current_database() - tableau_ is not set in dber_instance_label_tool\n";
+    std::cout << " get_current_database() - tableau_ is not set in dber_instance_label_tool\n";
     return false;
   }
 
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage_->get_frames();
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage_->get_frames();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau_->get_selected_positions(col_pos, row_pos, times);
 
   for (unsigned i = 0; i<col_pos->size(); i++) {
     if ((*row_pos)[i] < 0 || (*row_pos)[i] < 0)
       continue;
     
-    vcl_pair<unsigned, unsigned> p;
+    std::pair<unsigned, unsigned> p;
     int col = (*col_pos)[i];
     int row = (*row_pos)[i];
     if (col < int(frames.size()))
@@ -114,7 +114,7 @@ dber_instance_label_tool::~dber_instance_label_tool()
 
 
 //: Return the name of this tool
-vcl_string dber_instance_label_tool::name() const
+std::string dber_instance_label_tool::name() const
 {
   return "Label Selected Video Instances";
 }
@@ -137,16 +137,16 @@ dber_instance_label_tool::handle( const vgui_event & e,
 {
   if (gesture_display_(e))
     if (tableau_) {
-      vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage_->get_frames();
+      std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage_->get_frames();
       unsigned col_pos, row_pos;
       tableau_->get_active_position(&col_pos, &row_pos);
       if (col_pos < frames.size())
         if (row_pos < frames[col_pos].size()) {
           dbru_label_sptr lbl = frames[col_pos][row_pos]->get_label();
           if (lbl)
-            vcl_cout << *lbl;
+            std::cout << *lbl;
           else 
-            vcl_cout << "no label has been set for this instance\n";
+            std::cout << "no label has been set for this instance\n";
         }
     }
 
@@ -158,9 +158,9 @@ dber_instance_label_tool::handle( const vgui_event & e,
     static int view_bin = -1;
     static int shadow_bin = -1;
     static int shadow_length = -1;
-    vcl_string category;
+    std::string category;
     vgui_dialog param_dlg("Prepare Label");
-    vcl_vector<vcl_string> cats;
+    std::vector<std::string> cats;
     cats.push_back("null");
     cats.push_back("car");
     cats.push_back("pickup");
@@ -188,15 +188,15 @@ void dber_instance_label_tool::activate()
   bpro1_storage_sptr junk = storage();
   ins_storage_ = get_instance_storage(junk);
   if(!ins_storage_) {
-    vcl_cout << "Failed to activate dber_instance_tools\n";
+    std::cout << "Failed to activate dber_instance_tools\n";
     return;
   }
 
-  vcl_cout << "label_instances tool active\n";
-  vcl_cout << "USAGE: First create a label, then selected instances will be labeled\n";
+  std::cout << "label_instances tool active\n";
+  std::cout << "USAGE: First create a label, then selected instances will be labeled\n";
 
   if (!tableau_) {
-    vcl_cout << " dber_instance_label_tool::activate() - tableau_ is not set in dber_instance_label_tool\n";
+    std::cout << " dber_instance_label_tool::activate() - tableau_ is not set in dber_instance_label_tool\n";
     return;
   }
 

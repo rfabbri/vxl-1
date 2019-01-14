@@ -8,7 +8,7 @@
 //\date 04/25/2005 12:21:35 PM EDT
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <dbsol/dbsol_gshock_curve_2d_sptr.h>
 #include <dbsol/algo/dbsol_geno_shock.h>
@@ -27,7 +27,7 @@ public:
 
    //: geno curves
    // index into this vector is the curve id
-   mw_curves(vcl_vector< vcl_vector<vsol_point_2d_sptr> > *curvepts);
+   mw_curves(std::vector< std::vector<vsol_point_2d_sptr> > *curvepts);
    ~mw_curves();
    
    //: set_points
@@ -39,7 +39,7 @@ public:
    // sets the curveid and checks for consistency between points and curves
 
 
-   const vcl_vector<vsol_point_2d_sptr> & pt() const {return pt_;}
+   const std::vector<vsol_point_2d_sptr> & pt() const {return pt_;}
    // returns ith point
    const vsol_point_2d &pt(unsigned i) const {return *pt_[i];}
 
@@ -47,11 +47,11 @@ public:
 
    //: curveid()
    // curve id given pixel id
-   const vcl_vector<double>& curveid() const {return curveid_;}
+   const std::vector<double>& curveid() const {return curveid_;}
    
    // ith geno curve
    //: gcurve()
-   const vcl_vector<dbsol_gshock_curve_2d_sptr> & gcurve() const {return gcurve_;}
+   const std::vector<dbsol_gshock_curve_2d_sptr> & gcurve() const {return gcurve_;}
    const dbsol_gshock_curve_2d_sptr gcurve(unsigned i) const {return gcurve_[i];}
 
    void compute_geno();
@@ -68,25 +68,25 @@ public:
 
    //: output description to stream
    friend
-   vcl_ostream&  operator<<(vcl_ostream& s, const mw_curves &c);
+   std::ostream&  operator<<(std::ostream& s, const mw_curves &c);
 
 
    bool check_consistency() const;
 
    //: list of all pixels of all curves; 
    // index into this vector is the pixel id
-   vcl_vector<vsol_point_2d_sptr> pt_;
+   std::vector<vsol_point_2d_sptr> pt_;
 
    //: curve having i-th pixel
    // i.e. pixel id to curve id
-   vcl_vector<double> curveid_;
+   std::vector<double> curveid_;
 
    //: geno curves
    // index into this vector is the curve id
-   vcl_vector<dbsol_gshock_curve_2d_sptr> gcurve_;
+   std::vector<dbsol_gshock_curve_2d_sptr> gcurve_;
 
    //: vector of cached pixels for each curve 
-   vcl_vector< vcl_vector<vsol_point_2d_sptr> > &curvepts_;
+   std::vector< std::vector<vsol_point_2d_sptr> > &curvepts_;
 };
 
 

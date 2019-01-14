@@ -12,7 +12,7 @@ dbctrk_stereo_matching::dbctrk_stereo_matching(FMatrix F)
   F_=F;
 }
 
-void dbctrk_stereo_matching::set_curves1(vcl_vector<dbctrk_tracker_curve_sptr> c1)
+void dbctrk_stereo_matching::set_curves1(std::vector<dbctrk_tracker_curve_sptr> c1)
 {
   curves1_.clear();
   for(unsigned int i=0;i<c1.size();i++)
@@ -20,7 +20,7 @@ void dbctrk_stereo_matching::set_curves1(vcl_vector<dbctrk_tracker_curve_sptr> c
     curves1_.push_back(c1[i])  ;
   }
 }
-void dbctrk_stereo_matching::set_curves2(vcl_vector<dbctrk_tracker_curve_sptr> c2)
+void dbctrk_stereo_matching::set_curves2(std::vector<dbctrk_tracker_curve_sptr> c2)
 {
   curves2_.clear();
   for(unsigned int i=0;i<c2.size();i++)
@@ -29,7 +29,7 @@ void dbctrk_stereo_matching::set_curves2(vcl_vector<dbctrk_tracker_curve_sptr> c
   }
 }
 
-void dbctrk_stereo_matching::get_curves1(vcl_vector<dbctrk_tracker_curve_sptr> & out1)
+void dbctrk_stereo_matching::get_curves1(std::vector<dbctrk_tracker_curve_sptr> & out1)
 {
 
    out1.clear();
@@ -37,7 +37,7 @@ void dbctrk_stereo_matching::get_curves1(vcl_vector<dbctrk_tracker_curve_sptr> &
      out1.push_back(curves1_[i]);
 
 }
-void dbctrk_stereo_matching::get_curves2(vcl_vector<dbctrk_tracker_curve_sptr> & out2)
+void dbctrk_stereo_matching::get_curves2(std::vector<dbctrk_tracker_curve_sptr> & out2)
 {
 
    out2.clear();
@@ -57,9 +57,9 @@ void dbctrk_stereo_matching::stereo_matching()
       {
 
            double euc,scale;
-        vcl_map<int,int> mapping;
-        vcl_vector<int> tail_old;
-        vcl_vector<int> tail_new;
+        std::map<int,int> mapping;
+        std::vector<int> tail_old;
+        std::vector<int> tail_new;
         vnl_matrix<double> R1,T1,Tbar;
         //vgl_point_2d<double> epipole_(0,0);
         double matching_cost=mc.match_DP(curves1_[j]->desc,curves2_[i]->desc,
@@ -82,7 +82,7 @@ void dbctrk_stereo_matching::stereo_matching()
     }
   }
 
-  vcl_cout<<"\n In best matches";
+  std::cout<<"\n In best matches";
   //mc.best_matches(&curves2_,&curves1_);
   bootstrap_matches(10);
 
@@ -98,11 +98,11 @@ void dbctrk_stereo_matching::bootstrap_matches(int level_curves)
   int I=curves2_.size();
   int A=curves1_.size();
 
-  vcl_map<int,dbctrk_tracker_curve_sptr> c1;
-  vcl_map<int,dbctrk_tracker_curve_sptr> c2;
+  std::map<int,dbctrk_tracker_curve_sptr> c1;
+  std::map<int,dbctrk_tracker_curve_sptr> c2;
 
-  vcl_vector<int> seed1;
-  vcl_vector<int> seed2;
+  std::vector<int> seed1;
+  std::vector<int> seed2;
 
 
   for(unsigned int i=0;i<curves2_.size();i++)
@@ -130,9 +130,9 @@ void dbctrk_stereo_matching::bootstrap_matches(int level_curves)
       s[i][a]=1e5;
     }
   }
-  //vcl_cout<<"\n ....................";
-  vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-  vcl_vector<match_data_sptr>::iterator iter_old;
+  //std::cout<<"\n ....................";
+  std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+  std::vector<match_data_sptr>::iterator iter_old;
 
   iter_new=curves2_.begin();
   for (int i=0; iter_new!=curves2_.end(); iter_new++,i++)
@@ -406,15 +406,15 @@ double dbctrk_stereo_matching::spatial_euclidean_dist(dbctrk_tracker_curve_sptr 
 
   return min;
 }
-void dbctrk_stereo_matching::compute_spatial_distance(vcl_vector<dbctrk_tracker_curve_sptr> curves,
-                        vcl_map<vcl_pair<int,int>, double > & spatiald)
+void dbctrk_stereo_matching::compute_spatial_distance(std::vector<dbctrk_tracker_curve_sptr> curves,
+                        std::map<std::pair<int,int>, double > & spatiald)
 {
   spatiald.clear();
   for(unsigned int i=0;i<curves.size()-1;i++)
   {
     for(unsigned int j=i+1;j<curves.size();j++)
     {
-      spatiald[vcl_make_pair(i,j)]=spatial_euclidean_dist(curves[i],curves[j]);
+      spatiald[std::make_pair(i,j)]=spatial_euclidean_dist(curves[i],curves[j]);
 
     }
   }
@@ -428,5 +428,5 @@ double dbctrk_stereo_matching::spatial_sig_dist(dbctrk_tracker_curve_sptr c1,dbc
     dist+=(c1->spatialsig[i]-c2->spatialsig[i])*(c1->spatialsig[i]-c2->spatialsig[i]);
   }
 
-  return vcl_sqrt(dist);
+  return std::sqrt(dist);
 }

@@ -12,10 +12,10 @@
 //                                   Assumes the float image is already scaled to [0,1] range
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <cmath>
 
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_rational_camera.h>
@@ -49,15 +49,15 @@ class dbvxm_util
                                     vgl_h_matrix_2d<double> &H_image_to_plane,
                                     unsigned scale);
 
- /* static bool read_cameras(const vcl_string filename,
-                           vcl_vector<vnl_double_3x3> &Ks,
-                           vcl_vector<vnl_double_3x3> &Rs,
-                           vcl_vector<vnl_double_3x1> &Ts);
+ /* static bool read_cameras(const std::string filename,
+                           std::vector<vnl_double_3x3> &Ks,
+                           std::vector<vnl_double_3x3> &Rs,
+                           std::vector<vnl_double_3x1> &Ts);
 
-  static bool write_cameras(const vcl_string filename,
-                            vcl_vector<vnl_double_3x3> &Ks,
-                            vcl_vector<vnl_double_3x3> &Rs,
-                            vcl_vector<vnl_double_3x1> &Ts);*/
+  static bool write_cameras(const std::string filename,
+                            std::vector<vnl_double_3x3> &Ks,
+                            std::vector<vnl_double_3x3> &Rs,
+                            std::vector<vnl_double_3x1> &Ts);*/
 
   static void smooth_gaussian(vil_image_view_base_sptr img,
                               float stdx, float stdy);
@@ -123,10 +123,10 @@ class dbvxm_util
                               float stdx, float stdy);
 
   template<class T>
-  static void write_slab_as_image(bvxm_voxel_slab<T> const& slab_in,vcl_string filename);
+  static void write_slab_as_image(bvxm_voxel_slab<T> const& slab_in,std::string filename);
 
   template<class T, unsigned N>
-  static void write_slab_as_image(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,vcl_string filename);
+  static void write_slab_as_image(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,std::string filename);
 
   template<class T>
   static T sum_slab(bvxm_voxel_slab<T> const& slab);
@@ -135,10 +135,10 @@ class dbvxm_util
   static bool generate_test_boxes(T box_min_x, T box_min_y, T box_min_z, 
                     T box_dim_x, T box_dim_y, T box_dim_z,
                     T world_dim_x, T world_dim_y, T world_dim_z,
-                    vcl_vector<vgl_box_3d<T> >& boxes);
+                    std::vector<vgl_box_3d<T> >& boxes);
 
   template<class T>
-  static vcl_vector<vgl_point_3d<T> > corners_of_box_3d(vgl_box_3d<T> box);
+  static std::vector<vgl_point_3d<T> > corners_of_box_3d(vgl_box_3d<T> box);
 
  protected:
 
@@ -163,8 +163,8 @@ void dbvxm_util::warp_slab_bilinear(bvxm_voxel_slab<T> const& slab_in,
     vnl_vector_fixed<double,3> test_pix_out0 = Hd*test_pix0;
     vnl_vector_fixed<double,3> test_pix_out1 = Hd*test_pix1;
     // normalize homogeneous coordinates
-    double xsize = vcl_fabs((test_pix_out1[0] / test_pix_out1[2]) - (test_pix_out0[0] / test_pix_out0[2]));
-    double ysize = vcl_fabs((test_pix_out1[1] / test_pix_out1[2]) - (test_pix_out0[1] / test_pix_out0[2]));
+    double xsize = std::fabs((test_pix_out1[0] / test_pix_out1[2]) - (test_pix_out0[0] / test_pix_out0[2]));
+    double ysize = std::fabs((test_pix_out1[1] / test_pix_out1[2]) - (test_pix_out0[1] / test_pix_out0[2]));
 
     // smoothing radius of filter
     // TODO: is gaussian convolution with std = projected_size the right amount to get us to nyquist res?
@@ -178,7 +178,7 @@ void dbvxm_util::warp_slab_bilinear(bvxm_voxel_slab<T> const& slab_in,
     if ( (ysize > 2.0) && (ysize < max_projection_size) )
       ystd = (float)ysize/2.0f;
 
-     //vcl_cout << "xsize = " << xsize << " ysize = " << ysize << vcl_endl;
+     //std::cout << "xsize = " << xsize << " ysize = " << ysize << std::endl;
     bvxm_voxel_slab<T> slab_in_smooth;
     slab_in_smooth.deep_copy(slab_in);
     smooth_gaussian(slab_in_smooth, xstd, ystd);
@@ -206,12 +206,12 @@ void dbvxm_util::warp_slab_bilinear(bvxm_voxel_slab<T> const& slab_in,
                 float pix_in_x = pix_in_homg[0] / pix_in_homg[2];
                 float pix_in_y = pix_in_homg[1] / pix_in_homg[2];
                 // calculate weights and pixel values
-                unsigned x0 = (unsigned)vcl_floor(pix_in_x);
-                unsigned x1 = (unsigned)vcl_ceil(pix_in_x);
+                unsigned x0 = (unsigned)std::floor(pix_in_x);
+                unsigned x1 = (unsigned)std::ceil(pix_in_x);
                 float x0_weight = (float)(x1 - pix_in_x);
                 float x1_weight = (float)(1.0f - x0_weight);
-                unsigned y0 = (unsigned)vcl_floor(pix_in_y);
-                unsigned y1 = (unsigned)vcl_ceil(pix_in_y);
+                unsigned y0 = (unsigned)std::floor(pix_in_y);
+                unsigned y1 = (unsigned)std::ceil(pix_in_y);
                 float y0_weight = (float)(y1 - pix_in_y);
                 float y1_weight = (float)(1.0f - y0_weight);
                 vnl_vector_fixed<unsigned,4>xvals(x0,x0,x1,x1);
@@ -248,8 +248,8 @@ void dbvxm_util::warp_slab_nearest_neighbour(bvxm_voxel_slab<T> const& slab_in,
     vnl_vector_fixed<double,3> test_pix_out0 = Hd*test_pix0;
     vnl_vector_fixed<double,3> test_pix_out1 = Hd*test_pix1;
     // normalize homogeneous coordinates
-    double xsize = vcl_fabs((test_pix_out1[0] / test_pix_out1[2]) - (test_pix_out0[0] / test_pix_out0[2]));
-    double ysize = vcl_fabs((test_pix_out1[1] / test_pix_out1[2]) - (test_pix_out0[1] / test_pix_out0[2]));
+    double xsize = std::fabs((test_pix_out1[0] / test_pix_out1[2]) - (test_pix_out0[0] / test_pix_out0[2]));
+    double ysize = std::fabs((test_pix_out1[1] / test_pix_out1[2]) - (test_pix_out0[1] / test_pix_out0[2]));
 
     // smoothing radius of filter
     // TODO: is gaussian convolution with std = projected_size the right amount to get us to nyquist res?
@@ -263,7 +263,7 @@ void dbvxm_util::warp_slab_nearest_neighbour(bvxm_voxel_slab<T> const& slab_in,
     if ( (ysize > 2.0) && (ysize < max_projection_size) )
       ystd = (float)ysize/2.0f;
 
-    //vcl_cout << "xsize = " << xsize << " ysize = " << ysize << vcl_endl;
+    //std::cout << "xsize = " << xsize << " ysize = " << ysize << std::endl;
     bvxm_voxel_slab<T> slab_in_smooth;
     slab_in_smooth.deep_copy(slab_in);
     //smooth_gaussian(slab_in_smooth, xstd, ystd);
@@ -314,7 +314,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
 {
   // check slab is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) ) {
-    vcl_cerr << "error: slab and image are different sizes.\n";
+    std::cerr << "error: slab and image are different sizes.\n";
     return false;
   }
 
@@ -323,7 +323,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
   {
     if (vil_image_view<unsigned char> *img_view = dynamic_cast<vil_image_view<unsigned char>*>(image.ptr())) {
       if (img_view->nplanes() == N) {
-        vcl_vector<vil_image_view<unsigned char>::const_iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<unsigned char>::const_iterator plane_it = img_view->begin() + (p*img_view->planestep());
           img_its.push_back(plane_it);
@@ -336,12 +336,12 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << std::endl;
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
   }
@@ -352,7 +352,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
       vil_image_view<vxl_byte> plane_view = vil_view_as_planes(*img_view);
 
       if (img_view->nplanes() == 1) {
-        vcl_vector<vil_image_view<unsigned char>::const_iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<unsigned char>::const_iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
           img_its.push_back(plane_it);
@@ -365,12 +365,12 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
   }
@@ -378,7 +378,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
   {
     if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>* >(image.ptr())) {
       if (img_view->nplanes() == N) {
-        vcl_vector<vil_image_view<float>::const_iterator> img_its;
+        std::vector<vil_image_view<float>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<float>::const_iterator plane_it = img_view->begin() + (p*img_view->planestep());
           img_its.push_back(plane_it);
@@ -390,11 +390,11 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << std::endl;
         return false;
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
   }
@@ -405,7 +405,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
       vil_image_view<float> plane_view = vil_view_as_planes(*img_view);
 
       if (img_view->nplanes() == 1) {
-        vcl_vector<vil_image_view<float>::const_iterator> img_its;
+        std::vector<vil_image_view<float>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<float>::const_iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
           img_its.push_back(plane_it);
@@ -417,17 +417,17 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
   }
   else {
-    vcl_cerr << "img_to_slab(scalar): unsupported pixel type\n";
+    std::cerr << "img_to_slab(scalar): unsupported pixel type\n";
   }
 
   return true;
@@ -439,7 +439,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
 {
   // check slab is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) ) {
-    vcl_cerr << "error: slab and image are different sizes.\n";
+    std::cerr << "error: slab and image are different sizes.\n";
     return false;
   }
 
@@ -464,7 +464,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
         }
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
     }
   }
   else if (image->pixel_format() == VIL_PIXEL_FORMAT_RGB_BYTE) {
@@ -476,7 +476,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
         vil_convert_planes_to_grey(img_view_plane,img_view_grey);
       }
       else {
-        vcl_cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << vcl_endl;
+        std::cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << std::endl;
         return false;
       }
       vil_image_view<float>::const_iterator img_it = img_view_grey.begin();
@@ -485,7 +485,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
         *slab_it = (T)(*img_it / 255.0);
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) {
     if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>* >(image.ptr())) {
@@ -495,7 +495,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
         *slab_it = (T)(*img_it); // no divide by 255, we copy the image to the slab directly, assuming image is already scaled to [0,1] range
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_RGB_FLOAT) {
     if (vil_image_view<vil_rgb<float> > *img_view_rgb = dynamic_cast<vil_image_view<vil_rgb<float> >* >(image.ptr())) {
@@ -505,7 +505,7 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
         vil_convert_planes_to_grey(img_view_plane,img_view_grey);
       }
       else {
-        vcl_cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << vcl_endl;
+        std::cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << std::endl;
         return false;
       }
       vil_image_view<float>::const_iterator img_it = img_view_grey.begin();
@@ -515,11 +515,11 @@ bool dbvxm_util::img_to_slab(vil_image_view_base_sptr const image, bvxm_voxel_sl
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
     }
   }
   else {
-    vcl_cerr << "img_to_slab(scalar): unsupported pixel type\n";
+    std::cerr << "img_to_slab(scalar): unsupported pixel type\n";
   }
 
   return true;
@@ -531,7 +531,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
   // check image is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) )
   {
-    vcl_cerr << "error: slab and image are different sizes.\n";
+    std::cerr << "error: slab and image are different sizes.\n";
     return false;
   }
 
@@ -543,7 +543,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
     {
       if (vil_image_view<unsigned char> *img_view = dynamic_cast<vil_image_view<unsigned char>*>(image.ptr()))
       {
-        vcl_vector<vil_image_view<unsigned char>::iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<unsigned char>::iterator plane_it = img_view->begin() + (p*img_view->planestep());
@@ -562,13 +562,13 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
       }
       else
       {
-        vcl_cerr << "error in slab_to_image: failed to cast image_view_base to image_view\n";
+        std::cerr << "error in slab_to_image: failed to cast image_view_base to image_view\n";
         return false;
       }
     }
     else
     {
-      vcl_cerr << "error in slab_to_image: incorrect number of image planes\n";
+      std::cerr << "error in slab_to_image: incorrect number of image planes\n";
       return false;
     }
     break;
@@ -578,7 +578,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
     {
       if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>*>(image.ptr()))
       {
-        vcl_vector<vil_image_view<float>::iterator> img_its;
+        std::vector<vil_image_view<float>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<float>::iterator plane_it = img_view->begin() + (p*img_view->planestep());
@@ -597,13 +597,13 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
       }
       else
       {
-        vcl_cerr << "error in slab_to_image: failed to cast image_view_base to image_view\n";
+        std::cerr << "error in slab_to_image: failed to cast image_view_base to image_view\n";
         return false;
       }
     }
     else
     {
-      vcl_cerr << "error in slab_to_image: incorrect number of image planes\n";
+      std::cerr << "error in slab_to_image: incorrect number of image planes\n";
       return false;
     }
     break;
@@ -616,7 +616,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
 
       if (img_view->nplanes() == 1)
       {
-        vcl_vector<vil_image_view<unsigned char>::iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<unsigned char>::iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
@@ -634,20 +634,20 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const &slab
       }
       else
       {
-        vcl_cerr << "error: slab_to_img (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
+        std::cerr << "error: slab_to_img (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = 1\n";
         return false;
       }
     }
     else
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
 
     break;
 
   default:
-    vcl_cerr << "img_to_slab: unsupported pixel type\n";
+    std::cerr << "img_to_slab: unsupported pixel type\n";
     return false;
     break;
   }
@@ -662,7 +662,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<T> const& slab, vil_image_view_base
   // check image is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) )
   {
-    vcl_cerr << "error: slab and image are different sizes.\n";
+    std::cerr << "error: slab and image are different sizes.\n";
     return false;
   }
 
@@ -680,7 +680,7 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<T> const& slab, vil_image_view_base
     }
     else
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
     break;
@@ -696,13 +696,13 @@ bool dbvxm_util::slab_to_img(bvxm_voxel_slab<T> const& slab, vil_image_view_base
     }
     else
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
       return false;
     }
     break;
 
   default:
-    vcl_cerr << "img_to_slab: unsupported pixel type\n";
+    std::cerr << "img_to_slab: unsupported pixel type\n";
     return false;
     break;
   }
@@ -728,7 +728,7 @@ void dbvxm_util::add_slabs(bvxm_voxel_slab<T> const& s1, bvxm_voxel_slab<T> cons
   if ( (sum.nx() != s1.nx()) || (sum.nx() != s2.nx()) ||
     (sum.ny() != s1.ny()) || (sum.ny() != s2.ny()) ||
     (sum.nz() != s1.nz()) || (sum.nz() != s2.nz()) ) {
-      vcl_cerr << "error: sizes of slabs to multiply do not match.\n";
+      std::cerr << "error: sizes of slabs to multiply do not match.\n";
       return;
   }
 
@@ -748,7 +748,7 @@ void dbvxm_util::multiply_slabs(bvxm_voxel_slab<T> const& s1, bvxm_voxel_slab<T>
   if ( (product.nx() != s1.nx()) || (product.nx() != s2.nx()) ||
     (product.ny() != s1.ny()) || (product.ny() != s2.ny()) ||
     (product.nz() != s1.nz()) || (product.nz() != s2.nz()) ) {
-      vcl_cerr << "error: sizes of slabs to multiply do not match.\n";
+      std::cerr << "error: sizes of slabs to multiply do not match.\n";
       return;
   }
 
@@ -765,7 +765,7 @@ void dbvxm_util::threshold_slab_above(bvxm_voxel_slab<T> const& slab, T const& t
 {
   // check sizes
   if ( (mask.nx() != slab.nx()) || (mask.ny() != slab.ny()) ) {
-    vcl_cerr << "error: sizes of slabs to multiply do not match.\n";
+    std::cerr << "error: sizes of slabs to multiply do not match.\n";
     return;
   }
 
@@ -782,8 +782,8 @@ template<class T>
 void dbvxm_util::smooth_gaussian(bvxm_voxel_slab<T> &slab, float stdx, float stdy)
 {
   if ( (stdx < 0) || (stdy < 0) ) {
-    vcl_cerr << "error: smooth_gaussian called with negative std. deviation!\n"
-             << "stdx = " << stdx << "  stdy = " << stdy << vcl_endl;
+    std::cerr << "error: smooth_gaussian called with negative std. deviation!\n"
+             << "stdx = " << stdx << "  stdy = " << stdy << std::endl;
     return;
   }
 
@@ -797,7 +797,7 @@ void dbvxm_util::smooth_gaussian(bvxm_voxel_slab<T> &slab, float stdx, float std
 
   // fill in kernel
   for (unsigned i=0; i<kernel_size_x; ++i) {
-    kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * vcl_exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
+    kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * std::exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
   }
   // normalize kernel in case taps dont sum to exactly one
   kernel_1dx = kernel_1dx / kernel_1dx.sum();
@@ -807,7 +807,7 @@ void dbvxm_util::smooth_gaussian(bvxm_voxel_slab<T> &slab, float stdx, float std
   vnl_vector<float> kernel_1dy(kernel_size_y);
   // fill in kernel
   for (unsigned i=0; i<kernel_size_y; ++i) {
-    kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * vcl_exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
+    kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * std::exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
   }
   // normalize kernel in case taps dont sum to exactly one
   kernel_1dy = kernel_1dy / kernel_1dy.sum();
@@ -882,7 +882,7 @@ void dbvxm_util::smooth_gaussian(bvxm_voxel_slab<T> &slab, float stdx, float std
 
 // used for debugging
 template<class T>
-void dbvxm_util::write_slab_as_image(bvxm_voxel_slab<T> const& slab_in,vcl_string filename)
+void dbvxm_util::write_slab_as_image(bvxm_voxel_slab<T> const& slab_in,std::string filename)
 {
   vil_image_view<T> img(slab_in.nx(),slab_in.ny(),1);
   typename vil_image_view<T>::iterator img_it = img.begin();
@@ -897,10 +897,10 @@ void dbvxm_util::write_slab_as_image(bvxm_voxel_slab<T> const& slab_in,vcl_strin
 
 // used for debugging
 template<class T, unsigned N>
-void dbvxm_util::write_slab_as_image(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,vcl_string filename)
+void dbvxm_util::write_slab_as_image(bvxm_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,std::string filename)
 {
   vil_image_view<T> img(slab_in.nx(),slab_in.ny(),N);
-  vcl_vector<typename vil_image_view<T>::iterator> img_its;
+  std::vector<typename vil_image_view<T>::iterator> img_its;
   for (unsigned p=0; p < N; ++p) {
     typename vil_image_view<T>::iterator plane_it = img.begin() + (p*img.planestep());
     img_its.push_back(plane_it);
@@ -921,14 +921,14 @@ template<class T>
 bool dbvxm_util::generate_test_boxes(T box_min_x, T box_min_y, T box_min_z, 
                     T box_dim_x, T box_dim_y, T box_dim_z,
                     T world_dim_x, T world_dim_y, T world_dim_z,
-                    vcl_vector<vgl_box_3d<T> >& boxes)
+                    std::vector<vgl_box_3d<T> >& boxes)
 {
   // create the big box at the bottom
   T max_x = box_min_x + box_dim_x;
   T max_y = box_min_y + box_dim_y;
   T max_z = box_min_z + box_dim_z;
   if ((max_x > world_dim_x) || (max_y > world_dim_y) || (max_z > world_dim_z)) {
-    vcl_cerr << "generate_boxes() -- the box is out of world boundaries!" << vcl_endl;
+    std::cerr << "generate_boxes() -- the box is out of world boundaries!" << std::endl;
     return false;
   }
 
@@ -959,10 +959,10 @@ bool dbvxm_util::generate_test_boxes(T box_min_x, T box_min_y, T box_min_z,
 }
 
 template<class T>
-vcl_vector<vgl_point_3d<T> >
+std::vector<vgl_point_3d<T> >
 dbvxm_util::corners_of_box_3d(vgl_box_3d<T> box)
 {
-  vcl_vector<vgl_point_3d<T> > corners;
+  std::vector<vgl_point_3d<T> > corners;
 
   corners.push_back(box.min_point());
   corners.push_back(vgl_point_3d<T> (box.min_x()+box.width(), box.min_y(), box.min_z()));

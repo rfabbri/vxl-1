@@ -12,7 +12,7 @@
 //
 //  \endverbatim
 
-#include<vcl_iostream.h>
+#include<iostream>
 
 class dbdet_dlvwr_params {
 public:
@@ -39,6 +39,6 @@ private:
 };
 
 
-vcl_ostream& operator<<(vcl_ostream& os, const dbdet_dlvwr_params& params);
+std::ostream& operator<<(std::ostream& os, const dbdet_dlvwr_params& params);
 
 #endif // dbdet_dlvwr_params_h_

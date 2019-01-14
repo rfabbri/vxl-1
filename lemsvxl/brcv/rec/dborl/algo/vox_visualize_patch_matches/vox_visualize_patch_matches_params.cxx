@@ -10,7 +10,7 @@
 
 //: Constructor
 vox_visualize_patch_matches_params::
-vox_visualize_patch_matches_params(vcl_string algo_name) : 
+vox_visualize_patch_matches_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
 

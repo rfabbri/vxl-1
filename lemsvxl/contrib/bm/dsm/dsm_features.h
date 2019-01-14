@@ -23,9 +23,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_string.h>
-#include<vcl_vector.h>
+#include<map>
+#include<string>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 #include<vgl/io/vgl_io_point_2d.h>
@@ -52,29 +52,29 @@ public:
 
 	dsm_features(){}
 
-	dsm_features(vcl_string const& neighborhood_xml_path);
+	dsm_features(std::string const& neighborhood_xml_path);
 
-	dsm_features(vcl_string const& video_glob,
-					vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > const& neighborhood);
+	dsm_features(std::string const& video_glob,
+					std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > const& neighborhood);
 
-	vcl_string feature_type();
+	std::string feature_type();
 
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > feature_map()
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > feature_map()
 	{return this->feature_map_;}
 
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > reduced_feature_map()
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > reduced_feature_map()
 	{ return this->reduced_feature_map_; }
 
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator reduced_feature_map_begin()
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator reduced_feature_map_begin()
 	{return this->reduced_feature_map_.begin();}
 
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator reduced_feature_map_end()
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator reduced_feature_map_end()
 	{return this->reduced_feature_map_.end();}
 
-	vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > neighborhood()
+	std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > neighborhood()
 	{return this->neighborhood_;}
 
-	bool parse_neighborhood_xml( vcl_string const& neighborhood_xml_path);
+	bool parse_neighborhood_xml( std::string const& neighborhood_xml_path);
 
 	bool extract_sift_features(unsigned const& octave_size = 6, unsigned const& num_octaves = 1);
 
@@ -88,9 +88,9 @@ public:
 
 	bool reduce_dimensionality(unsigned const& ndims_to_keep);
 
-	void write_features_xml( vcl_string const& filename );
+	void write_features_xml( std::string const& filename );
 
-	bool write_reduced_features_mfile( vcl_string const& filename ) const;
+	bool write_reduced_features_mfile( std::string const& filename ) const;
 
 	void b_write(vsl_b_ostream& os) const;
 
@@ -99,8 +99,8 @@ public:
 private:
 
 
-	vcl_string neighborhood_xml_path_;
-	vcl_string video_glob_;
+	std::string neighborhood_xml_path_;
+	std::string video_glob_;
 	
 	unsigned octave_size_;
 	unsigned num_octaves_;
@@ -113,10 +113,10 @@ private:
 	//target:frame:feature map
 	//because each target may have more than one feature vector associated with it at a given time we will store this in matrix form
 	//the rows indicating the ith feature vector, the columns the value of the jth dimension of the feature vector
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > feature_map_;
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > reduced_feature_map_;
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, bapl_lowe_keypoint_sptr >, dsm_vgl_point_2d_coord_compare<unsigned>  > lowe_keypoint_map_;
-	vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > neighborhood_;
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > feature_map_;
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  > reduced_feature_map_;
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, bapl_lowe_keypoint_sptr >, dsm_vgl_point_2d_coord_compare<unsigned>  > lowe_keypoint_map_;
+	std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > neighborhood_;
 };
 
 #endif //DSM_FEATURES_H_

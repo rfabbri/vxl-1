@@ -14,8 +14,8 @@
 //    J.L. Mundy 03/24/07  Added inputs/outputs and split functionality
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_popup_params.h>
@@ -29,7 +29,7 @@ public:
   bvis_tool();
   virtual ~bvis_tool();
   //: Return the name of the tool
-  virtual vcl_string name() const = 0;
+  virtual std::string name() const = 0;
 
   //: Handle events
   // \note This function is called once for most events \b before the event
@@ -59,45 +59,45 @@ public:
   virtual void clear_output(int resize = -1);
   
   //: Set this vector of inputs for the indicated dataset index
-  void set_input( const vcl_vector< bpro_storage_sptr >& input, 
+  void set_input( const std::vector< bpro_storage_sptr >& input, 
                   const unsigned index = 0);
   //: Append the storage class to the input vector at the given frame
   void add_input( const bpro_storage_sptr& input,
                   const unsigned index = 0);
 
   //: Set this vector of outputs at the indicated dataset index
-  void set_output( const vcl_vector< bpro_storage_sptr >& output,
+  void set_output( const std::vector< bpro_storage_sptr >& output,
                    const unsigned index = 0);
   //: Append the storage class to output vector at the dataset index
   void add_output( const bpro_storage_sptr& output,
                    const unsigned index = 0);
 
   //: Return the vector of output storage classes at given dataset index
-  vcl_vector< bpro_storage_sptr > const& get_output(const unsigned index = 0);
+  std::vector< bpro_storage_sptr > const& get_output(const unsigned index = 0);
   //: Return the vector of input storage class at the given frame
-  vcl_vector< bpro_storage_sptr > const& get_input(const unsigned index = 0);
+  std::vector< bpro_storage_sptr > const& get_input(const unsigned index = 0);
 
 
   //: Set the vector of names of the storage classes to be used as input
-  void set_input_names(const vcl_vector<vcl_string>& names)
+  void set_input_names(const std::vector<std::string>& names)
   { input_names_ = names;}
   //: Set the vector of names of the storage classes to be used as output
-  void set_output_names(const vcl_vector<vcl_string>& names)
+  void set_output_names(const std::vector<std::string>& names)
   { output_names_ = names;}
   //: Return the vector of names of the storage classes to be used as input
-  vcl_vector< vcl_string > input_names() const
+  std::vector< std::string > input_names() const
   { return input_names_;}
   //: Return the vector of names of the storage classes to be used as output
-  vcl_vector< vcl_string > output_names() const
+  std::vector< std::string > output_names() const
   { return output_names_;}
 
   //: Generate default output storage names 
   virtual void generate_output_names(){return;}
 
   //: Returns a vector of strings describing the storage class input types produced
-  virtual vcl_vector< vcl_string > get_input_type() = 0;
+  virtual std::vector< std::string > get_input_type() = 0;
   //: Returns a vector of strings describing the storage class output types produced
-  virtual vcl_vector< vcl_string > get_output_type() = 0;
+  virtual std::vector< std::string > get_output_type() = 0;
 
   //: The number of input data collections defined by input_types
   virtual unsigned int n_input_datasets() {return 1;}
@@ -106,12 +106,12 @@ public:
   virtual unsigned int n_output_datasets() {return 1;}
 
  protected:
-  vcl_vector< vcl_vector< bpro_storage_sptr > >  input_data_;
-  vcl_vector< vcl_vector< bpro_storage_sptr > >  output_data_;
+  std::vector< std::vector< bpro_storage_sptr > >  input_data_;
+  std::vector< std::vector< bpro_storage_sptr > >  output_data_;
   //: Names of the storage classes used as input
-  vcl_vector< vcl_string > input_names_;
+  std::vector< std::string > input_names_;
   //: Names of the storage classes used as output
-  vcl_vector< vcl_string > output_names_;
+  std::vector< std::string > output_names_;
 };
 
 //: Use in menus to toggle a parameter

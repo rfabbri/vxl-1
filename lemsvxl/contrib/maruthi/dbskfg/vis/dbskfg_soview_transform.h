@@ -46,14 +46,14 @@ class dbskfg_soview_transform : public vgui_soview2D
 
     //: Returns the type of this class
     /* virtual */ 
-    vcl_string type_name() const {return "dbskfg_soview_transform"; }
+    std::string type_name() const {return "dbskfg_soview_transform"; }
 
     //: Returns the transform associated with this class
     dbskfg_transform_descriptor_sptr& transform(){return transform_;}
  
     //: Print details about this object to the given stream.
     /* virtual */ 
-    vcl_ostream& print(vcl_ostream& os) const;
+    std::ostream& print(std::ostream& os) const;
     
 
 protected:

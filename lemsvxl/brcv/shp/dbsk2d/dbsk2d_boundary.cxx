@@ -5,7 +5,7 @@
 
 #include "dbsk2d_boundary.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <vgl/vgl_line_2d.h>
 
@@ -83,7 +83,7 @@ compute_bounding_box() const
   {
     if (!(*cit)->get_bounding_box())
     {
-      vcl_cerr << "In dbsk2d_boundary::compute_bounding_box() -"
+      std::cerr << "In dbsk2d_boundary::compute_bounding_box() -"
                << " contour has null bounding box\n";
       continue;
     }
@@ -137,7 +137,7 @@ partition_into_cells(bool tight, bool talkative, double tol)
   // only partition when partitioning parameters have been set
   if (this->num_cells()==0 || this->cell_w()<=0 || this->cell_h()<=0)
   {
-    vcl_cerr << "Error: Partitioning parameters has not been set.\n";
+    std::cerr << "Error: Partitioning parameters has not been set.\n";
     return;
   }
   // go through list of edges and put them in appropriate box(es).
@@ -145,7 +145,7 @@ partition_into_cells(bool tight, bool talkative, double tol)
   dbsk2d_bnd_utils::extract_edge_list(this, all_edges);
   
   if (talkative)
-    vcl_cout << "\nPatitioning boundary...\nNumber of edges= " << all_edges.size() << vcl_endl;
+    std::cout << "\nPatitioning boundary...\nNumber of edges= " << all_edges.size() << std::endl;
 
   // scan through all edges and put them in appropriate cells
   for (bnd_edge_list::iterator eit = all_edges.begin(); eit != all_edges.end();
@@ -182,7 +182,7 @@ insert_edge_into_cells_using_bounding_box(const dbsk2d_bnd_edge_sptr& e,
   bbox.add(vgl_point_2d<double>(box->get_max_x(), box->get_max_y()));
   
   // list of cells this edge belongs to
-  vcl_vector<dbsk2d_bnd_cell_sptr > cells = 
+  std::vector<dbsk2d_bnd_cell_sptr > cells = 
     this->compute_cell_membership_of_bbox(bbox, tol);
 
   for (unsigned i =0; i < cells.size(); ++i)
@@ -213,7 +213,7 @@ insert_line_into_cells_tight(const dbsk2d_bnd_edge_sptr& e, double tol)
   vgl_box_2d<double > box = this->cell_region();
   if (!(box.contains(p1) && box.contains(p2)))
   {
-    vcl_cerr << "In dbsk2d_boundary::insert_line_into_cells_tight().\n" << 
+    std::cerr << "In dbsk2d_boundary::insert_line_into_cells_tight().\n" << 
         "Error: line outside partitioned area\n";
     return;
   }
@@ -239,8 +239,8 @@ insert_line_into_cells_tight(const dbsk2d_bnd_edge_sptr& e, double tol)
   // compute cells that intersect with the constructed rectangle
   // assumming tol << cell_h, cell_w, we only need to compute intersection 
   // the two long linesegments with the cells
-  vcl_list<dbsk2d_bnd_cell_sptr > cells_line1;
-  vcl_list<dbsk2d_bnd_cell_sptr > cells_line2;
+  std::list<dbsk2d_bnd_cell_sptr > cells_line1;
+  std::list<dbsk2d_bnd_cell_sptr > cells_line2;
 
   this->compute_cell_membership_of_line(line1_p1, line1_p2, cells_line1);
   this->compute_cell_membership_of_line(line2_p1, line2_p2, cells_line2);
@@ -252,7 +252,7 @@ insert_line_into_cells_tight(const dbsk2d_bnd_edge_sptr& e, double tol)
   cells_line1.unique();
 
   // put the edge into the computed cells
-  for (vcl_list<dbsk2d_bnd_cell_sptr >::iterator cit = 
+  for (std::list<dbsk2d_bnd_cell_sptr >::iterator cit = 
     cells_line1.begin(); cit != cells_line1.end(); ++cit)
   {
     (*cit)->add_bnd_edge(e);
@@ -261,20 +261,20 @@ insert_line_into_cells_tight(const dbsk2d_bnd_edge_sptr& e, double tol)
 
 
 //: Compute list of cells that a point belongs to (fuzzily)
-vcl_vector<dbsk2d_bnd_cell_sptr > dbsk2d_boundary::
+std::vector<dbsk2d_bnd_cell_sptr > dbsk2d_boundary::
 compute_cell_membership_of_point(const vgl_point_2d<double >& pt, double tol) const
 {
-  vcl_vector<dbsk2d_bnd_cell_sptr > cell_list;
+  std::vector<dbsk2d_bnd_cell_sptr > cell_list;
   cell_list.clear();
 
   // compute range of boxes this edge belongs to.
-  int min_col = static_cast<int>(vcl_floor(
+  int min_col = static_cast<int>(std::floor(
     (pt.x()-tol-this->xmin()) / this->cell_w()));
-  int max_col = static_cast<int>(vcl_floor(
+  int max_col = static_cast<int>(std::floor(
     (pt.x()+tol-this->xmin()) / this->cell_w()));
-  int min_row = static_cast<int>(vcl_floor(
+  int min_row = static_cast<int>(std::floor(
     (pt.y()-tol-this->ymin()) / this->cell_h()));
-  int max_row = static_cast<int>(vcl_floor(
+  int max_row = static_cast<int>(std::floor(
     (pt.y()+tol-this->ymin()) / this->cell_h()));
 
   for (int i=min_row; i<=max_row; ++i)
@@ -294,21 +294,21 @@ compute_cell_membership_of_point(const vgl_point_2d<double >& pt, double tol) co
 void dbsk2d_boundary::
 compute_cell_membership_of_line(const vgl_point_2d<double >& p1, 
                                 const vgl_point_2d<double >& p2, 
-                                vcl_list<dbsk2d_bnd_cell_sptr >& ret_cells)
+                                std::list<dbsk2d_bnd_cell_sptr >& ret_cells)
                                 const
 {
   ret_cells.clear();
   
   // form a list of intersection points
-  vcl_list<double > intersections;
+  std::list<double > intersections;
   this->intersect_line_with_cell_grids(p1, p2, intersections);
   intersections.push_back(1);
 
   // Now compute the midpoints of the disjoint line segments
-  vcl_vector<vgl_point_2d<double > > midpoints;
+  std::vector<vgl_point_2d<double > > midpoints;
 
   vgl_point_2d<double > prev_pt = p1;
-  for (vcl_list<double >::iterator it=intersections.begin(); 
+  for (std::list<double >::iterator it=intersections.begin(); 
     it != intersections.end(); ++it)
   {
     vgl_point_2d<double > cur_pt = midpoint<double >(p1, p2, *it);
@@ -320,8 +320,8 @@ compute_cell_membership_of_line(const vgl_point_2d<double >& p1,
   // the linesegment intersects with
   for (unsigned int i=0; i<midpoints.size(); ++i)
   {
-    int col = (int)vcl_floor((midpoints[i].x()-this->xmin()) / this->cell_w());
-    int row = (int)vcl_floor((midpoints[i].y()-this->ymin()) / this->cell_h());
+    int col = (int)std::floor((midpoints[i].x()-this->xmin()) / this->cell_w());
+    int row = (int)std::floor((midpoints[i].y()-this->ymin()) / this->cell_h());
     // ignore if `col' and `row' are out of range
     if (col<0 || col >=this->num_cols() || row <0 || row >= this->num_rows())
       continue;
@@ -332,10 +332,10 @@ compute_cell_membership_of_line(const vgl_point_2d<double >& p1,
 
 
 //: COmpute list of cells that a bounding box intersect with (no fuzzy)
-vcl_vector<dbsk2d_bnd_cell_sptr > dbsk2d_boundary::
+std::vector<dbsk2d_bnd_cell_sptr > dbsk2d_boundary::
 compute_cell_membership_of_bbox(const vgl_box_2d<double >& bbox, double tol) const
 {
-  vcl_vector<dbsk2d_bnd_cell_sptr > ret_cells;
+  std::vector<dbsk2d_bnd_cell_sptr > ret_cells;
 
   // display an error when edge is outside partitioned area
   bool inside_partition_area = (bbox.min_x() >= this->xmin() &&
@@ -344,7 +344,7 @@ compute_cell_membership_of_bbox(const vgl_box_2d<double >& bbox, double tol) con
     bbox.max_y() <= (this->ymin()+this->height()) );
   if (!inside_partition_area)
   {
-    vcl_cerr << "In dbsk2d_boundary::compute_cell_membership_of_bbox().\n" 
+    std::cerr << "In dbsk2d_boundary::compute_cell_membership_of_bbox().\n" 
       << "Error: vsol_box_2d outside partitioned area\n";
     return ret_cells;
   }
@@ -356,13 +356,13 @@ compute_cell_membership_of_bbox(const vgl_box_2d<double >& bbox, double tol) con
   box.set_max_y(box.max_y() + tol);
 
   // compute range of boxes this edge belongs to.
-  int min_col = static_cast<int>(vcl_floor(
+  int min_col = static_cast<int>(std::floor(
     (box.min_x()-this->xmin()) / this->cell_w()));
-  int max_col = static_cast<int>(vcl_floor(
+  int max_col = static_cast<int>(std::floor(
     (box.max_x()-this->xmin()) / this->cell_w()));
-  int min_row = static_cast<int>(vcl_floor(
+  int min_row = static_cast<int>(std::floor(
     (box.min_y()-this->ymin()) / this->cell_h()));
-  int max_row = static_cast<int>(vcl_floor(
+  int max_row = static_cast<int>(std::floor(
     (box.max_y()-this->ymin()) / this->cell_h()));
 
   // just in case the edge is outside partitioned area
@@ -388,7 +388,7 @@ compute_cell_membership_of_bbox(const vgl_box_2d<double >& bbox, double tol) con
 void dbsk2d_boundary::
 intersect_line_with_cell_grids( const vgl_point_2d<double >& p1,
                                const vgl_point_2d<double >& p2, 
- vcl_list<double >& intersections) const
+ std::list<double >& intersections) const
 {
   // clear old stuffs
   intersections.clear();
@@ -396,11 +396,11 @@ intersect_line_with_cell_grids( const vgl_point_2d<double >& p1,
   // compute range of rows and columns this line cuts through
   vgl_box_2d<double > box(p1, p2);
 
-  int start_col = (int)(vcl_ceil((box.min_x()-this->xmin())/this->cell_w()));
-  int end_col = (int)(vcl_ceil((box.max_x()-this->xmin())/this->cell_w()))-1;
+  int start_col = (int)(std::ceil((box.min_x()-this->xmin())/this->cell_w()));
+  int end_col = (int)(std::ceil((box.max_x()-this->xmin())/this->cell_w()))-1;
 
-  int start_row = (int)(vcl_ceil((box.min_y()-this->ymin())/this->cell_h()));
-  int end_row = (int)(vcl_ceil((box.max_y()-this->ymin())/this->cell_h()))-1;
+  int start_row = (int)(std::ceil((box.min_y()-this->ymin())/this->cell_h()));
+  int end_row = (int)(std::ceil((box.max_y()-this->ymin())/this->cell_h()))-1;
 
 
   for (int m=start_col; m<= end_col; ++m)
@@ -428,7 +428,7 @@ intersect_line_with_cell_grids( const vgl_point_2d<double >& p1,
 void dbsk2d_boundary::
 intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1, 
   const vgl_point_2d<double >& arc_p2, double arc_k,
-  vcl_list<double >& intersections) const
+  std::list<double >& intersections) const
 {
   bgld_circ_arc arc(arc_p1, arc_p2, arc_k);
   double h = arc.height();
@@ -439,7 +439,7 @@ intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1,
   bbox.add(arc.end());
 
   // compute the cells this bbox belongs to, which are potential containers of the arc
-  vcl_vector<dbsk2d_bnd_cell_sptr > cells = 
+  std::vector<dbsk2d_bnd_cell_sptr > cells = 
     this->compute_cell_membership_of_bbox(bbox, h);
 
   // for each cell, check whether the arc ACTUALLY intersects it.
@@ -456,7 +456,7 @@ intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1,
     vgl_point_2d<double > p3(box.max_x(), box.max_y());
     vgl_point_2d<double > p4(box.min_x(), box.max_y());
 
-    vcl_vector<vgl_line_segment_2d<double > >line_list;
+    std::vector<vgl_line_segment_2d<double > >line_list;
     line_list.push_back(vgl_line_segment_2d<double >(p1, p2));
     line_list.push_back(vgl_line_segment_2d<double >(p2, p3));
     line_list.push_back(vgl_line_segment_2d<double >(p3, p4));
@@ -464,8 +464,8 @@ intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1,
 
     for (unsigned i =0; i < line_list.size(); ++i)
     {
-      vcl_vector<double > line_ratios;
-      vcl_vector<double > arc_ratios;
+      std::vector<double > line_ratios;
+      std::vector<double > arc_ratios;
       double d = bgld_closest_point::lineseg_to_circular_arc(line_list[i], arc,
         line_ratios, arc_ratios);
 
@@ -515,7 +515,7 @@ break_long_line_edges(double tol)
     ////////////////////////////////////////////
 
     // find intersection points with grid lines
-    vcl_list<double > intersections;
+    std::list<double > intersections;
 
     this->intersect_line_with_cell_grids(e->point1(), e->point2(),
       intersections);
@@ -525,7 +525,7 @@ break_long_line_edges(double tol)
 
     // remove intersection points that are too close to each other
     double prev_ratio = 0;
-    vcl_list<double >::iterator it = intersections.begin();
+    std::list<double >::iterator it = intersections.begin();
     while (it != intersections.end())
     {
       double cur_ratio = *it;
@@ -553,11 +553,11 @@ break_long_line_edges(double tol)
     // replace `e' by a vector of new edges
 
     // vector of line edges that will be used to replace `e'
-    vcl_vector<dbsk2d_bnd_edge_sptr > new_edges;
+    std::vector<dbsk2d_bnd_edge_sptr > new_edges;
       
     // list of vertices along `e'    
     bnd_vertex_vector vertices_along_edge;
-    for (vcl_list<double >::iterator it = intersections.begin();
+    for (std::list<double >::iterator it = intersections.begin();
       it != intersections.end(); ++it)
     {
       vgl_point_2d<double > p1 = e->point1();
@@ -569,7 +569,7 @@ break_long_line_edges(double tol)
 
 
     // list of bpoints (including duplicated ones)
-    vcl_vector<dbsk2d_ishock_bpoint* > bpoint_list;
+    std::vector<dbsk2d_ishock_bpoint* > bpoint_list;
 
     // if the bbox spans over two cells, that means the point is close to a boundary
     if (this->compute_cell_membership_of_point(e->point1(), tol).size() > 1)
@@ -647,7 +647,7 @@ break_long_line_edges(double tol)
     vertices_along_edge.push_back(e->bnd_v2());
 
     // direction of new edges
-    vcl_vector<signed char > directions;
+    std::vector<signed char > directions;
     
     // form a vector of arc edges equivalent to the old edge
     dbsk2d_bnd_vertex_sptr bnd_v1 = e->bnd_v1();
@@ -681,8 +681,8 @@ break_long_line_edges(double tol)
     // replace `e' with the new vector of edges
     // containers for new_edges with reverse order and reverse directions
     // in case they are needed.
-    vcl_vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
-    vcl_vector<signed char > reverse_directions;
+    std::vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
+    std::vector<signed char > reverse_directions;
 
     // replace `cur_edge' with new edges, topologically
     while (e->numsup()>0)
@@ -702,7 +702,7 @@ break_long_line_edges(double tol)
         if (reverse_new_edges.size() == 0)
         {
           reverse_new_edges.reserve(new_edges.size());
-          vcl_reverse_copy(new_edges.begin(), new_edges.end(), 
+          std::reverse_copy(new_edges.begin(), new_edges.end(), 
             reverse_new_edges.begin());
           reverse_directions.assign(directions.size(), -1);
         }
@@ -725,13 +725,13 @@ break_long_line_edges(double tol)
       vgl_point_2d<double > p = centre<double >(new_e->point1(), new_e->point2());
       
       // compute range of boxes this edge belongs to.
-      int min_col = static_cast<int>(vcl_floor(
+      int min_col = static_cast<int>(std::floor(
         (p.x()-tol-this->xmin()) / this->cell_w()));
-      int max_col = static_cast<int>(vcl_floor(
+      int max_col = static_cast<int>(std::floor(
         (p.x()+tol-this->xmin()) / this->cell_w()));
-      int min_row = static_cast<int>(vcl_floor(
+      int min_row = static_cast<int>(std::floor(
         (p.y()-tol-this->ymin()) / this->cell_h()));
-      int max_row = static_cast<int>(vcl_floor(
+      int max_row = static_cast<int>(std::floor(
         (p.y()+tol-this->ymin()) / this->cell_h()));
 
       for (int i=min_row; i<=max_row; ++i)
@@ -792,7 +792,7 @@ break_long_arc_edges(double tol)
 
 
     // intersection locations
-    vcl_list<double > intersections;
+    std::list<double > intersections;
     this->intersect_arc_with_cell_grids(arc.start(), arc.end(), arc.k(), intersections);
 
     // length of the segments
@@ -800,7 +800,7 @@ break_long_arc_edges(double tol)
 
     // remove intersection points that are too close to each other
     double prev_ratio = 0;
-    vcl_list<double >::iterator it = intersections.begin();
+    std::list<double >::iterator it = intersections.begin();
     while (it != intersections.end())
     {
       double cur_ratio = *it;
@@ -826,11 +826,11 @@ break_long_arc_edges(double tol)
     // replace `e' by a vector of new edges
     
     // vector of line edges that will be used to replace `e'
-    vcl_vector<dbsk2d_bnd_edge_sptr > new_edges;
+    std::vector<dbsk2d_bnd_edge_sptr > new_edges;
       
     // list of vertices along `e'    
     bnd_vertex_vector vertices_along_edge;
-    for (vcl_list<double >::iterator it = intersections.begin();
+    for (std::list<double >::iterator it = intersections.begin();
       it != intersections.end(); ++it)
     {
       vertices_along_edge.push_back(dbsk2d_bnd_utils::new_vertex(
@@ -838,7 +838,7 @@ break_long_arc_edges(double tol)
     }
 
     // list of bpoints (including duplicated ones)
-    vcl_vector<dbsk2d_ishock_bpoint* > bpoint_list;
+    std::vector<dbsk2d_ishock_bpoint* > bpoint_list;
 
     // if the bbox spans over two cells, that means the point is close to a boundary
     if (this->compute_cell_membership_of_point(e->point1(), tol).size() > 1)
@@ -916,7 +916,7 @@ break_long_arc_edges(double tol)
     vertices_along_edge.push_back(e->bnd_v2());
 
     // direction of new edges
-    vcl_vector<signed char > directions;
+    std::vector<signed char > directions;
     
     // form a vector of line edges equivalent to the old edge
     dbsk2d_bnd_vertex_sptr bnd_v1 = e->bnd_v1();
@@ -952,8 +952,8 @@ break_long_arc_edges(double tol)
     // replace `e' with the new vector of edges
     // containers for new_edges with reverse order and reverse directions
     // in case they are needed.
-    vcl_vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
-    vcl_vector<signed char > reverse_directions;
+    std::vector<dbsk2d_bnd_edge_sptr > reverse_new_edges;
+    std::vector<signed char > reverse_directions;
 
     // replace `cur_edge' with new edges, topologically
     while (e->numsup()>0)
@@ -973,7 +973,7 @@ break_long_arc_edges(double tol)
         if (reverse_new_edges.size() == 0)
         {
           reverse_new_edges.reserve(new_edges.size());
-          vcl_reverse_copy(new_edges.begin(), new_edges.end(), 
+          std::reverse_copy(new_edges.begin(), new_edges.end(), 
             reverse_new_edges.begin());
           reverse_directions.assign(directions.size(), -1);
         }
@@ -994,7 +994,7 @@ break_long_arc_edges(double tol)
     {
       dbsk2d_bnd_edge_sptr new_e = new_edges[i];
       vgl_point_2d<double > p = centre<double >(new_e->point1(), new_e->point2());
-      vcl_vector<dbsk2d_bnd_cell_sptr > cells = 
+      std::vector<dbsk2d_bnd_cell_sptr > cells = 
         this->compute_cell_membership_of_point(p, tol);
       for (unsigned i =0; i < cells.size(); ++i)
       {
@@ -1068,7 +1068,7 @@ void dbsk2d_boundary::update_belm_list() const
 // preproc_contours and scratch_contours
 void dbsk2d_boundary::update_belm_list(
     dbsk2d_bnd_contour_sptr& new_contour,
-    vcl_vector<dbsk2d_ishock_belm*>& ret_belms) 
+    std::vector<dbsk2d_ishock_belm*>& ret_belms) 
 {
 
     // Add new contour to pre-processes list
@@ -1079,11 +1079,11 @@ void dbsk2d_boundary::update_belm_list(
     dbsk2d_bnd_vertex_sptr endpt = new_contour->bnd_vertex(
         new_contour->num_edges());
 
-    vcl_map<unsigned int,vcl_string> local_count;
+    std::map<unsigned int,std::string> local_count;
     local_count[startpt->get_id()]="temp";
     local_count[endpt->get_id()]="temp";
 
-    vcl_vector<dbsk2d_ishock_belm*> local_gap;
+    std::vector<dbsk2d_ishock_belm*> local_gap;
 
     //Now convert to edges
     for ( unsigned int c=0; c < new_contour->num_edges() ; ++c)
@@ -1130,7 +1130,7 @@ add_a_point(const vgl_point_2d<double >& pt, bool preproc_needed)
     dbsk2d_bnd_utils::new_stand_alone_point(pt, this);
 
   // construct a contour from degenerate edge
-  vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges(1, edge);
+  std::vector<dbsk2d_bnd_edge_sptr > bnd_edges(1, edge);
   dbsk2d_bnd_contour_sptr to_return = 
     new dbsk2d_bnd_contour(bnd_edges, this->nextAvailableID());
 
@@ -1156,7 +1156,7 @@ add_a_line(const vgl_point_2d<double >& p1, const vgl_point_2d<double >& p2,
            bool preproc_needed)
 {  
   // put end points of `line' into a list
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   pts.push_back(p1);
   pts.push_back(p2);
     
@@ -1189,7 +1189,7 @@ add_a_polyline(const vsol_polyline_2d_sptr & polyline, bool preproc_needed)
   if (polyline->size() < 2) return 0;
 
   // collect vertices of the polyline
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   pts.reserve(polyline->size());
 
   for (unsigned int i = 0; i < polyline->size(); i++)
@@ -1214,7 +1214,7 @@ add_a_polygon(const vsol_polygon_2d_sptr& polygon,
   if (polygon->size() < 3) return 0;
 
   // collect the polygon's vertices
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   pts.reserve(polygon->size());
   for (unsigned int i = 0; i < polygon->size(); ++i)
     pts.push_back(polygon->vertex(i)->get_p());
@@ -1238,7 +1238,7 @@ add_an_interp_curve_2d( const bsold_interp_curve_2d_sptr& curve,
   if (!curve) return 0;
 
   // collect sampled points and convert to a polyline
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   for (unsigned int i = 0; i < curve->size(); i ++)
   {
     pts.push_back(curve->interval(i)->point_at(0));
@@ -1256,7 +1256,7 @@ add_an_interp_curve_2d( const bsold_interp_curve_2d_sptr& curve,
 //: Add a set of connected lines to the boundary. 
 // This is a common function for add_a_polyline and add_a_polygon
 dbsk2d_bnd_contour_sptr dbsk2d_boundary::
-add_connected_lines(const vcl_vector<vgl_point_2d<double > > &vertices, 
+add_connected_lines(const std::vector<vgl_point_2d<double > > &vertices, 
                     bool closed, bool preproc_needed )
 {
   // form a new contour and add to `this' boundary
@@ -1274,10 +1274,10 @@ dbsk2d_bnd_contour_sptr dbsk2d_boundary::
 add_an_arc( vgl_point_2d<double > arc_p1, vgl_point_2d<double > arc_p2, 
                   double arc_k, bool preproc_needed)
 {
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   pts.push_back(arc_p1);
   pts.push_back(arc_p2);
-  vcl_vector<double > curvatures(1, arc_k);
+  std::vector<double > curvatures(1, arc_k);
   return this->add_connected_arcs(pts, curvatures, false, preproc_needed);
 }
 
@@ -1287,8 +1287,8 @@ add_an_arc( vgl_point_2d<double > arc_p1, vgl_point_2d<double > arc_p2,
 //-------------------------------------------------------------------------
 //: Add a set of connected arcs to the boundary
 dbsk2d_bnd_contour_sptr dbsk2d_boundary::
-add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
-                   const vcl_vector<double >& curvatures,
+add_connected_arcs( const std::vector<vgl_point_2d<double > > &vertices,
+                   const std::vector<double >& curvatures,
                    bool closed, bool preproc_needed)
 {
   if (vertices.size() < 2) return 0;
@@ -1299,7 +1299,7 @@ add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
 
   // for a list topological vertices
   // convert the pts into bnd_vertex and put into a list
-  vcl_vector<dbsk2d_bnd_vertex_sptr > bv_list;
+  std::vector<dbsk2d_bnd_vertex_sptr > bv_list;
   bv_list.reserve(vertices.size());
   for (unsigned int i = 0; i < vertices.size(); ++i)
   {
@@ -1310,7 +1310,7 @@ add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
   if (closed) bv_list.push_back(bv_list[0]);
 
   // now link all these vertices into a chain and save as a contour
-  vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges;
+  std::vector<dbsk2d_bnd_edge_sptr > bnd_edges;
   for (unsigned int i=0; i<bv_list.size()-1; ++i)
   {
     bgld_circ_arc arc(bv_list[i]->point(), bv_list[i+1]->point(), curvatures[i]);
@@ -1327,7 +1327,7 @@ add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
         bv_list[i+1], curvatures[i], this));
     }
   }
-  vcl_vector<signed char > directions(bnd_edges.size(), 1);
+  std::vector<signed char > directions(bnd_edges.size(), 1);
   
   // for a new contour and add to `this' boundary
   dbsk2d_bnd_contour_sptr to_return = 
@@ -1407,7 +1407,7 @@ add_a_bnd_contour(const dbsk2d_bnd_contour_sptr& new_bnd_contour,
 //: print a quick summary
 // Need rewrite.
 void dbsk2d_boundary::
-print(vcl_ostream &os) const
+print(std::ostream &os) const
 {
   bnd_contour_list all_contours;
   this->all_contours(all_contours);
@@ -1419,7 +1419,7 @@ print(vcl_ostream &os) const
 //: describe
 // Need rewrite.
 void dbsk2d_boundary::
-describe(vcl_ostream &os, int blanking) const
+describe(std::ostream &os, int blanking) const
 {
   for (int j=0; j<blanking; ++j) os << ' ';
   this->print(os);
@@ -1435,7 +1435,7 @@ describe(vcl_ostream &os, int blanking) const
 // -----------------------------------------------------------------------
 //: Print the belm list
 void dbsk2d_boundary::
-print_belm_list(vcl_ostream& os )
+print_belm_list(std::ostream& os )
 {
   for (dbsk2d_boundary::belm_iterator belm_it = this->belm_begin();
     belm_it != this->belm_end(); ++belm_it)
@@ -1444,19 +1444,19 @@ print_belm_list(vcl_ostream& os )
     if (belm->is_a_point())
     {
       os << "BPOINT id = " << belm->id() << 
-        " \n   pt = " << belm->start() << vcl_endl;
+        " \n   pt = " << belm->start() << std::endl;
     }
     else if (belm->is_a_line())
     {
       os << "BLINE id = " << belm->id() << 
         "\n   start id = " << belm->s_pt()->id() << 
-        "   end id = " << belm->e_pt()->id() << vcl_endl;
+        "   end id = " << belm->e_pt()->id() << std::endl;
     }
     else if (belm->is_an_arc())
     {
       os << "BARC  id = " << belm->id() << 
         "\n   start id = " << belm->s_pt()->id() << 
-        "   end id = " << belm->e_pt()->id() << vcl_endl;
+        "   end id = " << belm->e_pt()->id() << std::endl;
     }
   }
   return;
@@ -1465,7 +1465,7 @@ print_belm_list(vcl_ostream& os )
 
 //: print a summary of partition parameters
 void dbsk2d_boundary::
-print_partition_summary(vcl_ostream& os) const
+print_partition_summary(std::ostream& os) const
 {
   os << "Partition params: \n" <<
     "(xmin, ymin)= (" << this->xmin() << "," << this->ymin() << ")\n" <<
@@ -1662,7 +1662,7 @@ print_partition_summary(vcl_ostream& os) const
 ///*
 //   SLink* slist = elm->SElementList;
 //
-//   //go through the list and vcl_set bShow to GUI_RANGE_OF_INFLUENCE...
+//   //go through the list and std::set bShow to GUI_RANGE_OF_INFLUENCE...
 //   while (slist != 0) {
 //      slist->se->bShow=GUI_RANGE_OF_INFLUENCE;
 //      //if (elm->type()!=BPOINT)
@@ -1787,39 +1787,39 @@ print_partition_summary(vcl_ostream& os) const
 //  //dbsk2d_assert (nTotalBElms == nBP + nBL + nBA + 8 );
 //  //dbsk2d_assert (nTotalBElms == nBP + nBL + nBA);
 //
-//   vcl_cout<<"dbsk2d_boundary Summaries" <<vcl_endl;
-//   vcl_cout<<"# of Total dbsk2d_boundary Elements: "<< nTotalBElms <<vcl_endl;
-//   vcl_cout<<"# of Total GUI BElements: "<< nTotalGUIElms
-//     <<", total Non-GUI: "<< nTotalNonGUIElms <<vcl_endl;
-//   vcl_cout<<"# of BPOINTs: " << nBP << " (GUI: " << nGUIBP
-//     << ", Non-GUI: " << nNonGUIBP << ")" <<vcl_endl;
-//   vcl_cout<<"# of BLines: "  << nBL << " (GUI: " << nGUIBL
-//     << ", Non-GUI: " << nNonGUIBL << ")" <<vcl_endl;
-//   vcl_cout<<"# of BArcs: "   << nBA << " (GUI: " << nGUIBA
-//     << ", Non-GUI: " << nNonGUIBA << ")" <<vcl_endl;
+//   std::cout<<"dbsk2d_boundary Summaries" <<std::endl;
+//   std::cout<<"# of Total dbsk2d_boundary Elements: "<< nTotalBElms <<std::endl;
+//   std::cout<<"# of Total GUI BElements: "<< nTotalGUIElms
+//     <<", total Non-GUI: "<< nTotalNonGUIElms <<std::endl;
+//   std::cout<<"# of BPOINTs: " << nBP << " (GUI: " << nGUIBP
+//     << ", Non-GUI: " << nNonGUIBP << ")" <<std::endl;
+//   std::cout<<"# of BLines: "  << nBL << " (GUI: " << nGUIBL
+//     << ", Non-GUI: " << nNonGUIBL << ")" <<std::endl;
+//   std::cout<<"# of BArcs: "   << nBA << " (GUI: " << nGUIBA
+//     << ", Non-GUI: " << nNonGUIBA << ")" <<std::endl;
 //
 //}
 //
 //void dbsk2d_boundary::
 //DebugPrintBoundaryList()
 //{
-//  vcl_cout <<vcl_endl;
-//  vcl_cout << " ==== BOUNDARY LIST ====" <<vcl_endl;
-//  vcl_cout<< "BoundaryList: " <<vcl_endl;
+//  std::cout <<std::endl;
+//  std::cout << " ==== BOUNDARY LIST ====" <<std::endl;
+//  std::cout<< "BoundaryList: " <<std::endl;
 //  belm_map_iter elmPtr = BElmList.begin();
 //  for (; elmPtr != BElmList.end(); elmPtr++) {
 //    dbsk2d_ishock_belm* current = (elmPtr->second);
 //
 //    switch (current->type()) {
-//    case BPOINT:  vcl_cout<< "dbsk2d_ishock_bpoint"; break;
-//    case BLINE:    vcl_cout<< "dbsk2d_ishock_bline"; break;
-//    case BARC:    vcl_cout<< "dbsk2d_ishock_barc"; break;
+//    case BPOINT:  std::cout<< "dbsk2d_ishock_bpoint"; break;
+//    case BLINE:    std::cout<< "dbsk2d_ishock_bline"; break;
+//    case BARC:    std::cout<< "dbsk2d_ishock_barc"; break;
 //    default: break;
 //    }
-//    vcl_cout<< ", Bid: "<< current->id()<<vcl_endl;
+//    std::cout<< ", Bid: "<< current->id()<<std::endl;
 //  }
 //
-//  vcl_cout <<" ========================" <<vcl_endl;
+//  std::cout <<" ========================" <<std::endl;
 //
 //}
 //
@@ -1833,33 +1833,33 @@ print_partition_summary(vcl_ostream& os) const
 //
 //#ifndef _VISUALIZER_CMDLINE_
 //    //display info
-//    current->getInfo(vcl_cout);
+//    current->getInfo(std::cout);
 //#endif
 //  }
 //  else
-//    vcl_cout <<"INVALID BOUNDARY ID: "<<id<<vcl_endl;
+//    std::cout <<"INVALID BOUNDARY ID: "<<id<<std::endl;
 //}
 //
 //void dbsk2d_boundary::
 //DebugPrintTaintedBoundaryList()
 //{
-//  vcl_cout <<vcl_endl;
-//  vcl_cout << " ==== TAINTED BOUNDARY LIST ====" <<vcl_endl;
-//  vcl_cout<< "BoundaryList: " <<vcl_endl;
+//  std::cout <<std::endl;
+//  std::cout << " ==== TAINTED BOUNDARY LIST ====" <<std::endl;
+//  std::cout<< "BoundaryList: " <<std::endl;
 //  belm_map_iter elmPtr = taintedBElmList.begin();
 //  for (; elmPtr != taintedBElmList.end(); elmPtr++) {
 //    dbsk2d_ishock_belm* current = (elmPtr->second);
 //
 //    switch (current->type()) {
-//    case BPOINT:  vcl_cout<< "dbsk2d_ishock_bpoint"; break;
-//    case BLINE:    vcl_cout<< "dbsk2d_ishock_bline"; break;
-//    case BARC:    vcl_cout<< "dbsk2d_ishock_barc"; break;
+//    case BPOINT:  std::cout<< "dbsk2d_ishock_bpoint"; break;
+//    case BLINE:    std::cout<< "dbsk2d_ishock_bline"; break;
+//    case BARC:    std::cout<< "dbsk2d_ishock_barc"; break;
 //    default: break;
 //    }
-//    vcl_cout<< ", Bid: "<< current->id()<<vcl_endl;
+//    std::cout<< ", Bid: "<< current->id()<<std::endl;
 //  }
 //
-//  vcl_cout <<" ========================" <<vcl_endl;
+//  std::cout <<" ========================" <<std::endl;
 //}
 //
 //
@@ -2129,12 +2129,12 @@ print_partition_summary(vcl_ostream& os) const
 //      double l, k;
 //      //if spt is the starting point of this line
 //      if (lLine->s_pt() == spt){
-//        dtheta = vcl_fabs(u- angle0To2Pi(lLine->u()+vnl_math::pi));
+//        dtheta = std::fabs(u- angle0To2Pi(lLine->u()+vnl_math::pi));
 //        l = _distPointPoint(spt->pt(),lLine->e_pt()->pt());
 //        k = 1/getArcRadiusFromThreePoints(lLine->e_pt()->pt(), spt->pt(), ept->pt());
 //      }
 //      else {
-//        dtheta = vcl_fabs(u- lLine->u());
+//        dtheta = std::fabs(u- lLine->u());
 //        l = _distPointPoint(spt->pt(),lLine->s_pt()->pt());
 //        k = 1/getArcRadiusFromThreePoints(lLine->s_pt()->pt(), spt->pt(), ept->pt());
 //      }
@@ -2152,12 +2152,12 @@ print_partition_summary(vcl_ostream& os) const
 //      double l, k;
 //      //if ept is the starting point of this line
 //      if (rLine->s_pt() == ept){
-//        dtheta = vcl_fabs(u- rLine->u());
+//        dtheta = std::fabs(u- rLine->u());
 //        l = _distPointPoint(ept->pt(),rLine->e_pt()->pt());
 //        k = 1/getArcRadiusFromThreePoints(rLine->e_pt()->pt(), ept->pt(), spt->pt());
 //      }
 //      else {
-//        dtheta = vcl_fabs(u- angle0To2Pi(rLine->u()+vnl_math::pi));
+//        dtheta = std::fabs(u- angle0To2Pi(rLine->u()+vnl_math::pi));
 //        l = _distPointPoint(ept->pt(),rLine->s_pt()->pt());
 //        k = 1/getArcRadiusFromThreePoints(rLine->s_pt()->pt(), ept->pt(), spt->pt());
 //      }
@@ -2261,7 +2261,7 @@ print_partition_summary(vcl_ostream& os) const
 //  //if the arc is zero length, just add a point
 //  if (BisEq(sx, ex) && BisEq(sy, ey)) {
 //    dbsk2d_assert (0);
-//    vcl_cout << "arc is too small! " <<vcl_endl;
+//    std::cout << "arc is too small! " <<std::endl;
 //    return NULL;
 //    //return add_a_point(sx, sy);
 //  }
@@ -2309,7 +2309,7 @@ print_partition_summary(vcl_ostream& os) const
 //
 //  //Trying to fit the arc in a box smaller than the accuracy of the input
 //  theta = theta/2;
-//  //double l = 2*r*vcl_sin(theta);
+//  //double l = 2*r*std::sin(theta);
 //  //double w = l*l/r/8;
 //
 //  //if (w < W_THRESHOLD){ //boundary estimation accuracy
@@ -2414,8 +2414,8 @@ print_partition_summary(vcl_ostream& os) const
 //  //new_biArc.compute_other_stuff();
 //
 //  //vgl_point_2d<double> mid = new_biArc.bi_arc_params.end1;
-//  //double R1 = vcl_fabs(new_biArc.bi_arc_params.radius1);
-//  //double R2 = vcl_fabs(new_biArc.bi_arc_params.radius2);
+//  //double R1 = std::fabs(new_biArc.bi_arc_params.radius1);
+//  //double R2 = std::fabs(new_biArc.bi_arc_params.radius2);
 //  //int dir1 = new_biArc.bi_arc_params.dir1;
 //  //int dir2 = new_biArc.bi_arc_params.dir2;
 //  //double l1 = new_biArc.bi_arc_params.Length1;

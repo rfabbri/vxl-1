@@ -15,8 +15,8 @@
 
 #include <bpro1/bpro1_storage.h>
 #include "dbmrf_curvel_3d_storage_sptr.h"
-#include <vcl_set.h>
-#include <vcl_vector.h>
+#include <set>
+#include <vector>
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_4x4.h>
 #include <vgl/vgl_vector_3d.h>
@@ -29,7 +29,7 @@ public:
   //: Constructor
   dbmrf_curvel_3d_storage();
   //: Constructor
-  dbmrf_curvel_3d_storage( const vcl_set<bmrf_curve_3d_sptr>& curves,
+  dbmrf_curvel_3d_storage( const std::set<bmrf_curve_3d_sptr>& curves,
                             const vnl_double_3x4& camera,
                             const vgl_vector_3d<double>& dir,
                             const vnl_double_4x4& xform );
@@ -37,20 +37,20 @@ public:
   virtual ~dbmrf_curvel_3d_storage(){}
 
   //: Returns the type string "curvel_3d"
-  virtual vcl_string type() const { return "curvel_3d"; }
+  virtual std::string type() const { return "curvel_3d"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbmrf_curvel_3d_storage"; }
+  virtual std::string is_a() const { return "dbmrf_curvel_3d_storage"; }
 
   //: Set the curvel_3d storage set
-  void set_curvel_3d( const vcl_set<bmrf_curve_3d_sptr>& curves);
+  void set_curvel_3d( const std::set<bmrf_curve_3d_sptr>& curves);
 
   //: Retrieve the curvel_3d storage set
-  void get_curvel_3d( vcl_set<bmrf_curve_3d_sptr>& curves ) const;
+  void get_curvel_3d( std::set<bmrf_curve_3d_sptr>& curves ) const;
 
   //: Set the cameras
   void set_camera( const vnl_double_3x4& camera );
@@ -81,7 +81,7 @@ public:
 
 private:
   //: The vector of bmrf_curve_3d smart pointers
-  vcl_set<bmrf_curve_3d_sptr> curvel_3d_;
+  std::set<bmrf_curve_3d_sptr> curvel_3d_;
   
   //: Vector of cameras
   vnl_double_3x4 camera_;
@@ -104,7 +104,7 @@ struct dbmrf_curvel_3d_storage_new : public dbmrf_curvel_3d_storage_sptr
   dbmrf_curvel_3d_storage_new() : base(new dbmrf_curvel_3d_storage()) { }
 
   //: Constructor - creates a dbmrf_curvel_3d_storage_sptr with curvel_3ds.
-  dbmrf_curvel_3d_storage_new(const vcl_set<bmrf_curve_3d_sptr>& curves,
+  dbmrf_curvel_3d_storage_new(const std::set<bmrf_curve_3d_sptr>& curves,
                                const vnl_double_3x4& camera,
                                const vgl_vector_3d<double>& dir,
                                const vnl_double_4x4& xform )

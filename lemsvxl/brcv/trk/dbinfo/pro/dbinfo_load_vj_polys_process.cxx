@@ -4,7 +4,7 @@
 // \file
 
 #include <dbinfo/pro/dbinfo_load_vj_polys_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bpro1/bpro1_storage.h>
 #include <bpro1/bpro1_parameters.h>
 #include <bvis1/bvis1_manager.h>
@@ -22,7 +22,7 @@ dbinfo_load_vj_polys_process::dbinfo_load_vj_polys_process() : bpro1_process(), 
 {
   if( !parameters()->add( "VJ Poly file <filename...>" , "-poly_filename", bpro1_filepath("","*") ))
     {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -42,7 +42,7 @@ dbinfo_load_vj_polys_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbinfo_load_vj_polys_process::name()
+std::string dbinfo_load_vj_polys_process::name()
 {
   return "Load VJ_Polys";
 }
@@ -58,10 +58,10 @@ dbinfo_load_vj_polys_process::clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_load_vj_polys_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
 
@@ -70,10 +70,10 @@ dbinfo_load_vj_polys_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_load_vj_polys_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -94,13 +94,13 @@ dbinfo_load_vj_polys_process::output_frames()
   return num_frames_;
 }
 
-static bool read_poly_file(vcl_ifstream& str,
-                           vcl_vector<vcl_vector<vsol_polygon_2d_sptr> >& polys)
+static bool read_poly_file(std::ifstream& str,
+                           std::vector<std::vector<vsol_polygon_2d_sptr> >& polys)
 {
   polys.clear();
   unsigned nframes = 0, nobj = 0, npoly = 0, nverts = 0, frame = 0;
   char buff[1000];
-  vcl_string name;
+  std::string name;
 
   str.getline(buff,1000);
     str >> name;
@@ -117,14 +117,14 @@ static bool read_poly_file(vcl_ifstream& str,
       if(name != "NPOLYS:")
         return false;
       str >> npoly;
-      vcl_vector<vsol_polygon_2d_sptr> fpolys;
+      std::vector<vsol_polygon_2d_sptr> fpolys;
       for(unsigned ip = 0; ip<npoly; ++ip)
         {
           str >> name;
           if(name != "NVERTS:")
             return false;
           str >> nverts;
-          vcl_vector<double> x(nverts), y(nverts);
+          std::vector<double> x(nverts), y(nverts);
           str >> name;
           if(name != "X:")
             return false;
@@ -135,7 +135,7 @@ static bool read_poly_file(vcl_ifstream& str,
             return false;
           for(unsigned iv = 0; iv<nverts; ++iv)
             str >> y[iv];
-          vcl_vector<vsol_point_2d_sptr> poly_verts;
+          std::vector<vsol_point_2d_sptr> poly_verts;
           for(unsigned iv = 0; iv<nverts; ++iv)
             {
               vsol_point_2d_sptr p = new vsol_point_2d(x[iv],y[iv]);
@@ -155,14 +155,14 @@ dbinfo_load_vj_polys_process::execute()
   // read the polygons from the vj file
   bpro1_filepath poly_path;
   parameters()->get_value( "-poly_filename" , poly_path );
-  vcl_string path = poly_path.path;
-  vcl_ifstream is(path.c_str());
+  std::string path = poly_path.path;
+  std::ifstream is(path.c_str());
   if(!is.is_open())
     {
-      vcl_cout << "Failed to open poly file\n";
+      std::cout << "Failed to open poly file\n";
       return  false;
     }
-  vcl_vector<vcl_vector<vsol_polygon_2d_sptr> > polys;
+  std::vector<std::vector<vsol_polygon_2d_sptr> > polys;
   if(!read_poly_file(is, polys))
     return false;
   //for now assume the start frame is frame 0 - not general enough 
@@ -176,15 +176,15 @@ dbinfo_load_vj_polys_process::execute()
       //the storage element
       vidpro1_vsol2D_storage* str = new vidpro1_vsol2D_storage();
       //insert the polys for this frame
-      vcl_vector<vsol_polygon_2d_sptr> fpolys = polys[frame];
-      for(vcl_vector<vsol_polygon_2d_sptr>::iterator pit = fpolys.begin();
+      std::vector<vsol_polygon_2d_sptr> fpolys = polys[frame];
+      for(std::vector<vsol_polygon_2d_sptr>::iterator pit = fpolys.begin();
           pit != fpolys.end(); ++pit)
         {
           vsol_region_2d* r = (*pit)->cast_to_region();
           vsol_spatial_object_2d_sptr so = r->cast_to_spatial_object();
           str->add_object(so,"vjpoly");
         }
-      vcl_vector< bpro1_storage_sptr > stores;
+      std::vector< bpro1_storage_sptr > stores;
       stores.push_back(str);
       //save the vsol2D tracks into the output data for this frame
       output_data_.push_back(stores);

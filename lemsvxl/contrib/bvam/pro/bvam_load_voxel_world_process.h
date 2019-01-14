@@ -11,7 +11,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class bvam_load_voxel_world_process : public bprb_process
@@ -28,7 +28,7 @@ class bvam_load_voxel_world_process : public bprb_process
   //: Clone the process
   virtual bvam_load_voxel_world_process* clone() const {return new bvam_load_voxel_world_process(*this);}
 
-  vcl_string name(){return "LoadVoxelWorldProcess";}
+  std::string name(){return "LoadVoxelWorldProcess";}
 
   bool init() { return true; }
   bool execute();

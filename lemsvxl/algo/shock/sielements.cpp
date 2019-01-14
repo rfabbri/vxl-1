@@ -2,8 +2,8 @@
 // INTRINSIC SHOCK ELEMENT FUNCTIONS
 /////////////////////////////////////////////////////
 
-#include <vcl_sstream.h>
-#include <vcl_cmath.h>
+#include <sstream>
+#include <cmath>
 
 #include <extrautils/msgout.h>
 #include "ishock-common.h"
@@ -238,7 +238,7 @@ void SILink::setSimTime (RADIUS_TYPE stime)
   //assert (_startTime<=stime);
   if (stime < _startTime) {
     //if (MessageOption>=MSG_NORMAL) {
-    //  vcl_cout<< "Correction! sid= "<< _id << " _endTime less than _startTime, error= " << stime-_startTime <<vcl_endl;
+    //  std::cout<< "Correction! sid= "<< _id << " _endTime less than _startTime, error= " << stime-_startTime <<std::endl;
     //  MSGOUT();
     //}
     //Correction: add R_PHI_EPSILONON to _startTime
@@ -256,7 +256,7 @@ JUNCTION_TYPE SILink::getJunctionType (void)
   //1)Numerical issue: a shock propagates and should have intersection.
   //  but actually no junction found.
    if (_lNeighbor==NULL && _rNeighbor==NULL) {
-    vcl_cout<< "Numerical Issue: getJunctionType(): TO_INFINITY sid=" << _id <<vcl_endl;
+    std::cout<< "Numerical Issue: getJunctionType(): TO_INFINITY sid=" << _id <<std::endl;
     return TO_INFINITY; //BOGUS_JUNCTION_TYPE
   }
 
@@ -282,7 +282,7 @@ JUNCTION_TYPE SILink::getJunctionType (void)
   //But it does happen when numerical epsilon of R is introduced.
   //( see 030216-RemoveSpecialCaseOfSink-3.bnd)
    if (lshock->lBElement() == rshock->rBElement()) {
-    //vcl_cout<< vcl_endl<<"WARNING: Numerical Issue--Special case of SINK." <<vcl_endl;
+    //std::cout<< std::endl<<"WARNING: Numerical Issue--Special case of SINK." <<std::endl;
       lshock->set_lNeighbor (rshock);
       rshock->set_rNeighbor (lshock);
       return SINK_JUNCTION;
@@ -556,8 +556,8 @@ SIPointPoint::SIPointPoint (int newid, RADIUS_TYPE stime,
 Point SIPointPoint::getPtFromLTau (TAU_TYPE ltau)
 {
    Point pt;
-  DIST_TYPE d = _H/(2*vcl_cos(ltau));
-  pt = _origin + rotateCCW(d*vcl_cos(ltau), d*vcl_sin(ltau), _u);
+  DIST_TYPE d = _H/(2*std::cos(ltau));
+  pt = _origin + rotateCCW(d*std::cos(ltau), d*std::sin(ltau), _u);
   
    return pt;
 }
@@ -714,14 +714,14 @@ LTAU_TYPE SIPointLine::RTau(LTAU_TYPE LTau)
   DIST_TYPE c = _H/2;
 
   if (_nu==1) {
-    d = _H/(1+vcl_cos(LTau));  //d = 2*c/(1+vcl_cos(LTau));
-    return vcl_fabs(d*vcl_sin(LTau));
+    d = _H/(1+std::cos(LTau));  //d = 2*c/(1+std::cos(LTau));
+    return std::fabs(d*std::sin(LTau));
   }
   else {
     //in this case LTau is expected to be negative by definition
     //but our definition uses all positive taus
-    rtau = angle0To2Pi(vcl_acos(-LTau/vcl_sqrt(LTau*LTau + 4*c*c)) 
-                      + vcl_atan(-2*c/LTau));
+    rtau = angle0To2Pi(std::acos(-LTau/std::sqrt(LTau*LTau + 4*c*c)) 
+                      + std::atan(-2*c/LTau));
     return 2*M_PI - rtau;
   }
 }
@@ -733,13 +733,13 @@ LTAU_TYPE SIPointLine::LTau(LTAU_TYPE RTau)
   DIST_TYPE c = _H/2;
 
   if (_nu==-1){
-    d = _H/(1+vcl_cos(RTau));
-    return vcl_fabs(d*vcl_sin(RTau));
+    d = _H/(1+std::cos(RTau));
+    return std::fabs(d*std::sin(RTau));
   }
   else {
     //in this case RTau is expected to be positive
-    ltau = angle0To2Pi(vcl_acos(-RTau/vcl_sqrt(RTau*RTau + 4*c*c)) 
-                      + vcl_atan(-2*c/RTau));
+    ltau = angle0To2Pi(std::acos(-RTau/std::sqrt(RTau*RTau + 4*c*c)) 
+                      + std::atan(-2*c/RTau));
     return ltau;
   }
 }
@@ -758,8 +758,8 @@ bool SIPointLine::isTauValid_MinMax (LTAU_TYPE letau, LTAU_TYPE retau)
 Point SIPointLine::getPtFromPointTau (TAU_TYPE ptau)
 {
    Point pt;
-  DIST_TYPE d = _H/(1+vcl_cos(ptau));
-  pt = _origin + rotateCCW(d*vcl_cos(ptau), d*vcl_sin(ptau), _u);
+  DIST_TYPE d = _H/(1+std::cos(ptau));
+  pt = _origin + rotateCCW(d*std::cos(ptau), d*std::sin(ptau), _u);
   
    return pt;
 }
@@ -847,9 +847,9 @@ SIPointArc::SIPointArc (int newid, RADIUS_TYPE stime,
       _a = (Rl()-Rr())/2; //Could be negative!
       _c = _H/2;
       _b2 = _c*_c-_a*_a;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
 
-    _Asym = (_nu==1) ? vcl_atan2(_b,-vcl_fabs(_a)) : vcl_atan2(_b,_a);
+    _Asym = (_nu==1) ? std::atan2(_b,-std::fabs(_a)) : std::atan2(_b,_a);
     _Asym = angle0To2Pi (_Asym);
 
     if (_nu==1)
@@ -861,7 +861,7 @@ SIPointArc::SIPointArc (int newid, RADIUS_TYPE stime,
       _a = (Rl()+Rr())/2;
       _c = _H/2;
       _b2 = _a*_a-_c*_c;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
    }
 
   _LsTau = CCW (_u, lsvector);
@@ -935,9 +935,9 @@ DIST_TYPE SIPointArc::dFromLTau (TAU_TYPE Ltau)
   double denom;
 
   if (_s>0)
-    denom = _c*vcl_cos(Ltau)-_a;
+    denom = _c*std::cos(Ltau)-_a;
   else
-    denom = _a-_c*vcl_cos(Ltau);
+    denom = _a-_c*std::cos(Ltau);
 
   if (_isEq(denom,0,1E-13))//(denom==0)
     d = ISHOCK_DIST_HUGE;
@@ -954,9 +954,9 @@ DIST_TYPE SIPointArc::dFromRTau (TAU_TYPE Rtau)
   double denom;
 
   if (_s>0)
-    denom = _a+_c*vcl_cos(Rtau);
+    denom = _a+_c*std::cos(Rtau);
   else
-    denom = _a-_c*vcl_cos(Rtau);
+    denom = _a-_c*std::cos(Rtau);
 
   if (denom==0)
     d = ISHOCK_DIST_HUGE;
@@ -987,13 +987,13 @@ TAU_TYPE SIPointArc::RTau (TAU_TYPE Ltau)
 
   //2)Normal Case
   DIST_TYPE d = dFromLTau (Ltau);
-  double m = ( d*vcl_sin(Ltau) )/( d*vcl_cos(Ltau)-_H );
+  double m = ( d*std::sin(Ltau) )/( d*std::cos(Ltau)-_H );
 
   //For (_s>0) case, RTau is between (M_PI to 2*M_PI)
   //For (_s<0) case, RTau is between (0 to M_PI)
   int si = (_s>0) ? (m>0) : (m<0);
 
-  TAU_TYPE rtau = angle0To2Pi (vcl_atan(m)+si*M_PI);
+  TAU_TYPE rtau = angle0To2Pi (std::atan(m)+si*M_PI);
 
   return rtau;
 }
@@ -1018,13 +1018,13 @@ TAU_TYPE SIPointArc::LTau (TAU_TYPE Rtau)
 
   //2)Normal Case
   DIST_TYPE d = dFromRTau (Rtau);
-  double m = ( d*vcl_sin(Rtau) )/( d*vcl_cos(Rtau)-_H );
+  double m = ( d*std::sin(Rtau) )/( d*std::cos(Rtau)-_H );
 
   //For (_s>0) case, LTau is between (0 to M_PI)
   //For (_s<0) case, LTau is between (M_PI to 2*M_PI)
   int si = (_s>0) ? (m<0) : (m>0);
 
-  TAU_TYPE ltau = angle0To2Pi (vcl_atan(m)+si*M_PI);
+  TAU_TYPE ltau = angle0To2Pi (std::atan(m)+si*M_PI);
 
   return ltau;
 }
@@ -1123,7 +1123,7 @@ TAU_TYPE SIPointArc::computeMaxLTau ()
 {
   if (_s==1) {
     if (_nu==1) { //Case 1:
-      //double _LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+      //double _LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
       bool bIgnoreRightLimit = false;
       VECTOR_TYPE rvector = angle0To2Pi( RTau(_LAsym) + _u+M_PI );
       //If the converted LAsym is inside the right arc, ignore right limit.
@@ -1136,7 +1136,7 @@ TAU_TYPE SIPointArc::computeMaxLTau ()
         return LTau(CCW(_u+M_PI, _Sr));
     }
     else { //Case 2:
-      //double _RAsym = vcl_atan2 (_b, _a) +M_PI;
+      //double _RAsym = std::atan2 (_b, _a) +M_PI;
       bool bIgnoreLeftLimit = false;
       VECTOR_TYPE lvector = angle0To2Pi( LTau(_RAsym) + _u );
       //If the converted RAsym is inside the left arc, ignore left limit.
@@ -1161,7 +1161,7 @@ TAU_TYPE SIPointArc::computeMinRTau ()
 {  
   if (_s==1) {
     if (_nu==1) { //Case 1:
-      //double LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+      //double LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
       bool bIgnoreRightLimit = false;
       VECTOR_TYPE rvector = angle0To2Pi( RTau(_LAsym) + _u+M_PI );
       //If the converted LAsym is inside the right arc, ignore right limit.
@@ -1174,7 +1174,7 @@ TAU_TYPE SIPointArc::computeMinRTau ()
         return CCW(_u+M_PI, _Sr);
     }
     else { //Case 2:
-      //double RAsym = vcl_atan2(_b, _a) +M_PI;
+      //double RAsym = std::atan2(_b, _a) +M_PI;
       bool bIgnoreLeftLimit = false;
       VECTOR_TYPE lvector = angle0To2Pi( LTau(_RAsym) + _u );
       // the converted RAsym is inside the left arc, ignore left limit.
@@ -1238,11 +1238,11 @@ TAU_TYPE SIPointArc::getLTauFromTime (RADIUS_TYPE time)
 
   if (_s>0) {
     d = time + Rl();
-    ltau = vcl_acos ( (_a*d+_b2)/d/_c );
+    ltau = std::acos ( (_a*d+_b2)/d/_c );
   }
   else {
     d = Rr() - time;
-    ltau = vcl_acos ( (_a*d-_b2)/d/_c );
+    ltau = std::acos ( (_a*d-_b2)/d/_c );
   }
 
   return ltau;
@@ -1256,7 +1256,7 @@ Point SIPointArc::getPtFromLTau (TAU_TYPE tau)
   assert (tau>=0);
    DIST_TYPE d = dFromLTau (tau);
 
-  pt = _origin + rotateCCW(d*vcl_cos(tau), d*vcl_sin(tau), _u);
+  pt = _origin + rotateCCW(d*std::cos(tau), d*std::sin(tau), _u);
 
    return pt;
 }
@@ -1300,12 +1300,12 @@ SILineLine::SILineLine (int newid, RADIUS_TYPE stime,
    _lL = _distPointPoint (_Al, _Bl);
    _lR = _distPointPoint (_Ar, _Br);
 
-   _nl = angle0To2Pi (vcl_atan2(_Bl.y - _Al.y, _Bl.x - _Al.x));
+   _nl = angle0To2Pi (std::atan2(_Bl.y - _Al.y, _Bl.x - _Al.x));
    _ul = angle0To2Pi (_nl - M_PI_2);
-   _nr = angle0To2Pi (vcl_atan2(_Br.y - _Ar.y, _Br.x - _Ar.x));
+   _nr = angle0To2Pi (std::atan2(_Br.y - _Ar.y, _Br.x - _Ar.x));
    _ur = angle0To2Pi (_nr - M_PI_2);
   //_sigma = (_Bl.x - _Al.x)*(_Br.x - _Ar.x) + (_Bl.y - _Al.y)*(_Br.y - _Ar.y);
-   _sigma = vcl_cos(_nl)*vcl_cos(_nr) + vcl_sin(_nl)*vcl_sin(_nr); // nl dot nr
+   _sigma = std::cos(_nl)*std::cos(_nr) + std::sin(_nl)*std::sin(_nr); // nl dot nr
 
   _thetaL = CCW (_ul, _nr);
   _thetaR = CCW (_ur, _nl);
@@ -1314,25 +1314,25 @@ SILineLine::SILineLine (int newid, RADIUS_TYPE stime,
    _phi = CCW (_nr, _nl+M_PI)/2;
   if (_phi>M_PI_2) { //Extreme case!
     _phiSpecialCase = true;
-    vcl_cout<< "phi special case for SILineLine. error= " <<_phi-M_PI_2<<vcl_endl;
+    std::cout<< "phi special case for SILineLine. error= " <<_phi-M_PI_2<<std::endl;
     _phi = M_PI_2; //A_EPSILON
      _H = _distPointPoint (_Al, _Ar);
     assert (_H!=0);
 
-    ANGLE_TYPE alphaL = CCW (_ul, vcl_atan2(_Ar.y - _Al.y , _Ar.x - _Al.x));
-    ANGLE_TYPE alphaR = CCW (_ur, vcl_atan2(_Al.y - _Ar.y , _Al.x - _Ar.x));
-    _deltaL = _H*vcl_sin(alphaL - _thetaL)/vcl_cos(_thetaL);
+    ANGLE_TYPE alphaL = CCW (_ul, std::atan2(_Ar.y - _Al.y , _Ar.x - _Al.x));
+    ANGLE_TYPE alphaR = CCW (_ur, std::atan2(_Al.y - _Ar.y , _Al.x - _Ar.x));
+    _deltaL = _H*std::sin(alphaL - _thetaL)/std::cos(_thetaL);
     if (_deltaL < _lL)
       _deltaL = _lL;
-    _deltaR = _H*vcl_sin(alphaR - _thetaR)/vcl_cos(_thetaR);
+    _deltaR = _H*std::sin(alphaR - _thetaR)/std::cos(_thetaR);
     if (_deltaR < _lR)
       _deltaR = _lR;
 
-    _N1L = -vcl_tan(_phi);  //-ISHOCK_DIST_HUGE
-    _N1R = vcl_tan(_phi);    //+ISHOCK_DIST_HUGE
+    _N1L = -std::tan(_phi);  //-ISHOCK_DIST_HUGE
+    _N1R = std::tan(_phi);    //+ISHOCK_DIST_HUGE
     
-    _N2L = -_H*vcl_cos(alphaL+2*_phi)/(2*vcl_cos(_phi)*vcl_cos(_phi));  //ISHOCK_DIST_HUGE
-    _N2R = -_H*vcl_cos(2*_phi - alphaR)/(2*vcl_cos(_phi)*vcl_cos(_phi));  //ISHOCK_DIST_HUGE
+    _N2L = -_H*std::cos(alphaL+2*_phi)/(2*std::cos(_phi)*std::cos(_phi));  //ISHOCK_DIST_HUGE
+    _N2R = -_H*std::cos(2*_phi - alphaR)/(2*std::cos(_phi)*std::cos(_phi));  //ISHOCK_DIST_HUGE
   }
   else { //Normal case.
     _phiSpecialCase = false;
@@ -1340,22 +1340,22 @@ SILineLine::SILineLine (int newid, RADIUS_TYPE stime,
      _H = _distPointPoint (_Al, _Ar);
     assert (_H!=0);
 
-    ANGLE_TYPE alphaL = CCW (_ul, vcl_atan2(_Ar.y - _Al.y , _Ar.x - _Al.x));
-    ANGLE_TYPE alphaR = CCW (_ur, vcl_atan2(_Al.y - _Ar.y , _Al.x - _Ar.x));
+    ANGLE_TYPE alphaL = CCW (_ul, std::atan2(_Ar.y - _Al.y , _Ar.x - _Al.x));
+    ANGLE_TYPE alphaR = CCW (_ur, std::atan2(_Al.y - _Ar.y , _Al.x - _Ar.x));
   
-    _deltaL = _H*vcl_sin(alphaL - _thetaL)/vcl_cos(_thetaL);
-    _deltaR = _H*vcl_sin(alphaR - _thetaR)/vcl_cos(_thetaR);
+    _deltaL = _H*std::sin(alphaL - _thetaL)/std::cos(_thetaL);
+    _deltaR = _H*std::sin(alphaR - _thetaR)/std::cos(_thetaR);
   
-    _N1L = -vcl_tan(_phi);
-    _N1R = vcl_tan(_phi);
+    _N1L = -std::tan(_phi);
+    _N1R = std::tan(_phi);
     
-    _N2L = -_H*vcl_cos(alphaL+2*_phi)/(2*vcl_cos(_phi)*vcl_cos(_phi));
-    _N2R = -_H*vcl_cos(2*_phi - alphaR)/(2*vcl_cos(_phi)*vcl_cos(_phi));
+    _N2L = -_H*std::cos(alphaL+2*_phi)/(2*std::cos(_phi)*std::cos(_phi));
+    _N2R = -_H*std::cos(2*_phi - alphaR)/(2*std::cos(_phi)*std::cos(_phi));
   }
 
   //_origin is the S (intersection of two line?)
-  _origin.x = _Al.x - 0.5*_H*vcl_cos(_ul);
-  _origin.y = _Al.y - 0.5*_H*vcl_sin(_ul);
+  _origin.x = _Al.x - 0.5*_H*std::cos(_ul);
+  _origin.y = _Al.y - 0.5*_H*std::sin(_ul);
 
   _LsTau = lsvector;
   _RsTau = rsvector;
@@ -1425,8 +1425,8 @@ Point SILineLine::getPtFromLTau (TAU_TYPE tau)
 
   //Here we compute the point directly, without reference to _origin
   RADIUS_TYPE radius = r(tau);
-  pt.x = _Al.x + tau*vcl_cos(_nl) - radius*vcl_cos(_ul);
-  pt.y = _Al.y + tau*vcl_sin(_nl) - radius*vcl_sin(_ul);
+  pt.x = _Al.x + tau*std::cos(_nl) - radius*std::cos(_ul);
+  pt.y = _Al.y + tau*std::sin(_nl) - radius*std::sin(_ul);
    return pt;
 }
 
@@ -1633,7 +1633,7 @@ SILineArc::SILineArc (int newid, RADIUS_TYPE stime,
 
 DIST_TYPE SILineArc::d (TAU_TYPE ptau) 
 {
-  return (_R+(_nud*_s)*_H)/(1+(_nud*_s)*vcl_cos(ptau));
+  return (_R+(_nud*_s)*_H)/(1+(_nud*_s)*std::cos(ptau));
 }
 
 LTAU_TYPE SILineArc::RTau (LTAU_TYPE LTau)
@@ -1643,20 +1643,20 @@ LTAU_TYPE SILineArc::RTau (LTAU_TYPE LTau)
    double alpha;
 
   if (_nu==1){
-    //!!!!bug if (vcl_cos(LTau)==1)
-    d = 2*_c/(1+(_s*_nud)*vcl_cos(LTau));
+    //!!!!bug if (std::cos(LTau)==1)
+    d = 2*_c/(1+(_s*_nud)*std::cos(LTau));
     assert (d>=0);
-    return vcl_fabs(d*vcl_sin(LTau));
+    return std::fabs(d*std::sin(LTau));
   }
   else {
     if (LTau==0) {
       return 2*M_PI; //M_PI;
     }
     else {
-      if (LTau>0) alpha = vcl_atan(-2*_c/LTau);
-        else        alpha = vcl_atan(-2*_c/LTau) + M_PI;
+      if (LTau>0) alpha = std::atan(-2*_c/LTau);
+        else        alpha = std::atan(-2*_c/LTau) + M_PI;
   
-      rtau = angle0To2Pi(vcl_acos(-LTau/vcl_sqrt(LTau*LTau + 4*_c*_c)) 
+      rtau = angle0To2Pi(std::acos(-LTau/std::sqrt(LTau*LTau + 4*_c*_c)) 
                         + alpha);
       if (_s*_nud==1)
          return 2*M_PI - rtau;
@@ -1673,18 +1673,18 @@ LTAU_TYPE SILineArc::LTau (LTAU_TYPE RTau)
    ANGLE_TYPE alpha;
 
   if (_nu==-1){
-    d = 2*_c/(1+(_s*_nud)*vcl_cos(RTau));
-    return vcl_fabs(d*vcl_sin(RTau));
+    d = 2*_c/(1+(_s*_nud)*std::cos(RTau));
+    return std::fabs(d*std::sin(RTau));
   }
   else {
     if (RTau==0) {
       return 0;
     }
     else {
-      if (RTau>0) alpha = vcl_atan(-2*_c/RTau);
-        else        alpha = vcl_atan(-2*_c/RTau) + M_PI;
+      if (RTau>0) alpha = std::atan(-2*_c/RTau);
+        else        alpha = std::atan(-2*_c/RTau) + M_PI;
   
-      ltau = angle0To2Pi(vcl_acos(-RTau/vcl_sqrt(RTau*RTau + 4*_c*_c)) 
+      ltau = angle0To2Pi(std::acos(-RTau/std::sqrt(RTau*RTau + 4*_c*_c)) 
                         + alpha);
       if (_s*_nud==1)
          return ltau;
@@ -2119,8 +2119,8 @@ bool SILineArc::isTauValid_LA (LTAU_TYPE letau, LTAU_TYPE retau)
 TAU_TYPE SILineArc::getPointTauFromTime (RADIUS_TYPE time)
 {
   TAU_TYPE ptau;
-  //ptau = vcl_acos ( (2*_c-time)*(_s*_nud)/time );
-  ptau = vcl_acos (-time/(time+2*_c));
+  //ptau = std::acos ( (2*_c-time)*(_s*_nud)/time );
+  ptau = std::acos (-time/(time+2*_c));
   return (_nu==1) ? ptau : 2*M_PI-ptau;
 }
 
@@ -2138,8 +2138,8 @@ bool SILineArc::isTauValid_MinMax (LTAU_TYPE letau, LTAU_TYPE retau)
 Point SILineArc::getPtFromPointTau (TAU_TYPE ptau)
 {
    DIST_TYPE c2 = _c*2;
-   DIST_TYPE d = c2/(1+(_s*_nud)*vcl_cos(ptau));
-   Point pt = _origin + rotateCCW(d*vcl_cos(ptau),d*vcl_sin(ptau), _u);
+   DIST_TYPE d = c2/(1+(_s*_nud)*std::cos(ptau));
+   Point pt = _origin + rotateCCW(d*std::cos(ptau),d*std::sin(ptau), _u);
 
    return pt;
 }
@@ -2199,7 +2199,7 @@ SIArcArc::SIArcArc (int newid, RADIUS_TYPE stime,
     _MU = 1;  //Normal outward cases
     _s =  1; //Hyperbola
   }
-   else if (_H<vcl_fabs(_Rl-_Rr)) {
+   else if (_H<std::fabs(_Rl-_Rr)) {
     _MU = 1;  //Normal outward cases
     _s = -1; //Ellipse
   }
@@ -2216,9 +2216,9 @@ SIArcArc::SIArcArc (int newid, RADIUS_TYPE stime,
       _a = (_Rl-_Rr)/2;
       _c = _H/2;
       _b2 = _c*_c-_a*_a;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
 
-    _Asym = (_nu==1) ? vcl_atan2(_b,-vcl_fabs(_a)) : vcl_atan2(_b,_a);
+    _Asym = (_nu==1) ? std::atan2(_b,-std::fabs(_a)) : std::atan2(_b,_a);
     _Asym = angle0To2Pi (_Asym);
 
     if (_nu==1)
@@ -2230,7 +2230,7 @@ SIArcArc::SIArcArc (int newid, RADIUS_TYPE stime,
       _a = (_Rl+_Rr)/2;
       _c = _H/2;
       _b2 = _a*_a-_c*_c;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
    }
 
   _LsTau = CCW (_u, lsvector);
@@ -2438,9 +2438,9 @@ DIST_TYPE SIArcArc::dFromLTau (TAU_TYPE Ltau)
   double denom;
 
   if (_s>0)
-    denom = _c*vcl_cos(Ltau)-_a;
+    denom = _c*std::cos(Ltau)-_a;
   else
-    denom = _a-_c*vcl_cos(Ltau);
+    denom = _a-_c*std::cos(Ltau);
 
   if (AisEq(denom,0)) //if (denom==0)
     d = ISHOCK_DIST_HUGE;
@@ -2457,9 +2457,9 @@ DIST_TYPE SIArcArc::dFromRTau (TAU_TYPE Rtau)
   double denom;
 
   if (_s>0)
-    denom = _a+_c*vcl_cos(Rtau);
+    denom = _a+_c*std::cos(Rtau);
   else
-    denom = _a-_c*vcl_cos(Rtau);
+    denom = _a-_c*std::cos(Rtau);
 
   if (AisEq(denom,0)) //if (denom==0)
     d = ISHOCK_DIST_HUGE;
@@ -2489,13 +2489,13 @@ TAU_TYPE SIArcArc::RTau (TAU_TYPE Ltau)
 
   //2)Normal case
   DIST_TYPE d = dFromLTau (Ltau);
-  double m = ( d*vcl_sin(Ltau) )/( d*vcl_cos(Ltau)-_H );
+  double m = ( d*std::sin(Ltau) )/( d*std::cos(Ltau)-_H );
 
   //For (_s>0) case, RTau is between (M_PI to 2*M_PI)
   //For (_s<0) case, RTau is between (0 to M_PI)
   int si = (_s>0) ? (m>0) : (m<0);
 
-  VECTOR_TYPE rtau = angle0To2Pi (vcl_atan(m)+si*M_PI);
+  VECTOR_TYPE rtau = angle0To2Pi (std::atan(m)+si*M_PI);
 
   return rtau;
 }
@@ -2518,13 +2518,13 @@ TAU_TYPE SIArcArc::LTau (TAU_TYPE Rtau)
   }
 
   DIST_TYPE d = dFromRTau (Rtau);
-  double m = ( d*vcl_sin(Rtau) )/( d*vcl_cos(Rtau)-_H );
+  double m = ( d*std::sin(Rtau) )/( d*std::cos(Rtau)-_H );
 
   //For (_s>0) case, LTau is between (0 to M_PI)
   //For (_s<0) case, LTau is between (M_PI to 2*M_PI)
   int si = (_s>0) ? (m<0) : (m>0);
 
-  VECTOR_TYPE ltau = angle0To2Pi (vcl_atan(m)+si*M_PI);
+  VECTOR_TYPE ltau = angle0To2Pi (std::atan(m)+si*M_PI);
 
   return ltau;
 }
@@ -2662,7 +2662,7 @@ TAU_TYPE SIArcArc::computeMaxLTau ()
   if (_MU==1) { //SIMILAR TO Point-Arc
     if (_s==1) {
       if (_nu==1) { //Case 1:
-        //double LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+        //double LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
         bool bIgnoreRightLimit = false;
         VECTOR_TYPE rvector = angle0To2Pi( RTau(_LAsym) + _u+M_PI );
         //If the converted LAsym is inside the right arc, ignore right limit.
@@ -2689,7 +2689,7 @@ TAU_TYPE SIArcArc::computeMaxLTau ()
         }
       }
       else { //Case 2:
-        //double RAsym = vcl_atan2 (_b, _a) +M_PI;
+        //double RAsym = std::atan2 (_b, _a) +M_PI;
         bool bIgnoreLeftLimit = false;
         VECTOR_TYPE lvector = angle0To2Pi( LTau(_RAsym) + _u );
         // the converted RAsym is inside the left arc, ignore left limit.
@@ -2737,14 +2737,14 @@ TAU_TYPE SIArcArc::computeMaxLTau ()
           minRTauNoAsym = M_PI;
         if (_nu==1) { //Case 5:
           //Asymptote on left.
-          ANGLE_TYPE limit_LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+          ANGLE_TYPE limit_LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
           ANGLE_TYPE limitR = LTau(  vnl_math_max (minRTauNoAsym, limit_LAsym+M_PI) );
           ANGLE_TYPE min_LR = vnl_math_min (limitL, limitR);
           return vnl_math_min (min_LR, limit_LAsym);
         }
         else { //Case 7:
           //Asymptote on right.
-          ANGLE_TYPE limit_RAsym = vcl_atan2 (_b, _a);
+          ANGLE_TYPE limit_RAsym = std::atan2 (_b, _a);
           ANGLE_TYPE limitR = LTau(  vnl_math_max (minRTauNoAsym, limit_RAsym+M_PI) );
           ANGLE_TYPE min_LR = vnl_math_min (limitL, limitR);
           return vnl_math_min (min_LR, limit_RAsym);
@@ -2775,7 +2775,7 @@ TAU_TYPE SIArcArc::computeMinRTau ()
   if (_MU==1) { //SIMILAR TO Point-Arc
     if (_s==1) {
       if (_nu==1) { //Case 1:
-        //double LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+        //double LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
         bool bIgnoreRightLimit = false;
         VECTOR_TYPE rvector = angle0To2Pi( RTau(_LAsym) + _u+M_PI );
         //If the converted LAsym is inside the right arc, ignore right limit.
@@ -2802,7 +2802,7 @@ TAU_TYPE SIArcArc::computeMinRTau ()
         }
       }
       else { //Case 2: nu==-1
-        //double RAsym = vcl_atan2 (_b, _a) +M_PI;
+        //double RAsym = std::atan2 (_b, _a) +M_PI;
         bool bIgnoreLeftLimit = false;
         VECTOR_TYPE lvector = angle0To2Pi( LTau(_RAsym) + _u );
         // the converted RAsym is inside the left arc, ignore left limit.
@@ -2846,14 +2846,14 @@ TAU_TYPE SIArcArc::computeMinRTau ()
           maxLTauNoAsym = M_PI;
         if (_nu==1) { //Case 5:
           //Asymptote on left.
-          VECTOR_TYPE limit_LAsym = angle0To2Pi( vcl_atan2(_b, -vcl_fabs(_a)) );
+          VECTOR_TYPE limit_LAsym = angle0To2Pi( std::atan2(_b, -std::fabs(_a)) );
           VECTOR_TYPE limitL = RTau (  vnl_math_min (maxLTauNoAsym, limit_LAsym) );
           VECTOR_TYPE min_LR = vnl_math_max (limitL, limitR);
           return vnl_math_min (min_LR, limit_LAsym+M_PI);
         }
         else { //Case 7:
           //Asymptote on right.
-          VECTOR_TYPE limit_RAsym = vcl_atan2 (_b, _a);
+          VECTOR_TYPE limit_RAsym = std::atan2 (_b, _a);
           VECTOR_TYPE limitL = RTau (  vnl_math_min (maxLTauNoAsym, limit_RAsym) );
           VECTOR_TYPE min_LR = vnl_math_max (limitL, limitR);
           return vnl_math_min (min_LR, limit_RAsym+M_PI);
@@ -3012,11 +3012,11 @@ TAU_TYPE SIArcArc::getLTauFromTime (RADIUS_TYPE time)
 
   if (_s>0) {
     d = time + _Rl;
-    ltau = vcl_acos ( (_a*d+_b2)/d/_c );
+    ltau = std::acos ( (_a*d+_b2)/d/_c );
   }
   else {
     d = _Rr - time;
-    ltau = vcl_acos ( (_a*d-_b2)/d/_c );
+    ltau = std::acos ( (_a*d-_b2)/d/_c );
   }
 
   return ltau;
@@ -3029,7 +3029,7 @@ Point SIArcArc::getPtFromLTau (TAU_TYPE tau)
   assert (tau>=0);
    DIST_TYPE d = dFromLTau (tau);
 
-  pt = rotateCCW(d*vcl_cos(tau), d*vcl_sin(tau), _u);
+  pt = rotateCCW(d*std::cos(tau), d*std::sin(tau), _u);
    pt.x = _origin.x + pt.x;
    pt.y = _origin.y + pt.y;
 
@@ -3069,14 +3069,14 @@ SIThirdOrder::SIThirdOrder (int newid, RADIUS_TYPE stime,
    _lL = _distPointPoint(_Al, _Bl);
    _lR = _distPointPoint(_Ar, _Br);
 
-   _nl = vcl_atan2(_Bl.y - _Al.y, _Bl.x - _Al.x);
+   _nl = std::atan2(_Bl.y - _Al.y, _Bl.x - _Al.x);
    _ul = angle0To2Pi (_nl- M_PI_2);
 
    //distance between the lines
-   _H = vcl_fabs((_Ar.x - _Al.x)*vcl_cos(_ul) + (_Ar.y - _Al.y)*vcl_sin(_ul));
+   _H = std::fabs((_Ar.x - _Al.x)*std::cos(_ul) + (_Ar.y - _Al.y)*std::sin(_ul));
 
-   _origin.x = _Al.x - 0.5*_H*vcl_cos(_ul);
-   _origin.y = _Al.y - 0.5*_H*vcl_sin(_ul);
+   _origin.x = _Al.x - 0.5*_H*std::cos(_ul);
+   _origin.y = _Al.y - 0.5*_H*std::sin(_ul);
 
   //nu=1: shock_dir=nr, nu=-1: shock_dir=nl
 
@@ -3201,9 +3201,9 @@ Point SIArcThirdOrder::getPtFromLTau (TAU_TYPE ltau)
 
   //For CCWATO: ltau goes clockwise
   TAU_TYPE tau = (_nudr==ARC_NUD_CCW) ? -ltau : ltau;
-   d = b2/(a - c*vcl_cos(tau));
+   d = b2/(a - c*std::cos(tau));
 
-   pt = rotateCCW(d*vcl_cos(tau),d*vcl_sin(tau), _ul);
+   pt = rotateCCW(d*std::cos(tau),d*std::sin(tau), _ul);
    pt.x = _origin.x + pt.x;
    pt.y = _origin.y + pt.y;
 

@@ -6,8 +6,8 @@
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_double_2.h>
-#include <vcl_utility.h>
-#include<vcl_algorithm.h>
+#include <utility>
+#include<algorithm>
 
 
 #include "dbctrk/dbctrk_DPMatch.h"
@@ -18,14 +18,14 @@
 
 inline
 double curveMatch(double &euc_dist,                        //!< out
-                  vcl_vector<vcl_pair<double,double> > v1, //!< in
-                  vcl_vector<vcl_pair<double,double> > v2, //!< in
-                  vcl_map<int,int> & mapping,              //!< out
+                  std::vector<std::pair<double,double> > v1, //!< in
+                  std::vector<std::pair<double,double> > v2, //!< in
+                  std::map<int,int> & mapping,              //!< out
                   vnl_matrix <double> & R_,                //!< out
                   vnl_matrix <double> & T_,                //!< out
                   vnl_matrix <double> & Tbar,              //!< out
-                  vcl_vector<int> &tail1,
-                  vcl_vector<int> &tail2,
+                  std::vector<int> &tail1,
+                  std::vector<int> &tail2,
                   double &scale,vgl_point_2d<double>  & e)                           //!< out
 {
 #if 0 // these variables are not used
@@ -50,8 +50,8 @@ double curveMatch(double &euc_dist,                        //!< out
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   //euc_dist = d1.transformed_euclidean_distance();
@@ -84,8 +84,8 @@ double curveMatch(Curve * c1, Curve * c2,
 
   d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   m->euc_       = d1.transformed_euclidean_distance();
   m->mapping_   = d1.alignment;
@@ -134,10 +134,10 @@ double curveMatch(dbctrk_curve_description *  c1,
   d1.I2neg.push_back(c2->Ngcolor);
   d1.I2neg.push_back(c2->Nbcolor);
   
-  //   vcl_cout<<"\n cost of matching is "<<d1.normfinalCost();
+  //   std::cout<<"\n cost of matching is "<<d1.normfinalCost();
   d1.match();
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   m->euc_       = d1.transformed_euclidean_distance();
   m->mapping_   = d1.alignment;
@@ -150,8 +150,8 @@ double curveMatch(dbctrk_curve_description *  c1,
   return d1.normfinalCost();
 }
 inline
-double curveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
-                  vcl_vector<vgl_point_2d<double> > v2, //!< in
+double curveMatch(std::vector<vgl_point_2d<double> > v1, //!< in
+                  std::vector<vgl_point_2d<double> > v2, //!< in
                   match_data_sptr  m,vgl_point_2d<double>  & e,int alpha=1,int beta=1,int gamma=1)                           //!< out
 {
 #if 0 // these variables are not used
@@ -176,8 +176,8 @@ double curveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   m->euc_ = d1.transformed_euclidean_distance();
@@ -191,14 +191,14 @@ double curveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
 }
 inline
 double FcurveMatch(double &euc_dist,                        //!< out
-                  vcl_vector<vcl_pair<double,double> > v1, //!< in
-                  vcl_vector<vcl_pair<double,double> > v2, //!< in
-                  vcl_map<int,int> & mapping,              //!< out
+                  std::vector<std::pair<double,double> > v1, //!< in
+                  std::vector<std::pair<double,double> > v2, //!< in
+                  std::map<int,int> & mapping,              //!< out
                   vnl_matrix <double> & R_,                //!< out
                   vnl_matrix <double> & T_,                //!< out
                   vnl_matrix <double> & Tbar,              //!< out
-                  vcl_vector<int> &tail1,
-                  vcl_vector<int> &tail2,
+                  std::vector<int> &tail1,
+                  std::vector<int> &tail2,
                   double &scale,FMatrix F)                           //!< out
 {
 #if 0 // these variables are not used
@@ -226,8 +226,8 @@ double FcurveMatch(double &euc_dist,                        //!< out
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   //euc_dist = d1.transformed_euclidean_distance();
@@ -241,7 +241,7 @@ double FcurveMatch(double &euc_dist,                        //!< out
 }
 
 inline
-double computesplicecost(vcl_vector<vgl_point_2d<double> > v)                           //!< out
+double computesplicecost(std::vector<vgl_point_2d<double> > v)                           //!< out
 {
   #if 0 // these variables are not used
     double lambda1=1.0;
@@ -251,9 +251,9 @@ double computesplicecost(vcl_vector<vgl_point_2d<double> > v)                   
     int localize=0;
     bool endPointMatch=false;
   #endif // 0
-   vcl_vector<vcl_pair<double,double> > points;
+   std::vector<std::pair<double,double> > points;
    for(unsigned int i=0;i<v.size();i++)
-    points.push_back(vcl_make_pair(v[i].x(),v[i].y()));
+    points.push_back(std::make_pair(v[i].x(),v[i].y()));
   Curve c1; c1.readDataFromVector(points);
 
  
@@ -261,9 +261,9 @@ double computesplicecost(vcl_vector<vgl_point_2d<double> > v)                   
   return d1.SpliceCost(c1);
 }
 inline
-double tempcurveMatch(vcl_vector<vcl_pair<double,double> > v1, //!< in
-            vcl_vector<vcl_pair<double,double> > v2, //!< in
-            vcl_map<int,int> & mapping,              //!< out
+double tempcurveMatch(std::vector<std::pair<double,double> > v1, //!< in
+            std::vector<std::pair<double,double> > v2, //!< in
+            std::map<int,int> & mapping,              //!< out
             vnl_matrix <double> & R_,                //!< out
                       vnl_matrix <double> & Tbar,              //!< out
                       double &scale,vgl_point_2d<double>  & e,
@@ -277,12 +277,12 @@ double tempcurveMatch(vcl_vector<vcl_pair<double,double> > v1, //!< in
   int localize=0;
 #endif // 0
 
-  vcl_vector<int> tail1;
-  vcl_vector<int> tail2;
+  std::vector<int> tail1;
+  std::vector<int> tail2;
   bool endPointMatch=false;
 
 
- // vcl_cout<<"\n size of input curve is "<<v1.size()<<"\t"<<v2.size();
+ // std::cout<<"\n size of input curve is "<<v1.size()<<"\t"<<v2.size();
   Curve c1; c1.readDataFromVector(v1);
   Curve c2; c2.readDataFromVector(v2);
 
@@ -301,8 +301,8 @@ double tempcurveMatch(vcl_vector<vcl_pair<double,double> > v1, //!< in
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   //double euc_dist = d1.transformed_euclidean_distance();
@@ -316,9 +316,9 @@ double tempcurveMatch(vcl_vector<vcl_pair<double,double> > v1, //!< in
 
 
 inline
-double tempcurveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
-            vcl_vector<vgl_point_2d<double> > v2, //!< in
-            vcl_map<int,int> & mapping,              //!< out
+double tempcurveMatch(std::vector<vgl_point_2d<double> > v1, //!< in
+            std::vector<vgl_point_2d<double> > v2, //!< in
+            std::map<int,int> & mapping,              //!< out
             vnl_matrix <double> & R_,                //!< out
                       vnl_matrix <double> & Tbar,              //!< out
                       double &scale,vgl_point_2d<double>  & e,
@@ -332,12 +332,12 @@ double tempcurveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
   int localize=0;
 #endif // 0
 
-  vcl_vector<int> tail1;
-  vcl_vector<int> tail2;
+  std::vector<int> tail1;
+  std::vector<int> tail2;
   bool endPointMatch=false;
 
 
- // vcl_cout<<"\n size of input curve is "<<v1.size()<<"\t"<<v2.size();
+ // std::cout<<"\n size of input curve is "<<v1.size()<<"\t"<<v2.size();
   Curve c1; c1.readDataFromVector(v1);
   Curve c2; c2.readDataFromVector(v2);
 
@@ -354,8 +354,8 @@ double tempcurveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   //double euc_dist = d1.transformed_euclidean_distance();
@@ -364,14 +364,14 @@ double tempcurveMatch(vcl_vector<vgl_point_2d<double> > v1, //!< in
   d1.detect_tail(tail1,tail2);
   Tbar     = d1.Tbar;
   scale    = d1.scale;
-  //vcl_cout<<"\n"<<d1.normfinalCost();
+  //std::cout<<"\n"<<d1.normfinalCost();
   return d1.normfinalCost();
 }
 
 inline
 double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
                    dbctrk_tracker_curve_sptr dbctrk2, //!< in
-                   vcl_map<int,int> & mapping,              
+                   std::map<int,int> & mapping,              
                    vnl_matrix <double> & R_,                
                    vnl_matrix <double> & Tbar,              
                    double &scale,
@@ -380,8 +380,8 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
                    bool onesided,bool reverse,int L)                         
 {
 
-  vcl_vector<int> tail1;
-  vcl_vector<int> tail2;
+  std::vector<int> tail1;
+  std::vector<int> tail2;
   bool endPointMatch=false;
   Curve c1; 
   Curve c2; 
@@ -414,9 +414,9 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
  /* if(reverse)
   {
     for(int i=0;i<d1.I1pos.size();i++)
-        vcl_reverse(d1.I1pos[i].begin(),d1.I1pos[i].end());
+        std::reverse(d1.I1pos[i].begin(),d1.I1pos[i].end());
     for(int i=0;i<d1.I1neg.size();i++)
-        vcl_reverse(d1.I1neg[i].begin(),d1.I1neg[i].end());
+        std::reverse(d1.I1neg[i].begin(),d1.I1neg[i].end());
     
     
   }*/
@@ -432,14 +432,14 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
 
   if(!onesided)
     {
-      vcl_cout<<"\n normal match";
+      std::cout<<"\n normal match";
   if (endPointMatch)
     d1.endPointMatch();
   else
     d1.match();
 
-  vcl_vector< vcl_pair <int,int> > fmap = d1.finalMap();
-  vcl_vector <double> fmapCost = d1.finalMapCost();
+  std::vector< std::pair <int,int> > fmap = d1.finalMap();
+  std::vector <double> fmapCost = d1.finalMapCost();
   
   //transformed and then computed euclidean distance
   //double euc_dist = d1.transformed_euclidean_distance();
@@ -462,7 +462,7 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
   
   //transformed and then computed euclidean distance
       
-  vcl_map<int,int> mapping1  = d1.alignment;
+  std::map<int,int> mapping1  = d1.alignment;
   vnl_matrix<double> R1_       = d1.R;
   d1.detect_tail(tail1,tail2);
   vnl_matrix<double> Tbar1     = d1.Tbar;
@@ -471,7 +471,7 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
 
   d1.neg=1;
   d1.pos=0;
-  vcl_map<int,int> mapping2  = d1.alignment;
+  std::map<int,int> mapping2  = d1.alignment;
   vnl_matrix<double> R2_       = d1.R;
   d1.detect_tail(tail1,tail2);
   vnl_matrix<double> Tbar2     = d1.Tbar;
@@ -483,7 +483,7 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
       R_=R1_;
       Tbar=Tbar1;
       scale=scale1;
-      vcl_cout<<"\n Positive side";
+      std::cout<<"\n Positive side";
       return cost1;
     }
   else
@@ -492,7 +492,7 @@ double IcurveMatch(dbctrk_tracker_curve_sptr dbctrk1, //!< in
       R_=R2_;
       Tbar=Tbar2;
       scale=scale2;
-      vcl_cout<<"\n Negative side";
+      std::cout<<"\n Negative side";
 
       return cost2;
     }

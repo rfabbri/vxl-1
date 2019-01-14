@@ -7,7 +7,7 @@
 #include <borld/borld_image_description.h>
 #include <borld/borld_image_polygon_description.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 MAIN_ARGS(test_evaluation)
 {
@@ -33,7 +33,7 @@ MAIN_ARGS(test_evaluation)
   es->increment_TN();
 
   TEST("test all_done() ", es->all_done(), true);
-  vcl_cout << "es statistics:\n";
+  std::cout << "es statistics:\n";
   es->print_stats();
 
   TEST_NEAR("test TPR() ", es->TPR(), 3.0f/5.0f, 0.001);
@@ -81,7 +81,7 @@ MAIN_ARGS(test_evaluation)
   borld_evaluation_evaluate_detection(*es2, gt_box, det_box, t); // FN
 
   TEST("test all_done() ", es2->all_done(), true);
-  vcl_cout << "es2 statistics:\n";
+  std::cout << "es2 statistics:\n";
   es2->print_stats();
 
   TEST_NEAR("test es2 TPR() ", es2->TPR(), es->TPR(), 0.001);  
@@ -104,7 +104,7 @@ MAIN_ARGS(test_evaluation)
   parser.clear();
   borld_image_description_sptr model_desc = borld_image_description_parse("bonefishes.xml", parser);
   
-  vcl_vector<vsol_polygon_2d_sptr>& polys = query_desc1->category_data_->cast_to_image_polygon_description()->get_polygon_vector("fish");
+  std::vector<vsol_polygon_2d_sptr>& polys = query_desc1->category_data_->cast_to_image_polygon_description()->get_polygon_vector("fish");
   TEST("test polys ", polys.size(), 1);
   polys[0]->compute_bounding_box();
   vsol_box_2d_sptr query_box = polys[0]->get_bounding_box();

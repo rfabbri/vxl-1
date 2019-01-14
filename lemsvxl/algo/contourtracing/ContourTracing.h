@@ -4,7 +4,7 @@
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 /*
 class ContourPoint
@@ -72,7 +72,7 @@ protected:
   int nPoints_;
 //  ContourPoint* PointsListHead_;
 
-  vcl_vector<vsol_point_2d_sptr> points_;
+  std::vector<vsol_point_2d_sptr> points_;
 
   char input_file_name[1024];
 
@@ -97,7 +97,7 @@ public:
   }
 
   void setSigma (float new_sigma) {sigma_ = new_sigma;}
-  void setImageFileName (vcl_string name) {strcpy(input_file_name, name.c_str());}
+  void setImageFileName (std::string name) {strcpy(input_file_name, name.c_str());}
   void setImage (vil_image_resource_sptr new_image) {image_ = new_image;}
   int nPoints() {return nPoints_;}
 
@@ -106,5 +106,5 @@ public:
 
 //  ContourPoint* PointsListHead (void) {return PointsListHead_;}
 
-  vcl_vector<vsol_point_2d_sptr>& getResult (void);
+  std::vector<vsol_point_2d_sptr>& getResult (void);
 };

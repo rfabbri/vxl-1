@@ -23,10 +23,10 @@
 //
 //#include <vbl/vbl_ref_count.h>
 //#include <vnl/vnl_vector.h>
-//#include <vcl_iostream.h>
-//#include <vcl_string.h>
-//#include <vcl_vector.h>
-//#include <vcl_map.h>
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <map>
 //
 
 
@@ -166,7 +166,7 @@ public:
 //  // I/O -----------------------------------------------------------------------
 //
 //  //: write info of the dbskbranch to an output stream
-//  virtual vcl_ostream& print(vcl_ostream & os){return os; };
+//  virtual std::ostream& print(std::ostream & os){return os; };
 //
 //protected:
 //

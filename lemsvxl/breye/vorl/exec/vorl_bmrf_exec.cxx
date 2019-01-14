@@ -23,8 +23,8 @@
 #include <vnl/algo/vnl_qr.h>
 #include <vnl/vnl_det.h>
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 
 //: decompose the camera into internal and external params
@@ -71,7 +71,7 @@ decompose_camera( const vnl_double_3x4& camera,
       internal(j,i) = diag[i] * R(2-i,2-j);
       rotation(j,i) = diag[j] * Q(2-i,2-j);
     }
-  vcl_cout << internal << vcl_endl;
+  std::cout << internal << std::endl;
   // Compute t' = inv(C) t
   vnl_double_3 t;
   for (int i = 0; i < 3; ++i)
@@ -102,14 +102,14 @@ decompose_camera( const vnl_double_3x4& camera,
 
 
 //: Write the header info to a VRML file
-void write_vrml_header(vcl_ofstream& str)
+void write_vrml_header(std::ofstream& str)
 {
   str << "#VRML V2.0 utf8\n\n";
 }
 
 //: Write the cameras to the VRML file
-void write_vrml_cameras( vcl_ofstream& str,
-                         const vcl_vector<vnl_double_3x4>& cameras )
+void write_vrml_cameras( std::ofstream& str,
+                         const std::vector<vnl_double_3x4>& cameras )
 {
   for(unsigned int i=0; i<cameras.size(); ++i){
     vnl_double_3x3 K, R;
@@ -122,7 +122,7 @@ void write_vrml_cameras( vcl_ofstream& str,
     if(vnl_det(R) < 0)
       R.scale_row(1,-1);
     vnl_quaternion<double> ornt(R);
-    double fov = vcl_max(vcl_atan(K[1][2]/K[1][1]), vcl_atan(K[0][2]/K[0][0]));
+    double fov = std::max(std::atan(K[1][2]/K[1][1]), std::atan(K[0][2]/K[0][0]));
     str << "Viewpoint {\n"
         << "  position    "<< ctr[0] << ' ' << ctr[1] << ' ' << ctr[2] << '\n'
         << "  orientation "<< ornt.axis() << ' '<< ornt.angle() << '\n'
@@ -134,7 +134,7 @@ void write_vrml_cameras( vcl_ofstream& str,
 
 
 //: Write a curve to the VRML file
-void write_vrml_bbox( vcl_ofstream& str,
+void write_vrml_bbox( std::ofstream& str,
                       const vnl_double_4x4& bbox_xform )
 {
   str << "DEF BoundingBox Shape {\n"
@@ -163,7 +163,7 @@ void write_vrml_bbox( vcl_ofstream& str,
 
 
 //: Write a curve to the VRML file
-void write_vrml_curve( vcl_ofstream& str,
+void write_vrml_curve( std::ofstream& str,
                        const bmrf_curve_3d_sptr& curve )
 {
   str << "Shape {\n"
@@ -191,10 +191,10 @@ void write_vrml_curve( vcl_ofstream& str,
 
 
 //: Write a set of curves to the VRML file
-void write_vrml_curve_set( vcl_ofstream& str,
-                           const vcl_set<bmrf_curve_3d_sptr>& curves )
+void write_vrml_curve_set( std::ofstream& str,
+                           const std::set<bmrf_curve_3d_sptr>& curves )
 {
-  for ( vcl_set<bmrf_curve_3d_sptr>::const_iterator itr = curves.begin();
+  for ( std::set<bmrf_curve_3d_sptr>::const_iterator itr = curves.begin();
         itr != curves.end();  ++itr )
   {
     write_vrml_curve(str, *itr);
@@ -216,26 +216,26 @@ int main(int argc, char** argv)
 
   // Make each process and add them to the list of program args
   bpro_process_sptr edge_detector(new vidpro_VD_edge_process());
-  edge_detector->set_input_names(vcl_vector<vcl_string>(1,"video"));
-  edge_detector->set_output_names(vcl_vector<vcl_string>(1,"edges"));
+  edge_detector->set_input_names(std::vector<std::string>(1,"video"));
+  edge_detector->set_output_names(std::vector<std::string>(1,"edges"));
   vorl_manager::instance()->add_process_to_args(edge_detector);
 
   bpro_process_sptr network_builder(new dbmrf_network_builder_process());
-  vcl_vector<vcl_string> network_input_names;
+  std::vector<std::string> network_input_names;
   network_input_names.push_back("video");
   network_input_names.push_back("edges");
   network_builder->set_input_names(network_input_names);
-  network_builder->set_output_names(vcl_vector<vcl_string>(1,"network"));
+  network_builder->set_output_names(std::vector<std::string>(1,"network"));
   vorl_manager::instance()->add_process_to_args(network_builder);
 
   bpro_process_sptr curve_reconstructor(new dbmrf_curve_3d_builder_process());
-  curve_reconstructor->set_input_names(vcl_vector<vcl_string>(1,"network"));
-  curve_reconstructor->set_output_names(vcl_vector<vcl_string>(1,"curves3D"));
+  curve_reconstructor->set_input_names(std::vector<std::string>(1,"network"));
+  curve_reconstructor->set_output_names(std::vector<std::string>(1,"curves3D"));
   vorl_manager::instance()->add_process_to_args(curve_reconstructor);
 
   bpro_process_sptr curve_projector(new dbmrf_curve_projector_process());
-  curve_projector->set_input_names(vcl_vector<vcl_string>(1,"curves3D"));
-  curve_projector->set_output_names(vcl_vector<vcl_string>(1,"curves2D"));
+  curve_projector->set_input_names(std::vector<std::string>(1,"curves3D"));
+  curve_projector->set_output_names(std::vector<std::string>(1,"curves2D"));
   vorl_manager::instance()->add_process_to_args(curve_projector);
 
   //===========================================================
@@ -250,7 +250,7 @@ int main(int argc, char** argv)
   if(epu == 0.0f && epv == 0.0f){
     bpro_filepath camera_path;
     curve_reconstructor->parameters()->get_value("-camera", camera_path);
-    vcl_ifstream fp(camera_path.path.c_str());
+    std::ifstream fp(camera_path.path.c_str());
     if(fp.is_open()){
       vnl_double_3x4 C;
       fp >> C;
@@ -300,15 +300,15 @@ int main(int argc, char** argv)
   dbmrf_curvel_3d_storage_sptr curvel_storage;
   curvel_storage.vertical_cast(result);
  
-  vcl_set< bmrf_curve_3d_sptr > curves;
+  std::set< bmrf_curve_3d_sptr > curves;
   curvel_storage->get_curvel_3d( curves );
   vnl_double_4x4 bbox_xform = curvel_storage->bb_xform();
-  vcl_vector<vnl_double_3x4> cameras;
+  std::vector<vnl_double_3x4> cameras;
 
   // Write out the bounding box file
   vorl_manager::instance()->rewind();
-  vcl_string out_dir = vorl_manager::instance()->get_output_dir();
-  vcl_ofstream bbout(vcl_string(out_dir+"/bbox_cam.txt").c_str());
+  std::string out_dir = vorl_manager::instance()->get_output_dir();
+  std::ofstream bbout(std::string(out_dir+"/bbox_cam.txt").c_str());
   bbout << "Bounding Box Transform\n" << bbox_xform << '\n';
   do {
     result = rep->get_data_by_name("curves3D");
@@ -320,8 +320,8 @@ int main(int argc, char** argv)
   bbout.close();
   
   // Create VRML output
-  vcl_string vrml_file = vorl_manager::instance()->get_output_vrml_dir() + "/model.wrl";
-  vcl_ofstream vrml(vrml_file.c_str());
+  std::string vrml_file = vorl_manager::instance()->get_output_vrml_dir() + "/model.wrl";
+  std::ofstream vrml(vrml_file.c_str());
   write_vrml_header(vrml);
   write_vrml_cameras(vrml, cameras);
   write_vrml_bbox(vrml, bbox_xform);
@@ -329,12 +329,12 @@ int main(int argc, char** argv)
   vrml.close();
 
   // Save part of the repository
-  vcl_set<vcl_string> names;
+  std::set<std::string> names;
   names.insert("network");
   names.insert("curves3D");
   names.insert("curves2D");
-  vcl_string output_dir = vorl_manager::instance()->get_output_dir();
-  vcl_string binfile=output_dir+"/bin.rep";
+  std::string output_dir = vorl_manager::instance()->get_output_dir();
+  std::string binfile=output_dir+"/bin.rep";
   vorl_manager::instance()->save_repository(binfile, names);
 
   return 0; 

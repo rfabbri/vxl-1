@@ -13,7 +13,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class breg3d_init_ekf_camera_optimizer_planar_process : public bprb_process
@@ -30,7 +30,7 @@ class breg3d_init_ekf_camera_optimizer_planar_process : public bprb_process
   //: Clone the process
   virtual breg3d_init_ekf_camera_optimizer_planar_process* clone() const {return new breg3d_init_ekf_camera_optimizer_planar_process(*this);}
 
-  vcl_string name(){return "breg3dInitEkfCameraOptimizerPlanar";}
+  std::string name(){return "breg3dInitEkfCameraOptimizerPlanar";}
 
   bool init() { return true; }
   bool execute();

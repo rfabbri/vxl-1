@@ -15,7 +15,7 @@
 #include <bof/bof_codebook.h>
 #include <dbcll/dbcll_euclidean_cluster.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 //:global variables
 namespace bof_combine_cluster_info_process_globals 
@@ -30,14 +30,14 @@ bool bof_combine_cluster_info_process_cons(bprb_func_process& pro)
 {
   using namespace bof_combine_cluster_info_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //suffix of info files to combine
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //suffix of info files to combine
   input_types_[1] = "unsigned"; //number of info files to combine
   input_types_[2] = "unsigned"; //number of means 
-  input_types_[3] = "vcl_string"; //info file out
+  input_types_[3] = vcl_string"; //info file out
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
  
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -50,23 +50,23 @@ bool bof_combine_cluster_info_process(bprb_func_process& pro)
   using namespace bof_combine_cluster_info_process_globals;
   
   //get inputs
-  vcl_string sfx = pro.get_input<vcl_string>(0);
+  std::string sfx = pro.get_input<std::string>(0);
   unsigned n_files = pro.get_input<unsigned>(1);  
   unsigned k = pro.get_input<unsigned>(2);  
-  vcl_string info_file_out = pro.get_input<vcl_string>(3);
+  std::string info_file_out = pro.get_input<std::string>(3);
 
-  vcl_vector<unsigned> sizes(k,0);
-  vcl_vector<double> sse_v(k,0.0);
+  std::vector<unsigned> sizes(k,0);
+  std::vector<double> sse_v(k,0.0);
   
   for (unsigned fi = 0; fi < n_files; fi++) {
     
     //read info file
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << sfx << fi << "_info.xml";
     
-    vcl_ifstream ifs(ss.str().c_str());
+    std::ifstream ifs(ss.str().c_str());
     if(!ifs.is_open()){
-      vcl_cerr << "Error: Could not open file: " << ss.str() <<  "\n";
+      std::cerr << "Error: Could not open file: " << ss.str() <<  "\n";
       return false;
     }
     
@@ -74,15 +74,15 @@ bool bof_combine_cluster_info_process(bprb_func_process& pro)
     bxml_element query("dbcll_clusters");
     bxml_data_sptr root = bxml_find_by_name(doc.root_element(), query);
     if (!root) {
-      vcl_cerr << "Error: bof_info - could not parse xml root\n";
+      std::cerr << "Error: bof_info - could not parse xml root\n";
       return false;
     }
 
     bxml_element cluster_query("cluster");
-    vcl_vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
+    std::vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
     
     if(clusters_data.size()!=k){
-      vcl_cerr << "Wrong number of clusters in xml file \n";
+      std::cerr << "Wrong number of clusters in xml file \n";
       return false;
     }
     

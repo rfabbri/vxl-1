@@ -27,12 +27,12 @@ bool pcl_convert_id_to_rgb_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_convert_id_to_rgb_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //id cloud path
-  input_types_[1] = "vcl_string"; //rgb cloud path
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //id cloud path
+  input_types_[1] = vcl_string"; //rgb cloud path
   input_types_[2] = "unsigned";
 
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -45,17 +45,17 @@ bool pcl_convert_id_to_rgb_process(bprb_func_process& pro)
   using namespace pcl;
   
   //get inputs
-  vcl_string id_cloud_pcd_file = pro.get_input<vcl_string>(0);
-  vcl_string rgb_pcd_file = pro.get_input<vcl_string>(1);
+  std::string id_cloud_pcd_file = pro.get_input<std::string>(0);
+  std::string rgb_pcd_file = pro.get_input<std::string>(1);
   unsigned nmeans = pro.get_input<unsigned>(2);
 
   //read the id_cloud
-  vcl_cout << "Loading: " << id_cloud_pcd_file <<vcl_endl;
+  std::cout << "Loading: " << id_cloud_pcd_file <<std::endl;
   PointCloud<dbrec3d_pcl_point_types::PointClassId>::Ptr class_id_cloud(new PointCloud<dbrec3d_pcl_point_types::PointClassId>);
   if (pcl::io::loadPCDFile (id_cloud_pcd_file, *class_id_cloud) < 0)
     return (false);
-  vcl_cout << " Done:" <<  class_id_cloud->width * class_id_cloud->height << " points\n";
-  vcl_cout << "Available dimensions: " << getFieldsList(*class_id_cloud).c_str ();
+  std::cout << " Done:" <<  class_id_cloud->width * class_id_cloud->height << " points\n";
+  std::cout << "Available dimensions: " << getFieldsList(*class_id_cloud).c_str ();
   
   //creat an rgb cloud for visualization purposes
   PointCloud<PointXYZRGB>::Ptr rgb_cloud(new PointCloud<PointXYZRGB>);

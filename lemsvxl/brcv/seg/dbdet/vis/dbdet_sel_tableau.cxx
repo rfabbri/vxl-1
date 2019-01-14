@@ -3,10 +3,10 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <limits>
 
 #include <gl2ps/gl2ps.h>
 
@@ -134,13 +134,13 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     // II) Display info about the selected edgel
     if (cur_edgel){
       //vgl_point_2d<double> pt = cur_edgel->pt;
-      //vcl_cout << "Closest edgel: " << pt << vcl_endl;
+      //std::cout << "Closest edgel: " << pt << std::endl;
 
       print_edgel_stats(cur_edgel);
       post_overlay_redraw(); //for drawing the curvelets
     }
     //else
-    //  vcl_cout << "No closest edgel\n";
+    //  std::cout << "No closest edgel\n";
   }
 
   //Query 2: select a link
@@ -165,7 +165,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
     // I) Find edgel closest to ix,iy
     cur_edgel = find_closest_edgel(ix, iy);
-    vcl_cout << "Found edgel: " << cur_edgel << vcl_endl;
+    std::cout << "Found edgel: " << cur_edgel << std::endl;
     if (cur_edgel) {
       dbdet_edgel_chain* found = 0;
       bool valid = false;
@@ -173,7 +173,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
         for (int i = 0; i < (*it)->edgels.size(); ++i) {
            if ((*it)->edgels[i]->id == cur_edgel->id) {
              found = (*it);
-             vcl_cout << "Chain found: edgel[" << i << "]  -> (0, " << (*it)->edgels.size() -1 << ")\n";
+             std::cout << "Chain found: edgel[" << i << "]  -> (0, " << (*it)->edgels.size() -1 << ")\n";
              if (i > 0 && i < (*it)->edgels.size() - 1) {
                 valid = true;
              }
@@ -183,7 +183,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
         if (valid) break;
       }
       if (found) {
-        vcl_cout << "Found chain: " << found << vcl_endl;
+        std::cout << "Found chain: " << found << std::endl;
         if (chain_a) {
           chain_b = found;
         } else {
@@ -199,7 +199,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     chain_a = chain_b = 0;
     cur_edgel = 0;
     cur_link = 0;
-    vcl_cout << "Chain deseleted: " << chain_a << ", " << chain_b << vcl_endl;
+    std::cout << "Chain deseleted: " << chain_a << ", " << chain_b << std::endl;
     post_redraw();
   }
 
@@ -210,7 +210,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
         if (*it == chain_a) {
           CFG_.frags.erase(it);
-          vcl_cout << "Chain deleted: " << chain_a << vcl_endl;
+          std::cout << "Chain deleted: " << chain_a << std::endl;
           break;
         }
       }
@@ -219,7 +219,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       cur_link = 0;
       post_redraw();
     } else {
-      vcl_cout << "2 Chains selected -> deselected" << chain_a << vcl_endl;
+      std::cout << "2 Chains selected -> deselected" << chain_a << std::endl;
       chain_a = chain_b = 0;
       cur_edgel = 0;
       cur_link = 0;
@@ -236,7 +236,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       new_chain->edgels = dbdet_edgel_list(chain_a->edgels.begin() + i, chain_a->edgels.end());
       chain_a->edgels = dbdet_edgel_list(chain_a->edgels.begin(), chain_a->edgels.begin() + i + 1);
       CFG_.frags.push_back(new_chain);
-      vcl_cout << "Chain splitted: " << chain_a << " -> " << new_chain << vcl_endl;
+      std::cout << "Chain splitted: " << chain_a << " -> " << new_chain << std::endl;
       chain_a = chain_b = 0;
       cur_edgel = 0;
       cur_link = 0;
@@ -256,12 +256,12 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     b_front = chain_b->edgels.front();
     b_back = chain_b->edgels.back();
 
-    vcl_cout << "Points A: " << a_front->pt << ", " << a_back->pt << vcl_endl;
-    vcl_cout << "Points B: " << b_front->pt << ", " << b_back->pt << vcl_endl;
+    std::cout << "Points A: " << a_front->pt << ", " << a_back->pt << std::endl;
+    std::cout << "Points B: " << b_front->pt << ", " << b_back->pt << std::endl;
 
     //Case 0: --> a --> e --> b --> 
     min = vgl_distance(a_back->pt, b_front->pt);
-    vcl_cout << "--> a --> e --> b -->: dist:" << min << vcl_endl; 
+    std::cout << "--> a --> e --> b -->: dist:" << min << std::endl; 
     
     //Case 1: --> a --> e <-- b <--
     dist = vgl_distance(a_back->pt, b_back->pt);
@@ -269,23 +269,23 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       min = dist;
       state=1;
     }
-    vcl_cout << "--> a --> e <-- b <--: dist:" << dist << vcl_endl;
+    std::cout << "--> a --> e <-- b <--: dist:" << dist << std::endl;
     //Case 2: <-- a <-- e <-- b <--
     dist = vgl_distance(a_front->pt, b_back->pt);
     if (dist < min) {
       min = dist;
       state=2;
     }
-    vcl_cout << "<-- a <-- e <-- b <--: dist:" << dist << vcl_endl;
+    std::cout << "<-- a <-- e <-- b <--: dist:" << dist << std::endl;
     // <-- a <-- e --> b -->
     dist = vgl_distance(a_front->pt, b_front->pt);
     if (dist < min) {
       min = dist;
       state=3;
     }
-    vcl_cout << "<-- a <-- e --> b -->: dist:" << dist << vcl_endl;
+    std::cout << "<-- a <-- e --> b -->: dist:" << dist << std::endl;
 
-    vcl_cout << "Case: " << state << vcl_endl;
+    std::cout << "Case: " << state << std::endl;
     if (min < 3.0) {
       switch (state) {
         case 0:
@@ -305,13 +305,13 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
           break; 
       }
 
-      vcl_cout << "------------------------------------------------\n"; 
+      std::cout << "------------------------------------------------\n"; 
       for(int i = 0; i < chain_a->edgels.size(); ++i) {
-         vcl_cout << chain_a->edgels[i]->pt << "\n";
+         std::cout << chain_a->edgels[i]->pt << "\n";
       }
-      vcl_cout << "------------------------------------------------\n";
+      std::cout << "------------------------------------------------\n";
 
-      vcl_cout << "Chains merged: " << chain_a << ", " << chain_b << vcl_endl;
+      std::cout << "Chains merged: " << chain_a << ", " << chain_b << std::endl;
       for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
         if (*it == chain_b) {
           CFG_.frags.erase(it);
@@ -321,7 +321,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       chain_b = chain_a = 0;
       post_redraw();
     } else {
-      vcl_cout << "Cannot merge: " << chain_a << ", " << chain_b << ", distance > 3.0" << vcl_endl;
+      std::cout << "Cannot merge: " << chain_a << ", " << chain_b << ", distance > 3.0" << std::endl;
     }
   }
 
@@ -342,7 +342,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     if (cur_edgel && CM_.is_valid())
     {
       //display all the groupings of the current edgel
-      vcl_list<dbdet_curvelet* >::iterator cv_it = CM_.curvelets(cur_edgel->id).begin();
+      std::list<dbdet_curvelet* >::iterator cv_it = CM_.curvelets(cur_edgel->id).begin();
       for ( ; cv_it!=CM_.curvelets(cur_edgel->id).end(); cv_it++)
       {
         if (draw_anchored_only_ && (*cv_it)->ref_edgel != cur_edgel) continue;
@@ -402,7 +402,7 @@ dbdet_edgel* dbdet_sel_tableau::find_closest_edgel(float ix, float iy)
   unsigned row_cell = (unsigned)iy;
   unsigned col_cell = (unsigned)ix;
 
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   unsigned jcell_min = 0, icell_min = 0;
   unsigned imin = 0;
 
@@ -426,7 +426,7 @@ dbdet_edgel* dbdet_sel_tableau::find_closest_edgel(float ix, float iy)
     }
   }
 
-  if (dmin == vcl_numeric_limits<double>::infinity())
+  if (dmin == std::numeric_limits<double>::infinity())
     return 0;
   else
     return EM_->edge_cells[icell_min][jcell_min][imin];
@@ -434,16 +434,16 @@ dbdet_edgel* dbdet_sel_tableau::find_closest_edgel(float ix, float iy)
 
 double distPL(double px, double py, vgl_point_2d<double> p1, vgl_point_2d<double> p2)
 {
-  double l = vcl_sqrt((p2.y()-p1.y())*(p2.y()-p1.y()) + 
+  double l = std::sqrt((p2.y()-p1.y())*(p2.y()-p1.y()) + 
                       (p2.x()-p1.x())*(p2.x()-p1.x()));
 
   double t = ((py-p1.y())*(p2.y()-p1.y()) + 
               (px-p1.x())*(p2.x()-p1.x()));
 
   if (t<0 || t>l)
-    return vcl_numeric_limits<double>::infinity();
+    return std::numeric_limits<double>::infinity();
   else
-    return vcl_fabs((py-p1.y())*(p2.x()-p1.x()) - 
+    return std::fabs((py-p1.y())*(p2.x()-p1.x()) - 
                     (px-p1.x())*(p2.y()-p1.y()))/l;
 }
 
@@ -456,7 +456,7 @@ dbdet_link* dbdet_sel_tableau::find_closest_link(float ix, float iy)
     return 0;
 
   // 2) Now go over its links to find the closest one
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   dbdet_link* closest_link = 0;
 
   if (ELG_.cLinks.size()==0)
@@ -481,7 +481,7 @@ dbdet_link* dbdet_sel_tableau::find_closest_link(float ix, float iy)
     }
   }
 
-  if (dmin == vcl_numeric_limits<double>::infinity()) {
+  if (dmin == std::numeric_limits<double>::infinity()) {
     return 0;
   } 
   else {
@@ -545,15 +545,15 @@ void dbdet_sel_tableau::draw_selected_cvlet(dbdet_curvelet* cvlet)
       ////draw a circle of the same curvature
       //double kk = cm->k;
 
-      //double cx = cm->pt.x() + vcl_cos(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
-      //double cy = cm->pt.y() + vcl_sin(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
+      //double cx = cm->pt.x() + std::cos(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
+      //double cy = cm->pt.y() + std::sin(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
 
       //glColor3f( 0.0, 0.0, 0.0 );
       //glLineWidth (1.0);
       //glBegin( GL_LINE_STRIP );
       //for (unsigned j=0; j<=100; j++){
       //  double th = j*2*vnl_math::pi/100;
-      //  glVertex2f(cx+vcl_cos(th)/(kk+1e-9), cy+vcl_sin(th)/(kk+1e-9));
+      //  glVertex2f(cx+std::cos(th)/(kk+1e-9), cy+std::sin(th)/(kk+1e-9));
       //}
       //glEnd();
       
@@ -624,10 +624,10 @@ void dbdet_sel_tableau::draw_edgel_groupings()
           Lstd += (cvlet->edgel_chain[k]->left_app->value()-Lmean)*(cvlet->edgel_chain[k]->left_app->value()-Lmean);
           Rstd += (cvlet->edgel_chain[k]->right_app->value()-Rmean)*(cvlet->edgel_chain[k]->right_app->value()-Rmean);
         }
-        Lstd = vcl_sqrt(Lstd/cvlet->edgel_chain.size());
-        Rstd = vcl_sqrt(Rstd/cvlet->edgel_chain.size());
+        Lstd = std::sqrt(Lstd/cvlet->edgel_chain.size());
+        Rstd = std::sqrt(Rstd/cvlet->edgel_chain.size());
 
-        if (vcl_fabs(Lmean-Rmean)<app_threshold_*(Lstd+Rstd)) //saliency test
+        if (std::fabs(Lmean-Rmean)<app_threshold_*(Lstd+Rstd)) //saliency test
           continue;
       }
 
@@ -701,8 +701,8 @@ void dbdet_sel_tableau::draw_uncertainty_zone(dbdet_curvelet* cvlet, float r, fl
     for (int th=0; th<=20; th++){
       double theta = th*2*vnl_math::pi/20.0;
 
-      glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*vcl_cos(theta), 
-                 cvlet->edgel_chain[j]->pt.y() + dpos*vcl_sin(theta));
+      glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*std::cos(theta), 
+                 cvlet->edgel_chain[j]->pt.y() + dpos*std::sin(theta));
     }
     glEnd();
   }
@@ -715,16 +715,16 @@ void dbdet_sel_tableau::draw_uncertainty_zone(dbdet_curvelet* cvlet, float r, fl
   //  dbdet_edgel* e = cvlet->edgel_chain[j];
 
   //  glBegin( GL_LINE_STRIP );
-  //  glVertex2f(e->pt.x() + CM_.dpos_*-vcl_sin(e->tangent) + CM_.token_len_/2*vcl_cos(e->tangent), 
-  //             e->pt.y() + CM_.dpos_* vcl_cos(e->tangent) + CM_.token_len_/2*vcl_sin(e->tangent));
-  //  glVertex2f(e->pt.x() - CM_.dpos_*-vcl_sin(e->tangent) + CM_.token_len_/2*vcl_cos(e->tangent), 
-  //             e->pt.y() - CM_.dpos_* vcl_cos(e->tangent) + CM_.token_len_/2*vcl_sin(e->tangent));
-  //  glVertex2f(e->pt.x() - CM_.dpos_*-vcl_sin(e->tangent) - CM_.token_len_/2*vcl_cos(e->tangent), 
-  //             e->pt.y() - CM_.dpos_* vcl_cos(e->tangent) - CM_.token_len_/2*vcl_sin(e->tangent));
-  //  glVertex2f(e->pt.x() + CM_.dpos_*-vcl_sin(e->tangent) - CM_.token_len_/2*vcl_cos(e->tangent), 
-  //             e->pt.y() + CM_.dpos_* vcl_cos(e->tangent) - CM_.token_len_/2*vcl_sin(e->tangent));
-  //  glVertex2f(e->pt.x() + CM_.dpos_*-vcl_sin(e->tangent) + CM_.token_len_/2*vcl_cos(e->tangent), 
-  //             e->pt.y() + CM_.dpos_* vcl_cos(e->tangent) + CM_.token_len_/2*vcl_sin(e->tangent));
+  //  glVertex2f(e->pt.x() + CM_.dpos_*-std::sin(e->tangent) + CM_.token_len_/2*std::cos(e->tangent), 
+  //             e->pt.y() + CM_.dpos_* std::cos(e->tangent) + CM_.token_len_/2*std::sin(e->tangent));
+  //  glVertex2f(e->pt.x() - CM_.dpos_*-std::sin(e->tangent) + CM_.token_len_/2*std::cos(e->tangent), 
+  //             e->pt.y() - CM_.dpos_* std::cos(e->tangent) + CM_.token_len_/2*std::sin(e->tangent));
+  //  glVertex2f(e->pt.x() - CM_.dpos_*-std::sin(e->tangent) - CM_.token_len_/2*std::cos(e->tangent), 
+  //             e->pt.y() - CM_.dpos_* std::cos(e->tangent) - CM_.token_len_/2*std::sin(e->tangent));
+  //  glVertex2f(e->pt.x() + CM_.dpos_*-std::sin(e->tangent) - CM_.token_len_/2*std::cos(e->tangent), 
+  //             e->pt.y() + CM_.dpos_* std::cos(e->tangent) - CM_.token_len_/2*std::sin(e->tangent));
+  //  glVertex2f(e->pt.x() + CM_.dpos_*-std::sin(e->tangent) + CM_.token_len_/2*std::cos(e->tangent), 
+  //             e->pt.y() + CM_.dpos_* std::cos(e->tangent) + CM_.token_len_/2*std::sin(e->tangent));
   //  glEnd();
   //}
 
@@ -811,8 +811,8 @@ void dbdet_sel_tableau::draw_line_fit(dbdet_curvelet* cvlet, float r, float g, f
   glLineWidth (cvlet_line_width_);
   //gl2psLineWidth(line_width);
   glBegin(GL_LINES);
-    glVertex2f(cm->pt.x()-Lm*vcl_cos(cm->theta), cm->pt.y()-Lm*vcl_sin(cm->theta));
-    glVertex2f(cm->pt.x()+Lp*vcl_cos(cm->theta), cm->pt.y()+Lp*vcl_sin(cm->theta));
+    glVertex2f(cm->pt.x()-Lm*std::cos(cm->theta), cm->pt.y()-Lm*std::sin(cm->theta));
+    glVertex2f(cm->pt.x()+Lp*std::cos(cm->theta), cm->pt.y()+Lp*std::sin(cm->theta));
   glEnd();
 
 }
@@ -825,8 +825,8 @@ void dbdet_sel_tableau::draw_CC_fit(dbdet_curvelet* cvlet, float r, float g, flo
 
   //draw a circular arc
   double kk = cm->k;
-  double cx = cm->pt.x() + vcl_cos(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
-  double cy = cm->pt.y() + vcl_sin(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
+  double cx = cm->pt.x() + std::cos(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
+  double cy = cm->pt.y() + std::sin(cm->theta+vnl_math::pi_over_2)/(kk+1e-9);
 
   //length on the minus side
   double Lm = vgl_distance(cvlet->edgel_chain[0]->pt, cvlet->ref_edgel->pt);
@@ -838,7 +838,7 @@ void dbdet_sel_tableau::draw_CC_fit(dbdet_curvelet* cvlet, float r, float g, flo
   glBegin(GL_LINE_STRIP);
   for (double s=-Lm; s<0; s+=0.1){
     double th = cm->theta + s*kk;
-    glVertex2f(cx+vcl_cos(th-vnl_math::pi_over_2)/(kk+1e-9), cy+vcl_sin(th-vnl_math::pi_over_2)/(kk+1e-9));
+    glVertex2f(cx+std::cos(th-vnl_math::pi_over_2)/(kk+1e-9), cy+std::sin(th-vnl_math::pi_over_2)/(kk+1e-9));
   }
   glEnd();
 
@@ -851,7 +851,7 @@ void dbdet_sel_tableau::draw_CC_fit(dbdet_curvelet* cvlet, float r, float g, flo
   glBegin(GL_LINE_STRIP);
   for (double s=0; s<Lp; s+=0.1){
     double th = cm->theta + s*kk;
-    glVertex2f(cx+vcl_cos(th-vnl_math::pi_over_2)/(kk+1e-9), cy+vcl_sin(th-vnl_math::pi_over_2)/(kk+1e-9));
+    glVertex2f(cx+std::cos(th-vnl_math::pi_over_2)/(kk+1e-9), cy+std::sin(th-vnl_math::pi_over_2)/(kk+1e-9));
   }
   glEnd();
 
@@ -885,10 +885,10 @@ void dbdet_sel_tableau::draw_CC2_fit(dbdet_curvelet* cvlet, float r, float g, fl
   //gl2psLineWidth(3.0);
 
   if (forward){
-    if (vcl_fabs(kk)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(kk)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
-      glVertex2f(sx - Lm*vcl_cos(theta), sy - Lm*vcl_sin(theta));
-      glVertex2f(sx + Lp*vcl_cos(theta), sy + Lp*vcl_sin(theta));
+      glVertex2f(sx - Lm*std::cos(theta), sy - Lm*std::sin(theta));
+      glVertex2f(sx + Lp*std::cos(theta), sy + Lp*std::sin(theta));
       glEnd();
       return;
     }
@@ -896,16 +896,16 @@ void dbdet_sel_tableau::draw_CC2_fit(dbdet_curvelet* cvlet, float r, float g, fl
     glBegin(GL_LINE_STRIP);
     for (double s=-Lm; s<Lp; s+=0.1){
       double th = theta + s*kk;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/kk + vcl_cos(th-vnl_math::pi_over_2)/kk, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/kk + vcl_sin(th-vnl_math::pi_over_2)/kk );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/kk + std::cos(th-vnl_math::pi_over_2)/kk, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/kk + std::sin(th-vnl_math::pi_over_2)/kk );  
     }
     glEnd();
   }
   else {
-    if (vcl_fabs(kk)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(kk)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
-      glVertex2f(sx + Lm*vcl_cos(theta), sy + Lm*vcl_sin(theta));
-      glVertex2f(sx - Lp*vcl_cos(theta), sy - Lp*vcl_sin(theta));
+      glVertex2f(sx + Lm*std::cos(theta), sy + Lm*std::sin(theta));
+      glVertex2f(sx - Lp*std::cos(theta), sy - Lp*std::sin(theta));
       glEnd();
       return;
     }
@@ -913,8 +913,8 @@ void dbdet_sel_tableau::draw_CC2_fit(dbdet_curvelet* cvlet, float r, float g, fl
     glBegin(GL_LINE_STRIP);
     for (double s=Lm; s>-Lp; s-=0.1){
       double th = theta + s*kk;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/kk + vcl_cos(th-vnl_math::pi_over_2)/kk, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/kk + vcl_sin(th-vnl_math::pi_over_2)/kk );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/kk + std::cos(th-vnl_math::pi_over_2)/kk, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/kk + std::sin(th-vnl_math::pi_over_2)/kk );  
     }
     glEnd();
   }
@@ -930,10 +930,10 @@ void dbdet_sel_tableau::draw_CC(double sx, double sy, double theta, double k,
   //gl2psLineWidth(3.0);
 
   if (forward){
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
-      glVertex2f(sx - Lm*vcl_cos(theta), sy - Lm*vcl_sin(theta));
-      glVertex2f(sx + Lp*vcl_cos(theta), sy + Lp*vcl_sin(theta));
+      glVertex2f(sx - Lm*std::cos(theta), sy - Lm*std::sin(theta));
+      glVertex2f(sx + Lp*std::cos(theta), sy + Lp*std::sin(theta));
       glEnd();
       return;
     }
@@ -941,16 +941,16 @@ void dbdet_sel_tableau::draw_CC(double sx, double sy, double theta, double k,
     glBegin(GL_LINE_STRIP);
     for (double s=-Lm; s<Lp; s+=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
   else {
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
-      glVertex2f(sx + Lm*vcl_cos(theta), sy + Lm*vcl_sin(theta));
-      glVertex2f(sx - Lp*vcl_cos(theta), sy - Lp*vcl_sin(theta));
+      glVertex2f(sx + Lm*std::cos(theta), sy + Lm*std::sin(theta));
+      glVertex2f(sx - Lp*std::cos(theta), sy - Lp*std::sin(theta));
       glEnd();
       return;
     }
@@ -958,8 +958,8 @@ void dbdet_sel_tableau::draw_CC(double sx, double sy, double theta, double k,
     glBegin(GL_LINE_STRIP);
     for (double s=Lm; s>-Lp; s-=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
@@ -990,8 +990,8 @@ void dbdet_sel_tableau::draw_CC3d_fit(dbdet_curvelet* cvlet, float r, float g, f
 
         if (cm->Kmax(i,j)>cm->Kmin(i,j)){
           theta = dbdet_angle0To2Pi(cm->ref_theta + cm->Dt(j));
-          sx = cm->ref_pt.x() + cm->Dx(i)*-vcl_sin(theta);
-          sy = cm->ref_pt.y() + cm->Dx(i)*vcl_cos(theta);
+          sx = cm->ref_pt.x() + cm->Dx(i)*-std::sin(theta);
+          sy = cm->ref_pt.y() + cm->Dx(i)*std::cos(theta);
           
           //draw five samples from each k range
           for (int m=0; m<6; m++){
@@ -1052,7 +1052,7 @@ void dbdet_sel_tableau::draw_edgel_link_graph()
                                   {1.0000, 0.8000,      0},
                                   {1.0000, 0.4000,      0}};
 
-  vcl_vector<dbdet_edgel*>& edgels = EM_->edgels;
+  std::vector<dbdet_edgel*>& edgels = EM_->edgels;
   dbdet_edgel_link_graph& link_graph = ELG_;
 
   if (link_graph.cLinks.size()==0)
@@ -1121,8 +1121,8 @@ void dbdet_sel_tableau::draw_edgel_chains()
     float x1, y1, x2, y2;
     vgui_projection_inspector().image_to_window_coordinates(0, 0, x1, y1);
     vgui_projection_inspector().image_to_window_coordinates(CM_.params_.dpos_, 0, x2, y2);
-    glLineWidth (vcl_fabs(x2-x1));
-    //gl2psLineWidth(vcl_fabs(x2-x1));
+    glLineWidth (std::fabs(x2-x1));
+    //gl2psLineWidth(std::fabs(x2-x1));
   }
   else {
     glLineWidth (curve_line_width_);
@@ -1206,15 +1206,15 @@ dbdet_sel_tableau::draw_contour_groups()
     float x1, y1, x2, y2;
     vgui_projection_inspector().image_to_window_coordinates(0, 0, x1, y1);
     vgui_projection_inspector().image_to_window_coordinates(CM_.params_.dpos_, 0, x2, y2);
-    glLineWidth (vcl_fabs(x2-x1));
-    //gl2psLineWidth(vcl_fabs(x2-x1));
+    glLineWidth (std::fabs(x2-x1));
+    //gl2psLineWidth(std::fabs(x2-x1));
   }
   else {
     glLineWidth (curve_line_width_);
     //gl2psLineWidth(curve_line_width_);
   }
 
-  vcl_list<dbdet_edgel_chain_list>::iterator l_it=c_groups_.begin();
+  std::list<dbdet_edgel_chain_list>::iterator l_it=c_groups_.begin();
   unsigned i=0;
   for(; l_it != c_groups_.end(); l_it++,i++)
   {
@@ -1250,8 +1250,8 @@ dbdet_sel_tableau::draw_prune_contours()
     float x1, y1, x2, y2;
     vgui_projection_inspector().image_to_window_coordinates(0, 0, x1, y1);
     vgui_projection_inspector().image_to_window_coordinates(CM_.params_.dpos_, 0, x2, y2);
-    glLineWidth (vcl_fabs(x2-x1));
-    //gl2psLineWidth(vcl_fabs(x2-x1));
+    glLineWidth (std::fabs(x2-x1));
+    //gl2psLineWidth(std::fabs(x2-x1));
   }
   else {
     glLineWidth (curve_line_width_);
@@ -1277,22 +1277,22 @@ dbdet_sel_tableau::draw_prune_contours()
 void 
 dbdet_sel_tableau::print_edgel_stats(dbdet_edgel * e)
 {
-  vcl_cout << "========= EDGEL =========\n";
-  vcl_cout << "id: " << e->id;
+  std::cout << "========= EDGEL =========\n";
+  std::cout << "id: " << e->id;
   if (ELG_.linked.size()==0)
-    vcl_cout << " : LG [NL]";
+    std::cout << " : LG [NL]";
   else {
     if (ELG_.linked[e->id])
-      vcl_cout << " : LG [L]";
+      std::cout << " : LG [L]";
     else
-      vcl_cout << " : LG [NL]";  
+      std::cout << " : LG [NL]";  
   }
 
   //if (EULM_(e->gpt.x(), e->gpt.y()))
-  //  vcl_cout << ", GRID [NL]" << vcl_endl;
+  //  std::cout << ", GRID [NL]" << std::endl;
   //else
-  //  vcl_cout << ", GRID [L]" << vcl_endl;
-  vcl_cout << vcl_endl;
+  //  std::cout << ", GRID [L]" << std::endl;
+  std::cout << std::endl;
 
   //Print the curvelet info
   if (!CM_.is_valid())
@@ -1300,7 +1300,7 @@ dbdet_sel_tableau::print_edgel_stats(dbdet_edgel * e)
 
   //first determine the max number of edgels before the ref edgel in all of the curvelets
   unsigned num = 0;
-  vcl_list<dbdet_curvelet* >::iterator cv_it = CM_.curvelets(e->id).begin();
+  std::list<dbdet_curvelet* >::iterator cv_it = CM_.curvelets(e->id).begin();
   for ( ; cv_it!=CM_.curvelets(e->id).end(); cv_it++){
     dbdet_curvelet* cvlet = (*cv_it);
 
@@ -1314,8 +1314,8 @@ dbdet_sel_tableau::print_edgel_stats(dbdet_edgel * e)
   }
 
   //print the marker for the ref edge column
-  for (unsigned i=0; i<=num; i++) vcl_cout << "\t";
-  vcl_cout << "***" << vcl_endl;
+  for (unsigned i=0; i<=num; i++) std::cout << "\t";
+  std::cout << "***" << std::endl;
 
   //now print the curvelet with the ref edgel at the correct position
   cv_it = CM_.curvelets(e->id).begin();
@@ -1326,9 +1326,9 @@ dbdet_sel_tableau::print_edgel_stats(dbdet_edgel * e)
 
 void dbdet_sel_tableau::print_link_info(dbdet_link* link)
 {
-  vcl_cout << "========= LINK =========\n";
-  vcl_cout << "(" << link->pe->id << " --> " << link->ce->id << ") : ";
-  vcl_cout << "deg. overlap = " << link->deg_overlap << vcl_endl;  
+  std::cout << "========= LINK =========\n";
+  std::cout << "(" << link->pe->id << " --> " << link->ce->id << ") : ";
+  std::cout << "deg. overlap = " << link->deg_overlap << std::endl;  
 
   //first determine the max number of edgels before the ref edgel in all of the curvelets
   unsigned num = 0;
@@ -1343,8 +1343,8 @@ void dbdet_sel_tableau::print_link_info(dbdet_link* link)
   }
 
   //print the marker for the ref edge column
-  for (unsigned i=0; i<=num; i++) vcl_cout << "\t";
-  vcl_cout << "***" << vcl_endl;
+  for (unsigned i=0; i<=num; i++) std::cout << "\t";
+  std::cout << "***" << std::endl;
 
   //now print the curvelet with the ref edgel at the correct position
   cv_it = link->curvelets.begin();
@@ -1358,19 +1358,19 @@ void dbdet_sel_tableau::print_cvlet_info(dbdet_curvelet* cvlet, dbdet_edgel* e, 
 
   if (display_groupings_special_) //immediate links only
   {
-    vcl_cout << "Local Chain:"; 
+    std::cout << "Local Chain:"; 
     for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i) {
       if ( cvlet->edgel_chain[i]==e || //current edgel
       (i>0 && cvlet->edgel_chain[i-1]==e) || //edgel after it
       (i<cvlet->edgel_chain.size()-1 && cvlet->edgel_chain[i+1]==e) //edgel before it
       )
-        vcl_cout << " " << cvlet->edgel_chain[i]->id;
+        std::cout << " " << cvlet->edgel_chain[i]->id;
     }
   }
   else {
-    vcl_cout << "Chain: "; 
-    if (cvlet->forward) vcl_cout << "F : ";
-    else                vcl_cout << "B : ";
+    std::cout << "Chain: "; 
+    if (cvlet->forward) std::cout << "F : ";
+    else                std::cout << "B : ";
 
     
     //find the position of the ref in the current cvlet
@@ -1381,28 +1381,28 @@ void dbdet_sel_tableau::print_cvlet_info(dbdet_curvelet* cvlet, dbdet_edgel* e, 
     }
 
     //print the edgels in the correct positions
-    for (int i=0; i<(int(pos) - num); i++) vcl_cout << "\t";
+    for (int i=0; i<(int(pos) - num); i++) std::cout << "\t";
 
     for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i)
-      vcl_cout << "\t" << cvlet->edgel_chain[i]->id;
+      std::cout << "\t" << cvlet->edgel_chain[i]->id;
 
     ////put more tabs to the end of the cvlets
-    //for (int i=0; i<(CM_.maxN_/CM_.token_len_ - (cvlet->edgel_chain.size()-num)); i++)  vcl_cout << "\t";
+    //for (int i=0; i<(CM_.maxN_/CM_.token_len_ - (cvlet->edgel_chain.size()-num)); i++)  std::cout << "\t";
   }
 
   //print curve params
   cvlet->curve_model->print_info();
 
   //print curvelet quality info
-  vcl_cout << ", dir= " << cvlet->forward << ", Q= " << cvlet->quality << ", L= " << cvlet->length ;
-  vcl_cout << vcl_endl;
+  std::cout << ", dir= " << cvlet->forward << ", Q= " << cvlet->quality << ", L= " << cvlet->length ;
+  std::cout << std::endl;
 }
 
 void 
 dbdet_sel_tableau::get_popup(const vgui_popup_params& /*params*/, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_points_)?on:off)+"Show Points", 
                new dbdet_sel_tableau_toggle_command(this, &display_points_));

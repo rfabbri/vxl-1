@@ -3,7 +3,7 @@
 
 #include<vbl/vbl_smart_ptr.h>
 #include"bmocl_manager_sptr.h"
-#include<vcl_cassert.h>
+#include<cassert>
 
 
 class oclVectorAddManagerDestroyer;
@@ -15,7 +15,7 @@ public:
 	~oclVectorAddManager(){}
 
 	//runs the oclVectorAdd kernel in parallel and returns the answer
-	vcl_vector<float> oclAdd(vcl_vector<float> const& a, vcl_vector<float> const& b);
+	std::vector<float> oclAdd(std::vector<float> const& a, std::vector<float> const& b);
 
 	float* oclAdd(float* a, float* b, unsigned const& size);
 

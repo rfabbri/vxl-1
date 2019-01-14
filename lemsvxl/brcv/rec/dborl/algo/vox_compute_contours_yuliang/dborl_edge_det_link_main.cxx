@@ -19,13 +19,13 @@
 #include "dborl_edge_det_link_params.h"
 #include "dborl_edge_det_link_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <vcl_set.h>
+#include <set>
 
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     // Let time how long this takes
     // Start timer
     vul_timer t;
-    vcl_string color_thresh_;
+    std::string color_thresh_;
 
     dborl_edge_det_link_params_sptr params = 
         new dborl_edge_det_link_params("dborl_edge_det_link");  
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web 
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " << 
-            params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " << 
+            params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -79,14 +79,14 @@ int main(int argc, char *argv[]) {
         return 1;
 
     //load the input image
-    vcl_string input_img = params->input_object_dir_() + "/" 
+    std::string input_img = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_extension_();
 
-	vcl_cout << input_img << vcl_endl;
+	std::cout << input_img << std::endl;
 
     if (!vul_file::exists(input_img)) 
     {
-        vcl_cerr << "Cannot find image: " << input_img << vcl_endl;
+        std::cerr << "Cannot find image: " << input_img << std::endl;
         return 1;
     }
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
         vil_load_image_resource(input_img.c_str());
     if (!img_sptr) 
     {
-        vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
+        std::cerr << "Cannot load image: " << input_img << std::endl;
         return 1;
     }
 
@@ -106,10 +106,10 @@ int main(int argc, char *argv[]) {
     // Lets trace out contours ignore everything else except for saving
     
     // Create storage
-    vcl_vector<bpro1_storage_sptr> ct_results;
+    std::vector<bpro1_storage_sptr> ct_results;
     if ( params->trace_contours_())
     {
-        vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
+        std::cout<<"************ Contour Tracing  ************"<<std::endl;
 
         dbdet_contour_tracer_process ct_pro;
         set_process_parameters_of_bpro1(*params, 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
 
         if (ct_results.size() != 1 )
         {
-            vcl_cerr<< "Contour tracing failed"<<vcl_endl;
+            std::cerr<< "Contour tracing failed"<<std::endl;
             return 1;
         }
 
@@ -151,18 +151,18 @@ int main(int argc, char *argv[]) {
     // Perform third order edge detection if we are not tracing contours
     
     // Create output storage for edge detection
-    vcl_vector<bpro1_storage_sptr> edge_det_results;
+    std::vector<bpro1_storage_sptr> edge_det_results;
   
     //******************** Use Existing Edges ****************************
     if ( !params->trace_contours_())
     {
         if ( params->use_existing_edges_())
         {
-            vcl_cout<<"************* Using Existing Edges *********"<<vcl_endl;
+            std::cout<<"************* Using Existing Edges *********"<<std::endl;
             dbdet_load_edg_process load_edg_pro;
 
             //load the input image
-            vcl_string input_edg = params->input_object_dir_() + "/" 
+            std::string input_edg = params->input_object_dir_() + "/" 
                 + params->input_object_name_() + params->edge_extension_();
 
             bpro1_filepath input(input_edg,params->edge_extension_());
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
     
     if ( !params->trace_contours_() && !params->use_existing_edges_())
     {
-        vcl_cout<<"************ Edge Detection   ************"<<vcl_endl;
+        std::cout<<"************ Edge Detection   ************"<<std::endl;
         
 
         // Perform color third order edge detection
@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
                                             params->
                                             tag_color_edge_detection_);  
 
-            vcl_vector<bpro1_param*> pars  = pro_color_edg.parameters()->get_param_list();
+            std::vector<bpro1_param*> pars  = pro_color_edg.parameters()->get_param_list();
 			for (unsigned i = 0; i < pars.size(); i++) 
 			{
 		        	if(pars[i]->name()=="-thresh")
@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
                                             params->
                                             tag_generic_edge_detection_);  
 
-            vcl_vector<bpro1_param*> pars  = pro_generic_edg.parameters()->get_param_list();
+            std::vector<bpro1_param*> pars  = pro_generic_edg.parameters()->get_param_list();
 			for (unsigned i = 0; i < pars.size(); i++) 
 			{
 		        	if(pars[i]->name()=="-thresh")
@@ -301,7 +301,7 @@ int main(int argc, char *argv[]) {
   
         if (edge_det_results.size() != 1 )
         {
-            vcl_cerr<< "Process output does not contain an edge map"<<vcl_endl;
+            std::cerr<< "Process output does not contain an edge map"<<std::endl;
             return 1;
         
         }
@@ -312,12 +312,12 @@ int main(int argc, char *argv[]) {
     // Perform sel linking if we are not doing contour tracing
 
     // Set up storage for sel results
-    vcl_vector<bpro1_storage_sptr> el_results;
+    std::vector<bpro1_storage_sptr> el_results;
     if(params->edge_linking_method_() == "sel")
     {
 	    if ( !params->trace_contours_())
 	    {
-		vcl_cout<<"************ Symbolic Edge Linking     ************"<<vcl_endl;
+		std::cout<<"************ Symbolic Edge Linking     ************"<<std::endl;
 		dbdet_sel_process sel_pro;
 		set_process_parameters_of_bpro1(*params, 
 		                                sel_pro, 
@@ -345,8 +345,8 @@ int main(int argc, char *argv[]) {
 
 		if (el_results.size() != 1) 
 		{
-		    vcl_cerr << "Process output does not contain a sel data structure"
-		             << vcl_endl;
+		    std::cerr << "Process output does not contain a sel data structure"
+		             << std::endl;
 		    return 1;
 		}
 
@@ -356,7 +356,7 @@ int main(int argc, char *argv[]) {
     {
 	    if ( !params->trace_contours_())
 	    {
-		vcl_cout<<"************ Generic Edge Linking     ************"<<vcl_endl;
+		std::cout<<"************ Generic Edge Linking     ************"<<std::endl;
 		dbdet_generic_linker_process gen_pro;
 		set_process_parameters_of_bpro1(*params, 
 		                                gen_pro, 
@@ -384,8 +384,8 @@ int main(int argc, char *argv[]) {
 
 		if (el_results.size() != 1) 
 		{
-		    vcl_cerr << "Process output does not contain a gen data structure"
-		             << vcl_endl;
+		    std::cerr << "Process output does not contain a gen data structure"
+		             << std::endl;
 		    return 1;
 		}
 
@@ -393,7 +393,7 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-    	vcl_cout<<"ERROR: NO Edge Linking Method is selected!"<< vcl_endl;
+    	std::cout<<"ERROR: NO Edge Linking Method is selected!"<< std::endl;
     }
 
     //******************** Extract Contours *********************************
@@ -401,11 +401,11 @@ int main(int argc, char *argv[]) {
     // we peformed edge detection and linking
 
     // create storage for ec results
-    vcl_vector<bpro1_storage_sptr> ec_results;
+    std::vector<bpro1_storage_sptr> ec_results;
 
     if ( !params->trace_contours_())
     {
-        vcl_cout<<"************ Extract Contours ************"<<vcl_endl;
+        std::cout<<"************ Extract Contours ************"<<std::endl;
 
         // Converts a sel object to a vsol object
         dbdet_sel_extract_contours_process ec_pro;
@@ -436,8 +436,8 @@ int main(int argc, char *argv[]) {
         //:get the output from edge detection   
         if (ec_results.size() != 1) 
         {
-            vcl_cerr << "Process output does not contain a vsol structure"
-                     << vcl_endl;
+            std::cerr << "Process output does not contain a vsol structure"
+                     << std::endl;
 
             return 1;
         }
@@ -446,11 +446,11 @@ int main(int argc, char *argv[]) {
     //******************** Prune Contours *********************************
     // Prune contours based on contrast
     // Grab contours that remain after pruning
-    vcl_vector<bpro1_storage_sptr> pc_results;
+    std::vector<bpro1_storage_sptr> pc_results;
         
     if ( params->prune_contours_())
     {
-        vcl_cout<<"************ Prune Contours   ************"<<vcl_endl;
+        std::cout<<"************ Prune Contours   ************"<<std::endl;
 
         dbdet_prune_curves_process pc_pro;
         set_process_parameters_of_bpro1(*params, 
@@ -488,8 +488,8 @@ int main(int argc, char *argv[]) {
 
         if (pc_results.size() != 1) 
         {
-            vcl_cerr << "Process output does not contain a \
-                         set of remaining contours after pruning"<<vcl_endl;
+            std::cerr << "Process output does not contain a \
+                         set of remaining contours after pruning"<<std::endl;
             return 1;
         }
 
@@ -498,11 +498,11 @@ int main(int argc, char *argv[]) {
     //******************** Prune Contours using parameters from logistic regression*********************************
     // Prune contours based on contrast
     // Grab contours that remain after pruning
-    //vcl_vector<bpro1_storage_sptr> pc_results;
+    //std::vector<bpro1_storage_sptr> pc_results;
         
     if ( params->prune_contours_logistic_())
     {
-        vcl_cout<<"************ Prune Contours Logistic Regression  ************"<<vcl_endl;
+        std::cout<<"************ Prune Contours Logistic Regression  ************"<<std::endl;
 
         dbdet_prune_fragments_Logistic_Regression pc_pro;
         set_process_parameters_of_bpro1(*params, 
@@ -532,8 +532,8 @@ int main(int argc, char *argv[]) {
 
         if (pc_results.size() != 1) 
         {
-            vcl_cerr << "Process output does not contain a \
-                         set of remaining contours after pruning"<<vcl_endl;
+            std::cerr << "Process output does not contain a \
+                         set of remaining contours after pruning"<<std::endl;
             return 1;
         }
 
@@ -550,11 +550,11 @@ int main(int argc, char *argv[]) {
     {
         if (params->save_edges_()) 
         {
-            vcl_cout<<"************ Saving  Edges    ************"<<vcl_endl;
+            std::cout<<"************ Saving  Edges    ************"<<std::endl;
 
             dbdet_save_edg_process save_edg_pro;
 
-            vcl_string output_file;
+            std::string output_file;
             if (params->save_to_object_folder_())
             { 
                 output_file = params->output_edge_link_folder_() + "/";
@@ -599,7 +599,7 @@ int main(int argc, char *argv[]) {
             }
             else
             {
-                vcl_cerr<<"Unknown edge typ to save with"<<vcl_endl;
+                std::cerr<<"Unknown edge typ to save with"<<std::endl;
                 
                 //Set status to bad
                 status = false;
@@ -607,9 +607,9 @@ int main(int argc, char *argv[]) {
             if ( !status )
             {
         
-                vcl_cerr << "Problems in saving edge file: " 
+                std::cerr << "Problems in saving edge file: " 
                          << output_file + params->edge_extension_()
-                         << vcl_endl;
+                         << std::endl;
                 return 1;
      
             }
@@ -626,8 +626,8 @@ int main(int argc, char *argv[]) {
         if ( params->save_curvelets_() )
         {
 
-            vcl_cout<<"************ Saving Curvelets ************"<<vcl_endl;
-            vcl_string output_cvlet_file;
+            std::cout<<"************ Saving Curvelets ************"<<std::endl;
+            std::string output_cvlet_file;
 
             if (params->save_to_object_folder_())
             { 
@@ -671,8 +671,8 @@ int main(int argc, char *argv[]) {
             if ( !write_cv_status )
             {
         
-                vcl_cerr << "Problems in saving .cvlet curvlet file: " 
-                         << output_cvlet_file << vcl_endl;
+                std::cerr << "Problems in saving .cvlet curvlet file: " 
+                         << output_cvlet_file << std::endl;
                 return 1;
      
             }
@@ -690,10 +690,10 @@ int main(int argc, char *argv[]) {
 
 			dbdet_sel_storage_sptr input_sel_0;
 			input_sel_0.vertical_cast(el_results[0]);
-			vcl_set<int> frags_hyp_ind = input_sel_0->CFG().participate_edge_id;
+			std::set<int> frags_hyp_ind = input_sel_0->CFG().participate_edge_id;
 			dbdet_curvelet_map& cvlet_map = input_sel_0->CM();
 
-            vcl_string output_ind_file;
+            std::string output_ind_file;
             if (params->save_to_object_folder_())
             { 
                 output_ind_file = params->output_edge_link_folder_() + "/";
@@ -710,14 +710,14 @@ int main(int argc, char *argv[]) {
                 vul_file::make_directory(output_ind_file);
 
             }
-            vcl_cout<<"************ Saving cvlet edge ids ************"<<vcl_endl;
+            std::cout<<"************ Saving cvlet edge ids ************"<<std::endl;
 
-            vcl_string output_ind_file_0 = output_ind_file + params->input_object_name_() + "_cvlet_ind.txt";
+            std::string output_ind_file_0 = output_ind_file + params->input_object_name_() + "_cvlet_ind.txt";
 
-			vcl_ofstream outfp_0(output_ind_file_0.c_str(), vcl_ios::out);
+			std::ofstream outfp_0(output_ind_file_0.c_str(), std::ios::out);
 
 			if (!outfp_0){
-				vcl_cout << " Error opening file  " << output_ind_file_0.c_str() << vcl_endl;
+				std::cout << " Error opening file  " << output_ind_file_0.c_str() << std::endl;
 				return false;
 			}
 			outfp_0.precision(5);
@@ -726,25 +726,25 @@ int main(int argc, char *argv[]) {
 				//get the list curvelets anchored at this edge
 				if(cvlet_map.curvelets(i).size()>0)
 				{
-					outfp_0 << i << vcl_endl;
+					outfp_0 << i << std::endl;
 				}
 			}
 
-            vcl_cout<<"************ Saving frags + hypothesis edge ids ************"<<vcl_endl;
+            std::cout<<"************ Saving frags + hypothesis edge ids ************"<<std::endl;
     
-            vcl_string output_ind_file_1 = output_ind_file + params->input_object_name_() + "_frags_hyp_ind.txt";
+            std::string output_ind_file_1 = output_ind_file + params->input_object_name_() + "_frags_hyp_ind.txt";
 
-			vcl_ofstream outfp_1(output_ind_file_1.c_str(), vcl_ios::out);
+			std::ofstream outfp_1(output_ind_file_1.c_str(), std::ios::out);
 
 			if (!outfp_1){
-				vcl_cout << " Error opening file  " << output_ind_file_1.c_str() << vcl_endl;
+				std::cout << " Error opening file  " << output_ind_file_1.c_str() << std::endl;
 				return false;
 			}
 			outfp_1.precision(5);
 
-			vcl_set<int>::iterator it = frags_hyp_ind.begin();
+			std::set<int>::iterator it = frags_hyp_ind.begin();
 			for (; it!=frags_hyp_ind.end(); it++)
-				outfp_1<< (*it) << vcl_endl;
+				outfp_1<< (*it) << std::endl;
 
 
 		}
@@ -753,9 +753,9 @@ int main(int argc, char *argv[]) {
 
     //******************** Save Contours  *********************************
     // Change to the dbdet version by Yuliang
-    vcl_cout<<"************ Saving Contours  ************"<<vcl_endl;
+    std::cout<<"************ Saving Contours  ************"<<std::endl;
 
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_())
     { 
         output_file = params->output_edge_link_folder_() + "/";
@@ -827,11 +827,11 @@ int main(int argc, char *argv[]) {
         {
 
             // Unknown file extension encountered
-            vcl_cerr<<"Unknow file extension " << params->output_extension_() 
-              << " to save with OR ..."<<vcl_endl;
-            vcl_cerr<<"Bad combination of inputs parameters  ..." <<vcl_endl;
-            vcl_cerr<<"For example, saving output of sel with .con ext"
-                    <<vcl_endl;
+            std::cerr<<"Unknow file extension " << params->output_extension_() 
+              << " to save with OR ..."<<std::endl;
+            std::cerr<<"Bad combination of inputs parameters  ..." <<std::endl;
+            std::cerr<<"For example, saving output of sel with .con ext"
+                    <<std::endl;
 
             // set write status to bad
             write_status=false;
@@ -879,15 +879,15 @@ int main(int argc, char *argv[]) {
     }
     else if (params->output_extension_() == ".cvlet")
     {
-      vcl_cout << "Just outputting .cvlet, no contours.\n";
+      std::cout << "Just outputting .cvlet, no contours.\n";
     }
     else 
     {
         // Unknown file extension encountered
-        vcl_cerr<<"Unknow file extension " << params->output_extension_() 
-          << " to save with OR ..."<<vcl_endl;
-        vcl_cerr<<"Bad combination of inputs parameters  ..." <<vcl_endl;
-        vcl_cerr<<"For example, saving output of sel with .con ext"<<vcl_endl;
+        std::cerr<<"Unknow file extension " << params->output_extension_() 
+          << " to save with OR ..."<<std::endl;
+        std::cerr<<"Bad combination of inputs parameters  ..." <<std::endl;
+        std::cerr<<"For example, saving output of sel with .con ext"<<std::endl;
 
         // set write status to bad
         write_status=false;
@@ -896,8 +896,8 @@ int main(int argc, char *argv[]) {
     if ( !write_status )
     {
         
-        vcl_cerr << "Problems in saving dbdet contour file: " 
-                 << output_file << vcl_endl;
+        std::cerr << "Problems in saving dbdet contour file: " 
+                 << output_file << std::endl;
         return 1;
      
     }
@@ -907,8 +907,8 @@ int main(int argc, char *argv[]) {
 
 
    //****************************** Load the cem file generated **************************************
-    vcl_cout<<"************ Load CEM file ************"<<vcl_endl;
-    vcl_string cem_file;
+    std::cout<<"************ Load CEM file ************"<<std::endl;
+    std::string cem_file;
 
     if (params->save_to_object_folder_())
     { 
@@ -930,7 +930,7 @@ int main(int argc, char *argv[]) {
 
     bpro1_filepath cem_path(cem_file, ".cem");
 
-    vcl_vector<bpro1_storage_sptr> load_cem_results;
+    std::vector<bpro1_storage_sptr> load_cem_results;
     dbdet_load_cem_process load_cem_pro;
     load_cem_pro.parameters()->set_value("-cem_filename",cem_path);
     // Before we start the process lets clean input output
@@ -953,8 +953,8 @@ int main(int argc, char *argv[]) {
     if ( !load_cem_status )
     {
 
-        vcl_cerr << "Problems in loading cem file" 
-                 << cem_file << vcl_endl;
+        std::cerr << "Problems in loading cem file" 
+                 << cem_file << std::endl;
         return 1;
 
     }
@@ -962,11 +962,11 @@ int main(int argc, char *argv[]) {
 
     //******************** Convert to Binary Map *********************************
 
-    vcl_vector<bpro1_storage_sptr> cb_results;
+    std::vector<bpro1_storage_sptr> cb_results;
         
     if ( params->convert_edgemap_to_image_())
     {
-	vcl_cout<<"************ Convert to Binary Map   ************"<<vcl_endl;
+	std::cout<<"************ Convert to Binary Map   ************"<<std::endl;
 
 	dbdet_convert_edgemap_to_image_process cb_pro;
 	set_process_parameters_of_bpro1(*params, 
@@ -1002,15 +1002,15 @@ int main(int argc, char *argv[]) {
 
 	if (cb_results.size() != 1) 
 	{
-	    vcl_cerr << "Process output does not contain a \
-		         binary map"<<vcl_endl;
+	    std::cerr << "Process output does not contain a \
+		         binary map"<<std::endl;
 	    return 1;
 	}
 
 	//******************** Save binary map*********************************
 
-	vcl_cout<<"************ Saving Binary Map ************"<<vcl_endl;
-	vcl_string output_binary_file;
+	std::cout<<"************ Saving Binary Map ************"<<std::endl;
+	std::string output_binary_file;
 
 	if (params->save_to_object_folder_())
 	{ 
@@ -1053,8 +1053,8 @@ int main(int argc, char *argv[]) {
 	if ( !save_image_status )
 	{
 
-	vcl_cerr << "Problems in saving .bmp binary contour map: " 
-		 << output_binary_file << vcl_endl;
+	std::cerr << "Problems in saving .bmp binary contour map: " 
+		 << output_binary_file << std::endl;
 	return 1;
 
 	}
@@ -1062,12 +1062,12 @@ int main(int argc, char *argv[]) {
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

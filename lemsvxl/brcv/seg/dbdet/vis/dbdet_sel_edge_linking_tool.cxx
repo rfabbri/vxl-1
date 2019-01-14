@@ -1,8 +1,8 @@
 #include "dbdet_sel_edge_linking_tool.h"
 
-#include <vcl_limits.h>
+#include <limits>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -27,7 +27,7 @@ dbdet_sel_edge_linking_tool::dbdet_sel_edge_linking_tool(): sel_storage_(0), act
 }
 
 
-vcl_string dbdet_sel_edge_linking_tool::name() const
+std::string dbdet_sel_edge_linking_tool::name() const
 {
   return "SEL Edge Linker";
 }
@@ -120,9 +120,9 @@ bool dbdet_sel_edge_linking_tool::handle( const vgui_event & e,
 
 #define samp_int 0.5
 
-dbdet_edgel_chain* dbdet_sel_edge_linking_tool::form_edgel_chain_from_trace(vcl_vector<vgl_point_2d<double> > &pts)
+dbdet_edgel_chain* dbdet_sel_edge_linking_tool::form_edgel_chain_from_trace(std::vector<vgl_point_2d<double> > &pts)
 {
-  vcl_vector<dbdet_edgel*> edgels;
+  std::vector<dbdet_edgel*> edgels;
 
   //sample the trace curve at regular intervals
   for (unsigned i=0; i<pts.size(); i++)
@@ -130,7 +130,7 @@ dbdet_edgel_chain* dbdet_sel_edge_linking_tool::form_edgel_chain_from_trace(vcl_
     if (i<pts.size()-1){
       //form samples at constant intervals
       vgl_vector_2d<double> interval = pts[i+1]-pts[i];
-      unsigned num = (int) vcl_floor(interval.length()/samp_int);
+      unsigned num = (int) std::floor(interval.length()/samp_int);
 
       for (unsigned j=0; j<num; j++){
         vgl_point_2d<double> spt = pts[i] + (double(j)/double(num))*interval;
@@ -174,7 +174,7 @@ dbdet_edgel* dbdet_sel_edge_linking_tool::get_nearest_edgel(vgl_point_2d<double>
   dbdet_edgemap_sptr edgemap = sel_storage_->EM();
 
   // b) find the closest edgel in the neighboring cells
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   for (int xcell = xx-2; xcell <= xx+2; xcell++){
     for (int ycell = yy-2; ycell <= yy+2; ycell++){
       if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap->width() || ycell >= (int)edgemap->height()) 
@@ -201,7 +201,7 @@ dbdet_edgel* dbdet_sel_edge_linking_tool::get_nearest_edgel(vgl_point_2d<double>
 void dbdet_sel_edge_linking_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                 vgui_menu &/*menu*/ )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   //menu.add( ((plot_intensity)?on:off)+"Plot Intensity", 
   //          bvis1_tool_toggle, (void*)(&plot_intensity) );

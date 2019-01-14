@@ -5,7 +5,7 @@
 //  all D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbsk3d\tests\data 
 //
 
-#include <vcl_string.h>
+#include <string>
 #include <testlib/testlib_test.h>
 
 #include <dbsk3d/pro/dbsk3d_process.h>
@@ -16,7 +16,7 @@
 #define COST_TH                 5.0f
 #define RMIN_RATIO              1.0f
 
-bool test_shock_detection (vcl_string prefix,
+bool test_shock_detection (std::string prefix,
                            const float reg_th, const float rmin_ratio,
                            const float prune_boxr)
 {
@@ -27,7 +27,7 @@ bool test_shock_detection (vcl_string prefix,
 
   //Recover full scaffold from QHull.
   result = sp.fs_recover_qhull ();
-  vcl_cout << vcl_endl << vcl_endl; 
+  std::cout << std::endl << std::endl; 
   TEST("fs_recover_qhull (should be 1/true) ", result, 1);
 
   //Surface Segregation.
@@ -50,13 +50,13 @@ bool test_shock_detection (vcl_string prefix,
   sp.fs_mesh()->detect_valid_FE_type ();
 
   //Extract the largest (i-th) inside shock component (delete all non-component shocks)
-  vcl_set<int> ith_comp_list;
+  std::set<int> ith_comp_list;
   ith_comp_list.insert (0);
   result = sp.determine_inside_shock_comp (ith_comp_list, false);
   TEST("determine_inside_shock_comp (should be 1/true) ", result, 1);
 
   result = sp.build_ms_hypg (0);
-  vcl_cout << vcl_endl << vcl_endl;
+  std::cout << std::endl << std::endl;
   TEST("build_ms_hypg (should be 1/true) ", result, 1);
 
   return result;
@@ -65,7 +65,7 @@ bool test_shock_detection (vcl_string prefix,
 
 MAIN_ARGS (dbsk3d_test_shock_detect)
 {
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
       dir_base = argv[1];
@@ -77,7 +77,7 @@ MAIN_ARGS (dbsk3d_test_shock_detect)
   }
 
   testlib_test_start ("dbsk3d_test_shock_detect: bones1");
-  vcl_string data_prefix = dir_base + "bones1";
+  std::string data_prefix = dir_base + "bones1";
   test_shock_detection (data_prefix, COST_TH, RMIN_RATIO, PRUNE_BOXRATIO); //, 1.5f, 0.1f);
 
   testlib_test_start ("dbsk3d_test_shock_detect: tetra2");

@@ -56,7 +56,7 @@ void dbsksp_shock_tableau::
 add_popup(vgui_menu& menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((this->display_shock_graph_elms_)?on:off) + "Display Shock Graph Elements", 
     new dbsksp_shock_tableau_toggle_command(this, &(this->display_shock_graph_elms_)) );
@@ -93,10 +93,10 @@ handle(const vgui_event &e)
 {
   // set the display (hide/show) flags of the soviews
 
-  for (vcl_map< vcl_string , vgui_displaybase_tableau_grouping >::iterator it 
+  for (std::map< std::string , vgui_displaybase_tableau_grouping >::iterator it 
     = groupings.begin(); it != groupings.end(); it++ )
   {
-    vcl_string group_name = it->first;
+    std::string group_name = it->first;
     
     
     if (group_name == "dbsksp_soview_shock_node")

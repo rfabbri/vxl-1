@@ -4,31 +4,31 @@
 
 #include<dsm2/dsm2_observer_base.h>
 
-#include<vcl_cstddef.h>
-#include<vcl_vector.h>
+#include<cstddef>
+#include<vector>
 
 class dsm2_km_change_observer:public dsm2_observer_base
 {
 public:
 
-	dsm2_km_change_observer():num_nodes_(vcl_size_t(0)){}
+	dsm2_km_change_observer():num_nodes_(std::size_t(0)){}
 
 	~dsm2_km_change_observer(){}
 
-	virtual void update( dsm2_subject_base* s, vcl_string const& interest );
+	virtual void update( dsm2_subject_base* s, std::string const& interest );
 
 	virtual void b_read( vsl_b_istream& is );
 
 	virtual void b_write( vsl_b_ostream& os ) const;
 
-	void write_txt( vcl_string const& filename ) const;
+	void write_txt( std::string const& filename ) const;
 
-	vcl_vector<bool> change(){ return this->change_; }
+	std::vector<bool> change(){ return this->change_; }
 
-	vcl_size_t num_nodes(){ return this->num_nodes_; }
+	std::size_t num_nodes(){ return this->num_nodes_; }
 
 protected:
-	vcl_vector<bool> change_;
+	std::vector<bool> change_;
 
 	size_t num_nodes_;
 };

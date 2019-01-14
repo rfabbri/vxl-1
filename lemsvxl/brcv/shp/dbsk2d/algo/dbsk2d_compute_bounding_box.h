@@ -12,7 +12,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vsol/vsol_box_2d_sptr.h>
 

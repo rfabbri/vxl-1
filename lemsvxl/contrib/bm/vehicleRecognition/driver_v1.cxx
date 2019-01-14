@@ -7,9 +7,9 @@
 
 #include<brip/brip_vil_float_ops.h> //fast extrema method
 
-#include<vcl_iostream.h> //cout etc...
-#include<vcl_fstream.h> //write file output
-#include<vcl_string.h> // std::string
+#include<iostream> //cout etc...
+#include<fstream> //write file output
+#include<string> // std::string
 
 #include<vil/vil_convert.h> //to convert images to and from vxl_byte and float
 #include<vil/vil_load.h> //load images
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
   //argv[1] is the path to images
   //argv[2] is the path to output the operator response
 
-  vcl_string inDir, outDir, filename,f;
+  std::string inDir, outDir, filename,f;
   if(argc > 1)
     {
       inDir=argv[1];
@@ -72,10 +72,10 @@ int main(int argc, char *argv[])
   //use fn() as filename
   for(vul_file_iterator fn=inDir; fn; ++fn)
    {
-      vcl_cout << fn() << vcl_endl;
+      std::cout << fn() << std::endl;
       filename = vul_file::strip_directory(fn());
       filename = vul_file::strip_extension(filename);
-      vcl_cout << filename << vcl_endl;
+      std::cout << filename << std::endl;
 
       //load image
       image = vil_load(fn());
@@ -116,17 +116,17 @@ int main(int argc, char *argv[])
            opMax = *itBegin;
        } 
       
-      vcl_cout << "opMin: " << opMin << vcl_endl;
-      vcl_cout << "opMax: " << opMax << vcl_endl;
+      std::cout << "opMin: " << opMin << std::endl;
+      std::cout << "opMax: " << opMax << std::endl;
       
       vil_convert_stretch_range_limited(opResponse,opByte,opMin,opMax);
 
       //save the opByte as .png
-      vcl_string tempFilename = outDir+"/"+filename+"_opByte.png";
+      std::string tempFilename = outDir+"/"+filename+"_opByte.png";
       vil_save(opByte,tempFilename.c_str());
 
-      vcl_string tempFilename2 = outDir+"/"+filename+"_opByte.txt";
-      vcl_ofstream outStream(tempFilename2.c_str(), vcl_ios_out);
+      std::string tempFilename2 = outDir+"/"+filename+"_opByte.txt";
+      std::ofstream outStream(tempFilename2.c_str(), std::ios::out);
       if(outStream){
         for(unsigned j=0;j<opByte.nj();++j){
           for(unsigned i=0;i<opByte.ni();++i){
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
  
       
       f = outDir + "/" + filename + "_histogram.txt";
-      vcl_ofstream ofstr(f.c_str(), vcl_ios_out);
+      std::ofstream ofstr(f.c_str(), std::ios::out);
       if(ofstr){
         ofstr << hist << endl;
       }
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
       //filename = vul_file::strip_extension(filename);
       //filename = outDir+filename+".txt";
       
-      //vcl_cout << vcl_endl << filename << vcl_endl;
+      //std::cout << std::endl << filename << std::endl;
       
    }
   

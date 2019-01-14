@@ -12,12 +12,12 @@
 #include <vtol/vtol_edge_2d.h>
 #include <vtol/vtol_edge_2d_sptr.h>
 #include <dbctrk/dbctrk_curve_description.h>
-#include <vcl_map.h>
+#include <map>
 #include <vbl/vbl_ref_count.h>
 class dbctrk_tracker_curve;
 
 #include <dbctrk/dbctrk_tracker_curve_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_vector_io.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
@@ -50,7 +50,7 @@ class match_data : public vbl_ref_count
   ~match_data(){}
 
   //holds the set of matched curves(can be one or more than one)
-  vcl_vector<dbctrk_tracker_curve_sptr> match_curve_set;
+  std::vector<dbctrk_tracker_curve_sptr> match_curve_set;
 
   //the representative
   dbctrk_tracker_curve_sptr curve_set;
@@ -64,9 +64,9 @@ class match_data : public vbl_ref_count
   double energy_;
   double euc_;
   double cost_;
-  vcl_map<int,int> mapping_;
-  vcl_vector<int> tail1_;
-  vcl_vector<int> tail2_;
+  std::map<int,int> mapping_;
+  std::vector<int> tail1_;
+  std::vector<int> tail2_;
   //: Binary save self to stream.
   void b_write(vsl_b_ostream &os) const;
   //: Binary load self from stream.
@@ -75,13 +75,13 @@ class match_data : public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(vcl_string const&) const;
+  bool is_class(std::string const&) const;
 };
 
 
@@ -95,9 +95,9 @@ class dbctrk_tracker_curve  : public vbl_ref_count
   //initialize the curve
   void init_set( vtol_edge_2d_sptr const &c,int id);
   // initialize the curve using a set of points
-  void init_set(vcl_vector<vgl_point_2d<double> > p,int id);
+  void init_set(std::vector<vgl_point_2d<double> > p,int id);
   //intializing tails as curves
-  void init_set(dbctrk_tracker_curve_sptr c,vcl_vector<int> ks,int id);
+  void init_set(dbctrk_tracker_curve_sptr c,std::vector<int> ks,int id);
 
   void set_curve(vtol_edge_2d_sptr c) { c_=c; }
 
@@ -114,10 +114,10 @@ class dbctrk_tracker_curve  : public vbl_ref_count
   vtol_edge_2d_sptr get_curve() { return c_; }
   double compute_euclidean_distance (vnl_matrix<double> R, vnl_matrix<double> T,double s);
   double compute_euclidean_distance_next (vnl_matrix<double> R, vnl_matrix<double> T,double s);
-  void compute_transformation(vcl_vector<vgl_point_2d<double> > curve,
-                              vcl_vector<vgl_point_2d<double> > & transformed_curve,
+  void compute_transformation(std::vector<vgl_point_2d<double> > curve,
+                              std::vector<vgl_point_2d<double> > & transformed_curve,
                               vnl_matrix<double> R,vnl_matrix<double> T);
-  double compute_mean(vcl_vector<double> t);
+  double compute_mean(std::vector<double> t);
   
   
   //: Binary save self to stream.
@@ -130,22 +130,22 @@ class dbctrk_tracker_curve  : public vbl_ref_count
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(vcl_string const&) const;
+  bool is_class(std::string const&) const;
 
   // contains some basic level information about curve
 
   dbctrk_curve_description * desc;
 
-  vcl_vector<match_data_sptr> next_;
-  vcl_vector<match_data_sptr> prev_;
-  vcl_vector<match_data_sptr> seg_prev_;
-  vcl_map<double,int> neighbors_;
+  std::vector<match_data_sptr> next_;
+  std::vector<match_data_sptr> prev_;
+  std::vector<match_data_sptr> seg_prev_;
+  std::map<double,int> neighbors_;
 
   int match_id_;
   int group_id_;
@@ -162,7 +162,7 @@ class dbctrk_tracker_curve  : public vbl_ref_count
   bool isreal_;
   bool ismovingobject_;
   vdgl_edgel_chain_sptr ec_;
-  vcl_vector<double> spatialsig;
+  std::vector<double> spatialsig;
   vsol_digital_curve_2d_sptr dc_;
 
   

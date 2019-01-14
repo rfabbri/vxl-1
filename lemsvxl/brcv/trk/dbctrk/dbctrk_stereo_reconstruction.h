@@ -3,16 +3,16 @@
 
 #include <mvl/FMatrix.h>
 #include <mvl/PMatrix.h>
-#include <vcl_utility.h>
+#include <utility>
 
 class dbctrk_stereo_reconstruction
 {
 public:
   dbctrk_stereo_reconstruction();
-  dbctrk_stereo_reconstruction(vcl_vector< vcl_vector<vcl_pair <vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences);
+  dbctrk_stereo_reconstruction(std::vector< std::vector<std::pair <vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences);
 
 
-  void set_correspondences(vcl_vector< vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences);
+  void set_correspondences(std::vector< std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences);
   void set_F(FMatrix F);
 
   void compute_P();
@@ -24,7 +24,7 @@ public:
 
 private:
 
-  vcl_vector< vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences_;
+  std::vector< std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences_;
   FMatrix F_;
   PMatrix P1_;
   PMatrix P2_;

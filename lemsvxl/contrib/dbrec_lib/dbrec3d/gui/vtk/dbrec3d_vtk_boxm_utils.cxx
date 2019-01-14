@@ -16,7 +16,7 @@ vtkHyperOctree* dbrec3d_scene_to_hyperoctree(boxm_scene<boct_tree<short, float> 
   scene->block_num(x_blocks,y_blocks,z_blocks);
   if(x_blocks*y_blocks*z_blocks != 1)
   {
-    vcl_cout << "Only scenes with one block are supported for now" << vcl_endl;
+    std::cout << "Only scenes with one block are supported for now" << std::endl;
     return NULL;
   }
 
@@ -67,10 +67,10 @@ void dbrec3d_clone_leaves(vtkHyperOctreeCursor *cursor,
   }
   else{    //subdivide and recurre 
     vtk_octree->SubdivideLeaf(cursor);
-    vcl_vector<boct_tree_cell<short,float> * > children;
+    std::vector<boct_tree_cell<short,float> * > children;
     boxm_cell->all_children(children);
     if(cursor->GetNumberOfChildren()!=8){
-      vcl_cerr << "Error: wrong number of children" << vcl_endl;
+      std::cerr << "Error: wrong number of children" << std::endl;
       return;
     }
     for (unsigned i=0; i<8; i++) 

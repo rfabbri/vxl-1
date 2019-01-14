@@ -2,8 +2,8 @@
 //:
 // \file
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 
 //--------------------------------------------------------------
 //
@@ -42,12 +42,12 @@ float btom_gauss_cylinder::cylinder_intensity(float x, float y)
   //  cout << *this << endl;
   double theta = (90-elevation_)*vnl_math::pi_over_180;
   double phi = azimuth_*vnl_math::pi_over_180;
-  double cth = vcl_cos(theta);
+  double cth = std::cos(theta);
   double cths = cth*cth;
-  double tth = vcl_tan(theta);
+  double tth = std::tan(theta);
   double tths = tth*tth;
-  double sph = vcl_sin(phi);
-  double cph = vcl_cos(phi);
+  double sph = std::sin(phi);
+  double cph = std::cos(phi);
   double xyss = 1.0/(xy_sigma_*xy_sigma_);
   double zss = 1.0/(z_sigma_*z_sigma_);
   double wss = 1.0/(length_sigma_*length_sigma_);
@@ -67,10 +67,10 @@ float btom_gauss_cylinder::cylinder_intensity(float x, float y)
   double ay = yr/xy_sigma_;
   double axs = ax*ax;
   double ays = ay*ay;
-  double ty = vcl_exp(-ays);
-  double tx = vcl_exp(-axs*xd);
-  double tz = vcl_exp(-azs*zd);
-  double tz1 = vcl_exp(-2*ax*az*Dinv2);
+  double ty = std::exp(-ays);
+  double tx = std::exp(-axs*xd);
+  double tz = std::exp(-azs*zd);
+  double tz1 = std::exp(-2*ax*az*Dinv2);
   float pix = float(density_*tx*ty*tz*tz1);
   return pix;
 }
@@ -82,14 +82,14 @@ float btom_gauss_cylinder::cylinder_intensity(float x, float y)
 float btom_gauss_cylinder::radon_transform(float theta, float t)
 {
   double th_rad = theta*vnl_math::pi_over_180;
-  double neu = vcl_sin(th_rad)*x_origin_ +vcl_cos(th_rad)*y_origin_ -t;
+  double neu = std::sin(th_rad)*x_origin_ +std::cos(th_rad)*y_origin_ -t;
   double neusq = neu*neu;
   double arg = neusq/(xy_sigma_*xy_sigma_);
-  double radon = xy_sigma_*vcl_exp(-arg);
+  double radon = xy_sigma_*std::exp(-arg);
   return (float)radon;
 }
 
-vcl_ostream& operator<< (vcl_ostream& os, const btom_gauss_cylinder& gc)
+std::ostream& operator<< (std::ostream& os, const btom_gauss_cylinder& gc)
 {
   os << "btom_gauss_cylinder:\n[---\n"
      << "xy_sigma " << gc.xy_sigma_ << '\n'

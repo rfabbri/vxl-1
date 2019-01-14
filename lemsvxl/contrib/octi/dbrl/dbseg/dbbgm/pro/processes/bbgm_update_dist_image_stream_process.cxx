@@ -3,7 +3,7 @@
 //:
 // \file
 #include <bprb/bprb_func_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_update.h>
@@ -38,7 +38,7 @@ namespace {
 bool bbgm_update_dist_image_stream_process_cons(bprb_func_process& pro)
 {
   
-  vcl_vector<vcl_string> in_types(9), out_types(1);
+  std::vector<std::string> in_types(9), out_types(1);
   in_types[0]= "bbgm_image_sptr";//pointer to initial distribution image (typically null)
   in_types[1]= "vidl_istream_sptr";//the video stream
   in_types[2]= "int"; //max_components
@@ -59,7 +59,7 @@ bool bbgm_update_dist_image_stream_process_init(bprb_func_process& pro)
   //extract the stream
   istr = pro.get_input<vidl_istream_sptr>(1);
   if (!(istr && istr->is_open())){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::init() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::init() -"
              << " invalid input stream\n";
     return false;
   }
@@ -67,13 +67,13 @@ bool bbgm_update_dist_image_stream_process_init(bprb_func_process& pro)
     istr->seek_frame(0);
   vidl_frame_sptr f = istr->current_frame();
   if (!f){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::init() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::init() -"
              << " invalid initial frame\n";
     return false;
   }
   ni = f->ni(); nj = f->nj();
-  vcl_cout << " initialized, stream frame size: " << ni << ", " << nj << ", stream at frame # " << istr->frame_number() << vcl_endl;
-  vcl_cout.flush();
+  std::cout << " initialized, stream frame size: " << ni << ", " << nj << ", stream at frame # " << istr->frame_number() << std::endl;
+  std::cout.flush();
 
   pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(0));
 
@@ -85,7 +85,7 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
 {
   // Sanity check
   if (!pro.verify_inputs()){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::execute() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -114,7 +114,7 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
   //Retrieve end frame number
   int end_frame = pro.get_input<int>(8);
 
-  vcl_cout << " will start at frame # " << start_frame << " will end at frame # " << end_frame << vcl_endl;
+  std::cout << " will start at frame # " << start_frame << " will end at frame # " << end_frame << std::endl;
 
   typedef bsta_gauss_if3 bsta_gauss_t;
   typedef bsta_gauss_t::vector_type vector_;
@@ -126,8 +126,8 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
   bbgm_image_sptr model_sptr;
   if (!bgm) {
     model_sptr = new bbgm_image_of<obs_mix_gauss_type>(ni, nj, obs_mix_gauss_type());
-    vcl_cout << " Initialized the bbgm image\n";
-    vcl_cout.flush();
+    std::cout << " Initialized the bbgm image\n";
+    std::cout.flush();
 
   }
   else model_sptr = bgm;
@@ -159,10 +159,10 @@ bool bbgm_update_dist_image_stream_process(bprb_func_process& pro)
         vil_math_scale_values(frame,1.0/255.0);
 
       update(*model,frame,updater);
-      vcl_cout << "updated frame # "<< istr->frame_number()
+      std::cout << "updated frame # "<< istr->frame_number()
                << " format " << fb->pixel_format() << " nplanes "
                << fb->nplanes()<< '\n';
-      vcl_cout.flush();
+      std::cout.flush();
     }
   }
 

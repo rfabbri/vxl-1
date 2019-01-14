@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbsta/bsta_attributes.h>
@@ -14,8 +14,8 @@
 #include <vul/vul_timer.h>
 #include <vnl/vnl_random.h>
 #include <dbbgm/bbgm_wavelet_compressor.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 #include <dbbgm/bbgm_wavelet.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/vis/dbbgm_image_tableau.h>
@@ -34,26 +34,26 @@ static void test_bg_wavelet(int argc, char* argv[])
 
 {
 	if (argc<2){
-		vcl_cerr<<"no path provided !";
+		std::cerr<<"no path provided !";
 		return;
 	}
 	vul_arg<char*> initPath("-b","Base Path","C:\\");
 	vul_arg<int> level_arg("-l","Level",0);
 	vul_arg_parse(argc,argv);
 	
-	vcl_string basePath=vul_file::dirname(initPath.value_);
-	vcl_string wv_path=basePath+"\\out_wv";
-	vcl_string bg_path=basePath+"\\out_bg";
+	std::string basePath=vul_file::dirname(initPath.value_);
+	std::string wv_path=basePath+"\\out_wv";
+	std::string bg_path=basePath+"\\out_bg";
 	vul_file::make_directory_path(wv_path.c_str());
 	vul_file::make_directory_path(bg_path.c_str());
 	bbgm_wavelet_compressor* BWC = new bbgm_wavelet_compressor(argc,argv);
 	
 	/*
 	BWC->wavelet_decomposition_full(2,2);
-	BWC->saveWaveletVector(wv_path,vcl_string("wv_"),vcl_string("tiff"));
+	BWC->saveWaveletVector(wv_path,std::string("wv_"),std::string("tiff"));
 	
 	vil_save(im2->spatialDomain(),(wv_path+"\\LL_TRUE.tiff").c_str());
-	BWC->saveWaveletVector(wv_path,vcl_string("img_"),vcl_string("tiff")); */
+	BWC->saveWaveletVector(wv_path,std::string("img_"),std::string("tiff")); */
 	
 	//bbgm_wavelet<vil_image_view <float> > im=BWC->wavelet_decompositionAt(3,2,0);
 	//vil_image_view <float> imLL1=im.getSubband(LL,3);
@@ -72,9 +72,9 @@ static void test_bg_wavelet(int argc, char* argv[])
 	
 	
 	
-	vcl_stringstream mystream;
+	std::stringstream mystream;
 	mystream<<"mmerge and "<<level<<" level decomposition "<<" and wv no "<<wv<<"_";
-	BWC->saveBackgroundVideoSequence(0,1,0.2f,false,bg_path,mystream.str(),vcl_string("bmp"),level);
+	BWC->saveBackgroundVideoSequence(0,1,0.2f,false,bg_path,mystream.str(),std::string("bmp"),level);
     //BWC->testInterp();
 	//BWC->displayParam(true,"variance",0,true,(wv_path+"\\mean_c0.tiff"));
 	BWC->displayParam(true,"mean",0,true,(wv_path+"\\wv_mean_c0.tiff"));
@@ -103,7 +103,7 @@ static void test_bg_wavelet(int argc, char* argv[])
 	char** my_argv = new char*[1];
 	my_argv[0] = new char[13];
 	char* temp = my_argv[0];
-	vcl_strcpy(my_argv[0], "--mfc-use-gl");
+	std::strcpy(my_argv[0], "--mfc-use-gl");
 	 
 	int argcc=1;
    // Initialize the toolkit.

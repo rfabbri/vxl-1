@@ -40,7 +40,7 @@ void dbrec_pairwise_indep_gaussian_model::sample_location(const vgl_point_2d<flo
 {
   float dist = (float)dist_model_.sample(dbrec_type_id_factory::instance()->rng());
   float angle = (float)angle_model_.sample(dbrec_type_id_factory::instance()->rng());
-  vcl_cout << "indep gaussian sampled distance: " << dist << " (scaled dist: " << dist*scale << ") angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
+  std::cout << "indep gaussian sampled distance: " << dist << " (scaled dist: " << dist*scale << ") angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
   sample_location_helper(loc, first_part, second_loc, dist*scale, angle);
 }
 
@@ -52,10 +52,10 @@ void get_distance_and_angle(const vnl_vector_fixed<float, 2>& central_part_direc
 
   dist = (float)dif_to_center.magnitude();
   vnl_vector_fixed<float, 2> v1_hat = dif_to_center.normalize();
-  angle = (float)vcl_acos(dot_product(central_part_direction_vector, v1_hat));
+  angle = (float)std::acos(dot_product(central_part_direction_vector, v1_hat));
 
   //: if angle is ~ 180 degrees return a positive angle, otherwise negate the angle
-  if (!(vcl_abs(angle-vnl_math::pi) < 0.17) && !(angle < 0.17))  // allow for a 10 degree interval around 180 degrees and 0 degree
+  if (!(std::abs(angle-vnl_math::pi) < 0.17) && !(angle < 0.17))  // allow for a 10 degree interval around 180 degrees and 0 degree
   {
     //: now we want this angle positive or negative, depending on which side of v does v1 lie
     vnl_double_3 v_3(central_part_direction_vector[0], central_part_direction_vector[1], 0.0);
@@ -105,7 +105,7 @@ vgl_box_2d<float> dbrec_pairwise_indep_gaussian_model::get_probe_box(const vgl_p
 
   float mx = cx + out_dist[0];
   float my = cy + out_dist[1];
-  float rad = (float)vcl_ceil(vcl_sqrt(var_dist)+3);
+  float rad = (float)std::ceil(std::sqrt(var_dist)+3);
   float si = mx - rad;
   float upper_i = mx + rad;
   float sj = my - rad;
@@ -201,14 +201,14 @@ void dbrec_pairwise_indep_uniform_model::sample_location(const vgl_point_2d<floa
   
   //: sample a distance from uniform distribution
   float angle = min_angle_ + float(dbrec_type_id_factory::instance()->random())*(max_angle_ - min_angle_);
-  vcl_cout << "indep uniform sampled distance: " << dist << " angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
+  std::cout << "indep uniform sampled distance: " << dist << " angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
   sample_location_helper(loc, first_part, second_loc, dist*scale, angle);
 }
 
 double dbrec_pairwise_indep_uniform_model::prob_density(const vnl_vector_fixed<float, 2>& central_part_direction_vector, 
     const vgl_point_2d<float>& central_part_loc, const vgl_point_2d<float>& second_part_loc) const
 {
-  vcl_cout << "In dbrec_pairwise_indep_uniform_model::prob_density() -- not implemented for this model!\n";
+  std::cout << "In dbrec_pairwise_indep_uniform_model::prob_density() -- not implemented for this model!\n";
   throw 0;
 }
 //: return self as a bxml_data_sptr
@@ -262,13 +262,13 @@ vgl_box_2d<float> dbrec_pairwise_indep_uniform_discrete_model::get_probe_box(con
 //: create a probe box using the model given the first part's location
 vgl_box_2d<float> dbrec_pairwise_indep_uniform_model::get_probe_box(const vgl_point_2d<float>& loc, const vnl_vector_fixed<float, 2>& v) const
 {
-  vcl_cout << "In dbrec_pairwise_indep_uniform_model::get_probe_box() -- not implemented for this model!\n";
+  std::cout << "In dbrec_pairwise_indep_uniform_model::get_probe_box() -- not implemented for this model!\n";
   throw 0;
 }
 //: create a probe box using the model given the first part's location
 vgl_box_2d<float> dbrec_pairwise_2d_gaussian_model::get_probe_box(const vgl_point_2d<float>& loc, const vnl_vector_fixed<float, 2>& v) const
 {
-  vcl_cout << "In dbrec_pairwise_gaussian_model::get_probe_box() -- not implemented for this model!\n";
+  std::cout << "In dbrec_pairwise_gaussian_model::get_probe_box() -- not implemented for this model!\n";
   throw 0;
 }
 
@@ -301,17 +301,17 @@ dbrec_pairwise_model_sptr dbrec_pairwise_indep_uniform_discrete_model::xml_parse
 void dbrec_pairwise_discrete_model::sample_location(const vgl_point_2d<float>& loc, float scale, dbrec_part_sptr first_part, vgl_point_2d<float>& second_loc) const
 {
   //: use the bsta sampler to sample from a 2D discrete prob distribution given as a joint histogram
-  vcl_vector<vcl_pair<float, float> > out;
+  std::vector<std::pair<float, float> > out;
   //bool done = bsta_sampler<unsigned>::sample(hist_, 1, out);
   bool done = bsta_sampler<unsigned>::sample_in_likelihood_order(hist_, 1, out);
   if (!done || !out.size()) {
-    vcl_cout << "In dbrec_pairwise_discrete_model::sample_location() -- sampling problem!\n";
+    std::cout << "In dbrec_pairwise_discrete_model::sample_location() -- sampling problem!\n";
     throw 0;
   }
 
   float angle = out[0].first;
   float dist = out[0].second;
-  vcl_cout << "pairwise discrete model sampled distance: " << dist << " (scaled dist: " << dist*scale << ") angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
+  std::cout << "pairwise discrete model sampled distance: " << dist << " (scaled dist: " << dist*scale << ") angle: " << angle << " (" << angle/vnl_math::pi*180.0f << ")\n";
   sample_location_helper(loc, first_part, second_loc, dist*scale, angle);
 }
 
@@ -369,7 +369,7 @@ bxml_data_sptr dbrec_pairwise_discrete_model::xml_element() const
   //: dump the data of the histogram as a different data element
   bxml_element* hist_data = new bxml_element("hist_data");
   hist_data->append_text("\n");
-  vcl_stringstream ss;
+  std::stringstream ss;
   vbl_array_2d<float> count_arr = hist_.counts();
   for (unsigned na = 0; na < hist_.nbins_a(); na++) {
     for (unsigned nb = 0; nb < hist_.nbins_b(); nb++) {
@@ -409,7 +409,7 @@ dbrec_pairwise_model_sptr dbrec_pairwise_discrete_model::xml_parse_element(bxml_
     if ((*it)->type() != bxml_element::TEXT)
       continue;
     bxml_text* ht = dynamic_cast<bxml_text*>((*it).ptr());
-    vcl_stringstream ss(ht->data());
+    std::stringstream ss(ht->data());
     for (unsigned na = 0; na < nbins_a; na++) {
       for (unsigned nd = 0; nd < nbins_d; nd++) {
         float val; ss >> val;
@@ -423,43 +423,43 @@ dbrec_pairwise_model_sptr dbrec_pairwise_discrete_model::xml_parse_element(bxml_
 }
 
 //: visualize the model 
-void dbrec_pairwise_discrete_model::visualize(vcl_string& doc_name) const
+void dbrec_pairwise_discrete_model::visualize(std::string& doc_name) const
 {
-  vcl_string doc_name2 = doc_name + ".vrml";
-  vcl_ofstream os(doc_name2.c_str());
+  std::string doc_name2 = doc_name + ".vrml";
+  std::ofstream os(doc_name2.c_str());
   hist_.print_to_vrml(os);
   os.close();
 
-  vcl_string doc_name3 = doc_name + ".svg";
+  std::string doc_name3 = doc_name + ".svg";
   write_svg_angle_distance(hist_, doc_name3); 
 }
 
-void dbrec_pairwise_rot_invariant_discrete_model::visualize(vcl_string& doc_name) const
+void dbrec_pairwise_rot_invariant_discrete_model::visualize(std::string& doc_name) const
 {
-  vcl_stringstream ns;
+  std::stringstream ns;
   if (gamma_defined_) 
     ns << "gmin_" << gamma_min_ << "_gmax_" << gamma_max_ << "_gr_" << gamma_range_;
   if (rho_defined_)
     ns << "_rmin_" << (int)class_hist_.min_a() << "_rmax_" << (int)class_hist_.max_a() << "_r_int_" << (int)class_hist_.delta_a();
   ns << "_dmin_" << (int)class_hist_.min_b() << "_dmax_" << (int)class_hist_.max_b() << "_d_int_" << (int)class_hist_.delta_b();
   
-  vcl_stringstream ent_ns; ent_ns << "_ent_" << class_hist_.entropy() << "_vol_" << class_hist_.volume();
-  vcl_stringstream ent_ns_nc; ent_ns_nc << "_ent_" << non_class_hist_.entropy() << "_vol_" << non_class_hist_.volume();
+  std::stringstream ent_ns; ent_ns << "_ent_" << class_hist_.entropy() << "_vol_" << class_hist_.volume();
+  std::stringstream ent_ns_nc; ent_ns_nc << "_ent_" << non_class_hist_.entropy() << "_vol_" << non_class_hist_.volume();
 
-  vcl_string doc_name2 = doc_name + "_"+ns.str()+ent_ns.str()+"_class_hist.vrml";
-  vcl_ofstream os(doc_name2.c_str());
+  std::string doc_name2 = doc_name + "_"+ns.str()+ent_ns.str()+"_class_hist.vrml";
+  std::ofstream os(doc_name2.c_str());
   class_hist_.print_to_vrml(os);
   os.close();
-  vcl_string doc_name3 = doc_name + "_"+ns.str()+ent_ns_nc.str()+"_non_class_hist.vrml";
-  vcl_ofstream os3(doc_name3.c_str());
+  std::string doc_name3 = doc_name + "_"+ns.str()+ent_ns_nc.str()+"_non_class_hist.vrml";
+  std::ofstream os3(doc_name3.c_str());
   non_class_hist_.print_to_vrml(os3);
   os3.close();
 }
 
 //: create new instances of self by sampling from the histogram
-bool dbrec_pairwise_discrete_model::sample_new_instances(unsigned n, vcl_vector<dbrec_pairwise_model_sptr>& new_ins)
+bool dbrec_pairwise_discrete_model::sample_new_instances(unsigned n, std::vector<dbrec_pairwise_model_sptr>& new_ins)
 {
-  vcl_vector<vcl_pair<unsigned, unsigned> > out_indices;
+  std::vector<std::pair<unsigned, unsigned> > out_indices;
   if (!bsta_sampler<unsigned>::sample_in_likelihood_order(hist_, n, out_indices))
     return false;
  
@@ -473,9 +473,9 @@ bool dbrec_pairwise_discrete_model::sample_new_instances(unsigned n, vcl_vector<
 }
 
 //: create new instances of indep gaussian models by sampling from the histogram
-bool dbrec_pairwise_discrete_model::sample_new_indep_gaussian_instances(unsigned n, vcl_vector<dbrec_pairwise_model_sptr>& new_ins)
+bool dbrec_pairwise_discrete_model::sample_new_indep_gaussian_instances(unsigned n, std::vector<dbrec_pairwise_model_sptr>& new_ins)
 {
-  vcl_vector<vcl_pair<float, float> > out_values;
+  std::vector<std::pair<float, float> > out_values;
   if (!bsta_sampler<unsigned>::sample_in_likelihood_order(hist_, n, out_values))
     return false;
  
@@ -524,7 +524,7 @@ int dbrec_pairwise_rot_invariant_model::sample_gamma(vnl_random& rng) const {
 
 double measure_angle_clockwise(vnl_vector_fixed<float, 2>& dir1, vnl_vector_fixed<float, 2>& dir2) {
   //: first find angle using the dot product
-  double angle_rad = vcl_acos(dot_product(dir1, dir2));
+  double angle_rad = std::acos(dot_product(dir1, dir2));
   //: if cross_product is along positive z axis, then use the angle as is otherwise use (2*pi - angle)
   vnl_double_3 v_3(dir1[0], dir1[1], 0.0);
   vnl_double_3 v1_hat_3(dir2[0], dir2[1], 0.0);
@@ -556,7 +556,7 @@ int dbrec_pairwise_rot_invariant_model::measure_d(dbrec_part_ins_sptr p1_ins, db
   vnl_vector_fixed<float, 2> p1_c(p1_ins->pt().x(), p1_ins->pt().y());
   vnl_vector_fixed<float, 2> p2_c(p2_ins->pt().x(), p2_ins->pt().y());
   float d = (p1_c-p2_c).magnitude();
-  int d_i = (int)vcl_floor(d+0.5f);
+  int d_i = (int)std::floor(d+0.5f);
   return d_i;
 }
 
@@ -566,18 +566,18 @@ double dbrec_pairwise_rot_invariant_model::prob_density(dbrec_part_ins_sptr p1_i
   if (gamma_range_ > 0) { //: if gamma is defined for these two parts, compute it
     int angle_degree = measure_gamma(p1_ins, p2_ins);
     int gamma = angle_degree % gamma_range_;  // gamma_range_ is the greatest common divisor of symmetry angles of the two parts, and saved here at the compositor after training
-    //vcl_cout << "\t \t gamma: " << gamma << " ";
+    //std::cout << "\t \t gamma: " << gamma << " ";
     gamma_prob = prob_density_gamma(gamma);
   }
   double rho_prob = 1.0;
   if (rho_range_ > 0) { // if rho is defined for these two parts, compute it
     int angle_degree = measure_rho(p1_ins, p2_ins);
     int rho = angle_degree % rho_range_;  // rho_range_ is the lowest common multiplier of symmetry angles of the two parts, and saved here at the compositor after training
-    //vcl_cout << " rho: " << rho << " ";
+    //std::cout << " rho: " << rho << " ";
     rho_prob = prob_density_rho(rho);
   }
   int d_i = measure_d(p1_ins, p2_ins);
-  //vcl_cout << " d: " << d_i << "\n";
+  //std::cout << " d: " << d_i << "\n";
   double d_prob = prob_density_d(d_i);
   return gamma_prob*rho_prob*d_prob;
 }
@@ -669,7 +669,7 @@ bxml_data_sptr dbrec_pairwise_rot_invariant_discrete_model::xml_element() const
   hist_data->set_attribute("max_d", class_hist_.max_b());
   hist_data->set_attribute("nbins_d", class_hist_.nbins_b());
   hist_data->append_text("\n");
-  vcl_stringstream ss;
+  std::stringstream ss;
   vbl_array_2d<float> count_arr = class_hist_.counts();
   for (unsigned na = 0; na < class_hist_.nbins_a(); na++) {
     for (unsigned nb = 0; nb < class_hist_.nbins_b(); nb++) {
@@ -684,7 +684,7 @@ bxml_data_sptr dbrec_pairwise_rot_invariant_discrete_model::xml_element() const
   //: dump the data of the class histogram as a different data element
   bxml_element* hist_data2 = new bxml_element("non_class_hist_data");
   hist_data2->append_text("\n");
-  vcl_stringstream ss2;
+  std::stringstream ss2;
   vbl_array_2d<float> count_arr2 = non_class_hist_.counts();
   for (unsigned na = 0; na < non_class_hist_.nbins_a(); na++) {
     for (unsigned nb = 0; nb < non_class_hist_.nbins_b(); nb++) {
@@ -734,7 +734,7 @@ dbrec_pairwise_model_sptr dbrec_pairwise_rot_invariant_discrete_model::xml_parse
     if ((*it)->type() != bxml_element::TEXT)
       continue;
     bxml_text* ht = dynamic_cast<bxml_text*>((*it).ptr());
-    vcl_stringstream ss(ht->data());
+    std::stringstream ss(ht->data());
     for (int na = 0; na < nbins_rho; na++) {
       for (int nd = 0; nd < nbins_d; nd++) {
         float val; ss >> val;
@@ -752,7 +752,7 @@ dbrec_pairwise_model_sptr dbrec_pairwise_rot_invariant_discrete_model::xml_parse
     if ((*it)->type() != bxml_element::TEXT)
       continue;
     bxml_text* ht = dynamic_cast<bxml_text*>((*it).ptr());
-    vcl_stringstream ss(ht->data());
+    std::stringstream ss(ht->data());
     for (int na = 0; na < nbins_rho; na++) {
       for (int nd = 0; nd < nbins_d; nd++) {
         float val; ss >> val;
@@ -820,7 +820,7 @@ void dbrec_pairwise_rot_invariant_discrete_model::prob_densities(dbrec_part_ins_
   if (gamma_defined_) { //: if gamma is defined for these two parts, compute it
     int angle_degree = dbrec_pairwise_rot_invariant_model::measure_gamma(p1_ins, p2_ins);
     int gamma = angle_degree % gamma_range_;  // gamma_range_ is the greatest common divisor of symmetry angles of the two parts, and saved here at the compositor after training
-    //vcl_cout << "\t \t gamma: " << gamma << " ";
+    //std::cout << "\t \t gamma: " << gamma << " ";
     if (gamma_min_ < 0) {  // gamma range might be [-45,45)
       if ((gamma >= 0 && gamma <= gamma_max_) ||
           (gamma >= gamma_range_+gamma_min_ && gamma <= gamma_range_))

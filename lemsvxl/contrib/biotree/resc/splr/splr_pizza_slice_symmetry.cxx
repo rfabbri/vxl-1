@@ -4,7 +4,7 @@
 #include <vnl/xio/vnl_xio_quaternion.h>
 #include <vnl/xio/vnl_xio_vector_fixed.h>
 #include "splr_pizza_slice_symmetry_representatives.h"
-#include <vcl_fstream.h>
+#include <fstream>
 
 splr_pizza_slice_symmetry::splr_pizza_slice_symmetry(vnl_quaternion<double> camera0_to_camera1)
   : camera0_to_camera1_(camera0_to_camera1){

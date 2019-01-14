@@ -7,8 +7,8 @@
 // \author Thomas Pollard
 // \date 1/12/08
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include "bvam_image_metadata.h"
 
 class bvam_image_schedule {
@@ -20,9 +20,9 @@ public:
 
   // Loading commands.  Enter "NONE" in a field if it is not to be loaded.
   void load(
-    vcl_string image_dir,
-    vcl_string camera_file,
-    vcl_string light_file,
+    std::string image_dir,
+    std::string camera_file,
+    std::string light_file,
     bool read_date );
 
   // Scheduling commands.
@@ -42,11 +42,11 @@ public:
 
 protected:
 
-  vcl_vector<bvam_image_metadata> list_;
-  vcl_vector<unsigned> schedule_;
+  std::vector<bvam_image_metadata> list_;
+  std::vector<unsigned> schedule_;
 
   // Get the date from a quickbird filename.
-  double get_date( vcl_string file_name );
+  double get_date( std::string file_name );
 
 };
 

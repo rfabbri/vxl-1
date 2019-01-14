@@ -25,7 +25,7 @@ vidpro_kl_process::vidpro_kl_process(void): bpro_process(),kl_params(),kl_points
     if( !parameters()->add( "No of Points" , "-klnumpoints" , (int)100) ||
       !parameters()->add( "Search Range" , "-klrange" , (int) 15 ) ) 
      {
-        vcl_cerr << "ERROR: Adding parameters in vidpro_kl_process::vidpro_kl_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro_kl_process::vidpro_kl_process()" << std::endl;
      }
     else
     {
@@ -41,7 +41,7 @@ vidpro_kl_process::~vidpro_kl_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_kl_process::name()
 {
   return "KL tracking";
@@ -65,18 +65,18 @@ vidpro_kl_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro_kl_process::get_input_type()
+std::vector< std::string > vidpro_kl_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro_kl_process::get_output_type()
+std::vector< std::string > vidpro_kl_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -87,7 +87,7 @@ bool
 vidpro_kl_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In vidpro_kl_process::execute() - "
+    std::cout << "In vidpro_kl_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -105,18 +105,18 @@ vidpro_kl_process::execute()
   parameters()->get_value("-klrange",kl_params.search_range);
 
   kl_points=new vgel_kl(kl_params);
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
   images.push_back(image1_sptr);
   images.push_back(image2_sptr);
 
   vgel_multi_view_data_vertex_sptr matched_points;
   matched_points=new vgel_multi_view_data<vtol_vertex_2d_sptr>(2);
   kl_points->match_sequence(images,matched_points);
-  vcl_vector<vsol_point_2d_sptr> points ;
-  vcl_vector<vtol_vertex_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> points ;
+  std::vector<vtol_vertex_2d_sptr> pts;
   matched_points->get( 1,pts);
 
-  vcl_vector<vtol_vertex_2d_sptr> prevpts;
+  std::vector<vtol_vertex_2d_sptr> prevpts;
   matched_points->get( 0,prevpts);
 
   for(unsigned int i=0;i<pts.size() && i<prevpts.size();i++)
@@ -128,7 +128,7 @@ vidpro_kl_process::execute()
         points.push_back(p);
         points.push_back(prevp);
   }
-  vcl_vector< vsol_spatial_object_2d_sptr > klt_points;
+  std::vector< vsol_spatial_object_2d_sptr > klt_points;
   for( unsigned int i = 0 ; i < points.size() ; i++ ) {
     vsol_spatial_object_2d_sptr point = points[i]->cast_to_spatial_object();
     klt_points.push_back(point);

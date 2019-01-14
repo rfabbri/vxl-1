@@ -17,8 +17,8 @@
 #include <dbskfg/dbskfg_rag_graph_sptr.h>
 #include <dbskfg/dbskfg_rag_node_sptr.h>
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 class dbskfg_shock_node;
 
@@ -38,7 +38,7 @@ public:
     void grow_regions(unsigned int id=0);
 
     // Grow regions
-    void grow_regions(vcl_vector<unsigned int>& regions_to_grow);
+    void grow_regions(std::vector<unsigned int>& regions_to_grow);
 
     // Grow one region
     dbskfg_rag_node_sptr grow_region(unsigned int id);
@@ -53,14 +53,14 @@ private:
 
     // Expand rag_node
     void expand_rag_node(dbskfg_rag_node_sptr rag_node,
-                         vcl_map<unsigned int,dbskfg_rag_node_sptr*>& 
+                         std::map<unsigned int,dbskfg_rag_node_sptr*>& 
                          visited_nodes);
 
     // Expand wavefront
     void expand_wavefront(dbskfg_shock_node* node, 
                           dbskfg_rag_node_sptr rag_node,
-                          vcl_vector<dbskfg_shock_node*>& stack,
-                          vcl_map<unsigned int,dbskfg_rag_node_sptr*>& 
+                          std::vector<dbskfg_shock_node*>& stack,
+                          std::map<unsigned int,dbskfg_rag_node_sptr*>& 
                           visited_nodes);
 
     // Keep a region adjancency graph

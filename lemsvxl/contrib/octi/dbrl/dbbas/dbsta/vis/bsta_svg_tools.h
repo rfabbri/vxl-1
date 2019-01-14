@@ -7,7 +7,7 @@
 // \author Ozge C. Ozcanli
 // \date April 22, 2009
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbsta/bsta_histogram.h>
 #include <dbsta/bsta_joint_histogram.h>
 #include <bxml/bsvg/bsvg_plot.h>
@@ -17,7 +17,7 @@
 //: Create SVG document from histogram
 // \relatesalso bsta_histogram
 template <class T>
-void write_svg(const bsta_histogram<T>& h, const vcl_string& outfile,
+void write_svg(const bsta_histogram<T>& h, const std::string& outfile,
                float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30)
 {
   bsvg_plot pl(width, height);
@@ -32,8 +32,8 @@ void write_svg(const bsta_histogram<T>& h, const vcl_string& outfile,
   pl.add_axes(0, 1, 0, 1);
   pl.add_y_increments(0.1f);
 
-  vcl_vector<float> ps;
-  vcl_vector<float> x_labels;
+  std::vector<float> ps;
+  std::vector<float> x_labels;
   for (unsigned i = 0; i < h.nbins(); ++i, min+=delta) {
     ps.push_back(float(h.p(i)));
     x_labels.push_back(min);
@@ -46,7 +46,7 @@ void write_svg(const bsta_histogram<T>& h, const vcl_string& outfile,
 
 //: Create a polar style pie chart from the joint histogram, assuming that the first dimension is the angle, and it is in radius
 template <class T>
-void write_svg_angle_distance(const bsta_joint_histogram<T>& h, const vcl_string& out_file,
+void write_svg_angle_distance(const bsta_joint_histogram<T>& h, const std::string& out_file,
                               float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30)
 {
   bsvg_plot pl(width, height);
@@ -56,7 +56,7 @@ void write_svg_angle_distance(const bsta_joint_histogram<T>& h, const vcl_string
   T maxb = h.max_b();
   T delta_a = h.delta_a();
   T delta_b = h.delta_b();
-  vcl_cout << "min_a: " << mina << " max_a: " << maxa << " min_b: " << minb << " max_b: " << maxb << vcl_endl;
+  std::cout << "min_a: " << mina << " max_a: " << maxa << " min_b: " << minb << " max_b: " << maxb << std::endl;
   T min = T(10);
   T max = T(0);
   for (unsigned a = 0; a < h.nbins_a(); a++)
@@ -64,8 +64,8 @@ void write_svg_angle_distance(const bsta_joint_histogram<T>& h, const vcl_string
       if (h.p(a,b) < min) min = h.p(a,b);
       if (h.p(a,b) > max) max = h.p(a,b);
     }
-  vcl_stringstream mss; mss << "abs min: " << min << " max: " << max;
-  vcl_stringstream mss2; mss2 << "ent: " << h.entropy();
+  std::stringstream mss; mss << "abs min: " << min << " max: " << max;
+  std::stringstream mss2; mss2 << "ent: " << h.entropy();
   bsvg_text* tmm = new bsvg_text(mss.str());
   tmm->set_location(margin, margin);
   pl.add_element(tmm);
@@ -79,28 +79,28 @@ void write_svg_angle_distance(const bsta_joint_histogram<T>& h, const vcl_string
 
   // now add the splices starting from the outer most bins
   for (float valb = maxb; valb >= minb; valb -= delta_b) {
-    float radius = valb*factor; vcl_stringstream rs; rs << (int)(valb);
+    float radius = valb*factor; std::stringstream rs; rs << (int)(valb);
     bsvg_text* t = new bsvg_text(rs.str());
     t->set_location(300.0f, 315.0f+radius);
     pl.add_element(t);
     for (float vala = (float)mina; vala < maxa; vala += delta_a) {
       float mag = (h.p(vala+0.005f, valb)/max)*255;
 #ifdef DEBUG
-      vcl_cout << ' ' << mag << ' ';
+      std::cout << ' ' << mag << ' ';
 #endif
       unsigned channel = (unsigned)mag;
       pl.add_splice(300.0f, 300.0f, radius, vala, vala+delta_a, 255, 255-channel, 255-channel);
     }
 #ifdef DEBUG
-    vcl_cout << '\n';
+    std::cout << '\n';
 #endif
   }
 
   for (float vala = (float)mina; vala < maxa; vala += delta_a) {
-    vcl_stringstream rs; rs << (int)(vala*180.0*vnl_math::one_over_pi);
+    std::stringstream rs; rs << (int)(vala*180.0*vnl_math::one_over_pi);
     bsvg_text* t = new bsvg_text(rs.str());
     float radius = maxb*factor+font_size;
-    t->set_location((float)(300.0f+(radius)*vcl_cos(vala+vnl_math::pi*0.01)), (float)(300.0f+(radius)*-vcl_sin(vala+vnl_math::pi*0.01)));
+    t->set_location((float)(300.0f+(radius)*std::cos(vala+vnl_math::pi*0.01)), (float)(300.0f+(radius)*-std::sin(vala+vnl_math::pi*0.01)));
     pl.add_element(t);
   }
 

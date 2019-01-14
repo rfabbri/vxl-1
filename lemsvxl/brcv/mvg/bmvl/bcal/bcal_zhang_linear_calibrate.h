@@ -55,8 +55,8 @@ class bcal_zhang_linear_calibrate
 
  private:
   bcal_camera_graph<bcal_calibrate_plane, bcal_zhang_camera_node, bcal_euclidean_transformation>* cam_graph_ptr_;
-  vcl_vector<vgl_h_matrix_2d<double> *> h_matrice_;
-  vcl_vector<int> num_views_;
+  std::vector<vgl_h_matrix_2d<double> *> h_matrice_;
+  std::vector<int> num_views_;
 };
 
 #endif // AFX_ZHANGLINEARCALIBRATE_H__A6F24F23_8E39_494F_83FB_3ABF8093481D__INCLUDED_

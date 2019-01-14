@@ -86,7 +86,7 @@ public:
   virtual ~dbsk2d_ishock_bpoint(){}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a () const { return vcl_string("dbsk2d_ishock_bpoint"); };
+  virtual std::string is_a () const { return std::string("dbsk2d_ishock_bpoint"); };
 
   //: Return extrinsic point
   vgl_point_2d<double> pt() const { return _pt; }
@@ -210,7 +210,7 @@ public:
   // Useful functions
   //-----------------------------------------
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
   virtual void compute_extrinsic_locus();
 };
 

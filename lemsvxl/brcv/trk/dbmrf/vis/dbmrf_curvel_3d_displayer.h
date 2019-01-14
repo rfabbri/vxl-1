@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   dbmrf_curvel_3d_displayer(){}
 
   //: Return type string "curvel_3d"
-  virtual vcl_string type() const { return "curvel_3d"; }
+  virtual std::string type() const { return "curvel_3d"; }
 
   //: Create a tableau if the storage object is of type curvel_3d
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

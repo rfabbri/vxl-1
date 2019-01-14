@@ -2,7 +2,7 @@
 
 #include"dvrml_indexed_lineset.h"
 
-void dvrml_indexed_lineset::draw( vcl_ostream& os )
+void dvrml_indexed_lineset::draw( std::ostream& os )
 {
     assert(this->lineset_point_list.size() > 0);
 
@@ -28,8 +28,8 @@ void dvrml_indexed_lineset::draw( vcl_ostream& os )
 
     for( connection_list_itr = this->lineset_connection_list.begin(); connection_list_itr != connection_list_end; ++connection_list_itr )
     {
-        vcl_vector<unsigned>::iterator inner_connection_itr;
-        vcl_vector<unsigned>::iterator inner_connection_end = connection_list_itr->end();
+        std::vector<unsigned>::iterator inner_connection_itr;
+        std::vector<unsigned>::iterator inner_connection_end = connection_list_itr->end();
 
         os << "             ";
 

@@ -18,7 +18,7 @@
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <dborl/dborl_det_desc_sptr.h>
-#include <vcl_string.h>
+#include <string>
 
 // ============================================================================
 // dborl_det_desc
@@ -36,7 +36,7 @@ public:
   //: destructor
   virtual ~dborl_det_desc(){};
 
-  virtual vcl_string is_a() const { return "dborl_det_desc"; }
+  virtual std::string is_a() const { return "dborl_det_desc"; }
 
   //: Return bounding box of the detection
   virtual vsol_box_2d_sptr bbox() = 0;

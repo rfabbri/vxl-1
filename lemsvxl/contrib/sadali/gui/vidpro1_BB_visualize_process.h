@@ -39,7 +39,7 @@ public:
   virtual bpro1_process* clone() const;
 
   //: The name of this process
-  vcl_string name();
+  std::string name();
 
   //: Returns the number of input frames to this process
   int input_frames();
@@ -47,9 +47,9 @@ public:
   int output_frames();
 
   //: Returns a vector of strings describing the input types to this process
-  vcl_vector< vcl_string > get_input_type();
+  std::vector< std::string > get_input_type();
   //: Returns a vector of strings describing the output types of this process
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_output_type();
 
   //: Execute the process
   bool execute();
@@ -62,9 +62,9 @@ protected:
      double
      compute_err(const vil_image_view<float>  &left_image_view_filt, const vil_image_view<float>  &right_image_view_filt,
                                       const vnl_double_3x4 &LeftProjMat , const vnl_double_3x4 &RightProjMat ,
-                                      vcl_vector<vnl_double_4> &WorldPoints);
+                                      std::vector<vnl_double_4> &WorldPoints);
     void
-     computeWorldPoints(vcl_vector<vnl_double_4> &WP, double samplex, double sampley, const vnl_double_4x4 &BBMatrix , int plane_index);
+     computeWorldPoints(std::vector<vnl_double_4> &WP, double samplex, double sampley, const vnl_double_4x4 &BBMatrix , int plane_index);
 #if 0
     void
     updateBBMat(const vnl_double_4x4 &BBMatrix,vnl_double_4x4 &UpdatedBBMatrix, const double t,const double alpha);
@@ -80,8 +80,8 @@ protected:
         rotZ_mat(const double a);
 #endif
     double
-        Compute_proj(vcl_vector<vsol_spatial_object_2d_sptr>  &left_image_view_filt,  vcl_vector<vsol_spatial_object_2d_sptr>  &right_image_view_filt,
-                    const vnl_double_3x4 &LeftProjMat , const vnl_double_3x4 &RightProjMat , const vcl_vector<vnl_double_4> &WorldPoints);
+        Compute_proj(std::vector<vsol_spatial_object_2d_sptr>  &left_image_view_filt,  std::vector<vsol_spatial_object_2d_sptr>  &right_image_view_filt,
+                    const vnl_double_3x4 &LeftProjMat , const vnl_double_3x4 &RightProjMat , const std::vector<vnl_double_4> &WorldPoints);
 
 
     

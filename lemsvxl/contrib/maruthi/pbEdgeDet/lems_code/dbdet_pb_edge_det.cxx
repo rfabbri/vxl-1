@@ -94,12 +94,12 @@ dbdet_edgemap_sptr dbdet_detect_pb_edges(vil_image_view<vxl_byte> image,
             // Amirs approach uncomment for later
 
             // double orient = parabs.maxo(i,j);
-            // grad_x(i,j)=vcl_cos(orient + M_PI_2);
-            // grad_y(i,j)=vcl_sin(orient + M_PI_2);
-            // //grad_y(i,j)=vcl_sin(vcl_fmod(orient + M_PI_2,M_PI));
+            // grad_x(i,j)=std::cos(orient + M_PI_2);
+            // grad_y(i,j)=std::sin(orient + M_PI_2);
+            // //grad_y(i,j)=std::sin(std::fmod(orient + M_PI_2,M_PI));
 
-            // vcl_cout<<"grad x: "<<grad_x(i,j)<<vcl_endl;
-            // vcl_cout<<"grad y: "<<grad_y(i,j)<<vcl_endl;
+            // std::cout<<"grad x: "<<grad_x(i,j)<<std::endl;
+            // std::cout<<"grad y: "<<grad_y(i,j)<<std::endl;
 
 
             if ( parabs.edgemap(i,j) == 1)
@@ -130,8 +130,8 @@ dbdet_edgemap_sptr dbdet_detect_pb_edges(vil_image_view<vxl_byte> image,
 
 
     // //Now call the nms code to get the subpixel edge tokens
-    // vcl_vector<vgl_point_2d<double> > loc;
-    // vcl_vector<double> orientation, mag;
+    // std::vector<vgl_point_2d<double> > loc;
+    // std::vector<double> orientation, mag;
 
     // dbdet_nms NMS(
     //     dbdet_nms_params(threshold, dbdet_nms_params::PFIT_3_POINTS), 
@@ -152,7 +152,7 @@ dbdet_edgemap_sptr dbdet_detect_pb_edges(vil_image_view<vxl_byte> image,
 
     // // dbdet_add_intensity_app(image, edge_map, sigma, 1); //opt: 0: original , 1: smoothed, 2: Half gaussian
 
-    // vcl_cerr<<"dont with stuff"<<vcl_endl;
+    // std::cerr<<"dont with stuff"<<std::endl;
 
     return edge_map;
 }

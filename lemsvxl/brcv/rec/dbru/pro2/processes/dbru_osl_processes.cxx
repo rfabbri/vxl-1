@@ -13,7 +13,7 @@
 // \endverbatim
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <brdb/brdb_value.h>
 #include <dbru/dbru_osl.h>
 #include <dbru/dbru_osl_sptr.h>
@@ -27,13 +27,13 @@ bool dbru_load_objects_process_cons(bprb_func_process& pro)
 {
   //input
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
-  input_types.push_back("vcl_string"); //input objects file 
+  std::vector<std::string> input_types;
+  input_types.push_back(vcl_string"); //input objects file 
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbru_osl_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -44,43 +44,43 @@ bool dbru_load_objects_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 1) {
-    vcl_cout << "dbru_load_objects_process: The input number should be 1" << vcl_endl;
+    std::cout << "dbru_load_objects_process: The input number should be 1" << std::endl;
     return false;
   }
 
   // get the inputs
   unsigned i=0;
-  vcl_string objects_file = pro.get_input<vcl_string>(i++);
+  std::string objects_file = pro.get_input<std::string>(i++);
 
   dbru_osl_sptr osl = new dbru_osl();
 
-  vcl_ifstream dbfp(objects_file.c_str());
+  std::ifstream dbfp(objects_file.c_str());
   if (!dbfp) {
-    vcl_cout << "Problems in opening db object list file: " << objects_file << "!\n";
+    std::cout << "Problems in opening db object list file: " << objects_file << "!\n";
     return false;
   }
 
-  vcl_cout << "reading database objects...\n";
+  std::cout << "reading database objects...\n";
   
   char buffer[1000]; 
   dbfp.getline(buffer, 1000);  // comment 
-  vcl_string dummy;
+  std::string dummy;
   dbfp >> dummy;   // <contour_segmentation   
   dbfp >> dummy; // object_cnt="23">
   unsigned int size;
   sscanf(dummy.c_str(), "object_cnt=\"%d\">", &size); 
 
   for (unsigned i = 0; i<size; i++) {
-    vcl_cout << "reading database object: " << i << "...\n";
+    std::cout << "reading database object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp)) { 
-      vcl_cout << "problems in reading database object number: " << i << vcl_endl;
+      std::cout << "problems in reading database object number: " << i << std::endl;
       return 0;
     }
     osl->add_object(obj);
   }
 
-  vcl_cout << "loaded " << osl->size() << " objects\n";
+  std::cout << "loaded " << osl->size() << " objects\n";
 
   pro.set_output_val<dbru_osl_sptr>(0, osl);
   return true;
@@ -93,16 +93,16 @@ bool dbru_create_change_object_process_cons(bprb_func_process& pro)
 {
   //input
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbru_osl_sptr"); //input objects file 
   input_types.push_back("unsigned"); // video id
   input_types.push_back("unsigned"); // frame id
-  input_types.push_back("vcl_string"); // name of the output file
+  input_types.push_back(vcl_string"); // name of the output file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -112,7 +112,7 @@ bool dbru_create_change_object_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 4) {
-    vcl_cout << "dbru_load_objects_process: The input number should be 1" << vcl_endl;
+    std::cout << "dbru_load_objects_process: The input number should be 1" << std::endl;
     return false;
   }
 
@@ -121,7 +121,7 @@ bool dbru_create_change_object_process(bprb_func_process& pro)
   dbru_osl_sptr osl = pro.get_input<dbru_osl_sptr>(i++);
   unsigned video_id = pro.get_input<unsigned>(i++);
   unsigned frame_id = pro.get_input<unsigned>(i++);
-  vcl_string output_file = pro.get_input<vcl_string>(i++);
+  std::string output_file = pro.get_input<std::string>(i++);
 
   bvgl_changes_sptr changes = new bvgl_changes();
 

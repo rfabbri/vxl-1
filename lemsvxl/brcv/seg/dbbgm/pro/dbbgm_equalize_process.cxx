@@ -44,7 +44,7 @@ dbbgm_equalize_process::dbbgm_equalize_process()
       !parameters()->add( "Morphological Radius" , "-mradius" ,   0.0f   ) ||
       !parameters()->add( "YUV Model" ,            "-yuv",        false  ) ||
       !parameters()->add( "Debug" ,                "-debug",      false  )  ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -64,7 +64,7 @@ dbbgm_equalize_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_equalize_process::name()
 {
   return "Equalize with Background";
@@ -88,9 +88,9 @@ dbbgm_equalize_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_equalize_process::get_input_type()
+std::vector< std::string > dbbgm_equalize_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
   to_return.push_back( "image" );
@@ -99,9 +99,9 @@ vcl_vector< vcl_string > dbbgm_equalize_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_equalize_process::get_output_type()
+std::vector< std::string > dbbgm_equalize_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   // return mask image in debug mode only
   bool debug=false;
   parameters()->get_value( "-debug" ,  debug );
@@ -116,7 +116,7 @@ bool
 dbbgm_equalize_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_equalize_process::execute() - "
+    std::cout << "In dbbgm_equalize_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }
@@ -274,7 +274,7 @@ dbbgm_equalize_process::execute()
     if(last_s == scale[0] && last_o == offset[0])
         break;
     else{
-      //vcl_cout << "scale = " << scale[0] << " offset = "<<offset[0]<<vcl_endl;
+      //std::cout << "scale = " << scale[0] << " offset = "<<offset[0]<<std::endl;
       out_img.deep_copy(img);
       for(unsigned p=0; p<img.nplanes(); ++p)
       {
@@ -291,7 +291,7 @@ dbbgm_equalize_process::execute()
   }
 
   //double eq_time = t.real() / 1000.0;
-  //vcl_cout << "equalized in "<<eq_time<<" sec"<<vcl_endl;
+  //std::cout << "equalized in "<<eq_time<<" sec"<<std::endl;
 
   return true;
 }

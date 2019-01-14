@@ -2,7 +2,7 @@
 // Ian Scott, Feb 2004.
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 #include "tube.h"
 #include <vnl/vnl_math.h>
@@ -12,22 +12,22 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
-#include <vcl_cstring.h>
-#include <vcl_string.h>
+#include <cstring>
+#include <string>
 #include "sub.h"
 #include "recog.h"
 
 #define CERR false
 //
-float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
+float main3(int argc, std::vector <std::string> argv, vnl_vector <float>V)
 {
-  ///##comented out 10-2-2006##/// vcl_cout << "Test dtube\n";
+  ///##comented out 10-2-2006##/// std::cout << "Test dtube\n";
 
   vgl_point_3d <double> pts0(1,0,0);
 
-  ///##comented out 10-2-2006##/// vcl_cout << "Inputs\n";
+  ///##comented out 10-2-2006##/// std::cout << "Inputs\n";
   // Simple triangle
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
   pts.push_back( vgl_point_3d<double>(0.0, 0, 0.0) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .74) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .75) );
@@ -36,8 +36,8 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
   pts.push_back( vgl_point_3d<double>(0.0, 0, 5.0) );
 
   //for (unsigned i=0; i < pts.size(); ++i)
-  //  ///##comented out 10-2-2006##/// vcl_cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
- // ///##comented out 10-2-2006##/// vcl_cout << vcl_endl;
+  //  ///##comented out 10-2-2006##/// std::cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
+ // ///##comented out 10-2-2006##/// std::cout << std::endl;
 
   vgl_point_3d <double> e12(1,0,3);
   vgl_point_3d <double> e22(4,0,3);
@@ -57,9 +57,9 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
 
  // aT.ranger(pts);
   /*vgl_polygon<double> poly=vgl_convex_hull(pts);
-  ///##comented out 10-2-2006##/// vcl_cout << "Outputs\n";
-  poly.print(///##comented out 10-2-2006##/// vcl_cout);
-  ///##comented out 10-2-2006##/// vcl_cout << vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout << "Outputs\n";
+  poly.print(///##comented out 10-2-2006##/// std::cout);
+  ///##comented out 10-2-2006##/// std::cout << std::endl;
 
   TEST("inside", poly.contains( pts[0] ), true );
   TEST("inside", poly.contains( pts[1] ), true );
@@ -72,16 +72,16 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
 
   /////////////////////////////////////////
   /////////////////////////////////////////
-  vcl_vector<vgl_point_3d<double> >ptl;
-  vcl_vector<vgl_point_3d<double> >pts_f;
-  vcl_vector<vgl_point_3d<double> >pts_r;
+  std::vector<vgl_point_3d<double> >ptl;
+  std::vector<vgl_point_3d<double> >pts_f;
+  std::vector<vgl_point_3d<double> >pts_r;
   //read_wrl_file(ptl,"C:/CBB/A4000-4099/4073/sel/del.wrl");
   //read_wrl_file(pts_f,"C:/CBB/A4000-4099/4073/sel/delf.wrl");
   //read_wrl_file(pts_r,"C:/CBB/A4000-4099/4073/sel/delr.wrl");
-  vcl_vector <vgl_point_3d<double> >  pt07;
+  std::vector <vgl_point_3d<double> >  pt07;
   //read_bb_box_file(pt07,"bbox_cam_my.txt");
   
-  //vcl_cout<<pt07[0];
+  //std::cout<<pt07[0];
   //*//read_wrl_file(ptl,"del.wrl",true);
  
   read_wrl_file(ptl,argv[0],true);
@@ -137,7 +137,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     
     vnl_vector <int> ans=p0.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point0.set(s0.x(),s0.y(),s0.z());
@@ -146,7 +146,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
   }
   
   int p0_index= find_near_point( pts_r,max_point0,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<std::endl<<"-------------------------------"<<std::endl;
   if (argc!=1) {
   P(0,0)=pts_r[p0_index].x();
   P(0,1)=pts_r[p0_index].y();
@@ -176,7 +176,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     
     vnl_vector <int> ans=p1.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -185,7 +185,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
   }
   
   int p1_index= find_near_point( pts_r,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p1:"<<pts_r[p1_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p1:"<<pts_r[p1_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(1,0)=pts_r[p1_index].x();
   P(1,1)=pts_r[p1_index].y();
   P(1,2)=pts_r[p1_index].z();
@@ -199,7 +199,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     //p1.ranger(pts_r);
     //p1.search(pts_r,pts_r[i]);
     vnl_vector <int> ans=p1.search(pts_r,pts_r[i]);
-    ///##comented out 10-2-2006##/// vcl_cout<<pts_r[i]<<ans<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<pts_r[i]<<ans<<std::endl;
   }*/
 
   //exit(1);
@@ -227,7 +227,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     
     vnl_vector <int> ans=p3.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point_p3.set(s0.x(),s0.y(),s0.z());
@@ -236,7 +236,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
   }
   
   int p3_index= find_near_point( pts_r,max_point_p3,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p3:"<<pts_r[p3_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p3:"<<pts_r[p3_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(3,0)=pts_r[p3_index].x();
   P(3,1)=pts_r[p3_index].y();
   P(3,2)=pts_r[p3_index].z();
@@ -264,7 +264,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     
     vnl_vector <int> ans=p9.search(pts_f,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -274,7 +274,7 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
   }
   
   int p9_index= find_near_point( pts_f,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가?
-  ///##comented out 10-2-2006##/// vcl_cout<<"p9:"<<pts_f[p9_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p9:"<<pts_f[p9_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(9,0)=pts_f[p9_index].x();
   P(9,1)=pts_f[p9_index].y();
   P(9,2)=pts_f[p9_index].z();
@@ -300,19 +300,19 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
 
       vnl_vector <int> ans=p2_nose.search(pts_f,s0);
 
-      ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+      ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
       if (ans[4]>max) {
        max=ans[4];
      //if (2*ans[0]+ans[1]>max) {
      //   max=2*ans[0]+ans[1];
         max_point_p2_nose.set(s0.x(),s0.y(),s0.z());
-       // ///##comented out 10-2-2006##/// vcl_cout<<max<<s0<<vcl_endl;
+       // ///##comented out 10-2-2006##/// std::cout<<max<<s0<<std::endl;
       }
 
     }
 
     int p2_nose_index= find_near_point( pts_f,max_point_p2_nose,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-    ///##comented out 10-2-2006##/// vcl_cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<std::endl;
     P(2,0)=pts_f[p2_nose_index].x();
     P(2,1)=pts_f[p2_nose_index].y();
     P(2,2)=pts_f[p2_nose_index].z();
@@ -330,14 +330,14 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
     if (max_r_z.z()>height_of_car) height_of_car=max_r_z.z();
 
     //float result=recognizer3(P,height_of_car);
-    //vcl_cerr<<V<<vcl_endl;
+    //std::cerr<<V<<std::endl;
    // float result=recognizer4(P,height_of_car,V);
    //  float result=recognizer_RG(P,height_of_car,V);
 
 
-    vcl_vector <int> choice;
+    std::vector <int> choice;
     for (unsigned i=22;i<V.size();i++)
-      choice.push_back((int) vcl_floor(V[i]));
+      choice.push_back((int) std::floor(V[i]));
     float result=tree(P,height_of_car,V,choice);
 
 
@@ -361,15 +361,15 @@ float main3(int argc, vcl_vector <vcl_string> argv, vnl_vector <float>V)
 ///////////////////////////////////////////////////////////
 //int main2(int argc, char* argv[])
 
-float main2(int argc, vcl_vector <vcl_string> argv)
+float main2(int argc, std::vector <std::string> argv)
 {
-  ///##comented out 10-2-2006##/// vcl_cout << "Test dtube\n";
+  ///##comented out 10-2-2006##/// std::cout << "Test dtube\n";
 
   vgl_point_3d <double> pts0(1,0,0);
 
-  ///##comented out 10-2-2006##/// vcl_cout << "Inputs\n";
+  ///##comented out 10-2-2006##/// std::cout << "Inputs\n";
   // Simple triangle
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
   pts.push_back( vgl_point_3d<double>(0.0, 0, 0.0) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .74) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .75) );
@@ -378,8 +378,8 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   pts.push_back( vgl_point_3d<double>(0.0, 0, 5.0) );
 
   //for (unsigned i=0; i < pts.size(); ++i)
-  //  ///##comented out 10-2-2006##/// vcl_cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
- // ///##comented out 10-2-2006##/// vcl_cout << vcl_endl;
+  //  ///##comented out 10-2-2006##/// std::cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
+ // ///##comented out 10-2-2006##/// std::cout << std::endl;
 
   vgl_point_3d <double> e12(1,0,3);
   vgl_point_3d <double> e22(4,0,3);
@@ -399,9 +399,9 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 
  // aT.ranger(pts);
   /*vgl_polygon<double> poly=vgl_convex_hull(pts);
-  ///##comented out 10-2-2006##/// vcl_cout << "Outputs\n";
-  poly.print(///##comented out 10-2-2006##/// vcl_cout);
-  ///##comented out 10-2-2006##/// vcl_cout << vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout << "Outputs\n";
+  poly.print(///##comented out 10-2-2006##/// std::cout);
+  ///##comented out 10-2-2006##/// std::cout << std::endl;
 
   TEST("inside", poly.contains( pts[0] ), true );
   TEST("inside", poly.contains( pts[1] ), true );
@@ -414,16 +414,16 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 
   /////////////////////////////////////////
   /////////////////////////////////////////
-  vcl_vector<vgl_point_3d<double> >ptl;
-  vcl_vector<vgl_point_3d<double> >pts_f;
-  vcl_vector<vgl_point_3d<double> >pts_r;
+  std::vector<vgl_point_3d<double> >ptl;
+  std::vector<vgl_point_3d<double> >pts_f;
+  std::vector<vgl_point_3d<double> >pts_r;
   //read_wrl_file(ptl,"C:/CBB/A4000-4099/4073/sel/del.wrl");
   //read_wrl_file(pts_f,"C:/CBB/A4000-4099/4073/sel/delf.wrl");
   //read_wrl_file(pts_r,"C:/CBB/A4000-4099/4073/sel/delr.wrl");
-  vcl_vector <vgl_point_3d<double> >  pt07;
+  std::vector <vgl_point_3d<double> >  pt07;
   //read_bb_box_file(pt07,"bbox_cam_my.txt");
   
-  //vcl_cout<<pt07[0];
+  //std::cout<<pt07[0];
   //*//read_wrl_file(ptl,"del.wrl",true);
  
   read_wrl_file(ptl,argv[0],true);
@@ -479,7 +479,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     
     vnl_vector <int> ans=p0.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point0.set(s0.x(),s0.y(),s0.z());
@@ -488,7 +488,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   }
   
   int p0_index= find_near_point( pts_r,max_point0,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<std::endl<<"-------------------------------"<<std::endl;
   if (argc!=1) {
   P(0,0)=pts_r[p0_index].x();
   P(0,1)=pts_r[p0_index].y();
@@ -518,7 +518,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     
     vnl_vector <int> ans=p1.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -527,7 +527,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   }
   
   int p1_index= find_near_point( pts_r,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p1:"<<pts_r[p1_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p1:"<<pts_r[p1_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(1,0)=pts_r[p1_index].x();
   P(1,1)=pts_r[p1_index].y();
   P(1,2)=pts_r[p1_index].z();
@@ -541,7 +541,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     //p1.ranger(pts_r);
     //p1.search(pts_r,pts_r[i]);
     vnl_vector <int> ans=p1.search(pts_r,pts_r[i]);
-    ///##comented out 10-2-2006##/// vcl_cout<<pts_r[i]<<ans<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<pts_r[i]<<ans<<std::endl;
   }*/
 
   //exit(1);
@@ -569,7 +569,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     
     vnl_vector <int> ans=p3.search(pts_r,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point_p3.set(s0.x(),s0.y(),s0.z());
@@ -578,7 +578,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   }
   
   int p3_index= find_near_point( pts_r,max_point_p3,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  ///##comented out 10-2-2006##/// vcl_cout<<"p3:"<<pts_r[p3_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p3:"<<pts_r[p3_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(3,0)=pts_r[p3_index].x();
   P(3,1)=pts_r[p3_index].y();
   P(3,2)=pts_r[p3_index].z();
@@ -606,7 +606,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     
     vnl_vector <int> ans=p9.search(pts_f,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -616,7 +616,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   }
   
   int p9_index= find_near_point( pts_f,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가?
-  ///##comented out 10-2-2006##/// vcl_cout<<"p9:"<<pts_f[p9_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p9:"<<pts_f[p9_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(9,0)=pts_f[p9_index].x();
   P(9,1)=pts_f[p9_index].y();
   P(9,2)=pts_f[p9_index].z();
@@ -642,19 +642,19 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 
       vnl_vector <int> ans=p2_nose.search(pts_f,s0);
 
-      ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+      ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
       if (ans[4]>max) {
        max=ans[4];
      //if (2*ans[0]+ans[1]>max) {
      //   max=2*ans[0]+ans[1];
         max_point_p2_nose.set(s0.x(),s0.y(),s0.z());
-       // ///##comented out 10-2-2006##/// vcl_cout<<max<<s0<<vcl_endl;
+       // ///##comented out 10-2-2006##/// std::cout<<max<<s0<<std::endl;
       }
 
     }
 
     int p2_nose_index= find_near_point( pts_f,max_point_p2_nose,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-    ///##comented out 10-2-2006##/// vcl_cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<std::endl;
     P(2,0)=pts_f[p2_nose_index].x();
     P(2,1)=pts_f[p2_nose_index].y();
     P(2,2)=pts_f[p2_nose_index].z();
@@ -679,9 +679,9 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 
 
 
-    ///##comented out 10-2-2006##/// vcl_cout<<"************************************\n"<<result<<"        "<<vul_file::get_cwd()<<
-    ///##comented out 10-2-2006##///  "\n************************************"<<vcl_endl;
-    ///##comented out 10-2-2006##/// vcl_cout<<P<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<"************************************\n"<<result<<"        "<<vul_file::get_cwd()<<
+    ///##comented out 10-2-2006##///  "\n************************************"<<std::endl;
+    ///##comented out 10-2-2006##/// std::cout<<P<<std::endl;
     /*
     t1.set(1,0,-1);
     t2.set(0,0,-1);
@@ -689,7 +689,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     for (unsigned i=0;i<20;i++) // search just 10 points..
     {
     //for (double t1z=0;t1z<1;t1z+=.1) {
-    if (vcl_fabs(pts_r[i].z()-pts_r[0].z()) <.5)
+    if (std::fabs(pts_r[i].z()-pts_r[0].z()) <.5)
     {
 
 
@@ -701,7 +701,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     p1.set_length(3.0,4.0,4.0, 4.0);
 
     vnl_vector <int> ans=p1.search(pts_r,pts_r[i]);
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<std::endl;
     }
 
     }
@@ -756,7 +756,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     
     vnl_vector <int> ans=p9_angle.search(pts_f,s0);
     
-    ///##comented out 10-2-2006##/// vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    ///##comented out 10-2-2006##/// std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -765,27 +765,27 @@ float main2(int argc, vcl_vector <vcl_string> argv)
   }
   
   int p9_angle_index= find_near_point( pts_f,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가?
-  ///##comented out 10-2-2006##/// vcl_cout<<"p9 angle:"<<pts_f[p9_angle_index]<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"p9 angle:"<<pts_f[p9_angle_index]<<std::endl;
 
   vgl_vector_3d <double>a1=ep7-pts_f[p9_angle_index];
   vgl_vector_3d <double>a2=ep9-pts_f[p9_angle_index];
 
   double dp=dot_product(a1,a2);
-  ///##comented out 10-2-2006##/// vcl_cout<<"dot_product(a1,a2)  "<<a1.length()<<" "<<a2.length()<<" "<<acos(dp/(a1.length()*a2.length()))*180/vnl_math::pi<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout <<"a1(hood)" <<a1<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"dot_product(a1,a2)  "<<a1.length()<<" "<<a2.length()<<" "<<acos(dp/(a1.length()*a2.length()))*180/vnl_math::pi<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout <<"a1(hood)" <<a1<<std::endl;
 
-  /////##comented out 10-2-2006##/// vcl_cout<<"angle :" <<
+  /////##comented out 10-2-2006##/// std::cout<<"angle :" <<
   //P(9,0)=pts_f[p9_index].x();
   //P(9,1)=pts_f[p9_index].y();
   //P(9,2)=pts_f[p9_index].z();
 
-   //vcl_cerr<<" vcl_cerr_test"<<vcl_endl;
+   //std::cerr<<" vcl_cerr_test"<<std::endl;
 
-   //vcl_cerr<<vul_file::dirname(argv[0]);
-  if (CERR) vcl_cerr<<vul_file::get_cwd()<<"----------------   "<<result<<vcl_endl;
-   //vcl_string input_file_path=".";
-  // vcl_string aaa=vul_file::strip_directory(input_file);
-   //   vcl_string nums1=vul_file::strip_extension(aaa);
+   //std::cerr<<vul_file::dirname(argv[0]);
+  if (CERR) std::cerr<<vul_file::get_cwd()<<"----------------   "<<result<<std::endl;
+   //std::string input_file_path=".";
+  // std::string aaa=vul_file::strip_directory(input_file);
+   //   std::string nums1=vul_file::strip_extension(aaa);
 
   return 7;
   ///////////////////////////////
@@ -814,7 +814,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 
   vgl_point_3d <double> p7(P(7,0),P(7,1),P(7,2));
   unsigned int p7_index=find_near_point(pts_f,p7,1,pts_f.size());
-  ///##comented out 10-2-2006##/// vcl_cout<<p7_index<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<p7_index<<std::endl;
   for (unsigned i=0;i<2;i++) // search just 10 points..
   {
 
@@ -822,7 +822,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     for (unsigned j=p7_index;j<p7_index+1 ;j++) { // near tha p9fC points..
       for (unsigned k=i+1;k<j;k++) {
 
-       // ///##comented out 10-2-2006##/// vcl_cout<<pts_f[i]<<pts_f[k]<<pts_f[j]<<vcl_endl;
+       // ///##comented out 10-2-2006##/// std::cout<<pts_f[i]<<pts_f[k]<<pts_f[j]<<std::endl;
         t1.set(pts_f[i].x()-pts_f[k].x(),pts_f[i].y()-pts_f[k].y(),pts_f[i].z()-pts_f[k].z());
         t2.set(pts_f[j].x()-pts_f[k].x(),pts_f[j].y()-pts_f[k].y(),pts_f[j].z()-pts_f[k].z());
 
@@ -830,7 +830,7 @@ float main2(int argc, vcl_vector <vcl_string> argv)
         tube p789(pts_f[k],t1,t2,t3,t4,.1,-1,1,1,0,0);
         
         vnl_vector <int> ans=p789.search(pts_f,pts_f[k]);
-        ///##comented out 10-2-2006##/// vcl_cout<<ans<<vcl_endl;
+        ///##comented out 10-2-2006##/// std::cout<<ans<<std::endl;
         if (ans[4]>max_linear[4]) {
           max_linear=ans;
           max_lin_index=k;
@@ -849,8 +849,8 @@ float main2(int argc, vcl_vector <vcl_string> argv)
     }
 
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<"max_lin "<<max_linear<<" "<<max_lin_point<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"max_sqr "<<max_square<<" "<<max_square_point<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"max_lin "<<max_linear<<" "<<max_lin_point<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"max_sqr "<<max_square<<" "<<max_square_point<<std::endl;
 
 
 
@@ -865,20 +865,20 @@ float main2(int argc, vcl_vector <vcl_string> argv)
 //////////////////////
 //////////////////////
 
-vcl_string get_recent(vcl_vector <vcl_string> flist[],int i) {
+std::string get_recent(std::vector <std::string> flist[],int i) {
   int N=flist[i].size();
   if (N==0) return "NULL";
-  vcl_string to_return =flist[i][N-1];
+  std::string to_return =flist[i][N-1];
   return to_return;
 }
 
-vcl_vector <vcl_string>  get_from_range( vcl_vector <vcl_string> flist[], int index, int month_start, int month_end, int day_start, int day_end, int time_start, int time_end) 
-//void get_from_range(vcl_vector <vcl_string> flist[], int index) 
+std::vector <std::string>  get_from_range( std::vector <std::string> flist[], int index, int month_start, int month_end, int day_start, int day_end, int time_start, int time_end) 
+//void get_from_range(std::vector <std::string> flist[], int index) 
 {
 
-  vcl_vector <vcl_string> to_return;
-  // vcl_vector <vul_reg_exp> rlist;
-  vcl_string vr_dir,mode;
+  std::vector <std::string> to_return;
+  // std::vector <vul_reg_exp> rlist;
+  std::string vr_dir,mode;
   int word_count;
   // for (unsigned i=0;i<4;i++) {
   if (index==0) { vr_dir="contour_0_"; mode="0"; word_count=9;}
@@ -890,20 +890,20 @@ vcl_vector <vcl_string>  get_from_range( vcl_vector <vcl_string> flist[], int in
   //rlist.push_back(r0);
   // }
 
-  vcl_cout<<vr_dir<<vcl_endl;
+  std::cout<<vr_dir<<std::endl;
 
-  //vcl_vector <vcl_string> to_return;
+  //std::vector <std::string> to_return;
   for (unsigned i=0;i<flist[index].size();i++) 
   {
-    vcl_string along=flist[index][i];
+    std::string along=flist[index][i];
     //a=vul_file::basename(along);
-    vcl_string sub=along.substr(word_count+3);
+    std::string sub=along.substr(word_count+3);
     int month=atoi(sub.substr(0,2).c_str());
     int day=atoi(sub.substr(3,2).c_str());
     int year=atoi(sub.substr(6,4).c_str());
     int time=atoi(sub.substr(11,2).c_str());
 
-   //// vcl_cout<<month<<" "<<day<<" "<<year<<" "<<time<<vcl_endl;
+   //// std::cout<<month<<" "<<day<<" "<<year<<" "<<time<<std::endl;
 
     if (day>=day_start&&day<=day_end && month>=month_start&&month<=month_end && time>=time_start&&time<=time_end)
     {
@@ -918,20 +918,20 @@ vcl_vector <vcl_string>  get_from_range( vcl_vector <vcl_string> flist[], int in
 
 int main(int argc, char* argv[])
 {
-        vcl_cout<<"--------------------------------------------"<<vcl_endl;
-        if (CERR) vcl_cerr<<"--------------------------------------------"<<vcl_endl;
-        vcl_cout<<vul_file::get_cwd()<<vcl_endl;
-        if (CERR) vcl_cerr<<vul_file::get_cwd();//<<vcl_endl;
- vcl_vector <vcl_string>  flist[4];
+        std::cout<<"--------------------------------------------"<<std::endl;
+        if (CERR) std::cerr<<"--------------------------------------------"<<std::endl;
+        std::cout<<vul_file::get_cwd()<<std::endl;
+        if (CERR) std::cerr<<vul_file::get_cwd();//<<std::endl;
+ std::vector <std::string>  flist[4];
   //vul_file_iterator fn=vul_file::dirname(filename)+"/*.con";
   //vul_file_iterator fn=vul_file::dirname(vul_file::get_cwd());
   //vul_file_iterator fn=input_file_path+"/*.con";
   bool recon_flag=0;
-  vcl_string vr_dir;
-  vcl_string mode;
+  std::string vr_dir;
+  std::string mode;
 
   int METHODS_NUM=2;
-  vcl_vector <vul_reg_exp> rlist;
+  std::vector <vul_reg_exp> rlist;
   for (unsigned i=0;i<METHODS_NUM;i++) {
     if (i==0) { vr_dir="contour_0"; mode="0";}
     else if (i==1) {vr_dir="correct_1";mode="1";}
@@ -942,22 +942,22 @@ int main(int argc, char* argv[])
     rlist.push_back(r0);
   }
   
-  //vcl_string input_file_path="C:/CBB/A4000-4099/4011/sel.";
-  vcl_string input_file_path=".";
+  //std::string input_file_path="C:/CBB/A4000-4099/4011/sel.";
+  std::string input_file_path=".";
   vul_file_iterator fn=input_file_path+"/*";//nframes_=5;
   for ( ; fn; ++fn) 
   {
-    vcl_string input_file = fn();//
+    std::string input_file = fn();//
     if (vul_file::is_directory(input_file)) {
 
       for (unsigned j=0;j<METHODS_NUM;j++)
         if (rlist[j].find(input_file.c_str()) ){
           flist[j].push_back(input_file);
-         //***// vcl_cout<<j<<": "<<input_file<<vcl_endl;
+         //***// std::cout<<j<<": "<<input_file<<std::endl;
         }
     }
   }
-  //***//vcl_cout<<vul_file::get_cwd()<<"----------------   "<<vcl_endl;
+  //***//std::cout<<vul_file::get_cwd()<<"----------------   "<<std::endl;
  
 
   /*int day_in=atoi(argv[1]);
@@ -966,25 +966,25 @@ int main(int argc, char* argv[])
   int time_out =atoi(argv[4]);
 */
   for (unsigned i=1;i<METHODS_NUM;i++) {
-    vcl_string where;
+    std::string where;
     where=get_recent(flist,i);
-    vcl_cout<< where<<vcl_endl;
-    //vcl_vector <vcl_string> FL=get_from_range(flist,1, 10,11,9,17, 0,12);
-   /* vcl_vector <vcl_string> FL=get_from_range(flist,1, 10,10,day_in,day_out, time_in,time_out);
-    vcl_cout<<"================="<<vcl_endl;
+    std::cout<< where<<std::endl;
+    //std::vector <std::string> FL=get_from_range(flist,1, 10,11,9,17, 0,12);
+   /* std::vector <std::string> FL=get_from_range(flist,1, 10,10,day_in,day_out, time_in,time_out);
+    std::cout<<"================="<<std::endl;
     for (unsigned j=0;j<FL.size();j++)
-      vcl_cout<<FL[j]<<vcl_endl;
+      std::cout<<FL[j]<<std::endl;
 */
     
 
-   vcl_vector <vcl_string>  which_to_read;
+   std::vector <std::string>  which_to_read;
 
     if (i==0) 
     {
-      vcl_cout<<"***case 0***"<<vcl_endl;
-      vcl_string File =where+"/del-AEC-0.wrl";
-      vcl_string Filef=where+"/delf-AEC-0.wrl";
-      vcl_string Filer=where+"/delr-AEC-0.wrl";
+      std::cout<<"***case 0***"<<std::endl;
+      std::string File =where+"/del-AEC-0.wrl";
+      std::string Filef=where+"/delf-AEC-0.wrl";
+      std::string Filer=where+"/delr-AEC-0.wrl";
 
       which_to_read.push_back(File);
       which_to_read.push_back(Filef);
@@ -993,10 +993,10 @@ int main(int argc, char* argv[])
     }
     if (i==1)
     {
-      vcl_cout<<"***case 1***"<<vcl_endl;
-      vcl_string File =where+"/del-AEC-1.wrl";
-      vcl_string Filef=where+"/delf-AEC-1.wrl";
-      vcl_string Filer=where+"/delr-AEC-1.wrl";
+      std::cout<<"***case 1***"<<std::endl;
+      std::string File =where+"/del-AEC-1.wrl";
+      std::string Filef=where+"/delf-AEC-1.wrl";
+      std::string Filer=where+"/delr-AEC-1.wrl";
 
       which_to_read.push_back(File);
       which_to_read.push_back(Filef);
@@ -1004,13 +1004,13 @@ int main(int argc, char* argv[])
     }
     which_to_read.push_back(where+"/bbox_cam_my.txt");
 
-          vcl_string reference=vul_file::get_cwd();
-         vcl_cout<<reference<<"***"<<vcl_endl;
-         // vcl_cout<<"afafdsa"<<vcl_endl;
+          std::string reference=vul_file::get_cwd();
+         std::cout<<reference<<"***"<<std::endl;
+         // std::cout<<"afafdsa"<<std::endl;
          int SZ=reference.size();
-   vcl_cout<<SZ<<vcl_endl;
+   std::cout<<SZ<<std::endl;
     int ref_id=atoi(reference.substr(SZ-8,SZ-4).c_str());  
-    vcl_cout<<"directory id: "<<ref_id<<vcl_endl;
+    std::cout<<"directory id: "<<ref_id<<std::endl;
         
         ///float result=main2(i,which_to_read);
     vnl_vector <float> V(argc,0);
@@ -1032,21 +1032,21 @@ int main(int argc, char* argv[])
 
 
       }
-      if (CERR) vcl_cerr<<V[j]<<" ";
+      if (CERR) std::cerr<<V[j]<<" ";
     }
 
 
 
-    if (CERR) vcl_cerr<<vcl_endl;
+    if (CERR) std::cerr<<std::endl;
     float result=main3(i,which_to_read,V);
-        vcl_cout<<result<<vcl_endl;
+        std::cout<<result<<std::endl;
         //vul_reg_exp r(vul_file::get_cwd());
 
         int class_id=970;
   if (result==999) 
   {
-                vcl_cout<<"999"<<vcl_endl;
-                vcl_cerr<<"                   No Decision         "<<result<<vcl_endl;
+                std::cout<<"999"<<std::endl;
+                std::cerr<<"                   No Decision         "<<result<<std::endl;
         }
         if (result<10) class_id=0;
         else if (result<20) class_id=1;
@@ -1055,15 +1055,15 @@ int main(int argc, char* argv[])
 
   int real_class_id;
   bool check=table(ref_id,class_id,real_class_id);
-  vcl_cout<<"real_class_id "<<real_class_id<<vcl_endl;
+  std::cout<<"real_class_id "<<real_class_id<<std::endl;
         if (check) 
         {
-                vcl_cout<<"OOOOO "<<real_class_id<<" "<<result<<vcl_endl;
-                if (CERR) vcl_cerr<<"                       OOOOO    "<<real_class_id<<" "<<result<<vcl_endl;
+                std::cout<<"OOOOO "<<real_class_id<<" "<<result<<std::endl;
+                if (CERR) std::cerr<<"                       OOOOO    "<<real_class_id<<" "<<result<<std::endl;
         }
         else {
-                vcl_cout<<"XXXXX "<<real_class_id<<" "<<result<<vcl_endl;
-                if (CERR) vcl_cerr<<"                         XXXXX     "<<real_class_id<<" "<<result<<vcl_endl;
+                std::cout<<"XXXXX "<<real_class_id<<" "<<result<<std::endl;
+                if (CERR) std::cerr<<"                         XXXXX     "<<real_class_id<<" "<<result<<std::endl;
         }
 
   }

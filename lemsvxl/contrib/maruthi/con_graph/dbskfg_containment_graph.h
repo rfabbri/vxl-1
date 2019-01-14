@@ -22,7 +22,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_spatial_object_2d.h>
-#include <vcl_string.h>
+#include <string>
 
 //: 
 class dbskfg_containment_graph : 
@@ -53,7 +53,7 @@ public:
     // -------------------------------------------------------------------------
 
     //: Return the type identifier string
-    vcl_string is_a() const {return "dbskfg_containment_graph"; }
+    std::string is_a() const {return "dbskfg_containment_graph"; }
 
     //: Compute region root
     void compute_region_root(dbskfg_rag_node_sptr rag_node);
@@ -62,26 +62,26 @@ public:
     bool expand_region_root(dbskfg_rag_node_sptr rag_node);
 
     //: Print out graph
-    void print(vcl_ostream& os);
+    void print(std::ostream& os);
 
     //: Returns depth map
-    vcl_map<unsigned int,unsigned int>& depth_map(){return depth_map_;}
+    std::map<unsigned int,unsigned int>& depth_map(){return depth_map_;}
 
     //: Set outputfilename
-    void set_output_filename(vcl_string file){output_filename_ = file;}
+    void set_output_filename(std::string file){output_filename_ = file;}
     
     void print_node_cache();
 
     //: Return node if
-    dbskfg_containment_node_sptr node_merge(vcl_map<unsigned int,bool>&
+    dbskfg_containment_node_sptr node_merge(std::map<unsigned int,bool>&
                                             attr ,
-                                            vcl_set<vcl_string>& wavefront);
+                                            std::set<std::string>& wavefront);
 
     //: insert node
     void insert_node(dbskfg_containment_node_sptr node);
 
     //: Expand tree
-    void expand_tree(vcl_ofstream& stream);
+    void expand_tree(std::ofstream& stream);
 
     
 protected:
@@ -96,38 +96,38 @@ private:
     dbskfg_containment_node::ExpandType expand_type_;
 
     // Holds all contours with their ids
-    vcl_map<unsigned int, vcl_vector<vsol_spatial_object_2d_sptr> > 
+    std::map<unsigned int, std::vector<vsol_spatial_object_2d_sptr> > 
         original_list_;
 
     // Keep initial attributes
-    vcl_map<unsigned int,bool> initial_attributes_;
+    std::map<unsigned int,bool> initial_attributes_;
 
     // Keep a map of all nodes at depth
-    vcl_map<unsigned int,unsigned int> depth_map_;
+    std::map<unsigned int,unsigned int> depth_map_;
 
     // Keep nodes by depth
-    vcl_map<unsigned int, vcl_vector<dbskfg_containment_node_sptr> >
+    std::map<unsigned int, std::vector<dbskfg_containment_node_sptr> >
         depth_nodes_;
 
     // Keep a map of all nodes for easy cache
-    vcl_map< vcl_vector<bool>, vcl_vector< vcl_pair<vcl_set<vcl_string>
+    std::map< std::vector<bool>, std::vector< std::pair<std::set<std::string>
         ,dbskfg_containment_node_sptr > > > node_cache_;
 
     // Keep a threshold for total path probability
     double path_threshold_;
 
     // Keep outfile name
-    vcl_string output_filename_;
+    std::string output_filename_;
 
     //: Print node out
-    void print_node(vcl_map<unsigned int,bool> attributes,
-                    vcl_string filename,
+    void print_node(std::map<unsigned int,bool> attributes,
+                    std::string filename,
                     vgl_polygon<double>& vgl_poly);
 
     //: Expand tree level
     void expand_tree_level(
-        vcl_vector<dbskfg_containment_node_sptr>& queue,
-        vcl_ofstream& ofstream);
+        std::vector<dbskfg_containment_node_sptr>& queue,
+        std::ofstream& ofstream);
 
     // Make copy constructor private
     dbskfg_containment_graph(const dbskfg_containment_graph&);

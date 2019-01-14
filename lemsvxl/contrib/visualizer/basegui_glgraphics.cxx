@@ -6,7 +6,7 @@
 #include "basegui_glfont.h"
 #include "basegui_rgbimage.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 GLGraphicsView::GLGraphicsView(SceneGraph *c) 
   : _width(-1), _height(-1), _scene_graph(c),

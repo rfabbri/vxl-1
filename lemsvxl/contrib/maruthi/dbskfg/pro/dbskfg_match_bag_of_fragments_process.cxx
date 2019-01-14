@@ -16,22 +16,22 @@
 //: Constructor
 dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
 {    
-    vcl_string interp_ds = "Interpolation ds to get densely interpolated versions of the scurves: meaningful if localized_edit option is ON";
-    vcl_string local_edit = "Local Edit Improves elastic matching cost of scurves using the densely interpolated version";
+    std::string interp_ds = "Interpolation ds to get densely interpolated versions of the scurves: meaningful if localized_edit option is ON";
+    std::string local_edit = "Local Edit Improves elastic matching cost of scurves using the densely interpolated version";
     
-    vcl_vector<vcl_string> choices;
+    std::vector<std::string> choices;
     choices.push_back("Scale to Ref Area");
     choices.push_back("Scale to Mean Shape");
     choices.push_back("Scale to Larger Shape");
     choices.push_back("Scale to Smaller Shape");
 
-    vcl_vector<vcl_string> grad_color_choices;
+    std::vector<std::string> grad_color_choices;
     grad_color_choices.push_back("RGB");
     grad_color_choices.push_back("Opponent");
     grad_color_choices.push_back("Normalized Opponent");
     grad_color_choices.push_back("LAB");
     
-    vcl_vector<vcl_string> raw_color_choices;
+    std::vector<std::string> raw_color_choices;
     raw_color_choices.push_back("LAB");
     raw_color_choices.push_back("HSV");
     raw_color_choices.push_back("RGB");
@@ -53,7 +53,7 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         !parameters()->add( "Output folder:", 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
-                            "-output_prefix", vcl_string("")) ||
+                            "-output_prefix", std::string("")) ||
         !parameters()->add("Sampling ds to reconstruct the scurve", 
                            "-scurve_sample_ds", (float) 5.0f ) ||
         !parameters()->add(interp_ds,
@@ -101,7 +101,7 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -118,16 +118,16 @@ dbskfg_match_bag_of_fragments_process::clone() const
     return new dbskfg_match_bag_of_fragments_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_match_bag_of_fragments_process::name()
 {
     return "Match Bag of Fragments";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_bag_of_fragments_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "image" );
 
@@ -135,10 +135,10 @@ dbskfg_match_bag_of_fragments_process::get_input_type()
     
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_bag_of_fragments_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
@@ -166,37 +166,37 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     bpro1_filepath model_folder_filepath;
     this->parameters()->get_value("-model_folder", model_folder_filepath);
-    vcl_string model_dir = model_folder_filepath.path;
+    std::string model_dir = model_folder_filepath.path;
     
     bpro1_filepath query_folder_filepath;
     this->parameters()->get_value("-query_folder", query_folder_filepath);
-    vcl_string query_dir = query_folder_filepath.path;
+    std::string query_dir = query_folder_filepath.path;
 
     bpro1_filepath model_image_file;
     this->parameters()->get_value("-model_image_file" , model_image_file);
-    vcl_string model_image_path=model_image_file.path;
+    std::string model_image_path=model_image_file.path;
 
 
     bpro1_filepath bow_file;
     this->parameters()->get_value("-bow_file" , bow_file);
-    vcl_string bow_path=bow_file.path;
+    std::string bow_path=bow_file.path;
 
     bpro1_filepath bow_color_file;
     this->parameters()->get_value("-bow_color_file", bow_color_file);
-    vcl_string bow_color_path=bow_color_file.path;
+    std::string bow_color_path=bow_color_file.path;
     
     bpro1_filepath part_file;
     this->parameters()->get_value("-part_file" , part_file);
-    vcl_string part_path=part_file.path;
+    std::string part_path=part_file.path;
 
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
 
-    vcl_string output_prefix;
+    std::string output_prefix;
     parameters()->get_value("-output_prefix", output_prefix);
  
-    vcl_string output_file = output_folder+"/"+output_prefix;
+    std::string output_file = output_folder+"/"+output_prefix;
 
     //get the subsampling parameter
     bool elastic_splice_cost    = false; 

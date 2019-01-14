@@ -26,11 +26,11 @@ class dbcvr_cvmatch_intensity : public dbcvr_cvmatch
 public:
 
     dbcvr_cvmatch_intensity() {}
-    dbcvr_cvmatch_intensity(vcl_vector<double> pixel1, vcl_vector<double> pixel2);
+    dbcvr_cvmatch_intensity(std::vector<double> pixel1, std::vector<double> pixel2);
 
     double computeIntervalCost(int i, int ip, int j, int jp);
-    void setPixelVector1(vcl_vector<double> pixel1) { pixel_vector1_=pixel1; }
-    void setPixelVector2(vcl_vector<double> pixel2) { pixel_vector2_=pixel2; }
+    void setPixelVector1(std::vector<double> pixel1) { pixel_vector1_=pixel1; }
+    void setPixelVector2(std::vector<double> pixel2) { pixel_vector2_=pixel2; }
     void initializeDPCosts();
     void computeDPCosts();
     void findDPCorrespondence();
@@ -39,8 +39,8 @@ public:
 
 protected:
 
-    vcl_vector<double> pixel_vector1_;
-    vcl_vector<double> pixel_vector2_;
+    std::vector<double> pixel_vector1_;
+    std::vector<double> pixel_vector2_;
 
 };
 

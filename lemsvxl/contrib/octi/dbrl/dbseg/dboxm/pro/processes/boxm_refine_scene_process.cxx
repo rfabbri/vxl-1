@@ -11,7 +11,7 @@
 // \author Gamze Tunali
 // \date April 24, 2009
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
@@ -31,7 +31,7 @@ bool boxm_refine_scene_process_cons(bprb_func_process& pro)
   //input[0]: The scene
   //input[1]: The threshold for splitting
   //input[2]: bool for resetting the appearence model
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "boxm_scene_base_sptr";
   input_types_[1] = "float";
   input_types_[2] = "bool";
@@ -47,7 +47,7 @@ bool boxm_refine_scene_process(bprb_func_process& pro)
   using namespace boxm_refine_scene_process_globals;
 
   if ( pro.n_inputs() < n_inputs_ ){
-    vcl_cout << pro.name() << "boxm_refine_scene_process: The input number should be " << n_inputs_<< vcl_endl;
+    std::cout << pro.name() << "boxm_refine_scene_process: The input number should be " << n_inputs_<< std::endl;
     return false;
   }
 
@@ -59,7 +59,7 @@ bool boxm_refine_scene_process(bprb_func_process& pro)
 
   // check the input validity
   if (scene == 0) {
-     vcl_cout << "boxm_refine_scene_process: scene is null, cannot run" << vcl_endl;
+     std::cout << "boxm_refine_scene_process: scene is null, cannot run" << std::endl;
      return false;
   }
 
@@ -76,7 +76,7 @@ bool boxm_refine_scene_process(bprb_func_process& pro)
     }
   } else if (scene->appearence_model() == BOXM_APM_SIMPLE_GREY) {
     if (scene->multi_bin()) {
-      vcl_cout << "boxm_refine_scene_process: multibin case is not implemented for BOXM_APM_SIMPLE_GREY yet" << vcl_endl;
+      std::cout << "boxm_refine_scene_process: multibin case is not implemented for BOXM_APM_SIMPLE_GREY yet" << std::endl;
       return false;
     }
     else {
@@ -86,7 +86,7 @@ bool boxm_refine_scene_process(bprb_func_process& pro)
     }
   }else if (scene->appearence_model() == BOXM_APM_MOB_GREY) {
     if (scene->multi_bin()) {
-      vcl_cout << "boxm_refine_scene_process: multibin case is not implemented for BOXM_APM_SIMPLE_GREY yet" << vcl_endl;
+      std::cout << "boxm_refine_scene_process: multibin case is not implemented for BOXM_APM_SIMPLE_GREY yet" << std::endl;
       return false;
     }
     else {
@@ -96,7 +96,7 @@ bool boxm_refine_scene_process(bprb_func_process& pro)
     }
   }
   else {
-    vcl_cout << "boxm_refine_scene_process: undefined APM type" << vcl_endl;
+    std::cout << "boxm_refine_scene_process: undefined APM type" << std::endl;
     return false;
   }
 

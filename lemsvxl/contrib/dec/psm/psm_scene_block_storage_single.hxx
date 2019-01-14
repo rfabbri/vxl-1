@@ -3,10 +3,10 @@
 
 #include "psm_scene_block_storage_single.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_ios.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <fstream>
+#include <ios>
+#include <string>
 
 #include <vul/vul_file.h>
 #include <vgl/vgl_point_3d.h>
@@ -31,12 +31,12 @@ hsds_fd_tree<T,3>& psm_scene_block_storage_single<T>::get_block(vgl_point_3d<int
     put_block();
   }
   curr_block_ = block_index;
-  vcl_string fname = this->storage_filename(block_index.x(),block_index.y(),block_index.z());
+  std::string fname = this->storage_filename(block_index.x(),block_index.y(),block_index.z());
   // check if file exsist already or not
   if (vul_file::exists(fname))  {
-    vcl_ifstream is(fname.c_str(),vcl_ios::binary);
+    std::ifstream is(fname.c_str(),std::ios::binary);
     if (!is.good()) {
-      vcl_cerr << "error opening file " << fname << " for read! " << vcl_endl;
+      std::cerr << "error opening file " << fname << " for read! " << std::endl;
     }
     else {
       block_.b_read(is);
@@ -55,8 +55,8 @@ template <class T>
 void psm_scene_block_storage_single<T>::put_block()
 {
   if (curr_block_valid_) {
-    vcl_string fname = this->storage_filename(curr_block_.x(),curr_block_.y(),curr_block_.z());
-    vcl_ofstream os(fname.c_str(),vcl_ios::binary);
+    std::string fname = this->storage_filename(curr_block_.x(),curr_block_.y(),curr_block_.z());
+    std::ofstream os(fname.c_str(),std::ios::binary);
     block_.b_write(os);
   }
   return;

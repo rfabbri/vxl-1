@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <string>
+#include <vector>
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -31,7 +31,7 @@ static void test_homography_generator()
 
   vil_image_view_base_sptr img0_base = vil_load("./frame_00000.png");
   if (!img0_base) {
-    vcl_cerr << "error loading image." << vcl_endl;
+    std::cerr << "error loading image." << std::endl;
     TEST("FAILED TO LOAD TEST IMAGE",false,true);
     return;
   }
@@ -46,8 +46,8 @@ static void test_homography_generator()
   vnl_matrix_fixed<double,2,3> HA;
   double rot_angle = 0.1;
 
-  HA(0,0) = vcl_cos(rot_angle);    HA(0,1) = vcl_sin(rot_angle);  HA(0,2) =  -20.0;
-  HA(1,0) = -vcl_sin(rot_angle);  HA(1,1) = vcl_cos(rot_angle) ; HA(1,2) = 30.0;
+  HA(0,0) = std::cos(rot_angle);    HA(0,1) = std::sin(rot_angle);  HA(0,2) =  -20.0;
+  HA(1,0) = -std::sin(rot_angle);  HA(1,1) = std::cos(rot_angle) ; HA(1,2) = 30.0;
 
   vimt_transform_2d xform_in;
   xform_in.set_affine(HA);
@@ -109,12 +109,12 @@ static void test_homography_generator()
   vil_save(byte_image,"img1_db.tiff");
 
 
-  vcl_cout << "original homography: " << vcl_endl;
-  vcl_cout << xform_in.matrix() << vcl_endl << vcl_endl;
-  vcl_cout << "lm generated homography: " << vcl_endl;
-  vcl_cout << xform_out1.matrix() << vcl_endl << vcl_endl;
-  vcl_cout << "db generated homography: " << vcl_endl;
-  vcl_cout << xform_out2.matrix() << vcl_endl << vcl_endl;
+  std::cout << "original homography: " << std::endl;
+  std::cout << xform_in.matrix() << std::endl << std::endl;
+  std::cout << "lm generated homography: " << std::endl;
+  std::cout << xform_out1.matrix() << std::endl << std::endl;
+  std::cout << "db generated homography: " << std::endl;
+  std::cout << xform_out2.matrix() << std::endl << std::endl;
 
 
   return;

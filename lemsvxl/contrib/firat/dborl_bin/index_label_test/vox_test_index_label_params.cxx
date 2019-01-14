@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_test_index_label_params::vox_test_index_label_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_test_index_label_params::vox_test_index_label_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
 
     //: Name of input object

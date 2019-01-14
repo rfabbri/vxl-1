@@ -38,8 +38,8 @@ void draw_fs_sheet_geom (SoSeparator* root, dbsk3d_fs_sheet* S,
                          const bool user_defined_class);
 
 void draw_fs_sheet_mesh_geom (SoGroup* root, dbsk3d_fs_sheet* S,
-                              const vcl_vector<vgl_point_3d<double> >& pts,
-                              const vcl_vector<vcl_vector<int> >& faces);
+                              const std::vector<vgl_point_3d<double> >& pts,
+                              const std::vector<std::vector<int> >& faces);
 
 SoSeparator* draw_fs_sheet_A13_A3_bnd_curves (dbsk3d_fs_sheet* S, const float width);
 

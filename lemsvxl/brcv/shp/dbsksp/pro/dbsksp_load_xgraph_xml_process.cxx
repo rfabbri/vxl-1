@@ -30,7 +30,7 @@ dbsksp_load_shock_graph_xml_process()
     this->shock_graph_types_, 0) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,32 +51,32 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_load_shock_graph_xml_process::
+std::string dbsksp_load_shock_graph_xml_process::
 name()
 { 
   return "Load shock graph XML"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_load_shock_graph_xml_process::
+std::vector< std::string > dbsksp_load_shock_graph_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_load_shock_graph_xml_process::
+std::vector< std::string > dbsksp_load_shock_graph_xml_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   
 
   // shock graph type
   unsigned int shock_graph_choice = 0;
   this->parameters()->get_value( "-shock_graph_type" , shock_graph_choice);
-  vcl_string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
+  std::string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
 
   if (shock_graph_type == "dbsksp_xshock_graph")
     to_return.push_back("dbsksp_xgraph");
@@ -114,7 +114,7 @@ execute()
   // shock graph type
   unsigned int shock_graph_choice = 0;
   this->parameters()->get_value( "-shock_graph_type" , shock_graph_choice);
-  vcl_string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
+  std::string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
 
   //// 2. output storage
   
@@ -127,7 +127,7 @@ execute()
     dbsksp_shock_graph_sptr shock_graph = 0;
     if ( x_read(xmlfile.path, shock_graph) )
     {
-      vcl_cout << "Loading shock graph XML file completed.\n";
+      std::cout << "Loading shock graph XML file completed.\n";
       shock_graph->compute_all_dependent_params();
       dbsksp_shock_storage_sptr shock_storage = dbsksp_shock_storage_new();
       shock_storage->set_shock_graph(shock_graph);
@@ -135,7 +135,7 @@ execute()
     }
     else 
     {
-      vcl_cerr << "Loading shock graph XML file failed.\n";
+      std::cerr << "Loading shock graph XML file failed.\n";
       shock_graph = 0;
     }
   }
@@ -144,20 +144,20 @@ execute()
     dbsksp_xshock_graph_sptr xg = 0;
     if ( x_read(xmlfile.path, xg) )
     {
-      vcl_cout << "Loading xshock_graph XML file completed.\n";
+      std::cout << "Loading xshock_graph XML file completed.\n";
       dbsksp_xgraph_storage_sptr shock_storage = dbsksp_xgraph_storage_new();
       shock_storage->set_xgraph(xg);
       this->output_data_[0].push_back(shock_storage);
     }
     else
     {
-      vcl_cerr << "Loading xshock_graph XML file failed.\n";
+      std::cerr << "Loading xshock_graph XML file failed.\n";
       xg = 0;
     }
   }
   else
   {
-    vcl_cerr << "ERROR: unknown shock graph type.\n";
+    std::cerr << "ERROR: unknown shock graph type.\n";
   }
   return true;
 }

@@ -16,8 +16,8 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 
 
 #include "structs.h"
-#include <vcl_cstddef.h>
-#include <vcl_cstdlib.h>
+#include <cstddef>
+#include <cstdlib>
 
 #ifdef MEM_COUNT
 

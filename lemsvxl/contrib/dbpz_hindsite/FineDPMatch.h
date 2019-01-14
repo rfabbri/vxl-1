@@ -3,9 +3,9 @@
 #define __TBS_FINE_DPMATCH_DEF__
 
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include "Curve.h"
 
@@ -18,22 +18,22 @@ class FineDPMatch{
   ~FineDPMatch(){};
 
   //From NewFineDPMatch
-  vcl_vector <floatType> _ds1;
-  vcl_vector <floatType> _ds2;
-  vcl_vector <floatType> _dt1;
-  vcl_vector <floatType> _dt2;
+  std::vector <floatType> _ds1;
+  std::vector <floatType> _ds2;
+  std::vector <floatType> _dt1;
+  std::vector <floatType> _dt2;
 
   //access functions
   floatType finalCost(){return _finalCost;};
   floatType finalCost(floatType cost){_finalCost=cost; return _finalCost;};
-  vcl_vector < vcl_pair <int,int> > finalMap(){return _finalMap;};
-  vcl_vector< floatType > finalMapCost(){return _finalMapCost;};
+  std::vector < std::pair <int,int> > finalMap(){return _finalMap;};
+  std::vector< floatType > finalMapCost(){return _finalMapCost;};
   int n(){return _n;};
   int m(){return _m;};
 
   //display functions (debug)
   void printCost();
-  void writeCost(vcl_string f);
+  void writeCost(std::string f);
   void printMap();
   void printFinalMap();
   curveType curve1(){return _curve1;};
@@ -44,11 +44,11 @@ class FineDPMatch{
   //Data
   curveType _curve1;
   curveType _curve2;
-  vcl_vector< vcl_vector<floatType> > _cost;
-  vcl_vector< vcl_vector< vcl_pair <int,int> > > _map;
-  vcl_vector< vcl_pair <int,int> > _finalMap;
+  std::vector< std::vector<floatType> > _cost;
+  std::vector< std::vector< std::pair <int,int> > > _map;
+  std::vector< std::pair <int,int> > _finalMap;
   floatType _finalCost;
-  vcl_vector< floatType > _finalMapCost;
+  std::vector< floatType > _finalMapCost;
   int _n;
   int _m;
   bool _flip;
@@ -57,7 +57,7 @@ class FineDPMatch{
   int _numCostElems;
   floatType _R1;
   floatType _R2;
-  vcl_vector<floatType> _lambda;
+  std::vector<floatType> _lambda;
 
   //Functions
   void initializeDPCosts();
@@ -73,10 +73,10 @@ class FineDPMatch{
 template <class curveType,class floatType>
 FineDPMatch<curveType,floatType>::FineDPMatch(){
 
-  vcl_vector< vcl_vector<floatType> > a;
-  vcl_vector< vcl_vector< vcl_pair <int,int> > > b;
-  vcl_vector< vcl_pair <int,int> > c;
-  vcl_vector< floatType > d;
+  std::vector< std::vector<floatType> > a;
+  std::vector< std::vector< std::pair <int,int> > > b;
+  std::vector< std::pair <int,int> > c;
+  std::vector< floatType > d;
 
   curveType c1,c2;
   _curve1 = c1;
@@ -94,7 +94,7 @@ FineDPMatch<curveType,floatType>::FineDPMatch(){
 template <class curveType,class floatType>
 FineDPMatch<curveType,floatType>::FineDPMatch(curveType &c1, curveType &c2){
 
-  vcl_vector< vcl_pair <int,int> > b;
+  std::vector< std::pair <int,int> > b;
 
   int n; 
   _curve1 = c1;
@@ -105,10 +105,10 @@ FineDPMatch<curveType,floatType>::FineDPMatch(curveType &c1, curveType &c2){
   _n=_curve1.numPoints();
   _m=_curve2.numPoints();
   for (n=0;n<_n;n++){
-    vcl_vector<floatType> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<floatType> tmp1(_m,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _map.push_back(tmp2);
   }
   _finalMap = b;
@@ -117,7 +117,7 @@ FineDPMatch<curveType,floatType>::FineDPMatch(curveType &c1, curveType &c2){
   _R2 = 0.0;
 
   _numCostElems=3;
-  vcl_vector <floatType> v(_numCostElems,0);
+  std::vector <floatType> v(_numCostElems,0);
   _ds1=v;
   _ds2=v;
   _dt1=v;
@@ -141,7 +141,7 @@ void FineDPMatch<curveType,floatType>::printCost(){
 } 
 
 template <class curveType,class floatType>
-void FineDPMatch<curveType,floatType>::writeCost(vcl_string fname){
+void FineDPMatch<curveType,floatType>::writeCost(std::string fname){
   FILE *fp=fopen(fname.c_str(),"w");
   int i,j;
   floatType c;
@@ -252,7 +252,7 @@ void FineDPMatch<curveType,floatType>::findDPCorrespondence(){
   i=_n-1;
   j=_m-1;
  
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_cost[p.first][p.second]);
   while (ip > 0 || jp > 0){
@@ -260,7 +260,7 @@ void FineDPMatch<curveType,floatType>::findDPCorrespondence(){
     jp=_map[i][j].second;
     //COUT << _cost[i][j]-_cost[ip][jp] << endl;
 
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_cost[p.first][p.second]);
     i=ip;

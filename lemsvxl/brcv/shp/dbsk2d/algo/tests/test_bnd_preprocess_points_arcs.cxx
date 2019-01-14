@@ -11,7 +11,7 @@
 
 void test_remove_points_close_to_arcs()
 {
-  vcl_cout << "In test_remove_points_close_to_arcs()\n";
+  std::cout << "In test_remove_points_close_to_arcs()\n";
 
   // construct an arc and a stand-alone point
   // arc
@@ -20,7 +20,7 @@ void test_remove_points_close_to_arcs()
   double k1 = -0.5;
 
   // point
-  vgl_point_2d<double > pt(1, 2-vcl_sqrt(3.0)+0.5*dbsk2d_bnd_preprocess::distance_tol);
+  vgl_point_2d<double > pt(1, 2-std::sqrt(3.0)+0.5*dbsk2d_bnd_preprocess::distance_tol);
   
   dbsk2d_bnd_vertex_sptr v1 = dbsk2d_bnd_utils::new_vertex(p1);
   dbsk2d_bnd_vertex_sptr v2 = dbsk2d_bnd_utils::new_vertex(p2);
@@ -33,10 +33,10 @@ void test_remove_points_close_to_arcs()
     dbsk2d_bnd_utils::new_stand_alone_point(pt);
 
   // list of arcs and points
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
   bnd_arcs.push_back(bnd_arc1);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_pts;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_pts;
   bnd_pts.push_back(bnd_pt);
   
   //===============================================================================

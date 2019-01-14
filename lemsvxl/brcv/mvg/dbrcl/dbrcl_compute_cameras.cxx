@@ -4,21 +4,21 @@
 #include "dbrcl_compute_cameras.h"
 
 #include <vgl/vgl_distance.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsol/vsol_point_2d.h>
 
 //----------------------------------------------
 bool 
 dbrcl_compute_cameras::compute_cameras(
   vgel_multi_view_data_vertex_sptr& tracked_points,
-  const vcl_vector< vpgl_proj_camera<double> >& known_cameras,
-  const vcl_vector<int>& known_frames,
-  vcl_vector< vpgl_proj_camera<double> >& cameras )
+  const std::vector< vpgl_proj_camera<double> >& known_cameras,
+  const std::vector<int>& known_frames,
+  std::vector< vpgl_proj_camera<double> >& cameras )
 {
-  vcl_cerr << "dbrcl_compute_cameras::compute_cameras:\n" 
+  std::cerr << "dbrcl_compute_cameras::compute_cameras:\n" 
     << " computing all cameras\n";
   if( known_cameras.size() < 2 ){
-    vcl_cerr << "  insufficient constrained cameras to compute the other cameras\n";
+    std::cerr << "  insufficient constrained cameras to compute the other cameras\n";
     return false;
   }
 
@@ -32,18 +32,18 @@ dbrcl_compute_cameras::compute_cameras(
         cameras.push_back( known_cameras[i] );
         know_camera = true;
         if( verbose )
-          vcl_cerr << "  Frame " << f << " camera:\n"
+          std::cerr << "  Frame " << f << " camera:\n"
             << known_cameras[i].get_matrix();
       }
     if( know_camera ) continue;
 
     // Otherwise, get all correspondences between this frame and known frames.
-    vcl_vector< vcl_vector< vtol_vertex_2d_sptr > > pf, pi, pj;
-    vcl_vector< vpgl_proj_camera<double> > observed_cameras_i, observed_cameras_j;
+    std::vector< std::vector< vtol_vertex_2d_sptr > > pf, pi, pj;
+    std::vector< vpgl_proj_camera<double> > observed_cameras_i, observed_cameras_j;
     int num_constraints = 0;
     for( int i = 0; i < static_cast<int>(known_frames.size()); i++ ){
       for( int j = i+1; j < static_cast<int>(known_frames.size()); j++ ){
-        vcl_vector< vtol_vertex_2d_sptr > npf, npi, npj;
+        std::vector< vtol_vertex_2d_sptr > npf, npi, npj;
         tracked_points->get( known_frames[i], f, known_frames[j], npi, npf, npj );
         if( npf.size() >= 10 ){
           num_constraints += npf.size();
@@ -55,7 +55,7 @@ dbrcl_compute_cameras::compute_cameras(
     }
     if( pf.size() == 0 ){
       cameras.push_back( vpgl_proj_camera<double>() );
-      vcl_cerr << "  insufficient tracks to compute camera from frame " << f << '\n';
+      std::cerr << "  insufficient tracks to compute camera from frame " << f << '\n';
       continue;
     }
 
@@ -69,7 +69,7 @@ dbrcl_compute_cameras::compute_cameras(
 
     for( int lvl = 0; lvl < 14; lvl++ ){
 
-      double current_radius = start_window_radius/vcl_pow(2,double(lvl));
+      double current_radius = start_window_radius/std::pow(2,double(lvl));
       vnl_vector<double> old_best_params = best_params;
       for( double dx = -current_radius; dx < current_radius; 
         dx += current_radius/search_increments ){
@@ -80,7 +80,7 @@ dbrcl_compute_cameras::compute_cameras(
           these_params(1) = these_params(1)+dy;
 
           // Compute the error from these parameters.
-          vcl_vector<double> this_error;
+          std::vector<double> this_error;
           for( int k = 0; k < static_cast<int>(pf.size()); k++ ){
             vnl_matrix_fixed<double,3,4> camera1 =
               observed_cameras_i[ k ].get_matrix();
@@ -105,7 +105,7 @@ dbrcl_compute_cameras::compute_cameras(
             }
           }
 
-          vcl_sort( this_error.begin(), this_error.end() );
+          std::sort( this_error.begin(), this_error.end() );
           double final_error = this_error[ this_error.size()/2 ]; //double floor(double)
           if( final_error < best_error ){
             best_error = final_error;
@@ -119,11 +119,11 @@ dbrcl_compute_cameras::compute_cameras(
     this_camera(0,2) = best_params(0);
     this_camera(1,2) = best_params(1);
     if( verbose )
-      vcl_cerr << "  Frame " << f << " camera:\n" << this_camera;
+      std::cerr << "  Frame " << f << " camera:\n" << this_camera;
     cameras.push_back( vpgl_proj_camera<double>( this_camera ) );
   }
 
-  vcl_cerr << " success\n";
+  std::cerr << " success\n";
   return true;
 }
 
@@ -131,15 +131,15 @@ dbrcl_compute_cameras::compute_cameras(
 //----------------------------------------------
 bool 
 dbrcl_compute_cameras::compute_cameras(
-  vcl_vector< dbinfo_track_geometry_sptr >& tracks,
-  const vcl_vector< vpgl_proj_camera<double> >& known_cameras,
-  const vcl_vector<int>& known_frames,
-  vcl_vector< vpgl_proj_camera<double> >& cameras )
+  std::vector< dbinfo_track_geometry_sptr >& tracks,
+  const std::vector< vpgl_proj_camera<double> >& known_cameras,
+  const std::vector<int>& known_frames,
+  std::vector< vpgl_proj_camera<double> >& cameras )
 {
-  vcl_cerr << "dbrcl_compute_cameras::compute_cameras:\n" 
+  std::cerr << "dbrcl_compute_cameras::compute_cameras:\n" 
     << " computing all cameras\n";
   if( known_cameras.size() < 2 ){
-    vcl_cerr << "  insufficient constrained cameras to compute the other cameras\n";
+    std::cerr << "  insufficient constrained cameras to compute the other cameras\n";
     return false;
   }
 
@@ -159,7 +159,7 @@ dbrcl_compute_cameras::compute_cameras(
         cameras.push_back( known_cameras[i] );
         know_camera = true;
         if( verbose )
-          vcl_cerr << "  Frame " << f << " camera:\n"
+          std::cerr << "  Frame " << f << " camera:\n"
             << known_cameras[i].get_matrix();
       }
     if( know_camera ) continue;
@@ -189,11 +189,11 @@ dbrcl_compute_cameras::compute_cameras(
     this_camera(0,2) = V(0);
     this_camera(1,2) = V(1);
     if( verbose )
-      vcl_cerr << "  Frame " << f << " camera:\n" << this_camera;
+      std::cerr << "  Frame " << f << " camera:\n" << this_camera;
     cameras.push_back( vpgl_proj_camera<double>( this_camera ) );
   }
 
-  vcl_cerr << " success\n";
+  std::cerr << " success\n";
   return true;
 }
 

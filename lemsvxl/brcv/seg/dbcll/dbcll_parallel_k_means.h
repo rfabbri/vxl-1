@@ -22,10 +22,10 @@ public:
   
   //: Assign n-points to k-means. Return cluster assigment and partial sum
   template <unsigned dim>
-  static unsigned dbcll_assign_k_means( const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                        const vcl_vector<vnl_vector_fixed<double,dim> >& centroids,
-                                        vcl_vector<vcl_vector<unsigned> >& clusters,
-                                       vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums);
+  static unsigned dbcll_assign_k_means( const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                        const std::vector<vnl_vector_fixed<double,dim> >& centroids,
+                                        std::vector<std::vector<unsigned> >& clusters,
+                                       std::vector<vnl_vector_fixed<double,dim> >&partial_sums);
 
 
 };

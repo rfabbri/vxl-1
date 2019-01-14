@@ -20,8 +20,8 @@
 //-------------------------------------------------------------------------
 
 // Includes
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -49,7 +49,7 @@ private:
     // Bioproc error type
     cluster_error m_error;
     // Exception message
-    vcl_string m_message;
+    std::string m_message;
     // MPI specific error.
     int m_mpierror;
     // System specific error code.
@@ -59,7 +59,7 @@ public:
     // Default is thrown when a container tries to fetch the filter response on non-LeadProcessor
     cluster_exception() : m_error (Incomplete), m_message ("Response field is only complete on processor 0"), m_mpierror (0), m_syserror (0) {}
     // Customizable exception instance
-    cluster_exception(cluster_error err, vcl_string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
+    cluster_exception(cluster_error err, std::string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
 
     // Property accessors
     const char* get_message() { return m_message.data (); }
@@ -74,17 +74,17 @@ class  cluster_db_matching
 public:
    
     // Ctor/dtor
-    cluster_db_matching (vcl_string db_file, vcl_string resolution, vcl_string db_string, vcl_string image_dir, 
+    cluster_db_matching (std::string db_file, std::string resolution, std::string db_string, std::string image_dir, 
         int verbose = TRACE_ERROR                           // Errors only
     );
     ~cluster_db_matching ();
   
     // Execute the algorithm and create the filter repsonse
-    void execute_shock (vcl_string cons_dir, vcl_string esfs_dir, bool save_out_imgs = false, vcl_string output_dir = "", double sampling_ds = 1.0f, double pruning_threshold = -1.0f, bool elastic_splice = false, bool normalize_cost = false, bool save_shgm = false, vcl_string shgms_dir = "");
+    void execute_shock (std::string cons_dir, std::string esfs_dir, bool save_out_imgs = false, std::string output_dir = "", double sampling_ds = 1.0f, double pruning_threshold = -1.0f, bool elastic_splice = false, bool normalize_cost = false, bool save_shgm = false, std::string shgms_dir = "");
     
 
     // Fetch the distance matrix - throws if not on LeadProcessor
-    vcl_vector< vcl_vector<double> > &get_dist_matrix() {
+    std::vector< std::vector<double> > &get_dist_matrix() {
       // Only on processor 0. Otherwise throw an exception
       if (m_MyRank == 0) 
         return *dist_matrix_;
@@ -92,7 +92,7 @@ public:
         throw cluster_exception();
     }
 
-    vcl_vector< vcl_vector<double> > &get_info_matrix() {
+    std::vector< std::vector<double> > &get_info_matrix() {
       // Only on processor 0. Otherwise throw an exception
       if (m_MyRank == 0) 
         return *info_matrix_;
@@ -104,20 +104,20 @@ public:
 private:
   
     //: stores the distance_matrix 
-    vcl_vector< vcl_vector<double> > *dist_matrix_;
-    vcl_vector< vcl_vector<double> > *info_matrix_;
+    std::vector< std::vector<double> > *dist_matrix_;
+    std::vector< std::vector<double> > *info_matrix_;
 
     unsigned int db_size_, num_pairs_;
-    vcl_vector<vcl_string> database_; 
-    vcl_vector<vil_image_resource_sptr> database_images_;
-    vcl_vector<vsol_polygon_2d_sptr> database_polygons_;
-    vcl_vector<dbinfo_observation_sptr> database_obs_;
+    std::vector<std::string> database_; 
+    std::vector<vil_image_resource_sptr> database_images_;
+    std::vector<vsol_polygon_2d_sptr> database_polygons_;
+    std::vector<dbinfo_observation_sptr> database_obs_;
 
     // Verbosity level
     int m_verbose;
 
     // new addition
-    //vcl_vector<vil_image_resource_sptr> images;
+    //std::vector<vil_image_resource_sptr> images;
 
   // Configuration including number of processors, our rank, and computer name
     int m_TotalProcessors;
@@ -132,8 +132,8 @@ private:
     int *m_PointOffsets;
     int *m_PointCounts;
 
-    dbskr_tree_sptr read_esf_from_file(vcl_string fname, double sampling_ds, double pruning_threshold, bool elastic_splice);
-    vsol_polygon_2d_sptr read_con_from_file(vcl_string fname);
+    dbskr_tree_sptr read_esf_from_file(std::string fname, double sampling_ds, double pruning_threshold, bool elastic_splice);
+    vsol_polygon_2d_sptr read_con_from_file(std::string fname);
 
     // Whether this processor is the lead processor
     bool LeadProcessor () { return m_MyRank == 0; }

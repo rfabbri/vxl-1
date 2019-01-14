@@ -50,7 +50,7 @@
 #include <vbl/vbl_array_3d.h>
 #include <vnl/vnl_quaternion.h>
 #include <biocts/biocts_rvgs.h>
-#include <vcl_ctime.h>
+#include <ctime>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -64,9 +64,9 @@ public:
   biosim_ctsim(double pixel_size, double source_origin_dist, double source_sensor_distance, 
                vnl_int_2 sensor_dimensions, vnl_double_2 principal_point, 
                vgl_point_3d<double> initial_source_position, vnl_double_3 rotation_axis,
-               double rotation_step_size, vcl_string noise_type);
+               double rotation_step_size, std::string noise_type);
   //: constructor from a xscan_dummy_scan object (KK requested this)
-  biosim_ctsim(xscan_dummy_scan dummy_scan, vcl_string noise_type);
+  biosim_ctsim(xscan_dummy_scan dummy_scan, std::string noise_type);
 
   //: getters
   double pix_size(){ return pix_size_; }
@@ -82,7 +82,7 @@ public:
   double data(int x, int y, int z) { return data_[x][y][z]; }
 
   //: write the scan to a file
-  void write_scan(vcl_string scanfile);
+  void write_scan(std::string scanfile);
 
   //: construct the camera with the given index (this is not used any more,
   //  but let's wait a little before deleting it)
@@ -147,7 +147,7 @@ private:
   //: noise type
   //  no_noise : no noise
   //  from-file : use the noise file "bnoise.pgm"
-  vcl_string noise_;
+  std::string noise_;
   //: number of views
   int num_views_;
   //: initial camera

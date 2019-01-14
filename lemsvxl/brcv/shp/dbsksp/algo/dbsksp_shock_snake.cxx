@@ -45,7 +45,7 @@ optimize_twoshapelet_method_1(const dbsksp_twoshapelet_sptr& init_ss,
   // initial parameter
   vnl_vector<double > x_init = twoshapelet_cost.get_free_params(init_ss);
 
-  vcl_cout << "Starting cost = " << twoshapelet_cost.f(x_init) << vcl_endl;
+  std::cout << "Starting cost = " << twoshapelet_cost.f(x_init) << std::endl;
 
   // structure of free variables 'x'
   //double m0_;
@@ -87,7 +87,7 @@ optimize_twoshapelet_method_1(const dbsksp_twoshapelet_sptr& init_ss,
   vpdfl_sampler_base* p_sampler = pdf.new_sampler();
 
   // Generate lots of samples
-  vcl_vector<vnl_vector<double> > data(n_samples);
+  std::vector<vnl_vector<double> > data(n_samples);
   data[0] = x_init;
   for (int i=1; i<n_samples; ++i)
     p_sampler->sample(data[i]);
@@ -106,12 +106,12 @@ optimize_twoshapelet_method_1(const dbsksp_twoshapelet_sptr& init_ss,
   }
 
   vnl_vector<double > x = x_min;
-  vcl_cout << "Min cost after stochastic sampling = " 
-    << twoshapelet_cost.f(x) << vcl_endl;
+  std::cout << "Min cost after stochastic sampling = " 
+    << twoshapelet_cost.f(x) << std::endl;
 
 
   // update the shape with the new twoshapelet params
-  vcl_cout << "Final min cost = " << twoshapelet_cost.f(x) << vcl_endl;
+  std::cout << "Final min cost = " << twoshapelet_cost.f(x) << std::endl;
 
   final_ss = twoshapelet_cost.get_twoshapelet(x);
 
@@ -159,7 +159,7 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
 
   // sample the space =======================================
   int n_samples = 100000;
-  vcl_vector<vnl_vector<double> > samples;
+  std::vector<vnl_vector<double> > samples;
   samples.reserve(n_samples);
 
   // get current time to use as seed for random generator
@@ -181,9 +181,9 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
 
     // m1 and m2 are constraint by phi1 and phi2
     double max_m0 = vnl_math::min( 
-      vnl_math::abs(1/vcl_sin(phi0)), vnl_math::abs(1/vcl_sin(phi1)));
+      vnl_math::abs(1/std::sin(phi0)), vnl_math::abs(1/std::sin(phi1)));
     double max_m1 = vnl_math::min( 
-      vnl_math::abs(1/vcl_sin(phi1)), vnl_math::abs(1/vcl_sin(phi2)));
+      vnl_math::abs(1/std::sin(phi1)), vnl_math::abs(1/std::sin(phi2)));
 
     double m0 = random_generator.drand32(-0.7*max_m0, 0.7*max_m0);
     double m1 = random_generator.drand32(-0.7*max_m1, 0.7*max_m1);
@@ -212,7 +212,7 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
   vnl_vector<double > x_min = x_init;
   
   double min_cost = ss_cost.f(x_init);
-  vcl_cout << "Starting cost = " << ss_cost.f(x_init) << vcl_endl;
+  std::cout << "Starting cost = " << ss_cost.f(x_init) << std::endl;
   
   for (int i=0; i<n_samples; ++i)
   {
@@ -223,7 +223,7 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
     {
       // enforce hard constraints
       dbsksp_twoshapelet_sptr ss0 = ss_cost.get_twoshapelet(x);
-      double width = 2*ss0->shapelet_end()->radius_end() * vcl_sin(ss0->phi2());
+      double width = 2*ss0->shapelet_end()->radius_end() * std::sin(ss0->phi2());
 
       // if <0 then there is no constraints
       if (this->max_width_ > 0 && width > this->max_width_)
@@ -257,12 +257,12 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
   /////////////////////////////////////////////////////
 
   //// update the shape with the new twoshapelet params
-  //vcl_cout << "Min cost = " << twoshapelet_cost.f(x) << vcl_endl;
+  //std::cout << "Min cost = " << twoshapelet_cost.f(x) << std::endl;
 
 
 
 
-  vcl_cout << "Min cost after stochastic sampling = " <<  min_cost << vcl_endl;
+  std::cout << "Min cost after stochastic sampling = " <<  min_cost << std::endl;
   final_ss = ss_cost.get_twoshapelet(x_min);
 
   return 1;
@@ -309,7 +309,7 @@ optimize_terminal_twoshapelet(const dbsksp_shapelet_sptr& init_ss,
 
   //// sample the space =======================================
   //int n_samples = 100000;
-  //vcl_vector<vnl_vector<double> > samples;
+  //std::vector<vnl_vector<double> > samples;
   //samples.reserve(n_samples);
 
   //// get current time to use as seed for random generator
@@ -331,9 +331,9 @@ optimize_terminal_twoshapelet(const dbsksp_shapelet_sptr& init_ss,
 
   //  // m1 and m2 are constraint by phi1 and phi2
   //  double max_m0 = vnl_math::min( 
-  //    vnl_math::abs(1/vcl_sin(phi0)), vnl_math::abs(1/vcl_sin(phi1)));
+  //    vnl_math::abs(1/std::sin(phi0)), vnl_math::abs(1/std::sin(phi1)));
   //  double max_m1 = vnl_math::min( 
-  //    vnl_math::abs(1/vcl_sin(phi1)), vnl_math::abs(1/vcl_sin(phi2)));
+  //    vnl_math::abs(1/std::sin(phi1)), vnl_math::abs(1/std::sin(phi2)));
 
   //  double m0 = random_generator.drand32(-max_m0, max_m0);
   //  double m1 = random_generator.drand32(-max_m1, max_m1);
@@ -362,7 +362,7 @@ optimize_terminal_twoshapelet(const dbsksp_shapelet_sptr& init_ss,
   //vnl_vector<double > x_min = x_init;
   //
   //double min_cost = ss_cost.f(x_init);
-  //vcl_cout << "Starting cost = " << ss_cost.f(x_init) << vcl_endl;
+  //std::cout << "Starting cost = " << ss_cost.f(x_init) << std::endl;
   //
   //for (int i=0; i<n_samples; ++i)
   //{
@@ -395,12 +395,12 @@ optimize_terminal_twoshapelet(const dbsksp_shapelet_sptr& init_ss,
   ///////////////////////////////////////////////////////
 
   ////// update the shape with the new twoshapelet params
-  ////vcl_cout << "Min cost = " << twoshapelet_cost.f(x) << vcl_endl;
+  ////std::cout << "Min cost = " << twoshapelet_cost.f(x) << std::endl;
 
 
 
 
-  //vcl_cout << "Min cost after stochastic sampling = " <<  min_cost << vcl_endl;
+  //std::cout << "Min cost after stochastic sampling = " <<  min_cost << std::endl;
   //final_ss = ss_cost.get_twoshapelet(x_min);
 
   return 1;
@@ -521,7 +521,7 @@ extend_and_deform_2_edges_n_times(dbsksp_shock_edge_sptr& terminal_edge,
   {
     if (this->verbal())
     {
-      vcl_cerr << "n = " << n << vcl_endl;
+      std::cerr << "n = " << n << std::endl;
     }
     int error_code = this->extend_and_deform_2_edges(terminal_edge,
                   chord0, chord1, final_twoshapelet);
@@ -553,7 +553,7 @@ extend_and_deform_2_edges_till_reach_target(
   {
     if (this->verbal())
     {
-      vcl_cerr << "n = " << n << vcl_endl;
+      std::cerr << "n = " << n << std::endl;
     }
     int error_code = this->extend_and_deform_2_edges(terminal_edge,
                   chord0, chord1, final_twoshapelet);
@@ -563,7 +563,7 @@ extend_and_deform_2_edges_till_reach_target(
     // check if the target point is ``within reach''
     if (vgl_distance(end_node->pt(),target_point) <= (chord0 + end_node->radius()))
     {
-      vcl_cerr << "The target point has been reached.\n";
+      std::cerr << "The target point has been reached.\n";
       break;
     }
   }

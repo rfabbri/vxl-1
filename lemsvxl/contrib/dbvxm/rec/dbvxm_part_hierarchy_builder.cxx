@@ -5,8 +5,8 @@
 //
 //
 
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 
 #include <vil/vil_image_resource.h>
 
@@ -31,7 +31,7 @@ dbvxm_part_hierarchy_sptr dbvxm_part_hierarchy_builder::construct_candidates_fro
   float lambda1 = 1.0f;
   float theta = 0.0f;
   bool bright = false;
-  vcl_vector<dbvxm_part_instance_sptr> parts;
+  std::vector<dbvxm_part_instance_sptr> parts;
   extract_gaussian_primitives(img, lambda0, lambda1, theta, bright, 0.1f, 0, parts);
   theta = 90.0f;
   extract_gaussian_primitives(img, lambda0, lambda1, theta, bright, 0.1f, 1, parts);
@@ -41,9 +41,9 @@ dbvxm_part_hierarchy_sptr dbvxm_part_hierarchy_builder::construct_candidates_fro
   extract_gaussian_primitives(img, lambda0, lambda1, theta, bright, 0.1f, 3, parts);
 
   //: now sort primitives wrt strength
-  vcl_sort(parts.begin(), parts.end(), strength_more);
+  std::sort(parts.begin(), parts.end(), strength_more);
   //: erase the ones with less than min_strength
-  vcl_vector<dbvxm_part_instance_sptr>::reverse_iterator it = parts.rbegin();
+  std::vector<dbvxm_part_instance_sptr>::reverse_iterator it = parts.rbegin();
   for ( ; it != parts.rend(); it++) {
     if ((*it)->strength_ > min_strength)
       break;
@@ -66,11 +66,11 @@ dbvxm_part_hierarchy_sptr dbvxm_part_hierarchy_builder::construct_candidates_fro
   //: now detect layer 1 instances and construct the second layer
 
   //: given a set of detected lower level parts, create a set of instance detections for one layer above in the hierarchy
-  vcl_vector<dbvxm_part_instance_sptr> upper_parts;
+  std::vector<dbvxm_part_instance_sptr> upper_parts;
   h->extract_upper_layer(parts, img->ni(), img->nj(), 0.1f, upper_parts);
 
   //: now sort primitives wrt strength
-  vcl_sort(upper_parts.begin(), upper_parts.end(), strength_more);
+  std::sort(upper_parts.begin(), upper_parts.end(), strength_more);
   //: erase the ones with less than min_strength
   it = upper_parts.rbegin();
   for ( ; it != upper_parts.rend(); it++) {
@@ -86,7 +86,7 @@ dbvxm_part_hierarchy_sptr dbvxm_part_hierarchy_builder::construct_candidates_fro
 /*
 //: assuming parts array contains detected parts of layer n-1
 //  construct layer_n from all pairwise combinations of detected parts of layer_n-1
-bool dbvxm_part_hierarchy_builder::construct_layer_candidates(unsigned layer_n, dbvxm_part_hierarchy_sptr& h, vcl_vector<dbvxm_part_instance_sptr>& parts)
+bool dbvxm_part_hierarchy_builder::construct_layer_candidates(unsigned layer_n, dbvxm_part_hierarchy_sptr& h, std::vector<dbvxm_part_instance_sptr>& parts)
 {
   if (layer_n-1 < 0)
     return false;

@@ -5,18 +5,18 @@
 #include <vul/vul_timer.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; exit(1); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 int
 main(int argc, char **argv)
 {
-  vcl_string prefix_default(".");
+  std::string prefix_default(".");
 
-  vul_arg<vcl_string> a_prefix("-prefix", 
+  vul_arg<std::string> a_prefix("-prefix", 
       "path to directory of files",prefix_default.c_str());
-  vul_arg<vcl_string> a_cam_type("-cam_type",
+  vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
-  vul_arg<vcl_string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
+  vul_arg<std::string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
   vul_arg<double> a_distance_threshold("-dist", 
       "(in pixels) threshold for an edgel to be an inlier to the reprojected curve in each view", 10.0);
   vul_arg<double> a_dtheta_threshold("-dtheta", 
@@ -55,7 +55,7 @@ main(int argc, char **argv)
       "(EXPERIMENTAL) the minimum number of inlier edgels a curvelet must have in order to be inlier curvelet. Works only if -use_curvelets is set.", 3);
 
   vul_arg_parse(argc,argv);
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   bmcsd_util::camera_file_type cam_type;
 
@@ -65,7 +65,7 @@ main(int argc, char **argv)
     if (a_cam_type() == "projcamera")
       cam_type = bmcsd_util::MW_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
     }
   }
@@ -74,18 +74,18 @@ main(int argc, char **argv)
   bool retval = 
     mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
 
   bmcsd_stereo_instance_views seed_frames_to_match;
 
   retval = bmcsd_view_set::read_txt(
-      a_prefix() + vcl_string("/mcs_stereo_instances.txt"), 
+      a_prefix() + std::string("/mcs_stereo_instances.txt"), 
       &seed_frames_to_match);
   MW_ASSERT("frames to match from file", retval, true);
-  vcl_cout << "Instances:\n" << seed_frames_to_match << vcl_endl;
+  std::cout << "Instances:\n" << seed_frames_to_match << std::endl;
 
   if (a_use_curvelets() && !dpath.has_curvelets()) {
-    vcl_cerr << "Error: curvelets requested, but no file names found.\n";
+    std::cerr << "Error: curvelets requested, but no file names found.\n";
   }
 
   //Anil: First stereo instance is used to compute the total number of 
@@ -97,15 +97,15 @@ main(int argc, char **argv)
   unsigned numConf = seedViews->num_confirmation_views();
 
   //Anil: Create storage for all the view data
-  vcl_vector<bmcsd_stereo_instance_views> all_frames_to_match;
+  std::vector<bmcsd_stereo_instance_views> all_frames_to_match;
 
   //Anil: Create storage for all the cam, edge and curve data
-  vcl_vector<bdifd_camera> allCams(numConf+2);
-  vcl_vector<dbdet_edgemap_sptr> allEdges(numConf+2);
-  vcl_vector<vil_image_view<vxl_uint_32> > allDTs(numConf+2);
-  vcl_vector<vil_image_view<unsigned> > allLabels(numConf+2);
-  vcl_vector<vcl_vector<vsol_polyline_2d_sptr> > allCurves(numConf+2);
-  vcl_vector<vcl_vector<vcl_vector<double> > > allTangents(numConf+2);
+  std::vector<bdifd_camera> allCams(numConf+2);
+  std::vector<dbdet_edgemap_sptr> allEdges(numConf+2);
+  std::vector<vil_image_view<vxl_uint_32> > allDTs(numConf+2);
+  std::vector<vil_image_view<unsigned> > allLabels(numConf+2);
+  std::vector<std::vector<vsol_polyline_2d_sptr> > allCurves(numConf+2);
+  std::vector<std::vector<std::vector<double> > > allTangents(numConf+2);
 
   vul_timer file_io;
 
@@ -125,21 +125,21 @@ main(int argc, char **argv)
     allEdges[v] = edge_map;
 
     // 3 Curve fragment loader
-    vcl_string fname = dpath[v].frag_full_path();
-    vcl_string ext = vul_file::extension(fname);
+    std::string fname = dpath[v].frag_full_path();
+    std::string ext = vul_file::extension(fname);
     unsigned min_samples = 0;
     unsigned min_length = 0.0;
     bool use_length = true;
-    vcl_vector< vsol_spatial_object_2d_sptr > base;
+    std::vector< vsol_spatial_object_2d_sptr > base;
 
     if (ext == ".vsl") {
       vsl_b_ifstream bp_in(fname.c_str());
       if (!bp_in) {
-        vcl_cout << " Error opening file  " << fname << vcl_endl;
+        std::cout << " Error opening file  " << fname << std::endl;
         return BPROD_INVALID;
       }
 
-      vcl_cout << "Opened vsl file " << fname <<  " for reading" << vcl_endl;
+      std::cout << "Opened vsl file " << fname <<  " for reading" << std::endl;
 
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->b_read(bp_in);
@@ -150,10 +150,10 @@ main(int argc, char **argv)
       if (!retval) {
         return BPROD_INVALID;
       }
-      vcl_cout << "Opened cemv file " << fname <<  " for reading" << vcl_endl;
+      std::cout << "Opened cemv file " << fname <<  " for reading" << std::endl;
     }
 
-    vcl_vector< vsol_polyline_2d_sptr > curves;
+    std::vector< vsol_polyline_2d_sptr > curves;
     curves.reserve(base.size());
 
     // Cast everything to polyline
@@ -163,7 +163,7 @@ main(int argc, char **argv)
         p = dynamic_cast<vsol_polyline_2d *> (base[i].ptr());
 
       if (!p) {
-        vcl_cerr << "Non-polyline found, but only POLYLINES supported!" << vcl_endl;
+        std::cerr << "Non-polyline found, but only POLYLINES supported!" << std::endl;
         return BPROD_INVALID;
       }
 
@@ -174,8 +174,8 @@ main(int argc, char **argv)
     }
 
     // The swap trick reduces the excess memory used by curves
-    vcl_vector< vsol_polyline_2d_sptr >(curves).swap(curves);
-    vcl_cout << "Curves: #curves =  " << curves.size() << vcl_endl;
+    std::vector< vsol_polyline_2d_sptr >(curves).swap(curves);
+    std::cout << "Curves: #curves =  " << curves.size() << std::endl;
 
     allCurves[v] = curves;
 
@@ -201,9 +201,9 @@ main(int argc, char **argv)
 
     // 5 Tangent computation
     
-    vcl_cout << "Started tgt computation.\n";
+    std::cout << "Started tgt computation.\n";
 
-    vcl_vector<vcl_vector<double> > tangents(curves.size());
+    std::vector<std::vector<double> > tangents(curves.size());
 
     for (unsigned c=0; c < curves.size(); ++c) {
       dbdet_edgel_chain ec;
@@ -223,8 +223,8 @@ main(int argc, char **argv)
   //Anil: Populate the view data
   //i) Input read from file, first anchor instance
   all_frames_to_match.push_back(seed_frames_to_match);
-  vcl_vector<unsigned> firstAnchorOrder;
-  vcl_vector<bool> usedViews(numConf+2);
+  std::vector<unsigned> firstAnchorOrder;
+  std::vector<bool> usedViews(numConf+2);
   firstAnchorOrder.push_back(seedViews->stereo0());
   usedViews[seedViews->stereo0()] = true;
 
@@ -328,91 +328,91 @@ main(int argc, char **argv)
   bool startRun = true;
   unsigned numInstances = all_frames_to_match.size();
   numInstances = 1;
-  vcl_cout << numInstances << " starting instances will be used." << vcl_endl;
-  vcl_cout << "A total of " << firstAnchorOrder.size() << " instances will be used." << vcl_endl;
+  std::cout << numInstances << " starting instances will be used." << std::endl;
+  std::cout << "A total of " << firstAnchorOrder.size() << " instances will be used." << std::endl;
 
   //Anil: Data structure to store the marked portions of each image curve in each view
-  vcl_vector<vcl_vector<vcl_vector<bool> > > usedCurvesAll(numConf+2);
+  std::vector<std::vector<std::vector<bool> > > usedCurvesAll(numConf+2);
 
   for(unsigned v=0; v<numConf+2; ++v)
     usedCurvesAll[v].resize(2000);
 
   //Anil: Containers for the reduced 3d curves
-  vcl_vector<bdifd_1st_order_curve_3d> reducedCurves;
-  vcl_vector<bmcsd_curve_3d_attributes> reducedAttr;
+  std::vector<bdifd_1st_order_curve_3d> reducedCurves;
+  std::vector<bmcsd_curve_3d_attributes> reducedAttr;
 
   //Anil: Create buffer storage for all the cam, edge and curve data
   //The order of data in these containers will be changed to suit each stereo run
-  vcl_vector<bdifd_camera> curCams(numConf+2);
-  vcl_vector<dbdet_edgemap_sptr> curEdges(numConf+2);
-  vcl_vector<vil_image_view<vxl_uint_32> > curDTs(numConf+2);
-  vcl_vector<vil_image_view<unsigned> > curLabels(numConf+2);
-  vcl_vector<vcl_vector<vsol_polyline_2d_sptr> > curCurves(numConf+2);
-  vcl_vector<vcl_vector<vcl_vector<double> > > curTangents(numConf+2);
+  std::vector<bdifd_camera> curCams(numConf+2);
+  std::vector<dbdet_edgemap_sptr> curEdges(numConf+2);
+  std::vector<vil_image_view<vxl_uint_32> > curDTs(numConf+2);
+  std::vector<vil_image_view<unsigned> > curLabels(numConf+2);
+  std::vector<std::vector<vsol_polyline_2d_sptr> > curCurves(numConf+2);
+  std::vector<std::vector<std::vector<double> > > curTangents(numConf+2);
 
   //Anil: The cumulative curves after the initial subsampling run need to be stored.
-  vcl_vector<vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > > cumulativeCurveBox(numConf+2);
+  std::vector<std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > > cumulativeCurveBox(numConf+2);
 
   long file_io_time = file_io.real();
-  vcl_cout << "#1 FILE IO: " << file_io_time << vcl_endl;
+  std::cout << "#1 FILE IO: " << file_io_time << std::endl;
 
   for(unsigned ins=0; ins<numInstances; ++ins) {
 
     //STEP #1: Run 2-view stereo with confirmation views
 
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-------------------------------(RUNNING INSTANCE: " << ins << ")-------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-------------------------------(RUNNING INSTANCE: " << ins << ")-------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
 
     vul_timer pre_process;
 
@@ -453,7 +453,7 @@ main(int argc, char **argv)
     s.set_min_num_inlier_edgels_per_curvelet(a_min_num_inliers_per_curvelet());
     s.set_isFirstRun(true);
 
-    vcl_vector<vcl_vector<unsigned> > fa_usedCurveIDs(2);
+    std::vector<std::vector<unsigned> > fa_usedCurveIDs(2);
     if(!startRun) {
       
       for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
@@ -497,7 +497,7 @@ main(int argc, char **argv)
     MW_ASSERT("Stereo driver init return value", retval, true);
 
     long pre_process_time = pre_process.real();
-    vcl_cout << "#2 PRE-PROCESSING: " << pre_process_time << vcl_endl;
+    std::cout << "#2 PRE-PROCESSING: " << pre_process_time << std::endl;
 
     vul_timer running;
 
@@ -510,25 +510,25 @@ main(int argc, char **argv)
     s.get_curve_sketch(&csk);
 
     long running_time = running.real();
-    vcl_cout << "#3 RUNNING: " << running_time << vcl_endl;
+    std::cout << "#3 RUNNING: " << running_time << std::endl;
     vul_timer post_process;
 
     //STEP #2: Process the 3D curves to remove the segments that did not gather sufficient edge support
     //A segment is removed only if its size is 3 samples or more
     //A curve segment is created only if its size is 8 samples or more
-    vcl_vector<bdifd_1st_order_curve_3d> fullCurves = csk.curves_3d();
+    std::vector<bdifd_1st_order_curve_3d> fullCurves = csk.curves_3d();
 
-    vcl_vector<bdifd_1st_order_curve_3d> supportedSegments;
-    vcl_vector<bmcsd_curve_3d_attributes> supportedAttr;
+    std::vector<bdifd_1st_order_curve_3d> supportedSegments;
+    std::vector<bmcsd_curve_3d_attributes> supportedAttr;
 
     //Anil: Attributes contain mate curve information, get it from the curve sketch data structure 
-    const vcl_vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
+    const std::vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
     unsigned seedCurveSize = attrVec.front().origCurveSize_;
 
     //Anil: Data structure for stitching 3D curves together at their corresponding samples
     //1st index is the image curve ID, 2nd index is for different 3D curves and 3rd index is for sample IDs 
-    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
-    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
 
     unsigned numCurves = attrVec.size();
     bmcsd_curve_3d_attributes seedAttr;
@@ -538,15 +538,15 @@ main(int argc, char **argv)
       {
 	bdifd_1st_order_curve_3d curCurve = fullCurves[c];
 	bmcsd_curve_3d_attributes curAttr = attrVec[c];
-	vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	unsigned offset = curAttr.imageCurveOffset_;
 	unsigned offset_v1 = curAttr.imageCurveOffset_v1_;
 	unsigned origID = curAttr.orig_id_v0_;
 	unsigned origID_v1 = curAttr.orig_id_v1_;
 	unsigned origCurveSize = curAttr.origCurveSize_;
 	unsigned origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	vcl_vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
-	vcl_vector<bool> certaintyFlags = curAttr.certaintyFlags_;
+	std::vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
+	std::vector<bool> certaintyFlags = curAttr.certaintyFlags_;
 	unsigned v0_seed = fa_views->stereo0();
 	unsigned v1_seed = fa_views->stereo1();
 	
@@ -649,7 +649,7 @@ main(int argc, char **argv)
 	  }
       }
     long post_process_time = post_process.real();
-    vcl_cout << "#4 POST-PROCESSING: " << post_process_time << vcl_endl;
+    std::cout << "#4 POST-PROCESSING: " << post_process_time << std::endl;
     cumulativeCurveBox[fa_views->stereo0()] = cumulativeCurve;
   }
 
@@ -682,72 +682,72 @@ main(int argc, char **argv)
 
     //STEP #1: Run 2-view stereo with confirmation views
 
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-------------------------------(RUNNING INSTANCE: " << ins << ")-------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
-    vcl_cout << "-----------------------------------------------------------------------------------------------------------------------" << vcl_endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-------------------------------(RUNNING INSTANCE: " << ins << ")-------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------------------------------------------" << std::endl;
 
 
     bmcsd_stereo_instance_views frames_to_match = all_frames_to_match[ins];
     bmcsd_stereo_views_sptr fa_views = frames_to_match.instance(0);
 
-    vcl_cout << "FIRST ANCHOR: " << fa_views->stereo0() << vcl_endl;
-    vcl_cout << "SECOND ANCHOR: " << fa_views->stereo1() << vcl_endl;
-    vcl_cout << "CONFIRMATION VIEWS: ";
+    std::cout << "FIRST ANCHOR: " << fa_views->stereo0() << std::endl;
+    std::cout << "SECOND ANCHOR: " << fa_views->stereo1() << std::endl;
+    std::cout << "CONFIRMATION VIEWS: ";
 
     for(unsigned pr=0; pr<numConf; ++pr)
-      vcl_cout << fa_views->confirmation_view(pr) << " ";
+      std::cout << fa_views->confirmation_view(pr) << " ";
 
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
     bmcsd_concurrent_stereo_driver s(dpath, frames_to_match);
     
@@ -783,7 +783,7 @@ main(int argc, char **argv)
     s.set_min_num_inlier_edgels_per_curvelet(a_min_num_inliers_per_curvelet());
     s.set_isFirstRun(true);
 
-    vcl_vector<vcl_vector<unsigned> > fa_usedCurveIDs(2);
+    std::vector<std::vector<unsigned> > fa_usedCurveIDs(2);
     if(!startRun) {
       
       for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
@@ -837,19 +837,19 @@ main(int argc, char **argv)
     //STEP #2: Process the 3D curves to remove the segments that did not gather sufficient edge support
     //A segment is removed only if its size is 3 samples or more
     //A curve segment is created only if its size is 8 samples or more
-    vcl_vector<bdifd_1st_order_curve_3d> fullCurves = csk.curves_3d();
+    std::vector<bdifd_1st_order_curve_3d> fullCurves = csk.curves_3d();
 
-    vcl_vector<bdifd_1st_order_curve_3d> supportedSegments;
-    vcl_vector<bmcsd_curve_3d_attributes> supportedAttr;
+    std::vector<bdifd_1st_order_curve_3d> supportedSegments;
+    std::vector<bmcsd_curve_3d_attributes> supportedAttr;
 
     //Anil: Attributes contain mate curve information, get it from the curve sketch data structure 
-    const vcl_vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
+    const std::vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
     unsigned seedCurveSize = attrVec.front().origCurveSize_;
 
     //Anil: Data structure for stitching 3D curves together at their corresponding samples
     //1st index is the image curve ID, 2nd index is for different 3D curves and 3rd index is for sample IDs 
-    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
-    vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
+    std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
 
     if(usedViews[fa_views->stereo0()])
       cumulativeCurve = cumulativeCurveBox[fa_views->stereo0()];
@@ -862,15 +862,15 @@ main(int argc, char **argv)
       {
 	bdifd_1st_order_curve_3d curCurve = fullCurves[c];
 	bmcsd_curve_3d_attributes curAttr = attrVec[c];
-	vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	unsigned offset = curAttr.imageCurveOffset_;
 	unsigned offset_v1 = curAttr.imageCurveOffset_v1_;
 	unsigned origID = curAttr.orig_id_v0_;
 	unsigned origID_v1 = curAttr.orig_id_v1_;
 	unsigned origCurveSize = curAttr.origCurveSize_;
 	unsigned origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	vcl_vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
-	vcl_vector<bool> certaintyFlags = curAttr.certaintyFlags_;
+	std::vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
+	std::vector<bool> certaintyFlags = curAttr.certaintyFlags_;
 	unsigned v0_seed = fa_views->stereo0();
 	unsigned v1_seed = fa_views->stereo1();
 	
@@ -976,7 +976,7 @@ main(int argc, char **argv)
     bmcsd_curve_3d_sketch supportedCurves(supportedSegments,supportedAttr);
     //Anil: Container for all the mate curves
     //First index is views and second index is the image curves in v0()
-    vcl_vector<vcl_vector<vcl_set<int> > > cumulativeMates;
+    std::vector<std::vector<std::set<int> > > cumulativeMates;
     cumulativeMates.resize(numConf);
 
     /*//STEP #3: Loop over all the confirmation views to gather all mate curves together
@@ -988,9 +988,9 @@ main(int argc, char **argv)
 	for(unsigned c=0; c<numCurves; ++c){
 	  bmcsd_curve_3d_attributes curAttr = attrVec[c];
 	  unsigned origID = curAttr.orig_id_v0_;
-	  vcl_set<int> curMates = curAttr.mate_curves_[v];
+	  std::set<int> curMates = curAttr.mate_curves_[v];
 
-	  for(vcl_set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+	  for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	    cumulativeMates[v][origID].insert(*mit);
 	}
       } 
@@ -1000,7 +1000,7 @@ main(int argc, char **argv)
       {
 	bmcsd_curve_3d_sketch csk_elong;
 	unsigned curView = fa_views->confirmation_view(v);
-	vcl_cout << "LOOKING FOR CUES IN VIEW: " << curView << vcl_endl;
+	std::cout << "LOOKING FOR CUES IN VIEW: " << curView << std::endl;
 	bmcsd_stereo_instance_views curFrames;
 	bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
 	curInstance->set_stereo0(fa_views->stereo0());
@@ -1037,7 +1037,7 @@ main(int argc, char **argv)
 	cur_s.set_mate_curves_v1(cumulativeMates[v]);
 	cur_s.set_isFirstRun(false);    
 
-	vcl_vector<vcl_vector<unsigned> > cur_usedCurveIDs(2);
+	std::vector<std::vector<unsigned> > cur_usedCurveIDs(2);
 	if(!startRun) {
       
 	  for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
@@ -1081,26 +1081,26 @@ main(int argc, char **argv)
 	//Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
 	//A segment is removed only if its size is 3 samples or more
 	//A curve segment is created only if its size is 8 samples or more
-	vcl_vector<bdifd_1st_order_curve_3d> cur_fullCurves = csk_elong.curves_3d();
+	std::vector<bdifd_1st_order_curve_3d> cur_fullCurves = csk_elong.curves_3d();
  
-	vcl_vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
-	vcl_vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
+	std::vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
+	std::vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
 
-	const vcl_vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_elong.attributes();
+	const std::vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_elong.attributes();
 
 	for(unsigned c=0; c<cur_fullCurves.size(); ++c)
 	  {
 	    bdifd_1st_order_curve_3d curCurve = cur_fullCurves[c];
 	    bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
-	    vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	    std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	    unsigned cur_offset = curAttr.imageCurveOffset_;
 	    unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	    unsigned cur_origID = curAttr.orig_id_v0_;
 	    unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	    unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	    unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	    vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	    vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	    std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	    std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	    unsigned cur_v0_seed = fa_views->stereo0();
 	    unsigned cur_v1_seed = curView;
 
@@ -1205,13 +1205,13 @@ main(int argc, char **argv)
 
     /*bmcsd_curve_3d_sketch csk_supported(supportedSegments,supportedAttr);
     //: Write 3D curves and attributes to file.
-    retval = csk_supported.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+    retval = csk_supported.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
     MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
     static const int arr[] = {-2, 4, -4, 1, -1, 3, -3, 5, -5};   
-    vcl_vector<int> modifVec(arr, arr + sizeof(arr)/sizeof(arr[0]));
-    vcl_vector<unsigned> visitationSchedule;
-    vcl_vector<bool> cur_usedViews(numConf+2);
+    std::vector<int> modifVec(arr, arr + sizeof(arr)/sizeof(arr[0]));
+    std::vector<unsigned> visitationSchedule;
+    std::vector<bool> cur_usedViews(numConf+2);
     cur_usedViews[fa_views->stereo0()] = true;
     cur_usedViews[fa_views->stereo1()] = true;
 
@@ -1238,9 +1238,9 @@ main(int argc, char **argv)
       unsigned curView = visitationSchedule[vis];
       bmcsd_curve_3d_sketch csk_iterate;
       //unsigned curView = fa_views->confirmation_view(vi);
-      vcl_cout << "FIRST ANCHOR: " << fa_views->stereo0() << vcl_endl;
-      vcl_cout << "SWITCHING SECOND ANCHOR TO VIEW: " << curView << vcl_endl;
-      vcl_cout << "CONFIRMATION VIEWS: ";
+      std::cout << "FIRST ANCHOR: " << fa_views->stereo0() << std::endl;
+      std::cout << "SWITCHING SECOND ANCHOR TO VIEW: " << curView << std::endl;
+      std::cout << "CONFIRMATION VIEWS: ";
 
       bmcsd_stereo_instance_views curFrames;
       bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
@@ -1252,13 +1252,13 @@ main(int argc, char **argv)
 	if(fa_views->confirmation_view(cv) != curView){
 	//if(fa_views->confirmation_view(cv) != vi)
 	  curInstance->add_confirmation_view(fa_views->confirmation_view(cv));
-	  vcl_cout << fa_views->confirmation_view(cv) << " ";
+	  std::cout << fa_views->confirmation_view(cv) << " ";
 	}
       }
 
       curInstance->add_confirmation_view(fa_views->stereo1());
       curFrames.add_instance(curInstance);
-      vcl_cout << fa_views->stereo1() << vcl_endl;
+      std::cout << fa_views->stereo1() << std::endl;
 
       curCams.clear();
       curEdges.clear();
@@ -1289,7 +1289,7 @@ main(int argc, char **argv)
 	curLabels[vv+2] = allLabels[curInstance->confirmation_view(vv)];
       }
 
-      vcl_vector<vcl_vector<unsigned> > usedCurveIDs(2);
+      std::vector<std::vector<unsigned> > usedCurveIDs(2);
       for(unsigned imc=0; imc<usedCurvesAll[fa_views->stereo0()].size(); ++imc){
 	unsigned numUsed = 0;
 	for(unsigned s=0; s<usedCurvesAll[fa_views->stereo0()][imc].size(); ++s)
@@ -1357,27 +1357,27 @@ main(int argc, char **argv)
       //Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
       //A segment is removed only if its size is 3 samples or more
       //A curve segment is created only if its size is 8 samples or more
-      vcl_vector<bdifd_1st_order_curve_3d> cur_fullCurves = csk_iterate.curves_3d();
+      std::vector<bdifd_1st_order_curve_3d> cur_fullCurves = csk_iterate.curves_3d();
       unsigned cur_numCurves = cur_fullCurves.size();
  
-      vcl_vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
-      vcl_vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
+      std::vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
+      std::vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
 
-      const vcl_vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_iterate.attributes();
+      const std::vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_iterate.attributes();
 
       for(unsigned c=0; c<cur_fullCurves.size(); ++c)
 	{
 	  bdifd_1st_order_curve_3d curCurve = cur_fullCurves[c];
 	  bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
-	  vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	  std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	  unsigned cur_offset = curAttr.imageCurveOffset_;
 	  unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	  unsigned cur_origID = curAttr.orig_id_v0_;
 	  unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	  unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	  unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	  vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	  vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	  std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	  std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	  unsigned cur_v0_seed = fa_views->stereo0();
 	  unsigned cur_v1_seed = curView;
 
@@ -1483,7 +1483,7 @@ main(int argc, char **argv)
     
       //Anil: Container for all the mate curves
       //First index is views and second index is the image curves in v0()
-      vcl_vector<vcl_vector<vcl_set<int> > > cur_cumulativeMates;
+      std::vector<std::vector<std::set<int> > > cur_cumulativeMates;
       cur_cumulativeMates.resize(numConf);
 
       /*//Loop over all the confirmation views to gather all mate curves together
@@ -1495,9 +1495,9 @@ main(int argc, char **argv)
 	  for(unsigned c=0; c<cur_numCurves; ++c){
 	    bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
 	    unsigned origID = curAttr.orig_id_v0_;
-	    vcl_set<int> curMates = curAttr.mate_curves_[v];
+	    std::set<int> curMates = curAttr.mate_curves_[v];
 
-	    for(vcl_set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+	    for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	      cur_cumulativeMates[v][origID].insert(*mit);
 	  }
 	} 
@@ -1507,27 +1507,27 @@ main(int argc, char **argv)
 	{
 	  bmcsd_curve_3d_sketch csk_iter_elong;
 	  unsigned iterView = curInstance->confirmation_view(v);
-	  vcl_cout << "LOOKING FOR CUES IN VIEW: " << iterView << vcl_endl;
+	  std::cout << "LOOKING FOR CUES IN VIEW: " << iterView << std::endl;
 	  bmcsd_stereo_instance_views iterFrames;
 	  bmcsd_stereo_views_sptr iterInstance = new bmcsd_stereo_views();
 	  iterInstance->set_stereo0(curInstance->stereo0());
 	  iterInstance->set_stereo1(iterView);
-	  vcl_cout << curInstance->stereo0() << " " << iterView << vcl_endl;
+	  std::cout << curInstance->stereo0() << " " << iterView << std::endl;
 	  iterInstance->reserve_num_confirmation_views(numConf);
 
 	  for(unsigned cv=0; cv<numConf; ++cv)
 	    if(cv != v){
 	      iterInstance->add_confirmation_view(curInstance->confirmation_view(cv));
-	      vcl_cout << curInstance->confirmation_view(cv) << " ";
+	      std::cout << curInstance->confirmation_view(cv) << " ";
 	    }
 	
 	  iterInstance->add_confirmation_view(curInstance->stereo1());
-	  vcl_cout << curInstance->stereo1() << vcl_endl;
+	  std::cout << curInstance->stereo1() << std::endl;
 	  iterFrames.add_instance(iterInstance);
 
 	  bmcsd_concurrent_stereo_driver iter_s(dpath, iterFrames);
 
-	  vcl_vector<vcl_vector<unsigned> > iter_usedCurveIDs(2);
+	  std::vector<std::vector<unsigned> > iter_usedCurveIDs(2);
 	  for(unsigned imc=0; imc<usedCurvesAll[curInstance->stereo0()].size(); ++imc){
 	    unsigned numUsed = 0;
 	    for(unsigned s=0; s<usedCurvesAll[curInstance->stereo0()][imc].size(); ++s)
@@ -1588,26 +1588,26 @@ main(int argc, char **argv)
 	  //Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
 	  //A segment is removed only if its size is 3 samples or more
 	  //A curve segment is created only if its size is 8 samples or more
-	  vcl_vector<bdifd_1st_order_curve_3d> iter_fullCurves = csk_iter_elong.curves_3d();
+	  std::vector<bdifd_1st_order_curve_3d> iter_fullCurves = csk_iter_elong.curves_3d();
  
-	  vcl_vector<bdifd_1st_order_curve_3d> iter_supportedSegments;
-	  vcl_vector<bmcsd_curve_3d_attributes> iter_supportedAttr;
+	  std::vector<bdifd_1st_order_curve_3d> iter_supportedSegments;
+	  std::vector<bmcsd_curve_3d_attributes> iter_supportedAttr;
 
-	  const vcl_vector<bmcsd_curve_3d_attributes> iter_attrVec = csk_iter_elong.attributes();
+	  const std::vector<bmcsd_curve_3d_attributes> iter_attrVec = csk_iter_elong.attributes();
 
 	  for(unsigned c=0; c<iter_fullCurves.size(); ++c)
 	    {
 	      bdifd_1st_order_curve_3d curCurve = iter_fullCurves[c];
 	      bmcsd_curve_3d_attributes curAttr = iter_attrVec[c];
-	      vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	      std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	      unsigned cur_offset = curAttr.imageCurveOffset_;
 	      unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	      unsigned cur_origID = curAttr.orig_id_v0_;
 	      unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	      unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	      unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	      vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	      vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	      std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	      std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	      unsigned cur_v0_seed = curInstance->stereo0();
 	      unsigned cur_v1_seed = iterView;
 
@@ -1712,7 +1712,7 @@ main(int argc, char **argv)
       
     }
 
-    vcl_cout << "FINISHED GATHERING!!!!" << vcl_endl;
+    std::cout << "FINISHED GATHERING!!!!" << std::endl;
 
 
     //STEP #6: Take the average of all the corresponding curve samples 
@@ -1721,7 +1721,7 @@ main(int argc, char **argv)
 
     for(unsigned i=0; i<2000; ++i)
       {
-	vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
+	std::vector<std::vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
 	bdifd_1st_order_curve_3d averageCurve;
 	if(!cur_cumulativeCurve.empty())
 	  {
@@ -1781,7 +1781,7 @@ main(int argc, char **argv)
 			double y=cur_cumulativeCurve[s][p].Gama[1];
 			double z=cur_cumulativeCurve[s][p].Gama[2];
 
-			double distSq = vcl_pow(x-avGama[0],2) + vcl_pow(y-avGama[1],2) + vcl_pow(z-avGama[2],2);
+			double distSq = std::pow(x-avGama[0],2) + std::pow(y-avGama[1],2) + std::pow(z-avGama[2],2);
 			if(distSq<0.05)
 			  {
 			    xSum+=x;
@@ -1840,47 +1840,47 @@ main(int argc, char **argv)
     curTangents.resize(numConf+2);
   }
 
-  vcl_cout << "NUMBER OF REDUCED CURVES: " << reducedCurves.size() << vcl_endl;
+  std::cout << "NUMBER OF REDUCED CURVES: " << reducedCurves.size() << std::endl;
   bmcsd_curve_3d_sketch csk_reduced(reducedCurves,reducedAttr);
   //: Write 3D curves and attributes to file.
-  retval = csk_reduced.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk_reduced.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);//*/
 
   /*//: Write 3D curves and attributes to file.
-  retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*//: Write 3D curves and attributes to file.
-  retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*//: Write 3D curves and attributes to file.
-  retval = supportedCurves.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = supportedCurves.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*if (a_write_corresp()) {
     for (unsigned i=0; i < s.num_corresp(); ++i) {
-      vcl_ostringstream ns;
+      std::ostringstream ns;
       ns << i;
-      vcl_string fname
-        = a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/corresp.vsl") + ns.str();
+      std::string fname
+        = a_prefix() + std::string("/") + a_out_dir() + std::string("/corresp.vsl") + ns.str();
       vsl_b_ofstream corr_ofs(fname);
       vsl_b_write(corr_ofs, s.corresp(i));
     }
   }
 
   //Anil: Write the edge support to different txt files
-  if(!write_edge_support(a_prefix() + vcl_string("/") + a_out_dir(), csk.attributes()))
-  vcl_cout << "Error writing edge support files!" << vcl_endl;*/
+  if(!write_edge_support(a_prefix() + std::string("/") + a_out_dir(), csk.attributes()))
+  std::cout << "Error writing edge support files!" << std::endl;*/
 
   /*for(unsigned u=0; u<numConf+2; ++u)
   {
-    vcl_stringstream used_stream;
+    std::stringstream used_stream;
     used_stream << "used_samples_";
     used_stream << u;
     used_stream << ".txt";
-    vcl_string used_fname = used_stream.str();
-    vcl_ofstream used_file(used_fname.c_str());
+    std::string used_fname = used_stream.str();
+    std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
@@ -1889,7 +1889,7 @@ main(int argc, char **argv)
 	  numImageCurvesProcessed++;
       }
 
-    used_file << numImageCurvesProcessed << vcl_endl;
+    used_file << numImageCurvesProcessed << std::endl;
 
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
@@ -1899,7 +1899,7 @@ main(int argc, char **argv)
 	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
 	      used_file << usedCurvesAll[u][imc][s] << " ";
       
-	    used_file << vcl_endl;
+	    used_file << std::endl;
 	  }
       }
 
@@ -1913,7 +1913,7 @@ main(int argc, char **argv)
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  /*vcl_vector<vcl_vector<unsigned> > usedCurveIDs(2);
+  /*std::vector<std::vector<unsigned> > usedCurveIDs(2);
 
   for(unsigned imc=0; imc<usedCurvesAll[12].size(); ++imc){
     unsigned numUsed = 0;
@@ -1986,17 +1986,17 @@ main(int argc, char **argv)
 
   s2.get_curve_sketch(&csk_second_round);
   //: Write 3D curves and attributes to file.
-  retval = csk_second_round.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk_second_round.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);//*/
 
   //Write out the used curve samples in a text file
   for(unsigned u=0; u<numConf+2; ++u) {
-    vcl_stringstream used_stream;
+    std::stringstream used_stream;
     used_stream << "used_samples_";
     used_stream << u;
     used_stream << ".txt";
-    vcl_string used_fname = used_stream.str();
-    vcl_ofstream used_file(used_fname.c_str());
+    std::string used_fname = used_stream.str();
+    std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
@@ -2005,7 +2005,7 @@ main(int argc, char **argv)
 	  numImageCurvesProcessed++;
       }
 
-    used_file << numImageCurvesProcessed << vcl_endl;
+    used_file << numImageCurvesProcessed << std::endl;
 
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
@@ -2015,7 +2015,7 @@ main(int argc, char **argv)
 	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
 	      used_file << usedCurvesAll[u][imc][s] << " ";
       
-	    used_file << vcl_endl;
+	    used_file << std::endl;
 	  }
       }
 

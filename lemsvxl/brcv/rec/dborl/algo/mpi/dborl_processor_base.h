@@ -41,8 +41,8 @@
 //       paths to the libraries specified properly in FindMPI.cmake
 
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 //using namespace std;
 
 template <class T, class R> 
@@ -53,19 +53,19 @@ public:
   //: this method is run on each processor after lead processor broadcasts its command 
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
   //virtual bool parse_command_line(int argc, char *argv[]) = 0;
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv) = 0;
+  virtual bool parse_command_line(std::vector<std::string>& argv) = 0;
 
   //: this method is run on each processor
   virtual bool parse(const char* param_file) = 0;
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<T>& t) = 0;
+  virtual bool initialize(std::vector<T>& t) = 0;
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(T t, R& r) = 0;
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<R>& results) = 0;
+  virtual bool finalize(std::vector<R>& results) = 0;
 
 #ifdef MPI_CPP_BINDING
   virtual MPI::Datatype create_datatype_for_R() = 0;
@@ -73,7 +73,7 @@ public:
   virtual MPI_Datatype create_datatype_for_R() = 0;
 #endif
 
-  vcl_string param_file_;
+  std::string param_file_;
 };
 
 #endif  //_DBORL_PROCESSOR_BASE_H

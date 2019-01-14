@@ -30,7 +30,7 @@
 
 #include <bbas/bsol/bsol_algs.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 extern "C" {
 #include <vl/gmm.h>
@@ -40,12 +40,12 @@ extern "C" {
 
 //: Constructor
 dbskr_test_routines::dbskr_test_routines(
-    vcl_string query_list,
-    vcl_string query_dc_file,
-    vcl_string model_list,
-    vcl_string gmm_file,
-    vcl_string pca_M_file,
-    vcl_string pca_mean_file,
+    std::string query_list,
+    std::string query_dc_file,
+    std::string model_list,
+    std::string gmm_file,
+    std::string pca_M_file,
+    std::string pca_mean_file,
     DescriptorType descr_type,
     ColorSpace color_space,
     int stride,
@@ -58,7 +58,7 @@ dbskr_test_routines::dbskr_test_routines(
 {
 
     // Write out centers
-    vcl_string d_type="";
+    std::string d_type="";
     if ( descr_type_ == dbskr_test_routines::GRADIENT )
     {
         d_type="gradient";
@@ -68,7 +68,7 @@ dbskr_test_routines::dbskr_test_routines(
         d_type="color";
     }
 
-    vcl_string c_type="";
+    std::string c_type="";
     if ( color_space_ == dbskr_test_routines::RGB )
     {
         c_type="rgb";
@@ -88,27 +88,27 @@ dbskr_test_routines::dbskr_test_routines(
     
     compute_bg_color(color_space_);
 
-    vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
-            <<vcl_endl;
+    std::cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
+            <<std::endl;
 
     // Load query data
-    vcl_cout<<"Loading query files"<<vcl_endl;
+    std::cout<<"Loading query files"<<std::endl;
     load_query_file(query_list);
 
     // Load query dc data
-    vcl_cout<<"Loading query DC data"<<vcl_endl;
+    std::cout<<"Loading query DC data"<<std::endl;
     load_dc_file(query_dc_file);
 
     // Load model file first
-    vcl_cout<<"Loading model file"<<vcl_endl;
+    std::cout<<"Loading model file"<<std::endl;
     load_model_file(model_list);
 
     // Load gmm data
-    vcl_cout<<"Loading gmm data"<<vcl_endl;
+    std::cout<<"Loading gmm data"<<std::endl;
     load_gmm_data(gmm_file);
 
     // Load gmm data
-    vcl_cout<<"Loading pca data"<<vcl_endl;
+    std::cout<<"Loading pca data"<<std::endl;
     load_pca_data(pca_M_file,
                   pca_mean_file);
 
@@ -141,9 +141,9 @@ dbskr_test_routines::~dbskr_test_routines()
 void dbskr_test_routines::test()
 {
 
-    vcl_cout<<"Computing distances between "<<
+    std::cout<<"Computing distances between "<<
         query_test_points_.size()<<" Querys and "<<
-        model_points_.size()<<" Models"<<vcl_endl;
+        model_points_.size()<<" Models"<<std::endl;
 
     // Create sift filter object
     VlSiftFilt* filter = vl_sift_new(query_ni_,
@@ -153,14 +153,14 @@ void dbskr_test_routines::test()
 
     int encoding_size = 2 * PCA_M_.cols() * keywords_;
 
-    vcl_vector<vcl_vector<vnl_matrix<vl_sift_pix> > > output(
+    std::vector<std::vector<vnl_matrix<vl_sift_pix> > > output(
         query_test_points_.size());
 
     for ( int q=0; q < query_test_points_.size() ; ++q)
     {
 
-        vcl_vector<vcl_pair<float,float> > q_pts=query_points_[q];
-        vcl_vector<vgl_point_2d<double> > test_points=query_test_points_[q];
+        std::vector<std::pair<float,float> > q_pts=query_points_[q];
+        std::vector<vgl_point_2d<double> > test_points=query_test_points_[q];
 
         vnl_matrix<vl_sift_pix> dist_matrix(model_points_.size(),
                                             test_points.size(),
@@ -190,10 +190,10 @@ void dbskr_test_routines::test()
         
         for ( int m=0; m < model_points_.size() ; ++m)
         {
-            vcl_cout<<"Distance: Query "<<q<<" vs Model "<<m
-                    <<vcl_endl;
+            std::cout<<"Distance: Query "<<q<<" vs Model "<<m
+                    <<std::endl;
 
-            vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m][q];
+            std::vector<std::pair<float,float> > m_pts=model_points_[m][q];
             
             vil_fill(chan1,bg_color_[0]);
             vil_fill(chan2,bg_color_[1]);
@@ -208,7 +208,7 @@ void dbskr_test_routines::test()
 
             if ( write_out_)
             {
-                vcl_stringstream name;
+                std::stringstream name;
                 name<<"Model_"<<m<<"_vs_Query_"<<q<<"_warp.png";
 
                 vil_image_view<vxl_byte > map_image;
@@ -271,13 +271,13 @@ void dbskr_test_routines::test()
     vl_sift_delete(filter);
     filter=0;
     
-    vcl_cout<<"Writing out Results"<<vcl_endl;
+    std::cout<<"Writing out Results"<<std::endl;
 
     // Write out output
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_filename_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::binary);
     
     float q = output.size();
     float m = model_points_.size();
@@ -299,7 +299,7 @@ void dbskr_test_routines::test()
     for ( int q=0; q < query_test_points_.size() ; ++q)
     {
 
-        vcl_vector<vgl_point_2d<double> > test_points=query_test_points_[q];
+        std::vector<vgl_point_2d<double> > test_points=query_test_points_[q];
 
         float size=test_points.size();
 
@@ -318,7 +318,7 @@ void dbskr_test_routines::test()
             
         }
 
-        vcl_vector< vnl_matrix<vl_sift_pix> > dist_matrices=output[q];
+        std::vector< vnl_matrix<vl_sift_pix> > dist_matrices=output[q];
 
         for ( int k=0; k < dist_matrices.size() ; ++k)
         {
@@ -349,21 +349,21 @@ void dbskr_test_routines::test()
 
 
 //: Load model data and convert to color space if appropriate
-void dbskr_test_routines::load_pca_data(vcl_string& M_filename,
-                                        vcl_string& mean_filename)
+void dbskr_test_routines::load_pca_data(std::string& M_filename,
+                                        std::string& mean_filename)
 {
     // Open M file
     {
         int rows=0;
         int cols=0;
 
-        vcl_ifstream M_stream(M_filename.c_str());
+        std::ifstream M_stream(M_filename.c_str());
         
         M_stream>>rows;
         M_stream>>cols;
 
-        vcl_cout<<"PCA tranformation is a matrix of "<<rows<<" by "
-                <<cols<<vcl_endl;
+        std::cout<<"PCA tranformation is a matrix of "<<rows<<" by "
+                <<cols<<std::endl;
 
         PCA_M_.set_size(rows,cols);
         PCA_M_.fill(0.0);
@@ -383,13 +383,13 @@ void dbskr_test_routines::load_pca_data(vcl_string& M_filename,
 
     // Open mean file
     {
-        vcl_ifstream mean_stream(mean_filename.c_str());
+        std::ifstream mean_stream(mean_filename.c_str());
 
         int dim=0;
         mean_stream>>dim;
         PCA_mean_.set_size(dim);
 
-        vcl_cout<<"Mean file is length "<<dim<<vcl_endl;
+        std::cout<<"Mean file is length "<<dim<<std::endl;
 
         for ( int i =0; i < dim ; ++i)
         {
@@ -402,13 +402,13 @@ void dbskr_test_routines::load_pca_data(vcl_string& M_filename,
 }
 
 //: Load model data and convert to color space if appropriate
-void dbskr_test_routines::load_gmm_data(vcl_string& filename)
+void dbskr_test_routines::load_gmm_data(std::string& filename)
 {
     
     int dimension  = 128;
     int numCenters = 0;
 
-    vcl_ifstream myfile (filename.c_str());
+    std::ifstream myfile (filename.c_str());
     if (myfile.is_open())
     {
         myfile>>numCenters;
@@ -416,8 +416,8 @@ void dbskr_test_routines::load_gmm_data(vcl_string& filename)
         
         keywords_=numCenters;
 
-        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
-        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+        std::cout<<"Num Centers: "<<keywords_<<std::endl;
+        std::cout<<"Dimension:   "<<dimension<<std::endl;
 
         means_cg_ = (float*) vl_malloc(
             sizeof(float)*dimension*numCenters);
@@ -501,9 +501,9 @@ void dbskr_test_routines::compute_bg_color(
     }
     else
     {
-        double o1 = (red-green)/vcl_sqrt(2);
-        double o2 = (red+green-2*blue)/vcl_sqrt(6);
-        double o3 = (red+green+blue)/vcl_sqrt(3);
+        double o1 = (red-green)/std::sqrt(2);
+        double o2 = (red+green-2*blue)/std::sqrt(6);
+        double o3 = (red+green+blue)/std::sqrt(3);
         if ( color_space == NOPP )
         {
             if ( o3 > 0.0 )
@@ -522,16 +522,16 @@ void dbskr_test_routines::compute_bg_color(
 }
 
 //: Load model files and convert to color space if appropriate
-void dbskr_test_routines::load_dc_file(vcl_string& filename)
+void dbskr_test_routines::load_dc_file(std::string& filename)
 {
-    vcl_ifstream fstream(filename.c_str(), 
-                         vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream fstream(filename.c_str(), 
+                         std::ios::in|std::ios::binary|std::ios::ate);
     float* memblock(0);
     if (fstream.is_open())
     {
-        vcl_ifstream::pos_type size = fstream.tellg();
+        std::ifstream::pos_type size = fstream.tellg();
         memblock = new float[size/sizeof(float)];
-        fstream.seekg (0, vcl_ios::beg);
+        fstream.seekg (0, std::ios::beg);
         fstream.read ((char *) memblock, size);
         fstream.close();
     }
@@ -546,7 +546,7 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
     int index=2;
     for ( int i=0; i < query_points_.size() ; ++i)
     {
-        vcl_vector<vcl_pair<float,float> > query_xy;
+        std::vector<std::pair<float,float> > query_xy;
         float points=memblock[index];
         ++index;
 
@@ -559,7 +559,7 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
             y=memblock[index];
             ++index;
 
-            vcl_pair<float,float> coord(x,y);
+            std::pair<float,float> coord(x,y);
             query_xy.push_back(coord);
         }
 
@@ -574,7 +574,7 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
 
         for ( int q=0 ; q < query_points_.size() ; ++q)
         {
-            vcl_vector<vcl_pair<float,float> > model_xy;
+            std::vector<std::pair<float,float> > model_xy;
             for ( int s=0; s < numb_xys ; ++s)
             {
                 float x(0),y(0);
@@ -584,7 +584,7 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
                 y=memblock[index];
                 ++index;
                 
-                vcl_pair<float,float> coord(x,y);
+                std::pair<float,float> coord(x,y);
                 model_xy.push_back(coord);
             }
 
@@ -598,20 +598,20 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
 }
 
 //: Load query files and convert to color space if appropriate
-void dbskr_test_routines::load_query_file(vcl_string& filename)
+void dbskr_test_routines::load_query_file(std::string& filename)
 {
-    vcl_ifstream esf_file(filename.c_str());
+    std::ifstream esf_file(filename.c_str());
 
     if ( !esf_file.is_open() )
     {
-        vcl_cerr<<"Error opening "<<filename<<vcl_endl;
+        std::cerr<<"Error opening "<<filename<<std::endl;
         return;
     }
 
     dbsk2d_xshock_graph_fileio loader;
 
-    vcl_string line;
-    while ( vcl_getline (esf_file,line) )
+    std::string line;
+    while ( std::getline (esf_file,line) )
     {
 
         // Load in two of the same one for mirroring one for not
@@ -623,8 +623,8 @@ void dbskr_test_routines::load_query_file(vcl_string& filename)
         query_masks_.push_back(polygon);
 
         // Read in image file
-        vcl_string query_imagename=vul_file::strip_extension(line);
-        vcl_string filename=vul_file::strip_directory(query_imagename);
+        std::string query_imagename=vul_file::strip_extension(line);
+        std::string filename=vul_file::strip_directory(query_imagename);
         
         output_filename_=filename+"_dist_matrix.bin";
 
@@ -658,27 +658,27 @@ void dbskr_test_routines::load_query_file(vcl_string& filename)
 }
 
 //: Load model files and convert to color space if appropriate
-void dbskr_test_routines::load_model_file(vcl_string& filename)
+void dbskr_test_routines::load_model_file(std::string& filename)
 {
-    vcl_ifstream esf_file(filename.c_str());
+    std::ifstream esf_file(filename.c_str());
 
     if ( !esf_file.is_open() )
     {
-        vcl_cerr<<"Error opening "<<filename<<vcl_endl;
+        std::cerr<<"Error opening "<<filename<<std::endl;
         return;
     }
 
     dbsk2d_xshock_graph_fileio loader;
 
-    vcl_string line;
-    while ( vcl_getline (esf_file,line) )
+    std::string line;
+    while ( std::getline (esf_file,line) )
     {
 
         // Load in two of the same one for mirroring one for not
         dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(line);
 
         // Read in image file
-        vcl_string model_imagename=vul_file::strip_extension(line);
+        std::string model_imagename=vul_file::strip_extension(line);
         
         model_imagename=model_imagename+".jpg";
 
@@ -715,7 +715,7 @@ vgl_polygon<double> dbskr_test_routines::compute_boundary(
         sg,
         true,
         true,
-        vcl_min((float)scurve_sample_ds, scurve_interpolate_ds),
+        std::min((float)scurve_sample_ds, scurve_interpolate_ds),
         scurve_sample_ds,
         0);
 
@@ -724,7 +724,7 @@ vgl_polygon<double> dbskr_test_routines::compute_boundary(
 }
 
 void dbskr_test_routines::compute_fvs(
-    vcl_vector<vgl_point_2d<double> >& stride_points,
+    std::vector<vgl_point_2d<double> >& stride_points,
     vl_sift_pix* chan1_grad_data,
     vl_sift_pix* chan2_grad_data,
     vl_sift_pix* chan3_grad_data,
@@ -739,7 +739,7 @@ void dbskr_test_routines::compute_fvs(
 
     double fixed_theta=0.0;
 
-    vcl_vector<vl_sift_pix> descriptors;
+    std::vector<vl_sift_pix> descriptors;
 
     for ( int g=0; g < stride_points.size() ; ++g)
     {
@@ -827,7 +827,7 @@ void dbskr_test_routines::compute_fvs(
         {
 
             fv_descriptor[f]= vnl_math::sgn0(fv_descriptor[f])*(
-                vcl_pow(vcl_fabs(fv_descriptor[f]),powernorm_));
+                std::pow(std::fabs(fv_descriptor[f]),powernorm_));
         }
 
         fv_descriptor.normalize();
@@ -840,8 +840,8 @@ void dbskr_test_routines::compute_fvs(
 
 
 void dbskr_test_routines::explicit_alignment(
-    vcl_vector<vcl_pair<float,float> >& q_pts, 
-    vcl_vector<vcl_pair<float,float> >& m_pts,
+    std::vector<std::pair<float,float> >& q_pts, 
+    std::vector<std::pair<float,float> >& m_pts,
     vil_image_view<double>& model_chan_1,
     vil_image_view<double>& model_chan_2,
     vil_image_view<double>& model_chan_3,
@@ -850,8 +850,8 @@ void dbskr_test_routines::explicit_alignment(
 
     for ( int i=0; i < q_pts.size() ; ++i)
     {
-        vcl_pair<float,float> q_coords=q_pts[i];
-        vcl_pair<float,float> m_coords=m_pts[i];
+        std::pair<float,float> q_coords=q_pts[i];
+        std::pair<float,float> m_coords=m_pts[i];
         
         double xx=m_coords.first;
         double yy=m_coords.second;
@@ -909,7 +909,7 @@ void dbskr_test_routines::compute_query_test_points()
     for ( unsigned int i=0; i < query_masks_.size() ; ++i)
     {
         vgl_box_2d<double> bbox;
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(query_masks_[i], false);  
@@ -920,7 +920,7 @@ void dbskr_test_routines::compute_query_test_points()
             {
                 vgl_point_2d<double> query_pt(x,y);
                 
-                vcl_pair<int,int> ib(x,y);
+                std::pair<int,int> ib(x,y);
                 in_bounds.insert(ib);
 
                 bbox.add(query_pt);
@@ -928,12 +928,12 @@ void dbskr_test_routines::compute_query_test_points()
         }
 
 
-        vcl_vector<vgl_point_2d<double> > points;
+        std::vector<vgl_point_2d<double> > points;
         for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride_)
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride_) 
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -1143,9 +1143,9 @@ void dbskr_test_routines::convert_to_color_space(
                 double red=image(c,r,0);
                 double green=image(c,r,1);
                 double blue=image(c,r,2);
-                o1(c,r) = (red-green)/vcl_sqrt(2);
-                o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
-                o3(c,r) = (red+green+blue)/vcl_sqrt(3);
+                o1(c,r) = (red-green)/std::sqrt(2);
+                o2(c,r) = (red+green-2*blue)/std::sqrt(6);
+                o3(c,r) = (red+green+blue)/std::sqrt(3);
                 if ( color_space == NOPP )
                 {
                     if ( o3(c,r) > 0.0 )

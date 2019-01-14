@@ -73,7 +73,7 @@ dbetl_point_track::cost_func() const
 {/*
   vnl_matrix<double> E(2*num_points_,4);
   vnl_matrix<double> P3(num_points_,4);
-  vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
+  std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
   for(int i=0; i<num_points_; ++i, ++p_itr){
     while(*p_itr == NULL) 
       ++p_itr;
@@ -84,9 +84,9 @@ dbetl_point_track::cost_func() const
   }
   return dbetl_reproject_lsqr_cost(E,P3);
   */
-  vcl_vector<vnl_double_3x4> cameras;
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
+  std::vector<vnl_double_3x4> cameras;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
   for(int i=0; i<num_points_; ++i, ++p_itr){
     while(*p_itr == NULL) 
       ++p_itr;
@@ -107,12 +107,12 @@ dbetl_point_track::estimate_mean_3d()
 
   int steps_above = 10;
   int steps_below = 10;
-  vcl_vector<vnl_double_3x4> cameras;
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > pts_above(steps_above);
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > pts_below(steps_below);
-  vcl_vector<double> errors;
-  vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
+  std::vector<vnl_double_3x4> cameras;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<std::vector<vgl_point_2d<double> > > pts_above(steps_above);
+  std::vector<std::vector<vgl_point_2d<double> > > pts_below(steps_below);
+  std::vector<double> errors;
+  std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = points_.begin();
   for(int i=0; i<num_points_; ++i, ++p_itr){
     while(*p_itr == NULL) 
       ++p_itr;
@@ -140,7 +140,7 @@ dbetl_point_track::estimate_mean_3d()
       }
     }
   }
-  //vcl_cout << "above = " << steps_above << " below = " << steps_below << vcl_endl;
+  //std::cout << "above = " << steps_above << " below = " << steps_below << std::endl;
 
   // for more than 2 points
   if(num_points_>2){
@@ -209,15 +209,15 @@ dbetl_point_track::estimate_mean_3d()
     error = 0.0;
   }
 
-  //vcl_cout << "Error = " <<error << " -- ";
+  //std::cout << "Error = " <<error << " -- ";
   for(unsigned int i=0; i<errors.size(); ++i){
     error += errors[i];
-    //vcl_cout << errors[i] << ", ";
+    //std::cout << errors[i] << ", ";
   }
   error /= (errors.size()+1);
-  //vcl_cout << "avg = " << error << vcl_endl;
+  //std::cout << "avg = " << error << std::endl;
 
-  vcl_vector<vgl_point_3d<double> > cpts = this->curve_points();
+  std::vector<vgl_point_3d<double> > cpts = this->curve_points();
   double distance = 0.0;
   if(cpts.size() > 1){
     vgl_point_3d<double> last_pt = cpts.front();
@@ -227,11 +227,11 @@ dbetl_point_track::estimate_mean_3d()
     }
     distance /= cpts.size()-1;
   }
-  //vcl_cout << "error = " << error << " \t distance = " << distance << vcl_endl;
+  //std::cout << "error = " << error << " \t distance = " << distance << std::endl;
 
   error += distance;
 
-  return error + num_points_*vcl_log(2*vnl_math::pi);
+  return error + num_points_*std::log(2*vnl_math::pi);
 }
 
 
@@ -241,7 +241,7 @@ dbetl_point_track::image_cost() const
 {
   double cost = this->image_cost(points_);
   int size = 1;
-  vcl_vector<dbetl_point_2d_sptr> pts(points_);
+  std::vector<dbetl_point_2d_sptr> pts(points_);
   for(unsigned int i=0; i<mean_3d_above_.size(); ++i){
     for(unsigned int j=0; j<pts.size(); ++j){
       if(pts[j] != NULL) 
@@ -265,13 +265,13 @@ dbetl_point_track::image_cost() const
 
 //: The cost associated with the image statistics
 double
-dbetl_point_track::image_cost(const vcl_vector<dbetl_point_2d_sptr>& pts) const
+dbetl_point_track::image_cost(const std::vector<dbetl_point_2d_sptr>& pts) const
 {
   double error = 0.0;
   double mean_near = 0.0;
   double mean_far = 0.0;
   int num = 0;
-  for( vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
+  for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
        p_itr != pts.end();  ++p_itr ){
     if(*p_itr == NULL) 
       continue;
@@ -282,7 +282,7 @@ dbetl_point_track::image_cost(const vcl_vector<dbetl_point_2d_sptr>& pts) const
   mean_near /= num;
   mean_far /= num;
 
-  for( vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
+  for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = pts.begin();
        p_itr != pts.end();  ++p_itr ){
     if(*p_itr == NULL) 
       continue;
@@ -295,10 +295,10 @@ dbetl_point_track::image_cost(const vcl_vector<dbetl_point_2d_sptr>& pts) const
 
 
 //: Return the vector of 3D points making up a local curve fragment
-vcl_vector<vgl_point_3d<double> > 
+std::vector<vgl_point_3d<double> > 
 dbetl_point_track::curve_points() const
 {
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
   for(int i=int(mean_3d_below_.size())-1; i>0; --i)
     pts.push_back(mean_3d_below_[i]);
   pts.push_back(mean_3d_);

@@ -27,11 +27,11 @@ public:
    );
 
   static void compute_circle_stats(
-  const vcl_vector<bdifd_3rd_order_point_2d> &crv,
-  const vcl_vector<vcl_vector<double> > &k, 
-  const vcl_vector<vcl_vector<double> > &kdot,
-  const vcl_vector<vcl_vector<double> > &k_stdv, 
-  const vcl_vector<vcl_vector<double> > &kdot_stdv,
+  const std::vector<bdifd_3rd_order_point_2d> &crv,
+  const std::vector<std::vector<double> > &k, 
+  const std::vector<std::vector<double> > &kdot,
+  const std::vector<std::vector<double> > &k_stdv, 
+  const std::vector<std::vector<double> > &kdot_stdv,
   double &k_err,
   double &k_mean,
   double &k_stddev_nopoly , //:< disconsidering k_stdv, kdot_stddv

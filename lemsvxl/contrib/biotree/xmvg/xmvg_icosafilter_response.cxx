@@ -1,8 +1,8 @@
 #include <xmvg/xmvg_icosafilter_response.h>
 #include <vnl/vnl_matrix_fixed.h>
-#include <vcl_list.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <list>
+#include <iostream>
+#include <cstdlib>
 
 // max eigen value of the noise covariance matrix is multiplied by a big number to get 
 // smaller results at the end as strength
@@ -42,7 +42,7 @@ void xmvg_icosafilter_response::normalize(void) {
   double sum = 0.0;
   double max = 0.0;
   for (unsigned i=0; i < this->size(); i++) {
-    double val = vcl_fabs(res_[i]);
+    double val = std::fabs(res_[i]);
     sum += val;
     if (val > max)
       max = val;
@@ -51,7 +51,7 @@ void xmvg_icosafilter_response::normalize(void) {
   if (sum != 0.0) {
     for (unsigned i=0; i < res_.size(); i++) {
       //double x = res_[i];
-      //x = vcl_fabs(res_[i]);
+      //x = std::fabs(res_[i]);
       //x = x/max;
       //x *= 2.25;
       set(i, (res_[i]/sum));

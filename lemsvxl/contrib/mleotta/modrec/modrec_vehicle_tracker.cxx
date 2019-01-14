@@ -72,7 +72,7 @@ struct modrec_edgel_metric
   //: Compute the Mahalanobis distance between two points
   static inline T distance(const F& pt1, const F& pt2, const covar_type& c)
   {
-    return vcl_sqrt(sqr_distance(pt1,pt2,c));
+    return std::sqrt(sqr_distance(pt1,pt2,c));
   }
   
   //: Compute the square Mahalanobis distance between two points
@@ -223,8 +223,8 @@ public:
         if(mask(i,j)){
           float theta = edge_map(i,j,1);
           float offset = edge_map(i,j,2);
-          edgels(i,j,0) = i + vcl_cos(theta)*offset;
-          edgels(i,j,1) = j + vcl_sin(theta)*offset;
+          edgels(i,j,0) = i + std::cos(theta)*offset;
+          edgels(i,j,1) = j + std::sin(theta)*offset;
           edgels(i,j,2) = theta;
         }
         else
@@ -262,7 +262,7 @@ public:
     assert(input_type_id(0) == typeid(vil_image_resource_sptr));
     vil_image_resource_sptr last_image = input<vil_image_resource_sptr>(0);
     if(!last_image){
-      vcl_cout << "first image"<< vcl_endl;
+      std::cout << "first image"<< std::endl;
       output(0,vnl_vector_fixed<double,2>(0,0));
       return DBPRO_VALID;
     }
@@ -288,22 +288,22 @@ public:
       for(unsigned int i=0; i<ni; ++i){
         if(curr(i,j,0) <= 0 || last(i,j,0) <= 0)
           continue;
-        if(vcl_abs(curr(i,j,0)-last(i,j,0)) > 10.0)
+        if(std::abs(curr(i,j,0)-last(i,j,0)) > 10.0)
           continue;
         double adiff = curr(i,j,1) - last(i,j,1);
         while(adiff > vnl_math::pi)
           adiff -= 2*vnl_math::pi;
         while(adiff < -vnl_math::pi)
           adiff += 2*vnl_math::pi;
-        if(vcl_abs(adiff) > 0.1)
+        if(std::abs(adiff) > 0.1)
           continue;
         ++matches;
         
         double w = curr(i,j,0);
         double theta = curr(i,j,1);
         double d = w*(curr(i,j,2) - last(i,j,2));
-        double nx = w*vcl_cos(theta);
-        double ny = w*vcl_sin(theta);
+        double nx = w*std::cos(theta);
+        double ny = w*std::sin(theta);
         n_xx += nx*nx;
         n_xy += nx*ny;
         n_yy += ny*ny;
@@ -312,11 +312,11 @@ public:
       }
     }
     
-    vcl_cout << "num matches = "<<matches<<vcl_endl;
+    std::cout << "num matches = "<<matches<<std::endl;
     double det = n_xx*n_yy - n_xy*n_xy;
     double ox = (d_x*n_yy - d_y*n_xy)/det;
     double oy = (d_y*n_xx - d_x*n_xy)/det;
-    vcl_cout << "offset is "<<ox<<", "<<oy<<vcl_endl;
+    std::cout << "offset is "<<ox<<", "<<oy<<std::endl;
     
     output(0,vnl_vector_fixed<double,2>(ox,oy));
     
@@ -360,7 +360,7 @@ public:
         out_edge_map(i,j,0) = in_edge_map(i,j,0);
         out_edge_map(i,j,1) = in_edge_map(i,j,1);
         double theta = in_edge_map(i,j,1);
-        double d = vcl_cos(theta)*offset[0] + vcl_sin(theta)*offset[1];
+        double d = std::cos(theta)*offset[0] + std::sin(theta)*offset[1];
         out_edge_map(i,j,2) = in_edge_map(i,j,2) - d;
       }
     }
@@ -444,10 +444,10 @@ public:
     vil_image_resource_sptr in_img = input<vil_image_resource_sptr>(0);
     vil_image_view<float> image = in_img->get_view();
     
-    vcl_vector<double> px, py, val;
+    std::vector<double> px, py, val;
     vil_find_peaks_3x3_subpixel(px,py,val,image,threshold_);
     
-    vcl_vector<vgl_point_2d<double> > pts(px.size());
+    std::vector<vgl_point_2d<double> > pts(px.size());
     for(unsigned int i=0; i<px.size(); ++i)
       pts[i].set(px[i],py[i]);
     
@@ -492,15 +492,15 @@ public:
     
     vil_blob_finder blob_finder;
     blob_finder.set_work_image(work_image_);
-    vcl_vector<int> bi,bj;
-    unsigned int min_len = vcl_sqrt(min_area_*4*3.14159);
-    vcl_vector<vgl_polygon<double> > polys;
+    std::vector<int> bi,bj;
+    unsigned int min_len = std::sqrt(min_area_*4*3.14159);
+    std::vector<vgl_polygon<double> > polys;
     while (blob_finder.next_4con_region(bi,bj))
     {
       if(bi.size() < min_len)
         continue;
       
-      vcl_vector<vgl_point_2d<double> > pts;
+      std::vector<vgl_point_2d<double> > pts;
       bool on_boundary = false;
       for(unsigned int i=0; i<bi.size(); ++i){
         if(bi[i] <= 0 || bi[i] >= ni-1 || bj[i] <= 0 || bj[i] >= nj-1){
@@ -547,17 +547,17 @@ public:
   //: Execute this process
   dbpro_signal execute()
   {
-    typedef vcl_pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
-    vcl_vector<pv_pair> flow;
+    typedef std::pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
+    std::vector<pv_pair> flow;
     
     assert(input_type_id(0) == typeid(vil_image_resource_sptr));
     vil_image_resource_sptr image1 = input<vil_image_resource_sptr>(0);
     if(!image1)
       return DBPRO_INVALID;
     
-    assert(input_type_id(1) == typeid(vcl_vector<vgl_point_2d<double> >));
-    vcl_vector<vgl_point_2d<double> > pts = 
-        input<vcl_vector<vgl_point_2d<double> > >(1);
+    assert(input_type_id(1) == typeid(std::vector<vgl_point_2d<double> >));
+    std::vector<vgl_point_2d<double> > pts = 
+        input<std::vector<vgl_point_2d<double> > >(1);
     
     last_pts_.swap(pts);
     
@@ -567,8 +567,8 @@ public:
     if(!last_image_){
       last_image_.set_size(ni,nj);
       vil_convert_cast(img1,last_image_);
-      vcl_cout << "sizeof(vxl_byte) " << sizeof(vxl_byte)
-               <<" sizeof(KLT_PixelType) "<<sizeof(KLT_PixelType)<<vcl_endl;
+      std::cout << "sizeof(vxl_byte) " << sizeof(vxl_byte)
+               <<" sizeof(KLT_PixelType) "<<sizeof(KLT_PixelType)<<std::endl;
       output(0, flow);
       return DBPRO_VALID;
     }
@@ -614,7 +614,7 @@ public:
   KLT_TrackingContext klt_tc_;
   vil_image_view<KLT_PixelType> curr_image_;
   vil_image_view<KLT_PixelType> last_image_;
-  vcl_vector<vgl_point_2d<double> > last_pts_;
+  std::vector<vgl_point_2d<double> > last_pts_;
 };
 
 
@@ -633,10 +633,10 @@ public:
   dbpro_signal execute()
   {
     
-    typedef vcl_pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
+    typedef std::pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
     
-    assert(input_type_id(0) == typeid(vcl_vector<pv_pair>));
-    vcl_vector<pv_pair> flow = input<vcl_vector<pv_pair> >(0);
+    assert(input_type_id(0) == typeid(std::vector<pv_pair>));
+    std::vector<pv_pair> flow = input<std::vector<pv_pair> >(0);
     
     if(flow.empty()){
       output(0, flow);
@@ -651,7 +651,7 @@ public:
     vnl_vector_fixed<double,2> offset2 = input<vnl_vector_fixed<double,2> >(2);
     vgl_vector_2d<double> o2(offset2[0],offset2[1]);
     
-    vcl_vector<pv_pair> t_flow;
+    std::vector<pv_pair> t_flow;
     for(unsigned int i=0; i<flow.size(); ++i){
       vgl_point_2d<double> p(flow[i].first - o2);
       vgl_vector_2d<double> v(flow[i].second - (o2 - o1));
@@ -681,21 +681,21 @@ public:
   //: Execute this process
   dbpro_signal execute()
   {
-    typedef vcl_pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
+    typedef std::pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
     
-    assert(input_type_id(0) == typeid(vcl_vector<vgl_polygon<double> >));
-    vcl_vector<vgl_polygon<double> > silhouettes = 
-        input<vcl_vector<vgl_polygon<double> > >(0);
+    assert(input_type_id(0) == typeid(std::vector<vgl_polygon<double> >));
+    std::vector<vgl_polygon<double> > silhouettes = 
+        input<std::vector<vgl_polygon<double> > >(0);
     
-    assert(input_type_id(1) == typeid(vcl_vector<pv_pair>));
-    vcl_vector<pv_pair> flow = input<vcl_vector<pv_pair> >(1);
+    assert(input_type_id(1) == typeid(std::vector<pv_pair>));
+    std::vector<pv_pair> flow = input<std::vector<pv_pair> >(1);
     
-    assert(input_type_id(2) == typeid(vcl_vector<modrec_vehicle_state>));
-    vcl_vector<modrec_vehicle_state> states = 
-        input<vcl_vector<modrec_vehicle_state> >(2);
+    assert(input_type_id(2) == typeid(std::vector<modrec_vehicle_state>));
+    std::vector<modrec_vehicle_state> states = 
+        input<std::vector<modrec_vehicle_state> >(2);
     
     if(!tracking_enabled_){
-      output(0, vcl_vector<modrec_vehicle_state>());
+      output(0, std::vector<modrec_vehicle_state>());
       return DBPRO_VALID;
     }
     
@@ -724,7 +724,7 @@ namespace{
 // for detection of KLT points
 float min_eigenvalue(float a, float b, float c){
   double d=a-b;
-  return (a + b - vcl_sqrt(d*d + 4*c*c))/2.0;
+  return (a + b - std::sqrt(d*d + 4*c*c))/2.0;
 }
 }
 
@@ -744,9 +744,9 @@ public:
   dbpro_signal execute()
   {
     
-    assert(input_type_id(0) == typeid(vcl_vector<modrec_vehicle_state>));
-    vcl_vector<modrec_vehicle_state> states =
-        input<vcl_vector<modrec_vehicle_state> >(0);
+    assert(input_type_id(0) == typeid(std::vector<modrec_vehicle_state>));
+    std::vector<modrec_vehicle_state> states =
+        input<std::vector<modrec_vehicle_state> >(0);
         
     for(int i=0; i<states.size(); ++i){
       if(!optimizer_->correct_state(states[i]) || states[i].params.inf_norm() > 1.0)
@@ -779,11 +779,11 @@ public:
   dbpro_signal execute()
   {
     
-    assert(input_type_id(0) == typeid(vcl_vector<modrec_vehicle_state>));
-    vcl_vector<modrec_vehicle_state> states =
-        input<vcl_vector<modrec_vehicle_state> >(0);
+    assert(input_type_id(0) == typeid(std::vector<modrec_vehicle_state>));
+    std::vector<modrec_vehicle_state> states =
+        input<std::vector<modrec_vehicle_state> >(0);
     
-    vcl_vector<modrec_vehicle_state> pstates;
+    std::vector<modrec_vehicle_state> pstates;
     for(unsigned int i=0; i<states.size(); ++i){
       pstates.push_back(modrec_circ_motion_predict(states[i],time_));
     }
@@ -863,7 +863,7 @@ modrec_vehicle_tracker::modrec_vehicle_tracker(modrec_vehicle_fit_video* optimiz
   graph_["x_edgels"]    = new extract_subpix_filter();
   graph_["blob_detect"] = new blob_detector_filter();
   graph_["track_init"]  = new track_init_filter();
-  graph_["s_delay"]     = new dbpro_delay(1,vcl_vector<modrec_vehicle_state>());
+  graph_["s_delay"]     = new dbpro_delay(1,std::vector<modrec_vehicle_state>());
   graph_["trk_predict"] = new track_predict_filter();
   graph_["trk_correct"] = new track_correct_filter(optimizer);
   

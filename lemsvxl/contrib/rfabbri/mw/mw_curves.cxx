@@ -6,13 +6,13 @@
 
 //: Just a "factory" method to build the desired point vectors out of a vector
 // of polylines
-vcl_vector< vcl_vector<vsol_point_2d_sptr> > *   mw_curves::
-new_curvepts(const vcl_vector< vsol_polyline_2d_sptr > &polys)
+std::vector< std::vector<vsol_point_2d_sptr> > *   mw_curves::
+new_curvepts(const std::vector< vsol_polyline_2d_sptr > &polys)
 {
-  vcl_vector< vcl_vector<vsol_point_2d_sptr> > *pcurvepts;
-  pcurvepts = new vcl_vector< vcl_vector<vsol_point_2d_sptr> >;
+  std::vector< std::vector<vsol_point_2d_sptr> > *pcurvepts;
+  pcurvepts = new std::vector< std::vector<vsol_point_2d_sptr> >;
 
-  vcl_vector< vcl_vector<vsol_point_2d_sptr> > &curvepts=*pcurvepts;
+  std::vector< std::vector<vsol_point_2d_sptr> > &curvepts=*pcurvepts;
 
   curvepts.resize(polys.size());
   for (unsigned i=0; i<curvepts.size(); ++i) {
@@ -28,7 +28,7 @@ new_curvepts(const vcl_vector< vsol_polyline_2d_sptr > &polys)
 //: this class is the one who unallocs the vectors of points
 // TODO: support open curves; add open/closed bool vector to input
 mw_curves::
-mw_curves(vcl_vector< vcl_vector<vsol_point_2d_sptr> > *curvepts)
+mw_curves(std::vector< std::vector<vsol_point_2d_sptr> > *curvepts)
    :
    gcurve_(curvepts->size(),0),
    curvepts_(*curvepts)
@@ -69,22 +69,22 @@ check_consistency() const
 //: todo: check_consistency_thorough
 
 //: output to stream
-vcl_ostream&  operator<<(vcl_ostream& s, const mw_curves &c)
+std::ostream&  operator<<(std::ostream& s, const mw_curves &c)
 {
    // dump everything!
-   s << "Pt\n" << "size: " << c.pt_.size() << vcl_endl;
+   s << "Pt\n" << "size: " << c.pt_.size() << std::endl;
    for (unsigned long i=0; i < ((c.pt_.size() < 4)?c.pt_.size():4); ++i) {
    //   for (unsigned long i=0; i < c.pt_.size(); ++i) {
       s << i << ":\t" << *(c.pt_[i]);
    }
-   vcl_cout << "  last: " << *(c.pt_[c.pt_.size()-1]);
+   std::cout << "  last: " << *(c.pt_[c.pt_.size()-1]);
 
-   s << "Curveid\n" << "size: " << c.curveid_.size() << vcl_endl;
+   s << "Curveid\n" << "size: " << c.curveid_.size() << std::endl;
    for (unsigned long i=0; i < ((c.curveid_.size() < 4)?c.curveid_.size():4); ++i) {
-      s << i << ":\t" << c.curveid_[i] << vcl_endl;
+      s << i << ":\t" << c.curveid_[i] << std::endl;
    }
 
-   s << "gcurve_\n" << "ncurves: " << c.gcurve_.size() << vcl_endl;
+   s << "gcurve_\n" << "ncurves: " << c.gcurve_.size() << std::endl;
 
    return s;
 }
@@ -108,7 +108,7 @@ void mw_curves::
 nearest_point_to(double x, double y,  unsigned long *np, double *min_distance)
 {
    if (npts() == 0) {
-      vcl_cerr << "Hey, no points!" << vcl_endl;
+      std::cerr << "Hey, no points!" << std::endl;
       return;
    }
 

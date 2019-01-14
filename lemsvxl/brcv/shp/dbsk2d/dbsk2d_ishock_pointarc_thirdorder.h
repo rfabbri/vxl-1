@@ -94,14 +94,14 @@ public:
   // Dynamics of this shock edge
   // the taus here are "default taus" that sTau() returns
   //-----------------------------------------------------------------------------
-  virtual double dFromLTau  (double Ltau) { return vcl_fabs(_Rl-_Rr)/2; }
-  virtual double dFromRTau  (double Rtau) { return vcl_fabs(_Rl-_Rr)/2; }
+  virtual double dFromLTau  (double Ltau) { return std::fabs(_Rl-_Rr)/2; }
+  virtual double dFromRTau  (double Rtau) { return std::fabs(_Rl-_Rr)/2; }
 
-  virtual double rFromLTau  (double Ltau) { return vcl_fabs(_Rl-_Rr)/2; }
-  virtual double rFromRTau  (double Rtau) { return vcl_fabs(_Rl-_Rr)/2; }
+  virtual double rFromLTau  (double Ltau) { return std::fabs(_Rl-_Rr)/2; }
+  virtual double rFromRTau  (double Rtau) { return std::fabs(_Rl-_Rr)/2; }
 
-  virtual double d  (double tau) { return vcl_fabs(_Rl-_Rr)/2; }
-  virtual double r  (double tau) { return vcl_fabs(_Rl-_Rr)/2; }
+  virtual double d  (double tau) { return std::fabs(_Rl-_Rr)/2; }
+  virtual double r  (double tau) { return std::fabs(_Rl-_Rr)/2; }
   virtual double rp (double tau);
   virtual double rpp(double tau);
   virtual double tangent (double tau);
@@ -136,7 +136,7 @@ public:
   virtual vgl_point_2d<double> getRFootPt (double rtau);
 
   virtual void compute_extrinsic_locus();
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
 };
 

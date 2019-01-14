@@ -1,6 +1,6 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <streambuf>
+#include <sstream>
 #include <math.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
 #include <vgl/vgl_conic.h>
@@ -65,7 +65,7 @@ get_args(
    unsigned *npts)
 {
 
-  vcl_string method;
+  std::string method;
   if (nrhs > 2) {
     mexErrMsgTxt("Too many inputs.\n");
   }
@@ -133,16 +133,16 @@ void mexFunction(
 
 
   // Initialize buffering stuff for error messages
-  vcl_cout.sync_with_stdio(true);
-  vcl_cerr.sync_with_stdio(true);
+  std::cout.sync_with_stdio(true);
+  std::cerr.sync_with_stdio(true);
 
-  vcl_streambuf* cout_sbuf = vcl_cout.rdbuf();
-  vcl_stringbuf myout_sbuf;
-  vcl_cout.rdbuf(&myout_sbuf);
+  std::streambuf* cout_sbuf = std::cout.rdbuf();
+  std::stringbuf myout_sbuf;
+  std::cout.rdbuf(&myout_sbuf);
 
-  vcl_streambuf* cerr_sbuf = vcl_cerr.rdbuf();
-  vcl_stringbuf myerr_sbuf;
-  vcl_cerr.rdbuf(&myerr_sbuf);
+  std::streambuf* cerr_sbuf = std::cerr.rdbuf();
+  std::stringbuf myerr_sbuf;
+  std::cerr.rdbuf(&myerr_sbuf);
 
 
 
@@ -155,10 +155,10 @@ void mexFunction(
   mexPrintf("%s",myout_sbuf.str().c_str());
   mexPrintf("%s",myerr_sbuf.str().c_str());
 
-  vcl_cout.rdbuf(cout_sbuf);
-  vcl_cerr.rdbuf(cerr_sbuf);
-  vcl_flush(vcl_cout);
-  vcl_flush(vcl_cerr);
+  std::cout.rdbuf(cout_sbuf);
+  std::cerr.rdbuf(cerr_sbuf);
+  std::flush(std::cout);
+  std::flush(std::cerr);
 
   return;
 }

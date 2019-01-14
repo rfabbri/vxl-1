@@ -14,13 +14,13 @@ main(int argc, char **argv)
 
   vul_arg_parse(argc,argv);
 
-  vcl_cout << "rad_ini: " << rad_ini() << " rad_end: " << rad_end()
+  std::cout << "rad_ini: " << rad_ini() << " rad_end: " << rad_end()
     << " nrad: " << nrad()
     << " dx: " << dx() << " dt: " << dt() 
-    << vcl_endl;
+    << std::endl;
 
 
-  vcl_cerr << "Code is currently being updated to support new SEL\n";
+  std::cerr << "Code is currently being updated to support new SEL\n";
   abort();
 // XXX mw_test_sel_geometry::test_circle( rad_ini(), rad_end(), nrad(), dx(), dt());
 

@@ -19,11 +19,11 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_algorithm.h>
-#include<vcl_iomanip.h>
-#include<vcl_set.h>
-#include<vcl_string.h>
-#include<vcl_vector.h>
+#include<algorithm>
+#include<iomanip>
+#include<set>
+#include<string>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -43,18 +43,18 @@
 class dbcl_ncn_extractor: public vbl_ref_count
 {
 public:
-	typedef vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dbcl_vgl_point_2d_dist_compare > target_ncn_map_type;
+	typedef std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dbcl_vgl_point_2d_dist_compare > target_ncn_map_type;
 
-	typedef vcl_set<vgl_point_2d<unsigned>, dbcl_vgl_point_2d_dist_compare > pivot_pixel_set_type;
+	typedef std::set<vgl_point_2d<unsigned>, dbcl_vgl_point_2d_dist_compare > pivot_pixel_set_type;
 
 	dbcl_ncn_extractor():neighborhood_valid_(false), entropy_valid_(false), pivot_set_valid_(false){}
 
-	dbcl_ncn_extractor( vcl_string const& video_glob, vcl_vector<vgl_point_2d<unsigned> > const& target_points, 
+	dbcl_ncn_extractor( std::string const& video_glob, std::vector<vgl_point_2d<unsigned> > const& target_points, 
 						unsigned const& num_pivot_pixels = 2000, unsigned const& num_particles = 10000, unsigned const& num_neighbors = 10 );
 
 	~dbcl_ncn_extractor(){}
 
-	bool load_video(vcl_string const& video_glob);
+	bool load_video(std::string const& video_glob);
 
 	void calculate_temporal_entropy( unsigned const& nbins = 16 );
 
@@ -70,10 +70,10 @@ public:
 	
 
 	//i/o
-	void load_entropy_bin(vcl_string const& filename);
-	bool save_entropy_dat(vcl_string const& filename);
-	bool save_entropy_bin(vcl_string const& filename);
-	bool write_neighborhood_mfile(vcl_string const& filename);
+	void load_entropy_bin(std::string const& filename);
+	bool save_entropy_dat(std::string const& filename);
+	bool save_entropy_bin(std::string const& filename);
+	bool write_neighborhood_mfile(std::string const& filename);
 
 
 	
@@ -92,10 +92,10 @@ private:
 
 	target_ncn_map_type target_ncn_map_;
 
-	vcl_map<unsigned, vil_image_resource_sptr> img_seq_;
+	std::map<unsigned, vil_image_resource_sptr> img_seq_;
 
 	//PROTECTED MEMBER FUNCTIONS
-	void build_frame_map(vcl_string const& filename);
+	void build_frame_map(std::string const& filename);
 
 	static bool binary_search_predicate(double& i, double& j){return i > j;}
 

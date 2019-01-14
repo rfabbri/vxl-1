@@ -10,7 +10,7 @@
 // 
 #include <xmvg/xmvg_filter_response.h>
 #include <det/det_cylinder_map.h>
-#include <vcl_string.h>
+#include <string>
 
 class xmvg_icosafilter_response: public xmvg_filter_response<double>
 {

@@ -30,7 +30,7 @@ static void test_smw_node()
 //    TEST_NEAR("sigma() returns correct value after sequence: 4.5,1.2,7.23",
 //              test_node.sigma(),2.4654,tol);
 
-    vcl_cout << "test_node.sigma() = " << test_node.sigma() << vcl_endl;
+    std::cout << "test_node.sigma() = " << test_node.sigma() << std::endl;
 
 }
 

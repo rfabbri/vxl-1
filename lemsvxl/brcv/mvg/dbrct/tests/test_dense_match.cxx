@@ -1,20 +1,20 @@
 #include <dbrct/dbrct_wide_dense_match.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <fstream>
+#include <string>
 #include <vil1/vil1_load.h>
 #include <vil1/vil1_save.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vsl/vsl_binary_io.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <testlib/testlib_test.h>
 
 int test_dense_match_main(int argc, char *argv[])
 {
    testlib_test_begin("dense match");
    
-   vcl_string image_base;
+   std::string image_base;
     if(argc>=2)
     {
     image_base=argv[1];
@@ -25,8 +25,8 @@ int test_dense_match_main(int argc, char *argv[])
     image_base += "/";
    #endif
    
-   vcl_string  Limg=image_base+"img1.png";
-   vcl_string  Rimg=image_base+"img2.png";
+   std::string  Limg=image_base+"img1.png";
+   std::string  Rimg=image_base+"img2.png";
 
    vil1_image img1=vil1_load(Limg.c_str());
    vil1_image img2=vil1_load(Rimg.c_str());
@@ -59,10 +59,10 @@ int test_dense_match_main(int argc, char *argv[])
    {
        for(unsigned int j=0;j<wdm.f_assignments.cols();j++)
        {
-        vcl_cout<<wdm.f_assignments(i,j)-j<<" ";
+        std::cout<<wdm.f_assignments(i,j)-j<<" ";
 
        }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
    }*/
 
    return testlib_test_summary();   

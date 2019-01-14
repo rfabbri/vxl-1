@@ -11,7 +11,7 @@
 #include <vnl/algo/vnl_conjugate_gradient.h>
 #include <dbsksp/dbsksp_shock_graph.h>
 #include <dbsksp/dbsksp_shock_node.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsks/dbsks_ocm_image_cost.h>
 #include <vsol/vsol_box_2d.h>
@@ -48,11 +48,11 @@ set_cost_params(const dbsks_ocm_image_cost_sptr& ocm, float ds, float lambda)
 // -----------------------------------------------------------------------------------
 //: Set initial states of xnodes using the shapelet results from DP engine
 void dbsks_local_match::
-set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
+set_xnode_states(const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
 {
 
   this->cur_xnode_map_.clear();
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator it = 
     shapelet_map.begin(); it != shapelet_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it ->first;
@@ -63,7 +63,7 @@ set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& s
     // xnode associated with the parent node
     dbsksp_xshock_node_descriptor xnode_parent(s_e->start(), s_e->bnd_start(0),
       s_e->bnd_start(1));
-    this->cur_xnode_map_.insert(vcl_make_pair(v_parent, xnode_parent));
+    this->cur_xnode_map_.insert(std::make_pair(v_parent, xnode_parent));
 
     // if the child node is connected to a terminal edge, then it is not
     // the parent node in any edge (for non-branching graphs). It xnode is thus
@@ -73,7 +73,7 @@ set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& s
       dbsksp_shock_node_sptr v_child= e->child_node();
       dbsksp_xshock_node_descriptor xnode_child(s_e->end(), 
         s_e->bnd_end(0), s_e->bnd_end(1));
-      this->cur_xnode_map_.insert(vcl_make_pair(v_child, xnode_child));
+      this->cur_xnode_map_.insert(std::make_pair(v_child, xnode_child));
     }
   }
 
@@ -91,7 +91,7 @@ set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& s
 
 // -----------------------------------------------------------------------------
 //: Get object boundary from the cur_xnode_map
-vcl_vector<bgld_circ_arc > dbsks_local_match::
+std::vector<bgld_circ_arc > dbsks_local_match::
 get_cur_bnd_arc_list()
 {
   return dbsks_bnd_arc_list(this->graph(), this->cur_xnode_map_);
@@ -105,7 +105,7 @@ get_cur_bnd_arc_list()
 //: Set initial states (fragments) of the edges
 void dbsks_local_match::
 set_init_states_of_edges(
-  const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
+  const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
 {
   this->shapelet_map_ = shapelet_map;
   return;
@@ -118,7 +118,7 @@ set_init_states_of_edges(
 //: Set ref_shapelet_map
 void dbsks_local_match::
 set_ref_shapelet_map(
-  const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& ref_shapelet_map)
+  const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& ref_shapelet_map)
 {
   this->ref_shapelet_map_ = ref_shapelet_map;
 }
@@ -140,8 +140,8 @@ set_ref_shapelet_map(
 //    this->lm_cost()->convert_to_graph_params(this->shapelet_map_);  
 //  
 //  double init_cost = this->lm_cost()->f(x);
-//  vcl_cout << "Start minimization ... \n";
-//    vcl_cout << "x_init = " << x << "\n";
+//  std::cout << "Start minimization ... \n";
+//    std::cout << "x_init = " << x << "\n";
 //
 //
 //  // amoeba
@@ -151,14 +151,14 @@ set_ref_shapelet_map(
 //  //amoeba.set_max_iterations(100);
 //  amoeba.minimize(x);
 //
-//  vcl_cout << "Final x = " << x << "\n";
+//  std::cout << "Final x = " << x << "\n";
 //
 //  double final_cost1 = this->lm_cost()->f(x);
 //  double final_cost2 = this->lm_cost()->f(this->lm_cost()->xmin_);
 //
 //  this->final_x_ = this->lm_cost()->xmin_;
 //
-//  vcl_cout << "\nInit cost = " << init_cost << "\n"
+//  std::cout << "\nInit cost = " << init_cost << "\n"
 //    << "Final cost 1 = " << final_cost1 << "\n"
 //    << "Final cost 2= " << final_cost2 << "\n";
 //}
@@ -209,7 +209,7 @@ optimize(const dbsksp_shock_node_sptr& v)
 
     
     
-    vcl_cout << "\nInit cost = " << f_init << "\n"
+    std::cout << "\nInit cost = " << f_init << "\n"
         << "Cached accum_image_cost = " << a12_xnode_cost.accum_image_cost_ << "\n"
         << "Cached accum_length = " << a12_xnode_cost.accum_len_ << "\n"
         << "Cached accum_shape_cost = " << a12_xnode_cost.accum_shape_cost_ << "\n"
@@ -220,7 +220,7 @@ optimize(const dbsksp_shock_node_sptr& v)
 
 
     double f_final = a12_xnode_cost.f(x);
-    vcl_cout << "Final cost " << f_final << "\n"
+    std::cout << "Final cost " << f_final << "\n"
       << "Cached accum_image_cost = " << a12_xnode_cost.accum_image_cost_ << "\n"
       << "Cached accum_length = " << a12_xnode_cost.accum_len_ << "\n"
       << "Cached accum_shape_cost = " << a12_xnode_cost.accum_shape_cost_ << "\n"
@@ -262,7 +262,7 @@ optimize(const dbsksp_shock_node_sptr& v)
 
       // DEBUG - 
       double f_init = ainfty_xnode_cost.f(x);
-      vcl_cout << "\nInit cost = " << f_init << "\n"
+      std::cout << "\nInit cost = " << f_init << "\n"
         << "Cached accum_image_cost = " << ainfty_xnode_cost.accum_image_cost_ << "\n"
         << "Cached accum_length = " << ainfty_xnode_cost.accum_len_ << "\n"
         << "Cached accum_shape_cost = " << ainfty_xnode_cost.accum_shape_cost_ << "\n"
@@ -273,7 +273,7 @@ optimize(const dbsksp_shock_node_sptr& v)
 
       double f_final = ainfty_xnode_cost.f(x);
 
-      vcl_cout << "\nInit cost = " << f_init << "\n"
+      std::cout << "\nInit cost = " << f_init << "\n"
         << "Final cost " << f_final << "\n"
         << "Cached accum_image_cost = " << ainfty_xnode_cost.accum_image_cost_ << "\n"
         << "Cached accum_length = " << ainfty_xnode_cost.accum_len_ << "\n"
@@ -310,7 +310,7 @@ optimize(const dbsksp_shock_node_sptr& v)
       
       
       double f_init = ainfty_xnode_cost.f(x);
-      vcl_cout << "\nInit cost = " << f_init << "\n"
+      std::cout << "\nInit cost = " << f_init << "\n"
         << "Cached accum_image_cost = " << ainfty_xnode_cost.accum_image_cost_ << "\n"
         << "Cached accum_length = " << ainfty_xnode_cost.accum_len_ << "\n"
         << "Cached accum_shape_cost = " << ainfty_xnode_cost.accum_shape_cost_ << "\n"
@@ -321,7 +321,7 @@ optimize(const dbsksp_shock_node_sptr& v)
 
       double f_final = ainfty_xnode_cost.f(x);
 
-      vcl_cout << "Final cost " << f_final << "\n"
+      std::cout << "Final cost " << f_final << "\n"
         << "Cached accum_image_cost = " << ainfty_xnode_cost.accum_image_cost_ << "\n"
         << "Cached accum_length = " << ainfty_xnode_cost.accum_len_ << "\n"
         << "Cached accum_shape_cost = " << ainfty_xnode_cost.accum_shape_cost_ << "\n"
@@ -331,7 +331,7 @@ optimize(const dbsksp_shock_node_sptr& v)
       new_xnode = dbsks_convert_to_xnode(x);
     }
   }
-  vcl_cout << "Final xnode: \n"
+  std::cout << "Final xnode: \n"
       << "   pt = " << new_xnode.pt_ << "\n"
       << "   psi = " << new_xnode.psi_ << "\n"
       << "   phi = " << new_xnode.phi_ << "\n"
@@ -374,7 +374,7 @@ optimize_nodes_in_sequence(int num_node_visits)
 
   for (int i =0; i < num_node_visits; ++i)
   {
-    vcl_cout << "Node id = " << cur_node->id() << "\n";
+    std::cout << "Node id = " << cur_node->id() << "\n";
     this->optimize(cur_node);
 
     // select the next node
@@ -399,11 +399,11 @@ optimize_nodes_in_sequence(int num_node_visits)
 
 
   // Display final costs
-  vcl_cout << "Initial graph cost = " << this->init_graph_cost_ << "\n"
+  std::cout << "Initial graph cost = " << this->init_graph_cost_ << "\n"
     << "Init image cost = " << this->init_graph_image_cost_ << "\n"
     << "Init shape cost = " << this->init_graph_shape_cost_ << "\n";
 
-  vcl_cout << "Final graph cost = " << this->final_graph_cost_ << "\n"
+  std::cout << "Final graph cost = " << this->final_graph_cost_ << "\n"
     << "Final image cost = " << this->final_graph_image_cost_ << "\n"
     << "Final shape cost = " << this->final_graph_shape_cost_ << "\n";
   
@@ -415,13 +415,13 @@ optimize_nodes_in_sequence(int num_node_visits)
 
 //: graph cost, using shock-edit distance cost as regularization
 double dbsks_local_match::
-f_graph_w_shock_edit_shape_cost(const vcl_map<dbsksp_shock_node_sptr, 
+f_graph_w_shock_edit_shape_cost(const std::map<dbsksp_shock_node_sptr, 
                                 dbsksp_xshock_node_descriptor >& xnode_map,
                                 double& image_cost,
                                 double& shape_cost)
 {
-  vcl_map<dbsksp_shock_edge_sptr, double > image_cost_map;
-  vcl_map<dbsksp_shock_edge_sptr, double > shape_cost_map;
+  std::map<dbsksp_shock_edge_sptr, double > image_cost_map;
+  std::map<dbsksp_shock_edge_sptr, double > shape_cost_map;
   
   return this->f_graph_w_shock_edit_shape_cost(xnode_map,
     image_cost, shape_cost, image_cost_map, shape_cost_map);
@@ -432,12 +432,12 @@ f_graph_w_shock_edit_shape_cost(const vcl_map<dbsksp_shock_node_sptr,
 //: ----------------------------------------------------------------------------
 //: graph cost, using shock-edit distance cost as regularization
 double dbsks_local_match::
-f_graph_w_shock_edit_shape_cost(const vcl_map<dbsksp_shock_node_sptr, 
+f_graph_w_shock_edit_shape_cost(const std::map<dbsksp_shock_node_sptr, 
                                 dbsksp_xshock_node_descriptor >& xnode_map,
                                 double& image_cost,
                                 double& shape_cost,
-                                vcl_map<dbsksp_shock_edge_sptr, double >& image_cost_map,
-                                vcl_map<dbsksp_shock_edge_sptr, double >& shape_cost_map)
+                                std::map<dbsksp_shock_edge_sptr, double >& image_cost_map,
+                                std::map<dbsksp_shock_edge_sptr, double >& shape_cost_map)
 {
   // create place holder for the shape and image cost lists
   image_cost_map.clear();
@@ -451,8 +451,8 @@ f_graph_w_shock_edit_shape_cost(const vcl_map<dbsksp_shock_node_sptr,
     if (e->is_terminal_edge())
       continue;
 
-    image_cost_map.insert(vcl_make_pair(e, 0));
-    shape_cost_map.insert(vcl_make_pair(e, 0));
+    image_cost_map.insert(std::make_pair(e, 0));
+    shape_cost_map.insert(std::make_pair(e, 0));
   }
   
 
@@ -532,7 +532,7 @@ f_graph_w_shock_edit_shape_cost(const vcl_map<dbsksp_shock_node_sptr,
 
 //: graph cost, using shock-edit distance cost as regularization
 double dbsks_local_match::
-f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+f_graph_w_bnd_length_shape_cost(const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 {
   double final_cost = 0;
   // extrinsic fragment cost
@@ -581,7 +581,7 @@ f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xsh
 ////: Return the final twoshapelets associated with the edges
 //void dbsks_local_match::
 //get_final_twoshapelets(
-//  vcl_map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map)
+//  std::map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map)
 //{
 //  this->lm_cost()->convert_to_twoshapelet_map(this->final_x_, twoshapelet_map);
 //  return;
@@ -593,7 +593,7 @@ f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xsh
 ////: Return the final xnode associated with the vertices
 //void dbsks_local_match::
 //get_final_xnodes(
-//  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+//  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 //{
 //  this->lm_cost()->convert_to_xnode_map(this->final_x_, xnode_map);
 //}
@@ -606,7 +606,7 @@ f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xsh
 //// -----------------------------------------------------------------------------
 ////: Return the final list boundary arcs
 //void dbsks_local_match::
-//get_bnd_arc_list(vcl_vector<bgld_circ_arc >& arc_list)
+//get_bnd_arc_list(std::vector<bgld_circ_arc >& arc_list)
 //{
 //  this->lm_cost()->convert_to_circ_arc_list(this->final_x_, arc_list);
 //  return;
@@ -620,7 +620,7 @@ f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xsh
 
 //: Print Optimization results to a stream
 void dbsks_local_match::
-print_summary(vcl_ostream& str) const
+print_summary(std::ostream& str) const
 {
   // compute bounding box
   vsol_box_2d_sptr bbox = dbsks_compute_bounding_box(this->get_cur_xnode_map());
@@ -662,7 +662,7 @@ print_summary(vcl_ostream& str) const
     << "bbox_ymax " << bbox->get_max_y() << "\n"
     << "final_xnode_map 0\n"
     << "number_of_nodes " << this->cur_xnode_map_.size() << "\n";
-  for (vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
+  for (std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::const_iterator
     it = this->cur_xnode_map_.begin(); it != this->cur_xnode_map_.end(); ++it)
   {
     dbsksp_shock_node_sptr v = it->first;

@@ -28,16 +28,16 @@
 #include <dborl/algo/mpi/dborl_processor_base.h>
 #include "dborl_patch_extract_params.h"
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 #include <dborl/dborl_index_sptr.h>
 #include <dborl/dborl_index_node_sptr.h>
 
 class dborl_patch_extract_input
 { public:
-    dborl_patch_extract_input(vcl_string n, vcl_string full_n) : name(n), full_name(full_n) {}
-    vcl_string name;
-    vcl_string full_name;
+    dborl_patch_extract_input(std::string n, std::string full_n) : name(n), full_name(full_n) {}
+    std::string name;
+    std::string full_name;
 };
 
 
@@ -50,26 +50,26 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
   virtual bool parse(const char* param_file);
 
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_patch_extract_input>& t);
+  virtual bool initialize(std::vector<dborl_patch_extract_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_patch_extract_input i, char& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<char>& results);
+  virtual bool finalize(std::vector<char>& results);
 
   void print_time();
   void set_total_processors(unsigned tot) { total_processors_ = tot; }

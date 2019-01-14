@@ -7,8 +7,8 @@
 #include<vnl/vnl_vector_fixed.h>
 #include "dbrl_id_point_2d_storage.h"
 #include "dbrl_id_point_2d_storage_sptr.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <cmath>
+#include <cstdlib> // for rand()
 #include <vnl/vnl_sample.h>
 
 //: Constructor
@@ -19,7 +19,7 @@ dbrl_denoise_point_set_process::dbrl_denoise_point_set_process(void): bpro1_proc
         !parameters()->add( "No of points (threshold)" , "-npoints" , (int)2 ) 
         ) 
      {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_denoise_point_set_process::dbrl_denoise_point_set_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_denoise_point_set_process::dbrl_denoise_point_set_process()" << std::endl;
      }
     
  
@@ -33,7 +33,7 @@ dbrl_denoise_point_set_process::~dbrl_denoise_point_set_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_denoise_point_set_process::name()
 {
   return "Denoise Point set";
@@ -57,18 +57,18 @@ dbrl_denoise_point_set_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_denoise_point_set_process::get_input_type()
+std::vector< std::string > dbrl_denoise_point_set_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbrl_id_point_2d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_denoise_point_set_process::get_output_type()
+std::vector< std::string > dbrl_denoise_point_set_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbrl_id_point_2d" );
   return to_return;
 }
@@ -79,7 +79,7 @@ bool
 dbrl_denoise_point_set_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbrl_denoise_point_set_process::execute() - "
+    std::cout << "In dbrl_denoise_point_set_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -98,15 +98,15 @@ dbrl_denoise_point_set_process::execute()
   parameters()->get_value("-rad",rad);
   parameters()->get_value("-npoints",npoints);
 
-  vcl_vector<dbrl_id_point_2d_sptr> idpoints;
-  vcl_vector<dbrl_id_point_2d_sptr> origpoints=frame_pts->points();
+  std::vector<dbrl_id_point_2d_sptr> idpoints;
+  std::vector<dbrl_id_point_2d_sptr> origpoints=frame_pts->points();
 
   for(int i=0;i<static_cast<int>(origpoints.size());i++)
       {
         int counter=0;
         for(int j=0;j<static_cast<int>(origpoints.size());j++)
             {
-                if((vcl_fabs(origpoints[j]->x()-origpoints[i]->x())<rad ) && (vcl_fabs(origpoints[j]->y()-origpoints[i]->y())<rad))
+                if((std::fabs(origpoints[j]->x()-origpoints[i]->x())<rad ) && (std::fabs(origpoints[j]->y()-origpoints[i]->y())<rad))
                     {
                         counter++;
                     }
@@ -116,8 +116,8 @@ dbrl_denoise_point_set_process::execute()
             idpoints.push_back(origpoints[i]);
       }
 
-  vcl_cout<<"\n orid size is "<<origpoints.size();
- vcl_cout<<"\n id size is "<<idpoints.size();   
+  std::cout<<"\n orid size is "<<origpoints.size();
+ std::cout<<"\n id size is "<<idpoints.size();   
  dbrl_id_point_2d_storage_sptr output=dbrl_id_point_2d_storage_new(idpoints);
  output_data_[0].push_back(output);
 

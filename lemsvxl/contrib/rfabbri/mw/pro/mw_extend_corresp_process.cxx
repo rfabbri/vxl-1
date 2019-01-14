@@ -26,7 +26,7 @@ mw_extend_corresp_process::mw_extend_corresp_process()
   if( 
       !parameters()->add( "extend to subcurves" ,             "-bsubcurves" ,    false )
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ mw_extend_corresp_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 mw_extend_corresp_process::name()
 {
   return "Extend MW Corresp";
@@ -70,9 +70,9 @@ mw_extend_corresp_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > mw_extend_corresp_process::get_input_type()
+std::vector< std::string > mw_extend_corresp_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   to_return.push_back( "mw pt corresp" );
@@ -81,9 +81,9 @@ vcl_vector< vcl_string > mw_extend_corresp_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > mw_extend_corresp_process::get_output_type()
+std::vector< std::string > mw_extend_corresp_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "mw pt corresp" );
   return to_return;
 }
@@ -107,15 +107,15 @@ mw_extend_corresp_process::execute()
   bmcsd_discrete_corresp_storage_sptr c_sto;
   c_sto.vertical_cast(input_data_[1][2]);  
   if (!c_sto) {
-    vcl_cout << "Error: corresp storage null\n";
+    std::cout << "Error: corresp storage null\n";
     return false;
   }
   acorr_ = c_sto->corresp();
-  vcl_cout << "Corresp NAME: " << c_sto->name() << vcl_endl;
-  vcl_cout << "Corresp: " << " : \n" << *acorr_ << vcl_endl;
+  std::cout << "Corresp NAME: " << c_sto->name() << std::endl;
+  std::cout << "Corresp: " << " : \n" << *acorr_ << std::endl;
 
   if (acorr_->checksum() != bmcsd_discrete_corresp_algo::compute_checksum(a0_, a1_)) {
-    vcl_cerr << "ERROR: input correspondence incompatible with input vsols\n";
+    std::cerr << "ERROR: input correspondence incompatible with input vsols\n";
     return false;
   }
 
@@ -142,25 +142,25 @@ mw_extend_corresp_process::execute()
 }
 
 bool mw_extend_corresp_process::
-get_vsols(unsigned v, unsigned input_id, vcl_vector< vsol_polyline_2d_sptr > *pcurves)
+get_vsols(unsigned v, unsigned input_id, std::vector< vsol_polyline_2d_sptr > *pcurves)
 {
-  vcl_vector< vsol_polyline_2d_sptr > &curves = *pcurves;
+  std::vector< vsol_polyline_2d_sptr > &curves = *pcurves;
   vidpro1_vsol2D_storage_sptr input_vsol;
   input_vsol.vertical_cast(input_data_[v][input_id]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > base = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > base = input_vsol->all_data();
 
   curves.resize(base.size(),0);
   for (unsigned i=0; i<curves.size(); ++i) {
     curves[i] = dynamic_cast<vsol_polyline_2d *> (base[i].ptr());
 
     if (!curves[i]) {
-      vcl_cout << "Non-polyline found in frame; but only POLYLINES supported!" << vcl_endl;
+      std::cout << "Non-polyline found in frame; but only POLYLINES supported!" << std::endl;
       return false;
     }
   }
 
-  vcl_cout << "Num curves: " << curves.size() << vcl_endl;
+  std::cout << "Num curves: " << curves.size() << std::endl;
 
   return true;
 }

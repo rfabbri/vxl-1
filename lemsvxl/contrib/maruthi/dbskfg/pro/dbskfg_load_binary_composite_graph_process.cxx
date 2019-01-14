@@ -32,7 +32,7 @@
 
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_distance.h>
 #include <rsdl/rsdl_point.h>
@@ -46,7 +46,7 @@ dbskfg_load_binary_composite_graph_process::dbskfg_load_binary_composite_graph_p
         !parameters()->add("use outside shock ",
                            "-outside_shock", (bool) false))
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -69,24 +69,24 @@ dbskfg_load_binary_composite_graph_process::clone() const
     return new dbskfg_load_binary_composite_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_load_binary_composite_graph_process::name()
 {
     return "Load Binary Composite Graph";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_load_binary_composite_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_load_binary_composite_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     //to_return.push_back("composite_graph");
     return to_return;
 }
@@ -108,7 +108,7 @@ bool dbskfg_load_binary_composite_graph_process::execute()
     bool outside_shock(false);
     parameters()->get_value( "-cginput" , input);
     parameters()->get_value( "-outside_shock" , outside_shock);
-    vcl_string input_file_path = input.path;
+    std::string input_file_path = input.path;
 
     int num_of_files = 0;
 
@@ -118,10 +118,10 @@ bool dbskfg_load_binary_composite_graph_process::execute()
     if (input_file_path == "") 
     { return false; }
 
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > > geoms;
-    vcl_map<unsigned int,vcl_set<unsigned int> > con_ids;
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > > geoms;
+    std::map<unsigned int,std::set<unsigned int> > con_ids;
     read_binary_file(input_file_path,geoms,con_ids);
-    vcl_cout<<"Loaded "<<geoms.size()<<" Fragments "<<vcl_endl;
+    std::cout<<"Loaded "<<geoms.size()<<" Fragments "<<std::endl;
 
     // create new bounding box
     vsol_box_2d_sptr bbox = new vsol_box_2d();
@@ -137,25 +137,25 @@ bool dbskfg_load_binary_composite_graph_process::execute()
     double xmax_scaled = ((image_ni_-xcenter)*5)+xcenter;
     double ymax_scaled = ((image_nj_-ycenter)*5)+ycenter;
     
-    vcl_cout<<xmin_scaled<<" "<<ymin_scaled<<vcl_endl;
+    std::cout<<xmin_scaled<<" "<<ymin_scaled<<std::endl;
     bbox->add_point(xmin_scaled,ymin_scaled);
     bbox->add_point(xmax_scaled,ymax_scaled);
     
-    vcl_cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
+    std::cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
              << "("   << bbox->get_min_x() << ", " << bbox->get_min_y() 
              << ") (" << bbox->get_max_x() << ", " << bbox->get_max_y() 
              << ") (" 
              << bbox->width() << ", " 
-             << bbox->height() << ")"<<vcl_endl;
+             << bbox->height() << ")"<<std::endl;
     
     // Add to vidpro storage this new bounding box
     vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
     box_poly->set_id(10e6);
-    box_poly->print(vcl_cout);
+    box_poly->print(std::cout);
     bbox=0;
 
 
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >::iterator 
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > >::iterator 
         git;
     unsigned int g=0;
     for ( git=geoms.begin() ; git != geoms.end() ; ++git)
@@ -185,23 +185,23 @@ bool dbskfg_load_binary_composite_graph_process::finish()
 
 
 void dbskfg_load_binary_composite_graph_process::read_binary_file
-(vcl_string input_file,
- vcl_map<unsigned int,
- vcl_vector< vsol_spatial_object_2d_sptr > >& geoms,
- vcl_map<unsigned int,vcl_set<unsigned int> >& con_ids)
+(std::string input_file,
+ std::map<unsigned int,
+ std::vector< vsol_spatial_object_2d_sptr > >& geoms,
+ std::map<unsigned int,std::set<unsigned int> >& con_ids)
 {
     
-    vcl_ifstream file (input_file.c_str(), 
-                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream file (input_file.c_str(), 
+                       std::ios::in|std::ios::binary|std::ios::ate);
 
     double* memblock(0);
     unsigned int size_cons=0;
     if (file.is_open())
     {
-        vcl_ifstream::pos_type size = file.tellg();
+        std::ifstream::pos_type size = file.tellg();
         size_cons=size/sizeof(double);
         memblock = new double[size_cons];
-        file.seekg (0, vcl_ios::beg);
+        file.seekg (0, std::ios::beg);
         file.read ((char *) memblock, size);
         file.close();
 
@@ -210,8 +210,8 @@ void dbskfg_load_binary_composite_graph_process::read_binary_file
     image_ni_=memblock[0];
     image_nj_=memblock[1];
     
-    vcl_cout<<"Image size: "<<image_ni_<<" by "<<image_nj_<<vcl_endl;
-    vcl_cout<<"Read in size_cons data: "<<size_cons<<vcl_endl;
+    std::cout<<"Image size: "<<image_ni_<<" by "<<image_nj_<<std::endl;
+    std::cout<<"Read in size_cons data: "<<size_cons<<std::endl;
     unsigned int c=2;
     unsigned int id=0;
     while ( c < size_cons)
@@ -237,9 +237,9 @@ void dbskfg_load_binary_composite_graph_process::read_binary_file
 }
 
 bool dbskfg_load_binary_composite_graph_process::
-compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
-              vcl_set<unsigned int>& contour_ids,
-              vcl_pair<unsigned int,unsigned int>& image_size,
+compute_graph(std::vector<vsol_spatial_object_2d_sptr>& contours,
+              std::set<unsigned int>& contour_ids,
+              std::pair<unsigned int,unsigned int>& image_size,
               bool prune_degree_three_nodes)
 {
    
@@ -257,21 +257,21 @@ compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
     double xmax_scaled = ((image_size.first-xcenter)*2)+xcenter;
     double ymax_scaled = ((image_size.second-ycenter)*2)+ycenter;
     
-    vcl_cout<<xmin_scaled<<" "<<ymin_scaled<<vcl_endl;
+    std::cout<<xmin_scaled<<" "<<ymin_scaled<<std::endl;
     bbox->add_point(xmin_scaled,ymin_scaled);
     bbox->add_point(xmax_scaled,ymax_scaled);
     
-    vcl_cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
+    std::cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
              << "("   << bbox->get_min_x() << ", " << bbox->get_min_y() 
              << ") (" << bbox->get_max_x() << ", " << bbox->get_max_y() 
              << ") (" 
              << bbox->width() << ", " 
-             << bbox->height() << ")"<<vcl_endl;
+             << bbox->height() << ")"<<std::endl;
     
     // Add to vidpro storage this new bounding box
     vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
     box_poly->set_id(10e6);
-    box_poly->print(vcl_cout);
+    box_poly->print(std::cout);
     bbox=0;
 
 
@@ -287,7 +287,7 @@ compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
 
 bool dbskfg_load_binary_composite_graph_process::
 compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
-                        vcl_set<unsigned int>& cons,
+                        std::set<unsigned int>& cons,
                         bool prune_degree_three_nodes,
                         bool outside_shock)
 {
@@ -299,11 +299,11 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
 
 
-    vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map;
-    vcl_vector<double> outside_shock_radius;
+    std::map<int,std::vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map;
+    std::vector<double> outside_shock_radius;
     rsdl_kd_tree_sptr kd_tree(0);
     
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
         dbsk2d_compute_ishock_process shock_pro;
@@ -339,8 +339,8 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         ishock_sample_map = sampler.get_ishock_samples();
 
         // uncomment for debugging
-        // vcl_ofstream file("actual_shock_sample_pro.txt");
-        // vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
+        // std::ofstream file("actual_shock_sample_pro.txt");
+        // std::map<int,std::vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
         // for ( mit = ishock_sample_map.begin(); mit != ishock_sample_map.end()
         //           ; ++mit)
         // {
@@ -349,7 +349,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         //         file<<(*mit).second[k]->left_bnd_pt.x()<<" "
         //             <<(*mit).second[k]->left_bnd_pt.y()<<" "
         //             <<(*mit).second[k]->right_bnd_pt.x()<<" "
-        //             <<(*mit).second[k]->right_bnd_pt.y()<<vcl_endl;
+        //             <<(*mit).second[k]->right_bnd_pt.y()<<std::endl;
 
         //     }
         // }
@@ -359,9 +359,9 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             shock_storage->get_ishock_graph());
         grouper.grow_regions();
 
-        vcl_map<unsigned int, vcl_set<int> > region_belms_contour_ids
+        std::map<unsigned int, std::set<int> > region_belms_contour_ids
             = grouper.get_region_belms_contour_ids();
-        vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_edge*> > region_shocks
+        std::map<unsigned int, std::vector<dbsk2d_ishock_edge*> > region_shocks
             = grouper.get_region_nodes();
 
         int int_size=0;
@@ -369,25 +369,25 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         double area=0.0;
         double arc_length=0.0;
         vgl_polygon<double> poly_gt(1);
-        vcl_map<unsigned int, vcl_set<int> >::iterator it;
+        std::map<unsigned int, std::set<int> >::iterator it;
         for ( it = region_belms_contour_ids.begin() ; it != 
                   region_belms_contour_ids.end() ; ++it)
         {
             
-            vcl_set<int> rag_con_ids=(*it).second;
+            std::set<int> rag_con_ids=(*it).second;
 
-            vcl_set<int>::iterator fit=rag_con_ids.find(10e6);
+            std::set<int>::iterator fit=rag_con_ids.find(10e6);
             if ( fit != rag_con_ids.end())
             {
                 continue;
             }
 
-            vcl_vector<unsigned int> intersection(10000);
-            vcl_vector<unsigned int>::iterator start_iterator;
+            std::vector<unsigned int> intersection(10000);
+            std::vector<unsigned int>::iterator start_iterator;
             start_iterator=intersection.begin();
-            vcl_vector<unsigned int>::iterator out_iterator;
+            std::vector<unsigned int>::iterator out_iterator;
         
-            out_iterator=vcl_set_intersection(cons.begin(),
+            out_iterator=std::set_intersection(cons.begin(),
                                               cons.end(),
                                               rag_con_ids.begin(),
                                               rag_con_ids.end(),
@@ -417,7 +417,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             kd_points_.clear();
             key_map_.clear();
 
-            vcl_vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
+            std::vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
             
             for ( unsigned int i=0; i < edges.size() ; ++i)
             {
@@ -426,11 +426,11 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             
             sample_outside_shock(shock_storage->get_shock_graph());
         
-            vcl_cout<<"Numb points in kd tree: "<<kd_points_.size()<<vcl_endl;
-            vcl_cout<<"Building kd tree"<<vcl_endl;
+            std::cout<<"Numb points in kd tree: "<<kd_points_.size()<<std::endl;
+            std::cout<<"Building kd tree"<<std::endl;
             
-            vcl_vector<rsdl_point> points;
-            vcl_map<vcl_pair<double,double>,double>::iterator kit;
+            std::vector<rsdl_point> points;
+            std::map<std::pair<double,double>,double>::iterator kit;
             for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
             {
                 vnl_double_2 vec((*kit).first.first,(*kit).first.second);
@@ -442,8 +442,8 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             
             // Uncomment for debugging
             
-            // vcl_ofstream file("kd_tree_points.txt");
-            // vcl_map<vcl_pair<double,double>,double>::iterator kit;
+            // std::ofstream file("kd_tree_points.txt");
+            // std::map<std::pair<double,double>,double>::iterator kit;
             // for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
             // {
             //     file<<(*kit).first.first
@@ -451,7 +451,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             //         <<(*kit).first.second
             //         <<" "
             //         <<(*kit).second
-            //         <<vcl_endl;
+            //         <<std::endl;
             // }
             // file.close();
 
@@ -472,7 +472,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
 
     /*********************** Compute Composite Graph ************************/
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     {
         // Lets vertical cast to shock stroge
         // Holds shock storage
@@ -522,21 +522,21 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             continue;
         }
         
-        vcl_set<unsigned int> rag_ids;
+        std::set<unsigned int> rag_ids;
         node->rag_contour_ids(rag_ids);
         
-        vcl_set<unsigned int>::iterator it=rag_ids.find(10e6);
+        std::set<unsigned int>::iterator it=rag_ids.find(10e6);
         if ( it != rag_ids.end())
         {
             continue;
         }
 
-        vcl_vector<unsigned int> intersection(10000);
-        vcl_vector<unsigned int>::iterator start_iterator;
+        std::vector<unsigned int> intersection(10000);
+        std::vector<unsigned int>::iterator start_iterator;
         start_iterator=intersection.begin();
-        vcl_vector<unsigned int>::iterator out_iterator;
+        std::vector<unsigned int>::iterator out_iterator;
         
-        out_iterator=vcl_set_intersection(cons.begin(),
+        out_iterator=std::set_intersection(cons.begin(),
                                           cons.end(),
                                           rag_ids.begin(),
                                           rag_ids.end(),
@@ -553,14 +553,14 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
     if ( !retain_region )
     {
-        vcl_cerr<<"Fragment is outside image"<<vcl_endl;
+        std::cerr<<"Fragment is outside image"<<std::endl;
         cg_storage=0;
         return false;
 
     }
 
     dbskfg_composite_graph_sptr cgraph = cg_storage->get_composite_graph();
-    vcl_vector<dbskfg_rag_node_sptr> regions_to_remove;
+    std::vector<dbskfg_rag_node_sptr> regions_to_remove;
 
     for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
          vit != rag_graph->vertices_end(); ++vit)
@@ -569,13 +569,13 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
         if ( node->id() != retain_region->id() )
         {
-            vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+            std::map<unsigned int,dbskfg_shock_link*> shock_links=
                 node->get_shock_links();
-            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            std::map<unsigned int,dbskfg_shock_link*>::iterator it;
             for ( it= shock_links.begin() ; it != shock_links.end(); ++it)
             {
 
-                vcl_vector<dbskfg_composite_link_sptr> left_links=
+                std::vector<dbskfg_composite_link_sptr> left_links=
                     (*it).second->left_contour_links();
 
                 for ( unsigned int k=0; k < left_links.size() ; ++k)
@@ -586,7 +586,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
                     
                 }
 
-                vcl_vector<dbskfg_composite_link_sptr> right_links=
+                std::vector<dbskfg_composite_link_sptr> right_links=
                     (*it).second->right_contour_links();
 
                 for ( unsigned int k=0; k < right_links.size() ; ++k)
@@ -620,25 +620,25 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         }
         else
         {
-            vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+            std::map<unsigned int,dbskfg_shock_link*> shock_links=
                 node->get_shock_links();
-            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            std::map<unsigned int,dbskfg_shock_link*>::iterator it;
             for ( it= shock_links.begin() ; it != shock_links.end(); ++it)
             {
                 int orig_shock_id=(*it).second->get_original_shock_id();
                 if ( !ishock_sample_map.count(orig_shock_id))
                 {
-                    vcl_cout<<"BIG ERROR SHOCK SAMPLE NOT FOUND"<<vcl_endl;
+                    std::cout<<"BIG ERROR SHOCK SAMPLE NOT FOUND"<<std::endl;
                 }
-                vcl_vector<dbsk2d_xshock_sample_sptr> samples=ishock_sample_map
+                std::vector<dbsk2d_xshock_sample_sptr> samples=ishock_sample_map
                     [orig_shock_id];
 
                 (*it).second->set_sampled_shock_points(samples);
 
             }
-            vcl_map<unsigned int,dbskfg_shock_node*> wavefront=
+            std::map<unsigned int,dbskfg_shock_node*> wavefront=
                 node->get_wavefront();
-            vcl_map<unsigned int,dbskfg_shock_node*>::iterator wit;
+            std::map<unsigned int,dbskfg_shock_node*>::iterator wit;
             for ( wit = wavefront.begin() ; wit != wavefront.end() ; ++wit)
             {
                 (*wit).second->set_virtual(true);
@@ -655,8 +655,8 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     }
 
     unsigned int numb_shock_edges=0;
-    vcl_vector<dbskfg_composite_link_sptr> contours_to_erase;
-    vcl_set<unsigned int> shock_nodes;
+    std::vector<dbskfg_composite_link_sptr> contours_to_erase;
+    std::set<unsigned int> shock_nodes;
     for (dbskfg_composite_graph::edge_iterator eit = cgraph->edges_begin(); 
          eit != cgraph->edges_end(); ++eit)
     {
@@ -706,9 +706,9 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
     if ( numb_shock_edges > (shock_nodes.size()-1) )
     {
-        vcl_cerr<<"Fragment has a cycle"<<vcl_endl;
-        vcl_cerr<<"Numb shock edges: "<<numb_shock_edges<<vcl_endl;
-        vcl_cerr<<"Numb shock nodes: "<<shock_nodes.size()<<vcl_endl;
+        std::cerr<<"Fragment has a cycle"<<std::endl;
+        std::cerr<<"Numb shock edges: "<<numb_shock_edges<<std::endl;
+        std::cerr<<"Numb shock nodes: "<<shock_nodes.size()<<std::endl;
         shock_results.clear();
         cg_storage=0;
         return false;
@@ -718,10 +718,10 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     {
         if ( degree_three_nodes < 1 )
         {
-            vcl_cerr<<"Fragment has zero degree three nodes! "<<vcl_endl;
-            vcl_cerr<<"Numb shock edges: "<<numb_shock_edges<<vcl_endl;
-            vcl_cerr<<"Numb shock nodes: "<<shock_nodes.size()<<vcl_endl;
-            vcl_cerr<<"Degree three nodes: "<<degree_three_nodes<<vcl_endl;
+            std::cerr<<"Fragment has zero degree three nodes! "<<std::endl;
+            std::cerr<<"Numb shock edges: "<<numb_shock_edges<<std::endl;
+            std::cerr<<"Numb shock nodes: "<<shock_nodes.size()<<std::endl;
+            std::cerr<<"Degree three nodes: "<<degree_three_nodes<<std::endl;
             shock_results.clear();
             cg_storage=0;
             return false;
@@ -757,7 +757,7 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
     // Create empty image stroage
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
     
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
         dbsk2d_compute_ishock_process shock_pro;
@@ -793,7 +793,7 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
 
 
     /*********************** Compute Composite Graph ************************/
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     {
         // Lets vertical cast to shock stroge
         // Holds shock storage
@@ -848,14 +848,14 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
 
     if ( !retain_region )
     {
-        vcl_cerr<<"Fragment is outside image"<<vcl_endl;
+        std::cerr<<"Fragment is outside image"<<std::endl;
         cg_storage=0;
         return false;
 
     }
 
     dbskfg_composite_graph_sptr cgraph = cg_storage->get_composite_graph();
-    vcl_vector<dbskfg_rag_node_sptr> regions_to_remove;
+    std::vector<dbskfg_rag_node_sptr> regions_to_remove;
 
     for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
          vit != rag_graph->vertices_end(); ++vit)
@@ -864,13 +864,13 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
 
         if ( node->id() != retain_region->id() )
         {
-            vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+            std::map<unsigned int,dbskfg_shock_link*> shock_links=
                 node->get_shock_links();
-            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            std::map<unsigned int,dbskfg_shock_link*>::iterator it;
             for ( it= shock_links.begin() ; it != shock_links.end(); ++it)
             {
 
-                vcl_vector<dbskfg_composite_link_sptr> left_links=
+                std::vector<dbskfg_composite_link_sptr> left_links=
                     (*it).second->left_contour_links();
 
                 for ( unsigned int k=0; k < left_links.size() ; ++k)
@@ -881,7 +881,7 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
                     
                 }
 
-                vcl_vector<dbskfg_composite_link_sptr> right_links=
+                std::vector<dbskfg_composite_link_sptr> right_links=
                     (*it).second->right_contour_links();
 
                 for ( unsigned int k=0; k < right_links.size() ; ++k)
@@ -915,9 +915,9 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
         }
         else
         {
-            vcl_map<unsigned int,dbskfg_shock_node*> wavefront=
+            std::map<unsigned int,dbskfg_shock_node*> wavefront=
                 node->get_wavefront();
-            vcl_map<unsigned int,dbskfg_shock_node*>::iterator wit;
+            std::map<unsigned int,dbskfg_shock_node*>::iterator wit;
             for ( wit = wavefront.begin() ; wit != wavefront.end() ; ++wit)
             {
                 (*wit).second->set_virtual(true);
@@ -934,8 +934,8 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
     }
 
     unsigned int numb_shock_edges=0;
-    vcl_vector<dbskfg_composite_link_sptr> contours_to_erase;
-    vcl_set<unsigned int> shock_nodes;
+    std::vector<dbskfg_composite_link_sptr> contours_to_erase;
+    std::set<unsigned int> shock_nodes;
     for (dbskfg_composite_graph::edge_iterator eit = cgraph->edges_begin(); 
          eit != cgraph->edges_end(); ++eit)
     {
@@ -985,9 +985,9 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
 
     if ( numb_shock_edges > (shock_nodes.size()-1) )
     {
-        vcl_cerr<<"Fragment has a cycle"<<vcl_endl;
-        vcl_cerr<<"Numb shock edges: "<<numb_shock_edges<<vcl_endl;
-        vcl_cerr<<"Numb shock nodes: "<<shock_nodes.size()<<vcl_endl;
+        std::cerr<<"Fragment has a cycle"<<std::endl;
+        std::cerr<<"Numb shock edges: "<<numb_shock_edges<<std::endl;
+        std::cerr<<"Numb shock nodes: "<<shock_nodes.size()<<std::endl;
         shock_results.clear();
         cg_storage=0;
         return false;
@@ -1020,10 +1020,10 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
       dbsk2d_ishock_node* tgt_inode = ((dbsk2d_shock_ishock_node*)
                                        cur_edge->target().ptr())->ishock_node();
 
-      vcl_list<dbsk2d_ishock_edge*>& ishock_edges = cur_edge->edges();
+      std::list<dbsk2d_ishock_edge*>& ishock_edges = cur_edge->edges();
 
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double > > left_curve;
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double > > right_curve;
+      std::vector<std::pair<vgl_point_2d<double>,double > > left_curve;
+      std::vector<std::pair<vgl_point_2d<double>,double > > right_curve;
 
 
       dbsk2d_ishock_node* cur_node = src_inode;
@@ -1050,12 +1050,12 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
           }
       }
 
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double> > 
+      std::vector<std::pair<vgl_point_2d<double>,double> > 
           resampled_right_contour;
       if ( right_curve.size() )
       {
           resampled_right_contour.push_back(right_curve[0]);
-          kd_points_[vcl_make_pair(
+          kd_points_[std::make_pair(
                   right_curve[0].first.x(),
                   right_curve[0].first.y())]=right_curve[0].second;
           for ( unsigned int i=1; i < right_curve.size() ; ++i)
@@ -1079,17 +1079,17 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
                       double time_int = right_curve[i-1].second + ratio*dt;
 
                       
-                      resampled_right_contour.push_back(vcl_make_pair(
+                      resampled_right_contour.push_back(std::make_pair(
                                                             p_int,
                                                             time_int));
-                      kd_points_[vcl_make_pair(p_int.x(),
+                      kd_points_[std::make_pair(p_int.x(),
                                                p_int.y())]=time_int;
 
                   } 
               }
 
               resampled_right_contour.push_back(right_curve[i]);
-              kd_points_[vcl_make_pair(
+              kd_points_[std::make_pair(
                       right_curve[i].first.x(),
                       right_curve[i].first.y())]=right_curve[i].second;
               
@@ -1097,12 +1097,12 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
   
       }
 
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double> > 
+      std::vector<std::pair<vgl_point_2d<double>,double> > 
           resampled_left_contour;
       if ( left_curve.size() )
       {
           resampled_left_contour.push_back(left_curve[0]);
-          kd_points_[vcl_make_pair(
+          kd_points_[std::make_pair(
                   left_curve[0].first.x(),
                   left_curve[0].first.y())]=left_curve[0].second;
           for ( unsigned int i=1; i < left_curve.size() ; ++i)
@@ -1126,17 +1126,17 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
                       double time_int = left_curve[i-1].second + ratio*dt;
 
                       
-                      resampled_left_contour.push_back(vcl_make_pair(
+                      resampled_left_contour.push_back(std::make_pair(
                                                             p_int,
                                                             time_int));
-                      kd_points_[vcl_make_pair(p_int.x(),
+                      kd_points_[std::make_pair(p_int.x(),
                                                p_int.y())]=time_int;
 
                   } 
               }
 
               resampled_left_contour.push_back(left_curve[i]);
-              kd_points_[vcl_make_pair(
+              kd_points_[std::make_pair(
                       left_curve[i].first.x(),
                       left_curve[i].first.y())]=left_curve[i].second;
               
@@ -1147,10 +1147,10 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
       // Uncomment for debugging
       // if ( resampled_left_contour.size() )
       // {
-      //     vcl_stringstream stream;
+      //     std::stringstream stream;
       //     stream<<"Coarse_shock_brand_id_left_"<<cur_edge->id()<<".txt";
 
-      //     vcl_ofstream file(stream.str().c_str());
+      //     std::ofstream file(stream.str().c_str());
       //     for ( unsigned int c=0; c < resampled_left_contour.size() ; ++c)
       //     {
       //         file<<resampled_left_contour[c].first.x()
@@ -1158,17 +1158,17 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
       //             <<resampled_left_contour[c].first.y()
       //             <<" "
       //             <<resampled_left_contour[c].second
-      //             <<vcl_endl;
+      //             <<std::endl;
       //     }
       //     file.close();
       // }
 
       // if ( resampled_right_contour.size() )
       // {
-      //     vcl_stringstream stream;
+      //     std::stringstream stream;
       //     stream<<"Coarse_shock_brand_id_right_"<<cur_edge->id()<<".txt";
 
-      //     vcl_ofstream file(stream.str().c_str());
+      //     std::ofstream file(stream.str().c_str());
       //     for ( unsigned int c=0; c < resampled_right_contour.size() ; ++c)
       //     {
       //         file<<resampled_right_contour[c].first.x()
@@ -1176,7 +1176,7 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
       //             <<resampled_right_contour[c].first.y()
       //             <<" "
       //             <<resampled_right_contour[c].second
-      //             <<vcl_endl;
+      //             <<std::endl;
       //     }
       //     file.close();
       // }
@@ -1188,8 +1188,8 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
 
 void dbskfg_load_binary_composite_graph_process::sample_shock_link(
     dbsk2d_ishock_edge* cur_iedge,
-    vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& left_curve,
-    vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& right_curve,
+    std::vector<std::pair<vgl_point_2d<double>,double > >& left_curve,
+    std::vector<std::pair<vgl_point_2d<double>,double > >& right_curve,
     dbsk2d_shock_graph_sptr pruned_graph,
     bool reverse)
 {
@@ -1246,22 +1246,22 @@ void dbskfg_load_binary_composite_graph_process::sample_shock_link(
             vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
             double radius=sample->radius;
             
-            vcl_pair<double,double> left_pair=vcl_make_pair(
+            std::pair<double,double> left_pair=std::make_pair(
                 left_bnd_pt.x(),
                 left_bnd_pt.y());
             
-            vcl_pair<double,double> right_pair=vcl_make_pair(
+            std::pair<double,double> right_pair=std::make_pair(
                 right_bnd_pt.x(),
                 right_bnd_pt.y());
 
             if ( !ignore_left )
             {
-                left_curve.push_back(vcl_make_pair(left_bnd_pt,radius));
+                left_curve.push_back(std::make_pair(left_bnd_pt,radius));
             }
 
             if ( !ignore_right )
             {
-                right_curve.push_back(vcl_make_pair(right_bnd_pt,radius));
+                right_curve.push_back(std::make_pair(right_bnd_pt,radius));
             }
         }
 
@@ -1277,22 +1277,22 @@ void dbskfg_load_binary_composite_graph_process::sample_shock_link(
             vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
             double radius=sample->radius;
             
-            vcl_pair<double,double> left_pair=vcl_make_pair(
+            std::pair<double,double> left_pair=std::make_pair(
                 left_bnd_pt.x(),
                 left_bnd_pt.y());
             
-            vcl_pair<double,double> right_pair=vcl_make_pair(
+            std::pair<double,double> right_pair=std::make_pair(
                 right_bnd_pt.x(),
                 right_bnd_pt.y());
 
             if ( !ignore_left )
             {
-                left_curve.push_back(vcl_make_pair(left_bnd_pt,radius));
+                left_curve.push_back(std::make_pair(left_bnd_pt,radius));
             }
 
             if ( !ignore_right )
             {
-                right_curve.push_back(vcl_make_pair(right_bnd_pt,radius));
+                right_curve.push_back(std::make_pair(right_bnd_pt,radius));
             }
 
         }
@@ -1319,11 +1319,11 @@ void dbskfg_load_binary_composite_graph_process::sample_shock_link(
             vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
             double radius=sample->radius;
             
-            vcl_pair<double,double> left_pair=vcl_make_pair(
+            std::pair<double,double> left_pair=std::make_pair(
                 left_bnd_pt.x(),
                 left_bnd_pt.y());
 
-            vcl_pair<double,double> right_pair=vcl_make_pair(
+            std::pair<double,double> right_pair=std::make_pair(
                 right_bnd_pt.x(),
                 right_bnd_pt.y());
 
@@ -1352,11 +1352,11 @@ void dbskfg_load_binary_composite_graph_process::sample_shock_link(
             vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
             double radius=sample->radius;
             
-            vcl_pair<double,double> left_pair=vcl_make_pair(
+            std::pair<double,double> left_pair=std::make_pair(
                 left_bnd_pt.x(),
                 left_bnd_pt.y());
 
-            vcl_pair<double,double> right_pair=vcl_make_pair(
+            std::pair<double,double> right_pair=std::make_pair(
                 right_bnd_pt.x(),
                 right_bnd_pt.y());
 

@@ -1,8 +1,8 @@
 //: Aug 19, 2005 MingChing Chang
 //  Implementation of Surazhsky and Danil's interval based propagation algorithm
 
-#include <vcl_queue.h>
-#include <vcl_iostream.h>
+#include <queue>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_timer.h>
@@ -17,7 +17,7 @@ void gdt_i_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cout, "gdt_ibased_init() for %d source(s):\n", (int) source_vertices_.size());
+    vul_printf (std::cout, "gdt_ibased_init() for %d source(s):\n", (int) source_vertices_.size());
 #endif
 
   //: Construct a wavefront for each src_vertex by putting its one-ring neighborhood edges surrounding it
@@ -26,7 +26,7 @@ void gdt_i_manager::gdt_init ()
     dbmsh3d_gdt_vertex_3d* src_vertex = source_vertices_[i];
     src_vertex->set_dist (0);
 
-    vcl_vector<dbmsh3d_halfedge*> ordered_halfedges;
+    std::vector<dbmsh3d_halfedge*> ordered_halfedges;
     ordered_halfedges.clear();
 
     dbmsh3d_halfedge* last_he = src_vertex->m2_get_ordered_HEs (ordered_halfedges);
@@ -40,7 +40,7 @@ void gdt_i_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
       if (n_verbose_>1)
-        vul_printf (vcl_cout, "  init_dege_edge %d propagated\n", edge_d->id());
+        vul_printf (std::cout, "  init_dege_edge %d propagated\n", edge_d->id());
 #endif
     }
 
@@ -66,9 +66,9 @@ void gdt_i_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
       if (n_verbose_>1) {
-        vul_printf (vcl_cout, "  init_dege_edge %d propagated\n", edge_d->id());
-        vul_printf (vcl_cout, "  init_wavefront_edge %d propagated\n", edge_j->id());
-        vul_printf (vcl_cout, "    face %d propagated.\n", cur_face->id());
+        vul_printf (std::cout, "  init_dege_edge %d propagated\n", edge_d->id());
+        vul_printf (std::cout, "  init_wavefront_edge %d propagated\n", edge_j->id());
+        vul_printf (std::cout, "    face %d propagated.\n", cur_face->id());
       }
 #endif
 
@@ -84,16 +84,16 @@ void gdt_i_manager::gdt_propagation (unsigned int n_total_iter)
   n_prop_iter_ = 0;
   vul_timer time;
 
-  vul_printf (vcl_cout, "\n====== Start interval-based GDT computation. =====\n");
+  vul_printf (std::cout, "\n====== Start interval-based GDT computation. =====\n");
 
   while (interval_queue_.size() != 0 && n_prop_iter_ < n_total_iter) {
 
 #if GDT_DEBUG_MSG
     if (n_verbose_)
       if (n_prop_iter_ % 100 == 0)
-        vul_printf (vcl_cout, " %d", n_prop_iter_);
+        vul_printf (std::cout, " %d", n_prop_iter_);
     else if (n_verbose_>1)
-      vul_printf (vcl_cout, "\nIter %d, ", n_prop_iter_);
+      vul_printf (std::cout, "\nIter %d, ", n_prop_iter_);
 #endif
 
     gdt_propagate_one_step ();
@@ -101,7 +101,7 @@ void gdt_i_manager::gdt_propagation (unsigned int n_total_iter)
   }
 
   double prop_time = time.real();
-  vul_printf (vcl_cout, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
+  vul_printf (std::cout, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
                (int) n_prop_iter_, prop_time/1000);
 }
 
@@ -111,15 +111,15 @@ void gdt_i_manager::gdt_propagate_one_step ()
   //: Get the wf_segment with minimal distance from the wavefront_
 #if GDT_DEBUG_MSG
   if (n_verbose_>2)
-    vul_printf (vcl_cout, "Interval Queue %d: ", (int) interval_queue_.size());
+    vul_printf (std::cout, "Interval Queue %d: ", (int) interval_queue_.size());
 #endif
-  vcl_multimap<double, gdt_interval*>::iterator iit =  interval_queue_.begin();
+  std::multimap<double, gdt_interval*>::iterator iit =  interval_queue_.begin();
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>3) {
     for (; iit != interval_queue_.end(); iit++) {
       gdt_interval* I = (*iit).second;
-      vul_printf (vcl_cout, "%d(%.3f,%.3f,%.3f) ", 
+      vul_printf (std::cout, "%d(%.3f,%.3f,%.3f) ", 
                    I->edge()->id(), I->stau(), I->etau(), (float)(*iit).first);
     }
   }
@@ -142,7 +142,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
     delete I;
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cout, "\n=> Skip the deleted I on edge %d.\n", cur_edge->id());
+      vul_printf (std::cout, "\n=> Skip the deleted I on edge %d.\n", cur_edge->id());
 #endif
     return;
   }
@@ -161,7 +161,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
   if (cur_he == NULL) {
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cout, "\n==> Skip I on edge %d (no next face to propagate).\n", cur_edge->id());
+      vul_printf (std::cout, "\n==> Skip I on edge %d (no next face to propagate).\n", cur_edge->id());
 #endif
     return;
   }
@@ -188,7 +188,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
         (right_edge->is_propagated() && !right_edge->one_dege_I())) {
 #if GDT_DEBUG_MSG
       if (n_verbose_>2)
-        vul_printf (vcl_cout, "\n==> Skip propagating degenerate I on edge %d.\n", cur_edge->id());
+        vul_printf (std::cout, "\n==> Skip propagating degenerate I on edge %d.\n", cur_edge->id());
 #endif
       return;
     }
@@ -196,7 +196,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cout, "\n==> Propagating I on edge %d to face %d.\n", cur_edge->id(), cur_face->id());
+    vul_printf (std::cout, "\n==> Propagating I on edge %d to face %d.\n", cur_edge->id(), cur_face->id());
 #endif
 
   ///////////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
     left_edge->attach_IS ();
 
     //: Put all modified intervals on left_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = left_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = left_edge->interval_section()->I_map()->begin();
     for (; it != left_edge->interval_section()->I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -272,7 +272,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
     left_edge->attach_IS ();
 
     //: Put all modified intervals on left_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = left_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = left_edge->interval_section()->I_map()->begin();
     for (; it != left_edge->interval_section()->I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -282,7 +282,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
   }
   else if (result_l==4) {
     //: Put all propagated intervals on left_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = prop_left_IS.I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = prop_left_IS.I_map()->begin();
     for (; it != prop_left_IS.I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -349,7 +349,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
     right_edge->attach_IS ();
 
     //: Put all modified intervals on right_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = right_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = right_edge->interval_section()->I_map()->begin();
     for (; it != right_edge->interval_section()->I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -368,7 +368,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
     right_edge->attach_IS ();
 
     //: Put all modified intervals on right_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = right_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = right_edge->interval_section()->I_map()->begin();
     for (; it != right_edge->interval_section()->I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -378,7 +378,7 @@ void gdt_i_manager::gdt_propagate_one_step ()
   }
   else if (result_r==4) {
     //: Put all propagated intervals on right_edge to the queue.
-    vcl_map<double, gdt_ibase*>::iterator it = prop_right_IS.I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = prop_right_IS.I_map()->begin();
     for (; it != prop_right_IS.I_map()->end(); it++) {
       gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -421,17 +421,17 @@ void gdt_i_manager::remove_I_subseq_intervals_on_edge (dbmsh3d_gdt_edge* input_e
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>2)
-    vul_printf (vcl_cout, "    Remove subseq. intervals of edge %d.\n", input_edge->id());
+    vul_printf (std::cout, "    Remove subseq. intervals of edge %d.\n", input_edge->id());
 #endif
 
-  vcl_set<gdt_interval*> intervals_subtree;
+  std::set<gdt_interval*> intervals_subtree;
 
   //: add each nI's subtree of intervals to the 'remove' set.
-  vcl_map<double, gdt_ibase*>::iterator iit = input_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator iit = input_edge->interval_section()->I_map()->begin();
   for (; iit != input_edge->interval_section()->I_map()->end(); iit++) {
     gdt_interval* II = (gdt_interval*) (*iit).second;
 
-    vcl_vector<gdt_interval*>::iterator it = II->nextIs().begin();
+    std::vector<gdt_interval*>::iterator it = II->nextIs().begin();
     for (; it != II->nextIs().end(); it++) {
       gdt_interval* nI = (gdt_interval*) (*it);
       assert (nI->prev_flag()==true);
@@ -442,7 +442,7 @@ void gdt_i_manager::remove_I_subseq_intervals_on_edge (dbmsh3d_gdt_edge* input_e
 
   //: delete all intervals in intervals_subtree[]
   //  first break all the prev connection and edge connection.
-  vcl_set<gdt_interval*>::iterator it = intervals_subtree.begin();
+  std::set<gdt_interval*>::iterator it = intervals_subtree.begin();
   for (; it != intervals_subtree.end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it);
 
@@ -480,7 +480,7 @@ INTERSECT_RESULT gdt_i_manager::intersect_interval_sections_delete_invalids (
 #if GDT_DEBUG_MSG
   //: debug
   assert (input_IS2 != result_IS);
-  vcl_map<double, gdt_ibase*>::iterator iit = input_IS1->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator iit = input_IS1->I_map()->begin();
   for (; iit != input_IS1->I_map()->end(); iit++) {
     gdt_interval* I = (gdt_interval*) (*iit).second;
     assert (I->prev_flag() == false);
@@ -501,7 +501,7 @@ INTERSECT_RESULT gdt_i_manager::intersect_interval_sections_delete_invalids (
   if (result == INTERSECT_RESULT_1 || result == INTERSECT_RESULT_3) {
     //: delete the next_[] subtree for invalid intervals on input_IS2
     //  if result is 0, 2, 3
-    vcl_map<double, gdt_ibase*>::iterator it = input_IS2->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = input_IS2->I_map()->begin();
     while (it != input_IS2->I_map()->end()) {
       gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -524,7 +524,7 @@ INTERSECT_RESULT gdt_i_manager::intersect_interval_sections_delete_invalids (
 void gdt_i_manager::_detach_edge_intervals (dbmsh3d_gdt_edge* cur_edge, 
                                             gdt_interval_section* detached_IS) 
 {
-  vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
   //: be careful on the iterator in deletion!
   while (it != cur_edge->interval_section()->I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
@@ -545,7 +545,7 @@ gdt_interval* gdt_i_manager::_prop_I_left_dege (const dbmsh3d_halfedge* cur_he,
   //unused dbmsh3d_gdt_edge* left_edge = (dbmsh3d_gdt_edge*) left_he->edge();
 
   //: the prev is the first interval of cur_edge
-  vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
   gdt_interval* I = (gdt_interval*) (*it).second;
 
   get_psrc_dist (cur_edge->sV(), I);
@@ -559,7 +559,7 @@ gdt_interval* gdt_i_manager::_prop_I_right_dege (const dbmsh3d_halfedge* cur_he,
   //unused dbmsh3d_gdt_edge* right_edge = (dbmsh3d_gdt_edge*) right_he->edge();
 
   //the first interval of cur_edge
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
   gdt_interval* I = (gdt_interval*) (*rit).second;
 
   get_psrc_dist (cur_edge->eV(), I);

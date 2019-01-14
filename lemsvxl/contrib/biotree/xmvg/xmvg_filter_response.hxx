@@ -8,7 +8,7 @@
 
 
 template <class T>
-void x_write(vcl_ostream& os, xmvg_filter_response<T> res)
+void x_write(std::ostream& os, xmvg_filter_response<T> res)
 {
   vsl_basic_xml_element element("xmvg_filter_response");
   element.add_attribute("size", (int) res.size());
@@ -18,7 +18,7 @@ void x_write(vcl_ostream& os, xmvg_filter_response<T> res)
   element.x_write(os);
 }
 template <class T>
-vcl_ostream& operator << ( vcl_ostream& stream, const xmvg_filter_response<T> & resp)
+std::ostream& operator << ( std::ostream& stream, const xmvg_filter_response<T> & resp)
 {
   for (unsigned i=0; i<resp.size(); i++) {
     stream << resp.get(i) << " ";
@@ -31,6 +31,6 @@ vcl_ostream& operator << ( vcl_ostream& stream, const xmvg_filter_response<T> & 
 #undef XMVG_FILTER_RESPONSE_INSTANTIATE
 #define XMVG_FILTER_RESPONSE_INSTANTIATE(T) \
 template class xmvg_filter_response<T>; \
-template void x_write(vcl_ostream & , xmvg_filter_response<T>); \
-template vcl_ostream& operator << ( vcl_ostream& , const xmvg_filter_response<T> &)
+template void x_write(std::ostream & , xmvg_filter_response<T>); \
+template std::ostream& operator << ( std::ostream& , const xmvg_filter_response<T> &)
 #endif

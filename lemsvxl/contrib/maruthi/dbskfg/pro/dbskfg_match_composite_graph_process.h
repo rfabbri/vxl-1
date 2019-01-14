@@ -17,7 +17,7 @@
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 #include <dbskr/dbskr_scurve.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <dbskr/dbskr_edit_distance_base.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vl/sift.h>
@@ -36,10 +36,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -55,16 +55,16 @@ private:
   double final_cost_;
 
   //: Curve list 1
-  vcl_vector<dbskr_scurve_sptr> curve_list1_;
+  std::vector<dbskr_scurve_sptr> curve_list1_;
   
   //: Curve list 2
-  vcl_vector<dbskr_scurve_sptr> curve_list2_;
+  std::vector<dbskr_scurve_sptr> curve_list2_;
 
   //: Map points from curve list 1 to curve list 2
-  vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list_;
+  std::vector< std::vector < std::pair <int,int> > > map_list_;
 
   //: Get path key
-  vcl_vector< pathtable_key > path_map_;
+  std::vector< pathtable_key > path_map_;
 
   // compute app cost
   double compute_app_cost(vl_sift_pix* grad_data1,

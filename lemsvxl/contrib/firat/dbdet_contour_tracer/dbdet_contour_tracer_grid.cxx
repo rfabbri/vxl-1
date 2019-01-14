@@ -95,9 +95,9 @@ dbdet_contour_tracer_grid::dbdet_contour_tracer_grid(int width, int height, Xing
 {
 	width_ = width;
 	height_ = height;
-	grid_points_ = new vcl_vector<dbdet_contour_tracer_xing*>[width*height];
-	horiz_lines_ = new vcl_vector<dbdet_contour_tracer_xing*>[width*height];
-	vert_lines_ = new vcl_vector<dbdet_contour_tracer_xing*>[width*height];
+	grid_points_ = new std::vector<dbdet_contour_tracer_xing*>[width*height];
+	horiz_lines_ = new std::vector<dbdet_contour_tracer_xing*>[width*height];
+	vert_lines_ = new std::vector<dbdet_contour_tracer_xing*>[width*height];
 
 	int pos;
 	double xp, yp;
@@ -200,23 +200,23 @@ dbdet_contour_tracer_grid::dbdet_contour_tracer_grid(int width, int height, Xing
 	}
 }
 
-vcl_vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_grid_points(int x, int y)
+std::vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_grid_points(int x, int y)
 {
 	return grid_points_[y*width_ + x];
 
 }
 
-vcl_vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_horiz_points(int x, int y)
+std::vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_horiz_points(int x, int y)
 {
 	return horiz_lines_[y*width_ + x];
 }
 
-vcl_vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_vert_points(int x, int y)
+std::vector<dbdet_contour_tracer_xing*>& dbdet_contour_tracer_grid::get_vert_points(int x, int y)
 {
 	return vert_lines_[y*width_ + x];
 }
 
-void add_untraced_points(vcl_vector<dbdet_contour_tracer_xing*>& next_point_candidates, vcl_vector<dbdet_contour_tracer_xing*>& A)
+void add_untraced_points(std::vector<dbdet_contour_tracer_xing*>& next_point_candidates, std::vector<dbdet_contour_tracer_xing*>& A)
 {
 	for(int i = 0; i < A.size(); i++)
 	{
@@ -227,7 +227,7 @@ void add_untraced_points(vcl_vector<dbdet_contour_tracer_xing*>& next_point_cand
 	}
 }
 
-void dbdet_contour_tracer_grid::get_next_point_candidates(dbdet_contour_tracer_xing* p, vcl_vector<dbdet_contour_tracer_xing*>& next_point_candidates)
+void dbdet_contour_tracer_grid::get_next_point_candidates(dbdet_contour_tracer_xing* p, std::vector<dbdet_contour_tracer_xing*>& next_point_candidates)
 {
 	int xx = (int)p->x;
 	int yy = (int)p->y;
@@ -235,127 +235,127 @@ void dbdet_contour_tracer_grid::get_next_point_candidates(dbdet_contour_tracer_x
 	{
 	case XING_HORIZ:
 	{
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
 		add_untraced_points(next_point_candidates, G_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
 		add_untraced_points(next_point_candidates, H_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
 		add_untraced_points(next_point_candidates, V_0_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_N1 = get_grid_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_N1 = get_grid_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, G_0_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_N1 = get_horiz_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_N1 = get_horiz_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, H_0_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_0_N1 = get_vert_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& V_0_N1 = get_vert_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, V_0_N1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, G_0_P1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, H_0_P1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_N1 = get_grid_points(xx+1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_N1 = get_grid_points(xx+1, yy-1);
 		add_untraced_points(next_point_candidates, G_P1_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_P1_N1 = get_vert_points(xx+1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& V_P1_N1 = get_vert_points(xx+1, yy-1);
 		add_untraced_points(next_point_candidates, V_P1_N1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, G_P1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, V_P1_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
 		add_untraced_points(next_point_candidates, G_P1_P1);
 	}
 	break;
 
 	case XING_VERT:
 	{
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
 		add_untraced_points(next_point_candidates, G_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
 		add_untraced_points(next_point_candidates, H_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
 		add_untraced_points(next_point_candidates, V_0_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_N1_0 = get_grid_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_N1_0 = get_grid_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, G_N1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_N1_0 = get_horiz_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& H_N1_0 = get_horiz_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, H_N1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_N1_0 = get_vert_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_N1_0 = get_vert_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, V_N1_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, G_P1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, V_P1_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, G_0_P1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, H_0_P1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_N1_P1 = get_grid_points(xx-1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_N1_P1 = get_grid_points(xx-1, yy+1);
 		add_untraced_points(next_point_candidates, G_N1_P1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_N1_P1 = get_horiz_points(xx-1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& H_N1_P1 = get_horiz_points(xx-1, yy+1);
 		add_untraced_points(next_point_candidates, H_N1_P1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
 		add_untraced_points(next_point_candidates, G_P1_P1);
 	}
 	break;
 
 	case XING_GRID:
 	{
-		vcl_vector<dbdet_contour_tracer_xing*>& G_N1_N1 = get_grid_points(xx-1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& G_N1_N1 = get_grid_points(xx-1, yy-1);
 		add_untraced_points(next_point_candidates, G_N1_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_N1_N1 = get_horiz_points(xx-1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& H_N1_N1 = get_horiz_points(xx-1, yy-1);
 		add_untraced_points(next_point_candidates, H_N1_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_N1_N1 = get_vert_points(xx-1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& V_N1_N1 = get_vert_points(xx-1, yy-1);
 		add_untraced_points(next_point_candidates, V_N1_N1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_N1 = get_grid_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_N1 = get_grid_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, G_0_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_N1 = get_horiz_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_N1 = get_horiz_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, H_0_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_0_N1 = get_vert_points(xx, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& V_0_N1 = get_vert_points(xx, yy-1);
 		add_untraced_points(next_point_candidates, V_0_N1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_N1_0 = get_grid_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_N1_0 = get_grid_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, G_N1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_N1_0 = get_horiz_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& H_N1_0 = get_horiz_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, H_N1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_N1_0 = get_vert_points(xx-1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_N1_0 = get_vert_points(xx-1, yy);
 		add_untraced_points(next_point_candidates, V_N1_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
 		add_untraced_points(next_point_candidates, G_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
 		add_untraced_points(next_point_candidates, H_0_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
 		add_untraced_points(next_point_candidates, V_0_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_N1 = get_grid_points(xx+1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_N1 = get_grid_points(xx+1, yy-1);
 		add_untraced_points(next_point_candidates, G_P1_N1);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_P1_N1 = get_vert_points(xx+1, yy-1);
+		std::vector<dbdet_contour_tracer_xing*>& V_P1_N1 = get_vert_points(xx+1, yy-1);
 		add_untraced_points(next_point_candidates, V_P1_N1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, G_P1_0);
-		vcl_vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
+		std::vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
 		add_untraced_points(next_point_candidates, V_P1_0);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_N1_P1 = get_grid_points(xx-1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_N1_P1 = get_grid_points(xx-1, yy+1);
 		add_untraced_points(next_point_candidates, G_N1_P1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_N1_P1 = get_horiz_points(xx-1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& H_N1_P1 = get_horiz_points(xx-1, yy+1);
 		add_untraced_points(next_point_candidates, H_N1_P1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, G_0_P1);
-		vcl_vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
 		add_untraced_points(next_point_candidates, H_0_P1);
 
-		vcl_vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
+		std::vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
 		add_untraced_points(next_point_candidates, G_P1_P1);
 	}
 	break;
@@ -393,25 +393,25 @@ void dbdet_contour_tracer_grid::determine_unambiguous_and_bad_neighbors()
 	{
 		for(int xx = 0; xx < width_-1; xx++)
 		{
-			vcl_vector<dbdet_contour_tracer_xing*> points;
-			vcl_vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
+			std::vector<dbdet_contour_tracer_xing*> points;
+			std::vector<dbdet_contour_tracer_xing*>& G_0_0 = get_grid_points(xx, yy);
 			add_untraced_points(points, G_0_0);
-			vcl_vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
+			std::vector<dbdet_contour_tracer_xing*>& H_0_0 = get_horiz_points(xx, yy);
 			add_untraced_points(points, H_0_0);
-			vcl_vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
+			std::vector<dbdet_contour_tracer_xing*>& V_0_0 = get_vert_points(xx, yy);
 			add_untraced_points(points, V_0_0);
 
-			vcl_vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
+			std::vector<dbdet_contour_tracer_xing*>& G_0_P1 = get_grid_points(xx, yy+1);
 			add_untraced_points(points, G_0_P1);
-			vcl_vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
+			std::vector<dbdet_contour_tracer_xing*>& H_0_P1 = get_horiz_points(xx, yy+1);
 			add_untraced_points(points, H_0_P1);
 
-			vcl_vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
+			std::vector<dbdet_contour_tracer_xing*>& G_P1_0 = get_grid_points(xx+1, yy);
 			add_untraced_points(points, G_P1_0);
-			vcl_vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
+			std::vector<dbdet_contour_tracer_xing*>& V_P1_0 = get_vert_points(xx+1, yy);
 			add_untraced_points(points, V_P1_0);
 
-			vcl_vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
+			std::vector<dbdet_contour_tracer_xing*>& G_P1_P1 = get_grid_points(xx+1, yy+1);
 			add_untraced_points(points, G_P1_P1);
 
 			if(points.size() == 2)
@@ -423,7 +423,7 @@ void dbdet_contour_tracer_grid::determine_unambiguous_and_bad_neighbors()
 			}
 			else if(points.size() == 4)
 			{
-				//vcl_cout << xx << " " << yy << vcl_endl;
+				//std::cout << xx << " " << yy << std::endl;
 				bool intersection_flag;
 				dbdet_contour_tracer_xing *p1, *p2, *p3, *p4;
 				p1 = points[0];	p2 = points[1];	p3 = points[2];	p4 = points[3];
@@ -442,7 +442,7 @@ void dbdet_contour_tracer_grid::determine_unambiguous_and_bad_neighbors()
 			}
 			/*else if(points.size() != 0)
 			{
-				vcl_cout << "(" << xx << ", " << yy << "): num_points = " << points.size() << vcl_endl;
+				std::cout << "(" << xx << ", " << yy << "): num_points = " << points.size() << std::endl;
 			}*/
 		}
 	}
@@ -456,7 +456,7 @@ void dbdet_contour_tracer_grid::get_an_unambiguous_point_pair(int& srow, dbdet_c
 	{
 		for(int xx = 0; xx < width_ && !p1; xx++)
 		{
-			vcl_vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(xx, yy);
+			std::vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(xx, yy);
 			for(int i = 0; i < H.size() && !p1; i++)
 			{
 				if(!H[i]->traced)
@@ -471,7 +471,7 @@ void dbdet_contour_tracer_grid::get_an_unambiguous_point_pair(int& srow, dbdet_c
 			}
 			if(!p1)
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& V = get_vert_points(xx, yy);
+				std::vector<dbdet_contour_tracer_xing*>& V = get_vert_points(xx, yy);
 				for(int i = 0; i < V.size() && !p1; i++)
 				{
 					if(!V[i]->traced)
@@ -487,7 +487,7 @@ void dbdet_contour_tracer_grid::get_an_unambiguous_point_pair(int& srow, dbdet_c
 			}
 			if(!p1)
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& G = get_grid_points(xx, yy);
+				std::vector<dbdet_contour_tracer_xing*>& G = get_grid_points(xx, yy);
 				for(int i = 0; i < G.size() && !p1; i++)
 				{
 					if(!G[i]->traced)
@@ -513,7 +513,7 @@ void dbdet_contour_tracer_grid::remove_all_traced_points()
 		for(int x = 0; x < width_; x++)
 		{
 			//GRID
-			vcl_vector<dbdet_contour_tracer_xing*>& G = get_grid_points(x, y);
+			std::vector<dbdet_contour_tracer_xing*>& G = get_grid_points(x, y);
 			if(!G.empty() && G[0]->traced)
 			{
 
@@ -523,7 +523,7 @@ void dbdet_contour_tracer_grid::remove_all_traced_points()
 			}
 			if(x != width_-1) //HORIZ
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(x, y);
+				std::vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(x, y);
 				for(int i = 0; i < H.size(); i++)
 				{
 					if (H[i]->traced)
@@ -537,7 +537,7 @@ void dbdet_contour_tracer_grid::remove_all_traced_points()
 			}
 			if(y != height_-1) //VERT
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& V = get_vert_points(x, y);
+				std::vector<dbdet_contour_tracer_xing*>& V = get_vert_points(x, y);
 				for(int i = 0; i < V.size(); i++)
 				{
 					if (V[i]->traced)
@@ -553,7 +553,7 @@ void dbdet_contour_tracer_grid::remove_all_traced_points()
 	}
 }
 
-bool dbdet_contour_tracer_grid::get_associated_cell_ids(dbdet_contour_tracer_xing* p, vcl_vector<int>& idx, vcl_vector<int>& idy)
+bool dbdet_contour_tracer_grid::get_associated_cell_ids(dbdet_contour_tracer_xing* p, std::vector<int>& idx, std::vector<int>& idy)
 {
 	int xx = p->x;
 	int yy = p->y;
@@ -609,7 +609,7 @@ bool dbdet_contour_tracer_grid::get_associated_cell_ids(dbdet_contour_tracer_xin
 bool dbdet_contour_tracer_grid::belong_to_same_cell(dbdet_contour_tracer_xing* p1, dbdet_contour_tracer_xing* p2)
 {
 
-	vcl_vector<int> idx1, idy1, idx2, idy2;
+	std::vector<int> idx1, idy1, idx2, idy2;
 	get_associated_cell_ids(p1, idx1, idy1);
 	get_associated_cell_ids(p2, idx2, idy2);
 	for(int i = 0; i < idx1.size(); i++)
@@ -632,7 +632,7 @@ dbdet_contour_tracer_grid::~dbdet_contour_tracer_grid()
 		for(int x = 0; x < width_; x++)
 		{
 			//GRID
-			vcl_vector<dbdet_contour_tracer_xing*>& G = get_grid_points(x, y);
+			std::vector<dbdet_contour_tracer_xing*>& G = get_grid_points(x, y);
 			if(!G.empty())
 			{
 				delete G[0];
@@ -640,7 +640,7 @@ dbdet_contour_tracer_grid::~dbdet_contour_tracer_grid()
 			}
 			if(x != width_-1) //HORIZ
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(x, y);
+				std::vector<dbdet_contour_tracer_xing*>& H = get_horiz_points(x, y);
 				for(int i = 0; i < H.size(); i++)
 				{
 					delete H[i];
@@ -649,7 +649,7 @@ dbdet_contour_tracer_grid::~dbdet_contour_tracer_grid()
 			}
 			if(y != height_-1) //VERT
 			{
-				vcl_vector<dbdet_contour_tracer_xing*>& V = get_vert_points(x, y);
+				std::vector<dbdet_contour_tracer_xing*>& V = get_vert_points(x, y);
 				for(int i = 0; i < V.size(); i++)
 				{
 					delete V[i];

@@ -40,9 +40,9 @@
 //#include <vil/vil_pyramid_image_resource_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 
 #include <pdf1d/pdf1d_flat.h>
 #include <pdf1d/pdf1d_gaussian.h>
@@ -76,12 +76,12 @@ public:
 
 public:
 
-  vcl_string xgraph_file;
-  vcl_string xgraph_geom_file;
-  vcl_string xgraph_geom_param_file;
+  std::string xgraph_file;
+  std::string xgraph_geom_file;
+  std::string xgraph_geom_param_file;
 
   //: Final detection list
-  vcl_vector<dbsks_det_desc_xgraph_sptr > output_shape_list;
+  std::vector<dbsks_det_desc_xgraph_sptr > output_shape_list;
 
   // Graph-tree info
   unsigned root_vid_;

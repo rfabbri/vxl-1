@@ -4,9 +4,9 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -64,13 +64,13 @@ class dbskr_shock_patch_match_tableau_command : public vgui_command
       case 1:  //compute normalization based on reconstructed boundary length
       {
         if (!match_->compute_length_norm_costs_of_cors())
-          vcl_cout << "problems in compute_length_norm_costs_of_cors()\n";
+          std::cout << "problems in compute_length_norm_costs_of_cors()\n";
         break;
       }
       case 2:  // compute normalization based on total splice cost
       {
         if (!match_->compute_splice_norm_costs_of_cors())
-          vcl_cout << "problems in compute_splice_norm_costs_of_cors()\n";
+          std::cout << "problems in compute_splice_norm_costs_of_cors()\n";
         break;
       }
       case 3: //resort with respect to normalized costs
@@ -86,12 +86,12 @@ class dbskr_shock_patch_match_tableau_command : public vgui_command
       case 5: // compute detection box
       {
         if (!match_->detect_instance(match_tableau->detection_box_, match_tableau->N_, match_tableau->k_, match_tableau->threshold_))
-          vcl_cout << "problems in detection box computation\n";
+          std::cout << "problems in detection box computation\n";
         else {
           if (!match_tableau->detection_box_)
-            vcl_cout << " No detection box with this threshold\n";
+            std::cout << " No detection box with this threshold\n";
           else
-            vcl_cout << "box: " << *(match_tableau->detection_box_) << vcl_endl;
+            std::cout << "box: " << *(match_tableau->detection_box_) << std::endl;
         }
         break;
       }
@@ -180,10 +180,10 @@ void dbskr_shock_patch_match_tableau::set_match(dbskr_shock_patch_match_sptr m)
   match_->left_ = 0;
   match_->right_ = 0;
   match_->cor_ = 0;
-  vcl_map<int, dbskr_shock_patch_sptr>& map1 = m->get_id_map1();
+  std::map<int, dbskr_shock_patch_sptr>& map1 = m->get_id_map1();
   model_box_ = new vsol_box_2d();
   model_poly_ = 0;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator iter = map1.begin(); iter != map1.end(); iter++) {
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator iter = map1.begin(); iter != map1.end(); iter++) {
     model_box_->grow_minmax_bounds(iter->second->bounding_box());
     if (!model_poly_)
       model_poly_ = iter->second->get_outer_boundary();
@@ -195,8 +195,8 @@ void dbskr_shock_patch_match_tableau::set_match(dbskr_shock_patch_match_sptr m)
   model_box_poly_ = bsol_algs::poly_from_box(model_box_);
 
   image_box_ = new vsol_box_2d();
-  vcl_map<int, dbskr_shock_patch_sptr>& map2 = m->get_id_map2();
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator iter = map2.begin(); iter != map2.end(); iter++) {
+  std::map<int, dbskr_shock_patch_sptr>& map2 = m->get_id_map2();
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator iter = map2.begin(); iter != map2.end(); iter++) {
     image_box_->grow_minmax_bounds(iter->second->bounding_box());
   }
   
@@ -223,27 +223,27 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
 
         vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
         if(!res) {
-          vcl_cout << "Could not access repository!\n";
+          std::cout << "Could not access repository!\n";
           return false;
         }
 
         dbskr_shock_match_storage_sptr st = dbskr_shock_match_storage_new();
-        vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-        vcl_string name_initial = "patch_match_str";
+        std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+        std::string name_initial = "patch_match_str";
         int len = name_initial.length();
         int max = 0;
-        for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+        for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
           iter != st_set.end(); iter++) {
             if ((*iter)->type() == st->type() && 
-                (*iter)->name().find(name_initial) != vcl_string::npos) {
-              vcl_string name = (*iter)->name();
-              vcl_string numbr = name.substr(len, 3);
+                (*iter)->name().find(name_initial) != std::string::npos) {
+              std::string name = (*iter)->name();
+              std::string numbr = name.substr(len, 3);
               int n = atoi(numbr.c_str());
               if (n > max)
                 max = n;
             }
         }
-        vcl_ostringstream oss;
+        std::ostringstream oss;
         oss.width(3);
         oss.fill('0');
         oss << name_initial << max+1;
@@ -251,9 +251,9 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
         st->set_name(name_initial);
         match_->cor_->clear_map_list();
         if (match_->cor_->recover_dart_ids_and_scurves())
-          vcl_cout << "recovered dart ids and scurves\n";
+          std::cout << "recovered dart ids and scurves\n";
         else 
-          vcl_cout << "problems in recovery!!\n";
+          std::cout << "problems in recovery!!\n";
 
         st->set_sm_cor(match_->cor_);
         res->store_data(st);
@@ -262,23 +262,23 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
         bvis1_manager::instance()->display_current_frame();
 
       } else {
-        vcl_cout << " select a match first!!\n";
+        std::cout << " select a match first!!\n";
       }
     }
 
   if (gesture_select_point_(e)) {
 
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix_, iy_);
-    //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+    //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
     mouse_pt_ = vgl_point_2d<double>(ix_, iy_);
 
     bool found_it = false;
-    vcl_map<int, dbskr_shock_patch_sptr>& id_map1 = match_->get_id_map1();
-    vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
+    std::map<int, dbskr_shock_patch_sptr>& id_map1 = match_->get_id_map1();
+    std::map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
     match_->left_ = 0;
     patch_cor_map_type& map = match_->get_map();
     
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
+    std::map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
     for ( ; itr != id_map1.end(); itr++) {
       dbskr_shock_patch_sptr sp = itr->second;
       if (sp->inside(ix_, iy_)) {
@@ -301,9 +301,9 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
 
         if(find_patch_correspondences(match_->left_, match_->patch_set2_, map, match_->edit_params_)) 
         {
-          vcl_cout << "Matched the patch to the second set using edit distance parameters in match_\n";
+          std::cout << "Matched the patch to the second set using edit distance parameters in match_\n";
         } else {
-          vcl_cout << "Problems during matching\n";
+          std::cout << "Problems during matching\n";
           return false;
         }
       }
@@ -346,21 +346,21 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
             trans_model_box_->add_point(trans_model_box_poly->vertex(jjj)->x(), trans_model_box_poly->vertex(jjj)->y());
         }
 
-        vcl_cout << "------------ First match ------------\n";
-        vcl_cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
-        vcl_cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
-        vcl_cout << "homography mapping right to left:\n" << H << vcl_endl;
+        std::cout << "------------ First match ------------\n";
+        std::cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
+        std::cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
+        std::cout << "homography mapping right to left:\n" << H << std::endl;
         double angle, dist;
         match_->get_rotation_angle_degree(H, angle);
         match_->get_Lie_dist_to_identity(H, dist);
-        vcl_cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
-        vcl_cout << "-------------------------------------\n";
+        std::cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
+        std::cout << "-------------------------------------\n";
 
       } else 
         match_->current_left_v_id_ = -1;
 
     } else 
-      vcl_cout << "Current mouse position is not covered by any of the shock patches!\n";
+      std::cout << "Current mouse position is not covered by any of the shock patches!\n";
 
     bvis1_manager::instance()->post_redraw();
     //bvis1_manager::instance()->regenerate_all_tableaux();
@@ -368,7 +368,7 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
   }
 
   if (next_match_(e)) {
-     vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
+     std::map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
     if (match_->current_left_v_id_ >= 0) {
       match_->current_left_v_id_ = (match_->current_left_v_id_ + 1)%match_->left_v_->size();
       match_->right_ = id_map2[(*match_->left_v_)[match_->current_left_v_id_].first];
@@ -405,15 +405,15 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
             trans_model_box_->add_point(trans_model_box_poly->vertex(jjj)->x(), trans_model_box_poly->vertex(jjj)->y());
         }
 
-      vcl_cout << "------------ " << match_->current_left_v_id_ << " match ------------\n";
-      vcl_cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
-      vcl_cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
-      vcl_cout << "homography mapping right to left:\n" << H << vcl_endl;
+      std::cout << "------------ " << match_->current_left_v_id_ << " match ------------\n";
+      std::cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
+      std::cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
+      std::cout << "homography mapping right to left:\n" << H << std::endl;
       double angle, dist;
       match_->get_rotation_angle_degree(H, angle);
       match_->get_Lie_dist_to_identity(H, dist);
-      vcl_cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
-      vcl_cout << "-------------------------------------\n";
+      std::cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
+      std::cout << "-------------------------------------\n";
     }
 
     bvis1_manager::instance()->post_redraw();
@@ -424,11 +424,11 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
   if (next_patch_(e)) {
     
     if (match_->left_) {
-      vcl_map<int, dbskr_shock_patch_sptr>& id_map1 = match_->get_id_map1();
-      vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
+      std::map<int, dbskr_shock_patch_sptr>& id_map1 = match_->get_id_map1();
+      std::map<int, dbskr_shock_patch_sptr>& id_map2 = match_->get_id_map2();
       patch_cor_map_type& map = match_->get_map();
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator itr_main;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
+      std::map<int, dbskr_shock_patch_sptr>::iterator itr_main;
+      std::map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
       for ( ; itr != id_map1.end(); itr++) {
         dbskr_shock_patch_sptr sp = itr->second;
         if (match_->left_ == sp) {
@@ -470,9 +470,9 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
 
           if(find_patch_correspondences(match_->left_, match_->patch_set2_, map, match_->edit_params_)) 
           {
-            vcl_cout << "Matched the patch to the second set\n";
+            std::cout << "Matched the patch to the second set\n";
           } else {
-            vcl_cout << "Problems during matching\n";
+            std::cout << "Problems during matching\n";
             return false;
           }
         }
@@ -514,25 +514,25 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
             trans_model_box_->add_point(trans_model_box_poly->vertex(jjj)->x(), trans_model_box_poly->vertex(jjj)->y());
         }
 
-          vcl_cout << "------------ First match ------------\n";
-          vcl_cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
-          vcl_cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
-          vcl_cout << "homography mapping right to left:\n" << H << vcl_endl;
+          std::cout << "------------ First match ------------\n";
+          std::cout << " left: " << match_->left_->id() << " right: " << match_->right_->id() << " cost: ";
+          std::cout << match_->cor_->final_cost() << " norm: " << match_->cor_->final_norm_cost() << "\n";
+          std::cout << "homography mapping right to left:\n" << H << std::endl;
           double angle, dist;
           match_->get_rotation_angle_degree(H, angle);
           match_->get_Lie_dist_to_identity(H, dist);
-          vcl_cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
-          vcl_cout << "-------------------------------------\n";
+          std::cout << "rot angle: " << angle << " degree Lie dist to identity: " << dist << "\n";
+          std::cout << "-------------------------------------\n";
         } else 
           match_->current_left_v_id_ = -1;
       } else 
-        vcl_cout << "No next!\n";
+        std::cout << "No next!\n";
 
       bvis1_manager::instance()->post_redraw();
       //bvis1_manager::instance()->regenerate_all_tableaux();
       //bvis1_manager::instance()->display_current_frame();
     } else 
-      vcl_cout << "Select a left patch first!\n";
+      std::cout << "Select a left patch first!\n";
   }
 
   if (gesture_select_match_triplet_(e)) {
@@ -564,16 +564,16 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
     if (gesture_select_point_(e)) {
 
       vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix_, iy_);
-      //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+      //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
       mouse_pt_ = vgl_point_2d<double>(ix_, iy_);
 
       bool found_it = false;
       curve_match_->left_ = 0;
-      vcl_map<int, dbskr_shock_patch_sptr>& id_map1 = curve_match_->get_id_map1();
-      vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
+      std::map<int, dbskr_shock_patch_sptr>& id_map1 = curve_match_->get_id_map1();
+      std::map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
       patch_curve_cor_map_type& curve_map = curve_match_->get_map();
       
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
+      std::map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
       for ( ; itr != id_map1.end(); itr++) {
         dbskr_shock_patch_sptr sp = itr->second;
         if (sp->inside(ix_, iy_)) {
@@ -588,9 +588,9 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
         if (iter == curve_map.end()) {
           if(find_patch_correspondences_curve(curve_match_->left_, curve_match_->patch_set2_, curve_map, curve_match_->n_)) 
           {
-            vcl_cout << "Matched the patch to the second set\n";
+            std::cout << "Matched the patch to the second set\n";
           } else {
-            vcl_cout << "Problems during matching\n";
+            std::cout << "Problems during matching\n";
             return false;
           }
         }
@@ -600,16 +600,16 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
           curve_match_->right_ = id_map2[(*curve_match_->left_curve_v_)[0].first];
           curve_match_->curve_cor_ = (*curve_match_->left_curve_v_)[0].second;
           curve_match_->current_left_v_id_ = 0;
-          vcl_cout << "------------ First match ------------\n";
-          vcl_cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
+          std::cout << "------------ First match ------------\n";
+          std::cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
           for (unsigned kk = 0; kk < curve_match_->curve_cor_.size(); kk++)
-            vcl_cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
-          vcl_cout << "-------------------------------------\n";
+            std::cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
+          std::cout << "-------------------------------------\n";
         } else 
           match_->current_left_v_id_ = -1;
 
       } else 
-        vcl_cout << "Current mouse position is not covered by any of the shock patches!\n";
+        std::cout << "Current mouse position is not covered by any of the shock patches!\n";
 
       bvis1_manager::instance()->post_redraw();
       //bvis1_manager::instance()->regenerate_all_tableaux();
@@ -617,16 +617,16 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
     }
 
     if (next_match_(e)) {
-       vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
+       std::map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
       if (curve_match_->current_left_v_id_ >= 0) {
         curve_match_->current_left_v_id_ = (curve_match_->current_left_v_id_ + 1)%curve_match_->left_curve_v_->size();
         curve_match_->right_ = id_map2[(*curve_match_->left_curve_v_)[curve_match_->current_left_v_id_].first];
         curve_match_->curve_cor_ = (*curve_match_->left_curve_v_)[curve_match_->current_left_v_id_].second;
-        vcl_cout << "------------ " << curve_match_->current_left_v_id_ << " match ------------\n";
-        vcl_cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
+        std::cout << "------------ " << curve_match_->current_left_v_id_ << " match ------------\n";
+        std::cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
         for (unsigned kk = 0; kk < curve_match_->curve_cor_.size(); kk++)
-          vcl_cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
-        vcl_cout << "-------------------------------------\n";
+          std::cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
+        std::cout << "-------------------------------------\n";
       }
 
       bvis1_manager::instance()->post_redraw();
@@ -637,11 +637,11 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
     if (next_patch_(e)) {
       
       if (curve_match_->left_) {
-        vcl_map<int, dbskr_shock_patch_sptr>& id_map1 = curve_match_->get_id_map1();
-        vcl_map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
+        std::map<int, dbskr_shock_patch_sptr>& id_map1 = curve_match_->get_id_map1();
+        std::map<int, dbskr_shock_patch_sptr>& id_map2 = curve_match_->get_id_map2();
         patch_curve_cor_map_type& curve_map = curve_match_->get_map();
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator itr_main;
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
+        std::map<int, dbskr_shock_patch_sptr>::iterator itr_main;
+        std::map<int, dbskr_shock_patch_sptr>::iterator itr = id_map1.begin();
         for ( ; itr != id_map1.end(); itr++) {
           dbskr_shock_patch_sptr sp = itr->second;
           if (curve_match_->left_ == sp) {
@@ -675,9 +675,9 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
           if (iter == curve_map.end()) {
             if(find_patch_correspondences_curve(curve_match_->left_, curve_match_->patch_set2_, curve_map, curve_match_->n_)) 
             {
-              vcl_cout << "Matched the patch to the second set\n";
+              std::cout << "Matched the patch to the second set\n";
             } else {
-              vcl_cout << "Problems during matching\n";
+              std::cout << "Problems during matching\n";
               return false;
             }
           }
@@ -687,21 +687,21 @@ bool dbskr_shock_patch_match_tableau::handle( const vgui_event & e )
             curve_match_->right_ = id_map2[(*curve_match_->left_curve_v_)[0].first];
             curve_match_->curve_cor_ = (*curve_match_->left_curve_v_)[0].second;
             curve_match_->current_left_v_id_ = 0;
-            vcl_cout << "------------ First match ------------\n";
-            vcl_cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
+            std::cout << "------------ First match ------------\n";
+            std::cout << " left: " << curve_match_->left_->id() << " right: " << curve_match_->right_->id() << " cost: ";
             for (unsigned kk = 0; kk < curve_match_->curve_cor_.size(); kk++)
-              vcl_cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
-            vcl_cout << "-------------------------------------\n";
+              std::cout << curve_match_->curve_cor_[kk]->final_cost_ << " norm: " << curve_match_->curve_cor_[kk]->final_norm_cost_ << "\n";
+            std::cout << "-------------------------------------\n";
           } else 
             curve_match_->current_left_v_id_ = -1;
         } else 
-          vcl_cout << "No next!\n";
+          std::cout << "No next!\n";
 
         bvis1_manager::instance()->post_redraw();
         //bvis1_manager::instance()->regenerate_all_tableaux();
         //bvis1_manager::instance()->display_current_frame();
       } else 
-        vcl_cout << "Select a left patch first!\n";
+        std::cout << "Select a left patch first!\n";
     }
 
     }
@@ -764,7 +764,7 @@ void dbskr_shock_patch_match_tableau::draw_render()
       //if (trans_poly_) {
       //  draw_poly_LINE_STRIP(trans_poly_, offset_x3, offset_y3, 1.0f, 0.0f, 0.0f, 2.0f)
       //} else {
-      //  vcl_cout << "transformed polygon is not computed ok!!!\n";
+      //  std::cout << "transformed polygon is not computed ok!!!\n";
      // }
       if (trans_model_poly_) {
         draw_poly_LINE_STRIP(trans_model_poly_, offset_x3, offset_y3, 0.0f, 0.0f, 0.0f, 3.0f);
@@ -777,8 +777,8 @@ void dbskr_shock_patch_match_tableau::draw_render()
     if (left_patches_.size() > 0 && right_patches_.size() > 0 && transformed_models_.size() > 0 && 
       transformed_models_.size() == left_patches_.size() &&  left_patches_.size() == right_patches_.size()) {
         draw_poly_LINE_STRIP(model_poly_, 0, 2*offset_y3, 0.0f, 0.0f, 0.0f, 2.0f);
-        vcl_vector<float> col(3, 0);
-        vcl_vector<vcl_vector<float> > cols(3, col);
+        std::vector<float> col(3, 0);
+        std::vector<std::vector<float> > cols(3, col);
         cols[0][0] = 1.0f; cols[0][1] = 0.0f; cols[0][2] = 0.0f; 
         cols[1][0] = 0.0f; cols[1][1] = 1.0f; cols[1][2] = 0.0f; 
         cols[2][0] = 0.0f; cols[2][1] = 0.0f; cols[2][2] = 1.0f; 
@@ -804,8 +804,8 @@ void dbskr_shock_patch_match_tableau::draw_render()
       for (unsigned kk = 0; kk < curve_match_->curve_cor_.size(); kk++)
       {
         dbcvr_cv_cor_sptr cor = curve_match_->curve_cor_[kk];
-        vcl_vector<vgl_point_2d<double> > pts1 = cor->get_contour_pts1();
-        vcl_vector<vgl_point_2d<double> > pts2 = cor->get_contour_pts2();
+        std::vector<vgl_point_2d<double> > pts1 = cor->get_contour_pts1();
+        std::vector<vgl_point_2d<double> > pts2 = cor->get_contour_pts2();
 
         int color = 0;
         for (unsigned int j = 0; j<pts1.size(); j++) {
@@ -829,7 +829,7 @@ void dbskr_shock_patch_match_tableau::draw_render()
     if (!(match_->cor_)->get_tree1()) {
     tree1 = (match_->left_)->tree();  // forces computation of the tree if not available
       if (!tree1) {
-        vcl_cout << "Tree is not available for patch: " << (match_->left_)->id() << " skipping\n" << vcl_endl;
+        std::cout << "Tree is not available for patch: " << (match_->left_)->id() << " skipping\n" << std::endl;
       }
       match_->cor_->set_tree1(tree1);
     }
@@ -837,7 +837,7 @@ void dbskr_shock_patch_match_tableau::draw_render()
     if (!(match_->cor_)->get_tree2()) {
     tree2 = (match_->right_)->tree();  // forces computation of the tree if not available
       if (!tree2) {
-        vcl_cout << "Tree is not available for patch: " << (match_->right_)->id() << " skipping\n" << vcl_endl;
+        std::cout << "Tree is not available for patch: " << (match_->right_)->id() << " skipping\n" << std::endl;
       }
       match_->cor_->set_tree2(tree2);
     }
@@ -847,27 +847,27 @@ void dbskr_shock_patch_match_tableau::draw_render()
 
     if (display_corresponding_bnd_points_)
     {
-      vcl_vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
-      vcl_vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
-      vcl_vector<vcl_vector < vcl_pair <int,int> > >& map_list = sm_cor_->get_map_list();
-      vcl_vector<pathtable_key>& key_map = sm_cor_->get_map();
+      std::vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
+      std::vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
+      std::vector<std::vector < std::pair <int,int> > >& map_list = sm_cor_->get_map_list();
+      std::vector<pathtable_key>& key_map = sm_cor_->get_map();
 
       //// draw corresponding points on the boundary curves in changing color
       if ((curve_list1.size() != curve_list2.size()) || (curve_list1.size() != map_list.size())) {
-        vcl_cout << "different sizes in shock curve correspondence, not drawing boundary curves!\n";
+        std::cout << "different sizes in shock curve correspondence, not drawing boundary curves!\n";
       } 
       else {  // draw corresponding shock curves
         int color = 0;
         for (unsigned int i = 0; i<curve_list1.size(); i++) {
           dbskr_scurve_sptr sc1 = curve_list1[i];
           dbskr_scurve_sptr sc2 = curve_list2[i];
-          vcl_vector< vcl_pair<int, int> > map = map_list[i];
+          std::vector< std::pair<int, int> > map = map_list[i];
 
           pathtable_key key = key_map[i];
-          vcl_cout << "in corresponding bnd pts, key first: " << key.first.first << ", " << key.first.second << " sc1 # pts: " << sc1->num_points() << " ";
-          vcl_cout << ", key second: " << key.second.first << ", " << key.second.second << " sc2 # pts: " << sc2->num_points() << "\n";
+          std::cout << "in corresponding bnd pts, key first: " << key.first.first << ", " << key.first.second << " sc1 # pts: " << sc1->num_points() << " ";
+          std::cout << ", key second: " << key.second.first << ", " << key.second.second << " sc2 # pts: " << sc2->num_points() << "\n";
 
-          //vcl_cout << "curve1 size: " << sc1->num_points() << " curve2 size: " << sc2->num_points() << " drawing " << map.size() << " pair of points\n";
+          //std::cout << "curve1 size: " << sc1->num_points() << " curve2 size: " << sc2->num_points() << " drawing " << map.size() << " pair of points\n";
 
           for (unsigned int j = 0; j<map.size(); j++) {
             int k = map[j].first;
@@ -920,7 +920,7 @@ class dbskr_spm_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbskr_spm_tableau_set_display_params_command(dbskr_shock_patch_match_tableau* tab, 
-    const vcl_string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -936,14 +936,14 @@ class dbskr_spm_tableau_set_display_params_command : public vgui_command
 
   dbskr_shock_patch_match_tableau *match_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class dbskr_spm_tableau_set_display_float_params_command : public vgui_command
 {
  public:
   dbskr_spm_tableau_set_display_float_params_command(dbskr_shock_patch_match_tableau* tab, 
-    const vcl_string& name, const void* floatref) : match_tableau(tab), fref_((float*)floatref), name_(name) {}
+    const std::string& name, const void* floatref) : match_tableau(tab), fref_((float*)floatref), name_(name) {}
 
   void execute() 
   { 
@@ -959,14 +959,14 @@ class dbskr_spm_tableau_set_display_float_params_command : public vgui_command
 
   dbskr_shock_patch_match_tableau *match_tableau;
   float* fref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 void 
 dbskr_shock_patch_match_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_left_)?on:off)+"Display Left", 
                new dbskr_spm_tableau_toggle_command(this, &display_left_));
@@ -1106,7 +1106,7 @@ draw_patch(dbskr_shock_patch_sptr shock_patch, int off_x, int off_y)
   }
 
   if (display_real_boundaries_) {
-    vcl_vector<vsol_polyline_2d_sptr>& rbs = shock_patch->get_real_boundaries();
+    std::vector<vsol_polyline_2d_sptr>& rbs = shock_patch->get_real_boundaries();
     int color = 0;
     for (unsigned i = 0; i < rbs.size(); i++) {
       vsol_polyline_2d_sptr poly = rbs[i];

@@ -1,7 +1,7 @@
 #include <bio_defs.h>
 #include <biob/biob_worldpt_transformation.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 worldpt biob_worldpt_transformation::operator()(worldpt pt){
   return convert(matrix_(convert(pt)));

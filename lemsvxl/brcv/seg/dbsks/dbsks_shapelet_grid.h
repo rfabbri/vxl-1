@@ -211,7 +211,7 @@ public:
   void change_num_yA(int num_yA);
 
   //: Print grid information
-  void print(vcl_ostream& str);
+  void print(std::ostream& str);
 };
 
 

@@ -1,4 +1,4 @@
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_1d.h>
@@ -17,8 +17,8 @@ dbinfo_ihs_feature::dbinfo_ihs_feature(dbinfo_feature_data_base_sptr const& data
 //:scan gradient data from the current frame into the feature data store
 bool 
 dbinfo_ihs_feature::scan(const unsigned frame, 
-                         vcl_vector<vgl_point_2d<unsigned> > const& points,
-                         vcl_vector<bool> const& valid,
+                         std::vector<vgl_point_2d<unsigned> > const& points,
+                         std::vector<bool> const& valid,
                          vil_image_resource_sptr const& image)
 {
 

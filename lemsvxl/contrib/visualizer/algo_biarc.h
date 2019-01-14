@@ -2,8 +2,8 @@
 #define       BI_ARC_H
 
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 #include <basegui_xpmath.h>
 
@@ -88,7 +88,7 @@ class BiArc
         double          _end_angle;
 
     public:
-        vcl_vector<BiArcParams> bi_arc_params;
+        std::vector<BiArcParams> bi_arc_params;
 
         BiArc()
           {
@@ -116,7 +116,7 @@ class BiArc
             bi_arc_params.clear();
            }
 
-        const vcl_vector<BiArcParams> &get_bi_arc_params();
+        const std::vector<BiArcParams> &get_bi_arc_params();
         int set_start_params(Point2D<double> start_pt, double start_angle);
         int set_end_params(Point2D<double> end_pt, double end_angle);
         
@@ -126,11 +126,11 @@ class BiArc
             set_end_params(end_pt, end_angle);
            }
 
-        int getParams(vcl_vector<BiArcParams> &params);
+        int getParams(std::vector<BiArcParams> &params);
         BiArcParams getParams(void);
    };
 
-vcl_ostream& operator<<(vcl_ostream &os, BiArcParams &params);
+std::ostream& operator<<(std::ostream &os, BiArcParams &params);
 int getSinSign(double angle);
 int getCosSign(double angle);
 

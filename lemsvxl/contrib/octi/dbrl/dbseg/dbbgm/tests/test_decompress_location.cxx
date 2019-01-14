@@ -1,13 +1,13 @@
 #include <testlib/testlib_test.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <dbbgm/bbgm_image_of.h>
 #include <vil/vil_image_view.h>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_random.h>
 #include <dbbgm/bbgm_wavelet_compressor.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbbgm/bbgm_wavelet.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/vis/dbbgm_image_tableau.h>
@@ -25,25 +25,25 @@ static void test_decompress_location(int argc, char* argv[])
 
 {
 	if (argc<2){
-		vcl_cerr<<"no path provided !";
+		std::cerr<<"no path provided !";
 		return;
 	}
 	vul_arg<char*> initPath("-b","Base Path","C:\\");
 	vul_arg_parse(argc,argv);
 	
-	vcl_string basePath=vul_file::dirname(initPath.value_);
-	vcl_string wv_path=basePath+"\\out_wv";
-	vcl_string bg_path=basePath+"\\out_bg";
+	std::string basePath=vul_file::dirname(initPath.value_);
+	std::string wv_path=basePath+"\\out_wv";
+	std::string bg_path=basePath+"\\out_bg";
 	vul_file::make_directory_path(wv_path.c_str());
 	vul_file::make_directory_path(bg_path.c_str());
 	bbgm_wavelet_compressor* BWC = new bbgm_wavelet_compressor(argc,argv);
 	
 	
 	//BWC->wavelet_decomposition_full(2,2);
-	//BWC->saveWaveletVector(wv_path,vcl_string("wv_"),vcl_string("tiff"));
+	//BWC->saveWaveletVector(wv_path,std::string("wv_"),std::string("tiff"));
 	
 	//vil_save(im2->spatialDomain(),(wv_path+"\\LL_TRUE.tiff").c_str());
-	//BWC->saveWaveletVector(wv_path,vcl_string("img_"),vcl_string("tiff")); */
+	//BWC->saveWaveletVector(wv_path,std::string("img_"),std::string("tiff")); */
 	int level=3;
 	bbgm_wavelet<vil_image_view <float> > im=BWC->wavelet_decompositionAt(level,10,0);
 	//vil_image_view <float> imLL1=im.getSubband(LL,3);
@@ -66,7 +66,7 @@ static void test_decompress_location(int argc, char* argv[])
 		{
 		  im.decompressLocation(i,j,tmp);
 		  output(ii,jj)=tmp;
-		  vcl_cout<<tmp<<" and the actual location "<<(BWC->spatialAt(0))(i,j)<<vcl_endl; 
+		  std::cout<<tmp<<" and the actual location "<<(BWC->spatialAt(0))(i,j)<<std::endl; 
 		}
 			
 	//BWC->loadModel(bg_path+"\\bgmodel.mdl",true);
@@ -77,7 +77,7 @@ static void test_decompress_location(int argc, char* argv[])
 	char** my_argv = new char*[1];
 	my_argv[0] = new char[13];
 	char* temp = my_argv[0];
-	vcl_strcpy(my_argv[0], "--mfc-use-gl");
+	std::strcpy(my_argv[0], "--mfc-use-gl");
 	 
 	int argcc=1;
    // Initialize the toolkit.

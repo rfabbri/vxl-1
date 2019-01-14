@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   dbvrl_region_displayer(){}
 
   //: Return type string "dbvrl"
-  virtual vcl_string type() const { return "bvrl"; }
+  virtual std::string type() const { return "bvrl"; }
 
   //: Create a tableau if the storage object is of type "dbvrl"
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

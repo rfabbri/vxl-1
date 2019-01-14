@@ -1,9 +1,9 @@
 //this is /contrib/bm/dsm/dsm_histogram.h
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_iostream.h>
-#include<vcl_map.h>
-#include<vcl_utility.h>
+#include<iostream>
+#include<map>
+#include<utility>
 
 //struct dsm_binary_tree_node
 //{

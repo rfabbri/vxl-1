@@ -13,11 +13,11 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
-#include <vcl_vector.h>
+#include <cassert>
+#include <string>
+#include <iostream>
+#include <limits>
+#include <vector>
 #include <vnl/vnl_vector_fixed.h>
 
 #include <bxml/bxml_write.h>
@@ -29,14 +29,14 @@ template <unsigned dim>
 class dbcll_euclidean_cluster_light; 
 
 template<unsigned dim> 
-void dbcll_xml_read(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+void dbcll_xml_read(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
                     const vnl_vector_fixed<double, dim> &common_mean,
-                    vcl_string xml_file);
+                    std::string xml_file);
 
 template <unsigned dim>
-void dbcll_xml_read_and_init(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
-                    vcl_vector<vnl_vector_fixed<double, dim> > const &means,
-                    vcl_string xml_file);
+void dbcll_xml_read_and_init(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+                    std::vector<vnl_vector_fixed<double, dim> > const &means,
+                    std::string xml_file);
 
 
 //#define DEBUG_BOF
@@ -90,7 +90,7 @@ public:
     double t = n+m;
     
 #ifdef DEBUG_BOF
-    vcl_cout <<" Merging Clusters: \n Mean1: " << this->mean_ << " ,Mean2: " << c2.mean_ 
+    std::cout <<" Merging Clusters: \n Mean1: " << this->mean_ << " ,Mean2: " << c2.mean_ 
     << " \n Var1: " << this->var_ << " ,Mean2: " << c2.var_ 
     << " \n Size1: " << this->size_ << " ,Size2: " << c2.size_ <<  "\n";
 #endif
@@ -103,20 +103,20 @@ public:
     this->size_ = t;
     
 #ifdef DEBUG_BOF
-    vcl_cout <<" Merging Clusters: \n Total mean: " << this->mean_ 
+    std::cout <<" Merging Clusters: \n Total mean: " << this->mean_ 
     << " \n Total var: " << this->var_  << " \n Total Size: " << this->size_ << "\n";
 #endif
 
     
   }
   
-  friend void dbcll_xml_read<dim>(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+  friend void dbcll_xml_read<dim>(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
                                   const vnl_vector_fixed<double, dim> &common_mean,
-                                  vcl_string xml_file);
+                                  std::string xml_file);
   
-  friend void dbcll_xml_read_and_init<dim>(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
-                                  vcl_vector<vnl_vector_fixed<double, dim> > const &means,
-                                  vcl_string xml_file);
+  friend void dbcll_xml_read_and_init<dim>(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+                                  std::vector<vnl_vector_fixed<double, dim> > const &means,
+                                  std::string xml_file);
   
 
 protected:
@@ -128,22 +128,22 @@ protected:
 
 //: Generate a vector of Eucleadian clusters from points, means and cluster_indeces
 template <unsigned dim>
-void dbcll_init_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                   const vcl_vector<vcl_vector<unsigned> >& clusters,
-                                   const vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                                   vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
+void dbcll_init_euclidean_clusters(const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                   const std::vector<std::vector<unsigned> >& clusters,
+                                   const std::vector<vnl_vector_fixed<double,dim> >& means,
+                                   std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
 {
   
 #ifdef DEBUG
-  vcl_cout << "Means size(): " << means.size() << "\n";
-  vcl_cout << "Points size(): " << points.size() << "\n";
-  vcl_cout << "Clusters size(): " << clusters.size() << "\n";
+  std::cout << "Means size(): " << means.size() << "\n";
+  std::cout << "Points size(): " << points.size() << "\n";
+  std::cout << "Clusters size(): " << clusters.size() << "\n";
 #endif
   
   for(unsigned mi=0; mi<means.size(); ++mi){
     double var = 0.0;
     vnl_vector_fixed<double,dim> mean = means[mi];
-    vcl_vector<unsigned> cluster_idxs = clusters[mi];
+    std::vector<unsigned> cluster_idxs = clusters[mi];
     
     for(unsigned ci = 0; ci < cluster_idxs.size(); ci++)
       var += vnl_vector_ssd(mean, points[cluster_idxs[ci]]);
@@ -158,7 +158,7 @@ void dbcll_init_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,dim>
 namespace {
   
   inline double cluster_distance(unsigned i, unsigned j,
-                                 const vcl_vector<vcl_vector<double> >& dcs)
+                                 const std::vector<std::vector<double> >& dcs)
   {
     if(i==j) return 0.0;
     if(i>j)  return dcs[i][j];
@@ -171,9 +171,9 @@ namespace {
 //: Compute a vector of Eucleadian clusters from points and means. Return the euclidean clusters
 //  This function does not modify the centers. It just associates a point to the mean with the smallest sse
 template <unsigned dim>
-void dbcll_compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                      const vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                                      vcl_vector<dbcll_euclidean_cluster_light<dim> > &clusters_out)
+void dbcll_compute_euclidean_clusters(const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                      const std::vector<vnl_vector_fixed<double,dim> >& means,
+                                      std::vector<dbcll_euclidean_cluster_light<dim> > &clusters_out)
 {
   /////////////////////
   //Compute Clusters///
@@ -182,7 +182,7 @@ void dbcll_compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,d
   typedef vnl_vector_fixed<double,dim> vector;
   
 #ifdef DEBUG_BOF
-  vcl_cout << "Number of points: " << points.size() << "\n";
+  std::cout << "Number of points: " << points.size() << "\n";
 #endif
   
   if(means.empty())
@@ -190,34 +190,34 @@ void dbcll_compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,d
   
   const unsigned k = means.size();
   
-  vcl_vector<unsigned long > sizes;
+  std::vector<unsigned long > sizes;
   sizes.clear();
   sizes.resize(k,0);
   
   // the distances between each pair of means
-  vcl_vector<vcl_vector<double> > dcs(k);
+  std::vector<std::vector<double> > dcs(k);
   // compute center distances
   for(unsigned i=0; i<k; ++i)
     for(unsigned j=0; j<i; ++j)
-      dcs[i].push_back(vcl_sqrt(vnl_vector_ssd(means[i],means[j])));
+      dcs[i].push_back(std::sqrt(vnl_vector_ssd(means[i],means[j])));
   
   // a vector of minimum distance between between each mean and other means
   // (divided by 2)
-  vcl_vector<double> sc(k,vcl_numeric_limits<double>::infinity());
+  std::vector<double> sc(k,std::numeric_limits<double>::infinity());
   
   //a vector to hold sum of squeare errors for each cluster
-  vcl_vector<double> sse(k, 0.0);
+  std::vector<double> sse(k, 0.0);
   
   // initialize the clusters
   for(unsigned pi=0; pi<points.size(); ++pi){
     const vector& point = points[pi];
     unsigned best_mean = 0;
-    double  best_dist = vcl_numeric_limits<double>::infinity();
+    double  best_dist = std::numeric_limits<double>::infinity();
     for(unsigned mi=0; mi<k; ++mi){
       //triangle inequality to avoid redundant distance calculations
       if(cluster_distance(mi,best_mean,dcs) > 2*best_dist)
         continue;
-      double dist = vcl_sqrt(vnl_vector_ssd(point,means[mi]));
+      double dist = std::sqrt(vnl_vector_ssd(point,means[mi]));
       if(dist < best_dist){
         best_dist = dist;
         best_mean = mi;
@@ -241,7 +241,7 @@ void dbcll_compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,d
   }
   
 #ifdef DEBUG_BOF
-  vcl_cout << "Size of clusters: " << total_size<< "\n";
+  std::cout << "Size of clusters: " << total_size<< "\n";
 #endif
   return;
   
@@ -249,7 +249,7 @@ void dbcll_compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,d
 
 //: Write a vector of clusters to xml_file. The indeces and means are not saves because they may be large vectors
 template <unsigned dim>
-void dbcll_xml_write(const vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, vcl_string xml_file)
+void dbcll_xml_write(const std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, std::string xml_file)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element("dbcll_clusters");
@@ -287,7 +287,7 @@ void dbcll_xml_write(const vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_
   root->append_text("\n");
   
   //write to disk  
-  vcl_ofstream os(xml_file.c_str());
+  std::ofstream os(xml_file.c_str());
   os.precision(15);
   bxml_write(os, doc);
   os.close();  
@@ -298,13 +298,13 @@ void dbcll_xml_write(const vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_
 
 //: Read a vector of clusters to xml_file and a vector of means
 template <unsigned dim>
-void dbcll_xml_read_and_init(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
-                    vcl_vector<vnl_vector_fixed<double, dim> > const &means,
-                    vcl_string xml_file)
+void dbcll_xml_read_and_init(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+                    std::vector<vnl_vector_fixed<double, dim> > const &means,
+                    std::string xml_file)
 {
-  vcl_ifstream ifs(xml_file.c_str());
+  std::ifstream ifs(xml_file.c_str());
   if(!ifs.is_open()){
-    vcl_cerr << "Error: Could not open file: " << xml_file <<  "\n";
+    std::cerr << "Error: Could not open file: " << xml_file <<  "\n";
     return;
   }
   
@@ -312,19 +312,19 @@ void dbcll_xml_read_and_init(vcl_vector<dbcll_euclidean_cluster_light<dim> > &al
   bxml_element query("dbcll_clusters");
   bxml_data_sptr root = bxml_find_by_name(doc.root_element(), query);
   if (!root) {
-    vcl_cerr << "Error: bof_info - could not parse xml root\n";
+    std::cerr << "Error: bof_info - could not parse xml root\n";
     return;
   }
   
   bxml_element cluster_query("cluster");
-  vcl_vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
+  std::vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
   
   
   unsigned nclusters = clusters_data.size();
   all_clusters.clear();
   all_clusters.resize(nclusters);
   
-  //vcl_cout<< "Number of clusters: " << nclusters << "\n";
+  //std::cout<< "Number of clusters: " << nclusters << "\n";
   
   for (unsigned ci = 0; ci < nclusters; ci++) {
     bxml_element* cluster_elm = dynamic_cast<bxml_element*>(clusters_data[ci].ptr());
@@ -354,13 +354,13 @@ void dbcll_xml_read_and_init(vcl_vector<dbcll_euclidean_cluster_light<dim> > &al
 
 //: Read a vector of clusters to xml_file. Use a dummy mean
 template <unsigned dim>
-void dbcll_xml_read(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
+void dbcll_xml_read(std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters, 
                     const vnl_vector_fixed<double, dim> &common_mean,
-                    vcl_string xml_file)
+                    std::string xml_file)
 {
-  vcl_ifstream ifs(xml_file.c_str());
+  std::ifstream ifs(xml_file.c_str());
   if(!ifs.is_open()){
-    vcl_cerr << "Error: Could not open file: " << xml_file <<  "\n";
+    std::cerr << "Error: Could not open file: " << xml_file <<  "\n";
     return;
   }
   
@@ -368,19 +368,19 @@ void dbcll_xml_read(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_cluster
   bxml_element query("dbcll_clusters");
   bxml_data_sptr root = bxml_find_by_name(doc.root_element(), query);
   if (!root) {
-    vcl_cerr << "Error: bof_info - could not parse xml root\n";
+    std::cerr << "Error: bof_info - could not parse xml root\n";
     return;
   }
   
   bxml_element cluster_query("cluster");
-  vcl_vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
+  std::vector<bxml_data_sptr> clusters_data = bxml_find_all_with_name(root, cluster_query);
   
   
   unsigned nclusters = clusters_data.size();
   all_clusters.clear();
   all_clusters.resize(nclusters);
   
-   //vcl_cout<< "Number of clusters: " << nclusters << "\n";
+   //std::cout<< "Number of clusters: " << nclusters << "\n";
   
   for (unsigned ci = 0; ci < nclusters; ci++) {
     bxml_element* cluster_elm = dynamic_cast<bxml_element*>(clusters_data[ci].ptr());
@@ -411,7 +411,7 @@ void dbcll_xml_read(vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_cluster
 
 
 //: Write a basic cluster info to xml_file. The indeces and means are not saves because they may be large vectors
-void dbcll_xml_write(const vcl_vector<unsigned> &sizes, const vcl_vector<double> sse_vector, vcl_string xml_file);
+void dbcll_xml_write(const std::vector<unsigned> &sizes, const std::vector<double> sse_vector, std::string xml_file);
 
 
 #endif

@@ -17,13 +17,13 @@
 //                   So I've switched to maps instead.
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
+#include <vector>
+#include <list>
+#include <set>
 #include "dbdet_edgel.h"
 #include <dbdet/edge/dbdet_edgemap.h>
 #include "dbdet_CFTG.h"
-#include <vcl_map.h>
+#include <map>
 
 
 //: This class represents the curve fragment graph formed from the edgels
@@ -31,23 +31,23 @@
 class dbdet_curve_fragment_graph
 {
 public:
-  vcl_vector<dbdet_edgel_chain_list> cFrags; ///< child curve fragments
-  vcl_vector<dbdet_edgel_chain_list> pFrags; ///< parent curve fragments
+  std::vector<dbdet_edgel_chain_list> cFrags; ///< child curve fragments
+  std::vector<dbdet_edgel_chain_list> pFrags; ///< parent curve fragments
 
   dbdet_edgel_chain_list frags; ///< redundant single list of all fragments
   
-  vcl_vector<dbdet_edgel_chain_list> HypFrags; ///< hypothesis curve fragments attached to each edge
-  vcl_map<int, vcl_vector<dbdet_edgel*> > best_paths; ///< the best path from hypothesis tree rooted as each end point
-  vcl_map<int, vcl_vector<dbdet_edgel*> > best_free_end_paths; ///< the best path from hypothesis tree rooted as each end point
-  vcl_vector<dbdet_edgel*> end_points; ///< list end_points
-  //vcl_vector<int> end_points_flag; ///< flag of used end_points
-  vcl_vector<int> edgels_having_attached_paths; //flag of edges that have attached paths
-  vcl_vector<int> junction_edgels;   //flag of junction edgels
+  std::vector<dbdet_edgel_chain_list> HypFrags; ///< hypothesis curve fragments attached to each edge
+  std::map<int, std::vector<dbdet_edgel*> > best_paths; ///< the best path from hypothesis tree rooted as each end point
+  std::map<int, std::vector<dbdet_edgel*> > best_free_end_paths; ///< the best path from hypothesis tree rooted as each end point
+  std::vector<dbdet_edgel*> end_points; ///< list end_points
+  //std::vector<int> end_points_flag; ///< flag of used end_points
+  std::vector<int> edgels_having_attached_paths; //flag of edges that have attached paths
+  std::vector<int> junction_edgels;   //flag of junction edgels
 
   //this is a hack (need to move this out of here into the storage class)
   dbdet_CFTG CFTG; ///< The Curve Fragment Topology Graph (CFTG) 
 
-  vcl_set<int> participate_edge_id;  // include edges in unambiguous fragments and edges participate in hypothesis tree;
+  std::set<int> participate_edge_id;  // include edges in unambiguous fragments and edges participate in hypothesis tree;
 
   //: constructor
   dbdet_curve_fragment_graph(int size=0): cFrags(size), pFrags(size), HypFrags(size){}

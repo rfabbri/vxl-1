@@ -20,7 +20,7 @@ dbkpr_bbf_match_process::dbkpr_bbf_match_process()
   if( !parameters()->add( "Max bins searched" , "-max_bins"  , (int)50 ) ||
       !parameters()->add( "Max scale" ,         "-max_scale" , 10.0f   ) ||
       !parameters()->add( "Estimate F Matrix" , "-est_F"     , false   ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,7 +40,7 @@ dbkpr_bbf_match_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_bbf_match_process::name()
 {
   return "Match Keypoints";
@@ -64,18 +64,18 @@ dbkpr_bbf_match_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_bbf_match_process::get_input_type()
+std::vector< std::string > dbkpr_bbf_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_bbf_match_process::get_output_type()
+std::vector< std::string > dbkpr_bbf_match_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints" );
   return to_return;
 }
@@ -86,7 +86,7 @@ bool
 dbkpr_bbf_match_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbkpr_bbf_match_process::execute() - not exactly two"
+    std::cout << "In dbkpr_bbf_match_process::execute() - not exactly two"
              << " input keypoint sets \n";
     return false;
   }
@@ -98,8 +98,8 @@ dbkpr_bbf_match_process::execute()
   frame_keypoints2.vertical_cast(input_data_[0][0]);
 
   // get keypoints from the storage classes
-  const vcl_vector< dbdet_keypoint_sptr >& keypoints1 = frame_keypoints1->keypoints();
-  const vcl_vector< dbdet_keypoint_sptr >& keypoints2 = frame_keypoints2->keypoints();
+  const std::vector< dbdet_keypoint_sptr >& keypoints1 = frame_keypoints1->keypoints();
+  const std::vector< dbdet_keypoint_sptr >& keypoints2 = frame_keypoints2->keypoints();
 
 
   int ni1 = frame_keypoints1->ni();
@@ -113,15 +113,15 @@ dbkpr_bbf_match_process::execute()
   parameters()->get_value( "-max_scale" , max_scale_ );
   parameters()->get_value( "-est_F" , est_F );
   // build the BBF search tree
-  vcl_vector<vnl_vector_fixed<double,128> > descriptors(keypoints1.size());
+  std::vector<vnl_vector_fixed<double,128> > descriptors(keypoints1.size());
   for(unsigned int i=0; i<keypoints1.size(); ++i)
     descriptors[i] = keypoints1[i]->descriptor();
   bnld_bbf_tree<double,128> bbf(descriptors);
 
-  vcl_vector< dbdet_keypoint_sptr > matches1, matches2;
+  std::vector< dbdet_keypoint_sptr > matches1, matches2;
   for (unsigned int i=0; i<keypoints2.size(); ++i){
     //find the two closest matches
-    vcl_vector<int> matches;
+    std::vector<int> matches;
     bbf.n_nearest(keypoints2[i]->descriptor(), matches, 2, max_bins);
     // check if the distance to the first is less than 80% of the distance to the second
     if( vnl_vector_ssd(keypoints2[i]->descriptor(),keypoints1[matches[0]]->descriptor()) <
@@ -132,16 +132,16 @@ dbkpr_bbf_match_process::execute()
   }
 
   if(est_F){
-    vcl_vector< vgl_homg_point_2d<double> > pts1, pts2;
+    std::vector< vgl_homg_point_2d<double> > pts1, pts2;
     FMatrixComputeRANSAC fransac(true,0.5);
     for (unsigned int i=0; i<matches1.size(); ++i){
       pts1.push_back(vgl_homg_point_2d<double>(*matches1[i]));
       pts2.push_back(vgl_homg_point_2d<double>(*matches2[i])); 
     }
     FMatrix F = fransac.compute(pts1,pts2);
-    vcl_vector<bool> inliers = fransac.get_inliers();
+    std::vector<bool> inliers = fransac.get_inliers();
 
-    vcl_vector< dbdet_keypoint_sptr > old_matches1(matches1), old_matches2(matches2);
+    std::vector< dbdet_keypoint_sptr > old_matches1(matches1), old_matches2(matches2);
     matches1.clear();
     matches2.clear();
     for (unsigned int i=0; i<inliers.size(); ++i){

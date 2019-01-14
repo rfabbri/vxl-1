@@ -2,7 +2,7 @@
 
 #include "ncn_image_point.h"
 
-vcl_ostream& operator << (vcl_ostream& os, const ncn_image_point& p)
+std::ostream& operator << (std::ostream& os, const ncn_image_point& p)
 {
     os << p.x() << '\t' << p.y();
     return os;

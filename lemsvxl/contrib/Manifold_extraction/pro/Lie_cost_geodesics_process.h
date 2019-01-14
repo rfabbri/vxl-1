@@ -23,10 +23,10 @@
 class Lie_cost_geodesics_process : public bpro1_process 
 {
 protected:
- double compute_lie_cost( vcl_vector<vsol_point_2d_sptr> curve1_samples, vcl_vector<vsol_point_2d_sptr> curve2_samples);
+ double compute_lie_cost( std::vector<vsol_point_2d_sptr> curve1_samples, std::vector<vsol_point_2d_sptr> curve2_samples);
  
- double compute_kimia_cost( vcl_vector<vsol_point_2d_sptr> curve1_samples, vcl_vector<vsol_point_2d_sptr> curve2_samples,
-                                                      vcl_vector<double> tangent_angle_c1,vcl_vector<double> tangent_angle_c2);
+ double compute_kimia_cost( std::vector<vsol_point_2d_sptr> curve1_samples, std::vector<vsol_point_2d_sptr> curve2_samples,
+                                                      std::vector<double> tangent_angle_c1,std::vector<double> tangent_angle_c2);
 
 public:
   Lie_cost_geodesics_process();
@@ -35,20 +35,20 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Lie cost geodesics";
   }
 
   
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "vsol2D" );
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }

@@ -15,9 +15,9 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <vector>
+#include <iostream>
 #include <vgl/vgl_point_2d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
@@ -63,14 +63,14 @@ class dbinfo_feature_base : public vbl_ref_count
   //:abstract base methods that must be implemented on each child
   //:cache the image data for storage and mutual information calculations
   virtual bool scan(const unsigned frame,
-                    vcl_vector<vgl_point_2d<unsigned> > const& points,
-                    vcl_vector<bool> const& valid,
+                    std::vector<vgl_point_2d<unsigned> > const& points,
+                    std::vector<bool> const& valid,
                     vil_image_resource_sptr const& image) {return false;}
 
   //: Reconstruct an image snippet around the feature of size n_i x n_j. Offset the feature points by (i0, j0)
   virtual vil_image_resource_sptr 
-    image(vcl_vector<vgl_point_2d<float> > const& points,
-          vcl_vector<bool> const& valid,
+    image(std::vector<vgl_point_2d<float> > const& points,
+          std::vector<bool> const& valid,
           unsigned n_i, unsigned n_j, float i0, float j0, bool background_noise = true)
     {return 0;}
 
@@ -102,7 +102,7 @@ class dbinfo_feature_base : public vbl_ref_count
   unsigned margin() const {return margin_;}
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const;
+  virtual void print(std::ostream& os = std::cout) const;
 
   //-----------------------
   //:  BINARY I/O METHODS |
@@ -112,10 +112,10 @@ class dbinfo_feature_base : public vbl_ref_count
   virtual unsigned version() const {return 1;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbinfo_feature_base";}
+  virtual std::string is_a() const {return "dbinfo_feature_base";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
     { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -162,13 +162,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_feature_base* &fb)
 }
 #include <dbinfo/dbinfo_feature_base_sptr.h>
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_feature_base const& fb)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_feature_base const& fb)
 {
   fb.print(os);
   return os;
 }
 #if 0
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_feature_base const* fb)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_feature_base const* fb)
 {
   if (fb)
     os << *fb;
@@ -177,7 +177,7 @@ inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_feature_base const* fb)
   return os;
 }
 #endif
-inline void vsl_print_summary(vcl_ostream & os, const dbinfo_feature_base* fbp)
+inline void vsl_print_summary(std::ostream & os, const dbinfo_feature_base* fbp)
 {os << *fbp;}
   
 #endif // dbinfo_feature_base_h_

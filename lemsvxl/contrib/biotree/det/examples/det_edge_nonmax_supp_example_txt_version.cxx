@@ -13,9 +13,9 @@
 // \author  Can Aras (can@lems.brown.edu)
 // \date    2006-01-26
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 
 #include <vsl/vsl_binary_io.h>
 
@@ -40,7 +40,7 @@ const double CYL_LENGTH = 0.1;
 int main(int argc, char *argv[])
 {
   if(argc < 7){
-    vcl_cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin out_file_base out_file_type\n";
+    std::cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin out_file_base out_file_type\n";
     return 1;
   }
 
@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
   char* o_file_base = argv[5];
   char* o_file_type = argv[6];
 
-  if((vcl_strcmp(o_file_type, "bin") != 0) && (vcl_strcmp(o_file_type, "txt") != 0))
+  if((std::strcmp(o_file_type, "bin") != 0) && (std::strcmp(o_file_type, "txt") != 0))
   {
-    vcl_cout << "Unrecognized output file extension" << vcl_endl;
+    std::cout << "Unrecognized output file extension" << std::endl;
     exit(-1);
   }
  
@@ -80,18 +80,18 @@ int main(int argc, char *argv[])
   int dimx2,dimy2,dimz2;
   int dimx3,dimy3,dimz3;
 
-  vcl_string fbase = argv[1];
-  vcl_string fnamex = fbase + "_x.txt";
-  vcl_string fnamey = fbase + "_y.txt";
-  vcl_string fnamez = fbase + "_z.txt";
+  std::string fbase = argv[1];
+  std::string fnamex = fbase + "_x.txt";
+  std::string fnamey = fbase + "_y.txt";
+  std::string fnamez = fbase + "_z.txt";
 
-  FILE *fpx = vcl_fopen(fnamex.c_str(), "r");
-  FILE *fpy = vcl_fopen(fnamey.c_str(), "r");
-  FILE *fpz = vcl_fopen(fnamez.c_str(), "r");
+  FILE *fpx = std::fopen(fnamex.c_str(), "r");
+  FILE *fpy = std::fopen(fnamey.c_str(), "r");
+  FILE *fpz = std::fopen(fnamez.c_str(), "r");
 
-  vcl_fscanf(fpx, "%d %d %d\n", &dimx1, &dimy1, &dimz1);
-  vcl_fscanf(fpy, "%d %d %d\n", &dimx2, &dimy2, &dimz2);
-  vcl_fscanf(fpz, "%d %d %d\n", &dimx3, &dimy3, &dimz3);
+  std::fscanf(fpx, "%d %d %d\n", &dimx1, &dimy1, &dimz1);
+  std::fscanf(fpy, "%d %d %d\n", &dimx2, &dimy2, &dimz2);
+  std::fscanf(fpz, "%d %d %d\n", &dimx3, &dimy3, &dimz3);
 
   assert(dimx1==dimx2 && dimx2 == dimx3 && 
          dimy1==dimy2 && dimy2 == dimy3 && 
@@ -103,24 +103,24 @@ int main(int argc, char *argv[])
 
   for(int k=0; k<dimz1; k++)
   {
-    vcl_cout << k << vcl_endl;
+    std::cout << k << std::endl;
     for(int j=0; j<dimy1; j++)
     {
       for(int i=0; i<dimx1; i++)
       {
         double resp;
-        vcl_fscanf(fpx, "%lf ", &resp);
+        std::fscanf(fpx, "%lf ", &resp);
         responses_x(i, j, k) = resp;
-        vcl_fscanf(fpy, "%lf ", &resp);
+        std::fscanf(fpy, "%lf ", &resp);
         responses_y(i, j, k) = resp;
-        vcl_fscanf(fpz, "%lf ", &resp);
+        std::fscanf(fpz, "%lf ", &resp);
         responses_z(i, j, k) = resp;
       }
     }
   }
-  vcl_fclose(fpx);
-  vcl_fclose(fpy);
-  vcl_fclose(fpz);
+  std::fclose(fpx);
+  std::fclose(fpy);
+  std::fclose(fpz);
 
   det_edge_map cm(responses_x, responses_y, responses_z);
   cm = cm.nonmaxium_suppression_for_edge_detection();
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
   }
 
   // for visualization below this point
-  vcl_vector<double> field;
+  std::vector<double> field;
   for(int k=0;k<dimz1;k++)
   {
     for(int j=0;j<dimy1;j++)
@@ -172,13 +172,13 @@ int main(int argc, char *argv[])
     }
   }
 
-  if(vcl_strcmp(o_file_type, "bin") == 0)
+  if(std::strcmp(o_file_type, "bin") == 0)
   {
-    vcl_string o_file(o_file_base);
+    std::string o_file(o_file_base);
     o_file = o_file + ".bin";
     // create cylinder and write to binary stream
-    vcl_vector<vsol_cylinder_sptr> cylinders;
-    vcl_vector<double> strengths;
+    std::vector<vsol_cylinder_sptr> cylinders;
+    std::vector<double> strengths;
     vsl_b_ofstream stream(o_file.c_str());
 
     int index = 0;
@@ -191,8 +191,8 @@ int main(int argc, char *argv[])
           double x, y, z;
           if (cm[i][j][k].location_ != vgl_point_3d<double> (0.,0.,0.) && cm[i][j][k].strength_ > (max_intensity/3))
           {
-            vcl_cout << cm[i][j][k].location_ << vcl_endl;
-            vcl_cout << cm[i][j][k].strength_ << vcl_endl;
+            std::cout << cm[i][j][k].location_ << std::endl;
+            std::cout << cm[i][j][k].strength_ << std::endl;
 
             x = i + cm[i][j][k].location_.x();
             y = j + cm[i][j][k].location_.y();
@@ -220,11 +220,11 @@ int main(int argc, char *argv[])
     }
     stream.close();
   }
-  else if(vcl_strcmp(o_file_type, "txt") == 0)
+  else if(std::strcmp(o_file_type, "txt") == 0)
   {
-    vcl_string o_file(o_file_base);
+    std::string o_file(o_file_base);
     o_file = o_file + ".txt";
-    FILE *fp = vcl_fopen(o_file.c_str(), "w");
+    FILE *fp = std::fopen(o_file.c_str(), "w");
 
     int index = 0;
     for(int k=0;k<dimz1;k++)
@@ -236,8 +236,8 @@ int main(int argc, char *argv[])
           double x, y, z;
           if (cm[i][j][k].location_ != vgl_point_3d<double> (0.,0.,0.) && cm[i][j][k].strength_ > (max_intensity/3))
           {
-            vcl_cout << cm[i][j][k].location_ << vcl_endl;
-            vcl_cout << cm[i][j][k].strength_ << vcl_endl;
+            std::cout << cm[i][j][k].location_ << std::endl;
+            std::cout << cm[i][j][k].strength_ << std::endl;
 
             x = i + cm[i][j][k].location_.x();
             y = j + cm[i][j][k].location_.y();
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
         }
       }
     }
-    vcl_fclose(fp);
+    std::fclose(fp);
   }
   //////////////////////////////////////////
 

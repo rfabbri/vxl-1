@@ -30,7 +30,7 @@ dbsksp_save_shock_graph_xml_process()
     this->shock_graph_types_, 0) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,21 +51,21 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_save_shock_graph_xml_process::
+std::string dbsksp_save_shock_graph_xml_process::
 name()
 { 
   return "Save shock graph XML"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_save_shock_graph_xml_process::
+std::vector< std::string > dbsksp_save_shock_graph_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   unsigned int shock_graph_choice = 0;
   this->parameters()->get_value( "-shock_graph_type" , shock_graph_choice);
-  vcl_string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
+  std::string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
 
   if (shock_graph_type == "dbsksp_shock_graph")
   {
@@ -80,10 +80,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_save_shock_graph_xml_process::
+std::vector< std::string > dbsksp_save_shock_graph_xml_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -108,7 +108,7 @@ bool dbsksp_save_shock_graph_xml_process::
 execute()
 {
   if ( this->input_data_.size() != 1 ){
-    vcl_cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
+    std::cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
     return false;
   }
 
@@ -116,7 +116,7 @@ execute()
   // parse process parameters
   unsigned int shock_graph_choice = 0;
   this->parameters()->get_value( "-shock_graph_type" , shock_graph_choice);
-  vcl_string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
+  std::string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
 
   bpro1_filepath xmlfile;
   parameters()->get_value( "-xmlfile" , xmlfile );
@@ -131,11 +131,11 @@ execute()
 
     if (shock_storage->shock_graph() && x_write(xmlfile.path, shock_storage->shock_graph()))
     {
-      vcl_cout << "Saving shock graph XML file succeeded.\n";
+      std::cout << "Saving shock graph XML file succeeded.\n";
     }
     else
     {
-      vcl_cout << "Saving shock graph XML file failed.\n";
+      std::cout << "Saving shock graph XML file failed.\n";
     }
   }
   else if (shock_graph_type == "dbsksp_xshock_graph")
@@ -146,11 +146,11 @@ execute()
 
     if (shock_storage->xgraph() && x_write(xmlfile.path, shock_storage->xgraph()))
     {
-      vcl_cout << "Saving xshock graph XML file succeeded.\n";
+      std::cout << "Saving xshock graph XML file succeeded.\n";
     }
     else
     {
-      vcl_cout << "Saving xshock graph XML file failed.\n";
+      std::cout << "Saving xshock graph XML file failed.\n";
     };
   }
   this->clear_output();

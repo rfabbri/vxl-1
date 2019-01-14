@@ -19,8 +19,8 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 
 #include <vsol/vsol_point_2d.h>
@@ -58,7 +58,7 @@ dbdet_generic_linker_process::dbdet_generic_linker_process()
       
       !parameters()->add( "Output contours as vsol", "-output_vsol", false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -78,7 +78,7 @@ dbdet_generic_linker_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_generic_linker_process::name()
 {
   return "Generic Edge Linker";
@@ -102,9 +102,9 @@ dbdet_generic_linker_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_generic_linker_process::get_input_type()
+std::vector< std::string > dbdet_generic_linker_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map" );
 
   return to_return;
@@ -112,9 +112,9 @@ vcl_vector< vcl_string > dbdet_generic_linker_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_generic_linker_process::get_output_type()
+std::vector< std::string > dbdet_generic_linker_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  
   //get the parameters
   bool output_vsol;
@@ -134,7 +134,7 @@ vcl_vector< vcl_string > dbdet_generic_linker_process::get_output_type()
 bool dbdet_generic_linker_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_generic_linker_process::execute() - not exactly one input \n";
+    std::cout << "In dbdet_generic_linker_process::execute() - not exactly one input \n";
     return false;
   }
   clear_output();
@@ -183,20 +183,20 @@ bool dbdet_generic_linker_process::execute()
     prune_contours(CFG, len_thresh, strength_thresh, contrast_thresh, adap_thresh_fac, d2f_thresh, avg_k_thresh);
 
   double link_time = t.real() / 1000.0;
-  vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+  std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
 
   //output the linked contours as vsol
   if (output_vsol)
   {
     //construct vsol objects from the linked contours
-    vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+    std::vector< vsol_spatial_object_2d_sptr > image_curves;
   
     dbdet_edgel_chain_list_iter f_it = CFG.frags.begin();
     for (; f_it != CFG.frags.end(); f_it++)
     {
       dbdet_edgel_chain* chain = (*f_it);
 
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for (unsigned j=0; j<chain->edgels.size(); j++)
         pts.push_back(new vsol_point_2d(chain->edgels[j]->pt));
       vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);

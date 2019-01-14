@@ -17,7 +17,7 @@
 
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <borld/borld_evaluation.h>
 
 //: This process is for matching extrinsic shock graphs
@@ -27,15 +27,15 @@ public:
   dbskr_detect_shock_patches_process();
   virtual ~dbskr_detect_shock_patches_process() {}
   
-  virtual vcl_string name() {
+  virtual std::string name() {
     return "Detect Shock Patches";
   }
 
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  virtual vcl_vector< vcl_string > get_input_type();
-  virtual vcl_vector< vcl_string > get_output_type();
+  virtual std::vector< std::string > get_input_type();
+  virtual std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

@@ -10,8 +10,8 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <boxm/boxm_scene.h>
 
-#include <vcl_algorithm.h>
-#include <vcl_iterator.h>
+#include <algorithm>
+#include <iterator>
 
 /********************* scene widget *************************/
 //: Constructor - from scene. 
@@ -43,9 +43,9 @@ void dbrec3d_gradient_scene_widget::draw()
       glLineWidth(10.0);
       vnl_float_3 color = (arrow.end_pos_ - arrow.pos_).normalize();
       if(filter_by_dir_ )
-        if((dot_product(color, dir_to_filter_.normalize()) < vcl_cos(vnl_math::pi_over_4) ))
+        if((dot_product(color, dir_to_filter_.normalize()) < std::cos(vnl_math::pi_over_4) ))
           continue;
-      glColor3f(vcl_abs(color[0]), vcl_abs(color[1]), vcl_abs(color[2]));
+      glColor3f(std::abs(color[0]), std::abs(color[1]), std::abs(color[2]));
       QGLViewer::drawArrow(qglviewer::Vec(arrow.pos_[0],arrow.pos_[1], arrow.pos_[2]), qglviewer::Vec(arrow.end_pos_[0],arrow.end_pos_[1], arrow.end_pos_[2]), arrow.length_/10.0);
     }
 }
@@ -56,8 +56,8 @@ void dbrec3d_gradient_scene_widget::draw_fast()
 {
   int value;
   glGetIntegerv(GL_MAX_ELEMENTS_INDICES, &value);
-  unsigned nvertices3d = vcl_floor(scene_data_->hist_.area())*2*3;
-  vcl_cout <<value<< vcl_endl; 
+  unsigned nvertices3d = std::floor(scene_data_->hist_.area())*2*3;
+  std::cout <<value<< std::endl; 
   
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   
@@ -96,7 +96,7 @@ void dbrec3d_gradient_scene_widget::init()
   setSceneBoundingBox(qglviewer::Vec(bbox_.min_x(), bbox_.min_y(), bbox_.min_z()), qglviewer::Vec(bbox_.max_x(), bbox_.max_y(), bbox_.max_z()));
   showEntireScene();
   setAxisIsDrawn();
-  vcl_cout << "Scene Radius: " << sceneRadius() << vcl_endl;
+  std::cout << "Scene Radius: " << sceneRadius() << std::endl;
   
   // Opens help window
   help();
@@ -108,15 +108,15 @@ void dbrec3d_gradient_scene_widget::init()
 void dbrec3d_gradient_scene_widget::init_gradient_lines()
 {
   //allocate the arrays
-  unsigned nvertices3d = vcl_floor(scene_data_->hist_.area())*2*3;
+  unsigned nvertices3d = std::floor(scene_data_->hist_.area())*2*3;
   //vertices_.reserve(nvertices3d);
   //colors_.reserve(nvertices3d);
   
   //iterate throught the scene organizing vertices so that tresholding becomes easier
-  vcl_vector<vcl_vector<float> > binned_vertices;
+  std::vector<std::vector<float> > binned_vertices;
   
   for(unsigned i = 0; i < scene_data_->hist_.nbins(); i++)
-    binned_vertices.push_back(vcl_vector<float>());
+    binned_vertices.push_back(std::vector<float>());
   
   //cast the gradient scene
   typedef vnl_vector_fixed< float,3 > datatype;
@@ -156,8 +156,8 @@ void dbrec3d_gradient_scene_widget::init_gradient_lines()
   //: Now assemble the vertices such that they are orginez by bins - release the memory occuppyed by the temp stl-vectors
   for(unsigned i = 0; i < scene_data_->hist_.nbins(); i++)
   {
-    vcl_copy(binned_vertices[i].begin(),binned_vertices[i].end(),vcl_back_inserter(vertices_));
-    vcl_copy(binned_vertices[i].begin(),binned_vertices[i].end(),vcl_back_inserter(colors_));
+    std::copy(binned_vertices[i].begin(),binned_vertices[i].end(),std::back_inserter(vertices_));
+    std::copy(binned_vertices[i].begin(),binned_vertices[i].end(),std::back_inserter(colors_));
     binned_vertices[i].clear();
   }
   
@@ -167,10 +167,10 @@ void dbrec3d_gradient_scene_widget::init_gradient_lines()
   
   for(unsigned i = 0; i < vertices_.size(); i++)
   {
-    vcl_sqrt(vertices_[i]);
+    std::sqrt(vertices_[i]);
   }
   
-  vcl_cout << " Array is allocated \n" ; 
+  std::cout << " Array is allocated \n" ; 
   
     
 }
@@ -291,9 +291,9 @@ QSize dbrec3d_gradient_scene_widget::sizeHint()const
 
 void dbrec3d_gradient_scene_widget::update_dir_to_filter()
 {
-  float x = vcl_cos((float)azimuth_);
-  float y = vcl_sin((float)azimuth_);
-  float z = vcl_cos((float)polar_);
+  float x = std::cos((float)azimuth_);
+  float y = std::sin((float)azimuth_);
+  float z = std::cos((float)polar_);
   
   dir_to_filter_.put(0,x);
   dir_to_filter_.put(1,y);
@@ -305,7 +305,7 @@ void dbrec3d_gradient_scene_widget::update_dir_to_filter()
 
 void dbrec3d_filter_dir_widget::draw()
 {
-  //vcl_cout << this->camera()->orientation() << vcl_endl;
+  //std::cout << this->camera()->orientation() << std::endl;
   
 //  glColor3f(0, 0, 1);
 //  QGLViewer::drawArrow(qglviewer::Vec(0,0,0), qglviewer::Vec(0,0,1));
@@ -325,20 +325,20 @@ void dbrec3d_filter_dir_widget::init()
   setSceneBoundingBox(qglviewer::Vec(bbox_.min_x(), bbox_.min_y(), bbox_.min_z()), qglviewer::Vec(bbox_.max_x(), bbox_.max_y(), bbox_.max_z()));
   showEntireScene();
   setAxisIsDrawn();
-  vcl_cout << "Scene Radius: " << sceneRadius() << vcl_endl;
+  std::cout << "Scene Radius: " << sceneRadius() << std::endl;
 }
 
 /********************* Points Scene Widget **********************************/
 
-dbrec3d_points_scene_widget::dbrec3d_points_scene_widget(vcl_string file, boxm_scene_base_sptr scene_base)
+dbrec3d_points_scene_widget::dbrec3d_points_scene_widget(std::string file, boxm_scene_base_sptr scene_base)
 {
   init_points(file);
   bbox_ = scene_base->get_world_bbox();
 }
 
-void dbrec3d_points_scene_widget::init_points(vcl_string filename)
+void dbrec3d_points_scene_widget::init_points(std::string filename)
 {
-  vcl_ifstream loc_ifs(filename.c_str());
+  std::ifstream loc_ifs(filename.c_str());
   
   unsigned long i;
   while (!loc_ifs.eof()) {
@@ -350,7 +350,7 @@ void dbrec3d_points_scene_widget::init_points(vcl_string filename)
     }
     i++;
   }
-  vcl_cout << " Out of while loop" <<vcl_endl;
+  std::cout << " Out of while loop" <<std::endl;
 }
 
 void dbrec3d_points_scene_widget::init()
@@ -360,7 +360,7 @@ void dbrec3d_points_scene_widget::init()
   setSceneBoundingBox(qglviewer::Vec(bbox_.min_x(), bbox_.min_y(), bbox_.min_z()), qglviewer::Vec(bbox_.max_x(), bbox_.max_y(), bbox_.max_z()));
   showEntireScene();
   setAxisIsDrawn();
-  vcl_cout << "Scene Radius: " << sceneRadius() << vcl_endl;
+  std::cout << "Scene Radius: " << sceneRadius() << std::endl;
   
   // Opens help window
   help();
@@ -442,7 +442,7 @@ void dbrec3d_id_scene_widget::init()
   setSceneBoundingBox(qglviewer::Vec(bbox_.min_x(), bbox_.min_y(), bbox_.min_z()), qglviewer::Vec(bbox_.max_x(), bbox_.max_y(), bbox_.max_z()));
   showEntireScene();
   setAxisIsDrawn();
-  vcl_cout << "Scene Radius: " << sceneRadius() << vcl_endl;
+  std::cout << "Scene Radius: " << sceneRadius() << std::endl;
   
   // Opens help window
   help();

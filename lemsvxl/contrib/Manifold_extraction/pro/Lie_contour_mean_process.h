@@ -30,9 +30,9 @@ class Lie_contour_mean_process : public bpro1_process
 {
 protected:
 
-  double compute_lie_cost(vcl_vector<vsol_point_2d_sptr> curve1_samples,vcl_vector<vsol_point_2d_sptr> curve2_samples );
-  void angles_scales(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2,
-                     vcl_vector<double> &angles,vcl_vector<double> &scales);
+  double compute_lie_cost(std::vector<vsol_point_2d_sptr> curve1_samples,std::vector<vsol_point_2d_sptr> curve2_samples );
+  void angles_scales(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2,
+                     std::vector<double> &angles,std::vector<double> &scales);
 
 public:
   Lie_contour_mean_process();
@@ -41,17 +41,17 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "lie contour mean";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     // to_return.push_back( "vsol2D" );
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }

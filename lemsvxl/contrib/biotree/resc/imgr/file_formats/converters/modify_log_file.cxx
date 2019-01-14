@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
     #if defined(VCL_WIN32)
 
-    vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+    std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
 
     _setmaxstdio(2048);
 
@@ -25,10 +25,10 @@ int main(int argc, char* argv[])
   vgui_dialog dlg("Load log-file");
   dlg.set_ok_button("LOAD");
   dlg.set_cancel_button("CANCEL");
-  static vcl_string fname = "*.log";
-  static vcl_string scan_file = "*.scn";
-  static vcl_string modified_log_file = "*.log";
-  static vcl_string ext = "*.*";
+  static std::string fname = "*.log";
+  static std::string scan_file = "*.scn";
+  static std::string modified_log_file = "*.log";
+  static std::string ext = "*.*";
   
   dlg.file("logFile name:", ext, fname);
   dlg.file("scan file name:",ext,scan_file);
@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
   {
       vgui::quit();
 
-    vcl_FILE *fp = vcl_fopen(fname.c_str(), "r");
+    std::FILE *fp = std::fopen(fname.c_str(), "r");
    imgr_skyscan_log_header hs(fp);
 
    // reading the scan file 
 
-   vcl_ifstream ifstr(scan_file.c_str());
+   std::ifstream ifstr(scan_file.c_str());
 
     xscan_scan scan;
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
  hs.object_to_source_dist_ = src_rot_dist;
  hs.optical_axis_ = princp_pt.y();
 
- vcl_ofstream ostr(modified_log_file.c_str());
+ std::ofstream ostr(modified_log_file.c_str());
  ostr << hs;
 
       

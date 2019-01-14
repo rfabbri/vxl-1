@@ -17,12 +17,12 @@
 // \endverbatim
 //
 //---------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_1d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 //#include <dbinfo/dbinfo_observation_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
@@ -37,13 +37,13 @@ class dbru_facedb : public vbl_ref_count
 
   // if this constructer is used all the prototypes will be added as a separate object with 
   // labels only containing category
-  //dbru_facedb(vcl_vector<vcl_string> const& classes,
-  //         vcl_vector<vcl_vector<dbinfo_observation_sptr> > const& prototypes
+  //dbru_facedb(std::vector<std::string> const& classes,
+  //         std::vector<std::vector<dbinfo_observation_sptr> > const& prototypes
   //         );
 
   // normally this constructer should be used and objects should be appropriately labeled
   // e.g. via dbru_labeling_tool
-  dbru_facedb(vcl_vector<vcl_vector<vil_image_resource_sptr> > const& faces
+  dbru_facedb(std::vector<std::vector<vil_image_resource_sptr> > const& faces
            );
 
   //: copy constructor
@@ -52,12 +52,12 @@ class dbru_facedb : public vbl_ref_count
   void clear();
 
   // add a set of images from a new subject
-  void add_subject(vcl_vector<vil_image_resource_sptr> subject);
+  void add_subject(std::vector<vil_image_resource_sptr> subject);
   // add a set of images to an existing subject
-  void add_subject(vcl_vector<vil_image_resource_sptr> subject, unsigned i);
+  void add_subject(std::vector<vil_image_resource_sptr> subject, unsigned i);
 
   //: get a particular subject
-  vcl_vector<vil_image_resource_sptr>& get_subject(unsigned i);
+  std::vector<vil_image_resource_sptr>& get_subject(unsigned i);
 
   //: get a particular image of a particular subject in facedb
   vil_image_resource_sptr get_face(unsigned i, unsigned j);
@@ -68,7 +68,7 @@ class dbru_facedb : public vbl_ref_count
   //:total number of faces from all subjects
   //unsigned n_faces() const { return facedb_.size(); }
 
-  void print(vcl_ostream& os = vcl_cout) const;
+  void print(std::ostream& os = std::cout) const;
 
   //-----------------------
   //:  BINARY I/O METHODS |
@@ -78,10 +78,10 @@ class dbru_facedb : public vbl_ref_count
   virtual unsigned version() const {return 1;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbru_object_signature_library";}
+  virtual std::string is_a() const {return "dbru_object_signature_library";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
     { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -92,8 +92,8 @@ class dbru_facedb : public vbl_ref_count
 
  private:
   // main data structure that holds the prototypes
-  vcl_vector<vcl_vector<vil_image_resource_sptr> > facedb_;
-  //vcl_vector<dbru_object_sptr>* facedb_;
+  std::vector<std::vector<vil_image_resource_sptr> > facedb_;
+  //std::vector<dbru_object_sptr>* facedb_;
 
 };
 
@@ -122,13 +122,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbru_facedb* &facedb)
   vsl_b_read(is, *facedb);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbru_facedb const& facedb)
+inline std::ostream &operator<<(std::ostream &os, dbru_facedb const& facedb)
 {
   facedb.print(os);
   return os;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, dbru_facedb const*  facedb)
+inline void vsl_print_summary(std::ostream& os, dbru_facedb const*  facedb)
 {os << facedb;}
 
 

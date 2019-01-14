@@ -5,9 +5,9 @@
 
 #include<dsm/dsm_ncn_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //process which takes a dsm_ncn_sptr and writes its neighborhood as an mfile.
 
@@ -23,9 +23,9 @@ bool dsm_write_neighborhood_mfile_process_cons(bprb_func_process& pro)
 	//set input/output types
 	using namespace dsm_write_neighborhood_mfile_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 	unsigned i = 0;
-	input_types_[i++] = "vcl_string";
+	input_types_[i++] = vcl_string";
 	input_types_[i++] = "dsm_ncn_sptr";
 
 	if(!pro.set_input_types(input_types_))
@@ -40,13 +40,13 @@ bool dsm_write_neighborhood_mfile_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cerr << pro.name() << "dsm_write_neighborhood_mfile_process: The input number should be: " << n_inputs_ << vcl_flush;
+		std::cerr << pro.name() << "dsm_write_neighborhood_mfile_process: The input number should be: " << n_inputs_ << std::flush;
 		return false;
 	}
 
 	//get intputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 	dsm_ncn_sptr ncn_sptr = pro.get_input<dsm_ncn_sptr>(i++);
 
 	return ncn_sptr->write_neighborhood_mfile(filename);

@@ -1,6 +1,6 @@
 
 // aerial_vehicle_segmentation.cpp : Defines the entry point for the DLL application.
-#include<vcl_cstdio.h>
+#include<cstdio>
 //#include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 //#include <vidpro1/storage/vidpro1_image_storage.h>
 
@@ -39,10 +39,10 @@
 #include <vil/vil_new.h>
 //#include <brip/brip_vil_float_ops.h>
 #include <vil/vil_convert.h>
-//vcl_vector<vgl_point_2d<double> > meanpts;
+//std::vector<vgl_point_2d<double> > meanpts;
 
 #if HAS_DSHOW
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vil/vil_flip.h>
 #include <vil/vil_decimate.h>
 #include <vil/algo/vil_gauss_filter.h>
@@ -74,23 +74,23 @@ bool combine_osls(unsigned int out_handle, unsigned int handle1, unsigned int ha
   vbl_array_1d<dbru_object_sptr> *osl1 = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle1);  
   vbl_array_1d<dbru_object_sptr> *osl2 = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle2);  
 
-  vcl_cout << "out osl initial size: " << out_osl->size() << " (should be zero)\n";
+  std::cout << "out osl initial size: " << out_osl->size() << " (should be zero)\n";
   for (unsigned int i = 0; i<osl1->size(); i++) {
     out_osl->push_back((*osl1)[i]);
   }
-  vcl_cout << "added: " << osl1->size() << " obs from osl1\n";
+  std::cout << "added: " << osl1->size() << " obs from osl1\n";
   
   for (unsigned int i = 0; i<osl2->size(); i++) {
     out_osl->push_back((*osl2)[i]);
   }
-  vcl_cout << "added: " << osl2->size() << " obs from osl2\n";
+  std::cout << "added: " << osl2->size() << " obs from osl2\n";
 
   return true;
 }
 
 unsigned int load_osl(const char *osl_file_name) 
 {
-  vcl_cout << "loading osl: " << osl_file_name << " ...";
+  std::cout << "loading osl: " << osl_file_name << " ...";
   vbl_array_1d<dbru_object_sptr> *osl = new vbl_array_1d<dbru_object_sptr>();
   vsl_b_ifstream obfile(osl_file_name);
   unsigned int size;
@@ -100,18 +100,18 @@ unsigned int load_osl(const char *osl_file_name)
     obj->b_read(obfile);
     osl->push_back(obj);
   }
-  vcl_cout << " Done!\n";
+  std::cout << " Done!\n";
 
   obfile.close();
-  vcl_cout << osl->size() << " objects and observations are read from binary input file\n";
+  std::cout << osl->size() << " objects and observations are read from binary input file\n";
   return reinterpret_cast<unsigned int>(osl);
 }
 
 bool write_osl(unsigned int handle, const char *osl_file_name) {
   
-  vcl_cout << "writing osl ";
+  std::cout << "writing osl ";
   vbl_array_1d<dbru_object_sptr> *osl_objects = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
-  vcl_cout << "size: " << osl_objects->size();
+  std::cout << "size: " << osl_objects->size();
   
   if (osl_objects->size() > 0) {
     //vsl_add_to_binary_loader(dbru_object);
@@ -121,10 +121,10 @@ bool write_osl(unsigned int handle, const char *osl_file_name) {
       (*osl_objects)[i]->b_write(obfile);
     }
     obfile.close();
-    vcl_cout << " objects and observations are written to binary output file\n";
+    std::cout << " objects and observations are written to binary output file\n";
     return true;
   } else {
-    vcl_cout << "No objects to write\n";
+    std::cout << "No objects to write\n";
     return false;
   }
 
@@ -137,24 +137,24 @@ bool write_osl(unsigned int handle, const char *osl_file_name) {
 bool extract_observations(unsigned int handle, const char *video_file_name, const char *output_dir, int factor, float sigma) {
 
   vbl_array_1d<dbru_object_sptr> *osl = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
-  vcl_cout << "osl size: " << osl->size() << vcl_endl;
+  std::cout << "osl size: " << osl->size() << std::endl;
 
-  vcl_cout << "CAUTION: Assuming all the objects in the osl file are coming from the same video stream!\n";
-  vcl_cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
+  std::cout << "CAUTION: Assuming all the objects in the osl file are coming from the same video stream!\n";
+  std::cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
 
   vidl_dshow_file_istream vs(video_file_name);
   if (vs.is_open() && vs.is_seekable()) {
-    vcl_cout << "Stream is opened ok!\n";
+    std::cout << "Stream is opened ok!\n";
   } else {
-    vcl_cout << "Problems in opening video stream or it is not seekable! Quitting!\n";
+    std::cout << "Problems in opening video stream or it is not seekable! Quitting!\n";
     return false;
   }
 
   // correlate frame numbers with obj number and polygon number
   
   // assume max frame number is 100000
-  vcl_vector<vcl_pair<int, int> > tmp;
-  vbl_array_1d< vcl_vector<vcl_pair<int, int> > > frame_to_ids(100000, tmp);
+  std::vector<std::pair<int, int> > tmp;
+  vbl_array_1d< std::vector<std::pair<int, int> > > frame_to_ids(100000, tmp);
 
   int max_frame = 0;
   for (unsigned i = 0; i<osl->size(); i++) {
@@ -172,29 +172,29 @@ bool extract_observations(unsigned int handle, const char *video_file_name, cons
       
       //: add this frame number into the map for this object
       if (real_j < 0 || real_j >= 100000) {
-        vcl_cout << "frame number is not withing our 100,000 limit or negative, quitting!\n";
+        std::cout << "frame number is not withing our 100,000 limit or negative, quitting!\n";
         return false;
       }
 
       if (max_frame < real_j) 
         max_frame = real_j;
 
-      (frame_to_ids[real_j]).push_back(vcl_pair<int, int> (i, j));    
-      vcl_cout << "adding frame: " << real_j << " obj id: " << i << " poly id: " << j << vcl_endl;
+      (frame_to_ids[real_j]).push_back(std::pair<int, int> (i, j));    
+      std::cout << "adding frame: " << real_j << " obj id: " << i << " poly id: " << j << std::endl;
     }
   }
 
-  vcl_cout << "MAX FRAME is: " << max_frame << vcl_endl;
+  std::cout << "MAX FRAME is: " << max_frame << std::endl;
 
   // now load the video from min_frame to max_frame
   
-  //vcl_map<int, vcl_pair<unsigned int, unsigned int> >::iterator iter = frame_to_ids.begin();
+  //std::map<int, std::pair<unsigned int, unsigned int> >::iterator iter = frame_to_ids.begin();
   int current_frame_no = 0;
   while (frame_to_ids[current_frame_no].size() == 0) 
     current_frame_no++;
 
-  vcl_cout << "seeking to frame number: " << current_frame_no << "... ";
-  vs.seek_frame(current_frame_no);  vcl_cout << "Done!\n";
+  std::cout << "seeking to frame number: " << current_frame_no << "... ";
+  vs.seek_frame(current_frame_no);  std::cout << "Done!\n";
 
   int height, width;
   vidl_frame_sptr frame = vs.current_frame();
@@ -202,42 +202,42 @@ bool extract_observations(unsigned int handle, const char *video_file_name, cons
   if (frame) {
    height = frame->nj();
    width = frame->ni();
-   vcl_cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
+   std::cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
  
-   vcl_cout << " processing frame... ";
+   std::cout << " processing frame... ";
    vil_image_view<vxl_byte> img, img_ud;
    vil_image_view<float> dummy, dummy2, dummy3(height/factor, width/factor), dummy4;
    vidl_convert_to_view_rgb(frame,img);
    img_ud = vil_flip_ud(img);
    vil_convert_planes_to_grey(img_ud, dummy4);  //brip_vil_float_ops::convert_to_float(img_ud);
-   vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(vcl_floor(3*sigma+0.5)));
+   vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(std::floor(3*sigma+0.5)));
    dummy2 = vil_decimate(dummy, factor, factor);
    dummy3.deep_copy(dummy2);
    imgr = vil_new_image_resource_of_view(dummy3);
-   vcl_cout << " Done!\n";
+   std::cout << " Done!\n";
 
 
    } else {
-    vcl_cout << "could not read frame!\nQuitting\n";
+    std::cout << "could not read frame!\nQuitting\n";
     return false;
   }
 
   for(int kk = current_frame_no; kk <= max_frame; )
   {
     for (unsigned jj = 0; jj < frame_to_ids[kk].size(); jj++) {
-      vcl_pair<int, int> id_pair = frame_to_ids[kk][jj];
-      vcl_cout << "extracting obj id: " << id_pair.first << " poly id: " << id_pair.second << vcl_endl;
+      std::pair<int, int> id_pair = frame_to_ids[kk][jj];
+      std::cout << "extracting obj id: " << id_pair.first << " poly id: " << id_pair.second << std::endl;
       dbru_object_sptr obj = (*osl)[id_pair.first];
       vsol_polygon_2d_sptr poly = obj->get_polygon(id_pair.second);
       unsigned int s = poly->size();
       if (s == 0) {
-        vcl_cout << "CAUTION: 0 sized polygon, this should not happen!!!!\n";
+        std::cout << "CAUTION: 0 sized polygon, this should not happen!!!!\n";
         return false;
       }
 
       dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly, true, true, false);
       if (!obs->scan(0, imgr)) {
-        vcl_cout << "Could not scan the object!\n";
+        std::cout << "Could not scan the object!\n";
         return false;
       }
       obj->set_observation(id_pair.second, obs);
@@ -246,17 +246,17 @@ bool extract_observations(unsigned int handle, const char *video_file_name, cons
       // output the images
       char buffer[1000];
       
-      vcl_sprintf(buffer, "./%s/image_obj%d-poly%d.png", output_dir, id_pair.first, id_pair.second);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "./%s/image_obj%d-poly%d.png", output_dir, id_pair.first, id_pair.second);
+      std::string filename = buffer;
       poly->compute_bounding_box();
 
-      int w = (int)vcl_floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
-      int h = (int)vcl_floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
+      int w = (int)std::floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
+      int h = (int)std::floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
 
-      int mx = (int)vcl_floor(poly->get_min_x());
-      int my = (int)vcl_floor(poly->get_min_y());
-      int maxx = (int)vcl_ceil(poly->get_max_x());
-      int maxy = (int)vcl_ceil(poly->get_max_y());
+      int mx = (int)std::floor(poly->get_min_x());
+      int my = (int)std::floor(poly->get_min_y());
+      int maxx = (int)std::ceil(poly->get_max_x());
+      int maxy = (int)std::ceil(poly->get_max_y());
 
       dbinfo_region_geometry_sptr geo = obs->geometry();
       vil1_memory_image_of<float> image_out(w,h);
@@ -309,21 +309,21 @@ bool extract_observations(unsigned int handle, const char *video_file_name, cons
     if (frame) {
       height = frame->nj();
       width = frame->ni();
-      vcl_cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
+      std::cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
 
-      vcl_cout << " processing frame... ";
+      std::cout << " processing frame... ";
       vil_image_view<vxl_byte> img, img_ud;
       vil_image_view<float> dummy, dummy2, dummy3(height/factor, width/factor), dummy4;
       vidl_convert_to_view_rgb(frame,img);
       img_ud = vil_flip_ud(img);
       vil_convert_planes_to_grey(img_ud, dummy4);  //brip_vil_float_ops::convert_to_float(img_ud);
-      vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(vcl_floor(3*sigma+0.5)));
+      vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(std::floor(3*sigma+0.5)));
       dummy2 = vil_decimate(dummy, factor, factor);
       dummy3.deep_copy(dummy2);
       imgr = vil_new_image_resource_of_view(dummy3);
-      vcl_cout << " Done!\n";
+      std::cout << " Done!\n";
     } else {
-      vcl_cout << "could not read frame!\nQuitting\n";
+      std::cout << "could not read frame!\nQuitting\n";
       return false;
     }
   }
@@ -336,82 +336,82 @@ bool extract_observations(unsigned int handle, const char *video_file_name, cons
 //  video_list_file_name is <id, directory> pair for each video which have objects in the database
 int createosl(unsigned int handle, const char *object_list_filename, const char *video_file_name, const char *osl_file_name, int factor, float sigma) 
 { 
-  //vcl_ofstream ofile("temp.txt");
-  //vcl_string home("/projects/vorl1/");
-  //vcl_string home("d:/lockheed_videos/");
-  vcl_cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
-  vcl_cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
+  //std::ofstream ofile("temp.txt");
+  //std::string home("/projects/vorl1/");
+  //std::string home("d:/lockheed_videos/");
+  std::cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
+  std::cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
 
   vidl_dshow_file_istream vs(video_file_name);
   if (vs.is_open() && vs.is_seekable()) {
-    vcl_cout << "Stream is opened ok!\n";
+    std::cout << "Stream is opened ok!\n";
   } else {
-    vcl_cout << "Problems in opening video stream or it is not seekable! Quitting!\n";
+    std::cout << "Problems in opening video stream or it is not seekable! Quitting!\n";
     return 0;
   }
   
   vbl_array_1d<dbru_object_sptr> *osl_objects = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
   osl_objects->clear();
-  vcl_cout << "initial database size should be zero: " << osl_objects->size() << vcl_endl;
+  std::cout << "initial database size should be zero: " << osl_objects->size() << std::endl;
   
-  vcl_string output_dir = osl_file_name;
+  std::string output_dir = osl_file_name;
   output_dir = output_dir.substr(0, output_dir.length()-4);
-  vcl_cout << "will output images into the directory: " << output_dir << " , please create this directory under the current dir\n";
+  std::cout << "will output images into the directory: " << output_dir << " , please create this directory under the current dir\n";
 
-  vcl_cout << "reading objects...\n";
-  vcl_ifstream dbfp(object_list_filename);
+  std::cout << "reading objects...\n";
+  std::ifstream dbfp(object_list_filename);
   if (!dbfp) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return -1;
   }
 
   // first determine the number of objects in the file\n";
   char buffer[1000]; 
-  vcl_string line;
+  std::string line;
 
   int size = 0;
   // found the first object
-  vcl_string object_string = "<object";
+  std::string object_string = "<object";
   while (!dbfp.eof()) {
-    vcl_string dummy;
+    std::string dummy;
     //dbfp.getline(buffer, 1000);
     dbfp >> dummy;
     //line = buffer;
-    //vcl_cout << "line: " << line << vcl_endl;
-    //vcl_cout << "dummy: " <<dummy << vcl_endl;
+    //std::cout << "line: " << line << std::endl;
+    //std::cout << "dummy: " <<dummy << std::endl;
     //pos1 = line.find("<object", 0);
-    //if (pos1 != vcl_string::npos)
+    //if (pos1 != std::string::npos)
     if (dummy == object_string) 
       size++;
   }
   dbfp.close();
-  vcl_cout << "Found " << size << " objects in the xml file\n";
+  std::cout << "Found " << size << " objects in the xml file\n";
   if (!size) {
-    vcl_cout << "objects file do not contain any objects! Quitting!\n";
+    std::cout << "objects file do not contain any objects! Quitting!\n";
     return -1;
   }
 
-  vcl_ifstream dbfp2(object_list_filename);
+  std::ifstream dbfp2(object_list_filename);
   if (!dbfp2) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return -1;
   }
 
   dbfp2.getline(buffer, 1000);  // comment 
   
   for (int i = 0; i<size; i++) {
-    vcl_cout << "reading object: " << i << "...\n";
+    std::cout << "reading object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp2)) { 
-      vcl_cout << "problems in reading object number: " << i << vcl_endl;
+      std::cout << "problems in reading object number: " << i << std::endl;
       return 0;
     }
     
-    vcl_cout << "read: " << (*obj) << "extracting observations assuming 1 polygon per frame" << vcl_endl;
+    std::cout << "read: " << (*obj) << "extracting observations assuming 1 polygon per frame" << std::endl;
     
-    vcl_cout << "seeking to frame number: " << obj->start_frame_-1 << "... ";
+    std::cout << "seeking to frame number: " << obj->start_frame_-1 << "... ";
     vs.seek_frame(obj->start_frame_-1);
-    vcl_cout << "Done!\n";
+    std::cout << "Done!\n";
     for (int j = obj->start_frame_; j<=obj->end_frame_; j++) {
       vsol_polygon_2d_sptr poly = obj->get_polygon(j-obj->start_frame_);
       int s = poly->size();
@@ -426,9 +426,9 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
       if (frame) {
         height = frame->nj();
         width = frame->ni();
-        vcl_cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
+        std::cout << "orig frame number: " << vs.frame_number() << " width (ni): " << width << " height (nj): " << height << " ... ";
       } else {
-        vcl_cout << "could not read frame!\nQuitting\n";
+        std::cout << "could not read frame!\nQuitting\n";
         return 0;
       }
       
@@ -445,21 +445,21 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
       vil_image_view<float> dummy4;
       vil_convert_planes_to_grey(img_ud, dummy4);  //brip_vil_float_ops::convert_to_float(img_ud);
 
-      //vil_gauss_filter_2d(img_ud, dummy, sigma, unsigned(vcl_floor(3*sigma+0.5)));
-      vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(vcl_floor(3*sigma+0.5)));
+      //vil_gauss_filter_2d(img_ud, dummy, sigma, unsigned(std::floor(3*sigma+0.5)));
+      vil_gauss_filter_2d(dummy4, dummy, sigma, unsigned(std::floor(3*sigma+0.5)));
 
       dummy2 = vil_decimate(dummy, factor, factor);
       dummy3.deep_copy(dummy2);
 
-      vcl_cout << "dummy3 ni: " << dummy3.ni() << " nj: " << dummy3.nj() << vcl_endl;
+      std::cout << "dummy3 ni: " << dummy3.ni() << " nj: " << dummy3.nj() << std::endl;
       vil_image_resource_sptr imgr = vil_new_image_resource_of_view(dummy3);
-      vcl_cout << "imgr ni: " << imgr->ni() << " nj: " << imgr->nj() << vcl_endl;
+      std::cout << "imgr ni: " << imgr->ni() << " nj: " << imgr->nj() << std::endl;
       
-      vcl_cout << " IP Done! getting polygon: " << j-obj->start_frame_ << " from obj\n";
+      std::cout << " IP Done! getting polygon: " << j-obj->start_frame_ << " from obj\n";
       
       dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly, true, true, false);
       if (!obs->scan(0, imgr)) {
-        vcl_cout << "Could not scan the object!\n";
+        std::cout << "Could not scan the object!\n";
         return -1;
       }
       obj->add_observation(obs);
@@ -467,17 +467,17 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
       // output the images
       char buffer[1000];
       
-      vcl_sprintf(buffer, "./%s/image_obj%d-poly%d.png",output_dir.c_str(), i, j-obj->start_frame_);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "./%s/image_obj%d-poly%d.png",output_dir.c_str(), i, j-obj->start_frame_);
+      std::string filename = buffer;
       poly->compute_bounding_box();
 
-      int w = (int)vcl_floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
-      int h = (int)vcl_floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
+      int w = (int)std::floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
+      int h = (int)std::floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
 
-      int mx = (int)vcl_floor(poly->get_min_x());
-      int my = (int)vcl_floor(poly->get_min_y());
-      int maxx = (int)vcl_ceil(poly->get_max_x());
-      int maxy = (int)vcl_ceil(poly->get_max_y());
+      int mx = (int)std::floor(poly->get_min_x());
+      int my = (int)std::floor(poly->get_min_y());
+      int maxx = (int)std::ceil(poly->get_max_x());
+      int maxy = (int)std::ceil(poly->get_max_y());
 
       dbinfo_region_geometry_sptr geo = obs->geometry();
       vil1_memory_image_of<float> image_out(w,h);
@@ -514,7 +514,7 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
       //database_objects.push_back(obj);
       osl_objects->push_back(obj);
     else {
-      vcl_cout << "problems in object " << *(obj) << " skipping!\n";
+      std::cout << "problems in object " << *(obj) << " skipping!\n";
       continue;
     }
   }
@@ -527,7 +527,7 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
       (*osl_objects)[i]->b_write(obfile);
     }
     obfile.close();
-    vcl_cout << "Objects and observations are written to binary output file\n";
+    std::cout << "Objects and observations are written to binary output file\n";
   }
 
   return 0;
@@ -538,57 +538,57 @@ int createosl(unsigned int handle, const char *object_list_filename, const char 
 //  video_list_file_name is <id, directory> pair for each video which have objects in the database
 bool create_empty_osl(unsigned int handle, const char *object_list_filename, const char *osl_file_name) 
 { 
-  //vcl_ofstream ofile("temp.txt");
-  //vcl_string home("/projects/vorl1/");
-  //vcl_string home("d:/lockheed_videos/");
-  vcl_cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
-  vcl_cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
+  //std::ofstream ofile("temp.txt");
+  //std::string home("/projects/vorl1/");
+  //std::string home("d:/lockheed_videos/");
+  std::cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
+  std::cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
 
   vbl_array_1d<dbru_object_sptr> *osl_objects = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
   osl_objects->clear();
-  vcl_cout << "initial database size should be zero: " << osl_objects->size() << vcl_endl;
+  std::cout << "initial database size should be zero: " << osl_objects->size() << std::endl;
   
-  vcl_cout << "reading objects...\n";
-  vcl_ifstream dbfp(object_list_filename);
+  std::cout << "reading objects...\n";
+  std::ifstream dbfp(object_list_filename);
   if (!dbfp) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return false;
   }
 
   // first determine the number of objects in the file\n";
   char buffer[1000]; 
-  vcl_string line;
+  std::string line;
 
   int size = 0;
   // found the first object
-  vcl_string object_string = "<object";
+  std::string object_string = "<object";
   while (!dbfp.eof()) {
-    vcl_string dummy;
+    std::string dummy;
     dbfp >> dummy;
     if (dummy == object_string) 
       size++;
   }
   dbfp.close();
-  vcl_cout << "Found " << size << " objects in the xml file\n";
+  std::cout << "Found " << size << " objects in the xml file\n";
   
   if (!size) {
-    vcl_cout << "objects file do not contain any objects! Quitting!\n";
+    std::cout << "objects file do not contain any objects! Quitting!\n";
     return false;
   }
 
-  vcl_ifstream dbfp2(object_list_filename);
+  std::ifstream dbfp2(object_list_filename);
   if (!dbfp2) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return false;
   }
 
   dbfp2.getline(buffer, 1000);  // comment 
   
   for (int i = 0; i<size; i++) {
-    vcl_cout << "reading object: " << i << "...\n";
+    std::cout << "reading object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp2)) { 
-      vcl_cout << "problems in reading object number: " << i << vcl_endl;
+      std::cout << "problems in reading object number: " << i << std::endl;
       return false;
     }
     
@@ -600,7 +600,7 @@ bool create_empty_osl(unsigned int handle, const char *object_list_filename, con
     if (obj->get_observations_size() == obj->polygon_cnt_)
       osl_objects->push_back(obj);
     else {
-      vcl_cout << "problems in object " << *(obj) << " skipping!\n";
+      std::cout << "problems in object " << *(obj) << " skipping!\n";
       return false;
     }
   }
@@ -613,7 +613,7 @@ bool create_empty_osl(unsigned int handle, const char *object_list_filename, con
       (*osl_objects)[i]->b_write(obfile);
     }
     obfile.close();
-    vcl_cout << "Objects and observations are written to binary output file\n";
+    std::cout << "Objects and observations are written to binary output file\n";
   }
 
   return true;
@@ -626,62 +626,62 @@ bool create_empty_osl(unsigned int handle, const char *object_list_filename, con
 bool add_to_osl_only_objects(unsigned int handle, const char *object_list_filename) 
 { 
 
-  //vcl_ofstream ofile("temp.txt");
-  //vcl_string home("/projects/vorl1/");
-  //vcl_string home("d:/lockheed_videos/");
-  vcl_cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
-  vcl_cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
+  //std::ofstream ofile("temp.txt");
+  //std::string home("/projects/vorl1/");
+  //std::string home("d:/lockheed_videos/");
+  std::cout << "CAUTION: Assuming all the objects in the input file are coming from the same video stream!\n";
+  std::cout << "Make sure that the frame numbers are original frame numbers of the stream!\n";
 
   vbl_array_1d<dbru_object_sptr> *osl_objects = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
-  vcl_cout << "initial database size: " << osl_objects->size() << vcl_endl;
+  std::cout << "initial database size: " << osl_objects->size() << std::endl;
   
-  vcl_cout << "reading objects...\n";
-  vcl_ifstream dbfp(object_list_filename);
+  std::cout << "reading objects...\n";
+  std::ifstream dbfp(object_list_filename);
   if (!dbfp) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return false;
   }
 
   // first determine the number of objects in the file\n";
   char buffer[1000]; 
-  vcl_string line;
+  std::string line;
 
   int size = 0;
   // found the first object
-  vcl_string object_string = "<object";
+  std::string object_string = "<object";
   while (!dbfp.eof()) {
-    vcl_string dummy;
+    std::string dummy;
     //dbfp.getline(buffer, 1000);
     dbfp >> dummy;
     //line = buffer;
-    //vcl_cout << "line: " << line << vcl_endl;
-    //vcl_cout << "dummy: " <<dummy << vcl_endl;
+    //std::cout << "line: " << line << std::endl;
+    //std::cout << "dummy: " <<dummy << std::endl;
     //pos1 = line.find("<object", 0);
-    //if (pos1 != vcl_string::npos)
+    //if (pos1 != std::string::npos)
     if (dummy == object_string) 
       size++;
   }
   dbfp.close();
-  vcl_cout << "Found " << size << " objects in the xml file\n";
+  std::cout << "Found " << size << " objects in the xml file\n";
   
   if (!size) {
-    vcl_cout << "objects file do not contain any objects! Quitting!\n";
+    std::cout << "objects file do not contain any objects! Quitting!\n";
     return false;
   }
 
-  vcl_ifstream dbfp2(object_list_filename);
+  std::ifstream dbfp2(object_list_filename);
   if (!dbfp2) {
-    vcl_cout << "Problems in opening object list file!\n";
+    std::cout << "Problems in opening object list file!\n";
     return false;
   }
 
   dbfp2.getline(buffer, 1000);  // comment 
   
   for (int i = 0; i<size; i++) {
-    vcl_cout << "reading object: " << i << "...\n";
+    std::cout << "reading object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp2)) { 
-      vcl_cout << "problems in reading object number: " << i << vcl_endl;
+      std::cout << "problems in reading object number: " << i << std::endl;
       return false;
     }
     
@@ -693,7 +693,7 @@ bool add_to_osl_only_objects(unsigned int handle, const char *object_list_filena
     if (obj->get_observations_size() == obj->polygon_cnt_)
       osl_objects->push_back(obj);
     else {
-      vcl_cout << "problems in object " << *(obj) << " skipping!\n";
+      std::cout << "problems in object " << *(obj) << " skipping!\n";
       return false;
     }
   }
@@ -704,8 +704,8 @@ bool add_to_osl_only_objects(unsigned int handle, const char *object_list_filena
 bool write_osl_to_database(unsigned int handle, int mot, int view, int shadow, int length, const char *database_file)
 {
   vbl_array_1d<dbru_object_sptr> *osl = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
-  vcl_cout << "osl size: " << osl->size() << vcl_endl;
-  vcl_map<vcl_string, int> category_id_map;
+  std::cout << "osl size: " << osl->size() << std::endl;
+  std::map<std::string, int> category_id_map;
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
   category_id_map["utility"] = 0;
@@ -713,13 +713,13 @@ bool write_osl_to_database(unsigned int handle, int mot, int view, int shadow, i
   category_id_map["pick-up truck"] = 2;
   category_id_map["van"] = 3;
 
-  vcl_ofstream dbfp(database_file);
+  std::ofstream dbfp(database_file);
   if (!dbfp) {
-    vcl_cout << "Problems in opening database file!\n";
+    std::cout << "Problems in opening database file!\n";
     return false;
   }
 
-  vcl_vector<vcl_pair<unsigned int, unsigned int> > ids;
+  std::vector<std::pair<unsigned int, unsigned int> > ids;
 
   dbru_label_sptr target_label = new dbru_label("null", mot, view, shadow, length);
   for (unsigned i = 0; i<osl->size(); i++) {
@@ -730,13 +730,13 @@ bool write_osl_to_database(unsigned int handle, int mot, int view, int shadow, i
       
       dbru_label_sptr input_label = obj->labels_[j];
       if (check_labels(input_label, target_label)) {
-        ids.push_back(vcl_pair<unsigned int, unsigned int> (i, j));
+        ids.push_back(std::pair<unsigned int, unsigned int> (i, j));
       }
 
     }
   }
 
-  dbfp << ids.size() << vcl_endl;
+  dbfp << ids.size() << std::endl;
   for (unsigned i = 0; i<ids.size(); i++) {
     dbfp << ids[i].first << " " << ids[i].second << "\n";
   }
@@ -748,8 +748,8 @@ bool write_osl_to_database(unsigned int handle, int mot, int view, int shadow, i
 
 int display_osl(unsigned int handle, int mot, int view, int shadow, int length, bool print_labels) {
   vbl_array_1d<dbru_object_sptr> *osl = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
-  vcl_cout << "initial database size: " << osl->size() << vcl_endl;
-  vcl_map<vcl_string, int> category_id_map;
+  std::cout << "initial database size: " << osl->size() << std::endl;
+  std::map<std::string, int> category_id_map;
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
   category_id_map["utility"] = 0;
@@ -757,15 +757,15 @@ int display_osl(unsigned int handle, int mot, int view, int shadow, int length, 
   category_id_map["pick-up truck"] = 2;
   category_id_map["van"] = 3;
 
-  vcl_vector<int> category_cnts(4, 0);
-  vcl_vector<int> category_frame_cnts(4, 0);
+  std::vector<int> category_cnts(4, 0);
+  std::vector<int> category_frame_cnts(4, 0);
   
   dbru_label_sptr target_label = new dbru_label("null", mot, view, shadow, length);
   for (unsigned i = 0; i<osl->size(); i++) {
     dbru_object_sptr obj = (*osl)[i];
     dbru_label_sptr input_label = obj->labels_[0];
     if (print_labels)
-      vcl_cout << (*input_label) << vcl_endl;
+      std::cout << (*input_label) << std::endl;
 
     if (check_labels(input_label, target_label)) 
       category_cnts[category_id_map[obj->category_]]++;
@@ -773,51 +773,51 @@ int display_osl(unsigned int handle, int mot, int view, int shadow, int length, 
       if (obj->get_polygon(j)->size() == 0) continue;
       dbru_label_sptr input_label = obj->labels_[j];
       if (check_labels(input_label, target_label)) {
-        vcl_cout << "obj: " << i << " poly: " << j << " label: " << (*input_label) << vcl_endl;
+        std::cout << "obj: " << i << " poly: " << j << " label: " << (*input_label) << std::endl;
         category_frame_cnts[category_id_map[obj->category_]]++;
       }
     }
   }
-  vcl_cout << "car cnt: " << category_cnts[1] << " frame cnt: " << category_frame_cnts[1] << vcl_endl;
-  vcl_cout << "pickup cnt: " << category_cnts[2] << " frame cnt: " << category_frame_cnts[2] << vcl_endl;
-  vcl_cout << "utility cnt: " << category_cnts[0] << " frame cnt: " << category_frame_cnts[0] << vcl_endl;
+  std::cout << "car cnt: " << category_cnts[1] << " frame cnt: " << category_frame_cnts[1] << std::endl;
+  std::cout << "pickup cnt: " << category_cnts[2] << " frame cnt: " << category_frame_cnts[2] << std::endl;
+  std::cout << "utility cnt: " << category_cnts[0] << " frame cnt: " << category_frame_cnts[0] << std::endl;
 
   return 0;
 }
 
-unsigned int find_first_occurance(vcl_string name, vcl_vector<vcl_string>& names) {
+unsigned int find_first_occurance(std::string name, std::vector<std::string>& names) {
   
   for (unsigned i = 0; i<names.size(); i++) {
-    vcl_string name_i = names[i];
+    std::string name_i = names[i];
     if (name == names[i]) 
       return i;
   }
-  vcl_cout << "IF HERE NOT RETURNED!!!\n";
+  std::cout << "IF HERE NOT RETURNED!!!\n";
   return 10000000;
 }
 
-bool analyse_out_file(vcl_string database_file, bool curve) {
-  vcl_cout << "analysing the output file: " << database_file << vcl_endl;
-  vcl_ifstream is(database_file.c_str());
+bool analyse_out_file(std::string database_file, bool curve) {
+  std::cout << "analysing the output file: " << database_file << std::endl;
+  std::ifstream is(database_file.c_str());
   if (!is) {
-    vcl_cout << "Problems in opening database file!\n";
+    std::cout << "Problems in opening database file!\n";
     return false;
   }
   
-  vcl_string p = "pick-up";
-  vcl_string u = "utility";
-  vcl_string c = "car";
-  vcl_string null = "null";
+  std::string p = "pick-up";
+  std::string u = "utility";
+  std::string c = "car";
+  std::string null = "null";
 
-  vcl_string dummy;
+  std::string dummy;
   is >> dummy; is >> dummy; // db size:
-  vcl_cout << "read: " << dummy << vcl_endl;
+  std::cout << "read: " << dummy << std::endl;
   int size;
   is >> size;
-  vcl_cout << " size: " << size << vcl_endl;
-  vcl_vector<vcl_string> names, shape_matches, info_matches, info_dt_matches;
+  std::cout << " size: " << size << std::endl;
+  std::vector<std::string> names, shape_matches, info_matches, info_dt_matches;
   for (int i = 0; i<size; i++) {
-    vcl_string name;
+    std::string name;
     is >> dummy;
     if (dummy == "total")
       break;
@@ -841,8 +841,8 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
       is >> dummy;
       shape_matches.push_back("pick-up");
     } else {
-      char *category = vcl_strtok ((char *)(dummy.c_str()),"_");
-      vcl_string d2 = category;
+      char *category = std::strtok ((char *)(dummy.c_str()),"_");
+      std::string d2 = category;
       shape_matches.push_back(d2);
     }
     
@@ -852,8 +852,8 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
       is >> dummy;
       info_matches.push_back("pick-up");
     } else {
-      char *category = vcl_strtok ((char *)(dummy.c_str()),"_");
-      vcl_string d2 = category;
+      char *category = std::strtok ((char *)(dummy.c_str()),"_");
+      std::string d2 = category;
       info_matches.push_back(d2);
     }
     
@@ -864,8 +864,8 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
         is >> dummy;
         info_dt_matches.push_back("pick-up");
       } else {
-        char *category = vcl_strtok ((char *)(dummy.c_str()),"_");
-        vcl_string d2 = category;
+        char *category = std::strtok ((char *)(dummy.c_str()),"_");
+        std::string d2 = category;
         info_dt_matches.push_back(d2);
       }
     }
@@ -873,203 +873,203 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
   is.close();
 
   /*if (!(names.size() == size)) {
-    vcl_cout << "problems in the input file\n";
+    std::cout << "problems in the input file\n";
     return false;
   }*/
 
-  vcl_map<vcl_pair<vcl_string, vcl_string>, int> instance_shape_cnt;
-  vcl_map<vcl_pair<vcl_string, vcl_string>, int> instance_info_cnt;
-  vcl_map<vcl_pair<vcl_string, vcl_string>, int> instance_info_dt_cnt;
+  std::map<std::pair<std::string, std::string>, int> instance_shape_cnt;
+  std::map<std::pair<std::string, std::string>, int> instance_info_cnt;
+  std::map<std::pair<std::string, std::string>, int> instance_info_dt_cnt;
   
   // initialize these as zero for all categories and each name
   for (unsigned i = 0; i<names.size(); i++) {
-    vcl_cout << names[i] << vcl_endl;
-    vcl_pair<vcl_string, vcl_string> key(names[i], c);
+    std::cout << names[i] << std::endl;
+    std::pair<std::string, std::string> key(names[i], c);
     instance_shape_cnt[key] = 0;
     instance_info_cnt[key] = 0;
     instance_info_dt_cnt[key] = 0;
-    key = vcl_pair<vcl_string, vcl_string> (names[i], p);
+    key = std::pair<std::string, std::string> (names[i], p);
     instance_shape_cnt[key] = 0;
     instance_info_cnt[key] = 0;
     instance_info_dt_cnt[key] = 0;
-    key = vcl_pair<vcl_string, vcl_string> (names[i], u);
+    key = std::pair<std::string, std::string> (names[i], u);
     instance_shape_cnt[key] = 0;
     instance_info_cnt[key] = 0;
     instance_info_dt_cnt[key] = 0;
   }
 
-  vcl_map<vcl_pair<vcl_string, vcl_string>, int>::iterator iter;
+  std::map<std::pair<std::string, std::string>, int>::iterator iter;
   for (unsigned i = 0; i<names.size(); i++) {
-    vcl_string name = names[i];
+    std::string name = names[i];
     /*
-    vcl_cout << "i: " << i << " name: " << names[i] << " ";
-    vcl_cout << " shape match: " << shape_matches[i] << " info match: " << info_matches[i] << vcl_endl;
+    std::cout << "i: " << i << " name: " << names[i] << " ";
+    std::cout << " shape match: " << shape_matches[i] << " info match: " << info_matches[i] << std::endl;
    */
-    vcl_pair<vcl_string, vcl_string> key(name, shape_matches[i]);
+    std::pair<std::string, std::string> key(name, shape_matches[i]);
     instance_shape_cnt[key]++;
     
-    key = vcl_pair<vcl_string, vcl_string> (name, info_matches[i]);
+    key = std::pair<std::string, std::string> (name, info_matches[i]);
     instance_info_cnt[key]++;
 
     if (curve) {
-      key = vcl_pair<vcl_string, vcl_string> (name, info_dt_matches[i]);
+      key = std::pair<std::string, std::string> (name, info_dt_matches[i]);
       instance_info_dt_cnt[key]++;
     }
 
   }
 
   for (iter = instance_shape_cnt.begin(); iter != instance_shape_cnt.end(); iter++) {
-    vcl_cout << "for " << (iter->first).first << " " << (iter->first).second << " shape corrects: " << iter->second << vcl_endl;
+    std::cout << "for " << (iter->first).first << " " << (iter->first).second << " shape corrects: " << iter->second << std::endl;
   }
 
   int total_cnt = 0;
   int correct_cnt = 0;
 
   for (iter = instance_shape_cnt.begin(); iter != instance_shape_cnt.end(); iter++) {
-    vcl_string name = (iter->first).first;
+    std::string name = (iter->first).first;
     if ((iter->first).second != c) continue;
     total_cnt++;
     
     //unsigned int id = find_first_occurance(name, names);
     //if (instance_shape_classification[id] == null) {
-      vcl_pair<vcl_string, vcl_string> c_key(name, c);
-      vcl_pair<vcl_string, vcl_string> p_key(name, p);
-      vcl_pair<vcl_string, vcl_string> u_key(name, u);
+      std::pair<std::string, std::string> c_key(name, c);
+      std::pair<std::string, std::string> p_key(name, p);
+      std::pair<std::string, std::string> u_key(name, u);
       int c_cnt = instance_shape_cnt[c_key];
       int p_cnt = instance_shape_cnt[p_key];
       int u_cnt = instance_shape_cnt[u_key];
 
-      vcl_string::size_type pos;
+      std::string::size_type pos;
       if (c_cnt >= p_cnt && c_cnt >= u_cnt) {
-        if (name.find(c) != vcl_string::npos)
+        if (name.find(c) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << c << "\n";
+        std::cout << name << " " << c << "\n";
       }
 
       if (p_cnt >= c_cnt && p_cnt >= u_cnt) {
-        if (name.find(p) != vcl_string::npos)
+        if (name.find(p) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << p << "\n";
+        std::cout << name << " " << p << "\n";
       }
 
       if (u_cnt >= p_cnt && u_cnt >= c_cnt) {
-        if (name.find(u) != vcl_string::npos)
+        if (name.find(u) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << u << "\n";
+        std::cout << name << " " << u << "\n";
       }
 
         
     //}
 
   }
-  vcl_cout << "shape correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << vcl_endl;
+  std::cout << "shape correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << std::endl;
 
 
   total_cnt = 0;
   correct_cnt = 0;
 
   for (iter = instance_info_cnt.begin(); iter != instance_info_cnt.end(); iter++) {
-    vcl_string name = (iter->first).first;
+    std::string name = (iter->first).first;
     if ((iter->first).second != c) continue;
     total_cnt++;
     
     //unsigned int id = find_first_occurance(name, names);
     //if (instance_shape_classification[id] == null) {
-      vcl_pair<vcl_string, vcl_string> c_key(name, c);
-      vcl_pair<vcl_string, vcl_string> p_key(name, p);
-      vcl_pair<vcl_string, vcl_string> u_key(name, u);
+      std::pair<std::string, std::string> c_key(name, c);
+      std::pair<std::string, std::string> p_key(name, p);
+      std::pair<std::string, std::string> u_key(name, u);
       int c_cnt = instance_info_cnt[c_key];
       int p_cnt = instance_info_cnt[p_key];
       int u_cnt = instance_info_cnt[u_key];
 
-      vcl_string::size_type pos;
+      std::string::size_type pos;
       if (c_cnt >= p_cnt && c_cnt >= u_cnt) {
-        if (name.find(c) != vcl_string::npos)
+        if (name.find(c) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << c << "\n";
+        std::cout << name << " " << c << "\n";
       }
 
       if (p_cnt >= c_cnt && p_cnt >= u_cnt) {
-        if (name.find(p) != vcl_string::npos)
+        if (name.find(p) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << p << "\n";
+        std::cout << name << " " << p << "\n";
       }
 
       if (u_cnt >= p_cnt && u_cnt >= c_cnt) {
-        if (name.find(u) != vcl_string::npos)
+        if (name.find(u) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << u << "\n";
+        std::cout << name << " " << u << "\n";
       }
 
         
     //}
 
   }
-  vcl_cout << "info correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << vcl_endl;
+  std::cout << "info correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << std::endl;
 
   if (curve) {
   int total_cnt = 0;
   int correct_cnt = 0;
 
   for (iter = instance_info_dt_cnt.begin(); iter != instance_info_dt_cnt.end(); iter++) {
-    vcl_string name = (iter->first).first;
+    std::string name = (iter->first).first;
     if ((iter->first).second != c) continue;
     total_cnt++;
     
     //unsigned int id = find_first_occurance(name, names);
     //if (instance_shape_classification[id] == null) {
-      vcl_pair<vcl_string, vcl_string> c_key(name, c);
-      vcl_pair<vcl_string, vcl_string> p_key(name, p);
-      vcl_pair<vcl_string, vcl_string> u_key(name, u);
+      std::pair<std::string, std::string> c_key(name, c);
+      std::pair<std::string, std::string> p_key(name, p);
+      std::pair<std::string, std::string> u_key(name, u);
       int c_cnt = instance_info_dt_cnt[c_key];
       int p_cnt = instance_info_dt_cnt[p_key];
       int u_cnt = instance_info_dt_cnt[u_key];
 
-      vcl_string::size_type pos;
+      std::string::size_type pos;
       if (c_cnt >= p_cnt && c_cnt >= u_cnt) {
-        if (name.find(c) != vcl_string::npos)
+        if (name.find(c) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << c << "\n";
+        std::cout << name << " " << c << "\n";
       }
 
       if (p_cnt >= c_cnt && p_cnt >= u_cnt) {
-        if (name.find(p) != vcl_string::npos)
+        if (name.find(p) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << p << "\n";
+        std::cout << name << " " << p << "\n";
       }
 
       if (u_cnt >= p_cnt && u_cnt >= c_cnt) {
-        if (name.find(u) != vcl_string::npos)
+        if (name.find(u) != std::string::npos)
           correct_cnt++;
 
-        vcl_cout << name << " " << u << "\n";
+        std::cout << name << " " << u << "\n";
       }
 
         
     //}
 
   }
-  vcl_cout << "info dt correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << vcl_endl;
+  std::cout << "info dt correct: " << correct_cnt << " out of " << total_cnt << " perc: " << ((double)correct_cnt/total_cnt)*100.0f << std::endl;
   }
 
 
 /*
   for (iter = instance_info_cnt.begin(); iter != instance_info_cnt.end(); iter++) {
-    vcl_cout << "for " << (iter->first).first << " " << (iter->first).second << " info corrects: " << iter->second << vcl_endl;
-    vcl_string name = (iter->first).first;
+    std::cout << "for " << (iter->first).first << " " << (iter->first).second << " info corrects: " << iter->second << std::endl;
+    std::string name = (iter->first).first;
     unsigned int id = find_first_occurance(name, names);
     if (instance_info_classification[id] == null) {
-      vcl_pair<vcl_string, vcl_string> c_key(name, c);
-      vcl_pair<vcl_string, vcl_string> p_key(name, p);
-      vcl_pair<vcl_string, vcl_string> u_key(name, u);
+      std::pair<std::string, std::string> c_key(name, c);
+      std::pair<std::string, std::string> p_key(name, p);
+      std::pair<std::string, std::string> u_key(name, u);
       int c_cnt = instance_info_cnt[c_key];
       int p_cnt = instance_info_cnt[p_key];
       int u_cnt = instance_info_cnt[u_key];
@@ -1086,13 +1086,13 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
 
   if (curve) 
     for (iter = instance_info_dt_cnt.begin(); iter != instance_info_dt_cnt.end(); iter++) {
-      vcl_cout << "for " << (iter->first).first << " " << (iter->first).second << " info dt corrects: " << iter->second << vcl_endl;
-      vcl_string name = (iter->first).first;
+      std::cout << "for " << (iter->first).first << " " << (iter->first).second << " info dt corrects: " << iter->second << std::endl;
+      std::string name = (iter->first).first;
       unsigned int id = find_first_occurance(name, names);
       if (instance_info_dt_classification[id] == null) {     
-        vcl_pair<vcl_string, vcl_string> c_key(name, c);
-        vcl_pair<vcl_string, vcl_string> p_key(name, p);
-        vcl_pair<vcl_string, vcl_string> u_key(name, u);
+        std::pair<std::string, std::string> c_key(name, c);
+        std::pair<std::string, std::string> p_key(name, p);
+        std::pair<std::string, std::string> u_key(name, u);
         int c_cnt = instance_info_dt_cnt[c_key];
         int p_cnt = instance_info_dt_cnt[p_key];
         int u_cnt = instance_info_dt_cnt[u_key];
@@ -1109,24 +1109,24 @@ bool analyse_out_file(vcl_string database_file, bool curve) {
   
 /*
   for (unsigned i = 0; i<names.size(); i++) {
-    vcl_string name = names[i];
-    vcl_cout << "instance:\t" << name << " shape class: " << instance_shape_classification[i] << vcl_endl;
-    vcl_cout << "instance:\t" << name << " info class: " << instance_info_classification[i] << vcl_endl;
+    std::string name = names[i];
+    std::cout << "instance:\t" << name << " shape class: " << instance_shape_classification[i] << std::endl;
+    std::cout << "instance:\t" << name << " info class: " << instance_info_classification[i] << std::endl;
     if (curve)
-      vcl_cout << "instance:\t" << name << " info dt class: " << instance_info_dt_classification[i] << vcl_endl;
+      std::cout << "instance:\t" << name << " info dt class: " << instance_info_dt_classification[i] << std::endl;
   }
   */ 
   return true;
 }
 
 void print_usage() {
-  vcl_cout << "USAGE:\n 0: create empty osl and write out: <object file> <out_osl>\n";
-  vcl_cout << "1: add to osl (no observations extracted) and write out: <object file> <in_osl> <out_osl>\n";
-  vcl_cout << "2: extract observations and write out: <video file> <in_osl> <out_osl> <output_dir> <decimate factor 2> <sigma for image smoothing before decimation, 1.0>\n";
-  vcl_cout << "3: display osl content <in_osl> <motion> <view> <shadow> <shadow length> <1 if print labels, otherwise 0>\n";
-  vcl_cout << "4: create database file <in_osl> <motion> <view> <shadow> <shadow length> <db_file>\n";
-  vcl_cout << "5: analyse out file of mathcing processes: <out_file_name> <0 if shock, 1 if curve> \n";
-  vcl_cout << "6: combine two osl files: <in_osl_1> <in_osl_2> <out_osl>\n";
+  std::cout << "USAGE:\n 0: create empty osl and write out: <object file> <out_osl>\n";
+  std::cout << "1: add to osl (no observations extracted) and write out: <object file> <in_osl> <out_osl>\n";
+  std::cout << "2: extract observations and write out: <video file> <in_osl> <out_osl> <output_dir> <decimate factor 2> <sigma for image smoothing before decimation, 1.0>\n";
+  std::cout << "3: display osl content <in_osl> <motion> <view> <shadow> <shadow length> <1 if print labels, otherwise 0>\n";
+  std::cout << "4: create database file <in_osl> <motion> <view> <shadow> <shadow length> <db_file>\n";
+  std::cout << "5: analyse out file of mathcing processes: <out_file_name> <0 if shock, 1 if curve> \n";
+  std::cout << "6: combine two osl files: <in_osl_1> <in_osl_2> <out_osl>\n";
 }
 
 #if HAS_DSHOW
@@ -1137,7 +1137,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  vcl_string obj_file, out_osl, in_osl, in_osl2, video_file, database_file, output_dir;
+  std::string obj_file, out_osl, in_osl, in_osl2, video_file, database_file, output_dir;
   int option = atoi(argv[1]);
   switch (option) {
     case 0: { 
@@ -1159,7 +1159,7 @@ int main(int argc, char *argv[]) {
         reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (load_osl(in_osl.c_str()));
       
       if (!add_to_osl_only_objects(reinterpret_cast<unsigned int>(osl), obj_file.c_str())) {
-        vcl_cout << "objects not added!\nQuitting!\n";
+        std::cout << "objects not added!\nQuitting!\n";
         return 0;
       }
 
@@ -1217,11 +1217,11 @@ int main(int argc, char *argv[]) {
       break;
             }
     case 5: {
-      vcl_cout << "argc: " << argc << vcl_endl;
+      std::cout << "argc: " << argc << std::endl;
       if (argc != 4) {print_usage(); return 0;}
       database_file = argv[2];
       int dummy = atoi(argv[3]);
-      vcl_cout << "read option: " << dummy << vcl_endl;
+      std::cout << "read option: " << dummy << std::endl;
       bool curve = true;
       if (dummy == 0)
         curve = false;

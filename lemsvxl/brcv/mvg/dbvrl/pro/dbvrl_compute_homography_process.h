@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 #include <vimt/vimt_transform_2d.h>
@@ -27,7 +27,7 @@ public:
   dbvrl_compute_homography_process();
   ~dbvrl_compute_homography_process();
 
-  vcl_string name();
+  std::string name();
 
   //: Clone the process
   virtual bpro1_process* clone() const;
@@ -35,8 +35,8 @@ public:
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
@@ -68,7 +68,7 @@ private:
 
 
     float sigma_first_image_;
-    vcl_string regimgname;
+    std::string regimgname;
 
     //: stores the first image to enable registration w.r.t to the first image.
     vil_image_resource_sptr first_img_;

@@ -18,8 +18,8 @@
 #include <bnld/bnld_angle.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
+#include <utility>
+#include <algorithm>
 #include <container/vnl_vector_to_vcl_vector.h>
 
 
@@ -47,8 +47,8 @@ dbsks_xgraph_geom_model::
 //: Build the model
 bool dbsks_xgraph_geom_model::
 build(const dbsksp_xshock_graph_sptr& xgraph,
-          const vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >& map_edge2xfrag, 
-          const vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >& map_node2xgeom,
+          const std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >& map_edge2xfrag, 
+          const std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >& map_node2xgeom,
           unsigned root_vid, 
           unsigned major_child_eid,
           double norm_graph_size)
@@ -87,26 +87,26 @@ build(const dbsksp_xshock_graph_sptr& xgraph,
 void dbsks_xgraph_geom_model::
 compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
                                  double norm_graph_size,
-                                 const vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >& map_eid2xfrag)
+                                 const std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >& map_eid2xfrag)
 {
   // Loop thru the edges
-  for (vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >::const_iterator mit = 
+  for (std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >::const_iterator mit = 
     map_eid2xfrag.begin(); mit != map_eid2xfrag.end(); ++mit)
   {
     unsigned eid = mit->first;
-    const vcl_vector<dbsksp_xshock_fragment_sptr >& xfrags = mit->second;
+    const std::vector<dbsksp_xshock_fragment_sptr >& xfrags = mit->second;
 
     int num_xfrags = xfrags.size();
-    vcl_vector<double > psi_start(num_xfrags, 0);
-    vcl_vector<double > r_start(num_xfrags, 0);
-    vcl_vector<double > phi_start(num_xfrags, 0);
+    std::vector<double > psi_start(num_xfrags, 0);
+    std::vector<double > r_start(num_xfrags, 0);
+    std::vector<double > phi_start(num_xfrags, 0);
     
-    vcl_vector<double > alpha_start(num_xfrags, 0);
-    vcl_vector<double > chord(num_xfrags, 0);
-    vcl_vector<double > dpsi(num_xfrags, 0);
+    std::vector<double > alpha_start(num_xfrags, 0);
+    std::vector<double > chord(num_xfrags, 0);
+    std::vector<double > dpsi(num_xfrags, 0);
     
-    vcl_vector<double > phi_end(num_xfrags, 0);
-    vcl_vector<double > r_end(num_xfrags, 0);
+    std::vector<double > phi_end(num_xfrags, 0);
+    std::vector<double > r_end(num_xfrags, 0);
 
     double sum_log2_r_start = 0;
     for (unsigned i =0; i < xfrags.size(); ++i)
@@ -158,40 +158,40 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
   }
 
   // Additional attributes
-  for (vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >::const_iterator mit = 
+  for (std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >::const_iterator mit = 
     map_eid2xfrag.begin(); mit != map_eid2xfrag.end(); ++mit)
   {
     unsigned eid = mit->first;
-    const vcl_vector<dbsksp_xshock_fragment_sptr >& list_xfrag = mit->second;    
+    const std::vector<dbsksp_xshock_fragment_sptr >& list_xfrag = mit->second;    
 
     unsigned num_xfrags = list_xfrag.size();
-    vcl_vector<double > list_chord_length(num_xfrags, 0);
-    vcl_vector<double > list_median_length(num_xfrags, 0);
+    std::vector<double > list_chord_length(num_xfrags, 0);
+    std::vector<double > list_median_length(num_xfrags, 0);
     
-    vcl_vector<double > list_start_radius(num_xfrags, 0);
-    vcl_vector<double > list_start_width(num_xfrags, 0);
+    std::vector<double > list_start_radius(num_xfrags, 0);
+    std::vector<double > list_start_width(num_xfrags, 0);
     
-    vcl_vector<double > list_end_radius(num_xfrags, 0);
-    vcl_vector<double > list_end_width(num_xfrags, 0);
+    std::vector<double > list_end_radius(num_xfrags, 0);
+    std::vector<double > list_end_width(num_xfrags, 0);
     
-    vcl_vector<double > list_average_width(num_xfrags, 0);
+    std::vector<double > list_average_width(num_xfrags, 0);
 
-    vcl_vector<double > list_start_phi(num_xfrags, 0);
-    vcl_vector<double > list_end_phi(num_xfrags, 0);
+    std::vector<double > list_start_phi(num_xfrags, 0);
+    std::vector<double > list_end_phi(num_xfrags, 0);
     
-    vcl_vector<double > list_predicted_phi(num_xfrags, 0);
+    std::vector<double > list_predicted_phi(num_xfrags, 0);
 
-    vcl_vector<double > list_start_phi_diff(num_xfrags, 0);
-    vcl_vector<double > list_end_phi_diff(num_xfrags, 0);
+    std::vector<double > list_start_phi_diff(num_xfrags, 0);
+    std::vector<double > list_end_phi_diff(num_xfrags, 0);
 
-    vcl_vector<double > list_left_curvature_diff(num_xfrags, 0);
-    vcl_vector<double > list_right_curvature_diff(num_xfrags, 0);
+    std::vector<double > list_left_curvature_diff(num_xfrags, 0);
+    std::vector<double > list_right_curvature_diff(num_xfrags, 0);
 
-    vcl_vector<double > list_left_bnd_length(num_xfrags, 0);
-    vcl_vector<double > list_right_bnd_length(num_xfrags, 0);
+    std::vector<double > list_left_bnd_length(num_xfrags, 0);
+    std::vector<double > list_right_bnd_length(num_xfrags, 0);
 
-    vcl_vector<double > list_left_chord_length(num_xfrags, 0);
-    vcl_vector<double > list_right_chord_length(num_xfrags, 0);
+    std::vector<double > list_left_chord_length(num_xfrags, 0);
+    std::vector<double > list_right_chord_length(num_xfrags, 0);
 
     for (unsigned i =0; i < num_xfrags; ++i)
     {
@@ -220,11 +220,11 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
       list_end_radius[i] = xfrag->end().radius_;
 
       //> start width
-      double start_width = xfrag->start().radius()*vcl_sin(xfrag->start().phi());
+      double start_width = xfrag->start().radius()*std::sin(xfrag->start().phi());
       list_start_width[i] = start_width;
 
       //> end width
-      double end_width = xfrag->end().radius()*vcl_sin(xfrag->end().phi());
+      double end_width = xfrag->end().radius()*std::sin(xfrag->end().phi());
       list_end_width[i] = end_width;
 
       //> average width
@@ -239,7 +239,7 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
       list_end_phi[i] = end_phi;
 
       //> predicted phi - using only 0th order info
-      double temp = vcl_atan2((end_width - start_width), median_length); // <0: decreasing width
+      double temp = std::atan2((end_width - start_width), median_length); // <0: decreasing width
       double predicted_phi = temp + vnl_math::pi_over_2;
       list_predicted_phi[i] = predicted_phi;
 
@@ -316,19 +316,19 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
 void dbsks_xgraph_geom_model::
 compute_vertex_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
                                    double norm_graph_size,
-                                   const vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >& map_vid2xnode)
+                                   const std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >& map_vid2xnode)
 {
-  for (vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >::const_iterator mit = 
+  for (std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >::const_iterator mit = 
     map_vid2xnode.begin(); mit != map_vid2xnode.end(); ++mit)
   {
     unsigned vid = mit->first;
-    const vcl_vector<dbsks_xnode_geom_sptr >& xnode_geoms = mit->second;
+    const std::vector<dbsks_xnode_geom_sptr >& xnode_geoms = mit->second;
 
     int num_xnodes = xnode_geoms.size();
-    vcl_vector<double > psi(num_xnodes, 0);
-    vcl_vector<double > phi(num_xnodes, 0);
-    vcl_vector<double > radius(num_xnodes, 0);
-    vcl_vector<double > phi_diff(num_xnodes, 0);
+    std::vector<double > psi(num_xnodes, 0);
+    std::vector<double > phi(num_xnodes, 0);
+    std::vector<double > radius(num_xnodes, 0);
+    std::vector<double > phi_diff(num_xnodes, 0);
 
     for (unsigned i =0; i < xnode_geoms.size(); ++i)
     {
@@ -357,19 +357,19 @@ compute_vertex_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
 
 
   // Additional attributes
-  for (vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >::const_iterator mit = 
+  for (std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >::const_iterator mit = 
     map_vid2xnode.begin(); mit != map_vid2xnode.end(); ++mit)
   {
     // vertex id
     unsigned vid = mit->first;
 
     // list exemplar xnodes
-    const vcl_vector<dbsks_xnode_geom_sptr >& list_xnode = mit->second;
+    const std::vector<dbsks_xnode_geom_sptr >& list_xnode = mit->second;
 
     unsigned num_xnodes = list_xnode.size();
-    vcl_vector<double > list_parent_width(num_xnodes, 0);
-    vcl_vector<double > list_child1_width(num_xnodes, 0);
-    vcl_vector<double > list_child2_width(num_xnodes, 0);
+    std::vector<double > list_parent_width(num_xnodes, 0);
+    std::vector<double > list_child1_width(num_xnodes, 0);
+    std::vector<double > list_child2_width(num_xnodes, 0);
 
     for (unsigned i =0; i < list_xnode.size(); ++i)
     {
@@ -378,9 +378,9 @@ compute_vertex_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
       double phi1 = (xnode->phi_ + xnode->phi_diff_)/2;
       double phi2 = (xnode->phi_ - xnode->phi_diff_)/2;
 
-      list_parent_width[i] = xnode->radius_*vcl_sin(xnode->phi_);
-      list_child1_width[i] = xnode->radius_ * vcl_sin(phi1);
-      list_child2_width[i] = xnode->radius_ * vcl_sin(phi2);
+      list_parent_width[i] = xnode->radius_*std::sin(xnode->phi_);
+      list_child1_width[i] = xnode->radius_ * std::sin(phi1);
+      list_child2_width[i] = xnode->radius_ * std::sin(phi2);
     }
 
     // update these data to the model
@@ -403,7 +403,7 @@ bool dbsks_xgraph_geom_model::
 build_edge_geom_models()
 {
   bool success = true;
-  for (vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
+  for (std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
     this->map_edge2geom_.begin(); iter != this->map_edge2geom_.end(); ++iter)
   {
     success = success && iter->second->build_from_attr_data();
@@ -417,7 +417,7 @@ bool dbsks_xgraph_geom_model::
 build_vertex_geom_models()
 {
   bool success = true;
-  for (vcl_map<unsigned, dbsks_xnode_geom_model_sptr >::iterator iter = 
+  for (std::map<unsigned, dbsks_xnode_geom_model_sptr >::iterator iter = 
     this->map_node2geom_.begin(); iter != this->map_node2geom_.end(); ++iter)
   {
     success = success && iter->second->build_from_attr_data();
@@ -477,7 +477,7 @@ compute_attribute_constraints()
   // But we need to computer other attributes such as nkdiff
   this->biarc_sampler_->compute_cache_nkdiff();
 
-  for (vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
+  for (std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
     this->map_edge2geom_.begin(); iter != this->map_edge2geom_.end(); ++iter)
   {
     unsigned eid = iter->first;
@@ -513,7 +513,7 @@ is_compatible(const dbsksp_xshock_graph_sptr& xgraph)
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
   {
-    vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
+    std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator iter = 
       this->map_edge2geom_.find((*eit)->id());
     if (iter == this->map_edge2geom_.end())
     {
@@ -530,7 +530,7 @@ is_compatible(const dbsksp_xshock_graph_sptr& xgraph)
     if ((*vit)->degree() <= 1)
       continue;
 
-    vcl_map<unsigned, dbsks_xnode_geom_model_sptr >::iterator iter = 
+    std::map<unsigned, dbsks_xnode_geom_model_sptr >::iterator iter = 
       this->map_node2geom_.find((*vit)->id());
 
     if (iter == this->map_node2geom_.end())

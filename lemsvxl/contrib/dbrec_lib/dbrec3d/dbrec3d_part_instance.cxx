@@ -5,12 +5,12 @@
 
 #include "dbrec3d_part_instance.h"
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_part_instance &part)
+std::ostream& operator << (std::ostream& os, const dbrec3d_part_instance &part)
 {
   os << "This is dbrec3d_part_instance\n";
   os << "type id: " << part.type_id() << "\n";
   os << "location: " << part.location() << "\n";
-  os << "response: " << part.posterior() <<vcl_endl;
+  os << "response: " << part.posterior() <<std::endl;
   
   return os;
 }
@@ -56,9 +56,9 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_part_instance &part)
     }
       
     default:
-      vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dbrec3d_part_instance&)\n"
+      std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dbrec3d_part_instance&)\n"
       << "           Unknown version number "<< version << '\n';
-      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
       return;
   }
 }
@@ -68,14 +68,14 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_part_instance *&part)
   vsl_b_read(is, *part);
 }
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_pair_composite_instance &part)
+std::ostream& operator << (std::ostream& os, const dbrec3d_pair_composite_instance &part)
 {
   os << "This is dbrec3d_pair_composite_instance\n";
   os << "type id: " << part.type_id() << "\n";
   os << "location: " << part.location() << "\n";
   os << "response: " << part.posterior() <<"\n";
   os << "location child 1: " << part.location_child1() <<  "\n";
-  os << "location child 2: " << part.location_child2() <<  vcl_endl;
+  os << "location child 2: " << part.location_child2() <<  std::endl;
   return os;
 }
 
@@ -128,9 +128,9 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_pair_composite_instance &part)
     }
       
     default:
-      vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dbrec3d_part_instance&)\n"
+      std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dbrec3d_part_instance&)\n"
       << "           Unknown version number "<< version << '\n';
-      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
       return;
   }
 }
@@ -148,5 +148,5 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_pair_composite_instance *&part)
 //template void vsl_b_write(vsl_b_ostream &, dbrec3d_part_instance<T > const *&); \
 //template void vsl_b_read(vsl_b_istream &, dbrec3d_part_instance<T > &); \
 //template void vsl_b_read(vsl_b_istream &, dbrec3d_part_instance<T > *&); \
-//template vcl_ostream& operator << (vcl_ostream&, const dbrec3d_part_instance<T >&)
+//template std::ostream& operator << (std::ostream&, const dbrec3d_part_instance<T >&)
 //#endif

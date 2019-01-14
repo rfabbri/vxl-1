@@ -14,7 +14,7 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_cstddef.h>
+#include<cstddef>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -27,7 +27,7 @@ public:
 
     virtual ~dts_pixel_time_series_base(){}
 
-    virtual vcl_size_t size() const = 0;
+    virtual std::size_t size() const = 0;
 
     virtual unsigned dimension() = 0;
 
@@ -35,7 +35,7 @@ public:
 
     virtual void b_read( vsl_b_istream& is ) = 0;
 
-	virtual bool write_txt( vcl_string const& filename,
+	virtual bool write_txt( std::string const& filename,
 								vgl_point_2d<unsigned> const& pt )= 0;
 };
 

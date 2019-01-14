@@ -13,7 +13,7 @@
 #include <bsol/bsol_algs.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
@@ -26,16 +26,16 @@
 // -----------------------------------------------------------------------------
 //: Non-max supression on list of detection based the polygon of the detected xgraphs
 // Output is a list of detections that survive, sorted in descending confidence level.
-bool dbsks_det_nms_using_polygon(const vcl_vector<dbsks_det_desc_xgraph_sptr >& input_det_list,
-                                 vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
+bool dbsks_det_nms_using_polygon(const std::vector<dbsks_det_desc_xgraph_sptr >& input_det_list,
+                                 std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
                                  double min_overlap_ratio)
 {
   // first thing first
   output_det_list.clear();
 
   // Create a sorted copy of the input detection list
-  vcl_vector<dbsks_det_desc_xgraph_sptr > sorted_det_list = input_det_list;
-  vcl_sort(sorted_det_list.begin(), sorted_det_list.end(), dbsks_decreasing_confidence);
+  std::vector<dbsks_det_desc_xgraph_sptr > sorted_det_list = input_det_list;
+  std::sort(sorted_det_list.begin(), sorted_det_list.end(), dbsks_decreasing_confidence);
 
   ///////////////////////////////////
   //// \debug - no nnms - pass everything
@@ -50,10 +50,10 @@ bool dbsks_det_nms_using_polygon(const vcl_vector<dbsks_det_desc_xgraph_sptr >& 
 
   output_det_list.reserve(sorted_det_list.size());
   // \debug text
-  vcl_cout << "\nProcessing detection ";
+  std::cout << "\nProcessing detection ";
   for (unsigned i =0; i < sorted_det_list.size(); ++i)
   {
-    vcl_cout << " " << i;
+    std::cout << " " << i;
 
     dbsks_det_desc_xgraph_sptr query_det = sorted_det_list[i];
 
@@ -118,14 +118,14 @@ bool dbsks_det_nms_using_polygon(const vcl_vector<dbsks_det_desc_xgraph_sptr >& 
     // \debug
     if (pass_nonmax_test)
     {
-      vcl_cout << "[Y]";
+      std::cout << "[Y]";
     }
     else
     {
-      vcl_cout << "[N]";
+      std::cout << "[N]";
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   return true;
 }
 

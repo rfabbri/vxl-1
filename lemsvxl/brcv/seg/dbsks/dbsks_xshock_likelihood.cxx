@@ -36,7 +36,7 @@ loglike_upperbound(unsigned edge_id) const
 //: Likelihood of a xshock graph
 double dbsks_xshock_likelihood::
 loglike_xgraph(const dbsksp_xshock_graph_sptr& xgraph, 
-               const vcl_vector<unsigned >& ignored_edges,
+               const std::vector<unsigned >& ignored_edges,
                bool verbose) const
 {
   double sum_cost = 0;
@@ -88,16 +88,16 @@ loglike_xgraph(const dbsksp_xshock_graph_sptr& xgraph,
 
     if (verbose)
     {
-      vcl_cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
-      vcl_cout << "     parent_vid=" << xv_p->id() << "\n";
-      //xv_p->descriptor(xe)->print(vcl_cout);
-      vcl_cout << "     child_vid=" << xv_c->id() << "\n";
-      //xv_c->descriptor(xe)->opposite_xnode().print(vcl_cout);
+      std::cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
+      std::cout << "     parent_vid=" << xv_p->id() << "\n";
+      //xv_p->descriptor(xe)->print(std::cout);
+      std::cout << "     child_vid=" << xv_c->id() << "\n";
+      //xv_c->descriptor(xe)->opposite_xnode().print(std::cout);
     }
   }
   if (verbose)
   {
-    vcl_cout << "   Total cost=" << sum_cost << vcl_endl;
+    std::cout << "   Total cost=" << sum_cost << std::endl;
   }
   return sum_cost;
 }

@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_random.h>
 
 #include "../psm_apm_traits.h"
@@ -12,9 +12,9 @@ static void test_psm_simple_grey_processor()
 {
   START("psm_simple_grey_processor test");
 
-  vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs_vec;
-  vcl_vector<float> vis_vec;
-  vcl_vector<float> pre_vec;
+  std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs_vec;
+  std::vector<float> vis_vec;
+  std::vector<float> pre_vec;
 
   // generate a bunch of random samples with visibility probability 1
   unsigned int nsamples = 10000;

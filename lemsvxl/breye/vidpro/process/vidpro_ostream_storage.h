@@ -26,7 +26,7 @@ public:
 
   vidpro_ostream_storage();
   virtual ~vidpro_ostream_storage();
-  virtual vcl_string type() const { return "ostream"; }
+  virtual std::string type() const { return "ostream"; }
   
   //: Return IO version number;
   short version() const;
@@ -42,7 +42,7 @@ public:
   virtual bpro_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro_ostream_storage"; }
+  virtual std::string is_a() const { return "vidpro_ostream_storage"; }
 
   void set_ostream( const vidl_ostream_sptr &ostream );
  

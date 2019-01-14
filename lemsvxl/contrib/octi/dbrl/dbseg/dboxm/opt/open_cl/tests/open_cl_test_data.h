@@ -10,9 +10,9 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 
 #include <dboxm/opt/open_cl/boxm_ray_trace_manager.h>
 
@@ -22,19 +22,19 @@ class open_cl_test_data
   template <class T>
   static boct_tree<short, T >* tree();
   template <class T>
-  static void save_tree(vcl_string const& tree_path);
+  static void save_tree(std::string const& tree_path);
 
   static void test_rays(vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_origin,
                         vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_dir);
 
   template <class T>
-  static  void tree_and_rays_from_image(vcl_string const& image_path,
+  static  void tree_and_rays_from_image(std::string const& image_path,
                                         unsigned group_size,
                                         boct_tree<short, T >*& tree,
                                         vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_origin,
                                         vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_dir);
 
-  static void save_expected_image(vcl_string const& image_path,
+  static void save_expected_image(std::string const& image_path,
                                   unsigned cols, unsigned rows,
                                   float* expected_img);
 };
@@ -42,8 +42,8 @@ class open_cl_test_data
 template <class T>
 boct_tree<short,T > * open_cl_test_data::tree()
 {
-  vcl_vector<boct_tree_cell<short, T > > leaves;
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<boct_tree_cell<short, T > > leaves;
+  std::vector<vgl_point_3d<double> > pts;
   pts.push_back(vgl_point_3d<double>(0,0,0));
   pts.push_back(vgl_point_3d<double>(0.51,0,0));
   pts.push_back(vgl_point_3d<double>(0,0.51,0));
@@ -52,11 +52,11 @@ boct_tree<short,T > * open_cl_test_data::tree()
   pts.push_back(vgl_point_3d<double>(0.51,0,0.51));
   pts.push_back(vgl_point_3d<double>(0.0,0.51,0.51));
   pts.push_back(vgl_point_3d<double>(0.51,0.51,0.51));
-  vcl_vector<boct_loc_code<short> > leaf_codes;
+  std::vector<boct_loc_code<short> > leaf_codes;
   unsigned n_levels = 3;
   for (unsigned i = 0; i<8; ++i) {
     boct_loc_code<short> loc(pts[i], n_levels-1);
-    vcl_cout << "code[" << i << "] = " << loc << '\n';
+    std::cout << "code[" << i << "] = " << loc << '\n';
     leaf_codes.push_back(loc);
   }
   for (unsigned i = 0; i<8; ++i) {
@@ -72,10 +72,10 @@ boct_tree<short,T > * open_cl_test_data::tree()
   boct_tree<short, T > * ret_tree =
     new boct_tree<short, T >(root, init_tree->number_levels());
   delete init_tree;
-  vcl_vector<boct_tree_cell<short, T >* > tleaves;
+  std::vector<boct_tree_cell<short, T >* > tleaves;
   tleaves = ret_tree->leaf_cells();
-  vcl_size_t i = 0;
-  typename vcl_vector<boct_tree_cell<short, T >* >::iterator lit = tleaves.begin();
+  std::size_t i = 0;
+  typename std::vector<boct_tree_cell<short, T >* >::iterator lit = tleaves.begin();
   for (; lit!= tleaves.end(); ++lit, ++i)
   {
     T v((float)1.0*i);
@@ -87,7 +87,7 @@ boct_tree<short,T > * open_cl_test_data::tree()
 
 template <class T>
 void open_cl_test_data::
-tree_and_rays_from_image(vcl_string const& image_path,
+tree_and_rays_from_image(std::string const& image_path,
                          unsigned group_size,
                          boct_tree<short, T >*& tree,
                          vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_origin,
@@ -102,7 +102,7 @@ tree_and_rays_from_image(vcl_string const& image_path,
   unsigned ni = image.ni(), nj = image.nj();
   // find a square arrangement consistent with group size
   double gsize = static_cast<double>(group_size);
-  unsigned gwidth = static_cast<unsigned>(vcl_sqrt(gsize));
+  unsigned gwidth = static_cast<unsigned>(std::sqrt(gsize));
   unsigned gheight = group_size/gwidth;
   if (gwidth*gheight!=gsize)
     return;//maybe fixup later to handle all situations
@@ -110,15 +110,15 @@ tree_and_rays_from_image(vcl_string const& image_path,
   double min_dim = mni;
   if (mnj<min_dim)
     min_dim = mnj;
-  double dlev = vcl_log(min_dim)/vcl_log(2.0);
+  double dlev = std::log(min_dim)/std::log(2.0);
   unsigned n_levels = static_cast<unsigned>(dlev+1.0);
 
   float rni = 1.0f/static_cast<float>(mni), rnj =1.0f/static_cast<float>(mnj);
   ray_origin.resize(mnj, mni);
   ray_dir.resize(mnj, mni);
   ray_dir.fill(vnl_vector_fixed<float,3>(0.0f, 0.0f, -1.0f));
-  vcl_vector<boct_loc_code<short> > leaf_codes;
-  vcl_vector<float> image_int;
+  std::vector<boct_loc_code<short> > leaf_codes;
+  std::vector<float> image_int;
   float upper_v=(mnj-1)*rnj;
   for (unsigned j=0; j<mnj; ++j)
     for (unsigned i=0; i<mni; ++i)
@@ -133,7 +133,7 @@ tree_and_rays_from_image(vcl_string const& image_path,
       image_int.push_back(static_cast<float>(image(i,j))/255.0f);
     }
   //construct leaves
-  vcl_vector<boct_tree_cell<short, T > > leaves;
+  std::vector<boct_tree_cell<short, T > > leaves;
   for (unsigned i = 0; i<leaf_codes.size(); ++i) {
     boct_tree_cell<short, T > leaf(leaf_codes[i]);
     leaves.push_back(leaf);
@@ -151,10 +151,10 @@ tree_and_rays_from_image(vcl_string const& image_path,
   delete init_tree;
 
   // fill the leaves with data
-  vcl_vector<boct_tree_cell<short, T >* > tleaves;
+  std::vector<boct_tree_cell<short, T >* > tleaves;
   tleaves = tree->leaf_cells();
-  vcl_size_t i = 0;
-  typename vcl_vector<boct_tree_cell<short, T >* >::iterator lit = tleaves.begin();
+  std::size_t i = 0;
+  typename std::vector<boct_tree_cell<short, T >* >::iterator lit = tleaves.begin();
 
   for (; lit!= tleaves.end(); ++lit, ++i)
   {
@@ -206,7 +206,7 @@ tree_and_rays_from_image(vcl_string const& image_path,
 
 
 template <class T>
-void open_cl_test_data::save_tree(vcl_string const& tree_path)
+void open_cl_test_data::save_tree(std::string const& tree_path)
 {
   boxm_ray_trace_manager<T>* ray_mgr = typename boxm_ray_trace_manager<T>::instance();
   boct_tree<short,T >* tree = typename open_cl_test_data::tree<T>();

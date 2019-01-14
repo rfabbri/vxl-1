@@ -6,15 +6,15 @@
 
 static void 
 calib_perturb_minimizing_reprojection_errors(
-    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
+    const std::vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d);
+    const std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d);
 
 //: This program accomodates any experimentation I wanna do.
 int
 main(int /*argc*/, char ** /*argv*/)
 {
-  vcl_vector<bdifd_camera> cam_gt_;
+  std::vector<bdifd_camera> cam_gt_;
   unsigned nviews_=3;
   cam_gt_.resize(nviews_);
 
@@ -36,7 +36,7 @@ main(int /*argc*/, char ** /*argv*/)
   P = bdifd_turntable::camera_olympus(60, K);
   cam_gt_[2].set_p(*P);
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
   bdifd_data::space_curves_olympus_turntable( crv3d );
 
   calib_perturb_minimizing_reprojection_errors(cam_gt_, K, crv3d);
@@ -48,14 +48,14 @@ main(int /*argc*/, char ** /*argv*/)
 // measurements of tangent, curvature, and curvature derivative.
 void 
 calib_perturb_minimizing_reprojection_errors(
-    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
+    const std::vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d)
+    const std::vector<std::vector<bdifd_3rd_order_point_3d> > &crv3d)
 {
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
   bdifd_data::project_into_cams(crv3d, cam_gt_, crv2d_gt_);
 
-  vcl_vector<bdifd_camera> cam_;
+  std::vector<bdifd_camera> cam_;
   cam_.resize(3);
 
   double err_pos, err_t, err_k, err_kdot;
@@ -67,7 +67,7 @@ calib_perturb_minimizing_reprojection_errors(
          min_err_kdot, min_angle_err_kdot,
          min_err_pos, min_angle_err_pos;
 
-  min_err_pos = min_err_k = min_err_t = min_err_kdot = vcl_numeric_limits<double>::infinity();
+  min_err_pos = min_err_k = min_err_t = min_err_kdot = std::numeric_limits<double>::infinity();
 
   for (double dtheta=0.0001; dtheta <30; dtheta += 0.01) {
     const double angle1_perturb = 0 +dtheta;
@@ -84,7 +84,7 @@ calib_perturb_minimizing_reprojection_errors(
     cam_[2].set_p(*P); delete P;
 
     //: second, distance to reprojection using perturbed cameras 
-    //    vcl_cout << "\nErrors of reprojection using PERTURBED cams\n";
+    //    std::cout << "\nErrors of reprojection using PERTURBED cams\n";
     bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
     
     bdifd_data::max_err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos,err_t,err_k,
@@ -109,18 +109,18 @@ calib_perturb_minimizing_reprojection_errors(
       min_err_kdot = err_kdot;
       min_angle_err_kdot = dtheta;
     }
-    if ( (unsigned)(dtheta/0.025) % 10 == 0 || vcl_fabs(dtheta-30) < 2*dtheta ) {
-      vcl_cout << "\nperturbation angle (deg):" << dtheta << vcl_endl;
-      vcl_cout << "min_err_pos: " << min_err_pos <<  "\tangle: " << min_angle_err_pos << vcl_endl
-      << "min_err_t: " << min_err_t <<  "\tangle: " << min_angle_err_t << vcl_endl
-      << "min_err_k: " << min_err_k <<  "\tangle: " << min_angle_err_k << vcl_endl
-      << "min_err_kdot: " << min_err_kdot <<  "\tangle: " << min_angle_err_kdot << vcl_endl;
+    if ( (unsigned)(dtheta/0.025) % 10 == 0 || std::fabs(dtheta-30) < 2*dtheta ) {
+      std::cout << "\nperturbation angle (deg):" << dtheta << std::endl;
+      std::cout << "min_err_pos: " << min_err_pos <<  "\tangle: " << min_angle_err_pos << std::endl
+      << "min_err_t: " << min_err_t <<  "\tangle: " << min_angle_err_t << std::endl
+      << "min_err_k: " << min_err_k <<  "\tangle: " << min_angle_err_k << std::endl
+      << "min_err_kdot: " << min_err_kdot <<  "\tangle: " << min_angle_err_kdot << std::endl;
     }
   }
 
-  vcl_cout << "-----------------------  FINAL RESULTS  ------------------------------------\n"
-    << "min_err_pos: " << min_err_pos <<  "\tangle: " << min_angle_err_pos << vcl_endl
-    << "min_err_t: " << min_err_t <<  "\tangle: " << min_angle_err_t << vcl_endl
-    << "min_err_k: " << min_err_k <<  "\tangle: " << min_angle_err_k << vcl_endl
-    << "min_err_kdot: " << min_err_kdot <<  "\tangle: " << min_angle_err_kdot << vcl_endl;
+  std::cout << "-----------------------  FINAL RESULTS  ------------------------------------\n"
+    << "min_err_pos: " << min_err_pos <<  "\tangle: " << min_angle_err_pos << std::endl
+    << "min_err_t: " << min_err_t <<  "\tangle: " << min_angle_err_t << std::endl
+    << "min_err_k: " << min_err_k <<  "\tangle: " << min_angle_err_k << std::endl
+    << "min_err_kdot: " << min_err_kdot <<  "\tangle: " << min_angle_err_kdot << std::endl;
 }

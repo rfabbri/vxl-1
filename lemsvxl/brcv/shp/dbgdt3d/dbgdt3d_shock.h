@@ -4,8 +4,8 @@
 #ifndef gdt_shock_h_
 #define gdt_shock_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <utility>
 #include <vgl/vgl_point_3d.h>
 
 #include <dbmsh3d/dbmsh3d_utils.h>
@@ -21,7 +21,7 @@ inline double _R_get_asymptote (const double& aRi, const double& b2)
   if (_eqT(aRi, 0)) // if aRi == 0, line shock.
     return vnl_math::pi_over_2;
   else
-    return vcl_atan2 (vcl_sqrt(b2), aRi);
+    return std::atan2 (std::sqrt(b2), aRi);
 }
 
 inline double _L_get_asymptote (const double& aLi, const double& b2)
@@ -29,7 +29,7 @@ inline double _L_get_asymptote (const double& aLi, const double& b2)
   if (_eqT(aLi, 0)) // if aLi == 0, line shock.
     return vnl_math::pi_over_2;
   else
-    return vcl_atan2 (vcl_sqrt(b2), -aLi);
+    return std::atan2 (std::sqrt(b2), -aLi);
 }
 
 // #####################################################################
@@ -37,7 +37,7 @@ inline double _L_get_asymptote (const double& aLi, const double& b2)
 inline double _get_dRR_from_tauRR (const double& aR, const double& bR2, 
                                    const double& cR, const double& tauRR)
 {
-  const double denom = -cR*vcl_cos(tauRR)+aR;
+  const double denom = -cR*std::cos(tauRR)+aR;
   assert (!_eqM(denom, 0));
   const double dRR = bR2 / denom;
   assert (dRR > 0);
@@ -53,7 +53,7 @@ inline double _get_tauR_from_dR (const double& aR, const double& bR2,
   if (_eqF (cos_value, -1))
     return vnl_math::pi;
   assert (-1 < cos_value && cos_value < 1);
-  return vcl_acos (cos_value);
+  return std::acos (cos_value);
 }
 
 inline double _get_tauR_from_tauRR (const double& aR, const double& bR2, 
@@ -70,7 +70,7 @@ inline double _get_tauR_from_tauRR (const double& aR, const double& bR2,
 inline double _get_dR_from_tauR (const double& aR, const double& bR2, 
                                  const double& cR, const double& tauR)
 {
-  const double denom = cR*vcl_cos(tauR)-aR;
+  const double denom = cR*std::cos(tauR)-aR;
   assert (!_eqM(denom, 0));
   const double dR = bR2 / denom;
   assert (dR > 0);
@@ -86,7 +86,7 @@ inline double _get_tauRR_from_dRR (const double& aR, const double& bR2,
   if (_eqF (cos_value, -1))
     return vnl_math::pi;
   assert (-1 < cos_value && cos_value < 1);
-  return vcl_acos (cos_value);
+  return std::acos (cos_value);
 }
 
 inline double _get_tauRR_from_tauR (const double& aR, const double& bR2, 
@@ -109,13 +109,13 @@ inline double _get_tauLL_from_dLL (const double& aL, const double& bL2,
   if (_eqF (cos_value, -1))
     return vnl_math::pi;
   assert (-1 < cos_value && cos_value < 1);
-  return vcl_acos (cos_value);
+  return std::acos (cos_value);
 }
 
 inline double _get_dL_from_tauL (const double& aL, const double& bL2, 
                                  const double& cL, const double& tauL)
 {
-  const double denom = -cL*vcl_cos(tauL)-aL;
+  const double denom = -cL*std::cos(tauL)-aL;
   assert (!_eqM(denom, 0));
   const double dL = bL2 / denom;
   assert (dL > 0);
@@ -136,7 +136,7 @@ inline double _get_tauLL_from_tauL (const double& aL, const double& bL2,
 inline double _get_dLL_from_tauLL (const double& aL, const double& bL2, 
                                    const double& cL, const double& tauLL)
 {
-  const double denom = cL*vcl_cos(tauLL)+aL;
+  const double denom = cL*std::cos(tauLL)+aL;
   assert (!_eqM(denom, 0));
   const double d = bL2 / denom;
   assert (d > 0);
@@ -152,7 +152,7 @@ inline double _get_tauL_from_dL (const double& aL, const double& bL2,
   if (_eqF (cos_value, -1))
     return vnl_math::pi;
   assert (-1 < cos_value && cos_value < 1);
-  return vcl_acos (cos_value);
+  return std::acos (cos_value);
 }
 
 inline double _get_tauL_from_tauLL (const double& aL, const double& bL2, 
@@ -281,7 +281,7 @@ protected:
   dbmsh3d_gdt_vertex_3d*  Snode_;
   dbmsh3d_gdt_vertex_3d*  Enode_;
 
-  vcl_vector<gdt_selm*>   selms_;
+  std::vector<gdt_selm*>   selms_;
   
 public:
   //: ====== Constructor/Destructor ======
@@ -356,7 +356,7 @@ public:
     return false;
   }
   
-  vcl_vector<gdt_selm*>& selms() {
+  std::vector<gdt_selm*>& selms() {
     return selms_;
   }
 
@@ -661,7 +661,7 @@ public:
   bool validate_W_event (const gdt_welm* W, const double& tauP, double& timeP) const;
 
   //: ====== getInfo ======
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 };
 
 void associate_W_S (gdt_welm* W, gdt_shock* S);

@@ -1,10 +1,10 @@
 // ISHOCK-INIT.CPP
 //Intrinsic Shock Initialization
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cmath>
 
 //MSGOUT
 //#include "msgout.h"
@@ -120,7 +120,7 @@ void IShock::InitializeShocks (SHOCK_INIT_TYPE InitType)
 
   //6)For adding new elements, first we have to validate each existing sources, O(#_of_sources*n).
   if (InitType == BRUTE_FORCE_ADD_PATCH_INIT) {
-    vcl_vector<SIElement*> elmsToDel;
+    std::vector<SIElement*> elmsToDel;
     SIElmListIterator curS = SIElmList.begin();
     for (; curS!=SIElmList.end(); curS++){
       SIElement* curSElm = curS->second;
@@ -347,7 +347,7 @@ void IShock::InitializeShocks (SHOCK_INIT_TYPE InitType)
               midDistSq = _distSqPointPoint (arcPt1, arcPt2)/4;
               midPoint = _midPointPoint (arcPt1, arcPt2);
             }
-            else if (H<vcl_fabs(ba1->R()-ba2->R())) { //2)detect small and big arc.
+            else if (H<std::fabs(ba1->R()-ba2->R())) { //2)detect small and big arc.
               BArc* bigArc;
               BArc* smallArc;
               if (ba1->R()>ba2->R()) {
@@ -407,7 +407,7 @@ void IShock::InitializeShocks (SHOCK_INIT_TYPE InitType)
           if (InitType==REGULAR_ADD_PATCH_INIT || InitType==DELETE_PATCH_INIT)
             if (!ValidateCandidateSource_TwoBElmNeighbors (ArrayA[a], ArrayB[b], midPoint, midDistSq))
               continue;
-          initializeASource (ArrayA[a], ArrayB[b], midPoint, vcl_sqrt(midDistSq));
+          initializeASource (ArrayA[a], ArrayB[b], midPoint, std::sqrt(midDistSq));
         }
       }//end if LAGRANGIAN
     }//end for b
@@ -416,7 +416,7 @@ void IShock::InitializeShocks (SHOCK_INIT_TYPE InitType)
   //clear the taintedBElementList now that shocks have been reinitialized from them
   boundary()->taintedBElmList.clear();
 
-  ////vcl_cout<<"InitializeShocks(): # of sources initialized: "<< nSourceElement() <<vcl_endl;
+  ////std::cout<<"InitializeShocks(): # of sources initialized: "<< nSourceElement() <<std::endl;
   //if (MessageOption==MSG_VERBOSE){
   //  DebugPrintShockList (true);
   //}
@@ -715,7 +715,7 @@ void IShock::init_source_from_delaunay_edge (edge_ref e)
     //init a source from this edge
 
     Point midPoint = Point((op->x + dp->x)/2,(op->y + dp->y)/2);
-    double midDist = vcl_sqrt(d2_od)/2;
+    double midDist = std::sqrt(d2_od)/2;
     BElement* lbp = boundary()->BElmList[op->id];
     BElement* rbp = boundary()->BElmList[dp->id];
     initializeASource(lbp, rbp, midPoint, midDist);
@@ -782,7 +782,7 @@ void IShock::InitializeShocksDTPoints (void)
 
   long sec2 = clock();
 
-  vcl_cout << "Time before traversal of the delaunay: " << sec2-sec1 <<" msecs."<<vcl_endl;
+  std::cout << "Time before traversal of the delaunay: " << sec2-sec1 <<" msecs."<<std::endl;
 
   //traverse the quad edge data structure to extract the valid sources
   TraverseDelaunay(e);
@@ -795,7 +795,7 @@ void IShock::InitializeShocksDTPoints (void)
   //clear the taintedBElementList now that shocks have been reinitialized from them
   boundary()->taintedBElmList.clear();
 
-  //vcl_cout<<"# of shocks initialized: "<<nSElement() <<vcl_endl;
+  //std::cout<<"# of shocks initialized: "<<nSElement() <<std::endl;
   //DebugPrintShockList ();
 }
 
@@ -841,20 +841,20 @@ void IShock::TestSTLProfiling (BElmListType* ListA, BElmListType* ListB, BElmLis
     }
   }
   long sec2 = clock();
-  vcl_cout<< "\n\nNumber of elements= " << n <<vcl_endl<<vcl_endl;
-  vcl_cout<< "STL map counter= " << counter <<vcl_endl;
-  vcl_cout<< "STL map totalid= " << totalid <<vcl_endl;
-  vcl_cout << "Time on trivial loop on STL map: "<<sec2-sec1<<" msec."<<vcl_endl<<vcl_endl;
+  std::cout<< "\n\nNumber of elements= " << n <<std::endl<<std::endl;
+  std::cout<< "STL map counter= " << counter <<std::endl;
+  std::cout<< "STL map totalid= " << totalid <<std::endl;
+  std::cout << "Time on trivial loop on STL map: "<<sec2-sec1<<" msec."<<std::endl<<std::endl;
 
   //######################## VECTOR ##########################
-  vcl_vector<BElement* > belmVector;
+  std::vector<BElement* > belmVector;
   for (aa=ListA->rbegin(); aa != ListA->rend(); aa++) {
     belmVector.push_back (aa->second);
   }
-  vcl_vector<BElement* > *VectorA = &belmVector;
-  vcl_vector<BElement* > *VectorB = &belmVector;
-  vcl_vector<BElement* > *VectorC = &belmVector;
-  typedef vcl_vector<BElement* >::reverse_iterator belmVectorIterator;
+  std::vector<BElement* > *VectorA = &belmVector;
+  std::vector<BElement* > *VectorB = &belmVector;
+  std::vector<BElement* > *VectorC = &belmVector;
+  typedef std::vector<BElement* >::reverse_iterator belmVectorIterator;
 
   sec1 = clock();
   counter = 0;
@@ -873,9 +873,9 @@ void IShock::TestSTLProfiling (BElmListType* ListA, BElmListType* ListB, BElmLis
     }
   }
   sec2 = clock();
-  vcl_cout<< "STL vcl_vector counter= " << counter <<vcl_endl;
-  vcl_cout<< "STL vcl_vector totalid= " << totalid <<vcl_endl;
-  vcl_cout << "Time on trivial loop on STL Vector: "<<sec2-sec1<<" msec."<<vcl_endl<<vcl_endl;
+  std::cout<< "STL std::vector counter= " << counter <<std::endl;
+  std::cout<< "STL std::vector totalid= " << totalid <<std::endl;
+  std::cout << "Time on trivial loop on STL Vector: "<<sec2-sec1<<" msec."<<std::endl<<std::endl;
 
   //######################## ARRAY ##########################
   BElement** belmArray = new  BElement*[n];
@@ -900,9 +900,9 @@ void IShock::TestSTLProfiling (BElmListType* ListA, BElmListType* ListB, BElmLis
     }
   }
   sec2 = clock();
-  vcl_cout<< "C++ array counter= " << counter <<vcl_endl;
-  vcl_cout<< "C++ array totalid= " << totalid <<vcl_endl;
-  vcl_cout << "Time on trivial loop on C++ Array: "<<sec2-sec1<<" msec."<<vcl_endl<<vcl_endl;
+  std::cout<< "C++ array counter= " << counter <<std::endl;
+  std::cout<< "C++ array totalid= " << totalid <<std::endl;
+  std::cout << "Time on trivial loop on C++ Array: "<<sec2-sec1<<" msec."<<std::endl<<std::endl;
   delete []belmArray;
 
   return;

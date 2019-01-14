@@ -30,7 +30,7 @@ public:
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
 
-  vcl_string name() const;
+  std::string name() const;
 
 protected:
   vgui_event_condition left_click;

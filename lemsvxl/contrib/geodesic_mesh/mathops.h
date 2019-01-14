@@ -16,7 +16,7 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 #define MATHOPS
 
 #include "structs.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
 class MathOps {
 

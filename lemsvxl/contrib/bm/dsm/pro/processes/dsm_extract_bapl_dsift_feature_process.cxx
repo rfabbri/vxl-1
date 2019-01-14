@@ -20,8 +20,8 @@ bool dsm_extract_bapl_dsift_feature_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_extract_bapl_dsift_feature_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "bapl_dsift_sptr";
@@ -46,7 +46,7 @@ bool dsm_extract_bapl_dsift_feature_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_extract_bapl_dsift_feature_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_extract_bapl_dsift_feature_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 

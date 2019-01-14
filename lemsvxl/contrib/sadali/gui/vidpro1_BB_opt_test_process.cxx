@@ -49,7 +49,7 @@ vidpro1_BB_opt_test_process::vidpro1_BB_opt_test_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_BB_opt_test_process::vidpro1_BB_opt_test_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_BB_opt_test_process::vidpro1_BB_opt_test_process()" << std::endl;
     }
 }
 
@@ -62,7 +62,7 @@ vidpro1_BB_opt_test_process::~vidpro1_BB_opt_test_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_BB_opt_test_process::name()
 {
     return "Homography Test_Img";
@@ -94,12 +94,12 @@ vidpro1_BB_opt_test_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_BB_opt_test_process::get_input_type()
 {
     // this process looks for an image and vsol2D storage class
     // at each input frame
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -107,11 +107,11 @@ vidpro1_BB_opt_test_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_BB_opt_test_process::get_output_type()
 {  
     // this process produces a vsol2D storage class
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
 
     to_return.push_back( "image" );
     to_return.push_back( "image" );
@@ -126,8 +126,8 @@ vidpro1_BB_opt_test_process::execute()
 {
     // verify that the number of input frames is correct
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In vidpro1_BB_opt_test_process::execute() - not exactly two"
-            << " input frames" << vcl_endl;
+        std::cout << "In vidpro1_BB_opt_test_process::execute() - not exactly two"
+            << " input frames" << std::endl;
         return false;
     }
     clear_output();
@@ -179,7 +179,7 @@ vidpro1_BB_opt_test_process::execute()
     homog_mat[2][1]=(double)homparam8;
     homog_mat[2][2]=(double)homparam9;
     vgl_h_matrix_2d<double> test_homog_mat(homog_mat);
-    vcl_cout<<"Homog mat:"<<homog_mat<<"\n";
+    std::cout<<"Homog mat:"<<homog_mat<<"\n";
 
     brip_vil_float_ops::homography(origimg_view,test_homog_mat,corr_img_view);
     vil_image_view<vxl_byte> byte_img(corr_img_view.ni(),corr_img_view.nj() );

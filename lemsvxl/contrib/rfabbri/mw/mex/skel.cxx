@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
+#include <iostream>
+#include <streambuf>
 #include <math.h>
 
 
@@ -12,7 +12,7 @@ void mymex(
       double *pts0,
       double *pts1,
       mwSize n,
-      const vcl_string &method,
+      const std::string &method,
       mxArray **p_fmatrix
       )
 {

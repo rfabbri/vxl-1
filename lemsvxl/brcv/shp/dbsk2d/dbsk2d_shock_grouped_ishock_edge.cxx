@@ -11,7 +11,7 @@
 dbsk2d_shock_grouped_ishock_edge::
 dbsk2d_shock_grouped_ishock_edge(dbsk2d_shock_node_sptr src_node, 
                                  dbsk2d_shock_node_sptr tgt_node,
-                                 vcl_list<dbsk2d_ishock_edge*> shock_edges) : 
+                                 std::list<dbsk2d_ishock_edge*> shock_edges) : 
   dbsk2d_shock_edge(src_node, tgt_node), 
   edges_(shock_edges) 
 { 

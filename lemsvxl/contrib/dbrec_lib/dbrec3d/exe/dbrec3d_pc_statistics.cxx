@@ -9,7 +9,7 @@
 //#include <QVTKWidget.h>
 
 #include <vul/vul_arg.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_vector.h>
 #include <dbrec3d/gui/dbrec3d_line_plot.h>
 
@@ -41,14 +41,14 @@ void reconstruction_error(vnl_vector<double> const &weights, QVector<double> &er
 
 int main(int argc, char** argv) 
 {
-  vul_arg<vcl_string> weights_file("-weights_vector", "weights or eigen values file", "");
-  vul_arg<vcl_string> r_error_file("-test_error_file", "test error file", "");
+  vul_arg<std::string> weights_file("-weights_vector", "weights or eigen values file", "");
+  vul_arg<std::string> r_error_file("-test_error_file", "test error file", "");
 
 
   vul_arg_parse(argc, argv);
   
   //Load vectors 
-  vcl_ifstream weights_stream(weights_file().c_str());
+  std::ifstream weights_stream(weights_file().c_str());
   vnl_vector<double> weights;
   if(weights_stream)
     weights_stream >> weights;
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
   dbrec3d_choose_plot *plots = new dbrec3d_choose_plot;
   
   {
-    vcl_vector<double> auxVector;
+    std::vector<double> auxVector;
     auxVector.assign(weights.data_block(), weights.data_block() + npc);
     plots->register_plot(QString("Weights"), pc_index, QVector<double>::fromStdVector(auxVector));
     
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
   
   { 
     //t_error = 1.0 - t_error/t_error[0]; 
-//    vcl_vector<double> auxVector;
+//    std::vector<double> auxVector;
 //    auxVector.assign(t_error.data_block(), t_error.data_block() + npc);
 //    plots->register_plot(QString("Training Error"), pc_index, QVector<double>::fromStdVector(auxVector));
   }

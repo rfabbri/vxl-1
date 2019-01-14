@@ -12,7 +12,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 
@@ -30,13 +30,13 @@ class bvam_illum_index_process : public bprb_process
   //: Clone the process
   virtual bvam_illum_index_process* clone() const {return new bvam_illum_index_process(*this);}
 
-  vcl_string name(){return "BvamIllumIndexProcess";}
+  std::string name(){return "BvamIllumIndexProcess";}
 
   bool init() { return true; }
   bool execute();
   bool finish(){return true;}
 
-  unsigned bin_index(vcl_string map_type, double sun_el, double sun_az,
+  unsigned bin_index(std::string map_type, double sun_el, double sun_az,
                    unsigned num_lat = 0, unsigned num_long = 0);
  
  private:

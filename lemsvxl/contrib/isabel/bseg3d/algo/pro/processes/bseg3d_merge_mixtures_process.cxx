@@ -10,7 +10,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <bseg3d/algo/bseg3d_explore_mixtures.h>
 
@@ -26,16 +26,16 @@ bool bseg3d_merge_mixtures_process_cons(bprb_func_process& pro)
   // 3. nx (grid size)
   // 4. ny
   // 5. nz
-  vcl_vector<vcl_string> input_types_(5);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
+  std::vector<std::string> input_types_(5);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "unsigned";
   input_types_[4] = "unsigned";
 
 
   // No outputs to the database. The resulting grid is stored on disk
-  vcl_vector<vcl_string> output_types_(0);
+  std::vector<std::string> output_types_(0);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -53,12 +53,12 @@ bool bseg3d_merge_mixtures_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != 5)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << 5 << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << 5 << std::endl;
     return false;
   }
 
-  vcl_string apm_path = pro.get_input<vcl_string>(0);
-  vcl_string output_path = pro.get_input<vcl_string>(1);
+  std::string apm_path = pro.get_input<std::string>(0);
+  std::string output_path = pro.get_input<std::string>(1);
   unsigned nx = pro.get_input<unsigned>(2);
   unsigned ny = pro.get_input<unsigned>(3);
   unsigned nz = pro.get_input<unsigned>(4);

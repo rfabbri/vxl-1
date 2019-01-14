@@ -20,10 +20,10 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 #include <dbskfg/dbskfg_utilities.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <map>
+#include <vector>
+#include <string>
+#include <utility>
 #include <vgl/vgl_line_segment_2d.h>
 
 class dbsk2d_ishock_node;
@@ -74,14 +74,14 @@ private:
     void compile_contour_and_shock_links_helper
         (dbsk2d_ishock_edge* edge,
          dbskfg_shock_link* shock_link,
-         vcl_map< vcl_pair<unsigned int,unsigned int>, 
+         std::map< std::pair<unsigned int,unsigned int>, 
          dbskfg_composite_link_sptr>& 
          edge_map, dbskfg_utilities::Orientation type,bool& status_flag);
 
   
     //: Methods
     // return a vector of points that lie in between lines
-    vcl_vector< dbskfg_contour_node* > 
+    std::vector< dbskfg_contour_node* > 
         find_points_on_line(vgl_line_segment_2d<double>& line, 
                             int s_contour_id,
                             int e_contour_id);
@@ -102,13 +102,13 @@ private:
     dbskfg_rag_graph_sptr rag_graph_;
 
     // Keeps a unique string id attached to each contour node
-    vcl_map<vcl_string,dbskfg_contour_node*> contour_node_map_;
+    std::map<std::string,dbskfg_contour_node*> contour_node_map_;
 
     // Keep a mapping of instrinsinc shock ids to composite shock nodes
-    vcl_map<int,dbskfg_composite_node*> isnodes_to_composite_snodes_;
+    std::map<int,dbskfg_composite_node*> isnodes_to_composite_snodes_;
 
     // Keep a map of all contour nodes associated with an original contour id
-    vcl_map<int, vcl_vector<dbskfg_contour_node*> > nodes_contour_;
+    std::map<int, std::vector<dbskfg_contour_node*> > nodes_contour_;
 
     // Make copy ctor private
     dbskfg_compute_composite_graph(const dbskfg_compute_composite_graph&);

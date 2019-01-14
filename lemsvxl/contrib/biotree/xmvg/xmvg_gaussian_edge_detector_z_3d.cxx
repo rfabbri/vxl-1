@@ -8,7 +8,7 @@ xmvg_gaussian_edge_detector_z_3d::xmvg_gaussian_edge_detector_z_3d()
 
 xmvg_gaussian_edge_detector_z_3d::xmvg_gaussian_edge_detector_z_3d(xmvg_gaussian_edge_detector_descriptor & descriptor)
 {
-  assert(descriptor.name() == vcl_string("gaussian_edge_detector"));
+  assert(descriptor.name() == std::string("gaussian_edge_detector"));
   descriptor_ = descriptor;
 }
 
@@ -23,8 +23,8 @@ public:
   //: constructor with the fixed parameters
   analytic_gauss_edge_detector_z_1(double sigma, vnl_double_3 p) : sigma_(sigma), p_(p) 
   {
-    C = vcl_pow(p_.get(0),2) + vcl_pow(p_.get(1),2) + vcl_pow(p_.get(2),2);
-    sigmasq_ = vcl_pow(sigma_, 2);
+    C = std::pow(p_.get(0),2) + std::pow(p_.get(1),2) + std::pow(p_.get(2),2);
+    sigmasq_ = std::pow(sigma_, 2);
     I = -p_.get(2) / sigmasq_;
     common_coeff_ = 1 / (2*(vnl_math::pi)*sigmasq_);
   }
@@ -37,12 +37,12 @@ public:
   //: evaluating the filter value, this is normally preceded by setting varying parameters
   double evaluate()
   {
-    double sintheta = vcl_sin(theta_);
-    double costheta = vcl_cos(theta_);
-    double B = sintheta*(p_.get(0)*vcl_cos(phi_) + p_.get(1)*vcl_sin(phi_)) + costheta*(p_.get(2));
+    double sintheta = std::sin(theta_);
+    double costheta = std::cos(theta_);
+    double B = sintheta*(p_.get(0)*std::cos(phi_) + p_.get(1)*std::sin(phi_)) + costheta*(p_.get(2));
     double H = -costheta / sigmasq_;
 
-    double expo = vcl_exp((vcl_pow(B,2.0) - C) / (2*sigmasq_));
+    double expo = std::exp((std::pow(B,2.0) - C) / (2*sigmasq_));
     double val = common_coeff_ * expo * (B*H - I);
     return val;
   }
@@ -69,10 +69,10 @@ public:
     x0 = p_.get(0);
     y0 = p_.get(1);
     z0 = p_.get(2);
-    C = vcl_pow(x0,2) + vcl_pow(y0,2) + vcl_pow(z0,2);
-    sigmatwo_ = vcl_pow(sigma_, 2);
-    sigmasix_ = vcl_pow(sigma_, 6);
-    G = (3*z0*sigmatwo_ - vcl_pow(z0,3)) / sigmasix_;
+    C = std::pow(x0,2) + std::pow(y0,2) + std::pow(z0,2);
+    sigmatwo_ = std::pow(sigma_, 2);
+    sigmasix_ = std::pow(sigma_, 6);
+    G = (3*z0*sigmatwo_ - std::pow(z0,3)) / sigmasix_;
     common_coeff_ = 1 / (12*(vnl_math::pi)*sigmatwo_);
   }
   //: setting the varying parameters, this is normally followed by an evaluate function call
@@ -84,17 +84,17 @@ public:
   //: evaluating the filter value, this is normally preceded by setting varying parameters
   double evaluate()
   {
-    double sintheta = vcl_sin(theta_);
-    double costheta = vcl_cos(theta_);
-    double sinphi = vcl_sin(phi_);
-    double cosphi = vcl_cos(phi_);
+    double sintheta = std::sin(theta_);
+    double costheta = std::cos(theta_);
+    double sinphi = std::sin(phi_);
+    double cosphi = std::cos(phi_);
     double B = sintheta*(x0*cosphi + y0*sinphi) + costheta*z0;
-    double D = -vcl_pow(costheta,3) / sigmasix_;
-    double E = -3*vcl_pow(costheta,2)*z0 / sigmasix_;
-    double F = 3*costheta*(sigmatwo_-vcl_pow(z0,2)) / sigmasix_;
+    double D = -std::pow(costheta,3) / sigmasix_;
+    double E = -3*std::pow(costheta,2)*z0 / sigmasix_;
+    double F = 3*costheta*(sigmatwo_-std::pow(z0,2)) / sigmasix_;
 
-    double expo = vcl_exp((vcl_pow(B,2.0) - C) / (2*sigmatwo_));
-    double val = common_coeff_ * expo * (G - B*F + vcl_pow(B,2)*E - D*vcl_pow(B,3) + sigmatwo_*E - 3*sigmatwo_*D*B);
+    double expo = std::exp((std::pow(B,2.0) - C) / (2*sigmatwo_));
+    double val = common_coeff_ * expo * (G - B*F + std::pow(B,2)*E - D*std::pow(B,3) + sigmatwo_*E - 3*sigmatwo_*D*B);
     return val;
   }
 protected:
@@ -129,8 +129,8 @@ xmvg_atomic_filter_2d<double> xmvg_gaussian_edge_detector_z_3d::splat(vgl_point_
 
   vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(cam_trans, descriptor_.box());
 
-  int min_x = int(vcl_floor(box_2d.min_x()));   int max_x = int(vcl_ceil(box_2d.max_x()));
-  int min_y = int(vcl_floor(box_2d.min_y()));   int max_y = int(vcl_ceil(box_2d.max_y()));
+  int min_x = int(std::floor(box_2d.min_x()));   int max_x = int(std::ceil(box_2d.max_x()));
+  int min_y = int(std::floor(box_2d.min_y()));   int max_y = int(std::ceil(box_2d.max_y()));
 
   unsigned u_size = max_x - min_x + 1;
   unsigned v_size = max_y - min_y + 1;
@@ -156,12 +156,12 @@ xmvg_atomic_filter_2d<double> xmvg_gaussian_edge_detector_z_3d::splat(vgl_point_
 
       // if the ray direction is given in the wrong direction, i.e. not towards the image plane, but away from it
       // then it should be corrected, note that acos returns a value between [0, pi].
-      rd_to_pa_angle = vcl_acos(dot_product(ray_direction, cam_trans.principal_axis()) 
+      rd_to_pa_angle = std::acos(dot_product(ray_direction, cam_trans.principal_axis()) 
                                / (ray_direction.length() * cam_trans.principal_axis().length()));
       if(rd_to_pa_angle > vnl_math::pi_over_2)
         ray_direction = -ray_direction;
-      theta = vnl_math::pi_over_2 - vcl_atan(ray_direction.z() / (vcl_sqrt(vcl_pow(ray_direction.x(),2) + vcl_pow(ray_direction.y(),2))));
-      phi = vcl_atan(ray_direction.y() / ray_direction.x());
+      theta = vnl_math::pi_over_2 - std::atan(ray_direction.z() / (std::sqrt(std::pow(ray_direction.x(),2) + std::pow(ray_direction.y(),2))));
+      phi = std::atan(ray_direction.y() / ray_direction.x());
       // if x component of the ray direction is negative, then pi degrees should be added to phi since
       // atan returns value in the range of [-pi/2,pi/2].
       if(ray_direction.x() < 0)
@@ -176,7 +176,7 @@ xmvg_atomic_filter_2d<double> xmvg_gaussian_edge_detector_z_3d::splat(vgl_point_
   return result;
 }
 
-void x_write(vcl_ostream& os, xmvg_gaussian_edge_detector_z_3d detector)
+void x_write(std::ostream& os, xmvg_gaussian_edge_detector_z_3d detector)
 {
   x_write(os, detector.descriptor());
 }

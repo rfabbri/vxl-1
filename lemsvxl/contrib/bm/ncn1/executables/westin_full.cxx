@@ -11,15 +11,15 @@ int main(int argc, char* argv[])
 {
     if(argc < 2)
     {
-        vcl_cerr << "error westin_full.exe::must provide input glob and output directory" << vcl_endl;
+        std::cerr << "error westin_full.exe::must provide input glob and output directory" << std::endl;
         return 1;
     }
 
-    vcl_string video_glob = argv[1];
+    std::string video_glob = argv[1];
 
-    vcl_string result_dir = argv[2];
+    std::string result_dir = argv[2];
 
-    vcl_string entropy_bin_filename = result_dir + "\\temporal_entropy.bin";
+    std::string entropy_bin_filename = result_dir + "\\temporal_entropy.bin";
 
     ncn1_factory factory;
 

@@ -5,7 +5,7 @@
 
 #include "dbcll_euclidean_cluster_light.h"
 
-void dbcll_xml_write(const vcl_vector<unsigned> &sizes, const vcl_vector<double> sse_vector, vcl_string xml_file)
+void dbcll_xml_write(const std::vector<unsigned> &sizes, const std::vector<double> sse_vector, std::string xml_file)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element("dbcll_clusters");
@@ -44,7 +44,7 @@ void dbcll_xml_write(const vcl_vector<unsigned> &sizes, const vcl_vector<double>
   root->append_text("\n");
   
   //write to disk  
-  vcl_ofstream os(xml_file.c_str());
+  std::ofstream os(xml_file.c_str());
   os.precision(15);
   bxml_write(os, doc);
   os.close();  

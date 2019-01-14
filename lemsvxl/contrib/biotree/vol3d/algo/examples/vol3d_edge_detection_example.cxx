@@ -10,8 +10,8 @@
 \
 //    
 
-#include <vcl_ctime.h>
-#include <vcl_vector.h>
+#include <ctime>
+#include <vector>
 #include <vgl/xio/vgl_xio_box_3d.h>
 #include <vgl/xio/vgl_xio_vector_3d.h>
 #include <vil3d/vil3d_image_resource.h>
@@ -41,31 +41,31 @@ double ***grad_y;
 double ***grad_z;
 unsigned short ***vol;
 
-int file_check(vcl_string logfile, vcl_string scanfile, vcl_string boxfile)
+int file_check(std::string logfile, std::string scanfile, std::string boxfile)
 {
   //file extension check
-    vcl_size_t dot_pos = logfile.find_first_of(".");
-    if(vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
+    std::size_t dot_pos = logfile.find_first_of(".");
+    if(std::strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && std::strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified log file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified log file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     dot_pos = scanfile.find_first_of(".");
-    if(vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
+    if(std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
     {
-      vcl_cout << "************************************************" << vcl_endl;
-      vcl_cout << "The specified scan file extension is not correct" << vcl_endl;
-      vcl_cout << "************************************************" << vcl_endl;
+      std::cout << "************************************************" << std::endl;
+      std::cout << "The specified scan file extension is not correct" << std::endl;
+      std::cout << "************************************************" << std::endl;
       return 1;
     }
     dot_pos = boxfile.find_first_of(".");
-    if(vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
+    if(std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified box file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified box file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     return 1;
@@ -80,15 +80,15 @@ void create_gaussian_gradient_kernels()
     {
       for(int z = -offset; z <= offset; z++)
       {
-        gauss_x[x+offset][y+offset][z+offset] = (x/(vcl_pow(SIGMA,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(SIGMA,2.0)))
-          /(vcl_pow(vcl_sqrt(2*vnl_math::pi)*SIGMA,3.0));
-        gauss_y[x+offset][y+offset][z+offset] = (y/(vcl_pow(SIGMA,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(SIGMA,2.0)))
-          /(vcl_pow(vcl_sqrt(2*vnl_math::pi)*SIGMA,3.0));
-        gauss_z[x+offset][y+offset][z+offset] = (z/(vcl_pow(SIGMA,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(SIGMA,2.0)))
-          /(vcl_pow(vcl_sqrt(2*vnl_math::pi)*SIGMA,3.0));
+        gauss_x[x+offset][y+offset][z+offset] = (x/(std::pow(SIGMA,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(SIGMA,2.0)))
+          /(std::pow(std::sqrt(2*vnl_math::pi)*SIGMA,3.0));
+        gauss_y[x+offset][y+offset][z+offset] = (y/(std::pow(SIGMA,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(SIGMA,2.0)))
+          /(std::pow(std::sqrt(2*vnl_math::pi)*SIGMA,3.0));
+        gauss_z[x+offset][y+offset][z+offset] = (z/(std::pow(SIGMA,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(SIGMA,2.0)))
+          /(std::pow(std::sqrt(2*vnl_math::pi)*SIGMA,3.0));
       }
     }
   }
@@ -100,7 +100,7 @@ void convolve_volume_with_gaussian(int dimx, int dimy, int dimz)
   // convolve the image with the Gaussian edge detector kernels
   for(int z = 0; z < dimz; z++)
   {
-    vcl_cout << "processing slice " << z+1 << " of " << dimz << " slices for gradient" << vcl_endl;
+    std::cout << "processing slice " << z+1 << " of " << dimz << " slices for gradient" << std::endl;
     for(int y = 0; y < dimy; y++)
     {
       for(int x = 0; x < dimx; x++)
@@ -152,8 +152,8 @@ void save_result_as_binary(det_edge_map cm, int dimx, int dimy, int dimz, const 
     }
   }
   // create cylinder and write to binary stream
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
   vsl_b_ofstream stream(o_file);
 
   int index = 0;
@@ -166,8 +166,8 @@ void save_result_as_binary(det_edge_map cm, int dimx, int dimy, int dimz, const 
         double x, y, z;
         if (cm[i][j][k].location_ != vgl_point_3d<double> (0.,0.,0.) && cm[i][j][k].strength_ > (max_intensity/3))
         {
-          vcl_cout << cm[i][j][k].location_ << vcl_endl;
-          vcl_cout << cm[i][j][k].strength_ << vcl_endl;
+          std::cout << cm[i][j][k].location_ << std::endl;
+          std::cout << cm[i][j][k].strength_ << std::endl;
 
           x = i + cm[i][j][k].location_.x() - offset;
           y = j + cm[i][j][k].location_.y() - offset;
@@ -204,47 +204,47 @@ int main(int argc, char** argv)
 {
   clock_t start, end;
   double elapsed;
-  start = vcl_clock();
+  start = std::clock();
 
   proc_io_run_xml_parser parser;
-  vcl_FILE *xmlFile;
-  vcl_string fname="";
-  vcl_string recon_fname = "";
-  vcl_string out_fname = "";
+  std::FILE *xmlFile;
+  std::string fname="";
+  std::string recon_fname = "";
+  std::string out_fname = "";
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    if (arg == vcl_string ("-x")) { fname = vcl_string(argv[++i]);}
+    std::string arg (argv[i]);
+    if (arg == std::string ("-x")) { fname = std::string(argv[++i]);}
 
     // this argument can be a volume data file like *.gipl or a path with wild characters to the 
     // reconstructed images like: C:\\test_images\\filters\\newcast35um2_orig\\scan35um_rec####.bmp
-    else if (arg == vcl_string ("-b")) {recon_fname = vcl_string(argv[++i]);}
+    else if (arg == std::string ("-b")) {recon_fname = std::string(argv[++i]);}
     // output bin file name
-    else if (arg == vcl_string ("-o")) {out_fname = vcl_string(argv[++i]);}
+    else if (arg == std::string ("-o")) {out_fname = std::string(argv[++i]);}
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-x xml_script] " << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-x xml_script] " << std::endl;
       throw -1;
     }
   }
 
   if (  fname == ""){
-    vcl_cout << "XML File not specified" << vcl_endl; 
+    std::cout << "XML File not specified" << std::endl; 
     return(1);
   }
 
   if (  recon_fname == ""){
-    vcl_cout << "3D Data File (Path) not specified" << vcl_endl; 
+    std::cout << "3D Data File (Path) not specified" << std::endl; 
     return(1);
   }
 
   if (  out_fname == ""){
-    vcl_cout << "Output File not specified" << vcl_endl; 
+    std::cout << "Output File not specified" << std::endl; 
     return(1);
   }
 
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile){
     fprintf(stderr, " %s error on opening", fname.c_str() );
     return(1);
@@ -258,34 +258,34 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  vcl_cout << "parsing finished!" << vcl_endl;
+  std::cout << "parsing finished!" << std::endl;
 
   // get the parameters from parser
-  static vcl_string logfile = parser.log();
-  static vcl_string scanfile = parser.scan();
-  static vcl_string boxfile = parser.box();
+  static std::string logfile = parser.log();
+  static std::string scanfile = parser.scan();
+  static std::string boxfile = parser.box();
 
   if (file_check(logfile, scanfile, boxfile) == 0)
     return 1;
 
   imgr_skyscan_log log(logfile.data());
   xscan_scan scan = log.get_scan();
-  vcl_cout << "SCAN BEFORE\n" << scan << vcl_endl;
+  std::cout << "SCAN BEFORE\n" << scan << std::endl;
 
-  vcl_ifstream scan_file(scanfile.c_str());
+  std::ifstream scan_file(scanfile.c_str());
   scan_file >> scan;
   scan_file.close();
 
-  vcl_cout << "SCAN AFTER\n" << scan << vcl_endl;
+  std::cout << "SCAN AFTER\n" << scan << std::endl;
 
   log.set_scan(scan);
 
   //get the box
-  vcl_ifstream box_file(boxfile.c_str());
+  std::ifstream box_file(boxfile.c_str());
   vgl_box_3d<double> box;
   box.read(box_file);
   box_file.close();
-  vcl_cout << "BOX\n" << box << vcl_endl;
+  std::cout << "BOX\n" << box << std::endl;
 
 #if 0 //for debugging purposes (added by CAN)
   // increase box dimensions
@@ -294,7 +294,7 @@ int main(int argc, char** argv)
   box.set_depth(box.depth()*2);
 #endif
 
-  vcl_cout << "BOX\n" << box << vcl_endl;
+  std::cout << "BOX\n" << box << std::endl;
 
   imgr_skyscan_reconlog header(logfile.data(), scan);
   vgl_point_3d<double> box_min = header.bsc_to_fbpc(box.min_point());
@@ -314,46 +314,46 @@ int main(int argc, char** argv)
 
   vgl_box_3d<double> recon_box(box_min, box_max);
 
-  vcl_cout << recon_box << vcl_endl;
+  std::cout << recon_box << std::endl;
 
   vil3d_image_resource_sptr img_res_sptr = vil3d_load_image_resource(recon_fname.c_str()); 
-  vcl_cout << "ni=" << img_res_sptr->ni() << " nj=" << img_res_sptr->nj() << 
-    " nk=" << img_res_sptr->nk() << vcl_endl;
+  std::cout << "ni=" << img_res_sptr->ni() << " nj=" << img_res_sptr->nj() << 
+    " nk=" << img_res_sptr->nk() << std::endl;
 
   // round the min and max positions
   int minx, miny, minz, maxx, maxy, maxz;
-  if(box_min.x() - vcl_floor(box_min.x()) >= 0.5)
-    minx = int(vcl_ceil(box_min.x()));
+  if(box_min.x() - std::floor(box_min.x()) >= 0.5)
+    minx = int(std::ceil(box_min.x()));
   else
-    minx = int(vcl_floor(box_min.x()));
+    minx = int(std::floor(box_min.x()));
 
-  if(box_max.x() - vcl_floor(box_max.x()) >= 0.5)
-    maxx = int(vcl_ceil(box_max.x()));
+  if(box_max.x() - std::floor(box_max.x()) >= 0.5)
+    maxx = int(std::ceil(box_max.x()));
   else
-    maxx = int(vcl_floor(box_max.x()));
+    maxx = int(std::floor(box_max.x()));
 
-  if(box_min.y() - vcl_floor(box_min.y()) >= 0.5)
-    miny = int(vcl_ceil(box_min.y()));
+  if(box_min.y() - std::floor(box_min.y()) >= 0.5)
+    miny = int(std::ceil(box_min.y()));
   else
-    miny = int(vcl_floor(box_min.y()));
+    miny = int(std::floor(box_min.y()));
 
-  if(box_max.y() - vcl_floor(box_max.y()) >= 0.5)
-    maxy = int(vcl_ceil(box_max.y()));
+  if(box_max.y() - std::floor(box_max.y()) >= 0.5)
+    maxy = int(std::ceil(box_max.y()));
   else
-    maxy = int(vcl_floor(box_max.y()));
+    maxy = int(std::floor(box_max.y()));
 
-  if(box_min.z() - vcl_floor(box_min.z()) >= 0.5)
-    minz = int(vcl_ceil(box_min.z()));
+  if(box_min.z() - std::floor(box_min.z()) >= 0.5)
+    minz = int(std::ceil(box_min.z()));
   else
-    minz = int(vcl_floor(box_min.z()));
+    minz = int(std::floor(box_min.z()));
 
-  if(box_max.z() - vcl_floor(box_max.z()) >= 0.5)
-    maxz = int(vcl_ceil(box_max.z()));
+  if(box_max.z() - std::floor(box_max.z()) >= 0.5)
+    maxz = int(std::ceil(box_max.z()));
   else
-    maxz = int(vcl_floor(box_max.z()));
+    maxz = int(std::floor(box_max.z()));
 
   vgl_point_3d<double> p1 = header.fbpc_to_bsc(vgl_point_3d<double> (minx, miny, minz+header.start_slice_));
-  vcl_cout << p1 << vcl_endl;
+  std::cout << p1 << std::endl;
 
   // boundaries are extended to get correct gradients at the boundaries too
   int offset = (KERNEL_SIZE-1) / 2;
@@ -416,9 +416,9 @@ int main(int argc, char** argv)
   }
 
   create_gaussian_gradient_kernels();
-  vcl_cout << "Gaussian kernels created..." << vcl_endl;
+  std::cout << "Gaussian kernels created..." << std::endl;
   convolve_volume_with_gaussian(dimx, dimy, dimz);
-  vcl_cout << "Gradient computations finished..." << vcl_endl;
+  std::cout << "Gradient computations finished..." << std::endl;
 
   int roidimx = dimx - 2*offset;
   int roidimy = dimy - 2*offset;
@@ -428,76 +428,76 @@ int main(int argc, char** argv)
   for(int k=offset;k<dimz-offset;k++)
   {
     char buffer[1024];
-    vcl_sprintf(buffer, "D:\\MyDocs\\Temp\\vis\\img%03d.pgm",k);
-    FILE *fp = vcl_fopen(buffer, "w");
-    vcl_fprintf(fp,"P2\n%d %d\n%d\n", roidimx, roidimy, 255);
+    std::sprintf(buffer, "D:\\MyDocs\\Temp\\vis\\img%03d.pgm",k);
+    FILE *fp = std::fopen(buffer, "w");
+    std::fprintf(fp,"P2\n%d %d\n%d\n", roidimx, roidimy, 255);
     for(int j=offset; j<dimy-offset; j++)
     {
       for(int i=offset; i<dimx-offset; i++)
       {
-//        double val = vcl_sqrt(vcl_pow(grad_x[i][j][k],2.0) + vcl_pow(grad_y[i][j][k],2.0) + vcl_pow(grad_z[i][j][k],2.0));
-        double val = vcl_abs(vol[i][j][k]);
-        vcl_fprintf(fp,"%d ", int(val));
+//        double val = std::sqrt(std::pow(grad_x[i][j][k],2.0) + std::pow(grad_y[i][j][k],2.0) + std::pow(grad_z[i][j][k],2.0));
+        double val = std::abs(vol[i][j][k]);
+        std::fprintf(fp,"%d ", int(val));
       }
-      vcl_fprintf(fp,"\n");
+      std::fprintf(fp,"\n");
     }
-    vcl_fclose(fp);
+    std::fclose(fp);
   }
 #endif
 
 #if 0
-  FILE *fpx = vcl_fopen("D:\\MyDocs\\Temp\\vol_edge_x.txt", "w");
-  FILE *fpy = vcl_fopen("D:\\MyDocs\\Temp\\vol_edge_y.txt", "w");
-  FILE *fpz = vcl_fopen("D:\\MyDocs\\Temp\\vol_edge_z.txt", "w");
-  vcl_fprintf(fpx,"%d %d %d\n", roidimx, roidimy, roidimz);
-  vcl_fprintf(fpy,"%d %d %d\n", roidimx, roidimy, roidimz);
-  vcl_fprintf(fpz,"%d %d %d\n", roidimx, roidimy, roidimz);
+  FILE *fpx = std::fopen("D:\\MyDocs\\Temp\\vol_edge_x.txt", "w");
+  FILE *fpy = std::fopen("D:\\MyDocs\\Temp\\vol_edge_y.txt", "w");
+  FILE *fpz = std::fopen("D:\\MyDocs\\Temp\\vol_edge_z.txt", "w");
+  std::fprintf(fpx,"%d %d %d\n", roidimx, roidimy, roidimz);
+  std::fprintf(fpy,"%d %d %d\n", roidimx, roidimy, roidimz);
+  std::fprintf(fpz,"%d %d %d\n", roidimx, roidimy, roidimz);
   for(int k = offset; k < dimz-offset; k++)
   {
     for(int j = offset; j < dimy-offset; j++)
     {
       for(int i = offset; i < dimx-offset; i++)
       {
-        vcl_fprintf(fpx,"%f ", grad_x[i][j][k]);
-        vcl_fprintf(fpy,"%f ", grad_y[i][j][k]);
-        vcl_fprintf(fpz,"%f ", grad_z[i][j][k]);
+        std::fprintf(fpx,"%f ", grad_x[i][j][k]);
+        std::fprintf(fpy,"%f ", grad_y[i][j][k]);
+        std::fprintf(fpz,"%f ", grad_z[i][j][k]);
       }
-      vcl_fprintf(fpx,"\n");
-      vcl_fprintf(fpy,"\n");
-      vcl_fprintf(fpz,"\n");
+      std::fprintf(fpx,"\n");
+      std::fprintf(fpy,"\n");
+      std::fprintf(fpz,"\n");
     }
-    vcl_fprintf(fpx,"\n");
-    vcl_fprintf(fpy,"\n");
-    vcl_fprintf(fpz,"\n");
+    std::fprintf(fpx,"\n");
+    std::fprintf(fpy,"\n");
+    std::fprintf(fpz,"\n");
   }
-  vcl_fclose(fpx);
-  vcl_fclose(fpy);
-  vcl_fclose(fpz);
+  std::fclose(fpx);
+  std::fclose(fpy);
+  std::fclose(fpz);
 #endif
 
 #if 0
-  FILE *fp = vcl_fopen("D:\\MyDocs\\Temp\\vol.txt", "w");
-  vcl_fprintf(fp,"%d %d %d\n", roidimx, roidimy, roidimz);
+  FILE *fp = std::fopen("D:\\MyDocs\\Temp\\vol.txt", "w");
+  std::fprintf(fp,"%d %d %d\n", roidimx, roidimy, roidimz);
   for(int k = offset; k < dimz-offset; k++)
   {
     for(int j = offset; j < dimy-offset; j++)
     {
       for(int i = offset; i < dimx-offset; i++)
       {
-        vcl_fprintf(fp,"%d ", unsigned short(vol[i][j][k]));
+        std::fprintf(fp,"%d ", unsigned short(vol[i][j][k]));
       }
-      vcl_fprintf(fp,"\n");
+      std::fprintf(fp,"\n");
     }
-    vcl_fprintf(fp,"\n");
+    std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 #endif
 
   det_edge_map cm(dimx, dimy, dimz, grad_x, grad_y, grad_z);
   cm = cm.nonmaxium_suppression_for_edge_detection();
   save_result_as_binary(cm, dimx, dimy, dimz, out_fname.c_str());
 
-  end = vcl_clock();
+  end = std::clock();
   elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is " << elapsed << vcl_endl;
+  std::cout << "Elapsed time is " << elapsed << std::endl;
 }

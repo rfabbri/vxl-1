@@ -4,7 +4,7 @@
 #ifndef dbmsh3d_process_h_
 #define dbmsh3d_process_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <vul/vul_printf.h>
 
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -38,21 +38,21 @@ protected:
   //    dir_file       "abc\def\prefix-ghi-jkl-mno"
   //    file           "prefix-ghi-jkl-mno"
   //    suffix         "txt"
-  vcl_string      dir_file_;
-  vcl_string      dir_prefix_;
+  std::string      dir_file_;
+  std::string      dir_prefix_;
 
   PRO_DATA        pro_data_;
 
   //: Point cloud or mesh or several types.
-  vcl_vector<vgl_point_3d<double> > pts_;
+  std::vector<vgl_point_3d<double> > pts_;
   
   //: The efficient vertex data structure 
   //  for Indexed-face-set (IFS) visualization, File I/O, etc.
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > idpts_;
+  std::vector<std::pair<int, vgl_point_3d<double> > > idpts_;
 
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > > oripts_;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > > oripts_;
 
-  vcl_vector<vcl_vector<int> > ifs_faces_;
+  std::vector<std::vector<int> > ifs_faces_;
 
   dbmsh3d_sg3pi*  sg3pi_;
   dbmsh3d_mesh*   mesh_;
@@ -88,19 +88,19 @@ public:
   }
 
   //###### Data access functions ######
-  vcl_string dir_prefix() const {
+  std::string dir_prefix() const {
     return dir_prefix_;
   }
-  vcl_string dir_file() const {
+  std::string dir_file() const {
     return dir_file_;
   }
-  vcl_string dir() const {
+  std::string dir() const {
     return buld_get_dir (dir_prefix_);
   }
-  void set_dir_prefix (const vcl_string& str) {
+  void set_dir_prefix (const std::string& str) {
     dir_prefix_ = str;
   }
-  void set_dir_file (const vcl_string& str) {
+  void set_dir_file (const std::string& str) {
     dir_file_ = str;
     dir_prefix_ = buld_get_dir_prefix (str);
   }
@@ -112,31 +112,31 @@ public:
     pro_data_ = data;
   }
 
-  vcl_vector<vgl_point_3d<double> >& pts() {
+  std::vector<vgl_point_3d<double> >& pts() {
     return pts_;
   }
   vgl_point_3d<double> pts (const int i) const {
     return pts_[i];
   }
 
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts() {
+  std::vector<std::pair<int, vgl_point_3d<double> > >& idpts() {
     return idpts_;
   }
-  const vcl_pair<int, vgl_point_3d<double> >& idpts (const unsigned int i) const {
+  const std::pair<int, vgl_point_3d<double> >& idpts (const unsigned int i) const {
     return idpts_[i];
   }
-  vcl_pair<int, vgl_point_3d<double> >& idpts (const unsigned int i) {
+  std::pair<int, vgl_point_3d<double> >& idpts (const unsigned int i) {
     return idpts_[i];
   }
 
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& oripts() {
+  std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& oripts() {
     return oripts_;
   }
-  vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > oripts (const int i) const {
+  std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > oripts (const int i) const {
     return oripts_[i];
   }
 
-  vcl_vector<vcl_vector<int> >& ifs_faces() {
+  std::vector<std::vector<int> >& ifs_faces() {
     return ifs_faces_;
   }
   int ifs_faces (const int i, const int j) {
@@ -207,53 +207,53 @@ public:
 
   //###### File I/O ######
   //: Load input points from various input file types.
-  bool load_points_files (vcl_string dirfile = "");
+  bool load_points_files (std::string dirfile = "");
 
   //: Load input faces (already meshed) from various file types.
-  bool load_faces_files (vcl_string dirfile = "");
+  bool load_faces_files (std::string dirfile = "");
 
   //: Load input meshe from various file types.
-  bool load_meshes_files (vcl_string dirfile = "");
+  bool load_meshes_files (std::string dirfile = "");
   
-  void save_xyz (vcl_string dirfile = "");
-  bool load_xyz (vcl_string dirfile = "");
+  void save_xyz (std::string dirfile = "");
+  bool load_xyz (std::string dirfile = "");
 
-  void save_p3d (vcl_string dirfile = "");
-  bool load_p3d (vcl_string dirfile = "");
+  void save_p3d (std::string dirfile = "");
+  bool load_p3d (std::string dirfile = "");
 
-  void save_xyzn1 (vcl_string dirfile = "");
-  bool load_xyzn1 (vcl_string dirfile = "");
+  void save_xyzn1 (std::string dirfile = "");
+  bool load_xyzn1 (std::string dirfile = "");
   
-  ///void save_xyznw (vcl_string dirfile = "");
-  ///bool load_xyznw (vcl_string dirfile = "");
+  ///void save_xyznw (std::string dirfile = "");
+  ///bool load_xyznw (std::string dirfile = "");
 
-  void save_3pi (vcl_string dirfile = "");
-  bool load_3pi (vcl_string dirfile = "");
+  void save_3pi (std::string dirfile = "");
+  bool load_3pi (std::string dirfile = "");
 
-  void save_ply (vcl_string dirfile = "", const bool ascii_mode = true);
-  bool load_ply (vcl_string dirfile = "");
-  bool load_ply_v (vcl_string dirfile = "");
-  bool load_ply_f (vcl_string dirfile = "");
+  void save_ply (std::string dirfile = "", const bool ascii_mode = true);
+  bool load_ply (std::string dirfile = "");
+  bool load_ply_v (std::string dirfile = "");
+  bool load_ply_f (std::string dirfile = "");
 
-  void save_ply2 (vcl_string dirfile = "");
-  bool load_ply2 (vcl_string dirfile = "", const bool IFS_to_MHE = false);
-  bool load_ply2_v (vcl_string dirfile = "");
-  bool load_ply2_f (vcl_string dirfile = "");
+  void save_ply2 (std::string dirfile = "");
+  bool load_ply2 (std::string dirfile = "", const bool IFS_to_MHE = false);
+  bool load_ply2_v (std::string dirfile = "");
+  bool load_ply2_f (std::string dirfile = "");
 
-  void save_off (vcl_string dirfile = "");
-  bool load_off (vcl_string dirfile = "");
+  void save_off (std::string dirfile = "");
+  bool load_off (std::string dirfile = "");
 
-  void save_obj (vcl_string dirfile = "");
-  bool load_obj (vcl_string dirfile = "");
+  void save_obj (std::string dirfile = "");
+  bool load_obj (std::string dirfile = "");
 
-  void save_iv_ifs (vcl_string dirfile = "");
-  bool load_iv_ifs (vcl_string dirfile = "");
+  void save_iv_ifs (std::string dirfile = "");
+  bool load_iv_ifs (std::string dirfile = "");
 
-  void save_m (vcl_string dirfile = "");
-  bool load_m (vcl_string dirfile = "");
+  void save_m (std::string dirfile = "");
+  bool load_m (std::string dirfile = "");
 
-  void save_vtk (vcl_string dirfile = "");
-  bool load_vtk (vcl_string dirfile = "");
+  void save_vtk (std::string dirfile = "");
+  bool load_vtk (std::string dirfile = "");
 
   //###### Alignment, affine transformation ######
   bool is_hmatrix_identity () const {
@@ -277,7 +277,7 @@ public:
 
   virtual void apply_xform_hmatrix ();
 
-  bool load_hmatrix (vcl_string dirfile = "");
+  bool load_hmatrix (std::string dirfile = "");
 
   //###### Virtual Visualization Functions ######
 };
@@ -341,7 +341,7 @@ public:
   }
 
   //: ====== File I/O ======
-  bool load_ply2_fmm (vcl_string dirfile = "");
+  bool load_ply2_fmm (std::string dirfile = "");
 
   //: ====== Processing ======
 

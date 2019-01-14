@@ -7,19 +7,19 @@
 
 #include"nn_subpixel_distance_transform.h"
 #include<ANN/ANN.h>
-#include<vcl_cmath.h>
+#include<cmath>
 
-bool nn_subpixel_distance_transform(vcl_vector<dbdet_3d_edge_sptr>& edges, vil_image_view<double>& DT,
+bool nn_subpixel_distance_transform(std::vector<dbdet_3d_edge_sptr>& edges, vil_image_view<double>& DT,
 		int ni, int nj, int slice_index, double hx, double hy, double dist_thresh)
 {
 	int NI = (ni-1)/hx+1;
 	int NJ = (nj-1)/hy+1;
 	int dim = 3;
 	DT.set_size(NI,NJ);
-	vcl_vector<dbdet_3d_edge_sptr> close_edges;
+	std::vector<dbdet_3d_edge_sptr> close_edges;
 	for(int i = 0; i < edges.size(); i++)
 	{
-		if(vcl_fabs(edges[i]->z - slice_index) < dist_thresh)
+		if(std::fabs(edges[i]->z - slice_index) < dist_thresh)
 		{
 			close_edges.push_back(edges[i]);
 		}
@@ -49,7 +49,7 @@ bool nn_subpixel_distance_transform(vcl_vector<dbdet_3d_edge_sptr>& edges, vil_i
 					&nnIdx,							// nearest neighbors (returned)
 					&dist,							// distance (returned)
 					0);
-			DT(i,j) = vcl_sqrt(dist);
+			DT(i,j) = std::sqrt(dist);
 		}
 	}
 	delete kdTree;

@@ -4,7 +4,7 @@
 #include <shape_align/dbskr_test_routines.h>
 
 #include <vul/vul_timer.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <vul/vul_arg.h>
 
@@ -61,12 +61,12 @@ int main( int argc, char *argv[] )
         color=dbskr_test_routines::LAB;
     }
 
-    vcl_string query_esf_file(query_file());
-    vcl_string query_dc_file(dc_file());
-    vcl_string model_filename(model_file());
-    vcl_string gmm_file(gmm());
-    vcl_string pca_M_file(pca_modes());
-    vcl_string pca_mean_file(pca_mean());
+    std::string query_esf_file(query_file());
+    std::string query_dc_file(dc_file());
+    std::string model_filename(model_file());
+    std::string gmm_file(gmm());
+    std::string pca_M_file(pca_modes());
+    std::string pca_mean_file(pca_mean());
 
     vul_timer t;
 
@@ -86,8 +86,8 @@ int main( int argc, char *argv[] )
     
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     return 0;
 }

@@ -22,7 +22,7 @@
 #include <dbsksp/vis/dbsksp_shock_tableau.h>
 #include <dbsksp/vis/dbsksp_soview_shock.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 
@@ -47,7 +47,7 @@ dbsksp_shock_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbsksp_shock_graph_sptr shock_graph = shock_storage->shock_graph();
   if (shock_graph)
   {
-    vcl_vector<vgui_style_sptr> style_vector;
+    std::vector<vgui_style_sptr> style_vector;
     style_vector.push_back(vgui_style::new_style(1,0,0, 3.0, 3.0));
     style_vector.push_back(vgui_style::new_style(0,1,0, 3.0, 3.0));
     style_vector.push_back(vgui_style::new_style(0,0,1, 3.0, 3.0));
@@ -116,7 +116,7 @@ dbsksp_shock_displayer::make_tableau( bpro1_storage_sptr storage) const
     }
 
     // display all the shapelets
-    vcl_vector<dbsksp_shapelet_sptr > shapelet_list = shock_storage->shapelet_list();
+    std::vector<dbsksp_shapelet_sptr > shapelet_list = shock_storage->shapelet_list();
     for (unsigned i=0; i<shapelet_list.size(); ++i)
     {
       int index = (5*i) % 256;

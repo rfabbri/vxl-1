@@ -96,10 +96,10 @@ private:
 //  unsigned n_bins_;
 //  
 //  //: The models 
-//  vcl_vector<bsta_gaussian_sphere<double, 3> > position_dist;
+//  std::vector<bsta_gaussian_sphere<double, 3> > position_dist;
 //  
 //  //: The model for relative orientation -start by assuming all arientations are equally likely?
-//  //vcl_vector<bsta_gaussian_sphere<double, 3> > orientation_dist;
+//  //std::vector<bsta_gaussian_sphere<double, 3> > orientation_dist;
 //
 //  
 //};

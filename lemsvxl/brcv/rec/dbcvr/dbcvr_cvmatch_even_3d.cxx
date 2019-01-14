@@ -4,14 +4,14 @@
 #include <bnld/algo/bnld_eno_third_order.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <utility>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 
 dbcvr_cvmatch_even_3d::dbcvr_cvmatch_even_3d()
 {
@@ -144,10 +144,10 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
 
   for (int i=0;i<n1_;i++) 
   {
-    vcl_vector<double> tmp1(n2_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(n2_,DP_VERY_LARGE_COST);
     DPCost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(n2_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(n2_,tmp3);
     DPMap_.push_back(tmp2);
   }
 
@@ -209,8 +209,8 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       double phi = curve1_phis_[i];
       double theta = curve1_thetas_[i];
       vgl_vector_3d<double> Ts(k * N);
-      double phi_s = -Ts.z() / (vcl_sin(phi));
-      double theta_s = (Ts.y()*vcl_cos(theta) - Ts.x()*vcl_sin(theta)) / vcl_sin(phi);
+      double phi_s = -Ts.z() / (std::sin(phi));
+      double theta_s = (Ts.y()*std::cos(theta) - Ts.x()*std::sin(theta)) / std::sin(phi);
       curve1_dphis_.push_back(phi_s);
       curve1_dthetas_.push_back(theta_s);
     }
@@ -222,8 +222,8 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       double phi = curve2_phis_[i];
       double theta = curve2_thetas_[i];
       vgl_vector_3d<double> Ts(k * N);
-      double phi_s = -Ts.z() / (vcl_sin(phi));
-      double theta_s = (Ts.y()*vcl_cos(theta) - Ts.x()*vcl_sin(theta)) / vcl_sin(phi);
+      double phi_s = -Ts.z() / (std::sin(phi));
+      double theta_s = (Ts.y()*std::cos(theta) - Ts.x()*std::sin(theta)) / std::sin(phi);
       curve2_dphis_.push_back(phi_s);
       curve2_dthetas_.push_back(theta_s);
     }
@@ -238,7 +238,7 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
     // ENO on phi of curve1
     int interval_index;
     double t, dphi, dtheta;
-    vcl_vector<double> points, arclengths;
+    std::vector<double> points, arclengths;
     double a0, a1, a2, a3;
     for(int i = 0; i < n1_-1; i++)
     {
@@ -250,12 +250,12 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       a2 = eno.coefficient(interval_index, 2);
       a3 = eno.coefficient(interval_index, 3);
       t = arclengths[interval_index];
-      dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve1_dphis_.push_back(dphi);
     }
     // deal with last point
     t = arclengths[interval_index+1];
-    dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+    dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
     curve1_dphis_.push_back(dphi);
 
     // ENO on theta of curve1
@@ -269,12 +269,12 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       a2 = eno.coefficient(interval_index, 2);
       a3 = eno.coefficient(interval_index, 3);
       t = arclengths[interval_index];
-      dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve1_dthetas_.push_back(dtheta);
     }
     // deal with last point
     t = arclengths[interval_index+1];
-    dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+    dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
     curve1_dthetas_.push_back(dtheta);
 
     // ENO on phi of curve2
@@ -288,12 +288,12 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       a2 = eno.coefficient(interval_index, 2);
       a3 = eno.coefficient(interval_index, 3);
       t = arclengths[interval_index];
-      dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve2_dphis_.push_back(dphi);
     }
     // deal with last point
     t = arclengths[interval_index+1];
-    dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+    dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
     curve2_dphis_.push_back(dphi);
 
     // ENO on theta of curve2
@@ -307,17 +307,17 @@ void dbcvr_cvmatch_even_3d::initializeDPCosts()
       a2 = eno.coefficient(interval_index, 2);
       a3 = eno.coefficient(interval_index, 3);
       t = arclengths[interval_index];
-      dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve2_dthetas_.push_back(dtheta);
     }
     // deal with last point
     t = arclengths[interval_index+1];
-    dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+    dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
     curve2_dthetas_.push_back(dtheta);
   }
   else if(cost_formula_type_ == INTRINSIC)
   {
-    vcl_cout << "Error: Angle derivatives computation type not well specified, quitting!" << vcl_endl;
+    std::cout << "Error: Angle derivatives computation type not well specified, quitting!" << std::endl;
     exit(-1);
   }
 }
@@ -328,7 +328,7 @@ double dbcvr_cvmatch_even_3d::computeIntervalCost(int i, int ip, int j, int jp)
   // compute stretch cost
   double sc1 = curve1_lengths_[i] - curve1_lengths_[ip];
   double sc2 = curve2_lengths_[j] - curve2_lengths_[jp];
-  double stretch_cost = vcl_fabs(sc1 - sc2);
+  double stretch_cost = std::fabs(sc1 - sc2);
 
   double bend_cost, twist_cost;
 
@@ -337,11 +337,11 @@ double dbcvr_cvmatch_even_3d::computeIntervalCost(int i, int ip, int j, int jp)
     // compute extrinsic bend cost
     double bc1 = (curve1_curvatures_[i] + curve1_curvatures_[ip])/ 2;
     double bc2 = (curve2_curvatures_[j] + curve2_curvatures_[jp])/ 2;
-    bend_cost = vcl_fabs(bc1*sc1 - bc2*sc2);
+    bend_cost = std::fabs(bc1*sc1 - bc2*sc2);
     // compute extrinsic twist cost
     double tc1 = (curve1_torsions_[i] + curve1_torsions_[ip])/ 2;
     double tc2 = (curve2_torsions_[j] + curve2_torsions_[jp])/ 2;
-    twist_cost = vcl_fabs(tc1*sc1 - tc2*sc2);
+    twist_cost = std::fabs(tc1*sc1 - tc2*sc2);
   }
   else if(cost_formula_type_ == INTRINSIC)
   {
@@ -359,26 +359,26 @@ double dbcvr_cvmatch_even_3d::computeIntervalCost(int i, int ip, int j, int jp)
     double d_theta_s2 = curve2_dthetas_[j] - curve2_dthetas_[jp];
 
     // bending cost
-    double bc1 = vcl_pow(d_phi1, 2.0) + vcl_pow(vcl_sin(phi1) * d_theta1, 2.0);
-    double bc2 = vcl_pow(d_phi2, 2.0) + vcl_pow(vcl_sin(phi2) * d_theta2, 2.0);
-    bend_cost = vcl_fabs(bc1-bc2);
+    double bc1 = std::pow(d_phi1, 2.0) + std::pow(std::sin(phi1) * d_theta1, 2.0);
+    double bc2 = std::pow(d_phi2, 2.0) + std::pow(std::sin(phi2) * d_theta2, 2.0);
+    bend_cost = std::fabs(bc1-bc2);
 
     // twist cost
-    double temp1 = 2*vcl_cos(phi1) * d_theta1 * vcl_pow(d_phi1, 2.0) + vcl_sin(phi1) * d_phi1 * d_theta_s1 * sc1;
-    double temp2 = vcl_sin(phi1) * d_theta1 * (-d_phi_s1 * sc1 + vcl_sin(phi1) * vcl_cos(phi1) * vcl_pow(d_theta1, 2.0));
-    double temp3 = vcl_pow(d_phi1, 2.0) + vcl_pow(vcl_sin(phi1) * d_theta1, 2.0);
+    double temp1 = 2*std::cos(phi1) * d_theta1 * std::pow(d_phi1, 2.0) + std::sin(phi1) * d_phi1 * d_theta_s1 * sc1;
+    double temp2 = std::sin(phi1) * d_theta1 * (-d_phi_s1 * sc1 + std::sin(phi1) * std::cos(phi1) * std::pow(d_theta1, 2.0));
+    double temp3 = std::pow(d_phi1, 2.0) + std::pow(std::sin(phi1) * d_theta1, 2.0);
     double tc1 = (temp1 + temp2) / temp3;
 
-    double temp4 = 2*vcl_cos(phi2) * d_theta2 * vcl_pow(d_phi2, 2.0) + vcl_sin(phi2) * d_phi2 * d_theta_s2 * sc2;
-    double temp5 = vcl_sin(phi2) * d_theta2 * (-d_phi_s2 * sc2 + vcl_sin(phi2) * vcl_cos(phi2) * vcl_pow(d_theta2, 2.0));
-    double temp6 = vcl_pow(d_phi2, 2.0) + vcl_pow(vcl_sin(phi2) * d_theta2, 2.0);
+    double temp4 = 2*std::cos(phi2) * d_theta2 * std::pow(d_phi2, 2.0) + std::sin(phi2) * d_phi2 * d_theta_s2 * sc2;
+    double temp5 = std::sin(phi2) * d_theta2 * (-d_phi_s2 * sc2 + std::sin(phi2) * std::cos(phi2) * std::pow(d_theta2, 2.0));
+    double temp6 = std::pow(d_phi2, 2.0) + std::pow(std::sin(phi2) * d_theta2, 2.0);
     double tc2 = (temp4 + temp5) / temp6;
 
-    twist_cost = vcl_fabs(tc1-tc2);
+    twist_cost = std::fabs(tc1-tc2);
   }
   else
   {
-    vcl_cout << "Error: Cost computation formula type not well specified, quitting!" << vcl_endl;
+    std::cout << "Error: Cost computation formula type not well specified, quitting!" << std::endl;
   }
   double cost = stretch_cost + R1_ * bend_cost + R2_ * twist_cost;
 
@@ -440,7 +440,7 @@ void dbcvr_cvmatch_even_3d::findDPCorrespondence(void)
   i = n1_-1;
   j = n2_-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   finalMap_.push_back(p);
   finalMap_Cost_.push_back(DPCost_[p.first][p.second]);
 
@@ -448,7 +448,7 @@ void dbcvr_cvmatch_even_3d::findDPCorrespondence(void)
   { //Ming: should be &&
     ip=DPMap_[i][j].first;
     jp=DPMap_[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     finalMap_.push_back(p);
     finalMap_Cost_.push_back(DPCost_[p.first][p.second]);
   
@@ -463,10 +463,10 @@ void dbcvr_cvmatch_even_3d::findDPCorrespondence(void)
 //    int sec1 = finalMap_[i].second;
 //    int fir2 = finalMap_[i+1].first;
 //    int sec2 = finalMap_[i+1].second;
-//    vcl_printf("%d-%d and %d-%d: %f\n", fir1, fir2, sec1, sec2, computeIntervalCost(fir1, fir2, sec1, sec2));
+//    std::printf("%d-%d and %d-%d: %f\n", fir1, fir2, sec1, sec2, computeIntervalCost(fir1, fir2, sec1, sec2));
 //    sum += computeIntervalCost(fir1, fir2, sec1, sec2);
 //  }
-//  vcl_cout << "Sum: " << sum << vcl_endl;
+//  std::cout << "Sum: " << sum << std::endl;
 
 //  write_data(curve1_curvatures_, "D:/MyDocs/courses/en256/project/code-and-data/Temp/match/k1.txt");
 //  write_data(curve1_torsions_, "D:/MyDocs/courses/en256/project/code-and-data/Temp/match/t1.txt");
@@ -479,8 +479,8 @@ void dbcvr_cvmatch_even_3d::findDPCorrespondence(void)
 //  write_data(curve1_dthetas_, "D:/MyDocs/courses/en256/project/code-and-data/Temp/match/dtheta1.txt");
 }
 
-int dbcvr_cvmatch_even_3d::pick_points_for_eno(vcl_vector<double> &points, vcl_vector<double> &picked_points, 
-                                               vcl_vector<double> &arclengths, vcl_vector<double> &picked_arclengths,
+int dbcvr_cvmatch_even_3d::pick_points_for_eno(std::vector<double> &points, std::vector<double> &picked_points, 
+                                               std::vector<double> &arclengths, std::vector<double> &picked_arclengths,
                                                int index)
 {
   picked_points.clear();
@@ -528,7 +528,7 @@ int dbcvr_cvmatch_even_3d::pick_points_for_eno(vcl_vector<double> &points, vcl_v
   return interval_index;
 }
 
-void dbcvr_cvmatch_even_3d::continuous_angles(vcl_vector<double> &angles)
+void dbcvr_cvmatch_even_3d::continuous_angles(std::vector<double> &angles)
 {
   int size = angles.size();
   for(int i=1; i<size; i++)
@@ -543,10 +543,10 @@ void dbcvr_cvmatch_even_3d::continuous_angles(vcl_vector<double> &angles)
   }
 }
 
-void dbcvr_cvmatch_even_3d::write_data(vcl_vector<double> &data, vcl_string fname)
+void dbcvr_cvmatch_even_3d::write_data(std::vector<double> &data, std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   int size = data.size();
   for(int i=0; i<size; i++)
-    fp << data[i] << vcl_endl;
+    fp << data[i] << std::endl;
 }

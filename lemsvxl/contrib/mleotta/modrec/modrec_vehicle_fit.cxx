@@ -12,7 +12,7 @@
 #include <vil/algo/vil_gauss_filter.h>
 #include <vil/algo/vil_sobel_1x3.h>
 #include <vil/algo/vil_suppress_non_max_edges.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <rrel/rrel_util.h>
 #include <rrel/rrel_cauchy_obj.h>
 #include <rrel/rrel_tukey_obj.h>
@@ -57,7 +57,7 @@ void modrec_vehicle_fit::detect_edges(const vil_image_view<vxl_byte>& img,
 //  - [0] is top \a num_pc PCA params
 //  - [1,2,3] is Tx,Ty,Tz respectively
 //  - [4,5,6] is Rx,Ry,Rz respectively
-void modrec_vehicle_fit::set_options(const vcl_vector<bool>& options, 
+void modrec_vehicle_fit::set_options(const std::vector<bool>& options, 
                                      unsigned int num_pc)
 {
   num_params_ = options[0]?num_pc:0;
@@ -97,10 +97,10 @@ void modrec_vehicle_fit::set_init_uncert(double uncert)
 void modrec_vehicle_fit::
 compute_line_matches(const vgl_point_2d<double>& p0, const vgl_point_2d<double>& p1,
                      const vil_image_view<float>& edge_map,
-                     vcl_vector<vnl_vector_fixed<double,3> >& matches) const
+                     std::vector<vnl_vector_fixed<double,3> >& matches) const
 {
-  unsigned int search_dist = vcl_ceil(4*mest_scale_);
-  vcl_vector<modrec_edgel> edgels =
+  unsigned int search_dist = std::ceil(4*mest_scale_);
+  std::vector<modrec_edgel> edgels =
       modrec_find_edgel_neighbors(edge_map,
                                   vgl_line_segment_2d<double>(p0,p1),
                                   search_dist, 0, 0.5);
@@ -118,11 +118,11 @@ compute_line_matches(const vgl_point_2d<double>& p0, const vgl_point_2d<double>&
   vgl_vector_2d<double> n(v.y(),-v.x());
   double len = v.sqr_length();
   v /= len; 
-  len = vcl_sqrt(len);
+  len = std::sqrt(len);
   n /= len;
   // create a histogram of approx 1 pixel bins along the line
-  unsigned int num_bins = vcl_floor(len);
-  vcl_vector<unsigned int> bins(num_bins+1,0);
+  unsigned int num_bins = std::floor(len);
+  std::vector<unsigned int> bins(num_bins+1,0);
   unsigned int init_matches_size = matches.size();
   for(unsigned int k=0; k<edgels.size(); ++k)
   {
@@ -159,12 +159,12 @@ compute_line_matches(const vgl_point_2d<double>& p0, const vgl_point_2d<double>&
     assert(bwx >= 0.0);
     assert(bwy >= 0.0);
     
-    w *= vcl_min(bwx,bwy);
+    w *= std::min(bwx,bwy);
                   
     matches.push_back(vnl_vector_fixed<double,3>(s,d,w));
   }
   
-  for(vcl_vector<vnl_vector_fixed<double,3> >::iterator itr = matches.begin()+init_matches_size;
+  for(std::vector<vnl_vector_fixed<double,3> >::iterator itr = matches.begin()+init_matches_size;
       itr != matches.end(); ++itr)
   {
     vnl_vector_fixed<double,3>& m = *itr;
@@ -203,8 +203,8 @@ namespace
 //: Compute the terms for optimization from a set of curves and Jacobians
 //  adds to the matrix \a M and vector \a b passed in
 void modrec_vehicle_fit::
-compute_curve_opt_terms(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
-                        const vcl_vector<vcl_vector<vnl_matrix<double> > >& J,
+compute_curve_opt_terms(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
+                        const std::vector<std::vector<vnl_matrix<double> > >& J,
                         const vil_image_view<float>& edge_map,
                         vnl_matrix<double>& M,
                         vnl_vector<double>& b,
@@ -213,14 +213,14 @@ compute_curve_opt_terms(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& cu
 {
   for(unsigned int i=0; i<curves.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
-    const vcl_vector<vnl_matrix<double> >& Ji = J[i];
+    const std::vector<vgl_point_2d<double> >& curve = curves[i];
+    const std::vector<vnl_matrix<double> >& Ji = J[i];
     for(unsigned int j=1; j<curve.size(); ++j)
     {
       const vgl_point_2d<double>& p0 = curve[j-1];
       const vgl_point_2d<double>& p1 = curve[j];
       
-      vcl_vector<vnl_vector_fixed<double,3> > matches;
+      std::vector<vnl_vector_fixed<double,3> > matches;
       compute_line_matches(p0,p1,edge_map,matches);
             
       vgl_vector_2d<double> v = p1-p0;
@@ -264,20 +264,20 @@ compute_curve_opt_terms(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& cu
 
 //: Compute the residuals of the optimization
 void modrec_vehicle_fit::
-compute_curve_residuals(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
+compute_curve_residuals(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
                         const vil_image_view<float>& edge_map,
                         double& total_weight,
                         double& wgt_residual) const
 {
   for(unsigned int i=0; i<curves.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
+    const std::vector<vgl_point_2d<double> >& curve = curves[i];
     for(unsigned int j=1; j<curve.size(); ++j)
     {
       const vgl_point_2d<double>& p0 = curve[j-1];
       const vgl_point_2d<double>& p1 = curve[j];
       
-      vcl_vector<vnl_vector_fixed<double,3> > matches;
+      std::vector<vnl_vector_fixed<double,3> > matches;
       compute_line_matches(p0,p1,edge_map,matches);
       
       for(unsigned int k=0; k<matches.size(); ++k)
@@ -373,12 +373,12 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
   mest_scale_ = estimate_initial_scale(mesh,translation,rotation,init_uncert_)/4;
   if(mest_scale_ < 1.0) // lower bound at 1
     mest_scale_ = 1.0;
-  vcl_cout << "initial scale = "<<mest_scale_<<vcl_endl;
+  std::cout << "initial scale = "<<mest_scale_<<std::endl;
   //if(mest_scale_ > 8.0) // upper bound at 8
   //  mest_scale_ = 8.0;
   double init_mest_scale = mest_scale_;
   
-  double last_residual = vcl_numeric_limits<double>::infinity();
+  double last_residual = std::numeric_limits<double>::infinity();
   vnl_vector<double> soln(num_params_,0.0);
   
   bool compute_visibility = true;
@@ -407,8 +407,8 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
       --k;
       if(mest_scale_ <= 1)
         break;
-      last_residual = vcl_numeric_limits<double>::infinity();
-      mest_scale_ /= vcl_sqrt(2);
+      last_residual = std::numeric_limits<double>::infinity();
+      mest_scale_ /= std::sqrt(2);
       if(mest_scale_ < 1)
         mest_scale_ = 1.0;
       //compute_visibility = true;
@@ -421,7 +421,7 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
     
     apply_solution(soln,mesh,translation,rotation);
 
-    //vcl_cout << " res = "<<residual<<" scale = "<<mest_scale_<<vcl_endl;
+    //std::cout << " res = "<<residual<<" scale = "<<mest_scale_<<std::endl;
   }
   mest_scale_ = init_mest_scale;
 }
@@ -443,7 +443,7 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
     mest_scale_ = 1.0;
   double init_mest_scale = mest_scale_;
   
-  double last_residual = vcl_numeric_limits<double>::infinity();
+  double last_residual = std::numeric_limits<double>::infinity();
   vnl_vector<double> soln(num_params_,0.0);
   
   double alpha = 0.1;
@@ -488,8 +488,8 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
         if(mest_scale_ <= 1)
           break;
         alpha = 0.1;
-        last_residual = vcl_numeric_limits<double>::infinity();
-        mest_scale_ /= vcl_sqrt(2);
+        last_residual = std::numeric_limits<double>::infinity();
+        mest_scale_ /= std::sqrt(2);
         if(mest_scale_ < 1)
           mest_scale_ = 1.0;
         //compute_visibility = true;
@@ -507,7 +507,7 @@ void modrec_vehicle_fit::fit_model(unsigned int num_itr,
     
     apply_solution(soln,mesh,translation,rotation);
     
-    vcl_cout << "alpha = "<<alpha<<" res = "<<residual<<" scale = "<<mest_scale_<< " grad mag = "<<b.magnitude()<<vcl_endl;
+    std::cout << "alpha = "<<alpha<<" res = "<<residual<<" scale = "<<mest_scale_<< " grad mag = "<<b.magnitude()<<std::endl;
   }
   mest_scale_ = init_mest_scale;
 }
@@ -549,7 +549,7 @@ bool modrec_vehicle_fit::fit_model_once(modrec_pca_vehicle& mesh,
   
   apply_solution(soln,mesh,translation,rotation);
   
-  vcl_cout << " res = "<<residual<<" scale = "<<mest_scale_<<vcl_endl;
+  std::cout << " res = "<<residual<<" scale = "<<mest_scale_<<std::endl;
   
   return true;
 }
@@ -583,21 +583,21 @@ evaluate_residual(const modrec_pca_vehicle& mesh,
 //: Compute the edgel matches and weights from a set of curves 
 // This is primarily for debugging
 void modrec_vehicle_fit::
-compute_edgel_matches(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
+compute_edgel_matches(const std::vector<std::vector<vgl_point_2d<double> > >& curves,
                       const vil_image_view<float>& edge_map,
-                      vcl_vector<vgl_point_2d<double> >& edgel_snaps,
-                      vcl_vector<vgl_point_2d<double> >& edgels,
-                      vcl_vector<double>& edgel_weights) const
+                      std::vector<vgl_point_2d<double> >& edgel_snaps,
+                      std::vector<vgl_point_2d<double> >& edgels,
+                      std::vector<double>& edgel_weights) const
 {
   for(unsigned int i=0; i<curves.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
+    const std::vector<vgl_point_2d<double> >& curve = curves[i];
     for(unsigned int j=1; j<curve.size(); ++j)
     {
       const vgl_point_2d<double>& p0 = curve[j-1];
       const vgl_point_2d<double>& p1 = curve[j];
       
-      vcl_vector<vnl_vector_fixed<double,3> > matches;
+      std::vector<vnl_vector_fixed<double,3> > matches;
       compute_line_matches(p0,p1,edge_map,matches);
       
       vgl_vector_2d<double> v = p1-p0;
@@ -622,12 +622,12 @@ compute_edgel_matches(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curv
 void modrec_vehicle_fit::
 last_edgel_matches(const modrec_pca_vehicle_projector& projector, 
                    const vil_image_view<float>& edge_map,
-                   vcl_vector<vgl_point_2d<double> >& edgel_snaps,
-                   vcl_vector<vgl_point_2d<double> >& edgels,
-                   vcl_vector<double>& edgel_weights) const
+                   std::vector<vgl_point_2d<double> >& edgel_snaps,
+                   std::vector<vgl_point_2d<double> >& edgels,
+                   std::vector<double>& edgel_weights) const
 {
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = projector.contours();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = projector.parts();
+  const std::vector<std::vector<vgl_point_2d<double> > >& contours = projector.contours();
+  const std::vector<std::vector<vgl_point_2d<double> > >& parts = projector.parts();
   
   compute_edgel_matches(contours, edge_map,
                         edgel_snaps, edgels, edgel_weights);
@@ -639,7 +639,7 @@ last_edgel_matches(const modrec_pca_vehicle_projector& projector,
 //: Compute the number of pixel size edge points with an edge neighbor within \a dist_thresh
 // return the total samples and number of matches
 void modrec_vehicle_fit::
-compute_edgel_coverage(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves, 
+compute_edgel_coverage(const std::vector<std::vector<vgl_point_2d<double> > >& curves, 
                        const vil_image_view<float>& edge_map,
                        double dist_thresh,
                        unsigned int& num_match,
@@ -649,27 +649,27 @@ compute_edgel_coverage(const vcl_vector<vcl_vector<vgl_point_2d<double> > >& cur
   num_total = 0;
   for(unsigned int i=0; i<curves.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
+    const std::vector<vgl_point_2d<double> >& curve = curves[i];
     for(unsigned int j=1; j<curve.size(); ++j)
     {
       const vgl_point_2d<double>& p0 = curve[j-1];
       const vgl_point_2d<double>& p1 = curve[j];
       
-      vcl_vector<vnl_vector_fixed<double,3> > matches;
+      std::vector<vnl_vector_fixed<double,3> > matches;
       compute_line_matches(p0,p1,edge_map,matches);
       
       vgl_vector_2d<double> v = p1-p0;
-      unsigned int num_bins = static_cast<unsigned int>(vcl_floor(v.length()));
+      unsigned int num_bins = static_cast<unsigned int>(std::floor(v.length()));
       num_total += num_bins;
-      vcl_vector<bool> matched(num_bins,false);
+      std::vector<bool> matched(num_bins,false);
       
       for(unsigned int k=0; k<matches.size(); ++k)
       {
         const vnl_vector_fixed<double,3>& m = matches[k];
-        if(vcl_abs(m[1]) >= dist_thresh)
+        if(std::abs(m[1]) >= dist_thresh)
           continue;
         
-        int bin = static_cast<int>(vcl_floor(m[0]*num_bins));
+        int bin = static_cast<int>(std::floor(m[0]*num_bins));
         if(bin >= num_bins) bin = num_bins-1;
         if(bin < 0) bin = 0;
         
@@ -695,8 +695,8 @@ last_edgel_coverage(const modrec_pca_vehicle_projector& projector,
                     unsigned int& num_part_match,
                     unsigned int& num_part_total) const
 {
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = projector.contours();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = projector.parts();
+  const std::vector<std::vector<vgl_point_2d<double> > >& contours = projector.contours();
+  const std::vector<std::vector<vgl_point_2d<double> > >& parts = projector.parts();
   
   compute_edgel_coverage(contours, edge_map, dist_thresh,
                          num_contour_match, num_contour_total);
@@ -708,7 +708,7 @@ last_edgel_coverage(const modrec_pca_vehicle_projector& projector,
 //: estimate the initial scale given the set of Jacobians
 double modrec_vehicle_fit::
 estimate_initial_scale(const vnl_vector<double>& sigma,
-                       const vcl_vector<vcl_vector<vnl_matrix<double> > >& J)
+                       const std::vector<std::vector<vnl_matrix<double> > >& J)
 {
   double d=0;
   double d2=0;
@@ -730,8 +730,8 @@ estimate_initial_scale(const vnl_vector<double>& sigma,
   d /= num;
   d2 /= num;
   d2 -= d*d;
-  d2 = vcl_sqrt(d2);
-  vcl_cout << "mean "<<d<<" std "<<d2<<" max "<<d_max<<vcl_endl;
+  d2 = std::sqrt(d2);
+  std::cout << "mean "<<d<<" std "<<d2<<" max "<<d_max<<std::endl;
   
   return d;
 }

@@ -29,7 +29,7 @@ public:
     typedef typename 
         vnl_vector_fixed<math_type,n> feature_type;
 
-    typedef vcl_map<time_type, feature_type> map_type;
+    typedef std::map<time_type, feature_type> map_type;
 
     enum{dim=n};
 
@@ -41,7 +41,7 @@ public:
 
     ~dts_time_series(){}
 
-    virtual vcl_size_t size() const 
+    virtual std::size_t size() const 
         { return this->time_map.size(); }
 
     virtual unsigned dimension(){ return this->dim; }
@@ -50,7 +50,7 @@ public:
 
     virtual void b_read( vsl_b_istream& is );
 
-    virtual void write_txt( vcl_string const& filename) const;
+    virtual void write_txt( std::string const& filename) const;
 
     void insert( time_type const& t,
             feature_type const&  f)
@@ -71,7 +71,7 @@ public:
 
     typedef elementType feature_type;
 
-    typedef vcl_map<time_type, feature_type> map_type;
+    typedef std::map<time_type, feature_type> map_type;
 
     enum{dim=1};
 
@@ -83,7 +83,7 @@ public:
    
     ~dts_time_series(){}
 
-    virtual vcl_size_t size() const
+    virtual std::size_t size() const
     { return this->time_map.size(); }
 
     virtual unsigned dimension(){ return this->dim; }
@@ -92,7 +92,7 @@ public:
 
     virtual void b_read( vsl_b_istream& is );
 
-    virtual void write_txt( vcl_string const& filename) const;
+    virtual void write_txt( std::string const& filename) const;
 
     void insert( time_type const& t,
             feature_type const&  f)

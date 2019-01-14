@@ -36,7 +36,7 @@ class dbbgm_image_tableau
   bbgm_viewer_sptr active_viewer_;
 
   //: A vector of all viewers to try
-  vcl_vector<bbgm_viewer_sptr> all_viewers_;
+  std::vector<bbgm_viewer_sptr> all_viewers_;
 
  public:
 
@@ -47,7 +47,7 @@ class dbbgm_image_tableau
   bool color_space_YUV_;
 
   //: Returns the type of this tableau ('dbbgm_image_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Apply the viewer to the distribution image and display the result
   bool functor_image(const bbgm_viewer_sptr& viewer);
@@ -74,7 +74,7 @@ class dbbgm_image_tableau
   //: Generate the popup menu
   void get_popup(const vgui_popup_params& params, vgui_menu &menu);
 
-  const vcl_vector<bbgm_viewer_sptr>& viewers() const { return all_viewers_; }
+  const std::vector<bbgm_viewer_sptr>& viewers() const { return all_viewers_; }
 
  protected:
   friend struct dbbgm_image_tableau_new;

@@ -15,23 +15,23 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_list.h>
+#include <iostream>
+#include <sstream>
+#include <list>
 #include <vnl/vnl_math.h>
 
 #include <dbmsh3d/dbmsh3d_mesh_mc.h>
 #include <dbmsh3d/dbmsh3d_face.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 dbmsh3d_mesh_mc::dbmsh3d_mesh_mc(dbmsh3d_mesh* mesh) : dbmsh3d_mesh()
 {
   
   // deep copy the vertices
-  vcl_map<int, dbmsh3d_vertex* > vertices = mesh->vertexmap();
-  vcl_map<int, dbmsh3d_vertex* >::iterator v_it;
+  std::map<int, dbmsh3d_vertex* > vertices = mesh->vertexmap();
+  std::map<int, dbmsh3d_vertex* >::iterator v_it;
   for (v_it = vertices.begin(); v_it != vertices.end(); v_it++) {
     dbmsh3d_vertex* vertex = v_it->second;
     dbmsh3d_vertex* new_vertex = new dbmsh3d_vertex(vertex->get_pt().x(),vertex->get_pt().y(),vertex->get_pt().z(),vertex->id());
@@ -39,8 +39,8 @@ dbmsh3d_mesh_mc::dbmsh3d_mesh_mc(dbmsh3d_mesh* mesh) : dbmsh3d_mesh()
   }
 
   // deep copy the edgemap
-  vcl_map<int, dbmsh3d_edge* > edgemap = mesh->edgemap();
-  vcl_map<int, dbmsh3d_edge* >::iterator edge_it;
+  std::map<int, dbmsh3d_edge* > edgemap = mesh->edgemap();
+  std::map<int, dbmsh3d_edge* >::iterator edge_it;
   for (edge_it = edgemap.begin(); edge_it != edgemap.end(); edge_it++) {
     // create new edges
     dbmsh3d_edge* E = edge_it->second;
@@ -51,8 +51,8 @@ dbmsh3d_mesh_mc::dbmsh3d_mesh_mc(dbmsh3d_mesh* mesh) : dbmsh3d_mesh()
   }
 
   // deep copy the faces 
-  vcl_map<int, dbmsh3d_face* > fmap_old = mesh->facemap();
-  vcl_map<int, dbmsh3d_face* >::iterator face_it;
+  std::map<int, dbmsh3d_face* > fmap_old = mesh->facemap();
+  std::map<int, dbmsh3d_face* >::iterator face_it;
   for (face_it = fmap_old.begin(); face_it != fmap_old.end(); face_it++) {
 
     dbmsh3d_face* old_face = (dbmsh3d_face*) face_it->second;
@@ -66,7 +66,7 @@ dbmsh3d_mesh_mc::dbmsh3d_mesh_mc(dbmsh3d_mesh* mesh) : dbmsh3d_mesh()
     // clone the half edges
     do {
       dbmsh3d_edge* E = HE->edge();
-      //vcl_cout << E->id() << vcl_endl;
+      //std::cout << E->id() << std::endl;
       dbmsh3d_edge* new_edge = this->edgemap(E->id());
       dbmsh3d_halfedge* new_he = new dbmsh3d_halfedge(new_edge, new_face);
       new_face->connect_bnd_E_end (new_he->edge());
@@ -83,8 +83,8 @@ dbmsh3d_mesh_mc* dbmsh3d_mesh_mc::clone() const
   dbmsh3d_mesh_mc* mesh = new dbmsh3d_mesh_mc();
   
   // deep copy the vertices
-  vcl_map<int, dbmsh3d_vertex* > vertices = this->vertexmap_;
-  vcl_map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
+  std::map<int, dbmsh3d_vertex* > vertices = this->vertexmap_;
+  std::map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
   while (v_it != vertices.end()) {
     dbmsh3d_vertex* vertex = v_it->second;
     dbmsh3d_vertex* v = mesh->_new_vertex(); 
@@ -94,27 +94,27 @@ dbmsh3d_mesh_mc* dbmsh3d_mesh_mc::clone() const
   }
 
  // deep copy the edgemap
-  vcl_map<int, dbmsh3d_edge* > edgemap = this->edgemap_;
-  vcl_map<int, dbmsh3d_edge* >::iterator edge_it = edgemap.begin();
+  std::map<int, dbmsh3d_edge* > edgemap = this->edgemap_;
+  std::map<int, dbmsh3d_edge* >::iterator edge_it = edgemap.begin();
   while (edge_it != edgemap.end()) {
     // create new edges
     dbmsh3d_edge* E = edge_it->second;
-    //vcl_cout << "old E id=" << E->id() << vcl_endl;
+    //std::cout << "old E id=" << E->id() << std::endl;
     dbmsh3d_edge* new_edge = /*mesh->_new_edge*/new dbmsh3d_edge(mesh->vertexmap(E->sV()->id()), 
                                     mesh->vertexmap(E->eV()->id()), edge_it->first);
-    //vcl_cout << "  new edge id=" << new_edge->id() << vcl_endl;
-    //vcl_cout << " v1=" << ((dbmsh3d_vertex*)new_edge->sV())->get_pt() << 
-    //  " v2=" << ((dbmsh3d_vertex*)new_edge->eV())->get_pt() << vcl_endl;
+    //std::cout << "  new edge id=" << new_edge->id() << std::endl;
+    //std::cout << " v1=" << ((dbmsh3d_vertex*)new_edge->sV())->get_pt() << 
+    //  " v2=" << ((dbmsh3d_vertex*)new_edge->eV())->get_pt() << std::endl;
     mesh->add_edge_incidence (new_edge);
     edge_it++;
   }
 
   // deep copy the faces
-  vcl_map<int, dbmsh3d_face* > fmap = this->facemap_;
-  vcl_map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
+  std::map<int, dbmsh3d_face* > fmap = this->facemap_;
+  std::map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
   while (face_it != fmap.end()) {
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) face_it->second;
-    //vcl_cout << "old face id=" << face->id() << vcl_endl;
+    //std::cout << "old face id=" << face->id() << std::endl;
     face->_sort_bnd_HEs_chain();
     face->_ifs_clear_vertices ();
     dbmsh3d_face_mc* f = mesh->_new_face();
@@ -124,7 +124,7 @@ dbmsh3d_mesh_mc* dbmsh3d_mesh_mc::clone() const
     // clone the half edges
     do {
       dbmsh3d_edge* E = HE->edge();
-      //vcl_cout << E->id() << vcl_endl;
+      //std::cout << E->id() << std::endl;
       dbmsh3d_halfedge* new_he = new dbmsh3d_halfedge(mesh->edgemap(E->id()), f);
       f->connect_bnd_E_end (new_he->edge());
       HE = HE->next();
@@ -133,10 +133,10 @@ dbmsh3d_mesh_mc* dbmsh3d_mesh_mc::clone() const
     mesh->_add_face(f);
     // clone the inner faces
     if (face->size() > 0) {
-      vcl_map<int, dbmsh3d_halfedge*> inner_faces = face->get_mc_halfedges();
-      vcl_map<int, dbmsh3d_halfedge*>::iterator it = inner_faces.begin();
+      std::map<int, dbmsh3d_halfedge*> inner_faces = face->get_mc_halfedges();
+      std::map<int, dbmsh3d_halfedge*>::iterator it = inner_faces.begin();
       while (it != inner_faces.end()) {
-        vcl_vector<dbmsh3d_edge*> incident_edges;
+        std::vector<dbmsh3d_edge*> incident_edges;
         face->get_mc_incident_edges(it->second, incident_edges);
         dbmsh3d_face* inner_face = copy_inner_face(incident_edges, mesh);
         f->add_mc_halfedge((dbmsh3d_halfedge *)inner_face->halfedge());
@@ -165,10 +165,10 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
   F->_ifs_clear_vertices ();
   
   unsigned E1_index, E2_index;
-  vcl_vector<dbmsh3d_edge*> inc_edges;
+  std::vector<dbmsh3d_edge*> inc_edges;
   F->get_bnd_Es (inc_edges);
 
-  vcl_vector<dbmsh3d_halfedge*> inc_hedges;
+  std::vector<dbmsh3d_halfedge*> inc_hedges;
   F->get_bnd_HEs (inc_hedges);
 
   //Determine E1_index and E2_index.
@@ -200,7 +200,7 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
 
   //disconnect E1 from all incident faces and delete edge E1
   //the incident faces of E1 is stored in incident_faces1.
-  vcl_set<dbmsh3d_face*> incident_faces1;
+  std::set<dbmsh3d_face*> incident_faces1;
   E1->_disconnect_all_Fs (incident_faces1);
   dbmsh3d_vertex* V1s = E1->sV();
   dbmsh3d_vertex* V1e = E1->eV();
@@ -208,7 +208,7 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
 
   //disconnect E2 from all incident faces and delete edge E2
   //the incident faces of E1 is stored in incident_faces1.
-  vcl_set<dbmsh3d_face*> incident_faces2;
+  std::set<dbmsh3d_face*> incident_faces2;
   E2->_disconnect_all_Fs (incident_faces2);
   dbmsh3d_vertex* V2s = E2->sV();
   dbmsh3d_vertex* V2e = E2->eV();
@@ -230,51 +230,51 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
   dbmsh3d_face_mc* face2 = M->_new_face ();
 
   //connect all incident edges of F1, including E12 
-  vcl_cout << "face1" << vcl_endl;
-  vcl_cout << E12->id() << "from " << E12->sV()->id() << " to" << E12->eV()->id() << vcl_endl;
+  std::cout << "face1" << std::endl;
+  std::cout << E12->id() << "from " << E12->sV()->id() << " to" << E12->eV()->id() << std::endl;
   face1->connect_bnd_E_end (E12);
   face1->connect_bnd_E_end (newE1e);
-  vcl_cout << newE1e->id() << "from " << newE1e->sV()->id() << " to" << newE1e->eV()->id() << vcl_endl;
+  std::cout << newE1e->id() << "from " << newE1e->sV()->id() << " to" << newE1e->eV()->id() << std::endl;
   unsigned index=E1_index+1;
   if (index == inc_edges.size()) {
       index=0;
   }
   for (; index!= E2_index;) {
     face1->connect_bnd_E_end (inc_edges[index]);
-    vcl_cout << inc_edges[index]->id() << "from " << inc_edges[index]->sV()->id() << " to" << inc_edges[index]->eV()->id() << vcl_endl;
+    std::cout << inc_edges[index]->id() << "from " << inc_edges[index]->sV()->id() << " to" << inc_edges[index]->eV()->id() << std::endl;
     if (++index == inc_edges.size())
       index=0;
   }
   face1->connect_bnd_E_end (newE2s);
-  vcl_cout << newE2s->id() << "from " << newE2s->sV()->id() << " to" << newE2s->eV()->id() << vcl_endl;
+  std::cout << newE2s->id() << "from " << newE2s->sV()->id() << " to" << newE2s->eV()->id() << std::endl;
   M->_add_face(face1);
   dbmsh3d_halfedge* nhe = E12->halfedge()->next();
   dbmsh3d_edge* ne = (dbmsh3d_edge*) nhe->edge();
  
-  vcl_ostringstream oss;
+  std::ostringstream oss;
   face1->_sort_bnd_HEs_chain();
   face1->_ifs_clear_vertices ();
   face1->getInfo(oss);
-  //vcl_cout << oss.str().c_str();
+  //std::cout << oss.str().c_str();
   
   
   //connect all incident edges of F2, including E12
-  vcl_cout << "FACE2" << vcl_endl;
+  std::cout << "FACE2" << std::endl;
   face2->connect_bnd_E_end (E12); 
-   vcl_cout << E12->id() << "from " << E12->sV()->id() << " to" << E12->eV()->id() << vcl_endl;
+   std::cout << E12->id() << "from " << E12->sV()->id() << " to" << E12->eV()->id() << std::endl;
   face2->connect_bnd_E_end (newE2e);
-  vcl_cout << newE2e->id() << "from " << newE2e->sV()->id() << " to" << newE2e->eV()->id() << vcl_endl;
+  std::cout << newE2e->id() << "from " << newE2e->sV()->id() << " to" << newE2e->eV()->id() << std::endl;
   index = E2_index+1;
   if (index == inc_edges.size())
       index=0;
   for (; index!= E1_index; ) {
     face2->connect_bnd_E_end (inc_edges[index]);
-    vcl_cout << inc_edges[index]->id() << "from " << inc_edges[index]->sV()->id() << " to" << inc_edges[index]->eV()->id() << vcl_endl;
+    std::cout << inc_edges[index]->id() << "from " << inc_edges[index]->sV()->id() << " to" << inc_edges[index]->eV()->id() << std::endl;
     if (++index == inc_edges.size())
       index=0;
   }
   face2->connect_bnd_E_end (newE1s);
-  vcl_cout << newE1s->id() << "from " << newE1s->sV()->id() << " to" << newE1s->eV()->id() << vcl_endl;
+  std::cout << newE1s->id() << "from " << newE1s->sV()->id() << " to" << newE1s->eV()->id() << std::endl;
   M->_add_face(face2);
   nhe = E12->halfedge()->next();
   ne = (dbmsh3d_edge*) nhe->edge();
@@ -283,9 +283,9 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
   face2->_sort_bnd_HEs_chain();
   face2->_ifs_clear_vertices ();
   face2->getInfo(oss);
-  //vcl_cout << oss.str().c_str();
+  //std::cout << oss.str().c_str();
 
-  vcl_set<dbmsh3d_face*>::iterator it = incident_faces1.begin();
+  std::set<dbmsh3d_face*>::iterator it = incident_faces1.begin();
   for (; it != incident_faces1.end(); it++) {
     // add the new edges
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it);
@@ -294,7 +294,7 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
     face->_sort_bnd_HEs_chain();
     face->_ifs_clear_vertices ();
     //face->getInfo(oss);
-    //vcl_cout << oss.str().c_str();
+    //std::cout << oss.str().c_str();
   }
 
   it = incident_faces2.begin();
@@ -308,7 +308,7 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
     //face->getInfo(oss);
     
   }
-  vcl_cout << oss.str().c_str();
+  std::cout << oss.str().c_str();
   F1 = face1;
   F2 = face2;
   }
@@ -320,8 +320,8 @@ void merge_mesh (dbmsh3d_mesh_mc* M1, dbmsh3d_mesh_mc* M2)
   unsigned f_num = M1->facemap().size();
 
   // merge the vertices
-  vcl_map<int, dbmsh3d_vertex* > vertices = M2->vertexmap();
-  vcl_map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
+  std::map<int, dbmsh3d_vertex* > vertices = M2->vertexmap();
+  std::map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
   while (v_it != vertices.end()) {
     dbmsh3d_vertex* vertex = v_it->second;
     dbmsh3d_vertex* v = new dbmsh3d_vertex(vertex->id() + v_num);//M1->_new_vertex(); 
@@ -331,8 +331,8 @@ void merge_mesh (dbmsh3d_mesh_mc* M1, dbmsh3d_mesh_mc* M2)
   }
 
   // merge the edges
-  vcl_map<int, dbmsh3d_edge* > edgemap = M2->edgemap();
-  vcl_map<int, dbmsh3d_edge* >::iterator edge_it = edgemap.begin();
+  std::map<int, dbmsh3d_edge* > edgemap = M2->edgemap();
+  std::map<int, dbmsh3d_edge* >::iterator edge_it = edgemap.begin();
   while (edge_it != edgemap.end()) {
     // create new edges
     dbmsh3d_edge* edge = edge_it->second;
@@ -344,8 +344,8 @@ void merge_mesh (dbmsh3d_mesh_mc* M1, dbmsh3d_mesh_mc* M2)
   }
 
   // merge the faces
-  vcl_map<int, dbmsh3d_face* > fmap = M2->facemap();
-  vcl_map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
+  std::map<int, dbmsh3d_face* > fmap = M2->facemap();
+  std::map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
   while (face_it != fmap.end()) {
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) face_it->second;
     dbmsh3d_face_mc* f = M1->_new_mc_face();
@@ -361,23 +361,23 @@ void merge_mesh (dbmsh3d_mesh_mc* M1, dbmsh3d_mesh_mc* M2)
     M1->_add_face(f);
 
     if (face->size() > 0) {
-      vcl_map<int, dbmsh3d_halfedge*> inner_faces = face->get_mc_halfedges();
-      vcl_map<int, dbmsh3d_halfedge*>::iterator it = inner_faces.begin();
+      std::map<int, dbmsh3d_halfedge*> inner_faces = face->get_mc_halfedges();
+      std::map<int, dbmsh3d_halfedge*>::iterator it = inner_faces.begin();
       while (it != inner_faces.end()) {
         //dbmsh3d_face* inner_face = new dbmsh3d_face();
-        vcl_vector<dbmsh3d_edge*> incident_edges;
+        std::vector<dbmsh3d_edge*> incident_edges;
         face->get_mc_incident_edges(it->second, incident_edges);
         dbmsh3d_face* inner_face = copy_inner_face(incident_edges, M1);
         f->add_mc_halfedge((dbmsh3d_halfedge *)inner_face->halfedge());
         it++;
       } 
     }
-    //vcl_cout << "new_face id =" << f->id() << vcl_endl;
+    //std::cout << "new_face id =" << f->id() << std::endl;
     face_it++;
   }
 }
 
-dbmsh3d_face* copy_inner_face(vcl_vector<dbmsh3d_edge*> incident_edges,
+dbmsh3d_face* copy_inner_face(std::vector<dbmsh3d_edge*> incident_edges,
                           dbmsh3d_mesh_mc* mesh)
 {
   dbmsh3d_face* inner_face = new dbmsh3d_face();
@@ -397,7 +397,7 @@ dbmsh3d_face* copy_inner_face(vcl_vector<dbmsh3d_edge*> incident_edges,
      v = mesh->_new_vertex ();
      v->set_pt(e->get_pt());
      //mesh->_add_vertex(v); 
-     //vcl_cout << prev_v << " to " << v << vcl_endl;
+     //std::cout << prev_v << " to " << v << std::endl;
      dbmsh3d_edge* new_edge = new  dbmsh3d_edge(prev_v, v, 100);
      dbmsh3d_halfedge *he = new dbmsh3d_halfedge (new_edge, inner_face);
      prev_v = v;
@@ -405,7 +405,7 @@ dbmsh3d_face* copy_inner_face(vcl_vector<dbmsh3d_edge*> incident_edges,
    }
    
   // add the last halfedge
-  //vcl_cout << prev_v << " to " << v_first << vcl_endl;
+  //std::cout << prev_v << " to " << v_first << std::endl;
   dbmsh3d_edge* new_edge = new  dbmsh3d_edge(prev_v, v_first, 100);
   dbmsh3d_halfedge *he = new dbmsh3d_halfedge (new_edge, inner_face);
   inner_face->_connect_bnd_HE_end(he);
@@ -415,8 +415,8 @@ dbmsh3d_face* copy_inner_face(vcl_vector<dbmsh3d_edge*> incident_edges,
 void dbmsh3d_mesh_mc::orient_face_normals()
 {
   // find the face (topmost) with the biggest z value
-  vcl_map<int, dbmsh3d_face* > fmap = facemap();
-  vcl_map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
+  std::map<int, dbmsh3d_face* > fmap = facemap();
+  std::map<int, dbmsh3d_face* >::iterator face_it = fmap.begin();
   double maxz=-1e26;
   int maxz_face_id;
   while (face_it != fmap.end()) {
@@ -446,17 +446,17 @@ void dbmsh3d_mesh_mc::orient_face_normals()
   face->set_visited(true);
 
   // visit all the other faces and fix their normal
-  vcl_list<dbmsh3d_face_mc*> face_stack;
+  std::list<dbmsh3d_face_mc*> face_stack;
   do {
-    //vcl_cout << "Face ID=" << face->id() << vcl_endl;
-    vcl_vector<dbmsh3d_face*> inc_faces;
+    //std::cout << "Face ID=" << face->id() << std::endl;
+    std::vector<dbmsh3d_face*> inc_faces;
 
-    vcl_vector<dbmsh3d_edge*> inc_edges;
+    std::vector<dbmsh3d_edge*> inc_edges;
     face->get_bnd_Es (inc_edges);
     for (unsigned i=0; i<inc_edges.size(); i++) {
       dbmsh3d_edge* E = inc_edges[i];
       dbmsh3d_halfedge* he = E->get_HE_of_F (face);
-      vcl_vector<dbmsh3d_face*> faces;
+      std::vector<dbmsh3d_face*> faces;
       E->get_incident_Fs(faces);
       for (unsigned f=0; f<faces.size(); f++) {
         dbmsh3d_face_mc* inc_face = (dbmsh3d_face_mc*) faces[f];
@@ -468,7 +468,7 @@ void dbmsh3d_mesh_mc::orient_face_normals()
           dbmsh3d_halfedge* h2 = inc_he->next();
           if (h1->s_vertex() == h2->s_vertex()) {
             inc_face->_reverse_bnd_HEs_chain();
-            //vcl_cout << "changing face direction" << inc_face->id() << vcl_endl; 
+            //std::cout << "changing face direction" << inc_face->id() << std::endl; 
           }
           inc_face->set_visited(true);
           face_stack.push_back(inc_face);
@@ -489,7 +489,7 @@ void dbmsh3d_mesh_mc::orient_face_normals()
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) face_it->second;
     vgl_vector_3d<double> normal = face->compute_normal(); 
     normal /= normal.length();
-    //vcl_cout << "Face " << face->id() << " N=" << normal << vcl_endl;
+    //std::cout << "Face " << face->id() << " N=" << normal << std::endl;
     face_it++;
   }
 }

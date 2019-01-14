@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include "../bvaml_params.h"
 #include "../bvaml_log_writer.h"
 #include "../bvaml_world.h"
@@ -8,7 +8,7 @@
 int main( int argc, char* argv[] )
 {
   if( argc < 2 ) {
-    vcl_cout<<"Usage : bgmv_run param_file1 param_file2 ...\n";
+    std::cout<<"Usage : bgmv_run param_file1 param_file2 ...\n";
     return -1;
   }
 
@@ -16,7 +16,7 @@ int main( int argc, char* argv[] )
 
   bvaml_params params;
   for( int i = 1; i < argc; i++ )
-    params.read_params( vcl_string(argv[i]) ); 
+    params.read_params( std::string(argv[i]) ); 
   params.print_summary();
 
   bvaml_world world( &params );

@@ -45,9 +45,9 @@
 vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process()
 {
     if (
-        (!parameters()->add( "BB Filename" , "-BB_fname" , (vcl_string)"c:\\taxi\bbox_cam.txt" ) )
+        (!parameters()->add( "BB Filename" , "-BB_fname" , (std::string)"c:\\taxi\bbox_cam.txt" ) )
         ||
-        (!parameters()->add("Output Filename" , "-ptsfname", (vcl_string)"c:\\curves.vrml" ))
+        (!parameters()->add("Output Filename" , "-ptsfname", (std::string)"c:\\curves.vrml" ))
         ||
         (!parameters()->add( "Get BB from file" , "-use_BBfile" , (bool)false ) )
         ||
@@ -111,7 +111,7 @@ vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process
 
 
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process()" << std::endl;
     }
     initialized = false;
 }
@@ -125,7 +125,7 @@ vidpro1_3D_planar_curve_reconst_process::~vidpro1_3D_planar_curve_reconst_proces
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_3D_planar_curve_reconst_process::name()
 {
     return "3D Planar Curve Reconstruction";
@@ -157,12 +157,12 @@ vidpro1_3D_planar_curve_reconst_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_3D_planar_curve_reconst_process::get_input_type()
 {
     // this process looks for an image and vsol2D storage class
     // at each input frame
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vtol" );
     to_return.push_back( "vtol" );
     to_return.push_back( "image" );
@@ -172,11 +172,11 @@ vidpro1_3D_planar_curve_reconst_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_3D_planar_curve_reconst_process::get_output_type()
 {  
     // this process produces a vsol2D storage class
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
 
     return to_return;
 }
@@ -188,8 +188,8 @@ vidpro1_3D_planar_curve_reconst_process::execute()
 {
     // verify that the number of input frames is correct
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In vidpro1_3D_planar_curve_reconst_process::execute() - not exactly two"
-            << " input frames" << vcl_endl;
+        std::cout << "In vidpro1_3D_planar_curve_reconst_process::execute() - not exactly two"
+            << " input frames" << std::endl;
         return false;
     }
     clear_output();
@@ -198,14 +198,14 @@ vidpro1_3D_planar_curve_reconst_process::execute()
    
     vnl_double_4 CameraCenter;
     
-    vcl_vector<vnl_double_4> WorldPoints;
+    std::vector<vnl_double_4> WorldPoints;
 
 
     vnl_double_4 Normal;
-    vcl_cout<<"Computing planeparams for BBmatrix =\n"<<BBMatrix;
+    std::cout<<"Computing planeparams for BBmatrix =\n"<<BBMatrix;
 
     compute_plane_params(BBMatrix,Normal);
-  //  vcl_cout<<"Normal is "<<Normal<<"\n";
+  //  std::cout<<"Normal is "<<Normal<<"\n";
     vnl_double_4 test_point(1.0,0.0,0.0,1.0);
     vnl_double_4 test_BB_point =BBMatrix*test_point;
 
@@ -220,14 +220,14 @@ vidpro1_3D_planar_curve_reconst_process::execute()
     vnl_double_4x3 psuedoinverse = svd_decomp.pinverse(3);
     CameraCenter = svd_decomp.nullvector();
     double denom = dot_product(Normal,CameraCenter);
-   // vcl_cout<<"Psuedoinv"<< psuedoinverse;
-   // vcl_cout<<"\nCameraCenter:\t"<<CameraCenter<<"\n";
-   //  vcl_cout<<"Denom:\t"<<denom;
+   // std::cout<<"Psuedoinv"<< psuedoinverse;
+   // std::cout<<"\nCameraCenter:\t"<<CameraCenter<<"\n";
+   //  std::cout<<"Denom:\t"<<denom;
     vnl_double_3x3 test_homog = CurProjMatL.extract(3,3,0,1) ;
     vnl_double_3x3 inv_test_homog = vnl_matrix_inverse<double>(test_homog);
 
-    vcl_vector<vsol_point_3d_sptr> left_curve_reconst;
-    vcl_vector<vsol_point_3d_sptr> right_curve_reconst;
+    std::vector<vsol_point_3d_sptr> left_curve_reconst;
+    std::vector<vsol_point_3d_sptr> right_curve_reconst;
 
   
 
@@ -243,10 +243,10 @@ vidpro1_3D_planar_curve_reconst_process::execute()
     vil_image_resource_sptr left_mask_res = left_mask_stor->get_image();
     vil_image_resource_sptr right_mask_res = right_mask_stor->get_image();
 
-    vcl_vector < vsol_spatial_object_2d_sptr > origpts;
+    std::vector < vsol_spatial_object_2d_sptr > origpts;
     
-    vcl_set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
-    vcl_set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
+    std::set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
+    std::set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
     vil_image_view<vxl_byte> left_mask = left_mask_res->get_view();
     vil_image_view<vxl_byte> right_mask = left_mask_res->get_view();
 
@@ -299,7 +299,7 @@ vidpro1_3D_planar_curve_reconst_process::execute()
             planar_curve_reconst_problem *reconstructor = new  planar_curve_reconst_problem (BBMatrix,proj_point,CurProjMatL);
             vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
             LM_instance->minimize_without_gradient(param_vec);
-            LM_instance->diagnose_outcome(vcl_cout);
+            LM_instance->diagnose_outcome(std::cout);
             vsol_point_3d_sptr newpt = new vsol_point_3d(test_BB_point[0],
                 param_vec[0]/param_vec[2], param_vec[1]/param_vec[2]);
 #endif
@@ -321,7 +321,7 @@ vidpro1_3D_planar_curve_reconst_process::execute()
     psuedoinverse = svd_decomp_R.pinverse(3);
   CameraCenter = svd_decomp_R.nullvector();
     denom = dot_product(Normal,CameraCenter);
-  //  vcl_cout<<"CameraCenter:\t"<<CameraCenter<<"\n";
+  //  std::cout<<"CameraCenter:\t"<<CameraCenter<<"\n";
  
 
     for ( ;n!=right_img_edge->end(); n++)
@@ -368,7 +368,7 @@ vidpro1_3D_planar_curve_reconst_process::execute()
             planar_curve_reconst_problem *reconstructor = new  planar_curve_reconst_problem (BBMatrix,proj_point,CurProjMatR);
             vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
             LM_instance->minimize_without_gradient(param_vec);
-            LM_instance->diagnose_outcome(vcl_cout);
+            LM_instance->diagnose_outcome(std::cout);
             vsol_point_3d_sptr newpt = new vsol_point_3d(test_BB_point[0],
                 param_vec[0]/param_vec[2], param_vec[1]/param_vec[2]);
             delete LM_instance;
@@ -385,13 +385,13 @@ vidpro1_3D_planar_curve_reconst_process::execute()
 
         }
     }
-    vcl_string fname;
+    std::string fname;
     parameters()->get_value("-ptsfname",fname);
-  //  vcl_ofstream leftcurvepts((fname+vcl_string("left")).c_str(),vcl_ios::out);
-  //  vcl_ofstream rightcurvepts((fname+vcl_string("right")).c_str(),vcl_ios::out);
+  //  std::ofstream leftcurvepts((fname+std::string("left")).c_str(),std::ios::out);
+  //  std::ofstream rightcurvepts((fname+std::string("right")).c_str(),std::ios::out);
    
 
-    vcl_ofstream vrml_stream_comb((fname+vcl_string(".wrl")).c_str(),vcl_ios::out);
+    std::ofstream vrml_stream_comb((fname+std::string(".wrl")).c_str(),std::ios::out);
   
     vnl_double_3 red(1.0,0.0,0.0);
     vnl_double_3 green(0.0,1.0,0.0);
@@ -452,7 +452,7 @@ vidpro1_3D_planar_curve_reconst_process::compute_plane_params(const vnl_double_4
     cornerpointthr = cornerpointthr/cornerpointthr[3];
     cornerpointfou = cornerpointfou/cornerpointfou[3];
     vgl_h_matrix_2d_compute_4point hcl;
-    vcl_vector <vgl_homg_point_2d <double> > point_set1, point_set2;
+    std::vector <vgl_homg_point_2d <double> > point_set1, point_set2;
     vnl_double_3 projcponeL = CurProjMatL*cornerpointone;
     vnl_double_3 projcptwoL = CurProjMatL*cornerpointtwo;
     vnl_double_3 projcpthrL = CurProjMatL*cornerpointthr;
@@ -483,20 +483,20 @@ vidpro1_3D_planar_curve_reconst_process::compute_plane_params(const vnl_double_4
     // H represents the homography that
     // transforms points from  plane1 into plane2.
  Hright = hcl.compute(point_set1, point_set2);
- vcl_cout<<Hleft<<"\n"<<Hright<<"\n";
+ std::cout<<Hleft<<"\n"<<Hright<<"\n";
 
 
 
 
    
-    vcl_vector<vnl_double_4> corners(4);
+    std::vector<vnl_double_4> corners(4);
     corners[0] = cornerpointone;
     corners[1] = cornerpointtwo;
     corners[2] = cornerpointthr;
     corners[3] = cornerpointfou;
     assert(corners.size()==4);
   //  for (int i =0 ;i<4;i++)
-  // vcl_cout<<corners[i]<<"\n"; 
+  // std::cout<<corners[i]<<"\n"; 
     vnl_double_3 non_homgcorner1, non_homgcorner2, non_homgcorner3;
     non_homgcorner1 = corners[0].extract(3);
     non_homgcorner2 = corners[1].extract(3);
@@ -505,12 +505,12 @@ vidpro1_3D_planar_curve_reconst_process::compute_plane_params(const vnl_double_4
     vnl_double_3 v2 = non_homgcorner3-non_homgcorner1;
     vnl_double_3 N1 = cross_3d(v2,v1);
     double d = dot_product(non_homgcorner1,N1);
-    vcl_cout<<d;
+    std::cout<<d;
     Normal[0] = -N1[0]/d; 
     Normal[1] = -N1[1]/d;
     Normal[2] = -N1[2]/d;
     Normal[3] = 1.0;
-vcl_cout<<"\nNormal is "<<Normal<<"\n";
+std::cout<<"\nNormal is "<<Normal<<"\n";
 
 
 }
@@ -596,10 +596,10 @@ parameters()->get_value("-use_BBfile", use_BB_file);
 if (use_BB_file)
 {
 
-vcl_string BB_fname;
+std::string BB_fname;
 parameters()->get_value("-BB_fname",BB_fname);
-vcl_ifstream BB_file(BB_fname.c_str(), vcl_ios::in);
-vcl_string str("");
+std::ifstream BB_file(BB_fname.c_str(), std::ios::in);
+std::string str("");
 while (str!="Transform")
 {BB_file>>str;
 }

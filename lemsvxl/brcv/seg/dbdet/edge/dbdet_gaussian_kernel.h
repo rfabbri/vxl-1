@@ -19,7 +19,7 @@ class dbdet_gaussian_kernel : public dbdet_kernel
 {
 public:
   int khs;                     //kernel half size
-  vcl_vector<double> K_x, K_y; //separated kernels to minimize computation
+  std::vector<double> K_x, K_y; //separated kernels to minimize computation
 
 protected:
   double sigma; ///< operator sigma
@@ -27,8 +27,8 @@ protected:
 public:
   //: constructor given sigma and shifts
   dbdet_gaussian_kernel(double sigma_, double dx_=0.0, double dy_=0.0, double theta_=0.0): 
-    dbdet_kernel((unsigned)(2*vcl_ceil(4*sigma_)+1), (unsigned)(2*vcl_ceil(4*sigma_)+1), dx_, dy_, theta_), 
-    khs((int) vcl_ceil(4*sigma_)), K_x(2*khs+1, 0.0), K_y(2*khs+1, 0.0), sigma(sigma_)
+    dbdet_kernel((unsigned)(2*std::ceil(4*sigma_)+1), (unsigned)(2*std::ceil(4*sigma_)+1), dx_, dy_, theta_), 
+    khs((int) std::ceil(4*sigma_)), K_x(2*khs+1, 0.0), K_y(2*khs+1, 0.0), sigma(sigma_)
   {
     compute_kernel();
   }
@@ -62,21 +62,21 @@ public:
   {   
     double ssq = sigma*sigma;
     //double pisig2 = 2*vnl_math::pi*ssq;
-    double cc = vcl_sqrt(2*vnl_math::pi)*ssq*sigma;
+    double cc = std::sqrt(2*vnl_math::pi)*ssq*sigma;
 
     //not separable
     for (int x = -khs; x <= khs; x++){
       for (int y = -khs; y <= khs; y++){
 
-        double xx = x* vcl_cos(theta) + y*vcl_sin(theta) - dx;
-        double yy = x*-vcl_sin(theta) + y*vcl_cos(theta) - dy;
+        double xx = x* std::cos(theta) + y*std::sin(theta) - dx;
+        double yy = x*-std::sin(theta) + y*std::cos(theta) - dy;
 
         //only one half is a Gaussian (the other half is zeros)
         if (yy>=0)
           top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 0.0;
         else
-          //top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 2*vcl_exp(-xx*xx/(2*ssq))*vcl_exp(-yy*yy/(2*ssq))/pisig2;
-          top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = vcl_exp(-xx*xx/(2*ssq))*yy*-vcl_exp(-yy*yy/(2*ssq))/cc;
+          //top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 2*std::exp(-xx*xx/(2*ssq))*std::exp(-yy*yy/(2*ssq))/pisig2;
+          top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = std::exp(-xx*xx/(2*ssq))*yy*-std::exp(-yy*yy/(2*ssq))/cc;
       }
     }
   }
@@ -96,21 +96,21 @@ public:
   {   
     double ssq = sigma*sigma;
     //double pisig2 = 2*vnl_math::pi*ssq;
-    double cc = vcl_sqrt(2*vnl_math::pi)*ssq*sigma;
+    double cc = std::sqrt(2*vnl_math::pi)*ssq*sigma;
 
     //not separable
     for (int x = -khs; x <= khs; x++){
       for (int y = -khs; y <= khs; y++){
 
-        double xx = x* vcl_cos(theta) + y*vcl_sin(theta) - dx;
-        double yy = x*-vcl_sin(theta) + y*vcl_cos(theta) - dy;
+        double xx = x* std::cos(theta) + y*std::sin(theta) - dx;
+        double yy = x*-std::sin(theta) + y*std::cos(theta) - dy;
 
         //only one half is a Gaussian (the other half is zeros)
         if (yy<0)
           top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 0.0;
         else
-          //top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 2*vcl_exp(-xx*xx/(2*ssq))*vcl_exp(-yy*yy/(2*ssq))/pisig2;
-          top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = vcl_exp(-xx*xx/(2*ssq))*yy*vcl_exp(-yy*yy/(2*ssq))/cc;
+          //top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = 2*std::exp(-xx*xx/(2*ssq))*std::exp(-yy*yy/(2*ssq))/pisig2;
+          top_left_[(x+khs)*istep_+ (y+khs)*jstep_] = std::exp(-xx*xx/(2*ssq))*yy*std::exp(-yy*yy/(2*ssq))/cc;
       }
     }
   }
@@ -129,13 +129,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {   
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
+      K_x[x+khs] = std::exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
+      K_y[y+khs] = std::exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -160,13 +160,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = -(x-dx)*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
+      K_x[x+khs] = -(x-dx)*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
+      K_y[y+khs] = std::exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -190,13 +190,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
+      K_x[x+khs] = std::exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = -(y-dy)*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq);
+      K_y[y+khs] = -(y-dy)*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -220,13 +220,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = ((x-dx)*(x-dx)-ssq)*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq);
+      K_x[x+khs] = ((x-dx)*(x-dx)-ssq)*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
+      K_y[y+khs] = std::exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -250,13 +250,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = -(x-dx)*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
+      K_x[x+khs] = -(x-dx)*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = -(y-dy)*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq);
+      K_y[y+khs] = -(y-dy)*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -280,13 +280,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
+      K_x[x+khs] = std::exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = ((y-dy)*(y-dy)-ssq)*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq);
+      K_y[y+khs] = ((y-dy)*(y-dy)-ssq)*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -310,13 +310,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = (x-dx)*(3*ssq -(x-dx)*(x-dx))*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq*ssq);
+      K_x[x+khs] = (x-dx)*(3*ssq -(x-dx)*(x-dx))*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
+      K_y[y+khs] = std::exp(-(y-dy)*(y-dy)/(2*ssq))/sq2pisig;
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -340,13 +340,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = ((x-dx)*(x-dx)-ssq)*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq);
+      K_x[x+khs] = ((x-dx)*(x-dx)-ssq)*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = -(y-dy)*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*sigma*ssq);
+      K_y[y+khs] = -(y-dy)*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*sigma*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -370,13 +370,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = -(x-dx)*vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
+      K_x[x+khs] = -(x-dx)*std::exp(-(x-dx)*(x-dx)/(2*ssq))/(sq2pisig*ssq);
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = ((y-dy)*(y-dy)-ssq)*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq);
+      K_y[y+khs] = ((y-dy)*(y-dy)-ssq)*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){
@@ -400,13 +400,13 @@ public:
   virtual void compute_kernel(bool separated_kernels_only=false)
   {
     double ssq = sigma*sigma;
-    double sq2pisig = vcl_sqrt(2*vnl_math::pi)*sigma;
+    double sq2pisig = std::sqrt(2*vnl_math::pi)*sigma;
     
     //1-d kernels
     for(int x = -khs; x <= khs; x++)
-      K_x[x+khs] = vcl_exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
+      K_x[x+khs] = std::exp(-(x-dx)*(x-dx)/(2*ssq))/sq2pisig;
     for(int y = -khs; y <= khs; y++)
-      K_y[y+khs] = (y-dy)*(3*ssq -(y-dy)*(y-dy))*vcl_exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq*ssq);
+      K_y[y+khs] = (y-dy)*(3*ssq -(y-dy)*(y-dy))*std::exp(-(y-dy)*(y-dy)/(2*ssq))/(sq2pisig*ssq*ssq*ssq);
 
     if (!separated_kernels_only){
       for (unsigned i=0; i<ni_; i++){

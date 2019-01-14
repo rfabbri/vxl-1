@@ -27,7 +27,7 @@
 #include <vgl/vgl_line_segment_2d.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_sprintf.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 
@@ -59,7 +59,7 @@ dbrl_compute_motion_field_process::dbrl_compute_motion_field_process() : bpro1_p
        if(  !parameters()->add( "Initial Search Radius "   , "-initradius" ,(float) 5.0)
            )
        {
-        vcl_cout<<"\n Error in parameters ";
+        std::cout<<"\n Error in parameters ";
        }
 
      }
@@ -88,10 +88,10 @@ dbrl_compute_motion_field_process::clone() const
 /*************************************************************************
 * Function Name: dbrl_compute_motion_field_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbrl_compute_motion_field_process::name()
 {
     return "Compute Motion Field";
@@ -101,12 +101,12 @@ dbrl_compute_motion_field_process::name()
 /*************************************************************************
 * Function Name: dbrl_compute_motion_field_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_compute_motion_field_process::get_input_type()
+std::vector< std::string > dbrl_compute_motion_field_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map" );
     return to_return;
 }
@@ -115,12 +115,12 @@ vcl_vector< vcl_string > dbrl_compute_motion_field_process::get_input_type()
 /*************************************************************************
 * Function Name: dbrl_compute_motion_field_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_compute_motion_field_process::get_output_type()
+std::vector< std::string > dbrl_compute_motion_field_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_match_set" );
     return to_return;
 }
@@ -157,8 +157,8 @@ dbrl_compute_motion_field_process::execute()
     prev_edgemap.vertical_cast(input_data_[1][0]);
 
     //:convert edgemap to dbrl_feature
-    vcl_vector<dbrl_feature_sptr> curr_features=get_features_from_edge_map(curr_edgemap->get_edgemap());
-    vcl_vector<dbrl_feature_sptr> prev_features=get_features_from_edge_map(prev_edgemap->get_edgemap());
+    std::vector<dbrl_feature_sptr> curr_features=get_features_from_edge_map(curr_edgemap->get_edgemap());
+    std::vector<dbrl_feature_sptr> prev_features=get_features_from_edge_map(prev_edgemap->get_edgemap());
     
     dbrl_match_set_sptr matchset=compute_motion_field(curr_features,prev_features);
        dbrl_match_set_storage_sptr dms=new dbrl_match_set_storage();
@@ -182,12 +182,12 @@ dbrl_compute_motion_field_process::finish()
 }
 
 dbrl_match_set_sptr
-dbrl_compute_motion_field_process::compute_motion_field(vcl_vector<dbrl_feature_sptr> tgt_orig,
-                                                        vcl_vector<dbrl_feature_sptr> src_orig)
+dbrl_compute_motion_field_process::compute_motion_field(std::vector<dbrl_feature_sptr> tgt_orig,
+                                                        std::vector<dbrl_feature_sptr> src_orig)
 {
     
-    vcl_vector<dbrl_feature_sptr> tgt=copy_features(tgt_orig);
-    vcl_vector<dbrl_feature_sptr> src=copy_features(src_orig);
+    std::vector<dbrl_feature_sptr> tgt=copy_features(tgt_orig);
+    std::vector<dbrl_feature_sptr> src=copy_features(src_orig);
     float initr=0;
     parameters()->get_value("-initradius",initr);
     dbrl_rpm_affine_params affine_params;
@@ -205,9 +205,9 @@ dbrl_compute_motion_field_process::compute_motion_field(vcl_vector<dbrl_feature_
     return matchset;
 }
 
-vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::feature_to_vsol(vcl_vector<dbrl_feature_sptr> & f)
+std::vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::feature_to_vsol(std::vector<dbrl_feature_sptr> & f)
      {
-     vcl_vector<vsol_spatial_object_2d_sptr> vpts;
+     std::vector<vsol_spatial_object_2d_sptr> vpts;
      for(unsigned i=0;i<f.size();i++)
      {
          if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f[i].ptr()))
@@ -218,8 +218,8 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::featu
           if(dbrl_feature_point_tangent* pt=dynamic_cast<dbrl_feature_point_tangent*>(f[i].ptr()))
              {
                  vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0],pt->location()[1]);
-                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                  vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                  vpts.push_back(p->cast_to_spatial_object());
@@ -228,8 +228,8 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::featu
            if(dbrl_feature_point_tangent_curvature* pt=dynamic_cast<dbrl_feature_point_tangent_curvature*>(f[i].ptr()))
              {
                  vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0],pt->location()[1]);
-                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                  vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                  vpts.push_back(p->cast_to_spatial_object());
@@ -240,15 +240,15 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::featu
      }
 
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::get_features_from_image()
+std::vector<std::vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::get_features_from_image()
 {
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+    std::vector<std::vector<dbrl_feature_sptr> > alledges;
     static int numframes=0;
     parameters()->get_value("-numframes",numframes);
     static bool ispoly=true;
     parameters()->get_value("-ispoly",ispoly);
     if ( input_data_.size() != numframes ){
-        vcl_cout << "In dbrl_compute_motion_field_process::execute() - not exactly one"
+        std::cout << "In dbrl_compute_motion_field_process::execute() - not exactly one"
             << " input image \n";
         return alledges;
     }
@@ -299,16 +299,16 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
         nsp.pfit_type_ = parabola_fit;
         sdet_nonmax_suppression ns(nsp, grad_x, grad_y);
         ns.apply();
-        vcl_vector< vsol_spatial_object_2d_sptr > detections;
+        std::vector< vsol_spatial_object_2d_sptr > detections;
         vgl_polygon<double> * contour;
 
-        vcl_vector<vsol_line_2d_sptr> lines=ns.get_lines();
-        vcl_vector<dbdet_edgel* > all_edgels;
+        std::vector<vsol_line_2d_sptr> lines=ns.get_lines();
+        std::vector<dbdet_edgel* > all_edgels;
         if(ispoly)
         {
             detections=frame_poly->all_data();
             vsol_polygon_2d_sptr poly = detections[0]->cast_to_region()->cast_to_polygon();
-            vcl_vector<vgl_point_2d<double> > pts;
+            std::vector<vgl_point_2d<double> > pts;
             for (unsigned k=0; k<poly->size(); k++)
             {
                 pts.push_back(vgl_point_2d<double>(poly->vertex(k)->x(),poly->vertex(k)->y()));
@@ -345,18 +345,18 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
         unsigned max_size_to_group=7;
 
         edge_linker->build_curvelets_greedy(max_size_to_group);
-        vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+        std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
 
         dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
         output_sel->set_sel(edge_linker);
         output_data_[0].push_back(output_sel);
 
-    vcl_vector<dbrl_feature_sptr> edges;
+    std::vector<dbrl_feature_sptr> edges;
     for(unsigned i=0;i<edgels.size();i++)
     {
         dbrl_feature_point_tangent_curvature_groupings * pt;
-        vcl_vector<unsigned> neighbors_id_vec;
+        std::vector<unsigned> neighbors_id_vec;
         for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
         {
             for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -410,14 +410,14 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
 
 
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::get_features_from_vsol()
+std::vector<std::vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::get_features_from_vsol()
 {
   
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+    std::vector<std::vector<dbrl_feature_sptr> > alledges;
     static int numframes=0;
     parameters()->get_value("-numframes",numframes);
     if ( input_data_.size() != numframes ){
-        vcl_cout << "In dbrl_compute_motion_field_process::execute() - not exactly one"
+        std::cout << "In dbrl_compute_motion_field_process::execute() - not exactly one"
             << " input image \n";
         return alledges;
     }
@@ -437,13 +437,13 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
     // get image from the storage class
     for(int i=0;i<numframes;i++)
    { 
-        vcl_vector<dbrl_feature_sptr>   edges;       
+        std::vector<dbrl_feature_sptr>   edges;       
         vidpro1_vsol2D_storage_sptr frame_edges;
         frame_edges.vertical_cast(input_data_[i][0]);
-        vcl_vector< vsol_spatial_object_2d_sptr > lines=frame_edges->all_data();
+        std::vector< vsol_spatial_object_2d_sptr > lines=frame_edges->all_data();
 
-    vcl_vector<dbdet_edgel* > all_edgels;
-    vcl_vector<dbrl_feature_sptr> features;
+    std::vector<dbdet_edgel* > all_edgels;
+    std::vector<dbrl_feature_sptr> features;
     for (unsigned k=0; k<lines.size(); k++)
     {
         if(lines[k]->cast_to_curve())
@@ -472,9 +472,9 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
     //unsigned max_size_to_group=7;
 
     //edge_linker->build_curvelets_greedy(max_size_to_group);
-    //vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    //std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
 
-    //vcl_vector<dbrl_feature_sptr> features;
+    //std::vector<dbrl_feature_sptr> features;
 
     //dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
@@ -484,7 +484,7 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
     //for(unsigned i=0;i<edgels.size();i++)
     //{
     //    dbrl_feature_point_tangent_curvature_groupings * pt;
-    //    vcl_vector<unsigned> neighbors_id_vec;
+    //    std::vector<unsigned> neighbors_id_vec;
     //    for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
     //    {
     //        for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -510,13 +510,13 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > dbrl_compute_motion_field_process::ge
 
 
 
-vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_features_from_edge_map(dbdet_edgemap_sptr edgemap)
+std::vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_features_from_edge_map(dbdet_edgemap_sptr edgemap)
 {
-    vcl_vector<dbrl_feature_sptr>  edges;
+    std::vector<dbrl_feature_sptr>  edges;
     
 
     dbdet_edgemap_iter iter=edgemap->edge_cells.begin();
-    vcl_vector<dbrl_feature_sptr> features;
+    std::vector<dbrl_feature_sptr> features;
     
     for(;iter!=edgemap->edge_cells.end();iter++)
     {
@@ -534,7 +534,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_features_fr
 
 
 
-vgl_point_2d<double> dbrl_compute_motion_field_process::center_of_mass(vcl_vector<dbrl_feature_sptr> & f)
+vgl_point_2d<double> dbrl_compute_motion_field_process::center_of_mass(std::vector<dbrl_feature_sptr> & f)
 {
     double cx=0.0;
     double cy=0.0;
@@ -567,7 +567,7 @@ vgl_point_2d<double> dbrl_compute_motion_field_process::center_of_mass(vcl_vecto
 }
 
 
-void dbrl_compute_motion_field_process::normalize_cm(vcl_vector<dbrl_feature_sptr> & f,double xref,double yref)
+void dbrl_compute_motion_field_process::normalize_cm(std::vector<dbrl_feature_sptr> & f,double xref,double yref)
 {
     for(unsigned i=0;i<f.size();i++)
     {
@@ -583,9 +583,9 @@ void dbrl_compute_motion_field_process::normalize_cm(vcl_vector<dbrl_feature_spt
 }
 
 
-vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::copy_features(vcl_vector<dbrl_feature_sptr> f)
+std::vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::copy_features(std::vector<dbrl_feature_sptr> f)
 {
-    vcl_vector<dbrl_feature_sptr> fout;
+    std::vector<dbrl_feature_sptr> fout;
     for(unsigned i=0;i<f.size();i++)
     {
         if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f[i].ptr()))
@@ -612,13 +612,13 @@ vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::copy_features(v
 
 
 
-vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::make_grid_from_points(vcl_vector<dbrl_feature_sptr> features,int xmin,int xmax,int ymin,int ymax)
+std::vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::make_grid_from_points(std::vector<dbrl_feature_sptr> features,int xmin,int xmax,int ymin,int ymax)
 {
     int cnt=0;
-    vcl_vector<vsol_spatial_object_2d_sptr> toreturn;
+    std::vector<vsol_spatial_object_2d_sptr> toreturn;
     for(int i=xmin;i<xmax;i++)
     {
-        vcl_vector<vsol_point_2d_sptr> pts;
+        std::vector<vsol_point_2d_sptr> pts;
         for(int j=ymin;j<ymax;j++)
         {
             if(dbrl_feature_point *pt=dynamic_cast<dbrl_feature_point*> (features[cnt].ptr()))
@@ -637,7 +637,7 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::make_
     cnt=0;
     for(int j=ymin;j<ymax;j++)
     {
-        vcl_vector<vsol_point_2d_sptr> pts;
+        std::vector<vsol_point_2d_sptr> pts;
         for(int i=xmin;i<xmax;i++)
         {
             if(dbrl_feature_point *pt=dynamic_cast<dbrl_feature_point*> (features[cnt+(i-xmin)*(ymax-ymin)].ptr()))
@@ -658,9 +658,9 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_compute_motion_field_process::make_
     return toreturn;
 }
 
-vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_grid_points(int xmin,int xmax,int ymin,int ymax)
+std::vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_grid_points(int xmin,int xmax,int ymin,int ymax)
 {
-    vcl_vector<dbrl_feature_sptr> features;
+    std::vector<dbrl_feature_sptr> features;
     for(int i=xmin;i<xmax;i++)
     {
         for(int j=ymin;j<ymax;j++)
@@ -673,9 +673,9 @@ vcl_vector<dbrl_feature_sptr> dbrl_compute_motion_field_process::get_grid_points
     return features;
 }
 
-void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & xmin,int &ymin,int &xmax,int &ymax)
+void  dbrl_compute_motion_field_process::get_box(std::vector<dbrl_feature_sptr> f,int & xmin,int &ymin,int &xmax,int &ymax)
 {
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
 
     vgl_box_2d<double> box;
 
@@ -689,16 +689,16 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
             box.add(vgl_point_2d<double>(pt->location()[0],pt->location()[1]));
     }
 
-    xmin=vcl_floor(box.min_x());
-    ymin=vcl_floor(box.min_y());
-    xmax=vcl_ceil(box.max_x());
-    ymax=vcl_ceil(box.max_y());
+    xmin=std::floor(box.min_x());
+    ymin=std::floor(box.min_y());
+    xmax=std::ceil(box.max_x());
+    ymax=std::ceil(box.max_y());
 
 
 }
 
-//dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,unsigned char> fmap,
-//                                                      dbinfo_observation_sptr obs,vcl_string superimgname)
+//dbrl_superresolution_multiple_objects::super_resolute(std::map<dbrl_feature_sptr,unsigned char> fmap,
+//                                                      dbinfo_observation_sptr obs,std::string superimgname)
 //{
 //    vil_image_resource_sptr img=obs->obs_snippet();
 //    //vil_image_view<double> superimg(img->ni(),img->nj(),1);
@@ -708,8 +708,8 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
 //    int miny=obs->ex_roi()->rmin(0);
 //    int maxy=obs->ex_roi()->rmax(0);
 //
-//    vcl_map<dbrl_feature_sptr,unsigned char>::iterator iter;
-//    vcl_map<dbrl_feature_sptr,unsigned char> filtered_samples;
+//    std::map<dbrl_feature_sptr,unsigned char>::iterator iter;
+//    std::map<dbrl_feature_sptr,unsigned char> filtered_samples;
 //    for(iter=fmap.begin();iter!=fmap.end();iter++)
 //    {
 //        if( dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(iter->first.ptr()))
@@ -735,7 +735,7 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
 //        }
 //    }
 //    dbrl_estimator_cubic_patch * cpatch=new dbrl_estimator_cubic_patch();
-//    vcl_vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
+//    std::vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
 //
 //    vil_image_view<unsigned char> superimg(img->ni()*4,img->nj()*4);
 //
@@ -749,8 +749,8 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
 //                if(patches[i].intriangle(p))
 //                {
 //                    double newz=patches[i].interpolate(p);
-//                    unsigned char intensity=(unsigned char)vcl_floor(newz+0.5);
-//                    superimg(vcl_floor((is-minx)*4),vcl_floor((js-miny)*4))=intensity;
+//                    unsigned char intensity=(unsigned char)std::floor(newz+0.5);
+//                    superimg(std::floor((is-minx)*4),std::floor((js-miny)*4))=intensity;
 //                    continue;
 //                }
 //            }
@@ -761,10 +761,10 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
 //    vil_save(superimg,superimgname.c_str());
 //}
 //
-//vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(vcl_vector<dbrl_feature_sptr> f2,
+//std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(std::vector<dbrl_feature_sptr> f2,
 //                                                                                     double spacing)
 //{
-//    vcl_vector<vgl_point_2d<double> > pts;
+//    std::vector<vgl_point_2d<double> > pts;
 //
 //    vgl_box_2d<double> box;
 //
@@ -779,12 +779,12 @@ void  dbrl_compute_motion_field_process::get_box(vcl_vector<dbrl_feature_sptr> f
 //
 //    }
 //
-//    double xmin=vcl_floor(box.min_x());
-//    double ymin=vcl_floor(box.min_y());
-//    double xmax=vcl_ceil(box.max_x());
-//    double ymax=vcl_ceil(box.max_y());
+//    double xmin=std::floor(box.min_x());
+//    double ymin=std::floor(box.min_y());
+//    double xmax=std::ceil(box.max_x());
+//    double ymax=std::ceil(box.max_y());
 //
-//    vcl_vector<dbrl_feature_sptr> fs;
+//    std::vector<dbrl_feature_sptr> fs;
 //    for(double x=xmin;x<=xmax;)
 //    {   
 //        for(double y=ymin;y<=ymax;)

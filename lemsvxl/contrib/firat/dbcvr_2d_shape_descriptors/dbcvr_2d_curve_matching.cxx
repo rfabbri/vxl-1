@@ -9,9 +9,9 @@
 #include "dbcvr_2d_curve_matching.h"
 #include "dbcvr_2d_shape_descriptor_utils.h"
 #include "dbcvr_2d_shape_descriptors.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsol/vsol_digital_curve_2d.h>
 
 #define KAPPA_FUNCTION(i,m,L,M) (mymod((i+m-(L-1)/2) , M))
@@ -40,11 +40,11 @@ bool dbcvr_curve_match::operator<(dbcvr_curve_match rhs) const
 
 void dbcvr_curve_match::print()
 {
-	vcl_cout << "rev:" << rev_ << " m: " << m_ << " L: " << L_ << " S: " << score_ << vcl_endl;
+	std::cout << "rev:" << rev_ << " m: " << m_ << " L: " << L_ << " S: " << score_ << std::endl;
 }
 
 
-double dbcvr_score_diff_chord_angles(int m, vnl_matrix<double>& alpha_prime, vnl_matrix<double>& beta_prime, vcl_vector<unsigned>& indices)
+double dbcvr_score_diff_chord_angles(int m, vnl_matrix<double>& alpha_prime, vnl_matrix<double>& beta_prime, std::vector<unsigned>& indices)
 {
 	int M = alpha_prime.columns();
 	int L = beta_prime.columns();
@@ -56,13 +56,13 @@ double dbcvr_score_diff_chord_angles(int m, vnl_matrix<double>& alpha_prime, vnl
 		for(int j = 0; j < L-2; j++)
 		{
 			int k2_P = KAPPA_FUNCTION(j, m, L-2, M);
-			diff += vcl_acos(vcl_cos(alpha_prime(k1_P, k2_P) - beta_prime(i, j+1)));
+			diff += std::acos(std::cos(alpha_prime(k1_P, k2_P) - beta_prime(i, j+1)));
 		}
 	}
 	return 1 - diff/vnl_math::pi/(L-2)/qrows;
 }
 
-bool dbcvr_get_best_matches_single_scale(vnl_matrix<double>& alpha_prime, vsol_digital_curve_2d_sptr query, vcl_vector<unsigned>& indices, vcl_vector<dbcvr_curve_match>& matches, bool reversed, int num_detections, int center_step)
+bool dbcvr_get_best_matches_single_scale(vnl_matrix<double>& alpha_prime, vsol_digital_curve_2d_sptr query, std::vector<unsigned>& indices, std::vector<dbcvr_curve_match>& matches, bool reversed, int num_detections, int center_step)
 {
 	int M = alpha_prime.columns();
 	int L = query->size();
@@ -72,7 +72,7 @@ bool dbcvr_get_best_matches_single_scale(vnl_matrix<double>& alpha_prime, vsol_d
 	{
 		matches.push_back(dbcvr_curve_match(i, L, dbcvr_score_diff_chord_angles(i, alpha_prime, beta_prime, indices), reversed));
 	}
-	vcl_sort(matches.begin(), matches.end());
+	std::sort(matches.begin(), matches.end());
 	if(matches.size() > num_detections)
 	{
 		matches.erase(matches.begin()+num_detections, matches.end());
@@ -80,30 +80,30 @@ bool dbcvr_get_best_matches_single_scale(vnl_matrix<double>& alpha_prime, vsol_d
 	return true;
 }
 
-bool dbcvr_get_best_matches_single_scale(vsol_digital_curve_2d_sptr exemplar, vsol_digital_curve_2d_sptr query, vcl_vector<unsigned>& indices, vcl_vector<dbcvr_curve_match>& matches, bool reversed, int num_detections, int center_step)
+bool dbcvr_get_best_matches_single_scale(vsol_digital_curve_2d_sptr exemplar, vsol_digital_curve_2d_sptr query, std::vector<unsigned>& indices, std::vector<dbcvr_curve_match>& matches, bool reversed, int num_detections, int center_step)
 {
-	vcl_vector<unsigned> exemplar_indices;
+	std::vector<unsigned> exemplar_indices;
 	vnl_matrix<double> alpha_prime;
 	dbcvr_diff_chord_angles(exemplar, true, exemplar_indices, alpha_prime);
 	return dbcvr_get_best_matches_single_scale(alpha_prime, query, indices, matches, reversed, num_detections, center_step);
 }
 
-bool dbcvr_get_best_matches_multi_scale(vsol_digital_curve_2d_sptr exemplar, vsol_digital_curve_2d_sptr query, vcl_vector<unsigned>& indices,  vcl_vector<dbcvr_curve_match>& matches, vcl_vector<int>& sample_points, int num_detections, int center_step)
+bool dbcvr_get_best_matches_multi_scale(vsol_digital_curve_2d_sptr exemplar, vsol_digital_curve_2d_sptr query, std::vector<unsigned>& indices,  std::vector<dbcvr_curve_match>& matches, std::vector<int>& sample_points, int num_detections, int center_step)
 {
-	vcl_vector<unsigned> exemplar_indices;
+	std::vector<unsigned> exemplar_indices;
 	vnl_matrix<double> alpha_prime;
 	dbcvr_diff_chord_angles(exemplar, true, exemplar_indices, alpha_prime);
 	for(int i = 0; i < sample_points.size(); i++)
 	{
 		vsol_digital_curve_2d_sptr qL = dbcvr_uniform_sampling_open(query, sample_points[i]);
 		vsol_digital_curve_2d_sptr qL_rev = dbcvr_get_reversed_curve(qL);
-		vcl_vector<dbcvr_curve_match> matchesL, matchesL_rev;
+		std::vector<dbcvr_curve_match> matchesL, matchesL_rev;
 		dbcvr_get_best_matches_single_scale(alpha_prime, qL, indices, matchesL, false, num_detections, center_step);
 		dbcvr_get_best_matches_single_scale(alpha_prime, qL_rev, indices, matchesL_rev, true, num_detections, center_step);
 		matches.insert(matches.end(), matchesL.begin(), matchesL.end());
 		matches.insert(matches.end(), matchesL_rev.begin(), matchesL_rev.end());
 	}
-	vcl_sort(matches.begin(), matches.end());
+	std::sort(matches.begin(), matches.end());
 	if(matches.size() > num_detections)
 	{
 		matches.erase(matches.begin()+num_detections, matches.end());

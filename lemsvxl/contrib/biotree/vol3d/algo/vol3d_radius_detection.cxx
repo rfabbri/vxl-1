@@ -1,10 +1,10 @@
 #include "vol3d_radius_detection.h"
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <fstream>
+#include <iostream>
 #include <assert.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 #include <vil3d/vil3d_new.h>
 #include <vil3d/vil3d_save.h>
 #include <vul/vul_timer.h>
@@ -12,11 +12,11 @@
 double 
 vol3d_radius_detection::mylog2(double x)
 {
-  return vcl_log(x)/vcl_log(2.0);
+  return std::log(x)/std::log(2.0);
 }
 
 vol3d_radius_detection::vol3d_radius_detection(int min_r, int max_r)
-  : rp_(static_cast<int>(vcl_floor(2*mylog2((double)max_r/min_r)+0.5))+1)
+  : rp_(static_cast<int>(std::floor(2*mylog2((double)max_r/min_r)+0.5))+1)
 {
 
   assert(min_r <= max_r);
@@ -25,18 +25,18 @@ vol3d_radius_detection::vol3d_radius_detection(int min_r, int max_r)
  
   assert(num_probes > 0);
 
-  double sqrt2 = vcl_sqrt(2.0); 
+  double sqrt2 = std::sqrt(2.0); 
 
   for(int i = 0; i <num_probes; i++)
       {
-   // rp_[i] = static_cast<int>(vcl_floor((vcl_pow(sqrt2, i)*min_r)+0.5)); 
-      rp_[i] = ((vcl_pow(sqrt2, i)*min_r)+0.5); 
-  vcl_cout << "rp " << rp_[i] << vcl_endl;
+   // rp_[i] = static_cast<int>(std::floor((std::pow(sqrt2, i)*min_r)+0.5)); 
+      rp_[i] = ((std::pow(sqrt2, i)*min_r)+0.5); 
+  std::cout << "rp " << rp_[i] << std::endl;
       }
 
 
   // setup a radius filter with maxium radius
-  rf_ = new vol3d_radius_filter(static_cast<int>(vcl_ceil(rp_[num_probes-1]))); 
+  rf_ = new vol3d_radius_filter(static_cast<int>(std::ceil(rp_[num_probes-1]))); 
     
 }
 
@@ -65,7 +65,7 @@ radius(vil3d_image_resource_sptr  vol_sptr, double density_mean, double density_
     for(int j = 0; j < dim2; j++)
       for(int k = 0; k < dim3; k++)
       {
-        vcl_valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
 
         assert(dens.size() > 1 );
 
@@ -88,8 +88,8 @@ radius(vil3d_image_resource_sptr  vol_sptr, double density_mean, double density_
       }
         
 #if 0
-  vcl_string txt_file = "C:\\scale_selection\\radius_labeling.txt"; 
-          vcl_ofstream fstream(txt_file.c_str());
+  std::string txt_file = "C:\\scale_selection\\radius_labeling.txt"; 
+          std::ofstream fstream(txt_file.c_str());
 
           for(int k = 0; k < dim3; k++)
       {
@@ -100,9 +100,9 @@ radius(vil3d_image_resource_sptr  vol_sptr, double density_mean, double density_
           
 fstream << res[i][j][k] << "  " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << k << vcl_endl;
+fstream << "end of row " << k << std::endl;
     }
 fstream.close();
 #endif
@@ -114,7 +114,7 @@ vbl_array_3d<double> vol3d_radius_detection::
 radius(vil3d_image_resource_sptr vol_sptr, double density_sigma)
 {
 
-  double threshold = 3. * vcl_sqrt(2.0) * density_sigma;
+  double threshold = 3. * std::sqrt(2.0) * density_sigma;
   
   int dim1 = vol_sptr->ni();
 
@@ -133,11 +133,11 @@ radius(vil3d_image_resource_sptr vol_sptr, double density_sigma)
     for(int j = 0; j < dim2; j++)
       for(int k = 0; k < dim3; k++)
       {
-        vcl_valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
 
         assert(dens.size() > 1 );
        
-        vcl_valarray<double> diff(dens.size()-1);
+        std::valarray<double> diff(dens.size()-1);
  
         for (unsigned int r = 0;r < diff.size();r++)
             {
@@ -163,8 +163,8 @@ if ((diff[r] < -3*density_sigma) & (res[i][j][k] != 0 ) )
       }
 
 #if 0
-   vcl_string txt_file = "C:\\scale_selection\\radius_labeling_with_known_sigma.txt"; 
-          vcl_ofstream fstream(txt_file.c_str());
+   std::string txt_file = "C:\\scale_selection\\radius_labeling_with_known_sigma.txt"; 
+          std::ofstream fstream(txt_file.c_str());
 
           for(int k = 0; k < dim3; k++)
       {
@@ -175,9 +175,9 @@ if ((diff[r] < -3*density_sigma) & (res[i][j][k] != 0 ) )
           
 fstream << res[i][j][k] << "  " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << k << vcl_endl;
+fstream << "end of row " << k << std::endl;
     }
 fstream.close();
 #endif
@@ -212,11 +212,11 @@ radius(vil3d_image_resource_sptr vol_sptr, double density_sigma ,float threshold
     for(int j = 0; j < dim2; j++)
       for(int k = 0; k < dim3; k++)
       {
-        vcl_valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol_view, rp_, i, j, k);
 
         assert(dens.size() > 1 );
 
-        vcl_valarray<double> diff(dens.size()-1);
+        std::valarray<double> diff(dens.size()-1);
  
         for (unsigned int r = 0;r < diff.size();r++)
             {
@@ -259,8 +259,8 @@ if (res[i][j][k] == -1)
       }
 
 #if 0
-  vcl_string txt_file = "C:\\scale_selection\\radius_labeling.txt"; 
-          vcl_ofstream fstream(txt_file.c_str());
+  std::string txt_file = "C:\\scale_selection\\radius_labeling.txt"; 
+          std::ofstream fstream(txt_file.c_str());
 
   for(int i = 0; i<dim1; i++)
       {
@@ -271,9 +271,9 @@ if (res[i][j][k] == -1)
           
 fstream << res[i][j][k] << "  " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << i << vcl_endl;
+fstream << "end of row " << i << std::endl;
     }
 fstream.close();
 #endif
@@ -306,9 +306,9 @@ radius(vbl_array_3d<double> vol, double density_mean, double density_sigma)
       {
    //   vul_timer t1;
 
-        vcl_valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
 
-    //    vcl_cout <<" time for finding densities at a voxel " << "(" << i <<","<<j<<","<<k<<")" <<t1.real()<< vcl_endl;
+    //    std::cout <<" time for finding densities at a voxel " << "(" << i <<","<<j<<","<<k<<")" <<t1.real()<< std::endl;
 
         assert(dens.size() > 1 );
 
@@ -330,7 +330,7 @@ radius(vbl_array_3d<double> vol, double density_mean, double density_sigma)
         } 
       }
    double time = t.real();
-   vcl_cout <<" Time for the radius detection " << time / 1000.0 << "s.\n";
+   std::cout <<" Time for the radius detection " << time / 1000.0 << "s.\n";
         
   return res;
 }
@@ -350,8 +350,8 @@ radius(vbl_array_3d<double> vol, double density_sigma)
   
 
 
-//vcl_string density_txt_file = "C:\\scale_selection\\densities_prior_to_labeling.txt";
-//  vcl_ofstream fstr(density_txt_file.c_str());
+//std::string density_txt_file = "C:\\scale_selection\\densities_prior_to_labeling.txt";
+//  std::ofstream fstr(density_txt_file.c_str());
 
                                                   
   
@@ -363,18 +363,18 @@ radius(vbl_array_3d<double> vol, double density_sigma)
     for(int j = 0; j < dim2; j++)
       for(int k = 0; k < dim3; k++)
       {
-        vcl_valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
 
-      //   fstr << "(" << i+510 << "," << j+309<<")" << vcl_endl; 
+      //   fstr << "(" << i+510 << "," << j+309<<")" << std::endl; 
   for (int d = 0;d<dens.size();d++)
             {
      //   fstr << (unsigned short)dens[d] <<" ";
             }
-     //   fstr << vcl_endl;
+     //   fstr << std::endl;
 
         assert(dens.size() > 1 );
 
-        vcl_valarray<double> diff(dens.size()-1);
+        std::valarray<double> diff(dens.size()-1);
  
      
            for (unsigned int r = 0;r < diff.size();r++)
@@ -404,8 +404,8 @@ break;
       }
 
 
-   vcl_string txt_file = "C:\\scale_selection\\radius_labeling_with_known_sigma.txt"; 
-          vcl_ofstream fstream(txt_file.c_str());
+   std::string txt_file = "C:\\scale_selection\\radius_labeling_with_known_sigma.txt"; 
+          std::ofstream fstream(txt_file.c_str());
 
           for(int k = 0; k < dim3; k++)
       {
@@ -416,9 +416,9 @@ break;
           
 fstream << res[i][j][k] << "  " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << k << vcl_endl;
+fstream << "end of row " << k << std::endl;
     }
 fstream.close();
 
@@ -453,11 +453,11 @@ int dim3 = vol.get_row3_count();
     for(int j = 0; j < dim2; j++)
       for(int k = 0; k < dim3; k++)
       {
-        vcl_valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
+        std::valarray<double> dens = rf_->densities(vol, rp_, i, j, k);
 
         assert(dens.size() > 1 );
 
-        vcl_valarray<double> diff(dens.size()-1);
+        std::valarray<double> diff(dens.size()-1);
  
      
 if (((dens[0] - dens[dens.size()-1])/dens[0]) < background_threshold)
@@ -489,8 +489,8 @@ break;
     }
       }
 
-  vcl_string txt_file = "C:\\scale_selection\\radius_labeling_with_0.7_thresh.txt"; 
-          vcl_ofstream fstream(txt_file.c_str());
+  std::string txt_file = "C:\\scale_selection\\radius_labeling_with_0.7_thresh.txt"; 
+          std::ofstream fstream(txt_file.c_str());
 
           for(int k = 0; k < dim3; k++)
       {
@@ -501,9 +501,9 @@ break;
           
 fstream << res[i][j][k] << "  " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << k << vcl_endl;
+fstream << "end of row " << k << std::endl;
     }
 fstream.close();
 

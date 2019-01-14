@@ -26,12 +26,12 @@ public:
   static void median_fill(vil_image_view<double>& image);
 
   //: read one or more FLIMAP ASCII files and build a pair of LIDAR images (like Buckeye format)
-  static void generate_lidar_images(const vcl_string& glob, const vgl_box_2d<double>& bbox,
+  static void generate_lidar_images(const std::string& glob, const vgl_box_2d<double>& bbox,
                                           vil_image_view<double>& return1,
                                           vil_image_view<double>& return2,
                                           vil_image_view<vxl_byte>& rgb_img);
 
-  static void generate_model(const vcl_string input_path, 
+  static void generate_model(const std::string input_path, 
                              const lidar_labeling_params params, 
                              vil_image_view<int>& labels, 
                              vil_image_view<unsigned char>& labels_colored, 

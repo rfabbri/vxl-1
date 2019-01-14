@@ -60,7 +60,7 @@ smw_world::smw_world(vil_image_view<float> const& img,
                                                  init_var_,min_var_) );
     }
     else
-        vcl_cerr << "ERROR: SUB-IMAGE PARAMETER FAILURE" << vcl_flush;
+        std::cerr << "ERROR: SUB-IMAGE PARAMETER FAILURE" << std::flush;
 
     this->update(img);
     
@@ -89,7 +89,7 @@ vil_image_view<vxl_byte> smw_world::change_map()
     return change_map_img;
 }//end smw_world::change_map
 
-bool smw_world::write_dot_file(vcl_ostream& os, unsigned const& row, 
+bool smw_world::write_dot_file(std::ostream& os, unsigned const& row, 
                                unsigned const& col)
 {
     //translate the world coordinates to the subimage that the
@@ -101,7 +101,7 @@ bool smw_world::write_dot_file(vcl_ostream& os, unsigned const& row,
     return world_[world_row][world_col].write_dot_file(os);
 }//end smw_world::write_dot_file
 
-bool smw_world::write_dot_file_full(vcl_ostream& os, unsigned const& col,
+bool smw_world::write_dot_file_full(std::ostream& os, unsigned const& col,
                                     unsigned const& row)
 {
     unsigned world_col = col - x1_;
@@ -124,13 +124,13 @@ vil_image_view<vxl_byte> smw_world::max_prob_map()
 
 }//end smw_world::prob_map
 
-bool smw_world::write_max_prob_map(vcl_string const& prob_path)
+bool smw_world::write_max_prob_map(std::string const& prob_path)
 {
     vil_image_view<vxl_byte> prob_map = this->max_prob_map();
     vil_save(prob_map,prob_path.c_str());
 }//end smw_world::write_prob_map
 
-// bool smw_world::write_prob_map(vcl_string const& prob_path,
+// bool smw_world::write_prob_map(std::string const& prob_path,
 //                     vil_image_view<float> const& grey_img)
 // {
     
@@ -181,13 +181,13 @@ smw_world::highlight_region(vil_image_view<vil_rgb<vxl_byte> > const& src,
     }
     else
     {
-        vcl_cerr << "(gx,gy) as specified do not fall in the area in which" 
-                 << " the world is operating. " << vcl_endl;
-        vcl_cerr << "(x1_,y1_) = " << "(" << x1_ << ", " << y1_ << ")" 
-                 << vcl_endl;
-        vcl_cerr << "(x2_,y2_) = " << "(" << x2_ << ", " << y2_ << ")"
-                 << vcl_endl;
-        vcl_cerr << "(gx,gy) = " << "(" << gx << ", " << gy << ")" 
-                 << vcl_endl;
+        std::cerr << "(gx,gy) as specified do not fall in the area in which" 
+                 << " the world is operating. " << std::endl;
+        std::cerr << "(x1_,y1_) = " << "(" << x1_ << ", " << y1_ << ")" 
+                 << std::endl;
+        std::cerr << "(x2_,y2_) = " << "(" << x2_ << ", " << y2_ << ")"
+                 << std::endl;
+        std::cerr << "(gx,gy) = " << "(" << gx << ", " << gy << ")" 
+                 << std::endl;
     }
 }//end smw_world::highlight_region

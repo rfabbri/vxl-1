@@ -1,10 +1,10 @@
 #include "dbdet_generic_linker.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <algorithm>
 #include <vnl/vnl_math.h>
 #include <pdf1d/pdf1d_calc_mean_var.h>
 
@@ -72,7 +72,7 @@ void dbdet_generic_linker::extract_image_contours_by_tracing()
     }
   }
 
-  vcl_cout << "Before linking, # of unlinked edgels = " << count_unlinked_edgels() << vcl_endl;
+  std::cout << "Before linking, # of unlinked edgels = " << count_unlinked_edgels() << std::endl;
 
   //trace contours from unlinked points in both directions
   trace_contours_in_both_directions();
@@ -82,7 +82,7 @@ void dbdet_generic_linker::extract_image_contours_by_tracing()
   //next trace all the chains starting at junctions
   //trace_contours_from_junctions();
 
-  vcl_cout << "After linking, # of unlinked edgels = " << count_unlinked_edgels() << vcl_endl;
+  std::cout << "After linking, # of unlinked edgels = " << count_unlinked_edgels() << std::endl;
 }
 
 void dbdet_generic_linker::trace_contours_in_both_directions()
@@ -118,7 +118,7 @@ void dbdet_generic_linker::trace_contours_in_both_directions()
           dx = temp_chain->edgels[0]->pt.x()-temp_chain->edgels[1]->pt.x();
           dy = temp_chain->edgels[0]->pt.y()-temp_chain->edgels[1]->pt.y();
           
-          double norm = vcl_sqrt(dx*dx + dy*dy);
+          double norm = std::sqrt(dx*dx + dy*dy);
           dx /= norm;
           dy /= norm;
         }
@@ -285,16 +285,16 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
     eC = cur_chain->edgels.front();
 
   //determine the closest edgel to the current one and link to it
-  vcl_multimap<double, int> dist;
+  std::multimap<double, int> dist;
   //double dist[8];
   
   for (int i=0; i<num_of_neigh; i++){
     dbdet_edgel* eN = edgemap_->edge_cells(neighbor_row[i], neighbor_col[i]).front();
-    dist.insert(vcl_pair<double, int>(vgl_distance(eC->pt, eN->pt), i));
+    dist.insert(std::pair<double, int>(vgl_distance(eC->pt, eN->pt), i));
   }
 
   //connect to the closest one
-  vcl_multimap<double, int>::iterator nit = dist.begin();
+  std::multimap<double, int>::iterator nit = dist.begin();
   for (; nit != dist.end(); nit++){
     //double d = nit->first;
     int min = nit->second;
@@ -305,7 +305,7 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
     double dy2 = eN->pt.y() - eC->pt.y();
     double dx2 = eN->pt.x() - eC->pt.x();
 
-    double norm = vcl_sqrt(dx2*dx2 + dy2*dy2);
+    double norm = std::sqrt(dx2*dx2 + dy2*dy2);
     dx2 /= norm;
     dy2 /= norm;
 
@@ -321,8 +321,8 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
     else
       no_zigzag = (dx1*dx2+dy1*dy2)>=0.7;
 
-    double dp1 = dx2*vcl_cos(eC->tangent)+dy2*vcl_sin(eC->tangent);
-    double dp2 = dx2*vcl_cos(eN->tangent)+dy2*vcl_sin(eN->tangent);
+    double dp1 = dx2*std::cos(eC->tangent)+dy2*std::sin(eC->tangent);
+    double dp2 = dx2*std::cos(eN->tangent)+dy2*std::sin(eN->tangent);
 
     bool eC_aligned = dp1>0;
     bool eN_aligned = dp2>0;
@@ -341,8 +341,8 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
       double Ln_app = eN_aligned ? eN->left_app->value()  : eN->right_app->value();
       double Rn_app = eN_aligned ? eN->right_app->value() : eN->left_app->value();
 
-      app_consistent = (vcl_fabs(Lc_app-Ln_app) < app_thresh_ &&
-                             vcl_fabs(Rc_app-Rn_app) < app_thresh_);
+      app_consistent = (std::fabs(Lc_app-Ln_app) < app_thresh_ &&
+                             std::fabs(Rc_app-Rn_app) < app_thresh_);
     }
     else
       app_consistent = true;
@@ -350,11 +350,11 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
     //perform the smoothness test
     if (req_smooth_continuation_){
       //only link if the edgels are locally relatable (tangents do not deviate too much from the curve)
-      double vec = vcl_atan2(dy2, dx2);
-      double th1 = vcl_min(dbdet_CCW(vec, eC->tangent), dbdet_CCW(vec, eC->tangent+vnl_math::pi));
-      double th2 = vcl_min(dbdet_CCW(vec, eN->tangent), dbdet_CCW(vec, eN->tangent+vnl_math::pi));
+      double vec = std::atan2(dy2, dx2);
+      double th1 = std::min(dbdet_CCW(vec, eC->tangent), dbdet_CCW(vec, eC->tangent+vnl_math::pi));
+      double th2 = std::min(dbdet_CCW(vec, eN->tangent), dbdet_CCW(vec, eN->tangent+vnl_math::pi));
     
-      smooth_continuation = vcl_fabs(vnl_math::pi - th1+th2)<0.25;
+      smooth_continuation = std::fabs(vnl_math::pi - th1+th2)<0.25;
     }
     else
       smooth_continuation = true;
@@ -362,10 +362,10 @@ vgl_point_2d<int> dbdet_generic_linker::Grow_Seed_Edge(int x, int y, dbdet_edgel
     //perform curvature test
     if (req_low_curvatures_){
       //k = 2*sin(th)/d (this estimate can change with slight perturbations, need to be conservative)
-      //curvature_low = vcl_fabs(2*vcl_sin(th1)/d)<0.5 && vcl_fabs(2*vcl_sin(th2)/d)<0.5;
+      //curvature_low = std::fabs(2*std::sin(th1)/d)<0.5 && std::fabs(2*std::sin(th2)/d)<0.5;
 
       //alternative low curvature test
-      curvature_low = (vcl_fabs(dp1)>0.9 && vcl_fabs(dp2)>0.9);
+      curvature_low = (std::fabs(dp1)>0.9 && std::fabs(dp2)>0.9);
     }
     else
       curvature_low = true;
@@ -542,9 +542,9 @@ void dbdet_generic_linker::form_junctions()
 
 void dbdet_generic_linker::report_stats()
 {
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "Edge Linking Summary\n";
-  vcl_cout << "======================================" << vcl_endl;
+  std::cout << "======================================" << std::endl;
+  std::cout << "Edge Linking Summary\n";
+  std::cout << "======================================" << std::endl;
 
   
 }

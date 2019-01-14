@@ -12,7 +12,7 @@
 #include <vgui/vgui_easy2D_tableau.h>
 
 #include <vul/vul_arg.h>
-#include <vcl_ios.h>
+#include <ios>
 
 #include <vnl/vnl_double_3.h>
 
@@ -57,7 +57,7 @@ class codebook_manager : public vgui_wrapper_tableau
   static void open_codebook();
   static void change_settings();
 
-  void load_codebook(const vcl_string& filename);
+  void load_codebook(const std::string& filename);
 
   void set_image(const vil_image_resource_sptr& img);
 
@@ -72,21 +72,21 @@ class codebook_manager : public vgui_wrapper_tableau
 
  private: 
   void compute_keypoints(const vil_image_resource_sptr& img);
-  vcl_vector<vcl_pair<double,unsigned> > search_codebook(const dbdet_keypoint_sptr& k, bool find_closest=false);
+  std::vector<std::pair<double,unsigned> > search_codebook(const dbdet_keypoint_sptr& k, bool find_closest=false);
   void draw_match(const modrec_codeword<128>& cw, double d);
 
 
   vgui_image_tableau_sptr image_tab_;
   vgui_easy2D_tableau_sptr key_tab_;
-  vcl_vector<dbdet_keypoint_sptr> keypoints_;
+  std::vector<dbdet_keypoint_sptr> keypoints_;
   double code_thresh_;
 
   bgui3d_examiner_tableau_sptr exam_tab_;
   SoSeparator* draw_root_;
   SoSeparator* marker_node_;
 
-  vcl_vector<modrec_codeword<128> > codebook_;
-  vcl_vector<unsigned> code_sizes_;
+  std::vector<modrec_codeword<128> > codebook_;
+  std::vector<unsigned> code_sizes_;
 
 
   vgui_window* win_;
@@ -207,7 +207,7 @@ void codebook_manager::set_image(const vil_image_resource_sptr& img)
   vgui_style_sptr point_style = vgui_style::new_style(0.0f , 1.0f , 0.0f , 4.0f , 1.0f);
 
   key_tab_->clear();
-  for( vcl_vector< dbdet_keypoint_sptr >::const_iterator itr = keypoints_.begin();
+  for( std::vector< dbdet_keypoint_sptr >::const_iterator itr = keypoints_.begin();
        itr != keypoints_.end();  ++itr ){
     if(*itr){
       dbdet_keypoint_soview2D* obj = new dbdet_keypoint_soview2D(*itr,false);
@@ -257,7 +257,7 @@ void codebook_manager::compute_keypoints(const vil_image_resource_sptr& img)
   gauss.compute_gradients(g_dir, g_mag);
 
   // detect peaks in the scale space
-  vcl_vector<vgl_point_3d<float> > peak_pts;
+  std::vector<vgl_point_3d<float> > peak_pts;
   dbdet_scale_space_peaks(dog, peak_pts, max_curve_ratio, contrast_thresh);
 
   // compute orientations and descriptors at each scale peak to make a Lowe keypoint
@@ -266,7 +266,7 @@ void codebook_manager::compute_keypoints(const vil_image_resource_sptr& img)
   for(unsigned int i=0; i<peak_pts.size(); ++i)
   {
     vgl_point_3d<float>& pt = peak_pts[i];
-    vcl_vector<float> orientations = dbdet_ssp_orientations(pt, o_params);
+    std::vector<float> orientations = dbdet_ssp_orientations(pt, o_params);
     for(unsigned int j=0; j<orientations.size(); ++j)
     {
       dbdet_lowe_keypoint* kp = new dbdet_lowe_keypoint(pt.x(), pt.y(), pt.z(),
@@ -283,8 +283,8 @@ void codebook_manager::compute_keypoints(const vil_image_resource_sptr& img)
 void codebook_manager::open_image()
 {
   vgui_dialog load_image_dlg("Open Image");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext, image_filename);
   if (!load_image_dlg.ask())
     return;
@@ -317,7 +317,7 @@ void codebook_manager::settings()
 //======================================================================
 //: load the codebook data
 //======================================================================
-void codebook_manager::load_codebook(const vcl_string& filename)
+void codebook_manager::load_codebook(const std::string& filename)
 {
   vsl_b_ifstream is(filename);
   vsl_b_read(is,codebook_);
@@ -331,8 +331,8 @@ void codebook_manager::load_codebook(const vcl_string& filename)
 void codebook_manager::open_codebook()
 {
   vgui_dialog load_dlg("Open Codebook");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_dlg.file("Codebook Filename:", ext, filename);
   if (!load_dlg.ask())
     return;
@@ -343,15 +343,15 @@ void codebook_manager::open_codebook()
 //======================================================================
 //: search_codebook
 //======================================================================
-vcl_vector<vcl_pair<double,unsigned> >
+std::vector<std::pair<double,unsigned> >
 codebook_manager::search_codebook(const dbdet_keypoint_sptr& k, bool find_closest)
 {
   dbdet_lowe_keypoint* kp = static_cast<dbdet_lowe_keypoint*>(k.ptr());
   vnl_vector_fixed<double,128> d = kp->descriptor();
   double best = 1.0;
   int best_ind = -1;
-  typedef vcl_pair<double,unsigned> pair_du;
-  vcl_vector<pair_du> matches;
+  typedef std::pair<double,unsigned> pair_du;
+  std::vector<pair_du> matches;
   pair_du closest(codebook_[0].compare_descriptor(d),0);
   for(unsigned i=0; i<codebook_.size(); ++i){
     double dist = codebook_[i].compare_descriptor(d);
@@ -402,7 +402,7 @@ bool codebook_manager::handle(const vgui_event &e)
     vgui_soview* so = key_tab_->get_highlighted_soview();
     if(so && draw_root_){
       dbdet_keypoint_soview2D* kso = static_cast<dbdet_keypoint_soview2D*>(so);
-      vcl_vector<vcl_pair<double,unsigned> > matches = search_codebook(kso->sptr);
+      std::vector<std::pair<double,unsigned> > matches = search_codebook(kso->sptr);
       if(!matches.empty()){
         draw_root_->removeAllChildren();
         key_tab_->select(key_tab_->get_highlighted());
@@ -418,7 +418,7 @@ bool codebook_manager::handle(const vgui_event &e)
     vgui_soview* so = key_tab_->get_highlighted_soview();
     if(so && draw_root_){
       dbdet_keypoint_soview2D* kso = static_cast<dbdet_keypoint_soview2D*>(so);
-      vcl_vector<vcl_pair<double,unsigned> > matches = search_codebook(kso->sptr,true);
+      std::vector<std::pair<double,unsigned> > matches = search_codebook(kso->sptr,true);
       if(!matches.empty()){
         draw_root_->removeAllChildren();
         key_tab_->select(key_tab_->get_highlighted());
@@ -439,9 +439,9 @@ bool codebook_manager::handle(const vgui_event &e)
 int main(int argc, char** argv)
 {
 
-  vul_arg<vcl_string>  a_image("-image", "path to image", "");
-  vul_arg<vcl_string>  a_codebook("-codebook", "path to codebook", "");
-  vul_arg<vcl_string>  a_mesh("-mesh", "path to mesh", "");
+  vul_arg<std::string>  a_image("-image", "path to image", "");
+  vul_arg<std::string>  a_codebook("-codebook", "path to codebook", "");
+  vul_arg<std::string>  a_mesh("-mesh", "path to mesh", "");
   vul_arg_parse(argc, argv);
 
 
@@ -473,7 +473,7 @@ int main(int argc, char** argv)
   menu_bar.add("File",file_menu);
   menu_bar.add("Options",opt_menu);
 
-  vcl_string title = "Codebook GUI";
+  std::string title = "Codebook GUI";
   vgui_window* win = vgui::produce_window(1000, 800, menu_bar, title);
   win->get_adaptor()->set_tableau(codebook_manager::instance());
   win->set_statusbar(true);

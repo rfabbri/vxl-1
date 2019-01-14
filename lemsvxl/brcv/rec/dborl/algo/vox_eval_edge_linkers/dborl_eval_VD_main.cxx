@@ -17,7 +17,7 @@
 #include "dborl_eval_VD_params.h"
 #include "dborl_eval_VD_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -81,15 +81,15 @@ int main(int argc, char *argv[])
     return 0;
 
   // 1) load the input image
-  vcl_string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
+  std::string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
   if (!vul_file::exists(input_img)) {
-    vcl_cout << "Cannot find image: " << input_img << "\n";
+    std::cout << "Cannot find image: " << input_img << "\n";
     return 0;
   }
 
   vil_image_view<vxl_byte> image  = vil_load(input_img.c_str());
   if (!image) {
-    vcl_cout << "Cannot load image: " << input_img << "\n";
+    std::cout << "Cannot load image: " << input_img << "\n";
     return 0;
   }
 
@@ -119,11 +119,11 @@ int main(int argc, char *argv[])
   detector.SetImage(img);
   //process edges
   detector.DoContour();
-  vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+  std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
 
   //create an edgemap from the detector output
   dbdet_edgemap_sptr EM = new dbdet_edgemap(img.width(), img.height());
-  vcl_vector<dbdet_edgel_chain*> chains; //to store the edgel chains
+  std::vector<dbdet_edgel_chain*> chains; //to store the edgel chains
   for (unsigned i=0; i<edges->size(); i++)
   {
     vtol_edge_2d_sptr ve = (*edges)[i];
@@ -145,13 +145,13 @@ int main(int argc, char *argv[])
 
   // 3) save edgemap
   char out_edge_filename[300];
-  //vcl_sprintf(out_edge_filename, "%s_%d_%f_%f.edg", out_prefix.c_str(), N, sigma, threshold);
-  bool retval = dbdet_save_edg(vcl_string(out_edge_filename), EM);
+  //std::sprintf(out_edge_filename, "%s_%d_%f_%f.edg", out_prefix.c_str(), N, sigma, threshold);
+  bool retval = dbdet_save_edg(std::string(out_edge_filename), EM);
 
   // 3) save this edge map onto a file
   if (params->save_edges_()) 
   {
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     output_file = output_file + params->input_object_name_() + params->edg_output_extension_();
 
     if (!dbdet_save_edg(output_file, EM)) {
-      vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving edge file: " << output_file << std::endl;
       return 0;
     }
   }
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
   // 4) save the linked contour files
   if (params->save_contours_())
   {
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 
     // Save the contour fragment graph as a .cem file
     if (!dbdet_save_cem(output_file, EM, CFG)) {
-      vcl_cout << "Problems in saving the contour file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving the contour file: " << output_file << std::endl;
       return 0;
     }
   }
@@ -200,15 +200,15 @@ int main(int argc, char *argv[])
   // 5) Evaluate the results
   
   //first read in the GT image
-  vcl_string GT_img_filename = params->input_object_dir_() + "/" + params->input_object_name_() + params->GT_extension_();
+  std::string GT_img_filename = params->input_object_dir_() + "/" + params->input_object_name_() + params->GT_extension_();
   if (!vul_file::exists(GT_img_filename)) {
-    vcl_cout << "Cannot find image: " << GT_img_filename << "\n";
+    std::cout << "Cannot find image: " << GT_img_filename << "\n";
     return 0;
   }
 
   vil_image_view<vxl_byte> GT_img  = vil_load(GT_img_filename.c_str());
   if (!image) {
-    vcl_cout << "Cannot load image: " << GT_img_filename << "\n";
+    std::cout << "Cannot load image: " << GT_img_filename << "\n";
     return 0;
   }
 
@@ -219,13 +219,13 @@ int main(int argc, char *argv[])
 
     //set the edge thresholds
     double thresh_vec[] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 15.0, 18.0, 20.0, 25.0, 30.0, 40.0, 50.0};
-    eval_params.thresh = vcl_vector<double>(thresh_vec, thresh_vec + sizeof(thresh_vec)/sizeof(thresh_vec[0]));
+    eval_params.thresh = std::vector<double>(thresh_vec, thresh_vec + sizeof(thresh_vec)/sizeof(thresh_vec[0]));
 
     //call the evaluator with the params above
     dbdet_eval_result res = dbdet_eval_edge_det(eval_params, EM, GT_img);
 
     // save the ROC information for this image
-    vcl_string ROC_file;
+    std::string ROC_file;
     if (params->save_to_object_folder_()) 
       ROC_file = params->input_object_dir_() + "/";
     else {
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
     dbdet_eval_result res = dbdet_eval_edge_linking(eval_params, CFG, GT_img);
 
     // save the ROC information for this image
-    vcl_string ROC_file;
+    std::string ROC_file;
     if (params->save_to_object_folder_()) 
       ROC_file = params->input_object_dir_() + "/";
     else {

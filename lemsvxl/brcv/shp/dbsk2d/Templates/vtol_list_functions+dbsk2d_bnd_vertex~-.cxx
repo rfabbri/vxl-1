@@ -4,15 +4,15 @@
 #include <dbsk2d/dbsk2d_bnd_vertex_sptr.h>
 
 #include <vtol/vtol_list_functions.hxx>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
-template vcl_vector<dbsk2d_bnd_vertex* >* tagged_union(vcl_vector<dbsk2d_bnd_vertex*>*);
+template std::vector<dbsk2d_bnd_vertex* >* tagged_union(std::vector<dbsk2d_bnd_vertex*>*);
 
-template vcl_vector<dbsk2d_bnd_vertex_sptr >* tagged_union(vcl_vector<dbsk2d_bnd_vertex_sptr>* );
+template std::vector<dbsk2d_bnd_vertex_sptr >* tagged_union(std::vector<dbsk2d_bnd_vertex_sptr>* );
 
-template vcl_list<dbsk2d_bnd_vertex* >* tagged_union(vcl_list<dbsk2d_bnd_vertex*>*);
+template std::list<dbsk2d_bnd_vertex* >* tagged_union(std::list<dbsk2d_bnd_vertex*>*);
 
-template vcl_list<dbsk2d_bnd_vertex_sptr >* tagged_union(vcl_list<dbsk2d_bnd_vertex_sptr>* );
+template std::list<dbsk2d_bnd_vertex_sptr >* tagged_union(std::list<dbsk2d_bnd_vertex_sptr>* );
 
 

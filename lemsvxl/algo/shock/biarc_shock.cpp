@@ -2,7 +2,7 @@
 #include "biarc_shock.h"
 //#include "euler.h"
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 /* ---------------- Bi Arc Functions --------------------- */
 
@@ -15,15 +15,15 @@ double BiArcShock::compute_join_theta(double k1, double k2)
     double denomenator=0,sin_numerator=0,cos_numerator=0,sin_theta1=0,cos_theta1=0,theta_temp=0;
 
     denomenator=k2-k1;
-    sin_numerator=k1*k2*(_end_pt.x-_start_pt.x)+k2*vcl_sin(_start_angle)-k1*vcl_sin(_end_angle);
+    sin_numerator=k1*k2*(_end_pt.x-_start_pt.x)+k2*std::sin(_start_angle)-k1*std::sin(_end_angle);
 
-    cos_numerator=-k1*k2*(_end_pt.y-_start_pt.y)+k2*vcl_cos(_start_angle)-k1*vcl_cos(_end_angle);
+    cos_numerator=-k1*k2*(_end_pt.y-_start_pt.y)+k2*std::cos(_start_angle)-k1*std::cos(_end_angle);
 
     if (denomenator!=0)
       {
         sin_theta1=sin_numerator/denomenator;
         cos_theta1=cos_numerator/denomenator;
-        theta_temp=vcl_atan2(sin_theta1,cos_theta1);
+        theta_temp=std::atan2(sin_theta1,cos_theta1);
         if(theta_temp<0)  theta_temp+=2*M_PI;  
        }
     else
@@ -44,8 +44,8 @@ double BiArcShock::compute_arclength(double theta0,double theta1,double k)
 
     double dif=0,L=0;
 
-    theta0 =  vcl_fmod (theta0, 2*M_PI);
-    theta1 =  vcl_fmod (theta1, 2*M_PI);
+    theta0 =  std::fmod (theta0, 2*M_PI);
+    theta1 =  std::fmod (theta1, 2*M_PI);
 
     if (theta0<0)
         theta0 +=2*M_PI;
@@ -136,7 +136,7 @@ int BiArcShock::compute_biarc_params(void)
     theta2 = _end_angle;
     
     distance= _distPointPoint(_start_pt, _end_pt);
-    psi=vcl_atan2(_end_pt.y-_start_pt.y,_end_pt.x-_start_pt.x);
+    psi=std::atan2(_end_pt.y-_start_pt.y,_end_pt.x-_start_pt.x);
     if(psi<0) psi+=2*M_PI;
 
     alpha=_start_angle-psi;
@@ -151,9 +151,9 @@ int BiArcShock::compute_biarc_params(void)
     mean_angle=(alpha+beta)/2.;
 
 
-    if(vcl_fabs(mean_angle)<EPSILON)                  // one arc
+    if(std::fabs(mean_angle)<EPSILON)                  // one arc
       {
-        if(vcl_fabs(alpha)<EPSILON)                   // straight line
+        if(std::fabs(alpha)<EPSILON)                   // straight line
           {
             BiArcShockParams params;
 
@@ -178,11 +178,11 @@ int BiArcShock::compute_biarc_params(void)
             dif_angle=beta-alpha;
             if(alpha>0)
               {
-                estimate_K=-vcl_fabs(2/distance *vcl_sin((beta-alpha)/2));
+                estimate_K=-std::fabs(2/distance *std::sin((beta-alpha)/2));
                }
             else
               {
-                estimate_K=vcl_fabs(2/distance *vcl_sin((beta-alpha)/2));
+                estimate_K=std::fabs(2/distance *std::sin((beta-alpha)/2));
                }
 
             if((estimate_K>0) && (dif_angle>0))
@@ -223,21 +223,21 @@ int BiArcShock::compute_biarc_params(void)
       {
 
 
-        k1=-(4.0/distance)*vcl_sin(((3.0*alpha+beta)/4))*vcl_cos((beta-alpha)/4);
-        k2= (4.0/distance)*vcl_sin(((alpha+3.0*beta)/4))*vcl_cos((beta-alpha)/4);
+        k1=-(4.0/distance)*std::sin(((3.0*alpha+beta)/4))*std::cos((beta-alpha)/4);
+        k2= (4.0/distance)*std::sin(((alpha+3.0*beta)/4))*std::cos((beta-alpha)/4);
 
 
         join_theta=compute_join_theta(k1, k2);
 
-        if(vcl_fabs(k1)<(EPSILON))
+        if(std::fabs(k1)<(EPSILON))
           {
-            if (vcl_fabs(vcl_sin((theta0 - theta2)/2))<MIN_DENOMINATOR)
+            if (std::fabs(std::sin((theta0 - theta2)/2))<MIN_DENOMINATOR)
               {
                 L4 = INF;
                }
             else
               {
-                L1 = distance*(vcl_fabs(vcl_sin (((theta2 + theta0)/2)-psi)/vcl_sin((theta0 - theta2)/2)));
+                L1 = distance*(std::fabs(std::sin (((theta2 + theta0)/2)-psi)/std::sin((theta0 - theta2)/2)));
                }
            }
         else 
@@ -245,15 +245,15 @@ int BiArcShock::compute_biarc_params(void)
             L1 = compute_arclength(_start_angle,join_theta,k1);
            }
 
-        if(vcl_fabs(k2)<EPSILON)
+        if(std::fabs(k2)<EPSILON)
           {
-            if (vcl_fabs(vcl_sin((theta0 - theta2)/2))<MIN_DENOMINATOR)
+            if (std::fabs(std::sin((theta0 - theta2)/2))<MIN_DENOMINATOR)
               {
                 L2 = INF;
                }
             else
               {
-                L2=distance*(vcl_fabs(vcl_sin(((theta2 + theta0)/2)-psi) / vcl_sin((theta0 - theta2)/2)));
+                L2=distance*(std::fabs(std::sin(((theta2 + theta0)/2)-psi) / std::sin((theta0 - theta2)/2)));
                }
            }
         else
@@ -262,10 +262,10 @@ int BiArcShock::compute_biarc_params(void)
            }
 
 
-        k3 = (4.0/distance)*vcl_cos(((3.0*alpha+beta)/4))*vcl_sin((beta-alpha)/4);
-        k4 = (4.0/distance)*vcl_cos(((alpha+3.0*beta)/4))*vcl_sin((beta-alpha)/4);
+        k3 = (4.0/distance)*std::cos(((3.0*alpha+beta)/4))*std::sin((beta-alpha)/4);
+        k4 = (4.0/distance)*std::cos(((alpha+3.0*beta)/4))*std::sin((beta-alpha)/4);
 
-        if((vcl_fabs(k3)<EPSILON)&&(vcl_fabs(k4)<EPSILON))
+        if((std::fabs(k3)<EPSILON)&&(std::fabs(k4)<EPSILON))
           {
             L3=INF_PI;
             L4=INF_PI;
@@ -273,15 +273,15 @@ int BiArcShock::compute_biarc_params(void)
         else
           {
             join_theta=compute_join_theta(k3, k4);
-            if(vcl_fabs(k3)<EPSILON)
+            if(std::fabs(k3)<EPSILON)
               {
-                if (vcl_fabs(vcl_sin((theta0-join_theta)/2))<MIN_DENOMINATOR)
+                if (std::fabs(std::sin((theta0-join_theta)/2))<MIN_DENOMINATOR)
                   {
                     L3 = INF;
                    }
                 else
                   {
-                    L3=distance*vcl_fabs(vcl_sin(((join_theta + theta0)/2)-psi) / vcl_sin((theta0-join_theta)/2));
+                    L3=distance*std::fabs(std::sin(((join_theta + theta0)/2)-psi) / std::sin((theta0-join_theta)/2));
                    }
                }
             else
@@ -289,15 +289,15 @@ int BiArcShock::compute_biarc_params(void)
                 L3=compute_arclength(_start_angle,join_theta,k3);
                }
 
-            if(vcl_fabs(k4)<EPSILON)
+            if(std::fabs(k4)<EPSILON)
               {
-                if (vcl_fabs(vcl_sin((join_theta - theta2)/2))<MIN_DENOMINATOR)
+                if (std::fabs(std::sin((join_theta - theta2)/2))<MIN_DENOMINATOR)
                   {
                     L4 = INF;
                    }
                 else
                   {
-                    L4=distance*vcl_fabs((vcl_sin (((join_theta + theta2)/2) -psi)/vcl_sin((join_theta - theta2)/2)));
+                    L4=distance*std::fabs((std::sin (((join_theta + theta2)/2) -psi)/std::sin((join_theta - theta2)/2)));
                    }
                }
             else
@@ -376,8 +376,8 @@ Point  get_center(Point  start, double angle, double radius)
     double r=radius;
 
     Point  center; 
-    center.x =  start.x-r*vcl_sin(angle); 
-    center.y =  start.y+r*vcl_cos(angle);
+    center.x =  start.x-r*std::sin(angle); 
+    center.y =  start.y+r*std::cos(angle);
 
     return center;
 }
@@ -407,7 +407,7 @@ void BiArcShock::compute_other_stuff(void)
     //L2 *=dist_bet_pts;
 
     
-    if (vcl_fabs(K1)>=1.0/INF_RADIUS)
+    if (std::fabs(K1)>=1.0/INF_RADIUS)
         R1 = 1/K1;
     else
       {
@@ -417,7 +417,7 @@ void BiArcShock::compute_other_stuff(void)
             R1 = INF_RADIUS;
        }
 
-    if (vcl_fabs(K2)>=1.0/INF_RADIUS)
+    if (std::fabs(K2)>=1.0/INF_RADIUS)
         R2 = 1/K2;
     else
       {
@@ -458,22 +458,22 @@ void BiArcShock::compute_other_stuff(void)
     
     double circle1_span, circle2_span;
 
-    circle1_span=vcl_fabs(L1/R1);
-    circle2_span=vcl_fabs(L2/R2);
+    circle1_span=std::fabs(L1/R1);
+    circle2_span=std::fabs(L2/R2);
 
     //if ((circle1_span>2*M_PI)||(circle2_span>2*M_PI))
     //    cout<<" Error : Span > 2*PI :"<<circle1_span<<", "<<circle2_span<<endl;
 
 
-    circle1_span =  vcl_fmod (circle1_span, 2*M_PI);
-    circle2_span =  vcl_fmod (circle2_span, 2*M_PI);
+    circle1_span =  std::fmod (circle1_span, 2*M_PI);
+    circle2_span =  std::fmod (circle2_span, 2*M_PI);
    
     if (circle1_span<0)
         circle1_span +=2*M_PI;
     
     double start_pos=0, end_pos=0;
 
-    start_pos = vcl_atan2((double)(circle1_start.y-center1.y), (double)(circle1_start.x-center1.x));
+    start_pos = std::atan2((double)(circle1_start.y-center1.y), (double)(circle1_start.x-center1.x));
     if (start_pos<0)
         start_pos +=2*M_PI;
 
@@ -486,12 +486,12 @@ void BiArcShock::compute_other_stuff(void)
         end_pos = start_pos+circle1_span;
        }
 
-    end_pos =  vcl_fmod (end_pos, 2*M_PI);
+    end_pos =  std::fmod (end_pos, 2*M_PI);
     if (end_pos<0)
         end_pos +=2*M_PI;
    
-    circle1_end.x = center1.x +vcl_fabs(R1)*vcl_cos(end_pos);
-    circle1_end.y = center1.y +vcl_fabs(R1)*vcl_sin(end_pos);
+    circle1_end.x = center1.x +std::fabs(R1)*std::cos(end_pos);
+    circle1_end.y = center1.y +std::fabs(R1)*std::sin(end_pos);
     circle2_start = circle1_end;
 
 

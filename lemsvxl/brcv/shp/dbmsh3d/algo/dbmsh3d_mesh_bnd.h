@@ -16,14 +16,14 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 
 class dbmsh3d_bnd_chain
 {
 protected:
-  vcl_vector<dbmsh3d_halfedge*> HE_list_;
+  std::vector<dbmsh3d_halfedge*> HE_list_;
 
 public:
   //=========== Constructor & Destructor ===========
@@ -34,7 +34,7 @@ public:
   }
 
   //=========== Data Accessing ===========
-  vcl_vector<dbmsh3d_halfedge*>& HE_list() {
+  std::vector<dbmsh3d_halfedge*>& HE_list() {
     return HE_list_;
   }  
   dbmsh3d_halfedge* HE_list (unsigned int i) const {
@@ -46,7 +46,7 @@ public:
 
   //=========== Querying Functions ===========
   bool is_V_incident_via_HE (const dbmsh3d_vertex* V);
-  void trace_polyline (vcl_vector<vgl_point_3d<double> >& polyline_vertices);
+  void trace_polyline (std::vector<vgl_point_3d<double> >& polyline_vertices);
 
   //=========== Modification Functions ===========
   void trace_bnd_chain (dbmsh3d_halfedge* startHE);
@@ -58,7 +58,7 @@ class dbmsh3d_bnd_chain_set
 {
 protected:
   dbmsh3d_mesh*     mesh_;
-  vcl_vector<dbmsh3d_bnd_chain*> chainset_;
+  std::vector<dbmsh3d_bnd_chain*> chainset_;
 
 public:
   //=========== Constructor & Destructor ===========
@@ -72,7 +72,7 @@ public:
   }
 
   //=========== Data Accessing ===========
-  vcl_vector<dbmsh3d_bnd_chain*>& chainset() {
+  std::vector<dbmsh3d_bnd_chain*>& chainset() {
     return chainset_;
   }
 

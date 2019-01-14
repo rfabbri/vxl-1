@@ -1,5 +1,5 @@
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 #include <dbbgm/bbgm_wavelet.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/vis/dbbgm_image_tableau.h>
@@ -15,16 +15,16 @@
 #include <dbbgm/vis/dbbgm_inspector_tool.h>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <brdb/brdb_value.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
-#include <vcl_iostream.h>
-#include <vcl_cstring.h>
+#include <iostream>
+#include <cstring>
 bool bbgm_invoke_gui_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(4);
+  std::vector<std::string> in_types(4);
   in_types[0]="bbgm_image_sptr";//original model
   in_types[1]="bbgm_image_sptr";//inverse transform model
   in_types[2]="bbgm_image_sptr";//forward transform model 
@@ -53,7 +53,7 @@ bool bbgm_invoke_gui_process(bprb_func_process& pro)
 	char** my_argv = new char*[1];
 	my_argv[0] = new char[13];
 	char* temp = my_argv[0];
-	vcl_strcpy(my_argv[0], "--mfc-use-gl");
+	std::strcpy(my_argv[0], "--mfc-use-gl");
 	 
 	int argcc=1;
    // Initialize the toolkit.

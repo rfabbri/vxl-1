@@ -15,12 +15,12 @@
 
 bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "parsing dbskr_extract_bnd_params\n";
+  //std::cout << "parsing dbskr_extract_bnd_params\n";
   bxml_element query("dbskr_extract_bnd_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node dbskr_extract_bnd_params\n";
+    std::cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node dbskr_extract_bnd_params\n";
     return false;
   }
 
@@ -28,7 +28,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node bnd_data\n";
+    std::cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node bnd_data\n";
     return false;
   }
    
@@ -36,7 +36,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
   if (!data1)
     return false;
 
-  vcl_string nrad_str, dx_str, dt_str, max_k_str, min_size_str, smoothing_nsteps_str, rms_str, edge_im_thres_str;
+  std::string nrad_str, dx_str, dt_str, max_k_str, min_size_str, smoothing_nsteps_str, rms_str, edge_im_thres_str;
   data1->get_attribute("nrad", nrad_);
   data1->get_attribute("nrad", nrad_str);
   data1->get_attribute("dx", dx_);
@@ -50,7 +50,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
   data1->get_attribute("smoothing_nsteps", smoothing_nsteps_); 
   data1->get_attribute("smoothing_nsteps", smoothing_nsteps_str); 
 
-  vcl_string val;
+  std::string val;
   data1->get_attribute("smooth_bnds", val);
   smooth_bnds_ = val.compare("off") == 0 ? false : true;
 
@@ -74,7 +74,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result3 = bxml_find_by_name(result, query3);
 
   if (!result3) {
-    vcl_cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node bnd_data_new\n";
+    std::cout << "dbskr_extract_bnd_params::parse_from_data() - could not find the node bnd_data_new\n";
     return false;
   }
    
@@ -84,7 +84,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
 
   data2->get_attribute("require_appearance_consistency", val);
   require_appearance_consistency_ = val.compare("off") == 0 ? false : true;  // if generic linker
-  //vcl_string appearance_consistency_threshold_str;
+  //std::string appearance_consistency_threshold_str;
   data2->get_attribute("appearance_consistency_threshold", appearance_consistency_threshold_); // if generic linker, this threshold was 2.0f on the order of edge strength
 //  data2->get_attribute("appearance_consistency_threshold", appearance_consistency_threshold_str); // if generic linker, this threshold was 2.0f on the order of edge strength
 
@@ -106,7 +106,7 @@ bool dbskr_extract_bnd_params::parse_from_data(bxml_data_sptr root)
   if (fit_lines_)
     output_file_postfix_ = output_file_postfix_ + "-fitted-" + rms_str;
   
-  //vcl_cout << "output_file_postfix: " << output_file_postfix_ << vcl_endl;
+  //std::cout << "output_file_postfix: " << output_file_postfix_ << std::endl;
 
   return true;
 }

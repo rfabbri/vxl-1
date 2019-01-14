@@ -15,7 +15,7 @@ dbseg_levelset_process::dbseg_levelset_process() : bpro1_process()
       !parameters()->add( "Fusing Minimum Density"   , "-fuDensity"    , (int)50 )
       
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -35,7 +35,7 @@ dbseg_levelset_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_levelset_process::name()
+std::string dbseg_levelset_process::name()
 {
   return "Level Set Segmentation";
 }
@@ -50,10 +50,10 @@ dbseg_levelset_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_levelset_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
 
@@ -62,10 +62,10 @@ dbseg_levelset_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_levelset_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
   
@@ -94,7 +94,7 @@ bool
 dbseg_levelset_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_levelset_process::execute() - "
+    std::cout << "In dbseg_levelset_process::execute() - "
              << "not exactly one input image\n";
     return false;
   }
@@ -131,11 +131,11 @@ dbseg_levelset_process::execute()
             for (int k = 0; k < imageView.nplanes(); k++) {
                 float f = (float)imageView(i,j,k);
                 image_representation(i,j,k) = ((float) imageView(i,j,k))/255;
-                //vcl_cout << image_representation(i,j,k) << " ";
+                //std::cout << image_representation(i,j,k) << " ";
             }
             
         }
-        //vcl_cout << vcl_endl;
+        //std::cout << std::endl;
     }
 
 
@@ -185,7 +185,7 @@ dbseg_levelset_process::execute()
     vil_image_resource_sptr resource = vil_new_image_resource_of_view(*segmented_view);
     vidpro1_image_storage_sptr segmented_storage = vidpro1_image_storage_new();
     segmented_storage->set_image(resource);
-    vcl_cout << "Level Set segmentation completed. " << 0 << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << vcl_endl; 
+    std::cout << "Level Set segmentation completed. " << 0 << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << std::endl; 
     output_data_[0].push_back(segmented_storage);
 
     /*delete image_representation;

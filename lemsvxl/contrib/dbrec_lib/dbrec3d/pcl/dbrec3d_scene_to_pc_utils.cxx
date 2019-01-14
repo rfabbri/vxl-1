@@ -21,7 +21,7 @@ void boxm_gradient_scene_to_pc(boxm_scene<boct_tree<short, vnl_vector_fixed<floa
     
     //iterate through the cells at the given resolution
     if(resolution_level !=0){
-    vcl_cerr << "Case not implemented yet" << vcl_endl;
+    std::cerr << "Case not implemented yet" << std::endl;
     return;
     }
 
@@ -51,7 +51,7 @@ void boxm_gradient_scene_to_pc(boxm_scene<boct_tree<short, vnl_vector_fixed<floa
 
     sf_datatype cell_data = grad_cell->data();
 
-    float norm = vcl_sqrt(cell_data[1]*cell_data[1] + cell_data[2]*cell_data[2] + cell_data[3]*cell_data[3]);
+    float norm = std::sqrt(cell_data[1]*cell_data[1] + cell_data[2]*cell_data[2] + cell_data[3]*cell_data[3]);
        
     if (norm < norm_thresh) {
       ++cell_it; ++valid_cell_it;
@@ -78,16 +78,16 @@ void boxm_gradient_scene_to_pc(boxm_scene<boct_tree<short, vnl_vector_fixed<floa
 }
 
 //: Converts a vector of cells containing gradient information to a point cloud of normals
-void boxm_cell_data_to_pcd(vcl_vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > const &cells, 
+void boxm_cell_data_to_pcd(std::vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > const &cells, 
                            pcl::PointCloud<pcl::PointNormal>::Ptr cloud)
 {
-  vcl_vector<boct_cell_data<short, vnl_vector_fixed<float,10> > >::const_iterator cell_data_it = cells.begin();
+  std::vector<boct_cell_data<short, vnl_vector_fixed<float,10> > >::const_iterator cell_data_it = cells.begin();
   
   for (; cell_data_it!=cells.end(); cell_data_it++) {
     
     vnl_vector_fixed<float,10> cell_data = cell_data_it->data_;
     
-    float norm = vcl_sqrt(cell_data[1]*cell_data[1] + cell_data[2]*cell_data[2] + cell_data[3]*cell_data[3]);
+    float norm = std::sqrt(cell_data[1]*cell_data[1] + cell_data[2]*cell_data[2] + cell_data[3]*cell_data[3]);
     
     pcl::PointNormal p;
     p.x = cell_data_it->centroid_.x();

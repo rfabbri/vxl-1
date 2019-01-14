@@ -35,7 +35,7 @@ void dbdet_graddt_levelset2d_segmentation::sussman_reinitialization_()
 
 }
 
-void dbdet_compute_graddt_force(vcl_vector<dbdet_3d_edge_sptr>& edgemap, vil_image_view<double>& DT,
+void dbdet_compute_graddt_force(std::vector<dbdet_3d_edge_sptr>& edgemap, vil_image_view<double>& DT,
 		vil_image_view<double>& Fx,  vil_image_view<double>& Fy, int slice_index, int width, int height,
 		double hx, double hy, double dist_thresh)
 {
@@ -44,8 +44,8 @@ void dbdet_compute_graddt_force(vcl_vector<dbdet_3d_edge_sptr>& edgemap, vil_ima
 	dbdet_levelset2d_utils_compute_difference(DT, Fy, 1, 2, -hy);
 }
 
-void dbdet_classify_edges(vil3d_image_view<double>& V,  vcl_vector<dbdet_3d_edge_sptr>& orig_edgemap,
-		vcl_vector<dbdet_3d_edge_sptr>& FG_edgemap, vcl_vector<dbdet_3d_edge_sptr>& BG_edgemap, double BG_thresh)
+void dbdet_classify_edges(vil3d_image_view<double>& V,  std::vector<dbdet_3d_edge_sptr>& orig_edgemap,
+		std::vector<dbdet_3d_edge_sptr>& FG_edgemap, std::vector<dbdet_3d_edge_sptr>& BG_edgemap, double BG_thresh)
 {
 	int num_edges = orig_edgemap.size();
 	int maxx = V.ni()-1;

@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "vidpro1_register_images_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -50,7 +50,7 @@ vidpro1_register_images_process::vidpro1_register_images_process(void): bpro1_pr
 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_register_images_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_register_images_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
     else
     {
@@ -67,7 +67,7 @@ vidpro1_register_images_process::~vidpro1_register_images_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_register_images_process::name()
 {
     return "Register \& Save Images";
@@ -91,18 +91,18 @@ vidpro1_register_images_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_register_images_process::get_input_type()
+std::vector< std::string > vidpro1_register_images_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_register_images_process::get_output_type()
+std::vector< std::string > vidpro1_register_images_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
@@ -113,19 +113,19 @@ bool
 vidpro1_register_images_process::execute()
 {
     if ( input_data_.size() !=1 ){
-        vcl_cout << "In vidpro1_register_images_process::execute() - "
+        std::cout << "In vidpro1_register_images_process::execute() - "
             << "not exactly one input images \n";
         return false;
     }
     last_frame_no=input_data_[0][0]->frame();
 
     clear_output();
-    vcl_cout<<"\n Registering  frame no "<<last_frame_no;
+    std::cout<<"\n Registering  frame no "<<last_frame_no;
 
     parameters()->get_value( "-first" , first_frame_ );
 
     if(input_data_[0][0]->frame()==0){
-      vcl_cout<<"\n inside ";
+      std::cout<<"\n inside ";
         vidpro1_image_storage_sptr frame_image;
         frame_image.vertical_cast(input_data_[0][0]);
         vil_image_resource_sptr image = frame_image->get_image();
@@ -143,7 +143,7 @@ vidpro1_register_images_process::execute()
         outfilename=outfile.path;
         read_homographies(hmgfile.path);
         
-        vcl_string currentname = vul_sprintf("%s%05d.%s", outfilename.c_str(),
+        std::string currentname = vul_sprintf("%s%05d.%s", outfilename.c_str(),
                                          last_frame_no,
                                          "tif");
         if(homographies_.size()<=0)
@@ -159,11 +159,11 @@ vidpro1_register_images_process::execute()
             box_.update(p(ni_,0).x(),p(ni_,0).y());
             box_.update(p(ni_,nj_).x(),p(ni_,nj_).y());
         }
-        bimg_ni=(int)vcl_ceil(box_.max()[0]-box_.min()[0]);
-        bimg_nj=(int)vcl_ceil(box_.max()[1]-box_.min()[1]);
+        bimg_ni=(int)std::ceil(box_.max()[0]-box_.min()[0]);
+        bimg_nj=(int)std::ceil(box_.max()[1]-box_.min()[1]);
 
-        offset_i=(int)vcl_ceil(0-box_.min()[0]);
-        offset_j=(int)vcl_ceil(0-box_.min()[1]);
+        offset_i=(int)std::ceil(0-box_.min()[0]);
+        offset_j=(int)std::ceil(0-box_.min()[1]);
 
         vimt_transform_2d ftxform=xforms_[last_frame_no].inverse();
         vimt_image_2d_of<float> sample_im;
@@ -231,15 +231,15 @@ vidpro1_register_images_process::finish()
 }
 
 bool
-vidpro1_register_images_process::read_homographies(vcl_string filename)
+vidpro1_register_images_process::read_homographies(std::string filename)
 {
-    vcl_ifstream ifile(filename.c_str(),vcl_ios::in);
-    vcl_cout<<"\n Reading Homographies "<<filename;
+    std::ifstream ifile(filename.c_str(),std::ios::in);
+    std::cout<<"\n Reading Homographies "<<filename;
 
     if(!ifile)
     {
-        vcl_cout<<"\n error opening file";
-        vcl_cout.flush();
+        std::cout<<"\n error opening file";
+        std::cout.flush();
         return false;
 
     }
@@ -248,11 +248,11 @@ vidpro1_register_images_process::read_homographies(vcl_string filename)
     {
         vnl_matrix<double> p(3,3);
         ifile>>p;
-        vcl_cout<<p;
+        std::cout<<p;
         homographies_.push_back(p);
         ifile.getline(buffer,100);
     }
-    vcl_cout.flush();
+    std::cout.flush();
     return true;
 }
 

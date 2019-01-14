@@ -3,4 +3,4 @@
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsl/vsl_map_io.hxx>
  
-VSL_MAP_IO_INSTANTIATE(int, dbdet_keypoint_sptr, vcl_less<int>);
+VSL_MAP_IO_INSTANTIATE(int, dbdet_keypoint_sptr, std::less<int>);

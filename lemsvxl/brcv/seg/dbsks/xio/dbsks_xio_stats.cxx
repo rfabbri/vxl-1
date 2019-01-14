@@ -7,7 +7,7 @@
 #include <bxml/bxml_find.h>
 
 #include <dbsksp/dbsksp_shock_graph.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 // ============================================================================
 // IMPLEMENTATION OF X_WRITE and X_READ
@@ -16,9 +16,9 @@
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to an xml file
-bool x_write(const vcl_string& filepath, const dbsks_shock_graph_stats& stats)
+bool x_write(const std::string& filepath, const dbsks_shock_graph_stats& stats)
 {
-  vcl_ofstream file(filepath.c_str());
+  std::ofstream file(filepath.c_str());
   if (x_write(file, stats))
   {
     file.close();
@@ -34,7 +34,7 @@ bool x_write(const vcl_string& filepath, const dbsks_shock_graph_stats& stats)
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to a stream
-bool x_write(vcl_ostream& os, const dbsks_shock_graph_stats& stats){
+bool x_write(std::ostream& os, const dbsks_shock_graph_stats& stats){
   bxml_document doc;
   bxml_element *root = new bxml_element("dbsks_shock_graph_stats");
   root->set_attribute("version", "1");
@@ -110,7 +110,7 @@ bool x_write(vcl_ostream& os, const dbsks_shock_graph_stats& stats){
 
 // ----------------------------------------------------------------------------
 //: load a shock graph from an xml file
-bool x_read(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph, 
+bool x_read(const std::string& filepath, const dbsksp_shock_graph_sptr& graph, 
             dbsks_shock_graph_stats& stats)
 {
   // clean up existing data
@@ -125,7 +125,7 @@ bool x_read(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph,
 
   if (!result)
   {
-    vcl_cout << "ERROR: could not find node 'dbsks_shock_graph_stats'.\n";
+    std::cout << "ERROR: could not find node 'dbsks_shock_graph_stats'.\n";
     return false;
   }
 
@@ -134,7 +134,7 @@ bool x_read(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph,
   root->get_attribute("version", version);
   if (version != 1)
   {
-    vcl_cout << "ERROR: Unknown dbsks_shock_graph_stats XML version. Quit now.\n";
+    std::cout << "ERROR: Unknown dbsks_shock_graph_stats XML version. Quit now.\n";
     return false;
   }
 

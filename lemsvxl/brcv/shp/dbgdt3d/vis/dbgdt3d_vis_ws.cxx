@@ -26,7 +26,7 @@ SoSeparator* gdtws_draw_W_in_Qw (gdt_ws_manager* ws_manager, const SbColor color
   vis->addChild(ds);
 
   //: Go through each interval on Qw and draw it  
-  vcl_multimap<double, gdt_welm*>::iterator it = ws_manager->Qw()->begin();
+  std::multimap<double, gdt_welm*>::iterator it = ws_manager->Qw()->begin();
   for (; it != ws_manager->Qw()->end(); it++) {
     gdt_welm* W = (*it).second;
     if (W->is_dege())
@@ -46,7 +46,7 @@ SoSeparator* gdt_draw_snodes_vispt (gdt_ws_manager* ws_manager,
 {
   SoSeparator* vis = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_gdt_vertex_3d*>::iterator it = ws_manager->snodemap().begin();
+  std::map<int, dbmsh3d_gdt_vertex_3d*>::iterator it = ws_manager->snodemap().begin();
   for (; it != ws_manager->snodemap().end(); it++) {
     dbmsh3d_vertex* vertex = (*it).second;
     //draw boundary vertex in light blue

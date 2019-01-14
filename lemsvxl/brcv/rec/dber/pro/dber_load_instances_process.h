@@ -32,15 +32,15 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Load Video Instances";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    return vcl_vector< vcl_string >();
+  std::vector< std::string > get_input_type() {
+    return std::vector< std::string >();
   }
-  vcl_vector< vcl_string > get_output_type() {
-    return vcl_vector< vcl_string >();
+  std::vector< std::string > get_output_type() {
+    return std::vector< std::string >();
   }
 
   int input_frames() {

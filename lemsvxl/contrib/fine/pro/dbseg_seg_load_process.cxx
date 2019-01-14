@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -27,7 +27,7 @@ dbseg_seg_load_process::dbseg_seg_load_process() : bpro1_process()
   if( !parameters()->add( "Segmentation Structure file <filename...>" , "-seg_filename" , bpro1_filepath("","*") ) 
       )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -47,16 +47,16 @@ dbseg_seg_load_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_load_process::name()
+std::string dbseg_seg_load_process::name()
 {
   return "Load Segmentation Structure";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbseg_seg_load_process::get_input_type()
+std::vector< std::string > dbseg_seg_load_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -66,9 +66,9 @@ vcl_vector< vcl_string > dbseg_seg_load_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbseg_seg_load_process::get_output_type()
+std::vector< std::string > dbseg_seg_load_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "seg" );
@@ -442,7 +442,7 @@ dbseg_seg_load_process::execute()
     vsl_b_read(in2, nplanes);
     int numIDs;
     vsl_b_read(in2, numIDs);
-    vcl_vector<int> validIDs;
+    std::vector<int> validIDs;
     vsl_b_read(in2, validIDs);
 
     vsl_b_read(in2, obj);*/
@@ -451,7 +451,7 @@ dbseg_seg_load_process::execute()
   seg_storage->add_object(static_execute(seg_path));
     
   output_data_[0].push_back(seg_storage);
-  vcl_cout << "Segmentation Structure loaded successfully in: " << t.real()/1000 << " seconds" << vcl_endl;
+  std::cout << "Segmentation Structure loaded successfully in: " << t.real()/1000 << " seconds" << std::endl;
 
   return true;
 }

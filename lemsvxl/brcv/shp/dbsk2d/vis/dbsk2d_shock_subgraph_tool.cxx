@@ -59,7 +59,7 @@ dbsk2d_shock_subgraph_tool::handle( const vgui_event & e,
       if (sedge) {
         dbsk2d_extract_subgraph (sub_sg, 0, sedge->target(), depth_);
         if (!sub_sg) {
-          vcl_cout << "Could not extract subgraph!\n";
+          std::cout << "Could not extract subgraph!\n";
           return false;
         }
 
@@ -70,28 +70,28 @@ dbsk2d_shock_subgraph_tool::handle( const vgui_event & e,
         //sub_sg = dbsk2d_extract_subgraph (sg, snode);
         dbsk2d_extract_subgraph (sub_sg, 0, snode, depth_);
         if (!sub_sg) {
-          vcl_cout << "Could not extract subgraph!\n";
+          std::cout << "Could not extract subgraph!\n";
           return false;
         }
       }
 
       vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
       if(!res) {
-        vcl_cout << "Could not access repository!\n";
+        std::cout << "Could not access repository!\n";
         return false;
       }
       
       dbsk2d_shock_storage_sptr new_shock = new dbsk2d_shock_storage();
-      vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-      vcl_string name_initial = "subshock";
+      std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+      std::string name_initial = "subshock";
       int len = name_initial.length();
       int max = 0;
-      for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+      for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
         iter != st_set.end(); iter++) {
           if ((*iter)->type() == new_shock->type() && 
-              (*iter)->name().find(name_initial) != vcl_string::npos) {
-            vcl_string name = (*iter)->name();
-            vcl_string numbr = name.substr(len, 3);
+              (*iter)->name().find(name_initial) != std::string::npos) {
+            std::string name = (*iter)->name();
+            std::string numbr = name.substr(len, 3);
             int n = atoi(numbr.c_str());
             if (n > max)
               max = n;
@@ -103,9 +103,9 @@ dbsk2d_shock_subgraph_tool::handle( const vgui_event & e,
       new_shock->set_name(name_initial);
       new_shock->set_shock_graph(sub_sg);
       if (sub_sg->has_cycle())
-        vcl_cout << "Sub graph has a loop!\n";
+        std::cout << "Sub graph has a loop!\n";
       else
-        vcl_cout << "Sub graph has NO loop!\n";
+        std::cout << "Sub graph has NO loop!\n";
       res->store_data(new_shock);
       bvis1_manager::instance()->add_to_display(new_shock);
       bvis1_manager::instance()->display_current_frame();
@@ -118,7 +118,7 @@ dbsk2d_shock_subgraph_tool::handle( const vgui_event & e,
   return dbsk2d_ishock_highlight_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_shock_subgraph_tool::name() const
 {
   return "Extract Subgraph (from sampled coarse shock)";

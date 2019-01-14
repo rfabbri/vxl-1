@@ -21,7 +21,7 @@
 #include <dbsta/bsta_gaussian_sphere.h>
 #include <dbsta/bsta_gaussian_full.h>
 #include <vnl/vnl_random.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <dbsta/algo/bsta_sample_set.h>
 
 template <class T, unsigned n>
@@ -52,14 +52,14 @@ class bsta_mean_shift
   void clear() { modes_.clear(); }
 
   unsigned size() const { return modes_.size(); }
-  vcl_vector<vector_ >& modes() { return modes_; }
+  std::vector<vector_ >& modes() { return modes_; }
 
   //: the default for maximum iterations to quit search starting from a seed is 1000
   void set_max_iter(unsigned iter) { max_iter_ = iter; }
 
  private:
 
-  vcl_vector<vector_ > modes_;  // modes of the distribution
+  std::vector<vector_ > modes_;  // modes of the distribution
 
   unsigned max_iter_;
 };

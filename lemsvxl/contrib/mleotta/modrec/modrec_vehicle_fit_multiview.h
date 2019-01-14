@@ -103,7 +103,7 @@ private:
   };
   
   //: A vector containing all the views
-  vcl_vector<view> views_;
+  std::vector<view> views_;
   //: the direction of the sun for shadow casting
   vgl_vector_3d<double> sun_dir_;
 

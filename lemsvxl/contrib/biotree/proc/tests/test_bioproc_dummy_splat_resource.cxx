@@ -4,8 +4,8 @@
 // \author    Kongbin Kang
 // \date        2005-03-03
 // 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <testlib/testlib_test.h>
 #include <xscan/xscan_dummy_scan.h>
 #include <xmvg/xmvg_no_noise_filter_3d.h>
@@ -53,7 +53,7 @@ static void test_bioproc_dummy_splat_resource(int argc, char *argv[])
   xmvg_no_noise_filter_3d fy(fdy);
   xmvg_no_noise_filter_3d fz(fdz);
 
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   filters.push_back(fx);
   filters.push_back(fy);
   filters.push_back(fz);
@@ -62,7 +62,7 @@ static void test_bioproc_dummy_splat_resource(int argc, char *argv[])
 
   bioproc_dummy_splat_resource<double, xmvg_no_noise_filter_3d> splr(scan_ref, comp3d);
 
-  vcl_cout << splr.splat(0, vgl_point_3d<double>(0, 0, 0)). atomic_filter(2).weights();
+  std::cout << splr.splat(0, vgl_point_3d<double>(0, 0, 0)). atomic_filter(2).weights();
 
 }
 

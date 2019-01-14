@@ -29,33 +29,33 @@ bool less_num_members(const dbcll_cluster_sptr& c1,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_feat_file("-feat3d", "path to 3d features", "");
-  vul_arg<vcl_string>  a_clust_file("-clusters", "path to clusters index file", "");
-  vul_arg<vcl_string>  a_code_file("-codebook", "path to output codebook file", "");
+  vul_arg<std::string>  a_feat_file("-feat3d", "path to 3d features", "");
+  vul_arg<std::string>  a_clust_file("-clusters", "path to clusters index file", "");
+  vul_arg<std::string>  a_code_file("-codebook", "path to output codebook file", "");
   vul_arg_parse(argc, argv);
 
 
-  vcl_vector<modrec_desc_feature_3d<128> > features;
+  std::vector<modrec_desc_feature_3d<128> > features;
   typedef vbl_triple<unsigned,unsigned,unsigned> utriple;
-  vcl_vector<utriple> idx_array;
+  std::vector<utriple> idx_array;
   read_features(a_feat_file(), features, idx_array);
 
-  vcl_cout << "read " << features.size() << " features"<<vcl_endl;
+  std::cout << "read " << features.size() << " features"<<std::endl;
 
-  vcl_vector<vcl_vector<unsigned> > clusters_idx;
+  std::vector<std::vector<unsigned> > clusters_idx;
   read_clusters(a_clust_file(), clusters_idx);
 
-  vcl_cout << "read " << clusters_idx.size() << " clusters"<<vcl_endl;
+  std::cout << "read " << clusters_idx.size() << " clusters"<<std::endl;
 
-  vcl_vector<modrec_codeword<128> > codebook;
-  vcl_vector<unsigned> sizes;
+  std::vector<modrec_codeword<128> > codebook;
+  std::vector<unsigned> sizes;
 
   for(unsigned i=0; i<clusters_idx.size(); ++i){
     //if(clusters_idx[i].size() < 10)
     //  continue;
 
 
-    vcl_vector<unsigned> ci = clusters_idx[i];
+    std::vector<unsigned> ci = clusters_idx[i];
     vnl_double_3 mpos(0,0,0);
     vnl_double_3 mrot(0,0,0);
     vnl_vector_fixed<double,128> mdesc(0.0);
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     vdesc -= ci.size() * mdesc.squared_magnitude(); vdesc /= ci.size();
     vs -= ci.size() * ms*ms; vs /= ci.size();
 
-    //vcl_cout << vdesc<<", "<<vpos<<", "<<vrot<<", "<< vs<<vcl_endl;
+    //std::cout << vdesc<<", "<<vpos<<", "<<vrot<<", "<< vs<<std::endl;
 
     vgl_point_3d<double> p(mpos[0],mpos[1],mpos[2]);
     vgl_rotation_3d<double> r(mrot);

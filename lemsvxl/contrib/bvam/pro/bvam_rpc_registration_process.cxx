@@ -53,7 +53,7 @@ bool bvam_rpc_registration_process::execute()
   vpgl_camera_double_sptr camera_inp = input1->value();
   vpgl_local_rational_camera<double> *cam_inp;
   if (!(cam_inp = dynamic_cast<vpgl_local_rational_camera<double>*>(camera_inp.ptr()))) {
-    vcl_cerr << "error: process expects camera to be a vpgl_local_rational_camera." << vcl_endl;
+    std::cerr << "error: process expects camera to be a vpgl_local_rational_camera." << std::endl;
     return false;
   }
 
@@ -68,7 +68,7 @@ bool bvam_rpc_registration_process::execute()
   if (!parameters()->get_value("cedt_image_gaussian_sigma", cedt_image_gaussian_sigma) || 
     !parameters()->get_value("offset_search_size", offset_search_size)
     ){
-      vcl_cout << "problems in retrieving parameters\n";
+      std::cout << "problems in retrieving parameters\n";
       return false;
   }
 
@@ -100,9 +100,9 @@ bool bvam_rpc_registration_process::execute()
       }
     }
 
-    vcl_cout << "Estimating image offsets:" << vcl_endl;
+    std::cout << "Estimating image offsets:" << std::endl;
     for(int u=-offset_search_size; u<=offset_search_size; u++){
-      vcl_cout << ".";
+      std::cout << ".";
       for(int v=-offset_search_size; v<=offset_search_size; v++){
         double prob = 0.0;
         for(int m=offset_search_size; m<ni-offset_search_size; m++){
@@ -120,9 +120,9 @@ bool bvam_rpc_registration_process::execute()
         }
       }
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
-    vcl_cout << "Estimated changes in offsets (u,v)=(" << max_u << "," << max_v << ")" << vcl_endl;
+    std::cout << "Estimated changes in offsets (u,v)=(" << max_u << "," << max_v << ")" << std::endl;
   }
 
 

@@ -17,9 +17,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_iostream.h>
-#include<vcl_iterator.h> //for vcl_distance
-#include<vcl_map.h>
+#include<iostream>
+#include<iterator> //for std::distance
+#include<map>
 
 #include<vnl/vnl_matrix.h>
 #include<vnl/algo/vnl_svd.h>
@@ -40,7 +40,7 @@ public:
 
 	~dsm_time_series(){}
 	
-	vcl_map<unsigned, dsm_feature_sptr> time_series;
+	std::map<unsigned, dsm_feature_sptr> time_series;
 
 	void insert( unsigned const& time, dsm_feature_sptr feature_sptr );
 
@@ -48,7 +48,7 @@ public:
 
 	void b_read( vsl_b_istream& is );
 
-	bool write_txt( vcl_string const& filename );
+	bool write_txt( std::string const& filename );
 	
 };
 

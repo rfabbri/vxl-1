@@ -1,8 +1,8 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbgdt3d/dbgdt3d_manager.h>
@@ -38,12 +38,12 @@ void gdt_manager::_compute_psrc_dist (dbmsh3d_gdt_vertex_3d* psrc, dbmsh3d_gdt_e
   assert (cur_edge->interval_section()->size());
 
   if (psrc == cur_edge->sV()) {
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
     gdt_interval* I = (gdt_interval*) (*it).second;
     distance = I->get_dist_at_tau (0);
   }
   else {
-    vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+    std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
     gdt_interval* I = (gdt_interval*) (*rit).second;
     distance = I->get_dist_at_tau (cur_edge->len());
   }
@@ -76,7 +76,7 @@ gdt_interval* gdt_manager::find_farthest_vertex (dbmsh3d_gdt_vertex_3d* input_ps
   dbmsh3d_gdt_vertex_3d* farthest_vertex = NULL;
 
   //: loop through all mesh vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = gdt_mesh_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = gdt_mesh_->vertexmap().begin();
   for (; it != gdt_mesh_->vertexmap().end(); it++) {
     dbmsh3d_gdt_vertex_3d* V = (dbmsh3d_gdt_vertex_3d*) (*it).second;
 
@@ -126,7 +126,7 @@ gdt_interval* gdt_manager::find_farthest_vertex (dbmsh3d_gdt_vertex_3d* input_ps
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cout, "\nThe farthest vertex %d on edge %d, tau: %lf, dist: %lf\n", 
+    vul_printf (std::cout, "\nThe farthest vertex %d on edge %d, tau: %lf, dist: %lf\n", 
                  farthest_vertex->id(), farthest_I->edge()->id(), farthest_tau, farthest_dist);
 #endif
 
@@ -139,11 +139,11 @@ gdt_interval* gdt_manager::find_farthest_vertex (dbmsh3d_gdt_vertex_3d* input_ps
 void gdt_manager::get_iso_contour_s_e_gdt_points (
                             vgl_point_3d<double>* start_pt,
                             dbmsh3d_face* cur_face, double gdt_dist,
-                            vcl_vector<vcl_pair<gdt_interval*, double> >* iso_contour_points,
+                            std::vector<std::pair<gdt_interval*, double> >* iso_contour_points,
                             dbmsh3d_gdt_edge** iso_contour_s_edge,
-                            vcl_pair<gdt_interval*, double>& iso_contour_s_gdt_point, 
+                            std::pair<gdt_interval*, double>& iso_contour_s_gdt_point, 
                             dbmsh3d_gdt_edge** iso_contour_e_edge,
-                            vcl_pair<gdt_interval*, double>& iso_contour_e_gdt_point)
+                            std::pair<gdt_interval*, double>& iso_contour_e_gdt_point)
 {
   iso_contour_s_gdt_point.first = NULL;
   iso_contour_e_gdt_point.first = NULL;
@@ -154,7 +154,7 @@ void gdt_manager::get_iso_contour_s_e_gdt_points (
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) cur_he->edge();
 
     //: There exists at almost two points on the cur_edge with the gdt_dist
-    vcl_pair<gdt_interval*, double> point1, point2;
+    std::pair<gdt_interval*, double> point1, point2;
     cur_edge->get_gdt_points (gdt_dist, point1, point2);
     
     //: We want the closer point to the start_pt
@@ -188,10 +188,10 @@ void gdt_manager::get_iso_contour_s_e_gdt_points (
 //  But for each edge, there might be more than 2 iso-distance intersection points !
 void gdt_manager::next_iso_contour_point (double gdt_dist,
                                           dbmsh3d_gdt_edge* input_edge, 
-                                          vcl_pair<gdt_interval*, double>& input_point,
+                                          std::pair<gdt_interval*, double>& input_point,
                                           dbmsh3d_face* nextF, 
                                           dbmsh3d_gdt_edge** nextE, 
-                                          vcl_pair<gdt_interval*, double>& next_point)
+                                          std::pair<gdt_interval*, double>& next_point)
 {
   //: loop through each edge of the cur_face
   dbmsh3d_halfedge* cur_he = nextF->halfedge();
@@ -199,7 +199,7 @@ void gdt_manager::next_iso_contour_point (double gdt_dist,
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) cur_he->edge();
     if (cur_edge != input_edge) {
       //: For each I, there exists at almost two points with the given geodesic distance
-      vcl_pair<gdt_interval*, double> point1, point2;
+      std::pair<gdt_interval*, double> point1, point2;
       cur_edge->get_gdt_points (gdt_dist, point1, point2);
     
       //: !! for now, only consider one of them here
@@ -223,19 +223,19 @@ void gdt_manager::next_iso_contour_point (double gdt_dist,
 //  and form a coverage on all edges.
 void gdt_manager::print_results (int method, const char* prefix, int i_source, bool b_assert_gap)
 {
-  vul_printf (vcl_cout, "===========================================\n");
-  vul_printf (vcl_cout, "Summary of GDT on [%s] with source %d via\n  ", prefix, i_source);
+  vul_printf (std::cout, "===========================================\n");
+  vul_printf (std::cout, "Summary of GDT on [%s] with source %d via\n  ", prefix, i_source);
 
   if (method == GDT_METHOD_I)
-    vul_printf (vcl_cout, "Method 1 (Interval Based)");
+    vul_printf (std::cout, "Method 1 (Interval Based)");
   else if (method == GDT_METHOD_F)
-    vul_printf (vcl_cout, "Method 2 (Face Based)");
+    vul_printf (std::cout, "Method 2 (Face Based)");
   else if (method == GDT_METHOD_FS)
-    vul_printf (vcl_cout, "Method 3 (Face Based + Shock)");
+    vul_printf (std::cout, "Method 3 (Face Based + Shock)");
   else if (method == GDT_METHOD_WS)
-    vul_printf (vcl_cout, "Method 4 (Wavefront + Shock)");
+    vul_printf (std::cout, "Method 4 (Wavefront + Shock)");
 
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   //: loop through all faces
   int n_prop_faces = 0;
@@ -243,7 +243,7 @@ void gdt_manager::print_results (int method, const char* prefix, int i_source, b
   //: loop through each edges and print intervals
   int n_prop_edges = 0;
   int n_total_intervals = 0;
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = gdt_mesh_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = gdt_mesh_->edgemap().begin();
   for (; eit != gdt_mesh_->edgemap().end(); eit++) {
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) (*eit).second;
     if (cur_edge->interval_section()->size() != 0)
@@ -251,13 +251,13 @@ void gdt_manager::print_results (int method, const char* prefix, int i_source, b
 
     #if GDT_DEBUG_MSG
     if (n_verbose_==3)
-      vul_printf (vcl_cout, "edge %d (s%d-e%d) (len: %lf) has %d intervals:\n", 
+      vul_printf (std::cout, "edge %d (s%d-e%d) (len: %lf) has %d intervals:\n", 
                   cur_edge->id(), cur_edge->sV()->id(), cur_edge->eV()->id(), 
                   cur_edge->length(), cur_edge->interval_section()->size());
     #endif
 
     //: A) print each intervals
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
     for (int i=0; it != cur_edge->interval_section()->I_map()->end(); it++, i++) {
       gdt_interval* I = (gdt_interval*) (*it).second;
       n_total_intervals++;
@@ -266,11 +266,11 @@ void gdt_manager::print_results (int method, const char* prefix, int i_source, b
       if (n_verbose_==3) {
         switch (I->type()) {
         case ITYPE_PSRC:
-          vul_printf (vcl_cout, "    regular I %d: (%lf - %lf) vs: %d\n", 
+          vul_printf (std::cout, "    regular I %d: (%lf - %lf) vs: %d\n", 
                       i, I->stau(), I->etau(), I->psrc()->id());
         break;
         case ITYPE_DEGE:
-          vul_printf (vcl_cout, "    dege I %d: (%lf - %lf) vs: %d\n", 
+          vul_printf (std::cout, "    dege I %d: (%lf - %lf) vs: %d\n", 
                       i, I->stau(), I->etau(), I->psrc()->id());
         break;
         default:
@@ -297,45 +297,45 @@ void gdt_manager::print_results (int method, const char* prefix, int i_source, b
     #endif
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator itf = gdt_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator itf = gdt_mesh_->facemap().begin();
   for (; itf != gdt_mesh_->facemap().end(); itf++) {
     dbmsh3d_face* face = (*itf).second;
     if (face->b_visited())
       n_prop_faces++;
   }
   
-  vul_printf (vcl_cout, "mesh #v: %d, #f: %d, #e: %d\n",
+  vul_printf (std::cout, "mesh #v: %d, #f: %d, #e: %d\n",
                (int) gdt_mesh_->vertexmap().size(), 
                (int) gdt_mesh_->facemap().size(), 
                (int) gdt_mesh_->edgemap().size());
 
-  vul_printf (vcl_cout, "# total iterations: %d\n", (int) n_prop_iter_);
-  vul_printf (vcl_cout, "# propagated faces: %d\n", n_prop_faces);
-  vul_printf (vcl_cout, "# propagated intervals: %d\n", n_total_intervals);
-  vul_printf (vcl_cout, "# propagated edges: %d\n", n_prop_edges);
+  vul_printf (std::cout, "# total iterations: %d\n", (int) n_prop_iter_);
+  vul_printf (std::cout, "# propagated faces: %d\n", n_prop_faces);
+  vul_printf (std::cout, "# propagated intervals: %d\n", n_total_intervals);
+  vul_printf (std::cout, "# propagated edges: %d\n", n_prop_edges);
   double d_I_per_edge = (double) n_total_intervals / n_prop_edges;
-  vul_printf (vcl_cout, "# average interval per edge: %f\n", d_I_per_edge);
+  vul_printf (std::cout, "# average interval per edge: %f\n", d_I_per_edge);
 }
 
 void gdt_ws_manager::print_statistics ()
 {
 #if GDT_DEBUG_MSG
-  vul_printf (vcl_cout, "===========================================\n");
-  vul_printf (vcl_cout, "# 2nd order sources: %d\n", n_W_W_2nd_source_);
-  vul_printf (vcl_cout, "# shock junctions: %d\n", n_S_junct_);
-  vul_printf (vcl_cout, "# shock sinks: %d\n", n_S_sink_);
-  vul_printf (vcl_cout, "# W-E strike at FPT: %d\n", n_WE_FPT_);
-  vul_printf (vcl_cout, "# W-E strike at SV: %d\n", n_WE_SV_);
-  vul_printf (vcl_cout, "# W-E strike at EV: %d\n", n_WE_EV_);
-  vul_printf (vcl_cout, "# S-E intersection: %d\n", n_S_E_);
-  vul_printf (vcl_cout, "# W-V strikes: %d\n", n_W_V_strike_);
-  vul_printf (vcl_cout, "# V launch shocks: %d\n", n_V_launch_S_);
-  vul_printf (vcl_cout, "# interior V launch rarefactions: %d\n", n_V_interior_RF_);
-  vul_printf (vcl_cout, "# bnd V launch rarefactions: %d\n", n_V_bnd_RF_);
-  vul_printf (vcl_cout, "# V launch degeI (instead of S): %d\n", n_V_launch_degeI_);
-  vul_printf (vcl_cout, "# S on E: %d\n", n_S_on_edge_);  
-  vul_printf (vcl_cout, "# S terminate at V: %d\n", n_S_term_at_V_);
-  vul_printf (vcl_cout, "# W terminate at V: %d\n", n_W_term_at_V_);
+  vul_printf (std::cout, "===========================================\n");
+  vul_printf (std::cout, "# 2nd order sources: %d\n", n_W_W_2nd_source_);
+  vul_printf (std::cout, "# shock junctions: %d\n", n_S_junct_);
+  vul_printf (std::cout, "# shock sinks: %d\n", n_S_sink_);
+  vul_printf (std::cout, "# W-E strike at FPT: %d\n", n_WE_FPT_);
+  vul_printf (std::cout, "# W-E strike at SV: %d\n", n_WE_SV_);
+  vul_printf (std::cout, "# W-E strike at EV: %d\n", n_WE_EV_);
+  vul_printf (std::cout, "# S-E intersection: %d\n", n_S_E_);
+  vul_printf (std::cout, "# W-V strikes: %d\n", n_W_V_strike_);
+  vul_printf (std::cout, "# V launch shocks: %d\n", n_V_launch_S_);
+  vul_printf (std::cout, "# interior V launch rarefactions: %d\n", n_V_interior_RF_);
+  vul_printf (std::cout, "# bnd V launch rarefactions: %d\n", n_V_bnd_RF_);
+  vul_printf (std::cout, "# V launch degeI (instead of S): %d\n", n_V_launch_degeI_);
+  vul_printf (std::cout, "# S on E: %d\n", n_S_on_edge_);  
+  vul_printf (std::cout, "# S terminate at V: %d\n", n_S_term_at_V_);
+  vul_printf (std::cout, "# W terminate at V: %d\n", n_W_term_at_V_);
 #endif
 }
 

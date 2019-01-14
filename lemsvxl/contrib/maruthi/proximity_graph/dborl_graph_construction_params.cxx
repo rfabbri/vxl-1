@@ -6,7 +6,7 @@
 
 //: Constructor
 dborl_graph_construction_params::
-dborl_graph_construction_params(vcl_string algo_name) : 
+dborl_graph_construction_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
 

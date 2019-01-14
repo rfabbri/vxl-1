@@ -9,10 +9,10 @@
 #include <dbskr/dbskr_sm_cor.h>
 
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -37,7 +37,7 @@ dbskr_shock_match_pmi_process::dbskr_shock_match_pmi_process() : dbskr_shock_mat
 {
   if ( !parameters()->add( "normal edit distance" , "-normal" , false ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,9 +48,9 @@ dbskr_shock_match_pmi_process::clone() const
   return new dbskr_shock_match_pmi_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_shock_match_pmi_process::get_input_type()
+std::vector< std::string > dbskr_shock_match_pmi_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   to_return.push_back( "shock" );
   to_return.push_back( "vsol2D" );
@@ -60,9 +60,9 @@ vcl_vector< vcl_string > dbskr_shock_match_pmi_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_shock_match_pmi_process::get_output_type()
+std::vector< std::string > dbskr_shock_match_pmi_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock_match");
   to_return.push_back("region_cor");
   to_return.push_back("image");
@@ -76,11 +76,11 @@ bool dbskr_shock_match_pmi_process::execute()
   parameters()->get_value( "-load2" , load2);
   bpro1_filepath input_path;
   parameters()->get_value( "-esf1" , input_path);
-  vcl_string esf_file1 = input_path.path;
+  std::string esf_file1 = input_path.path;
   parameters()->get_value( "-esf2" , input_path);
-  vcl_string esf_file2 = input_path.path;  
+  std::string esf_file2 = input_path.path;  
   parameters()->get_value( "-shgm" , input_path);
-  vcl_string shgm_file = input_path.path;
+  std::string shgm_file = input_path.path;
   bool normal_edit=false;
   parameters()->get_value( "-normal", normal_edit);
 
@@ -101,14 +101,14 @@ bool dbskr_shock_match_pmi_process::execute()
   input_vsol2.vertical_cast(input_data_[0][3]);
 
   // The contour needs to be a polygon
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   vsol_polygon_2d_sptr poly1 = vsol_list[0]->cast_to_region()->cast_to_polygon();
   //the second polygon
   vsol_list = input_vsol2->all_data();
   vsol_polygon_2d_sptr poly2 = vsol_list[0]->cast_to_region()->cast_to_polygon();
 
   if (!poly1 || !poly2) {
-    vcl_cout << "one of the polygons is not valid.\n";
+    std::cout << "one of the polygons is not valid.\n";
     return false;
   }
   //----------------------------------
@@ -122,7 +122,7 @@ bool dbskr_shock_match_pmi_process::execute()
   vil_image_resource_sptr image2 = frame_image2->get_image();
 
   if (!image1 || !image2) {
-    vcl_cout << "one of the images is missing.\n";
+    std::cout << "one of the images is missing.\n";
     return false;
   }
   //----------------------------------
@@ -148,7 +148,7 @@ bool dbskr_shock_match_pmi_process::execute()
     sg2 = shock2->get_shock_graph();
   }
   if (!sg1 || !sg2) {
-    vcl_cout << "Problems in getting shock graphs!\n";
+    std::cout << "Problems in getting shock graphs!\n";
     return false;
   }  
   //: prepare the trees also
@@ -167,18 +167,18 @@ bool dbskr_shock_match_pmi_process::execute()
   } 
   else // do the matching
   {  
-    vcl_cout << "matching shock graphs...\n";
+    std::cout << "matching shock graphs...\n";
     clock_t time1, time2;
     time1 = clock();
     if (normal_edit) {
       dbskr_tree_edit edit(tree1, tree2);   
       edit.save_path(true);
       if (!edit.edit()) {
-        vcl_cout << "Problems in editing trees\n";
+        std::cout << "Problems in editing trees\n";
         return false;
       }
       float val = edit.final_cost();
-      vcl_cout << " cost: " << val << " ";
+      std::cout << " cost: " << val << " ";
       edit.write_shgm(shgm_file);
       sm_cor = edit.get_correspondence();
     } 
@@ -187,29 +187,29 @@ bool dbskr_shock_match_pmi_process::execute()
       dbskr_tree_edit_pmi edit(tree1, tree2, obs1, obs2);   
       edit.save_path(true);
       if (!edit.edit()) {
-        vcl_cout << "Problems in editing trees\n";
+        std::cout << "Problems in editing trees\n";
         return false;
       }
       float val = edit.final_cost();
-      vcl_cout << " cost: " << val << " ";
+      std::cout << " cost: " << val << " ";
       edit.write_shgm(shgm_file);
       sm_cor = edit.get_correspondence();
     }
     time2 = clock();
-    vcl_cout << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
+    std::cout << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
   }
   
   // create the output storage class
   dbskr_shock_match_storage_sptr output_match = dbskr_shock_match_storage_new();
-  //vcl_vector<pathtable_key> path_map;
+  //std::vector<pathtable_key> path_map;
   output_match->set_sm_cor(sm_cor);
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_match));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_match));
 
   dbru_rcor_sptr output_rcor = new dbru_rcor(obs1, obs2);
   dbru_rcor_generator::find_correspondence_shock(output_rcor,sm_cor);
   float info = dbinfo_observation_matcher::minfo(obs1, obs2, output_rcor->get_correspondences(), true);
-  vcl_cout << " mutual info: " << info << vcl_endl;
+  std::cout << " mutual info: " << info << std::endl;
   dbru_rcor_storage_sptr output_storage = dbru_rcor_storage_new();
   output_storage->set_rcor(output_rcor);
   output_data_[0].push_back(output_storage);

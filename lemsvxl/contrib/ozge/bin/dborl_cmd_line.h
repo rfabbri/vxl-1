@@ -14,10 +14,10 @@
 #if !defined(_DBORL_CMD_LINE_H)
 #define _DBORL_CMD_LINE_H
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <ctime>
+#include <algorithm>
+#include <iostream>
+#include <string>
 #include <dborl/dborl_dataset_sptr.h>
 
 #include <dborl/algo/dborl_algo_params.h>
@@ -35,22 +35,22 @@ class dborl_patch_match_params : public dborl_algo_params
 public:
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> db_index_prototype_;
-  dborl_parameter<vcl_string> db_index_query_;
+  dborl_parameter<std::string> db_index_prototype_;
+  dborl_parameter<std::string> db_index_query_;
 
   dborl_parameter<bool> use_assoc_match_folder_;
-  dborl_parameter<vcl_string> match_folder_assoc_;    // use_assoc_match_folder then use this folder otherwise create
-  dborl_parameter<vcl_string> match_folder_to_create_;
+  dborl_parameter<std::string> match_folder_assoc_;    // use_assoc_match_folder then use this folder otherwise create
+  dborl_parameter<std::string> match_folder_to_create_;
 
   //: to find the saved patch storages of the prototypes
   dbskr_extract_patch_params2 patch_params_prototype_;
-  dborl_parameter<vcl_string> patch_folder_assoc_prototype_;
-  dborl_parameter<vcl_string> shock_folder_assoc_prototype_;  // required for quad algo
+  dborl_parameter<std::string> patch_folder_assoc_prototype_;
+  dborl_parameter<std::string> shock_folder_assoc_prototype_;  // required for quad algo
 
   //: to find saved patch storages of the queries
   dbskr_extract_patch_params2 patch_params_query_;
-  dborl_parameter<vcl_string> patch_folder_assoc_query_;    
-  dborl_parameter<vcl_string> shock_folder_assoc_query_;  // required for quad algo
+  dborl_parameter<std::string> patch_folder_assoc_query_;    
+  dborl_parameter<std::string> shock_folder_assoc_query_;  // required for quad algo
 
   dborl_parameter<bool> save_detections_;       // save a file similar in format to the ground truth files and evaluation files
   dborl_parameter<bool> use_saved_detections_;       // use saved detections if available
@@ -130,10 +130,10 @@ public:
 };
 
 //: also prepares the command file
-bool prepare_param_files(vcl_string input_file_xml, vcl_string output_prefix, float min_val, float inc, float max_value);
-bool prepare_param_files2(vcl_string input_file_xml, vcl_string output_prefix, float min_val, float inc, float max_value, int processor_cnt);
-bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_string legend_file, vcl_string plot_type, float min_val, float inc, float max_value);
-bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, vcl_string output_file, vcl_string legend_file, vcl_string plot_type, float min_val, float inc, float max_value);
+bool prepare_param_files(std::string input_file_xml, std::string output_prefix, float min_val, float inc, float max_value);
+bool prepare_param_files2(std::string input_file_xml, std::string output_prefix, float min_val, float inc, float max_value, int processor_cnt);
+bool prepare_plot(std::string input_file_prefix, std::string output_file, std::string legend_file, std::string plot_type, float min_val, float inc, float max_value);
+bool prepare_plot2(std::string input_file_prefix, std::string input_file_prefix2, std::string output_file, std::string legend_file, std::string plot_type, float min_val, float inc, float max_value);
 
 
 #endif  //_DBORL_COMMAND_LINE_H

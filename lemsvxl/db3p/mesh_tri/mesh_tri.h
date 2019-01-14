@@ -19,7 +19,7 @@
 /*****************************************************************/
 
 
-#include <vcl_vector.h>  // Include STL vector class.
+#include <vector>  // Include STL vector class.
 
 class Vector2d
 {
@@ -54,7 +54,7 @@ private:
 
 // Typedef an STL vector of vertices which are used to represent
 // a polygon/contour and a series of triangles.
-typedef vcl_vector< Vector2d > Vector2dVector;
+typedef std::vector< Vector2d > Vector2dVector;
 
 
 class Triangulate

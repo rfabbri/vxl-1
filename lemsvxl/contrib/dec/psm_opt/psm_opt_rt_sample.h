@@ -26,7 +26,7 @@ class psm_aux_traits<PSM_AUX_OPT_RT_GREY>
 public:
   typedef psm_opt_rt_sample<float> sample_datatype;
 
-  static vcl_string storage_subdir() { return "opt_rt_grey_work"; }
+  static std::string storage_subdir() { return "opt_rt_grey_work"; }
 
 };
 
@@ -37,7 +37,7 @@ class psm_aux_traits<PSM_AUX_OPT_RT_RGB>
 public:
   typedef psm_opt_rt_sample<vil_rgb<float> > sample_datatype;
 
-  static vcl_string storage_subdir() { return "opt_rt_rgb_work"; }
+  static std::string storage_subdir() { return "opt_rt_rgb_work"; }
 
 };
 

@@ -9,7 +9,7 @@
 // 
 //   This is....
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
@@ -67,9 +67,9 @@ public:
 
   void track_frame(
     const vil_image_view<vxl_byte>& new_frame,
-    const vcl_vector< vgl_point_2d<int> >& new_tracks );
+    const std::vector< vgl_point_2d<int> >& new_tracks );
 
-  vcl_vector< vgl_point_2d<int> >& get_tracks(){ return tracks_; }
+  std::vector< vgl_point_2d<int> >& get_tracks(){ return tracks_; }
 
 
   // Helper Functions:--------------------------
@@ -94,11 +94,11 @@ public:
 
 protected:
 
-  vcl_vector< vgl_point_2d<int> > tracks_;
-  vcl_vector<bool> track_masks_;
-  vcl_vector< vnl_matrix<float> > nbhd_transform_;
-  vcl_vector< vnl_matrix<int> > nbhd_window_;
-  vcl_vector< vnl_matrix<int> > mi_mask_;
+  std::vector< vgl_point_2d<int> > tracks_;
+  std::vector<bool> track_masks_;
+  std::vector< vnl_matrix<float> > nbhd_transform_;
+  std::vector< vnl_matrix<int> > nbhd_window_;
+  std::vector< vnl_matrix<int> > mi_mask_;
 
   // Build a log table for speed boost.
   float log_search_volume;

@@ -45,9 +45,9 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_node<T>* p)
 }//end vsl_b_write
 
 template<int T>
-void vsl_print_summary(vcl_ostream& os, const dsm_node<T>* p)
+void vsl_print_summary(std::ostream& os, const dsm_node<T>* p)
 {
-    os << "vsl_print_summary(vcl_ostream& os, const dsm_node<T>* p -- not yet implemented.\n";
+    os << "vsl_print_summary(std::ostream& os, const dsm_node<T>* p -- not yet implemented.\n";
 }//end vsl_print_summary
 
 #define DSM_IO_NODE_INSTANTIATE(T)\
@@ -55,6 +55,6 @@ template void vsl_b_read(vsl_b_istream &is, dsm_node<T>& node);\
 template void vsl_b_write(vsl_b_ostream &os, dsm_node<T> const& node);\
 template void vsl_b_read(vsl_b_istream &is, dsm_node<T>* &p);\
 template void vsl_b_write(vsl_b_ostream &os, const dsm_node<T>* p);\
-template void vsl_print_summary(vcl_ostream& os, const dsm_node<T>* p)
+template void vsl_print_summary(std::ostream& os, const dsm_node<T>* p)
 
 #endif //DSM_IO_NODE_TXX_

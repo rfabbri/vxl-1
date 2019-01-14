@@ -25,7 +25,7 @@ biob_worldpt_index_enumerator_sptr splr_subset_splat_collection<T, filter_2d_cla
 
 template<class T, class filter_2d_class>
 biob_worldpt_index_enumerator_sptr splr_subset_splat_collection<T, filter_2d_class>::enumerator(biob_subset_worldpt_roster::const_which_points_t & which_points){
-  vcl_cerr << "(splr_subset_splat_collection.hxx) enumerator taking which_points argument has not been implemented.\n";
+  std::cerr << "(splr_subset_splat_collection.hxx) enumerator taking which_points argument has not been implemented.\n";
   assert(false);
   return 0;
 }

@@ -21,7 +21,7 @@ bvam_save_occupancy_raw_process::bvam_save_occupancy_raw_process()
   input_data_.resize(2,brdb_value_sptr(0));
   input_types_.resize(2);
   input_types_[0] = "bvam_voxel_world_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = std::string";
 
   // process has 0 outputs.
   output_data_.resize(0,brdb_value_sptr(0));
@@ -42,9 +42,9 @@ bool bvam_save_occupancy_raw_process::execute()
     static_cast<brdb_value_t<bvam_voxel_world_sptr>* >(input_data_[0].ptr());
   bvam_voxel_world_sptr world = input0->value();
 
-  brdb_value_t<vcl_string>* input1 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[1].ptr());
-  vcl_string filename = input1->value();
+  brdb_value_t<std::string>* input1 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[1].ptr());
+  std::string filename = input1->value();
 
   return world->save_occupancy_raw(filename);
 

@@ -15,7 +15,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
 
@@ -27,7 +27,7 @@ void dbmsh3d_mesh::IFS_to_MHE ()
 {
   //Loop through all face F and put F into its V's incident face list.
   //This V-F incidence will be cleared after MHE is built.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     for(unsigned int j=0; j<F->vertices().size(); j++) {
@@ -37,25 +37,25 @@ void dbmsh3d_mesh::IFS_to_MHE ()
   }
     
   IFS_to_MHE_build_edges ();
-  vul_printf (vcl_cout, "IFS_to_MHE(): mesh #v: %d, #f: %d, #e: %d\n",
+  vul_printf (std::cout, "IFS_to_MHE(): mesh #v: %d, #f: %d, #e: %d\n",
               vertexmap_.size(), facemap_.size(), edgemap_.size());
 }
 
 void dbmsh3d_mesh::IFS_to_MHE_build_edges (const bool skip_v0)
 {
-  vul_printf (vcl_cout, "  IFS_to_MHE_build_edges():\n");
+  vul_printf (std::cout, "  IFS_to_MHE_build_edges():\n");
   ///assert (is_MHE() == false);
   
   //For each V, try to locate the other V sharing an edge via F.
-  vul_printf (vcl_cout, "    Constructing mesh edges: ");
+  vul_printf (std::cout, "    Constructing mesh edges: ");
   int prev_per = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator nit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator nit = vertexmap_.begin();
   for (int count=0; nit != vertexmap_.end(); nit++, count++) {
     dbmsh3d_vertex* V = (*nit).second;
     float percentage = (float) (count * 100.0 / vertexmap_.size());
-    int per = static_cast<int>(vcl_ceil (percentage));
+    int per = static_cast<int>(std::ceil (percentage));
     if (per % 10 ==0 && per != prev_per)
-      vul_printf (vcl_cout, "%2d%% ", per);
+      vul_printf (std::cout, "%2d%% ", per);
     prev_per = per;
   
     for (dbmsh3d_ptr_node* cur = V->F_list(); cur != NULL; cur = cur->next()) {
@@ -100,26 +100,26 @@ void dbmsh3d_mesh::IFS_to_MHE_build_edges (const bool skip_v0)
 //: Brute-forcely build MHE from IFS
 void dbmsh3d_mesh::IFS_to_MHE_bf (const bool skip_v0)
 {
-  vul_printf (vcl_cout, "\n  IFS_to_MHE_bf():\n");
+  vul_printf (std::cout, "\n  IFS_to_MHE_bf():\n");
   
   //For each V, try to locate the other V sharing an edge via F.
-  vul_printf (vcl_cout, "    Constructing mesh edges: ");
+  vul_printf (std::cout, "    Constructing mesh edges: ");
   int prev_per = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator nit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator nit = vertexmap_.begin();
   for (int count=0; nit != vertexmap_.end(); nit++, count++) {
     dbmsh3d_vertex* V = (*nit).second;
     float percentage = (float) (count * 100.0 / vertexmap_.size());
-    int per = static_cast<int>(vcl_ceil (percentage));
+    int per = static_cast<int>(std::ceil (percentage));
     //if (per % 10 ==0 && per != prev_per)
     if (per != prev_per)
-      vul_printf (vcl_cout, "%2d%% ", per);
+      vul_printf (std::cout, "%2d%% ", per);
     prev_per = per;
 
     //Loop through each incident face for this V
-    vcl_set<void*> V_incident_Fs;
+    std::set<void*> V_incident_Fs;
     V_incident_Fs.clear();
 
-    vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
     for (; fit != facemap_.end(); fit++) {
       dbmsh3d_face* F = (*fit).second;
       for (unsigned int i=0; i<F->vertices().size(); i++) {
@@ -128,7 +128,7 @@ void dbmsh3d_mesh::IFS_to_MHE_bf (const bool skip_v0)
       }    
     }
 
-    vcl_set<void*>::iterator it = V_incident_Fs.begin();
+    std::set<void*>::iterator it = V_incident_Fs.begin();
     for (; it != V_incident_Fs.end(); it++) {
       dbmsh3d_face* F = (dbmsh3d_face*) (*it);
 
@@ -174,11 +174,11 @@ void dbmsh3d_mesh::sort_halfedges_for_all_faces (const int verbose)
     return;
 
   if (verbose>1)
-    vul_printf (vcl_cout, "\n      sort_halfedges_for_all_faces(): %u faces.\n", facemap_.size());
+    vul_printf (std::cout, "\n      sort_halfedges_for_all_faces(): %u faces.\n", facemap_.size());
   assert (is_MHE());
 
   //Go through each face, re-sort the list of halfedges in a circular way
-  vcl_map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
   for (; pit != facemap_.end(); pit++) {
     dbmsh3d_face* F = (*pit).second;
     F->_sort_bnd_HEs_chain ();
@@ -188,15 +188,15 @@ void dbmsh3d_mesh::sort_halfedges_for_all_faces (const int verbose)
 
 void dbmsh3d_mesh::build_face_IFS () 
 {
-  vul_printf (vcl_cout, "dbmsh3d_mesh::build_face_IFS()\n");
+  vul_printf (std::cout, "dbmsh3d_mesh::build_face_IFS()\n");
   assert (is_MHE());
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     F->_ifs_track_ordered_vertices ();
   }
-  vul_printf (vcl_cout, "\tdone.\n");
+  vul_printf (std::cout, "\tdone.\n");
 }
 
 //: Build Indexed-Face-Set from the MHE representation.
@@ -207,7 +207,7 @@ void dbmsh3d_mesh::build_IFS_mesh ()
 {
   assert (is_MHE());
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     F->_ifs_track_ordered_vertices ();
@@ -225,7 +225,7 @@ void dbmsh3d_mesh::clean_IFS_mesh ()
   assert (is_MHE());
 
   //Go through each face and clear the F.vertices[]
-  vcl_map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
   for (; pit != facemap_.end(); pit++) {
     dbmsh3d_face* F = (*pit).second;
     F->vertices().clear();
@@ -234,20 +234,20 @@ void dbmsh3d_mesh::clean_IFS_mesh ()
 
 void dbmsh3d_mesh::MHE_to_IFS ()
 {
-  vul_printf (vcl_cout, "  MHE_to_IFS().\n");
+  vul_printf (std::cout, "  MHE_to_IFS().\n");
   build_face_IFS ();
 
   //Delete all mesh edges and halfedges.
 
   //Go through all mesh faces and 
-  vcl_map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = facemap_.begin();
   for (; pit != facemap_.end(); pit++) {
     dbmsh3d_face* F = (*pit).second;
     _delete_HE_chain (F->halfedge());
   }
 
   //Delete all mesh edges.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   while (eit != edgemap_.end()) {
     dbmsh3d_edge* E = (*eit).second;
     remove_edge (E);
@@ -255,7 +255,7 @@ void dbmsh3d_mesh::MHE_to_IFS ()
   }
 
   //Delete all mesh vertex's pointer to edges.  
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->clear_incident_E_list();
@@ -270,11 +270,11 @@ bool edges_id_less (const dbmsh3d_edge* E1, const dbmsh3d_edge* E2)
 
 void dbmsh3d_mesh::sort_V_incident_Es ()
 { 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
 
-    vcl_vector<dbmsh3d_edge*> edges;    
+    std::vector<dbmsh3d_edge*> edges;    
     int count = 0;
     dbmsh3d_ptr_node* cur = (dbmsh3d_ptr_node*) V->E_list();
     for (; cur != NULL; cur = cur->next()) {
@@ -284,7 +284,7 @@ void dbmsh3d_mesh::sort_V_incident_Es ()
     }
     assert (edges.size() == count);
 
-    vcl_sort (edges.begin(), edges.end(), edges_id_less);  
+    std::sort (edges.begin(), edges.end(), edges_id_less);  
 
     V->clear_incident_E_list ();
 
@@ -300,7 +300,7 @@ void dbmsh3d_mesh::sort_V_incident_Es ()
     return false;
 
   //: go through each linkElm and validate the halfedge list and incident faces
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = edgemap_.begin();
   for (; lit != edgemap_.end(); lit++) {
     dbmsh3d_edge* edge = (*lit).second;
 

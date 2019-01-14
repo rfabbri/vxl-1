@@ -1,8 +1,8 @@
 // This is biotree/resc/imgr/imgrv_manager.cxx
 #include <imgrv/imgrv_manager.h>
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_matlab_read.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
@@ -64,7 +64,7 @@ void imgrv_manager::init()
 
 void imgrv_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void imgrv_manager::cine_mode()
@@ -87,8 +87,8 @@ void imgrv_manager::stop_cine_mode()
 void imgrv_manager::load_view_3d()
 {
   vgui_dialog load_view_3d_dlg("Load 3d View");
-  static vcl_string image_filename = "dummyfile";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "dummyfile";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Scan Filename:", ext, image_filename);
   if (!load_view_3d_dlg.ask())
     return;

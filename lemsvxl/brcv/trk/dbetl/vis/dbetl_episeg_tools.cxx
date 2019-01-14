@@ -41,7 +41,7 @@ dbetl_epiprofile_tool::~dbetl_epiprofile_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbetl_epiprofile_tool::name() const
 {
   return "Epi-Profile"; 
@@ -54,7 +54,7 @@ dbetl_epiprofile_tool::activate()
 {
   vgui_dialog storage_dialog("Select Image");
 
-  vcl_vector<vcl_string> choices = bvis1_manager::instance()
+  std::vector<std::string> choices = bvis1_manager::instance()
     ->repository()->get_all_storage_class_names("image");
 
   int selection = -1;
@@ -96,7 +96,7 @@ dbetl_epiprofile_tool::handle( const vgui_event & e,
       vgui_soview2D_point(ep.x(), ep.y()).draw();
       vgui_draw_line(epl.a(), epl.b(), epl.c());
 
-      vcl_vector<dbetl_point_2d_sptr> pts = dbetl_epiprofile(storage_->episegs(), 
+      std::vector<dbetl_point_2d_sptr> pts = dbetl_epiprofile(storage_->episegs(), 
                                                            image_storage_->get_image(),
                                                            epipole_->angle(last_x_,last_y_));
       if(pts.size() < 2)
@@ -130,7 +130,7 @@ dbetl_epiprofile_tool::handle( const vgui_event & e,
           double orient = pts[i]->orientation();
           glBegin(GL_LINES);
           glVertex2f(pt.x(),pt.y());
-          glVertex2f(pt.x()+5*vcl_cos(orient), pt.y()+5*vcl_sin(orient));
+          glVertex2f(pt.x()+5*std::cos(orient), pt.y()+5*std::sin(orient));
           glEnd();
         }
       }
@@ -179,7 +179,7 @@ void
 dbetl_epiprofile_tool::get_popup( const vgui_popup_params& params, 
                                        vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((draw_samples_)?on:off)+"Draw Samples", 
             bvis1_tool_toggle, (void*)(&draw_samples_) );
   menu.add( ((draw_color_)?on:off)+"Color Samples", 

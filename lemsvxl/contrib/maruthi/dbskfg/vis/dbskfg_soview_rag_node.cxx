@@ -72,8 +72,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbskfg_soview_rag_node::
-print(vcl_ostream& os) const
+std::ostream& dbskfg_soview_rag_node::
+print(std::ostream& os) const
 {
     node_->print(os);
     return os;

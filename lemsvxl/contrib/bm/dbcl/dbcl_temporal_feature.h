@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include<vbl/vbl_ref_count.h>
-#include<vcl_map.h>
-#include<vcl_vector.h>
+#include<map>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 

@@ -14,7 +14,7 @@
 #include <proximity_graph/dborl_knn_graph.h>
 #include <vul/vul_file.h>
 #include <vul/vul_timer.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 int main(int argc, char *argv[]) 
 {
@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -53,20 +53,20 @@ int main(int argc, char *argv[])
 
 
     // Grab some generic parameters
-    vcl_string exemp_labels  = params->dataset_dir_()+"/"+
+    std::string exemp_labels  = params->dataset_dir_()+"/"+
         params->exemplar_label_file_();
-    vcl_string exemp_dataset = params->dataset_dir_()+"/"+
+    std::string exemp_dataset = params->dataset_dir_()+"/"+
         params->exemplar_sim_matrix_();
-    vcl_string exemp_category = params->dataset_dir_()+"/"+
+    std::string exemp_category = params->dataset_dir_()+"/"+
         params->exemplar_category_file_();
 
-    vcl_cout<<"Processing file "<<exemp_dataset<<vcl_endl;
-    vcl_cout<<"Category file   "<<exemp_category<<vcl_endl;
+    std::cout<<"Processing file "<<exemp_dataset<<std::endl;
+    std::cout<<"Category file   "<<exemp_category<<std::endl;
     if ( !params->graph_type_() )
     { 
         // Create ouput file name
-        vcl_stringstream graph_value;
-        vcl_string output_string;
+        std::stringstream graph_value;
+        std::string output_string;
         graph_value<<params->beta_();
         output_string=graph_value.str();
         
@@ -74,17 +74,17 @@ int main(int argc, char *argv[])
         {
             if ( output_string.find(".") )
             {
-                vcl_cout<<output_string<<vcl_endl;
+                std::cout<<output_string<<std::endl;
                 output_string.replace(output_string.find("."),1,"_");
             
             }
         }
 
-        vcl_string output_file_name = params->output_dir_() + "/" +
+        std::string output_file_name = params->output_dir_() + "/" +
             "beta_" + output_string + "_graph.xml";
 
-        vcl_cout<<"Writing results to "<<  output_file_name << vcl_endl;
-        vcl_cout<<vcl_endl;
+        std::cout<<"Writing results to "<<  output_file_name << std::endl;
+        std::cout<<std::endl;
 
         // Create proximity graph
         dborl_proximity_graph pg_graph;
@@ -102,16 +102,16 @@ int main(int argc, char *argv[])
     {
 
         // Create ouput file name
-        vcl_stringstream graph_value;
-        vcl_string output_string;
+        std::stringstream graph_value;
+        std::string output_string;
         graph_value<<params->neighbors_();
         output_string=graph_value.str();
         
-        vcl_string output_file_name = params->output_dir_() + "/" +
+        std::string output_file_name = params->output_dir_() + "/" +
             "knn_" + output_string + "_graph.xml";
 
-        vcl_cout<<"Writing results to "<<  output_file_name << vcl_endl;
-        vcl_cout<<vcl_endl;
+        std::cout<<"Writing results to "<<  output_file_name << std::endl;
+        std::cout<<std::endl;
 
         dborl_knn_graph knn_graph;
         knn_graph.construct_graph(exemp_dataset,
@@ -125,8 +125,8 @@ int main(int argc, char *argv[])
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

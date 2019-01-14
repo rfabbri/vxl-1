@@ -24,7 +24,7 @@ void
 call_geno_process(int order)
 {
 
-  vcl_cout << order << "\n";
+  std::cout << order << "\n";
    bpro1_process_sptr pro= MANAGER->process_manager()->get_process_by_name("Sample Curve");
 
 
@@ -34,13 +34,13 @@ call_geno_process(int order)
    if (!MANAGER->active_tableau())
       return;
 
-   vcl_string itype(MANAGER->storage_from_tableau(MANAGER->active_tableau())->type());
+   std::string itype(MANAGER->storage_from_tableau(MANAGER->active_tableau())->type());
    if (itype != "vsol2D")
       return;
 
-   vcl_string iname(MANAGER->storage_from_tableau(MANAGER->active_tableau())->name());
+   std::string iname(MANAGER->storage_from_tableau(MANAGER->active_tableau())->name());
 
-   vcl_vector<vcl_string> name_v;
+   std::vector<std::string> name_v;
 
    name_v.push_back(iname);
    pro->set_input_names(name_v);
@@ -48,13 +48,13 @@ call_geno_process(int order)
    name_v[0] = "GENO Output";
    pro->set_output_names(name_v);
 
-   vcl_set<bpro1_storage_sptr> modified;
+   std::set<bpro1_storage_sptr> modified;
    //now run the process
    MANAGER->process_manager()->run_process_on_current_frame(pro, &modified);
 
 
    // update the display for any modified storage objects
-   for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+   for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
          itr != modified.end(); ++itr ) {
      bvis1_manager::instance()->add_to_display(*itr);
    }
@@ -71,13 +71,13 @@ call_eno_process()
    if (!MANAGER->active_tableau())
       return;
 
-   vcl_string itype(MANAGER->storage_from_tableau(MANAGER->active_tableau())->type());
+   std::string itype(MANAGER->storage_from_tableau(MANAGER->active_tableau())->type());
    if (itype != "vsol2D")
       return;
 
-   vcl_string iname(MANAGER->storage_from_tableau(MANAGER->active_tableau())->name());
+   std::string iname(MANAGER->storage_from_tableau(MANAGER->active_tableau())->name());
 
-   vcl_vector<vcl_string> name_v;
+   std::vector<std::string> name_v;
 
    name_v.push_back(iname);
    pro->set_input_names(name_v);
@@ -85,13 +85,13 @@ call_eno_process()
    name_v[0] = "ENO Output";
    pro->set_output_names(name_v);
 
-   vcl_set<bpro1_storage_sptr> modified;
+   std::set<bpro1_storage_sptr> modified;
    //now run the process
    MANAGER->process_manager()->run_process_on_current_frame(pro, &modified);
 
 
    // update the display for any modified storage objects
-   for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+   for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
          itr != modified.end(); ++itr ) {
      bvis1_manager::instance()->add_to_display(*itr);
    }
@@ -102,7 +102,7 @@ call_eno_process()
 void 
 clear_all()
 {
-   vcl_cout << "clearing all\n";
+   std::cout << "clearing all\n";
    MANAGER->repository()->initialize(1);
    MANAGER->regenerate_all_tableaux();
    MANAGER->display_current_frame(true);
@@ -128,7 +128,7 @@ geno_interactive()
       MANAGER->add_new_view(0, false);
    MANAGER->display_current_frame();
 
-   vcl_string type, name;
+   std::string type, name;
    // use active vsol if any; else create one for input
    if (MANAGER->active_tableau()) {
       type = MANAGER->storage_from_tableau(MANAGER->active_tableau())->type();
@@ -144,7 +144,7 @@ geno_interactive()
          MANAGER->add_to_display(n_data);
          MANAGER->display_current_frame();
       } else {
-         vcl_cerr << "error: unable to register new data\n";
+         std::cerr << "error: unable to register new data\n";
          return;
       }
    }

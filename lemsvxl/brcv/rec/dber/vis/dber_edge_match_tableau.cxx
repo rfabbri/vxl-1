@@ -4,9 +4,9 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <vector>
+#include <cstdlib>
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
 #include <vgui/vgui_menu.h>
@@ -29,16 +29,16 @@
 #define DIST_THRESHOLD  1
 
 //: Constructor
-dber_edge_match_tableau::dber_edge_match_tableau(vcl_vector<vsol_line_2d_sptr>& l1, 
-                                                 vcl_vector<vsol_line_2d_sptr>& l2,
-                                                 vcl_vector<unsigned>& a) : lines1_(l1), lines2_(l2), assign_(a)
+dber_edge_match_tableau::dber_edge_match_tableau(std::vector<vsol_line_2d_sptr>& l1, 
+                                                 std::vector<vsol_line_2d_sptr>& l2,
+                                                 std::vector<unsigned>& a) : lines1_(l1), lines2_(l2), assign_(a)
 {
   gl_mode = GL_RENDER;
 
   //fill in the vcl_randomized color table
   for (int i=0; i<100; i++){
     for (int j=0; j<3;j++)
-      rnd_colormap[i][j] = (vcl_rand() % 256)/256.0;
+      rnd_colormap[i][j] = (std::rand() % 256)/256.0;
   }
 
   //: assign black as last color
@@ -50,7 +50,7 @@ dber_edge_match_tableau::dber_edge_match_tableau(vcl_vector<vsol_line_2d_sptr>& 
   //fill in the vcl_randomized color table2
   for (int i=0; i<5000; i++){
     for (int j=0; j<3;j++)
-      rnd_colormap2[i][j] = (vcl_rand() % 256)/256.0;
+      rnd_colormap2[i][j] = (std::rand() % 256)/256.0;
   }
 
   //offsets
@@ -82,7 +82,7 @@ bool dber_edge_match_tableau::handle( const vgui_event & e )
   if (gesture_select(e)) {
  
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix_, iy_);
-    //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+    //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
     vgl_point_2d<double> mouse_pt = vgl_point_2d<double>(ix_, iy_);
 
     // find the closest edgel in the first set,
@@ -113,7 +113,7 @@ bool dber_edge_match_tableau::handle( const vgui_event & e )
 void dber_edge_match_tableau::draw_render()
 {
   /*if (!assign_.size() || !lines1_.size() || !lines2_.size()) {
-    vcl_cout << "shock correspondence is not set!\n";
+    std::cout << "shock correspondence is not set!\n";
     return;
   }*/
 
@@ -149,7 +149,7 @@ void dber_edge_match_tableau::draw_render()
   for (unsigned i = 0; i < smaller; i++) {
     if (assign_[i] < 0) continue;
     if (assign_[i] >= lines2_.size()) {
-      //vcl_cout << "warning assignment i: " << i << " exceeds lines2 size\n";
+      //std::cout << "warning assignment i: " << i << " exceeds lines2 size\n";
       continue;
     }
     glColor3f(rnd_colormap[i%100][0],rnd_colormap[i%100][1],rnd_colormap[i%100][2]);
@@ -175,7 +175,7 @@ void dber_edge_match_tableau::draw_render()
   for (unsigned i = 0; i < smaller; i++) {
     if (assign_[i] < 0) continue;
     if (assign_[i] >= lines2_.size()) {
-      //vcl_cout << "warning assignment i: " << i << " exceeds lines2 size\n";
+      //std::cout << "warning assignment i: " << i << " exceeds lines2 size\n";
       continue;
     }
     glColor3f(rnd_colormap[i%100][0],rnd_colormap[i%100][1],rnd_colormap[i%100][2]);
@@ -232,7 +232,7 @@ class dbskr_sm_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbskr_sm_tableau_set_display_params_command(dber_edge_match_tableau* tab, 
-    const vcl_string& name, const void* intref) : match_tableau(tab), name_(name), iref_((int*)intref) {}
+    const std::string& name, const void* intref) : match_tableau(tab), name_(name), iref_((int*)intref) {}
 
   void execute() 
   { 
@@ -248,14 +248,14 @@ class dbskr_sm_tableau_set_display_params_command : public vgui_command
 
   dber_edge_match_tableau *match_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 void 
 dber_edge_match_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 /*
   submenu.add( ((display_shock_samples_)?on:off)+"Show Shock Samples", 
                new dbskr_sm_tableau_toggle_command(this, &display_shock_samples_));

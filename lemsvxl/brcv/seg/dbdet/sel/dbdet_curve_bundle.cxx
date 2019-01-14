@@ -1,9 +1,9 @@
 #include "dbdet_curve_bundle.h"
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <algorithm>
 
 
 
@@ -207,7 +207,7 @@ vgl_polygon<double> dbdet_ES_curve_bundle::compute_curve_bundle(dbdet_int_params
   }
 
   // predict the variation in the intrinsic parameters
-  double alpha = vcl_asin(dpos_/params.d);
+  double alpha = std::asin(dpos_/params.d);
 
   double t1_1, t1_2, t1_3, t1_4, t2_1, t2_2, t2_3, t2_4;
   if (first_is_ref)

@@ -26,8 +26,8 @@ class dborl_example_algo_params : public dborl_algo_params
 public:
   dborl_parameter<float> a_float_;
   dborl_parameter<int> an_int_;
-  dborl_parameter<vcl_string> filename_string_; 
-  dborl_parameter<vcl_string> a_string_;
+  dborl_parameter<std::string> filename_string_; 
+  dborl_parameter<std::string> a_string_;
   dborl_parameter<float> another_float_;
   dborl_parameter<double> a_double_;
   dborl_parameter<bool> a_flag_;
@@ -37,14 +37,14 @@ public:
   dborl_parameter<char> a_char_;
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> path_;
-  dborl_parameter<vcl_string> object_name_;
-  dborl_parameter<vcl_string> pixel_type_;
-  dborl_parameter<vcl_string> filename_;
-  dborl_parameter<vcl_string> iso_filename_;
+  dborl_parameter<std::string> path_;
+  dborl_parameter<std::string> object_name_;
+  dborl_parameter<std::string> pixel_type_;
+  dborl_parameter<std::string> filename_;
+  dborl_parameter<std::string> iso_filename_;
   dborl_parameter<int> iters_;
 
-  dborl_example_algo_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_example_algo_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     a_float_.set_values(param_list_, "data", "a_float", "set to a number between 0 and 10, tpr is this number dividied by 10", 5.0f, 5.0f); 
     an_int_.set_values(param_list_, "data", "an_int", "some int", 10, 0); 
     filename_string_.set_values(param_list_, "data", "filename_string", "some file", "datafile", "datafile"); 

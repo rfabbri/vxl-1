@@ -12,7 +12,7 @@
 #include "bvaml_params.h"
 #include "bvaml_supervoxel.h"
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
@@ -35,11 +35,11 @@ public:
   // change_file as a probability map image with 0=0, 255=1.
   void process(
     int mode,
-    vcl_string namebase,
+    std::string namebase,
     const vil_image_view<vxl_byte>& img,
     const vpgl_proj_camera<double>& camera,
     const vnl_vector<float>& light,
-    const vcl_vector< vgl_point_2d<int> >& inspect_pixels );
+    const std::vector< vgl_point_2d<int> >& inspect_pixels );
 
   // Process the job in the param file.
   void process_job();
@@ -55,7 +55,7 @@ public:
   // Set the planes specified in the file to have probability 1 and 
   // all voxels above and below to have prob 0.
   void set_ground_plane(
-    vcl_string ground_file );
+    std::string ground_file );
 
 
 
@@ -63,7 +63,7 @@ protected:
 
   bvaml_params* params_;
 
-  vcl_vector< bvaml_supervoxel > supervoxels_;
+  std::vector< bvaml_supervoxel > supervoxels_;
   vil_image_view<vxl_byte> last_norm_img_;
   
   // Load the voxel for the index, with the data for the specified

@@ -15,15 +15,15 @@ int main(int argc, char** argv)
   // Make each process and add it to the list of program args
   bpro1_process_sptr process(new dbcvr_curvematch_process()); 
 
-  //process->set_input_names(vcl_vector<vcl_string>(1,"video"));
+  //process->set_input_names(std::vector<std::string>(1,"video"));
   vorl1_manager::instance()->add_process_to_args(process); 
   vorl1_manager::instance()->parse_params(argc, argv); 
-  //vcl_string fname;
+  //std::string fname;
   //process->parameters()->get_value("-fout",fname);
-  //vcl_string dirname=vorl1_manager::instance()->get_output_dir();
+  //std::string dirname=vorl1_manager::instance()->get_output_dir();
 
 
-  //vcl_string inputfile=dirname+"//"+fname;
+  //std::string inputfile=dirname+"//"+fname;
 
 
   // process->parameters()->set_value("-fout",inputfile);

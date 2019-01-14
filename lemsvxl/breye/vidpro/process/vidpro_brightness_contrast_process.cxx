@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_brightness_contrast_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_image_storage.h>
@@ -19,7 +19,7 @@ vidpro_brightness_contrast_process::vidpro_brightness_contrast_process() : bpro_
 {
   if( !parameters()->add( "Brightness" , "-brightness" , (int)0 ) ||
       !parameters()->add( "Contrast" ,   "-contrast" ,   1.0f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   
   }
 }
@@ -37,21 +37,21 @@ vidpro_brightness_contrast_process::clone() const
 }
 
 
-vcl_string vidpro_brightness_contrast_process::name()
+std::string vidpro_brightness_contrast_process::name()
 {
   return "Brightness/Contrast";
 }
 
-vcl_vector< vcl_string > vidpro_brightness_contrast_process::get_input_type()
+std::vector< std::string > vidpro_brightness_contrast_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_brightness_contrast_process::get_output_type()
+std::vector< std::string > vidpro_brightness_contrast_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no return type
  // to_return.clear();
     to_return.push_back( "image" );
@@ -63,7 +63,7 @@ bool vidpro_brightness_contrast_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In vidpro_brightness_contrast_process::execute() - not exactly one"
+      std::cout << "In vidpro_brightness_contrast_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }

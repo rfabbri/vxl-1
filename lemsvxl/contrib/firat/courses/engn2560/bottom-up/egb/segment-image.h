@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #ifndef SEGMENT_IMAGE
 #define SEGMENT_IMAGE
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include "image.h"
 #include "misc.h"
 #include "filter.h"

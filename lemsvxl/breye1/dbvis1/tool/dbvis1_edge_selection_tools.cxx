@@ -62,7 +62,7 @@ dbvis1_edge_selection_tool::handle( const vgui_event & e,
 
   if ( gesture_prune_(e) ) {
 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
     
     int deleted = 0;
@@ -74,7 +74,7 @@ dbvis1_edge_selection_tool::handle( const vgui_event & e,
     }
 
     tableau_->deselect_all();
-    vcl_cout << deleted << " objects are deleted out of " << all_objects.size()-1 << " objects from storage!\n";
+    std::cout << deleted << " objects are deleted out of " << all_objects.size()-1 << " objects from storage!\n";
     
     //: update storage class
     all_objects.clear();
@@ -85,7 +85,7 @@ dbvis1_edge_selection_tool::handle( const vgui_event & e,
         storage_->add_object(((bgui_vsol_soview2D_polyline*)all_objects[i])->sptr()->cast_to_spatial_object() , "remainings" );
 
       } else 
-          vcl_cout << "types do not match, storage class is not updated!!\n";
+          std::cout << "types do not match, storage class is not updated!!\n";
     }
 
     //storage_ = bvis1_manager::instance()->storage_from_tableau(tableau_);
@@ -99,7 +99,7 @@ dbvis1_edge_selection_tool::handle( const vgui_event & e,
 }
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbvis1_edge_selection_tool::name() const
 {
   return "Edge Selection";

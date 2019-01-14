@@ -33,7 +33,7 @@ int main()
     dbsksp_edit_distance work;
     double cost = compute_edit_distance2(xg1,xg2, work);
     dbsksp_xshock_graph_sptr xg3 = work.edit_xgraph2_to_common_topology();
-    vcl_vector<pathtable_key > work_corr;
+    std::vector<pathtable_key > work_corr;
     work.get_final_correspondence(work_corr);
     for(int i = 0; i < work_corr.size(); i++)
     {

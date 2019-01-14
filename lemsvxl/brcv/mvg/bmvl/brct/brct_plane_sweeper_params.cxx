@@ -5,8 +5,8 @@
 // See brct_plane_sweeper_params.h
 //
 //-----------------------------------------------------------------------------
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 
 //------------------------------------------------------------------------
 // Constructors
@@ -79,32 +79,32 @@ void brct_plane_sweeper_params::InitParams(float zmin,
 //:   Checks that parameters are within acceptable bounds
 //    Note that msg << ends seems to restart the string and erase the
 //    previous string. We should only use it as the last call, use
-//    vcl_endl otherwise.
+//    std::endl otherwise.
 bool brct_plane_sweeper_params::SanityCheck()
 {
-  vcl_stringstream msg;
+  std::stringstream msg;
   bool valid = true;
 
-  msg << vcl_ends;
+  msg << std::ends;
 
   SetErrorMsg(msg.str().c_str());
   return valid;
 }
 
-vcl_ostream& operator<<(vcl_ostream& os, const brct_plane_sweeper_params& sp)
+std::ostream& operator<<(std::ostream& os, const brct_plane_sweeper_params& sp)
 {
   return
   os << "brct_plane_sweeper_params:\n[---\n"
-     << "zmin " << sp.zmin_ << vcl_endl
-     << "zmax " << sp.zmax_ << vcl_endl
-     << "N zplanes " << sp.nz_ << vcl_endl
-     << "Point Match Radius " << sp.point_radius_ << vcl_endl
-     << "Corr Window Radius " << sp.corr_radius_ << vcl_endl
-     << "Corr Display Range Min " << sp.corr_min_ << vcl_endl
-     << "Corr Display Range Max " << sp.corr_max_ << vcl_endl
-     << "Coor Thresh " << sp.corr_thresh_ << vcl_endl
-     << "Corr Smooth Sigma " << sp.corr_sigma_ << vcl_endl
-     << "Intensity Thresh " << sp.intensity_thresh_ << vcl_endl
+     << "zmin " << sp.zmin_ << std::endl
+     << "zmax " << sp.zmax_ << std::endl
+     << "N zplanes " << sp.nz_ << std::endl
+     << "Point Match Radius " << sp.point_radius_ << std::endl
+     << "Corr Window Radius " << sp.corr_radius_ << std::endl
+     << "Corr Display Range Min " << sp.corr_min_ << std::endl
+     << "Corr Display Range Max " << sp.corr_max_ << std::endl
+     << "Coor Thresh " << sp.corr_thresh_ << std::endl
+     << "Corr Smooth Sigma " << sp.corr_sigma_ << std::endl
+     << "Intensity Thresh " << sp.intensity_thresh_ << std::endl
      << sp.hdp_
-     << "---]" << vcl_endl;
+     << "---]" << std::endl;
 }

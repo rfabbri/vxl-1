@@ -6,7 +6,7 @@
 //
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <xscan/xscan_dummy_scan.h>
 #include <xscan/xscan_scan.h>
 #include <xmvg/xmvg_gaussian_filter_descriptor.h>
@@ -14,8 +14,8 @@
 
 static void test_xmvg_impulse_response()
 {
-  vcl_cout << "---test descriptor---" << vcl_endl;
-  vcl_stringstream ss;
+  std::cout << "---test descriptor---" << std::endl;
+  std::stringstream ss;
   ss << "dummy";
   xscan_dummy_scan scan(10, 120, 160, vnl_int_2(256, 256), vnl_double_2(128, 128),
     vgl_point_3d<double>(0.0, -120.0, 0.0), vnl_double_3(.0, .0, 1.), 
@@ -33,10 +33,10 @@ static void test_xmvg_impulse_response()
     {
       xmvg_perspective_camera<double> cam = scan_ref(t);
       double val = filter.splat_impulse(vgl_point_3d<double> (0.0, 0.0, 0.0), cam, vgl_point_3d<double> (0.0, disp, 0.0));
-//      vcl_cout << t << " "  << val << vcl_endl;
+//      std::cout << t << " "  << val << std::endl;
       sum += val;
     }
-    vcl_cout << sum/360 << vcl_endl;
+    std::cout << sum/360 << std::endl;
   }
 }
 

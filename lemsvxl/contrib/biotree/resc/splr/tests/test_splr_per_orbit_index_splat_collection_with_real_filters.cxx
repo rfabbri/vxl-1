@@ -6,7 +6,7 @@
 #include <xmvg/xmvg_composite_filter_3d.h>
 #include <xscan/xscan_dummy_scan.h>
 
-//template class splr_per_orbit_index_splat_collection<double, vcl_vector<
+//template class splr_per_orbit_index_splat_collection<double, std::vector<
 
 void test_splr_per_orbit_index_splat_collection_with_real_filters(){
   double f_radius = 0.02;
@@ -23,8 +23,8 @@ void test_splr_per_orbit_index_splat_collection_with_real_filters(){
   xmvg_no_noise_filter_3d fy(fdy);
   xmvg_no_noise_filter_3d fz(fdz);
 
-//  vcl_vector<xmvg_atomic_filter_3d<double> > filters;
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+//  std::vector<xmvg_atomic_filter_3d<double> > filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   filters.push_back(fx);
   filters.push_back(fy);
   filters.push_back(fz);

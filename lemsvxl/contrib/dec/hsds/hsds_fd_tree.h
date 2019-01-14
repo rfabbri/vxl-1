@@ -1,10 +1,10 @@
 #ifndef hsds_fd_tree_h_
 #define hsds_fd_tree_h_
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_bounding_box.h>
 #include <vnl/vnl_vector.h>
@@ -27,7 +27,7 @@ public:
   hsds_fd_tree(vbl_bounding_box<double,d> bbox, unsigned char init_level, T const& init_data, unsigned int max_levels = hsds_fd_tree_node_index<d>::MAX_LEVELS);
 
   //: constructor taking all data
-  hsds_fd_tree(vbl_bounding_box<double,d> bbox, vcl_map<hsds_fd_tree_node_index<d>,T > nodes, unsigned int max_levels = hsds_fd_tree_node_index<d>::MAX_LEVELS);
+  hsds_fd_tree(vbl_bounding_box<double,d> bbox, std::map<hsds_fd_tree_node_index<d>,T > nodes, unsigned int max_levels = hsds_fd_tree_node_index<d>::MAX_LEVELS);
 
   //: returns the bounding box
   vbl_bounding_box<double,d> bounding_box() const {return bbox_;}
@@ -66,7 +66,7 @@ public:
   bool neighbor_cell(hsds_fd_tree_node_index<d> index, unsigned int dim, bool positive_neighbor, hsds_fd_tree_node_index<d> &neighbor) const;
 
   //: return a set of cells bordering on the specified face of another cell
-  bool neighbor_cells(hsds_fd_tree_node_index<d> index, unsigned int dim, bool positive_neighbor, vcl_vector<hsds_fd_tree_node_index<d> > &neighbors) const;
+  bool neighbor_cells(hsds_fd_tree_node_index<d> index, unsigned int dim, bool positive_neighbor, std::vector<hsds_fd_tree_node_index<d> > &neighbors) const;
 
   //: subdivide the given node
   void split(hsds_fd_tree_node_index<d> index, T const& new_data);
@@ -78,9 +78,9 @@ public:
   unsigned int size() const { return nodes_.size();}
 
   //: iterator through nodes
-  typedef typename vcl_map<hsds_fd_tree_node_index<d>, T >::iterator iterator;
+  typedef typename std::map<hsds_fd_tree_node_index<d>, T >::iterator iterator;
   //: const iterator through nodes
-  typedef typename vcl_map<hsds_fd_tree_node_index<d>, T >::const_iterator const_iterator;
+  typedef typename std::map<hsds_fd_tree_node_index<d>, T >::const_iterator const_iterator;
 
   //: iterator to first node
   iterator begin(){return nodes_.begin();}
@@ -102,20 +102,20 @@ public:
   //: create a new tree with identical structure of this tree, but with a new datatype
   template<class T2>
   hsds_fd_tree<T2,d> twin_tree(T2 init_val) const {
-    vcl_map<hsds_fd_tree_node_index<d>,T2 > new_nodes;
-    typename vcl_map<hsds_fd_tree_node_index<d>,T >::const_iterator old_it;
+    std::map<hsds_fd_tree_node_index<d>,T2 > new_nodes;
+    typename std::map<hsds_fd_tree_node_index<d>,T >::const_iterator old_it;
     for (old_it = nodes_.begin(); old_it != nodes_.end(); ++old_it) {
-      new_nodes.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T2 >(old_it->first,init_val));
+      new_nodes.insert(std::make_pair<hsds_fd_tree_node_index<d>,T2 >(old_it->first,init_val));
     }
     hsds_fd_tree<T2,d> twin(this->bbox_,new_nodes,this->max_levels_);
     return twin;
   }
 
   //: binary write tree to stream
-  void b_write(vcl_ostream &os) const;
+  void b_write(std::ostream &os) const;
 
   //: binary read tree from stream
-  void b_read(vcl_istream &is);
+  void b_read(std::istream &is);
 
 
 private:
@@ -123,14 +123,14 @@ private:
 
   vbl_bounding_box<double,d> bbox_;
 
-  vcl_map<hsds_fd_tree_node_index<d>,T > nodes_;
+  std::map<hsds_fd_tree_node_index<d>,T > nodes_;
 
 };
 
 // IO functions
 //: write index to stream for debugging
 template <unsigned d>
-vcl_ostream&  operator<<(vcl_ostream& s, hsds_fd_tree_node_index<d> const& index);
+std::ostream&  operator<<(std::ostream& s, hsds_fd_tree_node_index<d> const& index);
 
 //: header class for storing tree in file
 template <class T, unsigned d>

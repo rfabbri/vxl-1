@@ -38,9 +38,9 @@ public:
 
   void apply_z_filtering();
 
-  void write_result(vcl_string outfile);
+  void write_result(std::string outfile);
 
-  vcl_vector <xmvg_perspective_camera<double> > cameras_;
+  std::vector <xmvg_perspective_camera<double> > cameras_;
 
   bioproj_mem_io *proj_mem_io_;
 

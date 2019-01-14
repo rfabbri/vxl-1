@@ -4,9 +4,9 @@
 #ifndef gdt_interval_section_h_
 #define gdt_interval_section_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <cmath>
+#include <utility>
+#include <map>
 
 #include <dbgdt3d/dbgdt3d_interval.h>
 
@@ -25,7 +25,7 @@ class gdt_interval_section
 protected:
   //: a map of intervals sorted by its stau as key. 
   //  Note that the intervals can NOT overlap.
-  vcl_map<double, gdt_ibase*> I_map_;
+  std::map<double, gdt_ibase*> I_map_;
 
   //: the extent of the set is [0, len]
   //  should equal to the length of the underlying mesh edge.
@@ -46,7 +46,7 @@ public:
   void clear_I_map ();
 
   //: ====== Data access functions ======
-  vcl_map<double, gdt_ibase*>* I_map() {
+  std::map<double, gdt_ibase*>* I_map() {
     return &I_map_;
   }
   unsigned int size() {
@@ -61,7 +61,7 @@ public:
 
   //: ====== Query functions ======  
   gdt_ibase* _find_interval (const double stau) {
-    vcl_map<double, gdt_ibase*>::iterator it = I_map_.find (stau);
+    std::map<double, gdt_ibase*>::iterator it = I_map_.find (stau);
     if (it == I_map_.end())
       return NULL;
     ///gdt_ibase* I = (*it).second;
@@ -83,7 +83,7 @@ public:
   void _add_interval (gdt_ibase* I) {
     assert (!_eqT (I->stau(), I->etau()));
     assert (_find_interval(I->stau()) == NULL);
-    I_map_.insert (vcl_pair<double, gdt_ibase*>(I->stau(), I));
+    I_map_.insert (std::pair<double, gdt_ibase*>(I->stau(), I));
   }
 
   //: just remove it from the map, not deleting it
@@ -123,7 +123,7 @@ public:
 
     new_I->_set_stau (itau_min);
     new_I->_set_etau (itau_max);
-    I_map_.insert (vcl_pair<double, gdt_ibase*>(new_I->stau(), new_I));
+    I_map_.insert (std::pair<double, gdt_ibase*>(new_I->stau(), new_I));
   }
 
   void clone_intersect_overlap (gdt_interval* I1, gdt_interval* I2, 
@@ -140,7 +140,7 @@ inline void move_intervals (gdt_interval_section* from_IS,
                             gdt_interval_section* dest_IS)
 {
   assert (dest_IS->I_map()->size()==0);
-  vcl_map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
   while (it != from_IS->I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -149,7 +149,7 @@ inline void move_intervals (gdt_interval_section* from_IS,
     #endif
 
     from_IS->I_map()->erase (it);
-    dest_IS->I_map()->insert (vcl_pair<double, gdt_ibase*>(I->stau(), I));
+    dest_IS->I_map()->insert (std::pair<double, gdt_ibase*>(I->stau(), I));
     it = from_IS->I_map()->begin();
   }
 }
@@ -157,7 +157,7 @@ inline void move_intervals (gdt_interval_section* from_IS,
 inline void move_intervals_numfix (gdt_interval_section* from_IS, 
                                    gdt_interval_section* dest_IS)
 {
-  vcl_map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
   while (it != from_IS->I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -177,7 +177,7 @@ inline void clone_intervals (gdt_interval_section* from_IS,
   assert (dest_IS->I_map()->size() == 0);
   assert (from_IS->len() == dest_IS->len());
 
-  vcl_map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = from_IS->I_map()->begin();
   for (; it != from_IS->I_map()->end(); it++) {
     gdt_ibase* I = (*it).second;
 
@@ -191,7 +191,7 @@ inline void clone_intervals (gdt_interval_section* from_IS,
       break;
     }
 
-    dest_IS->I_map()->insert (vcl_pair<double, gdt_ibase*>(I_new->stau(), I_new));
+    dest_IS->I_map()->insert (std::pair<double, gdt_ibase*>(I_new->stau(), I_new));
   }
 }
 

@@ -22,9 +22,9 @@ graph::iterator smw_graph::add_node()
     node_id_type new_node_id = new_node.id();
     graph::iterator new_node_itr;
 
-    vcl_pair<graph::iterator,bool> ret;
+    std::pair<graph::iterator,bool> ret;
     //insert the node into the graph
-    ret = graph_.insert(vcl_make_pair(new_node_id,new_node));
+    ret = graph_.insert(std::make_pair(new_node_id,new_node));
     
     //Must traverse the graph and adjust the transition tables of every
     //node to include the new node id with appropriate modifications.
@@ -67,10 +67,10 @@ bool smw_graph::remove_node(node_id_type const& node_id)
     }
     else
     {
-        vcl_cerr << "ERROR: smw_graph::remove_node \n"
+        std::cerr << "ERROR: smw_graph::remove_node \n"
                  << "graph_id: " << graph_id_ << '\n'
                  << "node_id: " << node_id << '\n'
-                 << "Not found in the graph. " << vcl_flush;
+                 << "Not found in the graph. " << std::flush;
         return false;
     }
 }//end smw_graph::remove_node
@@ -136,7 +136,7 @@ bool smw_graph::update(float const& obs)
 
             // We take the square root to compute the geometric
             // mean of the product of random variables
-            temp_prob = vcl_sqrt(transition_prob*model_prob);
+            temp_prob = std::sqrt(transition_prob*model_prob);
 
             if(temp_prob > max_prob)
             {
@@ -190,11 +190,11 @@ bool smw_graph::update(float const& obs)
 }//end smw_graph::update
 
 
-vcl_ostream& operator<<(vcl_ostream& os, smw_graph& g)
+std::ostream& operator<<(std::ostream& os, smw_graph& g)
 {
-    os << "This graph has " << g.size() << " node(s)" << '\n' << vcl_endl;
+    os << "This graph has " << g.size() << " node(s)" << '\n' << std::endl;
 
-    os << "Current node id: " << g.curr_node_id_ << '\n' << vcl_endl;
+    os << "Current node id: " << g.curr_node_id_ << '\n' << std::endl;
     
     graph::iterator g_itr = g.graph_.begin();
     graph::iterator g_end = g.graph_.end();
@@ -209,7 +209,7 @@ vcl_ostream& operator<<(vcl_ostream& os, smw_graph& g)
     return os;
 }//end overloading << operator
 
-bool smw_graph::write_dot_file(vcl_ostream& os)
+bool smw_graph::write_dot_file(std::ostream& os)
 {
     graph::const_iterator g_itr = graph_.begin();
     graph::const_iterator g_end = graph_.end();
@@ -246,7 +246,7 @@ bool smw_graph::write_dot_file(vcl_ostream& os)
         //connect nodes and label the edges
         
         os << '\t' << curr_node_id_ << " -> " 
-           << g_itr->first << "[label = \"" << vcl_setprecision(4) << t_prob 
+           << g_itr->first << "[label = \"" << std::setprecision(4) << t_prob 
            << "\" ];\n";    
         
         
@@ -258,7 +258,7 @@ bool smw_graph::write_dot_file(vcl_ostream& os)
 
 }//end smw_graph::write_dot_file
 
-bool smw_graph::write_dot_file_full(vcl_ostream& os)
+bool smw_graph::write_dot_file_full(std::ostream& os)
 {
     graph::iterator g_itr = graph_.begin();
     graph::iterator g_end = graph_.end();
@@ -314,7 +314,7 @@ bool smw_graph::write_dot_file_full(vcl_ostream& os)
                     g_itr->second.transition_prob(g_itr2->first,rel_time_curr_);
                 os << '\t' << '\t' << g_itr->first << "->"
                    << g_itr2->first 
-                   << " [label=\"" << vcl_setprecision(4) << t_prob << "\""
+                   << " [label=\"" << std::setprecision(4) << t_prob << "\""
                    << ",color=red];\n";
 
             }

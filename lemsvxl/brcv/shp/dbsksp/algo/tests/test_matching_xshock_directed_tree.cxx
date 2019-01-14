@@ -20,11 +20,11 @@
 // ----------------------------------------------------------------------------
 void test_matching_xshock_direced_tree()
 {
-  vcl_string data_dir = dbtest_root_dir() + "/brcv/shp/dbsksp/algo/tests/data";
-  vcl_string xgraph_file1 = data_dir + "/calf1.xml";
-  vcl_string xgraph_file2 = data_dir + "/dog1.xml";  
+  std::string data_dir = dbtest_root_dir() + "/brcv/shp/dbsksp/algo/tests/data";
+  std::string xgraph_file1 = data_dir + "/calf1.xml";
+  std::string xgraph_file2 = data_dir + "/dog1.xml";  
 
-  //vcl_string shgm_file = "D:/vision/data/contour-files/shocks/match-calf1-dog1.shgm";
+  //std::string shgm_file = "D:/vision/data/contour-files/shocks/match-calf1-dog1.shgm";
 
   // Load the two shock graphs from file
   dbsksp_xshock_graph_sptr xgraph1 = 0;
@@ -35,7 +35,7 @@ void test_matching_xshock_direced_tree()
   
   if (!xgraph1 || !xgraph2)
   {
-    vcl_cerr << "\nERROR: Couldn't load two source shock graphs!\n";
+    std::cerr << "\nERROR: Couldn't load two source shock graphs!\n";
     return;
   }
 
@@ -60,7 +60,7 @@ void test_matching_xshock_direced_tree()
   dbsksp_xshock_directed_tree_sptr tree2 = new dbsksp_xshock_directed_tree();
   tree2->acquire(xgraph2);
 
-  vcl_cout << "matching shock graphs...\n";
+  std::cout << "matching shock graphs...\n";
   vul_timer t;
   t.mark();
 
@@ -70,7 +70,7 @@ void test_matching_xshock_direced_tree()
   //
   //float   norm_val = 0;
 
-  //  << "original edit distance"<<vcl_endl;
+  //  << "original edit distance"<<std::endl;
 
   //instantiate the edit distance algorithm
   dbsksp_edit_distance edit_distance;
@@ -81,14 +81,14 @@ void test_matching_xshock_direced_tree()
   edit_distance.save_path(true);
   if (!edit_distance.edit()) 
   {
-    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+    std::cerr << "Problems in editing trees"<<std::endl;
     return;
   }
 
 
   //float val = edit_distance.final_cost();
 
-  vcl_cout << "\nFinal cost: " << edit_distance.final_cost() << "\n"
+  std::cout << "\nFinal cost: " << edit_distance.final_cost() << "\n"
     << "Tree1 splice cost = " << tree1->total_splice_cost() << "\n"
     << "Tree2 splice cost = " << tree2->total_splice_cost() << "\n";
 
@@ -108,19 +108,19 @@ void test_matching_xshock_direced_tree()
   //
   //if ( !norm_reconst )
   //{
-  //  vcl_cout << "final cost: " << val << " final norm cost: " 
+  //  std::cout << "final cost: " << val << " final norm cost: " 
   //    << norm_val << "( tree1 tot splice: " 
   //    << tree1->total_splice_cost() << ", tree2: " 
-  //    << tree2->total_splice_cost() << ")" << vcl_endl;
+  //    << tree2->total_splice_cost() << ")" << std::endl;
   //}
   //else
   //{
-  //  vcl_cout << "final cost: " << val << " final norm cost: " 
+  //  std::cout << "final cost: " << val << " final norm cost: " 
   //    << norm_val << "( tree1 tot length: " 
   //    << tree1->total_reconstructed_boundary_length() 
   //    << ", tree2: " 
   //    << tree2->total_reconstructed_boundary_length() << ")" 
-  //    << vcl_endl;
+  //    << std::endl;
   //}
   //
   //// this functions set curve_matching_R and other parameters of sm_cor 

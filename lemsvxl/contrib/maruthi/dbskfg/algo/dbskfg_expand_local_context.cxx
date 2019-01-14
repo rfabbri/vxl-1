@@ -16,8 +16,8 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 // vcl headers
-#include <vcl_algorithm.h>
-#include <vcl_sstream.h>
+#include <algorithm>
+#include <sstream>
 // bsol headers
 #include <bsol/bsol_algs.h>
 
@@ -44,10 +44,10 @@ void dbskfg_expand_local_context::expand_local_context()
     // Keep expanding polygon until it stops expanding
     // Stopping of expansion is indicating by the number of vertices staying
     // constant
-    vcl_string prev_string,next_string;
+    std::string prev_string,next_string;
     do
     {
-        vcl_stringstream prev_stream,next_stream;
+        std::stringstream prev_stream,next_stream;
 
         // Get set of polygon points before expansion
         for ( unsigned int k=0; k < transform_->outer_shock_nodes_.size() ; 
@@ -102,7 +102,7 @@ void dbskfg_expand_local_context::expand_local_context()
 
 
     // Add in contour nodes affected if necessary
-    vcl_map<unsigned int,dbskfg_contour_node*>::iterator it;
+    std::map<unsigned int,dbskfg_contour_node*>::iterator it;
     for ( it = degree_ones_.begin() ; it != degree_ones_.end() ; ++it)
     {
         
@@ -124,11 +124,11 @@ void dbskfg_expand_local_context::expand_polygon()
     //Loop over all outer shock nodes and see which ones need to be expanded
 
     //Mark ids for deletion 
-    vcl_vector<unsigned int> outer_shock_nodes_to_delete;
-    vcl_vector<dbskfg_composite_node_sptr > outer_shock_nodes_to_add;
+    std::vector<unsigned int> outer_shock_nodes_to_delete;
+    std::vector<dbskfg_composite_node_sptr > outer_shock_nodes_to_add;
 
     // Keep a countour map
-    vcl_map<unsigned int,vcl_string> contour_map;
+    std::map<unsigned int,std::string> contour_map;
 
     for ( unsigned int k=0; k < transform_->outer_shock_nodes_.size() ; 
           ++k)
@@ -144,7 +144,7 @@ void dbskfg_expand_local_context::expand_polygon()
         // nodes later
         // The nodes could be very,very close to each other, so lets make
         // sure that up to four digits they are equal
-        vcl_stringstream srad,sdistance;
+        std::stringstream srad,sdistance;
         srad<<snode->get_radius();
         sdistance<<distance;
 
@@ -249,7 +249,7 @@ void dbskfg_expand_local_context::expand_polygon()
     {
         unsigned int id=outer_shock_nodes_to_delete[d];
 
-        vcl_vector<dbskfg_composite_node_sptr>::iterator it;
+        std::vector<dbskfg_composite_node_sptr>::iterator it;
 
         for ( it=transform_->outer_shock_nodes_.begin(); 
               it != transform_->outer_shock_nodes_.end() ; 
@@ -286,7 +286,7 @@ void dbskfg_expand_local_context::add_contours(dbskfg_shock_link* shock_link)
     if ( shock_link->shock_compute_type() == 
          dbskfg_utilities::RLLP )
     {
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             clinks = shock_link->right_contour_links();
                         
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -306,7 +306,7 @@ void dbskfg_expand_local_context::add_contours(dbskfg_shock_link* shock_link)
          dbskfg_utilities::LLRP )
     {
 
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             clinks = shock_link->left_contour_links();
          
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -327,7 +327,7 @@ void dbskfg_expand_local_context::add_contours(dbskfg_shock_link* shock_link)
     {
 
         // Left Line
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             clinks = shock_link->left_contour_links();
                         
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -342,7 +342,7 @@ void dbskfg_expand_local_context::add_contours(dbskfg_shock_link* shock_link)
         }                                
         
         // Right line
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             rclinks = shock_link->right_contour_links();
                      
         for ( unsigned int i=0; i<rclinks.size() ; ++i)
@@ -407,7 +407,7 @@ void dbskfg_expand_local_context::add_to_polygon(dbskfg_shock_link* shock_link)
 double dbskfg_expand_local_context::
 distance_from_ess(vgl_point_2d<double> test_point)
 {
-    vcl_vector<double> distances;
+    std::vector<double> distances;
 
     // Loop over all parts of new contours spatial objects and record 
     // distances
@@ -466,6 +466,6 @@ distance_from_ess(vgl_point_2d<double> test_point)
 
     }
 
-    return *vcl_min_element(distances.begin(),distances.end());
+    return *std::min_element(distances.begin(),distances.end());
 
 }

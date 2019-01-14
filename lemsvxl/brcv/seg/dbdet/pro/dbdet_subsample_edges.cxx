@@ -19,8 +19,8 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 
 #include <vsol/vsol_point_2d.h>
@@ -38,7 +38,7 @@
 dbdet_subsample_edges::dbdet_subsample_edges()
 {
   //subsampling algorithms
-  vcl_vector<vcl_string> subsampling_algo_choices;
+  std::vector<std::string> subsampling_algo_choices;
   subsampling_algo_choices.push_back("Choose every Nth edge");                   //0
   subsampling_algo_choices.push_back("Fit lines to Contours");                   //1
 
@@ -51,7 +51,7 @@ dbdet_subsample_edges::dbdet_subsample_edges()
 
       !parameters()->add( "Do not include short fragments" , "-bremove_short_frags" , false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -71,7 +71,7 @@ dbdet_subsample_edges::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_subsample_edges::name()
 {
   return "SubSample Edges";
@@ -95,9 +95,9 @@ dbdet_subsample_edges::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_subsample_edges::get_input_type()
+std::vector< std::string > dbdet_subsample_edges::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
     to_return.push_back( "sel" );
 
   return to_return;
@@ -105,9 +105,9 @@ vcl_vector< vcl_string > dbdet_subsample_edges::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_subsample_edges::get_output_type()
+std::vector< std::string > dbdet_subsample_edges::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
 
   return to_return;
@@ -118,7 +118,7 @@ vcl_vector< vcl_string > dbdet_subsample_edges::get_output_type()
 bool dbdet_subsample_edges::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_subsample_edges::execute() - not exactly one input \n";
+    std::cout << "In dbdet_subsample_edges::execute() - not exactly one input \n";
     return false;
   }
   clear_output();
@@ -183,20 +183,20 @@ bool dbdet_subsample_edges::execute()
         fitter.add_point(chain->edgels[j]->pt);
       
       fitter.fit();
-      vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+      std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
 
       //convert the line segments into edgels
       for (unsigned int i=0; i<segs.size(); i++){
 
         double len = vgl_distance(segs[i].point1(),segs[i].point2()); 
-        //vcl_cout << len << vcl_endl;
+        //std::cout << len << std::endl;
 
         if (len<SCF_len/2)
           continue;
 
         if (len>(2*SCF_len-1)){ //put multiple edgels
           double tangent = dbdet_angle0To2Pi(segs[i].slope_radians());
-          double N = vcl_floor((len+1.0)/SCF_len);
+          double N = std::floor((len+1.0)/SCF_len);
           for (double j=0; j<N; j++){
             //determine the center of the segment first
             vgl_point_2d<double> pt = segs[i].point1() + (2*j+1)/(2*N)*(segs[i].point2()-segs[i].point1());

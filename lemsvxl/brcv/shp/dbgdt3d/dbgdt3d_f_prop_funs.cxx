@@ -45,7 +45,7 @@ double gdt_f_manager::prop_to_left_edge (dbmsh3d_halfedge* cur_he, dbmsh3d_halfe
         }
         else {
           //else, fix the boundary of the last interval
-          vcl_map<double, gdt_ibase*>::reverse_iterator rit = left_interval_section->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator rit = left_interval_section->I_map()->rbegin();
           gdt_ibase* I = (*rit).second;
           I->_set_etau (b);
         }
@@ -57,7 +57,7 @@ double gdt_f_manager::prop_to_left_edge (dbmsh3d_halfedge* cur_he, dbmsh3d_halfe
         }
         else {
           //else, fix the boundary of the firat interval
-          vcl_map<double, gdt_ibase*>::iterator it = left_interval_section->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = left_interval_section->I_map()->begin();
           gdt_ibase* I = (*it).second;
           left_interval_section->I_map()->erase (it);
           I->_set_stau (0);
@@ -107,7 +107,7 @@ double gdt_f_manager::prop_to_right_edge (dbmsh3d_halfedge* cur_he, dbmsh3d_half
         }
         else {
           //else, fix the boundary of the last interval
-          vcl_map<double, gdt_ibase*>::iterator it = right_interval_section->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = right_interval_section->I_map()->begin();
           gdt_ibase* I = (*it).second;
           right_interval_section->I_map()->erase (it);
           I->_set_stau (0);
@@ -121,7 +121,7 @@ double gdt_f_manager::prop_to_right_edge (dbmsh3d_halfedge* cur_he, dbmsh3d_half
         }
         else {
           //else, fix the boundary of the last interval
-          vcl_map<double, gdt_ibase*>::reverse_iterator rit = right_interval_section->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator rit = right_interval_section->I_map()->rbegin();
           gdt_ibase* I = (*rit).second;
           I->_set_etau (a);
         }
@@ -137,7 +137,7 @@ bool gdt_f_manager::_detect_left_dege (dbmsh3d_gdt_edge* cur_edge, const double&
 {
   //: test the first I of cur_edge
   assert (cur_edge->interval_section()->I_map()->size() != 0);
-  vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
   gdt_interval* I = (gdt_interval*) (*it).second;
   assert (I->stau() == 0);
 
@@ -158,7 +158,7 @@ bool gdt_f_manager::_detect_right_dege (dbmsh3d_gdt_edge* cur_edge, const double
 {
   //: test the last I of cur_edge
   assert (cur_edge->interval_section()->I_map()->size() != 0);
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
   gdt_interval* I = (gdt_interval*) (*rit).second;
   assert (_eqT (I->etau(), cur_edge->len()));
     
@@ -184,7 +184,7 @@ void gdt_f_manager::_prop_left_dege (dbmsh3d_gdt_edge* cur_edge,
   //:1) If the destination section is empty, add the new degenerate interval.
   if (left_interval_section->I_map()->size()==0) {
     //the prev is the first interval of cur_edge
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
     gdt_interval* prev = (gdt_interval*) (*it).second;
 
     get_psrc_dist (psrc, cur_edge);
@@ -195,7 +195,7 @@ void gdt_f_manager::_prop_left_dege (dbmsh3d_gdt_edge* cur_edge,
     //: This is required in the degenerate propagation near saddle.
     //  If there exists any existing degenerate interval withe the same psrc, 
     //  keep it and set it's prev_ flag.
-    vcl_map<double, gdt_ibase*>::iterator it = left_interval_section->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = left_interval_section->I_map()->begin();
     gdt_interval* I = (gdt_interval*) (*it).second;
     if (I->is_dege() && I->psrc() == psrc) {
       //: need to change the I's prev to this propagation!!
@@ -204,7 +204,7 @@ void gdt_f_manager::_prop_left_dege (dbmsh3d_gdt_edge* cur_edge,
     }
     else { //Propagate the degenerate interval and intersect with the existing one
       //the prev is the first interval of cur_edge
-      vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
       gdt_interval* prev = (gdt_interval*) (*it).second;
 
       get_psrc_dist (psrc, cur_edge);
@@ -224,7 +224,7 @@ void gdt_f_manager::_prop_right_dege (dbmsh3d_gdt_edge* cur_edge,
   //:1) If the destination section is empty, add the new degenerate interval.
   if (right_interval_section->I_map()->size()==0) {
     //the prev is the first interval of cur_edge
-    vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+    std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
     gdt_interval* prev = (gdt_interval*) (*rit).second;
 
     get_psrc_dist (psrc, cur_edge);
@@ -235,7 +235,7 @@ void gdt_f_manager::_prop_right_dege (dbmsh3d_gdt_edge* cur_edge,
     //: This is required in the degenerate propagation near saddle.
     //  If there exists any existing degenerate interval withe the same psrc, 
     //  keep it and set it's prev_ flag.
-    vcl_map<double, gdt_ibase*>::iterator it = right_interval_section->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = right_interval_section->I_map()->begin();
     gdt_interval* I = (gdt_interval*) (*it).second;
     if (I->is_dege() && ((gdt_interval*)I)->psrc() == psrc) {
       //: need to change the I's prev to this propagation!!
@@ -244,7 +244,7 @@ void gdt_f_manager::_prop_right_dege (dbmsh3d_gdt_edge* cur_edge,
     }
     else { //Propagate the degenerate interval and intersect with the existing one
       //the prev is the first interval of cur_edge
-      vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+      std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
       gdt_interval* prev = (gdt_interval*) (*rit).second;
 
       get_psrc_dist (psrc, cur_edge);
@@ -284,7 +284,7 @@ double gdt_f_manager::_project_left_sections (const dbmsh3d_gdt_edge* cur_edge,
     prop_tau = left_edge->len();
 
   //: Propagation order: from the first one to the last.
-  vcl_map<double, gdt_ibase*>::iterator it = 
+  std::map<double, gdt_ibase*>::iterator it = 
     ((dbmsh3d_gdt_edge*)cur_edge)->interval_section()->I_map()->begin();
   gdt_interval* II = (gdt_interval*) (*it).second;
 
@@ -381,7 +381,7 @@ double gdt_f_manager::_project_right_sections (const dbmsh3d_gdt_edge* cur_edge,
     prop_tau = 0;
 
   //: Propagation order: from the last one to the first.
-  vcl_map<double, gdt_ibase*>::reverse_iterator it = 
+  std::map<double, gdt_ibase*>::reverse_iterator it = 
     ((dbmsh3d_gdt_edge*)cur_edge)->interval_section()->I_map()->rbegin();
   gdt_interval* II = (gdt_interval*) (*it).second;
 

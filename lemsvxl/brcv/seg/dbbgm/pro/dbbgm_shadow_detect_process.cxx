@@ -31,7 +31,7 @@ dbbgm_shadow_detect_process::dbbgm_shadow_detect_process()
   if( !parameters()->add( "Smoothing Sigma" ,      "-sigma" ,   1.0f        ) ||
       !parameters()->add( "Distance Theshold" ,    "-dist" ,    2.5f        ) ||
       !parameters()->add( "YUV Color Space" ,      "-yuv",      true        ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -51,7 +51,7 @@ dbbgm_shadow_detect_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_shadow_detect_process::name()
 {
   return "Detect Shadows";
@@ -75,9 +75,9 @@ dbbgm_shadow_detect_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_shadow_detect_process::get_input_type()
+std::vector< std::string > dbbgm_shadow_detect_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_distribution_image" );
 
@@ -86,9 +86,9 @@ vcl_vector< vcl_string > dbbgm_shadow_detect_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_shadow_detect_process::get_output_type()
+std::vector< std::string > dbbgm_shadow_detect_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
 
@@ -101,7 +101,7 @@ bool
 dbbgm_shadow_detect_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_shadow_detect_process::execute() - "
+    std::cout << "In dbbgm_shadow_detect_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }

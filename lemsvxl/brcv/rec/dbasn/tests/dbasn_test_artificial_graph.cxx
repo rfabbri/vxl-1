@@ -19,10 +19,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 #include <testlib/testlib_test.h>
@@ -97,7 +97,7 @@ void test_ga_nodes_only ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("nodes_only identical graphs: %d bad matches.", bad);
@@ -123,7 +123,7 @@ void test_ga_nodes_only ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -178,7 +178,7 @@ void test_ga_diff_n_same_e ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("diff_n_same_e identical graphs: %d bad matches.", bad);
@@ -204,7 +204,7 @@ void test_ga_diff_n_same_e ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -260,7 +260,7 @@ void test_ga_same_n_diff_e ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_n_diff_e identical graphs: %d bad matches.", bad);
@@ -286,7 +286,7 @@ void test_ga_same_n_diff_e ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;  
@@ -347,7 +347,7 @@ void test_ga_diff_n_e ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("diff_n_e rotation of indices: %d bad matches.", bad);
@@ -373,7 +373,7 @@ void test_ga_diff_n_e ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;  
@@ -434,7 +434,7 @@ void test_ga_diff_n_e_flip ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("diff_n_e_flip noeds: %d bad matches.", bad);
@@ -460,7 +460,7 @@ void test_ga_diff_n_e_flip ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;  

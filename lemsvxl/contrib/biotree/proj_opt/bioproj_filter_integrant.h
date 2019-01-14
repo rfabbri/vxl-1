@@ -11,7 +11,7 @@
 // 
 
 #include <vnl/vnl_analytic_integrant.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 class bioproj_filter_integrant : public vnl_analytic_integrant{
 public:
@@ -21,7 +21,7 @@ public:
 
   double f_(double zeta)
   {
-    return vcl_exp(-((xi_*xi_) - (zeta*zeta)) / (2*(sigma_*sigma_)));
+    return std::exp(-((xi_*xi_) - (zeta*zeta)) / (2*(sigma_*sigma_)));
   }
 protected:
   double sigma_;

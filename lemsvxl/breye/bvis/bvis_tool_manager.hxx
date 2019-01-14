@@ -17,7 +17,7 @@
 #include <vgui/vgui_displaybase_tableau.h>
 
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <bvis/bvis_gl_codec.h>
 
@@ -68,8 +68,8 @@ template <class T>
 void bvis_tool_manager<T>::assign_input()
 {
   active_tool_->clear_input();
-  vcl_vector< vcl_string > input_type_list = active_tool_->get_input_type();
-  vcl_vector< vcl_string > input_names = active_tool_->input_names();
+  std::vector< std::string > input_type_list = active_tool_->get_input_type();
+  std::vector< std::string > input_names = active_tool_->input_names();
 
   for( unsigned int i = 0 ;
        i < input_names.size();
@@ -87,8 +87,8 @@ template <class T>
 void bvis_tool_manager<T>::assign_output()
 {
   active_tool_->clear_output();
-  vcl_vector< vcl_string > output_types = active_tool_->get_output_type();
-  vcl_vector< vcl_string > output_names = active_tool_->output_names();
+  std::vector< std::string > output_types = active_tool_->get_output_type();
+  std::vector< std::string > output_names = active_tool_->output_names();
   for( unsigned int i = 0 ;
        i < output_types.size();
        i++ ) {

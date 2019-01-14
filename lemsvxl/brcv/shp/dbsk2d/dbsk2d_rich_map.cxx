@@ -4,7 +4,7 @@
 // \file
 
 #include <dbsk2d/dbsk2d_rich_map.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
 
@@ -14,7 +14,7 @@ dbsk2d_rich_map::dbsk2d_rich_map(const dbsk2d_shock_graph_sptr shock_graph,
                                  int x_offset, int y_offset) :
   x_offset_(x_offset), y_offset_(y_offset),
   width_(width), height_(height),
-  distance_map_(height, width, vcl_numeric_limits<float >::max()),
+  distance_map_(height, width, std::numeric_limits<float >::max()),
   curve_map_(height, width, curve_map_element(NULL,0)),
   shock_map_(height, width, shock_map_element())
 {
@@ -42,7 +42,7 @@ float dbsk2d_rich_map::distance(int x, int y) const
 {
   if( x < x_offset_ || x >= int(width_+x_offset_) ||
       y < y_offset_ || y >= int(height_+y_offset_) )
-    return vcl_numeric_limits<float>::infinity();
+    return std::numeric_limits<float>::infinity();
 
   return distance_map_[y-y_offset_][x-x_offset_];
 }
@@ -94,7 +94,7 @@ void dbsk2d_rich_map::fill_the_map(const dbsk2d_shock_graph_sptr shock_graph)
 
     //traverse the descriptor list and draw the shock fragments for the 
     //degenerate descriptors
-    vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
+    std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
     for (; p_itr != snode->descriptor_list().end(); ++ p_itr){
       dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
  
@@ -128,8 +128,8 @@ void dbsk2d_rich_map::fill_a_shock_fragment(dbsk2d_shock_fragment_sptr fragment)
 
       ////from this point find the closest point on the contour(s)
       //double s1=0, s2=0;
-      //double d1 = vcl_numeric_limits<float >::max();
-      //double d2 = vcl_numeric_limits<float >::max();
+      //double d1 = std::numeric_limits<float >::max();
+      //double d2 = std::numeric_limits<float >::max();
 
       //if (fragment->contour1){
       //  s1 = fragment->contour1->closest_point(x,y);

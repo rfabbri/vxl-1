@@ -15,7 +15,7 @@
 #include <brip/brip_vil_float_ops.h>
 
 //strength_threshold in [0,1] - min strength to declare the part as detected
-bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float strength_threshold, unsigned type, vcl_vector<dbvxm_part_instance_sptr>& parts)
+bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, float lambda1, float theta, bool bright, float strength_threshold, unsigned type, std::vector<dbvxm_part_instance_sptr>& parts)
 {
   vil_image_view<float> fimg = brip_vil_float_ops::convert_to_float(img);
   vil_image_view<float> extr = brip_vil_float_ops::extrema(fimg, lambda0, lambda1, theta, bright, true);
@@ -37,7 +37,7 @@ bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, flo
   vil_math_value_range(res, min, max);
   
 #if 1
-  vcl_cout << "res min: " << min << " max: " << max << vcl_endl;
+  std::cout << "res min: " << min << " max: " << max << std::endl;
   vil_image_view<vxl_byte> res_o(ni, nj);
   vil_convert_stretch_range_limited(res, res_o, min, max);
   vil_save(res_o, "./temp.png");
@@ -46,13 +46,13 @@ bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, flo
   //: find the top 10 percentile of the output map and convert it into a prob map (scale to [0,1] range) accordingly
   //float val;
   //vil_math_value_range_percentile(res, 1.0, val);
-  //vcl_cout << "res top 10 percentile value: " << val << vcl_endl;
+  //std::cout << "res top 10 percentile value: " << val << std::endl;
   vil_image_view<float> strength_map(ni, nj);
   //vil_convert_stretch_range_limited(res, strength_map, 0.0f, val, 0.0f, 1.0f);
   vil_convert_stretch_range_limited(res, strength_map, 0.0f, max, 0.0f, 1.0f);
 #if 1
   vil_math_value_range(strength_map, min, max);
-  vcl_cout << "strength_map min: " << min << " max: " << max << vcl_endl;
+  std::cout << "strength_map min: " << min << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(strength_map, res_o, min, max);
   vil_save(res_o, "./strength_map.png");
 #endif
@@ -77,9 +77,9 @@ bool extract_gaussian_primitives(vil_image_resource_sptr img, float lambda0, flo
       brip_vil_float_ops::combine_color_planes(img_resc, res_resc, msk_resc);
     vil_save(rgb, "./temp.png");
   vil_math_value_range(fimg, min, max);
-  vcl_cout << "img min: " << min << " max: " << max << vcl_endl;
+  std::cout << "img min: " << min << " max: " << max << std::endl;
   vil_math_value_range(mask, min, max);
-  vcl_cout << "mask min: " << min << " max: " << max << vcl_endl;
+  std::cout << "mask min: " << min << " max: " << max << std::endl;
 #endif
   
 
@@ -110,10 +110,10 @@ bool dbvxm_part_gaussian::mark_receptive_field(vil_image_view<vxl_byte>& img, un
   unsigned nrows = mask.rows();
   unsigned ncols = mask.cols();
 
-  int js = (int)vcl_floor(y_ - (float)nrows/2.0f + 0.5f);
-  int is = (int)vcl_floor(x_ - (float)ncols/2.0f + 0.5f);
-  int je = (int)vcl_floor(y_ + (float)nrows/2.0f + 0.5f);
-  int ie = (int)vcl_floor(x_ + (float)ncols/2.0f + 0.5f);
+  int js = (int)std::floor(y_ - (float)nrows/2.0f + 0.5f);
+  int is = (int)std::floor(x_ - (float)ncols/2.0f + 0.5f);
+  int je = (int)std::floor(y_ + (float)nrows/2.0f + 0.5f);
+  int ie = (int)std::floor(x_ + (float)ncols/2.0f + 0.5f);
 
   int ni = (int)img.ni();
   int nj = (int)img.nj();
@@ -141,10 +141,10 @@ bool dbvxm_part_gaussian::mark_receptive_field(vil_image_view<float>& img, float
   unsigned nrows = mask.rows();
   unsigned ncols = mask.cols();
 
-  int js = (int)vcl_floor(y_ - (float)nrows/2.0f + 0.5f);
-  int is = (int)vcl_floor(x_ - (float)ncols/2.0f + 0.5f);
-  int je = (int)vcl_floor(y_ + (float)nrows/2.0f + 0.5f);
-  int ie = (int)vcl_floor(x_ + (float)ncols/2.0f + 0.5f);
+  int js = (int)std::floor(y_ - (float)nrows/2.0f + 0.5f);
+  int is = (int)std::floor(x_ - (float)ncols/2.0f + 0.5f);
+  int je = (int)std::floor(y_ + (float)nrows/2.0f + 0.5f);
+  int ie = (int)std::floor(x_ + (float)ncols/2.0f + 0.5f);
 
   int ni = (int)img.ni();
   int nj = (int)img.nj();
@@ -170,8 +170,8 @@ bool dbvxm_part_gaussian::mark_center(vil_image_view<vxl_byte>& img, unsigned pl
   int ni = (int)img.ni();
   int nj = (int)img.nj();
 
-  int ic = (int)vcl_floor(x_ + 0.5f);
-  int jc = (int)vcl_floor(y_ + 0.5f);
+  int ic = (int)std::floor(x_ + 0.5f);
+  int jc = (int)std::floor(y_ + 0.5f);
   if (ic >= 0 && jc >= 0 && ic < ni && jc < nj)
     img(ic, jc, plane) = (vxl_byte)(strength_*255);
 

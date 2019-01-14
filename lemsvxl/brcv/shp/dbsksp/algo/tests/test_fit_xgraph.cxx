@@ -17,8 +17,8 @@
 // ----------------------------------------------------------------------------
 void test_fit_xgraph()
 {
-  vcl_string data_dir = dbtest_root_dir() + "/brcv/shp/dbsksp/algo/tests/data";
-  vcl_string xgraph_file = data_dir + "/calf1.xml";
+  std::string data_dir = dbtest_root_dir() + "/brcv/shp/dbsksp/algo/tests/data";
+  std::string xgraph_file = data_dir + "/calf1.xml";
 
   // Load the two shock graphs from file
   dbsksp_xshock_graph_sptr xgraph = 0;
@@ -29,7 +29,7 @@ void test_fit_xgraph()
   
   if (!xgraph)
   {
-    vcl_cerr << "\nERROR: Couldn't load the source shock graph!\n";
+    std::cerr << "\nERROR: Couldn't load the source shock graph!\n";
     return;
   }
 

@@ -40,7 +40,7 @@ public:
 //  virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   
   //=========================================================
   //      EVENT HANDLERS

@@ -33,7 +33,7 @@ public:
   virtual ~vidpro1_shockshape_storage(){}
 
   //: Returns the type string "shockshape"
-  virtual vcl_string type() const { return "shockshape"; }
+  virtual std::string type() const { return "shockshape"; }
 
   //: Return IO version number;
   short version() const;
@@ -49,14 +49,14 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro1_shockshape_storage"; }
+  virtual std::string is_a() const { return "vidpro1_shockshape_storage"; }
 
   //: Return smart pointer to the shockshape object
   shockshape_sptr get_shockshape(){return shockshape_;}
   //: set the shockshape object
   void set_shockshape(const shockshape_sptr& shockshape_sp){shockshape_ = shockshape_sp;};
   
-  // vcl_vector< vsol_spatial_object_2d_sptr > shock_line;
+  // std::vector< vsol_spatial_object_2d_sptr > shock_line;
   
 protected:
   shockshape_sptr shockshape_;

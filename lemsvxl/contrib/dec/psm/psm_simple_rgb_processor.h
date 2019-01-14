@@ -46,24 +46,24 @@ public:
 
   static void init_appearance(psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype const& mean, float variance, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model);
 
-  static void compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const&vis, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma = 0.1f);
+  static void compute_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const&vis, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma = 0.1f);
 
-  static void update_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma = 0.1f);
+  static void update_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma = 0.1f);
 
-  static void finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model);
+  static void finalize_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model);
 
 private:
 
   static void obs_to_vector(psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype const& obs, vnl_vector_fixed<float,3> &v);
   static void vector_to_obs(vnl_vector_fixed<float,3> const& v, psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype &obs);
 
-  static void compute_gaussian_params(vcl_vector<vnl_vector_fixed<float,3> > const& obs, vcl_vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &sigma);
+  static void compute_gaussian_params(std::vector<vnl_vector_fixed<float,3> > const& obs, std::vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &sigma);
 
   static float sigma_norm_factor(unsigned int nobs);
 
 };
 
-vcl_ostream& operator<<(vcl_ostream &os, psm_simple_rgb const& apm);
+std::ostream& operator<<(std::ostream &os, psm_simple_rgb const& apm);
 
 
 #endif // psm_simple_rgb_processor_h_

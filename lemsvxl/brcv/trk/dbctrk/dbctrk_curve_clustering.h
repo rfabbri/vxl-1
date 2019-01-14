@@ -12,10 +12,10 @@
 // Output : clusters of curves have similar transformation.
 
 #include <dbctrk/dbctrk_tracker_curve_sptr.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <utility>
+#include <string>
+#include <map>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vgl/vgl_fwd.h>
 
@@ -48,7 +48,7 @@ class dbctrk_curve_cluster
   dbctrk_curve_cluster();
   ~dbctrk_curve_cluster() {}
   // list of member curves of a cluster
-  vcl_vector<dbctrk_tracker_curve_sptr>  curve_cluster_;
+  std::vector<dbctrk_tracker_curve_sptr>  curve_cluster_;
   // representative of the cluster
   dbctrk_tracker_curve_sptr prototype;
 
@@ -93,15 +93,15 @@ class dbctrk_curve_clustering
   //: computing transformation a curve given a T
   double compute_likelihood_distance(int i,int j);
   void compute_transformation
-    (vcl_vector<vgl_point_2d<double> > p,
-     vcl_vector<vgl_point_2d<double> > & tp,
+    (std::vector<vgl_point_2d<double> > p,
+     std::vector<vgl_point_2d<double> > & tp,
      vnl_matrix<double> R,vnl_matrix<double> T,double s);
   //: initializing clusters with each curve
-  void init_clusters(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets);
+  void init_clusters(std::vector<dbctrk_tracker_curve_sptr> * curve_sets);
   //: build distance table
   void build_table();
   //: clustering curves 
-  void cluster_curves(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets);
+  void cluster_curves(std::vector<dbctrk_tracker_curve_sptr> * curve_sets);
   //: to get the minimum distance paired
   bool return_min(int &mini, int &minj, double & min_cost);
   //: computes the distance between two clusters using the effect of transformation
@@ -110,28 +110,28 @@ class dbctrk_curve_clustering
   // after they are transformed using each others transformation
   double compute_euclidean_dist(int i,int j);
   //: get the moving object clusters
-  void get_moving_objects(int frame_no,vcl_vector<vcl_vector<dbctrk_tracker_curve_sptr> > & curves_on_objects);
+  void get_moving_objects(int frame_no,std::vector<std::vector<dbctrk_tracker_curve_sptr> > & curves_on_objects);
   void clustering();
-  bool build_network(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets);
+  bool build_network(std::vector<dbctrk_tracker_curve_sptr> * curve_sets);
   double compute_vector_distance(int i,int j);
 
   //: compute hausdorff distance between two point sets
-  double compute_hausdorff_distance(vcl_vector<vgl_point_2d<double> > curve1,
-            vcl_vector<vgl_point_2d<double> > curve2);
+  double compute_hausdorff_distance(std::vector<vgl_point_2d<double> > curve1,
+            std::vector<vgl_point_2d<double> > curve2);
   //: list of clusters
-  vcl_vector<dbctrk_curve_cluster> clusters_;
+  std::vector<dbctrk_curve_cluster> clusters_;
   //: lookup table for distance between two curves
-  vcl_map<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>,double> distance_table;
-  void write_distance_table(vcl_string filename,vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets);
+  std::map<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>,double> distance_table;
+  void write_distance_table(std::string filename,std::vector<dbctrk_tracker_curve_sptr> * curve_sets);
   private:
 
-  double compute_mean(vcl_vector<double> t);
-  double compute_std(vcl_vector<double> t);
-  double median(vcl_vector<double> vec);
-  double min(vcl_vector<double> vec);
-  double max(vcl_vector<double> vec);
+  double compute_mean(std::vector<double> t);
+  double compute_std(std::vector<double> t);
+  double median(std::vector<double> vec);
+  double min(std::vector<double> vec);
+  double max(std::vector<double> vec);
   double thresh_;
-  vcl_map<dbctrk_tracker_curve_sptr,int> mapping_;
+  std::map<dbctrk_tracker_curve_sptr,int> mapping_;
   
   int no_of_clusters_;
   double min_cost_threshold_;

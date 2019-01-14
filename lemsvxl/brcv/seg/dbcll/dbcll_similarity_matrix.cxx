@@ -7,7 +7,7 @@
 
 
 #include "dbcll_similarity_matrix.h"
-#include <vcl_vector.h>
+#include <vector>
 
 
 //: Constructor
@@ -25,12 +25,12 @@ unsigned
 dbcll_similarity_matrix::reduce(unsigned i1, unsigned i2, unsigned s1, unsigned s2)
 {
   if(i1 > i2){
-    vcl_swap(i1,i2);
-    vcl_swap(s1,s2);
+    std::swap(i1,i2);
+    std::swap(s1,s2);
   }
   double st = s1+s2;
-  vcl_vector<unsigned>::iterator to_remove = valid_idx_.end();
-  for(vcl_vector<unsigned>::iterator i=valid_idx_.begin(); i!=valid_idx_.end(); ++i)
+  std::vector<unsigned>::iterator to_remove = valid_idx_.end();
+  for(std::vector<unsigned>::iterator i=valid_idx_.begin(); i!=valid_idx_.end(); ++i)
   {
     unsigned i3 = *i;
     if(i3 == i2){
@@ -80,8 +80,8 @@ void dbcll_precompute_cluster::merge(const dbcll_cluster& other)
 
 
 
-vcl_vector<dbcll_cluster_sptr>
-dbcll_precompute_similarity(const vcl_vector<dbcll_cluster_sptr>& clusters)
+std::vector<dbcll_cluster_sptr>
+dbcll_precompute_similarity(const std::vector<dbcll_cluster_sptr>& clusters)
 {
   const unsigned num = clusters.size();
   dbcll_similarity_matrix_sptr sim_matrix(new dbcll_similarity_matrix(num));
@@ -93,7 +93,7 @@ dbcll_precompute_similarity(const vcl_vector<dbcll_cluster_sptr>& clusters)
     }
   }
 
-  vcl_vector<dbcll_cluster_sptr> new_clusters;
+  std::vector<dbcll_cluster_sptr> new_clusters;
   for(unsigned i=0; i<num; ++i){
     new_clusters.push_back(new dbcll_precompute_cluster(clusters[i]->key_index(),
                                                         sim_matrix, i));

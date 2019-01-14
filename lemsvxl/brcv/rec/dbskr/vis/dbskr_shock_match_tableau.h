@@ -60,7 +60,7 @@ public:
   dbskr_sm_cor_sptr get_sm_cor(void) { return sm_cor_; }
 
   //: write out the shock curve alignment map onto a text file
-  void write_shock_alignment(vcl_vector<vcl_pair<int,int> > align, vcl_string fname);
+  void write_shock_alignment(std::vector<std::pair<int,int> > align, std::string fname);
 
   void draw_render();
   void draw_original_shock_graphs();
@@ -68,7 +68,7 @@ public:
   void draw_box(vsol_box_2d_sptr box);
 
   void draw_boundary_curves(dbskr_scurve_sptr sk_path, int color, double off_x, double off_y);
-  void draw_shock_graph(dbsk2d_shock_graph_sptr sg, vcl_map<int, int> &edge_color_map, double off_x, double off_y);
+  void draw_shock_graph(dbsk2d_shock_graph_sptr sg, std::map<int, int> &edge_color_map, double off_x, double off_y);
   void draw_visual_frags(dbskr_scurve_sptr sk_path, int color, double off_x, double off_y);
   void draw_intrinsic_coords(dbskr_scurve_sptr sk_path, int color, double off_x, double off_y);
 

@@ -1,9 +1,9 @@
 //: This is lemsvxlsrc/brcv/shp/dbmsh3d/vis/dbmsh3d_cmdproc.h
 //  Creation: Feb 12, 2007   Ming-Ching Chang
 
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <cstdlib>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -79,8 +79,8 @@ bool dbmsh3d_check_cmdproc (dbmsh3d_pro_vis* pv, int argc, char **argv)
     //Default Viewer: try to open the argv[1] file and visualize it.
     //Assume the first parameter specifies the file to display.
     if (argc>1 && argv[1][0] != '-') {      
-      vcl_string dirfile = buld_get_dir_file (argv[1]);
-      vcl_string suffix = buld_get_suffix (argv[1]);
+      std::string dirfile = buld_get_dir_file (argv[1]);
+      std::string suffix = buld_get_suffix (argv[1]);
       if (suffix == ".p3d") {
         pv->b_view_p3d_ = true;
         pv->set_dir_file (dirfile);
@@ -223,7 +223,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
       vgl_box_3d<double> bbox;
       detect_bounding_box (pv->mesh(), bbox);
-      vcl_cout << bbox;
+      std::cout << bbox;
 
       dbmsh3d_pro_contiune = true;
       dbmsh3d_app_window_title += " -- " + pv->dir_file();
@@ -252,7 +252,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_xyz_) {
     pv->reset_mesh ();
     if (pv->load_xyz() == false) {   
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -261,7 +261,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
       vgl_box_3d<double> bbox;
       detect_bounding_box (pv->mesh(), bbox);
-      vcl_cout << bbox;
+      std::cout << bbox;
 
       dbmsh3d_pro_contiune = true;
       dbmsh3d_app_window_title += " -- " + pv->dir_file();
@@ -274,7 +274,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyzn1_file()));
   }
   if (pv->b_view_xyzn1_) {
-    vcl_string xyzn1_file = pv->dir_file() + ".xyzn1";
+    std::string xyzn1_file = pv->dir_file() + ".xyzn1";
     pv->set_pro_data (dbmsh3d_pro::PD_ORIPTS);
     pv->oripts().clear();
 
@@ -282,7 +282,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       dbmsh3d_pro_contiune = true;
 
     if (dbmsh3d_pro_contiune == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -300,12 +300,12 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   }
   if (pv->b_view_xyznw_) {
     pv->set_pro_data (dbmsh3d_pro::PD_ORIPTS);
-    vcl_string xyznw_file = pv->dir_file() + ".xyznw";
+    std::string xyznw_file = pv->dir_file() + ".xyznw";
     if (dbmsh3d_load_xyznw (pv->oripts(), xyznw_file.c_str()))
       dbmsh3d_pro_contiune = true;
 
     if (dbmsh3d_pro_contiune == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -323,12 +323,12 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   }
   if (pv->b_view_pts_) {
     pv->set_pro_data (dbmsh3d_pro::PD_MESH);
-    vcl_string pts_file = pv->dir_file() + ".pts";
+    std::string pts_file = pv->dir_file() + ".pts";
     if (dbmsh3d_load_pts (pv->mesh(), pts_file.c_str()))
       dbmsh3d_pro_contiune = true;
 
     if (dbmsh3d_pro_contiune == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -370,7 +370,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
         //-l: DCS_psi step size.
         //-thr: th_ratio.
         float DCS_psi = dbmsh3d_cmd_len(); //default step size: 1
-        vul_printf (vcl_cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
+        vul_printf (std::cout, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
                     nstep, DCS_psi, dbmsh3d_cmd_thr());
 
         //Estimate intra- and inter- scanline sample distance.
@@ -441,7 +441,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   
       //-o3pi: output 3pi file.
       if (dbmsh3d_cmd_3pi_ofile()) {
-        vcl_string file_3pi = buld_get_dir_file (dbmsh3d_cmd_3pi_ofile()) + ".3pi";
+        std::string file_3pi = buld_get_dir_file (dbmsh3d_cmd_3pi_ofile()) + ".3pi";
         dbmsh3d_save_sg3pi (pv->sg3pi(), file_3pi.c_str());
       }
 
@@ -463,7 +463,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   }
   if (pv->b_view_ply_) {
     if (pv->load_ply () == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -514,7 +514,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_ply2_) {
     pv->reset_mesh ();
     if (pv->load_ply2 (pv->dir_file()) == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {     
@@ -564,7 +564,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_off_) {
     pv->reset_mesh ();
     if (pv->load_off (pv->dir_file()) == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {    
@@ -608,7 +608,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_obj_) {
     pv->reset_mesh ();
     if (pv->load_obj (pv->dir_file()) == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {    
@@ -652,7 +652,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_m_) {
     pv->reset_mesh ();
     if (pv->load_m (pv->dir_file()) == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {    
@@ -728,7 +728,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (pv->b_view_vtk_) {
     pv->reset_mesh ();
     if (pv->load_vtk (pv->dir_file()) == false) {
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", pv->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {     
@@ -776,17 +776,17 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (dbmsh3d_cmd_fix_af() != 0) {
     //Read in the alignment matrix file.
     pv->set_dir_prefix (dbmsh3d_cmd_fileprefix());
-    vcl_string file_af = pv->dir_prefix() + ".txt";
+    std::string file_af = pv->dir_prefix() + ".txt";
     pv->load_hmatrix (file_af);
 
     //Fix orientation
     pv->fix_hmatrix_orient ();
 
     //Save to "f_fixed.txt"
-    vcl_string af_new = pv->dir_prefix() + "_fixed.txt";
+    std::string af_new = pv->dir_prefix() + "_fixed.txt";
     dbmsh3d_write_xform_file (af_new, pv->hmatrix());
 
-    vul_printf (vcl_cout, "\n\n Alignment file %s saved.\n", af_new.c_str());
+    vul_printf (std::cout, "\n\n Alignment file %s saved.\n", af_new.c_str());
     dbmsh3d_cmd_gui() = 0;
   }
   //############### Texture Mapping the Mesh ###############  
@@ -802,7 +802,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
     //texture mapping on face 1443 using file texture_1443.png
     dbmsh3d_textured_face_mc* F = (dbmsh3d_textured_face_mc*) M->facemap(1443);
-    vcl_string texture_img = pv->dir_file() + "_texture_1443.png";
+    std::string texture_img = pv->dir_file() + "_texture_1443.png";
     F->set_tex_map_uri (texture_img);
 
     _root->addChild (draw_F_textured (F));
@@ -828,19 +828,19 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     pv->set_pro_data (dbmsh3d_pro::PD_IDPTS);    
     int pro_option = 0;
 
-    vcl_string xyz_file = pv->dir_file() + ".xyz";
+    std::string xyz_file = pv->dir_file() + ".xyz";
     if (dbmsh3d_load_xyz (pv->idpts(), xyz_file.c_str()))
       pro_option = 1;
 
     if (pro_option == 0) {
-      vcl_string p3d_file = pv->dir_file() + ".p3d";
+      std::string p3d_file = pv->dir_file() + ".p3d";
       if (dbmsh3d_load_p3d (pv->idpts(), p3d_file.c_str()))
         pro_option = 2;
     }
 
     if (pro_option == 0) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix().c_str());
     }
     else {
       if (dbmsh3d_cmd_dup()==1) { //-dup 1: bucketing + dup checking
@@ -852,11 +852,11 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
         check_dup_pts (pv->idpts());
 
       if (pro_option == 1) {
-        vcl_string xyz_file = pv->dir_prefix() + "_nodup.xyz";
+        std::string xyz_file = pv->dir_prefix() + "_nodup.xyz";
         dbmsh3d_save_xyz (pv->idpts(), xyz_file.c_str());
       }
       else if (pro_option == 2) {
-        vcl_string p3d_file = pv->dir_prefix() + "_nodup.p3d";
+        std::string p3d_file = pv->dir_prefix() + "_nodup.p3d";
         dbmsh3d_save_p3d (pv->idpts(), p3d_file.c_str());
       }
 
@@ -876,16 +876,16 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       detect_bounding_box (pv->mesh(), bbox);
     }
     else {
-      vul_printf (vcl_cout, "\nError: can't load file %u.\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "\nError: can't load file %u.\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
 
     if (dbmsh3d_cmd_minx()==FLT_MAX && dbmsh3d_cmd_miny()==FLT_MAX && dbmsh3d_cmd_minz()==FLT_MAX && 
         dbmsh3d_cmd_maxx()==FLT_MIN && dbmsh3d_cmd_maxy()==FLT_MIN && dbmsh3d_cmd_maxz()==FLT_MIN) {
       //-crop 1 without specifying min/max: display bounding box.
-      vul_printf (vcl_cout, "\n bounding box min: (%lf, %lf, %lf) - \n",
+      vul_printf (std::cout, "\n bounding box min: (%lf, %lf, %lf) - \n",
                   bbox.min_x(), bbox.min_y(), bbox.min_z());
-      vul_printf (vcl_cout, "              max: (%lf, %lf, %lf).\n",                    
+      vul_printf (std::cout, "              max: (%lf, %lf, %lf).\n",                    
                   bbox.max_x(), bbox.max_y(), bbox.max_z());
     }
     else { //crop the data, if min/max not specified, use bounding box.*/
@@ -948,7 +948,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (dbmsh3d_cmd_cclab()) {
     pv->reset_mesh();
     if (pv->load_meshes_files () == false) {
-      vul_printf (vcl_cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -965,7 +965,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (dbmsh3d_cmd_rmet()==1) {
     pv->reset_mesh();
     if (pv->load_meshes_files () == false) {
-      vul_printf (vcl_cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -988,7 +988,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     bool load_file_success = false;
     //currently only handle points.
     if (pv->load_points_files () == false) {
-      vul_printf (vcl_cout, "\nError: can't load %s.\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "\nError: can't load %s.\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -1012,11 +1012,11 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   }
   //############### Bucketing the Point Cloud ###############
   if (dbmsh3d_cmd_bkt()==1 || dbmsh3d_cmd_bkt()==3) {
-    //Store slices of points in vcl_vector<vcl_pair<id, pt> >.
+    //Store slices of points in std::vector<std::pair<id, pt> >.
     pv->set_pro_data (dbmsh3d_pro::PD_PTS);
 
-    vcl_string xyz_file = pv->dir_prefix() + ".xyz";
-    vcl_string p3d_file = pv->dir_prefix() + ".p3d";
+    std::string xyz_file = pv->dir_prefix() + ".xyz";
+    std::string p3d_file = pv->dir_prefix() + ".p3d";
     if (dbmsh3d_load_xyz (pv->pts(), xyz_file.c_str()))
       dbmsh3d_pro_contiune = true;
     else if (dbmsh3d_load_p3d (pv->pts(), p3d_file.c_str()))
@@ -1024,7 +1024,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
     if (dbmsh3d_pro_contiune == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix().c_str());
     }
     else {      
       if (dbmsh3d_cmd_bkt()==1) //-bktbr: box ratio 
@@ -1047,7 +1047,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       //copy pv->pts() to pv->oripts()
       assert (pv->oripts().size() == 0);
       for (unsigned int i=0; i<pv->pts().size(); i++) {
-        vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > oript;
+        std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > oript;
         oript.first.set (pv->pts(i).x(), pv->pts(i).y(), pv->pts(i).z());
         pv->oripts().push_back (oript);
       }
@@ -1062,7 +1062,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       assert (pv->oripts().size() == 0);
       for (unsigned int i=0; i<pv->mesh()->vertexmap().size(); i++) {
         dbmsh3d_vertex* V = pv->mesh()->vertexmap (i);
-        vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > oript;
+        std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > oript;
         oript.first.set (V->pt().x(), V->pt().y(), V->pt().z());
         pv->oripts().push_back (oript);
       }
@@ -1080,7 +1080,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-tri 1: triangulate the mesh
   if (dbmsh3d_cmd_meshtri()) { 
     if (dbmsh3d_pro_contiune == false) {
-      vul_printf (vcl_cout, "Error in -tri: specify input mesh file.\n");
+      vul_printf (std::cout, "Error in -tri: specify input mesh file.\n");
     }
     else {
       dbmsh3d_mesh* tri_mesh = generate_tri_mesh (pv->mesh());
@@ -1098,7 +1098,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   if (dbmsh3d_cmd_ssim()!=0) { 
     pv->reset_mesh();
     if (pv->load_meshes_files () == false) {
-      vul_printf (vcl_cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
+      vul_printf (std::cout, "\nError: can't load %s\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -1145,17 +1145,17 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
                 dbmsh3d_cmd_ptb(), pv->dir_prefix().c_str());
 
       //Visualize the simulated scans and save list file.
-      vcl_vector<vcl_string> list_3pi;
-      vcl_vector<vcl_string> list_af;
+      std::vector<std::string> list_3pi;
+      std::vector<std::string> list_af;
 
       pv->reset_sg3pi ();
       for (int i = dbmsh3d_cmd_n1(); i <= dbmsh3d_cmd_n2(); i++) {
-        vcl_string file_3pi = vul_sprintf ("%s_scan_%02d.3pi", pv->dir_prefix().c_str(), i);
+        std::string file_3pi = vul_sprintf ("%s_scan_%02d.3pi", pv->dir_prefix().c_str(), i);
         list_3pi.push_back (file_3pi);
         bool result = dbmsh3d_load_sg3pi (pv->sg3pi(), file_3pi.c_str());
         assert (result);
 
-        vcl_string file_af = vul_sprintf ("%s_scan_%02d.txt", pv->dir_prefix().c_str(), i);
+        std::string file_af = vul_sprintf ("%s_scan_%02d.txt", pv->dir_prefix().c_str(), i);
         list_af.push_back (file_af);
         pv->load_hmatrix (file_af);
         pv->set_pro_data (dbmsh3d_pro_base::PD_SG3PI);
@@ -1168,11 +1168,11 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       }
 
       //Save list file for all simulated scans.
-      vcl_string list_file = vul_sprintf ("%s_scan_sim_list.txt", pv->dir_prefix().c_str());
+      std::string list_file = vul_sprintf ("%s_scan_sim_list.txt", pv->dir_prefix().c_str());
       dbmsh3d_save_list_file (list_file, list_3pi, list_af);
 
       //Save list view run file.      
-      vcl_string list_view_run = vul_sprintf ("%s_scan_sim_list_view.bat", pv->dir_prefix().c_str());
+      std::string list_view_run = vul_sprintf ("%s_scan_sim_list_view.bat", pv->dir_prefix().c_str());
       dbmsh3d_save_list_view_run_file (list_view_run, list_file);
     }    
   }    
@@ -1186,7 +1186,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-fmm 1
   if (dbmsh3d_cmd_fmm()) {
     pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_fileprefix()));
-    vcl_string suffix = buld_get_suffix (dbmsh3d_cmd_fileprefix());
+    std::string suffix = buld_get_suffix (dbmsh3d_cmd_fileprefix());
 
     //: read in the mesh file
     pv->load_ply2_fmm ();
@@ -1196,12 +1196,12 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
     //: for multiple sources, randomly generate NS of sources
     //  if needed, randomly generate the source and ending vertex.
-    vcl_srand ( (unsigned int) vcl_time(NULL) );
+    std::srand ( (unsigned int) std::time(NULL) );
     unsigned int vsize = pv->fmm_mesh()->vertexmap().size();
 
     for (int i=0; i<dbmsh3d_cmd_ns(); i++) {
-      double random = (double) vcl_rand() / RAND_MAX;
-      int idx = (int) vcl_floor (random * vsize);
+      double random = (double) std::rand() / RAND_MAX;
+      int idx = (int) std::floor (random * vsize);
 
       //: if the sV specified
       if (i==0 && dbmsh3d_cmd_s()!=-1)
@@ -1210,7 +1210,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       dbmsh3d_fmm_vertex_3d* src_vertex = (dbmsh3d_fmm_vertex_3d*) pv->fmm_mesh()->vertexmap (idx);
       pv->fmm_mesh()->add_source_vertex (src_vertex);
 
-      vul_printf (vcl_cout, "The starting vertex[%d]: id[%d] (%.16f %.16f %.16f)\n",
+      vul_printf (std::cout, "The starting vertex[%d]: id[%d] (%.16f %.16f %.16f)\n",
                    i, src_vertex->id(),
                    src_vertex->pt().x(), 
                    src_vertex->pt().y(), 
@@ -1227,8 +1227,8 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
     //: The ending vertex for back-tracking of the geodesic shortest path.
     for (int i=0; i<dbmsh3d_cmd_ne(); i++) {
-      double random = (double) vcl_rand() / RAND_MAX;
-      int idx = (int) vcl_floor (random * vsize);
+      double random = (double) std::rand() / RAND_MAX;
+      int idx = (int) std::floor (random * vsize);
 
       //: if the eV specified
       if (i==0 && dbmsh3d_cmd_e()!=-1)
@@ -1236,7 +1236,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
       dbmsh3d_fmm_vertex_3d* ending_vertex = (dbmsh3d_fmm_vertex_3d*) pv->fmm_mesh()->vertexmap (idx);
     
-      vul_printf (vcl_cout, "The ending vertex[%d]: id[%d] (%.16f %.16f %.16f)\n", 
+      vul_printf (std::cout, "The ending vertex[%d]: id[%d] (%.16f %.16f %.16f)\n", 
                    i, ending_vertex->id(), 
                    ending_vertex->pt().x(), 
                    ending_vertex->pt().y(), 
@@ -1249,15 +1249,15 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
       geodesic_tracker.back_track_geodesic (ending_vertex);
 
       //: put the result in the geodesic_path_points.
-      vcl_vector<vgl_point_3d<double> > geodesic_path_points;
+      std::vector<vgl_point_3d<double> > geodesic_path_points;
       geodesic_path_points.clear();
       geodesic_tracker.get_geodesic_polyline (geodesic_path_points);
 
       if (i==0) {
-        vul_printf (vcl_cout, "\nThe (first) geodesic shortest path (e -> s):\n");
+        vul_printf (std::cout, "\nThe (first) geodesic shortest path (e -> s):\n");
         for (unsigned int i=0; i<geodesic_path_points.size(); i++) {
           vgl_point_3d<double> p = geodesic_path_points[i];
-          vul_printf (vcl_cout, "\t(%lf, %lf, %lf)\n", p.x(), p.y(), p.z());
+          vul_printf (std::cout, "\t(%lf, %lf, %lf)\n", p.x(), p.y(), p.z());
         }
       }
 
@@ -1277,14 +1277,14 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   /*if (dbgdt3d_cmd_shp()) {
     //
     if (pv->load_meshes_files() == false) {
-      vul_printf (vcl_cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix());
+      vul_printf (std::cout, "ERROR:\t File %s Not Found!\n", pv->dir_prefix());
     }
     else {
       //-s: src
       //-e: dest
       int src = dbmsh3d_cmd_s();
       int dest = dbmsh3d_cmd_e();
-      vcl_vector<dbmsh3d_edge*> Edges;
+      std::vector<dbmsh3d_edge*> Edges;
 
       pv->mesh()->IFS_to_MHE();
       bool result = find_shortest_Es_on_M (pv->mesh(), src, dest, Edges);
@@ -1342,69 +1342,69 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //##########################################################################
 
   //########################### Save Output Files ############################
-  vcl_string dirfile;  
+  std::string dirfile;  
   if (dbmsh3d_cmd_p3d_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_p3d_ofile());
     dirfile += ".p3d";
-    vul_printf (vcl_cout, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile.c_str());
     pv->save_p3d (dirfile);
   }
   if (dbmsh3d_cmd_g3d_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_g3d_ofile());
     dirfile += ".g3d";
-    vul_printf (vcl_cout, "Writing color point cloud file (*.g3d) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing color point cloud file (*.g3d) %s...\n", dirfile.c_str());
     pv->save_g3d (dirfile);
   }
   if (dbmsh3d_cmd_xyz_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_xyz_ofile());
     dirfile += ".xyz";
-    vul_printf (vcl_cout, "Writing ASCII point cloud file (*.xyz) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing ASCII point cloud file (*.xyz) %s...\n", dirfile.c_str());
     pv->save_xyz (dirfile);
   }
   if (dbmsh3d_cmd_xyzn1_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_xyzn1_ofile());
     dirfile += ".xyzn1";
-    vul_printf (vcl_cout, "Writing oriented point cloud file (*.xyzn1) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing oriented point cloud file (*.xyzn1) %s...\n", dirfile.c_str());
     pv->save_xyzn1 (dirfile);
   }
   if (dbmsh3d_cmd_xyznw_ofile()) {
-    ///vul_printf (vcl_cout, "Writing Oriented Point Cloud (*.xyznw) file %s...\n", dbmsh3d_cmd_xyznw_ofile());
-    ///pv->save_xyznw (vcl_string (dbmsh3d_cmd_xyznw_ofile()) + ".xyznw");
+    ///vul_printf (std::cout, "Writing Oriented Point Cloud (*.xyznw) file %s...\n", dbmsh3d_cmd_xyznw_ofile());
+    ///pv->save_xyznw (std::string (dbmsh3d_cmd_xyznw_ofile()) + ".xyznw");
   }
   if (dbmsh3d_cmd_ply_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofile());
     dirfile += ".ply";
-    vul_printf (vcl_cout, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile.c_str());
     pv->save_ply (dirfile, true);
   }
   if (dbmsh3d_cmd_ply_ofileb()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofileb());
     dirfile += ".ply";
-    vul_printf (vcl_cout, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile.c_str());
     pv->save_ply (dirfile, false);
   }
   if (dbmsh3d_cmd_ply2_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_ply2_ofile());
     dirfile += ".ply2";
-    vul_printf (vcl_cout, "Writing ASCII PLY2 mesh file (*.ply2) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing ASCII PLY2 mesh file (*.ply2) %s...\n", dirfile.c_str());
     pv->save_ply2 (dirfile);
   }
   if (dbmsh3d_cmd_off_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_off_ofile());
     dirfile += ".off";
-    vul_printf (vcl_cout, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile.c_str());
     pv->save_off (dirfile);
   }
   if (dbmsh3d_cmd_obj_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_obj_ofile());
     dirfile += ".obj";
-    vul_printf (vcl_cout, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile.c_str());
     pv->save_obj (dirfile);
   }
   if (dbmsh3d_cmd_vtk_ofile()) {
     dirfile = buld_get_dir_file (dbmsh3d_cmd_vtk_ofile());
     dirfile += ".vtk";
-    vul_printf (vcl_cout, "Writing VTK mesh file (*.vtk) %s...\n", dirfile.c_str());
+    vul_printf (std::cout, "Writing VTK mesh file (*.vtk) %s...\n", dirfile.c_str());
     pv->save_vtk (dirfile);
   }
   
@@ -1446,7 +1446,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     f0->_add_vertex (v[2], vgl_point_2d<double> (v[2]->pt().x(), v[2]->pt().y()));
     f0->_add_vertex (v[3], vgl_point_2d<double> (v[3]->pt().x(), v[3]->pt().y()));
 
-    vcl_string texture_filename = "texture.png";
+    std::string texture_filename = "texture.png";
     f0->set_tex_map_uri (texture_filename);
 
     ///vis = new SoSeparator;
@@ -1524,11 +1524,11 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     vis = draw_filled_polygon (vertices, 3, SbColor(0.5f, 0.5f, 0.5f), 0.0f); //Gray
     _root->addChild (vis);*/
 
-    /*vcl_string file_ply = "15.ply";
+    /*std::string file_ply = "15.ply";
     pv->load_ply (file_ply);
 
     //: y -> -y, z -> -z.
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pv->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pv->mesh()->vertexmap().begin();
     for (; it != pv->mesh()->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
       vgl_point_3d<double> P (V->pt().x(), -V->pt().y(), -V->pt().z());
@@ -1539,14 +1539,14 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     pv->mesh()->build_face_IFS ();
     _root->addChild (pv->vis_mesh (false, dbmsh3d_cmd_shapehints(), dbmsh3d_cmd_colorcode()));
 
-    vcl_string file_3pi = "15.3pi";
+    std::string file_3pi = "15.3pi";
     dbmsh3d_load_sg3pi (pv->sg3pi(), file_3pi.c_str());
     pv->reset_mesh();
     build_mesh_vertices_3pi (pv->sg3pi(), pv->mesh());   
     pv->set_pro_data (dbmsh3d_pro::PD_MESH);
     _root->addChild (pv->vis_ptset (3, dbmsh3d_cmd_idv()!=0));*/
 
-    /*vul_printf (vcl_cout, "Test Coin3D controls......\n");
+    /*vul_printf (std::cout, "Test Coin3D controls......\n");
     
     SoSeparator * group = new SoSeparator;
 
@@ -1596,8 +1596,8 @@ void dbmsh3d_save_vis_to_iv_wrl (SoSeparator* _root)
 {
   //Save Visualization Output Files
   if (dbmsh3d_cmd_iv_ofile()) {
-    vul_printf (vcl_cout, "Writing OpenInventor IV (*.iv) file %s...\n", dbmsh3d_cmd_iv_ofile());
-    bgui3d_export_iv (_root, vcl_string (dbmsh3d_cmd_iv_ofile()) + ".iv");
+    vul_printf (std::cout, "Writing OpenInventor IV (*.iv) file %s...\n", dbmsh3d_cmd_iv_ofile());
+    bgui3d_export_iv (_root, std::string (dbmsh3d_cmd_iv_ofile()) + ".iv");
   }
   if (dbmsh3d_cmd_iv_ofilebin()) {
     ////writeIV (_root, dbmsh3d_cmd_iv_ofilebin(), false);
@@ -1608,7 +1608,7 @@ void dbmsh3d_save_vis_to_iv_wrl (SoSeparator* _root)
     SoNode *_VRMLroot = tovrml.getVRMLSceneGraph(); //THERE ARE SOME PROBLEM HERE!
     _VRMLroot->ref();
 
-    vul_printf (vcl_cout, "Writing VRML (*.wrl) file %s...\n", dbmsh3d_cmd_wrl_ofile());
+    vul_printf (std::cout, "Writing VRML (*.wrl) file %s...\n", dbmsh3d_cmd_wrl_ofile());
 
     SoOutput out;
     out.openFile (dbmsh3d_cmd_wrl_ofile());
@@ -1625,7 +1625,7 @@ void dbmsh3d_save_vis_to_iv_wrl (SoSeparator* _root)
     SoVRMLGroup *_VRML2root = tovrml2.getVRML2SceneGraph();
     _VRML2root->ref();
   
-    vul_printf (vcl_cout, "Writing VRML2 (*.wrl) file %s...\n", dbmsh3d_cmd_wrl_ofile2());
+    vul_printf (std::cout, "Writing VRML2 (*.wrl) file %s...\n", dbmsh3d_cmd_wrl_ofile2());
   
     SoOutput out;
     out.openFile (dbmsh3d_cmd_wrl_ofile2());

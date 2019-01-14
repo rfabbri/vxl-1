@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_tracking_face_2d.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vbl/vbl_array_1d.h>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
@@ -31,22 +31,22 @@ static void test_features(int argc, char* argv[])
   vsol_point_2d_sptr p0 = new vsol_point_2d(2,2);
   vsol_point_2d_sptr p1 = new vsol_point_2d(5,2);
   vsol_point_2d_sptr p2 = new vsol_point_2d(3.0,4.0);
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   vsol_polygon_2d_sptr poly = new vsol_polygon_2d(verts);
   //region geometry test
   dbinfo_region_geometry_sptr rg = new dbinfo_region_geometry(cols, rows, poly);
-  vcl_cout << "Number of points " << rg->size() << '\n';
+  std::cout << "Number of points " << rg->size() << '\n';
   brip_roi_sptr roi = rg->roi();
-  vcl_cout << "feature test image bounds [(" << roi->cmin(0) 
+  std::cout << "feature test image bounds [(" << roi->cmin(0) 
            << ' ' << roi->cmax(0) << ' ' << ")(" 
            << roi->rmin(0) << ' ' << roi->rmax(0) << ")]\n";
 
   TEST("region_geometry, roi ", rg&&rg->size()==6&&roi&&roi->cmax(0)==5, true);
 
   //Get the region points
-  vcl_vector<vgl_point_2d<unsigned> > points;
-  vcl_vector<bool> valid;
+  std::vector<vgl_point_2d<unsigned> > points;
+  std::vector<bool> valid;
   for(unsigned i = 0; i<rg->size(); ++i)
     {
       vgl_point_2d<float> fp = rg->point(i);
@@ -76,7 +76,7 @@ static void test_features(int argc, char* argv[])
       t_image(c,r) = image(r,c);
   good_scan = tifp->scan(1, points, valid, t_imgr);
   float info = dbinfo_observation_matcher::minfo(ifp->data(), tifp->data());
-  vcl_cout << "Intensity mutual information " << info << '\n';
+  std::cout << "Intensity mutual information " << info << '\n';
   TEST_NEAR("Test intensity mutual information ",
             info, 0.143156, 1e-7);
 
@@ -108,12 +108,12 @@ static void test_features(int argc, char* argv[])
   vil_image_view<unsigned char> cimage_roi = roi_resource->get_view();
   for(int r = 0; r<3; ++r)
     for(int c = 0; c<3; ++c)
-      vcl_cout << "cimage( "<< c << ' ' << r << ")= " << (unsigned)cimage_roi(c,r) << '\n';
+      std::cout << "cimage( "<< c << ' ' << r << ")= " << (unsigned)cimage_roi(c,r) << '\n';
   
 
   //reference the scan points to the origin of the expanded roi
   unsigned n_gpts = geom->size();
-  vcl_vector<vgl_point_2d<unsigned> > scan_points;
+  std::vector<vgl_point_2d<unsigned> > scan_points;
   valid.clear();
   for(unsigned i = 0; i<n_gpts; ++i)
     {
@@ -140,17 +140,17 @@ static void test_features(int argc, char* argv[])
   good_data = true;
   for(unsigned i = 0; i<scan_points.size(); ++i)
     {
-      vcl_cout << "P[" << i << "]=("<< scan_points[i].x() << ' ' 
+      std::cout << "P[" << i << "]=("<< scan_points[i].x() << ' ' 
                << scan_points[i].y() << ")   D[" << i << "]=( " << gv[i][0] << ' ' << gv[i][1]
                << ")   C[" << i << "]=( " << cgv[i][0] << ' ' 
                << cgv[i][1] <<  ")\n";
       good_data = good_data && gv[i][0]==cgv[i][0]&&gv[i][1]==cgv[i][1];
-      good_data = good_data && vcl_fabs(gv[i][0]-1.0)<0.001 && vcl_fabs(gv[i][1]-1.0)<0.001;
+      good_data = good_data && std::fabs(gv[i][0]-1.0)<0.001 && std::fabs(gv[i][1]-1.0)<0.001;
     }
 #endif
   TEST("dbinfo_gradient_feature::scan ", good_image&&good_scan, true);
 
-  vcl_vector<vbl_array_2d<float> > idata;
+  std::vector<vbl_array_2d<float> > idata;
   vbl_array_2d<float> vv(8,2,0.0f);
   vv[0][0]=1.0f;     vv[0][1]=0.0f;
   vv[1][0]=0.5f;   vv[1][1]=0.5f;
@@ -170,7 +170,7 @@ static void test_features(int argc, char* argv[])
   dbinfo_feature_data_base_sptr fd1 = 
     new dbinfo_feature_data<vbl_array_2d<float> >(pix_format, nplanes, f_format, idata);
   float minf = dbinfo_observation_matcher::minfo(fd0, fd1);
-  vcl_cout << "Gradient mutual information " << minf << '\n';
+  std::cout << "Gradient mutual information " << minf << '\n';
   TEST_NEAR("Test gradient mutual information ", minf, 3.0, 1e-6);
 
   //  Test Binary I/O
@@ -187,7 +187,7 @@ static void test_features(int argc, char* argv[])
   vsl_b_read(bp_in2, fb_in);
   bp_in2.close();
   if(fb_in)
-    vcl_cout << "recovered feature " << *fb_in << '\n';
+    std::cout << "recovered feature " << *fb_in << '\n';
   vpl_unlink ("test_feature_base_io.tmp");
   TEST("recover from generic feature base pointer ",
        fb_in->margin() , 10);

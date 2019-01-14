@@ -13,7 +13,7 @@
 // \endverbatim
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_cstddef.h>
+#include<cstddef>
 
 #include<vsl/vsl_binary_io.h>
 

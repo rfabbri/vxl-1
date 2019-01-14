@@ -90,8 +90,8 @@ vnl_vector<double > dbdet_compute_HOG(const vil_image_view<double >& Gx,
   vnl_vector<double > vv(num_bins, 0);
   for (int i =0; i < num_bins; ++i)
   {
-    uu(i) = vcl_cos((i+0.5)*angle_per_bin);
-    vv(i) = vcl_sin((i+0.5)*angle_per_bin);
+    uu(i) = std::cos((i+0.5)*angle_per_bin);
+    vv(i) = std::sin((i+0.5)*angle_per_bin);
   }
   
   // place holder for the histogram
@@ -189,7 +189,7 @@ double dbdet_compute_mean_gradient_magnitude(const vil_image_view<double >& Gx,
     }
   }
 
-  return vcl_sqrt(sum_mag2/(ni*nj));
+  return std::sqrt(sum_mag2/(ni*nj));
 }
 
 

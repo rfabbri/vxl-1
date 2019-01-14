@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <structure/dbseg_seg_storage.h>
@@ -25,7 +25,7 @@ dbseg_seg_save_view_process::dbseg_seg_save_view_process() : bpro1_process()
   if( !parameters()->add( "Filename" , "-filename", bpro1_filepath("","*") )  ||
       !parameters()->add( "Depth Level" , "-depth", (int)1 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -45,7 +45,7 @@ dbseg_seg_save_view_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_save_view_process::name()
+std::string dbseg_seg_save_view_process::name()
 {
   return "Save Segmentation View";
 }
@@ -60,10 +60,10 @@ dbseg_seg_save_view_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_view_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "seg" );
 
@@ -72,10 +72,10 @@ dbseg_seg_save_view_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_view_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -100,7 +100,7 @@ bool
 dbseg_seg_save_view_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_seg_save_view_process::execute() - "
+    std::cout << "In dbseg_seg_save_view_process::execute() - "
              << "not exactly one input seg structure \n";
     return false;
   }
@@ -115,7 +115,7 @@ dbseg_seg_save_view_process::execute()
   parameters()->get_value( "-depth" , depth );
     //seg_object* object = seg_stg->get_object();
     if (depth < 1 || depth > static_cast<dbseg_seg_object<vxl_byte>* >( seg_storage->get_object() )->get_max_depth()) {
-        vcl_cout << "In dbseg_seg_save_view_process::execute() - "
+        std::cout << "In dbseg_seg_save_view_process::execute() - "
              << "depth level not available \n";
         return false;
     }

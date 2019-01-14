@@ -5,7 +5,7 @@
 #ifndef dbsk3d_hypg_fmm_h_
 #define dbsk3d_hypg_fmm_h_
 
-#include <vcl_map.h>
+#include <map>
 #include <dbmsh3d/algo/dbmsh3d_fmm.h>
 #include <dbsk3d/dbsk3d_ms_hypg.h>
 
@@ -16,7 +16,7 @@ protected:
   dbsk3d_ms_hypg*       ms_hypg_;
   
   //: map between each shock sheet id and the corresponding fmm-mesh
-  vcl_map <int, dbmsh3d_fmm_mesh*> sheet_fmm_mesh_map_;
+  std::map <int, dbmsh3d_fmm_mesh*> sheet_fmm_mesh_map_;
 
 public:
   //###### Constructor/Destructor ######
@@ -24,7 +24,7 @@ public:
     ms_hypg_ = ms_hypg;
   }
   virtual ~dbsk3d_ms_hypg_fmm () {
-    vcl_map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map_.begin();
+    std::map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map_.begin();
     for (; it != sheet_fmm_mesh_map_.end(); it++) {
       dbmsh3d_fmm_mesh* fmm_mesh = (*it).second;
       delete fmm_mesh;
@@ -43,7 +43,7 @@ public:
     ms_hypg_ = ms_hypg;
   }
 
-  vcl_map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map() {
+  std::map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map() {
     return sheet_fmm_mesh_map_;
   }
 

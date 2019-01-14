@@ -7,8 +7,8 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/14/2008 03:19:50 AM EDT
 //
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vector>
 
 struct dbdet_bvis1_util {
@@ -18,14 +18,14 @@ struct dbdet_bvis1_util {
   // kind can be used to populate the frames over and over
   // TODO: std::vector<std::string> parameter for names
   static void
-  load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames, bool use_filename=false);
+  load_edgemaps_into_frames(const std::vector<std::string> &edgemaps_fnames, bool use_filename=false);
 
   //: Loads list of curve fragments into all frames. Doesn't add frames.
   // The idea is that the frames are added first, then many functions of this
   // kind can be used to populate the frames over and over
   // TODO: std::vector<std::string> parameter for names
   static void
-  load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames=false);
+  load_curve_frags_into_frames(const std::vector<std::string> &cfrags_fnames, bool use_filenames=false);
 
   //: Loads lists of images, edges and fragments into all frames.
   // - it will load all images, one per frame

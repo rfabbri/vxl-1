@@ -6,9 +6,9 @@
 #include <vil3d/vil3d_slice.h>
 #include <vil/vil_image_view.h>
 template<class T>
-T* sliceFileManager<T>::readHelper(const vcl_string& fname, int& ni, int& nj, int& nk)
+T* sliceFileManager<T>::readHelper(const std::string& fname, int& ni, int& nj, int& nk)
 {
-  vcl_ifstream in_stream(fname.c_str());
+  std::ifstream in_stream(fname.c_str());
   if(in_stream.good()){
     in_stream.read((char*)(&ni),sizeof(int));
     in_stream.read((char*)(&nj),sizeof(int));
@@ -19,32 +19,32 @@ T* sliceFileManager<T>::readHelper(const vcl_string& fname, int& ni, int& nj, in
     for(int i =0; i < nk; i++){
       in_stream.read((char*)(cur),ni*nj*sizeof(T));
       cur += ni*nj;
-      if(in_stream.eof()){ vcl_cerr << fname << " reached eof, slice " << i << "\n"; return 0;}
-      if(!in_stream.good()){ vcl_cerr << fname << " in_stream no longer good, slice " << i << "\n"; return 0;}
+      if(in_stream.eof()){ std::cerr << fname << " reached eof, slice " << i << "\n"; return 0;}
+      if(!in_stream.good()){ std::cerr << fname << " in_stream no longer good, slice " << i << "\n"; return 0;}
     }
 
     in_stream.close();
     return data;
   }
   else{
-    vcl_cerr << "Bad instream " << fname << "\n";
+    std::cerr << "Bad instream " << fname << "\n";
     return 0;
   }
 }
 
 template<class T>
-vil3d_image_view_base_sptr sliceFileManager<T>::read(const vcl_string& fname)
+vil3d_image_view_base_sptr sliceFileManager<T>::read(const std::string& fname)
 {
   int ni, nj, nk;
-  vcl_ifstream* in_stream = sliceFileManager<T>::openSliceFileForRead(fname,ni,nj,nk);
+  std::ifstream* in_stream = sliceFileManager<T>::openSliceFileForRead(fname,ni,nj,nk);
   if(in_stream){
     vil3d_image_view<T> * img = new vil3d_image_view<T>(ni,nj,nk,1);
     T* cur = img->origin_ptr();
     for(int i =0; i < nk; i++){
       in_stream->read((char*)(cur),ni*nj*sizeof(T));
       cur += ni*nj;
-      if(in_stream->eof()){ vcl_cerr << fname << " reached eof, slice " << i << "\n"; return 0;}
-      if(!in_stream->good()){ vcl_cerr << fname << " in_stream no longer good, slice " << i << "\n"; return 0;}
+      if(in_stream->eof()){ std::cerr << fname << " reached eof, slice " << i << "\n"; return 0;}
+      if(!in_stream->good()){ std::cerr << fname << " in_stream no longer good, slice " << i << "\n"; return 0;}
     }
 
     sliceFileManager<T>::closeSliceFile(in_stream);
@@ -57,7 +57,7 @@ vil3d_image_view_base_sptr sliceFileManager<T>::read(const vcl_string& fname)
 } 
 
 template<class T>
-void sliceFileManager<T>::read(const vcl_string& fname, vbl_array_3d<T>& img)
+void sliceFileManager<T>::read(const std::string& fname, vbl_array_3d<T>& img)
 {
         int ni, nj, nk;
         T* in_data = sliceFileManager<T>::readHelper(fname,ni,nj,nk);
@@ -68,19 +68,19 @@ void sliceFileManager<T>::read(const vcl_string& fname, vbl_array_3d<T>& img)
 }
 
 template<class T>
- T* sliceFileManager<T>::read(const vcl_string& fname, int & ni, int& nj, int & nk)
+ T* sliceFileManager<T>::read(const std::string& fname, int & ni, int& nj, int & nk)
 {
         return sliceFileManager<T>::readHelper(fname,ni,nj,nk);
 }
 
 template<class T>
- void sliceFileManager<T>::write(const vil3d_image_view<T>& img, const vcl_string& fname)
+ void sliceFileManager<T>::write(const vil3d_image_view<T>& img, const std::string& fname)
 {
         int ni = img.ni();
         int nj = img.nj();
         int nk = img.nk();
 
-        vcl_ofstream out(fname.c_str(), vcl_ios_binary);
+        std::ofstream out(fname.c_str(), std::ios::binary);
 
   if(out.good()){
         out.write((char*)(&ni), sizeof(int));
@@ -94,23 +94,23 @@ template<class T>
         out.close();
   }
   else{
-    vcl_cerr << "Bad out stream " << fname << "\n";
+    std::cerr << "Bad out stream " << fname << "\n";
   }
 }
 
 template<class T>
- void sliceFileManager<T>::write(const vbl_array_3d<T>& img, const vcl_string& fname)
+ void sliceFileManager<T>::write(const vbl_array_3d<T>& img, const std::string& fname)
 {
   int ni = img.get_row1_count();
   int nj = img.get_row2_count();
   int nk = img.get_row3_count();
-  vcl_ofstream out(fname.c_str(), vcl_ios_binary);
+  std::ofstream out(fname.c_str(), std::ios::binary);
   if(out.good()){
     out.write((char*)(&ni), sizeof(int));
     out.write((char*)(&nj), sizeof(int));
     out.write((char*)(&nk), sizeof(int));
 
-    vcl_cerr << "vbl_array_3d is column_major; writing " << sizeof(T) << "bytes at a time\n";
+    std::cerr << "vbl_array_3d is column_major; writing " << sizeof(T) << "bytes at a time\n";
     for(int k = 0; k < nk; k++){
       for(int j = 0; j < nj; j++){
         for(int i = 0; i < ni; i++){
@@ -130,14 +130,14 @@ template<class T>
     out.close();
   }
   else{
-    vcl_cerr << "Bad out stream " << fname << "\n";
+    std::cerr << "Bad out stream " << fname << "\n";
   }
 }
 
   template<class T>
-void sliceFileManager<T>::write(const T* img, const int& ni, const int& nj, const int& nk, const vcl_string& fname)
+void sliceFileManager<T>::write(const T* img, const int& ni, const int& nj, const int& nk, const std::string& fname)
 {
-  vcl_ofstream out(fname.c_str(), vcl_ios_binary);
+  std::ofstream out(fname.c_str(), std::ios::binary);
 
   if(out.good()){
     out.write((char*)(&ni), sizeof(int));
@@ -152,14 +152,14 @@ void sliceFileManager<T>::write(const T* img, const int& ni, const int& nj, cons
     out.close();
   }
   else{
-    vcl_cerr << "Bad out stream " << fname << "\n";
+    std::cerr << "Bad out stream " << fname << "\n";
   }
 }
 
   template<class T>
-vcl_ofstream* sliceFileManager<T>::openSliceFileForWrite(const vcl_string& fname, const int& ni, const int& nj, const int &nk)
+std::ofstream* sliceFileManager<T>::openSliceFileForWrite(const std::string& fname, const int& ni, const int& nj, const int &nk)
 {
-  vcl_ofstream * out = new vcl_ofstream(fname.c_str(),vcl_ios_binary);
+  std::ofstream * out = new std::ofstream(fname.c_str(),std::ios::binary);
   if(out->good()){
     out->write((char*)(&ni), sizeof(int));
     out->write((char*)(&nj), sizeof(int));
@@ -168,19 +168,19 @@ vcl_ofstream* sliceFileManager<T>::openSliceFileForWrite(const vcl_string& fname
     return out;
   }
   else{
-    vcl_cerr << "Bad out stream " << fname << "\n";
+    std::cerr << "Bad out stream " << fname << "\n";
     return 0;
   }
 }
 
 template<class T>
- void sliceFileManager<T>::closeSliceFile(vcl_ifstream* stream)
+ void sliceFileManager<T>::closeSliceFile(std::ifstream* stream)
 {
   stream->close();
   delete stream;
 }
 template<class T>
- void sliceFileManager<T>::closeSliceFile(vcl_ofstream* stream)
+ void sliceFileManager<T>::closeSliceFile(std::ofstream* stream)
 {
   stream->close();
   delete stream;
@@ -188,20 +188,20 @@ template<class T>
 
 
 template<class T>
- void sliceFileManager<T>::writeOneSlice(vcl_ofstream* out, T* data, const int& ni, const int& nj)
+ void sliceFileManager<T>::writeOneSlice(std::ofstream* out, T* data, const int& ni, const int& nj)
 {
   out->write((char*)(data), ni*nj*sizeof(T));
 }
 template<class T>
- void sliceFileManager<T>::writeOneSlice(vcl_ofstream* out, const vil_image_view<T>& data)
+ void sliceFileManager<T>::writeOneSlice(std::ofstream* out, const vil_image_view<T>& data)
 {
   out->write((char*)(data.top_left_ptr()), data.ni()*data.nj()*sizeof(T));
 }
 
 template<class T>
- inline vcl_ifstream* sliceFileManager<T>::openSliceFileForRead(const vcl_string& fname, int& ni, int& nj,int& nk)
+ inline std::ifstream* sliceFileManager<T>::openSliceFileForRead(const std::string& fname, int& ni, int& nj,int& nk)
 {
-  vcl_ifstream * in = new vcl_ifstream(fname.c_str());
+  std::ifstream * in = new std::ifstream(fname.c_str());
   if(in->good()){
     in->read((char*)(&ni), sizeof(int));
     in->read((char*)(&nj), sizeof(int));
@@ -209,24 +209,24 @@ template<class T>
     return in;
   }
   else{
-    vcl_cerr << "Bad instream " << fname << "\n";
+    std::cerr << "Bad instream " << fname << "\n";
     return 0;
   }
 }
 
 template<class T>
- inline bool sliceFileManager<T>::readOneSlice(vcl_ifstream* in, T* slice, const int& ni, const int& nj )
+ inline bool sliceFileManager<T>::readOneSlice(std::ifstream* in, T* slice, const int& ni, const int& nj )
 {
-  if(in->eof()){ vcl_cerr << "reached eof\n"; return 0;}
-  if(!in->good()){ vcl_cerr << "in_stream no longer good!\n"; return 0;}
+  if(in->eof()){ std::cerr << "reached eof\n"; return 0;}
+  if(!in->good()){ std::cerr << "in_stream no longer good!\n"; return 0;}
   in->read((char*)(slice), ni*nj*sizeof(T));
   return 1;
 }
 template<class T>
-inline bool sliceFileManager<T>::readOneSlice(vcl_ifstream* in, vil_image_view<T>& slice, const int& ni, const int& nj)
+inline bool sliceFileManager<T>::readOneSlice(std::ifstream* in, vil_image_view<T>& slice, const int& ni, const int& nj)
 {
-  if(in->eof()){ vcl_cerr << "reached eof\n"; return 0;}
-  if(!in->good()){ vcl_cerr << "in_stream no longer good!\n"; return 0;}
+  if(in->eof()){ std::cerr << "reached eof\n"; return 0;}
+  if(!in->good()){ std::cerr << "in_stream no longer good!\n"; return 0;}
   slice.set_size(ni,nj);
   in->read((char*)(slice.top_left_ptr()), ni*nj*sizeof(T));
   return 1;

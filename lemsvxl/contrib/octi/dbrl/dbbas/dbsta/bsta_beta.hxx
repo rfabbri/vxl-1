@@ -18,7 +18,7 @@ static inline vnl_bignum factorial(int n)
 
 //: constructs from a set of sample values
 template <class T>
-bsta_beta<T>::bsta_beta(vcl_vector<T> x)
+bsta_beta<T>::bsta_beta(std::vector<T> x)
 {
   T mean=0;
   T var=0;
@@ -69,10 +69,10 @@ T bsta_beta<T>::prob_density(T x) const
   {
     T a = (T)vnl_log_beta(alpha_,beta_);
 
-    T b = (alpha_-1)*vcl_log(x) ;
-    T c = (beta_-1)*vcl_log(1-x) ;
+    T b = (alpha_-1)*std::log(x) ;
+    T c = (beta_-1)*std::log(1-x) ;
 
-    T ans=vcl_exp(b+c-a);
+    T ans=std::exp(b+c-a);
     return ans;
   }
 }
@@ -87,7 +87,7 @@ T bsta_beta<T>::cum_dist_funct(T x) const
   T val;
   for (unsigned j=a; j<=a+b-1; j++) {
     val = factorial(a+b-1)/(factorial(j)*factorial(a+b-1-j));
-    val *= vcl_pow(x,T(j))*vcl_pow(1-x, T(a+b-1-j));
+    val *= std::pow(x,T(j))*std::pow(1-x, T(a+b-1-j));
     Ix+=val;
   }
   return Ix;

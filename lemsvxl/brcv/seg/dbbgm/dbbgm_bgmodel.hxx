@@ -3,8 +3,8 @@
 
 #include <dbbgm/dbbgm_bgmodel.h>
 #include <vil/vil_image_view.h>
-#include <vcl_cmath.h>
-#include <vcl_cassert.h>
+#include <cmath>
+#include <cassert>
 
 #define DISTFROMEAN 2.5
 //The initial standarddev given when only a single point is currently in the model.
@@ -79,7 +79,7 @@ bool dbbgm_bgmodel<T>::docalculations()
                 return false;
          currentwinner.fill(-1);
     int lframes;
-    float pthresh=vcl_exp(-DISTFROMEAN*DISTFROMEAN/2);
+    float pthresh=std::exp(-DISTFROMEAN*DISTFROMEAN/2);
 
     for(int y=0;y<nj;y++)
     {
@@ -126,7 +126,7 @@ bool dbbgm_bgmodel<T>::docalculations()
                     ++model.samplecount[j](y,x);
                     model.weight[j](y,x)=(float)model.samplecount[j](y,x)/(float)model.no_of_observations(y,x);
                     model.mean[j](y,x)+=(int)((curr_img_(x,y)- (float)model.mean[j](y,x))/(float)model.samplecount[j](y,x));
-                    model.standarddev[j](y,x)+=(vcl_sqrt(((float)curr_img_(x,y)- (float)model.mean[j](y,x))*(curr_img_(x,y)- (float)model.mean[j](y,x)))-(float)model.standarddev[j](y,x))/(float)model.samplecount[j](y,x);
+                    model.standarddev[j](y,x)+=(std::sqrt(((float)curr_img_(x,y)- (float)model.mean[j](y,x))*(curr_img_(x,y)- (float)model.mean[j](y,x)))-(float)model.standarddev[j](y,x))/(float)model.samplecount[j](y,x);
                     if(model.standarddev[j](y,x)<MINSTANDARDDEV)
                                                 model.standarddev[j](y,x)=MINSTANDARDDEV;
                     }
@@ -237,7 +237,7 @@ vil_image_view<T> dbbgm_bgmodel<T>::detectforeground()
     vil_image_view<T> fg;
     fg.set_size(ni,nj);
     fg.fill(0);
-    float pthresh=vcl_exp(-DISTFROMEAN*DISTFROMEAN/2);
+    float pthresh=std::exp(-DISTFROMEAN*DISTFROMEAN/2);
     for(int y=0;y<nj;y++)
     {
         for(int x=0;x<ni;x++)
@@ -303,7 +303,7 @@ template<class T>
 float dbbgm_bgmodel<T>::getprobabilty(float mu, float sigma,float x)
 {
     
-        return vcl_exp(-(x-mu)*(x-mu)/(2*sigma*sigma));
+        return std::exp(-(x-mu)*(x-mu)/(2*sigma*sigma));
 }
 
 #define DBBGM_BGMODEL_INSTANTIATE(T) \

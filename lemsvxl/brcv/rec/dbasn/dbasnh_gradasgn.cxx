@@ -14,12 +14,12 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_algorithm.h>
-#include <vcl_ctime.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_cfloat.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <ctime>
+#include <cassert>
+#include <cmath>
+#include <cfloat>
+#include <iostream>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
@@ -59,9 +59,9 @@ double dbasnh_gradasgn::C_aibjck (const int a, const int b, const int c,
   //Because two points chosen from a unifom distribution in the unit interval
   //will be on average 1/3 units apart.
   //The corner[][][] should be very sparse.
-  double compatibility = 1 - vcl_fabs (angle_abc - angle_ijk) * 3;
+  double compatibility = 1 - std::fabs (angle_abc - angle_ijk) * 3;
   ///if (vnl_math::isnan (compatibility)) {
-    ///vcl_cout<< "Error: C_aibjck NaN! ";
+    ///std::cout<< "Error: C_aibjck NaN! ";
     ///assert (0);
   ///}
 
@@ -92,18 +92,18 @@ void dbasnh_gradasgn::normalize_costs (const bool abs_max)
 //Very similar to the original dbasn_gradasgn, just add additional terms
 bool dbasnh_gradasgn::get_assignment () 
 {
-  vcl_clock_t t1 = vcl_clock();
+  std::clock_t t1 = std::clock();
 
   //The main loop of graduated assignment.
   float T = params_.T0_;
   int iter_a = 0;
   while (T >= params_.Tf_) { // loop A 
     if (debug_out_>2)
-      vul_printf (vcl_cout, "\n%2d T: %1.3lf ", iter_a, T);
+      vul_printf (std::cout, "\n%2d T: %1.3lf ", iter_a, T);
     int iter_b = 0;
     while (iter_b <= params_.I0_) { // loop B: iter_b <= I0_      
       if (debug_out_>2)
-        vul_printf (vcl_cout, "  <b%d>", iter_b);
+        vul_printf (std::cout, "  <b%d>", iter_b);
       for (int a = 0; a< M_row_-1; a++)
         for (int i = 0; i<M_col_-1; i++) {
           float Qai = 0.0;
@@ -173,14 +173,14 @@ bool dbasnh_gradasgn::get_assignment ()
       num_stable_ = sa.run_assign (M_hat_, M_hat_, T, params_.Is_, params_.eS_); 
       if (num_stable_ == false) { //exp. explosion.
         if (debug_out_)          
-          vcl_cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
+          std::cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
         goto GRAD_ASGN_FINISH; 
       }
 
-      //debug: vcl_cout << "\t returned assignment matrix at temperature " << T << " is:\n";
+      //debug: std::cout << "\t returned assignment matrix at temperature " << T << " is:\n";
       //debug: print_M (M_hat_, M_row_, M_col_);
       //debug: print energy for the current assignment matrix 
-      ///vcl_cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
+      ///std::cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
       
       if (test_converge_M (M_hat_, M_, params_.eB_)) { 
         copy_M (M_, M_hat_, M_row_, M_col_);
@@ -198,18 +198,18 @@ bool dbasnh_gradasgn::get_assignment ()
 
 GRAD_ASGN_FINISH:
   if (debug_out_>1)
-    vcl_cout << "\nTotal iteration A: " << iter_a << vcl_endl;
+    std::cout << "\nTotal iteration A: " << iter_a << std::endl;
   //M_ is the result, put clean one in M_hat_
   make_assignment_matrix (M_, M_hat_);
   
-  vcl_clock_t t2 = vcl_clock();
+  std::clock_t t2 = std::clock();
 
   if (debug_out_>0)
     print_M (M_, M_row_, M_col_);
   if (debug_out_>1) {
     print_M_bin (M_hat_, M_row_, M_col_);
     print_match_result ();
-    vcl_cout << "\n ==> GA assign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
+    std::cout << "\n ==> GA assign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
   }
 
   return num_stable_;
@@ -224,11 +224,11 @@ double dbasnh_gradasgn::get_similarity (const int verbose)
 
 //###################################################################
 
-double dbasnh_gradasgn_aug::get_norm_row_dist (vcl_vector<vcl_vector<double> >& table,
+double dbasnh_gradasgn_aug::get_norm_row_dist (std::vector<std::vector<double> >& table,
                                                const int r, const int c)
 {
   //Get the specified row from the table.
-  vcl_vector<double> row;
+  std::vector<double> row;
   row.insert (row.begin(), table[r].begin(), table[r].end());
 
   //Compute the max of row to normalize the value of table[r][c].
@@ -253,7 +253,7 @@ double dbasnh_gradasgn_aug::get_norm_row_dist (vcl_vector<vcl_vector<double> >& 
   }
 
     ///return (row[c] - min) / (max - min); <-- no sq dist <--wrong: forcing min_cost to 0 cost!!
-    ///return vcl_sqrt ((row[c] - min) / (max - min)); <--wrong: forcing min_cost to 0 cost!!
+    ///return std::sqrt ((row[c] - min) / (max - min)); <--wrong: forcing min_cost to 0 cost!!
 
   ///Method 2: Normalization (w.r.t row-max only).
   ///if (max == min)
@@ -301,7 +301,7 @@ double dbasnh_gradasgn_aug::get_N_type_diff (const int a, const int i)
   else {
     double diff = dbash_comp_node_type_diff (Na_m, Na_n, Na_f, Ni_m, Ni_n, Ni_f);
     //Use sqrare root distance.
-    return vcl_sqrt (diff);
+    return std::sqrt (diff);
   }
 }
 
@@ -395,8 +395,8 @@ double dbasnh_gradasgn_aug::C_aibj (const int a, const int b, const int i, const
       Eu = get_norm_row_dist (Gg_Eu_dist_f_, m, n);
     }
 
-    double ed_sq = vcl_sqrt (ed);
-    double Eu_sq = vcl_sqrt (Eu);
+    double ed_sq = std::sqrt (ed);
+    double Eu_sq = std::sqrt (Eu);
     
     //!!Important Parameters!!
     //Here we should emphasize the Eu & ed distance and abandon the curve lenth similarity!!
@@ -467,7 +467,7 @@ double dbasnh_gradasgn_aug::C_aibjck (const int a, const int b, const int c,
                            - 0.1 * sqr_dist (grad_r_abc, grad_r_ijk); 
 
   //sqr_dist_wei_max
-  ///double compatibility = 1 - vcl_fabs (nf_abc - nf_ijk) - vcl_fabs (angle_abc - angle_ijk) * 2;
+  ///double compatibility = 1 - std::fabs (nf_abc - nf_ijk) - std::fabs (angle_abc - angle_ijk) * 2;
   //Orientation as radius (Na to Ni), (Nb to Nj).
   //No much difference!
   //compatibility = 0.7 * compatibility + 0.1 * ( C_ai (a, i) + C_ai (b, j) + C_ai (c, k));
@@ -576,7 +576,7 @@ void dbasnh_gradasgn_aug::normalize_costs (const bool abs_max)
     hypg_G_aug()->normalize_corner_grad_r_cost (hypg_G_aug()->corner_grad_r_max(), debug_out_);
     hypg_g_aug()->normalize_corner_grad_r_cost (hypg_g_aug()->corner_grad_r_max(), debug_out_);    
   }
-  ///vcl_cout << vcl_endl;
+  ///std::cout << std::endl;
 }
 
 void dbasnh_gradasgn_aug::init_R_T ()
@@ -598,24 +598,24 @@ void dbasnh_gradasgn_aug::get_max_len_between_nodes ()
   double G_max_r = hypg_G_aug()->bound_box_radius_of_nodes ();
   double g_max_r = hypg_g_aug()->bound_box_radius_of_nodes ();
   max_len_btwn_nodes_ = vnl_math::max (G_max_r, g_max_r);
-  vul_printf (vcl_cout, "  get_max_len_between_nodes: %f.\n", max_len_btwn_nodes_);
+  vul_printf (std::cout, "  get_max_len_between_nodes: %f.\n", max_len_btwn_nodes_);
 }
 
 //: An extended version of get_assignment() to updating (R, T) in the iterative process.
 bool dbasnh_gradasgn_aug::get_assignment ()
 {
-  vcl_clock_t t1 = vcl_clock();
+  std::clock_t t1 = std::clock();
 
   //The main loop of graduated assignment.
   float T = params_.T0_;
   int iter_a = 0;
   while (T >= params_.Tf_) { // loop A 
     if (debug_out_>2)
-      vul_printf (vcl_cout, "\n%2d T: %1.3lf ", iter_a, T);
+      vul_printf (std::cout, "\n%2d T: %1.3lf ", iter_a, T);
     int iter_b = 0;
     while (iter_b <= params_.I0_) { // loop B: iter_b <= I0_      
       if (debug_out_>2)
-        vul_printf (vcl_cout, "  <b%d>", iter_b);
+        vul_printf (std::cout, "  <b%d>", iter_b);
       for (int a = 0; a< M_row_-1; a++)
         for (int i = 0; i<M_col_-1; i++) {
           float Qai = 0.0;
@@ -685,14 +685,14 @@ bool dbasnh_gradasgn_aug::get_assignment ()
       num_stable_ = sa.run_assign (M_hat_, M_hat_, T, params_.Is_, params_.eS_); 
       if (num_stable_ == false) { //exp. explosion.
         if (debug_out_)          
-          vcl_cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
+          std::cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
         goto GRAD_ASGN_FINISH; 
       }
 
-      //debug: vcl_cout << "\t returned assignment matrix at temperature " << T << " is:\n";
+      //debug: std::cout << "\t returned assignment matrix at temperature " << T << " is:\n";
       //debug: print_M (M_hat_, M_row_, M_col_);
       //debug: print energy for the current assignment matrix 
-      ///vcl_cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
+      ///std::cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
       
       if (test_converge_M (M_hat_, M_, params_.eB_)) { 
         copy_M (M_, M_hat_, M_row_, M_col_);
@@ -718,18 +718,18 @@ bool dbasnh_gradasgn_aug::get_assignment ()
 
 GRAD_ASGN_FINISH:
   if (debug_out_>1)
-    vcl_cout << "\nTotal iteration A: " << iter_a << vcl_endl;
+    std::cout << "\nTotal iteration A: " << iter_a << std::endl;
   //M_ is the result, put clean one in M_hat_
   make_assignment_matrix (M_, M_hat_);
   
-  vcl_clock_t t2 = vcl_clock();
+  std::clock_t t2 = std::clock();
 
   if (debug_out_)
     print_M (M_, M_row_, M_col_);
   if (debug_out_>1) {
     print_M_bin (M_hat_, M_row_, M_col_);
     print_match_result ();
-    vcl_cout << "\n ==> GA assign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
+    std::cout << "\n ==> GA assign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
   }  
 
   return num_stable_;
@@ -737,7 +737,7 @@ GRAD_ASGN_FINISH:
 
 void dbasnh_gradasgn_aug::update_new_R_T ()
 {
-  vcl_vector<vgl_point_3d<double> > Gnode, gnodeM;
+  std::vector<vgl_point_3d<double> > Gnode, gnodeM;
   vnl_matrix_fixed<double,3,3>    R;
   vnl_vector_fixed<double,3>      Cf, Cm;
 
@@ -767,10 +767,10 @@ void dbasnh_gradasgn_aug::update_new_R_T ()
 
   //Debug:
   ///print_M (M_hat_, M_row_, M_col_);
-  ///vul_printf (vcl_cout, "\n  R:\n");
-  ///R_.print (vcl_cerr);
-  ///vul_printf (vcl_cout, "  T:\n");
-  ///T_.print (vcl_cerr);
+  ///vul_printf (std::cout, "\n  R:\n");
+  ///R_.print (std::cerr);
+  ///vul_printf (std::cout, "  T:\n");
+  ///T_.print (std::cerr);
 }
 
 //: Compute the final similarity (as energy defined in the GA).
@@ -887,10 +887,10 @@ double dbasnh_gradasgn_aug::get_similarity (const int verbose)
   }
 
   if (verbose) {
-    vul_printf (vcl_cout, "\n  node sim = %.3f, max = %.3f, normalized = %.3f, wN = %.3f.\n", node_sim, node_sim_max, norm_sim_node_, params_.wN_);
-    vul_printf (vcl_cout, "  curve sim = %.3f, max = %.3f, normalized = %.3f, wL = %.3f.\n", curve_sim, curve_sim_max, norm_sim_curve_, params_.wL_);
-    vul_printf (vcl_cout, "  corner sim = %.3f, max = %.3f, normalized = %.3f, wC = %.3f.\n", corner_sim, corner_sim_max, norm_sim_corner_, params_.wC_);
-    vul_printf (vcl_cout, "  Similarity = %.3f, Norm Similarity = %f.\n", similarity_, norm_similarity_);
+    vul_printf (std::cout, "\n  node sim = %.3f, max = %.3f, normalized = %.3f, wN = %.3f.\n", node_sim, node_sim_max, norm_sim_node_, params_.wN_);
+    vul_printf (std::cout, "  curve sim = %.3f, max = %.3f, normalized = %.3f, wL = %.3f.\n", curve_sim, curve_sim_max, norm_sim_curve_, params_.wL_);
+    vul_printf (std::cout, "  corner sim = %.3f, max = %.3f, normalized = %.3f, wC = %.3f.\n", corner_sim, corner_sim_max, norm_sim_corner_, params_.wC_);
+    vul_printf (std::cout, "  Similarity = %.3f, Norm Similarity = %f.\n", similarity_, norm_similarity_);
   }
 
   return norm_similarity_;

@@ -52,7 +52,7 @@ vidpro1_edgemap_form_process::vidpro1_edgemap_form_process()
           
           
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_edgemap_form_process::vidpro1_edgemap_form_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_edgemap_form_process::vidpro1_edgemap_form_process()" << std::endl;
   }
 
 }
@@ -66,7 +66,7 @@ vidpro1_edgemap_form_process::~vidpro1_edgemap_form_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_edgemap_form_process::name()
 {
   return "Edge2Img";
@@ -98,14 +98,14 @@ return 1;
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_edgemap_form_process::get_input_type()
 {
   // this process looks for  vsol2D storage classes
   // at each input frame
   
   
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   
   to_return.push_back( "vtol" );
   to_return.push_back( "vtol" );
@@ -115,12 +115,12 @@ vidpro1_edgemap_form_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_edgemap_form_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
         
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -137,8 +137,8 @@ vidpro1_edgemap_form_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_edgemap_form_process::execute() - not exactly two"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro1_edgemap_form_process::execute() - not exactly two"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
@@ -152,10 +152,10 @@ vidpro1_edgemap_form_process::execute()
   vidpro1_vtol_storage_sptr right_img_edge; 
   right_img_edge.vertical_cast(input_data_[0][1]);
  
-  vcl_vector < vsol_spatial_object_2d_sptr > origpts;
+  std::vector < vsol_spatial_object_2d_sptr > origpts;
   int  maxx,maxy;
-  vcl_set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
-  vcl_set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
+  std::set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
+  std::set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
 
   maxx = 0;
   maxy = 0;
@@ -296,7 +296,7 @@ vidpro1_edgemap_form_process::execute()
                   if (x0<x1)
                       for (x = x0; x < x1; x++) 
                       {
-                          leftedgemap((int)x,vcl_floor(y))= value;
+                          leftedgemap((int)x,std::floor(y))= value;
                           y = y + m;
                       }
                   else
@@ -305,7 +305,7 @@ vidpro1_edgemap_form_process::execute()
                         for (x = x1; x < x0; x++) 
 
                             {
-                          leftedgemap((int)x,vcl_floor(y))= value;
+                          leftedgemap((int)x,std::floor(y))= value;
                           y = y + m;
                             }
                       }
@@ -318,7 +318,7 @@ vidpro1_edgemap_form_process::execute()
                     if (y0<y1)
                          for (y = y0; y < y1; y++) 
                           {
-                             leftedgemap(vcl_floor(x),(int)y)= value;
+                             leftedgemap(std::floor(x),(int)y)= value;
                               x = x + m;
                           }
                          else
@@ -326,7 +326,7 @@ vidpro1_edgemap_form_process::execute()
                              x = x1;
                              for (y = y1; y < y0; y++) 
                                  {
-                                  leftedgemap(vcl_floor(x),(int)y)= value;
+                                  leftedgemap(std::floor(x),(int)y)= value;
                                   x = x + m;
                                   }
                              }
@@ -392,14 +392,14 @@ vidpro1_edgemap_form_process::execute()
       if (x0<x1)
           for (x = x0; x < x1; x++) 
           {
-             rightedgemap(x,vcl_floor(y))= value;
+             rightedgemap(x,std::floor(y))= value;
               y = y + m;
           }
           else
           {  y = y1;
               for (x = x1; x < x0; x++) 
               {
-                  rightedgemap(x,vcl_floor(y))= value;
+                  rightedgemap(x,std::floor(y))= value;
                   y = y + m;
               }
           }
@@ -411,7 +411,7 @@ vidpro1_edgemap_form_process::execute()
         {
             for (y = y0; y < y1; y++) 
             {
-              rightedgemap(vcl_floor(x),y)= value;
+              rightedgemap(std::floor(x),y)= value;
               x = x + m;
             }
         }
@@ -420,7 +420,7 @@ vidpro1_edgemap_form_process::execute()
               x= x1;
               for (y = y1; y < y0; y++) 
               {
-                  rightedgemap(vcl_floor(x),y)= value;
+                  rightedgemap(std::floor(x),y)= value;
                   x = x + m;
               }
           }
@@ -446,13 +446,13 @@ vidpro1_edgemap_form_process::execute()
    for (int i = 0; i<leftedgemap.ni();i++)
       for (int j = 0; j<leftedgemap.nj();j++)
   {
-      greyvalimg1(i,j) = vxl_byte(MIN(255,vcl_floor(255.0*leftedgemap(i,j))));
+      greyvalimg1(i,j) = vxl_byte(MIN(255,std::floor(255.0*leftedgemap(i,j))));
       
   }
       for (int i = 0; i<rightedgemap.ni();i++)
       for (int j = 0; j<rightedgemap.nj();j++)
   {
-      greyvalimg2(i,j) = vxl_byte(MIN(255,vcl_floor(255.0*rightedgemap(i,j))));
+      greyvalimg2(i,j) = vxl_byte(MIN(255,std::floor(255.0*rightedgemap(i,j))));
       
   }
 

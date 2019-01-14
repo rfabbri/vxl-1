@@ -15,7 +15,7 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
 
@@ -29,7 +29,7 @@ class dbinfo_observation_generator
   //: generate a set of randomly placed observations about a seed observation
   static bool uniform_about_seed(const unsigned nobs,
                                  dbinfo_observation_sptr const& seed,
-                                 vcl_vector<dbinfo_observation_sptr>& obs,
+                                 std::vector<dbinfo_observation_sptr>& obs,
                                  const float dx, const float dy,
                                  const float dtheta = 0,
                                  const float dscale = 0,
@@ -40,8 +40,8 @@ class dbinfo_observation_generator
   // return the corresponding transforms as well
   static bool uniform_about_seed(const unsigned nobs,
                                  dbinfo_observation_sptr const& seed,
-                                 vcl_vector<dbinfo_observation_sptr>& obs,
-                                 vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                                 std::vector<dbinfo_observation_sptr>& obs,
+                                 std::vector<vgl_h_matrix_2d<float> >& xforms,
                                  const float dx, const float dy,
                                  const float dtheta = 0,
                                  const float dscale = 0,
@@ -49,7 +49,7 @@ class dbinfo_observation_generator
 
 static bool uniform_about_seed_affine_no_skew(const unsigned nobs,
                                               dbinfo_observation_sptr const& seed,
-                                              vcl_vector<dbinfo_observation_sptr>& obs,
+                                              std::vector<dbinfo_observation_sptr>& obs,
                                               const float dx, const float dy,
                                               const float dtheta=0, const float dscale=0,
                                               const float daspect=0,
@@ -58,8 +58,8 @@ static bool uniform_about_seed_affine_no_skew(const unsigned nobs,
   static 
 bool uniform_about_seed_affine_no_skew(const unsigned nobs,
                                        dbinfo_observation_sptr const& seed,
-                                       vcl_vector<dbinfo_observation_sptr>& obs,
-                                       vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                                       std::vector<dbinfo_observation_sptr>& obs,
+                                       std::vector<vgl_h_matrix_2d<float> >& xforms,
                                        const float dx, const float dy,
                                        const float dtheta=0,
                                        const float dscale=0,
@@ -67,7 +67,7 @@ bool uniform_about_seed_affine_no_skew(const unsigned nobs,
                                        const float sufficient_points_thresh=0.9f);
 static bool uniform_in_interval_affine_no_skew(const unsigned nobs,
                                    dbinfo_observation_sptr const& seed,
-                                   vcl_vector<dbinfo_observation_sptr>& obs,
+                                   std::vector<dbinfo_observation_sptr>& obs,
                                    const float x_min, const float x_max,
                                    const float y_min, const float y_max,
                                    const float theta_min,
@@ -81,8 +81,8 @@ static bool uniform_in_interval_affine_no_skew(const unsigned nobs,
 static bool
 uniform_in_interval_affine_no_skew(const unsigned nobs,
                                    dbinfo_observation_sptr const& seed,
-                                   vcl_vector<dbinfo_observation_sptr>& obs,
-                                   vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                                   std::vector<dbinfo_observation_sptr>& obs,
+                                   std::vector<vgl_h_matrix_2d<float> >& xforms,
                                    const float x_min, const float x_max,
                                    const float y_min, const float y_max,
                                    const float theta_min,

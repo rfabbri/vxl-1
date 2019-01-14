@@ -1,7 +1,7 @@
 //: This is dbsk3d/algo/dbsk3d_ms_hypg_fmm.cxx
 //MingChing Chang Nov. 15, 2007.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
@@ -15,7 +15,7 @@
 //  
 void dbsk3d_ms_hypg_fmm::build_sheets_fmm_mesh ()
 {
-  vcl_map<int, dbmsh3d_sheet*>::iterator SS_it = ms_hypg_->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator SS_it = ms_hypg_->sheetmap().begin();
   for (; SS_it != ms_hypg_->sheetmap().end(); SS_it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*SS_it).second;
 
@@ -27,7 +27,7 @@ void dbsk3d_ms_hypg_fmm::build_sheets_fmm_mesh ()
     dbmsh3d_fmm_mesh* fmm_mesh = generate_fmm_tri_mesh (SSM);
 
     //Put the new trimesh into the map.
-    sheet_fmm_mesh_map_.insert (vcl_pair<int, dbmsh3d_fmm_mesh*>(MS->id(), fmm_mesh));
+    sheet_fmm_mesh_map_.insert (std::pair<int, dbmsh3d_fmm_mesh*>(MS->id(), fmm_mesh));
 
     delete SSM;
   }
@@ -38,7 +38,7 @@ void dbsk3d_ms_hypg_fmm::build_sheets_fmm_mesh ()
 //
 void dbsk3d_ms_hypg_fmm::run_fmm_on_sheet_meshes ()
 {
-  vcl_map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map_.begin();
+  std::map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map_.begin();
   for (; it != sheet_fmm_mesh_map_.end(); it++) {
     dbmsh3d_fmm_mesh* fmm_mesh = (*it).second;
 
@@ -49,11 +49,11 @@ void dbsk3d_ms_hypg_fmm::run_fmm_on_sheet_meshes ()
     fmm_mesh->setup_fast_marching ();
 
     //: set all boundary and internal curve's nodeElm as sources.
-    vcl_set<dbmsh3d_vertex*> incident_Ns;
+    std::set<dbmsh3d_vertex*> incident_Ns;
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) ms_hypg_->sheetmap ((*it).first);
     MS->get_incident_FVs (incident_Ns);
 
-    vcl_set<dbmsh3d_vertex*>::iterator it = incident_Ns.begin();
+    std::set<dbmsh3d_vertex*>::iterator it = incident_Ns.begin();
     for (; it != incident_Ns.end(); it++) {
       dbmsh3d_vertex* V = (*it);
       int id = V->id();

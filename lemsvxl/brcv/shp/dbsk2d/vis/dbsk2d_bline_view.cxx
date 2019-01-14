@@ -21,7 +21,7 @@ void dbsk2d_bline_view::draw_filled_rectangle(vgl_point_2d<double> spt, double u
   /*if (t0==t1){
     glBegin( GL_LINE_STRIP );
     glVertex2f(x, y);
-    glVertex2f(x+r*vcl_cos(t0), y+r*vcl_sin(t0));
+    glVertex2f(x+r*std::cos(t0), y+r*std::sin(t0));
     glEnd();
     return;
   }*/

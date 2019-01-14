@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_timer.h>
 
 #include <vsol/vsol_point_2d.h>
@@ -30,10 +30,10 @@
 
 #include "cluster_db_matching.h"
 
-cluster_db_matching::cluster_db_matching(vcl_string db_file, 
-                                         vcl_string resolution, 
-                                         vcl_string db_string, 
-                                         vcl_string image_dir, 
+cluster_db_matching::cluster_db_matching(std::string db_file, 
+                                         std::string resolution, 
+                                         std::string db_string, 
+                                         std::string image_dir, 
                                          int verbose) 
    : m_verbose (verbose)
 {
@@ -72,17 +72,17 @@ cluster_db_matching::cluster_db_matching(vcl_string db_file,
   
   // each processor reads db file
   db_size_ = 0;
-  vcl_ifstream fpd((db_file).c_str());
+  std::ifstream fpd((db_file).c_str());
   if (!fpd.is_open()) {
-    vcl_cout << "Unable to open database file!\n";
+    std::cout << "Unable to open database file!\n";
   } else {
     char buffer[1000];
     while (!fpd.eof()) {
-      vcl_string temp;
+      std::string temp;
       fpd.getline(buffer, 1000);
       temp = buffer;
       if (temp.size() > 1) {
-        //vcl_cout << "temp: " << temp << " addition: " << db_string << vcl_endl;
+        //std::cout << "temp: " << temp << " addition: " << db_string << std::endl;
         database_.push_back(temp+"_"+db_string);
       }
     }
@@ -92,18 +92,18 @@ cluster_db_matching::cluster_db_matching(vcl_string db_file,
 
   trace (IfInfo(), "db_size_: %d\n", db_size_);
 #if 0
-  vcl_cout << "printing database list: \n";
+  std::cout << "printing database list: \n";
   for (unsigned int i = 0; i<db_size_; i++) {
-    vcl_cout << database_[i] << "\n";
+    std::cout << database_[i] << "\n";
   }
 #endif
   
   //: each processor loads the images
   for (unsigned i = 0; i<db_size_; i++) {
-    vcl_string image_file = image_dir + database_[i] + ".png";
+    std::string image_file = image_dir + database_[i] + ".png";
     vil_image_resource_sptr image_r = vil_load_image_resource( image_file.c_str() );
     if (!image_r) 
-      vcl_cout << "image: " << image_file << " could not be loaded!\n";
+      std::cout << "image: " << image_file << " could not be loaded!\n";
     else 
       database_images_.push_back(image_r);
   }
@@ -111,9 +111,9 @@ cluster_db_matching::cluster_db_matching(vcl_string db_file,
 
   num_pairs_ = (db_size_*(db_size_-1))/2;  
 
-  vcl_vector<double> tmp(db_size_, 10000.0f);
-  dist_matrix_ = new vcl_vector< vcl_vector<double> > (db_size_, tmp);
-  info_matrix_ = new vcl_vector< vcl_vector<double> > (db_size_, tmp);
+  std::vector<double> tmp(db_size_, 10000.0f);
+  dist_matrix_ = new std::vector< std::vector<double> > (db_size_, tmp);
+  info_matrix_ = new std::vector< std::vector<double> > (db_size_, tmp);
 }
 
 // Destructor
@@ -130,12 +130,12 @@ cluster_db_matching::~cluster_db_matching()
 }
 
 // Execute - execute the matching algorithm as currently configured.
-void cluster_db_matching::execute_shock(vcl_string cons_dir, 
-                                        vcl_string esfs_dir, 
-                                        bool save_out_imgs, vcl_string output_dir, 
+void cluster_db_matching::execute_shock(std::string cons_dir, 
+                                        std::string esfs_dir, 
+                                        bool save_out_imgs, std::string output_dir, 
                                         double sampling_ds, double pruning_threshold,
                                         bool elastic_splice, bool normalize_cost, 
-                                        bool save_shgm, vcl_string shgms_dir)
+                                        bool save_shgm, std::string shgms_dir)
 {
     trace (LeadProcessor () && IfInfo (), "number of pairs: %d", num_pairs_);
     
@@ -148,13 +148,13 @@ void cluster_db_matching::execute_shock(vcl_string cons_dir,
     m_SendBuf = new double [myNumberPoints * NUM_MATRICES];  // since we're creating 2 values for each pair
 
     if (database_images_.size() != db_size_) {
-      vcl_cout << "images not loaded! Exiting!\n";
+      std::cout << "images not loaded! Exiting!\n";
       return;
     }
 
     //: load cons
     for (unsigned i = 0; i<db_size_; i++) {
-      vcl_string con_file = cons_dir + database_[i] + ".con";
+      std::string con_file = cons_dir + database_[i] + ".con";
       vsol_polygon_2d_sptr poly = read_con_from_file(con_file.c_str());
       if (!poly) 
         trace( IfInfo(), "contour: %s could not be loaded!\n", con_file.c_str());
@@ -179,14 +179,14 @@ void cluster_db_matching::execute_shock(vcl_string cons_dir,
     }
 
     if (database_obs_.size() != db_size_) {
-      vcl_cout << "observations not created! Exiting!\n";
+      std::cout << "observations not created! Exiting!\n";
       return;
     }
     
     //: load esfs and create trees
-    vcl_vector<dbskr_tree_sptr> database_trees;
+    std::vector<dbskr_tree_sptr> database_trees;
     for (unsigned i = 0; i<db_size_; i++) {
-      vcl_string esf_file = esfs_dir + database_[i] + ".esf";
+      std::string esf_file = esfs_dir + database_[i] + ".esf";
       trace (LeadProcessor () && IfInfo (), "Loading: %s\n", esf_file.c_str());
       dbskr_tree_sptr tree = read_esf_from_file(esf_file.c_str(), sampling_ds, pruning_threshold, elastic_splice);
       if (!tree)
@@ -215,19 +215,19 @@ void cluster_db_matching::execute_shock(vcl_string cons_dir,
       // do something for each point
       vul_timer t;
       dbskr_sm_cor_sptr sm_cor1, sm_cor2; double cost1, cost2, norm;
-      vcl_string shgm_file_name1 = shgms_dir+database_[i]+"_"+database_[j]+".shgm";
-      vcl_string shgm_file_name2 = shgms_dir+database_[j]+"_"+database_[i]+".shgm";
-      vcl_ifstream shgmf1(shgm_file_name1.c_str());
-      vcl_ifstream shgmf2(shgm_file_name2.c_str());
+      std::string shgm_file_name1 = shgms_dir+database_[i]+"_"+database_[j]+".shgm";
+      std::string shgm_file_name2 = shgms_dir+database_[j]+"_"+database_[i]+".shgm";
+      std::ifstream shgmf1(shgm_file_name1.c_str());
+      std::ifstream shgmf2(shgm_file_name2.c_str());
 
       if (normalize_cost) {
         norm = database_trees[i]->total_splice_cost()+database_trees[j]->total_splice_cost();
-        //vcl_cout << " norm: " << norm << " ";
+        //std::cout << " norm: " << norm << " ";
       } else
         norm = 1.0f;
       
       if (shgmf1.is_open()) {
-        //vcl_cout << "reading " << shgm_file_name1 << vcl_endl;
+        //std::cout << "reading " << shgm_file_name1 << std::endl;
         trace (IfInfo (), "read shgmf1\n");
         shgmf1.close();
         sm_cor1 = new dbskr_sm_cor(database_trees[i], database_trees[j]);
@@ -240,7 +240,7 @@ void cluster_db_matching::execute_shock(vcl_string cons_dir,
       }
       
       if (shgmf2.is_open()) {
-        //vcl_cout << "reading " << shgm_file_name2 << vcl_endl;
+        //std::cout << "reading " << shgm_file_name2 << std::endl;
         trace (IfInfo (), "read shgmf2\n");
         shgmf2.close();
         sm_cor2 = new dbskr_sm_cor(database_trees[j], database_trees[i]);
@@ -367,21 +367,21 @@ void cluster_db_matching:: trace (bool cond, char* fmt, ...)
         vsprintf (msg, fmt, vaMarker);
         
         // Display
-        vcl_cout << prefix << msg << vcl_endl;
+        std::cout << prefix << msg << std::endl;
     }
 }
 
-vsol_polygon_2d_sptr cluster_db_matching::read_con_from_file(vcl_string fname) {
+vsol_polygon_2d_sptr cluster_db_matching::read_con_from_file(std::string fname) {
   double x, y;
   char buffer[2000];
   int nPoints;
 
-  vcl_vector<vsol_point_2d_sptr> inp;
+  std::vector<vsol_point_2d_sptr> inp;
   inp.clear();
 
-  vcl_ifstream fp(fname.c_str());
+  std::ifstream fp(fname.c_str());
   if (!fp) {
-    vcl_cout<<" Unable to Open "<< fname <<vcl_endl;
+    std::cout<<" Unable to Open "<< fname <<std::endl;
     return 0;
   }
   //2)Read in file header.
@@ -389,7 +389,7 @@ vsol_polygon_2d_sptr cluster_db_matching::read_con_from_file(vcl_string fname) {
   fp.getline(buffer,2000); //OPEN/CLOSE flag (not important, we assume close)
   fp >> nPoints;
 #if 0
-  vcl_cout << "Number of Points from Contour: " << nPoints << vcl_endl;
+  std::cout << "Number of Points from Contour: " << nPoints << std::endl;
 #endif     
   for (int i=0;i<nPoints;i++) {
     fp >> x >> y;
@@ -401,7 +401,7 @@ vsol_polygon_2d_sptr cluster_db_matching::read_con_from_file(vcl_string fname) {
   return poly;
 }
 
-dbskr_tree_sptr cluster_db_matching::read_esf_from_file(vcl_string fname, double sampling_ds, double pruning_threshold, bool elastic_splice) {
+dbskr_tree_sptr cluster_db_matching::read_esf_from_file(std::string fname, double sampling_ds, double pruning_threshold, bool elastic_splice) {
   dbsk2d_xshock_graph_fileio loader;
   dbskr_tree_sptr tree = new dbskr_tree(sampling_ds);
   dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(fname);

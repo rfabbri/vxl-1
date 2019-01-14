@@ -15,9 +15,9 @@
 #include <cali/cali_vnl_least_squares_function.h>
 #include <cali/cali_param.h>
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 #include <imgr/file_formats/imgr_skyscan_log.h>
 
@@ -32,30 +32,30 @@ class vil_math_bool_invert_functor
 
 int main(int argc, char* argv[]) {
   if(argc < 2){
-    vcl_cerr << "usage " << argv[0] << " <parameter file>\n";
+    std::cerr << "usage " << argv[0] << " <parameter file>\n";
     exit(1);
   }
 
-  vcl_string path = argv[1];
+  std::string path = argv[1];
   cali_param par(path);
-  vcl_string fname = par.LOGFILE;
-  vcl_FILE *fp = vcl_fopen(fname.data(),"r");
+  std::string fname = par.LOGFILE;
+  std::FILE *fp = std::fopen(fname.data(),"r");
   assert(fp != NULL);
   imgr_skyscan_log_header skyscan_log_header(fp);
-  vcl_fclose(fp);
+  std::fclose(fp);
   
   imgr_skyscan_log skyscan_log(fname.data());
   xscan_scan scan;
   scan = skyscan_log.get_scan();
-  vcl_cout << scan << vcl_endl;
+  std::cout << scan << std::endl;
 
   scan.set_scan_size(par.END - par.START + 1);
 
   int nviews = scan.scan_size();
   // change the scan
   vpgl_calibration_matrix<double> kk(scan.kk());
-  vcl_cout << "scan SIZE---->" << nviews << vcl_endl;
-  vcl_vector<vil_image_resource_sptr> resources(nviews);
+  std::cout << "scan SIZE---->" << nviews << std::endl;
+  std::vector<vil_image_resource_sptr> resources(nviews);
   for (int i=0; i<nviews; i++) {
        resources[i] = vil_new_image_resource(skyscan_log_header.number_of_columns_,skyscan_log_header.number_of_rows_,1,  VIL_PIXEL_FORMAT_BYTE);
   }
@@ -71,9 +71,9 @@ int main(int argc, char* argv[]) {
 
   
   // read the x values from the text file
-  vcl_string txt_file = par.CONVERGEDVALUES;
-  vcl_cout << "reading in values from " <<  txt_file << "\n";
-  vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
+  std::string txt_file = par.CONVERGEDVALUES;
+  std::cout << "reading in values from " <<  txt_file << "\n";
+  std::ifstream fstream(txt_file.c_str(),std::ios::in);
   vnl_vector<double> x(par.SIZE_OF_X);
 
   double val;
@@ -81,9 +81,9 @@ int main(int argc, char* argv[]) {
   int x_size=0;
   while (!fstream.eof()) {
     fstream.getline(val_string, 256);
-    val = vcl_atof(val_string);
+    val = std::atof(val_string);
     x[x_size++] = val;
-    vcl_cout << x_size << "=" << val << vcl_endl;
+    std::cout << x_size << "=" << val << std::endl;
   }
 
 
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
                         turn_table_trans);
   scan.set_orbit(new_orbit);
 
-  vcl_vector<double>x_coord_tol;
+  std::vector<double>x_coord_tol;
 
   x_coord_tol.push_back(0);
   x_coord_tol.push_back(0);
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
   x_coord_tol.push_back(0);
   x_coord_tol.push_back(0);
 
-  vcl_vector<double>y_coord_tol;
+  std::vector<double>y_coord_tol;
 
   y_coord_tol.push_back(0);
   y_coord_tol.push_back(0);
@@ -137,8 +137,8 @@ int main(int argc, char* argv[]) {
   y_coord_tol.push_back(0);
   y_coord_tol.push_back(0);
 
-  vcl_vector<double>z_coord_tol;
-  vcl_vector<double>rad_tol;
+  std::vector<double>z_coord_tol;
+  std::vector<double>rad_tol;
 
    for (int i = 0;i<13;i++)
    {
@@ -148,27 +148,27 @@ int main(int argc, char* argv[]) {
 
 
    cali_simulated_scan_resource scan_res = cali_simulated_scan_resource(scan,resources,par,x_coord_tol,y_coord_tol,z_coord_tol,rad_tol);
-  vcl_cout << "Rotation---------------------------->" << vcl_endl;
-  vcl_cout << artf_rot << vcl_endl;
-  vcl_cout << "Translation------------------------->" << vcl_endl;
-  vcl_cout << artf_trans << vcl_endl;
-  vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan(".", "test_images", artf_rot, artf_trans,par.INTERVAL);
+  std::cout << "Rotation---------------------------->" << std::endl;
+  std::cout << artf_rot << std::endl;
+  std::cout << "Translation------------------------->" << std::endl;
+  std::cout << artf_trans << std::endl;
+  std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan(".", "test_images", artf_rot, artf_trans,par.INTERVAL);
 
 
 
   int i = 0;
   for (int k = par.START; k < par.END && i < images.size(); k += par.INTERVAL,i++) {  
-          vcl_string sourcename = cali_artf_corresponder::gen_read_fname( par.CONICS_BIN_FILE_BASE, k);
+          std::string sourcename = cali_artf_corresponder::gen_read_fname( par.CONICS_BIN_FILE_BASE, k);
 
-          vcl_string dir = vul_file::dirname(sourcename);
-          vcl_string ext = vul_file::extension(sourcename);
-          vcl_string base = vul_file::basename(sourcename,ext.c_str());
+          std::string dir = vul_file::dirname(sourcename);
+          std::string ext = vul_file::extension(sourcename);
+          std::string base = vul_file::basename(sourcename,ext.c_str());
           sourcename = dir + "/" + base + ".tif";
 
           vil_image_view<vxl_uint_16> source = vil_load(sourcename.c_str());
-          vcl_cerr << "loaded " << sourcename << " size " << source.ni() << " " << source.nj() << "\n";
+          std::cerr << "loaded " << sourcename << " size " << source.ni() << " " << source.nj() << "\n";
           vil_image_view<vxl_byte> synthetic = images[i]->get_view();
-          vcl_cerr << "synthetic " << " size " << synthetic.ni() << " " << synthetic.nj() << "\n";
+          std::cerr << "synthetic " << " size " << synthetic.ni() << " " << synthetic.nj() << "\n";
 
           vil_image_view<vxl_byte > threeplane_img(synthetic.ni(),synthetic.nj(),3);
           vil_image_view<vxl_byte> r = vil_plane(threeplane_img,0);
@@ -227,12 +227,12 @@ int main(int argc, char* argv[]) {
           vil_math_image_sum(b_with_balls,b_without_balls,b);
 
 
-          vcl_string outname = cali_artf_corresponder::gen_read_fname("./overlay0000.tif", k);
+          std::string outname = cali_artf_corresponder::gen_read_fname("./overlay0000.tif", k);
           dir = vul_file::dirname(outname);
           ext = vul_file::extension(outname);
           base = vul_file::basename(outname,ext.c_str());
           outname = dir + "/" + base + ".png";
-          vcl_cout << "save to " << outname << "\n";
+          std::cout << "save to " << outname << "\n";
           vil_save(threeplane_img,outname.c_str());
   }
 

@@ -1,8 +1,8 @@
 #ifndef _ISHOCKXSHOCK_H
 #define _ISHOCKXSHOCK_H
 
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <utility>
+#include <map>
 
 #include "xshock.h"
 #include "ishock.h"
@@ -11,7 +11,7 @@ class IShockExNode;
 class IShockExEdge;
 class IShockXShock;
 
-typedef vcl_pair<int, ExNode*> SINodeExNodePair;
+typedef std::pair<int, ExNode*> SINodeExNodePair;
 
 class IShockExNode: public ExNode
 { 
@@ -38,7 +38,7 @@ class IShockXShock: public XShock
 {
 public:
   IShock* _shock;
-  vcl_map <int, ExNode*> SINodeToExNodeMapping; //SINode ID to ExNode* mapping
+  std::map <int, ExNode*> SINodeToExNodeMapping; //SINode ID to ExNode* mapping
 
   IShockXShock(IShock* shock){_shock=shock;}
   ~IShockXShock(){}

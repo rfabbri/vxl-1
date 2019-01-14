@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <dbdet/pro/dbdet_mask_edges_process.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -22,7 +22,7 @@ dbdet_mask_edges_process::dbdet_mask_edges_process() : bpro1_process()
      !parameters()->add( "(if use rectangle) Add the rectangle to the output vsol?" , "-addrect" ,  true ) 
      )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
   
 }
@@ -36,9 +36,9 @@ dbdet_mask_edges_process::clone() const
 }
 
 
-vcl_vector< vcl_string > dbdet_mask_edges_process::get_input_type()
+std::vector< std::string > dbdet_mask_edges_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
@@ -46,9 +46,9 @@ vcl_vector< vcl_string > dbdet_mask_edges_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_mask_edges_process::get_output_type()
+std::vector< std::string > dbdet_mask_edges_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -60,8 +60,8 @@ bool dbdet_mask_edges_process::valid_point(vsol_point_2d_sptr point) {
   return valid_point(float(point->x()), float(point->y()));
 }
 bool dbdet_mask_edges_process::valid_point(float yy, float xx) {
-  int x = int(vcl_floor(xx+0.5));
-  int y = int(vcl_floor(yy+0.5));
+  int x = int(std::floor(xx+0.5));
+  int y = int(std::floor(yy+0.5));
   // vxl_byte val = mask(y,x);
   if (!mask(y,x) || (y > 0 && !mask(y-1,x)) || 
     (x > 0 && !mask(y,x-1)) || 
@@ -92,9 +92,9 @@ bool dbdet_mask_edges_process::execute()
   parameters()->get_value("-addrect", add_rect);
 
   // new vector to store the points
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
   
   if (use_image) {
   //  vil_image_view<vxl_byte> mask; int ni, nj;
@@ -161,14 +161,14 @@ bool dbdet_mask_edges_process::execute()
 
     vidpro1_vsol2D_storage_sptr input_vsol2;
     input_vsol2.vertical_cast(input_data_[0][1]);
-    vcl_vector< vsol_spatial_object_2d_sptr > rect = input_vsol2->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > rect = input_vsol2->all_data();
     if (rect.size() != 1) {
-      vcl_cout << "input vsol contains more than one contours!! Which one is the rectangle!! Please create a vsol storage which contains a single rectangular polygon that signifies the region of interest!\n";
+      std::cout << "input vsol contains more than one contours!! Which one is the rectangle!! Please create a vsol storage which contains a single rectangular polygon that signifies the region of interest!\n";
       return false;
     }
     
     if (!rect[0]->cast_to_region() || !(rect[0]->cast_to_region()->cast_to_polygon()) ) {
-      vcl_cout << "input vsol does not contain a polygon (rectangle)!! Please create a vsol storage which contains a single rectangular polygon that signifies the region of interest!\n";
+      std::cout << "input vsol does not contain a polygon (rectangle)!! Please create a vsol storage which contains a single rectangular polygon that signifies the region of interest!\n";
       return false;
     }
 
@@ -240,7 +240,7 @@ bool dbdet_mask_edges_process::execute()
 
   }
 
-  vcl_cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " edges out of " << input_vsol->all_data().size() << " edges\n"; 
+  std::cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " edges out of " << input_vsol->all_data().size() << " edges\n"; 
   // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
   output_vsol->add_objects(contours, "pruned");

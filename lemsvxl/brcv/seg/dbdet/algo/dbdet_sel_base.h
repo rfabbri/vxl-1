@@ -32,12 +32,12 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_queue.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <queue>
+#include <utility>
 
 #include <dbdet/sel/dbdet_edgel.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -94,7 +94,7 @@ public:
   unsigned maxN() { return maxN_; }
 
   //: return a reference to the edgel buckets
-  vbl_array_2d<vcl_vector<dbdet_edgel*> > & cells() { return edgemap_->edge_cells; }
+  vbl_array_2d<std::vector<dbdet_edgel*> > & cells() { return edgemap_->edge_cells; }
 
   //: return the cvlet map
   dbdet_curvelet_map& cvlet_map() { return curvelet_map_; }
@@ -149,11 +149,11 @@ public:
         bool use_flag=false, bool forward=true,  bool centered=true, bool leading=true) = 0;
 
     //: form an edgel grouping from an ordered list of edgemap_->edgels
-    virtual dbdet_curvelet* form_an_edgel_grouping(dbdet_edgel* ref_e, vcl_deque<dbdet_edgel*> &edgel_chain, 
+    virtual dbdet_curvelet* form_an_edgel_grouping(dbdet_edgel* ref_e, std::deque<dbdet_edgel*> &edgel_chain, 
         bool forward=true,  bool centered=true, bool leading=true) = 0;
 
     //: check to see if curvelets are balanced
-    bool curvelet_is_balanced(dbdet_edgel* ref_e, vcl_deque<dbdet_edgel*> &edgel_chain);
+    bool curvelet_is_balanced(dbdet_edgel* ref_e, std::deque<dbdet_edgel*> &edgel_chain);
 
     //: form the full curvelet map (curvelet map lists all the curvelets it participated in and not just the ones anchored to it)
     void form_full_cvlet_map();
@@ -279,10 +279,10 @@ public:
   void propagate_HTs_N_steps(int N);
 
     void propagate_HT_from_the_next_leaf_node();
-      vcl_set<dbdet_hyp_tree_node*> check_for_interaction(dbdet_hyp_tree_node* node);
+      std::set<dbdet_hyp_tree_node*> check_for_interaction(dbdet_hyp_tree_node* node);
       bool C1_CPL_interaction(dbdet_hyp_tree_node* node1, dbdet_hyp_tree_node* node2);
 
-    //bool explore_continuations(vcl_queue<dbdet_hyp_tree_node*>& BFS_queue, dbdet_edgel* e);
+    //bool explore_continuations(std::queue<dbdet_hyp_tree_node*>& BFS_queue, dbdet_edgel* e);
     void explore_continuations(dbdet_hyp_tree_node* cur_node, dbdet_link* link);
 
       int dist_from_edge(dbdet_curvelet* cvlet, dbdet_edgel* e);
@@ -314,8 +314,8 @@ public:
 
     void resolve_HT(dbdet_hyp_tree* HT); 
 
-    double compute_path_metric(vcl_vector<dbdet_curvelet*>& path);
-    void back_propagate_solution(vcl_vector<dbdet_curvelet*>& path, vgl_point_2d<double> sol);
+    double compute_path_metric(std::vector<dbdet_curvelet*>& path);
+    void back_propagate_solution(std::vector<dbdet_curvelet*>& path, vgl_point_2d<double> sol);
     
   void print_all_trees();
 
@@ -342,12 +342,12 @@ public:
   void Post_Process();
 
   //: perform a geometric consistency check to determine whether a given temp path is valid
-  bool is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain);
+  bool is_EHT_path_legal(std::vector<dbdet_edgel*>& edgel_chain);
 
   //: compute a simple path metric based on the chain and its neighboring support chains
-  double compute_path_metric2(vcl_vector<dbdet_edgel*>& Pchain, 
-                             vcl_vector<dbdet_edgel*>& Tchain, 
-                             vcl_vector<dbdet_edgel*>& Cchain);
+  double compute_path_metric2(std::vector<dbdet_edgel*>& Pchain, 
+                             std::vector<dbdet_edgel*>& Tchain, 
+                             std::vector<dbdet_edgel*>& Cchain);
 
   //: disambiguate the CFG, basically to produce a disjoint set
   void disambiguate_the_CFTG();
@@ -384,10 +384,10 @@ public:
   void resolve_paths_conflict();
 
   //: perform a geometric consistency check to determine whether a given attached path to junction
-  bool is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain);
+  bool is_JCT_path_legal(std::vector<dbdet_edgel*>& edgel_chain);
 
   //: check if two paths initialing from the same edge are partially overlapping
-  bool is_overlapping(vcl_vector<dbdet_edgel*> edges_1, vcl_vector<dbdet_edgel*> edges_2);
+  bool is_overlapping(std::vector<dbdet_edgel*> edges_1, std::vector<dbdet_edgel*> edges_2);
 
   //: extract non-overlapping attached paths, count the total number
   int check_a_junction(int edgel_id);
@@ -405,14 +405,14 @@ public:
   void merge_non_jct_curve_frags();
 
   //: compute a simple path metric based on the chain and its neighboring support chains
-  double compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
-                               vcl_vector<dbdet_edgel*>& Tchain,
-                               vcl_vector<dbdet_edgel*>& Cchain);
-  double compute_path_metric3(vcl_deque<dbdet_edgel*>& Tchain);
+  double compute_path_metric3(std::vector<dbdet_edgel*>& Pchain,
+                               std::vector<dbdet_edgel*>& Tchain,
+                               std::vector<dbdet_edgel*>& Cchain);
+  double compute_path_metric3(std::deque<dbdet_edgel*>& Tchain);
 
   //: compute the len of the chain
-  double compute_path_len(vcl_deque<dbdet_edgel*>& chain);
-  double compute_path_len(vcl_vector<dbdet_edgel*>& chain);
+  double compute_path_len(std::deque<dbdet_edgel*>& chain);
+  double compute_path_len(std::vector<dbdet_edgel*>& chain);
 
   //: check if two chains have cross over links
   bool is_cross_over(dbdet_edgel_chain* chain_1, dbdet_edgel_chain* chain_2);
@@ -496,20 +496,20 @@ protected:
   unsigned min_deg_to_link_; ///< minimum degree of a link before it is linked 
 
   //for the connected components algo to separate the link graph and the cvlet map
-  vcl_set<dbdet_curvelet*> cv_set1;
-  vcl_map<vcl_pair<int, int>, dbdet_link*> link_map;
-  vcl_queue<dbdet_link*> BFS_links_queue;
-  vcl_map<dbdet_link*, dbdet_link*> link_pairs;
+  std::set<dbdet_curvelet*> cv_set1;
+  std::map<std::pair<int, int>, dbdet_link*> link_map;
+  std::queue<dbdet_link*> BFS_links_queue;
+  std::map<dbdet_link*, dbdet_link*> link_pairs;
 
 public: //temp
 
   //for the hybrid algorithm
   bool use_hybrid_; 
-  vcl_vector<int> cId_; ///< id of the contour that each edgel belongs to
+  std::vector<int> cId_; ///< id of the contour that each edgel belongs to
 
   //for the DHT algorithm
   dbdet_HT_graph HTG;             ///< The global HTG
-  vcl_queue<dbdet_hyp_tree_node*> BFS_queue_global; ///< BFS queue for propagating the HTs simultaneously
+  std::queue<dbdet_hyp_tree_node*> BFS_queue_global; ///< BFS queue for propagating the HTs simultaneously
 
   dbdet_edgel_labels ELs;         ///< edgel labels for contour ownership
 

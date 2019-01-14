@@ -30,7 +30,7 @@ class vox_eval_shock_patches_params : public dborl_algo_params
 public:
 
   //: Constructor
-  vox_eval_shock_patches_params(vcl_string algo_name);
+  vox_eval_shock_patches_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
@@ -38,33 +38,33 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
   
   //: Name of model to compare against
-  dborl_parameter<vcl_string> model_object_name_;
+  dborl_parameter<std::string> model_object_name_;
   
   //: Passes the folder of the model shock graph
-  dborl_parameter<vcl_string> model_object_dir_;    
+  dborl_parameter<std::string> model_object_dir_;    
 
   //: Name of query to compare against
-  dborl_parameter<vcl_string> query_object_name_;
+  dborl_parameter<std::string> query_object_name_;
   
   //: Passes the folder of the query object
-  dborl_parameter<vcl_string> query_object_dir_;    
+  dborl_parameter<std::string> query_object_dir_;    
 
   //: Passes the query index filename
-  dborl_parameter<vcl_string> query_index_filename_;
+  dborl_parameter<std::string> query_index_filename_;
 
   //: extension of the html file of the bounding box detection results
-  dborl_parameter<vcl_string> input_bbox_detect_extension_;     
+  dborl_parameter<std::string> input_bbox_detect_extension_;     
 
   //: overlap ratio for detection
   dborl_parameter<float> bbox_overlap_ratio_;     
 
   //: extension of the output for output evaluation of shock patch detection
-  dborl_parameter<vcl_string> output_shock_patch_eval_extension_;     
+  dborl_parameter<std::string> output_shock_patch_eval_extension_;     
 
   // if written to this folder as opposed to object folder then the 
   // shock patch evaluation results gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_shock_patch_eval_folder_;  
+  dborl_parameter<std::string> output_shock_patch_eval_folder_;  
 
 };
 

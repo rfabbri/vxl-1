@@ -9,7 +9,7 @@
 //  dbsk3dr_test_rigid_trans D:\Projects\BrownEyes\lemsvxlsrc\brcv\rec\dbsk3dr\tests\data
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <testlib/testlib_test.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -21,7 +21,7 @@
 //Match P3 to P2, the result is in PP.
 void EuclideanTransform3D_test ()
 {
-  vcl_vector<vgl_point_3d<double> > PS0, PS1, PS2;
+  std::vector<vgl_point_3d<double> > PS0, PS1, PS2;
 
   PS0.push_back (vgl_point_3d<double> (3, 3, 0));
   PS0.push_back (vgl_point_3d<double> (2, 3, 0));
@@ -44,7 +44,7 @@ void EuclideanTransform3D_test ()
 
   bgld_get_rigid_alignment (PS1, PS2, R, C1, C2);
 
-  vcl_vector<double> ppx, ppy, ppz;
+  std::vector<double> ppx, ppy, ppz;
   for (unsigned int i=0; i<PS1.size(); i++) {
     double p[3], pp[3];
     p[0]= PS2[i].x();
@@ -62,9 +62,9 @@ void EuclideanTransform3D_test ()
     pp[1] += C1.get(1);
     pp[2] += C1.get(2);
 
-    TEST("x_i ", vcl_fabs(pp[0] - PS0[i].x()) < 1E-5, true);
-    TEST("y_i ", vcl_fabs(pp[1] - PS0[i].y()) < 1E-5, true);
-    TEST("z_i ", vcl_fabs(pp[2] - PS0[i].z()) < 1E-5, true);
+    TEST("x_i ", std::fabs(pp[0] - PS0[i].x()) < 1E-5, true);
+    TEST("y_i ", std::fabs(pp[1] - PS0[i].y()) < 1E-5, true);
+    TEST("z_i ", std::fabs(pp[2] - PS0[i].z()) < 1E-5, true);
 
     ppx.push_back (pp[0]);
     ppy.push_back (pp[1]);
@@ -76,7 +76,7 @@ void EuclideanTransform3D_test ()
 void test_2d_euclidean_transform ()
 {
   const int N = 4;
-  vcl_vector<double> x1,y1,x2,y2;
+  std::vector<double> x1,y1,x2,y2;
 
   x1.push_back (3);
   x1.push_back (2);
@@ -144,7 +144,7 @@ void test_2d_euclidean_transform ()
 
   //5)Compute the translation.
   //  Translation is just the difference between two centers
-  //double tx=0, ty=0; // double theta=vcl_acos(R(0,0));
+  //double tx=0, ty=0; // double theta=std::acos(R(0,0));
   double center1[2] = {x1_centroid,y1_centroid};
   double center2[2] = {x2_centroid,y2_centroid};
 
@@ -152,7 +152,7 @@ void test_2d_euclidean_transform ()
   vnl_matrix<double> cen2 (center2,2,1);
 
   //6)Rotate and translate the (x2, y2) to be (x1p, y1p)
-  vcl_vector<double> x1p, y1p;
+  std::vector<double> x1p, y1p;
   for (int i=0; i<N; i++) {
     double p[2], pr[2];
     p[0]= x2[i];
@@ -176,7 +176,7 @@ void test_2d_euclidean_transform ()
 
 MAIN_ARGS(dbsk3dr_test_rigid_trans)
 {
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32

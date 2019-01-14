@@ -33,7 +33,7 @@ clone() const
 }
 
 //: Return the name of this process
-vcl_string dbrl_edge_image_to_oriented_edgemap_process::
+std::string dbrl_edge_image_to_oriented_edgemap_process::
 name()
 {
     return "Edge Image to Oriented Edge Map";
@@ -54,19 +54,19 @@ output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector<vcl_string> dbrl_edge_image_to_oriented_edgemap_process::
+std::vector<std::string> dbrl_edge_image_to_oriented_edgemap_process::
 get_input_type()
 {
-    vcl_vector<vcl_string> to_return;
+    std::vector<std::string> to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 //: Provide a vector of output types
-vcl_vector<vcl_string> dbrl_edge_image_to_oriented_edgemap_process::
+std::vector<std::string> dbrl_edge_image_to_oriented_edgemap_process::
 get_output_type()
 {
-    vcl_vector<vcl_string> to_return;
+    std::vector<std::string> to_return;
     to_return.push_back( "edge_map" );
     return to_return;
 }
@@ -83,7 +83,7 @@ execute()
     unsigned height = image_rsc->nj();
 
     vil_image_view<float> image = image_rsc->get_view(0,width,0,height);
-    vcl_vector<dbdet_edgel*> edgels;
+    std::vector<dbdet_edgel*> edgels;
 
     for(unsigned i=0; i<width; ++i)
     {

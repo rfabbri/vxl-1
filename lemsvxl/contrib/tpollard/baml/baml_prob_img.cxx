@@ -3,10 +3,10 @@
 
 #include "baml_prob_img.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_save.h>
 
-vcl_ofstream baml_prob_img::norm_record = vcl_ofstream( "D:/norm_record.txt" );
+std::ofstream baml_prob_img::norm_record = std::ofstream( "D:/norm_record.txt" );
 
 //-------------------------------------------------
 baml_prob_img::baml_prob_img()
@@ -86,14 +86,14 @@ baml_prob_img::normalize_img(
           }
         }
         float this_prob = prob( nimg );
-        vcl_cerr << this_prob << ' ';
+        std::cerr << this_prob << ' ';
         if( this_prob < 0 ) return;
         if( this_prob > sb_best_prob ){ sb_best_prob = this_prob; sb_best = sb; }
         if( this_prob > best_prob ){ best_prob = this_prob; a = sa; b = sb; }
       } 
-      vcl_cerr << '\n';
+      std::cerr << '\n';
     }
-    vcl_cerr << '\n';
+    std::cerr << '\n';
   }
   norm_record << a << ' ' << b << '\n';
 };
@@ -102,7 +102,7 @@ baml_prob_img::normalize_img(
 //-------------------------------------------------------
 void 
 baml_prob_img::draw_best( 
-  vcl_string img_file )
+  std::string img_file )
 {
   vil_image_view<vxl_byte> img( ni_, nj_ );
   for( unsigned i = 0; i < ni_; i++ )
@@ -121,9 +121,9 @@ baml_prob_img::draw_best(
 //--------------------------------------------------
 void 
 baml_prob_img::write( 
-  vcl_string file_name )
+  std::string file_name )
 {
-  vcl_ofstream s( file_name.c_str(), vcl_ifstream::binary );
+  std::ofstream s( file_name.c_str(), std::ifstream::binary );
   if( s.good() ){
     char* byte_cache;
     unsigned nx[1];
@@ -136,9 +136,9 @@ baml_prob_img::write(
 
 //---------------------------------------------------
 void 
-baml_prob_img::read( vcl_string file_name )
+baml_prob_img::read( std::string file_name )
 {
-  vcl_ifstream s( file_name.c_str(), vcl_ifstream::binary );
+  std::ifstream s( file_name.c_str(), std::ifstream::binary );
   if( s.good() ){
     char* byte_cache;
     unsigned nx[1];
@@ -177,9 +177,9 @@ baml_prob_img::initialize( unsigned ni, unsigned nj )
 void 
 baml_prob_img::write_pixel(
   int i, int j,
-  vcl_string file )
+  std::string file )
 {
-  vcl_ofstream ofs( file.c_str() );
+  std::ofstream ofs( file.c_str() );
   baml_mog* new_mog = (*this)(i,j);
 
   for(  float c = 0.0; c < 1.0; c+=(float).01 )

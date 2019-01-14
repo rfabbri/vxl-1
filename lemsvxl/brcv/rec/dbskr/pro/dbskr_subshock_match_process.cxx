@@ -11,10 +11,10 @@
 
 //#include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/algo/dbsk2d_extract_subgraph.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 
 #include <dbskr/dbskr_tree_edit_combined.h>
 
@@ -47,7 +47,7 @@ dbskr_subshock_match_process::dbskr_subshock_match_process() : bpro1_process()
        !parameters()->add( "use combined edit distance?" , "-combined" , (bool) true ) || 
        !parameters()->add( "subgraph extraction depth", "-depth", (int) 1 ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -58,17 +58,17 @@ dbskr_subshock_match_process::clone() const
   return new dbskr_subshock_match_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_subshock_match_process::get_input_type()
+std::vector< std::string > dbskr_subshock_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_subshock_match_process::get_output_type()
+std::vector< std::string > dbskr_subshock_match_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock_match");
   return to_return;
 }
@@ -81,11 +81,11 @@ bool dbskr_subshock_match_process::execute()
   parameters()->get_value( "-load2" , load2);
   bpro1_filepath input_path;
   parameters()->get_value( "-esf1" , input_path);
-  vcl_string esf_file1 = input_path.path;
+  std::string esf_file1 = input_path.path;
   parameters()->get_value( "-esf2" , input_path);
-  vcl_string esf_file2 = input_path.path;  
+  std::string esf_file2 = input_path.path;  
   parameters()->get_value( "-shgm" , input_path);
-  vcl_string shgm_file = input_path.path;
+  std::string shgm_file = input_path.path;
 
   dbsk2d_xshock_graph_fileio loader;
   */
@@ -110,7 +110,7 @@ bool dbskr_subshock_match_process::execute()
   
   if (!sg1 || !sg2)
   {
-    vcl_cout << "Problems in getting shock graphs!\n";
+    std::cout << "Problems in getting shock graphs!\n";
     return false;
   }
 /*
@@ -167,7 +167,7 @@ bool dbskr_subshock_match_process::execute()
     if (sub_sg->has_cycle())
       continue;
 
-    vcl_cout << "matching shock subgraphs...\n";
+    std::cout << "matching shock subgraphs...\n";
     clock_t time1, time2;
     time1 = clock();
 
@@ -187,12 +187,12 @@ bool dbskr_subshock_match_process::execute()
 
     edit->save_path(true);
     if (!edit->edit()) {
-      vcl_cout << "Problems in editing trees\n";
+      std::cout << "Problems in editing trees\n";
       return false;
     }
     time2 = clock();
     float val = edit->final_cost();
-    vcl_cout << " cost: " << val << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
+    std::cout << " cost: " << val << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
     if (val < best_value) {
       best_value = val;
       //edit.write_shgm(shgm_file);
@@ -203,7 +203,7 @@ bool dbskr_subshock_match_process::execute()
   }
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_match));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_match));
 
   return true;
 }

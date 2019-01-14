@@ -34,7 +34,7 @@ dbvxm_detect_multiscale_process::dbvxm_detect_multiscale_process()
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "dbvxm_multi_scale_voxel_world_sptr";
-  input_types_[3] = "vcl_string";
+  input_types_[3] = vcl_string";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";
   input_types_[6] = "unsigned";
@@ -76,9 +76,9 @@ bool dbvxm_detect_multiscale_process::execute()
     static_cast<brdb_value_t<dbvxm_multi_scale_voxel_world_sptr>* >(input_data_[2].ptr());
   dbvxm_multi_scale_voxel_world_sptr world = input2->value();
 
-  brdb_value_t<vcl_string>* input3 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
-  vcl_string voxel_type = input3->value();
+  brdb_value_t<std::string>* input3 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -130,7 +130,7 @@ bool dbvxm_detect_multiscale_process::execute()
     result = world->pixel_probability_density<APM_MOG_GREY>(observation,prob_map, mask, bin_index,req_scale);
     
    if(!result){
-    vcl_cerr << "error bvxm_detect_changes_process: failed to detect changes" << vcl_endl;
+    std::cerr << "error bvxm_detect_changes_process: failed to detect changes" << std::endl;
     return false;
   }
   float threshold_value = 0.5;
@@ -140,7 +140,7 @@ bool dbvxm_detect_multiscale_process::execute()
   vil_image_view<bool> binary_img;
   vil_image_view<vxl_byte> gray_img;
   vil_threshold_above<float>(prob_map, binary_img, threshold_value);
-  vcl_cout<<"min "<< min_value <<" max "<<max_value<<"\n";
+  std::cout<<"min "<< min_value <<" max "<<max_value<<"\n";
   vil_convert_stretch_range_limited<float>(prob_map,gray_img,min_value,max_value);
       //store output
   brdb_value_sptr output0 = 

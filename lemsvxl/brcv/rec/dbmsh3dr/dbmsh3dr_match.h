@@ -5,7 +5,7 @@
 #ifndef dbmsh3dr_match_h_
 #define dbmsh3dr_match_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -19,8 +19,8 @@
 
 //#####################################################################
 
-bool dbmsh3dr_pp_icp_regstr (const vcl_vector<vgl_point_3d<double> >& fixPS, 
-                             vcl_vector<vgl_point_3d<double> >& movPS, 
+bool dbmsh3dr_pp_icp_regstr (const std::vector<vgl_point_3d<double> >& fixPS, 
+                             std::vector<vgl_point_3d<double> >& movPS, 
                              const int nMaxIter, const float conv_th, const double dist_th,
                              vgl_h_matrix_3d<double>& H);
 
@@ -35,41 +35,41 @@ vgl_h_matrix_3d<double> set_h_matrix (const vnl_matrix_fixed<double,3,3>& R,
 double estimate_ICP_conv (const vnl_matrix_fixed<double,3,3>& R);
 
 ///typedef vnl_vector_fixed<double,3>     vector_3d;
-///typedef vcl_vector<rgrl_feature_sptr>  feature_vector;
+///typedef std::vector<rgrl_feature_sptr>  feature_vector;
 
-bool rgrl_rigid_icp_register (const vcl_vector<rgrl_feature_sptr>& fixedFV, 
-                              const vcl_vector<rgrl_feature_sptr>& movingFV,    
+bool rgrl_rigid_icp_register (const std::vector<rgrl_feature_sptr>& fixedFV, 
+                              const std::vector<rgrl_feature_sptr>& movingFV,    
                               const vnl_matrix<double>& init_R, 
                               const vnl_vector_fixed<double,3>&  init_t,
                               rgrl_trans_rigid& r_xform, double& error);
 
 //#####################################################################
 
-void compute_pp_min_dist (const vcl_vector<vgl_point_3d<double> >& pts1, 
-                          const vcl_vector<vgl_point_3d<double> >& pts2, 
-                          vcl_vector<double>& min_dists,
-                          vcl_vector<int>& min_ids);
+void compute_pp_min_dist (const std::vector<vgl_point_3d<double> >& pts1, 
+                          const std::vector<vgl_point_3d<double> >& pts2, 
+                          std::vector<double>& min_dists,
+                          std::vector<int>& min_ids);
 
-void compute_pp_min_dist (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts1, 
-                          const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts2, 
-                          vcl_vector<double>& min_dists,
-                          vcl_vector<int>& min_ids);
+void compute_pp_min_dist (const std::vector<std::pair<int, vgl_point_3d<double> > >& idpts1, 
+                          const std::vector<std::pair<int, vgl_point_3d<double> > >& idpts2, 
+                          std::vector<double>& min_dists,
+                          std::vector<int>& min_ids);
 
 void compute_pp_min_dist (dbmsh3d_pt_set* PS1, dbmsh3d_pt_set* PS2,
-                          vcl_vector<double>& min_dists,
-                          vcl_vector<int>& min_ids);
+                          std::vector<double>& min_dists,
+                          std::vector<int>& min_ids);
 
 void compute_pf_min_dist (dbmsh3d_mesh* M, dbmsh3d_mesh* M2, const int top_n, 
-                          vcl_vector<double>& min_dists,
-                          vcl_vector<vgl_point_3d<double> >& closest_pts);
+                          std::vector<double>& min_dists,
+                          std::vector<vgl_point_3d<double> >& closest_pts);
 
-bool get_error_estim (const vcl_vector<double>& min_dists, const double& dist_th, 
+bool get_error_estim (const std::vector<double>& min_dists, const double& dist_th, 
                       double& min, double& mean, double& median, double& RMS, double& max);
 
-void normalize_min_dist (const double dist_th, vcl_vector<double>& min_dists); 
+void normalize_min_dist (const double dist_th, std::vector<double>& min_dists); 
 
-void compute_imprv_of_error (const vcl_vector<double>& min_dists_1,
-                             const vcl_vector<double>& min_dists_2,
+void compute_imprv_of_error (const std::vector<double>& min_dists_1,
+                             const std::vector<double>& min_dists_2,
                              const double& dist_th, 
                              double& min, double& mean, double& median, double& RMS, double& max);
 

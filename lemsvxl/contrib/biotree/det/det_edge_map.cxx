@@ -26,9 +26,9 @@ void det_edge_map::resize(int nx, int ny, int nz)
 }
 
 det_edge_map::det_edge_map(unsigned nx, unsigned ny, unsigned nz, 
-                           vcl_vector<xmvg_filter_response<double> > const& responses_x, 
-                           vcl_vector<xmvg_filter_response<double> > const& responses_y, 
-                           vcl_vector<xmvg_filter_response<double> > const& responses_z,
+                           std::vector<xmvg_filter_response<double> > const& responses_x, 
+                           std::vector<xmvg_filter_response<double> > const& responses_y, 
+                           std::vector<xmvg_filter_response<double> > const& responses_z,
                            double sharpening_coefficient)
                            : map_(nx, ny, nz), nx_(nx), ny_(ny), nz_(nz)
 {
@@ -162,7 +162,7 @@ det_map_entry& det_edge_map::operator()(unsigned i, unsigned j, unsigned k)
   return map_[i][j][k];
 }
 
-vcl_istream& operator >> ( vcl_istream& stream, det_edge_map& map)
+std::istream& operator >> ( std::istream& stream, det_edge_map& map)
 {
   int nx, ny, nz;
   char str[80];
@@ -206,7 +206,7 @@ vcl_istream& operator >> ( vcl_istream& stream, det_edge_map& map)
   return stream;
 }
 
-vcl_ostream& operator << ( vcl_ostream& stream, const det_edge_map& map)
+std::ostream& operator << ( std::ostream& stream, const det_edge_map& map)
 {
 
   int nx = map.nx();

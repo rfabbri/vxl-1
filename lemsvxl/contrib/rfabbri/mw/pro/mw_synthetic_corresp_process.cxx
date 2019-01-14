@@ -28,7 +28,7 @@ mw_synthetic_corresp_process::mw_synthetic_corresp_process()
       !parameters()->add( "Output vsol edges" ,             "-bvsol" ,    false )  ||
       !parameters()->add( "Output edgemap" ,            "-blines" ,   true )
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ mw_synthetic_corresp_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 mw_synthetic_corresp_process::name()
 {
   return "Synthetic Correspondences";
@@ -72,18 +72,18 @@ mw_synthetic_corresp_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > mw_synthetic_corresp_process::get_input_type()
+std::vector< std::string > mw_synthetic_corresp_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 //  to_return.push_back( "keypoints" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > mw_synthetic_corresp_process::get_output_type()
+std::vector< std::string > mw_synthetic_corresp_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
 
   bool bvsol=false;
@@ -122,7 +122,7 @@ finish()
 
 
   // Compute the global correspondence points
-  vcl_vector<dbdet_keypoint_corr3d_sptr> corr_pts;
+  std::vector<dbdet_keypoint_corr3d_sptr> corr_pts;
     generate_corr_pts(corr_pts);
 
 //  vnl_matrix_fixed<double,3,3> rot;
@@ -130,7 +130,7 @@ finish()
 //  vgl_h_matrix_3d<double> R(rot, vnl_vector_fixed< double, 3 >(0.0));
 //  vgl_point_3d<double> center(0,0,-10);
 
-  vcl_cout << "# Output frames : " << output_data_.size() << vcl_endl;
+  std::cout << "# Output frames : " << output_data_.size() << std::endl;
 
 
   bool blines=false, bvsol=false;
@@ -141,7 +141,7 @@ finish()
   dbdet_edgemap_sptr edge_map;
 
   // edgels (vsol)
-  vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+  std::vector< vsol_spatial_object_2d_sptr > edgels;
 
 
   // pack up the results into storage classes
@@ -173,11 +173,11 @@ finish()
 
       x = frenet_pt.gama[0];
       y = frenet_pt.gama[1];
-      dir = vcl_atan2(frenet_pt.t[1],frenet_pt.t[0]);
+      dir = std::atan2(frenet_pt.t[1],frenet_pt.t[0]);
 
       if (bvsol){
         if ( blines){
-          vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(dir)/2.0, vcl_sin(dir)/2.0), vgl_point_2d<double>(x,y));
+          vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(dir)/2.0, std::sin(dir)/2.0), vgl_point_2d<double>(x,y));
           edgels.push_back(newLine->cast_to_spatial_object());
         }
         else {
@@ -193,14 +193,14 @@ finish()
 
     // Output to repository
     if (bvsol){
-      vcl_cout << "N edgels: " << edgels.size() << vcl_endl;
+      std::cout << "N edgels: " << edgels.size() << std::endl;
       // create the output storage class
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->add_objects(edgels,"myedgels");
       output_data_[i].push_back(output_vsol); //: TODO check this.
     }  
     else {
-      vcl_cout << "N edgels: " << edge_map->num_edgels() << vcl_endl;
+      std::cout << "N edgels: " << edge_map->num_edgels() << std::endl;
       // create the output storage class
       dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
       output_edgemap->set_edgemap(edge_map);
@@ -236,12 +236,12 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
 
   nviews_ = 3; //: for now.
 
-  vcl_vector<unsigned> angles;
+  std::vector<unsigned> angles;
   angles.push_back(30);
   angles.push_back(50);
   angles.push_back(70);
 
-  vcl_vector<bdifd_camera> cam;
+  std::vector<bdifd_camera> cam;
 
   cam.resize(nviews_);
 
@@ -252,11 +252,11 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
     pcam_[i] = P;
   }
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
   bdifd_data::space_curves_digicam_turntable_medium_sized( crv3d );
 
   bdifd_data::project_into_cams(crv3d, cam, crv2d_);
-  vcl_cout << "Number of samples INCLUDING epitangencies: " << crv2d_[0].size() << vcl_endl;
+  std::cout << "Number of samples INCLUDING epitangencies: " << crv2d_[0].size() << std::endl;
 
   for (unsigned n=0; n < crv2d_[0].size(); n+=1)
     pt_id_.push_back(n);
@@ -267,8 +267,8 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
 
   bmcsd_algo_util::move_world_to_1st_cam(pcam_,vgl_pts_);
   for (unsigned i=0; i < pcam_.size(); ++i) {
-    vcl_cout << "Camera view index " << i << ":" << vcl_endl;
-    vcl_cout << *(pcam_[i]) << vcl_endl;
+    std::cout << "Camera view index " << i << ":" << std::endl;
+    std::cout << *(pcam_[i]) << std::endl;
   }
 
   { // sanity test
@@ -287,15 +287,15 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
         d_total += d*d;
       }
     }
-    d_total = vcl_sqrt(d_total);
-    vcl_cout << "Total reprojection error after coordinate transf to 1st cam: " << d_total << vcl_endl;
+    d_total = std::sqrt(d_total);
+    std::cout << "Total reprojection error after coordinate transf to 1st cam: " << d_total << std::endl;
   }
 }
 
 //-----------------------------------------------------------------------------
 
 void  mw_synthetic_corresp_process::
-generate_corr_pts(vcl_vector<dbdet_keypoint_corr3d_sptr> &corr_pts)
+generate_corr_pts(std::vector<dbdet_keypoint_corr3d_sptr> &corr_pts)
 {
   corr_pts.resize(pt_id_.size());
 
@@ -325,23 +325,23 @@ generate_corr_pts(vcl_vector<dbdet_keypoint_corr3d_sptr> &corr_pts)
 void mw_synthetic_corresp_process::
 initialize_poses(
     const vpgl_calibration_matrix<double> &K, 
-    vcl_vector<vpgl_perspective_camera<double> *> &pcam_ini,
-    vcl_vector<vgl_point_3d<double> > &vgl_pts_ini
+    std::vector<vpgl_perspective_camera<double> *> &pcam_ini,
+    std::vector<vgl_point_3d<double> > &vgl_pts_ini
     ) const
 {
   pcam_ini.resize(nviews_);
-  vcl_vector<vgl_point_2d<double> > p0;
+  std::vector<vgl_point_2d<double> > p0;
   p0.reserve(pt_id_.size());
   for (unsigned ip=0; ip < pt_id_.size(); ++ip) {
     p0.push_back(vgl_point_2d<double>(crv2d_[0][pt_id_[ip]].gama[0],crv2d_[0][pt_id_[ip]].gama[1]));
   }
 
 
-  vcl_vector<vcl_vector< vgl_point_3d<double> > > world_points_ini;
+  std::vector<std::vector< vgl_point_3d<double> > > world_points_ini;
   world_points_ini.resize(nviews_);
 
   for (unsigned iv=1; iv < pcam_ini.size(); ++iv) {
-    vcl_vector<vgl_point_2d<double> > p1;
+    std::vector<vgl_point_2d<double> > p1;
     p1.reserve(pt_id_.size());
     for (unsigned ip=0; ip < pt_id_.size(); ++ip) {
       p1.push_back(vgl_point_2d<double>(crv2d_[iv][pt_id_[ip]].gama[0],crv2d_[iv][pt_id_[ip]].gama[1]));
@@ -356,8 +356,8 @@ initialize_poses(
   }
 
   for (unsigned i=0; i < pcam_ini.size(); ++i) {
-    vcl_cout << "Essential-matrix-initialized camera view index " << i << ":" << vcl_endl;
-    vcl_cout << *(pcam_ini[i]) << vcl_endl;
+    std::cout << "Essential-matrix-initialized camera view index " << i << ":" << std::endl;
+    std::cout << *(pcam_ini[i]) << std::endl;
   }
 
   // Renormalize the translations to have only 1 global ambiguous scale
@@ -389,16 +389,16 @@ initialize_poses(
         vgl_point_2d<double> p_orig(crv2d_[iv][pt_id_[ip]].gama[0],crv2d_[iv][pt_id_[ip]].gama[1]);
         double d=vgl_distance(p_proj,p_orig);
         if (d > 1e-5 && cnt < 10) {
-          vcl_cout << "Warning: reproj error " << d << " point id: " << pt_id_[ip] 
-            << "\np_proj: " << p_proj << " p_orig: " << p_orig << vcl_endl;
+          std::cout << "Warning: reproj error " << d << " point id: " << pt_id_[ip] 
+            << "\np_proj: " << p_proj << " p_orig: " << p_orig << std::endl;
           ++cnt;
         }
 
         d_total += d*d;
       }
     }
-    d_total = vcl_sqrt(d_total);
-    vcl_cout << "Total reprojection error after closed-form initialization: " << d_total << vcl_endl;
+    d_total = std::sqrt(d_total);
+    std::cout << "Total reprojection error after closed-form initialization: " << d_total << std::endl;
   }
 }
 /*

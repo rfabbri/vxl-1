@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_map_io.h>
 #include <vsol/vsol_point_2d.h>
 #include <dbinfo/pro/dbinfo_track_storage.h>
@@ -72,9 +72,9 @@ dbinfo_track_storage::b_read(vsl_b_istream &is)
     break;
   }
   default:
-    vcl_cerr << "I/O ERROR: dbinfo_track_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbinfo_track_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -98,7 +98,7 @@ dbinfo_track_storage::set_track(dbinfo_track_sptr const& track)
 {
   if(!track)
     {
-      vcl_cout << "In dbinfo_track_storage::set_track(..) - null track\n";
+      std::cout << "In dbinfo_track_storage::set_track(..) - null track\n";
       return;
     }
   unsigned id = track->id();
@@ -106,16 +106,16 @@ dbinfo_track_storage::set_track(dbinfo_track_sptr const& track)
 }
 
 void 
-dbinfo_track_storage::set_tracks(vcl_vector<dbinfo_track_sptr> const& tracks)
+dbinfo_track_storage::set_tracks(std::vector<dbinfo_track_sptr> const& tracks)
 {
-  for(vcl_vector<dbinfo_track_sptr>::const_iterator trit = tracks.begin();
+  for(std::vector<dbinfo_track_sptr>::const_iterator trit = tracks.begin();
       trit != tracks.end(); ++trit)
     this->set_track(*trit);
 }
 
-vcl_vector<dbinfo_track_sptr> dbinfo_track_storage::tracks()
+std::vector<dbinfo_track_sptr> dbinfo_track_storage::tracks()
 {
-  vcl_vector<dbinfo_track_sptr> temp;
+  std::vector<dbinfo_track_sptr> temp;
   for(map_type::iterator mit = track_index_.begin();
       mit != track_index_.end(); ++mit)
     temp.push_back((*mit).second);
@@ -131,8 +131,8 @@ dbinfo_track_storage::track_by_spacetime(const unsigned frame,
 {
   assert(v);
   double dthresh = 0.1;
-  vcl_vector<dbinfo_track_sptr> tracks = this->tracks();
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+  std::vector<dbinfo_track_sptr> tracks = this->tracks();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
       trit != tracks.end(); trit++)
     {
       dbinfo_observation_sptr obs = (*trit)->observ(frame);

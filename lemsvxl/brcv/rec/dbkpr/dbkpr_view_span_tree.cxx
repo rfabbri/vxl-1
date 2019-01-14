@@ -6,8 +6,8 @@
 #include <dbdet/dbdet_keypoint.h>
 #include <dbdet/dbdet_keypoint_corr3d.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_algorithm.h>
-#include <vcl_set.h>
+#include <algorithm>
+#include <set>
 #include <vnl/vnl_double_2.h>
 
 #include <mvl/FMatrixComputeRANSAC.h>
@@ -19,7 +19,7 @@ dbkpr_view_span_link
 dbkpr_view_span_link::reverse() const
 {
   dbkpr_view_span_link rlnk(this->to, this->from);
-  for( vcl_map<int,int>::const_iterator itr = this->matches.begin();
+  for( std::map<int,int>::const_iterator itr = this->matches.begin();
        itr != this->matches.end();  ++itr )
   {
     rlnk.matches[itr->second] = itr->first;
@@ -37,35 +37,35 @@ static bool links_match_size_less(const dbkpr_view_span_link& l1,
 
 //: Constructor
 dbkpr_view_span_tree::
-dbkpr_view_span_tree( const vcl_vector<vcl_vector<dbdet_keypoint_sptr> >& keypoints,
+dbkpr_view_span_tree( const std::vector<std::vector<dbdet_keypoint_sptr> >& keypoints,
                       unsigned int max_bins, double F_std, unsigned int num_ran_sam)
  : max_bins_(max_bins), std_(F_std), num_samples_(num_ran_sam),
    keypoints_(keypoints), links_(keypoints.size())
 {
   // construct all of the bbf kd-trees
   for(unsigned int i=0; i<keypoints.size(); ++i){
-    vcl_vector<vnl_vector_fixed<double,128> > descriptors(keypoints[i].size());
+    std::vector<vnl_vector_fixed<double,128> > descriptors(keypoints[i].size());
     for(unsigned int j=0; j<keypoints[i].size(); ++j)
       descriptors[j] = keypoints[i][j]->descriptor();
     bbf_trees_.push_back(descriptors);
     labels_.push_back(i);
   }
-  vcl_cout << "build all trees" << vcl_endl;
+  std::cout << "build all trees" << std::endl;
 
-  vcl_vector<dbkpr_view_span_link> links;
+  std::vector<dbkpr_view_span_link> links;
   unsigned int num_views = keypoints_.size();
   for(unsigned int i=0; i<num_views; ++i){
-    vcl_cout << "matching " << i << vcl_endl;
+    std::cout << "matching " << i << std::endl;
     for(unsigned int j=i+1; j<num_views; ++j){
       links.push_back(dbkpr_view_span_link(i,j,tentative_matches(i,j)));
     }
   }
-  vcl_sort(links.begin(), links.end(), links_match_size_less);
+  std::sort(links.begin(), links.end(), links_match_size_less);
   while(!links.empty() && links.back().matches.size() > 20){
     dbkpr_view_span_link lnk = links.back();
     if(merge_labels(lnk.from,lnk.to)){
-      vcl_cout << "linking " << lnk.from << " to " << lnk.to
-               << " ("<< lnk.matches.size()<< " matches)"<< vcl_endl;
+      std::cout << "linking " << lnk.from << " to " << lnk.to
+               << " ("<< lnk.matches.size()<< " matches)"<< std::endl;
       apply_F_constraints(lnk);
       expand_matches(lnk);
       links_[lnk.from].push_back(lnk);
@@ -81,16 +81,16 @@ dbkpr_view_span_tree( const vcl_vector<vcl_vector<dbdet_keypoint_sptr> >& keypoi
 // The second index is the keypoint number
 // corresponding keypoints will have the same second index in all frames
 // missing correspondencs are marked with NULL keypoint smart pointers
-vcl_vector<vcl_vector<dbdet_keypoint_sptr> >
+std::vector<std::vector<dbdet_keypoint_sptr> >
 dbkpr_view_span_tree::global_correspondence() const
 {
   // recursively build a matrix of match indices
-  vcl_vector<vcl_vector<int> > global_indices(keypoints_.size());
+  std::vector<std::vector<int> > global_indices(keypoints_.size());
   global_corr_helper(-1,0,global_indices);
 
   // look up the keypoints for each index
-  vcl_vector<dbdet_keypoint_sptr> empty(global_indices[0].size(),NULL);
-  vcl_vector<vcl_vector<dbdet_keypoint_sptr> > global_matches(global_indices.size(),empty);
+  std::vector<dbdet_keypoint_sptr> empty(global_indices[0].size(),NULL);
+  std::vector<std::vector<dbdet_keypoint_sptr> > global_matches(global_indices.size(),empty);
   for(unsigned int i=0; i<global_indices.size(); ++i){
     for(unsigned int j=0; j<global_indices[i].size(); ++j){
       int ind = global_indices[i][j];
@@ -104,15 +104,15 @@ dbkpr_view_span_tree::global_correspondence() const
 
 
 //: Traverse the tree computing a global set of correspondence points
-vcl_vector<dbdet_keypoint_corr3d_sptr>
+std::vector<dbdet_keypoint_corr3d_sptr>
 dbkpr_view_span_tree::global_corr3d_points() const
 {
   // recursively build a matrix of match indices
-  vcl_vector<vcl_vector<int> > global_indices(keypoints_.size());
+  std::vector<std::vector<int> > global_indices(keypoints_.size());
   global_corr_helper(-1,0,global_indices);
 
   // look up the keypoints for each index
-  vcl_vector<dbdet_keypoint_corr3d_sptr> global_matches;
+  std::vector<dbdet_keypoint_corr3d_sptr> global_matches;
   for(unsigned int j=0; j<global_indices[0].size(); ++j){
     dbdet_keypoint_corr3d_sptr kp_corr = new dbdet_keypoint_corr3d(0,0,0);
     for(unsigned int i=0; i<global_indices.size(); ++i){
@@ -131,14 +131,14 @@ dbkpr_view_span_tree::global_corr3d_points() const
 //: helper function for recursive correspondence building
 void
 dbkpr_view_span_tree::global_corr_helper(int parent, int current,
-                                         vcl_vector<vcl_vector<int> >& corr) const
+                                         std::vector<std::vector<int> >& corr) const
 {
-  for( vcl_vector<dbkpr_view_span_link>::const_iterator citr = links_[current].begin();
+  for( std::vector<dbkpr_view_span_link>::const_iterator citr = links_[current].begin();
        citr != links_[current].end();  ++citr )
   {
     if(citr->to != parent){
       // make a copy of the current matches
-      vcl_map<int,int> matches(citr->matches);
+      std::map<int,int> matches(citr->matches);
       // for each existing correspondence
       for( unsigned int i=0; i<corr[current].size(); ++i )
       {
@@ -146,7 +146,7 @@ dbkpr_view_span_tree::global_corr_helper(int parent, int current,
         // if we have a keypoint for this correspondence (from the parent)
         if(ind != -1){
           // find a match from the current to the child
-          vcl_map<int,int>::iterator fitr = matches.find(ind);
+          std::map<int,int>::iterator fitr = matches.find(ind);
           if(fitr != matches.end()){
             // add to the correspondece matrix and remove from the local map
             corr[citr->to][i] = fitr->second;
@@ -160,7 +160,7 @@ dbkpr_view_span_tree::global_corr_helper(int parent, int current,
       for( unsigned int i=0; i<corr.size(); ++i)
         corr[i].resize(c+matches.size(),-1);
       // add new correspondences for the remaining matches
-      for( vcl_map<int,int>::const_iterator mitr = matches.begin();
+      for( std::map<int,int>::const_iterator mitr = matches.begin();
            mitr != matches.end();  ++mitr, ++c)
       {
         corr[current][c] = mitr->first;
@@ -181,10 +181,10 @@ dbkpr_view_span_tree::match_matrix() const
   vnl_matrix<int> M(num_views,num_views);
   for(unsigned int i=0; i<num_views; ++i){
     for(unsigned int j=0; j<num_views; ++j){
-      vcl_cout << "matching " << i << ", "<< j << vcl_endl;
-      vcl_map<int,int> matches = tentative_matches(i,j);
+      std::cout << "matching " << i << ", "<< j << std::endl;
+      std::map<int,int> matches = tentative_matches(i,j);
       M(i,j) = matches .size();
-      vcl_cout << "  matches="<<matches.size()<<vcl_endl;
+      std::cout << "  matches="<<matches.size()<<std::endl;
     }
   }
   return M;
@@ -200,14 +200,14 @@ static inline bool similar(double v1, double v2, double ratio=0.8)
 void 
 dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
 {
-  vcl_vector<vnl_vector_fixed<double,2> > inlier_pos;
-  vcl_vector<int> inlier_idx;
-  const vcl_vector<dbdet_keypoint_sptr>& all_kpts_from = keypoints_[link.from];
-  const vcl_vector<dbdet_keypoint_sptr>& all_kpts_to = keypoints_[link.to];
-  vcl_set<int> unmatched_from, unmatched_to;
+  std::vector<vnl_vector_fixed<double,2> > inlier_pos;
+  std::vector<int> inlier_idx;
+  const std::vector<dbdet_keypoint_sptr>& all_kpts_from = keypoints_[link.from];
+  const std::vector<dbdet_keypoint_sptr>& all_kpts_to = keypoints_[link.to];
+  std::set<int> unmatched_from, unmatched_to;
   for(int i=0; i< (int)all_kpts_from.size(); ++i) unmatched_from.insert(i);
   for(int i=0; i< (int)all_kpts_to.size(); ++i) unmatched_to.insert(i);
-  for( vcl_map<int,int>::const_iterator itr = link.matches.begin();
+  for( std::map<int,int>::const_iterator itr = link.matches.begin();
        itr != link.matches.end();  ++itr )
   {
     const dbdet_keypoint_sptr& kp = all_kpts_from[itr->first];
@@ -219,7 +219,7 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
   bnld_bbf_tree<double,2> pos_bbf_tree(inlier_pos);
   
   // Consider all unmatched point in the first image   
-  for( vcl_set<int>::iterator f_itr = unmatched_from.begin();
+  for( std::set<int>::iterator f_itr = unmatched_from.begin();
        f_itr != unmatched_from.end();  ++f_itr )
   {
     const dbdet_keypoint_sptr& from_kp = all_kpts_from[*f_itr];
@@ -228,11 +228,11 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
       link.F.image2_epipolar_line(vgl_homg_point_2d<double>(*from_kp));
       
     // Find the three nearest matching point in the same image
-    vcl_vector<int> indices;
+    std::vector<int> indices;
     pos_bbf_tree.n_nearest(vnl_double_2(from_kp->x(),from_kp->y()), indices, 3);
-    vcl_map<int,int>::const_iterator match_n1 = link.matches.find(inlier_idx[indices[0]]);
-    vcl_map<int,int>::const_iterator match_n2 = link.matches.find(inlier_idx[indices[1]]);
-    vcl_map<int,int>::const_iterator match_n3 = link.matches.find(inlier_idx[indices[2]]);
+    std::map<int,int>::const_iterator match_n1 = link.matches.find(inlier_idx[indices[0]]);
+    std::map<int,int>::const_iterator match_n2 = link.matches.find(inlier_idx[indices[1]]);
+    std::map<int,int>::const_iterator match_n3 = link.matches.find(inlier_idx[indices[2]]);
     
     
     double s11 = all_kpts_from[match_n1->first]->scale();
@@ -248,7 +248,7 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
     double ds2 = s12/s22;
     double ds3 = s13/s23;
     
-    for( vcl_set<int>::iterator t_itr = unmatched_to.begin();
+    for( std::set<int>::iterator t_itr = unmatched_to.begin();
          t_itr != unmatched_to.end();  ++t_itr )
     {
       const dbdet_keypoint_sptr& to_kp = all_kpts_to[*t_itr];
@@ -260,8 +260,8 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
       double d22 = vgl_distance(*all_kpts_to[match_n2->second], *to_kp)/s22;
       double d23 = vgl_distance(*all_kpts_to[match_n3->second], *to_kp)/s23;
       if( similar(d11,d21) && similar(d12,d22) && similar(d13,d23) ){
-        vcl_cout <<"found a match" << vcl_endl;
-        link.matches.insert(vcl_pair<int,int>(*f_itr,*t_itr));
+        std::cout <<"found a match" << std::endl;
+        link.matches.insert(std::pair<int,int>(*f_itr,*t_itr));
         break;
       }
     }
@@ -273,10 +273,10 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
 void
 dbkpr_view_span_tree::apply_F_constraints(dbkpr_view_span_link& link)
 {
-  vcl_vector< vgl_homg_point_2d<double> > pts1, pts2;
-  vcl_vector< int > ind1, ind2;
+  std::vector< vgl_homg_point_2d<double> > pts1, pts2;
+  std::vector< int > ind1, ind2;
   FMatrixComputeRANSAC fransac(true, std_);
-  for( vcl_map<int,int>::const_iterator itr = link.matches.begin();
+  for( std::map<int,int>::const_iterator itr = link.matches.begin();
        itr != link.matches.end();  ++itr )
   {
     ind1.push_back(itr->first);
@@ -287,10 +287,10 @@ dbkpr_view_span_tree::apply_F_constraints(dbkpr_view_span_link& link)
 
   // take the best of 15
   int most_inliers = 0;
-  vcl_vector<bool> best_inliers;
+  std::vector<bool> best_inliers;
   for(unsigned int c=0; c<num_samples_; ++c){
     FMatrix F = fransac.compute(pts1,pts2);
-    vcl_vector<bool> inliers = fransac.get_inliers();
+    std::vector<bool> inliers = fransac.get_inliers();
     int in_count=0;
     for (unsigned int i=0; i<inliers.size(); ++i)
       if(inliers[i])
@@ -315,17 +315,17 @@ dbkpr_view_span_tree::apply_F_constraints(dbkpr_view_span_link& link)
 //: compute tentative matches between view \p v1 and view \p v2
 //  using only keypoint descriptors
 //  return a map of indices in v1 to indices in v2
-vcl_map<int,int>
+std::map<int,int>
 dbkpr_view_span_tree::tentative_matches( unsigned int v1, unsigned int v2 ) const
 {
-  const vcl_vector<dbdet_keypoint_sptr>& keys1 = keypoints_[v1];
-  const vcl_vector<dbdet_keypoint_sptr>& keys2 = keypoints_[v2];
+  const std::vector<dbdet_keypoint_sptr>& keys1 = keypoints_[v1];
+  const std::vector<dbdet_keypoint_sptr>& keys2 = keypoints_[v2];
   const bnld_bbf_tree<double,128>& bbf_tree = bbf_trees_[v2];
 
-  vcl_map<int,int> matches;
+  std::map<int,int> matches;
   for (unsigned int i=0; i<keys1.size(); ++i){
     //find the two closest matches
-    vcl_vector<int> indices;
+    std::vector<int> indices;
     bbf_tree.n_nearest(keys1[i]->descriptor(), indices, 2, max_bins_);
     // check if the distance to the first is less than 80% of the distance to the second
     if( vnl_vector_ssd(keys1[i]->descriptor(),keys2[indices[0]]->descriptor()) <

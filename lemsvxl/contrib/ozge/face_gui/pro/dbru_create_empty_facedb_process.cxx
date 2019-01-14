@@ -4,7 +4,7 @@
 // \file
 
 #include <ozge/face_gui/pro/dbru_create_empty_facedb_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bpro1/bpro1_parameters.h>
 #include <ozge/face_gui/pro/dbru_facedb_storage.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -30,7 +30,7 @@ dbru_create_empty_facedb_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbru_create_empty_facedb_process::name()
+std::string dbru_create_empty_facedb_process::name()
 {
   return "Create Empty facedb";
 }
@@ -45,18 +45,18 @@ dbru_create_empty_facedb_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbru_create_empty_facedb_process::get_input_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbru_create_empty_facedb_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbru_facedb_storage");
   return to_return;
 }
@@ -104,7 +104,7 @@ dbru_create_empty_facedb_process::finish()
    //Old way of enforcing global
    if(!res->store_data(facedb_storage_))
     {
-      vcl_cout << "In dbinfo_facedb_display_tool::display_facedb() "
+      std::cout << "In dbinfo_facedb_display_tool::display_facedb() "
                << "store to repository failed\n";
       return false;
     }

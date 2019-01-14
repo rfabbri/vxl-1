@@ -92,7 +92,7 @@ void DrawingWindow::OnPenColor()
   dialog.SetTitle("Choose the Pen colour");
   if (dialog.ShowModal() == wxID_OK){
     wxColour col = dialog.GetColourData().GetColour();
-    vcl_cout<<" Vals = "<<(int)col.Red()<<"  "<<(int)col.Green()<<"  "<<(int)col.Blue()<<vcl_endl;
+    std::cout<<" Vals = "<<(int)col.Red()<<"  "<<(int)col.Green()<<"  "<<(int)col.Blue()<<std::endl;
     //mergeStyle(Color((float)col.Red(), (float)col.Green(), (float)col.Blue()));
   }
 }

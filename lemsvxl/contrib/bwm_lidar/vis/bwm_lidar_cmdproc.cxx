@@ -1,11 +1,11 @@
 //: This is bwm_lidar_cmdproc.cxx
 //  Creation: Dec 13, 2007   Ming-Ching Chang
 
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_iomanip.h>
+#include <ctime>
+#include <cstdlib>
+#include <string>
+#include <iostream>
+#include <iomanip>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 
@@ -55,23 +55,23 @@
 #include <Inventor/actions/SoToVRML2Action.h>
 
 //: for one view
-static bool read_calib (const vcl_string &view_f,
-                        const vcl_string &camera_f,
-                        const vcl_string &center_direction_f,
+static bool read_calib (const std::string &view_f,
+                        const std::string &camera_f,
+                        const std::string &center_direction_f,
                         vil_image_view<vxl_byte>& view,
                         vnl_matrix_fixed<double,3,4> &camera,
                         vnl_vector_fixed<double,3> &center,
                         vnl_vector_fixed<double,3> &view_direction);
 
 //: for all views
-static bool read_calib_all (const vcl_string& input_path,
-                            const vcl_string& texture_prefix,
-                            vcl_vector<vil_image_view<vxl_byte> >& views,
-                            vcl_vector<vnl_matrix_fixed<double,3,4> > &camera_matrices,
-                            vcl_vector<vnl_vector_fixed<double,3> > &camera_center,
-                            vcl_vector<vnl_vector_fixed<double,3> > &camera_view_direction);
+static bool read_calib_all (const std::string& input_path,
+                            const std::string& texture_prefix,
+                            std::vector<vil_image_view<vxl_byte> >& views,
+                            std::vector<vnl_matrix_fixed<double,3,4> > &camera_matrices,
+                            std::vector<vnl_vector_fixed<double,3> > &camera_center,
+                            std::vector<vnl_vector_fixed<double,3> > &camera_view_direction);
 
-void divide_ground_plane (vcl_vector<dbmsh3d_textured_mesh_mc*>& M_vec, 
+void divide_ground_plane (std::vector<dbmsh3d_textured_mesh_mc*>& M_vec, 
                           double width, double height, double ground_height);
 
 //#####################################################################
@@ -84,8 +84,8 @@ bool bwm_lidar_check_cmdproc (int argc, char **argv)
     //Default Viewer: try to open the argv[1] file and visualize it.
     //Assume the first parameter specifies the file to display.
     if (argc>1 && argv[1][0] != '-') {      
-      vcl_string dirfile = dbul_get_dir_file (argv[1]);
-      vcl_string suffix = dbul_get_suffix (argv[1]);
+      std::string dirfile = dbul_get_dir_file (argv[1]);
+      std::string suffix = dbul_get_suffix (argv[1]);
     }
   }
   return true;
@@ -95,7 +95,7 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
 {
   SoSeparator* _root = new SoSeparator;
 
-  vcl_string prefix;
+  std::string prefix;
   if (dbmsh3d_cmd_fileprefix())
     prefix = dbmsh3d_cmd_fileprefix();
   else
@@ -108,7 +108,7 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
   if (bwm_lidar_cmd_run() != 0) {
 
     //-d : input directory.
-    vcl_string input_path;
+    std::string input_path;
     if (bwm_lidar_cmd_dir())
       input_path = bwm_lidar_cmd_dir();
     else
@@ -180,7 +180,7 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
     vis_building->addChild (vis_ground);
 
     //vector of meshes for buildings.
-    vcl_vector<dbmsh3d_textured_mesh_mc*> M_vec;
+    std::vector<dbmsh3d_textured_mesh_mc*> M_vec;
 
     divide_ground_plane (M_vec, labels.ni(), labels.nj(), ground_height);
 
@@ -234,23 +234,23 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
       //Given all 32 calibrated views, generate texture mapping mesh.
 
       if (bwm_lidar_cmd_ft() == NULL) {
-        vcl_cerr << "specify -ft texture file prefix!!" << vcl_endl;
+        std::cerr << "specify -ft texture file prefix!!" << std::endl;
         return _root;
       }
-      vcl_string texture_prefix = bwm_lidar_cmd_ft();
+      std::string texture_prefix = bwm_lidar_cmd_ft();
 
       //Load the view images from files.
       //Load the camera parameters from files.
-      vcl_vector<vil_image_view<vxl_byte> > views;
-      vcl_vector<vnl_matrix_fixed<double,3,4> > camera_matrices;
-      vcl_vector<vnl_vector_fixed<double,3> > camera_center;
-      vcl_vector<vnl_vector_fixed<double,3> > camera_view_direction;
+      std::vector<vil_image_view<vxl_byte> > views;
+      std::vector<vnl_matrix_fixed<double,3,4> > camera_matrices;
+      std::vector<vnl_vector_fixed<double,3> > camera_center;
+      std::vector<vnl_vector_fixed<double,3> > camera_view_direction;
 
       // read calibration for all images (32) 
       bool retval = read_calib_all (input_path, texture_prefix, views, camera_matrices, camera_center, camera_view_direction);
 
       //The texture mapping VRML file.
-      vcl_string output_vrml = prefix + "-textured.wrl";
+      std::string output_vrml = prefix + "-textured.wrl";
 
       ///dbmsh3d_textured_mesh_mc* M = new dbmsh3d_textured_mesh_mc;
       //-f prefix.
@@ -259,18 +259,18 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
 
       for (unsigned int i=0; i<M_vec.size(); i++) {
         M_vec[i]->IFS_to_MHE();
-        vcl_string file = vul_sprintf("bld_%02d.ply2", i);
+        std::string file = vul_sprintf("bld_%02d.ply2", i);
         dbmsh3d_save_ply2 (M_vec[i], (prefix + file).c_str());
       }
 
-      ///vcl_vector<dbmsh3d_textured_mesh_mc*> meshes;
+      ///std::vector<dbmsh3d_textured_mesh_mc*> meshes;
       ///meshes.push_back (M);
-      vcl_vector<vpgl_proj_camera<double> > cameras;
+      std::vector<vpgl_proj_camera<double> > cameras;
       for (unsigned int i=0; i<camera_matrices.size(); i++) {
         vpgl_proj_camera<double> camera(camera_matrices[i]);
         cameras.push_back(camera);
       }
-      //vcl_vector<dbmsh3d_textured_mesh_mc> mesh_out;
+      //std::vector<dbmsh3d_textured_mesh_mc> mesh_out;
 
       bool r = texturemap_meshes (M_vec, views, cameras, ".");
       assert (r);
@@ -351,19 +351,19 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
   else if (bwm_lidar_cmd_lidar() == 2) {
     //-f prefix
     //Load the lidar image 1
-    vcl_string lidar_file_max = dbmsh3d_cmd_fileprefix();
+    std::string lidar_file_max = dbmsh3d_cmd_fileprefix();
     lidar_file_max += "_max.tif";
     vil_image_resource_sptr lidar_image_max = vil_load_image_resource( lidar_file_max.c_str() );
     assert (lidar_image_max);
 
     //Load the lidar image 2
-    vcl_string lidar_file_min = dbmsh3d_cmd_fileprefix();
+    std::string lidar_file_min = dbmsh3d_cmd_fileprefix();
     lidar_file_min += "_min.tif";
     vil_image_resource_sptr lidar_image_min = vil_load_image_resource( lidar_file_min.c_str() );
     assert (lidar_image_min);
 
     //Load the lidar labelling image
-    vcl_string lidar_file_labeled = dbmsh3d_cmd_fileprefix();
+    std::string lidar_file_labeled = dbmsh3d_cmd_fileprefix();
     lidar_file_labeled += "_labeled.tif";
     vil_image_resource_sptr lidar_image_labeled = vil_load_image_resource( lidar_file_labeled.c_str() );
     assert (lidar_image_labeled);
@@ -383,7 +383,7 @@ SoSeparator* bwm_lidar_cmdproc_execute ()
   return _root;
 }
 
-void divide_ground_plane (vcl_vector<dbmsh3d_textured_mesh_mc*>& M_vec, 
+void divide_ground_plane (std::vector<dbmsh3d_textured_mesh_mc*>& M_vec, 
                           double width, double height, double ground_height)
 {
   dbmsh3d_textured_mesh_mc* M = new dbmsh3d_textured_mesh_mc;
@@ -430,9 +430,9 @@ void divide_ground_plane (vcl_vector<dbmsh3d_textured_mesh_mc*>& M_vec,
 //: for one view
 bool
 read_calib(
-    const vcl_string &view_f,
-    const vcl_string &camera_f,
-    const vcl_string &center_direction_f,
+    const std::string &view_f,
+    const std::string &camera_f,
+    const std::string &center_direction_f,
     vil_image_view<vxl_byte>& view,
     vnl_matrix_fixed<double,3,4> &camera,
     vnl_vector_fixed<double,3> &center,
@@ -443,18 +443,18 @@ read_calib(
   view = vil_load (view_f.c_str());
 
   //read camera matrix files.
-  vcl_ifstream fp( camera_f.c_str() );
+  std::ifstream fp( camera_f.c_str() );
   if (!fp) {
-    vcl_cerr << "read: error, unable to open file name " << camera_f << vcl_endl;
+    std::cerr << "read: error, unable to open file name " << camera_f << std::endl;
     return false;
   }
 
   fp >> camera;
 
   //read camera center and direction file.
-  vcl_ifstream fp2( center_direction_f.c_str() );
+  std::ifstream fp2( center_direction_f.c_str() );
   if (!fp2) {
-    vcl_cerr << "read: error, unable to open file name " << center_direction_f << vcl_endl;
+    std::cerr << "read: error, unable to open file name " << center_direction_f << std::endl;
     return false;
   }
 
@@ -467,18 +467,18 @@ read_calib(
 
 //: for all views
 bool
-read_calib_all (const vcl_string& input_path,
-                const vcl_string& texture_prefix,
-    vcl_vector<vil_image_view<vxl_byte> >& views,
-    vcl_vector<vnl_matrix_fixed<double,3,4> > &camera_matrices,
-    vcl_vector<vnl_vector_fixed<double,3> > &camera_center,
-    vcl_vector<vnl_vector_fixed<double,3> > &camera_view_direction
+read_calib_all (const std::string& input_path,
+                const std::string& texture_prefix,
+    std::vector<vil_image_view<vxl_byte> >& views,
+    std::vector<vnl_matrix_fixed<double,3,4> > &camera_matrices,
+    std::vector<vnl_vector_fixed<double,3> > &camera_center,
+    std::vector<vnl_vector_fixed<double,3> > &camera_view_direction
 )
 {
   //path to the texture image data.
-  ///vcl_string mypath("/vision/video/rfabbri/lafayette-1218/");
-  ///vcl_string mypath("V:\\video\\rfabbri\\lafayette-1218\\");
-  vcl_string mypath = input_path + "/" + texture_prefix + "/";
+  ///std::string mypath("/vision/video/rfabbri/lafayette-1218/");
+  ///std::string mypath("V:\\video\\rfabbri\\lafayette-1218\\");
+  std::string mypath = input_path + "/" + texture_prefix + "/";
 
   unsigned const n_blocks = 8;
   unsigned const n_directions_per_block = 4;
@@ -489,16 +489,16 @@ read_calib_all (const vcl_string& input_path,
 
   for(unsigned ib=1; ib <= n_blocks; ib++)
     for (unsigned iv=1; iv <= n_directions_per_block; iv++) {
-      vcl_string myprefix;
+      std::string myprefix;
 
-      vcl_stringstream sstr;
+      std::stringstream sstr;
       ///sstr << "Lafayette_" << ib << "_v" << iv;
       sstr << texture_prefix.c_str() << "_" << ib << "_v" << iv;
       sstr >> myprefix;
 
-      vcl_string view_f = mypath + myprefix + vcl_string(".jpg");
-      vcl_string camera_f = mypath + myprefix + vcl_string("_cam.txt");
-      vcl_string center_direction_f = mypath + myprefix + vcl_string("_center-direction.txt");
+      std::string view_f = mypath + myprefix + std::string(".jpg");
+      std::string camera_f = mypath + myprefix + std::string("_cam.txt");
+      std::string center_direction_f = mypath + myprefix + std::string("_center-direction.txt");
 
       vil_image_view<vxl_byte> view;
       vnl_matrix_fixed<double,3,4> camera;
@@ -508,7 +508,7 @@ read_calib_all (const vcl_string& input_path,
                                 view, camera, center, view_direction);
       if (!retval || (ib==5 && iv==1)) {
         final_retval = false;
-        vcl_cerr << "Skipping file " << myprefix << "*" << vcl_endl;
+        std::cerr << "Skipping file " << myprefix << "*" << std::endl;
         ///views.push_back(view);
         ///camera_matrices.push_back(camera);
         ///camera_center.push_back(center);
@@ -520,10 +520,10 @@ read_calib_all (const vcl_string& input_path,
         camera_center.push_back(center);
         camera_view_direction.push_back(view_direction);
 
-        vcl_cout << "Block " << ib << " view " << iv << vcl_endl;
-        vcl_cout << "Cam: " << camera << vcl_endl;
-        vcl_cout << "Center: " << center << vcl_endl;
-        vcl_cout << "Direction: " << view_direction<< vcl_endl << vcl_endl;
+        std::cout << "Block " << ib << " view " << iv << std::endl;
+        std::cout << "Cam: " << camera << std::endl;
+        std::cout << "Center: " << center << std::endl;
+        std::cout << "Direction: " << view_direction<< std::endl << std::endl;
       }
     }
   return final_retval;

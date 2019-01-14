@@ -12,9 +12,9 @@
 #ifndef all_includes_h
 #define all_includes_h
 
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <cstdlib>
+#include <string>
+#include <vector>
 
 #include <vgl/algo/vgl_homg_operators_2d.h>
 #include <vgl/vgl_closest_point.h>

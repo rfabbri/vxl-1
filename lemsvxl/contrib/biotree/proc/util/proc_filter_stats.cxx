@@ -10,14 +10,14 @@
 #include "proc_filter_stats.h"
 
 #include <vnl/vnl_matrix.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/algo/vnl_matrix_inverse.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // finds the maximum of each filter response
 bool
-proc_filter_stats::max(vcl_vector<xmvg_filter_response<double> > & responses,
+proc_filter_stats::max(std::vector<xmvg_filter_response<double> > & responses,
                         xmvg_filter_response<double> &max_vect)
 {
   double min_double = -1.*vnl_numeric_traits<double>::maxval;
@@ -40,7 +40,7 @@ proc_filter_stats::max(vcl_vector<xmvg_filter_response<double> > & responses,
 
 // finds the mean of each filter response
 bool
-proc_filter_stats::mean(vcl_vector<xmvg_filter_response<double> > & responses,
+proc_filter_stats::mean(std::vector<xmvg_filter_response<double> > & responses,
                         xmvg_filter_response<double>  &mean_vals)
 {
   if (responses.size() > 0) 
@@ -72,7 +72,7 @@ proc_filter_stats::mean(vcl_vector<xmvg_filter_response<double> > & responses,
 
 // computes the covariance matrix
 double
-proc_filter_stats::covar(vcl_vector<xmvg_filter_response<double> > & responses,
+proc_filter_stats::covar(std::vector<xmvg_filter_response<double> > & responses,
                          vnl_matrix<double> &covar_matrix){
   // check if the there are any responses
   if (responses.size() == 0) 
@@ -104,7 +104,7 @@ proc_filter_stats::covar(vcl_vector<xmvg_filter_response<double> > & responses,
 
   // divide the variance by the number of samples
   covar_matrix = covar / responses.size();
-  vcl_cout << covar_matrix << vcl_endl;
+  std::cout << covar_matrix << std::endl;
   return 1;
 }
 
@@ -112,11 +112,11 @@ proc_filter_stats::covar(vcl_vector<xmvg_filter_response<double> > & responses,
 // for each filter fi --> sqrt(sum((f-f_mean)^tCovar^-1(f-f_mean)))
 // the results are written to a file unless fname is "" (null string)
 double
-proc_filter_stats::noise_threshold(vcl_vector<xmvg_filter_response<double> > & responses,
+proc_filter_stats::noise_threshold(std::vector<xmvg_filter_response<double> > & responses,
                                    vnl_matrix<double> const& covar_matrix,
                                    double max_covar,
                                    xmvg_filter_response<double> const& mean,
-                                   vcl_string fname) 
+                                   std::string fname) 
 {
   vnl_matrix<double> f(6, 1);
   vnl_matrix<double> f_transp(1, 6);

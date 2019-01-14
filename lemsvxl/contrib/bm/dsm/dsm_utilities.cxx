@@ -1,7 +1,7 @@
 //this is /contrib/bm/dsm/dsm_utilities.cxx
 #include"dsm_utilities.h"
 
-vnl_matrix<double> dsm_utilities::compute_confusion_matrix( vcl_string const& img_gt_filename, vcl_string const& img_prediction_filename)
+vnl_matrix<double> dsm_utilities::compute_confusion_matrix( std::string const& img_gt_filename, std::string const& img_prediction_filename)
 {
 	vnl_matrix<double> confusion_matrix(2,2,double(0));
 
@@ -10,8 +10,8 @@ vnl_matrix<double> dsm_utilities::compute_confusion_matrix( vcl_string const& im
 
 	if( gt_view.size() != prediction_view.size() )
 	{
-		vcl_cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
-				 << "\t Ground Truth and Prediction Images are not the same size!" << vcl_flush;
+		std::cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
+				 << "\t Ground Truth and Prediction Images are not the same size!" << std::flush;
 		exit(1);
 	}
 
@@ -27,8 +27,8 @@ vnl_matrix<double> dsm_utilities::compute_confusion_matrix( vil_image_view<vxl_b
 
 	if( gt_view.size() != prediction_view.size() )
 	{
-		vcl_cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
-				 << "\t Ground Truth and Prediction Images are not the same size!" << vcl_flush;
+		std::cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
+				 << "\t Ground Truth and Prediction Images are not the same size!" << std::flush;
 		exit(1);
 	}
 
@@ -53,9 +53,9 @@ vnl_matrix<double> dsm_utilities::compute_confusion_matrix( vil_image_view<vxl_b
 						++confusion_matrix[0][1];
 					else
 					{
-						vcl_cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
+						std::cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
 							     << "\t Unknown value of prediction image at location (" 
-								 << i << "," << j  << ") = " << int(prediction_value) << vcl_flush;
+								 << i << "," << j  << ") = " << int(prediction_value) << std::flush;
 						exit(1);
 					}
 				}//end if gt_value == 255
@@ -69,17 +69,17 @@ vnl_matrix<double> dsm_utilities::compute_confusion_matrix( vil_image_view<vxl_b
 						++confusion_matrix[1][1];
 					else
 					{
-						vcl_cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
+						std::cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
 							     << "\t Unknown value of prediction image at location (" 
-								 << i << "," << j  << ") = " << int(prediction_value) << vcl_flush;
+								 << i << "," << j  << ") = " << int(prediction_value) << std::flush;
 						exit(1);
 					}
 				}
 				else
 				{
-					vcl_cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
+					std::cerr << "----ERROR---- dsm_utilities::compute_confusion_matrix\n"
 							     << "\t Unknown value of ground truth image at location (" 
-								 << i << "," << j  << ") = " << prediction_value << vcl_flush;
+								 << i << "," << j  << ") = " << prediction_value << std::flush;
 						exit(1);
 				}
 			}//end don't care check

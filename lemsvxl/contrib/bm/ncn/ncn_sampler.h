@@ -12,11 +12,11 @@
 
 #include<vbl/vbl_array_1d.h>
 
-#include<vcl_iostream.h>
-#include<vcl_iomanip.h>
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<iostream>
+#include<iomanip>
+#include<map>
+#include<set>
+#include<utility>
 
 #include<vgl/vgl_distance.h>
 #include<vgl/vgl_point_2d.h>
@@ -45,9 +45,9 @@ class ncn_sampler
 {
 public:
     static bool sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix, unsigned const& num_pivot_pixels,
-                                vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than >& pivot_pixel_candidates, unsigned const& nparticles = 5000);
+                                std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than >& pivot_pixel_candidates, unsigned const& nparticles = 5000);
 
-    static bool vgl_point_2d_set_to_dat(vcl_ofstream& os, vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& point_set);
+    static bool vgl_point_2d_set_to_dat(std::ofstream& os, std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& point_set);
 
 private:
     static unsigned find_bin(vbl_array_1d<double> const& cdf, double const& target);

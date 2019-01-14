@@ -59,7 +59,7 @@ class dbcll_similarity_matrix: public vbl_ref_count
 
  private:
   vnl_sym_matrix<double> data_;
-  vcl_vector<unsigned> valid_idx_;
+  std::vector<unsigned> valid_idx_;
 };
 
 
@@ -78,7 +78,7 @@ class dbcll_precompute_cluster: public dbcll_cluster
   : dbcll_cluster(idx), sim_matrix_(M), m_idx_(m_idx) {}
 
   //: Constructor - multiple indices
-  dbcll_precompute_cluster(const vcl_vector<unsigned>& idxs,
+  dbcll_precompute_cluster(const std::vector<unsigned>& idxs,
                            const dbcll_similarity_matrix_sptr& M,
                            unsigned m_idx)
   : dbcll_cluster(idxs), sim_matrix_(M), m_idx_(m_idx) {}
@@ -115,8 +115,8 @@ class dbcll_precompute_cluster: public dbcll_cluster
 
 
 //: Compute a set of precomputed clusters from an existing set of clusters
-vcl_vector<dbcll_cluster_sptr>
-dbcll_precompute_similarity(const vcl_vector<dbcll_cluster_sptr>& clusters);
+std::vector<dbcll_cluster_sptr>
+dbcll_precompute_similarity(const std::vector<dbcll_cluster_sptr>& clusters);
 
 
 

@@ -8,18 +8,18 @@
 #include "elbow_edge_clustering.h"
 #include <vil3d/algo/vil3d_find_blobs.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_map.h>
+#include <map>
 
 #define round_flt(a) (((a) - int(a) >= 0.5) ? int((a)+1) : int(a))
 
-bool elbow_get_largest_edge_cluster(const vcl_vector<dbdet_3d_edge_sptr>& edgemap, vcl_vector<dbdet_3d_edge_sptr>& cluster,
+bool elbow_get_largest_edge_cluster(const std::vector<dbdet_3d_edge_sptr>& edgemap, std::vector<dbdet_3d_edge_sptr>& cluster,
 		int ni, int nj, int nk, int h)
 {
 	int NI = (ni-1)/h+1;
 	int NJ = (nj-1)/h+1;
 	int NK = (nk-1)/h+1;
-	vcl_cout << "Start: Create edge bins..." << vcl_endl;
-	vcl_vector<vcl_vector<dbdet_3d_edge_sptr> > bins(NI*NJ*NK);
+	std::cout << "Start: Create edge bins..." << std::endl;
+	std::vector<std::vector<dbdet_3d_edge_sptr> > bins(NI*NJ*NK);
 	vil3d_image_view<bool> bw(NI, NJ, NK);
 	bw.fill(false);
 	for(int i = 0; i < edgemap.size(); i++)
@@ -33,13 +33,13 @@ bool elbow_get_largest_edge_cluster(const vcl_vector<dbdet_3d_edge_sptr>& edgema
 			bw(i0,j0,k0) = true;
 		}
 	}
-	vcl_cout << "Finish: Create edge bins..." << vcl_endl;
-	vcl_cout << "Start: Connected component analysis..." << vcl_endl;
+	std::cout << "Finish: Create edge bins..." << std::endl;
+	std::cout << "Start: Connected component analysis..." << std::endl;
 	vil3d_image_view<unsigned> labels;
 	vil3d_find_blobs(bw, vil3d_find_blob_connectivity_26_conn, labels);
-	vcl_cout << "Finish: Connected component analysis..." << vcl_endl;
-	vcl_cout << "Start: Find max label..." << vcl_endl;
-	vcl_map<unsigned,int> hist;
+	std::cout << "Finish: Connected component analysis..." << std::endl;
+	std::cout << "Start: Find max label..." << std::endl;
+	std::map<unsigned,int> hist;
 	unsigned num_labels = 0;
 	for(int i = 0; i < NI; i++)
 	{
@@ -52,7 +52,7 @@ bool elbow_get_largest_edge_cluster(const vcl_vector<dbdet_3d_edge_sptr>& edgema
 				{
 					num_labels = L;
 				}
-				vcl_map<unsigned,int>::iterator it = hist.find(L);
+				std::map<unsigned,int>::iterator it = hist.find(L);
 				if(it == hist.end())
 				{
 					hist[L] = 1;
@@ -75,9 +75,9 @@ bool elbow_get_largest_edge_cluster(const vcl_vector<dbdet_3d_edge_sptr>& edgema
 			max_label = i;
 		}
 	}
-	vcl_cout << "Max count: " << max_count << " max_label: " << max_label << vcl_endl;
-	vcl_cout << "Finish: Find max label..." << vcl_endl;
-	vcl_cout << "Start: Extract largest cluster..." << vcl_endl;
+	std::cout << "Max count: " << max_count << " max_label: " << max_label << std::endl;
+	std::cout << "Finish: Find max label..." << std::endl;
+	std::cout << "Start: Extract largest cluster..." << std::endl;
 	for(int i = 0; i < NI; i++)
 	{
 		for(int j = 0; j < NJ; j++)
@@ -87,13 +87,13 @@ bool elbow_get_largest_edge_cluster(const vcl_vector<dbdet_3d_edge_sptr>& edgema
 				unsigned L = labels(i,j,k);
 				if(L == max_label)
 				{
-					vcl_vector<dbdet_3d_edge_sptr>& edg = bins[i + j*NI + k*NI*NJ];
+					std::vector<dbdet_3d_edge_sptr>& edg = bins[i + j*NI + k*NI*NJ];
 					cluster.insert(cluster.end(), edg.begin(), edg.end());
 				}
 			}
 		}
 	}
-	vcl_cout << "Finish: Extract largest cluster..." << vcl_endl;
+	std::cout << "Finish: Extract largest cluster..." << std::endl;
 }
 
 

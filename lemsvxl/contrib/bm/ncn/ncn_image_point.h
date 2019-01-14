@@ -14,8 +14,8 @@
 // \endverbatim
 #include<vnl/vnl_math.h>
 
-#include<vcl_ostream.h>
-#include<vcl_set.h>
+#include<ostream>
+#include<set>
 
 class ncn_image_point
 {
@@ -35,10 +35,10 @@ public:
             return x_ < p.x();
     }
     
-   //friend vcl_ostream& operator << (vcl_ostream& os, ncn_image_point const& p);
+   //friend std::ostream& operator << (std::ostream& os, ncn_image_point const& p);
 
 private:
-    friend vcl_ostream& operator << (vcl_ostream& os, ncn_image_point const& p);
+    friend std::ostream& operator << (std::ostream& os, ncn_image_point const& p);
     unsigned x_;
     unsigned y_;
     

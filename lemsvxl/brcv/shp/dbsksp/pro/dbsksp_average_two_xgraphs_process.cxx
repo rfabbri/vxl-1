@@ -27,10 +27,10 @@ dbsksp_average_two_xgraphs_process()
     !parameters()->add("Weight of xgraph2: " , "-weight2" , 1.0f) ||
     !parameters()->add("Scurve matching R: " , "-scurve-matching-R" , 6.0f) ||
     !parameters()->add("Scurve sample ds: " , "-scurve-sample-ds" , 1.0f) ||
-    !parameters()->add("Prefix for intermediate results (empty for not saving):" , "-base_name", vcl_string("")) 
+    !parameters()->add("Prefix for intermediate results (empty for not saving):" , "-base_name", std::string("")) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_average_two_xgraphs_process::
+std::string dbsksp_average_two_xgraphs_process::
 name()
 { 
   return "Average two xshock graphs"; 
@@ -64,10 +64,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_average_two_xgraphs_process::
+std::vector< std::string > dbsksp_average_two_xgraphs_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   to_return.push_back("dbsksp_xgraph");
   return to_return;
@@ -77,10 +77,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_average_two_xgraphs_process::
+std::vector< std::string > dbsksp_average_two_xgraphs_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_average_xgraph" );  
   //to_return.push_back( "dbsksp_xgraph" );  
   //to_return.push_back( "dbsksp_xgraph" );  
@@ -124,11 +124,11 @@ execute()
   float scurve_sample_ds = 3.0f;
   this->parameters()->get_value("-scurve-sample-ds" , scurve_sample_ds);
 
-  vcl_string base_name = "";
+  std::string base_name = "";
   this->parameters()->get_value("-base_name", base_name);
 
 
-  vcl_cout << "\nRetrieve two xgraphs from repository ...";
+  std::cout << "\nRetrieve two xgraphs from repository ...";
 
   // input shock graphs
   dbsksp_xgraph_storage_sptr input_xgraph1;
@@ -144,15 +144,15 @@ execute()
 
   if (!xgraph1 || !xgraph2)
   {
-    vcl_cout << "failed. Quit now.\n";
+    std::cout << "failed. Quit now.\n";
     return false;
   }
   else
   {
-    vcl_cout << "done.\n";
+    std::cout << "done.\n";
   }
 
-  vcl_cout << "\n>Compute average of the two xgraphs ...\n";
+  std::cout << "\n>Compute average of the two xgraphs ...\n";
 
   ////
   //dbsksp_average_two_xgraphs engine;
@@ -167,13 +167,13 @@ execute()
     scurve_matching_R, scurve_sample_ds, 0.5, 0.01, base_name);
   engine.compute();
 
-  vcl_cout << "\nDone.\n";
+  std::cout << "\nDone.\n";
 
   dbsksp_xshock_graph_sptr average_xgraph = engine.average_xgraph();
   if (average_xgraph)
   {
        
-    vcl_cout << "\nFinal edit cost xgraph1 - average_xgraph = " << engine.distance_to_parent(0) << "\n"
+    std::cout << "\nFinal edit cost xgraph1 - average_xgraph = " << engine.distance_to_parent(0) << "\n"
       << "Final edit cost average_xgraph - xgraph2 = " << engine.distance_to_parent(1) << "\n";
 
     // create a storage and push this tree in

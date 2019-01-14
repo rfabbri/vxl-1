@@ -9,7 +9,7 @@
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 
@@ -20,12 +20,12 @@ public:
     my_bsol_intrinsic_curve_2d(){};
     virtual ~my_bsol_intrinsic_curve_2d(){};
 
-    //Constructor from a vcl_vector of points
-    my_bsol_intrinsic_curve_2d(const vcl_vector<vsol_point_2d_sptr> &new_vertices) : bsol_intrinsic_curve_2d(new_vertices){};
+    //Constructor from a std::vector of points
+    my_bsol_intrinsic_curve_2d(const std::vector<vsol_point_2d_sptr> &new_vertices) : bsol_intrinsic_curve_2d(new_vertices){};
     //Copy constructor
     my_bsol_intrinsic_curve_2d(const bsol_intrinsic_curve_2d &other) : bsol_intrinsic_curve_2d(other){};
 
-    vcl_vector<vsol_point_2d_sptr>* getStorage(){ return storage_; };
+    std::vector<vsol_point_2d_sptr>* getStorage(){ return storage_; };
 
     void changeStart( int newStart );
     void reverse();

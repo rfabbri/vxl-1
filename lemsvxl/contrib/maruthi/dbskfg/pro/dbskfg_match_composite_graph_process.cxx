@@ -27,20 +27,20 @@
 #include <vl/generic.h>
 #include <vil/vil_transpose.h>
 #include <vl/mathop.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 //: Constructor
 dbskfg_match_composite_graph_process::dbskfg_match_composite_graph_process()
     :final_cost_(0.0)
 {
 
-    vcl_vector<vcl_string> root_node_choices;
+    std::vector<std::string> root_node_choices;
     root_node_choices.push_back("Largest Radius vs Centroid");         //0
     root_node_choices.push_back("Largest Radius Both");                //1
     root_node_choices.push_back("Centroid Both");                      //2
     
-    vcl_string interp_ds = "Interpolation ds to get densely interpolated versions of the scurves: meaningful if localized_edit option is ON";
-    vcl_string local_edit = "Local Edit Improves elastic matching cost of scurves using the densely interpolated version";
+    std::string interp_ds = "Interpolation ds to get densely interpolated versions of the scurves: meaningful if localized_edit option is ON";
+    std::string local_edit = "Local Edit Improves elastic matching cost of scurves using the densely interpolated version";
     
     if (
         !parameters()->add("Sampling ds to reconstruct the scurve", 
@@ -69,7 +69,7 @@ dbskfg_match_composite_graph_process::dbskfg_match_composite_graph_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -86,16 +86,16 @@ dbskfg_match_composite_graph_process::clone() const
     return new dbskfg_match_composite_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_match_composite_graph_process::name()
 {
     return "Match Composite Graphs";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_composite_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "composite_graph" );
     to_return.push_back( "composite_graph" );
     to_return.push_back( "image" );
@@ -105,10 +105,10 @@ dbskfg_match_composite_graph_process::get_input_type()
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_composite_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
@@ -194,13 +194,13 @@ bool dbskfg_match_composite_graph_process::execute()
             double f2_root_node_radius=tree2->get_root_node_radius();
             double scale_ratio = f1_root_node_radius/f2_root_node_radius;
             
-            vcl_cout<<"Scaling tree 2 to tree 1 ratio of root node radii"
-                    <<vcl_endl;
-            vcl_cout<<"Tree 1 root node radius: "<<
-                f1_root_node_radius<<vcl_endl;
-            vcl_cout<<"Tree 2 root node radius: "<<
-                f2_root_node_radius<<vcl_endl;
-            vcl_cout<<"scale ratio "<<scale_ratio<<vcl_endl;
+            std::cout<<"Scaling tree 2 to tree 1 ratio of root node radii"
+                    <<std::endl;
+            std::cout<<"Tree 1 root node radius: "<<
+                f1_root_node_radius<<std::endl;
+            std::cout<<"Tree 2 root node radius: "<<
+                f2_root_node_radius<<std::endl;
+            std::cout<<"scale ratio "<<scale_ratio<<std::endl;
 
             tree2->set_scale_ratio(scale_ratio);
 
@@ -214,7 +214,7 @@ bool dbskfg_match_composite_graph_process::execute()
 
     if (!f1 || !f2 ) 
     {
-        vcl_cerr << "Problems acquiring trees"<<vcl_endl;
+        std::cerr << "Problems acquiring trees"<<std::endl;
         return false;
     }
 
@@ -238,7 +238,7 @@ bool dbskfg_match_composite_graph_process::execute()
 
     if (!edit.edit()) 
     {
-        vcl_cerr << "Problems in editing trees"<<vcl_endl;
+        std::cerr << "Problems in editing trees"<<std::endl;
         return false;
     }
 
@@ -255,11 +255,11 @@ bool dbskfg_match_composite_graph_process::execute()
     
     double norm_val = val/(tree1_splice_cost+tree2_splice_cost );
     
-    vcl_cout << "final cost: " << val 
+    std::cout << "final cost: " << val 
              << " final norm cost: " << norm_val 
              << "( tree1 tot splice: " << tree1_splice_cost
              << ", tree2: " << tree2_splice_cost
-             << ")" << vcl_endl;
+             << ")" << std::endl;
 
     final_cost_ = norm_val;
 
@@ -281,7 +281,7 @@ bool dbskfg_match_composite_graph_process::execute()
         VlSiftFilt* filter1(0);
         VlSiftFilt* filter2(0);
 
-        vcl_cout<<"Computing Appearance Cost"<<vcl_endl;
+        std::cout<<"Computing Appearance Cost"<<std::endl;
 
         // Compute gradient and angle
         compute_grad_maps(image1,&grad_data1,&filter1);
@@ -299,7 +299,7 @@ bool dbskfg_match_composite_graph_process::execute()
         double final_app_cost = 
             compute_app_cost(grad_data1,grad_data2,filter1,filter2);
 
-        vcl_cout<<"Final app cost: "<<final_app_cost<<vcl_endl;
+        std::cout<<"Final app cost: "<<final_app_cost<<std::endl;
 
         vl_sift_delete(filter1);
         vl_sift_delete(filter2);
@@ -330,12 +330,12 @@ double dbskfg_match_composite_graph_process::compute_app_cost(
 
         double local_distance=0.0;
 
-        vcl_vector< vcl_vector<vl_sift_pix> > model_sift;
-        vcl_vector< vcl_vector<vl_sift_pix> > query_sift;
+        std::vector< std::vector<vl_sift_pix> > model_sift;
+        std::vector< std::vector<vl_sift_pix> > query_sift;
         
         for (unsigned j = 0; j < map_list_[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list_[i][j];
+            std::pair<int, int> cor = map_list_[i][j];
             
             // Compute sift for both images
            
@@ -355,7 +355,7 @@ double dbskfg_match_composite_graph_process::compute_app_cost(
                                         radius_ps1/2,
                                         theta_ps1);
 
-            vcl_vector<vl_sift_pix> descr_vec1;
+            std::vector<vl_sift_pix> descr_vec1;
             descr_vec1.assign(descr_ps1,descr_ps1+128);
             descr_vec1.push_back(ps1.x());
             descr_vec1.push_back(ps1.y());
@@ -378,7 +378,7 @@ double dbskfg_match_composite_graph_process::compute_app_cost(
                                         radius_ps2/2,
                                         theta_ps2);
 
-            vcl_vector<vl_sift_pix> descr_vec2;    
+            std::vector<vl_sift_pix> descr_vec2;    
             descr_vec2.assign(descr_ps2,descr_ps2+128);
             descr_vec2.push_back(ps2.x());
             descr_vec2.push_back(ps2.y());
@@ -402,7 +402,7 @@ double dbskfg_match_composite_graph_process::compute_app_cost(
             query_sift.push_back(descr_vec2);
             
         }
-        vcl_cout<<"Tree 1 dart ("
+        std::cout<<"Tree 1 dart ("
                 <<path_map_[i].first.first
                 <<","
                 <<path_map_[i].first.second
@@ -411,34 +411,34 @@ double dbskfg_match_composite_graph_process::compute_app_cost(
                 <<","
                 <<path_map_[i].second.second
                 <<") L2 distance: "
-                <<local_distance<<vcl_endl;
+                <<local_distance<<std::endl;
 
         {
-            vcl_stringstream model_stream;
+            std::stringstream model_stream;
             model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
-            vcl_stringstream query_stream;
+            std::stringstream query_stream;
             query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
 
-            vcl_ofstream model_file(model_stream.str().c_str());
-            model_file<<model_sift.size()<<vcl_endl;
+            std::ofstream model_file(model_stream.str().c_str());
+            model_file<<model_sift.size()<<std::endl;
             for ( unsigned int b=0; b < model_sift.size() ; ++b)
             {
-                vcl_vector<vl_sift_pix> vec=model_sift[b];
+                std::vector<vl_sift_pix> vec=model_sift[b];
                 for  ( unsigned int c=0; c < vec.size() ; ++c)
                 {
-                    model_file<<vec[c]<<vcl_endl;
+                    model_file<<vec[c]<<std::endl;
                 }
             }
             model_file.close();
 
-            vcl_ofstream query_file(query_stream.str().c_str());
-            query_file<<query_sift.size()<<vcl_endl;
+            std::ofstream query_file(query_stream.str().c_str());
+            query_file<<query_sift.size()<<std::endl;
             for ( unsigned int b=0; b < query_sift.size() ; ++b)
             {
-                vcl_vector<vl_sift_pix> vec=query_sift[b];
+                std::vector<vl_sift_pix> vec=query_sift[b];
                 for  ( unsigned int c=0; c < vec.size() ; ++c)
                 {
-                    query_file<<vec[c]<<vcl_endl;
+                    query_file<<vec[c]<<std::endl;
                 }
             }
             query_file.close();

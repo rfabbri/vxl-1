@@ -19,7 +19,7 @@ dbru_label(const dbru_label& tp)
 }
 
 dbru_label::
-dbru_label(const vcl_string name,
+dbru_label(const std::string name,
           const int motion_bin,
           const int view_bin,
           const int shadow_bin,
@@ -32,7 +32,7 @@ dbru_label(const vcl_string name,
        shadow_length);
 }
 
-void dbru_label::Init(vcl_string name,
+void dbru_label::Init(std::string name,
                      int motion_bin,
                      int view_bin,
                      int shadow_bin,
@@ -58,7 +58,7 @@ dbru_label& dbru_label::operator=(const dbru_label& right)
   return *this;
 }
 
-void dbru_label::print(vcl_ostream& os) const
+void dbru_label::print(std::ostream& os) const
 {
   os << "category: " << category_name_ << " "
      << "orientation: " << motion_orientation_bin_ << " "

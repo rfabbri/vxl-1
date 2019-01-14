@@ -33,7 +33,7 @@ dbseg_disk_bin_images_process() : bpro1_process()
     !parameters()->add( "Spine"   , "-savespine" , (bool)true )    || 
     !parameters()->add( "Filename prefix" , "-filename", bpro1_filepath("",".png") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 //
@@ -55,7 +55,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbseg_disk_bin_images_process::
+std::string dbseg_disk_bin_images_process::
 name()
 {
   return "Disk Binary Images";
@@ -70,7 +70,7 @@ input_frames()
   int num_frames = -1;
   this->parameters()->get_value( "-num_frames" , num_frames );
   if (num_frames < 0)
-    vcl_cout << "ERROR: number of frames is non-negative.\n";
+    std::cout << "ERROR: number of frames is non-negative.\n";
   return num_frames;
 }
 
@@ -87,10 +87,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbseg_disk_bin_images_process::
+std::vector< std::string > dbseg_disk_bin_images_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("seg");
   return to_return;
 }
@@ -99,10 +99,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbseg_disk_bin_images_process::
+std::vector< std::string > dbseg_disk_bin_images_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -118,7 +118,7 @@ execute()
   /*// mesh filename
    bpro1_filepath mesh_path;
   this->parameters()->get_value( "-mesh_filename" , mesh_path );    
-  vcl_string mesh_filename = mesh_path.path;
+  std::string mesh_filename = mesh_path.path;
   */
 
 
@@ -143,7 +143,7 @@ execute()
 
   if (num_frames <= 0)
   {
-    vcl_cerr << "In dbseg_disk_bin_images_process::execute() - number of frames " 
+    std::cerr << "In dbseg_disk_bin_images_process::execute() - number of frames " 
       << "must be a positive integer number.\n";
     return false;
   
@@ -151,7 +151,7 @@ execute()
 
   if (num_disks <= 0)
   {
-    vcl_cerr << "In dbseg_disk_bin_images_process::execute() - number of disks " 
+    std::cerr << "In dbseg_disk_bin_images_process::execute() - number of disks " 
       << "must be a positive integer number.\n";
     return false;
   
@@ -159,12 +159,12 @@ execute()
 
   if ((int)(this->input_data_.size()) < num_frames)
   {
-    vcl_cerr << "In dbseg_disk_bin_images_process::execute() - not exactly " << num_frames
+    std::cerr << "In dbseg_disk_bin_images_process::execute() - not exactly " << num_frames
              << " input segs \n";
     return false;
   }
 
-  /*vcl_cout << "Grouping the images into volumetric data.\n";
+  /*std::cout << "Grouping the images into volumetric data.\n";
   vil3d_image_view<vxl_byte > img3d;
 
   // determine size of the image
@@ -176,7 +176,7 @@ execute()
   img3d.set_size(ni, nj, num_frames+2);
   img3d.fill(0);
 */
-  vcl_vector<dbseg_seg_object<vxl_byte>*> thesegs;
+  std::vector<dbseg_seg_object<vxl_byte>*> thesegs;
   
   //puts segs into vector
   for (int i=0; i<num_frames; ++i)

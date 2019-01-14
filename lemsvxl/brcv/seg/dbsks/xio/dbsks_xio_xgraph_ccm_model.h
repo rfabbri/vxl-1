@@ -10,14 +10,14 @@
 // \date     July 12, 2009
 
 #include <dbsks/dbsks_xgraph_ccm_model_sptr.h>
-#include <vcl_string.h>
+#include <string>
 
 //==============================================================================
 // WRITE
 //==============================================================================
 
 ////:  Write xgraph contour ocm model to a stream
-//bool x_write(vcl_ostream& os, const dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
+//bool x_write(std::ostream& os, const dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
 
 
 //==============================================================================
@@ -25,10 +25,10 @@
 //==============================================================================
 
 //: Read xgraph contour ocm model from a file
-bool x_read(const vcl_string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
+bool x_read(const std::string& filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
 
 //: Read xgraph contour ocm model from a file and also read ccm parameters from a separate file
-bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
+bool x_read(const std::string& filepath, const std::string& param_filepath, dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
 
 
 #endif

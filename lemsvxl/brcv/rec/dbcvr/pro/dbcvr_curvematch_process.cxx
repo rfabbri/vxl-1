@@ -16,9 +16,9 @@
 
 #include "dbcvr_curvematch_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <algorithm>
+#include <cstdio>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -50,7 +50,7 @@ dbcvr_curvematch_process::dbcvr_curvematch_process()
     !parameters()->add( "R:" , "-r1" , 10.0f ) ||
     !parameters()->add( "restricted curve match ratio: ", "-ret", 0.25f ) ||
     !parameters()->add( "rms for line fitting before matching: ", "-rms", 0.05f) ) {
-      vcl_cerr << "ERROR: Adding parameters in dbcvr_curvematch_process::dbcvr_curvematch_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbcvr_curvematch_process::dbcvr_curvematch_process()" << std::endl;
   }
 }
 
@@ -82,9 +82,9 @@ bool dbcvr_curvematch_process::execute()
   float restricted_cvmatch_ratio=0; parameters()->get_value( "-ret", restricted_cvmatch_ratio);
   float rms=0; parameters()->get_value( "-rms", rms);
   bpro1_filepath input_path; parameters()->get_value( "-con1" , input_path);
-  vcl_string con_file1 = input_path.path;
+  std::string con_file1 = input_path.path;
   parameters()->get_value( "-con2" , input_path);
-  vcl_string con_file2 = input_path.path;  
+  std::string con_file2 = input_path.path;  
   clear_output();
 
   //----------------------------------
@@ -103,7 +103,7 @@ bool dbcvr_curvematch_process::execute()
     input_vsol1.vertical_cast(input_data_[0][0]);
     // The contour needs to be a polygon
     {
-      const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
+      const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
       poly1 = vsol_list[0]->cast_to_region()->cast_to_polygon();
     }
   }
@@ -119,13 +119,13 @@ bool dbcvr_curvematch_process::execute()
     input_vsol2.vertical_cast(input_data_[0][1]);
     // The contour needs to be a polygon
     {
-      const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol2->all_data();
+      const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol2->all_data();
       poly2 = vsol_list[0]->cast_to_region()->cast_to_polygon();
     }
   }
 
   //if (!poly1 || !poly2) {
-  //  vcl_cout << "one of the polygons is not valid.\n";
+  //  std::cout << "one of the polygons is not valid.\n";
   //  return false;
   //}
   /*
@@ -142,7 +142,7 @@ bool dbcvr_curvematch_process::execute()
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  //vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  //std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   if (load1){
     if( out1->cast_to_curve())
     {
@@ -170,7 +170,7 @@ bool dbcvr_curvematch_process::execute()
   }
 
   else {
-    const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
+    const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
     
 //    if(load1){
 //    vsol_list[0]=out1;
@@ -230,7 +230,7 @@ bool dbcvr_curvematch_process::execute()
     }
   }
   else {
-    const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol2->all_data();
+    const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol2->all_data();
 
 //    if(load2){
 //    vsol_list[0]=out2;
@@ -277,9 +277,9 @@ bool dbcvr_curvematch_process::execute()
   curve2->setOpen(false);
 
   double length1=2*curve1->arcLength(curve1->size()-1);
-  vcl_cout << "length of first curve: " << length1/2 << vcl_endl;
+  std::cout << "length of first curve: " << length1/2 << std::endl;
   double length2=curve2->arcLength(curve2->size()-1);
-  vcl_cout << "length of second curve: " << length2 << vcl_endl;
+  std::cout << "length of second curve: " << length2 << std::endl;
 
   dbcvr_clsd_cvmatch_sptr d1 = new dbcvr_clsd_cvmatch(curve1,curve2,(double)r1, template_size);
   //d1->setStretchCostFlag(flag);
@@ -321,7 +321,7 @@ bool dbcvr_curvematch_process::execute()
   //Flipping does better
   if (minCostFlip<minCost){
   normCost=minCostFlip/(length1/2+length2);
-  vcl_printf("%9.6f %9.6f %9.6f %9.6f\n",minCostFlip,normCost,minCost,(length1/2+length2));
+  std::printf("%9.6f %9.6f %9.6f %9.6f\n",minCostFlip,normCost,minCost,(length1/2+length2));
 
   curveMatch->setFinalMap(d2->finalMap(minIndexFlip));
   int d2size_int = static_cast<int>(d2->finalMap(minIndexFlip).size());
@@ -330,11 +330,11 @@ bool dbcvr_curvematch_process::execute()
   curveMatch->setFinalMap(i, //d2->finalMap(minIndexFlip)[i].first, 
   d2->finalMap(minIndexFlip)[i].first%curve1->size(), 
   d2->finalMap(minIndexFlip)[i].second);
-  vcl_cout << "Flipped cost is better!!!\n";
+  std::cout << "Flipped cost is better!!!\n";
   }
   else{
   normCost=minCost/(length1/2+length2);
-  vcl_printf("%9.6f %9.6f %9.6f %9.6f\n",minCost,normCost,minCostFlip,(length1/2+length2));
+  std::printf("%9.6f %9.6f %9.6f %9.6f\n",minCost,normCost,minCostFlip,(length1/2+length2));
 
   curveMatch->setFinalMap(d1->finalMap(minIndex));
   int d1size_int = static_cast<int>(d2->finalMap(minIndexFlip).size());
@@ -346,15 +346,15 @@ bool dbcvr_curvematch_process::execute()
   }
   }
   time2 = clock();
-  vcl_cout<< vcl_endl<<"closed curve_2d matching cost: "<< (minCostFlip<minCost?minCostFlip:minCost) <<vcl_endl;
-  vcl_cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout<< std::endl<<"closed curve_2d matching cost: "<< (minCostFlip<minCost?minCostFlip:minCost) <<std::endl;
+  std::cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
   } else {
 
   double length1=2*curve1->arcLength(curve1->size()-1);
-  vcl_cout << "length of first curve: " << length1/2 << vcl_endl;
+  std::cout << "length of first curve: " << length1/2 << std::endl;
   double length2=curve2->arcLength(curve2->size()-1);
-  vcl_cout << "length of second curve: " << length2 << vcl_endl;
+  std::cout << "length of second curve: " << length2 << std::endl;
 
   curve1->setOpen(true);
   curve2->setOpen(true);
@@ -368,12 +368,12 @@ bool dbcvr_curvematch_process::execute()
   curveMatch->Match ();
   time2 = clock();
 
-  //      vcl_cout << "Final map size of curve match: " << curveMatch->finalMap()->size() << vcl_endl;
-  vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< curveMatch->finalCost() <<vcl_endl;
-  vcl_cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. Final map:" <<vcl_endl;
+  //      std::cout << "Final map size of curve match: " << curveMatch->finalMap()->size() << std::endl;
+  std::cout<< std::endl<<"curve_2d matching cost: "<< curveMatch->finalCost() <<std::endl;
+  std::cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. Final map:" <<std::endl;
 
   //for (int i = 0; i<curveMatch->finalMap()->size(); i++)
-  //        cl_cout << "curve match Map " << i << ": " << (*curveMatch->finalMap())[i].first << " " << (*curveMatch->finalMap())[i].second << vcl_endl;
+  //        cl_cout << "curve match Map " << i << ": " << (*curveMatch->finalMap())[i].first << " " << (*curveMatch->finalMap())[i].second << std::endl;
   //
   } 
   */
@@ -385,7 +385,7 @@ if(closed_version){
 
   int minIndex;
   double curve_matching_cost = d1->finalBestCostRestrictedStartingPoint(minIndex, restricted_cvmatch_ratio, true);
-  vcl_printf("%9.6f\n",curve_matching_cost);
+  std::printf("%9.6f\n",curve_matching_cost);
   sil_cor= d1->get_cv_cor(minIndex);
     curveMatch->setFinalMap(d1->finalMap(minIndex));
 }
@@ -394,7 +394,7 @@ else{
   d1->setStretchCostFlag(false);   // cost: |ds1-ds2| + R|d_theta1-d_theta2|
   d1->Match();
   double curve_matching_cost = d1->finalCost();
-  vcl_printf("%9.6f\n",curve_matching_cost);
+  std::printf("%9.6f\n",curve_matching_cost);
   sil_cor= d1->get_cv_cor();
     curveMatch->setFinalMap(*(d1->finalMap()));
     curveMatch->setFinalMapCost(d1->finalMapCost());

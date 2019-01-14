@@ -13,10 +13,10 @@ bool dsm_ground_truth_read_bwm_bin_process_cons( bprb_func_process& pro )
 {
 	using namespace dsm_ground_truth_read_bwm_bin_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
-	input_types_[0] = "vcl_string";//filename
+	input_types_[0] = vcl_string";//filename
 	output_types_[0] = "dsm_ground_truth_sptr";
 
 	if(!pro.set_input_types(input_types_))
@@ -34,12 +34,12 @@ bool dsm_ground_truth_read_bwm_bin_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cerr << pro.name() << " dsm_ground_truth_read_bwm_bin_process: The input number should be " << n_inputs_ << vcl_flush;
+		std::cerr << pro.name() << " dsm_ground_truth_read_bwm_bin_process: The input number should be " << n_inputs_ << std::flush;
 		return false;
 	}
 
 	//get inputs
-	vcl_string filename = pro.get_input<vcl_string>(0);
+	std::string filename = pro.get_input<std::string>(0);
 
 	dsm_ground_truth_sptr gt_sptr = new dsm_ground_truth();
 

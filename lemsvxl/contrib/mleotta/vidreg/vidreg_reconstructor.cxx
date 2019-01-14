@@ -39,7 +39,7 @@ vidreg_reconstructor::~vidreg_reconstructor()
 void
 vidreg_reconstructor::reconstruct()
 {
-  vcl_cout << "reconstructing" <<vcl_endl;
+  std::cout << "reconstructing" <<std::endl;
 
   init_cameras();
 
@@ -47,7 +47,7 @@ vidreg_reconstructor::reconstruct()
 
   vpgl_bundle_adjust::write_vrml("initial_scene.wrl",cameras_,world_points_);
 
-  vcl_vector<vpgl_calibration_matrix<double> > Ks;
+  std::vector<vpgl_calibration_matrix<double> > Ks;
   vnl_vector<double> init_a = vpgl_bundle_adj_lsqr::create_param_vector(cameras_);
   vnl_vector<double> init_b = vpgl_bundle_adj_lsqr::create_param_vector(world_points_);
   for(unsigned int i=0; i<cameras_.size(); ++i){
@@ -63,7 +63,7 @@ vidreg_reconstructor::reconstruct()
   //lm.set_trace(true);
   lm.set_verbose(true);
   if(!lm.minimize(a,b))
-    vcl_cout << "didn't converge" <<vcl_endl;
+    std::cout << "didn't converge" <<std::endl;
   lm.diagnose_outcome();
 
   //double error1 = lm.get_end_error();
@@ -89,7 +89,7 @@ vidreg_reconstructor::init_cameras()
   vgl_rotation_3d<double> R;
   cameras_.push_back(vpgl_perspective_camera<double>(K_, vgl_point_3d<double>(x,y,0), R));
 
-  typedef vcl_deque<vidreg_salient_group_sptr>::const_iterator Gitr;
+  typedef std::deque<vidreg_salient_group_sptr>::const_iterator Gitr;
   for(Gitr g = groups_.begin(); g != groups_.end(); ++g)
   {
     rgrl_transformation_sptr xform = (*g)->view()->xform_estimate();
@@ -113,8 +113,8 @@ vidreg_reconstructor::init_cameras()
 void
 vidreg_reconstructor::init_points()
 {
-  vcl_vector<vcl_vector<rgrl_feature_sptr> > tracks(cameras_.size());
-  typedef vcl_map<rgrl_feature_sptr,unsigned> Tmap;
+  std::vector<std::vector<rgrl_feature_sptr> > tracks(cameras_.size());
+  typedef std::map<rgrl_feature_sptr,unsigned> Tmap;
   Tmap track_map;
 
   const double depth = -K_.focal_length();
@@ -122,7 +122,7 @@ vidreg_reconstructor::init_points()
   typedef rgrl_match_set::from_iterator from_iter;
   typedef from_iter::to_iterator        to_iter;
 
-  typedef vcl_deque<vidreg_salient_group_sptr>::const_iterator Gitr;
+  typedef std::deque<vidreg_salient_group_sptr>::const_iterator Gitr;
   unsigned int frame = 0;
   unsigned int num_tracks = 0;
   for(Gitr g = groups_.begin(); g != groups_.end(); ++g, ++frame)
@@ -161,7 +161,7 @@ vidreg_reconstructor::init_points()
 
   // prune short tracks
   {
-    vcl_vector<vcl_vector<rgrl_feature_sptr> > good_tracks(cameras_.size());
+    std::vector<std::vector<rgrl_feature_sptr> > good_tracks(cameras_.size());
     unsigned num_good_tracks = 0;
     for(unsigned int j=0; j<num_tracks; ++j){
       unsigned num_corrs = 0;
@@ -184,8 +184,8 @@ vidreg_reconstructor::init_points()
   world_points_.clear();
   mask_.clear();
   world_points_.resize(num_tracks, vgl_point_3d<double>(0,0,0));
-  mask_.resize(cameras_.size(), vcl_vector<bool>(num_tracks,false));
-  vcl_vector<unsigned> observation_count(num_tracks,0);
+  mask_.resize(cameras_.size(), std::vector<bool>(num_tracks,false));
+  std::vector<unsigned> observation_count(num_tracks,0);
 
   for(unsigned int i=0; i<cameras_.size(); ++i){
     const vpgl_perspective_camera<double>& P = cameras_[i];
@@ -208,8 +208,8 @@ vidreg_reconstructor::init_points()
   for(unsigned int j=0; j<num_tracks; ++j){
     double n = observation_count[j];
     for(int i=0; i<cameras_.size(); ++i)
-      vcl_cout << mask_[i][j] << " ";
-    vcl_cout << vcl_endl;
+      std::cout << mask_[i][j] << " ";
+    std::cout << std::endl;
     world_points_[j].set(world_points_[j].x()/n,
                          world_points_[j].y()/n,
                          world_points_[j].z()/n);

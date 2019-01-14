@@ -29,7 +29,7 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_rich_map_sptr.h>
 #include <vgui/vgui_gl.h>
-#include <vcl_utility.h>
+#include <utility>
 #include "dbsk2d_shock_tableau_sptr.h"
 #include <dbsk2d/dbsk2d_shock_edge_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -82,8 +82,8 @@ public:
   // rendering funtions
   
   // helper method
-  vcl_pair<int,int> getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode);
-  vcl_pair<int,int> getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge);
+  std::pair<int,int> getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode);
+  std::pair<int,int> getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge);
 
   //: render the boundary class
   void draw_boundary_select();

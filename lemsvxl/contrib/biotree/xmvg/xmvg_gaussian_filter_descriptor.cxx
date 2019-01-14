@@ -17,7 +17,7 @@ sigma_r_(sigma_r), sigma_z_(length/2)
   // Orientation vector cannot be (0,0,0).
   assert(orientation.x() != 0 || orientation.y() != 0 || orientation.z() != 0);
 
-  name_ = vcl_string("gaussian_filter");
+  name_ = std::string("gaussian_filter");
   centre_ = centre;
   // Normalize the orientation vector.
   orientation_ = normalize(orientation);
@@ -28,7 +28,7 @@ sigma_r_(sigma_r), sigma_z_(length/2)
   // here for the rest of the code, and I did not want to add an if statement because of
   // time and performance constraints. However, this should be one of the first places to
   // look in case of a crash, or something related to xmvg not working fine. (06/26/05)
-  rotation_angle_ = vcl_acos(orientation_.z());
+  rotation_angle_ = std::acos(orientation_.z());
   rotation_axis_ = vnl_vector_fixed<double,3>(-orientation_.y(), orientation_.x(), 0);
   // The transformation matrix
   vgl_h_matrix_3d<double> tr;
@@ -82,14 +82,14 @@ void xmvg_gaussian_filter_descriptor::calculate_bounding_box(void)
 
     }
 
-void x_write(vcl_ostream& os, xmvg_gaussian_filter_descriptor f)
+void x_write(std::ostream& os, xmvg_gaussian_filter_descriptor f)
 { 
   //: open the tag
   vsl_basic_xml_element name_element("xmvg_gaussian_filter_descriptor");
   name_element.x_write_open(os);
 
   //:write child elements
-  vcl_string name = "filter_desc";
+  std::string name = "filter_desc";
   x_write(os, static_cast<xmvg_filter_descriptor&>(f)); 
 
   vsl_basic_xml_element r("sigma_r");

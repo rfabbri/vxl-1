@@ -7,7 +7,7 @@
 #include "dbrec_part.h"
 #include <bxml/bsvg/bsvg_element.h>
 #include <bxml/bxml_write.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include "dbrec_compositor.h"
 #include "dbrec_visitor.h"
 
@@ -25,7 +25,7 @@ bool dbrec_composition::equal(const dbrec_composition& other) const
     return false;
 }
 
-vcl_ostream& dbrec_composition::print(vcl_ostream& out) const
+std::ostream& dbrec_composition::print(std::ostream& out) const
 {
   out << "\t composition:\n";
   dbrec_part::print(out);
@@ -76,12 +76,12 @@ dbrec_part_sptr dbrec_composition::get_part(unsigned type) const
 
 //: a recursive helper for populate_table() method of the hierarchy
 //  inefficient cause depth() is also recursive and traverses the tree more than once when it calls depth() method on parts
-void dbrec_composition::populate_table(vcl_vector<vcl_pair<dbrec_part_sptr, int> >& part_table) const
+void dbrec_composition::populate_table(std::vector<std::pair<dbrec_part_sptr, int> >& part_table) const
 {
   for (unsigned i = 0; i < children_.size(); i++) {
     int type = children_[i]->type();
     if ((int)part_table.size() < type) {
-      part_table.resize(type + 100, vcl_pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
+      part_table.resize(type + 100, std::pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
     }
     if (!part_table[type].first) {
       part_table[type].first = children_[i];
@@ -99,7 +99,7 @@ bool dbrec_composition::same_part(dbrec_part_sptr other)
     return false;
   if (radius_ != other_comp->radius())
     return false;
-  vcl_vector<dbrec_part_sptr>& other_children = other_comp->children();
+  std::vector<dbrec_part_sptr>& other_children = other_comp->children();
   if (other_children.size() != children_.size())
     return false;
   for (unsigned i = 0; i < children_.size(); i++) {
@@ -133,10 +133,10 @@ dbrec_part_sptr dbrec_hierarchy::next()
   else return (*it_); 
 }
 
-vcl_ostream& dbrec_hierarchy::print(vcl_ostream& out) const
+std::ostream& dbrec_hierarchy::print(std::ostream& out) const
 {
   out << "\t ---hierarchy:\n";
-  for (vcl_vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
+  for (std::vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
     (*it)->print(out);
   }
   out << "\t end hierarchy ---\n";
@@ -146,7 +146,7 @@ vcl_ostream& dbrec_hierarchy::print(vcl_ostream& out) const
 unsigned dbrec_hierarchy::depth() const
 {
   unsigned depth = 0;
-  for (vcl_vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
+  for (std::vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
     unsigned d = (*it)->depth();
     if (depth < d)
       depth = d;
@@ -157,7 +157,7 @@ unsigned dbrec_hierarchy::depth() const
 unsigned dbrec_hierarchy::width() const
 {
   unsigned width = 0;
-  for (vcl_vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
+  for (std::vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
     width += (*it)->width();
   }
   return width;
@@ -166,12 +166,12 @@ unsigned dbrec_hierarchy::width() const
 dbrec_part_sptr dbrec_hierarchy::get_part(unsigned type) const
 {
   dbrec_part_sptr p = (type < part_table_.size()) ? part_table_[type].first : 0;
-  //vcl_map<unsigned, dbrec_part_sptr>::iterator p_it = part_map_.find(type);
+  //std::map<unsigned, dbrec_part_sptr>::iterator p_it = part_map_.find(type);
   //if (p_it != part_map_.end()) {
   //  p = p_it->second;
   //} else {
   if (!p) {
-    for (vcl_vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
+    for (std::vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
       if ((*it)->type() == type)
         return (*it);
       p = (*it)->get_part(type);
@@ -183,7 +183,7 @@ dbrec_part_sptr dbrec_hierarchy::get_part(unsigned type) const
           part_table_[type].first = p;
           part_table_[type].second = p->depth();
         } else {
-          part_table_.resize(type + 100, vcl_pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
+          part_table_.resize(type + 100, std::pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
           part_table_[type].first = p;
           part_table_[type].second = p->depth();
         }
@@ -201,7 +201,7 @@ void dbrec_hierarchy::populate_table() const
   for (unsigned i = 0; i < roots_.size(); i++) {
     int type = roots_[i]->type();
     if ((int)part_table_.size() < type) {
-      part_table_.resize(type + 100, vcl_pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
+      part_table_.resize(type + 100, std::pair<dbrec_part_sptr, int>(dbrec_part_sptr(0), -1)); // increase capacity for another hundred items after this one
     }
     if (!part_table_[type].first) {
       part_table_[type].first = roots_[i];
@@ -213,7 +213,7 @@ void dbrec_hierarchy::populate_table() const
 }
 
 //: return a list of parts at the given depth
-void dbrec_hierarchy::get_parts(int depth, vcl_vector<dbrec_part_sptr>& parts) const
+void dbrec_hierarchy::get_parts(int depth, std::vector<dbrec_part_sptr>& parts) const
 {
   if (!table_populated_) {
     this->populate_table();
@@ -225,7 +225,7 @@ void dbrec_hierarchy::get_parts(int depth, vcl_vector<dbrec_part_sptr>& parts) c
   }
 }
 //: return a list of all parts in the hierarchy (usually used for visualizations)
-void dbrec_hierarchy::get_all_parts(vcl_vector<dbrec_part_sptr>& parts) const
+void dbrec_hierarchy::get_all_parts(std::vector<dbrec_part_sptr>& parts) const
 {
   if (!table_populated_) {
     this->populate_table();
@@ -248,7 +248,7 @@ void dbrec_hierarchy::register_parts(dbrec_type_id_factory* ins) const
   }
 }
 
-void dbrec_part::visualize(bsvg_document& doc, float x, float y, float vis_rad, const vcl_string& color) const
+void dbrec_part::visualize(bsvg_document& doc, float x, float y, float vis_rad, const std::string& color) const
 {
   bsvg_ellipse* circle = new bsvg_ellipse(vis_rad, vis_rad); // it's gonna be a circle since rx = ry
   circle->set_location(x, y);
@@ -256,14 +256,14 @@ void dbrec_part::visualize(bsvg_document& doc, float x, float y, float vis_rad, 
   circle->set_stroke_color("black");
   doc.add_element(circle);
 
-  vcl_stringstream ss; ss << type_; 
+  std::stringstream ss; ss << type_; 
   bsvg_text* t = new bsvg_text(ss.str());
   t->set_location(x, y+3*vis_rad);
   t->set_fill_color(color);
   doc.add_element(t);
 }
 
-void dbrec_composition::visualize(bsvg_document& doc, float x, float y, float vis_rad, const vcl_string& color) const
+void dbrec_composition::visualize(bsvg_document& doc, float x, float y, float vis_rad, const std::string& color) const
 {
   dbrec_part::visualize(doc, x, y, vis_rad, color);
   float h = 3*vis_rad;
@@ -283,10 +283,10 @@ void dbrec_composition::visualize(bsvg_document& doc, float x, float y, float vi
     current += wid_i/2;
   }
 }
-void dbrec_composition::visualize_models(const vcl_string& suffix) const
+void dbrec_composition::visualize_models(const std::string& suffix) const
 {
-  vcl_stringstream ids; ids << this->type(); 
-  vcl_string part_suffix = suffix + "_comp_" + ids.str();
+  std::stringstream ids; ids << this->type(); 
+  std::string part_suffix = suffix + "_comp_" + ids.str();
   dbrec_image_compositor* comp = dynamic_cast<dbrec_image_compositor*>(compositor_.ptr());
   comp->visualize(part_suffix, children_);
   for (unsigned i = 0; i < children_.size(); i++)
@@ -306,7 +306,7 @@ void dbrec_composition::accept(dbrec_visitor* v)
 }
 
 //: visualize as an svn document
-void dbrec_hierarchy::visualize(const vcl_string& out) const
+void dbrec_hierarchy::visualize(const std::string& out) const
 {
   //: find the depth of the hierarchy to determine a good height
   unsigned d = this->depth();
@@ -318,7 +318,7 @@ void dbrec_hierarchy::visualize(const vcl_string& out) const
   doc.add_description("Hierarchy");
   
   float current = 0;
-  for (vcl_vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
+  for (std::vector<dbrec_part_sptr>::const_iterator it = roots_.begin(); it != roots_.end(); it++) {
     unsigned w = (*it)->width();
     float rw = w*4.0f*_visualization_radius;
     current += rw/2.0f;
@@ -329,11 +329,11 @@ void dbrec_hierarchy::visualize(const vcl_string& out) const
   bxml_write(out, doc);
 }
 
-vcl_ostream & operator<<(vcl_ostream& out, const dbrec_part& p)
+std::ostream & operator<<(std::ostream& out, const dbrec_part& p)
 {
   return p.print(out);
 }
-vcl_ostream & operator<<(vcl_ostream& out, const dbrec_composition& p)
+std::ostream & operator<<(std::ostream& out, const dbrec_composition& p)
 {
   return p.print(out);
 }
@@ -341,13 +341,13 @@ vcl_ostream & operator<<(vcl_ostream& out, const dbrec_composition& p)
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_hierarchy as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbrec_hierarchy const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbrec_hierarchy &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 

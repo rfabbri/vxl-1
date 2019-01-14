@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 #include <dbknee/dbknee_tibia_cs.h>
 
 //: Process that builds a shock graph from a vsol polyline 
@@ -33,10 +33,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Compute tibia CS"; }
+  std::string name() {  return "Compute tibia CS"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -47,10 +47,10 @@ public:
   // Support function
   
   //: Take in the data (mesh file, param file) and execute
-  bool compute_tibia_cs(const vcl_string& data_file,
-    const vcl_string& cs_file);
+  bool compute_tibia_cs(const std::string& data_file,
+    const std::string& cs_file);
 
-  bool region_thickness_face_based(const vcl_string& thickness_mesh_file, 
+  bool region_thickness_face_based(const std::string& thickness_mesh_file, 
     dbknee_tibia_cs coord);
 
 };

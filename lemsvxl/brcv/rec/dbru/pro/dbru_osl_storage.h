@@ -34,7 +34,7 @@ public:
   //: Destructor
   virtual ~dbru_osl_storage();
 
-  virtual vcl_string type() const { return "dbru_osl_storage"; }
+  virtual std::string type() const { return "dbru_osl_storage"; }
 
   //: Return IO version number;
   short version() const;
@@ -50,7 +50,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbru_osl_storage"; }
+  virtual std::string is_a() const { return "dbru_osl_storage"; }
 
   //: set the OSL
   void set_osl(dbru_osl_sptr osl) { osl_ = osl; }
@@ -82,7 +82,7 @@ private:
   // for visualization
   unsigned n_rows_, n_cols_;  // for visualization of the OSL
   // a map for each object that gives which polygon is displayed in which column
-  vcl_vector< vcl_map<int, int> > column_map_;
+  std::vector< std::map<int, int> > column_map_;
 };
 
 //Inlined functions

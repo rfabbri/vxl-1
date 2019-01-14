@@ -13,9 +13,9 @@
 #include <vil3d/vil3d_load.h>
 #include <vil/vil_load.h>
 #include <vil3d/vil3d_tricub_interp.h>
-#include <vcl_algorithm.h>
-#include <vcl_fstream.h>
-#include <vcl_set.h>
+#include <algorithm>
+#include <fstream>
+#include <set>
 #include <dbskfg/dbskfg_utilities.h>
 #include <dbxml/dbxml_algos.h>
 
@@ -89,10 +89,10 @@ void dbskfg_transform_manager::update_transforms_conflicts()
 
             if ( transforms_[t]->loop_endpoints_.size() )
             {
-                vcl_stringstream sstream1;
+                std::stringstream sstream1;
                 sstream1<<transforms_[t]->loop_endpoints_[0]->pt();
         
-                vcl_stringstream sstream2;
+                std::stringstream sstream2;
                 sstream2<<transforms_[t]->loop_endpoints_[1]->pt();
 
                 if ( 
@@ -109,16 +109,16 @@ void dbskfg_transform_manager::update_transforms_conflicts()
                     loop_map_[sstream2.str()]=t;
                 }
 
-                vcl_pair<vcl_string,vcl_string> pair1 =
-                    vcl_make_pair(sstream1.str(),sstream2.str());
-                vcl_pair<vcl_string,vcl_string> pair2 =
-                    vcl_make_pair(sstream2.str(),sstream1.str());
+                std::pair<std::string,std::string> pair1 =
+                    std::make_pair(sstream1.str(),sstream2.str());
+                std::pair<std::string,std::string> pair2 =
+                    std::make_pair(sstream2.str(),sstream1.str());
 
                 loop_end_map_[pair1]=t;
                 loop_end_map_[pair2]=t;
             }
             
-            vcl_vector<unsigned int> contour_ids=
+            std::vector<unsigned int> contour_ids=
                 transforms_[t]->contour_ids_affected();
 
             for (unsigned int k=0; k < contour_ids.size() ; ++k)
@@ -132,7 +132,7 @@ void dbskfg_transform_manager::update_transforms_conflicts()
         else
         {
 
-            vcl_pair<vcl_string,vcl_string> gap_strings =
+            std::pair<std::string,std::string> gap_strings =
                 transforms_[t]->gap_string();
             old_gap_map_[gap_strings.first]=t;
             old_gap_map_[gap_strings.second]=t;
@@ -145,17 +145,17 @@ void dbskfg_transform_manager::update_transforms_conflicts()
 
 }
 
-void dbskfg_transform_manager::read_in_training_data(vcl_string filename)
+void dbskfg_transform_manager::read_in_training_data(std::string filename)
 {
 
-    vcl_ifstream file (filename.c_str(), 
-                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream file (filename.c_str(), 
+                       std::ios::in|std::ios::binary|std::ios::ate);
     double* memblock(0);
     if (file.is_open())
     {
-        vcl_ifstream::pos_type size = file.tellg();
+        std::ifstream::pos_type size = file.tellg();
         memblock = new double[size/sizeof(double)];
-        file.seekg (0, vcl_ios::beg);
+        file.seekg (0, std::ios::beg);
         file.read ((char *) memblock, size);
         file.close();
 
@@ -164,9 +164,9 @@ void dbskfg_transform_manager::read_in_training_data(vcl_string filename)
         unsigned int nj=memblock[1];
         unsigned int nk=memblock[2];
 
-        vcl_cout<<"Reading in a "<<ni<<" by "<<nj<<" by "<< nk 
+        std::cout<<"Reading in a "<<ni<<" by "<<nj<<" by "<< nk 
                 <<" volume of distances"
-                <<vcl_endl;
+                <<std::endl;
 
         dist_volume_.set_size(ni,nj,nk,1);
         unsigned int index=3;
@@ -216,20 +216,20 @@ double dbskfg_transform_manager::transform_probability(
                                                dist_volume_.jstep(),
                                                dist_volume_.kstep());
  
-    double prob = 1.0-(1.0/(1.0+vcl_exp(distance*logistic_beta0_+
+    double prob = 1.0-(1.0/(1.0+std::exp(distance*logistic_beta0_+
                                     logistic_beta1_)));
     
     return prob;
 }
 
 void dbskfg_transform_manager::find_transform(
-    vcl_vector<dbskfg_composite_link_sptr>&
+    std::vector<dbskfg_composite_link_sptr>&
     contour_links_to_remove,
     dbskfg_transform_descriptor_sptr& grouped_transform)
 {
 
     // Local set
-    vcl_set<unsigned int> local_set;
+    std::set<unsigned int> local_set;
 
     for ( unsigned int d=0; d < contour_links_to_remove.size(); ++d)
 
@@ -241,7 +241,7 @@ void dbskfg_transform_manager::find_transform(
     }
       
 
-    vcl_set<unsigned int>::iterator it;
+    std::set<unsigned int>::iterator it;
     for ( it = local_set.begin() ; it != local_set.end() ; ++it)
     {
 
@@ -252,15 +252,15 @@ void dbskfg_transform_manager::find_transform(
 
 }
 
-void dbskfg_transform_manager::start_binary_file(vcl_string binary_file_output)
+void dbskfg_transform_manager::start_binary_file(std::string binary_file_output)
 {
     output_binary_file_ = binary_file_output;
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_binary_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double size_x = image_->ni();
     double size_y = image_->nj();
@@ -275,15 +275,15 @@ void dbskfg_transform_manager::start_binary_file(vcl_string binary_file_output)
 
 }
 
-void dbskfg_transform_manager::start_region_file(vcl_string binary_file_output)
+void dbskfg_transform_manager::start_region_file(std::string binary_file_output)
 {
     output_region_file_ = binary_file_output;
 
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double size_x = image_->ni();
     double size_y = image_->nj();
@@ -300,7 +300,7 @@ void dbskfg_transform_manager::start_region_file(vcl_string binary_file_output)
 
 
 
-void dbskfg_transform_manager::start_xml_file(vcl_string xml_file_output)
+void dbskfg_transform_manager::start_xml_file(std::string xml_file_output)
 {
  
     xml_file_output_ = xml_file_output;
@@ -323,11 +323,11 @@ void dbskfg_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 {
 
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_binary_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
     double num_vertices= poly[0].size();
     output_binary_file.write(reinterpret_cast<char *>(&num_vertices),
@@ -354,20 +354,20 @@ void dbskfg_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 void dbskfg_transform_manager::write_output_region(
     dbskfg_rag_node_sptr rag_node)
 {
-    vcl_cout<<"Writing output region"<<vcl_endl;
-    vcl_map<unsigned int,dbskfg_composite_link_sptr> all_links;
+    std::cout<<"Writing output region"<<std::endl;
+    std::map<unsigned int,dbskfg_composite_link_sptr> all_links;
     
-    vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+    std::map<unsigned int,dbskfg_shock_link*> shock_links=
         rag_node->get_shock_links();
-    vcl_map<unsigned int, dbskfg_shock_node*> wavefront =
+    std::map<unsigned int, dbskfg_shock_node*> wavefront =
         rag_node->get_wavefront();
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it = shock_links.begin() ; it != shock_links.end() ; ++it)
     {
-        vcl_vector<dbskfg_composite_link_sptr> left_links=
+        std::vector<dbskfg_composite_link_sptr> left_links=
             (*it).second->left_contour_links();
-        vcl_vector<dbskfg_composite_link_sptr> right_links=
+        std::vector<dbskfg_composite_link_sptr> right_links=
             (*it).second->right_contour_links();
 
         dbskfg_composite_node_sptr source=(*it).second->source();
@@ -513,17 +513,17 @@ void dbskfg_transform_manager::write_output_region(
 
     }
     
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
 
     double num_contours= all_links.size()*4.0+all_links.size();
     output_region_file.write(reinterpret_cast<char *>(&num_contours),
                               sizeof(double));
-    vcl_map<unsigned int,dbskfg_composite_link_sptr>::iterator lit;
+    std::map<unsigned int,dbskfg_composite_link_sptr>::iterator lit;
     for (lit = all_links.begin() ; lit != all_links.end() ; ++lit)
     {
 
@@ -558,15 +558,15 @@ void dbskfg_transform_manager::write_output_region(
 }
 
 void dbskfg_transform_manager::write_binary_transforms(
-    vcl_string binary_file_output)
+    std::string binary_file_output)
 {
    
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(binary_file_output.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double numb_transforms = transforms_.size();
 
@@ -587,7 +587,7 @@ void dbskfg_transform_manager::write_binary_transforms(
         double shock_link_found = transform->shock_link_found_;
 
         // Get euler spiral points
-        vcl_vector<vgl_point_2d<double> > points;
+        std::vector<vgl_point_2d<double> > points;
         dbskfg_utilities::ess_points(transform,points);
 
         double npoints = points.size();

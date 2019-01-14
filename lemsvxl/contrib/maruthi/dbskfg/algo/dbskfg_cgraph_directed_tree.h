@@ -30,7 +30,7 @@
 #include <vl/sift.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_double_2.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vil/vil_image_view.h>
 
 #include <rsdl/rsdl_point.h>
@@ -84,9 +84,9 @@ public:
   // used in get_scurve(...)
   //: return a vector of pointers to the edges in underlying composite graph 
   //  for the given dart list
-  void get_edge_list(const vcl_vector<int>& dart_list,  
+  void get_edge_list(const std::vector<int>& dart_list,  
                      dbskfg_composite_node_sptr& start_node,  
-                     vcl_vector<dbskfg_composite_link_sptr>& path);
+                     std::vector<dbskfg_composite_link_sptr>& path);
 
   //: acquire tree topology from a shock graph
   bool acquire_tree_topology(const dbskfg_composite_graph_sptr& 
@@ -112,7 +112,7 @@ public:
   
   //: find and cache the sift along shock curve for this pair of darts, 
   // if not already cached
-  vcl_vector<vnl_vector_fixed<vl_sift_pix,384> >& 
+  std::vector<vnl_vector_fixed<vl_sift_pix,384> >& 
       get_sift_along_curve(int start_dart, int end_dart);
 
   //: returns both the coarse and dense version of shock curve
@@ -138,11 +138,11 @@ public:
   // File I/O-------------------------------------------------------------------
 
   //: create and write .shg file to debug splice and contract costs
-  bool create_shg(vcl_string fname);
+  bool create_shg(std::string fname);
 
   //: comptue region descriptor
   void compute_region_descriptor(
-      vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment,
+      std::map<int,std::vector<dbskfg_sift_data> >& fragment,
       vsol_box_2d_sptr& bbox);
 
 
@@ -169,7 +169,7 @@ public:
 
   //------------------------------------------------------------------------
   //: get polygons for all scurve ( shock graph parts )
-  void get_polygon_scurves(vcl_vector<vgl_polygon<double> >& polys);
+  void get_polygon_scurves(std::vector<vgl_polygon<double> >& polys);
 
   //------------------------------------------------------------------------
   // verify_mapping
@@ -178,7 +178,7 @@ public:
   //------------------------------------------------------------------------
   //: uses the already existing scurves, so if circular_ends = true 
   //while acquiring the tree then the outline will have circular completions  
-  vgl_point_2d<double> get_mapping(vcl_pair<int,int>& key)
+  vgl_point_2d<double> get_mapping(std::pair<int,int>& key)
   {
       vgl_point_2d<double> pt(-1,-1);
       if ( xy_st_mapping_.count(key))
@@ -197,17 +197,17 @@ public:
       vnl_double_2 temp(pt.x(),pt.y());
       rsdl_point query(temp);
       
-      vcl_vector< rsdl_point > cpoints;
-      vcl_vector< int > cindices;
+      std::vector< rsdl_point > cpoints;
+      std::vector< int > cindices;
       
       kd_tree_->n_nearest( query, 1, cpoints, cindices);
 
       return st_points_[cindices[0]];
   }
 
-  void compute_scurve_polygons(vcl_string& prefix);
+  void compute_scurve_polygons(std::string& prefix);
   
-  void compute_sift_tree(vcl_vector<vl_sift_pix>& descriptors);
+  void compute_sift_tree(std::vector<vl_sift_pix>& descriptors);
 
   // compute appeance
   bool compute_appearance()
@@ -226,7 +226,7 @@ public:
   void compute_descriptor( vgl_point_2d<double>& model_pt,
                            double& model_radius,
                            double& model_theta,
-                           vcl_vector<vl_sift_pix>& descriptors);
+                           std::vector<vl_sift_pix>& descriptors);
 
   // get bounding box
   vsol_box_2d_sptr bbox(){return bbox_;}
@@ -259,7 +259,7 @@ public:
   bool virtual_node_dart(int dart)
   {
       
-      vcl_vector<int>::iterator find_it = vcl_find(
+      std::vector<int>::iterator find_it = std::find(
           darts_virtual_nodes_.begin(),
           darts_virtual_nodes_.end(),
           dart);
@@ -275,7 +275,7 @@ public:
 
   void compute_average_ds();
 
-  vcl_vector<double>& get_average_ds(){return average_ds_;}
+  std::vector<double>& get_average_ds(){return average_ds_;}
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
@@ -295,14 +295,14 @@ protected:
 
   //: each dart has a list of pointers to the actual edges 
   //  on the corresponding shock branch of the graph (in the correct order)
-  vcl_vector<vcl_vector<dbskfg_composite_link_sptr> > shock_edges_;
+  std::vector<std::vector<dbskfg_composite_link_sptr> > shock_edges_;
 
   //: each dart also has a list of start nodes for the underlying edge to 
   // determine direction 
-  vcl_vector<dbskfg_composite_node_sptr> starting_nodes_;
+  std::vector<dbskfg_composite_node_sptr> starting_nodes_;
 
   //: Keep a vector of mapping of dart ids which have virtual nodes
-  vcl_vector<int> darts_virtual_nodes_;
+  std::vector<int> darts_virtual_nodes_;
 
   //: Keep track of largest radius of root node
   double root_node_radius_;
@@ -310,10 +310,10 @@ protected:
   // Cache data////////////////////////////////////////////////////////////
 
   //: cache the shock curves for future use for each path of darts
-  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
+  std::map<std::pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
 
   //: cache the sift points computed
-  vcl_map<vcl_pair<int,int>, vcl_vector<
+  std::map<std::pair<int,int>, std::vector<
       vnl_vector_fixed<vl_sift_pix,384> > > dart_path_sift_map_;
 
   // Cost-related parameters /////////////////////////////////////////////
@@ -328,8 +328,8 @@ protected:
   vsol_box_2d_sptr bbox_;
 
   static bool compare_node_radius_pairs(
-      const vcl_pair<double,unsigned int>& pair1,
-      const vcl_pair<double,unsigned int>& pair2)
+      const std::pair<double,unsigned int>& pair1,
+      const std::pair<double,unsigned int>& pair2)
   {return pair1.first > pair2.first; }
   
   void compute_bounding_box();
@@ -350,7 +350,7 @@ protected:
 
   vl_sift_pix* blue_grad_data_;
   
-  vcl_vector<double> average_ds_;
+  std::vector<double> average_ds_;
 
   vil_image_view<double>* channel1_;
 
@@ -360,9 +360,9 @@ protected:
 
   unsigned int id_;
 
-  vcl_map<vcl_pair<int,int>,vgl_point_2d<double> > xy_st_mapping_;
+  std::map<std::pair<int,int>,vgl_point_2d<double> > xy_st_mapping_;
 
-  vcl_vector<vgl_point_2d<double> > st_points_;
+  std::vector<vgl_point_2d<double> > st_points_;
 
   rsdl_kd_tree* kd_tree_;
 };

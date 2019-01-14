@@ -9,7 +9,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_rgb.h>
 
-#include <vcl_ostream.h>
+#include <ostream>
 
 class psm_mog_grey_processor;
 class psm_simple_grey_processor;

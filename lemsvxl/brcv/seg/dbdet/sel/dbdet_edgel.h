@@ -20,9 +20,9 @@
 //\endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
-#include <vcl_list.h>
+#include <vector>
+#include <deque>
+#include <list>
 
 #include <vgl/vgl_point_2d.h>
 
@@ -33,15 +33,15 @@ class dbdet_edgel;
 class dbdet_curvelet;
 
 //useful type definitions
-typedef vcl_deque<dbdet_edgel* > dbdet_edgel_list;
-typedef vcl_deque<dbdet_edgel* >::iterator dbdet_edgel_list_iter;
-typedef vcl_deque<dbdet_edgel* >::const_iterator dbdet_edgel_list_const_iter;
-typedef vcl_deque<dbdet_edgel* >::reverse_iterator dbdet_edgel_list_reverse_iter;
-typedef vcl_deque<dbdet_edgel* >::const_reverse_iterator dbdet_edgel_list_const_reverse_iter;
+typedef std::deque<dbdet_edgel* > dbdet_edgel_list;
+typedef std::deque<dbdet_edgel* >::iterator dbdet_edgel_list_iter;
+typedef std::deque<dbdet_edgel* >::const_iterator dbdet_edgel_list_const_iter;
+typedef std::deque<dbdet_edgel* >::reverse_iterator dbdet_edgel_list_reverse_iter;
+typedef std::deque<dbdet_edgel* >::const_reverse_iterator dbdet_edgel_list_const_reverse_iter;
 
-typedef vcl_list<dbdet_curvelet* > curvelet_list;
-typedef vcl_list<dbdet_curvelet* >::iterator curvelet_list_iter;
-typedef vcl_list<dbdet_curvelet* >::const_iterator curvelet_list_const_iter;
+typedef std::list<dbdet_curvelet* > curvelet_list;
+typedef std::list<dbdet_curvelet* >::iterator curvelet_list_iter;
+typedef std::list<dbdet_curvelet* >::const_iterator curvelet_list_const_iter;
 
 //: edgel class: contains pt, tangent and collection of all the groupings around it
 class dbdet_edgel
@@ -131,7 +131,7 @@ public:
     }
   }
 
-  void append(vcl_vector<dbdet_edgel*>& n_chain)
+  void append(std::vector<dbdet_edgel*>& n_chain)
   {
     for (unsigned i=0; i<n_chain.size(); i++)
       edgels.push_back(n_chain[i]);
@@ -148,8 +148,8 @@ public:
   void push_front(dbdet_edgel* edgel){ edgels.push_front(edgel); }
 };
 
-typedef vcl_list<dbdet_edgel_chain*> dbdet_edgel_chain_list;
-typedef vcl_list<dbdet_edgel_chain*>::iterator dbdet_edgel_chain_list_iter;
-typedef vcl_list<dbdet_edgel_chain*>::const_iterator dbdet_edgel_chain_list_const_iter;
+typedef std::list<dbdet_edgel_chain*> dbdet_edgel_chain_list;
+typedef std::list<dbdet_edgel_chain*>::iterator dbdet_edgel_chain_list_iter;
+typedef std::list<dbdet_edgel_chain*>::const_iterator dbdet_edgel_chain_list_const_iter;
 
 #endif // dbdet_edgel_h

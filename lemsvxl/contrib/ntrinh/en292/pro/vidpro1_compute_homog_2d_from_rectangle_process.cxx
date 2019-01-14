@@ -30,7 +30,7 @@ vidpro1_compute_homog_2d_from_rectangle_process() : bpro1_process()
       !parameters()->add( "Line y1=" , "-ht_y1" , (float)20)
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters()" << std::endl;
   }
   else
   {    
@@ -46,7 +46,7 @@ vidpro1_compute_homog_2d_from_rectangle_process::
 
 
 //: Return the name of this process
-vcl_string vidpro1_compute_homog_2d_from_rectangle_process::
+std::string vidpro1_compute_homog_2d_from_rectangle_process::
 name()
 {
   return "Compute homography 2D from rectangle";
@@ -71,20 +71,20 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_compute_homog_2d_from_rectangle_process::
+std::vector< std::string > vidpro1_compute_homog_2d_from_rectangle_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_compute_homog_2d_from_rectangle_process::
+std::vector< std::string > vidpro1_compute_homog_2d_from_rectangle_process::
 get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "homog_2d" );
   return to_return;
 }
@@ -95,10 +95,10 @@ bool vidpro1_compute_homog_2d_from_rectangle_process::
 execute()
 {
   
-  vcl_cout << "\nCompute homography matrix from correspondence between a 4-polygon(image) and rectangle(world)\n";
+  std::cout << "\nCompute homography matrix from correspondence between a 4-polygon(image) and rectangle(world)\n";
   if ( this->input_data_.size() != 1 )
   {
-    vcl_cout << "In vidpro1_compute_homog_2d_from_rectangle_process::execute() - not exactly one"
+    std::cout << "In vidpro1_compute_homog_2d_from_rectangle_process::execute() - not exactly one"
              << " input frames \n";
     return false;
   }
@@ -107,7 +107,7 @@ execute()
   // get input from storage classes
   vidpro1_vsol2D_storage_sptr vsol_storage;
   vsol_storage.vertical_cast(input_data_[0][0]);
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_data = vsol_storage->all_data();
   
   if (vsol_data.size() < 1)
     return false;
@@ -124,18 +124,18 @@ execute()
   // if can't find a polygon, quit
   if (!poly)
   {
-    vcl_cout << "Could not find a polygon in vsol2D storage" << vcl_endl;
+    std::cout << "Could not find a polygon in vsol2D storage" << std::endl;
     return false;
   }
 
   if (poly->size() != 4)
   {
-    vcl_cout << "Number of vertices in polygon is not 4" << vcl_endl;
+    std::cout << "Number of vertices in polygon is not 4" << std::endl;
     return false;
   }
 
   // points from the image (4-polygon)
-  vcl_vector< vgl_homg_point_2d< double > > image_points;
+  std::vector< vgl_homg_point_2d< double > > image_points;
   for (unsigned int i = 0; i < poly->size(); i ++)
   {
     vgl_homg_point_2d< double > pt(poly->vertex(i)->x(), poly->vertex(i)->y()); 
@@ -143,7 +143,7 @@ execute()
   }
 
   // world points - from user input
-  vcl_vector< vgl_homg_point_2d< double > > world_points;
+  std::vector< vgl_homg_point_2d< double > > world_points;
   // coordinate of a rectangle
   float x0=0, y0=0, x1=0, y1=0;
   this->parameters()->get_value("-ht_x0", x0);
@@ -168,10 +168,10 @@ execute()
   bool success = homog_func.compute(world_points, image_points, H);
   if (!success)
   {
-    vcl_cout << "Computing homography from 4 points failed \n";
+    std::cout << "Computing homography from 4 points failed \n";
     return false;
   }
-  vcl_cout << "Computing homography succeeded.\nH = " << H << vcl_endl;
+  std::cout << "Computing homography succeeded.\nH = " << H << std::endl;
   /////////////////////////////////////////////////////////////////////
 
   // create the output storage class

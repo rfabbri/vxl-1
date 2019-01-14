@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <structure/dbseg_seg_storage.h>
@@ -24,7 +24,7 @@ dbseg_seg_save_binimage_process::dbseg_seg_save_binimage_process() : bpro1_proce
 {
   if( !parameters()->add( "Filename" , "-filename", bpro1_filepath("","png") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -44,7 +44,7 @@ dbseg_seg_save_binimage_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_save_binimage_process::name()
+std::string dbseg_seg_save_binimage_process::name()
 {
   return "Save Segmentation Binary Image";
 }
@@ -59,10 +59,10 @@ dbseg_seg_save_binimage_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_binimage_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "seg" );
 
@@ -71,10 +71,10 @@ dbseg_seg_save_binimage_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_binimage_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -99,7 +99,7 @@ bool
 dbseg_seg_save_binimage_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_seg_save_binimage_process::execute() - "
+    std::cout << "In dbseg_seg_save_binimage_process::execute() - "
              << "not exactly one input seg structure \n";
     return false;
   }
@@ -113,14 +113,14 @@ dbseg_seg_save_binimage_process::execute()
     bool multiple = false;
     dbseg_seg_object<vxl_byte>* object = static_cast<dbseg_seg_object<vxl_byte>*>(seg_stg->get_object());
     if (object->get_outlined_regions().size() > 1) {
-        //vcl_cout << "In dbseg_seg_save_binimage_process::execute() - "
+        //std::cout << "In dbseg_seg_save_binimage_process::execute() - "
         //     << "more than one region selected \n";
         //return false;
         multiple = true;
 
     }
     if (object->get_outlined_regions().size() == 0) {
-        vcl_cout << "In dbseg_seg_save_binimage_process::execute() - "
+        std::cout << "In dbseg_seg_save_binimage_process::execute() - "
              << "no region selected, doing nothing \n";
         saveMiddle = true;
         return false;
@@ -172,14 +172,14 @@ dbseg_seg_save_binimage_process::execute()
  vil_save(binaryImage, file.path.c_str());
    /*fstream out(file.path.c_str(), fstream::out);
   //the actual saving 
-   out << "binimage" << vcl_endl << "CLOSED" << vcl_endl << poly[0].size() << vcl_endl;
+   out << "binimage" << std::endl << "CLOSED" << std::endl << poly[0].size() << std::endl;
    for (int i = 0; i < poly[0].size(); i++) {
         out << poly[0][i].x() << " ";
         out << poly[0][i].y() << " ";
    }
   out.close();*/
 
- vcl_cout << "binimage of region " << tempID << " saved." << vcl_endl;
+ std::cout << "binimage of region " << tempID << " saved." << std::endl;
 
   return true;
 

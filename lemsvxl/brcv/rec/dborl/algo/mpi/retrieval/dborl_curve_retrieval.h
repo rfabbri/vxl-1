@@ -37,17 +37,17 @@
 #include <dborl/dborl_index_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 
 class dborl_curve_retrieval_input
 { public:
-    dborl_curve_retrieval_input(vsol_polygon_2d_sptr t1, vsol_polygon_2d_sptr t2, vcl_string n1, vcl_string n2) :
+    dborl_curve_retrieval_input(vsol_polygon_2d_sptr t1, vsol_polygon_2d_sptr t2, std::string n1, std::string n2) :
                                       cont1(t1), cont2(t2), name1(n1), name2(n2) {}
     vsol_polygon_2d_sptr cont1;
     vsol_polygon_2d_sptr cont2;
-    vcl_string name1;
-    vcl_string name2;
+    std::string name1;
+    std::string name2;
 };
 
 
@@ -60,26 +60,26 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
   virtual bool parse(const char* param_file);
 
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_curve_retrieval_input>& t);
+  virtual bool initialize(std::vector<dborl_curve_retrieval_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_curve_retrieval_input i, float& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<float>& results);
+  virtual bool finalize(std::vector<float>& results);
 
   void print_time();
 
@@ -94,7 +94,7 @@ protected:
   
   dborl_curve_retrieval_params params_;
   dborl_index_sptr ind_;
-  vcl_vector<unsigned> database_indices_;
+  std::vector<unsigned> database_indices_;
   vul_timer t_;
   
 };

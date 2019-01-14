@@ -21,7 +21,7 @@
 #include <brec/brec_part_hierarchy_sptr.h>
 #include <brec/brec_part_base_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class dbrec_part_hierarchy_builder
 {

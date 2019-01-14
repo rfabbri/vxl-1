@@ -8,7 +8,7 @@
 #include <bnld/bnld_angle.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -77,7 +77,7 @@ default_instance()
   // initialize with default parameters the first time the instance is created
   if (!biarc_sampler.has_cache_samples())
   {
-    vcl_cout << "\n>>Constructing a biarc sampler ...";
+    std::cout << "\n>>Constructing a biarc sampler ...";
     
     // Set parameters of biarc sampler
     dbsks_biarc_sampler_params bsp;
@@ -106,7 +106,7 @@ default_instance()
     biarc_sampler.set_sampling_params(36, 1.5, 51);
     biarc_sampler.compute_cache_sample_points();
 
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
 
   return biarc_sampler;
@@ -267,8 +267,8 @@ radians_per_bin() const
 void dbsks_biarc_sampler::
 retrieve_samples_from_valid_biarc_index(int i_dx, int i_dy, int i_profile,
                                         int start_x, int start_y,
-                                        vcl_vector<int >& xs, vcl_vector<int >& ys, 
-                                        vcl_vector<int >& angle_bins) const
+                                        std::vector<int >& xs, std::vector<int >& ys, 
+                                        std::vector<int >& angle_bins) const
 {
   // retrieve the reference point set
   const vnl_matrix<int >& samples = this->biarc_sample_index_(i_dx, i_dy, i_profile);
@@ -296,9 +296,9 @@ void dbsks_biarc_sampler::
 retrieve_and_scale_samples_from_valid_biarc_index(int i_dx, int i_dy, int i_profile,
                                                   double scaled_up,
                                                   const vgl_point_2d<double >& start,
-                                                  vcl_vector<int >& xs, 
-                                                  vcl_vector<int >& ys, 
-                                                  vcl_vector<int >& angle_bins) const
+                                                  std::vector<int >& xs, 
+                                                  std::vector<int >& ys, 
+                                                  std::vector<int >& angle_bins) const
 {
   // retrieve the reference point set
   const vnl_matrix<int >& samples_index = this->biarc_sample_index_(i_dx, i_dy, i_profile);
@@ -394,7 +394,7 @@ compute_cache_sample_points()
             samples(kk, 3) = t.y();
 
             // keep tangent angle in [0, 2pi]
-            double angle = vcl_atan2(t.y(), t.x());
+            double angle = std::atan2(t.y(), t.x());
             angle = (angle < 0) ? (angle + 2*vnl_math::pi) : angle;
             
             // indices of these points
@@ -480,8 +480,8 @@ compute_cache_nkdiff()
 bool dbsks_biarc_sampler::
 compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                 const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-                vcl_vector<double >& x_vec, vcl_vector<double >& y_vec, 
-                vcl_vector<double >& tx_vec, vcl_vector<double >& ty_vec)
+                std::vector<double >& x_vec, std::vector<double >& y_vec, 
+                std::vector<double >& tx_vec, std::vector<double >& ty_vec)
 {
   x_vec.clear();
   y_vec.clear();
@@ -527,7 +527,7 @@ compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >
 bool dbsks_biarc_sampler::
 compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                 const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-                vcl_vector<vgl_point_2d<double > >& pts, vcl_vector<vgl_vector_2d<double > >& tangents)
+                std::vector<vgl_point_2d<double > >& pts, std::vector<vgl_vector_2d<double > >& tangents)
 {
   // sanitize output storage
   pts.clear();
@@ -535,8 +535,8 @@ compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >
 
 
   // retrieve sample points using a similar function
-  vcl_vector<double > x_vec, y_vec; 
-  vcl_vector<double > tx_vec, ty_vec;
+  std::vector<double > x_vec, y_vec; 
+  std::vector<double > tx_vec, ty_vec;
   bool ok = this->compute_samples(start, start_tangent, end, end_tangent, 
                                   x_vec, y_vec, tx_vec, ty_vec);
 
@@ -565,7 +565,7 @@ compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >
 bool dbsks_biarc_sampler::
 compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                 const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-                vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins, double& angle_step) const
+                std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins, double& angle_step) const
 {
   xs.clear();
   ys.clear();
@@ -601,7 +601,7 @@ compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >
 bool dbsks_biarc_sampler::
 compute_samples_using_cache(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                             const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-                            vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const
+                            std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const
 {
   int i_dx, i_dy, i_profile;
 
@@ -644,7 +644,7 @@ compute_samples_using_cache(const vgl_point_2d<double >& start, const vgl_vector
     // success should be true. Otherwise something is seriously wrong
     if (!success)
     {
-      vcl_cout << "\nERROR: something is seriously wrong with this biarc sampler.\n";
+      std::cout << "\nERROR: something is seriously wrong with this biarc sampler.\n";
       return false;
     }
     this->retrieve_and_scale_samples_from_valid_biarc_index(i_dx, i_dy, i_profile, 
@@ -665,13 +665,13 @@ compute_samples_using_cache(const vgl_point_2d<double >& start, const vgl_vector
 bool dbsks_biarc_sampler::
 compute_samples_not_using_cache(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                                 const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-                                vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const
+                                std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const
 {
-  vcl_vector<double > x_vec;
-  vcl_vector<double > y_vec;
-  vcl_vector<double > tx_vec;
-  vcl_vector<double > ty_vec;
-  vcl_vector<double > angle_vec;
+  std::vector<double > x_vec;
+  std::vector<double > y_vec;
+  std::vector<double > tx_vec;
+  std::vector<double > ty_vec;
+  std::vector<double > angle_vec;
   if (!this->compute_uniform_biarc_samples(start, start_tangent, end, end_tangent, ds_,
     x_vec, y_vec, tx_vec, ty_vec, angle_vec))
   {
@@ -718,11 +718,11 @@ compute_uniform_biarc_samples(const vgl_point_2d<double >& start,
                               const vgl_point_2d<double >& end, 
                               const vgl_vector_2d<double >& end_tangent,
                               double ds,
-                              vcl_vector<double >& x_vec, 
-                              vcl_vector<double >& y_vec, 
-                              vcl_vector<double >& tx_vec,
-                              vcl_vector<double >& ty_vec,
-                              vcl_vector<double >& angle_vec) const
+                              std::vector<double >& x_vec, 
+                              std::vector<double >& y_vec, 
+                              std::vector<double >& tx_vec,
+                              std::vector<double >& ty_vec,
+                              std::vector<double >& angle_vec) const
 {
   x_vec.clear();
   y_vec.clear();
@@ -765,7 +765,7 @@ compute_uniform_biarc_samples(const vgl_point_2d<double >& start,
     ty_vec[kk] = t.y();
 
     // keep tangent angle in [0, 2pi]
-    double angle = vcl_atan2(t.y(), t.x());
+    double angle = std::atan2(t.y(), t.x());
     if (angle < 0) 
     {
       angle += 2*vnl_math::pi;

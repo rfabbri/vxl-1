@@ -26,13 +26,13 @@ class dbrl_oriented_edgemap_to_edge_image_process : public bpro1_process
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector<vcl_string> get_input_type();
-  vcl_vector<vcl_string> get_output_type();
+  std::vector<std::string> get_input_type();
+  std::vector<std::string> get_output_type();
 
   bool execute();
   bool finish();

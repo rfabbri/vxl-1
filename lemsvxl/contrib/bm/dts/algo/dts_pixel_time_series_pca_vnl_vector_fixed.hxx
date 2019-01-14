@@ -5,7 +5,7 @@
 
 #include<dts/algo/dts_time_series_pca_vnl_vector_fixed.h>
 
-#include<vcl_iterator.h>//for vcl_distance
+#include<iterator>//for std::distance
 
 template< class pixelT, class timeT, class mathT, 
     unsigned dim, unsigned ndims2keep>
@@ -17,12 +17,12 @@ void dts_pixel_time_series_pca_vnl_vector_fixed<pixelT,timeT,mathT,dim,ndims2kee
 
 	if(!pts_ptr)
 	{
-		vcl_cerr << "----WARNING---- "
+		std::cerr << "----WARNING---- "
                  << "dts_pixel_time_series_pca_vnl_vector_fixed: "
-				 << "Could not cast from base to child." << vcl_endl
+				 << "Could not cast from base to child." << std::endl
                  << "\tFILE: " << __FILE__ << '\n'
                  << "\tLINE: " << __LINE__ << '\n'
-                 << vcl_flush;
+                 << std::flush;
 		return;
 	}
 
@@ -49,21 +49,21 @@ dts_pixel_time_series_base_sptr
 			p_itr != p_end; ++p_itr )
 	{
 #ifdef _DEBUG
-		vcl_cout << "Executing PCA on pixel: " << p_itr->first << vcl_endl
-				 << "\t" << pts.pixel_time_series_map.size() - vcl_distance(p_itr,p_end) 
-			     << " of " << pts.pixel_time_series_map.size() << vcl_endl;
+		std::cout << "Executing PCA on pixel: " << p_itr->first << std::endl
+				 << "\t" << pts.pixel_time_series_map.size() - std::distance(p_itr,p_end) 
+			     << " of " << pts.pixel_time_series_map.size() << std::endl;
 #endif //_DEBUG
 		dts_time_series<timeT,mathT,dim>* ts_ptr =
 			dynamic_cast<dts_time_series<timeT,mathT,dim>*>(p_itr->second.as_pointer());
 
 		if(!ts_ptr)
 		{
-			vcl_cerr << "----ERROR---- "
+			std::cerr << "----ERROR---- "
                      << "dts_pixel_time_series_pca_vnl_vector_fixed::pca_new_sptr"
                      << " failed dynamic_cast.\n"
                      << "\tFILE: " << __FILE__ << '\n'
                      << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
 			exit(1);
 		}
 

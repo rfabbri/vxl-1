@@ -1,8 +1,8 @@
 // This is brcv/seg/dbdet/tests/test_curve_fragment_postprocess.cxx
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vil/vil_convert.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -56,13 +56,13 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
   // beta_2 = beta_2./fstd_2;
   //
   
-  vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
+  std::string root = dbtest_root_dir();
+  std::string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
 
-  vcl_string image_path = base_path + "2018.jpg";
-  vcl_string frags_path = base_path + "2018.cem";
-  vcl_string edge_path = base_path + "2018.edg";
-  vcl_string beta_path = base_path + "gPb_SEL_beta_of_cues_for_seletion.txt";
+  std::string image_path = base_path + "2018.jpg";
+  std::string frags_path = base_path + "2018.cem";
+  std::string edge_path = base_path + "2018.edg";
+  std::string beta_path = base_path + "gPb_SEL_beta_of_cues_for_seletion.txt";
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
@@ -115,11 +115,11 @@ detailed_test()
   dbdet_edgel_chain crv;
   y_feature_vector v;
 
-  vcl_cout << "\n--- Testing empty curve case ---\n";
+  std::cout << "\n--- Testing empty curve case ---\n";
   cue_computer.compute_all_cues(crv, &v);
   }
 
-  { vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  { std::cout << "\n--- Testing 3-edgel curve case ---\n";
   dbdet_edgel_chain crv;
   y_feature_vector v;
 
@@ -167,8 +167,8 @@ realistic_test()
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(curve_fragment_graph.frags, edgemap_sptr, img, beta, &rank);
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string rank_path = root + "/brcv/seg/dbdet/algo/tests/test_data/rank.txt";
+  std::string root = dbtest_root_dir();
+  std::string rank_path = root + "/brcv/seg/dbdet/algo/tests/test_data/rank.txt";
   
   vnl_vector<double> gt_rank =
     static_cast<vnl_vector<double> > (vnl_file_vector<double>(rank_path.c_str()));

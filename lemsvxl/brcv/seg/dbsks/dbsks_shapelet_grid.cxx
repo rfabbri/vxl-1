@@ -233,7 +233,7 @@ compute_grid()
   for (int i=0; i<this->num_rA_; ++i)
   {
     double log2_ratio = this->min_log2_rA_ + i*this->step_log2_rA_;
-    this->rA_[i] = this->ref_rA_ * vcl_exp(vnl_math::ln2 * log2_ratio);
+    this->rA_[i] = this->ref_rA_ * std::exp(vnl_math::ln2 * log2_ratio);
   }
 
 
@@ -243,7 +243,7 @@ compute_grid()
   for (int i=0; i<this->num_len_; ++i)
   {
     double log2_ratio = this->min_log2_len_ + i*this->step_log2_len_;
-    this->len_[i] = this->ref_len_ * vcl_exp(vnl_math::ln2 * log2_ratio);
+    this->len_[i] = this->ref_len_ * std::exp(vnl_math::ln2 * log2_ratio);
   }
 }
 
@@ -412,7 +412,7 @@ i_psiA(double psiA) const
   double diff = psiA - this->min_psiA_;
 
   // convert this to [0, 2pi] range
-  diff = vcl_fmod(diff, 2*vnl_math::pi);
+  diff = std::fmod(diff, 2*vnl_math::pi);
   diff = (diff < 0) ? (diff + 2*vnl_math::pi) : diff;
 
   int ind = vnl_math::rnd(diff / this->step_psiA_);
@@ -424,7 +424,7 @@ i_psiA(double psiA) const
 int dbsks_shapelet_grid::
 i_psiA(const vgl_vector_2d<double >& tangentA) const
 {
-  double psiA = vcl_atan2(tangentA.y(), tangentA.x());
+  double psiA = std::atan2(tangentA.y(), tangentA.x());
   return this->i_psiA(psiA);
 }
 
@@ -442,7 +442,7 @@ i_m(double m) const
 int dbsks_shapelet_grid::
 i_rA(double rA) const
 {
-  double dev = vcl_log(rA / this->ref_rA_) / vnl_math::ln2;
+  double dev = std::log(rA / this->ref_rA_) / vnl_math::ln2;
   int temp = vnl_math::rnd((dev - this->min_log2_rA_) / this->step_log2_rA_);
   //return dbsks_clip(temp, 0, this->rA_.size()-1);
   return temp;
@@ -452,7 +452,7 @@ i_rA(double rA) const
 int dbsks_shapelet_grid::
 i_len(double len) const
 {
-  double dev = vcl_log(len / this->ref_len_) / vnl_math::ln2;
+  double dev = std::log(len / this->ref_len_) / vnl_math::ln2;
   int temp = vnl_math::rnd((dev-this->min_log2_len_) / this->step_log2_len_);
   //return dbsks_clip(temp, 0, this->len_.size()-1);
   return temp;
@@ -564,7 +564,7 @@ shapelet(int i_xy, int i_plane) const
   double phiB = this->phiB_[i_phiB];
 
   vgl_point_2d<double > ptA(xA, yA);
-  vgl_vector_2d<double > tA(vcl_cos(psiA), vcl_sin(psiA));
+  vgl_vector_2d<double > tA(std::cos(psiA), std::sin(psiA));
 
   dbsksp_shapelet_sptr s0 = new dbsksp_shapelet;
   s0->set_from(ptA, rA, tA, phiA, m, len, phiB);
@@ -642,7 +642,7 @@ change_num_yA(int num_yA)
 // ----------------------------------------------------------------------------
 //: Print grid information
 void dbsks_shapelet_grid::
-print(vcl_ostream& str)
+print(std::ostream& str)
 {
   str << "Shapelet grid info: \n"
     << "  num_x = " << this->num_xA_ << "\n"

@@ -22,8 +22,8 @@ class bprt_homog_interface
 {
       
 public:
-        bprt_homog_interface(vcl_vector< vsol_point_2d_sptr > &storage1,
-                        vcl_vector< vsol_point_2d_sptr > &storage2, 
+        bprt_homog_interface(std::vector< vsol_point_2d_sptr > &storage1,
+                        std::vector< vsol_point_2d_sptr > &storage2, 
                         unsigned int dof, int *max_num_planes, float std,
                         bool affine= false, bool normalize = false, bool use_correlate = true, 
                         bool use_epipole = true):
@@ -41,12 +41,12 @@ public:
         if (storage2.size()<num_points)
         {
                 num_points=storage2.size();
-                vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
+                std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
         }
         else 
             if (storage2.size()>num_points)
             {
-                    vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
+                    std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
             }
         
 
@@ -67,32 +67,32 @@ public:
         if (!tr1found)
         {
                 normtr1_.set_identity();
-                vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist1 /n";
+                std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist1 /n";
         }
         if (!tr2found)
         {
                 normtr2_.set_identity();
-                vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist2 /n";
+                std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist2 /n";
         }
 
         if (tr1found&&tr2found&&normalize_)
         {
             double cx= 0.0, cy =0.0;
             double cx2 =0.0, cy2 = 0.0;
-            vcl_cout<<"norm1";
+            std::cout<<"norm1";
             for (int m= 0; m<3; m++)
             {
                 for (int n= 0; n<3; n++)
-                    vcl_cout<<normtr1_.get(m,n)<<"\t";
+                    std::cout<<normtr1_.get(m,n)<<"\t";
                     ;
-                vcl_cout<<"\n";
+                std::cout<<"\n";
             }
             
             for (int m= 0; m<3; m++)
             {
                 for (int n= 0; n<3; n++)
-                    vcl_cout<<normtr2_.get(m,n)<<"\t";
-                 vcl_cout<<"\n";
+                    std::cout<<normtr2_.get(m,n)<<"\t";
+                 std::cout<<"\n";
 
             }
 
@@ -105,8 +105,8 @@ public:
               
 
             }
-              vcl_cout<<"Centroid 1:  "<< cx<<"   "<<cy<<"\n";
-                vcl_cout<<"Centroid 2:  "<< cx2<<"   "<<cy2<<"\n";
+              std::cout<<"Centroid 1:  "<< cx<<"   "<<cy<<"\n";
+                std::cout<<"Centroid 2:  "<< cx2<<"   "<<cy2<<"\n";
 
 
              for (int i=0;i<pointlist1_.size();++i)
@@ -127,16 +127,16 @@ public:
                 cy2 +=  pointlist2_[i].y()/pointlist2_.size();
 
             }
-                vcl_cout<<"Centroid 1:  "<< cx<<"   "<<cy<<"\n";
-                vcl_cout<<"Centroid 2:  "<< cx2<<"   "<<cy2<<"\n";
+                std::cout<<"Centroid 1:  "<< cx<<"   "<<cy<<"\n";
+                std::cout<<"Centroid 2:  "<< cx2<<"   "<<cy2<<"\n";
 
         }
         
         }
 
         bprt_homog_interface(
-                vcl_vector< vsol_point_2d_sptr > &storage1,
-                vcl_vector< vsol_point_2d_sptr > &storage2)
+                std::vector< vsol_point_2d_sptr > &storage1,
+                std::vector< vsol_point_2d_sptr > &storage2)
         {
                 prior_scale=1;
                 dof_=4;
@@ -147,12 +147,12 @@ public:
                 if (storage2.size()<num_points)
                 {
                     num_points=storage2.size();
-                    vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
+                    std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
                 }
                 else 
                     if (storage2.size()>num_points)
                     {
-                    vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
+                    std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() Not same amount of points in list of points\n";
                     }
                 for (int i=0;i<num_points;i++)
                         pointlist1_.push_back(vgl_homg_point_2d<double> (storage1[i]->x(),storage1[i]->y()));
@@ -168,12 +168,12 @@ public:
                 if (!normtr1_.compute_from_points(pointlist1_))
                 {
                         normtr1_.set_identity();
-                        vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist1 /n";
+                        std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist1 /n";
                 }
                 if (!normtr2_.compute_from_points(pointlist2_))
                 {
                         normtr2_.set_identity();
-                        vcl_cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist2 /n";
+                        std::cout<<"Warning: bprt_homog_interface::bprt_homog_interface() couldn't compute normalizing transform for pointlist2 /n";
                 }
                 for (int i=0;i<pointlist1_.size();++i)
                 {
@@ -189,39 +189,39 @@ public:
         }
 
         bool compute_homog();
-        void set_method(vcl_string &method_name);
-        void get_output(vcl_vector< vsol_spatial_object_2d_sptr> &out,int i);
-        void output(vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf2);
-        void transfer(vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf2, int numpopul);
-        vcl_vector<vcl_vector<vgl_homg_point_2d<double> > > get_outliers(double scale, double mult_scale,int popindex);
+        void set_method(std::string &method_name);
+        void get_output(std::vector< vsol_spatial_object_2d_sptr> &out,int i);
+        void output(std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf2);
+        void transfer(std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf2, int numpopul);
+        std::vector<std::vector<vgl_homg_point_2d<double> > > get_outliers(double scale, double mult_scale,int popindex);
         vnl_double_3x3 get_H(int index);
         vgl_h_matrix_2d<double> get_Homog();
-        vcl_vector< vsol_spatial_object_2d_sptr > get_pop(int imnum, int popnum);
-        vcl_vector< vsol_spatial_object_2d_sptr > get_transf_pop(int imnum, int popnum);
+        std::vector< vsol_spatial_object_2d_sptr > get_pop(int imnum, int popnum);
+        std::vector< vsol_spatial_object_2d_sptr > get_transf_pop(int imnum, int popnum);
         vgl_h_matrix_2d<double> get_Homog(int index);
-        void get_outlier_points(vcl_vector< vsol_point_2d_sptr> &out,vcl_vector< vsol_point_2d_sptr> &out2);
+        void get_outlier_points(std::vector< vsol_point_2d_sptr> &out,std::vector< vsol_point_2d_sptr> &out2);
         void set_epipole(vgl_homg_point_2d<double> epipole1, vgl_homg_point_2d<double> epipole2);
 
 
 
         private:
         rrel_homography2d_est *Homog_est;
-        vcl_vector< vgl_homg_point_2d <double > > pointlist1_,pointlist2_;
-        vcl_vector< vcl_vector< vsol_spatial_object_2d_sptr > > transferpopulationlist1,transferpopulationlist2;
+        std::vector< vgl_homg_point_2d <double > > pointlist1_,pointlist2_;
+        std::vector< std::vector< vsol_spatial_object_2d_sptr > > transferpopulationlist1,transferpopulationlist2;
       
         vnl_double_3x3 H_;
         vgl_h_matrix_2d_compute_4point CalcLin;
         vgl_h_matrix_2d <double> FullH_;
-        vcl_vector<vsol_spatial_object_2d_sptr> output1_, output2_;
+        std::vector<vsol_spatial_object_2d_sptr> output1_, output2_;
 
         vnl_double_3x3  NormH_;
         vgl_h_matrix_2d<double> NormHvgl_;
         vgl_norm_trans_2d<double> normtr1_;
         vgl_norm_trans_2d<double> normtr2_;
-        vcl_vector< vcl_vector<  vgl_homg_point_2d <double > > > pops1_,pops2_;
-        vcl_vector<vgl_h_matrix_2d<double> > Homog_matlist;
-        vcl_vector<vgl_homg_point_2d<double> > leftover1, leftover2;
-                vcl_vector<vsol_point_2d_sptr> outlier_points1,outlier_points2;
+        std::vector< std::vector<  vgl_homg_point_2d <double > > > pops1_,pops2_;
+        std::vector<vgl_h_matrix_2d<double> > Homog_matlist;
+        std::vector<vgl_homg_point_2d<double> > leftover1, leftover2;
+                std::vector<vsol_point_2d_sptr> outlier_points1,outlier_points2;
         double prior_scale;
         vgl_homg_point_2d<double> epi1;
         vgl_homg_point_2d<double> epi2;
@@ -232,7 +232,7 @@ public:
         
         int num_points;
         bool affine_;
-        vcl_string method_;
+        std::string method_;
         bool use_correlate_;
         bool normalize_;
         bool use_epipole_;

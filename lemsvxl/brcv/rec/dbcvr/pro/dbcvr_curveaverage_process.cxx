@@ -23,12 +23,12 @@ dbcvr_curveaverage_process::dbcvr_curveaverage_process()
   nframes_ = 2;
 
 /*  if (!parameters()->add_parameter( "Output file < filename.cm >" , "-curvematchoutput" ,
-                            bpro1_parameters::FILE_STRING , (vcl_string)"output.cm" ) ||
+                            bpro1_parameters::FILE_STRING , (std::string)"output.cm" ) ||
       !parameters()->add_parameter(  "Input file1 <filename...>" , "-curvematchinput1" ,
-                            bpro1_parameters::FILE_STRING , (vcl_string)"input1.con" )  ||
+                            bpro1_parameters::FILE_STRING , (std::string)"input1.con" )  ||
       !parameters()->add_parameter(  "Input file2 <filename...>" , "-curvematchinput2" ,
-                            bpro1_parameters::FILE_STRING , (vcl_string)"input2.con" ) ) {
-    vcl_cerr << "ERROR: Adding parameters in dbcvr_curveaverage_process::dbcvr_curveaverage_process()" << vcl_endl;
+                            bpro1_parameters::FILE_STRING , (std::string)"input2.con" ) ) {
+    std::cerr << "ERROR: Adding parameters in dbcvr_curveaverage_process::dbcvr_curveaverage_process()" << std::endl;
   }*/
 }
 
@@ -56,7 +56,7 @@ dbcvr_curveaverage_process::clone() const
 //Ming: curve2 in input_spatial_object_[1]
 bool dbcvr_curveaverage_process::execute()
 {
-  vcl_string input_file;
+  std::string input_file;
   parameters()->get_value( "-curvematchinput" , input_file );
 
   clear_output();
@@ -83,7 +83,7 @@ bool dbcvr_curveaverage_process::execute()
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_curve())
@@ -141,7 +141,7 @@ bool dbcvr_curveaverage_process::execute()
   curveMatch->setCurve2 (curve2);
   curveMatch->Match ();
 
-  vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< curveMatch->finalCost() <<vcl_endl;
+  std::cout<< std::endl<<"curve_2d matching cost: "<< curveMatch->finalCost() <<std::endl;
 
   // create the output storage class
   dbcvr_curvematch_storage_sptr output_curvematch = dbcvr_curvematch_storage_new();

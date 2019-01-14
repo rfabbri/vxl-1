@@ -12,14 +12,14 @@
 #include <boxm/boxm_scene.h>
 #include <boct/util/boct_construct_tree.h>
 
-void bof_codebook_utils::sample_rnd_k_means(vcl_vector<vnl_vector_fixed<double,10> > &rnd_means, const unsigned K)
+void bof_codebook_utils::sample_rnd_k_means(std::vector<vnl_vector_fixed<double,10> > &rnd_means, const unsigned K)
 {
   typedef boct_tree<short, bool> bool_tree_type;
   typedef boct_tree_cell<short, bool> bool_cell_type;
   
   typedef boct_tree<short,vnl_vector_fixed<double,10> > feature_tree_type;
   typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > feature_cell_type;
-  vcl_vector<vnl_vector_fixed<double,10> > features;
+  std::vector<vnl_vector_fixed<double,10> > features;
   vnl_random rng;
   
   //Get K samples from each block in every training scene
@@ -39,7 +39,7 @@ void bof_codebook_utils::sample_rnd_k_means(vcl_vector<vnl_vector_fixed<double,1
     
     if(!(feature_scene && valid_scene /*&& train_scene*/))
     {
-      vcl_cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << vcl_endl;
+      std::cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << std::endl;
       return;
     }
     
@@ -53,7 +53,7 @@ void bof_codebook_utils::sample_rnd_k_means(vcl_vector<vnl_vector_fixed<double,1
     for (it.begin(); !it.end(); ++it) 
     {
       if(!(feature_scene->valid_index(it.index()) && valid_scene->valid_index(it.index()))){
-        vcl_cerr << "In bof_util::random_label_for_training: Invalid block" << vcl_endl;
+        std::cerr << "In bof_util::random_label_for_training: Invalid block" << std::endl;
         return;
       }
       
@@ -65,22 +65,22 @@ void bof_codebook_utils::sample_rnd_k_means(vcl_vector<vnl_vector_fixed<double,1
       bool_tree_type* valid_tree = valid_scene->get_block(it.index())->get_tree();
       
       //get leaf cells
-      vcl_vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
-      vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
+      std::vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
+      std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
       
       float tree_ncells = feature_leaves.size();
   
       //get the number of valid features
       unsigned long tree_valid_ncells = 0;
-      vcl_vector<bool_cell_type *>::iterator valid_it = valid_leaves.begin();
+      std::vector<bool_cell_type *>::iterator valid_it = valid_leaves.begin();
       for (; valid_it != valid_leaves.end(); valid_it++) {
         if ((*valid_it)->data()) {
           tree_valid_ncells++;
         }
       }
       
-      vcl_cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of valid leaves is: "
-      << tree_valid_ncells << " and the number of leaves is: " << (unsigned long)tree_ncells <<  vcl_endl;
+      std::cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of valid leaves is: "
+      << tree_valid_ncells << " and the number of leaves is: " << (unsigned long)tree_ncells <<  std::endl;
 
       if((int)tree_valid_ncells<K)
         continue;
@@ -111,7 +111,7 @@ void bof_codebook_utils::sample_rnd_k_means(vcl_vector<vnl_vector_fixed<double,1
 }
 
 //: Preform fast_k-means on a subsample of the training set. The means should be initialized with K points
-bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_fixed<double,10> > &means,
+bool bof_codebook_utils::fast_k_means_for_train_subsample(std::vector<vnl_vector_fixed<double,10> > &means,
                                                     double subsample_fraction, unsigned max_it)
 {
   typedef boct_tree<short, bool> bool_tree_type;
@@ -121,7 +121,7 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
   typedef boct_tree_cell<short,vnl_vector_fixed<double,10> > feature_cell_type;
   
   //collect subsmaples
-  vcl_vector<vnl_vector_fixed<double,10> > subsamples;
+  std::vector<vnl_vector_fixed<double,10> > subsamples;
   subsamples.clear();
   vnl_random rng;
   
@@ -130,7 +130,7 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
     if (!info_.training_scenes_[scene_id]) 
       continue;
     
-    vcl_cout << "Scene " << scene_id << " labeled for training \n";
+    std::cout << "Scene " << scene_id << " labeled for training \n";
     
     boxm_scene_base_sptr feature_scene_base = info_.load_feature_scene(scene_id);
     boxm_scene_base_sptr valid_scene_base = info_.load_valid_scene(scene_id);
@@ -141,7 +141,7 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
     
     if(!(feature_scene && valid_scene))
     {
-      vcl_cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << vcl_endl;
+      std::cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << std::endl;
       return false;
     }
     
@@ -165,13 +165,13 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
       bool_tree_type* valid_tree = valid_scene->get_active_block()->get_tree();
       
       //get leaf cells
-      vcl_vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
-      vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
+      std::vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
+      std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
       
       
       //get the percentage of number of valid features
       unsigned long tree_valid_ncells = 0;
-      vcl_vector<bool_cell_type *>::iterator valid_it = valid_leaves.begin();
+      std::vector<bool_cell_type *>::iterator valid_it = valid_leaves.begin();
       for (; valid_it != valid_leaves.end(); valid_it++) {
         if ((*valid_it)->data()) {
           tree_valid_ncells++;
@@ -180,7 +180,7 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
       
       unsigned long tree_ncells = valid_leaves.size();
       unsigned long tree_nsamples = (unsigned long)((float)tree_valid_ncells*subsample_fraction);
-      vcl_cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of valid leaves is: " << tree_valid_ncells << vcl_endl;
+      std::cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of valid leaves is: " << tree_valid_ncells << std::endl;
       for(unsigned long i =0; i<tree_nsamples; i++)
       {
         unsigned long sample = rng.lrand32((int)(tree_ncells-1));
@@ -198,23 +198,23 @@ bool bof_codebook_utils::fast_k_means_for_train_subsample(vcl_vector<vnl_vector_
       feature_scene->unload_active_blocks();
       valid_scene->unload_active_blocks();
       
-      vcl_cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of subsamples is: " << tree_nsamples << vcl_endl;
+      std::cout <<" In Scene: " << scene_id << ". In block (" << it.index() << "), number of subsamples is: " << tree_nsamples << std::endl;
     }
    
   }
   
   //perform fast k-means on samples
-  vcl_vector<vcl_vector<unsigned> > clusters;
-  vcl_cout << "Size subsamples: " << subsamples.size() << "\n";
+  std::vector<std::vector<unsigned> > clusters;
+  std::cout << "Size subsamples: " << subsamples.size() << "\n";
   unsigned n_iterations = dbcll_fast_k_means(subsamples, clusters, means, max_it);
   subsamples.clear();
-  vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;  
+  std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;  
   return true;
   
 }
 
 //: Preform fast_k-means on the training set of a barticular block. The means should be initialized with K points
-bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fixed<double,10> > &means,
+bool bof_codebook_utils::fast_k_means_on_train_samples(std::vector<vnl_vector_fixed<double,10> > &means,
                                                 int scene_id, int block_i, int block_j, int block_k, unsigned max_it)
 {
   if (!info_.training_scenes_[scene_id]) {
@@ -235,7 +235,7 @@ bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fix
   
   if(!(feature_scene && valid_scene))
   {
-    vcl_cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << vcl_endl;
+    std::cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << std::endl;
     return false;
   }
   
@@ -245,7 +245,7 @@ bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fix
   
   //get the cells for this block
   if(!(feature_scene->valid_index(block_i, block_j, block_k) && valid_scene->valid_index(block_i, block_j, block_k) )){
-    vcl_cerr << "In bof_util::random_label_for_training: Invalid block" << vcl_endl;
+    std::cerr << "In bof_util::random_label_for_training: Invalid block" << std::endl;
     return false;
   }
   
@@ -257,11 +257,11 @@ bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fix
   bool_tree_type* valid_tree = valid_scene->get_block(block_i, block_j, block_k)->get_tree();
   
   //get leaf cells
-  vcl_vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
-  vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
+  std::vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells_at_level(0);
+  std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells_at_level(0);
   
   float tree_ncells = valid_leaves.size();
-  vcl_vector<vnl_vector_fixed<double,10> > features;
+  std::vector<vnl_vector_fixed<double,10> > features;
   for(unsigned long i =0; i<tree_ncells; i++)
   {
     if(!valid_leaves[i]->data())
@@ -272,7 +272,7 @@ bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fix
     
   }
   
-  vcl_cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of features is: " << features.size() << vcl_endl;
+  std::cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of features is: " << features.size() << std::endl;
 
   if (features.empty()) {
     return false;
@@ -285,17 +285,17 @@ bool bof_codebook_utils::fast_k_means_on_train_samples(vcl_vector<vnl_vector_fix
 
   
   //perform fast k-means on samples
-  vcl_vector<vcl_vector<unsigned> > clusters;
+  std::vector<std::vector<unsigned> > clusters;
   unsigned n_iterations = dbcll_fast_k_means(features, clusters, means, max_it);
-  vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;
+  std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;
   return true;
 }
 
 //: Clusters points. This function does not modify the centers. It just associates a point to the closest (Euclidean) mean
 void  
-bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,10> > &means,
+bof_codebook_utils::compute_euclidean_clusters(const std::vector<vnl_vector_fixed<double,10> > &means,
                                                bool is_train, int class_id, int scene_id, int block_i, int block_j, int block_k,
-                                               vcl_vector<dbcll_euclidean_cluster_light<10> > &clusters)
+                                               std::vector<dbcll_euclidean_cluster_light<10> > &clusters)
 {
   
   typedef boct_tree<short, bool> bool_tree_type;
@@ -319,7 +319,7 @@ bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed
   
   if(!(feature_scene && valid_scene /* && train_scene*/ && class_id_scene))
   {
-    vcl_cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << vcl_endl;
+    std::cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << std::endl;
     return;
   }
   
@@ -332,7 +332,7 @@ bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed
   //get the cells for this block
   if(!(feature_scene->valid_index(block_i, block_j, block_k) && valid_scene->valid_index(block_i, block_j, block_k) /*&& 
        train_scene->valid_index(block_i, block_j, block_k)*/ &&  (class_id_scene->valid_index(block_i, block_j, block_k)) )){
-    vcl_cerr << "In bof_util::random_label_for_training: Invalid block" << vcl_endl;
+    std::cerr << "In bof_util::random_label_for_training: Invalid block" << std::endl;
     return ;
   }
   
@@ -348,15 +348,15 @@ bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed
   char_tree_type* class_id_tree = class_id_scene->get_block(block_i, block_j, block_k)->get_tree();
   
   //get leaf cells
-  vcl_vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells();
-  vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
-  //vcl_vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
-  vcl_vector<char_cell_type *> class_id_leaves = class_id_tree->leaf_cells();
+  std::vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells();
+  std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
+  //std::vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
+  std::vector<char_cell_type *> class_id_leaves = class_id_tree->leaf_cells();
 
   
   float tree_ncells = valid_leaves.size();
-  vcl_vector<vnl_vector_fixed<double,10> > features;
-  vcl_cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of cells is: " << tree_ncells << vcl_endl;
+  std::vector<vnl_vector_fixed<double,10> > features;
+  std::cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of cells is: " << tree_ncells << std::endl;
   for(unsigned long i =0; i<tree_ncells; i++)
   {
     if(!valid_leaves[i]->data())
@@ -371,7 +371,7 @@ bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed
       
     features.push_back(feature_leaves[i]->data());
   }
-  vcl_cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of relevant cells is: " << features.size() << vcl_endl;
+  std::cout <<" In block (" << block_i << ',' << block_j <<',' <<  block_k << "), number of relevant cells is: " << features.size() << std::endl;
 
   // write and release memory
   feature_scene->unload_active_blocks();
@@ -389,7 +389,7 @@ bof_codebook_utils::compute_euclidean_clusters(const vcl_vector<vnl_vector_fixed
 //: Assign cluster id. This function does not modify the centers. It just associates a point to the closest (Euclidean) mean
 //  The tree-structure of the cluster-id-scene is created from scratch such that there is only id per cell, 
 void  
-bof_codebook_utils::assign_cluster_id(const vcl_vector<vnl_vector_fixed<double,10> > &means,
+bof_codebook_utils::assign_cluster_id(const std::vector<vnl_vector_fixed<double,10> > &means,
                                       int scene_id, int block_i, int block_j, int block_k)
 {
   
@@ -412,7 +412,7 @@ bof_codebook_utils::assign_cluster_id(const vcl_vector<vnl_vector_fixed<double,1
   
   if(!(feature_scene && valid_scene && cluster_id_scene))
   {
-    vcl_cerr << "Error in bof_codebook_utils::assign_cluster_id: Could not cast scenes" << vcl_endl;
+    std::cerr << "Error in bof_codebook_utils::assign_cluster_id: Could not cast scenes" << std::endl;
     return;
   }
   
@@ -423,7 +423,7 @@ bof_codebook_utils::assign_cluster_id(const vcl_vector<vnl_vector_fixed<double,1
   
   //get the cells for this block
   if(!(feature_scene->valid_index(block_i, block_j, block_k) && valid_scene->valid_index(block_i, block_j, block_k) &&  (cluster_id_scene->valid_index(block_i, block_j, block_k)) )){
-   vcl_cerr << "In bof_codebook_utils::assign_cluster_id: Invalid block" << vcl_endl;
+   std::cerr << "In bof_codebook_utils::assign_cluster_id: Invalid block" << std::endl;
    return ;
  }
   
@@ -436,9 +436,9 @@ bof_codebook_utils::assign_cluster_id(const vcl_vector<vnl_vector_fixed<double,1
   bool_tree_type* valid_tree = valid_scene->get_block(block_i, block_j, block_k)->get_tree();
  
   
-  vcl_vector<feature_cell_type *> feature_cells = feature_tree->leaf_cells_at_level(0);
-  vcl_vector<short_cell_type> cloned_cells;
-  vcl_vector<bool_cell_type*> valid_cells = valid_tree->leaf_cells_at_level(0);
+  std::vector<feature_cell_type *> feature_cells = feature_tree->leaf_cells_at_level(0);
+  std::vector<short_cell_type> cloned_cells;
+  std::vector<bool_cell_type*> valid_cells = valid_tree->leaf_cells_at_level(0);
   
   dbcll_euclidean_cluster_util<10> cluster_util(means);
   
@@ -473,7 +473,7 @@ bof_codebook_utils::assign_cluster_id(const vcl_vector<vnl_vector_fixed<double,1
 //: Binary save parameters to stream.
 void vsl_b_write(vsl_b_ostream & , bof_codebook const & )
 {
-  vcl_cerr << "Error: Trying to save but binary io not implemented\n";
+  std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
@@ -481,20 +481,20 @@ void vsl_b_write(vsl_b_ostream & , bof_codebook const & )
 //: Binary load parameters from stream.
 void vsl_b_read(vsl_b_istream & , bof_codebook & )
 {
-  vcl_cerr << "Error: Trying to read but binary io not implemented\n";
+  std::cerr << "Error: Trying to read but binary io not implemented\n";
   return;
 }
 
-void vsl_print_summary(vcl_ostream & , const bof_codebook & )
+void vsl_print_summary(std::ostream & , const bof_codebook & )
 {
-  vcl_cerr << "Error: Trying to print but binary io not implemented\n";
+  std::cerr << "Error: Trying to print but binary io not implemented\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream& is,bof_codebook* p)
 {
   delete p;
-  vcl_cerr << "Error: Trying to read but binary io not implemented\n";
+  std::cerr << "Error: Trying to read but binary io not implemented\n";
   return;
 }
 
@@ -511,7 +511,7 @@ void vsl_b_write(vsl_b_ostream& os, const bof_codebook* &p)
   }
 }
 
-void vsl_print_summary(vcl_ostream& os, const bof_codebook* &p)
+void vsl_print_summary(std::ostream& os, const bof_codebook* &p)
 {
   if (p==0)
     os << "NULL PTR";

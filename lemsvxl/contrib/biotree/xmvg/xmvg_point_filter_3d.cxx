@@ -7,7 +7,7 @@ xmvg_point_filter_3d::xmvg_point_filter_3d()
 
 xmvg_point_filter_3d::xmvg_point_filter_3d(xmvg_point_filter_descriptor & descriptor)
 {
-  assert(descriptor.name() == vcl_string("point_filter"));
+  assert(descriptor.name() == std::string("point_filter"));
   descriptor_ = descriptor;
 }
 
@@ -22,8 +22,8 @@ xmvg_atomic_filter_2d<double> xmvg_point_filter_3d::splat(vgl_point_3d<double> c
 
   vgl_point_2d<double> c2d = cam.project(c3d);
 
-  int u = static_cast<int>(vcl_floor(c2d.x()));
-  int v = static_cast<int>(vcl_floor(c2d.y()));
+  int u = static_cast<int>(std::floor(c2d.x()));
+  int v = static_cast<int>(std::floor(c2d.y()));
   vnl_int_2 left_upper(u, v);
 
   vnl_int_2 size(1,1);
@@ -36,6 +36,6 @@ xmvg_atomic_filter_2d<double> xmvg_point_filter_3d::splat(vgl_point_3d<double> c
   return result;
 }
 
-void x_write(vcl_ostream& os, xmvg_point_filter_3d pf)
+void x_write(std::ostream& os, xmvg_point_filter_3d pf)
 {
 }

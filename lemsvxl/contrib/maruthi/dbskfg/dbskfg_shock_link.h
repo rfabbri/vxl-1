@@ -25,9 +25,9 @@
 #include <dbsk2d/dbsk2d_ishock_bpoint.h>
 #include <dbskfg/dbskfg_rag_node_sptr.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_set.h>
+#include <vector>
+#include <utility>
+#include <set>
 
 #include <dbsk2d/dbsk2d_xshock_sample.h>
 #include <dbsk2d/dbsk2d_xshock_sample_sptr.h>
@@ -66,7 +66,7 @@ public:
     //----Information about this Link ---------------------------------------
 
     //: Prints information about this node
-    /* virtual */ void print(vcl_ostream& os);
+    /* virtual */ void print(std::ostream& os);
 
     //: Returns whether this shock link is line/line, point/line, etc
     dbskfg_utilities::Shock_Compute_Type shock_compute_type();
@@ -84,7 +84,7 @@ public:
         {left_contour_links_.push_back(link);}}
     
     //: Get left contours
-    vcl_vector<dbskfg_composite_link_sptr>& left_contour_links()
+    std::vector<dbskfg_composite_link_sptr>& left_contour_links()
     {return left_contour_links_;}
 
     //: Add to right contour
@@ -93,7 +93,7 @@ public:
         {right_contour_links_.push_back(link);}}
    
     //: Get right contours
-    vcl_vector<dbskfg_composite_link_sptr>& right_contour_links()
+    std::vector<dbskfg_composite_link_sptr>& right_contour_links()
     {return right_contour_links_;}
 
     //: Add left pont
@@ -117,17 +117,17 @@ public:
     vgl_polygon<double> polygon(){ return polygon_boundary_; }
 
     //: return the extrinsic points for rendering this geometry
-    vcl_vector<vgl_point_2d<double> >& ex_pts() { return ex_pts_; }
+    std::vector<vgl_point_2d<double> >& ex_pts() { return ex_pts_; }
 
     //: set polygon
     void set_polygon(vgl_polygon<double> poly);
 
     //: set extrinsinc points
     void set_sampled_shock_points(
-        vcl_vector<dbsk2d_xshock_sample_sptr>& samples){samples_=samples;}
+        std::vector<dbsk2d_xshock_sample_sptr>& samples){samples_=samples;}
 
     //: set extrinsinc points
-    vcl_vector<dbsk2d_xshock_sample_sptr>& get_sampled_shock_points()
+    std::vector<dbsk2d_xshock_sample_sptr>& get_sampled_shock_points()
     {return samples_;}
 
     // get original shock id
@@ -146,7 +146,7 @@ public:
     bool endpoint_spawned();
 
     //: Get contour pair
-    vcl_set<unsigned int> get_contour_pair();
+    std::set<unsigned int> get_contour_pair();
 
     //: Figure out shock extrinsinc points for this link
     void construct_locus();
@@ -173,7 +173,7 @@ public:
     dbskfg_shock_link_boundary get_right_boundary()
     {return right_boundary_;}
 
-    void splice_cost(vcl_vector<double>& costs);
+    void splice_cost(std::vector<double>& costs);
 
     dbsk2d_ishock_edge* ishock_edge(){return elm_;}
 
@@ -200,16 +200,16 @@ private:
     dbskfg_contour_node* right_point_;
 
     // Keeps a list of all contour links for the left element
-    vcl_vector<dbskfg_composite_link_sptr> left_contour_links_;
+    std::vector<dbskfg_composite_link_sptr> left_contour_links_;
 
     // Keeps a list of all contour links for the right element
-    vcl_vector<dbskfg_composite_link_sptr> right_contour_links_;
+    std::vector<dbskfg_composite_link_sptr> right_contour_links_;
 
     // Keeps a unified list of all elements for degenerate fragment
-    vcl_vector<dbskfg_composite_link_sptr> degenerate_links_;
+    std::vector<dbskfg_composite_link_sptr> degenerate_links_;
 
     //: extrinsic points for drawing purposes
-    vcl_vector<vgl_point_2d<double> > ex_pts_;
+    std::vector<vgl_point_2d<double> > ex_pts_;
 
     // Keeps the whole fragment in a polygon
     vgl_polygon<double> polygon_boundary_;
@@ -220,9 +220,9 @@ private:
     // Keep an ishock elm
     dbsk2d_ishock_edge* elm_;
 
-    vcl_vector<dbsk2d_ishock_belm*> belm_;
+    std::vector<dbsk2d_ishock_belm*> belm_;
 
-    vcl_vector<dbsk2d_xshock_sample_sptr> samples_;
+    std::vector<dbsk2d_xshock_sample_sptr> samples_;
 
     // store original ishock id
     int original_ishock_id_;
@@ -236,7 +236,7 @@ private:
     void form_degenerate_fragment();
 
     // Finding start pair for polygon
-    vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> >
+    std::pair< vgl_point_2d<double>,vgl_point_2d<double> >
         find_start_pair_of_polygon(dbskfg_composite_link_sptr clink,
                                    unsigned int& target_id,
                                    dbskfg_utilities::Orientation dir);

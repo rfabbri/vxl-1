@@ -4,8 +4,8 @@
 // \file
 // \brief Ref. counted block of data on the heap. Based on vil_memory_chunk.cxx
 // \author Dan Crispell
-#include <vcl_cstring.h>
-#include <vcl_cassert.h>
+#include <cstring>
+#include <cassert>
 
 #include <vbl/vbl_smart_ptr.hxx>
 
@@ -25,7 +25,7 @@ bvam_memory_chunk::~bvam_memory_chunk()
 bvam_memory_chunk::bvam_memory_chunk(const bvam_memory_chunk& d)
 : data_(new char[d.size()]), size_(d.size())
 {
-  vcl_memcpy(data_,d.data_,size_);
+  std::memcpy(data_,d.data_,size_);
 }
 
 //: Assignment operator
@@ -34,7 +34,7 @@ bvam_memory_chunk& bvam_memory_chunk::operator=(const bvam_memory_chunk& d)
   if (this==&d) return *this;
 
   set_size(d.size());
-  vcl_memcpy(data_,d.data_,size_);
+  std::memcpy(data_,d.data_,size_);
   return *this;
 }
 

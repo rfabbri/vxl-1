@@ -4,9 +4,9 @@
 #ifndef gdt_shock_prop_h_
 #define gdt_shock_prop_h_
 
-#include <vcl_algorithm.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <algorithm>
+#include <map>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_halfedge.h>
 #include <gdt/gdt_shock.h>
@@ -16,7 +16,7 @@ class gdt_shock_prop
 {
 protected:
   //: The shock queue is a map of <(dist, id), shock>.
-  vcl_map<vcl_pair<double, int>, gdt_shock*> shock_queue_;
+  std::map<std::pair<double, int>, gdt_shock*> shock_queue_;
 
   dbmsh3d_face*     cur_face_;
 
@@ -62,12 +62,12 @@ public:
   }
 
   //: ====== Data access functions ======
-  vcl_map<vcl_pair<double, int>, gdt_shock*>* shock_queue() {
+  std::map<std::pair<double, int>, gdt_shock*>* shock_queue() {
     return &shock_queue_;
   }
   void _add_shock (gdt_shock* S) {
-    vcl_pair<double, int> key (S->simT(), S->id()); //simtime??
-    shock_queue_.insert (vcl_pair<vcl_pair<double, int>, gdt_shock*>(key, S));
+    std::pair<double, int> key (S->simT(), S->id()); //simtime??
+    shock_queue_.insert (std::pair<std::pair<double, int>, gdt_shock*>(key, S));
   }
 
   //: ====== Shock propagation functions ======

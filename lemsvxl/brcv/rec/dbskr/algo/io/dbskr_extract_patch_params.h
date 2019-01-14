@@ -35,9 +35,9 @@ class dbskr_extract_patch_params
     bool keep_pruned_;            // keep pruned patches to save their images for debugging purposes
     bool save_images_;
     bool save_discarded_images_;
-    vcl_string image_ext_;
+    std::string image_ext_;
 
-    vcl_string output_file_postfix_;
+    std::string output_file_postfix_;
 
     bool parse_from_data(bxml_data_sptr root);
     static bxml_element *create_default_document_data();
@@ -63,7 +63,7 @@ class dbskr_extract_patch_params2 : public dborl_algo_params_base
     dborl_parameter<bool> keep_pruned_;            // keep pruned patches to save their images for debugging purposes
     dborl_parameter<bool> save_images_;
     dborl_parameter<bool> save_discarded_images_;
-    dborl_parameter<vcl_string> image_ext_;
+    dborl_parameter<std::string> image_ext_;
 
     dbskr_extract_patch_params2() : dborl_algo_params_base("ext_patch") { 
       start_depth_.set_values(param_list_, "data", "start_depth", "start_depth", 1, 1);

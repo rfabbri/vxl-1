@@ -22,7 +22,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 
 //#include <vsol/vsol_box_2d_sptr.h>
 #include <vgl/vgl_point_3d.h>
@@ -48,14 +48,14 @@ class bvam_roi_init_process : public bprb_process
   virtual bvam_roi_init_process* clone() const 
     { return new bvam_roi_init_process(*this); }
 
-  vcl_string name(){return "BvamRoiInitProcess";}
+  std::string name(){return "BvamRoiInitProcess";}
 
   bool init() { return true; }
   bool execute();
   bool finish(){return true;}
  
  
-  bool roi_init(vcl_string const& image_path,
+  bool roi_init(std::string const& image_path,
                 vpgl_rational_camera<double>* camera,
                 bvam_world_params_sptr world_params,
                 float uncertainty,
@@ -70,7 +70,7 @@ class bvam_roi_init_process : public bprb_process
                                 float r);
 
     //: return the corner point of a box (no particular order)
-    vcl_vector<vgl_point_3d<double> > corners_of_box_3d(vgl_box_3d<double> box);
+    std::vector<vgl_point_3d<double> > corners_of_box_3d(vgl_box_3d<double> box);
 
 };
 

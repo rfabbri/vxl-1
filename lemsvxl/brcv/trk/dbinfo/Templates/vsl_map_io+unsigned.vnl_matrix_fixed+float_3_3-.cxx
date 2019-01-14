@@ -3,4 +3,4 @@
 #include <vnl/vnl_matrix_fixed.h>
 
 typedef vnl_matrix_fixed<float,3,3> vnl_matrix_fixed_float_3_3; 
-VSL_MAP_IO_INSTANTIATE(unsigned,vnl_matrix_fixed_float_3_3,vcl_less<unsigned>);
+VSL_MAP_IO_INSTANTIATE(unsigned,vnl_matrix_fixed_float_3_3,std::less<unsigned>);

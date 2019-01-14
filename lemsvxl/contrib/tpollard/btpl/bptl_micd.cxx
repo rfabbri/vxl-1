@@ -11,11 +11,11 @@
 //
 //
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include <sstream>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_stream_fstream.h>
@@ -32,22 +32,22 @@ int main()
 {
 //  //1. Read in base image and warped images
 //
-//  vcl_string scene = "embassy";
-//  vcl_string date = "07JAN25";
+//  std::string scene = "embassy";
+//  std::string date = "07JAN25";
 //
-//  vcl_stringstream base_img_ss;
-//  vcl_stringstream warp_img_ss;
-//  vcl_stringstream prob_img_ss;
+//  std::stringstream base_img_ss;
+//  std::stringstream warp_img_ss;
+//  std::stringstream prob_img_ss;
 //
 //  base_img_ss << "C:\\baghdad\\micd\\" << scene << "\\" << date<< "\\base.png";
-//  vcl_string base_img_name = base_img_ss.str();
+//  std::string base_img_name = base_img_ss.str();
 //
 //  warp_img_ss << "C:\\baghdad\\micd\\" << scene << "\\" << date<< "\\registered3.png";
-//  vcl_string warp_img_name = warp_img_ss.str();
+//  std::string warp_img_name = warp_img_ss.str();
 //
 //  //output image
 //  prob_img_ss << "C:\\baghdad\\micd\\" << scene << "\\" << date<< "\\changes_test2.png";  
-//  vcl_string prob_img_name = prob_img_ss.str();
+//  std::string prob_img_name = prob_img_ss.str();
 //
 //  vil_image_view<vxl_byte> base_img_int = vil_convert_to_grey_using_average(
 //    vil_load( base_img_name.c_str() )); 
@@ -66,7 +66,7 @@ int main()
 //
 //  //  2. Define bounding box
 //
-//  vcl_vector< vgl_point_2d<int> > region_bounds;
+//  std::vector< vgl_point_2d<int> > region_bounds;
 //  region_bounds.push_back(vgl_point_2d<int>(11, 11));
 //  region_bounds.push_back(vgl_point_2d<int>(base_img.ni()-11,11));
 //  region_bounds.push_back(vgl_point_2d<int>(base_img.ni()-11, base_img.nj()-11));
@@ -118,7 +118,7 @@ int main()
 
   vil_image_view<vxl_byte> img1 = vil_load("D:/images_multiview/baghdad/hiafa_warped/jan.png");
   vil_image_view<vxl_byte> img2 = vil_load("D:/images_multiview/baghdad/hiafa_warped/jan_warped_aff.png");
-  vcl_string out("D:/images_multiview/baghdad/hiafa_warped/jan_change_aff.tiff");
+  std::string out("D:/images_multiview/baghdad/hiafa_warped/jan_change_aff.tiff");
   vgl_point_2d<int> img1pt(631,780), img2pt(553,807);
   vgl_vector_2d<int> d=img2pt-img1pt;
 
@@ -172,6 +172,6 @@ int main()
   }
 
   vil_save( img1e, out.c_str() );
-  vcl_cout<<max_int<<vcl_endl;
+  std::cout<<max_int<<std::endl;
 
 }

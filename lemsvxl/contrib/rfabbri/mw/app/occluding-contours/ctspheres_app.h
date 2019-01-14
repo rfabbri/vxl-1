@@ -8,7 +8,7 @@
 //\date Sun Jan 15 14:09:27 EST 2006
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <bmcsd/bmcsd_util.h>

@@ -33,7 +33,7 @@ void gdt_ws_manager::detect_psrcW_Qs2_event (gdt_welm* inputW)
   vgl_point_2d<double> M;
 
   //1) check eL's activeIs_[]
-  vcl_set<gdt_interval*>::iterator it = eL->activeIs().begin();
+  std::set<gdt_interval*>::iterator it = eL->activeIs().begin();
   for (; it != eL->activeIs().end(); it++) {
     gdt_welm* Wp = (gdt_welm*) (*it);
     assert (!Wp->is_dege());
@@ -144,7 +144,7 @@ void gdt_ws_manager::detect_RF_Qs2_event (gdt_welm* inputRF)
   vgl_point_2d<double> M;
 
   //Check eO's activeIs_[]
-  vcl_set<gdt_interval*>::iterator it = eO->activeIs().begin();
+  std::set<gdt_interval*>::iterator it = eO->activeIs().begin();
   for (; it != eO->activeIs().end(); it++) {
     gdt_welm* Wp = (gdt_welm*) (*it);
 

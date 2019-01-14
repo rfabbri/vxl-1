@@ -2,7 +2,7 @@
 //  
 
 #include <assert.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbgdt3d/dbgdt3d_shock.h>
 #include <dbgdt3d/dbgdt3d_solve_shock_intersect.h>
@@ -74,8 +74,8 @@ bool solve_intrinsic_shock_int (const double& aLi, const double& bL2, const doub
 
   //4) Both shocks are non-contact, use the shock-shock formula.
 
-  const double cos_theta = vcl_cos (theta);
-  const double sin_theta = vcl_sin (theta);
+  const double cos_theta = std::cos (theta);
+  const double sin_theta = std::sin (theta);
 
   const double A = -cL * cos_theta - bL2/bR2 * cR;
   const double B = cL * sin_theta;
@@ -110,16 +110,16 @@ bool _solve_trig (const double& A, const double& B, const double& C, const doubl
 
   if (A==0) {
     assert (B != 0);
-    tauR1 = vcl_asin(C/B); // -pi/2 < asin < pi/2
+    tauR1 = std::asin(C/B); // -pi/2 < asin < pi/2
     tauR2 = vector_minus_pi_to_pi (vnl_math::pi - tauR1);
   }
   else {
     // If acos(cos_value) not correct, no solution.
-    double cos_value = C / vcl_sqrt(A*A + B*B);
+    double cos_value = C / std::sqrt(A*A + B*B);
     if (cos_value>1 || cos_value<-1)
       return false;
 
-    double alpha = vcl_atan2 (B, A);
+    double alpha = std::atan2 (B, A);
 
     // Two possible solutions: 0 < acos < pi, -pi < atan2 < pi
     // So -pi < acos+atan2 < 2pi.

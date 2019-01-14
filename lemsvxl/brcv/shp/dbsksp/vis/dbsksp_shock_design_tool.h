@@ -40,7 +40,7 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
   
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -65,8 +65,8 @@ public:
   {return this->active_twoshapelet_; }
 
   //: Get and set the operating mode
-  vcl_string operating_mode() const {return this->operating_mode_; }
-  void set_operating_mode(const vcl_string& mode)
+  std::string operating_mode() const {return this->operating_mode_; }
+  void set_operating_mode(const std::string& mode)
   {this->operating_mode_ = mode; }
   
   //: Handle events
@@ -111,7 +111,7 @@ protected:
   dbsksp_twoshapelet_sptr active_twoshapelet_;
 
   //: operating mode of the tool
-  vcl_string operating_mode_;
+  std::string operating_mode_;
 
   // gestures for active nodes and edges
   vgui_event_condition gesture_display_info_;

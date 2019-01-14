@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h> 
 #include <xmvg/xmvg_source.h>
@@ -7,7 +7,7 @@
 static void test_perspective_camera()
 {
   //test dummy_scan
-  vcl_cout << "Testing constructor\n";
+  std::cout << "Testing constructor\n";
   xmvg_source source;
   //Construct the camera for theta =0 using sky scan data
   vnl_double_3x3 m(0.0);
@@ -27,12 +27,12 @@ static void test_perspective_camera()
   
   xmvg_perspective_camera<double> P(K, center, R, source);
 
-  vcl_cout << P << '\n';
+  std::cout << P << '\n';
 
   vgl_homg_point_3d<double> X(0,17.8/2, 9.327/2);
     
   vgl_homg_point_2d<double> hu = P.project(X);
-  vcl_cout << X << '\n' << hu << '\n';
+  std::cout << X << '\n' << hu << '\n';
   TEST_NEAR("test x projection", hu.x()/hu.w(), 2000, 0.1);
   TEST_NEAR("test y projection", hu.y()/hu.w(), 0.0, 0.1);
 
@@ -43,14 +43,14 @@ static void test_perspective_camera()
   vgl_h_matrix_3d<double> tr;
   tr.set_identity();
   tr.set_rotation_about_axis(axis, theta);
-  vcl_cout <<"Rotation Matrix \n" << tr << '\n';
+  std::cout <<"Rotation Matrix \n" << tr << '\n';
   
   xmvg_perspective_camera<double> P_rot = 
     xmvg_perspective_camera<double>::postmultiply(P, tr); 
    
-  vcl_cout << "P_rot\n" << P_rot << '\n';
+  std::cout << "P_rot\n" << P_rot << '\n';
   vgl_point_2d<double> ur = P_rot.project(X);
-  vcl_cout << X << '\n' << ur << '\n';
+  std::cout << X << '\n' << ur << '\n';
   TEST_NEAR("test rotation projection x", ur.x(), 1523.94, 0.01);
   TEST_NEAR("test rotation projection y", ur.y(), 135.747, 0.01);
 

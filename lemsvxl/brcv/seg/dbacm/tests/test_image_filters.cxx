@@ -5,7 +5,7 @@
 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbacm/dbacm_image_filters.h>
 
@@ -13,7 +13,7 @@
 
 void test_malladi_image_force()
 {
-  vcl_cout << "This is test_malladi_image_force()" << vcl_endl;
+  std::cout << "This is test_malladi_image_force()" << std::endl;
 }
 
 

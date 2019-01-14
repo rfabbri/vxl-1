@@ -3,20 +3,20 @@
 #define DSM_IO_MAP_MAP_MAP_TXX_
 #include<dsm/io/dsm_io_map_map_map.h>
 #include<dsm/io/dsm_io_map_map.h>
-#include<vcl_cstdlib.h>
+#include<cstdlib>
 //=============================================================================
 //: Write a map of maps of maps to stream
 template<class T1, class T2, class T3, class T4,
          class Compare1, class Compare2, class Compare3>
 void vsl_b_write( vsl_b_ostream& os,
-                  vcl_map<T1, vcl_map<T2, 
-                  vcl_map<T3, T4, Compare3>, Compare2>, Compare1> const& m)
+                  std::map<T1, std::map<T2, 
+                  std::map<T3, T4, Compare3>, Compare2>, Compare1> const& m)
 {
     const short version_no = 1;
     vsl_b_write(os, version_no);
     vsl_b_write(os, m.size());
 
-    typename vcl_map<T1, vcl_map<T2, vcl_map<T3, T4, Compare3>,
+    typename std::map<T1, std::map<T2, std::map<T3, T4, Compare3>,
                     Compare2>, Compare1>::const_iterator 
         m_itr, m_end = m.end();
 
@@ -24,7 +24,7 @@ void vsl_b_write( vsl_b_ostream& os,
     {
         //write the key
         vsl_b_write(os, m_itr->first);
-        //write the vcl_map<T2,vcl_map<T3,T4>>
+        //write the std::map<T2,std::map<T3,T4>>
         //using signature already defined
         vsl_b_write(os, m_itr->second);
     }
@@ -36,8 +36,8 @@ void vsl_b_write( vsl_b_ostream& os,
 template<class T1, class T2, class T3, class T4,
          class Compare1, class Compare2, class Compare3>
 void vsl_b_read( vsl_b_istream& is,
-                  vcl_map<T1, vcl_map<T2, 
-                  vcl_map<T3, T4, Compare3>, Compare2>, Compare1>& m)
+                  std::map<T1, std::map<T2, 
+                  std::map<T3, T4, Compare3>, Compare2>, Compare1>& m)
 {
     if(!is) return;
     
@@ -58,7 +58,7 @@ void vsl_b_read( vsl_b_istream& is,
             {
                 T1 key1;
                 vsl_b_read(is, key1);
-                vcl_map<T2, vcl_map<T3,T4,Compare3>,Compare2> inner_map;
+                std::map<T2, std::map<T3,T4,Compare3>,Compare2> inner_map;
                 vsl_b_read(is,inner_map);
                 m[key1]=inner_map;
             }//end outer map iteration
@@ -67,13 +67,13 @@ void vsl_b_read( vsl_b_istream& is,
         }//end case1
     default:
         {
-            vcl_cerr << "I/O ERROR: "
+            std::cerr << "I/O ERROR: "
                      << "vsl_b_read( vsl_b_istream&, "
-                     << "vcl_map<T1, vcl_map<T2, vcl_map<T3,T4, "
+                     << "std::map<T1, std::map<T2, std::map<T3,T4, "
                      << "Compare3>, Compare2>, Compare1>&)&)\n"
                      << "\t\tUnknown Version Number " << ver << '\n';
             //set an unrecoverable IO error on the stream
-            is.is().clear(vcl_ios::badbit);
+            is.is().clear(std::ios::badbit);
             return;
         }//end default
     }//end swtich
@@ -82,20 +82,20 @@ void vsl_b_read( vsl_b_istream& is,
 
 template<class T1, class T2, class T3, class T4,
          class Compare1, class Compare2, class Compare3>
-void vsl_print_summary( vcl_ostream& os, 
-                        vcl_map<T1, vcl_map<T2, 
-                        vcl_map<T3, T4, Compare3>, Compare2>, Compare1>& m)
+void vsl_print_summary( std::ostream& os, 
+                        std::map<T1, std::map<T2, 
+                        std::map<T3, T4, Compare3>, Compare2>, Compare1>& m)
 {
-        vcl_cout << "vsl_print_summary( vcl_ostream& os,\n"
-                 << "                   vcl_map<T1, vcl_map<T2,\n"
-                 << "                   vcl_map<T3, T4, Compare3>, Compare2>,"
+        std::cout << "vsl_print_summary( std::ostream& os,\n"
+                 << "                   std::map<T1, std::map<T2,\n"
+                 << "                   std::map<T3, T4, Compare3>, Compare2>,"
                  << " Compare1 >& m)\n"
-                 << "\tNot Yet Implemented." << vcl_endl;
+                 << "\tNot Yet Implemented." << std::endl;
 }//end vsl_print_summary
 
 #define DSM_IO_MAP_MAP_MAP_INSTANTIATE(T1,T2,T3,T4,Compare1,Compare2,Compare3) \
-template void vsl_b_write( vsl_b_ostream&, vcl_map<T1, vcl_map<T2,vcl_map<T3,T4,Compare3>,Compare2>, Compare1> const& m); \
-template void vsl_b_read( vsl_b_istream&,  vcl_map<T1, vcl_map<T2,vcl_map<T3,T4,Compare3>,Compare2>, Compare1>& m); \
-template void vsl_print_summary( vcl_ostream&, vcl_map<T1, vcl_map<T2, vcl_map<T3,T4,Compare3>,Compare2>,Compare1>& m)
+template void vsl_b_write( vsl_b_ostream&, std::map<T1, std::map<T2,std::map<T3,T4,Compare3>,Compare2>, Compare1> const& m); \
+template void vsl_b_read( vsl_b_istream&,  std::map<T1, std::map<T2,std::map<T3,T4,Compare3>,Compare2>, Compare1>& m); \
+template void vsl_print_summary( std::ostream&, std::map<T1, std::map<T2, std::map<T3,T4,Compare3>,Compare2>,Compare1>& m)
 
 #endif //DSM_IO_MAP_MAP_MAP_TXX_

@@ -6,14 +6,14 @@
 #ifndef cali_param_h
 #define cali_param_h
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstddef.h>
-#include <vcl_cstdlib.h>
-#include <vcl_utility.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <cstdio>
+#include <cstddef>
+#include <cstdlib>
+#include <utility>
+#include <fstream>
 
 #include <vnl/vnl_vector.h>
 
@@ -22,18 +22,18 @@ class cali_param
 {
     public:
         //  path for the txt file containing all the necessary parameters & paths for cali
-    cali_param(vcl_string pathname); 
+    cali_param(std::string pathname); 
 
      cali_param(void);
     cali_param(cali_param const& par);
 
     //  path for the text file which stores the centers of the conics projected into the images from
     //  the artifact model
-     vcl_string CENTERS;
+     std::string CENTERS;
 
      // path for the text file which stores the difference vectors corresponding to the ball centers,widths & the 
      // heights
-     vcl_string DIFF;
+     std::string DIFF;
 
      // there are currently two methods,method 1 in which the user decides how many parameters are to be varied & method 2 
      // in which 9 parameters (more details in cali_calibrator.h) are varied in the first stage of iterations ,followed by 
@@ -42,32 +42,32 @@ class cali_param
      // path for the text file which stores the converged values of the parameters obtained after the iterations 
      // (corresponding to method 1 )
 
-     vcl_string CONVERGEDVALUES;
+     std::string CONVERGEDVALUES;
     
      // path for the text file which stores the converged values of the parameters obtained after the first stage in 
      // calibration (corresponding to method 2 )
-     vcl_string CONVERGEDVALUES_STAGE1;
+     std::string CONVERGEDVALUES_STAGE1;
    
      // path for the text file which stores the converged values of the parameters obtained after the second stage in 
      // calibration (corresponding to method 2 )
 
-     vcl_string CONVERGEDVALUES_STAGE2;
+     std::string CONVERGEDVALUES_STAGE2;
 
      // path for the text file which contains the coordinates of the balls attached to the artifact (measured by CMM machine)
-     vcl_string CMMINFO;
+     std::string CMMINFO;
 
      // path for the log file of the data set being used for the calibration
-     vcl_string LOGFILE;
+     std::string LOGFILE;
      
      // path for the text file which contains the information about the conics fitted to the image data set
-     vcl_string CONICS_BIN_FILE_BASE;
+     std::string CONICS_BIN_FILE_BASE;
       
      // path for the text file which contains the correspondences ( the centers of the balls in the images & the centers of 
      // the projected spheres  ( used only in case of manual calibration...)
-     vcl_string CORRESPONDENCEINFO;
+     std::string CORRESPONDENCEINFO;
      
      // path for the scan file which would be generated after the calibration process is finished
-     vcl_string OUTPUT_SCANFILE;
+     std::string OUTPUT_SCANFILE;
     
  // the number of balls attached to the cylinder ( the calibration artifact )
   int BALL_NUMBER;
@@ -150,14 +150,14 @@ class cali_param
  
 // vector containing the center correspondences read out from the path specified by CORRESPONDENCEINFO (used only for 
 // manual calibration )
-  vcl_vector<vcl_pair<double,double> > COORDS;
+  std::vector<std::pair<double,double> > COORDS;
 
 // vector containing the height,width correspondences read out from the path specified by CORRESPONDENCEINFO (used only for 
 // manual calibration )
-  vcl_vector<vcl_pair<double,double> >HEIGHT_RADII;
+  std::vector<std::pair<double,double> >HEIGHT_RADII;
  
 private:
-    vcl_string pathname_;
+    std::string pathname_;
 
 
     

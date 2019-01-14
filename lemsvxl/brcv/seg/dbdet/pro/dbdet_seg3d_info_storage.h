@@ -30,7 +30,7 @@ public:
 
   dbdet_seg3d_info_storage();
   virtual ~dbdet_seg3d_info_storage();
-  virtual vcl_string type() const { return "seg3d_info"; }
+  virtual std::string type() const { return "seg3d_info"; }
   
   //: Return IO version number;
   short version() const;
@@ -46,7 +46,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_seg3d_info_storage"; }
+  virtual std::string is_a() const { return "dbdet_seg3d_info_storage"; }
 
   //: Return a smart pointer to seg3d_info
   dbdet_seg3d_info_sptr seg3d_info() const { return this->seg3d_info_; }
@@ -57,7 +57,7 @@ public:
 
 
   //: Return the storage vector
-  vcl_vector <vidpro1_vsol2D_storage_sptr > vsol_storage_list() const
+  std::vector <vidpro1_vsol2D_storage_sptr > vsol_storage_list() const
   { return this->vsol_storage_list_; }
 
 
@@ -67,14 +67,14 @@ public:
 
   //: set the storage list
   void set_vsol_storage_list(
-    const vcl_vector<vidpro1_vsol2D_storage_sptr >& storage_list)
+    const std::vector<vidpro1_vsol2D_storage_sptr >& storage_list)
   { this->vsol_storage_list_ = storage_list; }
   
 protected:
   dbdet_seg3d_info_sptr seg3d_info_;
 
   // list of vsol2d storage for the contour, one storage per frame
-  vcl_vector <vidpro1_vsol2D_storage_sptr > vsol_storage_list_;
+  std::vector <vidpro1_vsol2D_storage_sptr > vsol_storage_list_;
 };
 
 //: Create a smart-pointer to a dbdet_seg3d_info_storage.

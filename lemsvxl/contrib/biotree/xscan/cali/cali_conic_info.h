@@ -5,25 +5,25 @@
 #include <vsl/vsl_vector_io.h>
 #include <vsl/vsl_list_io.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 class cali_conic_info {
 private: 
-  vcl_vector<vcl_vector<vsol_conic_2d_sptr> > conic_list;
+  std::vector<std::vector<vsol_conic_2d_sptr> > conic_list;
   
   int scan_start;
   int scan_interval;
 public:
   cali_conic_info(){};
-  cali_conic_info(vcl_vector<vcl_vector<vsol_conic_2d_sptr> >  const &list, 
+  cali_conic_info(std::vector<std::vector<vsol_conic_2d_sptr> >  const &list, 
     int start, 
     int interval) :
   conic_list(list), scan_start(start), scan_interval(interval){};
   
   ~cali_conic_info(){};
 
-  vcl_vector<vcl_vector<vsol_conic_2d_sptr> > get_conic_list() {return conic_list;}
+  std::vector<std::vector<vsol_conic_2d_sptr> > get_conic_list() {return conic_list;}
 
   short version() const;
 

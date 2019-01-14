@@ -13,8 +13,8 @@
 //    Amir Tamrakar  
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 #include "dbdet_edgel.h"
 #include <dbdet/edge/dbdet_edgemap.h>
@@ -37,16 +37,16 @@ public:
 
 };
 
-typedef vcl_list<dbdet_CFTG_link*> dbdet_CFTG_link_list;
-typedef vcl_list<dbdet_CFTG_link*>::iterator dbdet_CFTG_link_list_iter;
+typedef std::list<dbdet_CFTG_link*> dbdet_CFTG_link_list;
+typedef std::list<dbdet_CFTG_link*>::iterator dbdet_CFTG_link_list_iter;
 
 //: This class represents the curve fragment topology graph formed from the contour fragments
 //  The links are equivalence classes of curve fragments represented by sets of edgel chains
 class dbdet_CFTG
 {
 public:
-  vcl_vector<dbdet_CFTG_link_list> cLinks; ///< child links
-  vcl_vector<dbdet_CFTG_link_list> pLinks; ///< parent links
+  std::vector<dbdet_CFTG_link_list> cLinks; ///< child links
+  std::vector<dbdet_CFTG_link_list> pLinks; ///< parent links
 
   dbdet_CFTG_link_list Links; ///< redundant single list of all links
   

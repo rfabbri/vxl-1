@@ -26,7 +26,7 @@ dbseg_seg_process::dbseg_seg_process()
     if(!parameters()->add( "Alternative Region Fill (for low numbers of regions)?" , "-altFill" , false   ) 
       
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ dbseg_seg_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbseg_seg_process::name()
 {
   return "Create Seg Structure";
@@ -54,9 +54,9 @@ dbseg_seg_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbseg_seg_process::get_input_type()
+std::vector< std::string > dbseg_seg_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   return to_return;
@@ -64,9 +64,9 @@ vcl_vector< vcl_string > dbseg_seg_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbseg_seg_process::get_output_type()
+std::vector< std::string > dbseg_seg_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("seg_object");
   return to_return;
 }
@@ -95,7 +95,7 @@ dbseg_seg_process::execute()
 {
   if ( input_data_[0].size() != 2 )
   {
-      vcl_cout << "In dbseg_seg_process::execute() - not exactly two"
+      std::cout << "In dbseg_seg_process::execute() - not exactly two"
                << " input images \n";
       return false;
   }
@@ -210,7 +210,7 @@ dbseg_seg_object_base* dbseg_seg_process::static_execute(vil_image_view_base_spt
     set<int> colors;
 
     int regionCount = 0;
-    vcl_cout << "Filling Regions..." << vcl_endl;
+    std::cout << "Filling Regions..." << std::endl;
 
     if (!altFill) {
         int block = (  orig.ni() ) / 10;
@@ -219,7 +219,7 @@ dbseg_seg_object_base* dbseg_seg_process::static_execute(vil_image_view_base_spt
             //progress report
             if (block != 0) {
                 if (i % block == 0) {
-                    vcl_cout << i / block * 10 << "% ";
+                    std::cout << i / block * 10 << "% ";
                 }
             }
             for (int j = 0; j < orig.nj(); j++) {
@@ -275,7 +275,7 @@ dbseg_seg_object_base* dbseg_seg_process::static_execute(vil_image_view_base_spt
     
     }
     
-    vcl_cout << vcl_endl << regionCount << " regions filled." << vcl_endl;
+    std::cout << std::endl << regionCount << " regions filled." << std::endl;
 
     delete done;
     delete curr;

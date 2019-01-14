@@ -3,8 +3,8 @@
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <bvam/bvam_voxel_world.h>
 #include <bvam/bvam_mog_grey_processor.h>
 
@@ -14,7 +14,7 @@ bvam_load_voxel_world_process::bvam_load_voxel_world_process()
   //this process takes one input: the filename of the world_parameters
   input_data_.resize(1,brdb_value_sptr(0));
   input_types_.resize(1);
-  input_types_[0]="vcl_string";
+  input_types_[0]=std::string";
 
   //output
   output_data_.resize(1,brdb_value_sptr(0));
@@ -24,7 +24,7 @@ bvam_load_voxel_world_process::bvam_load_voxel_world_process()
   //parameters
   /*if( !parameters()->add( "Image file <filename...>" , "image_filename" , bprb_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }*/
 
 }
@@ -45,14 +45,14 @@ bvam_load_voxel_world_process::execute()
     return false;
 
   //Retrieve path from input
-  brdb_value_t<vcl_string>* input0 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[0].ptr());
+  brdb_value_t<std::string>* input0 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[0].ptr());
 
-  vcl_string world_params_fname = input0->value();
+  std::string world_params_fname = input0->value();
  
-  vcl_ifstream ifs(world_params_fname.c_str());
+  std::ifstream ifs(world_params_fname.c_str());
   if (!ifs.is_open()) {
-    vcl_cerr << "error: failed to open world_parameters file " << world_params_fname << vcl_endl;
+    std::cerr << "error: failed to open world_parameters file " << world_params_fname << std::endl;
     return false;
   }
 
@@ -67,7 +67,7 @@ bvam_load_voxel_world_process::execute()
       vox_world = static_cast<bvam_voxel_world_base*>(new bvam_voxel_world<bvam_mog_grey_processor>());
       break;
     default:
-      vcl_cerr << "error: don't know how to create a bvam_voxel_world with apm_type = " << params->apm_type() << vcl_endl;
+      std::cerr << "error: don't know how to create a bvam_voxel_world with apm_type = " << params->apm_type() << std::endl;
       return false;
   }
 

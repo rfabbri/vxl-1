@@ -1,6 +1,6 @@
 #include "mw_sel_inliers_to_curve.h"
 
-#include <vcl_limits.h>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -35,7 +35,7 @@ mw_sel_inliers_to_curve() :
 {
 }
 
-vcl_string mw_sel_inliers_to_curve::
+std::string mw_sel_inliers_to_curve::
 name() const
 {
   return "SEL Curve Inliers";
@@ -55,19 +55,19 @@ activate ()
     vidpro1_vsol2D_storage_sptr sto=NULL;
     sto.vertical_cast(MANAGER->repository()->get_data_at("vsol2D",frame_v_[0]));
     if (sto == NULL) {
-      vcl_cerr << "Tool error: Could not find a vsol.\n";
+      std::cerr << "Tool error: Could not find a vsol.\n";
       return;
     }
 
-    vcl_vector< vsol_spatial_object_2d_sptr > base = sto->all_data ();
+    std::vector< vsol_spatial_object_2d_sptr > base = sto->all_data ();
 
     if (!base.size()) {
-      vcl_cerr << "Tool error: Could not find a vsol.\n";
+      std::cerr << "Tool error: Could not find a vsol.\n";
       return;
     }
 
-    vcl_cout << "Number of vsols in storage named " << sto->name() <<  " in frame " << frame_v_[0]
-      << ": " << base.size() << vcl_endl;
+    std::cout << "Number of vsols in storage named " << sto->name() <<  " in frame " << frame_v_[0]
+      << ": " << base.size() << std::endl;
 
     curves_.resize(base.size());
 
@@ -76,12 +76,12 @@ activate ()
       vsol_polyline_2d_sptr cptr = dynamic_cast<vsol_polyline_2d *> (base[i].ptr());
 
       if (!cptr) {
-        vcl_cerr << "Non-polyline found; but only POLYLINES supported!" << vcl_endl;
+        std::cerr << "Non-polyline found; but only POLYLINES supported!" << std::endl;
         return;
       }
       bmcsd_util::get_vsol_point_vector(*cptr, &(curves_[i]));
 
-      vcl_cout << "Polyline size: " << curves_[i].size() << vcl_endl;
+      std::cout << "Polyline size: " << curves_[i].size() << std::endl;
     }
   }
 
@@ -100,7 +100,7 @@ activate ()
     dt_storage.vertical_cast(p);
 
     if(!dt_storage) {
-      vcl_cerr << "Error: tool requires distance map image storage (from Distance Transform process) " << vcl_endl;
+      std::cerr << "Error: tool requires distance map image storage (from Distance Transform process) " << std::endl;
       return;
     }
 
@@ -110,7 +110,7 @@ activate ()
     dt_ = vil_image_view<vxl_uint_32>(bview);
     assert(dt_);
 
-    vcl_cout << "DT: " << dt_ << vcl_endl;
+    std::cout << "DT: " << dt_ << std::endl;
     }
 
     // Get label image
@@ -121,7 +121,7 @@ activate ()
     label_storage.vertical_cast(p);
 
     if(!label_storage) {
-      vcl_cerr << "Error: tool requires Label image storage (from Distance Transform process)" << vcl_endl;
+      std::cerr << "Error: tool requires Label image storage (from Distance Transform process)" << std::endl;
       return;
     }
 
@@ -131,7 +131,7 @@ activate ()
     label_ = vil_image_view<unsigned>(bview);
     assert(label_);
 
-    vcl_cout << "Label: " << label_ << vcl_endl;
+    std::cout << "Label: " << label_ << std::endl;
     }
   }
 }
@@ -139,7 +139,7 @@ activate ()
 void mw_sel_inliers_to_curve::
 deactivate ()
 {
-  vcl_cout << "mw_sel_inliers_to_curve OFF\n";
+  std::cout << "mw_sel_inliers_to_curve OFF\n";
   dbdet_sel_explorer_tool::deactivate();
 }
 
@@ -157,7 +157,7 @@ handle( const vgui_event & e,
         curves_[current_curve_id_], tau_distance_, dt_, label_, 
         sel_storage_->CM(), &inlier_curvelets);
 
-    vcl_cout << "Number of inlier curvelets: " << num_inliers << vcl_endl;
+    std::cout << "Number of inlier curvelets: " << num_inliers << std::endl;
 
     draw_curvelets(inlier_curvelets);
   }

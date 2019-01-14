@@ -3,7 +3,7 @@
 // \file
 
 #include <vgui/vgui_dialog.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include "bvis_tool.h"
 
 //: Constructor
@@ -58,7 +58,7 @@ void bvis_tool::clear_output(int size)
 }
 
 
-void bvis_tool::set_input( const vcl_vector< bpro_storage_sptr >& input,
+void bvis_tool::set_input( const std::vector< bpro_storage_sptr >& input,
                             const unsigned index)
 {
   input_data_[index] = input;
@@ -74,7 +74,7 @@ void bvis_tool::add_input(const bpro_storage_sptr& input,
 }
 
 //: Set the vector of outputs
-void bvis_tool::set_output( const vcl_vector< bpro_storage_sptr >& output,
+void bvis_tool::set_output( const std::vector< bpro_storage_sptr >& output,
                             const unsigned index)
 {
   if (output_data_.size()<=0)
@@ -91,7 +91,7 @@ void bvis_tool::add_output( const bpro_storage_sptr& output,
   output_data_[index].push_back(output);
 }
 
-vcl_vector< bpro_storage_sptr > const & 
+std::vector< bpro_storage_sptr > const & 
 bvis_tool::get_output(const unsigned index)
 {
   assert(output_data_.size()>index);
@@ -99,7 +99,7 @@ bvis_tool::get_output(const unsigned index)
 }
 
 
-vcl_vector< bpro_storage_sptr > const &
+std::vector< bpro_storage_sptr > const &
 bvis_tool::get_input(const unsigned index)
 {
   assert(input_data_.size()>index);

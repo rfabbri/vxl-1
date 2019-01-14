@@ -16,7 +16,7 @@
 #include <bpro1/bpro1_storage.h>
 #include <dbbgm/pro/dbbgm_storage_sptr.h>
 #include <dbbgm/dbbgm_bgmodel_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: Storage class for ctrk 
 class dbbgm_storage : public bpro1_storage {
@@ -30,10 +30,10 @@ public:
   virtual ~dbbgm_storage(){}
 
   //: Returns the type string "dbbgm"
-  virtual vcl_string type() const { return "dbbgm"; }
+  virtual std::string type() const { return "dbbgm"; }
 
   //: Returns the type string "dbbgm"
-  virtual vcl_string name() const { return "dbbgm"; }
+  virtual std::string name() const { return "dbbgm"; }
 
   //: Set the model
   void set_model(const dbbgm_bgmodel_sptr &bgm);
@@ -41,7 +41,7 @@ public:
   //: Retrieve the model
   void get_model(dbbgm_bgmodel_sptr & bgm) const;
 
-  virtual vcl_string is_a() const {return "dbbgm_storage";}
+  virtual std::string is_a() const {return "dbbgm_storage";}
 
   virtual bpro1_storage* clone() const;
 

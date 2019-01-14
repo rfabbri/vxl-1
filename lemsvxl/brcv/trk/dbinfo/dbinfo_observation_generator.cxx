@@ -1,4 +1,4 @@
-#include <vcl_cassert.h>
+#include <cassert>
 #include <dbinfo/dbinfo_observation_generator.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <bugl/bugl_random_transform_set_2d.h>
@@ -13,10 +13,10 @@ dbinfo_observation_generator::generate(dbinfo_observation_sptr const& seed,
   dbinfo_observation_sptr result= (dbinfo_observation*)0;
 
   //replicate the feature storage
-  vcl_vector<dbinfo_feature_base_sptr> features = seed->features(),
+  std::vector<dbinfo_feature_base_sptr> features = seed->features(),
     new_features;
   assert(features.size());
-  for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit =  features.begin();
+  for(std::vector<dbinfo_feature_base_sptr>::iterator fit =  features.begin();
       fit != features.end(); ++fit)
     new_features.push_back((*fit)->feature_base_new());
 
@@ -41,7 +41,7 @@ dbinfo_observation_generator::generate(dbinfo_observation_sptr const& seed,
 bool dbinfo_observation_generator::
 uniform_about_seed(const unsigned nobs,
                    dbinfo_observation_sptr const& seed,
-                   vcl_vector<dbinfo_observation_sptr>& obs,
+                   std::vector<dbinfo_observation_sptr>& obs,
                    const float dx, const float dy,
                    const float dtheta, const float dscale,
                    const float sufficient_points_thresh)
@@ -51,7 +51,7 @@ uniform_about_seed(const unsigned nobs,
   unsigned limit = 2*nobs;//two tries
 
   obs.clear();
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::equiform_uniform(limit, trans_set,
                                                         dx, dy,
                                                         dtheta, dscale);
@@ -72,8 +72,8 @@ uniform_about_seed(const unsigned nobs,
 // return the corresponding transforms as well
 bool dbinfo_observation_generator::uniform_about_seed(const unsigned nobs,
                                dbinfo_observation_sptr const& seed,
-                               vcl_vector<dbinfo_observation_sptr>& obs,
-                               vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                               std::vector<dbinfo_observation_sptr>& obs,
+                               std::vector<vgl_h_matrix_2d<float> >& xforms,
                                const float dx, const float dy,
                                const float dtheta,
                                const float dscale,
@@ -83,7 +83,7 @@ bool dbinfo_observation_generator::uniform_about_seed(const unsigned nobs,
   obs.clear();
   xforms.clear();
   unsigned limit = 2*nobs;//two tries
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::equiform_uniform(limit, trans_set,
                                                         dx, dy,
                                                         dtheta, dscale);
@@ -104,7 +104,7 @@ bool dbinfo_observation_generator::uniform_about_seed(const unsigned nobs,
 bool dbinfo_observation_generator::
 uniform_about_seed_affine_no_skew(const unsigned nobs,
                                   dbinfo_observation_sptr const& seed,
-                                  vcl_vector<dbinfo_observation_sptr>& obs,
+                                  std::vector<dbinfo_observation_sptr>& obs,
                                   const float dx, const float dy,
                                   const float dtheta, const float dscale,
                                   const float daspect,
@@ -115,7 +115,7 @@ uniform_about_seed_affine_no_skew(const unsigned nobs,
   unsigned limit = 2*nobs;//two tries
 
   obs.clear();
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::zero_skew_affine_uniform(limit, trans_set,
                                                                 dx, dy,
                                                                 dtheta, dscale, daspect);
@@ -133,8 +133,8 @@ uniform_about_seed_affine_no_skew(const unsigned nobs,
 }
 bool dbinfo_observation_generator::uniform_about_seed_affine_no_skew(const unsigned nobs,
                                        dbinfo_observation_sptr const& seed,
-                                       vcl_vector<dbinfo_observation_sptr>& obs,
-                                       vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                                       std::vector<dbinfo_observation_sptr>& obs,
+                                       std::vector<vgl_h_matrix_2d<float> >& xforms,
                                        const float dx, const float dy,
                                        const float dtheta, const float dscale,
                                        const float daspect,
@@ -145,7 +145,7 @@ bool dbinfo_observation_generator::uniform_about_seed_affine_no_skew(const unsig
   unsigned limit = 2*nobs;//two tries
 
   obs.clear();
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::zero_skew_affine_uniform(limit, trans_set,
                                                                 dx, dy,
                                                                 dtheta, dscale, daspect);
@@ -165,7 +165,7 @@ bool dbinfo_observation_generator::uniform_about_seed_affine_no_skew(const unsig
 bool dbinfo_observation_generator::
 uniform_in_interval_affine_no_skew(const unsigned nobs,
                                    dbinfo_observation_sptr const& seed,
-                                   vcl_vector<dbinfo_observation_sptr>& obs,
+                                   std::vector<dbinfo_observation_sptr>& obs,
                                    const float x_min, const float x_max,
                                    const float y_min, const float y_max,
                                    const float theta_min,
@@ -181,7 +181,7 @@ uniform_in_interval_affine_no_skew(const unsigned nobs,
   unsigned limit = 2*nobs;//two tries
 
   obs.clear();
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::
     zero_skew_affine_uniform_interval(limit, trans_set,
                                       x_min, x_max,
@@ -205,8 +205,8 @@ uniform_in_interval_affine_no_skew(const unsigned nobs,
 bool dbinfo_observation_generator::
 uniform_in_interval_affine_no_skew(const unsigned nobs,
                                    dbinfo_observation_sptr const& seed,
-                                   vcl_vector<dbinfo_observation_sptr>& obs,
-                                   vcl_vector<vgl_h_matrix_2d<float> >& xforms,
+                                   std::vector<dbinfo_observation_sptr>& obs,
+                                   std::vector<vgl_h_matrix_2d<float> >& xforms,
                                    const float x_min, const float x_max,
                                    const float y_min, const float y_max,
                                    const float theta_min,
@@ -222,7 +222,7 @@ uniform_in_interval_affine_no_skew(const unsigned nobs,
   unsigned limit = 2*nobs;//two tries
   obs.clear();
   xforms.clear();
-  vcl_vector<vgl_h_matrix_2d<float> > trans_set;
+  std::vector<vgl_h_matrix_2d<float> > trans_set;
   bugl_random_transform_set_2d<float>::
     zero_skew_affine_uniform_interval(limit, trans_set,
                                       x_min, x_max,

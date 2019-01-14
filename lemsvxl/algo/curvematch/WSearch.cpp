@@ -13,8 +13,8 @@
 //#pragma hdrstop
 
 #include "WSearch.h"
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
  
 bool DPNCS (Image* pim, Image* image, int sx1, int sy1, int sx2, int sy2);
 bool RPDPNCS (Image* pim, Image* image, int sx1, int sy1, int sx2, int sy2);
@@ -160,7 +160,7 @@ bool DPNCS (Image* pim, Image* image, int sx1, int sy1, int sx2, int sy2)
       }
    }
    catch ( ... ) {
-      vcl_cout << "Memory not enough !"; exit(1);
+      std::cout << "Memory not enough !"; exit(1);
    }
    //First row and column set to zero...
    for (y=0; y<sh+1; y++) {
@@ -401,7 +401,7 @@ void CFSelSort (double minCF, int fN, int wcf, int hcf)
    //   CFmax = new CFstr[fN];
    //}
    //catch ( ... ){
-   //   //closegraph (); vcl_cout << "Memory not enough !"; exit(1);
+   //   //closegraph (); std::cout << "Memory not enough !"; exit(1);
    //}
    //
    // 2) selection sort, change swap to fill 0 in CF[][]
@@ -620,7 +620,7 @@ bool RPDPNCS (Image* pim, Image* image, int sx1, int sy1, int sx2, int sy2)
       }
    }
    catch ( ... ) {
-      vcl_cout << "Memory not enough !"; exit(1);
+      std::cout << "Memory not enough !"; exit(1);
    }
    //First row and column set to zero...
    for (y=0; y<dpheight; y++) {
@@ -1119,7 +1119,7 @@ bool SRPDPNCS (Image* pim, Image* image, int sx1, int sy1, int sx2, int sy2)
     }
   }
   catch ( ... ) {
-    //closegraph (); vcl_cout << "Memory not enough !"; exit(1);
+    //closegraph (); std::cout << "Memory not enough !"; exit(1);
   }
   //First row and column set to zero...
   for (y=0; y<dpheight; y++) {

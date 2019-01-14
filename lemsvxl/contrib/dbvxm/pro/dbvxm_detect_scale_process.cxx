@@ -56,7 +56,7 @@ bool dbvxm_detect_scale_process::execute()
   double ni = static_cast<double>(input_img->ni());
   double nj = static_cast<double>(input_img->nj());
 
-  double image_diag = vcl_sqrt(ni*ni + nj*nj);
+  double image_diag = std::sqrt(ni*ni + nj*nj);
   if(image_diag == 0)
     return false;
 
@@ -76,7 +76,7 @@ bool dbvxm_detect_scale_process::execute()
                                                world_point,
                                                wul);
 
-  vcl_cout<<"\n Success one";
+  std::cout<<"\n Success one";
 
   if(!success)
     return false;
@@ -84,7 +84,7 @@ bool dbvxm_detect_scale_process::execute()
                                                world_plane,
                                                world_point,
                                                wlr);
-  vcl_cout<<"\n Success two";
+  std::cout<<"\n Success two";
   if(!success)
     return false;
 
@@ -101,19 +101,19 @@ bool dbvxm_detect_scale_process::execute()
   //                     xlr,ylr,zlr,
   //                     bgeo_lvcs::DEG,bgeo_lvcs::METERS);
 
-  double world_diag = vcl_sqrt((wlr.x()-wul.x())*(wlr.x()-wul.x())+(wlr.y()-wul.y())*(wlr.y()-wul.y()));
+  double world_diag = std::sqrt((wlr.x()-wul.x())*(wlr.x()-wul.x())+(wlr.y()-wul.y())*(wlr.y()-wul.y()));
   //shouldn't happen
   if(world_diag==0)
     return false;
   double diag_gsd = world_diag/(image_diag*main_world->get_params()->voxel_length());
-  vcl_cout<<"\n Success three";
+  std::cout<<"\n Success three";
   // scale should always be greater than 0
   if(diag_gsd<0)
       return false;
   unsigned int scale=0;
   if(diag_gsd>=1)
-      scale=(unsigned) vcl_ceil((vcl_log(diag_gsd)/vcl_log(2.0))-0.5);
-  vcl_cout<<"The scale of the current image is "<<scale<< "and  "<<diag_gsd <<"\n";
+      scale=(unsigned) std::ceil((std::log(diag_gsd)/std::log(2.0))-0.5);
+  std::cout<<"The scale of the current image is "<<scale<< "and  "<<diag_gsd <<"\n";
   brdb_value_sptr output0 = new brdb_value_t<unsigned>(scale);
   output_data_[0] = output0;
 

@@ -1,7 +1,7 @@
 #include <vgui/vgui.h>
 #include <vgui/vgui_key.h>
 #include <vgui/vgui_menu.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include "lmco_manager.h"
 #include "lmco_menus.h"
 
@@ -40,7 +40,7 @@ void lmco_menus::set_style_callback()
 void lmco_menus::compute_mi_callback()
 {
   double mi = lmco_manager::instance()->compute_mi();
-  vcl_cout << "MI = " << mi << vcl_endl;
+  std::cout << "MI = " << mi << std::endl;
 }
 
 void lmco_menus::optimize_position_callback()

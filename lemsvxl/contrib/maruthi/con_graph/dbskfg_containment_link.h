@@ -15,7 +15,7 @@
 // \endverbatim
 
 #include <dbgrl/dbgrl_edge.h>
-#include <vcl_ostream.h>
+#include <ostream>
 #include <dbskfg/algo/dbskfg_transform_descriptor.h>
 #include <dbskfg/algo/dbskfg_transform_descriptor_sptr.h>
 #include <con_graph/dbskfg_containment_node_sptr.h>
@@ -39,13 +39,13 @@ public:
     {return transform_type_;}
 
     // Set contours affected
-    void set_contours_affected(vcl_vector<unsigned int> contours);
+    void set_contours_affected(std::vector<unsigned int> contours);
 
     // Set distance
     void set_distance(double distance){distance_ = distance;}
 
     // get contours affected
-    vcl_vector<unsigned int> get_contours_affected(){
+    std::vector<unsigned int> get_contours_affected(){
         return contours_affected_;}
 
     // Returns the transform object associated with this link
@@ -68,7 +68,7 @@ public:
     double cost(){return cost_;}
 
     // Prints out information about this node
-    void print(vcl_ostream& os);
+    void print(std::ostream& os);
 
     // Destroy transform
     void destroy_transform()
@@ -106,7 +106,7 @@ private:
     dbskfg_transform_descriptor_sptr grouped_transform_;
 
     // Store contours affected
-    vcl_vector<unsigned int> contours_affected_;
+    std::vector<unsigned int> contours_affected_;
 
     // Store the cost of this node 
     double cost_;

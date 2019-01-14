@@ -5,9 +5,9 @@
 
 #include<dsm/io/dsm_io_state_machine.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 namespace dsm_read_state_machine_bin_process_globals
 {
@@ -19,10 +19,10 @@ bool dsm_read_state_machine_bin_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_read_state_machine_bin_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-    vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+    std::vector<std::string> output_types_(n_outputs_);
 
-    input_types_[0] = "vcl_string";
+    input_types_[0] = vcl_string";
     input_types_[1] = "unsigned";
     output_types_[0] = "dsm_state_machine_base_sptr";
 
@@ -41,11 +41,11 @@ bool dsm_read_state_machine_bin_process(bprb_func_process& pro)
 
     //get input
     unsigned  i = 0;
-    vcl_string filename = pro.get_input<vcl_string>(i++);
+    std::string filename = pro.get_input<std::string>(i++);
     unsigned ndims = pro.get_input<unsigned>(i++);
 
     //create the input stream
-    vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+    vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
     
     
 
@@ -83,8 +83,8 @@ bool dsm_read_state_machine_bin_process(bprb_func_process& pro)
         break;
     default:
         {
-            vcl_cerr << "------ERROR DSM_READ_STATE_MACHINE_BIN_PROCESS: " << ndims 
-                     << "UNSPECIFIED DIMENSION PLEASE ADD THIS CASE OR USE A DIFFERENT VALUE.---------" << vcl_flush;
+            std::cerr << "------ERROR DSM_READ_STATE_MACHINE_BIN_PROCESS: " << ndims 
+                     << "UNSPECIFIED DIMENSION PLEASE ADD THIS CASE OR USE A DIFFERENT VALUE.---------" << std::flush;
             return false;   
         }//end default
     }//end switch

@@ -12,8 +12,8 @@
 #include <dbsksp/dbsksp_xshock_edge.h>
 
 #include <vnl/vnl_math.h>
-#include <vcl_utility.h>
-#include <vcl_fstream.h>
+#include <utility>
+#include <fstream>
 
 
 
@@ -21,7 +21,7 @@
 //: Convert an angle to [-pi, pi] range
 double dbsksp_xio_angle_to_npi2pi(double angle)
 {
-  double a = vcl_fmod(angle + vnl_math::pi, vnl_math::pi*2);
+  double a = std::fmod(angle + vnl_math::pi, vnl_math::pi*2);
   return (a>0) ? (a - vnl_math::pi) : (a + vnl_math::pi);
 }
 
@@ -51,7 +51,7 @@ enum dbsksp_xio_xshock_tag_index
 
 
 //: look-up table for all the tag labels
-class dbsksp_xio_xshock_tag_list : public vcl_map<dbsksp_xio_xshock_tag_index, vcl_string >
+class dbsksp_xio_xshock_tag_list : public std::map<dbsksp_xio_xshock_tag_index, std::string >
 {
 public:
   dbsksp_xio_xshock_tag_list()
@@ -87,9 +87,9 @@ static dbsksp_xio_xshock_tag_list dbsksp_xio_xshock_tag;
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to an xml file
-bool x_write(const vcl_string& filepath, const dbsksp_xshock_graph_sptr& graph)
+bool x_write(const std::string& filepath, const dbsksp_xshock_graph_sptr& graph)
 {
-  vcl_ofstream file(filepath.c_str());
+  std::ofstream file(filepath.c_str());
   if (x_write(file, graph))
   {
     file.close();
@@ -105,7 +105,7 @@ bool x_write(const vcl_string& filepath, const dbsksp_xshock_graph_sptr& graph)
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to a stream
-bool x_write(vcl_ostream& os, const dbsksp_xshock_graph_sptr& graph)
+bool x_write(std::ostream& os, const dbsksp_xshock_graph_sptr& graph)
 {
   // set the accuracy to double-precision
   //int current_precision = os.precision();
@@ -207,7 +207,7 @@ bool x_write(vcl_ostream& os, const dbsksp_xshock_graph_sptr& graph)
 
 // ----------------------------------------------------------------------------
 //: load a shock graph from an xml file
-bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
+bool x_read(const std::string& filepath, dbsksp_xshock_graph_sptr& xg)
 {
   xg = 0;
   bxml_document doc = bxml_read(filepath);
@@ -229,15 +229,15 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
     bxml_element(dbsksp_xio_xshock_tag[SHOCK_GRAPH])).ptr());
   if (!root)
   {
-    vcl_cerr << "ERROR: Unable to locate root element `sksp_xshock_graph'.\n";
+    std::cerr << "ERROR: Unable to locate root element `sksp_xshock_graph'.\n";
     return false;
   }
 
   // check version
-  vcl_string version = "";
+  std::string version = "";
   if (!root->get_attribute(dbsksp_xio_xshock_tag[VERSION], version) || version != "1")
   {
-    vcl_cerr << "ERROR: Unknown xshock graph version.\n";
+    std::cerr << "ERROR: Unknown xshock graph version.\n";
     return false;
   }
 
@@ -246,13 +246,13 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
     bxml_find_by_name(root, bxml_element(dbsksp_xio_xshock_tag[SHOCK_NODE_LIST])).ptr());
   if (!node_list_elm)
   {
-    vcl_cerr << "ERROR: Unable to locate element `" << dbsksp_xio_xshock_tag[SHOCK_NODE_LIST] << "'.\n";
+    std::cerr << "ERROR: Unable to locate element `" << dbsksp_xio_xshock_tag[SHOCK_NODE_LIST] << "'.\n";
     return false;
   }
 
   // iterate thru the nodes in the node list and create the nodes
-  vcl_map<unsigned int, dbsksp_xshock_node_sptr > node_list;
-  vcl_map<unsigned int, bxml_element* > node_elm_list;
+  std::map<unsigned int, dbsksp_xshock_node_sptr > node_list;
+  std::map<unsigned int, bxml_element* > node_elm_list;
 
   for(bxml_element::const_data_iterator itr = node_list_elm->data_begin();
     itr != node_list_elm->data_end();  ++itr)
@@ -275,7 +275,7 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
       !node_elm->get_attribute(dbsksp_xio_xshock_tag[Y], xv_y) ||    // "y"
       !node_elm->get_attribute(dbsksp_xio_xshock_tag[RADIUS], xv_radius))      // "radius"
     {
-      vcl_cerr << "ERROR : Unable to retrieve all node attributes.\n";
+      std::cerr << "ERROR : Unable to retrieve all node attributes.\n";
       return false;
     };
    
@@ -284,8 +284,8 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
     xv->set_pt(vgl_point_2d<double >(xv_x, xv_y));
     xv->set_radius(xv_radius);
 
-    node_list.insert(vcl_make_pair(xv_id, xv));
-    node_elm_list.insert(vcl_make_pair(xv_id, node_elm));
+    node_list.insert(std::make_pair(xv_id, xv));
+    node_elm_list.insert(std::make_pair(xv_id, node_elm));
   }
 
 
@@ -294,12 +294,12 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
     bxml_find_by_name(root, bxml_element(dbsksp_xio_xshock_tag[SHOCK_EDGE_LIST])).ptr());
   if (!edge_list_elm)
   {
-    vcl_cerr << "ERROR: Unable to locate element `" << dbsksp_xio_xshock_tag[SHOCK_EDGE_LIST] << "'.\n";
+    std::cerr << "ERROR: Unable to locate element `" << dbsksp_xio_xshock_tag[SHOCK_EDGE_LIST] << "'.\n";
     return false;
   }
 
   // iterate thru the edges in the edge list and create the edges
-  vcl_map<unsigned int, dbsksp_xshock_edge_sptr > edge_list;
+  std::map<unsigned int, dbsksp_xshock_edge_sptr > edge_list;
   for(bxml_element::const_data_iterator itr = edge_list_elm->data_begin();
     itr != edge_list_elm->data_end();  ++itr)
   {
@@ -323,19 +323,19 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
       xe_target_id == 0  // "target_id"
       ) 
     {
-      vcl_cerr << "ERROR : Unable to retrieve all attributes of element `" 
+      std::cerr << "ERROR : Unable to retrieve all attributes of element `" 
         << dbsksp_xio_xshock_tag[SHOCK_EDGE] << "'.\n";
       return false;
     };
 
     // retrieve pointers of source and target nodes from its id's
-    vcl_map<unsigned int, dbsksp_xshock_node_sptr >::iterator source_vit, target_vit; 
+    std::map<unsigned int, dbsksp_xshock_node_sptr >::iterator source_vit, target_vit; 
     source_vit = node_list.find(xe_source_id);
     target_vit = node_list.find(xe_target_id);
     
     if (source_vit == node_list.end() || target_vit == node_list.end())
     {
-      vcl_cerr << "ERROR: unable to find either source or target node of edge with id = " 
+      std::cerr << "ERROR: unable to find either source or target node of edge with id = " 
         << xe_id << ".\n";
       return false;
     }
@@ -344,13 +344,13 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
 
     // create the edge
     dbsksp_xshock_edge_sptr xe = new dbsksp_xshock_edge(source_sptr, target_sptr, xe_id);
-    edge_list.insert(vcl_make_pair(xe_id, xe));
+    edge_list.insert(std::make_pair(xe_id, xe));
   }
 
   // 3. Add edges to the nodes and fill in info for shock node descriptors
 
   // iterate thru the list of nodes
-  for (vcl_map<unsigned int, dbsksp_xshock_node_sptr >::iterator nit = 
+  for (std::map<unsigned int, dbsksp_xshock_node_sptr >::iterator nit = 
     node_list.begin(); nit != node_list.end(); ++nit)
   {
     // retrieve basic info of the node of interest
@@ -370,7 +370,7 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
 
     if (!descriptor_list_elm)
     {
-      vcl_cerr << "ERROR: Unable to locate element `" 
+      std::cerr << "ERROR: Unable to locate element `" 
         << dbsksp_xio_xshock_tag[SHOCK_NODE_DESCRIPTOR_LIST] << "'.\n";
       return false;
     }
@@ -398,16 +398,16 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
         !descriptor_elm->get_attribute(dbsksp_xio_xshock_tag[PHI], xe_phi)
         )
       {
-        vcl_cerr << "ERROR : Unable to retrieve all attributes of element `" 
+        std::cerr << "ERROR : Unable to retrieve all attributes of element `" 
           << dbsksp_xio_xshock_tag[SHOCK_NODE_DESCRIPTOR] << "'.\n";
         return false;
       }
 
       // retrieve edge from edge id
-      vcl_map<unsigned int, dbsksp_xshock_edge_sptr >::iterator xe_itr = edge_list.find(xe_id);
+      std::map<unsigned int, dbsksp_xshock_edge_sptr >::iterator xe_itr = edge_list.find(xe_id);
       if (xe_itr == edge_list.end())
       {
-        vcl_cerr << "ERROR: unable to find edge (id = " << xe_id 
+        std::cerr << "ERROR: unable to find edge (id = " << xe_id 
           << " ) associated with a node (id = " << xv_id << ").\n";
         return false;
       }
@@ -426,13 +426,13 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
 
 
   // insert all the nodes and edges to the shock graph
-  for (vcl_map<unsigned int, dbsksp_xshock_node_sptr >::iterator itr = node_list.begin();
+  for (std::map<unsigned int, dbsksp_xshock_node_sptr >::iterator itr = node_list.begin();
     itr != node_list.end(); ++itr)
   {
     graph->add_vertex(itr->second);
   }
 
-  for (vcl_map<unsigned int, dbsksp_xshock_edge_sptr >::iterator itr = edge_list.begin();
+  for (std::map<unsigned int, dbsksp_xshock_edge_sptr >::iterator itr = edge_list.begin();
     itr != edge_list.end(); ++itr)
   {
     graph->add_edge(itr->second);
@@ -470,7 +470,7 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
       dbsksp_xshock_edge_sptr xe = *eit;
       if (!xe->is_vertex(xv))
       {
-        vcl_cerr << "ERROR: graph structure is not consistent.\n";
+        std::cerr << "ERROR: graph structure is not consistent.\n";
         return false;
       }
     }

@@ -5,7 +5,7 @@
 
 #include "dbsksp_interp_two_xnodes.h"
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vgl/vgl_distance.h>
 #include <dbsksp/algo/dbsksp_interp_two_xnodes_cost_function.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
@@ -134,7 +134,7 @@ optimize_over_alpha0_method_1()
     bool print_debug_table = false;
     if (print_debug_table)
     {
-      vcl_string filename = "D:/vision/temp/t_fitcost.txt";
+      std::string filename = "D:/vision/temp/t_fitcost.txt";
       vnl_matrix<double > fitcost(200, 5, 0); // x fitcost len0 len1
       for (unsigned j=1; j<200; ++j)
       {
@@ -155,7 +155,7 @@ optimize_over_alpha0_method_1()
           
         }
       }
-      vcl_ofstream outstr(filename.c_str(), vcl_ios_out);
+      std::ofstream outstr(filename.c_str(), std::ios::out);
       outstr << "x fitcost len0 len1 det_A\n";
       outstr << fitcost;
       outstr.close(); 
@@ -227,7 +227,7 @@ optimize_over_alpha0_method_2()
 
   if (print_debug_table)
   {
-    vcl_string filename = "D:/vision/temp/t_fitcost.txt";
+    std::string filename = "D:/vision/temp/t_fitcost.txt";
     vnl_matrix<double > fitcost(200, 5, 0); // x fitcost len0 len1
     for (unsigned j=1; j<200; ++j)
     {
@@ -246,7 +246,7 @@ optimize_over_alpha0_method_2()
         fitcost(j, 3) = ss_init->len1();
       }
     }
-    vcl_ofstream outstr(filename.c_str(), vcl_ios_out);
+    std::ofstream outstr(filename.c_str(), std::ios::out);
     outstr << "x fitcost len0 len1 det_A\n";
     outstr << fitcost;
     outstr.close(); 
@@ -295,7 +295,7 @@ optimize_over_phi1()
   // 
   double x0 = this->start_xnode_.pt_.x();
   double y0 = this->start_xnode_.pt_.y();
-  double theta0 = vcl_atan2(v0.y(), v0.x());
+  double theta0 = std::atan2(v0.y(), v0.x());
   double r0 = this->start_xnode_.radius_;
   double m0 = 0;
   double m1 = 0;

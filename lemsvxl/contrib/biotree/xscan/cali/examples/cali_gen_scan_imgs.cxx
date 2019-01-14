@@ -8,37 +8,37 @@
 #include <cali/cali_vnl_least_squares_function.h>
 #include <cali/cali_param.h>
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 #include <imgr/file_formats/imgr_skyscan_log.h>
 
 int main(int argc, char* argv[]) {
   if(argc < 2){
-    vcl_cerr << "usage " << argv[0] << " <parameter file>\n";
+    std::cerr << "usage " << argv[0] << " <parameter file>\n";
     exit(1);
   }
-    vcl_string path = argv[1];
+    std::string path = argv[1];
   cali_param par(path);
-  vcl_string fname = par.LOGFILE;
-  vcl_FILE *fp = vcl_fopen(fname.data(),"r");
+  std::string fname = par.LOGFILE;
+  std::FILE *fp = std::fopen(fname.data(),"r");
   assert(fp != NULL);
   imgr_skyscan_log_header skyscan_log_header(fp);
-  vcl_fclose(fp);
+  std::fclose(fp);
   
   imgr_skyscan_log skyscan_log(fname.data());
   xscan_scan scan;
   scan = skyscan_log.get_scan();
-  vcl_cout << scan << vcl_endl;
+  std::cout << scan << std::endl;
 
 scan.set_scan_size(par.END - par.START + 1);
 
   int nviews = scan.scan_size();
   // change the scan
   vpgl_calibration_matrix<double> kk(scan.kk());
-  vcl_cout << "scan SIZE---->" << nviews << vcl_endl;
-  vcl_vector<vil_image_resource_sptr> resources(nviews);
+  std::cout << "scan SIZE---->" << nviews << std::endl;
+  std::vector<vil_image_resource_sptr> resources(nviews);
   for (int i=0; i<nviews; i++) {
        resources[i] = vil_new_image_resource(skyscan_log_header.number_of_columns_,skyscan_log_header.number_of_rows_,1,  VIL_PIXEL_FORMAT_BYTE);
       //  resources[i] = vil_new_image_resource(2000,1048,1,  VIL_PIXEL_FORMAT_BYTE);
@@ -63,9 +63,9 @@ scan.set_scan_size(par.END - par.START + 1);
 
   
   // read the x values from the text file
-  vcl_string txt_file = par.CONVERGEDVALUES;
-  vcl_cout << "reading in values from " <<  txt_file << "\n";
-  vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
+  std::string txt_file = par.CONVERGEDVALUES;
+  std::cout << "reading in values from " <<  txt_file << "\n";
+  std::ifstream fstream(txt_file.c_str(),std::ios::in);
    vnl_vector<double> x(par.SIZE_OF_X);
 
   double val;
@@ -73,9 +73,9 @@ scan.set_scan_size(par.END - par.START + 1);
   int x_size=0;
   while (!fstream.eof()) {
     fstream.getline(val_string, 256);
-    val = vcl_atof(val_string);
+    val = std::atof(val_string);
     x[x_size++] = val;
-    vcl_cout << x_size << "=" << val << vcl_endl;
+    std::cout << x_size << "=" << val << std::endl;
   }
 
 
@@ -115,14 +115,14 @@ scan.set_scan_size(par.END - par.START + 1);
 
     */
 
-  //vcl_vector<double>x_coord_tol(0,0,-0.0947263,0.0404068,0.050888,0.296285,0.286996,0.109258,0.125204,-0.103531,
+  //std::vector<double>x_coord_tol(0,0,-0.0947263,0.0404068,0.050888,0.296285,0.286996,0.109258,0.125204,-0.103531,
      // -0.0743285,0,0);
-  //vcl_vector<double>y_coord_tol(0,0,0.00245647,0.0188508,-0.183153,-0.376836,-0.182137,-0.164995,0.128703,0.243105,
+  //std::vector<double>y_coord_tol(0,0,0.00245647,0.0188508,-0.183153,-0.376836,-0.182137,-0.164995,0.128703,0.243105,
      // -0.00153744,0,0);
-  //vcl_vector<double>z_coord_tol(0,0,0,0,0,0,0,0,0,0,0,0,0);
-  //vcl_vector<double>rad_tol(0,0,0,0,0,0,0,0,0,0,0,0,0);
+  //std::vector<double>z_coord_tol(0,0,0,0,0,0,0,0,0,0,0,0,0);
+  //std::vector<double>rad_tol(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-  vcl_vector<double>x_coord_tol;
+  std::vector<double>x_coord_tol;
 
   x_coord_tol.push_back(0);
   x_coord_tol.push_back(0);
@@ -138,7 +138,7 @@ scan.set_scan_size(par.END - par.START + 1);
    x_coord_tol.push_back(0);
    x_coord_tol.push_back(0);
 
-   vcl_vector<double>y_coord_tol;
+   std::vector<double>y_coord_tol;
 
    y_coord_tol.push_back(0);
    y_coord_tol.push_back(0);
@@ -154,8 +154,8 @@ scan.set_scan_size(par.END - par.START + 1);
    y_coord_tol.push_back(0);
    y_coord_tol.push_back(0);
 
-   vcl_vector<double>z_coord_tol;
-   vcl_vector<double>rad_tol;
+   std::vector<double>z_coord_tol;
+   std::vector<double>rad_tol;
 
    for (int i = 0;i<13;i++)
    {
@@ -180,14 +180,14 @@ scan.set_scan_size(par.END - par.START + 1);
   //artf_rot.normalize();
   //vgl_point_3d<double> artf_tr(0, 0, -14*cali_cylinder_artifact::height/16);
   //vgl_point_3d<double> artf_trans(-0.437369, -3.6068, -49.6446);  //17.6695971242095, 0.0545319300998807, -57.8451903241621);
-  vcl_cout << "Rotation---------------------------->" << vcl_endl;
-  vcl_cout << artf_rot << vcl_endl;
-  vcl_cout << "Translation------------------------->" << vcl_endl;
-  vcl_cout << artf_trans << vcl_endl;
-//  vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\test_images\\result_two_indent", "test_artifact", artf_rot, artf_trans,22);
-// vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\march_03\\artifact35um\\tolerance_study\\test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
-//vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\latest_amherst\\upside_down_artf_test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
-// vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\march_03\\artifact17um\\test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
- vcl_vector<vil_image_resource_sptr> images = scan_res.simulate_scan(".", "test_images", artf_rot, artf_trans,par.INTERVAL);
+  std::cout << "Rotation---------------------------->" << std::endl;
+  std::cout << artf_rot << std::endl;
+  std::cout << "Translation------------------------->" << std::endl;
+  std::cout << artf_trans << std::endl;
+//  std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\test_images\\result_two_indent", "test_artifact", artf_rot, artf_trans,22);
+// std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\march_03\\artifact35um\\tolerance_study\\test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
+//std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\latest_amherst\\upside_down_artf_test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
+// std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan("C:\\march_03\\artifact17um\\test_images", "test_images", artf_rot, artf_trans,par.INTERVAL);
+ std::vector<vil_image_resource_sptr> images = scan_res.simulate_scan(".", "test_images", artf_rot, artf_trans,par.INTERVAL);
 }
 

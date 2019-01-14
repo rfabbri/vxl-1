@@ -12,9 +12,9 @@
 #include "vox_convert_and_associate_pb_output_params.h"
 #include "vox_convert_and_associate_pb_output_params_sptr.h"
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -68,8 +68,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " <<
-        params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " <<
+        params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -79,23 +79,23 @@ int main(int argc, char *argv[]) {
     if (!params->parse_input_xml())
         return 1;
 
-    vcl_string object_name = params->input_object_name_();
-    vcl_string input_file_name = params->input_edgemap_folder_list_file_();
+    std::string object_name = params->input_object_name_();
+    std::string input_file_name = params->input_edgemap_folder_list_file_();
 
-    vcl_ifstream xlists(input_file_name.c_str());
+    std::ifstream xlists(input_file_name.c_str());
 
-    vcl_string line;
+    std::string line;
 
     if (xlists.is_open())
     {
         while (! xlists.eof() )
         {
             getline(xlists, line);
-            vcl_string query_object_name = line.substr(0, object_name.length());
+            std::string query_object_name = line.substr(0, object_name.length());
             if(object_name == query_object_name)
             {
-                vcl_string pb_output_folder = line.substr(object_name.length() + 1);
-                vcl_cout << "Folder to be processed: " << pb_output_folder << vcl_endl;
+                std::string pb_output_folder = line.substr(object_name.length() + 1);
+                std::cout << "Folder to be processed: " << pb_output_folder << std::endl;
 
                 if(!vul_file_exists(params->output_edgemap_dir_()))
                 {
@@ -105,14 +105,14 @@ int main(int argc, char *argv[]) {
                 vul_file_iterator fit(pb_output_folder + "/*" + params->input_edgemap_extension_());
                 for(; fit; ++fit)
                 {
-                    vcl_string edgemap_file = fit.filename();
-                    vcl_string objname = edgemap_file.substr(0, edgemap_file.length() - params->input_edgemap_extension_().length());
-                    vcl_string edgeorient_file = pb_output_folder + "/"+ objname + params->input_edgeorient_extension_();
+                    std::string edgemap_file = fit.filename();
+                    std::string objname = edgemap_file.substr(0, edgemap_file.length() - params->input_edgemap_extension_().length());
+                    std::string edgeorient_file = pb_output_folder + "/"+ objname + params->input_edgeorient_extension_();
                     edgemap_file = pb_output_folder + "/" + edgemap_file;
                     vil_image_view<vxl_byte> edgemap_image = vil_load(edgemap_file.c_str());
                     if(edgemap_image.ni() < params->min_width_() || edgemap_image.nj() < params->min_height_())
                     {
-                        vcl_cout << "Skip: " << objname << vcl_endl;
+                        std::cout << "Skip: " << objname << std::endl;
                         continue;
                     }
                     /////
@@ -134,13 +134,13 @@ int main(int argc, char *argv[]) {
                     buld_octave_double_array theta_array = buld_octave_value_to_octave_double_array(outargs(0));
                     /////
                     dbdet_edgemap_sptr EM = vox_convert_pb_outputs_to_edgemap(pb_array, theta_array);
-                    vcl_string dest_file_name = params->output_edgemap_dir_() + "/" + objname + params->output_edgemap_extension_();
-                    vcl_cout << "Assoc file:" << dest_file_name << vcl_endl;
+                    std::string dest_file_name = params->output_edgemap_dir_() + "/" + objname + params->output_edgemap_extension_();
+                    std::cout << "Assoc file:" << dest_file_name << std::endl;
                     bool save_status = dbdet_save_edg(dest_file_name, EM);
 
                     if(!save_status)
                     {
-                        vcl_cerr<< "Saving edges has failed."<< vcl_endl;
+                        std::cerr<< "Saving edges has failed."<< std::endl;
                         return 1;
                     }
                 }
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-        vcl_cerr << "Error: cannot open file: " << input_file_name << vcl_endl;
+        std::cerr << "Error: cannot open file: " << input_file_name << std::endl;
         return 1;
     }
 
@@ -159,12 +159,12 @@ int main(int argc, char *argv[]) {
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

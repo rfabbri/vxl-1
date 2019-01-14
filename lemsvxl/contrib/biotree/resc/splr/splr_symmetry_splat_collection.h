@@ -39,8 +39,8 @@ class splr_symmetry_splat_collection : public splr_splat_collection<T, filter_2d
 
 class splr_symmetry_splat_collection_enumerator : public biob_worldpt_index_enumerator {
  private:
-  typedef vcl_list<biob_worldpt_index> representees_t;// list of members of sample_points() 
-  const vcl_vector<representees_t> representees_vector_; //entry i is points of sample_points() represented by representative i
+  typedef std::list<biob_worldpt_index> representees_t;// list of members of sample_points() 
+  const std::vector<representees_t> representees_vector_; //entry i is points of sample_points() represented by representative i
   biob_worldpt_index_enumerator_sptr subsplat_enumerator_;
   representees_t::const_iterator representees_iterator_, representees_end_;
   void conditional_advance(){
@@ -66,7 +66,7 @@ class splr_symmetry_splat_collection_enumerator : public biob_worldpt_index_enum
   bool has_next(){
     return representees_iterator_ != representees_end_ || subsplat_enumerator_->has_next();
   }
-  splr_symmetry_splat_collection_enumerator(const vcl_vector<representees_t> & representees_vector,                                            
+  splr_symmetry_splat_collection_enumerator(const std::vector<representees_t> & representees_vector,                                            
                                             biob_worldpt_index_enumerator_sptr subsplat_enumerator)
     : representees_vector_(representees_vector), subsplat_enumerator_(subsplat_enumerator) {
     conditional_advance();

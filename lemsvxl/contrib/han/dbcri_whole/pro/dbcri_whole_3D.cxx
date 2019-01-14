@@ -1,7 +1,7 @@
 #define DEBUG false
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro1/bpro1_process.h>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vnl/vnl_double_3x3.h>
@@ -37,7 +37,7 @@ void dbcri_whole_process::read_edge_map()
 
 {
   vgl_point_2d<double> epipole(epi_x_,epi_y_);
-  vcl_cout<<"epipole: "<<epipole<<vcl_endl;
+  std::cout<<"epipole: "<<epipole<<std::endl;
   vgl_point_2d <double> uppoint(1000.0,(-1000.0f*line_upper_.a()-line_upper_.c())/line_upper_.b());
   vgl_point_2d <double> lowpoint(1000.0,(-1000.0f*line_lower_.a()-line_lower_.c())/line_lower_.b());
   vsol_line_2d_sptr newhline_upper= new vsol_line_2d(epipole,uppoint);
@@ -57,22 +57,22 @@ void dbcri_whole_process::read_edge_map()
     // output_data_[frame].push_back(output_vsol);
 
 
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
 
     vidpro1_vtol_storage_sptr frame_vtol;
 
     ////frame_image.vertical_cast(input_data_[frame][0]);
-    vcl_cout<<output_data_.size()<<vcl_endl;
-    vcl_cout<<output_data_[frame].size()<<vcl_endl;
-    vcl_cout<<input_data_[frame][0]<<vcl_endl;
+    std::cout<<output_data_.size()<<std::endl;
+    std::cout<<output_data_[frame].size()<<std::endl;
+    std::cout<<input_data_[frame][0]<<std::endl;
     frame_vtol.vertical_cast(input_data_[frame][2]);
-    vcl_cout<<frame_vtol<<vcl_endl;
-    vcl_vector <vsol_digital_curve_2d_sptr>  dclist;
+    std::cout<<frame_vtol<<std::endl;
+    std::vector <vsol_digital_curve_2d_sptr>  dclist;
 
-    vcl_vector<vtol_edge_2d_sptr> edges;
+    std::vector<vtol_edge_2d_sptr> edges;
 
 
-    for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
+    for ( std::set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
       itr != frame_vtol->end();  ++itr ) {
 
         vtol_edge *edge = (*itr)->cast_to_edge();
@@ -103,8 +103,8 @@ void dbcri_whole_process::read_edge_map()
 
                 double xx=(*ec)[i].get_x();double yy=(*ec)[i].get_y();
 
-                //vcl_cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<vcl_endl;
-                //vcl_cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<vcl_endl;
+                //std::cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<std::endl;
+                //std::cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<std::endl;
 
 
 
@@ -123,7 +123,7 @@ void dbcri_whole_process::read_edge_map()
 
                 }
                 dc->add_vertex(new vsol_point_2d(ec->edgel(i).get_pt()));
-                // vcl_cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<vcl_endl;
+                // std::cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<std::endl;
 
                 sh_pts.push_back(new vsol_point_2d(ec->edgel(i).get_pt()));
               }
@@ -147,8 +147,8 @@ void dbcri_whole_process::read_edge_map()
 ///// cross ratio calculetion
 
 double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
-                                         vcl_vector <vsol_digital_curve_2d_sptr> &dcl_,
-                                         vcl_vector <vcl_vector <dbecl_episeg_sptr> > &episeglist,
+                                         std::vector <vsol_digital_curve_2d_sptr> &dcl_,
+                                         std::vector <std::vector <dbecl_episeg_sptr> > &episeglist,
                                          dbecl_epipole_sptr &epipole)
 {
 
@@ -186,12 +186,12 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
 
   C=WC_;
 
-  //vcl_cout<<C<<vcl_endl;
+  //std::cout<<C<<std::endl;
   vnl_double_3x3 M = C.extract(3,3);
 
   //T = vnl_inverse(M_in) * epi;
   T = vnl_inverse(M) * epi;
-  double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   T /= T_normal;
   //T *= trans_dist;
 
@@ -214,13 +214,13 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
 
   double ratio;
   vnl_double_3 ratio_3;
-  vcl_vector <ratios> ratios_front_list;
-  vcl_vector <ratios> ratios_rear_list;
+  std::vector <ratios> ratios_front_list;
+  std::vector <ratios> ratios_rear_list;
 
   bool selected0,selected1,selected2;
   double distance0,distance1,distance2;
 
-  vcl_vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
+  std::vector <vgl_point_3d<double> > point_3d_front_list, point_3d_rear_list;
   dbecl_episeg_point  x0pt,x1pt,x2pt;
   //dbecl_episeg_point  x0pt(episeglist[fm1][i0], episeglist[fm1][i0]->index(ang));
 
@@ -237,11 +237,11 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=-100.0f;x1=-100.0f;x2=-100.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang){
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -254,7 +254,7 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)>x1) {
@@ -266,7 +266,7 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)>x2) {
@@ -275,8 +275,8 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
           x2pt.set_point(episeglist[fm3][i2],episeglist[fm3][i2]->index(ang));
 
           ///////////////debug
-          //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
-          //vcl_cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<vcl_endl;
+          //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
+          //std::cout<<episeglist[fm3][i2]<<" "<<episeglist[fm3][i2]->index(ang)<<std::endl;
         }
       }
     }
@@ -294,26 +294,26 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     /////////////////////////
     /////////////////////////
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    /////  vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    /////  std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     /// dont have camera yet.. 3d reconstruction is wrong..
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
 
-    //// 9-21-2006 commented out ///// vcl_cout<<"contour point:"<<point_3d<<vcl_endl;
+    //// 9-21-2006 commented out ///// std::cout<<"contour point:"<<point_3d<<std::endl;
     point_3d_front_list.push_back(point_3d);
     ratios temp_ratios;
     temp_ratios.angle=ang;
@@ -348,11 +348,11 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     selected1=false;
     selected2=false;
     x0=10000.0f;x1=10000.0f;x2=10000.f;
-    //vcl_cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<vcl_endl;
+    //std::cout<<ang<<" "<<episeglist[fm1].size()<<" "<<episeglist[fm2].size()<<" "<<episeglist[fm3].size()<<std::endl;
 
     for (unsigned i0=0;i0<episeglist[fm1].size();i0++) {
 
-      //vcl_cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm1][i0]->min_angle()<<" "<<episeglist[fm1][i0]->max_angle()<<std::endl;
       if (episeglist[fm1][i0]->min_angle() <=ang&&episeglist[fm1][i0]->max_angle() >=ang) {
         //if (episeglist[fm1][i0]->index(ang)) {
 
@@ -367,7 +367,7 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i1=0;i1<episeglist[fm2].size();i1++) {
-      //vcl_cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm2][i1]->min_angle()<<" "<<episeglist[fm2][i1]->max_angle()<<std::endl;
       if (episeglist[fm2][i1]->min_angle() <=ang&&episeglist[fm2][i1]->max_angle() >=ang) {
         //if (episeglist[fm2][i1]->index(ang)) {
         if (episeglist[fm2][i1]->dist(ang)<x1) {
@@ -380,7 +380,7 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     }
 
     for (unsigned i2=0;i2<episeglist[fm3].size();i2++) {
-      //vcl_cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<vcl_endl;
+      //std::cout<<episeglist[fm3][i2]->min_angle()<<" "<<episeglist[fm3][i2]->max_angle()<<std::endl;
       if (episeglist[fm3][i2]->min_angle() <=ang&&episeglist[fm3][i2]->max_angle() >=ang) {
         //if (episeglist[fm3][i2]->index(ang)) {
         if (episeglist[fm3][i2]->dist(ang)<x2) {
@@ -394,25 +394,25 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
     // if 3 points are not determined continue
     if (!selected0 || !selected1 || !selected2) continue;
 
-    // double c=vcl_sqrt(vcl_pow(x2-xe,2)+vcl_pow(y2-ye,2));
-    // double b=vcl_sqrt(vcl_pow(x1-xe,2)+vcl_pow(y1-ye,2));
-    // double a=vcl_sqrt(vcl_pow(x0-xe,2)+vcl_pow(y0-ye,2));
+    // double c=std::sqrt(std::pow(x2-xe,2)+std::pow(y2-ye,2));
+    // double b=std::sqrt(std::pow(x1-xe,2)+std::pow(y1-ye,2));
+    // double a=std::sqrt(std::pow(x0-xe,2)+std::pow(y0-ye,2));
     double c=x2; double  b=x1;double a=x0;
 
-    double cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-    double bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-    double ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
+    double cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+    double bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+    double ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
 
     ratio=(b-a)/(c-a)*c/b;
 
-    if (DEBUG) vcl_cout<<" camera ratio is: "<< ang <<" "<<ratio<<vcl_endl;
-    //vcl_cout<< ang <<" "<<ratio<<vcl_endl;
+    if (DEBUG) std::cout<<" camera ratio is: "<< ang <<" "<<ratio<<std::endl;
+    //std::cout<< ang <<" "<<ratio<<std::endl;
 
 
 
     vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x0pt.pt(), P1, x2pt.pt(), P3);
-    //vcl_cout<<point_3d<<vcl_endl;
-    //vcl_cout<<"1 vs 3: "<<point_3d<<vcl_endl;
+    //std::cout<<point_3d<<std::endl;
+    //std::cout<<"1 vs 3: "<<point_3d<<std::endl;
     point_3d_rear_list.push_back(point_3d);
 
     ratios temp_ratios;
@@ -447,9 +447,9 @@ double dbcri_whole_process::cameras_fast1(int fm1, int fm2, int fm3,
 
 
 
-  //for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
+  //for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = cameras_.begin();
   //  C_itr != cameras_.end();  ++C_itr )
-  //vcl_cout << "Camera " << C_itr->first << "\n" << C_itr->second << vcl_endl;
+  //std::cout << "Camera " << C_itr->first << "\n" << C_itr->second << std::endl;
 
 
   double r=histogram_method_for_finding_cross_ratio(ratios_front_list,ratios_rear_list);

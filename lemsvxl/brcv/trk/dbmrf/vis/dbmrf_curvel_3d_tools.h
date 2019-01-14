@@ -32,7 +32,7 @@ public:
   virtual ~dbmrf_curvel_3d_inspect_tool();
 
   //: Return the name of the tool
-  virtual vcl_string name() const { return "Inspect Curvel 3D";}
+  virtual std::string name() const { return "Inspect Curvel 3D";}
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 

@@ -5,8 +5,8 @@
 #include "basegui_style.h"
 #include "basegui_xform.h"
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #ifndef NDEBUG
 #define SCENEGRAPH_DEBUG 1
@@ -56,8 +56,8 @@ public:
   virtual void pushXForm(const XForm &x);
 
   virtual void pop();
-    virtual int  getInformation(vcl_string &) { return 0; };
-    virtual int  getInformation(vcl_string &, Point2D<double> pt) { return 0; };
+    virtual int  getInformation(std::string &) { return 0; };
+    virtual int  getInformation(std::string &, Point2D<double> pt) { return 0; };
 
  public:
   // local api, used by the node classes for scene-graph managment
@@ -79,7 +79,7 @@ public:
   virtual void pushLocalNodeAbove(LocalPropertyNode *new_parent);
 
  public:
-  virtual int getPoints_(vcl_vector<Point2D<double> >& pts_);
+  virtual int getPoints_(std::vector<Point2D<double> >& pts_);
   virtual bool setPoint_(int id_, const Point2D<double> pt_);
   bool supportSelect_();
 
@@ -90,7 +90,7 @@ public:
 
 class Group : public GraphicsNode {
 private:
-  typedef vcl_vector<GraphicsNode*> children_t;
+  typedef std::vector<GraphicsNode*> children_t;
   children_t _children;
 
 public:

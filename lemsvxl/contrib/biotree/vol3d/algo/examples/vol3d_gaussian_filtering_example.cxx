@@ -21,8 +21,8 @@
 //   06-06-06 - H. Can Aras - Added functions used for debugging purposes
 // \endverbatim
 
-#include <vcl_ctime.h>
-#include <vcl_vector.h>
+#include <ctime>
+#include <vector>
 
 #include <vil/vil_load.h>
 #include <vil3d/vil3d_image_resource.h>
@@ -45,31 +45,31 @@
 int VERSION = 2;
 int KERNEL_SIZE = 10;
 
-int file_check(vcl_string logfile, vcl_string scanfile, vcl_string boxfile)
+int file_check(std::string logfile, std::string scanfile, std::string boxfile)
 {
   //file extension check
-    vcl_size_t dot_pos = logfile.find_first_of(".");
-    if(vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
+    std::size_t dot_pos = logfile.find_first_of(".");
+    if(std::strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && std::strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified log file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified log file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     dot_pos = scanfile.find_first_of(".");
-    if(vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
+    if(std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
     {
-      vcl_cout << "************************************************" << vcl_endl;
-      vcl_cout << "The specified scan file extension is not correct" << vcl_endl;
-      vcl_cout << "************************************************" << vcl_endl;
+      std::cout << "************************************************" << std::endl;
+      std::cout << "The specified scan file extension is not correct" << std::endl;
+      std::cout << "************************************************" << std::endl;
       return 1;
     }
     dot_pos = boxfile.find_first_of(".");
-    if(vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
+    if(std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified box file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified box file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     return 1;
@@ -83,35 +83,35 @@ void round_box_limits(int width, int height, int depth,
                       vgl_point_3d<double> box_min, vgl_point_3d<double> box_max, 
                       int &minx, int &miny, int &minz, int &maxx, int &maxy, int &maxz)
 {
-  if(box_min.x() - vcl_floor(box_min.x()) >= 0.5)
-    minx = int(vcl_ceil(box_min.x()));
+  if(box_min.x() - std::floor(box_min.x()) >= 0.5)
+    minx = int(std::ceil(box_min.x()));
   else
-    minx = int(vcl_floor(box_min.x()));
+    minx = int(std::floor(box_min.x()));
 
-  if(box_max.x() - vcl_floor(box_max.x()) >= 0.5)
-    maxx = int(vcl_ceil(box_max.x()));
+  if(box_max.x() - std::floor(box_max.x()) >= 0.5)
+    maxx = int(std::ceil(box_max.x()));
   else
-    maxx = int(vcl_floor(box_max.x()));
+    maxx = int(std::floor(box_max.x()));
 
-  if(box_min.y() - vcl_floor(box_min.y()) >= 0.5)
-    miny = int(vcl_ceil(box_min.y()));
+  if(box_min.y() - std::floor(box_min.y()) >= 0.5)
+    miny = int(std::ceil(box_min.y()));
   else
-    miny = int(vcl_floor(box_min.y()));
+    miny = int(std::floor(box_min.y()));
 
-  if(box_max.y() - vcl_floor(box_max.y()) >= 0.5)
-    maxy = int(vcl_ceil(box_max.y()));
+  if(box_max.y() - std::floor(box_max.y()) >= 0.5)
+    maxy = int(std::ceil(box_max.y()));
   else
-    maxy = int(vcl_floor(box_max.y()));
+    maxy = int(std::floor(box_max.y()));
 
-  if(box_min.z() - vcl_floor(box_min.z()) >= 0.5)
-    minz = int(vcl_ceil(box_min.z()));
+  if(box_min.z() - std::floor(box_min.z()) >= 0.5)
+    minz = int(std::ceil(box_min.z()));
   else
-    minz = int(vcl_floor(box_min.z()));
+    minz = int(std::floor(box_min.z()));
 
-  if(box_max.z() - vcl_floor(box_max.z()) >= 0.5)
-    maxz = int(vcl_ceil(box_max.z()));
+  if(box_max.z() - std::floor(box_max.z()) >= 0.5)
+    maxz = int(std::ceil(box_max.z()));
   else
-    maxz = int(vcl_floor(box_max.z()));
+    maxz = int(std::floor(box_max.z()));
 
   if(minx < 0)
     minx = 0;
@@ -135,8 +135,8 @@ void round_box_limits(int width, int height, int depth,
 template <class T> void save_ROI(vil3d_image_view<T> view, const char *filename, 
                                  int minx, int miny, int minz, int maxx, int maxy, int maxz)
 {
-  FILE *fp = vcl_fopen(filename, "w");
-  vcl_fprintf(fp, "%d %d %d\n", maxx-minx+1, maxy-miny+1, maxz-minz+1);
+  FILE *fp = std::fopen(filename, "w");
+  std::fprintf(fp, "%d %d %d\n", maxx-minx+1, maxy-miny+1, maxz-minz+1);
   int indexz = 0;
   for(int k = minz; k <= maxz; k++)
   {
@@ -146,24 +146,24 @@ template <class T> void save_ROI(vil3d_image_view<T> view, const char *filename,
       int indexx = 0;
       for(int i = minx; i <= maxx; i++)
       {
-        vcl_fprintf(fp, "%d ", static_cast<unsigned short>(view(i,j,k)));
+        std::fprintf(fp, "%d ", static_cast<unsigned short>(view(i,j,k)));
         indexx++;
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
       indexy++;
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
     indexz++;
   }
   fclose(fp);
 }
 
 template <class T>
-void run_proc(bool radius_det, vcl_string radius_fname,
+void run_proc(bool radius_det, std::string radius_fname,
               vil3d_image_resource_sptr img_res_sptr,
-              vcl_vector<vol3d_gaussian_kernel_3d> &kernel_list,
+              std::vector<vol3d_gaussian_kernel_3d> &kernel_list,
               //vgl_box_3d<double> &recon_box,
-              vcl_ofstream& xml_file)
+              std::ofstream& xml_file)
 {
 
   vol3d_gaussian_filtering_proc<T> proc(img_res_sptr, kernel_list);
@@ -172,8 +172,8 @@ void run_proc(bool radius_det, vcl_string radius_fname,
     if (radius_fname.size() > 0) {
         // it is going to use the given radius data while computing filter resp.
         vil3d_image_resource_sptr radius_res_sptr = vil3d_load_image_resource(radius_fname.c_str()); 
-        vcl_cout << "Radius ni=" << radius_res_sptr->ni() << " nj=" << radius_res_sptr->nj() << 
-        " nk=" << radius_res_sptr->nk() << vcl_endl;
+        std::cout << "Radius ni=" << radius_res_sptr->ni() << " nj=" << radius_res_sptr->nj() << 
+        " nk=" << radius_res_sptr->nk() << std::endl;
         proc.execute_with_rad_det(radius_res_sptr);
       } else {
         // no radius data is given, it will compute it itself before filtering
@@ -190,42 +190,42 @@ void run_proc(bool radius_det, vcl_string radius_fname,
 int main(int argc, char** argv)
 {
   proc_io_run_xml_parser parser;
-  vcl_FILE *xmlFile;
-  vcl_string fname="";
-  vcl_string recon_fname = "";
-  vcl_string radius_fname = "";
+  std::FILE *xmlFile;
+  std::string fname="";
+  std::string recon_fname = "";
+  std::string radius_fname = "";
   bool radius_det = false;
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    if (arg == vcl_string ("-x")) { fname = vcl_string(argv[++i]);}
+    std::string arg (argv[i]);
+    if (arg == std::string ("-x")) { fname = std::string(argv[++i]);}
 
     // this argument can be a volume data file like *.gipl or a path with wild characters to the 
     // reconstructed images like: C:\\test_images\\filters\\newcast35um2_orig\\scan35um_rec####.bmp
-    else if (arg == vcl_string ("-b")) {recon_fname = vcl_string(argv[++i]);}
-    else if (arg == vcl_string ("-r")) {
+    else if (arg == std::string ("-b")) {recon_fname = std::string(argv[++i]);}
+    else if (arg == std::string ("-r")) {
       radius_det = true;  
       if ((i+1) < argc)
-        radius_fname = vcl_string(argv[++i]);}
+        radius_fname = std::string(argv[++i]);}
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-x xml_script] " << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-x xml_script] " << std::endl;
       throw -1;
     }
   }
   
   if (  fname == ""){
-    vcl_cout << "XML File not specified" << vcl_endl; 
+    std::cout << "XML File not specified" << std::endl; 
     return(1);
   }
 
   if (  recon_fname == ""){
-    vcl_cout << "3D Data File (Path) not specified" << vcl_endl; 
+    std::cout << "3D Data File (Path) not specified" << std::endl; 
     return(1);
   }
     
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile){
     fprintf(stderr, " %s error on opening", fname.c_str() );
     return(1);
@@ -239,21 +239,21 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  vcl_cout << "parsing finished!" << vcl_endl;
+  std::cout << "parsing finished!" << std::endl;
 
   // get the parameters from parser
-  static vcl_string logfile = parser.log();
-  static vcl_string scanfile = parser.scan();
-  static vcl_string boxfile = parser.box();
+  static std::string logfile = parser.log();
+  static std::string scanfile = parser.scan();
+  static std::string boxfile = parser.box();
   double filter_radius = parser.filter_radius();
   double filter_length = parser.filter_length();
-  static vcl_string outputfile = parser.output_file();
+  static std::string outputfile = parser.output_file();
 
   if (file_check(logfile, scanfile, boxfile) == 0)
     return 1;
  
   // open output file to write the xml elements and the filter response
-  vcl_ofstream xml_file(outputfile.data());
+  std::ofstream xml_file(outputfile.data());
   xml_file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << "\n";
 
   // create a main node for the whole xml document
@@ -263,13 +263,13 @@ int main(int argc, char** argv)
 
   imgr_skyscan_log log(logfile.data());
   xscan_scan scan = log.get_scan();
-  vcl_cout << "SCAN BEFORE\n" << scan << vcl_endl;
+  std::cout << "SCAN BEFORE\n" << scan << std::endl;
 
-  vcl_ifstream scan_file(scanfile.c_str());
+  std::ifstream scan_file(scanfile.c_str());
   scan_file >> scan;
   scan_file.close();
 
-  vcl_cout << "SCAN AFTER\n" << scan << vcl_endl;
+  std::cout << "SCAN AFTER\n" << scan << std::endl;
   x_write(xml_file, scan);
 
 
@@ -277,12 +277,12 @@ int main(int argc, char** argv)
   x_write(xml_file, log);
 
   //get the box
-  vcl_ifstream box_file(boxfile.c_str());
+  std::ifstream box_file(boxfile.c_str());
   vgl_box_3d<double> box;
   box.read(box_file);
 
   box_file.close();
-  vcl_cout << "BOX\n" << box << vcl_endl;
+  std::cout << "BOX\n" << box << std::endl;
   x_write(xml_file, box, "processing_box");
       
   // filter 3d
@@ -291,10 +291,10 @@ int main(int argc, char** argv)
 
   imgr_skyscan_reconlog header(logfile.data(), scan);
 
-  vcl_vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
+  std::vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
 
   // create gaussian filter kernels
-  vcl_vector<vol3d_gaussian_kernel_3d> kernel_list;
+  std::vector<vol3d_gaussian_kernel_3d> kernel_list;
   double sigma_r = f_radius;
   double sigma_z = f_length/2.0;
   for (unsigned i=0; i<orientation_list.size(); i++) {

@@ -105,7 +105,7 @@ merge_io_storage()
   input_vsol.vertical_cast(repository_sptr->get_data_by_name(vsol2d_name_));
 
   // parse through all the vsol classes and obtain curve objects only
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
 
   //search for regions (polygons or polylines)
@@ -150,7 +150,7 @@ merge_io_storage()
         vsol_polygon_2d_sptr poly = region->cast_to_polygon();
 
         // turn into a vgl_polygon
-        vcl_vector<vgl_point_2d<double > > pts;
+        std::vector<vgl_point_2d<double > > pts;
         for (unsigned m=0; m<poly->size(); ++m)
         {
           pts.push_back(poly->vertex(m)->get_p());
@@ -208,7 +208,7 @@ bool dbdet_manual_seg_tool::handle( const vgui_event & e,
     ctracer.trace(binary_img_);
 
     //get the interesting contours
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    std::vector< vsol_spatial_object_2d_sptr > contours;
     for (unsigned i=0; i<ctracer.contours().size(); i++)
     {
       if ((int)(ctracer.contours()[i].size()) >= 30)
@@ -236,7 +236,7 @@ bool dbdet_manual_seg_tool::handle( const vgui_event & e,
       seg_view_ = image_sptr_->get_view();
     }
     else
-      vcl_cerr<<"Cannot Undo"<<vcl_endl;
+      std::cerr<<"Cannot Undo"<<std::endl;
 
     vil_renderer_->set_image_resource(image_sptr_ );
     vil_renderer_->reread_image();
@@ -435,7 +435,7 @@ void
 dbdet_manual_seg_tool::get_popup( const vgui_popup_params& params, 
                                  vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( "Set brush size", new seg_tool_set_brush_size__command(this) );
 

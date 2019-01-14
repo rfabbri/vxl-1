@@ -39,17 +39,17 @@ preprocess(dbsk2d_boundary_sptr boundary, bool talkative)
 
   if (talkative)
   {
-    vcl_cout << "\nAnalyzing boundary...\n";
-    vcl_cout << "Number of contours= " << boundary->preproc_contours().size() + boundary->scratch_contours().size() << vcl_endl;
-    vcl_cout << "Cell partition params:\n";
-    vcl_cout << "Number of rows =" << boundary->num_rows() << vcl_endl;
-    vcl_cout << "Number of cols =" << boundary->num_cols() << vcl_endl;
+    std::cout << "\nAnalyzing boundary...\n";
+    std::cout << "Number of contours= " << boundary->preproc_contours().size() + boundary->scratch_contours().size() << std::endl;
+    std::cout << "Cell partition params:\n";
+    std::cout << "Number of rows =" << boundary->num_rows() << std::endl;
+    std::cout << "Number of cols =" << boundary->num_cols() << std::endl;
   }
 
   //preprocess the whole boundary if no partitioning has been made
   if (boundary->num_cells()==0)
   {
-    vcl_cout << "Preprocess the whole boundary in one shot: \n";
+    std::cout << "Preprocess the whole boundary in one shot: \n";
     bnd_edge_list edges;
     dbsk2d_bnd_utils::extract_edge_list(boundary, edges);
     return this->preprocess(edges);
@@ -58,16 +58,16 @@ preprocess(dbsk2d_boundary_sptr boundary, bool talkative)
   else
   {
     if (talkative)
-      vcl_cout << "Preprocess the boundary using partitioned cells: \n";
+      std::cout << "Preprocess the boundary using partitioned cells: \n";
     for (int i=0; i< boundary->num_rows(); ++i)
       for (int j=0; j< boundary->num_cols(); ++j)
       {
         dbsk2d_bnd_cell_sptr cell = boundary->cell(i, j);
         if (talkative)
         {
-          vcl_cout << "Cell row=" << i << " column= " << j << 
-            "  number of edges= " << cell->num_bnd_edges() << vcl_endl;
-          vcl_cout << "Preprocessing... ";
+          std::cout << "Cell row=" << i << " column= " << j << 
+            "  number of edges= " << cell->num_bnd_edges() << std::endl;
+          std::cout << "Preprocessing... ";
         }
 
         ///////////////////////////////////////////////////////////////
@@ -76,8 +76,8 @@ preprocess(dbsk2d_boundary_sptr boundary, bool talkative)
         ///////////////////////////////////////////////////////////////
         if (talkative)
         {
-          vcl_cout << "done\n";
-          vcl_cout << "Number of edges after preprocessing=" << cell->edges().size() << vcl_endl;
+          std::cout << "done\n";
+          std::cout << "Number of edges after preprocessing=" << cell->edges().size() << std::endl;
         }
       }
   }
@@ -105,7 +105,7 @@ need_preprocessing(dbsk2d_boundary_sptr boundary)
 //: Pre-process a group of edges
 // Return false if preprocessing fails
 bool dbsk2d_bnd_preprocess::
-preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+preprocess(std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
 
   // 0. Remove too short lines and arcs
@@ -114,9 +114,9 @@ preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
   this->remove_short_curves(edges);
   
   // 1. Separate the edges into three groups: points, edges, lines
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_pts; 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines; 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_pts; 
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines; 
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
   this->classify_edges(edges, &bnd_pts, &bnd_lines, &bnd_arcs);
 
 
@@ -126,7 +126,7 @@ preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
   // 3. Process the lines - intersection, shortening, removing short lines
 
   // 3.0 Merge close end-points
-  vcl_list<dbsk2d_bnd_vertex_sptr > line_vertices;
+  std::list<dbsk2d_bnd_vertex_sptr > line_vertices;
   dbsk2d_bnd_utils::extract_vertex_list(bnd_lines, line_vertices);
   
   bnd_vertex_list affected_vertices;
@@ -169,7 +169,7 @@ preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
   // 4. Process the arcs
   
   // 4.0 Merge close end-points
-  vcl_list<dbsk2d_bnd_vertex_sptr > arc_vertices;
+  std::list<dbsk2d_bnd_vertex_sptr > arc_vertices;
   dbsk2d_bnd_utils::extract_vertex_list(bnd_arcs, arc_vertices);
 
   this->merge_close_vertices(&affected_vertices, &arc_vertices);
@@ -311,12 +311,12 @@ preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
 //--------------------------------------------------------
 //: Return true if the set of edges needs preprocessing
 bool dbsk2d_bnd_preprocess::
-need_preprocessing(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+need_preprocessing(std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   // Separate the edges into three groups: points, edges, lines
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_pts; 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines; 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_pts; 
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines; 
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
   this->classify_edges(edges, &bnd_pts, &bnd_lines, &bnd_arcs);
 
   bool to_return = this->lines_need_preprocessing(bnd_lines) ||
@@ -332,7 +332,7 @@ need_preprocessing(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
 //------------------------------------------------------------------------
 //: Return true if the set of points need preprocessing
 bool dbsk2d_bnd_preprocess::
-points_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
+points_need_preprocessing(const std::list<dbsk2d_bnd_edge_sptr >& bnd_pts)
 {
   for (bnd_edge_list::const_iterator eit1 = bnd_pts.begin();
     eit1 != bnd_pts.end(); ++eit1)
@@ -357,7 +357,7 @@ points_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
 //------------------------------------------------------------------------
 //: Return true if this set of line edges need preprocessor
 bool dbsk2d_bnd_preprocess::
-lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
+lines_need_preprocessing(const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines)
 {
 
   for (bnd_edge_list::const_iterator eit1 = bnd_lines.begin();
@@ -419,7 +419,7 @@ lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
 //----------------------------------------------------------------------
 //: Return true if this set of line edges need preprocessor
 bool dbsk2d_bnd_preprocess::
-point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,                               const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
+point_lines_need_preprocessing(const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines,                               const std::list<dbsk2d_bnd_edge_sptr >& bnd_pts)
 {
   for (bnd_edge_list::const_iterator line_it = bnd_lines.begin();
     line_it != bnd_lines.end(); ++line_it)
@@ -453,7 +453,7 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //void dbsk2d_boundary::
 //PreProcessBoundary (void)
 //{
-//  vcl_cout<< "Boundary Preprocessing\n";
+//  std::cout<< "Boundary Preprocessing\n";
 //
 //  dbsk2d_ishock_bpoint *bp1, *bp2;
 //  belm_map_iter i, j, temp;
@@ -565,30 +565,30 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //
 //  //To make it a less than O(N^2) operation, let's bin the points first
 //
-//  vcl_cout << "**********************************************" <<vcl_endl;
-//  vcl_cout << "Edge Results Preprocessing for DT" << vcl_endl;
-//  vcl_cout << "**********************************************" <<vcl_endl;
+//  std::cout << "**********************************************" <<std::endl;
+//  std::cout << "Edge Results Preprocessing for DT" << std::endl;
+//  std::cout << "**********************************************" <<std::endl;
 //
 //  //long sec1 = clock();
 //
-//  vcl_list<int> ** ImgBins;
-//  ImgBins = new vcl_list<int> *[1001];
+//  std::list<int> ** ImgBins;
+//  ImgBins = new std::list<int> *[1001];
 //  for (int j=0; j<1001;j++)
-//    ImgBins[j] = new vcl_list<int>[1001];
+//    ImgBins[j] = new std::list<int>[1001];
 //
 //  //long sec2 = clock();
 //
-//  //vcl_cout << "init Bins Time: "<<sec2-sec1<<" msec."<<vcl_endl;
-//  vcl_cout << "Binning the Edge points" << vcl_endl;
+//  //std::cout << "init Bins Time: "<<sec2-sec1<<" msec."<<std::endl;
+//  std::cout << "Binning the Edge points" << std::endl;
 //
-//  //keep the elements to delete in this vcl_set
-//  vcl_set<int> elmsToDel;
+//  //keep the elements to delete in this std::set
+//  std::set<int> elmsToDel;
 //
 //  belm_map_iter i=BElmList.begin();
 //   for (; i!=BElmList.end(); i++) {
 //    dbsk2d_ishock_bpoint* bp = (dbsk2d_ishock_bpoint*)(i->second);
-//    int x =  (int)vcl_floor (bp->pt().x());
-//    int y =  (int)vcl_floor (bp->pt().y());
+//    int x =  (int)std::floor (bp->pt().x());
+//    int y =  (int)std::floor (bp->pt().y());
 //
 //    if (x>=0 && y>=0){
 //      ImgBins[x][y].push_back(bp->id());
@@ -618,8 +618,8 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //  }
 //  //long sec3 = clock();
 //
-//  vcl_cout << "Done Binning." << vcl_endl;
-//  //vcl_cout << "Fill Bins Time: "<<sec3-sec2<<" msec."<<vcl_endl;
+//  std::cout << "Done Binning." << std::endl;
+//  //std::cout << "Fill Bins Time: "<<sec3-sec2<<" msec."<<std::endl;
 //
 //  //Now the search space should be limited to a neighborhood of 9 bins only
 //  //let's do each bin seperately first
@@ -627,7 +627,7 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //  for (int x=0; x<1000; x++){
 //    for (int y=0; y<1000; y++){
 //      if (ImgBins[x][y].size()>1){
-//        vcl_list<int>::iterator m, n;
+//        std::list<int>::iterator m, n;
 //        for (m = ImgBins[x][y].begin(); m!=ImgBins[x][y].end(); m++){
 //          n=m; n++;
 //          for (;n!=ImgBins[x][y].end(); n++){
@@ -638,7 +638,7 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //            double a2 = bp2->tangent();
 //
 //            //do the angles agree?
-//            if (_dot(a1,a2) > vcl_cos(2*angle_accuracy)){
+//            if (_dot(a1,a2) > std::cos(2*angle_accuracy)){
 //              //are they really close?
 //              double dist = _distPointPoint(bp1->pt(), bp2->pt());
 //              if (dist <= position_accuracy){//dist <operator_length/2
@@ -654,10 +654,10 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //  }
 //
 //  //long sec4 = clock();
-//  //vcl_cout << "Deciding duplicates Time: "<<sec4-sec3<<" msec."<<vcl_endl;
+//  //std::cout << "Deciding duplicates Time: "<<sec4-sec3<<" msec."<<std::endl;
 //
 //  //delete all the marked elements
-//  vcl_set<int>::iterator k=elmsToDel.begin();
+//  std::set<int>::iterator k=elmsToDel.begin();
 //   for (; k!=elmsToDel.end(); k++) {
 //    int ID = *k;
 //    //dbsk2d_ishock_bpoint* curBElm = (dbsk2d_ishock_bpoint*)BElmList[ID];
@@ -669,7 +669,7 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //  }
 //
 //  //long sec5 = clock();
-//  //vcl_cout << "Deleting duplicates Time: "<<sec5-sec4<<" msec."<<vcl_endl;
+//  //std::cout << "Deleting duplicates Time: "<<sec5-sec4<<" msec."<<std::endl;
 //
 //  //delete the bins
 //  for (int x=0; x<1001;x++){
@@ -681,7 +681,7 @@ point_lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines,
 //  delete []ImgBins;
 //
 //  //long sec6 = clock();
-//  vcl_cout << "Done Cleaning." << vcl_endl;
+//  std::cout << "Done Cleaning." << std::endl;
 //
 //}
 //

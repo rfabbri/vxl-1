@@ -22,7 +22,7 @@
 
 #include <boxm/boxm_scene.h>
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 template <unsigned dim>
 class bof_class_codebook_util
@@ -33,37 +33,37 @@ public:
   bof_class_codebook_util(bof_scene_categories_sptr category_info):category_info_(category_info){}
   
   //: Collects all features beonging to a given class
-  void collect_class_features(unsigned class_id, vcl_vector<vnl_vector_fixed<double,dim> > &features);
+  void collect_class_features(unsigned class_id, std::vector<vnl_vector_fixed<double,dim> > &features);
   
   
   void random_samples(unsigned class_id, unsigned long n_samples, 
-                      vcl_vector<vnl_vector_fixed<double,dim> > const &features, 
-                      vcl_vector<vnl_vector_fixed<double,dim> > &rnd_samples);
+                      std::vector<vnl_vector_fixed<double,dim> > const &features, 
+                      std::vector<vnl_vector_fixed<double,dim> > &rnd_samples);
   
   //: Initialize k-means according to the algorithm in Bradley98
-  vcl_vector<vnl_vector_fixed<double,dim> > init_codebook(unsigned class_id, unsigned K, unsigned long nsamples, unsigned J, unsigned max_it,
-                                                         vcl_vector<vnl_vector_fixed<double,dim> > const &features);
+  std::vector<vnl_vector_fixed<double,dim> > init_codebook(unsigned class_id, unsigned K, unsigned long nsamples, unsigned J, unsigned max_it,
+                                                         std::vector<vnl_vector_fixed<double,dim> > const &features);
   
   //: Learns the category codebook
   void learn_codebook (unsigned class_id, unsigned K, float fraction, unsigned J, unsigned max_it,
-                       vcl_vector<vnl_vector_fixed<double,dim> > &means,
-                       vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters);
+                       std::vector<vnl_vector_fixed<double,dim> > &means,
+                       std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters);
    
  
   //: Compute the probability of an object (for all testing objects), under a given class codebook
-  void compute_p_o(unsigned class_id, vcl_vector< vnl_vector_fixed<double, dim> > const &means,
-                   vcl_vector< dbcll_euclidean_cluster_light<dim> > const &class_clusters,
-                   vcl_string classification_dir);
+  void compute_p_o(unsigned class_id, std::vector< vnl_vector_fixed<double, dim> > const &means,
+                   std::vector< dbcll_euclidean_cluster_light<dim> > const &class_clusters,
+                   std::string classification_dir);
   
   //: Compute the probability of a single object, under a given class codebook
-  double compute_p_o(bsta_histogram<float> const &class_dist, vcl_vector< dbcll_euclidean_cluster_light<dim> > const &obj_clusters);
+  double compute_p_o(bsta_histogram<float> const &class_dist, std::vector< dbcll_euclidean_cluster_light<dim> > const &obj_clusters);
   
   
   //: Read the clusters in an xml file 
-  void xml_read(vcl_string xml_file, vcl_vector< vnl_vector_fixed<double, dim> > const &means,
-                vcl_vector< dbcll_euclidean_cluster_light<dim> > &clusters);
+  void xml_read(std::string xml_file, std::vector< vnl_vector_fixed<double, dim> > const &means,
+                std::vector< dbcll_euclidean_cluster_light<dim> > &clusters);
   
-  vcl_string path() { return category_info_->path_out_; }
+  std::string path() { return category_info_->path_out_; }
   
 protected:
   
@@ -74,15 +74,15 @@ protected:
 
 //: Collects all features belonging to a given class
 template <unsigned dim>
-void bof_class_codebook_util<dim>::collect_class_features(unsigned class_id, vcl_vector<vnl_vector_fixed<double,dim> > &features)
+void bof_class_codebook_util<dim>::collect_class_features(unsigned class_id, std::vector<vnl_vector_fixed<double,dim> > &features)
 {
-  vcl_cout << "Collecting category features, for class: " << category_info_->category_names_[class_id] << vcl_endl;
+  std::cout << "Collecting category features, for class: " << category_info_->category_names_[class_id] << std::endl;
   
   typedef boct_tree<short,vnl_vector_fixed<double,dim> > feature_tree_type;
   typedef boct_tree_cell<short,vnl_vector_fixed<double,dim> > feature_cell_type;
   
-  vcl_set<int> scenes_to_visit = category_info_->category_scenes_[class_id];
-  vcl_set<int>::iterator scenes_it = scenes_to_visit.begin();
+  std::set<int> scenes_to_visit = category_info_->category_scenes_[class_id];
+  std::set<int>::iterator scenes_it = scenes_to_visit.begin();
   
   for ( ; scenes_it != scenes_to_visit.end(); scenes_it++ )
   {
@@ -99,11 +99,11 @@ void bof_class_codebook_util<dim>::collect_class_features(unsigned class_id, vcl
     
     if(!(scene && valid_scene))
     {
-      vcl_cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << vcl_endl;
+      std::cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << std::endl;
       return;
     }
     
-    vcl_vector<bof_scene_object>::iterator it = category_info_->ply_paths_[*scenes_it].begin();
+    std::vector<bof_scene_object>::iterator it = category_info_->ply_paths_[*scenes_it].begin();
     for (; it!=category_info_->ply_paths_[*scenes_it].end(); it++) 
     {
       if(it->class_id != class_id)
@@ -116,8 +116,8 @@ void bof_class_codebook_util<dim>::collect_class_features(unsigned class_id, vcl
       outer_bbox = tight_bbox;
       outer_bbox.expand_about_centroid(category_info_->info_.finest_cell_length_[*scenes_it]*category_info_->bbox_scale_);
       
-      vcl_vector<feature_cell_type*> object_leaves;
-      vcl_vector<boct_tree_cell<short, bool>* > valid_leaves;
+      std::vector<feature_cell_type*> object_leaves;
+      std::vector<boct_tree_cell<short, bool>* > valid_leaves;
       
       scene->leaves_in_region(outer_bbox, object_leaves);
       valid_scene->leaves_in_region(outer_bbox, valid_leaves);
@@ -142,14 +142,14 @@ void bof_class_codebook_util<dim>::collect_class_features(unsigned class_id, vcl
 
 //: Initialize k-means according to the algorithm in Bradley98
 template <unsigned dim>
-vcl_vector<vnl_vector_fixed<double,dim> > bof_class_codebook_util<dim>::init_codebook(unsigned class_id, unsigned K, unsigned long nsamples, unsigned J, unsigned max_it,
-                                                                                vcl_vector<vnl_vector_fixed<double,dim> > const &features)
+std::vector<vnl_vector_fixed<double,dim> > bof_class_codebook_util<dim>::init_codebook(unsigned class_id, unsigned K, unsigned long nsamples, unsigned J, unsigned max_it,
+                                                                                std::vector<vnl_vector_fixed<double,dim> > const &features)
 { 
   
-  vcl_vector<vnl_vector_fixed<double,dim> > rnd_means;
-  vcl_vector<vnl_vector_fixed<double,dim> > CM;
-  vcl_vector<vcl_vector<vnl_vector_fixed<double,dim> > > FM(J);
-  vcl_vector<vcl_vector<vnl_vector_fixed<double,dim> > > initial_means(J);
+  std::vector<vnl_vector_fixed<double,dim> > rnd_means;
+  std::vector<vnl_vector_fixed<double,dim> > CM;
+  std::vector<std::vector<vnl_vector_fixed<double,dim> > > FM(J);
+  std::vector<std::vector<vnl_vector_fixed<double,dim> > > initial_means(J);
   
   random_samples(class_id, K, features, rnd_means);
   
@@ -158,28 +158,28 @@ vcl_vector<vnl_vector_fixed<double,dim> > bof_class_codebook_util<dim>::init_cod
     
     initial_means[j] = rnd_means;
     
-    vcl_vector<vnl_vector_fixed<double,dim> > subsamples;
+    std::vector<vnl_vector_fixed<double,dim> > subsamples;
     random_samples(class_id, nsamples, features, subsamples);
     
-    vcl_vector<vcl_vector<unsigned> > clusters;
-    vcl_cout << "Size subsamples: " << subsamples.size() << "\n";
+    std::vector<std::vector<unsigned> > clusters;
+    std::cout << "Size subsamples: " << subsamples.size() << "\n";
     unsigned n_iterations = dbcll_fast_k_means(subsamples, clusters, initial_means[j], max_it);
-    vcl_cout << "Number of means: " << initial_means[j].size() << "\n";
+    std::cout << "Number of means: " << initial_means[j].size() << "\n";
     subsamples.clear();
-    vcl_cout <<" Number of iterations for fast-k means is: " << n_iterations << vcl_endl;  
+    std::cout <<" Number of iterations for fast-k means is: " << n_iterations << std::endl;  
     CM.insert(CM.end(), initial_means[j].begin(), initial_means[j].end()); 
     FM[j] = initial_means[j];
   }
   
   int min_j = -1;
-  double min_sse = vcl_numeric_limits<double>::infinity();
+  double min_sse = std::numeric_limits<double>::infinity();
   
   for (unsigned j=0; j<J; j++) {
     
-    vcl_vector<vcl_vector<unsigned> > clusters;
+    std::vector<std::vector<unsigned> > clusters;
     unsigned n_iterations = dbcll_fast_k_means(CM, clusters, FM[j], max_it);
-    vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;
-    vcl_vector<dbcll_euclidean_cluster_light<dim> > all_clusters;
+    std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;
+    std::vector<dbcll_euclidean_cluster_light<dim> > all_clusters;
     dbcll_init_euclidean_clusters(CM, clusters, FM[j], all_clusters);
     double total_sse = 0.0;
     for(unsigned ci = 0; ci<all_clusters.size(); ci++){
@@ -200,8 +200,8 @@ vcl_vector<vnl_vector_fixed<double,dim> > bof_class_codebook_util<dim>::init_cod
 
 template <unsigned dim>
 void bof_class_codebook_util<dim>::random_samples(unsigned class_id, unsigned long n_samples, 
-                                             vcl_vector<vnl_vector_fixed<double,dim> > const &features, 
-                                             vcl_vector<vnl_vector_fixed<double,dim> > &rnd_samples)
+                                             std::vector<vnl_vector_fixed<double,dim> > const &features, 
+                                             std::vector<vnl_vector_fixed<double,dim> > &rnd_samples)
 {
   vnl_random rng;
   
@@ -216,20 +216,20 @@ void bof_class_codebook_util<dim>::random_samples(unsigned class_id, unsigned lo
 //: Learns the category codebook
 template <unsigned dim>
 void bof_class_codebook_util<dim>::learn_codebook(unsigned class_id, unsigned K, float fraction, unsigned J, unsigned max_it,
-                                             vcl_vector<vnl_vector_fixed<double,dim> > &means,
-                                             vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
+                                             std::vector<vnl_vector_fixed<double,dim> > &means,
+                                             std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
 {
   
-  vcl_vector<vnl_vector_fixed<double,dim> > features;
+  std::vector<vnl_vector_fixed<double,dim> > features;
   collect_class_features(class_id, features);
   unsigned long nsamples = (unsigned long)((float)features.size() * fraction);
   
   means = init_codebook(class_id, K, nsamples, J, max_it, features);
   
   //Perform fast-kmeans on all samples
-  vcl_vector<vcl_vector<unsigned> > clusters;
+  std::vector<std::vector<unsigned> > clusters;
   unsigned n_iterations = dbcll_fast_k_means(features, clusters, means, max_it);
-  vcl_cout <<" Number of iterationsfor fast-k means is: " << n_iterations << vcl_endl;  
+  std::cout <<" Number of iterationsfor fast-k means is: " << n_iterations << std::endl;  
   
   dbcll_init_euclidean_clusters(features, clusters, means, all_clusters);
   
@@ -237,8 +237,8 @@ void bof_class_codebook_util<dim>::learn_codebook(unsigned class_id, unsigned K,
 
 //: Read the clusters in an xml file 
 template <unsigned dim>
-void bof_class_codebook_util<dim>::xml_read(vcl_string xml_file, vcl_vector<vnl_vector_fixed<double, dim> > const &means,
-                                            vcl_vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
+void bof_class_codebook_util<dim>::xml_read(std::string xml_file, std::vector<vnl_vector_fixed<double, dim> > const &means,
+                                            std::vector<dbcll_euclidean_cluster_light<dim> > &all_clusters)
 {
     all_clusters.clear();
     dbcll_xml_read_and_init(all_clusters, means, xml_file);
@@ -247,14 +247,14 @@ void bof_class_codebook_util<dim>::xml_read(vcl_string xml_file, vcl_vector<vnl_
 
 //: Compute the probability of an object (for all testing objects), under a given class codebook
 template <unsigned dim>
-void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vnl_vector_fixed<double, dim> > const &means,
-                                               vcl_vector< dbcll_euclidean_cluster_light<dim> > const &class_clusters,
-                                               vcl_string classification_dir)
+void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, std::vector< vnl_vector_fixed<double, dim> > const &means,
+                                               std::vector< dbcll_euclidean_cluster_light<dim> > const &class_clusters,
+                                               std::string classification_dir)
 {
   
-  vcl_cout << "Computing object probabilities, for class: " << category_info_->category_names_[class_id] << vcl_endl;
+  std::cout << "Computing object probabilities, for class: " << category_info_->category_names_[class_id] << std::endl;
   
-  vcl_vector<float> counts(class_clusters.size(),0.0);
+  std::vector<float> counts(class_clusters.size(),0.0);
   for (unsigned cluster_idx=0; cluster_idx < class_clusters.size(); cluster_idx++) {
     counts[cluster_idx]=class_clusters[cluster_idx].size();
   }
@@ -265,8 +265,8 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
   typedef boct_tree<short,vnl_vector_fixed<double,dim> > feature_tree_type;
   typedef boct_tree_cell<short,vnl_vector_fixed<double,dim> > feature_cell_type;
   
-  vcl_set<int> scenes_to_visit = category_info_->category_scenes_[class_id];
-  vcl_set<int>::iterator scenes_it = scenes_to_visit.begin();
+  std::set<int> scenes_to_visit = category_info_->category_scenes_[class_id];
+  std::set<int>::iterator scenes_it = scenes_to_visit.begin();
   
   for ( ; scenes_it != scenes_to_visit.end(); scenes_it++ )
   {
@@ -276,7 +276,7 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
       continue;
     
     //file to write classification results
-    vcl_stringstream cl_ss;
+    std::stringstream cl_ss;
     cl_ss << classification_dir << "/scene_" << *scenes_it; 
     
     if(!vul_file::exists(cl_ss.str()))
@@ -291,11 +291,11 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
     
     if(!(scene && valid_scene))
     {
-      vcl_cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << vcl_endl;
+      std::cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << std::endl;
       return;
     }
     
-    vcl_vector<bof_scene_object>::iterator it = category_info_->ply_paths_[*scenes_it].begin();
+    std::vector<bof_scene_object>::iterator it = category_info_->ply_paths_[*scenes_it].begin();
     for (; it!=category_info_->ply_paths_[*scenes_it].end(); it++) 
     {
       if(it->class_id != class_id)
@@ -308,14 +308,14 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
       outer_bbox = tight_bbox;
       outer_bbox.expand_about_centroid(category_info_->info_.finest_cell_length_[*scenes_it]*category_info_->bbox_scale_);
       
-      vcl_vector<feature_cell_type*> object_leaves;
-      vcl_vector<boct_tree_cell<short, bool>* > valid_leaves;
+      std::vector<feature_cell_type*> object_leaves;
+      std::vector<boct_tree_cell<short, bool>* > valid_leaves;
       
       scene->leaves_in_region(outer_bbox, object_leaves);
       valid_scene->leaves_in_region(outer_bbox, valid_leaves);
             
       //get the features
-      vcl_vector<vnl_vector_fixed<double,dim> > features;
+      std::vector<vnl_vector_fixed<double,dim> > features;
       for (unsigned long i = 0; i < object_leaves.size(); i++) {
         if ((valid_leaves[i])->data()) {
           features.push_back(object_leaves[i]->data());
@@ -323,18 +323,18 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
       }
       
       //cluster this objetc's features    
-      vcl_vector<dbcll_euclidean_cluster_light<dim> > clusters_out;
+      std::vector<dbcll_euclidean_cluster_light<dim> > clusters_out;
       dbcll_compute_euclidean_clusters(features, means, clusters_out );
       double p = compute_p_o(class_hist, clusters_out);
       
       //write the clusters to file
-      vcl_stringstream ss;
+      std::stringstream ss;
       ss << classification_dir << "/scene_" << *scenes_it << "/";
       ss << "aposteriori_" << vul_file::strip_extension(vul_file::strip_directory(it->ply_path)) << ".txt";
       
-      vcl_ofstream ofs(ss.str().c_str());
+      std::ofstream ofs(ss.str().c_str());
       if(!ofs.is_open()){
-        vcl_cerr << "Failed to open " << ss.str() << " for write\n";
+        std::cerr << "Failed to open " << ss.str() << " for write\n";
         continue;
       }
       
@@ -343,7 +343,7 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
       ofs.close();
       
       
-      vcl_stringstream mesh_ss;
+      std::stringstream mesh_ss;
       mesh_ss << classification_dir << "/scene_" << *scenes_it << "/" << vul_file::strip_extension(vul_file::strip_directory(it->ply_path)) << ".xml";
       dbcll_xml_write(clusters_out, mesh_ss.str());
       
@@ -364,7 +364,7 @@ void bof_class_codebook_util<dim>::compute_p_o(unsigned class_id, vcl_vector< vn
 //: Compute the probability of a single object, under a given class codebook
 template <unsigned dim>
 double bof_class_codebook_util<dim>::compute_p_o(bsta_histogram<float> const &class_dist, 
-                                                 vcl_vector< dbcll_euclidean_cluster_light<dim> > const &obj_clusters)
+                                                 std::vector< dbcll_euclidean_cluster_light<dim> > const &obj_clusters)
 {
   double p_o  = 0.0;
   for (unsigned cluster_idx=0; cluster_idx < obj_clusters.size(); cluster_idx++) {

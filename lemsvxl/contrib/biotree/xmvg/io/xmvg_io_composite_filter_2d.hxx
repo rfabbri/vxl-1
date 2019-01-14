@@ -27,17 +27,17 @@ template<class T>
         break;
 
       default:
-        vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, xmvg_composite_filter_2d<T>&)\n"
+        std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, xmvg_composite_filter_2d<T>&)\n"
                << "           Unknown version number "<< ver << '\n';
-        is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+        is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
         return;
     }
   }
 
 template<class T>
-   void vsl_print_summary(vcl_ostream & os,const xmvg_composite_filter_2d<T> & p)
+   void vsl_print_summary(std::ostream & os,const xmvg_composite_filter_2d<T> & p)
      {
-       os << "Size: " << p.size() << vcl_endl;
+       os << "Size: " << p.size() << std::endl;
 
        unsigned size = p.size();
   
@@ -51,7 +51,7 @@ template<class T>
 #define XMVG_IO_COMPOSITE_FILTER_2D_INSTANTIATE(T) \
 template void vsl_b_write(vsl_b_ostream & , const xmvg_composite_filter_2d<T> &); \
 template void vsl_b_read(vsl_b_istream & , xmvg_composite_filter_2d<T> &); \
-template void vsl_print_summary(vcl_ostream & , const xmvg_composite_filter_2d<T> & ); \
+template void vsl_print_summary(std::ostream & , const xmvg_composite_filter_2d<T> & ); \
 VSL_VECTOR_IO_INSTANTIATE(xmvg_atomic_filter_2d<T > );
 
 #endif

@@ -49,7 +49,7 @@ public:
   virtual ~dbsk2d_ishock_bline(){};
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a () const { return vcl_string("dbsk2d_ishock_bline"); }
+  virtual std::string is_a () const { return std::string("dbsk2d_ishock_bline"); }
 
   double l() const { return _l; }
   
@@ -89,7 +89,7 @@ public:
   virtual void reconnect(dbsk2d_ishock_bpoint* oldPt, dbsk2d_ishock_bpoint* newPt);
 
   //: Return information about the object
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //: extrinsic points for drawing purposes
   virtual void compute_extrinsic_locus();

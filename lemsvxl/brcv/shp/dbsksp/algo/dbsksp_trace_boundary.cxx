@@ -20,7 +20,7 @@
 
 //: Trace boundary of an xshock graph as an ordered-list of biarcs
 bool dbsksp_trace_xgraph_boundary_as_biarc_spline(const dbsksp_xshock_graph_sptr& xgraph, 
-                                                  vcl_vector<bgld_biarc >& boundary)
+                                                  std::vector<bgld_biarc >& boundary)
 {
   // Preliminary checks
   boundary.clear();
@@ -65,7 +65,7 @@ bool dbsksp_trace_xgraph_boundary_as_biarc_spline(const dbsksp_xshock_graph_sptr
 //: Trace boundary of an xshock graph as a polygon, 
 // Paramter: "approx_ds": approximate distance between adjacent vertices
 bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgraph,
-                                             vcl_vector<vgl_point_2d<double > >& polygon,
+                                             std::vector<vgl_point_2d<double > >& polygon,
                                              double approx_ds)
 {
   // first thing first
@@ -73,12 +73,12 @@ bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgr
 
   if (approx_ds < 0)
   {
-    vcl_cout << "\nERROR: approx_ds needs to be a positive number.\n";
+    std::cout << "\nERROR: approx_ds needs to be a positive number.\n";
     return false;
   }
 
   // a) Acquire the boundary as an ordered set of biarcs
-  vcl_vector<bgld_biarc > biarc_list;
+  std::vector<bgld_biarc > biarc_list;
   if (!dbsksp_trace_xgraph_boundary_as_biarc_spline(xgraph, biarc_list))
   {
     return false;
@@ -116,12 +116,12 @@ bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgr
 vsol_polygon_2d_sptr dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgraph,
                                                              double approx_ds)
 {
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   if (!dbsksp_trace_xgraph_boundary_as_polygon(xgraph, pts, approx_ds))
     return 0;
 
   // convert to vsol_polygon_2d
-  vcl_vector<vsol_point_2d_sptr > vertices(pts.size(), 0);
+  std::vector<vsol_point_2d_sptr > vertices(pts.size(), 0);
   for (unsigned i =0; i < pts.size(); ++i)
   {
     vertices[i] = new vsol_point_2d(pts[i]);

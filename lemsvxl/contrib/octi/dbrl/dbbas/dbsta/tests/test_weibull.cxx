@@ -1,9 +1,9 @@
 #include <testlib/testlib_test.h>
 #include <dbsta/bsta_weibull.h>
-#include <vcl_string.h>
+#include <string>
 
 template <class T>
-void test_weibull_type(T epsilon, const vcl_string& type_name)
+void test_weibull_type(T epsilon, const std::string& type_name)
 {
   //test default constructor
   bsta_weibull<T> wb;

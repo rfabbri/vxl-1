@@ -1,8 +1,8 @@
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <string>
 
 #include "base_points.h"
 #include "base_geometry_functions.h"
@@ -50,7 +50,7 @@ Point2D<double> EulerSpiral::compute_end_pt(Point2D<double> start_pt, double K, 
      * */
     if (arclength<0)
       {
-        vcl_cout<< " Error:<compute_end_pt> Arc Length value is negative!! : "<<arclength<<vcl_endl;
+        std::cout<< " Error:<compute_end_pt> Arc Length value is negative!! : "<<arclength<<std::endl;
         return _start_pt;
        }
 
@@ -81,7 +81,7 @@ Point2D<double> EulerSpiral::compute_end_pt(Point2D<double> start_pt, double K, 
 
 
     //NOTE : Fixed BUG. Reduced the threshold.
-    if (vcl_fabs(gamma)<GAMMA_MIN)
+    if (std::fabs(gamma)<GAMMA_MIN)
         gamma =0;
 
     if (gamma>0) 
@@ -119,7 +119,7 @@ Point2D<double> EulerSpiral::compute_end_pt(Point2D<double> start_pt, double K, 
 
     if (gamma==0) 
       { 
-        if (vcl_fabs(K)<K_MIN)
+        if (std::fabs(K)<K_MIN)
           {
             /* straight line */
 
@@ -170,7 +170,7 @@ inline double EulerSpiral::compute_error(Point2D<double> start_pt, Point2D<doubl
     new_K2 = gamma*L+K0;
     neg_gamma = -gamma;
 
-    if (vcl_fabs(gamma)>1e-7)
+    if (std::fabs(gamma)>1e-7)
       {
         determinant = ((K0*K0)+2*gamma*2*M_PI);
         if (determinant>0)
@@ -270,7 +270,7 @@ inline double EulerSpiral::compute_error(Point2D<double> start_pt, Point2D<doubl
  * Spirallace results in _euler_spiral (class variable)
  * or in the function argument according to the value of useInternal_.
  * */
-int EulerSpiral::computeSpiral(vcl_vector<Point2D<double> > &spiral_, double step_size_, int count_, bool useInternal_)
+int EulerSpiral::computeSpiral(std::vector<Point2D<double> > &spiral_, double step_size_, int count_, bool useInternal_)
   {
     double gamma      = 0;
     double s          = 0;    /* initial (default) value; NOTE: s inthesetof: [0,L] */
@@ -390,7 +390,7 @@ int EulerSpiral::find_es_parameters(void)
     double l_step_small=0;
     double l_step_large=0;
 
-    vcl_vector<double> errors(16);
+    std::vector<double> errors(16);
     int  error_index=0; 
 
     double dist_bet_pts=0;
@@ -399,7 +399,7 @@ int EulerSpiral::find_es_parameters(void)
 
     if (_intial_bi_arc_estimates.bi_arc_params.size()==0)
       {
-        vcl_cout<<" Error : No Bi-Arcs Computed!!"<<vcl_endl;
+        std::cout<<" Error : No Bi-Arcs Computed!!"<<std::endl;
         return 0;
        }
 
@@ -426,11 +426,11 @@ int EulerSpiral::find_es_parameters(void)
 
         if (es_params.getLength()>10)
           {
-            if (vcl_fabs((es_params.getK0()+es_params.getK2()))>EPSILON)
+            if (std::fabs((es_params.getK0()+es_params.getK2()))>EPSILON)
               {
                 double temp_length=0;
 
-                temp_length = vcl_fabs((2*es_params.getTurningAngle())/(es_params.getK0()+es_params.getK2()));
+                temp_length = std::fabs((2*es_params.getTurningAngle())/(es_params.getK0()+es_params.getK2()));
 
 
                 if (temp_length<es_params.getLength())
@@ -444,26 +444,26 @@ int EulerSpiral::find_es_parameters(void)
 
 
 
-        //vcl_cout<<" Angle Diff = "<<es_params.getTurningAngle()*(180/M_PI)<<" Count = "<<discard<<vcl_endl;
-        if  (vcl_fabs(es_params.getTurningAngle())>2*M_PI)
+        //std::cout<<" Angle Diff = "<<es_params.getTurningAngle()*(180/M_PI)<<" Count = "<<discard<<std::endl;
+        if  (std::fabs(es_params.getTurningAngle())>2*M_PI)
           {
             discard++;
             if (discard>=2)
-                vcl_cout<<" Error : Both Bi-Arcs discarded as both have winding angle >360 degrees"<<vcl_endl;
+                std::cout<<" Error : Both Bi-Arcs discarded as both have winding angle >360 degrees"<<std::endl;
 
-            //  vcl_cout<<" Angle Diff = "<<es_params.getTurningAngle()*(180/M_PI)<<" Count = "<<discard<<vcl_endl;
+            //  std::cout<<" Angle Diff = "<<es_params.getTurningAngle()*(180/M_PI)<<" Count = "<<discard<<std::endl;
             break;
            }  
 
         if (bi_arc_count==1)
           {
-            if (vcl_fabs(_intial_bi_arc_estimates.bi_arc_params[1].compute_angle_diff()-_intial_bi_arc_estimates.bi_arc_params[0].compute_angle_diff())<0.001)
+            if (std::fabs(_intial_bi_arc_estimates.bi_arc_params[1].compute_angle_diff()-_intial_bi_arc_estimates.bi_arc_params[0].compute_angle_diff())<0.001)
                 break;
            }
 
 
-        k_step_large  =  vcl_fabs(es_params.getK0())/10;
-        if (vcl_fabs(k_step_large)<K_STEP)
+        k_step_large  =  std::fabs(es_params.getK0())/10;
+        if (std::fabs(k_step_large)<K_STEP)
             k_step_large = K_STEP;
 
         k_step_small  =  K_STEP;
@@ -512,9 +512,9 @@ int EulerSpiral::find_es_parameters(void)
 
                 _es_params.push_back(es_params);
 
-  //              vcl_cout<<"-----------------------------"<<vcl_endl;
-  //              vcl_cout<<es_params<<vcl_endl;
-  //              vcl_cout<<" Error ="<<prev_error*dist_bet_pts<<vcl_endl<<vcl_endl<<vcl_endl;
+  //              std::cout<<"-----------------------------"<<std::endl;
+  //              std::cout<<es_params<<std::endl;
+  //              std::cout<<" Error ="<<prev_error*dist_bet_pts<<std::endl<<std::endl<<std::endl;
                 
                 break;
                }
@@ -661,7 +661,7 @@ int EulerSpiral::find_es_parameters(void)
                    }
 
                 error=minimum(errors, error_index);
-                //vcl_cout<<" K0="<<K0<<" Length ="<<length<<" K2="<<K2<<" Error ="<<error<<vcl_endl;
+                //std::cout<<" K0="<<K0<<" Length ="<<length<<" K2="<<K2<<" Error ="<<error<<std::endl;
 
                 if ((error>=prev_error)||(error==HUGE_ERROR))
                   {
@@ -675,10 +675,10 @@ int EulerSpiral::find_es_parameters(void)
                         k_step_large *=1.5;
                     else
                       {
-                        k_step_large = vcl_fabs(K0)/10;
-                        if (vcl_fabs(k_step_large)<K_STEP)
+                        k_step_large = std::fabs(K0)/10;
+                        if (std::fabs(k_step_large)<K_STEP)
                             k_step_large = K_STEP;
-                        if (vcl_fabs(k_step_large)>10)
+                        if (std::fabs(k_step_large)>10)
                             k_step_large = K_STEP;
                        }
 
@@ -793,7 +793,7 @@ int EulerSpiral::find_es_parameters(void)
                         case 15: K0     -= k_step_small; length -= l_step_small; break;
 
 
-                        default: vcl_cout<<"<find_es_parameters> No such error Index"<<vcl_endl;
+                        default: std::cout<<"<find_es_parameters> No such error Index"<<std::endl;
                        }
                     prev_error=error;
 
@@ -813,10 +813,10 @@ int EulerSpiral::find_es_parameters(void)
                         case 3:
                               {
 
-                                k_step_large = vcl_fabs(K0)/10;
-                                if (vcl_fabs(k_step_large)<K_STEP)
+                                k_step_large = std::fabs(K0)/10;
+                                if (std::fabs(k_step_large)<K_STEP)
                                     k_step_large = K_STEP;
-                                if (vcl_fabs(k_step_large)>10)
+                                if (std::fabs(k_step_large)>10)
                                     k_step_large = K_STEP;
 
                                 l_step_large      = length/100;
@@ -829,10 +829,10 @@ int EulerSpiral::find_es_parameters(void)
                               {
                                 l_step_small = length/100;
 
-                                k_step_large = vcl_fabs(K0)/10;
-                                if (vcl_fabs(k_step_large)<K_STEP)
+                                k_step_large = std::fabs(K0)/10;
+                                if (std::fabs(k_step_large)<K_STEP)
                                     k_step_large = K_STEP;
-                                if (vcl_fabs(k_step_large)>10)
+                                if (std::fabs(k_step_large)>10)
                                     k_step_large = K_STEP;
 
                                 k_step_small = K_STEP;
@@ -844,11 +844,11 @@ int EulerSpiral::find_es_parameters(void)
 
                                 l_step_large      = length/100;
 
-                                k_step_large = vcl_fabs(K0)/10;
-                                if (vcl_fabs(k_step_large)<K_STEP)
+                                k_step_large = std::fabs(K0)/10;
+                                if (std::fabs(k_step_large)<K_STEP)
                                     k_step_large = K_STEP;
 
-                                if (vcl_fabs(k_step_large)>10)
+                                if (std::fabs(k_step_large)>10)
                                     k_step_large = K_STEP;
 
                                 k_step_small = K_STEP;
@@ -868,11 +868,11 @@ int EulerSpiral::find_es_parameters(void)
                         case 14:
                         case 15:
                               {
-                                k_step_large = vcl_fabs(K0)/10;
-                                if (vcl_fabs(k_step_large)<K_STEP)
+                                k_step_large = std::fabs(K0)/10;
+                                if (std::fabs(k_step_large)<K_STEP)
                                     k_step_large = K_STEP;
 
-                                if (vcl_fabs(k_step_large)>10)
+                                if (std::fabs(k_step_large)>10)
                                     k_step_large = K_STEP;
                                 l_step_large      = length/100;
                                }
@@ -891,9 +891,9 @@ int EulerSpiral::find_es_parameters(void)
 
 
 /* auxiliary functions */
-inline double EulerSpiral::minimum(const vcl_vector<double> &array,int& index) 
+inline double EulerSpiral::minimum(const std::vector<double> &array,int& index) 
   { 
-    vcl_vector<double>::const_iterator iter = vcl_min_element(array.begin(), array.end());
+    std::vector<double>::const_iterator iter = std::min_element(array.begin(), array.end());
 
     for (unsigned int i=0; i<array.size(); i++)
       { 
@@ -909,7 +909,7 @@ inline double EulerSpiral::minimum(const vcl_vector<double> &array,int& index)
 /*------------ Interface Functions ----------------*/
 
 
-int EulerSpiral::getDoubleParams(vcl_vector <EulerSpiralParams> &params)
+int EulerSpiral::getDoubleParams(std::vector <EulerSpiralParams> &params)
   {
     if (euc_distance(_start_pt, _end_pt)<0.01)
         return -1; 
@@ -918,9 +918,9 @@ int EulerSpiral::getDoubleParams(vcl_vector <EulerSpiralParams> &params)
     find_es_parameters();
     if (_es_params.size()<=0)
       {
-        vcl_cout<<" Warning : No ES present!"<<vcl_endl;
-        vcl_cout<<" Input Params = Start Pt ="<<_start_pt<<" Angle = "<<_start_angle*(180/M_PI)<<vcl_endl;
-        vcl_cout<<"                End   Pt ="<<_end_pt  <<" Angle = "<<_end_angle*(180/M_PI)<<vcl_endl; 
+        std::cout<<" Warning : No ES present!"<<std::endl;
+        std::cout<<" Input Params = Start Pt ="<<_start_pt<<" Angle = "<<_start_angle*(180/M_PI)<<std::endl;
+        std::cout<<"                End   Pt ="<<_end_pt  <<" Angle = "<<_end_angle*(180/M_PI)<<std::endl; 
         return -1;
        }
     else

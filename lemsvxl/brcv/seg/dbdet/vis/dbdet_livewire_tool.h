@@ -22,7 +22,7 @@
 // \endverbatim
 
 #include <bvis1/bvis1_tool.h>
-#include <vcl_map.h>
+#include <map>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_easy2D_tableau.h>
 #include <vil1/vil1_image.h>
@@ -49,7 +49,7 @@ public:
 //  virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -85,9 +85,9 @@ protected:
   
   vsol_digital_curve_2d_sptr dc;
 
-  vcl_vector<vgui_soview2D_point*> temp;
-  vcl_vector<vgui_soview2D_point*> contour;
-  vcl_vector<vcl_pair<int, int> > cor;
+  std::vector<vgui_soview2D_point*> temp;
+  std::vector<vgui_soview2D_point*> contour;
+  std::vector<std::pair<int, int> > cor;
   int last_x, last_y, last_xx, last_yy;
 
 private:

@@ -9,7 +9,7 @@
 // 
 //   This is....
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>

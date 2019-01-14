@@ -6,7 +6,7 @@
 #include <dbskfg/dbskfg_rag_graph.h>
 #include <dbskfg/dbskfg_shock_node.h>
 #include <dbskfg/dbskfg_shock_link.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 dbskfg_region_growing_transforms::dbskfg_region_growing_transforms
 ( 
@@ -30,8 +30,8 @@ void dbskfg_region_growing_transforms::grow_regions(unsigned int id)
     rag_graph_->destroy_map();
 
     // Lets keep a set of visited links
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
+    std::map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
+    std::map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
 
     for (dbskfg_rag_graph::vertex_iterator vit = 
              rag_graph_->vertices_begin(); 
@@ -64,8 +64,8 @@ void dbskfg_region_growing_transforms::grow_regions(unsigned int id)
 
     }
   
-    vcl_cout<<"Rag graph vertices after Growing: "<<
-        rag_graph_->number_of_vertices()<<vcl_endl;
+    std::cout<<"Rag graph vertices after Growing: "<<
+        rag_graph_->number_of_vertices()<<std::endl;
 
 
     // push back node 
@@ -75,9 +75,9 @@ void dbskfg_region_growing_transforms::grow_regions(unsigned int id)
     {  
         (*vit)->prune_wavefront_nodes();
         
-        vcl_set<unsigned int> rag_con_ids;
+        std::set<unsigned int> rag_con_ids;
         (*vit)->rag_contour_ids(rag_con_ids);
-        vcl_set<unsigned int>::iterator sit;
+        std::set<unsigned int>::iterator sit;
         for ( sit = rag_con_ids.begin() ; sit != rag_con_ids.end() ; ++sit)
         {
             if ( !(*vit)->endpoint_spawned_node())
@@ -93,14 +93,14 @@ void dbskfg_region_growing_transforms::grow_regions(unsigned int id)
 
 
 void dbskfg_region_growing_transforms::grow_regions(
-    vcl_vector<unsigned int>& regions_to_grow)
+    std::vector<unsigned int>& regions_to_grow)
 {
     // Destroy previous tree
     rag_graph_->destroy_map();
 
     // Lets keep a set of visited links
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
+    std::map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
+    std::map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
 
     for (dbskfg_rag_graph::vertex_iterator vit = 
              rag_graph_->vertices_begin(); 
@@ -131,9 +131,9 @@ void dbskfg_region_growing_transforms::grow_regions(
         unsigned int id_find = regions_to_grow[k];
         dbskfg_rag_node_sptr rag_node = rag_graph_->rag_node(id_find);
         
-        vcl_set<unsigned int> rag_con_ids;
+        std::set<unsigned int> rag_con_ids;
         rag_node->rag_contour_ids(rag_con_ids);
-        vcl_set<unsigned int>::iterator sit;
+        std::set<unsigned int>::iterator sit;
         for ( sit = rag_con_ids.begin() ; sit != rag_con_ids.end() ; ++sit)
         {
             if ( !rag_node->endpoint_spawned_node())
@@ -144,8 +144,8 @@ void dbskfg_region_growing_transforms::grow_regions(
         
     }
       
-    vcl_cout<<"Rag graph vertices after Growing: "<<
-        rag_graph_->number_of_vertices()<<vcl_endl;
+    std::cout<<"Rag graph vertices after Growing: "<<
+        rag_graph_->number_of_vertices()<<std::endl;
 
 
     // push back node 
@@ -155,9 +155,9 @@ void dbskfg_region_growing_transforms::grow_regions(
     {  
         (*vit)->prune_wavefront_nodes();
 
-        // vcl_set<unsigned int> rag_con_ids;
+        // std::set<unsigned int> rag_con_ids;
         // (*vit)->rag_contour_ids(rag_con_ids);
-        // vcl_set<unsigned int>::iterator sit;
+        // std::set<unsigned int>::iterator sit;
         // for ( sit = rag_con_ids.begin() ; sit != rag_con_ids.end() ; ++sit)
         // {
         //     if ( !(*vit)->endpoint_spawned_node())
@@ -183,8 +183,8 @@ dbskfg_rag_node_sptr dbskfg_region_growing_transforms::grow_region(
     dbskfg_rag_node_sptr rag_node(0);
 
     // Lets keep a set of visited links
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
-    vcl_map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
+    std::map<unsigned int,dbskfg_rag_node_sptr*> visited_nodes;
+    std::map<unsigned int,dbskfg_rag_node_sptr*>::iterator mit;
 
     for (dbskfg_rag_graph::vertex_iterator vit = 
              rag_graph_->vertices_begin(); 
@@ -211,17 +211,17 @@ dbskfg_rag_node_sptr dbskfg_region_growing_transforms::grow_region(
 
 void dbskfg_region_growing_transforms::
 expand_rag_node(dbskfg_rag_node_sptr rag_node,
-                vcl_map<unsigned int,dbskfg_rag_node_sptr*>& visited_nodes)
+                std::map<unsigned int,dbskfg_rag_node_sptr*>& visited_nodes)
 {
     
     
     // Grab wavefront
-    vcl_map<unsigned int,dbskfg_shock_node*> wavefront = 
+    std::map<unsigned int,dbskfg_shock_node*> wavefront = 
         rag_node->get_wavefront();
 
     // Put all nodes of wavefront on a stack
-    vcl_vector<dbskfg_shock_node*> stack;
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator mit;
+    std::vector<dbskfg_shock_node*> stack;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator mit;
     for ( mit = wavefront.begin() ; mit != wavefront.end() ; ++mit)
     {
 
@@ -244,8 +244,8 @@ expand_rag_node(dbskfg_rag_node_sptr rag_node,
 void dbskfg_region_growing_transforms::
 expand_wavefront(dbskfg_shock_node* snode, 
                  dbskfg_rag_node_sptr rag_node,
-                 vcl_vector<dbskfg_shock_node*>& stack,
-                 vcl_map<unsigned int,dbskfg_rag_node_sptr*>& 
+                 std::vector<dbskfg_shock_node*>& stack,
+                 std::map<unsigned int,dbskfg_rag_node_sptr*>& 
                  visited_nodes)
 {
 

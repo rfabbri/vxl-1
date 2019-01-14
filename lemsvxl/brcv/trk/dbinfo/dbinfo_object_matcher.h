@@ -19,10 +19,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <string>
+#include <cassert>
+#include <utility>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_1d.h>
 #include <vil/vil_image_resource_sptr.h>

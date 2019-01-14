@@ -8,7 +8,7 @@ xmvg_gaussian_filter_3d::xmvg_gaussian_filter_3d()
 
 xmvg_gaussian_filter_3d::xmvg_gaussian_filter_3d(xmvg_gaussian_filter_descriptor & descriptor)
 {
-  assert(descriptor.name() == vcl_string("gaussian_filter"));
+  assert(descriptor.name() == std::string("gaussian_filter"));
   descriptor_ = descriptor;
 }
 
@@ -21,9 +21,9 @@ class my_integrant : public vnl_analytic_integrant
 public:
   my_integrant(double sr, double sz, vnl_double_3 p0) : sr_(sr), sz_(sz), p0_(p0) 
   { 
-    oneoversr2_ = 1 / vcl_pow(sr_, 2); 
-    oneoversz2_ = 1 / vcl_pow(sz_, 2);
-    normalizer_ = -vcl_pow(sr_,2) / (sz_ * 2 * vcl_sqrt(2*vnl_math::pi));
+    oneoversr2_ = 1 / std::pow(sr_, 2); 
+    oneoversz2_ = 1 / std::pow(sz_, 2);
+    normalizer_ = -std::pow(sr_,2) / (sz_ * 2 * std::sqrt(2*vnl_math::pi));
   }
 
   void set_varying_params(double theta, double phi)
@@ -34,11 +34,11 @@ public:
 
   double f_(double rho)
   { 
-    double x2 = vcl_pow( p0_.get(0) + rho * vcl_sin(theta_) * vcl_cos(phi_), 2 );
-    double y2 = vcl_pow( p0_.get(1) + rho * vcl_sin(theta_) * vcl_sin(phi_), 2 );
-    double z2 = vcl_pow( p0_.get(2) + rho * vcl_cos(theta_), 2 );
+    double x2 = std::pow( p0_.get(0) + rho * std::sin(theta_) * std::cos(phi_), 2 );
+    double y2 = std::pow( p0_.get(1) + rho * std::sin(theta_) * std::sin(phi_), 2 );
+    double z2 = std::pow( p0_.get(2) + rho * std::cos(theta_), 2 );
     double term1 = oneoversr2_ * ((x2 + y2) * oneoversr2_ - 2);
-    double term2 = vcl_exp(-(x2+y2)*oneoversr2_/2) * vcl_exp(-z2*oneoversz2_/2);
+    double term2 = std::exp(-(x2+y2)*oneoversr2_/2) * std::exp(-z2*oneoversz2_/2);
     return (normalizer_ * term1 * term2);
   }
 protected:
@@ -61,10 +61,10 @@ public:
   //: constructor with the fixed parameters
   analytic_gauss_filter(double sr, double sz, vnl_double_3 p) : sr_(sr), sz_(sz), p_(p) 
   {
-    C = vcl_pow(p_.get(0),2) + vcl_pow(p_.get(1),2);
-    F = vcl_pow(p_.get(2),2);
-    sr2_ = vcl_pow(sr_, 2);
-    sz2_ = vcl_pow(sz_, 2);
+    C = std::pow(p_.get(0),2) + std::pow(p_.get(1),2);
+    F = std::pow(p_.get(2),2);
+    sr2_ = std::pow(sr_, 2);
+    sz2_ = std::pow(sz_, 2);
   }
   //: setting the varying parameters, this is normally followed by an evaluate function call
   void set_varying_params(double theta, double phi)
@@ -75,23 +75,23 @@ public:
   //: evaluating the filter value, this is normally preceded by setting varying parameters
   double evaluate()
   {
-    double sintheta = vcl_sin(theta_);
-    double costheta = vcl_cos(theta_);
-    double A = vcl_pow(sintheta,2);
-    double B = 2*sintheta*(p_.get(0)*vcl_cos(phi_) + p_.get(1)*vcl_sin(phi_));
-    double D = vcl_pow(costheta,2);
+    double sintheta = std::sin(theta_);
+    double costheta = std::cos(theta_);
+    double A = std::pow(sintheta,2);
+    double B = 2*sintheta*(p_.get(0)*std::cos(phi_) + p_.get(1)*std::sin(phi_));
+    double D = std::pow(costheta,2);
     double E = 2*p_.get(2)*costheta;
     double denominator = 2 * sr2_ * sz2_;
     double G = (A*sz2_ + D*sr2_) / denominator;
     double H = (B*sz2_ + E*sr2_) / denominator;
     double I = (C*sz2_ + F*sr2_) / denominator;
 
-    double expo = vcl_exp((vcl_pow(H,2) / (4*G) - I));
-    double all_common = 1 / (sz_ * vcl_sqrt(2*G));
+    double expo = std::exp((std::pow(H,2) / (4*G) - I));
+    double all_common = 1 / (sz_ * std::sqrt(2*G));
     double coef1 = 1;
     double partial_common = -1 / (4*sr2_*G);
     double coef2 = A;
-    double coef3 = (4*C*vcl_pow(G,2) - 2*H*B*G + A*vcl_pow(H,2)) / (2*G);
+    double coef3 = (4*C*std::pow(G,2) - 2*H*B*G + A*std::pow(H,2)) / (2*G);
 
     double val = all_common * (coef1 + partial_common * (coef2 + coef3)) * expo;
     return val;
@@ -134,8 +134,8 @@ xmvg_atomic_filter_2d<double> xmvg_gaussian_filter_3d::splat(vgl_point_3d<double
 
   vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(cam_trans, descriptor_.box());
 
-  int min_x = int(vcl_floor(box_2d.min_x()));   int max_x = int(vcl_ceil(box_2d.max_x()));
-  int min_y = int(vcl_floor(box_2d.min_y()));   int max_y = int(vcl_ceil(box_2d.max_y()));
+  int min_x = int(std::floor(box_2d.min_x()));   int max_x = int(std::ceil(box_2d.max_x()));
+  int min_y = int(std::floor(box_2d.min_y()));   int max_y = int(std::ceil(box_2d.max_y()));
 
   unsigned u_size = max_x - min_x + 1;
   unsigned v_size = max_y - min_y + 1;
@@ -175,12 +175,12 @@ xmvg_atomic_filter_2d<double> xmvg_gaussian_filter_3d::splat(vgl_point_3d<double
 
       // if the ray direction is given in the wrong direction, i.e. not towards the image plane, but away from it
       // then it should be corrected
-      rd_to_pa_angle = vcl_acos(dot_product(ray_direction, cam_trans.principal_axis()) 
+      rd_to_pa_angle = std::acos(dot_product(ray_direction, cam_trans.principal_axis()) 
                                / (ray_direction.length() * cam_trans.principal_axis().length()));
       if(rd_to_pa_angle > vnl_math::pi_over_2)
         ray_direction = -ray_direction;
-      theta = vnl_math::pi_over_2 - vcl_atan(ray_direction.z() / (vcl_sqrt(vcl_pow(ray_direction.x(),2) + vcl_pow(ray_direction.y(),2))));
-      phi = vcl_atan(ray_direction.y() / ray_direction.x());
+      theta = vnl_math::pi_over_2 - std::atan(ray_direction.z() / (std::sqrt(std::pow(ray_direction.x(),2) + std::pow(ray_direction.y(),2))));
+      phi = std::atan(ray_direction.y() / ray_direction.x());
       // if x component of the ray direction is negative, then pi degrees should be added to phi since
       // atan returns value in the range of [-pi/2,pi/2].
       if(ray_direction.x() < 0)
@@ -229,12 +229,12 @@ double xmvg_gaussian_filter_3d::splat_impulse(vgl_point_3d<double> centre, xmvg_
   ray_start = (line.point_finite());
   ray_direction.set( line.point_infinite().x(), line.point_infinite().y(), line.point_infinite().z() );
   // if the ray direction is given in the wrong direction, i.e. not towards the image plane, but away from it, it should be corrected
-  rd_to_pa_angle = vcl_acos(dot_product(ray_direction, cam_trans.principal_axis()) 
+  rd_to_pa_angle = std::acos(dot_product(ray_direction, cam_trans.principal_axis()) 
     / (ray_direction.length() * cam_trans.principal_axis().length()));
   if(rd_to_pa_angle > vnl_math::pi_over_2)
     ray_direction = -ray_direction;
-  theta = vnl_math::pi_over_2 - vcl_atan(ray_direction.z() / (vcl_sqrt(vcl_pow(ray_direction.x(),2) + vcl_pow(ray_direction.y(),2))));
-  phi = vcl_atan(ray_direction.y() / ray_direction.x());
+  theta = vnl_math::pi_over_2 - std::atan(ray_direction.z() / (std::sqrt(std::pow(ray_direction.x(),2) + std::pow(ray_direction.y(),2))));
+  phi = std::atan(ray_direction.y() / ray_direction.x());
   // if x component of the ray direction is negative, then pi degrees should be added to phi since
   // atan returns value in the range of [-pi/2,pi/2].
   if(ray_direction.x() < 0)
@@ -248,7 +248,7 @@ double xmvg_gaussian_filter_3d::splat_impulse(vgl_point_3d<double> centre, xmvg_
   return analytic_result;
 }
 
-void x_write(vcl_ostream& os, xmvg_gaussian_filter_3d f)
+void x_write(std::ostream& os, xmvg_gaussian_filter_3d f)
 {
   xmvg_gaussian_filter_descriptor fd = f.descriptor();
   x_write(os, fd);

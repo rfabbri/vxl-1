@@ -14,14 +14,14 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_algorithm.h>
-#include <vcl_cfloat.h>
-#include <vcl_cmath.h>
-#include <vcl_ctime.h>
-#include <vcl_cassert.h>
-#include <vcl_sstream.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <cfloat>
+#include <cmath>
+#include <ctime>
+#include <cassert>
+#include <sstream>
+#include <cstdlib>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 
@@ -57,13 +57,13 @@ void dbasn_gradasgn::_allocate_mem ()
   }
 
   // initialize M_: put random numbers.
-  vcl_srand ((unsigned int) vcl_time(NULL));
+  std::srand ((unsigned int) std::time(NULL));
   int s = (M_row_>M_col_) ? M_row_ : M_col_;
   for (i = 0; i<M_row_; i++)
     for (j = 0; j<M_col_; j++) {
       //M_hat_[i][j] = 1.0 + params_.init_epsilon_;
       //M_[i][j] = 1.0 + params_.init_epsilon_;
-      M_[i][j] = 1.0/s + 0.01* ( (double)vcl_rand() / (double)(RAND_MAX) );
+      M_[i][j] = 1.0/s + 0.01* ( (double)std::rand() / (double)(RAND_MAX) );
     }
 }
 
@@ -132,10 +132,10 @@ void dbasn_gradasgn::normalize_costs (const bool abs_max)
   g_->get_link_cost_max_min (g_l_max, g_l_min);
 
   if (abs_max) {
-    float n_max = vcl_max (G_n_max, g_n_max);
-    float l_max = vcl_max (G_l_max, g_l_max);
-    float n_min = vcl_max (G_n_min, g_n_min);
-    float l_min = vcl_max (G_l_min, g_l_min);
+    float n_max = std::max (G_n_max, g_n_max);
+    float l_max = std::max (G_l_max, g_l_max);
+    float n_min = std::max (G_n_min, g_n_min);
+    float l_min = std::max (G_l_min, g_l_min);
     G_->normalize_node_cost (n_max, n_min, debug_out_);
     g_->normalize_node_cost (n_max, n_min, debug_out_);
     G_->normalize_link_cost (l_max, l_min, debug_out_);
@@ -151,18 +151,18 @@ void dbasn_gradasgn::normalize_costs (const bool abs_max)
 
 bool dbasn_gradasgn::get_assignment ()
 {
-  vcl_clock_t t1 = vcl_clock();
+  std::clock_t t1 = std::clock();
 
   float T = params_.T0_;
   int iter_a = 0;
   while (T >= params_.Tf_) { // loop A 
     if (debug_out_>2)
-      vul_printf (vcl_cout, "\n%2d T: %1.3lf ", iter_a, T);
+      vul_printf (std::cout, "\n%2d T: %1.3lf ", iter_a, T);
     int iter_b = 0;
 
     while (iter_b <= params_.I0_) { // loop B: iter_b <= I0_  
       if (debug_out_>2)
-        vul_printf (vcl_cout, "  <b%d>", iter_b);
+        vul_printf (std::cout, "  <b%d>", iter_b);
       for (int a = 0; a< M_row_-1; a++)
         for (int i = 0; i<M_col_-1; i++) {
           float Qai = 0.0;
@@ -206,14 +206,14 @@ bool dbasn_gradasgn::get_assignment ()
       num_stable_ = sa.run_assign (M_hat_, M_hat_, T, params_.Is_, params_.eS_); 
       if (num_stable_ == false) { //exp. explosion.
         if (debug_out_)          
-          vcl_cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
+          std::cout << "\n\n\n\t\t  EXP. EXPLOSION in softasgn!\n\n\n";
         goto GRAD_ASGN_FINISH; 
       }
 
-      //debug: vcl_cout << "\t returned assignment matrix at temperature " << T << " is:\n";
+      //debug: std::cout << "\t returned assignment matrix at temperature " << T << " is:\n";
       //debug: print_M (M_hat_, M_row_, M_col_);      
       //debug: print energy for the current assignment matrix 
-      ///vcl_cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
+      ///std::cout << "\t\t" << current_energy(M_, G_, g_) << "\n";
 
       if (test_converge_M (M_hat_, M_, params_.eB_)) { 
         copy_M (M_, M_hat_, M_row_, M_col_);
@@ -230,18 +230,18 @@ bool dbasn_gradasgn::get_assignment ()
 
 GRAD_ASGN_FINISH:
   if (debug_out_>1)
-    vcl_cout << "\nTotal iteration A: " << iter_a << vcl_endl;
+    std::cout << "\nTotal iteration A: " << iter_a << std::endl;
   //M_ is the result, put clean one in M_hat_
   make_assignment_matrix (M_, M_hat_);
   
-  vcl_clock_t t2 = vcl_clock();
+  std::clock_t t2 = std::clock();
 
   if (debug_out_>0)
     print_M (M_, M_row_, M_col_);  
   if (debug_out_>1) {
     print_M_bin (M_hat_, M_row_, M_col_);
     print_match_result ();
-    vcl_cout << "\n ==> GAassign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
+    std::cout << "\n ==> GAassign requires " << (double)(t2-t1) / CLOCKS_PER_SEC << " seconds.\n";
   }
   return num_stable_;
 }
@@ -357,7 +357,7 @@ double dbasn_gradasgn::C_ai (const int a, const int i)
   //randomly selected from a uniform distribution in the intervbal [0, 1].
   //Because two points chosen from a unifom distribution in the unit interval
   //will be on average 1/3 units apart.
-  return 1 - vcl_fabs (G_->nodes(a)->cost() - g_->nodes(i)->cost()) * 3;
+  return 1 - std::fabs (G_->nodes(a)->cost() - g_->nodes(i)->cost()) * 3;
 }
 
 //=====================================================================
@@ -379,10 +379,10 @@ double dbasn_gradasgn::C_aibj (const int a, const int b, const int i, const int 
   //randomly selected from a uniform distribution in the intervbal [0, 1].
   //Because two points chosen from a unifom distribution in the unit interval
   //will be on average 1/3 units apart.
-  double compatibility = 1 - vcl_fabs (cost_ab - cost_ij) * 3;
+  double compatibility = 1 - std::fabs (cost_ab - cost_ij) * 3;
 
   if (vnl_math::isnan (compatibility)) {
-    vcl_cout<< "Error: C_aibj NaN! ";
+    std::cout<< "Error: C_aibj NaN! ";
     assert (0);
   }
 
@@ -403,20 +403,20 @@ int dbasn_gradasgn::compare_to_gtruth (const int* labelgG, const int n_g_nodes) 
 
 void dbasn_gradasgn::print_match_result ()
 {
-  vcl_cout<< "GA matching result (G <-> g): \n";
+  std::cout<< "GA matching result (G <-> g): \n";
   //The final output, labelGg_p[M_col_-1]
   for (int i=0; i<M_row_-1; i++) {
-    vcl_cout << i <<"<->"<< labelGg_[i] << vcl_endl;
+    std::cout << i <<"<->"<< labelGg_[i] << std::endl;
   }
 }
 
 /*void dbasn_gradasgn::print_C_ai_array (const bool print_full)
 {
-  vcl_cout<<vcl_endl << "N_ai_array: "<< vcl_endl;
+  std::cout<<std::endl << "N_ai_array: "<< std::endl;
   for (int a = 0; a<M_row_-1; a++)
     for (int i = 0; i<M_col_-1; i++)
       if (print_full || C_ai_array_[a][i] != 0)
-        vcl_cout<< a <<" "<< i <<" "<< C_ai_array_[a][i] <<vcl_endl;
+        std::cout<< a <<" "<< i <<" "<< C_ai_array_[a][i] <<std::endl;
 }*/
 
 //: Compute the final similarity (as energy defined in the GA).
@@ -465,9 +465,9 @@ double dbasn_gradasgn_aug::C_ai (const int a, const int i)
   }
 
   //Count the total number of diff. #A_3, #A13, and #A1n in Na and Ni.
-  double D = vcl_abs (Na->n_rib() - Ni->n_rib()) +
-             vcl_abs (Na->n_axial() - Ni->n_axial()) +
-             vcl_abs (Na->n_dege() - Ni->n_dege());
+  double D = std::abs (Na->n_rib() - Ni->n_rib()) +
+             std::abs (Na->n_axial() - Ni->n_axial()) +
+             std::abs (Na->n_dege() - Ni->n_dege());
 
   compatibility -= 0.1 * D;
   return compatibility;

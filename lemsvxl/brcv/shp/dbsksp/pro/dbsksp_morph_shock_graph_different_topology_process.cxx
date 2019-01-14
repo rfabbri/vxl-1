@@ -33,7 +33,7 @@ dbsksp_morph_shock_graph_different_topology_process()
       double(6) )
   )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -57,7 +57,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_morph_shock_graph_different_topology_process::
+std::string dbsksp_morph_shock_graph_different_topology_process::
 name()
 { 
   return "Morph Shock Graph - different topology"; 
@@ -79,10 +79,10 @@ clear_output(int resize)
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_morph_shock_graph_different_topology_process::
+std::vector< std::string > dbsksp_morph_shock_graph_different_topology_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock_match");
   return to_return;
 }
@@ -91,10 +91,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_morph_shock_graph_different_topology_process::
+std::vector< std::string > dbsksp_morph_shock_graph_different_topology_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_shock" );
   to_return.push_back( "dbsksp_shock" );
   return to_return;
@@ -127,7 +127,7 @@ execute()
 
   // simple checks
   if ( this->input_data_.size() != 1 ){
-    vcl_cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
+    std::cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
     return false;
   }
 
@@ -150,9 +150,9 @@ execute()
 
 
   //// transition graphs
-  //vcl_vector<dbsksp_shock_graph_sptr > transition_graphs_1 = 
+  //std::vector<dbsksp_shock_graph_sptr > transition_graphs_1 = 
   //  morpher.transitions_tree1();
-  //vcl_vector<dbsksp_shock_graph_sptr > transition_graphs_2 = 
+  //std::vector<dbsksp_shock_graph_sptr > transition_graphs_2 = 
   //  morpher.transitions_tree2();
 
 
@@ -166,12 +166,12 @@ execute()
 
 
   //// merge the two list, back to front
-  //vcl_vector<dbsksp_shock_graph_sptr > transition_graphs = transition_graphs_1;
+  //std::vector<dbsksp_shock_graph_sptr > transition_graphs = transition_graphs_1;
 
   //// insert this the mean graph in between
   //if (success)
   //{
-  //  vcl_cout << "The final two graphs have the same topology.\n";
+  //  std::cout << "The final two graphs have the same topology.\n";
   //  sametop_morpher.morph();
   //  dbsksp_shock_graph_sptr mean_graph = 
   //    sametop_morpher.get_intermediate_graph(0.5);
@@ -180,11 +180,11 @@ execute()
   //}
   //else
   //{
-  //  vcl_cout << "The final two graphs do not have the same topology.\n";
+  //  std::cout << "The final two graphs do not have the same topology.\n";
   //}
 
   //// transition graphs for tree 1
-  //for (vcl_vector<dbsksp_shock_graph_sptr >::reverse_iterator itr = 
+  //for (std::vector<dbsksp_shock_graph_sptr >::reverse_iterator itr = 
   //  transition_graphs_2.rbegin(); itr != transition_graphs_2.rend(); ++itr)
   //{
   //  transition_graphs.push_back(*itr);
@@ -194,7 +194,7 @@ execute()
 
   //// save transition graphs to output data
   //// go backward
-  //for (vcl_vector<dbsksp_shock_graph_sptr >::reverse_iterator itr = 
+  //for (std::vector<dbsksp_shock_graph_sptr >::reverse_iterator itr = 
   //  transition_graphs.rbegin(); itr != transition_graphs.rend(); ++itr)
   //{
   //  // new storage
@@ -205,7 +205,7 @@ execute()
   //  output_shock->set_shock_graph(graph);
 
   //  // storage vector
-  //  vcl_vector<bpro1_storage_sptr > frame_storage;
+  //  std::vector<bpro1_storage_sptr > frame_storage;
   //  frame_storage.push_back(output_shock);
   //  output_data_.push_back(frame_storage);
   //}
@@ -228,8 +228,8 @@ execute()
 
 
   // storage vector
-  vcl_vector<bpro1_storage_sptr > frame1_storage;
-  vcl_vector<bpro1_storage_sptr > frame2_storage;
+  std::vector<bpro1_storage_sptr > frame1_storage;
+  std::vector<bpro1_storage_sptr > frame2_storage;
 
   // frame 1: tree1 --> mean shape
   dbsksp_shock_storage_sptr tree1_init = dbsksp_shock_storage_new();

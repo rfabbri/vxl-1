@@ -13,7 +13,7 @@ protected:
   Group* _drawing_group;
 
 public:
-  DrawingWindow(MainGUIWindow *parent, const vcl_string &title, 
+  DrawingWindow(MainGUIWindow *parent, const std::string &title, 
           BasePlugin *plugin=NULL);
   ~DrawingWindow();
 

@@ -10,7 +10,7 @@
  * 
  */
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 //!!!!!!!
 #ifndef M_PI

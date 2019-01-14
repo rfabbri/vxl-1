@@ -1,13 +1,13 @@
 #include "dbcvr_cvmatch.h"
 #include <dbcvr/dbcvr_cv_cor.h>
 
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <utility>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_math.h>
 
 //value in (-Pi,Pi]
@@ -128,10 +128,10 @@ void dbcvr_cvmatch::initializeDPCosts()
   assert (_m>0);
 
   for (int i=0;i<_n;i++) {
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _DPCost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _DPMap.push_back(tmp2);
   }
 
@@ -149,26 +149,26 @@ void dbcvr_cvmatch::initializeDPCosts()
 // Cost of matching the interval [x(i-1),x(i)]  to [y(k),y(j)].
 double dbcvr_cvmatch::computeIntervalCost(int i, int ip, int j, int jp)
 {
-  double ds1 = vcl_fabs(stretchCost (_curve1, i,ip));
-  double ds2 = vcl_fabs(stretchCost (_curve2, j,jp));
+  double ds1 = std::fabs(stretchCost (_curve1, i,ip));
+  double ds2 = std::fabs(stretchCost (_curve2, j,jp));
   double dF;
   
   if (_normalized_stretch_cost) {
     if (ds1+ds2 > 1E-5)
-      dF = vcl_pow(ds1-ds2,2)/(ds1+ds2);
+      dF = std::pow(ds1-ds2,2)/(ds1+ds2);
     else dF = 0;
   } else
-    dF = vcl_fabs(ds1-ds2);
+    dF = std::fabs(ds1-ds2);
 
   double dt1 = bendCost (_curve1, i,ip);
   double dt2 = bendCost (_curve2, j,jp);
-  double dK = vcl_fabs(dt1-dt2);
-  //double dK = vcl_fabs(curve_angleDiff(dt1, dt2));
+  double dK = std::fabs(dt1-dt2);
+  //double dK = std::fabs(curve_angleDiff(dt1, dt2));
 
   //1)The bad orientation cost from fix starting tangent!
   //double do1 = bendCost (_curve1, i,0);
   //double do2 = bendCost (_curve2, j,0);
-  //double dO = vcl_fabs(do1-do2);
+  //double dO = std::fabs(do1-do2);
 
   //2)The good orientation cost from absolute position
   /*double dx = _curve1.x(i) - _curve1.x(0);
@@ -177,7 +177,7 @@ double dbcvr_cvmatch::computeIntervalCost(int i, int ip, int j, int jp)
   dx = _curve2.x(j) - _curve2.x(0);
   dy = _curve2.y(j) - _curve2.y(0);
   double do2 = atan2 (dy, dx);
-  double dO = vcl_fabs(do1-do2);*/
+  double dO = std::fabs(do1-do2);*/
 
   double cost = dF + _R*dK; // + _R*0.2*dO;
 
@@ -213,7 +213,7 @@ void dbcvr_cvmatch::computeDPCosts ()
     }
   }
   //Kai
-  ///vcl_cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
+  ///std::cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
 }
 
 // ###########################################################
@@ -237,14 +237,14 @@ void dbcvr_cvmatch::findDPCorrespondence (void)
   i = _n-1;
   j = _m-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_DPCost[p.first][p.second]);
 
   while (ip > 0 || jp > 0) { //Ming: should be &&
     ip=_DPMap[i][j].first;
     jp=_DPMap[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_DPCost[p.first][p.second]);
   
@@ -450,34 +450,34 @@ void dbcvr_cvmatch::ListDPTable (void)
   int n = _curve1->size();
   int m = _curve2->size();
 
-  vcl_cout<< "\n===================================================";
-  vcl_cout<< "\ni j _map[i][j].first _map[i][j].second _cost[i][j]\n";  
+  std::cout<< "\n===================================================";
+  std::cout<< "\ni j _map[i][j].first _map[i][j].second _cost[i][j]\n";  
   for (int i=0;i<=n-1; i++){
     for (int j=0;j<=m-1; j++){
-      vcl_cout<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";
+      std::cout<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";
     }
   }
 }
 
 void dbcvr_cvmatch::ListAlignCurve (void)
 {
-  vcl_cout<<"=======================================\n";
-  vcl_cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
+  std::cout<<"=======================================\n";
+  std::cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
   for (unsigned int i=0;i<=finalMap()->size()-1; i++){
-    vcl_cout<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
+    std::cout<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
   }
 }
 
 void dbcvr_cvmatch::SaveDPTable (void)
 {
-  vcl_string basefname1 = _fileName1; //getBaseFileName(_fileName1);
-  vcl_string basefname2 = _fileName2; //getBaseFileName(_fileName2);
-  vcl_string basefname=basefname1+'-'+basefname2;
+  std::string basefname1 = _fileName1; //getBaseFileName(_fileName1);
+  std::string basefname2 = _fileName2; //getBaseFileName(_fileName2);
+  std::string basefname=basefname1+'-'+basefname2;
 
   //Output AlignCurve File
-  vcl_string acfname = basefname;
+  std::string acfname = basefname;
   acfname += "-ACurve.txt";
-  vcl_ofstream outfp2(acfname.c_str());
+  std::ofstream outfp2(acfname.c_str());
   for (unsigned int i=0; i<(*finalMap()).size(); i++){
     outfp2<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
   }
@@ -489,14 +489,14 @@ void dbcvr_cvmatch::SaveAlignCurve (void)
   int n = _curve1->size();
   int m = _curve2->size();
 
-  vcl_string basefname1 = _fileName1; //getBaseFileName(_fileName1);
-  vcl_string basefname2 = _fileName2; //getBaseFileName(_fileName2);
-  vcl_string basefname=basefname1+'-'+basefname2;
+  std::string basefname1 = _fileName1; //getBaseFileName(_fileName1);
+  std::string basefname2 = _fileName2; //getBaseFileName(_fileName2);
+  std::string basefname=basefname1+'-'+basefname2;
 
   //Output DPTalbe File
-  vcl_string dpfname = basefname;
+  std::string dpfname = basefname;
   dpfname += "-DPMap.txt";
-  vcl_ofstream outfp3(dpfname.c_str());
+  std::ofstream outfp3(dpfname.c_str());
   for (int i=0;i<=n-1; i++){
     for (int j=0;j<=m-1; j++){
       outfp3<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";

@@ -24,13 +24,13 @@ bool bof_combine_quantization_process_cons(bprb_func_process& pro)
 {
   using namespace bof_combine_quantization_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //bof_dir
-  input_types_[1] = "vcl_string"; //xml prefix per scene
-  input_types_[2] = "vcl_string"; //file to the common mean
-  input_types_[3] = "vcl_string"; //path out. An xml file for dbcll_clusters and a bsta_histograms.txt/.svg will be saved
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //bof_dir
+  input_types_[1] = vcl_string"; //xml prefix per scene
+  input_types_[2] = vcl_string"; //file to the common mean
+  input_types_[3] = vcl_string"; //path out. An xml file for dbcll_clusters and a bsta_histograms.txt/.svg will be saved
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -42,32 +42,32 @@ bool bof_combine_quantization_process(bprb_func_process& pro)
   using namespace bof_combine_quantization_process_globals;
   
   //get inputs
-  vcl_string bof_dir = pro.get_input<vcl_string>(0);
-  vcl_string xml_scen_prfx = pro.get_input<vcl_string>(1);
-  vcl_string common_mean_file = pro.get_input<vcl_string>(2);
-  vcl_string path_out = pro.get_input<vcl_string>(3);
+  std::string bof_dir = pro.get_input<std::string>(0);
+  std::string xml_scen_prfx = pro.get_input<std::string>(1);
+  std::string common_mean_file = pro.get_input<std::string>(2);
+  std::string path_out = pro.get_input<std::string>(3);
 
   //load the mean
   
-  vcl_ifstream mean_ifs(common_mean_file.c_str());
+  std::ifstream mean_ifs(common_mean_file.c_str());
   if(!mean_ifs.is_open()){
-    vcl_cerr << "Error: Could not open file: " << common_mean_file << "\n";
+    std::cerr << "Error: Could not open file: " << common_mean_file << "\n";
     throw;
   }
   
   unsigned num_means;
   mean_ifs >> num_means;
-  vcl_vector<vnl_vector_fixed<double, 10> > common_means(num_means);
-  vcl_cout << "In file: " << common_mean_file  << "Parsing: " << num_means << " means \n";
+  std::vector<vnl_vector_fixed<double, 10> > common_means(num_means);
+  std::cout << "In file: " << common_mean_file  << "Parsing: " << num_means << " means \n";
   
   for(unsigned i=0; i<num_means; i++){
     vnl_vector_fixed<double,10> &mean = common_means[i];
     mean_ifs >> mean;
 #ifdef DEBUG
-    vcl_cout << means_[i] << ", ";
+    std::cout << means_[i] << ", ";
 #endif
   }
-  vcl_cout << "/n";
+  std::cout << "/n";
   mean_ifs.close();
   
   

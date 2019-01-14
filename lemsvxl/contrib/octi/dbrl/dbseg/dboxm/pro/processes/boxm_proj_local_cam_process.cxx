@@ -43,7 +43,7 @@ bool boxm_proj_local_cam_process_cons(bprb_func_process& pro)
   using namespace boxm_proj_local_cam_process_globals;
   //this process takes 3 input:
   //the filename of the image, the camera and the voxel world
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned  i=0;
   input_types_[i++] = "vpgl_camera_double_sptr";   // rational camera
   input_types_[i++] = "float";   // X
@@ -55,7 +55,7 @@ bool boxm_proj_local_cam_process_cons(bprb_func_process& pro)
 
   //output
   unsigned j = 0;
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[j++] = "float"; // u
   output_types_[j++] = "float"; // v
 
@@ -67,10 +67,10 @@ bool boxm_proj_local_cam_process(bprb_func_process& pro)
 {
   using namespace boxm_proj_local_cam_process_globals;
   //static const parameters
-  static const vcl_string error = "error";
+  static const std::string error = "error";
 
   if ( pro.n_inputs() < n_inputs_ ) {
-    vcl_cout << pro.name() << " The input number should be " << n_inputs_<< vcl_endl;
+    std::cout << pro.name() << " The input number should be " << n_inputs_<< std::endl;
     return false;
   }
 
@@ -87,7 +87,7 @@ bool boxm_proj_local_cam_process(bprb_func_process& pro)
   vpgl_local_rational_camera<double>* rat_camera =
     dynamic_cast<vpgl_local_rational_camera<double>*> (camera.as_pointer());
   if (!rat_camera) {
-    vcl_cerr << "The camera input is not a rational camera\n";
+    std::cerr << "The camera input is not a rational camera\n";
     return false;
   }
 
@@ -99,7 +99,7 @@ bool boxm_proj_local_cam_process(bprb_func_process& pro)
   pro.set_output_val<float>(j++, u);
   pro.set_output_val<float>(j++, v);
 
-  vcl_cout<<"(u,v):"<<u<<','<<v<<'\n';
+  std::cout<<"(u,v):"<<u<<','<<v<<'\n';
   return true;
 }
 

@@ -42,9 +42,9 @@ vidpro1_homog_curve_process::vidpro1_homog_curve_process()
 {
     // Set up the parameters for this process
     if (
-        (!parameters()->add( "BB Filename" , "-BB_fname" , (vcl_string)"c:\\taxi\bbox_cam.txt" ) )
+        (!parameters()->add( "BB Filename" , "-BB_fname" , (std::string)"c:\\taxi\bbox_cam.txt" ) )
         ||
-        (!parameters()->add("Output Filename" , "-ptsfname", (vcl_string)"c:\\curves.vrml" ))
+        (!parameters()->add("Output Filename" , "-ptsfname", (std::string)"c:\\curves.vrml" ))
 #if 0
         ||
         // Set up the parameters for this process
@@ -106,7 +106,7 @@ vidpro1_homog_curve_process::vidpro1_homog_curve_process()
 
 
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_3D_planar_curve_reconst_process::vidpro1_3D_planar_curve_reconst_process()" << std::endl;
     }
 }
 
@@ -119,7 +119,7 @@ vidpro1_homog_curve_process::~vidpro1_homog_curve_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_homog_curve_process::name()
 {
     return "Curve Homography";
@@ -151,12 +151,12 @@ vidpro1_homog_curve_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_homog_curve_process::get_input_type()
 {
     // this process looks for an image and vsol2D storage class
     // at each input frame
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vtol" );
     to_return.push_back( "vtol" );
 
@@ -165,11 +165,11 @@ vidpro1_homog_curve_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_homog_curve_process::get_output_type()
 {  
     // this process produces a vsol2D storage class
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
 
     to_return.push_back( "vsol2D" );
     to_return.push_back( "vsol2D" );
@@ -184,8 +184,8 @@ vidpro1_homog_curve_process::execute()
 {
     // verify that the number of input frames is correct
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In vidpro1_homog_curve_process::execute() - not exactly two"
-            << " input frames" << vcl_endl;
+        std::cout << "In vidpro1_homog_curve_process::execute() - not exactly two"
+            << " input frames" << std::endl;
         return false;
     }
     clear_output();
@@ -200,10 +200,10 @@ vidpro1_homog_curve_process::execute()
 
 
     //Get necessary matrices from bbox_cam file
-    vcl_string BB_fname;
+    std::string BB_fname;
     parameters()->get_value("-BB_fname",BB_fname);
-    vcl_ifstream BB_file(BB_fname.c_str(), vcl_ios::in);
-    vcl_string str("");
+    std::ifstream BB_file(BB_fname.c_str(), std::ios::in);
+    std::string str("");
     while (str!="Transform")
     {BB_file>>str;
     }
@@ -241,7 +241,7 @@ vidpro1_homog_curve_process::execute()
     cornerpointtwo = cornerpointtwo/cornerpointtwo[3];
     cornerpointthr = cornerpointthr/cornerpointthr[3];
     cornerpointfou = cornerpointfou/cornerpointfou[3];
-    vcl_vector<vnl_double_4> corners(4);
+    std::vector<vnl_double_4> corners(4);
     corners[0] = cornerpointone;
     corners[1] = cornerpointtwo;
     corners[2] = cornerpointthr;
@@ -256,17 +256,17 @@ vidpro1_homog_curve_process::execute()
     double denom = dot_product(Normal,CameraCenter);
 
 
-    vcl_vector < vsol_spatial_object_2d_sptr > origpts;
+    std::vector < vsol_spatial_object_2d_sptr > origpts;
     
-    vcl_set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
-    vcl_set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
+    std::set<vtol_topology_object_sptr>::const_iterator u=left_img_edge->begin();
+    std::set<vtol_topology_object_sptr>::const_iterator n=right_img_edge->begin();
 
     double x1,y1;
     vidpro1_vsol2D_storage_sptr image_curve_of_L;
     vidpro1_vsol2D_storage_sptr image_curve_of_R;
    
-     vcl_vector< vsol_spatial_object_2d_sptr > left_proj;
-      vcl_vector< vsol_spatial_object_2d_sptr > right_proj;
+     std::vector< vsol_spatial_object_2d_sptr > left_proj;
+      std::vector< vsol_spatial_object_2d_sptr > right_proj;
 
     for ( ;u!=left_img_edge->end(); u++)
     {
@@ -283,7 +283,7 @@ vidpro1_homog_curve_process::execute()
         unsigned int chain_size = ech->size();
 
         vdgl_edgel_chain_sptr newcurve;
-        vcl_vector< vsol_point_2d_sptr > points; 
+        std::vector< vsol_point_2d_sptr > points; 
         for (unsigned int i=0; i<chain_size;i++)
         {
 
@@ -329,7 +329,7 @@ vidpro1_homog_curve_process::execute()
     for ( ;n!=right_img_edge->end(); n++)
     {
 
-        vcl_vector< vsol_point_2d_sptr > points; 
+        std::vector< vsol_point_2d_sptr > points; 
 
         vtol_edge_2d_sptr edge = (*n)->cast_to_edge()->cast_to_edge_2d();
         vsol_curve_2d * curve =edge->curve().ptr();
@@ -394,7 +394,7 @@ vidpro1_homog_curve_process::finish()
 }
 
 void
-vidpro1_homog_curve_process::compute_plane_params(const vcl_vector<vnl_double_4> & corners, vnl_double_4 &Normal)
+vidpro1_homog_curve_process::compute_plane_params(const std::vector<vnl_double_4> & corners, vnl_double_4 &Normal)
 {
     assert(corners.size()==4);
 

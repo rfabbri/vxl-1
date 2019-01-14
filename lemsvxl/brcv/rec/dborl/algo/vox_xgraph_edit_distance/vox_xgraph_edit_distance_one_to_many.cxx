@@ -76,7 +76,7 @@ initialize()
 
   if ( !dataset_index )
   {
-    vcl_cerr<<"\nParing index file failed!\n";
+    std::cerr<<"\nParing index file failed!\n";
     return false;
   }
 
@@ -91,13 +91,13 @@ initialize()
 
   for (unsigned i =0; i < num_shapes; ++i)
   {
-    vcl_string object_name = index_node->names()[i];
+    std::string object_name = index_node->names()[i];
     // form the full file path for the esf file
-    vcl_string esf_file = index_node->paths()[i] + "/" + object_name + ".esf";
+    std::string esf_file = index_node->paths()[i] + "/" + object_name + ".esf";
 
     if (!vul_file::exists(esf_file)) 
     {
-      vcl_cerr << "\nCannot find shock (.esf) files: " << esf_file << "\n";
+      std::cerr << "\nCannot find shock (.esf) files: " << esf_file << "\n";
       return false;
     }
     this->model_esf_files_.push_back(esf_file);
@@ -106,12 +106,12 @@ initialize()
 
 
   // Print out list of object names
-  vcl_cout << "\nModel dataset has " << this->model_object_names_.size() << " objects:\n";
+  std::cout << "\nModel dataset has " << this->model_object_names_.size() << " objects:\n";
   for (unsigned i =0; i < this->model_object_names_.size(); ++i)
   {
-    vcl_cout << "\n  " << this->model_object_names_[i];
+    std::cout << "\n  " << this->model_object_names_[i];
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
 
 
   //2) Parse query object
@@ -122,7 +122,7 @@ initialize()
   // esf file
   this->query_esf_file_ = this->params_->query_object_dir_() + "/" + this->query_object_name_ + ".esf";
 
-  vcl_cout << "Query object name: " << this->query_object_name_ << "\n";
+  std::cout << "Query object name: " << this->query_object_name_ << "\n";
 
 
   //3) Set up folder for output
@@ -178,7 +178,7 @@ perform_distance_computation()
   this->distance_query_to_models_.resize(num_models, vnl_numeric_traits<double >::maxval);
   for (unsigned i =0; i < this->model_object_names_.size(); ++i)
   {
-    vcl_string model_esf_file = this->model_esf_files_[i];
+    std::string model_esf_file = this->model_esf_files_[i];
 
     // Load model shock graph
     dbsksp_xshock_graph_sptr model_xgraph = 0;
@@ -188,7 +188,7 @@ perform_distance_computation()
 
     if (!model_xgraph)
     {
-      vcl_cout << "\nERROR: failed to load model xgraph: " << this->model_object_names_[i] << "\n";
+      std::cout << "\nERROR: failed to load model xgraph: " << this->model_object_names_[i] << "\n";
       continue;
     }
 
@@ -213,7 +213,7 @@ perform_distance_computation()
     this->distance_query_to_models_[i] = distance;
 
     // write out
-    vcl_cout 
+    std::cout 
       << "query = " << this->query_object_name_ << ", "
       << "model = " << this->model_object_names_[i] << ", "
       << "distance = " << distance << "\n";
@@ -250,8 +250,8 @@ compute_edit_distance(const dbsksp_xshock_graph_sptr& xgraph1,
 //------------------------------------------------------------------------------
 //: Load esf file
 bool vox_xgraph_edit_distance_one_to_many::
-load_esf(const vcl_string& esf_file, dbsksp_xshock_graph_sptr& xgraph, 
-    bool use_existing_xgraph, const vcl_string& xgraph_extension)
+load_esf(const std::string& esf_file, dbsksp_xshock_graph_sptr& xgraph, 
+    bool use_existing_xgraph, const std::string& xgraph_extension)
 {
   // sanitize output container
   xgraph = 0;
@@ -259,10 +259,10 @@ load_esf(const vcl_string& esf_file, dbsksp_xshock_graph_sptr& xgraph,
   //0) If xgraph file exists, load it (instead of converting from esf).
   if (use_existing_xgraph)
   {
-    vcl_string xgraph_file = vul_file::strip_extension(esf_file) + xgraph_extension;
+    std::string xgraph_file = vul_file::strip_extension(esf_file) + xgraph_extension;
     if (vul_file::exists(xgraph_file) && x_read(xgraph_file, xgraph))
     {
-      vcl_cout << "\nLoaded existing xgraph file in object folder: " 
+      std::cout << "\nLoaded existing xgraph file in object folder: " 
         << vul_file::strip_directory(xgraph_file) << ".\n";
       return true;
     }
@@ -310,7 +310,7 @@ load_esf(const vcl_string& esf_file, dbsksp_xshock_graph_sptr& xgraph,
 
   //3) Save output
   xgraph = sksp_storage->xgraph();
-  vcl_cout << "\nConverted esf file:[ " << vul_file::strip_directory(esf_file) 
+  std::cout << "\nConverted esf file:[ " << vul_file::strip_directory(esf_file) 
     << " ] to xgraph successfully.\n";
   return true;  
 }
@@ -396,7 +396,7 @@ write_out()
     return false;
 
   //2) Save edit distance
-  vcl_string data_file = this->output_prefix_ + "-xgraph_edit_distance.xml";
+  std::string data_file = this->output_prefix_ + "-xgraph_edit_distance.xml";
 
   // write an xml document for output
   bxml_document doc;

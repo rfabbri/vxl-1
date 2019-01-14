@@ -11,7 +11,7 @@
 
 #include <bof/bof_util.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <vul/vul_file_iterator.h>
 
@@ -28,10 +28,10 @@ bool bof_combine_means_process_cons(bprb_func_process& pro)
 {
   using namespace bof_combine_means_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //suffix of means to be added
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //suffix of means to be added
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "bof_feature_vector_sptr" ;  //the vector of the combined means
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -44,7 +44,7 @@ bool bof_combine_means_process(bprb_func_process& pro)
   using namespace bof_combine_means_process_globals;
   
   //get inputs
-  vcl_string means_sfx = pro.get_input<vcl_string>(0);
+  std::string means_sfx = pro.get_input<std::string>(0);
 
   bof_feature_vector_sptr fv = new bof_feature_vector;
   fv->features_.clear();
@@ -52,16 +52,16 @@ bool bof_combine_means_process(bprb_func_process& pro)
   for (vul_file_iterator fn= (means_sfx + "*"); fn; ++fn) {
 
    
-    vcl_ifstream mean_ifs(fn());
+    std::ifstream mean_ifs(fn());
     if(!mean_ifs.is_open()){
-      vcl_cerr << "Error: Could not open mean_ifs \n";
+      std::cerr << "Error: Could not open mean_ifs \n";
       return false;
     }
     
     unsigned num_means;
     mean_ifs >> num_means;
     
-    vcl_cout << "In file: " << fn() << "Parsing: " << num_means << " means \n";
+    std::cout << "In file: " << fn() << "Parsing: " << num_means << " means \n";
     
     for(unsigned i=0; i<num_means; i++){
       vnl_vector_fixed<double,10> mean;
@@ -75,7 +75,7 @@ bool bof_combine_means_process(bprb_func_process& pro)
   
   
   
-  vcl_cout << "Number of combined means: " << fv->features_.size() << " means \n";
+  std::cout << "Number of combined means: " << fv->features_.size() << " means \n";
 
   
   //store output

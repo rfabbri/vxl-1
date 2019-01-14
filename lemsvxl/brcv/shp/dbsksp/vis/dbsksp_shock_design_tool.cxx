@@ -126,7 +126,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr){
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsksp_shock_design_tool::
+std::string dbsksp_shock_design_tool::
 name() const {
   return "Shock design";
 }
@@ -426,14 +426,14 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
 
   if (this->gesture_select_e0_(e))
   {
-    vcl_cout << "gesture_select_e0_.\n";
+    std::cout << "gesture_select_e0_.\n";
     return this->handle_select_e0();
   }
 
   
   if (this->gesture_select_e1_(e))
   {
-    vcl_cout << "gesture_select_e1_.\n";
+    std::cout << "gesture_select_e1_.\n";
     return this->handle_select_e1();
   }
 
@@ -455,7 +455,7 @@ handle_display_info()
       dbsksp_soview_shock_edge_chord* chord = 
         static_cast<dbsksp_soview_shock_edge_chord* >(so);
       dbsksp_shock_edge_sptr edge = chord->edge();
-      edge->print(vcl_cout);
+      edge->print(std::cout);
       this->set_selected_edge(edge);
       if (!edge->is_vertex(this->selected_node()))
       {
@@ -478,7 +478,7 @@ handle_display_info()
         static_cast<dbsksp_soview_shock_node* >(so);
       dbsksp_shock_node_sptr node = so_node->node();
 
-      node->print(vcl_cout);
+      node->print(std::cout);
       this->set_selected_node(node);
       if (!this->selected_edge() || !this->selected_edge()->is_vertex(node))
       {
@@ -498,14 +498,14 @@ handle_change_m(double dm)
 {
   if (!this->selected_edge())
   {
-    vcl_cout << "ERROR: An edge must be selected before change_m operation\n";
+    std::cout << "ERROR: An edge must be selected before change_m operation\n";
     return true;
   }
 
   if (this->selected_edge()->source()->degree()==1 || 
     this->selected_edge()->target()->degree()==1 )
   {
-    vcl_cerr << "ERROR: A-infinity edge has a constant m = 0;\n";
+    std::cerr << "ERROR: A-infinity edge has a constant m = 0;\n";
     return true;
   }
 
@@ -515,10 +515,10 @@ handle_change_m(double dm)
   double phi_source = source->descriptor(this->selected_edge())->phi;
   double phi_target = target->descriptor(this->selected_edge())->phi;
 
-  if (vcl_abs(new_m*vcl_sin(phi_source)) > 1 || 
-    vcl_abs(new_m*vcl_sin(phi_target)) > 1)
+  if (std::abs(new_m*std::sin(phi_source)) > 1 || 
+    std::abs(new_m*std::sin(phi_target)) > 1)
   {
-    vcl_cerr << "ERROR: m would be out of the valid range. Nothing was changed.\n";
+    std::cerr << "ERROR: m would be out of the valid range. Nothing was changed.\n";
     return true;
   }
   this->selected_edge()->set_param_m(new_m);
@@ -534,7 +534,7 @@ handle_change_length(double dl)
 {
   if (!this->selected_edge())
   {
-    vcl_cerr << "ERROR: An edge must be selected before change_length operation\n";
+    std::cerr << "ERROR: An edge must be selected before change_length operation\n";
     return true;
   }
 
@@ -542,14 +542,14 @@ handle_change_length(double dl)
   if (this->selected_edge()->source()->degree()==1 || 
     this->selected_edge()->target()->degree()==1 )
   {
-    vcl_cerr << "ERROR: A-infinity edge has length=radius. It cannot be mannual changed;\n";
+    std::cerr << "ERROR: A-infinity edge has length=radius. It cannot be mannual changed;\n";
     return true;
   }
 
   double old_len = this->selected_edge()->chord_length();
   if (old_len + dl < 0)
   {
-    vcl_cerr << "ERROR: length would be < 0. Nothing was changed.\n";
+    std::cerr << "ERROR: length would be < 0. Nothing was changed.\n";
     return true;
   }
   this->selected_edge()->set_chord_length(old_len + dl);
@@ -565,20 +565,20 @@ handle_change_phi(double dphi)
 {
   if (!this->selected_node())
   {
-    vcl_cerr << "ERROR: A node must be selected before change_phi operation\n";
+    std::cerr << "ERROR: A node must be selected before change_phi operation\n";
     return true;
   }
 
   if (!this->storage()->active_edge())
   {
-    vcl_cerr << "ERROR: An active edge must be selected before change_phi operation\n";
+    std::cerr << "ERROR: An active edge must be selected before change_phi operation\n";
     return true;
   }
 
   if ((this->selected_node() != this->storage()->active_edge()->source()) &&
     (this->selected_node() != this->storage()->active_edge()->target()))
   {
-    vcl_cerr << "ERROR: Active edge must be incident to this node.\n";
+    std::cerr << "ERROR: Active edge must be incident to this node.\n";
     return true;
   }
 
@@ -648,7 +648,7 @@ handle_change_ref_dir(double rot_angle)
 bool dbsksp_shock_design_tool::
 handle_change_scale(double d_log2scale)
 {
-  double scale = vcl_exp(vnl_math::ln2 * d_log2scale);
+  double scale = std::exp(vnl_math::ln2 * d_log2scale);
   this->tableau()->shock_graph()->scale_up(scale);
 
   bvis1_manager::instance()->display_current_frame();
@@ -663,7 +663,7 @@ handle_set_ref()
 {
   if (!this->selected_node())
   {
-    vcl_cerr << "ERROR: A node must be selected before change reference nodes or direction\n";
+    std::cerr << "ERROR: A node must be selected before change reference nodes or direction\n";
     return true;
   }
 
@@ -709,7 +709,7 @@ handle_change_active_node_geom(double dx, double dy, double dpsi, double dr, dou
 {
   if (!this->selected_node() || !this->selected_edge())
   {
-    vcl_cout << "\nERROR: a node and an edge must be selected before applying change_active_node_orient.\n";
+    std::cout << "\nERROR: a node and an edge must be selected before applying change_active_node_orient.\n";
     return true;
   }
   dbsksp_shock_node_sptr v2 = this->selected_node();
@@ -720,14 +720,14 @@ handle_change_active_node_geom(double dx, double dy, double dpsi, double dr, dou
   dbsksp_shock_node_sptr v1 = e1->opposite(v2);
   if (v1->degree() != 2)
   {
-    vcl_cout << "\nERROR: There should only 1 degree-2 node between active node and ref node.\n";
+    std::cout << "\nERROR: There should only 1 degree-2 node between active node and ref node.\n";
     return true;
   }
   dbsksp_shock_edge_sptr e0 = graph->cyclic_adj_succ(e1, v1);
   dbsksp_shock_node_sptr v0 = e0->opposite(v1);
   if (v0 != graph->ref_node())
   {
-    vcl_cout << "\nERROR: Reference node must be distance-2 away from active node along active edge.\n";
+    std::cout << "\nERROR: Reference node must be distance-2 away from active node along active edge.\n";
     return true;
   }
 
@@ -771,7 +771,7 @@ handle_change_active_node_geom(double dx, double dy, double dpsi, double dr, dou
   // check consistency
   if (!ss)
   {
-    vcl_cout << "\nERROR: xnode interpolation failed.\n";
+    std::cout << "\nERROR: xnode interpolation failed.\n";
     return true;
   }
 
@@ -786,7 +786,7 @@ handle_change_active_node_geom(double dx, double dy, double dpsi, double dr, dou
 
   if (!is_consistent)
   {
-    vcl_cout << "\nERROR: xnode interpolation result is not consistent.\n";
+    std::cout << "\nERROR: xnode interpolation result is not consistent.\n";
     return true;
   }
 
@@ -851,7 +851,7 @@ handle_insert_node_at_active_edge_midpoint()
 {
   if (!this->selected_edge())
   {
-    vcl_cerr << "ERROR: An edge must be selected before insert_node operation\n";
+    std::cerr << "ERROR: An edge must be selected before insert_node operation\n";
     return true;
   }
 
@@ -859,7 +859,7 @@ handle_insert_node_at_active_edge_midpoint()
   if (this->selected_edge()->source()->degree()==1 || 
     this->selected_edge()->target()->degree()==1 )
   {
-    vcl_cerr << "ERROR: Cannot insert a node to an A-infinity edge;\n";
+    std::cerr << "ERROR: Cannot insert a node to an A-infinity edge;\n";
     return true;
   }
 
@@ -880,13 +880,13 @@ handle_extend_branch()
 {
   if (!this->selected_edge() || !this->selected_edge()->is_terminal_edge() )
   {
-    vcl_cerr << "ERROR: a terminal edge must be selected to extend the branch";
+    std::cerr << "ERROR: a terminal edge must be selected to extend the branch";
     return true;
   }
 
   if (!this->storage()->active_edge()->is_vertex(this->storage()->active_node()))
   {
-    vcl_cerr << "ERROR: active edge must be incidennt at active node\n";
+    std::cerr << "ERROR: active edge must be incidennt at active node\n";
     return true;
   }
 
@@ -978,13 +978,13 @@ execute()
 
   if (!e || !v) 
   {
-    vcl_cerr << "ERROR: No active edge or node found. " << vcl_endl;
+    std::cerr << "ERROR: No active edge or node found. " << std::endl;
     return;
   }
 
   if (v != e->source() && v != e->target()) 
   {
-    vcl_cerr << "ERROR: Active edge is not incident to active node.\n";
+    std::cerr << "ERROR: Active edge is not incident to active node.\n";
     return;
   }
     
@@ -1034,21 +1034,21 @@ execute()
   dbsksp_shock_storage_sptr storage = this->tool()->storage();
   if (!storage->active_node())
   {
-    vcl_cerr << "ERROR: A node must be selected before insert_A_infty_branch"
+    std::cerr << "ERROR: A node must be selected before insert_A_infty_branch"
       << " operation\n";
     return;
   }
 
   if (!storage->active_edge())
   {
-    vcl_cerr << "ERROR: An active edge must be selected before insert_A_infty_branch"
+    std::cerr << "ERROR: An active edge must be selected before insert_A_infty_branch"
       << " operation\n";
     return;
   }
 
   if (! storage->active_edge()->is_vertex(storage->active_node()))
   {
-    vcl_cerr << "ERROR: Active edge must be incident to active node.\n";
+    std::cerr << "ERROR: Active edge must be incident to active node.\n";
     return;
   }
 
@@ -1057,11 +1057,11 @@ execute()
   
   if (storage->shock_graph()->insert_A_infty_branch(active_node, active_edge))
   {
-    vcl_cout << "A new A_infty branch has been created.\n";
+    std::cout << "A new A_infty branch has been created.\n";
   }
   else
   {
-    vcl_cout << "Something goes wrong while creating new A_infty branch.\n"
+    std::cout << "Something goes wrong while creating new A_infty branch.\n"
       << "No branch was created\n";
   }
   
@@ -1086,25 +1086,25 @@ execute()
   // Preliminary checks
   if (!storage->active_edge() || !storage->active_node())
   {
-    vcl_cerr << "ERROR: Need to specify active_node and active_edge before "
+    std::cerr << "ERROR: Need to specify active_node and active_edge before "
       << " delete_A_infty_branch operation\n";
     return;
   }
 
   if ( !storage->active_edge()->is_vertex(storage->active_node()) )
   {
-    vcl_cerr << "ERROR: active_edge needs to be incident to active_node.\n";
+    std::cerr << "ERROR: active_edge needs to be incident to active_node.\n";
     return;
   }
 
   if ( !storage->active_edge()->is_terminal_edge() )
   {
-    vcl_cerr << "ERROR: active_edge needs to be a terminal edge.\n";
+    std::cerr << "ERROR: active_edge needs to be a terminal edge.\n";
   }
 
   if ( storage->active_node()->degree() < 3 )
   {
-    vcl_cerr << "ERROR: active_node must have degree at least 3.\n";
+    std::cerr << "ERROR: active_node must have degree at least 3.\n";
   }
 
   // The mission : Remove the terminal edge !
@@ -1148,13 +1148,13 @@ execute()
 void dbsksp_tool_squeeze_shock_edge_command::
 execute()
 {
-  vcl_cout << "Command: convert a short edge to a node.\n";
+  std::cout << "Command: convert a short edge to a node.\n";
   dbsksp_shock_graph_sptr graph = this->tool()->storage()->shock_graph();
   dbsksp_shock_edge_sptr edge = this->tool()->storage()->active_edge();
 
   if (!edge)
   {
-    vcl_cerr << "ERROR: an edge has to be selected first.\n";
+    std::cerr << "ERROR: an edge has to be selected first.\n";
     return;
   }
 
@@ -1162,7 +1162,7 @@ execute()
   if ( edge == graph->ref_edge() || edge->source() == graph->ref_node() ||
     edge->target() == graph->ref_node() )
   {
-    vcl_cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
+    std::cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
     return;
   }
 
@@ -1170,12 +1170,12 @@ execute()
   dbsksp_shock_node_sptr node = graph->squeeze_shock_edge(edge);
   if (!node)
   {
-    vcl_cout << "Operation failed.\n";
+    std::cout << "Operation failed.\n";
   }
   else
   {
-    vcl_cout << "Conversion compleleted.\n";
-    node->print(vcl_cout);
+    std::cout << "Conversion compleleted.\n";
+    node->print(std::cout);
   }
 
   graph->compute_all_dependent_params();
@@ -1198,13 +1198,13 @@ execute()
 void dbsksp_tool_remove_leaf_edge_command::
 execute()
 {
-  vcl_cout << "Command: Remove a leaf edge.\n";
+  std::cout << "Command: Remove a leaf edge.\n";
   dbsksp_shock_graph_sptr graph = this->tool()->storage()->shock_graph();
   dbsksp_shock_edge_sptr edge = this->tool()->storage()->active_edge();
 
   if (!edge)
   {
-    vcl_cerr << "ERROR: an edge has to be selected first.\n";
+    std::cerr << "ERROR: an edge has to be selected first.\n";
     return;
   }
 
@@ -1212,20 +1212,20 @@ execute()
   if ( edge == graph->ref_edge() || edge->source() == graph->ref_node() ||
     edge->target() == graph->ref_node() )
   {
-    vcl_cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
+    std::cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
     return;
   }
 
   dbsksp_shock_node_sptr node = graph->remove_leaf_A_1_2_edge(edge);
   if (!node)
   {
-    vcl_cerr << "ERROR: active edge is not a leaf edge.\n"
+    std::cerr << "ERROR: active edge is not a leaf edge.\n"
       << "Operation failed.\n";
   }
   else
   {
-    vcl_cout << "Leaf edge removal compleleted.\n";
-    node->print(vcl_cout);
+    std::cout << "Leaf edge removal compleleted.\n";
+    node->print(std::cout);
   }
 
   graph->compute_all_dependent_params();
@@ -1242,13 +1242,13 @@ execute()
 void dbsksp_tool_remove_internal_edge_command::
 execute()
 {
-  vcl_cout << "Command: Remove a leaf edge.\n";
+  std::cout << "Command: Remove a leaf edge.\n";
   dbsksp_shock_graph_sptr graph = this->tool()->storage()->shock_graph();
   dbsksp_shock_edge_sptr edge = this->tool()->storage()->active_edge();
 
   if (!edge)
   {
-    vcl_cerr << "ERROR: an edge has to be selected first.\n";
+    std::cerr << "ERROR: an edge has to be selected first.\n";
     return;
   }
 
@@ -1256,20 +1256,20 @@ execute()
   if ( edge == graph->ref_edge() || edge->source() == graph->ref_node() ||
     edge->target() == graph->ref_node() )
   {
-    vcl_cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
+    std::cerr << "ERROR: Either active_node is a ref_node or active_edge is a ref_edge.\n";
     return;
   }
 
   dbsksp_shock_node_sptr node = graph->remove_internal_edge(edge);
   if (!node)
   {
-    vcl_cerr << "ERROR: active edge is not an internal edge.\n"
+    std::cerr << "ERROR: active edge is not an internal edge.\n"
       << "Operation failed.\n";
   }
   else
   {
-    vcl_cout << "Internal edge removal compleleted.\n";
-    node->print(vcl_cout);
+    std::cout << "Internal edge removal compleleted.\n";
+    node->print(std::cout);
   }
 
   graph->compute_all_dependent_params();
@@ -1304,19 +1304,19 @@ execute()
   // Preliminary checks
   if (!node || !e0 || !e1)
   {
-    vcl_cerr << "ERROR: Active node and e0 and e1 must be specified.\n";
+    std::cerr << "ERROR: Active node and e0 and e1 must be specified.\n";
     return;
   }
 
   if (node->degree() < 4)
   {
-    vcl_cerr << "ERROR: degree of node has to be at least 4.\n";
+    std::cerr << "ERROR: degree of node has to be at least 4.\n";
     return;
   }
 
   if (!e0->is_vertex(node) || !e1->is_vertex(node))
   {
-    vcl_cerr << "ERROR: e0 and e1 must both be incident at active node.\n";
+    std::cerr << "ERROR: e0 and e1 must both be incident at active node.\n";
   }
 
   // Now run the main command
@@ -1327,14 +1327,14 @@ execute()
   // Report and clean up
   if (!new_edge)
   {
-    vcl_cerr << "ERROR: Something went wrong when splitting the node.\n";
+    std::cerr << "ERROR: Something went wrong when splitting the node.\n";
   }
   else
   {
-    vcl_cout << "Parameters of the new edge = \n";
-    new_edge->print(vcl_cout);
-    vcl_cout << "The entire graph = \n";
-    graph->print(vcl_cout);
+    std::cout << "Parameters of the new edge = \n";
+    new_edge->print(std::cout);
+    std::cout << "The entire graph = \n";
+    graph->print(std::cout);
   }
 
   graph->compute_all_dependent_params();

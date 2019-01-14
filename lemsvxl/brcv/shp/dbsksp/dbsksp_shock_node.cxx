@@ -8,9 +8,9 @@
 #include <dbsksp/dbsksp_shock_edge.h>
 #include <dbsksp/dbsksp_shock_node_descriptor.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 
@@ -24,7 +24,7 @@
 dbsksp_shock_node_descriptor_sptr dbsksp_shock_node::
 descriptor(const dbsksp_shock_edge_sptr& e)
 {
-  for(vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator it =
+  for(std::list<dbsksp_shock_node_descriptor_sptr >::iterator it =
     this->descriptor_list_.begin(); it != this->descriptor_list_.end(); ++it)
   {
     assert (*it);
@@ -58,7 +58,7 @@ remove_shock_edge(const E_sptr& e)
   // remove both the edge and its descriptor
   if (this->del_edge(e))
   {
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator itr =
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator itr =
       this->descriptor_list_.begin(); 
       itr != this->descriptor_list_.end(); ++itr)
     {
@@ -93,12 +93,12 @@ insert_shock_edge(const E_sptr& new_edge, const E_sptr& ref_edge)
 
   // insert the edge
   // find location of the ref_edge in the edge list
-  vcl_list<E_sptr >::iterator eit = vcl_find(this->in_edges_.begin(),
+  std::list<E_sptr >::iterator eit = std::find(this->in_edges_.begin(),
     this->in_edges_.end(), ref_edge);
 
   if (eit == this->in_edges_.end())
   {
-    vcl_cerr << "ERROR: in dbsksp_shock_node::insert_edge(...)\n" 
+    std::cerr << "ERROR: in dbsksp_shock_node::insert_edge(...)\n" 
       << "reference edge is not incident to this node.\n";
     return 0;
   }
@@ -109,8 +109,8 @@ insert_shock_edge(const E_sptr& new_edge, const E_sptr& ref_edge)
   dbsksp_shock_node_descriptor_sptr descriptor = new dbsksp_shock_node_descriptor();
   descriptor->edge = new_edge;
   
-  vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator dit = 
-    vcl_find(this->descriptor_list_.begin(), this->descriptor_list_.end(),
+  std::list<dbsksp_shock_node_descriptor_sptr >::iterator dit = 
+    std::find(this->descriptor_list_.begin(), this->descriptor_list_.end(),
     this->descriptor(ref_edge));
   this->descriptor_list_.insert(dit, descriptor);
 
@@ -127,8 +127,8 @@ insert_shock_edge(const E_sptr& new_edge, const E_sptr& ref_edge)
 bool dbsksp_shock_node::
 connected_to_terminal_edge() const
 {
-  vcl_list<dbsksp_shock_edge_sptr > connected_edges = this->edge_list();
-  for (vcl_list<dbsksp_shock_edge_sptr >::iterator itr = connected_edges.begin();
+  std::list<dbsksp_shock_edge_sptr > connected_edges = this->edge_list();
+  for (std::list<dbsksp_shock_edge_sptr >::iterator itr = connected_edges.begin();
     itr != connected_edges.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e = *itr;
@@ -157,8 +157,8 @@ change_phi_distribute_difference_uniformly(const dbsksp_shock_edge_sptr& e,
   d->phi = new_phi;
 
   // iterate thru the descriptors and adjust the phi
-  vcl_list<dbsksp_shock_node_descriptor_sptr > dlist = this->descriptor_list();
-  for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator itr = dlist.begin();
+  std::list<dbsksp_shock_node_descriptor_sptr > dlist = this->descriptor_list();
+  for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator itr = dlist.begin();
     itr != dlist.end(); ++itr)
   {
     dbsksp_shock_node_descriptor_sptr d0 = *itr;
@@ -179,7 +179,7 @@ change_phi_distribute_difference_uniformly(const dbsksp_shock_edge_sptr& e,
 // ----------------------------------------------------------------------------
 //: print info of the dbskpoint to an output stream
 void dbsksp_shock_node::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "\n<<\n"
     << "type[ " << this->is_a() << " ] id[ " << this->id() << " ]\n"
@@ -294,14 +294,14 @@ solve_equations_at_A12_node(
 
   if (m0 != 0 || m2 != 0)
   {
-    *alpha0 = vcl_atan( (m0 * vcl_sin(theta)) / (m2 + m0 * vcl_cos(theta)) );
-    *alpha2 = -vcl_atan( (m2 * vcl_sin(theta)) / ( m0 + m2 * vcl_cos(theta)) );
-    double sin_phi = vnl_math::abs(vcl_sin(theta)) /
-      vcl_sqrt(m2*m2 + m0*m0 + 2*m2*m0*vcl_cos(theta));
+    *alpha0 = std::atan( (m0 * std::sin(theta)) / (m2 + m0 * std::cos(theta)) );
+    *alpha2 = -std::atan( (m2 * std::sin(theta)) / ( m0 + m2 * std::cos(theta)) );
+    double sin_phi = vnl_math::abs(std::sin(theta)) /
+      std::sqrt(m2*m2 + m0*m0 + 2*m2*m0*std::cos(theta));
 
-    if (vcl_abs(sin_phi) > 1) return false;
+    if (std::abs(sin_phi) > 1) return false;
 
-    double phi = vcl_asin(sin_phi);
+    double phi = std::asin(sin_phi);
     *phi0 = (shock_flow_direction > 0) ? phi : vnl_math::pi-phi;
     *phi2 = vnl_math::pi - (*phi0);
     return true;
@@ -340,17 +340,17 @@ compute_params_at_A12_node_given_2_m_and_1_phi(
   desc_e2->phi = vnl_math::pi - phi0;
 
   // solve the constraints
-  double sin_alpha0 = m0 * vcl_sin(phi0);
-  double sin_alpha2 = m2 * vcl_sin(phi0);
+  double sin_alpha0 = m0 * std::sin(phi0);
+  double sin_alpha2 = m2 * std::sin(phi0);
 
 
   // check validity condition
-  if (vcl_abs(sin_alpha0) > 1 || vcl_abs(sin_alpha2) > 1)
+  if (std::abs(sin_alpha0) > 1 || std::abs(sin_alpha2) > 1)
     return false;
 
 
-  desc_e0->alpha = vcl_asin(sin_alpha0);
-  desc_e2->alpha = vcl_asin(sin_alpha2);
+  desc_e0->alpha = std::asin(sin_alpha0);
+  desc_e2->alpha = std::asin(sin_alpha2);
 
   desc_e0->rot_angle_to_succ_edge = desc_e0->alpha + vnl_math::pi - desc_e2->alpha;
   desc_e2->rot_angle_to_succ_edge = desc_e2->alpha + vnl_math::pi - desc_e0->alpha;
@@ -373,15 +373,15 @@ compute_params_at_A13_node_given_3_m_and_2_phi(const dbsksp_shock_node_sptr& nod
   int degree = node->degree();
   
   // Collect information from the node and its adjacent edges
-  vcl_vector<dbsksp_shock_edge_sptr > edges;
+  std::vector<dbsksp_shock_edge_sptr > edges;
   for (dbsksp_shock_node::edge_iterator eit = node->edges_begin(); 
     eit != node->edges_end(); ++eit)
   {
     edges.push_back(*eit);
   }
 
-  vcl_vector<dbsksp_shock_node_descriptor_sptr > descriptors;
-  for (vcl_list<dbsksp_shock_node_descriptor_sptr >::const_iterator it = 
+  std::vector<dbsksp_shock_node_descriptor_sptr > descriptors;
+  for (std::list<dbsksp_shock_node_descriptor_sptr >::const_iterator it = 
     node->descriptor_list().begin(); it != node->descriptor_list().end(); ++it)
   {
     descriptors.push_back(*it);
@@ -398,8 +398,8 @@ compute_params_at_A13_node_given_3_m_and_2_phi(const dbsksp_shock_node_sptr& nod
   // compute alpha's from m and phi
   for (int i=0; i<degree; ++i)
   {
-    double sin_alpha = edges[i]->param_m(node) * vcl_sin(descriptors[i]->phi);
-    descriptors[i]->alpha = vcl_asin(sin_alpha);
+    double sin_alpha = edges[i]->param_m(node) * std::sin(descriptors[i]->phi);
+    descriptors[i]->alpha = std::asin(sin_alpha);
   }
 
   // compute angle between two adjacent shock chords
@@ -426,15 +426,15 @@ compute_params_at_A1nGT3_node_given_n_m_and_n_minus_1_phi(
   int degree = node->degree();
   
   // Collect information from the node and its adjacent edges
-  vcl_vector<dbsksp_shock_edge_sptr > edges;
+  std::vector<dbsksp_shock_edge_sptr > edges;
   for (dbsksp_shock_node::edge_iterator eit = node->edges_begin(); 
     eit != node->edges_end(); ++eit)
   {
     edges.push_back(*eit);
   }
 
-  vcl_vector<dbsksp_shock_node_descriptor_sptr > descriptors;
-  for (vcl_list<dbsksp_shock_node_descriptor_sptr >::const_iterator it = 
+  std::vector<dbsksp_shock_node_descriptor_sptr > descriptors;
+  for (std::list<dbsksp_shock_node_descriptor_sptr >::const_iterator it = 
     node->descriptor_list().begin(); it != node->descriptor_list().end(); ++it)
   {
     descriptors.push_back(*it);
@@ -451,8 +451,8 @@ compute_params_at_A1nGT3_node_given_n_m_and_n_minus_1_phi(
   // compute alpha's from m and phi
   for (int i=0; i<degree; ++i)
   {
-    double sin_alpha = edges[i]->param_m(node) * vcl_sin(descriptors[i]->phi);
-    descriptors[i]->alpha = vcl_asin(sin_alpha);
+    double sin_alpha = edges[i]->param_m(node) * std::sin(descriptors[i]->phi);
+    descriptors[i]->alpha = std::asin(sin_alpha);
   }
 
   // compute angle between two adjacent shock chords

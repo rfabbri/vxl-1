@@ -75,8 +75,8 @@ compute_score(const vnl_vector<double >& feature, double& score)
 // -------------------------------------------------------------------------------
 //: Compute the score (probablity) of a list of BHOG feature vector
 bool dbsks_xfrag_bhog_model::
-compute_score(const vcl_vector<vnl_vector<double > >& feat_list, 
-              vcl_vector<double >& score_list)
+compute_score(const std::vector<vnl_vector<double > >& feat_list, 
+              std::vector<double >& score_list)
 {
   // preliminary checks
   if (feat_list.empty())
@@ -148,7 +148,7 @@ compute_score(const vcl_vector<vnl_vector<double > >& feat_list,
 // -----------------------------------------------------------------------------
 //: Load SVM model from file
 bool dbsks_xfrag_bhog_model::
-load_from_file(const vcl_string& libsvm_model_file)
+load_from_file(const std::string& libsvm_model_file)
 {
   if (this->libsvm_model_)
   {

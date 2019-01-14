@@ -4,7 +4,7 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <dbskfg/pro/dbskfg_load_binary_composite_graph_process.h>
 
 #include <bsta/bsta_spherical_histogram.h>
@@ -46,20 +46,20 @@
 void write_distance_matrix(
     double size,
     double* compressed_distance_matrix,
-    vcl_string output_file_path);
+    std::string output_file_path);
 
 void transpose_descriptor (vl_sift_pix* dst, vl_sift_pix* src);
 
 void write_distance_matrix(
     double size,
     double* compressed_distance_matrix,
-    vcl_string output_file_path)
+    std::string output_file_path)
 {
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_file_path.c_str(),
-                            vcl_ios::out |
-                            vcl_ios::app |
-                            vcl_ios::binary);
+                            std::ios::out |
+                            std::ios::app |
+                            std::ios::binary);
 
     output_binary_file.write(reinterpret_cast<char *>(&size),
                              sizeof(double));
@@ -96,8 +96,8 @@ void write_distance_matrix(
 int main( int argc, char *argv[] )
 {
 
-    vcl_stringstream stream(argv[1]);
-    vcl_string input_img;
+    std::stringstream stream(argv[1]);
+    std::string input_img;
     stream>>input_img;
 
     bool status=true;
@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
 
 
     // // Create output storage for edge detection
-    // vcl_vector<bpro1_storage_sptr> edge_det_results;
+    // std::vector<bpro1_storage_sptr> edge_det_results;
 
 
     // dbdet_third_order_color_edge_detector_process pro_color_edg;
@@ -142,26 +142,26 @@ int main( int argc, char *argv[] )
     
     // dbdet_save_edg_process save_edg_pro;
 
-    // vcl_string output_file="";
+    // std::string output_file="";
     // {
-    //     vcl_string final_name=vul_file::strip_extension(
+    //     std::string final_name=vul_file::strip_extension(
     //         vul_file::strip_directory(input_img));
-    //     vcl_string orig_directory=vul_file::dirname(input_img);
+    //     std::string orig_directory=vul_file::dirname(input_img);
         
-    //     vcl_string final_directory=orig_directory;
-    //     vcl_string replacer="Cropped";
+    //     std::string final_directory=orig_directory;
+    //     std::string replacer="Cropped";
     //     final_directory.replace(33,42-33,replacer);
     //     output_file=final_directory + "/" + final_name + "_to.edg";
         
     //     //output_file=vul_file::strip_extension(input_img) +"_to.edg";
     // }
 
-    // vcl_cout<<output_file<<vcl_endl;
+    // std::cout<<output_file<<std::endl;
 
     // bpro1_filepath output(output_file,"_to.edg");
-    // vcl_string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
+    // std::string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
 
-    // vcl_ifstream istream(bbox_file.c_str());
+    // std::ifstream istream(bbox_file.c_str());
     
     // double x(0.0),y(0.0),width(0.0),height(0.0);
 
@@ -176,8 +176,8 @@ int main( int argc, char *argv[] )
     // double ymin=y; double ymax=y+height;
 
     // vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
-    // vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
-    //         <<height<<vcl_endl;
+    // std::cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
+    //         <<height<<std::endl;
 
 
 
@@ -191,7 +191,7 @@ int main( int argc, char *argv[] )
     //                                                      height+1);
     
 
-    // vcl_vector<dbdet_edgel*> orig_edges=EM->edgels;
+    // std::vector<dbdet_edgel*> orig_edges=EM->edgels;
     // for  ( unsigned int e=0; e < orig_edges.size() ; ++e)
     // {
     //     vgl_point_2d<double> location=orig_edges[e]->pt;
@@ -229,8 +229,8 @@ int main( int argc, char *argv[] )
     // save_edg_pro.clear_output();
 
 
-    // vcl_stringstream stream(argv[1]);
-    // vcl_string input_img;
+    // std::stringstream stream(argv[1]);
+    // std::string input_img;
     // stream>>input_img;
 
     //test default constructor
@@ -248,58 +248,58 @@ int main( int argc, char *argv[] )
     // double az(0.0),el(0.0);
     // sh.convert_to_spherical(0,0,1,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,0,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,0,-1,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
 
     // sh.convert_to_spherical(1,0,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(-1,0,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,1,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,-1,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,0,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(0,1,1,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(1,0,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(1,0,1,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(1,1,0,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
     // sh.convert_to_spherical(1,1,1,az, el);
     // sh.upcount(az,el);
-    // vcl_cout<<az<<","<<el<<vcl_endl;
+    // std::cout<<az<<","<<el<<std::endl;
 
-    // vcl_ofstream file("sphere.vrml");
+    // std::ofstream file("sphere.vrml");
     // sh.print_to_vrml(file,0.5);
     // file.close();
     // vil_image_view<vxl_byte> src_image = vil_load("black_white.png");
@@ -381,15 +381,15 @@ int main( int argc, char *argv[] )
     //                             5,
     //                             0);//fmod(angle+M_PI/2,2*M_PI));
     
-    // vcl_vector<vl_sift_pix> model_sift;
+    // std::vector<vl_sift_pix> model_sift;
     // //transpose_descriptor(descr_ps1,temp_ps1);
     // //model_sift.assign(descr_ps1,descr_ps1+128);
     // model_sift.assign(temp_ps1,temp_ps1+128);
 
-    // vcl_ofstream model_stream("Model_sift_app_correspondence.txt");
+    // std::ofstream model_stream("Model_sift_app_correspondence.txt");
     // for (unsigned int i=0; i < model_sift.size() ; ++i)
     // {
-    //     model_stream<<model_sift[i]<<vcl_endl;
+    //     model_stream<<model_sift[i]<<std::endl;
     // }
     // model_stream.close();
 
@@ -400,7 +400,7 @@ int main( int argc, char *argv[] )
     //     vil_load_image_resource(input_img.c_str());
     // if (!img_sptr) 
     // {
-    //     vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
+    //     std::cerr << "Cannot load image: " << input_img << std::endl;
     //     return 1;
     // }
 
@@ -409,9 +409,9 @@ int main( int argc, char *argv[] )
     // inp->set_image(img_sptr);
 
     // Create storage
-    vcl_vector<bpro1_storage_sptr> ct_results;
+    std::vector<bpro1_storage_sptr> ct_results;
     {
-        vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
+        std::cout<<"************ Contour Tracing  ************"<<std::endl;
 
         dbdet_contour_tracer_process ct_pro;
         // set_process_parameters_of_bpro1(*params, 
@@ -440,7 +440,7 @@ int main( int argc, char *argv[] )
 
         if (ct_results.size() != 1 )
         {
-            vcl_cerr<< "Contour tracing failed"<<vcl_endl;
+            std::cerr<< "Contour tracing failed"<<std::endl;
             return 1;
         }
 
@@ -449,7 +449,7 @@ int main( int argc, char *argv[] )
     vidpro1_vsol2D_storage_sptr input_vsol;
     input_vsol.vertical_cast(ct_results[0]);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
         input_vsol->all_data();
 
     vsol_polygon_2d_sptr new_poly;
@@ -470,10 +470,10 @@ int main( int argc, char *argv[] )
             }
             fitter.fit();
  
-            vcl_vector<vgl_line_segment_2d<double> >& segs = 
+            std::vector<vgl_line_segment_2d<double> >& segs = 
                 fitter.get_line_segs();
 
-            vcl_vector<vsol_point_2d_sptr > new_pts;
+            std::vector<vsol_point_2d_sptr > new_pts;
             new_pts.push_back(
                 new 
                 vsol_point_2d(segs[0]
@@ -488,20 +488,20 @@ int main( int argc, char *argv[] )
                     new 
                     vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
             }
-            vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+            std::cout << "fitted polygon size: " << new_pts.size() << std::endl;
             new_poly = new vsol_polygon_2d(new_pts);
 
         }
     }
 
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    std::vector< vsol_spatial_object_2d_sptr > contours;
     contours.push_back(new_poly->cast_to_spatial_object());
     
     vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
     output_vsol->add_objects(contours,"trace");
 
     {
-        vcl_string output_file=vul_file::strip_extension(input_img);
+        std::string output_file=vul_file::strip_extension(input_img);
         output_file=output_file+".cem";
         bpro1_filepath output(output_file,".cem");
         
@@ -524,16 +524,16 @@ int main( int argc, char *argv[] )
         
     }
     
-    //vcl_stringstream input_file;
+    //std::stringstream input_file;
 
-    // vcl_stringstream stream(argv[1]);
-    // vcl_string input_directory;
+    // std::stringstream stream(argv[1]);
+    // std::string input_directory;
     // stream>>input_directory;
 
 
 
-    // vcl_string line;
-    // vcl_ifstream myfile(input_directory.c_str());
+    // std::string line;
+    // std::ifstream myfile(input_directory.c_str());
     // if (myfile.is_open())
     // {
     //     while ( getline (myfile,line) )
@@ -564,17 +564,17 @@ int main( int argc, char *argv[] )
     // }
 
 
-    // vcl_string line;
+    // std::string line;
 
     // unsigned int position = input_directory.find_first_of("_");
-    // vcl_string object_name = input_directory.substr(0,position);
+    // std::string object_name = input_directory.substr(0,position);
 
-    // vcl_ifstream myfile(input_directory.c_str());
-    // vcl_getline(myfile,line);
-    // vcl_stringstream foo(line);
+    // std::ifstream myfile(input_directory.c_str());
+    // std::getline(myfile,line);
+    // std::stringstream foo(line);
     // unsigned int numb_polygons=0;
     // foo>>numb_polygons;
-    // vcl_cout<<"Working on "<<numb_polygons<<vcl_endl;
+    // std::cout<<"Working on "<<numb_polygons<<std::endl;
     // double* output_distances= new double[numb_polygons];
 
     // unsigned int index=0;
@@ -583,10 +583,10 @@ int main( int argc, char *argv[] )
     // {
     //     while(myfile.good())
     //     {
-    //         vcl_getline(myfile,line);
+    //         std::getline(myfile,line);
     //         unsigned int ind=line.find_last_of(",");
-    //         vcl_string distance=line.substr(ind+1);
-    //         vcl_stringstream streamer(distance);
+    //         std::string distance=line.substr(ind+1);
+    //         std::stringstream streamer(distance);
     //         double raw_distance(0);
     //         streamer>>raw_distance;
     //         if ( index < numb_polygons )
@@ -599,22 +599,22 @@ int main( int argc, char *argv[] )
         
     // }
     
-    // vcl_string output_name=object_name + "_distance_mat.bin";
-    // vcl_cout<<output_name<<vcl_endl;
+    // std::string output_name=object_name + "_distance_mat.bin";
+    // std::cout<<output_name<<std::endl;
     // write_distance_matrix(numb_polygons,output_distances,output_name);
     // delete [] output_distances;
 
-    // vcl_string temp=input_directory;
+    // std::string temp=input_directory;
     // unsigned int position=temp.find("_cgraph_fragments");
-    // vcl_string str_scale=temp.substr(position-2,2);
-    // vcl_stringstream sstream(str_scale);
+    // std::string str_scale=temp.substr(position-2,2);
+    // std::stringstream sstream(str_scale);
 
 
     // unsigned int scale;
     // sstream>>scale;    
 
     // // Determine Object Name
-    // vcl_string object_name=input_directory;
+    // std::string object_name=input_directory;
     // unsigned int dir_location = object_name.find("image_pyramid");
     // object_name.erase(dir_location-1);
     // dir_location=object_name.find_last_of("/");
@@ -623,7 +623,7 @@ int main( int argc, char *argv[] )
 
     // double step=1.189207115002721;
 
-    // vcl_vector<double> scale_sizes;
+    // std::vector<double> scale_sizes;
     // scale_sizes.push_back(1.000000000000000);
     // scale_sizes.push_back(1.189207115002721);
     // scale_sizes.push_back(1.414213562373095);
@@ -653,7 +653,7 @@ int main( int argc, char *argv[] )
     // bpro1_filepath input_file(bn(),"");
     // bpro1_filepath output_folder(input_directory,"");
 
-    // vcl_vector<double> thresholds;
+    // std::vector<double> thresholds;
     // thresholds.push_back(0.0);
     // thresholds.push_back(0.1);
     // thresholds.push_back(0.2);
@@ -668,8 +668,8 @@ int main( int argc, char *argv[] )
 
     // for ( unsigned int i=0; i < thresholds.size() ; ++i)
     // { 
-    //     vcl_cout<<"Working on "<<input_directory<<" at threshold "
-    //             <<thresholds[i]<<vcl_endl;
+    //     std::cout<<"Working on "<<input_directory<<" at threshold "
+    //             <<thresholds[i]<<std::endl;
     //     pro.clear();
 
     //     pro.parameters()->set_value( "-output_prefix", object_name);
@@ -680,11 +680,11 @@ int main( int argc, char *argv[] )
     
     //     bool status = pro.execute();
 
-    //     vcl_stringstream streamer;
+    //     std::stringstream streamer;
     //     streamer<<i;
 
     //     // Create names
-    //     vcl_string output_file = input_directory+"/"+
+    //     std::string output_file = input_directory+"/"+
     //         object_name+"_t"+streamer.str()+"_pruned_fragments.bin";
     //     pro.write_out_data(output_file);
     // }

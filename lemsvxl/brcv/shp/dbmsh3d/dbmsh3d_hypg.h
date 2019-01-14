@@ -16,10 +16,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_node.h>
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -34,7 +34,7 @@ class dbmsh3d_hypg : public dbmsh3d_graph
 protected:
   dbmsh3d_mesh* mesh_;
   
-  vcl_map<int, dbmsh3d_sheet*> sheetmap_;
+  std::map<int, dbmsh3d_sheet*> sheetmap_;
   int   sheet_id_counter_;
 
 public:
@@ -45,7 +45,7 @@ public:
   }
   
   void _clear_sheetmap () {
-    vcl_map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
+    std::map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
     while (it != sheetmap_.end()) {
       dbmsh3d_sheet* S = (*it).second;
       remove_sheet (S);
@@ -55,7 +55,7 @@ public:
   }
   void _clear_all_S_shared_F () {
     //Clear the shared_F_list for all sheets.
-    vcl_map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
+    std::map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
     for (; it != sheetmap_.end(); it++) {
       dbmsh3d_sheet* S = (*it).second;
       S->clear_shared_F_list();
@@ -63,7 +63,7 @@ public:
   }
   void _clear_all_C_shared_E () {
     //Clear the shared_E_list for all curves.
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
     for (; it != edgemap_.end(); it++) {
       dbmsh3d_curve* C = (dbmsh3d_curve*) (*it).second;
       C->clear_shared_E_list();
@@ -103,11 +103,11 @@ public:
     sheet_id_counter_ = counter;
   }
 
-  vcl_map<int, dbmsh3d_sheet*>& sheetmap () {
+  std::map<int, dbmsh3d_sheet*>& sheetmap () {
     return sheetmap_;
   }
   dbmsh3d_sheet* sheetmap (const int i) {
-    vcl_map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.find (i);
+    std::map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.find (i);
     if (it == sheetmap_.end())
       return NULL;    
     return (*it).second;
@@ -143,7 +143,7 @@ public:
   }
 
   void _add_sheet (dbmsh3d_sheet* S) {
-    sheetmap_.insert (vcl_pair<int, dbmsh3d_sheet*>(S->id(), S));
+    sheetmap_.insert (std::pair<int, dbmsh3d_sheet*>(S->id(), S));
   }
 
   //: Disconnect all associated halfedges 
@@ -166,11 +166,11 @@ public:
   void remove_S_complete_hypg (dbmsh3d_sheet* S);
 
   void remove_S_complete_hypg (dbmsh3d_sheet* S, 
-                               vcl_set<dbmsh3d_edge*>& remaining_Cs,
-                               vcl_set<dbmsh3d_vertex*>& remaining_Ns);
+                               std::set<dbmsh3d_edge*>& remaining_Cs,
+                               std::set<dbmsh3d_vertex*>& remaining_Ns);
 
-  void remove_S_complete_fix (vcl_set<dbmsh3d_edge*>& remaining_Cs, vcl_set<dbmsh3d_vertex*>& remaining_Ns,
-                              vcl_set<dbmsh3d_edge*>& removed_Cs, vcl_set<dbmsh3d_vertex*>& removed_Ns);
+  void remove_S_complete_fix (std::set<dbmsh3d_edge*>& remaining_Cs, std::set<dbmsh3d_vertex*>& remaining_Ns,
+                              std::set<dbmsh3d_edge*>& removed_Cs, std::set<dbmsh3d_vertex*>& removed_Ns);
   
   //: Merge two adjacent curves C1 and C2 sharing a node N.
   //  Keep C1 and merge all edge elements of C2 to C1.

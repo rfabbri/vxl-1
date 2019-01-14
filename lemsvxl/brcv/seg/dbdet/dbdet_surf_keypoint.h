@@ -20,7 +20,7 @@
 
 #include "dbdet_keypoint.h"
 #include "dbdet_keypoint_sptr.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_resource_sptr.h>
 
 //: A Surf keypoint as described 
@@ -51,7 +51,7 @@ class dbdet_surf_keypoint : public dbdet_keypoint
 
   //=============== Binary I/O Methods ========================
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_surf_keypoint"; }
+  virtual std::string is_a() const { return "dbdet_surf_keypoint"; }
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -67,7 +67,7 @@ class dbdet_surf_keypoint : public dbdet_keypoint
   short version() const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
   
  private:
   double scale_;
@@ -75,11 +75,11 @@ class dbdet_surf_keypoint : public dbdet_keypoint
   bool sign_;
   vnl_vector<double> descriptor_;
 
-  friend vcl_istream& operator >> (vcl_istream& is, dbdet_surf_keypoint& s);
+  friend std::istream& operator >> (std::istream& is, dbdet_surf_keypoint& s);
 };
 
 
-vcl_istream& operator >> (vcl_istream& is, dbdet_surf_keypoint& s);
+std::istream& operator >> (std::istream& is, dbdet_surf_keypoint& s);
 
 
 #endif // dbdet_surf_keypoint_h_

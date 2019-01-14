@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = vehicle_model_menus::get_menu();
   unsigned w = 1024, h = 200;
 
-  vcl_string title = "Tool for model fitting to instances ";
+  std::string title = "Tool for model fitting to instances ";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(vehicle_model_vis_manager::instance());
   win->set_statusbar(true);

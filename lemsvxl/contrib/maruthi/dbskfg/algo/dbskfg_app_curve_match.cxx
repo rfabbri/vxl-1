@@ -32,10 +32,10 @@ void dbskfg_app_curve_match::initializeDPCosts()
 
     for (int i=0;i<_n1;i++) 
     {
-        vcl_vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
+        std::vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
         _DPCost.push_back(tmp1);
-        vcl_pair <int,int> tmp3(0,0);
-        vcl_vector< vcl_pair <int,int> > tmp2(_n2,tmp3);
+        std::pair <int,int> tmp3(0,0);
+        std::vector< std::pair <int,int> > tmp2(_n2,tmp3);
         _DPMap.push_back(tmp2);
     }
 
@@ -67,9 +67,9 @@ double dbskfg_app_curve_match::computeIntervalCost(int i, int ip, int j, int jp)
     double dapp2=descr_cost(sift_j,sift_jp);
     
 
-    double app_cont=vcl_fabs(dapp1-dapp2);
+    double app_cont=std::fabs(dapp1-dapp2);
 
-    double app_diff=vcl_fabs(descr_cost(sift_i,sift_j)+
+    double app_diff=std::fabs(descr_cost(sift_i,sift_j)+
                              descr_cost(sift_ip,sift_jp));
 
     double cost=app_cont+app_diff;

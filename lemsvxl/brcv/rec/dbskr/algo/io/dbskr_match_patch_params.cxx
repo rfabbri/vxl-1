@@ -15,13 +15,13 @@
 
 bool dbskr_match_patch_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "dbskr_match_patch_params\n";
+  //std::cout << "dbskr_match_patch_params\n";
 
   bxml_element query("dbskr_match_patch_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_match_patch_params::parse_from_data() - could not find the node dbskr_match_patch_params\n";
+    std::cout << "dbskr_match_patch_params::parse_from_data() - could not find the node dbskr_match_patch_params\n";
     return false;
   }
 
@@ -29,7 +29,7 @@ bool dbskr_match_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_match_patch_params::parse_from_data() - could not find the node shock_match_params\n";
+    std::cout << "dbskr_match_patch_params::parse_from_data() - could not find the node shock_match_params\n";
     return false;
   }
    
@@ -41,7 +41,7 @@ bool dbskr_match_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result4 = bxml_find_by_name(result, query4);
 
   if (!result4) {
-    vcl_cout << "dbskr_match_patch_params::parse_from_data() - could not find the node query_patches_params\n";
+    std::cout << "dbskr_match_patch_params::parse_from_data() - could not find the node query_patches_params\n";
     return false;
   }
 
@@ -51,7 +51,7 @@ bool dbskr_match_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result5 = bxml_find_by_name(result, query5);
 
   if (!result5) {
-    vcl_cout << "dbskr_match_patch_params::parse_from_data() - could not find the node model_patches_params\n";
+    std::cout << "dbskr_match_patch_params::parse_from_data() - could not find the node model_patches_params\n";
     return false;
   }
 
@@ -73,7 +73,7 @@ bool dbskr_match_patch_params::parse_from_data(bxml_data_sptr root)
   data2->get_attribute("dbdir", db_dir_);
   data2->get_attribute("dblist", db_list_);
 
-  vcl_string val;
+  std::string val;
 
   data2->get_attribute("savematches", val);
   save_matches_ = val.compare("off") == 0 ? false: true; 

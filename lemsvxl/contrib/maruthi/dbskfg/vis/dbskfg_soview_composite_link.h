@@ -47,11 +47,11 @@ class dbskfg_soview_contour_link : public vgui_soview2D
 
     //: Returns the type of this class
     /* virtual */ 
-    vcl_string type_name() const {return "dbskfg_soview_contour_link"; }
+    std::string type_name() const {return "dbskfg_soview_contour_link"; }
  
     //: Print details about this object to the given stream.
     /* virtual */ 
-    vcl_ostream& print(vcl_ostream& os) const;
+    std::ostream& print(std::ostream& os) const;
   
 protected:
 
@@ -95,11 +95,11 @@ class dbskfg_soview_shock_link : public vgui_soview2D
 
     //: Returns the type of this class
     /* virtual */ 
-    vcl_string type_name() const {return "dbskfg_soview_shock_link"; }
+    std::string type_name() const {return "dbskfg_soview_shock_link"; }
  
     //: Print details about this object to the given stream.
     /* virtual */ 
-    vcl_ostream& print(vcl_ostream& os) const;
+    std::ostream& print(std::ostream& os) const;
   
 protected:
 
@@ -144,11 +144,11 @@ class dbskfg_soview_shock_ray : public vgui_soview2D
 
     //: Returns the type of this class
     /* virtual */ 
-    vcl_string type_name() const {return "dbskfg_soview_shock_ray"; }
+    std::string type_name() const {return "dbskfg_soview_shock_ray"; }
  
     //: Print details about this object to the given stream.
     /* virtual */ 
-    vcl_ostream& print(vcl_ostream& os) const;
+    std::ostream& print(std::ostream& os) const;
   
 protected:
 

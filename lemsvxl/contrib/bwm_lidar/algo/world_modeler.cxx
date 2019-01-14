@@ -10,8 +10,8 @@
 // \endverbatim
 
 #include "world_modeler.h"
-#include <vcl_cassert.h>
-#include <vcl_set.h>
+#include <cassert>
+#include <set>
 
 
 //: fill infinite values with the median of its 8 neighborhood
@@ -23,7 +23,7 @@ void world_modeler::median_fill(vil_image_view<double>& image)
     for(unsigned int j=0; j<nj; ++j){
       if(!vnl_math_isfinite(image(i,j)))
       {
-        vcl_vector<double> v;
+        std::vector<double> v;
         for(int si = i-1; si<=i+1; ++si){
           if(si < 0) continue;
           if(si >= ni) break;
@@ -38,7 +38,7 @@ void world_modeler::median_fill(vil_image_view<double>& image)
         if(!v.empty()){
           // partial sort
           unsigned int r = v.size()/2;
-          vcl_nth_element(v.begin(), v.begin()+r, v.end());
+          std::nth_element(v.begin(), v.begin()+r, v.end());
           image(i,j) = v[r];
         }
       }
@@ -52,23 +52,23 @@ void world_modeler::median_fill(vil_image_view<double>& image)
 // \param return2 returns the last return (min point) at each pixel
 // \param rgb_img return the colors at the first returns
 void world_modeler::
-generate_lidar_images(const vcl_string& glob,
+generate_lidar_images(const std::string& glob,
                       const vgl_box_2d<double>& bbox,
                             vil_image_view<double>& return1,
                             vil_image_view<double>& return2,
                             vil_image_view<vxl_byte>& rgb_img)
 {
   // find all files that match the glob and contain ".xyz" in the file name 
-  vcl_vector<vcl_string> xyz_file_name_list;
+  std::vector<std::string> xyz_file_name_list;
   for (vul_file_iterator fn=glob; fn; ++fn) {
-    vcl_string curr_image_filename = fn();
-    vcl_string::size_type pos_xyz = curr_image_filename.find(".xyz");
-    if (pos_xyz != vcl_string::npos) {
+    std::string curr_image_filename = fn();
+    std::string::size_type pos_xyz = curr_image_filename.find(".xyz");
+    if (pos_xyz != std::string::npos) {
       xyz_file_name_list.push_back(curr_image_filename);
     }
   }
   if(xyz_file_name_list.size() < 1){
-    vcl_cerr << "Glob did not match any .xyz files"<<vcl_endl;
+    std::cerr << "Glob did not match any .xyz files"<<std::endl;
     exit(-1);
   }
 
@@ -78,9 +78,9 @@ generate_lidar_images(const vcl_string& glob,
 
   // resize the images and fill with default values
   return1.set_size(ni,nj);
-  return1.fill(-vcl_numeric_limits<double>::infinity());
+  return1.fill(-std::numeric_limits<double>::infinity());
   return2.set_size(ni,nj);
-  return2.fill(vcl_numeric_limits<double>::infinity());
+  return2.fill(std::numeric_limits<double>::infinity());
   rgb_img.set_size(ni,nj,3);
   rgb_img.fill(0);
 
@@ -88,11 +88,11 @@ generate_lidar_images(const vcl_string& glob,
   unsigned count=0;
   for(unsigned xyz=0; xyz<xyz_file_name_list.size(); ++xyz){
     vnl_matrix<double> points_colors;
-    vcl_cout << "Started Reading " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Started Reading " << xyz_file_name_list[xyz] << "\n";
     flimap_reader::read_flimap_file(xyz_file_name_list[xyz],points_colors);
-    vcl_cout << "Finished Reading " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Finished Reading " << xyz_file_name_list[xyz] << "\n";
 
-    vcl_cout << "Started Processing " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Started Processing " << xyz_file_name_list[xyz] << "\n";
     for(unsigned p=0; p<points_colors.rows(); ++p){
       // Calculate the pixel position for 3D point
       int i = (points_colors(p,0) - bbox.min_x())/pixel_size;
@@ -118,7 +118,7 @@ generate_lidar_images(const vcl_string& glob,
         rgb_img(i,j,2) = static_cast<char>(points_colors(p,5));
       }
     }
-    vcl_cout << "Finished Processing " << xyz_file_name_list[xyz] << " with "<<count<<" points"<< "\n";
+    std::cout << "Finished Processing " << xyz_file_name_list[xyz] << " with "<<count<<" points"<< "\n";
   }
 
   // use a median filter to fill in isolated pixels with missing data
@@ -133,7 +133,7 @@ generate_lidar_images(const vcl_string& glob,
 //:                      where positive intensities correspond to a building component        
 //:     labels_colored: an image where buildings are colored with reddish colors and vegetation are colored with blueish colors
 //:     height: a matrix where the height in the LIDAR image is set for each pixel
-void world_modeler::generate_model(const vcl_string input_path, const lidar_labeling_params params, vil_image_view<int>& labels, vil_image_view<unsigned char>& labels_colored, vil_image_view<unsigned char>& colors, vnl_matrix<double>& height, vnl_matrix<int>& occupied){
+void world_modeler::generate_model(const std::string input_path, const lidar_labeling_params params, vil_image_view<int>& labels, vil_image_view<unsigned char>& labels_colored, vil_image_view<unsigned char>& colors, vnl_matrix<double>& height, vnl_matrix<int>& occupied){
   //  Bounding box for the region of interest. This is now manuel, it should be 
   //    taken from the user or calculated automatically. Not very important at the moment
   vgl_point_2d<double> bb_min(594025.0, 3343770.0);
@@ -143,17 +143,17 @@ void world_modeler::generate_model(const vcl_string input_path, const lidar_labe
   double pixel_size = params.pixel_size_;
 
   // Get the list of all .xyz files in the directory
-  vcl_string path_xyz = input_path + "\\*.*";
-  vcl_vector<vcl_string> xyz_file_name_list;
+  std::string path_xyz = input_path + "\\*.*";
+  std::vector<std::string> xyz_file_name_list;
   for (vul_file_iterator fn=path_xyz; fn; ++fn) {
-    vcl_string curr_image_filename = fn();
-    vcl_string::size_type pos_xyz = curr_image_filename.find(".xyz");
-    if (pos_xyz != vcl_string::npos) {
+    std::string curr_image_filename = fn();
+    std::string::size_type pos_xyz = curr_image_filename.find(".xyz");
+    if (pos_xyz != std::string::npos) {
       xyz_file_name_list.push_back(curr_image_filename);
     }
   }
   if(xyz_file_name_list.size() < 1){
-    vcl_cerr << "Please provide an input directory that contains .xyz files!\n";
+    std::cerr << "Please provide an input directory that contains .xyz files!\n";
     exit(-1);
   }
 
@@ -173,11 +173,11 @@ void world_modeler::generate_model(const vcl_string input_path, const lidar_labe
 
   for(unsigned xyz=0; xyz<xyz_file_name_list.size(); xyz++){
     vnl_matrix<double> points_colors;
-    vcl_cout << "Started Reading " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Started Reading " << xyz_file_name_list[xyz] << "\n";
     flimap_reader::read_flimap_file(xyz_file_name_list[xyz],points_colors);
-    vcl_cout << "Finished Reading " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Finished Reading " << xyz_file_name_list[xyz] << "\n";
 
-    vcl_cout << "Started Processing " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Started Processing " << xyz_file_name_list[xyz] << "\n";
     for(unsigned i=0; i<points_colors.rows(); i++){
       // Calculate the pixel position for 3D point
       int curr_pixel_x = (points_colors(i,0) - bb_min.x())/pixel_size;
@@ -204,7 +204,7 @@ void world_modeler::generate_model(const vcl_string input_path, const lidar_labe
         colors(curr_pixel_x,curr_pixel_y,2) = (int)(points_colors(i,5));
       }
     }
-    vcl_cout << "Finished Processing " << xyz_file_name_list[xyz] << "\n";
+    std::cout << "Finished Processing " << xyz_file_name_list[xyz] << "\n";
   }
 
   // Find maximum and minumum elevations

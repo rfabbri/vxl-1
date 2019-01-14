@@ -1,7 +1,7 @@
 #include "mw_util.h"
 
 #include <vsol/vsol_point_2d.h>
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
 
@@ -14,14 +14,14 @@
 //TODO: put this in a file loader library
 bool
 load_con_file(
-      vcl_string filename, 
-      vcl_vector<vsol_point_2d_sptr> &points, 
+      std::string filename, 
+      std::vector<vsol_point_2d_sptr> &points, 
       bool *is_open)
 {
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << filename << vcl_endl;
+    std::cout << " Error opening file  " << filename << std::endl;
     return false;
   }
 
@@ -30,21 +30,21 @@ load_con_file(
   //
   char lineBuffer[2000];
   infp.getline(lineBuffer,2000);
-  if (vcl_strncmp(lineBuffer,"CONTOUR",7)) {
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be CONTOUR " << lineBuffer << vcl_endl;
+  if (std::strncmp(lineBuffer,"CONTOUR",7)) {
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be CONTOUR " << lineBuffer << std::endl;
     return false;
   }
 
   char openFlag[2000];
   infp.getline(openFlag,2000);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     *is_open = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     *is_open = false;
   else{
-    vcl_cerr << "Invalid File " << filename << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << filename << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return false;
   }
 
@@ -71,25 +71,25 @@ load_con_file(
 // filename
 // OBS: this only works on unix systems
 bool
-con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
+con_filenames(std::string image_fname,std::vector<std::string> &con_fnames)
 {
 
-   vcl_string cmdline("confiles ");
+   std::string cmdline("confiles ");
    cmdline.append(image_fname);
    if (system(cmdline.c_str()) == -1) {
-      vcl_cerr << "error trying to exec helper script confiles" << vcl_endl;
+      std::cerr << "error trying to exec helper script confiles" << std::endl;
       return false;
    }
 
    // output of script:
-   vcl_string con_filenames="/tmp/lemsvxl_mw_confiles";
-   vcl_ifstream infp(con_filenames.c_str(), vcl_ios::in);
+   std::string con_filenames="/tmp/lemsvxl_mw_confiles";
+   std::ifstream infp(con_filenames.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cout << " Error opening output of script, file  " << con_filenames << vcl_endl;
+     std::cout << " Error opening output of script, file  " << con_filenames << std::endl;
      return false;
    }
 
-   vcl_string cfname;
+   std::string cfname;
    while (!infp.eof()) {
       char buf[1024];
       infp.getline(buf,1024);
@@ -99,7 +99,7 @@ con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
 
 #ifndef NDEBUG
    if (con_fnames.size()==0)
-      vcl_cerr << "Warning: no contour files for image " << image_fname << vcl_endl;
+      std::cerr << "Warning: no contour files for image " << image_fname << std::endl;
 #endif
    return true;
 }
@@ -109,29 +109,29 @@ con_filenames(vcl_string image_fname,vcl_vector<vcl_string> &con_fnames)
 //: returns directory of the file name, as well as the prefix, which is the
 //common prefix to all filenames of data relating to the file
 bool
-mw_get_prefix(vcl_string img_name, vcl_string *dir, vcl_string *prefix)
+mw_get_prefix(std::string img_name, std::string *dir, std::string *prefix)
 {
-   vcl_cout << "Parsing image name: " << img_name << vcl_endl;
+   std::cout << "Parsing image name: " << img_name << std::endl;
 
-   vcl_string cmd("mw_basename ");
+   std::string cmd("mw_basename ");
    cmd += img_name;
    if (system(cmd.c_str()) == -1)
       return false;
 
-   vcl_string path_fname="/tmp/lemsvxl_mw_bname";
-   vcl_ifstream infp(path_fname.c_str(), vcl_ios::in);
+   std::string path_fname="/tmp/lemsvxl_mw_bname";
+   std::ifstream infp(path_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cout << " Error opening file  " << path_fname << vcl_endl;
+     std::cout << " Error opening file  " << path_fname << std::endl;
      return false;
    }
 
    char buf[1024];
    infp.getline(buf,1024);
    *dir = buf;
-   vcl_cout << "Directory: " << *dir << vcl_endl;
+   std::cout << "Directory: " << *dir << std::endl;
    infp.getline(buf,1024);
    *prefix = buf;
-   vcl_cout << "Prefix: " << *prefix << vcl_endl;
+   std::cout << "Prefix: " << *prefix << std::endl;
 
    return true;
 }
@@ -140,15 +140,15 @@ mw_get_prefix(vcl_string img_name, vcl_string *dir, vcl_string *prefix)
 // reads the extrinsic calibration from an ascii file into R and t
 static bool
 read_extrinsic(
-      vcl_string prefix_path_name, 
+      std::string prefix_path_name, 
       vgl_h_matrix_3d<double> *Rout,
       vgl_homg_point_3d<double> *center_out)
 {
-   vcl_cout << "Reading extrinsic params\n\n";
+   std::cout << "Reading extrinsic params\n\n";
    prefix_path_name.append(".extrinsic");
-   vcl_ifstream infp_ext(prefix_path_name.c_str(), vcl_ios::in);
+   std::ifstream infp_ext(prefix_path_name.c_str(), std::ios::in);
    if (!infp_ext) {
-     vcl_cerr << " Error opening file  " << prefix_path_name << vcl_endl;
+     std::cerr << " Error opening file  " << prefix_path_name << std::endl;
      return false;
    }
 
@@ -162,42 +162,42 @@ read_extrinsic(
    vgl_h_matrix_3d<double> R(mm,t_dummy);
    *Rout = R;
 
-//   vcl_cout << "Rotation\n";
-//   vcl_cout << *Rout << vcl_endl << vcl_endl;
+//   std::cout << "Rotation\n";
+//   std::cout << *Rout << std::endl << std::endl;
 
    infp_ext >> t_dummy;
    vgl_homg_point_3d<double> center(t_dummy[0],t_dummy[1],t_dummy[2]);
 
    *center_out = center;
 
-//   vcl_cout << "Center:\n";
-//   vcl_cout << t_dummy << vcl_endl;
+//   std::cout << "Center:\n";
+//   std::cout << t_dummy << std::endl;
 }
 
 static bool
 read_extrinsic(
-      vcl_string prefix_path_name, 
+      std::string prefix_path_name, 
       vgl_h_matrix_3d<double> *Rout,
       vgl_homg_point_3d<double> *center_out);
 
 // reads intrinsic and extr. camera info from matlab calibration toolbox data
 bool
-read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <double> *P1out,
+read_cam(std::string img_name1, std::string img_name2, vpgl_perspective_camera <double> *P1out,
       vpgl_perspective_camera <double> *P2out)
 {
    bool stat;
 
-   vcl_string dir, pref;
+   std::string dir, pref;
    if (!mw_get_prefix(img_name1,&dir,&pref)) {
-      vcl_cerr << "Error in read_cam\n";
+      std::cerr << "Error in read_cam\n";
       return false;
    }
 
    // Intrinsic params
-   vcl_string cam_fname(dir+"/calib.intrinsic");
-   vcl_ifstream infp(cam_fname.c_str(), vcl_ios::in);
+   std::string cam_fname(dir+"/calib.intrinsic");
+   std::ifstream infp(cam_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cerr << " Error opening file  " << cam_fname << vcl_endl;
+     std::cerr << " Error opening file  " << cam_fname << std::endl;
      return false;
    }
 
@@ -213,7 +213,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
    vgl_homg_point_3d<double> center;
    stat = read_extrinsic(pref, &R, &center);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
    vpgl_perspective_camera<double> P1(K, center, R);
@@ -221,7 +221,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
 
    // File 2
    if (!mw_get_prefix(img_name2,&dir,&pref)) {
-      vcl_cerr << "Error in read_cam\n";
+      std::cerr << "Error in read_cam\n";
       return false;
    }
 
@@ -229,7 +229,7 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
    vgl_homg_point_3d<double> center2;
    stat = read_extrinsic(pref, &R2, &center2);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
 
@@ -241,22 +241,22 @@ read_cam(vcl_string img_name1, vcl_string img_name2, vpgl_perspective_camera <do
 
 // reads intrinsic and extr. camera info from matlab calibration toolbox data
 bool
-read_cam( vcl_string img_name1, 
+read_cam( std::string img_name1, 
       vpgl_perspective_camera <double> *P1out)
 {
    bool stat;
 
-   vcl_string dir, pref;
+   std::string dir, pref;
    if (!mw_get_prefix(img_name1,&dir,&pref)) {
-      vcl_cerr << "Error in read_cam\n";
+      std::cerr << "Error in read_cam\n";
       return false;
    }
 
    // Intrinsic params
-   vcl_string cam_fname(dir+"/calib.intrinsic");
-   vcl_ifstream infp(cam_fname.c_str(), vcl_ios::in);
+   std::string cam_fname(dir+"/calib.intrinsic");
+   std::ifstream infp(cam_fname.c_str(), std::ios::in);
    if (!infp) {
-     vcl_cerr << " Error opening file  " << cam_fname << vcl_endl;
+     std::cerr << " Error opening file  " << cam_fname << std::endl;
      return false;
    }
 
@@ -272,7 +272,7 @@ read_cam( vcl_string img_name1,
    vgl_homg_point_3d<double> center;
    stat = read_extrinsic(pref, &R, &center);
       if (!stat) {
-         vcl_cerr << "error while reading extrinsic" << vcl_endl;
+         std::cerr << "error while reading extrinsic" << std::endl;
          return false;
       }
    vpgl_perspective_camera<double> P1(K, center, R);
@@ -312,9 +312,9 @@ reconstruct_pt_tangents(
       const vpgl_perspective_camera <double> &Pr1,
       const vpgl_perspective_camera <double> &Pr2,
       // Output: 
-      vcl_vector<vsol_point_2d_sptr> *Gamas,
-      vcl_vector<double> *error, // distance btw two rays in 3D
-      vcl_vector<vgl_vector_3d<double>> *Ts
+      std::vector<vsol_point_2d_sptr> *Gamas,
+      std::vector<double> *error, // distance btw two rays in 3D
+      std::vector<vgl_vector_3d<double>> *Ts
       )
       */
 
@@ -330,8 +330,8 @@ reconstruct_pt_tangents(
       // Output (caller's storage; we do not alloc em here): 
       double vnl_vector_fixed<double,3> *Gama_s,
       double vnl_vector_fixed<double,3> *Gama_sp,
-      vcl_vector<vgl_vector_3d<double>> *T_s,
-      vcl_vector<vgl_vector_3d<double>> *T_sp,
+      std::vector<vgl_vector_3d<double>> *T_s,
+      std::vector<vgl_vector_3d<double>> *T_sp,
       double *error_s1, // distance btw two rays in 3D
       double *error_s2, // distance btw two rays in 3D
       )
@@ -417,16 +417,16 @@ reconstruct_pt_tangents(
       vnl_svd<double> svd(A);
       vnl_vector<double> lambda = svd.solve(c2-c1);
     
-      vcl_cout << "Lambda:\n" << lambda << vcl_endl;
+      std::cout << "Lambda:\n" << lambda << std::endl;
       // the error is:   (A*lambda +c1 - c2).two_norm()
     
       vnl_vector_fixed<double,3> Cpt_v = c1 + lambda(0)*gama1;
       vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
-      vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
+      std::cout << "Reconstructed point: " << Cpt << std::endl;
 
      //=========== Tangents
-      vcl_cout << "\n\n\n";
-      vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
+      std::cout << "\n\n\n";
+      std::cout << "================= Tangent reconstruction: =======================" << std::endl;
     
       // Camera 1:
       vnl_vector_fixed<double,3> t1_cam_bkwd;
@@ -451,8 +451,8 @@ reconstruct_pt_tangents(
     
       t2_world_bkwd = Rct2*t2_cam_bkwd;
     
-      vcl_cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << vcl_endl << vcl_endl;
-      vcl_cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << vcl_endl << vcl_endl;
+      std::cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << std::endl << std::endl;
+      std::cout << "Test t2 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << std::endl << std::endl;
     
       T_rec = vnl_cross_3d( vnl_cross_3d(t1_world_bkwd,gama1), vnl_cross_3d(t2_world_bkwd,gama2) );
 

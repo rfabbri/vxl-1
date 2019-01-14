@@ -6,9 +6,9 @@
 
 #include<dsm/dsm_ncn_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //:global variables
 //:2 inputs, the filename to write to and dsm_ncn_sptr from database
@@ -22,7 +22,7 @@ bool dsm_create_ncn_sptr_process_cons(bprb_func_process& pro)
 {
 	//set input/output types
 	using namespace dsm_create_ncn_sptr_globals;
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 	output_types_[0] = "dsm_ncn_sptr";
 
 	if(!pro.set_output_types(output_types_))
@@ -36,8 +36,8 @@ bool dsm_create_ncn_sptr_process(bprb_func_process& pro)
 {
 	using namespace dsm_create_ncn_sptr_globals;
 
-	vcl_string video_glob("");
-	vcl_string targets_xml_path("");
+	std::string video_glob("");
+	std::string targets_xml_path("");
 	unsigned num_neighbors(0);
 	unsigned num_pivot_pixels(0);
 	unsigned num_particles(0);

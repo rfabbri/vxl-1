@@ -6,8 +6,8 @@
 // This class is an intermediate between completely intrinsic shock 
 // class and a completely extrinsic shock class
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 //#include <stdio.h>
 
 #include "ishock.h"
@@ -89,7 +89,7 @@ void IShockXShock::sample_intrinsic_shocks(int option)
 
 void IShockXShock::write_esf_file (const char* filename)
 {
-  vcl_vector<const char *> miscInfo;
+  std::vector<const char *> miscInfo;
   miscInfo.push_back("Pruning Scale: 1.00");
   miscInfo.push_back("Other parameters used: Default");
 
@@ -413,7 +413,7 @@ void IShockXShock::sampleShock(SIPointPoint* spp, ExSampleListVector &edgeSample
 
       double ds = SHK()->DELTA_SAMPLE;
       //increment tau to unit arclength on shock
-    next_tau = vcl_atan(2*ds/spp->H() + vcl_tan(tau));
+    next_tau = std::atan(2*ds/spp->H() + std::tan(tau));
 
       //use this next_tau
       tau = next_tau;
@@ -538,7 +538,7 @@ void IShockXShock::sampleShock(SILineLine* sll, ExSampleListVector &edgeSampleLi
 
       double ds = SHK()->DELTA_SAMPLE;
       //increment tau to unit arclength on shock
-      double next_tau = tau - ds*vcl_fabs(vcl_cos(M_PI/4 + sll->thetaR()/2));
+      double next_tau = tau - ds*std::fabs(std::cos(M_PI/4 + sll->thetaR()/2));
 
       //use this next_tau
       tau = next_tau;

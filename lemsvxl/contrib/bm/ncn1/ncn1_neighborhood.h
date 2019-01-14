@@ -8,8 +8,8 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_vector.h>
+#include<map>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -17,10 +17,10 @@
 
 namespace neighborhood_typedefs
 {
-	typedef vcl_vector<vgl_point_2d<unsigned> > target_pixel_list_type;
-	typedef vcl_vector<vgl_point_2d<unsigned> > pivot_pixel_list_type;
-    typedef vcl_map< vgl_point_2d<unsigned>,pivot_pixel_list_type,ncn1_vgl_point_2d_less_than > neighborhood_type;
-	typedef vcl_map< vgl_point_2d<unsigned>,vcl_vector<vgl_point_2d<unsigned> >,ncn1_vgl_point_2d_less_than >   neighborhood_type;
+	typedef std::vector<vgl_point_2d<unsigned> > target_pixel_list_type;
+	typedef std::vector<vgl_point_2d<unsigned> > pivot_pixel_list_type;
+    typedef std::map< vgl_point_2d<unsigned>,pivot_pixel_list_type,ncn1_vgl_point_2d_less_than > neighborhood_type;
+	typedef std::map< vgl_point_2d<unsigned>,std::vector<vgl_point_2d<unsigned> >,ncn1_vgl_point_2d_less_than >   neighborhood_type;
     
 }
 
@@ -44,7 +44,7 @@ public:
      
     void set_pivot_pixel_candidates( pivot_pixel_list_type& ppc ){ pivot_pixel_candidates_ = ppc; }
     
-    vcl_vector<vgl_point_2d<unsigned> > pivot_pixel_candidates() {return pivot_pixel_candidates_;}
+    std::vector<vgl_point_2d<unsigned> > pivot_pixel_candidates() {return pivot_pixel_candidates_;}
 
     void set_neighborhood( neighborhood_type& nbrhd ) {neighborhood_ = nbrhd;}
 

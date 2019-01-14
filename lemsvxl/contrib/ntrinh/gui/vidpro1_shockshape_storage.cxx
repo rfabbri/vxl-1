@@ -69,9 +69,9 @@ vidpro1_shockshape_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro1_shockshape_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro1_shockshape_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

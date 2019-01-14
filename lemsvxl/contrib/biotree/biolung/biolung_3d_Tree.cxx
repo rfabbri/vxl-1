@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 #include "biolung_3D_Tree.h"
 
@@ -121,7 +121,7 @@ int biolung_Tree::shape(biolung_POINT3D p)    // Shape of the whole organ
 {
   
   if((p.z*15*15*15+2*(p.x*p.x+2.25*p.y*p.y)*(p.x*p.x+2.25*p.y*p.y)<0)&&(p.x*p.x>0.01*15*15)&&(p.z>-2.3*15)
-                &&((p.x*p.x>=0.111*15*15)||((p.x*p.x<0.111*15*15)&&(-p.y>15*0.6*vcl_cos(2*PI*p.x*0.06667)-15*0.7)))
+                &&((p.x*p.x>=0.111*15*15)||((p.x*p.x<0.111*15*15)&&(-p.y>15*0.6*std::cos(2*PI*p.x*0.06667)-15*0.7)))
                 &&((p.z+1.7*15)*15+0.4*(p.x+0.12*15)*(p.x+0.12*15)+0.4*1.69*(p.y+0.15*15)*(p.y+0.15*15)>0)
           &&((p.z+1.6*15)*(p.z+1.6*15)+8.65*(p.x-0.13*15)*(p.x-0.13*15)+6.25*(p.y+0.32*15)*(p.y+0.32*15)>15*15)
         &&(!(((p.z+0.45*15)*(p.z+0.45*15)+(p.x-0.1*15)*(p.x-0.1*15)+(p.y-0.1*15)*(p.y-0.1*15)<0.01*15*15)
@@ -137,7 +137,7 @@ int biolung_Tree::shape(biolung_POINT3D p)    // Shape of the whole organ
 double biolung_Tree::com_len(biolung_POINT3D p1,biolung_POINT3D p2)       //compute length of point p1 to p2
 {
   if((p1.x==p2.x)&&(p1.y==p2.y)&&(p1.z==p2.z))return 0;
-  else return vcl_sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z));
+  else return std::sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z));
 }
 
 biolung_Vector biolung_Tree::com_vec(biolung_POINT3D p1,biolung_POINT3D p2)       //compute vector from p1 to p2
@@ -147,7 +147,7 @@ biolung_Vector biolung_Tree::com_vec(biolung_POINT3D p1,biolung_POINT3D p2)     
   if((p1.x==p2.x)&&(p1.y==p2.y)&&(p1.z==p2.z)) {vec.l=0; vec.m=0; vec.n=0;}
   else
   {
-    len=vcl_sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z));
+    len=std::sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z));
     vec.l=(p2.x-p1.x)/len;
     vec.l=(p2.y-p1.y)/len;
     vec.l=(p2.z-p1.z)/len;
@@ -190,18 +190,18 @@ biolung_Vector biolung_Tree::product2(biolung_Vector vec1, biolung_Vector vec2)
 biolung_Vector biolung_Tree::rotate1(biolung_Vector vec1, biolung_Vector vec2, double ang)  
 {                                                           
   biolung_Vector vec;
-  vec.l = vec1.l*vcl_cos(ang)+(vec2.m*vec1.n-vec2.n*vec1.m)*vcl_sin(ang);
-  vec.m = vec1.m*vcl_cos(ang)+(vec2.n*vec1.l-vec2.l*vec1.n)*vcl_sin(ang);
-  vec.n = vec1.n*vcl_cos(ang)+(vec2.l*vec1.m-vec2.m*vec1.l)*vcl_sin(ang);
+  vec.l = vec1.l*std::cos(ang)+(vec2.m*vec1.n-vec2.n*vec1.m)*std::sin(ang);
+  vec.m = vec1.m*std::cos(ang)+(vec2.n*vec1.l-vec2.l*vec1.n)*std::sin(ang);
+  vec.n = vec1.n*std::cos(ang)+(vec2.l*vec1.m-vec2.m*vec1.l)*std::sin(ang);
   return vec;
 }
 
 biolung_Vector biolung_Tree::rotate2(biolung_Vector vec1, biolung_Vector vec2,  double ang)  
 {                                                           
   biolung_Vector vec;
-  vec.l = -(vec1.m*vec2.n-vec1.n*vec2.m)*vcl_sin(ang)+vec1.l*vcl_cos(ang);
-  vec.m = -(vec1.n*vec2.l-vec1.l*vec2.n)*vcl_sin(ang)+vec1.m*vcl_cos(ang);
-  vec.n = -(vec1.l*vec2.m-vec1.m*vec2.l)*vcl_sin(ang)+vec1.n*vcl_cos(ang);
+  vec.l = -(vec1.m*vec2.n-vec1.n*vec2.m)*std::sin(ang)+vec1.l*std::cos(ang);
+  vec.m = -(vec1.n*vec2.l-vec1.l*vec2.n)*std::sin(ang)+vec1.m*std::cos(ang);
+  vec.n = -(vec1.l*vec2.m-vec1.m*vec2.l)*std::sin(ang)+vec1.n*std::cos(ang);
   return vec;
 }
 
@@ -434,7 +434,7 @@ double biolung_Tree::DisCenter1(biolung_POINT3D ce, biolung_POINT3D p1,biolung_V
   dis2=((ce.x-p1.x)*vec.m-(ce.y-p1.y)*vec.l)*((ce.x-p1.x)*vec.m-(ce.y-p1.y)*vec.l)
     +((ce.y-p1.y)*vec.n-(ce.z-p1.z)*vec.m)*((ce.y-p1.y)*vec.n-(ce.z-p1.z)*vec.m)
     +((ce.z-p1.z)*vec.l-(ce.x-p1.x)*vec.n)*((ce.z-p1.z)*vec.l-(ce.x-p1.x)*vec.n);
-  if(dis2>0) dis=vcl_sqrt(dis2);
+  if(dis2>0) dis=std::sqrt(dis2);
   else dis=0;
   return dis;
 }
@@ -449,8 +449,8 @@ double biolung_Tree::DisCenter2(biolung_POINT3D ce, biolung_POINT3D p1,biolung_V
   if(dis22<=0) dis2=0;
   else 
   {
-    if((ce.x-p1.x)*vec.l+(ce.y-p1.y)*vec.m+(ce.z-p1.z)*vec.n>0) dis2=vcl_sqrt(dis22);
-    else dis2=-vcl_sqrt(dis22);
+    if((ce.x-p1.x)*vec.l+(ce.y-p1.y)*vec.m+(ce.z-p1.z)*vec.n>0) dis2=std::sqrt(dis22);
+    else dis2=-std::sqrt(dis22);
   }
   return dis2;
 }
@@ -478,9 +478,9 @@ double biolung_Tree::evenplane1(biolung_Area ar, int g,biolung_Range ra,biolung_
   {
     for(i=1;i<10;i++)
     {
-      vec_r.l = vec.l*vcl_cos(i*0.05*PI)-(norm.n*vec.m-norm.m*vec.n)*vcl_sin(i*0.05*PI);
-      vec_r.m = vec.m*vcl_cos(i*0.05*PI)-(norm.l*vec.n-norm.n*vec.l)*vcl_sin(i*0.05*PI);
-      vec_r.n = vec.n*vcl_cos(i*0.05*PI)-(norm.m*vec.l-norm.l*vec.m)*vcl_sin(i*0.05*PI);
+      vec_r.l = vec.l*std::cos(i*0.05*PI)-(norm.n*vec.m-norm.m*vec.n)*std::sin(i*0.05*PI);
+      vec_r.m = vec.m*std::cos(i*0.05*PI)-(norm.l*vec.n-norm.n*vec.l)*std::sin(i*0.05*PI);
+      vec_r.n = vec.n*std::cos(i*0.05*PI)-(norm.m*vec.l-norm.l*vec.m)*std::sin(i*0.05*PI);
       even=0.5*PI-i*0.05*PI;
       if(volratio2(ar,g,ra,par,vec_r,pp)>0.45)  break;
     }
@@ -491,9 +491,9 @@ double biolung_Tree::evenplane1(biolung_Area ar, int g,biolung_Range ra,biolung_
   {
     for(i=1;i<10;i++)
     {
-      vec_r.l = vec.l*vcl_cos(i*0.05*PI)+(norm.n*vec.m-norm.m*vec.n)*vcl_sin(i*0.05*PI);
-      vec_r.m = vec.m*vcl_cos(i*0.05*PI)+(norm.l*vec.n-norm.n*vec.l)*vcl_sin(i*0.05*PI);
-      vec_r.n = vec.n*vcl_cos(i*0.05*PI)+(norm.m*vec.l-norm.l*vec.m)*vcl_sin(i*0.05*PI);
+      vec_r.l = vec.l*std::cos(i*0.05*PI)+(norm.n*vec.m-norm.m*vec.n)*std::sin(i*0.05*PI);
+      vec_r.m = vec.m*std::cos(i*0.05*PI)+(norm.l*vec.n-norm.n*vec.l)*std::sin(i*0.05*PI);
+      vec_r.n = vec.n*std::cos(i*0.05*PI)+(norm.m*vec.l-norm.l*vec.m)*std::sin(i*0.05*PI);
       even=0.5*PI+i*0.05*PI;
       if(volratio2(ar,g,ra,par,vec_r,pp)<0.55) even=0.5*PI+i*0.05*PI;
       break;
@@ -523,9 +523,9 @@ double biolung_Tree::evenplane2(biolung_Area ar, int g,biolung_Range ra,biolung_
   {
     for(i=1;i<10;i++)
     {
-      vec_r.l = vec.l*vcl_cos(i*0.05*PI)+(norm.n*vec.m-norm.m*vec.n)*vcl_sin(i*0.05*PI);
-      vec_r.m = vec.m*vcl_cos(i*0.05*PI)+(norm.l*vec.n-norm.n*vec.l)*vcl_sin(i*0.05*PI);
-      vec_r.n = vec.n*vcl_cos(i*0.05*PI)+(norm.m*vec.l-norm.l*vec.m)*vcl_sin(i*0.05*PI);
+      vec_r.l = vec.l*std::cos(i*0.05*PI)+(norm.n*vec.m-norm.m*vec.n)*std::sin(i*0.05*PI);
+      vec_r.m = vec.m*std::cos(i*0.05*PI)+(norm.l*vec.n-norm.n*vec.l)*std::sin(i*0.05*PI);
+      vec_r.n = vec.n*std::cos(i*0.05*PI)+(norm.m*vec.l-norm.l*vec.m)*std::sin(i*0.05*PI);
       even=0.5*PI-i*0.05*PI;
       if(volratio2(ar,g,ra,par,vec_r,pp)>0.45) break;
     }
@@ -534,9 +534,9 @@ double biolung_Tree::evenplane2(biolung_Area ar, int g,biolung_Range ra,biolung_
   {
     for(i=1;i<10;i++)
     {
-      vec_r.l = vec.l*vcl_cos(i*0.05*PI)-(norm.n*vec.m-norm.m*vec.n)*vcl_sin(i*0.05*PI);
-      vec_r.m = vec.m*vcl_cos(i*0.05*PI)-(norm.l*vec.n-norm.n*vec.l)*vcl_sin(i*0.05*PI);
-      vec_r.n = vec.n*vcl_cos(i*0.05*PI)-(norm.m*vec.l-norm.l*vec.m)*vcl_sin(i*0.05*PI);
+      vec_r.l = vec.l*std::cos(i*0.05*PI)-(norm.n*vec.m-norm.m*vec.n)*std::sin(i*0.05*PI);
+      vec_r.m = vec.m*std::cos(i*0.05*PI)-(norm.l*vec.n-norm.n*vec.l)*std::sin(i*0.05*PI);
+      vec_r.n = vec.n*std::cos(i*0.05*PI)-(norm.m*vec.l-norm.l*vec.m)*std::sin(i*0.05*PI);
       even=0.5*PI+i*0.05*PI;
       if(volratio2(ar,g,ra,par,vec_r,pp)<0.55) break;
     }
@@ -678,7 +678,7 @@ double biolung_Tree::com_ang(double r,double n)    //branching angle theta1 for 
     if(n>0) 
     {
       coss=0.5*(1-pow(1-r,4/n)+pow(r,4/n))/pow(r, 2/n);
-            s=vcl_acos(coss);
+            s=std::acos(coss);
       if(s>0.5*PI) s=0.5*PI;
     }
     else s=0;
@@ -691,7 +691,7 @@ double biolung_Tree::revers_com_ang(double ang,double n)    //  compute volume_r
   double cosa,r,comr;
   int i;
 
-  cosa=vcl_cos(ang);
+  cosa=std::cos(ang);
   
   for(i=1;i<20;i++)
   {
@@ -760,8 +760,8 @@ long biolung_Tree::computeTree()
   r_p=0.52;  
   p1_p.z=0; p1_p.x=0; p1_p.y=-0.09*15; 
   p2_p.z=-0.62*15;   p2_p.x=0;   p2_p.y=0;
-  vec_p.n=-0.9903; vec_p.l=0; vec_p.m=vcl_sqrt(1-0.9903*0.9903);
-  norm_p.n=-vcl_sqrt(1-0.9903*0.9903); norm_p.l=0; norm_p.m=-0.9903;
+  vec_p.n=-0.9903; vec_p.l=0; vec_p.m=std::sqrt(1-0.9903*0.9903);
+  norm_p.n=-std::sqrt(1-0.9903*0.9903); norm_p.l=0; norm_p.m=-0.9903;
 
 
   ar_p.a[0].n=0;
@@ -964,9 +964,9 @@ long biolung_Tree::computeTree()
             vec_l.n=0; vec_l.l=1; vec_l.m=0;
             ar_l.a[g_l].n =-0.50;  //35degree
                ar_l.a[g_l].l =0.0;
-             ar_l.a[g_l].m =vcl_sqrt(0.750);
+             ar_l.a[g_l].m =std::sqrt(0.750);
             ar_l.a4[g_l]=distance(ar_l.a[g_l],p2_l)-0.08;          
-              norm_l.n=-0.5736;  norm_l.l=0.0;   norm_l.m=-vcl_sqrt(1-0.5736*0.5736);
+              norm_l.n=-0.5736;  norm_l.l=0.0;   norm_l.m=-std::sqrt(1-0.5736*0.5736);
             r_l=volratio(ar_l,g_l,ra_l,par_l);
         }
         else
@@ -1196,7 +1196,7 @@ long biolung_Tree::computeTree()
 
         if (awstack.message == ERROR)
         {
-            vcl_cout << "\nStack full!!" << vcl_endl;
+            std::cout << "\nStack full!!" << std::endl;
             return i-1;
         }
 

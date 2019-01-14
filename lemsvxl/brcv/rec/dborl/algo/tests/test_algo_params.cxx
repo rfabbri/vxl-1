@@ -2,8 +2,8 @@
 #include <dborl/algo/dborl_algo_params.h>
 #include <dbskr/algo/io/dbskr_match_shock_params.h>  // for dbskr_tree_edit_params2
 
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -17,8 +17,8 @@ class test_params : public dborl_algo_params
 public:
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> db_index_;
-  dborl_parameter<vcl_string> output_folder_;
+  dborl_parameter<std::string> db_index_;
+  dborl_parameter<std::string> output_folder_;
 
   dborl_parameter<bool> normalize_;
   dborl_parameter<bool> norm_reconst_bound_;  // only one of these should be true
@@ -58,20 +58,20 @@ static void test_algo_params(int argc, char* argv[])
 
   TEST_NEAR("testing added params", p2.edit_params_.curve_matching_R_(), p.edit_params_.curve_matching_R_(), 0.01);
 
-  vcl_string out_name = p2.edit_params_.output_file_postfix();
-  vcl_cout << "out_name: " << out_name << vcl_endl;
+  std::string out_name = p2.edit_params_.output_file_postfix();
+  std::cout << "out_name: " << out_name << std::endl;
 
   out_name = p2.edit_params_.output_file_postfix("replaced_name");
-  vcl_cout << "out_name2: " << out_name << vcl_endl;
+  std::cout << "out_name2: " << out_name << std::endl;
 
   //: test parsing evaluation.xml file
-  //vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
-  //vcl_string algo_name;
+  //std::map<std::string, buld_exp_stat_sptr> category_statistics;
+  //std::string algo_name;
   //TEST("testing parse evaluation", parse_evaluation_file("evaluation_k_1_N_1_0.5.xml", category_statistics, algo_name), true);
 
-  vcl_string out_file = "eval_obj.xml";
-  vcl_string obj_name = "dummy_obj1";
-  vcl_vector<vsol_box_2d_sptr> detected_boxes;
+  std::string out_file = "eval_obj.xml";
+  std::string obj_name = "dummy_obj1";
+  std::vector<vsol_box_2d_sptr> detected_boxes;
   vsol_box_2d_sptr b1 = new vsol_box_2d();
   b1->add_point(203, 809);
   b1->add_point(300, 500);
@@ -79,7 +79,7 @@ static void test_algo_params(int argc, char* argv[])
   vsol_box_2d_sptr b2 = new vsol_box_2d(*b1);
   b2->add_point(400, 1000);
   detected_boxes.push_back(b2);
-  vcl_vector<vcl_string> categories;
+  std::vector<std::string> categories;
   categories.push_back("dummy_cat1");
   categories.push_back("dummy_cat2");
   buld_exp_stat stat;
@@ -91,7 +91,7 @@ static void test_algo_params(int argc, char* argv[])
 
   detected_boxes.clear();
   categories.clear();
-  vcl_string new_name;
+  std::string new_name;
   buld_exp_stat new_stat;
   bool out = parse_obj_evaluation(out_file, new_name, detected_boxes, categories, new_stat);
   TEST("test parsing obj evaluation parsing", out, true);

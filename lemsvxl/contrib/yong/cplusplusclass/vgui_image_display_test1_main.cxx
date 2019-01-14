@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui.h>
 #include <vnl/vnl_math.h>
 #include <vgui/vgui_image_tableau.h>
@@ -20,7 +20,7 @@
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_macro.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vgui/vgui_text_tableau.h>
@@ -54,7 +54,7 @@ class example_flim_tableau : public vgui_tableau
     else
       return false;
   }
-  vcl_string type_name() const { return "example_flim_tableau"; }
+  std::string type_name() const { return "example_flim_tableau"; }
 };
 
 typedef vgui_tableau_sptr_t<example_flim_tableau> example_flim_tableau_sptr;
@@ -72,14 +72,14 @@ int main (int argc, char** argv)
   vgui::init(argc, argv);
 
   if (argc < 2) {
-    vcl_cerr << __FILE__ " : image_file argument required\n";
-    vcl_abort();
+    std::cerr << __FILE__ " : image_file argument required\n";
+    std::abort();
   }
 
   vil_image_view<vxl_byte> img = vil_load(argv[1]);
   if (!img) {
-    vcl_cerr << __FILE__ " : cannot load image from " << argv[1] << '\n';
-    vcl_abort();
+    std::cerr << __FILE__ " : cannot load image from " << argv[1] << '\n';
+    std::abort();
   }
 
   vgui_image_tableau_new img_tab(img);
@@ -102,7 +102,7 @@ int main (int argc, char** argv)
 
   main_window->get_statusbar()->write("statusbar-text");
 
-  vgui_text_graph(vcl_cerr);
+  vgui_text_graph(std::cerr);
 
   return vgui::run();
 }
@@ -136,7 +136,7 @@ struct example_window_title_setter : public vgui_observer
     deck->observers.detach(this);
   }
 
-  vcl_string last_title;
+  std::string last_title;
 
   // When this observer receives an update message, it changes the window title.
   void update()
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
       deck->add(t);
     }
     else
-      vcl_cerr << "no such file : \'" << argv[i] << "\'\n";
+      std::cerr << "no such file : \'" << argv[i] << "\'\n";
   }
   deck->index(0);
 
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
   vgui::init(argc, argv);
   if (argc <= 1)
   {
-    vcl_cerr << "Please give an image filename on the command line\n";
+    std::cerr << "Please give an image filename on the command line\n";
     return 0;
   }
 
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
   vgui::init(argc, argv);
   if (argc <= 2)
   {
-    vcl_cerr << "Please give two image filenames on the command line\n";
+    std::cerr << "Please give two image filenames on the command line\n";
     return 0;
   }
   // Load two images(given in the first two command line args)
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
   vgui::init(argc, argv);
   if (argc <= 2)
   {
-    vcl_cerr << "Please give two image filenames on the command line\n";
+    std::cerr << "Please give two image filenames on the command line\n";
     return 0;
   }
   // Load two images(given in the first two command line args)
@@ -303,7 +303,7 @@ int main(int argc, char **argv)
   vgui::init(argc, argv);
   if (argc <= 1)
   {
-    vcl_cerr << "Please give an image filename on the command line\n";
+    std::cerr << "Please give an image filename on the command line\n";
     return 0;
   }
 
@@ -368,7 +368,7 @@ int main(int argc, char ** argv)
   vgui::init(argc,argv);
   if (argc <= 1)
   {
-    vcl_cerr << "Please give an image filename on the command line\n";
+    std::cerr << "Please give an image filename on the command line\n";
     return 0;
   }
   // Make the tableau hierarchy.
@@ -394,7 +394,7 @@ int main(int argc, char ** argv)
 // simplicity all menu items will call this function):
 static void dummy()
 {
-  vcl_cerr << "Dummy function called\n";
+  std::cerr << "Dummy function called\n";
 }
 
 // Create a vgui menu:
@@ -420,7 +420,7 @@ int main(int argc, char ** argv)
   vgui::init(argc,argv);
   if (argc <= 1)
  {
-    vcl_cerr << "Please give an image filename on the command line\n";
+    std::cerr << "Please give an image filename on the command line\n";
     return 0;
  }
 
@@ -442,7 +442,7 @@ int main(int argc, char ** argv)
 // simplicity all menu items will call this function):
 static void dummy()
 {
-  vcl_cerr << "Dummy function called\n";
+  std::cerr << "Dummy function called\n";
 }
 
 // Create a vgui_menu:
@@ -471,7 +471,7 @@ vgui_menu create_menus()
   vgui::init(argc,argv);
   if (argc <= 1)
   {
-    vcl_cerr << "Please give an image filename on the command line\n";
+    std::cerr << "Please give an image filename on the command line\n";
     return 0;
   }
   // Load an image into an image tableau:
@@ -506,21 +506,21 @@ static void test_dialog()
   static long long_value = 3;
   static float float_value = 3.1f;
   static double double_value = 4.2;
-  static vcl_string string_value = "dialog test";
+  static std::string string_value = "dialog test";
   static bool bool_value = true;
-  static vcl_string inline_file_value = "/tmp/myfile_inline.txt";
-  static vcl_string file_value = "/tmp/myfile.txt";
-  static vcl_string regexp = "*.txt";
-  static vcl_string inline_color_value = "blue";
-  static vcl_string color_value = "red";
+  static std::string inline_file_value = "/tmp/myfile_inline.txt";
+  static std::string file_value = "/tmp/myfile.txt";
+  static std::string regexp = "*.txt";
+  static std::string inline_color_value = "blue";
+  static std::string color_value = "red";
 
   static int choice_value = 1;
-  vcl_vector<vcl_string> labels;
-  labels.push_back(vcl_string("fltk"));
-  labels.push_back(vcl_string("motif"));
-  labels.push_back(vcl_string("gtk"));
-  labels.push_back(vcl_string("glut"));
-  labels.push_back(vcl_string("glX"));
+  std::vector<std::string> labels;
+  labels.push_back(std::string("fltk"));
+  labels.push_back(std::string("motif"));
+  labels.push_back(std::string("gtk"));
+  labels.push_back(std::string("glut"));
+  labels.push_back(std::string("glX"));
 
   vgui_dialog mydialog("My dialog");
   mydialog.field("int value", int_value);
@@ -537,31 +537,31 @@ static void test_dialog()
 
   if (mydialog.ask())
   {
-    vcl_cerr << "OK pressed.\n";
-    vcl_cerr << "int_value : " << int_value << vcl_endl;
-    vcl_cerr << "long_value : " << long_value << vcl_endl;
-    vcl_cerr << "float_value : " << float_value << vcl_endl;
-    vcl_cerr << "double_value : " << double_value << vcl_endl;
-    vcl_cerr << "string_value : " << string_value << vcl_endl;
-    vcl_cerr << "bool_value : " << vbl_bool_ostream::true_false(bool_value) << vcl_endl;
-    vcl_cerr << "choice_value : " << choice_value << " " << labels[choice_value] << vcl_endl;
-    vcl_cerr << "inline_file_value: " << inline_file_value << vcl_endl;
-    vcl_cerr << "file_value: " << file_value << vcl_endl;
-    vcl_cerr << "inline_color_value: " << inline_color_value << vcl_endl;
-    vcl_cerr << "color_value: " << color_value << vcl_endl;
+    std::cerr << "OK pressed.\n";
+    std::cerr << "int_value : " << int_value << std::endl;
+    std::cerr << "long_value : " << long_value << std::endl;
+    std::cerr << "float_value : " << float_value << std::endl;
+    std::cerr << "double_value : " << double_value << std::endl;
+    std::cerr << "string_value : " << string_value << std::endl;
+    std::cerr << "bool_value : " << vbl_bool_ostream::true_false(bool_value) << std::endl;
+    std::cerr << "choice_value : " << choice_value << " " << labels[choice_value] << std::endl;
+    std::cerr << "inline_file_value: " << inline_file_value << std::endl;
+    std::cerr << "file_value: " << file_value << std::endl;
+    std::cerr << "inline_color_value: " << inline_color_value << std::endl;
+    std::cerr << "color_value: " << color_value << std::endl;
   } else {
-    vcl_cerr << "Cancel pressed.\n";
-    vcl_cerr << "int_value : " << int_value << vcl_endl;
-    vcl_cerr << "long_value : " << long_value << vcl_endl;
-    vcl_cerr << "float_value : " << float_value << vcl_endl;
-    vcl_cerr << "double_value : " << double_value << vcl_endl;
-    vcl_cerr << "string_value : " << string_value << vcl_endl;
-    vcl_cerr << "bool_value : " << vbl_bool_ostream::true_false(bool_value) << vcl_endl;
-    vcl_cerr << "choice_value : " << choice_value << " " << labels[choice_value] << vcl_endl;
-    vcl_cerr << "inline_file_value: " << inline_file_value << vcl_endl;
-    vcl_cerr << "file_value: " << file_value << vcl_endl;
-    vcl_cerr << "inline_color_value: " << inline_color_value << vcl_endl;
-    vcl_cerr << "color_value: " << color_value << vcl_endl;
+    std::cerr << "Cancel pressed.\n";
+    std::cerr << "int_value : " << int_value << std::endl;
+    std::cerr << "long_value : " << long_value << std::endl;
+    std::cerr << "float_value : " << float_value << std::endl;
+    std::cerr << "double_value : " << double_value << std::endl;
+    std::cerr << "string_value : " << string_value << std::endl;
+    std::cerr << "bool_value : " << vbl_bool_ostream::true_false(bool_value) << std::endl;
+    std::cerr << "choice_value : " << choice_value << " " << labels[choice_value] << std::endl;
+    std::cerr << "inline_file_value: " << inline_file_value << std::endl;
+    std::cerr << "file_value: " << file_value << std::endl;
+    std::cerr << "inline_color_value: " << inline_color_value << std::endl;
+    std::cerr << "color_value: " << color_value << std::endl;
   }
 }
 
@@ -574,7 +574,7 @@ static void test_dialog2()
 
   mydialog.message("A picture");
 
-  vcl_string button_txt("close");
+  std::string button_txt("close");
   mydialog.set_ok_button(button_txt.c_str());
   mydialog.set_cancel_button(0);
   mydialog.ask();
@@ -627,14 +627,14 @@ struct example_tableau : public vgui_image_tableau
       float pointx, pointy;
       vgui_projection_inspector p_insp;
       p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-      int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+      int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
       vgui::out << '(' << intx << ' ' << inty << ")\n";
     }
 
     if (e.type == vgui_BUTTON_DOWN &&
         e.button == vgui_LEFT && e.modifier == 0)
     {
-      vcl_cout << "selecting at " << e.wx << ' ' << e.wy << vcl_endl;
+      std::cout << "selecting at " << e.wx << ' ' << e.wy << std::endl;
       return true; // event has been used
     }
 
@@ -643,9 +643,9 @@ struct example_tableau : public vgui_image_tableau
     return vgui_image_tableau::handle(e);
   }
 
-  vcl_string type_name() const
+  std::string type_name() const
   {
-    return vcl_string("example_tableau");      
+    return std::string("example_tableau");      
   }
 
 
@@ -667,7 +667,7 @@ int main(int argc,char **argv)
   vgui::init(argc, argv);
   if (argc <= 1)
   {
-    vcl_cerr << "Please give an image filename\n";
+    std::cerr << "Please give an image filename\n";
     return 0;
   }
 

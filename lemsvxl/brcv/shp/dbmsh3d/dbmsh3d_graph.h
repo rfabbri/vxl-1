@@ -16,10 +16,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 #include <dbmsh3d/dbmsh3d_edge.h>
@@ -29,7 +29,7 @@
 class dbmsh3d_graph : public dbmsh3d_pt_set
 {
 protected:
-  vcl_map<int, dbmsh3d_edge*> edgemap_;
+  std::map<int, dbmsh3d_edge*> edgemap_;
   int   edge_id_counter_;
 
 public:
@@ -39,7 +39,7 @@ public:
   }
 
   void _clear_edgemap () {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
     while (it != edgemap_.end()) {
       dbmsh3d_edge* E = (*it).second;
       remove_edge (E);
@@ -61,11 +61,11 @@ public:
   }
 
   //###### Data access functions ######
-  vcl_map<int, dbmsh3d_edge*>& edgemap() {
+  std::map<int, dbmsh3d_edge*>& edgemap() {
     return edgemap_;
   }
   dbmsh3d_edge* edgemap (const int i) {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (i);
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (i);
     if (it == edgemap_.end())
       return NULL;
     return (*it).second;
@@ -96,7 +96,7 @@ public:
   }
 
   void _add_edge (dbmsh3d_edge* E) {
-    edgemap_.insert (vcl_pair<int, dbmsh3d_edge*>(E->id(), E));
+    edgemap_.insert (std::pair<int, dbmsh3d_edge*>(E->id(), E));
   }
 
   void add_edge_incidence (dbmsh3d_edge* E) {
@@ -110,7 +110,7 @@ public:
   }
 
   void add_edge_incidence_check (dbmsh3d_edge* E) {
-    edgemap_.insert (vcl_pair<int, dbmsh3d_edge*>(E->id(), E));
+    edgemap_.insert (std::pair<int, dbmsh3d_edge*>(E->id(), E));
     dbmsh3d_vertex* sV = E->sV();
     sV->check_add_incident_E (E);
     dbmsh3d_vertex* eV = E->eV();

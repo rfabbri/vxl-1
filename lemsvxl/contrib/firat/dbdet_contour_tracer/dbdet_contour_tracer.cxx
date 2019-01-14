@@ -19,14 +19,14 @@ static int
 trace_eno_zero_xings(const vil_image_view<double> &img /*surface*/, Tracer *Tr);
 
 static int
-trace_eno_zero_xings_with_shock_capturing(const vil_image_view<double> &img /*surface*/, vcl_vector<vcl_vector<vsol_point_2d_sptr> >& contours);
+trace_eno_zero_xings_with_shock_capturing(const vil_image_view<double> &img /*surface*/, std::vector<std::vector<vsol_point_2d_sptr> >& contours);
 
 
 static void free_data_tracer(Tracer *Tr);
 
 static void decode_old_tracer(
 		const Tracer &trac,
-		vcl_vector<vcl_vector<vsol_point_2d_sptr> > &contours,
+		std::vector<std::vector<vsol_point_2d_sptr> > &contours,
 		unsigned &idx_of_max_contour
 );
 
@@ -38,7 +38,7 @@ trace(const vil_image_view<bool> &img)
 	bool stat;
 
 	if (!img.is_contiguous() || img.istep() != 1) {
-		vcl_cerr << "dbnl_eno_image: only contigous row-wise (col,row) images supported\n";
+		std::cerr << "dbnl_eno_image: only contigous row-wise (col,row) images supported\n";
 		return false;
 	}
 
@@ -57,7 +57,7 @@ trace(const vil_image_view<bool> &img)
 	curvature_smoothing(s_edt_double.top_left_ptr(),
 			curvature_smooth_beta_ , curvature_smooth_nsteps_, 0, img.nj(),img.ni());
 
-	//  vil_print_all(vcl_cout, s_edt_double);
+	//  vil_print_all(std::cout, s_edt_double);
 
 
 	// 3 - trace_eno_zero_xings
@@ -72,8 +72,8 @@ trace(const vil_image_view<bool> &img)
 	// 5 - Smooth the largest contour using Gaussian smoothing
 	if (!contours_.empty() && sigma_ > 0.0)
 	{
-		vcl_vector<vsol_point_2d_sptr>& contour = contours_[index_of_max_contour_];
-		vcl_vector<vgl_point_2d<double> > curve;
+		std::vector<vsol_point_2d_sptr>& contour = contours_[index_of_max_contour_];
+		std::vector<vgl_point_2d<double> > curve;
 		for (unsigned i = 0; i<contour.size(); i++)
 		{
 			curve.push_back(vgl_point_2d<double>(contour[i]->x(), contour[i]->y()));
@@ -177,7 +177,7 @@ trace_sedt_image_with_shock_capturing(const vil_image_view<double >& s_edt_doubl
 // \param[in] i : index of contour to be written
 //
 bool dbdet_contour_tracer::
-output_con_file(const vcl_string &filename, unsigned idx)
+output_con_file(const std::string &filename, unsigned idx)
 {
 	char strtemp1[100];
 	char strtemp2[100];
@@ -191,13 +191,13 @@ output_con_file(const vcl_string &filename, unsigned idx)
 	strcpy(strtemp1, filename.c_str());
 	strtemp1[j]= '\0';
 	sprintf(strtemp2, "%s-points-%d.con", strtemp1,idx+1);
-	vcl_cout << "Created " << strtemp2 << vcl_endl;
+	std::cout << "Created " << strtemp2 << std::endl;
 
 
-	vcl_ofstream confile;
+	std::ofstream confile;
 	confile.open(strtemp2);
 
-	confile << "CONTOUR\nCLOSE\n" << contours_[idx].size() << vcl_endl;
+	confile << "CONTOUR\nCLOSE\n" << contours_[idx].size() << std::endl;
 	for (unsigned k=0; k < contours_[idx].size(); ++k)
 		confile << contours_[idx][k]->x() << " " << contours_[idx][k]->y() << " ";
 
@@ -308,7 +308,7 @@ trace_eno_zero_xings(const vil_image_view<double> &img /*surface*/, Tracer *ptra
 
 
 int
-trace_eno_zero_xings_with_shock_capturing(const vil_image_view<double> &img /*surface*/, vcl_vector<vcl_vector<vsol_point_2d_sptr> >& contours)
+trace_eno_zero_xings_with_shock_capturing(const vil_image_view<double> &img /*surface*/, std::vector<std::vector<vsol_point_2d_sptr> >& contours)
 {
 
 	unsigned y,x,pos,i;
@@ -518,7 +518,7 @@ void free_data_tracer(Tracer *Tr)
 //  the contours themselves 
 void decode_old_tracer(
 		const Tracer &trac,
-		vcl_vector<vcl_vector<vsol_point_2d_sptr> > &contours,
+		std::vector<std::vector<vsol_point_2d_sptr> > &contours,
 		unsigned &index_of_max_contour
 )
 {

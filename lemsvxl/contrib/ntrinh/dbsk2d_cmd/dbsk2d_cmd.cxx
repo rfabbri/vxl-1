@@ -8,7 +8,7 @@
 
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include "dbsk2d_cmd_utils.h"
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
   vul_arg<bool > help_gen_random_bnd(arg_list,"-help-gen_random-bnd", 
     "print help on using the option -gen_random-bnd", false);
 
-  vul_arg<vcl_string > bnd_file(arg_list,"-bnd-file", "Output boundary file", "sample.bnd");
+  vul_arg<std::string > bnd_file(arg_list,"-bnd-file", "Output boundary file", "sample.bnd");
   vul_arg<int > num_lines(arg_list,"-num-lines", "Number of line segments", 10);
   vul_arg<int > num_arcs(arg_list,"-num-arcs", "Number of circular arc segments", 10);
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   // print usage on converting ps images to jpeg
   if (help_gen_random_bnd())
   {
-    vcl_cout << "Usage with --gen_random-bnd option:\n"
+    std::cout << "Usage with --gen_random-bnd option:\n"
       << bnd_file.option() << " " << bnd_file.help() << "\n"
       << num_lines.option() << " " << num_lines.help() << "\n"
       << num_arcs.option() << " " << num_arcs.help() << "\n";
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   // convert PS (with bounding box) images to jpeg images
   if (gen_random_bnd())
   {
-    vcl_cout << "Output boundary file= " << bnd_file() << "\n"
+    std::cout << "Output boundary file= " << bnd_file() << "\n"
       << "Numer of line segments = " << num_lines() << "\n"
       << "Numer of arc segments = " << num_arcs() << "\n";
     int image_width = 512;

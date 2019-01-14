@@ -13,8 +13,8 @@
 
 #include <bvis1/bvis1_tool.h>
 
-#include <vcl_set.h>
-#include <vcl_queue.h>
+#include <set>
+#include <queue>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_style_sptr.h>
 
@@ -35,7 +35,7 @@ public:
   ~dbdet_sel_CC_linking_tool() { clear_contour(); }
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -61,8 +61,8 @@ public:
   void resolve_contour();
 
   //drawing routines
-  void draw_edgel_chain(vcl_vector<dbdet_edgel*>& edgel_chain, float R=1.0, float G=0.0, float B=0.0);
-  void draw_arc_spline(vcl_vector<dbdet_edgel*>& edgel_chain,  float R=1.0, float G=0.0, float B=0.0);
+  void draw_edgel_chain(std::vector<dbdet_edgel*>& edgel_chain, float R=1.0, float G=0.0, float B=0.0);
+  void draw_arc_spline(std::vector<dbdet_edgel*>& edgel_chain,  float R=1.0, float G=0.0, float B=0.0);
   
   void draw_hyp_tree();
   void draw_link(dbdet_EHT_node* cur_node);

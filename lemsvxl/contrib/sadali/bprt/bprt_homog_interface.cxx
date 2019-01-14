@@ -9,7 +9,7 @@
 
 
 void 
-bprt_homog_interface::set_method(vcl_string &method_name)
+bprt_homog_interface::set_method(std::string &method_name)
 {
         method_ = method_name;
         
@@ -18,7 +18,7 @@ bprt_homog_interface::set_method(vcl_string &method_name)
 bool 
 bprt_homog_interface::compute_homog()
 {
-        vcl_string method = method_;
+        std::string method = method_;
         leftover1 = pointlist1_;
         leftover2 = pointlist2_;
         int plane_ind = -1;
@@ -35,17 +35,17 @@ bprt_homog_interface::compute_homog()
            
             if  ( (leftover1.size()<8) && (leftover2.size()<8) )
             {
-                 vcl_cout<<"Number of planes assumed:   "<<*max_planes_<<"\n";
+                 std::cout<<"Number of planes assumed:   "<<*max_planes_<<"\n";
                 *max_planes_ = plane_ind;
                 break;
             }
             else 
-                vcl_cout<<"Number of planes assumed:   "<<*max_planes_<<"\n";
+                std::cout<<"Number of planes assumed:   "<<*max_planes_<<"\n";
                 double max_outlier_frac = 0.5;
                 double desired_prob_good = 0.99999;
                 int max_pops = *max_planes_;
                 int trace_level = 0;
-                vcl_cout<<"\n"<<"bprt_homog_interface::compute_homog()-- No of pts in homography:"<<leftover1.size()<<"   "<<leftover2.size()<<"\n";
+                std::cout<<"\n"<<"bprt_homog_interface::compute_homog()-- No of pts in homography:"<<leftover1.size()<<"   "<<leftover2.size()<<"\n";
 
                 if (use_epipole_)
                     Homog_est = new rrel_homography2d_est_epipole(leftover1,leftover2, epi1,epi2);
@@ -65,17 +65,17 @@ bprt_homog_interface::compute_homog()
                         Homog_est->set_no_prior_scale();
                         if ( !ransam->estimate( Homog_est, lms ) )
                         {
-                                vcl_cout << "LMS failed!!\n";
+                                std::cout << "LMS failed!!\n";
                                 delete lms;
                                 delete ransam;
                                 return false;
                         }
                         else {
-                                vcl_cout << "LMS succeeded.\n"
-                                        << "estimate = " << ransam->params() << vcl_endl
-                                        << "scale = " << ransam->scale() << vcl_endl;
+                                std::cout << "LMS succeeded.\n"
+                                        << "estimate = " << ransam->params() << std::endl
+                                        << "scale = " << ransam->scale() << std::endl;
                         }
-                        vcl_cout << vcl_endl;
+                        std::cout << std::endl;
                         delete lms;
                 }
                 else if (method=="muset")
@@ -89,7 +89,7 @@ bprt_homog_interface::compute_homog()
                         //muset->set_muse_type(RREL_MUSE_TRIMMED);
                         if ( !ransam->estimate( Homog_est, muset ) )
                         {
-                                vcl_cout << "MUSE failed!!\n";
+                                std::cout << "MUSE failed!!\n";
                                
                                 if (plane_ind==0)
                                 { 
@@ -99,17 +99,17 @@ bprt_homog_interface::compute_homog()
                                 }
                                 else 
                                 {*max_planes_= plane_ind;
-                                                                vcl_cout<<"\nWarning :only found "<<plane_ind<<"  planes\n";
+                                                                std::cout<<"\nWarning :only found "<<plane_ind<<"  planes\n";
 
                                     continue;
                                 }
                         }
                         else {
-                                vcl_cout << "MUSE succeeded.\n"
-                                        << "estimate = " << ransam->params() << vcl_endl
-                                        << "scale = " << ransam->scale() << vcl_endl;
+                                std::cout << "MUSE succeeded.\n"
+                                        << "estimate = " << ransam->params() << std::endl
+                                        << "scale = " << ransam->scale() << std::endl;
                         }
-                        vcl_cout << vcl_endl;
+                        std::cout << std::endl;
                         delete muset;
                 }
                         //
@@ -122,15 +122,15 @@ bprt_homog_interface::compute_homog()
                         Homog_est->set_prior_scale( prior_scale );
                         if ( !ransam->estimate( Homog_est, msac ) )
                         {
-                                vcl_cout << "MSAC failed!!\n";
+                                std::cout << "MSAC failed!!\n";
                                 delete msac;
                                 delete ransam;
                                 return false;
                         }
                         else {
-                                vcl_cout << "MSAC succeeded.\n"
-                                        << "estimate = " << ransam->params() << vcl_endl
-                                        << "scale = "    << ransam->scale()  << vcl_endl;
+                                std::cout << "MSAC succeeded.\n"
+                                        << "estimate = " << ransam->params() << std::endl
+                                        << "scale = "    << ransam->scale()  << std::endl;
                                 delete msac;
                         }
                 }
@@ -148,18 +148,18 @@ bprt_homog_interface::compute_homog()
                         
                         if ( !ransam->estimate( Homog_est, mlesac ) )
                         {
-                                vcl_cout << "MLESAC failed!!\n";
+                                std::cout << "MLESAC failed!!\n";
                                 delete ransam;
                                 delete mlesac;
                                 return false;
                         }
                         else {
-                                vcl_cout << "MLESAC succeeded.\n"
-                                        << "estimate = " << ransam->params() << vcl_endl
-                                        << "scale = " << ransam->scale() << vcl_endl;
+                                std::cout << "MLESAC succeeded.\n"
+                                        << "estimate = " << ransam->params() << std::endl
+                                        << "scale = " << ransam->scale() << std::endl;
                                 delete mlesac;
                         }
-                        vcl_cout << vcl_endl;
+                        std::cout << std::endl;
                         
                 }
                         
@@ -176,15 +176,15 @@ bprt_homog_interface::compute_homog()
                         
                         if ( !ransam->estimate(Homog_est, ransac ) )
                         {
-                                vcl_cout << "RANSAC failed!!\n";
+                                std::cout << "RANSAC failed!!\n";
                                 delete ransam;
                                 delete ransac;
                                 return false;
                         }
                         else {
-                                vcl_cout << "RANSAC succeeded.\n"
-                                        << "estimate = " << ransam->params() << vcl_endl
-                                        << "scale = " << ransam->scale() << vcl_endl;
+                                std::cout << "RANSAC succeeded.\n"
+                                        << "estimate = " << ransam->params() << std::endl
+                                        << "scale = " << ransam->scale() << std::endl;
                                 delete ransac;          
                         }
                 }
@@ -192,7 +192,7 @@ bprt_homog_interface::compute_homog()
                 Homog_est->params_to_homog(ransam->params(),Hmat);
                 NormH_=Hmat; 
                 NormHvgl_ = vgl_h_matrix_2d<double> (NormH_);
-                vcl_cout<<"Calc H by "<<method<<"\n";
+                std::cout<<"Calc H by "<<method<<"\n";
                 
                 vgl_h_matrix_2d<double> invtr=normtr2_.get_inverse();
                 if (normalize_)
@@ -200,26 +200,26 @@ bprt_homog_interface::compute_homog()
                
                 else 
                     FullH_ = NormH_;
-                vcl_cout<<"homography"<<FullH_<<"\n";
+                std::cout<<"homography"<<FullH_<<"\n";
                 //IMPORTANT Make surre  the found homography is pushed_back before get_outliers function
                 if (normalize_)
                     Homog_matlist.push_back(NormHvgl_);
                 else
                 Homog_matlist.push_back(FullH_);
 
-                vcl_cout<<"Determinant of homography:"<<vnl_det(FullH_.get_matrix())<<"\n";
-                vcl_vector<vcl_vector<vgl_homg_point_2d< double > > > outlier_vec = this->get_outliers(ransam->scale(),2.5, plane_ind);
+                std::cout<<"Determinant of homography:"<<vnl_det(FullH_.get_matrix())<<"\n";
+                std::vector<std::vector<vgl_homg_point_2d< double > > > outlier_vec = this->get_outliers(ransam->scale(),2.5, plane_ind);
                 for (int i = 0; i<outlier_vec[0].size(); i++)
                 {
-                    vcl_cout<<"\nOutlier  x:"<<(normtr1_.get_inverse()*outlier_vec[0][i]).x()<<" y: "<< (normtr1_.get_inverse()*outlier_vec[0][i]).y()<<"\t";
-                    vcl_cout<<"Outlier  x:"<<(normtr2_.get_inverse()*outlier_vec[1][i]).x()<<" y: "<< (normtr2_.get_inverse()*outlier_vec[1][i]).y()<<"\t";
+                    std::cout<<"\nOutlier  x:"<<(normtr1_.get_inverse()*outlier_vec[0][i]).x()<<" y: "<< (normtr1_.get_inverse()*outlier_vec[0][i]).y()<<"\t";
+                    std::cout<<"Outlier  x:"<<(normtr2_.get_inverse()*outlier_vec[1][i]).x()<<" y: "<< (normtr2_.get_inverse()*outlier_vec[1][i]).y()<<"\t";
 
                 }
-                vcl_cout<<"\n";
+                std::cout<<"\n";
                leftover1 = outlier_vec[0];
                leftover2 = outlier_vec[1];
-                           vcl_cout<<"Number of left points1: "<<leftover1.size()<<"\n";
-                           vcl_cout<<"Number of left points2: "<<leftover2.size()<<"\n";
+                           std::cout<<"Number of left points1: "<<leftover1.size()<<"\n";
+                           std::cout<<"Number of left points2: "<<leftover2.size()<<"\n";
 
                 delete ransam;
                       
@@ -236,8 +236,8 @@ bprt_homog_interface::compute_homog()
                     FullH_=vgl_h_matrix_2d<double>(invtr*NormH_*normtr1_);
                 else 
                     FullH_ = NormH_;
-                vcl_cout<<"Calc H by 4points\n";
-                vcl_cout<<FullH_;
+                std::cout<<"Calc H by 4points\n";
+                std::cout<<FullH_;
                 
                 }
 
@@ -245,7 +245,7 @@ bprt_homog_interface::compute_homog()
         return true;
         }
 void 
-bprt_homog_interface::transfer(vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, vcl_vector< vsol_spatial_object_2d_sptr > &pt_2btransf2, int populnum)
+bprt_homog_interface::transfer(std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf1, std::vector< vsol_spatial_object_2d_sptr > &pt_2btransf2, int populnum)
 {
         int num_pt_2btransf1=pt_2btransf1.size();
         int num_pt_2btransf2=pt_2btransf2.size();
@@ -271,20 +271,20 @@ bprt_homog_interface::transfer(vcl_vector< vsol_spatial_object_2d_sptr > &pt_2bt
 
 
 void
- bprt_homog_interface::get_output(vcl_vector< vsol_spatial_object_2d_sptr> &out,int i)
+ bprt_homog_interface::get_output(std::vector< vsol_spatial_object_2d_sptr> &out,int i)
 {
         if (i==1)
         {
                 out=output1_;
         //      for (int k=0;k<num_points;k++)
-                //      vcl_cout<<output1_[k]->cast_to_point()->x()<<"  "<<output1_[k]->cast_to_point()->y()<<"  ";
+                //      std::cout<<output1_[k]->cast_to_point()->x()<<"  "<<output1_[k]->cast_to_point()->y()<<"  ";
         }
         
         if (i==2)
         {
                 out=output2_;
         //      for (int k=0;k<num_points;k++)
-        //              vcl_cout<<output2_[k]->cast_to_point()->x()<<"  "<<output2_[k]->cast_to_point()->y()<<"  ";
+        //              std::cout<<output2_[k]->cast_to_point()->x()<<"  "<<output2_[k]->cast_to_point()->y()<<"  ";
         }
         
 }
@@ -308,18 +308,18 @@ vgl_h_matrix_2d<double>
 // Calculates outliers and returns them
 // Also calculates inliers and puts them  in pops1_ and pops2_ as a vector of vgl_homg_2d which belong to one population
 
-vcl_vector<vcl_vector<vgl_homg_point_2d<double> > > 
+std::vector<std::vector<vgl_homg_point_2d<double> > > 
 bprt_homog_interface::get_outliers(double scale, double mult_scale,int popindex)
 {   
-    vcl_vector<vcl_vector<vgl_homg_point_2d<double> > > outliers;
-    vcl_vector<vgl_homg_point_2d<double> > outliers1, outliers2;
-    vcl_vector<vgl_homg_point_2d<double> > inliers1, inliers2;
+    std::vector<std::vector<vgl_homg_point_2d<double> > > outliers;
+    std::vector<vgl_homg_point_2d<double> > outliers1, outliers2;
+    std::vector<vgl_homg_point_2d<double> > inliers1, inliers2;
     vnl_vector<double> params(9);
-    vcl_vector<double> residuals;
+    std::vector<double> residuals;
 
     Homog_est->homog_to_params(NormH_,params);
     Homog_est->compute_residuals(params , residuals);
-    vcl_vector<vsol_spatial_object_2d_sptr> transferpop1,transferpop2;
+    std::vector<vsol_spatial_object_2d_sptr> transferpop1,transferpop2;
         outlier_points1.clear();
         outlier_points2.clear();
     int inliers =0;
@@ -354,17 +354,17 @@ bprt_homog_interface::get_outliers(double scale, double mult_scale,int popindex)
     outliers.push_back(outliers2);
     pops1_.push_back(inliers1);
     pops2_.push_back(inliers2);
-    vcl_cout<<"number of inliers: "<<inliers<<"\n";
-        vcl_cout<<"number of outliers: "<<outliers1.size()<<"\n";
+    std::cout<<"number of inliers: "<<inliers<<"\n";
+        std::cout<<"number of outliers: "<<outliers1.size()<<"\n";
 
     return outliers;
 }
-vcl_vector<vsol_spatial_object_2d_sptr > 
+std::vector<vsol_spatial_object_2d_sptr > 
 bprt_homog_interface::get_pop(int imgnum, int popnum)
 {
     assert((pops1_.size()>popnum)&&(pops2_.size()>popnum));
-    vcl_vector<vsol_spatial_object_2d_sptr> pops1_so;
-    vcl_vector<vsol_spatial_object_2d_sptr> pops2_so;
+    std::vector<vsol_spatial_object_2d_sptr> pops1_so;
+    std::vector<vsol_spatial_object_2d_sptr> pops2_so;
     
     if (imgnum==1)
     {
@@ -394,7 +394,7 @@ bprt_homog_interface::get_pop(int imgnum, int popnum)
 
 }
 
-vcl_vector<vsol_spatial_object_2d_sptr> 
+std::vector<vsol_spatial_object_2d_sptr> 
 bprt_homog_interface::get_transf_pop(int imnum,int popnum)
 {
 
@@ -420,7 +420,7 @@ bprt_homog_interface::set_epipole(vgl_homg_point_2d<double> epipole1, vgl_homg_p
 }
 
 void
-bprt_homog_interface::get_outlier_points( vcl_vector<vsol_point_2d_sptr> &outliers_from_first_homog1, vcl_vector<vsol_point_2d_sptr> &outliers_from_first_homog2)
+bprt_homog_interface::get_outlier_points( std::vector<vsol_point_2d_sptr> &outliers_from_first_homog1, std::vector<vsol_point_2d_sptr> &outliers_from_first_homog2)
 {
 //Check to see if the point was  added before
         //will be a problem because of floating point errors
@@ -440,7 +440,7 @@ outliers_from_first_homog2.clear();
           outliers_from_first_homog1.push_back(new vsol_point_2d(normtr1_.get_inverse()*vgl_homg_point_2d<double>(outlier_points1[i]->x(),outlier_points1[i]->y())));
 
     }
-         vcl_cout<<outliers_from_first_homog1.size()<<"  Number of outlier in first image\n";
+         std::cout<<outliers_from_first_homog1.size()<<"  Number of outlier in first image\n";
         for (int i =0; i<outlier_points2.size();i++)
     {
         added_before= false;
@@ -453,5 +453,5 @@ outliers_from_first_homog2.clear();
           outliers_from_first_homog2.push_back(new vsol_point_2d(normtr2_.get_inverse()*vgl_homg_point_2d<double>(outlier_points2[i]->x(),outlier_points2[i]->y())));
 
     }
-        vcl_cout<<outliers_from_first_homog2.size()<<"  Number of outlier in first image\n";
+        std::cout<<outliers_from_first_homog2.size()<<"  Number of outlier in first image\n";
 }

@@ -19,14 +19,14 @@ dbsk2d_ishock_gap_detector::dbsk2d_ishock_gap_detector(
 
 //: Detect all gap 1 for whole ishock graph
 void dbsk2d_ishock_gap_detector::detect_gap1(
-    vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
+    std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
     gap_pairs)
 {
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
         
-    vcl_vector<dbsk2d_ishock_belm*> belm_list = boundary_->belm_list();
+    std::vector<dbsk2d_ishock_belm*> belm_list = boundary_->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_point() )
@@ -38,7 +38,7 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             if ( bpoint->is_an_end_point() && bpoint->is_a_GUIelm())
             {
                 bool flag=false;
-                vcl_set<int> contour_ids;
+                std::set<int> contour_ids;
                 gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
             }
 
@@ -46,8 +46,8 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
     }
 
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator it;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator it;
     it = gaps_visited.begin();
     for ( ; it != gaps_visited.end() ; ++it)
     {
@@ -59,10 +59,10 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
 
 //: Detect all gap 1 for just particular endpoint
 void dbsk2d_ishock_gap_detector::detect_gap1(dbsk2d_ishock_belm* belm,
-vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
+std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
         gap_pairs)
 {
-    vcl_map<unsigned int,dbsk2d_ishock_bpoint*> endpoints;
+    std::map<unsigned int,dbsk2d_ishock_bpoint*> endpoints;
     dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
     bnd_ishock_map_iter curS = belm->shock_map().begin();
     for ( ; curS != belm->shock_map().end() ; ++curS)
@@ -83,7 +83,7 @@ vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
                     if ( other_bpoint->is_an_end_point() && 
                          endpoints.count(other_bpoint->id())==0)
                     {
-                        gap_pairs.push_back(vcl_make_pair(bp1,other_bpoint));
+                        gap_pairs.push_back(std::make_pair(bp1,other_bpoint));
                         endpoints[other_bpoint->id()]=other_bpoint;
 
                     }
@@ -99,7 +99,7 @@ vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
                     if ( other_bpoint->is_an_end_point() &&
                          endpoints.count(other_bpoint->id()) ==0 )
                     {
-                        gap_pairs.push_back(vcl_make_pair(bp1,other_bpoint));
+                        gap_pairs.push_back(std::make_pair(bp1,other_bpoint));
                         endpoints[other_bpoint->id()]=other_bpoint;
                      
                     }
@@ -116,25 +116,25 @@ vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
 
 //: Detect all gap 1 for a bunch of regions
 void dbsk2d_ishock_gap_detector::detect_gap1(
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& region_outer_nodes,
-    vcl_vector<
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& region_outer_nodes,
+    std::vector<
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
     gap_pairs)
 {
 
     // Detect all gaps for a bunch of regions
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
 
     // Loop thru new regions and determine new transforms
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >::iterator it;
 
     for ( it = region_outer_nodes.begin() ; it != region_outer_nodes.end(); 
           ++it)
     {
         // Detect transforms
-        vcl_vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
+        std::vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
         for ( unsigned int i=0; i < outer_shock_nodes.size() ; ++i)
         {
             ishock_edge_list adj_edges = outer_shock_nodes[i]->adj_edges();
@@ -149,7 +149,7 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        vcl_set<int> contour_ids;
+                        std::set<int> contour_ids;
                         gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
                     }
                 }
@@ -161,7 +161,7 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        vcl_set<int> contour_ids;
+                        std::set<int> contour_ids;
                         gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
 
                     }
@@ -171,12 +171,12 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
         }   
     }
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator bit;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator bit;
     bit = gaps_visited.begin();
     for ( ; bit != gaps_visited.end() ; ++bit)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_pair
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_pair
             = (*bit).second;
         int id1(0),id2(0);
 
@@ -195,9 +195,9 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             }
             it=edges.begin();
             
-            const vcl_list< vtol_topology_object * > * 
+            const std::list< vtol_topology_object * > * 
                 superiors  = (*it)->superiors_list();
-            vcl_list<vtol_topology_object*>::const_iterator tit;
+            std::list<vtol_topology_object*>::const_iterator tit;
             tit=(*superiors).begin();
             
             id1 = (*tit)->get_id();
@@ -219,9 +219,9 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             }
             it=edges.begin();
             
-            const vcl_list< vtol_topology_object * > * 
+            const std::list< vtol_topology_object * > * 
                 superiors  = (*it)->superiors_list();
-            vcl_list<vtol_topology_object*>::const_iterator tit;
+            std::list<vtol_topology_object*>::const_iterator tit;
             tit=(*superiors).begin();
             
             id2 = (*tit)->get_id();
@@ -236,30 +236,30 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
 
 //: Detect all gap 1 for a bunch of regions
 void dbsk2d_ishock_gap_detector::detect_all_gaps(
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& region_outer_nodes,
-    vcl_vector<
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& region_outer_nodes,
+    std::vector<
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
     gap_pairs,
-    vcl_vector<
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >&
+    std::vector<
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >&
     gap4_pairs)
 {
 
     // Detect all gaps for a bunch of regions
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gaps4_visited;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gaps_visited;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gaps4_visited;
 
     // Loop thru new regions and determine new transforms
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >::iterator it;
 
     for ( it = region_outer_nodes.begin() ; it != region_outer_nodes.end(); 
           ++it)
     {
         // Detect transforms
-        vcl_vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
+        std::vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
         for ( unsigned int i=0; i < outer_shock_nodes.size() ; ++i)
         {
             ishock_edge_list adj_edges = outer_shock_nodes[i]->adj_edges();
@@ -274,19 +274,19 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        vcl_set<int> contour_ids;
+                        std::set<int> contour_ids;
                         gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
 
-                        vcl_vector<
-                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                        std::vector<
+                            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
                                 > gap4_pairs;
                         detect_gap4(bpoint,gap4_pairs,contour_ids);
                       
                         for ( unsigned int v=0; v < gap4_pairs.size() ; ++v)
                         {
-                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
                                 pair=gap4_pairs[v];
-                            gaps4_visited[vcl_make_pair(pair.first->id(),
+                            gaps4_visited[std::make_pair(pair.first->id(),
                                                         pair.second->id())]
                                 =pair;
                             
@@ -302,19 +302,19 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        vcl_set<int> contour_ids;
+                        std::set<int> contour_ids;
                         gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
                     
-                        vcl_vector<
-                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                        std::vector<
+                            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
                                 > gap4_pairs;
                         detect_gap4(bpoint,gap4_pairs,contour_ids);
                       
                         for ( unsigned int v=0; v < gap4_pairs.size() ; ++v)
                         {
-                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
                                 pair=gap4_pairs[v];
-                            gaps4_visited[vcl_make_pair(pair.first->id(),
+                            gaps4_visited[std::make_pair(pair.first->id(),
                                                         pair.second->id())]
                                 =pair;
                             
@@ -326,12 +326,12 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
         }   
     }
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator bit;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >::iterator bit;
     bit = gaps_visited.begin();
     for ( ; bit != gaps_visited.end() ; ++bit)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_pair
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_pair
             = (*bit).second;
         int id1(0),id2(0);
 
@@ -350,9 +350,9 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             }
             it=edges.begin();
            
-            const vcl_list< vtol_topology_object * > * 
+            const std::list< vtol_topology_object * > * 
                 superiors  = (*it)->superiors_list();
-            vcl_list<vtol_topology_object*>::const_iterator tit;
+            std::list<vtol_topology_object*>::const_iterator tit;
             tit=(*superiors).begin();
             
             id1 = (*tit)->get_id();
@@ -374,9 +374,9 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             }
             it=edges.begin();
             
-            const vcl_list< vtol_topology_object * > * 
+            const std::list< vtol_topology_object * > * 
                 superiors  = (*it)->superiors_list();
-            vcl_list<vtol_topology_object*>::const_iterator tit;
+            std::list<vtol_topology_object*>::const_iterator tit;
             tit=(*superiors).begin();
             
             id2 = (*tit)->get_id();
@@ -389,8 +389,8 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
     }
 
 
-    vcl_map< vcl_pair<int,int>,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >::iterator sit;
+    std::map< std::pair<int,int>,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >::iterator sit;
     sit = gaps4_visited.begin();
     for ( ; sit != gaps4_visited.end() ; ++sit)
     {
@@ -400,11 +400,11 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
 
 //: Detect all gap 1 for whole ishock graph
 void dbsk2d_ishock_gap_detector::detect_gap4(
-    vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
+    std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
     gap_pairs)
 {
     
-    vcl_vector<dbsk2d_ishock_belm*> belm_list = boundary_->belm_list();
+    std::vector<dbsk2d_ishock_belm*> belm_list = boundary_->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_point() )
@@ -415,7 +415,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
             
             if ( bpoint->is_an_end_point() && bpoint->is_a_GUIelm())
             {
-                vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
                     pair(0,0);
                 detect_gap4(bpoint,pair);
 
@@ -437,7 +437,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 //: Detect all gap 1 
 void dbsk2d_ishock_gap_detector::detect_gap4(
     dbsk2d_ishock_belm* belm,
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& gap4_pair)
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& gap4_pair)
 {
 
     belm_list interacting_elms;
@@ -445,7 +445,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 
     dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
 
-    vcl_map<double,dbsk2d_ishock_bline*> element_maps;
+    std::map<double,dbsk2d_ishock_bline*> element_maps;
 
     bnd_ishock_map_iter curS = belm->shock_map().begin();
     for ( ; curS != belm->shock_map().end() ; ++curS)
@@ -468,7 +468,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                             dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
                             element_maps[
-                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                std::fabs(vnl_math::pi_over_2-curS->first.s_eta)]
                                 =other_bline;
                         }
                     }
@@ -500,7 +500,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                             other_bline=(dbsk2d_ishock_bline*)
                                             (*it);
                                         element_maps[
-                                            vcl_fabs
+                                            std::fabs
                                             (vnl_math::pi_over_2-curS
                                              ->first.s_eta)]
                                             =other_bline;
@@ -530,7 +530,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                             dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
                             element_maps[
-                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                std::fabs(vnl_math::pi_over_2-curS->first.s_eta)]
                                 =other_bline;
                         }
                     }
@@ -563,7 +563,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                             =(dbsk2d_ishock_bline*)
                                             (*it);
                                         element_maps[
-                                            vcl_fabs
+                                            std::fabs
                                             (vnl_math::pi_over_2-curS
                                              ->first.s_eta)]
                                             =other_bline;
@@ -602,9 +602,9 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 //: Detect all gap 1 
 void dbsk2d_ishock_gap_detector::detect_gap4(
     dbsk2d_ishock_belm* belm,
-    vcl_vector< vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > 
+    std::vector< std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > 
     & gap4_pair,
-    vcl_set<int>& contour_id)
+    std::set<int>& contour_id)
 {
 
     belm_list interacting_elms;
@@ -612,7 +612,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 
     dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
 
-    vcl_map<double,dbsk2d_ishock_bline*> element_maps;
+    std::map<double,dbsk2d_ishock_bline*> element_maps;
 
     bnd_ishock_map_iter curS = belm->shock_map().begin();
     for ( ; curS != belm->shock_map().end() ; ++curS)
@@ -635,7 +635,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                             dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
                             element_maps[
-                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                std::fabs(vnl_math::pi_over_2-curS->first.s_eta)]
                                 =other_bline;
                         }
                     }
@@ -673,7 +673,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                             other_bline=(dbsk2d_ishock_bline*)
                                             (*it);
                                         element_maps[
-                                            vcl_fabs
+                                            std::fabs
                                             (vnl_math::pi_over_2-curS
                                              ->first.s_eta)]
                                             =other_bline;
@@ -696,7 +696,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                             dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
                             element_maps[
-                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                std::fabs(vnl_math::pi_over_2-curS->first.s_eta)]
                                 =other_bline;
                         }
                     }
@@ -735,7 +735,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                             =(dbsk2d_ishock_bline*)
                                             (*it);
                                         element_maps[
-                                            vcl_fabs
+                                            std::fabs
                                             (vnl_math::pi_over_2-curS
                                              ->first.s_eta)]
                                             =other_bline;
@@ -753,15 +753,15 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 
     if ( element_maps.size() == 1 )
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
-            pair=vcl_make_pair(bp1,(*element_maps.begin()).second);
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+            pair=std::make_pair(bp1,(*element_maps.begin()).second);
         gap4_pair.push_back(pair);
         
     }
     else if ( element_maps.size() > 1 )
     {
-        vcl_map<int,vcl_set<double> > local_map;
-        vcl_map<double,dbsk2d_ishock_bline*>::iterator it;
+        std::map<int,std::set<double> > local_map;
+        std::map<double,dbsk2d_ishock_bline*>::iterator it;
         for ( it = element_maps.begin() ; it != element_maps.end() ; ++it)
         {
             if ( contour_id.count((*it).second->get_contour_id()) == 0)
@@ -771,15 +771,15 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
             
         }
     
-        vcl_map<int,vcl_set<double> >::iterator lit;
+        std::map<int,std::set<double> >::iterator lit;
         for ( lit=local_map.begin() ; lit != local_map.end() ; ++lit)
         {
 
-            vcl_set<double> angles=(*lit).second;
+            std::set<double> angles=(*lit).second;
             double key=*(angles.begin());
             
-            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
-                pair=vcl_make_pair(bp1,element_maps[key]);
+            std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                pair=std::make_pair(bp1,element_maps[key]);
             gap4_pair.push_back(pair);
 
             
@@ -795,10 +795,10 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 //: remove boundary element
 void dbsk2d_ishock_gap_detector::gap_endpoint(
     dbsk2d_ishock_bpoint* bp,
-    vcl_map<vcl_pair<int,int>,
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& gaps_visited,
+    std::map<std::pair<int,int>,
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& gaps_visited,
     bool& flag,
-    vcl_set<int>& contour_ids)
+    std::set<int>& contour_ids)
 {
     bnd_ishock_map_iter curS = bp->shock_map().begin();
     for ( ; curS != bp->shock_map().end() ; ++curS)
@@ -825,10 +825,10 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                         contour_ids.insert(
                             LinkedBElmList.front()->get_contour_id());
 
-                        vcl_pair<int, int> pair1(
+                        std::pair<int, int> pair1(
                             bp->id(),
                             other_bpoint->id());
-                        vcl_pair<int, int> pair2(
+                        std::pair<int, int> pair2(
                             other_bpoint->id(),
                             bp->id());
                         if ( gaps_visited.count(pair1)==0 
@@ -836,7 +836,7 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                              gaps_visited.count(pair2)==0
                             )
                         {
-                            gaps_visited[pair1]=vcl_make_pair(bp,other_bpoint);
+                            gaps_visited[pair1]=std::make_pair(bp,other_bpoint);
 
                         }
                     }
@@ -858,10 +858,10 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                         contour_ids.insert(
                             LinkedBElmList.front()->get_contour_id());
 
-                        vcl_pair<unsigned int, unsigned int> pair1(
+                        std::pair<unsigned int, unsigned int> pair1(
                             bp->id(),
                             other_bpoint->id());
-                        vcl_pair<unsigned int, unsigned int> pair2(
+                        std::pair<unsigned int, unsigned int> pair2(
                             other_bpoint->id(),
                             bp->id());
                         if ( gaps_visited.count(pair1)==0 
@@ -869,7 +869,7 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                              gaps_visited.count(pair2)==0
                             )
                         {
-                            gaps_visited[pair1]=vcl_make_pair(bp,other_bpoint);
+                            gaps_visited[pair1]=std::make_pair(bp,other_bpoint);
 
                         }
                     }

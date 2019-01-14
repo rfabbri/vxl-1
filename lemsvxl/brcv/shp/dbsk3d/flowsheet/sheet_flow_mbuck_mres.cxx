@@ -14,7 +14,7 @@
  *
 \*------------------------------------------------------------*/
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include "sheet_flow_mbuck_mres.h"
 #include "buck_utils.h"

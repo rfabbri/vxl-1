@@ -37,7 +37,7 @@ public:
   //: This is called when the tool is activated
   virtual void activate();
 
-  vcl_string name() const;
+  std::string name() const;
 
   virtual void get_popup( const vgui_popup_params& params, vgui_menu &menu );
 
@@ -51,7 +51,7 @@ public:
                       float rm, float gm, float bm,
                       float rs, float gs, float bs);
 
-  void draw_shock_path(vcl_vector<dbsk2d_shock_edge_sptr> &edges, float r, float g, float b);
+  void draw_shock_path(std::vector<dbsk2d_shock_edge_sptr> &edges, float r, float g, float b);
 
   void draw_v_graph_nodes(dbskr_v_graph_sptr v, float r, float g, float b, float point_size);
   void draw_patch(dbskr_shock_patch_sptr shock_patch, float r, float g, float b);
@@ -81,14 +81,14 @@ protected:
   double length_thres_;
 
   dbskr_scurve_sptr cur_scurve; ///< this is the scurve formed from the path of the selected nodes
-  vcl_vector<dbskr_scurve_sptr> scurves_;
-  vcl_vector<vcl_vector<dbskr_v_node_sptr> > paths_;
-  vcl_vector<dbskr_v_graph_sptr> graphs_;
-  vcl_vector<dbskr_v_edge_sptr> outer_edges_;
+  std::vector<dbskr_scurve_sptr> scurves_;
+  std::vector<std::vector<dbskr_v_node_sptr> > paths_;
+  std::vector<dbskr_v_graph_sptr> graphs_;
+  std::vector<dbskr_v_edge_sptr> outer_edges_;
   unsigned current_ind_, current_graph_ind_;
   dbskr_v_graph_sptr current_graph_;
 
-  vcl_vector<float> abs_lengths_;
+  std::vector<float> abs_lengths_;
 
   bool binterpolate_, subsample_;
   double interpolate_ds_, subsample_ds_;

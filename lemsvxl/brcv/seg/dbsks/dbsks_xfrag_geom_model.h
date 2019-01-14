@@ -24,9 +24,9 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_random.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <string>
+#include <vector>
+#include <map>
 #include <dbsks/dbsks_biarc_sampler.h>
 
 // =============================================================================
@@ -100,17 +100,17 @@ public:
 
 
   //: Set data for a geometric attribute. If existing, old data will be overwritten
-  void set_attr_data(const vcl_string& attr_name, const vcl_vector<double >& attr_values)
+  void set_attr_data(const std::string& attr_name, const std::vector<double >& attr_values)
   {
     this->attr_data_[attr_name] = attr_values;
   }
 
   //: Get data values for a geometric attribute
   // Return false if the attribute does not exist
-  bool get_attr_data(const vcl_string& attr_name, vcl_vector<double >& attr_values) const; 
+  bool get_attr_data(const std::string& attr_name, std::vector<double >& attr_values) const; 
 
   //: Return const reference to the attribute data map
-  const vcl_map<vcl_string, vcl_vector<double > >& attr_data() const 
+  const std::map<std::string, std::vector<double > >& attr_data() const 
   {return this->attr_data_; };
 
   //: Clear the list of attribute data
@@ -138,7 +138,7 @@ public:
 
   //: Generate samples for the ending node descriptor, given the the source descriptor
   bool sample_end_given_start(const dbsksp_xshock_node_descriptor& start, int num_samples,
-    vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list, double graph_size)
+    std::vector<dbsksp_xshock_node_descriptor >& xdesc_list, double graph_size)
   {
     //// sampling method 2 - min-max in model
     //if (graph_size == 0)
@@ -153,37 +153,37 @@ public:
 
   //: Generate samples for the ending node descriptor, hard-coded variation range
   bool sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& start, int num_samples,
-    vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+    std::vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
   //: Generate samples for the ending node descriptor, using minmax-range from model
   bool sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
-    double graph_size, int num_samples, vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+    double graph_size, int num_samples, std::vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
   bool sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
   bool sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
   bool sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descriptor& end, 
-    double graph_size, int num_samples, vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+    double graph_size, int num_samples, std::vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
   //: Uniform sampling of the starting location of the fragment given the allowed
   // deviation from the initial location
   bool sample_start_position(int num_samples, double delta_x, double delta_y,
-    vcl_vector<double >& x, vcl_vector<double >& y);
+    std::vector<double >& x, std::vector<double >& y);
 
   //: Generate samples of the position of the starting node which form a grid surrounding
   // its current position
   bool sample_start_position(double step_x, int num_x_backward, int num_x_forward,
     double step_y, int num_y_backward, int num_y_forward, 
-    vcl_vector<double >& xs, vcl_vector<double >& ys);
+    std::vector<double >& xs, std::vector<double >& ys);
 
   //: Uniform sampling of the intrinsic properties of the start descriptor, given the allowed range
   bool sample_start_idesc(int num_samples, double delta_psi, double delta_phi, double delta_log2r,
-    vcl_vector<double >& psi, vcl_vector<double >& phi, vcl_vector<double >& r);
+    std::vector<double >& psi, std::vector<double >& phi, std::vector<double >& r);
 
 
   // Utilities------------------------------------------------------------------
@@ -235,7 +235,7 @@ protected:
 
 
   //: write info of the dbskbranch to an output stream
-  virtual vcl_ostream& print(vcl_ostream & os){return os;};
+  virtual std::ostream& print(std::ostream & os){return os;};
 
 protected:
   dbsksp_xshock_node_descriptor ref_start_;
@@ -275,7 +275,7 @@ protected:
   //> Attribute data
   
   //: list of data related to the fragments
-  vcl_map<vcl_string, vcl_vector<double > > attr_data_;
+  std::map<std::string, std::vector<double > > attr_data_;
   double graph_size_for_attr_data_;
 };
 

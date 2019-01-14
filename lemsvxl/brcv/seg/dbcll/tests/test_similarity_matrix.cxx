@@ -5,16 +5,16 @@
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_random.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 namespace{
 double eps = 1e-12;
   
-vcl_vector<vnl_vector_fixed<double,3> > random_vectors(unsigned num)
+std::vector<vnl_vector_fixed<double,3> > random_vectors(unsigned num)
 {
   vnl_random rand;
-  vcl_vector<vnl_vector_fixed<double,3> > pts;
+  std::vector<vnl_vector_fixed<double,3> > pts;
   for(unsigned i=0; i<num; ++i){
     // choose a distribution
     double dist = rand.drand64();
@@ -42,14 +42,14 @@ bool less_key_index(const dbcll_cluster_sptr& c1,
 MAIN( test_similarity_matrix )
 {
   {
-    vcl_vector<dbcll_cluster_sptr> c(4);
+    std::vector<dbcll_cluster_sptr> c(4);
   
     c[0] = new dbcll_euclidean_cluster<2>(vnl_double_2(0.0, 0.0),0);
     c[1] = new dbcll_euclidean_cluster<2>(vnl_double_2(1.0, 1.0),1);
     c[2] = new dbcll_euclidean_cluster<2>(vnl_double_2(2.0, 0.0),2);
     c[3] = new dbcll_euclidean_cluster<2>(vnl_double_2(-1.0, 1.0),3);
 
-    vcl_vector<dbcll_cluster_sptr> c2 = dbcll_precompute_similarity(c);
+    std::vector<dbcll_cluster_sptr> c2 = dbcll_precompute_similarity(c);
 
     TEST("Precomputed same number of clusters", c2.size(), c.size());
 
@@ -74,7 +74,7 @@ MAIN( test_similarity_matrix )
     same = true;
     for(unsigned i=0; i<c.size(); ++i){
       for(unsigned j=0; j<c.size(); ++j){
-        if(vcl_abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
+        if(std::abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
           same = false;
           break;
         }
@@ -98,8 +98,8 @@ MAIN( test_similarity_matrix )
     for(unsigned i=0; i<c.size(); ++i){
       for(unsigned j=0; j<c.size(); ++j){
         if(i==j) continue;
-        vcl_cout << i<<","<<j<<": "<<c[i]->similarity(*c[j])<<", "<<c2[i]->similarity(*c2[j]) <<vcl_endl;
-        if(vcl_abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
+        std::cout << i<<","<<j<<": "<<c[i]->similarity(*c[j])<<", "<<c2[i]->similarity(*c2[j]) <<std::endl;
+        if(std::abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
           same = false;
           break;
         }
@@ -124,8 +124,8 @@ MAIN( test_similarity_matrix )
     for(unsigned i=0; i<c.size(); ++i){
       for(unsigned j=0; j<c.size(); ++j){
         if(i==j) continue;
-        vcl_cout << i<<","<<j<<": "<<c[i]->similarity(*c[j])<<", "<<c2[i]->similarity(*c2[j]) <<vcl_endl;
-        if(vcl_abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
+        std::cout << i<<","<<j<<": "<<c[i]->similarity(*c[j])<<", "<<c2[i]->similarity(*c2[j]) <<std::endl;
+        if(std::abs(c[i]->similarity(*c[j]) - c2[i]->similarity(*c2[j])) > eps){
           same = false;
           break;
         }
@@ -145,19 +145,19 @@ MAIN( test_similarity_matrix )
   }
 
   {
-    vcl_vector<vnl_vector_fixed<double,3> > rvs = random_vectors(1000);
-    vcl_vector<dbcll_cluster_sptr> clusters = dbcll_init_euclidean_clusters(rvs);
-    vcl_vector<dbcll_cluster_sptr> clusters2 = dbcll_precompute_similarity(clusters);
+    std::vector<vnl_vector_fixed<double,3> > rvs = random_vectors(1000);
+    std::vector<dbcll_cluster_sptr> clusters = dbcll_init_euclidean_clusters(rvs);
+    std::vector<dbcll_cluster_sptr> clusters2 = dbcll_precompute_similarity(clusters);
 
     dbcll_remainder_heap remain(clusters.begin(), clusters.end());
     dbcll_rnn_agg_clustering(remain, clusters, -25.0);
-    vcl_cout << "number of clusters " << clusters.size() << vcl_endl;
-    vcl_sort(clusters.begin(),clusters.end(),less_key_index);
+    std::cout << "number of clusters " << clusters.size() << std::endl;
+    std::sort(clusters.begin(),clusters.end(),less_key_index);
 
     dbcll_remainder_set remain2(clusters2.begin(), clusters2.end());
     dbcll_rnn_agg_clustering(remain2, clusters2, -25.0);
-    vcl_cout << "number of clusters " << clusters2.size() << vcl_endl;
-    vcl_sort(clusters2.begin(),clusters2.end(),less_key_index);
+    std::cout << "number of clusters " << clusters2.size() << std::endl;
+    std::sort(clusters2.begin(),clusters2.end(),less_key_index);
 
     TEST("Same number of clusters after clustering", clusters.size(), clusters2.size());
 
@@ -174,7 +174,7 @@ MAIN( test_similarity_matrix )
     for(unsigned i=0; i<clusters.size(); ++i){
       for(unsigned j=0; j<clusters.size(); ++j){
         if(i==j) continue;
-        if(vcl_abs(clusters[i]->similarity(*clusters[j])
+        if(std::abs(clusters[i]->similarity(*clusters[j])
                  - clusters2[i]->similarity(*clusters2[j])) > eps){
           same = false;
           break;

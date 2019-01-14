@@ -11,8 +11,8 @@
 #include <vnl/vnl_transpose.h>
 #include <dbnl/algo/dbnl_matrix_multiply.h>
 
-dbrl_transformation_sptr dbrl_estimator_point_affine::estimate(vcl_vector<dbrl_feature_sptr> f1,
-                                                               vcl_vector<dbrl_feature_sptr> f2,
+dbrl_transformation_sptr dbrl_estimator_point_affine::estimate(std::vector<dbrl_feature_sptr> f1,
+                                                               std::vector<dbrl_feature_sptr> f2,
                                                                dbrl_correspondence & M) const
     {
     assert(f1.size()>0);
@@ -148,7 +148,7 @@ dbrl_transformation_sptr dbrl_estimator_point_affine::estimate(vcl_vector<dbrl_f
 
         vnl_matrix<double> A=(component1-component2)*vnl_inverse(component2+identity*lambda_)+identity;
 
-        //vcl_cout<<A;
+        //std::cout<<A;
         //A+I
         //vnl_matrix<double> A=numer*vnl_inverse(denom+identity*lambda_)+identity;
         dbrl_affine_transformation * affinet=new dbrl_affine_transformation(A);
@@ -161,8 +161,8 @@ dbrl_transformation_sptr dbrl_estimator_point_affine::estimate(vcl_vector<dbrl_f
     }
 
 
-double dbrl_estimator_point_affine::residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                                             const vcl_vector<dbrl_feature_sptr>& f2,
+double dbrl_estimator_point_affine::residual(const std::vector<dbrl_feature_sptr>& f1,
+                                             const std::vector<dbrl_feature_sptr>& f2,
                                              const dbrl_correspondence & M,
                                              const dbrl_transformation_sptr& tform) const
 
@@ -174,7 +174,7 @@ double dbrl_estimator_point_affine::residual(const vcl_vector<dbrl_feature_sptr>
 
     t->set_from_features(f2);
     t->transform();
-    vcl_vector<dbrl_feature_sptr> tformed_f2=t->get_to_features();
+    std::vector<dbrl_feature_sptr> tformed_f2=t->get_to_features();
 
 
     double residual=0;
@@ -206,7 +206,7 @@ void dbrl_estimator_point_affine::b_read(vsl_b_istream &is)
             vsl_b_read(is, lambda_);
             break;
         default:
-            vcl_cerr << "dbrl_estimator_point_affine: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_estimator_point_affine: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -214,7 +214,7 @@ short dbrl_estimator_point_affine::version() const
     {
     return 1;
     }
-void dbrl_estimator_point_affine::print_summary(vcl_ostream &os) const
+void dbrl_estimator_point_affine::print_summary(std::ostream &os) const
 {
   
 }

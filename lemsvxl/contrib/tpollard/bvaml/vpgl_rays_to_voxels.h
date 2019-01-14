@@ -16,7 +16,7 @@
 // continuous voxel rays.
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
@@ -41,7 +41,7 @@ public:
   // only be listed in one pixel-ray.
   void get_ray_voxels(
     const vgl_point_2d<int>& pixel_index,
-    vcl_vector< vgl_point_3d<int> >& ray_voxels,
+    std::vector< vgl_point_3d<int> >& ray_voxels,
     bool unique_assignment );
 
 
@@ -49,7 +49,7 @@ protected:
 
   void get_ray_voxels(
     const vgl_point_2d<int>& pixel_index,
-    vcl_vector< vgl_point_3d<int> >& ray_voxels );
+    std::vector< vgl_point_3d<int> >& ray_voxels );
 
   // Stored variables:
   vpgl_perspective_camera<double> camera_;

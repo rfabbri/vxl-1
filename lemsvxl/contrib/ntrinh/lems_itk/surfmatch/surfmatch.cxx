@@ -3,7 +3,7 @@
 // \author Nhon Trinh (ntrinh@lems.brown.edu)
 // \date June 29, 2006
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/algo/vgl_h_matrix_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
@@ -44,13 +44,13 @@ vgl_point_3d<double > translate_scale(const vgl_point_3d<double >& p,
 
 // given two corresponding point sets, find the best rigid transform with least mean square
  bool match_landmarks(
-  const vcl_vector<vgl_point_3d<double > >& fixed_points, 
-  const vcl_vector<vgl_point_3d<double > >& moving_points,
+  const std::vector<vgl_point_3d<double > >& fixed_points, 
+  const std::vector<vgl_point_3d<double > >& moving_points,
   vgl_h_matrix_3d<double >& transform_matrix)
 {
   if (fixed_points.size() != moving_points.size())
   {
-    vcl_cerr << "Two point sets need to be of the same size." << vcl_endl;
+    std::cerr << "Two point sets need to be of the same size." << std::endl;
     return false;
   }
 
@@ -99,7 +99,7 @@ vgl_point_3d<double > translate_scale(const vgl_point_3d<double >& p,
   transform_init->SetTransform(transform);
   transform_init->InitializeTransform();
 
-  vcl_cout << "Init transform = " << transform << vcl_endl;
+  std::cout << "Init transform = " << transform << std::endl;
 
   transform_matrix = vgl_h_matrix_3d<double >(transform->GetMatrix().GetVnlMatrix(),
     transform->GetOffset().Get_vnl_vector());
@@ -133,7 +133,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
                dbmsh3d_mesh& moving_mesh, 
                vgl_h_matrix_3d<double >& transform_matrix,
                const vgl_h_matrix_3d<double >& init_matrix,
-               const vcl_string& report_file)
+               const std::string& report_file)
 {  
   const unsigned int Dimension = 3;
   
@@ -155,7 +155,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
 
   // traverse thru all vertices and write to ply file
   unsigned int pointId = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fixed_mesh.vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fixed_mesh.vertexmap().begin();
   for (; vit != fixed_mesh.vertexmap().end(); ++vit) 
   {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) (*vit).second;
@@ -170,8 +170,8 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   }
   fixedPointSet->SetPoints( fixedPointContainer );
 
-  vcl_cout << "Npts of fixedPointSet = " << 
-    fixedPointSet->GetNumberOfPoints() << vcl_endl;
+  std::cout << "Npts of fixedPointSet = " << 
+    fixedPointSet->GetNumberOfPoints() << std::endl;
 
   // traverse thru all vertices and write to ply file
   pointId = 0;
@@ -191,8 +191,8 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   }
   movingPointSet->SetPoints( movingPointContainer );
   
-  vcl_cout << "Npts of movingPointSet = " << 
-    movingPointSet->GetNumberOfPoints() << vcl_endl;
+  std::cout << "Npts of movingPointSet = " << 
+    movingPointSet->GetNumberOfPoints() << std::endl;
 
 
   // ======
@@ -306,7 +306,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   //  fixedCentroid.SetElement(i, fixedCentroid.GetElement(i) / fixedPointSet->GetNumberOfPoints());
   //}
 
-  //vcl_cout << "Fixed centroid " << fixedCentroid << vcl_endl;
+  //std::cout << "Fixed centroid " << fixedCentroid << std::endl;
 
   //PointType movingCentroid;
   //for (unsigned int i=0; i<movingCentroid.GetPointDimension(); ++i)
@@ -331,7 +331,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   //{
   //  movingCentroid.SetElement(i, movingCentroid.GetElement(i) / movingPointSet->GetNumberOfPoints());
   //}
-  //vcl_cout << "Moving centroid " << movingCentroid << vcl_endl;
+  //std::cout << "Moving centroid " << movingCentroid << std::endl;
 
   //transform->SetTranslation(fixedCentroid-movingCentroid);
 
@@ -353,7 +353,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
 
 
 
-  vcl_cout << "Initial translation = " <<  transform->GetTranslation() << vcl_endl;
+  std::cout << "Initial translation = " <<  transform->GetTranslation() << std::endl;
 
 
 
@@ -392,7 +392,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
 
 
 
-  vcl_cout << "preparing distance map for ICP .. \n";
+  std::cout << "preparing distance map for ICP .. \n";
 
 
 
@@ -442,7 +442,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
 
 
 
-  vcl_cout << "start registration ... " << vcl_endl;
+  std::cout << "start registration ... " << std::endl;
 
 
   // for now
@@ -459,12 +459,12 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   optimizer->GetOptimizer()->diagnose_outcome();
 
 
-  vcl_cout << "Final transform " << transform << vcl_endl;
-  vcl_cout << "Solution = " << transform->GetParameters() << vcl_endl;
+  std::cout << "Final transform " << transform << std::endl;
+  std::cout << "Solution = " << transform->GetParameters() << std::endl;
 
-  //vcl_cout << "Versor = " << transform->GetVersor() << vcl_endl;
-  //vcl_cout << "Center = " << transform->GetCenter() << vcl_endl;
-  //vcl_cout << "Translation = " << transform->GetTranslation() << vcl_endl;
+  //std::cout << "Versor = " << transform->GetVersor() << std::endl;
+  //std::cout << "Center = " << transform->GetCenter() << std::endl;
+  //std::cout << "Translation = " << transform->GetTranslation() << std::endl;
 
   // transform the mesh
   // Go trough the list of fixed point and find the closest distance
@@ -523,7 +523,7 @@ bool surfmatch(dbmsh3d_mesh& fixed_mesh,
   double end_error = optimizer->GetOptimizer()->get_end_error();
   double start_error = optimizer->GetOptimizer()->get_start_error();
 
-  vcl_ofstream out_file(report_file.c_str());
+  std::ofstream out_file(report_file.c_str());
 
   for (int r=0; r<4; ++r)
   {
@@ -551,15 +551,15 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
                dbmsh3d_mesh& moving_mesh, 
                vgl_h_matrix_3d<double >& transform_matrix,
                const vgl_h_matrix_3d<double >& init_matrix,
-               const vcl_string& report_file)
+               const std::string& report_file)
 {
-  vcl_cout << "Report file = " << report_file << vcl_endl;
+  std::cout << "Report file = " << report_file << std::endl;
 
 
   // get the point clouds from the meshes
-  vcl_vector<vgl_point_3d<double > > fixed_cloud;
+  std::vector<vgl_point_3d<double > > fixed_cloud;
   fixed_cloud.reserve(fixed_mesh.vertexmap().size());
-  for (vcl_map<int, dbmsh3d_vertex*>::iterator vit = fixed_mesh.vertexmap().begin();
+  for (std::map<int, dbmsh3d_vertex*>::iterator vit = fixed_mesh.vertexmap().begin();
     vit != fixed_mesh.vertexmap().end(); ++vit) 
   {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) (*vit).second;
@@ -567,10 +567,10 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   }
 
   // moving cloud
-  vcl_vector<vgl_point_3d<double > > moving_cloud;
+  std::vector<vgl_point_3d<double > > moving_cloud;
   moving_cloud.reserve(moving_mesh.vertexmap().size());
   
-  for (vcl_map<int, dbmsh3d_vertex*>::iterator vit = moving_mesh.vertexmap().begin(); 
+  for (std::map<int, dbmsh3d_vertex*>::iterator vit = moving_mesh.vertexmap().begin(); 
     vit != moving_mesh.vertexmap().end(); ++vit) 
   {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) (*vit).second;
@@ -599,14 +599,14 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
 
   dbgl_minimal_enclosing_sphere(fixed_cloud, fixed_center, fixed_radius);
   vgl_vector_3d<double > fixed_v = fixed_center - coord_origin;
-  vcl_cout << "Fixed Center = " << fixed_center << vcl_endl;
-  vcl_cout << "Fixed radius = " << fixed_radius << vcl_endl;
+  std::cout << "Fixed Center = " << fixed_center << std::endl;
+  std::cout << "Fixed radius = " << fixed_radius << std::endl;
 
 
   dbgl_minimal_enclosing_sphere(moving_cloud, moving_center, moving_radius);
   vgl_vector_3d<double > moving_v = moving_center - coord_origin;
-  vcl_cout << "Moving Center = " << moving_center << vcl_endl;
-  vcl_cout << "Moving radius = " << moving_radius << vcl_endl;
+  std::cout << "Moving Center = " << moving_center << std::endl;
+  std::cout << "Moving radius = " << moving_radius << std::endl;
 
 
   // move fixed_cloud to origin
@@ -683,8 +683,8 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   }
   fixedPointSet->SetPoints( fixedPointContainer );
 
-  vcl_cout << "Npts of fixedPointSet = " << 
-    fixedPointSet->GetNumberOfPoints() << vcl_endl;
+  std::cout << "Npts of fixedPointSet = " << 
+    fixedPointSet->GetNumberOfPoints() << std::endl;
 
   // traverse thru all vertices and write to ply file
   pointId = 0;
@@ -699,8 +699,8 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   }
   movingPointSet->SetPoints( movingPointContainer );
   
-  vcl_cout << "Npts of movingPointSet = " << 
-    movingPointSet->GetNumberOfPoints() << vcl_endl;
+  std::cout << "Npts of movingPointSet = " << 
+    movingPointSet->GetNumberOfPoints() << std::endl;
 
 
 
@@ -805,7 +805,7 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
 
 
 
-  vcl_cout << "preparing distance map for ICP .. \n";
+  std::cout << "preparing distance map for ICP .. \n";
 
 
 
@@ -849,7 +849,7 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   metric->SetDistanceMap( distanceFilter->GetOutput() );
 
 
-  vcl_cout << "start registration ... " << vcl_endl;
+  std::cout << "start registration ... " << std::endl;
 
 
   // for now
@@ -866,12 +866,12 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   optimizer->GetOptimizer()->diagnose_outcome();
 
 
-  vcl_cout << "Final transform " << transform << vcl_endl;
-  vcl_cout << "Solution = " << transform->GetParameters() << vcl_endl;
+  std::cout << "Final transform " << transform << std::endl;
+  std::cout << "Solution = " << transform->GetParameters() << std::endl;
 
-  //vcl_cout << "Versor = " << transform->GetVersor() << vcl_endl;
-  //vcl_cout << "Center = " << transform->GetCenter() << vcl_endl;
-  //vcl_cout << "Translation = " << transform->GetTranslation() << vcl_endl;
+  //std::cout << "Versor = " << transform->GetVersor() << std::endl;
+  //std::cout << "Center = " << transform->GetCenter() << std::endl;
+  //std::cout << "Translation = " << transform->GetTranslation() << std::endl;
 
 
   vgl_h_matrix_3d<double > hmatrix_rigid(transform->GetMatrix().GetVnlMatrix(),
@@ -889,7 +889,7 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
   double end_error = optimizer->GetOptimizer()->get_end_error();
   double start_error = optimizer->GetOptimizer()->get_start_error();
 
-  vcl_ofstream out_file(report_file.c_str());
+  std::ofstream out_file(report_file.c_str());
 
   for (int r=0; r<4; ++r)
   {
@@ -909,7 +909,7 @@ bool surfmatch2(dbmsh3d_mesh& fixed_mesh,
 
   // moving cloud
   id_count = 0;
-  for (vcl_map<int, dbmsh3d_vertex*>::iterator vit = moving_mesh.vertexmap().begin(); 
+  for (std::map<int, dbmsh3d_vertex*>::iterator vit = moving_mesh.vertexmap().begin(); 
     vit != moving_mesh.vertexmap().end(); ++vit) 
   {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) (*vit).second;

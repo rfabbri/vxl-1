@@ -34,20 +34,20 @@ public:
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
 
   //: extract image contours from the edge image
   void trace_edges(vil_image_view<vxl_byte> & image, unsigned edge_val, 
-                   vcl_vector<vsol_spatial_object_2d_sptr> & contours);
+                   std::vector<vsol_spatial_object_2d_sptr> & contours);
 
   void trace_contours_from_end_points();
 

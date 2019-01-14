@@ -5,7 +5,7 @@
 #ifndef dbsk3d_hypg_trans_h_
 #define dbsk3d_hypg_trans_h_
 
-#include <vcl_map.h>
+#include <map>
 #include <dbmsh3d/algo/dbmsh3d_fmm.h>
 #include <dbsk3d/dbsk3d_ms_hypg.h>
 
@@ -54,7 +54,7 @@ protected:
   bool  b_merge_xform_;
 
   //: Priority queue of rank ordered shock transforms.
-  vcl_multimap<float, vcl_pair<char, vcl_pair<void*, void*> > > ms_xform_Q_;
+  std::multimap<float, std::pair<char, std::pair<void*, void*> > > ms_xform_Q_;
   
 public:
   //###### Constructor/Destructor ######
@@ -85,7 +85,7 @@ public:
   }
 
   //###### Data access functions ######
-  vcl_multimap<float, vcl_pair<char, vcl_pair<void*, void*> > >& ms_xform_Q() {
+  std::multimap<float, std::pair<char, std::pair<void*, void*> > >& ms_xform_Q() {
     return ms_xform_Q_;
   }
   dbsk3d_ms_hypg* ms_hypg () {
@@ -202,15 +202,15 @@ public:
   void try_add_A12A3I_n_c_merge_to_Q (dbsk3d_ms_node* MN);
   void try_add_A1A5_n_c_merge_to_Q (dbsk3d_ms_node* MN);
   
-  void try_add_modified_to_Q (vcl_set<dbsk3d_ms_sheet*>& modified_MS_set, 
-                              vcl_set<dbsk3d_ms_curve*>& modified_MC_set, 
-                              vcl_set<dbsk3d_ms_node*>& modified_MN_set);  
+  void try_add_modified_to_Q (std::set<dbsk3d_ms_sheet*>& modified_MS_set, 
+                              std::set<dbsk3d_ms_curve*>& modified_MC_set, 
+                              std::set<dbsk3d_ms_node*>& modified_MN_set);  
   
   void _add_xform_to_Q (const float cost, const char type, const void* data1, const void* data2) {
     assert (data1 != NULL || data2 != NULL);
-    vcl_pair<void*, void*> data ((void*) data1, (void*) data2);
-    vcl_pair<char, vcl_pair<void*, void*> > xform (type, data);
-    ms_xform_Q_.insert (vcl_pair<float, vcl_pair<char, vcl_pair<void*, void*> > > (cost, xform));  
+    std::pair<void*, void*> data ((void*) data1, (void*) data2);
+    std::pair<char, std::pair<void*, void*> > xform (type, data);
+    ms_xform_Q_.insert (std::pair<float, std::pair<char, std::pair<void*, void*> > > (cost, xform));  
   }
 
   void _pop_xform_from_Q (float& cost, char& type, dbsk3d_ms_sheet* &MS, 

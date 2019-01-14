@@ -4,7 +4,7 @@
 #ifndef _dbsk3d_ms_recon_h_
 #define _dbsk3d_ms_recon_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_graph.h>
 #include <dbsk3d/dbsk3d_ms_hypg.h>
@@ -13,16 +13,16 @@
 //=========== Boundary Reconstruction and Ridge Detection ===========
 
 //Ridge boundary curve detection
-bool _add_to_ridgebnd (vcl_vector<vgl_point_3d<double> >& ridgebnd_curve,
+bool _add_to_ridgebnd (std::vector<vgl_point_3d<double> >& ridgebnd_curve,
                        const vgl_point_3d<double> Ga);
 
 void get_ridge_bnd_curves (dbsk3d_ms_curve* SCurve, 
-                           vcl_vector<vgl_point_3d<double> >& ridgebnd_curve_a, 
-                           vcl_vector<vgl_point_3d<double> >& ridgebnd_curve_b);
+                           std::vector<vgl_point_3d<double> >& ridgebnd_curve_a, 
+                           std::vector<vgl_point_3d<double> >& ridgebnd_curve_b);
 
 void get_curoff_patch_bnd_curves (dbsk3d_ms_curve* SCurve, dbsk3d_ms_sheet* SSheet,
-                                  vcl_vector<vgl_point_3d<double> >& surfbnd_curve_a, 
-                                  vcl_vector<vgl_point_3d<double> >& surfbnd_curve_b);
+                                  std::vector<vgl_point_3d<double> >& surfbnd_curve_a, 
+                                  std::vector<vgl_point_3d<double> >& surfbnd_curve_b);
 
 //Ridge estimation
 vgl_vector_3d<double> get_init_ridge_vector (const dbsk3d_fs_edge* A3RibElm,
@@ -35,11 +35,11 @@ vgl_vector_3d<double> get_ridge_vector (const dbsk3d_fs_edge* A3RibElm,
                                         const dbsk3d_fs_edge* prevRibElm);
 
 
-bool save_ms_bnd_link_g3d (dbmsh3d_graph* ms_graph, dbmsh3d_mesh* bndset, vcl_string filename);
+bool save_ms_bnd_link_g3d (dbmsh3d_graph* ms_graph, dbmsh3d_mesh* bndset, std::string filename);
 
 void get_A3Rib_bnd_trace_points (dbmsh3d_graph* ms_graph, 
-                                 vcl_vector <vgl_point_3d<double> >* pts);
+                                 std::vector <vgl_point_3d<double> >* pts);
 void get_A13Axial_bnd_trace_points (dbmsh3d_graph* ms_graph, 
-                                    vcl_vector <vgl_point_3d<double> >* pts);
+                                    std::vector <vgl_point_3d<double> >* pts);
 
 #endif

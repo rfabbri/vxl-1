@@ -16,7 +16,7 @@
 //   
 // \endverbatim
 //-----------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 
 /*#include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -90,7 +90,7 @@ class dbseg_seg_tableau : public vgui_composite_tableau// changed : public vgui_
     dbseg_seg_object<vxl_byte>* get_object();
 
   //: Returns the type of this tableau ('bgui_vsol2D_tableau').
-  vcl_string type_name() const { return "dbseg_seg_tableau";}
+  std::string type_name() const { return "dbseg_seg_tableau";}
 
     //returns the last region to break an is_continuous call
   int get_discontinuous();

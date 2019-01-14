@@ -28,14 +28,14 @@ bool dbrec_create_hierarchy_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("unsigned");      // detector id for the type of structure to be recognized (if using builder class, otherwise not-used)
-  input_types.push_back("vcl_string");      // name of the hierarchy
+  input_types.push_back(vcl_string");      // name of the hierarchy
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("brec_part_hierarchy_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -46,21 +46,21 @@ bool dbrec_create_hierarchy_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "brec_create_hierarchy_process - invalid inputs\n";
+    std::cerr << "brec_create_hierarchy_process - invalid inputs\n";
     return false;
   }
 
   // get input
   unsigned i = 0;
   unsigned d_id = pro.get_input<unsigned>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
 
   brec_part_hierarchy_sptr h;
   switch (d_id) {
     case 0: { h = dbrec_part_hierarchy_builder::construct_detector_steeple0(); } break;
     case 1: { h = dbrec_part_hierarchy_builder::construct_detector_steeple1(); } break;
     case 2: { h = dbrec_part_hierarchy_builder::construct_detector_10080_car(); } break;
-    default: { vcl_cout << "In dbrec_create_hierarchy_process::execute() -- Unrecognized detector type!!\n"; return false; }
+    default: { std::cout << "In dbrec_create_hierarchy_process::execute() -- Unrecognized detector type!!\n"; return false; }
   }
   
   pro.set_output_val<brec_part_hierarchy_sptr>(0, h);
@@ -75,24 +75,24 @@ bool dbrec_create_hierarchy_process(bprb_func_process& pro)
 bool dbrec_visualize_hierarchy_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");    
-  input_types.push_back("vcl_string");
+  input_types.push_back(vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_visualize_hierarchy_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "brec_create_hierarchy_process - invalid inputs\n";
+    std::cerr << "brec_create_hierarchy_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
   h->visualize(name);
   return true;
 }
@@ -101,24 +101,24 @@ bool dbrec_visualize_hierarchy_process(bprb_func_process& pro)
 bool dbrec_visualize_hierarchy_models_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");     
-  input_types.push_back("vcl_string");  // suffix for the file names
+  input_types.push_back(vcl_string");  // suffix for the file names
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_visualize_hierarchy_models_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_visualize_hierarchy_models_process - invalid inputs\n";
+    std::cerr << "dbrec_visualize_hierarchy_models_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
   for (unsigned i = 0; i < h->class_cnt(); i++) {
     dbrec_part_sptr p = h->root(i);
     p->visualize_models(name);
@@ -132,16 +132,16 @@ bool dbrec_visualize_sampled_class_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");      // hierarchy
   input_types.push_back("int");                   // class id, the index of the root node in the hierarchy
   input_types.push_back("int");                   // type id of the composition, pass the class id -1 if to sample from this composition only
-  input_types.push_back("vcl_string");
+  input_types.push_back(vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -151,7 +151,7 @@ bool dbrec_visualize_sampled_class_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 4) {
-    vcl_cerr << "brec_create_hierarchy_process - invalid inputs\n";
+    std::cerr << "brec_create_hierarchy_process - invalid inputs\n";
     return false;
   }
 
@@ -160,7 +160,7 @@ bool dbrec_visualize_sampled_class_process(bprb_func_process& pro)
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
   int class_id = pro.get_input<int>(i++);
   int composition_type_id = pro.get_input<int>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
   if (class_id < 0) {
     dbrec_draw_composition(h, name, composition_type_id, 30.0f, "red");
   } else {
@@ -173,24 +173,24 @@ bool dbrec_visualize_sampled_class_process(bprb_func_process& pro)
 bool dbrec_write_hierarchy_xml_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");
-  input_types.push_back("vcl_string");  // path of output xml file
+  input_types.push_back(vcl_string");  // path of output xml file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_write_hierarchy_xml_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
+    std::cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
 
   dbrec_write_xml_visitor wxml;
   for (unsigned i = 0; i < h->class_cnt(); i++)
@@ -202,11 +202,11 @@ bool dbrec_write_hierarchy_xml_process(bprb_func_process& pro)
 bool dbrec_parse_hierarchy_xml_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
-  input_types.push_back("vcl_string");  // path of output xml file
+  std::vector<std::string> input_types;
+  input_types.push_back(vcl_string");  // path of output xml file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_hierarchy_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -214,11 +214,11 @@ bool dbrec_parse_hierarchy_xml_process_cons(bprb_func_process& pro)
 bool dbrec_parse_hierarchy_xml_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 1) {
-    vcl_cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
+    std::cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
-  vcl_string name = pro.get_input<vcl_string>(i++);
+  std::string name = pro.get_input<std::string>(i++);
 
   dbrec_parse_hierarchy_xml parser;
   if (!parser.parse(name))
@@ -232,12 +232,12 @@ bool dbrec_parse_hierarchy_xml_process(bprb_func_process& pro)
 bool dbrec_hierarchy_get_type_id_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr"); 
   input_types.push_back("int");  // class id
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("int");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -245,7 +245,7 @@ bool dbrec_hierarchy_get_type_id_process_cons(bprb_func_process& pro)
 bool dbrec_hierarchy_get_type_id_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 1) {
-    vcl_cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
+    std::cerr << "brec_write_hierarchy_xml_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;

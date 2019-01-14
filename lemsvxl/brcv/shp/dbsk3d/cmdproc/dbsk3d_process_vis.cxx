@@ -1,9 +1,9 @@
 //: This is lemsvxlsrc/brcv/shp/dbsk3d/pro/dbsk3d_process_vis.cxx
 //  Creation: Dec 24, 2005   Ming-Ching Chang
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <iostream>
+#include <fstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -83,7 +83,7 @@ SoSeparator* dbsk3d_pro_vis::vis_mesh (const bool draw_idv,
                                        const int colorcode,
                                        const bool b_draw_isolated_pts)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
 
@@ -107,7 +107,7 @@ SoSeparator* dbsk3d_pro_vis::vis_mesh (const bool draw_idv,
     root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -146,7 +146,7 @@ SoSeparator* dbsk3d_pro_vis::vis_mesh_color ()
 //  Note that this surface is the 
 SoSeparator* dbsk3d_pro_vis::vis_mesh_options (int option, const bool draw_idv, const bool showid)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
   SoSeparator* root = new SoSeparator;
@@ -177,7 +177,7 @@ SoSeparator* dbsk3d_pro_vis::vis_mesh_options (int option, const bool draw_idv, 
   root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -185,7 +185,7 @@ SoSeparator* dbsk3d_pro_vis::vis_mesh_options (int option, const bool draw_idv, 
 //: Visualize the reconstructed surface mesh in animation
 SoSeparator* dbsk3d_pro_vis::vis_mesh_anim (const int nF_batch)
 {
-  vul_printf (vcl_cout, "vis_mesh_anim(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_mesh_anim(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
   SoSeparator* root = new SoSeparator;
@@ -205,10 +205,10 @@ bool dbsk3d_pro_vis::compute_dx_dy_dz (const float ratio)
   view_dy_ = (float) (bbox.height() * ratio);
   view_dz_ = (float) (bbox.depth() * ratio);
 
-  vul_printf (vcl_cout, "    compute_dx_dy_dz(): \n");
-  vul_printf (vcl_cout, "\tBounding box width %f, height %f, depth %f.\n",
+  vul_printf (std::cout, "    compute_dx_dy_dz(): \n");
+  vul_printf (std::cout, "\tBounding box width %f, height %f, depth %f.\n",
                bbox.width(), bbox.height(), bbox.depth());
-  vul_printf (vcl_cout, "\tSet view dx %f, dy %f, dz %f.\n",
+  vul_printf (std::cout, "\tSet view dx %f, dy %f, dz %f.\n",
                view_dx_, view_dy_, view_dz_);
   return r;
 }
@@ -218,14 +218,14 @@ bool dbsk3d_pro_vis::compute_dx_dy_dz (const float ratio)
 //  If the sg_sa_ is available, use sg_sa_->compute_medialn_link_len();
 void dbsk3d_pro_vis::compute_vertex_node_size ()
 {
-  vul_printf (vcl_cout, "    compute_vertex_node_size(): ");
+  vul_printf (std::cout, "    compute_vertex_node_size(): ");
 
   if (fs_mesh_->facemap().size() != 0) {
     fs_mesh_->compute_median_A122_dist();
     cube_size_ = (float) (fs_mesh_->median_A122_dist() / 10);
     ms_vis_param_.ball_size_ = (float) (fs_mesh_->median_A122_dist() / 6); 
     
-    vul_printf (vcl_cout, "cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
+    vul_printf (std::cout, "cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
     return;
   }
 
@@ -234,14 +234,14 @@ void dbsk3d_pro_vis::compute_vertex_node_size ()
     cube_size_ = (float) (sg_sa_->median_edge_len() / 2); // 10, 5
     ms_vis_param_.ball_size_ = (float) (sg_sa_->median_edge_len()/1.5); //6, 3
     
-    vul_printf (vcl_cout, "cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
+    vul_printf (std::cout, "cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
     return;
   }
   
   //Can't estimate the avg_a12_dist. Use default value.
   cube_size_ = dbmsh3d_cmd_rc();
   ms_vis_param_.ball_size_ = dbmsh3d_cmd_r();
-  vul_printf (vcl_cout, "default: cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
+  vul_printf (std::cout, "default: cube %f, ball %f.\n", cube_size_, ms_vis_param_.ball_size_);
 }
 
 
@@ -256,7 +256,7 @@ SoSeparator* dbsk3d_pro_vis::vis_unasgn_genes (const float size)
   basecolor->rgb = color_from_code (COLOR_DARKCYAN);
   root->addChild (basecolor);
 
-  vcl_vector<dbmsh3d_vertex*> unasgn_genes;
+  std::vector<dbmsh3d_vertex*> unasgn_genes;
   fs_mesh_->check_all_G_asgn (unasgn_genes);
 
   for (unsigned int i=0; i< unasgn_genes.size(); i++) {
@@ -341,7 +341,7 @@ SoSeparator* dbsk3d_pro_vis::display_sheet_flow ()
 
   flowRoot->addChild( flowSwitch );
 
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     
@@ -417,7 +417,7 @@ SoSeparator* dbsk3d_pro_vis::reconstruct()
   sep->addChild( coord );
   sep->addChild( ps );
 
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
 
@@ -748,7 +748,7 @@ SoSeparator* dbsk3d_pro_vis::view_vor ()
   return group;
 }
 
-SoSeparator* dbsk3d_pro_vis::view_cms (vcl_string prefix)
+SoSeparator* dbsk3d_pro_vis::view_cms (std::string prefix)
 {
   if (load_cms(prefix))
     return vis_ms_hypg ();
@@ -756,7 +756,7 @@ SoSeparator* dbsk3d_pro_vis::view_cms (vcl_string prefix)
     return NULL;
 }
 
-SoSeparator* dbsk3d_pro_vis::view_sg (vcl_string prefix)
+SoSeparator* dbsk3d_pro_vis::view_sg (std::string prefix)
 {
   if (load_sg(prefix))
     return vis_ms_graph ();
@@ -778,7 +778,7 @@ SoSeparator* dbsk3d_pro_vis::view_sg (vcl_string prefix)
 //    - vis_option ==0 : show each file in random color.
 //                 ==1 : show all files in a single color (silver).
 //
-SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename, 
+SoSeparator* dbsk3d_pro_vis::vis_list_file (std::string filename, 
                                             const int option, const int vis_option)
 {
   SoSeparator* root = new SoSeparator;
@@ -786,13 +786,13 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
   if (buld_get_suffix (filename) == "")
     filename += ".txt";
 
-  vul_printf (vcl_cout, "dbsk3dr_pro_vis::vis_list_file(): %s.\n", filename.c_str());
+  vul_printf (std::cout, "dbsk3dr_pro_vis::vis_list_file(): %s.\n", filename.c_str());
 
-  vcl_ifstream  in;
-  vcl_string    linestr;
+  std::ifstream  in;
+  std::string    linestr;
   in.open (filename.c_str());
   if (in == false) {
-    vul_printf (vcl_cout, "Can't open listfile %s\n", filename.c_str());
+    vul_printf (std::cout, "Can't open listfile %s\n", filename.c_str());
     return root; 
   }
 
@@ -809,23 +809,23 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
   int n_total_faces = 0;
   while (in) {
     linestr.clear();
-    vcl_getline (in, linestr);
+    std::getline (in, linestr);
 
-    if (linestr.length() == 0 || vcl_strncmp (linestr.c_str(), "#", 1) == 0)
+    if (linestr.length() == 0 || std::strncmp (linestr.c_str(), "#", 1) == 0)
       continue; //skip empty line and comments.
 
     char file[256] = "", file_af[256] = "";
-    vcl_sscanf (linestr.c_str(), "%s %s", file, file_af);
+    std::sscanf (linestr.c_str(), "%s %s", file, file_af);
     DBMSH3D_FILE_TYPE type;
     
     //1) Read in the data file
-    if (vcl_strcmp (file, "") != 0) {
+    if (std::strcmp (file, "") != 0) {
       //clean up the datastructure before loading.
       reset_data (); 
       pro_data_ = PD_MESH;
       reset_shock_data ();
       
-      vcl_string suffix = buld_get_suffix (file);
+      std::string suffix = buld_get_suffix (file);
       if (suffix == ".cms") {
         type = DBMSH3D_FILE_CMS;
         load_cms (file);
@@ -841,7 +841,7 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
     }
 
     //2) Read in the alignment file (if any)
-    if (vcl_strcmp (file_af, "") != 0) {      
+    if (std::strcmp (file_af, "") != 0) {      
       load_hmatrix (file_af); //read in the alignment file.
       apply_xform_hmatrix (); //xform the dataset.
       af_count++;
@@ -891,7 +891,7 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
       n_total_faces += mesh_->facemap().size();
     }
 
-    vul_printf (vcl_cout, "\t Currently %u points %u faces loaded.\n", 
+    vul_printf (std::cout, "\t Currently %u points %u faces loaded.\n", 
                 n_total_pts, n_total_faces);
   }
 
@@ -899,10 +899,10 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
   if (option==1)
     assert (pts_.size() == n_total_pts);
 
-  vul_printf (vcl_cout, "\n====================================================\n");
-  vul_printf (vcl_cout, "  vis_list_file(): %d files (%d align. files) shown from %s.\n", 
+  vul_printf (std::cout, "\n====================================================\n");
+  vul_printf (std::cout, "  vis_list_file(): %d files (%d align. files) shown from %s.\n", 
               file_count, af_count, filename.c_str());
-  vul_printf (vcl_cout, "\tTotally %u points, %u faces.\n", 
+  vul_printf (std::cout, "\tTotally %u points, %u faces.\n", 
               n_total_pts, n_total_faces);
   return root;
 }
@@ -911,18 +911,18 @@ void dbsk3d_pro_vis::parse_run_file (const char* prefix)
 {
 
   //1)If file open fails, return.
-  vcl_ifstream fp (prefix,vcl_ios::in);
+  std::ifstream fp (prefix,std::ios::in);
   if (!fp){
-    vcl_cout<<"\n\t Unable to Open "<<prefix<<vcl_endl;
+    std::cout<<"\n\t Unable to Open "<<prefix<<std::endl;
     return;
   }
 
   //: parse the run file to get those values
-  vcl_string s = "init";
+  std::string s = "init";
   while (s != "") {
     fp >> s;
     if (s == "-prefix") {
-      vcl_string  prefix;
+      std::string  prefix;
       fp >> prefix;
 
       set_dir_prefix (prefix);

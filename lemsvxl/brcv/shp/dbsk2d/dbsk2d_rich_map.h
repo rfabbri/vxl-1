@@ -26,7 +26,7 @@
 //
 // \endverbatim
 
-#include <vcl_utility.h>
+#include <utility>
 #include <vbl/vbl_array_2d.h>
 #include <vbl/vbl_ref_count.h>
 

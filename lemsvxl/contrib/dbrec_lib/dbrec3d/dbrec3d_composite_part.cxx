@@ -31,7 +31,7 @@
 //  bxml_data_sptr contexts_data = bxml_find_by_name(doc.root_element(), query);
 //  bxml_element* contexts_elm = dynamic_cast<bxml_element *> (contexts_data.as_pointer());
 //  if (!contexts_elm) {
-//    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name dbrec3d_contexts\n";
+//    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name dbrec3d_contexts\n";
 //    return false;
 //  }
 //  
@@ -40,7 +40,7 @@
 //    dbrec3d_context_parse_xml_element(*d_it);
 //  }
 //  
-//  vcl_vector<dbrec_part_sptr> children;  // empty for now
+//  std::vector<dbrec_part_sptr> children;  // empty for now
 //  
 //  dbrec3d_composite_part<dbrec3d_pairwise_compositor<dbrec3d_pairwise_gaussian_model> >* cp = 
 //  new dbrec3d_composite_part<dbrec3d_pairwise_compositor<dbrec3d_pairwise_gaussian_model> >(type, children, compositor, radius);

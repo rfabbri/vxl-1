@@ -8,7 +8,7 @@
 
 #include "dborl_extract_contour.h"
 #include "dborl_extract_contour_params.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dborl/algo/dborl_index_parser.h>
 #include <dborl/dborl_index.h>
@@ -30,13 +30,13 @@
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-bool dborl_extract_contour::parse_command_line(vcl_vector<vcl_string>& argv)
+bool dborl_extract_contour::parse_command_line(std::vector<std::string>& argv)
 {
   params_->parse_command_line_args(argv);  // parses the input.xml file if its name is passed from command line
   
   //: always print the params file if an executable to work with ORL web interface
   if (!params_->print_params_xml(params_->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params_->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params_->print_params_file() << std::endl;
 
   if (params_->exit_with_no_processing() || params_->print_params_only())
     return false;
@@ -48,20 +48,20 @@ bool dborl_extract_contour::parse_command_line(vcl_vector<vcl_string>& argv)
 }
 
 //: this method is run on each processor
-bool dborl_extract_contour::parse_index(vcl_string index_file)
+bool dborl_extract_contour::parse_index(std::string index_file)
 {
   dborl_index_parser parser;
   parser.clear();
 
-  vcl_FILE *xmlFile = vcl_fopen(index_file.c_str(), "r");
+  std::FILE *xmlFile = std::fopen(index_file.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << "dborl_extract_contour::parse_index() -- " << index_file << "-- error on opening" << vcl_endl;
+    std::cout << "dborl_extract_contour::parse_index() -- " << index_file << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
 
@@ -72,7 +72,7 @@ bool dborl_extract_contour::parse_index(vcl_string index_file)
     return false;
 
   if (!(ind_->get_type() == dborl_index_type::flat_image)) {
-    vcl_cout << "Index is not of flat_image type! Exiting!\n";
+    std::cout << "Index is not of flat_image type! Exiting!\n";
     return false;
   }
   
@@ -93,19 +93,19 @@ bool dborl_extract_contour::parse(const char* param_file)
 //  run the algorithm to generate this file, then modify it  
 void dborl_extract_contour::print_default_file(const char* def_file)
 {
-  params_->print_default_input_xml(vcl_string(def_file));
+  params_->print_default_input_xml(std::string(def_file));
 }
 
 //: this method is run on each processor
 //  initialize the input vector with indices of objects in the root of the index file
 //  assuming a flat index of images so only distributes the objects at the root
-bool dborl_extract_contour::initialize(vcl_vector<int>& t)
+bool dborl_extract_contour::initialize(std::vector<int>& t)
 {
   dborl_index_node_sptr root = ind_->root_->cast_to_index_node();
   
   //: check if the index contains all the information needed
   if (root->names().size() != root->paths().size()) {
-    vcl_cout << "The index does not contain object names as well as object paths! Exiting!\n";
+    std::cout << "The index does not contain object names as well as object paths! Exiting!\n";
     return false;
   }
 
@@ -121,16 +121,16 @@ bool dborl_extract_contour::process(int t1, char& f)
 {
   dborl_index_node_sptr root = ind_->root_->cast_to_index_node();
 
-  vcl_string img_name = root->paths()[t1] + "/" + root->names()[t1] + params_->image_extension();
+  std::string img_name = root->paths()[t1] + "/" + root->names()[t1] + params_->image_extension();
   if (!vul_file::exists(img_name)) {
-    vcl_cout << "In dborl_extract_contour::process() -- img: " << img_name << " could not be loaded\n";
+    std::cout << "In dborl_extract_contour::process() -- img: " << img_name << " could not be loaded\n";
     f = 0;
     return false;
   }
 
   vil_image_resource_sptr image_sptr = vil_load_image_resource(img_name.c_str());
   if (!image_sptr) {
-    vcl_cout << "In dborl_extract_contour::process() -- problems in loading img: " << img_name << "\n";
+    std::cout << "In dborl_extract_contour::process() -- problems in loading img: " << img_name << "\n";
     f = 0;
     return false;
   }
@@ -182,7 +182,7 @@ bool dborl_extract_contour::process(int t1, char& f)
  
   //get the largest contour and save
   vsol_polygon_2d_sptr newContour = new vsol_polygon_2d (ctracer.largest_contour());
-  vcl_string output_name;
+  std::string output_name;
   if (params_->save_to_output_folder()) 
     output_name = params_->output_directory() + "/" + root->names()[t1] + params_->image_extension();
   else
@@ -190,7 +190,7 @@ bool dborl_extract_contour::process(int t1, char& f)
   output_name = vul_file::strip_extension(output_name) + ".con";
 
   if (!bsold_save_con_file(output_name.c_str(), newContour)) {
-    vcl_cout << "In dborl_extract_contour::process() -- problems in saving con file: " << output_name << vcl_endl;
+    std::cout << "In dborl_extract_contour::process() -- problems in saving con file: " << output_name << std::endl;
     f = 0;
     return false;
   }
@@ -199,11 +199,11 @@ bool dborl_extract_contour::process(int t1, char& f)
   return true;
 }
 
-bool dborl_extract_contour::finalize(vcl_vector<char>& results)
+bool dborl_extract_contour::finalize(std::vector<char>& results)
 {
   for (unsigned i = 0; i < results.size(); i++) {
     if (!results[i]) {
-      vcl_cout << "Problems occurred processing some of the inputs\n";
+      std::cout << "Problems occurred processing some of the inputs\n";
       return false;
     }
   }

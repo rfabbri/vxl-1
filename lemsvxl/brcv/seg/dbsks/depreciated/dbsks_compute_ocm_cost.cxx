@@ -35,8 +35,8 @@ bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm,
   // Compute image cost by matching each of these arcs with one in the pre-computed grid
   double len = biarc.len();
   int half_num_pts = vnl_math_floor(len/(2*ds));
-  vcl_vector<vgl_point_2d<double > > pts(2*half_num_pts+1);
-  vcl_vector<vgl_vector_2d<double > > ts(2*half_num_pts+1);
+  std::vector<vgl_point_2d<double > > pts(2*half_num_pts+1);
+  std::vector<vgl_vector_2d<double > > ts(2*half_num_pts+1);
   for (int k =-half_num_pts; k <= half_num_pts; ++k)
   {
     pts[k+half_num_pts] = biarc.point_at(len/2 + k*ds);
@@ -75,8 +75,8 @@ bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm,
     double len = bnd_biarc[i].len();
 
     int half_num_pts = vnl_math_floor(len/(2*ds));
-    vcl_vector<vgl_point_2d<double > > pts(2*half_num_pts+1);
-    vcl_vector<vgl_vector_2d<double > > ts(2*half_num_pts+1);
+    std::vector<vgl_point_2d<double > > pts(2*half_num_pts+1);
+    std::vector<vgl_vector_2d<double > > ts(2*half_num_pts+1);
     for (int k =-half_num_pts; k <= half_num_pts; ++k)
     {
       pts[k+half_num_pts] = bnd_biarc[i].point_at(len/2 + k*ds);
@@ -107,8 +107,8 @@ bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_fragment& xfrag,
                             float& cost,
-                            vcl_vector<vgl_point_2d<double > >& pts,
-                            vcl_vector<vgl_vector_2d<double > >& tangents)
+                            std::vector<vgl_point_2d<double > >& pts,
+                            std::vector<vgl_vector_2d<double > >& tangents)
 {
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
@@ -159,7 +159,7 @@ bool dbsks_compute_ocm_cost(dbsks_shotton_ocm* shotton_ocm,
                             float& cost)
 {
   // place holders for sample points
-  static vcl_vector<int >x_vec, y_vec, angle_vec;
+  static std::vector<int >x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
   
@@ -196,7 +196,7 @@ bool dbsks_compute_ocm_cost_biarc(dbsks_gray_ocm* gray_ocm,
                             const vgl_vector_2d<double >& end_tangent,
                             float& cost)
 {
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   double angle_step;
 
   // boundary curve
@@ -222,7 +222,7 @@ bool dbsks_compute_ocm_cost(dbsks_gray_ocm* gray_ocm,
                             const dbsksp_xshock_fragment& xfrag,
                             float& cost)
 {
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -263,7 +263,7 @@ bool dbsks_compute_ocm_cost(dbsks_gray_ocm* gray_ocm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
                             float& cost,
-                            const vcl_vector<unsigned >& ignored_edges,
+                            const std::vector<unsigned >& ignored_edges,
                             bool verbose)
 {
   float sum_cost = 0;
@@ -313,17 +313,17 @@ bool dbsks_compute_ocm_cost(dbsks_gray_ocm* gray_ocm,
 
     if (verbose)
     {
-      vcl_cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
-      vcl_cout << "     parent_vid=" << xv_p->id() << "\n      ";
-      xv_p->descriptor(xe)->print(vcl_cout);
-      vcl_cout << "     child_vid=" << xv_c->id() << "\n      ";
-      xv_c->descriptor(xe)->opposite_xnode().print(vcl_cout);
+      std::cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
+      std::cout << "     parent_vid=" << xv_p->id() << "\n      ";
+      xv_p->descriptor(xe)->print(std::cout);
+      std::cout << "     child_vid=" << xv_c->id() << "\n      ";
+      xv_c->descriptor(xe)->opposite_xnode().print(std::cout);
     }
   }
 
   if (verbose)
   {
-    vcl_cout << "   Total cost=" << sum_cost << vcl_endl;
+    std::cout << "   Total cost=" << sum_cost << std::endl;
   }
 
   // final result
@@ -346,7 +346,7 @@ bool dbsks_compute_ocm_cost_biarc(dbsks_ccm* ccm,
                             const vgl_vector_2d<double >& end_tangent,
                             float& cost)
 {
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   double angle_step;
 
   // boundary curve
@@ -370,7 +370,7 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* ccm,
                             const dbsksp_xshock_fragment& xfrag,
                             float& cost)
 {
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -414,7 +414,7 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* ccm,
                             const dbsksp_xshock_fragment& xfrag,
                             float& cost_left, float& cost_right)
 {
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -461,7 +461,7 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* ccm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
                             float& cost,
-                            const vcl_vector<unsigned >& ignored_edges,
+                            const std::vector<unsigned >& ignored_edges,
                             bool verbose)
 {
   float sum_cost = 0;
@@ -511,17 +511,17 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* ccm,
 
     if (verbose)
     {
-      vcl_cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
-      vcl_cout << "     parent_vid=" << xv_p->id() << "\n      ";
-      xv_p->descriptor(xe)->print(vcl_cout);
-      vcl_cout << "     child_vid=" << xv_c->id() << "\n      ";
-      xv_c->descriptor(xe)->opposite_xnode().print(vcl_cout);
+      std::cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
+      std::cout << "     parent_vid=" << xv_p->id() << "\n      ";
+      xv_p->descriptor(xe)->print(std::cout);
+      std::cout << "     child_vid=" << xv_c->id() << "\n      ";
+      xv_c->descriptor(xe)->opposite_xnode().print(std::cout);
     }
   }
 
   if (verbose)
   {
-    vcl_cout << "   Total cost=" << sum_cost << vcl_endl;
+    std::cout << "   Total cost=" << sum_cost << std::endl;
   }
 
   // final result
@@ -551,8 +551,8 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* ccm,
 bool dbsks_compute_ccm_of_xgraph(dbsks_ccm* ccm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
-                            vcl_vector<vcl_string >& cfrag_labels, 
-                            vcl_vector<float >& cfrag_ccm_costs)
+                            std::vector<std::string >& cfrag_labels, 
+                            std::vector<float >& cfrag_ccm_costs)
 {
   // clean-up
   cfrag_labels.clear();
@@ -581,7 +581,7 @@ bool dbsks_compute_ccm_of_xgraph(dbsks_ccm* ccm,
     dbsksp_xshock_node_descriptor end = xv_c->descriptor(xe)->opposite_xnode();
 
     // Compute CCM cost
-    vcl_vector<int > x_vec, y_vec, angle_vec;
+    std::vector<int > x_vec, y_vec, angle_vec;
     double angle_step;
 
     // boundary curve

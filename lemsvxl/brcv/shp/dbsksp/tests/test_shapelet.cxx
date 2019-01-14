@@ -21,10 +21,10 @@ void test_shapelet()
   dbsksp_shapelet s(x0, y0, theta0, r0, phi0, phi1, m0, len);
   double R = 30;
   double true_area_left = 
-    (1.0/2) * R*R*vcl_sin(vnl_math::pi/3) - (1.0/2) * (R-r0)*(R-r0)*vnl_math::pi/3;
+    (1.0/2) * R*R*std::sin(vnl_math::pi/3) - (1.0/2) * (R-r0)*(R-r0)*vnl_math::pi/3;
   double true_area_right = true_area_left;
 
-  double true_area_front_arc = 2*vnl_math::pi/3 * r0*r0 + r0*r0*vcl_sin(2*vnl_math::pi/3) /2;
+  double true_area_front_arc = 2*vnl_math::pi/3 * r0*r0 + r0*r0*std::sin(2*vnl_math::pi/3) /2;
 
   TEST_NEAR("Compute shapelet area - left", s.area_left(), true_area_left, 1e-8);
   TEST_NEAR("Compute shapelet area - right", s.area_right(), true_area_right, 1e-8);

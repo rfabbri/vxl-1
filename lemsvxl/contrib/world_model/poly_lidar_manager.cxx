@@ -69,7 +69,7 @@ poly_lidar_manager::~poly_lidar_manager(void)
     delete my_polygon;
   if (my_polygon_copy != 0)
     delete my_polygon_copy;
-  vcl_list<obj_observable*>::iterator iter=objects.begin();
+  std::list<obj_observable*>::iterator iter=objects.begin();
   while (iter != objects.end()) {
     delete (*iter);
     iter++;
@@ -101,7 +101,7 @@ void poly_lidar_manager::setup_scene (vgui_grid_tableau_sptr grid)
                                 invert, use_glPixelMap, cache_buffer);
  
 
-  vcl_string image_filename = "C:\\images\\Baghdad_Tile39\\dem_1m_a1_baghdad_tile39.tif";
+  std::string image_filename = "C:\\images\\Baghdad_Tile39\\dem_1m_a1_baghdad_tile39.tif";
   
   vil_image_resource_sptr res = vil_load_image_resource(image_filename.c_str());
   //img_left_ = set_image_resource(res);
@@ -214,11 +214,11 @@ void poly_lidar_manager::load_image()
                                 invert, use_glPixelMap, cache_buffer);
 
 
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   if (!filename.empty())
   {
     //vil_image_view_base_sptr img = vil_load( filename.data() );
-    //vcl_cout << img->cols() << "  " << img.rows();
+    //std::cout << img->cols() << "  " << img.rows();
     //observer_left_->add_image(0, 0, *img);
 
     vil_image_resource_sptr res = vil_load_image_resource(filename.c_str());
@@ -240,21 +240,21 @@ void poly_lidar_manager::define_ground_plane()
   // pick the ground truth line
   float x1, y1, x2, y2;
   left_->pick_line(&x1, &y1, &x2, &y2);
-  vcl_cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << vcl_endl;
+  std::cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << std::endl;
   observer_left_->add_line(x1, y1, x2, y2);
   observer_left_->set_ground_plane(x1, y1, x2, y2);
 
   // pick the orthogonal line
   /*float x3, y3, x4, y4;
   left_->pick_line(&x3, &y3, &x4, &y4);
-  vcl_cout << "(" << x3 << "," << y3 << ")" << "(" << x4 << "," << y4 << ")" << vcl_endl;
+  std::cout << "(" << x3 << "," << y3 << ")" << "(" << x4 << "," << y4 << ")" << std::endl;
   observer_left_->add_line(x3,y3,x4,y4);*/
 }
 
 void poly_lidar_manager::save()
 {
   vgui_dialog params("File Save");
-  vcl_string ext, file, empty="";
+  std::string ext, file, empty="";
 
   params.file ("Save...", ext, file);  
   bool use_lvcs = false;
@@ -269,7 +269,7 @@ void poly_lidar_manager::save()
     return;
   }
 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     obj_observable* o = *it;
     dbmsh3d_mesh* mesh = o->get_object();
@@ -281,7 +281,7 @@ void poly_lidar_manager::save()
 void poly_lidar_manager::save_all()
 {
   vgui_dialog params("File Save");
-  vcl_string ext, list_name, empty="";
+  std::string ext, list_name, empty="";
 
   params.file ("Filename...", ext, list_name);  
   bool use_lvcs = false;
@@ -297,28 +297,28 @@ void poly_lidar_manager::save_all()
     return;
   }
 
-  vcl_string directory_name = vul_file::dirname(list_name);
+  std::string directory_name = vul_file::dirname(list_name);
 
-  vcl_ofstream list_out(list_name.data());
+  std::ofstream list_out(list_name.data());
   if (!list_out.good()) {
-    vcl_cerr << "error opening file "<< list_name <<vcl_endl;
+    std::cerr << "error opening file "<< list_name <<std::endl;
     return;
   }
 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   int mesh_idx = 0;
   while (it != objects.end()) {
-    vcl_ostringstream meshname;
-    vcl_ostringstream fullpath;
+    std::ostringstream meshname;
+    std::ostringstream fullpath;
     meshname << "mesh" << mesh_idx <<".ply2";
     fullpath << directory_name << "/" << meshname.str();
 
-    list_out << meshname.str() << vcl_endl;
+    list_out << meshname.str() << std::endl;
     obj_observable* o = *it;
 
     // generate texture map
     //if (do_tex) {
-    //  vcl_ostringstream tex_fullpath;
+    //  std::ostringstream tex_fullpath;
     //  tex_fullpath << tex_filename << "." << mesh_idx << ".tiff";
     //  tex_generator.generate_texture_map(o,tex_fullpath.str());
     //}
@@ -331,29 +331,29 @@ void poly_lidar_manager::save_all()
 
 void poly_lidar_manager::save_lvcs()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   // just save origin for now
-  vcl_ofstream os(filename.data());
+  std::ofstream os(filename.data());
   double lat,lon,elev;
   lvcs_->get_origin(lat,lon,elev);
   os.precision(12);
-  os << lat << " "<< lon << " " << elev << vcl_endl;
+  os << lat << " "<< lon << " " << elev << std::endl;
 
   return;
 }
 
 void poly_lidar_manager::load_lvcs()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   // just load origin for now
-  vcl_ifstream is(filename.data());
+  std::ifstream is(filename.data());
   double lat, lon, elev;
   is >> lat;
   is >> lon;
   is >> elev;
 
   lvcs_ = new bgeo_lvcs(lat,lon,elev,bgeo_lvcs::wgs84,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
-  vcl_cout << "loaded lvcs with origin "<<lat<<", "<<lon<<", "<<elev<<vcl_endl;
+  std::cout << "loaded lvcs with origin "<<lat<<", "<<lon<<", "<<elev<<std::endl;
 
   return;
 }
@@ -361,14 +361,14 @@ void poly_lidar_manager::load_lvcs()
 void poly_lidar_manager::convert_file_to_lvcs()
 {
   if (!lvcs_) {
-    vcl_cerr << "error: lvcs is not defined!"<<vcl_endl;
+    std::cerr << "error: lvcs is not defined!"<<std::endl;
     return;
   }
   // expects simple text file with each line being of the form "lat lon z"
-  vcl_string filename_in = select_file();
-  vcl_string filename_out = filename_in + ".lvcs";
-  vcl_ifstream is(filename_in.data());
-  vcl_ofstream os(filename_out.data());
+  std::string filename_in = select_file();
+  std::string filename_out = filename_in + ".lvcs";
+  std::ifstream is(filename_in.data());
+  std::ofstream os(filename_out.data());
   
   double lat,lon,elev;
   double x,y,z;
@@ -378,7 +378,7 @@ void poly_lidar_manager::convert_file_to_lvcs()
     is >> lon;
     is >> elev;
     lvcs_->global_to_local(lon,lat,elev,bgeo_lvcs::wgs84,x,y,z,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
-    os << x <<" "<<y<<" "<<z<<vcl_endl;
+    os << x <<" "<<y<<" "<<z<<std::endl;
   }
 
   return;
@@ -391,16 +391,16 @@ void poly_lidar_manager::save_mesh(dbmsh3d_mesh* mesh, const char* filename, boo
   dbmsh3d_mesh* mesh2 = clone_mesh_ifs (mesh); ///mesh->clone();
   if (use_lvcs) {
     if (!lvcs_){
-      vcl_cerr << "error: lvcs == null" <<vcl_endl;
+      std::cerr << "error: lvcs == null" <<std::endl;
       return;
     }
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = mesh2->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = mesh2->vertexmap().begin();
     for (; it != mesh2->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (dbmsh3d_vertex*) (*it).second;
       double x=0,y=0,z=0;
       lvcs_->global_to_local(V->pt().x(),V->pt().y(),V->pt().z(),bgeo_lvcs::wgs84,x,y,z,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
       vgl_point_3d<double> new_pt(x,y,z);
-      vcl_cout << "converted global <"<<V->pt().x() <<", "<< V->pt().y() <<", "<< V->pt().z() <<"> to <" <<x<< ", "<<y<<" ,"<<z<<"> "<<vcl_endl;
+      std::cout << "converted global <"<<V->pt().x() <<", "<< V->pt().y() <<", "<< V->pt().z() <<"> to <" <<x<< ", "<<y<<" ,"<<z<<"> "<<std::endl;
       V->set_pt(new_pt);
     }
   }
@@ -413,7 +413,7 @@ void poly_lidar_manager::save_mesh(dbmsh3d_mesh* mesh, const char* filename, boo
 void poly_lidar_manager::load_mesh_single()
 {
   vgui_dialog params ("File Open");
-  vcl_string ext, filename, empty="";
+  std::string ext, filename, empty="";
 
   params.file ("Open...", ext, filename);  
   bool image_xy = false;
@@ -429,7 +429,7 @@ void poly_lidar_manager::load_mesh_single()
 void poly_lidar_manager::load_mesh_multiple()
 {
   vgui_dialog params ("File Open");
-  vcl_string ext, master_filename, empty="";
+  std::string ext, master_filename, empty="";
 
   params.file ("Open...", ext, master_filename);  
   bool image_xy = false;
@@ -439,16 +439,16 @@ void poly_lidar_manager::load_mesh_multiple()
     return;
 
   // read txt file
-  vcl_ifstream file_inp(master_filename.data());
+  std::ifstream file_inp(master_filename.data());
   if (!file_inp.good()) {
-    vcl_cerr << "error opening file "<< master_filename <<vcl_endl;
+    std::cerr << "error opening file "<< master_filename <<std::endl;
     return;
   }
 
-  vcl_string directory_name = vul_file::dirname(master_filename);
+  std::string directory_name = vul_file::dirname(master_filename);
   while(!file_inp.eof()){
-    vcl_ostringstream fullpath;
-    vcl_string mesh_fname;
+    std::ostringstream fullpath;
+    std::string mesh_fname;
     file_inp >> mesh_fname;
     if (!mesh_fname.empty() && (mesh_fname[0] != '#')) {
       fullpath << directory_name << "/" << mesh_fname;
@@ -461,18 +461,18 @@ void poly_lidar_manager::load_mesh_multiple()
   return;
 }
 
-void poly_lidar_manager::load_mesh(vcl_string filename, bool img_xy)
+void poly_lidar_manager::load_mesh(std::string filename, bool img_xy)
 {
   dbmsh3d_mesh_mc mesh_mc;
 
   if (!dbmsh3d_load_ply2(&mesh_mc,filename.data())) {
-    vcl_cerr << "Error loading mesh "<<filename<< vcl_endl;
+    std::cerr << "Error loading mesh "<<filename<< std::endl;
     return;
   }
   if (img_xy) {
     // transform all vertices from image to world coordinates
-    vcl_map<int,dbmsh3d_vertex*> vertmap = mesh_mc.vertexmap();
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit;
+    std::map<int,dbmsh3d_vertex*> vertmap = mesh_mc.vertexmap();
+    std::map<int, dbmsh3d_vertex*>::iterator vit;
     for (vit = vertmap.begin(); vit!=vertmap.end(); vit++) {
       dbmsh3d_vertex* vert = (dbmsh3d_vertex*)vit->second;
       vsol_point_2d_sptr p2d = new vsol_point_2d(vert->pt().x(),vert->pt().y());
@@ -510,8 +510,8 @@ void poly_lidar_manager::define_lvcs()
   observer_left_->backproj_point(img_point,world_point);
 
   /*
-  vcl_vector<vsol_point_2d_sptr> points2d;
-  vcl_vector<vsol_point_3d_sptr> points3d;
+  std::vector<vsol_point_2d_sptr> points2d;
+  std::vector<vsol_point_3d_sptr> points3d;
   // push img_point 3x to create degenerate polygon
   for (int i=0;i<3;i++) {
     points2d.push_back(img_point);
@@ -527,7 +527,7 @@ void poly_lidar_manager::define_lvcs()
   lvcs_ = new bgeo_lvcs(world_point->y(),world_point->x(),world_point->z(),
                         bgeo_lvcs::wgs84,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
 
-  vcl_cout << "defining lvcs with origin = <"<<world_point->y() <<", "<<world_point->x() <<", "<< world_point->z() <<">"<<vcl_endl;
+  std::cout << "defining lvcs with origin = <"<<world_point->y() <<", "<<world_point->x() <<", "<< world_point->z() <<">"<<std::endl;
 }
 
   
@@ -543,7 +543,7 @@ void poly_lidar_manager::create_poly()
   unsigned n = poly2d->size();
   // make sure that the last two vertices of the polygon are not the same
   if (*(poly2d->vertex(n-1)) == *(poly2d->vertex(n-2))) {
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     // erase the last vertex
     for (unsigned i=0; i<poly2d->size()-1; i++) {
       vertices.push_back(poly2d->vertex(i));
@@ -632,9 +632,9 @@ void poly_lidar_manager::create_interior()
 void poly_lidar_manager::get_selection(obj_observable* &obs, unsigned &face_id)
 {
 
-  vcl_vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
+  std::vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
   if (select_list.size() == 0 || select_list.size() > 1) {
-    vcl_cerr << "Select only ONE face" << vcl_endl;
+    std::cerr << "Select only ONE face" << std::endl;
   } else {
     unsigned sel_id = select_list[0]->get_id();
     vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
@@ -654,18 +654,18 @@ bool poly_lidar_manager::handle(const vgui_event &e)
   {
     
     vgui_projection_inspector pi;
-    //vcl_cout << "X=" << e.wx << " Y=" << e.wy << vcl_endl;
+    //std::cout << "X=" << e.wx << " Y=" << e.wy << std::endl;
     if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == 0) {
       left_button_down = true;
       // take the position of the first point
       pi.window_to_image_coordinates(e.wx, e.wy, mouse_start_x, mouse_start_y);
-      vcl_cout << mouse_start_x << " " << mouse_start_x << vcl_endl;
+      std::cout << mouse_start_x << " " << mouse_start_x << std::endl;
 
-      vcl_vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
-      //vcl_cout << select_list.size();
+      std::vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
+      //std::cout << select_list.size();
       if (select_list.size() > 0) {
         // TODO: if there are more than one polygon, move all of them
-        //select_list[0]->print(vcl_cout);
+        //select_list[0]->print(std::cout);
         unsigned id = select_list[0]->get_id();
         vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
         observer_left_->deselect(id);
@@ -686,7 +686,7 @@ bool poly_lidar_manager::handle(const vgui_event &e)
         float wy = e.wy;     
         pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
         double diff = -1 * (cur_pointy - mouse_start_y)/10.0;
-        vcl_cout << diff << vcl_endl;
+        std::cout << diff << std::endl;
         vsol_polygon_3d_sptr poly3d;
      //   observer_left_->backproj_poly(poly2d, poly3d, diff);
         my_polygon_copy->move(poly3d);
@@ -713,7 +713,7 @@ bool poly_lidar_manager::handle(const vgui_event &e)
       
       pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
       double diff = (mouse_start_y - cur_pointy)/10.0;
-      vcl_cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << vcl_endl;
+      std::cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << std::endl;
       mouse_start_y = cur_pointy;
       if (my_obj != 0)
         my_obj->move_extr_face(diff);
@@ -729,10 +729,10 @@ bool poly_lidar_manager::handle(const vgui_event &e)
 
 //////////////////////////////////////////////////////////////////////////////////
 // Private Methods
-vcl_string poly_lidar_manager::select_file()
+std::string poly_lidar_manager::select_file()
 {
   vgui_dialog params ("File Open");
-  vcl_string ext, file, empty="";
+  std::string ext, file, empty="";
 
   params.file ("Open...", ext, file);  
   if (!params.ask())
@@ -750,8 +750,8 @@ vcl_string poly_lidar_manager::select_file()
 /*vpgl_camera<double>* poly_lidar_manager::select_camera()
 {
   vgui_dialog params ("Camera File Open");
-  vcl_string ext, file, empty="";
-  vcl_vector<vcl_string> camera_types;
+  std::string ext, file, empty="";
+  std::vector<std::string> camera_types;
   int camera_type = 0;
 
   vpgl_camera<double> *camera = (vpgl_camera<double>*)0;
@@ -781,20 +781,20 @@ vcl_string poly_lidar_manager::select_file()
     camera = (read_rational_camera(file)).clone();
     break;
   default:
-    vcl_cout << "Error: unknown camera type "<<camera_type<< vcl_endl;
+    std::cout << "Error: unknown camera type "<<camera_type<< std::endl;
   }
   return camera;
 }*/
 
-void poly_lidar_manager::read_world_points(vcl_string fname)
+void poly_lidar_manager::read_world_points(std::string fname)
 {
-  vcl_ifstream points_file(fname.data());
+  std::ifstream points_file(fname.data());
   int x, y, z;
   while (!points_file.eof()) {
     points_file >> x;
     points_file >> y;
     points_file >> z;
-    vcl_cout << x << " " << y << " " << z << vcl_endl;
+    std::cout << x << " " << y << " " << z << std::endl;
     vgl_point_3d<double> p(x, y, z);
     //world_points_.push_back(p);
   }
@@ -804,7 +804,7 @@ obj_observable* poly_lidar_manager::find_polygon_in_3D(unsigned id,
                                                  vsol_polygon_3d_sptr& poly,
                                                  unsigned& index)
 { 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     obj_observable* o = *it;
     if (o->is_poly_in(id, index)) {
@@ -820,7 +820,7 @@ obj_observable* poly_lidar_manager::find_polygon_in_3D(unsigned id,
 
 void poly_lidar_manager::delete_observable(observable* obs)
 {
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     if (*it == obs) {
       delete (*it);
@@ -946,30 +946,30 @@ void poly_lidar_manager::divide_polygon(vgui_soview2D_polygon* poly2d,
     bbox_poly.push_back(xmin, ymax);
   }
 
-  vcl_cout << bbox_poly;
+  std::cout << bbox_poly;
 
   vgl_polygon<float> my_poly(poly2d->x, poly2d->y, poly2d->n);
-  vcl_cout << my_poly << vcl_endl;
+  std::cout << my_poly << std::endl;
 
   // intersect the two polygon
   vgl_polygon<float> new_poly1 = vgl_clip(my_poly, bbox_poly, vgl_clip_type_intersect);
   vgl_polygon<float> new_poly2 = vgl_clip(my_poly, new_poly1, vgl_clip_type_difference);
 
-  vcl_cout << new_poly1 << vcl_endl;
-  vcl_cout << new_poly2 << vcl_endl;
+  std::cout << new_poly1 << std::endl;
+  std::cout << new_poly2 << std::endl;
 
-  vcl_vector<vsol_point_2d_sptr> vlist1;
+  std::vector<vsol_point_2d_sptr> vlist1;
   if (new_poly1.num_sheets() > 1)
-    vcl_cerr << "More than one polygon found!!!!!!" << vcl_endl;
+    std::cerr << "More than one polygon found!!!!!!" << std::endl;
   //for (unsigned int s = 0; s < new_poly1.num_sheets(); ++s) {
     for (unsigned int p = 0; p < new_poly1[0].size(); ++p) {
       vlist1.push_back(new vsol_point_2d(new_poly1[0][p].x(), new_poly1[0][p].y())); 
   }
  // }
 
-  vcl_vector<vsol_point_2d_sptr> vlist2;
+  std::vector<vsol_point_2d_sptr> vlist2;
   if (new_poly2.num_sheets() > 1)
-    vcl_cerr << "More than one polygon found!!!!!!" << vcl_endl;
+    std::cerr << "More than one polygon found!!!!!!" << std::endl;
   //for (unsigned int s = 0; s < new_poly2.num_sheets(); ++s) {
     for (unsigned int p = 0; p < new_poly2[0].size(); ++p) {
       vlist2.push_back(new vsol_point_2d(new_poly2[0][p].x(), new_poly2[0][p].y())); 
@@ -993,17 +993,17 @@ void poly_lidar_manager::divide_polygon(vgui_soview2D_polygon* poly2d,
 void poly_lidar_manager::move_polygon(vsol_polygon_3d_sptr &polygon, double dist)
 {
   unsigned n = polygon->size();
-  vcl_vector<vsol_point_3d_sptr> vlist(n);
+  std::vector<vsol_point_3d_sptr> vlist(n);
   for(unsigned i=0; i<n; i++) {
     vsol_point_3d_sptr p = polygon->vertex(i);
-    vcl_cout << "point before: " << p << vcl_endl;
+    std::cout << "point before: " << p << std::endl;
     vgl_vector_3d<double> normal = polygon->normal_at_point(p);
-    vcl_cout << "Normal==>" << normal << vcl_endl;
+    std::cout << "Normal==>" << normal << std::endl;
     double fact = -1*dist;
     vsol_point_3d_sptr ptr = new vsol_point_3d(p->x() + fact*normal.x() , 
       p->y() + fact*normal.y(), 
       p->z() + fact*normal.z());
-    vcl_cout << "point after: ";
+    std::cout << "point after: ";
     ptr->print();
     vlist[i] = ptr;
   }
@@ -1011,12 +1011,12 @@ void poly_lidar_manager::move_polygon(vsol_polygon_3d_sptr &polygon, double dist
   //delete (polygon.ptr());
   polygon = new vsol_polygon_3d(vlist);
 }
-static void write_xyz(bgeo_lvcs &lvcs,vcl_vector<vsol_point_3d_sptr> const& points, vcl_string const& file)
+static void write_xyz(bgeo_lvcs &lvcs,std::vector<vsol_point_3d_sptr> const& points, std::string const& file)
 {
-  vcl_ofstream os(file.c_str());  
+  std::ofstream os(file.c_str());  
   if(!os.is_open())
     {
-      vcl_cout << "Bad file path in write_xyz\n";
+      std::cout << "Bad file path in write_xyz\n";
       return;
     }
   double lat, lon, elev;
@@ -1044,14 +1044,14 @@ static void write_xyz(bgeo_lvcs &lvcs,vcl_vector<vsol_point_3d_sptr> const& poin
 void poly_lidar_manager::save_point_cloud_meshed()
 {
   vgui_dialog params("Mesh File");
-  vcl_string ext="ply2", file;
+  std::string ext="ply2", file;
 
   params.file("File?",ext,file);
   if (!params.ask())
     return;
   float x1,y1,x2,y2;
 
-  vcl_cout << "Pick a box to select mesh region\n";
+  std::cout << "Pick a box to select mesh region\n";
 
   left_->pick_box(&x1, &y1, &x2, &y2);
 
@@ -1063,17 +1063,17 @@ void poly_lidar_manager::save_point_cloud_meshed()
 void poly_lidar_manager::save_point_cloud()
 {
   vgui_dialog params ("Point Cloud File");
-  vcl_string ext="xyz", file;
+  std::string ext="xyz", file;
 
   params.file ("File?", ext, file);  
   if (!params.ask())
     return;
     float x1, y1, x2, y2;
 
-  vcl_cout << "Pick a box to select point region\n";
+  std::cout << "Pick a box to select point region\n";
   left_->pick_box(&x1, &y1, &x2, &y2);
   bgeo_lvcs lvcs;
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
   observer_left_->get_point_cloud(x1, y1, x2, y2, lvcs, points);
   write_xyz(lvcs, points, file);
 }

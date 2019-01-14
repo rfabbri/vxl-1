@@ -37,7 +37,7 @@ class dbsk3d_sg_sa_trans
 protected:
   dbsk3d_sg_sa*   sg_sa_;
 
-  vcl_vector<dbsk3d_ms_curve*>   A15_Transition_List_;
+  std::vector<dbsk3d_ms_curve*>   A15_Transition_List_;
 
 public:
   //###### Constructor/Destructor ######

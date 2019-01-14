@@ -17,8 +17,8 @@ bool dsm_time_series_sptr_from_map_process_cons( bprb_func_process& pro )
 {
 	//set input/output types
 	using namespace dsm_time_series_sptr_from_map_process_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_pixel_time_series_map_sptr";//the map
@@ -42,7 +42,7 @@ bool dsm_time_series_sptr_from_map_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_time_series_sptr_from_map_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_time_series_sptr_from_map_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -56,8 +56,8 @@ bool dsm_time_series_sptr_from_map_process( bprb_func_process& pro )
 
 	if( map_itr == map_sptr->pixel_time_series_map.end() )
 	{
-		vcl_cout << pro.name() << " ERROR: dsm_time_series_sptr_from_map_process:\n"
-			     << "\t the pixel at (" << key_x << "," << key_y << ") was not found in the pixel time series map." << vcl_endl;
+		std::cout << pro.name() << " ERROR: dsm_time_series_sptr_from_map_process:\n"
+			     << "\t the pixel at (" << key_x << "," << key_y << ") was not found in the pixel time series map." << std::endl;
 		return false;
 	}
 

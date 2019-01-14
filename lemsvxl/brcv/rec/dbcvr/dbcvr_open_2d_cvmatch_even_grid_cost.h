@@ -38,7 +38,7 @@ public:
   virtual double compute_interval_cost(int i, int ip, int j, int jp);
 
 protected:
-  void continuous_angles(vcl_vector<double> &angles);
+  void continuous_angles(std::vector<double> &angles);
 
   // variables
 public:
@@ -56,11 +56,11 @@ protected:
   double ds1_, ds2_;
 
   // arclength at each sampling point
-  vcl_vector<double>  curve1_lengths_;
-  vcl_vector<double>  curve2_lengths_;
+  std::vector<double>  curve1_lengths_;
+  std::vector<double>  curve2_lengths_;
     // tangent vector angle at each sampling point
-  vcl_vector<double>  curve1_thetas_;
-  vcl_vector<double>  curve2_thetas_;
+  std::vector<double>  curve1_thetas_;
+  std::vector<double>  curve2_thetas_;
 };
 
 #endif

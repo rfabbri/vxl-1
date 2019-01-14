@@ -10,7 +10,7 @@
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbknee/dbknee_tibia_cs.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <dbgl/dbgl_area.h>
 
 //: Constructor
@@ -23,7 +23,7 @@ dbknee_compute_tibia_cs_process()
     "-cs_file", bpro1_filepath("",".txt"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -45,19 +45,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_compute_tibia_cs_process::
+std::vector< std::string > dbknee_compute_tibia_cs_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_compute_tibia_cs_process::
+std::vector< std::string > dbknee_compute_tibia_cs_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -97,7 +97,7 @@ execute()
   }
   else
   {
-    vcl_cout << "ERROR: Computing coordinate system failed.\n";
+    std::cout << "ERROR: Computing coordinate system failed.\n";
   }
 
 
@@ -116,10 +116,10 @@ finish()
 
 //: Take in the data (mesh file, param file) and execute
 bool dbknee_compute_tibia_cs_process::
-compute_tibia_cs(const vcl_string& data_file,
-                    const vcl_string& cs_file)
+compute_tibia_cs(const std::string& data_file,
+                    const std::string& cs_file)
 {
-  vcl_cout << "Compute cylinder coordinate system from a knee cartilage mesh.\n";
+  std::cout << "Compute cylinder coordinate system from a knee cartilage mesh.\n";
   
   // i. Load input mesh file
   // --------------
@@ -127,14 +127,14 @@ compute_tibia_cs(const vcl_string& data_file,
   // determine file name
   if (data_file == "")
   {
-    vcl_cerr << "An input data file is required to proceed.";
+    std::cerr << "An input data file is required to proceed.";
     return false;
   }
 
-  vcl_cout << "Input data file = " << data_file << vcl_endl;
+  std::cout << "Input data file = " << data_file << std::endl;
 
   // determine the file format
-  vcl_string data_file_format = vul_file::extension(data_file);
+  std::string data_file_format = vul_file::extension(data_file);
 
   
   dbmsh3d_mesh mesh;
@@ -162,19 +162,19 @@ compute_tibia_cs(const vcl_string& data_file,
   // iv. Save results
   // -----------------
 
-  vcl_string outfile = cs_file;
+  std::string outfile = cs_file;
   if (outfile == "")
   {
     outfile = vul_file::strip_extension(data_file + "_cs.txt");
   }
 
   // open file for writing
-  vcl_ofstream outfp(outfile.c_str(), vcl_ios_out);
+  std::ofstream outfp(outfile.c_str(), std::ios::out);
   coord.print(outfp);
   outfp.close();  
 
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
   this->region_thickness_face_based(data_file, coord);
 
@@ -192,7 +192,7 @@ compute_tibia_cs(const vcl_string& data_file,
 // compute thickness as weighted average of closest distance to the faces
 // the weights are the areas of the triangle
 bool dbknee_compute_tibia_cs_process::
-region_thickness_face_based(const vcl_string& thickness_mesh_file, 
+region_thickness_face_based(const std::string& thickness_mesh_file, 
     dbknee_tibia_cs coord)
 {
   // load the coordinate system
@@ -200,13 +200,13 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
   // i. Load the meshes
   dbmsh3d_richmesh richmesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.push_back("verror_abs");
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
 
   ///////////////////////////////
@@ -225,7 +225,7 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
 
   
 
-  vcl_cout << "#v[ " << richmesh.num_vertices() 
+  std::cout << "#v[ " << richmesh.num_vertices() 
     << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
  
@@ -245,13 +245,13 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
     vgl_point_3d<double > local = face->compute_center_pt();
     
     
-    if ( vcl_abs(local.x()) > dx || vcl_abs(local.y()) > dy )
+    if ( std::abs(local.x()) > dx || std::abs(local.y()) > dy )
     {
       continue;
     }
 
     // Compute thickness and area of the face
-    vcl_vector<dbmsh3d_vertex* > face_vertices;
+    std::vector<dbmsh3d_vertex* > face_vertices;
     face->get_bnd_Vs(face_vertices);
     assert(face_vertices.size() >= 3);
 
@@ -273,8 +273,8 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
         v2->is_a() != "dbmsh3d_richvertex" || 
         v3->is_a() != "dbmsh3d_richvertex" )
       {
-        vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-        vcl_cerr << "Quit now. \n";
+        std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+        std::cerr << "Quit now. \n";
         return false;
       }
 
@@ -310,12 +310,12 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
 
   
 
-  vcl_cout << "\nTop region: "
+  std::cout << "\nTop region: "
     << "\n  #f = " << face_count_top 
     << "\n  Area = " << area_top
-    << "\n  Mean thickness = " << top_thickness << vcl_endl;
+    << "\n  Mean thickness = " << top_thickness << std::endl;
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return true;
 
 }

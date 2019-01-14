@@ -44,7 +44,7 @@
 #include <vgui/vgui_easy2D_tableau.h>
 #include <vgui/vgui_soview2D.h>
 #include <vbl/vbl_array_1d.h>
-#include <vcl_utility.h>
+#include <utility>
 
 #include <vsol/vsol_polygon_2d_sptr.h>
 
@@ -70,7 +70,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -96,14 +96,14 @@ protected:
   vgui_event_condition gesture_right_arrow;
   vgui_event_condition gesture_left_arrow;
 
-  vcl_vector<vcl_vector<vgui_soview2D_polygon*> > polygons_;  // the array that holds each object in each frame
+  std::vector<std::vector<vgui_soview2D_polygon*> > polygons_;  // the array that holds each object in each frame
   vbl_array_1d< vbl_array_1d<vsol_polygon_2d_sptr>* > normal_polygons_;  // the array that holds each object in each frame
   vbl_array_1d< vbl_array_1d<dbskr_tree_sptr>* > trees_;  // the array that holds each object in each frame
   vbl_array_1d< vbl_array_1d<dbinfo_observation_sptr> *> observations_;
   vbl_array_1d< vil_image_resource_sptr > images_;
   // only match the current query against current database instance for now
-  vcl_pair<int, int> query_polygon_; 
-  vcl_pair<int, int> database_polygon_;
+  std::pair<int, int> query_polygon_; 
+  std::pair<int, int> database_polygon_;
 
   int size_;
   int frame_no_;
@@ -120,7 +120,7 @@ protected:
   vidpro1_image_storage_sptr image_storage1_, image_storage2_, image_storage3_;
 
   //: algorithm names and parameters
-  vcl_vector<vcl_string> choices_;
+  std::vector<std::string> choices_;
   int choice_;   // choice_ determines which algorithm to use
   float rms_;
   float R_;

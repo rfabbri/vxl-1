@@ -41,8 +41,8 @@ void SIContact::compute_extrinsic_locus()
     end = getStartPt();
   else if (endTime() > MAX_RADIUS) {
     //compute projected EngPoint
-    end.x = start.x + LARGE_DRAWLENGTH*vcl_cos(_n);
-    end.y = start.y + LARGE_DRAWLENGTH*vcl_sin(_n);
+    end.x = start.x + LARGE_DRAWLENGTH*std::cos(_n);
+    end.y = start.y + LARGE_DRAWLENGTH*std::sin(_n);
   } 
   else
     end = getEndPt();
@@ -63,8 +63,8 @@ void SIPointPoint::compute_extrinsic_locus()
   }
   else if (_simTime > MAX_RADIUS) {
     //compute projected EngPoint
-    end.x = start.x + LARGE_DRAWLENGTH*vcl_cos(_n);
-    end.y = start.y + LARGE_DRAWLENGTH*vcl_sin(_n);
+    end.x = start.x + LARGE_DRAWLENGTH*std::cos(_n);
+    end.y = start.y + LARGE_DRAWLENGTH*std::sin(_n);
   } 
   else {
     end = getEndPt();
@@ -100,22 +100,22 @@ void SIPointLine::compute_extrinsic_locus()
   const int NUM_SUBDIVISIONS = 100;
   double DELTA_TAU = 2*M_PI/NUM_SUBDIVISIONS; 
 
-  d = _H/(1+vcl_cos(stau));
-   pt = origin + rotateCCWPoint2D(d*vcl_cos(stau), d*vcl_sin(stau), _u);
+  d = _H/(1+std::cos(stau));
+   pt = origin + rotateCCWPoint2D(d*std::cos(stau), d*std::sin(stau), _u);
   ExPts.push_back(pt);
 
   last_pt = pt;
 
    for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-      d = _H/(1+vcl_cos(tau));
-    pt = origin + rotateCCWPoint2D(d*vcl_cos(tau), d*vcl_sin(tau), _u);
+      d = _H/(1+std::cos(tau));
+    pt = origin + rotateCCWPoint2D(d*std::cos(tau), d*std::sin(tau), _u);
 
     ExPts.push_back(pt);
     last_pt = pt;
    }
 
-  d = _H/(1+vcl_cos(etau));
-   Point2D<double> e_pt = origin + rotateCCWPoint2D(d*vcl_cos(etau), d*vcl_sin(etau), _u);
+  d = _H/(1+std::cos(etau));
+   Point2D<double> e_pt = origin + rotateCCWPoint2D(d*std::cos(etau), d*std::sin(etau), _u);
   ExPts.push_back(e_pt);
 }
 
@@ -151,19 +151,19 @@ void SIPointArc::compute_extrinsic_locus()
   double DELTA_TAU = 2*M_PI/NUM_SUBDIVISIONS;
 
   //starting point
-   pt = origin + rotateCCWPoint2D(d(stau)*vcl_cos(stau), d(stau)*vcl_sin(stau), _u);
+   pt = origin + rotateCCWPoint2D(d(stau)*std::cos(stau), d(stau)*std::sin(stau), _u);
   ExPts.push_back(pt);
 
   last_pt = pt;
 
    for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-    pt = origin + rotateCCWPoint2D(d(tau)*vcl_cos(tau), d(tau)*vcl_sin(tau), _u);
+    pt = origin + rotateCCWPoint2D(d(tau)*std::cos(tau), d(tau)*std::sin(tau), _u);
 
     ExPts.push_back(pt);
     last_pt = pt;
    }
 
-   Point2D<double> e_pt = origin + rotateCCWPoint2D(d(etau)*vcl_cos(etau), d(etau)*vcl_sin(etau), _u);
+   Point2D<double> e_pt = origin + rotateCCWPoint2D(d(etau)*std::cos(etau), d(etau)*std::sin(etau), _u);
   ExPts.push_back(e_pt);
 }
 
@@ -205,22 +205,22 @@ void SILineArc::compute_extrinsic_locus()
   const int NUM_SUBDIVISIONS = 100;
   double DELTA_TAU = 2*M_PI/NUM_SUBDIVISIONS; 
 
-  d = H/(1+vcl_cos(stau));
-   pt = origin + rotateCCWPoint2D(d*vcl_cos(stau), d*vcl_sin(stau), u);
+  d = H/(1+std::cos(stau));
+   pt = origin + rotateCCWPoint2D(d*std::cos(stau), d*std::sin(stau), u);
   ExPts.push_back(pt);
 
   last_pt = pt;
 
    for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-      d = H/(1+vcl_cos(tau));
-    pt = origin + rotateCCWPoint2D(d*vcl_cos(tau), d*vcl_sin(tau), u);
+      d = H/(1+std::cos(tau));
+    pt = origin + rotateCCWPoint2D(d*std::cos(tau), d*std::sin(tau), u);
 
     ExPts.push_back(pt);
     last_pt = pt;
    }
 
-  d = H/(1+vcl_cos(etau));
-   Point2D<double> e_pt = origin + rotateCCWPoint2D(d*vcl_cos(etau), d*vcl_sin(etau), u);
+  d = H/(1+std::cos(etau));
+   Point2D<double> e_pt = origin + rotateCCWPoint2D(d*std::cos(etau), d*std::sin(etau), u);
   ExPts.push_back(e_pt);
 }
 
@@ -243,19 +243,19 @@ void SIArcArc::compute_extrinsic_locus()
   double DELTA_TAU = 2*M_PI/NUM_SUBDIVISIONS;
 
   //starting point
-   pt = origin + rotateCCWPoint2D(d(stau)*vcl_cos(stau), d(stau)*vcl_sin(stau), _u);
+   pt = origin + rotateCCWPoint2D(d(stau)*std::cos(stau), d(stau)*std::sin(stau), _u);
   ExPts.push_back(pt);
 
   last_pt = pt;
 
    for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-    pt = origin + rotateCCWPoint2D(d(tau)*vcl_cos(tau), d(tau)*vcl_sin(tau), _u);
+    pt = origin + rotateCCWPoint2D(d(tau)*std::cos(tau), d(tau)*std::sin(tau), _u);
 
     ExPts.push_back(pt);
     last_pt = pt;
    }
 
-   Point2D<double> e_pt = origin + rotateCCWPoint2D(d(etau)*vcl_cos(etau), d(etau)*vcl_sin(etau), _u);
+   Point2D<double> e_pt = origin + rotateCCWPoint2D(d(etau)*std::cos(etau), d(etau)*std::sin(etau), _u);
   ExPts.push_back(e_pt);
 }
 
@@ -294,11 +294,11 @@ void SIArcThirdOrder::compute_extrinsic_locus()
   double R = (_Rl+_Rr)/2;
 
   const int NUM_ELLIPSE_SUBDIVISIONS = 100;
-  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*vcl_fabs(endVector-startVector)/(2*M_PI));
+  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*std::fabs(endVector-startVector)/(2*M_PI));
   if(n_line_segs < 4) n_line_segs = 4;
 
   for(int i = 0; i < n_line_segs; ++i) {
     double v = startVector + (endVector-startVector)*i/double(n_line_segs-1);
-    ExPts.push_back(Point2D<double>(_origin.x+R*vcl_cos(v), _origin.y+R*vcl_sin(v)));
+    ExPts.push_back(Point2D<double>(_origin.x+R*std::cos(v), _origin.y+R*std::sin(v)));
   }
 }

@@ -6,7 +6,7 @@
 // \date    2006-3-30
 // 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <imgr/file_formats/imgr_skyscan_reconlog.h>
 #include <xscan/xscan_scan.h>
 
@@ -14,45 +14,45 @@ int main(int argc, char* argv[])
 {
   if(argc < 3)
   {
-    vcl_cerr << "usage:\n"<<argv[0]<<" reconstructed_image_header_name"<<"  the scan file path "<<'\n';
+    std::cerr << "usage:\n"<<argv[0]<<" reconstructed_image_header_name"<<"  the scan file path "<<'\n';
     exit(1);
   }
 
-  vcl_string recon_log_file = argv[1];
-  vcl_string scan_file = argv[2];
-  vcl_ifstream ifstr(scan_file.c_str());
+  std::string recon_log_file = argv[1];
+  std::string scan_file = argv[2];
+  std::ifstream ifstr(scan_file.c_str());
 
     xscan_scan scan;
 
     ifstr>>scan;
 
-    vcl_cout <<scan <<vcl_endl;
+    std::cout <<scan <<std::endl;
   
   imgr_skyscan_reconlog header(recon_log_file.c_str(),scan);
 
   if(header.is_valid())
   {
-    vcl_cout << "starting slice is: " << header.start_slice_<<'\n';
-    vcl_cout << "ending slice is: " << header.end_slice_<<'\n';
-    vcl_cout << "slice step is: " << header.slice_step_ <<'\n';
-    vcl_cout << "voxel size is: " << header.voxel_size_ <<'\n';
+    std::cout << "starting slice is: " << header.start_slice_<<'\n';
+    std::cout << "ending slice is: " << header.end_slice_<<'\n';
+    std::cout << "slice step is: " << header.slice_step_ <<'\n';
+    std::cout << "voxel size is: " << header.voxel_size_ <<'\n';
 
-    vcl_cout << "sensor source distance is: " << header.get_source_sensor_dist() <<'\n';
-    vcl_cout << "source rotation distance is: " << header.get_source_rot_center_dist() <<'\n';
+    std::cout << "sensor source distance is: " << header.get_source_sensor_dist() <<'\n';
+    std::cout << "source rotation distance is: " << header.get_source_rot_center_dist() <<'\n';
 
-    vcl_cout << "v component of the principal point is: "<<header.get_v0() <<'\n';
+    std::cout << "v component of the principal point is: "<<header.get_v0() <<'\n';
 
-    vcl_cout << "camera pixel size in u direction is: "<<header.get_camera_pixel_size_u() <<'\n';
-    vcl_cout << "camera pixel size in v direction is: "<<header.get_camera_pixel_size_v()<<'\n';
+    std::cout << "camera pixel size in u direction is: "<<header.get_camera_pixel_size_u() <<'\n';
+    std::cout << "camera pixel size in v direction is: "<<header.get_camera_pixel_size_v()<<'\n';
 
-    vcl_cout << "x dimension of the slice is: "<<header.get_size_x() <<'\n';
-    vcl_cout << "y dimension of the slice is: "<<header.get_size_y() <<'\n';
+    std::cout << "x dimension of the slice is: "<<header.get_size_x() <<'\n';
+    std::cout << "y dimension of the slice is: "<<header.get_size_y() <<'\n';
 
     
   
-    vcl_cout << header.fbpc_to_bsc(vgl_point_3d<double>(440, 838,711));
+    std::cout << header.fbpc_to_bsc(vgl_point_3d<double>(440, 838,711));
     
-    vcl_cout << header.fbpc_to_bsc(vgl_point_3d<double>(460, 820,700));
+    std::cout << header.fbpc_to_bsc(vgl_point_3d<double>(460, 820,700));
 
     
    }

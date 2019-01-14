@@ -8,10 +8,10 @@
 
 
 //#include "dbsks_cmdline_utils.h"
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <fstream>
+#include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <dbsks/algo/dbsks_load.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbsksp/dbsksp_xshock_graph.h>
@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
   vul_arg_info_list arg_list;
   
   // Path to xgraph xml file
-  vul_arg<vcl_string > xgraph_file(arg_list,"-xgraph-file", "Path to xgraph.xml file", 
+  vul_arg<std::string > xgraph_file(arg_list,"-xgraph-file", "Path to xgraph.xml file", 
     "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/giraffes-xgraph/giraffes_one.xgraph.0.xml");
 
   // CCM model file
-  vul_arg<vcl_string > xgraph_ccm_file(arg_list,"-xgraph-ccm-file", "Path to xgraph ccm model file", 
+  vul_arg<std::string > xgraph_ccm_file(arg_list,"-xgraph-ccm-file", "Path to xgraph ccm model file", 
     "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-train/swans/swans_prototype_0-xshock_ccm_model-2010apr08.xml");
 
   
@@ -53,15 +53,15 @@ int main(int argc, char *argv[])
   vul_arg<unsigned > xfrag_eid(arg_list, "-xfrag-eid", "Id of edge to compute cost", 21);
 
   // Path to edge image file
-  vul_arg<vcl_string > edge_image(arg_list,"-edge-image", "Path to edge image file (_edges.png)", 
+  vul_arg<std::string > edge_image(arg_list,"-edge-image", "Path to edge image file (_edges.png)", 
     "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/reorganized-data/all_pb_edges_pyramid-clean_using_kovesi-I_15-len_4/giraffes_one/giraffes_one_00_pb_edges.png");
   
   // Path to edge orientation file
-  vul_arg<vcl_string > edge_orient(arg_list,"-edge-orient", "Path to edge orient file (_orient.txt)", 
+  vul_arg<std::string > edge_orient(arg_list,"-edge-orient", "Path to edge orient file (_orient.txt)", 
     "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/reorganized-data/all_pb_edges_pyramid-clean_using_kovesi-I_15-len_4/giraffes_one/giraffes_one_00_pb_orient.txt");
 
   // Prefix to output file(s)
-  vcl_string prefix_name = "";
+  std::string prefix_name = "";
   if (is_ccm)
   {
     prefix_name = "two-edge-ccm-two-side-2010may26";
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   {
     prefix_name = "two-edge-ocm-two-side-2010may26";
   }
-  vul_arg<vcl_string > output_prefix(arg_list,"-output-prefix", "Prefix to all output files", 
+  vul_arg<std::string > output_prefix(arg_list,"-output-prefix", "Prefix to all output files", 
     "D:/vision/projects/symseg/xshock/" + prefix_name);
 
   // print help
@@ -102,8 +102,8 @@ int main(int argc, char *argv[])
   dbsksp_xshock_graph_sptr xgraph = 0;
   load_ok &= dbsks_load_xgraph(xgraph_file(), xgraph);
 
-  double xgraph_size = vcl_sqrt(xgraph->area());
-  vcl_cout << "Xgraph size = " << xgraph_size << "\n";
+  double xgraph_size = std::sqrt(xgraph->area());
+  std::cout << "Xgraph size = " << xgraph_size << "\n";
 
   //2) Load xgraph ccm model
   dbsks_xgraph_ccm_model_sptr xgraph_ccm = 0;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
   if (!load_ok)
   {
-    vcl_cout << "\nERROR: Failed to load necessary data.\n";
+    std::cout << "\nERROR: Failed to load necessary data.\n";
     return EXIT_FAILURE;
   }
 
@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
   biarc_sampler->compute_cache_sample_points();
 
   // coordinates of the biarc points
-  vcl_vector<int > x_vec[2], y_vec[2], angle_vec[2];
+  std::vector<int > x_vec[2], y_vec[2], angle_vec[2];
  
-  vcl_vector<unsigned > edge_ids;
+  std::vector<unsigned > edge_ids;
   edge_ids.push_back(21);
   edge_ids.push_back(22);
 
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
     temp_start = xfrag.start();
     temp_end = xfrag.end();
 
-    vcl_vector<int > temp_x_vec[2], temp_y_vec[2], temp_angle_vec[2];
+    std::vector<int > temp_x_vec[2], temp_y_vec[2], temp_angle_vec[2];
 
     // left boundary
     biarc_sampler->compute_samples_using_cache(temp_start.bnd_pt_left(), temp_start.bnd_tangent_left(),
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
     sum += ccm_cost;
   }
 
-  vcl_cout << "\nOriginal xgraph: sum = " << sum << "\n";
+  std::cout << "\nOriginal xgraph: sum = " << sum << "\n";
   
 
 
@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
 
 
   // translate the points, keep the angles
-  vcl_vector<int > cur_x_vec[2], cur_y_vec[2];
+  std::vector<int > cur_x_vec[2], cur_y_vec[2];
   cur_x_vec[0] = x_vec[0];
   cur_x_vec[1] = x_vec[1];
 
@@ -320,8 +320,8 @@ int main(int argc, char *argv[])
     }
   }
 
-  vcl_string out_file = output_prefix() + "-cost.txt";
-  vcl_ofstream ofs(out_file.c_str(), vcl_ios_out);
+  std::string out_file = output_prefix() + "-cost.txt";
+  std::ofstream ofs(out_file.c_str(), std::ios::out);
   xfrag_ccm_cost.print(ofs);
   ofs.close();
 

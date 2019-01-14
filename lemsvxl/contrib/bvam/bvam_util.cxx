@@ -1,11 +1,11 @@
 
 #include "bvam_util.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <string>
+#include <vector>
 #include <vpgl/vpgl_camera.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_linear.h>
@@ -30,8 +30,8 @@ void bvam_util::compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvam_w
     vgl_point_3d<float> grid_corner = grid_corner_bottom + vgl_vector_3d<float>(0.0f,0.0f,vox_length*(grid_size.z() - 0.5f));
 
 
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_img;
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_vox;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_img;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_vox;
 
     vgl_vector_3d<float> x_step(vox_length,0,0);
     vgl_vector_3d<float> y_step(0,vox_length,0);
@@ -64,21 +64,21 @@ void bvam_util::compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvam_w
 
     vgl_h_matrix_2d_compute_linear comp_4pt;
     if (!comp_4pt.compute(voxel_corners_img,voxel_corners_vox, H_image_to_plane)) {
-      vcl_cerr << "ERROR computing homography from image to voxel slice. " << vcl_endl;
+      std::cerr << "ERROR computing homography from image to voxel slice. " << std::endl;
     }
     if (!comp_4pt.compute(voxel_corners_vox,voxel_corners_img, H_plane_to_image)) {
-      vcl_cerr << "ERROR computing homography from voxel slice to image. " << vcl_endl;
+      std::cerr << "ERROR computing homography from voxel slice to image. " << std::endl;
     }
     return;
 }
 
 
 
-bool bvam_util::read_cameras(const vcl_string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
+bool bvam_util::read_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 {
-  vcl_ifstream file_inp(filename.c_str());
+  std::ifstream file_inp(filename.c_str());
   if (!file_inp.good()) {
-    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+    std::cerr << "error opening file "<< filename <<std::endl;
     return false;
   }
   unsigned ncameras;
@@ -101,22 +101,22 @@ bool bvam_util::read_cameras(const vcl_string filename, std::vector<vnl_double_3
 }
 
 
-bool bvam_util::write_cameras(const vcl_string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
+bool bvam_util::write_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 {
-  vcl_ofstream file_out(filename.c_str());
+  std::ofstream file_out(filename.c_str());
   if (!file_out.good()) {
-    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+    std::cerr << "error opening file "<< filename <<std::endl;
     return false;
   }
   unsigned ncameras = Ks.size();
 
-  file_out << ncameras << vcl_endl << vcl_endl;
+  file_out << ncameras << std::endl << std::endl;
   for (unsigned i=0; i < ncameras; i++) {
 
-    file_out << Ks[i] << vcl_endl;
-    file_out << Rs[i] << vcl_endl;
-    file_out << Ts[i] << vcl_endl;
-    file_out << vcl_endl;
+    file_out << Ks[i] << std::endl;
+    file_out << Rs[i] << std::endl;
+    file_out << Ts[i] << std::endl;
+    file_out << std::endl;
   }
   file_out.close();
 
@@ -155,12 +155,12 @@ void bvam_util::bilinear_weights(vgl_h_matrix_2d<double> invH, unsigned nx_out, 
       float pix_in_x = pix_in_homg[0][n] / pix_in_homg[2][n];
       float pix_in_y = pix_in_homg[1][n] / pix_in_homg[2][n];
       // calculate weights and pixel values
-      unsigned x0 = (unsigned)vcl_floor(pix_in_x);
-      unsigned x1 = (unsigned)vcl_ceil(pix_in_x);
+      unsigned x0 = (unsigned)std::floor(pix_in_x);
+      unsigned x1 = (unsigned)std::ceil(pix_in_x);
       float x0_weight = (float)(x1 - pix_in_x);
       float x1_weight = (float)(1.0f - x0_weight);
-      unsigned y0 = (unsigned)vcl_floor(pix_in_y);
-      unsigned y1 = (unsigned)vcl_ceil(pix_in_y);
+      unsigned y0 = (unsigned)std::floor(pix_in_y);
+      unsigned y1 = (unsigned)std::ceil(pix_in_y);
       float y0_weight = (float)(y1 - pix_in_y);
       float y1_weight = (float)(1.0f - y0_weight);
       xvals.set_column(n,vnl_vector_fixed<unsigned,4>(x0,x0,x1,x1));

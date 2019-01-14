@@ -9,17 +9,17 @@
 dbrl_estimator_cubic_patch::dbrl_estimator_cubic_patch()
 {
 }
-dbrl_transformation_sptr dbrl_estimator_cubic_patch::estimate( vcl_vector<dbrl_feature_sptr> f1,
-                                                               vcl_vector<dbrl_feature_sptr> f2,
+dbrl_transformation_sptr dbrl_estimator_cubic_patch::estimate( std::vector<dbrl_feature_sptr> f1,
+                                                               std::vector<dbrl_feature_sptr> f2,
                                                                dbrl_correspondence & M) const
 {
    
-     vcl_vector<dbrl_feature_sptr> f1f=normalize_point_set(f1,M);
+     std::vector<dbrl_feature_sptr> f1f=normalize_point_set(f1,M);
         
      dbrl_cubic_transformation * cubictransform;
 
-     vcl_vector<dbrl_feature_sptr> f1filtered;
-     vcl_vector<dbrl_feature_sptr> f2filtered;
+     std::vector<dbrl_feature_sptr> f1filtered;
+     std::vector<dbrl_feature_sptr> f2filtered;
 
     {
         for(unsigned i=0;i<f1f.size();i++)
@@ -88,11 +88,11 @@ dbrl_transformation_sptr dbrl_estimator_cubic_patch::estimate( vcl_vector<dbrl_f
     {
         zx[i]=pts1(i,0)-pts2(i,0);
         zy[i]=pts1(i,1)-pts2(i,1);
-        vcl_cout<<zx[i]<<" ";
+        std::cout<<zx[i]<<" ";
     }
 
-    vcl_vector<dbrl_clough_tocher_patch> patchx=estimate_cubic(pts2,zx);
-    vcl_vector<dbrl_clough_tocher_patch> patchy=estimate_cubic(pts2,zy);
+    std::vector<dbrl_clough_tocher_patch> patchx=estimate_cubic(pts2,zx);
+    std::vector<dbrl_clough_tocher_patch> patchy=estimate_cubic(pts2,zy);
 
 
     cubictransform=new dbrl_cubic_transformation(patchx,patchy);
@@ -101,7 +101,7 @@ dbrl_transformation_sptr dbrl_estimator_cubic_patch::estimate( vcl_vector<dbrl_f
     }
     return cubictransform;
 }
-vcl_vector<dbrl_clough_tocher_patch>  
+std::vector<dbrl_clough_tocher_patch>  
 dbrl_estimator_cubic_patch::estimate_cubic(vnl_matrix<double> xy, vnl_vector<double> zs) const
 {
 
@@ -141,7 +141,7 @@ dbrl_estimator_cubic_patch::estimate_cubic(vnl_matrix<double> xy, vnl_vector<dou
 
     compute_normal_derivatives(n, p, v, ntri);
 
-    vcl_vector<dbrl_clough_tocher_patch> patches;
+    std::vector<dbrl_clough_tocher_patch> patches;
     for(int i=0;i<ntri;i++)
     {
         dbrl_clough_tocher_patch patch;
@@ -160,7 +160,7 @@ dbrl_estimator_cubic_patch::estimate_cubic(vnl_matrix<double> xy, vnl_vector<dou
 
     return patches;
 }
-vcl_vector<dbrl_feature_sptr> dbrl_estimator_cubic_patch::normalize_point_set( vcl_vector<dbrl_feature_sptr>  f2,
+std::vector<dbrl_feature_sptr> dbrl_estimator_cubic_patch::normalize_point_set( std::vector<dbrl_feature_sptr>  f2,
                                                       dbrl_correspondence  M) const
 
 {
@@ -187,7 +187,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_estimator_cubic_patch::normalize_point_set( v
     vnl_transpose Mtrans(M.M());
     vnl_matrix<double> Mt=Mtrans.asMatrix();
     vnl_matrix<double> vpts=Mtrans*pts;
-    vcl_vector<dbrl_feature_sptr>  f2filtered;
+    std::vector<dbrl_feature_sptr>  f2filtered;
     for(int i=0;i<Mt.rows();i++)
     {
         if(Mt.get_row(i).sum()<0.75)
@@ -203,8 +203,8 @@ vcl_vector<dbrl_feature_sptr> dbrl_estimator_cubic_patch::normalize_point_set( v
 }
 
 
-double dbrl_estimator_cubic_patch::residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                                            const vcl_vector<dbrl_feature_sptr>& f2,
+double dbrl_estimator_cubic_patch::residual(const std::vector<dbrl_feature_sptr>& f1,
+                                            const std::vector<dbrl_feature_sptr>& f2,
                                             const dbrl_correspondence & M,
                                             const dbrl_transformation_sptr& tform) const
 
@@ -216,7 +216,7 @@ double dbrl_estimator_cubic_patch::residual(const vcl_vector<dbrl_feature_sptr>&
 
     t->set_from_features(f2);
     t->transform();
-    vcl_vector<dbrl_feature_sptr> tformed_f2=t->get_to_features();
+    std::vector<dbrl_feature_sptr> tformed_f2=t->get_to_features();
 
 
     double residual=0;
@@ -248,7 +248,7 @@ void dbrl_estimator_cubic_patch::b_read(vsl_b_istream &is)
             //vsl_b_read(is, lambda_);
             break;
         default:
-            vcl_cerr << "dbrl_estimator_cubic_patch: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_estimator_cubic_patch: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -256,7 +256,7 @@ short dbrl_estimator_cubic_patch::version() const
     {
     return 1;
     }
-void dbrl_estimator_cubic_patch::print_summary(vcl_ostream &os) const
+void dbrl_estimator_cubic_patch::print_summary(std::ostream &os) const
 {
   
 }

@@ -1,7 +1,7 @@
 
 #include <slice/sliceFileManager.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
+#include <ctime>
+#include <cstdlib>
 #include <vil/vil_save.h>
 #include <vil/vil_math.h>
 #include <vil/vil_convert.h>
@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
   if(argc != 3)
   {
-    vcl_cout << "Usage: " << argv[0] << " [vil3d file name] [output slice file name ]\n ";
+    std::cout << "Usage: " << argv[0] << " [vil3d file name] [output slice file name ]\n ";
     exit(-1);
   }
 

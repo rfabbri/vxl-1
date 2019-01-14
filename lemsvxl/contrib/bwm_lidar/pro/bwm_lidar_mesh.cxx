@@ -26,19 +26,19 @@ bwm_lidar_mesh_process::bwm_lidar_mesh_process()
   //Input the two lidar images and the labelling image from Ibrahim
 
   if( !parameters()->add( "Lidar image 1 (max) file <filename...>" , "-image_filename1" , bpro1_filepath("","*") )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 
   if( !parameters()->add( "Lidar image 2 (min) file <filename...>" , "-image_filename2" , bpro1_filepath("","*") )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 
   if( !parameters()->add( "Labelled lidar image file <filename...>" , "-image_filename3" , bpro1_filepath("","*") )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 
-  /*if (!parameters()->add( "Input Path", "-ip", (vcl_string)"")) {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+  /*if (!parameters()->add( "Input Path", "-ip", (std::string)"")) {
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }*/
 }
 
@@ -50,7 +50,7 @@ bpro1_process* bwm_lidar_mesh_process::clone() const{
   return new bwm_lidar_mesh_process(*this);
 }
 
-vcl_string bwm_lidar_mesh_process::name(){
+std::string bwm_lidar_mesh_process::name(){
   return "BWM Lidar Mesh Process";
 }
 
@@ -62,13 +62,13 @@ int bwm_lidar_mesh_process::output_frames(){
   return 1;
 }
 
-vcl_vector< vcl_string > bwm_lidar_mesh_process::get_input_type(){
-  vcl_vector< vcl_string > to_return;
+std::vector< std::string > bwm_lidar_mesh_process::get_input_type(){
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > bwm_lidar_mesh_process::get_output_type(){
-  vcl_vector<vcl_string > to_return;
+std::vector< std::string > bwm_lidar_mesh_process::get_output_type(){
+  std::vector<std::string > to_return;
   to_return.push_back ("image" );
   to_return.push_back ("image" );
   to_return.push_back ("image" );
@@ -83,10 +83,10 @@ bool bwm_lidar_mesh_process::execute()
 {
   bpro1_filepath image_path;
   parameters()->get_value( "-image_filename1" , image_path );
-  vcl_string image_filename = image_path.path;
+  std::string image_filename = image_path.path;
   vil_image_resource_sptr loaded_image = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
   vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
@@ -96,7 +96,7 @@ bool bwm_lidar_mesh_process::execute()
   image_filename = image_path.path;
   vil_image_resource_sptr loaded_image2 = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image2 ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
   vidpro1_image_storage_sptr image_storage2 = vidpro1_image_storage_new();
@@ -106,14 +106,14 @@ bool bwm_lidar_mesh_process::execute()
   image_filename = image_path.path;
   vil_image_resource_sptr loaded_image3 = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image3 ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
   vidpro1_image_storage_sptr image_storage3 = vidpro1_image_storage_new();
   image_storage3->set_image( loaded_image3 );
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,image_storage));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,image_storage));
   output_data_[0].push_back(image_storage2);
   output_data_[0].push_back(image_storage3);
 

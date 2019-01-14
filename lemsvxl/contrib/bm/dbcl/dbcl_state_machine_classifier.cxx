@@ -24,9 +24,9 @@ dbcl_state_machine_classifier::graph_type::iterator dbcl_state_machine_classifie
     node_id_type new_node_id = new_node->id();
     graph_type::iterator new_node_itr;
 
-    vcl_pair<graph_type::iterator,bool> ret;
+    std::pair<graph_type::iterator,bool> ret;
     //insert node into the graph
-    ret = this->graph_.insert( vcl_make_pair(new_node_id,new_node) );
+    ret = this->graph_.insert( std::make_pair(new_node_id,new_node) );
 
     //Must traverse the graph and adjust the transition tables of every 
     //node to include the new node id with appropriate modifications.
@@ -69,9 +69,9 @@ bool dbcl_state_machine_classifier::remove_node( node_id_type const& node_id )
     }
     else
     {
-       vcl_cerr << "ERROR: dbcl_state_machine_classifier::remove_node \n"
+       std::cerr << "ERROR: dbcl_state_machine_classifier::remove_node \n"
                 << "node_id: " << node_id << '\n'
-                << "Not found in the classifier's graph. " << vcl_flush;
+                << "Not found in the classifier's graph. " << std::flush;
         return false;
     }
 
@@ -141,7 +141,7 @@ bool dbcl_state_machine_classifier::update( vnl_vector<double> const& obs )
 
             //we take the square root to compute the geometric
             //mean of the product of random variables
-            temp_prob = vcl_sqrt(transition_prob*model_prob);
+            temp_prob = std::sqrt(transition_prob*model_prob);
 
             if( temp_prob > max_prob )
             {
@@ -221,7 +221,7 @@ bool dbcl_state_machine_classifier::update_manhalanobis_distance( vnl_vector<dou
         double max_prob = 0.0, temp_prob = 0.0f;
         double model_prob = 0.0, transition_prob = 0.0;
 
-		vcl_map<double,graph_type::iterator> weight_node_map;
+		std::map<double,graph_type::iterator> weight_node_map;
         for(; g_itr != g_end; ++g_itr)
         {
             transition_prob = this->curr_node_itr_->second->transition_prob(g_itr->first,this->rel_time_curr_);
@@ -230,12 +230,12 @@ bool dbcl_state_machine_classifier::update_manhalanobis_distance( vnl_vector<dou
 
 			double curr_sqr_mahalanobis_distance = g_itr->second->model_.sqr_mahalanobis_dist(obs);
 
-			//double thresh =  this->mahalan_dist_factor_*vcl_sqrt(g_itr->second->model_.det_covar());
+			//double thresh =  this->mahalan_dist_factor_*std::sqrt(g_itr->second->model_.det_covar());
 
 			if( curr_sqr_mahalanobis_distance < mahalan_dist_factor_ )
 			{
 				double covar_det = g_itr->second->model_.det_covar();
-				weight_node_map.insert(vcl_make_pair(transition_prob/covar_det,g_itr));
+				weight_node_map.insert(std::make_pair(transition_prob/covar_det,g_itr));
 			}
 
         }//end graph iteration
@@ -323,13 +323,13 @@ void dbcl_state_machine_classifier::classify()
 			graph_type::iterator graph_itr;
 			graph_type::iterator graph_end = this->graph_.end();
 
-			vcl_vector<vnl_vector_fixed<double,2> > curr_means;
-			vcl_vector<vnl_matrix_fixed<double,2,2> > curr_covars;
+			std::vector<vnl_vector_fixed<double,2> > curr_means;
+			std::vector<vnl_matrix_fixed<double,2,2> > curr_covars;
 
-			//vcl_map<unsigned,vnl_vector<double> >
+			//std::map<unsigned,vnl_vector<double> >
 			node_id_mean_map_type node_id_mean_map;
 
-			//vcl_map<unsigned,vnl_matrix<double> >
+			//std::map<unsigned,vnl_matrix<double> >
 			node_id_covar_map_type node_id_covar_map;
 			node_id_mixture_weight_map_type node_id_mixture_weight_map;
 			for( graph_itr = this->graph_.begin(); graph_itr != graph_end; ++graph_itr )
@@ -347,7 +347,7 @@ void dbcl_state_machine_classifier::classify()
 			classifier_clk_sptr_->increment_time();
 		}
 		else
-			vcl_cerr << "dbcl_state_machine_classifier::classify() - couldn't find feature vector for frame " << t << vcl_endl;
+			std::cerr << "dbcl_state_machine_classifier::classify() - couldn't find feature vector for frame " << t << std::endl;
 	}//end frame iteration
 
 }//end dbcl_state_machine_classifier
@@ -359,9 +359,9 @@ bool dbcl_state_machine_classifier::classify( dbcl_temporal_feature_sptr feature
 
 	vnl_vector<double> obs = feature_sptr->feature_vector();
 
-	vcl_map<double,graph_type::iterator> weight_node_map;
+	std::map<double,graph_type::iterator> weight_node_map;
 
-	vcl_map<double,graph_type::iterator> discriminant_node_map;
+	std::map<double,graph_type::iterator> discriminant_node_map;
 
 	this->change_ =  true;
 
@@ -371,10 +371,10 @@ bool dbcl_state_machine_classifier::classify( dbcl_temporal_feature_sptr feature
 		double curr_transition_prob = this->curr_node_itr_->second->transition_prob(g_itr->first,this->rel_time_curr_);
 		double curr_covar_det = g_itr->second->model_.det_covar();
 
-		double curr_discriminant = -.5*curr_mahalanobis_distance + vcl_log(curr_transition_prob) - .5*vcl_log(curr_covar_det);
+		double curr_discriminant = -.5*curr_mahalanobis_distance + std::log(curr_transition_prob) - .5*std::log(curr_covar_det);
 
 		//log(p(x|wi)p(wi))
-		discriminant_node_map.insert( vcl_make_pair(curr_discriminant,g_itr) );
+		discriminant_node_map.insert( std::make_pair(curr_discriminant,g_itr) );
 
 		if( curr_mahalanobis_distance < 5/*mahalan_dist_factor_*/ )
 		{

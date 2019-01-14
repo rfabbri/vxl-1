@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  May 01, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -15,15 +15,15 @@
 //: Pass FF's unassociated generators to remaining adjacent shock links.
 bool FF_prune_pass_Gs (dbsk3d_fs_face* FF, const bool reset_E_type)
 {
-  vcl_map<int, dbmsh3d_vertex*> asso_genes;
+  std::map<int, dbmsh3d_vertex*> asso_genes;
   FF_get_A3_asso_genes_FE_FV (FF, asso_genes, true);
 
   //Prune the fs_face FF.
   FF->set_valid (false);
 
   //Add this FF's 2 genes
-  asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (FF->genes(0)->id(), FF->genes(0)));
-  asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (FF->genes(1)->id(), FF->genes(1)));
+  asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (FF->genes(0)->id(), FF->genes(0)));
+  asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (FF->genes(1)->id(), FF->genes(1)));
 
   //Go through all bnd_links which will remain (after pruning of this FF) 
   //and check pass genes to it.
@@ -46,7 +46,7 @@ bool FF_prune_pass_Gs (dbsk3d_fs_face* FF, const bool reset_E_type)
 
   #if DBMSH3d_DEBUG>2
   if (success == false)
-    vul_printf (vcl_cout, "\tpruned_pass_genes(): error !! FF %d.\n", FF->id());
+    vul_printf (std::cout, "\tpruned_pass_genes(): error !! FF %d.\n", FF->id());
   #endif
   ///assert (success == true);
   return success;
@@ -55,7 +55,7 @@ bool FF_prune_pass_Gs (dbsk3d_fs_face* FF, const bool reset_E_type)
 //: Get associated genes from incident A3 FE's and FV's 
 //  (which will be lost if pruning this fs_face) to the given set.
 void FF_get_A3_asso_genes_FE_FV (dbsk3d_fs_face* FF,
-                                 vcl_map<int, dbmsh3d_vertex*>& A3_asso_genes,
+                                 std::map<int, dbmsh3d_vertex*>& A3_asso_genes,
                                  const bool remove_G_from_FE_FV)
 {
   //Go through all incident shock links and look for A3-Rib-type FE.
@@ -69,7 +69,7 @@ void FF_get_A3_asso_genes_FE_FV (dbsk3d_fs_face* FF,
       if (FE->have_asgn_Gs()) { //put all FE's generators into asso_genes[].
         for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
           dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-          A3_asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (G->id(), G));
+          A3_asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (G->id(), G));
         }
         if (remove_G_from_FE_FV)  //Disconnect all asgn. G's from FV.
           FE->clear_asgn_G_list ();
@@ -83,7 +83,7 @@ void FF_get_A3_asso_genes_FE_FV (dbsk3d_fs_face* FF,
         if (FV->have_asgn_Gs()) { //put all FV's generators into asso_genes[].
           for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
             dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-            A3_asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (G->id(), G));
+            A3_asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (G->id(), G));
           }
           if (remove_G_from_FE_FV)  //Disconnect all asgn. G's from FV.
             FV->clear_asgn_G_list ();
@@ -106,8 +106,8 @@ void FF_get_A3_asso_genes_FE_FV (dbsk3d_fs_face* FF,
 //    - Handle degenerate A1n Links.
 //
 bool S_valid_splice_xform (dbsk3d_fs_sheet* S,
-                           vcl_list<vcl_pair<int, int> >& S_to_splice,
-                           vcl_vector<dbsk3d_fs_edge*>& C_Lset)
+                           std::list<std::pair<int, int> >& S_to_splice,
+                           std::vector<dbsk3d_fs_edge*>& C_Lset)
 {
   int S1id, S2id;
 
@@ -123,7 +123,7 @@ bool S_valid_splice_xform (dbsk3d_fs_sheet* S,
         int result = S_valid_splice_on_FE (S, FE, FF, S1id, S2id);
         if (result == 0) {
           #if DBMSH3D_DEBUG > 2
-          vul_printf (vcl_cout, "\tS %d FF %d FE %d not eligible for the 3D splice transform.\n", 
+          vul_printf (std::cout, "\tS %d FF %d FE %d not eligible for the 3D splice transform.\n", 
                        S->id(), FF->id(), FE->id());
           #endif
           return false;
@@ -131,7 +131,7 @@ bool S_valid_splice_xform (dbsk3d_fs_sheet* S,
         else if (result == 1) {
           //FE is an internal A5 swallow tail link. Skip.
           #if DBMSH3D_DEBUG > 2
-          vul_printf (vcl_cout, "\tS %d FF %d has an internal A5 swallow tail link FE %d.\n", 
+          vul_printf (std::cout, "\tS %d FF %d has an internal A5 swallow tail link FE %d.\n", 
                        S->id(), FF->id(), FE->id());
           #endif
         }
@@ -139,7 +139,7 @@ bool S_valid_splice_xform (dbsk3d_fs_sheet* S,
           //FE is eligible for splice xform.
           C_Lset.push_back (FE); //Add FE to the A13 Curve's fs_edge list.
           if (S1id != S2id)
-            S_to_splice.push_back (vcl_pair<int, int> (S1id, S2id));
+            S_to_splice.push_back (std::pair<int, int> (S1id, S2id));
         }
       }
       HE = HE->next();
@@ -203,12 +203,12 @@ int S_valid_splice_on_FE (dbsk3d_fs_sheet* S, dbsk3d_fs_edge* FE,
 }
 
 void replace_S2_in_list (const int S1id, const int S2id, 
-                         vcl_list<vcl_pair<int, int> >& S_to_splice)
+                         std::list<std::pair<int, int> >& S_to_splice)
 {
   //Go through the list and replace all instance of S2id by S1id.
   //Can not set the value of a set, because it is internally sorted!
   //should remove it and insert it back!
-  vcl_list<vcl_pair<int, int> >::iterator it = S_to_splice.begin();
+  std::list<std::pair<int, int> >::iterator it = S_to_splice.begin();
   for (; it != S_to_splice.end(); it++) {
     if ((*it).first == S2id)
       (*it).first = S1id;

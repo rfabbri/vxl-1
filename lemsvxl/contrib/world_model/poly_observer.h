@@ -3,7 +3,7 @@
 
 #include "poly_observer_sptr.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
+#include <map>
 
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_easy2D_tableau_sptr.h>
@@ -56,8 +56,8 @@ public:
 protected:
 //  vpgl_camera<double> *camera_;
 
-  vcl_map<obj_observable *, vcl_vector<vgui_soview2D_polygon* > > objects;
-  vcl_map<obj_observable *, vcl_vector<vcl_vector<vgui_soview2D_circle* > > > object_verts;
+  std::map<obj_observable *, std::vector<vgui_soview2D_polygon* > > objects;
+  std::map<obj_observable *, std::vector<std::vector<vgui_soview2D_circle* > > > object_verts;
   void handle_update(vgui_message const& msg, obj_observable* o); 
   void get_vertices_xy(vsol_polygon_2d_sptr poly2d, float **x, float **y);
   void get_vertices_xyz(vsol_polygon_3d_sptr poly3d, double **x, double **y, double **z);

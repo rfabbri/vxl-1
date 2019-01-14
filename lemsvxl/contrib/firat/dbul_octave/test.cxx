@@ -12,7 +12,7 @@
 //
 
 #include<dbul/dbul_octave.h>
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include<bxml/bxml_read.h>
 
 int main()

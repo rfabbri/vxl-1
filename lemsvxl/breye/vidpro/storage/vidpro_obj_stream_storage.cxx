@@ -59,7 +59,7 @@ vidpro_obj_stream_storage::b_read(vsl_b_istream &is)
       vsl_b_read(is, this->path_);
       vidpro_object_stream_sptr obj_is = new vidpro_object_stream(path_ + "/*");
       if (!obj_is || !obj_is->is_open()) {
-        vcl_cerr <<"\nI/O ERROR: vidpro_obj_stream_storage::b_read(vsl_b_istream &is)\n"
+        std::cerr <<"\nI/O ERROR: vidpro_obj_stream_storage::b_read(vsl_b_istream &is)\n"
           <<"        Failed to open the input stream.\nList \""<<path_<<"\" not found\n";
          return;
       }
@@ -68,9 +68,9 @@ vidpro_obj_stream_storage::b_read(vsl_b_istream &is)
     }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro_obj_stream_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro_obj_stream_storage::b_read(vsl_b_istream&)\n"
       << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -93,7 +93,7 @@ vidpro_obj_stream_storage::set_stream(const  vidpro_object_stream_sptr  &stream 
 }
 
 //: Get the istream directory and filename path
-vcl_string 
+std::string 
 vidpro_obj_stream_storage::get_path() const
 {
   return path_;
@@ -101,7 +101,7 @@ vidpro_obj_stream_storage::get_path() const
 
 //: Set the istream path
 void
-vidpro_obj_stream_storage::set_path(const vcl_string& path)
+vidpro_obj_stream_storage::set_path(const std::string& path)
 {
   path_ = path;
 }

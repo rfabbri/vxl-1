@@ -1,7 +1,7 @@
 #ifndef psm_triangle_interpolation_iterator_aa_h_
 #define psm_triangle_interpolation_iterator_aa_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/vgl_region_scan_iterator.h>
 #include <vgl/vgl_triangle_scan_iterator.h>
@@ -50,8 +50,8 @@ protected:
   bool next_return_;
 
   unsigned int tri_diameter_x_;
-  vcl_vector<float> aa_vals_;
-  vcl_vector<T> interp_vals_;
+  std::vector<float> aa_vals_;
+  std::vector<T> interp_vals_;
   int vec_offset_;
 
   vbl_bounding_box<double,2> tri_bb_;
@@ -61,11 +61,11 @@ protected:
   double s2_;
 
   // start and end of pixels containing any of part triangle 
-  //vcl_vector<int> border_x_start_;
-  //vcl_vector<int> border_x_end_;
+  //std::vector<int> border_x_start_;
+  //std::vector<int> border_x_end_;
   // start and end of pixels completely enclosed by the triangle
-  //vcl_vector<int> interior_x_start_;
-  //vcl_vector<int> interior_x_end_;
+  //std::vector<int> interior_x_start_;
+  //std::vector<int> interior_x_end_;
 };
 
 

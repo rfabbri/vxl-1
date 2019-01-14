@@ -1,20 +1,20 @@
 #include "Lie_cv_cor.h"
 #include "Lie_cv_cor_sptr.h"
 #include "Lie_contour_match.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdio>
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h> 
-#include <vcl_iostream.h>
+#include <cassert>
+#include <algorithm> 
+#include <iostream>
 #include <vsol/vsol_point_2d.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 
 #define TOL                   (1.0e-1)
-#define IS_ALMOST_ZERO(X)     (vcl_abs(X) < TOL)
-#define IS_ALMOST_EQUAL(X,Y)  (vcl_abs(X-Y) < TOL)
+#define IS_ALMOST_ZERO(X)     (std::abs(X) < TOL)
+#define IS_ALMOST_EQUAL(X,Y)  (std::abs(X-Y) < TOL)
 
 Lie_cv_cor::Lie_cv_cor() : final_cost_(0), final_norm_cost_(0), length1_(-1), length2_(-1)
 {
@@ -22,12 +22,12 @@ Lie_cv_cor::Lie_cv_cor() : final_cost_(0), final_norm_cost_(0), length1_(-1), le
 
 Lie_cv_cor::Lie_cv_cor(const dbsol_interp_curve_2d_sptr c1, 
                            const dbsol_interp_curve_2d_sptr c2, 
-                           vcl_vector< vcl_pair <int,int> >& map)
+                           std::vector< std::pair <int,int> >& map)
                             : final_cost_(0), final_norm_cost_(0) {
                                
   // save pointers to the original polygons also
   // (might be line fitted versions of input polygons)
-  vcl_vector<vsol_point_2d_sptr> tmp;
+  std::vector<vsol_point_2d_sptr> tmp;
   for (int i = 0; i<c1->size(); i++)
     tmp.push_back(c1->point_at_sample(i));
   poly1_ = new vsol_polygon_2d(tmp);
@@ -107,8 +107,8 @@ double Lie_cv_cor::get_arclength_on_curve2(double s1) {
     s1 = s1 + length1_;
 
   // binary search for s1 in vector of arclengths
-  const vcl_vector<double>::const_iterator
-      p = vcl_lower_bound(arclengths1_.begin(), arclengths1_.end(), s1);
+  const std::vector<double>::const_iterator
+      p = std::lower_bound(arclengths1_.begin(), arclengths1_.end(), s1);
 
   if (p == arclengths1_.begin())
     return arclengths2_[0];
@@ -134,11 +134,11 @@ double Lie_cv_cor::get_arclength_on_curve1(double s2) {
    }
   
   // binary search for s2 in vector of arclengths
-  const vcl_vector<double>::const_iterator
-      p = vcl_lower_bound(arclengths2_.begin(), arclengths2_.end(), s2);
+  const std::vector<double>::const_iterator
+      p = std::lower_bound(arclengths2_.begin(), arclengths2_.end(), s2);
 
   if (p == arclengths2_.begin())
-    return vcl_fmod(arclengths1_[0], length1_);
+    return std::fmod(arclengths1_[0], length1_);
 
   int loc = p - arclengths2_.begin();
 
@@ -146,15 +146,15 @@ double Lie_cv_cor::get_arclength_on_curve1(double s2) {
   double dif = s2-arclengths2_[loc-1];
   double interval_dif = arclengths2_[loc]-arclengths2_[loc-1];
   double interval_dif2 = arclengths1_[loc]-arclengths1_[loc-1];
-  return vcl_fmod(arclengths1_[loc-1]+(dif/interval_dif)*interval_dif2, length1_);
+  return std::fmod(arclengths1_[loc-1]+(dif/interval_dif)*interval_dif2, length1_);
 }
 
 //: write points to a file
-bool Lie_cv_cor::write_correspondence(vcl_string file_name, int increment) 
+bool Lie_cv_cor::write_correspondence(std::string file_name, int increment) 
 {
-  vcl_ofstream of(file_name.c_str());
+  std::ofstream of(file_name.c_str());
   if (!of) {
-    vcl_cout << "Unable to open output file " <<file_name << " for write " << vcl_endl;
+    std::cout << "Unable to open output file " <<file_name << " for write " << std::endl;
     return false;
   }
 
@@ -165,11 +165,11 @@ bool Lie_cv_cor::write_correspondence(vcl_string file_name, int increment)
   for (unsigned i = 0; i<pts2_.size(); i+=increment)
     cnt2++;
 
-  of << cnt1 << vcl_endl;
+  of << cnt1 << std::endl;
   for (unsigned i = 0; i<pts1_.size(); i+=increment) 
     of << pts1_[i].x() << " " << pts1_[i].y() << "\n";
   
-  of << cnt2 << vcl_endl;
+  of << cnt2 << std::endl;
   for (unsigned i = 0; i<pts2_.size(); i+=increment) 
     of << pts2_[i].x() << " " << pts2_[i].y() << "\n";
 

@@ -7,18 +7,18 @@
 //
 
 #include "example_processor.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
 //bool example_processor::parse_command_line(int argc, char *argv[])
-bool example_processor::parse_command_line(vcl_vector<vcl_string>& argv)
+bool example_processor::parse_command_line(std::vector<std::string>& argv)
 {
   if (!argv.size()) {
-    vcl_cout << "argv size is 0! Exit!\n";
+    std::cout << "argv size is 0! Exit!\n";
     return false;
   } else
-    vcl_cout << " argv size: " << argv.size() << vcl_endl;
+    std::cout << " argv size: " << argv.size() << std::endl;
   param_file_ = argv[0];
   return true; // nothing to parse
 }
@@ -31,16 +31,16 @@ bool example_processor::parse(const char* param_file)
 }
 
 //: this method is run on each processor
-bool example_processor::initialize(vcl_vector<int>& t)
+bool example_processor::initialize(std::vector<int>& t)
 {
   for (unsigned i = 0; i < 4; i++) {
     t.push_back(i + 1);
   }
 
-  vcl_cout << "initialized " << t.size() << " integers as follows\n";
+  std::cout << "initialized " << t.size() << " integers as follows\n";
   for (unsigned i = 0; i < t.size(); i++)
-    vcl_cout << t[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << t[i] << " ";
+  std::cout << std::endl;
 
   return true;
 }
@@ -52,14 +52,14 @@ bool example_processor::process(int t1, float& f)
   return true;
 }
 
-bool example_processor::finalize(vcl_vector<float>& results)
+bool example_processor::finalize(std::vector<float>& results)
 {
   float sum = 0.0f;
   for (unsigned i = 0; i < results.size(); i++) {
     sum += results[i];
   }
-  vcl_cout << "sum of the results: " << sum << " from " << results.size() << " sized vector\n";
-  vcl_cout << "sum of the results should be 14\n";
+  std::cout << "sum of the results: " << sum << " from " << results.size() << " sized vector\n";
+  std::cout << "sum of the results should be 14\n";
   return true;
 }
 

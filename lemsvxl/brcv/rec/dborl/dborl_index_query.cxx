@@ -13,41 +13,41 @@
 
 #include "dborl_index_query.h"
 
-void dborl_index_query::add_object_name(const vcl_string& name)
+void dborl_index_query::add_object_name(const std::string& name)
 {
     object_names_.push_back(name);
 }
 
-void dborl_index_query::add_assoc_file_label(const vcl_string& label)
+void dborl_index_query::add_assoc_file_label(const std::string& label)
 {
     assoc_file_labels_.push_back(label);
 }
 
-void dborl_index_query::add_assoc_file_type(const vcl_string& type)
+void dborl_index_query::add_assoc_file_type(const std::string& type)
 {
     assoc_file_types_.push_back(type);
 }
 
-vcl_vector<vcl_string>& dborl_index_query::get_object_names()
+std::vector<std::string>& dborl_index_query::get_object_names()
 {
     return object_names_;
 }
 
-vcl_vector<vcl_string>& dborl_index_query::get_assoc_file_labels()
+std::vector<std::string>& dborl_index_query::get_assoc_file_labels()
 {
     return assoc_file_labels_;
 }
 
-vcl_vector<vcl_string>& dborl_index_query::get_assoc_file_types()
+std::vector<std::string>& dborl_index_query::get_assoc_file_types()
 {
     return assoc_file_types_;
 }
 
-void dborl_index_query::print(vcl_ostream& os)
+void dborl_index_query::print(std::ostream& os)
 {
-    os << "#############################" << vcl_endl;
-    os << "INDEX QUERY:" << vcl_endl;
-    os << "     OBJECT NAMES:" << vcl_endl;
+    os << "#############################" << std::endl;
+    os << "INDEX QUERY:" << std::endl;
+    os << "     OBJECT NAMES:" << std::endl;
     for(int i = 0; i < object_names_.size(); i++)
     {
         os << "\"" << object_names_[i] << "\"";
@@ -56,8 +56,8 @@ void dborl_index_query::print(vcl_ostream& os)
             os << " ";
         }
     }
-    os << vcl_endl;
-    os << "     ASSOC LABELS:" << vcl_endl;
+    os << std::endl;
+    os << "     ASSOC LABELS:" << std::endl;
     for(int i = 0; i < assoc_file_labels_.size(); i++)
     {
         os << "\"" << assoc_file_labels_[i] << "\"";
@@ -66,8 +66,8 @@ void dborl_index_query::print(vcl_ostream& os)
             os << " ";
         }
     }
-    os << vcl_endl;
-    os << "     ASSOC TYPES:" << vcl_endl;
+    os << std::endl;
+    os << "     ASSOC TYPES:" << std::endl;
     for(int i = 0; i < assoc_file_types_.size(); i++)
     {
         os << "\"" << assoc_file_types_[i] << "\"";
@@ -76,6 +76,6 @@ void dborl_index_query::print(vcl_ostream& os)
             os << " ";
         }
     }
-    os << vcl_endl;
-    os << "#############################" << vcl_endl;
+    os << std::endl;
+    os << "#############################" << std::endl;
 }

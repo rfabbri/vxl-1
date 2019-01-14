@@ -8,7 +8,7 @@
 
 dbskfg_detect_fragments::dbskfg_detect_fragments
 ( 
-    vcl_string input_match_file
+    std::string input_match_file
 )
 {
     load_match_file(input_match_file);
@@ -24,14 +24,14 @@ void dbskfg_detect_fragments::detect(double threshold,
                                      vsol_box_2d_sptr& bounding_box)
 {
 
-    vcl_map<unsigned int,vcl_vector<vcl_pair<double,unsigned int> > >::
+    std::map<unsigned int,std::vector<std::pair<double,unsigned int> > >::
         iterator it;
 
     // For each row hols the number below threshold
-    vcl_map<unsigned int,vcl_vector<unsigned int> > rows_that_match;
+    std::map<unsigned int,std::vector<unsigned int> > rows_that_match;
     for ( it = sim_matrix_.begin() ; it != sim_matrix_.end() ; ++it)
     {
-        vcl_vector<vcl_pair<double,unsigned int> > row = (*it).second;
+        std::vector<std::pair<double,unsigned int> > row = (*it).second;
         
         for ( unsigned int i=0 ; i < row.size() ; ++i)
         {
@@ -56,17 +56,17 @@ void dbskfg_detect_fragments::detect(double threshold,
     if ( flag)
     {
         bounding_box = new vsol_box_2d();
-        vcl_map<unsigned int,vcl_vector<unsigned int> >::iterator rit;
+        std::map<unsigned int,std::vector<unsigned int> >::iterator rit;
         for ( rit = rows_that_match.begin() ; rit != rows_that_match.end() ; 
               ++rit)
         {
-            vcl_vector<unsigned int> matches=(*rit).second;
-            vcl_cout<<"Model id "
+            std::vector<unsigned int> matches=(*rit).second;
+            std::cout<<"Model id "
                     <<(*rit).first
                     <<" has "
                     <<matches.size()
                     <<" matches that meet detection criteria "
-                    <<vcl_endl;
+                    <<std::endl;
 
             for ( unsigned int i=0; i < matches.size() ; ++i)
             {
@@ -82,7 +82,7 @@ void dbskfg_detect_fragments::detect(double threshold,
 
 }
 
-void dbskfg_detect_fragments::load_match_file(vcl_string input_sim_matrix)
+void dbskfg_detect_fragments::load_match_file(std::string input_sim_matrix)
 {
     // read document
     bxml_document doc_in = bxml_read(input_sim_matrix);
@@ -95,7 +95,7 @@ void dbskfg_detect_fragments::load_match_file(vcl_string input_sim_matrix)
 
 void dbskfg_detect_fragments::load_bbox(const bxml_data_sptr& root_xml)
 {
-    vcl_vector<bxml_data_sptr> bounding_boxes; // contour_points
+    std::vector<bxml_data_sptr> bounding_boxes; // contour_points
 
     // Lets find bounding boxs
     bxml_element* head=dbxml_algos::find_by_name(root_xml,"bbox");
@@ -131,7 +131,7 @@ void dbskfg_detect_fragments::load_bbox(const bxml_data_sptr& root_xml)
 void dbskfg_detect_fragments::load_matrix(const bxml_data_sptr& root_xml)
 {
 
-    vcl_vector<bxml_data_sptr> one_to_many; // contour_points
+    std::vector<bxml_data_sptr> one_to_many; // contour_points
     
     // Lets find bounding boxs
     bxml_element* head=dbxml_algos::find_by_name(root_xml,"costs");
@@ -148,7 +148,7 @@ void dbskfg_detect_fragments::load_matrix(const bxml_data_sptr& root_xml)
         unsigned int model_id;
         data_elm->get_attribute("model_id",model_id);
 
-        vcl_vector<bxml_data_sptr> query_matches; // contour_points
+        std::vector<bxml_data_sptr> query_matches; // contour_points
 
         dbxml_algos::find_all_elems_by_name(one_to_many[rows],
                                             "query_match",query_matches);
@@ -166,7 +166,7 @@ void dbskfg_detect_fragments::load_matrix(const bxml_data_sptr& root_xml)
             query_elm->get_attribute("query_id",id);
             query_elm->get_attribute("cost",cost);
             
-            sim_matrix_[model_id].push_back(vcl_make_pair(cost,id));
+            sim_matrix_[model_id].push_back(std::make_pair(cost,id));
 
         }
         

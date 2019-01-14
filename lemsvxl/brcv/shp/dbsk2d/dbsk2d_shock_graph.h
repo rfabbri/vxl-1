@@ -14,7 +14,7 @@
 //      O.C.Ozcanli 05/31/2006 added box_ and related methods
 // \endverbatim
 
-#include <vcl_set.h>
+#include <set>
 #include <bgrld/bgrld_graph.h>
 
 #include <dbsk2d/dbsk2d_shock_node.h>
@@ -52,7 +52,7 @@ public:
 
   //: these methods are required when degree two nodes are not important in traversal
   dbsk2d_shock_node_sptr get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, dbsk2d_shock_edge_sptr e);
-  dbsk2d_shock_node_sptr get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, dbsk2d_shock_edge_sptr e, vcl_vector<dbsk2d_shock_edge_sptr>& edges);
+  dbsk2d_shock_node_sptr get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, dbsk2d_shock_edge_sptr e, std::vector<dbsk2d_shock_edge_sptr>& edges);
 
   dbsk2d_shock_node_sptr get_node(int id);
 private:

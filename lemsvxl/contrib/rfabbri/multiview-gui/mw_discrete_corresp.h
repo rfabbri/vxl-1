@@ -9,8 +9,8 @@
 //
 
 #include <vsol/vsol_point_2d.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 //: this is to be used within the mw_discrete_corresp class; the cost can be
 //interpreted as the cost of the ; 
@@ -39,9 +39,9 @@ public:
 
    //: \todo functional access
 
-   friend vcl_ostream&  operator<<(vcl_ostream& s, const mw_discrete_corresp &c);
+   friend std::ostream&  operator<<(std::ostream& s, const mw_discrete_corresp &c);
 public:
-   vcl_vector < vcl_list< mw_attributed_point > > corresp_;
+   std::vector < std::list< mw_attributed_point > > corresp_;
 };
 
 

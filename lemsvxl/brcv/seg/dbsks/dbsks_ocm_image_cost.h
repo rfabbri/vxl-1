@@ -61,8 +61,8 @@ public:
   // User-interface functions -------------------------------------------------
 
   //: (Normalized) Oriented Chamfer Matching of a set of (point-tangent)s
-  float f(const vcl_vector<vgl_point_2d<double > >& pts,
-    const vcl_vector<vgl_vector_2d<double > >& tangents) const;
+  float f(const std::vector<vgl_point_2d<double > >& pts,
+    const std::vector<vgl_vector_2d<double > >& tangents) const;
 
   //: Compute Oriented Chamfer Matching cost for a grid of circular arcs
   void f(const dbsks_circ_arc_grid& grid, float ds,
@@ -77,12 +77,12 @@ public:
 protected:
 
   //: (Normalized) L^2 - Oriented Chamfer Matching of a set of (point-tangent)s
-  float f_L2(const vcl_vector<vgl_point_2d<double > >& pts,
-    const vcl_vector<vgl_vector_2d<double > >& tangents) const;
+  float f_L2(const std::vector<vgl_point_2d<double > >& pts,
+    const std::vector<vgl_vector_2d<double > >& tangents) const;
 
   //: (Normalized) L^2 - Oriented Chamfer Matching of a set of (point-tangent)s
-  float f_shotton_ocm(const vcl_vector<vgl_point_2d<double > >& pts,
-    const vcl_vector<vgl_vector_2d<double > >& tangents) const;
+  float f_shotton_ocm(const std::vector<vgl_point_2d<double > >& pts,
+    const std::vector<vgl_vector_2d<double > >& tangents) const;
 
   // Utility functions --------------------------------------------------------
 public:
@@ -108,8 +108,8 @@ public:
 
   //: Compute point-tangent samples of the shapelet, given sampling rate "ds"
   static void compute_boundary_samples_uniform(const dbsksp_shapelet_sptr& sh, double ds, 
-                                 vcl_vector<vgl_point_2d<double > >& pts,
-                                 vcl_vector<vgl_vector_2d<double > >& tangents);
+                                 std::vector<vgl_point_2d<double > >& pts,
+                                 std::vector<vgl_vector_2d<double > >& tangents);
 
 
   // Member variables ---------------------------------------------------------

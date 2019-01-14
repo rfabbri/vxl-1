@@ -1,9 +1,9 @@
 //This is brcv/seg/dbdet/pro/dbdet_save_cem_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
 
 #include "dbdet_save_cem_process.h"
 
@@ -22,25 +22,25 @@ dbdet_save_cem_process::dbdet_save_cem_process() : bpro1_process()
 {
   if( !parameters()->add( "Output file <filename...>" , "-cem_filename" , bpro1_filepath("","*.cem")))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
-vcl_string dbdet_save_cem_process::name() 
+std::string dbdet_save_cem_process::name() 
 {
   return "Save .CEM File";
 }
 
-vcl_vector< vcl_string > dbdet_save_cem_process::get_input_type() 
+std::vector< std::string > dbdet_save_cem_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel");
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_save_cem_process::get_output_type() 
+std::vector< std::string > dbdet_save_cem_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -66,7 +66,7 @@ bool dbdet_save_cem_process::execute()
   bool retval = dbdet_save_cem(cem_filename.path, input_sel->EM(), input_sel->CFG());
 
   if (!retval) {
-    vcl_cerr << "Error while saving file: " << cem_filename.path << vcl_endl;
+    std::cerr << "Error while saving file: " << cem_filename.path << std::endl;
     return false;
   }
   return true;

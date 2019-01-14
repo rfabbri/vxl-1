@@ -13,7 +13,7 @@ dbseg_seed_regions_tool::dbseg_seed_regions_tool() :
 {
 }
 
-vcl_string dbseg_seed_regions_tool::name() const
+std::string dbseg_seed_regions_tool::name() const
 {
   return "Seed Regions";
 }
@@ -137,7 +137,7 @@ bool dbseg_seed_regions_tool::handle( const vgui_event & e, const bvis1_view_tab
         point_list.push_back(vgl_point_2d<double>(ix, iy));
 
         if (point_list.size() < 3) {
-            vcl_cerr << "Error Creating Region - Polygon has fewer than 3 points" << vcl_endl;
+            std::cerr << "Error Creating Region - Polygon has fewer than 3 points" << std::endl;
             return true;
         }
 

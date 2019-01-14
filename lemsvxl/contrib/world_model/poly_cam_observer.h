@@ -3,7 +3,7 @@
 
 #include "poly_observer.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
+#include <map>
 
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_easy2D_tableau_sptr.h>
@@ -74,7 +74,7 @@ public:
   void proj_poly(vsol_polygon_3d_sptr poly3d, 
                    vsol_polygon_2d_sptr& poly2d);
 
-  void proj_poly(vcl_vector<dbmsh3d_vertex*> verts, vcl_vector<vgl_point_2d<double> > &projections);
+  void proj_poly(std::vector<dbmsh3d_vertex*> verts, std::vector<vgl_point_2d<double> > &projections);
 
   //vsol_polygon_2d_sptr get_vsol_polygon_2d(vgui_soview2D_polygon* polygon);
 
@@ -95,7 +95,7 @@ public:
 private:
   vpgl_camera<double> *camera_;
   vgl_homg_plane_3d<double> proj_plane_;
-  //vcl_map<obj_observable *, vcl_vector<vgui_soview2D_polygon* > > objects;
+  //std::map<obj_observable *, std::vector<vgui_soview2D_polygon* > > objects;
 
   //void handle_update(vgui_message const& msg, obj_observable* o); 
   //void get_vertices_xy(vsol_polygon_2d_sptr poly2d, float **x, float **y);

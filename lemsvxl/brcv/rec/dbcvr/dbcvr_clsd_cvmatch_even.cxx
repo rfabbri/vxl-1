@@ -1,6 +1,6 @@
 #include "dbcvr_clsd_cvmatch_even.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdio>
 
 #include <bsold/bsold_interp_curve_2d.h>
 
@@ -69,15 +69,15 @@ dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(const bsold_interp_curve_2d_spt
   //  _curve1->add_vertex(c1->x(n), c1->y(n));
 
   for (int n=0;n<2*_n1;n++){    // 2*n1*_delta_s1 = 2*L1
-    vcl_vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
     
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_n2,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_n2,tmp3);
     _map.push_back(tmp2);
     
-    vcl_pair <int,int> tmp4(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp5(_n1+_n2,tmp4);
+    std::pair <int,int> tmp4(0,0);
+    std::vector< std::pair <int,int> > tmp5(_n1+_n2,tmp4);
     _finalMap.push_back(tmp5);
   }
   
@@ -150,36 +150,36 @@ void dbcvr_clsd_cvmatch_even::setTemplateSize (int temp_size) {
 
 void dbcvr_clsd_cvmatch_even::printCost(){
   int i,j;
-  vcl_cout << "Cost Matrix" << vcl_endl;
+  std::cout << "Cost Matrix" << std::endl;
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
-      vcl_printf("%6.3f ",_cost[i][j]);
+      std::printf("%6.3f ",_cost[i][j]);
     }
-    vcl_printf("\n");
+    std::printf("\n");
   }
 }
 
-void dbcvr_clsd_cvmatch_even::writeCost(vcl_string fname){
-  vcl_FILE *fp=vcl_fopen(fname.c_str(),"w");
+void dbcvr_clsd_cvmatch_even::writeCost(std::string fname){
+  std::FILE *fp=std::fopen(fname.c_str(),"w");
   int i,j;
   double c;
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
       c=_cost[i][j];
-      vcl_fwrite(&c,sizeof(double),1,fp);
+      std::fwrite(&c,sizeof(double),1,fp);
     }
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 }
 
 void dbcvr_clsd_cvmatch_even::printMap(){
   int i,j;
-  vcl_printf("Map Matrix\n");
+  std::printf("Map Matrix\n");
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
-      vcl_printf("(%2d,%2d) ", _map[i][j].first, _map[i][j].second);
+      std::printf("(%2d,%2d) ", _map[i][j].first, _map[i][j].second);
     }
-    vcl_printf("\n");
+    std::printf("\n");
   }
 } 
 
@@ -219,11 +219,11 @@ void dbcvr_clsd_cvmatch_even::initializeDPMask2(int s1, int s2) {
   n1=_n1;
   n2=_n2;
 
-  vcl_pair <int,int> tmp3(0,0);
-  vcl_vector< vcl_pair <int,int> > Pi(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > Pj(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > PiR(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > PjR(n1+n2,tmp3);
+  std::pair <int,int> tmp3(0,0);
+  std::vector< std::pair <int,int> > Pi(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > Pj(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > PiR(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > PjR(n1+n2,tmp3);
   
   count=0;
   for (ii=0;ii<Ni-1;ii++){
@@ -336,8 +336,8 @@ void dbcvr_clsd_cvmatch_even::findDPCorrespondence(int startPoint){
   int i,j,ip,jp;
   int count;
 
-  vcl_pair <int,int> tmp3(0,0);
-  vcl_vector< vcl_pair <int,int> > tmpMap(_n1+_n2+1,tmp3);
+  std::pair <int,int> tmp3(0,0);
+  std::vector< std::pair <int,int> > tmpMap(_n1+_n2+1,tmp3);
   //tmpMap=(intPair*)calloc(d->n1+d->n2+1,sizeof(intPair));
 
   _finalCost[startPoint]=_cost[_n1+startPoint-1][_n2-1];
@@ -362,7 +362,7 @@ void dbcvr_clsd_cvmatch_even::findDPCorrespondence(int startPoint){
     j=jp;
   }
   _finalMap[startPoint].clear();
-  vcl_pair <int,int> p;
+  std::pair <int,int> p;
   //_finalMapSize[startPoint]=count;
   for (i=0;i<count;i++){
     p.first = tmpMap[count-1-i].first;
@@ -406,7 +406,7 @@ void dbcvr_clsd_cvmatch_even::Match(){
   
   //Copy the starting point match (0) to the match from _n
   int N0=_finalMap[0].size();
-  vcl_pair <int,int> p;
+  std::pair <int,int> p;
   _finalMap[_n1].clear();
   _finalCost[_n1]=_finalCost[0];
   for (int i=0;i<N0;i++){
@@ -414,7 +414,7 @@ void dbcvr_clsd_cvmatch_even::Match(){
     p.second=_finalMap[0][i].second;
     _finalMap[_n1].push_back(p);
   }
-  //vcl_cout <<  "In Match: Done copying  start point"<< vcl_endl;
+  //std::cout <<  "In Match: Done copying  start point"<< std::endl;
   computeMiddlePaths(0,_n1);
 
 #if 0
@@ -427,18 +427,18 @@ void dbcvr_clsd_cvmatch_even::Match(){
     }
   }
 
-  vcl_ofstream fpoo; 
-  fpoo.open("D:\\contours\\Mpeg-7\\temp_even.out", vcl_ios::app);
+  std::ofstream fpoo; 
+  fpoo.open("D:\\contours\\Mpeg-7\\temp_even.out", std::ios::app);
 
   fpoo << 2*_n1 << " " << _n2 << "\n";
   for (int i = 0; i<2*_n1; i++) {
     for (int j = 0; j<_n2; j++) {   // -1 since (0,0) will go to CD
       fpoo << i*_delta_s1 << " ";
-      fpoo << j*_delta_s2 << vcl_endl;
+      fpoo << j*_delta_s2 << std::endl;
     }
   }
 
-  //vcl_cout << "k_min was: " << k_min << " changhed to 0\n";
+  //std::cout << "k_min was: " << k_min << " changhed to 0\n";
   //k_min = 0;
 
   N0=_finalMap[k_min].size();
@@ -447,13 +447,13 @@ void dbcvr_clsd_cvmatch_even::Match(){
     int ii =_finalMap[k_min][i].first;
     int jj =_finalMap[k_min][i].second;
     fpoo << ii*_delta_s1 << " ";
-    fpoo << jj*_delta_s2 << vcl_endl;
+    fpoo << jj*_delta_s2 << std::endl;
 
     double s1 = ii*_delta_s1;
     double s2 = jj*_delta_s2;
 
     
-    s1 = vcl_fmod(s1, L1);
+    s1 = std::fmod(s1, L1);
     s1 = (s1 == 0 ? L1 : s1);
 
     s2 = (s2 == 0 ? L2 : s2);
@@ -461,18 +461,18 @@ void dbcvr_clsd_cvmatch_even::Match(){
     double s1_prev = s1 - _delta_s1;
     if (s1_prev < 0) s1_prev = L1 + s1_prev;
   
-    s1_prev = vcl_fmod(s1_prev, L1);
+    s1_prev = std::fmod(s1_prev, L1);
     s1_prev = (s1_prev == 0 ? L1 : s1_prev);
 
     double s2_prev = s2 - _delta_s2;
     if (s2_prev < 0) s2_prev = L2 + s2_prev;
 
-    s2_prev = vcl_fmod(s2_prev, L2);
+    s2_prev = std::fmod(s2_prev, L2);
     s2_prev = (s2_prev == 0 ? L2 : s2_prev);
 
 
     fpoo << curve_angleDiff (_curve1->tangent_angle_at(s1), _curve1->tangent_angle_at(s1_prev)) << " ";
-    fpoo << curve_angleDiff (_curve2->tangent_angle_at(s2), _curve2->tangent_angle_at(s2_prev)) << vcl_endl;
+    fpoo << curve_angleDiff (_curve2->tangent_angle_at(s2), _curve2->tangent_angle_at(s2_prev)) << std::endl;
   }
 
   fpoo.close();
@@ -487,7 +487,7 @@ void dbcvr_clsd_cvmatch_even::computeCurveProperties() {
     
   for (int i = 0; i<2*_n1; i++) {
     double s1 = _lengths_curve1[i];
-    s1 = vcl_fmod(s1, L1);
+    s1 = std::fmod(s1, L1);
     s1 = (s1 == 0 ? L1 : s1);
     _tangents_curve1.push_back(_curve1->tangent_angle_at(s1));
   }
@@ -519,14 +519,14 @@ double dbcvr_clsd_cvmatch_even::computeIntervalCost(int i, int ip, int j, int jp
   double dF;
   if (_normalized_stretch_cost) {
     if (ds1+ds2 > 1E-5)
-      dF = vcl_pow(ds1-ds2,2)/(ds1+ds2);
+      dF = std::pow(ds1-ds2,2)/(ds1+ds2);
     else dF = 0;
-  } else dF = vcl_fabs(ds1-ds2);
+  } else dF = std::fabs(ds1-ds2);
 
   double dt1 = curve_angleDiff (_tangents_curve1[i], _tangents_curve1[ip]);
   double dt2 = curve_angleDiff (_tangents_curve2[j], _tangents_curve2[jp]);
 
-  double dK = vcl_fabs(dt1-dt2);
+  double dK = std::fabs(dt1-dt2);
   
   return dF + _R*dK;
 }

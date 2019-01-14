@@ -24,7 +24,7 @@ vil_image_view<vxl_byte> dbru_multiple_instance_object::get_image_i(int i)
     return vil_image_view<vxl_byte>();
 }
 
-vcl_vector<vsol_line_2d_sptr> dbru_multiple_instance_object::get_edges()
+std::vector<vsol_line_2d_sptr> dbru_multiple_instance_object::get_edges()
 {
     return edges_;
 }
@@ -85,9 +85,9 @@ void dbru_multiple_instance_object::b_read(vsl_b_istream &is)
             }
 
     default: {
-            vcl_cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
+            std::cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
                 << "           Unknown version number "<< ver << '\n';
-            is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+            is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
             return;
              }
         }

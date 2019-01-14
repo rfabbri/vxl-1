@@ -143,7 +143,7 @@ BPoint* Boundary_Bucketing::addGUIPoint (COORD_TYPE x, COORD_TYPE y, INPUT_TAN_T
 {
   //1)Test if (x, y) is valid...
   if (!isPointValidInWorld(x,y)) {
-    //vcl_cout << "BPoint Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<vcl_endl;
+    //std::cout << "BPoint Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<std::endl;
     //MSGOUT(0);
     return NULL;
   }
@@ -154,7 +154,7 @@ BPoint* Boundary_Bucketing::addGUIPoint (COORD_TYPE x, COORD_TYPE y, INPUT_TAN_T
   update_list.insert(ID_BElm_pair(newelm->id(), newelm));
 
   //Output points to save for debug...
-  //vcl_cout<< "("<<x<<" "<<y<<")\n";
+  //std::cout<< "("<<x<<" "<<y<<")\n";
   //MessageOut(2);
    return newelm;
 }
@@ -175,7 +175,7 @@ BElement* Boundary_Bucketing::addGUILine (COORD_TYPE sx, COORD_TYPE sy, COORD_TY
 
   //2)Test if (sx, sy)-(ex, ey) is valid...
   if (!isPointValidInWorld(sx,sy) || !isPointValidInWorld(ex,ey)) {
-    vcl_cout << "BLine Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<vcl_endl;
+    std::cout << "BLine Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<std::endl;
     return NULL;
   }
 
@@ -220,12 +220,12 @@ BElement* Boundary_Bucketing::addGUILineBetween (BPoint* spt, BPoint* ept)
       double l, k;
       //if spt is the starting point of this line
       if (lLine->s_pt() == spt){
-        dtheta = vcl_fabs(u- angle02Pi(lLine->U()+M_PI));
+        dtheta = std::fabs(u- angle02Pi(lLine->U()+M_PI));
         l = _distPointPoint(spt->pt(),lLine->e_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(lLine->e_pt()->pt(), spt->pt(), ept->pt());
       }
       else {
-        dtheta = vcl_fabs(u- lLine->U());
+        dtheta = std::fabs(u- lLine->U());
         l = _distPointPoint(spt->pt(),lLine->s_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(lLine->s_pt()->pt(), spt->pt(), ept->pt());
       }
@@ -243,12 +243,12 @@ BElement* Boundary_Bucketing::addGUILineBetween (BPoint* spt, BPoint* ept)
       double l, k;
       //if ept is the starting point of this line
       if (rLine->s_pt() == ept){
-        dtheta = vcl_fabs(u- rLine->U());
+        dtheta = std::fabs(u- rLine->U());
         l = _distPointPoint(ept->pt(),rLine->e_pt()->pt());        
         k = 1/getArcRadiusFromThreePoints(rLine->e_pt()->pt(), ept->pt(), spt->pt());
       }
       else {
-        dtheta = vcl_fabs(u- angle02Pi(rLine->U()+M_PI));
+        dtheta = std::fabs(u- angle02Pi(rLine->U()+M_PI));
         l = _distPointPoint(ept->pt(),rLine->s_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(rLine->s_pt()->pt(), ept->pt(), spt->pt());
       }
@@ -416,7 +416,7 @@ BElement* Boundary_Bucketing::addGUIArcBetween (BPoint* spt, BPoint* ept, Point 
 
   //Trying to fit the arc in a box smaller than the accuracy of the input
   theta = theta/2;
-  double l = 2*r*vcl_sin(theta);
+  double l = 2*r*std::sin(theta);
   double w = l*l/r/8;
 
   //if (w < W_THRESHOLD){ //boundary estimation accuracy
@@ -473,9 +473,9 @@ BElement* Boundary_Bucketing::addGUIArcBetween (BPoint* spt, BPoint* ept, Point 
 
     //Bucketing: addPPVisCon to the two endPts...
     //Note that nud is always CCW here!
-    //Should use a faster way to avoid vcl_cos and vcl_sin!
-    ((BPoint_Bucketing*)spt)->addEPVisCon (vcl_cos(newelm->_InTangent), vcl_sin(newelm->_InTangent), newelm->id());
-    ((BPoint_Bucketing*)ept)->addEPVisCon (vcl_cos(newelm->_OutTangent+M_PI), vcl_sin(newelm->_OutTangent+M_PI), newelm->id());
+    //Should use a faster way to avoid std::cos and std::sin!
+    ((BPoint_Bucketing*)spt)->addEPVisCon (std::cos(newelm->_InTangent), std::sin(newelm->_InTangent), newelm->id());
+    ((BPoint_Bucketing*)ept)->addEPVisCon (std::cos(newelm->_OutTangent+M_PI), std::sin(newelm->_OutTangent+M_PI), newelm->id());
   
     return newelm;
   }

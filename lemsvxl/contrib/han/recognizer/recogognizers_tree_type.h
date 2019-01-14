@@ -1,41 +1,41 @@
-int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int>VC) 
+int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  std::vector <int>VC) 
 {
 
 
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   
   
 
   double R_HoC=0.0;
   
   
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
   
  ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
 
 
   vnl_vector <int>choice(VC.size());
- // vcl_cerr<<VC[0]<< " ";
+ // std::cerr<<VC[0]<< " ";
   int index=0;
   for (unsigned i=0;i<VC.size();i++) {
     int min=5000000;
@@ -48,24 +48,24 @@ int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int
         min_j=j;
       }
     }
-   // vcl_cerr<<min_j<<" ";
+   // std::cerr<<min_j<<" ";
     VC[min_j]=10000000;
     choice[min_j]=index;
     index++;
   }
 
  // for (unsigned i=0;i<choice.size();i++) 
-  //  vcl_cerr<<choice[i]<< " ";
- // vcl_cerr<<vcl_endl;
+  //  std::cerr<<choice[i]<< " ";
+ // std::cerr<<std::endl;
 
   float decision=999;
   
   for (unsigned Ci=0;Ci<14;Ci++) {
-  if (choice[Ci] ==0 &&x01/vcl_fabs(P(0,0)-P(7,0))>.20+V[0] && HoC-.9 < 4.0+V[1]) decision = 00;
+  if (choice[Ci] ==0 &&x01/std::fabs(P(0,0)-P(7,0))>.20+V[0] && HoC-.9 < 4.0+V[1]) decision = 00;
   // else if (HoC<4.4) decision=8;
-   if ( choice[Ci] ==1  && x01/vcl_fabs(P(0,0)-P(7,0))>.16+V[2] && HoC-.9 < 3.5+V[3]) decision = 01; // big offset 0 and 1
+   if ( choice[Ci] ==1  && x01/std::fabs(P(0,0)-P(7,0))>.16+V[2] && HoC-.9 < 3.5+V[3]) decision = 01; // big offset 0 and 1
    if ( choice[Ci] ==2  && HoC < 4.0+V[4]) decision = 02;                                    // small height
-   if ( choice[Ci] ==3  && (HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2+V[5]) decision = 03;           //height/length
+   if ( choice[Ci] ==3  && (HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2+V[5]) decision = 03;           //height/length
 
   //else if ((HoC-.9) < 4) decision = 04;
   //if (real_length<12) decision = 02;
@@ -75,7 +75,7 @@ int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int
 
   
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
    if ( choice[Ci] ==6  && P(7,2)>3.5&&HoC<4.5+V[8]) decision = 17;
   // else if ((P(7,2))/(HoC)>.6) decision = 18;
    if ( choice[Ci] ==7  && (P(7,2))/(HoC-.9)>.95+V[9]) decision = 19;
@@ -86,15 +86,15 @@ int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int
 
   // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
    if ( choice[Ci] ==8  && HoC>6.5+ V[20] /**added later :was typo **/) decision=25; //this is good
-  //else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+  //else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
    if ( choice[Ci] ==9  && (P(7,2))/(HoC-.9)>.75+V[10]&&HoC<6.0&&HoC>5+V[11]) decision = 16;
    if ( choice[Ci] ==10  && P(7,2)/HoC<.4 +V[12]&&HoC>6+V[13]) decision = 29; 
   //else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 
-   if ( choice[Ci] ==11  && (P(7,2))/(HoC-.9)>.65+V[14] && vcl_fabs(P(0,0)-P(7,0)+V[15])>12 ) decision = 16.1;
-   if ( choice[Ci] ==12  && x01/vcl_fabs(P(0,0)-P(7,0))>.20+V[16] && HoC-.9 < 4.5+V[17]) decision = 0.1;//위치와 순서와 값 매우 좋음...
-   if ( choice[Ci] ==13  && x01/vcl_fabs(P(0,0)-P(7,0))>.20 +V[18]&& HoC-.9 < 5.5+V[19]) decision = 0.2;//나쁨?
+   if ( choice[Ci] ==11  && (P(7,2))/(HoC-.9)>.65+V[14] && std::fabs(P(0,0)-P(7,0)+V[15])>12 ) decision = 16.1;
+   if ( choice[Ci] ==12  && x01/std::fabs(P(0,0)-P(7,0))>.20+V[16] && HoC-.9 < 4.5+V[17]) decision = 0.1;//위치와 순서와 값 매우 좋음...
+   if ( choice[Ci] ==13  && x01/std::fabs(P(0,0)-P(7,0))>.20 +V[18]&& HoC-.9 < 5.5+V[19]) decision = 0.2;//나쁨?
 
 
   //if (choice[Ci]==14) decision=10.1;
@@ -102,7 +102,7 @@ int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int
   }
   //decision=888;
   decision=10.1;
-  //vcl_cerr<<decision<<" ";
+  //std::cerr<<decision<<" ";
   return (decision);
 
 
@@ -119,9 +119,9 @@ int tree(vnl_matrix <double> P,double HoC, vnl_vector <float>V,  vcl_vector <int
 int recognizer(vnl_matrix <double> P,double HoC)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   double x,y,z;
 
   x=-179.21471; y= -25.48460;  z= 28.59190;  v(0)=x; v(1)=y; v(2)=z; C0.push_back(v);//cube_x=12.97000;  cube_y= 6.39340;  cube_z= 7.46310;             break;
@@ -159,133 +159,133 @@ int recognizer(vnl_matrix <double> P,double HoC)
 
   C.push_back(C0);C.push_back(C1);C.push_back(C2);
  
-  /*///##comented out 10-2-2006##/// vcl_cout<<"x01 distance :" ;
+  /*///##comented out 10-2-2006##/// std::cout<<"x01 distance :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<C[i][1][0]-C[i][0][0]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<C[i][1][0]-C[i][0][0]<<" ";
   }*/
 
   double R_HoC=0.0;
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"HoC :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<C[i][1][2]/12.0<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<C[i][1][2]/12.0<<" ";
   }
 
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"LEN :" ;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"LEN :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<vcl_fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<std::fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
   }
 
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x01_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
     CR_x01_07[i]=(C[i][1][0]-C[i][0][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x01_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<CR_x01_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x19_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
     CR_x19_07[i]=(C[i][9][0]-C[i][1][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x19_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<CR_x19_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x79_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_x79_07[i]=vcl_abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x79_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_x79_07[i]=std::abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
+    ///##comented out 10-2-2006##/// std::cout<<CR_x79_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
 
   double CR_z37_39[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"z37/z39 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"z37/z39 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_z37_39[i]=vcl_abs(C[i][7][2])/(C[i][9][2]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_z37_39[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_z37_39[i]=std::abs(C[i][7][2])/(C[i][9][2]);
+    ///##comented out 10-2-2006##/// std::cout<<CR_z37_39[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x07_z39[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"z39/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"z39/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_x07_z39[i]=vcl_abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x07_z39[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_x07_z39[i]=std::abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
+    ///##comented out 10-2-2006##/// std::cout<<CR_x07_z39[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<vcl_endl;
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"length: "<<real_length<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<std::endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  ///##comented out 10-2-2006##/// std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"length: "<<real_length<<std::endl;
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug//////##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  ///##comented out 10-2-2006##/// std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug//////##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
 
 
   int decision=999;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 00;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
+  if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 00;
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
   else if (HoC-.9 < 3.0) decision = 02;                                    // small height
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
   //if (real_length<12) decision = 02;
 
   else if (HoC-.9>5.9) decision = 23;  // if too high, van..
@@ -298,7 +298,7 @@ int recognizer(vnl_matrix <double> P,double HoC)
   /////////else if (P(3,2)<2.0&&P(2,2)<2.5) decision = 21;
 
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
  // if ((P(7,0)-.9)/(HoC-.9)>.5) decision = 19;
  // if ((P(7,0)-.9)/(HoC-.9)<.4) decision = 29;
  //// else if (P(7,2)/HoC>.5) decision = 19;
@@ -318,9 +318,9 @@ int recognizer(vnl_matrix <double> P,double HoC)
 int recognizer2(vnl_matrix <double> P,double HoC)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   double x,y,z;
 
   x=-179.21471; y= -25.48460;  z= 28.59190;  v(0)=x; v(1)=y; v(2)=z; C0.push_back(v);//cube_x=12.97000;  cube_y= 6.39340;  cube_z= 7.46310;             break;
@@ -358,135 +358,135 @@ int recognizer2(vnl_matrix <double> P,double HoC)
 
   C.push_back(C0);C.push_back(C1);C.push_back(C2);
  
-  /*///##comented out 10-2-2006##/// vcl_cout<<"x01 distance :" ;
+  /*///##comented out 10-2-2006##/// std::cout<<"x01 distance :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<C[i][1][0]-C[i][0][0]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<C[i][1][0]-C[i][0][0]<<" ";
   }*/
 
   double R_HoC=0.0;
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"HoC :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<C[i][1][2]/12.0<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<C[i][1][2]/12.0<<" ";
   }
 
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"LEN :" ;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"LEN :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    ///##comented out 10-2-2006##/// vcl_cout<<vcl_fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<std::fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
   }
 
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x01_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
     CR_x01_07[i]=(C[i][1][0]-C[i][0][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x01_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<CR_x01_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x19_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
     CR_x19_07[i]=(C[i][9][0]-C[i][1][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x19_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<CR_x19_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x79_07[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_x79_07[i]=vcl_abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x79_07[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_x79_07[i]=std::abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
+    ///##comented out 10-2-2006##/// std::cout<<CR_x79_07[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
 
   double CR_z37_39[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"z37/z39 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"z37/z39 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_z37_39[i]=vcl_abs(C[i][7][2])/(C[i][9][2]);
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_z37_39[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_z37_39[i]=std::abs(C[i][7][2])/(C[i][9][2]);
+    ///##comented out 10-2-2006##/// std::cout<<CR_z37_39[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
   double CR_x07_z39[3];
-  ///##comented out 10-2-2006##/// vcl_cout<<"z39/x07 ratio  :" ;
+  ///##comented out 10-2-2006##/// std::cout<<"z39/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    ///##comented out 10-2-2006##/// vcl_cout<<i<<":" ;
-    CR_x07_z39[i]=vcl_abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
-    ///##comented out 10-2-2006##/// vcl_cout<<CR_x07_z39[i]<<" ";
+    ///##comented out 10-2-2006##/// std::cout<<i<<":" ;
+    CR_x07_z39[i]=std::abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
+    ///##comented out 10-2-2006##/// std::cout<<CR_x07_z39[i]<<" ";
   }
-  ///##comented out 10-2-2006##/// vcl_cout<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<vcl_endl;
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"length: "<<real_length<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<std::endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  ///##comented out 10-2-2006##/// std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"length: "<<real_length<<std::endl;
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug//////##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  ///##comented out 10-2-2006##/// std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug//////##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
 
 
   int decision=999;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 00;
  // else if (HoC<4.4) decision=8;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
   else if (HoC < 4.0) decision = 02;                                    // small height
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
 
   //else if ((HoC-.9) < 4) decision = 04;
   //if (real_length<12) decision = 02;
@@ -500,7 +500,7 @@ int recognizer2(vnl_matrix <double> P,double HoC)
   /////////else if (P(3,2)<2.0&&P(2,2)<2.5) decision = 21;
 
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
    else if (P(7,2)>3.5&&HoC<4.5) decision = 17;
  // else if ((P(7,2))/(HoC)>.6) decision = 18;
   else if ((P(7,2))/(HoC-.9)>.95) decision = 19;
@@ -511,7 +511,7 @@ int recognizer2(vnl_matrix <double> P,double HoC)
 
 // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
  else if (HoC>6.5) decision=25; //this is good
- else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+ else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
    else if ((P(7,2))/(HoC-.9)>.75&&HoC<6.0) decision = 16;
 else if (P(7,2)/HoC<.4 &&HoC>5.5) decision = 29; 
@@ -529,58 +529,58 @@ else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 float recognizer3(vnl_matrix <double> P,double HoC)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   
   
 
   double R_HoC=0.0;
   
   
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"length: "<<real_length<<vcl_endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  ///##comented out 10-2-2006##/// std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"length: "<<real_length<<std::endl;
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug//////##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  ///##comented out 10-2-2006##/// std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug//////##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
 
 
   float decision=999;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
   // else if (HoC<4.4) decision=8;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
   else if (HoC < 4.0) decision = 02;                                    // small height
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2) decision = 03;           //height/length
 
   //else if ((HoC-.9) < 4) decision = 04;
   //if (real_length<12) decision = 02;
@@ -594,7 +594,7 @@ float recognizer3(vnl_matrix <double> P,double HoC)
   /////////else if (P(3,2)<2.0&&P(2,2)<2.5) decision = 21;
 
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
   else if (P(7,2)>3.5&&HoC<4.5) decision = 17;
   // else if ((P(7,2))/(HoC)>.6) decision = 18;
   else if ((P(7,2))/(HoC-.9)>.95) decision = 19;
@@ -605,15 +605,15 @@ float recognizer3(vnl_matrix <double> P,double HoC)
 
   // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
   else if (HoC>6.5) decision=25; //this is good
-  //else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+  //else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
   else if ((P(7,2))/(HoC-.9)>.75&&HoC<6.0&&HoC>5) decision = 16;
   else if (P(7,2)/HoC<.4 &&HoC>6) decision = 29; 
   //else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 
-  else if ((P(7,2))/(HoC-.9)>.65 && vcl_fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
-else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
-else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
+  else if ((P(7,2))/(HoC-.9)>.65 && std::fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
+else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
+else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
 
 
   else decision=10.1;
@@ -629,47 +629,47 @@ else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
 float recognizer4(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   
   
 
   double R_HoC=0.0;
   
   
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"length: "<<real_length<<vcl_endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  ///##comented out 10-2-2006##/// std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"length: "<<real_length<<std::endl;
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug//////##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  ///##comented out 10-2-2006##/// std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug//////##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
@@ -677,15 +677,15 @@ float recognizer4(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 
   float decision=999;
 
-  //**//if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>V[0] && HoC-.9 < V[1]) decision = 00;
+  //**//if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>V[0] && HoC-.9 < V[1]) decision = 00;
 
-  //**//else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>V[2] && HoC-.9 < V[3]) decision = 01; // big offset 0 and 1
+  //**//else if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
+  else if (x01/std::fabs(P(0,0)-P(7,0))>V[2] && HoC-.9 < V[3]) decision = 01; // big offset 0 and 1
   
   else if (HoC < V[4]/*4.0*/) decision = 02;                                    // small height
   
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < V[5]/*.2*/) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < V[5]/*.2*/) decision = 03;           //height/length
 
 
   else if (HoC>V[6]/*7*/) decision = 28; 
@@ -707,15 +707,15 @@ float recognizer4(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 
   // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
   else if (HoC>6.5) decision=25; //this is good
-  //else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+  //else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
   else if ((P(7,2))/(HoC-.9)>.75&&HoC<6.0&&HoC>5) decision = 16;
   else if (P(7,2)/HoC<.4 &&HoC>6) decision = 29; 
   //else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 
-  else if ((P(7,2))/(HoC-.9)>.65 && vcl_fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
-  //else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
+  else if ((P(7,2))/(HoC-.9)>.65 && std::fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
+  //else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
 
 
   else decision=10.1;
@@ -732,58 +732,58 @@ float recognizer4(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 float recognizer_RG(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   
   
 
   double R_HoC=0.0;
   
   
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  ///##comented out 10-2-2006##/// vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"length: "<<real_length<<vcl_endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  ///##comented out 10-2-2006##/// std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"length: "<<real_length<<std::endl;
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug//////##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  ///##comented out 10-2-2006##/// vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  ///##comented out 10-2-2006##/// std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug//////##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  ///##comented out 10-2-2006##/// vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  ///##comented out 10-2-2006##/// std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
- // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+ // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
 
 
   float decision=999;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.20+V[0] && HoC-.9 < 4.0+V[1]) decision = 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>.20+V[0] && HoC-.9 < 4.0+V[1]) decision = 00;
   // else if (HoC<4.4) decision=8;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16+V[2] && HoC-.9 < 3.5+V[3]) decision = 01; // big offset 0 and 1
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.16+V[2] && HoC-.9 < 3.5+V[3]) decision = 01; // big offset 0 and 1
   else if (HoC < 4.0+V[4]) decision = 02;                                    // small height
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2+V[5]) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2+V[5]) decision = 03;           //height/length
 
   //else if ((HoC-.9) < 4) decision = 04;
   //if (real_length<12) decision = 02;
@@ -797,7 +797,7 @@ float recognizer_RG(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
   /////////else if (P(3,2)<2.0&&P(2,2)<2.5) decision = 21;
 
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) decision = 05;
   else if (P(7,2)>3.5&&HoC<4.5+V[8]) decision = 17;
   // else if ((P(7,2))/(HoC)>.6) decision = 18;
   else if ((P(7,2))/(HoC-.9)>.95+V[9]) decision = 19;
@@ -808,15 +808,15 @@ float recognizer_RG(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 
   // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
   else if (HoC>6.5+   V[20]   ) decision=25; //this is good
-  //else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+  //else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
   else if ((P(7,2))/(HoC-.9)>.75+V[10]&&HoC<6.0&&HoC>5+V[11]) decision = 16;
   else if (P(7,2)/HoC<.4 +V[12]&&HoC>6+V[13]) decision = 29; 
   //else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 
-  else if ((P(7,2))/(HoC-.9)>.65+V[14] && vcl_fabs(P(0,0)-P(7,0)+V[15])>12 ) decision = 16.1;
-else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20+V[16] && HoC-.9 < 4.5+V[17]) decision = 0.1;//위치와 순서와 값 매우 좋음...
-else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 +V[18]&& HoC-.9 < 5.5+V[19]) decision = 0.2;//나쁨?
+  else if ((P(7,2))/(HoC-.9)>.65+V[14] && std::fabs(P(0,0)-P(7,0)+V[15])>12 ) decision = 16.1;
+else if (x01/std::fabs(P(0,0)-P(7,0))>.20+V[16] && HoC-.9 < 4.5+V[17]) decision = 0.1;//위치와 순서와 값 매우 좋음...
+else if (x01/std::fabs(P(0,0)-P(7,0))>.20 +V[18]&& HoC-.9 < 5.5+V[19]) decision = 0.2;//나쁨?
 
 
   else decision=10.1;
@@ -839,57 +839,57 @@ float recognizer052307(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
   bool show=true;
 
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <std::vector <vnl_vector <double> > >C;
  
 
   double R_HoC=0.0;
   
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
 
-  if (show)  vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  if (show)  vcl_cout<<"length: "<<real_length<<vcl_endl;
+  if (show)  std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  if (show)  std::cout<<"length: "<<real_length<<std::endl;
 
-  if (show)  vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  if (show)  vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  if (show)  vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  if (show)  vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug///if (show)  vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  if (show)  vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
+  if (show)  std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  if (show)  std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  if (show)  std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  if (show)  std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug///if (show)  std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  if (show)  std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
-  if (show)  vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  if (show)  std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
-  vcl_cout<<"recognizer"<<vcl_endl;
-  vcl_cout<<HoC<<vcl_endl;                         ///*******
-  vcl_cout<<P<<vcl_endl;                           ///*******
-  //vcl_cout<<P(7,0)<<vcl_endl;                    ///*******
-  // vcl_cout<<P(9,0)<<vcl_endl;                    ///*******
-  vcl_cout<<x01<<" "     ;                         ///*******
-  vcl_cout<<x07<<" "     ;                         ///*******
-  vcl_cout<<x79<<vcl_endl;                         ///*******
-  vcl_cout<<x01/vcl_fabs(P(0,0)-P(7,0))<<" ";      ///*******
-  vcl_cout<<P(7,2)/HoC<<vcl_endl;                  ///*******
-  vcl_cout<<"======"<<vcl_endl;                  ///*******
+  std::cout<<"recognizer"<<std::endl;
+  std::cout<<HoC<<std::endl;                         ///*******
+  std::cout<<P<<std::endl;                           ///*******
+  //std::cout<<P(7,0)<<std::endl;                    ///*******
+  // std::cout<<P(9,0)<<std::endl;                    ///*******
+  std::cout<<x01<<" "     ;                         ///*******
+  std::cout<<x07<<" "     ;                         ///*******
+  std::cout<<x79<<std::endl;                         ///*******
+  std::cout<<x01/std::fabs(P(0,0)-P(7,0))<<" ";      ///*******
+  std::cout<<P(7,2)/HoC<<std::endl;                  ///*******
+  std::cout<<"======"<<std::endl;                  ///*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
   ////////////////////////////////////////////////////*******
 
   float decision=999;
-  //**//if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>V[0] && HoC-.9 < V[1]) decision = 00;
+  //**//if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.0) decision = 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>V[0] && HoC-.9 < V[1]) decision = 00;
 
-  //**//else if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>V[2] && HoC-.9 < V[3]) decision = 01; // big offset 0 and 1
+  //**//else if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) decision = 01; // big offset 0 and 1
+  else if (x01/std::fabs(P(0,0)-P(7,0))>V[2] && HoC-.9 < V[3]) decision = 01; // big offset 0 and 1
   
   else if (HoC < V[4]/*4.0*/) decision = 02;                                    // small height
   
-  else if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < V[5]/*.2*/) decision = 03;           //height/length
+  else if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < V[5]/*.2*/) decision = 03;           //height/length
 
 
   else if (HoC>V[6]/*7*/) decision = 28; 
@@ -911,15 +911,15 @@ float recognizer052307(vnl_matrix <double> P,double HoC,vnl_vector <float> V)
 
   // else if (P(3,2)<1.0) decision = 20;  //  rear botom low mini van
   else if (HoC>6.5) decision=25; //this is good
-  //else if (x07/vcl_fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
+  //else if (x07/std::fabs(P(0,0)-P(7,0))<.2 && HoC> 5.5) decision = 27;//bad 11-1-2006
 
   else if ((P(7,2))/(HoC-.9)>.75&&HoC<6.0&&HoC>5) decision = 16;
   else if (P(7,2)/HoC<.4 &&HoC>6) decision = 29; 
   //else if (P(3,2)>2.2) decision = 10;  // rear botom high suv
 
-  else if ((P(7,2))/(HoC-.9)>.65 && vcl_fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
-  else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
-  //else if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
+  else if ((P(7,2))/(HoC-.9)>.65 && std::fabs(P(0,0)-P(7,0))>12 ) decision = 16.1;
+  else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) decision = 0.1;//위치와 순서와 값 매우 좋음...
+  //else if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 5.5) decision = 0.2;//나쁨?
 
 
   else decision=10.1;

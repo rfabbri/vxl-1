@@ -7,7 +7,7 @@
 
 //: Constructor
 bcdg_hypothel::bcdg_hypothel( const vgl_point_3d<double>& p, 
-                              const vcl_vector< dbecl_episeg_sptr > & v,
+                              const std::vector< dbecl_episeg_sptr > & v,
                               double cost) :
   _point_3d(p),
   _curves_2d(v),

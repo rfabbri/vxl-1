@@ -3,7 +3,7 @@
 #include "basegui_allbitmaps.h"
 #include "basegui_printer.h"
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 BaseWindow*    basePluginWnd;
 
@@ -39,7 +39,7 @@ END_EVENT_TABLE()
     // BaseWindow
     // ---------------------------------------------------------------------------
 
-    BaseWindow::BaseWindow(MainGUIWindow *parent, const vcl_string& title_,
+    BaseWindow::BaseWindow(MainGUIWindow *parent, const std::string& title_,
             BasePlugin* plugin)
     : wxMDIChildFrame((wxMDIParentFrame*)parent, -1, 
             wxString(title_.c_str()), 
@@ -129,9 +129,9 @@ BaseWindow::~BaseWindow()
     delete _popupMenu;
    }
 
-void BaseWindow::load(const vcl_string& filename)
+void BaseWindow::load(const std::string& filename)
   {
-    vcl_cout<<" BaseWindow:: Load:"<<filename<<vcl_endl;
+    std::cout<<" BaseWindow:: Load:"<<filename<<std::endl;
    }
 
 void BaseWindow::load(){}
@@ -231,7 +231,7 @@ void BaseWindow::addCustomToolstoToolbar()
 
 int BaseWindow::processCommandLine(int argc, const char* const* argv)
   {
-    vcl_cout<<" ERROR: The plugin you are using does not override the \"processCommandLine(int const char* const*)\" function !"<<vcl_endl;
+    std::cout<<" ERROR: The plugin you are using does not override the \"processCommandLine(int const char* const*)\" function !"<<std::endl;
     return 0;
    }
 
@@ -290,7 +290,7 @@ void BaseWindow::OnCustomMenu(wxCommandEvent& event) {
  }
 
 void BaseWindow::menuItemSelected(wxCommandEvent &evt) {
-      //cerr << "BaseWindow::menuItemSelected " << evt.GetId() << vcl_endl;
+      //cerr << "BaseWindow::menuItemSelected " << evt.GetId() << std::endl;
  }
 
 void BaseWindow::OnCloseChild(wxCommandEvent& WXUNUSED(event))
@@ -331,11 +331,11 @@ void BaseWindow::OnZoom(wxCommandEvent& WXUNUSED(event))
         return;
 
     float ratio;
-    vcl_stringstream strm(res.c_str());
+    std::stringstream strm(res.c_str());
     if((strm >> ratio) && ratio != (float)0){
           zoom(ratio);
 
-          vcl_ostringstream vcl_ostrm;
+          std::ostringstream vcl_ostrm;
           vcl_ostrm << "Scale Factor: " << view()->getScaleFactor();
           GDebugDisplayer.status(vcl_ostrm.str());
      }
@@ -345,7 +345,7 @@ void BaseWindow::OnZoomIn(wxCommandEvent& WXUNUSED(event))
   {
     zoom((float)1.1);
 
-    vcl_ostringstream vcl_ostrm;
+    std::ostringstream vcl_ostrm;
     vcl_ostrm << "Scale Factor: " << view()->getScaleFactor();
     GDebugDisplayer.status(vcl_ostrm.str());
    }
@@ -354,7 +354,7 @@ void BaseWindow::OnZoomOut(wxCommandEvent& WXUNUSED(event))
   {
     zoom(1/(float)1.1);
 
-    vcl_ostringstream vcl_ostrm;
+    std::ostringstream vcl_ostrm;
     vcl_ostrm << "Scale Factor: " << view()->getScaleFactor();
     GDebugDisplayer.status(vcl_ostrm.str());
    }
@@ -495,7 +495,7 @@ void BaseWindow::OntoggleAutoHighlight()
         // Set the color back to normal for the previously selected objects
         if(_prevHits.size()>0)
           {
-            vcl_vector<GraphicsNode*>::iterator it;
+            std::vector<GraphicsNode*>::iterator it;
             it = _prevHits.begin();
             for (; it != _prevHits.end(); ++it) 
               {
@@ -611,12 +611,12 @@ void BaseWindow::charUp(wxKeyEvent &evt)
 //                HIT TEST HANDLERS
 //###########################################################
 
-int BaseWindow::_hitTest (vcl_vector<HitRecord>& hits_, Point2D<double>& pos_) 
+int BaseWindow::_hitTest (std::vector<HitRecord>& hits_, Point2D<double>& pos_) 
   {
     return  view()->hitTest(hits_,pos_,5);
    }
 
-int BaseWindow::_hitTest(vcl_vector<HitRecord> &hits_,
+int BaseWindow::_hitTest(std::vector<HitRecord> &hits_,
       const Point2D<double> topLeft, const Point2D<double>bottomRight)
 {
   return view()->hitTest(hits_, topLeft, bottomRight);
@@ -625,7 +625,7 @@ int BaseWindow::_hitTest(vcl_vector<HitRecord> &hits_,
 void BaseWindow::HighlightSelected(wxMouseEvent& event) 
   {
     Point2D<double> mouse_position(event.GetX(),event.GetY());
-    vcl_vector<HitRecord> hits;
+    std::vector<HitRecord> hits;
     bool dirty=false;
 
     _hitTest(hits,mouse_position);
@@ -633,7 +633,7 @@ void BaseWindow::HighlightSelected(wxMouseEvent& event)
     // Set the color back to normal for the previously selected objects
     if(_prevHits.size()>0)
       {
-        vcl_vector<GraphicsNode*>::iterator it;
+        std::vector<GraphicsNode*>::iterator it;
         it = _prevHits.begin();
         for (; it != _prevHits.end(); ++it) 
           {
@@ -647,7 +647,7 @@ void BaseWindow::HighlightSelected(wxMouseEvent& event)
     // Set the color to RED for the newly selected objects
     if(hits.size()>0)
       {
-        vcl_vector<HitRecord>::iterator it;
+        std::vector<HitRecord>::iterator it;
         it = hits.begin();
         for (; it != hits.end(); ++it) 
           {
@@ -666,20 +666,20 @@ void BaseWindow::HighlightSelected(wxMouseEvent& event)
 
 void BaseWindow::displayDebugInfo(wxMouseEvent& event)
   {
-    vcl_ostringstream vcl_ostrm;
+    std::ostringstream vcl_ostrm;
 
     Point2D<double> mouse_position(event.GetX(),event.GetY());
 
-    vcl_vector<HitRecord> hits;
+    std::vector<HitRecord> hits;
     if(_hitTest(hits,mouse_position)==0)
         return;
 
     Point2D<double> pos = view()->unproject(Point2D<double>(event.GetX(), event.GetY()));
     vcl_ostrm << " Position = "<<pos<<" \n\n";
-    for (vcl_vector<HitRecord>::iterator it = hits.begin(); it != hits.end(); ++it) 
+    for (std::vector<HitRecord>::iterator it = hits.begin(); it != hits.end(); ++it) 
       {
         GraphicsNode *hitObj=it->hit_object;
-        vcl_string information;
+        std::string information;
 
         if (hitObj)
           {
@@ -701,7 +701,7 @@ void BaseWindow::displayDebugInfo(wxMouseEvent& event)
    }
 void BaseWindow::displayCurrentInfo (wxMouseEvent &event)
   {
-    vcl_ostringstream vcl_ostrm;
+    std::ostringstream vcl_ostrm;
     vcl_ostrm.precision (14);
     Point2D<double> mouse_pos (event.GetX(),event.GetY());
     
@@ -776,12 +776,12 @@ void BaseWindow::zoom(float ratio)
 
 
 
-void BaseWindow::setTitle(vcl_string title)
+void BaseWindow::setTitle(std::string title)
   {
     SetTitle(wxString(title.c_str()));
    }
 
-vcl_string BaseWindow::getTitle(void)
+std::string BaseWindow::getTitle(void)
   {
-    return vcl_string(GetTitle());
+    return std::string(GetTitle());
    }

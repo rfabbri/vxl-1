@@ -8,8 +8,8 @@
 // \date 8/29/06
 //
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgl/vgl_point_3d.h>
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
@@ -27,20 +27,20 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
 
 protected:
 
-  vcl_vector< vpgl_proj_camera<double> > computed_cameras;
+  std::vector< vpgl_proj_camera<double> > computed_cameras;
 
 
 private:

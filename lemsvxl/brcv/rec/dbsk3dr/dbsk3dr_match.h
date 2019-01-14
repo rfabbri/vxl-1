@@ -6,7 +6,7 @@
 #ifndef dbsk3dr_match_h_
 #define dbsk3dr_match_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -26,11 +26,11 @@ protected:
   dbasnh_gradasgn_aug*    ga_match_;
 
   //: map storing the mapping of <nid, sid> for G and g.
-  vcl_map<int, int>       G_sid_;
-  vcl_map<int, int>       g_sid_;
+  std::map<int, int>       G_sid_;
+  std::map<int, int>       g_sid_;
   //: map storing the mapping of <sid, nid> for G and g.
-  vcl_map<int, int>       G_nid_;
-  vcl_map<int, int>       g_nid_;
+  std::map<int, int>       G_nid_;
+  std::map<int, int>       g_nid_;
 
   //: the centroids and rotation matrix R for rigid transformation of registration.
   vnl_matrix_fixed<double,3,3> R_; 
@@ -86,7 +86,7 @@ public:
   int G_sid (const int nid) {
     if (nid==-1)
       return -1;
-    vcl_map<int, int>::iterator it = G_sid_.find (nid);
+    std::map<int, int>::iterator it = G_sid_.find (nid);
     assert (it != G_sid_.end());
     return (*it).second;
   }
@@ -96,20 +96,20 @@ public:
   }
 
   void G_add_ga_node (dbasn_node* GN, const int sid) {
-    G_sid_.insert (vcl_pair<int, int> (GN->nid(), sid));
-    G_nid_.insert (vcl_pair<int, int> (sid, GN->nid()));
+    G_sid_.insert (std::pair<int, int> (GN->nid(), sid));
+    G_nid_.insert (std::pair<int, int> (sid, GN->nid()));
     ga_hypg_G()->_add_node (GN);
   }
   void g_add_ga_node (dbasn_node* GN, const int sid) {
-    g_sid_.insert (vcl_pair<int, int> (GN->nid(), sid));
-    g_nid_.insert (vcl_pair<int, int> (sid, GN->nid()));
+    g_sid_.insert (std::pair<int, int> (GN->nid(), sid));
+    g_nid_.insert (std::pair<int, int> (sid, GN->nid()));
     ga_hypg_g()->_add_node (GN);
   }
   
   int g_sid (const int nid) {
     if (nid==-1)
       return -1;
-    vcl_map<int, int>::iterator it = g_sid_.find (nid);
+    std::map<int, int>::iterator it = g_sid_.find (nid);
     assert (it != g_sid_.end());
     return (*it).second;
   }
@@ -119,12 +119,12 @@ public:
   }
   
   int G_nid (const int sid) {
-    vcl_map<int, int>::iterator it = G_nid_.find (sid);
+    std::map<int, int>::iterator it = G_nid_.find (sid);
     assert (it != G_nid_.end());
     return (*it).second;
   }
   int g_nid (const int sid) {
-    vcl_map<int, int>::iterator it = g_nid_.find (sid);
+    std::map<int, int>::iterator it = g_nid_.find (sid);
     assert (it != g_nid_.end());
     return (*it).second;
   }
@@ -183,7 +183,7 @@ public:
   //option 1 : test 3d curve matching.
   //option 2 : test 3d shock curve matching.
   void test_mc_dp_match (const int option, const int cid1, const int cid2, const bool flip,
-                         vcl_vector< vcl_pair<int,int> >& alignment);
+                         std::vector< std::pair<int,int> >& alignment);
 
   //###### Query functions after shock matching ######
 
@@ -203,9 +203,9 @@ public:
   void get_rigid_xform_matrices (const bool node_only = true, const int verbose = 1);
 
   double get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_curve* C2, 
-                                      vcl_vector< vcl_pair<int,int> >& alignment,
-                                      vcl_vector<vgl_point_3d<double> >& cor_movPS, 
-                                      vcl_vector<vgl_point_3d<double> >& cor_fixPS);
+                                      std::vector< std::pair<int,int> >& alignment,
+                                      std::vector<vgl_point_3d<double> >& cor_movPS, 
+                                      std::vector<vgl_point_3d<double> >& cor_fixPS);
 
   void transform_scaffold_graph_1_to_2 ();
   void transform_point_G_1_to_2 (dbmsh3d_mesh* M);

@@ -21,7 +21,7 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_context &c){}
 void vsl_b_read(vsl_b_istream & is, dbrec3d_context *c){}
 
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_context &c){ return os; }
+std::ostream& operator << (std::ostream& os, const dbrec3d_context &c){ return os; }
 
 /*************** XML IO *************************************/
 
@@ -36,7 +36,7 @@ dbrec3d_context_sptr dbrec3d_context_parse_xml_element(bxml_data_sptr d)
   bxml_element* root_elm = dynamic_cast<bxml_element*>(root.ptr());
   
   //get the variables
-  vcl_string scene_path = "", scene_file = "";
+  std::string scene_path = "", scene_file = "";
   bool exclusive = false;
   int hierarchy_level = -1, part_id = -1;
   root_elm->get_attribute("scene_file", scene_file);
@@ -67,7 +67,7 @@ dbrec3d_context_sptr dbrec3d_context_parse_xml_element(bxml_data_sptr d)
     
   }
   else {
-    vcl_cerr << "dbrec3d_create_scene_process: undefined datatype\n";
+    std::cerr << "dbrec3d_create_scene_process: undefined datatype\n";
     return NULL;
   }  
   

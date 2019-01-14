@@ -17,7 +17,7 @@ dbsksp_save_xgraph_xml_process()
     "-xmlfile", bpro1_filepath("",".xml") )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -38,27 +38,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_save_xgraph_xml_process::
+std::string dbsksp_save_xgraph_xml_process::
 name()
 { 
   return "Save xgraph XML"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_save_xgraph_xml_process::
+std::vector< std::string > dbsksp_save_xgraph_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_save_xgraph_xml_process::
+std::vector< std::string > dbsksp_save_xgraph_xml_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -83,7 +83,7 @@ bool dbsksp_save_xgraph_xml_process::
 execute()
 {
   if ( this->input_data_.size() != 1 ){
-    vcl_cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
+    std::cerr << "ERROR: executing " __FILE__ "not exactly one input frame.\n";
     return false;
   }
 
@@ -96,14 +96,14 @@ execute()
   shock_storage.vertical_cast(input_data_[0][0]);
 
   // save to file
-  vcl_cout << "\nSaving xgraph to file: " << xmlfile.path << "...";
+  std::cout << "\nSaving xgraph to file: " << xmlfile.path << "...";
   if (shock_storage->xgraph() && x_write(xmlfile.path, shock_storage->xgraph()))
   {
-    vcl_cout << "[ OK ].\n";
+    std::cout << "[ OK ].\n";
   }
   else
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
   };
   
   this->clear_output();

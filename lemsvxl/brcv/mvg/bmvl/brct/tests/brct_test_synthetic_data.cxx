@@ -1,8 +1,8 @@
 // This is brl/bmvl/brct/tests/brct_test_synthetic_data.cxx
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
 #include <testlib/testlib_test.h>
 #include <vil1/vil1_save.h>
 #include <vil1/vil1_memory_image_of.h>
@@ -39,7 +39,7 @@ static vsol_point_2d_sptr project_point(vnl_double_3x4 const& P, const double x,
 {
   vnl_double_4 X(x,y,z,1);
   vnl_double_3 p = P*X;
-  if (vcl_fabs(p[2])<1e-06)
+  if (std::fabs(p[2])<1e-06)
     return 0;
   double u = p[0]/p[2], v = p[1]/p[2];
   return new vsol_point_2d(u, v);
@@ -47,31 +47,31 @@ static vsol_point_2d_sptr project_point(vnl_double_3x4 const& P, const double x,
 
 static void
 generate_tracks(vnl_double_3x4 const& P,
-                vcl_vector<vcl_vector<vdgl_digital_curve_sptr> >& tracks)
+                std::vector<std::vector<vdgl_digital_curve_sptr> >& tracks)
 {
   double delta = 1.0;
   double ymin = 2, ymax = 4;
-  vcl_vector<vdgl_digital_curve_sptr> track1, track2;
+  std::vector<vdgl_digital_curve_sptr> track1, track2;
   double t1min=-7, t1max = 5;
-  vcl_cout << "Track1\n";
+  std::cout << "Track1\n";
   for (double t1 = t1min; t1<=t1max; t1+=delta)
   {
     double xs=x1(t1), ys=ymin, zs=z1(t1);
     double xe=xs, ye=ymax, ze=zs;
-    vcl_cout << "Xs(" << xs << ' ' << ys << ' ' << zs << ")\n";
+    std::cout << "Xs(" << xs << ' ' << ys << ' ' << zs << ")\n";
     vsol_point_2d_sptr ps = project_point(P, xs, ys, zs);
     vsol_point_2d_sptr pe = project_point(P, xe, ye, ze);
     vdgl_digital_curve_sptr c = new vdgl_digital_curve(ps, pe);
     track1.push_back(c);
   }
   tracks.push_back(track1);
-  vcl_cout << "\n\n Track2\n";
+  std::cout << "\n\n Track2\n";
   double t2min=-9, t2max = 2;
   for (double t2 = t2min; t2<=t2max; t2+=delta)
   {
     double xs=x2(t2), ys=ymin, zs=z2(t2);
     double xe=xs, ye=ymax, ze=zs;
-    vcl_cout << "Xs(" << xs << ' ' << ys << ' ' << zs << ")\n";
+    std::cout << "Xs(" << xs << ' ' << ys << ' ' << zs << ")\n";
     vsol_point_2d_sptr ps = project_point(P, xs, ys, zs);
     vsol_point_2d_sptr pe = project_point(P, xe, ye, ze);
     vdgl_digital_curve_sptr c = new vdgl_digital_curve(ps, pe);
@@ -95,11 +95,11 @@ static vnl_double_3x4 generate_P(vnl_double_3x3 const & K)
 }
 
 static void
-write_track_to_image(vcl_vector<vdgl_digital_curve_sptr> const& track,
+write_track_to_image(std::vector<vdgl_digital_curve_sptr> const& track,
                      vil1_memory_image_of<unsigned char>& image)
 {
   int w = image.width(), h = image.height();
-  for (vcl_vector<vdgl_digital_curve_sptr>::const_iterator cit = track.begin();
+  for (std::vector<vdgl_digital_curve_sptr>::const_iterator cit = track.begin();
       cit != track.end(); cit++)
   {
     vdgl_digital_curve_sptr dc = (*cit);
@@ -119,14 +119,14 @@ write_track_to_image(vcl_vector<vdgl_digital_curve_sptr> const& track,
 }
 
 static void
-write_track_to_file(vcl_vector<vdgl_digital_curve_sptr> const& track,
-                    vcl_string const & file)
+write_track_to_file(std::vector<vdgl_digital_curve_sptr> const& track,
+                    std::string const & file)
 {
-  vcl_ofstream str(file.c_str());
+  std::ofstream str(file.c_str());
   if (!str)
     return;
   str << "CURVE\n";
-  for (vcl_vector<vdgl_digital_curve_sptr>::const_iterator cit = track.begin();
+  for (std::vector<vdgl_digital_curve_sptr>::const_iterator cit = track.begin();
        cit != track.end(); cit++)
   {
     vdgl_digital_curve_sptr dc = (*cit);
@@ -149,14 +149,14 @@ write_track_to_file(vcl_vector<vdgl_digital_curve_sptr> const& track,
 
 static void brct_test_synthetic_data(int argc, char * argv[])
 {
-  vcl_string path = argc<2 ? vcl_string("") : vcl_string(argv[1]) + "/";
+  std::string path = argc<2 ? std::string("") : std::string(argv[1]) + "/";
   int success=0, failures=0;
   brct_epi_reconstructor kf;
   vnl_double_3x4 P = generate_P(generate_K());
-  vcl_vector<vcl_vector<vdgl_digital_curve_sptr> > tracks;
+  std::vector<std::vector<vdgl_digital_curve_sptr> > tracks;
   generate_tracks(P, tracks);
   vil1_memory_image_of<unsigned char> track_image(1024, 768);
-  for (vcl_vector<vcl_vector<vdgl_digital_curve_sptr> >::iterator trit =
+  for (std::vector<std::vector<vdgl_digital_curve_sptr> >::iterator trit =
        tracks.begin(); trit != tracks.end(); trit++)
   {
     kf.add_track(*trit);
@@ -166,7 +166,7 @@ static void brct_test_synthetic_data(int argc, char * argv[])
   write_track_to_file(tracks[0], path+"track0.txt");
   write_track_to_file(tracks[1], path+"track1.txt");
 
-  vcl_cout << "Test Summary: " << success << " tests succeeded, "
+  std::cout << "Test Summary: " << success << " tests succeeded, "
            << failures << " tests failed" << (failures?"\t***\n":"\n");
 }
 

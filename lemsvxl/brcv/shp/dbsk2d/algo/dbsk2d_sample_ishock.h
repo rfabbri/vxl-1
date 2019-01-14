@@ -16,7 +16,7 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
+#include <map>
 
 #include <dbsk2d/dbsk2d_ishock_node.h>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
@@ -39,7 +39,7 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 
 //useful typedefs
-typedef vcl_list<dbsk2d_xshock_sample_sptr> sample_list;
+typedef std::list<dbsk2d_xshock_sample_sptr> sample_list;
 
 //: This class contains the algorithm to sample the coarse shock graph
 //  into an extrinsic shock graph
@@ -51,27 +51,27 @@ protected:
   dbsk2d_shock_graph_sptr xshock_graph; ///< The sample extrinsic shock graph
 
   //: mapping from node/edge ids to the connected component labels
-  vcl_map<int, int> cc_label_map;
+  std::map<int, int> cc_label_map;
 
   //: mapping from a connected component label to the vector of node/edges that
   //  belong to the component
-  vcl_map<int, vcl_vector<int> > cc_elms;
+  std::map<int, std::vector<int> > cc_elms;
 
   //: largest connected component: defined to be the inside shock graph
   int largest_component_id;
 
   //: mapping from node ids to the nodes of the extrinsic shock graph
-  vcl_map<int, dbsk2d_shock_node_sptr> nodes_map;
+  std::map<int, dbsk2d_shock_node_sptr> nodes_map;
 
   //: mapping from edge ids to the edges of the extrinsic shock graph
-  vcl_map<int, dbsk2d_shock_edge_sptr> edges_map;
+  std::map<int, dbsk2d_shock_edge_sptr> edges_map;
 
   int next_available_sample_id; ///< next available id for a shock sample
 
   double delta_sample; ///< sampling resolution
 
   //: mapping of intrinsinc shock id to edges
-  vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map_;
+  std::map<int,std::vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map_;
 
 public:
   //: Constructor
@@ -120,7 +120,7 @@ public:
   void add_edge_adjacency_info(int option);
 
   //: Get ishock samples map
-  vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >& get_ishock_samples()
+  std::map<int,std::vector<dbsk2d_xshock_sample_sptr> >& get_ishock_samples()
   {return ishock_sample_map_;}
 
 };

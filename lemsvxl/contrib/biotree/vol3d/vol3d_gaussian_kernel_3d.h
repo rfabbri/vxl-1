@@ -11,7 +11,7 @@
 // \author  Gamze D. Tunali
 // \date    2006-05-01
 // 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_box_3d.h> 
 #include <vgl/vgl_point_3d.h> 
 #include <vnl/vnl_quaternion.h>
@@ -45,7 +45,7 @@ public:
   //: direction of the filter
   vgl_vector_3d<double> dir() { return dir_;}
 
-  void print(vcl_ostream& os);
+  void print(std::ostream& os);
 
    //: returns the rotation quaternion from (0, 0, 1) to the filter direction
   vnl_quaternion<double> get_rotation();
@@ -56,7 +56,7 @@ protected:
   double sigma_r_;
   double sigma_z_;
   vgl_vector_3d<double> dir_;
-  vcl_vector<double> field_;
+  std::vector<double> field_;
 
 private:
   //: filter value at a given 3D point
@@ -64,6 +64,6 @@ private:
  
 };
 
-void x_write(vcl_ostream& os, vol3d_gaussian_kernel_3d kernel, vcl_string name="");
+void x_write(std::ostream& os, vol3d_gaussian_kernel_3d kernel, std::string name="");
 
 #endif

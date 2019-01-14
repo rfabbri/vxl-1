@@ -7,9 +7,9 @@
 // \author    Kongbin Kang (kk at lems.brown.edu) & Gamze Tunali
 // \date        2005-11-01
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 #include <biob/biob_grid_worldpt_roster.h>
 #include <biob/biob_roster_to_grid_mapping.h>
 
@@ -24,7 +24,7 @@
 #include <geom/geom_index_structure.h>
 #include <geom/geom_rectangular_probe_volume.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
@@ -41,7 +41,7 @@
 /*
 double get_double(char* str){
   double x;
-  vcl_stringstream arg(str);
+  std::stringstream arg(str);
   arg >> x;
   return x;
 }
@@ -62,15 +62,15 @@ const double CYL_LENGTH = 1.0;
 double strength(xmvg_filter_response<double> response){
   double max_response_value = 0.;
   for (int i = 0; i < response.size(); ++i){
-    max_response_value = vcl_max(vcl_abs(response[i]), max_response_value);
+    max_response_value = std::max(std::abs(response[i]), max_response_value);
   }
   return max_response_value;
 }
 */
 
-vgl_vector_3d<double> estimate_orientation_and_strength(xmvg_filter_response<double> response, vcl_vector<vgl_vector_3d<double> > filter_orientations){
+vgl_vector_3d<double> estimate_orientation_and_strength(xmvg_filter_response<double> response, std::vector<vgl_vector_3d<double> > filter_orientations){
   det_cylinder_detect detector;
-  vcl_vector<vgl_vector_3d<double> > v = detector.compute_v(response, filter_orientations);
+  std::vector<vgl_vector_3d<double> > v = detector.compute_v(response, filter_orientations);
   vgl_vector_3d<double> direction = detector.detect_dir(response, v, filter_orientations, true);
   return direction; //I modified detect_dir so it gives a strength when last parameter = true
 }
@@ -78,15 +78,15 @@ vgl_vector_3d<double> estimate_orientation_and_strength(xmvg_filter_response<dou
 int main(int argc, char *argv[])
 {
   if(argc != 3){
-    vcl_cout << "Usage: "<< argv[0] << " response_file binary_cylinder_filename\n";
+    std::cout << "Usage: "<< argv[0] << " response_file binary_cylinder_filename\n";
     return 1;
   }
 
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "failed to load response file\n";
+    std::cout << "failed to load response file\n";
     return 1;
   }
   double resolution = parser.resolution(); //get_double(argv[2]); 

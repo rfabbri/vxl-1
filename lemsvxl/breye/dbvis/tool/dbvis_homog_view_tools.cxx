@@ -10,8 +10,8 @@
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <bvis/bvis_tool.h>
-#include <vcl_map.h>
-#include <vcl_list.h>
+#include <map>
+#include <list>
 #include <vgui/vgui_style_sptr.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_easy2D_tableau.h>
@@ -59,7 +59,7 @@ dbvis_homog_view_tool::~dbvis_homog_view_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbvis_homog_view_tool::name() const
 {
         return "Homography View";
@@ -84,7 +84,7 @@ dbvis_homog_view_tool::set_tableau( const vgui_tableau_sptr& tableau )
 
                 tableau_vsol = NULL;
                 tableau_im=NULL;
-                // vcl_cout<<"Tableau doesn't exist or isn't right type";
+                // std::cout<<"Tableau doesn't exist or isn't right type";
                 return false;
 }
 
@@ -116,7 +116,7 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
 
         if (tableau_im.ptr()  && gesture_img_sel_(e))
         {
-                vcl_cout<<tableau_im->type_name()<<": "<<(void *) tableau_im.ptr()<<"\n";
+                std::cout<<tableau_im->type_name()<<": "<<(void *) tableau_im.ptr()<<"\n";
                 tableaus_im_.push_back(tableau_im);
                 images_.push_back( bvis_manager::instance() -> storage_from_tableau( tableau_im ) );
 
@@ -139,7 +139,7 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
                         vidpro_vsol2D_storage_sptr stor;
                                                 
                         stor.vertical_cast ( bvis_manager::instance()->storage_from_tableau( tableau_vsol ) );
-                        vcl_vector <vcl_string > namesake;
+                        std::vector <std::string > namesake;
                         vsol_polygon_2d_sptr drawn(new vsol_polygon_2d( drawnpt ) );
 
                                                 //Creating a tableeu for the drawn polygon
@@ -147,9 +147,9 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
                         polyg_tableau.add_vsol_polygon_2d( drawn );
 
 
-                        vcl_vector< vsol_spatial_object_2d_sptr > pts_in_stor = stor->all_data();
+                        std::vector< vsol_spatial_object_2d_sptr > pts_in_stor = stor->all_data();
                         
-                        vcl_vector<vsol_point_2d_sptr> select_pts;
+                        std::vector<vsol_point_2d_sptr> select_pts;
                         int count=0;
 
 
@@ -163,7 +163,7 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
                                 }
                         }
 
-                        vcl_cout<<"Total no of pts in polygon:"<<count<<"\n";
+                        std::cout<<"Total no of pts in polygon:"<<count<<"\n";
 
 
                         int found=-1;
@@ -181,7 +181,7 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
 
                         if (found==-1)
                         {
-                                vcl_cout<<"new tableau\n";
+                                std::cout<<"new tableau\n";
                                 tableaus_vsol_.push_back(tableau_vsol);
                                 pts_.push_back(select_pts);
 
@@ -244,7 +244,7 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
 
         if( tableau_vsol.ptr() && gesture_lift_(e))
         {
-                //      vcl_cout<<"selected object\n";
+                //      std::cout<<"selected object\n";
                 object_ = (vgui_soview2D*)tableau_vsol->get_highlighted_soview();
                 //      active_ = true;
                 if(( object_ != NULL )&&!end_sel_flag)
@@ -268,22 +268,22 @@ dbvis_homog_view_tool::handle( const vgui_event & e, const bvis_view_tableau_spt
 
                         if (found==-1)
                         {
-                                vcl_cout<<"new tableau\n";
+                                std::cout<<"new tableau\n";
                                 tableaus_vsol_.push_back(tableau_vsol);
                                 if ((object_ptr))
                                 {
                                         //      object_ptr->set_style(vgui_style::new_style(0.4f, 0.2f, 0.8f, 1.0f, 3.0f));
-                                        vcl_vector<vsol_point_2d_sptr> newpts;
-                                         vcl_vector <vsol_line_2d_sptr> epilines_in_tab;
+                                        std::vector<vsol_point_2d_sptr> newpts;
+                                         std::vector <vsol_line_2d_sptr> epilines_in_tab;
                                         newpts.push_back(new  vsol_point_2d(object_ptr->sptr()->x(),object_ptr->sptr()->y()));
                                         pts_.push_back(newpts);
                                         epilines.push_back(epilines_in_tab);
                                 }
                                 else
                                 {
-                                        vcl_vector<vsol_point_2d_sptr> newpts;
+                                        std::vector<vsol_point_2d_sptr> newpts;
                                         bgui_vsol_soview2D_line_seg* line_ptr=(bgui_vsol_soview2D_line_seg *)object_;
-                                        vcl_vector <vsol_line_2d_sptr> epilines_in_tab;
+                                        std::vector <vsol_line_2d_sptr> epilines_in_tab;
                                         epilines_in_tab.push_back( new vsol_line_2d(*(line_ptr->sptr().ptr() ) ) );
                                         epilines.push_back(epilines_in_tab);
                                         pts_.push_back(newpts);
@@ -389,29 +389,29 @@ bool dbvis_homog_view_tool::four_pts()
 {
         end_sel_flag=false;
         
-        vcl_string alg="4pt";
+        std::string alg="4pt";
         bprt_homog_interface homogfind(pts_[0],pts_[1]);
         homogfind.compute_homog();
         
-        vcl_cout<<"\n"<<alg<<"\n";
+        std::cout<<"\n"<<alg<<"\n";
         vidpro_vsol2D_storage_sptr pt_2b_trans_stor1;
         pt_2b_trans_stor1.vertical_cast ( bvis_manager::instance()->storage_from_tableau( tableaus_vsol_[0] ) );
         vidpro_vsol2D_storage_sptr pt_2b_trans_stor2;
         pt_2b_trans_stor2.vertical_cast ( bvis_manager::instance()->storage_from_tableau( tableaus_vsol_[1] ) );
 
-        vcl_vector< vsol_spatial_object_2d_sptr > pt_2b_trans1;
+        std::vector< vsol_spatial_object_2d_sptr > pt_2b_trans1;
         pt_2b_trans1 = pt_2b_trans_stor1->all_data();
         
-        vcl_vector< vsol_spatial_object_2d_sptr > pt_2b_trans2;
+        std::vector< vsol_spatial_object_2d_sptr > pt_2b_trans2;
         pt_2b_trans2 = pt_2b_trans_stor2->all_data();
         
         homogfind.transfer(pt_2b_trans1,pt_2b_trans2,0);
 
-vcl_vector <vsol_spatial_object_2d_sptr> point,point2;
+std::vector <vsol_spatial_object_2d_sptr> point,point2;
 homogfind.get_output(point      , 1);
 homogfind.get_output(point2 , 2);
-vcl_vector< vsol_spatial_object_2d_sptr > homog1;
-vcl_vector< vsol_spatial_object_2d_sptr > homog2;
+std::vector< vsol_spatial_object_2d_sptr > homog1;
+std::vector< vsol_spatial_object_2d_sptr > homog2;
 
 #if 0
 for (int k=0;k<point.size();k++)
@@ -448,7 +448,7 @@ bvis_manager::instance()->add_to_display(storage2_);
 bgui_vsol2D_tableau_sptr tableau_a((bgui_vsol2D_tableau *)( bvis_manager::instance()->make_tableau(storage_).ptr() ) );
 bgui_vsol2D_tableau_sptr tableau_b((bgui_vsol2D_tableau *)( bvis_manager::instance()->make_tableau(storage2_).ptr() ) );
 
-//      vcl_cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
+//      std::cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
 tableau_a->set_vsol_point_2d_style(vgui_style::new_style(1.0f, 1.0f, 0.0f, 3.0f, 1.0f));
 tableau_b->set_vsol_point_2d_style(vgui_style::new_style(.5f, .5f, 0.0f, 3.0f, 1.0f));
 for (int m=0;m<tableaus_vsol_.size();m++)
@@ -471,7 +471,7 @@ tableaus_vsol_.clear();
 pts_[0].clear();
 pts_[1].clear();
 
-vcl_cout<<"end tool";
+std::cout<<"end tool";
 
 pts_.clear();
 
@@ -489,26 +489,26 @@ return true;
 bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
 {
         end_sel_flag = false;
-        vcl_string      alg = "RANSAC-all pts\n";
-        vcl_ofstream logfile("d://homography_log.txt", vcl_ios::out);
+        std::string      alg = "RANSAC-all pts\n";
+        std::ofstream logfile("d://homography_log.txt", std::ios::out);
 
-        vcl_cout<<alg;
- //   vcl_cout<<"\n"<<"\n";
+        std::cout<<alg;
+ //   std::cout<<"\n"<<"\n";
         vidpro_vsol2D_storage_sptr pt_2b_trans_stor1;
         pt_2b_trans_stor1.vertical_cast ( bvis_manager::instance()->storage_from_tableau( tableaus_vsol_[0] ) );
         vidpro_vsol2D_storage_sptr pt_2b_trans_stor2;
         pt_2b_trans_stor2.vertical_cast ( bvis_manager::instance()->storage_from_tableau( tableaus_vsol_[1] ) );
 
 
-        vcl_vector< vsol_spatial_object_2d_sptr > pt_2b_trans1;
+        std::vector< vsol_spatial_object_2d_sptr > pt_2b_trans1;
         pt_2b_trans1 = pt_2b_trans_stor1->all_data();
 
-        vcl_vector< vsol_spatial_object_2d_sptr > pt_2b_trans2;
+        std::vector< vsol_spatial_object_2d_sptr > pt_2b_trans2;
         pt_2b_trans2 = pt_2b_trans_stor2->all_data();
 
 
 
-        vcl_vector< vsol_point_2d_sptr > featurept1,featurept2;
+        std::vector< vsol_point_2d_sptr > featurept1,featurept2;
 
 
         for ( int m=0; m<pt_2b_trans1.size(); m++ )
@@ -524,12 +524,12 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
 
 
 
-        vcl_vector< vsol_point_2d_sptr > current_unused_points1 = featurept1;
-        vcl_vector< vsol_point_2d_sptr > current_unused_points2 = featurept2;
+        std::vector< vsol_point_2d_sptr > current_unused_points1 = featurept1;
+        std::vector< vsol_point_2d_sptr > current_unused_points2 = featurept2;
 
 
-        vcl_vector< vsol_point_2d_sptr > corrpt1;
-        vcl_vector< vsol_point_2d_sptr > corrpt2;
+        std::vector< vsol_point_2d_sptr > corrpt1;
+        std::vector< vsol_point_2d_sptr > corrpt2;
         int num_popfound = 0;
         
         storage_=vidpro_vsol2D_storage_new();
@@ -539,11 +539,11 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
         linestorage3_=vidpro_vsol2D_storage_new();
         linestorage4_=vidpro_vsol2D_storage_new();
 
-        vcl_vector< vsol_spatial_object_2d_sptr > residual_lines1;
-        vcl_vector< vsol_spatial_object_2d_sptr > residual_lines2;
+        std::vector< vsol_spatial_object_2d_sptr > residual_lines1;
+        std::vector< vsol_spatial_object_2d_sptr > residual_lines2;
 
-        vcl_vector< vsol_spatial_object_2d_sptr > corr_lines1;
-        vcl_vector< vsol_spatial_object_2d_sptr > corr_lines2;
+        std::vector< vsol_spatial_object_2d_sptr > corr_lines1;
+        std::vector< vsol_spatial_object_2d_sptr > corr_lines2;
         num_pop =2 ;
         vidpro_vsol2D_storage_sptr inliers_11 = vidpro_vsol2D_storage_new();
         vidpro_vsol2D_storage_sptr inliers_12=vidpro_vsol2D_storage_new();
@@ -567,7 +567,7 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
                         vil_image_resource_sptr image_sptr =  image->get_image();
                         vil_image_resource_sptr image2_sptr = image2->get_image();
                         vil_image_view< float > corr_out;
-                        vcl_cout<<"\n Current number of unused points  "<<current_unused_points1.size()<<"\n";
+                        std::cout<<"\n Current number of unused points  "<<current_unused_points1.size()<<"\n";
                         corrpt1.clear();
                         corrpt2.clear();
 
@@ -592,13 +592,13 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
                         }
                 int popul = 1;
                 bprt_homog_interface homogfind(corrpt1,corrpt2,8,&popul,1.0,false, true, true, use_epipolar_const_);
-                homogfind.set_method((vcl_string)"muset");
+                homogfind.set_method((std::string)"muset");
                 if (use_epipolar_const_)
                         homogfind.set_epipole(epip[0], epip[1]);
 
                 if (!homogfind.compute_homog())
                 {
-                         vcl_cout<<"Couldn't calculate homography";
+                         std::cout<<"Couldn't calculate homography";
                          end_sel_flag=false;
                          break;
                 }
@@ -607,8 +607,8 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
             current_unused_points1.clear();
             current_unused_points2.clear();
                         homogfind.get_outlier_points(current_unused_points1, current_unused_points2);
-                        vcl_vector<vsol_spatial_object_2d_sptr> outliers_so1;
-                        vcl_vector<vsol_spatial_object_2d_sptr> outliers_so2;
+                        std::vector<vsol_spatial_object_2d_sptr> outliers_so1;
+                        std::vector<vsol_spatial_object_2d_sptr> outliers_so2;
                         for (int u = 0; u<current_unused_points1.size(); u++)
                                 {
                                 outliers_so1.push_back( current_unused_points1[u]->cast_to_spatial_object() );
@@ -632,18 +632,18 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
                                 
 
 
-                vcl_vector< vsol_spatial_object_2d_sptr > pop_2b_trans1 = homogfind.get_transf_pop(1,0);
-                vcl_vector< vsol_spatial_object_2d_sptr > pop_2b_trans2 = homogfind.get_transf_pop(2,0);
+                std::vector< vsol_spatial_object_2d_sptr > pop_2b_trans1 = homogfind.get_transf_pop(1,0);
+                std::vector< vsol_spatial_object_2d_sptr > pop_2b_trans2 = homogfind.get_transf_pop(2,0);
 
                 
                 char index[4];
-                vcl_string string_index = (vcl_string)itoa(num_popfound,index,10);
-                vcl_string point_group_name1(((vcl_string)"Homog_1_popul")+string_index);
-                vcl_string point_group_name2(((vcl_string)"Homog_2_popul")+string_index);
+                std::string string_index = (std::string)itoa(num_popfound,index,10);
+                std::string point_group_name1(((std::string)"Homog_1_popul")+string_index);
+                std::string point_group_name2(((std::string)"Homog_2_popul")+string_index);
                                 
 
-                vcl_vector< vsol_spatial_object_2d_sptr > orig_pop1 = homogfind.get_pop(1,0);
-                vcl_vector< vsol_spatial_object_2d_sptr > orig_pop2 = homogfind.get_pop(2,0);
+                std::vector< vsol_spatial_object_2d_sptr > orig_pop1 = homogfind.get_pop(1,0);
+                std::vector< vsol_spatial_object_2d_sptr > orig_pop2 = homogfind.get_pop(2,0);
                 if (num_popfound == 1)
                 {
                 
@@ -700,15 +700,15 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
                 linestorage3_->set_name("Corr btw orig");
                 linestorage4_->set_name("Corr btw transfers");
 #if 0
-                outliers_11->set_name((vcl_string)"Outliers_11");
-                                outliers_12->set_name((vcl_string)"Outliers_12");
-                                outliers_21->set_name((vcl_string)"Outliers_21");
-                                outliers_22->set_name((vcl_string)"Outliers_22");
+                outliers_11->set_name((std::string)"Outliers_11");
+                                outliers_12->set_name((std::string)"Outliers_12");
+                                outliers_21->set_name((std::string)"Outliers_21");
+                                outliers_22->set_name((std::string)"Outliers_22");
 #endif
-        inliers_11->set_name((vcl_string)"inliers_11");
-        inliers_12->set_name((vcl_string)"inliers_12");
-        inliers_21->set_name((vcl_string)"inliers_21");
-        inliers_22->set_name((vcl_string)"inliers_22");
+        inliers_11->set_name((std::string)"inliers_11");
+        inliers_12->set_name((std::string)"inliers_12");
+        inliers_21->set_name((std::string)"inliers_21");
+        inliers_22->set_name((std::string)"inliers_22");
         bvis_manager::instance()->repository()->store_data(storage_);
         bvis_manager::instance()->repository()->store_data(storage2_);
         bvis_manager::instance()->add_to_display(storage_);
@@ -742,7 +742,7 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
 #endif
         bgui_vsol2D_tableau_sptr tableau_a((bgui_vsol2D_tableau *)(bvis_manager::instance()->make_tableau(storage_).ptr() ) );
         bgui_vsol2D_tableau_sptr tableau_b((bgui_vsol2D_tableau *)(bvis_manager::instance()->make_tableau(storage2_).ptr() ) );
-        //      vcl_cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
+        //      std::cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
    // tableau_a->set_vsol_point_2d_style(vgui_style::new_style(1.0f, 1.0f, 0.0f, 3.0f, 1.0f));
    // tableau_b->set_vsol_point_2d_style(vgui_style::new_style(.5f, .5f, 0.0f, 3.0f, 1.0f));
 
@@ -768,7 +768,7 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
 
         tableaus_vsol_.clear();
 
-        vcl_cout<<"end tool\n";
+        std::cout<<"end tool\n";
         end_sel_flag=false;
 
         active_=false;
@@ -783,7 +783,7 @@ bool dbvis_homog_view_tool::Ransac_all_pts_in_image()
 
 bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
 {
-        vcl_ofstream logfile("d://homography_log_.txt", vcl_ios::out);
+        std::ofstream logfile("d://homography_log_.txt", std::ios::out);
         storage_=vidpro_vsol2D_storage_new();
         storage2_=vidpro_vsol2D_storage_new();
         linestorage_=vidpro_vsol2D_storage_new();
@@ -794,14 +794,14 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
         vidpro_vsol2D_storage_sptr inliers_12=vidpro_vsol2D_storage_new();
         vidpro_vsol2D_storage_sptr inliers_21=vidpro_vsol2D_storage_new();
         vidpro_vsol2D_storage_sptr inliers_22=vidpro_vsol2D_storage_new();
-        vcl_vector< vsol_spatial_object_2d_sptr > residual_lines1;
-        vcl_vector< vsol_spatial_object_2d_sptr > residual_lines2;
+        std::vector< vsol_spatial_object_2d_sptr > residual_lines1;
+        std::vector< vsol_spatial_object_2d_sptr > residual_lines2;
 
-        vcl_vector< vsol_spatial_object_2d_sptr > corr_lines1;
-        vcl_vector< vsol_spatial_object_2d_sptr > corr_lines2;
+        std::vector< vsol_spatial_object_2d_sptr > corr_lines1;
+        std::vector< vsol_spatial_object_2d_sptr > corr_lines2;
         end_sel_flag = false;
-        vcl_string alg = "RANSAC-selectpts\n";
-        vcl_vector< vsol_point_2d_sptr > featurept1,featurept2;
+        std::string alg = "RANSAC-selectpts\n";
+        std::vector< vsol_point_2d_sptr > featurept1,featurept2;
 
 
 
@@ -823,8 +823,8 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
     
     while (num_popfound<num_pop)
     {
-        vcl_vector< vsol_point_2d_sptr > corrpt1;
-        vcl_vector< vsol_point_2d_sptr > corrpt2;
+        std::vector< vsol_point_2d_sptr > corrpt1;
+        std::vector< vsol_point_2d_sptr > corrpt2;
         if (use_correlation_)
         {
             assert(images_.size()>=2);
@@ -844,13 +844,13 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
         
         int popul =1;
         bprt_homog_interface homogfind(corrpt1,corrpt2,8,&popul,1.0,false,true,true,use_epipolar_const_);
-        homogfind.set_method((vcl_string)"muset");
+        homogfind.set_method((std::string)"muset");
         if (use_epipolar_const_)
             homogfind.set_epipole(epip[0], epip[1]);
         
         if (!homogfind.compute_homog())
         {
-            vcl_cout<<"Couldn't calculate homography";
+            std::cout<<"Couldn't calculate homography";
             end_sel_flag=false;
             return false;
         }
@@ -859,16 +859,16 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
         {
             num_popfound++; 
             
-            vcl_vector< vsol_spatial_object_2d_sptr > pop_2b_trans1 = homogfind.get_transf_pop(1,0);
-            vcl_vector< vsol_spatial_object_2d_sptr > pop_2b_trans2 = homogfind.get_transf_pop(2,0);
+            std::vector< vsol_spatial_object_2d_sptr > pop_2b_trans1 = homogfind.get_transf_pop(1,0);
+            std::vector< vsol_spatial_object_2d_sptr > pop_2b_trans2 = homogfind.get_transf_pop(2,0);
             char index[4];
-            vcl_string string_index = (vcl_string)itoa(num_popfound,index,10);
-            vcl_string point_group_name1(((vcl_string)"Homog_1_popul")+string_index);
-            vcl_string point_group_name2(((vcl_string)"Homog_2_popul")+string_index);
+            std::string string_index = (std::string)itoa(num_popfound,index,10);
+            std::string point_group_name1(((std::string)"Homog_1_popul")+string_index);
+            std::string point_group_name2(((std::string)"Homog_2_popul")+string_index);
             
             
-            vcl_vector< vsol_spatial_object_2d_sptr > orig_pop1 = homogfind.get_pop(1,0);
-            vcl_vector< vsol_spatial_object_2d_sptr > orig_pop2 = homogfind.get_pop(2,0);
+            std::vector< vsol_spatial_object_2d_sptr > orig_pop1 = homogfind.get_pop(1,0);
+            std::vector< vsol_spatial_object_2d_sptr > orig_pop2 = homogfind.get_pop(2,0);
             
             if (num_popfound == 1)
             {
@@ -934,10 +934,10 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
 
 
 #if 0
-        inliers_11->set_name((vcl_string)"inliers_11");
-        inliers_12->set_name((vcl_string)"inliers_12");
-        inliers_21->set_name((vcl_string)"inliers_21");
-        inliers_22->set_name((vcl_string)"inliers_22");
+        inliers_11->set_name((std::string)"inliers_11");
+        inliers_12->set_name((std::string)"inliers_12");
+        inliers_21->set_name((std::string)"inliers_21");
+        inliers_22->set_name((std::string)"inliers_22");
 #endif
         bvis_manager::instance()->repository()->store_data(storage_);
         bvis_manager::instance()->repository()->store_data(storage2_);
@@ -963,7 +963,7 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
 #endif
 
 
-        vcl_cout<<alg<<"\n";
+        std::cout<<alg<<"\n";
 
 
   if (use_epipolar_const_)
@@ -977,7 +977,7 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
 
         bgui_vsol2D_tableau_sptr tableau_a((bgui_vsol2D_tableau *)(bvis_manager::instance()->make_tableau(storage_).ptr() ) );
         bgui_vsol2D_tableau_sptr tableau_b((bgui_vsol2D_tableau *)(bvis_manager::instance()->make_tableau(storage2_).ptr() ) );
-        //      vcl_cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
+        //      std::cout<<"\n"<<tableau_a<<"  "<<tableau_b<<"\n";
         tableau_a->set_vsol_point_2d_style(vgui_style::new_style(1.0f, 1.0f, 0.0f, 3.0f, 1.0f));
     tableau_b->set_vsol_point_2d_style(vgui_style::new_style(.5f, .5f, 0.6f, 3.0f, 1.0f));
         
@@ -1027,21 +1027,21 @@ bool dbvis_homog_view_tool::Ransac_selected_pts_in_image()
 
 
 
-void dbvis_homog_view_tool::putative_correspondences(vcl_vector<vsol_point_2d_sptr >  &featurepts1,vcl_vector<vsol_point_2d_sptr >      &featurepts2,
+void dbvis_homog_view_tool::putative_correspondences(std::vector<vsol_point_2d_sptr >  &featurepts1,std::vector<vsol_point_2d_sptr >      &featurepts2,
                                                                                                         vil_image_resource_sptr &image_sptr, vil_image_resource_sptr &image2_sptr, 
-                                                                                                        vcl_vector<vsol_point_2d_sptr > &corrpt1, vcl_vector<vsol_point_2d_sptr > &corrpt2)
+                                                                                                        std::vector<vsol_point_2d_sptr > &corrpt1, std::vector<vsol_point_2d_sptr > &corrpt2)
 {
 
         vil_image_view< float > corr_out;
-        vcl_vector<vsol_point_2d_sptr > smallgroup;
-        vcl_vector<vsol_point_2d_sptr > largegroup;
+        std::vector<vsol_point_2d_sptr > smallgroup;
+        std::vector<vsol_point_2d_sptr > largegroup;
         int smallnumpoint;
         int largenumpoint;
         bool change_in_order;
                 int radius =3;
         if ((!image_sptr)|| (!image2_sptr))
                 {
-                                vcl_cout<<"Images not selected";
+                                std::cout<<"Images not selected";
                                 corrpt1 = featurepts1;
                                 corrpt2 = featurepts2;
                                 return;
@@ -1052,7 +1052,7 @@ void dbvis_homog_view_tool::putative_correspondences(vcl_vector<vsol_point_2d_sp
         vil_image_view< vil_rgb < vxl_byte > > img2 = image2_sptr->get_view(0, image2_sptr->ni() , 0 , image2_sptr->nj() );
         if (vil_image_view_deep_equality (img1, img2))
         {
-                vcl_cout<<"Warning two  image deep-equal";
+                std::cout<<"Warning two  image deep-equal";
 
         }
 
@@ -1157,7 +1157,7 @@ void
 dbvis_homog_view_tool::get_popup( const vgui_popup_params& params, 
                                                                          vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((use_correlation_)?on:off)+"Use correlation", 
                         bvis_tool_toggle, (void*)(&use_correlation_) );
  // menu.add( ((end_sel_flag)?on:off)+"Selection of Pts have ended", 

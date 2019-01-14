@@ -32,10 +32,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -45,15 +45,15 @@ public:
   
   void clear(){polygons_.clear(); prototype_list_.clear();}
 
-  void write_out_data(vcl_string);
+  void write_out_data(std::string);
 
 private:
 
-  void brute_force_computation(vcl_string output_distance_matrix,
-                               vcl_string output_dendrogram_complete,
-                               vcl_string output_dendrogram_average);
+  void brute_force_computation(std::string output_distance_matrix,
+                               std::string output_dendrogram_complete,
+                               std::string output_dendrogram_average);
 
-  void linear_scan(vcl_string output_distance_matrix, double threshold);
+  void linear_scan(std::string output_distance_matrix, double threshold);
 
                   
   void cluster_data_complete( unsigned int num_objects,
@@ -66,15 +66,15 @@ private:
 
   void write_distance_matrix(double size,
                              double* compressed_distance_matrix,
-                             vcl_string output_file_path);
+                             std::string output_file_path);
 
   void write_dendrogram(double size,
                         double* dendrogram,
-                        vcl_string output_file_path);
+                        std::string output_file_path);
 
-  vcl_vector< vgl_polygon<double> > polygons_;
-  vcl_vector<vgl_polygon<double> > prototype_list_;
-  vcl_map<vcl_pair<unsigned int,unsigned int>, double> distance_matrix_;
+  std::vector< vgl_polygon<double> > polygons_;
+  std::vector<vgl_polygon<double> > prototype_list_;
+  std::map<std::pair<unsigned int,unsigned int>, double> distance_matrix_;
 
 };
 

@@ -58,10 +58,10 @@ protected:
   void compute_internal_data();
 
   inline vnl_vector<float> closest_edge(const float * pixel_edges,
-    const  vcl_ptrdiff_t & pstep_edges,
-    const  vcl_ptrdiff_t & kstep_edges,
-    const  vcl_ptrdiff_t & jstep_edges,
-    const  vcl_ptrdiff_t & istep_edges);
+    const  std::ptrdiff_t & pstep_edges,
+    const  std::ptrdiff_t & kstep_edges,
+    const  std::ptrdiff_t & jstep_edges,
+    const  std::ptrdiff_t & istep_edges);
 
 
   // ------------- INTERNAL DATA (computed from other member variables)----

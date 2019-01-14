@@ -31,9 +31,9 @@
 //  Options:
 //    - boxr is the extended box ratio.
 //
-SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                                     vcl_vector<vcl_vector<int> >& finalM_faces,
-                                     const vcl_string dirprefix,
+SoSeparator* run_seg_adpt_bucketing (const std::vector<vgl_point_3d<double> >& input_pts,
+                                     std::vector<std::vector<int> >& finalM_faces,
+                                     const std::string dirprefix,
                                      const int npbkt, const bool b_check_dup,
                                      const float bdsphr_rr, const int bdsphr_sr,
                                      const float seg_msr, const int seg_topo_opt)
@@ -50,14 +50,14 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   const float bktseg_bor = seg_msr + bktseg_cdr;
 
   //1) Divide input points into space-division buckets.
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > all_pts;
+  std::vector<std::pair<int, vgl_point_3d<double> > > all_pts;
   all_pts.resize (input_pts.size());
   for (unsigned int i=0; i<input_pts.size(); i++)
-    all_pts[i] = vcl_pair<int, vgl_point_3d<double> > (i, input_pts[i]);
+    all_pts[i] = std::pair<int, vgl_point_3d<double> > (i, input_pts[i]);
   dbmsh3d_pt_bktstr* BktStruct = adpt_bucketing_idpts (all_pts, npbkt, b_check_dup);
 
   //Generate bucket list (for generating run files and list files).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   BktStruct->gen_bucket_list (dirprefix, bucket_list);
 
   //Generate the bucket list file of .P3D files (one for each bucket).
@@ -75,9 +75,9 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   dbmsh3d_richmesh* RM;
   
   //Rich mesh properties to store the original vertex id.
-  vcl_vector<vcl_string > bkt_vplist;
+  std::vector<std::string > bkt_vplist;
   bkt_vplist.push_back("id");  
-  vcl_vector<vcl_string > bkt_fplist;
+  std::vector<std::string > bkt_fplist;
 
   double dm = 0, dm_avg = 0;
   int count = 0;
@@ -90,17 +90,17 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         dbmsh3d_pt_bucket* B = R->bucket_list(b);
         
         //Meshing the surface in B with no initial triangles.
-        vcl_vector<vcl_vector<int> > B_initM_faces; //B_initM_faces is empty.
+        std::vector<std::vector<int> > B_initM_faces; //B_initM_faces is empty.
         double d_median;
         RM = run_surface_meshing_rm (B->idpt_list(), B_initM_faces, dirprefix+"-tmp",
                                      bdsphr_rr, bdsphr_sr, seg_msr, seg_topo_opt>1, d_median);
 
-        dm = vcl_max (dm, d_median);
+        dm = std::max (dm, d_median);
         dm_avg += d_median;
         count++;
 
         //Save each reconsturcted surface mesh RM in the bucket to a file prefix_00_00_00-surface.ply
-        vcl_string B_surf_ply = dirprefix;
+        std::string B_surf_ply = dirprefix;
         char buf[128];
         B_surf_ply += "_";
         sprintf (buf, "%02d", s);
@@ -130,23 +130,23 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   //     - si: the interior bucket extension for stitching sausage.
   //     - se: the exterior bucket extension for stitching sausage.
   dm_avg /= count;
-  vul_printf (vcl_cout, "\ndm_avg = %f\n", dm_avg);
+  vul_printf (std::cout, "\ndm_avg = %f\n", dm_avg);
   double dmax = dm * seg_msr;
   double dc = dm * bktseg_cdr;
   double db = dm * bktseg_bor;
   double si = dc + db;
   double se = dc + dmax;
-  vul_printf (vcl_cout, "\tEstimated median sampling dist. dm : %f.\n", dm);
-  vul_printf (vcl_cout, "\t      average dm of buckets dm_avg : %f.\n", dm_avg);
-  vul_printf (vcl_cout, "\t        maximum triangle size dmax : %f (dm * msr %f).\n", dmax, seg_msr);
-  vul_printf (vcl_cout, "\t                confident dist. dc : %f (dm * cdr %f).\n", dc, bktseg_cdr);
-  vul_printf (vcl_cout, "\t overlapping stitching boundary db : %f (dm * bor %f).\n", db, bktseg_bor);
-  vul_printf (vcl_cout, "\t         stitching sausage int. si : %f (dc + db).\n", si);
-  vul_printf (vcl_cout, "\t         stitching sausage ext. se : %f (dc+dmax).\n", se);
+  vul_printf (std::cout, "\tEstimated median sampling dist. dm : %f.\n", dm);
+  vul_printf (std::cout, "\t      average dm of buckets dm_avg : %f.\n", dm_avg);
+  vul_printf (std::cout, "\t        maximum triangle size dmax : %f (dm * msr %f).\n", dmax, seg_msr);
+  vul_printf (std::cout, "\t                confident dist. dc : %f (dm * cdr %f).\n", dc, bktseg_cdr);
+  vul_printf (std::cout, "\t overlapping stitching boundary db : %f (dm * bor %f).\n", db, bktseg_bor);
+  vul_printf (std::cout, "\t         stitching sausage int. si : %f (dc + db).\n", si);
+  vul_printf (std::cout, "\t         stitching sausage ext. se : %f (dc+dmax).\n", se);
 
   //Storage for stitching sausage mesh.
   //The stitchM is a full MHE mesh (without the use of IFS to save memory).
-  ///vcl_vector<vcl_vector<int> > stitchS_faces;
+  ///std::vector<std::vector<int> > stitchS_faces;
   dbmsh3d_mesh* stitchM = new dbmsh3d_mesh;
 
   //Loop through the buckets again to put all confident triangles to finalM_faces.
@@ -218,7 +218,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         ///assert (sboxin.min_x() < sboxin.max_x());
 
         //Read in the reconstructed surfaces in each bucket B.
-        vcl_string B_surf_ply = dirprefix;
+        std::string B_surf_ply = dirprefix;
         char buf[128];
         B_surf_ply += "_";
         sprintf (buf, "%02d", s);
@@ -234,7 +234,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         dbmsh3d_load_ply (RM, B_surf_ply.c_str(), bkt_vplist, bkt_fplist);
 
         //Recover the original vertex id.        
-        vcl_map<int, dbmsh3d_vertex*>::iterator vit = RM->vertexmap().begin();
+        std::map<int, dbmsh3d_vertex*>::iterator vit = RM->vertexmap().begin();
         for (; vit != RM->vertexmap().end(); vit++) {
           dbmsh3d_richvertex* RV = (dbmsh3d_richvertex*) (*vit).second;          
           double id;
@@ -247,11 +247,11 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         root->addChild (draw_box (rbox, dbmsh3d_cmd_cw(), SbColor(0,0.5,0)));
 
         //For all faces inside the reduced-box:
-        vcl_map<int, dbmsh3d_face*>::iterator fit = RM->facemap().begin();
+        std::map<int, dbmsh3d_face*>::iterator fit = RM->facemap().begin();
         for (; fit != RM->facemap().end(); fit++) {
           dbmsh3d_face* F = (*fit).second;
           if (F->_ifs_inside_box (rbox)) {
-            vcl_vector<int> vids;
+            std::vector<int> vids;
             for (unsigned int i=0; i<F->vertices().size(); i++)
               vids.push_back (F->vertices(i)->id());
             assert (vids.size() > 2);
@@ -277,7 +277,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   }
 
   // Visualize the intermediate mesh of interior trinagles in buckets.
-  vcl_string int_surf = dirprefix;
+  std::string int_surf = dirprefix;
   int_surf += "-int.ply2";
   dbmsh3d_save_ply2 (input_pts, finalM_faces, int_surf.c_str());
   root->addChild (draw_ifs (input_pts, finalM_faces, COLOR_SILVER, true));
@@ -369,8 +369,8 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
 
         //Meshing surface in the sausage region, using all existing 
         //finalized triangles as inital triangles.
-        vcl_vector<vcl_vector<int> > S_initM_faces;
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > > S_idpts;
+        std::vector<std::vector<int> > S_initM_faces;
+        std::vector<std::pair<int, vgl_point_3d<double> > > S_idpts;
 
         //To speed up searching, only searching the stitchM is enough.
         //(in comparison to searching the whole finalM_faces.)
@@ -380,7 +380,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         BktStruct->get_sausage_idpts (s, r, b, sboxin, sboxout, S_idpts);
 
         //Debug: assert that all points of the S_initM_faces are in the S_idpts set.
-        vcl_set<int> ptids;
+        std::set<int> ptids;
         for (unsigned int i=0; i<S_idpts.size(); i++)
           ptids.insert (S_idpts[i].first);
         for (unsigned int i=0; i<S_initM_faces.size(); i++) {
@@ -388,7 +388,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
             int id = S_initM_faces[i][j];
             if (ptids.find (id) == ptids.end()) {
               // assert!!!
-              S_idpts.push_back (vcl_pair<int, vgl_point_3d<double> > (id, input_pts[id]));
+              S_idpts.push_back (std::pair<int, vgl_point_3d<double> > (id, input_pts[id]));
             }
           }
         }
@@ -400,10 +400,10 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         double d_median;
         RM = run_surface_meshing_rm (S_idpts, S_initM_faces, dirprefix+"-tmp",
                                      bdsphr_rr, bdsphr_sr, seg_msr, seg_topo_opt>1, d_median);
-        dm = vcl_max (dm, d_median);
+        dm = std::max (dm, d_median);
 
         //Save the stitching mesh.
-        vcl_string B_surf_ply = dirprefix;
+        std::string B_surf_ply = dirprefix;
         char buf[128];
         B_surf_ply += "_";
         sprintf (buf, "%02d", s);
@@ -422,7 +422,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
         // - skip faces partially inside boxin (shrinking db = si-dc)
         // - not causing any topological problems 
         //   (non-2-manifold edge-junction or vertex-1-ring).        
-        vcl_map<int, dbmsh3d_face*>::iterator fit = RM->facemap().begin();
+        std::map<int, dbmsh3d_face*>::iterator fit = RM->facemap().begin();
         for (; fit != RM->facemap().end(); fit++) {
           dbmsh3d_face* F = (*fit).second;
           if (F->_ifs_outside_box (box))
@@ -431,7 +431,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
             continue;
 
           //Check topology and add F to stitchM
-          vcl_vector<int> vids;
+          std::vector<int> vids;
           for (unsigned int i=0; i<F->vertices().size(); i++)
             vids.push_back (F->vertices(i)->id());
           add_F_to_M_check_topo (vids, stitchM);
@@ -443,9 +443,9 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   }
 
   //save stitchM
-  vcl_vector<vcl_vector<int> > stitchM_faces;
+  std::vector<std::vector<int> > stitchM_faces;
   add_M_faces_to_IFSset (stitchM, stitchM_faces);
-  vcl_string stitch_surf = dirprefix;
+  std::string stitch_surf = dirprefix;
   stitch_surf += "-stitch.ply2";
   dbmsh3d_save_ply2 (input_pts, stitchM_faces, stitch_surf.c_str());
   stitchM_faces.clear();
@@ -455,7 +455,7 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   delete stitchM;
 
   //Save final mesh after stitching.
-  vcl_string final_surf = dirprefix;
+  std::string final_surf = dirprefix;
   final_surf += "-stitch-final.ply2";
   dbmsh3d_save_ply2 (input_pts, finalM_faces, final_surf.c_str());
 
@@ -463,8 +463,8 @@ SoSeparator* run_seg_adpt_bucketing (const vcl_vector<vgl_point_3d<double> >& in
   return root;
 }
 
-void run_seg_adpt_bucketing_2 (vcl_vector<vgl_point_3d<double> >& pts,
-                             const int M, const vcl_string prefix,
+void run_seg_adpt_bucketing_2 (std::vector<vgl_point_3d<double> >& pts,
+                             const int M, const std::string prefix,
                              const bool b_check_dup, const float bktbr,
                              const float msr)
 {
@@ -472,7 +472,7 @@ void run_seg_adpt_bucketing_2 (vcl_vector<vgl_point_3d<double> >& pts,
   dbmsh3d_pt_bktstr* BktStruct = adpt_bucketing_pts (pts, M, b_check_dup);
 
   //Generate bucket list (for generating run files and list files).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   BktStruct->gen_bucket_list (prefix, bucket_list);
   
   //Generate the bucket list file of .P3D files (one for each bucket).
@@ -515,21 +515,21 @@ void run_seg_adpt_bucketing_2 (vcl_vector<vgl_point_3d<double> >& pts,
 }
 
 
-void run_seg_adpt_bucketing_3 (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                               const int npbkt, const vcl_string& dirprefix,
+void run_seg_adpt_bucketing_3 (const std::vector<vgl_point_3d<double> >& input_pts,
+                               const int npbkt, const std::string& dirprefix,
                                const bool b_check_dup, const float bktbr,
                                const float bdsphr_rr, const float bdsphr_sr, 
                                const float seg_msr, const int seg_topo_opt)
 {
   //The bucketing structure
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > all_pts;
+  std::vector<std::pair<int, vgl_point_3d<double> > > all_pts;
   all_pts.resize (input_pts.size());
   for (unsigned int i=0; i<input_pts.size(); i++)
-    all_pts[i] = vcl_pair<int, vgl_point_3d<double> > (i, input_pts[i]);
+    all_pts[i] = std::pair<int, vgl_point_3d<double> > (i, input_pts[i]);
   dbmsh3d_pt_bktstr* BktStruct = adpt_bucketing_idpts (all_pts, npbkt, b_check_dup);
 
   //Generate bucket list (for generating run files and list files).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   BktStruct->gen_bucket_list (dirprefix, bucket_list);
   
   //Save points in each bucket to a P3D file.
@@ -543,12 +543,12 @@ void run_seg_adpt_bucketing_3 (const vcl_vector<vgl_point_3d<double> >& input_pt
   gen_bktlst_view_bat (dirprefix);
 
   //Generate the stitching surface
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > stitchS_idpts;
+  std::vector<std::pair<int, vgl_point_3d<double> > > stitchS_idpts;
   //-bktbr: box ratio
   get_stitch_surface_pts (BktStruct, stitchS_idpts, bktbr);
 
   //Mesh the stitching surface S.
-  vcl_vector<vcl_vector<int> > stitchS_init_faces;
+  std::vector<std::vector<int> > stitchS_init_faces;
   dbmsh3d_mesh* M;
   double d_median;
   M = run_surface_meshing (stitchS_idpts, stitchS_init_faces, dirprefix+"-tmp",
@@ -560,32 +560,32 @@ void run_seg_adpt_bucketing_3 (const vcl_vector<vgl_point_3d<double> >& input_pt
   delete BktStruct;
 }
 
-void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                               vcl_vector<vcl_vector<int> >& finalM_faces,
-                               const vcl_string& dirprefix,
+void run_seg_adpt_bucketing_4 (const std::vector<vgl_point_3d<double> >& input_pts,
+                               std::vector<std::vector<int> >& finalM_faces,
+                               const std::string& dirprefix,
                                const int npbkt, const bool b_check_dup, const float bktbr,
                                const float bdsphr_rr, const int bdsphr_sr,
                                const float seg_msr, const int seg_topo_opt,
                                const int n_erode) 
 {
   //1) Divide input points into space-division buckets.
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > all_pts;
+  std::vector<std::pair<int, vgl_point_3d<double> > > all_pts;
   all_pts.resize (input_pts.size());
   for (unsigned int i=0; i<input_pts.size(); i++)
-    all_pts[i] = vcl_pair<int, vgl_point_3d<double> > (i, input_pts[i]);
+    all_pts[i] = std::pair<int, vgl_point_3d<double> > (i, input_pts[i]);
   dbmsh3d_pt_bktstr* BktStruct = adpt_bucketing_idpts (all_pts, npbkt, b_check_dup);
 
   //Get the stitching surface S.
-  vcl_vector<vcl_vector<int> > stitchM_faces;
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > stitchS_idpts;
+  std::vector<std::vector<int> > stitchM_faces;
+  std::vector<std::pair<int, vgl_point_3d<double> > > stitchS_idpts;
   //-bktbr: box ratio
   get_stitch_surface_pts (BktStruct, stitchS_idpts, bktbr);
 
   //Mesh the stitching surface S.
-  vcl_vector<vcl_vector<int> > stitchS_init_faces; //empty
+  std::vector<std::vector<int> > stitchS_init_faces; //empty
   dbmsh3d_mesh* M;
   double d_median;
-  vcl_string tmpprefix = dirprefix+"-tmp";
+  std::string tmpprefix = dirprefix+"-tmp";
   M = run_surface_meshing (stitchS_idpts, stitchS_init_faces, tmpprefix,
                            bdsphr_rr, bdsphr_sr, seg_msr, seg_topo_opt>1, d_median);
 
@@ -618,11 +618,11 @@ void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pt
         box.set_max_x (B->max_x());
         
         //Determine all faces of stitching surface S that intersects B as initial mesh.
-        vcl_vector<vcl_vector<int> > B_initM_faces;
+        std::vector<std::vector<int> > B_initM_faces;
         get_faces_intersect_box (stitchM_faces, input_pts, box, B_initM_faces);
 
         //Get the points for local meshing in this bucket B.
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > > B_meshing_idpts;
+        std::vector<std::pair<int, vgl_point_3d<double> > > B_meshing_idpts;
         get_pts_local_bucket_meshing (B, B_initM_faces, input_pts, B_meshing_idpts);
 
         //Meshing the surface in B using the initial mesh.    
@@ -631,7 +631,7 @@ void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pt
                                  bdsphr_rr, bdsphr_sr, seg_msr, seg_topo_opt>1, d_median);
 
         //Save the faces of S to B_faces.
-        ///vcl_vector<vcl_vector<int> > B_faces;
+        ///std::vector<std::vector<int> > B_faces;
         ///add_mesh_faces_IFS (pv1->bnd_mesh(), B_faces);
 
         //Add the surface in bucket B to finalM_faces.
@@ -642,7 +642,7 @@ void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pt
         merge_meshes (input_pts, finalM_faces, M);
         
         //Save the reconsturcted surface to .ply file. 
-        vcl_string B_surf_ply = dirprefix;
+        std::string B_surf_ply = dirprefix;
         char buf[128];
         B_surf_ply += "_";
         sprintf (buf, "%02d", s);
@@ -674,13 +674,13 @@ void run_seg_adpt_bucketing_4 (const vcl_vector<vgl_point_3d<double> >& input_pt
   merge_meshes (input_pts, finalM_faces, Ms);
   delete Ms;
 
-  vcl_string final_surf = dirprefix;
+  std::string final_surf = dirprefix;
   final_surf += "_bktseg_final.ply2";
   dbmsh3d_save_ply2 (input_pts, finalM_faces, final_surf.c_str());
 
 }
 
-void run_seg_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
+void run_seg_cell_bucketing (dbmsh3d_pt_set* pts, const std::string prefix,
                              const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ,
                              const float msr)
 {
@@ -688,7 +688,7 @@ void run_seg_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
   cell_bucketing (pts, prefix, BUCKET_NX, BUCKET_NY, BUCKET_NZ);
   
   //Generate the bucket list file of .P3D files (one for each bucket).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   /*gen_bktlst_txt (prefix, bucket_list);
 
   //Generate the run file to view bucketing results.
@@ -724,7 +724,7 @@ void run_seg_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
 }
 
 
-void run_seg_cell_bucketing_2 (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
+void run_seg_cell_bucketing_2 (dbmsh3d_pt_set* pt_set, const std::string prefix,
                                   const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ,
                                   const float msr)
 {

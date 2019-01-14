@@ -52,12 +52,12 @@ public:
 
   //: Return a platform independent string identifying the class
   // inherited. 
-  virtual vcl_string is_a() const { return vcl_string("dbsk2d_bnd_vertex"); }
+  virtual std::string is_a() const { return std::string("dbsk2d_bnd_vertex"); }
 
   //: Return true if the argument matches the string identifying the class 
   // or any parent class
   // inherited.
-  virtual bool is_class(const vcl_string& cls) const { return cls==is_a() || 
+  virtual bool is_class(const std::string& cls) const { return cls==is_a() || 
     vtol_vertex::is_class(cls); }
 
   //: Return the pointer to dbsk2d_ishock_bpoint
@@ -113,9 +113,9 @@ public:
 
   //: print
   // inherited. Need rewrite.
-  virtual void print(vcl_ostream & os=vcl_cout) const;
+  virtual void print(std::ostream & os=std::cout) const;
 
-  //  void describe(vcl_ostream &strm=vcl_cout, int blanking=0) const;
+  //  void describe(std::ostream &strm=std::cout, int blanking=0) const;
 
   //: Compute bounding box of the vertex. A local implementation
   // inherited.

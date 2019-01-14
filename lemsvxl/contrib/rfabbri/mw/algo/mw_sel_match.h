@@ -21,8 +21,8 @@ class mw_sel_point_matcher : mw_point_matcher {
     FAIL_UNDEFINED
   };
   void sel_geometry_costs (
-    const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
-    const vcl_vector<dbdet_sel_sptr> &sel_,
+    const std::vector<std::vector< vsol_point_2d_sptr > > &points_,
+    const std::vector<dbdet_sel_sptr> &sel_,
     bmcsd_discrete_corresp *corr,
     unsigned iv1, unsigned iv2);
   

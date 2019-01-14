@@ -8,14 +8,14 @@
 // 
 
 #include <vbl/vbl_array_3d.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class biosim_cylinder_pyramid
 
 {
 private:
     vbl_array_3d<double> volume_;
-    vcl_vector<double> radii_;
+    std::vector<double> radii_;
 
 
 public:

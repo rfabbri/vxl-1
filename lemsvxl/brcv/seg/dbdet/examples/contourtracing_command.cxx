@@ -28,7 +28,7 @@
 #include <vil/algo/vil_threshold.h>
 #include <vul/vul_psfile.h>
 #include <bdgl/bdgl_curve_algs.h>
-#include <vcl_cstring.h>
+#include <cstring>
 
 int main( int argc, char* argv[] )
 {
@@ -36,11 +36,11 @@ int main( int argc, char* argv[] )
   char strtemp2[100];
 
   if (argc != 4) {
-    vcl_cout << "USAGE: contourtracing_command.exe <image file name> <smoothing sigma> <number of times to be smoothed>\n";
+    std::cout << "USAGE: contourtracing_command.exe <image file name> <smoothing sigma> <number of times to be smoothed>\n";
     return 1;
   }
 
-  vcl_string image_filename(argv[1]);
+  std::string image_filename(argv[1]);
   float s = atof(argv[2]);
   unsigned cnt = atoi(argv[3]);
 
@@ -55,11 +55,11 @@ int main( int argc, char* argv[] )
   ctracer.trace(binary_img);
   ctracer.output_con_file(image_filename.c_str());
 
-  const vcl_vector<vsol_point_2d_sptr>& points = ctracer.largest_contour();
+  const std::vector<vsol_point_2d_sptr>& points = ctracer.largest_contour();
 
-  vcl_cout << "number of points in largest contour: " << points.size() << vcl_endl;
+  std::cout << "number of points in largest contour: " << points.size() << std::endl;
   
-  vcl_strcpy(strtemp1, image_filename.c_str());    
+  std::strcpy(strtemp1, image_filename.c_str());    
   {
   unsigned i;
   for ( i=0; strtemp1[i] != '.'; i++ ){}
@@ -71,13 +71,13 @@ int main( int argc, char* argv[] )
   vul_psfile psfile1(strtemp2, false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << strtemp2 << vcl_endl;
+    std::cout << " Error opening file  " << strtemp2 << std::endl;
     return false;
   }
 
-  vcl_cout << " Opened file " << strtemp2 << " for writing!\n";
-  vcl_cout << " Image dimensions are, width: " << loaded_image.ni();
-  vcl_cout << " height: " << loaded_image.nj() << "\n";
+  std::cout << " Opened file " << strtemp2 << " for writing!\n";
+  std::cout << " Image dimensions are, width: " << loaded_image.ni();
+  std::cout << " height: " << loaded_image.nj() << "\n";
 
   unsigned char * data= new unsigned char[loaded_image.ni()*loaded_image.nj()];
   for( unsigned i=0;i<loaded_image.ni()*loaded_image.nj();i++)
@@ -107,7 +107,7 @@ int main( int argc, char* argv[] )
     strtemp1[i]= 0;
     sprintf(strtemp2, "%s.con", strtemp1);
 
-    vcl_vector<vgl_point_2d<double> > curve;
+    std::vector<vgl_point_2d<double> > curve;
     curve.clear();
 
     for (i=0; i<points.size();i++){

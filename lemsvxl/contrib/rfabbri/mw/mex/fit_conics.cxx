@@ -1,6 +1,6 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <streambuf>
+#include <sstream>
 #include <math.h>
 #include <vgl/algo/vgl_fit_conics_2d.h>
 #include <bgld/algo/bgld_conic_arc.h>
@@ -14,7 +14,7 @@ static void
 mymex(
       double *pts,
       mwSize pts_size,
-      const vcl_string &method,
+      const std::string &method,
       mwSize min_length,
       double subsample_step_size,
       double tol,
@@ -23,11 +23,11 @@ mymex(
       mxArray **ptr_conics
       )
 {
-  vcl_vector<vgl_point_2d<double> > pts_vxl(pts_size);
+  std::vector<vgl_point_2d<double> > pts_vxl(pts_size);
 
   matlab_to_vgl(pts, &pts_vxl);
   
-  vcl_cout << "Method is conic\n\n";
+  std::cout << "Method is conic\n\n";
 
   // Core processing.
   if (method == "conic") { 
@@ -38,19 +38,19 @@ mymex(
     bool retval = fit.fit();
 
     if (!retval) {
-      vcl_cout << "Error in fit()\n";
-      vcl_cerr << "Error in fit()\n";
+      std::cout << "Error in fit()\n";
+      std::cerr << "Error in fit()\n";
     }
     assert(retval);
 
-    vcl_vector<vgl_conic_segment_2d<double> > segs = fit.get_conic_segs();
+    std::vector<vgl_conic_segment_2d<double> > segs = fit.get_conic_segs();
 
-    vcl_cout << "Number of segments: " << segs.size() << vcl_endl;
+    std::cout << "Number of segments: " << segs.size() << std::endl;
 
-    vcl_vector<vgl_point_2d<double> > subsamples;
+    std::vector<vgl_point_2d<double> > subsamples;
     subsamples.reserve(segs.size()*static_cast<unsigned>(ceil(1.0/subsample_step_size+10)));
 
-    vcl_vector<vgl_point_2d<double> > endpoints;
+    std::vector<vgl_point_2d<double> > endpoints;
     endpoints.reserve(2*segs.size());
     // transform to a parametric curve and finely sample it.
     for (unsigned is=0; is < segs.size(); ++is) {
@@ -59,7 +59,7 @@ mymex(
       for (double t=0; t <= 1; t += subsample_step_size) {
         subsamples.push_back(s.point_at(t));
       }
-      vcl_cout << "Switching samples at " << subsamples.size() << vcl_endl;
+      std::cout << "Switching samples at " << subsamples.size() << std::endl;
 
       endpoints.push_back(segs[is].point1());
       endpoints.push_back(segs[is].point2());
@@ -72,23 +72,23 @@ mymex(
   } else {
     // Circular arc fitting
 
-    vcl_vector<bgld_circ_arc> segs;
+    std::vector<bgld_circ_arc> segs;
 
-    vcl_cout << "tolerance = " << tol << vcl_endl;
+    std::cout << "tolerance = " << tol << std::endl;
     bool retval = bgld_fit_circ_arc_spline_to_polyline(segs, pts_vxl, tol);
     if (!retval) {
-      vcl_cout << "Error in fit()\n";
-      vcl_cerr << "Error in fit()\n";
+      std::cout << "Error in fit()\n";
+      std::cerr << "Error in fit()\n";
     }
     assert(retval);
 
-    vcl_cout << "Number of segments: " << segs.size() << vcl_endl;
+    std::cout << "Number of segments: " << segs.size() << std::endl;
 
-    vcl_vector<vgl_point_2d<double> > subsamples;
+    std::vector<vgl_point_2d<double> > subsamples;
     subsamples.reserve(
         segs.size()*static_cast<unsigned>(ceil(1.0/subsample_step_size+10)));
 
-    vcl_vector<vgl_point_2d<double> > endpoints;
+    std::vector<vgl_point_2d<double> > endpoints;
     endpoints.reserve(2*segs.size());
     // transform to a parametric curve and finely sample it.
     for (unsigned is=0; is < segs.size(); ++is) {
@@ -116,7 +116,7 @@ get_args(
    const mxArray *prhs[],
    double **pts,
    mwSize *pts_size,
-   vcl_string *method,
+   std::string *method,
    double *subsample_step_size,
    mwSize *min_length,
    double *tol)
@@ -180,7 +180,7 @@ get_args(
     if (mxGetString(prhs[1], buf, buflen) != 0)
       mexErrMsgTxt("Could not convert string data.\n");
 
-    *method = vcl_string(buf);
+    *method = std::string(buf);
 
     if (nrhs > 2) {
       *subsample_step_size = *(mxGetPr(prhs[2]));
@@ -232,23 +232,23 @@ void mexFunction(
   double *pts; double subsample_step_size, tol;
   mwSize min_length; 
   mwSize pts_size;
-  vcl_string method;
+  std::string method;
 
   get_args(nlhs, plhs, nrhs, prhs, 
       &pts, &pts_size, &method,
       &subsample_step_size, &min_length,  &tol);
 
   // Initialize buffering stuff for error messages
-  vcl_cout.sync_with_stdio(true);
-  vcl_cerr.sync_with_stdio(true);
+  std::cout.sync_with_stdio(true);
+  std::cerr.sync_with_stdio(true);
 
-  vcl_streambuf* cout_sbuf = vcl_cout.rdbuf();
-  vcl_stringbuf myout_sbuf;
-  vcl_cout.rdbuf(&myout_sbuf);
+  std::streambuf* cout_sbuf = std::cout.rdbuf();
+  std::stringbuf myout_sbuf;
+  std::cout.rdbuf(&myout_sbuf);
 
-  vcl_streambuf* cerr_sbuf = vcl_cerr.rdbuf();
-  vcl_stringbuf myerr_sbuf;
-  vcl_cerr.rdbuf(&myerr_sbuf);
+  std::streambuf* cerr_sbuf = std::cerr.rdbuf();
+  std::stringbuf myerr_sbuf;
+  std::cerr.rdbuf(&myerr_sbuf);
 
 
   // ---- Main code ----
@@ -259,9 +259,9 @@ void mexFunction(
   mexPrintf("%s",myout_sbuf.str().c_str());
   mexPrintf("%s",myerr_sbuf.str().c_str());
 
-  vcl_cout.rdbuf(cout_sbuf);
-  vcl_cerr.rdbuf(cerr_sbuf);
-  vcl_flush(vcl_cout);
-  vcl_flush(vcl_cerr);
+  std::cout.rdbuf(cout_sbuf);
+  std::cerr.rdbuf(cerr_sbuf);
+  std::flush(std::cout);
+  std::flush(std::cerr);
   return;
 }

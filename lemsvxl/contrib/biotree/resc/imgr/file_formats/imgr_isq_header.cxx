@@ -1,7 +1,7 @@
 #include "imgr_isq_header.h"
 #include <vil/vil_stream_read.h>
-#include <vcl_cstring.h>
-#include <vcl_exception.h>
+#include <cstring>
+#include <exception>
 
 const unsigned isq_magic_len = 16;
 
@@ -34,7 +34,7 @@ imgr_isq_header::imgr_isq_header(vil_stream * fs)
     // read magic words
     if (fs->read(check_, isq_magic_len) == static_cast<int>(isq_magic_len))
     {
-      if(vcl_strncmp( check_, isq_magic, isq_magic_len) == 0)
+      if(std::strncmp( check_, isq_magic, isq_magic_len) == 0)
       {
         is_valid_ = true;
 
@@ -110,7 +110,7 @@ imgr_isq_header::imgr_isq_header(vil_stream * fs)
     }
 
     if(!is_valid_){
-      vcl_throw vcl_exception();
+      throw std::exception();
     }
   }
 

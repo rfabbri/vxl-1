@@ -37,7 +37,7 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_file_matrix.h>
 #include <vul/vul_timer.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 //: Constructor
@@ -162,7 +162,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr)
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsks_examine_xgraph_cost_tool::
+std::string dbsks_examine_xgraph_cost_tool::
 name() const 
 {
   return "Examine xgraph cost";
@@ -177,7 +177,7 @@ name() const
 void dbsks_examine_xgraph_cost_tool::
 get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   // computer vertex depths
   menu.add("Compute xgraph vertex depths", dbsks_exgc_compute_xgraph_vertex_depths_wrapper, (void*)(this));
@@ -272,7 +272,7 @@ compute_xgraph_vertex_depths()
 
   if (!xv)
   {
-    vcl_cout << "\nERROR: couldn't determine root node" << vcl_endl;
+    std::cout << "\nERROR: couldn't determine root node" << std::endl;
     return;
   }
   xgraph->compute_vertex_depths(xv->id());
@@ -314,7 +314,7 @@ handle_display_part_cost()
 bool dbsks_examine_xgraph_cost_tool::
 handle_display_xfrag_cost(const dbsksp_xshock_edge_sptr& xe)
 {
-  vcl_cout << "\nEdge id= " << xe->id() << "\n";
+  std::cout << "\nEdge id= " << xe->id() << "\n";
   
   // parent and child nodes
   dbsksp_xshock_node_sptr xv_parent = xe->parent_node();
@@ -322,7 +322,7 @@ handle_display_xfrag_cost(const dbsksp_xshock_edge_sptr& xe)
 
   if (!xv_parent || !xv_child)
   {
-    vcl_cout << "\nERROR: couldn't determine child and parent of edge id=" << xe->id() << vcl_endl;
+    std::cout << "\nERROR: couldn't determine child and parent of edge id=" << xe->id() << std::endl;
     return true;
   }
 
@@ -338,25 +338,25 @@ handle_display_xfrag_cost(const dbsksp_xshock_edge_sptr& xe)
   //  // Compute gray OCM cost
   //  float gray_ocm_cost = 0;
   //  dbsks_compute_ocm_cost(&this->gray_ocm_, &this->biarc_sampler_, xfrag, gray_ocm_cost);
-  //  vcl_cout << "  Gray OCM cost= " << gray_ocm_cost << vcl_endl;
+  //  std::cout << "  Gray OCM cost= " << gray_ocm_cost << std::endl;
   //}
 
   //else if (this->examine_ccm_)
   //{
   //  float ccm_cost = -1.0f;
   //  dbsks_compute_ocm_cost(&this->ccm_, &this->biarc_sampler_, xfrag, ccm_cost);
-  //  vcl_cout << "  Contour OCM cost= " << ccm_cost << vcl_endl;
+  //  std::cout << "  Contour OCM cost= " << ccm_cost << std::endl;
   //}
 
   //else if (this->examine_wcm_model_)
   //{
   //  float ccm_cost = vnl_numeric_traits<float >::maxval;
   //  dbsks_compute_ocm_cost(&this->wcm_, &this->biarc_sampler_, xfrag, ccm_cost);
-  //  vcl_cout << "\n  CCM cost = " << ccm_cost << ".\n";
+  //  std::cout << "\n  CCM cost = " << ccm_cost << ".\n";
 
   //  float wcm_likelihood = vnl_numeric_traits<float >::maxval;
   //  wcm_likelihood = this->wcm_like_.loglike(xe->id(), xfrag);
-  //  vcl_cout << "  WCM likelihood= " << wcm_likelihood << ".\n";
+  //  std::cout << "  WCM likelihood= " << wcm_likelihood << ".\n";
   //}
 
   //else 
@@ -364,7 +364,7 @@ handle_display_xfrag_cost(const dbsksp_xshock_edge_sptr& xe)
   {
     float subpix_ccm_loglike = vnl_numeric_traits<float >::maxval;
 
-    vcl_vector<int > x_vec[2], y_vec[2], angle_vec[2];
+    std::vector<int > x_vec[2], y_vec[2], angle_vec[2];
     
 
     subpix_ccm_loglike = this->subpix_ccm_like_.loglike(xe->id(), xfrag,
@@ -416,7 +416,7 @@ handle_display_xfrag_cost(const dbsksp_xshock_edge_sptr& xe)
     
     }
     
-    vcl_cout << "  Subpix CCM likelihood= " << subpix_ccm_loglike << ".\n";
+    std::cout << "  Subpix CCM likelihood= " << subpix_ccm_loglike << ".\n";
     this->tableau()->post_overlay_redraw();
   }
   return true;
@@ -435,16 +435,16 @@ handle_display_graph_cost()
   dbsksp_xshock_graph_sptr xgraph = this->xgraph_storage()->xgraph();
   if (!xgraph)
   {
-    vcl_cout << "\nERROR: couldn't find xshock graph." << vcl_endl;
+    std::cout << "\nERROR: couldn't find xshock graph." << std::endl;
     return true;
   }
 
-  vcl_cout << "\nGraph cost - #edges= " << xgraph->number_of_edges() << vcl_endl;
+  std::cout << "\nGraph cost - #edges= " << xgraph->number_of_edges() << std::endl;
   
 
   
   // determine the ignored edge
-  vcl_vector<unsigned int > ignored_edges;
+  std::vector<unsigned int > ignored_edges;
   ignored_edges.clear();
 
   //// compute each cost type separately
@@ -455,8 +455,8 @@ handle_display_graph_cost()
   //  
   //  dbsks_compute_ocm_cost(&this->gray_ocm_, &this->biarc_sampler_, xgraph, gray_ocm_cost, 
   //    ignored_edges, false);
-  //  vcl_cout << "  Gray OCM cost= " << gray_ocm_cost 
-  //    << " - Confidence= " << 1-(gray_ocm_cost / xgraph->number_of_edges()) << vcl_endl;
+  //  std::cout << "  Gray OCM cost= " << gray_ocm_cost 
+  //    << " - Confidence= " << 1-(gray_ocm_cost / xgraph->number_of_edges()) << std::endl;
   //}
 
   //if (this->examine_ccm_)
@@ -465,8 +465,8 @@ handle_display_graph_cost()
   //  float ccm_cost = 0;
   //  dbsks_compute_ocm_cost(&this->ccm_, &this->biarc_sampler_, xgraph, ccm_cost,
   //    ignored_edges, false);
-  //  vcl_cout << "  Contour OCM cost= " << ccm_cost 
-  //    << " - Confidence= " << 1-(ccm_cost/xgraph->number_of_edges()) << vcl_endl;
+  //  std::cout << "  Contour OCM cost= " << ccm_cost 
+  //    << " - Confidence= " << 1-(ccm_cost/xgraph->number_of_edges()) << std::endl;
   //}
 
   //if (this->examine_wcm_model_)
@@ -475,11 +475,11 @@ handle_display_graph_cost()
   //  float ccm_cost = 0;
   //  dbsks_compute_ocm_cost(&this->wcm_, &this->biarc_sampler_, xgraph, ccm_cost,
   //    ignored_edges, false);
-  //  vcl_cout << "  CCM cost= " << ccm_cost << "\n";
+  //  std::cout << "  CCM cost= " << ccm_cost << "\n";
 
   //  float wcm_like = 0;
   //  this->wcm_like_.loglike_xgraph(xgraph, ignored_edges, false);
-  //  vcl_cout << "  WCM likelihood= " << wcm_like << "\n";    
+  //  std::cout << "  WCM likelihood= " << wcm_like << "\n";    
   //}
 
 
@@ -487,13 +487,13 @@ handle_display_graph_cost()
   {
     float subpix_ccm_loglike = vnl_numeric_traits<float >::maxval;
 
-    vcl_vector<int > x_vec[2], y_vec[2], angle_vec[2];
+    std::vector<int > x_vec[2], y_vec[2], angle_vec[2];
     
 
     subpix_ccm_loglike = this->subpix_ccm_like_.loglike_xgraph(this->xgraph_storage()->xgraph(), 
-      vcl_vector<unsigned >(0), true);
+      std::vector<unsigned >(0), true);
 
-    vcl_cout << "\n subpix_ccm_loglike = " << subpix_ccm_loglike << "\n";
+    std::cout << "\n subpix_ccm_loglike = " << subpix_ccm_loglike << "\n";
   }
   return true;
 }
@@ -548,11 +548,11 @@ prepare_image_cost_fnt()
 //void dbsks_examine_xgraph_cost_tool::
 //prepare_gray_ocm_cost_fnt()
 //{
-//  vcl_cout << "\n>>>Preparing cost function for Gray-OCM...\n";
+//  std::cout << "\n>>>Preparing cost function for Gray-OCM...\n";
 //  // get view of the image
 //  if (!this->gray_ocm_image_storage_ || !(this->gray_ocm_image_storage_->get_image()))
 //  {
-//    vcl_cout << "\nERROR: image storage has not been set up correctly.\n";
+//    std::cout << "\nERROR: image storage has not been set up correctly.\n";
 //    return;
 //  }
 //  vil_image_view<float > image_view = *vil_convert_cast(float(), 
@@ -561,7 +561,7 @@ prepare_image_cost_fnt()
 //  // get view of the edgemap
 //  if (!this->gray_ocm_edgemap_storage_ || !(this->gray_ocm_edgemap_storage_->get_image()))
 //  {
-//    vcl_cout << "\nERROR: edgemap storage has not been set up correctly.\n";
+//    std::cout << "\nERROR: edgemap storage has not been set up correctly.\n";
 //    return;
 //  }
 //  vil_image_view<float > edgemap_view = *vil_convert_cast(float(),
@@ -582,7 +582,7 @@ prepare_image_cost_fnt()
 //    !this->gray_ocm_params_->get_value("-gray-ocm-lambda", lambda) ||
 //    !this->gray_ocm_params_->get_value("-gray-ocm-nchannel-0topi", nchannel))
 //  {
-//    vcl_cout << "\nERROR: couldn't retrieve values of all parameters of gray_ocm.\n";
+//    std::cout << "\nERROR: couldn't retrieve values of all parameters of gray_ocm.\n";
 //    return;
 //  }
 //
@@ -594,7 +594,7 @@ prepare_image_cost_fnt()
 //
 //  // pre-compute chamfer cost and orientation cost at every pixel and orientation
 //  gray_ocm->compute();
-//  vcl_cout << "Done.>>>" << vcl_endl;
+//  std::cout << "Done.>>>" << std::endl;
 //  return;
 //}
 //
@@ -604,12 +604,12 @@ prepare_image_cost_fnt()
 //void dbsks_examine_xgraph_cost_tool::
 //prepare_ccm_cost_fnt()
 //{
-//  vcl_cout << "\n>>>Preparing cost function for contour-OCM...\n";
+//  std::cout << "\n>>>Preparing cost function for contour-OCM...\n";
 //
 //  // get view of the edgemap
 //  if (!this->ccm_edgemap_storage_ || !(this->ccm_edgemap_storage_->get_image()))
 //  {
-//    vcl_cout << "\nERROR: edgemap storage has not been set up correctly.\n";
+//    std::cout << "\nERROR: edgemap storage has not been set up correctly.\n";
 //    return;
 //  }
 //  vil_image_view<float > edgemap = *vil_convert_cast(float(),
@@ -628,7 +628,7 @@ prepare_image_cost_fnt()
 //    !this->ccm_params_->get_value("-contour-ocm-gamma", gamma) ||
 //    !this->ccm_params_->get_value("-contour-ocm-nchannel-0topi", nchannel_0topi))
 //  {
-//    vcl_cout << "\nERROR: couldn't retrieve values of all parameters of ccm.\n";
+//    std::cout << "\nERROR: couldn't retrieve values of all parameters of ccm.\n";
 //    return;
 //  }
 //
@@ -637,13 +637,13 @@ prepare_image_cost_fnt()
 //  vnl_file_matrix<double > theta(edgeorient_file.path.c_str());
 //  if (theta.empty())
 //  {
-//    vcl_cout << "\nERROR: couldn't load edge orientation file: " << edgeorient_file << vcl_endl;
+//    std::cout << "\nERROR: couldn't load edge orientation file: " << edgeorient_file << std::endl;
 //    return;
 //  }
 //
 //  if (edgemap.nj() != theta.rows() || edgemap.ni() != theta.cols())
 //  {
-//    vcl_cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << vcl_endl;
+//    std::cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << std::endl;
 //    return;
 //  }
 //
@@ -663,7 +663,7 @@ prepare_image_cost_fnt()
 //
 //  //////////////////////////////////////////////////////////////////////////////
 //  //>> Contour OCM cost function
-//  vcl_cout << "\nConstructing contour-OCM cost function ...";
+//  std::cout << "\nConstructing contour-OCM cost function ...";
 //  vul_timer timer;
 //  timer.mark();
 //  dbsks_ccm& ccm = (this->ccm_);
@@ -672,11 +672,11 @@ prepare_image_cost_fnt()
 //  ccm.set_edge_orient(edge_angle);
 //  ccm.compute();
 //
-//  vcl_cout << "done" << vcl_endl;;
-//  vcl_cout << "    Time spent = ";
-//  timer.print(vcl_cout);
+//  std::cout << "done" << std::endl;;
+//  std::cout << "    Time spent = ";
+//  timer.print(std::cout);
 //
-//  vcl_cout << "Done.>>>" << vcl_endl;
+//  std::cout << "Done.>>>" << std::endl;
 //  return;
 //}
 //
@@ -691,7 +691,7 @@ prepare_image_cost_fnt()
 //prepare_wcm_model_cost_fnt()
 //{
 //  //>> Whole-Contour-Matching
-//  vcl_cout << "\n>> Constructing Whole-Contour-Matching cost function ...";
+//  std::cout << "\n>> Constructing Whole-Contour-Matching cost function ...";
 //
 //  vul_timer timer;
 //  timer.mark();
@@ -712,7 +712,7 @@ prepare_image_cost_fnt()
 //  // contour-edge map
 //  bpro1_filepath cemv_file;
 //  this->wcm_model_params_->get_value("-cemv-file", cemv_file);
-//  vcl_vector<vsol_polyline_2d_sptr > polyline_list;
+//  std::vector<vsol_polyline_2d_sptr > polyline_list;
 //  dbsks_load_polyline_list(cemv_file.path, polyline_list);
 //
 //  // CCM model file
@@ -741,15 +741,15 @@ prepare_image_cost_fnt()
 //  
 //
 //
-//  vcl_cout << "[ OK ]\n";
-//  vcl_cout << "    Time spent = ";
-//  timer.print(vcl_cout);
+//  std::cout << "[ OK ]\n";
+//  std::cout << "    Time spent = ";
+//  timer.print(std::cout);
 //
 //  /////////////////////////////////////////////////////////////////////
 //  //>> Re-compute the vertex depths using the root node in the ccm model
-//  vcl_cout << ">> Recomputing vertex depths using root vertex in the CCM mode ... ";
+//  std::cout << ">> Recomputing vertex depths using root vertex in the CCM mode ... ";
 //  this->xgraph_storage()->xgraph()->compute_vertex_depths(xgraph_ccm->root_vid());
-//  vcl_cout << "[ OK ]\n";
+//  std::cout << "[ OK ]\n";
 //
 //  return;
 //}
@@ -763,7 +763,7 @@ prepare_image_cost_fnt()
 void dbsks_examine_xgraph_cost_tool::
 prepare_biarc_sampler_fnt()
 {
-  vcl_cout << "\n<<< Constructing a biarc sampler ...";
+  std::cout << "\n<<< Constructing a biarc sampler ...";
 
   dbsks_biarc_sampler* biarc_sampler = &(this->biarc_sampler_);
 
@@ -780,13 +780,13 @@ prepare_biarc_sampler_fnt()
   if (!this->biarc_sampler_params_->get_value("-biarc-sampler-ds", ds) ||
     !this->biarc_sampler_params_->get_value("-biarc-sampler-nchannel-0to2pi", nchannel_0to2pi))
   {
-    vcl_cout << "\nERROR: couldn't retrieve all parameters of biarc_sampler.\n";
+    std::cout << "\nERROR: couldn't retrieve all parameters of biarc_sampler.\n";
     return;
   }
 
   biarc_sampler->set_sampling_params(nchannel_0to2pi, ds);
   biarc_sampler->compute_cache_sample_points();
-  vcl_cout << "Done.>>>" << vcl_endl;
+  std::cout << "Done.>>>" << std::endl;
 
   return;
 }
@@ -801,13 +801,13 @@ prepare_biarc_sampler_fnt()
 void dbsks_examine_xgraph_cost_tool::
 prepare_subpix_ccm_cost_fnt()
 {
-  vcl_cout << "Preparing subpix ccm cost function ... \n";
+  std::cout << "Preparing subpix ccm cost function ... \n";
 
   vul_timer timer;
   timer.mark();
 
   // some annoucement
-  vcl_cout << "\n> Constructing a likelihood function based on CCM cost ...";
+  std::cout << "\n> Constructing a likelihood function based on CCM cost ...";
 
 
   bpro1_filepath temp;
@@ -817,25 +817,25 @@ prepare_subpix_ccm_cost_fnt()
   
   // edge-image file
   this->subpix_ccm_params_->get_value("-edge-image", temp);
-  vcl_string edge_image_file = temp.path;
+  std::string edge_image_file = temp.path;
 
   // edge-orientation file
   this->subpix_ccm_params_->get_value("-edge-orient", temp);
-  vcl_string edge_orient_file = temp.path;
+  std::string edge_orient_file = temp.path;
 
   float log2_scale_up_factor = 0;
   this->subpix_ccm_params_->get_value("-log2-scale-up-factor", log2_scale_up_factor);
 
   // Load the edgel map from two files: edge image and edge orient
   edgemap = dbsks_load_subpix_edgemap(edge_image_file, edge_orient_file, 15.0f, 255.0f);
-  dbdet_resize_edgemap(edgemap, vcl_pow(2, log2_scale_up_factor));
+  dbdet_resize_edgemap(edgemap, std::pow(2, log2_scale_up_factor));
 
 
   //2) Load CCM model
   dbsks_xgraph_ccm_model_sptr xgraph_ccm = 0;
 
   this->subpix_ccm_params_->get_value("-xgraph-ccm-model", temp);
-  vcl_string xgraph_ccm_file = temp.path;
+  std::string xgraph_ccm_file = temp.path;
   x_read(xgraph_ccm_file, xgraph_ccm);
 
   
@@ -844,13 +844,13 @@ prepare_subpix_ccm_cost_fnt()
 
   if (!edgemap || !xgraph_ccm || !biarc_sampler)
   {
-    vcl_cout << "\nERROR: could not construct submix_ccm cost function.\n";
+    std::cout << "\nERROR: could not construct submix_ccm cost function.\n";
     return;
   }
 
   //4) Detection window
   vgl_box_2d<int > window(0, edgemap->width()-1, 0, edgemap->height()-1);    
-  vcl_cout 
+  std::cout 
     << "\n Detection window  [xmin ymin xmax ymax] = "
     << "[" << window.min_x() 
     << " " << window.min_y() 
@@ -866,7 +866,7 @@ prepare_subpix_ccm_cost_fnt()
   //6) Compute cache data
   this->subpix_ccm_like_.compute_internal_data(window);
 
-  vcl_cout << "Compute subpix_ccm cost function completed.\n";
+  std::cout << "Compute subpix_ccm cost function completed.\n";
 
   //
   //this->xgraph_storage()->set_image(vil_load(edge_image_file.c_str()));
@@ -933,11 +933,11 @@ handle_overlay_redraw()
       float y = this->sample_y_[k][i];
       float a = this->sample_angle_[k][i];
 
-      float x0 = x - vcl_cos(a) * d;
-      float y0 = y - vcl_sin(a) * d;
+      float x0 = x - std::cos(a) * d;
+      float y0 = y - std::sin(a) * d;
 
-      float x1 = x + vcl_cos(a) * d;
-      float y1 = y + vcl_sin(a) * d;
+      float x1 = x + std::cos(a) * d;
+      float y1 = y + std::sin(a) * d;
 
       glVertex2f(x0, y0);
       glVertex2f(x1, y1);
@@ -985,11 +985,11 @@ handle_overlay_redraw()
       float y = this->edgel_y_[k][i];
       float a = this->edgel_angle_[k][i];
 
-      float x0 = x - vcl_cos(a) * d;
-      float y0 = y - vcl_sin(a) * d;
+      float x0 = x - std::cos(a) * d;
+      float y0 = y - std::sin(a) * d;
 
-      float x1 = x + vcl_cos(a) * d;
-      float y1 = y + vcl_sin(a) * d;
+      float x1 = x + std::cos(a) * d;
+      float y1 = y + std::sin(a) * d;
 
       glVertex2f(x0, y0);
       glVertex2f(x1, y1);
@@ -1051,13 +1051,13 @@ execute()
   vgui_dialog io_dialog(("Select storage of type "+this->storage_type_).c_str() );
 
   //display input options
-  vcl_string input_type = this->storage_type_;
+  std::string input_type = this->storage_type_;
   io_dialog.message("Select Input(s) From Available ones:");
 
   //store the choices
   int input_choice;
-  vcl_vector <vcl_string> available_storages;
-  vcl_string input_name;
+  std::vector <std::string> available_storages;
+  std::string input_name;
 
   //get the repository and extract the qualified ones
   vidpro1_repository_sptr repository_sptr = bvis1_manager::instance()->repository();
@@ -1067,7 +1067,7 @@ execute()
 
   if (available_storages.empty())
   {
-    vcl_cout << "ERROR: no storage of type \"" << this->storage_type_ << "\" is available." << vcl_endl;
+    std::cout << "ERROR: no storage of type \"" << this->storage_type_ << "\" is available." << std::endl;
     return;
   }
 
@@ -1079,7 +1079,7 @@ execute()
   {
 
     // get the names of the user-select storage
-    vcl_string storage_name = available_storages.at(input_choice);
+    std::string storage_name = available_storages.at(input_choice);
     *(this->storage_) = repository_sptr->get_data_by_name(storage_name);
     return;
   }
@@ -1105,15 +1105,15 @@ execute()
 {
   if (!this->params_)
   {
-    vcl_cout << "\nERROR: Parameter list is empty." << vcl_endl;
+    std::cout << "\nERROR: Parameter list is empty." << std::endl;
     return;
   }
 
   // Pop up a dialogue box displaying all parameters in bpro1_parameters and let
   // user modify them
   vgui_dialog param_dialog("Set parameters");
-  vcl_vector< bpro1_param* > param_vector = this->params_->get_param_list();
-  for( vcl_vector< bpro1_param* >::iterator it = param_vector.begin(); it != 
+  std::vector< bpro1_param* > param_vector = this->params_->get_param_list();
+  for( std::vector< bpro1_param* >::iterator it = param_vector.begin(); it != 
     param_vector.end();  ++it ) 
   {
     if( bpro1_param_type<int> * param = dynamic_cast<bpro1_param_type<int> *>(*it) ) {
@@ -1131,7 +1131,7 @@ execute()
     else if( bpro1_param_type<double> * param = dynamic_cast<bpro1_param_type<double> *>(*it) ) {
       param_dialog.field( param->description().c_str() , param->temp_ref() );
     }
-    else if( bpro1_param_type<vcl_string> * param = dynamic_cast<bpro1_param_type<vcl_string> *>(*it) ) {
+    else if( bpro1_param_type<std::string> * param = dynamic_cast<bpro1_param_type<std::string> *>(*it) ) {
       param_dialog.field( param->description().c_str() , param->temp_ref() );
     }
     else if( bpro1_param_type<bool> * param = dynamic_cast<bpro1_param_type<bool> *>(*it) ) {
@@ -1141,7 +1141,7 @@ execute()
       param_dialog.file( param->description().c_str(), param->temp_ref().ext, param->temp_ref().path );
     }
     else{
-      vcl_cerr << "No valid dialog interface for parameter: " << (*it)->name() << vcl_endl;
+      std::cerr << "No valid dialog interface for parameter: " << (*it)->name() << std::endl;
     }
   }
 
@@ -1149,7 +1149,7 @@ execute()
   {
     if (param_dialog.ask()) 
     {
-      for(vcl_vector< bpro1_param* >::iterator it = param_vector.begin(); it != param_vector.end(); ++it)
+      for(std::vector< bpro1_param* >::iterator it = param_vector.begin(); it != param_vector.end(); ++it)
       {
         (*it)->set_from_temp();
 

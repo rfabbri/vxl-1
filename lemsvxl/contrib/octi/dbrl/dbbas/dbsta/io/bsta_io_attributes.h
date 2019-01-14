@@ -38,7 +38,7 @@ vsl_b_read(vsl_b_istream &is, bsta_num_obs<comp_>& m)
 //: Print summary
 template <class comp_>
 void
-vsl_print_summary(vcl_ostream &os, const bsta_num_obs<comp_>& m)
+vsl_print_summary(std::ostream &os, const bsta_num_obs<comp_>& m)
 {
   vsl_print_summary(os,static_cast<comp_>(m));
   os << " with "<<m.num_observations<<" observations";

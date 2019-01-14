@@ -17,14 +17,14 @@
 void test_dbsk2d_distance_functions()
 {
 
-  vcl_cout << "This is test_dbsk2d_distance_functions()" << vcl_endl;
+  std::cout << "This is test_dbsk2d_distance_functions()" << std::endl;
   
   // input points
   double x[] = { 0 , 1, 2, 3};
   double y[] = { 0 , 0, 0, 2};
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 4; ++i)
   {
     dbsk2d_ishock_bpoint* bp = new dbsk2d_ishock_bpoint(x[i], y[i]);
@@ -32,7 +32,7 @@ void test_dbsk2d_distance_functions()
   }
 
   // contruct list of edges
-  vcl_vector<dbsk2d_bnd_edge_sptr > edges;
+  std::vector<dbsk2d_bnd_edge_sptr > edges;
   for (unsigned int i = 0; i < 3; ++i)
   {
     dbsk2d_ishock_bpoint* bp1 = vertices[i]->bpoint();
@@ -58,7 +58,7 @@ void test_dbsk2d_distance_functions()
   // test 1 - complete line edge
   double min_dist = 
     dbsk2d_distance::point_to_bnd_edge(pt, contour->bnd_edge(0));
-  vcl_cout << "Distance from pt(0.5, 1) to edge(0) = " << min_dist << vcl_endl;
+  std::cout << "Distance from pt(0.5, 1) to edge(0) = " << min_dist << std::endl;
   TEST_NEAR("Distance from pt to complete line bnd_edge", min_dist , 1, 1e-7);
 
   // test 2 - partial line edge but closest point remains the same

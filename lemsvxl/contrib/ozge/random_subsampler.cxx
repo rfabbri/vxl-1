@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 #include <time.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 
 #define MPI   (3.14159265)
 #define SMALL  (1.0E-4)
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  vcl_string con_filename(argv[1]);
+  std::string con_filename(argv[1]);
   int e = atoi(argv[2]);
   bool even = (e == 1 ? true : false);
   N = atoi(argv[3]);
@@ -48,22 +48,22 @@ int main(int argc, char *argv[]) {
   curve_2d->readCONFromFile( con_filename.c_str() );
   
   NO = curve_2d->size();
-  vcl_cout << "Number of points in original curve: " << NO << vcl_endl;
+  std::cout << "Number of points in original curve: " << NO << std::endl;
 
   if (!even) {
-    vcl_vector<int> values;
+    std::vector<int> values;
 
     srand(time(NULL));
     // pick N random distinct numbers in (0,..,NO-1)
     for (int i = 0; i<N; i++) {
       double r = ((double)rand()/(double)(RAND_MAX));
-      int a = int(vcl_floor(r*(NO-1)+0.5f)); // round the value to nearest integer
+      int a = int(std::floor(r*(NO-1)+0.5f)); // round the value to nearest integer
       int tag = 0;
-      //vcl_cout << "a: " << a << "\n";
+      //std::cout << "a: " << a << "\n";
       for (int j = 0; j<i; j++) {
-        //vcl_cout << "values[" << j << "]: " << values[j] << "\n";
+        //std::cout << "values[" << j << "]: " << values[j] << "\n";
         if (a == values[j]) {
-          vcl_cout << "HIT!!\n";
+          std::cout << "HIT!!\n";
           i--;
           tag = 1;
           break;
@@ -73,13 +73,13 @@ int main(int argc, char *argv[]) {
       values.push_back(a);
     }
 
-    vcl_cout << " values size: " << values.size() << " N: " << N << vcl_endl;
+    std::cout << " values size: " << values.size() << " N: " << N << std::endl;
 
     //: Sort by the values.
-    vcl_sort(values.begin(), values.end());
+    std::sort(values.begin(), values.end());
     
     //for (int i = 0; i<values.size(); i++) 
-    //  vcl_cout << "values[" << i << "]: " << values[i] << vcl_endl;
+    //  std::cout << "values[" << i << "]: " << values[i] << std::endl;
 
     strcpy(strtemp1, con_filename.c_str());
     int i;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     sprintf(strtemp2, "%s-random-%d-%02d", strtemp1, N, id);
     sprintf(strtemp2, "%s.con", strtemp2);
 
-    vcl_cout << "output name: " << strtemp2 << vcl_endl;
+    std::cout << "output name: " << strtemp2 << std::endl;
     FILE *out = fopen(strtemp2, "w");
     fprintf(out, "CONTOUR\nOPEN\n%d\n", N);
     for (int i = 0; i<N; i++)
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
     fclose(out);
   } else {
 
-    vcl_vector<vsol_point_2d_sptr> inp1;
+    std::vector<vsol_point_2d_sptr> inp1;
     for (int k = 0; k<curve_2d->size(); k++)
       inp1.push_back(curve_2d->vertex(k));
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
     }
 
     double len = curve->length();
-    vcl_cout << " len: " << len << vcl_endl;
+    std::cout << " len: " << len << std::endl;
 
     double delta_s = len/N;
 
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
       sprintf(strtemp2, "%s-even-geno-%d", strtemp1, N);
     sprintf(strtemp2, "%s.con", strtemp2);
 
-    vcl_cout << "output name: " << strtemp2 << vcl_endl;
+    std::cout << "output name: " << strtemp2 << std::endl;
     FILE *out = fopen(strtemp2, "w");
     fprintf(out, "CONTOUR\nOPEN\n%d\n", N);
     
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
     vsol_point_2d_sptr pt = curve->point_at(len);
     fprintf(out, "%lf %lf\n", pt->x(), pt->y());
     cnt++;
-    vcl_cout << "printed " << cnt << " points N was: " << N << " \n";
+    std::cout << "printed " << cnt << " points N was: " << N << " \n";
 
     fclose(out);
 

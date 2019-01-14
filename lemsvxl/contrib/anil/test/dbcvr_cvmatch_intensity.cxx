@@ -1,7 +1,7 @@
 #include "dbcvr_cvmatch_intensity.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
-dbcvr_cvmatch_intensity::dbcvr_cvmatch_intensity(vcl_vector<double> vector1, vcl_vector<double> vector2)
+dbcvr_cvmatch_intensity::dbcvr_cvmatch_intensity(std::vector<double> vector1, std::vector<double> vector2)
 {
     pixel_vector1_ = vector1;
     pixel_vector2_ = vector2;
@@ -9,13 +9,13 @@ dbcvr_cvmatch_intensity::dbcvr_cvmatch_intensity(vcl_vector<double> vector1, vcl
 
 double dbcvr_cvmatch_intensity::computeIntervalCost(int i, int ip, int j, int jp)
 {
-    //double first_half = vcl_abs((pixel_vector1_[ip]*(i-ip)/2)-(pixel_vector2_[jp]*(j-jp)/2));
-    //double second_half = vcl_abs((pixel_vector1_[i]*(i-ip)/2)-(pixel_vector2_[j]*(j-jp)/2));
+    //double first_half = std::abs((pixel_vector1_[ip]*(i-ip)/2)-(pixel_vector2_[jp]*(j-jp)/2));
+    //double second_half = std::abs((pixel_vector1_[i]*(i-ip)/2)-(pixel_vector2_[j]*(j-jp)/2));
     //return first_half + second_half;
     
-    //return vcl_abs((pixel_vector1_[ip]*(i-ip))-(pixel_vector2_[jp]*(j-jp)));
+    //return std::abs((pixel_vector1_[ip]*(i-ip))-(pixel_vector2_[jp]*(j-jp)));
 
-    return vcl_abs(pixel_vector1_[ip]-pixel_vector2_[jp])+vcl_abs(pixel_vector1_[i]-pixel_vector2_[j]);
+    return std::abs(pixel_vector1_[ip]-pixel_vector2_[jp])+std::abs(pixel_vector1_[i]-pixel_vector2_[j]);
 }
 
 void dbcvr_cvmatch_intensity::Match ()
@@ -36,10 +36,10 @@ void dbcvr_cvmatch_intensity::initializeDPCosts()
   assert (_m>0);
 
   for (int i=0;i<_n;i++) {
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _DPCost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _DPMap.push_back(tmp2);
   }
 
@@ -82,7 +82,7 @@ void dbcvr_cvmatch_intensity::computeDPCosts ()
     }
   }
   //Kai
-  ///vcl_cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
+  ///std::cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
 }
 
 void dbcvr_cvmatch_intensity::findDPCorrespondence (void)
@@ -102,14 +102,14 @@ void dbcvr_cvmatch_intensity::findDPCorrespondence (void)
   i = _n-1;
   j = _m-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_DPCost[p.first][p.second]);
 
   while (ip > 0 || jp > 0) { //Ming: should be &&
     ip=_DPMap[i][j].first;
     jp=_DPMap[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_DPCost[p.first][p.second]);
   

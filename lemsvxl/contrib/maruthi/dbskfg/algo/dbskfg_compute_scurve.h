@@ -19,10 +19,10 @@
 #include <dbskr/dbskr_scurve_sptr.h>
 #include <dbskfg/dbskfg_composite_node_sptr.h>
 #include <dbskfg/dbskfg_composite_link_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 class dbsk2d_xshock_edge;
 
 class dbskfg_compute_scurve
@@ -37,7 +37,7 @@ public:
 
     // compute shock curve
     dbskr_scurve_sptr compute_curve(dbskfg_composite_node_sptr start_node,
-                                    vcl_vector<dbskfg_composite_link_sptr> path,
+                                    std::vector<dbskfg_composite_link_sptr> path,
                                     bool leaf_edge, 
                                     bool binterpolate, bool bsub_sample,
                                     double interpolate_ds, double subsample_ds,

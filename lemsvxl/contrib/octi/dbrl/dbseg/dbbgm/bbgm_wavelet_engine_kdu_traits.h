@@ -10,7 +10,7 @@
 #include <dkdu/coresys/common/kdu_compressed.h>
 #include <dkdu/apps/kdu_expand/kdu_expand_bg.h>
 #include <vil/vil_image_view.h>
-#include <vcl_sstream.h>
+#include <sstream>
 typedef bsta_gauss_if3 bsta_gauss_i;
 typedef bsta_num_obs<bsta_gauss_i> gauss_indep;
 typedef bsta_mixture<gauss_indep> mix_gauss_indep3;

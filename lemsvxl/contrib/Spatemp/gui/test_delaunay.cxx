@@ -3,7 +3,7 @@
 
 int main()
 {
-    vcl_vector<dbdet_edgel*> edges;
+    std::vector<dbdet_edgel*> edges;
     //edges.push_back(new dbdet_edgel(vgl_point_2d<double>(0,0),0.0,0.0,0.0,0));
     //edges.push_back(new dbdet_edgel(vgl_point_2d<double>(0,10),0.0,0.0,0.0,1));
     //edges.push_back(new dbdet_edgel(vgl_point_2d<double>(5,5),0.0,0.0,0.0,2));
@@ -35,12 +35,12 @@ int main()
 
     for(unsigned i=0;i<d.neighbor_map_.size();i++)
     {
-        vcl_cout<<i << ": ";
+        std::cout<<i << ": ";
         for(unsigned j=0;j<d.neighbor_map_[i].size();j++)
         {
-            vcl_cout<<d.neighbor_map_[i][j]<<" ";
+            std::cout<<d.neighbor_map_[i][j]<<" ";
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
 
     return 0;

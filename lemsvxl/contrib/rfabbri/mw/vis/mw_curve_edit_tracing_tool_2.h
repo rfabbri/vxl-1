@@ -32,7 +32,7 @@ public:
                const bvis1_view_tableau_sptr& view );
  
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   void activate();
   void deactivate();
@@ -57,20 +57,20 @@ private:
   unsigned o1_query_idx_;
   bool o1_query_is_corresp_;
 
-  vcl_map<unsigned, vcl_list<bgui_vsol_soview2D *>::iterator > correspondents_idx_;
+  std::map<unsigned, std::list<bgui_vsol_soview2D *>::iterator > correspondents_idx_;
 
   //: threshold in cost when asked to show only the matches with this cost.
   double tau_cost_;
 
   // Styles  -----
-  vcl_vector<vgui_style_sptr> best_match_style_; 
+  std::vector<vgui_style_sptr> best_match_style_; 
   vgui_style_sptr o0_query_style_; 
   vgui_style_sptr o0_query_off_style_; 
   vgui_style_sptr corresp_objs_style_;
 
-  vcl_string best_match_layer_; 
-  vcl_string corresp_objs_layer_; 
-  vcl_string o0_query_layer_;
+  std::string best_match_layer_; 
+  std::string corresp_objs_layer_; 
+  std::string o0_query_layer_;
 
   vgui_event_type gesture_query_corresp_;
 
@@ -81,9 +81,9 @@ private:
 
   //: mouse_over object in right view
   bgui_vsol_soview2D *o1_soview_; 
-  vcl_vector<bgui_vsol_soview2D *> o0_corresp_soview_;
-  vcl_vector<bgui_vsol_soview2D *> o1_corresp_soview_;
-  vcl_list<bgui_vsol_soview2D *> correspondents_soview_;
+  std::vector<bgui_vsol_soview2D *> o0_corresp_soview_;
+  std::vector<bgui_vsol_soview2D *> o1_corresp_soview_;
+  std::list<bgui_vsol_soview2D *> correspondents_soview_;
 
   void toggle_lock_correspondence_query();
   bool handle_key(vgui_key key);

@@ -22,6 +22,6 @@ template void vsl_b_write(vsl_b_ostream & os, const splr_map<K, V> & map); \
 template void vsl_b_read(vsl_b_istream & is, splr_map<K, V> & map); \
 VSL_PAIR_IO_INSTANTIATE(K, V);
 
-//previously had VSL_MAP_IO_INSTANTIATE(K, V, vcl_less<K>);--not sure why needed
+//previously had VSL_MAP_IO_INSTANTIATE(K, V, std::less<K>);--not sure why needed
 
 #endif

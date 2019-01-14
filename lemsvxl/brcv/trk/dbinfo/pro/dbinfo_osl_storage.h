@@ -12,7 +12,7 @@
 // \verbatim
 //  Modifications
 // \endverbatim
-#include <vcl_cassert.h>
+#include <cassert>
 #include <bpro1/bpro1_storage.h>
 #include <dbinfo/dbinfo_osl_sptr.h>
 
@@ -22,7 +22,7 @@ public:
 
   dbinfo_osl_storage();
   virtual ~dbinfo_osl_storage();
-  virtual vcl_string type() const { return "dbinfo_osl_storage"; }
+  virtual std::string type() const { return "dbinfo_osl_storage"; }
   
 
   //: Return IO version number;
@@ -39,7 +39,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbinfo_osl_storage"; }
+  virtual std::string is_a() const { return "dbinfo_osl_storage"; }
 
 
   //:set osl

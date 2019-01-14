@@ -22,9 +22,9 @@ dbrl_id_point_2d_displayer::make_tableau( bpro1_storage_sptr storage) const
   id_point_storage.vertical_cast(storage);
  
   bgui_vsol2D_tableau_sptr btab= bgui_vsol2D_tableau_new();
-  vcl_vector< dbrl_id_point_2d_sptr > idpoints=  id_point_storage->points();
+  std::vector< dbrl_id_point_2d_sptr > idpoints=  id_point_storage->points();
 
-  vcl_vector< dbrl_id_point_2d_sptr >::iterator itr;
+  std::vector< dbrl_id_point_2d_sptr >::iterator itr;
   for(itr=idpoints.begin();itr!=idpoints.end();itr++)
     {
         vsol_point_2d_sptr point=new vsol_point_2d((*itr)->x(),(*itr)->y());

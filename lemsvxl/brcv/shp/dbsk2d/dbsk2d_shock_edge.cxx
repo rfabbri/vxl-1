@@ -44,9 +44,9 @@ dbsk2d_shock_edge::get_ex_coords(double psi, double t)
 }
 
 //: Return some information about the element
-void dbsk2d_shock_edge::getInfo (vcl_ostream& ostrm) 
+void dbsk2d_shock_edge::getInfo (std::ostream& ostrm) 
 { 
-  ostrm << "E: [" << id_ << "]" << vcl_endl; 
-  ostrm << "[ pN: " << source()->id() << ", cN: " << (target()?target()->id():-1) << " ]\n" << vcl_endl;
+  ostrm << "E: [" << id_ << "]" << std::endl; 
+  ostrm << "[ pN: " << source()->id() << ", cN: " << (target()?target()->id():-1) << " ]\n" << std::endl;
 }
 

@@ -75,7 +75,7 @@ public:
   float f(int i, int j, int orient_channel);
 
   //: cost of an oriented point, represented by its index
-  float f(vcl_vector<int >& x, vcl_vector<int >& y, vcl_vector<int >& orient_channel);
+  float f(std::vector<int >& x, std::vector<int >& y, std::vector<int >& orient_channel);
 
 protected:
 

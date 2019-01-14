@@ -28,7 +28,7 @@ public:
   virtual ~dbdet_edgemap_storage(){}
 
   //: Returns the type string "edge_map"
-  virtual vcl_string type() const { return "edge_map"; }
+  virtual std::string type() const { return "edge_map"; }
 
   //: Return IO version number;
   short version() const;
@@ -38,7 +38,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_edgemap_storage"; }
+  virtual std::string is_a() const { return "dbdet_edgemap_storage"; }
 
   void set_edgemap(dbdet_edgemap_sptr edgemap) { edge_map_= edgemap; }
   dbdet_edgemap_sptr get_edgemap() { return edge_map_; }

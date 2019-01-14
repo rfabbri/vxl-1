@@ -12,7 +12,7 @@
 vgui_soview2D_bfrag2D_assembly::vgui_soview2D_bfrag2D_assembly( vgui_soview2D_bfrag2D* in, 
                                                                 double * inMatrix ){
 
-    vcl_cout << "soview_assmebly -> init w/ piece w/ posisiton information" << vcl_endl;
+    std::cout << "soview_assmebly -> init w/ piece w/ posisiton information" << std::endl;
 
     theViews.push_back( in );
     //XXX also need to push back in parallel an identity matrix
@@ -23,7 +23,7 @@ vgui_soview2D_bfrag2D_assembly::vgui_soview2D_bfrag2D_assembly( vgui_soview2D_bf
 void vgui_soview2D_bfrag2D_assembly::addPositionedPiece( vgui_soview2D_bfrag2D* in,
                                                          double *inMatrix ){
 
-    vcl_cout << "soview_assmebly -> addiding piece w/ posisiton information" << vcl_endl;
+    std::cout << "soview_assmebly -> addiding piece w/ posisiton information" << std::endl;
 
     theViews.push_back( in );
     //XXX also need to push back in parallel an identity matrix

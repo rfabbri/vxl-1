@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_algorithm.h>
-#include <vcl_limits.h>
+#include <algorithm>
+#include <limits>
 #include <vgl/vgl_distance.h>
 #include "bcdg_finger.h"
 #include "bcdg_global_option.h"
@@ -13,7 +13,7 @@
 #include "bcdg_3d_reconstructor.h"
 
 //: Constructor
-bcdg_global_option::bcdg_global_option(const vcl_vector<bcdg_local_option_sptr>& o, bcdg_algo0::params* s) :
+bcdg_global_option::bcdg_global_option(const std::vector<bcdg_local_option_sptr>& o, bcdg_algo0::params* s) :
   _points(o.size()),
   _local_options(o),
   _params(s)
@@ -25,10 +25,10 @@ bcdg_global_option::bcdg_global_option(const vcl_vector<bcdg_local_option_sptr>&
 
 
 //: Get the minimum step for the given local options
-void bcdg_global_option::interpolate_min_step(const vcl_vector<bcdg_local_option_sptr>& loptions) {
+void bcdg_global_option::interpolate_min_step(const std::vector<bcdg_local_option_sptr>& loptions) {
   // First, find the local option with the minimum "step" distance
   // (measured by theta)
-  _theta = vcl_numeric_limits<double>::max();
+  _theta = std::numeric_limits<double>::max();
  
   for(int i = 0; i < loptions.size(); i++) {
     if(loptions[i] != NULL) {
@@ -104,7 +104,7 @@ double bcdg_global_option::specific_cost(int i, const bcdg_point_projection& pro
 //: Get the piece of the hypothesis to which this corresponds.
 bcdg_hypothel_sptr bcdg_global_option::hypothel()  const {
   bcdg_3d_reconstructor rec(this,_params);
-  vcl_vector<dbecl_episeg_sptr> tr(_points.size());
+  std::vector<dbecl_episeg_sptr> tr(_points.size());
   for(int i = 0; i < tr.size(); i++) {
     if(_local_options[i] != NULL) {
       tr[i] = _local_options[i]->curve();
@@ -114,8 +114,8 @@ bcdg_hypothel_sptr bcdg_global_option::hypothel()  const {
 }
 
 //: Update the fingers
-vcl_vector< bcdg_finger_sptr > bcdg_global_option::next_fingers (const vcl_vector<bcdg_finger_sptr>& oldf) const {
-  vcl_vector<bcdg_finger_sptr> toReturn(oldf.size());
+std::vector< bcdg_finger_sptr > bcdg_global_option::next_fingers (const std::vector<bcdg_finger_sptr>& oldf) const {
+  std::vector<bcdg_finger_sptr> toReturn(oldf.size());
   for(int i = 0; i < oldf.size(); i++) {
     if(_local_options[i] != NULL) {
       toReturn[i] = oldf[i]->next_finger(_theta,_local_options[i]);
@@ -130,7 +130,7 @@ vcl_vector< bcdg_finger_sptr > bcdg_global_option::next_fingers (const vcl_vecto
 
 //: What is the median projection of this point?
 void bcdg_global_option::compute_median_projection() {
-  vcl_vector<bcdg_point_projection> p;
+  std::vector<bcdg_point_projection> p;
   
   for(int i = 0; i < _points.size(); i++) {
     for(int j = i + 1; j < _points.size(); j++) {
@@ -138,7 +138,7 @@ void bcdg_global_option::compute_median_projection() {
     }
   }
 
-  vcl_sort(p.begin(), p.end());
+  std::sort(p.begin(), p.end());
   _median_proj = p[p.size() / 2];
 }
 

@@ -35,7 +35,7 @@ dbdet_graddt_levelset2d_volume_segmentation_process()
 			|| !parameters()->add( "[STOP] Stopping Threshold" , "-stopthresh", double(.05))
 	)
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -56,17 +56,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbdet_graddt_levelset2d_volume_segmentation_process::
+std::string dbdet_graddt_levelset2d_volume_segmentation_process::
 name()
 {
 	return "Run slice-by-slice levelset segmentation";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_graddt_levelset2d_volume_segmentation_process::
+std::vector< std::string > dbdet_graddt_levelset2d_volume_segmentation_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_dataset");
 	to_return.push_back("3d_edges");
 	return to_return;
@@ -74,10 +74,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_graddt_levelset2d_volume_segmentation_process::
+std::vector< std::string > dbdet_graddt_levelset2d_volume_segmentation_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("levelset_function");
 	return to_return;
 }
@@ -114,16 +114,16 @@ execute()
 	double BG_thresh;
 	double dist_thresh;
 	double stop_thresh;
-	parameters()->get_value( "-beta0" , beta0 ); vcl_cout << "beta0: " << beta0 << vcl_endl;
-	parameters()->get_value( "-beta1" , beta1 ); vcl_cout << "beta1: " << beta1 << vcl_endl;
-	parameters()->get_value( "-alpha" , alpha ); vcl_cout << "alpha: " << alpha << vcl_endl;
-	parameters()->get_value( "-hx" , hx ); vcl_cout << "hx: " << hx << vcl_endl;
-	parameters()->get_value( "-hy" , hy ); vcl_cout << "hy: " << hy << vcl_endl;
-	parameters()->get_value( "-maxiter" , maxiter ); vcl_cout << "maxiter: " << maxiter << vcl_endl;
-	parameters()->get_value( "-bgthresh" , BG_thresh ); vcl_cout << "BG_thresh: " << BG_thresh << vcl_endl;
-	parameters()->get_value( "-dthresh" , dist_thresh ); vcl_cout << "dist_thresh: " << dist_thresh << vcl_endl;
-	parameters()->get_value( "-reinitfreq" , reinit_freq ); vcl_cout << "reinit_freq: " << reinit_freq << vcl_endl;
-	parameters()->get_value( "-stopthresh" , stop_thresh ); vcl_cout << "stop_thresh: " << stop_thresh << vcl_endl;
+	parameters()->get_value( "-beta0" , beta0 ); std::cout << "beta0: " << beta0 << std::endl;
+	parameters()->get_value( "-beta1" , beta1 ); std::cout << "beta1: " << beta1 << std::endl;
+	parameters()->get_value( "-alpha" , alpha ); std::cout << "alpha: " << alpha << std::endl;
+	parameters()->get_value( "-hx" , hx ); std::cout << "hx: " << hx << std::endl;
+	parameters()->get_value( "-hy" , hy ); std::cout << "hy: " << hy << std::endl;
+	parameters()->get_value( "-maxiter" , maxiter ); std::cout << "maxiter: " << maxiter << std::endl;
+	parameters()->get_value( "-bgthresh" , BG_thresh ); std::cout << "BG_thresh: " << BG_thresh << std::endl;
+	parameters()->get_value( "-dthresh" , dist_thresh ); std::cout << "dist_thresh: " << dist_thresh << std::endl;
+	parameters()->get_value( "-reinitfreq" , reinit_freq ); std::cout << "reinit_freq: " << reinit_freq << std::endl;
+	parameters()->get_value( "-stopthresh" , stop_thresh ); std::cout << "stop_thresh: " << stop_thresh << std::endl;
 
 	elbow_vil3d_storage_sptr data_storage;
 	data_storage.vertical_cast(input_data_[0][0]);
@@ -131,10 +131,10 @@ execute()
 
 	dbdet_third_order_3d_edge_storage_sptr edg_storage;
 	edg_storage.vertical_cast(input_data_[0][1]);
-	vcl_vector<dbdet_3d_edge_sptr>& edgemap = edg_storage->edgemap();
+	std::vector<dbdet_3d_edge_sptr>& edgemap = edg_storage->edgemap();
 
-	vcl_vector<dbdet_3d_edge_sptr> FG_edgemap;
-	vcl_vector<dbdet_3d_edge_sptr> BG_edgemap;
+	std::vector<dbdet_3d_edge_sptr> FG_edgemap;
+	std::vector<dbdet_3d_edge_sptr> BG_edgemap;
 
 	dbdet_classify_edges(image, edgemap, FG_edgemap, BG_edgemap, BG_thresh);
 	int width = image.ni();
@@ -175,28 +175,28 @@ execute()
 		seg.set_active_regions(external_inactive, external_inactive, external_active);
 
 		bool converged = seg.update(maxiter);
-		vcl_cout << "Segmentation took " << seg.iteration() << " iterations. ";
+		std::cout << "Segmentation took " << seg.iteration() << " iterations. ";
 		if(converged)
 		{
-			vcl_cout << "[Converged]" << vcl_endl;
+			std::cout << "[Converged]" << std::endl;
 		}
 		else
 		{
-			vcl_cout << "[Not Converged]" << vcl_endl;
+			std::cout << "[Not Converged]" << std::endl;
 		}
 	}
 
 
 
-	/*vcl_vector<vcl_vector<int> > rois;
+	/*std::vector<std::vector<int> > rois;
 	dbdet_compute_rois(image, rois, block_size);
-	vcl_vector<dbdet_3d_edge_sptr> edgemap;
-	vcl_cout << "Number of blocks = " << rois.size() << vcl_endl;
+	std::vector<dbdet_3d_edge_sptr> edgemap;
+	std::cout << "Number of blocks = " << rois.size() << std::endl;
 	for(int i = 0; i < rois.size(); i++)
 	{
-		vcl_cout << "Block " << i+1 << " : " << rois[i][0] << " " << rois[i][1] << " " <<
-				rois[i][2] << " " << rois[i][3] << " " << rois[i][4] << " " << rois[i][5] << vcl_endl;
-		vcl_vector<dbdet_3d_edge_sptr> edg;
+		std::cout << "Block " << i+1 << " : " << rois[i][0] << " " << rois[i][1] << " " <<
+				rois[i][2] << " " << rois[i][3] << " " << rois[i][4] << " " << rois[i][5] << std::endl;
+		std::vector<dbdet_3d_edge_sptr> edg;
 		dbdet_third_order_3d_edge_detector_roi(image, edg, str, sigma, h,
 				rois[i][0], rois[i][1], rois[i][2], rois[i][3], rois[i][4], rois[i][5]);
 		for(int j = 0; j <  edg.size(); j++)
@@ -207,14 +207,14 @@ execute()
 		}
 		edgemap.insert(edgemap.end(), edg.begin(), edg.end());
 	}
-	vcl_cout << "Number of edges = " << edgemap.size() << vcl_endl;
+	std::cout << "Number of edges = " << edgemap.size() << std::endl;
 	dbdet_third_order_3d_edge_storage_sptr edge_storage = dbdet_third_order_3d_edge_storage_new();
 	edge_storage->set_edgemap(edgemap);
 	this->output_data_[0].push_back(edge_storage);*/
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

@@ -24,8 +24,8 @@ dbinfo_object_matcher::make_image(dbinfo_observation_sptr obs, int w, int h, dou
   dbinfo_feature_base_sptr feat = (obs->features())[0];
   if(feat->format()!=DBINFO_INTENSITY_FEATURE)
     return 0;
-  vcl_vector<vgl_point_2d<float> > points = geo->points();
-  vcl_vector<bool> valid = geo->masks();
+  std::vector<vgl_point_2d<float> > points = geo->points();
+  std::vector<bool> valid = geo->masks();
   return feat->image(points, valid, ni, nj, i0, j0, background_noise);
 }
 
@@ -78,13 +78,13 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   //double radius_q = geo_q->diameter()/2.0f;
   vsol_point_2d_sptr cent_db = geo_db->centroid();
   vsol_point_2d_sptr cent_q = geo_q->centroid();
-  vcl_cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
+  std::cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
 
   int w = geo_db->cols();
   int h = geo_db->rows();
   
   image_q = make_image(obsq, w, h, (-cent_q->x()+cent_db->x()), (-cent_q->y()+cent_db->y()));
-  vcl_cout << "making the image of database observation also\n";
+  std::cout << "making the image of database observation also\n";
   image_rdb = make_image(obsdb, w, h, 0, 0);
 
   vgl_h_matrix_2d<float> H;  H.set_identity();
@@ -95,9 +95,9 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
                                                          use_intensity,
                                                          use_gradient,
                                                          false);
-  vcl_cout << "before random iterations info is: " << initial_info << vcl_endl;
+  std::cout << "before random iterations info is: " << initial_info << std::endl;
   
-  vcl_cout << " size of query obs: " << geo_q->size() << vcl_endl;
+  std::cout << " size of query obs: " << geo_q->size() << std::endl;
   // before optimizing randomly search for a good starting point
   // we know database cog should align with some point "on" the query,
   // so pick points randomly inside the query Nob times
@@ -105,8 +105,8 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   float radius_ok = ratio*(float(geo_q->diameter())/2.0f);
 
   //randomly search for the best match
-  vcl_vector<dbinfo_observation_sptr> obss;
-  vcl_vector<vgl_h_matrix_2d<float> > xforms;
+  std::vector<dbinfo_observation_sptr> obss;
+  std::vector<vgl_h_matrix_2d<float> > xforms;
   bool success = 
     dbinfo_observation_generator::uniform_about_seed(Nob, obsdb, obss, 
                                                      xforms,
@@ -114,7 +114,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
                                                      radius_ok,
                                                      dr, ds);
   unsigned no_obs=obss.size();
-  vcl_cout << "Constructed " << no_obs << " valid observations\n";
+  std::cout << "Constructed " << no_obs << " valid observations\n";
   vgl_h_matrix_2d<float> best_trans;
   for(unsigned i = 0; i<no_obs; ++i)
   {
@@ -134,10 +134,10 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
           }
       }
   
-  vcl_cout << "after " << no_obs << " random samples the best info is "  
+  std::cout << "after " << no_obs << " random samples the best info is "  
            << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
-  vcl_cout << "The transform is\n";
-  vcl_cout << best_trans << '\n';
+  std::cout << "The transform is\n";
+  std::cout << best_trans << '\n';
 
   image_match = make_alignment_image(image_rdb, initial_obs);
   return initial_info>max_info?initial_info:max_info;
@@ -167,7 +167,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   vsol_point_2d_sptr cent_db = geo_db->centroid();
   vsol_point_2d_sptr cent_q = geo_q->centroid();
   if(verbose)
-    vcl_cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
+    std::cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
   int w = geo_db->cols();
   int h = geo_db->rows();
   
@@ -184,9 +184,9 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
                                                          use_gradient,
                                                          false);
   if(verbose)
-    vcl_cout << "before random iterations info is: " << initial_info 
-             << vcl_endl << " size of query obs: " << geo_q->size() 
-             << vcl_endl;
+    std::cout << "before random iterations info is: " << initial_info 
+             << std::endl << " size of query obs: " << geo_q->size() 
+             << std::endl;
   // before optimizing randomly search for a good starting point
   // we know database cog should align with some point "on" the query,
   // so pick points randomly inside the query Nob times
@@ -194,8 +194,8 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   float radius_ok = ratio*(float(geo_q->diameter())/2.0f);
 
   //randomly search for the best match
-  vcl_vector<dbinfo_observation_sptr> obss;
-  vcl_vector<vgl_h_matrix_2d<float> > xforms;
+  std::vector<dbinfo_observation_sptr> obss;
+  std::vector<vgl_h_matrix_2d<float> > xforms;
   bool success = dbinfo_observation_generator::uniform_about_seed_affine_no_skew(Nob, obsdb, obss, 
                                                                     xforms,
                                                                     radius_ok,
@@ -206,7 +206,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   unsigned no_obs=obss.size();
   
   if(verbose)
-      vcl_cout << "Constructed " << no_obs << " valid observations\n";
+      std::cout << "Constructed " << no_obs << " valid observations\n";
   best_trans.set_identity();
   for(unsigned i = 0; i<no_obs; ++i)
   {
@@ -215,7 +215,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
           continue;
       ob->scan(0, image_q);
       float mi = dbinfo_observation_matcher::minfo(obsdb, ob,use_intensity,use_gradient,false);
-      //vcl_cout<<"MI: "<<mi<<"\t"<<xforms[i]<<"\n";
+      //std::cout<<"MI: "<<mi<<"\t"<<xforms[i]<<"\n";
       if(mi>max_info)
       {
           initial_obs = ob;
@@ -224,7 +224,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
       }
   }
   
-  vcl_cout << "after " << no_obs << " random samples the best info is "  
+  std::cout << "after " << no_obs << " random samples the best info is "  
            << max_info << " time: " << t.real()/1000.0f << " seconds.\n"
            << "The transform is\n"
            << best_trans << '\n';
@@ -251,7 +251,7 @@ dbinfo_object_matcher::minfo_alignment_in_interval(dbinfo_observation_sptr obsq,
     vsol_point_2d_sptr cent_db = geo_db->centroid();
     vsol_point_2d_sptr cent_q = geo_q->centroid();
     if(verbose)
-        vcl_cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
+        std::cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
     int w = geo_db->cols();
     int h = geo_db->rows();
 
@@ -269,8 +269,8 @@ dbinfo_object_matcher::minfo_alignment_in_interval(dbinfo_observation_sptr obsq,
         true,
         false);
   //randomly search for the best match
-  vcl_vector<dbinfo_observation_sptr> obss;
-  vcl_vector<vgl_h_matrix_2d<float> > xforms;
+  std::vector<dbinfo_observation_sptr> obss;
+  std::vector<vgl_h_matrix_2d<float> > xforms;
   bool success = dbinfo_observation_generator::
     uniform_in_interval_affine_no_skew(n_intervals, obsdb, obss, xforms,
                                       xmin, xmax, ymin, ymax,
@@ -281,7 +281,7 @@ dbinfo_object_matcher::minfo_alignment_in_interval(dbinfo_observation_sptr obsq,
   unsigned no_obs=obss.size();
   float max_info = initial_info;
   if(verbose)
-    vcl_cout << "Constructed " << no_obs << " valid observations\n";
+    std::cout << "Constructed " << no_obs << " valid observations\n";
   vgl_h_matrix_2d<float> best_trans;
   for(unsigned i = 0; i<no_obs; ++i)
   {
@@ -296,22 +296,22 @@ dbinfo_object_matcher::minfo_alignment_in_interval(dbinfo_observation_sptr obsq,
         vil_image_resource_sptr out_img = ob->image_cropped(false);
 /*        char buffer[1000];
         sprintf(buffer, "%01f", xmin);
-        vcl_string xmin_str = buffer;
+        std::string xmin_str = buffer;
         sprintf(buffer, "%01f", xmax);
-        vcl_string xmax_str = buffer;
+        std::string xmax_str = buffer;
         sprintf(buffer, "%01f", theta_min);
-        vcl_string themin = buffer;
+        std::string themin = buffer;
         sprintf(buffer, "%01f", theta_max);
-        vcl_string themax = buffer;
+        std::string themax = buffer;
         sprintf(buffer, "%01f", scale_min);
-        vcl_string scamin = buffer;
+        std::string scamin = buffer;
         sprintf(buffer, "%01f", scale_max);
-        vcl_string scamax = buffer;
+        std::string scamax = buffer;
         sprintf(buffer, "%01f", aspect_min);
-        vcl_string aspmin = buffer;
+        std::string aspmin = buffer;
         sprintf(buffer, "%01f", aspect_max);
-        vcl_string aspmax = buffer;
-        vcl_string out_name = "d://projects//temp//img_"+xmin_str+"_"+xmax_str+"_"+themin+"_"+themax+"_"+scamin+"_"+scamax+"_"+aspmin+"_"+aspmax+".png";
+        std::string aspmax = buffer;
+        std::string out_name = "d://projects//temp//img_"+xmin_str+"_"+xmax_str+"_"+themin+"_"+themax+"_"+scamin+"_"+scamax+"_"+aspmin+"_"+aspmax+".png";
 
         vil_save_image_resource(out_img, out_name.c_str());
         */
@@ -324,7 +324,7 @@ dbinfo_object_matcher::minfo_alignment_in_interval(dbinfo_observation_sptr obsq,
 
       }
   
-  vcl_cout << "after " << no_obs << " random samples the best info is "  
+  std::cout << "after " << no_obs << " random samples the best info is "  
            << max_info << " time: " << t.real()/1000.0f << " seconds.\n"
            << "The transform is\n"
            << best_trans << '\n';
@@ -368,19 +368,19 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   //double radius_q = geo_q->diameter()/2.0f;
   vsol_point_2d_sptr cent_db = geo_db->centroid();
   vsol_point_2d_sptr cent_q = geo_q->centroid();
-  vcl_cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
+  std::cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
 
   int w = geo_db->cols();
   int h = geo_db->rows();
   
   image_q = make_image(obsq, w, h, (-cent_q->x()+cent_db->x()), (-cent_q->y()+cent_db->y()));
-  vcl_cout << "making the image of database observation also\n";
+  std::cout << "making the image of database observation also\n";
   //image_rdb = make_image(obsdb, w, h, 0, 0);
 
   vgl_h_matrix_2d<float> H;  H.set_identity(); H.set_scale(forced_scale);
-  vcl_cout << "database diameter before transformation: " << obsdb->geometry()->diameter() << vcl_endl;
+  std::cout << "database diameter before transformation: " << obsdb->geometry()->diameter() << std::endl;
   dbinfo_observation_sptr initial_obs = dbinfo_observation_generator::generate(obsdb, H);
-  vcl_cout << "database diameter after transformation: " << initial_obs->geometry()->diameter() << vcl_endl;
+  std::cout << "database diameter after transformation: " << initial_obs->geometry()->diameter() << std::endl;
   initial_obs->scan(0, image_q);
   image_rdb = make_image(initial_obs, w, h, 0, 0);
   best_trans = H;
@@ -388,9 +388,9 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
                                                          use_intensity,
                                                          use_gradient,
                                                          false);
-  vcl_cout << "before random iterations info is: " << initial_info << vcl_endl;
+  std::cout << "before random iterations info is: " << initial_info << std::endl;
   
-  vcl_cout << " size of query obs: " << geo_q->size() << vcl_endl;
+  std::cout << " size of query obs: " << geo_q->size() << std::endl;
   // before optimizing randomly search for a good starting point
   // we know database cog should align with some point "on" the query,
   // so pick points randomly inside the query Nob times
@@ -398,8 +398,8 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
   float radius_ok = ratio*(float(geo_q->diameter())/2.0f);
 
   //randomly search for the best match
-  vcl_vector<dbinfo_observation_sptr> obss;
-  vcl_vector<vgl_h_matrix_2d<float> > xforms;
+  std::vector<dbinfo_observation_sptr> obss;
+  std::vector<vgl_h_matrix_2d<float> > xforms;
   bool success = 
     dbinfo_observation_generator::uniform_about_seed(Nob, obsdb, obss, 
                                                      xforms,
@@ -407,7 +407,7 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
                                                      radius_ok,
                                                      dr, ds);
   unsigned no_obs=obss.size();
-  vcl_cout << "Constructed " << no_obs << " valid observations\n";
+  std::cout << "Constructed " << no_obs << " valid observations\n";
   
   for(unsigned i = 0; i<no_obs; ++i)
   {
@@ -427,10 +427,10 @@ dbinfo_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obsq,
           }
       }
   
-  vcl_cout << "after " << no_obs << " random samples the best info is "  
+  std::cout << "after " << no_obs << " random samples the best info is "  
            << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
-  vcl_cout << "The transform is\n";
-  vcl_cout << best_trans << '\n';
+  std::cout << "The transform is\n";
+  std::cout << best_trans << '\n';
 
   image_match = make_alignment_image(image_rdb, initial_obs);
   return initial_info>max_info?initial_info:max_info;

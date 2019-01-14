@@ -39,7 +39,7 @@ dbsksp_build_shock_graph_process()
     this->shock_graph_types_, 0) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -64,7 +64,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_build_shock_graph_process::
+std::string dbsksp_build_shock_graph_process::
 name()
 { 
   return "Build Shock Graph"; 
@@ -73,13 +73,13 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_build_shock_graph_process::
+std::vector< std::string > dbsksp_build_shock_graph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   unsigned int build_type = 0;
   parameters()->get_value( "-build_type" , build_type);
-  vcl_string mode = this->build_type_descriptions_[build_type];
+  std::string mode = this->build_type_descriptions_[build_type];
 
   // type 1: create a shock graph from a polyline
   if (mode == "from a polyline")
@@ -93,10 +93,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_build_shock_graph_process::
+std::vector< std::string > dbsksp_build_shock_graph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_shock" );  
   return to_return;
 }
@@ -127,11 +127,11 @@ execute()
 
   unsigned int build_type = 0;
   this->parameters()->get_value( "-build_type" , build_type);
-  vcl_string mode = this->build_type_descriptions_[build_type];
+  std::string mode = this->build_type_descriptions_[build_type];
   
   unsigned int shock_graph_choice = 0;
   this->parameters()->get_value( "-shock_graph_type" , shock_graph_choice);
-  vcl_string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
+  std::string shock_graph_type = this->shock_graph_types_[shock_graph_choice];
 
   // place holder for output graph
   dbsksp_shock_storage_sptr output_shock = dbsksp_shock_storage_new();
@@ -142,8 +142,8 @@ execute()
   {
 
     if ( input_data_.size() != 1 ){
-      vcl_cerr << "In dbsksp_build_shock_graph_process::execute() - "
-             << "not exactly one input frame" << vcl_endl;
+      std::cerr << "In dbsksp_build_shock_graph_process::execute() - "
+             << "not exactly one input frame" << std::endl;
       return false;
     }
 
@@ -151,7 +151,7 @@ execute()
     vidpro1_vsol2D_storage_sptr vsol_storage;
     vsol_storage.vertical_cast(input_data_[0][0]);
 
-    vcl_vector<vsol_spatial_object_2d_sptr > all_data = vsol_storage->all_data();
+    std::vector<vsol_spatial_object_2d_sptr > all_data = vsol_storage->all_data();
 
     // search for the first polyline
     vsol_polyline_2d_sptr polyline;
@@ -167,7 +167,7 @@ execute()
     // Quit if there is no polyline present
     if (!polyline)
     {
-      vcl_cout << "There is no polyline in the vsol storage class.\n";
+      std::cout << "There is no polyline in the vsol storage class.\n";
       return false;
     }
 
@@ -190,7 +190,7 @@ execute()
     }
     else
     {
-      vcl_cerr << "ERROR: unknown shock graph type.\n";
+      std::cerr << "ERROR: unknown shock graph type.\n";
     }
 
   }
@@ -215,7 +215,7 @@ execute()
     }
     else
     {
-      vcl_cerr << "ERROR: unknown shock graph type.\n";
+      std::cerr << "ERROR: unknown shock graph type.\n";
     }
   }
 

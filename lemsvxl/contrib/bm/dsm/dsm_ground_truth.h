@@ -17,14 +17,14 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_algorithm.h>
-#include<vcl_iomanip.h>
-#include<vcl_iostream.h>
-#include<vcl_map.h>
-#include<vcl_sstream.h>
-#include<vcl_string.h>
-#include<vcl_vector.h>
-#include<vcl_utility.h>
+#include<algorithm>
+#include<iomanip>
+#include<iostream>
+#include<map>
+#include<sstream>
+#include<string>
+#include<vector>
+#include<utility>
 
 #include<vgl/vgl_polygon.h>
 #include<vgl/vgl_point_2d.h>
@@ -53,30 +53,30 @@ public:
 	~dsm_ground_truth(){}
 
 	//: relation: frame, polygon
-	vcl_map<unsigned, vcl_vector<vsol_polygon_2d_sptr> > frame_polygon_map;
+	std::map<unsigned, std::vector<vsol_polygon_2d_sptr> > frame_polygon_map;
 
 	//: relation: frame, change type
-	vcl_map<unsigned, vcl_vector<vcl_string> > frame_change_type_map;
+	std::map<unsigned, std::vector<std::string> > frame_change_type_map;
 
 	//: build the change maps
 	//: ni = image width
 	//: nj = image height
 	void build_change_maps(unsigned const& ni, unsigned const& nj);
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> >
+	std::map<unsigned, vil_image_view<vxl_byte> >
 		build_change_map_classical(unsigned const& ni, unsigned const& nj) const;
 
 	void save_change_maps_classical_tiff( unsigned const& ni, 
-						unsigned const& nj, vcl_string const& result_dir) const;
+						unsigned const& nj, std::string const& result_dir) const;
 
-	void save_change_maps_tiff( vcl_string const& result_dir );
+	void save_change_maps_tiff( std::string const& result_dir );
 
 	//: relation: frame, change type, pixel locations
-	vcl_map<unsigned, vil_image_view<vxl_byte> > change_maps;
+	std::map<unsigned, vil_image_view<vxl_byte> > change_maps;
 
-	void b_read_bwm_gt( vcl_string const& filename );
+	void b_read_bwm_gt( std::string const& filename );
 
-	void b_write_bwm_gt( vcl_string const& filename ) const;
+	void b_write_bwm_gt( std::string const& filename ) const;
 
 	void b_write(vsl_b_ostream& os) const;
    

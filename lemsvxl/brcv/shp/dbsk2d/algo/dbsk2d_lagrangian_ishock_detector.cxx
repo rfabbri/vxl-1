@@ -283,45 +283,45 @@ void dbsk2d_lagrangian_ishock_detector::print_ordered_selm_list (bool bPrintAll)
   if (bPrintAll!=true)
     return;
 
-  vcl_cout<< "ShockList: " <<vcl_endl;
+  std::cout<< "ShockList: " <<std::endl;
   ordered_shock_list_iter elmPtr = active_shocks_list.begin();
   for (; elmPtr != active_shocks_list.end(); elmPtr++) {
     dbsk2d_ishock_elm* current = elmPtr->second;
 
     switch (current->type()) {
-    case dbsk2d_ishock_elm::SNODE:                vcl_cout<< "N"; break;
-    case dbsk2d_ishock_elm::POINTPOINT:           vcl_cout<< "P-P"; break;
-    case dbsk2d_ishock_elm::POINTLINE:            vcl_cout<< "P-L"; break;
-    case dbsk2d_ishock_elm::POINTARC:             vcl_cout<< "P-A"; break;
-    case dbsk2d_ishock_elm::LINELINE:             vcl_cout<< "L-L"; break;
-    case dbsk2d_ishock_elm::LINEARC:              vcl_cout<< "L-A"; break;
-    case dbsk2d_ishock_elm::ARCARC:               vcl_cout<< "A-A"; break;
-    case dbsk2d_ishock_elm::CONTACTSHOCK:         vcl_cout<< "C"; break;
-    case dbsk2d_ishock_elm::LINELINE_THIRDORDER:  vcl_cout<< "LL-TO"; break;
-    case dbsk2d_ishock_elm::POINTARC_THIRDORDER:  vcl_cout<< "PA-TO"; break;
-    case dbsk2d_ishock_elm::ARCARC_THIRDORDER:    vcl_cout<< "AA-TO"; break;
-    default:                                      vcl_cout<< "ERROR"; break;
+    case dbsk2d_ishock_elm::SNODE:                std::cout<< "N"; break;
+    case dbsk2d_ishock_elm::POINTPOINT:           std::cout<< "P-P"; break;
+    case dbsk2d_ishock_elm::POINTLINE:            std::cout<< "P-L"; break;
+    case dbsk2d_ishock_elm::POINTARC:             std::cout<< "P-A"; break;
+    case dbsk2d_ishock_elm::LINELINE:             std::cout<< "L-L"; break;
+    case dbsk2d_ishock_elm::LINEARC:              std::cout<< "L-A"; break;
+    case dbsk2d_ishock_elm::ARCARC:               std::cout<< "A-A"; break;
+    case dbsk2d_ishock_elm::CONTACTSHOCK:         std::cout<< "C"; break;
+    case dbsk2d_ishock_elm::LINELINE_THIRDORDER:  std::cout<< "LL-TO"; break;
+    case dbsk2d_ishock_elm::POINTARC_THIRDORDER:  std::cout<< "PA-TO"; break;
+    case dbsk2d_ishock_elm::ARCARC_THIRDORDER:    std::cout<< "AA-TO"; break;
+    default:                                      std::cout<< "ERROR"; break;
     }
-    vcl_cout<< ", Sid: "<< current->id();
-    vcl_cout<< ", simTime: "<< current->simTime();
+    std::cout<< ", Sid: "<< current->id();
+    std::cout<< ", simTime: "<< current->simTime();
     if (current->isActive()) {
       if (current->simTime() < MAX_RADIUS)
-        vcl_cout<< ", Active.";
+        std::cout<< ", Active.";
       else
-        vcl_cout<< ", OutOfRange.";
+        std::cout<< ", OutOfRange.";
     }
     else
-      vcl_cout<< ", Dead.";
+      std::cout<< ", Dead.";
     if (current->is_a_link())
       if (current->hasPropagated()) 
-        vcl_cout<< " Propagated.";
+        std::cout<< " Propagated.";
       else
-        vcl_cout<< " Unpropagated.";
+        std::cout<< " Unpropagated.";
 
-    vcl_cout<< vcl_endl;
+    std::cout<< std::endl;
   }
 
-  vcl_cout<< "------------------" <<vcl_endl;
+  std::cout<< "------------------" <<std::endl;
 }
 
 void dbsk2d_lagrangian_ishock_detector::print_selm_info_from_id(int id)
@@ -332,11 +332,11 @@ void dbsk2d_lagrangian_ishock_detector::print_selm_info_from_id(int id)
 
     if (current->id() == id){
       //display info
-      current->getInfo(vcl_cout);
+      current->getInfo(std::cout);
       return;
     }      
   }
-  vcl_cout <<"INVALID SHOCK ID: "<<id<<vcl_endl;
+  std::cout <<"INVALID SHOCK ID: "<<id<<std::endl;
 }
 
 //-------------------------------------------------------------------
@@ -403,36 +403,36 @@ void dbsk2d_lagrangian_ishock_detector::validate_shocks()
     dbsk2d_assert(selm->rShock());
   }
   #ifdef DEBUG_SHOCK_VERBOSE
-  vcl_cout << "shocks validated!" << vcl_endl;
+  std::cout << "shocks validated!" << std::endl;
   #endif
 }
 
 void dbsk2d_lagrangian_ishock_detector::DebugPrintOnePropagation (int id, PROPAGATION_TYPE action)
 {
-  //vcl_cout<< "---> Shock "<< id;
+  //std::cout<< "---> Shock "<< id;
   switch (action) {
     case BOGUS_PROPAGATION_TYPE: dbsk2d_assert (0); break;
-    case NO_PROPAGATION: vcl_cout<< " NO_PROPAGATION"; break;
-    case PROPAGATION_DONE: vcl_cout<< " PROPAGATION_DONE"; break;
-    case PROPAGATION_TO_INFINITY: vcl_cout<< " PROPAGATION_TO_INFINITY"; break;
-    case PROPAGATION_TO_BND: vcl_cout<< " PROPAGATION_TO_BND"; break;
-    case INVALID_CANDIDATE_SOURCE: vcl_cout<< " INVALID_CANDIDATE_SOURCE"; break;
-    case A3_FORMATION: vcl_cout<< " A3_FORMATION"; break;
-    case REGULAR_JUNCT: vcl_cout<< " REGULAR_JUNCT"; break;
-    case DEGENERATE_JUNCT: vcl_cout<< " DEGENERATE_JUNCT"; break;
-    case SINK_FORMATION: vcl_cout<< " SINK_FORMATION"; break;
-    case NEW_SHOCK_FROM_A3: vcl_cout<< " NEW_SHOCK_FROM_A3"; break;
-    case NEW_SHOCKS_FROM_SOURCE: vcl_cout<< " NEW_SHOCKS_FROM_SOURCE"; break;
-    case NEW_SHOCK_FROM_JUNCT: vcl_cout<< " NEW_SHOCK_FROM_JUNCT"; break;
-    case NEW_CAND_SRC: vcl_cout<< "NEW_CAND_SRC"; break;
-    case LEFT_INTERSECTION: vcl_cout<< " LEFT_INTERSECTION"; break;
-    case RIGHT_INTERSECTION: vcl_cout<< " RIGHT_INTERSECTION"; break;
-    case BOTH_INTERSECTION: vcl_cout<< " BOTH_INTERSECTION"; break;
-    case THIRD_ORDER_FORMATION: vcl_cout<< " THIRD_ORDER_FORMATION"; break;
-    case ARC_THIRD_ORDER_FORMATION: vcl_cout<< " ARC_THIRD_ORDER_FORMATION"; break;  
-    case PROPAGATION_ERROR_DETECTED: vcl_cout << "PROPAGATION_ERROR_DETECTED"; break;
+    case NO_PROPAGATION: std::cout<< " NO_PROPAGATION"; break;
+    case PROPAGATION_DONE: std::cout<< " PROPAGATION_DONE"; break;
+    case PROPAGATION_TO_INFINITY: std::cout<< " PROPAGATION_TO_INFINITY"; break;
+    case PROPAGATION_TO_BND: std::cout<< " PROPAGATION_TO_BND"; break;
+    case INVALID_CANDIDATE_SOURCE: std::cout<< " INVALID_CANDIDATE_SOURCE"; break;
+    case A3_FORMATION: std::cout<< " A3_FORMATION"; break;
+    case REGULAR_JUNCT: std::cout<< " REGULAR_JUNCT"; break;
+    case DEGENERATE_JUNCT: std::cout<< " DEGENERATE_JUNCT"; break;
+    case SINK_FORMATION: std::cout<< " SINK_FORMATION"; break;
+    case NEW_SHOCK_FROM_A3: std::cout<< " NEW_SHOCK_FROM_A3"; break;
+    case NEW_SHOCKS_FROM_SOURCE: std::cout<< " NEW_SHOCKS_FROM_SOURCE"; break;
+    case NEW_SHOCK_FROM_JUNCT: std::cout<< " NEW_SHOCK_FROM_JUNCT"; break;
+    case NEW_CAND_SRC: std::cout<< "NEW_CAND_SRC"; break;
+    case LEFT_INTERSECTION: std::cout<< " LEFT_INTERSECTION"; break;
+    case RIGHT_INTERSECTION: std::cout<< " RIGHT_INTERSECTION"; break;
+    case BOTH_INTERSECTION: std::cout<< " BOTH_INTERSECTION"; break;
+    case THIRD_ORDER_FORMATION: std::cout<< " THIRD_ORDER_FORMATION"; break;
+    case ARC_THIRD_ORDER_FORMATION: std::cout<< " ARC_THIRD_ORDER_FORMATION"; break;  
+    case PROPAGATION_ERROR_DETECTED: std::cout << "PROPAGATION_ERROR_DETECTED"; break;
   }
-  vcl_cout<< vcl_endl;
+  std::cout<< std::endl;
 }
 
 void dbsk2d_lagrangian_ishock_detector::MessageOutDetectionResults (int wndid)
@@ -482,36 +482,36 @@ void dbsk2d_lagrangian_ishock_detector::MessageOutDetectionResults (int wndid)
 
 
   #ifdef DEBUG_SHOCK_VERBOSE
-  vcl_cout<< "\n===== Shock Detection Results ====="<<vcl_endl;
+  std::cout<< "\n===== Shock Detection Results ====="<<std::endl;
   //if (_ShockAlgoType==LAGRANGIAN)
-  //   vcl_cout<<"ShockAlgorithm: Lagrangian: "<<vcl_endl;
+  //   std::cout<<"ShockAlgorithm: Lagrangian: "<<std::endl;
   //else if (_ShockAlgoType==DYN_VAL)
-  //   vcl_cout<<"ShockAlgorithm: Dynamic Validation: "<<vcl_endl;
+  //   std::cout<<"ShockAlgorithm: Dynamic Validation: "<<std::endl;
 
-  vcl_cout<<"Bnd Elements: "<< boundary()->belm_list().size()<<vcl_endl;
-  vcl_cout<<"Total Shock Elements: "<< nTotalShocks <<vcl_endl<<vcl_endl;
+  std::cout<<"Bnd Elements: "<< boundary()->belm_list().size()<<std::endl;
+  std::cout<<"Total Shock Elements: "<< nTotalShocks <<std::endl<<std::endl;
 
   /*if (MessageOption == MSG_VERBOSE) {
-  vcl_cout <<"SNodes: "<< nTotalSNodes <<vcl_endl; 
-  vcl_cout <<"SLinks: "<< nTotalSLinks <<vcl_endl;
-  vcl_cout <<"Contacts: "<< nTotalContacts <<vcl_endl;
-  vcl_cout <<"A3s: "<< nA3  <<vcl_endl;
-  vcl_cout <<"SO Source: "<< nSO <<vcl_endl;
-  vcl_cout <<"Junctions: "<< nSJunct <<vcl_endl;
-  vcl_cout <<"Sinks: " << nSink <<vcl_endl;
-  vcl_cout <<"Point-Point: "<< nPP  <<vcl_endl;
-  vcl_cout <<"Point-Line: "<< nPL <<vcl_endl;
-  vcl_cout <<"Point-Arc: "<< nPA <<vcl_endl;
-  vcl_cout <<"Line-Line: "<< nLL  <<vcl_endl;
-  vcl_cout <<"Line-Arc: "<< nLA <<vcl_endl;
-  vcl_cout <<"Arc-Arc: "<< nAA <<vcl_endl;
-  vcl_cout <<"PointLineContact: "<< nPLC <<vcl_endl;
-  vcl_cout <<"PointArcContact: "<< nPAC<<vcl_endl;
-  vcl_cout <<"LLC: "<< nLLC <<vcl_endl;
-  vcl_cout <<"LAC: "<< nLAC <<vcl_endl;
-  vcl_cout <<"AAC: "<< nAAC <<vcl_endl;
-  vcl_cout <<"ThirdOrder: "<< nTO  <<vcl_endl;
-  vcl_cout <<"ArcThirdOrder: "<< nATO <<vcl_endl;
+  std::cout <<"SNodes: "<< nTotalSNodes <<std::endl; 
+  std::cout <<"SLinks: "<< nTotalSLinks <<std::endl;
+  std::cout <<"Contacts: "<< nTotalContacts <<std::endl;
+  std::cout <<"A3s: "<< nA3  <<std::endl;
+  std::cout <<"SO Source: "<< nSO <<std::endl;
+  std::cout <<"Junctions: "<< nSJunct <<std::endl;
+  std::cout <<"Sinks: " << nSink <<std::endl;
+  std::cout <<"Point-Point: "<< nPP  <<std::endl;
+  std::cout <<"Point-Line: "<< nPL <<std::endl;
+  std::cout <<"Point-Arc: "<< nPA <<std::endl;
+  std::cout <<"Line-Line: "<< nLL  <<std::endl;
+  std::cout <<"Line-Arc: "<< nLA <<std::endl;
+  std::cout <<"Arc-Arc: "<< nAA <<std::endl;
+  std::cout <<"PointLineContact: "<< nPLC <<std::endl;
+  std::cout <<"PointArcContact: "<< nPAC<<std::endl;
+  std::cout <<"LLC: "<< nLLC <<std::endl;
+  std::cout <<"LAC: "<< nLAC <<std::endl;
+  std::cout <<"AAC: "<< nAAC <<std::endl;
+  std::cout <<"ThirdOrder: "<< nTO  <<std::endl;
+  std::cout <<"ArcThirdOrder: "<< nATO <<std::endl;
   }*/
   #endif
 }

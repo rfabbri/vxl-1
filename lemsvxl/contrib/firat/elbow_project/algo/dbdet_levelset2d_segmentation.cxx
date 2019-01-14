@@ -6,8 +6,8 @@
  */
 
 #include "dbdet_levelset2d_segmentation.h"
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 #include <vil/vil_math.h>
 #include <vil/algo/vil_convolve_1d.h>
 #include <vil/vil_transpose.h>
@@ -198,7 +198,7 @@ bool dbdet_levelset2d_segmentation::stop_(vil_image_view<double>& phi_old)
 	{
 		for(int i = 0; i < physical_width_; i++)
 		{
-			double v = vcl_pow(phi_(i,j) - phi_old(i,j), 2);
+			double v = std::pow(phi_(i,j) - phi_old(i,j), 2);
 			if(max < v)
 			{
 				max = v;
@@ -243,7 +243,7 @@ bool dbdet_levelset2d_segmentation::dbdet_levelset2d_utils_compute_rflux_pos_(vi
 
 			if(phi_x_minus(i,j) != 0 && phi_x_plus(i,j) != 0) //degenerate case
 			{
-				double val = vcl_fabs(phi_x_minus(i,j)) + vcl_fabs(phi_x_plus(i,j));
+				double val = std::fabs(phi_x_minus(i,j)) + std::fabs(phi_x_plus(i,j));
 				phi_x_minus(i,j) = val;
 				phi_x_plus(i,j) = 0.5;
 			}
@@ -271,7 +271,7 @@ bool dbdet_levelset2d_segmentation::dbdet_levelset2d_utils_compute_rflux_neg_(vi
 
 			if(phi_x_minus(i,j) == 0 && phi_x_plus(i,j) == 0) //degenerate case
 			{
-				double val = vcl_fabs(phi_x_minus(i,j)) + vcl_fabs(phi_x_plus(i,j));
+				double val = std::fabs(phi_x_minus(i,j)) + std::fabs(phi_x_plus(i,j));
 				phi_x_minus(i,j) = val;
 				phi_x_plus(i,j) = 0.5;
 			}

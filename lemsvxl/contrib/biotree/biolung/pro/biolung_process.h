@@ -14,8 +14,8 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro1/bpro1_process.h>
 
 class biolung_process : public bpro1_process
@@ -28,10 +28,10 @@ class biolung_process : public bpro1_process
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   void clear_output();
 

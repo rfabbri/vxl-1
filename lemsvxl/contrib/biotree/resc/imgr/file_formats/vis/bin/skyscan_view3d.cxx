@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = skyscan_view3d_menus::get_menu();
   unsigned w = 1024, h = 200;
 
-  vcl_string title = "Tool for 3-d image views";
+  std::string title = "Tool for 3-d image views";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(skyscan_vis_manager::instance());
   win->set_statusbar(true);

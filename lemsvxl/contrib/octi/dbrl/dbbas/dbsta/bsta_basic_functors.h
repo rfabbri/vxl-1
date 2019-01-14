@@ -12,7 +12,7 @@
 //   (none yet)
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsta/bsta_attributes.h>
 #include <dbsta/bsta_gaussian_indep.h>
 #include <dbsta/bsta_gaussian_sphere.h>
@@ -55,7 +55,7 @@ class bsta_prob_density_addcovar_functor
                     const covar_t_& add_covar, return_T& retval ) const
   {
     unsigned nc = d.num_components();
-    vcl_vector<covar_t_> initial_covars(nc);
+    std::vector<covar_t_> initial_covars(nc);
     mix_dist_& non_const_d = const_cast<mix_dist_&>(d);
     for (unsigned i = 0; i<nc; ++i) {
       initial_covars[i]=(d.distribution(i)).covar();
@@ -109,7 +109,7 @@ class bsta_probability_addcovar_functor
   {
     unsigned nc = d.num_components();
     mix_dist_& non_const_d = const_cast<mix_dist_&>(d);
-    vcl_vector<covar_t_> initial_covars(nc);
+    std::vector<covar_t_> initial_covars(nc);
     for (unsigned i = 0; i<nc; ++i){
       initial_covars[i]=(d.distribution(i)).covar();
       non_const_d.distribution(i).set_covar(initial_covars[i]+add_covar);

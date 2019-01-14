@@ -3,10 +3,10 @@
 //  Nov 03, 2004   Creation
 //  Nov 08, 2004   Add to FullShock
 
-#include <vcl_algorithm.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <map>
+#include <utility>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
@@ -20,7 +20,7 @@
 
 void add_bndsphere_genes (dbmsh3d_mesh* bndset, const float radius_ratio, const int nsample_ratio)
 {
-  vul_printf (vcl_cout, "\nadd_bndsphere_genes():\n");
+  vul_printf (std::cout, "\nadd_bndsphere_genes():\n");
 
   vgl_box_3d<double> bbox;
   detect_bounding_box (bndset, bbox);
@@ -69,9 +69,9 @@ void add_bndsphere_genes (dbmsh3d_mesh* bndset, const float radius_ratio, const 
     theta *= vnl_math::pi*2;
     for (int j=0; j<nPoints; j++) {
       theta += 2.0 * vnl_math::pi * j / nPoints;
-      double x = radius * vcl_sin(phi) * vcl_cos(theta) + center.x();
-      double y = radius * vcl_sin(phi) * vcl_sin(theta) + center.y();
-      double z = radius * vcl_cos(phi) + center.z();
+      double x = radius * std::sin(phi) * std::cos(theta) + center.x();
+      double y = radius * std::sin(phi) * std::sin(theta) + center.y();
+      double z = radius * std::cos(phi) + center.z();
 
       vertex = bndset->_new_vertex ();
       vertex->get_pt().set (x, y, z);
@@ -81,7 +81,7 @@ void add_bndsphere_genes (dbmsh3d_mesh* bndset, const float radius_ratio, const 
     nTotalPoints += nPoints;
   }
 
-  vul_printf (vcl_cout, "\tTotally, %d point genes added.\n", nTotalPoints);
+  vul_printf (std::cout, "\tTotally, %d point genes added.\n", nTotalPoints);
 }
 
 
@@ -104,7 +104,7 @@ void add_bndsphere_genes (dbmsh3d_mesh* bndset, const float radius_ratio, const 
 //: return number of voronoi vertices...
 bool load_from_vor_file (dbsk3d_fs_mesh* fs_mesh, const char* pcVORFile)
 {
-  vul_printf (vcl_cout, "\n  load_from_vor_file(): Pass 1\n");
+  vul_printf (std::cout, "\n  load_from_vor_file(): Pass 1\n");
 
   // --- Start Scanning the Voronoi data (ASCII file from qvoronoi)
   FILE* fp = fopen (pcVORFile, "r");
@@ -136,7 +136,7 @@ bool load_from_vor_file (dbsk3d_fs_mesh* fs_mesh, const char* pcVORFile)
     FV->get_pt().set (x, y, z);
     fs_mesh->_add_vertex (FV);
   }
-  vul_printf (vcl_cout, "\tread in %d Voronoi nodes finished.\n", num_voronoi_nodes);
+  vul_printf (std::cout, "\tread in %d Voronoi nodes finished.\n", num_voronoi_nodes);
 
   //: Read in Voronoi regions (centering at each PointGene)
   //  !! Important !!
@@ -149,13 +149,13 @@ bool load_from_vor_file (dbsk3d_fs_mesh* fs_mesh, const char* pcVORFile)
       fscanf (fp, " %d", &id);
     fscanf(fp, "\n");
   }
-  vul_printf (vcl_cout, "\tread in Voronoi regions for %d genes finished.\n", nG);
+  vul_printf (std::cout, "\tread in Voronoi regions for %d genes finished.\n", nG);
 
   //: Read in Voronoi facets
   int num_voronoi_faces;
   fscanf (fp, "%d\n", &num_voronoi_faces);
   
-  vul_printf (vcl_cout, "\tread in %d Voronoi faces...\n", num_voronoi_faces);
+  vul_printf (std::cout, "\tread in %d Voronoi faces...\n", num_voronoi_faces);
   unsigned int count = 0;
   for (int i = 0; i < num_voronoi_faces; i++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) fs_mesh->_new_face ();
@@ -185,17 +185,17 @@ bool load_from_vor_file (dbsk3d_fs_mesh* fs_mesh, const char* pcVORFile)
 
     fs_mesh->_add_face (FF);
   }
-  vul_printf (vcl_cout, "\tdone.\n", num_voronoi_faces);
+  vul_printf (std::cout, "\tdone.\n", num_voronoi_faces);
   fclose(fp);
   return true;
 }
 
 bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh, 
                                const char* pcVORFile, const int nOrigGene,
-                               vcl_vector<vcl_vector<dbsk3d_fs_face*> >& G_S_asso)
+                               std::vector<std::vector<dbsk3d_fs_face*> >& G_S_asso)
 
 {
-  vul_printf (vcl_cout, "\n  load_from_vor_file_pass2(): Pass 2\n");
+  vul_printf (std::cout, "\n  load_from_vor_file_pass2(): Pass 2\n");
 
   // --- Start Scanning the Voronoi data (ASCII file from qvoronoi)
   FILE* fp = fopen (pcVORFile, "r");
@@ -222,7 +222,7 @@ bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh,
   double x, y, z;
   for (int i=0; i<num_voronoi_nodes; i++)
     fscanf(fp, "%lf %lf %lf\n", &x, &y, &z);
-  vul_printf (vcl_cout, "\tread in %d Voronoi nodes finished.\n", num_voronoi_nodes);
+  vul_printf (std::cout, "\tread in %d Voronoi nodes finished.\n", num_voronoi_nodes);
 
   //Read in Voronoi regions (centering at each PointGene)
   int nN_G, id;
@@ -232,7 +232,7 @@ bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh,
       fscanf (fp, " %d", &id);
     fscanf(fp, "\n");
   }
-  vul_printf (vcl_cout, "\tread in Voronoi regions for %d genes finished.\n", nG);
+  vul_printf (std::cout, "\tread in Voronoi regions for %d genes finished.\n", nG);
 
   //: Read in Voronoi patches
   int num_voronoi_faces;
@@ -240,7 +240,7 @@ bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh,
 
   G_S_asso.resize (nG - nOrigGene);
   
-  vul_printf (vcl_cout, "\tread in %d Voronoi faces...\n", num_voronoi_faces);
+  vul_printf (std::cout, "\tread in %d Voronoi faces...\n", num_voronoi_faces);
   for (int i = 0; i < num_voronoi_faces; i++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) fs_mesh->facemap (i);
 
@@ -270,8 +270,8 @@ bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh,
       fscanf (fp, " %d", &nid);
     fscanf (fp, "\n");
   }
-  vul_printf (vcl_cout, "\t%u entries added to G_S_asso[][].\n", G_S_asso.size(), nG - nOrigGene);
-  vul_printf (vcl_cout, "\tdone.\n");
+  vul_printf (std::cout, "\t%u entries added to G_S_asso[][].\n", G_S_asso.size(), nG - nOrigGene);
+  vul_printf (std::cout, "\tdone.\n");
   fclose(fp);
   return true;
 }
@@ -279,18 +279,18 @@ bool load_from_vor_file_pass2 (dbsk3d_fs_mesh* fs_mesh,
 //#################################################################
 
 void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene,
-                                  vcl_vector<vcl_vector<dbsk3d_fs_face*> >& G_S_asso)
+                                  std::vector<std::vector<dbsk3d_fs_face*> >& G_S_asso)
 {
-  vul_printf (vcl_cout, "\nrm_bndsphere_shock_recovery(): G_S_asso size: %u\n", G_S_asso.size());
-  vul_printf (vcl_cout, "\tTotal %u shock nodes, %u links, %u patches.\n", 
+  vul_printf (std::cout, "\nrm_bndsphere_shock_recovery(): G_S_asso size: %u\n", G_S_asso.size());
+  vul_printf (std::cout, "\tTotal %u shock nodes, %u links, %u patches.\n", 
            fs_mesh->vertexmap().size(), fs_mesh->edgemap().size(), fs_mesh->facemap().size());
   
   //: The infinity shock elms are the shocks formed with the 'infinity' generators.
   //  Go through all bounding sphere of dbsk3d_point_genes, 
   //  put all nodeElms, linkElms, sheetElms with them into the to_delete set.
-  vcl_set<int> inf_P_to_del;
-  vcl_set<int> inf_L_to_del;
-  vcl_set<int> inf_N_to_del;
+  std::set<int> inf_P_to_del;
+  std::set<int> inf_L_to_del;
+  std::set<int> inf_N_to_del;
 
   assert (n_orig_gene < int(fs_mesh->bnd_mesh()->vertexmap().size()));
   for (unsigned int i=n_orig_gene; i<fs_mesh->bnd_mesh()->vertexmap().size(); i++) {
@@ -298,7 +298,7 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
 
     //Loop through each incident face for this infGene.
     int gsid = infGene->id() - n_orig_gene;
-    vcl_vector<dbsk3d_fs_face*>::iterator it = G_S_asso[gsid].begin();
+    std::vector<dbsk3d_fs_face*>::iterator it = G_S_asso[gsid].begin();
     for (; it != G_S_asso[gsid].end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) *it;
   
@@ -328,7 +328,7 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
   // ###############################################################
   //: Go through all 'infinity' fs_edges (to delete) and check
   //  if it is incident to any other non-inf fs_face. If so, keep them.
-  vcl_set<int>::iterator it = inf_L_to_del.begin();
+  std::set<int>::iterator it = inf_L_to_del.begin();
   for (; it != inf_L_to_del.end(); it++) {
     int id = (*it);
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) fs_mesh->edgemap (id);
@@ -354,7 +354,7 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
   remove_bndsphere_genes (fs_mesh->bnd_mesh(), n_orig_gene);
 
   //Remove all INF shock patchElms, linkElms, and finally nodeElms.
-  vul_printf (vcl_cout, "\tremoving %u shock sheet elements at infinity.\n", 
+  vul_printf (std::cout, "\tremoving %u shock sheet elements at infinity.\n", 
               inf_P_to_del.size());
   it = inf_P_to_del.begin();
   for (; it != inf_P_to_del.end(); it++) {
@@ -363,7 +363,7 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
   }
   inf_P_to_del.clear();
 
-  vul_printf (vcl_cout, "\tremoving %u possible shock link elements at infinity.\n", 
+  vul_printf (std::cout, "\tremoving %u possible shock link elements at infinity.\n", 
               inf_L_to_del.size());
   it = inf_L_to_del.begin();
   for (; it != inf_L_to_del.end(); it++) {
@@ -375,7 +375,7 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
   }
   inf_L_to_del.clear();
 
-  vul_printf (vcl_cout, "\tremoving %u possible shock node elements at infinity.\n", 
+  vul_printf (std::cout, "\tremoving %u possible shock node elements at infinity.\n", 
               inf_N_to_del.size());
   it = inf_N_to_del.begin();
   for (; it != inf_N_to_del.end(); it++) {
@@ -387,25 +387,25 @@ void rm_bndsphere_shock_recovery (dbsk3d_fs_mesh* fs_mesh, const int n_orig_gene
   }
   inf_N_to_del.clear();
 
-  vul_printf (vcl_cout, "\tRemaining: %u shock nodes, %u links, %u patches.\n", 
+  vul_printf (std::cout, "\tRemaining: %u shock nodes, %u links, %u patches.\n", 
            fs_mesh->vertexmap().size(), fs_mesh->edgemap().size(), fs_mesh->facemap().size());
 }
 
 void remove_bndsphere_genes (dbmsh3d_mesh* bndset, const int n_orig_gene)
 {
-  vul_printf (vcl_cout, "  remove_bndsphere_genes()\n");
+  vul_printf (std::cout, "  remove_bndsphere_genes()\n");
 
   //Remove all generators with id after n_orig_gene.
   int max_id = int(bndset->vertexmap().size()); 
   for (int i=n_orig_gene; i<max_id; i++) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = bndset->vertexmap().find (i);
+    std::map<int, dbmsh3d_vertex*>::iterator it = bndset->vertexmap().find (i);
     dbmsh3d_vertex* G = (*it).second;
     delete G;
     bndset->vertexmap().erase (it);
   }
   
   assert (bndset->vertexmap().size() == n_orig_gene);
-  vul_printf (vcl_cout, "\tAfter removing bounding sphere, back to %u points.\n", n_orig_gene);
+  vul_printf (std::cout, "\tAfter removing bounding sphere, back to %u points.\n", n_orig_gene);
 }
 
 

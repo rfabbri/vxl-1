@@ -27,14 +27,14 @@ public:
   //: Destructor
   virtual ~dbru_rcor_storage();
 
-  virtual vcl_string type() const { return "region_cor"; }
+  virtual std::string type() const { return "region_cor"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbru_rcor_storage"; }
+  virtual std::string is_a() const { return "dbru_rcor_storage"; }
 
   //: set the region correspondence
   void set_rcor(dbru_rcor_sptr rcor) { rcor_ = rcor; }

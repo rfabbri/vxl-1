@@ -37,11 +37,11 @@ int main( int argc, char* argv[] )
   char strtemp2[100];
 
   if (argc != 3 &&argc != 4) {
-    vcl_cout << "USAGE: ps_xz.exe <res*.txt> <xz =>0 yz=>1> <bottom height>\n";
+    std::cout << "USAGE: ps_xz.exe <res*.txt> <xz =>0 yz=>1> <bottom height>\n";
     return 1;
   }
 
-  vcl_string image_filename(argv[1]);
+  std::string image_filename(argv[1]);
   //float s = atof(argv[2]);
   //unsigned cnt = atoi(argv[3]);
 
@@ -50,7 +50,7 @@ int main( int argc, char* argv[] )
  // vul_file_iterator fn="./*.png";
   //vul_file_iterator fn=input_file_path+"/*.con";
 
- // vcl_string input_file = fn();
+ // std::string input_file = fn();
  // vil_image_view<vxl_byte> loaded_image  = vil_load(input_file.c_str());
 
  // int ni=loaded_image.ni();

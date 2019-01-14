@@ -1,9 +1,9 @@
 #ifndef psm_condense_scene_h_
 #define psm_condense_scene_h_
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <vector>
+#include <set>
+#include <map>
 
 #include <vbl/vbl_bounding_box.h>
 
@@ -20,11 +20,11 @@
 template<psm_apm_type APM>
 void psm_condense_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_point_3d<int> block_idx, unsigned int min_level)
 {   
-  //vcl_vector<hsds_fd_tree_node_index<3> > to_split;
-  vcl_set<hsds_fd_tree_node_index<3> > to_split;
-  //vcl_vector<psm_sample<APM> > new_vals;
+  //std::vector<hsds_fd_tree_node_index<3> > to_split;
+  std::set<hsds_fd_tree_node_index<3> > to_split;
+  //std::vector<psm_sample<APM> > new_vals;
 
-  float max_alpha_int = (float)-vcl_log(1.0 - occlusion_prob_thresh);
+  float max_alpha_int = (float)-std::log(1.0 - occlusion_prob_thresh);
 
   hsds_fd_tree<psm_sample<APM>,3> &block = scene.get_block(block_idx);
 
@@ -34,7 +34,7 @@ void psm_condense_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_
     return;
   }
   for (int level = max_level - 1; level >= (int)min_level; --level) {
-    vcl_cout << "level = " << level << vcl_endl;
+    std::cout << "level = " << level << std::endl;
     unsigned int nmerged = 0;
 
     unsigned int max_level_index = 2 << level;
@@ -86,7 +86,7 @@ void psm_condense_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_
         }
       }
     }
-    vcl_cout << "  merged " << nmerged << " cells." << vcl_endl;
+    std::cout << "  merged " << nmerged << " cells." << std::endl;
   }
 }
 
@@ -94,8 +94,8 @@ void psm_condense_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_
 template<psm_apm_type APM>
 void psm_condense_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, unsigned int min_level)
 {
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
   for (; vbit != valid_blocks.end(); ++vbit) {
     psm_condense_scene(scene, occlusion_prob_thresh,*vbit, min_level);
   }

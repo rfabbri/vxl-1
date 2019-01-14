@@ -4,8 +4,8 @@
 // \date May 25, 2005
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <dbdet/xio/dbdet_xio_seg3d_info.h>
 
 
@@ -32,8 +32,8 @@ void test_xio_seg3d_info()
   s->add_frame(frame1);
   s->add_frame(frame2);
 
-  vcl_string xmlname = "test_xml.xml";
-  vcl_ofstream xml_file(xmlname.c_str());
+  std::string xmlname = "test_xml.xml";
+  std::ofstream xml_file(xmlname.c_str());
   x_write(xml_file,s);
   xml_file.close();
 
@@ -41,7 +41,7 @@ void test_xio_seg3d_info()
   dbdet_seg3d_info_sptr s2 = new dbdet_seg3d_info();
   x_read(xmlname, s2);
 
-  vcl_string xmlname2 = "test_xml_copy.xml";
+  std::string xmlname2 = "test_xml_copy.xml";
   xml_file.open(xmlname2.c_str());
   x_write(xml_file, s2);
   xml_file.close();

@@ -69,9 +69,9 @@ public:
   void build();
 
   //: write info of the coordinate system to an output stream
-  virtual void print(vcl_ostream & os);
+  virtual void print(std::ostream & os);
 
-  bool load_from_cs_file(const vcl_string& cs_file);
+  bool load_from_cs_file(const std::string& cs_file);
 
   //: convert from local coordinate to world coordinate
   vgl_point_3d<double > local_to_wcs(const vgl_point_3d<double >& pt) const;
@@ -124,7 +124,7 @@ protected:
 //{
 //public:
 //  dbknee_tibia_cs_params(const vgl_box_3d<double >& bounding_box,
-//    const vcl_map<vcl_string, double >& param_list);
+//    const std::map<std::string, double >& param_list);
 //  ~dbknee_cylinder_based_coord_params(){};
 //
 //  // variables:

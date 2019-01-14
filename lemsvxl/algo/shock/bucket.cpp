@@ -5,9 +5,9 @@
 //#include <stdlib.h>
 #include <time.h>
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>  // Include algorithms
+#include <cmath>
+#include <vector>
+#include <algorithm>  // Include algorithms
 //using namespace std;
 
 #include "belements-bucketing.h"
@@ -84,7 +84,7 @@ bool Bucket::isNeighboringBucket (Bucket* bc)
   return false;
 }
 
-void Bucket::getInfo (vcl_ostream& ostrm)
+void Bucket::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
@@ -163,16 +163,16 @@ void Bucketing::allocateStructure (void)
       horizMap.push_back (Pt_BElm_pair(bp->pt(), bp));
     }
   }
-  vcl_sort (horizMap.begin(), horizMap.end());
+  std::sort (horizMap.begin(), horizMap.end());
 
   //1-2)Horizontal parameters.
   _totalBPoints = horizMap.size();
   assert (_nElementsPerBucket>0);
   double totalBuckets = (double)_totalBPoints/_nElementsPerBucket;
-  double sqC = vcl_sqrt(totalBuckets);
-  _nSlotsMem =  (int)vcl_ceil (sqC) + 2;
-  _nElementsPerSlot = (int)vcl_ceil ((double)_totalBPoints/sqC);
-  _nBucketsPerSlotMem =  (int)vcl_ceil (sqC)+2;
+  double sqC = std::sqrt(totalBuckets);
+  _nSlotsMem =  (int)std::ceil (sqC) + 2;
+  _nElementsPerSlot = (int)std::ceil ((double)_totalBPoints/sqC);
+  _nBucketsPerSlotMem =  (int)std::ceil (sqC)+2;
   _nTotalBuckets = _nSlotsMem*_nBucketsPerSlotMem;
 
   //1-3)Allocate vertical projection parameters.
@@ -268,7 +268,7 @@ void Bucketing::assignPointsToBuckets (void)
   hFence[0] = WORLD_BOUNDING_BOX_LEFT;
   //1-2)setup hFence[1] usingfirst element
   BPoint_Bucketing *bp = (BPoint_Bucketing*) (horizMap.begin()->second);
-  hFence[1] =  (int)vcl_floor (bp->pt().x);
+  hFence[1] =  (int)std::floor (bp->pt().x);
 
   //1-3)setup all hFence[i]
   _nSlots = 2;
@@ -281,10 +281,10 @@ void Bucketing::assignPointsToBuckets (void)
     if (imod == _nElementsPerSlot-1) { //possible Fence
       float ptx = (float)bp->pt().x;
       if (ptx > prevHFence) { //add hFence[] !=
-        hFence[ii] =  (int)vcl_ceil (bp->pt().x);
+        hFence[ii] =  (int)std::ceil (bp->pt().x);
         _nSlots++;
         ii++;
-        prevHFence =  (int)vcl_ceil (bp->pt().x);
+        prevHFence =  (int)std::ceil (bp->pt().x);
       }
     }
   }
@@ -293,7 +293,7 @@ void Bucketing::assignPointsToBuckets (void)
     bp = (BPoint_Bucketing*) (horizMap.rbegin()->second);
     float ptx = (float)bp->pt().x;
     if (ptx > prevHFence) { // only if the leftover !!!
-      hFence[ii] =  (int)vcl_ceil (bp->pt().x);
+      hFence[ii] =  (int)std::ceil (bp->pt().x);
       assert (_nSlots < _nSlotsMem);
       _nSlots++;
     }
@@ -314,7 +314,7 @@ void Bucketing::assignPointsToBuckets (void)
   }
 
   for (i=1; i<_nSlots-1; i++)
-    vcl_sort(vertMap[i].begin(), vertMap[i].end());
+    std::sort(vertMap[i].begin(), vertMap[i].end());
 
 
   //2)Compute each v[i][j] and determine _nBPerSlot[i]
@@ -335,14 +335,14 @@ void Bucketing::assignPointsToBuckets (void)
 
     //recalculate _nElementsPerBucket here
     double _nElementsThisSlot = vertMap[ii].size();
-    int nPerBucket = (int)vcl_ceil ((double)_nElementsThisSlot / (_nBucketsPerSlotMem-2));
+    int nPerBucket = (int)std::ceil ((double)_nElementsThisSlot / (_nBucketsPerSlotMem-2));
 
     //2-3-0)setup the first fence
     vFence[ii][0] = WORLD_BOUNDING_BOX_TOP;
     //2-3-1)setup vFence[ii][1] usingfirst element
     assert (vertMap[ii].size()>0);
     BPoint_Bucketing *bp = (BPoint_Bucketing*) (vertMap[ii].begin()->second);
-    vFence[ii][1] =  (int)vcl_floor (bp->pt().y);
+    vFence[ii][1] =  (int)std::floor (bp->pt().y);
 
     //2-3-2)setup all vFence[i]
     _nBucketsInSlot[ii] = 2;
@@ -355,11 +355,11 @@ void Bucketing::assignPointsToBuckets (void)
       if (jmod == nPerBucket-1) { //possible Fence
         float pty = (float)bp->pt().y;
         if (pty > prevVFence) { //add vFence[] !=
-          vFence[ii][jj] =  (int)vcl_ceil (bp->pt().y);
+          vFence[ii][jj] =  (int)std::ceil (bp->pt().y);
           assert (_nBucketsInSlot[ii]<_nBucketsPerSlotMem);
           _nBucketsInSlot[ii]++;
           jj++;
-          prevVFence =  (int)vcl_ceil (bp->pt().y);
+          prevVFence =  (int)std::ceil (bp->pt().y);
         }
       }
     }
@@ -369,7 +369,7 @@ void Bucketing::assignPointsToBuckets (void)
       bp = (BPoint_Bucketing*) (vertMap[ii].rbegin()->second);
       float pty = (float)bp->pt().y;
       if (pty > prevVFence) {
-        vFence[ii][jj] =  (int)vcl_ceil (bp->pt().y);
+        vFence[ii][jj] =  (int)std::ceil (bp->pt().y);
         assert (_nBucketsInSlot[ii]<_nBucketsPerSlotMem);
         _nBucketsInSlot[ii]++;
       }
@@ -800,9 +800,9 @@ void Bucketing::BucketStatistics (void)
   int nTotalEmptyBuckets = nTotalNumBuckets-totalNonEmptyBuckets;
   double dAverage_NeighboringBuckets = (double)total_NeighboringBuckets/totalNonEmptyBuckets;
 
-  vcl_cout<< "Total number of Buckets= " << nTotalNumBuckets <<vcl_endl;
-  vcl_cout<< "Total number of Empty Buckets= " << nTotalEmptyBuckets <<vcl_endl;
-  vcl_cout<< "Average number of Neighboring Buckets per Bucket= " << dAverage_NeighboringBuckets <<vcl_endl;
+  std::cout<< "Total number of Buckets= " << nTotalNumBuckets <<std::endl;
+  std::cout<< "Total number of Empty Buckets= " << nTotalEmptyBuckets <<std::endl;
+  std::cout<< "Average number of Neighboring Buckets per Bucket= " << dAverage_NeighboringBuckets <<std::endl;
 }
 
 //protected function, If pt not inside any bucket, just return;
@@ -1232,7 +1232,7 @@ void Bucketing::PPShockInit (BPoint_Bucketing* bp1,
       bool bValid = PPwithinCircleValidation (bp1, bp2, midPoint, midDistSq, SABBucket);
       //1-3)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bp1, bp2, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bp1, bp2, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1288,7 +1288,7 @@ void Bucketing::PLShockInit (BPoint_Bucketing* bp1, BLine_Bucketing* bl2,
 
       //1-3)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bp1, bl2, footPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bp1, bl2, footPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1347,7 +1347,7 @@ void Bucketing::PAShockInit (BPoint_Bucketing* bp1, BArc_Bucketing* ba2,
 
       //1-3)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bp1, ba2, footPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bp1, ba2, footPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1410,7 +1410,7 @@ void Bucketing::LPShockInit (BLine_Bucketing* bl1, Bucket* BucketA,
 
       //1-3)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bp2, bl1, footPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bp2, bl1, footPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1466,7 +1466,7 @@ void Bucketing::APShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
       //1-3)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bp2, ba1, footPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bp2, ba1, footPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1539,7 +1539,7 @@ void Bucketing::LAShockInit (BLine_Bucketing* bl1, Bucket* BucketA,
 
       //1-4)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bl1, ba2, footPt, arcPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bl1, ba2, footPt, arcPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1601,7 +1601,7 @@ void Bucketing::ALShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
       //1-5)If valid, add sources into BucketIShock
       if (bValid) {
-        addValidSource (bl2, ba1, footPt, arcPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+        addValidSource (bl2, ba1, footPt, arcPt, midPoint, std::sqrt(midDistSq), SABBucket);
       }
     }
     else {
@@ -1636,7 +1636,7 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
   if (ba1->nud()==ARC_NUD_CCW && ba2->nud()==ARC_NUD_CCW)
     return;
 
-  //3 cases: H>r1+r2, H<vcl_fabs(r1-r2), and between.
+  //3 cases: H>r1+r2, H<std::fabs(r1-r2), and between.
   DIST_TYPE H = _distPointPoint (ba1->center(), ba2->center());
   if (H > ba1->R()+ba2->R()) { //1)two arcs are far away, test center.
 
@@ -1678,10 +1678,10 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
     //1-6)If valid, add sources into BucketIShock
     if (bValid) {
-      addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, vcl_sqrt(midDistSq), SABBucket);
+      addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, std::sqrt(midDistSq), SABBucket);
     }
   }
-  else if (H<vcl_fabs(ba1->R()-ba2->R())) { //2)detect small and big arc.
+  else if (H<std::fabs(ba1->R()-ba2->R())) { //2)detect small and big arc.
     BArc_Bucketing* bigArc;
     BArc_Bucketing* smallArc;
     Bucket* BucketBigArc;
@@ -1734,7 +1734,7 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
     //1-6)If valid, add sources into BucketIShock
     if (bValid) {
-      addValidSource (bigArc, smallArc, bigArcPt, smallArcPt, midPoint, vcl_sqrt(midDistSq), SABBucket);
+      addValidSource (bigArc, smallArc, bigArcPt, smallArcPt, midPoint, std::sqrt(midDistSq), SABBucket);
     }
   }
   else { //3)arcs intersecting, no possible source.
@@ -1787,7 +1787,7 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
           //1-6)If valid, add sources into BucketIShock
           if (bValid) {
-            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, vcl_sqrt(midDistSq), SABBucket);
+            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, std::sqrt(midDistSq), SABBucket);
           }
         }
       }
@@ -1829,7 +1829,7 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
           //1-6)If valid, add sources into BucketIShock
           if (bValid) {
-            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, vcl_sqrt(midDistSq), SABBucket);
+            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, std::sqrt(midDistSq), SABBucket);
           }
         }
       }
@@ -1873,7 +1873,7 @@ void Bucketing::AAShockInit (BArc_Bucketing* ba1, Bucket* BucketA,
 
           //1-6)If valid, add sources into BucketIShock
           if (bValid) {
-            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, vcl_sqrt(midDistSq), SABBucket);
+            addValidSource (ba1, ba2, arcPt1, arcPt2, midPoint, std::sqrt(midDistSq), SABBucket);
           }
         }
       }
@@ -2076,7 +2076,7 @@ void Bucketing::validateExistingSourcesForNewElms (BElmListType* ListA)
 void Bucketing::validateExistingSources_BPoint_Bucket (BPoint_Bucketing* bp1, Bucket* BucketA, Bucket* curBucket,
                                      SIElmSetType& _invalidSourceList)
 {
-  vcl_vector<SISource*> SourcesToDel;
+  std::vector<SISource*> SourcesToDel;
 
   SIElmSetType::iterator sit = curBucket->SIElmList()->begin();
   for (; sit!=curBucket->SIElmList()->end(); sit++) {
@@ -2091,7 +2091,7 @@ void Bucketing::validateExistingSources_BPoint_Bucket (BPoint_Bucketing* bp1, Bu
   //Go through SourcesToDel list again to delete them...
   for (unsigned int i=0; i<SourcesToDel.size() ; i++) {
     //Remember to remove the invalid source from this bucket.
-    SIElmSetType::iterator it = vcl_find (curBucket->SIElmList()->begin(),
+    SIElmSetType::iterator it = std::find (curBucket->SIElmList()->begin(),
                            curBucket->SIElmList()->end(), SourcesToDel[i]);
     if (it != curBucket->SIElmList()->end()) //if found
       curBucket->SIElmList()->erase (it);
@@ -2104,7 +2104,7 @@ void Bucketing::validateExistingSources_BPoint_Bucket (BPoint_Bucketing* bp1, Bu
 void Bucketing::validateExistingSources_BLine_Bucket (BLine_Bucketing* bl1, Bucket* BucketA, Bucket* curBucket,
                                     SIElmSetType& _invalidSourceList)
 {
-  vcl_vector<SISource*> SourcesToDel;
+  std::vector<SISource*> SourcesToDel;
 
   SIElmSetType::iterator sit = curBucket->SIElmList()->begin();
   for (; sit!=curBucket->SIElmList()->end(); sit++) {
@@ -2124,7 +2124,7 @@ void Bucketing::validateExistingSources_BLine_Bucket (BLine_Bucketing* bl1, Buck
   //Go through SourcesToDel list again to delete them...
   for (unsigned int i=0; i<SourcesToDel.size() ; i++) {
     //Remember to remove the invalid source from this bucket.
-    SIElmSetType::iterator it = vcl_find (curBucket->SIElmList()->begin(),
+    SIElmSetType::iterator it = std::find (curBucket->SIElmList()->begin(),
                            curBucket->SIElmList()->end(), SourcesToDel[i]);
     if (it != curBucket->SIElmList()->end()) //if found
       curBucket->SIElmList()->erase (it);
@@ -2136,7 +2136,7 @@ void Bucketing::validateExistingSources_BLine_Bucket (BLine_Bucketing* bl1, Buck
 void Bucketing::validateExistingSources_BArc_Bucket (BArc_Bucketing* ba1, Bucket* BucketA, Bucket* curBucket,
                                     SIElmSetType& _invalidSourceList)
 {
-  vcl_vector<SISource*> SourcesToDel;
+  std::vector<SISource*> SourcesToDel;
 
   SIElmSetType::iterator sit = curBucket->SIElmList()->begin();
   for (; sit!=curBucket->SIElmList()->end(); sit++) {
@@ -2156,7 +2156,7 @@ void Bucketing::validateExistingSources_BArc_Bucket (BArc_Bucketing* ba1, Bucket
   //Go through SourcesToDel list again to delete them...
   for (unsigned int i=0; i<SourcesToDel.size() ; i++) {
     //Remember to remove the invalid source from this bucket.
-    SIElmSetType::iterator it = vcl_find (curBucket->SIElmList()->begin(),
+    SIElmSetType::iterator it = std::find (curBucket->SIElmList()->begin(),
                            curBucket->SIElmList()->end(), SourcesToDel[i]);
     if (it != curBucket->SIElmList()->end()) //if found
       curBucket->SIElmList()->erase (it);
@@ -2419,13 +2419,13 @@ void Bucketing::initShocksBucketing ()
 
   long sec_after_build_bucket = clock ();
   long time_build_bucket = sec_after_build_bucket - sec_start_bucket;
-  vcl_cout<< "Time for Building Buckets: "<< time_build_bucket <<" msec."<<vcl_endl;
+  std::cout<< "Time for Building Buckets: "<< time_build_bucket <<" msec."<<std::endl;
 
   //4)Local Shock Detection
   localShockInit (_validSourceList);
   long sec_after_shockinit_bucket = clock();
   long time_local_shock_detect = sec_after_shockinit_bucket - sec_after_build_bucket;
-  vcl_cout<< "Time for Local Shock Detection within Buckets: "<< time_local_shock_detect <<" msec."<<vcl_endl;
+  std::cout<< "Time for Local Shock Detection within Buckets: "<< time_local_shock_detect <<" msec."<<std::endl;
 
   //5)For each generator A, and for each point B in visible buckets of BucketA
   //  Try to form every possible source S_ab in a spiral way.
@@ -2468,20 +2468,20 @@ void Bucketing::initShocksBucketing ()
   //7)Output results.
   long sec_after_bucketing = clock();
   long time_forming_source = sec_after_bucketing - sec_after_shockinit_bucket;
-  vcl_cout<< "Time for Forming Sources between Buckets: "<< time_forming_source <<" msec."<<vcl_endl;
+  std::cout<< "Time for Forming Sources between Buckets: "<< time_forming_source <<" msec."<<std::endl;
   long total_time = time_build_bucket + time_local_shock_detect + time_forming_source;
-  vcl_cout<< "-->Total Time for Bucketing: "<< total_time <<" msec."<<vcl_endl;
-  vcl_cout<< "Bucketing: # of Sources= " << _validSourceList.size() <<vcl_endl;
+  std::cout<< "-->Total Time for Bucketing: "<< total_time <<" msec."<<std::endl;
+  std::cout<< "Bucketing: # of Sources= " << _validSourceList.size() <<std::endl;
 
   //!!Debug
   #ifdef _VIS_DEBUG
-  vcl_cout<< "---Debug---"<<vcl_endl;
-  vcl_cout<< "nP_Bucket: "<<nP_Bucket<<vcl_endl;
-  vcl_cout<< "nP_nonNeighboringBucket: "<<nP_nonNeighboringBucket<<vcl_endl;
-  vcl_cout<< "nP_Bucket/nBElement: "<<(double)nP_Bucket/boundary->nBElement()*2<<vcl_endl;
-  vcl_cout<< "nL_Bucket: "<<nL_Bucket<<vcl_endl;
-  vcl_cout<< "nL_nonNeighboringBucket: "<<nL_nonNeighboringBucket<<vcl_endl;
-  vcl_cout<< "nL_Bucket/nBElement: "<<(double)nL_Bucket/boundary->nBElement()*2<<vcl_endl;
+  std::cout<< "---Debug---"<<std::endl;
+  std::cout<< "nP_Bucket: "<<nP_Bucket<<std::endl;
+  std::cout<< "nP_nonNeighboringBucket: "<<nP_nonNeighboringBucket<<std::endl;
+  std::cout<< "nP_Bucket/nBElement: "<<(double)nP_Bucket/boundary->nBElement()*2<<std::endl;
+  std::cout<< "nL_Bucket: "<<nL_Bucket<<std::endl;
+  std::cout<< "nL_nonNeighboringBucket: "<<nL_nonNeighboringBucket<<std::endl;
+  std::cout<< "nL_Bucket/nBElement: "<<(double)nL_Bucket/boundary->nBElement()*2<<std::endl;
   #endif
 }
 
@@ -2730,8 +2730,8 @@ void Bucketing::initShocks_BPoint_Bucket (BPoint_Bucketing* bp1, Bucket* BucketA
 
   //if forming source with non-neighboring bucket, output.
   if (!BucketA->isNeighboringBucket(curBucket)) {
-    ///vcl_cout<< "bp1 P-P Visibility Constraint: "<< bp1->_PPVisCon.size() <<vcl_endl;
-    ///vcl_cout<< "bp1: "<<bp1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<vcl_endl;
+    ///std::cout<< "bp1 P-P Visibility Constraint: "<< bp1->_PPVisCon.size() <<std::endl;
+    ///std::cout<< "bp1: "<<bp1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<std::endl;
     nP_nonNeighboringBucket++;
   }
   nP_Bucket++;
@@ -2776,8 +2776,8 @@ void Bucketing::initShocks_BLine_Bucket (BLine_Bucketing* bl1, Bucket* BucketA, 
   #ifdef _VIS_DEBUG
   //if forming source with non-neighboring bucket, output.
   if (!BucketA->isNeighboringBucket(curBucket)) {
-    ///vcl_cout<< "bl1 _LPVisCon: " <<vcl_endl;
-    ///vcl_cout<< "bl1: "<<bl1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<vcl_endl;
+    ///std::cout<< "bl1 _LPVisCon: " <<std::endl;
+    ///std::cout<< "bl1: "<<bl1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<std::endl;
     nL_nonNeighboringBucket++;
   }
   nL_Bucket++;
@@ -2823,8 +2823,8 @@ void Bucketing::initShocks_BArc_Bucket (BArc_Bucketing* ba1, Bucket* BucketA, Bu
   #ifdef _VIS_DEBUG
   //if forming source with non-neighboring bucket, output.
   if (!BucketA->isNeighboringBucket(curBucket)) {
-    ///vcl_cout<< "bl1 _LPVisCon: " <<vcl_endl;
-    ///vcl_cout<< "bl1: "<<bl1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<vcl_endl;
+    ///std::cout<< "bl1 _LPVisCon: " <<std::endl;
+    ///std::cout<< "bl1: "<<bl1->id()<<"-BucketB["<<curBucket->index().h<<"]["<<curBucket->index().v<<"]"<<std::endl;
     nA_nonNeighboringBucket++;
   }
   nA_Bucket++;
@@ -2980,7 +2980,7 @@ inline bool Bucketing::doesBLineInvalidatePXSource (BLine_Bucketing* bline, BPoi
   //EPSILONISSUE 10
   else { //2-2)ForConnedtedGUI, both t and plane is ok here, e_pt() can't form source!!
     //if (_isL(curDistSq, midDistSq, DIST_BOUND))
-    //compute vcl_vector of midPoint->footPoint
+    //compute std::vector of midPoint->footPoint
     double vMF = _vPointPoint (midPoint, footPoint);
     double vMA = _vPointPoint (midPoint, GPA->pt());
     if (!_isEq(vMF, vMA, TO_EPSILON))
@@ -3014,7 +3014,7 @@ inline bool Bucketing::doesBArcInvalidatePXSource (BArc_Bucketing* barc, BPoint_
   //EPSILONISSUE 10
   else { //2-2)ForConnedtedGUI, both t and plane is ok here, e_pt() can't form source!!
     //if (_isL(curDistSq, midDistSq, DIST_BOUND))
-    //compute vcl_vector of midPoint->footPoint
+    //compute std::vector of midPoint->footPoint
     double vMF = _vPointPoint (midPoint, footPoint);
     double vMA = _vPointPoint (midPoint, GPA->pt());
     if (!_isEq(vMF, vMA, TO_EPSILON))
@@ -3163,7 +3163,7 @@ bool Bucketing::PPwithinCircleValidation (BPoint_Bucketing* GPA, BPoint_Bucketin
     //if no intersecting, the iteration stop, go to the next one...
   }//end for (*snit)
 
-  //**vcl_cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<vcl_endl;
+  //**std::cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<std::endl;
 
   //4)Test on the validationQueue in a spiral way...
   //  If anyone invalidates it, done. Else, run until the queue is empty.
@@ -3339,7 +3339,7 @@ bool Bucketing::PLwithinCircleValidation (BPoint_Bucketing* GPA, BLine_Bucketing
     //if no intersecting, the iteration stop, go to the next one...
   }//end for (*snit)
 
-  //**vcl_cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<vcl_endl;
+  //**std::cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<std::endl;
 
   //4)Test on the validationQueue in a spiral way...
   //  If anyone invalidates it, done. Else, run until the queue is empty.
@@ -3513,7 +3513,7 @@ bool Bucketing::PAwithinCircleValidation (BPoint_Bucketing* GPA, BArc_Bucketing*
     //if no intersecting, the iteration stop, go to the next one...
   }//end for (*snit)
 
-  //**vcl_cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<vcl_endl;
+  //**std::cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<std::endl;
 
   //4)Test on the validationQueue in a spiral way...
   //  If anyone invalidates it, done. Else, run until the queue is empty.
@@ -3686,7 +3686,7 @@ bool Bucketing::LAwithinCircleValidation (BLine_Bucketing* GLA, BArc_Bucketing* 
     //if no intersecting, the iteration stop, go to the next one...
   }//end for (*snit)
 
-  //**vcl_cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<vcl_endl;
+  //**std::cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<std::endl;
 
   //4)Test on the validationQueue in a spiral way...
   //  If anyone invalidates it, done. Else, run until the queue is empty.
@@ -3859,7 +3859,7 @@ bool Bucketing::AAwithinCircleValidation (BArc_Bucketing* GAA, BArc_Bucketing* G
     //if no intersecting, the iteration stop, go to the next one...
   }//end for (*snit)
 
-  //**vcl_cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<vcl_endl;
+  //**std::cout<<"GAid: "<<GAid<<", GBid: "<<GBid<<", validationQueue size: "<<validationQueue.size()<<std::endl;
 
   //4)Test on the validationQueue in a spiral way...
   //  If anyone invalidates it, done. Else, run until the queue is empty.

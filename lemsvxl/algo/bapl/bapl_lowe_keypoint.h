@@ -56,7 +56,7 @@ public:
   void set_descriptor(const vnl_vector_fixed<double,128>& descriptor);
   
   //: Print a summary of the keypoint data to a stream
-  virtual void print_summary(vcl_ostream& os) const;
+  virtual void print_summary(std::ostream& os) const;
 
 protected:
   //: Normalize, threshold, and renormalize

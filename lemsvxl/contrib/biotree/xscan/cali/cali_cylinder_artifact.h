@@ -24,10 +24,10 @@ public:
      cali_cylinder_artifact(vgl_point_3d<double> center,cali_param par);
      cali_cylinder_artifact(vgl_point_3d<double> center,
                             cali_param par,
-                            vcl_vector<double> x_coord_tol,
-                            vcl_vector<double> y_coord_tol,
-                            vcl_vector<double> z_coord_tol,
-                            vcl_vector<double> rad_tol);
+                            std::vector<double> x_coord_tol,
+                            std::vector<double> y_coord_tol,
+                            std::vector<double> z_coord_tol,
+                            std::vector<double> rad_tol);
 
     // copy constructor
     cali_cylinder_artifact(cali_cylinder_artifact const& artf);
@@ -47,16 +47,16 @@ public:
     double density() const {return par_.BALL_DENSITY;}
     
 
-    vcl_vector<vgl_point_3d<double> > ball_centers(void);
+    std::vector<vgl_point_3d<double> > ball_centers(void);
 
-    vcl_vector<double > ball_radii(void);
+    std::vector<double > ball_radii(void);
 
     double ray_artifact_intersect(vgl_homg_line_3d_2_points<double> const& line);
    
     double ray_artifact_intersect(vgl_homg_line_3d_2_points<double> const& line) const; 
 
 
-    void print(vcl_ostream &s);
+    void print(std::ostream &s);
 
 protected:
    
@@ -64,8 +64,8 @@ protected:
     vgl_point_3d<double> center_;
     
     // vector of sphere pointers, it's size set to 13
-    //vcl_vector<vgl_sphere_3d<double> *> balls; 
-    vcl_vector<vgl_sphere_3d<double> > balls; 
+    //std::vector<vgl_sphere_3d<double> *> balls; 
+    std::vector<vgl_sphere_3d<double> > balls; 
 
     // 3d projective transformation matrix
     vgl_h_matrix_3d<double> tr_matrix;
@@ -75,10 +75,10 @@ protected:
     void create_balls();
 
 // creates the 3-D artifact model with some tolerances added to the x,y & z coordinates obtained from CMMINFO file
-    void create_balls_with_tolerance(const vcl_vector<double>& x_coord_tol,
-                                     const vcl_vector<double>& y_coord_tol,
-                                     const vcl_vector<double>& z_coord_tol,
-                                     const vcl_vector<double>& rad_tol);
+    void create_balls_with_tolerance(const std::vector<double>& x_coord_tol,
+                                     const std::vector<double>& y_coord_tol,
+                                     const std::vector<double>& z_coord_tol,
+                                     const std::vector<double>& rad_tol);
 
 
     void create_bounding_box();

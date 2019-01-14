@@ -7,7 +7,7 @@
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_4.h>
 #include <vnl/vnl_least_squares_function.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 
 class  BB_optimization_problem : public vnl_least_squares_function
@@ -49,10 +49,10 @@ public:
 
     void updateBBMat_LM(vnl_double_4x4 &UpdatedBBMatrix, const double newt, const double newalpha);
       
-    void   computeWorldPoints_LM( vcl_vector < vnl_double_4 > &WorldPoints, vnl_double_4x4 UpdatedBBMatrix);  
-    double compute_err_LM(const vcl_vector< vnl_double_4 > &WorldPoints, vnl_vector<double> &residuals,
+    void   computeWorldPoints_LM( std::vector < vnl_double_4 > &WorldPoints, vnl_double_4x4 UpdatedBBMatrix);  
+    double compute_err_LM(const std::vector< vnl_double_4 > &WorldPoints, vnl_vector<double> &residuals,
         const vnl_double_4x4 &BB);
-    void compute_plane_params_LM(const vcl_vector<vnl_double_4> & corners, vnl_double_4 &Normal);
+    void compute_plane_params_LM(const std::vector<vnl_double_4> & corners, vnl_double_4 &Normal);
      vnl_double_4x4 rot_mat(const vnl_double_4 &p, const  vnl_double_4 &v, const double a);
      vnl_double_4x4     rotZ_mat(const double radians);
      vnl_double_4x4     rotY_mat(const double radians);
@@ -60,7 +60,7 @@ public:
      vnl_double_4x4 trans_mat(const vnl_double_4 &trans);
      void compute_plane_params_LM(const vnl_double_4x4 &BB);
      void
-         compute_Normal_LM(const vcl_vector<vnl_double_4> & corners, vnl_double_4 &Normal);
+         compute_Normal_LM(const std::vector<vnl_double_4> & corners, vnl_double_4 &Normal);
 
 
 

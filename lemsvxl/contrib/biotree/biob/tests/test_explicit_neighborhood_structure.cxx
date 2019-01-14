@@ -30,7 +30,7 @@ static void test_explicit_neighborhood_structure(){
   //unused variable
   //int debugint = neighbors.size();
   //neighbors should be 0 and 2
-  vcl_vector<bool> is_neighbor(roster.num_points());
+  std::vector<bool> is_neighbor(roster.num_points());
   for (biob_explicit_neighborhood_structure::neighbors_t::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it){
     is_neighbor[it->index()] = true;
   }

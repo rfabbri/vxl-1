@@ -16,9 +16,9 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <map>
+#include <string>
+#include <utility>
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 
@@ -52,9 +52,9 @@ public:
     /*virtual*/ bool execute_transform();
 
     //: Get belms
-    /* virtual */ void get_belms(vcl_set<int>& set)
+    /* virtual */ void get_belms(std::set<int>& set)
     {
-        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+        std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
         for ( it = removal_bnd_elements_.begin(); 
               it != removal_bnd_elements_.end() ; ++it)
         {
@@ -68,10 +68,10 @@ public:
     //: return likelihood of transform
     /* virtual */ double likelihood();
 
-    /*virtual */ vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
+    /*virtual */ std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
         get_contour_pair(){return contour_pair_;}
 
-    vcl_vector<vgl_point_2d<double> > get_ordered_contour(){
+    std::vector<vgl_point_2d<double> > get_ordered_contour(){
         return ordered_contour_;}
 
 private: 
@@ -86,26 +86,26 @@ private:
     bool reinsert_contour();
 
     // Sample points
-    void sample_contour(vcl_vector<vgl_point_2d<double> >& foreground_grid,
-                        vcl_vector<vgl_point_2d<double> >& background_grid);
+    void sample_contour(std::vector<vgl_point_2d<double> >& foreground_grid,
+                        std::vector<vgl_point_2d<double> >& background_grid);
 
     // Keep initial start of contour
     dbsk2d_ishock_bpoint* contour_point_;
 
     // Keep pair of contour elmenents that define start and end of contour
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> contour_pair_;
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> contour_pair_;
 
     // Keep track whether transform is valid
     bool valid_transform_;
 
     // Keep ordered set of contour points
-    vcl_vector<vgl_point_2d<double> > ordered_contour_;
+    std::vector<vgl_point_2d<double> > ordered_contour_;
 
     // Keep track of any degree three nodes to reinitialize contact shocks
-    vcl_map<unsigned int, dbsk2d_ishock_belm*> higher_degree_nodes_;
+    std::map<unsigned int, dbsk2d_ishock_belm*> higher_degree_nodes_;
 
     // Keep track of contact shock pairs
-    vcl_map<unsigned int,vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
+    std::map<unsigned int,std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
         contact_shock_pairs_;
 
     // Make copy ctor private

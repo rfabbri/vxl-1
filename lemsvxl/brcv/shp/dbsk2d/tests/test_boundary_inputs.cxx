@@ -5,7 +5,7 @@
 
 
 #include <testlib/testlib_test.h>
-//#include <vcl_map.h>
+//#include <map>
 //
 //#include <dbsk2d/dbsk2d_ishock_belm.h>
 //#include <dbsk2d/dbsk2d_ishock_bpoint.h>
@@ -24,7 +24,7 @@
 //: input a polyline
 void test_boundary_inputs_polyline()
 {
-  vcl_cout << "This is test_boundary_inputs_polyline()" << vcl_endl;
+  std::cout << "This is test_boundary_inputs_polyline()" << std::endl;
 
   // Input a polyline to boundary
   
@@ -36,8 +36,8 @@ void test_boundary_inputs_polyline()
   double y_2[] = { 2 , 2, 3, 3};
 
 
-  vcl_vector< vsol_point_2d_sptr > vertices_1;
-  vcl_vector< vsol_point_2d_sptr > vertices_2;
+  std::vector< vsol_point_2d_sptr > vertices_1;
+  std::vector< vsol_point_2d_sptr > vertices_2;
 
   for (int i = 0; i < 4; i ++)
   {
@@ -45,10 +45,10 @@ void test_boundary_inputs_polyline()
     vertices_2.push_back(new vsol_point_2d(x_2[i], y_2[i]));
   }
   vsol_polyline_2d_sptr polyline_1 = new vsol_polyline_2d(vertices_1);
-  polyline_1->print_summary(vcl_cout);
+  polyline_1->print_summary(std::cout);
   
   vsol_polyline_2d_sptr polyline_2 = new vsol_polyline_2d(vertices_2);
-  polyline_2->print_summary(vcl_cout);
+  polyline_2->print_summary(std::cout);
 
   // add the the two polylines to the boundary
   dbsk2d_boundary_sptr boundary = new dbsk2d_boundary();
@@ -66,15 +66,15 @@ void test_boundary_inputs_polyline()
     belm_iter != boundary->belm_end(); belm_iter ++)
   {
     dbsk2d_ishock_belm* belm = (*belm_iter);
-    // vcl_cout << vcl_endl << belm->is_a();
-    // belm->getInfo(vcl_cout);
+    // std::cout << std::endl << belm->is_a();
+    // belm->getInfo(std::cout);
     if (belm->is_a_point())
       ++num_bpoints;
     else if (belm->is_a_line())
       ++num_blines;
   }
-  vcl_cout << "Number of bpoints = " << num_bpoints << vcl_endl;
-  vcl_cout << "Number of blines = " << num_blines << vcl_endl;
+  std::cout << "Number of bpoints = " << num_bpoints << std::endl;
+  std::cout << "Number of blines = " << num_blines << std::endl;
 
   // Test
   TEST("Test inputing a polyline to boundary", 
@@ -84,7 +84,7 @@ void test_boundary_inputs_polyline()
 //: input a LEMS curve - a polyline for now
 void test_boundary_inputs_interp_curve_2d()
 {
-  vcl_cout << "\nThis is test_boundary_inputs_interp_curve_2d()" << vcl_endl;
+  std::cout << "\nThis is test_boundary_inputs_interp_curve_2d()" << std::endl;
 
   // Input a polyline to boundary
   
@@ -96,8 +96,8 @@ void test_boundary_inputs_interp_curve_2d()
   double y_2[] = { 2 , 2, 3, 3};
 
 
-  vcl_vector< vsol_point_2d_sptr > pts_1;
-  vcl_vector< vsol_point_2d_sptr > pts_2;
+  std::vector< vsol_point_2d_sptr > pts_1;
+  std::vector< vsol_point_2d_sptr > pts_2;
 
   
 
@@ -115,8 +115,8 @@ void test_boundary_inputs_interp_curve_2d()
   bsold_curve_algs::interpolate_linear(curve_2.ptr(), pts_2);
 
   //print out summary of the two curves
-  curve_1->print_summary(vcl_cout);
-  curve_2->print_summary(vcl_cout);
+  curve_1->print_summary(std::cout);
+  curve_2->print_summary(std::cout);
 
   // add the the two curves to the boundary
   dbsk2d_boundary_sptr boundary = new dbsk2d_boundary();
@@ -135,15 +135,15 @@ void test_boundary_inputs_interp_curve_2d()
     belm_iter != boundary->belm_end(); belm_iter ++)
   {
     dbsk2d_ishock_belm* belm = (*belm_iter);
-    // vcl_cout << vcl_endl << belm->is_a();
-    // belm->getInfo(vcl_cout);
+    // std::cout << std::endl << belm->is_a();
+    // belm->getInfo(std::cout);
     if (belm->is_a_point())
       ++num_bpoints;
     else if (belm->is_a_line())
       ++num_blines;
   }
-  vcl_cout << "\nNumber of bpoints = " << num_bpoints << vcl_endl;
-  vcl_cout << "Number of blines = " << num_blines << vcl_endl;
+  std::cout << "\nNumber of bpoints = " << num_bpoints << std::endl;
+  std::cout << "Number of blines = " << num_blines << std::endl;
 
   // Test
   TEST("Test inputing a LEMS curve to boundary", 
@@ -155,7 +155,7 @@ void test_boundary_inputs_interp_curve_2d()
 void test_boundary_inputs_polygon()
 {
 
-  vcl_cout << "\nThis is test_boundary_inputs_polygon_2d()" << vcl_endl;
+  std::cout << "\nThis is test_boundary_inputs_polygon_2d()" << std::endl;
 
   // Input a polygon to boundary
   
@@ -163,7 +163,7 @@ void test_boundary_inputs_polygon()
   double x_1[] = { 0 , 1, 2, 3};
   double y_1[] = { 0 , 1, 1, 0};
 
-  vcl_vector< vsol_point_2d_sptr > pts_1;
+  std::vector< vsol_point_2d_sptr > pts_1;
 
   
   for (int i = 0; i < 4; i ++)
@@ -175,7 +175,7 @@ void test_boundary_inputs_polygon()
   vsol_polygon_2d_sptr polygon = new vsol_polygon_2d(pts_1);
 
   //print out summary of the two curves
-  polygon->print_summary(vcl_cout);
+  polygon->print_summary(std::cout);
   
 
   // add the the two curves to the boundary
@@ -193,16 +193,16 @@ void test_boundary_inputs_polygon()
     belm_iter != boundary->belm_end(); belm_iter ++)
   {
     dbsk2d_ishock_belm* belm = (*belm_iter);
-    // vcl_cout << vcl_endl << belm->is_a();
-    // belm->getInfo(vcl_cout);
+    // std::cout << std::endl << belm->is_a();
+    // belm->getInfo(std::cout);
     if (belm->is_a_point())
       ++num_bpoints;
     else if (belm->is_a_line())
       ++num_blines;
   }
   
-  vcl_cout << "\nNumber of bpoints = " << num_bpoints << vcl_endl;
-  vcl_cout << "Number of blines = " << num_blines << vcl_endl;
+  std::cout << "\nNumber of bpoints = " << num_bpoints << std::endl;
+  std::cout << "Number of blines = " << num_blines << std::endl;
 
   // Test
   TEST("Test inputing a polygon to boundary", 

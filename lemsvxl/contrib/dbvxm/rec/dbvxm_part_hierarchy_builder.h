@@ -27,7 +27,7 @@ public:
   static dbvxm_part_hierarchy_sptr construct_candidates_from_one_image(vil_image_resource_sptr img, float min_strength);
 
   //: construct layer_n from all pairwise combinations of detected parts of layer_n-1
-  static bool construct_layer_candidates(unsigned layer_n, dbvxm_part_hierarchy_sptr& h, vcl_vector<dbvxm_part_instance_sptr>& parts);
+  static bool construct_layer_candidates(unsigned layer_n, dbvxm_part_hierarchy_sptr& h, std::vector<dbvxm_part_instance_sptr>& parts);
 
   //: construct a hierarchy manually
   static dbvxm_part_hierarchy_sptr construct_vehicle_detector();

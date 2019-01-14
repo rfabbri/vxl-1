@@ -24,7 +24,7 @@ bvis_vtol_displayer::make_tableau( bpro_storage_sptr storage) const
   bgui_vsol2D_tableau_sptr vsol2D_tab;
   vsol2D_tab = bgui_vsol2D_tableau_new();
 
-  for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = vtol_storage->begin();
+  for ( std::set<vtol_topology_object_sptr>::const_iterator itr = vtol_storage->begin();
         itr != vtol_storage->end();  ++itr ) {
 
     // Matt Leotta:
@@ -40,10 +40,10 @@ bvis_vtol_displayer::make_tableau( bpro_storage_sptr storage) const
           vdgl_digital_curve_sptr dc = curve_2d->cast_to_vdgl_digital_curve();
           if (dc.ptr()){
             vsol2D_tab->add_edgel_curve(dc);
-          } else vcl_cout << "failed digital curve" << vcl_endl;
-        } else vcl_cout << "failed curve_2d" << vcl_endl;
-      } else vcl_cout << "failed edge_2d" << vcl_endl;
-    } else vcl_cout << "failed edge" << vcl_endl;
+          } else std::cout << "failed digital curve" << std::endl;
+        } else std::cout << "failed curve_2d" << std::endl;
+      } else std::cout << "failed edge_2d" << std::endl;
+    } else std::cout << "failed edge" << std::endl;
         
   }
 

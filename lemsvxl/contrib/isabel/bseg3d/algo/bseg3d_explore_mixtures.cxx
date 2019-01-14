@@ -2,7 +2,7 @@
 #include "bseg3d_explore_mixtures.h"
 #include "bseg3d_gmm_l2norm.h"
 #include "bseg3d_merge_mixtures.h"
-#include <vcl_limits.h>
+#include <limits>
 
 #include <bvxm/grid/bvxm_voxel_grid.h>
 
@@ -14,19 +14,19 @@ bool bseg3d_explore_mixtures::get_region_above_threshold(bvxm_voxel_grid_base_sp
   // cast grids
   bvxm_voxel_grid<datatype_>* grid_in = static_cast<bvxm_voxel_grid<float>* >(grid_in_base.ptr());
   if(!grid_in){
-    vcl_cerr<<"Error in thresholding grid: Input grid is null\n";
+    std::cerr<<"Error in thresholding grid: Input grid is null\n";
     return false;
   }
 
   bvxm_voxel_grid<datatype_>* grid_out = static_cast<bvxm_voxel_grid<float>* >(grid_out_base.ptr());
   if(!grid_out){
-    vcl_cerr<<"Error in thresholding grid: Input grid is null\n";
+    std::cerr<<"Error in thresholding grid: Input grid is null\n";
     return false;
   }
 
   bvxm_voxel_grid<datatype_>* mask_grid = static_cast<bvxm_voxel_grid<float>* >(mask_base.ptr());
    if(!mask_grid){
-    vcl_cerr<<"Error in thresholding grid: Ouput grid is null\n";
+    std::cerr<<"Error in thresholding grid: Ouput grid is null\n";
     return false;
   }
   
@@ -40,10 +40,10 @@ bool bseg3d_explore_mixtures::get_region_above_threshold(bvxm_voxel_grid_base_sp
     bvxm_voxel_grid<datatype_>::iterator out_slab_it = grid_out->begin();
   bvxm_voxel_grid<datatype_>::iterator mask_slab_it = mask_grid->begin();
 
-  vcl_cout << "Thresholding Grid: " << vcl_endl;
+  std::cout << "Thresholding Grid: " << std::endl;
   for (unsigned z=0; z<(unsigned)(grid_in->grid_size().z()); ++z, ++in_slab_it, ++mask_slab_it, ++out_slab_it)
   {
-    vcl_cout << '.';
+    std::cout << '.';
 
     //iterate through slab and threshold. At this point the grids get updated on disk
     bvxm_voxel_slab<datatype_>::iterator in_it = (*in_slab_it).begin();
@@ -81,7 +81,7 @@ bool bseg3d_explore_mixtures::calculate_l2distances(bvxm_voxel_grid_base_sptr ap
     return false;
 
   vgl_vector_3d<unsigned> grid_size = apm_grid->grid_size();
-  vcl_cout <<"Grid Size: " <<grid_size << vcl_endl;
+  std::cout <<"Grid Size: " <<grid_size << std::endl;
 
   // iterate though the apm grid and measure distances
   bvxm_voxel_grid<mix_gauss_type>::iterator apm_slab_it = apm_grid->begin();
@@ -91,15 +91,15 @@ bool bseg3d_explore_mixtures::calculate_l2distances(bvxm_voxel_grid_base_sptr ap
   if(reference_given){
     for (unsigned i=0; i<reference.num_components(); i++)
     {    
-      vcl_cout<<"Mean " <<reference.distribution(i).mean() << vcl_endl;
-      vcl_cout<<"Var " <<reference.distribution(i).var() << vcl_endl;
+      std::cout<<"Mean " <<reference.distribution(i).mean() << std::endl;
+      std::cout<<"Var " <<reference.distribution(i).var() << std::endl;
     }
   }
 
-  vcl_cout << "Measuring distances: " << vcl_endl;
+  std::cout << "Measuring distances: " << std::endl;
   for (unsigned z=0; z<(unsigned)grid_size.z(); ++z, ++apm_slab_it, ++mask_slab_it, ++dist_slab_it)
   {
-    vcl_cout << '.';
+    std::cout << '.';
 
     //3. Iterate through slab and threshold. At this point the grids get updated on disk
     bvxm_voxel_slab<mix_gauss_type>::iterator apm_it = (*apm_slab_it).begin();
@@ -110,12 +110,12 @@ bool bseg3d_explore_mixtures::calculate_l2distances(bvxm_voxel_grid_base_sptr ap
     //If the reference is not given then it is the one in the first voxel
     if(!reference_given){
       reference = *((*apm_slab_it).first_voxel());
-      vcl_cout << "Reference Mixture: \n ";
+      std::cout << "Reference Mixture: \n ";
       reference_given = true;
       for (unsigned i=0; i<reference.num_components(); i++)
       {
-        vcl_cout<<"Mean " <<reference.distribution(i).mean() << vcl_endl;
-        vcl_cout<<"Var " <<reference.distribution(i).var() << vcl_endl;
+        std::cout<<"Mean " <<reference.distribution(i).mean() << std::endl;
+        std::cout<<"Var " <<reference.distribution(i).var() << std::endl;
       }
     }
     
@@ -162,12 +162,12 @@ bool bseg3d_explore_mixtures::merge_mixtures(bvxm_voxel_grid_base_sptr apm_base,
 }
 
 bool bseg3d_explore_mixtures::save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_base,
-                                                  vcl_string filename)
+                                                  std::string filename)
 {
  
-  vcl_fstream ofs(filename.c_str(),vcl_ios::binary | vcl_ios::out);
+  std::fstream ofs(filename.c_str(),std::ios::binary | std::ios::out);
   if (!ofs.is_open()) {
-    vcl_cerr << "error opening file " << filename << " for write!\n";
+    std::cerr << "error opening file " << filename << " for write!\n";
     return false;
   }
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
@@ -194,7 +194,7 @@ bool bseg3d_explore_mixtures::save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_
   //get the range
   bvxm_voxel_grid<float>::iterator grid_it = grid->begin();
   float max = 0.0;
-  float min = vcl_numeric_limits<float>::infinity();
+  float min = std::numeric_limits<float>::infinity();
   for (unsigned k=0; grid_it != grid->end(); ++grid_it, ++k) {
     for (unsigned i=0; i<(*grid_it).nx(); ++i) {
       for (unsigned j=0; j < (*grid_it).ny(); ++j) {
@@ -205,17 +205,17 @@ bool bseg3d_explore_mixtures::save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_
       }
     }
   }
-  vcl_cout << "max =  " << max << " min= " <<min << vcl_endl;
+  std::cout << "max =  " << max << " min= " <<min << std::endl;
   grid_it = grid->begin();
   for (unsigned k=0; grid_it != grid->end(); ++grid_it, ++k) {
-    vcl_cout << '.';
+    std::cout << '.';
     for (unsigned i=0; i<(*grid_it).nx(); ++i) {
       for (unsigned j=0; j < (*grid_it).ny(); ++j) {
         data_array[i*ny*nz + j*nz + k] = (unsigned char)((*grid_it)(i,j)* 255.0);
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   ofs.write(reinterpret_cast<char*>(data_array),sizeof(unsigned char)*nx*ny*nz);
 
   ofs.close();
@@ -226,12 +226,12 @@ bool bseg3d_explore_mixtures::save_byte_grid_raw(bvxm_voxel_grid_base_sptr grid_
 }
 
 bool bseg3d_explore_mixtures::save_float_grid_raw(bvxm_voxel_grid_base_sptr grid_base,
-                                                  vcl_string filename)
+                                                  std::string filename)
 {
  
-  vcl_fstream ofs(filename.c_str(),vcl_ios::binary | vcl_ios::out);
+  std::fstream ofs(filename.c_str(),std::ios::binary | std::ios::out);
   if (!ofs.is_open()) {
-    vcl_cerr << "error opening file " << filename << " for write!\n";
+    std::cerr << "error opening file " << filename << " for write!\n";
     return false;
   }
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
@@ -256,8 +256,8 @@ bool bseg3d_explore_mixtures::save_float_grid_raw(bvxm_voxel_grid_base_sptr grid
 
     //get the range
   bvxm_voxel_grid<float>::iterator grid_it = grid->begin();
-  float max = -1.0 * vcl_numeric_limits<float>::infinity();
-  float min = vcl_numeric_limits<float>::infinity();
+  float max = -1.0 * std::numeric_limits<float>::infinity();
+  float min = std::numeric_limits<float>::infinity();
   for (unsigned k=0; grid_it != grid->end(); ++grid_it, ++k) {
     for (unsigned i=0; i<(*grid_it).nx(); ++i) {
       for (unsigned j=0; j < (*grid_it).ny(); ++j) {
@@ -268,22 +268,22 @@ bool bseg3d_explore_mixtures::save_float_grid_raw(bvxm_voxel_grid_base_sptr grid
       }
     }
   }
-  vcl_cout << "max =  " << max << " min= " <<min << vcl_endl;
+  std::cout << "max =  " << max << " min= " <<min << std::endl;
 
   grid_it = grid->begin();
   for (unsigned k=0; grid_it != grid->end(); ++grid_it, ++k) {
-    vcl_cout << '.';
+    std::cout << '.';
     for (unsigned i=0; i<(*grid_it).nx(); ++i) {
       for (unsigned j=0; j < (*grid_it).ny(); ++j) {
     /*    if( (*grid_it)(i,j) == 0)
           (*grid_it)(i,j) = -1000;*/
-        //data_array[i*ny*nz + j*nz + k] = vcl_exp(1.0f - (-1.0f*(*grid_it)(i,j))/(-1.0f* min));
-       // data_array[i*ny*nz + j*nz + k] =1.0f/(1.0f + vcl_abs((*grid_it)(i,j)));
+        //data_array[i*ny*nz + j*nz + k] = std::exp(1.0f - (-1.0f*(*grid_it)(i,j))/(-1.0f* min));
+       // data_array[i*ny*nz + j*nz + k] =1.0f/(1.0f + std::abs((*grid_it)(i,j)));
       data_array[i*ny*nz + j*nz + k] =(*grid_it)(i,j);
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   ofs.write(reinterpret_cast<char*>(data_array),sizeof(float)*nx*ny*nz);
 
   ofs.close();

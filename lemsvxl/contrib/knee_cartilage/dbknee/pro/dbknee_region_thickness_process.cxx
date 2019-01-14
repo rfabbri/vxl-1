@@ -16,11 +16,11 @@
 dbknee_region_thickness_process::
 dbknee_region_thickness_process()
 {
-  vcl_vector<vcl_string > knee_sides;
+  std::vector<std::string > knee_sides;
   knee_sides.push_back("left");
   knee_sides.push_back("right");
 
-  vcl_vector<vcl_string > average_method;
+  std::vector<std::string > average_method;
   average_method.push_back("vertex-based");
   average_method.push_back("face-based");
 
@@ -44,7 +44,7 @@ dbknee_region_thickness_process()
     "-average_method" , average_method, 0)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -66,19 +66,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_region_thickness_process::
+std::vector< std::string > dbknee_region_thickness_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_region_thickness_process::
+std::vector< std::string > dbknee_region_thickness_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -143,7 +143,7 @@ execute()
   else if (left_right != 0)
   {
     // unknown option:
-    vcl_cout << "ERROR: Unknown knee side option.\n";
+    std::cout << "ERROR: Unknown knee side option.\n";
     return false;
   }
   
@@ -191,8 +191,8 @@ finish()
 // ----------------------------------------------------------------------------
 //: Take in the data and execute
 bool dbknee_region_thickness_process::
-region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
-                 const vcl_string& cs_file,
+region_thickness_vertex_based(const std::string& thickness_mesh_file,
+                 const std::string& cs_file,
                  double band_width_ratio,
                  double start_angle,
                  double end_angle,
@@ -206,13 +206,13 @@ region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
   // i. Load the meshes
   dbmsh3d_richmesh richmesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.push_back("verror_abs");
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
 
   ///////////////////////////////
@@ -220,7 +220,7 @@ region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
     vertex_prop_list, face_prop_list);
   ///////////////////////////////
 
-  vcl_cout << "#v[ " << richmesh.num_vertices() 
+  std::cout << "#v[ " << richmesh.num_vertices() 
     << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
 
@@ -250,9 +250,9 @@ region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
   {
     if (vb->is_a() != "dbmsh3d_richvertex")
     {
-      vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-      vcl_cerr << "Current vertex type: " << vb->is_a() << vcl_endl;
-      vcl_cerr << "Quit now. \n";
+      std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+      std::cerr << "Current vertex type: " << vb->is_a() << std::endl;
+      std::cerr << "Quit now. \n";
       return false;
     }
     dbmsh3d_richvertex* v = static_cast<dbmsh3d_richvertex*>(vb);
@@ -286,20 +286,20 @@ region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
   bot_thickness = sum_bot / vertex_count_bot;
   top_thickness = sum_top / vertex_count_top;
 
-  vcl_cout << "\nBottom region: #v = " << vertex_count_bot 
+  std::cout << "\nBottom region: #v = " << vertex_count_bot 
     << "\n  Start angle = " << start_angle
     << "\n  End angle = " << end_angle
     << "\n  Band width = " << band_width_ratio
-    << "\n  Mean thickness = " << bot_thickness << vcl_endl;
+    << "\n  Mean thickness = " << bot_thickness << std::endl;
 
 
-  vcl_cout << "\nTop region: #v = " << vertex_count_top 
+  std::cout << "\nTop region: #v = " << vertex_count_top 
     << "\n  Start angle = " << start_angle
     << "\n  End angle = " << end_angle
     << "\n  Band width = " << band_width_ratio
-    << "\n  Mean thickness = " << top_thickness << vcl_endl;
+    << "\n  Mean thickness = " << top_thickness << std::endl;
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return true;
 }
 
@@ -312,8 +312,8 @@ region_thickness_vertex_based(const vcl_string& thickness_mesh_file,
 // compute thickness as weighted average of closest distance to the faces
 // the weights are the areas of the triangle
 bool dbknee_region_thickness_process::
-region_thickness_face_based(const vcl_string& thickness_mesh_file,
-                   const vcl_string& cs_file,
+region_thickness_face_based(const std::string& thickness_mesh_file,
+                   const std::string& cs_file,
                    double band_width_ratio,
                    double start_angle,
                    double end_angle,
@@ -327,13 +327,13 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
   // i. Load the meshes
   dbmsh3d_richmesh richmesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.push_back("verror_abs");
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
 
   ///////////////////////////////
@@ -343,7 +343,7 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
 
   richmesh.IFS_to_MHE();
 
-  vcl_cout << "#v[ " << richmesh.num_vertices() 
+  std::cout << "#v[ " << richmesh.num_vertices() 
     << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
 
@@ -391,7 +391,7 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
     }
 
     // Compute thickness and area of the face
-    vcl_vector<dbmsh3d_vertex* > face_vertices;
+    std::vector<dbmsh3d_vertex* > face_vertices;
     face->get_bnd_Vs(face_vertices);
     assert(face_vertices.size() >= 3);
 
@@ -413,8 +413,8 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
         v2->is_a() != "dbmsh3d_richvertex" || 
         v3->is_a() != "dbmsh3d_richvertex" )
       {
-        vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-        vcl_cerr << "Quit now. \n";
+        std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+        std::cerr << "Quit now. \n";
         return false;
       }
 
@@ -461,24 +461,24 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
     top_thickness = sum_weighted_thickness_top / area_top;
   }
 
-  vcl_cout << "\nBottom region: "
+  std::cout << "\nBottom region: "
     << "\n  Start angle = " << start_angle
     << "\n  End angle = " << end_angle
     << "\n  Band width = " << band_width_ratio
     << "\n  #f = " << face_count_bot 
     << "\n  Area = " << area_bot
-    << "\n  Mean thickness = " << bot_thickness << vcl_endl;
+    << "\n  Mean thickness = " << bot_thickness << std::endl;
 
 
-  vcl_cout << "\nTop region: "
+  std::cout << "\nTop region: "
     << "\n  Start angle = " << start_angle
     << "\n  End angle = " << end_angle
     << "\n  Band width = " << band_width_ratio
     << "\n  #f = " << face_count_top 
     << "\n  Area = " << area_top
-    << "\n  Mean thickness = " << top_thickness << vcl_endl;
+    << "\n  Mean thickness = " << top_thickness << std::endl;
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return true;
 
 }
@@ -488,18 +488,18 @@ region_thickness_face_based(const vcl_string& thickness_mesh_file,
 
 //: ---------------------------------------------------------------------------
 bool dbknee_region_thickness_process::
-crop_mesh_using_cyl_cs(const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
+crop_mesh_using_cyl_cs(const std::string& thickness_mesh_file,
+    const std::string& cs_file,
     double band_width_ratio,
     double start_angle,
     double end_angle,
-    const vcl_string& top_mesh_file,
-    const vcl_string& bot_mesh_file)
+    const std::string& top_mesh_file,
+    const std::string& bot_mesh_file)
 {
   // preliminary check
   if (top_mesh_file.empty() && bot_mesh_file.empty()) return false;
 
-  vcl_cout << "Crop the thickness mesh and save.\n";
+  std::cout << "Crop the thickness mesh and save.\n";
 
   // load the coordinate system
   dbknee_cylinder_based_coord coord;
@@ -508,13 +508,13 @@ crop_mesh_using_cyl_cs(const vcl_string& thickness_mesh_file,
   // i. Load the meshes
   dbmsh3d_mesh mesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   ///////////////////////////////
   dbmsh3d_load_ply(&mesh, thickness_mesh_file.c_str());
   ///////////////////////////////
 
-  vcl_cout << "#v[ " << mesh.num_vertices() 
+  std::cout << "#v[ " << mesh.num_vertices() 
     << " ], #f[ " << mesh.facemap().size() << " ]\n";
 
   // figure out the min and max of z for each band
@@ -538,8 +538,8 @@ crop_mesh_using_cyl_cs(const vcl_string& thickness_mesh_file,
   {
     dbmsh3d_mesh top_mesh;
     coord.crop_mesh_cylindrical(mesh, top_mesh, zmin_top, zmax_top, theta_min, theta_max);
-    vcl_cout << "Save top (medial side) mesh file. top_mesh_file = "
-      << top_mesh_file << vcl_endl;
+    std::cout << "Save top (medial side) mesh file. top_mesh_file = "
+      << top_mesh_file << std::endl;
 
     // Save mesh
     dbmsh3d_save_ply(&top_mesh, top_mesh_file.c_str(), false);
@@ -549,8 +549,8 @@ crop_mesh_using_cyl_cs(const vcl_string& thickness_mesh_file,
   {
     dbmsh3d_mesh bot_mesh;
     coord.crop_mesh_cylindrical(mesh, bot_mesh, zmin_bot, zmax_bot, theta_min, theta_max);
-    vcl_cout << "Save bot (lateral side) mesh file. bot_mesh_file = "
-      << bot_mesh_file << vcl_endl;
+    std::cout << "Save bot (lateral side) mesh file. bot_mesh_file = "
+      << bot_mesh_file << std::endl;
 
     // Save mesh
     dbmsh3d_save_ply(&bot_mesh, bot_mesh_file.c_str(), false);

@@ -105,8 +105,8 @@ protected:
   
   
   //: The array to store the points and colors to be passed to opengl
-  //vcl_vector<float> vertices_;
-  //vcl_vector<float> colors_;
+  //std::vector<float> vertices_;
+  //std::vector<float> colors_;
   
   
   dbrec3d_scene_model *scene_data_;
@@ -143,7 +143,7 @@ class dbrec3d_points_scene_widget : public QGLViewer
 public:
   //: Constructor from a file location where points where saved a vgl_point_3d, using << stream operator.
   //  The base scene is necessary to finf scene dimensions
-  dbrec3d_points_scene_widget(vcl_string file, boxm_scene_base_sptr scene_base);
+  dbrec3d_points_scene_widget(std::string file, boxm_scene_base_sptr scene_base);
   ~dbrec3d_points_scene_widget(){}
   
   
@@ -155,7 +155,7 @@ protected:
   
   
   //: A function that reads point locations from file
-  void init_points(vcl_string file);
+  void init_points(std::string file);
    
   virtual QString helpString() const;
   

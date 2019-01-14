@@ -33,9 +33,9 @@
 //#include <vil/vil_pyramid_image_resource_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 
 //: Run xgraph detection based on pyramid edgemap
 class dbsks_detect_xgraph_course_to_fine
@@ -68,15 +68,15 @@ class dbsks_detect_xgraph_course_to_fine
         bool run_course_detection_on(const dbdet_edgemap_sptr& edgemap,
                 const dbsksp_xshock_graph_sptr& xgraph,
                 double confidence_lower_threshold,
-                const vcl_string& work_dir,
-                vcl_vector<dbsks_det_desc_xgraph_sptr >& dets);
+                const std::string& work_dir,
+                std::vector<dbsks_det_desc_xgraph_sptr >& dets);
 
         bool run_fine_detection_on(const dbdet_edgemap_sptr& edgemap,
                 const dbsksp_xshock_graph_sptr& xgraph,
                 double confidence_lower_threshold,
-                const vcl_string& work_dir,
-                vcl_vector<dbsks_det_desc_xgraph_sptr >& course_dets,
-                vcl_vector<dbsks_det_desc_xgraph_sptr >& dets);
+                const std::string& work_dir,
+                std::vector<dbsks_det_desc_xgraph_sptr >& course_dets,
+                std::vector<dbsks_det_desc_xgraph_sptr >& dets);
 
 
         // Utilities------------------------------------------------------------------
@@ -88,17 +88,17 @@ class dbsks_detect_xgraph_course_to_fine
 
 
     public:
-        vcl_string image_file;
-        vcl_string edgemap_folder;
-        vcl_string object_id; // string id of the image running detection on
-        vcl_string edgemap_ext;
-        vcl_string edgeorient_ext;
+        std::string image_file;
+        std::string edgemap_folder;
+        std::string object_id; // string id of the image running detection on
+        std::string edgemap_ext;
+        std::string edgeorient_ext;
         double edgemap_log2_scale_ratio;
-        vcl_string xgraph_file;
-        vcl_string xgraph_geom_file;
-        vcl_string xgraph_course_ccm_file;
-        vcl_string xgraph_fine_ccm_file;
-        vcl_vector<vcl_string > cfrag_list_to_ignore;
+        std::string xgraph_file;
+        std::string xgraph_geom_file;
+        std::string xgraph_course_ccm_file;
+        std::string xgraph_fine_ccm_file;
+        std::vector<std::string > cfrag_list_to_ignore;
 
         //: Min graph size
         double prototype_xgraph_min_size;
@@ -117,7 +117,7 @@ class dbsks_detect_xgraph_course_to_fine
         int det_window_height;
 
         //: directory to save intermediate outputs
-        vcl_string work_folder;
+        std::string work_folder;
 
         //: lower threshold to accept a solution
         double min_accepted_confidence;
@@ -130,7 +130,7 @@ class dbsks_detect_xgraph_course_to_fine
         double min_overlap_ratio_for_rejection;
 
         //: Final detection list
-        vcl_vector<dbsks_det_desc_xgraph_sptr > output_det_list;
+        std::vector<dbsks_det_desc_xgraph_sptr > output_det_list;
 
     protected:
 
@@ -138,19 +138,19 @@ class dbsks_detect_xgraph_course_to_fine
         vil_image_view<vxl_byte > source_image;
 
         //: list of xgraphs to run detection on
-        vcl_vector<double > xgraph_scales;
+        std::vector<double > xgraph_scales;
 
 
         //> edgemap pyramid -----------------------------------------------------------
 
         //: list of edgemap file names for each level
-        vcl_vector<vcl_string > list_edgemap_base_name;
+        std::vector<std::string > list_edgemap_base_name;
 
         //: list of edgemap width for each level
-        vcl_vector<unsigned > list_edgemap_width;
+        std::vector<unsigned > list_edgemap_width;
 
         //: list of edge map scale (compared to original image) for each level
-        vcl_vector<double > list_edgemap_scale;
+        std::vector<double > list_edgemap_scale;
 
         //> Components to build an xshock_ccm_likelihood calculator-------------------
 

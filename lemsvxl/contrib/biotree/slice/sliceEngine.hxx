@@ -3,8 +3,8 @@
 #include "sliceEngine.h"
 #include "sliceProcessor.h"
 #include "sliceFileManager.h"
-#include <vcl_string.h>
-#include <vcl_cstring.h>
+#include <string>
+#include <cstring>
 
 template <class T>
 void sliceEngine<T>::clearStreams(){ 
@@ -17,31 +17,31 @@ template <class T>
 bool sliceEngine<T>::sanity_check(sliceProcessor<T>* proc, int& dimx, int& dimy, int& dimz)
 {
   if(!save_to_mem_ && !save_to_disk_){
-    vcl_cerr << "Error: must call sliceEngine::setSaveToMemory or sliceEngine::setSaveToDisk before processing";
+    std::cerr << "Error: must call sliceEngine::setSaveToMemory or sliceEngine::setSaveToDisk before processing";
     return false;
   }
 
   if(save_to_mem_ && proc->noutputs() != memlocs_.size()){
-    vcl_cerr << "Error:  # of memory locations (currently " << memlocs_.size() 
+    std::cerr << "Error:  # of memory locations (currently " << memlocs_.size() 
       << " must match # of outputs for for proc: " << proc->name() 
       << ", which is : " << proc->noutputs() << "\n";
     return false;
   }
 
   if(save_to_disk_ && proc->noutputs() != outnames_.size()){
-    vcl_cerr << "Error:  # of file output names  (currently " << outnames_.size() 
+    std::cerr << "Error:  # of file output names  (currently " << outnames_.size() 
       << " must match # of outputs for for proc: " << proc->name() 
       << ", which is : " << proc->noutputs() << "\n";
     return false;
   }
 
   if(!(proc->nslices() % 2)){
-    vcl_cerr << "Error:  nslices (currently " << proc->nslices() << " must be odd for proc: " << proc->name() << "\n";
+    std::cerr << "Error:  nslices (currently " << proc->nslices() << " must be odd for proc: " << proc->name() << "\n";
     return false;
   }
 
   if(this->nstreams() != proc->nstreams()){
-    vcl_cerr << "Error: nstreams must equal proc->nstreams() for proc: " << proc->name() << "\n";
+    std::cerr << "Error: nstreams must equal proc->nstreams() for proc: " << proc->name() << "\n";
     return false;
   }
   if(this->nstreams() > 0){
@@ -51,11 +51,11 @@ bool sliceEngine<T>::sanity_check(sliceProcessor<T>* proc, int& dimx, int& dimy,
       streamlist_.push_back(sliceFileManager<T>::openSliceFileForRead(innames_[i] ,nextdimx,nextdimy,nextdimz));
       if(nextdimx != dimx || nextdimy != dimy || nextdimz != dimz  )
       {
-        vcl_cerr << "Error: All stream dimensions do not match\n";
-        vcl_cerr << "First " << i << " streams have dimension ";
-        vcl_cerr << dimx << " " << dimy << " " << dimz << "\n";
-        vcl_cerr << "stream " << i+1 << " has dimension ";
-        vcl_cerr << nextdimx << " " << nextdimy << " " << nextdimz << "\n";
+        std::cerr << "Error: All stream dimensions do not match\n";
+        std::cerr << "First " << i << " streams have dimension ";
+        std::cerr << dimx << " " << dimy << " " << dimz << "\n";
+        std::cerr << "stream " << i+1 << " has dimension ";
+        std::cerr << nextdimx << " " << nextdimy << " " << nextdimz << "\n";
         for(int opened = 0; opened < i; opened++) 
                 sliceFileManager<T>::closeSliceFile(streamlist_[opened]);
         streamlist_.clear();
@@ -63,7 +63,7 @@ bool sliceEngine<T>::sanity_check(sliceProcessor<T>* proc, int& dimx, int& dimy,
       }
     }
     if(dimz < proc->nslices()){
-    vcl_cerr << "Data has " << dimz << " slices, proc " << proc->name() << " requires " << proc->nslices() << " slices to process\n";
+    std::cerr << "Data has " << dimz << " slices, proc " << proc->name() << " requires " << proc->nslices() << " slices to process\n";
         return false;
     }
   }
@@ -91,12 +91,12 @@ bool sliceEngine<T>::processWith(sliceProcessor<T>* proc)
     int margin = nslices/2;
 
     //each stream has a corresponding vector of slices (each slice is a T*)
-    vcl_vector< vcl_vector<T*> > slice_sets(nstreams);
+    std::vector< std::vector<T*> > slice_sets(nstreams);
 
     //set up output memory locations / output file locations
     //------------------------------------------------------------------------
-    vcl_vector<T*> save_offsets;
-    vcl_vector<vcl_ofstream*> out_streams;
+    std::vector<T*> save_offsets;
+    std::vector<std::ofstream*> out_streams;
     if(save_to_mem_){
       save_offsets.resize(noutputs);
       for(int i = 0; i < noutputs; i++){
@@ -117,7 +117,7 @@ bool sliceEngine<T>::processWith(sliceProcessor<T>* proc)
       slice_sets[stream].resize(proc->nslices());
       for(int offset = 0; offset < margin; offset++){
         slice_sets[stream][offset] = new T[dimx*dimy];
-        vcl_memset(slice_sets[stream][offset],0,dimx*dimy*sizeof(T));
+        std::memset(slice_sets[stream][offset],0,dimx*dimy*sizeof(T));
       }
       for(int offset = margin; offset < nslices; offset++){
         slice_sets[stream][offset] = new T[dimx*dimy];
@@ -131,13 +131,13 @@ bool sliceEngine<T>::processWith(sliceProcessor<T>* proc)
     //process the volume, reading/discarding slices as you go, until the point
     //where more zero slices are needed
     //------------------------------------------------------------------------
-    vcl_vector<T*> res; 
+    std::vector<T*> res; 
     for(int z = 0; z < dimz - margin - 1; z++){
       res = proc->process(slice_sets,dimx,dimy,z);
 
       if(save_to_mem_){
         for(int out = 0; out < noutputs; out++){
-          vcl_memcpy(save_offsets[out],res[out],dimx*dimy*sizeof(T));
+          std::memcpy(save_offsets[out],res[out],dimx*dimy*sizeof(T));
           save_offsets[out]+=dimx*dimy;
           delete [] res[out];
         }
@@ -169,7 +169,7 @@ bool sliceEngine<T>::processWith(sliceProcessor<T>* proc)
 
       if(save_to_mem_){
         for(int out = 0; out < noutputs; out++){
-          vcl_memcpy(save_offsets[out],res[out],dimx*dimy*sizeof(T));
+          std::memcpy(save_offsets[out],res[out],dimx*dimy*sizeof(T));
           save_offsets[out]+=dimx*dimy;
           delete [] res[out];
         }
@@ -189,7 +189,7 @@ bool sliceEngine<T>::processWith(sliceProcessor<T>* proc)
           slice_sets[stream][i] = slice_sets[stream][i+1];
         }
         slice_sets[stream][nslices-1] = new T[dimx*dimy];
-        vcl_memset(slice_sets[stream][nslices-1],0,dimx*dimy*sizeof(T));
+        std::memset(slice_sets[stream][nslices-1],0,dimx*dimy*sizeof(T));
       }
     } 
     //------------------------------------------------------------------------

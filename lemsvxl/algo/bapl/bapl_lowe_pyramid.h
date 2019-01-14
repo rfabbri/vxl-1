@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 //#include <vil/vil_image_view_base.h>
 
@@ -38,7 +38,7 @@ public:
   
 private:
   //: The image data
-  vcl_vector< vcl_vector< vil_image_view< T > > > data_;
+  std::vector< std::vector< vil_image_view< T > > > data_;
   
   //: Number of images per octave
   int octave_size_;

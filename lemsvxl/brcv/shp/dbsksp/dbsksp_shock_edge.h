@@ -17,7 +17,7 @@
 #include <dbsksp/dbsksp_shock_node_sptr.h>
 #include <dbsksp/dbsksp_shock_fragment_sptr.h>
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_string.h>
+#include <string>
 
 // forward declaration
 class dbsksp_shock_node;
@@ -44,7 +44,7 @@ public:
   void set_id(unsigned int id){ this->id_ = id; }
 
   //: Return name of the class
-  vcl_string is_a() const{ return "dbsksp_shock_edge"; }
+  std::string is_a() const{ return "dbsksp_shock_edge"; }
 
   
   //: Return and set the parameter m
@@ -127,7 +127,7 @@ public:
   // MISCELLANEOUS -------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os);
+  virtual void print(std::ostream & os);
 
   // MEMBER VARIABLES ----------------------------------------------------------
 protected:

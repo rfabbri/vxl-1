@@ -7,7 +7,7 @@
 // writes experiment search state to a .sest file
 // writes puzzle solving object to a .puso file
 // filename should have '/' between folders, not '\'
-void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl_string fname, vcl_vector<searchState> &states, bool write_matches)
+void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(std::string fname, std::vector<searchState> &states, bool write_matches)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element("root");
@@ -19,8 +19,8 @@ void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl
 
   for(unsigned i=0; i<states.size(); i++)
   {
-    vcl_stringstream dump_state_file_full_path;
-    vcl_stringstream dump_state_file_relative_path;
+    std::stringstream dump_state_file_full_path;
+    std::stringstream dump_state_file_relative_path;
     dump_state_file_full_path << fname << "//state" << i << ".sest";
     dump_state_file_relative_path << "state" << i << ".sest";
 
@@ -32,8 +32,8 @@ void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl
     // populate the state element more here
   }
 
-  vcl_stringstream dump_puzzle_solving_object_file_full_path;
-  vcl_stringstream dump_puzzle_solving_object_file_relative_path;
+  std::stringstream dump_puzzle_solving_object_file_full_path;
+  std::stringstream dump_puzzle_solving_object_file_relative_path;
   dump_puzzle_solving_object_file_full_path << fname << "//puzzlesolving.puso";
   dump_puzzle_solving_object_file_relative_path << "puzzlesolving.puso";
 
@@ -43,8 +43,8 @@ void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl
   // dump the puzzle solving object to file
   this->write_out(dump_puzzle_solving_object_file_full_path.str());
 
-  vcl_stringstream dump_matches_file_full_path;
-  vcl_stringstream dump_matches_file_relative_path;
+  std::stringstream dump_matches_file_full_path;
+  std::stringstream dump_matches_file_relative_path;
   dump_matches_file_full_path << fname << "//matches.mtc";
   dump_matches_file_relative_path << "matches.mtc";
 
@@ -54,8 +54,8 @@ void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl
   if(write_matches == true)
     this->write_out_matches(dump_matches_file_full_path.str());
 
-  vcl_stringstream dump_frags_file_full_path;
-  vcl_stringstream dump_frags_file_relative_path;
+  std::stringstream dump_frags_file_full_path;
+  std::stringstream dump_frags_file_relative_path;
   dump_frags_file_full_path << fname << "//frags.frg";
   dump_frags_file_relative_path << "frags.frg";
 
@@ -64,22 +64,22 @@ void PuzzleSolving::write_experiment_search_state_and_puzzle_solving_objects(vcl
   root->append_data(data4);
   this->write_out_frags(dump_frags_file_full_path.str());
 
-  vcl_stringstream output_name;
+  std::stringstream output_name;
   output_name << fname << "//output.xml";
 
   bxml_write(output_name.str(), doc);
 }
 
-void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(vcl_string fname, vcl_vector<searchState> &states, bool read_matches)
+void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(std::string fname, std::vector<searchState> &states, bool read_matches)
 {
-  vcl_stringstream temp;
+  std::stringstream temp;
   temp << fname << "//output.xml";
-  vcl_string fname2 = temp.str();
+  std::string fname2 = temp.str();
   // open input file
-  vcl_cout << fname2.c_str() << vcl_endl;
+  std::cout << fname2.c_str() << std::endl;
   FILE *fp = fopen(fname2.c_str(), "r");
-  vcl_ifstream in(fname2.c_str());
-  vcl_ifstream in2(fname2.c_str());
+  std::ifstream in(fname2.c_str());
+  std::ifstream in2(fname2.c_str());
   // create xml reader
   bxml_stream_read reader, reader2;
   bxml_data_sptr data;
@@ -102,9 +102,9 @@ void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(vcl_
     bxml_element* elem = static_cast<bxml_element*>(data.ptr());
     if(elem->name() == "state")
     {
-      vcl_string filename;
+      std::string filename;
       elem->get_attribute("dump_filename", filename);
-      vcl_string full_path = fname;
+      std::string full_path = fname;
       full_path.append("//");
       full_path.append(filename.c_str());
       states[i].read_in(full_path);
@@ -112,18 +112,18 @@ void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(vcl_
     }
     else if(elem->name() == "puzzle_solving")
     {
-      vcl_string filename;
+      std::string filename;
       elem->get_attribute("dump_filename", filename);
-      vcl_string full_path = fname;
+      std::string full_path = fname;
       full_path.append("//");
       full_path.append(filename.c_str());
       this->read_in(full_path);
     }
     else if(elem->name() == "matches")
     {
-      vcl_string filename;
+      std::string filename;
       elem->get_attribute("dump_filename", filename);
-      vcl_string full_path = fname;
+      std::string full_path = fname;
       full_path.append("//");
       full_path.append(filename.c_str());
       if(read_matches == true && _matches.size() == 0)
@@ -131,9 +131,9 @@ void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(vcl_
     }
     else if(elem->name() == "frags")
     {
-      vcl_string filename;
+      std::string filename;
       elem->get_attribute("dump_filename", filename);
-      vcl_string full_path = fname;
+      std::string full_path = fname;
       full_path.append("//");
       full_path.append(filename.c_str());
       this->read_in_frags(full_path);
@@ -143,41 +143,41 @@ void PuzzleSolving::read_experiment_search_state_and_puzzle_solving_objects(vcl_
   in2.close();
 }
 
-void PuzzleSolving::write_out(vcl_string fname)
+void PuzzleSolving::write_out(std::string fname)
 {
   unsigned size;
-  vcl_ofstream out(fname.c_str());
+  std::ofstream out(fname.c_str());
 
-  out << "START_DUMPING_PUZZLE_SOLVING_OBJECT" << vcl_endl;
+  out << "START_DUMPING_PUZZLE_SOLVING_OBJECT" << std::endl;
 
   size = _pairMatchesByPiece.size();
-  out << "_pairMatchesByPiece " << size << vcl_endl;
+  out << "_pairMatchesByPiece " << size << std::endl;
   for(unsigned i=0; i < size; i++)
   {
     unsigned size2 = _pairMatchesByPiece[i].size();
-    out << size2 << vcl_endl;
+    out << size2 << std::endl;
     for(unsigned j=0; j < size2; j++)
       out << _pairMatchesByPiece[i][j] << " ";
-    out << vcl_endl;
+    out << std::endl;
   }
 
   size = _Contours.size();
-  out << "_Contours " << size << vcl_endl;
+  out << "_Contours " << size << std::endl;
   for(unsigned i=0; i < size; i++)
     _Contours[i].write_out(out);
 
-  out << "_nPieces: " << _nPieces << vcl_endl;
+  out << "_nPieces: " << _nPieces << std::endl;
 
-  out << "tot_num_iters_: " << tot_num_iters_ << vcl_endl;
+  out << "tot_num_iters_: " << tot_num_iters_ << std::endl;
 
-  out << "END_DUMPING_PUZZLE_SOLVING_OBJECT" << vcl_endl;
+  out << "END_DUMPING_PUZZLE_SOLVING_OBJECT" << std::endl;
 }
 
-void PuzzleSolving::read_in(vcl_string fname)
+void PuzzleSolving::read_in(std::string fname)
 {
   unsigned size;
-  vcl_string dummy;
-  vcl_ifstream in(fname.c_str());
+  std::string dummy;
+  std::ifstream in(fname.c_str());
 
   in >> dummy;
   assert(dummy == "START_DUMPING_PUZZLE_SOLVING_OBJECT");
@@ -211,37 +211,37 @@ void PuzzleSolving::read_in(vcl_string fname)
   in >> tot_num_iters_;
 }
 
-void PuzzleSolving::write_out_matches(vcl_string fname)
+void PuzzleSolving::write_out_matches(std::string fname)
 {
   unsigned size;
-  vcl_ofstream out(fname.c_str());
+  std::ofstream out(fname.c_str());
 
-  out << "START_DUMPING_MATCHES" << vcl_endl;
+  out << "START_DUMPING_MATCHES" << std::endl;
   
   size = _matches.size();
-  out << "_matches " << size << vcl_endl;
+  out << "_matches " << size << std::endl;
   for(unsigned i=0; i < size; i++)
     _matches[i].write_out(out);
 }
 
-void PuzzleSolving::write_out_frags(vcl_string fname)
+void PuzzleSolving::write_out_frags(std::string fname)
 {
   unsigned size;
-  vcl_ofstream out(fname.c_str());
+  std::ofstream out(fname.c_str());
 
-  out << "START_DUMPING_FRAGS" << vcl_endl;
+  out << "START_DUMPING_FRAGS" << std::endl;
   
   size = _Contours.size();
-  out << "_cList " << size << vcl_endl;
+  out << "_cList " << size << std::endl;
   for(unsigned i=0; i < size; i++)
     _Contours[i].write_out(out);
 }
 
-void PuzzleSolving::read_in_matches(vcl_string fname)
+void PuzzleSolving::read_in_matches(std::string fname)
 {
   unsigned size;
-  vcl_string dummy;
-  vcl_ifstream in(fname.c_str());
+  std::string dummy;
+  std::ifstream in(fname.c_str());
 
   in >> dummy;
   assert(dummy == "START_DUMPING_MATCHES");
@@ -257,16 +257,16 @@ void PuzzleSolving::read_in_matches(vcl_string fname)
   // Do this only at the first iteration if necessary
   if(this->tot_num_iters_ == 0 && TOP_MATCHES_TO_KEEP < _matches.size())
   {
-    vcl_sort( _matches.begin(), _matches.end(), pairwiseMatchSort2() );
+    std::sort( _matches.begin(), _matches.end(), pairwiseMatchSort2() );
     _matches.erase(_matches.begin()+TOP_MATCHES_TO_KEEP, _matches.end());
   }
 }
 
-void PuzzleSolving::read_in_frags(vcl_string fname)
+void PuzzleSolving::read_in_frags(std::string fname)
 {
   unsigned size;
-  vcl_string dummy;
-  vcl_ifstream in(fname.c_str());
+  std::string dummy;
+  std::ifstream in(fname.c_str());
 
   in >> dummy;
   assert(dummy == "START_DUMPING_FRAGS");
@@ -279,7 +279,7 @@ void PuzzleSolving::read_in_frags(vcl_string fname)
     _Contours[i].read_in(in);
 }
 
-void PuzzleSolving::write_frag_assemblies_in_xml(vcl_string fname, vcl_vector<searchState> &states)
+void PuzzleSolving::write_frag_assemblies_in_xml(std::string fname, std::vector<searchState> &states)
 {
   if(fname.size() > 0)
   {
@@ -294,8 +294,8 @@ void PuzzleSolving::write_frag_assemblies_in_xml(vcl_string fname, vcl_vector<se
         bxml_element *data = new bxml_element("assembly");
         for(unsigned i=0; i < states[j].process.size(); i++)
         {
-          vcl_stringstream idname;
-          vcl_stringstream posename;
+          std::stringstream idname;
+          std::stringstream posename;
           idname << "id" << i;
           posename << "pose" << i;
           bfrag_curve *c = &(_cList[states[j].process[i]]);
@@ -316,111 +316,111 @@ void PuzzleSolving::write_frag_assemblies_in_xml(vcl_string fname, vcl_vector<se
   }
 }
 
-void searchState::write_out(vcl_string fname)
+void searchState::write_out(std::string fname)
 {
   unsigned size;
-  vcl_ofstream out(fname.c_str());
+  std::ofstream out(fname.c_str());
 
-  out << "START_DUMPING_SEARCH_STATE" << vcl_endl;
+  out << "START_DUMPING_SEARCH_STATE" << std::endl;
   
 //  size = _cList.size();
-//  out << "_cList " << size << vcl_endl;
+//  out << "_cList " << size << std::endl;
 //  for(unsigned i=0; i < size; i++)
 //    _cList[i].write_out(out);
 
 //  size = _matches.size();
-//  out << "_matches " << size << vcl_endl;
+//  out << "_matches " << size << std::endl;
 //  for(unsigned i=0; i < size; i++)
 //    _matches[i].write_out(out);
 
   size = transform_list_.size();
-  out << "transform_list_ " << size << vcl_endl;
+  out << "transform_list_ " << size << std::endl;
   for(unsigned i=0; i < size; i++)
   {
     vnl_matrix_fixed<double,3,3> transform = transform_list_[i];
     out << transform(0,0) << " " << transform(0,1) << " " << transform(0,2) << " " <<
            transform(1,0) << " " << transform(1,1) << " " << transform(1,2) << " " <<
-           transform(2,0) << " " << transform(2,1) << " " << transform(2,2) << vcl_endl;
+           transform(2,0) << " " << transform(2,1) << " " << transform(2,2) << std::endl;
   }
 
   size = rot_ang_list_.size();
-  out << "rot_ang_list_ " << size << vcl_endl;
+  out << "rot_ang_list_ " << size << std::endl;
   for(unsigned i=0; i < size; i++)
     out << rot_ang_list_[i] << " ";
-  out << vcl_endl;
+  out << std::endl;
 
   size = matches_ez_list_.size();
-  out << "matches_ez_list_ " << size << vcl_endl;
+  out << "matches_ez_list_ " << size << std::endl;
   for(unsigned i=0; i < size; i++)
-    out << matches_ez_list_[i].first << " " << matches_ez_list_[i].second << vcl_endl;
+    out << matches_ez_list_[i].first << " " << matches_ez_list_[i].second << std::endl;
 
-  out << "_numMatch: " << _numMatch << vcl_endl;
-  out << "_num_new: " << _num_new << vcl_endl;
+  out << "_numMatch: " << _numMatch << std::endl;
+  out << "_num_new: " << _num_new << std::endl;
 
-  out << "_merged" << vcl_endl;
+  out << "_merged" << std::endl;
   _merged.write_out(out);
 
   size = _constr.size();
-  out << "_constr " << size << vcl_endl;
+  out << "_constr " << size << std::endl;
   for(unsigned i=0; i < size; i++)
     _constr[i].write_out(out);
 
-  out << "active: " << active << vcl_endl;
+  out << "active: " << active << std::endl;
 
   size = process.size();
-  out << "process " << size << vcl_endl;
+  out << "process " << size << std::endl;
   for(unsigned i=0; i < size; i++)
-    out << process[i] << vcl_endl;
+    out << process[i] << std::endl;
 
-  out << "nProcess: " << nProcess << vcl_endl;
-  out << "tCost: " << tCost << vcl_endl;
-  out << "sCost: " << sCost << vcl_endl;
+  out << "nProcess: " << nProcess << std::endl;
+  out << "tCost: " << tCost << std::endl;
+  out << "sCost: " << sCost << std::endl;
 
   size = open_junc.size();
-  out << "open_junc " << size << vcl_endl;
+  out << "open_junc " << size << std::endl;
   for(unsigned i=0; i < size; i++)
   {
-    vcl_vector<int> temp = open_junc[i].first;
+    std::vector<int> temp = open_junc[i].first;
     out << temp.size() << " / ";
     for(unsigned j=0; j < temp.size(); j++)
       out << temp[j] << " ";
     out << " / ";
-    out << open_junc[i].second.x() << " " << open_junc[i].second.y() << vcl_endl;
+    out << open_junc[i].second.x() << " " << open_junc[i].second.y() << std::endl;
   }
 
   size = closed_junc.size();
-  out << "closed_junc " << size << vcl_endl;
+  out << "closed_junc " << size << std::endl;
   for(unsigned i=0; i < size; i++)
   {
-    vcl_vector<int> temp = closed_junc[i].first;
+    std::vector<int> temp = closed_junc[i].first;
     out << temp.size() << " / ";
     for(unsigned j=0; j < temp.size(); j++)
       out << temp[j] << " ";
     out << " / ";
-    out << closed_junc[i].second.x() << " " << closed_junc[i].second.y() << vcl_endl;
+    out << closed_junc[i].second.x() << " " << closed_junc[i].second.y() << std::endl;
   }
 
   size = old_edges.size();
-  out << "old_edges " << size << vcl_endl;
+  out << "old_edges " << size << std::endl;
   for(unsigned i=0; i < size; i++)
-    out << old_edges[i].first << " " << old_edges[i].second << vcl_endl;
+    out << old_edges[i].first << " " << old_edges[i].second << std::endl;
 
   size = new_edges.size();
-  out << "new_edges " << size << vcl_endl;
+  out << "new_edges " << size << std::endl;
   for(unsigned i=0; i < size; i++)
-    out << new_edges[i].first << " " << new_edges[i].second << vcl_endl;
+    out << new_edges[i].first << " " << new_edges[i].second << std::endl;
 
-  out << "new_edge: " << new_edge.first << " " << new_edge.second << vcl_endl;
+  out << "new_edge: " << new_edge.first << " " << new_edge.second << std::endl;
 
-  out << "END_DUMPING_SEARCH_STATE" << vcl_endl;
+  out << "END_DUMPING_SEARCH_STATE" << std::endl;
 
 }
 
-void searchState::read_in(vcl_string fname)
+void searchState::read_in(std::string fname)
 {
   unsigned size;
-  vcl_string dummy;
-  vcl_ifstream in(fname.c_str());
+  std::string dummy;
+  std::ifstream in(fname.c_str());
 
   in >> dummy;
   assert(dummy == "START_DUMPING_SEARCH_STATE");
@@ -522,7 +522,7 @@ void searchState::read_in(vcl_string fname)
     unsigned temp_size;
     in >> temp_size;
     in >> dummy;
-    vcl_vector<int> temp(temp_size);
+    std::vector<int> temp(temp_size);
     assert(dummy == "/");
     for(unsigned j=0; j < temp_size; j++)
       in >> temp[j];
@@ -541,7 +541,7 @@ void searchState::read_in(vcl_string fname)
     unsigned temp_size;
     in >> temp_size;
     in >> dummy;
-    vcl_vector<int> temp(temp_size);
+    std::vector<int> temp(temp_size);
     assert(dummy == "/");
     for(unsigned j=0; j < temp_size; j++)
       in >> temp[j];
@@ -576,12 +576,12 @@ void searchState::read_in(vcl_string fname)
   // Do this only at the first iteration if necessary
   if(this->nProcess == 0 && TOP_MATCHES_TO_KEEP < matches_ez_list_.size())
   {
-    vcl_sort( matches_ez_list_.begin(), matches_ez_list_.end(), pairwiseMatchSort() );
+    std::sort( matches_ez_list_.begin(), matches_ez_list_.end(), pairwiseMatchSort() );
     matches_ez_list_.erase(matches_ez_list_.begin()+TOP_MATCHES_TO_KEEP, matches_ez_list_.end());
   }
 }
 
-void searchState::write_frag_pairs_in_xml(vcl_string fname)
+void searchState::write_frag_pairs_in_xml(std::string fname)
 {
   if(fname.size() > 0)
   {
@@ -608,32 +608,32 @@ void searchState::write_frag_pairs_in_xml(vcl_string fname)
   }
 }
 
-void pairwiseMatch::write_out(vcl_ofstream &out)
+void pairwiseMatch::write_out(std::ofstream &out)
 {
   unsigned size;
-  out << "START_DUMPING_PAIRWISE_MATCH" << vcl_endl;
-  out << "cost: " << cost << vcl_endl;
-  out << "myIndex: " << myIndex << vcl_endl;
+  out << "START_DUMPING_PAIRWISE_MATCH" << std::endl;
+  out << "cost: " << cost << std::endl;
+  out << "myIndex: " << myIndex << std::endl;
 
   size = pointMap.size();
-  out << "pointMap " << size << vcl_endl;
+  out << "pointMap " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << pointMap[i].first << " " << pointMap[i].second << vcl_endl;
+    out << pointMap[i].first << " " << pointMap[i].second << std::endl;
 
-  out << "XForm3x3" << vcl_endl;
+  out << "XForm3x3" << std::endl;
   for(unsigned i=0; i<9; i++)
     out << xForm.vv[i] << " ";
-  out << vcl_endl;
-  out << xForm.transx << " " << xForm.transy << " " << xForm.rotAngle << vcl_endl;
+  out << std::endl;
+  out << xForm.transx << " " << xForm.transy << " " << xForm.rotAngle << std::endl;
 
-  out << "whichCurves: " << whichCurves.first << " " << whichCurves.second << vcl_endl;
-  out << "END_DUMPING_PAIRWISE_MATCH" << vcl_endl;
+  out << "whichCurves: " << whichCurves.first << " " << whichCurves.second << std::endl;
+  out << "END_DUMPING_PAIRWISE_MATCH" << std::endl;
 }
 
-void pairwiseMatch::read_in(vcl_ifstream &in)
+void pairwiseMatch::read_in(std::ifstream &in)
 {
   unsigned size;
-  vcl_string dummy;
+  std::string dummy;
   
   in >> dummy;
   assert(dummy == "START_DUMPING_PAIRWISE_MATCH");

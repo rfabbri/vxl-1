@@ -44,7 +44,7 @@ class dbbgm_distribution_image_tableau
   bool color_space_YUV_;
  
   //: Returns the type of this tableau ('dbbgm_distribution_image_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Apply the functor to the distribution image and display the result
   bool functor_image(const dbsta_functor<float>& functor);

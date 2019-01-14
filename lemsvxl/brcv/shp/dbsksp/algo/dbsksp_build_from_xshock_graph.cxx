@@ -20,13 +20,13 @@
 
 // ----------------------------------------------------------------------------
 //: Retrieve the list of edges corresponding to a dart
-vcl_vector<dbsksp_shock_edge_sptr > dbsksp_build_from_xshock_graph::
+std::vector<dbsksp_shock_edge_sptr > dbsksp_build_from_xshock_graph::
 get_shock_edges_of_dart(int dart)
 {
-  vcl_map<int, vcl_vector<dbsksp_shock_edge_sptr > >::iterator itr = 
+  std::map<int, std::vector<dbsksp_shock_edge_sptr > >::iterator itr = 
     this->dart_to_edges_map_.find(dart);
   if (itr == this->dart_to_edges_map_.end())
-    return vcl_vector<dbsksp_shock_edge_sptr >();
+    return std::vector<dbsksp_shock_edge_sptr >();
   else
     return itr->second;
 }
@@ -35,13 +35,13 @@ get_shock_edges_of_dart(int dart)
 
 // ----------------------------------------------------------------------------
 //: Retrieve the list of edges corresponding to a dart
-vcl_vector<dbsksp_shock_node_sptr > dbsksp_build_from_xshock_graph::
+std::vector<dbsksp_shock_node_sptr > dbsksp_build_from_xshock_graph::
 get_shock_nodes_of_dart(int dart)
 {
-  vcl_map<int, vcl_vector<dbsksp_shock_node_sptr > >::iterator itr = 
+  std::map<int, std::vector<dbsksp_shock_node_sptr > >::iterator itr = 
     this->dart_to_nodes_map_.find(dart);
   if (itr == this->dart_to_nodes_map_.end())
-    return vcl_vector<dbsksp_shock_node_sptr >();
+    return std::vector<dbsksp_shock_node_sptr >();
   else
     return itr->second;
 }
@@ -71,7 +71,7 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
   //dbsksp_shock_graph_sptr shock_graph = this->build_from_skr_tree(this->skr_tree());
 
   // Try the new method which requires the predefined number of segments for each dart
-  vcl_vector<int > num_segments;
+  std::vector<int > num_segments;
   this->compute_num_segments_for_darts(this->skr_tree(), this->shock_interp_sample_ds_,
     num_segments);
 
@@ -102,8 +102,8 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //
 //    //temp data structures
 //    dbsk2d_shock_node_sptr start_node;
-//    vcl_vector<dbsk2d_shock_edge_sptr> edges;
-//    vcl_vector<int> dart_list;
+//    std::vector<dbsk2d_shock_edge_sptr> edges;
+//    std::vector<int> dart_list;
 //
 //    //get shock edge list from this path
 //    dart_list.clear();
@@ -122,14 +122,14 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //    // a. Create head and tail shock nodes of the dart, if they have not been created yet
 //    // tail
 //    dbsksp_shock_node_sptr dart_tail;
-//    vcl_map<int, dbsksp_shock_node_sptr >::iterator node_itr = 
+//    std::map<int, dbsksp_shock_node_sptr >::iterator node_itr = 
 //      this->coarse_graph_nodes_map_.find(tree->tail(dart));
 //
 //    if (node_itr == this->coarse_graph_nodes_map_.end())
 //    {
 //      // the node has not been visited, create a new one for it
 //      dart_tail = new dbsksp_shock_node(this->gshock()->next_available_id());
-//      this->coarse_graph_nodes_map_.insert(vcl_make_pair(tree->tail(dart), dart_tail));
+//      this->coarse_graph_nodes_map_.insert(std::make_pair(tree->tail(dart), dart_tail));
 //    }
 //    else
 //    {
@@ -144,7 +144,7 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //    if (node_itr == this->coarse_graph_nodes_map_.end())
 //    {
 //      dart_head = new dbsksp_shock_node(this->gshock()->next_available_id());
-//      this->coarse_graph_nodes_map_.insert(vcl_make_pair(tree->head(dart), dart_head));
+//      this->coarse_graph_nodes_map_.insert(std::make_pair(tree->head(dart), dart_head));
 //    }
 //    else
 //    {
@@ -152,16 +152,16 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //    }
 //
 //    // b. Create edges and nodges for the shock cuve
-//    vcl_vector<dbsksp_shock_edge_sptr > edge_list;
-//    vcl_vector<dbsksp_shock_node_sptr > node_list;
+//    std::vector<dbsksp_shock_edge_sptr > edge_list;
+//    std::vector<dbsksp_shock_node_sptr > node_list;
 //    
 //    this->interpolate_shock_curve(sc, dart_tail, dart_head,
 //      node_list,
 //      edge_list);
 //
 //    // cache this mapping
-//    this->dart_to_edges_map_.insert(vcl_make_pair(dart, edge_list));
-//    this->dart_to_nodes_map_.insert(vcl_make_pair(dart, node_list));
+//    this->dart_to_edges_map_.insert(std::make_pair(dart, edge_list));
+//    this->dart_to_nodes_map_.insert(std::make_pair(dart, node_list));
 //  }
 //
 //
@@ -170,13 +170,13 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //
 //
 //  // 3) insert the nodes and edges to the graph
-//  for (vcl_map<int, dbsksp_shock_node_sptr >::iterator itr = 
+//  for (std::map<int, dbsksp_shock_node_sptr >::iterator itr = 
 //    this->nodes_map_.begin(); itr != this->nodes_map_.end(); ++itr)
 //  {
 //    this->gshock()->add_vertex(itr->second);
 //  }
 //
-//  for (vcl_map<int, dbsksp_shock_edge_sptr >::iterator itr =
+//  for (std::map<int, dbsksp_shock_edge_sptr >::iterator itr =
 //    this->edges_map_.begin(); itr != this->edges_map_.end(); ++itr)
 //  {
 //    this->gshock()->add_edge(itr->second);
@@ -209,12 +209,12 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //interpolate_shock_curve(const dbskr_scurve_sptr& sc, 
 //                    const dbsksp_shock_node_sptr& start_node,
 //                    const dbsksp_shock_node_sptr& end_node,
-//                    vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-//                    vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges)
+//                    std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+//                    std::vector<dbsksp_shock_edge_sptr >& ordered_edges)
 //{
 //  // 1) Extract the shock samples that will be used to construct the generative
 //  // shock nodes and edges
-//  vcl_vector<dbsksp_xshock_node_descriptor > xshock_node_list;
+//  std::vector<dbsksp_xshock_node_descriptor > xshock_node_list;
 //  {
 //    double distance_threshold = this->scurve_sample_ds();
 //    vgl_point_2d<double > prev_pt(1e10, 1e10);
@@ -227,7 +227,7 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 //      // only insert if the points are far apart
 //      if (vgl_distance(prev_pt, sh_pt) < distance_threshold)
 //      {
-//        //vcl_cerr << "ERROR: sampled points are too close to each other\n";
+//        //std::cerr << "ERROR: sampled points are too close to each other\n";
 //        continue;
 //      }
 //
@@ -268,18 +268,18 @@ build_from_xshock_graph_using_skr_tree(const dbsk2d_shock_graph_sptr& xshock)
 // ----------------------------------------------------------------------------
 //: Interpolate an order list of xnodes with a sequence of shock edges
 void  dbsksp_build_from_xshock_graph::
-interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node_list,
+interpolate_xnodes(const std::vector<dbsksp_xshock_node_descriptor >& xshock_node_list,
                    const dbsksp_shock_node_sptr& start_node,
                    const dbsksp_shock_node_sptr& end_node,
-                   vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-                   vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges)
+                   std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+                   std::vector<dbsksp_shock_edge_sptr >& ordered_edges)
 {
   // use the extract samples to construct the generative shock edges.
   // We will first create the topology to support the interpolation
   // Then we fill in the data using xnode interpolator
   // Note that each pair of samples requires two shock edges to interpolate (twoshapelet)
   // 1) create the nodes.
-  vcl_vector<dbsksp_shock_node_sptr > node_list;
+  std::vector<dbsksp_shock_node_sptr > node_list;
   node_list.push_back(start_node);
   for (unsigned i=1; (i+1)<xshock_node_list.size(); ++i)
   {
@@ -290,7 +290,7 @@ interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node
   node_list.push_back(end_node);
 
   // 2) create the edges connecting the nodes
-  vcl_vector<dbsksp_shock_edge_sptr > edge_list;
+  std::vector<dbsksp_shock_edge_sptr > edge_list;
   for (unsigned i=0; (i+1)< node_list.size(); ++i)
   {
     dbsksp_shock_node_sptr source = node_list[i];
@@ -315,7 +315,7 @@ interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node
 
     if (!ss || !ss->is_legal())
     {
-      vcl_cerr << "ERROR: xnode interpolation failed.\n";
+      std::cerr << "ERROR: xnode interpolation failed.\n";
       
       //return;
     }
@@ -326,14 +326,14 @@ interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node
     // balanced length
     double length_ratio = ss->len0() / (ss->len0() + ss->len1());
 
-    vcl_cout << "i = " << i << " len0 = " << ss->len0() 
-      << " len1 = " << ss->len1() << vcl_endl;
+    std::cout << "i = " << i << " len0 = " << ss->len0() 
+      << " len1 = " << ss->len1() << std::endl;
 
     if (length_ratio < 0.1 || length_ratio > 0.9)
     {
-      vcl_cerr << "ERROR: the twoshapelet is not well balanced.\n";
-      vcl_cerr << "start_error = " << interpolator.start_error_
-        << " end_error = " << interpolator.end_error_ << vcl_endl;
+      std::cerr << "ERROR: the twoshapelet is not well balanced.\n";
+      std::cerr << "start_error = " << interpolator.start_error_
+        << " end_error = " << interpolator.end_error_ << std::endl;
 
       
     }
@@ -379,12 +379,12 @@ interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node
   // 4. Cache the edges and nodes
   for (unsigned i=0; i<node_list.size(); ++i)
   {
-    this->nodes_map_.insert(vcl_make_pair(node_list[i]->id(), node_list[i]));
+    this->nodes_map_.insert(std::make_pair(node_list[i]->id(), node_list[i]));
   }
 
   for (unsigned i=0; i<edge_list.size(); ++i)
   {
-    this->edges_map_.insert(vcl_make_pair(edge_list[i]->id(), edge_list[i]));
+    this->edges_map_.insert(std::make_pair(edge_list[i]->id(), edge_list[i]));
   }
 
   // 5. Return the edges
@@ -405,8 +405,8 @@ interpolate_xnodes(const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node
 void dbsksp_build_from_xshock_graph::
 close_boundary_at_degree_one_nodes()
 {
-  vcl_vector<dbsksp_shock_node_sptr > terminal_nodes;
-  for (vcl_map<int, dbsksp_shock_node_sptr >::iterator itr = 
+  std::vector<dbsksp_shock_node_sptr > terminal_nodes;
+  for (std::map<int, dbsksp_shock_node_sptr >::iterator itr = 
     this->nodes_map_.begin(); itr != this->nodes_map_.end(); ++itr)
   {
     dbsksp_shock_node_sptr node = itr->second;
@@ -414,7 +414,7 @@ close_boundary_at_degree_one_nodes()
       continue;
     if (node->degree() == 0)
     {
-      vcl_cerr << "ERROR: there are degree-0 nodes in the nodes_map.\n";
+      std::cerr << "ERROR: there are degree-0 nodes in the nodes_map.\n";
       continue;
     }
 
@@ -447,14 +447,14 @@ close_boundary_at_degree_one_nodes()
     terminal_edge->set_param_m(0);
 
     // cache the new node and edges
-    this->edges_map_.insert(vcl_make_pair(terminal_edge->id(), terminal_edge));
+    this->edges_map_.insert(std::make_pair(terminal_edge->id(), terminal_edge));
     terminal_nodes.push_back(terminal_node);
   }
 
   for (unsigned i=0; i<terminal_nodes.size(); ++i)
   {
     dbsksp_shock_node_sptr node = terminal_nodes[i];
-    this->nodes_map_.insert(vcl_make_pair(node->id(), node));
+    this->nodes_map_.insert(std::make_pair(node->id(), node));
   }
 
 
@@ -477,11 +477,11 @@ close_boundary_at_degree_one_nodes()
 //: Method to build from a shock matching tree and the number of segments
 // corresponding to each dart
 dbsksp_shock_graph_sptr dbsksp_build_from_xshock_graph::
-build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_segments)
+build_from_skr_tree(const dbskr_tree_sptr& tree, const std::vector<int >& num_segments)
 {
   if (num_segments.size() != tree->size())
   {
-    vcl_cerr << "ERROR: in dbsksp_build_from_xshock_graph::build_from_skr_tree \n"
+    std::cerr << "ERROR: in dbsksp_build_from_xshock_graph::build_from_skr_tree \n"
       << "  num_segments.size() != tree->size() \n";
     return 0;
   }
@@ -501,8 +501,8 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
 
     //temp data structures
     dbsk2d_shock_node_sptr start_node;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
-    vcl_vector<int> dart_list;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<int> dart_list;
 
     //get shock edge list from this path
     dart_list.clear();
@@ -521,14 +521,14 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
     // a. Create head and tail shock nodes of the dart, if they have not been created yet
     // tail
     dbsksp_shock_node_sptr dart_tail;
-    vcl_map<int, dbsksp_shock_node_sptr >::iterator node_itr = 
+    std::map<int, dbsksp_shock_node_sptr >::iterator node_itr = 
       this->coarse_graph_nodes_map_.find(tree->tail(dart));
 
     if (node_itr == this->coarse_graph_nodes_map_.end())
     {
       // the node has not been visited, create a new one for it
       dart_tail = new dbsksp_shock_node(this->gshock()->next_available_id());
-      this->coarse_graph_nodes_map_.insert(vcl_make_pair(tree->tail(dart), dart_tail));
+      this->coarse_graph_nodes_map_.insert(std::make_pair(tree->tail(dart), dart_tail));
     }
     else
     {
@@ -543,7 +543,7 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
     if (node_itr == this->coarse_graph_nodes_map_.end())
     {
       dart_head = new dbsksp_shock_node(this->gshock()->next_available_id());
-      this->coarse_graph_nodes_map_.insert(vcl_make_pair(tree->head(dart), dart_head));
+      this->coarse_graph_nodes_map_.insert(std::make_pair(tree->head(dart), dart_head));
     }
     else
     {
@@ -551,8 +551,8 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
     }
 
     // b. Create edges and nodges for the shock cuve
-    vcl_vector<dbsksp_shock_edge_sptr > edge_list;
-    vcl_vector<dbsksp_shock_node_sptr > node_list;
+    std::vector<dbsksp_shock_edge_sptr > edge_list;
+    std::vector<dbsksp_shock_node_sptr > node_list;
     
     this->interpolate_shock_curve(sc, dart_tail, dart_head,
       num_segments[dart],
@@ -560,8 +560,8 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
       edge_list);
 
     // cache this mapping
-    this->dart_to_edges_map_.insert(vcl_make_pair(dart, edge_list));
-    this->dart_to_nodes_map_.insert(vcl_make_pair(dart, node_list));
+    this->dart_to_edges_map_.insert(std::make_pair(dart, edge_list));
+    this->dart_to_nodes_map_.insert(std::make_pair(dart, node_list));
   }
 
 
@@ -570,13 +570,13 @@ build_from_skr_tree(const dbskr_tree_sptr& tree, const vcl_vector<int >& num_seg
 
 
   // 3) insert the nodes and edges to the graph
-  for (vcl_map<int, dbsksp_shock_node_sptr >::iterator itr = 
+  for (std::map<int, dbsksp_shock_node_sptr >::iterator itr = 
     this->nodes_map_.begin(); itr != this->nodes_map_.end(); ++itr)
   {
     this->gshock()->add_vertex(itr->second);
   }
 
-  for (vcl_map<int, dbsksp_shock_edge_sptr >::iterator itr =
+  for (std::map<int, dbsksp_shock_edge_sptr >::iterator itr =
     this->edges_map_.begin(); itr != this->edges_map_.end(); ++itr)
   {
     this->gshock()->add_edge(itr->second);
@@ -616,14 +616,14 @@ interpolate_shock_curve(const dbskr_scurve_sptr& sc,
                         const dbsksp_shock_node_sptr& start_node,
                         const dbsksp_shock_node_sptr& end_node,
                         int num_segments,
-                        vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-                        vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges)
+                        std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+                        std::vector<dbsksp_shock_edge_sptr >& ordered_edges)
 {
   assert (sc->num_points() > 1);
   assert (num_segments > 0);
   // 1) Create a xshock_node_list from the shock samples 
   // These xshock_nodes will be used to construct the generative shock nodes and edges
-  vcl_vector<dbsksp_xshock_node_descriptor > xshock_node_list;
+  std::vector<dbsksp_xshock_node_descriptor > xshock_node_list;
   
   double arclength_per_segment = (sc->arclength(sc->num_points()-1))  / num_segments;
   
@@ -641,14 +641,14 @@ interpolate_shock_curve(const dbskr_scurve_sptr& sc,
 
   if (!sampling_dense_enough)
   {
-    vcl_cerr << "ERROR: sampling along the scuve is not dense enough.\n";
+    std::cerr << "ERROR: sampling along the scuve is not dense enough.\n";
     assert(false);
     return;
   }
 
   // create a vector of "stopping locations" for the xnodes. 
   // Need to make sure the end points match
-  vcl_vector<int > xnode_locations(num_segments + 1, 0);
+  std::vector<int > xnode_locations(num_segments + 1, 0);
   xnode_locations[0] = 0;
 
   int xnode_running_index = 1;
@@ -665,7 +665,7 @@ interpolate_shock_curve(const dbskr_scurve_sptr& sc,
   xnode_locations[xnode_running_index] = sc->num_points()-1;
   if (xnode_running_index != num_segments)
   {
-    vcl_cout << "ERROR: something wrong with the xnode location assignment.\n";
+    std::cout << "ERROR: something wrong with the xnode location assignment.\n";
     assert(false);
   }
 
@@ -702,13 +702,13 @@ interpolate_shock_curve(const dbskr_scurve_sptr& sc,
 void dbsksp_build_from_xshock_graph::
 compute_num_segments_for_darts(const dbskr_tree_sptr& tree,
                                double segment_ds, 
-                               vcl_vector<int >& num_segments)
+                               std::vector<int >& num_segments)
 {
   num_segments.resize(tree->size(), 0);
 
   if (segment_ds < 1)
   {
-    vcl_cerr << "ERROR: segment_ds should be at least 1.\n";
+    std::cerr << "ERROR: segment_ds should be at least 1.\n";
     return;
   }
 
@@ -719,8 +719,8 @@ compute_num_segments_for_darts(const dbskr_tree_sptr& tree,
 
     //temp data structures
     dbsk2d_shock_node_sptr start_node;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
-    vcl_vector<int> dart_list;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<int> dart_list;
 
     //get shock edge list from this path
     dart_list.clear();
@@ -733,7 +733,7 @@ compute_num_segments_for_darts(const dbskr_tree_sptr& tree,
     dbskr_scurve_sptr sc = 
       dbskr_compute_scurve(start_node, edges, false, true, true, 1.0, sampling_ds);
 
-    int n = (int) vcl_floor(sc->arclength(sc->num_points()-1) / segment_ds);
+    int n = (int) std::floor(sc->arclength(sc->num_points()-1) / segment_ds);
 
     // make sure each dart has at least one segment
     n = vnl_math::max(n , 1);

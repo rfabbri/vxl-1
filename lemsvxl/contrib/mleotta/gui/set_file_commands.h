@@ -73,7 +73,7 @@ class set_b_istream_command : public vgui_command
         dynamic_cast<dbpro_b_istream_source_base*>(process_.ptr());
       if(source){
         vgui_dialog file_dlg("Select Binary Input File");
-        vcl_string regexp("*.*"), filename;
+        std::string regexp("*.*"), filename;
         file_dlg.inline_file("Binary File",regexp,filename);
         if(!file_dlg.ask())
           return;
@@ -98,7 +98,7 @@ class set_b_ostream_command : public vgui_command
       dynamic_cast<dbpro_b_ostream_sink_base*>(process_.ptr());
       if(sink){
         vgui_dialog file_dlg("Select Binary Output File");
-        vcl_string regexp("*.*"), filename;
+        std::string regexp("*.*"), filename;
         file_dlg.inline_file("Binary File",regexp,filename);
         if(!file_dlg.ask())
           return;
@@ -123,7 +123,7 @@ class set_ifstream_command : public vgui_command
         dynamic_cast<dbpro_ifstream_source_base*>(process_.ptr());
       if(source){
         vgui_dialog file_dlg("Select Input File");
-        vcl_string regexp("*.*"), filename;
+        std::string regexp("*.*"), filename;
         file_dlg.inline_file("Input File",regexp,filename);
         if(!file_dlg.ask())
           return;
@@ -147,7 +147,7 @@ class set_xml_infile_command : public vgui_command
       dbpro_xio_source* source = dynamic_cast<dbpro_xio_source*>(process_.ptr());
       if(source){
         vgui_dialog file_dlg("Select XML Input File");
-        vcl_string regexp("*.xml"), filename;
+        std::string regexp("*.xml"), filename;
         file_dlg.inline_file("XML File",regexp,filename);
         if(!file_dlg.ask())
           return;
@@ -171,7 +171,7 @@ class set_xml_outfile_command : public vgui_command
       dbpro_xio_sink* sink = dynamic_cast<dbpro_xio_sink*>(process_.ptr());
       if(sink){
         vgui_dialog file_dlg("Select XML Output File");
-        vcl_string regexp("*.xml"), filename;
+        std::string regexp("*.xml"), filename;
         file_dlg.inline_file("XML File",regexp,filename);
         if(!file_dlg.ask())
           return;

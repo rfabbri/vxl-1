@@ -12,7 +12,7 @@
 //   (none yet)
 // \endverbatim
 
-#include <vcl_limits.h>
+#include <limits>
 
 
 //: A functor that classifies a sample as one of the components of the mixture
@@ -86,7 +86,7 @@ class bsta_mixture_prob_functor
         }
       }
       if (normalize_){
-        if (tmp > vcl_numeric_limits<T>::epsilon()){
+        if (tmp > std::numeric_limits<T>::epsilon()){
           for (unsigned int i=0; i<mix.num_components(); ++i){
             result[i] /= tmp;
           }

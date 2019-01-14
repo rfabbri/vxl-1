@@ -16,10 +16,10 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 
 #include <vbl/vbl_ref_count.h>
 #include <vidpro/vidpro_repository_sptr.h>
@@ -59,40 +59,40 @@ public:
 
 
 
-    bool get_process_input_names(vcl_map<vcl_string,vcl_vector<vcl_string> > &input_names,
+    bool get_process_input_names(std::map<std::string,std::vector<std::string> > &input_names,
         const bpro_process_sptr& process );
 
-    bool get_process_output_names(vcl_map<vcl_string,vcl_vector<vcl_string> > &output_names,
+    bool get_process_output_names(std::map<std::string,std::vector<std::string> > &output_names,
         const bpro_process_sptr& process );
 
     bool set_process_ostreams (const bpro_process_sptr& process, 
-        vcl_map<vcl_string, vcl_vector<vcl_string> > & output_list,
+        std::map<std::string, std::vector<std::string> > & output_list,
         bool has_ostream);
     bool check_process_ostreams(bpro_process_sptr const &process,
-        vcl_string const & ostream_name,
-        vcl_string const & ostream_type); 
+        std::string const & ostream_name,
+        std::string const & ostream_type); 
 
     
 
-    bool add_missing_input_names(vcl_vector<vcl_string> &input_names, const bpro_process_sptr& process);
+    bool add_missing_input_names(std::vector<std::string> &input_names, const bpro_process_sptr& process);
 
     bool load_frame_from_istream(int frame, vidpro_istream_storage_sptr& vistream_sto);
     bool load_object_from_stream(int global_frame, int local_frame, 
                                                 vidpro_obj_stream_storage_sptr obj_sto);
 
   
-    bool new_ostream(const vcl_string& directory,
-        const vcl_string& storage_name = "default",
-        const vcl_string& name_format = "%05d",
-        const vcl_string& file_format = "tiff",
+    bool new_ostream(const std::string& directory,
+        const std::string& storage_name = "default",
+        const std::string& name_format = "%05d",
+        const std::string& file_format = "tiff",
         const unsigned int init_index = 0);
 
-        bool new_obj_stream(const vcl_string& directory,
-        const vcl_string& storage_name = "default");
+        bool new_obj_stream(const std::string& directory,
+        const std::string& storage_name = "default");
 
     
     bool write_to_ostream(const bpro_process_sptr& process, const bpro_storage_sptr& sto);
-    bool write_to_object_ostream(const bpro_storage_sptr& sto, vcl_string const & os_name);
+    bool write_to_object_ostream(const bpro_storage_sptr& sto, std::string const & os_name);
     bool close_ostreams();
 
 
@@ -101,17 +101,17 @@ public:
     // \param modified is an optional parameter.  If specified, all storage objects
     //                 modified by the process are added to the set
     bool run_process_on_current_frame( const bpro_process_sptr& process,
-        vcl_set<bpro_storage_sptr>* modified = NULL );
-    bool run_process_queue_on_current_frame ( vcl_set<bpro_storage_sptr>* modified = NULL );
+        std::set<bpro_storage_sptr>* modified = NULL );
+    bool run_process_queue_on_current_frame ( std::set<bpro_storage_sptr>* modified = NULL );
 
     //: Call the finish function on the process 
     // \param modified is an optional parameter.  If specified, all storage objects
     //                 modified by the process are added to the set
     bool finish_process( int first_frame, int last_frame,
         const bpro_process_sptr& process_block,
-        vcl_set<bpro_storage_sptr>* modified = NULL );
+        std::set<bpro_storage_sptr>* modified = NULL );
     bool finish_process_queue( int first_frame, int last_frame,
-        vcl_set<bpro_storage_sptr>* modified = NULL );
+        std::set<bpro_storage_sptr>* modified = NULL );
 
     bool recording_macro();
     void start_recording_macro();
@@ -135,7 +135,7 @@ private:
 
     // vidl_ostream_sptr vostream_;
 
-    vcl_string ostream_dir_;
+    std::string ostream_dir_;
 
     bool allow_costum_window_;
 

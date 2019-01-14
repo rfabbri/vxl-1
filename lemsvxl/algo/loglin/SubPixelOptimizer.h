@@ -3,8 +3,8 @@
 #include "points.h"
 #include "PowellsAlgorithm.h"
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 template<typename T1, typename T2>
 class SubPixelEnergyFunction;
@@ -139,16 +139,16 @@ class SubPixelPoint
            }
 
         
-        vcl_string printValues() const
+        std::string printValues() const
           {
-            vcl_ostringstream ostrm;
+            std::ostringstream ostrm;
             ostrm<<" (";
             for (int j=0;j<_numDimensions;j++)
               {
-                ostrm<<vcl_setprecision(5)<<vcl_setw(7)<<_values[j]<<"  ";
+                ostrm<<std::setprecision(5)<<std::setw(7)<<_values[j]<<"  ";
                }
             ostrm<<" )";
-            ostrm<<vcl_endl;
+            ostrm<<std::endl;
             return ostrm.str();
            }
   
@@ -204,7 +204,7 @@ class SubPixelEnergyFunction
             return  -_convProductSum(_image,_filter, pt.getRowPos(), pt.getColPos());
            }
         
-        ~SubPixelEnergyFunction(){//cout<<" SubPixel Energy Function: Calls ="<<_callCount<<vcl_endl;
+        ~SubPixelEnergyFunction(){//cout<<" SubPixel Energy Function: Calls ="<<_callCount<<std::endl;
          }
   
    };
@@ -236,7 +236,7 @@ class LLSubPixelOptimizer
         LLSubPixelOptimizer(double tolerance, double tiny_val, int powel_it_max, int brent_it_max):_powellOptimizer(tolerance, tiny_val,  powel_it_max, brent_it_max)
           {};
         
-        void operator()(vil_image_view<unsigned char> image, vcl_vector<EdgePoint> &edge_list,  OptionsType & ops)
+        void operator()(vil_image_view<unsigned char> image, std::vector<EdgePoint> &edge_list,  OptionsType & ops)
           {
             EnergyFunctionType       energy_function(image, ops);
             

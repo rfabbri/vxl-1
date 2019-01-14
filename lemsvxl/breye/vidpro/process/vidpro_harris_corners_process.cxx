@@ -29,7 +29,7 @@ vidpro_harris_corners_process::vidpro_harris_corners_process() : bpro_process()
       !parameters()->add( "N = 2n+1, (n)" ,             "-hcn" ,      (int)1 ) ||
       !parameters()->add( "Max No. Corners (percent)" , "-hcmax" ,    80.0f ) ||
       !parameters()->add( "Scale Factor" ,              "-hcscale" ,  0.04f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   } 
 }
 
@@ -49,7 +49,7 @@ vidpro_harris_corners_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 vidpro_harris_corners_process::name()
 {
   return "Harris Corners";
@@ -57,18 +57,18 @@ vidpro_harris_corners_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_harris_corners_process::get_input_type()
+std::vector< std::string > vidpro_harris_corners_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_harris_corners_process::get_output_type()
+std::vector< std::string > vidpro_harris_corners_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -79,7 +79,7 @@ bool
 vidpro_harris_corners_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_harris_corner_process::execute() - not exactly one"
+    std::cout << "In vidpro_harris_corner_process::execute() - not exactly one"
           << " input image \n";
     return false;
   }
@@ -100,7 +100,7 @@ vidpro_harris_corners_process::execute()
   else if ( image_view.nplanes() == 1 ) {
     greyscale_view = image_view;
   } else {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
 
@@ -118,12 +118,12 @@ vidpro_harris_corners_process::execute()
   harris_detector.set_image(img);
   harris_detector.extract_corners();
 
-  vcl_vector<vsol_point_2d_sptr>& points = harris_detector.get_points();
+  std::vector<vsol_point_2d_sptr>& points = harris_detector.get_points();
   int N = points.size();
   if (!N)
     return false;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > harris_points;
+  std::vector< vsol_spatial_object_2d_sptr > harris_points;
   for( unsigned int i = 0 ; i < points.size() ; i++ ) {
     vsol_spatial_object_2d_sptr point = points[i]->cast_to_spatial_object();
     harris_points.push_back(point);

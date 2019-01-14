@@ -1,6 +1,6 @@
 // This is brl/bseg/dbinfo/dbinfo_feature_data
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_array_1d.h>
 #include <vbl/io/vbl_io_array_1d.h>
 #include <vbl/io/vbl_io_array_2d.h>
@@ -31,7 +31,7 @@ dbinfo_feature_data<T>::
 dbinfo_feature_data(const vil_pixel_format pix_format,
                     const unsigned nplanes,
                     const dbinfo_feature_format format,
-                    vcl_vector<T> const& data): 
+                    std::vector<T> const& data): 
   dbinfo_feature_data_base(pix_format, nplanes, format, data.size()),
   feature_data_(data)
 {
@@ -75,7 +75,7 @@ void dbinfo_feature_data<T>::b_write(vsl_b_ostream &os) const
   vsl_b_write(os, format());
   vsl_b_write(os, frame_from_index_);
   vsl_b_write(os, index_from_frame_);
-  vcl_vector<T> data = fd.data();
+  std::vector<T> data = fd.data();
   vsl_b_write(os, data);
 }
 
@@ -106,7 +106,7 @@ void dbinfo_feature_data<T>::b_read(vsl_b_istream &is)
 
 template<class T> 
 void dbinfo_feature_data<T>::
-print(vcl_ostream &strm) const
+print(std::ostream &strm) const
 {
   strm << this->is_a() << " [\n"
        << "pixel format " << pix_format_ << '\n'
@@ -115,7 +115,7 @@ print(vcl_ostream &strm) const
        << "]\n";
 }
 template <class T>
-vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_feature_data<T> const& fd)
+std::ostream &operator<<(std::ostream &strm, dbinfo_feature_data<T> const& fd)
 {
   dbinfo_feature_data<T>& non_const = const_cast<dbinfo_feature_data<T>&>(fd);
   non_const.print(strm);
@@ -123,7 +123,7 @@ vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_feature_data<T> const& fd)
 }
 #if 0
 template <class T>
-vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_feature_data<T> const* fd)
+std::ostream &operator<<(std::ostream &strm, dbinfo_feature_data<T> const* fd)
 {
   if (fd)
     strm << *fd;
@@ -135,9 +135,9 @@ vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_feature_data<T> const* fd)
 
 #define DBINFO_FEATURE_DATA_INSTANTIATE(T) \
 template class dbinfo_feature_data<T >; \
-template vcl_ostream& operator<<(vcl_ostream&, dbinfo_feature_data<T > const&); 
+template std::ostream& operator<<(std::ostream&, dbinfo_feature_data<T > const&); 
 #if 0
-template vcl_ostream& operator<<(vcl_ostream&, dbinfo_feature_data<T > const*);
+template std::ostream& operator<<(std::ostream&, dbinfo_feature_data<T > const*);
 #endif
 
 

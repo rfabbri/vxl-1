@@ -1,5 +1,5 @@
 #include "det_cylinder_map.h"
-#include <vcl_fstream.h>
+#include <fstream>
 
 det_cylinder_map::det_cylinder_map(unsigned nx, unsigned ny, unsigned nz)
   : map_(nx, ny, nz), nx_(nx), ny_(ny), nz_(nz)
@@ -33,7 +33,7 @@ det_map_entry& det_cylinder_map::operator()(unsigned i, unsigned j, unsigned k)
   return map_[i][j][k];
 }
 
-vcl_istream& operator >> ( vcl_istream& stream, det_cylinder_map& map)
+std::istream& operator >> ( std::istream& stream, det_cylinder_map& map)
 {
   int nx, ny, nz;
   char str[80];
@@ -77,7 +77,7 @@ vcl_istream& operator >> ( vcl_istream& stream, det_cylinder_map& map)
   return stream;
 }
 
-vcl_ostream& operator << ( vcl_ostream& stream, const det_cylinder_map& map)
+std::ostream& operator << ( std::ostream& stream, const det_cylinder_map& map)
 {
 
   int nx = map.nx();

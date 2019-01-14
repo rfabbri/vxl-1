@@ -1,7 +1,7 @@
 #include <dbskr/algo/dbskr_tree_edit_pmi.h>
 #include <dbskr/dbskr_tree.h>
 #include <dbskr/dbskr_dpmatch.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vbl/vbl_array_1d.h>
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_sm_cor.h>
@@ -12,10 +12,10 @@
 #include <dbru/algo/dbru_rcor.h>
 #include <dbru/algo/dbru_rcor_generator.h>
 
-//#include <vcl_algorithm.h> 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+//#include <algorithm> 
+#include <iostream>
+#include <cmath>
+#include <cstdio>
 
 #define NEWEPS     float(1e-5)
 //#define MIN_OF_THREE(X,Y,Z)   ((X) < (Y) ? ((X) < (Z) ? (X) : (Z)) : ((Y) < (Z) ? (Y) : (Z)))
@@ -56,7 +56,7 @@ float dbskr_tree_edit_pmi::get_cost(int td1, int d1, int td2, int d2) {
   key2.second.second = key.second.first;
 
   float match_cost;
-  vcl_map<pathtable_key, float>::iterator iter;
+  std::map<pathtable_key, float>::iterator iter;
   iter = pathtable_.find(key);   // searching for either key or key2 is enough
   if (iter == pathtable_.end()) {
 
@@ -81,7 +81,7 @@ float dbskr_tree_edit_pmi::get_cost(int td1, int d1, int td2, int d2) {
         //  THIS PART FINDS Correspondence using curve alignment
         
         d.Match();
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
         
         sm_cor_->clear_lists();
         sm_cor_->add_to_curve_list1(sc1); sm_cor_->add_to_curve_list2(sc2); sm_cor_->add_to_map_list(fmap);
@@ -89,17 +89,17 @@ float dbskr_tree_edit_pmi::get_cost(int td1, int d1, int td2, int d2) {
         dbru_rcor_generator::find_correspondence_shock(rcor_,sm_cor_);
         
         // Assume linear correspondence of shock curves and find region correspondence
-        /*vcl_vector<vcl_pair<int,int> > fmap; 
-        fmap.push_back(vcl_pair<int, int>(0,0));
-        fmap.push_back(vcl_pair<int, int>(sc1->num_points()-1,sc2->num_points()-1));
+        /*std::vector<std::pair<int,int> > fmap; 
+        fmap.push_back(std::pair<int, int>(0,0));
+        fmap.push_back(std::pair<int, int>(sc1->num_points()-1,sc2->num_points()-1));
         rcor_->clear_region_correspondence();
         dbru_rcor_generator::find_correspondence_shock(rcor_, sc1, sc2);
         */
-        vcl_vector<vcl_pair<unsigned, unsigned> >& corrs = rcor_->get_correspondences();
+        std::vector<std::pair<unsigned, unsigned> >& corrs = rcor_->get_correspondences();
         float info = dbinfo_observation_matcher::minfo(obs1_, obs2_, corrs, false);
         info = (info < 0.0f ? 0.0f:info);
         match_cost = corrs.size()*info;
-        vcl_cout << "info: " << info << " corrs size: " << corrs.size() << " assigned " << match_cost << " to path1: " << td1 << " " << d1 << " path2: " << td2 << " " << d2 << "\n";
+        std::cout << "info: " << info << " corrs size: " << corrs.size() << " assigned " << match_cost << " to path1: " << td1 << " " << d1 << " path2: " << td2 << " " << d2 << "\n";
 
         //: shock curve map is using darts as key
         pathtable_key key_scm;
@@ -206,7 +206,7 @@ float dbskr_tree_edit_pmi::maybe_left_splice_out_tree2(int d1, int d2) {
 
 
 float dbskr_tree_edit_pmi::merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2) {
-  vcl_vector<int>& ch = tree1_->children(d1);
+  std::vector<int>& ch = tree1_->children(d1);
   float min_cost = LARGE;
   // changing the order of children processing
   //for (unsigned int i = 0; i<ch.size(); i++) {
@@ -228,17 +228,17 @@ float dbskr_tree_edit_pmi::merge_down_tree1(int a1, int a2, int d1, int d2, int 
   return min_cost;
 }
 
-float dbskr_tree_edit_pmi::merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) {
+float dbskr_tree_edit_pmi::merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) {
   
-  vcl_vector<int>& ch = tree1_->children(d1);
+  std::vector<int>& ch = tree1_->children(d1);
   float min_cost = LARGE;
-  vcl_vector<pathtable_key> tmp;
-  vcl_vector<vcl_vector<pathtable_key> > big_tmp(ch.size(), tmp);
+  std::vector<pathtable_key> tmp;
+  std::vector<std::vector<pathtable_key> > big_tmp(ch.size(), tmp);
   int min_id = -1;
   //for (unsigned int i = 0; i<ch.size(); i++) {
   for (int i = ch.size()-1; i>=0; i--) {
     int d = ch[i];
-    //vcl_vector<pathtable_key> tmp;  
+    //std::vector<pathtable_key> tmp;  
     float cost = witht(a1, a2, d, d2, td1, td2, big_tmp[i]);
     
     // just add to this cost the cost of splicing siblings of d
@@ -260,7 +260,7 @@ float dbskr_tree_edit_pmi::merge_down_tree1(int a1, int a2, int d1, int d2, int 
 }
 
 float dbskr_tree_edit_pmi::merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2) {
-  vcl_vector<int>& ch = tree2_->children(d2);
+  std::vector<int>& ch = tree2_->children(d2);
   float min_cost = LARGE;
   for (int i = ch.size()-1; i>=0; i--) {
     int d = ch[i];
@@ -279,12 +279,12 @@ float dbskr_tree_edit_pmi::merge_down_tree2(int a1, int a2, int d1, int d2, int 
   return min_cost;
 }
 
-float dbskr_tree_edit_pmi::merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) {
-  vcl_vector<int>& ch = tree2_->children(d2);
+float dbskr_tree_edit_pmi::merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) {
+  std::vector<int>& ch = tree2_->children(d2);
   float min_cost = LARGE;
-  vcl_vector<pathtable_key> tmp;
+  std::vector<pathtable_key> tmp;
   
-  vbl_array_1d<vcl_vector<pathtable_key> > big_tmp(ch.size(), tmp);
+  vbl_array_1d<std::vector<pathtable_key> > big_tmp(ch.size(), tmp);
   int min_id = -1;
   for (int i = ch.size()-1; i>=0; i--) {
     int d = ch[i];
@@ -333,7 +333,7 @@ float dbskr_tree_edit_pmi::maybe_right_splice_out_tree1(int a1, int d1, int d2) 
     return A_[tree1_->next(d1)][d2];
   }
 }
-vcl_vector<pathtable_key>& dbskr_tree_edit_pmi::maybe_right_splice_out_tree1_vec(int a1, int d1, int d2) {
+std::vector<pathtable_key>& dbskr_tree_edit_pmi::maybe_right_splice_out_tree1_vec(int a1, int d1, int d2) {
   int d = tree1_->next(tree1_->mate(d1));
   if (!tree1_->up(d) &&                       // if d is up, d1 has no left sibling
       tree1_->head(a1) != tree1_->tail(d1) && // illegal after parent edge matched
@@ -379,7 +379,7 @@ float dbskr_tree_edit_pmi::maybe_right_splice_out_tree2(int a2, int d2, int d1) 
       return A_[d1][tree2_->next(d2)];
   }
 }
-vcl_vector<pathtable_key>& dbskr_tree_edit_pmi::maybe_right_splice_out_tree2_vec(int a2, int d2, int d1) {
+std::vector<pathtable_key>& dbskr_tree_edit_pmi::maybe_right_splice_out_tree2_vec(int a2, int d2, int d1) {
   int d = tree2_->next(tree2_->mate(d2));
   if (!tree2_->up(d) &&                       // if d is up, d1 has no left sibling
       tree2_->head(a2) != tree2_->tail(d2) && // illegal after parent edge matched

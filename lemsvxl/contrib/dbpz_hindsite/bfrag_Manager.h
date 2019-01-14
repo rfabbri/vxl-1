@@ -23,7 +23,7 @@
 #include <vgui/vgui_grid_tableau.h>
 #include <vgui/vgui_menu.h>
 #include <vgui/vgui_dialog.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgui/vgui_style.h>
 
 #include "bfrag2DManager.h"
@@ -43,15 +43,15 @@ public:
     
     //file operations
     void quit();
-    int loadPuzzle( vcl_string fn );
-    int addPuzzle( vcl_string fn );
-    int savePZ2as( vcl_string fn );
+    int loadPuzzle( std::string fn );
+    int addPuzzle( std::string fn );
+    int savePZ2as( std::string fn );
     void savePZ2();
     void generatePuzzle();
 
     //FRAG
-    int addbfrag2D( vcl_string topConFn, vcl_string botConFn, 
-                    vcl_string topImageFn, vcl_string botImageFn, vcl_string name );
+    int addbfrag2D( std::string topConFn, std::string botConFn, 
+                    std::string topImageFn, std::string botImageFn, std::string name );
     void displayContour();
     void displayAssembly();//deprecated
     void removeSelectedFragments();
@@ -85,7 +85,7 @@ public:
     void displayAllBotCurves( bool show );
 
     //accessor
-    vcl_string getLoadedName(){ return PZ2fn; };
+    std::string getLoadedName(){ return PZ2fn; };
     void setShell( vgui_shell_tableau_sptr s);
     vgui_shell_tableau_sptr shell(){ return theShell; };
 
@@ -105,20 +105,20 @@ private:
     //jonahs puzzle solver
     PuzzleSolving *_puzzleSolver;
 
-    vcl_string PZ2fn;
+    std::string PZ2fn;
 
     //for drawing the matched pairs from the searchState returned
-    vcl_vector<vcl_pair<Curve<double,double>*,Curve<double,double>*> > matchedPairs_;
+    std::vector<std::pair<Curve<double,double>*,Curve<double,double>*> > matchedPairs_;
     searchState pairMatchResults_, _originalPairMatchResults;
     int gridWH_; //stores the width & height (its made square) of the current grid
 
     //drawing puzzle solutions states
-    void displaySolutions( vcl_vector< searchState > *state);
+    void displaySolutions( std::vector< searchState > *state);
     int _firstDisplayedPiece;
     int _firstDisplayedPuzzle;
 
     int _curIteration;
-    vcl_vector< searchState > _allStateVector;
+    std::vector< searchState > _allStateVector;
 
 };
 

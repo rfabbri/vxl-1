@@ -8,7 +8,7 @@
 // 
 
 #include <xscan/xscan_scan.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_stream.h>
 #include <vil/vil_image_resource_sptr.h>
 #include "imgr_image_view_3d_base_sptr.h"
@@ -20,7 +20,7 @@ class imgr_scan_images_resource
 
     virtual void set_scan(xscan_scan scan) = 0;
 
-    virtual vcl_vector<vil_image_resource_sptr> get_images() const =0;
+    virtual std::vector<vil_image_resource_sptr> get_images() const =0;
 
     //:view access, for now we return only a bounded view
     // the full dataset will not fit into memory, so bound to the 3-d region of

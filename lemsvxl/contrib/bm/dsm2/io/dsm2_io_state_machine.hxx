@@ -44,9 +44,9 @@ void vsl_b_write(vsl_b_ostream &os, const dsm2_state_machine<nodeT, transitionT>
 }
 
 template<class nodeT, class transitionT>
-void vsl_print_summary(vcl_ostream& os, const dsm2_state_machine<nodeT, transitionT> *p)
+void vsl_print_summary(std::ostream& os, const dsm2_state_machine<nodeT, transitionT> *p)
 {
-	os << "vsl_print_summary not yet implemented. " << vcl_flush;
+	os << "vsl_print_summary not yet implemented. " << std::flush;
 }
 
 #define DSM2_IO_STATE_MACHINE_INSTANTIATE(...)\
@@ -54,6 +54,6 @@ template void vsl_b_read(vsl_b_istream &is, dsm2_state_machine<__VA_ARGS__> &sta
 template void vsl_b_write(vsl_b_ostream &os, dsm2_state_machine<__VA_ARGS__> const& state_machine);\
 template void vsl_b_read(vsl_b_istream &is, dsm2_state_machine<__VA_ARGS__>* &p);\
 template void vsl_b_write(vsl_b_ostream &os, const dsm2_state_machine<__VA_ARGS__>* p);\
-template void vsl_print_summary(vcl_ostream& os, const dsm2_state_machine<__VA_ARGS__> *p)
+template void vsl_print_summary(std::ostream& os, const dsm2_state_machine<__VA_ARGS__> *p)
 
 #endif //DSM2_IO_STATE_MACHINE_TXX_

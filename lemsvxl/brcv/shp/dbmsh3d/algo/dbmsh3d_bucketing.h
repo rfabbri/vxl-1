@@ -73,14 +73,14 @@ public:
   void set_index(int col, int row, int slab)
   { this->index_[0] = col; this->index_[1] = row; this->index_[2] = slab; }
 
-  const vcl_map<int, dbmsh3d_face* >& face_list() const
+  const std::map<int, dbmsh3d_face* >& face_list() const
   {return this->face_list_; }
   
 
 
 protected:
   int index_[3];
-  vcl_map<int, dbmsh3d_face* > face_list_;
+  std::map<int, dbmsh3d_face* > face_list_;
 
 };
 

@@ -13,10 +13,10 @@
 
 
 //: Pick a new mean index using the K-Means++ D^2 weighing scheme
-unsigned dbcll_random_sample_d2(const vcl_vector<double >& min_dists)
+unsigned dbcll_random_sample_d2(const std::vector<double >& min_dists)
 {
   double sum = 0.0;
-  typedef vcl_vector<double>::const_iterator ditr;
+  typedef std::vector<double>::const_iterator ditr;
   for(ditr v = min_dists.begin(); v!=min_dists.end(); ++v)
     sum += (*v) * (*v);
 
@@ -37,10 +37,10 @@ unsigned dbcll_random_sample_d2(const vcl_vector<double >& min_dists)
 
 //: Pick a new mean index using the D weighing scheme
 // equivalent to D^2 if min_dists is squared distance
-unsigned dbcll_random_sample_d(const vcl_vector<double >& min_dists)
+unsigned dbcll_random_sample_d(const std::vector<double >& min_dists)
 {
   double sum = 0.0;
-  typedef vcl_vector<double>::const_iterator ditr;
+  typedef std::vector<double>::const_iterator ditr;
   for(ditr v = min_dists.begin(); v!=min_dists.end(); ++v)
     sum += (*v);
 

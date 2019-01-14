@@ -1,11 +1,11 @@
 // This is breye/bvis/bvis_proc_selector_tableau.cxx
 #include <bvis/bvis_proc_selector_tableau.h>
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <string>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_gl.h>
@@ -28,7 +28,7 @@ bvis_proc_selector_tableau::bvis_proc_selector_tableau():
 //: Constructor - don't use this, use bvis_proc_selector_tableau_new.
 // Many children, top to bottom.
 bvis_proc_selector_tableau::
-bvis_proc_selector_tableau(vcl_vector<vgui_tableau_sptr> const& the_children):
+bvis_proc_selector_tableau(std::vector<vgui_tableau_sptr> const& the_children):
   bgui_selector_tableau(the_children), enabled_for_processing_(false)
 {
 }
@@ -61,8 +61,8 @@ class bvis_proc_toggle_command : public vgui_command
 void bvis_proc_selector_tableau::add_to_menu(vgui_menu &menu)
 {
   vgui_menu process_menu;
-  vcl_string check = " [x]", no_check = " [ ]";
-  vcl_string label = "Toggle Proc.";
+  std::string check = " [x]", no_check = " [ ]";
+  std::string label = "Toggle Proc.";
   if(enabled_for_processing_)
     label += check;
   else

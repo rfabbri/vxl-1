@@ -27,7 +27,7 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 #define CONE_H
 
 #include "structs.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 

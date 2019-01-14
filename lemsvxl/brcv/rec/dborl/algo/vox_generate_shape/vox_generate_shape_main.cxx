@@ -27,7 +27,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_load.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 // =============================================================================
 //: VOX executable to detect objects, represented by xshock_graph, in images
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
   timer.mark();
 
   //1. Parse the input xml file ////////////////////////////////////////////////
-  vcl_cout
+  std::cout
     << "\n---------------------------------------------------------------------"
     << "\nLoad parameter file"
     << "\n--------------------------------------------------------------------\n";
@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
   {
-    vcl_cout << "problems in writing params file to: " 
-      << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " 
+      << params->print_params_file() << std::endl;
   }
 
   // exit if there is nothing else to do
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
   //2. Generate Shapes based on trained geometric model
 
   	// List of detections to return
-    vcl_vector<dbsks_det_desc_xgraph_sptr > shape_list;
+    std::vector<dbsks_det_desc_xgraph_sptr > shape_list;
 
     //> Set up params
     dbsks_shape_generator m;
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
     if (!success)
     {
-      vcl_cout << "\nERROR: Shape Sampling failed. No results created." << vcl_endl;
+      std::cout << "\nERROR: Shape Sampling failed. No results created." << std::endl;
       return EXIT_FAILURE;
     }
 
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     shape_list = m.output_shape_list;
 
  //> Save each detection: xgraph + screenshot
-  vcl_cout << "\n>> Save each detected xgraph to output folder: " 
+  std::cout << "\n>> Save each detected xgraph to output folder: " 
     << params->get_output_folder() << "...";
 
   // Original image
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 	unsigned nplanes=3;
   vil_image_view<vxl_byte > source_image(ni,nj,nplanes);
 
-  vcl_string det_group_id = params->input_model_category_();
+  std::string det_group_id = params->input_model_category_();
 
     if (!vul_file::is_directory(params->get_output_folder()))
     {
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
     source_image,
     params->get_output_folder(),
     det_group_id);
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   return EXIT_SUCCESS;
 }

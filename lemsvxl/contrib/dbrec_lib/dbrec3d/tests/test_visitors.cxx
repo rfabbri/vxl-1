@@ -30,11 +30,11 @@ bool test_bxml_write_visitor()
   PARTS_MANAGER->register_kernel(kernel2_sptr);
   
   //request all parts in the database
-  vcl_vector<dbrec3d_part_sptr> parts= PARTS_MANAGER->get_all_parts();
+  std::vector<dbrec3d_part_sptr> parts= PARTS_MANAGER->get_all_parts();
   
   //write the xml file
   dbrec3d_write_xml_visitor xml_writer;
-  vcl_string doc("./test.xml");
+  std::string doc("./test.xml");
   xml_writer.write_hierarchy(parts, doc);
   
   //parse the file

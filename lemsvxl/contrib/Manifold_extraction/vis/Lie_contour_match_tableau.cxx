@@ -1,5 +1,5 @@
 #include <vgui/vgui_command.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsol/dbsol_interp_curve_2d.h>
 
 #include "Lie_contour_match_tableau.h"
@@ -21,15 +21,15 @@ class Lie_contour_match_tableau_change_command : public vgui_command
 
   void execute() 
   { 
-    vcl_cout << "interval: " << (*interval_ref) << " increment: " << increment << " size: " << *size_ref;
+    std::cout << "interval: " << (*interval_ref) << " increment: " << increment << " size: " << *size_ref;
     int temp = (*interval_ref) + increment;
-    vcl_cout << " temp: " << temp;
+    std::cout << " temp: " << temp;
     if (temp < (*size_ref) && temp > 1) {
-      vcl_cout << " temp is within bounds\n";
+      std::cout << " temp is within bounds\n";
       (*interval_ref) = temp;
-      vcl_cout << " new interval: " << *interval_ref << "\n";
+      std::cout << " new interval: " << *interval_ref << "\n";
     } else 
-      vcl_cout << " temp is NOT within bounds\n";
+      std::cout << " temp is NOT within bounds\n";
     
     cvmatch_tableau->post_redraw(); 
   }
@@ -104,13 +104,13 @@ void Lie_contour_match_tableau::draw_select()
 #define OX +0.5
 #define OY +0.5
 
-void Lie_contour_match_tableau::DrawPointMatching (vcl_vector<vgl_point_2d<double> >& pts1, vcl_vector<vgl_point_2d<double> >& pts2, 
+void Lie_contour_match_tableau::DrawPointMatching (std::vector<vgl_point_2d<double> >& pts1, std::vector<vgl_point_2d<double> >& pts2, 
                         double OffsetX1, double OffsetY1, double OffsetX2, double OffsetY2, bool show_matching_lines) {
 
  
   //just to draw the corresponding points with same colors
   if (pts1.size() != pts2.size()) {
-    vcl_cout << "Problems in curve correspondences, corresponding point sizes do not match!\n";
+    std::cout << "Problems in curve correspondences, corresponding point sizes do not match!\n";
     return;
   }
 
@@ -225,14 +225,14 @@ void Lie_contour_match_tableau::draw_render()
 void Lie_contour_match_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   char buffer[10000];
-  vcl_sprintf(buffer, "Current interval: %d ", interval_);
-  vcl_string initial = buffer;
-  vcl_sprintf(buffer, "Current offsetx2: %d ", offsetx2_);
-  vcl_string initialx = buffer;
-  vcl_sprintf(buffer, "Current offsety2: %d ", offsety2_);
-  vcl_string initialy = buffer;
+  std::sprintf(buffer, "Current interval: %d ", interval_);
+  std::string initial = buffer;
+  std::sprintf(buffer, "Current offsetx2: %d ", offsetx2_);
+  std::string initialx = buffer;
+  std::sprintf(buffer, "Current offsety2: %d ", offsety2_);
+  std::string initialy = buffer;
   
   submenu.add( ((draw_matching_lines_)?on:off)+"Draw Matching Lines", 
                new Lie_contour_match_tableau_toggle_command(this, &draw_matching_lines_));

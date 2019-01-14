@@ -3,14 +3,14 @@
 //  MingChing Chang
 //  June 26, 2007        Creation.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbsk3d/algo/dbsk3d_fs_xform.h>
 #include <dbsk3d/algo/dbsk3d_fs_inflow_prop.h>
 
 void dbsk3d_fs_inflow_prop::compute_surface_inflow ()
 {
-  vul_printf (vcl_cout, "compute_surface_inflow(): \n");
+  vul_printf (std::cout, "compute_surface_inflow(): \n");
 
   surface_inflow_gene_init ();
 
@@ -24,7 +24,7 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_init ()
   PQ_.clear();
 
   //Detect flow_type of all fs_edges.
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
   for (; lit != fs_mesh_->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
     FE->detect_flow_type();
@@ -33,7 +33,7 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_init ()
   //Detect flow_type of all fs_faces.
   //Put all A12 shock sheets containing valid A12-2 shock source points 
   //to a priority queue Q ordered by their A12-2 radius.
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     FF->detect_flow_type();
@@ -48,7 +48,7 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_init ()
 void dbsk3d_fs_inflow_prop::surface_inflow_gene_prop ()
 {
   //Loop through elements in PQ_ until finish.
-  vcl_multimap<double, vispt_elm*>::iterator it = PQ_.begin();
+  std::multimap<double, vispt_elm*>::iterator it = PQ_.begin();
   while (it != PQ_.end()) {
     vispt_elm* E = (*it).second;
     PQ_.erase (it); //remove E from queue.
@@ -125,9 +125,9 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_prop ()
             dbsk3d_fs_face* FF = (dbsk3d_fs_face*) HE->face();
             assert (FF->b_visited());
             //Get all incoming genes of FF and add to FE
-            vcl_set<dbmsh3d_vertex*> incomingG;
+            std::set<dbmsh3d_vertex*> incomingG;
             FF->get_incoming_Gs (incomingG);
-            vcl_set<dbmsh3d_vertex*>::iterator it = incomingG.begin();
+            std::set<dbmsh3d_vertex*>::iterator it = incomingG.begin();
             for (; it != incomingG.end(); it++) {
               dbmsh3d_vertex* G = (*it);
               FE->check_add_asgn_G (G);
@@ -155,9 +155,9 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_prop ()
             if (FF != newP) {
               assert (FF->b_visited());
               //Get all incoming genes of FF and add to FE
-              vcl_set<dbmsh3d_vertex*> incomingG;
+              std::set<dbmsh3d_vertex*> incomingG;
               FF->get_incoming_Gs (incomingG);
-              vcl_set<dbmsh3d_vertex*>::iterator it = incomingG.begin();
+              std::set<dbmsh3d_vertex*>::iterator it = incomingG.begin();
               for (; it != incomingG.end(); it++) {
                 dbmsh3d_vertex* G = (*it);
                 FE->check_add_asgn_G (G);
@@ -188,7 +188,7 @@ void dbsk3d_fs_inflow_prop::surface_inflow_gene_prop ()
 void dbsk3d_fs_inflow_prop::build_surface_mesh ()
 {
   //Loop through all fs_edges and build trianlges if asgn_gene > 3.
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
   for (; lit != fs_mesh_->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
     if (FE->n_asgn_Gs() >= 3) {

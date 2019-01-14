@@ -17,12 +17,12 @@
 #include <expat.h>
 #endif
 #include <stdio.h>
-#include <vcl_string.h>
-#include <vcl_cstdio.h>
+#include <string>
+#include <cstdio>
 
 
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
+#include <cassert>
+#include <vector>
 #include <vgl/vgl_vector_3d.h>
 #include <vnl/vnl_quaternion.h>
 #include <xmvg/xmvg_filter_response.h>
@@ -34,8 +34,8 @@ class proc_io_filter_xml_parser : public expatpp {
 public:
   proc_io_filter_xml_parser(void):version(2) {};
   ~proc_io_filter_xml_parser(void){};
-  vcl_vector<xmvg_filter_response<double> > responses() { return responses_; }
-  vcl_vector<vgl_vector_3d<double> > filter_orientations() { return orientations_; }
+  std::vector<xmvg_filter_response<double> > responses() { return responses_; }
+  std::vector<vgl_vector_3d<double> > filter_orientations() { return orientations_; }
   xmvg_composite_filter_descriptor composite_filter_descr();
   biob_worldpt_field<xmvg_filter_response<double> > splr_response_field() {return splr_response_field_; };
   biob_worldpt_field<vnl_quaternion<double> > splr_rotation_field() {return splr_rotation_field_; }
@@ -56,32 +56,32 @@ protected:
 
 private:
   void handleAtts(const XML_Char** atts);
-  void cdataHandler(vcl_string name, vcl_string data);
+  void cdataHandler(std::string name, std::string data);
   void WriteIndent();
   
   int version;
 
   // filter response paramaters
-  vcl_string cdata_;
-  vcl_string current_elm;
+  std::string cdata_;
+  std::string current_elm;
   int response_dimx_;
   int response_dimy_;
   int response_dimz_;
   int filter_num_;
   int filter_id_;
   double resolution_;
-  vcl_vector<xmvg_filter_response<double>  > responses_;
-  vcl_vector<vgl_vector_3d<double> > orientations_;
+  std::vector<xmvg_filter_response<double>  > responses_;
+  std::vector<vgl_vector_3d<double> > orientations_;
   vgl_box_3d<double> active_box_;
 
   // common filter descriptor parameters
-  vcl_string filter_name;
+  std::string filter_name;
   vgl_box_3d<double> filter_box;
   vgl_point_3d<double> filter_center;
   vgl_vector_3d<double> filter_orient;
   double filter_rot_angle;
   vnl_vector_fixed<double,3> filter_rot_axis;
-  vcl_vector<xmvg_filter_descriptor> descriptor_list;
+  std::vector<xmvg_filter_descriptor> descriptor_list;
 
   // gaussian specific filter parameters
   double filter_sigma_r;
@@ -94,13 +94,13 @@ private:
   // splr related parameters
   //vcl_vector_3d<vgl_point_3d<double> > explicit_worldpt_roster_points;
   vnl_quaternion<double> splr_symmetry_camera0_to_camera1;
-  vcl_vector<vnl_quaternion<double> > splr_rotations;
+  std::vector<vnl_quaternion<double> > splr_rotations;
   biob_explicit_worldpt_roster explicit_worldpt_roster;
-  vcl_string biob_field_type;
+  std::string biob_field_type;
   biob_worldpt_field<xmvg_filter_response<double> > splr_response_field_;
   biob_worldpt_field<vnl_quaternion<double> > splr_rotation_field_;
 };
 
-bool parse(vcl_string fname, proc_io_filter_xml_parser& parser);
+bool parse(std::string fname, proc_io_filter_xml_parser& parser);
 
 #endif

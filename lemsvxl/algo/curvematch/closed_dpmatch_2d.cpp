@@ -39,10 +39,10 @@ closed_dpmatch_2d::closed_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol_intri
   
 
   for (n=0;n<2*_n;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _map.push_back(tmp2);
   }
   
@@ -51,15 +51,15 @@ closed_dpmatch_2d::closed_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol_intri
   
 
   for(n=0;n<_n+1;n++){
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(1,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(1,tmp3);
     _finalMap.push_back(tmp2);
   }
-  vcl_vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
+  std::vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
   _finalCost = tmp5;
 
   for (n=0;n<_n+1;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _finalMapCost.push_back(tmp1);
   }
 }
@@ -68,7 +68,7 @@ closed_dpmatch_2d::closed_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol_intri
 
 void closed_dpmatch_2d::printCost(){
   int i,j;
-  vcl_cout << "Cost Matrix" << vcl_endl;
+  std::cout << "Cost Matrix" << std::endl;
   for (i = 0; i<_n; i++){
     for (j = 0; j<_m; j++){
       // cout << _cost[i][j] << " ";
@@ -79,7 +79,7 @@ void closed_dpmatch_2d::printCost(){
   }
 }
 
-void closed_dpmatch_2d::writeCost(vcl_string fname){
+void closed_dpmatch_2d::writeCost(std::string fname){
   FILE *fp=fopen(fname.c_str(),"w");
   int i,j;
   double c;
@@ -105,9 +105,9 @@ void closed_dpmatch_2d::printMap(){
 
 /*void closed_dpmatch_2d::printFinalMap(){
   int j;
-  vcl_cout << "Final Map" << vcl_endl;
+  std::cout << "Final Map" << std::endl;
   for (j = 0; j<_finalMap.size(); j++)
-    vcl_cout << _finalMap[j].first << " " << _finalMap[j].second << vcl_endl;;
+    std::cout << _finalMap[j].first << " " << _finalMap[j].second << std::endl;;
 }*/
 
 void closed_dpmatch_2d::initializeDPMask(int i, int j){
@@ -119,7 +119,7 @@ void closed_dpmatch_2d::initializeDPMask(int i, int j){
   int ii;
   int jj;
 
-  vcl_vector< vcl_pair<int,int> > Pi,Pj;
+  std::vector< std::pair<int,int> > Pi,Pj;
 
   //Find approximate path that goes through all grid points
   //Left path
@@ -129,11 +129,11 @@ void closed_dpmatch_2d::initializeDPMask(int i, int j){
     y1=_finalMap[i][ii].second;y2=_finalMap[i][ii+1].second;
     Pi.push_back(_finalMap[i][ii]);
     for (jj=y1+1;jj<y2;jj++){
-      vcl_pair<int,int> p(x1,jj);
+      std::pair<int,int> p(x1,jj);
       Pi.push_back(p);
     }
     for (jj=x1+1;jj<x2;jj++){
-      vcl_pair<int,int> p(jj,y2);
+      std::pair<int,int> p(jj,y2);
       Pi.push_back(p);
     }
   }
@@ -145,11 +145,11 @@ void closed_dpmatch_2d::initializeDPMask(int i, int j){
     y1=_finalMap[j][ii].second;y2=_finalMap[j][ii+1].second;
     Pj.push_back(_finalMap[j][ii]);
     for (jj=x1+1;jj<x2;jj++){
-      vcl_pair<int,int> p(jj,y1);
+      std::pair<int,int> p(jj,y1);
       Pj.push_back(p);
     }
     for (jj=y1+1;jj<y2;jj++){
-      vcl_pair<int,int> p(x2,jj);
+      std::pair<int,int> p(x2,jj);
       Pj.push_back(p);
     }
   }
@@ -263,7 +263,7 @@ double closed_dpmatch_2d::computeIntervalCost(int i, int ip,
   //Here the cost is based on lengths of the segments.
   double ds1 = stretchCost (_curve1, i,ip);
         double ds2 = stretchCost (_curve2, j,jp);
-  double cost = vcl_fabs(ds1-ds2);
+  double cost = std::fabs(ds1-ds2);
   return cost;
 }
 
@@ -280,7 +280,7 @@ void closed_dpmatch_2d::findDPCorrespondence(int startPoint){
   jp=_m-1;
   i=_n+startPoint-1;
   j=_m-1;
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   //_finalMap[startPoint].push_back(p);
   _finalMap[startPoint].insert(_finalMap[startPoint].begin(),p);
   _finalMapCost[startPoint].insert(_finalMapCost[startPoint].begin(),
@@ -288,7 +288,7 @@ void closed_dpmatch_2d::findDPCorrespondence(int startPoint){
   while (ip > startPoint || jp > 0){
     ip=_map[i][j].first;
     jp=_map[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap[startPoint].insert(_finalMap[startPoint].begin(),p);
     _finalMapCost[startPoint].insert(_finalMapCost[startPoint].begin(),
                                     _cost[p.first][p.second]);
@@ -317,14 +317,14 @@ void closed_dpmatch_2d::Match(){
   
   //Copy the starting point match (0) to the match from _n
   int N0=_finalMap[0].size();
-  vcl_pair <int,int> p;
+  std::pair <int,int> p;
   _finalMap[_n].clear();
   for (int i=0;i<N0;i++){
     p.first=_finalMap[0][i].first+_n;
     p.second=_finalMap[0][i].second;
     _finalMap[_n].push_back(p);
   }
-  vcl_cout <<  "In Match: Done copying  start point"<< vcl_endl;
+  std::cout <<  "In Match: Done copying  start point"<< std::endl;
   computeMiddlePaths(0,_n);
 }
 
@@ -359,10 +359,10 @@ closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol
   _m=_curve2->size();
 
   for (n=0;n<2*_n;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _map.push_back(tmp2);
   }
   
@@ -371,15 +371,15 @@ closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol
   
 
   for(n=0;n<_n+1;n++){
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(1,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(1,tmp3);
     _finalMap.push_back(tmp2);
   }
-  vcl_vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
+  std::vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
   _finalCost = tmp5;
 
   for (n=0;n<_n+1;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _finalMapCost.push_back(tmp1);
   }
   ////////////////////////////////////////////////////
@@ -388,7 +388,7 @@ closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol
   _lambda = 1.0;
 }
 closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol_intrinsic_curve_2d_sptr c2,
-                                            double R1,double R2, //vcl_vector<double> lambda, 
+                                            double R1,double R2, //std::vector<double> lambda, 
               double lambda,
                                             int numLenElems){
   
@@ -406,10 +406,10 @@ closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol
   _curve2->computeProperties();
   
   for (n=0;n<2*_n;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _map.push_back(tmp2);
   }
   
@@ -417,16 +417,16 @@ closednew_dpmatch_2d::closednew_dpmatch_2d(bsol_intrinsic_curve_2d_sptr c1, bsol
   _rightMask.insert(_rightMask.begin(),_m,2*_n-1);
 
   for(n=0;n<_n+1;n++){
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(1,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(1,tmp3);
     _finalMap.push_back(tmp2);
   }
 
-  vcl_vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
+  std::vector<double> tmp5(_n+1,DP_VERY_LARGE_COST);
   _finalCost = tmp5;
 
   for (n=0;n<_n+1;n++){
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _finalMapCost.push_back(tmp1);
   }
 
@@ -443,11 +443,11 @@ double closednew_dpmatch_2d::computeIntervalCost(int i, int ip, int j, int jp){
   ds1 = stretchCost (_curve1, i,ip);
         ds2 = stretchCost (_curve2, j,jp);
 
-  dF = vcl_fabs(ds1-_lambda*ds2);
+  dF = std::fabs(ds1-_lambda*ds2);
   
   dt1 = bendCost(_curve1, i,ip);
         dt2 = bendCost(_curve2, j,jp);
-  dK = vcl_fabs(dt1-dt2);
+  dK = std::fabs(dt1-dt2);
   
   cost = dF+_R1*dK;
   return cost;

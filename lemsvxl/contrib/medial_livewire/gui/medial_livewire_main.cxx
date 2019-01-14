@@ -121,7 +121,7 @@ int main(int argc, char** argv)
   medial_livewire_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 640, h = 512;
-  vcl_string title = "medial_livewire GUI";
+  std::string title = "medial_livewire GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
 
 

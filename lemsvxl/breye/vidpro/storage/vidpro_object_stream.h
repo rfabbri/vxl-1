@@ -10,9 +10,9 @@
 // \date 19 Dec 2005
 
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <string>
+#include <map>
 #include <bpro/bpro_storage_sptr.h>
 #include <vbl/vbl_ref_count.h>
 
@@ -24,16 +24,16 @@ class vidpro_object_stream: public vbl_ref_count
   vidpro_object_stream();
     
   //: Constructor - opens a stream
-  vidpro_object_stream(const vcl_string& directory,
-                           const vcl_string& name_format = "%05d",
+  vidpro_object_stream(const std::string& directory,
+                           const std::string& name_format = "%05d",
                            const unsigned int init_index = 0);
 
   //: Destructor
   ~vidpro_object_stream() { close(); }
 
   //: Open the stream
-  virtual bool open(const vcl_string& directory,
-                    const vcl_string& name_format = "%05d",
+  virtual bool open(const std::string& directory,
+                    const std::string& name_format = "%05d",
                     const unsigned int init_index = 0);
   
   //: Return true if the stream is open for reading
@@ -76,18 +76,18 @@ class vidpro_object_stream: public vbl_ref_count
   //: prevent deep copying a stream
   vidpro_object_stream(const vidpro_object_stream& other){}
 
-  vcl_string next_file_name()const;
+  std::string next_file_name()const;
 
-  vcl_map<int,vcl_string> paths_;
+  std::map<int,std::string> paths_;
 
   //: The current index
   unsigned int index_;
 
   //: The directory to save images in
-  vcl_string dir_;
+  std::string dir_;
 
   //: The printf-style format string for filenames
-  vcl_string name_format_;
+  std::string name_format_;
 };
 
 

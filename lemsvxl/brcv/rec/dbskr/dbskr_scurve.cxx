@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbskr/dbskr_scurve.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
@@ -10,10 +10,10 @@
 #include <vgl/vgl_intersection.h>
 #include <bgld/algo/bgld_eulerspiral.h>
 
-#include <vcl_cstdio.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_sstream.h>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <sstream>
 #include <dbsk2d/dbsk2d_geometry_utils.h>
 #include <dbskr/dbskr_dpmatch_combined.h>
 #include <vsol/vsol_polygon_2d.h>
@@ -53,10 +53,10 @@ double angleDiff_new(double a1, double  a2) {
 //: constructors
 //
 dbskr_scurve::dbskr_scurve(int num_points,
-                           vcl_vector<vgl_point_2d<double> > &sh_pt, 
-                           vcl_vector<double> &time,
-                           vcl_vector<double> &theta,
-                           vcl_vector<double> &phi, 
+                           std::vector<vgl_point_2d<double> > &sh_pt, 
+                           std::vector<double> &time,
+                           std::vector<double> &theta,
+                           std::vector<double> &phi, 
                            bool binterpolate, double interpolate_ds,
                            bool bsub_sample, double subsample_ds,
                            bool leaf_edge,
@@ -67,7 +67,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
     midpoint_index_(0)
 {
   if (binterpolate){
-    vcl_vector<int> lmap; //dummy map 
+    std::vector<int> lmap; //dummy map 
     interpolate(num_points, sh_pt, time, theta, phi, lmap);
   } 
   else {
@@ -107,7 +107,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
 
 //Interpolate/copy constructor
 dbskr_scurve::dbskr_scurve(dbskr_scurve& old,
-                           vcl_vector<int> &lmap,
+                           std::vector<int> &lmap,
                            double interpolate_ds) 
 {
   if (this == &old)
@@ -204,11 +204,11 @@ dbskr_scurve::operator=(const dbskr_scurve &rhs)
 
 //: This function takes a sampled shock curve and interpolates it.
 void dbskr_scurve::interpolate( int num_points,
-                                vcl_vector<vgl_point_2d<double> > &sh_pt,
-                                vcl_vector<double> &time,
-                                vcl_vector<double> &theta,
-                                vcl_vector<double> &phi,
-                                vcl_vector<int> &lmap)
+                                std::vector<vgl_point_2d<double> > &sh_pt,
+                                std::vector<double> &time,
+                                std::vector<double> &theta,
+                                std::vector<double> &phi,
+                                std::vector<int> &lmap)
 {
   // we need to interpolate along the length of the shock curve
   // to fill the gaps between the shock samples
@@ -251,13 +251,13 @@ void dbskr_scurve::interpolate( int num_points,
     double dt = time[i]-time[i-1];
 
 #if 0 //this is wrong, but added to match Sebastian's matching as in Matching-Tek version of the code
-    double apprxds = (vcl_fabs(dtheta)+vcl_fabs(dphi))*(time[i-1]+time[i])/2;
+    double apprxds = (std::fabs(dtheta)+std::fabs(dphi))*(time[i-1]+time[i])/2;
 #else
-    double apprxds = ds+(vcl_abs(dtheta)+vcl_abs(dphi))*(time[i-1]+time[i])/2;
+    double apprxds = ds+(std::abs(dtheta)+std::abs(dphi))*(time[i-1]+time[i])/2;
 #endif
 
 #if 0 //again same purpose: Matching Sebastian's Matching-Tek 
-    if (apprxds>interpolate_ds_ && vcl_fabs(dt)<0.01){
+    if (apprxds>interpolate_ds_ && std::fabs(dt)<0.01){
 #else //modified Sebastian's to allow for interppolation at pruned points because these samples are missing
       //(this is Amir's working interpolation as well.)
     if (apprxds>interpolate_ds_){
@@ -298,8 +298,8 @@ void dbskr_scurve::interpolate( int num_points,
 
 void dbskr_scurve::subsample()
 {
-  vcl_vector<vgl_point_2d<double> > sub_sh_pt, sub_bdry_plus, sub_bdry_minus;
-  vcl_vector<double> sub_time, sub_theta, sub_phi, sub_bdry_plus_angle, sub_bdry_minus_angle;
+  std::vector<vgl_point_2d<double> > sub_sh_pt, sub_bdry_plus, sub_bdry_minus;
+  std::vector<double> sub_time, sub_theta, sub_phi, sub_bdry_plus_angle, sub_bdry_minus_angle;
 
   //keep the first and last points and subsample the rest
   
@@ -457,7 +457,7 @@ void dbskr_scurve::reconstruct_boundary(double scale_ratio)
     curr = bdry_plus_[i];
 
     //If points are very close to each other angle is not reliable
-    if (vcl_pow(prev.x()-curr.x(),2)+vcl_pow(prev.y()-curr.y(),2) > 1E-1)
+    if (std::pow(prev.x()-curr.x(),2)+std::pow(prev.y()-curr.y(),2) > 1E-1)
     {
       dtheta = atan2(prev.y()-curr.y(), prev.x()-curr.x());
       bdry_plus_angle_.push_back(dtheta);
@@ -474,7 +474,7 @@ void dbskr_scurve::reconstruct_boundary(double scale_ratio)
     curr = bdry_minus_[i];
 
     //If points are very close to each other angle is not reliable
-    if (vcl_pow(prev.x()-curr.x(),2)+vcl_pow(prev.y()-curr.y(),2) > 1E-1)
+    if (std::pow(prev.x()-curr.x(),2)+std::pow(prev.y()-curr.y(),2) > 1E-1)
     {
       dtheta = atan2(prev.y()-curr.y(), prev.x()-curr.x());
       bdry_minus_angle_.push_back(dtheta);
@@ -572,7 +572,7 @@ void dbskr_scurve::compute_arclengths()
   for (int i = 1; i < num_points_; i++) {
     cx=sh_pt_[i].x();
     cy=sh_pt_[i].y();
-    dL=vcl_sqrt(vcl_pow(cx-px,2.0)+vcl_pow(cy-py,2.0));
+    dL=std::sqrt(std::pow(cx-px,2.0)+std::pow(cy-py,2.0));
     length += dL;
     arclength_.push_back(length);
     px=cx;
@@ -587,7 +587,7 @@ void dbskr_scurve::compute_arclengths()
   for ( unsigned int s=0; s < num_points_; ++s)
   {
       
-      double distance=vcl_fabs(arclength_[s]-half_arclength);
+      double distance=std::fabs(arclength_[s]-half_arclength);
       if ( distance < half_compare)
       {
           half_compare=distance;
@@ -636,9 +636,9 @@ void dbskr_scurve::compute_areas()
 vgl_point_2d<double> 
 dbskr_scurve::fragment_pt(int index, double radius)
 {
-  assert(vcl_fabs(radius)<=time_[index]+1e-10);
+  assert(std::fabs(radius)<=time_[index]+1e-10);
   double vec = theta_[index]+ vnl_math::sgn0(radius)*phi_[index];
-  return sh_pt_[index] + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
+  return sh_pt_[index] + std::fabs(radius)*vgl_vector_2d<double>(std::cos(vec), std::sin(vec));
 }
 
 //: return a continuous index and radius, of where you are
@@ -760,8 +760,8 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
         }
         double ratio = angle_ray/angle_sector;
 
-        vgl_vector_2d<double> tangent(vcl_cos(theta_[start_index]),
-                                      vcl_sin(theta_[start_index]));
+        vgl_vector_2d<double> tangent(std::cos(theta_[start_index]),
+                                      std::sin(theta_[start_index]));
 
         vgl_line_2d<double> tan_line(s_pt,
                                      tangent);
@@ -1048,11 +1048,11 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 
 //: return a continuous index and radius, of where you are
 //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
-void dbskr_scurve::draw_grid(vcl_vector<
-                             vcl_pair< vgl_point_2d<double>,
+void dbskr_scurve::draw_grid(std::vector<
+                             std::pair< vgl_point_2d<double>,
                              vgl_point_2d<double> > >&
                              lines,
-                             vcl_vector<bool>& shock_lines)
+                             std::vector<bool>& shock_lines)
 {
 
     for (unsigned int i = 1; i < num_points_; i++) 
@@ -1083,8 +1083,8 @@ void dbskr_scurve::draw_grid(vcl_vector<
             vgl_point_2d<double> arc_stop;
             
 
-            vgl_vector_2d<double> tangent(vcl_cos(theta_[start_index]),
-                                          vcl_sin(theta_[start_index]));
+            vgl_vector_2d<double> tangent(std::cos(theta_[start_index]),
+                                          std::sin(theta_[start_index]));
             
             vgl_line_2d<double> tan_line(s_pt,
                                          tangent);
@@ -1113,10 +1113,10 @@ void dbskr_scurve::draw_grid(vcl_vector<
             }
             
             
-            vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+            std::pair<vgl_point_2d<double>,vgl_point_2d<double> >
                 line1(s_pt,arc_start);
 
-            vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+            std::pair<vgl_point_2d<double>,vgl_point_2d<double> >
                 line2(s_pt,arc_stop);
 
 
@@ -1143,7 +1143,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
                 vgl_point_2d<double> stop_arc=
                     fragment_pt(stop_index,test_rad);
 
-                vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+                std::pair<vgl_point_2d<double>,vgl_point_2d<double> >
                     arc(start_arc,stop_arc);
                 lines.push_back(arc);
                 shock_lines.push_back(false);
@@ -1154,7 +1154,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
         {
 
             // Non-degenerate case
-            vcl_pair<vgl_point_2d<double>,
+            std::pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > shock_line(s_pt,
                                                        e_pt);
 
@@ -1164,19 +1164,19 @@ void dbskr_scurve::draw_grid(vcl_vector<
             vgl_point_2d<double> bdry_minus_start = bdry_minus_[start_index];
             vgl_point_2d<double> bdry_minus_stop  = bdry_minus_[stop_index];
 
-            vcl_pair<vgl_point_2d<double>,
+            std::pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > plus_start_line(s_pt,
                                                             bdry_plus_start);
 
-            vcl_pair<vgl_point_2d<double>,
+            std::pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > plus_stop_line(e_pt,
                                                            bdry_plus_stop);
             
-            vcl_pair<vgl_point_2d<double>,
+            std::pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > minus_start_line(s_pt,
                                                              bdry_minus_start);
 
-            vcl_pair<vgl_point_2d<double>,
+            std::pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > minus_stop_line(e_pt,
                                                             bdry_minus_stop);
 
@@ -1215,11 +1215,11 @@ void dbskr_scurve::draw_grid(vcl_vector<
                 vgl_point_2d<double> minus_stop=fragment_pt(stop_index,
                                                             -stop_radius);
 
-                vcl_pair<vgl_point_2d<double>,
+                std::pair<vgl_point_2d<double>,
                          vgl_point_2d<double> > plus_line(plus_start,
                                                           plus_stop);
 
-                vcl_pair<vgl_point_2d<double>,
+                std::pair<vgl_point_2d<double>,
                          vgl_point_2d<double> > minus_line(minus_start,
                                                            minus_stop);
 
@@ -1268,10 +1268,10 @@ dbskr_scurve::fragment_pt(int i1, int i2, int N, int n, double radius)
   double phi_int = phi_[i1] + ratio*dphi;
   double theta_int = theta_[i1] + ratio*dtheta;
 
-  assert(vcl_fabs(radius)<=time_int+1e-7);
+  assert(std::fabs(radius)<=time_int+1e-7);
 
   double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
-  return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
+  return pt + std::fabs(radius)*vgl_vector_2d<double>(std::cos(vec), std::sin(vec));
 }
 
 //: return the radius at an interpolated point defined by the continuous index
@@ -1280,12 +1280,12 @@ double dbskr_scurve::interp_radius(double index)
   assert(index>=0 && index<=num_points_-1);
 
   //the integer index less than the continuous one
-  int ind = (int)vcl_floor(index);
+  int ind = (int)std::floor(index);
 
   //if the continuous index is between two integer indices
   // we need to interpolate the values
   if (ind<index){
-    double ratio = index - vcl_floor(index);
+    double ratio = index - std::floor(index);
     return time_[ind]+ratio*(time_[ind+1]-time_[ind]);
   }
   else //return the value at the integer index
@@ -1299,13 +1299,13 @@ double dbskr_scurve::interp_theta(double index)
     assert(index>=0 && index<=num_points_-1);
 
     //the integer index less than the continuous one
-    int ind = (int)vcl_floor(index);
+    int ind = (int)std::floor(index);
 
     //if the continuous index is between two integer indices
     // we need to interpolate the values
     if (ind<index)
     {
-        double ratio = index - vcl_floor(index);
+        double ratio = index - std::floor(index);
         double dtheta = angleDiff_new(theta_[ind+1], theta_[ind]);
         double theta_int = theta_[ind] + ratio*dtheta;
 
@@ -1327,14 +1327,14 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
 {
   assert(index>=0 && index<=num_points_-1);
 
-  int i1 = (int)vcl_floor(index); //the integer index less than the continuous one
+  int i1 = (int)std::floor(index); //the integer index less than the continuous one
   int i2 = i1 + 1;
 
   //if the continuous index is between two integer indices
   // we need to interpolate the values
   if (i1<index)
   {
-    double ratio = index - vcl_floor(index);
+    double ratio = index - std::floor(index);
 
     double dphi = phi_[i2] - phi_[i1];
     double dtheta = angleDiff_new(theta_[i2], theta_[i1]);
@@ -1347,10 +1347,10 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
     double phi_int = phi_[i1] + ratio*dphi;
     double theta_int = theta_[i1] + ratio*dtheta;
 
-    assert(vcl_fabs(radius)<=time_int+1e-7);
+    assert(std::fabs(radius)<=time_int+1e-7);
 
     double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
-    return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
+    return pt + std::fabs(radius)*vgl_vector_2d<double>(std::cos(vec), std::sin(vec));
   }
   else {
     //return the value at the integer index
@@ -1360,10 +1360,10 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
     double phi_int = phi_[i1];
     double theta_int = theta_[i1];
 
-    assert(vcl_fabs(radius)<=time_int+1e-7);
+    assert(std::fabs(radius)<=time_int+1e-7);
 
     double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
-    return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
+    return pt + std::fabs(radius)*vgl_vector_2d<double>(std::cos(vec), std::sin(vec));
   }
 }
 
@@ -1374,27 +1374,27 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
 //: Stretch Cost consists of three elements: 
 // The difference in lengths of the corresponding boundarys segments
 // The difference in the radius (time of formation) of the shock
-void dbskr_scurve::stretch_cost(int i, int ip, vcl_vector<double> &a) 
+void dbskr_scurve::stretch_cost(int i, int ip, std::vector<double> &a) 
 {
-  a[0]=vcl_fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip]);
-  a[1]=vcl_fabs(bdry_minus_arclength_[i]-bdry_minus_arclength_[ip]);
+  a[0]=std::fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip]);
+  a[1]=std::fabs(bdry_minus_arclength_[i]-bdry_minus_arclength_[ip]);
   
   a[2]=2.0*(time_[i] - time_[ip]);
 }
 
-void dbskr_scurve::bend_cost(int i, int ip, vcl_vector<double> &a) 
+void dbskr_scurve::bend_cost(int i, int ip, std::vector<double> &a) 
 {
-  if (vcl_fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip])>EPS)
+  if (std::fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip])>EPS)
     a[0]=angleDiff_new(bdry_plus_angle_[i],bdry_plus_angle_[ip]);
   else
     a[0]=0.0;
-  if (vcl_fabs( bdry_minus_arclength_[i]-bdry_minus_arclength_[ip])>EPS)
+  if (std::fabs( bdry_minus_arclength_[i]-bdry_minus_arclength_[ip])>EPS)
     a[1]=angleDiff_new(bdry_minus_angle_[i],bdry_minus_angle_[ip]);
   else
     a[1]=0.0;
 #if 0 //turn on to replicate Sebastian's mistakes !!! 
       //Taking absolute of angleDiff is actually a mistake.
-  a[2]=2.0*vcl_fabs(angleDiff_new(phi_[i], phi_[ip]));
+  a[2]=2.0*std::fabs(angleDiff_new(phi_[i], phi_[ip]));
 #else //this is corrected version!!!
   a[2]=2.0*angleDiff_new(phi_[i], phi_[ip]);
 #endif
@@ -1402,16 +1402,16 @@ void dbskr_scurve::bend_cost(int i, int ip, vcl_vector<double> &a)
 
 void dbskr_scurve::area_cost(int i, int ip, double& dA) 
 {
-  dA=vcl_fabs(area_[i]-area_[ip]);
+  dA=std::fabs(area_[i]-area_[ip]);
 }
 
 //: Stretch Cost of the outer shock radius
 // The difference in lengths of the corresponding boundarys segments
-void dbskr_scurve::outer_shock_cost(int i, int ip, vcl_vector<double> &a) 
+void dbskr_scurve::outer_shock_cost(int i, int ip, std::vector<double> &a) 
 {
-  a[0]=2.0*vcl_fabs(bdry_plus_outer_shock_radius_[i]-
+  a[0]=2.0*std::fabs(bdry_plus_outer_shock_radius_[i]-
                     bdry_plus_outer_shock_radius_[ip]);
-  a[1]=2.0*vcl_fabs(bdry_minus_outer_shock_radius_[i]-
+  a[1]=2.0*std::fabs(bdry_minus_outer_shock_radius_[i]-
                     bdry_minus_outer_shock_radius_[ip]);
 
 }
@@ -1430,37 +1430,37 @@ void dbskr_scurve::outer_shock_cost(int i, int ip, vcl_vector<double> &a)
 //  d_r1 = |r1_i*sin(phi1_i)- r1_ip*sin(phi1_ip)|, d_r2 = |r2_j*sin(phi2_j)- r2_jp*sin(phi2_jp)| 
 //  and the initial costs:
 //  2*|r1_0*sin(phi1_0) - r2_0*sin(phi2_0)|
-void dbskr_scurve::stretch_cost_combined(int i, int ip, vcl_vector<double> &a) 
+void dbskr_scurve::stretch_cost_combined(int i, int ip, std::vector<double> &a) 
 {
-  a[0]=vcl_fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip]);
-  a[1]=vcl_fabs(bdry_minus_arclength_[i]-bdry_minus_arclength_[ip]);
+  a[0]=std::fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip]);
+  a[1]=std::fabs(bdry_minus_arclength_[i]-bdry_minus_arclength_[ip]);
   
   //Amir: changing the radius cost to r*sin(phi) cost
   //a[2] = 0.0;
-  a[2]=2.0*(time_[i]*vcl_sin(phi_[i]) - time_[ip]*vcl_sin(phi_[ip]));
+  a[2]=2.0*(time_[i]*std::sin(phi_[i]) - time_[ip]*std::sin(phi_[ip]));
   //a[2]=2.0*(time_[i] - time_[ip]);
 }
 
-void dbskr_scurve::bend_cost_combined(int i, int ip, vcl_vector<double> &a) 
+void dbskr_scurve::bend_cost_combined(int i, int ip, std::vector<double> &a) 
 {
-  if (vcl_fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip])>EPS)
+  if (std::fabs(bdry_plus_arclength_[i]-bdry_plus_arclength_[ip])>EPS)
     a[0]=angleDiff_new(bdry_plus_angle_[i],bdry_plus_angle_[ip]);
   else
     a[0]=0.0;
-  if (vcl_fabs( bdry_minus_arclength_[i]-bdry_minus_arclength_[ip])>EPS)
+  if (std::fabs( bdry_minus_arclength_[i]-bdry_minus_arclength_[ip])>EPS)
     a[1]=angleDiff_new(bdry_minus_angle_[i],bdry_minus_angle_[ip]);
   else
     a[1]=0.0;
   //Amir: removing the phi cost
   a[2] = 0.0;
-  //a[2]=2.0*vcl_fabs(phi_[i] - phi_[ip]));
+  //a[2]=2.0*std::fabs(phi_[i] - phi_[ip]));
 }
 
 double dbskr_scurve::contract_cost() 
 {
   double Ro=time_[0];
   double Rf=time_[num_points_-1];
-  double dr=2*vcl_abs(Rf-Ro);
+  double dr=2*std::abs(Rf-Ro);
 #if 0 //Fatih added this switch to match Sebastian's matching. Duplicated from the code at Matching-Tek folder
     double avg_r=0.15*(Rf+Ro);
   double addLen;
@@ -1479,8 +1479,8 @@ dbskr_scurve_sptr dbskr_scurve::get_original_scurve(bool construct_circular_ends
 {
   // construct a version of the current shock curve with the opposite end closed
 
-  vcl_vector< vgl_point_2d<double> > intp_sh_pt;
-  vcl_vector<double> intp_time, intp_phi, intp_theta;
+  std::vector< vgl_point_2d<double> > intp_sh_pt;
+  std::vector<double> intp_time, intp_phi, intp_theta;
 
   // first copy the current scurve
   for(int j=0; j<num_points_; j++)
@@ -1499,7 +1499,7 @@ dbskr_scurve_sptr dbskr_scurve::get_original_scurve(bool construct_circular_ends
     double phiEnd = 0;
 
     double dphi = phiEnd-phiStart;
-    double apprxds = vcl_abs(dphi)*time_[n];
+    double apprxds = std::abs(dphi)*time_[n];
 
     //num of extra samples
     int num_pts = int(apprxds/subsample_ds_); //at the end point
@@ -1534,18 +1534,18 @@ dbskr_scurve_sptr dbskr_scurve::get_replacement_scurve(int num_pts)
   // original and the pruned curve, the pruned curve should be sampled
   // with the same number of points as the original curve
 
-  vcl_vector< vgl_point_2d<double> > intp_sh_pts;
-  vcl_vector<double> intp_time, intp_phi, intp_theta;
+  std::vector< vgl_point_2d<double> > intp_sh_pts;
+  std::vector<double> intp_time, intp_phi, intp_theta;
 
   int n = 0; //index of the splice point
   double phiStart = phi_[n];
   double phiEnd = 0;
 
   double dphi = phiEnd-phiStart;
-  double apprxds = vcl_abs(dphi)*time_[n];
+  double apprxds = std::abs(dphi)*time_[n];
 
   //num of extra samples
-  int num_samples = vcl_max(num_pts, int(apprxds/subsample_ds_));
+  int num_samples = std::max(num_pts, int(apprxds/subsample_ds_));
   
   //add the interpolated samples
   for(int j=0; j<=num_samples; j++) //not ot forget the one at the starting point
@@ -1622,21 +1622,21 @@ void dbskr_scurve::set_euler_spiral_completion_length()
         minus_line.slope_radians());
 
     // For debugging purposes
-    // vcl_vector<vgl_point_2d<double> > samples;
+    // std::vector<vgl_point_2d<double> > samples;
     // es.compute_spiral(samples, 0.1);
     
-    // vcl_cout<<"curve=[";
+    // std::cout<<"curve=[";
     // for ( unsigned int s=0; s < samples.size() ; ++s)
     // {
     //     if ( s == samples.size()-1)
     //     {
-    //         vcl_cout<<samples[s].x()<<" "<<samples[s].y()<<"];"<<vcl_endl;
+    //         std::cout<<samples[s].x()<<" "<<samples[s].y()<<"];"<<std::endl;
     //         break;
     //     }
-    //     vcl_cout<<samples[s].x()<<" "<<samples[s].y()<<"; ..."<<vcl_endl;
+    //     std::cout<<samples[s].x()<<" "<<samples[s].y()<<"; ..."<<std::endl;
     // }
 
-    // vcl_cout<<"Es length: "<<es.length()<<vcl_endl;
+    // std::cout<<"Es length: "<<es.length()<<std::endl;
 
     virtual_length_ = es.length();
     if ( std::isinf(es.length()) || std::isnan(es.length()))
@@ -1719,16 +1719,16 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
     xs = sh_pt_x(n);
     ys = sh_pt_y(n);
    
-    tp = vcl_atan2(yp-ys,xp-xs);
-    tm = vcl_atan2(ym-ys,xm-xs);
+    tp = std::atan2(yp-ys,xp-xs);
+    tm = std::atan2(ym-ys,xm-xs);
     dt = angleDiff_new(tp,tm);
     R = time_[n];
 
     //the length of the contour to be deleted
     delLen = bdry_plus_length_+bdry_minus_length_+virtual_length_;
     //0.9 was replaced with 1.0 by Fatih, since Sebastian had 1.0 in his original version (which original version?). 05/01/08
-    //replLen = 1.0*R*vcl_fabs(dt);
-    replLen = 0.9*R*vcl_fabs(dt); //Amir: As in Matching-Tek
+    //replLen = 1.0*R*std::fabs(dt);
+    replLen = 0.9*R*std::fabs(dt); //Amir: As in Matching-Tek
    
 
   } 
@@ -1750,7 +1750,7 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
     tm = atan2(ym-ys,xm-xs);
     dt1 = angleDiff_new(tp,tm);
     R1 = time_[n];
-    d1 = R1*vcl_fabs(dt1);
+    d1 = R1*std::fabs(dt1);
     
     
     // need to fit an arc on the end node (either for A-inf or for the 
@@ -1770,7 +1770,7 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
     tm = atan2(ym-ys,xm-xs);
     dt2 = angleDiff_new(tp,tm);
     R2 = time_[n];
-    d2 = R2*vcl_fabs(dt2);
+    d2 = R2*std::fabs(dt2);
 
 #if 0     // this switch is actually a MISTAKE in the original code of Thomas Sebastian in
     // /vision\projects\kimia\shock-matching\code\CODE-IRIX6.5\Matching-ESF
@@ -1779,12 +1779,12 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
     // 1 should be switched to 0 to remove this code, see the reasoning why its wrong:
     // \vision\docs\kimia\intranet\Shock matching meetings\Shock Matching Debug.ppt
     if(time_[0] < time_[n]){
-      d1=vcl_fabs(dt1)*time_[0];
-      d2=vcl_fabs(dt2)*time_[n];
+      d1=std::fabs(dt1)*time_[0];
+      d2=std::fabs(dt2)*time_[n];
     }
     else {
-      d1=vcl_fabs(dt2)*time_[n];
-      d2=vcl_fabs(dt1)*time_[0];
+      d1=std::fabs(dt2)*time_[n];
+      d2=std::fabs(dt1)*time_[0];
     }
 #endif
 
@@ -1800,30 +1800,30 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
 #if 0 // the original version in /vision\projects\kimia\shock-matching\code\CODE-IRIX6.5\Matching-ESF
   //float fac=2.2f;//to account for sampling error
   float fac = 3.0; //in Matching-Tek version
-  float ratio=(float)vcl_fabs(delLen/replLen);
+  float ratio=(float)std::fabs(delLen/replLen);
   if (ratio > 2.5){
     float newDelLen=(float)(2.0*replLen+0.25*delLen*(ratio-2.0)/ratio);
-    return fac*vcl_fabs(newDelLen-replLen);
+    return fac*std::fabs(newDelLen-replLen);
   }
   else{
-    return fac*vcl_fabs(delLen-replLen);
+    return fac*std::fabs(delLen-replLen);
   }
 #else // the corrected version by Amir Tamrakar and Fatih Calakli 
   float fac=2.2f;//to account for sampling error
-  float ratio=vcl_fabs(delLen/replLen);
+  float ratio=std::fabs(delLen/replLen);
   if (ratio > 2.5){
     float newDelLen=2.0*replLen+0.25*delLen*(ratio-2.0)/ratio;
-    return fac*vcl_fabs(newDelLen-replLen) + 2*vcl_fabs(time_[0]-time_[num_points_-1]);//2*|r0_hat - rf|
+    return fac*std::fabs(newDelLen-replLen) + 2*std::fabs(time_[0]-time_[num_points_-1]);//2*|r0_hat - rf|
   }
   else{
-    return fac*vcl_fabs(delLen-replLen) + 2*vcl_fabs(time_[0]-time_[num_points_-1]);//2*|r0_hat - rf|
+    return fac*std::fabs(delLen-replLen) + 2*std::fabs(time_[0]-time_[num_points_-1]);//2*|r0_hat - rf|
   }
 #endif
 }
 
-void dbskr_scurve::writeData(vcl_string fname)
+void dbskr_scurve::writeData(std::string fname)
 {
-  vcl_ofstream outfp(fname.c_str(), vcl_ios::out);
+  std::ofstream outfp(fname.c_str(), std::ios::out);
 
   //write out all the information for each sample point along the shock branch
   for (int i=0; i<num_points_; i++){
@@ -1857,7 +1857,7 @@ void dbskr_scurve::writeData(vcl_string fname)
         outfp<<" "<<bdry_plus_outer_shock_radius_[i]
              <<" "<<bdry_minus_outer_shock_radius_[i];
     }
-    outfp << vcl_endl;
+    outfp << std::endl;
   }
 
   outfp.close();
@@ -1865,11 +1865,11 @@ void dbskr_scurve::writeData(vcl_string fname)
 
 
 //: for visualization purposes
-void dbskr_scurve::get_polys(vcl_vector<vsol_polygon_2d_sptr>& polys)
+void dbskr_scurve::get_polys(std::vector<vsol_polygon_2d_sptr>& polys)
 {
-  vcl_vector<vsol_point_2d_sptr> pts_s;
-  vcl_vector<vsol_point_2d_sptr> pts_bp;
-  vcl_vector<vsol_point_2d_sptr> pts_bm;
+  std::vector<vsol_point_2d_sptr> pts_s;
+  std::vector<vsol_point_2d_sptr> pts_bp;
+  std::vector<vsol_point_2d_sptr> pts_bm;
   
   for (int i=0; i<num_points_; i++) {
     pts_s.push_back(new vsol_point_2d(sh_pt_[i].x(), sh_pt_[i].y()));
@@ -1889,12 +1889,12 @@ void dbskr_scurve::get_polys(vcl_vector<vsol_polygon_2d_sptr>& polys)
 
 
 //: for visualization purposes
-void dbskr_scurve::write_polygon(vcl_string title,double width)
+void dbskr_scurve::write_polygon(std::string title,double width)
 {
 
 
-    vcl_vector<vgl_point_2d<double> > minus_pts;
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > minus_pts;
+    std::vector<vgl_point_2d<double> > points;
 
     vgl_point_2d<double> start_pt=sh_pt_[0];
     start_pt.set(start_pt.x()/scale_ratio_,
@@ -1936,19 +1936,19 @@ void dbskr_scurve::write_polygon(vcl_string title,double width)
         points.push_back(final_pt);
     }
 
-    vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
+    std::vector< vgl_point_2d<double> >::reverse_iterator rit;
     for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
     {
         points.push_back(*rit);
         
     }
     
-    vcl_ofstream poly_txt(title.c_str());
+    std::ofstream poly_txt(title.c_str());
 
     for ( unsigned int c=0; c < points.size() ; ++c)
     {
 
-        poly_txt<<vcl_fabs(width-points[c].x())<<" "<<points[c].y()<<vcl_endl;
+        poly_txt<<std::fabs(width-points[c].x())<<" "<<points[c].y()<<std::endl;
     }
 
     poly_txt.close();
@@ -1962,8 +1962,8 @@ void dbskr_scurve::get_polygon(vgl_polygon<double>& poly,double width)
 {
 
 
-    vcl_vector<vgl_point_2d<double> > minus_pts;
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > minus_pts;
+    std::vector<vgl_point_2d<double> > points;
 
     vgl_point_2d<double> start_pt=sh_pt_[0];
     start_pt.set(start_pt.x()/scale_ratio_,
@@ -2005,7 +2005,7 @@ void dbskr_scurve::get_polygon(vgl_polygon<double>& poly,double width)
         points.push_back(final_pt);
     }
 
-    vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
+    std::vector< vgl_point_2d<double> >::reverse_iterator rit;
     for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
     {
         points.push_back(*rit);
@@ -2015,7 +2015,7 @@ void dbskr_scurve::get_polygon(vgl_polygon<double>& poly,double width)
     for ( unsigned int c=0; c < points.size() ; ++c)
     {
 
-        poly.push_back(vcl_fabs(width-points[c].x()),
+        poly.push_back(std::fabs(width-points[c].x()),
                        points[c].y());
     }
 
@@ -2030,8 +2030,8 @@ void dbskr_scurve::get_polygon(int start_index,
 {
 
 
-    vcl_vector<vgl_point_2d<double> > minus_pts;
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > minus_pts;
+    std::vector<vgl_point_2d<double> > points;
 
     vgl_point_2d<double> start_pt=sh_pt_[start_index];
     start_pt.set(start_pt.x()/scale_ratio_,
@@ -2071,7 +2071,7 @@ void dbskr_scurve::get_polygon(int start_index,
     points.push_back(final_pt);
     
 
-    vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
+    std::vector< vgl_point_2d<double> >::reverse_iterator rit;
     for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
     {
         points.push_back(*rit);
@@ -2081,7 +2081,7 @@ void dbskr_scurve::get_polygon(int start_index,
     for ( unsigned int c=0; c < points.size() ; ++c)
     {
 
-        poly.push_back(vcl_fabs(width-points[c].x()),
+        poly.push_back(std::fabs(width-points[c].x()),
                        points[c].y());
     }
 

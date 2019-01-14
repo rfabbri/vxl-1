@@ -21,8 +21,8 @@
 
 #include <bild/algo/bild_gradient_color.h>
 #include <vnl/vnl_math.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
+#include <utility>
+#include <algorithm>
 
 // ============================================================================
 // dbsks_xshock_detector
@@ -34,7 +34,7 @@
 void dbsks_xshock_detector::
 detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 {
-  vcl_cout << "\n> Detecting xgraph in window " << window << vcl_endl;
+  std::cout << "\n> Detecting xgraph in window " << window << std::endl;
   
   // 0) Retrieive root vertex from geometric model
   if (!this->xgraph_geom_)
@@ -47,7 +47,7 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
   dbsksp_xshock_node_sptr xv_root = this->xgraph()->node_from_id(this->root_vid_);
   if (!xv_root)
   {
-    vcl_cout << "\nERROR: Could not find root vertex, root_vid=" << this->root_vid_ 
+    std::cout << "\nERROR: Could not find root vertex, root_vid=" << this->root_vid_ 
       << "\nQuit now.\n";
     return;
   }
@@ -57,7 +57,7 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
   dbsksp_xshock_edge_sptr major_child_edge = this->xgraph()->edge_from_id(this->major_child_eid_);
   if (!major_child_edge)
   {
-    vcl_cout << "ERROR: Could not find major child edge, major_child_eid=" << this->major_child_eid_
+    std::cout << "ERROR: Could not find major child edge, major_child_eid=" << this->major_child_eid_
       << "\nQuit now.\n";
     return;
   }
@@ -76,16 +76,16 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
   //bool hacking = false;
   //if (hacking)
   //{
-  //  vcl_string folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_103-swans_on_ethz-v1_05/swans_prototype_0+swans_aal/scale_91/ROI_0_0_255_239/";
-  //  vcl_string fname = "swans_prototype_0+swans_aal+ROI_0_0_255_239.0.xml";
+  //  std::string folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_103-swans_on_ethz-v1_05/swans_prototype_0+swans_aal/scale_91/ROI_0_0_255_239/";
+  //  std::string fname = "swans_prototype_0+swans_aal+ROI_0_0_255_239.0.xml";
   //  dbsksp_xshock_graph_sptr xg = 0;
   //  x_read(folder + fname, xg);
 
   //  xg->compute_vertex_depths(this->root_vid_);
 
-  //  float xg_cost = float(-this->xshock_likelihood_->loglike_xgraph(xg, vcl_vector<unsigned >(), true));
+  //  float xg_cost = float(-this->xshock_likelihood_->loglike_xgraph(xg, std::vector<unsigned >(), true));
 
-  //  vcl_cout << "xg_cost = " << xg_cost << "\n";
+  //  std::cout << "xg_cost = " << xg_cost << "\n";
   //}
 
 
@@ -114,8 +114,8 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
   xshock_dp.optimize();
   //////////////////////////////////////////////////////////////////////////////
   
-  vcl_cout << "\n# detections after DP: " << xshock_dp.list_opt_xgraph_state.size() << "\n";
-  vcl_cout << "\nValidate legality of solutions from DP ...\n";
+  std::cout << "\n# detections after DP: " << xshock_dp.list_opt_xgraph_state.size() << "\n";
+  std::cout << "\nValidate legality of solutions from DP ...\n";
 
   //5. Collect detection results
 
@@ -126,16 +126,16 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 	return;
   for (unsigned k =0; k < num_sols; ++k)
   {
-    vcl_map<unsigned, int >& map_node_state = xshock_dp.list_opt_xgraph_state[k];
+    std::map<unsigned, int >& map_node_state = xshock_dp.list_opt_xgraph_state[k];
     dbsksp_xshock_graph_sptr new_graph = this->reconstruct_xgraph(map_node_state);
 
     // only accept as a solution when it corresponds to a real, legal xgraph
     // \todo check legality of "new_graph"
 	if (!new_graph )
 	{
-      vcl_cout 
+      std::cout 
         << "\nERROR: couldn't reconstruct xraph for solution k=" << k 
-        << "\n  DP cost = " << xshock_dp.list_opt_cost[k] << vcl_endl;
+        << "\n  DP cost = " << xshock_dp.list_opt_cost[k] << std::endl;
       continue;
     }	
 	if(!is_sol_xgraph_legal(new_graph))
@@ -147,10 +147,10 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 	// Real cost is the computed directly from the likelihood function
 	// (or some other verification function)
 	new_graph->compute_vertex_depths(this->root_vid_);
-	float real_cost = float(-this->xshock_likelihood_->loglike_xgraph(new_graph, vcl_vector<unsigned >(), false));
+	float real_cost = float(-this->xshock_likelihood_->loglike_xgraph(new_graph, std::vector<unsigned >(), false));
 	this->list_solution_real_costs_.push_back(real_cost);
   } // solution
-  vcl_cout << "# detections after validating sols: " << this->list_solutions_.size() << vcl_endl;
+  std::cout << "# detections after validating sols: " << this->list_solutions_.size() << std::endl;
 
   return;
 }
@@ -193,7 +193,7 @@ build_xnode_grid(const vgl_box_2d<int >& window)
 
   else
   {
-    vcl_cout << "\nERROR: unknown generate_xnode_grid_option= " << generate_xnode_grid_option << vcl_endl;
+    std::cout << "\nERROR: unknown generate_xnode_grid_option= " << generate_xnode_grid_option << std::endl;
     return;
   } // else
 
@@ -259,7 +259,7 @@ build_xnode_grid_using_only_input_xgraph(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -280,12 +280,12 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
       continue;
 
 	double x, y, psi, phi, radius;
-	//vcl_cout<< "read para" <<vcl_endl;
+	//std::cout<< "read para" <<std::endl;
 	xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
-    //vcl_cout << "vid: " <<xv->id()<< " \n";
+    //std::cout << "vid: " <<xv->id()<< " \n";
 
-    double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+    double cur_graph_size = std::sqrt(this->xgraph()->area());
 
     dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom_->map_node2geom()[xv->id()];
     double min_psi, max_psi;
@@ -300,7 +300,7 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     min_radius *= cur_graph_size / graph_size;
     max_radius *= cur_graph_size / graph_size;
 
-	//vcl_cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< vcl_endl;
+	//std::cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< std::endl;
     // set parameters for the grid
     dbsks_xnode_grid_params params;
 
@@ -368,7 +368,7 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -392,7 +392,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
       continue;
 
   // size of the reference graph
-    //double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+    //double cur_graph_size = std::sqrt(this->xgraph()->area());
 
 	dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom_->map_node2geom()[xv->id()];
     double min_psi, max_psi;
@@ -407,7 +407,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     //min_radius *= cur_graph_size / graph_size;
     //max_radius *= cur_graph_size / graph_size;
 
-    vcl_cout << "vid: " <<xv->id()<< " ";
+    std::cout << "vid: " <<xv->id()<< " ";
 // set parameters for the grid
     dbsks_xnode_grid_params params;
 
@@ -418,7 +418,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.num_x = vnl_math::min(params.num_x, 65);
     params.min_x = vnl_math::rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
 
-    vcl_cout << "min_x: "<<params.min_x <<" ";
+    std::cout << "min_x: "<<params.min_x <<" ";
 
 	//////////////////////////////////////////// y
     params.step_y = 2;
@@ -427,7 +427,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.num_y = vnl_math::min(params.num_y, 65);
     params.min_y = vnl_math::rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
 
-    vcl_cout << "min_y: "<<params.min_y <<" ";
+    std::cout << "min_y: "<<params.min_y <<" ";
 /*
 	// sample psi using geom model
 	params.step_psi = vnl_math::pi / 15;
@@ -441,7 +441,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.num_psi = vnl_math::floor(range_psi / params.step_psi)+1;
     params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
 
-	vcl_cout << "min_psi: "<<params.min_psi <<" ";
+	std::cout << "min_psi: "<<params.min_psi <<" ";
 
 /*
 	// sample phi from prev dets 
@@ -459,14 +459,14 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_phi0 = (max_phi+min_phi)/2 - params.step_phi0 * (params.num_phi0-1)/2;
 
 
-	vcl_cout << "min_phi0: "<<params.min_phi0 <<" ";
+	std::cout << "min_phi0: "<<params.min_phi0 <<" ";
 
 	// sample radius from prev dets,  can combine both geometric and prev dets
 
 	params.step_r = 1;
 
-	double min_r = vcl_max(min_radius, xv->radius()*0.7);
-	double max_r = vcl_min(max_radius, xv->radius()*1.3);
+	double min_r = std::max(min_radius, xv->radius()*0.7);
+	double max_r = std::min(max_radius, xv->radius()*1.3);
 	
 	params.num_r = vnl_math::max(vnl_math::floor((max_r - min_r)/params.step_r)+1,3);
     params.min_r = min_r;
@@ -477,7 +477,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 	}
     //params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * double(params.num_r-1)/2;
 
-    vcl_cout << "min_r: "<<params.min_r <<vcl_endl;
+    std::cout << "min_r: "<<params.min_r <<std::endl;
 
 
     if (xv->degree() == 3)
@@ -496,7 +496,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -513,12 +513,12 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
 
   if (!this->xgraph_geom_ || this->xgraph_geom_->map_node2geom().empty())
   {
-    vcl_cout << "\nERROR: xgraph geometric model is either not defined or empty.\n";
+    std::cout << "\nERROR: xgraph geometric model is either not defined or empty.\n";
     return;
   }
 
   // size of the reference graph
-  double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+  double cur_graph_size = std::sqrt(this->xgraph()->area());
   
   // set root id, etc
   this->root_vid_ = this->xgraph_geom_->root_vid();
@@ -617,7 +617,7 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -644,14 +644,14 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
 // -----------------------------------------------------------------------------
 //: Reconstruct an xshock graph from a graph configuration
 dbsksp_xshock_graph_sptr dbsks_xshock_detector::
-reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
+reconstruct_xgraph(const std::map<unsigned, int >& map_xgraph_vid_to_state)
 {
   // create a duplicate graph
   dbsksp_xshock_graph_sptr new_graph = new dbsksp_xshock_graph(*this->xgraph());
   new_graph->compute_vertex_depths(this->root_vid_);
 
   // set properties for the nodes
-  for (vcl_map<unsigned, int >::const_iterator it = map_xgraph_vid_to_state.begin(); it != 
+  for (std::map<unsigned, int >::const_iterator it = map_xgraph_vid_to_state.begin(); it != 
     map_xgraph_vid_to_state.end(); ++it)
   {
     unsigned vid = it->first;
@@ -664,7 +664,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       int i_x, i_y, i_psi, i_phi0, i_r;
       if (!grid.linear_to_grid(it->second, i_x, i_y, i_psi, i_phi0, i_r))
       {
-        vcl_cout << "ERROR: point not in the grid.\n";
+        std::cout << "ERROR: point not in the grid.\n";
         return 0;
       };
       dbsksp_xshock_node_descriptor xdesc = grid.xdesc(i_x, i_y, i_psi, i_phi0, i_r);
@@ -693,7 +693,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       int i_x, i_y, i_psi, i_phi0, i_r, i_phi1;
       if (!grid.linear_to_grid(it->second, i_x, i_y, i_psi, i_phi0, i_r, i_phi1))
       {
-        vcl_cout << "ERROR: node state not in the grid.\n";
+        std::cout << "ERROR: node state not in the grid.\n";
         return 0;
       };
 
@@ -714,7 +714,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       
       if (parent_edge == 0)
       {
-        vcl_cout << "ERROR: couldn't identify the parent edge. "
+        std::cout << "ERROR: couldn't identify the parent edge. "
           << "Something is seriously wrong.\n";
         return 0;
       }
@@ -737,7 +737,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
     }
     else
     {
-      vcl_cout << "ERROR: degree not 2 or 3. Can't handle.\n";
+      std::cout << "ERROR: degree not 2 or 3. Can't handle.\n";
       return 0;
     }
   }
@@ -748,18 +748,18 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
 
 void dbsks_xshock_detector::compute_vertices_para_range()
 {
-	vcl_vector<double> vertices_min_x (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_max_x (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_min_y (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_max_y (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_min_psi (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_max_psi (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_min_phi (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_max_phi (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_min_r (this->xgraph()->number_of_vertices(), -1);
-	vcl_vector<double> vertices_max_r (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_min_x (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_max_x (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_min_y (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_max_y (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_min_psi (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_max_psi (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_min_phi (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_max_phi (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_min_r (this->xgraph()->number_of_vertices(), -1);
+	std::vector<double> vertices_max_r (this->xgraph()->number_of_vertices(), -1);
 
-	for(int i =0 ; i< vcl_min(int(prev_dets_.size()), 3); i++)
+	for(int i =0 ; i< std::min(int(prev_dets_.size()), 3); i++)
 	{
 		dbsksp_xshock_graph_sptr cur_xgraph = prev_dets_[i]->xgraph();
 		int j=0;
@@ -769,7 +769,7 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 			dbsksp_xshock_node_sptr xv = *vit;
 
 			double x, y, psi, phi, r;
-			//vcl_cout<< "read para" <<vcl_endl;
+			//std::cout<< "read para" <<std::endl;
 			xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, r);
 
 //////////////////////////////////////////////////////////
@@ -839,68 +839,68 @@ void dbsks_xshock_detector::compute_vertices_para_range()
   xgraph_vertices_max_r_ = vertices_max_r;		
 
 
-  vcl_cout << "min_x: ";	
+  std::cout << "min_x: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_min_x_[i] << " ";
+	 std::cout << xgraph_vertices_min_x_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "max_x: ";	
+  std::cout <<std::endl;
+  std::cout << "max_x: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_max_x_[i] << " ";
+	 std::cout << xgraph_vertices_max_x_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "min_y: ";	
+  std::cout <<std::endl;
+  std::cout << "min_y: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_min_y_[i] << " ";
+	 std::cout << xgraph_vertices_min_y_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "max_y: ";	
+  std::cout <<std::endl;
+  std::cout << "max_y: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_max_y_[i] << " ";
+	 std::cout << xgraph_vertices_max_y_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "min_psi: ";	
+  std::cout <<std::endl;
+  std::cout << "min_psi: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_min_psi_[i] << " ";
+	 std::cout << xgraph_vertices_min_psi_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "max_psi: ";	
+  std::cout <<std::endl;
+  std::cout << "max_psi: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_max_psi_[i] << " ";
+	 std::cout << xgraph_vertices_max_psi_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "min_phi: ";	
+  std::cout <<std::endl;
+  std::cout << "min_phi: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_min_phi_[i] << " ";
+	 std::cout << xgraph_vertices_min_phi_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "max_phi: ";	
+  std::cout <<std::endl;
+  std::cout << "max_phi: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_max_phi_[i] << " ";
+	 std::cout << xgraph_vertices_max_phi_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "min_r: ";	
+  std::cout <<std::endl;
+  std::cout << "min_r: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_min_r_[i] << " ";
+	 std::cout << xgraph_vertices_min_r_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
-  vcl_cout << "max_r: ";	
+  std::cout <<std::endl;
+  std::cout << "max_r: ";	
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
-	 vcl_cout << xgraph_vertices_max_r_[i] << " ";
+	 std::cout << xgraph_vertices_max_r_[i] << " ";
   }	
-  vcl_cout <<vcl_endl;
+  std::cout <<std::endl;
 
-  vcl_cout << "Done Compute Vertices Parameters Range." << vcl_endl;
+  std::cout << "Done Compute Vertices Parameters Range." << std::endl;
 
 	return;
 }

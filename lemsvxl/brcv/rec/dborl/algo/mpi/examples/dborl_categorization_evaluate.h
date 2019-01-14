@@ -30,7 +30,7 @@
 #include <dbskr/dbskr_tree_sptr.h>
 #include <dborl/dborl_index_sptr.h>
 #include <dborl/dborl_index_node_sptr.h>
-#include <vcl_string.h>
+#include <string>
 
 
 class dborl_categorization_evaluate 
@@ -44,7 +44,7 @@ public:
   virtual bool parse_command_line(int argc, char* argv[]);
 
   //: parse the index file
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
@@ -54,7 +54,7 @@ public:
   //: process each categorization.xml file given by the flat index of a job collection in a sequential mode
   bool process();
 
-  vcl_string param_file_;
+  std::string param_file_;
 protected:
   dborl_categorization_evaluate_params_sptr params_;
   dborl_index_sptr ind_;

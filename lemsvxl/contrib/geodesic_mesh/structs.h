@@ -20,8 +20,8 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include <vcl_iostream.h>
-#include <vcl_cstddef.h>
+#include <iostream>
+#include <cstddef>
 
 ///#define MEM_COUNT
 
@@ -37,7 +37,7 @@ public:
   double x;
   double y;
 
-  friend vcl_ostream& operator << (vcl_ostream& os, Point& p)
+  friend std::ostream& operator << (std::ostream& os, Point& p)
     {
       
       os << p.x << "\t" << p.y;
@@ -103,7 +103,7 @@ public:
       return temp;
     };
 
-  friend vcl_istream& operator >> (vcl_istream& is, Point &p)
+  friend std::istream& operator >> (std::istream& is, Point &p)
     {
       is >> p.x >> p.y;
       return is;
@@ -119,7 +119,7 @@ struct Vertex {
   Point p;
   int label;
 
-  friend vcl_ostream& operator << (vcl_ostream& os, Vertex& v)
+  friend std::ostream& operator << (std::ostream& os, Vertex& v)
     {      
       os << v.label << "\t" << v.p;
       return os;
@@ -132,15 +132,15 @@ struct Face{
 
   Vertex v[3];
   
-  friend vcl_ostream& operator << (vcl_ostream& os, Face& f)
+  friend std::ostream& operator << (std::ostream& os, Face& f)
     {
       for (int i=0; i < 3; i++)
   os << f.v[i].label << " (" << f.v[i].p.x << "," << f.v[i].p.y  << ") ";
-      os << vcl_endl;
+      os << std::endl;
       return os;
     };
 
-  friend vcl_istream& operator >> (vcl_istream& is, Face &f)
+  friend std::istream& operator >> (std::istream& is, Face &f)
     {
       for (int i=0; i < 3; i++)
     is >> f.v[i].p >> f.v[i].label;

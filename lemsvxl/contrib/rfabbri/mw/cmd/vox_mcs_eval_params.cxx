@@ -3,7 +3,7 @@
 
 //: Constructor
 vox_mcs_eval_params::
-vox_mcs_eval_params(vcl_string algo_name) : 
+vox_mcs_eval_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
   // Save result to the object folder?

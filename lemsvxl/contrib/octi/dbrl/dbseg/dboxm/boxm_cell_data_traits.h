@@ -16,7 +16,7 @@
 template <class T_loc>
 float boxm_cell_to_float(boct_tree_cell<T_loc, float >* cell,  double step_len)
 {
-  //return 1.0 - vcl_exp(-cell->data()*step_len);
+  //return 1.0 - std::exp(-cell->data()*step_len);
   return cell->data();
 }
 
@@ -32,7 +32,7 @@ template <class T_loc, class T_data>
 float boxm_cell_to_float(boct_tree_cell<T_loc, T_data >* cell, double step_len)
 {
 
-  return 1.0 - vcl_exp(-cell->data().basic_val()*step_len);
+  return 1.0 - std::exp(-cell->data().basic_val()*step_len);
 
 }
 

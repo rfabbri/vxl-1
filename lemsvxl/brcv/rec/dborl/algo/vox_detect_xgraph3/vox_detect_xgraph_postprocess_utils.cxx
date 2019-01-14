@@ -39,10 +39,10 @@
 #include <vil/vil_save.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <string>
+#include <map>
+#include <sstream>
 
 
 // =============================================================================
@@ -63,42 +63,42 @@ bool dbsks_recompute_cost_using_wcm()
   //>> input data
 
   // header and footer to complete the xml record
-  vcl_string xml_header_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_header.txt";
-  vcl_string xml_footer_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_footer.txt";
+  std::string xml_header_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_header.txt";
+  std::string xml_footer_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_footer.txt";
 
   //// experiment setting - 1
-  //vcl_string input_xml_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_47-all_images-combine_exp_45_46/input.xml";
-  //vcl_string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
-  //vcl_string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
-  //vcl_string exp_name = "exp_48-all_images-v0_74-window_512x512";
-  //vcl_string list_xml_det_record_file = "list_xml_det_record_exp_48.txt";
-  ////vcl_string list_xml_det_record_file = "list_xml_det_record_exp_48_1record.txt";
+  //std::string input_xml_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_47-all_images-combine_exp_45_46/input.xml";
+  //std::string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
+  //std::string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
+  //std::string exp_name = "exp_48-all_images-v0_74-window_512x512";
+  //std::string list_xml_det_record_file = "list_xml_det_record_exp_48.txt";
+  ////std::string list_xml_det_record_file = "list_xml_det_record_exp_48_1record.txt";
 
 
   // ------------------------
   // experiment setting - 2
-  vcl_string input_xml_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_49-swans-all_images-v0_75-window_512x512/input_template.xml";
-  vcl_string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
-  vcl_string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
-  vcl_string exp_name = "exp_49-swans-all_images-v0_75-window_512x512";
-  vcl_string list_xml_det_record_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_49-swans-all_images-v0_75-window_512x512/list_det_record.txt";
+  std::string input_xml_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_49-swans-all_images-v0_75-window_512x512/input_template.xml";
+  std::string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
+  std::string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
+  std::string exp_name = "exp_49-swans-all_images-v0_75-window_512x512";
+  std::string list_xml_det_record_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/exp_49-swans-all_images-v0_75-window_512x512/list_det_record.txt";
   //############################################################################
 
   //>> some announcement
-  vcl_cout << "\n>> Experiment input.xml = " << input_xml_file << vcl_endl;
-  vcl_cout << "\n>> Original experiment folder = " << orig_exp_folder << vcl_endl;
-  vcl_cout << "\n>> Destination experiment folder = " << dest_exp_folder << vcl_endl;
-  vcl_cout << "\n>> Experiment name = " << exp_name << vcl_endl;
-  vcl_cout << "\n-------------------------------------------------------------\n\n";
+  std::cout << "\n>> Experiment input.xml = " << input_xml_file << std::endl;
+  std::cout << "\n>> Original experiment folder = " << orig_exp_folder << std::endl;
+  std::cout << "\n>> Destination experiment folder = " << dest_exp_folder << std::endl;
+  std::cout << "\n>> Experiment name = " << exp_name << std::endl;
+  std::cout << "\n-------------------------------------------------------------\n\n";
 
   //>> Paths to original and destination folders
-  vcl_string orig_exp_path = orig_exp_folder + "/" + exp_name;
-  vcl_string dest_exp_path = dest_exp_folder + "/" + exp_name;
+  std::string orig_exp_path = orig_exp_folder + "/" + exp_name;
+  std::string dest_exp_path = dest_exp_folder + "/" + exp_name;
 
   // Check original experiment folder
   if (!vul_file::is_directory(orig_exp_path))
   {
-    vcl_cout << "\nERROR: Original experiment folder does not exist.\n";
+    std::cout << "\nERROR: Original experiment folder does not exist.\n";
     return false;
   }
 
@@ -109,28 +109,28 @@ bool dbsks_recompute_cost_using_wcm()
   }
 
   // Parse the list_xml_det_record file to get a list of filenames
-  vcl_vector<vcl_string > list_xml_det_record;
+  std::vector<std::string > list_xml_det_record;
   buld_parse_string_list(list_xml_det_record_file, list_xml_det_record);
 
   //>> Load all detection records in the original experiments
-  vcl_vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
+  std::vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
   for (unsigned m =0; m < list_xml_det_record.size(); ++m)
   {
-    vcl_string xml_record_filename = list_xml_det_record[m];
-    vcl_string xml_record_file = orig_exp_path + "/" + xml_record_filename;
+    std::string xml_record_filename = list_xml_det_record[m];
+    std::string xml_record_file = orig_exp_path + "/" + xml_record_filename;
 
-    vcl_cout << "\n>> Processing xml_record_file = " << xml_record_file << vcl_endl;
+    std::cout << "\n>> Processing xml_record_file = " << xml_record_file << std::endl;
 
     // Add a header and footer to this xml file to make it complete. Output to a temp file
-    vcl_string temp_xml_file = dest_exp_folder + "/" + "temp_det.xml";
-    vcl_ofstream os(temp_xml_file.c_str());
+    std::string temp_xml_file = dest_exp_folder + "/" + "temp_det.xml";
+    std::ofstream os(temp_xml_file.c_str());
     dbsks_append_text_file(os, xml_header_file);
     dbsks_append_text_file(os, xml_record_file);
     dbsks_append_text_file(os, xml_footer_file);
     os.close();
 
     // Load the temp file to get the list of detection
-    vcl_vector<dbsks_xshock_det_record_sptr > xshock_det_list;
+    std::vector<dbsks_xshock_det_record_sptr > xshock_det_list;
     x_read(temp_xml_file, xshock_det_list);
     vul_file::delete_file_glob(temp_xml_file.c_str());
 
@@ -138,50 +138,50 @@ bool dbsks_recompute_cost_using_wcm()
   }
 
   //>> Group the detection record by image
-  vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > > map_obj_to_detlist;
+  std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > > map_obj_to_detlist;
   for (unsigned m =0; m < all_xshock_dets.size(); ++m)
   {
     dbsks_xshock_det_record_sptr det = all_xshock_dets[m];
-    vcl_string object_name = "";
+    std::string object_name = "";
     det->get_value("object_name", object_name);
     map_obj_to_detlist[object_name].push_back(det);
   }
 
 
   //>> Now compute the wcm cost for detections in each image
-  vcl_cout << "\n>> Compute cost using WCM for detection in each image\n";
-  for (vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > >::iterator obj_iter =
+  std::cout << "\n>> Compute cost using WCM for detection in each image\n";
+  for (std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > >::iterator obj_iter =
     map_obj_to_detlist.begin(); obj_iter != map_obj_to_detlist.end(); ++obj_iter)
   {
-    vcl_string object_name = obj_iter->first;
-    vcl_vector<dbsks_xshock_det_record_sptr > det_list = obj_iter->second;
+    std::string object_name = obj_iter->first;
+    std::vector<dbsks_xshock_det_record_sptr > det_list = obj_iter->second;
 
-    vcl_cout << "\nObject name = " << object_name << ":" << vcl_endl;
+    std::cout << "\nObject name = " << object_name << ":" << std::endl;
 
     // Compute wcm for each detection
     for (unsigned m =0; m < det_list.size(); ++m)
     {
-      vcl_cout << " " << m;
+      std::cout << " " << m;
 
       dbsks_xshock_det_record_sptr det_record = det_list[m];
 
       //i) Retrieve the detection xgraph filename
-      vcl_string xgraph_filename = "";
+      std::string xgraph_filename = "";
       det_record->get_value("xgraph_xml", xgraph_filename);
 
       // full path to the xgraph file
-      vcl_string xgraph_file = orig_exp_path + "/" + xgraph_filename;
+      std::string xgraph_file = orig_exp_path + "/" + xgraph_filename;
 
       //ii) Compute wcm cost of the xgraph
-      vcl_map<float, float > map_uw2wcm;
+      std::map<float, float > map_uw2wcm;
       dbsks_compute_wcm_cost(input_xml_file, object_name, xgraph_file, map_uw2wcm);
 
       // form two strings consisting of all unmatched weight and their costs
-      vcl_stringstream uw_sstream;
-      vcl_stringstream wcm_sstream;
+      std::stringstream uw_sstream;
+      std::stringstream wcm_sstream;
       
       // first pair
-      vcl_map<float, float >::iterator iter = map_uw2wcm.begin();
+      std::map<float, float >::iterator iter = map_uw2wcm.begin();
       uw_sstream << "[" << iter->first;
       wcm_sstream << "[" << iter->second;
 
@@ -200,15 +200,15 @@ bool dbsks_recompute_cost_using_wcm()
       det_record->add("wcm_confidence", "wcm_confidence", wcm_sstream.str());
 
       // write the record out
-      vcl_string xml_filename = "xml_det_record+" + 
+      std::string xml_filename = "xml_det_record+" + 
         vul_file::strip_extension(xgraph_filename) + // remove ".xml"
         ".xml";
-      vcl_string xml_file = dest_exp_path + "/" + xml_filename;
-      x_write(xml_file, vcl_vector<dbsks_xshock_det_record_sptr >(1, det_record));
+      std::string xml_file = dest_exp_path + "/" + xml_filename;
+      x_write(xml_file, std::vector<dbsks_xshock_det_record_sptr >(1, det_record));
     } // iter detection
-    vcl_cout << "\n";
+    std::cout << "\n";
   } // iter object name
-  vcl_cout << ".Done.\n";
+  std::cout << ".Done.\n";
   return true;
 }
 
@@ -226,9 +226,9 @@ bool dbsks_recompute_cost_using_wcm()
 
 //------------------------------------------------------------------------------
 //: Compute wcm cost of a list of xgraphs in a given image (object)
-bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_name, 
-                            vcl_string xgraph_file,
-                            vcl_map<float, float >& map_uw2wcm)
+bool dbsks_compute_wcm_cost(std::string exp_input_xml_file, std::string object_name, 
+                            std::string xgraph_file,
+                            std::map<float, float >& map_uw2wcm)
 {
   // Load parameters from input.xml
   vox_detect_xgraph_params_sptr params = new vox_detect_xgraph_params("vox_detect_xgraph");
@@ -239,7 +239,7 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   // parse the input.xml file
   if (!params->parse_input_xml())
   {
-    vcl_cout << "\nERROR: could not parse input xml file: " << params->input_param_filename_ << vcl_endl;
+    std::cout << "\nERROR: could not parse input xml file: " << params->input_param_filename_ << std::endl;
     return false;
   }
 
@@ -247,13 +247,13 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   params->input_object_name_ = object_name;
 
   // retrieve experiment parameters from the xml file
-  vcl_string image_file = params->get_image_file();
-  vcl_string edgemap_file = params->get_edgemap_file();
-  vcl_string edgeorient_file = params->get_edgeorient_file();
-  vcl_string xgraph_geom_file = params->get_xgraph_geom_file();
-  vcl_string xgraph_ccm_file = params->get_xgraph_ccm_file();
-  vcl_string cemv_file = params->get_cemv_file();
-  vcl_vector<vcl_string > cfrag_list_to_ignore = params->get_cfrag_list_to_ignore();
+  std::string image_file = params->get_image_file();
+  std::string edgemap_file = params->get_edgemap_file();
+  std::string edgeorient_file = params->get_edgeorient_file();
+  std::string xgraph_geom_file = params->get_xgraph_geom_file();
+  std::string xgraph_ccm_file = params->get_xgraph_ccm_file();
+  std::string cemv_file = params->get_cemv_file();
+  std::vector<std::string > cfrag_list_to_ignore = params->get_cfrag_list_to_ignore();
 
   
   //>> Load the contents////////////////////////////////////////////////////////
@@ -261,30 +261,30 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   // Load data from the files
   vil_image_view<float > edgemap;
   vil_image_view<float > edge_angle;
-  vcl_vector<vsol_polyline_2d_sptr > polyline_list;
+  std::vector<vsol_polyline_2d_sptr > polyline_list;
   dbsksp_xshock_graph_sptr xgraph;
   dbsks_xgraph_geom_model_sptr xgraph_geom;
   dbsks_xgraph_ccm_model_sptr xgraph_ccm;
 
   // Load data from a list of file names
-  vcl_cout << "\nLoading data from the files..........................." << "\n"; 
+  std::cout << "\nLoading data from the files..........................." << "\n"; 
 
   if (!dbsks_load_data(image_file, edgemap_file, edgeorient_file, cemv_file, 
     xgraph_file, xgraph_geom_file, xgraph_ccm_file, cfrag_list_to_ignore,
     edgemap, edge_angle, polyline_list, xgraph, xgraph_geom, xgraph_ccm))
   {
-    vcl_cout << "\nERROR: Could not load all data.\n";
+    std::cout << "\nERROR: Could not load all data.\n";
     return false;
   }
 
 
   double standard_scale = 130;
   vil_image_view<float > std_edgemap;
-  vcl_vector<vsol_polyline_2d_sptr > std_polyline_list;
+  std::vector<vsol_polyline_2d_sptr > std_polyline_list;
   vil_image_view<float > std_edge_angle;
   
   // scale the edgemap up so that the xgraph size is "standard", i.e. 130
-  double xgraph_scale = vcl_sqrt(xgraph->area());
+  double xgraph_scale = std::sqrt(xgraph->area());
   double scaled_up_factor = 1.0;
   dbsks_adjust_to_standard_scale(standard_scale, xgraph_scale,
     edgemap, polyline_list, edge_angle,
@@ -292,18 +292,18 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   // scale up the xgraph to match with the newly created edgemap
   xgraph->scale_up(0, 0, scaled_up_factor);
 
-  vcl_cout << "\nAdjusting scale of edgemap and linked conotur to match the standard scale\n";
-  vcl_cout << "Standard scale =" << standard_scale << "\n"
+  std::cout << "\nAdjusting scale of edgemap and linked conotur to match the standard scale\n";
+  std::cout << "Standard scale =" << standard_scale << "\n"
     << "Original scale = " << xgraph_scale << "\n";
 
   xgraph_scale *= scaled_up_factor;
-  vcl_cout << "Scaled-up factor = " << scaled_up_factor << "\n"
+  std::cout << "Scaled-up factor = " << scaled_up_factor << "\n"
     << "Final xgraph scale = " << xgraph_scale << "\n";
 
   // Set things up for Whole-Contour-Matching //////////////////////////////////
 
   //>> WCM ......................................................................
-  vcl_cout << "\n>>Constructing Whole-Contour-Matching cost function ...";
+  std::cout << "\n>>Constructing Whole-Contour-Matching cost function ...";
 
   // get parameters
   float ccm_distance_threshold = 8;
@@ -334,14 +334,14 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   vgl_box_2d<int > wcm_window;
   wcm_window.add(vgl_point_2d<int >(bbox_xmin, bbox_ymin));
   wcm_window.add(vgl_point_2d<int >(bbox_xmax, bbox_ymax));
-  vcl_cout << "\n  wcm_window" << ": xmin=" << wcm_window.min_x() 
+  std::cout << "\n  wcm_window" << ": xmin=" << wcm_window.min_x() 
     << " ymin=" << wcm_window.min_y() 
     << " xmax=" << wcm_window.max_x()
     << " ymax=" << wcm_window.max_y() << "\n";
 
   // compute ccm cost for every pixel in the window
   wcm.compute(wcm_window, dbsks_ccm::USE_CLOSEST_ORIENTED_EDGE);
-  vcl_cout << "done" << vcl_endl;;
+  std::cout << "done" << std::endl;;
   
   //>> Biarc sampler............................................................
 
@@ -351,7 +351,7 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   // we don't want to recompute this all the time
   if (!biarc_sampler.has_cache_samples())
   {
-    vcl_cout << "\n>>Constructing a biarc sampler ...";
+    std::cout << "\n>>Constructing a biarc sampler ...";
 
     // Set parameters of biarc sampler
     dbsks_biarc_sampler_params bsp;
@@ -366,11 +366,11 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
     biarc_sampler.set_sampling_params(nbins_0to2pi, ds);
     biarc_sampler.compute_cache_sample_points(); 
 
-    vcl_cout << "done\n";
+    std::cout << "done\n";
   }
   else
   {
-    vcl_cout << "\n>>Biarc sampler is reused from previous iteration.\n";
+    std::cout << "\n>>Biarc sampler is reused from previous iteration.\n";
   }
 
 
@@ -381,16 +381,16 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
   for (float kk = 0.0f; kk <= 0.5f; kk = kk+0.02f)
   {
     wcm.set_weight_unmatched(kk);
-    float wcm_confidence = float(wcm_like.f_whole_contour(xgraph, vcl_vector<unsigned >(), false));
-    map_uw2wcm.insert(map_uw2wcm.end(), vcl_make_pair(kk, wcm_confidence));
+    float wcm_confidence = float(wcm_like.f_whole_contour(xgraph, std::vector<unsigned >(), false));
+    map_uw2wcm.insert(map_uw2wcm.end(), std::make_pair(kk, wcm_confidence));
   }
 
 
 
   //>> Compute likelihood of the xgraph
   wcm.set_weight_unmatched(0.0f);
-  double wcm_confidence = wcm_like.f_whole_contour(xgraph, vcl_vector<unsigned >(1, 10), false);
-  vcl_cout << "\n    the (wrongly) computed confidence = " << wcm_confidence << "\n";
+  double wcm_confidence = wcm_like.f_whole_contour(xgraph, std::vector<unsigned >(1, 10), false);
+  std::cout << "\n    the (wrongly) computed confidence = " << wcm_confidence << "\n";
   return true;
 }
 
@@ -408,70 +408,70 @@ bool dbsks_compute_wcm_cost(vcl_string exp_input_xml_file, vcl_string object_nam
 // different scales or different prototypes. Do non-max suppression if 
 // the detections overlap.
 
-bool dbsks_combine_det_results(const vcl_string& orig_exp_folder, 
-                               const vcl_string& exp_name1,
-                               const vcl_string& exp_name2,
+bool dbsks_combine_det_results(const std::string& orig_exp_folder, 
+                               const std::string& exp_name1,
+                               const std::string& exp_name2,
                                double min_overlap_ratio_for_rejection,
-                               const vcl_string& dest_exp_path,
-                               const vcl_string& prototype_name)
+                               const std::string& dest_exp_path,
+                               const std::string& prototype_name)
 {
   //############################################################################
   //>> input data
 
   //// ------------------------
   //// input
-  //vcl_string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
-  //vcl_string exp_name1 = "exp_64-applelogos_prototype1-all_images-v0_81-no_wcm";
-  //vcl_string exp_name2 = "exp_65-applelogos_prototype2-all_images-v0_81-no_wcm";
+  //std::string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
+  //std::string exp_name1 = "exp_64-applelogos_prototype1-all_images-v0_81-no_wcm";
+  //std::string exp_name2 = "exp_65-applelogos_prototype2-all_images-v0_81-no_wcm";
 
   //double min_overlap_ratio_for_rejection = 0.3;
 
   //// output
-  //vcl_string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
-  //vcl_string output_exp_name = "exp_66-applelogos_prototype1_and_2-all_images-v0_81-no_wcm";  
-  //vcl_string prototype_name = "applelogos_prototype_1_and_2";
+  //std::string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
+  //std::string output_exp_name = "exp_66-applelogos_prototype1_and_2-all_images-v0_81-no_wcm";  
+  //std::string prototype_name = "applelogos_prototype_1_and_2";
   ////############################################################################
 
-  vcl_vector<vcl_string > input_exp_names;
+  std::vector<std::string > input_exp_names;
   input_exp_names.push_back(exp_name1);
   input_exp_names.push_back(exp_name2);
 
   //>> some announcement
-  vcl_cout << "\n>> Combine detection data from multiple folders\n"
+  std::cout << "\n>> Combine detection data from multiple folders\n"
     << "--------------------------------------------------------------------"
     << "\n>> Original experiment folder = " << orig_exp_folder << "\n"
     << ">>   input_exp_name-1 = " << input_exp_names[0] << "\n"
     << ">>   input_exp_name-2 = " << input_exp_names[1] << "\n"
     << "\n"
     << "\n>> Destination experiment path = " << dest_exp_path << "\n";
-  vcl_cout << "\n-------------------------------------------------------------\n\n";
+  std::cout << "\n-------------------------------------------------------------\n\n";
 
   //>> Load detection results in all folders
-  vcl_vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
+  std::vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
   for (unsigned i_exp =0; i_exp < input_exp_names.size(); ++i_exp)
   {
     // Path to original experiment folder
-    vcl_string orig_exp_path = orig_exp_folder + "/" + input_exp_names[i_exp];
+    std::string orig_exp_path = orig_exp_folder + "/" + input_exp_names[i_exp];
 
     // Check original experiment folder
     if (!vul_file::is_directory(orig_exp_path))
     {
-      vcl_cout << "\nWARNING: Original experiment folder does not exist.\n";
+      std::cout << "\nWARNING: Original experiment folder does not exist.\n";
       continue;
     }
 
 
     // iterate thru all xml_det_record files
-    vcl_string xml_det_record_regexp = "xml_det_record+*.xml";
+    std::string xml_det_record_regexp = "xml_det_record+*.xml";
     for (vul_file_iterator fn= (orig_exp_path + "/" + xml_det_record_regexp); fn; ++fn) 
     {
-      vcl_string xml_det_record_file = fn();
-      vcl_cout << "\n>> Processing xml_record_file = " << xml_det_record_file << vcl_endl;
+      std::string xml_det_record_file = fn();
+      std::cout << "\n>> Processing xml_record_file = " << xml_det_record_file << std::endl;
 
-      vcl_string xml_det_record_filename = vul_file::strip_directory(xml_det_record_file);
+      std::string xml_det_record_filename = vul_file::strip_directory(xml_det_record_file);
 
       // Load the list of detections from this xml_record_file
-      vcl_vector<dbsks_xshock_det_record_sptr > xshock_det_records;
+      std::vector<dbsks_xshock_det_record_sptr > xshock_det_records;
       x_read(xml_det_record_file, xshock_det_records);
 
       // add a new attribute to each of the record: the experiment's filepath
@@ -487,11 +487,11 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
   }
 
   //>> Group the detection record by image
-  vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > > map_obj_to_detlist;
+  std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > > map_obj_to_detlist;
   for (unsigned m =0; m < all_xshock_dets.size(); ++m)
   {
     dbsks_xshock_det_record_sptr det = all_xshock_dets[m];
-    vcl_string object_name = "";
+    std::string object_name = "";
     det->get_value("object_name", object_name);
     map_obj_to_detlist[object_name].push_back(det);
   }
@@ -505,15 +505,15 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
 
   //>> Now do non-max supression for detection within each image, assuming their
   // confidence score has been normalized
-  for (vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > >::iterator i_obj =
+  for (std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > >::iterator i_obj =
     map_obj_to_detlist.begin(); i_obj != map_obj_to_detlist.end(); ++i_obj)
   {
-    vcl_string obj_name = i_obj->first;
-    vcl_vector<dbsks_xshock_det_record_sptr > xshock_det_records = i_obj->second;
+    std::string obj_name = i_obj->first;
+    std::vector<dbsks_xshock_det_record_sptr > xshock_det_records = i_obj->second;
 
     // form a list of xshock detections equivalent of the records
-    vcl_vector<dbsks_det_desc_xgraph_sptr > xshock_dets; // for non-max suppression
-    vcl_map<dbsks_det_desc_xgraph_sptr, dbsks_xshock_det_record_sptr> map_det2record; // for backward retrieval after NMS
+    std::vector<dbsks_det_desc_xgraph_sptr > xshock_dets; // for non-max suppression
+    std::map<dbsks_det_desc_xgraph_sptr, dbsks_xshock_det_record_sptr> map_det2record; // for backward retrieval after NMS
     for (unsigned m =0; m < xshock_det_records.size(); ++m)
     {
       dbsks_xshock_det_record_sptr record = xshock_det_records[m];
@@ -523,14 +523,14 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
       record->get_value("confidence", confidence);
 
       // retrieve path to xgraph
-      vcl_string xgraph_filename = ""; // filename
+      std::string xgraph_filename = ""; // filename
       record->get_value("xgraph_xml", xgraph_filename);
 
-      vcl_string exp_path = ""; // folder name
+      std::string exp_path = ""; // folder name
       record->get_value("exp_path", exp_path);
 
       // complete path
-      vcl_string xgraph_file = exp_path + "/" + xgraph_filename;
+      std::string xgraph_file = exp_path + "/" + xgraph_filename;
 
       // load xgraph
       dbsksp_xshock_graph_sptr xgraph = 0;
@@ -539,16 +539,16 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
 
       // save to lists
       xshock_dets.push_back(det);
-      map_det2record.insert(vcl_make_pair(det, record));
+      map_det2record.insert(std::make_pair(det, record));
     }
 
     //>> Non-max suppression across detection results form different scales
   
-    vcl_vector<dbsks_det_desc_xgraph_sptr > nms_xshock_dets;
+    std::vector<dbsks_det_desc_xgraph_sptr > nms_xshock_dets;
     dbsks_det_nms_using_polygon(xshock_dets, nms_xshock_dets, min_overlap_ratio_for_rejection);
 
     // Extract the surving records
-    vcl_vector<dbsks_xshock_det_record_sptr > nms_xshock_det_records;
+    std::vector<dbsks_xshock_det_record_sptr > nms_xshock_det_records;
     nms_xshock_det_records.reserve(nms_xshock_dets.size());
     for (unsigned m =0; m < nms_xshock_dets.size(); ++m)
     {
@@ -560,10 +560,10 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
     //>> save the surving records
 
     // construct a meaningful name
-    vcl_string xml_det_record_filename = "xml_det_record+" + prototype_name + 
+    std::string xml_det_record_filename = "xml_det_record+" + prototype_name + 
       "+" + obj_name + ".xml";
 
-    vcl_string xml_det_record_file = dest_exp_path + "/" + xml_det_record_filename;
+    std::string xml_det_record_file = dest_exp_path + "/" + xml_det_record_filename;
 
     // write the records to file
     x_write(xml_det_record_file, nms_xshock_det_records);
@@ -578,28 +578,28 @@ bool dbsks_combine_det_results(const vcl_string& orig_exp_folder,
 
 // -----------------------------------------------------------------------------
 //: For each xshock detection record in txt format, add an equivalent .xml file
-bool dbsks_convert_det_record_txt_to_xml(const vcl_string& exp_folder)
+bool dbsks_convert_det_record_txt_to_xml(const std::string& exp_folder)
 {
   // Annoucement
-  vcl_cout << "\nConverting xshock detection record from .txt to .xml format\n";
-  vcl_cout << "\nExperiment folder = " << exp_folder << "\n";
+  std::cout << "\nConverting xshock detection record from .txt to .xml format\n";
+  std::cout << "\nExperiment folder = " << exp_folder << "\n";
 
   // For each detection record file (format: "xml_det_record+*.txt"), add a header
   // and footer and save back with a new name, replacing .txt by .xml
-  vcl_string txt_det_record_regexp = "xml_det_record+*.txt";
+  std::string txt_det_record_regexp = "xml_det_record+*.txt";
   for (vul_file_iterator fn= (exp_folder + "/" + txt_det_record_regexp); fn; ++fn) 
   {
-    vcl_string txt_det_record_file = fn();
-    vcl_string txt_det_record_filename = vul_file::strip_directory(txt_det_record_file);
+    std::string txt_det_record_file = fn();
+    std::string txt_det_record_filename = vul_file::strip_directory(txt_det_record_file);
     
     // Some annoucement
-    vcl_cout << "\n>> Processing txt_record_file = " << txt_det_record_filename << vcl_endl;
+    std::cout << "\n>> Processing txt_record_file = " << txt_det_record_filename << std::endl;
     
     // new name
-    vcl_string xml_det_record_file = vul_file::strip_extension(txt_det_record_file) + ".xml";
+    std::string xml_det_record_file = vul_file::strip_extension(txt_det_record_file) + ".xml";
 
     // Add a header and footer to the .txt record file to make an .xml file
-    vcl_ofstream os(xml_det_record_file.c_str());
+    std::ofstream os(xml_det_record_file.c_str());
 
     // XML header
     os << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << "\n"
@@ -622,26 +622,26 @@ bool dbsks_convert_det_record_txt_to_xml(const vcl_string& exp_folder)
 
 // -----------------------------------------------------------------------------
 //: Create B/W of shape boundary for each detected shape and update detection record
-bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
+bool dbsks_create_bnd_screenshot(const std::string& exp_folder)
 {
   // Annoucement
-  vcl_cout << "\nCreate B/W screenshot for boundary of xshock detection\n";
-  vcl_cout << "\nExperiment folder = " << exp_folder << "\n";
+  std::cout << "\nCreate B/W screenshot for boundary of xshock detection\n";
+  std::cout << "\nExperiment folder = " << exp_folder << "\n";
 
   // For each detection record file (format: "xml_det_record+*.xml"), 
   // - retrieve the xgraph and the screenshot 
   // - create a new bw image containting the footprint of the xgraph's boundary contour
-  vcl_string det_record_regexp = "xml_det_record+*.xml";
+  std::string det_record_regexp = "xml_det_record+*.xml";
   for (vul_file_iterator fn= (exp_folder + "/" + det_record_regexp); fn; ++fn) 
   {
-    vcl_string det_record_file = fn();
-    vcl_string det_record_filename = vul_file::strip_directory(det_record_file);
+    std::string det_record_file = fn();
+    std::string det_record_filename = vul_file::strip_directory(det_record_file);
     
     // Some annoucement
-    vcl_cout << "\n>> Processing det_record_file = " << det_record_filename << vcl_endl;
+    std::cout << "\n>> Processing det_record_file = " << det_record_filename << std::endl;
 
     // Load the detection record file
-    vcl_vector<dbsks_xshock_det_record_sptr > xshock_det_list;
+    std::vector<dbsks_xshock_det_record_sptr > xshock_det_list;
     x_read(det_record_file, xshock_det_list);
     
     for (unsigned m =0; m < xshock_det_list.size(); ++m)
@@ -649,7 +649,7 @@ bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
       dbsks_xshock_det_record_sptr det_record = xshock_det_list[m];
       
       // Retrieve the shock graph
-      vcl_string xgraph_file = "";
+      std::string xgraph_file = "";
       det_record->get_value("xgraph_xml", xgraph_file);
       xgraph_file = exp_folder + "/" + vul_file::strip_directory(xgraph_file);
 
@@ -662,7 +662,7 @@ bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
       bool recompute_bbox = true;
       if (recompute_bbox)
       {
-        double xgraph_scale = vcl_sqrt(xgraph->area());
+        double xgraph_scale = std::sqrt(xgraph->area());
         vsol_box_2d_sptr bbox = xgraph->bounding_box();
 
         det_record->set_value("xgraph_scale", xgraph_scale);
@@ -675,14 +675,14 @@ bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
 
 
       // Create an emptry black image with size equal size of the original image
-      vcl_string screenshot_file = "";
+      std::string screenshot_file = "";
       det_record->get_value("screenshot", screenshot_file);
       screenshot_file = vul_file::strip_extension(vul_file::strip_directory(screenshot_file));
       screenshot_file = exp_folder + "/" + screenshot_file + ".png";
       vil_image_resource_sptr screenshot_rs = vil_load_image_resource(screenshot_file.c_str());
       if (!screenshot_rs)
       {
-        vcl_cout << "\nERROR: couldn't load screenshot file " << screenshot_file << "\n";
+        std::cout << "\nERROR: couldn't load screenshot file " << screenshot_file << "\n";
         return false;
       }
 
@@ -696,24 +696,24 @@ bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
         vil_rgb<vxl_byte >(0, 0, 0)); // black for padding
 
       // filename to save the new image
-      vcl_string bnd_screenshot_filename =  
+      std::string bnd_screenshot_filename =  
         vul_file::strip_extension(vul_file::strip_directory(screenshot_file)) + ".bnd.png";
 
-      vcl_string bnd_screenshot_file =  exp_folder+"/"+bnd_screenshot_filename;
+      std::string bnd_screenshot_file =  exp_folder+"/"+bnd_screenshot_filename;
 
 
       // save image
       if (!vil_save(bnd_screenshot, bnd_screenshot_file.c_str()))
       {
-        vcl_cout << "\nERROR: couldn't save image to file: " << bnd_screenshot_file << vcl_endl;
+        std::cout << "\nERROR: couldn't save image to file: " << bnd_screenshot_file << std::endl;
         return false;
       }
 
 
-      vcl_string bnd_screenshot_tag = "bnd_screenshot";
+      std::string bnd_screenshot_tag = "bnd_screenshot";
       if (!det_record->valid_parameter(bnd_screenshot_tag))
       {
-        det_record->add("bnd_screenshot", bnd_screenshot_tag, vcl_string(""));
+        det_record->add("bnd_screenshot", bnd_screenshot_tag, std::string(""));
       }
       det_record->set_value(bnd_screenshot_tag, bnd_screenshot_filename);
     } // det_record
@@ -734,38 +734,38 @@ bool dbsks_create_bnd_screenshot(const vcl_string& exp_folder)
 
 // -----------------------------------------------------------------------------
 //: Combine multiple detection records per image
-bool dbsks_combine_det_records_per_image(const vcl_string& exp_folder, 
-                                         const vcl_string& output_folder,
-                                         const vcl_string& xgraph_prototype_name)
+bool dbsks_combine_det_records_per_image(const std::string& exp_folder, 
+                                         const std::string& output_folder,
+                                         const std::string& xgraph_prototype_name)
 {
   // Annoucement
-  vcl_cout << "\nCombine det records with same object_name into one file\n";
-  vcl_cout << "\n  Experiment folder = " << exp_folder << "\n"
+  std::cout << "\nCombine det records with same object_name into one file\n";
+  std::cout << "\n  Experiment folder = " << exp_folder << "\n"
     << "\n  Output folder = " << output_folder << "\n"
     << "\n  xgraph_prototype_name = " << xgraph_prototype_name << "\n";
 
   // Collect names of all detection records in folder
-  vcl_vector<vcl_string > list_det_record_filename;
-  vcl_string det_record_regexp = "xml_det_record+*.xml";
+  std::vector<std::string > list_det_record_filename;
+  std::string det_record_regexp = "xml_det_record+*.xml";
   for (vul_file_iterator fn= (exp_folder + "/" + det_record_regexp); fn; ++fn) 
   {
-    vcl_string det_record_file = fn();
-    vcl_string det_record_filename = vul_file::strip_directory(det_record_file);
+    std::string det_record_file = fn();
+    std::string det_record_filename = vul_file::strip_directory(det_record_file);
     list_det_record_filename.push_back(det_record_filename);
   }
 
   // Now read the files and group the records by object names
-  vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > > map_obj_to_records;
+  std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > > map_obj_to_records;
   for (unsigned i_file =0; i_file < list_det_record_filename.size(); ++i_file)
   {
-    vcl_string det_record_filename = list_det_record_filename[i_file];
+    std::string det_record_filename = list_det_record_filename[i_file];
     
     // Some annoucement
-    vcl_cout << "\n>> Processing det_record_file = " << det_record_filename << vcl_endl;
+    std::cout << "\n>> Processing det_record_file = " << det_record_filename << std::endl;
 
     // Load the detection record file
-    vcl_string det_record_file = exp_folder + "/" + det_record_filename;
-    vcl_vector<dbsks_xshock_det_record_sptr > list_det_record;
+    std::string det_record_file = exp_folder + "/" + det_record_filename;
+    std::vector<dbsks_xshock_det_record_sptr > list_det_record;
     x_read(det_record_file, list_det_record);
 
     // Group the record by their object name
@@ -774,7 +774,7 @@ bool dbsks_combine_det_records_per_image(const vcl_string& exp_folder,
       dbsks_xshock_det_record_sptr det_record = list_det_record[m];
 
       // Retrieve the image (object) name
-      vcl_string object_name = "";
+      std::string object_name = "";
       det_record->get_value("object_name", object_name);
 
       map_obj_to_records[object_name].push_back(det_record);
@@ -782,17 +782,17 @@ bool dbsks_combine_det_records_per_image(const vcl_string& exp_folder,
   } // det_record_file
 
   // Save the new record files
-  for (vcl_map<vcl_string, vcl_vector<dbsks_xshock_det_record_sptr > >::iterator iter =
+  for (std::map<std::string, std::vector<dbsks_xshock_det_record_sptr > >::iterator iter =
     map_obj_to_records.begin(); iter != map_obj_to_records.end(); ++iter)
   {
-    vcl_string object_name = iter->first;
+    std::string object_name = iter->first;
 
     // name pattern: xml_det_record+mugs_blue.xgraph.0+applelogos_another.xml
-    vcl_string det_record_filename = "xml_det_record+" + 
+    std::string det_record_filename = "xml_det_record+" + 
       xgraph_prototype_name + "+" +
       object_name + ".xml";
 
-    vcl_string det_record_file = output_folder + "/" + det_record_filename;
+    std::string det_record_file = output_folder + "/" + det_record_filename;
 
     // save the file
     x_write(det_record_file, iter->second);
@@ -807,11 +807,11 @@ bool dbsks_combine_det_records_per_image(const vcl_string& exp_folder,
 //: Filter detection results using geometric constraints;
 bool dbsks_filter_dets_using_geometric_constraints()
 {
-  vcl_string xgraph_geom_file = //"D:/vision/projects/symseg/xshock/xshock-graph/xgraph_geom_model-mugs.xml";
+  std::string xgraph_geom_file = //"D:/vision/projects/symseg/xshock/xshock-graph/xgraph_geom_model-mugs.xml";
   "v:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/mugs-xgraph/xgraph_geom_model-mugs-v2.xml";
-  vcl_string prototype_xgraph_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/mugs-xgraph/mugs_apple.xgraph.0.xml";
+  std::string prototype_xgraph_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/mugs-xgraph/mugs_apple.xgraph.0.xml";
 
-  vcl_string test_xgraph_file = "D:/vision/projects/symseg/xshock/xshock-experiments/exp_86t_test_exemplars/mugs_blue.xgraph.0+mugs_tdnkitchen/mugs_blue.xgraph.0+mugs_tdnkitchen.0.xml";
+  std::string test_xgraph_file = "D:/vision/projects/symseg/xshock/xshock-experiments/exp_86t_test_exemplars/mugs_blue.xgraph.0+mugs_tdnkitchen/mugs_blue.xgraph.0+mugs_tdnkitchen.0.xml";
 
   //test_xgraph_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/mugs-xgraph/mugs_mat.xgraph.0.xml";
 
@@ -831,16 +831,16 @@ bool dbsks_filter_dets_using_geometric_constraints()
   dbsks_load_xgraph(test_xgraph_file, test_xgraph);
   test_xgraph->compute_vertex_depths(xgraph_geom->root_vid());
 
-  double cur_graph_size = vcl_sqrt(test_xgraph->area());
+  double cur_graph_size = std::sqrt(test_xgraph->area());
   double model_graph_size = 100; // hack for now.
 
   //test_xgraph->scale_up(0, 0, model_graph_size / cur_graph_size);
   test_xgraph->scale_up(0, 0, 64.0 / 200);
 
 
-  vcl_cout << "\nCheck geometric constraint for each edge of test xgraph:\n";
-  const vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  for (vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::const_iterator iter = map_edge2geom.begin();
+  std::cout << "\nCheck geometric constraint for each edge of test xgraph:\n";
+  const std::map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  for (std::map<unsigned, dbsks_xfrag_geom_model_sptr >::const_iterator iter = map_edge2geom.begin();
     iter != map_edge2geom.end(); ++iter)
   {
     unsigned eid = iter->first;
@@ -857,7 +857,7 @@ bool dbsks_filter_dets_using_geometric_constraints()
     dbsksp_xshock_fragment xfrag(xdesc_p, xdesc_c);
 
     bool pass = xfrag_geom->check_constraints(xfrag);
-    vcl_cout << "eid = " << eid << (pass ? " yes " : " no ") << "\n";
+    std::cout << "eid = " << eid << (pass ? " yes " : " no ") << "\n";
 
   }
   

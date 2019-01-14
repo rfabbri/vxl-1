@@ -26,7 +26,7 @@
 #include <bvam/pro/bvam_save_occupancy_raw_process.h>
 
 // datatypes
-#include <vcl_string.h>
+#include <string>
 #include <vil/vil_image_view_base.h>
 #include <bvam/bvam_voxel_world.h>
 #include <vpgl/vpgl_camera.h>
@@ -65,7 +65,7 @@ PyObject *
 register_datatypes(PyObject *self, PyObject *args)
 {
   REGISTER_DATATYPE(bool);
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE(std::string);
   REGISTER_DATATYPE(int);
   REGISTER_DATATYPE(long);
   REGISTER_DATATYPE(float);

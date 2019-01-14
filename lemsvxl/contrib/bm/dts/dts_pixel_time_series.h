@@ -61,12 +61,12 @@ public:
         dts_time_series<time_type,math_type,dim>
             time_series_type;
 
-    typedef vcl_map<vgl_point_2d<pixelType>,
+    typedef std::map<vgl_point_2d<pixelType>,
                 dts_time_series_base_sptr,
                     compare_type > 
                         pixel_time_series_map_type;
 
-    virtual vcl_size_t size() const
+    virtual std::size_t size() const
     { return this->pixel_time_series_map.size(); }
 
     virtual unsigned dimension()
@@ -77,7 +77,7 @@ public:
     virtual void b_read( vsl_b_istream& is );
 
     
-    virtual bool write_txt( vcl_string const& filename,
+    virtual bool write_txt( std::string const& filename,
 								vgl_point_2d<unsigned> const& pt );
 
     void insert( vgl_point_2d<pixelType> const& pt, 
@@ -116,12 +116,12 @@ public:
         dts_time_series<time_type,math_type,1>
             time_series_type;
 
-    typedef vcl_map<vgl_point_2d<pixelType>,
+    typedef std::map<vgl_point_2d<pixelType>,
                 dts_time_series_base_sptr,
                     compare_type > 
                         pixel_time_series_map_type;
 
-    virtual vcl_size_t size() const
+    virtual std::size_t size() const
     { return this->pixel_time_series_map.size(); }
 
     virtual unsigned dimension()
@@ -131,7 +131,7 @@ public:
 
     virtual void b_read( vsl_b_istream& is );
 
-	virtual bool write_txt( vcl_string const& filename,
+	virtual bool write_txt( std::string const& filename,
 								vgl_point_2d<unsigned> const& pt );
 
     void insert( vgl_point_2d<pixelType> const& pt, 

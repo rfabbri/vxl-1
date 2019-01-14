@@ -13,7 +13,7 @@
 int main()
 {
 	dbdet_graddt_levelset2d_segmentation seg;
-	vcl_vector<dbdet_3d_edge_sptr> edges;
+	std::vector<dbdet_3d_edge_sptr> edges;
 	dbdet_3d_edge_sptr edg = new dbdet_3d_edge;
 	int H = 11;
 	int W = 11;
@@ -28,9 +28,9 @@ int main()
 	{
 		for(int i = 0; i < W; i++)
 		{
-			vcl_cout << DT(i,j) << " ";
+			std::cout << DT(i,j) << " ";
 		}
-		vcl_cout << vcl_endl;
+		std::cout << std::endl;
 	}
 	seg.initialize(DT, 1, 1);
 	seg.set_reinitialization_frequency(1);
@@ -47,18 +47,18 @@ int main()
 	seg.set_speed(speed);
 	seg.set_stop_threshold(0.005);
 	seg.update(10);
-	vcl_cout << vcl_endl;
+	std::cout << std::endl;
 	for(int j = 0; j < H; j++)
 	{
 		for(int i = 0; i < W; i++)
 		{
-			vcl_cout << seg.get_phi()(i,j) << " ";
+			std::cout << seg.get_phi()(i,j) << " ";
 		}
-		vcl_cout << vcl_endl;
+		std::cout << std::endl;
 	}
 
-	/*vcl_cout << vcl_endl;
-	vcl_cout << vcl_endl;
+	/*std::cout << std::endl;
+	std::cout << std::endl;
 	vil_image_view<double> A(3,3);
 	vil_image_view<double> B,C,D,E;
 	double F1[2] = {1, -1};
@@ -81,29 +81,29 @@ int main()
 	{
 		for(int i = 0; i < B.ni(); i++)
 		{
-			vcl_cout << B(i,j) << " ";
+			std::cout << B(i,j) << " ";
 		}
-		vcl_cout << vcl_endl;
+		std::cout << std::endl;
 	}
-	vcl_cout << vcl_endl;
-	vcl_cout << vcl_endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
 	for(int j = 0; j < C.nj(); j++)
 		{
 			for(int i = 0; i < C.ni(); i++)
 			{
-				vcl_cout << C(i,j) << " ";
+				std::cout << C(i,j) << " ";
 			}
-			vcl_cout << vcl_endl;
+			std::cout << std::endl;
 		}
-	vcl_cout << vcl_endl;
-		vcl_cout << vcl_endl;
+	std::cout << std::endl;
+		std::cout << std::endl;
 		for(int j = 0; j < D.nj(); j++)
 			{
 				for(int i = 0; i < D.ni(); i++)
 				{
-					vcl_cout << D(i,j) << " ";
+					std::cout << D(i,j) << " ";
 				}
-				vcl_cout << vcl_endl;
+				std::cout << std::endl;
 			}*/
 	return 0;
 }

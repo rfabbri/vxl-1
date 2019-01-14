@@ -70,7 +70,7 @@ public:
   virtual ~mw_curve_tracing_tool_2() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -118,24 +118,24 @@ protected:
   bgui_vsol2D_tableau_sptr curve_tableau_r_;
   bgui_vsol2D_tableau_sptr curve_tableau_current_;
 
-  vcl_vector< vsol_polyline_2d_sptr > vsols_right_;
+  std::vector< vsol_polyline_2d_sptr > vsols_right_;
 
-  vcl_list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
-  vcl_vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
+  std::list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
+  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
+  std::list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
   vgui_style_sptr cc_style_;  //:< style for curve segts
 
 
-  vcl_list<vgui_soview2D_point *> intercept_pts_soviews_;
-  vcl_vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
+  std::list<vgui_soview2D_point *> intercept_pts_soviews_;
+  std::vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
   bool display_all_intersections_; 
 
   //: epipolar lines of curve segt points in image 1
-  vcl_vector<vgl_homg_line_2d<double> > ep_; 
-  vcl_vector<vgl_homg_line_2d<double> > ep_left_; 
+  std::vector<vgl_homg_line_2d<double> > ep_; 
+  std::vector<vgl_homg_line_2d<double> > ep_left_; 
 
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_;
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_left_;
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_;
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_left_;
 
   vgui_style_sptr ep_style_;
   bool display_all_right_epips_;
@@ -157,7 +157,7 @@ private:
   void print_index_of_candidate_curve();
   void break_curves_into_episegs();
   void break_curves_into_episegs(
-    const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
+    const std::vector< vsol_polyline_2d_sptr >  &vsols,
     const vgl_homg_point_2d<double> &e, int frame, int view) const;
 
 };

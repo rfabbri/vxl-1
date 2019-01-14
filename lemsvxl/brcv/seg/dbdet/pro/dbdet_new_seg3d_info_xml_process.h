@@ -13,8 +13,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro1/bpro1_process.h>
 
 //: 
@@ -31,7 +31,7 @@ public:
   virtual bpro1_process* clone() const;
   
   //: The name of the video process
-  virtual vcl_string name();
+  virtual std::string name();
 
   //: Returns the number of frames needed for input
   // (prior to and including the current frame)
@@ -41,9 +41,9 @@ public:
   virtual int output_frames();
 
   //: Returns a vector of strings describing the required storage class input types
-  virtual vcl_vector< vcl_string > get_input_type();
+  virtual std::vector< std::string > get_input_type();
   //: Returns a vector of strings describing the storage class output types produced
-  virtual vcl_vector< vcl_string > get_output_type();
+  virtual std::vector< std::string > get_output_type();
 
   //: Execute the process on using the storage classes already set
   virtual bool execute();

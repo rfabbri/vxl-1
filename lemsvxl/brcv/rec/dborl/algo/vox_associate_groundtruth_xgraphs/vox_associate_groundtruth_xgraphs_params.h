@@ -21,18 +21,18 @@ class vox_associate_groundtruth_xgraphs_params : public dborl_algo_params
 public:
 
     //: Constructor
-    vox_associate_groundtruth_xgraphs_params(vcl_string algo_name);
+    vox_associate_groundtruth_xgraphs_params(std::string algo_name);
 
     // MEMBER VARIABLES
 
     //: Name of input object
-    dborl_parameter<vcl_string> input_object_name_;
+    dborl_parameter<std::string> input_object_name_;
 
     // if written to this folder as opposed to object folder then the shock graph
     // gets associated to the input object.
     // if nothing is written here, nothing gets associated
-    dborl_parameter<vcl_string> output_xgraph_dir_;
-    dborl_parameter<vcl_string> input_xgraph_list_file_;
+    dborl_parameter<std::string> output_xgraph_dir_;
+    dborl_parameter<std::string> input_xgraph_list_file_;
 
 };
 

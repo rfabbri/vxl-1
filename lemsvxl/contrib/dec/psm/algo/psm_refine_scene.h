@@ -1,8 +1,8 @@
 #ifndef psm_refine_scene_h_
 #define psm_refine_scene_h_
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
+#include <vector>
+#include <set>
 
 #include <vbl/vbl_bounding_box.h>
 
@@ -18,14 +18,14 @@
 template<psm_apm_type APM>
 void psm_refine_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_point_3d<int> block_idx, bool reset_appearance = true)
 {   
-  //vcl_vector<hsds_fd_tree_node_index<3> > to_split;
-  vcl_set<hsds_fd_tree_node_index<3> > to_split;
-  //vcl_vector<psm_sample<APM> > new_vals;
+  //std::vector<hsds_fd_tree_node_index<3> > to_split;
+  std::set<hsds_fd_tree_node_index<3> > to_split;
+  //std::vector<psm_sample<APM> > new_vals;
 
-  float max_alpha_int = (float)-vcl_log(1.0 - occlusion_prob_thresh);
+  float max_alpha_int = (float)-std::log(1.0 - occlusion_prob_thresh);
 
   hsds_fd_tree<psm_sample<APM>,3> &block = scene.get_block(block_idx);
-  vcl_cout << "max levels = " << block.max_level() << vcl_endl;
+  std::cout << "max levels = " << block.max_level() << std::endl;
 
   typename hsds_fd_tree<psm_sample<APM>,3>::iterator block_it = block.begin();
   for (; block_it != block.end(); ++block_it) {
@@ -54,8 +54,8 @@ void psm_refine_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_po
       }
     }
   }
-  vcl_cout << "splitting " << to_split.size() << " cells. " << vcl_endl;
-  vcl_set<hsds_fd_tree_node_index<3> >::iterator split_it = to_split.begin();
+  std::cout << "splitting " << to_split.size() << " cells. " << std::endl;
+  std::set<hsds_fd_tree_node_index<3> >::iterator split_it = to_split.begin();
   for (; split_it != to_split.end(); ++split_it) {
     psm_sample<APM> old_sample = block[*split_it];
     vbl_bounding_box<double,3> cell_bb = block.cell_bounding_box(*split_it);
@@ -75,8 +75,8 @@ void psm_refine_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, vgl_po
 template<psm_apm_type APM>
 void psm_refine_scene(psm_scene<APM> &scene, float occlusion_prob_thresh, bool reset_appearance = true)
 {
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
   for (; vbit != valid_blocks.end(); ++vbit) {
     psm_refine_scene(scene, occlusion_prob_thresh,*vbit,reset_appearance);
   }

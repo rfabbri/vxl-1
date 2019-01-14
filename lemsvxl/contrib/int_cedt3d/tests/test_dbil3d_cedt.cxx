@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vul/vul_get_timestamp.h>
 #include <vnl/vnl_random.h>
 #include <vil3d/vil3d_image_view.h>
@@ -87,7 +87,7 @@ if(cube){
         double some_number = rand.drand32(10,25);
         int dim = (int)(some_number); 
         int nsources =  (int)(rand.drand32(1,some_number));
-        vcl_cout << "Dimension : " << dim << " Sources : " << nsources << vcl_endl;
+        std::cout << "Dimension : " << dim << " Sources : " << nsources << std::endl;
         randomPoints(dt_image,dim,nsources, rand);
 }
 else{
@@ -99,15 +99,15 @@ else{
         int dimz = (int)(some_number); 
 
         int nsources =  (int)(rand.drand32(1,some_number));
-        vcl_cout << "Dimension : " << dimx << " " << dimy << " " << dimz 
-        << " Sources : " << nsources << vcl_endl;
+        std::cout << "Dimension : " << dimx << " " << dimy << " " << dimz 
+        << " Sources : " << nsources << std::endl;
         randomPoints_noncube(dt_image,dimx,dimy,dimz,nsources, rand);
 }
 
 
         vil3d_image_view<double> brute_dt_image(dt_image.ni(),dt_image.nj(),dt_image.nk());
 
-         vcl_cout << "* computation of exact DT" << vcl_endl;
+         std::cout << "* computation of exact DT" << std::endl;
         /*-------------------
          * computation of exact DT
          */
@@ -122,24 +122,24 @@ else{
         //----------------------------
 
 
-//        vil3d_print_all(vcl_cout, brute_dt_image);
+//        vil3d_print_all(std::cout, brute_dt_image);
 
-        vcl_cout << "dbil3d_cedt " << vcl_endl;
+        std::cout << "dbil3d_cedt " << std::endl;
         vil3d_image_view<int> offsets;
         bool take_sqrt = false;
         bool get_offsets = true;
         dbil3d_cedt(dt_image, offsets, take_sqrt,get_offsets);
 
- //       vil3d_print_all(vcl_cout, dt_image);
+ //       vil3d_print_all(std::cout, dt_image);
 
-         vcl_cout << "differences " << vcl_endl;
+         std::cout << "differences " << std::endl;
         double sumsq  = 0;
         double max = -1;
 
         for(int k=0; k<static_cast<int>(brute_dt_image.nk()); k++) {
                 for(int j=0; j<static_cast<int>(brute_dt_image.nj()); j++) {
                         for(int i=0; i<static_cast<int>(brute_dt_image.ni()); i++) {
-                                diff = vcl_fabs(brute_dt_image(i,j,k) - dt_image(i,j,k));
+                                diff = std::fabs(brute_dt_image(i,j,k) - dt_image(i,j,k));
                                 sumsq +=  diff;
                                 if( diff > max || max == -1)
                                             max = diff;

@@ -8,7 +8,7 @@
 #include <rgrl/rgrl_cast.h>
 #include <rgrl/rgrl_transformation.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 //: Default Constructor
@@ -67,7 +67,7 @@ vidreg_feature_edgel::absolute_signature_weight(rgrl_feature_sptr other) const
   if(dir_wgt <= 0.0)
     return 0.0;
 
-  dir_wgt = vcl_asin(dir_wgt);
+  dir_wgt = std::asin(dir_wgt);
   dir_wgt *= vnl_math::two_over_pi;
 
   // should also use magnitude somehow

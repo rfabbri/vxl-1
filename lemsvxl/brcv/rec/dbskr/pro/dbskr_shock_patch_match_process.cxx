@@ -10,8 +10,8 @@
 #include <dbskr/pro/dbskr_shock_patch_match_storage.h>
 #include <dbskr/algo/dbskr_shock_patch_match.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 
 dbskr_shock_patch_match_process::
@@ -21,7 +21,7 @@ dbskr_shock_patch_match_process() : bpro1_process()
     if ( !parameters()->add( "Model Bin file:" , "-model_filepath" , bpro1_filepath("", "*.bin")) ||
          !parameters()->add( "Query Bin file:" , "-query_filepath" , bpro1_filepath("", "*.bin")) ||
          !parameters()->add( "Output folder:"  , "-output_folder"  , bpro1_filepath("", "")) ||
-         !parameters()->add( "Output Sim file prefix:" , "-output_prefix", vcl_string("")) ||
+         !parameters()->add( "Output Sim file prefix:" , "-output_prefix", std::string("")) ||
          !parameters()->add( "shock graph pruning threshold" , "-prune_thres", (float) 0.8f ) ||
          !parameters()->add( "normalize: using reconst bnd length (else total splice cost)" , "-norm_reconst", (bool) true ) ||
          !parameters()->add("Sampling ds to reconstruct the scurve", "-scurve_sample_ds", (float) 5.0f ) ||
@@ -36,7 +36,7 @@ dbskr_shock_patch_match_process() : bpro1_process()
         )
     {
         
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 
     }
 
@@ -49,16 +49,16 @@ dbskr_shock_patch_match_process::clone() const
   return new dbskr_shock_patch_match_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_shock_patch_match_process::get_input_type()
+std::vector< std::string > dbskr_shock_patch_match_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_shock_patch_match_process::get_output_type()
+std::vector< std::string > dbskr_shock_patch_match_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
@@ -95,19 +95,19 @@ bool dbskr_shock_patch_match_process::execute()
     bpro1_filepath output_folder_filepath;
     parameters()->get_value("-output_folder", output_folder_filepath);
 
-    vcl_string output_prefix;
+    std::string output_prefix;
     parameters()->get_value("-output_prefix", output_prefix);
  
-    vcl_string output_folder = output_folder_filepath.path;
-    vcl_string output_name   = output_folder + "/" + output_prefix + ".bin";
+    std::string output_folder = output_folder_filepath.path;
+    std::string output_name   = output_folder + "/" + output_prefix + ".bin";
 
     // ------------------ Load the model prototype ----------------------------
-    vcl_string storage_end = "patch_strg.bin";
+    std::string storage_end = "patch_strg.bin";
 
     // Grap file from parameters list
     bpro1_filepath model_filepath;
     parameters()->get_value( "-model_filepath" , model_filepath);
-    vcl_string model_file = model_filepath.path;
+    std::string model_file = model_filepath.path;
 
     // Read in binary files
     dbskr_shock_patch_storage_sptr proto_st = dbskr_shock_patch_storage_new();
@@ -117,7 +117,7 @@ bool dbskr_shock_patch_match_process::execute()
 
     // Throw an error for zero patches
     if (!proto_st->size()) {
-        vcl_cerr << "zero patches in proto st!!!: " << model_file << vcl_endl;
+        std::cerr << "zero patches in proto st!!!: " << model_file << std::endl;
         return false;
     }
 
@@ -131,7 +131,7 @@ bool dbskr_shock_patch_match_process::execute()
          edit_params.scurve_interpolate_ds_))
     {
      
-        vcl_cerr<<"Error loading shock patches"<<vcl_endl;
+        std::cerr<<"Error loading shock patches"<<std::endl;
         return false;
 
     }
@@ -139,7 +139,7 @@ bool dbskr_shock_patch_match_process::execute()
     // ------------------ Load the query patches ------------------------------
     bpro1_filepath query_filepath;
     parameters()->get_value( "-query_filepath" , query_filepath);
-    vcl_string query_file = query_filepath.path;
+    std::string query_file = query_filepath.path;
 
     // Read in binary files
     dbskr_shock_patch_storage_sptr query_st = dbskr_shock_patch_storage_new();
@@ -149,7 +149,7 @@ bool dbskr_shock_patch_match_process::execute()
 
     // Throw an error for zero patches
     if (!query_st->size()) {
-        vcl_cerr << "zero patches in query st!!!: " << query_file << vcl_endl;
+        std::cerr << "zero patches in query st!!!: " << query_file << std::endl;
         return false;
     }
 
@@ -163,14 +163,14 @@ bool dbskr_shock_patch_match_process::execute()
          edit_params.scurve_interpolate_ds_))
     {
      
-        vcl_cerr<<"Error loading query shock patches"<<vcl_endl;
+        std::cerr<<"Error loading query shock patches"<<std::endl;
         return false;
 
     }
 
     // ------------------ Perform matching ------------------------------
-    vcl_cout<<"Matching " << proto_st->size()<< " model patches to " 
-            << query_st->size()<<" query patches"<<vcl_endl;
+    std::cout<<"Matching " << proto_st->size()<< " model patches to " 
+            << query_st->size()<<" query patches"<<std::endl;
 
     //: create match structure
     dbskr_shock_patch_match_sptr match = new dbskr_shock_patch_match();
@@ -181,8 +181,8 @@ bool dbskr_shock_patch_match_process::execute()
     match->shock_pruning_threshold_ = shock_prune_thres;
 
     // : Do actual matching now
-    vcl_vector<dbskr_shock_patch_sptr>& pv1 = proto_st->get_patches();
-    vcl_vector<dbskr_shock_patch_sptr>& pv2 = query_st->get_patches();
+    std::vector<dbskr_shock_patch_sptr>& pv1 = proto_st->get_patches();
+    std::vector<dbskr_shock_patch_sptr>& pv2 = query_st->get_patches();
   
     for (unsigned i = 0; i < pv1.size(); i++) 
     {
@@ -201,14 +201,14 @@ bool dbskr_shock_patch_match_process::execute()
     
 
     //: prepare id maps for this match
-    vcl_map<int, dbskr_shock_patch_sptr> model_map;
+    std::map<int, dbskr_shock_patch_sptr> model_map;
     for (unsigned ii = 0; ii < proto_st->size(); ii++)
     {
         model_map[proto_st->get_patch(ii)->id()] = proto_st->get_patch(ii);
     }
     match->set_id_map1(model_map);
 
-    vcl_map<int, dbskr_shock_patch_sptr> query_map;
+    std::map<int, dbskr_shock_patch_sptr> query_map;
     for (unsigned ii = 0; ii < query_st->size(); ii++)
     { 
         query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);

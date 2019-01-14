@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
+#include <iostream>
+#include <streambuf>
 #include <math.h>
 #include <mw/algo/mw_qualitative_epipolar.h>
 #include <bmcsd/bmcsd_util.h>
@@ -19,7 +19,7 @@
 
 extern void _main();
 
-static mxArray *vgl2matlab( const vcl_list<vgl_polygon<double> > &mypolys);
+static mxArray *vgl2matlab( const std::list<vgl_polygon<double> > &mypolys);
 
 static
 bool mymex(
@@ -33,7 +33,7 @@ bool mymex(
 {
 
 
-  vcl_vector<vsol_point_2d_sptr> p0(n),p1(n);
+  std::vector<vsol_point_2d_sptr> p0(n),p1(n);
   for (unsigned i=0; i < (unsigned)n; ++i) {
     p0[i] = new vsol_point_2d(pts0[i],pts0[i+n]);
 //    mexPrintf("p0: %g,%g\t\t",p0[i]->x(),p0[i]->y());
@@ -60,8 +60,8 @@ bool mymex(
   //  Classic Fundamental Matrix Estimation
   // ---------------------------------------------------------------
 
-//  vcl_vector<vgl_point_2d<double> > vp0(n),vp1(n);
-//  vcl_vector<vgl_homg_point_2d<double> > vp0_homg(n),vp1_homg(n);
+//  std::vector<vgl_point_2d<double> > vp0(n),vp1(n);
+//  std::vector<vgl_homg_point_2d<double> > vp0_homg(n),vp1_homg(n);
 
 //  for (unsigned i=0; i < (unsigned)n; ++i) {
 //    vp0[i] = vgl_point_2d<double>(pts0[i],pts0[i+n]);
@@ -101,7 +101,7 @@ bool mymex(
     /*
       // -- VPGL 7 point Code not using RANSAC at all
     {
-      vcl_vector< vpgl_fundamental_matrix<double>* > v_fm;
+      std::vector< vpgl_fundamental_matrix<double>* > v_fm;
       
       vpgl_fm_compute_7_point fmc7(true);
       retval = fmc7.compute(vp0_homg,vp1_homg,v_fm);
@@ -115,7 +115,7 @@ bool mymex(
     }
     */
 
-    vcl_cout << "Fundamental Matrix from VPGL \n" << fm.get_matrix() << vcl_endl;
+    std::cout << "Fundamental Matrix from VPGL \n" << fm.get_matrix() << std::endl;
     // Write the fundamental matrix to matlab
     //mexPrintf("Fm: ");
     for (unsigned i=0; i < 9; ++i) {
@@ -132,14 +132,14 @@ bool mymex(
 
   {
     FMatrix f;
-    vcl_vector<FMatrix *> l; 
+    std::vector<FMatrix *> l; 
 
     // Perform the fit using the normalised 8-point estimator.
     {
       FMatrixComputeLinear computor(true,true);
       f = computor.compute(vp0_homg, vp1_homg);
 
-      vcl_cout << "FMatrixComputeLinear:\nF = " << f << vcl_endl;
+      std::cout << "FMatrixComputeLinear:\nF = " << f << std::endl;
     }
 
 
@@ -157,7 +157,7 @@ bool mymex(
       f = *(l[0]);
       f.set_rank2_using_svd();
 
-      vcl_cout << "FMatrixCompute7Point:\nF = " << f << vcl_endl;
+      std::cout << "FMatrixCompute7Point:\nF = " << f << std::endl;
     }
     */
 
@@ -179,7 +179,7 @@ bool mymex(
     double d = 0;
     for (unsigned int i = 0; i < vp0_homg.size(); ++i)
       d += f.image1_epipolar_distance_squared(vp0_homg[i], vp1_homg[i]);
-    vcl_cout << "Error = " << d/vp0_homg.size() << vcl_endl;
+    std::cout << "Error = " << d/vp0_homg.size() << std::endl;
 
     // Write the fundamental matrix to matlab
     //mexPrintf("Fm: ");
@@ -200,7 +200,7 @@ bool mymex(
 
 //: Vgl list of polygons to matlab cell representation
 static mxArray *vgl2matlab(
-    const vcl_list<vgl_polygon<double> > &mypolys
+    const std::list<vgl_polygon<double> > &mypolys
     )
 {
 
@@ -211,7 +211,7 @@ static mxArray *vgl2matlab(
 
   mxArray *mpoly;
 
-  vcl_list< vgl_polygon<double> > :: const_iterator itr=mypolys.begin();
+  std::list< vgl_polygon<double> > :: const_iterator itr=mypolys.begin();
 
   mwSize n_polys = mypolys.size();
   mpoly = mxCreateCellArray(1,&n_polys);
@@ -287,16 +287,16 @@ void mexFunction(
   double *pts1= (double *) mxGetPr(prhs[1]);
   double *box = (double *) mxGetPr(prhs[2]);
 
-  vcl_cout.sync_with_stdio(true);
-  vcl_cerr.sync_with_stdio(true);
+  std::cout.sync_with_stdio(true);
+  std::cerr.sync_with_stdio(true);
 
-  vcl_streambuf* cout_sbuf = vcl_cout.rdbuf();
-  vcl_stringbuf myout_sbuf;
-  vcl_cout.rdbuf(&myout_sbuf);
+  std::streambuf* cout_sbuf = std::cout.rdbuf();
+  std::stringbuf myout_sbuf;
+  std::cout.rdbuf(&myout_sbuf);
 
-  vcl_streambuf* cerr_sbuf = vcl_cerr.rdbuf();
-  vcl_stringbuf myerr_sbuf;
-  vcl_cerr.rdbuf(&myerr_sbuf);
+  std::streambuf* cerr_sbuf = std::cerr.rdbuf();
+  std::stringbuf myerr_sbuf;
+  std::cerr.rdbuf(&myerr_sbuf);
 
   bool retval = mymex(pts0,pts1,p0_nrows,box,&(plhs[0]),&(plhs[1]));
 
@@ -304,10 +304,10 @@ void mexFunction(
   mexPrintf("%s",myout_sbuf.str().c_str());
   mexPrintf("%s",myerr_sbuf.str().c_str());
 
-  vcl_cout.rdbuf(cout_sbuf);
-  vcl_cerr.rdbuf(cerr_sbuf);
-  vcl_flush(vcl_cout);
-  vcl_flush(vcl_cerr);
+  std::cout.rdbuf(cout_sbuf);
+  std::cerr.rdbuf(cerr_sbuf);
+  std::flush(std::cout);
+  std::flush(std::cerr);
 
   if (!retval)
     mexErrMsgTxt("Problem with computing epipolar region\n");

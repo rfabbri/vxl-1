@@ -2,9 +2,9 @@
 
 #include"ncn1_feature.h"
 
-void ncn1_feature::save_feature_dat( vcl_string const& filename )
+void ncn1_feature::save_feature_dat( std::string const& filename )
 {
-    vcl_ofstream of(filename.c_str());
+    std::ofstream of(filename.c_str());
 
     unsigned nframes = this->feature_map_.size();
     unsigned ntargets = this->feature_map_[0].size();
@@ -38,7 +38,7 @@ void ncn1_feature::save_feature_dat( vcl_string const& filename )
         unsigned target_cnt = 1;
         for( ; fv_itr != fv_end; ++fv_itr )
         {
-            //vcl_cout << "target = " << fv_itr->first << vcl_endl;
+            //std::cout << "target = " << fv_itr->first << std::endl;
             intensity_vector_type intensity_vector = fv_itr->second;
             intensity_vector_type::const_iterator intensity_itr;
             intensity_vector_type::const_iterator intensity_end = intensity_vector.end();
@@ -47,7 +47,7 @@ void ncn1_feature::save_feature_dat( vcl_string const& filename )
             for( intensity_itr = intensity_vector.begin(); intensity_itr != intensity_end; ++intensity_itr )
             {
                 of << unsigned(*intensity_itr);
-                //vcl_cout << '\t' << unsigned(*intensity_itr) << vcl_endl;
+                //std::cout << '\t' << unsigned(*intensity_itr) << std::endl;
                 if( intensity_itr != intensity_end - 1)
                     of << ", ";
             }//end intensity vector iteration
@@ -69,20 +69,20 @@ void ncn1_feature::reduce_features_2d()
     unsigned ndimensions = this->ndimensions();
     unsigned dimensions_to_retain = 2;
 
-    vcl_cout << "Reducing " << ndimensions << " dimensional feature vector to " << dimensions_to_retain << " dimensions..." << vcl_endl;
+    std::cout << "Reducing " << ndimensions << " dimensional feature vector to " << dimensions_to_retain << " dimensions..." << std::endl;
 
     vnl_matrix<double> target_frame_matrix(nframes*ntargets,ndimensions);
 
     //target vector to ease indexing
 
-    vcl_vector<vgl_point_2d<unsigned> > target_pixel_vector;
+    std::vector<vgl_point_2d<unsigned> > target_pixel_vector;
     for( feature_vector_type::iterator target_itr = feature_map_[0].begin(); target_itr != feature_map_[0].end(); ++target_itr ) 
         target_pixel_vector.push_back(target_itr->first);
 
     feature_map_type::const_iterator frame_itr;
     feature_map_type::const_iterator frame_end = this->feature_map_.end();
 
-    vcl_cout << "Forming Target/Frame Matrix..." << vcl_endl;
+    std::cout << "Forming Target/Frame Matrix..." << std::endl;
     unsigned row_indx;
     for( frame_itr = this->feature_map_.begin(), row_indx = 0; frame_itr != frame_end; ++frame_itr )
     {
@@ -104,7 +104,7 @@ void ncn1_feature::reduce_features_2d()
     //need to precondition the target_frame_matrix so that it will have a good condition number. 
     //We want a square matrix with zero mean and values ranging between -1 and 1 => construct covariance matrix.
 
-    vcl_cout << "Zeroing Target/Frame Matrix..." << vcl_endl;
+    std::cout << "Zeroing Target/Frame Matrix..." << std::endl;
 
     vnl_matrix<double> zeroed_matrix(target_frame_matrix.rows(),target_frame_matrix.cols());
     
@@ -124,28 +124,28 @@ void ncn1_feature::reduce_features_2d()
             zeroed_matrix(row,col) = target_frame_matrix(row,col) - mean;
     }//end column iteration
    
-    vcl_cout << "Building Covariance Matrix... " << vcl_endl;
+    std::cout << "Building Covariance Matrix... " << std::endl;
     vnl_matrix<double> covariance_matrix(ndimensions,ndimensions);
     covariance_matrix = zeroed_matrix.transpose() * zeroed_matrix;
     
     //can now do svd on the feature covariance matrix and reduce the dimensionality of each feature vector
-    vcl_cout << "Computing SVD of Covariance Matrix..." << vcl_endl;
+    std::cout << "Computing SVD of Covariance Matrix..." << std::endl;
     vnl_svd<double> svd(covariance_matrix);
 
-    vcl_cout << "Compute PCA using the result of SVD..." << vcl_endl;
+    std::cout << "Compute PCA using the result of SVD..." << std::endl;
     vnl_matrix<double> U = svd.U();
     vnl_matrix<double> reduced_U(ndimensions,dimensions_to_retain);
     vnl_matrix<double> reduced_dimensionality_point_matrix(target_frame_matrix.rows(),dimensions_to_retain);
     U.extract(reduced_U);
     reduced_dimensionality_point_matrix = target_frame_matrix * reduced_U;
 
-    vcl_cout << vcl_endl;
-    //vcl_cout << reduced_dimensionality_point_matrix << vcl_endl;
-    vcl_cout << "1 % 4  = " << 1%4 << vcl_endl;
+    std::cout << std::endl;
+    //std::cout << reduced_dimensionality_point_matrix << std::endl;
+    std::cout << "1 % 4  = " << 1%4 << std::endl;
     //now re-organize and place into the frame_reduced_feature_map
     frame_reduced_feature_map_2d_type temp_reduced_frame_map;
 
-    vcl_cout << "Re-organizing reduced points into reduced frame/target map..." << vcl_endl;
+    std::cout << "Re-organizing reduced points into reduced frame/target map..." << std::endl;
     
     //for( unsigned row_indx = 0; row_indx < reduced_dimensionality_point_matrix.rows(); ++row_indx )
     //{
@@ -169,7 +169,7 @@ void ncn1_feature::reduce_features_2d()
             unsigned linear_indx = frame_indx*ntargets + target_indx;
             vgl_point_2d<double> temp_reduced_pt;
             vgl_point_2d<unsigned> temp_target_coord;
-            vcl_cout << reduced_dimensionality_point_matrix(linear_indx,0) << '\t' << reduced_dimensionality_point_matrix(linear_indx,1) << vcl_endl;
+            std::cout << reduced_dimensionality_point_matrix(linear_indx,0) << '\t' << reduced_dimensionality_point_matrix(linear_indx,1) << std::endl;
             temp_reduced_pt.set(reduced_dimensionality_point_matrix(linear_indx,0),reduced_dimensionality_point_matrix(linear_indx,1));
             temp_target_coord.set(target_pixel_vector[target_indx].x(),target_pixel_vector[target_indx].y());
             temp_target_map[temp_target_coord] = temp_reduced_pt;
@@ -179,16 +179,16 @@ void ncn1_feature::reduce_features_2d()
         
     this->frame_feature_map_2d_= temp_frame_map;
         
-    vcl_cout << "Dimensionality Reduction Complete..." << vcl_endl;
+    std::cout << "Dimensionality Reduction Complete..." << std::endl;
 
     
      
 }//end ncn1_feature::reduce_features_2d()
 
 
-void ncn1_feature::save_2d_pts_dat( vcl_string const& filename )
+void ncn1_feature::save_2d_pts_dat( std::string const& filename )
 {
-    vcl_ofstream os(filename.c_str(),vcl_ios::out);
+    std::ofstream os(filename.c_str(),std::ios::out);
 
     frame_reduced_feature_map_2d_type::const_iterator frame_itr;
     frame_reduced_feature_map_2d_type::const_iterator frame_end = this->frame_feature_map_2d_.end();

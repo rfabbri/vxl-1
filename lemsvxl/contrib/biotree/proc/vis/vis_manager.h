@@ -9,7 +9,7 @@
 // \date    2005-05-04
 // 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgui/vgui_deck_tableau_sptr.h>
 #include <vgui/vgui_range_map_params_sptr.h>
 #include <vgui/vgui_grid_tableau.h>
@@ -21,7 +21,7 @@
 #include <vgl/vgl_box_3d.h>
 #include <bgui3d/bgui3d_examiner_tableau.h>
 #include <imgr/file_formats/imgr_isq_file_format.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 class vgui_window;
 
@@ -63,7 +63,7 @@ private:
   int file_type_;
 
   //: a deck of image tableaus
-  vcl_vector<vgui_image_tableau_sptr> img_tabs_;
+  std::vector<vgui_image_tableau_sptr> img_tabs_;
 
   bool stop_cine_;
   static vis_manager *instance_;
@@ -79,7 +79,7 @@ private:
   float x1_, y1_, x2_, y2_;
 
   //: store picked corner points
-  vcl_vector<vgl_point_3d<double> > corners_;
+  std::vector<vgl_point_3d<double> > corners_;
 
   vgl_box_3d<double> bounding_box_;
 

@@ -4,7 +4,7 @@
 #ifndef dbsk3d_process_h_
 #define dbsk3d_process_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/dbmsh3d_richmesh.h>
 #include <dbmsh3d/pro/dbmsh3d_process.h>
@@ -172,7 +172,7 @@ public:
 
   //====== Reset the Object ======
   virtual void reset_mesh () {
-    //vul_printf (vcl_cout, "reset dbsk3d_pro::mesh.\n");
+    //vul_printf (std::cout, "reset dbsk3d_pro::mesh.\n");
     delete mesh_;
     mesh_ = new dbmsh3d_mesh ();
     fs_mesh_->set_bnd_mesh (mesh_);
@@ -232,7 +232,7 @@ public:
   bool shock_detect_flow_sheet ();
 
   void add_bndsphere (const float radius_ratio, const int nsample_ratio);
-  bool fs_recover_qhull (vcl_string filename = "");
+  bool fs_recover_qhull (std::string filename = "");
   
   void run_rmin_trim_xforms (const float rmin_ratio, const bool reasgn_lost_genes);
 
@@ -244,7 +244,7 @@ public:
 
   void prune_shocks_of_holes ();
 
-  bool determine_inside_shock_comp (vcl_set<int>& ith_comp_list,
+  bool determine_inside_shock_comp (std::set<int>& ith_comp_list,
                                     const bool reasgn_lost_genes);
 
   bool build_ms_hypg (const int MS_topo_opt = 0);
@@ -287,20 +287,20 @@ public:
   //: File I/O
   
   //: Save the unmeshed surface points to a -surfpt.p3d file.
-  void save_surfpt (vcl_string filename = "");
+  void save_surfpt (std::string filename = "");
 
-  bool save_p3d_with_sphere (vcl_string filename = "");
+  bool save_p3d_with_sphere (std::string filename = "");
 
-  bool save_fs (vcl_string filename = "");
-  bool load_fs (vcl_string filename = "", const bool read_gene = true);
+  bool save_fs (std::string filename = "");
+  bool load_fs (std::string filename = "", const bool read_gene = true);
 
-  void save_cms (vcl_string filename = "");
-  bool load_cms (vcl_string filename = "", const bool load_surf = true);
+  void save_cms (std::string filename = "");
+  bool load_cms (std::string filename = "", const bool load_surf = true);
 
-  void save_sg (vcl_string filename = "");
-  bool load_sg (vcl_string filename = "", const bool load_surf = true);
+  void save_sg (std::string filename = "");
+  bool load_sg (std::string filename = "", const bool load_surf = true);
 
-  bool save_fs_vtk (vcl_string filename = "");
+  bool save_fs_vtk (std::string filename = "");
 
   void print_mem_usage ();
 
@@ -309,59 +309,59 @@ public:
 //###########################################################################
 //  The Surface Mesh Reconstruction Wrapping Function.
 
-dbmsh3d_mesh* run_surface_meshing (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& input_idpts,
-                                   const vcl_vector<vcl_vector<int> >& init_faces,
-                                   const vcl_string& dirprefix,
+dbmsh3d_mesh* run_surface_meshing (const std::vector<std::pair<int, vgl_point_3d<double> > >& input_idpts,
+                                   const std::vector<std::vector<int> >& init_faces,
+                                   const std::string& dirprefix,
                                    const float radius_ratio, const int nsample_ratio,
                                    const float max_sample_ratio, const int topo_option,
                                    double& d_median);
 
 //The recovered id in the richvertex's "id" property.
-dbmsh3d_richmesh* run_surface_meshing_rm (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& input_idpts,
-                                          const vcl_vector<vcl_vector<int> >& init_faces,
-                                          const vcl_string& dirprefix,
+dbmsh3d_richmesh* run_surface_meshing_rm (const std::vector<std::pair<int, vgl_point_3d<double> > >& input_idpts,
+                                          const std::vector<std::vector<int> >& init_faces,
+                                          const std::string& dirprefix,
                                           const float radius_ratio, const int nsample_ratio,
                                           const float max_sample_ratio, const int topo_option,
                                           double& d_median);
 
 void surface_meshing_pro (dbsk3d_pro* p1,
-                          const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& input_idpts,
-                          const vcl_vector<vcl_vector<int> >& init_faces,
-                          const vcl_string& dirprefix,
+                          const std::vector<std::pair<int, vgl_point_3d<double> > >& input_idpts,
+                          const std::vector<std::vector<int> >& init_faces,
+                          const std::string& dirprefix,
                           const float radius_ratio, const int nsample_ratio,
                           const float max_sample_ratio, const int topo_option,
                           double& d_median);
 
 // ###########################################################################
 
-void get_sausage_init_faces (const vcl_vector<vgl_point_3d<double> >& input_pts, 
-                             //const vcl_vector<vcl_vector<int> >& stitchS_faces, 
+void get_sausage_init_faces (const std::vector<vgl_point_3d<double> >& input_pts, 
+                             //const std::vector<std::vector<int> >& stitchS_faces, 
                              dbmsh3d_mesh* stitchM, 
                              const vgl_box_3d<double>& sboxin, 
                              const vgl_box_3d<double>& sboxout, 
-                             vcl_vector<vcl_vector<int> >& S_initM_faces);
+                             std::vector<std::vector<int> >& S_initM_faces);
 
 // ###########################################################################
 
 void get_stitch_surface_pts (dbmsh3d_pt_bktstr* BktStruct, 
-                             vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& stitchS_idpts, 
+                             std::vector<std::pair<int, vgl_point_3d<double> > >& stitchS_idpts, 
                              const float bkt_box_ratio);
 
 void get_pts_local_bucket_meshing (const dbmsh3d_pt_bucket* B, 
-                                   const vcl_vector<vcl_vector<int> >& B_initM_faces, 
-                                   const vcl_vector<vgl_point_3d<double> >& all_pts, 
-                                   vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& B_meshing_idpts);
+                                   const std::vector<std::vector<int> >& B_initM_faces, 
+                                   const std::vector<vgl_point_3d<double> >& all_pts, 
+                                   std::vector<std::pair<int, vgl_point_3d<double> > >& B_meshing_idpts);
 
-int merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts, 
-                  vcl_vector<vcl_vector<int> >& finalM_faces, 
+int merge_meshes (const std::vector<vgl_point_3d<double> >& finalM_pts, 
+                  std::vector<std::vector<int> >& finalM_faces, 
                   dbmsh3d_mesh* M);
 
-int check_merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts, 
-                        vcl_vector<vcl_vector<int> >& finalM_faces, 
+int check_merge_meshes (const std::vector<vgl_point_3d<double> >& finalM_pts, 
+                        std::vector<std::vector<int> >& finalM_faces, 
                         dbmsh3d_mesh* M);
 
-dbmsh3d_mesh* create_intersect_mesh (const vcl_vector<vgl_point_3d<double> >& pts, 
-                                     vcl_vector<vcl_vector<int> >& faces,
+dbmsh3d_mesh* create_intersect_mesh (const std::vector<vgl_point_3d<double> >& pts, 
+                                     std::vector<std::vector<int> >& faces,
                                      const vgl_box_3d<double>& M_box);
 
 // ###########################################################################

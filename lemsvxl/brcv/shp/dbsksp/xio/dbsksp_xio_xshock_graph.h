@@ -9,18 +9,18 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     Sep 7, 2008
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 
 
 //: write a shock graph to an xml file
-bool x_write(const vcl_string& filepath, const dbsksp_xshock_graph_sptr& xg);
+bool x_write(const std::string& filepath, const dbsksp_xshock_graph_sptr& xg);
 
 //: write a shock graph to a stream
-bool x_write(vcl_ostream& os, const dbsksp_xshock_graph_sptr& xg);
+bool x_write(std::ostream& os, const dbsksp_xshock_graph_sptr& xg);
 
 //: load a shock graph from an xml file
-bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg);
+bool x_read(const std::string& filepath, dbsksp_xshock_graph_sptr& xg);
 
 #endif

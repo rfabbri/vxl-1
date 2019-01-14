@@ -27,7 +27,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const {return "Distribution Inspector";}
+  virtual std::string name() const {return "Distribution Inspector";}
 
   //: handle events
   virtual bool handle( const vgui_event & e);

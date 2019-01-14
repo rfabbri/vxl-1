@@ -9,7 +9,7 @@
 #include <xmvg/xmvg_filter_response.h>
 #include <util/proc_filter_stats.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_vector.h>
+#include <vector>
 
 static void test_proc_filter_stats(){
   //generate some responses
@@ -17,7 +17,7 @@ static void test_proc_filter_stats(){
   xmvg_filter_response<double> r2(6, 6.);
   xmvg_filter_response<double> r3(6, 10.);
 
-  vcl_vector<xmvg_filter_response<double> > resp;
+  std::vector<xmvg_filter_response<double> > resp;
   resp.push_back(r1);
   resp.push_back(r2);
   resp.push_back(r3);

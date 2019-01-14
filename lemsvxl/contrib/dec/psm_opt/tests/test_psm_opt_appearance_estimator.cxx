@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <vector>
+#include <string>
+#include <sstream>
 
 #include <psm/psm_scene.h>
 #include <psm/psm_apm_traits.h>
@@ -29,9 +29,9 @@ static void test_psm_opt_appearance_estimator()
 
   psm_simple_grey_processor apm_proc;
 
-  vcl_vector<float> obs_vec;
-  vcl_vector<float> pre_vec;
-  vcl_vector<float> vis_vec;
+  std::vector<float> obs_vec;
+  std::vector<float> pre_vec;
+  std::vector<float> vis_vec;
   psm_simple_grey model;
 
   obs_vec.push_back(0.1f);
@@ -44,20 +44,20 @@ static void test_psm_opt_appearance_estimator()
 
 
 #if 0
-  vcl_ofstream ofs("c:/research/psm/output/scales.txt");
+  std::ofstream ofs("c:/research/psm/output/scales.txt");
   for (unsigned int i=0; i<1000; ++i) {
     psm_simple_grey model(0.5,1e-4);
     weight_vec[0] = ((float)i) / 10.0f;
     apm_proc.finalize_appearance(obs_vec, weight_vec, model);
     ofs << model.sigma()*1e4 << " ";
   }
-  ofs << vcl_endl;
+  ofs << std::endl;
 #endif
 
   psm_opt_appearance_estimator<PSM_APM_SIMPLE_GREY> app_est;
   app_est.compute_appearance(obs_vec, pre_vec, vis_vec, model);
 
-  vcl_cout << "mean = " << model.color() << "  sigma = " << model.sigma() << vcl_endl;
+  std::cout << "mean = " << model.color() << "  sigma = " << model.sigma() << std::endl;
   
 }
 

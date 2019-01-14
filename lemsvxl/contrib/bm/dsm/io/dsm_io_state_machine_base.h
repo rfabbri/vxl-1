@@ -14,7 +14,7 @@
 //   <none yet>
 // \endverbatim
 #include<vsl/vsl_binary_io.h>
-#include<vcl_iostream.h>
+#include<iostream>
 #include"../dsm_manager_base.h"
 #include"../dsm_manager.h"
 
@@ -23,6 +23,6 @@ void vsl_b_read(vsl_b_istream &is, dsm_state_machine_base &state_machine_base);
 void vsl_b_write(vsl_b_ostream &os, dsm_state_machine_base const& state_machine_base);
 void vsl_b_read(vsl_b_istream &is, dsm_state_machine_base* &p);
 void vsl_b_write(vsl_b_ostream &os, const dsm_state_machine_base* p);
-void vsl_print_summary(vcl_ostream& os, const dsm_state_machine_base *p);
+void vsl_print_summary(std::ostream& os, const dsm_state_machine_base *p);
 
 #endif//DSM_IO_STATE_MACHINE_BASE_H_

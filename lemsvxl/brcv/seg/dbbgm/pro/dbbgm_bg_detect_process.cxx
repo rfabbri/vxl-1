@@ -34,7 +34,7 @@ dbbgm_bg_detect_process::dbbgm_bg_detect_process()
       !parameters()->add( "Weight Theshold" ,      "-wt" ,      0.7f        ) ||
       !parameters()->add( "Morphological Radius" , "-mradius" , 3.0f        ) ||
       !parameters()->add( "YUV Color Space" ,      "-yuv",      false )      ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -54,7 +54,7 @@ dbbgm_bg_detect_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_bg_detect_process::name()
 {
   return "Detect Background";
@@ -78,9 +78,9 @@ dbbgm_bg_detect_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_bg_detect_process::get_input_type()
+std::vector< std::string > dbbgm_bg_detect_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
 
@@ -89,9 +89,9 @@ vcl_vector< vcl_string > dbbgm_bg_detect_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_bg_detect_process::get_output_type()
+std::vector< std::string > dbbgm_bg_detect_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
 
   return to_return;
@@ -103,7 +103,7 @@ bool
 dbbgm_bg_detect_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_bg_detect_process::execute() - "
+    std::cout << "In dbbgm_bg_detect_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }

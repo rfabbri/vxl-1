@@ -30,7 +30,7 @@ class dbskr_dpmatch : public dbcvr_cvmatch_even
 
   dbskr_dpmatch();
   dbskr_dpmatch(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2);
-  dbskr_dpmatch(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2, double R1, vcl_vector<double>& lambda, int num_cost_elems);
+  dbskr_dpmatch(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2, double R1, std::vector<double>& lambda, int num_cost_elems);
   virtual ~dbskr_dpmatch();
     
   //overwritten DP functions
@@ -65,13 +65,13 @@ class dbskr_dpmatch : public dbcvr_cvmatch_even
   int num_cost_elems_;
   double R1_;
 
-  vcl_vector<double> lambda_;
+  std::vector<double> lambda_;
 
   // temp arrays to use for cost computation
-  vcl_vector <double> ds1_;
-  vcl_vector <double> ds2_;
-  vcl_vector <double> dt1_;
-  vcl_vector <double> dt2_;
+  std::vector <double> ds1_;
+  std::vector <double> ds2_;
+  std::vector <double> dt1_;
+  std::vector <double> dt2_;
 };
 
 

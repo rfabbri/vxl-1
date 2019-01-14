@@ -10,8 +10,8 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -46,12 +46,12 @@ bool psm_mfa_optimizer_process_cons(bprb_func_process& pro)
   //input[0]: The scene
   //input[1]: The filename of the text file containing list of image names
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
 
   // process has 0 outputs:
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -71,7 +71,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -82,21 +82,21 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
   psm_scene_base_sptr scene_base = pro.get_input<psm_scene_base_sptr>(0);
   psm_apm_type apm_type = scene_base->appearance_model_type();
 
-  vcl_string image_list_fname = pro.get_input<vcl_string>(1);
+  std::string image_list_fname = pro.get_input<std::string>(1);
 
   // extract list of image_ids from file
-  vcl_ifstream ifs(image_list_fname.c_str());
+  std::ifstream ifs(image_list_fname.c_str());
   if (!ifs.good()) {
-    vcl_cerr << "error opening file " << image_list_fname << vcl_endl;
+    std::cerr << "error opening file " << image_list_fname << std::endl;
     return false;
   }
-  vcl_vector<vcl_string> image_filenames;
-  vcl_vector<vcl_string> camera_filenames;
+  std::vector<std::string> image_filenames;
+  std::vector<std::string> camera_filenames;
 
   unsigned int n_images = 0;
   ifs >> n_images;
   for (unsigned int i=0; i<n_images; ++i) {
-    vcl_string img_fname, cam_fname;
+    std::string img_fname, cam_fname;
     ifs >> img_fname;
     ifs >> cam_fname;
     image_filenames.push_back(img_fname);
@@ -109,7 +109,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_mfa_optimizer<PSM_APM_SIMPLE_GREY> optimizer(*scene, image_filenames, camera_filenames, black_background);
@@ -121,7 +121,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         //psm_mfa_optimizer<PSM_APM_MOG_GREY> optimizer(*scene, image_filenames, camera_filenames, black_background);
@@ -133,7 +133,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
       {     
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         //psm_mfa_optimizer<PSM_APM_SIMPLE_RGB> optimizer(*scene, image_filenames, camera_filenames, black_background);
@@ -146,7 +146,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
       {     
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         //psm_mfa_optimizer<PSM_APM_MOG_RGB> optimizer(*scene, image_filenames, camera_filenames, black_background);
@@ -156,7 +156,7 @@ bool psm_mfa_optimizer_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_mfa_optimizer_process: unsupported appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_mfa_optimizer_process: unsupported appearance model type " << apm_type << std::endl;
       return false;
   }
 

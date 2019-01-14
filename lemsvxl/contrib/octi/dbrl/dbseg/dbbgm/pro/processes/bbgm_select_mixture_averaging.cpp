@@ -2,7 +2,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <brdb/brdb_value.h>
@@ -25,7 +25,7 @@ typedef bbgm_image_of<obs_mix_gauss_type3> imageofgaussmix3;
 //: Process construct function
 bool bbgm_select_mixture_averaging_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(2);
+  std::vector<std::string> in_types(2);
   in_types[0]="int";//path for saved distribution image
   in_types[1]="bbgm_image_sptr";//pointer to distribution image
   pro.set_input_types(in_types);
@@ -37,14 +37,14 @@ bool bbgm_select_mixture_averaging_process(bprb_func_process& pro)
 {
   // Sanity check
   if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_select_mixture_averaging::execute - invalid inputs\n";
+    std::cerr << "In bbgm_select_mixture_averaging::execute - invalid inputs\n";
     return false;
   }
 
   compact_type type =static_cast<compact_type>(pro.get_input<int>(0));
   bbgm_image_sptr bgm = pro.get_input<bbgm_image_sptr>(1);
    if (!bgm) {
-    vcl_cerr << "Null background image\n";
+    std::cerr << "Null background image\n";
     return false;
   }
   bbgm_image_of<obs_mix_gauss_type3> *input_model =

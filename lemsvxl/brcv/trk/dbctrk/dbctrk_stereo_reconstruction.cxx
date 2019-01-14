@@ -3,7 +3,7 @@
 #include<vnl/vnl_double_3x4.h>
 #include<vnl/algo/vnl_svd.h>
 #include<vnl/vnl_double_4.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include<vgl/algo/vgl_homg_operators_2d.h>
 #include <brct/brct_algos.h>
 #include <vsol/vsol_point_3d_sptr.h>
@@ -12,7 +12,7 @@ dbctrk_stereo_reconstruction::dbctrk_stereo_reconstruction()
 {
 correspondences_.clear();
 }
-dbctrk_stereo_reconstruction::dbctrk_stereo_reconstruction(vcl_vector<vcl_vector<vcl_pair <vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences)
+dbctrk_stereo_reconstruction::dbctrk_stereo_reconstruction(std::vector<std::vector<std::pair <vgl_point_2d<double>,vgl_point_2d<double> >  > > correspondences)
 {
 correspondences_=correspondences;
 }
@@ -66,19 +66,19 @@ vgl_point_3d<double> dbctrk_stereo_reconstruction::triangulate_3d_point(const vg
   
 void dbctrk_stereo_reconstruction::compute_3D_structure()
 {
-  vcl_ofstream out("c:\\pts3d.vrml");
+  std::ofstream out("c:\\pts3d.vrml");
   
-  vcl_vector<vsol_point_3d_sptr> pts3d;
-  vcl_vector<vcl_vector<vsol_point_3d_sptr> > curves3d;
+  std::vector<vsol_point_3d_sptr> pts3d;
+  std::vector<std::vector<vsol_point_3d_sptr> > curves3d;
    
-  vcl_ofstream ofile("c:\\3dpoints.txt");
+  std::ofstream ofile("c:\\3dpoints.txt");
   for(unsigned int i=0;i<correspondences_.size();i++)
   {
     pts3d.clear();
     for(unsigned int j=0;j<correspondences_[i].size();j++)
     {
       vgl_point_3d<double> p3D=triangulate_3d_point(correspondences_[i][j].first,correspondences_[i][j].second);
-      vcl_cout<<p3D.x()<<" "<<p3D.y()<<" "<<p3D.z()<<"\n";
+      std::cout<<p3D.x()<<" "<<p3D.y()<<" "<<p3D.z()<<"\n";
       vsol_point_3d_sptr p=new vsol_point_3d(p3D);
       pts3d.push_back(p);
     }

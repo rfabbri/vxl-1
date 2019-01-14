@@ -16,7 +16,7 @@
 //                               boundary it intersects with.
 // \endverbatim
 
-#include <vcl_list.h>
+#include <list>
 #include <dbsk2d/dbsk2d_ishock_belm.h>
 #include <dbsk2d/dbsk2d_ishock_elm.h>
 #include <dbsk2d/dbsk2d_ishock_node.h>

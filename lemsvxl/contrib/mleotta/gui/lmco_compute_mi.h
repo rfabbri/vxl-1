@@ -13,7 +13,7 @@
 // \endverbatim
 //-----------------------------------------------------------------------------
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_point_2d.h>
@@ -80,7 +80,7 @@ private:
   vpgl_perspective_camera<double> cam1_;
   vpgl_perspective_camera<double> cam2_;
   imesh_mesh mesh_;
-  vcl_vector<vgl_vector_3d<double> > normals_;
+  std::vector<vgl_vector_3d<double> > normals_;
   double step_;
   bool use_rotation_;
 };
@@ -91,44 +91,44 @@ void compute_point_mapping(const vpgl_perspective_camera<double>& cam1,
                            const vpgl_perspective_camera<double>& cam2,
                            unsigned int ni, unsigned int nj, double step,
                            const imesh_mesh& mesh,
-                           const vcl_vector<vgl_vector_3d<double> >& normals,
-                           vcl_vector<vgl_point_2d<double> >& img_pts1, 
-                           vcl_vector<vgl_point_2d<double> >& img_pts2);
+                           const std::vector<vgl_vector_3d<double> >& normals,
+                           std::vector<vgl_point_2d<double> >& img_pts1, 
+                           std::vector<vgl_point_2d<double> >& img_pts2);
 
 //: compute mutual info by sampling the images at the specified points
 double compute_mi_at_pts(const vil_image_resource_sptr& img1,
-                         const vcl_vector<vgl_point_2d<double> >& pts1,
+                         const std::vector<vgl_point_2d<double> >& pts1,
                          const vil_image_resource_sptr& img2,
-                         const vcl_vector<vgl_point_2d<double> >& pts2,
+                         const std::vector<vgl_point_2d<double> >& pts2,
                                unsigned int plane);
 
 
 //: Sample the image by bilinear interpolation at the requested points
 //  sampling is done in the desired plane, values are scaled into [0 1]
-void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
+void bilin_sample(const std::vector<vgl_point_2d<double> >& pts,
                   const vil_image_resource_sptr& img,
-                        vcl_vector<double>& data,
+                        std::vector<double>& data,
                         unsigned int plane);
 
 //: Sample the image by bilinear interpolation at the requested points
 //  sampling is done in the desired plane
-void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
+void bilin_sample(const std::vector<vgl_point_2d<double> >& pts,
                   const vil_image_view<float>& img,
-                        vcl_vector<double>& data,
+                        std::vector<double>& data,
                         unsigned int plane);
 
 
 //: Compute the mutual information between vectors of corresponding data
 //  it is assumed that the data are normalized to the range [0 1]
 //  \param nbins is the number of bins used in the range [0 1]
-double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, 
+double mutual_info(const std::vector<double>& d1, const std::vector<double>& d2, 
                    unsigned nbins=16);
 
 //: Compute the mutual information between vectors of corresponding data with weights
 //  it is assumed that the data are normalized to the range [0 1]
 //  \param nbins is the number of bins used in the range [0 1]
-double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<double>& d2, 
-                            const vcl_vector<double>& w1, const vcl_vector<double>& w2, 
+double mutual_info_weighted(const std::vector<double>& d1, const std::vector<double>& d2, 
+                            const std::vector<double>& w1, const std::vector<double>& w2, 
                             unsigned nbins=16);
 
 

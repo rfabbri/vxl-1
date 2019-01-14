@@ -38,7 +38,7 @@ dbrl_edge_point_tangent_bg_model_process::dbrl_edge_point_tangent_bg_model_proce
 	!parameters()->add( "Initial Weight"     ,   "-initw" ,   0.1f        ) ||
 	!parameters()->add( "Use automated sliding windows scheme" , "-autbg" , false))
     {
-	vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+	std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
     }
 
 }
@@ -51,7 +51,7 @@ dbrl_edge_point_tangent_bg_model_process::~dbrl_edge_point_tangent_bg_model_proc
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_edge_point_tangent_bg_model_process::name()
 {
     return "subpixel edge point tangent BG model builder";
@@ -75,9 +75,9 @@ dbrl_edge_point_tangent_bg_model_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process::get_input_type()
+std::vector< std::string > dbrl_edge_point_tangent_bg_model_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     
     bool auto_bg;
     parameters()->get_value( "-autbg"  ,  auto_bg );
@@ -92,9 +92,9 @@ vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process::get_input_typ
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process::get_output_type()
+std::vector< std::string > dbrl_edge_point_tangent_bg_model_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     
     bool auto_bg;
     parameters()->get_value( "-autbg"  ,  auto_bg );
@@ -112,7 +112,7 @@ dbrl_edge_point_tangent_bg_model_process::execute()
 {
     if ( input_data_.size() != 1 )
     {
-	vcl_cout << "In dbbgm_model_process::execute() - "
+	std::cout << "In dbbgm_model_process::execute() - "
 		 << "not exactly two input images \n";
 	return false;
     }
@@ -185,8 +185,8 @@ dbrl_edge_point_tangent_bg_model_process::execute()
 	edge_image_dir.vertical_cast(repo->get_data_by_name("Edge Image",-10));
 	if(!edge_image_dir)
 	{
-	    vcl_cerr << "ERROR: Cannot find the edge image - make sure you use the appropriate converter tools on the edge maps!" << vcl_endl;
-	    vcl_cout << "Returning false" << vcl_endl;
+	    std::cerr << "ERROR: Cannot find the edge image - make sure you use the appropriate converter tools on the edge maps!" << std::endl;
+	    std::cout << "Returning false" << std::endl;
 	    return false;
 	}
 
@@ -220,8 +220,8 @@ dbrl_edge_point_tangent_bg_model_process::execute()
 	edge_image_dir_current.vertical_cast(repo->get_data_by_name("Edge Image",seq[i]));
 	if(!edge_image_dir_current)
 	{
-	    vcl_cerr << "ERROR: Cannot find the edge image - make sure you use the appropriate converter tools on the edge maps!" << vcl_endl;
-	    vcl_cout << "Returning false" << vcl_endl;
+	    std::cerr << "ERROR: Cannot find the edge image - make sure you use the appropriate converter tools on the edge maps!" << std::endl;
+	    std::cout << "Returning false" << std::endl;
 	    return false;
 	}
 	vil_image_resource_sptr edge_image_dir_rsc_current = edge_image_dir_current->get_image();

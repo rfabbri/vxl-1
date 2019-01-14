@@ -1,7 +1,7 @@
 //: dbmsh3dr_scan_fuse.cxx
 //  Ming-Ching Chang
 //  May 13, 2007
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/vgl_distance.h>
 #include <vul/vul_printf.h>
 

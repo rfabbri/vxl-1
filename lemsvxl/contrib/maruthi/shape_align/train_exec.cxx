@@ -4,7 +4,7 @@
 #include <shape_align/dbskr_train_routines.h>
 
 #include <vul/vul_timer.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <vul/vul_arg.h>
 
@@ -43,7 +43,7 @@ int main( int argc, char *argv[] )
         color=dbskr_train_routines::LAB;
     }
 
-    vcl_string mfile(filename());
+    std::string mfile(filename());
 
     vul_timer t;
 
@@ -58,8 +58,8 @@ int main( int argc, char *argv[] )
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     return 0;
 }

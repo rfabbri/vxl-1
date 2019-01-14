@@ -15,13 +15,13 @@
 // 
 mw_match_position_band::
 mw_match_position_band (
-  const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
+  const std::vector<std::vector< vsol_point_2d_sptr > > &points,
   bmcsd_discrete_corresp_n *corr,
   // --- the following params may be provided by the user if efficiency is
   // needed. However, they make this function implementation-dependent.
   //: fm[i][k] = fundamental matrix from view i to view k
-  const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
-  const vcl_vector<mw_subpixel_point_set *> &sp,
+  const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm,
+  const std::vector<mw_subpixel_point_set *> &sp,
   double err_pos,
   bool debug_synthetic
   )
@@ -64,9 +64,9 @@ mw_match_position_band (
     bbox_[i] = mw_algo_util::determine_right_bbox(pb,sp_[i]);
 
     w_[i] = new becld_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
-    vcl_cout << "BOUNDING BOX:\n";
-    vcl_cout << *(bbox_[i]);
-    vcl_cout << "SP DIMENSIONS:\n";
+    std::cout << "BOUNDING BOX:\n";
+    std::cout << *(bbox_[i]);
+    std::cout << "SP DIMENSIONS:\n";
     w_[i]->print();
   }
 
@@ -153,8 +153,8 @@ consider(unsigned vn)
             satisfies_reverse = false;
             d_fail = epband_[vn][iv]->distance(pt_tmp2);
             if (d_fail > 1) {
-              vcl_cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << vcl_endl;
-              vcl_cout << "============";
+              std::cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << std::endl;
+              std::cout << "============";
             }
           }
         }
@@ -196,7 +196,7 @@ consider_synthetic(unsigned vn)
     for (unsigned k=0; k < sp_[vn]->cells()[i_row][i_col].size(); ++k) {
       unsigned const p2_idx = sp_[vn]->cells()[i_row][i_col][k];
 //      if (p2_idx == tup_[0])
-//        vcl_cout << "Ok: " << tup_[0] << vcl_endl;
+//        std::cout << "Ok: " << tup_[0] << std::endl;
 
       // fine test if actual subpixel position is within err_pos_ from epipolar band
       vgl_point_2d<double> pt_tmp(points_[vn][p2_idx]->get_p());
@@ -204,7 +204,7 @@ consider_synthetic(unsigned vn)
         // now we have  a point to consider.
 
 //        if (p2_idx == tup_[0])
-//          vcl_cout << "Passed forward constr\n";
+//          std::cout << "Passed forward constr\n";
 
         is_specified_[vn]  = true;
         specified_pts_[vn] = points_[vn][p2_idx];
@@ -222,8 +222,8 @@ consider_synthetic(unsigned vn)
             satisfies_reverse = false;
             d_fail = epband_[vn][iv]->distance(pt_tmp2);
             if (d_fail > 1) {
-              vcl_cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << vcl_endl;
-              vcl_cout << "============";
+              std::cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << std::endl;
+              std::cout << "============";
             }
           }
         }
@@ -235,31 +235,31 @@ consider_synthetic(unsigned vn)
 
 #ifdef DEBUG_SYNTHETIC_EXACT
           if (p2_idx != tup_[0]) {
-            vcl_cout << "False positive tup: ";
+            std::cout << "False positive tup: ";
             for (unsigned ii=0; ii <= vn; ++ii) {
-              vcl_cout << tup_[ii] << "  ";
+              std::cout << tup_[ii] << "  ";
             }
-            vcl_cout << vcl_endl;
-            vcl_cout << "  d: " << epband_prv.distance(pt_tmp) << vcl_endl;
+            std::cout << std::endl;
+            std::cout << "  d: " << epband_prv.distance(pt_tmp) << std::endl;
             vgl_homg_point_2d<double> homg_pt(pt_tmp);
             vgl_homg_line_2d<double> ep_l = fm_[0][1].l_epipolar_line(vgl_homg_point_2d<double>(specified_pts_[0]->get_p()));
             double tru_d;
             tru_d = vgl_distance(ep_l, homg_pt);
-            vcl_cout << "  tru_d: " << tru_d << vcl_endl;
+            std::cout << "  tru_d: " << tru_d << std::endl;
 
             becld_epiband ep_tmp (
                 vgl_box_2d<double>(bbox_[1]->get_min_x(),bbox_[1]->get_max_x(), bbox_[1]->get_min_y(), bbox_[1]->get_max_y()));
             ep_tmp.compute(specified_pts_[0]->get_p(), fm_[0][1], err_pos_);
 
             double tru_d_2 = ep_tmp.distance(pt_tmp);
-            vcl_cout << "  tru_d_2: " << tru_d_2  << " Contains? " << ep_tmp.contains(pt_tmp) << vcl_endl;
-            ep_tmp.polygon().print(vcl_cout);
-            vcl_cout << "  pt_img1: " << pt_tmp << vcl_endl;
-            vcl_cout << "Equal? " << (points_[0][tup_[0]]->get_p() == points_[1][tup_[1]]->get_p()) << vcl_endl;
-            vcl_cout << "tru_p_im0: " << points_[0][tup_[0]]->get_p() << "tru_p_im1: " << points_[1][tup_[1]]->get_p() << vcl_endl;
-            vcl_cout << "tru_p_im0_inv: " << points_[0][tup_[1]]->get_p() << "tru_p_im1: " << points_[1][tup_[0]]->get_p() << vcl_endl;
-            vcl_cout << "tup_[0]: " << tup_[0] << ", tup_[1]: " << tup_[1] << vcl_endl;
-            vcl_cout << vcl_endl;
+            std::cout << "  tru_d_2: " << tru_d_2  << " Contains? " << ep_tmp.contains(pt_tmp) << std::endl;
+            ep_tmp.polygon().print(std::cout);
+            std::cout << "  pt_img1: " << pt_tmp << std::endl;
+            std::cout << "Equal? " << (points_[0][tup_[0]]->get_p() == points_[1][tup_[1]]->get_p()) << std::endl;
+            std::cout << "tru_p_im0: " << points_[0][tup_[0]]->get_p() << "tru_p_im1: " << points_[1][tup_[1]]->get_p() << std::endl;
+            std::cout << "tru_p_im0_inv: " << points_[0][tup_[1]]->get_p() << "tru_p_im1: " << points_[1][tup_[0]]->get_p() << std::endl;
+            std::cout << "tup_[0]: " << tup_[0] << ", tup_[1]: " << tup_[1] << std::endl;
+            std::cout << std::endl;
           }
 #endif
 
@@ -276,12 +276,12 @@ consider_synthetic(unsigned vn)
 //              consider = false;
 
 //          if (consider) {
-//            vcl_cout << "Failed backwardconstr, tup: ";
+//            std::cout << "Failed backwardconstr, tup: ";
 //            for (unsigned ii=0; ii < vn; ++ii) {
-//              vcl_cout << tup_[ii] << "  ";
+//              std::cout << tup_[ii] << "  ";
 //            }
-//            vcl_cout << vcl_endl;
-//            vcl_cout << "  d: " << d_fail << vcl_endl;
+//            std::cout << std::endl;
+//            std::cout << "  d: " << d_fail << std::endl;
 //          }
 //        }
 //#endif
@@ -297,29 +297,29 @@ consider_synthetic(unsigned vn)
               consider = false;
           
           if (consider) {
-            vcl_cout << "Failed forward constr, tup: ";
+            std::cout << "Failed forward constr, tup: ";
             for (unsigned ii=0; ii < vn; ++ii) {
-              vcl_cout << tup_[ii] << "  ";
+              std::cout << tup_[ii] << "  ";
             }
-            vcl_cout << p2_idx;
-            vcl_cout << vcl_endl;
-            vcl_cout << "  d: " << epband_prv.distance(pt_tmp) << vcl_endl;
+            std::cout << p2_idx;
+            std::cout << std::endl;
+            std::cout << "  d: " << epband_prv.distance(pt_tmp) << std::endl;
             vgl_homg_point_2d<double> homg_pt(pt_tmp);
             vgl_homg_line_2d<double> ep_l = fm_[0][1].l_epipolar_line(vgl_homg_point_2d<double>(specified_pts_[0]->get_p()));
             double tru_d;
             tru_d = vgl_distance(ep_l, homg_pt);
-            vcl_cout << "  tru_d: " << tru_d << vcl_endl;
+            std::cout << "  tru_d: " << tru_d << std::endl;
 
             becld_epiband ep_tmp (
                 vgl_box_2d<double>(bbox_[1]->get_min_x(),bbox_[1]->get_max_x(), bbox_[1]->get_min_y(), bbox_[1]->get_max_y()));
             ep_tmp.compute(specified_pts_[0]->get_p(), fm_[0][1], err_pos_);
 
             double tru_d_2 = ep_tmp.distance(pt_tmp);
-            vcl_cout << "  tru_d_2: " << tru_d_2  << "Contains? " << ep_tmp.contains(pt_tmp) << vcl_endl;
-            ep_tmp.polygon().print(vcl_cout);
-            vcl_cout << vcl_endl;
+            std::cout << "  tru_d_2: " << tru_d_2  << "Contains? " << ep_tmp.contains(pt_tmp) << std::endl;
+            ep_tmp.polygon().print(std::cout);
+            std::cout << std::endl;
 
-            vcl_cout << "  pt_img0: " << specified_pts_[0]->get_p() << vcl_endl;
+            std::cout << "  pt_img0: " << specified_pts_[0]->get_p() << std::endl;
           }
         }
       }

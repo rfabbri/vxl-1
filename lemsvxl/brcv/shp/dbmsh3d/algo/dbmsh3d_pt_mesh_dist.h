@@ -23,9 +23,9 @@ class rsdl_kd_tree;
 double dbmsh3d_pt_face_dist_3d (const vgl_point_3d<double>& P, const dbmsh3d_face* FP,
                                 vgl_point_3d<double>& G);
 
-rsdl_kd_tree* dbmsh3d_build_kdtree_pts (const vcl_vector<vgl_point_3d<double> >& pts);
+rsdl_kd_tree* dbmsh3d_build_kdtree_pts (const std::vector<vgl_point_3d<double> >& pts);
 
-rsdl_kd_tree* dbmsh3d_build_kdtree_idpts (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts);
+rsdl_kd_tree* dbmsh3d_build_kdtree_idpts (const std::vector<std::pair<int, vgl_point_3d<double> > >& idpts);
 
 rsdl_kd_tree* dbmsh3d_build_kdtree_vertices (dbmsh3d_pt_set* PS);
 
@@ -51,10 +51,10 @@ double dbmsh3d_pt_mesh_dist_bf (const vgl_point_3d<double>& P,
 //  to the closest point (can be vertex or interior pt on a face) of M1
 //
 double dbmsh3d_mesh_mesh_dist (dbmsh3d_mesh* M, rsdl_kd_tree* kd_tree, dbmsh3d_mesh* M2, 
-                               const int top_n, vcl_vector<double>& min_dists,
-                               vcl_vector<vgl_point_3d<double> >& closest_pts);
+                               const int top_n, std::vector<double>& min_dists,
+                               std::vector<vgl_point_3d<double> >& closest_pts);
 
-double estimate_avg_samp_dist (const vcl_vector<vgl_point_3d<double> >& pts, const int k = 4);
+double estimate_avg_samp_dist (const std::vector<vgl_point_3d<double> >& pts, const int k = 4);
 
 double estimate_avg_samp_dist (dbmsh3d_pt_set* PS, const int k = 4);
 

@@ -14,12 +14,12 @@
 // \endverbatim
 //
 
-#include <vcl_string.h>
+#include <string>
 #include <xscan/xscan_orbit_base.h>
 #include <xmvg/xmvg_source.h>
 #include <xmvg/xmvg_perspective_camera.h>
 #include <xscan/xscan_orbit_base_sptr.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 class xscan_scan
 {
@@ -29,7 +29,7 @@ public:
   xmvg_source source() const;
 
   //: return the image file path
-  vcl_string image_file_path() const {return image_file_path_;}
+  std::string image_file_path() const {return image_file_path_;}
 
   //: set image path
   void set_image_file_path(char* path) {image_file_path_ = path;}
@@ -62,7 +62,7 @@ public:
  
   //: constructor
   xscan_scan(unsigned nviews, 
-             const vcl_string image_file_path,
+             const std::string image_file_path,
              const xmvg_source& source, 
              const vpgl_calibration_matrix<double>& k,
              xscan_orbit_base_sptr orbit );
@@ -72,7 +72,7 @@ public:
   //: get number of views
   unsigned int n_views() { return n_views_; }
   //: get image file path
-  vcl_string image_file_path() { return image_file_path_; }
+  std::string image_file_path() { return image_file_path_; }
   //: get calibration matrix
   vpgl_calibration_matrix<double> kk() { return kk_; }
   //: get orbit
@@ -84,7 +84,7 @@ protected:
   unsigned int n_views_;
 
   //: image path
-  vcl_string image_file_path_;
+  std::string image_file_path_;
 
   //: x-ray source
   xmvg_source source_;
@@ -95,13 +95,13 @@ protected:
   //: a pointer to the orbit
   xscan_orbit_base_sptr orbit_;
 
-  friend vcl_ostream& operator << (vcl_ostream& stream, const xscan_scan& b);
+  friend std::ostream& operator << (std::ostream& stream, const xscan_scan& b);
 
   //: in order to dynamically create orbit object, whenever a new orbit class added,
   // a switch statment should be added into the implementation of this stream function
-  friend vcl_istream& operator >> (vcl_istream& stream, xscan_scan & scan);
+  friend std::istream& operator >> (std::istream& stream, xscan_scan & scan);
 };
 
-void x_write(vcl_ostream& stream, xscan_scan b);
+void x_write(std::ostream& stream, xscan_scan b);
 
 #endif

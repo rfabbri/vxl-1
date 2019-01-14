@@ -6,7 +6,7 @@
  *************************************************************************/
 
 #include <vgui/vgui.h>
-#include <vcl_string.h>
+#include <string>
 #include <vgui/vgui_dialog.h>
 
 #include "MenuHandler.h"
@@ -119,7 +119,7 @@ MenuHandler::fileOpen()
     return;
 
   // check the filetype.
-  vcl_string fileType;
+  std::string fileType;
   int a = _fileToOpen.find_last_of ('.');
   int b = _fileToOpen.find_last_of ('\0');
   fileType = _fileToOpen.substr (a, b);
@@ -165,10 +165,10 @@ MenuHandler::fileSave()
 {
   vgui_dialog params("File->Save...");  
   
-  vcl_string filename("");
+  std::string filename("");
   params.field( "Save as:", filename );
   int fileType;
-  vcl_vector<vcl_string> choices;
+  std::vector<std::string> choices;
   choices.push_back( "P3D" );
   choices.push_back( "IV" );
   params.choice("File type", choices, fileType );
@@ -319,7 +319,7 @@ MenuHandler::optionsColor()
 {
   vgui_dialog params( "Color Options" );
   
-  vcl_vector<vcl_string> choices;
+  std::vector<std::string> choices;
   choices.push_back( "GRAY" );
   choices.push_back( "RED" );
   choices.push_back( "ORANGE" );
@@ -376,8 +376,8 @@ void MenuHandler::options_view_show_hide()
   SoPathList switchPaths = sa.getPaths();
 
   vgui_dialog params("Show");  
-  vcl_vector<SoSwitch*> nodes;
-  vcl_vector<bool> show;
+  std::vector<SoSwitch*> nodes;
+  std::vector<bool> show;
 
   for( int i=0; i< switchPaths.getLength(); i++ )
   {

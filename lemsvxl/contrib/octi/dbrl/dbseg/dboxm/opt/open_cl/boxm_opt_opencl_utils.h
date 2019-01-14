@@ -2,10 +2,10 @@
 #define boxm_opt_opencl_utils_h_
 
 #include "bcl_cl.h"
-#include <vcl_string.h>
-#include <vcl_cstddef.h>
+#include <string>
+#include <cstddef>
 
-vcl_size_t RoundUp(int global_size,int group_size);
-vcl_string error_to_string(cl_int  status );
+std::size_t RoundUp(int global_size,int group_size);
+std::string error_to_string(cl_int  status );
 
 #endif

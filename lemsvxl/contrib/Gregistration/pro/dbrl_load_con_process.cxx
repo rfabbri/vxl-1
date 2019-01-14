@@ -1,7 +1,7 @@
 //This is vidpro1/process/dbrl_load_con_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include <pro/dbrl_load_con_process.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -12,9 +12,9 @@
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -28,7 +28,7 @@ dbrl_load_con_process::dbrl_load_con_process() : bpro1_process(), num_frames_(0)
       !parameters()->add( "Translation: " , "-trans" , 0.0f )||
       !parameters()->add( "reverse: " , "-rev" , (bool)false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,15 +40,15 @@ dbrl_load_con_process::clone() const
   return new dbrl_load_con_process(*this);
 }
 
-vcl_vector< vcl_string > dbrl_load_con_process::get_input_type() 
+std::vector< std::string > dbrl_load_con_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > dbrl_load_con_process::get_output_type() 
+std::vector< std::string > dbrl_load_con_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbrl_id_point_2d" );
   return to_return;
 }
@@ -57,7 +57,7 @@ bool dbrl_load_con_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-coninput" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
 
   float scale=0, rot=0, trans=0;
   bool rev=false;
@@ -73,7 +73,7 @@ bool dbrl_load_con_process::execute()
   // make sure that input_file_path is sane
   if (input_file_path == "") { return false; }
 
-  vcl_cout<<vul_file::dirname(input_file_path);
+  std::cout<<vul_file::dirname(input_file_path);
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
   {
@@ -82,10 +82,10 @@ bool dbrl_load_con_process::execute()
     //vul_file_iterator fn=input_file_path+"/*.con";
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
+      std::string input_file = fn();
   
       dbrl_id_point_2d_storage_sptr new_con = loadCON(input_file, scale, rot, trans);
-      output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,new_con));
+      output_data_.push_back(std::vector< bpro1_storage_sptr > (1,new_con));
       num_of_files++;
     }
 
@@ -93,10 +93,10 @@ bool dbrl_load_con_process::execute()
     num_frames_ = num_of_files;
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
 
     dbrl_id_point_2d_storage_sptr new_con = loadCON(input_file, scale, rot, trans);
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,new_con));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,new_con));
     num_frames_ = 1;
   }
 
@@ -107,14 +107,14 @@ bool dbrl_load_con_process::execute()
 
   {
    
-    vcl_vector<vcl_vector<bpro1_storage_sptr> > v_copy;
+    std::vector<std::vector<bpro1_storage_sptr> > v_copy;
    
-    for (vcl_vector<vcl_vector<bpro1_storage_sptr> >::reverse_iterator it = output_data_.rbegin(); it != output_data_.rend( ); it++ ) {
+    for (std::vector<std::vector<bpro1_storage_sptr> >::reverse_iterator it = output_data_.rbegin(); it != output_data_.rend( ); it++ ) {
 
       v_copy.push_back(*it);
     }
     output_data_.clear();
-    for (vcl_vector<vcl_vector<bpro1_storage_sptr> >::iterator it = v_copy.begin(); it != v_copy.end( ); it++ ) {
+    for (std::vector<std::vector<bpro1_storage_sptr> >::iterator it = v_copy.begin(); it != v_copy.end( ); it++ ) {
 
       output_data_.push_back(*it);
     }
@@ -123,39 +123,39 @@ bool dbrl_load_con_process::execute()
   return true;
 }
 
-dbrl_id_point_2d_storage_sptr dbrl_load_con_process::loadCON (vcl_string filename, float scale, float rot, float trans)
+dbrl_id_point_2d_storage_sptr dbrl_load_con_process::loadCON (std::string filename, float scale, float rot, float trans)
 {
   // new vector to store the contours
-  //vcl_vector< dbrl_id_point_2d_sptr > contours;
+  //std::vector< dbrl_id_point_2d_sptr > contours;
   
   // vector to store the points
-  vcl_vector< dbrl_id_point_2d_sptr > points;
+  std::vector< dbrl_id_point_2d_sptr > points;
 
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
   bool isOpen_;
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << filename << vcl_endl;
+    std::cout << " Error opening file  " << filename << std::endl;
     return false;
   }
 
   char lineBuffer[2000]; //200
   infp.getline(lineBuffer,2000);
-  if (vcl_strncmp(lineBuffer,"CONTOUR",7)) {
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be CONTOUR " << lineBuffer << vcl_endl;
+  if (std::strncmp(lineBuffer,"CONTOUR",7)) {
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be CONTOUR " << lineBuffer << std::endl;
     return false;
   }
 
   char openFlag[2000];
   infp.getline(openFlag,2000);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     isOpen_ = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     isOpen_ = false;
   else{
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return false;
   }
 
@@ -167,7 +167,7 @@ dbrl_id_point_2d_storage_sptr dbrl_load_con_process::loadCON (vcl_string filenam
 
   
   
-  vcl_cout<<numOfPoints<<vcl_endl;
+  std::cout<<numOfPoints<<std::endl;
   if (infp.eof()) return false;
   float x,y; 
   for (i=0;i<numOfPoints;i++) {
@@ -210,7 +210,7 @@ dbrl_id_point_2d_storage_sptr dbrl_load_con_process::loadCON (vcl_string filenam
   dbrl_id_point_2d_storage_sptr output_point_ids = dbrl_id_point_2d_storage_new();
   output_point_ids->set_id_points(points);
   
-  vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+  std::cout << "Loaded: " << filename.c_str() << ".\n";
 
   return output_point_ids;
 }

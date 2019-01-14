@@ -14,8 +14,8 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <string>
+#include <algorithm>
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
@@ -34,7 +34,7 @@ class dbvxm_rec_vehicles_process : public bprb_process
   //: Clone the process
   virtual dbvxm_rec_vehicles_process* clone() const {return new dbvxm_rec_vehicles_process(*this);}
 
-  vcl_string name(){return "dbvxmRecVehiclesProcess";}
+  std::string name(){return "dbvxmRecVehiclesProcess";}
 
   bool init() { return true; }
   bool execute();

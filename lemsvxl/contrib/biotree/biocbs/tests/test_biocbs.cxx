@@ -111,7 +111,7 @@ MAIN( test_biocbs )
   // if the ray direction is given in the wrong direction, 
   // i.e. not towards the image plane, but away from it
   // then it should be corrected
-  rd_to_pa_angle = vcl_acos(dot_product(ray_direction, cam.principal_axis()) 
+  rd_to_pa_angle = std::acos(dot_product(ray_direction, cam.principal_axis()) 
     / (ray_direction.length() * cam.principal_axis().length()));
   if(rd_to_pa_angle > vnl_math::pi_over_2)
     ray_direction = -ray_direction;

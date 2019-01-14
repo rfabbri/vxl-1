@@ -5,7 +5,7 @@
 
 #include "dbvrl_video_process.h"
 #include "dbvrl_region_storage.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbvrl/dbvrl_minimizer.h>
 #include <dbvrl/dbvrl_world_roi.h>
 #include <dbvrl/dbvrl_transform_2d.h>
@@ -31,7 +31,7 @@ dbvrl_video_process::dbvrl_video_process()
 {
   if( !parameters()->add( "Border Size (pixels)" , "-border" , (int)10 ) ||
       !parameters()->add( "First Frame" ,          "-first" ,  (bool)first_frame_ )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,7 +51,7 @@ dbvrl_video_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbvrl_video_process::name()
 {
   return "Register Video";
@@ -75,18 +75,18 @@ dbvrl_video_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbvrl_video_process::get_input_type()
+std::vector< std::string > dbvrl_video_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbvrl_video_process::get_output_type()
+std::vector< std::string > dbvrl_video_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "bvrl" );
   to_return.push_back( "bvrl" );
   return to_return;
@@ -98,7 +98,7 @@ bool
 dbvrl_video_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbvrl_video_process::execute() - not exactly two"
+    std::cout << "In dbvrl_video_process::execute() - not exactly two"
              << " input frames \n";
     return false;
   }
@@ -177,9 +177,9 @@ dbvrl_video_process::execute()
   total_xform = total_xform * init_xform.inverse();
 
   int frame = input_data_[0][0]->frame()+1;
-  vcl_cout << "rel_homog{"<<frame<<"} = [ " << init_xform.matrix() <<" ];"<< vcl_endl;
-  vcl_cout << "abs_homog{"<<frame<<"} = [ " << total_xform.matrix() <<" ];"<< vcl_endl;
-  vcl_cerr << " in " << time.real() << " msec" << vcl_endl;
+  std::cout << "rel_homog{"<<frame<<"} = [ " << init_xform.matrix() <<" ];"<< std::endl;
+  std::cout << "abs_homog{"<<frame<<"} = [ " << total_xform.matrix() <<" ];"<< std::endl;
+  std::cerr << " in " << time.real() << " msec" << std::endl;
 
   
   vimt_transform_2d default_xform;

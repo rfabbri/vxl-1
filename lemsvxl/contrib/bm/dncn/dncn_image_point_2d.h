@@ -9,16 +9,16 @@ class dncn_image_point_2d
 public:
     dncn_image_point_2d(){}
 
-    dncn_image_point_2d( vgl_point_2d<unsigned> point, vcl_map<unsigned,unsigned> fl ):img_point(point), frame_label(fl){}
+    dncn_image_point_2d( vgl_point_2d<unsigned> point, std::map<unsigned,unsigned> fl ):img_point(point), frame_label(fl){}
 
-    dncn_image_point_2d( unsigned const x, unsigned const y, vcl_map<unsigned,unsigned> fl ):frame_label(fl){ img_point = vgl_point_2d<unsigned>(x,y);}
+    dncn_image_point_2d( unsigned const x, unsigned const y, std::map<unsigned,unsigned> fl ):frame_label(fl){ img_point = vgl_point_2d<unsigned>(x,y);}
 
     ~dncn_image_point_2d(){}
 
     vgl_point_2d<unsigned> img_point;
 
     //the point is gt for only those frames which are indicated by the key. the value represents the class label.
-    vcl_map<unsigned, unsigned> frame_label;
+    std::map<unsigned, unsigned> frame_label;
 };
 
 #endif //dncn_image_point_2d_h_

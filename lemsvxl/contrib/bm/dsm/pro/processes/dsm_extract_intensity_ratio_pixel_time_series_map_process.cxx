@@ -23,12 +23,12 @@ bool dsm_extract_intensity_ratio_pixel_time_series_map_process_cons(bprb_func_pr
 {
 	using namespace dsm_extract_intensity_ratio_pixel_time_series_map_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_target_neighborhood_map_sptr";//the target/neighborhood map
-	input_types_[i++] = "vcl_string";//video glob
+	input_types_[i++] = vcl_string";//video glob
 
 	output_types_[0] = "dsm_pixel_time_series_map_sptr";
 
@@ -47,14 +47,14 @@ bool dsm_extract_intensity_ratio_pixel_time_series_map_process(bprb_func_process
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_extract_intensity_ratio_pixel_time_series_map_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_extract_intensity_ratio_pixel_time_series_map_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
 	dsm_target_neighborhood_map_sptr target_neighborhood_map_sptr = pro.get_input<dsm_target_neighborhood_map_sptr>(i++);
-	vcl_string video_glob = pro.get_input<vcl_string>(i++);
+	std::string video_glob = pro.get_input<std::string>(i++);
 	
 	unsigned num_neighbors = target_neighborhood_map_sptr->num_neighbors();
 
@@ -66,7 +66,7 @@ bool dsm_extract_intensity_ratio_pixel_time_series_map_process(bprb_func_process
 
 	for(unsigned t = 0; t < nframes; ++t)
 	{
-		vcl_cout << "Processing frame " << t << " of " << nframes << vcl_endl;
+		std::cout << "Processing frame " << t << " of " << nframes << std::endl;
 
 		vil_image_view<vxl_byte> grey_img, curr_img;
 		video_stream.seek_frame(t);
@@ -84,18 +84,18 @@ bool dsm_extract_intensity_ratio_pixel_time_series_map_process(bprb_func_process
 		unsigned t_idx;
 		for( t_idx = 0, t_itr=target_neighborhood_map_sptr->target_neighborhood_map_.begin(); t_itr != t_end; ++t_itr, ++t_idx)
 		{
-			vcl_cout << "\t Processing target " << t_idx << " of " << target_neighborhood_map_sptr->target_neighborhood_map_.size() << vcl_endl;
+			std::cout << "\t Processing target " << t_idx << " of " << target_neighborhood_map_sptr->target_neighborhood_map_.size() << std::endl;
 
 			vnl_vector<double> intensity_ratio(t_itr->second.size());
 
 			double target_intensity = grey_img(t_itr->first.x(),t_itr->first.y());
 
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
 
 			unsigned indx;
 			for( indx = 0, n_itr = t_itr->second.begin(); n_itr != n_end; ++n_itr, ++indx )
 			{
-				vcl_cout << "\t\t Processing neighbor " << indx << " of " << t_itr->second.size() << vcl_endl;
+				std::cout << "\t\t Processing neighbor " << indx << " of " << t_itr->second.size() << std::endl;
 				intensity_ratio[indx] = target_intensity/grey_img(n_itr->x(), n_itr->y());
 			}//end neighborhood iteration
 

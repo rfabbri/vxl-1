@@ -54,7 +54,7 @@
 #include <bvis1/displayer/bvis1_vtol_displayer.h>
 
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 int main(int argc, char** argv)
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
   outline_matching_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu(); 
   unsigned w = 512, h = 512;
-  vcl_string title = "OUTLINE MATCHING";
+  std::string title = "OUTLINE MATCHING";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
 

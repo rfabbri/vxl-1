@@ -11,7 +11,7 @@
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <cstdlib> // for rand()
 #include <dbinfo/dbinfo_feature_data.h>
 #include <vsol/vsol_point_2d.h>
 
@@ -71,7 +71,7 @@ dbinfo_cost_func::f(vnl_vector<double> const& x)
         break;
       }
     default:  
-      vcl_cout << "Fatal error in dbinfo_cost_func::f() - "
+      std::cout << "Fatal error in dbinfo_cost_func::f() - "
                << " unknown transformation spec\n";
       return bigval;
     }
@@ -91,14 +91,14 @@ dbinfo_cost_func::f(vnl_vector<double> const& x)
     switch(no_params_)
       {
       case 2:
-        vcl_cout << "c(" << x[0] << ' ' << x[1] << ")= " << c << '\n';
+        std::cout << "c(" << x[0] << ' ' << x[1] << ")= " << c << '\n';
         break;
       case 3:
-        vcl_cout << "c(" << x[0] << ' ' << x[1] << ' ' 
+        std::cout << "c(" << x[0] << ' ' << x[1] << ' ' 
                  << x[2] << ")= " << c << '\n';
         break;
       case 4:
-        vcl_cout << "c(" << x[0] << ' ' << x[1] << ' ' 
+        std::cout << "c(" << x[0] << ' ' << x[1] << ' ' 
                  << x[2] << ' ' << x[3] << ")= " << c << '\n';
         break;
    }
@@ -182,7 +182,7 @@ bool dbinfo_match_optimizer::optimize()
   if(debug_level_>2)
     minimizer.verbose = true;
   if(debug_level_>0)
-    vcl_cout << "Start cost " << c.f(x_) << '\n';
+    std::cout << "Start cost " << c.f(x_) << '\n';
   minimizer.minimize(x_);
   
   // set the optimized observation
@@ -193,21 +193,21 @@ bool dbinfo_match_optimizer::optimize()
   current_cost_ = c.f(x_);
   if(debug_level_>0)
     {
-      vcl_vector<double> p = this->current_params();
-      vcl_cout << "Optimized cost(";
-      for(vcl_vector<double>::iterator pit = p.begin();
+      std::vector<double> p = this->current_params();
+      std::cout << "Optimized cost(";
+      for(std::vector<double>::iterator pit = p.begin();
           pit != p.end(); ++pit)
-        vcl_cout << *pit << ' ';
-      vcl_cout << ")= " << current_cost_ << '\n';
+        std::cout << *pit << ' ';
+      std::cout << ")= " << current_cost_ << '\n';
     }
   return true;
 }
 
-vcl_vector<double> dbinfo_match_optimizer::current_params()
+std::vector<double> dbinfo_match_optimizer::current_params()
 {
   if(!x_.size()||!no_params_)
-    return vcl_vector<double>(0);
-  vcl_vector<double> p(no_params_);
+    return std::vector<double>(0);
+  std::vector<double> p(no_params_);
   for(unsigned i=0; i<no_params_; ++i)
     p[i]=x_[i];
 
@@ -232,7 +232,7 @@ vgl_h_matrix_2d<double> dbinfo_match_optimizer::current_transform()
 {
   vgl_h_matrix_2d<double> H;
   H.set_identity();
-  vcl_vector<double> p = this->current_params();
+  std::vector<double> p = this->current_params();
   if(p.size()==0)
     return H;
   if(no_params_==2)

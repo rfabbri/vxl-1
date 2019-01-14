@@ -24,9 +24,9 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 
 
 class dbsks_ccm;
@@ -34,13 +34,13 @@ class dbsks_ccm;
 
 
 //: Detect an object, represented as a shock graph, in an image
-bool dbsks_detect_xgraph(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
+bool dbsks_detect_xgraph(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
                          float ocm_edge_threshold,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_vector<double >& xgraph_scales,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::vector<double >& xgraph_scales,
                          int root_vid,
                          int major_child_eid,
                          float ocm_lambda,
@@ -48,7 +48,7 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
                          float ocm_tol_near_zero,
                          float ocm_distance_threshold,
                          vil_image_resource_sptr& image_resource, 
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& list_det);
+                         std::vector<dbsks_det_desc_xgraph_sptr >& list_det);
 
 
 
@@ -67,7 +67,7 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
                          float ocm_tol_near_zero,
                          float ocm_distance_threshold,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& list_det);
+                         std::vector<dbsks_det_desc_xgraph_sptr >& list_det);
 
 
 
@@ -75,14 +75,14 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
 
 
 //: Detect an object using both geometric model and contour chamfer matching cost model
-bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_string& xgraph_ccm_file,
-                         const vcl_vector<double >& xgraph_scales,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
+bool dbsks_detect_xgraph_using_ccm(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::string& xgraph_ccm_file,
+                         const std::vector<double >& xgraph_scales,
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
 
 
 
@@ -97,31 +97,31 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
                          const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
                          double xgraph_scale,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
 
 
 
 
 
 //: Detect an object using both geometric model and contour chamfer matching cost model
-bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
-                         const vcl_string& cemv_file,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_string& xgraph_ccm_file,
-                         const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+bool dbsks_detect_xgraph_using_wcm(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
+                         const std::string& cemv_file,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::string& xgraph_ccm_file,
+                         const std::vector<std::string >& cfrag_list_to_ignore,
                          float wcm_weight_unmatched,
-                         const vcl_vector<double >& xgraph_scales,
+                         const std::vector<double >& xgraph_scales,
                          int det_window_width,
                          int det_window_height,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
 
 //: Detect an object using both geometric model and contour chamfer matching cost model
 bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
                          const vil_image_view<float >& edge_angle,
-                         const vcl_vector<vsol_polyline_2d_sptr >& polyline_list,
+                         const std::vector<vsol_polyline_2d_sptr >& polyline_list,
                          const dbsksp_xshock_graph_sptr& xgraph,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
                          const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
@@ -129,21 +129,21 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
                          double xgraph_scale,
                          int det_window_width,
                          int det_window_height,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
 
 
 //: Load data from a list of file names
-bool dbsks_load_data(const vcl_string& image_file,
-                     const vcl_string& edgemap_file,
-                     const vcl_string& edgeorient_file,
-                     const vcl_string& cemv_file,
-                     const vcl_string& xgraph_file,
-                     const vcl_string& xgraph_geom_file,
-                     const vcl_string& xgraph_ccm_file,
-                     const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+bool dbsks_load_data(const std::string& image_file,
+                     const std::string& edgemap_file,
+                     const std::string& edgeorient_file,
+                     const std::string& cemv_file,
+                     const std::string& xgraph_file,
+                     const std::string& xgraph_geom_file,
+                     const std::string& xgraph_ccm_file,
+                     const std::vector<std::string >& cfrag_list_to_ignore,
                      vil_image_view<float >& edgemap,
                      vil_image_view<float >& edge_angle,
-                     vcl_vector<vsol_polyline_2d_sptr >& polyline_list,
+                     std::vector<vsol_polyline_2d_sptr >& polyline_list,
                      dbsksp_xshock_graph_sptr& xgraph,
                      dbsks_xgraph_geom_model_sptr& xgraph_geom,
                      dbsks_xgraph_ccm_model_sptr& xgraph_ccm);
@@ -159,26 +159,26 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 
 //// -----------------------------------------------------------------------------
 ////: Detect an object using both geometric model and contour chamfer matching cost model
-//bool dbsks_detect_xgraph_using_ccm_subpix(const vcl_string& image_file,
-//                                          const vcl_string& edgemap_folder,
-//                                          const vcl_string& object_id,
-//                                          const vcl_string& edgemap_ext,
-//                                          const vcl_string& edgeorient_ext,
-//                         const vcl_string& xgraph_file,
-//                         const vcl_string& xgraph_geom_file,
-//                         const vcl_string& xgraph_ccm_file,
-//                         const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+//bool dbsks_detect_xgraph_using_ccm_subpix(const std::string& image_file,
+//                                          const std::string& edgemap_folder,
+//                                          const std::string& object_id,
+//                                          const std::string& edgemap_ext,
+//                                          const std::string& edgeorient_ext,
+//                         const std::string& xgraph_file,
+//                         const std::string& xgraph_geom_file,
+//                         const std::string& xgraph_ccm_file,
+//                         const std::vector<std::string >& cfrag_list_to_ignore,
 //                         double xgraph_base_scale,
 //                         double min_xgraph_scale,
 //                         double log2_scale_step,
 //                         double max_xgraph_scale,
 //                         int det_window_width,
 //                         int det_window_height,
-//                         const vcl_string& work_folder,
+//                         const std::string& work_folder,
 //                         double min_accepted_confidence,
 //                         bool run_nms_based_on_overlap,
 //                         double min_overlap_ratio_for_rejection,
-//                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
+//                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list);
 //
 //
 //// -----------------------------------------------------------------------------
@@ -189,7 +189,7 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //                         const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
 //                         int det_window_width,
 //                         int det_window_height,
-//                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
+//                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
 //                         double confidence_lower_threshold,
 //                         bool run_nms_based_on_overlap,
 //                         double min_overlap_ratio_for_rejection

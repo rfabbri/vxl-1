@@ -19,8 +19,8 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
@@ -47,7 +47,7 @@ class dbinfo_multi_tracker : public dbinfo_multi_tracker_params
 
   dbinfo_mi_track_sptr track(unsigned i) {assert(i<n_tracks()); return tracks_[i];}
 
-  vcl_vector<dbinfo_mi_track_sptr> tracks()
+  std::vector<dbinfo_mi_track_sptr> tracks()
     { return tracks_;}  
 
   unsigned n_tracks() {return tracks_.size();}  
@@ -55,7 +55,7 @@ class dbinfo_multi_tracker : public dbinfo_multi_tracker_params
   void add_track(dbinfo_mi_track_sptr new_track){tracks_.push_back(new_track);}
   //:tracking methods
   //:potentially start a new track
-  bool initiate_track(vcl_vector<vsol_polygon_2d_sptr> const& track_regions);
+  bool initiate_track(std::vector<vsol_polygon_2d_sptr> const& track_regions);
 
   //:extend all existing tracks using randomly generated hypotheses
   bool extend_tracks_from_seeds();
@@ -65,7 +65,7 @@ class dbinfo_multi_tracker : public dbinfo_multi_tracker_params
     {return true;}
 
     //local utility methods
-  vcl_vector<dbinfo_observation_sptr> generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const& track);
+  std::vector<dbinfo_observation_sptr> generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const& track);
 
   //: clear all data
   void clear();
@@ -83,7 +83,7 @@ class dbinfo_multi_tracker : public dbinfo_multi_tracker_params
   unsigned id_counter_;
 
   //:existing tracks
-  vcl_vector<dbinfo_mi_track_sptr> tracks_;
+  std::vector<dbinfo_mi_track_sptr> tracks_;
 
 };
 

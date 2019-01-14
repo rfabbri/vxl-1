@@ -13,7 +13,7 @@
 // It is reasonable to open the files and check them for consistency so that
 // the existence of the resource guarantees the availability of the image data.
 //
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_pixel_format.h>
 #include <vgl/vgl_box_3d.h>
@@ -28,7 +28,7 @@ class imgr_scan_resource : public vbl_ref_count
   enum vil_pixel_format format_;
 
   //: All the 2d image resources that make up this volume
-  vcl_vector<vil_image_resource_sptr> resources_;
+  std::vector<vil_image_resource_sptr> resources_;
 
 #if 0
   //: temporarily a dummy scan, eventually a real scan (sptr)
@@ -48,7 +48,7 @@ class imgr_scan_resource : public vbl_ref_count
 
   //: only reasonable constructor. The resources have been loaded by scan_io
   imgr_scan_resource(xscan_scan const& scan, 
-                     vcl_vector<vil_image_resource_sptr> const& resources);
+                     std::vector<vil_image_resource_sptr> const& resources);
 
   virtual ~imgr_scan_resource(){};
   //:view access, for now we return only a bounded view

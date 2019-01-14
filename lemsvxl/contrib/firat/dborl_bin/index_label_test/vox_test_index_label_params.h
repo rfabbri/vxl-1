@@ -27,17 +27,17 @@ class vox_test_index_label_params : public dborl_algo_params
 public:
 
     //: Constructor
-    vox_test_index_label_params(vcl_string algo_name);
+    vox_test_index_label_params(std::string algo_name);
 
     // MEMBER VARIABLES
 
     //: Name of input object
-    dborl_parameter<vcl_string> input_object_name_;
+    dborl_parameter<std::string> input_object_name_;
     //parameter for the index file
     //Is a flat image database
-    dborl_parameter<vcl_string> index_filename_;
+    dborl_parameter<std::string> index_filename_;
 
-    dborl_parameter<vcl_string> assoc_label_;
+    dborl_parameter<std::string> assoc_label_;
 
 };
 

@@ -10,8 +10,8 @@
 #include "dbdet/sel/dbdet_curve_fragment_graph.h"
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_vector.h>
-#include <vcl_set.h>
+#include <vector>
+#include <set>
 
 // This class is to use in edit distance process to generate feasible 
 class frags_combination
@@ -34,7 +34,7 @@ public:
 	//insert a combination into this combination, !! end points are not assigned inserting
 	void insert_frags(frags_combination* const &combo)
 	{
-		vcl_list<dbdet_edgel_chain*>::const_iterator f_it_0 = combo->frags.begin();
+		std::list<dbdet_edgel_chain*>::const_iterator f_it_0 = combo->frags.begin();
 		for (; f_it_0 != combo->frags.end(); f_it_0++)
 		{	
 			frags.push_back(*f_it_0);
@@ -45,9 +45,9 @@ public:
 		}
 	}
 
-	void insert_frags(vcl_list<dbdet_edgel_chain*> const &frags_0)
+	void insert_frags(std::list<dbdet_edgel_chain*> const &frags_0)
 	{
-		vcl_list<dbdet_edgel_chain*>::const_iterator f_it_0 = frags_0.begin();
+		std::list<dbdet_edgel_chain*>::const_iterator f_it_0 = frags_0.begin();
 		for (; f_it_0 != frags_0.end(); f_it_0++)
 		{	
 			frags.push_back(*f_it_0);
@@ -57,7 +57,7 @@ public:
         int num_edgels()
 	{
 		int size;
-		vcl_list<dbdet_edgel_chain*>::const_iterator f_it_0 = frags.begin();
+		std::list<dbdet_edgel_chain*>::const_iterator f_it_0 = frags.begin();
 		for (; f_it_0 != frags.end(); f_it_0++)
 		{	
 			size += (*f_it_0)->edgels.size();
@@ -83,7 +83,7 @@ public:
 		return true;
 	}
 
-	friend vcl_ostream &operator << (vcl_ostream &out, const frags_combination* c1)
+	friend std::ostream &operator << (std::ostream &out, const frags_combination* c1)
 	{
 		out << "[ ";
 		for (int i = 0; i< (c1->index.size()); i++)
@@ -94,7 +94,7 @@ public:
 	//List to hold the address of fragments	
 	dbdet_edgel_chain_list frags;
 	//list to hold the index in 1 combo list
-	vcl_vector<int> index;
+	std::vector<int> index;
 	//The start_point and end_point of the combination
 	dbdet_edgel* start_point;
 	dbdet_edgel* end_point;
@@ -110,13 +110,13 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
@@ -139,10 +139,10 @@ public:
   // cost = sum of each closest distance between the edgels in c1 and edgels in c2/ number of edgels in c1
   double compute_contours_cost(dbdet_edgel_chain* const &c1, dbdet_edgel_chain* const &c2);
 
-  void check_column(vnl_matrix<double> cost_gt2cp,vnl_matrix<double> cost_cp2gt,vcl_vector<unsigned> &column2check, vcl_set<unsigned> &row_checked,vcl_set<unsigned> &column_checked,vnl_matrix<unsigned> &grouped_gt_cp);
-  void check_row(vnl_matrix<double> cost_gt2cp,vnl_matrix<double> cost_cp2gt,vcl_vector<unsigned> &row2check, vcl_set<unsigned> &row_checked,vcl_set<unsigned> &column_checked,vnl_matrix<unsigned> &grouped_gt_cp);
+  void check_column(vnl_matrix<double> cost_gt2cp,vnl_matrix<double> cost_cp2gt,std::vector<unsigned> &column2check, std::set<unsigned> &row_checked,std::set<unsigned> &column_checked,vnl_matrix<unsigned> &grouped_gt_cp);
+  void check_row(vnl_matrix<double> cost_gt2cp,vnl_matrix<double> cost_cp2gt,std::vector<unsigned> &row2check, std::set<unsigned> &row_checked,std::set<unsigned> &column_checked,vnl_matrix<unsigned> &grouped_gt_cp);
 
-  bool find_in_vector(vcl_vector<unsigned> const &v, unsigned value);
+  bool find_in_vector(std::vector<unsigned> const &v, unsigned value);
 
   void get_parameters();
 
@@ -176,12 +176,12 @@ public:
 
   double get_str_thresh_1(){return str_thresh_1;}
 
-  vcl_vector<vcl_list<dbdet_edgel_chain_list> > edit_distance_process(dbdet_edgel_chain_list &gt_frags, dbdet_edgel_chain_list &cp_frags);
+  std::vector<std::list<dbdet_edgel_chain_list> > edit_distance_process(dbdet_edgel_chain_list &gt_frags, dbdet_edgel_chain_list &cp_frags);
 
   bool overlap_combos(frags_combination* const &combo_0,  frags_combination* const &combo_1);
 
   // this function will use combos and combo_1 to generate a list of combos, each one has one more contour than each one in combos
-  vcl_list<frags_combination*> generate_combination(vcl_list<frags_combination*> const &combos,  vcl_list<frags_combination*> const &combos_1, vcl_list<frags_combination*> const &group_combos);
+  std::list<frags_combination*> generate_combination(std::list<frags_combination*> const &combos,  std::list<frags_combination*> const &combos_1, std::list<frags_combination*> const &group_combos);
   
   // this function compute the transform cost between two fragments combinations
   double compute_transform_cost(frags_combination* combo_0, frags_combination* combo_1);

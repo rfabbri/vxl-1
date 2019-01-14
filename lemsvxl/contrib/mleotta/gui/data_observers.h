@@ -67,8 +67,8 @@ class edgel_observer: public dbpro_observer
 
         tab->set_foreground(b_,g_,r_,1.0f);
 
-        vcl_set<vidreg_feature_edgel*> edgels;
-        for(vcl_vector<rgrl_feature_sptr>::const_iterator i = features->edgels.begin();
+        std::set<vidreg_feature_edgel*> edgels;
+        for(std::vector<rgrl_feature_sptr>::const_iterator i = features->edgels.begin();
             i != features->edgels.end(); ++i){
           if(vidreg_feature_edgel* f = dynamic_cast<vidreg_feature_edgel*>(i->ptr())){
             edgels.insert(f);
@@ -88,13 +88,13 @@ class edgel_observer: public dbpro_observer
           for(; e; ++n, e=e->next()){
             x[n] = e->location()[0];
             y[n] = e->location()[1];
-            vcl_set<vidreg_feature_edgel*>::iterator i = edgels.find(e);
+            std::set<vidreg_feature_edgel*>::iterator i = edgels.find(e);
             if(i == edgels.end())
               break;
             edgels.erase(i);
           }
           if(n>10)
-            vcl_cout << "adding edge of size "<<n<<vcl_endl;
+            std::cout << "adding edge of size "<<n<<std::endl;
           if(n>1)
             tab->add_linestrip(n,x,y);
         }
@@ -123,9 +123,9 @@ class feature_observer: public dbpro_observer
       if(clr_)
         tab->clear();
       if(data->info() == DBPRO_VALID){
-        assert(data->type_id() == typeid(vcl_vector<vidreg_salient_group_sptr>));
-        vcl_vector<vidreg_salient_group_sptr> groups =
-          data->data<vcl_vector<vidreg_salient_group_sptr> >();
+        assert(data->type_id() == typeid(std::vector<vidreg_salient_group_sptr>));
+        std::vector<vidreg_salient_group_sptr> groups =
+          data->data<std::vector<vidreg_salient_group_sptr> >();
         if(idx_ >= groups.size() || !groups[idx_])
           return true;
         vidreg_feature_group_sptr features = groups[idx_]->make_feature_group(1.0);
@@ -137,7 +137,7 @@ class feature_observer: public dbpro_observer
         float y[4] = {box.x0()[1], box.x0()[1], box.x1()[1], box.x1()[1]};
         tab->add_polygon(4,x,y);
 
-        for(vcl_vector<rgrl_feature_sptr>::const_iterator i = features->edgels.begin();
+        for(std::vector<rgrl_feature_sptr>::const_iterator i = features->edgels.begin();
             i != features->edgels.end(); ++i){
           if(rgrl_feature_face_pt* f = dynamic_cast<rgrl_feature_face_pt*>(i->ptr())){
             vnl_vector<double> pt = f->location();
@@ -145,7 +145,7 @@ class feature_observer: public dbpro_observer
             tab->add_line(pt[0],pt[1],pt2[0],pt2[1]);
           }
         }
-        for(vcl_vector<rgrl_feature_sptr>::const_iterator i = features->corners.begin();
+        for(std::vector<rgrl_feature_sptr>::const_iterator i = features->corners.begin();
             i != features->corners.end(); ++i){
           if(rgrl_feature_point* f = dynamic_cast<rgrl_feature_point*>(i->ptr()))
           {
@@ -154,8 +154,8 @@ class feature_observer: public dbpro_observer
 #if 0
             if(f->scale() > 0.0){
               vnl_vector<double> norm(2);
-              norm[0] = 10*vcl_cos(f->scale());
-              norm[1] = 10*vcl_sin(f->scale());
+              norm[0] = 10*std::cos(f->scale());
+              norm[1] = 10*std::sin(f->scale());
               vnl_vector<double> pt2 = pt + norm;
               tab->add_line(pt[0],pt[1],pt2[0],pt2[1]);
             }
@@ -188,7 +188,7 @@ class track_observer: public dbpro_observer
       if(clr_)
         tab->clear();
       if(data->info() == DBPRO_VALID){
-        typedef vcl_vector<vcl_pair<unsigned long, rgrl_feature_sptr> > Tvec;
+        typedef std::vector<std::pair<unsigned long, rgrl_feature_sptr> > Tvec;
         assert(data->type_id() == typeid(Tvec));
         Tvec tracks = data->data<Tvec >();
 

@@ -12,8 +12,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -48,21 +48,21 @@
 //: Constructor
 dbdet_generic_multicue_edge_detector_process::dbdet_generic_multicue_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
 
-  vcl_vector<vcl_string> cue_choices;
+  std::vector<std::string> cue_choices;
   cue_choices.push_back("Use multiple scales");          //0
   cue_choices.push_back("Use Intensity and Histogram");  //1
 
-  vcl_vector<vcl_string> combinator_choices;
+  std::vector<std::string> combinator_choices;
   combinator_choices.push_back("Use feature vector");    //0
   combinator_choices.push_back("Use weighted sum");       //1
   combinator_choices.push_back("Use weighted products");  //2
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -78,7 +78,7 @@ dbdet_generic_multicue_edge_detector_process::dbdet_generic_multicue_edge_detect
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0) ||
       !parameters()->add( "Output Combined Response Surface"   , "-boutput_res" , false))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -98,7 +98,7 @@ dbdet_generic_multicue_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_generic_multicue_edge_detector_process::name()
 {
   return "Generic Multicue Edge Detector";
@@ -122,21 +122,21 @@ dbdet_generic_multicue_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_generic_multicue_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_generic_multicue_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_generic_multicue_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_generic_multicue_edge_detector_process::get_output_type()
 {
   bool boutput_res;
   parameters()->get_value( "-boutput_res", boutput_res );
 
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   if (boutput_res)
     to_return.push_back("image");
   to_return.push_back( "edge_map" );
@@ -168,13 +168,13 @@ dbdet_generic_multicue_edge_detector_process::execute()
   parameters()->get_value( "-boutput_res", boutput_res );
 
   if (input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_generic_multicue_edge_detector_process::execute() - only one color image needed!\n";
+    std::cout << "In dbdet_generic_multicue_edge_detector_process::execute() - only one color image needed!\n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Generic Multi-Cue edge detection...";
-  vcl_cout.flush();
+  std::cout << "Generic Multi-Cue edge detection...";
+  std::cout.flush();
 
   //2) get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -197,7 +197,7 @@ dbdet_generic_multicue_edge_detector_process::execute()
 
   //3) compute image gradients of each of the cues
   vil_image_view<double> f1_dx, f1_dy, f2_dx, f2_dy, f3_dx, f3_dy;
-  int scale = (int) vcl_pow(2.0, N);
+  int scale = (int) std::pow(2.0, N);
 
   switch(cue_choice_opt)
   {
@@ -235,8 +235,8 @@ dbdet_generic_multicue_edge_detector_process::execute()
       double* Gy = f2_dy.top_left_ptr();
 
       for(unsigned long i=0; i<hist_ori.size(); i++){
-        Gx[i] = vcl_cos(Ori[i])*Mag[i];
-        Gy[i] = vcl_sin(Ori[i])*Mag[i];
+        Gx[i] = std::cos(Ori[i])*Mag[i];
+        Gy[i] = std::sin(Ori[i])*Mag[i];
       }
 
       //leave the third component filled with zeros
@@ -274,26 +274,26 @@ dbdet_generic_multicue_edge_detector_process::execute()
 //      double d = sqrt((A-C)*(A-C) + 4*B*B);
       //double c = (A-C)/d;
 
-      double l = (A+C+ vcl_sqrt((A-C)*(A-C) + 4*B*B))/2;
+      double l = (A+C+ std::sqrt((A-C)*(A-C) + 4*B*B))/2;
 
-      if (vcl_fabs(B)>1e-2){
-        n1[i] = B/vcl_sqrt(B*B+(l-A)*(l-A));
-        n2[i] = (l-A)/vcl_sqrt(B*B+(l-A)*(l-A));
+      if (std::fabs(B)>1e-2){
+        n1[i] = B/std::sqrt(B*B+(l-A)*(l-A));
+        n2[i] = (l-A)/std::sqrt(B*B+(l-A)*(l-A));
       }
       else {
-        n1[i] = (l-C)/vcl_sqrt(B*B+(l-C)*(l-C));
-        n2[i] = B/vcl_sqrt(B*B+(l-C)*(l-C));
+        n1[i] = (l-C)/std::sqrt(B*B+(l-C)*(l-C));
+        n2[i] = B/std::sqrt(B*B+(l-C)*(l-C));
       }
 
-      g_mag[i] = vcl_sqrt(l/3); //take the square root of the squared norm
+      g_mag[i] = std::sqrt(l/3); //take the square root of the squared norm
     }
   }
   else if (cue_comb_op==1)
   {  
     for(unsigned long i=0; i<grad_mag.size(); i++){
-      double A = w1*vcl_sqrt(f1x[i]*f1x[i] + f1y[i]*f1y[i]);
-      double B = w2*vcl_sqrt(f2x[i]*f2x[i] + f2y[i]*f2y[i]);
-      double C = w3*vcl_sqrt(f3x[i]*f3x[i] + f3y[i]*f3y[i]);
+      double A = w1*std::sqrt(f1x[i]*f1x[i] + f1y[i]*f1y[i]);
+      double B = w2*std::sqrt(f2x[i]*f2x[i] + f2y[i]*f2y[i]);
+      double C = w3*std::sqrt(f3x[i]*f3x[i] + f3y[i]*f3y[i]);
 
       n1[i] = f1x[i];
       n2[i] = f1y[i];
@@ -302,9 +302,9 @@ dbdet_generic_multicue_edge_detector_process::execute()
   }
   else if (cue_comb_op==2){
     for(unsigned long i=0; i<grad_mag.size(); i++){
-      double A = w1*vcl_sqrt(f1x[i]*f1x[i] + f1y[i]*f1y[i]);
-      double B = w2*vcl_sqrt(f2x[i]*f2x[i] + f2y[i]*f2y[i]);
-      double C = w3*vcl_sqrt(f3x[i]*f3x[i] + f3y[i]*f3y[i]);
+      double A = w1*std::sqrt(f1x[i]*f1x[i] + f1y[i]*f1y[i]);
+      double B = w2*std::sqrt(f2x[i]*f2x[i] + f2y[i]*f2y[i]);
+      double C = w3*std::sqrt(f3x[i]*f3x[i] + f3y[i]*f3y[i]);
 
       n1[i] = f1x[i];
       n2[i] = f1y[i];
@@ -316,9 +316,9 @@ dbdet_generic_multicue_edge_detector_process::execute()
   t.mark(); //reset timer
 
   //Now call the nms code to get the subpixel edge tokens
-  vcl_vector<vgl_point_2d<double> > loc;
-  vcl_vector<double> orientation, mag, d2f;
-  vcl_vector<vgl_point_2d<int> > pix_loc;
+  std::vector<vgl_point_2d<double> > loc;
+  std::vector<double> orientation, mag, d2f;
+  std::vector<vgl_point_2d<int> > pix_loc;
 
   dbdet_nms NMS(dbdet_nms_params(thresh, (dbdet_nms_params::PFIT_TYPE)parabola_fit), nu1, nu2, grad_mag);
   NMS.apply(true, loc, orientation, mag, d2f, pix_loc);
@@ -333,11 +333,11 @@ dbdet_generic_multicue_edge_detector_process::execute()
     edge_map->insert(new dbdet_edgel(pt, orientation[i], mag[i], d2f[i]));
   }
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
   
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels();
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for nms: " << nms_time << " msec" << std::endl;
+  std::cout << "#edgels = " << edge_map->num_edgels();
 
   // create the output storage class(es)
   if (boutput_res)

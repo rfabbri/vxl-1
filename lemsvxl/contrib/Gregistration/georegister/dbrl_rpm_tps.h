@@ -2,7 +2,7 @@
 #define _dbrl_rpm_tps_
 
 #include "dbrl_robust_point_matching.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include "dbrl_match_set_sptr.h"
 #include "dbrl_estimator_thin_plate_spline.h"
 #include "dbrl_correspondence.h"
@@ -34,18 +34,18 @@ class dbrl_rpm_tps: public dbrl_robust_point_matching
         dbrl_rpm_tps(){};
         virtual ~dbrl_rpm_tps(){};
         dbrl_rpm_tps(dbrl_rpm_tps_params & params,
-                                 vcl_vector<dbrl_feature_sptr>  f1,
-                                 vcl_vector<dbrl_feature_sptr>  f2);
-        virtual dbrl_match_set_sptr rpm(vcl_string name="Euclidean");
-        void normalize_point_set(vnl_matrix<double> & M, vcl_vector<dbrl_feature_sptr> & f);
+                                 std::vector<dbrl_feature_sptr>  f1,
+                                 std::vector<dbrl_feature_sptr>  f2);
+        virtual dbrl_match_set_sptr rpm(std::string name="Euclidean");
+        void normalize_point_set(vnl_matrix<double> & M, std::vector<dbrl_feature_sptr> & f);
         bool rpm_at(double T,dbrl_correspondence & M,dbrl_estimator_point_thin_plate_spline * tps_est,
-                    dbrl_transformation_sptr &tform,vcl_vector<dbrl_feature_sptr> &f1x,vcl_vector<dbrl_feature_sptr> & f2x,
-                    double l1,double l2,vcl_string name="Euclidean");
+                    dbrl_transformation_sptr &tform,std::vector<dbrl_feature_sptr> &f1x,std::vector<dbrl_feature_sptr> & f2x,
+                    double l1,double l2,std::string name="Euclidean");
 
         double energy(){return energy_;}
 
-        double distance(vcl_vector<dbrl_feature_sptr> f1,
-                vcl_vector<dbrl_feature_sptr> f2);
+        double distance(std::vector<dbrl_feature_sptr> f1,
+                std::vector<dbrl_feature_sptr> f2);
     protected:
         dbrl_rpm_tps_params params_;
 

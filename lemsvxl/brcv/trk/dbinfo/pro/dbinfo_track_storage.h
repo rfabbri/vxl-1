@@ -12,20 +12,20 @@
 // \verbatim
 //  Modifications
 // \endverbatim
-#include <vcl_map.h>
+#include <map>
 #include <bpro1/bpro1_storage.h>
 #include <dbinfo/dbinfo_track.h>
 #include <dbinfo/pro/dbinfo_track_storage_sptr.h>
 
 class dbinfo_track_storage : public bpro1_storage {
 
-  typedef vcl_map<unsigned, dbinfo_track_sptr, vcl_less<unsigned> > map_type;
+  typedef std::map<unsigned, dbinfo_track_sptr, std::less<unsigned> > map_type;
 
 public:
 
   dbinfo_track_storage();
   virtual ~dbinfo_track_storage();
-  virtual vcl_string type() const { return "dbinfo_track_storage"; }
+  virtual std::string type() const { return "dbinfo_track_storage"; }
   
 
   //: Return IO version number;
@@ -42,19 +42,19 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbinfo_track_storage"; }
+  virtual std::string is_a() const { return "dbinfo_track_storage"; }
 
   //:set a single track
   void set_track(dbinfo_track_sptr const& track);
 
   //:set multiple tracks
-  void set_tracks(vcl_vector<dbinfo_track_sptr> const& tracks);
+  void set_tracks(std::vector<dbinfo_track_sptr> const& tracks);
   
   //:retrieve a track by id
   dbinfo_track_sptr track(const unsigned id);
 
   //:retrieve all tracks
-  vcl_vector<dbinfo_track_sptr> tracks();
+  std::vector<dbinfo_track_sptr> tracks();
 
   //:retrive a track by spacetime position
   dbinfo_track_sptr track_by_spacetime(const unsigned frame,

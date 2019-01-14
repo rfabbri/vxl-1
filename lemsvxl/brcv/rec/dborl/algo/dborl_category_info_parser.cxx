@@ -4,12 +4,12 @@
 // \author Ozge C Ozcanli (ozge@lems.brown.edu)
 // \date 10/15/07
 
-#include <vcl_string.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <cstring>
+#include <cstdio>
+#include <cassert>
+#include <iostream>
+#include <sstream>
 
 #include <borld/borld_category_info.h>
 #include <dborl/algo//dborl_category_info_parser.h>
@@ -19,20 +19,20 @@
 template <typename T>
 void convert(const char* t, T& d)
 {
-  vcl_stringstream strm(t);
+  std::stringstream strm(t);
 
   strm >> d;
 
 }
 
 void 
-dborl_category_info_parser::cdataHandler(vcl_string name, vcl_string data)
+dborl_category_info_parser::cdataHandler(std::string name, std::string data)
 {
   // create a vector of tokens out of cdata and convert them later
-  vcl_vector<vcl_string> tokens;
+  std::vector<std::string> tokens;
   int length = data.size();
   const char * str = data.c_str();
-  vcl_string token = "";
+  std::string token = "";
   for (int i=0; i<length; i++) {
     if ((str[i] == ' ') || (str[i] == '\n')) {
       if (token.size() > 0) {
@@ -76,22 +76,22 @@ dborl_category_info_parser::cdataHandler(vcl_string name, vcl_string data)
 void 
 dborl_category_info_parser::startElement(const char* name, const char** atts)
 {
-  //vcl_cout<< "element=" << name << vcl_endl; 
+  //std::cout<< "element=" << name << std::endl; 
 
   // our tags are category_tag_, instance_tag_, box_tag_, polygon_tag_
   // we do nothing when a new instance starts, 
-  if (vcl_strcmp(name, "type") == 0) {
+  if (std::strcmp(name, "type") == 0) {
 
     for (int i=0; atts[i]; i+=2) {
-      if (vcl_strcmp(atts[i], "name") == 0) {
-        if (vcl_strcmp(atts[i+1], "category-info") == 0)
-          vcl_cout << "parsing category description file\n";
+      if (std::strcmp(atts[i], "name") == 0) {
+        if (std::strcmp(atts[i+1], "category-info") == 0)
+          std::cout << "parsing category description file\n";
         else
-          vcl_cout << "WARNING: dborl_category_info_parser expects attribute name: category-info, but the name is: " << atts[i+1] << vcl_endl;
+          std::cout << "WARNING: dborl_category_info_parser expects attribute name: category-info, but the name is: " << atts[i+1] << std::endl;
       }
     }
 
-  } else if (vcl_strcmp(name,"category")== 0) {
+  } else if (std::strcmp(name,"category")== 0) {
     current_cat_ = new borld_category_info();
   } 
   
@@ -103,10 +103,10 @@ dborl_category_info_parser::startElement(const char* name, const char** atts)
 void 
 dborl_category_info_parser::endElement(const char* name)
 {
-  //vcl_cout << "end element=" << name << vcl_endl;
+  //std::cout << "end element=" << name << std::endl;
   // our tags are category_tag_, instance_tag_, box_tag_, polygon_tag_
   // when an instance ends we add it to bbox description or polygon description
-  if (vcl_strcmp(name,"category")== 0) {
+  if (std::strcmp(name,"category")== 0) {
     cats_.push_back(new borld_category_info(*current_cat_));
     current_cat_ = 0;
   } 
@@ -129,39 +129,39 @@ void dborl_category_info_parser::charData(const XML_Char* s, int len)
 }
 
 //: inserts parsed categories at the beginning of cats
-bool parse(vcl_string fname, dborl_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats)
+bool parse(std::string fname, dborl_category_info_parser& parser, std::vector<borld_category_info_sptr>& cats)
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
 
   if (fname.size() == 0){
-    vcl_cout << "File not specified" << vcl_endl;
+    std::cout << "File not specified" << std::endl;
     return 0;
   }
 
   //errno_t err;
 
   //if ( (err = fopen_s(&xmlFile, fname.c_str(), "r") ) != 0 ) {
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << fname << "-- error on opening" << vcl_endl;
+    std::cout << fname << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return false;
    }
-   vcl_cout << "finished parsing!" << vcl_endl;
+   std::cout << "finished parsing!" << std::endl;
 
   fclose(xmlFile);
 
-  vcl_vector<borld_category_info_sptr>& parsed_cats = parser.get_categories();
+  std::vector<borld_category_info_sptr>& parsed_cats = parser.get_categories();
   cats.insert(cats.begin(), parsed_cats.begin(), parsed_cats.end());
   return true;
 }
 
-void write_categories_xml(vcl_vector<borld_category_info_sptr>& cats, vcl_ostream& os)
+void write_categories_xml(std::vector<borld_category_info_sptr>& cats, std::ostream& os)
 {
   os << "<type name = \"category-info\">\n";
   os << "\t<description>\n";

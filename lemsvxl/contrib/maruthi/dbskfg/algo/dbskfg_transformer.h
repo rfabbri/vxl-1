@@ -19,10 +19,10 @@
 #include <dbskfg/dbskfg_rag_graph_sptr.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 
 class dbskfg_shock_link;
 class dbsk2d_ishock_edge;
@@ -49,7 +49,7 @@ public:
     void undo_transform();
 
     //: Return new rag nodes
-    vcl_vector<unsigned int> new_rag_nodes(){return new_rag_nodes_;}
+    std::vector<unsigned int> new_rag_nodes(){return new_rag_nodes_;}
 
     //: Tell me if rag node has been deleted
     bool rag_deleted(unsigned int id) { return 
@@ -69,35 +69,35 @@ private:
     dbsk2d_shock_storage_sptr shock_storage_;
 
     // Holds all contour/shock nodes
-    vcl_map<vcl_string, dbskfg_composite_node_sptr> all_nodes_;
+    std::map<std::string, dbskfg_composite_node_sptr> all_nodes_;
 
     // Holds all new contour nodes
-    vcl_set<vcl_string> new_contour_nodes_;
+    std::set<std::string> new_contour_nodes_;
 
     // Holds all existing contour links
-    vcl_map<unsigned int, dbskfg_composite_link_sptr> orig_contour_links_;
+    std::map<unsigned int, dbskfg_composite_link_sptr> orig_contour_links_;
 
     // Holds all contours deleted
-    vcl_map<unsigned int, dbskfg_composite_link_sptr> contours_removed_;
+    std::map<unsigned int, dbskfg_composite_link_sptr> contours_removed_;
 
     // Holds new contour links
-    vcl_map<unsigned int, dbskfg_composite_link_sptr> new_contour_links_;
+    std::map<unsigned int, dbskfg_composite_link_sptr> new_contour_links_;
 
     // Holds all new contour links by endpoint, and start point
-    vcl_map<vcl_string,dbskfg_composite_link_sptr> new_contour_links_points_;
+    std::map<std::string,dbskfg_composite_link_sptr> new_contour_links_points_;
 
     // Holds all new shock links
-    vcl_map<unsigned int, dbskfg_composite_link_sptr> new_shock_links_;
+    std::map<unsigned int, dbskfg_composite_link_sptr> new_shock_links_;
 
     // Keep track that all outer shock nodes are visited
-    vcl_map<unsigned int, vcl_pair<dbskfg_composite_node_sptr,bool> > 
+    std::map<unsigned int, std::pair<dbskfg_composite_node_sptr,bool> > 
         wavefront_;
 
     // Keep a map of all rag nodes deleted
-    vcl_map<unsigned int,vcl_string> rag_nodes_deleted_;
+    std::map<unsigned int,std::string> rag_nodes_deleted_;
 
     // Keep a vector of all new rag nodes added
-    vcl_vector<unsigned int> new_rag_nodes_;
+    std::vector<unsigned int> new_rag_nodes_;
 
     // Holds rag graph
     dbskfg_rag_graph_sptr rag_graph_;
@@ -149,7 +149,7 @@ private:
 
     //: test for extra shock links that need to be removed
     void remove_extra_shocks_helper( 
-        vcl_vector<dbskfg_composite_node_sptr>& queue);
+        std::vector<dbskfg_composite_node_sptr>& queue);
 
     // Make copy ctor private
     dbskfg_transformer(const dbskfg_transformer&);

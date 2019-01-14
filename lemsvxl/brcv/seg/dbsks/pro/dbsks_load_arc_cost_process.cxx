@@ -30,7 +30,7 @@ dbsks_load_arc_cost_process()
     !parameters()->add("Add frame number as prefix: " , "-add_frame_number", false)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -50,27 +50,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_load_arc_cost_process::
+std::string dbsks_load_arc_cost_process::
 name()
 { 
   return "Load arc cost"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_load_arc_cost_process::
+std::vector< std::string > dbsks_load_arc_cost_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_load_arc_cost_process::
+std::vector< std::string > dbsks_load_arc_cost_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsks_shapematch" );
   return to_return;
 }
@@ -95,8 +95,8 @@ bool dbsks_load_arc_cost_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_load_arc_cost_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_load_arc_cost_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -119,19 +119,19 @@ execute()
 
 
   // determine filename of the input file
-  vcl_string file_path = arc_cost_file.path;
-  vcl_string new_file_path;
+  std::string file_path = arc_cost_file.path;
+  std::string new_file_path;
   if (add_frame_number == true)
   {
-    vcl_string base_name = 
+    std::string base_name = 
       vul_file::strip_directory(vul_file::strip_extension(file_path));
-    vcl_string file_dir = vul_file::dirname(file_path);
-    vcl_string file_ext = vul_file::extension(file_path);
+    std::string file_dir = vul_file::dirname(file_path);
+    std::string file_ext = vul_file::extension(file_path);
 
     int frame_number = image_storage->frame();
     
     // construct a new filename
-    vcl_string new_base_name = vul_sprintf("%03d", frame_number) + "_" +
+    std::string new_base_name = vul_sprintf("%03d", frame_number) + "_" +
       base_name;
     
     new_file_path = file_dir + "\\" + new_base_name + file_ext;
@@ -145,13 +145,13 @@ execute()
   // Create a new DP match to load the arc costs
   dbsks_dp_match_sptr dp_engine = new dbsks_dp_match();
 
-  vcl_cout << "Loading arc costs from file: " << new_file_path << "\n";
+  std::cout << "Loading arc costs from file: " << new_file_path << "\n";
 
  
   //////////////////////////////////////////////////
   dp_engine->load_circ_arc_costs(new_file_path);
-  vcl_cout << "Loaded arc_grid: \n";
-  dp_engine->arc_grid().print(vcl_cout);
+  std::cout << "Loaded arc_grid: \n";
+  dp_engine->arc_grid().print(std::cout);
   //////////////////////////////////////////////////
 
 

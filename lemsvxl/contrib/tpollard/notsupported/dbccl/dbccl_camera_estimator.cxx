@@ -22,10 +22,10 @@ dbccl_camera_estimator::dbccl_camera_estimator()
 //---------------------------------------------
 bool
 dbccl_camera_estimator::estimate(
-  const vcl_vector< vcl_vector< vgl_point_2d<double> > >& tracks,
-  const vcl_vector< vcl_vector<bool> >& track_masks,
+  const std::vector< std::vector< vgl_point_2d<double> > >& tracks,
+  const std::vector< std::vector<bool> >& track_masks,
   const vpgl_calibration_matrix<double>& K,
-  vcl_vector< vpgl_perspective_camera<double> >& cameras )
+  std::vector< vpgl_perspective_camera<double> >& cameras )
 {
   cameras.clear();
   vpgl_calibration_matrix<double> K_copy = K;
@@ -60,7 +60,7 @@ dbccl_camera_estimator::estimate(
     if( end_frame == start_frame ) return false;
 
     // Get the cameras for the end frame, and world points.
-    vcl_vector< vgl_point_2d<double> > start_pts, end_pts;
+    std::vector< vgl_point_2d<double> > start_pts, end_pts;
     for( int t = 0; t < num_tracks; t++ ){
       if( track_masks[start_frame][t] == true && track_masks[end_frame][t] == true ){
         start_pts.push_back( tracks[start_frame][t] );
@@ -73,7 +73,7 @@ dbccl_camera_estimator::estimate(
       start_cam, cc.get_camera2() );
 
     // Note that these wps are in the coordinate system of start_camera.
-    vcl_vector< vgl_point_3d<double> > world_pts;
+    std::vector< vgl_point_3d<double> > world_pts;
     cc.get_world_points( world_pts );
 
     // Get all of the cameras between start_frame and end_frame.
@@ -93,7 +93,7 @@ dbccl_camera_estimator::estimate(
       vpgl_perspective_camera<double> mid_cam = cc2.get_camera2();
 
       // Get the projection of the world points in this frame.
-      vcl_vector< vgl_point_2d<double> > mid_pts;
+      std::vector< vgl_point_2d<double> > mid_pts;
       for( int t = 0; t < num_tracks; t++ )
         if( track_masks[start_frame][t] == true && track_masks[end_frame][t] == true )
           mid_pts.push_back( tracks[f][t] );
@@ -110,7 +110,7 @@ dbccl_camera_estimator::estimate(
 
 /*
   // Do one last BA with all of the cameras.
-  vcl_vector< vgl_point_2d<double> > track_ips;
+  std::vector< vgl_point_2d<double> > track_ips;
   for( int f = 0; f < num_frames; f++ )
     for( int t = 0; t < num_tracks; t++ )
       track_ips.push_back( tracks[f][t] );
@@ -123,8 +123,8 @@ dbccl_camera_estimator::estimate(
 //-------------------------------------------------
 double dbccl_camera_estimator::find_best_camera(
   vpgl_perspective_camera<double>& camera,
-  const vcl_vector< vgl_point_3d<double> >& world_points,
-  const vcl_vector< vgl_point_2d<double> >& image_points )
+  const std::vector< vgl_point_3d<double> >& world_points,
+  const std::vector< vgl_point_2d<double> >& image_points )
 {
   // Find the optimal scale on translation.
   vgl_rotation_3d<double> R = camera.get_rotation();

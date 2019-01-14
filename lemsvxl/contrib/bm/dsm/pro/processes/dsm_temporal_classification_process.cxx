@@ -8,9 +8,9 @@
 #include<dsm/dsm_manager_base_sptr.h>
 #include<dsm/dsm_state_machine.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 namespace dsm_temporal_classification_process_globals
 {
@@ -23,8 +23,8 @@ bool dsm_temporal_classification_process_cons( bprb_func_process& pro )
 	//set input/output types
 	using namespace dsm_temporal_classification_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	input_types_[0] = "dsm_features_sptr";
 	output_types_[0] = "dsm_manager_sptr";
@@ -44,7 +44,7 @@ bool dsm_temporal_classification_process( bprb_func_process& pro )
 
 	//if( pro.n_inputs() < n_inputs_ )
 	//{
-	//	vcl_cout << pro.name() << "dsm_temporal_classification_process: The input number should be " << n_inputs_ << vcl_endl;
+	//	std::cout << pro.name() << "dsm_temporal_classification_process: The input number should be " << n_inputs_ << std::endl;
 	//	return false;
 	//}
 
@@ -55,7 +55,7 @@ bool dsm_temporal_classification_process( bprb_func_process& pro )
 
 	//dsm_manager_base_sptr manager_sptr = new dsm_manager();
 
-	//vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+	//std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 	//	rf_itr, rf_end = (features_sptr->reduced_feature_map()).end();
 	//unsigned t_forget(30);
 	//double prob_thresh(0.0002);
@@ -83,7 +83,7 @@ bool dsm_temporal_classification_process( bprb_func_process& pro )
 	//	manager_sptr->insert_state_machine(rf_itr->first,sm_base_sptr);
 
 	//	//classify the current target given all the observations
-	//	vcl_map<unsigned, vnl_vector<double> >::const_iterator obs_itr, obs_end = rf_itr->second.end();
+	//	std::map<unsigned, vnl_vector<double> >::const_iterator obs_itr, obs_end = rf_itr->second.end();
 	//	for(obs_itr = rf_itr->second.begin(); obs_itr != obs_end; ++obs_itr)
 	//	{
 	//		sm_base_sptr->classify(obs_itr->second);

@@ -63,10 +63,10 @@ void dbrec3d_pcl_transforms::xy_canonical(const pcl::PointCloud<T_point> &cloud_
   eigenvalues  = ei_symm.eigenvalues ();
   eigenvectors = ei_symm.eigenvectors ();
   
-  //if (ei_symm.info() != Success) vcl_abort();
-  vcl_cout << "The eigenvalues are:\n" << ei_symm.eigenvalues() << vcl_endl;
-  vcl_cout << "The eigenvectors are:\n"
-  << ei_symm.eigenvectors() << vcl_endl;
+  //if (ei_symm.info() != Success) std::abort();
+  std::cout << "The eigenvalues are:\n" << ei_symm.eigenvalues() << std::endl;
+  std::cout << "The eigenvectors are:\n"
+  << ei_symm.eigenvectors() << std::endl;
   //pcl::eigen33(XY_covariance, eigenvectors, eigenvalues);
   
   Eigen::Vector3f x_axis(eigenvectors(0,0), eigenvectors(1,0), 0.0f);

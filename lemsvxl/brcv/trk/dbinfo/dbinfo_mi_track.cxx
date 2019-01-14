@@ -13,7 +13,7 @@ float dbinfo_mi_track::score(dbinfo_observation_sptr const& obs,
   dbinfo_observation_sptr obs0 = dbinfo_track::observ(start_frame_);
   //  dbinfo_observation_sptr obs0 = observations_[k-1];
 #if 0 //JLM DEBUG
-  vcl_cout << "scoring : obs0 "  << obs0 << " vs " << obs << '\n';
+  std::cout << "scoring : obs0 "  << obs0 << " vs " << obs << '\n';
 #endif
   float info0 = dbinfo_observation_matcher::minfo(obs0, obs, verbose);
   //  float infok = dbinfo_observation_matcher::minfo(obs_k, obs, verbose);

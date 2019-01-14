@@ -28,13 +28,13 @@ inline double _dot (double x1, double y1, double x2, double y2)
 //: dot product between two vectors
 inline double _dot (VECTOR_TYPE v1, VECTOR_TYPE v2)
 {
-   return vcl_cos(v1)*vcl_cos(v2) + vcl_sin(v1)*vcl_sin(v2);
+   return std::cos(v1)*std::cos(v2) + std::sin(v1)*std::sin(v2);
 }
 
 //: compute the vector between two points
 inline VECTOR_TYPE _vPointPoint (vgl_point_2d<double> start, vgl_point_2d<double> end)
 {
-    return angle0To2Pi (vcl_atan2 ( end.y() - start.y(),
+    return angle0To2Pi (std::atan2 ( end.y() - start.y(),
                      end.x() - start.x()) );
 }
 
@@ -42,8 +42,8 @@ inline VECTOR_TYPE _vPointPoint (vgl_point_2d<double> start, vgl_point_2d<double
 inline vgl_vector_2d<double> _rotateCCW (double vx, double vy, double angle)
 {
   vgl_vector_2d<double> vec;
-  vec.set (vx*vcl_cos(angle) - vy*vcl_sin(angle),
-           vx*vcl_sin(angle) + vy*vcl_cos(angle));
+  vec.set (vx*std::cos(angle) - vy*std::sin(angle),
+           vx*std::sin(angle) + vy*std::cos(angle));
   return vec;
 }
 
@@ -51,8 +51,8 @@ inline vgl_vector_2d<double> _rotateCCW (double vx, double vy, double angle)
 inline vgl_vector_2d<double> _rotateCCW (vgl_vector_2d<double> v, double angle)
 {
   vgl_vector_2d<double> vec;
-  vec.set( v.x()*vcl_cos(angle) - v.y()*vcl_sin(angle),
-           v.x()*vcl_sin(angle) + v.y()*vcl_cos(angle));
+  vec.set( v.x()*std::cos(angle) - v.y()*std::sin(angle),
+           v.x()*std::sin(angle) + v.y()*std::cos(angle));
   return vec;
 }
 
@@ -62,8 +62,8 @@ inline vgl_vector_2d<double> _rotateCCW (vgl_vector_2d<double> v, double angle)
 inline vgl_point_2d<double> _translatePoint (vgl_point_2d<double> pt, VECTOR_TYPE v, double length)
 {
   vgl_point_2d<double> dpt;
-  dpt.x() = pt.x() + length*vcl_cos(v);
-  dpt.y() = pt.y() + length*vcl_sin(v);
+  dpt.x() = pt.x() + length*std::cos(v);
+  dpt.y() = pt.y() + length*std::sin(v);
   return dpt;
 }
 
@@ -158,9 +158,9 @@ inline double _distPointLine (vgl_point_2d<double> pt, vgl_point_2d<double> lsta
                               vgl_point_2d<double> lend)
 {
   //Ken: divide is slow.
-  return vcl_fabs((pt.y()-lstart.y())*(lend.x()-lstart.x()) - 
+  return std::fabs((pt.y()-lstart.y())*(lend.x()-lstart.x()) - 
                   (pt.x()-lstart.x())*(lend.y()-lstart.y()))/ 
-         vcl_sqrt((lend.x()-lstart.x())*(lend.x()-lstart.x()) + 
+         std::sqrt((lend.x()-lstart.x())*(lend.x()-lstart.x()) + 
                   (lend.y()-lstart.y())*(lend.y()-lstart.y()));
 }
 
@@ -179,20 +179,20 @@ inline double _distPointLineSegment (vgl_point_2d<double> pt,
                                      vgl_point_2d<double> lend)
 {
   //Ken: divide is slow.
-  double l = vcl_sqrt((lend.y()-lstart.y())*(lend.y()-lstart.y()) + 
+  double l = std::sqrt((lend.y()-lstart.y())*(lend.y()-lstart.y()) + 
                       (lend.x()-lstart.x())*(lend.x()-lstart.x()));
 
   double t = ((pt.y()-lstart.y())*(lend.y()-lstart.y()) + 
               (pt.x()-lstart.x())*(lend.x()-lstart.x()))/l;
 
   if (t<0)
-    return vcl_sqrt((pt.y()-lstart.y())*(pt.y()-lstart.y()) +
+    return std::sqrt((pt.y()-lstart.y())*(pt.y()-lstart.y()) +
                     (pt.x()-lstart.x())*(pt.x()-lstart.x()));
   else if (t>l)
-    return vcl_sqrt((pt.y()-lend.y())*(pt.y()-lend.y()) +
+    return std::sqrt((pt.y()-lend.y())*(pt.y()-lend.y()) +
                     (pt.x()-lend.x())*(pt.x()-lend.x()));
   else
-    return vcl_fabs((pt.y()-lstart.y())*(lend.x()-lstart.x()) - 
+    return std::fabs((pt.y()-lstart.y())*(lend.x()-lstart.x()) - 
                   (pt.x()-lstart.x())*(lend.y()-lstart.y()))/l;
 }
 
@@ -217,7 +217,7 @@ inline double _deltaPointLine (vgl_point_2d<double> pt,
   //Ken: divide is slow.
   return ((pt.y()-lstart.y())*(lend.y()-lstart.y()) + 
           (pt.x()-lstart.x())*(lend.x()-lstart.x())) /
- vcl_sqrt((lend.y()-lstart.y())*(lend.y()-lstart.y()) + 
+ std::sqrt((lend.y()-lstart.y())*(lend.y()-lstart.y()) + 
           (lend.x()-lstart.x())*(lend.x()-lstart.x()));
 }
 
@@ -294,12 +294,12 @@ inline vgl_point_2d<double> getCenterOfArc (double sx, double sy, double ex, dou
 {
   int nu=0; //not possible just a precaution
   double tau;
-  double d = vcl_sqrt((ey-sy)*(ey-sy) + (ex-sx)*(ex-sx));
+  double d = std::sqrt((ey-sy)*(ey-sy) + (ex-sx)*(ex-sx));
   
   if (_isEq(d,2*r, R_EPSILON)) tau=0;
-  else              tau = vcl_acos(d/(2*r)); 
+  else              tau = std::acos(d/(2*r)); 
 
-  double psi = vcl_atan2(ey-sy, ex-sx) + vnl_math::pi_over_2; 
+  double psi = std::atan2(ey-sy, ex-sx) + vnl_math::pi_over_2; 
   psi = angle0To2Pi (psi);
 
   if (nud>0 && nus>0) nu=-1;
@@ -308,8 +308,8 @@ inline vgl_point_2d<double> getCenterOfArc (double sx, double sy, double ex, dou
   else if (nud<0 && nus<0) nu=-1;
   else dbsk2d_assert(false); 
 
-  return vgl_point_2d<double> ((sx+ex)/2 + (d/2)*vcl_tan(nu*tau)*vcl_cos(psi),
-                               (sy+ey)/2 + (d/2)*vcl_tan(nu*tau)*vcl_sin(psi));
+  return vgl_point_2d<double> ((sx+ex)/2 + (d/2)*std::tan(nu*tau)*std::cos(psi),
+                               (sy+ey)/2 + (d/2)*std::tan(nu*tau)*std::sin(psi));
 }
 
 //: get the center of the circular arc fitting to the three points
@@ -326,21 +326,21 @@ inline vgl_point_2d<double> getArcCenterFromThreePoints (double x1, double y1,
   double start2x = (x2+x3)/2;
   double start2y = (y2+y3)/2;
 
-  double psi1 = vcl_atan2(y3-y1,x3-x1) + vnl_math::pi_over_2;
-  double psi2 = vcl_atan2(y3-y2,x3-x2) + vnl_math::pi_over_2;
+  double psi1 = std::atan2(y3-y1,x3-x1) + vnl_math::pi_over_2;
+  double psi2 = std::atan2(y3-y2,x3-x2) + vnl_math::pi_over_2;
 
-  double psihat = vcl_atan2(start2y - start1y, start2x - start1x);
+  double psihat = std::atan2(start2y - start1y, start2x - start1x);
 
-  if (vcl_sin(psi2 - psi1)==0){// parallel lines
+  if (std::sin(psi2 - psi1)==0){// parallel lines
     center.set(100000, 100000);
   }
   else {
-    double test1 = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
-    double newH = vcl_sqrt( (start1y - start2y)*(start1y - start2y) +
+    double test1 = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
+    double newH = std::sqrt( (start1y - start2y)*(start1y - start2y) +
                   (start1x - start2x)*(start1x - start2x) );
 
-    center.set( start1x + newH*test1*vcl_cos(psi1),
-                start1y + newH*test1*vcl_sin(psi1));
+    center.set( start1x + newH*test1*std::cos(psi1),
+                start1y + newH*test1*std::sin(psi1));
   }
   return center;
 }
@@ -357,21 +357,21 @@ inline double getArcRadiusFromThreePoints(double x1, double y1,
   double start2x = (x2+x3)/2;
   double start2y = (y2+y3)/2;
 
-  double psi1 = vcl_atan2(y3-y1,x3-x1) + vnl_math::pi_over_2;
-  double psi2 = vcl_atan2(y3-y2,x3-x2) + vnl_math::pi_over_2;
+  double psi1 = std::atan2(y3-y1,x3-x1) + vnl_math::pi_over_2;
+  double psi2 = std::atan2(y3-y2,x3-x2) + vnl_math::pi_over_2;
 
-  double psihat = vcl_atan2(start2y - start1y, start2x - start1x);
+  double psihat = std::atan2(start2y - start1y, start2x - start1x);
 
-  if (vcl_sin(psi2 - psi1)==0){// parallel lines
+  if (std::sin(psi2 - psi1)==0){// parallel lines
     return ISHOCK_DIST_HUGE;
   }
   else {
-    double test1 = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
-    double newH = vcl_sqrt( (start1y - start2y)*(start1y - start2y) +
+    double test1 = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
+    double newH = std::sqrt( (start1y - start2y)*(start1y - start2y) +
                   (start1x - start2x)*(start1x - start2x) );
 
-    center.set( start1x + newH*test1*vcl_cos(psi1),
-                start1y + newH*test1*vcl_sin(psi1));
+    center.set( start1x + newH*test1*std::cos(psi1),
+                start1y + newH*test1*std::sin(psi1));
 
     return _distPointPoint(center, vgl_point_2d<double>(x1,y1));
   }
@@ -393,14 +393,14 @@ inline double getTangentFromThreePoints (double x1, double y1,
                        double x2, double y2,
                        double x3, double y3)
 {
-  double vcl_tan_chord = angle0To2Pi (vcl_atan2 (y2-y1, x2-x1));
+  double vcl_tan_chord = angle0To2Pi (std::atan2 (y2-y1, x2-x1));
   vgl_point_2d<double> center = getArcCenterFromThreePoints (x1, y1, x2, y2, x3, y3);
   
   if (center.x()==100000)
     return vcl_tan_chord;
 
-  double tangent1 = angle0To2Pi (vcl_atan2 (center.y()-y3, center.x()-x3) + vnl_math::pi_over_2);
-  double tangent2 = angle0To2Pi (vcl_atan2 (center.y()-y3, center.x()-x3) - vnl_math::pi_over_2);
+  double tangent1 = angle0To2Pi (std::atan2 (center.y()-y3, center.x()-x3) + vnl_math::pi_over_2);
+  double tangent2 = angle0To2Pi (std::atan2 (center.y()-y3, center.x()-x3) - vnl_math::pi_over_2);
   double tangent;
   if (_dot (vcl_tan_chord, tangent1)>0) 
     tangent = tangent1;
@@ -413,11 +413,11 @@ inline double getTangentFromThreePoints (double x1, double y1,
 inline vgl_point_2d<double> centerOfArc(const vgl_point_2d<double> &point1, 
     const vgl_point_2d<double> &point2, double &radius, ARC_NUD &nud, ARC_NUS &nus)
 {
-  double chordVector = vcl_atan2(point2.y()- point1.y(), point2.x()-point1.x());
+  double chordVector = std::atan2(point2.y()- point1.y(), point2.x()-point1.x());
   vgl_point_2d<double> midChord((point2.x()+point1.x())/2, (point2.y()+point1.y())/2);
 
   double chordL = vnl_math::hypot(point2.y()- point1.y(), point2.x()-point1.x());
-  double d = vcl_sqrt(radius*radius - chordL*chordL/4);
+  double d = std::sqrt(radius*radius - chordL*chordL/4);
 
   double direction = chordVector;
   if (nud == ARC_NUD_CCW)
@@ -450,7 +450,7 @@ inline bool threePointsToArc (const vgl_point_2d<double> &p1, const vgl_point_2d
    
    center.set ( (D*E - B*F)/G, (A*F - C*E)/G);
 
-   radius = vcl_sqrt( (center.x()-p1.x())*(center.x()-p1.x()) +
+   radius = std::sqrt( (center.x()-p1.x())*(center.x()-p1.x()) +
                   (center.y()-p1.y())*(center.y()-p1.y()) );
 
   if (A*D-B*C > 0)
@@ -474,19 +474,19 @@ inline bool threePointsToArc (const vgl_point_2d<double> &p1, const vgl_point_2d
     s2y = (point2.y()+point3.y())/2;
 
   double 
-    psi1 = vcl_atan2(point2.y()-point1.y(),point2.x()-point1.x()) + vnl_math::pi/2,
-    psi2 = vcl_atan2(point2.y()-point3.y(),point2.x()-point3.x()) + vnl_math::pi/2;
+    psi1 = std::atan2(point2.y()-point1.y(),point2.x()-point1.x()) + vnl_math::pi/2,
+    psi2 = std::atan2(point2.y()-point3.y(),point2.x()-point3.x()) + vnl_math::pi/2;
 
-  double psihat = vcl_atan2(s2y-s1y, s2x-s1x);
+  double psihat = std::atan2(s2y-s1y, s2x-s1x);
 
-  if (vcl_sin(psi2 - psi1)==0) // collinear
+  if (std::sin(psi2 - psi1)==0) // collinear
     return false;
   else {
-    t = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
+    t = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
     H = vnl_math::hypot(s1y-s2y, s1x-s2x);
 
-    center.setX(s1x + H*t*vcl_cos(psi1));
-    center.setY(s1y + H*t*vcl_sin(psi1));
+    center.setX(s1x + H*t*std::cos(psi1));
+    center.setY(s1y + H*t*std::sin(psi1));
 
     radius = vnl_math::hypot(center.x()-point1.x(), 
               center.y()-point1.y());
@@ -514,15 +514,15 @@ inline bool threePointsToArc(const vgl_point_2d<double> &point1,
   e = (l2*x3 - x2*l3) - (l1*x3-l3*x1) + (l1*x2-x1*l2);
   f = -(y1*(l2*x3 - x2*l3) - y2*(l1*x3-l3*x1) + y3*(l1*x2-x1*l2));
 
-  if(vcl_fabs(a) < 1e-15)
+  if(std::fabs(a) < 1e-15)
    return false; // in a straight line
 
-  double r = vcl_sqrt((d*d+e*e)/(4*a*a) - f/a);
+  double r = std::sqrt((d*d+e*e)/(4*a*a) - f/a);
   double cx = -d/(2*a), cy = -e/(2*a);
 
-  double theta1 = vcl_atan2(y1-cy, x1-cx),
-  theta2 = vcl_atan2(y2-cy, x2-cx),
-  theta3 = vcl_atan2(y3-cy, x3-cx);
+  double theta1 = std::atan2(y1-cy, x1-cx),
+  theta2 = std::atan2(y2-cy, x2-cx),
+  theta3 = std::atan2(y3-cy, x3-cx);
 
   // make sure they're in ascending order
   if(theta3 < theta1) theta3 += 2*vnl_math::pi;
@@ -549,11 +549,11 @@ inline void pointTangentPointToArc(const vgl_point_2d<double> &point1, double th
 {
   double x1 = point1.x(), y1 = point1.y(),
   x2 = point2.x(), y2 = point2.y();
-  double u = (x2-x1)*vcl_cos(theta) + (y2-y1)*vcl_sin(theta),
-  v = -(x2-x1)*vcl_sin(theta) + (y2-y1)*vcl_cos(theta);
+  double u = (x2-x1)*std::cos(theta) + (y2-y1)*std::sin(theta),
+  v = -(x2-x1)*std::sin(theta) + (y2-y1)*std::cos(theta);
 
   double r = .5*(v*v+u*u)/v;
-  double cx = x1 - r*vcl_sin(theta), cy = y1 + r*vcl_cos(theta);
+  double cx = x1 - r*std::sin(theta), cy = y1 + r*std::cos(theta);
 
   if(r < 0) {
     r = -r;
@@ -571,13 +571,13 @@ inline void pointTangentPointToArc(const vgl_point_2d<double> &point1, double th
 {
   double x1 = point1.x(), y1 = point1.y(),
   x2 = point2.x(), y2 = point2.y();
-  double u = (x2-x1)*vcl_cos(theta) + (y2-y1)*vcl_sin(theta),
-  v = -(x2-x1)*vcl_sin(theta) + (y2-y1)*vcl_cos(theta);
+  double u = (x2-x1)*std::cos(theta) + (y2-y1)*std::sin(theta),
+  v = -(x2-x1)*std::sin(theta) + (y2-y1)*std::cos(theta);
 
   double r = .5*(v*v+u*u)/v;
-  double cx = x1 - r*vcl_sin(theta), cy = y1 + r*vcl_cos(theta);
-  double theta1 = vcl_atan2(y1-cy, x1-cx),
-  theta2 = vcl_atan2(y2-cy, x2-cx);
+  double cx = x1 - r*std::sin(theta), cy = y1 + r*std::cos(theta);
+  double theta1 = std::atan2(y1-cy, x1-cx),
+  theta2 = std::atan2(y2-cy, x2-cx);
 
   if(r < 0) {
     r = -r;
@@ -593,7 +593,7 @@ inline void pointTangentPointToArc(const vgl_point_2d<double> &point1, double th
 inline double getTangentOfArc(const vgl_point_2d<double> &center,
     const vgl_point_2d<double> &start, const vgl_point_2d<double> &end, ARC_NUD nud) 
 {
-  double thetai = vcl_atan2(end.y()-center.y(), end.x()-center.x());
+  double thetai = std::atan2(end.y()-center.y(), end.x()-center.x());
 
   if (nud==ARC_NUD_CCW)
     thetai -= vnl_math::pi/2;
@@ -607,11 +607,11 @@ inline double getTangentOfArc(const vgl_point_2d<double> &center, double radius,
     const vgl_point_2d<double> &start, const vgl_point_2d<double> &point) 
 {
   vgl_vector_2d<double> subtangenti = point-center;
-  double thetai = vcl_atan2(subtangenti.y(), subtangenti.x());
+  double thetai = std::atan2(subtangenti.y(), subtangenti.x());
 
   vgl_vector_2d<double> start_subtan = start - center;
-  double theta_start = vcl_atan2(start_subtan.y(), start_subtan.x());
-  if(vcl_fabs( vcl_fmod (theta_start - theta_first, 2*vnl_math::pi)) < 1e-4)
+  double theta_start = std::atan2(start_subtan.y(), start_subtan.x());
+  if(std::fabs( std::fmod (theta_start - theta_first, 2*vnl_math::pi)) < 1e-4)
     thetai += vnl_math::pi/2;
   else
     thetai -= vnl_math::pi/2;

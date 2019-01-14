@@ -27,7 +27,7 @@ public:
   dbknee_dicom_image_displayer(){}
 
   ////: Return type string "image"
-  //virtual vcl_string type() const { return bvis1_image_displayer::type(); }
+  //virtual std::string type() const { return bvis1_image_displayer::type(); }
 
   ////: Create a tableau if the storage object is of type image
   //virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

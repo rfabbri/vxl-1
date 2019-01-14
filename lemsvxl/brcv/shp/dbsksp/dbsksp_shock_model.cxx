@@ -176,9 +176,9 @@ compute_params_from_shock_graph(vnl_vector<double >& params)
     
     // get the phi's associated with (degree(vertex)-1) first edges
     // assign all but the last phi
-    vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = v->descriptor_list();
+    std::list<dbsksp_shock_node_descriptor_sptr > desc_list = v->descriptor_list();
       
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator it =
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator it =
       desc_list.begin(); (*it) != desc_list.back(); ++it)
     {
       params.put(var_count, (*it)->phi);
@@ -210,7 +210,7 @@ compute_params_from_shock_graph(vnl_vector<double >& params)
 
   // direction of reference edge
   vgl_vector_2d<double > ref_dir = this->shock_graph()->ref_direction();
-  double ref_psi = vcl_atan2(ref_dir.y(), ref_dir.x());
+  double ref_psi = std::atan2(ref_dir.y(), ref_dir.x());
   params.put(var_count, ref_psi);
   ++var_count;
 
@@ -242,7 +242,7 @@ update_shock_graph(const vnl_vector<double >& params )
     if (v->degree() == 1) continue;
 
     // first collect all the node descriptors
-    vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = 
+    std::list<dbsksp_shock_node_descriptor_sptr > desc_list = 
       v->descriptor_list();
 
     assert(desc_list.size() > 1);
@@ -250,7 +250,7 @@ update_shock_graph(const vnl_vector<double >& params )
     // assign all but the last phi
     double phi_sum = 0; // will be used to compute the last phi
     
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator it =
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator it =
       desc_list.begin(); (*it) != desc_list.back(); ++it)
     {
       (*it)->phi = params.get(var_count);
@@ -289,7 +289,7 @@ update_shock_graph(const vnl_vector<double >& params )
   ++var_count;
 
   this->shock_graph()->set_ref_direction(
-    vgl_vector_2d<double >(vcl_cos(ref_angle), vcl_sin(ref_angle)));
+    vgl_vector_2d<double >(std::cos(ref_angle), std::sin(ref_angle)));
   
   // origin radius
   this->shock_graph()->set_ref_node_radius(params.get(var_count));
@@ -307,8 +307,8 @@ update_shock_graph(const vnl_vector<double >& params )
 // edge correspondences with another shock graph of the same topology
 void dbsksp_phi_m_L_shock_model::
 get_free_params(const dbsksp_shock_graph_sptr& that_graph, vnl_vector<double >& params,
-                const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map,
-                const vcl_map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map)
+                const std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map,
+                const std::map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map)
 {
   params.set_size(this->num_params());
 
@@ -356,8 +356,8 @@ get_free_params(const dbsksp_shock_graph_sptr& that_graph, vnl_vector<double >& 
     
     // get the phi's associated with (degree(vertex)-1) first edges
     // assign all but the last phi
-    vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = this_v->descriptor_list(); 
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator itr =
+    std::list<dbsksp_shock_node_descriptor_sptr > desc_list = this_v->descriptor_list(); 
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator itr =
       desc_list.begin(); (*itr) != desc_list.back(); ++itr)
     {
       dbsksp_shock_edge_sptr this_e = (*itr)->edge;
@@ -396,7 +396,7 @@ get_free_params(const dbsksp_shock_graph_sptr& that_graph, vnl_vector<double >& 
 
   // direction of reference edge
   vgl_vector_2d<double > ref_dir = that_graph->ref_direction();
-  double ref_psi = vcl_atan2(ref_dir.y(), ref_dir.x());
+  double ref_psi = std::atan2(ref_dir.y(), ref_dir.x());
   params.put(var_count, ref_psi);
   ++var_count;
 
@@ -493,7 +493,7 @@ compute_params_from_shock_graph(vnl_vector<double >& params)
   params.set_size(4);
   params[0] = this->shock_graph()->ref_origin().x();
   params[1] = this->shock_graph()->ref_origin().y();
-  params[2] = vcl_atan2(this->shock_graph()->ref_direction().y(), 
+  params[2] = std::atan2(this->shock_graph()->ref_direction().y(), 
     this->shock_graph()->ref_direction().x());
   params[3] = this->shock_graph()->ref_node_radius();
 
@@ -509,7 +509,7 @@ update_shock_graph(const vnl_vector<double >& params )
   assert(params.size() == 4);
   this->shock_graph()->set_ref_origin(vgl_point_2d<double >(params[0], params[1]));
   this->shock_graph()->set_ref_direction(
-    vgl_vector_2d<double >(vcl_cos(params[2]), vcl_sin(params[2])));
+    vgl_vector_2d<double >(std::cos(params[2]), std::sin(params[2])));
   this->shock_graph()->set_ref_node_radius(params[3]);
 
   this->shock_graph()->compute_all_dependent_params();
@@ -566,7 +566,7 @@ update_shock_graph(const vnl_vector<double >& params )
 
   // direction of reference edge
   vgl_vector_2d<double > ref_dir = this->shock_graph()->ref_direction();
-  extrinsic_params[2] = vcl_atan2(ref_dir.y(), ref_dir.x());
+  extrinsic_params[2] = std::atan2(ref_dir.y(), ref_dir.x());
   
   // global radius
   extrinsic_params[3] = this->shock_graph()->ref_node_radius();
@@ -599,8 +599,8 @@ void dbsksp_selective_phi_m_L_shock_model::
 update_num_params()
 {
   int num_params = 0;
-  vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
-  for (vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
+  std::map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
+  for (std::map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
     sit != selection.end(); ++sit)
   {
     for (int i=0; i<4; ++i)
@@ -620,8 +620,8 @@ compute_params_from_shock_graph(vnl_vector<double >& params)
   params.set_size(this->num_params());
   vnl_vector<double >::iterator params_it = params.begin();
 
-  vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
-  for (vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
+  std::map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
+  for (std::map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
     sit != selection.end(); ++sit)
   {
     dbsksp_shock_edge_sptr e = sit->first;
@@ -663,8 +663,8 @@ update_shock_graph(const vnl_vector<double >& params )
   assert(params.size() == this->num_params());
   vnl_vector<double >::const_iterator params_it = params.begin();
   
-  vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
-  for (vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
+  std::map<dbsksp_shock_edge_sptr, vnl_int_4 > selection = this->params_selection();
+  for (std::map<dbsksp_shock_edge_sptr, vnl_int_4 >::iterator sit = selection.begin();
     sit != selection.end(); ++sit)
   {
     dbsksp_shock_edge_sptr e = sit->first;

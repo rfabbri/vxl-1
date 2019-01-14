@@ -1,8 +1,8 @@
 //: This is dbsk3d/algo/dbsk3d_ms_hypg_trans.cxx
 //  MingChing Chang 061117
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
@@ -21,7 +21,7 @@
 //: Add virtual curves from the detected MS transition queue.
 void dbsk3d_ms_hypg_trans::add_trans_virtual_curves ()
 {
-  vul_printf (vcl_cout, "add_trans_virtual_curves(). Q size %u.\n", ms_xform_Q_.size());
+  vul_printf (std::cout, "add_trans_virtual_curves(). Q size %u.\n", ms_xform_Q_.size());
   int n_tab_s_success = 0;
   int n_a5_c_success = 0;
   int n_a12a3i_c_success = 0;
@@ -91,23 +91,23 @@ void dbsk3d_ms_hypg_trans::add_trans_virtual_curves ()
 
     //Brute-force debug:
     if (ms_hypg_->check_integrity() == false)
-      vul_printf (vcl_cout, "ms_hypg integrity error! ");
+      vul_printf (std::cout, "ms_hypg integrity error! ");
   }
 
-  vul_printf (vcl_cout, "    %3d A12A3-II Sheet-Splice xforms.\n", n_tab_s_success);  
-  vul_printf (vcl_cout, "    %3d A5 Curve-Contract xforms.\n", n_a5_c_success);  
-  vul_printf (vcl_cout, "    %3d A12A3-I Curve-Contract xforms.\n", n_a12a3i_c_success);  
-  vul_printf (vcl_cout, "    %3d A15 Curve-Contract xforms.\n", n_a15_c_c_success);  
-  vul_printf (vcl_cout, "    %3d A15 Sheet-Contract xforms.\n", n_a15_s_c_success);  
-  vul_printf (vcl_cout, "    %3d A14 Sheet-Contract xforms.\n", n_a14_s_c_success);
-  vul_printf (vcl_cout, "\n    total virtual links added: %d.\n", n_vl);
+  vul_printf (std::cout, "    %3d A12A3-II Sheet-Splice xforms.\n", n_tab_s_success);  
+  vul_printf (std::cout, "    %3d A5 Curve-Contract xforms.\n", n_a5_c_success);  
+  vul_printf (std::cout, "    %3d A12A3-I Curve-Contract xforms.\n", n_a12a3i_c_success);  
+  vul_printf (std::cout, "    %3d A15 Curve-Contract xforms.\n", n_a15_c_c_success);  
+  vul_printf (std::cout, "    %3d A15 Sheet-Contract xforms.\n", n_a15_s_c_success);  
+  vul_printf (std::cout, "    %3d A14 Sheet-Contract xforms.\n", n_a14_s_c_success);
+  vul_printf (std::cout, "\n    total virtual links added: %d.\n", n_vl);
 }
 
 //##############################################################################
 
 int dbsk3d_ms_hypg_trans::add_vl_sheet_splice (dbsk3d_ms_sheet* MS)
 {
-  vcl_vector<dbmsh3d_edge*> MS_bnd_Cs;
+  std::vector<dbmsh3d_edge*> MS_bnd_Cs;
   MS->get_bnd_Es (MS_bnd_Cs);
   dbmsh3d_vertex* loop2_prevN = NULL;
   int n_vl = 0;
@@ -171,7 +171,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A5_curve_contract (dbsk3d_ms_curve* MC)
   dbsk3d_ms_node* Nee = (dbsk3d_ms_node*) Ce->other_V (Ne);
 
   //Add virtual link of (Nss - Cs - Ns - MC - Ne - Ce - Nee)
-  vcl_vector<dbmsh3d_curve*> sup_curves;
+  std::vector<dbmsh3d_curve*> sup_curves;
   sup_curves.push_back (Cs);
   sup_curves.push_back (MC);
   sup_curves.push_back (Ce);
@@ -242,7 +242,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_curve_contract (dbsk3d_ms_curve* MC)
   //     possible valid merges at either Ns or Ne.
   dbmsh3d_vertex* Ns = MC->s_MN();
   dbmsh3d_vertex* Ne = MC->e_MN();
-  vcl_set<dbsk3d_ms_sheet*> MS_merge_set;
+  std::set<dbsk3d_ms_sheet*> MS_merge_set;
 
   dbmsh3d_halfedge* HE = MC->halfedge();
   assert (is_HE_pair_3p_inc (HE)); //the pair loop contains >=3 halfedges with the same edge.
@@ -299,8 +299,8 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_curve_contract (dbsk3d_ms_curve* MC)
   dbsk3d_ms_node* MN_final = (dbsk3d_ms_node*) MC->other_V (MN_del);
   
   //MC_merge_set[] is the set of curves to merge with MC.
-  vcl_set<dbsk3d_ms_curve*> MC_merge_set;
-  vcl_set<dbsk3d_ms_sheet*>::iterator sit = MS_merge_set.begin();
+  std::set<dbsk3d_ms_curve*> MC_merge_set;
+  std::set<dbsk3d_ms_sheet*>::iterator sit = MS_merge_set.begin();
   for (; sit != MS_merge_set.end(); sit++) {
     dbsk3d_ms_sheet* MS = (*sit);
 
@@ -330,7 +330,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_curve_contract (dbsk3d_ms_curve* MC)
   }
 
   //Add virtual link of (MN_final - MC - MN_del - MC_merge_set[] - otherN[])
-  vcl_set<dbsk3d_ms_curve*>::iterator cit = MC_merge_set.begin();
+  std::set<dbsk3d_ms_curve*>::iterator cit = MC_merge_set.begin();
   for (; cit != MC_merge_set.end(); cit++) {
     dbsk3d_ms_curve* mergeMC = (*cit);
     dbmsh3d_node* otherN = (dbmsh3d_node*) mergeMC->other_V (MN_del);
@@ -349,7 +349,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_sheet_contract (dbsk3d_ms_sheet* MS)
   assert (MS->have_icurve_chain() == false); 
 
   //1-2) MS can not have incident A3 ribs.
-  vcl_set<dbsk3d_ms_node*> MNset;
+  std::set<dbsk3d_ms_node*> MNset;
   int count = 0;
   dbmsh3d_halfedge* HE = MS->halfedge();
   do {
@@ -375,7 +375,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_sheet_contract (dbsk3d_ms_sheet* MS)
   assert (MNp->n_E_incidence_nv() == MNq->n_E_incidence_nv());
 
   //1-5) Determine the merging sheets (MS1, MS2, ...).
-  vcl_vector<dbmsh3d_halfedge*> MS_merge_HE;
+  std::vector<dbmsh3d_halfedge*> MS_merge_HE;
   HE = MCd->halfedge();
   do {
     dbsk3d_ms_sheet* MSi = (dbsk3d_ms_sheet*) HE->face();
@@ -402,9 +402,9 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_sheet_contract (dbsk3d_ms_sheet* MS)
   dbsk3d_ms_node* MNA15 = (dbsk3d_ms_node*) MCq->other_V (Vpq);
 
   //1-8) Determine the MCpm[i] and MCqm[i] for each MSi to be merged.
-  vcl_set<dbmsh3d_face*> FFpm_set_visited, FFqm_set_visited;
-  vcl_vector<dbsk3d_ms_curve*> MCpm_vec, MCqm_vec;
-  vcl_set<dbmsh3d_sheet*> MS_merge_set;
+  std::set<dbmsh3d_face*> FFpm_set_visited, FFqm_set_visited;
+  std::vector<dbsk3d_ms_curve*> MCpm_vec, MCqm_vec;
+  std::set<dbmsh3d_sheet*> MS_merge_set;
   for (unsigned int i=0; i<MS_merge_HE.size(); i++) {
     dbsk3d_ms_sheet* MSi = (dbsk3d_ms_sheet*) MS_merge_HE[i]->face();
     MS_merge_set.insert (MSi);
@@ -437,7 +437,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A15_sheet_contract (dbsk3d_ms_sheet* MS)
 
   //1-9) If MCd has shared_E[], check if they are only with MCpm[] and MCqm[].
   if (MCd->have_shared_Es()) {
-    vcl_set<dbmsh3d_curve*> shared_E_Cset;
+    std::set<dbmsh3d_curve*> shared_E_Cset;
     for (unsigned int i=0; i<MCpm_vec.size(); i++)
       shared_E_Cset.insert (MCpm_vec[i]);
     for (unsigned int i=0; i<MCqm_vec.size(); i++)
@@ -478,7 +478,7 @@ int dbsk3d_ms_hypg_trans::add_vl_A14_sheet_contract (dbsk3d_ms_sheet* MS)
   //1-1) MS can not have incident A3 ribs.
   //Determine the two ms_curves MCp and MCq of MS.
   dbsk3d_ms_curve *MCp = NULL, *MCq = NULL;
-  vcl_set<dbsk3d_ms_node*> MNset;
+  std::set<dbsk3d_ms_node*> MNset;
   int n_bnd = MS->n_bnd_Es();
   assert (n_bnd == 2);
 

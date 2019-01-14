@@ -94,15 +94,15 @@
 #include <vnl/vnl_identity_3x3.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <utility>
+#include <limits>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-//#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+//#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
@@ -180,7 +180,7 @@ dbshadow_process::dbshadow_process()
     //!parameters()->add( "Include Borders" ,   "-sinclude_borders" ,   (bool)dp.borderp ) 
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -208,7 +208,7 @@ dbshadow_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbshadow_process::name()
 {
   return "dbshadow";
@@ -216,9 +216,9 @@ dbshadow_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbshadow_process::get_input_type()
+std::vector< std::string > dbshadow_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vsol2D" );
   to_return.push_back( "image" );
@@ -228,9 +228,9 @@ vcl_vector< vcl_string > dbshadow_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbshadow_process::get_output_type()
+std::vector< std::string > dbshadow_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vtol2D" );
   to_return.push_back( "vsol2D" );
@@ -286,10 +286,10 @@ dbshadow_process::execute()
 {
 
 
-  vcl_cout<<  input_data_.size() <<vcl_endl;
+  std::cout<<  input_data_.size() <<std::endl;
   if ( input_data_.size() != 1 ){
-    vcl_cout<<  input_data_.size() <<vcl_endl;
-    vcl_cout << "In dbshadow_process::execute() - "
+    std::cout<<  input_data_.size() <<std::endl;
+    std::cout << "In dbshadow_process::execute() - "
       << "not exactly one input images \n";
     return false;
   }
@@ -305,7 +305,7 @@ dbshadow_process::execute()
   // get image from the storage class
   vidpro_image_storage_sptr frame_image;
   frame_image.vertical_cast(input_data_[0][1]);
-  vcl_cout<<input_data_[0][1]<<vcl_endl;
+  std::cout<<input_data_[0][1]<<std::endl;
 
 
   //Dongjin Han 7-10-06 convert color image into grey
@@ -323,7 +323,7 @@ dbshadow_process::execute()
   else if ( image_view.nplanes() == 1 ) {
     image_rsc = image_view;
   } else {
-    vcl_cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << std::endl;
     return false;
   }
 
@@ -352,9 +352,9 @@ dbshadow_process::execute()
     double max_x=-100.0f,max_y=-100.0f,min_x=100000.0f,min_y=100000.0f;
     double left_x=100000.0f, left_y=100000.00f,right_x=-100000.0f,right_y=-100000.0f;
     // parse through all the vsol classes and save curve objects only
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = frame_vsol->all_data();
     // test if only one region
-    // vcl_cout<<frame<<" "<<vsol_list.size()<<vcl_endl;
+    // std::cout<<frame<<" "<<vsol_list.size()<<std::endl;
     //epi_segment construction
     vsol_digital_curve_2d_sptr dc1 = new vsol_digital_curve_2d;
     //dc1=vsol_list[b]->cast_to_region()->cast_to_polygon()->cast_to_digital_curve_2d();
@@ -382,7 +382,7 @@ dbshadow_process::execute()
           for (unsigned int i=1; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
           {
 
-            //vcl_cout<<"b: "<<b<<" "<<"i: "<<i<<vcl_endl;
+            //std::cout<<"b: "<<b<<" "<<"i: "<<i<<std::endl;
             vsol_point_2d_sptr p1 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i-1);
             vsol_point_2d_sptr p2 = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
             ////psfile1.line((float)p1->x(), (float)p1->y(), (float)p2->x(), (float)p2->y());
@@ -430,7 +430,7 @@ dbshadow_process::execute()
       vil_convert_to_grey_using_rgb_weighting(image_sptr->get_view()) );
 
     if(grey_view.nplanes() != 1) {
-      vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+      std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
       return false;
     }
     vil1_memory_image_of< unsigned char > img = vil1_from_vil_image_view( grey_view );
@@ -439,15 +439,15 @@ dbshadow_process::execute()
     detector.SetImage(img);
     //process edges
     detector.DoContour();
-    vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+    std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
     if (!edges)
       return false;
-    vcl_cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << vcl_endl;
+    std::cout << "process " << edges->size() << " edges in " << t.real() << " msecs." << std::endl;
     // create the output storage class
     vidpro_vtol_storage_sptr output_vtol = vidpro_vtol_storage_new();
     //vsol_digital_curve_2d_sptr dc_line = new vsol_digital_curve_2d;
     // add the edges as topology objects to to storage class
-    for ( vcl_vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
+    for ( std::vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
       e_itr != edges->end();  ++e_itr ) {
         vtol_topology_object_sptr edge = e_itr->ptr();  
         output_vtol->add_vtol(edge);
@@ -463,7 +463,7 @@ dbshadow_process::execute()
 
 static bool approx_equal(double a, double b, double thresh=1e-12)
 {
-  return vcl_abs(b-a) < thresh;
+  return std::abs(b-a) < thresh;
 }
 
 
@@ -473,7 +473,7 @@ dbshadow_process::finish()
 {
 
   if (!initialize_camera_N_string_scan()) {
-    vcl_cout<<"bbox_cam_my file problem"<<vcl_endl;
+    std::cout<<"bbox_cam_my file problem"<<std::endl;
     return false;
   }
   map3d_2d();//need for count_edge
@@ -495,7 +495,7 @@ dbshadow_process::finish()
       vnl_double_4 p0_4477( 5.80811, 4.46354, .5+dz,1);
     vnl_double_4 p7_4477(19.8571, 8.97397, .5+dz,1);
 
-    vcl_cout<<"z: "<<0.1+dz<<vcl_endl;
+    std::cout<<"z: "<<0.1+dz<<std::endl;
     shadow_histo(p0_4477,  p7_4477);
   }
 
@@ -506,15 +506,15 @@ dbshadow_process::finish()
       vnl_double_4 s(9.2243+dx,15.3703,2.97796,1);
       vnl_double_4 e(9.2243+dx,11.3703,2.97796,1);
       double ans=count_edge( s,  e);
-      vcl_cout<<s<<" "<<ans<<vcl_endl;
+      std::cout<<s<<" "<<ans<<std::endl;
     }
 
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
     for (double dx=0;dx<=0;dx+=.3) {
       vnl_double_4 s(9.2243+dx,15.3703,2.97796,1);
       vnl_double_4 e(6.76132+dx,11.232,2.66335,1);
       double ans=count_edge( s,  e);
-      vcl_cout<<s<<" "<<ans<<vcl_endl;
+      std::cout<<s<<" "<<ans<<std::endl;
     }
   }
   // 9.2243,15.3703,2.97796
@@ -531,24 +531,24 @@ bool dbshadow_process::initialize_camera_N_string_scan()
   bool default_cam_flag;
   parameters()->get_value( "-cam_filename" , cam_path );
   parameters()->get_value( "-cam_flag" , default_cam_flag );
-  //    vcl_cout<<vul_file::dirname(cam_path);
-  vcl_string cam_filename = cam_path.path;
+  //    std::cout<<vul_file::dirname(cam_path);
+  std::string cam_filename = cam_path.path;
   //first, check the con file names to find correct frmae # to use.
   vul_reg_exp r0("00");
 
   vul_file_iterator fn_con=vul_file::dirname(cam_path.path)+"/*.con";
 
   int cam_num;
-  vcl_vector <int> cam_num_list;
+  std::vector <int> cam_num_list;
   for ( ; fn_con; ++fn_con) 
   {
-    vcl_string input_file = fn_con();
+    std::string input_file = fn_con();
 
     if (r0.find(input_file.c_str()))
     {
       //vul_string_c_trim(cstr,">");
-      vcl_string a=vul_file::strip_extension(vul_file::strip_directory(input_file));
-      vcl_cout<<atoi(a.c_str())<<vcl_endl;
+      std::string a=vul_file::strip_extension(vul_file::strip_directory(input_file));
+      std::cout<<atoi(a.c_str())<<std::endl;
       cam_num_list.push_back(atoi(a.c_str()));
       //vnl_double_
     }
@@ -565,14 +565,14 @@ bool dbshadow_process::initialize_camera_N_string_scan()
   bool bbox_cam_my_file=false;
   for ( ; fn; ++fn) 
   {
-    vcl_string input_file = fn();
+    std::string input_file = fn();
 
     if (r1.find(input_file.c_str())&&r2.find(input_file.c_str())||r11.find(input_file.c_str())&&r2.find(input_file.c_str()) )
     {
       bbox_cam_my_file=true;
-      vcl_ifstream fp(input_file.c_str());
+      std::ifstream fp(input_file.c_str());
       if (!fp) {
-        vcl_cout<<" Unable to Open "<< cam_filename <<vcl_endl;
+        std::cout<<" Unable to Open "<< cam_filename <<std::endl;
         return false;
       }
       vnl_double_3x4 C;
@@ -581,11 +581,11 @@ bool dbshadow_process::initialize_camera_N_string_scan()
       vnl_double_3x4 Camera(0.0);
       vnl_double_3x4 Camera_Null(-1.0);
       Cam_List_.clear();
-      vcl_cout<<"reading camera file "<< input_file.c_str()<<vcl_endl;
-      vcl_string hhh="";
+      std::cout<<"reading camera file "<< input_file.c_str()<<std::endl;
+      std::string hhh="";
       while (hhh!="Transform") {
         fp>> hhh;
-        // vcl_cout<< hhh <<vcl_endl;
+        // std::cout<< hhh <<std::endl;
       }
       vnl_double_4x4 RT(0.0);
       for (unsigned i=0;i<4;i++) {
@@ -594,7 +594,7 @@ bool dbshadow_process::initialize_camera_N_string_scan()
           RT[i][j]=temp;
         }
       }
-      vcl_cout<<RT<<vcl_endl;
+      std::cout<<RT<<std::endl;
       BB_RT_matt_=RT;
       fp>>hhh;
       int count=0; // for BRMF 2.7
@@ -604,12 +604,12 @@ bool dbshadow_process::initialize_camera_N_string_scan()
         fp>>hhh; cam_num=atoi(hhh.c_str());
         if (count==0) {                 // for BRMF 2.7
           char a[10];                   // for BRMF 2.7
-          //vcl_sprintf(a,"%s",hhh);    // for BRMF 2.7
+          //std::sprintf(a,"%s",hhh);    // for BRMF 2.7
           empty_camera_number= atoi(hhh.c_str());// for BRMF 2.7
         }                               // for BRMF 2.7
         count++;                        // for BRMF 2.7
 
-        vcl_cout<<hhh<<vcl_endl;
+        std::cout<<hhh<<std::endl;
         for (unsigned j=0;j<3; j++) {
           for (unsigned k=0;k<4;k++) {
             fp >> temp;
@@ -620,7 +620,7 @@ bool dbshadow_process::initialize_camera_N_string_scan()
         for (unsigned i=0;i<cam_num_list.size();i++)
           if (cam_num_list[i]==cam_num) {
             Cam_List_.push_back(Camera);
-            vcl_cout<<Camera<<vcl_endl;
+            std::cout<<Camera<<std::endl;
           }
           fp>>hhh;
       }
@@ -640,23 +640,23 @@ void dbshadow_process::map3d_2d()
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
 
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     vidpro_vtol_storage_sptr frame_vtol;
     ////frame_image.vertical_cast(input_data_[frame][0]);
-    vcl_cout<<output_data_.size()<<vcl_endl;
-    vcl_cout<<output_data_[frame].size()<<vcl_endl;
-    vcl_cout<<input_data_[frame][0]<<vcl_endl;
+    std::cout<<output_data_.size()<<std::endl;
+    std::cout<<output_data_[frame].size()<<std::endl;
+    std::cout<<input_data_[frame][0]<<std::endl;
     frame_vtol.vertical_cast(input_data_[frame][2]);// 1 is ocntour?
-    vcl_cout<<frame_vtol<<vcl_endl;
-    vcl_vector <vsol_digital_curve_2d_sptr>  dclist;
-    vcl_vector<vtol_edge_2d_sptr> edges;
+    std::cout<<frame_vtol<<std::endl;
+    std::vector <vsol_digital_curve_2d_sptr>  dclist;
+    std::vector<vtol_edge_2d_sptr> edges;
 
 
 
-    //     for ( vcl_vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
+    //     for ( std::vector<vtol_edge_2d_sptr>::iterator e_itr = edges->begin();
     //   e_itr != edges->end();  ++e_itr )
 
-    for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
+    for ( std::set<vtol_topology_object_sptr>::const_iterator itr = frame_vtol->begin();
       itr != frame_vtol->end();  ++itr ) {
 
         vtol_edge *edge = (*itr)->cast_to_edge();
@@ -687,8 +687,8 @@ void dbshadow_process::map3d_2d()
 
                 double xx=(*ec)[i].get_x();double yy=(*ec)[i].get_y();
 
-                //vcl_cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<vcl_endl;
-                //vcl_cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<vcl_endl;
+                //std::cout<<veh_con_pol_x[frame][0]<<" "<<veh_con_pol_y[frame][0]<<std::endl;
+                //std::cout<<veh_con_pol_x[frame][100]<<" "<<veh_con_pol_y[frame][100]<<std::endl;
 
                 bool distance_measure;
                 parameters()->get_value( "-edge_distance" , distance_measure );
@@ -697,7 +697,7 @@ void dbshadow_process::map3d_2d()
 
 
                 dc->add_vertex(new vsol_point_2d(ec->edgel(i).get_pt()));
-                // vcl_cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<vcl_endl;
+                // std::cout<< (*ec)[i].get_x()<<" "<<(*ec)[i].get_y()<<std::endl;
 
                 sh_pts.push_back(new vsol_point_2d(ec->edgel(i).get_pt()));
               }
@@ -725,11 +725,11 @@ void dbshadow_process::map3d_2d()
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
 
-    vcl_vector <vnl_vector_fixed <double, 6 > > blob_image;
+    std::vector <vnl_vector_fixed <double, 6 > > blob_image;
 
     //vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vgl_point_2d <double> > image_pts;
-    //vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vgl_point_2d <double> > image_pts;
+    //std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     // get image from the storage class
     vidpro_image_storage_sptr frame_image;
     frame_image.vertical_cast(input_data_[frame][1]);// 1 is image
@@ -778,7 +778,7 @@ void dbshadow_process::probe_plane()
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     vidpro_vtol_storage_sptr frame_vtol;
 
     for (double di=-1;di<=1;di+=0.1)
@@ -812,8 +812,8 @@ void dbshadow_process::probe_bottom(vnl_double_4 s0, vnl_double_4 e0)
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vgl_point_2d <double> > image_pts;
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vgl_point_2d <double> > image_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     // get image from the storage class
     vidpro_image_storage_sptr frame_image;
     frame_image.vertical_cast(input_data_[frame][1]);
@@ -839,28 +839,28 @@ void dbshadow_process::probe_bottom(vnl_double_4 s0, vnl_double_4 e0)
         //14.2597 14.8963 0.81754
         double v0=p0[0]/p0[2];double w0=p0[1]/p0[2];
         image_pts.push_back( vgl_point_2d<double >(v0,w0));
-        // vcl_cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "<<color_view((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2]),0)<<vcl_endl;
-        // vcl_cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "<<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).r<<vcl_endl;
-        vcl_cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "
+        // std::cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "<<color_view((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2]),0)<<std::endl;
+        // std::cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "<<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).r<<std::endl;
+        std::cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "
           <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).r<<" "
           <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).g<<" "
           <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).b<<" "
-          <<vcl_endl;
+          <<std::endl;
         if (flag)
           sh_pts.push_back(new vsol_point_2d(p0[0]/p0[2],p0[1]/p0[2]));
         flag=true;
       }
 
-      vcl_cout<<"=== "<<frame<<vcl_endl;
-      vcl_cout<<"=== "<<frame<<vcl_endl;
-      vcl_cout<<"=== "<<frame<<vcl_endl;
-      vcl_cout<<"=== "<<frame<<vcl_endl;
-      vcl_cout<<"=== "<<frame<<vcl_endl;
-      vcl_cout<<" "<<vcl_endl;
+      std::cout<<"=== "<<frame<<std::endl;
+      std::cout<<"=== "<<frame<<std::endl;
+      std::cout<<"=== "<<frame<<std::endl;
+      std::cout<<"=== "<<frame<<std::endl;
+      std::cout<<"=== "<<frame<<std::endl;
+      std::cout<<" "<<std::endl;
 
 
       if(grey_view.nplanes() != 1) {
-        vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+        std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
         return ;
       }
 
@@ -891,13 +891,13 @@ void dbshadow_process::probe_front_plane(vnl_double_4 s0, vnl_double_4 e0)
   }*/
 
   for (double dx=-5; dx<3;dx+=.5) {
-    vcl_vector <vcl_vector< double > >image_pts_frames;
+    std::vector <std::vector< double > >image_pts_frames;
     frame=0;
     for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
       vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-      vcl_vector<  double > image_pts;
-      vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+      std::vector<  double > image_pts;
+      std::vector< vsol_spatial_object_2d_sptr > sh_pts;
       // get image from the storage class
       vidpro_image_storage_sptr frame_image;
       frame_image.vertical_cast(input_data_[frame][1]);
@@ -926,24 +926,24 @@ void dbshadow_process::probe_front_plane(vnl_double_4 s0, vnl_double_4 e0)
           //14.2597 14.8963 0.81754
           double v0=p0[0]/p0[2];double w0=p0[1]/p0[2];
           image_pts.push_back( (double)grey_view(v0,w0));
-          // vcl_cout<<(double)grey_view(v0,w0)<<vcl_endl;
-          //vcl_cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "
+          // std::cout<<(double)grey_view(v0,w0)<<std::endl;
+          //std::cout<<(int)(p0[0]/p0[2])<<" "<<(p0[1]/p0[2])<<" "
           //  <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).r<<" "
           //  <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).g<<" "
           //  <<(int)img((int)(p0[0]/p0[2]),(int)(p0[1]/p0[2])).b<<" "
-          //  <<vcl_endl;
+          //  <<std::endl;
           if (flag)  //flag not to draw first point.
             sh_pts.push_back(new vsol_point_2d(p0[0]/p0[2],p0[1]/p0[2]));
           flag=true;
         }
 
 
-        //vcl_cout<<"=== "<<frame<<vcl_endl;
-        //vcl_cout<<" "<<vcl_endl;
+        //std::cout<<"=== "<<frame<<std::endl;
+        //std::cout<<" "<<std::endl;
 
 
         if(grey_view.nplanes() != 1) {
-          vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+          std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
           return ;
         }
         output_vsol->add_objects(sh_pts);
@@ -956,7 +956,7 @@ void dbshadow_process::probe_front_plane(vnl_double_4 s0, vnl_double_4 e0)
 
     }
 
-    vcl_vector <double > mean_list;
+    std::vector <double > mean_list;
     for (unsigned j=0;j< image_pts_frames[0].size();j++)//# of pixel in rectangle
     {
       double s=0;
@@ -981,7 +981,7 @@ void dbshadow_process::probe_front_plane(vnl_double_4 s0, vnl_double_4 e0)
       //mean_list.push_back(mean);
     }
 
-    vcl_cout<<dx<<" "<<all_error<<vcl_endl;
+    std::cout<<dx<<" "<<all_error<<std::endl;
   }//dx
 }
 
@@ -998,15 +998,15 @@ void dbshadow_process::probe_windshield(vnl_double_4 s0, vnl_double_4 e0)
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     vidpro_vtol_storage_sptr frame_vtol;
 
     ////frame_image.vertical_cast(input_data_[frame][0]);
-    vcl_cout<<output_data_.size()<<vcl_endl;
-    vcl_cout<<output_data_[frame].size()<<vcl_endl;
-    vcl_cout<<input_data_[frame][0]<<vcl_endl;
+    std::cout<<output_data_.size()<<std::endl;
+    std::cout<<output_data_[frame].size()<<std::endl;
+    std::cout<<input_data_[frame][0]<<std::endl;
     frame_vtol.vertical_cast(input_data_[frame][2]);// 1 is ocntour?
-    vcl_cout<<frame_vtol<<vcl_endl;
+    std::cout<<frame_vtol<<std::endl;
   }
 
 }
@@ -1023,7 +1023,7 @@ double dbshadow_process::count_edge(vnl_double_4 s0, vnl_double_4 e0)
   s0u(2)+=width/2;s0d(2)-=width/2;
   vnl_double_4 e0u(e0),e0d(e0); // up down
   e0u(2)+=width/2;e0d(2)-=width/2;
-  vcl_vector <vnl_double_4> pts;
+  std::vector <vnl_double_4> pts;
   pts.push_back(s0d);pts.push_back(s0u);pts.push_back(e0u);pts.push_back(e0d);
 
   int *count= new int[input_data_.size()];
@@ -1034,10 +1034,10 @@ double dbshadow_process::count_edge(vnl_double_4 s0, vnl_double_4 e0)
 
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
 
     // generate probe on 2d
-    vcl_vector <vgl_point_2d<double> > image_pts;
+    std::vector <vgl_point_2d<double> > image_pts;
     for (unsigned ki=0;ki<pts.size();ki++) {
       vnl_double_3 p0=Cam_List_[input_data_.size()-frame-1]*pts[ki];
       double v0=p0[0]/p0[2];double w0=p0[1]/p0[2];
@@ -1047,11 +1047,11 @@ double dbshadow_process::count_edge(vnl_double_4 s0, vnl_double_4 e0)
 
 
     //check if the edge is in the probe
-    vcl_vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
-    //vcl_cout<<"curve_edge_list size:"<<curve_edge_list.size()<<vcl_endl;
+    std::vector <vsol_digital_curve_2d_sptr> curve_edge_list = dcl_edge_[frame];
+    //std::cout<<"curve_edge_list size:"<<curve_edge_list.size()<<std::endl;
     for (unsigned i=0;i<curve_edge_list.size();i++) {
       vsol_digital_curve_2d_sptr dc_edge=curve_edge_list[i];
-      //vcl_cout<<dc_edge->size()<<vcl_endl;
+      //std::cout<<dc_edge->size()<<std::endl;
       for(int j=0; j<dc_edge->size(); j++){
         vsol_point_2d_sptr pt = dc_edge->point(j);
         //pt->set_x(pt->x()+x);
@@ -1135,8 +1135,8 @@ double dbshadow_process::shadow_histo(vnl_double_4 p0, vnl_double_4 p7)
     body_grey_count[frame]=0;
 
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vgl_point_2d <double> > image_pts;
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vgl_point_2d <double> > image_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
 
     vnl_double_3 pt2d_0=Cam_List_[input_data_.size()-frame-1]*pt3d_0;
     vnl_double_3 pt2d_6=Cam_List_[input_data_.size()-frame-1]*pt3d_6;
@@ -1208,7 +1208,7 @@ double dbshadow_process::shadow_histo(vnl_double_4 p0, vnl_double_4 p7)
         g_count[frame]+=blob_image_list_[frame][i][4];
         b_count[frame]+=blob_image_list_[frame][i][5];
 
-       // vcl_cout<<blob_image_list_[frame][i]<<vcl_endl;
+       // std::cout<<blob_image_list_[frame][i]<<std::endl;
       }
 
       else if (
@@ -1223,7 +1223,7 @@ double dbshadow_process::shadow_histo(vnl_double_4 p0, vnl_double_4 p7)
         body_g_count[frame]+=blob_image_list_[frame][i][4];
         body_b_count[frame]+=blob_image_list_[frame][i][5];
 
-        //vcl_cout<<blob_image_list_[frame][i]<<vcl_endl;
+        //std::cout<<blob_image_list_[frame][i]<<std::endl;
       }
 
 
@@ -1234,35 +1234,35 @@ double dbshadow_process::shadow_histo(vnl_double_4 p0, vnl_double_4 p7)
   if (0) {
     frame=0;
     for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
-      vcl_cout<<"shadow # "<<frame<<" : "<<shadow_count[frame]<<vcl_endl;
-      vcl_cout<<"a # "<<frame<<" : "<<grey_count[frame]<<vcl_endl;
-      vcl_cout<<"r # "<<frame<<" : "<<r_count[frame]<<vcl_endl;
-      vcl_cout<<"g # "<<frame<<" : "<<g_count[frame]<<vcl_endl;
-      vcl_cout<<"b # "<<frame<<" : "<<b_count[frame]<<vcl_endl;
+      std::cout<<"shadow # "<<frame<<" : "<<shadow_count[frame]<<std::endl;
+      std::cout<<"a # "<<frame<<" : "<<grey_count[frame]<<std::endl;
+      std::cout<<"r # "<<frame<<" : "<<r_count[frame]<<std::endl;
+      std::cout<<"g # "<<frame<<" : "<<g_count[frame]<<std::endl;
+      std::cout<<"b # "<<frame<<" : "<<b_count[frame]<<std::endl;
     }
 
     frame=0;
     for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
-      vcl_cout<<"body # "<<frame<<" : "<<body_count[frame]<<vcl_endl;
-      vcl_cout<<"a # "<<frame<<" : "<<body_grey_count[frame]<<vcl_endl;
-      vcl_cout<<"r # "<<frame<<" : "<<body_r_count[frame]<<vcl_endl;
-      vcl_cout<<"g # "<<frame<<" : "<<body_g_count[frame]<<vcl_endl;
-      vcl_cout<<"b # "<<frame<<" : "<<body_b_count[frame]<<vcl_endl;
+      std::cout<<"body # "<<frame<<" : "<<body_count[frame]<<std::endl;
+      std::cout<<"a # "<<frame<<" : "<<body_grey_count[frame]<<std::endl;
+      std::cout<<"r # "<<frame<<" : "<<body_r_count[frame]<<std::endl;
+      std::cout<<"g # "<<frame<<" : "<<body_g_count[frame]<<std::endl;
+      std::cout<<"b # "<<frame<<" : "<<body_b_count[frame]<<std::endl;
     }
 
   }
 
   frame=0;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
-    vcl_cout<<grey_count[frame]/shadow_count[frame]<<" ";
+    std::cout<<grey_count[frame]/shadow_count[frame]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
   frame=0;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
-    vcl_cout<<body_grey_count[frame]/body_count[frame]<<" ";
+    std::cout<<body_grey_count[frame]/body_count[frame]<<" ";
   }
-  vcl_cout<<vcl_endl;
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
+  std::cout<<std::endl;
 
   delete[] shadow_count;
   delete[] r_count;
@@ -1290,15 +1290,15 @@ void dbshadow_process::shadow_histo()
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame)
   {
     //blob_image_list_[frame][i][2];
-     //vcl_sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
-    vcl_sort(blob_image_list_[frame].begin(), blob_image_list_[frame].end(), cmp_grey);
+     //std::sort(pts_z.begin(), pts_z.end(), dbcri_accu_edge_cmp_z);
+    std::sort(blob_image_list_[frame].begin(), blob_image_list_[frame].end(), cmp_grey);
   }
 
   frame=0;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame)
   {
     vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
-    vcl_vector< vsol_spatial_object_2d_sptr > sh_pts;
+    std::vector< vsol_spatial_object_2d_sptr > sh_pts;
     for (unsigned i=0;i<grey_level_threshold*blob_image_list_[frame].size();i++)
     {
       sh_pts.push_back(new vsol_point_2d(blob_image_list_[frame][i][0],blob_image_list_[frame][i][1]));

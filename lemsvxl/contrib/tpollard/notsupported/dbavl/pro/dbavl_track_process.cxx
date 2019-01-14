@@ -17,7 +17,7 @@ dbavl_track_process::dbavl_track_process() : bpro1_process()
 {
   if( !parameters()->add( 
     "Search Radius" , "-dbavlsr" , tracker.params.search_rad ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   } 
   parameters()->get_value( "-dbavlsr" , tracker.params.search_rad );
 }
@@ -38,7 +38,7 @@ dbavl_track_process::clone() const
 
 
 //------------------------------------------
-vcl_string
+std::string
 dbavl_track_process::name()
 {
   return "Aerial Tracker";
@@ -46,9 +46,9 @@ dbavl_track_process::name()
 
 
 //-----------------------------------------------
-vcl_vector< vcl_string > dbavl_track_process::get_input_type()
+std::vector< std::string > dbavl_track_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -56,9 +56,9 @@ vcl_vector< vcl_string > dbavl_track_process::get_input_type()
 
 
 //----------------------------------------------------
-vcl_vector< vcl_string > dbavl_track_process::get_output_type()
+std::vector< std::string > dbavl_track_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -69,7 +69,7 @@ bool
 dbavl_track_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_harris_corner_process::execute() - not exactly one"
+    std::cout << "In vidpro1_harris_corner_process::execute() - not exactly one"
           << " input image \n";
     return false;
   }
@@ -78,9 +78,9 @@ dbavl_track_process::execute()
   // Get your hands on any new tracks at this frame.
   vidpro1_vsol2D_storage_sptr new_tracks_storage;
   new_tracks_storage.vertical_cast(input_data_[0][1]);
-  vcl_vector< vsol_spatial_object_2d_sptr > new_tracks_vsol = 
+  std::vector< vsol_spatial_object_2d_sptr > new_tracks_vsol = 
     new_tracks_storage->all_data();
-  vcl_vector< vgl_point_2d<int> > new_tracks;
+  std::vector< vgl_point_2d<int> > new_tracks;
   for( int t = 0; t < new_tracks_vsol.size(); t++ )
     new_tracks.push_back( vgl_point_2d<int>( 
       (int)floor( new_tracks_vsol[t]->cast_to_point()->x() ),
@@ -100,7 +100,7 @@ dbavl_track_process::execute()
     greyscale_view = image_view;
   } 
   else {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
 

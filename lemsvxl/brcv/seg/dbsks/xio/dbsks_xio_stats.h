@@ -9,19 +9,19 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     May 19, 2008
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <dbsks/dbsks_shock_graph_stats.h>
 
 
 //: write a shock graph to an xml file
-bool x_write(const vcl_string& filepath, const dbsks_shock_graph_stats& stats);
+bool x_write(const std::string& filepath, const dbsks_shock_graph_stats& stats);
 
 //: write a shock graph to a stream
-bool x_write(vcl_ostream& os, const dbsks_shock_graph_stats& stats);
+bool x_write(std::ostream& os, const dbsks_shock_graph_stats& stats);
 
 //: load a shock graph from an xml file
-bool x_read(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph, 
+bool x_read(const std::string& filepath, const dbsksp_shock_graph_sptr& graph, 
             dbsks_shock_graph_stats& stats);
 
 #endif

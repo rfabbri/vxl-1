@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_compute_thickness_process : public bpro1_process 
@@ -32,10 +32,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Compute thickness"; }
+  std::string name() {  return "Compute thickness"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -46,9 +46,9 @@ public:
   // Support function
   
   //: Take in the data and execute
-  static bool compute_thickness(const vcl_string& inner_mesh_file,
-    const vcl_string& outer_mesh_file, 
-    const vcl_string& thickness_mesh_file,
+  static bool compute_thickness(const std::string& inner_mesh_file,
+    const std::string& outer_mesh_file, 
+    const std::string& thickness_mesh_file,
     bool show_gui);
 
 };

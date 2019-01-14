@@ -1,9 +1,9 @@
 #include <Spatemp/algo/dbdet_temporal_bundle.h>
 #include <dbdet/sel/dbdet_curvelet.h>
-#include <vcl_map.hxx>
+#include <mapxx>
 
-typedef vcl_vector< dbdet_temporal_bundle*> vec_dbdet_temporal_bundle_ptr;
-#include "vcl_functional.h"
+typedef std::vector< dbdet_temporal_bundle*> vec_dbdet_temporal_bundle_ptr;
+#include "functional"
 struct lessthan{
     bool operator()(dbdet_curvelet* c1,dbdet_curvelet* c2) const
     {

@@ -21,8 +21,8 @@
 #include <dbsk2d/dbsk2d_ishock_belm.h>
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 // vcl headers
-#include <vcl_sstream.h>
-#include <vcl_limits.h>
+#include <sstream>
+#include <limits>
 // vsol headers
 #include <vsol/vsol_point_2d_sptr.h>
 // vgl headers
@@ -72,17 +72,17 @@ bool dbskfg_compute_composite_graph::compile_composite_graph()
         return status_flag;
     }
 
-    vcl_cout<<"Finished compiling nodes and shock rays"<<vcl_endl;
+    std::cout<<"Finished compiling nodes and shock rays"<<std::endl;
 
     // 2. Lets compile all contour links
     compile_contour_and_shock_links(status_flag);
 
-    vcl_cout<<"Finished compiling contours and shock links"<<vcl_endl;
+    std::cout<<"Finished compiling contours and shock links"<<std::endl;
 
     //3: Lets classify nodes
     classify_nodes();
 
-    vcl_cout<<"Finished classifying nodes"<<vcl_endl;
+    std::cout<<"Finished classifying nodes"<<std::endl;
 
     //4. Lets compile all shock fragments
     compile_shock_fragments();
@@ -90,11 +90,11 @@ bool dbskfg_compute_composite_graph::compile_composite_graph()
     dbskfg_region_growing_transforms region_growing(rag_graph_);
     region_growing.grow_regions();
 
-    vcl_cout<<"Printing out vertices: "<<
-        composite_graph_->number_of_vertices()<<vcl_endl;
+    std::cout<<"Printing out vertices: "<<
+        composite_graph_->number_of_vertices()<<std::endl;
 
-    vcl_cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
-            <<vcl_endl;
+    std::cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
+            <<std::endl;
 
     return status_flag;
 }
@@ -106,7 +106,7 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays(bool&
     // Always look at raw graph
     dbsk2d_ishock_graph::vertex_iterator vit;
 
-    vcl_string lstring,rstring;
+    std::string lstring,rstring;
 
     // Keep a local thing to see if shock nodes repeat
     for ( vit = ishock_graph_->all_nodes().begin(); 
@@ -142,9 +142,9 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
 
     // In case of dual node need to keep shock string
     vgl_point_2d<double> shock_origin = node->origin();
-    vcl_stringstream shock_streamer;
+    std::stringstream shock_streamer;
     shock_streamer<<shock_origin;
-    vcl_string shock_string=shock_streamer.str();
+    std::string shock_string=shock_streamer.str();
 
     // Create the node we may or may not add to the graph
     // TODO: Add shock intrinsinc parameters
@@ -156,7 +156,7 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
     composite_graph_->add_vertex(shock_node);
 
     // Keep a temp map
-    vcl_map<vcl_string,vcl_pair<vgl_point_2d<double>,int> > contact_point_map;
+    std::map<std::string,std::pair<vgl_point_2d<double>,int> > contact_point_map;
 
     // Grab list of parent shocks
     ishock_edge_list& list=node->pShocks();
@@ -171,20 +171,20 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
         vgl_point_2d<double> leftstpt    = edge->getLFootPt(tau);
         vgl_point_2d<double> rightstpt   = edge->getRFootPt(tau);
 
-        vcl_stringstream lstreamer,rstreamer;
+        std::stringstream lstreamer,rstreamer;
         lstreamer<<leftstpt;
         rstreamer<<rightstpt; 
                 
-        vcl_string temp_lstring=lstreamer.str();
-        vcl_string temp_rstring=rstreamer.str();
+        std::string temp_lstring=lstreamer.str();
+        std::string temp_rstring=rstreamer.str();
 
-        vcl_pair<int,int> contour_ids = dbskfg_utilities::
+        std::pair<int,int> contour_ids = dbskfg_utilities::
             get_contour_id_from_shock_edge(edge);
 
-        vcl_pair<vgl_point_2d<double>,int> left_pair_combo =
-            vcl_make_pair(leftstpt,contour_ids.first);
-        vcl_pair<vgl_point_2d<double>,int> right_pair_combo =
-            vcl_make_pair(rightstpt,contour_ids.second);  
+        std::pair<vgl_point_2d<double>,int> left_pair_combo =
+            std::make_pair(leftstpt,contour_ids.first);
+        std::pair<vgl_point_2d<double>,int> right_pair_combo =
+            std::make_pair(rightstpt,contour_ids.second);  
 
         contact_point_map[temp_lstring]=left_pair_combo;
         contact_point_map[temp_rstring]=right_pair_combo;
@@ -203,20 +203,20 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
         vgl_point_2d<double> leftstpt    = cshock->getLFootPt(tau);
         vgl_point_2d<double> rightstpt   = cshock->getRFootPt(tau);
 
-        vcl_stringstream lstreamer,rstreamer;
+        std::stringstream lstreamer,rstreamer;
         lstreamer<<leftstpt;
         rstreamer<<rightstpt; 
                 
-        vcl_string temp_lstring=lstreamer.str();
-        vcl_string temp_rstring=rstreamer.str();
+        std::string temp_lstring=lstreamer.str();
+        std::string temp_rstring=rstreamer.str();
 
-        vcl_pair<int,int> contour_ids = dbskfg_utilities::
+        std::pair<int,int> contour_ids = dbskfg_utilities::
             get_contour_id_from_shock_edge(cshock);
 
-        vcl_pair<vgl_point_2d<double>,int> left_pair_combo =
-            vcl_make_pair(leftstpt,contour_ids.first);
-        vcl_pair<vgl_point_2d<double>,int> right_pair_combo =
-            vcl_make_pair(rightstpt,contour_ids.second);  
+        std::pair<vgl_point_2d<double>,int> left_pair_combo =
+            std::make_pair(leftstpt,contour_ids.first);
+        std::pair<vgl_point_2d<double>,int> right_pair_combo =
+            std::make_pair(rightstpt,contour_ids.second);  
 
         contact_point_map[temp_lstring]=left_pair_combo;
         contact_point_map[temp_rstring]=right_pair_combo;
@@ -233,20 +233,20 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
         vgl_point_2d<double> leftstpt    = cshock->getLFootPt(tau);
         vgl_point_2d<double> rightstpt   = cshock->getRFootPt(tau);
 
-        vcl_stringstream lstreamer,rstreamer;
+        std::stringstream lstreamer,rstreamer;
         lstreamer<<leftstpt;
         rstreamer<<rightstpt; 
 
-        vcl_string temp_lstring=lstreamer.str();
-        vcl_string temp_rstring=rstreamer.str();
+        std::string temp_lstring=lstreamer.str();
+        std::string temp_rstring=rstreamer.str();
       
-        vcl_pair<int,int> contour_ids = dbskfg_utilities::
+        std::pair<int,int> contour_ids = dbskfg_utilities::
             get_contour_id_from_shock_edge(cshock);
 
-        vcl_pair<vgl_point_2d<double>,int> left_pair_combo =
-            vcl_make_pair(leftstpt,contour_ids.first);
-        vcl_pair<vgl_point_2d<double>,int> right_pair_combo =
-            vcl_make_pair(rightstpt,contour_ids.second);  
+        std::pair<vgl_point_2d<double>,int> left_pair_combo =
+            std::make_pair(leftstpt,contour_ids.first);
+        std::pair<vgl_point_2d<double>,int> right_pair_combo =
+            std::make_pair(rightstpt,contour_ids.second);  
 
         contact_point_map[temp_lstring]=left_pair_combo;
         contact_point_map[temp_rstring]=right_pair_combo;
@@ -256,25 +256,25 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
 
    
     // Keep track of keys that we missed
-    vcl_map<vcl_string,vcl_string> keys_missed;
+    std::map<std::string,std::string> keys_missed;
 
     if ( contact_point_map.size() != node->degree(true) )
     {
    
         // We need to create a temp map before we delete everything
-        vcl_map<vcl_string,vcl_pair<vgl_point_2d<double>,int> > temp_map;
+        std::map<std::string,std::pair<vgl_point_2d<double>,int> > temp_map;
         
         // Keep another tempory map
-        vcl_map<vcl_string,vcl_string> string_temp_map;
+        std::map<std::string,std::string> string_temp_map;
 
         //Loop over map
-        vcl_map<vcl_string,vcl_pair<vgl_point_2d<double>,int > >::iterator mit;
+        std::map<std::string,std::pair<vgl_point_2d<double>,int > >::iterator mit;
         for ( mit = contact_point_map.begin(); mit != contact_point_map.end() ; 
               ++mit)
         {
 
-            vcl_stringstream fixed_streamer,norm_streamer;
-            fixed_streamer<<vcl_fixed;
+            std::stringstream fixed_streamer,norm_streamer;
+            fixed_streamer<<std::fixed;
             fixed_streamer.precision(1);
             
             fixed_streamer<<"<vgl_point_2d "
@@ -324,17 +324,17 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
 
 
     //Loop over map
-    vcl_map<vcl_string,vcl_pair<vgl_point_2d<double>,int > >::iterator mit;
+    std::map<std::string,std::pair<vgl_point_2d<double>,int > >::iterator mit;
     for ( mit = contact_point_map.begin(); mit != contact_point_map.end() ; 
           ++mit)
     {
-        vcl_string key=(*mit).first;
+        std::string key=(*mit).first;
 
         // Insert contour node
         if ( (contour_node_map_.count(key) == 0) )
         {
            
-            vcl_pair< vgl_point_2d<double>,int> contour_pair = (*mit).second;
+            std::pair< vgl_point_2d<double>,int> contour_pair = (*mit).second;
             dbskfg_composite_node_sptr cnode = 
                 new dbskfg_contour_node(
                     composite_graph_->next_available_id(),
@@ -385,7 +385,7 @@ void dbskfg_compute_composite_graph::compile_nodes_and_shock_rays_helper
     }
 
     // Take care of keys missed
-    vcl_map<vcl_string,vcl_string>::iterator sit;
+    std::map<std::string,std::string>::iterator sit;
     for ( sit = keys_missed.begin() ; sit != keys_missed.end() ; ++sit)
     {
         if ( contour_node_map_.count((*sit).second)== 0 )
@@ -402,7 +402,7 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links
 {
     
     // Keep a map to make sure edges we have seen we dont see again
-    vcl_map<vcl_pair<unsigned int, unsigned int>,
+    std::map<std::pair<unsigned int, unsigned int>,
         dbskfg_composite_link_sptr> edge_map;
 
     // Iterate thru all edges
@@ -477,7 +477,7 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links
 void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
     dbsk2d_ishock_edge* edge,
     dbskfg_shock_link* shock_link,
-    vcl_map< vcl_pair<unsigned int,unsigned int>, dbskfg_composite_link_sptr>& 
+    std::map< std::pair<unsigned int,unsigned int>, dbskfg_composite_link_sptr>& 
     edge_map,
     dbskfg_utilities::Orientation type,
     bool& status_flag)
@@ -495,14 +495,14 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
         startpt   = edge->getRFootPt(edge->sTau());
         endpt     = edge->getRFootPt(edge->eTau());
     }       
-    vcl_stringstream start_streamer;
-    vcl_stringstream end_streamer;  
+    std::stringstream start_streamer;
+    std::stringstream end_streamer;  
   
     start_streamer << startpt;
     end_streamer   << endpt;
   
-    vcl_string start_string   = start_streamer.str();
-    vcl_string end_string     = end_streamer.str();
+    std::string start_string   = start_streamer.str();
+    std::string end_string     = end_streamer.str();
 
 
     if ( type == dbskfg_utilities::LEFT )
@@ -536,12 +536,12 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
     unsigned int start_id = contour_node_map_[start_string]->id();
     unsigned int end_id   = contour_node_map_[end_string]->id();
  
-    vcl_pair<unsigned int,unsigned int> contour_pair_f=
-        vcl_make_pair(start_id,end_id);
-    vcl_pair<unsigned int,unsigned int> contour_pair_r=
-        vcl_make_pair(contour_pair_f.second,contour_pair_f.first);
+    std::pair<unsigned int,unsigned int> contour_pair_f=
+        std::make_pair(start_id,end_id);
+    std::pair<unsigned int,unsigned int> contour_pair_r=
+        std::make_pair(contour_pair_f.second,contour_pair_f.first);
 
-    vcl_pair<int,int> contour_ids = dbskfg_utilities::
+    std::pair<int,int> contour_ids = dbskfg_utilities::
         get_contour_id_from_shock_edge(edge);
     int orig_con_id(0);
     if ( type == dbskfg_utilities::LEFT )
@@ -561,7 +561,7 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
         vgl_line_segment_2d<double> line(startpt,endpt);
            
         // Determine points between these
-        vcl_vector<dbskfg_contour_node*> points_on_line=
+        std::vector<dbskfg_contour_node*> points_on_line=
             find_points_on_line(line,
                                 contour_node_map_[start_string]
                                 ->contour_id(),
@@ -636,10 +636,10 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
                 points_on_line.front());
             dbskfg_composite_link_sptr contour_link(0);
 
-            vcl_pair<unsigned int,unsigned int> front_pair_f=
-                vcl_make_pair(start_id,target_node->id());
-            vcl_pair<unsigned int,unsigned int> front_pair_r=
-                vcl_make_pair(front_pair_f.second,front_pair_f.first);
+            std::pair<unsigned int,unsigned int> front_pair_f=
+                std::make_pair(start_id,target_node->id());
+            std::pair<unsigned int,unsigned int> front_pair_r=
+                std::make_pair(front_pair_f.second,front_pair_f.first);
       
             if ( (edge_map.count(front_pair_f) == 0) && 
                  (edge_map.count(front_pair_r) == 0) )
@@ -697,8 +697,8 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
             clink->shock_links_affected(shock_link);
             clink->set_original_contour_id(orig_con_id);
 
-            vcl_pair<unsigned int, unsigned int> middle_pair_f;
-            vcl_pair<unsigned int, unsigned int> middle_pair_r;
+            std::pair<unsigned int, unsigned int> middle_pair_f;
+            std::pair<unsigned int, unsigned int> middle_pair_r;
 
             // Loop over vector and create links
             for ( unsigned int i=0; i < 
@@ -775,10 +775,10 @@ void dbskfg_compute_composite_graph::compile_contour_and_shock_links_helper(
             dbskfg_composite_node_sptr 
                 last_node(points_on_line.back());
 
-            vcl_pair<unsigned int,unsigned int> back_pair_f=
-                vcl_make_pair(last_node->id(),end_id);
-            vcl_pair<unsigned int,unsigned int> back_pair_r=
-                vcl_make_pair(back_pair_f.second,back_pair_f.first);
+            std::pair<unsigned int,unsigned int> back_pair_f=
+                std::make_pair(last_node->id(),end_id);
+            std::pair<unsigned int,unsigned int> back_pair_r=
+                std::make_pair(back_pair_f.second,back_pair_f.first);
                         
             if ( (edge_map.count(back_pair_f) == 0) &&
                  (edge_map.count(back_pair_r) == 0) )
@@ -890,7 +890,7 @@ void dbskfg_compute_composite_graph::compile_shock_fragments()
   }
 }
 
-vcl_vector< dbskfg_contour_node* > 
+std::vector< dbskfg_contour_node* > 
 dbskfg_compute_composite_graph::
 find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
 {
@@ -898,26 +898,26 @@ find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
     vgl_point_2d<double> stpt    = line.point1();
     vgl_point_2d<double> endpt   = line.point2();
             
-    vcl_stringstream st_streamer,end_streamer;
+    std::stringstream st_streamer,end_streamer;
     
     st_streamer  << stpt;
     end_streamer << endpt;
 
-    vcl_string st_string   = st_streamer.str();
-    vcl_string end_string  = end_streamer.str();
+    std::string st_string   = st_streamer.str();
+    std::string end_string  = end_streamer.str();
     
     // Keep the result of processing
-    vcl_vector<dbskfg_contour_node*> intersecting_points;
+    std::vector<dbskfg_contour_node*> intersecting_points;
 
     // Loop over graph and find all nodes with this contour id
-    vcl_vector<dbskfg_contour_node* > contour_segs;
+    std::vector<dbskfg_contour_node* > contour_segs;
     
     // Loop over map of this contour id
-    vcl_vector<dbskfg_contour_node*> contour_elements_start=
+    std::vector<dbskfg_contour_node*> contour_elements_start=
         nodes_contour_[s_id];
 
     // Loop over map of possibly other contour id
-    vcl_vector<dbskfg_contour_node*> contour_elements_end=
+    std::vector<dbskfg_contour_node*> contour_elements_end=
         nodes_contour_[e_id];
 
     for ( unsigned int i =0 ;i < contour_elements_start.size() ; ++i)
@@ -926,7 +926,7 @@ find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
         dbskfg_contour_node* contour_piece = 
             contour_elements_start[i];
 
-        vcl_stringstream cp_s;
+        std::stringstream cp_s;
         cp_s<<contour_piece->pt();
 
         if ( (st_string != cp_s.str()) &&
@@ -947,7 +947,7 @@ find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
             dbskfg_contour_node* contour_piece = 
                 contour_elements_end[i];
 
-            vcl_stringstream cp_s;
+            std::stringstream cp_s;
             cp_s<<contour_piece->pt();
 
             if ( (st_string != cp_s.str()) &&
@@ -967,7 +967,7 @@ find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
 
     // We have found all nodes on this contour, lets now see which ones 
     // exist in this line 
-    vcl_map<double,unsigned int> sort_map;    
+    std::map<double,unsigned int> sort_map;    
     for ( unsigned int i = 0 ; i < contour_segs.size() ; ++i)
     {
         if ( vgl_lineseg_test_point(contour_segs[i]->pt(),line) )
@@ -979,7 +979,7 @@ find_points_on_line(vgl_line_segment_2d<double>& line,int s_id,int e_id)
     }
 
     // Define iterator
-    vcl_map<double,unsigned int>::iterator it;
+    std::map<double,unsigned int>::iterator it;
     for ( it = sort_map.begin() ; it != sort_map.end() ; ++it)
     {
                                    
@@ -1003,7 +1003,7 @@ void dbskfg_compute_composite_graph::classify_nodes()
             unsigned int contour_degree(0);
             dbskfg_composite_node::edge_iterator eit;
 
-            vcl_vector<dbskfg_composite_link_sptr> edges;
+            std::vector<dbskfg_composite_link_sptr> edges;
 
             for (eit = (*vit)->out_edges_begin(); 
                  eit != (*vit)->out_edges_end() ; ++eit)

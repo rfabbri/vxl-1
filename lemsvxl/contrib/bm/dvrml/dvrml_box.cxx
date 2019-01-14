@@ -2,7 +2,7 @@
 
 #include"dvrml_box.h"
 
-void dvrml_box::draw( vcl_ostream& os )
+void dvrml_box::draw( std::ostream& os )
 {
     os << '#' << this->shape() << '\n'
        << "Transform{\n"

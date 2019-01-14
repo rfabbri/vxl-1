@@ -33,7 +33,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const 
+  virtual std::string is_a() const 
   { return "dbsksp_average_xgraph_storage"; }
 
 
@@ -82,7 +82,7 @@ public:
   // Binary IO -----------------------------------------------------------------
   
   //: Returns the type string "dbsksp_skgraph"
-  virtual vcl_string type() const { return "dbsksp_average_xgraph"; }
+  virtual std::string type() const { return "dbsksp_average_xgraph"; }
 
   //: Return IO version number;
   short version() const;

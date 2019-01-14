@@ -7,8 +7,8 @@
 #include <dbetl/dbetl_point_track.h>
 #include <dbetl/dbetl_epiprofile.h>
 #include <dbetl/dbetl_camera.h>
-#include <vcl_algorithm.h>
-#include <vcl_set.h>
+#include <algorithm>
+#include <set>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_det.h>
@@ -28,7 +28,7 @@ dbetl_tracker::track()
   this->create_points();
   for(unsigned int i=0; i<tracks_.size(); ++i)
   {
-    vcl_cout << "epipole " << i << vcl_endl;
+    std::cout << "epipole " << i << std::endl;
     this->track(i);
   }
 }
@@ -58,18 +58,18 @@ static bool pt_cmp_less(const dbetl_point_2d_sptr& lhs,
 void 
 dbetl_tracker::track(unsigned int index)
 {
-  vcl_vector<dbetl_point_track_sptr> new_tracks;
+  std::vector<dbetl_point_track_sptr> new_tracks;
 
   // create new tracks if none exist
   if(tracks_[index].empty()){
-    for( vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr = curr_pts_[index].begin();
+    for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr = curr_pts_[index].begin();
     p_itr != curr_pts_[index].end();  ++p_itr )
       tracks_[index].push_back(new dbetl_point_track(*p_itr));
     return;
   }
 
   // a vector of unmatched points
-  vcl_set<dbetl_point_2d_sptr> unmatched(curr_pts_[index].begin(), curr_pts_[index].end());
+  std::set<dbetl_point_2d_sptr> unmatched(curr_pts_[index].begin(), curr_pts_[index].end());
 
   // match each existing track to several points
   
@@ -77,13 +77,13 @@ dbetl_tracker::track(unsigned int index)
   vnl_vector<double> p3 = camera_->get_row(2);
   
   // order by the number of points
-  vcl_sort(tracks_[index].begin(), tracks_[index].end(), trk_cmp_size_gt);
-  for( vcl_vector<dbetl_point_track_sptr>::const_iterator t_itr = tracks_[index].begin();
+  std::sort(tracks_[index].begin(), tracks_[index].end(), trk_cmp_size_gt);
+  for( std::vector<dbetl_point_track_sptr>::const_iterator t_itr = tracks_[index].begin();
        t_itr != tracks_[index].end();  ++t_itr )
   {
     dbetl_point_2d_sptr last_pt = (*t_itr)->points().back();
-    for( vcl_vector<dbetl_point_2d_sptr>::const_iterator p_itr 
-      = vcl_lower_bound(curr_pts_[index].begin(), curr_pts_[index].end(), last_pt, pt_cmp_less); 
+    for( std::vector<dbetl_point_2d_sptr>::const_iterator p_itr 
+      = std::lower_bound(curr_pts_[index].begin(), curr_pts_[index].end(), last_pt, pt_cmp_less); 
     p_itr != curr_pts_[index].end();  ++p_itr )
     {
       if( (*p_itr)->dist() > last_pt->dist() + 100)
@@ -93,23 +93,23 @@ dbetl_tracker::track(unsigned int index)
       vgl_point_3d<double> pt = new_trk->mean_3d();
       double w = pt.x()*p3[0] + pt.y()*p3[1] + pt.z()*p3[2] + p3[3];
       if( w*sign_det_m < 0){ // behind camera
-        //vcl_cout << "behind camera" << vcl_endl;
+        //std::cout << "behind camera" << std::endl;
         continue;
       }
       new_tracks.push_back(new_trk);
     }
 
   }
-  vcl_cout << "unmatched: " << unmatched.size();
+  std::cout << "unmatched: " << unmatched.size();
 
-  vcl_sort(new_tracks.begin(), new_tracks.end(), trk_cmp_err_less);
+  std::sort(new_tracks.begin(), new_tracks.end(), trk_cmp_err_less);
 
   tracks_[index].clear();
   const double thresh = 2.5;
-  for( vcl_vector<dbetl_point_track_sptr>::const_iterator t_itr = new_tracks.begin();
+  for( std::vector<dbetl_point_track_sptr>::const_iterator t_itr = new_tracks.begin();
        t_itr != new_tracks.end();  ++t_itr)
   {
-    //vcl_cout << "error = " << (*t_itr)->error() << vcl_endl;
+    //std::cout << "error = " << (*t_itr)->error() << std::endl;
     if( (*t_itr)->error() > thresh 
        && tracks_[index].size() > 1)
       break;
@@ -122,7 +122,7 @@ dbetl_tracker::track(unsigned int index)
       continue;
     }
     
-    vcl_set<dbetl_point_2d_sptr>::iterator u_itr = unmatched.find((*t_itr)->last());
+    std::set<dbetl_point_2d_sptr>::iterator u_itr = unmatched.find((*t_itr)->last());
     if(u_itr == unmatched.end())
       continue;
     unmatched.erase(u_itr);
@@ -130,11 +130,11 @@ dbetl_tracker::track(unsigned int index)
     
   }
 
-  vcl_cout << "  after: " << unmatched.size() << vcl_endl;
+  std::cout << "  after: " << unmatched.size() << std::endl;
 
   // create new tracks for unmatched points
   
-  for( vcl_set<dbetl_point_2d_sptr>::const_iterator p_itr = unmatched.begin();
+  for( std::set<dbetl_point_2d_sptr>::const_iterator p_itr = unmatched.begin();
        p_itr != unmatched.end();  ++p_itr ){
     tracks_[index].push_back(new dbetl_point_track(*p_itr));
   }
@@ -149,9 +149,9 @@ dbetl_tracker::create_points()
   curr_pts_ = dbetl_epiprofile(episegs_, image_, min_angle_, d_angle_, tracks_.size());
 
   //: Set the camera to all points
-  for( vcl_vector<vcl_vector<dbetl_point_2d_sptr> >::iterator itr1 = curr_pts_.begin();
+  for( std::vector<std::vector<dbetl_point_2d_sptr> >::iterator itr1 = curr_pts_.begin();
        itr1 != curr_pts_.end();  ++itr1 )
-    for( vcl_vector<dbetl_point_2d_sptr>::iterator itr2 = itr1->begin();
+    for( std::vector<dbetl_point_2d_sptr>::iterator itr2 = itr1->begin();
        itr2 != itr1->end();  ++itr2 )
       (*itr2)->set_camera(camera_);
 }
@@ -160,10 +160,10 @@ dbetl_tracker::create_points()
 //: Create all the points at a given angle
 void
 dbetl_tracker::create_points(double angle, 
-                            vcl_vector<dbetl_point_2d_sptr>& points) const
+                            std::vector<dbetl_point_2d_sptr>& points) const
 {
   points = dbetl_epiprofile(episegs_, image_, angle);
-  for( vcl_vector<dbetl_point_2d_sptr>::const_iterator itr = points.begin();
+  for( std::vector<dbetl_point_2d_sptr>::const_iterator itr = points.begin();
        itr != points.end();  ++itr )
   {
     (*itr)->set_camera(camera_);

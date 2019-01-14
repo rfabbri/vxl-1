@@ -2,9 +2,9 @@
 #include "dbinfo_multi_tracker.h"
 //:
 // \file
-#include <vcl_cmath.h> // for vcl_fabs(double)
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+#include <cmath> // for std::fabs(double)
+#include <algorithm>
+#include <cassert>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_math.h>
 #include <vil/vil_image_resource.h>
@@ -66,7 +66,7 @@ dbinfo_multi_tracker::set_image(const unsigned frame, vil_image_resource_sptr co
 //existing track has dominance and the specified track regions are ignored.
 //Otherwise a new track is initiated.
 bool dbinfo_multi_tracker::
-initiate_track(vcl_vector<vsol_polygon_2d_sptr> const& track_regions)
+initiate_track(std::vector<vsol_polygon_2d_sptr> const& track_regions)
 {
   // for now always initiate a track.
   
@@ -75,12 +75,12 @@ initiate_track(vcl_vector<vsol_polygon_2d_sptr> const& track_regions)
 
   if(!intensity_info_&&!gradient_info_&&!color_info_)
     {
-      vcl_cout << "In dbinfo_multi_tracker::initiate_track - no information"
+      std::cout << "In dbinfo_multi_tracker::initiate_track - no information"
                << " channels\n";
       return false;
     }
   // Construct the observation
-  vcl_vector<dbinfo_feature_base_sptr> features;
+  std::vector<dbinfo_feature_base_sptr> features;
   if(intensity_info_)
     {
       dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
@@ -107,19 +107,19 @@ initiate_track(vcl_vector<vsol_polygon_2d_sptr> const& track_regions)
   new_track->set_id(id_counter_);
   ++id_counter_;
   tracks_.push_back(new_track);
-  vcl_cout << "Initiated Track " << new_track->id() << '\n';
+  std::cout << "Initiated Track " << new_track->id() << '\n';
   return true;
 }
 //Generate a set of track extension hypotheses from seeds.
-vcl_vector<dbinfo_observation_sptr> 
+std::vector<dbinfo_observation_sptr> 
 dbinfo_multi_tracker::generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const& track)
 {
   vul_timer t;
   assert(track);
-  vcl_vector<dbinfo_observation_sptr> seeds = track->seeds();
-  vcl_vector<dbinfo_observation_sptr> hypos;  
-  vcl_vector<dbinfo_observation_sptr> genobs;
-  for(vcl_vector<dbinfo_observation_sptr>::iterator sit = seeds.begin();
+  std::vector<dbinfo_observation_sptr> seeds = track->seeds();
+  std::vector<dbinfo_observation_sptr> hypos;  
+  std::vector<dbinfo_observation_sptr> genobs;
+  for(std::vector<dbinfo_observation_sptr>::iterator sit = seeds.begin();
       sit !=seeds.end(); ++sit)
     {
       vul_timer t1;
@@ -127,7 +127,7 @@ dbinfo_multi_tracker::generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const&
       dbinfo_observation_generator::uniform_about_seed(n_samples_, *sit, genobs,
                                                        search_radius_, search_radius_,
                                                        angle_range_, scale_range_);
-      for(vcl_vector<dbinfo_observation_sptr>::iterator hit = genobs.begin();
+      for(std::vector<dbinfo_observation_sptr>::iterator hit = genobs.begin();
           hit != genobs.end(); ++hit)
         {
           dbinfo_observation_sptr obs = *hit;
@@ -144,17 +144,17 @@ dbinfo_multi_tracker::generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const&
         }
     }
   //sort the hypotheses
-  vcl_sort(hypos.begin(), hypos.end(), score_compare);
+  std::sort(hypos.begin(), hypos.end(), score_compare);
 
-  vcl_cout << "Generated  " << hypos.size() << " hypotheses of area "
+  std::cout << "Generated  " << hypos.size() << " hypotheses of area "
            << (hypos[0]->geometry()->size())/1000.0  
            << " Kpix in "  << t.real() << " msec\n";
   
 
   //Transfer the top winners to the output
-  vcl_vector<dbinfo_observation_sptr> out;
+  std::vector<dbinfo_observation_sptr> out;
   int n = 0;
-  for(vcl_vector<dbinfo_observation_sptr>::iterator hit = hypos.begin();
+  for(std::vector<dbinfo_observation_sptr>::iterator hit = hypos.begin();
       (hit !=hypos.end())&&(n<n_samples_); ++hit, ++n)
     out.push_back(*hit);
   
@@ -169,14 +169,14 @@ dbinfo_multi_tracker::generate_hypotheses_from_seeds(dbinfo_mi_track_sptr const&
 bool dbinfo_multi_tracker::extend_tracks_from_seeds()
 {
   bool at_least_one_track_is_extended = false;
-  for(vcl_vector<dbinfo_mi_track_sptr>::iterator ti = tracks_.begin();
+  for(std::vector<dbinfo_mi_track_sptr>::iterator ti = tracks_.begin();
       ti != tracks_.end(); ++ti)
     {
       dbinfo_mi_track_sptr mi_trk = (*ti);
       if(mi_trk->is_disabled())
         continue;
       //Generate a sorted list of the top M track extension hypotheses for track ti.
-      vcl_vector<dbinfo_observation_sptr> obsvs =
+      std::vector<dbinfo_observation_sptr> obsvs =
         generate_hypotheses_from_seeds(mi_trk);
       if(obsvs.size()==0)
         continue;
@@ -204,9 +204,9 @@ bool dbinfo_multi_tracker::extend_tracks_from_seeds()
         //Extend with the top candidate
         if(!mi_trk->extend_track(seed))
             continue;
-        vcl_cout << "Extending Track " << mi_trk->id() 
+        std::cout << "Extending Track " << mi_trk->id() 
             << " with observation score "<< seed->score() <<'\n'
-            << vcl_flush;
+            << std::flush;
         //Add the candidates as seeds for the next iteration
         mi_trk->set_seeds(obsvs);
         at_least_one_track_is_extended = true;

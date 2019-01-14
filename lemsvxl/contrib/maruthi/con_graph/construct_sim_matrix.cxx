@@ -7,14 +7,14 @@
 #include <vil/vil_convert.h>
 #include <vl/imopv.h>
 #include <vl/generic.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vil/vil_transpose.h>
 #include <vl/sift.h>
 
 int main( int argc, char *argv[] )
 {
 
-    vcl_string file_name = 
+    std::string file_name = 
         "/media/disk/ethz/Giraffes/texture2/image_pyramid/texture2_04.png";
     
     vil_image_view<vxl_byte> temp = 
@@ -28,8 +28,8 @@ int main( int argc, char *argv[] )
     unsigned int width  = image.ni();
     unsigned int height = image.nj();
 
-    vcl_cout<<"Width: "<<width<<vcl_endl;
-    vcl_cout<<"Height: "<<height<<vcl_endl;
+    std::cout<<"Width: "<<width<<std::endl;
+    std::cout<<"Height: "<<height<<std::endl;
 
     double* gradient_magnitude = (double*) 
         vl_malloc(width*height*sizeof(double));
@@ -38,7 +38,7 @@ int main( int argc, char *argv[] )
 
     double* image_data=image.top_left_ptr();
 
-    vcl_cout<<"Computing gradient"<<vcl_endl;
+    std::cout<<"Computing gradient"<<std::endl;
 
     vl_imgradient_polar_d(
         gradient_magnitude, // gradient magnitude 
@@ -70,7 +70,7 @@ int main( int argc, char *argv[] )
         ++index;
     }
     
-    vcl_cerr<<"Computing sift "<<vcl_endl;
+    std::cerr<<"Computing sift "<<std::endl;
     vl_sift_pix descr[128];
 
     vl_sift_calc_raw_descriptor(filter,
@@ -84,31 +84,31 @@ int main( int argc, char *argv[] )
                                 -112*(M_PI/180));
 
     // write out sift point
-    vcl_ofstream myfile("sift_point.txt");
+    std::ofstream myfile("sift_point.txt");
     for ( unsigned int i =0 ; i < 128 ; ++i)
     {
-        myfile<<descr[i]<<vcl_endl;
+        myfile<<descr[i]<<std::endl;
     }
     myfile.close();
 
     // void vl_sift_calc_raw_descriptor(filer
     // {
-    //     vcl_ofstream myfile("grad_mag.txt");
+    //     std::ofstream myfile("grad_mag.txt");
     //     for ( unsigned int i=0; i < width*height ; ++i)
     //     {
     //         double value=gradient_magnitude[i];
-    //         myfile<<value<<vcl_endl;
+    //         myfile<<value<<std::endl;
             
     //     }
     //     myfile.close();
     // }
 
     // {
-    //     vcl_ofstream myfile2("grad_angle.txt");
+    //     std::ofstream myfile2("grad_angle.txt");
     //     for ( unsigned int i=0; i < width*height ; ++i)
     //     {
     //         double value=gradient_angle[i];
-    //         myfile2<<value<<vcl_endl;
+    //         myfile2<<value<<std::endl;
             
     //     }
     //     myfile2.close();
@@ -117,16 +117,16 @@ int main( int argc, char *argv[] )
 
 
 
-    // vcl_stringstream stream1(argv[1]);
-    // vcl_string model_cem_file;
+    // std::stringstream stream1(argv[1]);
+    // std::string model_cem_file;
     // stream1>>model_cem_file;
 
-    // vcl_stringstream stream2(argv[2]);
-    // vcl_string query_cem_file;
+    // std::stringstream stream2(argv[2]);
+    // std::string query_cem_file;
     // stream2>>query_cem_file;
 
-    // vcl_stringstream stream3(argv[3]);
-    // vcl_string output_prefix;
+    // std::stringstream stream3(argv[3]);
+    // std::string output_prefix;
     // stream3>>output_prefix;
 
 

@@ -13,7 +13,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class bvam_save_occupancy_raw_process : public bprb_process
@@ -30,7 +30,7 @@ class bvam_save_occupancy_raw_process : public bprb_process
   //: Clone the process
   virtual bvam_save_occupancy_raw_process* clone() const {return new bvam_save_occupancy_raw_process(*this);}
 
-  vcl_string name(){return "BvamSaveOccupancyRaw";}
+  std::string name(){return "BvamSaveOccupancyRaw";}
 
   bool init() { return true; }
   bool execute();

@@ -11,7 +11,7 @@
 #include <vil/vil_image_view.h>
 
 //: generate a map from the activated parts
-void dbvxm_part_hierarchy::generate_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map, vil_image_view<unsigned>& type_map) {
+void dbvxm_part_hierarchy::generate_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map, vil_image_view<unsigned>& type_map) {
   
   unsigned ni = map.ni();
   unsigned nj = map.nj();
@@ -29,7 +29,7 @@ void dbvxm_part_hierarchy::generate_map(vcl_vector<dbvxm_part_instance_sptr>& ex
 
 }
 
-void dbvxm_part_hierarchy::generate_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vcl_vector<vcl_vector<dbvxm_part_instance_sptr> >& map)
+void dbvxm_part_hierarchy::generate_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, std::vector<std::vector<dbvxm_part_instance_sptr> >& map)
 {
   unsigned ni = map.size();
   unsigned nj = map[0].size();
@@ -48,7 +48,7 @@ void dbvxm_part_hierarchy::generate_map(vcl_vector<dbvxm_part_instance_sptr>& ex
 }
 //: generate a float map with normalized strengths and receptive fields marked
 void 
-dbvxm_part_hierarchy::generate_output_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map)
+dbvxm_part_hierarchy::generate_output_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map)
 {
   unsigned ni = map.ni();
   unsigned nj = map.nj();
@@ -70,7 +70,7 @@ dbvxm_part_hierarchy::generate_output_map(vcl_vector<dbvxm_part_instance_sptr>& 
 
 //: output_img needs to have 3 planes
 void 
-dbvxm_part_hierarchy::generate_output_img(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, 
+dbvxm_part_hierarchy::generate_output_img(std::vector<dbvxm_part_instance_sptr>& extracted_parts, 
                                           vil_image_view<vxl_byte>& input_img, 
                                           vil_image_view<vxl_byte>& output_img)
 {
@@ -116,7 +116,7 @@ dbvxm_part_instance_sptr dbvxm_part_hierarchy::exists(dbvxm_part_base_sptr upper
                                                       dbvxm_part_instance_sptr central_p, 
                                                       vil_image_view<float>& map, 
                                                       vil_image_view<unsigned>& type_map, 
-                                                      vcl_vector<vcl_vector<dbvxm_part_instance_sptr> >& part_map,
+                                                      std::vector<std::vector<dbvxm_part_instance_sptr> >& part_map,
                                                       float det_threshold)
 {
   unsigned ni = map.ni();
@@ -124,7 +124,7 @@ dbvxm_part_instance_sptr dbvxm_part_hierarchy::exists(dbvxm_part_base_sptr upper
 
   //: first check if types and layers of central_p instance matches with upper_p's info
   if (upper_p->central_part()->type_ != central_p->type_ || upper_p->layer_ != central_p->layer_ + 1) {
-    vcl_cout << "central_p instance passed is not compatible with the upper layer part passes\n";
+    std::cout << "central_p instance passed is not compatible with the upper layer part passes\n";
     return 0;
   }
 
@@ -138,12 +138,12 @@ dbvxm_part_instance_sptr dbvxm_part_hierarchy::exists(dbvxm_part_base_sptr upper
   eit++;  // skip the central part
   float strength = 1.0f;
   for ( ; eit != upper_p->out_edges_end(); eit++) {
-    //int mx = (int)vcl_floor(cx+(*eit)->mean().get(0)+0.5);
-    //int my = (int)vcl_floor(cy+(*eit)->mean().get(1)+0.5);
-    //int rad = (int)vcl_ceil(vcl_sqrt((*eit)->var())+3);
-    int mx = (int)vcl_floor(cx+0.5);  // try all locations around center within dist+variance_dist radius
-    int my = (int)vcl_floor(cy+0.5);
-    int rad = (int)vcl_ceil((*eit)->mean_dist()+vcl_sqrt((*eit)->var_dist())+3);
+    //int mx = (int)std::floor(cx+(*eit)->mean().get(0)+0.5);
+    //int my = (int)std::floor(cy+(*eit)->mean().get(1)+0.5);
+    //int rad = (int)std::ceil(std::sqrt((*eit)->var())+3);
+    int mx = (int)std::floor(cx+0.5);  // try all locations around center within dist+variance_dist radius
+    int my = (int)std::floor(cy+0.5);
+    int rad = (int)std::ceil((*eit)->mean_dist()+std::sqrt((*eit)->var_dist())+3);
     int si = mx - rad;  si = si < 0 ? 0 : si;
     int upper_i = mx + rad; upper_i = upper_i > (int)ni ? ni : upper_i;
     int sj = my - rad;  sj = sj < 0 ? 0 : sj;
@@ -186,21 +186,21 @@ dbvxm_part_instance_sptr dbvxm_part_hierarchy::exists(dbvxm_part_base_sptr upper
 }
 
 //: given a set of detected lower level parts, create a set of instance detections for one layer above in the hierarchy
-void dbvxm_part_hierarchy::extract_upper_layer(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, 
+void dbvxm_part_hierarchy::extract_upper_layer(std::vector<dbvxm_part_instance_sptr>& extracted_parts, 
                                                unsigned ni, unsigned nj,
                                                float detection_threshold, 
-                                               vcl_vector<dbvxm_part_instance_sptr>& extracted_upper_parts)
+                                               std::vector<dbvxm_part_instance_sptr>& extracted_upper_parts)
 {
   vil_image_view<float> map(ni, nj, 1);  // the second plane will hold the types of the primitives
   vil_image_view<unsigned> type_map(ni, nj, 1);  // the second plane will hold the types of the primitives
   generate_map(extracted_parts, map, type_map);
   
-  vcl_vector<dbvxm_part_instance_sptr> dummy(nj, 0);
-  vcl_vector<vcl_vector<dbvxm_part_instance_sptr> > part_map(ni, dummy);
+  std::vector<dbvxm_part_instance_sptr> dummy(nj, 0);
+  std::vector<std::vector<dbvxm_part_instance_sptr> > part_map(ni, dummy);
   generate_map(extracted_parts, part_map);
 
   //: we'll generate a list of instantiations for each part in the upper parts of the hierarchy
-  //vcl_map<vcl_pair<unsigned, unsigned>, vcl_vector<dbvxm_part_instance_sptr> > instantiations;
+  //std::map<std::pair<unsigned, unsigned>, std::vector<dbvxm_part_instance_sptr> > instantiations;
 
   //: for each detected part, check for the existence of each upper layer part that uses it as a central part
   for (unsigned i = 0; i < extracted_parts.size(); i++) {

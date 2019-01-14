@@ -1,16 +1,16 @@
 #include <vul/vul_arg.h>
-#include <vcl_cstring.h> // needed for strcmp()
-#include <vcl_iostream.h>
-#include <vcl_iomanip.h>
-#include <vcl_list.h>
-#include <vcl_algorithm.h>
+#include <cstring> // needed for strcmp()
+#include <iostream>
+#include <iomanip>
+#include <list>
+#include <algorithm>
 #include <testlib/testlib_test.h>
 #include <vul/vul_file.h>
 #include <vul/vul_sequence_filename_map.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <cstdio>
 
 
 #if 0
@@ -18,37 +18,37 @@
 #define MAX_FCOPY_BUF_SIZE 100000 // uint: byte
 
 
-int my_fcopy(vcl_string const input_filename, vcl_string const output_filename)
+int my_fcopy(std::string const input_filename, std::string const output_filename)
 {
 
-    vcl_ofstream ostr;
-    vcl_ifstream istr;
+    std::ofstream ostr;
+    std::ifstream istr;
     unsigned long input_fsize;
     char* fcopy_buffer;
     unsigned long copy_byte_cnt = 0;
 
-    vcl_string my_string;
+    std::string my_string;
 
     // open input and output files in binary format.
-    istr.open(input_filename.c_str(), vcl_ifstream::binary | vcl_ifstream::in);
+    istr.open(input_filename.c_str(), std::ifstream::binary | std::ifstream::in);
     if(!istr.good())
     {
-        vcl_cerr << "Input file " << input_filename << " can not be openned successfully. " << vcl_endl;
+        std::cerr << "Input file " << input_filename << " can not be openned successfully. " << std::endl;
         return -1;
     }
 
-    ostr.open(output_filename.c_str(), vcl_ofstream::binary | vcl_ofstream::out);
+    ostr.open(output_filename.c_str(), std::ofstream::binary | std::ofstream::out);
     if(!ostr.good())
     {
-        vcl_cerr << "Output file " << output_filename << " can not be openned successfully. " << vcl_endl;
+        std::cerr << "Output file " << output_filename << " can not be openned successfully. " << std::endl;
         return -1;
     }
     
 
     // read the length of the inputfile.
-    istr.seekg(0, vcl_ifstream::end);
+    istr.seekg(0, std::ifstream::end);
     input_fsize = istr.tellg();
-    istr.seekg(0, vcl_ifstream::beg);
+    istr.seekg(0, std::ifstream::beg);
 
     // create the file copy buffer
     if(input_fsize <= MAX_FCOPY_BUF_SIZE)
@@ -69,7 +69,7 @@ int my_fcopy(vcl_string const input_filename, vcl_string const output_filename)
             istr.read(fcopy_buffer, MAX_FCOPY_BUF_SIZE);
             ostr.write(fcopy_buffer, MAX_FCOPY_BUF_SIZE);
             ostr.flush();
-            vcl_cout << ".";
+            std::cout << ".";
             copy_byte_cnt += MAX_FCOPY_BUF_SIZE;
         }
         else
@@ -77,7 +77,7 @@ int my_fcopy(vcl_string const input_filename, vcl_string const output_filename)
             istr.read(fcopy_buffer, input_fsize - copy_byte_cnt);
             ostr.write(fcopy_buffer, input_fsize - copy_byte_cnt);
             ostr.flush();
-            vcl_cout << ".";
+            std::cout << ".";
             copy_byte_cnt += input_fsize - copy_byte_cnt;
         }
     }
@@ -92,21 +92,21 @@ int my_fcopy(vcl_string const input_filename, vcl_string const output_filename)
 
 int main(int argc, char* argv[])
 {
-  vcl_stringstream SS;
-  vcl_string source_filename;
-  vcl_string des_filename;
+  std::stringstream SS;
+  std::string source_filename;
+  std::string des_filename;
 
   vul_arg_info_list arglist;
   vul_arg<char const*>     source_base_filename(arglist, 0, "Source filename");
   vul_arg<char const*>     des_base_filename(arglist, 0, "Destination filename");
   vul_arg<char const*>     arg_ext(arglist, 0, "image file extension");
   vul_arg<unsigned>           arg_dig_number(arglist, 0, "Number of Digits in filename");
-  vul_arg<vcl_list<int> >  arg_ind(arglist, "-ind", "indices of image frames...");
+  vul_arg<std::list<int> >  arg_ind(arglist, "-ind", "indices of image frames...");
 
   arglist.parse(argc, argv, true);
 
   //check the input image indices
-  vcl_list<int> indices = arg_ind();
+  std::list<int> indices = arg_ind();
 
   unsigned start_ind = 0;
   unsigned cur_ind = start_ind;
@@ -121,8 +121,8 @@ int main(int argc, char* argv[])
           des_filename.clear();
 
           SS << source_base_filename();
-          SS << vcl_setw (arg_dig_number());
-          SS << vcl_setfill('0');
+          SS << std::setw (arg_dig_number());
+          SS << std::setfill('0');
           SS << cur_ind;
           SS << ".";
           SS << arg_ext();
@@ -130,18 +130,18 @@ int main(int argc, char* argv[])
 
           if(!vul_file::exists(source_filename))
           {
-              vcl_cout << "File: " << source_filename << " does not exist. Copy is finished. " << vcl_endl;
+              std::cout << "File: " << source_filename << " does not exist. Copy is finished. " << std::endl;
               break;
           }
           else
           {
-              vcl_cout << "Copy File: " << source_filename;
+              std::cout << "Copy File: " << source_filename;
           }
 
           SS.clear();
           SS << des_base_filename();
-          SS << vcl_setw (arg_dig_number());
-          SS << vcl_setfill('0');
+          SS << std::setw (arg_dig_number());
+          SS << std::setfill('0');
           SS << cur_ind;
           SS << ".";
           SS << arg_ext();
@@ -153,14 +153,14 @@ int main(int argc, char* argv[])
           }
           else
           {
-            vcl_cout << " is done!" << vcl_endl;
+            std::cout << " is done!" << std::endl;
           }
       }
   }
   else
   {
       unsigned indices_number = indices.size();
-      vcl_list<int>::iterator iter;
+      std::list<int>::iterator iter;
       for(iter = indices.begin(); iter != indices.end(); iter++)
       {
           cur_ind = (*iter);
@@ -170,8 +170,8 @@ int main(int argc, char* argv[])
           des_filename.clear();
 
           SS << source_base_filename();
-          SS << vcl_setw (arg_dig_number());
-          SS << vcl_setfill('0');
+          SS << std::setw (arg_dig_number());
+          SS << std::setfill('0');
           SS << cur_ind;
           SS << ".";
           SS << arg_ext();
@@ -179,18 +179,18 @@ int main(int argc, char* argv[])
 
           if(!vul_file::exists(source_filename))
           {
-              vcl_cout << "File: " << source_filename << " does not exist. Copy is finished. " << vcl_endl;
+              std::cout << "File: " << source_filename << " does not exist. Copy is finished. " << std::endl;
               break;
           }
           else
           {
-              vcl_cout << "Copy File: " << source_filename;
+              std::cout << "Copy File: " << source_filename;
           }
 
           SS.clear();
           SS << des_base_filename();
-          SS << vcl_setw (arg_dig_number());
-          SS << vcl_setfill('0');
+          SS << std::setw (arg_dig_number());
+          SS << std::setfill('0');
           SS << cur_ind;
           SS << ".";
           SS << arg_ext();
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
           }
           else
           {
-            vcl_cout << " is done!" << vcl_endl;
+            std::cout << " is done!" << std::endl;
           }
 
       }
@@ -218,46 +218,46 @@ int main(int argc, char* argv[])
 #if 0
 void main(int argc, char* argv[])
 {  
-  vcl_cout << "Current directory: " << vul_file::get_cwd() << vcl_endl;    
-    vcl_cout << "Change directory to huston" << vcl_endl;
+  std::cout << "Current directory: " << vul_file::get_cwd() << std::endl;    
+    std::cout << "Change directory to huston" << std::endl;
     vul_file::change_directory("huston");
-    vcl_cout << "Current directory: " << vul_file::get_cwd() << vcl_endl;
+    std::cout << "Current directory: " << vul_file::get_cwd() << std::endl;
     vul_file::make_directory("huston_2");
 
     vul_file::make_directory_path ("huston_3");
     
     if(vul_file::is_directory("C:\\VXL\\brown_eyes_build\\contrib\\yong\\cplusplusclass\\debug\\huston"))
     {
-        vcl_cout << "this is a directory" << vcl_endl;
+        std::cout << "this is a directory" << std::endl;
     }
     else
     {
-        vcl_cout << "this is NOT a directory" << vcl_endl;
+        std::cout << "this is NOT a directory" << std::endl;
     }
 
-    vcl_cout << vul_file::expand_tilde (vcl_string("World_Map_Blocked_0.tiff")) << vcl_endl;
+    std::cout << vul_file::expand_tilde (std::string("World_Map_Blocked_0.tiff")) << std::endl;
 
     if(vul_file::exists("World_Map_Blocked_0.tiff"))
     {
-        vcl_cout << "World_Map_Blocked_0.tiff exists!" << vcl_endl;
+        std::cout << "World_Map_Blocked_0.tiff exists!" << std::endl;
     }
     else
     {
-        vcl_cout << "World_Map_Blocked_0.tiff does NOT exist!" << vcl_endl;
+        std::cout << "World_Map_Blocked_0.tiff does NOT exist!" << std::endl;
     }
 
 
-    vcl_cout << "Size of file World_Map_Blocked_0.tiff is " << vul_file::size("World_Map_Blocked_0.tiff") << vcl_endl;
+    std::cout << "Size of file World_Map_Blocked_0.tiff is " << vul_file::size("World_Map_Blocked_0.tiff") << std::endl;
 
-    vcl_cout << "The dir name of file World_Map_Blocked_0.tiff is " << vul_file::dirname("World_Map_Blocked_0.tiff") << vcl_endl;
+    std::cout << "The dir name of file World_Map_Blocked_0.tiff is " << vul_file::dirname("World_Map_Blocked_0.tiff") << std::endl;
 
-    vcl_cout << "The extension of file World_Map_Blocked_0.tiff is " << vul_file::extension("World_Map_Blocked_0.tiff") << vcl_endl;
+    std::cout << "The extension of file World_Map_Blocked_0.tiff is " << vul_file::extension("World_Map_Blocked_0.tiff") << std::endl;
 
-    vcl_cout << "The base name of file World_Map_Blocked_0.tiff is " << vul_file::basename("World_Map_Blocked_0.tiff", "0.tiff") << vcl_endl;
+    std::cout << "The base name of file World_Map_Blocked_0.tiff is " << vul_file::basename("World_Map_Blocked_0.tiff", "0.tiff") << std::endl;
 
-    vcl_cout << "The file name after strip dir of World_Map_Blocked_0.tiff is " << vul_file::strip_directory("C:\\VXL\\brown_eyes_build\\contrib\\yong\\cplusplusclass\\debug\\huston\\World_Map_Blocked_0.tiff") << vcl_endl;
+    std::cout << "The file name after strip dir of World_Map_Blocked_0.tiff is " << vul_file::strip_directory("C:\\VXL\\brown_eyes_build\\contrib\\yong\\cplusplusclass\\debug\\huston\\World_Map_Blocked_0.tiff") << std::endl;
 
-    vcl_cout << "The file name after strip ext of World_Map_Blocked_0.tiff is " << vul_file::strip_extension("C:\\VXL\\brown_eyes_build\\contrib\\yong\\cplusplusclass\\debug\\huston\\World_Map_Blocked_0.tiff") << vcl_endl;
+    std::cout << "The file name after strip ext of World_Map_Blocked_0.tiff is " << vul_file::strip_extension("C:\\VXL\\brown_eyes_build\\contrib\\yong\\cplusplusclass\\debug\\huston\\World_Map_Blocked_0.tiff") << std::endl;
 
 
 
@@ -268,7 +268,7 @@ void main(int argc, char* argv[])
 
     // Print out all the files that are specified by that pattern.
     for (int i = 0; i < map.get_nviews(); ++i) {
-      vcl_cout << map.name(i) << vcl_endl;
+      std::cout << map.name(i) << std::endl;
     }
   } else {
     // Capes' examples
@@ -283,10 +283,10 @@ void main(int argc, char* argv[])
     }
     {
       vul_sequence_filename_map map("im.###,:5:");
-      vcl_cerr << map.name(10) << vcl_endl
-               << map.pair_name(10,11) << vcl_endl
-               << map.triplet_name(10,11,12) << vcl_endl
-               << map.image_name(10) << vcl_endl;
+      std::cerr << map.name(10) << std::endl
+               << map.pair_name(10,11) << std::endl
+               << map.triplet_name(10,11,12) << std::endl
+               << map.image_name(10) << std::endl;
     }
   }
 
@@ -309,15 +309,15 @@ void main(int argc, char* argv[])
   vul_arg<char const*>     c_filename(0, "Other filename");
   vul_arg<bool>            a_fast("-fast", "Go fast", false);
   vul_arg_parse(argc, argv);
-  a_filename.print_value(vcl_cout<<vcl_endl);
-  a_naughty_global_arg.print_value(vcl_cout<<vcl_endl);
-  a_fast.print_value(vcl_cout<<vcl_endl);
+  a_filename.print_value(std::cout<<std::endl);
+  a_naughty_global_arg.print_value(std::cout<<std::endl);
+  a_fast.print_value(std::cout<<std::endl);
 
-  vcl_cout << vcl_endl << a_naughty_global_arg.option() << vcl_endl;
-  vcl_cout << a_naughty_global_arg.help() << vcl_endl;
+  std::cout << std::endl << a_naughty_global_arg.option() << std::endl;
+  std::cout << a_naughty_global_arg.help() << std::endl;
 
 
-  vcl_cerr << vcl_endl << "Filename [" << a_filename() << "]\n";
+  std::cerr << std::endl << "Filename [" << a_filename() << "]\n";
 }
 
 
@@ -370,12 +370,12 @@ void test_do_vul_arg()
   vul_arg<bool> bool1(arglist, "-bool1", "And another", false);
   vul_arg<bool> bool2(arglist, "-bool2", "And another", true);
   vul_arg<bool> bool3(arglist, "-bool3", "And a final help test just to finish off...", true);
-  vul_arg<vcl_list<int> > list1(arglist, "-list1", "List...");
+  vul_arg<std::list<int> > list1(arglist, "-list1", "List...");
   vul_arg<char*> filename1(arglist);
-  vul_arg<vcl_vector<double> > list2(arglist, "-list2", "double List...");
+  vul_arg<std::vector<double> > list2(arglist, "-list2", "double List...");
 
   int my_argc = count_my_args(my_argv_1);
-  vcl_cout << "vul_argc = " << my_argc
+  std::cout << "vul_argc = " << my_argc
            << ", int1 = " << int1()
            << ", int2 = " << int2()
            << ", bool1 = " << bool1()
@@ -383,23 +383,23 @@ void test_do_vul_arg()
            << ", bool3 = " << bool3()
            << ", list1 size = " << list1().size()
            << ", list2 size = " << list2().size()
-           << vcl_endl;
+           << std::endl;
   char **my_argv = (char**) my_argv_1;
 
   arglist.parse(my_argc, my_argv, true);
 
 //  TEST("int1", int1(), 3);
 //  TEST("int2", int2(), 2);
-//  TEST("filename == f", vcl_strcmp(filename1(), "f"), 0);
+//  TEST("filename == f", std::strcmp(filename1(), "f"), 0);
 
   {
     unsigned true_list_length = sizeof list1_contents / sizeof list1_contents[0];
-    vcl_list<int> l = list1();
+    std::list<int> l = list1();
     //TEST("list1 length", l.size(), true_list_length);
     bool ok = true;
     for (unsigned int i = 0; i < true_list_length; ++i) {
-      if (vcl_find(l.begin(), l.end(), list1_contents[i]) == l.end()) {
-        vcl_cout << "Integer [" << list1_contents[i] << "] not found in list\n";
+      if (std::find(l.begin(), l.end(), list1_contents[i]) == l.end()) {
+        std::cout << "Integer [" << list1_contents[i] << "] not found in list\n";
         ok = false;
       }
     }
@@ -407,12 +407,12 @@ void test_do_vul_arg()
   }
   {
     unsigned true_list_length = sizeof list2_contents / sizeof list2_contents[0];
-    vcl_vector<double> l = list2();
+    std::vector<double> l = list2();
 //    TEST("list2 length", l.size(), true_list_length);
     bool ok = true;
     for (unsigned int i = 0; i < true_list_length; ++i) {
-      if (vcl_find(l.begin(), l.end(), list2_contents[i]) == l.end()) {
-        vcl_cout << "Value [" << list2_contents[i] << "] not found in list\n";
+      if (std::find(l.begin(), l.end(), list2_contents[i]) == l.end()) {
+        std::cout << "Value [" << list2_contents[i] << "] not found in list\n";
         ok = false;
       }
     }

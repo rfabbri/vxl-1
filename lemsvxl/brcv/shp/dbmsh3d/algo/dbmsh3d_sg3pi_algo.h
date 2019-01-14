@@ -44,7 +44,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi, const float DCS_psi, 
                                      const int n_intra, const int n_inter);
 
 //: Discrete curve shortening only in z(x,y) value.
-bool bgld_curve_shorten_z (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
+bool bgld_curve_shorten_z (std::vector<dbmsh3d_sg3pi_pt*>& scanline, 
                            const float psi, const unsigned int nsteps);
 
 void apply_median_filter_1 (dbmsh3d_sg3pi* sg3pi);
@@ -65,8 +65,8 @@ void gaussian_smooth_2d_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
 
 void build_mesh_faces_3pi (dbmsh3d_sg3pi* sg3pi, dbmsh3d_mesh* M);
 
-void mesh_between_scanlines (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0, 
-                             const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline1, 
+void mesh_between_scanlines (const std::vector<dbmsh3d_sg3pi_pt*>& scanline0, 
+                             const std::vector<dbmsh3d_sg3pi_pt*>& scanline1, 
                              const double intra_scanline_th,
                              dbmsh3d_mesh* M);
 

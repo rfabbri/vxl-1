@@ -3,10 +3,10 @@
 //:
 // \file
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>
 
@@ -54,20 +54,20 @@ vgl_plane_3d<double> dbvxm_multi_scale_voxel_world::fit_plane()
 }
 
 //: output description of voxel world to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, dbvxm_multi_scale_voxel_world const& vox_world)
+std::ostream&  operator<<(std::ostream& s, dbvxm_multi_scale_voxel_world const& vox_world)
 {
   bvxm_world_params_sptr params = vox_world.get_params();
-  s << "dbvxm_multi_scale_voxel_world : " << params->num_voxels().x() << " x " << params->num_voxels().y() << " x " << params->num_voxels().z() << vcl_endl;
+  s << "dbvxm_multi_scale_voxel_world : " << params->num_voxels().x() << " x " << params->num_voxels().y() << " x " << params->num_voxels().z() << std::endl;
   return s;
 }
 
 
 //: save the occupancy grid in a ".raw" format readable by Drishti volume rendering software
-bool dbvxm_multi_scale_voxel_world::save_occupancy_raw(vcl_string filename, unsigned int scale)
+bool dbvxm_multi_scale_voxel_world::save_occupancy_raw(std::string filename, unsigned int scale)
 {
-  vcl_fstream ofs(filename.c_str(),vcl_ios::binary | vcl_ios::out);
+  std::fstream ofs(filename.c_str(),std::ios::binary | std::ios::out);
   if (!ofs.is_open()) {
-    vcl_cerr << "error opening file " << filename << " for write!\n";
+    std::cerr << "error opening file " << filename << " for write!\n";
     return false;
   }
   typedef bvxm_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
@@ -93,14 +93,14 @@ bool dbvxm_multi_scale_voxel_world::save_occupancy_raw(vcl_string filename, unsi
 
   bvxm_voxel_grid<ocp_datatype>::iterator ocp_it = ocp_grid->begin();
   for (unsigned k=0; ocp_it != ocp_grid->end(); ++ocp_it, ++k) {
-    vcl_cout << '.';
+    std::cout << '.';
     for (unsigned i=0; i<(*ocp_it).nx(); ++i) {
       for (unsigned j=0; j < (*ocp_it).ny(); ++j) {
         ocp_array[i*ny*nz + j*nz + k] = (unsigned char)((*ocp_it)(i,j) * 255.0);;
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   ofs.write(reinterpret_cast<char*>(ocp_array),sizeof(unsigned char)*nx*ny*nz);
 
   ofs.close();
@@ -115,9 +115,9 @@ bool dbvxm_multi_scale_voxel_world::save_occupancy_raw(vcl_string filename, unsi
 bool dbvxm_multi_scale_voxel_world::clean_grids()
 {
     // look for existing grids in the directory
-    vcl_string storage_directory = params_->model_dir();
+    std::string storage_directory = params_->model_dir();
 
-    vcl_stringstream grid_glob;
+    std::stringstream grid_glob;
     grid_glob << storage_directory << "/*.vox";
     bool result = vul_file::delete_file_glob(grid_glob.str().c_str());
 
@@ -136,8 +136,8 @@ bool dbvxm_multi_scale_voxel_world::update_edges(bvxm_image_metadata const& meta
   vgl_vector_3d<unsigned int> grid_size = params_->num_voxels();
 
   // compute homographies from voxel planes to image coordinates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
     for (unsigned z=0; z < (unsigned)grid_size.z(); ++z)
@@ -151,7 +151,7 @@ bool dbvxm_multi_scale_voxel_world::update_edges(bvxm_image_metadata const& meta
   // convert image to a voxel_slab
   bvxm_voxel_slab<edges_datatype> image_slab(metadata.img->ni(), metadata.img->nj(), 1);
   if (!bvxm_util::img_to_slab(metadata.img,image_slab)) {
-    vcl_cerr << "error converting image to voxel slab of observation type for bvxm_voxel_type:" << EDGES << vcl_endl;
+    std::cerr << "error converting image to voxel slab of observation type for bvxm_voxel_type:" << EDGES << std::endl;
     return false;
   }
 
@@ -162,13 +162,13 @@ bool dbvxm_multi_scale_voxel_world::update_edges(bvxm_image_metadata const& meta
   bvxm_voxel_grid<edges_datatype> *edges_grid  = static_cast<bvxm_voxel_grid<edges_datatype>*>(edges_grid_base.ptr());
   bvxm_voxel_grid<edges_datatype>::iterator edges_slab_it = edges_grid->begin();
 
-  vcl_cout << "Updating Voxels for the Edge Model: " << vcl_endl;
+  std::cout << "Updating Voxels for the Edge Model: " << std::endl;
 
   for (unsigned z=0; z<(unsigned)grid_size.z(); ++z, ++edges_slab_it)
   {
-    vcl_cout << '.';
+    std::cout << '.';
     if ( (edges_slab_it == edges_grid->end()) ) {
-      vcl_cerr << "error: reached end of grid slabs at z = " << z << ".  nz = " << grid_size.z() << vcl_endl;
+      std::cerr << "error: reached end of grid slabs at z = " << z << ".  nz = " << grid_size.z() << std::endl;
       return false;
     }
 
@@ -182,7 +182,7 @@ bool dbvxm_multi_scale_voxel_world::update_edges(bvxm_image_metadata const& meta
       (*edges_slab_it_it) = (*edges_slab_it_it)*(*frame_backproj_it);
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   return true;
 }
 
@@ -195,8 +195,8 @@ bool dbvxm_multi_scale_voxel_world::expected_edge_image(bvxm_image_metadata cons
   vgl_vector_3d<unsigned int> grid_size = params_->num_voxels();
 
   // compute homographies from voxel planes to image coordinates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
   for (unsigned z=0; z < (unsigned)grid_size.z(); ++z)
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
@@ -217,9 +217,9 @@ bool dbvxm_multi_scale_voxel_world::expected_edge_image(bvxm_image_metadata cons
 
   bvxm_voxel_grid<edges_datatype>::const_iterator edges_slab_it(edges_grid->begin());
 
-  vcl_cout << "Generating Expected Edge Image: " << vcl_endl;
+  std::cout << "Generating Expected Edge Image: " << std::endl;
   for (unsigned z=0; z<(unsigned)grid_size.z(); ++z, ++edges_slab_it) {
-    vcl_cout << '.';
+    std::cout << '.';
     // warp slice_probability to image plane
     bvxm_util::warp_slab_bilinear(*edges_slab_it, H_img_to_plane[z], slice_edges);
 
@@ -230,7 +230,7 @@ bool dbvxm_multi_scale_voxel_world::expected_edge_image(bvxm_image_metadata cons
       (*expected_edge_image_it) = vnl_math_max((*expected_edge_image_it),(*slice_edges_it));
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // convert back to vil_image_view
   bvxm_util::slab_to_img(expected_edge_image, expected);
@@ -257,7 +257,7 @@ void vsl_b_read(vsl_b_istream & is, dbvxm_multi_scale_voxel_world &world)
   params->b_read(is);
 }
 
-void vsl_print_summary(vcl_ostream &os, const dbvxm_multi_scale_voxel_world &world)
+void vsl_print_summary(std::ostream &os, const dbvxm_multi_scale_voxel_world &world)
 {
   bvxm_world_params_sptr params = world.get_params();
   os << *params;
@@ -290,7 +290,7 @@ void vsl_b_write(vsl_b_ostream& os, const dbvxm_multi_scale_voxel_world* &p)
   }
 }
 
-void vsl_print_summary(vcl_ostream& os, const dbvxm_multi_scale_voxel_world* &p)
+void vsl_print_summary(std::ostream& os, const dbvxm_multi_scale_voxel_world* &p)
 {
   if (p==0)
     os << "NULL PTR";

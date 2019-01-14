@@ -4,7 +4,7 @@
 // \file
 
 #include <vgui/vgui.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbskr/dbskr_compute_scurve.h>
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_tree.h>
@@ -60,28 +60,28 @@ void
 dbskr_visualize_path_scurve_tool::activate()
 {
   if (!tableau()) {
-    vcl_cout << " dbskr_visualize_path_scurve_tool::activate() - tableau is not set!\n";
+    std::cout << " dbskr_visualize_path_scurve_tool::activate() - tableau is not set!\n";
     return;
   }
 
   dbsk2d_shock_graph_sptr sg = tableau()->get_shock_graph();
   if( sg.ptr() == 0 ) {if (tableau()->get_shock_graph())
-    vcl_cout << "shock graph pointer is zero!\n";
+    std::cout << "shock graph pointer is zero!\n";
     return;
   }
   
   pf_ = new dbskr_shock_path_finder(sg);
   if (!pf_->construct_v()) {
-    vcl_cout << " dbskr_visualize_path_scurve_tool::activate() - problems in v_graph construction!\n";
+    std::cout << " dbskr_visualize_path_scurve_tool::activate() - problems in v_graph construction!\n";
     return;
   }
 
-  vcl_cout << "printing shock graph: " << vcl_endl;
+  std::cout << "printing shock graph: " << std::endl;
   print_shock_graph(sg);
-  vcl_cout << "-----------------------" << vcl_endl;
+  std::cout << "-----------------------" << std::endl;
   cur_scurve = 0;
 
-  vcl_cout << "printing v graph: " << vcl_endl;
+  std::cout << "printing v graph: " << std::endl;
   print_v_graph(pf_->get_v());
 
 }
@@ -93,7 +93,7 @@ dbskr_visualize_path_scurve_tool::~dbskr_visualize_path_scurve_tool()
   pf_->clear();
 }
 
-vcl_string
+std::string
 dbskr_visualize_path_scurve_tool::name() const
 {
   return "Visualize Shock Path Scurve Tool";
@@ -109,7 +109,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
 
   if (e.type == vgui_MOTION)
   {
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     vgui::out << "[" << intx << " " << inty << "] : (" << pointx << " " << pointy << ") \n";
   }
 
@@ -120,9 +120,9 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
     if (scurves_.size() > current_ind_) {
       cur_scurve = scurves_[current_ind_];
       for (unsigned i = 0; i < paths_[current_ind_].size(); i++) {
-        vcl_cout << paths_[current_ind_][i]->id_ << " ";
+        std::cout << paths_[current_ind_][i]->id_ << " ";
       }
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
     } 
 
     tableau()->post_overlay_redraw();
@@ -135,7 +135,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
     
     if (graphs_.size() > current_graph_ind_) {
       current_graph_ = graphs_[current_graph_ind_];
-      vcl_cout << "length of the path for current graph: " << abs_lengths_[current_graph_ind_];
+      std::cout << "length of the path for current graph: " << abs_lengths_[current_graph_ind_];
 
       sp_middle_ = extract_patch_from_v_graph(current_graph_, 0, 0, 0.05, construct_circular_ends_, true, true, interpolate_ds_, subsample_ds_);
     } 
@@ -165,7 +165,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
       }
       
       if (!node1) {
-        vcl_cout << "Not a valid node!! Please select a degree 3 or 1 node!\n";
+        std::cout << "Not a valid node!! Please select a degree 3 or 1 node!\n";
       }
     }
     
@@ -190,7 +190,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
         }
       }
       if (!node2) {
-        vcl_cout << "selected node is not a valid node! Please select a degree 1 or 3 node!\n";
+        std::cout << "selected node is not a valid node! Please select a degree 1 or 3 node!\n";
       }
 
     }
@@ -209,7 +209,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
         
         patch_box_ = sp1_->union_box(*sp2_);
         float box_perim = (float)(2*patch_box_->width() + 2*patch_box_->height());
-        vcl_cout << "patch box perimeter: " << box_perim << vcl_endl;
+        std::cout << "patch box perimeter: " << box_perim << std::endl;
 
         //: set the threshold to be 1.5*max_length as normalized
         //float norm_thres = 1.5f*max_l/box_perim;
@@ -222,32 +222,32 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
           current_graph_ind_ = 0;
           outer_edges_.clear();
           get_edges_on_outer_face(current_graph_, outer_edges_);
-          vcl_cout << "path length for this graph: " << abs_lengths_[0] << vcl_endl;
-          //vcl_cout << "edges on outer_edges_: " << vcl_endl;
+          std::cout << "path length for this graph: " << abs_lengths_[0] << std::endl;
+          //std::cout << "edges on outer_edges_: " << std::endl;
           //for (unsigned i = 0; i < outer_edges_.size(); i++) {
-          //  vcl_cout << "i: " << i << " s: " << outer_edges_[i]->source()->id_ << " t: " << outer_edges_[i]->target()->id_ << vcl_endl;
+          //  std::cout << "i: " << i << " s: " << outer_edges_[i]->source()->id_ << " t: " << outer_edges_[i]->target()->id_ << std::endl;
           //}
-          vcl_cout << "-----------------\n";
+          std::cout << "-----------------\n";
 
         } else {
           current_graph_ = 0;
         }
 
-        vcl_vector<float> abs_lengths2;
+        std::vector<float> abs_lengths2;
         pf_->get_all_v_node_paths(node1, node2, paths_, abs_lengths2, 1.0f, length_thres_);
         
       } else {  
-        vcl_vector<float> abs_lengths2;
+        std::vector<float> abs_lengths2;
         pf_->get_all_v_node_paths(node1, node2, paths_, abs_lengths2, 1.0f, length_thres_);
       }
         
       for (unsigned i = 0; i < paths_.size(); i++) {
-        vcl_vector<dbsk2d_shock_edge_sptr> edges;
+        std::vector<dbsk2d_shock_edge_sptr> edges;
         pf_->get_edges_on_path(paths_[i], edges);
         if (paths_[i].size() > 0 && edges.size() > 0) {
           //: test getting the shock paths
           dbskr_scurve_sptr sc = dbskr_compute_scurve(node1, edges, construct_circular_ends_, true, true, interpolate_ds_, subsample_ds_);
-          vcl_cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << vcl_endl;
+          std::cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << std::endl;
           scurves_.push_back(sc);
         } else
           scurves_.push_back(0);
@@ -266,7 +266,7 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
   } else if (create_shock_storage(e) && sp_middle_) {
     vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
     if(!res) {
-      vcl_cout << "Could not access repository!\n";
+      std::cout << "Could not access repository!\n";
       return false;
     }
 
@@ -281,22 +281,22 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
     if (sp_middle_->get_traced_boundary() && sp_middle_->shock_graph()) {
     
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-      vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-      vcl_string name_initial = "patch_vsol";
+      std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+      std::string name_initial = "patch_vsol";
       int len = name_initial.length();
       int max = 0;
-      for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+      for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
         iter != st_set.end(); iter++) {
           if ((*iter)->type() == output_vsol->type() && 
-              (*iter)->name().find(name_initial) != vcl_string::npos) {
-            vcl_string name = (*iter)->name();
-            vcl_string numbr = name.substr(len, 3);
+              (*iter)->name().find(name_initial) != std::string::npos) {
+            std::string name = (*iter)->name();
+            std::string numbr = name.substr(len, 3);
             int n = atoi(numbr.c_str());
             if (n > max)
               max = n;
           }
       }
-      vcl_ostringstream oss;
+      std::ostringstream oss;
       oss.width(3);
       oss.fill('0');
       oss << name_initial << max+1;
@@ -311,18 +311,18 @@ dbskr_visualize_path_scurve_tool::handle( const vgui_event & e,
       name_initial = "patch_shock";
       len = name_initial.length();
       max = 0;
-      for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+      for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
         iter != st_set.end(); iter++) {
           if ((*iter)->type() == output_shock->type() && 
-              (*iter)->name().find(name_initial) != vcl_string::npos) {
-            vcl_string name = (*iter)->name();
-            vcl_string numbr = name.substr(len, 3);
+              (*iter)->name().find(name_initial) != std::string::npos) {
+            std::string name = (*iter)->name();
+            std::string numbr = name.substr(len, 3);
             int n = atoi(numbr.c_str());
             if (n > max)
               max = n;
           }
       }
-      vcl_ostringstream oss2;
+      std::ostringstream oss2;
       oss2.width(3);
       oss2.fill('0');
       oss2 << name_initial << max+1;
@@ -479,7 +479,7 @@ void dbskr_visualize_path_scurve_tool::draw_an_scurve(dbskr_scurve_sptr cur_scur
   glEnd();
 }
 
-void dbskr_visualize_path_scurve_tool::draw_shock_path(vcl_vector<dbsk2d_shock_edge_sptr> &edges, float r, float g, float b)
+void dbskr_visualize_path_scurve_tool::draw_shock_path(std::vector<dbsk2d_shock_edge_sptr> &edges, float r, float g, float b)
 {
   glColor3f( r, g, b );
   glLineWidth (2.0);
@@ -509,7 +509,7 @@ void
 dbskr_visualize_path_scurve_tool::get_popup( const vgui_popup_params& params, 
                                           vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( "Set interpolate ds", 
             bvis1_tool_set_param, (void*)(&interpolate_ds_) );

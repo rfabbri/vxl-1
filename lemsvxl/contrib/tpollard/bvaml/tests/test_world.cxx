@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../bgmv_ray.h"
 #include "../bgmv_params.h"

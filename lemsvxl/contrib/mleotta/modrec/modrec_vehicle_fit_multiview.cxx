@@ -151,11 +151,11 @@ compute_all_opt_terms(const modrec_pca_vehicle& mesh,
       mesh_projector.project(camera,mesh,rotation,translation,sun_dir_,options_,num_pc_);
     else
       mesh_projector.reproject(camera,mesh,rotation,translation,sun_dir_,options_,num_pc_);
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
+    const std::vector<std::vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
+    const std::vector<std::vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
     
-    const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jc = mesh_projector.contours_jacobians();
-    const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jp = mesh_projector.parts_jacobians();
+    const std::vector<std::vector<vnl_matrix<double> > >& Jc = mesh_projector.contours_jacobians();
+    const std::vector<std::vector<vnl_matrix<double> > >& Jp = mesh_projector.parts_jacobians();
         
     compute_curve_opt_terms(contours, Jc, edge_map, M, b, total_weight, wgt_residual);
     compute_curve_opt_terms(parts, Jp, edge_map, M, b, total_weight, wgt_residual);
@@ -188,8 +188,8 @@ compute_all_residuals(const modrec_pca_vehicle& mesh,
       mest_scale_ = 1.0;
     
     mesh_projector.reproject(camera,mesh,rotation,translation,sun_dir_,options_,num_pc_);
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
+    const std::vector<std::vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
+    const std::vector<std::vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
     
     compute_curve_residuals(contours, edge_map, total_weight, wgt_residual);
     compute_curve_residuals(parts, edge_map, total_weight, wgt_residual);
@@ -227,12 +227,12 @@ double modrec_vehicle_fit_multiview::estimate_initial_scale(const modrec_pca_veh
     
     mesh_projector.project(camera,mesh,rotation,translation,vgl_vector_3d<double>(0,0,0),options_,num_pc_);
     
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
-    const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
+    const std::vector<std::vector<vgl_point_2d<double> > >& contours = mesh_projector.contours();
+    const std::vector<std::vector<vgl_point_2d<double> > >& parts = mesh_projector.parts();
     
-    const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jc = mesh_projector.contours_jacobians();
-    const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jp = mesh_projector.parts_jacobians();
-    vcl_vector<vcl_vector<vnl_matrix<double> > > J(Jc);
+    const std::vector<std::vector<vnl_matrix<double> > >& Jc = mesh_projector.contours_jacobians();
+    const std::vector<std::vector<vnl_matrix<double> > >& Jp = mesh_projector.parts_jacobians();
+    std::vector<std::vector<vnl_matrix<double> > > J(Jc);
     J.insert(J.end(), Jp.begin(), Jp.end());
     
     views_[idx].rel_scale = modrec_vehicle_fit::estimate_initial_scale(sigma,J);

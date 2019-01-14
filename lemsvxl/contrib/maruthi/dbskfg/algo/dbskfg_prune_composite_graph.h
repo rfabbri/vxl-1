@@ -17,7 +17,7 @@
 #include <dbskfg/dbskfg_rag_node_sptr.h>
 #include <dbskfg/dbskfg_composite_node_sptr.h>
 #include <dbskfg/dbskfg_composite_link_sptr.h>
-#include <vcl_map.h>
+#include <map>
 
 class dbskfg_shock_link;
 
@@ -51,7 +51,7 @@ private:
     dbskfg_rag_node_sptr rag_node_;
 
     // Holds a shock saliency map
-    vcl_map<unsigned int,cgraph_saliency_params> cgraph_saliency_map_;
+    std::map<unsigned int,cgraph_saliency_params> cgraph_saliency_map_;
 
     void prune();
 

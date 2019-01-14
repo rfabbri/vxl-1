@@ -106,8 +106,8 @@ inspect_point "point1x" "point1y" "point1z" "point2x" ...
 
 */
 
-#include <vcl_string.h>
-#include <vcl_cmath.h>
+#include <string>
+#include <cmath>
 #include <vgl/vgl_point_3d.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <vul/vul_awk.h>
@@ -138,7 +138,7 @@ public:
     write_raw_world( false ){}
 
   // Read the params from a file.
-  bool read_params( vcl_string param_file );
+  bool read_params( std::string param_file );
 
   // Print all parameters to screen.
   void print_summary();
@@ -147,16 +147,16 @@ public:
   // JOB PARAMETERS:--------------------------------------------
   
   // All image files to be processed.
-  vcl_vector<vcl_string> images;
+  std::vector<std::string> images;
 
   // Cameras for the images.
-  vcl_vector< vpgl_proj_camera<double> > cameras;
+  std::vector< vpgl_proj_camera<double> > cameras;
 
   // Special camera for rendering registered images.
   vpgl_proj_camera<double> render_camera;
 
   // Lights for the images.
-  vcl_vector< vnl_vector<float> > lights;
+  std::vector< vnl_vector<float> > lights;
 
   // Determines how each image/camera pair will be processed:
   // 0 for training
@@ -166,20 +166,20 @@ public:
   // 4 for rendering a new view from a projected image.
   // 5 for creating a probability map in baml_world.prob_img
   // 6 for normalizing images.
-  vcl_vector<int> process_modes;
+  std::vector<int> process_modes;
 
   // These pixels in each image will be inspected during training
   // and voxels output to vrml.
-  vcl_vector< vcl_vector< vgl_point_2d<int> > > inspect_pixels;
+  std::vector< std::vector< vgl_point_2d<int> > > inspect_pixels;
 
   // These voxels' appearance models will be printed during training.
-  vcl_vector< vgl_point_3d<int> > inspect_voxels;
+  std::vector< vgl_point_3d<int> > inspect_voxels;
 
   // Directory storing the model files.
-  vcl_string model_dir;
+  std::string model_dir;
 
   // Directory for storing all output.
-  vcl_string output_dir;
+  std::string output_dir;
 
   // This should be the scale factor to reduce the image to approximately
   // voxel sized pixels.  Will eventually be computed automatically.
@@ -193,14 +193,14 @@ public:
 
   // Write a x3d file of the world after the last training img.  First 
   // parameter is occupancy threshold, second is scaling.
-  vcl_vector<float> write_x3d_world;
+  std::vector<float> write_x3d_world;
 
   // List of prediction jobs to be done.
-  vcl_vector< vnl_vector<int> > prediction_jobs;
+  std::vector< vnl_vector<int> > prediction_jobs;
 
   bool write_raw_world;
 
-  vcl_string ground_plane_file;
+  std::string ground_plane_file;
 
 
   // GEOMETRY PARAMETERS:---------------------------------------
@@ -277,25 +277,25 @@ public:
 protected:
 
   bool get_cameras(
-    vcl_string camera_file,
-    vcl_vector< vpgl_proj_camera<double> >& cameras );
+    std::string camera_file,
+    std::vector< vpgl_proj_camera<double> >& cameras );
 
   bool get_images(
-    vcl_string image_dir,
-    vcl_vector< vcl_string >& images );
+    std::string image_dir,
+    std::vector< std::string >& images );
 
   bool get_lights(
-    vcl_string light_file,
-    vcl_vector< vnl_vector<float> >& lights );
+    std::string light_file,
+    std::vector< vnl_vector<float> >& lights );
 
   // Parse a range string of form like 10:5:45
   bool get_range(
-    vcl_string range_str,
+    std::string range_str,
     vnl_vector_fixed<int,3>& range_indices );
 
   void reorder_by_date(
-    const vcl_vector< vcl_string >& file_list,
-    vcl_vector< unsigned >& new_order );
+    const std::vector< std::string >& file_list,
+    std::vector< unsigned >& new_order );
 };
 
 

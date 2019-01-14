@@ -18,14 +18,14 @@ public:
 
   Lie_contour_match_storage() {}
   virtual ~Lie_contour_match_storage() {}
-  virtual vcl_string type() const { return "Lie contour matching"; }
+  virtual std::string type() const { return "Lie contour matching"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro1_Lie_contour_match_storage"; }
+  virtual std::string is_a() const { return "vidpro1_Lie_contour_match_storage"; }
 
   Lie_contour_match_sptr get_curvematch() {
     return curvematch_;

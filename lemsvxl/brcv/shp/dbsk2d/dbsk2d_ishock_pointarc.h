@@ -164,7 +164,7 @@ public:
   virtual vgl_point_2d<double> getRFootPt (double rtau);
 
   virtual void compute_extrinsic_locus();
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif // dbsk2d_ishock_pointarc_h_

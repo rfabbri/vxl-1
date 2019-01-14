@@ -4,8 +4,8 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -19,8 +19,8 @@
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/sel/dbdet_curve_model.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vil/vil_image_resource.h>
 
@@ -60,7 +60,7 @@ dbdet_compute_linked_curves_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_compute_linked_curves_process::name()
 {
   return "All in one Edge > Sel > Vsol";
@@ -84,9 +84,9 @@ dbdet_compute_linked_curves_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_compute_linked_curves_process::get_input_type()
+std::vector< std::string > dbdet_compute_linked_curves_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
 
   return to_return;
@@ -94,9 +94,9 @@ vcl_vector< vcl_string > dbdet_compute_linked_curves_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_compute_linked_curves_process::get_output_type()
+std::vector< std::string > dbdet_compute_linked_curves_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
 
   return to_return;
@@ -106,7 +106,7 @@ vcl_vector< vcl_string > dbdet_compute_linked_curves_process::get_output_type()
 bool dbdet_compute_linked_curves_process::execute()
 {
   if ( input_data_.size() != 1 ) {
-    vcl_cout << "In dbdet_compute_linked_curves_process::execute() - not exactly one"
+    std::cout << "In dbdet_compute_linked_curves_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -114,8 +114,8 @@ bool dbdet_compute_linked_curves_process::execute()
   clear_output();
 
   // ----------------------------------------------------------------------
-  vcl_cout << "Third_order edge detection...";
-  vcl_cout.flush();
+  std::cout << "Third_order edge detection...";
+  std::cout.flush();
   dbdet_edgemap_sptr EM;
 
   {
@@ -143,13 +143,13 @@ bool dbdet_compute_linked_curves_process::execute()
       badap_thresh, binterp_grid, reduce_tokens);
   }
 
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout << "#edgels = " << EM->num_edgels() << vcl_endl;
+  std::cout << "done!" << std::endl;
+  std::cout << "#edgels = " << EM->num_edgels() << std::endl;
 
   // ----------------------------------------------------------------------
 
   // ----------------------------------------------------------------------
-  vcl_cout << "Symbolic edge linker started.\n";
+  std::cout << "Symbolic edge linker started.\n";
 
   dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
@@ -275,7 +275,7 @@ bool dbdet_compute_linked_curves_process::execute()
   
   double group_time = t.real() / 1000.0;
   t.mark();
-  vcl_cout << "Time taken to form groups: " << group_time << " sec" << vcl_endl;
+  std::cout << "Time taken to form groups: " << group_time << " sec" << std::endl;
 
   //form a link graph
   if (b_use_all_cvlets)
@@ -297,9 +297,9 @@ bool dbdet_compute_linked_curves_process::execute()
   }
 
   double link_time = t.real() / 1000.0;
-  vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+  std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
   } // end block
-  vcl_cout << "Done with edge linker!" << vcl_endl;
+  std::cout << "Done with edge linker!" << std::endl;
 
 
 
@@ -307,7 +307,7 @@ bool dbdet_compute_linked_curves_process::execute()
   dbdet_curve_fragment_graph& CFG = output_sel->CFG();
 
 
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves;
 
   {
   // get the parameters
@@ -364,11 +364,11 @@ bool dbdet_compute_linked_curves_process::execute()
     double Lstd = Ldata.sd(); double Rstd = Rdata.sd(); 
 
     // C) Apply mean contrast threshold
-    if (apply_contrast_thresh && vcl_fabs(Lmean-Rmean)<contrast_thresh)
+    if (apply_contrast_thresh && std::fabs(Lmean-Rmean)<contrast_thresh)
       continue;
 
     // D) apply adaptive contrast threshold
-    if (apply_adap_thresh && vcl_fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)) //saliency test
+    if (apply_adap_thresh && std::fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)) //saliency test
         continue;
 
     // 3) compute average d2f for the contour fragment
@@ -379,12 +379,12 @@ bool dbdet_compute_linked_curves_process::execute()
     double d2f_mean = Ldata.mean();
 
     // E) apply peakiness threshold
-    if (apply_d2f_thresh && vcl_fabs(d2f_mean)<d2f_thresh)
+    if (apply_d2f_thresh && std::fabs(d2f_mean)<d2f_thresh)
         continue;
 
     // ==========
     //create a polyline out of the edgel chain
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     pts.reserve(chain->edgels.size());
     for (unsigned j=0; j<chain->edgels.size(); j++)
       pts.push_back(chain->edgels[j]->pt);
@@ -396,7 +396,7 @@ bool dbdet_compute_linked_curves_process::execute()
     // F) Apply curvature threshold
     if (apply_k_thresh)
     {
-      vcl_vector<double> ks;
+      std::vector<double> ks;
       ks.resize(pts.size());
 
       for (unsigned j=0; j<pts.size(); j++)
@@ -421,12 +421,12 @@ bool dbdet_compute_linked_curves_process::execute()
       for (unsigned j=0; j<ks.size(); j++)
         Ldata.obs(ks[j]);
 
-      if (vcl_fabs(Ldata.mean())<k_thresh) 
+      if (std::fabs(Ldata.mean())<k_thresh) 
         continue;
     }
 
     //finally construct vsol curves out of the remaining segments
-    vcl_vector<vsol_point_2d_sptr> vsol_pts;
+    std::vector<vsol_point_2d_sptr> vsol_pts;
     for (unsigned i=0; i<pts.size(); ++i)
       vsol_pts.push_back(new vsol_point_2d(pts[i]));
 

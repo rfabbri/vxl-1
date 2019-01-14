@@ -5,7 +5,7 @@
 
 #include "dbvrl_region_process.h"
 #include "dbvrl_region_storage.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbvrl/dbvrl_minimizer.h>
 #include <dbvrl/dbvrl_world_roi.h>
 #include <dbvrl/dbvrl_transform_2d.h>
@@ -29,7 +29,7 @@
 dbvrl_region_process::dbvrl_region_process()
 {
   if( !parameters()->add( "Transformation Type" , "-type" , (int)5 ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -49,7 +49,7 @@ dbvrl_region_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbvrl_region_process::name()
 {
   return "Register Region";
@@ -73,9 +73,9 @@ dbvrl_region_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbvrl_region_process::get_input_type()
+std::vector< std::string > dbvrl_region_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "bvrl" );
   return to_return;
@@ -83,9 +83,9 @@ vcl_vector< vcl_string > dbvrl_region_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbvrl_region_process::get_output_type()
+std::vector< std::string > dbvrl_region_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -95,7 +95,7 @@ bool
 dbvrl_region_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbvrl_region_process::execute() - not exactly two"
+    std::cout << "In dbvrl_region_process::execute() - not exactly two"
              << " input frames \n";
     return false;
   }
@@ -145,13 +145,13 @@ dbvrl_region_process::execute()
   points[1] = l_xform(vgl_point_2d<double>(1,0));
   points[2] = l_xform(vgl_point_2d<double>(1,1));
   points[3] = l_xform(vgl_point_2d<double>(0,1));
-  int ni = (int) vcl_floor(vcl_max( vgl_distance(points[0],points[1]),
+  int ni = (int) std::floor(std::max( vgl_distance(points[0],points[1]),
                                     vgl_distance(points[2],points[3]) )+0.5);
   
-  int nj = (int) vcl_floor(vcl_max( vgl_distance(points[0],points[3]),
+  int nj = (int) std::floor(std::max( vgl_distance(points[0],points[3]),
                                     vgl_distance(points[1],points[2]) )+0.5);
 
-  vcl_cout << "max box = ("<<ni<<","<<nj<<")"<< vcl_endl;
+  std::cout << "max box = ("<<ni<<","<<nj<<")"<< std::endl;
   dbvrl_world_roi roi(ni,nj,vgl_point_2d<double>(0.0, 0.0),
                      vgl_vector_2d<double>(0.99,0.0),
                      vgl_vector_2d<double>(0.0,0.99));
@@ -210,8 +210,8 @@ dbvrl_region_process::execute()
   vul_timer time;
   minimizer.minimize(init_xform);
 
-  vcl_cout << init_xform.matrix() << vcl_endl;
-  vcl_cout << " in " << time.real() << " msec" << vcl_endl;
+  std::cout << init_xform.matrix() << std::endl;
+  std::cout << " in " << time.real() << " msec" << std::endl;
   
 
   vimt_transform_2d new_xform = init_xform * (*curr_dbvrl_stg->transform());

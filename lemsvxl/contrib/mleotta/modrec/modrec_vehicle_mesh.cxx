@@ -5,17 +5,17 @@
 
 
 #include "modrec_vehicle_mesh.h"
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <fstream>
 #include <imesh/algo/imesh_transform.h>
 
 namespace{
 
 const double pi = 3.141592653589793238;
 
-double get_param(const vcl_string& name, const vcl_map<vcl_string,double>& params)
+double get_param(const std::string& name, const std::map<std::string,double>& params)
 {
-  vcl_map<vcl_string,double>::const_iterator f = params.find(name);
+  std::map<std::string,double>::const_iterator f = params.find(name);
   if(f == params.end())
     return 0.0;
 
@@ -26,12 +26,12 @@ double get_param(const vcl_string& name, const vcl_map<vcl_string,double>& param
 
 
 //: Read the vehicle parameters from a file
-void modrec_read_vehicle_params(const vcl_string filename,
-                                vcl_map<vcl_string,double>& params)
+void modrec_read_vehicle_params(const std::string filename,
+                                std::map<std::string,double>& params)
 {
-  vcl_ifstream fh(filename.c_str());
+  std::ifstream fh(filename.c_str());
 
-  vcl_string name;
+  std::string name;
   double val;
   while(fh >> name >> val){
     params[name] = val;
@@ -42,9 +42,9 @@ void modrec_read_vehicle_params(const vcl_string filename,
 
 
 //: Return the mean vehicle params
-vcl_map<vcl_string,double> modrec_read_vehicle_params()
+std::map<std::string,double> modrec_read_vehicle_params()
 {
-  vcl_map<vcl_string,double> p;
+  std::map<std::string,double> p;
   p["base_offset"] = 0.105309;
   p["body_width"] = 1.75217;
   p["door_offset"] = -0.265849;
@@ -81,16 +81,16 @@ vcl_map<vcl_string,double> modrec_read_vehicle_params()
 
 
 //: Generate the complete vehicle mesh
-void modrec_generate_vehicle(const vcl_map<vcl_string,double>& params,
+void modrec_generate_vehicle(const std::map<std::string,double>& params,
                              imesh_mesh& mesh)
 {
   double r1 = get_param("wheel_rad",params);
   double r2 = r1+get_param("tire_thick",params);
   double ww = get_param("wheel_width",params);
 
-  vcl_auto_ptr<imesh_vertex_array_base> verts(modrec_generate_vehicle_wheel_verts(r1,r2,ww));
-  vcl_auto_ptr<imesh_face_array_base> faces(modrec_generate_vehicle_wheel_faces());
-  vcl_vector<vgl_point_2d<double> > texture(modrec_generate_vehicle_wheel_tex());
+  std::auto_ptr<imesh_vertex_array_base> verts(modrec_generate_vehicle_wheel_verts(r1,r2,ww));
+  std::auto_ptr<imesh_face_array_base> faces(modrec_generate_vehicle_wheel_faces());
+  std::vector<vgl_point_2d<double> > texture(modrec_generate_vehicle_wheel_tex());
 
   imesh_mesh wheel_mesh_1(verts,faces);
   imesh_mesh wheel_mesh_2(wheel_mesh_1);
@@ -133,9 +133,9 @@ void modrec_generate_vehicle(const vcl_map<vcl_string,double>& params,
 
 
 //: Generate the mesh faces for the vehicle body
-vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_body_faces()
+std::auto_ptr<imesh_face_array_base> modrec_generate_vehicle_body_faces()
 {
-  vcl_auto_ptr<imesh_face_array> faces(new imesh_face_array);
+  std::auto_ptr<imesh_face_array> faces(new imesh_face_array);
 
   // top surface
   for(unsigned int i=0; i<11; ++i)
@@ -166,7 +166,7 @@ vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_body_faces()
   // mirror faces in Y
   unsigned int num_faces = faces->size();
   for(unsigned int i=0; i<num_faces; ++i){
-    vcl_vector<unsigned int> new_face;
+    std::vector<unsigned int> new_face;
     for(unsigned int j=faces->num_verts(i); j>0; --j){
       unsigned int v = (*faces)(i,j-1);
       if(v > 14) v += 56;
@@ -200,7 +200,7 @@ vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_body_faces()
   // mirror faces in Y
   num_faces = faces->size();
   for(unsigned int i=start_faces; i<num_faces; ++i){
-    vcl_vector<unsigned int> new_face;
+    std::vector<unsigned int> new_face;
     for(unsigned int j=faces->num_verts(i); j>0; --j){
       unsigned int v = (*faces)(i,j-1);
       if(v > 14) v += 56;
@@ -211,15 +211,15 @@ vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_body_faces()
 
   faces->make_group("undercarriage");
 
-  return vcl_auto_ptr<imesh_face_array_base>(faces);
+  return std::auto_ptr<imesh_face_array_base>(faces);
 }
 
 
 //: Generate the mesh vertices for the vehicle body
-vcl_auto_ptr<imesh_vertex_array<3> >
-modrec_generate_vehicle_body_verts(const vcl_map<vcl_string,double>& params)
+std::auto_ptr<imesh_vertex_array<3> >
+modrec_generate_vehicle_body_verts(const std::map<std::string,double>& params)
 {
-  vcl_auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(127));
+  std::auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(127));
   imesh_vertex_array<3>& verts = *verts_ptr;
 
 
@@ -317,8 +317,8 @@ modrec_generate_vehicle_body_verts(const vcl_map<vcl_string,double>& params)
       verts[ind[i]+8][0] += wgr;
     }
     for(unsigned int i=0; i<7; ++i){
-      double c = vcl_cos((2.0*pi*i)/12);
-      double s = vcl_sin((2.0*pi*i)/12);
+      double c = std::cos((2.0*pi*i)/12);
+      double s = std::sin((2.0*pi*i)/12);
       for(unsigned int j=0; j<num; ++j){
         verts[ind[j]+i+1][0] -= wgr*c;
         verts[ind[j]+i+1][2] = wgr*s;
@@ -444,10 +444,10 @@ modrec_generate_vehicle_body_verts(const vcl_map<vcl_string,double>& params)
 
 
 //: Generate the texture coords for the vehicle body
-vcl_vector<vgl_point_2d<double> >
+std::vector<vgl_point_2d<double> >
 modrec_generate_vehicle_body_tex()
 {
-  vcl_vector<vgl_point_2d<double> > tex(127,vgl_point_2d<double>(0.5,0.5));
+  std::vector<vgl_point_2d<double> > tex(127,vgl_point_2d<double>(0.5,0.5));
 
   // set X direction positions
   {
@@ -514,9 +514,9 @@ modrec_generate_vehicle_body_tex()
 
 
 //: Generate the mesh faces for the vehicle wheel (with \param rs radial samples)
-vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_wheel_faces(unsigned int rs)
+std::auto_ptr<imesh_face_array_base> modrec_generate_vehicle_wheel_faces(unsigned int rs)
 {
-  vcl_auto_ptr<imesh_face_array> faces(new imesh_face_array);
+  std::auto_ptr<imesh_face_array> faces(new imesh_face_array);
 
   for(unsigned int i=0; i<rs; ++i){
     unsigned int j = (i+1)%rs;
@@ -539,7 +539,7 @@ vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_wheel_faces(unsigned
   }
   faces->make_group("wheel_back");
 
-  return vcl_auto_ptr<imesh_face_array_base>(faces);
+  return std::auto_ptr<imesh_face_array_base>(faces);
 }
 
 
@@ -547,10 +547,10 @@ vcl_auto_ptr<imesh_face_array_base> modrec_generate_vehicle_wheel_faces(unsigned
 //  \params r1 is the wheel radius
 //  \params r2 is the tire outer radius
 //  \params r3 is the tire width
-vcl_auto_ptr<imesh_vertex_array<3> >
+std::auto_ptr<imesh_vertex_array<3> >
 modrec_generate_vehicle_wheel_verts(double r1, double r2, double w, unsigned int rs)
 {
-  vcl_auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(2+rs*5));
+  std::auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(2+rs*5));
 
   imesh_vertex_array<3>& verts = *verts_ptr;
 
@@ -558,8 +558,8 @@ modrec_generate_vehicle_wheel_verts(double r1, double r2, double w, unsigned int
   verts[1] = imesh_vertex<3>(0, 0, -w*.9);
   for(unsigned int i=0; i<rs; ++i){
     double a = (2.0*pi*i)/rs;
-    double c = vcl_cos(a);
-    double s = vcl_sin(a);
+    double c = std::cos(a);
+    double s = std::sin(a);
     verts[i+2] = imesh_vertex<3>(r1*c, r1*s, 0);
     verts[i+2+rs] = imesh_vertex<3>(r2*c, r2*s, 0);
     verts[i+2+2*rs] = imesh_vertex<3>(r2*c, r2*s, -w/2);
@@ -574,10 +574,10 @@ modrec_generate_vehicle_wheel_verts(double r1, double r2, double w, unsigned int
 //: Generate the texture coords for the vehicle wheel
 // if index == 0, center the wheel at the origin
 // else position the wheel in each of the four corners of the unit square
-vcl_vector<vgl_point_2d<double> >
+std::vector<vgl_point_2d<double> >
 modrec_generate_vehicle_wheel_tex(unsigned int index, unsigned int rs)
 {
-  vcl_vector<vgl_point_2d<double> > tex(2+rs*5);
+  std::vector<vgl_point_2d<double> > tex(2+rs*5);
 
   double r = 1.0/8.0;
 
@@ -598,8 +598,8 @@ modrec_generate_vehicle_wheel_tex(unsigned int index, unsigned int rs)
   tex[0] = tex[1] = vgl_point_2d<double>(0,0)+offset;
   for(unsigned int i=0; i<rs; ++i){
     double a = (2.0*pi*i)/rs;
-    double c = sign*-vcl_cos(a);
-    double s = sign*vcl_sin(a);
+    double c = sign*-std::cos(a);
+    double s = sign*std::sin(a);
     tex[i+2] = tex[i+2+4*rs] = vgl_point_2d<double>(r1*s, r1*c)+offset;
     tex[i+2+rs] = tex[i+2+3*rs] = vgl_point_2d<double>(r2*s, r2*c)+offset;
     tex[i+2+2*rs] = vgl_point_2d<double>(r3*s, r3*c)+offset;
@@ -612,15 +612,15 @@ modrec_generate_vehicle_wheel_tex(unsigned int index, unsigned int rs)
 // Dodecahedral mesh
 
 //: Generate the dodecahedral vehicle mesh
-void modrec_generate_dodec_vehicle(const vcl_map<vcl_string,double>& params,
+void modrec_generate_dodec_vehicle(const std::map<std::string,double>& params,
                                    imesh_mesh& mesh)
 {
   double r1 = get_param("wheel_rad",params);
   double r2 = r1+get_param("tire_thick",params);
   double so = get_param("susp_offset",params);
   
-  vcl_auto_ptr<imesh_vertex_array_base> verts(modrec_generate_dodec_vehicle_verts(params));
-  vcl_auto_ptr<imesh_face_array_base> faces(modrec_generate_dodec_vehicle_faces());
+  std::auto_ptr<imesh_vertex_array_base> verts(modrec_generate_dodec_vehicle_verts(params));
+  std::auto_ptr<imesh_face_array_base> faces(modrec_generate_dodec_vehicle_faces());
   
   mesh.set_vertices(verts);
   mesh.set_faces(faces);
@@ -631,10 +631,10 @@ void modrec_generate_dodec_vehicle(const vcl_map<vcl_string,double>& params,
 
 
 //: Generate the mesh vertices for the dodecahedral body
-vcl_auto_ptr<imesh_vertex_array<3> >
-modrec_generate_dodec_vehicle_verts(const vcl_map<vcl_string,double>& params)
+std::auto_ptr<imesh_vertex_array<3> >
+modrec_generate_dodec_vehicle_verts(const std::map<std::string,double>& params)
 {
-  vcl_auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(16));
+  std::auto_ptr<imesh_vertex_array<3> > verts_ptr(new imesh_vertex_array<3>(16));
   imesh_vertex_array<3>& verts = *verts_ptr;
   
   
@@ -787,10 +787,10 @@ modrec_generate_dodec_vehicle_verts(const vcl_map<vcl_string,double>& params)
 
 
 //: Generate the mesh faces for the dodecahedral body
-vcl_auto_ptr<imesh_face_array_base>
+std::auto_ptr<imesh_face_array_base>
 modrec_generate_dodec_vehicle_faces()
 {
-  vcl_auto_ptr<imesh_face_array> faces(new imesh_face_array);
+  std::auto_ptr<imesh_face_array> faces(new imesh_face_array);
   
   // top surface
   for(unsigned int i=0; i<7; ++i)
@@ -799,14 +799,14 @@ modrec_generate_dodec_vehicle_faces()
   // side surfaces
   faces->push_back(imesh_quad(2,3,4,5));
   unsigned int side1[] = {0,1,2,5,6,7};
-  faces->push_back(vcl_vector<unsigned int>(side1,side1+6));
+  faces->push_back(std::vector<unsigned int>(side1,side1+6));
   //faces->push_back(imesh_tri(0,1,2));
   //faces->push_back(imesh_tri(5,6,7));
   //faces->push_back(imesh_quad(0,2,5,7));
   
   faces->push_back(imesh_quad(13,12,11,10));
   unsigned int side2[] = {15,14,13,10,9,8};
-  faces->push_back(vcl_vector<unsigned int>(side2,side2+6));
+  faces->push_back(std::vector<unsigned int>(side2,side2+6));
   //faces->push_back(imesh_tri(10,9,8));
   //faces->push_back(imesh_tri(15,14,13));
   //faces->push_back(imesh_quad(15,13,10,8));
@@ -820,7 +820,7 @@ modrec_generate_dodec_vehicle_faces()
 
   faces->make_group("undercarriage");
   
-  return vcl_auto_ptr<imesh_face_array_base>(faces);
+  return std::auto_ptr<imesh_face_array_base>(faces);
 }
 
 
@@ -830,15 +830,15 @@ modrec_generate_dodec_vehicle_faces()
 // "A Generic Deformable Model for Vehicle Recognition", BMVC 1995
 
 //: Generate the ferryman vehicle mesh
-void modrec_generate_ferryman_vehicle(const vcl_map<vcl_string,double>& params,
+void modrec_generate_ferryman_vehicle(const std::map<std::string,double>& params,
                                       imesh_mesh& mesh)
 {
   double r1 = get_param("wheel_rad",params);
   double r2 = r1+get_param("tire_thick",params);
   double so = get_param("susp_offset",params);
   
-  vcl_auto_ptr<imesh_vertex_array_base> verts(modrec_generate_ferryman_vehicle_verts(params));
-  vcl_auto_ptr<imesh_face_array_base> faces(modrec_generate_ferryman_vehicle_faces());
+  std::auto_ptr<imesh_vertex_array_base> verts(modrec_generate_ferryman_vehicle_verts(params));
+  std::auto_ptr<imesh_face_array_base> faces(modrec_generate_ferryman_vehicle_faces());
   
   mesh.set_vertices(verts);
   mesh.set_faces(faces);
@@ -847,11 +847,11 @@ void modrec_generate_ferryman_vehicle(const vcl_map<vcl_string,double>& params,
 
 
 //: Generate the mesh vertices for the Ferryman body
-vcl_auto_ptr<imesh_vertex_array<3> >
-modrec_generate_ferryman_vehicle_verts(const vcl_map<vcl_string,double>& params)
+std::auto_ptr<imesh_vertex_array<3> >
+modrec_generate_ferryman_vehicle_verts(const std::map<std::string,double>& params)
 {
   // the Dodecahedral model has a subset of the vertices in the Ferryman model
-  vcl_auto_ptr<imesh_vertex_array<3> > verts_ptr(modrec_generate_dodec_vehicle_verts(params));
+  std::auto_ptr<imesh_vertex_array<3> > verts_ptr(modrec_generate_dodec_vehicle_verts(params));
   imesh_vertex_array<3>& verts = *verts_ptr;
   
   unsigned int start_idx = verts.size();
@@ -877,8 +877,8 @@ modrec_generate_ferryman_vehicle_verts(const vcl_map<vcl_string,double>& params)
   
   // shift the vertices around a semicircle
   for(unsigned int i=0; i<6; ++i){
-    double dx = -r*vcl_cos(i*vnl_math::pi/5.0);
-    double dy = r*vcl_sin(i*vnl_math::pi/5.0);
+    double dx = -r*std::cos(i*vnl_math::pi/5.0);
+    double dy = r*std::sin(i*vnl_math::pi/5.0);
     verts[start_idx+i][0] += dx;
     verts[start_idx+i][2] += dy;
     verts[start_idx+6+i][0] += dx;
@@ -895,10 +895,10 @@ modrec_generate_ferryman_vehicle_verts(const vcl_map<vcl_string,double>& params)
 
 
 //: Generate the mesh faces for the Ferryman body
-vcl_auto_ptr<imesh_face_array_base>
+std::auto_ptr<imesh_face_array_base>
 modrec_generate_ferryman_vehicle_faces()
 {
-  vcl_auto_ptr<imesh_face_array> faces(new imesh_face_array);
+  std::auto_ptr<imesh_face_array> faces(new imesh_face_array);
   
   // top surface
   for(unsigned int i=0; i<7; ++i)
@@ -907,7 +907,7 @@ modrec_generate_ferryman_vehicle_faces()
   // side surfaces
   faces->push_back(imesh_quad(2,3,4,5));
   unsigned int side1[] = {0,1,2,5,6,7};
-  vcl_vector<unsigned int> side1v(side1,side1+6);
+  std::vector<unsigned int> side1v(side1,side1+6);
   for(unsigned int i=16; i<28; ++i)
     side1v.push_back(i);
   faces->push_back(side1v);
@@ -915,7 +915,7 @@ modrec_generate_ferryman_vehicle_faces()
   
   faces->push_back(imesh_quad(13,12,11,10));
   unsigned int side2[] = {15,14,13,10,9,8};
-  vcl_vector<unsigned int> side2v(side2,side2+6);
+  std::vector<unsigned int> side2v(side2,side2+6);
   for(unsigned int i=39; i>=28; --i)
     side2v.push_back(i);
   faces->push_back(side2v);
@@ -929,5 +929,5 @@ modrec_generate_ferryman_vehicle_faces()
   //faces->push_back(imesh_quad(0,7,15,8));
   //faces->make_group("undercarriage");
   
-  return vcl_auto_ptr<imesh_face_array_base>(faces);
+  return std::auto_ptr<imesh_face_array_base>(faces);
 }

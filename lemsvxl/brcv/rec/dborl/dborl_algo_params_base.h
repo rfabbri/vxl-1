@@ -24,19 +24,19 @@ class dborl_algo_params_base : public vbl_ref_count
 {
 public:
 
-  vcl_string algo_name_;
+  std::string algo_name_;
 
   //: constructor
-  dborl_algo_params_base(vcl_string algo_name) : algo_name_(algo_name) {};
+  dborl_algo_params_base(std::string algo_name) : algo_name_(algo_name) {};
 
   virtual ~dborl_algo_params_base() { param_list_.clear(); // no allocation with new for the pointers so no need to call delete
                                     }
 
-  vcl_string output_file_postfix();
-  vcl_string output_file_postfix(vcl_string replacement_algo_name);
+  std::string output_file_postfix();
+  std::string output_file_postfix(std::string replacement_algo_name);
  
   //: if any additional params are defined in the deriving classes, they should be added to the following list in the constructor
-  vcl_vector<dborl_parameter_base*> param_list_;
+  std::vector<dborl_parameter_base*> param_list_;
 };
 
 #endif  //_dborl_algo_params_base_h

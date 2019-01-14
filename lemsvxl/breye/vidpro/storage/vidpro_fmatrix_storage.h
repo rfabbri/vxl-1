@@ -17,25 +17,25 @@
 #include <vidpro/storage/vidpro_fmatrix_storage_sptr.h>
 #include <vnl/vnl_double_3x3.h>
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 
 class vidpro_fmatrix_storage : public bpro_storage {
 
 public:
-  typedef vcl_map< int, vcl_map< vcl_string, vnl_double_3x3 > > data_map;
+  typedef std::map< int, std::map< std::string, vnl_double_3x3 > > data_map;
 
   //: Constructor
-  vidpro_fmatrix_storage(const vcl_string& from_name = "");
+  vidpro_fmatrix_storage(const std::string& from_name = "");
 
   //: Destructor
   virtual ~vidpro_fmatrix_storage();
 
   //: Return the type identifier string
-  virtual vcl_string type() const { return "fmatrix"; }
+  virtual std::string type() const { return "fmatrix"; }
 
   //: Return the name of the image that all fundamental matrices map from
-  vcl_string from_name() const { return from_name_; }
+  std::string from_name() const { return from_name_; }
         
   //: Return IO version number;
   short version() const;
@@ -51,18 +51,18 @@ public:
   virtual bpro_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro_fmatrix_storage"; }
+  virtual std::string is_a() const { return "vidpro_fmatrix_storage"; }
 
   //: Add an FMatrix related to an object with \p name at \p frame
-  void add_fmatrix( const vnl_double_3x3& F, int frame, const vcl_string& name );
+  void add_fmatrix( const vnl_double_3x3& F, int frame, const std::string& name );
 
   //: Retrieve an FMatrix related to an object with \p name at \p frame
-  bool get_fmatrix( vnl_double_3x3& F, int frame, const vcl_string& name ) const;
+  bool get_fmatrix( vnl_double_3x3& F, int frame, const std::string& name ) const;
 
 private:
 
   //: The name of the image that all fundamental matrices map from
-  const vcl_string from_name_;
+  const std::string from_name_;
   //: The data
   data_map f_map_; 
 
@@ -75,7 +75,7 @@ struct vidpro_fmatrix_storage_new : public vidpro_fmatrix_storage_sptr
   typedef vidpro_fmatrix_storage_sptr base;
 
   //: Constructor - creates a default vidpro_fmatrix_storage_sptr.
-  vidpro_fmatrix_storage_new(const vcl_string& from_name = "") 
+  vidpro_fmatrix_storage_new(const std::string& from_name = "") 
     : base(new vidpro_fmatrix_storage(from_name)) { }
 };
 

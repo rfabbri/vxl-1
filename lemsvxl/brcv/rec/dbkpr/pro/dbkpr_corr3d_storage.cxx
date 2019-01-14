@@ -14,7 +14,7 @@
 
 
 //: Constructor
-dbkpr_corr3d_storage::dbkpr_corr3d_storage( const vcl_vector< dbdet_keypoint_corr3d_sptr >& corr,
+dbkpr_corr3d_storage::dbkpr_corr3d_storage( const std::vector< dbdet_keypoint_corr3d_sptr >& corr,
                                                   int ni, int nj)
  : keypoints_3d_(corr), ni_(ni), nj_(nj), tree_(0)
 {
@@ -84,9 +84,9 @@ dbkpr_corr3d_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: dbkpr_corr3d_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbkpr_corr3d_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -103,7 +103,7 @@ dbkpr_corr3d_storage::clone() const
 
 //: Set the correspondences storage vector
 void
-dbkpr_corr3d_storage::set_correspondences( const vcl_vector< dbdet_keypoint_corr3d_sptr >& corr)
+dbkpr_corr3d_storage::set_correspondences( const std::vector< dbdet_keypoint_corr3d_sptr >& corr)
 {
   keypoints_3d_ = corr;
 }

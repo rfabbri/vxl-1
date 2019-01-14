@@ -6,7 +6,7 @@
 #include "dbsks_wcm.h"
 #include <vnl/vnl_math.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_set.h>
+#include <set>
 #include <vgl/vgl_distance.h>
 
 // ============================================================================
@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 //: Set the edge label image from a set of polylines
 void dbsks_wcm::
-set_edge_labels(const vcl_vector<vsol_polyline_2d_sptr >& contours)
+set_edge_labels(const std::vector<vsol_polyline_2d_sptr >& contours)
 {
   this->edge_label_.set_size(this->edge_strength_.ni(), this->edge_strength_.nj());
   this->edge_label_.fill(0);
@@ -26,7 +26,7 @@ set_edge_labels(const vcl_vector<vsol_polyline_2d_sptr >& contours)
   {
     ++label;
     vsol_polyline_2d_sptr contour = contours[i];
-    this->map_label2contour_.insert(vcl_make_pair(label, contour));
+    this->map_label2contour_.insert(std::make_pair(label, contour));
 
     // write to "edge_label" image
     for (unsigned m =0; m < contour->size(); ++m)
@@ -54,12 +54,12 @@ set_edge_labels(const vcl_vector<vsol_polyline_2d_sptr >& contours)
 //: Image cost of a contour (an ordered set of oriented points) given the shape's 
 // complete boundary
 float dbsks_wcm::
-f_whole_contour_v1(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-                const vcl_vector<int >& orient_channel, 
+f_whole_contour_v1(const std::vector<int >& x, const std::vector<int >& y, 
+                const std::vector<int >& orient_channel, 
                 double contour_length, const vgl_polygon<double >& shape_boundary)
 {
   // Find labels of edge points corresponding to the given contour
-  vcl_set<unsigned > unique_labels;
+  std::set<unsigned > unique_labels;
   for (unsigned i =0; i < x.size(); ++i)
   {
     if (!this->edge_strength_.in_range(x[i], y[i]))
@@ -89,12 +89,12 @@ f_whole_contour_v1(const vcl_vector<int >& x, const vcl_vector<int >& y,
   // have labels "labels"
   int num_edges = 0;
   int num_edges_too_far = 0;
-  for (vcl_set<unsigned >::iterator iter = unique_labels.begin(); 
+  for (std::set<unsigned >::iterator iter = unique_labels.begin(); 
     iter != unique_labels.end(); ++iter)
   {
     // retrieve the contour associated with the given label
     unsigned label = *iter;
-    vcl_map<unsigned, vsol_polyline_2d_sptr >::iterator mit = 
+    std::map<unsigned, vsol_polyline_2d_sptr >::iterator mit = 
       this->map_label2contour_.find(label);
     if (mit == this->map_label2contour_.end())
     {
@@ -137,8 +137,8 @@ f_whole_contour_v1(const vcl_vector<int >& x, const vcl_vector<int >& y,
 //: Image cost of a contour (an ordered set of oriented points) given the shape's 
 // complete boundary
 float dbsks_wcm::
-f_whole_contour(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-                const vcl_vector<int >& orient_channel, 
+f_whole_contour(const std::vector<int >& x, const std::vector<int >& y, 
+                const std::vector<int >& orient_channel, 
                 double contour_length, const vgl_polygon<double >& shape_boundary)
 {
   if (x.size() < 5)
@@ -168,11 +168,11 @@ f_whole_contour(const vcl_vector<int >& x, const vcl_vector<int >& y,
 // -----------------------------------------------------------------------------
 //: Cost of unmatched edges
 float dbsks_wcm::
-cost_unmatched_edges(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-                     const vcl_vector<int >& orient_channel, double contour_length,
+cost_unmatched_edges(const std::vector<int >& x, const std::vector<int >& y, 
+                     const std::vector<int >& orient_channel, double contour_length,
                      const vgl_polygon<double >& shape_boundary)
 {
-  vcl_vector<vgl_point_2d<double > >query_pts;
+  std::vector<vgl_point_2d<double > >query_pts;
   query_pts.reserve(x.size());
   for (unsigned i =0; i < x.size(); ++i)
   {
@@ -182,7 +182,7 @@ cost_unmatched_edges(const vcl_vector<int >& x, const vcl_vector<int >& y,
 
 
   // Find labels of edge points corresponding to the given contour
-  vcl_set<unsigned > unique_labels;
+  std::set<unsigned > unique_labels;
   for (unsigned i =0; i < x.size(); ++i)
   {
     // if the point is out of range, move on
@@ -210,13 +210,13 @@ cost_unmatched_edges(const vcl_vector<int >& x, const vcl_vector<int >& y,
 
   // Compute the number of mismatched points for each edge contour matched to the query contour
   double total_num_unmatched = 0;
-  for (vcl_set<unsigned >::iterator iter = unique_labels.begin(); 
+  for (std::set<unsigned >::iterator iter = unique_labels.begin(); 
     iter != unique_labels.end(); ++iter)
   {
     // retrieve the contour associated with the given label
     unsigned label = *iter;
 
-    vcl_map<unsigned, vsol_polyline_2d_sptr >::iterator mit =
+    std::map<unsigned, vsol_polyline_2d_sptr >::iterator mit =
       this->map_label2contour_.find(label);
     if (mit == this->map_label2contour_.end())
     {
@@ -266,15 +266,15 @@ cost_unmatched_edges(const vcl_vector<int >& x, const vcl_vector<int >& y,
 // -----------------------------------------------------------------------------
 //: Cost due to switching between linked contours (to avoid spurious edges)
 float dbsks_wcm::
-cost_switching_linked_contours(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-                               const vcl_vector<int >& orient_channel)
+cost_switching_linked_contours(const std::vector<int >& x, const std::vector<int >& y, 
+                               const std::vector<int >& orient_channel)
 {
   // no contour switching cost when too few points
   if (x.size() < 5)
     return 0.0f;
 
   //1) collect the edge labels for every point
-  static vcl_vector<unsigned > edge_labels;
+  static std::vector<unsigned > edge_labels;
   edge_labels.resize(x.size(), 0); //>> default = 0: no edge
 
   int npts = x.size();

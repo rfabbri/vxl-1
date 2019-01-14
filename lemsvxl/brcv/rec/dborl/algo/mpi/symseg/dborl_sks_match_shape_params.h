@@ -68,11 +68,11 @@ class dborl_sks_match_shape_params
 public:
 
   // Input / output parameters
-  vcl_string file_list_;  // the list of input to execute this process on
-  vcl_string file_dir_;  // the directory of input to execute this process on
-  vcl_string out_dir_;  // the directory of input to execute this process on
-  vcl_string model_file_;  // the shock model // same for all images so load just once
-  vcl_string extension_;  // image/file extension
+  std::string file_list_;  // the list of input to execute this process on
+  std::string file_dir_;  // the directory of input to execute this process on
+  std::string out_dir_;  // the directory of input to execute this process on
+  std::string model_file_;  // the shock model // same for all images so load just once
+  std::string extension_;  // image/file extension
 
   // process parameters
   bpro1_parameters_sptr dbsks_compute_arc_cost_params_;

@@ -10,8 +10,8 @@
 #include <vidpro1/vidpro1_repository.h>
 #include <vgui/vgui_projection_inspector.h>
 #include "dbvrl_region_tableau.h"
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 #include <vil/vil_image_resource.h>
 
 #include <vil/vil_convert.h>
@@ -109,7 +109,7 @@ dbvrl_region_transform_tool::set_storage ( const bpro1_storage_sptr& storage )
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbvrl_region_transform_tool::name() const
 {
   return "Region Transform"; 
@@ -124,10 +124,10 @@ dbvrl_region_transform_tool::handle( const vgui_event & e,
 {
   if( e.type == vgui_KEY_PRESS && e.key == 'b'){
     vidpro1_repository_sptr rep = bvis1_manager::instance()->repository();
-    //vcl_vector<vcl_string> names = rep->get_all_storage_class_names("dbvrl", frame);
+    //std::vector<std::string> names = rep->get_all_storage_class_names("dbvrl", frame);
 
     vgui_dialog reg_dialog("Create New Region");
-    static vcl_string name = "region0";
+    static std::string name = "region0";
     reg_dialog.field("Region Name: ", name);
     static bool copy = true;
     reg_dialog.checkbox("Copy Last Modified",copy);
@@ -252,7 +252,7 @@ dbvrl_region_transform_tool::handle( const vgui_event & e,
       case PROJECT:
         {
           new_corners_[active_corner_].set(ix, iy);
-          vcl_vector< vgl_homg_point_2d< double > > pts1, pts2;
+          std::vector< vgl_homg_point_2d< double > > pts1, pts2;
           pts1.push_back(vgl_homg_point_2d<double>(vertices_[0]));
           pts1.push_back(vgl_homg_point_2d<double>(vertices_[1]));
           pts1.push_back(vgl_homg_point_2d<double>(vertices_[2]));
@@ -323,10 +323,10 @@ dbvrl_region_transform_tool::update_xform()
     if(i==0)
       min_bound_ = max_bound_ = vertices_[0];
     else{
-      min_bound_.x() = vcl_min(min_bound_.x(), vertices_[i].x());
-      min_bound_.y() = vcl_min(min_bound_.y(), vertices_[i].y());
-      max_bound_.x() = vcl_max(max_bound_.x(), vertices_[i].x());
-      max_bound_.y() = vcl_max(max_bound_.y(), vertices_[i].y());
+      min_bound_.x() = std::min(min_bound_.x(), vertices_[i].x());
+      min_bound_.y() = std::min(min_bound_.y(), vertices_[i].y());
+      max_bound_.x() = std::max(max_bound_.x(), vertices_[i].x());
+      max_bound_.y() = std::max(max_bound_.y(), vertices_[i].y());
     }
   }
   new_corners_ = vertices_;
@@ -363,7 +363,7 @@ dbvrl_region_super_res_tool::set_tableau ( const vgui_tableau_sptr& tableau )
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbvrl_region_super_res_tool::name() const
 {
   return "Super Resolution";
@@ -381,12 +381,12 @@ dbvrl_region_super_res_tool::handle( const vgui_event & e,
     //Dialog to select the image and transforms
     vgui_dialog in_dialog("Select Images and Transforms");
 
-    vcl_vector<vcl_string> images = rep->get_all_storage_class_names("image");
+    std::vector<std::string> images = rep->get_all_storage_class_names("image");
 
     static int img_index = 0;
     in_dialog.choice("Select Image:", images, img_index);
 
-    vcl_vector<vcl_string> xforms = rep->get_all_storage_class_names("dbvrl");
+    std::vector<std::string> xforms = rep->get_all_storage_class_names("dbvrl");
 
     static int xform_index = 0;
     in_dialog.choice("Select Image:", xforms, xform_index);
@@ -401,8 +401,8 @@ dbvrl_region_super_res_tool::handle( const vgui_event & e,
     in_dialog.field("Area Magnification",area_mag);
 
 
-    static vcl_string out_path = "";
-    static vcl_string out_ext = "*.png";
+    static std::string out_path = "";
+    static std::string out_ext = "*.png";
     in_dialog.file("Output Image Path",out_ext,out_path);
 
     if(!in_dialog.ask())
@@ -426,7 +426,7 @@ dbvrl_region_super_res_tool::handle( const vgui_event & e,
     dbvrl_stg.vertical_cast(rep->get_data("dbvrl",0,xform_index));
     dbvrl_super_res super_resolution(images_, block_size);
     dbvrl_region_sptr reg = super_resolution.compute_region(area_mag);
-    vcl_cout << "(ni, nj) = " << reg->ni()<<","<<reg->nj()<< vcl_endl;
+    std::cout << "(ni, nj) = " << reg->ni()<<","<<reg->nj()<< std::endl;
     dbvrl_stg->region()->set_world_size(reg->ni(), reg->nj());
     vil_image_view<double> s_img = super_resolution.compute_high_res(dbvrl_stg->region(),
                                                                      out_path, blur);

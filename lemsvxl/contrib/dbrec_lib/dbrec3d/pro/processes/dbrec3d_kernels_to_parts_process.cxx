@@ -30,13 +30,13 @@ bool dbrec3d_kernels_to_parts_process_cons(bprb_func_process& pro)
 {
   using namespace dbrec3d_kernels_to_parts_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "boxm_scene_base_sptr"; //The scene containing bvpl kernel responses
   input_types_[1] = "bvpl_kernel_sptr"; //The kernel
   
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "int"; //The newly created context id
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -52,12 +52,12 @@ bool dbrec3d_kernels_to_parts_process(bprb_func_process& pro)
   bvpl_kernel_sptr kernel= pro.get_input<bvpl_kernel_sptr>(1);
 
   if (!scene_base.ptr()) {
-    vcl_cerr <<  " :-- Kernel scene is not valid!\n";
+    std::cerr <<  " :-- Kernel scene is not valid!\n";
     return false;
   }
   
   if ( !kernel ) {
-    vcl_cerr << pro.name() << " :-- Kernel is not valid!\n";
+    std::cerr << pro.name() << " :-- Kernel is not valid!\n";
     return false;
   }
   
@@ -100,7 +100,7 @@ bool dbrec3d_kernels_to_parts_process(bprb_func_process& pro)
     parts_scene->unload_active_blocks();
   }
   else{
-    vcl_cerr << "Error in dbrec3d_kernels_to_parts_process: Scene type no supported" <<vcl_endl;
+    std::cerr << "Error in dbrec3d_kernels_to_parts_process: Scene type no supported" <<std::endl;
     return false;
   }
   

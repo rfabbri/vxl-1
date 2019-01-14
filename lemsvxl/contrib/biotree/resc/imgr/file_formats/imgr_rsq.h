@@ -49,7 +49,7 @@
 //   and z-axis is the rotation axis.
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_stream.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -75,14 +75,14 @@ class imgr_rsq : public imgr_scan_images_resource
 
     virtual void set_scan(xscan_scan scan);
 
-    virtual vcl_vector<vil_image_resource_sptr> get_images() const;
-    vcl_vector<vil_image_resource_sptr> get_images(unsigned int interval) const;
-    vcl_vector<vil_image_resource_sptr> interval_images(vil_stream* vs,unsigned int interval) const;
+    virtual std::vector<vil_image_resource_sptr> get_images() const;
+    std::vector<vil_image_resource_sptr> get_images(unsigned int interval) const;
+    std::vector<vil_image_resource_sptr> interval_images(vil_stream* vs,unsigned int interval) const;
 
     //: get first two calibration images
-    vcl_vector<vil_image_resource_sptr> get_cali_images() const;
+    std::vector<vil_image_resource_sptr> get_cali_images() const;
 
-    vcl_vector<dbil_bounded_image_view<double> *>  get_cali_bnded_view(
+    std::vector<dbil_bounded_image_view<double> *>  get_cali_bnded_view(
                                         vgl_box_2d<double> const& bounds);
 
     int max_intensity() const { return max_intensity_; }
@@ -99,7 +99,7 @@ class imgr_rsq : public imgr_scan_images_resource
     //: It returns 4 time large of the original images because the sensor of scanco machine is
     // one quater of the full sensor. To avoid the problem of objects moving outside of 
     // images which is a trouble for vil), we use 0 padded virtual image.
-    vcl_vector<vil_image_resource_sptr> images(vil_stream *vs) const;
+    std::vector<vil_image_resource_sptr> images(vil_stream *vs) const;
 
     //: the index  of image with shutter close
     int dark_index_;

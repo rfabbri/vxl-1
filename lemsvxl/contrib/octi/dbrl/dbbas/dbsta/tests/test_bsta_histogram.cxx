@@ -1,13 +1,13 @@
 //:
 // \file
 #include <testlib/testlib_test.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <dbsta/bsta_histogram.h>
 #include <dbsta/bsta_joint_histogram.h>
 #include <dbsta/bsta_int_histogram_1d.h>
 #include <dbsta/bsta_int_histogram_2d.h>
 #include <vpl/vpl.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbsta/io/bsta_io_histogram.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -19,13 +19,13 @@
 static void test_int_hist()
 {
   bsta_int_histogram_1d h1d(50);
-  vcl_cout << "Num 1d bins "  << h1d.get_nbins() << '\n';
+  std::cout << "Num 1d bins "  << h1d.get_nbins() << '\n';
   TEST("Test No Bins 1d", h1d.get_nbins(), 50);
   for (unsigned k = 0; k<50; ++k)
     h1d.set_count(k, k*k);
   unsigned int index;
   unsigned long int max_value = h1d.get_max_val(index);
-  vcl_cout << "Max value " << max_value << " at index " << index << '\n';
+  std::cout << "Max value " << max_value << " at index " << index << '\n';
 
   bsta_int_histogram_2d h2d(50, 50);
 
@@ -44,7 +44,7 @@ void test_bsta_histogram()
   double v = 0.0;
   for (int b =0; b<bins; b++, v+=delta)
     h.upcount(v, 1.0);
-  vcl_cout << "Bins\n";
+  std::cout << "Bins\n";
   h.print();
   double area = h.area();
   double fraction_below = h.fraction_below(33.0);
@@ -59,17 +59,17 @@ void test_bsta_histogram()
   TEST_NEAR("value_above"   , value_above ,   56.0+32, 1e-9);
 
   //Test data constructor
-  vcl_vector<double> data(16, 1.0);
+  std::vector<double> data(16, 1.0);
   bsta_histogram<double> hdata(0, 128, data);
   hdata.upcount(32,1);
-  vcl_cout << "Bins\n";
+  std::cout << "Bins\n";
   hdata.print();
-  vcl_cout << "p(32) " << hdata.p(32.0) << '\n';
+  std::cout << "p(32) " << hdata.p(32.0) << '\n';
   TEST_NEAR("test data constructor p(32.0)", hdata.p(32.0), 0.117647, 1e-6);
 
   //Test entropy
   double ent = h.entropy();
-  vcl_cout << "Uniform Entropy for " << bins << " bins = " << ent  << " bits.\n";
+  std::cout << "Uniform Entropy for " << bins << " bins = " << ent  << " bits.\n";
   TEST_NEAR("test histogram uniform distribution entropy", ent, 31.0/8, 1e-9);
 
   //Joint Histogram Tests
@@ -82,8 +82,8 @@ void test_bsta_histogram()
       jh.upcount(va, 1.0, vb, 1.0);
   }
   double jent = jh.entropy();
-  vcl_cout << "Uniform Joint Entropy for " << bins*bins << " bins = " << jent  << " bits.\n";
-  vcl_ofstream of("joint_out.out");
+  std::cout << "Uniform Joint Entropy for " << bins*bins << " bins = " << jent  << " bits.\n";
+  std::ofstream of("joint_out.out");
   jh.print_to_m(of);
   of.close();
 
@@ -91,7 +91,7 @@ void test_bsta_histogram()
   for (int a =0; a<bins; a++, va+=delta) {
     double avg, var;
     jh.avg_and_variance_bin_for_row_a(a, avg, var);
-    vcl_cout << "avg: " << avg << " var: " << var << vcl_endl;
+    std::cout << "avg: " << avg << " var: " << var << std::endl;
 
     bsta_gauss_f1 g(static_cast<float>(avg), static_cast<float>(var));
     for (int b = 0; b < bins; b++) {
@@ -99,7 +99,7 @@ void test_bsta_histogram()
       new_jh.upcount(static_cast<float>((a+1)*delta), 0.0f, static_cast<float>((b+1)*delta), b_val);
     }
   }
-  vcl_ofstream of2("joint_out_new.out");
+  std::ofstream of2("joint_out_new.out");
   new_jh.print_to_m(of2);
   of2.close();
 
@@ -132,8 +132,8 @@ void test_bsta_histogram()
   double nbins_in = h_in.nbins();
   double max_in = h_in.max();
   double cn_in = h_in.counts(3);
-  double error = vcl_fabs(nbins_in-nbinsd)+
-    vcl_fabs(max-max_in)+vcl_fabs(cn-cn_in);
+  double error = std::fabs(nbins_in-nbinsd)+
+    std::fabs(max-max_in)+std::fabs(cn-cn_in);
   TEST_NEAR("histogram binary io", error, 0.0, 0.001);
   vpl_unlink("./temp.bin");
 
@@ -151,8 +151,8 @@ void test_bsta_histogram()
     nbins_in = hp->nbins();
     max_in = hp->max();
     cn_in = hp->counts(3);
-    error = vcl_fabs(nbins_in-nbinsd)+
-      vcl_fabs(max-max_in)+vcl_fabs(cn-cn_in);
+    error = std::fabs(nbins_in-nbinsd)+
+      std::fabs(max-max_in)+std::fabs(cn-cn_in);
     TEST_NEAR("histogram pointer binary io", error, 0.0, 0.001);
   }
   vpl_unlink("./sptr_temp.bin");
@@ -171,14 +171,14 @@ void test_bsta_histogram()
   double nbinsj_in = jh_in.nbins();
   double rangej_in = jh_in.range();
   double pj_in = jh_in.p(ia,ib);
-  double jerror = vcl_fabs(nbinsj_in-nbinsjd)+
-    vcl_fabs(rangej-rangej_in)+vcl_fabs(pj-pj_in);
+  double jerror = std::fabs(nbinsj_in-nbinsjd)+
+    std::fabs(rangej-rangej_in)+std::fabs(pj-pj_in);
 
   TEST_NEAR("joint_histogram binary io", jerror, 0.0, 0.001);
   vpl_unlink("./temp.bin");
 
   //: test vrml
-  vcl_ofstream jos_vrml("./temp.wrl");
+  std::ofstream jos_vrml("./temp.wrl");
   jh.print_to_vrml(jos_vrml);
   jos_vrml.close();
   vpl_unlink("./temp.wrl");

@@ -14,9 +14,9 @@
 #include "vox_associate_groundtruth_xgraphs_params.h"
 #include "vox_associate_groundtruth_xgraphs_params_sptr.h"
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " <<
-        params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " <<
+        params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -51,37 +51,37 @@ int main(int argc, char *argv[]) {
     if (!params->parse_input_xml())
         return 1;
 
-    vcl_string object_name = params->input_object_name_();
-    vcl_string input_file_name = params->input_xgraph_list_file_();
+    std::string object_name = params->input_object_name_();
+    std::string input_file_name = params->input_xgraph_list_file_();
 
-    vcl_ifstream xlists(input_file_name.c_str());
+    std::ifstream xlists(input_file_name.c_str());
 
-    vcl_string line;
+    std::string line;
 
     if (xlists.is_open())
     {
         while (! xlists.eof() )
         {
             getline(xlists, line);
-            vcl_string query_object_name = line.substr(0, object_name.length());
+            std::string query_object_name = line.substr(0, object_name.length());
             if(object_name == query_object_name)
             {
-                vcl_string xgraph_file = line.substr(object_name.length() + 1);
-                vcl_cout << "File to be associated: " << xgraph_file << vcl_endl;
+                std::string xgraph_file = line.substr(object_name.length() + 1);
+                std::cout << "File to be associated: " << xgraph_file << std::endl;
 
                 if(!vul_file_exists(params->output_xgraph_dir_()))
                 {
                     vul_file::make_directory(params->output_xgraph_dir_());
                 }
-                vcl_string dest_file_name = params->output_xgraph_dir_() + "/" + vul_file::strip_directory(xgraph_file);
-                vcl_cout << "Assoc file:" << dest_file_name << vcl_endl;
+                std::string dest_file_name = params->output_xgraph_dir_() + "/" + vul_file::strip_directory(xgraph_file);
+                std::cout << "Assoc file:" << dest_file_name << std::endl;
 
                 bool copy_status = buld_copy_file(xgraph_file, dest_file_name);
                 if(!copy_status)
                 {
-                    vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;
-                    vcl_cerr << xgraph_file << vcl_endl;
-                    vcl_cerr << dest_file_name << vcl_endl;
+                    std::cerr << "Association cannot be completed. Check paths:" << std::endl;
+                    std::cerr << xgraph_file << std::endl;
+                    std::cerr << dest_file_name << std::endl;
                     if(vul_file_exists(dest_file_name))
                     {
                         vpl_unlink(dest_file_name.c_str());
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-        vcl_cerr << "Error: cannot open file: " << input_file_name << vcl_endl;
+        std::cerr << "Error: cannot open file: " << input_file_name << std::endl;
         return 1;
     }
 
@@ -104,12 +104,12 @@ int main(int argc, char *argv[]) {
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

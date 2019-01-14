@@ -28,7 +28,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
 
   void form_image_fragment(vil_image_resource_sptr img,
                            dbsk2d_shock_fragment* fragment, 

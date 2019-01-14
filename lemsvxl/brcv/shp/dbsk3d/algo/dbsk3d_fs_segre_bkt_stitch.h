@@ -25,10 +25,10 @@ bool bkt_stitchsurf_recover_vid (const char* prefix);
 
 void filter_bucket_surf (dbmsh3d_richmesh* RM, const vgl_box_3d<double>& box,
                          const vgl_box_3d<double>& rbox,
-                         const vcl_string& bkt_int_ply, 
+                         const std::string& bkt_int_ply, 
                          dbmsh3d_richmesh* candM,
-                         const vcl_vector<vcl_string>& vertex_property_list,
-                         const vcl_vector<vcl_string>& face_property_list);
+                         const std::vector<std::string>& vertex_property_list,
+                         const std::vector<std::string>& face_property_list);
 
 void add_face_check_richmesh_v (dbmsh3d_richmesh* candM, const dbmsh3d_face* F,
                                 const bool flag);
@@ -47,61 +47,61 @@ void create_faces_from_richmesh_vid_topo (dbmsh3d_richmesh* RM, dbmsh3d_mesh* M)
 
 
 //Generate the meshing run file for all buckets.
-void gen_bkt1_seg_bat (const vcl_string& prefix,
-                       const vcl_vector<vcl_string>& bucket_list,
+void gen_bkt1_seg_bat (const std::string& prefix,
+                       const std::vector<std::string>& bucket_list,
                        const float msr);
 
 //Generate the bucketing surface list file.
-void gen_bkt1_seg_txt (const vcl_string& prefix,
-                       const vcl_vector<vcl_string>& bucket_list);
+void gen_bkt1_seg_txt (const std::string& prefix,
+                       const std::vector<std::string>& bucket_list);
 
 //Generate the run file to view surfaces in buckets.
-void gen_bkt1_seg_view_bat (const vcl_string& prefix);
+void gen_bkt1_seg_view_bat (const std::string& prefix);
 
 
 //Generate the run file for creating richmesh storing original vertex ids.
-void gen_bkt2_rmshid_bat (const vcl_string& prefix);
+void gen_bkt2_rmshid_bat (const std::string& prefix);
 
 //Generate the run file for pre-stitching.
-void gen_bkt3_prestitch_bat (const vcl_string& prefix);
+void gen_bkt3_prestitch_bat (const std::string& prefix);
 
 //Generate the run file to compute the stitching surface.
-void gen_bkt4_stitch_bat (const vcl_string& prefix, const float msr);
+void gen_bkt4_stitch_bat (const std::string& prefix, const float msr);
 
 //Generate the run file for creating rich mesh of stitching surface.
-void gen_bkt5_stitch_rmsh3d_bat (const vcl_string& prefix);
+void gen_bkt5_stitch_rmsh3d_bat (const std::string& prefix);
 
 //Generate the list file of final surfaces.
-void gen_bktfinal_txt (const vcl_string& prefix, const vcl_vector<vcl_string>& bucket_list);
+void gen_bktfinal_txt (const std::string& prefix, const std::vector<std::string>& bucket_list);
 
 //Generate the run file to view final surfaces.
-void gen_bktfin_view_bat (const vcl_string& prefix);
+void gen_bktfin_view_bat (const std::string& prefix);
 
 //Generate the run file to compute the final surface.
-void gen_bkt6_final_bat (const vcl_string& prefix);
+void gen_bkt6_final_bat (const std::string& prefix);
 
 //############################################################################
 
 //Generate the list files of gaps between buckets (each for a stitching).
-void gen_bktbnd_cellxyz_txt (const vcl_string& prefix, const vgl_box_3d<double>& bbox,
+void gen_bktbnd_cellxyz_txt (const std::string& prefix, const vgl_box_3d<double>& bbox,
                              const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ);
 
 //Generate the run file to collect the partial mesh to fill the gap between buckets.
-void gen_bktbnd_cellxyz_pm_bat (const vcl_string& prefix, const vgl_box_3d<double>& bbox,
+void gen_bktbnd_cellxyz_pm_bat (const std::string& prefix, const vgl_box_3d<double>& bbox,
                                 const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ);
 
 //Generate the run file to compute surfaces to fill the gap between buckets.
-void gen_bktbnd_cellxyz_seg_bat (const vcl_string& prefix, const vgl_box_3d<double>& bbox,
+void gen_bktbnd_cellxyz_seg_bat (const std::string& prefix, const vgl_box_3d<double>& bbox,
                                  const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ);
 
 //Generate the list file for the final stitching.
-void gen_bktsth_txt_cell (const vcl_string& prefix, 
-                          const vcl_vector<vcl_string>& bucket_list,
+void gen_bktsth_txt_cell (const std::string& prefix, 
+                          const std::vector<std::string>& bucket_list,
                           const vgl_box_3d<double>& bbox,
                           const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ);
 
 //Generate the final run file to stitch the surfaces together.
-void gen_bktsth_bat (const vcl_string& prefix);
+void gen_bktsth_bat (const std::string& prefix);
 
 
 #endif

@@ -6,7 +6,7 @@
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vidpro1/vidpro1_repository.h>
 
 #include <georegister/dbrl_rpm_tps.h>
@@ -103,7 +103,7 @@ dbrl_rpm_tps_process_tool::handle( const vgui_event & e,
         pdata.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbrl_id_point_2d",frame+data_frame_no));
         pt1_=pdata->points();
 
-        vcl_vector< dbrl_id_point_2d_sptr >::iterator itr;
+        std::vector< dbrl_id_point_2d_sptr >::iterator itr;
         for(itr=pt1_.begin();itr!=pt1_.end();itr++)
             {
             vsol_point_2d_sptr point=new vsol_point_2d((*itr)->x()/scale,(*itr)->y()/scale);
@@ -293,7 +293,7 @@ dbrl_rpm_tps_process_tool::handle( const vgui_event & e,
 
                     }
                 }
-            vcl_cout<<"\n Temperature = "<<T;
+            std::cout<<"\n Temperature = "<<T;
 
             match_set->set_original_features(f1,f2);
             match_set->set_mapped_features(f1x,f2x);
@@ -357,7 +357,7 @@ return false;
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbrl_rpm_tps_process_tool::name() const
     {
 
@@ -365,9 +365,9 @@ dbrl_rpm_tps_process_tool::name() const
 
     }
 
- vnl_vector<double> dbrl_rpm_tps_process_tool::center_of_mass(vcl_vector<dbrl_feature_sptr> & f)
+ vnl_vector<double> dbrl_rpm_tps_process_tool::center_of_mass(std::vector<dbrl_feature_sptr> & f)
         {
-        vcl_vector<vsol_spatial_object_2d_sptr> vpts;
+        std::vector<vsol_spatial_object_2d_sptr> vpts;
         double cx=0.0;
         double cy=0.0;
 

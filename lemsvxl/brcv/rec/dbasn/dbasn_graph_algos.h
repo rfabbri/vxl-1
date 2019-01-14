@@ -32,7 +32,7 @@ void generate_noisy_subgraph (dbasn_graph* g, dbasn_graph* inputG, int nN, int *
                               bool b_links, bool b_attrbs, double range,
                               float percent_remove_L); 
 
-int  load_GA_graph_file (dbasn_graph* G, const vcl_string& filename);
-void save_GA_graph_file (dbasn_graph* G, const vcl_string& filename);
+int  load_GA_graph_file (dbasn_graph* G, const std::string& filename);
+void save_GA_graph_file (dbasn_graph* G, const std::string& filename);
 
 #endif

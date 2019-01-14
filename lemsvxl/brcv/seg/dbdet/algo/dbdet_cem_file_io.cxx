@@ -3,8 +3,8 @@
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
 #include <dbdet/algo/dbdet_postprocess_contours.h>
-#include <vcl_cstring.h>
-#include <vcl_cassert.h>
+#include <cstring>
+#include <cassert>
 
 // -----------------------------------------------------------------------------
 //: Save the contour fragment graph as a .cem file
@@ -14,19 +14,19 @@ static bool sort_cmp(dbdet_edgel * e1, dbdet_edgel * e2)
   return e1->id < e2->id;
 }
 
-bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_fragment_graph& CFG)
+bool dbdet_save_cem(std::string filename, dbdet_edgemap_sptr EM, dbdet_curve_fragment_graph& CFG)
 {
   //1)If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
 /*
   // Compile edge information first
-  vcl_vector<int> emap(EM->num_edgels(), -2); //-2 indicates unused
+  std::vector<int> emap(EM->num_edgels(), -2); //-2 indicates unused
 
   dbdet_edgel_chain_list_iter cit = CFG.frags.begin();
   for (; cit!=CFG.frags.end(); cit++){
@@ -37,7 +37,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
   }
 
   //compile new edge list (only keep the used ones in the new list)
-  vcl_vector<int> new_emap;
+  std::vector<int> new_emap;
   for (unsigned i=0; i<EM->edgels.size(); i++){
     if (emap[i]==-1){
       emap[i] = new_emap.size(); //save the forward mapping
@@ -46,10 +46,10 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
   }
 */
   // change by Yuliang, Oct, 2014, save the full edge map istead of the used edges
-  //vcl_vector<int> emap(EM->num_edgels(), 0); //-2 indicates unused
+  //std::vector<int> emap(EM->num_edgels(), 0); //-2 indicates unused
 
 //compile new edge list (only keep the used ones in the new list)
- /* vcl_vector<int> new_emap;
+ /* std::vector<int> new_emap;
   for (unsigned i=0; i<EM->edgels.size(); i++){
 //    if (emap[i]==-1){
       emap[i] = new_emap.size(); //save the forward mapping
@@ -58,23 +58,23 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
 */
 
   // output header information
-  outfp << ".CEM v2.0 " << vcl_endl;
-  outfp << "size=[" << EM->width() << " " << EM->height() << "]" << vcl_endl;
+  outfp << ".CEM v2.0 " << std::endl;
+  outfp << "size=[" << EM->width() << " " << EM->height() << "]" << std::endl;
 
   //output the edgemap section
-  outfp << "[Edgemap]" << vcl_endl;
-  outfp << "count=" << EM->edgels.size() << vcl_endl;
-  //outfp << "# (x, y) dir conf d2f" << vcl_endl;
+  outfp << "[Edgemap]" << std::endl;
+  outfp << "count=" << EM->edgels.size() << std::endl;
+  //outfp << "# (x, y) dir conf d2f" << std::endl;
 
   for (unsigned i=0; i<EM->edgels.size(); i++){
     dbdet_edgel* e = EM->edgels[i];
     assert(i == e->id);
-    outfp << "(" << e->pt.x() << ", " << e->pt.y() << ")\t" << e->tangent << "\t" << e->strength << "\t" << e->deriv << vcl_endl; 
+    outfp << "(" << e->pt.x() << ", " << e->pt.y() << ")\t" << e->tangent << "\t" << e->strength << "\t" << e->deriv << std::endl; 
   }
 
   //output the contours section
-  outfp << "[Contours]" << vcl_endl;
-  outfp << "count=" << CFG.frags.size() << vcl_endl;
+  outfp << "[Contours]" << std::endl;
+  outfp << "count=" << CFG.frags.size() << std::endl;
 
   dbdet_edgel_chain_list_iter cit = CFG.frags.begin();
   for (; cit!=CFG.frags.end(); cit++){
@@ -83,12 +83,12 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
     outfp << "[";
     for (unsigned i=0; i<chain->edgels.size(); i++)
       outfp << chain->edgels[i]->id << " ";
-    outfp << "]" << vcl_endl;
+    outfp << "]" << std::endl;
   }
 
   //next output some properties of the contours that could be useful for evaluation
-  outfp << "[Contour Properties]" << vcl_endl;
-  outfp << "# <len> <avg. str> <mean con> <Lstd> <Rstd> <avg. d2f> <avg. k> <max k>" << vcl_endl;
+  outfp << "[Contour Properties]" << std::endl;
+  outfp << "# <len> <avg. str> <mean con> <Lstd> <Rstd> <avg. d2f> <avg. k> <max k>" << std::endl;
 
   cit = CFG.frags.begin();
   for (; cit!=CFG.frags.end(); cit++){
@@ -104,7 +104,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
     outfp << avg_curvature(chain) << " ";
     outfp << max_curvature(chain) << " ";
 
-    outfp << vcl_endl;
+    outfp << std::endl;
   }
 
 
@@ -117,7 +117,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
 
 // -----------------------------------------------------------------------------
 //: load the older version of the cem file (for backward compatibility)
-dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, int width, int height, bool convert_degrees_to_radians)
+dbdet_edgemap_sptr dbdet_load_cem_v1(std::ifstream &infp, dbdet_curve_fragment_graph& CFG, int width, int height, bool convert_degrees_to_radians)
 {
   char lineBuffer[1024];
   int numContours, numTotalEdges, numEdges;
@@ -127,36 +127,36 @@ dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_gr
 
   //construct the edgemap
   dbdet_edgemap_sptr edgemap = new dbdet_edgemap(width, height); //CEM file does not have size info
-  vcl_vector<dbdet_edgel_chain*> chains;
+  std::vector<dbdet_edgel_chain*> chains;
 
   //2)Read in each line
   while (infp.getline(lineBuffer,1024)) {
 
     //ignore comment lines and empty lines
-    if (vcl_strlen(lineBuffer)<2 || lineBuffer[0]=='#')
+    if (std::strlen(lineBuffer)<2 || lineBuffer[0]=='#')
       continue;
 
     //read the line with the contour count info
-    if (!vcl_strncmp(lineBuffer, "CONTOUR_COUNT=", sizeof("CONTOUR_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, "CONTOUR_COUNT=", sizeof("CONTOUR_COUNT=")-1)){
       sscanf(lineBuffer,"CONTOUR_COUNT=%d",&(numContours));
-      //vcl_cout << numContours << vcl_endl;
+      //std::cout << numContours << std::endl;
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "TOTAL_EDGE_COUNT=", sizeof("TOTAL_EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, "TOTAL_EDGE_COUNT=", sizeof("TOTAL_EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"TOTAL_EDGE_COUNT=%d",&(numTotalEdges));
-      //vcl_cout << numTotalEdges << vcl_endl;
+      //std::cout << numTotalEdges << std::endl;
       continue;
     }
 
     //read the beginning of a contour block
-    if (!vcl_strncmp(lineBuffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1))
+    if (!std::strncmp(lineBuffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1))
     {
       infp.getline(lineBuffer,1024);
 
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numEdges));
-      //vcl_cout << numEdges << vcl_endl;
+      //std::cout << numEdges << std::endl;
 
       dbdet_edgel_chain* chain = new dbdet_edgel_chain();
 
@@ -182,7 +182,7 @@ dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_gr
 
       //go to the end of the block
       infp.getline(lineBuffer,1024);
-      while (vcl_strncmp(lineBuffer, "[END CONTOUR]", sizeof(" [END CONTOUR]")-1))
+      while (std::strncmp(lineBuffer, "[END CONTOUR]", sizeof(" [END CONTOUR]")-1))
         infp.getline(lineBuffer,1024);
 
       //save it in the chains list for now
@@ -205,7 +205,7 @@ dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_gr
 
 // -----------------------------------------------------------------------------
 //: Loads an ascii file containing a graph of edgel chains (the contour fragment graph)
-dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_graph& CFG)
+dbdet_edgemap_sptr dbdet_load_cem(std::string filename, dbdet_curve_fragment_graph& CFG)
 {
   ////
   char lineBuffer[1024];
@@ -213,10 +213,10 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
   dbdet_edgemap_sptr edgemap;
 
   //1)If file open fails, return.
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return NULL;
   }
 
@@ -227,15 +227,15 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
 
   //determine the version of this file
   infp.getline(lineBuffer,1024); //read in the first line
-  if (!vcl_strncmp(lineBuffer, ".CEM v2.0", sizeof(".CEM v2.0")-1))
+  if (!std::strncmp(lineBuffer, ".CEM v2.0", sizeof(".CEM v2.0")-1))
   {
     version =2;
     edgemap = dbdet_load_cem_v2(infp, CFG);
-    vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+    std::cout << "Loaded: " << filename.c_str() << ".\n";
   }
   else {
     edgemap = dbdet_load_cem_v1(infp, CFG);
-    vcl_cout << "Loaded: " << filename.c_str() << ".\n";  
+    std::cout << "Loaded: " << filename.c_str() << ".\n";  
   }
 
   setlocale(LC_NUMERIC, dup_locale);
@@ -252,7 +252,7 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
 
 // -----------------------------------------------------------------------------
 //: load cem file version 2
-dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG)
+dbdet_edgemap_sptr dbdet_load_cem_v2(std::ifstream &infp, dbdet_curve_fragment_graph& CFG)
 {
   //
   char lineBuffer[1024];
@@ -266,11 +266,11 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
   while (infp.getline(lineBuffer,1024)) {
 
     //ignore comment lines and empty lines
-    if (vcl_strlen(lineBuffer)<2 || lineBuffer[0]=='#')
+    if (std::strlen(lineBuffer)<2 || lineBuffer[0]=='#')
       continue;
 
     //read the line with the edgemap size info
-    if (!vcl_strncmp(lineBuffer, "size=", sizeof("size=")-1)){
+    if (!std::strncmp(lineBuffer, "size=", sizeof("size=")-1)){
       sscanf(lineBuffer,"size=[%d %d]",&width, &height);
       
       //construct the edgemap
@@ -280,7 +280,7 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
     }
 
     //read the edgemap block
-    if (!vcl_strncmp(lineBuffer, "[Edgemap]", sizeof("[Edgemap]")-1))
+    if (!std::strncmp(lineBuffer, "[Edgemap]", sizeof("[Edgemap]")-1))
     {
       //read the next line with the edge count
       infp.getline(lineBuffer,1024);
@@ -304,7 +304,7 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
     }
 
     //read the contours block
-    if (!vcl_strncmp(lineBuffer, "[Contours]", sizeof("[Contours]")-1))
+    if (!std::strncmp(lineBuffer, "[Contours]", sizeof("[Contours]")-1))
     {
       //read the next line with the edge count
       infp.getline(lineBuffer,1024);
@@ -342,7 +342,7 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
     }
 
     //read the contour properties block
-    if (!vcl_strncmp(lineBuffer, "[Contour Properties]", sizeof("[Contour Properties]")-1))
+    if (!std::strncmp(lineBuffer, "[Contour Properties]", sizeof("[Contour Properties]")-1))
     {
       //read the next line with the comment
       infp.getline(lineBuffer,1024);

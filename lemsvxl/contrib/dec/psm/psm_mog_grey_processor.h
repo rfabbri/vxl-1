@@ -49,15 +49,15 @@ public:
 
   static void init_appearance(psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype const& mean, float variance, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model);
 
-  static void compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void compute_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void update_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void update_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void finalize_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
 private:
 
-  static void compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype &mean, float &variance);
+  static void compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype &mean, float &variance);
 
   static float sigma_norm_factor(unsigned int nobs);
 

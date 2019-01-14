@@ -144,10 +144,10 @@ compute_radius_increment_from_nodes()
   double a2 = -d_target->alpha + d_target->phi;
 
   //// replace the following formula by its equavalence but avoiding dividing 0
-  //double dr_over_len = (vcl_sin(a0) - vcl_sin(a2)) / 
-  //  vcl_sin(vnl_math::pi - a0 - a2);
+  //double dr_over_len = (std::sin(a0) - std::sin(a2)) / 
+  //  std::sin(vnl_math::pi - a0 - a2);
 
-  double dr_over_len = vcl_sin((a0-a2)/2) / vcl_sin((a0+a2)/2);
+  double dr_over_len = std::sin((a0-a2)/2) / std::sin((a0+a2)/2);
   this->set_radius_increment(dr_over_len * this->chord_length());
 }
 
@@ -170,7 +170,7 @@ form_fragment()
 
 //: write info of the dbskbranch to an output stream
 void dbsksp_shock_edge::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "\n<<\n"
     << "type[ " << this->is_a() << " ] id[ " << this->id() << " ]\n"

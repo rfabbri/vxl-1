@@ -16,10 +16,10 @@
 //  supports pixel access the full image space,  even though only data
 //  within the bounds is actually available
 //  
-#include <vcl_vector.h>
-#include <vcl_iosfwd.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <iosfwd>
+#include <string>
+#include <cassert>
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_smart_ptr.h>
 #include <vgl/vgl_box_3d.h>
@@ -46,7 +46,7 @@ class imgr_bounded_image_view_3d : public imgr_image_view_3d_base
    imgr_bounded_image_view_3d(){};
 
   //: full constructor
-  imgr_bounded_image_view_3d(vcl_vector<dbil_bounded_image_view<T>* > const& views,
+  imgr_bounded_image_view_3d(std::vector<dbil_bounded_image_view<T>* > const& views,
                              vgl_box_3d<double> const& bounds);
 
   //:  constructor where images are added later

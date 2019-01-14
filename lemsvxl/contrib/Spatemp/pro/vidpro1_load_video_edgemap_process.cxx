@@ -3,15 +3,15 @@
 
 
 #include <Spatemp/pro/vidpro1_load_video_edgemap_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -38,7 +38,7 @@ vidpro1_load_video_edgemap_process::vidpro1_load_video_edgemap_process() : bpro1
     if( !parameters()->add( "Edge Maps file dir <dirname...>" , "-edge_dirname", bpro1_filepath("","*") )
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     num_frames_=0;
 }
@@ -59,7 +59,7 @@ vidpro1_load_video_edgemap_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro1_load_video_edgemap_process::name()
+std::string vidpro1_load_video_edgemap_process::name()
 {
   return "Load .EDG Video";
 }
@@ -75,10 +75,10 @@ vidpro1_load_video_edgemap_process::clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_video_edgemap_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // no input type required
     to_return.clear();
 
@@ -87,10 +87,10 @@ vidpro1_load_video_edgemap_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro1_load_video_edgemap_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map");
 
     return to_return;
@@ -120,16 +120,16 @@ vidpro1_load_video_edgemap_process::execute()
     bpro1_filepath video_path;
     parameters()->get_value( "-edge_dirname" , video_path );
 
-    vcl_vector<vcl_string> video_files;
+    std::vector<std::string> video_files;
     for(vul_file_iterator fn = video_path.path+"*.edg"; fn; ++fn)
       video_files.push_back(fn());
   
     while(!video_files.empty())
     {
-      vcl_string filename=video_files.back();
+      std::string filename=video_files.back();
       video_files.pop_back();
       if(!loadEDG(filename))
-          vcl_cerr<<" Could not open edgemap "<<filename<<"\n";
+          std::cerr<<" Could not open edgemap "<<filename<<"\n";
       else
           num_frames_++;
     }
@@ -145,7 +145,7 @@ vidpro1_load_video_edgemap_process::finish()
     return true;
 }
 
-bool vidpro1_load_video_edgemap_process::loadEDG(vcl_string input_file)
+bool vidpro1_load_video_edgemap_process::loadEDG(std::string input_file)
 {
     bool bSubPixel=true, blines=false, bvsol=false;
     double scale=1;
@@ -157,13 +157,13 @@ bool vidpro1_load_video_edgemap_process::loadEDG(vcl_string input_file)
     if (!retval)
       return false;
 
-    vcl_cout << "N edgels: " << edge_map->num_edgels() << vcl_endl;
+    std::cout << "N edgels: " << edge_map->num_edgels() << std::endl;
     // create the output storage class
     dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
     output_edgemap->set_edgemap(edge_map);
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemap));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemap));
  
-    vcl_cout << "Loaded: " << input_file.c_str() << ".\n";
+    std::cout << "Loaded: " << input_file.c_str() << ".\n";
 
   return true;
 }

@@ -28,7 +28,7 @@ bioproc_filtering_proc<T,F>:: bioproc_filtering_proc(xscan_scan const& scan,
     vgl_box_3d<double> &box,   double resolution,
     vgl_box_3d<double> &outer_box,
     xmvg_composite_filter_3d<T, F> const & filter_3d,
-    vcl_string bin_scan_file,
+    std::string bin_scan_file,
     biob_worldpt_roster_sptr sample_roster) 
     : scan_(scan),   box_(box), outer_box_(outer_box), filter_3d_(filter_3d)
 {
@@ -57,7 +57,7 @@ bioproc_filtering_proc<T, F>:: bioproc_filtering_proc(
                            double resolution,
                            vgl_box_3d<double> &outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file,
+                           std::string bin_scan_file,
                            biob_worldpt_roster_sptr sample_roster)
 : scan_(scan_images.get_scan()), box_(box), outer_box_(outer_box), filter_3d_(filter_3d)
 {
@@ -105,7 +105,7 @@ void bioproc_filtering_proc<T,F> :: set_up_splr()
 }
 
 template<class T, class F>
-void bioproc_filtering_proc<T, F> :: execute(const vcl_vector<biob_worldpt_index> * which_samples)
+void bioproc_filtering_proc<T, F> :: execute(const std::vector<biob_worldpt_index> * which_samples)
 {
   unsigned nviews = scan_.scan_size();
   
@@ -113,7 +113,7 @@ void bioproc_filtering_proc<T, F> :: execute(const vcl_vector<biob_worldpt_index
 
   unsigned num_atomic_filters = filter_3d_.size();
   
-  vcl_vector<xmvg_filter_response<T> > response_field_(npts);
+  std::vector<xmvg_filter_response<T> > response_field_(npts);
   
   for(unsigned int i = 0; i< npts; i++){
     // get point
@@ -143,16 +143,16 @@ void bioproc_filtering_proc<T, F> :: execute(const vcl_vector<biob_worldpt_index
       // k is the size of the kernel on one side
       double B = 0.5;
       int k = 7;
-      vcl_vector<double> kernel(2*k+1);
+      std::vector<double> kernel(2*k+1);
       int index = 0;
       for(int i=-k; i<=k; i++)
       {
         if(i == 0)
-          kernel[index] = vcl_pow(B,2.0);
+          kernel[index] = std::pow(B,2.0);
         else if(i % 2 == 0)
           kernel[index] = 0.0;
         else
-          kernel[index] = -4*vcl_pow(B,2.0) / (vcl_pow((vnl_math::pi  * i), 2.0));
+          kernel[index] = -4*std::pow(B,2.0) / (std::pow((vnl_math::pi  * i), 2.0));
         index++;
       }
       /////////////////////////////////////////////////////////////////////////////////
@@ -165,14 +165,14 @@ void bioproc_filtering_proc<T, F> :: execute(const vcl_vector<biob_worldpt_index
 
     response_field_[i] = response;
 
-    vcl_cout << "finish compute response at voxel " << i << '\n';
+    std::cout << "finish compute response at voxel " << i << '\n';
   }
   field_->set_values(response_field_);
 
 }
 
 template<class T, class F>
-void x_write(vcl_ostream& os, bioproc_filtering_proc<T,F> &proc)
+void x_write(std::ostream& os, bioproc_filtering_proc<T,F> &proc)
 {
   vsl_basic_xml_element element("bioproc_filtering_proc");
   element.x_write_open(os);
@@ -190,6 +190,6 @@ void x_write(vcl_ostream& os, bioproc_filtering_proc<T,F> &proc)
 #undef BIOPROC_FILTERING_PROC_INSTANTIATE
 #define BIOPROC_FILTERING_PROC_INSTANTIATE(T, F) \
 template class bioproc_filtering_proc<T, F>;\
-template void x_write(vcl_ostream&, bioproc_filtering_proc<T, F> &)
+template void x_write(std::ostream&, bioproc_filtering_proc<T, F> &)
 
 #endif

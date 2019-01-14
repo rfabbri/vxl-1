@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Oct 4, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>

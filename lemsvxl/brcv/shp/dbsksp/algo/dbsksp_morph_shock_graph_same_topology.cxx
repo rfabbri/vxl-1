@@ -8,7 +8,7 @@
 #include <dbsksp/dbsksp_shock_edge.h>
 #include <dbsksp/dbsksp_shock_node.h>
 #include <dbsksp/dbsksp_shock_model.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 //: Establish correspondences between two shock graph using the ref_node's and
@@ -44,13 +44,13 @@ compute_correspondence()
   do
   {
     // locate the current edge in the map
-    vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr = 
+    std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr = 
       this->edge_map_.find(source_edge);
     // if this edge has not been visited, add the pair
     if (itr == this->edge_map_.end())
     {
-      this->edge_map_.insert(vcl_make_pair(source_edge, target_edge));
-      this->node_map_.insert(vcl_make_pair(source_node, target_node));
+      this->edge_map_.insert(std::make_pair(source_edge, target_edge));
+      this->node_map_.insert(std::make_pair(source_node, target_node));
     }
     // if it's been visited, compare the correspondence with the one found previously
     else
@@ -85,7 +85,7 @@ morph()
 {
   if (!this->compute_correspondence())
   {
-    vcl_cerr << "ERROR: could not establish correspondence between two shapes\n";
+    std::cerr << "ERROR: could not establish correspondence between two shapes\n";
     return false;
   }
 
@@ -109,12 +109,12 @@ morph()
   double source_ref_psi = this->source_params_[model.param_index_of_ref_dir()];
   double target_ref_psi = this->target_params_[model.param_index_of_ref_dir()];
 
-  vgl_vector_2d<double > source_ref_dir(vcl_cos(source_ref_psi), vcl_sin(source_ref_psi));
-  vgl_vector_2d<double > target_ref_dir(vcl_cos(target_ref_psi), vcl_sin(target_ref_psi));
+  vgl_vector_2d<double > source_ref_dir(std::cos(source_ref_psi), std::sin(source_ref_psi));
+  vgl_vector_2d<double > target_ref_dir(std::cos(target_ref_psi), std::sin(target_ref_psi));
 
   // reset the angles
   this->source_params_[model.param_index_of_ref_dir()] = 
-    vcl_atan2(source_ref_dir.y(), source_ref_dir.x());
+    std::atan2(source_ref_dir.y(), source_ref_dir.x());
 
   this->target_params_[model.param_index_of_ref_dir()] = 
     this->source_params_[model.param_index_of_ref_dir()] + 
@@ -147,12 +147,12 @@ get_intermediate_graph(double t)
 
 // ----------------------------------------------------------------------------
 //: print info of the morpher to an output stream
-vcl_ostream& dbsksp_morph_shock_graph_same_topology::
-print(vcl_ostream & os) const
+std::ostream& dbsksp_morph_shock_graph_same_topology::
+print(std::ostream & os) const
 {
   // print the correspondence maps
   os << "Edge correspondence map:\n";
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::const_iterator itr =
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::const_iterator itr =
     this->edge_map_.begin(); itr != this->edge_map_.end(); ++itr)
   {
     os << "( " << itr->first->id() << " , " << itr->second->id() << " ) ";
@@ -161,7 +161,7 @@ print(vcl_ostream & os) const
 
 
   os << "Node correspondence map:\n";
-  for (vcl_map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>::const_iterator itr =
+  for (std::map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>::const_iterator itr =
     this->node_map_.begin(); itr != this->node_map_.end(); ++itr)
   {
     os << "( " << itr->first->id() << " , " << itr->second->id() << " ) ";

@@ -5,7 +5,7 @@
 
 
 #include <testlib/testlib_test.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbsk2d/dbsk2d_bnd_vertex.h>
 #include <dbsk2d/dbsk2d_bnd_vertex_sptr.h>
@@ -16,21 +16,21 @@
 // test creating a new dbsk2d_bnd_ objects
 void test_bnd_utils_new()
 {
-  vcl_cout << "In test_bnd_utils_new_()" << vcl_endl;
+  std::cout << "In test_bnd_utils_new_()" << std::endl;
   
   // input points
   double x[] = { 1 , 5, 4};
   double y[] = { 3 , 7, 9};
 
   // form points
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   for (int i=0; i<3; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 2; ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(
@@ -65,7 +65,7 @@ void test_determine_edge_directions()
   double y[] = {1, 3, 4, 7};
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 4; ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(
@@ -73,8 +73,8 @@ void test_determine_edge_directions()
   }
 
   // contruct list of edges
-  vcl_vector<dbsk2d_bnd_edge_sptr > edges;
-  vcl_vector<signed char > directions;
+  std::vector<dbsk2d_bnd_edge_sptr > edges;
+  std::vector<signed char > directions;
   for (unsigned int i = 0; i < 3; ++i)
   {
     edges.push_back(dbsk2d_bnd_utils::new_line_between(vertices[i], 
@@ -89,7 +89,7 @@ void test_determine_edge_directions()
   edges[2]->reverse_direction();
   directions[2] = -1;
 
-  vcl_vector<signed char > computed_directions;
+  std::vector<signed char > computed_directions;
   bool connected = dbsk2d_bnd_utils::determine_edge_directions(edges, 
     computed_directions);
 
@@ -102,28 +102,28 @@ void test_determine_edge_directions()
 //: test extract_vertex_list()
 void test_extract_vertex_list()
 {
-  vcl_cout << "In test_extract_vertex_list()" << vcl_endl;
+  std::cout << "In test_extract_vertex_list()" << std::endl;
  
   // Construct a polyline
   double x[] = { 0 , 1, 2, 5, 9};
   double y[] = { 0 , 1, 1, 0, 8};
 
   // list of points
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   for (unsigned int i=0; i<5; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // list of vertices
-  vcl_vector<dbsk2d_bnd_vertex_sptr >vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr >vertices;
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(pts[i]));
   }
 
   // list of line edges
-  vcl_list<dbsk2d_bnd_edge_sptr > edges;
+  std::list<dbsk2d_bnd_edge_sptr > edges;
   for (unsigned int i=0; i<vertices.size()-1; ++i)
   {
     edges.push_back(dbsk2d_bnd_utils::new_line_between(vertices[i], 
@@ -134,7 +134,7 @@ void test_extract_vertex_list()
   edges.push_back(new dbsk2d_bnd_edge(vertices[3]));
 
   // list of extract vertices
-  vcl_list<dbsk2d_bnd_vertex_sptr > extracted_vertices;
+  std::list<dbsk2d_bnd_vertex_sptr > extracted_vertices;
   // make the list non-empty before passing to the function
   extracted_vertices.push_back(vertices[2]);
 
@@ -145,7 +145,7 @@ void test_extract_vertex_list()
   for (bnd_vertex_list::iterator vit = extracted_vertices.begin();
     vit != extracted_vertices.end(); ++vit)
   {
-    success = success && (vcl_find(vertices.begin(), vertices.end(), *vit)!=vertices.end());
+    success = success && (std::find(vertices.begin(), vertices.end(), *vit)!=vertices.end());
   }
 
   TEST("Extract vertices from an edge list", success, true);

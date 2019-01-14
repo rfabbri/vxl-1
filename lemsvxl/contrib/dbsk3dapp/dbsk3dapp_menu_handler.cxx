@@ -49,7 +49,7 @@ void dbsk3dapp_manager::file_new()
 void dbsk3dapp_manager::file_open()           
 {
   vgui_dialog params ("File Open");
-  vcl_string ext;
+  std::string ext;
 
   params.file ("Open...", ext, file_opened_cache_);  
 
@@ -74,7 +74,7 @@ void dbsk3dapp_manager::file_open()
 
   //get the dir_prefix and suffix of the file name
   pv1_->set_dir_file (dbul_get_dir_file (file_opened_cache_));
-  vcl_string suffix = dbul_get_suffix (file_opened_cache_);
+  std::string suffix = dbul_get_suffix (file_opened_cache_);
 
   SoSeparator* group = NULL;
 
@@ -135,7 +135,7 @@ void dbsk3dapp_manager::file_open()
 void dbsk3dapp_manager::file_save()           
 {
   vgui_dialog params("File->Save...");  
-  vcl_string ext;
+  std::string ext;
 
   if (file_saved_cache_ == "") {
     ext = dbul_get_suffix (file_opened_cache_);
@@ -169,12 +169,12 @@ void dbsk3dapp_manager::file_save()
 void dbsk3dapp_manager::file_save_view_as_iv()
 {
   vgui_dialog params ("Save View as IV");
-  vcl_string ext;
+  std::string ext;
 
   params.file ("IV to save...", ext, file_saved_cache_);
 
   int open_in_view = 1;
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back ("View 1 (Top Left)");
   view_choices.push_back ("View 2 (Top Right)");
   view_choices.push_back ("View 3 (Bottom Left)");
@@ -229,7 +229,7 @@ void dbsk3dapp_manager::search_fs_elm ()
   int searchOption = -1;
   unsigned idNumber = 0;
   vgui_dialog params("Search");
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back( "Sheet" );
   view_choices.push_back( "Link" );
   view_choices.push_back( "Node" );
@@ -281,7 +281,7 @@ void dbsk3dapp_manager::search_fs_elm ()
     break;
 
     default:
-      vcl_cout << "\nWARNING: can't found id: " << idNumber << vcl_endl;
+      std::cout << "\nWARNING: can't found id: " << idNumber << std::endl;
     break;
   }
 
@@ -295,7 +295,7 @@ void dbsk3dapp_manager::choose_view (vgui_dialog &params, int &pick)
 {
   int num = view_manager()->get_grid_size();
   
-  vcl_vector<vcl_string> choices;
+  std::vector<std::string> choices;
   choices.push_back( "Do Not Display" );
 
   for( int i=0; i<num; i++ ) {
@@ -326,8 +326,8 @@ void dbsk3dapp_manager::view_show_hide ()
   SoPathList switchPaths = sa.getPaths();
 
   vgui_dialog params ("Show/Hide visualization...");  
-  vcl_vector<SoSwitch*> nodes_with_soswitches;
-  vcl_vector<bool> show;
+  std::vector<SoSwitch*> nodes_with_soswitches;
+  std::vector<bool> show;
 
   for (int i=0; i< switchPaths.getLength(); i++) {
     bool isShown;
@@ -343,7 +343,7 @@ void dbsk3dapp_manager::view_show_hide ()
 
   // puts checkboxes in the dialog window for each element
   for (unsigned int i=0; i<nodes_with_soswitches.size(); i++) {
-    vcl_string str = nodes_with_soswitches[i]->getName().getString();
+    std::string str = nodes_with_soswitches[i]->getName().getString();
     str = remove_commas (str);
     params.checkbox (str.c_str() , (bool&) show[i]);
   }
@@ -371,7 +371,7 @@ void dbsk3dapp_manager::view_object_boundary_options()
   vgui_dialog params ("Object Boundary Mesh View Options");
   params.field( "Generatpr Point Size", pointSize ); 
   params.field ("Surface Mesh Transparency (Def: 0)", transparency);
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back ("As Is (Filled)");
   view_choices.push_back ("Lines");
   view_choices.push_back ("Points");
@@ -565,7 +565,7 @@ void dbsk3dapp_manager::view_scaffold_hypergraph_options()
 
 void dbsk3dapp_manager::view_background_color()
 {
-  vcl_string t;
+  std::string t;
   vgui_dialog params("Choose Background Color");
   params.color("Background Color", t);
   if(!params.ask())
@@ -694,7 +694,7 @@ void dbsk3dapp_manager::add_bndsphere()
   params.field ("bounding shpere num sample ratio (Def.=1)", nsample_ratio);
 
   int open_in_view = 1;
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back ("View 0 (Top Left)");
   view_choices.push_back ("View 1 (Top Right)");
   view_choices.push_back ("View 2 (Bottom Left)");
@@ -734,7 +734,7 @@ void dbsk3dapp_manager::surface_meshing()
   }
 
   vgui_dialog params ("Surface Meshing & Shock Pruning");
-  vcl_string ext;
+  std::string ext;
 
   float max_sample_ratio = 5.0f;
   params.field ("Maximum sampling ratio (Def=5)", max_sample_ratio);
@@ -799,7 +799,7 @@ void dbsk3dapp_manager::rmin_shock_prune()
 
   int i_original_view = 0;
   int open_in_view = 1;
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back ("View 0 (Top Left)");
   view_choices.push_back ("View 1 (Top Right)");
   view_choices.push_back ("View 2 (Bottom Left)");
@@ -1115,12 +1115,12 @@ void dbsk3dapp_manager::shock_recovery ()
   ///pv1_->reset_point_gene_set_with_shpere ();
   pv1_->reset_fs_mesh ();
 
-  vcl_string ext;
+  std::string ext;
   params.message("3 files required: prefix.p3d, prefix-sphere.p3d, prefix-sphere.vor .");
   params.file ("File prefix (Select the original .p3d file)", ext, file_opened_cache_);
 
   int open_in_view = 0;
-  vcl_vector<vcl_string> view_choices;
+  std::vector<std::string> view_choices;
   view_choices.push_back ("View 0 (Top Left)");
   view_choices.push_back ("View 1 (Top Right)");
   view_choices.push_back ("View 2 (Bottom Left)");
@@ -1140,7 +1140,7 @@ void dbsk3dapp_manager::shock_recovery ()
     return;
   }
 
-  vcl_string dir_prefix = dbul_get_dir_prefix (file_opened_cache_);
+  std::string dir_prefix = dbul_get_dir_prefix (file_opened_cache_);
   if (file_opened_cache_ == "")
     return;
 
@@ -1165,7 +1165,7 @@ void dbsk3dapp_manager::shock_recovery ()
 void dbsk3dapp_manager::compute_fullshock()
 {
   vgui_dialog params ("Shock Recovery from QHull/Voronoi with bounding sphere"); 
-  vcl_string ext;
+  std::string ext;
   params.file ("Original Point Cloud file (.p3d) to get 'prefix'", ext, file_opened_cache_);
 
   if (!params.ask())
@@ -1194,7 +1194,7 @@ void dbsk3dapp_manager::compute_fullshock()
 void dbsk3dapp_manager::scaffold_hypergraph_from_fs()
 {
   vgui_dialog params ("FullShock to Shock Scaffold Hypergraph");
-  vcl_string ext;
+  std::string ext;
   params.file ("Full Shock File (.fs)", ext, file_opened_cache_);
 
   ///params.field ("Close to Surface Pruning Ratio (Def.=0.1)", 
@@ -1253,7 +1253,7 @@ void dbsk3dapp_manager::scaffold_hypergraph_from_fs()
 void dbsk3dapp_manager::compute_scaffold_hypergraph ()
 {
   vgui_dialog params ("Compute Shock Scaffold Hypergraph (all in one)");
-  vcl_string ext;
+  std::string ext;
   params.file ("Original Point Cloud file (.p3d) to get 'prefix'", ext, file_opened_cache_);
 
   ///params.field ("Close to Surface Pruning Ratio (Def.=0.1)", 
@@ -1312,7 +1312,7 @@ void dbsk3dapp_manager::compute_scaffold_hypergraph ()
 void dbsk3dapp_manager::scaffold_hypergraph_plus_transitions()
 {
   vgui_dialog params ("Compute Shock Scaffold Hypergraph (all in one)");
-  vcl_string ext;
+  std::string ext;
   params.file ("Original Point Cloud file (.p3d) to get 'prefix'", ext, file_opened_cache_);
 
   ///params.field ("Close to Surface Pruning Ratio (Def.=0.1)", 
@@ -1387,7 +1387,7 @@ void dbsk3dapp_manager::scaffold_hypergraph_plus_transitions()
 void dbsk3dapp_manager::run_file_scaffold_hypergraph_plus_transitions()
 {
   vgui_dialog params ("Run File: Compute Shock Scaffold Hypergraph (all in one)");
-  vcl_string ext;
+  std::string ext;
   params.file ("Specify Run File (run_xxx.bat)", ext, file_opened_cache_);
   
   bool b_show_bnd_surface = true;
@@ -1479,9 +1479,9 @@ void dbsk3dapp_manager::run_file_scaffold_hypergraph_plus_transitions()
 void dbsk3dapp_manager::match_shock_matching()           
 {
   vgui_dialog params("Shock Matching");
-  vcl_string ext;
-  vcl_string sg_file_1 = file_opened_cache_;
-  vcl_string sg_file_2 = file_opened_cache_;
+  std::string ext;
+  std::string sg_file_1 = file_opened_cache_;
+  std::string sg_file_2 = file_opened_cache_;
   params.file ("Shock Scaffold Graph File 1 (with more vertices)", ext, sg_file_1);
   params.file ("Shock Scaffold Graph File 2 (with fewer vertices)", ext, sg_file_2);
 
@@ -1493,9 +1493,9 @@ void dbsk3dapp_manager::match_shock_matching()
   if (!params.ask())
     return;
 
-  vcl_string strDirFile1 = dbul_get_dir_file (sg_file_1);
+  std::string strDirFile1 = dbul_get_dir_file (sg_file_1);
   ///spvr_->p1()->oper_param_.strDirFile_ = strDirFile1;
-  vcl_string strDirFile2 = dbul_get_dir_file (sg_file_2);
+  std::string strDirFile2 = dbul_get_dir_file (sg_file_2);
   ///spvr_->p2()->oper_param_.strDirFile_ = strDirFile2;
 
   ///spvr_->shock_match (b_rigid_trans);
@@ -1597,7 +1597,7 @@ void dbsk3dapp_manager::option_do_validations()
 void dbsk3dapp_manager::draw_object_boundary_options()
 { 
   vgui_dialog params ("Object Boundary Mesh Drawing Options");
-  vcl_vector<vcl_string> color_scheme_choices;
+  std::vector<std::string> color_scheme_choices;
   color_scheme_choices.push_back ("Default Color with Lighting");
   color_scheme_choices.push_back ("Color by Propagation Color Code");
   color_scheme_choices.push_back ("Color by Group");
@@ -1659,14 +1659,14 @@ void dbsk3dapp_manager::help_vxl_object_size()
 
   vgui_dialog params("VXL Object Memory Size");
   
-  vcl_sprintf (s, "sizeof (vgl_point_3d<double>): %d", (int)sizeof (vgl_point_3d<double>));
+  std::sprintf (s, "sizeof (vgl_point_3d<double>): %d", (int)sizeof (vgl_point_3d<double>));
   params.message (s);
-  vcl_sprintf (s, "sizeof (vcl_vector<int>): %d", (int)sizeof (vcl_vector<int>));
+  std::sprintf (s, "sizeof (std::vector<int>): %d", (int)sizeof (std::vector<int>));
   params.message (s);
-  vcl_sprintf (s, "sizeof (vcl_map<int, double>): %d", (int)sizeof (vcl_map<int, double>));
+  std::sprintf (s, "sizeof (std::map<int, double>): %d", (int)sizeof (std::map<int, double>));
   params.message (s);
 
-  vcl_sprintf (s, "See commandline output for details.");
+  std::sprintf (s, "See commandline output for details.");
   params.message (s);
 
   dbmsh3d_hypg_print_object_size ();  
@@ -1681,23 +1681,23 @@ void dbsk3dapp_manager::help_object_size()
 
   vgui_dialog params("Object Memory Size");
   
-  vcl_sprintf (s, "sizeof (dbmsh3d_vertex): %d", (int)sizeof (dbmsh3d_vertex));
+  std::sprintf (s, "sizeof (dbmsh3d_vertex): %d", (int)sizeof (dbmsh3d_vertex));
   params.message (s);
   
-  vcl_sprintf (s, "sizeof (dbsk3d_fs_vertex): %d", (int)sizeof (dbsk3d_fs_vertex));
+  std::sprintf (s, "sizeof (dbsk3d_fs_vertex): %d", (int)sizeof (dbsk3d_fs_vertex));
   params.message (s);
-  vcl_sprintf (s, "sizeof (dbsk3d_fs_edge): %d", (int)sizeof (dbsk3d_fs_edge));
+  std::sprintf (s, "sizeof (dbsk3d_fs_edge): %d", (int)sizeof (dbsk3d_fs_edge));
   params.message (s);
-  vcl_sprintf (s, "sizeof (dbsk3d_fs_face): %d", (int)sizeof (dbsk3d_fs_face));
+  std::sprintf (s, "sizeof (dbsk3d_fs_face): %d", (int)sizeof (dbsk3d_fs_face));
   params.message (s);
-  vcl_sprintf (s, "sizeof (dbsk3d_ms_node): %d", (int)sizeof (dbsk3d_ms_node));
+  std::sprintf (s, "sizeof (dbsk3d_ms_node): %d", (int)sizeof (dbsk3d_ms_node));
   params.message (s);
-  vcl_sprintf (s, "sizeof (dbsk3d_ms_curve): %d", (int)sizeof (dbsk3d_ms_curve));
+  std::sprintf (s, "sizeof (dbsk3d_ms_curve): %d", (int)sizeof (dbsk3d_ms_curve));
   params.message (s);
-  vcl_sprintf (s, "sizeof (dbsk3d_ms_sheet): %d", (int)sizeof (dbsk3d_ms_sheet));
+  std::sprintf (s, "sizeof (dbsk3d_ms_sheet): %d", (int)sizeof (dbsk3d_ms_sheet));
   params.message (s);
 
-  vcl_sprintf (s, "See commandline output for details.");
+  std::sprintf (s, "See commandline output for details.");
   params.message (s);
 
   pv1_->print_mem_usage();
@@ -1729,10 +1729,10 @@ void dbsk3dapp_manager::help_test_object_size()
     double d;
   };
   class test_class_vector {
-    vcl_vector<void*> v;
+    std::vector<void*> v;
   };
   class test_class_map {
-    vcl_map<int,void*> m;
+    std::map<int,void*> m;
   };
 
   class test_class_virtual_fun {
@@ -1757,27 +1757,27 @@ void dbsk3dapp_manager::help_test_object_size()
 
   vgui_dialog params("Test Object Memory Size");
   
-  vcl_sprintf (s, "sizeof (test_class_empty): %d", (int)sizeof (test_class_empty));
+  std::sprintf (s, "sizeof (test_class_empty): %d", (int)sizeof (test_class_empty));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_void_pointer): %d", (int)sizeof (test_class_void_pointer));
+  std::sprintf (s, "sizeof (test_class_void_pointer): %d", (int)sizeof (test_class_void_pointer));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_bool): %d", (int)sizeof (test_class_bool));
+  std::sprintf (s, "sizeof (test_class_bool): %d", (int)sizeof (test_class_bool));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_int): %d", (int)sizeof (test_class_int));
+  std::sprintf (s, "sizeof (test_class_int): %d", (int)sizeof (test_class_int));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_float): %d", (int)sizeof (test_class_float));
+  std::sprintf (s, "sizeof (test_class_float): %d", (int)sizeof (test_class_float));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_double): %d", (int)sizeof (test_class_double));
+  std::sprintf (s, "sizeof (test_class_double): %d", (int)sizeof (test_class_double));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_vector): %d", (int)sizeof (test_class_vector));
+  std::sprintf (s, "sizeof (test_class_vector): %d", (int)sizeof (test_class_vector));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_map): %d", (int)sizeof (test_class_map));
+  std::sprintf (s, "sizeof (test_class_map): %d", (int)sizeof (test_class_map));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_virtual_fun): %d", (int)sizeof (test_class_virtual_fun));
+  std::sprintf (s, "sizeof (test_class_virtual_fun): %d", (int)sizeof (test_class_virtual_fun));
   params.message (s);
-  vcl_sprintf (s, "sizeof (test_class_virtual_destruct): %d", (int)sizeof (test_class_virtual_destruct));
+  std::sprintf (s, "sizeof (test_class_virtual_destruct): %d", (int)sizeof (test_class_virtual_destruct));
   params.message (s);  
-  vcl_sprintf (s, "sizeof (test_class): %d", (int)sizeof (test_class));
+  std::sprintf (s, "sizeof (test_class): %d", (int)sizeof (test_class));
   params.message (s);
 
   if (!params.ask())

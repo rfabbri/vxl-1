@@ -15,9 +15,9 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <dbinfo/dbinfo_feature_base.h>
 
 class dbinfo_intensity_feature : public dbinfo_feature_base
@@ -37,15 +37,15 @@ class dbinfo_intensity_feature : public dbinfo_feature_base
 
   //:scan the current frame and extract image data into cache
   virtual bool scan(const unsigned frame,
-                    vcl_vector<vgl_point_2d<unsigned> > const& points,
-                    vcl_vector<bool> const& valid,
+                    std::vector<vgl_point_2d<unsigned> > const& points,
+                    std::vector<bool> const& valid,
                     vil_image_resource_sptr const& image);
 
 
   //: Reconstruct an image snippet around the feature of size n_i x n_j. Offset the feature points by (i0, j0)
   virtual vil_image_resource_sptr
-    image(vcl_vector<vgl_point_2d<float> > const& points,
-          vcl_vector<bool> const& valid,
+    image(std::vector<vgl_point_2d<float> > const& points,
+          std::vector<bool> const& valid,
           unsigned n_i, unsigned n_j, float i0, float j0, bool background_noise = true);
   
 
@@ -58,7 +58,7 @@ class dbinfo_intensity_feature : public dbinfo_feature_base
     cast_to_intensity_feature() const { return this; }
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbinfo_intensity_feature";}
+  virtual std::string is_a() const {return "dbinfo_intensity_feature";}
 
  protected:
 

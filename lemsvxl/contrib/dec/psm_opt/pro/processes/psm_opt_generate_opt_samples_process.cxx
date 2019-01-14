@@ -10,7 +10,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -35,7 +35,7 @@ namespace psm_opt_generate_opt_samples_process_globals
   const unsigned int n_inputs_ = 4;
   const unsigned int n_outputs_ = 0;
   //Define parameters here
-  const vcl_string param_use_black_background_ =  "use_black_background";
+  const std::string param_use_black_background_ =  "use_black_background";
 }
 
 
@@ -50,14 +50,14 @@ bool psm_opt_generate_opt_samples_process_cons(bprb_func_process& pro)
   //input[2]: The image id string
   //input[3]: The scene
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
-  input_types_[2] = "vcl_string";
+  input_types_[2] = vcl_string";
   input_types_[3] = "psm_scene_base_sptr";
 
   // process has 0 outputs:
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -77,7 +77,7 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -90,14 +90,14 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
 
   vpgl_camera_double_sptr camera = pro.get_input<vpgl_camera_double_sptr>(1);
 
-  vcl_string image_id = pro.get_input<vcl_string>(2);
+  std::string image_id = pro.get_input<std::string>(2);
 
   psm_scene_base_sptr scene_base = pro.get_input<psm_scene_base_sptr>(3);
   psm_apm_type apm_type = scene_base->appearance_model_type();
 
   //vpgl_perspective_camera<double> *pcam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.ptr());
   //if (!pcam) {
-  //  vcl_cerr << "error: only perspective cameras allowed for now." << vcl_endl;
+  //  std::cerr << "error: only perspective cameras allowed for now." << std::endl;
   //  return false;
   //}
 
@@ -109,12 +109,12 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_generate_opt_rt_samples<PSM_APM_SIMPLE_GREY, PSM_AUX_OPT_RT_GREY>(*scene, camera.ptr(), *img, image_id, use_black_background);
@@ -127,12 +127,12 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_MOG_GREY>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_MOG_GREY>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_generate_opt_rt_samples<PSM_APM_MOG_GREY, PSM_AUX_OPT_RT_GREY>(*scene, camera.ptr(), *img, image_id, use_black_background);
@@ -146,14 +146,14 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> img_rgb = vil_view_as_rgb(*img);
 
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_generate_opt_rt_samples<PSM_APM_SIMPLE_RGB, PSM_AUX_OPT_RT_RGB>(*scene, camera.ptr(), img_rgb, image_id, use_black_background);
@@ -167,14 +167,14 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> img_rgb = vil_view_as_rgb(*img);
 
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_generate_opt_rt_samples<PSM_APM_MOG_RGB, PSM_AUX_OPT_RT_RGB>(*scene, camera.ptr(), img_rgb, image_id, use_black_background);
@@ -182,7 +182,7 @@ bool psm_opt_generate_opt_samples_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_opt_generate_opt_samples_process: unsupported appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_opt_generate_opt_samples_process: unsupported appearance model type " << apm_type << std::endl;
       return false;
   }
 

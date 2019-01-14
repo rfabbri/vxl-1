@@ -25,8 +25,8 @@
 #include <dbsksp/algo/dbsksp_edit_distance.h>
 
 #include <dborl/dborl_index_sptr.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 
 
@@ -59,8 +59,8 @@ protected:
   bool write_out();
 
   //: Load esf file
-  bool load_esf(const vcl_string& esf_file, dbsksp_xshock_graph_sptr& xgraph, 
-    bool use_existing_xgraph, const vcl_string& xgraph_extension);
+  bool load_esf(const std::string& esf_file, dbsksp_xshock_graph_sptr& xgraph, 
+    bool use_existing_xgraph, const std::string& xgraph_extension);
 
   //: Compute distance between two xgraphs - keeping the intermediate work
   double compute_edit_distance(const dbsksp_xshock_graph_sptr& xgraph1, 
@@ -83,29 +83,29 @@ protected:
   vox_xgraph_edit_distance_params_sptr params_;
 
   // Output folder
-  vcl_string output_folder_;
+  std::string output_folder_;
   
   //2) Output--------------------------------------------------------------------
 
   //3) Intermediate variables---------------------------------------------------
 
   //: List of object names
-  vcl_vector<vcl_string > model_object_names_;
+  std::vector<std::string > model_object_names_;
 
   //: List of esf files of the shock graphs
-  vcl_vector<vcl_string > model_esf_files_;
+  std::vector<std::string > model_esf_files_;
 
   // Query object name
-  vcl_string query_object_name_;
+  std::string query_object_name_;
 
   // Query esf file
-  vcl_string query_esf_file_;
+  std::string query_esf_file_;
 
   //: List of xgraphs to compute average on
-  vcl_vector<double > distance_query_to_models_;
+  std::vector<double > distance_query_to_models_;
 
   // basename (includes folder) to save everything
-  vcl_string output_prefix_;
+  std::string output_prefix_;
 };
 
 

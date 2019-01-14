@@ -1,9 +1,9 @@
 #pragma once
-#include <vcl_iostream.h>
-#include <vcl_cstddef.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <cstddef>
+#include <string>
+#include <vector>
+#include <map>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
@@ -71,8 +71,8 @@ public:
 
 
 	bbgm_wavelet_compressor(const vidl_istream_sptr& istr);
-	bbgm_wavelet_compressor(vcl_vector<vil_image_view<float>  > * image_vector):spatial_vector(image_vector){};
-	bbgm_wavelet_compressor(vcl_string path);
+	bbgm_wavelet_compressor(std::vector<vil_image_view<float>  > * image_vector):spatial_vector(image_vector){};
+	bbgm_wavelet_compressor(std::string path);
 	bbgm_wavelet_compressor(int argc, char* argv[]);
 // TODO
 //	bbgm_wavelet_compressor(char * path);
@@ -120,21 +120,21 @@ public:
 	}
 	
 	//utility methods
-	bool dumpVectorToDisk(vcl_string path,vcl_string base,vcl_string ext);
-	bool formFrameVector(const vidl_istream_sptr& istr,vcl_vector<vil_image_view<float> >* vec);
-	bool saveWaveletVector(vcl_string path,vcl_string base,vcl_string ext);
-	bool saveModel(bool waveletModel,vcl_string path);
-	bool loadModel(vcl_string path,bool isSpatialModel);
+	bool dumpVectorToDisk(std::string path,std::string base,std::string ext);
+	bool formFrameVector(const vidl_istream_sptr& istr,std::vector<vil_image_view<float> >* vec);
+	bool saveWaveletVector(std::string path,std::string base,std::string ext);
+	bool saveModel(bool waveletModel,std::string path);
+	bool loadModel(std::string path,bool isSpatialModel);
 
-	bool saveWaveletModel(vcl_string path);
-	bool loadWaveletModel(vcl_string path);
+	bool saveWaveletModel(std::string path);
+	bool loadWaveletModel(std::string path);
 	
 	void register_mean_viewers();
 	void register_variance_viewers();
 	void register_weight_viewers();
 	
 	bool clear_wavelet_vector();
-	vcl_string determine_prefix(unsigned int i,int maxn);
+	std::string determine_prefix(unsigned int i,int maxn);
 	void initParams(bbgm_wavelet_compressor_params* params =0);
 	void setParams(bbgm_wavelet_compressor_params* params){params_=params;}
 	
@@ -153,18 +153,18 @@ public:
 	
 	//background modeling methods
 	bool trainModel(int startFrame=0,int endFrame=0);
-	vil_image_view<float> displayParam(bool waveletModel,vcl_string attr,int comp_index,bool scale,vcl_string path);
+	vil_image_view<float> displayParam(bool waveletModel,std::string attr,int comp_index,bool scale,std::string path);
 	vil_image_view<float> measureBackground(bbgm_image_sptr bgm,vil_image_view<float> image,float tolerance,int quality,int frameNo);
 	bool saveBackgroundVideoSequence(int startFrame,int endFrame,float tolerance,bool useSpatialModel,
-														  vcl_string path,vcl_string base,vcl_string ext,int quality);
+														  std::string path,std::string base,std::string ext,int quality);
 	vil_image_view<float> pMap(){return pMap_;}
 	bool isValid_;
 	
 private:
 	vidl_istream_sptr video_stream;
-	vcl_vector<vil_image_view<float> > * spatial_vector;
-	vcl_vector<bbgm_vil_wavelet<float>* > * wavelet_vector;
-	vcl_map< int, vil_image_view<float> > * background_key_map;
+	std::vector<vil_image_view<float> > * spatial_vector;
+	std::vector<bbgm_vil_wavelet<float>* > * wavelet_vector;
+	std::map< int, vil_image_view<float> > * background_key_map;
 	bbgm_wavelet_compressor_params* params_;
 	float globalMax, globalMin;
 	vil_image_view<float> pMap_;
@@ -175,7 +175,7 @@ private:
 class bbgm_wavelet_compressor_params
 {
 public:
-	bbgm_wavelet_compressor_params(vcl_vector<int>& ints,vcl_vector<float>& floats ):intVector(ints),floatVector(floats){ }
+	bbgm_wavelet_compressor_params(std::vector<int>& ints,std::vector<float>& floats ):intVector(ints),floatVector(floats){ }
 	~bbgm_wavelet_compressor_params(){}
 	int waveletType() {return intVector.at(0);}
 	int maxComponents(){return intVector.at(1);}
@@ -192,8 +192,8 @@ private:
 	enum {GE_WAVELET,NCSECW_WAVELET,OCTI_WAVELET};
 
 protected:	
-	vcl_vector<int> intVector;
-	vcl_vector<float> floatVector;
+	std::vector<int> intVector;
+	std::vector<float> floatVector;
 
 
 };

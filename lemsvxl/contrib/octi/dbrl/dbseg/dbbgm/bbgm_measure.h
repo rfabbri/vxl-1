@@ -12,15 +12,15 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_2d.h>
 #include "bbgm_image_of.h"
 #include "bbgm_planes_to_sample.h"
 #include "bbgm_interpolate.h"
 #include <dbbgm/bbgm_wavelet.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <fstream>
+#include <sstream>
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -51,7 +51,7 @@ void measure(bbgm_image_of<dist_>& dimg,
 
   result.set_size(ni,nj,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   vector_ del(delta);
   typename bbgm_image_of<dist_>::iterator itr = dimg.begin();
@@ -86,7 +86,7 @@ void measure_sparse_image(bbgm_image_of<dist_>& dimg,
 
   result.set_size(ni*downFactor,nj*downFactor,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   vector_ del(delta);
   typename bbgm_image_of<dist_>::iterator itr = dimg.begin();
@@ -113,8 +113,8 @@ void measure_wv_lookup(bbgm_wavelet<bbgm_image_of<dist_> >& wavelet,
              const vil_image_view<typename dist_::math_type>& image,
              vil_image_view<typename dist_::math_type>& result,
              const measure_functor_& prop, const interp_functor_& interp_dist,
-             typename dist_::math_type delta,vcl_string data_path ,
-			 vcl_string frame_suffix,float threshold)
+             typename dist_::math_type delta,std::string data_path ,
+			 std::string frame_suffix,float threshold)
 			 
 {
   typedef typename dist_::vector_type vector_;
@@ -129,16 +129,16 @@ void measure_wv_lookup(bbgm_wavelet<bbgm_image_of<dist_> >& wavelet,
 
   result.set_size(ni,nj,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   vector_ del(delta);
   typename bbgm_image_of<dist_>::iterator itr = dimg->begin();
-  vcl_fstream file_op,file_look;
-  vcl_stringstream pointfilename,statsfilename;
+  std::fstream file_op,file_look;
+  std::stringstream pointfilename,statsfilename;
   pointfilename<<data_path<<"points_"<<frame_suffix<<".txt";
   statsfilename<<data_path<<"stats_"<<frame_suffix<<".txt";
-  file_op.open(pointfilename.str(),vcl_fstream::out);
-  file_look.open(statsfilename.str(),vcl_fstream::app);
+  file_op.open(pointfilename.str(),std::fstream::out);
+  file_look.open(statsfilename.str(),std::fstream::app);
   unsigned b_w=64;
   unsigned b_h=64;
   unsigned n_w=(unsigned)floor(double(result.ni())/b_w)+1;
@@ -163,12 +163,12 @@ void measure_wv_lookup(bbgm_wavelet<bbgm_image_of<dist_> >& wavelet,
 
 
 				  //if ((downFactor==1)||(!interp_dist(((float)i)/downFactor,((float)j)/downFactor,dimg,out_dist)))
-				  out_dist=(*dimg)(vcl_min(i/downFactor,dimg->ni()-1),vcl_min(j/downFactor,dimg->nj()-1));
+				  out_dist=(*dimg)(std::min(i/downFactor,dimg->ni()-1),std::min(j/downFactor,dimg->nj()-1));
 				  prop(out_dist, r_min, r_max, temp_val);
 
 
 				  // if (temp_val>=DBL_MAX)
-				  //  vcl_cout<<" error encountered at "<<i<<" "<<j<<vcl_endl;
+				  //  std::cout<<" error encountered at "<<i<<" "<<j<<std::endl;
 
 				  if ((temp_val<threshold)||(temp_val>=DBL_MAX)||(temp_val!=temp_val))  //prevent underflow
 				  {   dist_ tmp_dist;
@@ -191,12 +191,12 @@ void measure_wv_lookup(bbgm_wavelet<bbgm_image_of<dist_> >& wavelet,
 	  }
 	  start_x=0;
 	  start_y+=b_h;
-	//  vcl_cout<<"finished row of blocks "<<r<<vcl_endl;
+	//  std::cout<<"finished row of blocks "<<r<<std::endl;
   }
 
    file_op.close();
-   vcl_cout<<"Number of Wavelet Lookups is : "<<float(numLookup)/(result.ni()*result.nj())<<vcl_endl;
-   file_look<<wavelet.level_<<" "<<float(numLookup)/(result.ni()*result.nj())<<" "<<threshold<<vcl_endl;
+   std::cout<<"Number of Wavelet Lookups is : "<<float(numLookup)/(result.ni()*result.nj())<<std::endl;
+   file_look<<wavelet.level_<<" "<<float(numLookup)/(result.ni()*result.nj())<<" "<<threshold<<std::endl;
    file_look.close();
 #ifdef _CRTDBG_MAP_ALLOC
   _CrtDumpMemoryLeaks();
@@ -233,7 +233,7 @@ void measure_bkground(bbgm_image_of<dist_>& dimg,
 
   result.set_size(ni,nj,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   typename bbgm_image_of<dist_>::iterator itr = dimg.begin();
   for ( unsigned j=0; j<nj; ++j)
@@ -275,7 +275,7 @@ void measure(bbgm_image_of<dist_>& dimg,
 
   result.set_size(ni,nj,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   vector_ sample;
   typename bbgm_image_of<dist_>::iterator itr = dimg.begin();
@@ -319,7 +319,7 @@ void measure(bbgm_image_of<dist_>& dimg,
 
   result.set_size(ni,nj,1);
 
-  const vcl_ptrdiff_t pstep = image.planestep();
+  const std::ptrdiff_t pstep = image.planestep();
 
   vector_ sample;
   vector_ del(delta);

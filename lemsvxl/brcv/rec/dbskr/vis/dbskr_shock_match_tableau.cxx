@@ -4,9 +4,9 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -138,12 +138,12 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
 
   if (gesture_select(e)) {
     if (!sm_cor_) {
-      vcl_cout << "shock correspondence is not set!\n";
+      std::cout << "shock correspondence is not set!\n";
       return false;
     }
 
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ixx_, iyy_);
-    //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+    //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
     mouse_ppt_ = vgl_point_2d<double>(ixx_, iyy_);
     selected_dart_ = -1;
     selected_curve1_ = 0;
@@ -152,24 +152,24 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
     // check which bounding box contains the points
     bool first = false;
     if (shock1_box_->inside(ixx_, iyy_)) {
-      vcl_cout << " in box1!\n";
+      std::cout << " in box1!\n";
       first = true;
     }
     else if (shock2_box_->inside(ixx_, iyy_))
-      vcl_cout << " in box2!\n";
+      std::cout << " in box2!\n";
     else {
-      vcl_cout << " outside boxes!\n";  
+      std::cout << " outside boxes!\n";  
       return false;
     }
 
     // find the selected scurves in either of the shock graphs
-    vcl_vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
-    vcl_vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
-    vcl_vector<vcl_vector < vcl_pair <int,int> > >& map_list = sm_cor_->get_map_list();
-    vcl_vector<pathtable_key>& dart_path_map = sm_cor_->get_map();
+    std::vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
+    std::vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
+    std::vector<std::vector < std::pair <int,int> > >& map_list = sm_cor_->get_map_list();
+    std::vector<pathtable_key>& dart_path_map = sm_cor_->get_map();
     
     if (curve_list1.size() != curve_list2.size()) {
-      vcl_cout << "different sizes in shock curve correspondence, not drawing selected curves!\n";
+      std::cout << "different sizes in shock curve correspondence, not drawing selected curves!\n";
     } 
     else {  
       //int color = 0;
@@ -180,7 +180,7 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
         // check the plus and minus boundary points
-        vcl_vector< vcl_pair<int, int> > map = map_list[i];
+        std::vector< std::pair<int, int> > map = map_list[i];
         vgl_point_2d<double> mouse_pt1(ixx_-offset_x1, iyy_-offset_y1);
         vgl_point_2d<double> mouse_pt2(ixx_-offset_x2, iyy_-offset_y2);
         for (unsigned int j = 0; j<map.size(); j++) {
@@ -222,12 +222,12 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
           selected_curve2_ = curve_list2[selected_i];
           selected_match_->set_scurves(selected_curve1_, selected_curve2_);
           selected_match_->Match();
-          vcl_vector< vcl_pair<int, int> > map = map_list[selected_i];  // this map and selected_match_ map are identically same
-          vcl_vector< vcl_vector<double> >* DPCost = selected_match_->DPCost();
+          std::vector< std::pair<int, int> > map = map_list[selected_i];  // this map and selected_match_ map are identically same
+          std::vector< std::vector<double> >* DPCost = selected_match_->DPCost();
           selected_j = map.size()-1;
           int k = map[selected_j].first;
           int m = map[selected_j].second;
-          vcl_cout << "(" << k << ", " << m << ") " << (*DPCost)[k][m] << " ";
+          std::cout << "(" << k << ", " << m << ") " << (*DPCost)[k][m] << " ";
           //: set the points
           vgl_point_2d<double> pt_p_1(selected_curve1_->bdry_plus_pt(k).x(), selected_curve1_->bdry_plus_pt(k).y());
           vgl_point_2d<double> pt_p_2(selected_curve2_->bdry_plus_pt(m).x(), selected_curve2_->bdry_plus_pt(m).y());
@@ -249,18 +249,18 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
         }
 
         pathtable_key key = dart_path_map[selected_i];
-        vcl_vector<int> dart_list = sm_cor_->get_tree1()->get_dart_path(key.first.first, key.first.second);
-        //vcl_cout << "selected i: " << selected_i << " curve1: " << selected_curve1_ << " selected curve2: " << selected_curve2_ << "\ncurve1 darts:\t";
-        vcl_cout << "selected i: " << selected_i << " key: " << key.first.first << " " << key.first.second << " " << key.second.first << " " << key.second.second << "\ncurve1 darts:\t";
+        std::vector<int> dart_list = sm_cor_->get_tree1()->get_dart_path(key.first.first, key.first.second);
+        //std::cout << "selected i: " << selected_i << " curve1: " << selected_curve1_ << " selected curve2: " << selected_curve2_ << "\ncurve1 darts:\t";
+        std::cout << "selected i: " << selected_i << " key: " << key.first.first << " " << key.first.second << " " << key.second.first << " " << key.second.second << "\ncurve1 darts:\t";
         for (unsigned k = 0; k < dart_list.size(); k++)
-          vcl_cout << dart_list[k] << " ";
-        vcl_cout << "\ncurve2 darts:\t";
+          std::cout << dart_list[k] << " ";
+        std::cout << "\ncurve2 darts:\t";
         dart_list = sm_cor_->get_tree2()->get_dart_path(key.second.first, key.second.second);
         for (unsigned k = 0; k < dart_list.size(); k++)
-          vcl_cout << dart_list[k] << " ";
-        vcl_cout << "\n";
+          std::cout << dart_list[k] << " ";
+        std::cout << "\n";
 
-        //vcl_cout << "dart map key: " << dart_path_map[selected_i];
+        //std::cout << "dart map key: " << dart_path_map[selected_i];
         
         //output the shock curves on to text files for debug in MATLAB
         if (output_selected_scurve_info_){
@@ -271,31 +271,31 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
 
         float cost_d = sm_cor_->get_cost_d(selected_i);
         if (cost_d > 0)
-          vcl_cout << " dpmatch cost for this pair: " << cost_d << vcl_endl;
+          std::cout << " dpmatch cost for this pair: " << cost_d << std::endl;
         float cost = sm_cor_->get_cost(selected_i);
         if (sm_cor_->edit_params_.localized_edit_) {
           float cost_l = sm_cor_->get_cost_localized(selected_i);
-          vcl_cout << " localized cost + init_dr + init_alp (used in edit distance): " << cost << vcl_endl;
+          std::cout << " localized cost + init_dr + init_alp (used in edit distance): " << cost << std::endl;
         } else {
           if (cost > 0)
-            vcl_cout << " dpmatch cost + init_dr + init_alp (used in edit distance): " << cost << vcl_endl;
+            std::cout << " dpmatch cost + init_dr + init_alp (used in edit distance): " << cost << std::endl;
         }
         float cost_init_dr = sm_cor_->get_cost_init_dr(selected_i);
         //if (cost_init_dr > 0)
-          vcl_cout << " initial radius cost for this pair: " << cost_init_dr << vcl_endl;
+          std::cout << " initial radius cost for this pair: " << cost_init_dr << std::endl;
         float cost_init_alp = sm_cor_->get_cost_init_alp(selected_i);
         //if (cost_init_alp > 0)
-          vcl_cout << " initial alpha cost for this pair: " << cost_init_alp << "\n";
-        vcl_cout << "\t\tsc1 + length: " << selected_curve1_->boundary_plus_length() << " - length: " << selected_curve1_->boundary_minus_length() << vcl_endl;
-        vcl_cout << "\t\tsc2 + length: " << selected_curve2_->boundary_plus_length() << " - length: " << selected_curve2_->boundary_minus_length() << vcl_endl;
+          std::cout << " initial alpha cost for this pair: " << cost_init_alp << "\n";
+        std::cout << "\t\tsc1 + length: " << selected_curve1_->boundary_plus_length() << " - length: " << selected_curve1_->boundary_minus_length() << std::endl;
+        std::cout << "\t\tsc2 + length: " << selected_curve2_->boundary_plus_length() << " - length: " << selected_curve2_->boundary_minus_length() << std::endl;
       }
     }
     bvis1_manager::instance()->post_redraw();
   }
 
   if (gesture_select_next(e) && selected_i >= 0 && selected_j >= 0 && selected_curve1_ && selected_curve2_) {
-    vcl_vector< vcl_pair<int, int> >* map = selected_match_->finalMap();
-    vcl_vector< vcl_vector<double> >* DPCost = selected_match_->DPCost();
+    std::vector< std::pair<int, int> >* map = selected_match_->finalMap();
+    std::vector< std::vector<double> >* DPCost = selected_match_->DPCost();
 
     if (selected_j - 1 < 0)
       selected_j = map->size()-1;
@@ -304,12 +304,12 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
 
     int k = (*map)[selected_j].first;
     int m = (*map)[selected_j].second;
-    vcl_cout.precision(2);
-    vcl_cout << "(" << k << ", " << m << ") " << (*DPCost)[k][m] << " ";
+    std::cout.precision(2);
+    std::cout << "(" << k << ", " << m << ") " << (*DPCost)[k][m] << " ";
     if (selected_j < int(map->size()-1)) {
       int kp = (*map)[selected_j+1].first;
       int mp = (*map)[selected_j+1].second;
-      vcl_cout << "interval:\n";
+      std::cout << "interval:\n";
       selected_match_->computeIntervalCostPrint(k, kp, m, mp);
     }
 
@@ -336,18 +336,18 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
   }
 
   if (gesture_select_previous(e) && selected_i >= 0 && selected_j >= 0 && selected_curve1_ && selected_curve2_) {
-    vcl_vector< vcl_pair<int, int> >* map = selected_match_->finalMap();
-    vcl_vector< vcl_vector<double> >* DPCost = selected_match_->DPCost();
+    std::vector< std::pair<int, int> >* map = selected_match_->finalMap();
+    std::vector< std::vector<double> >* DPCost = selected_match_->DPCost();
     selected_j = (selected_j + 1)%(map->size());
     
     int k = (*map)[selected_j].first;
     int m = (*map)[selected_j].second;
-    vcl_cout.precision(2);
-    vcl_cout << "(" << k << ", " << m << ") cost: " << (*DPCost)[k][m] << " ";
+    std::cout.precision(2);
+    std::cout << "(" << k << ", " << m << ") cost: " << (*DPCost)[k][m] << " ";
     if (selected_j < int(map->size()-1)) {
       int kp = (*map)[selected_j+1].first;
       int mp = (*map)[selected_j+1].second;
-      vcl_cout << "interval:\n";
+      std::cout << "interval:\n";
       selected_match_->computeIntervalCostPrint(k, kp, m, mp);
     }
 
@@ -375,24 +375,24 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
 
   if (gesture_splice1(e)) {
     if (!sm_cor_) {
-      vcl_cout << "shock correspondence is not set!\n";
+      std::cout << "shock correspondence is not set!\n";
       return false;
     }
 
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ixx_, iyy_);
-    //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+    //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
     mouse_ppt_ = vgl_point_2d<double>(ixx_, iyy_);
 
     // check which bounding box contains the points
     bool first = false;
     if (shock1_box_->inside(ixx_, iyy_)) {
-      vcl_cout << " in box1!\n";
+      std::cout << " in box1!\n";
       first = true;
     }
     else if (shock2_box_->inside(ixx_, iyy_))
-      vcl_cout << " in box2!\n";
+      std::cout << " in box2!\n";
     else {
-      vcl_cout << " outside boxes!\n";
+      std::cout << " outside boxes!\n";
       //selected_curve1_ = 0;
       //selected_curve2_ = 0;
       selected_dart_ = -1;
@@ -440,7 +440,7 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
     }
     if (selected_dart_ >= 0) {
       selected_dart_mate_ = tree->mate(selected_dart_);
-      vcl_cout << "selected_dart: " << selected_dart_ << " splice cost: " << tree->delete_cost(selected_dart_) << " contract cost: " << tree->contract_cost(selected_dart_) << vcl_endl; 
+      std::cout << "selected_dart: " << selected_dart_ << " splice cost: " << tree->delete_cost(selected_dart_) << " contract cost: " << tree->contract_cost(selected_dart_) << std::endl; 
       delete_cost_mate_ = tree->delete_cost(selected_dart_mate_);
       contract_cost_mate_ = tree->contract_cost(selected_dart_mate_);
       
@@ -475,9 +475,9 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
 
   if (gesture_match_spliced_leaves(e)) {
     if (!selected_curve1_) 
-      vcl_cout << "please select a spliced branch from the first tree!\n";
+      std::cout << "please select a spliced branch from the first tree!\n";
     else if (!selected_curve2_)
-      vcl_cout << "please select a spliced branch from the second tree!\n";
+      std::cout << "please select a spliced branch from the second tree!\n";
     else {
       float init_dr, init_phi, coarse_match_cost, loc_match_cost = 0.0f;
       
@@ -491,7 +491,7 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
       init_dr = selected_match_->init_dr();
       init_phi = selected_match_->init_phi();
       coarse_match_cost = selected_match_->finalCost();
-      vcl_vector<vcl_pair<int,int> > fmap = *selected_match_->finalMap();
+      std::vector<std::pair<int,int> > fmap = *selected_match_->finalMap();
 
       if (sm_cor_->edit_params_.localized_edit_ && selected_curve2_pair_ && selected_curve1_pair_) {  
         dbskr_localize_match lmatch(selected_curve1_, selected_curve2_, 
@@ -500,32 +500,32 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
                                     fmap, (float)sm_cor_->edit_params_.curve_matching_R_);
         lmatch.match();
         loc_match_cost = lmatch.finalCost() + init_dr + init_phi;
-        vcl_cout << "localized match cost: " << loc_match_cost << " total cost: " << loc_match_cost + init_dr + init_phi << "\n";
+        std::cout << "localized match cost: " << loc_match_cost << " total cost: " << loc_match_cost + init_dr + init_phi << "\n";
       }
 
-      vcl_cout << "dpmatch cost for this pair: " << coarse_match_cost << vcl_endl;
+      std::cout << "dpmatch cost for this pair: " << coarse_match_cost << std::endl;
       if (sm_cor_->edit_params_.localized_edit_ && selected_curve2_pair_ && selected_curve1_pair_) {
-        vcl_cout << "localized cost + init_dr + init_alp (used in edit distance): " << loc_match_cost + init_dr + init_phi << vcl_endl;
+        std::cout << "localized cost + init_dr + init_alp (used in edit distance): " << loc_match_cost + init_dr + init_phi << std::endl;
       }
-      vcl_cout << "initial radius cost for this pair: " << init_dr << vcl_endl;
-      vcl_cout << "initial alpha cost for this pair: " << init_phi << vcl_endl;
-      vcl_cout << "\t\tsc1 + length: " << selected_curve1_->boundary_plus_length() << " - length: " << selected_curve1_->boundary_minus_length();
-      vcl_cout << " + nbr pts: " << selected_curve1_->bdry_plus().size() << " - nbr pts: " << selected_curve1_->bdry_minus().size() << vcl_endl;
-      vcl_cout << "\t\tsc2 + length: " << selected_curve2_->boundary_plus_length() << " - length: " << selected_curve2_->boundary_minus_length();
-      vcl_cout << " + nbr pts: " << selected_curve2_->bdry_plus().size() << " - nbr pts: " << selected_curve2_->bdry_minus().size() << vcl_endl;
+      std::cout << "initial radius cost for this pair: " << init_dr << std::endl;
+      std::cout << "initial alpha cost for this pair: " << init_phi << std::endl;
+      std::cout << "\t\tsc1 + length: " << selected_curve1_->boundary_plus_length() << " - length: " << selected_curve1_->boundary_minus_length();
+      std::cout << " + nbr pts: " << selected_curve1_->bdry_plus().size() << " - nbr pts: " << selected_curve1_->bdry_minus().size() << std::endl;
+      std::cout << "\t\tsc2 + length: " << selected_curve2_->boundary_plus_length() << " - length: " << selected_curve2_->boundary_minus_length();
+      std::cout << " + nbr pts: " << selected_curve2_->bdry_plus().size() << " - nbr pts: " << selected_curve2_->bdry_minus().size() << std::endl;
 
       if (sm_cor_->edit_params_.localized_edit_ && selected_curve2_pair_ && selected_curve1_pair_) {
-        vcl_cout << "\t\tsc1 dense + length: " << selected_curve1_pair_->dense->boundary_plus_length() << " - length: " << selected_curve1_pair_->dense->boundary_minus_length();
-        vcl_cout << " + nbr pts: " << selected_curve1_pair_->dense->bdry_plus().size() << " - nbr pts: " << selected_curve1_pair_->dense->bdry_minus().size() << vcl_endl;
-        vcl_cout << "\t\tsc2 + length: " << selected_curve2_pair_->dense->boundary_plus_length() << " - length: " << selected_curve2_pair_->dense->boundary_minus_length();
-        vcl_cout << " + nbr pts: " << selected_curve2_pair_->dense->bdry_plus().size() << " - nbr pts: " << selected_curve2_pair_->dense->bdry_minus().size() << vcl_endl;
+        std::cout << "\t\tsc1 dense + length: " << selected_curve1_pair_->dense->boundary_plus_length() << " - length: " << selected_curve1_pair_->dense->boundary_minus_length();
+        std::cout << " + nbr pts: " << selected_curve1_pair_->dense->bdry_plus().size() << " - nbr pts: " << selected_curve1_pair_->dense->bdry_minus().size() << std::endl;
+        std::cout << "\t\tsc2 + length: " << selected_curve2_pair_->dense->boundary_plus_length() << " - length: " << selected_curve2_pair_->dense->boundary_minus_length();
+        std::cout << " + nbr pts: " << selected_curve2_pair_->dense->bdry_plus().size() << " - nbr pts: " << selected_curve2_pair_->dense->bdry_minus().size() << std::endl;
       }
     }
   }
 
   if (gesture_splice2(e) && selected_dart_ >= 0) {
     selected_dart_pt_ = selected_dart_end_;
-    vcl_cout << "selected_mate: " << selected_dart_mate_ << " splice cost: " << delete_cost_mate_ << " contract cost: " << contract_cost_mate_ << vcl_endl; 
+    std::cout << "selected_mate: " << selected_dart_mate_ << " splice cost: " << delete_cost_mate_ << " contract cost: " << contract_cost_mate_ << std::endl; 
 
     //output the shock curves on to text files for debug in MATLAB
     if (output_selected_scurve_info_){
@@ -547,16 +547,16 @@ bool dbskr_shock_match_tableau::handle( const vgui_event & e )
   return false;
 }
 
-void dbskr_shock_match_tableau::write_shock_alignment(vcl_vector<vcl_pair<int,int> > align, vcl_string fname)
+void dbskr_shock_match_tableau::write_shock_alignment(std::vector<std::pair<int,int> > align, std::string fname)
 {
   //output the alignment mapping
-  vcl_ofstream outfp(fname.c_str(), vcl_ios::out);
+  std::ofstream outfp(fname.c_str(), std::ios::out);
 
   for (unsigned int j = 0; j<align.size(); j++) {
     int k = align[j].first;
     int m = align[j].second;
 
-    outfp << k << " " << m << vcl_endl;
+    outfp << k << " " << m << std::endl;
   }
 
   outfp.close();
@@ -565,7 +565,7 @@ void dbskr_shock_match_tableau::write_shock_alignment(vcl_vector<vcl_pair<int,in
 void dbskr_shock_match_tableau::draw_render()
 {
   if (!sm_cor_) {
-    vcl_cout << "shock correspondence is not set!\n";
+    std::cout << "shock correspondence is not set!\n";
     return;
   }
 
@@ -576,22 +576,22 @@ void dbskr_shock_match_tableau::draw_render()
 
   if (display_corresponding_bnd_points_)
   {
-    vcl_vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
-    vcl_vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
-    vcl_vector<vcl_vector < vcl_pair <int,int> > >& map_list = sm_cor_->get_map_list();
+    std::vector<dbskr_scurve_sptr>& curve_list1 = sm_cor_->get_curve_list1();
+    std::vector<dbskr_scurve_sptr>& curve_list2 = sm_cor_->get_curve_list2();
+    std::vector<std::vector < std::pair <int,int> > >& map_list = sm_cor_->get_map_list();
 
     //// draw corresponding points on the boundary curves in changing color
     if ((curve_list1.size() != curve_list2.size()) || (curve_list1.size() != map_list.size())) {
-      vcl_cout << "different sizes in shock curve correspondence, not drawing boundary curves!\n";
+      std::cout << "different sizes in shock curve correspondence, not drawing boundary curves!\n";
     } 
     else {  // draw corresponding shock curves
       int color = 0;
       for (unsigned int i = 0; i<curve_list1.size(); i++) {
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
-        vcl_vector< vcl_pair<int, int> > map = map_list[i];
+        std::vector< std::pair<int, int> > map = map_list[i];
 
-        //vcl_cout << "curve1 size: " << sc1->num_points() << " curve2 size: " << sc2->num_points() << " drawing " << map.size() << " pair of points\n";
+        //std::cout << "curve1 size: " << sc1->num_points() << " curve2 size: " << sc2->num_points() << " drawing " << map.size() << " pair of points\n";
 
         if (selected_curve1_ == sc1 && selected_curve2_ == sc2) {
         for (unsigned int j = 0; j<map.size(); j++) {
@@ -677,14 +677,14 @@ void dbskr_shock_match_tableau::draw_original_shock_graphs()
 
   //temp data structures
   dbsk2d_shock_node_sptr start_node;
-  vcl_vector<dbsk2d_shock_edge_sptr> edges;
-  vcl_vector<int> dart_list;
+  std::vector<dbsk2d_shock_edge_sptr> edges;
+  std::vector<int> dart_list;
 
   //---------------
   // Shock graph 1
   //---------------
 
-  vcl_map<int, int> edge_color_map1;
+  std::map<int, int> edge_color_map1;
  
   // iterate over the darts of this tree to draw everything
   for (int i=0; i < tree1->size(); i++)
@@ -728,7 +728,7 @@ void dbskr_shock_match_tableau::draw_original_shock_graphs()
   // Shock graph 2
   //---------------
 
-  vcl_map<int, int> edge_color_map2;
+  std::map<int, int> edge_color_map2;
 
   // iterate over the darts of this tree to draw everything
   for (int i=0; i<tree2->size(); i++)
@@ -789,20 +789,20 @@ void dbskr_shock_match_tableau::draw_matched_shock_graphs()
   dbsk2d_shock_graph_sptr sg2 = tree2->get_shock_graph();
 
   if (sg1 == NULL || sg2 == NULL || tree1 == NULL || tree2 == NULL) {
-    vcl_cout << "shock graphs or trees are not set!\n";
+    std::cout << "shock graphs or trees are not set!\n";
     return;
   }
 
   //get dart path mapping from the shock correspondence 
-  vcl_vector<pathtable_key>& dart_path_map = sm_cor_->get_map();
+  std::vector<pathtable_key>& dart_path_map = sm_cor_->get_map();
 
   // assign unique colors to each corresponding path in each shock graph
-  vcl_map<int, int> edge_color_map1, edge_color_map2;
+  std::map<int, int> edge_color_map1, edge_color_map2;
 
   //temp data structures
   dbsk2d_shock_node_sptr start_node;
-  vcl_vector<dbsk2d_shock_edge_sptr> edges;
-  vcl_vector<int> dart_list;
+  std::vector<dbsk2d_shock_edge_sptr> edges;
+  std::vector<int> dart_list;
 
   // go over all the corresponding paths and draw the corresponding 
   // boundary curves visual fragments and intrinsic fragement coordinates
@@ -829,11 +829,11 @@ void dbskr_shock_match_tableau::draw_matched_shock_graphs()
 
     dbskr_scurve_sptr sc1;
     if (sm_cor_->edit_params_.circular_ends_)
-      sc1 = dbskr_compute_scurve(start_node, edges, tree1->leaf(dart_list.back()), true, true, vcl_min(tree1->scurve_sample_ds_, tree1->interpolate_ds_), tree1->scurve_sample_ds_);
+      sc1 = dbskr_compute_scurve(start_node, edges, tree1->leaf(dart_list.back()), true, true, std::min(tree1->scurve_sample_ds_, tree1->interpolate_ds_), tree1->scurve_sample_ds_);
     else
-      sc1 = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min(tree1->scurve_sample_ds_, tree1->interpolate_ds_), tree1->scurve_sample_ds_);
+      sc1 = dbskr_compute_scurve(start_node, edges, false, true, true, std::min(tree1->scurve_sample_ds_, tree1->interpolate_ds_), tree1->scurve_sample_ds_);
 
-    //vcl_cout << "in draw matched shocks, key first: " << key.first.first << ", " << key.first.second << " sc1 # pts: " << sc1->num_points() << " ";
+    //std::cout << "in draw matched shocks, key first: " << key.first.first << ", " << key.first.second << " sc1 # pts: " << sc1->num_points() << " ";
 
     //---------------
     // Shock graph 2
@@ -853,10 +853,10 @@ void dbskr_shock_match_tableau::draw_matched_shock_graphs()
       edge_color_map2[edges[j]->id()] = color;
 
     if (sm_cor_->edit_params_.circular_ends_)
-      sc2 = dbskr_compute_scurve(start_node, edges, tree2->leaf(dart_list.back()), true, true, vcl_min(tree2->scurve_sample_ds_, tree2->interpolate_ds_), tree2->scurve_sample_ds_);
+      sc2 = dbskr_compute_scurve(start_node, edges, tree2->leaf(dart_list.back()), true, true, std::min(tree2->scurve_sample_ds_, tree2->interpolate_ds_), tree2->scurve_sample_ds_);
     else
-      sc2 = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min(tree2->scurve_sample_ds_, tree2->interpolate_ds_), tree2->scurve_sample_ds_);
-    //vcl_cout << ", key second: " << key.second.first << ", " << key.second.second << " sc2 # pts: " << sc2->num_points() << "\n";
+      sc2 = dbskr_compute_scurve(start_node, edges, false, true, true, std::min(tree2->scurve_sample_ds_, tree2->interpolate_ds_), tree2->scurve_sample_ds_);
+    //std::cout << ", key second: " << key.second.first << ", " << key.second.second << " sc2 # pts: " << sc2->num_points() << "\n";
     
     //-----------------------
     // Now do all the drawing
@@ -931,7 +931,7 @@ draw_boundary_curves(dbskr_scurve_sptr sk_path, int color,
 }
 
 void dbskr_shock_match_tableau::
-draw_shock_graph(dbsk2d_shock_graph_sptr sg, vcl_map<int, int> &edge_color_map, 
+draw_shock_graph(dbsk2d_shock_graph_sptr sg, std::map<int, int> &edge_color_map, 
                  double off_x, double off_y)
 {
   // draw shock graph edges
@@ -943,7 +943,7 @@ draw_shock_graph(dbsk2d_shock_graph_sptr sg, vcl_map<int, int> &edge_color_map,
 
     //use the correspondence color scheme
     int color;
-    vcl_map<int, int>::iterator iter = edge_color_map.find(selm->id());
+    std::map<int, int>::iterator iter = edge_color_map.find(selm->id());
     if (iter == edge_color_map.end() ){
       if (display_spliced_edges) 
         color = 100;                  // if no correspondence assign black
@@ -987,7 +987,7 @@ draw_shock_graph(dbsk2d_shock_graph_sptr sg, vcl_map<int, int> &edge_color_map,
 
 float rescale(float x)
 {
-  return vcl_sqrt(2*x-x*x);
+  return std::sqrt(2*x-x*x);
 }
 
 void dbskr_shock_match_tableau::
@@ -1098,7 +1098,7 @@ class dbskr_sm_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbskr_sm_tableau_set_display_params_command(dbskr_shock_match_tableau* tab, 
-    const vcl_string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -1114,14 +1114,14 @@ class dbskr_sm_tableau_set_display_params_command : public vgui_command
 
   dbskr_shock_match_tableau *match_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 void 
 dbskr_shock_match_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_spliced_edges)?on:off)+"Show Spliced edges", 
                new dbskr_sm_tableau_toggle_command(this, &display_spliced_edges));

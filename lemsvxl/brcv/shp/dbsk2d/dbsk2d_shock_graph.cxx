@@ -59,7 +59,7 @@ dbsk2d_shock_graph::get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, 
 }
 
 dbsk2d_shock_node_sptr 
-dbsk2d_shock_graph::get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, dbsk2d_shock_edge_sptr e, vcl_vector<dbsk2d_shock_edge_sptr>& edges)
+dbsk2d_shock_graph::get_other_end_merging_degree_twos(dbsk2d_shock_node_sptr n, dbsk2d_shock_edge_sptr e, std::vector<dbsk2d_shock_edge_sptr>& edges)
 {
   if (!n || !e)
     return 0;

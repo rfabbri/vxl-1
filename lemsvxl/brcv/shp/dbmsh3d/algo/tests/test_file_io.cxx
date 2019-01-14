@@ -7,7 +7,7 @@
 //  To debug in Visual studio, put argument
 //  test_file_io D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbmsh3d\algo\tests\data
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <testlib/testlib_test.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbmsh3d/algo/dbmsh3d_sg3pi_algo.h>
@@ -17,7 +17,7 @@ void test_ply_io()
   // test writing
   TEST("Read .PLY file", true, true);
 
-  vcl_string in_file[12];
+  std::string in_file[12];
   //
   in_file[0] = "C:/projects/ply-tools/Nbunny/BAMbunny.ply";
   //in_file[0] = "C:/projects/ply-tools/Nbunny/cube.ply";
@@ -32,15 +32,15 @@ void test_ply_io()
   in_file[9] = "C:/projects/ply-tools/Nbunny/lbmbunny.ply";
   in_file[10] = "C:/projects/ply-tools/Nbunny/lbpbunny.ply"; // failed
   in_file[11] = "C:/projects/ply-tools/Nbunny/lbubunny.ply";
-  //vcl_string in_file = "C:/projects/ply-tools/Nbunny/dodecahedron.ply";
-  //vcl_string in_file = "C:/projects/ply-tools/Nbunny/triangle.ply";
+  //std::string in_file = "C:/projects/ply-tools/Nbunny/dodecahedron.ply";
+  //std::string in_file = "C:/projects/ply-tools/Nbunny/triangle.ply";
 
 
 for (int i = 0; i<12; ++i)
 {
-  vcl_cout << "\n\nFile = " << in_file[i] << vcl_endl;
+  std::cout << "\n\nFile = " << in_file[i] << std::endl;
 
-  vcl_string loaded_file = in_file[i];
+  std::string loaded_file = in_file[i];
 
 
   dbmsh3d_mesh mesh;
@@ -49,12 +49,12 @@ for (int i = 0; i<12; ++i)
   dbmsh3d_load_ply (&mesh, loaded_file.c_str());
 
 
-  vcl_cout << "Print out about mesh" << vcl_endl;
-  vcl_cout << "Number of vertices = " << mesh.vertexmap().size() << vcl_endl;
-  vcl_cout << "Number of faces = " << mesh.facemap().size() << vcl_endl;
+  std::cout << "Print out about mesh" << std::endl;
+  std::cout << "Number of vertices = " << mesh.vertexmap().size() << std::endl;
+  std::cout << "Number of faces = " << mesh.facemap().size() << std::endl;
 
   // now test saving the file
-  vcl_string out_file = "C:/projects/ply-tools/Nbunny/test_saving.ply";
+  std::string out_file = "C:/projects/ply-tools/Nbunny/test_saving.ply";
   dbmsh3d_save_ply(& mesh, out_file.c_str(), false);
 
 
@@ -62,9 +62,9 @@ for (int i = 0; i<12; ++i)
   dbmsh3d_mesh mesh2;
   dbmsh3d_load_ply (&mesh2, out_file.c_str());
 
-  vcl_cout << "Print out about mesh 2" << vcl_endl;
-  vcl_cout << "Number of vertices = " << mesh2.vertexmap().size() << vcl_endl;
-  vcl_cout << "Number of faces = " << mesh2.facemap().size() << vcl_endl;
+  std::cout << "Print out about mesh 2" << std::endl;
+  std::cout << "Number of vertices = " << mesh2.vertexmap().size() << std::endl;
+  std::cout << "Number of faces = " << mesh2.facemap().size() << std::endl;
 }
   
   return;
@@ -72,24 +72,24 @@ for (int i = 0; i<12; ++i)
 
 void test_ply_io_richmesh()
 {
-  vcl_string in_file = "C:/projects/lemsvxl/src/brcv/shp/dbmsh3d/tests/test_data/cube_w_verror.ply";
+  std::string in_file = "C:/projects/lemsvxl/src/brcv/shp/dbmsh3d/tests/test_data/cube_w_verror.ply";
  
 
   // load rich mesh
   dbmsh3d_richmesh mesh;
-  vcl_vector<vcl_string > vertex_property_list;
+  std::vector<std::string > vertex_property_list;
   vertex_property_list.push_back("verror");
   
-  vcl_vector<vcl_string > face_property_list;
+  std::vector<std::string > face_property_list;
   face_property_list.clear();
 
   dbmsh3d_load_ply(&mesh, in_file.c_str(), vertex_property_list, face_property_list);
 
   // print out the properties of each vertex
-  mesh.print_summary(vcl_cout);
+  mesh.print_summary(std::cout);
 
   // save the mesh again to compare results
-  vcl_string out_file =
+  std::string out_file =
     "C:/projects/lemsvxl/src/brcv/shp/dbmsh3d/tests/test_data/resaved_cube_w_verror.ply";
   dbmsh3d_save_ply(&mesh, out_file.c_str(), 
     vertex_property_list, face_property_list, ASCII);
@@ -100,15 +100,15 @@ void test_ply_io_richmesh()
 
 void test_ply_io_richmesh2()
 {
-  vcl_string richmesh_file = "sample_richmesh.ply";
+  std::string richmesh_file = "sample_richmesh.ply";
   
  
   // save rich mesh
   dbmsh3d_richmesh richmesh;
-  vcl_vector<vcl_string > vertex_property_list;
+  std::vector<std::string > vertex_property_list;
   vertex_property_list.push_back("vertex_weight");
   
-  vcl_vector<vcl_string > face_property_list;
+  std::vector<std::string > face_property_list;
   face_property_list.push_back("face_weight");
 
 
@@ -141,7 +141,7 @@ void test_ply_io_richmesh2()
   f0->add_scalar_property("face_weight", 3.7);
 
   // print out the properties of each vertex
-  richmesh.print_summary(vcl_cout);
+  richmesh.print_summary(std::cout);
 
 
   // save the constructed mesh to a file
@@ -156,10 +156,10 @@ void test_ply_io_richmesh2()
     vertex_property_list, face_property_list);
 
   // print out the properties of each vertex
-  richmesh2.print_summary(vcl_cout);
+  richmesh2.print_summary(std::cout);
 
   // write the file out again
-  vcl_string richmesh2_file = "sample_richmesh_saved_again.ply";
+  std::string richmesh2_file = "sample_richmesh_saved_again.ply";
   dbmsh3d_save_ply(&richmesh2, richmesh2_file.c_str(), 
     vertex_property_list, face_property_list, ASCII);
 
@@ -180,7 +180,7 @@ void test_off_read ()
 
 //: Test reading Shape Grabber raw scan data file
 //  into vectors of scanlines of points.
-void test_3pi_read (vcl_string file_3pi)
+void test_3pi_read (std::string file_3pi)
 {
   dbmsh3d_sg3pi* sg3pi = new dbmsh3d_sg3pi;
   bool result = dbmsh3d_load_sg3pi (sg3pi, file_3pi.c_str());
@@ -193,7 +193,7 @@ void test_3pi_read (vcl_string file_3pi)
 MAIN_ARGS (test_file_io)
 {
   //read data file from specified position.
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32
@@ -204,7 +204,7 @@ MAIN_ARGS (test_file_io)
   }
 
   testlib_test_start ("Mesh file I/O");
-  vcl_string file_3pi = dir_base + "test1.3pi";
+  std::string file_3pi = dir_base + "test1.3pi";
   test_3pi_read (file_3pi);
 
   

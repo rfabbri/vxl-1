@@ -14,7 +14,7 @@
 #include <dbsksp/dbsksp_shapelet.h>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbsksp/algo/dbsksp_shock_path.h>
 
@@ -22,20 +22,20 @@
 //: \relates dbsksp_xshock_graph
 //: Compute a shock curve from a shock graph path
 dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_node_sptr& start_node,
-                                       const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+                                       const std::vector<dbsksp_xshock_edge_sptr>& path,
                                        double sample_ds)
 {
     // compute samples from the given path
-  vcl_vector<dbsksp_xshock_node_descriptor > xsamples;
+  std::vector<dbsksp_xshock_node_descriptor > xsamples;
   dbsksp_xgraph_algos::compute_xsamples(start_node, path, sample_ds/4, xsamples);
 
   // Resample xsample list to uniform sampling
-  vcl_vector<double > run_lengths;
+  std::vector<double > run_lengths;
   run_lengths.clear();
   run_lengths.reserve(xsamples.size());
   
   ////
-  //vcl_vector<bgld_biarc > chord_curves;
+  //std::vector<bgld_biarc > chord_curves;
   //chord_curves.clear();
   //chord_curves.reserve(xsamples.size());
 
@@ -49,7 +49,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 
     // forward direction
     {
-      vcl_vector<dbsksp_xshock_node_descriptor > ordered_xsamples;
+      std::vector<dbsksp_xshock_node_descriptor > ordered_xsamples;
       ordered_xsamples.reserve(xsamples.size());
       ordered_xsamples.push_back(cur_xsample);
       for (unsigned i =1; (i+1) < xsamples.size(); ++i)
@@ -78,7 +78,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 
     // Reverse direction
     {
-      vcl_vector<dbsksp_xshock_node_descriptor > rev_ordered_xsamples;
+      std::vector<dbsksp_xshock_node_descriptor > rev_ordered_xsamples;
       rev_ordered_xsamples.reserve(xsamples.size());
       cur_xsample = xsamples.back();
       rev_ordered_xsamples.push_back(cur_xsample);
@@ -145,14 +145,14 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
   num_points = vnl_math::max(num_points, 2);
 
   // Downsample to get uniformly distributed samples
-  vcl_vector<dbsksp_xshock_node_descriptor > uniform_xsamples;
+  std::vector<dbsksp_xshock_node_descriptor > uniform_xsamples;
   {
     double ds_per_interval = run_lengths.back() / (num_points-1);
 
 
     int cur_idx = 0;
 
-    vcl_vector<unsigned > downsample_index;
+    std::vector<unsigned > downsample_index;
     downsample_index.reserve(num_points);
     downsample_index.push_back(0);
 
@@ -202,7 +202,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
   //num_points = vnl_math::max(num_points, 2);
 
   //// Interpolate to get uniformly distributed samples
-  //vcl_vector<dbsksp_xshock_node_descriptor > uniform_xsamples;
+  //std::vector<dbsksp_xshock_node_descriptor > uniform_xsamples;
   //{
   //  double total_chordal_length = chord_run_lengths.back();
   //  double ds_per_interval = total_chordal_length / (num_points-1);
@@ -250,15 +250,15 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
   //    double len = cur_s - prev_s;
   //    double c = y0;
   //    double prev_phi = xsamples[prev_idx].phi();
-  //    double b = -vcl_cos(prev_phi) / vcl_sin(prev_phi);
+  //    double b = -std::cos(prev_phi) / std::sin(prev_phi);
   //    double a = (y1 - b*len - c) / (len*len);
 
   //    
   //    double chord_radius = a* (s-prev_s)*(s-prev_s) + b * (s-prev_s) + c;
 
   //    // Now we are ready to construct the shock point
-  //    double radius = chord_radius / vcl_sin(phi);
-  //    vgl_point_2d<double > shock_pt = chord_pt - radius * vcl_cos(phi) * chord_orient;
+  //    double radius = chord_radius / std::sin(phi);
+  //    vgl_point_2d<double > shock_pt = chord_pt - radius * std::cos(phi) * chord_orient;
 
   //    dbsksp_xshock_node_descriptor xsample(shock_pt, chord_orient, phi, radius);
   //    uniform_xsamples.push_back(xsample);
@@ -276,15 +276,15 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 //: Compute a shock curve from a shock graph path
 // \relates dbsksp_xshock_graph
 dbskr_scurve_sptr dbsksp_compute_scurve(const dbsksp_xshock_node_sptr& start_node,
-                                       const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+                                       const std::vector<dbsksp_xshock_edge_sptr>& path,
                                        double sample_ds)
 {
 
   dbsksp_shock_path_sptr shock_path = dbsksp_compute_uniform_shock_path(start_node, path, sample_ds);
 
   // Feed the samples to the scurve constructor
-  vcl_vector< vgl_point_2d<double> > sh_pt;
-  vcl_vector<double> time, theta, phi;
+  std::vector< vgl_point_2d<double> > sh_pt;
+  std::vector<double> time, theta, phi;
 
   unsigned num_pts = shock_path->num_points();
   sh_pt.reserve(num_pts);

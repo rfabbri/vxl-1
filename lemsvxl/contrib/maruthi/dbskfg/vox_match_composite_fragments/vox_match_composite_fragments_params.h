@@ -31,7 +31,7 @@ class vox_match_composite_fragments_params : public dborl_algo_params
 public:
 
   //: Constructor
-  vox_match_composite_fragments_params(vcl_string algo_name);
+  vox_match_composite_fragments_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
@@ -39,10 +39,10 @@ public:
   dbskr_tree_edit_params2 edit_params_;
 
   //: String for holding model image data
-  dborl_parameter<vcl_string> model_image_;
+  dborl_parameter<std::string> model_image_;
 
   //: String for holding model image data
-  dborl_parameter<vcl_string> query_image_;
+  dborl_parameter<std::string> query_image_;
 
   // If doing this normalize by length instead of total splice cost
   dborl_parameter<bool> norm_reconstruct_;
@@ -51,36 +51,36 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
   
   //: Name of model to compare against
-  dborl_parameter<vcl_string> model_object_name_;
+  dborl_parameter<std::string> model_object_name_;
   
   //: Passes the folder of the model composite bag of fragments
-  dborl_parameter<vcl_string> model_object_dir_;    
+  dborl_parameter<std::string> model_object_dir_;    
 
   //: Name of query to compare against
-  dborl_parameter<vcl_string> query_object_name_;
+  dborl_parameter<std::string> query_object_name_;
   
   //: Passes the folder of the query composite fragments
-  dborl_parameter<vcl_string> query_object_dir_;    
+  dborl_parameter<std::string> query_object_dir_;    
 
   //: Passes the folder of where the query objects can live
-  dborl_parameter<vcl_string> query_assoc_dir_;
+  dborl_parameter<std::string> query_assoc_dir_;
 
   //: extension of the folder where composite fragments can be found
-  dborl_parameter<vcl_string> input_composite_fragments_extension_;     
+  dborl_parameter<std::string> input_composite_fragments_extension_;     
 
   // Decide if writing out normalized or unnormalized costs
   dborl_parameter<bool> write_matching_norm_;  
 
   //: extension of the output for output composite graph 
-  dborl_parameter<vcl_string> output_match_extension_;     
+  dborl_parameter<std::string> output_match_extension_;     
 
   // if written to this folder as opposed to object folder then the 
   // composite graph matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_cgraph_match_folder_;  
+  dborl_parameter<std::string> output_cgraph_match_folder_;  
 
   //: tag for extraction of matching parameters
-  vcl_string tag_match_composite_fragments_;
+  std::string tag_match_composite_fragments_;
 
 };
 

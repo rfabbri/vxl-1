@@ -33,11 +33,11 @@ int main( int argc, char* argv[] )
   char strtemp2[100];
 
   if (argc < 3) {
-    vcl_cout << "USAGE: curvefitting_command.exe <contour_name1>.con <rms_distance>\n";
+    std::cout << "USAGE: curvefitting_command.exe <contour_name1>.con <rms_distance>\n";
     exit(-1);
   }
 
-  vcl_string con_filename(argv[1]);
+  std::string con_filename(argv[1]);
 
   bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
   curve_2d->readCONFromFile( con_filename.c_str() );
@@ -46,7 +46,7 @@ int main( int argc, char* argv[] )
   float rms_distance;
   rms_distance = atof(argv[2]);
 
-  vcl_cout << "Number of points in original curve: " << curve_2d->size() << vcl_endl;
+  std::cout << "Number of points in original curve: " << curve_2d->size() << std::endl;
 
   vgl_fit_lines_2d<double> fitter;//the fitting class
   fitter.set_min_fit_length(min_fit_length);
@@ -59,8 +59,8 @@ int main( int argc, char* argv[] )
   curve_2d->clear();
 
   fitter.fit();
-  vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
-  vcl_cout << "Number of line segments in fitted curve: " << segs.size() << vcl_endl;
+  std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+  std::cout << "Number of line segments in fitted curve: " << segs.size() << std::endl;
 
   bsol_intrinsic_curve_2d_sptr curve_2d_fitted = new bsol_intrinsic_curve_2d();
 
@@ -69,7 +69,7 @@ int main( int argc, char* argv[] )
   for (int i = 1; i<static_cast<int>(segs.size()); i++) {
     curve_2d_fitted->add_vertex(segs[i].point2().x(),segs[i].point2().y());
   }
-  vcl_cout << "Number of points in fitted curve: " << curve_2d_fitted->size() << vcl_endl;
+  std::cout << "Number of points in fitted curve: " << curve_2d_fitted->size() << std::endl;
 
   strcpy(strtemp1, con_filename.c_str());    
   for ( i=0; strtemp1[i] != '.'; i++ ){}
@@ -98,13 +98,13 @@ int connect_gaps( int argc, char* argv[] )
   char strtemp2[100];
 
   if (argc < 4) {
-    vcl_cout << "USAGE: curvematching_command.exe <contour_name1>.con <min_length> <rms_distance>\n";
+    std::cout << "USAGE: curvematching_command.exe <contour_name1>.con <min_length> <rms_distance>\n";
     exit(-1);
   }
 
 
 
-  vcl_string con_filename(argv[1]);
+  std::string con_filename(argv[1]);
 
   bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
   curve_2d->readCONFromFile( con_filename.c_str() );
@@ -116,7 +116,7 @@ int connect_gaps( int argc, char* argv[] )
   float rms_distance;
   rms_distance = atof(argv[3]);
 
-  vcl_cout << "Number of points in original curve: " << curve_2d->size() << vcl_endl;
+  std::cout << "Number of points in original curve: " << curve_2d->size() << std::endl;
 
   vgl_fit_lines_2d<double> fitter;//the fitting class
   fitter.set_min_fit_length(min_fit_length);
@@ -129,8 +129,8 @@ int connect_gaps( int argc, char* argv[] )
   curve_2d->clear();
 
   fitter.fit();
-  vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
-  vcl_cout << "Number of line segments in fitted curve: " << segs.size() << vcl_endl;
+  std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+  std::cout << "Number of line segments in fitted curve: " << segs.size() << std::endl;
 
   bsol_intrinsic_curve_2d_sptr curve_2d_fitted = new bsol_intrinsic_curve_2d();
 
@@ -141,14 +141,14 @@ int connect_gaps( int argc, char* argv[] )
       curve_2d_fitted->add_vertex(segs[i].point1().x(),segs[i].point1().y());
     curve_2d_fitted->add_vertex(segs[i].point2().x(),segs[i].point2().y());
   }
-  vcl_cout << "Number of points in fitted curve: " << curve_2d_fitted->size() << vcl_endl;
+  std::cout << "Number of points in fitted curve: " << curve_2d_fitted->size() << std::endl;
 
   strcpy(strtemp1, con_filename.c_str());    
   for ( i=0; strtemp1[i] != '.'; i++ ){}
   strtemp1[i]= 0;
   sprintf(strtemp2, "%s-%d-%.4f", strtemp1, min_fit_length, rms_distance);
   sprintf(strtemp2, "%s.con", strtemp2);
-  vcl_cout << "output file name: " << strtemp2 << vcl_endl;
+  std::cout << "output file name: " << strtemp2 << std::endl;
   
   FILE *out = fopen(strtemp2, "w");
   fprintf(out, "CONTOUR\nOPEN\n%d\n", curve_2d_fitted->size());

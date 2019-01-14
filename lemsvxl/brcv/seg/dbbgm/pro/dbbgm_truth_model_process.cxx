@@ -29,7 +29,7 @@
 dbbgm_truth_model_process::dbbgm_truth_model_process()
 {
   if( !parameters()->add( "YUV color space" ,      "-yuv" ,     false       )){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -49,7 +49,7 @@ dbbgm_truth_model_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_truth_model_process::name()
 {
   return "Truth BG Model";
@@ -73,9 +73,9 @@ dbbgm_truth_model_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_truth_model_process::get_input_type()
+std::vector< std::string > dbbgm_truth_model_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" ); // input image
   to_return.push_back( "image" ); // label image
   to_return.push_back( "dbbgm_image" );
@@ -84,9 +84,9 @@ vcl_vector< vcl_string > dbbgm_truth_model_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_truth_model_process::get_output_type()
+std::vector< std::string > dbbgm_truth_model_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   //to_return.push_back( "image" );
   //to_return.push_back( "image" ); 
   return to_return;
@@ -98,7 +98,7 @@ bool
 dbbgm_truth_model_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_truth_model_process::execute() - "
+    std::cout << "In dbbgm_truth_model_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -210,11 +210,11 @@ dbbgm_truth_model_process::finish()
       if(!data[i][j].empty()){
         const dbsta_mixture<float>& m = static_cast<const dbsta_mixture<float>&>((*model)(i,j));
         const dbsta_gaussian_indep<float,3>& g = static_cast<const dbsta_gaussian_indep<float,3>&>(m.distribution(0));
-        vcl_cout << g.mean() <<"\n-------------------"<< vcl_endl;
+        std::cout << g.mean() <<"\n-------------------"<< std::endl;
         for(unsigned int k=0; k<data[i][j].size(); ++k){
-          vcl_cout << data[i][j][k] << vcl_endl;
+          std::cout << data[i][j][k] << std::endl;
         }
-        vcl_cout << vcl_endl;
+        std::cout << std::endl;
       }
     }
   }

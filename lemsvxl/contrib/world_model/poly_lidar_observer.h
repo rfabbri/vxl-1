@@ -3,7 +3,7 @@
 
 #include "poly_observer.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
+#include <map>
 //#include <vbl/vbl_smart_ptr.h>
 
 #include <vgui/vgui_observer.h>
@@ -55,20 +55,20 @@ public:
   void set_ground_plane(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
 
   float ground_elev() { return ground_elev_; }
-  bool get_point_cloud(const float x1, const float y1, const float x2, const float y2, bgeo_lvcs& lvcs, vcl_vector<vsol_point_3d_sptr>& points);
-  bool save_meshed_point_cloud(const float x1, const float y1, const float x2, const float y2, vcl_string file);
+  bool get_point_cloud(const float x1, const float y1, const float x2, const float y2, bgeo_lvcs& lvcs, std::vector<vsol_point_3d_sptr>& points);
+  bool save_meshed_point_cloud(const float x1, const float y1, const float x2, const float y2, std::string file);
 
 
 private:
   vbl_smart_ptr<bgeo_lvcs> lvcs_;
   vnl_matrix<double> trans_matrix_;
-  vcl_vector<vcl_vector<double> > tiepoints;
+  std::vector<std::vector<double> > tiepoints;
   vil_image_resource_sptr img_res_;
   vil_image_view<float> img_view_;
   float ground_elev_;
   double scale_;
   void set_trans_matrix(vil_geotiff_header* gtif, 
-    vcl_vector<vcl_vector<double> > tiepoints);
+    std::vector<std::vector<double> > tiepoints);
   void proj_point(vsol_point_3d_sptr p3d,  vsol_point_2d_sptr& p2d);
   void img_to_wgs(const unsigned i, const unsigned j, double& lon, double& lat);
 

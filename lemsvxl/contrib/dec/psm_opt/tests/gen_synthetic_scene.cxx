@@ -5,7 +5,7 @@
 #include <psm/algo/psm_render_expected_aa.h>
 
 #include <hsds/hsds_fd_tree.h>
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
@@ -20,12 +20,12 @@
 #include "gen_synthetic_scene.h"
 
 
-void gen_synthetic_scene(psm_scene_base_sptr &scene, vcl_vector<vpgl_perspective_camera<double> > &cameras, vcl_vector<vil_image_view<float> > &images)
+void gen_synthetic_scene(psm_scene_base_sptr &scene, std::vector<vpgl_perspective_camera<double> > &cameras, std::vector<vil_image_view<float> > &images)
 {
   // create scene
   vgl_point_3d<double> origin(0.0, 0.0, 0.0);
   double block_len = 4.0;
-  vcl_string storage_dir = "./synthetic_scene_test";
+  std::string storage_dir = "./synthetic_scene_test";
   vul_file::make_directory(storage_dir);
 
   scene = new psm_scene<PSM_APM_SIMPLE_GREY>(origin, block_len, storage_dir, bgeo_lvcs_sptr(), 9);
@@ -86,11 +86,11 @@ void gen_synthetic_scene(psm_scene_base_sptr &scene, vcl_vector<vpgl_perspective
     vil_image_view<float> img(3,1);
     vil_image_view<float> mask(3,1);
     psm_render_expected(*scene_ptr,&cameras[c],img,mask);
-    vcl_cout << "image " << c << " : ";
+    std::cout << "image " << c << " : ";
     for (unsigned int i=0; i<3; ++i) {
-      vcl_cout << img(i,0) << " ";
+      std::cout << img(i,0) << " ";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
 
     images.push_back(img);
   }

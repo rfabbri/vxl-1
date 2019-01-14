@@ -4,7 +4,7 @@
 #include<vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include<vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include<vul/vul_sprintf.h>
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include <vsl/vsl_vector_io.h>
 #include <dbru/dbru_label_sptr.h>
 #include <dbru/dbru_label.h>
@@ -15,7 +15,7 @@ dbrl_load_multiple_instance_object_process::dbrl_load_multiple_instance_object_p
     if(!parameters()->add( "Input file" ,                    "-name" ,           bpro1_filepath("","*"))
       )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     
 }
@@ -44,10 +44,10 @@ dbrl_load_multiple_instance_object_process::clone() const
 /*************************************************************************
 * Function Name: dbrl_load_multiple_instance_object_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbrl_load_multiple_instance_object_process::name()
 {
     return "Load Multiple Instance";
@@ -57,12 +57,12 @@ dbrl_load_multiple_instance_object_process::name()
 /*************************************************************************
 * Function Name: ddbrl_load_multiple_instance_object_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_load_multiple_instance_object_process::get_input_type()
+std::vector< std::string > dbrl_load_multiple_instance_object_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 
@@ -76,12 +76,12 @@ dbrl_load_multiple_instance_object_process::clear_output(int resize)
 /*************************************************************************
 * Function Name: dbrl_load_multiple_instance_object_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_load_multiple_instance_object_process::get_output_type()
+std::vector< std::string > dbrl_load_multiple_instance_object_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "vsol2D" );
     return to_return;
@@ -113,7 +113,7 @@ dbrl_load_multiple_instance_object_process::execute()
 {
     bpro1_filepath input_path;
     parameters()->get_value( "-name" , input_path );
-    vcl_string path = input_path.path;
+    std::string path = input_path.path;
 
     vsl_b_ifstream ifile(path.c_str());
     unsigned numframes=0;
@@ -122,7 +122,7 @@ dbrl_load_multiple_instance_object_process::execute()
     num_frames_ = numframes;
     for(unsigned i=0;i<numframes;i++)
     {
-        vcl_vector<dbru_multiple_instance_object_sptr> temp;
+        std::vector<dbru_multiple_instance_object_sptr> temp;
         vsl_b_read(ifile,temp);
         vidpro1_vsol2D_storage * vsols= new vidpro1_vsol2D_storage();
         vidpro1_vsol2D_storage * edgevsols= new vidpro1_vsol2D_storage();
@@ -131,32 +131,32 @@ dbrl_load_multiple_instance_object_process::execute()
 
         for(unsigned i=0;i<temp.size();i++)
         {
-            vcl_vector<vsol_line_2d_sptr> lines=temp[i]->get_edges();
+            std::vector<vsol_line_2d_sptr> lines=temp[i]->get_edges();
             for(unsigned j=0;j<lines.size();j++)
             {
                 edgevsols->add_object(lines[j]->cast_to_spatial_object());
             }
         }
 
-        vcl_vector< bpro1_storage_sptr > stores;
+        std::vector< bpro1_storage_sptr > stores;
         stores.push_back(vsols);
         stores.push_back(edgevsols);
         output_data_.push_back(stores);
     }
 
-    vcl_reverse(output_data_.begin(),output_data_.end());
+    std::reverse(output_data_.begin(),output_data_.end());
     //int index=-1;
     //num_frames_=0;
     //do
     //{
     //    index=-1;
     //    vsl_b_read(ifile,index);
-    //    vcl_vector<dbrl_multiple_instance_object_sptr> temp;
+    //    std::vector<dbrl_multiple_instance_object_sptr> temp;
     //    vsl_b_read(ifile,temp);
     //    vidpro1_vsol2D_storage * vsols= new vidpro1_vsol2D_storage();
     //    for(unsigned i=0;i<temp.size();i++)
     //        vsols->add_object(temp[i]->get_poly()->cast_to_spatial_object());//temp[i]->get_label()->category());
-    //    vcl_vector< bpro1_storage_sptr > stores;
+    //    std::vector< bpro1_storage_sptr > stores;
     //    stores.push_back(vsols);
     //    output_data_.push_back(stores);
     //    num_frames_++;

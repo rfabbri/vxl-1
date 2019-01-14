@@ -45,7 +45,7 @@
 \*========================================================*/
 
 #include "dbcfg_curve.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <dbdet/sel/dbdet_edgel.h>
 
@@ -99,16 +99,16 @@ public:
   dbcfg_junction<T>* find_junction(T x, T y);
   
   // returns all curves at the given point
-  vcl_vector<dbcfg_curve<T> * > find_curves(T x, T y);
+  std::vector<dbcfg_curve<T> * > find_curves(T x, T y);
   
   // returns all curves at the given point and depth
-  vcl_vector<dbcfg_curve<T> * > find_curves(T x, T y, int depth);
+  std::vector<dbcfg_curve<T> * > find_curves(T x, T y, int depth);
 
   // returns all junctions in the cfg
-  vcl_vector<dbcfg_junction<T> * > get_junctions();
+  std::vector<dbcfg_junction<T> * > get_junctions();
 
   // returns all curves in the cfg
-  vcl_vector<dbcfg_curve<T> * > get_curves();
+  std::vector<dbcfg_curve<T> * > get_curves();
 
 protected:
   // converts the given xy to the internal matrix xy
@@ -121,16 +121,16 @@ private:
   // the internal 'bucket' matrix for curves
   // note that curves only exist on a range, and are hard to location
   // for these reasons, an object_location is used
-  vnl_matrix<vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * > _curve_matrix;
+  vnl_matrix<std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * > _curve_matrix;
 
   // the internal 'bucket' matrix for junctions
-  vnl_matrix<vcl_vector<dbcfg_junction<T> * > * > _junction_matrix;
+  vnl_matrix<std::vector<dbcfg_junction<T> * > * > _junction_matrix;
 
   // all curves
-  vcl_vector<dbcfg_curve<T> * > _curves;
+  std::vector<dbcfg_curve<T> * > _curves;
 
   // all junctions
-  vcl_vector<dbcfg_junction<T> * > _junctions;
+  std::vector<dbcfg_junction<T> * > _junctions;
 
   // boundless marker
   bool _boundless;

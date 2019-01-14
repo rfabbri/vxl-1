@@ -1,5 +1,5 @@
 #include "biocbs_scan.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 
@@ -33,9 +33,9 @@ interp_type_(interp_type)
   vol_dim_(1) = vol->get_row2_count();
   vol_dim_(2) = vol->get_row3_count();
   // compute the volume center voxel in voxel units
-  vol_center_(0) = int(vcl_floor((vol_dim_(0)-1)/2.0));
-  vol_center_(1) = int(vcl_floor((vol_dim_(1)-1)/2.0));
-  vol_center_(2) = int(vcl_floor((vol_dim_(2)-1)/2.0));
+  vol_center_(0) = int(std::floor((vol_dim_(0)-1)/2.0));
+  vol_center_(1) = int(std::floor((vol_dim_(1)-1)/2.0));
+  vol_center_(2) = int(std::floor((vol_dim_(2)-1)/2.0));
 
   // compute all cameras here for efficiency
   for(int viewno = 0; viewno < number_of_views_; viewno++)
@@ -85,7 +85,7 @@ void biocbs_scan::project_volume(int viewno)
         val = -1.0;
       else if(val > 1.0)
         val = 1.0;
-      rd_to_pa_angle = vcl_acos(val);
+      rd_to_pa_angle = std::acos(val);
       if(rd_to_pa_angle > vnl_math::pi_over_2)
         ray_direction = -ray_direction;
 
@@ -118,7 +118,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
                                          vgl_vector_3d<double> ray_direction, 
                                          vgl_point_3d <double> &point)
 {
-  vcl_vector< vgl_point_3d <double> > intersection_points;
+  std::vector< vgl_point_3d <double> > intersection_points;
   vgl_point_3d<double> intersection;
   double tol = 1e-8;
   double x0 = ray_start.x(); double y0 = ray_start.y(); double z0 = ray_start.z();
@@ -130,7 +130,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
   // is "tol" longer on every side
   vgl_box_3d<double> fake_box(xmin-tol, ymin-tol, zmin-tol, xmax+tol, ymax+tol, zmax+tol);
   //find intersection with xmin-plane
-  if(vcl_fabs(x1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(x1) > tol) //otherwise line an plane are parallel
   {
     double k = (xmin - x0) / x1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -138,7 +138,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
       intersection_points.push_back(intersection);
   }
   //find intersection with ymin-plane
-  if(vcl_fabs(y1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(y1) > tol) //otherwise line an plane are parallel
   {
     double k = (ymin - y0) / y1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -146,7 +146,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
       intersection_points.push_back(intersection);
   }
   //find intersection with zmin-plane
-  if(vcl_fabs(z1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(z1) > tol) //otherwise line an plane are parallel
   {
     double k = (zmin - z0) / z1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -154,7 +154,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
       intersection_points.push_back(intersection);
   }
   //find intersection with xmax-plane
-  if(vcl_fabs(x1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(x1) > tol) //otherwise line an plane are parallel
   {
     double k = (xmax - x0) / x1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -162,7 +162,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
       intersection_points.push_back(intersection);
   }
   //find intersection with ymax-plane
-  if(vcl_fabs(y1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(y1) > tol) //otherwise line an plane are parallel
   {
     double k = (ymax - y0) / y1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -170,7 +170,7 @@ bool biocbs_scan::intersect_line_and_box(vgl_box_3d<double> box, vgl_point_3d<do
       intersection_points.push_back(intersection);
   }
   //find intersection with zmax-plane
-  if(vcl_fabs(z1) > tol) //otherwise line an plane are parallel
+  if(std::fabs(z1) > tol) //otherwise line an plane are parallel
   {
     double k = (zmax - z0) / z1;
     intersection.set(x0+k*x1, y0+k*y1, z0+k*z1);
@@ -250,7 +250,7 @@ double biocbs_scan::discrete_line_integral(vgl_point_3d<double> point,
     }
     else
     {
-      vcl_cout << "There is no interpolation technique with the given name" << vcl_endl;
+      std::cout << "There is no interpolation technique with the given name" << std::endl;
       exit(-1);
     }
 
@@ -265,13 +265,13 @@ double biocbs_scan::interpolate_subvoxel_value(vgl_point_3d<double> subvox)
   double y = subvox.y();
   double z = subvox.z();
 
-  int fx = int(vcl_floor(x));
-  int fy = int(vcl_floor(y));
-  int fz = int(vcl_floor(z));
+  int fx = int(std::floor(x));
+  int fy = int(std::floor(y));
+  int fz = int(std::floor(z));
 
-  int cx = int(vcl_ceil(x));
-  int cy = int(vcl_ceil(y));
-  int cz = int(vcl_ceil(z));
+  int cx = int(std::ceil(x));
+  int cy = int(std::ceil(y));
+  int cz = int(std::ceil(z));
 
   // interpolate along x on the bottom slice
   double d1 = x - fx;
@@ -324,11 +324,11 @@ void biocbs_scan::adjust_data_range(double adjust_val)
   }
 }
 
-void biocbs_scan::write_data_3d(vcl_string fname)
+void biocbs_scan::write_data_3d(std::string fname)
 {
   FILE *fp;
-  fp = vcl_fopen(fname.c_str(), "w");
-  vcl_fprintf(fp, "%d %d %d\n", sensor_dim_.get(0), sensor_dim_.get(1), number_of_views_);
+  fp = std::fopen(fname.c_str(), "w");
+  std::fprintf(fp, "%d %d %d\n", sensor_dim_.get(0), sensor_dim_.get(1), number_of_views_);
   
   for(int k=0; k < number_of_views_; k++)
   {
@@ -336,17 +336,17 @@ void biocbs_scan::write_data_3d(vcl_string fname)
     {
       for(int i=0; i < sensor_dim_.get(0); i++)
       {
-        vcl_fprintf(fp, "%d ", int(proj_data_(i,j,k)));
+        std::fprintf(fp, "%d ", int(proj_data_(i,j,k)));
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fprintf(fp, "\n");
-  vcl_fclose(fp);
+  std::fprintf(fp, "\n");
+  std::fclose(fp);
 }
 
-void biocbs_scan::write_data_2d_views(vcl_string fnamebase)
+void biocbs_scan::write_data_2d_views(std::string fnamebase)
 {
   const char *fbase = fnamebase.c_str();
   char fname[1000];
@@ -356,54 +356,54 @@ void biocbs_scan::write_data_2d_views(vcl_string fnamebase)
     for(int j=0; j<sensor_dim_.get(1); j++)
       for(int i=0; i<sensor_dim_.get(0); i++)
         img(i,j) = (unsigned short)(proj_data_(i,j,k));
-    vcl_sprintf(fname, "%s%0.4d.tif", fbase, k);
+    std::sprintf(fname, "%s%0.4d.tif", fbase, k);
     vil_save(img, fname);
   }
 }
 
-void biocbs_scan::write_scan(vcl_string scanfile)
+void biocbs_scan::write_scan(std::string scanfile)
 {
   // file extension check
-  vcl_size_t dot_pos = scanfile.find_first_of(".");
-  if(vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
+  std::size_t dot_pos = scanfile.find_first_of(".");
+  if(std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
   {
-    vcl_cout << "************************************************" << vcl_endl;
-    vcl_cout << "The specified scan file extension is not correct" << vcl_endl;
-    vcl_cout << "************************************************" << vcl_endl;
+    std::cout << "************************************************" << std::endl;
+    std::cout << "The specified scan file extension is not correct" << std::endl;
+    std::cout << "************************************************" << std::endl;
     exit(-1);
   }
-  vcl_ofstream scan_file(scanfile.c_str());
+  std::ofstream scan_file(scanfile.c_str());
   scan_file << scan_;
   scan_file.close();
 }
 
-void biocbs_scan::write_box(vcl_string boxfile)
+void biocbs_scan::write_box(std::string boxfile)
 {
   // file extension check
-  vcl_size_t dot_pos = boxfile.find_first_of(".");
-  if(vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
+  std::size_t dot_pos = boxfile.find_first_of(".");
+  if(std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
   {
-    vcl_cout << "************************************************" << vcl_endl;
-    vcl_cout << "The specified scan file extension is not correct" << vcl_endl;
-    vcl_cout << "************************************************" << vcl_endl;
+    std::cout << "************************************************" << std::endl;
+    std::cout << "The specified scan file extension is not correct" << std::endl;
+    std::cout << "************************************************" << std::endl;
     exit(-1);
   }
-  vcl_ofstream box_file(boxfile.c_str());
+  std::ofstream box_file(boxfile.c_str());
   box_file << box_;
   box_file.close();
 }
 
 void biocbs_scan::write_view(vbl_array_2d<double> view)
 {
-  FILE *fp = vcl_fopen("D:\\MyDocs\\Temp\\view.pgm", "w");
-  vcl_fprintf(fp, "P2\n%d %d\n65535\n", sensor_dim_.get(0), sensor_dim_.get(1));
+  FILE *fp = std::fopen("D:\\MyDocs\\Temp\\view.pgm", "w");
+  std::fprintf(fp, "P2\n%d %d\n65535\n", sensor_dim_.get(0), sensor_dim_.get(1));
   for(int v = 0; v < sensor_dim_.get(1); v++)
   {
     for(int u = 0; u < sensor_dim_.get(0); u++)
     {
-      vcl_fprintf(fp, "%d ", int(view(u,v)));
+      std::fprintf(fp, "%d ", int(view(u,v)));
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 }

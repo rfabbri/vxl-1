@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -27,13 +27,13 @@ public:
   dbctrk_displayer(){}
 
   //: Return type string "trackedcurve"
-  virtual vcl_string type() const { return "dbctrk"; }
+  virtual std::string type() const { return "dbctrk"; }
 
   //: Create a tableau if the storage object is of type "dbctrk"
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;
 
   //: lookup for curves added to the tableau
-  //static vcl_map<dbctrk_tracker_curve_sptr, bgui_bmrf_epi_seg_soview2D*> seg_soview_map_;
+  //static std::map<dbctrk_tracker_curve_sptr, bgui_bmrf_epi_seg_soview2D*> seg_soview_map_;
  
 
   

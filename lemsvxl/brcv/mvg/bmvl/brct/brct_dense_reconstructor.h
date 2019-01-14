@@ -13,8 +13,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <vcl_vector.h>
-// not used? #include <vcl_string.h>
+#include <vector>
+// not used? #include <string>
 #include <vil1/vil1_image.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsrl/vsrl_image_correlation.h>
@@ -63,10 +63,10 @@ class brct_dense_reconstructor : public vsrl_dense_matcher
   void print_params();
 
   //: get vsol points corresponding to a line from image 0
-  vcl_vector<vsol_point_2d_sptr> points0(const int i, const int del = 5);
+  std::vector<vsol_point_2d_sptr> points0(const int i, const int del = 5);
 
   //: get vsol points corresponding to a line from image 1
-  vcl_vector<vsol_point_2d_sptr> points1(const int i, const int del = 5);
+  std::vector<vsol_point_2d_sptr> points1(const int i, const int del = 5);
 
   //: get the assigned coordinate
   virtual  int get_assignment(int x, int y);
@@ -75,7 +75,7 @@ class brct_dense_reconstructor : public vsrl_dense_matcher
   virtual int get_disparity(int x, int y);
 
   //: get the correlation values within the search range
-  void get_correlation(const int x, const int y, vcl_vector<int>& xpos, vcl_vector<double>& corr);
+  void get_correlation(const int x, const int y, std::vector<int>& xpos, std::vector<double>& corr);
 
   //: write an image of the disparity
   void write_disparity_image(char *filename);

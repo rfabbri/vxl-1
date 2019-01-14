@@ -142,8 +142,8 @@ void bfrag_Menu::removeSelectedFragment(){
 void bfrag_Menu::addPuzzle(){
     vgui_dialog params("Add Puzzle...");
     //params.set_modal(true);
-    vcl_string ext = "*.pz2";
-    vcl_string fileToOpen;
+    std::string ext = "*.pz2";
+    std::string fileToOpen;
     params.file("Puzzle File To Add (*.pz2)", ext, fileToOpen);
     
     if (!params.ask())
@@ -156,7 +156,7 @@ void bfrag_Menu::addPuzzle(){
         //vxl crashes.  who knows...
         vgui_dialog params("Add Puzzle...");
         //params.set_modal(true);
-        vcl_string ext = "*.pz2";
+        std::string ext = "*.pz2";
         params.file("Puzzle File To Add (*.pz2)", ext, fileToOpen);
     
         if (!params.ask())
@@ -172,7 +172,7 @@ void bfrag_Menu::displayAllContours(){
 void bfrag_Menu::displayNContours(){
         vgui_dialog which_dl("Display N Contours");
     int chosen, whereToStart = 1;
-    vcl_vector<vcl_string> numPairs;
+    std::vector<std::string> numPairs;
     numPairs.push_back("1");
     numPairs.push_back("4");
     numPairs.push_back("9");
@@ -228,7 +228,7 @@ void bfrag_Menu::matchingIteration(){
 void bfrag_Menu::displayNPairs(){
     vgui_dialog which_dl("Display N Pairs");
     int chosen, whereToStart = 1;
-    vcl_vector<vcl_string> numPairs;
+    std::vector<std::string> numPairs;
     numPairs.push_back("1");
     numPairs.push_back("4");
     numPairs.push_back("9");
@@ -315,27 +315,27 @@ void bfrag_Menu::about(){
 }
 
 void bfrag_Menu::topImagesShow(){
-    //vcl_cout << "top Images Show all" << vcl_endl;
+    //std::cout << "top Images Show all" << std::endl;
     bfrag_Manager::instance()->displayAllTopImages(true);
 }
 void bfrag_Menu::topImagesHide(){
-    //vcl_cout << "top Images Hide all" << vcl_endl;
+    //std::cout << "top Images Hide all" << std::endl;
     bfrag_Manager::instance()->displayAllTopImages(false);
 }
 void bfrag_Menu::botImagesShow(){
-    //vcl_cout << "bot Images Show all" << vcl_endl;
+    //std::cout << "bot Images Show all" << std::endl;
     bfrag_Manager::instance()->displayAllBotImages(true);
 }
 void bfrag_Menu::botImagesHide(){
-    //vcl_cout << "bot Images Hide all" << vcl_endl;
+    //std::cout << "bot Images Hide all" << std::endl;
     bfrag_Manager::instance()->displayAllBotImages(false);
 }
 void bfrag_Menu::botCurvesShow(){
-    //vcl_cout << "bot Curevs Show all" << vcl_endl;
+    //std::cout << "bot Curevs Show all" << std::endl;
     bfrag_Manager::instance()->displayAllBotCurves(true);
 }
 void bfrag_Menu::botCurvesHide(){
-    //vcl_cout << "bot Curevs Hide all" << vcl_endl;
+    //std::cout << "bot Curevs Hide all" << std::endl;
     bfrag_Manager::instance()->displayAllBotCurves(false);
 }
 
@@ -345,11 +345,11 @@ void bfrag_Menu::savePZ2(){
 
 void bfrag_Menu::savePZ2as(){
 
-    vcl_string saveFn = bfrag_Manager::instance()->getLoadedName();
+    std::string saveFn = bfrag_Manager::instance()->getLoadedName();
 
     vgui_dialog params("Save As...");
     //params.set_modal(true);
-    static vcl_string ext("*.pz2");
+    static std::string ext("*.pz2");
     params.file("PZ2 file name for saving (*.pz2) . . .", ext, saveFn);
 
     //on cancel leave
@@ -372,15 +372,15 @@ void bfrag_Menu::savePZ2as(){
 
 void bfrag_Menu::addbfrag2D(){
 
-    vcl_string topConFn, botConFn, topImageFn, botImageFn, name = "newPiece";
+    std::string topConFn, botConFn, topImageFn, botImageFn, name = "newPiece";
 
     vgui_dialog params("Open...");
     //params.set_modal(true);
     params.field( "Piece Name: ", name );
     params.message( "You must select at least a top curve.");
 
-    static vcl_string ext("*.con, *.cem");
-    static vcl_string no_ext;
+    static std::string ext("*.con, *.cem");
+    static std::string no_ext;
     params.file("Top Contour (*.con, *.cem) . . .", ext, topConFn);
     params.file("Top Image . . .", no_ext, topImageFn);
     params.file("Bottom Contour (*.con, *.cem) . . ", ext, botConFn);
@@ -429,8 +429,8 @@ void bfrag_Menu::load(){
 
     vgui_dialog params("Open...");
     //params.set_modal(true);
-    vcl_string ext = "*.pz2";
-    vcl_string fileToOpen;
+    std::string ext = "*.pz2";
+    std::string fileToOpen;
     params.file("Puzzle File To Load (*.pz2)", ext, fileToOpen);//inbuilt file browser condition. inbuilt in any dialogue box.
     if (!params.ask())
         return;
@@ -441,7 +441,7 @@ void bfrag_Menu::load(){
         //vxl crashes.  who knows...
         vgui_dialog params("Open2...");
         //params.set_modal(true);
-        vcl_string ext = "*.pz2";
+        std::string ext = "*.pz2";
         params.file("Puzzle File To Load1 (*.pz2)", ext, fileToOpen);
     
         if (!params.ask())

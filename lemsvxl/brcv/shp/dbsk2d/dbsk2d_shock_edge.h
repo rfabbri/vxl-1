@@ -94,7 +94,7 @@ public:
   virtual void compute_extrinsic_locus(){}
 
   //: Return some information about the element
-  virtual void getInfo (vcl_ostream& ostrm=vcl_cout);
+  virtual void getInfo (std::ostream& ostrm=std::cout);
 
 protected:
 

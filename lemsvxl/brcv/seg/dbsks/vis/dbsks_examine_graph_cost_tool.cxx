@@ -95,7 +95,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr){
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsks_examine_graph_cost_tool::
+std::string dbsks_examine_graph_cost_tool::
 name() const {
   return "Examine graph cost";
 }
@@ -317,16 +317,16 @@ handle_display_fragment_cost()
       this->dp_engine()->compute_frag_cost(edge_id, frag_h,
         total_cost, false, false, &deform_cost, &image_cost, &frag_size);
 
-      vcl_cout << 
+      std::cout << 
         vul_sprintf("\nEdge Id[ %d ]    Total    Deform      Image     FSize\n", edge_id);
-      vcl_cout << 
+      std::cout << 
         vul_sprintf("  Real cost: %8.2f  %8.2f   %8.2f  %8.2f \n", 
         total_cost, deform_cost, image_cost, frag_size);
 
       this->dp_engine()->compute_frag_cost(edge_id, frag_h,
         total_cost, true, false, &deform_cost, &image_cost, &frag_size);
 
-      vcl_cout << 
+      std::cout << 
         vul_sprintf("  Grid cost: %8.2f  %8.2f   %8.2f  %8.2f \n", 
         total_cost, deform_cost, image_cost, frag_size);
 
@@ -367,14 +367,14 @@ handle_display_graph_cost()
   double real_cost_norm = real_cost / chord_length;
 
 
-  vcl_cout << vul_sprintf("Graph:      real_cost    chord_len norm_real   \n");
-  vcl_cout << 
+  std::cout << vul_sprintf("Graph:      real_cost    chord_len norm_real   \n");
+  std::cout << 
     vul_sprintf("            %8.2f %8.2f %8.2f\n", real_cost, chord_length, real_cost_norm);
 
   // Display approximated shapelets of the fragments
   
 
-  vcl_map<unsigned int, vgl_point_2d<int > > i_state_map;
+  std::map<unsigned int, vgl_point_2d<int > > i_state_map;
   for (dbsksp_shock_graph::edge_iterator eit = sg->edges_begin();
     eit != sg->edges_end(); ++eit)
   {
@@ -396,11 +396,11 @@ handle_display_graph_cost()
     vgl_point_2d<int > i_state(i_xy, i_plane);
 
     // save the approximation
-    i_state_map.insert(vcl_make_pair(e->id(), i_state));
+    i_state_map.insert(std::make_pair(e->id(), i_state));
   }
 
   this->shock_storage()->clear_shapelet_list();
-  vcl_vector<dbsksp_shapelet_sptr > fragment_list;
+  std::vector<dbsksp_shapelet_sptr > fragment_list;
   this->dp_engine()->construct_graph(i_state_map, fragment_list);
 
   for (unsigned i =0; i < fragment_list.size(); ++i)
@@ -425,7 +425,7 @@ check_necessary_vars_available() const
 {
   if (!this->shock_storage_ || !this->image_storage_ || !this->shapematch_storage_)
   {
-    vcl_cout << "At least one storage has not been set.\n";
+    std::cout << "At least one storage has not been set.\n";
     return false;
   }
   return true;
@@ -445,15 +445,15 @@ execute()
   vgui_dialog io_dialog("Select image to segment" );
 
   //display input options
-  vcl_vector< vcl_string > input_type_list;
+  std::vector< std::string > input_type_list;
   input_type_list.push_back("image");
   input_type_list.push_back("dbsks_shapematch");
   io_dialog.message("Select Input(s) From Available ones:");
 
   //store the choices
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
   
   //get the repository and extract the qualified ones
   vidpro1_repository_sptr repository_sptr = bvis1_manager::instance()->repository();
@@ -470,12 +470,12 @@ execute()
   io_dialog.ask();
 
   // get the names of the user-select image storage
-  vcl_string image_name = available_storage_classes[0].at(input_choices[0]);
+  std::string image_name = available_storage_classes[0].at(input_choices[0]);
   bpro1_storage_sptr image_storage = repository_sptr->get_data_by_name(image_name);
   this->tool()->set_image_storage(image_storage);
 
   // get the name of shapematch storage
-  vcl_string shapematch_name = available_storage_classes[1].at(input_choices[1]);
+  std::string shapematch_name = available_storage_classes[1].at(input_choices[1]);
   bpro1_storage_sptr shapematch_storage = repository_sptr->get_data_by_name(shapematch_name);
   this->tool()->set_shapematch_storage(shapematch_storage);
   return;

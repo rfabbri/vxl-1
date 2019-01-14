@@ -23,11 +23,11 @@
 // vgl headers
 #include <vgl/vgl_polygon.h>
 // vcl headers
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_set.h>
+#include <utility>
+#include <vector>
+#include <map>
+#include <string>
+#include <set>
 // vsol headers
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -87,31 +87,31 @@ namespace dbskfg_utilities
     //: Tell if a shock node is a sink
     //: Methods
     // Search Method to see if a link is part of a set of links
-    bool is_link_in_set_of_links(vcl_vector<dbskfg_composite_link_sptr >& set,
+    bool is_link_in_set_of_links(std::vector<dbskfg_composite_link_sptr >& set,
                                  dbskfg_composite_link_sptr test_link);
 
     //: Methods
     // Search Method to see if a node is part of a set of nodes
-    bool is_node_in_set_of_nodes(vcl_vector<dbskfg_composite_node_sptr >& set,
+    bool is_node_in_set_of_nodes(std::vector<dbskfg_composite_node_sptr >& set,
                                  dbskfg_composite_node_sptr test_node,
                                  CompareType compare=ID);
 
     //: Methods
     // Search Method to see if a node is part of a set of nodes
-    bool is_node_in_set_of_nodes(vcl_vector<dbskfg_composite_node_sptr >& set,
-                                 vcl_string point_location);
+    bool is_node_in_set_of_nodes(std::vector<dbskfg_composite_node_sptr >& set,
+                                 std::string point_location);
 
     
     //: Methods
     // Search Method to see if a node is part of a set of nodes
-    bool is_node_in_set_of_nodes(vcl_vector<dbskfg_composite_node_sptr >& set,
+    bool is_node_in_set_of_nodes(std::vector<dbskfg_composite_node_sptr >& set,
                                  dbskfg_shock_node* snode,
                                  CompareType compare=ID);
 
     //: Methods
     // Search Method to see if a node is part of a set of nodes
     dbskfg_composite_node_sptr get_node_in_set_of_nodes( 
-        vcl_vector<dbskfg_composite_node_sptr >& set,
+        std::vector<dbskfg_composite_node_sptr >& set,
         dbskfg_composite_node_sptr test_node,
         CompareType compare=ID);
 
@@ -119,28 +119,28 @@ namespace dbskfg_utilities
     //: Methods
     // Search Method to see if a node is part of a set of nodes
     dbskfg_composite_node_sptr get_node_in_set_of_nodes( 
-        vcl_vector<dbskfg_composite_node_sptr >& set,
+        std::vector<dbskfg_composite_node_sptr >& set,
         vgl_point_2d<double> point);
   
     //: Methods
     // Search Method to see if a node is part of a set of links
-    bool is_node_in_set_of_links(vcl_vector<dbskfg_composite_link_sptr>& set,
+    bool is_node_in_set_of_links(std::vector<dbskfg_composite_link_sptr>& set,
                                  dbskfg_composite_node_sptr test_node);
 
     //: Methods
     // Find gap connected graph
-    void find_gap_connected_graph(vcl_map<unsigned int, 
+    void find_gap_connected_graph(std::map<unsigned int, 
                                   dbskfg_shock_link*>& shock_map,
                                   unsigned int common_edge_id);
 
     //: Methods
     // From a shock edge determines the original contour id pair
-    vcl_pair<int,int> 
+    std::pair<int,int> 
         get_contour_id_from_shock_edge(dbsk2d_ishock_edge* edge);
 
     // Method 
     // Assumes points are degree 1 contour endpoints
-    vcl_pair<double,double> get_tangent_pairs(dbskfg_contour_node*
+    std::pair<double,double> get_tangent_pairs(dbskfg_contour_node*
                                               lnode,
                                               dbskfg_contour_node*
                                               rnode,
@@ -154,7 +154,7 @@ namespace dbskfg_utilities
 
     //: Methods
     // Determine clockwise orientation
-    vcl_vector<dbskfg_shock_link*> clockwise(dbskfg_composite_node_sptr node);
+    std::vector<dbskfg_shock_link*> clockwise(dbskfg_composite_node_sptr node);
 
     //: Methods 
     // determine influence zone between two gap points filling out 
@@ -181,13 +181,13 @@ namespace dbskfg_utilities
     // Saves image polygon
     void save_image_poly(vgl_polygon<double>& vgl_poly,
                          vil_image_resource_sptr img_sptr,
-                         vcl_string filename);
+                         std::string filename);
 
     //: Method
     // Saves image polygon
     void save_image_mask(vgl_polygon<double>& vgl_poly,
                          vil_image_resource_sptr img_sptr,
-                         vcl_string filename,
+                         std::string filename,
                          bool actual=false);
 
 
@@ -228,13 +228,13 @@ namespace dbskfg_utilities
     //: Detect transforms
     void detect_transforms(
         vidpro1_vsol2D_storage_sptr& contour_storage,
-        vcl_vector<dbskfg_transform_descriptor_sptr>& results,
+        std::vector<dbskfg_transform_descriptor_sptr>& results,
         bool detect_gaps = true,
         bool detect_loops = true);
 
     // Return set of points for euler_spiral
     void ess_points(dbskfg_transform_descriptor_sptr transform,
-                    vcl_vector<vgl_point_2d<double> >& points);
+                    std::vector<vgl_point_2d<double> >& points);
 
 
     // Return 1-jacard index
@@ -247,11 +247,11 @@ namespace dbskfg_utilities
 
     // Read file
     void read_binary_file(
-        vcl_string input_file, 
-        vcl_map<unsigned int,
-        vcl_vector< vsol_spatial_object_2d_sptr > >& geoms,
-        vcl_map<unsigned int,vcl_set<unsigned int> >& con_ids,
-        vcl_pair<unsigned int,unsigned int>& image_size);
+        std::string input_file, 
+        std::map<unsigned int,
+        std::vector< vsol_spatial_object_2d_sptr > >& geoms,
+        std::map<unsigned int,std::set<unsigned int> >& con_ids,
+        std::pair<unsigned int,unsigned int>& image_size);
 }
 #endif // dbskfg_utilities_h_
 

@@ -25,15 +25,15 @@
 #include <vnl/algo/vnl_powell.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_timer.h>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_set.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <set>
 
 
 //==============================================================================
@@ -75,7 +75,7 @@ dbsksp_weighted_average_two_xgraphs(const dbsksp_xshock_graph_sptr& xgraph1,
                            float scurve_sample_ds,
                            float fit_xgraph_tol,
                            double relative_error_tol,
-                           const vcl_string& debug_base_name)
+                           const std::string& debug_base_name)
 {
   this->set_parent_xgraph(0, xgraph1);
   this->set_parent_xgraph(1, xgraph2);
@@ -118,7 +118,7 @@ init()
     this->base_name_ = "";
   }
 
-  vcl_cout 
+  std::cout 
     << "\nBase name= " << this->base_name_
     << "\nWeight 1= " << this->parent_weight_[0]
     << "\nWeight 2= " << this->parent_weight_[1] << "\n";
@@ -201,7 +201,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //  // Directed trees corresponding to the resample xgraphs
 //  dbsksp_xshock_directed_tree_sptr tree1_b = 0;
 //  dbsksp_xshock_directed_tree_sptr tree2_b = 0;
-//  vcl_vector<pathtable_key > correspondence; //> correspondence
+//  std::vector<pathtable_key > correspondence; //> correspondence
 // 
 //  // heuristic parameter values
 //  double distance_rms_error_threshold = 0.5;
@@ -218,7 +218,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    dbsksp_fit_xgraph fit_xgraph(distance_rms_error_threshold);
 //    dbsksp_xshock_graph_sptr common_xgraph[2];
 //
-//    vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
+//    std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
 //    fit_xgraph.fit_to(trimmed_xgraph[0], common_xgraph[0], dummy, sample_ds);
 //    fit_xgraph.fit_to(trimmed_xgraph[1], common_xgraph[1], dummy, sample_ds);
 //
@@ -249,7 +249,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //  }
 //
 //  //4) Subsample each branch of the shock graphs, if necessary, so that they share the sample topology
-//  vcl_map<dbsksp_xshock_edge_sptr, int > map_num_nodes_to_add;
+//  std::map<dbsksp_xshock_edge_sptr, int > map_num_nodes_to_add;
 //
 //  bool subsampling_success = true;
 //  for (unsigned k =0; k < correspondence.size(); ++k)
@@ -263,16 +263,16 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    int tree2_d2 = key.second.second;
 //
 //    // retrieve list of darts
-//    vcl_vector<int > path1 = tree1_b->get_dart_path(tree1_d1, tree1_d2);
-//    vcl_vector<int > path2 = tree2_b->get_dart_path(tree2_d1, tree2_d2);
+//    std::vector<int > path1 = tree1_b->get_dart_path(tree1_d1, tree1_d2);
+//    std::vector<int > path2 = tree2_b->get_dart_path(tree2_d1, tree2_d2);
 //
 //    // retrieve edges for shock branches
 //    dbsksp_xshock_node_sptr start_node1;
-//    vcl_vector<dbsksp_xshock_edge_sptr > branch1;
+//    std::vector<dbsksp_xshock_edge_sptr > branch1;
 //    tree1_b->get_edge_list(path1, start_node1, branch1);
 //
 //    dbsksp_xshock_node_sptr start_node2;
-//    vcl_vector<dbsksp_xshock_edge_sptr > branch2;
+//    std::vector<dbsksp_xshock_edge_sptr > branch2;
 //    tree2_b->get_edge_list(path2, start_node2, branch2);
 //
 //    // remove terminal edges at the begining and at the end of the branches
@@ -286,7 +286,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //      if (branch1.front()->is_terminal_edge())
 //      {
 //        start_node1 = branch1.front()->opposite(start_node1);
-//        vcl_vector<dbsksp_xshock_edge_sptr > temp = branch1;
+//        std::vector<dbsksp_xshock_edge_sptr > temp = branch1;
 //        branch1.clear();
 //        for (unsigned i =1; i < temp.size(); ++i)
 //        {
@@ -306,7 +306,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //      if (branch2.front()->is_terminal_edge())
 //      {
 //        start_node2 = branch2.front()->opposite(start_node2);
-//        vcl_vector<dbsksp_xshock_edge_sptr > temp = branch2;
+//        std::vector<dbsksp_xshock_edge_sptr > temp = branch2;
 //        branch2.clear();
 //        for (unsigned i =1; i < temp.size(); ++i)
 //        {
@@ -319,15 +319,15 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //
 //    // each path should have 2^n edges
 //    // verify this
-//    double log2_size1 = vcl_log(double(branch1.size())) / vnl_math::ln2;
+//    double log2_size1 = std::log(double(branch1.size())) / vnl_math::ln2;
 //    bool branch1_is_power_2 = (log2_size1 - vnl_math::floor(log2_size1)) < 1e-12;
 //
-//    double log2_size2 = vcl_log(double(branch2.size())) / vnl_math::ln2;
+//    double log2_size2 = std::log(double(branch2.size())) / vnl_math::ln2;
 //    bool branch2_is_power_2 = (log2_size2 - vnl_math::floor(log2_size2)) < 1e-12;
 //
 //    if (!branch1_is_power_2 || !branch2_is_power_2)
 //    {
-//      vcl_cout << "\nERROR: Number of edges in one branch is not a power of 2.\n";
+//      std::cout << "\nERROR: Number of edges in one branch is not a power of 2.\n";
 //      continue;
 //    }
 //
@@ -356,19 +356,19 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //
 //
 //  // adding nodes to the marked edges
-//  for (vcl_map<dbsksp_xshock_edge_sptr, int >::iterator iter = map_num_nodes_to_add.begin();
+//  for (std::map<dbsksp_xshock_edge_sptr, int >::iterator iter = map_num_nodes_to_add.begin();
 //    iter != map_num_nodes_to_add.end(); ++iter)
 //  {
 //    dbsksp_xshock_edge_sptr xe = iter->first;
 //    int num_nodes_to_add = iter->second;
 //
-//    vcl_vector<dbsksp_xshock_node_descriptor > list_xsample;
+//    std::vector<dbsksp_xshock_node_descriptor > list_xsample;
 //
 //    // new method
 //    dbsksp_xshock_node_descriptor start = *(xe->source()->descriptor(xe));
 //    dbsksp_xshock_node_descriptor end   = xe->target()->descriptor(xe)->opposite_xnode();
 //    dbsksp_xshock_fragment xfrag(start, end);
-//    int power_n = vnl_math::rnd(vcl_log(double(num_nodes_to_add+1)) / vnl_math::ln2);
+//    int power_n = vnl_math::rnd(std::log(double(num_nodes_to_add+1)) / vnl_math::ln2);
 //    dbsksp_divide_xfrag_into_2_power_n_fragments(xfrag, power_n, list_xsample);
 //
 //    
@@ -378,7 +378,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    ////
 //    //dbsksp_xgraph_algos::compute_xsamples(num_nodes_to_add+1, 
 //    //  xe->source(), 
-//    //  vcl_vector<dbsksp_xshock_edge_sptr>(1, xe), list_xsample);
+//    //  std::vector<dbsksp_xshock_edge_sptr>(1, xe), list_xsample);
 //
 //    assert(num_nodes_to_add + 2 == list_xsample.size());
 //
@@ -443,7 +443,7 @@ update_relative_error()
 
   this->relative_error_ = (err[0] + err[1]) / this->distance_btw_parents_;
 
-  vcl_cout 
+  std::cout 
     << "\n  d1    = " << this->distance_to_parent_[0] << " w1 = " << this->parent_weight_[0]
     << "\n  d2    = " << this->distance_to_parent_[1] << " w2 = " << this->parent_weight_[1]
     << "\n  d     = " << this->distance_btw_parents_
@@ -459,9 +459,9 @@ bool dbsksp_weighted_average_two_xgraphs::
 compute()
 {
   //0) Initialize internal variables
-  vcl_cout << "\n[Begin - Initialize internal variables]\n";
+  std::cout << "\n[Begin - Initialize internal variables]\n";
   this->init();
-  vcl_cout << "\n[End   - Initialize internal variables]\n";
+  std::cout << "\n[End   - Initialize internal variables]\n";
 
   // save the two original xgraphs
   if (this->debugging())
@@ -471,9 +471,9 @@ compute()
   }
 
   //1) Determine trimmed xgraphs -- splice the "leaf branches" from the original graphs
-  vcl_cout << "\n[Begin - Construct trimmed xgraphs]\n";
+  std::cout << "\n[Begin - Construct trimmed xgraphs]\n";
   bool success = this->construct_trimmed_xgraphs();
-  vcl_cout << "\n[End   - Construct trimmed xgraphs]\n";
+  std::cout << "\n[End   - Construct trimmed xgraphs]\n";
 
   if (!success) return false;
 
@@ -487,9 +487,9 @@ compute()
 
 
   //2) Construct a model xgraph and find their correspondence to the trimmed xgraphs
-  vcl_cout << "\n[Begin - Construct model xgraphs from trimmed xgraphs]\n";
+  std::cout << "\n[Begin - Construct model xgraphs from trimmed xgraphs]\n";
   success = this->construct_model_xgraph_from_trimmed_xgraphs();
-  vcl_cout << "\n[End   - Construct model xgraphs from trimmed xgraphs]\n";
+  std::cout << "\n[End   - Construct model xgraphs from trimmed xgraphs]\n";
   if (!success) return false;
   
   // print the initial model xgraph
@@ -499,9 +499,9 @@ compute()
   }
 
   //3) Optimize model xgraph to minimize cost
-  vcl_cout << "\n[Begin - Optimize model xgraph]\n";
+  std::cout << "\n[Begin - Optimize model xgraph]\n";
   this->optimize_model_xgraph();
-  vcl_cout << "\n[End - Optimize model xgraph]\n";
+  std::cout << "\n[End - Optimize model xgraph]\n";
 
   return true;
 }
@@ -513,12 +513,12 @@ bool dbsksp_weighted_average_two_xgraphs::
 construct_trimmed_xgraphs()
 {
   dbsksp_edit_distance work;
-  vcl_vector<pathtable_key > work_corr;
+  std::vector<pathtable_key > work_corr;
   double d_parents = this->compute_edit_distance(this->parent_xgraph(0), this->parent_xgraph(1), work); 
   work.get_final_correspondence(work_corr);
 
   // Print out
-  vcl_cout 
+  std::cout 
     << "\nDirect distance parent1 --> parent2 = " << d_parents
     << "\n  Deformation cost                  = " << work.get_deform_cost(work_corr)
     << "\n  Total splice cost of parent1      = " << work.tree1()->total_splice_cost()
@@ -532,7 +532,7 @@ construct_trimmed_xgraphs()
   // safety check
   if (!trimmed_xgraph[0] || !trimmed_xgraph[1])
   {
-    vcl_cout << "\nERROR: either trimmed_xgraph[0] or trimmed_xgraph[1] was not computed.\n";
+    std::cout << "\nERROR: either trimmed_xgraph[0] or trimmed_xgraph[1] was not computed.\n";
     return false;
   }
 
@@ -541,7 +541,7 @@ construct_trimmed_xgraphs()
   //{
   //  dbsksp_xshock_graph_sptr temp = 0;
   //  dbsksp_fit_xgraph fit_xgraph(this->fit_xgraph_tol_);
-  //  vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
+  //  std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
   //  fit_xgraph.fit_to(trimmed_xgraph[i], temp, dummy);
   //  assert(temp);
   //  trimmed_xgraph[i] = temp;
@@ -556,7 +556,7 @@ construct_trimmed_xgraphs()
     work.get_final_correspondence(work_corr);
 
     // Print out cost
-    vcl_cout 
+    std::cout 
       << vul_sprintf("\nDistance parent%i --> trimmed_xgraph%i= %f", i+1, i+1, this->distance_parent_to_trimmed_xgraph_[i])
       << "\n  Deformation cost           = " << work.get_deform_cost(work_corr) << "\n";
   }
@@ -568,7 +568,7 @@ construct_trimmed_xgraphs()
     work.get_final_correspondence(work_corr);
 
     // Print out
-    vcl_cout 
+    std::cout 
       << "\nDistance trimmed1 --> trimmed2 = " << this->distance_btw_trimmed_xgraphs_
       << "\n  Deformation cost           = " << work.get_deform_cost(work_corr)
       << "\n  Total splice cost of trimmed1 = " << work.tree1()->total_splice_cost()
@@ -587,7 +587,7 @@ construct_trimmed_xgraphs()
 double dbsksp_weighted_average_two_xgraphs::
 compute_deform_cost(const dbsksp_xshock_directed_tree_sptr& tree1,
                     const dbsksp_xshock_directed_tree_sptr& tree2,
-                    const vcl_vector<pathtable_key >& correspondence)
+                    const std::vector<pathtable_key >& correspondence)
 {
   dbsksp_edit_distance e1;
   e1.set_scurve_matching_R(this->scurve_matching_R());
@@ -603,11 +603,11 @@ compute_deform_cost(const dbsksp_xshock_directed_tree_sptr& tree1,
 //bool dbsksp_weighted_average_two_xgraphs::
 //compute_vertex_and_edge_correspondence(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    const dbsksp_xshock_directed_tree_sptr& tree2,
-//    const vcl_vector<pathtable_key >& dart_correspondence_tree1_to_tree2,
-//    vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph1_to_xgraph2,
-//    vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph2_to_xgraph1,
-//    vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph1_to_xgraph2,
-//    vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph2_to_xgraph1)
+//    const std::vector<pathtable_key >& dart_correspondence_tree1_to_tree2,
+//    std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph1_to_xgraph2,
+//    std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph2_to_xgraph1,
+//    std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph1_to_xgraph2,
+//    std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph2_to_xgraph1)
 //{
 //  // sanitize output storage
 //  node_map_xgraph1_to_xgraph2.clear();
@@ -629,7 +629,7 @@ compute_deform_cost(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    int tree2_d2 = key.second.second;
 //
 //    // retrieve list of nodes and edges from the darts
-//    vcl_vector<dbsksp_xshock_edge_sptr > edge_list1, edge_list2;
+//    std::vector<dbsksp_xshock_edge_sptr > edge_list1, edge_list2;
 //    dbsksp_xshock_node_sptr start_node1, start_node2;
 //
 //    tree1->get_edge_list(tree1->get_dart_path(tree1_d1, tree1_d2), start_node1, edge_list1);
@@ -643,22 +643,22 @@ compute_deform_cost(const dbsksp_xshock_directed_tree_sptr& tree1,
 //    dbsksp_xshock_node_sptr cur_xv2 = start_node2;
 //
 //    // correspondence for the first node
-//    node_map_xgraph1_to_xgraph2.insert(vcl_make_pair(cur_xv1, cur_xv2));
-//    node_map_xgraph2_to_xgraph1.insert(vcl_make_pair(cur_xv2, cur_xv1));
+//    node_map_xgraph1_to_xgraph2.insert(std::make_pair(cur_xv1, cur_xv2));
+//    node_map_xgraph2_to_xgraph1.insert(std::make_pair(cur_xv2, cur_xv1));
 //
 //    for (unsigned i =0; i < edge_list1.size(); ++i)
 //    {
 //      dbsksp_xshock_edge_sptr xe1 = edge_list1[i];
 //      dbsksp_xshock_edge_sptr xe2 = edge_list2[i];
 //
-//      edge_map_xgraph1_to_xgraph2.insert(vcl_make_pair(xe1, xe2));
-//      edge_map_xgraph2_to_xgraph1.insert(vcl_make_pair(xe2, xe1));
+//      edge_map_xgraph1_to_xgraph2.insert(std::make_pair(xe1, xe2));
+//      edge_map_xgraph2_to_xgraph1.insert(std::make_pair(xe2, xe1));
 //
 //      cur_xv1 = xe1->opposite(cur_xv1);
 //      cur_xv2 = xe2->opposite(cur_xv2);
 //
-//      node_map_xgraph1_to_xgraph2.insert(vcl_make_pair(cur_xv1, cur_xv2));
-//      node_map_xgraph2_to_xgraph1.insert(vcl_make_pair(cur_xv2, cur_xv1));
+//      node_map_xgraph1_to_xgraph2.insert(std::make_pair(cur_xv1, cur_xv2));
+//      node_map_xgraph2_to_xgraph1.insert(std::make_pair(cur_xv2, cur_xv1));
 //    }
 //
 //  }
@@ -682,7 +682,7 @@ compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tree,
   int centroid = common_tree1->centroid();
 
   // find the dart with maximum costs
-  vcl_vector<int > out_darts = common_tree1->out_darts(centroid);
+  std::vector<int > out_darts = common_tree1->out_darts(centroid);
   float max_subtree_cost = -1.0f;
   int max_dart_id = 0;
   for (unsigned i =0; i < out_darts.size(); ++i)
@@ -695,9 +695,9 @@ compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tree,
     }
   }
 
-  vcl_vector<dbsksp_xshock_edge_sptr > edge_path;
+  std::vector<dbsksp_xshock_edge_sptr > edge_path;
   dbsksp_xshock_node_sptr start_node = 0;
-  common_tree1->get_edge_list(vcl_vector<int >(1, max_dart_id), start_node, edge_path);
+  common_tree1->get_edge_list(std::vector<int >(1, max_dart_id), start_node, edge_path);
 
   // save results
   root_node = start_node;
@@ -711,7 +711,7 @@ compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tree,
 //: Compute coarse Euler tour for an xgraph (ignore degree-2 nodes)
 bool dbsksp_weighted_average_two_xgraphs::
 compute_coarse_euler_tour(const dbsksp_xshock_graph_sptr& model_xgraph, 
-    vcl_vector<dbsksp_xshock_node_sptr >& coarse_euler_tour) const
+    std::vector<dbsksp_xshock_node_sptr >& coarse_euler_tour) const
 {
   // sanitize output storage
   coarse_euler_tour.clear();
@@ -754,12 +754,12 @@ compute_coarse_euler_tour(const dbsksp_xshock_graph_sptr& model_xgraph,
 //------------------------------------------------------------------------------
 //: Print debug info to a file
 void dbsksp_weighted_average_two_xgraphs::
-print_debug_info(const vcl_string& str) const
+print_debug_info(const std::string& str) const
 {
   if (this->debugging())
   {
-    vcl_string fname = this->base_name_ + "-debug.txt";
-    vcl_ofstream ofs(fname.c_str(), vcl_ofstream::app);
+    std::string fname = this->base_name_ + "-debug.txt";
+    std::ofstream ofs(fname.c_str(), std::ofstream::app);
     ofs << str;
     ofs.close();
   }
@@ -790,7 +790,7 @@ construct_model_xgraph_from_trimmed_xgraphs()
   {
     dbsksp_xshock_graph_sptr temp = 0;
     dbsksp_fit_xgraph fit_xgraph(this->fit_xgraph_tol_);
-    vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
+    std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > dummy;
     fit_xgraph.fit_to(model_xgraph, temp, dummy);
     assert(temp);
     model_xgraph = temp;
@@ -802,7 +802,7 @@ construct_model_xgraph_from_trimmed_xgraphs()
     dbsksp_edit_distance::new_tree(model_xgraph, this->scurve_matching_R(), this->scurve_sample_ds());
   
   // correspondence
-  vcl_vector<pathtable_key > corr_trimmed_to_model[2];
+  std::vector<pathtable_key > corr_trimmed_to_model[2];
   
   // contract cost
   double                     contract_cost_trimmed_to_model[2];
@@ -815,14 +815,14 @@ construct_model_xgraph_from_trimmed_xgraphs()
     double deform_cost = work.get_deform_cost(corr_trimmed_to_model[i]);
     contract_cost_trimmed_to_model[i] = edit_cost - deform_cost;
 
-    vcl_cout 
+    std::cout 
       << "\nDistance trimmed"<< i+1 << " --> model = " << edit_cost
       << "\n  Deformation cost           = " << deform_cost
       << "\n  Contract + splice cost     = " << contract_cost_trimmed_to_model[i] << "\n";
   }
 
   //3) Verify that all edges of model xgraph are involved in the two correpondence maps
-  vcl_set<dbsksp_xshock_edge_sptr > active_edges;
+  std::set<dbsksp_xshock_edge_sptr > active_edges;
   for (unsigned idx =0; idx < 2; ++idx)
   {
     for (unsigned i =0; i < corr_trimmed_to_model[idx].size(); ++i)
@@ -832,11 +832,11 @@ construct_model_xgraph_from_trimmed_xgraphs()
       int model_d2 = key.second.second;
 
       // retrieve list of darts
-      vcl_vector<int > model_path = model_tree->get_dart_path(model_d1, model_d2);
+      std::vector<int > model_path = model_tree->get_dart_path(model_d1, model_d2);
 
       // retrieve list of edges
       dbsksp_xshock_node_sptr start_node;
-      vcl_vector<dbsksp_xshock_edge_sptr > edges;
+      std::vector<dbsksp_xshock_edge_sptr > edges;
       model_tree->get_edge_list(model_path, start_node, edges);
 
       // save list of edges
@@ -845,7 +845,7 @@ construct_model_xgraph_from_trimmed_xgraphs()
   }
 
   // Check that all edges are active
-  vcl_vector<dbsksp_xshock_edge_sptr > inactive_edges;
+  std::vector<dbsksp_xshock_edge_sptr > inactive_edges;
   for (dbsksp_xshock_graph::edge_iterator eit = model_xgraph->edges_begin(); 
     eit != model_xgraph->edges_end(); ++eit)
   {
@@ -884,7 +884,7 @@ optimize_model_xgraph()
 
   dbsksp_xshock_graph_sptr mg = this->model_tree_->xgraph();
 
-  vcl_cout 
+  std::cout 
     << "\n Model xgraph: #vertices = " << mg->number_of_vertices()
     << "\n               #edges    = " << mg->number_of_edges() << "\n";
 
@@ -892,7 +892,7 @@ optimize_model_xgraph()
     vul_sprintf("num_vertices_in_model_xgraph %d\n", mg->number_of_vertices()));
 
   //4) Choose a root node for the model xgraph
-  vcl_cout << "\nChoosing a root node ...";
+  std::cout << "\nChoosing a root node ...";
   {
     dbsksp_xshock_node_sptr model_root_node;
     dbsksp_xshock_edge_sptr model_pseudo_parent_edge;
@@ -901,7 +901,7 @@ optimize_model_xgraph()
     this->model_root_vid_ = model_root_node->id();
     this->model_pseudo_parent_eid_ = model_pseudo_parent_edge->id();
   }
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   this->print_debug_info(vul_sprintf("model_root_vid %d\n", this->model_root_vid_) + 
     vul_sprintf("model_pseudo_parent_eid %d\n", this->model_pseudo_parent_eid_));
@@ -920,7 +920,7 @@ optimize_model_xgraph()
   this->target_distance_trimmed_to_model_[0] = d * w2/(w1+w2) - d1;
   this->target_distance_trimmed_to_model_[1] = d * w1/(w1+w2) - d2;
 
-  vcl_cout << "Target distance trimmed1 --> model = " << this->target_distance_trimmed_to_model_[0] << "\n"
+  std::cout << "Target distance trimmed1 --> model = " << this->target_distance_trimmed_to_model_[0] << "\n"
     << "Target distance trimmed2 --> model = " << this->target_distance_trimmed_to_model_[1] << "\n";
 
   this->print_debug_info(
@@ -932,7 +932,7 @@ optimize_model_xgraph()
   // computed target distance
 
   //a) Form Euler tour of nodes to visit
-  vcl_vector<dbsksp_xshock_node_sptr > nodes_on_euler_tour;
+  std::vector<dbsksp_xshock_node_sptr > nodes_on_euler_tour;
   this->compute_coarse_euler_tour(mg, nodes_on_euler_tour);
 
   //b) Shape model to modify the model_xgraph
@@ -957,7 +957,7 @@ optimize_model_xgraph()
     vul_sprintf("f_tol              %f\n", f_tol));
 
   //b) Move along the Euler tour and optimize
-  vcl_vector<double > trace_relative_error;
+  std::vector<double > trace_relative_error;
 
   //
   this->print_debug_info("begin_trace_relative_error [time(ms) relative_error]\n");
@@ -968,7 +968,7 @@ optimize_model_xgraph()
   vnl_vector<double > argmin_relative_error;
   for (unsigned kk = 0; kk < 5 && this->relative_error() > this->relative_error_tol_; ++kk)
   {
-    vcl_cout << "\nEuler tour round = " << kk << "\n";
+    std::cout << "\nEuler tour round = " << kk << "\n";
     for (unsigned k =0; k < nodes_on_euler_tour.size() && this->relative_error() > this->relative_error_tol_; ++k)
     {
       vul_timer timer1;
@@ -989,8 +989,8 @@ optimize_model_xgraph()
       prev_xv = xv;
 
       //i) construct cost function
-      vcl_cout << "\nnode id= " << xv->id() << "\n";
-      xv->print(vcl_cout);
+      std::cout << "\nnode id= " << xv->id() << "\n";
+      xv->print(std::cout);
 
       dbsksp_weighted_average_two_xgraphs_one_node_cost_function local_deform_cost(
         this->trimmed_tree_[0],
@@ -1014,7 +1014,7 @@ optimize_model_xgraph()
 
       // Use Powell to minimize cost
       double f0 = local_deform_cost.f(x);
-      vcl_cout << "Init cost = " << f0 << "\n";
+      std::cout << "Init cost = " << f0 << "\n";
 
 
       // Powell
@@ -1025,7 +1025,7 @@ optimize_model_xgraph()
       powell.minimize(x);
       
       double final_cost = local_deform_cost.f(x);
-      vcl_cout << "Final cost = " << final_cost << "\n";
+      std::cout << "Final cost = " << final_cost << "\n";
 
       // True distance to two original shape
       this->update_relative_error();
@@ -1048,7 +1048,7 @@ optimize_model_xgraph()
       // print debug info
       this->print_debug_info(vul_sprintf("%f %f\n", float(timer.real())/1000, this->relative_error_));
 
-      vcl_cout << "Time: " << timer1.real() / 1000 << " secs\n";
+      std::cout << "Time: " << timer1.real() / 1000 << " secs\n";
     }
   }
 
@@ -1064,7 +1064,7 @@ optimize_model_xgraph()
     x_write(this->base_name_ + "-model-last.xml", this->average_xgraph());
   }
 
-  vcl_cout << "\nTimer - real time: " << timer.real() / 1000 << " seconds\n";
+  std::cout << "\nTimer - real time: " << timer.real() / 1000 << " seconds\n";
 
   this->update_relative_error();
   for (int i =0; i < 2; ++i)

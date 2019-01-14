@@ -76,7 +76,7 @@ dbvrl_cost_func::f(vnl_vector<double> const& x)
   for(unsigned int i=0; i<s1.size(); ++i){
     if (s1[i] != 0.0 && s2[i] != 0.0 && s3[i]>0.0){
       double diff = s2[i]-s1[i];
-      diff *=vcl_pow(diff,5)/(vcl_pow(diff,5)+vcl_pow(100.0,5)); 
+      diff *=std::pow(diff,5)/(std::pow(diff,5)+std::pow(100.0,5)); 
       rms += diff*diff*w1[i]*w2[i];
       total_weight += w1[i]*w2[i];
     }
@@ -87,14 +87,14 @@ dbvrl_cost_func::f(vnl_vector<double> const& x)
       for(unsigned int i=0; i<s1.size(); ++i){
           if (s1[i] != 0.0 && s2[i] != 0.0 ){
               double diff = s2[i]-s1[i];
-              //diff *=vcl_pow(diff,5)/(vcl_pow(diff,5)+vcl_pow(100.0,5)); 
+              //diff *=std::pow(diff,5)/(std::pow(diff,5)+std::pow(100.0,5)); 
               rms += diff*diff*w1[i]*w2[i];
               total_weight += w1[i]*w2[i];
           }
       }
   }
   rms /= total_weight;
-  return vcl_sqrt(rms);
+  return std::sqrt(rms);
 }
 
 

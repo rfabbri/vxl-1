@@ -18,7 +18,7 @@
 
 
 
-//const vcl_string demo_types[] = {"Shapelets from 2 extrinsic nodes"};
+//const std::string demo_types[] = {"Shapelets from 2 extrinsic nodes"};
 
 //: Constructor
 dbsksp_interp_two_xnodes_tool::
@@ -45,17 +45,17 @@ dbsksp_interp_two_xnodes_tool() :
 
 
   // task-specific params
-  this->param_list_.insert(vcl_make_pair("x0", 0));
-  this->param_list_.insert(vcl_make_pair("y0", 0));
-  this->param_list_.insert(vcl_make_pair("psi0", 0));
-  this->param_list_.insert(vcl_make_pair("phi0", vnl_math::pi*2/3));
-  this->param_list_.insert(vcl_make_pair("radius0", 10));
-  this->param_list_.insert(vcl_make_pair("x2", 100));
-  this->param_list_.insert(vcl_make_pair("y2", 0));
-  this->param_list_.insert(vcl_make_pair("psi2", 0));
-  this->param_list_.insert(vcl_make_pair("phi2", vnl_math::pi*2/3));
-  this->param_list_.insert(vcl_make_pair("radius2", 50));
-  this->param_list_.insert(vcl_make_pair("param_t", 0.5));  
+  this->param_list_.insert(std::make_pair("x0", 0));
+  this->param_list_.insert(std::make_pair("y0", 0));
+  this->param_list_.insert(std::make_pair("psi0", 0));
+  this->param_list_.insert(std::make_pair("phi0", vnl_math::pi*2/3));
+  this->param_list_.insert(std::make_pair("radius0", 10));
+  this->param_list_.insert(std::make_pair("x2", 100));
+  this->param_list_.insert(std::make_pair("y2", 0));
+  this->param_list_.insert(std::make_pair("psi2", 0));
+  this->param_list_.insert(std::make_pair("phi2", vnl_math::pi*2/3));
+  this->param_list_.insert(std::make_pair("radius2", 50));
+  this->param_list_.insert(std::make_pair("param_t", 0.5));  
   this->active_param_name_ = "x0";
 
 
@@ -174,11 +174,11 @@ void dbsksp_interp_two_xnodes_tool::
 get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   // construct shapelets from two extrinsic nodes
-  for (vcl_map<vcl_string, double >::iterator itr = 
+  for (std::map<std::string, double >::iterator itr = 
     this->param_list_.begin(); 
     itr != this->param_list_.end(); ++itr)
   {
-    vcl_string checkbox;
+    std::string checkbox;
     if (itr->first == this->active_param_name_)
     {
       checkbox = "[x] ";
@@ -186,15 +186,15 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
     else
       checkbox = "[ ] ";
     menu.add(checkbox + itr->first, 
-      new dbsksp_set_param_command<vcl_string >(&this->active_param_name_, itr->first));    
+      new dbsksp_set_param_command<std::string >(&this->active_param_name_, itr->first));    
   }
 
   // Interpolation mode menu
   vgui_menu mode_menu;
-  for (vcl_vector<vcl_string >::iterator itr = this->interp_mode_list_.begin();
+  for (std::vector<std::string >::iterator itr = this->interp_mode_list_.begin();
     itr != this->interp_mode_list_.end(); ++itr)
   {
-    vcl_string checkbox;
+    std::string checkbox;
     if (*itr == this->active_interp_mode_)
     {
       checkbox = "[x] ";
@@ -202,7 +202,7 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
     else
       checkbox = "[ ] ";
     mode_menu.add(checkbox + *itr, 
-      new dbsksp_set_param_command<vcl_string >(&this->active_interp_mode_, *itr ));    
+      new dbsksp_set_param_command<std::string >(&this->active_interp_mode_, *itr ));    
   }
 
 
@@ -219,7 +219,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   if (this->gesture_increase_increment_value_(e))
   {
     this->increment_ *= 10;
-    vgui::out << "increment=" << this->increment_<< vcl_endl;
+    vgui::out << "increment=" << this->increment_<< std::endl;
     return false;
   }
 
@@ -227,7 +227,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   if (this->gesture_decrease_increment_value_(e))
   {
     this->increment_ /= 10;
-    vgui::out << "increment=" << this->increment_<< vcl_endl;
+    vgui::out << "increment=" << this->increment_<< std::endl;
     return false;
   }
 
@@ -262,14 +262,14 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
 bool dbsksp_interp_two_xnodes_tool::
 handle_display_info()
 {
-  vcl_cout << "Parameters = \n";
-  for (vcl_map<vcl_string, double >::iterator itr = 
+  std::cout << "Parameters = \n";
+  for (std::map<std::string, double >::iterator itr = 
     this->param_list_.begin(); 
     itr != this->param_list_.end(); ++itr)
   {
-    vcl_cout << itr->first << " = " << itr->second << vcl_endl;  
+    std::cout << itr->first << " = " << itr->second << std::endl;  
   }
-  vcl_cout << "increment = " << this->increment_ << vcl_endl;
+  std::cout << "increment = " << this->increment_ << std::endl;
 
   return true;
 }
@@ -280,16 +280,16 @@ handle_display_info()
 bool dbsksp_interp_two_xnodes_tool::
 handle_change_param_value(double increment)
 {
-  vcl_map<vcl_string, double >::iterator itr = 
+  std::map<std::string, double >::iterator itr = 
     this->param_list_.find(this->active_param_name_);
   if (itr != this->param_list_.end())
   {
-    vcl_cout << "-----------------------------------------------------\n";
-    vcl_cout << "Parameter name = " << itr->first << vcl_endl;
-    vcl_cout << "Old value = " << itr->second << vcl_endl;
+    std::cout << "-----------------------------------------------------\n";
+    std::cout << "Parameter name = " << itr->first << std::endl;
+    std::cout << "Old value = " << itr->second << std::endl;
     itr->second += increment;
-    vcl_cout << "New value = " << itr->second << vcl_endl;
-    vcl_cout << "-----------------------------------------------------\n";
+    std::cout << "New value = " << itr->second << std::endl;
+    std::cout << "-----------------------------------------------------\n";
   }
 
   // compute two shapelets from two extrinsic nodes
@@ -315,11 +315,11 @@ handle_change_param_value(double increment)
     if (t > 0 && t < 1)
     {
       ss = interpolator.init(t);
-      vcl_cout << "alpha0 = " << ss->shapelet_start()->alpha_start() << vcl_endl;
+      std::cout << "alpha0 = " << ss->shapelet_start()->alpha_start() << std::endl;
     }
     else
     {
-      vcl_cout << "ERROR: t must be in (0, 1). Current t = " << t << vcl_endl;
+      std::cout << "ERROR: t must be in (0, 1). Current t = " << t << std::endl;
       return true;
     }
   }
@@ -340,11 +340,11 @@ handle_change_param_value(double increment)
     if (t > 0 && t < 1)
     {
       ss = interpolator.optimize(t);
-      //vcl_cout << "alpha0 = " << ss->shapelet_start()->alpha_start() << vcl_endl;
+      //std::cout << "alpha0 = " << ss->shapelet_start()->alpha_start() << std::endl;
     }
     else
     {
-      vcl_cout << "ERROR: t must be in (0, 1). Current t = " << t << vcl_endl;
+      std::cout << "ERROR: t must be in (0, 1). Current t = " << t << std::endl;
       return true;
     }
   }
@@ -475,8 +475,8 @@ draw_extrinsic_node(const dbsksp_xshock_node_descriptor& node)
 
   // ii. tangent
   vgui_soview2D_lineseg lineseg((float)node.pt_.x(), (float)node.pt_.y(), 
-    (float)(node.pt_.x() + node.radius_ * vcl_cos(node.psi_)), 
-    (float)(node.pt_.y() + node.radius_ * vcl_sin(node.psi_)));
+    (float)(node.pt_.x() + node.radius_ * std::cos(node.psi_)), 
+    (float)(node.pt_.y() + node.radius_ * std::sin(node.psi_)));
   
   lineseg.draw();
 
@@ -484,16 +484,16 @@ draw_extrinsic_node(const dbsksp_xshock_node_descriptor& node)
   // left
   lineseg.x0 = (float)node.pt_.x();
   lineseg.y0 = (float)node.pt_.y();
-  lineseg.x1 = (float)(node.pt_.x() + node.radius_*vcl_cos(node.psi_+node.phi_)); 
-  lineseg.y1 = (float)(node.pt_.y() + node.radius_*vcl_sin(node.psi_+node.phi_));
+  lineseg.x1 = (float)(node.pt_.x() + node.radius_*std::cos(node.psi_+node.phi_)); 
+  lineseg.y1 = (float)(node.pt_.y() + node.radius_*std::sin(node.psi_+node.phi_));
   lineseg.set_colour(0.0f, 1.0f, 0.0f);
   lineseg.draw();
 
   // right
   lineseg.x0 = (float)node.pt_.x();
   lineseg.y0 = (float)node.pt_.y();
-  lineseg.x1 = (float)(node.pt_.x() + node.radius_*vcl_cos(node.psi_-node.phi_)); 
-  lineseg.y1 = (float)(node.pt_.y() + node.radius_*vcl_sin(node.psi_-node.phi_));
+  lineseg.x1 = (float)(node.pt_.x() + node.radius_*std::cos(node.psi_-node.phi_)); 
+  lineseg.y1 = (float)(node.pt_.y() + node.radius_*std::sin(node.psi_-node.phi_));
   lineseg.draw();
 
 }

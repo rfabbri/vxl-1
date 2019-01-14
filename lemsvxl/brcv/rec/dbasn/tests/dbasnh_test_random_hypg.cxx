@@ -19,10 +19,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vul/vul_printf.h>
 #include <testlib/testlib_test.h>
 
@@ -47,10 +47,10 @@ MAIN( dbasnh_test_random_hypg )
 {
   testlib_test_start("Grad. Asgn. on random hypergraphs.");
 
-  vcl_cout <<"Hypergraph G with nodes: "<< G_N_NODE << ", connectivity percentage: "<< G_LINK_CONN << vcl_endl;
-  vcl_cout <<"Match with Sub-graph g with nodes: "<< SUB_G_N << vcl_endl;
-  vcl_cout <<"Noise: " << L_NOISE << vcl_endl;
-  vcl_cout <<"Repeat test for " << N_TEST << " times."<< vcl_endl;
+  std::cout <<"Hypergraph G with nodes: "<< G_N_NODE << ", connectivity percentage: "<< G_LINK_CONN << std::endl;
+  std::cout <<"Match with Sub-graph g with nodes: "<< SUB_G_N << std::endl;
+  std::cout <<"Noise: " << L_NOISE << std::endl;
+  std::cout <<"Repeat test for " << N_TEST << " times."<< std::endl;
 
   unsigned int incorrect_hypg = 0;
   unsigned int error_hypg = 0;
@@ -71,7 +71,7 @@ MAIN( dbasnh_test_random_hypg )
     //Testing simple graph matching
     dbasnh_gradasgn GA;
     dbasn_params params; //Use the default parameters. 
-    vcl_cout<< params;
+    std::cout<< params;
     ///GA.setup_GA_params (G, g, params);
     GA.set_G (G);
     GA.set_g (g);
@@ -92,7 +92,7 @@ MAIN( dbasnh_test_random_hypg )
       if (i != GA.labelGg(labelg[i])) 
         bad++;
     }
-    vul_printf (vcl_cout, "Hypergraph Matching Test # %d: %d bad matches (out of %d).\n", count, bad, SUB_G_N);
+    vul_printf (std::cout, "Hypergraph Matching Test # %d: %d bad matches (out of %d).\n", count, bad, SUB_G_N);
     if (bad)
       error_hypg++;
     incorrect_hypg += bad;
@@ -106,7 +106,7 @@ MAIN( dbasnh_test_random_hypg )
       if (i != GA.labelGg(labelg[i])) 
         bad++;
     }
-    vul_printf (vcl_cout, "Graph Matching Test # %d: %d bad matches (out of %d).\n", count, bad, SUB_G_N);
+    vul_printf (std::cout, "Graph Matching Test # %d: %d bad matches (out of %d).\n", count, bad, SUB_G_N);
     if (bad)
       error_graph++;
     incorrect_graph += bad;
@@ -116,9 +116,9 @@ MAIN( dbasnh_test_random_hypg )
     delete labelg;
   }
 
-  vul_printf (vcl_cout, "\n Totally %d errors / %d bad matches in %d hypergraph matching tests.\n",
+  vul_printf (std::cout, "\n Totally %d errors / %d bad matches in %d hypergraph matching tests.\n",
               error_hypg, incorrect_hypg, N_TEST);
-  vul_printf (vcl_cout, " Totally %d errors / %d bad matches in %d graph matching tests.\n\n",
+  vul_printf (std::cout, " Totally %d errors / %d bad matches in %d graph matching tests.\n\n",
               error_graph, incorrect_graph, N_TEST);
 
   return testlib_test_summary();

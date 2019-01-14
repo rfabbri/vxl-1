@@ -16,7 +16,7 @@
 #include "dborl_contour_ranker_params.h"
 #include "dborl_contour_ranker_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web 
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " << 
-            params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " << 
+            params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
         return 1;
 
     //load the input image
-    vcl_string img_file = params->input_object_dir_() + "/" 
+    std::string img_file = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_extension_();
 
     if (!vul_file::exists(img_file)) 
     {
-        vcl_cerr << "Cannot find image: " << img_file << vcl_endl;
+        std::cerr << "Cannot find image: " << img_file << std::endl;
         return 1;
     }
 
@@ -79,17 +79,17 @@ int main(int argc, char *argv[]) {
     input_img->set_image(img_sptr);
     if (!img_sptr) 
     {
-        vcl_cerr << "Cannot load image: " << img_file << vcl_endl;
+        std::cerr << "Cannot load image: " << img_file << std::endl;
         return 1;
     }
 
     //------------------------------------------
-    vcl_string edg_file = params->input_object_dir_() + "/" 
+    std::string edg_file = params->input_object_dir_() + "/" 
         + params->input_object_name_() + ".edg";
 
     if (!vul_file::exists(edg_file)) 
     {
-        vcl_cerr << "Cannot find edgemap: " << edg_file << vcl_endl;
+        std::cerr << "Cannot find edgemap: " << edg_file << std::endl;
         return 1;
     }
 
@@ -100,16 +100,16 @@ int main(int argc, char *argv[]) {
     input_edg->set_edgemap(edgemap_sptr);
     if (!edgemap_sptr) 
     {
-        vcl_cerr << "Cannot load edgemap: " << edg_file << vcl_endl;
+        std::cerr << "Cannot load edgemap: " << edg_file << std::endl;
         return 1;
     }
 
    //--------------------------------------------
-    vcl_string cem_file = params->input_object_dir_() + "/" 
+    std::string cem_file = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_cem_suffix_() + ".cem";
     if (!vul_file::exists(cem_file)) 
     {
-        vcl_cerr << "Cannot find cfrags: " << cem_file << vcl_endl;
+        std::cerr << "Cannot find cfrags: " << cem_file << std::endl;
         return 1;
     }
 
@@ -120,11 +120,11 @@ int main(int argc, char *argv[]) {
     input_sel->set_EM(frags_edgemap_sptr);
     if (!frags_edgemap_sptr) 
     {
-        vcl_cerr << "Cannot load cfrags: " << cem_file << vcl_endl;
+        std::cerr << "Cannot load cfrags: " << cem_file << std::endl;
         return 1;
     }
 
-    vcl_cout<<"************ Contour Ranker ************"<<vcl_endl;
+    std::cout<<"************ Contour Ranker ************"<<std::endl;
     dbdet_contour_ranker_process cr_pro;
     set_process_parameters_of_bpro1(*params, 
                                     cr_pro, 
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     // if process did not fail
 
     // Set up storage for cbg
-    vcl_vector<bpro1_storage_sptr> cr_results;
+    std::vector<bpro1_storage_sptr> cr_results;
     if ( el_status )
     {
         cr_results = cr_pro.get_output();
@@ -157,8 +157,8 @@ int main(int argc, char *argv[]) {
 
     if (cr_results.size() != 1) 
     {
-        vcl_cerr << "Process output does not contain a sel data structure"
-                 << vcl_endl;
+        std::cerr << "Process output does not contain a sel data structure"
+                 << std::endl;
         return 1;
     }
 
@@ -169,24 +169,24 @@ int main(int argc, char *argv[]) {
     dbdet_sel_storage_sptr sel;
     sel.vertical_cast(cr_results[0]);
 
-    vcl_string cem_file_out = params->output_cem_folder_() + "/" 
+    std::string cem_file_out = params->output_cem_folder_() + "/" 
         + params->input_object_name_() + params->output_cem_suffix_() +".cem";
     //save the contour fragment graph to the file
     bool retval = dbdet_save_cem(cem_file_out, sel->EM(), sel->CFG());
 
     if (!retval) {
-      vcl_cerr << "Error while saving file: " << cem_file_out << vcl_endl;
+      std::cerr << "Error while saving file: " << cem_file_out << std::endl;
       return 1;
     }
     //--------------------------------------------------------------------
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

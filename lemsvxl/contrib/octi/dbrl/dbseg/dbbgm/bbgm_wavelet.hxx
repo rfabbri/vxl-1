@@ -140,10 +140,10 @@ unsigned int y,contained_type& result)
 		this->waveletNo_,this->level_,*this->waveletIm_);
 }
 template<class image_>
-vcl_string
+std::string
 bbgm_wavelet<image_>::is_a() const
 {
-  return "bbgm_wavelet<"+vcl_string(typeid(image_).name())+">";
+  return "bbgm_wavelet<"+std::string(typeid(image_).name())+">";
 }
 
 template<class image_>
@@ -214,16 +214,16 @@ bbgm_wavelet<image_>::b_read(vsl_b_istream &is)
 		}
 		 break;
      default:
-      vcl_cerr << "bbgm_image: unknown I/O version " << ver << '\n';
+      std::cerr << "bbgm_image: unknown I/O version " << ver << '\n';
   }
 }
 template<class image_>
 void
-bbgm_wavelet<image_>::print_summary(vcl_ostream & os)
+bbgm_wavelet<image_>::print_summary(std::ostream & os)
 {
    image_ p=*this->waveletIm_;
-   os << "Rows: " << p.ni() << vcl_endl
-     << "Columns: " << p.nj() << vcl_endl;
+   os << "Rows: " << p.ni() << std::endl
+     << "Columns: " << p.nj() << std::endl;
   for (unsigned int i =0; i<p.ni() && i<5; i++)
   {
     for (unsigned int j=0; j<p.nj() && j<5; j++)
@@ -233,7 +233,7 @@ bbgm_wavelet<image_>::print_summary(vcl_ostream & os)
     }
     if (p.ni() > 5)
       os << "...";
-    os << vcl_endl;
+    os << std::endl;
   }
   if (p.nj() > 5)
     os << " ...\n";

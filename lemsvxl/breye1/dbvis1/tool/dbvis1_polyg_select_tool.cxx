@@ -84,9 +84,9 @@ dbvis1_polyg_select_tool::handle( const vgui_event & e,
 
       vidpro1_vsol2D_storage_sptr stor;
                         
-      vcl_vector <vcl_string > namesake;
+      std::vector <std::string > namesake;
       vsol_polygon_2d_sptr drawn(new vsol_polygon_2d( drawnvert ) );
-      vcl_vector<vsol_spatial_object_2d_sptr> select_pts;
+      std::vector<vsol_spatial_object_2d_sptr> select_pts;
       int count=0;
           
       stor.vertical_cast ( bvis1_manager::instance()->storage_from_tableau( tableau_) );
@@ -99,7 +99,7 @@ dbvis1_polyg_select_tool::handle( const vgui_event & e,
       vsol_tableau_->add_vsol_polygon_2d( drawn );
 
 
-      vcl_vector< vsol_spatial_object_2d_sptr > pts_in_stor = stor->all_data();
+      std::vector< vsol_spatial_object_2d_sptr > pts_in_stor = stor->all_data();
 
 
       for (int k=0;k<pts_in_stor.size();k++)
@@ -114,13 +114,13 @@ dbvis1_polyg_select_tool::handle( const vgui_event & e,
 
           
             
-          vcl_cout<<"Total no of pts in polygon:"<<count<<"\n";
+          std::cout<<"Total no of pts in polygon:"<<count<<"\n";
           vidpro1_vsol2D_storage_sptr selected_pts_stor = vidpro1_vsol2D_storage_new();
           selected_pts_stor->add_objects(select_pts,"Points inside region");
           char index[4];
-          vcl_string string_index = (vcl_string)itoa(sel_num_,index,10);
+          std::string string_index = (std::string)itoa(sel_num_,index,10);
           
-          vcl_string point_group_name(((vcl_string)"Inside_Polyg")+string_index);
+          std::string point_group_name(((std::string)"Inside_Polyg")+string_index);
           selected_pts_stor->set_name(point_group_name);
           
           bvis1_manager::instance()->repository()->store_data(selected_pts_stor);
@@ -167,7 +167,7 @@ dbvis1_polyg_select_tool::handle( const vgui_event & e,
 }
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbvis1_polyg_select_tool::name() const
 {
   return "Polygonal Selection";

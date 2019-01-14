@@ -108,8 +108,8 @@ set_edge_orient(const vil_image_view<float >& edge_angle)
   {
     for (unsigned j =0; j < nj; ++j)
     {
-      this->edge_orient_x_(i, j) = vcl_cos(this->edge_angle_(i,j));
-      this->edge_orient_y_(i, j) = vcl_sin(this->edge_angle_(i,j));
+      this->edge_orient_x_(i, j) = std::cos(this->edge_angle_(i,j));
+      this->edge_orient_y_(i, j) = std::sin(this->edge_angle_(i,j));
     }
   }
 
@@ -208,7 +208,7 @@ compute(const vgl_box_2d<int >& roi, edge_correspondence_method method,
   }
   else
   {
-    vcl_cout << "\nERROR: unknown edge correspondence method.\n";
+    std::cout << "\nERROR: unknown edge correspondence method.\n";
   }
   return;
 }
@@ -217,7 +217,7 @@ compute(const vgl_box_2d<int >& roi, edge_correspondence_method method,
 // -----------------------------------------------------------------------------
 //: cost of an oriented point, represented by its index
 float dbsks_ccm::
-f(const vcl_vector<int >& x, const vcl_vector<int >& y, const vcl_vector<int >& orient_channel)
+f(const std::vector<int >& x, const std::vector<int >& y, const std::vector<int >& orient_channel)
 {
   // need to have sufficient number of sample points to compute cost
   if (x.size() < 5)
@@ -324,7 +324,7 @@ float dbsks_ccm::
 edge_orient_cost(double signed_angle_difference) const
 {
   // modulo the angle difference to [0, pi]
-  double diff = vcl_fmod(signed_angle_difference, vnl_math::pi);
+  double diff = std::fmod(signed_angle_difference, vnl_math::pi);
   if (diff < 0)
     diff += vnl_math::pi;
 
@@ -390,7 +390,7 @@ contour_orient_cost(int cur_x, int cur_y, int cur_orient_bin,
   {
     // use the edge orientation as the contour orientation
     double edge_contour_angle = this->edge_angle_(edge_x, edge_y);
-    vgl_vector_2d<double > v_edge(vcl_cos(edge_contour_angle), vcl_sin(edge_contour_angle));
+    vgl_vector_2d<double > v_edge(std::cos(edge_contour_angle), std::sin(edge_contour_angle));
     
     angle_diff = vnl_math_abs(signed_angle(v_query, v_edge));
 
@@ -439,7 +439,7 @@ compute_ocm_cost_using_closest_edge()
   {
     for (int j = -radius; j <= radius; ++j)
     {
-      dist_map(i+radius, j+radius) = vcl_sqrt(float(i*i + j*j));
+      dist_map(i+radius, j+radius) = std::sqrt(float(i*i + j*j));
     }
   }
 
@@ -579,8 +579,8 @@ compute_ocm_cost_using_closest_edge()
         //>> contour orientation cost
         {
           // Coordinate of next point along contour's tangent
-          int next_point_x = vnl_math_rnd(i + vcl_cos(angle) * neighborhood_radius);
-          int next_point_y = vnl_math_rnd(j + vcl_sin(angle) * neighborhood_radius);
+          int next_point_x = vnl_math_rnd(i + std::cos(angle) * neighborhood_radius);
+          int next_point_y = vnl_math_rnd(j + std::sin(angle) * neighborhood_radius);
 
           //
           if (next_point_x < 0 || next_point_x >= ni || next_point_y < 0 || next_point_y >= nj)
@@ -605,16 +605,16 @@ compute_ocm_cost_using_closest_edge()
           double contour_dir = 0;
           if (next_edge_x == edge_x && next_edge_y == edge_y)
           {
-            contour_dir = vcl_atan2(double(next_edge_x-next_point_x), -double(next_edge_y-next_point_y));
+            contour_dir = std::atan2(double(next_edge_x-next_point_x), -double(next_edge_y-next_point_y));
           }
           else
           {
             // Compute orientation of "contour" on the edges
-            contour_dir = vcl_atan2(double(next_edge_y-edge_y), double(next_edge_x-edge_x));
+            contour_dir = std::atan2(double(next_edge_y-edge_y), double(next_edge_x-edge_x));
           }
 
           // normalize angle difference to [0, pi]
-          double contour_angle_diff = vcl_fmod(angle - contour_dir, vnl_math::pi);
+          double contour_angle_diff = std::fmod(angle - contour_dir, vnl_math::pi);
           if (contour_angle_diff < 0)
             contour_angle_diff += vnl_math::pi;
 
@@ -664,7 +664,7 @@ compute_ocm_cost_using_closest_oriented_edge()
   {
     for (int j = -radius; j <= radius; ++j)
     {
-      dist_map(i+radius, j+radius) = vcl_sqrt(float(i*i + j*j));
+      dist_map(i+radius, j+radius) = std::sqrt(float(i*i + j*j));
     }
   }
 
@@ -706,7 +706,7 @@ compute_ocm_cost_using_closest_oriented_edge()
       int wmax_y = vnl_math_min(j+radius, nj-1);
 
       // Collect locations of all the edges in the neighborhood
-      vcl_vector<vgl_point_2d<int > > neighborhood_edges;
+      std::vector<vgl_point_2d<int > > neighborhood_edges;
       neighborhood_edges.reserve((wmax_x-wmin_x+1)*(wmax_y-wmin_y+1));
       for (int wx = wmin_x; wx <= wmax_x; ++wx)
       {
@@ -739,7 +739,7 @@ compute_ocm_cost_using_closest_oriented_edge()
         for (int p = 0; p < 2*this->nchannel_0topi_; ++p)
         {
           double angle = p * this->radians_per_channel();
-          vgl_vector_2d<double > tangent(vcl_cos(angle), vcl_sin(angle));
+          vgl_vector_2d<double > tangent(std::cos(angle), std::sin(angle));
 
           // Seach among all edges in the neighborhood and minimize Oriented Chamfer Matching cost
           float min_ocm_cost = 1.0f;
@@ -862,8 +862,8 @@ compute_ocm_cost_using_closest_oriented_edge()
           double query_angle = p * this->radians_per_channel();
 
           // Coordinate of next point along contour's tangent
-          int next_point_x = vnl_math_rnd(i + vcl_cos(query_angle) * neighborhood_radius);
-          int next_point_y = vnl_math_rnd(j + vcl_sin(query_angle) * neighborhood_radius);
+          int next_point_x = vnl_math_rnd(i + std::cos(query_angle) * neighborhood_radius);
+          int next_point_y = vnl_math_rnd(j + std::sin(query_angle) * neighborhood_radius);
 
           // assuming orientation doesn't change
           // \todo alternatively, we can average the cost for various next_point_p,

@@ -37,8 +37,8 @@ extern void dbsk2d_assert_failure(char const *, int, char const *);
 
 #ifdef VCL_METRO_WERKS
 // for some reason, MW's <cassert> doesn't have its own printf() and abort() declarations.
-# include <vcl_cstdio.h>
-# include <vcl_cstdlib.h>
+# include <cstdio>
+# include <cstdlib>
 #endif
 
 #else // i.e., not _WIN32
@@ -46,7 +46,7 @@ extern void dbsk2d_assert_failure(char const *, int, char const *);
 #if !VCL_CXX_HAS_HEADER_CASSERT
 # include <assert.h>
 #else
-# include <vcl_cassert.h>
+# include <cassert>
 #endif
 
 //don't know how to handle this properly yet

@@ -20,7 +20,7 @@ void dbsk2d_bpoint_view::draw_filled_arc_sector(double x, double y, double r, do
   if (t0==t1){
     glBegin( GL_LINE_STRIP );
     glVertex2f(x, y);
-    glVertex2f(x+r*vcl_cos(t0), y+r*vcl_sin(t0));
+    glVertex2f(x+r*std::cos(t0), y+r*std::sin(t0));
     glEnd();
     return;
   }
@@ -33,7 +33,7 @@ void dbsk2d_bpoint_view::draw_filled_arc_sector(double x, double y, double r, do
   glVertex2f(x, y); //center
   for(int i = 0; i < n_line_segs; ++i) {
     double t = t0 + (t1-t0)*i/double(n_line_segs-1);
-    glVertex2f(x+r*vcl_cos(t), y+r*vcl_sin(t));
+    glVertex2f(x+r*std::cos(t), y+r*std::sin(t));
   }
   glEnd();
 }

@@ -12,10 +12,10 @@
 #include <vul/vul_file.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_random.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <cstdio>
 
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
@@ -46,7 +46,7 @@ vnl_random vrand;
 int main(int argc, char** argv)
 {
   if (argc < 2) {
-    vcl_cout << "USAGE: sel_batch_compute_contourmap <image_list_filename> \n";
+    std::cout << "USAGE: sel_batch_compute_contourmap <image_list_filename> \n";
     return 1;
   }
 
@@ -54,10 +54,10 @@ int main(int argc, char** argv)
   char lineBuffer[1024];
   
   //1)If file open fails, return.
-  vcl_ifstream infp(argv[1], vcl_ios::in);
+  std::ifstream infp(argv[1], std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << argv[1] << vcl_endl;
+    std::cout << " Error opening file  " << argv[1] << std::endl;
     return false;
   }
 
@@ -68,12 +68,12 @@ int main(int argc, char** argv)
       continue;
 
     //get the image filename
-    vcl_string image_filename(lineBuffer);
+    std::string image_filename(lineBuffer);
 
     //load image
     vil_image_view<vxl_byte> image  = vil_load(image_filename.c_str());
 
-    vcl_string out_filename(vul_file::strip_extension(vul_file::basename(image_filename)));
+    std::string out_filename(vul_file::strip_extension(vul_file::basename(image_filename)));
 
     //compute pixel generic edges
     dbdet_edgemap_sptr edgemap1 = compute_generic_edges(image, 0, out_filename);
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
   return 0; 
 }
 
-dbdet_edgemap_sptr compute_generic_edges(vil_image_view<vxl_byte>& image, int N, vcl_string filename)
+dbdet_edgemap_sptr compute_generic_edges(vil_image_view<vxl_byte>& image, int N, std::string filename)
 {
   //compute edges
   double sigma = 1;
@@ -104,13 +104,13 @@ dbdet_edgemap_sptr compute_generic_edges(vil_image_view<vxl_byte>& image, int N,
 
   //save edgemap
   char out_edge_filename[300];
-  vcl_sprintf(out_edge_filename, "%s_gen_%d_%f.edg", filename.c_str(), N, sigma);
-  saveEDG(vcl_string(out_edge_filename), edgemap);
+  std::sprintf(out_edge_filename, "%s_gen_%d_%f.edg", filename.c_str(), N, sigma);
+  saveEDG(std::string(out_edge_filename), edgemap);
 
   return edgemap;
 }
 
-dbdet_edgemap_sptr compute_third_order_edges(vil_image_view<vxl_byte>& image, vcl_string filename)
+dbdet_edgemap_sptr compute_third_order_edges(vil_image_view<vxl_byte>& image, std::string filename)
 {
   //compute edges
   double sigma = 1;
@@ -121,13 +121,13 @@ dbdet_edgemap_sptr compute_third_order_edges(vil_image_view<vxl_byte>& image, vc
 
   //save edgemap
   char out_edge_filename[300];
-  vcl_sprintf(out_edge_filename, "%s_TO_%d_%f.edg", filename.c_str(), N, sigma);
-  saveEDG(vcl_string(out_edge_filename), edgemap);
+  std::sprintf(out_edge_filename, "%s_TO_%d_%f.edg", filename.c_str(), N, sigma);
+  saveEDG(std::string(out_edge_filename), edgemap);
 
   return edgemap;
 }
 
-void link_edges(dbdet_edgemap_sptr edgemap, double nrad, unsigned maxN, double dx_sel, double dt_deg, vcl_string filename)
+void link_edges(dbdet_edgemap_sptr edgemap, double nrad, unsigned maxN, double dx_sel, double dt_deg, std::string filename)
 {
   //parameters
   //double nrad = 2.0;
@@ -148,29 +148,29 @@ void link_edges(dbdet_edgemap_sptr edgemap, double nrad, unsigned maxN, double d
 
   //save linked edges
   char out_cem_filename[500];
-  vcl_sprintf(out_cem_filename, "%s_%f_%f_%d.cem", filename.c_str(), dx_sel, dt_deg, maxN);
+  std::sprintf(out_cem_filename, "%s_%f_%f_%d.cem", filename.c_str(), dx_sel, dt_deg, maxN);
   saveCEM(out_cem_filename, edge_linker);
   
 }
 
-bool saveEDG(vcl_string filename, dbdet_edgemap_sptr edgemap)
+bool saveEDG(std::string filename, dbdet_edgemap_sptr edgemap)
 {
   //1) If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   //2) write out the header block
-  outfp << "# EDGE_MAP " << vcl_endl << vcl_endl;
-  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf" << vcl_endl;
-  outfp << vcl_endl;
-  outfp << "WIDTH=" << edgemap->width() << vcl_endl;
-  outfp << "HEIGHT=" << edgemap->height() << vcl_endl;
-  outfp << "EDGE_COUNT=" << edgemap->num_edgels  << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "# EDGE_MAP " << std::endl << std::endl;
+  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf" << std::endl;
+  outfp << std::endl;
+  outfp << "WIDTH=" << edgemap->width() << std::endl;
+  outfp << "HEIGHT=" << edgemap->height() << std::endl;
+  outfp << "EDGE_COUNT=" << edgemap->num_edgels  << std::endl;
+  outfp << std::endl << std::endl;
 
   //write out all the edgels
   dbdet_edgemap_const_iter it = edgemap->edge_cells.begin();
@@ -181,12 +181,12 @@ bool saveEDG(vcl_string filename, dbdet_edgemap_sptr edgemap)
       double x = edgel->pt.x();
       double y = edgel->pt.y();
 
-      int ix = (int) vcl_floor(x);
-      int iy = (int) vcl_floor(y);
+      int ix = (int) std::floor(x);
+      int iy = (int) std::floor(y);
       
       double idir = edgel->tangent, iconf = edgel->strength, dir= edgel->tangent, conf= edgel->strength;
       
-      outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << vcl_endl;
+      outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << std::endl;
     }
   }
 
@@ -195,14 +195,14 @@ bool saveEDG(vcl_string filename, dbdet_edgemap_sptr edgemap)
   return true;
 }
 
-bool saveCEM (vcl_string filename, dbdet_sel_sptr edge_linker)
+bool saveCEM (std::string filename, dbdet_sel_sptr edge_linker)
 { 
   // 0) form vsol polylines from the chains
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves;
   for (unsigned i=0; i<edge_linker->edgel_chains().size(); i++){
     //only keep the longer contours
     if (edge_linker->edgel_chains()[i]->edgels.size() >= 3){
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for (unsigned j=0; j<edge_linker->edgel_chains()[i]->edgels.size(); j++)
         pts.push_back(new vsol_point_2d(edge_linker->edgel_chains()[i]->edgels[j]->pt));
       vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);
@@ -211,33 +211,33 @@ bool saveCEM (vcl_string filename, dbdet_sel_sptr edge_linker)
   }
 
   //1)If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
-  vcl_cout << "Saving " << filename.c_str() << " ..." << vcl_endl;
+  std::cout << "Saving " << filename.c_str() << " ..." << std::endl;
 
   // output header information
-   outfp <<"# CONTOUR_EDGE_MAP "<<vcl_endl;
-   outfp <<"# .cem files"<<vcl_endl;
-   outfp <<"#"<<vcl_endl;
-   outfp <<"# Format :"<<vcl_endl;
-   outfp <<"# Each contour block will consist of the following"<<vcl_endl;
-   outfp <<"# [BEGIN CONTOUR]"<<vcl_endl;
-   outfp <<"# EDGE_COUNT=num_of_edges"<<vcl_endl;
-   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# ..."<<vcl_endl;
-   outfp <<"# [END CONTOUR]"<<vcl_endl;
+   outfp <<"# CONTOUR_EDGE_MAP "<<std::endl;
+   outfp <<"# .cem files"<<std::endl;
+   outfp <<"#"<<std::endl;
+   outfp <<"# Format :"<<std::endl;
+   outfp <<"# Each contour block will consist of the following"<<std::endl;
+   outfp <<"# [BEGIN CONTOUR]"<<std::endl;
+   outfp <<"# EDGE_COUNT=num_of_edges"<<std::endl;
+   outfp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# ..."<<std::endl;
+   outfp <<"# [END CONTOUR]"<<std::endl;
 
-  outfp<<vcl_endl;
+  outfp<<std::endl;
 
   // Note: this count is currently missing
-   outfp <<"CONTOUR_COUNT="<< vcl_endl;
-   outfp <<"TOTAL_EDGE_COUNT="<<vcl_endl;
+   outfp <<"CONTOUR_COUNT="<< std::endl;
+   outfp <<"TOTAL_EDGE_COUNT="<<std::endl;
 
   // parse through all the vsol classes and save curve objects only
   for (unsigned int b = 0 ; b < image_curves.size() ; b++ )
@@ -246,17 +246,17 @@ bool saveCEM (vcl_string filename, dbdet_sel_sptr edge_linker)
     {
       if( image_curves[b]->cast_to_curve()->cast_to_polyline() )
       {
-        outfp <<"[BEGIN CONTOUR]"<<vcl_endl;
-        outfp <<"EDGE_COUNT="<< image_curves[b]->cast_to_curve()->cast_to_polyline()->size() <<vcl_endl;
+        outfp <<"[BEGIN CONTOUR]"<<std::endl;
+        outfp <<"EDGE_COUNT="<< image_curves[b]->cast_to_curve()->cast_to_polyline()->size() <<std::endl;
         
         for (unsigned int i=0; i<image_curves[b]->cast_to_curve()->cast_to_polyline()->size();i++)
         {
           vsol_point_2d_sptr pt = image_curves[b]->cast_to_curve()->cast_to_polyline()->vertex(i);
           //output as subpixel contours
           // [%d, %d]\t%lf\t%lf\t[%lf, %lf]\t%lf\t%lf
-          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << vcl_endl;
+          outfp <<" [0, 0]  0.0  0.0  [" << pt->x() << ", " << pt->y() << "]  0.0  0.0"  << std::endl;
         }
-        outfp <<"[END CONTOUR]"<<vcl_endl<<vcl_endl;
+        outfp <<"[END CONTOUR]"<<std::endl<<std::endl;
       }
     }
   }

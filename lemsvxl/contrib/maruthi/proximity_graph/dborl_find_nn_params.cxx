@@ -6,7 +6,7 @@
 
 //: Constructor
 dborl_find_nn_params::
-dborl_find_nn_params(vcl_string algo_name) : 
+dborl_find_nn_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
 

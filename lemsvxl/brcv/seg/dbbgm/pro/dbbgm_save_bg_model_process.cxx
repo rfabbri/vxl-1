@@ -14,7 +14,7 @@ dbbgm_save_bg_model_process::dbbgm_save_bg_model_process()
 {
   if( !parameters()->add( "Background Model file <filename...>" , "-bgmodel_filename", bpro1_filepath("","*") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -34,7 +34,7 @@ dbbgm_save_bg_model_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbbgm_save_bg_model_process::name()
+std::string dbbgm_save_bg_model_process::name()
 {
   return "Save Background Model";
 }
@@ -49,10 +49,10 @@ dbbgm_save_bg_model_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbbgm_save_bg_model_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
     to_return.push_back( "dbbgm_distribution_image" );
 
@@ -61,10 +61,10 @@ dbbgm_save_bg_model_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbbgm_save_bg_model_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
 
   return to_return;
@@ -92,7 +92,7 @@ bool
 dbbgm_save_bg_model_process::execute()
 {
  if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_save_bgmodel_process::execute() - "
+    std::cout << "In dbbgm_save_bgmodel_process::execute() - "
              << "no distribution image storage to save \n";
     return false;
   }
@@ -100,7 +100,7 @@ dbbgm_save_bg_model_process::execute()
   image_storage.vertical_cast(input_data_[0][0]);
   bpro1_filepath file;
   parameters()->get_value( "-bgmodel_filename" , file );
-  vcl_string path = file.path;
+  std::string path = file.path;
   vsl_b_ofstream os(path);
   image_storage->b_write(os);
   return true;

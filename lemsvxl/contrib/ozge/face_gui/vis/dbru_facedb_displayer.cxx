@@ -16,7 +16,7 @@ dbru_facedb_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Return a NULL tableau if the types don't match
   if( storage->type() != this->type() )
     {
-      vcl_cout << "In dbru_facedb_displayer::make_tableau -"
+      std::cout << "In dbru_facedb_displayer::make_tableau -"
                << " types don't match\n";
       return NULL;
     }
@@ -33,13 +33,13 @@ dbru_facedb_displayer::make_tableau( bpro1_storage_sptr storage) const
   if(facedb->n_subjects()==0)
     return grid;
   unsigned row = 0;
-  vcl_cout << "adding subjects to display: " << row << " ";
+  std::cout << "adding subjects to display: " << row << " ";
   for ( ; row < nrows && row < facedb->n_subjects(); row++) {
-    vcl_vector<vil_image_resource_sptr>& subj = facedb->get_subject(row);
-    vcl_cout << "subject at row: " << row << " ";
+    std::vector<vil_image_resource_sptr>& subj = facedb->get_subject(row);
+    std::cout << "subject at row: " << row << " ";
     unsigned np = subj.size();
     for (unsigned col = 0; col < np && col < ncols; col++) {
-      vcl_cout << col << " ";
+      std::cout << col << " ";
       vil_image_resource_sptr fimg = subj[col];
       if (!fimg) 
         continue;
@@ -50,7 +50,7 @@ dbru_facedb_displayer::make_tableau( bpro1_storage_sptr storage) const
           grid->add_at(vtab, col, row);
         }
     }
-    vcl_cout << "...done!\n";
+    std::cout << "...done!\n";
   }
     
   return grid; 

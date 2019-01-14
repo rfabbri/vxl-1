@@ -27,8 +27,8 @@ public:
     cues_computer(img, em)
   {
     assert(em.ncols() == img.ni() && em.nrows() == img.nj() && tmap.rows() == img.ni() && tmap.cols() == img.nj());
-    double diag = vcl_sqrt(ni() * ni() + nj() * nj());
-    nbr_num_edges = vcl_max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
+    double diag = std::sqrt(ni() * ni() + nj() * nj());
+    nbr_num_edges = std::max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
     temp_n.reserve(nbr_num_edges);
   }
 
@@ -39,7 +39,7 @@ private:
 
   void dbdet_merge_at_degree_2_node(dbdet_factor_graph & G, unsigned c1_id, unsigned c2_id, unsigned g_idx, unsigned edgel_id);
 
-  void compute_texture_hist(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, y_hist_vector & left, y_hist_vector & right);
+  void compute_texture_hist(dbdet_edgel_chain & chain, std::vector< vnl_vector_fixed<double, 2> > & n, y_hist_vector & left, y_hist_vector & right);
 
  //Copy first level objects of CFG into newCFG
   void deep_copy_cfg(dbdet_curve_fragment_graph & CFG, dbdet_curve_fragment_graph & newCFG);
@@ -51,6 +51,6 @@ private:
   const vnl_matrix<unsigned> tmap_;
   unsigned nbr_num_edges;
   dbdet_curve_fragment_cues cues_computer;
-  vcl_vector<vnl_vector_fixed<double, 2> > temp_n;
+  std::vector<vnl_vector_fixed<double, 2> > temp_n;
 };
 #endif //dbdet_graphical_model_contour_merge_h

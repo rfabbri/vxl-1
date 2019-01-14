@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     // otherwise one to many
 
     //******************** Match Shock Graphs ****************************
-    vcl_cout<<"************  Visualize Matches  *************"<<vcl_endl;
+    std::cout<<"************  Visualize Matches  *************"<<std::endl;
 
     // Kick of process
     bool proc_status(false);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     if ( !proc_status )
     {
 
-        vcl_cerr<<"Visualization of Shock Patch Matches Failed"<<vcl_endl;
+        std::cerr<<"Visualization of Shock Patch Matches Failed"<<std::endl;
         
         // Finish off by updating status results
         params->percent_completed = 0.0f;
@@ -92,8 +92,8 @@ int main(int argc, char *argv[])
   
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     return 0;
 }

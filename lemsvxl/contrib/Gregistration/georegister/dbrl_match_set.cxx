@@ -28,12 +28,12 @@ void dbrl_match_set::set_correspondence_matrix(dbrl_correspondence & M)
     {
         M_=M;
     }
-void dbrl_match_set::set_original_features(vcl_vector<dbrl_feature_sptr> f1,vcl_vector<dbrl_feature_sptr> f2)
+void dbrl_match_set::set_original_features(std::vector<dbrl_feature_sptr> f1,std::vector<dbrl_feature_sptr> f2)
     {
         feature_set1=f1;
         feature_set2=f2;
     }
-void dbrl_match_set::set_mapped_features(vcl_vector<dbrl_feature_sptr> f1,vcl_vector<dbrl_feature_sptr> f2)
+void dbrl_match_set::set_mapped_features(std::vector<dbrl_feature_sptr> f1,std::vector<dbrl_feature_sptr> f2)
     {
         xformed_feature_set1=f1;
         xformed_feature_set2=f2;
@@ -135,13 +135,13 @@ dbrl_feature_sptr dbrl_match_set::xformed_feature_set2_i(int i)
         assert(i<static_cast<int>(xformed_feature_set2.size()));
         return xformed_feature_set2[i];
     }
-vcl_map<double,dbrl_feature_sptr> dbrl_match_set::correspondences1to2(int index)
+std::map<double,dbrl_feature_sptr> dbrl_match_set::correspondences1to2(int index)
     {
         assert(index<static_cast<int>(M_.rows()));
         //double maxindex=-1;
         //double maxweight=0.0;
-        vcl_vector<dbrl_feature_sptr> to_return;
-        vcl_map<double,dbrl_feature_sptr> feature_map;
+        std::vector<dbrl_feature_sptr> to_return;
+        std::map<double,dbrl_feature_sptr> feature_map;
         for(int j=0;j<static_cast<int>(M_.cols());j++)
         {
             if(M_(index,j)>M_.mcols(index))
@@ -151,20 +151,20 @@ vcl_map<double,dbrl_feature_sptr> dbrl_match_set::correspondences1to2(int index)
             }
         }
 
-        //vcl_map<double,dbrl_feature_sptr>::iterator iter;
+        //std::map<double,dbrl_feature_sptr>::iterator iter;
         //for(iter=feature_map.begin();iter!=feature_map.end();iter++)
         //    to_return.push_back((*iter).second);
         //return to_return;
         return feature_map;
 }
 
-vcl_map<double,dbrl_feature_sptr> dbrl_match_set::correspondences2to1(int index)
+std::map<double,dbrl_feature_sptr> dbrl_match_set::correspondences2to1(int index)
     {
     assert(index<static_cast<int>(M_.cols()));
     //double maxindex=-1;
     //double maxweight=0.0;
-    vcl_vector<dbrl_feature_sptr> to_return;
-            vcl_map<double,dbrl_feature_sptr> feature_map;
+    std::vector<dbrl_feature_sptr> to_return;
+            std::map<double,dbrl_feature_sptr> feature_map;
 
     for(int i=0;i<static_cast<int>(M_.rows());i++)
         {
@@ -173,7 +173,7 @@ vcl_map<double,dbrl_feature_sptr> dbrl_match_set::correspondences2to1(int index)
                 feature_map[1-M_(i,index)]=feature_set1[i];
             }
         }
-        //vcl_map<double,dbrl_feature_sptr>::iterator iter;
+        //std::map<double,dbrl_feature_sptr>::iterator iter;
         //for(iter=feature_map.begin();iter!=feature_map.end();iter++)
         //    to_return.push_back((*iter).second);
         //return to_return;
@@ -223,7 +223,7 @@ void dbrl_match_set::b_read(vsl_b_istream &is)
 
             break;
         default:
-            vcl_cerr << "dbrl_estimator_point_thin_plate_spline: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_estimator_point_thin_plate_spline: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -231,7 +231,7 @@ short dbrl_match_set::version() const
     {
     return 1;
     }
-void dbrl_match_set::print_summary(vcl_ostream &os) const
+void dbrl_match_set::print_summary(std::ostream &os) const
 {
   
 }
@@ -269,10 +269,10 @@ void vsl_b_read(vsl_b_istream &is, dbrl_match_set* &p)
 
     }
 
-void dbrl_match_set::normalize_point_set(vnl_matrix<double> & M, vcl_vector<dbrl_feature_sptr> & f2)
+void dbrl_match_set::normalize_point_set(vnl_matrix<double> & M, std::vector<dbrl_feature_sptr> & f2)
     {
 
-    vcl_string featuretype="";
+    std::string featuretype="";
     vnl_matrix<double> pts(f2.size(),2,0.0);
     for(unsigned i=0;i<f2.size();i++)
         {

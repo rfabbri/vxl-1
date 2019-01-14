@@ -18,7 +18,7 @@
 
 
 //: A point on a circle
-bool dbsk2d_cmd_generate_random_bnd(const vcl_string& bnd_file,
+bool dbsk2d_cmd_generate_random_bnd(const std::string& bnd_file,
                                     int num_lines,
                                     int num_arcs,
                                     int image_width,
@@ -28,7 +28,7 @@ bool dbsk2d_cmd_generate_random_bnd(const vcl_string& bnd_file,
   vnl_random random;
   random.reseed();
 
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list;
 
   // add a whole bunch of lines
   for (int i =0; i < num_lines; ++i)

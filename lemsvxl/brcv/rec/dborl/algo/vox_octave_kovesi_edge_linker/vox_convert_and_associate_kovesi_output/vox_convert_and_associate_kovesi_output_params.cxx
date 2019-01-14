@@ -14,7 +14,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_convert_and_associate_kovesi_output_params::vox_convert_and_associate_kovesi_output_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_convert_and_associate_kovesi_output_params::vox_convert_and_associate_kovesi_output_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
     //: Name of input object
     this->input_object_name_.set_values(

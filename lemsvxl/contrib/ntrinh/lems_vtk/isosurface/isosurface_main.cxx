@@ -13,12 +13,12 @@
 #include <vil3d/vil3d_image_view.h>
 #include <dbmsh3d/algovtk/dbmsh3d_isosurface.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vul/vul_file.h>
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 
@@ -55,16 +55,16 @@ int main (int argc, char **argv)
 
   if ( ! img3d.is_contiguous())
   {
-    vcl_cout << "img3d not contiguous." << vcl_endl;
+    std::cout << "img3d not contiguous." << std::endl;
     return 1;
   }
   
   
   
-  vcl_cout << "img3d is contiguous";
-  vcl_cout << "i_step = " << img3d.istep() << vcl_endl;
-  vcl_cout << "j_step = " << img3d.jstep() << vcl_endl;
-  vcl_cout << "k_step = " << img3d.kstep() << vcl_endl;
+  std::cout << "img3d is contiguous";
+  std::cout << "i_step = " << img3d.istep() << std::endl;
+  std::cout << "j_step = " << img3d.jstep() << std::endl;
+  std::cout << "k_step = " << img3d.kstep() << std::endl;
 
   img3d.fill(0);
   for (unsigned i=30; i<50; ++i)
@@ -172,7 +172,7 @@ int main (int argc, char **argv)
     vtkPolyData* poly = vtkPolyData::New();
     skinExtractor->Update();
     poly = skinExtractor->GetOutput();
-    poly->PrintSelf(vcl_cout, 2);
+    poly->PrintSelf(std::cout, 2);
 
   vtkPolyDataNormals *skinNormals = vtkPolyDataNormals::New();
     skinNormals->SetInputConnection(skinExtractor->GetOutputPort());

@@ -19,7 +19,7 @@
 #include <vil/vil_image_list.h>
 #include <vil/vil_image_resource.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_matrix.h>
@@ -30,7 +30,7 @@
 #include <vgl/algo/vgl_rtree.h>
 
 #include <vul/vul_timer.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <dbskfg/algo/fastcluster.cpp>
 
 //: Constructor
@@ -43,7 +43,7 @@ dbskfg_prune_fragments_process::dbskfg_prune_fragments_process()
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
-                            "-output_prefix", vcl_string("")) ||
+                            "-output_prefix", std::string("")) ||
         !parameters()->add( "Threshold:" , 
                             "-threshold", (double) 0.4) ||
         !parameters()->add( "Scale:", 
@@ -52,7 +52,7 @@ dbskfg_prune_fragments_process::dbskfg_prune_fragments_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -69,24 +69,24 @@ dbskfg_prune_fragments_process::clone() const
     return new dbskfg_prune_fragments_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_prune_fragments_process::name()
 {
     return "Prune Fragments";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_prune_fragments_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
     
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_prune_fragments_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
@@ -107,13 +107,13 @@ bool dbskfg_prune_fragments_process::execute()
  
     bpro1_filepath input;
     this->parameters()->get_value("-input_binary_file", input);
-    vcl_string input_file_path = input.path;
+    std::string input_file_path = input.path;
 
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
 
-    vcl_string output_prefix;
+    std::string output_prefix;
     parameters()->get_value( "-output_prefix", output_prefix);
 
     double threshold=0.0;
@@ -128,19 +128,19 @@ bool dbskfg_prune_fragments_process::execute()
 
 
     // Create names
-    vcl_string output_file = output_folder+"/"+
+    std::string output_file = output_folder+"/"+
             output_prefix+"_pruned_fragments.bin";
-    vcl_string output_dendrogram_complete = output_folder+"/"+
+    std::string output_dendrogram_complete = output_folder+"/"+
             output_prefix+"_dendrogram_complete.bin";
-    vcl_string output_dendrogram_average = output_folder+"/"+
+    std::string output_dendrogram_average = output_folder+"/"+
             output_prefix+"_dendrogram_average.bin";
 
     // Let time how long this takes
     // Start timer
     vul_timer t;
 
-    vcl_ifstream input_binary_file(input_file_path.c_str(),vcl_ios::in|
-                                   vcl_ios::binary);
+    std::ifstream input_binary_file(input_file_path.c_str(),std::ios::in|
+                                   std::ios::binary);
 
 
 
@@ -164,7 +164,7 @@ bool dbskfg_prune_fragments_process::execute()
         }
 
         vgl_bbox_2d<double> box;
-        vcl_vector<vgl_point_2d<double> > coords(polygon_size[0]);
+        std::vector<vgl_point_2d<double> > coords(polygon_size[0]);
         for ( unsigned int i=0; i < coords.size() ; ++i)
         {
             double coordinates[2];
@@ -181,14 +181,14 @@ bool dbskfg_prune_fragments_process::execute()
        
        
     }
-    vcl_cout<<"Read in "<<polygons_.size()
-            <<" fragments and resized with factor "<< scale <<vcl_endl;
+    std::cout<<"Read in "<<polygons_.size()
+            <<" fragments and resized with factor "<< scale <<std::endl;
     input_binary_file.close();
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time to read file: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time to read file: "<<vox_time<<" sec"<<std::endl;
 
     
     // Let time how long this takes
@@ -198,8 +198,8 @@ bool dbskfg_prune_fragments_process::execute()
 
     vox_time = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time linear scan: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time linear scan: "<<vox_time<<" sec"<<std::endl;
 
     clear_output();
     polygons_.clear();
@@ -213,7 +213,7 @@ bool dbskfg_prune_fragments_process::finish()
 }
 
 void dbskfg_prune_fragments_process::linear_scan(
-    vcl_string output_distance_matrix,double threshold)
+    std::string output_distance_matrix,double threshold)
 {
     unsigned int new_frags=0;
     if (prototype_list_.size() == 0 )
@@ -228,7 +228,7 @@ void dbskfg_prune_fragments_process::linear_scan(
     {
         vgl_polygon<double> new_proto= polygons_[p];
         double min_distance=1.0e6;
-        vcl_map<vcl_pair<unsigned int,unsigned int>, double> local_map;
+        std::map<std::pair<unsigned int,unsigned int>, double> local_map;
 
         for ( unsigned int i=0; i < prototype_list_.size() ; ++i)
         {
@@ -240,7 +240,7 @@ void dbskfg_prune_fragments_process::linear_scan(
                 prototype_list_[i],       // p2
                 vgl_clip_type_intersect, // p1 U p2
                 &value);                 // test if success
-            vcl_pair<unsigned int,unsigned int> key
+            std::pair<unsigned int,unsigned int> key
                     (i,prototype_list_.size());
 
             if ( intersect_poly.num_sheets() )
@@ -281,7 +281,7 @@ void dbskfg_prune_fragments_process::linear_scan(
         {
             prototype_list_.push_back(new_proto);
             new_frags++;
-            vcl_map< vcl_pair<unsigned int,unsigned int>, double>::iterator it;
+            std::map< std::pair<unsigned int,unsigned int>, double>::iterator it;
             for ( it = local_map.begin(); it != local_map.end() ; ++it)
             {
                 distance_matrix_[(*it).first]=(*it).second;
@@ -290,16 +290,16 @@ void dbskfg_prune_fragments_process::linear_scan(
         
 
     }
-    vcl_cout<<"Protos added in this run: "<<new_frags<<vcl_endl;
-    vcl_cout<<"Total size of prototype list: "<<
-        prototype_list_.size()<<vcl_endl;
+    std::cout<<"Protos added in this run: "<<new_frags<<std::endl;
+    std::cout<<"Total size of prototype list: "<<
+        prototype_list_.size()<<std::endl;
 
 }
 
 void dbskfg_prune_fragments_process::brute_force_computation(
-    vcl_string output_distance_matrix,
-    vcl_string output_dendrogram_complete,
-    vcl_string output_dendrogram_average)
+    std::string output_distance_matrix,
+    std::string output_dendrogram_complete,
+    std::string output_dendrogram_average)
 {
 
     unsigned int size=((polygons_.size())*(polygons_.size()-1))/2;
@@ -359,9 +359,9 @@ void dbskfg_prune_fragments_process::brute_force_computation(
 
     double vox_time = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time to compute distance matrix: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time to compute distance matrix: "
+            <<vox_time<<" sec"<<std::endl;
   
     // Let time how long this takes
     // Start timer
@@ -381,9 +381,9 @@ void dbskfg_prune_fragments_process::brute_force_computation(
 
     vox_time = t3.real()/1000.0;
     t3.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time to cluster data: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time to cluster data: "
+            <<vox_time<<" sec"<<std::endl;
 
 
     write_dendrogram((polygons_.size()-1)*4,
@@ -470,13 +470,13 @@ void dbskfg_prune_fragments_process::cluster_data_average(
 void dbskfg_prune_fragments_process::write_distance_matrix(
     double size,
     double* compressed_distance_matrix,
-    vcl_string output_file_path)
+    std::string output_file_path)
 {
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_file_path.c_str(),
-                            vcl_ios::out |
-                            vcl_ios::app |
-                            vcl_ios::binary);
+                            std::ios::out |
+                            std::ios::app |
+                            std::ios::binary);
 
     output_binary_file.write(reinterpret_cast<char *>(&size),
                              sizeof(double));
@@ -493,13 +493,13 @@ void dbskfg_prune_fragments_process::write_distance_matrix(
 void dbskfg_prune_fragments_process::write_dendrogram(
     double size,
     double* dendrogram,
-    vcl_string output_file_path)
+    std::string output_file_path)
 {
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_file_path.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app |
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app |
+                            std::ios::binary);
 
     output_binary_file.write(reinterpret_cast<char *>(&size),
                              sizeof(double));
@@ -512,17 +512,17 @@ void dbskfg_prune_fragments_process::write_dendrogram(
 }
 
 void dbskfg_prune_fragments_process::write_out_data(
-    vcl_string binary_file_output)
+    std::string binary_file_output)
 {
 
-    vcl_cout<<"Writing out "<<prototype_list_.size()<<" to "
-            <<binary_file_output<<vcl_endl;
+    std::cout<<"Writing out "<<prototype_list_.size()<<" to "
+            <<binary_file_output<<std::endl;
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(binary_file_output.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double size_x=0;
     double size_y=0;
@@ -558,17 +558,17 @@ void dbskfg_prune_fragments_process::write_out_data(
 
 
     // write out distance matrix
-    vcl_string output_distance_matrix=vul_file::strip_extension(
+    std::string output_distance_matrix=vul_file::strip_extension(
         binary_file_output);
     output_distance_matrix=output_distance_matrix+"_distance_mat.txt";
 
-    vcl_ofstream output_txt_file;
+    std::ofstream output_txt_file;
     output_txt_file.open(output_distance_matrix.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app );
+                         std::ios::out | 
+                         std::ios::app );
 
-    output_txt_file<<prototype_list_.size()<<vcl_endl;
-    vcl_map< vcl_pair<unsigned int,unsigned int>, double>::iterator it;
+    output_txt_file<<prototype_list_.size()<<std::endl;
+    std::map< std::pair<unsigned int,unsigned int>, double>::iterator it;
     for ( it = distance_matrix_.begin(); it != distance_matrix_.end() ; ++it)
     {
         output_txt_file<<(*it).first.first
@@ -576,7 +576,7 @@ void dbskfg_prune_fragments_process::write_out_data(
                         <<(*it).first.second
                         <<","
                         <<(*it).second
-                        <<vcl_endl;
+                        <<std::endl;
 
 
     }

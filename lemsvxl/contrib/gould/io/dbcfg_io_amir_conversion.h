@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <structure/dbcfg_contour_fragment_graph.h>
 #include <dbdet/sel/dbdet_edgel.h>
 #include <dbdet/edge/dbdet_edgemap.h>

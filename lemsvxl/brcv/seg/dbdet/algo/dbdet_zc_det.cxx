@@ -4,8 +4,8 @@
 // \file
 
 #include "dbdet_zc_det.h"
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>   // for vcl_abs(int) and vcl_sqrt()
+#include <cstdio>
+#include <cstdlib>   // for std::abs(int) and std::sqrt()
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_matrix_inverse.h>
@@ -43,9 +43,9 @@ dbdet_zc_det::dbdet_zc_det(const dbdet_zc_det_params& zcp, const vil_image_view<
 //: Apply the algorithm
 //
 void dbdet_zc_det::apply(bool collect_tokens,
-                         vcl_vector<vgl_point_2d<double> >& loc, 
-                         vcl_vector<double>& orientation, 
-                         vcl_vector<double>& mag)
+                         std::vector<vgl_point_2d<double> >& loc, 
+                         std::vector<double>& orientation, 
+                         std::vector<double>& mag)
 {
   double f[3], s_list[3];
 
@@ -61,7 +61,7 @@ void dbdet_zc_det::apply(bool collect_tokens,
         normalize(direction);
 
         //if non-degenerate
-        if (vcl_abs(direction.x()) > 10e-6 || vcl_abs(direction.y()) > 10e-6)
+        if (std::abs(direction.x()) > 10e-6 || std::abs(direction.y()) > 10e-6)
         {
           int face_num = intersected_face_number(direction); assert(face_num != -1);
           double s = intersection_parameter(direction, face_num); assert(s != -1000);
@@ -84,14 +84,14 @@ void dbdet_zc_det::apply(bool collect_tokens,
               double m = (f[1]-f[0])/s;
               s_star = -f[0]/m -s;
 
-              if (s_star<=0 && s_star>-vcl_sqrt(2.0)/2.0)
+              if (s_star<=0 && s_star>-std::sqrt(2.0)/2.0)
                 zc_valid = true;
             }
             else if (f[1]*f[2]<0 && f[1]<0) {// && ((option_==1 && f[1]>0) || (option_==2 && f[1]<0) || (option_==0))
               double m = (f[2]-f[1])/s;
               s_star = -f[1]/m;
 
-              if (s_star>=0 && s_star<vcl_sqrt(2.0)/2.0)
+              if (s_star>=0 && s_star<std::sqrt(2.0)/2.0)
                 zc_valid = true;
             }
  
@@ -103,7 +103,7 @@ void dbdet_zc_det::apply(bool collect_tokens,
               //if seeking tokens, form tokens from this point
               if (collect_tokens){
                 loc.push_back(vgl_point_2d<double>(x + s_star * direction.x(), y + s_star * direction.y()));
-                orientation.push_back(vcl_atan2(direction.x(), -direction.y()));
+                orientation.push_back(std::atan2(direction.x(), -direction.y()));
                 mag.push_back(mask_(x,y)); //this needs to be updated too
               }
             }
@@ -125,21 +125,21 @@ int dbdet_zc_det::intersected_face_number(const vgl_vector_2d<double>& direction
   }
   else if (direction.x() < 0 && direction.y() >= 0)
   {
-    if (vcl_abs(direction.x()) < direction.y())
+    if (std::abs(direction.x()) < direction.y())
       return 3;
     else
       return 4;
   }
   else if (direction.x() < 0 && direction.y() < 0)
   {
-    if (vcl_abs(direction.x()) >= vcl_abs(direction.y()))
+    if (std::abs(direction.x()) >= std::abs(direction.y()))
       return 5;
     else
       return 6;
   }
   else if (direction.x() >= 0 && direction.y() < 0)
   {
-    if (direction.x() < vcl_abs(direction.y()))
+    if (direction.x() < std::abs(direction.y()))
       return 7;
     else
       return 8;
@@ -261,7 +261,7 @@ double dbdet_zc_det::subpixel_s(double *s, double *f)
 
   //determine zero crossing
   double s_star=10.0; //large number
-  if (vcl_abs(m)>1e-5)
+  if (std::abs(m)>1e-5)
     s_star = -b/m;
 
   return s_star;
@@ -286,7 +286,7 @@ double dbdet_zc_det::subpixel_s(int x, int y, const vgl_vector_2d<double>& direc
     {
       find_distance_s_and_f_for_point(i, j, line1, d, s, direction);
       f = grad_mag_(x+i,y+j);
-      A(index, 0) = vcl_pow(s,2.0);
+      A(index, 0) = std::pow(s,2.0);
       A(index, 1) = s;
       A(index, 2) = 1.0;
       B(index, 0) = f;

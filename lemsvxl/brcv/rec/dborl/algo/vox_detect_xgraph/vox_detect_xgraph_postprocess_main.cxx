@@ -2,8 +2,8 @@
 
 #include "vox_detect_xgraph_postprocess_utils.h"
 #include <vul/vul_arg.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdlib>
 
 // -----------------------------------------------------------------------------
 //: Utilities to use with xgraph detection
@@ -42,25 +42,25 @@ int main(int argc, char **argv)
   //----------------------------------------------------------------------------
   // Supporting arguments
   // List of xml detection record
-  vul_arg<vcl_string > list_xml_det_record(arg_list, "-list-xml-det-record",
+  vul_arg<std::string > list_xml_det_record(arg_list, "-list-xml-det-record",
     "List of xml detection record (with no header and footer)", "");
 
   // Experiment folder
-  vul_arg<vcl_string > exp_folder(arg_list, "-exp-folder",
+  vul_arg<std::string > exp_folder(arg_list, "-exp-folder",
     "Full path to the xshock detection experiment folder", "");
 
   // Output folder
-  vul_arg<vcl_string > output_folder(arg_list, "-output-folder",
+  vul_arg<std::string > output_folder(arg_list, "-output-folder",
     "Full path to the output folder", "");
 
-  vul_arg<vcl_string > xgraph_prototype_name(arg_list, "-xgraph-prototype-name",
+  vul_arg<std::string > xgraph_prototype_name(arg_list, "-xgraph-prototype-name",
     "Name of prototype to be part of the detection record file name");
 
   vul_arg<float > overlap_ratio(arg_list, "-overlap-ratio",
     "Ratio between areas of overlap and of union of two shapes");
 
-  vul_arg<vcl_string > exp_name1(arg_list, "-exp-name1", "Name of experiment 1");
-  vul_arg<vcl_string > exp_name2(arg_list, "-exp-name2", "Name of experiment 2");
+  vul_arg<std::string > exp_name1(arg_list, "-exp-name1", "Name of experiment 1");
+  vul_arg<std::string > exp_name2(arg_list, "-exp-name2", "Name of experiment 2");
 
   //----------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
   {
     if (print_help())
     {
-      vcl_cout << "\nCombine detection results from multiple experiments.\n";
+      std::cout << "\nCombine detection results from multiple experiments.\n";
       return EXIT_SUCCESS;
     }
     
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     // check whether ONLY help info is needed
     if (print_help())
     {
-      vcl_cout << "Usage with " << convert_det_record_txt_to_xml.option() << "option:\n"
+      std::cout << "Usage with " << convert_det_record_txt_to_xml.option() << "option:\n"
         << exp_folder.option() << " " << exp_folder.help() << "\n";
       return EXIT_SUCCESS;
     }
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
     // check whether ONLY help info is needed
     if (print_help())
     {
-      vcl_cout << "Usage with " << create_bnd_screenshot.option() << "option:\n"
+      std::cout << "Usage with " << create_bnd_screenshot.option() << "option:\n"
         << exp_folder.option() << " " << exp_folder.help() << "\n";
       return EXIT_SUCCESS;
     }
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
     // check whether ONLY help info is needed
     if (print_help())
     {
-      vcl_cout << "Usage with " << combine_det_records_per_image.option() << "option:\n"
+      std::cout << "Usage with " << combine_det_records_per_image.option() << "option:\n"
         << exp_folder.option() << " " << exp_folder.help() << "\n"
         << output_folder.option() << " " << output_folder.help() << "\n"
         << xgraph_prototype_name.option() << " " << xgraph_prototype_name.help() << "\n";
@@ -157,9 +157,9 @@ int main(int argc, char **argv)
     // check whether ONLY help info is needed
     if (print_help())
     {
-      vcl_cout << "Usage: \n";
+      std::cout << "Usage: \n";
       
-      vcl_cout << "Good luck.\n";
+      std::cout << "Good luck.\n";
         
       return EXIT_SUCCESS;
     }

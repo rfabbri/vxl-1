@@ -51,7 +51,7 @@ dbrl_support_subpixel_process::~dbrl_support_subpixel_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_support_subpixel_process::name()
     {
     return "Estimating Support Subpixel";
@@ -76,18 +76,18 @@ dbrl_support_subpixel_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_support_subpixel_process::get_input_type()
+std::vector< std::string > dbrl_support_subpixel_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_support_subpixel_process::get_output_type()
+std::vector< std::string > dbrl_support_subpixel_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "vsol2D" );
         to_return.push_back( "vsol2D" );
 
@@ -100,7 +100,7 @@ bool
 dbrl_support_subpixel_process::execute()
     {
         if ( input_data_.size() != 1 ){
-            vcl_cout << "In dbrl_support_subpixel_process::execute() - "
+            std::cout << "In dbrl_support_subpixel_process::execute() - "
                 << "not exactly two input images \n";
             return false;
         }
@@ -128,13 +128,13 @@ dbrl_support_subpixel_process::execute()
         parameters()->get_value("-tthresh",tthresh);
 
         parameters()->get_value("-iscocirc",iscocirc_);
-        vcl_vector<vcl_string> groups=input_vsol->groups();
-        vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > > allpts;
+        std::vector<std::string> groups=input_vsol->groups();
+        std::vector< std::vector< dbrl_id_point_2d_sptr > > allpts;
         int count=0;
         for (unsigned c=0;c<groups.size();c++)
         {
-            vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->data_named(groups[c]);
-                    vcl_vector< dbrl_id_point_2d_sptr > pts;
+            std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->data_named(groups[c]);
+                    std::vector< dbrl_id_point_2d_sptr > pts;
 
             for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) {
                 if( vsol_list[b]->cast_to_curve()){
@@ -144,7 +144,7 @@ dbrl_support_subpixel_process::execute()
                         vgl_point_2d<double> spt(eline->p0()->x(), eline->p0()->y());
                         vgl_point_2d<double> ept(eline->p1()->x(), eline->p1()->y());
                         vgl_point_2d<double> pt(eline->middle()->x(), eline->middle()->y());
-                        double tan = vcl_atan2 (ept.y() - spt.y(), ept.x() - spt.x()) ;
+                        double tan = std::atan2 (ept.y() - spt.y(), ept.x() - spt.x()) ;
                         pts.push_back(new dbrl_id_point_2d(pt.x(),pt.y(), tan,count));
                         //pts[count]->set_weight(0.0);
                         count++;
@@ -172,9 +172,9 @@ dbrl_support_subpixel_process::finish()
     return true;
     }
 bool
-dbrl_support_subpixel_process::compute_temporal_support(double sigma_d, double sigma_a,double thresh,vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > >pts)
+dbrl_support_subpixel_process::compute_temporal_support(double sigma_d, double sigma_a,double thresh,std::vector< std::vector< dbrl_id_point_2d_sptr > >pts)
 {
-    vcl_vector< dbrl_id_point_2d_sptr > allpts;
+    std::vector< dbrl_id_point_2d_sptr > allpts;
     for(unsigned i=0;i<pts.size();i++)
         allpts.insert(allpts.end(),pts[i].begin(),pts[i].end());
 
@@ -194,20 +194,20 @@ dbrl_support_subpixel_process::compute_temporal_support(double sigma_d, double s
             double yi=allpts[i]->y();
             double ti=allpts[i]->tangent();
 
-            double st=vcl_exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
+            double st=std::exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
             weightst[i]+=st;
             weightst[j]+=st;
         }
     }
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_out;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_out;
     for(unsigned j=0;j<allpts.size();j++)
     {
         if(weightst[j] >thresh)
         {
             vsol_point_2d_sptr p=new vsol_point_2d(allpts[j]->x(),allpts[j]->y());
-            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.5*vcl_cos(allpts[j]->tangent()),p->y()+0.5*vcl_sin(allpts[j]->tangent()));
-            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.5*vcl_cos(allpts[j]->tangent()),p->y()-0.5*vcl_sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.5*std::cos(allpts[j]->tangent()),p->y()+0.5*std::sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.5*std::cos(allpts[j]->tangent()),p->y()-0.5*std::sin(allpts[j]->tangent()));
             vsol_line_2d_sptr l=new vsol_line_2d(ps,pe);
             vsol_out.push_back(p->cast_to_spatial_object());
             vsol_out.push_back(l->cast_to_spatial_object());
@@ -223,11 +223,11 @@ dbrl_support_subpixel_process::compute_temporal_support(double sigma_d, double s
 }
 
 bool
-dbrl_support_subpixel_process::compute_spatial_support(double sigma_d,double thresh,vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > > pts)
+dbrl_support_subpixel_process::compute_spatial_support(double sigma_d,double thresh,std::vector< std::vector< dbrl_id_point_2d_sptr > > pts)
 {
     unsigned totsize=0;
 
-    vcl_vector< dbrl_id_point_2d_sptr > allpts;
+    std::vector< dbrl_id_point_2d_sptr > allpts;
     for(unsigned i=0;i<pts.size();i++)
     {
         totsize+=pts[i].size();
@@ -252,7 +252,7 @@ dbrl_support_subpixel_process::compute_spatial_support(double sigma_d,double thr
                     double ti=pts[i][k]->tangent();
 
 
-                    st+=compute_support(xj,yj,tj,xi,yi,ti,sigma_d);//vcl_exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
+                    st+=compute_support(xj,yj,tj,xi,yi,ti,sigma_d);//std::exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
 
                 
             }
@@ -262,14 +262,14 @@ dbrl_support_subpixel_process::compute_spatial_support(double sigma_d,double thr
         }
     }
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_out;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_out;
     for(unsigned j=0;j<totsize;j++)
     {
         if(weightst[j] >thresh)
         {
             vsol_point_2d_sptr p=new vsol_point_2d(allpts[j]->x(),allpts[j]->y());
-            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*vcl_cos(allpts[j]->tangent()),p->y()+0.2*vcl_sin(allpts[j]->tangent()));
-            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*vcl_cos(allpts[j]->tangent()),p->y()-0.2*vcl_sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*std::cos(allpts[j]->tangent()),p->y()+0.2*std::sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*std::cos(allpts[j]->tangent()),p->y()-0.2*std::sin(allpts[j]->tangent()));
             vsol_line_2d_sptr l=new vsol_line_2d(ps,pe);
             vsol_out.push_back(p->cast_to_spatial_object());
             vsol_out.push_back(l->cast_to_spatial_object());

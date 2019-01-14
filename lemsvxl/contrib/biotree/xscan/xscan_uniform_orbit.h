@@ -28,7 +28,7 @@ class xscan_uniform_orbit : public xscan_orbit_base
       rot_(rot), t_(t),r0_(r0), t0_(t0){}
 
     //: RTTI
-    vcl_string class_id() {return "xscan_uniform_orbit";}
+    std::string class_id() {return "xscan_uniform_orbit";}
     
     //:get the transform matrix from world coordinate system to ith frame coordinate 
     //system which in most case is camera frame coordinate system
@@ -38,9 +38,9 @@ class xscan_uniform_orbit : public xscan_orbit_base
 //    bool operator==(xscan_uniform_orbit const& other) const;
 
     // stream input and output
-    vcl_ostream& output(vcl_ostream& stream) const; 
+    std::ostream& output(std::ostream& stream) const; 
 
-    vcl_istream& input(vcl_istream& stream);
+    std::istream& input(std::istream& stream);
 
     //: get rot
     vnl_quaternion<double> rot() { return rot_; }
@@ -69,11 +69,11 @@ class xscan_uniform_orbit : public xscan_orbit_base
 };
 
 
-vcl_ostream& operator << (vcl_ostream& stream, const xscan_uniform_orbit& orbit) ;
+std::ostream& operator << (std::ostream& stream, const xscan_uniform_orbit& orbit) ;
 
-vcl_istream& operator >> (vcl_istream& stream, xscan_uniform_orbit& orbit) ;
+std::istream& operator >> (std::istream& stream, xscan_uniform_orbit& orbit) ;
 
-void x_write(vcl_ostream& stream, xscan_uniform_orbit b, vcl_string name);
+void x_write(std::ostream& stream, xscan_uniform_orbit b, std::string name);
    
 #endif
 

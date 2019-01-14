@@ -5,8 +5,8 @@
 #include "bvam_voxel_storage.h"
 #include "bvam_voxel_slab.h"
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 
 #include <vgl/vgl_vector_3d.h>
 
@@ -17,7 +17,7 @@ bvam_voxel_slab_iterator_base<T>::bvam_voxel_slab_iterator_base(bvam_voxel_stora
 : storage_(storage), slab_thickness_(slab_thickness), slice_idx_(slice_idx), end_slab_(0,0,0,0,0), grid_size_(grid_size)
 {
   if (slab_thickness != 1) {
-    vcl_cerr << "error: only slabs of thickness 1 are currently supported.\n";
+    std::cerr << "error: only slabs of thickness 1 are currently supported.\n";
     assert(slab_thickness == 1);
   }
   if ( (slice_idx < 0) || (slice_idx >= grid_size_.z()) ) {

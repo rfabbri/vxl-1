@@ -12,11 +12,11 @@
 
 #include<vbl/vbl_array_1d.h>
 
-#include<vcl_iomanip.h>
-#include<vcl_map.h>
-#include<vcl_ostream.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<iomanip>
+#include<map>
+#include<ostream>
+#include<set>
+#include<utility>
 
 
 #include<vidl/vidl_image_list_istream.h>
@@ -42,7 +42,7 @@ public:
 	ncn1_factory(vidl_image_list_istream& video_stream, unsigned num_pivot_pixels = 2000, unsigned n_particles = 10000, unsigned n_neighbors = 10)
     {video_stream_ = video_stream; num_pivot_pixels_ = num_pivot_pixels; n_particles_ = n_particles; n_neighbors_ = n_neighbors; neighborhood_sptr_ = new ncn1_neighborhood; feature_sptr_ = new ncn1_feature(n_neighbors+1); neighborhood_sptr_->set_num_neighbors(this->n_neighbors_);}
 
-    ncn1_factory(vcl_string const& video_glob, unsigned num_pivot_pixels = 2000, unsigned n_particles = 10000, unsigned n_neighbors = 10);
+    ncn1_factory(std::string const& video_glob, unsigned num_pivot_pixels = 2000, unsigned n_particles = 10000, unsigned n_neighbors = 10);
     
 	~ncn1_factory(){}
 
@@ -55,7 +55,7 @@ public:
 
 	void calculate_temporal_entropy(vidl_image_list_istream& video_stream);
 
-	vil_image_view<double> calculate_temporal_entropy(vcl_map<unsigned, vil_image_view<unsigned> >& img_seq);
+	vil_image_view<double> calculate_temporal_entropy(std::map<unsigned, vil_image_view<unsigned> >& img_seq);
 
     pivot_pixel_list_type sample_pivot_pixel_candidates();
 
@@ -83,17 +83,17 @@ public:
     ncn1_feature_sptr feature_sptr(){ return feature_sptr_; }
 
     //Load and save functions
-	void load_binary_temporal_entropy(vcl_string const& filename, vil_image_view<double>& temporal_entropy);
+	void load_binary_temporal_entropy(std::string const& filename, vil_image_view<double>& temporal_entropy);
 
-    void load_binary_temporal_entropy(vcl_string const& filename);
+    void load_binary_temporal_entropy(std::string const& filename);
 
-	void save_binary_temporal_entropy(vcl_string const& filename, vil_image_view<double> const& temporal_entropy);
+	void save_binary_temporal_entropy(std::string const& filename, vil_image_view<double> const& temporal_entropy);
 
-    void save_binary_temporal_entropy(vcl_string const& filename);
+    void save_binary_temporal_entropy(std::string const& filename);
 
-    void save_matlab_temporal_entropy(vcl_string const& filename);
+    void save_matlab_temporal_entropy(std::string const& filename);
 
-    void save_feature_dat( vcl_string const& filename ){ this->feature_sptr_->save_feature_dat(filename); }
+    void save_feature_dat( std::string const& filename ){ this->feature_sptr_->save_feature_dat(filename); }
 
 private:
 	unsigned num_pivot_pixels_;

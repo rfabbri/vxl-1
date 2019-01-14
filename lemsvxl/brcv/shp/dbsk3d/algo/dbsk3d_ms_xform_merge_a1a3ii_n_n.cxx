@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Jan. 29, 2008
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -21,7 +21,7 @@
 //
 bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closest_MN2, 
                               dbsk3d_ms_sheet*& baseMS, 
-                              vcl_vector<dbmsh3d_edge*>& shortest_Evec)
+                              std::vector<dbmsh3d_edge*>& shortest_Evec)
 {
   //The resulting MN2 and the shortest path.
   closest_MN2 = NULL;
@@ -35,22 +35,22 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
     return false;
 
   //The source for searching MN2 is the MN1.
-  vcl_set<dbmsh3d_vertex*> srcV_set;
+  std::set<dbmsh3d_vertex*> srcV_set;
   srcV_set.insert (MN1->V());
 
   //2) Search for all ms_sheets incident to any of N's incident curves.
   //   Candidate MS that qualifies the xform: 
   //     - any of MN1's incident A13 (or A1n) tabMC1 is an i-curve of MS.
   //     - any of MN2's incident A13 (or A1n) tabMC2 is an i-curve of MS.
-  vcl_set<dbmsh3d_face*> incident_MS_set;
+  std::set<dbmsh3d_face*> incident_MS_set;
   MN1->get_incident_Fs (incident_MS_set);
   
-  vcl_set<dbmsh3d_face*>::iterator fit = incident_MS_set.begin();
+  std::set<dbmsh3d_face*>::iterator fit = incident_MS_set.begin();
   for (; fit != incident_MS_set.end(); fit++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*fit);
     
     //Given MN1 on MS, find the set of curves MC1_set from MS's i-curves.
-    vcl_set<dbmsh3d_edge*> MC1_set;
+    std::set<dbmsh3d_edge*> MC1_set;
     MS->get_ICpairs_inc_N (MN1, MC1_set);
     if (MC1_set.empty())
       continue; //tabMC1 not found, skip this MS.
@@ -59,10 +59,10 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
       continue; //skip this MN1 if more than one tabMC1 incident to MN1.
 
     //Put all MS's other icurve-pairs not in MC1_set as candidate MC2_cand.
-    vcl_set<dbmsh3d_edge*> MC2_cand;
+    std::set<dbmsh3d_edge*> MC2_cand;
     MS->get_icurve_pairs (MC2_cand);
 
-    vcl_set<dbmsh3d_edge*>::iterator eit = MC1_set.begin();
+    std::set<dbmsh3d_edge*>::iterator eit = MC1_set.begin();
     for (; eit != MC1_set.end(); eit++)
       MC2_cand.erase (*eit);
 
@@ -75,15 +75,15 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
     //Only search for MS's interior fine-scale A12 edge-elements 
     //  - exclude all bordering A3 and A13 curves (and their end points).
     //  - exclude all interior anchor curves (and their end points).
-    vcl_set<dbmsh3d_edge*> MS_incident_FE_set;
-    vcl_set<dbmsh3d_vertex*> MS_incident_FV_set;
+    std::set<dbmsh3d_edge*> MS_incident_FE_set;
+    std::set<dbmsh3d_vertex*> MS_incident_FV_set;
     MS->get_incident_FEs (MS_incident_FE_set);
     MS->get_incident_FVs (MS_incident_FV_set);
 
     //Collect the set of candidate MN2's in MN2_set
     //together with their fine-scale V's in FV2_set.
-    vcl_set<dbsk3d_ms_node*> MN2_set;
-    vcl_set<dbmsh3d_vertex*> V2_set;
+    std::set<dbsk3d_ms_node*> MN2_set;
+    std::set<dbmsh3d_vertex*> V2_set;
 
     //Loop through all MC2_cand and check each's starting/ending vertex as MN2.
     eit = MC2_cand.begin();
@@ -91,7 +91,7 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
       dbsk3d_ms_curve* tabMC2 = (dbsk3d_ms_curve*) (*eit);
       //Skip tabMC2 if shares starting/ending node with any tabMC1.
       bool skip_MC2 = false;
-      vcl_set<dbmsh3d_edge*>::iterator eit1 = MC1_set.begin();
+      std::set<dbmsh3d_edge*>::iterator eit1 = MC1_set.begin();
       for (; eit1 != MC1_set.end(); eit1++) {
         dbsk3d_ms_curve* tabMC1 = (dbsk3d_ms_curve*) (*eit1);
         if (tabMC2->is_V_incident (tabMC1->other_V (MN1))) {
@@ -117,20 +117,20 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
 
     //Dijkstra search for the closet MN2 in MN2_set.
     MSM->reset_face_traversal ();
-    vcl_set<dbmsh3d_edge*> avoid_Eset;
+    std::set<dbmsh3d_edge*> avoid_Eset;
     avoid_Eset.insert (MS_incident_FE_set.begin(), MS_incident_FE_set.end());
-    vcl_set<dbmsh3d_vertex*> avoid_Vset;
+    std::set<dbmsh3d_vertex*> avoid_Vset;
     avoid_Vset.insert (MS_incident_FV_set.begin(), MS_incident_FV_set.end());
 
     avoid_Vset.erase (MN1->V());
-    vcl_set<dbmsh3d_vertex*>::iterator vit = V2_set.begin();
+    std::set<dbmsh3d_vertex*>::iterator vit = V2_set.begin();
     for (; vit != V2_set.end(); vit++) {
       dbmsh3d_vertex* V = (*vit);
       avoid_Vset.erase (V);
     }
 
     //Find the the shortest path from MN1 for the destV (in the V2_set).
-    vcl_vector<dbmsh3d_edge*> Evec_path;
+    std::vector<dbmsh3d_edge*> Evec_path;
     dbmsh3d_vertex *srcV, *destV;
     bool result = find_shortest_Es_on_M_restrained_targets (MSM, srcV_set, V2_set,
                                                             avoid_Eset, avoid_Vset, 
@@ -142,7 +142,7 @@ bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN1, dbsk3d_ms_node*& closes
       shortest_Evec.insert (shortest_Evec.begin(), Evec_path.begin(), Evec_path.end());
 
       //Find the closest_MN2 from the destV.
-      vcl_set<dbsk3d_ms_node*>::iterator nit = MN2_set.begin();
+      std::set<dbsk3d_ms_node*>::iterator nit = MN2_set.begin();
       for (; nit != MN2_set.end(); nit++) {
         dbsk3d_ms_node* MN2 = (*nit);
         if (MN2->V() == destV) {

@@ -6,9 +6,9 @@
 #include <xscan/xscan_uniform_orbit.h>
 #include <vil/vil_load.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstddef.h>
+#include <algorithm>
+#include <cstdlib>
+#include <cstddef>
 #include <vsl/vsl_basic_xml_element.h>
 
 // Function copied from imgr_scan_resource_io.cxx file written by Prof. Mundy
@@ -16,23 +16,23 @@
 // The globbing format expects only '#' to represent numbers.
 // Do not use "*" or "?"
 // All "#" should be in one contiguous group.
-static void parse_globbed_filenames(const vcl_string & input,
-                                    vcl_vector<vcl_string> &filenames)
+static void parse_globbed_filenames(const std::string & input,
+                                    std::vector<std::string> &filenames)
 {
   filenames.clear();
-  vcl_string filename = input;
+  std::string filename = input;
 
   // Avoid confusing globbing functions
   if (filename.find("*") != filename.npos) return;
   if (filename.find("?") != filename.npos) return;
 
   // Check that all the #s are in a single group.
-  vcl_size_t start = filename.find_first_of("#");
+  std::size_t start = filename.find_first_of("#");
   if (start == filename.npos) return;
-  vcl_size_t end = filename.find_first_not_of("#", start);
+  std::size_t end = filename.find_first_not_of("#", start);
   if (filename.find_first_of("#",end) != filename.npos) return;
   if (end == filename.npos) end = filename.length();
-  for (vcl_size_t i=start, j=start; i!=end; ++i, j+=12)
+  for (std::size_t i=start, j=start; i!=end; ++i, j+=12)
     filename.replace(j,1,"[0123456789]");
 
 
@@ -47,36 +47,36 @@ static void parse_globbed_filenames(const vcl_string & input,
   end = (end + filenames.front().size()) - input.size();
 
   // Put them all in numeric order.
-  vcl_sort(filenames.begin(), filenames.end());
+  std::sort(filenames.begin(), filenames.end());
 
   // Now discard non-contiguously numbered files.
-  long count = vcl_atol(filenames.front().substr(start, end-start).c_str());
-  vcl_vector<vcl_string>::iterator it=filenames.begin()+1;
+  long count = std::atol(filenames.front().substr(start, end-start).c_str());
+  std::vector<std::string>::iterator it=filenames.begin()+1;
   while (it != filenames.end())
   {
-    if (vcl_atol(it->substr(start, end-start).c_str()) != ++count)
+    if (std::atol(it->substr(start, end-start).c_str()) != ++count)
       break;
     ++it;
   }
   filenames.erase(it, filenames.end());
 }
 
-imgr_skyscan_log::imgr_skyscan_log(vcl_string log_fname)
+imgr_skyscan_log::imgr_skyscan_log(std::string log_fname)
 : imgr_scan_images_resource()
 {
-  vcl_FILE *fp = vcl_fopen(log_fname.c_str(), "r");
+  std::FILE *fp = std::fopen(log_fname.c_str(), "r");
   if(!fp){
-    vcl_cout << "skyscan log file open failed\n";
+    std::cout << "skyscan log file open failed\n";
     exit(1);
   }
-  vcl_string images_fname(log_fname);
+  std::string images_fname(log_fname);
   int cut_point = images_fname.find(".log");
   images_fname.replace(cut_point, 8, "####.tif"); 
 
   imgr_skyscan_log_header header(fp);
   header_ = header;
   images_fname_ = images_fname;
-  vcl_fclose(fp);
+  std::fclose(fp);
 
   compute_scan();
 }
@@ -153,7 +153,7 @@ void imgr_skyscan_log::set_scan(xscan_scan scan)
   cached_scan_ = scan;
 }
 
-vcl_vector<vcl_string> imgr_skyscan_log::get_imagenames() 
+std::vector<std::string> imgr_skyscan_log::get_imagenames() 
 {
   if(filenames_.size() == 0){
     parse_globbed_filenames(images_fname_, filenames_);
@@ -161,10 +161,10 @@ vcl_vector<vcl_string> imgr_skyscan_log::get_imagenames()
   return filenames_;
 }
 
-vcl_vector<vil_image_resource_sptr> imgr_skyscan_log::get_images()  const
+std::vector<vil_image_resource_sptr> imgr_skyscan_log::get_images()  const
 {
 #if defined(VCL_WIN32)
-  vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+  std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
   _setmaxstdio(2048);
 #endif
 
@@ -173,7 +173,7 @@ vcl_vector<vil_image_resource_sptr> imgr_skyscan_log::get_images()  const
   parse_globbed_filenames(images_fname_, filenames_);
   }
   
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
   images.clear();
   for(unsigned i=0; i < filenames_.size(); i++)
   {
@@ -185,7 +185,7 @@ vcl_vector<vil_image_resource_sptr> imgr_skyscan_log::get_images()  const
 }
 
 //: XML write
-void x_write(vcl_ostream& os, imgr_skyscan_log log)
+void x_write(std::ostream& os, imgr_skyscan_log log)
 {
   vsl_basic_xml_element element("imgr_skyscan_log");
   element.x_write_open(os);

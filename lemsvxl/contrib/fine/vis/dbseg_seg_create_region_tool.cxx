@@ -14,7 +14,7 @@ dbseg_seg_create_region_tool::dbseg_seg_create_region_tool() :
 {
 }
 
-vcl_string dbseg_seg_create_region_tool::name() const
+std::string dbseg_seg_create_region_tool::name() const
 {
   return "Create Region";
 }
@@ -66,7 +66,7 @@ bool dbseg_seg_create_region_tool::handle( const vgui_event & e, const bvis1_vie
         list<int> childList;
         for (i = tempList.begin(); i != tempList.end(); ++i) {
             if (seg_tab_->get_object()->get_object_list()[*i]->get_depth() != 1) {
-                vcl_cerr << "Error creating region - not all selected regions at depth level 1" << vcl_endl;
+                std::cerr << "Error creating region - not all selected regions at depth level 1" << std::endl;
                 return true;
             }
             childList.push_back(*i);
@@ -77,7 +77,7 @@ bool dbseg_seg_create_region_tool::handle( const vgui_event & e, const bvis1_vie
             }
         }
         else {
-            vcl_cerr << "Error creating region - fewer than 2 regions selected" << vcl_endl;
+            std::cerr << "Error creating region - fewer than 2 regions selected" << std::endl;
             return true;
         }
         dis = false;
@@ -130,7 +130,7 @@ bool dbseg_seg_create_region_tool::handle( const vgui_event & e, const bvis1_vie
         point_list.push_back(vgl_point_2d<double>(ix, iy));
 
         if (point_list.size() < 3) {
-            vcl_cerr << "Error Creating Region - Polygon has fewer than 3 points" << vcl_endl;
+            std::cerr << "Error Creating Region - Polygon has fewer than 3 points" << std::endl;
             return true;
         }
 
@@ -199,7 +199,7 @@ void dbseg_seg_create_region_tool::select_regions()    {
             count++;
         }
     }
-    vcl_cout << count << " regions selected" << vcl_endl;
+    std::cout << count << " regions selected" << std::endl;
 }
 
 void dbseg_seg_create_region_tool::deactivate() {

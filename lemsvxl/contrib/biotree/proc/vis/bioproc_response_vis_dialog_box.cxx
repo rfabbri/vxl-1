@@ -33,11 +33,11 @@ int main(int argc, char** argv)
   vgui_dialog dlg("Specify responses file");
   dlg.set_ok_button("OK");
   dlg.set_cancel_button("CANCEL");
-  static vcl_string inputf = "F:/MyDocs/Temp/responses.txt";
-  static vcl_string marginx_str = "0";
-  static vcl_string marginy_str = "0";
-  static vcl_string marginz_str = "0";
-  static vcl_string ext = "*.*";
+  static std::string inputf = "F:/MyDocs/Temp/responses.txt";
+  static std::string marginx_str = "0";
+  static std::string marginy_str = "0";
+  static std::string marginz_str = "0";
+  static std::string ext = "*.*";
   dlg.file("Input Filename:", ext, inputf);
   dlg.file("Margin-X:", ext, marginx_str);
   dlg.file("Margin-Y:", ext, marginy_str);
@@ -57,12 +57,12 @@ int main(int argc, char** argv)
     int dimx,dimy,dimz;
     double intensity;
     FILE *fp;
-    fp = vcl_fopen(inputf.c_str(),"r");
-    vcl_fscanf(fp,"%d %d %d\n", &dimx, &dimy, &dimz);
+    fp = std::fopen(inputf.c_str(),"r");
+    std::fscanf(fp,"%d %d %d\n", &dimx, &dimy, &dimz);
 
     assert(dimx > 2*marginx && dimy > 2*marginy && dimz > 2*marginz);
 
-    vcl_vector<double> field;
+    std::vector<double> field;
 
     for(int k=0;k<dimz;k++)
     {
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
       {
         for(int i=0;i<dimx;i++)
         {
-          vcl_fscanf(fp,"%lf ", &intensity);
+          std::fscanf(fp,"%lf ", &intensity);
           if(i>=marginx && i<dimx-marginx && j>=marginy && j<dimy-marginy && k>=marginz && k<dimz-marginz )
             field.push_back(intensity);
 
@@ -79,11 +79,11 @@ int main(int argc, char** argv)
           if(min_intensity > intensity)
             min_intensity = intensity;
         }
-        vcl_fscanf(fp,"\n");
+        std::fscanf(fp,"\n");
       }
-      vcl_fscanf(fp,"\n");
+      std::fscanf(fp,"\n");
     }
-    vcl_fclose(fp);
+    std::fclose(fp);
 
 
     const size_t blocksize = field.size();

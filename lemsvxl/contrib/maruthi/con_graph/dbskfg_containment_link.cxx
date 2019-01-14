@@ -5,10 +5,10 @@
 
 #include <con_graph/dbskfg_containment_link.h>
 #include <con_graph/dbskfg_containment_node.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_clip.h>
 #include <dbskfg/algo/dbskfg_transform_manager.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <dbskfg/algo/dbskfg_expand_local_context.h>
 #include <dbskfg/algo/dbskfg_loop_transforms.h>
@@ -47,7 +47,7 @@ dbskfg_containment_link::~dbskfg_containment_link()
 }
 
 void dbskfg_containment_link::set_contours_affected(
-    vcl_vector<unsigned int> contours)
+    std::vector<unsigned int> contours)
 {
     contours_affected_ = contours;
 
@@ -59,28 +59,28 @@ void dbskfg_containment_link::set_contours_affected(
 
 }
 
-void dbskfg_containment_link::print(vcl_ostream& os)
+void dbskfg_containment_link::print(std::ostream& os)
 {
     if ( transform_type_ == dbskfg_transform_descriptor::GAP )
     {
-        vcl_cout<<"Tranform Type: GAP"<<vcl_endl;
-        vcl_cout<<"New Contour Id: "<<new_contour_id_<<vcl_endl;
+        std::cout<<"Tranform Type: GAP"<<std::endl;
+        std::cout<<"New Contour Id: "<<new_contour_id_<<std::endl;
     }
     else
     {
 
-        vcl_cout<<"Transform Type: LOOP"<<vcl_endl;
+        std::cout<<"Transform Type: LOOP"<<std::endl;
     }
 
     
-    vcl_cout<< "Contours Affected: ";
+    std::cout<< "Contours Affected: ";
     
     for ( unsigned int i=0; i < contours_affected_.size() ; ++i)
     {
 
-        vcl_cout<<contours_affected_[i]<<" ";
+        std::cout<<contours_affected_[i]<<" ";
     }
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
 }
 
@@ -100,10 +100,10 @@ void dbskfg_containment_link::determine_group_transform()
         if ( transform_->transform_type_ 
              == dbskfg_transform_descriptor::GAP)
         {
-            vcl_pair<vcl_string,vcl_string> gap_strings =
+            std::pair<std::string,std::string> gap_strings =
                 transform_->gap_string();        
         
-            vcl_map<vcl_string,unsigned int>& old_gap_map =
+            std::map<std::string,unsigned int>& old_gap_map =
                 dbskfg_transform_manager::Instance().old_gap_map();
 
             // See if exists in gap map
@@ -119,14 +119,14 @@ void dbskfg_containment_link::determine_group_transform()
         {
             if ( transform_->loop_endpoints_.size() )
             {
-                vcl_stringstream sstream1;
+                std::stringstream sstream1;
                 sstream1<<transform_->loop_endpoints_[0]->pt();
         
-                vcl_stringstream sstream2;
+                std::stringstream sstream2;
                 sstream2<<transform_->loop_endpoints_[1]->pt();
 
-                vcl_pair<vcl_string,vcl_string> pair1 =
-                    vcl_make_pair(sstream1.str(),sstream2.str());
+                std::pair<std::string,std::string> pair1 =
+                    std::make_pair(sstream1.str(),sstream2.str());
 
                 if ( dbskfg_transform_manager::Instance().loop_pair(
                          pair1))
@@ -186,7 +186,7 @@ void dbskfg_containment_link::determine_group_transform()
             }
             else
             {
-                vcl_vector<unsigned int> contour_ids=
+                std::vector<unsigned int> contour_ids=
                     transform_->contour_ids_affected();
 
                 unsigned int tran_in = dbskfg_transform_manager::Instance().
@@ -236,7 +236,7 @@ void dbskfg_containment_link::determine_group_transform()
                 = dbskfg_transform_manager::Instance()
                 .get_cgraph();
 
-            vcl_vector<unsigned int> nodes_to_delete;
+            std::vector<unsigned int> nodes_to_delete;
             for ( unsigned int v=0; v < grouped_transform_->
                       contours_nodes_affected_.size(); ++v)
             {

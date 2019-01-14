@@ -16,7 +16,7 @@
 
 #include <dbskfg/dbskfg_composite_link.h>
 #include <dbskfg/dbskfg_utilities.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class dbskfg_shock_link;
 
@@ -34,7 +34,7 @@ public:
 
     /* virtual */ ~dbskfg_contour_link();
 
-    /* virtual */ void print(vcl_ostream& os);
+    /* virtual */ void print(std::ostream& os);
 
     // Methods
 
@@ -42,7 +42,7 @@ public:
     void shock_links_affected(dbskfg_shock_link* shock_link);
 
     // Grab all shock links affected
-    vcl_vector<dbskfg_shock_link*> shocks_affected()
+    std::vector<dbskfg_shock_link*> shocks_affected()
     {return shocks_affected_;}
 
     // Add original contour id
@@ -60,7 +60,7 @@ private:
     int contour_id_;
 
     // Keep a vector of all shock links affected by this node
-    vcl_vector<dbskfg_shock_link*> shocks_affected_;
+    std::vector<dbskfg_shock_link*> shocks_affected_;
 
     // Make copy constructor private
     dbskfg_contour_link(const dbskfg_contour_link&);

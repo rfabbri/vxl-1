@@ -19,8 +19,8 @@
 #include "vox_average_n_xgraphs_params_sptr.h"
 
 #include <dborl/dborl_index_sptr.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 #include <dbsksp/pro/dbsksp_xgraph_storage_sptr.h>
@@ -56,7 +56,7 @@ protected:
   bool write_out();
 
   //: Load esf file
-  bool load_esf(const vcl_string& esf_file, dbsk2d_shock_storage_sptr& shock_storage);
+  bool load_esf(const std::string& esf_file, dbsk2d_shock_storage_sptr& shock_storage);
 
   //: Convert sk2d graph to sksp graph
   bool convert_sk2d_to_sksp(const dbsk2d_shock_storage_sptr& sk2d_storage,
@@ -66,12 +66,12 @@ protected:
   bool compute_average();
 
   //: save a screenshot of an to a file
-  bool save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_png_filename);
+  bool save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const std::string& out_png_filename);
 
   //: Compute edit cost and deformation cost from all parents to an xgraph
   void compute_edit_distance(const dbsksp_xshock_graph_sptr& query,
-    vcl_vector<double >& distance_parent_to_query,
-    vcl_vector<double >& deform_cost_parent_to_query);
+    std::vector<double >& distance_parent_to_query,
+    std::vector<double >& deform_cost_parent_to_query);
 
   
 
@@ -85,7 +85,7 @@ protected:
   vox_average_n_xgraphs_params_sptr params_;
 
   // Output folder
-  vcl_string output_folder_;
+  std::string output_folder_;
   
   //2) Output--------------------------------------------------------------------
   
@@ -97,25 +97,25 @@ protected:
   //3) Intermediate variables---------------------------------------------------
 
   //: List of object names
-  vcl_vector<vcl_string > list_object_name_;
+  std::vector<std::string > list_object_name_;
 
   //: List of esf files of the shock graphs
-  vcl_vector<vcl_string > list_esf_file_;
+  std::vector<std::string > list_esf_file_;
 
   //: List of xgraphs to compute average on
-  vcl_vector<dbsksp_xshock_graph_sptr > list_xgraph_;
+  std::vector<dbsksp_xshock_graph_sptr > list_xgraph_;
 
   //: list distance from parent to average xgraph
-  vcl_vector<double > list_distance_parent_to_average_;
+  std::vector<double > list_distance_parent_to_average_;
 
   //: list of deform cost when matching parents with the average shape
-  vcl_vector<double > list_deform_cost_parent_to_average_;
+  std::vector<double > list_deform_cost_parent_to_average_;
 
   // basename (includes folder) to save everything
-  vcl_string base_name_;
+  std::string base_name_;
 
   // optimization method name
-  vcl_string method_name_;
+  std::string method_name_;
 };
 
 

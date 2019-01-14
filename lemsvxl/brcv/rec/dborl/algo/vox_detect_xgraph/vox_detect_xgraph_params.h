@@ -28,47 +28,47 @@ class vox_detect_xgraph_params : public dborl_algo_params
 {
 public:
   //: Constructor
-  vox_detect_xgraph_params(vcl_string algo_name);
+  vox_detect_xgraph_params(std::string algo_name);
 
   // Parameter parsers ---------------------------------------------------------
 
   //: List of boundary contour fragment to ignore
-  bool parse_input_cfrag_list_to_ignore(vcl_vector<vcl_string >& cfrag_list_to_ignore) const;
+  bool parse_input_cfrag_list_to_ignore(std::vector<std::string >& cfrag_list_to_ignore) const;
 
-  vcl_string get_image_file() const;
-  vcl_string get_xgraph_file() const;
-  vcl_string get_edgemap_file() const;
-  //vcl_string get_edgeorient_file() const;
-  vcl_string get_xgraph_geom_file() const;
-  vcl_string get_xgraph_geom_param_file() const;
-  vcl_vector<double > get_xgraph_scales() const; // depreciated
-  vcl_string get_xgraph_ccm_file() const;
-  vcl_string get_xgraph_ccm_param_file() const;
-  //vcl_string get_cemv_file() const;
-  vcl_vector<vcl_string > get_cfrag_list_to_ignore() const;
-  vcl_string get_output_folder() const; // location of all output files
+  std::string get_image_file() const;
+  std::string get_xgraph_file() const;
+  std::string get_edgemap_file() const;
+  //std::string get_edgeorient_file() const;
+  std::string get_xgraph_geom_file() const;
+  std::string get_xgraph_geom_param_file() const;
+  std::vector<double > get_xgraph_scales() const; // depreciated
+  std::string get_xgraph_ccm_file() const;
+  std::string get_xgraph_ccm_param_file() const;
+  //std::string get_cemv_file() const;
+  std::vector<std::string > get_cfrag_list_to_ignore() const;
+  std::string get_output_folder() const; // location of all output files
 
-  vcl_string get_xgraph_prototype_name() const; //> (only) name of the xgraph prototype file
+  std::string get_xgraph_prototype_name() const; //> (only) name of the xgraph prototype file
 
   // MEMBER VARIABLES ----------------------------------------------------------
 
   //>> Object <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   //: Name of input object
-  dborl_parameter<vcl_string> input_object_name_;
+  dborl_parameter<std::string> input_object_name_;
 
   //: passes the folder of the input object
-  dborl_parameter<vcl_string> input_object_dir_;    
+  dborl_parameter<std::string> input_object_dir_;    
 
   //>> image <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   //: Get input image from object folder?
   dborl_parameter<bool> input_image_from_object_folder_;  
 
   //: folder containing the edgemaps (if input is not from object directory)
-  dborl_parameter<vcl_string> input_image_folder_;    
+  dborl_parameter<std::string> input_image_folder_;    
 
   //: extension of the input image
-  dborl_parameter<vcl_string> input_image_extension_;
+  dborl_parameter<std::string> input_image_extension_;
 
   
   //>> edgemap
@@ -76,22 +76,22 @@ public:
   dborl_parameter<bool> input_edgemap_from_object_folder_;  
 
   //: folder containing the edgemaps (if input is not from object directory)
-  dborl_parameter<vcl_string> input_edgemap_folder_;    
+  dborl_parameter<std::string> input_edgemap_folder_;    
 
   //: extension of the input image
-  dborl_parameter<vcl_string> input_edgemap_extension_;
+  dborl_parameter<std::string> input_edgemap_extension_;
 
   ////: Folder of input edgemap orientation (if not in object folder)
-  //dborl_parameter<vcl_string > input_edgeorient_folder_; 
+  //dborl_parameter<std::string > input_edgeorient_folder_; 
 
   //: extension of the input edge orientation
-  dborl_parameter<vcl_string > input_edgeorient_extension_;
+  dborl_parameter<std::string > input_edgeorient_extension_;
 
   ////: Folder of input linked-edge folder (if not in object folder)
-  //dborl_parameter<vcl_string > input_cemv_folder_; 
+  //dborl_parameter<std::string > input_cemv_folder_; 
 
   //: extension of the linked-edge file
-  dborl_parameter<vcl_string > input_cemv_extension_;
+  dborl_parameter<std::string > input_cemv_extension_;
 
   //: Relative scale of edgemap used for detection.
   // value is in log2 of the scale ratio between of the selected edgemap and the selected image in the pyramid
@@ -101,29 +101,29 @@ public:
 
   //>> Trained model for xgraph
   //: Folder containing the object shock graph
-  dborl_parameter<vcl_string > input_xgraph_folder_;
+  dborl_parameter<std::string > input_xgraph_folder_;
 
   //: xgraph file name
-  dborl_parameter<vcl_string > input_xgraph_prototype_filename_;
+  dborl_parameter<std::string > input_xgraph_prototype_filename_;
 
   //>> xgraph geom model
   
   //: xgraph geometric model filename (.xml)
-  dborl_parameter<vcl_string > input_xgraph_geom_filename_;
+  dborl_parameter<std::string > input_xgraph_geom_filename_;
 
   //: xgraph geometric model filename (.xml)
-  dborl_parameter<vcl_string > input_xgraph_geom_param_filename_;
+  dborl_parameter<std::string > input_xgraph_geom_param_filename_;
 
   //>> xgraph ccm model
 
   //: xgraph Contour-Chamfer-Matching model filename (.xml)
-  dborl_parameter<vcl_string > input_xgraph_ccm_filename_;
+  dborl_parameter<std::string > input_xgraph_ccm_filename_;
 
   //: xgraph Contour-Chamfer-Matching model parameter filename (.xml)
-  dborl_parameter<vcl_string > input_xgraph_ccm_param_filename_;
+  dborl_parameter<std::string > input_xgraph_ccm_param_filename_;
 
   //: List of contour fragments whose cost will be ignored
-  dborl_parameter<vcl_string > input_cfrag_list_to_ignore_;
+  dborl_parameter<std::string > input_cfrag_list_to_ignore_;
 
   //: Parameter lambda of Oriented Chamfer Matching
   dborl_parameter<float > input_wcm_weight_unmatched_;
@@ -131,7 +131,7 @@ public:
   //>> Detection objectives <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   //: Object categery of input shock graph
-  dborl_parameter<vcl_string > input_model_category_;
+  dborl_parameter<std::string > input_model_category_;
 
   
 
@@ -159,10 +159,10 @@ public:
   // if written to this folder as opposed to object folder then the shock graph 
   // gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_object_folder_;  
+  dborl_parameter<std::string> output_object_folder_;  
 
   //: tag for this algorithm
-  vcl_string algo_abbreviation_;
+  std::string algo_abbreviation_;
 
   // External constraints
   

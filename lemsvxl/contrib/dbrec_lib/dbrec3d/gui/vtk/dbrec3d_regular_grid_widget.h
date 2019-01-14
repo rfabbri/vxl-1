@@ -55,7 +55,7 @@ public:
   dbrec3d_regular_grid_widget(vtkRenderWindow *window, 
                               vgl_box_3d<double> const &bbox,
                               double cell_length,
-                              vcl_vector<boct_cell_data<short, float> > const &cell_data,
+                              std::vector<boct_cell_data<short, float> > const &cell_data,
                               float min_val, float max_val, unsigned resolution_level);
   
   
@@ -69,7 +69,7 @@ public:
                           vnl_vector_fixed<float,5> filter_z);
   void update_volume_data(vgl_box_3d<double> const &bbox,
                           double cell_length, 
-                          vcl_vector<boct_cell_data<short, float> > const &cell_data, 
+                          std::vector<boct_cell_data<short, float> > const &cell_data, 
                           unsigned resolution_level);
     
   //: Size properties
@@ -142,7 +142,7 @@ protected:
   void init_volume_data(bvpl_kernel_sptr kernel);
   void init_volume_data(vnl_vector_fixed<float,5> filter_x, vnl_vector_fixed<float,5> filter_y, vnl_vector_fixed<float,5> filter_z );
   void init_volume_data(vgl_box_3d<double> const &bbox,
-                        double cell_length, vcl_vector<boct_cell_data<short, float> > const &cell_data,unsigned resolution_level);
+                        double cell_length, std::vector<boct_cell_data<short, float> > const &cell_data,unsigned resolution_level);
   
   //: Handle key events
   virtual void keyPressEvent(QKeyEvent *e);

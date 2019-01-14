@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../bvaml_voxel.h"
 #include "../bvaml_params.h"
@@ -44,7 +44,7 @@ static void test_voxel()
     cov(2,2) = v1.appearance_model[9];
     vnl_vector_fixed<float,3> light_vnl( light.x(), light.y(), light.z() );
     float var = dot_product( light_vnl, cov*light_vnl );
-    vcl_cerr << "Error: " << last_error << '\n' 
+    std::cerr << "Error: " << last_error << '\n' 
       << "Distance to last light: " << dist_to_fit << '\n'
       << "Variance: " << var << '\n'
       << "Color prob: " << v1.prob( color, light ) << '\n'
@@ -71,7 +71,7 @@ static void test_voxel()
       ( true_n2.x()-v2.appearance_model[1] )*( true_n2.x()-v2.appearance_model[1] ) +
       ( true_n2.y()-v2.appearance_model[2] )*( true_n2.y()-v2.appearance_model[2] ) +
       ( true_n2.z()-v2.appearance_model[3] )*( true_n2.z()-v2.appearance_model[3] );
-    vcl_cerr << last_error << '\n' << v2.appearance_model << "\n\n";
+    std::cerr << last_error << '\n' << v2.appearance_model << "\n\n";
   } 
 
   TEST_NEAR( "\ntesting normal estimation from noisy data.\n", last_error, 0, .1 );
@@ -100,7 +100,7 @@ static void test_voxel()
       ( true_n3.y()-v3.appearance_model[7] )*( true_n3.y()-v3.appearance_model[7] ) +
       ( true_n3.z()-v3.appearance_model[8] )*( true_n3.z()-v3.appearance_model[8] );
     if( last_error2 < last_error ) last_error = last_error2;
-    vcl_cerr << last_error << '\n' << v3.appearance_model << "\n\n";
+    std::cerr << last_error << '\n' << v3.appearance_model << "\n\n";
   } 
 
   TEST_NEAR( "\ntesting normal estimation from bimodal data.\n", last_error, 0, .1 );

@@ -25,7 +25,7 @@ class dbrec3d_region_viewer : public QMainWindow
   Q_OBJECT
   
 public:
-  dbrec3d_region_viewer(boxm_scene<boct_tree< short, float > > *scene, vcl_vector<vgl_box_3d<double> > bboxes, float tf_min, float tf_max, unsigned resolution_level = 0);
+  dbrec3d_region_viewer(boxm_scene<boct_tree< short, float > > *scene, std::vector<vgl_box_3d<double> > bboxes, float tf_min, float tf_max, unsigned resolution_level = 0);
   
   public slots:
   
@@ -37,9 +37,9 @@ protected:
   dbrec3d_filter_grid_widget* region_widget_;
 
   //: The regions
-  vcl_vector<vgl_box_3d<double> > bboxes_;
+  std::vector<vgl_box_3d<double> > bboxes_;
   //: Iterator to current kernel
-  vcl_vector<vgl_box_3d<double> >::iterator curr_bboxes_it_;
+  std::vector<vgl_box_3d<double> >::iterator curr_bboxes_it_;
   
   unsigned resolution_level_;
   double cell_length_;

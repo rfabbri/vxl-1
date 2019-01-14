@@ -433,59 +433,59 @@ void rc3d_menus::prob_gauss_scale()
 
 void rc3d_menus::recon3d()
 {
-   vcl_cerr<<"goes 3d reconstruction\n";
+   std::cerr<<"goes 3d reconstruction\n";
    rc3d_windows_frame::instance()->reconstruct3d();
 }
 void rc3d_menus::manual_recon()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_reconstruction();
 }
 void rc3d_menus::manual_reconstruction_number()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_reconstruction_number();
 }
 
 void rc3d_menus::cad_N()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->cad_back_N_frame();
 }
 
 void rc3d_menus::mouse_N()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->mouse_point_selection_N_frame();
 }
 
 void rc3d_menus::manual_recon_recog_test()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_recon_rec_test();
 }
 
 
 void rc3d_menus::manual_recon_tri_opt()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_recon_tripplet_optimization();
 }
 
 void rc3d_menus::manual_recon_on_epi()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_reconstruction_on_epiline();
 }
 
 void rc3d_menus::manual_recon_on_epi_debug_temp()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_reconstruction_on_epiline_debug_temp();
 }
 void rc3d_menus::manual_recon_on_epi_BB_Front()
 {
-   //vcl_cerr<<"goes  reconstruction\n";
+   //std::cerr<<"goes  reconstruction\n";
    rc3d_windows_frame::instance()->manual_reconstruction_on_epiline_BB_Front();
 }
 
@@ -522,12 +522,12 @@ void rc3d_menus::remove_curve3d()
 }
 void rc3d_menus::find_epipole()
 {
-   vcl_cerr<<"goes epipole extraction using 5 point\n"<<vcl_endl;
+   std::cerr<<"goes epipole extraction using 5 point\n"<<std::endl;
    rc3d_windows_frame::instance()->find_epipole();
 }
 void rc3d_menus::show_epi_line()
 {
-   //vcl_cerr<<"goes epipole extraction using 5 point\n"<<vcl_endl;
+   //std::cerr<<"goes epipole extraction using 5 point\n"<<std::endl;
    rc3d_windows_frame::instance()->show_epipolar_line();
 }
 
@@ -546,7 +546,7 @@ void rc3d_menus::clear_display3()
 
 void rc3d_menus::vs()
 {
-//  vcl_cerr<<"goes vd callback\n";
+//  std::cerr<<"goes vd callback\n";
  rc3d_windows_frame::instance()->vd_edges();
 }
 
@@ -567,7 +567,7 @@ void rc3d_menus::vs_subtraction()
 
 void rc3d_menus::auto_vs()
 {
- // vcl_cerr<<"goes vd callback\n";
+ // std::cerr<<"goes vd callback\n";
  rc3d_windows_frame::instance()->auto_vd_edges();
 }
       
@@ -577,28 +577,28 @@ void rc3d_menus::osl_line_fit()
 }
 void rc3d_menus::vd_edges_map()
 {
- // vcl_cerr<<"goes vd callback\n";
+ // std::cerr<<"goes vd callback\n";
  rc3d_windows_frame::instance()->vd_edges_map();
 }
 void rc3d_menus::vd_edges_map_3()
 {
- // vcl_cerr<<"goes vd callback\n";
+ // std::cerr<<"goes vd callback\n";
  rc3d_windows_frame::instance()->vd_edges_map_all_in();
 }
 void rc3d_menus::back_ground()
 {
- // vcl_cerr<<"goes vd callback\n";
+ // std::cerr<<"goes vd callback\n";
  rc3d_windows_frame::instance()->back_ground();
 }
 /*void rc3d_menus::kalman_go_callback()
 {
-  vcl_cerr<<"goes into kalman_go_callback\n";
+  std::cerr<<"goes into kalman_go_callback\n";
   rc3d_windows_frame::instance()->go();
 }
 
 void rc3d_menus::show_predicted_curves()
 {
-  vcl_cerr<<"goes into predicted_curves\n";
+  std::cerr<<"goes into predicted_curves\n";
   rc3d_windows_frame::instance()->show_predicted_curve();
 }
 

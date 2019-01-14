@@ -1,7 +1,7 @@
 #ifndef _bvam_image_schedule_cxx_
 #define _bvam_image_schedule_cxx_
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 #include <vul/vul_awk.h>
@@ -29,22 +29,22 @@ bvam_image_schedule::push_back(
 //---------------------------------------------------
 void 
 bvam_image_schedule::load(
-  vcl_string image_dir,
-  vcl_string camera_file,
-  vcl_string light_file,
+  std::string image_dir,
+  std::string camera_file,
+  std::string light_file,
   bool read_date )
 {
   // Read all images from the directory.
-  vcl_vector< vil_image_view_base_sptr > image_list;
-  vcl_vector<double> date_list;
-  vcl_vector<vcl_string> name_list;
+  std::vector< vil_image_view_base_sptr > image_list;
+  std::vector<double> date_list;
+  std::vector<std::string> name_list;
   if( image_dir != "NONE" ){
     image_dir += "/*.*";
     for( vul_file_iterator fit = image_dir; fit; ++fit ){
       if( vul_file::is_directory(fit()) )
         continue;
-      vcl_string image_name = fit();
-      vcl_string extension = vul_file::extension( image_name ); 
+      std::string image_name = fit();
+      std::string extension = vul_file::extension( image_name ); 
       if( ( extension != ".jpg" ) &&
           ( extension != ".png" ) &&
           ( extension != ".tif" ) &&
@@ -63,9 +63,9 @@ bvam_image_schedule::load(
   }
 
   // Read the cameras.
-  vcl_vector< vpgl_proj_camera<double> > camera_list;
+  std::vector< vpgl_proj_camera<double> > camera_list;
   if( camera_file != "NONE" ){
-    vcl_ifstream camera_stream( camera_file.c_str() );
+    std::ifstream camera_stream( camera_file.c_str() );
     char line_buffer[256];
 
     if( !(camera_stream.good()) ){
@@ -85,9 +85,9 @@ bvam_image_schedule::load(
   }
 
   // Read the lights.
-  vcl_vector< vnl_vector<double> > light_list;
+  std::vector< vnl_vector<double> > light_list;
   if( light_file != "NONE" ){
-    vcl_ifstream light_stream( light_file.c_str() );
+    std::ifstream light_stream( light_file.c_str() );
     for( vul_awk lawk( light_stream ); lawk; ++lawk ){
       if( lawk.NF() == 0 ) continue;
       vnl_vector<double> new_light( lawk.NF() );
@@ -134,7 +134,7 @@ void
 bvam_image_schedule::order_by_date()
 {
   schedule_.clear();
-  vcl_vector<bool> added;
+  std::vector<bool> added;
   for( unsigned i = 0; i < list_.size(); i++ ) added[i] = false;
 
   // Brute force n^2 sorting.
@@ -161,7 +161,7 @@ bvam_image_schedule::schedule_subset(
   unsigned end_index,
   unsigned inc )
 {
-  vcl_vector<unsigned> new_schedule;
+  std::vector<unsigned> new_schedule;
   for( unsigned i = start_index; i < end_index; i += inc ){
     new_schedule.push_back( schedule_[i] );
   }
@@ -173,19 +173,19 @@ bvam_image_schedule::schedule_subset(
 void 
 bvam_image_schedule::shuffle()
 {
-  vcl_cerr << "SHUFFLE: NOT YET IMPLEMENTED";
+  std::cerr << "SHUFFLE: NOT YET IMPLEMENTED";
 };
 
 
 //---------------------------------------------------
 double 
 bvam_image_schedule::get_date( 
-  vcl_string file_name )
+  std::string file_name )
 {
-  vcl_string f = vul_file::strip_directory( file_name );
-  vcl_string year; year += f[0]; year += f[1];
-  vcl_string month; month += f[2]; month += f[3]; month += f[4]; 
-  vcl_string day; day += f[5]; day += f[6];
+  std::string f = vul_file::strip_directory( file_name );
+  std::string year; year += f[0]; year += f[1];
+  std::string month; month += f[2]; month += f[3]; month += f[4]; 
+  std::string day; day += f[5]; day += f[6];
   double date = atoi(year.c_str())/100.0;
   if( month == "JAN" ) date += .0001;
   else if( month == "FEB" ) date += .0002;
@@ -199,7 +199,7 @@ bvam_image_schedule::get_date(
   else if( month == "OCT" ) date += .0010;
   else if( month == "NOV" ) date += .0011;
   else if( month == "DEC" ) date += .0012;
-  else vcl_cerr << "ERROR: UNKNOWN DATE: " << month << '\n';
+  else std::cerr << "ERROR: UNKNOWN DATE: " << month << '\n';
   date += atoi(day.c_str())/1000000.0;
   return date;
 };

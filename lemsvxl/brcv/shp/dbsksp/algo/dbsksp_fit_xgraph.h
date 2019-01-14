@@ -30,8 +30,8 @@
 #include <bgld/algo/bgld_circ_arc.h>
 
 #include <vnl/vnl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 
 //==============================================================================
@@ -60,7 +60,7 @@ public:
   //: Fit a generative dbsksp_xshock_graph
   void fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
     dbsksp_xshock_graph_sptr& new_xgraph,
-    vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& map_new_node_to_old_node,
+    std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& map_new_node_to_old_node,
     double sample_ds = 1);
 
 
@@ -70,10 +70,10 @@ public:
   // Support functions----------------------------------------------------------
 protected:
 
-  typedef vcl_map<dbsksp_xshock_edge_sptr, vcl_vector<dbsk2d_xshock_edge_sptr > > type_map_sksp_edge_to_sk2d_edges;
-  typedef vcl_map<dbsksp_xshock_node_sptr, dbsk2d_shock_node_sptr > type_map_sksp_node_to_sk2d_node;
-  typedef vcl_pair<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr> type_branch_key;
-  typedef vcl_vector<dbsksp_xshock_edge_sptr > type_branch_edges;
+  typedef std::map<dbsksp_xshock_edge_sptr, std::vector<dbsk2d_xshock_edge_sptr > > type_map_sksp_edge_to_sk2d_edges;
+  typedef std::map<dbsksp_xshock_node_sptr, dbsk2d_shock_node_sptr > type_map_sksp_node_to_sk2d_node;
+  typedef std::pair<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr> type_branch_key;
+  typedef std::vector<dbsksp_xshock_edge_sptr > type_branch_edges;
 
   //: Convert the coarse shock graph, the topology is exact the same as in the sk2d shock graph
   // Depreciated
@@ -107,8 +107,8 @@ protected:
 
   //: Compute the list of shock branches in a undirected shock graph
   void compute_shock_branches(const dbsksp_xshock_graph_sptr& xgraph,
-    vcl_vector<type_branch_key >& list_branch_key,
-    vcl_vector<type_branch_edges >& list_branch_edges);
+    std::vector<type_branch_key >& list_branch_key,
+    std::vector<type_branch_edges >& list_branch_edges);
 
   //: Comparison function for keys of shock branches
   // Two keys are the same if the two end nodes are the same, regardless of their order

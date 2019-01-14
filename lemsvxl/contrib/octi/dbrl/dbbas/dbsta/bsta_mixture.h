@@ -15,10 +15,10 @@
 // \endverbatim
 
 #include "bsta_distribution.h"
-#include <vcl_cassert.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 #include "bsta_sampler.h"
 #include <vpdl/vpdt/vpdt_dist_traits.h>
 #include <vnl/vnl_random.h>
@@ -79,7 +79,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
     public:
     bool operator() (const dist_& d1,T w1, const dist_& d2,T w2) const
       { 
-		//  vcl_cout<<d1.entropy()<<" , "<<d2.entropy()<<vcl_endl;
+		//  std::cout<<d1.entropy()<<" , "<<d2.entropy()<<std::endl;
 		  return d1.det_covar()/w1 > d2.det_covar()/w2; 
 	 }
     };
@@ -97,7 +97,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   };
 
   //: The vector of components
-  vcl_vector<component*> components_;
+  std::vector<component*> components_;
 
  public:
   // Default Constructor
@@ -168,7 +168,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
  bool compactifyConservativeHeapWeight();
 
  //pairwise merge the components in the mixture - assumes a sorted vector as an input
- vcl_vector<component*> recursiveMerge(vcl_vector<component*> vec);
+ std::vector<component*> recursiveMerge(std::vector<component*> vec);
  
  
 
@@ -201,7 +201,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   // \note assumes weights have been normalized
   T prob_density(const vector_& pt) const
   {
-    typedef typename vcl_vector<component*>::const_iterator comp_itr;
+    typedef typename std::vector<component*>::const_iterator comp_itr;
     T prob = 0;
     for (comp_itr i = components_.begin(); i != components_.end(); ++i)
       prob += (*i)->weight * (*i)->distribution.prob_density(pt);
@@ -212,7 +212,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   // \note assumes weights have been normalized
   T probability(const vector_& min_pt, const vector_& max_pt) const
   {
-    typedef typename vcl_vector<component*>::const_iterator comp_itr;
+    typedef typename std::vector<component*>::const_iterator comp_itr;
     T prob = 0;
     for (comp_itr i = components_.begin(); i != components_.end(); ++i)
       prob += (*i)->weight * (*i)->distribution.probability(min_pt,max_pt);
@@ -222,7 +222,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   //: Normalize the weights of the components to add to 1.
   void normalize_weights()
   {
-    typedef typename vcl_vector<component*>::iterator comp_itr;
+    typedef typename std::vector<component*>::iterator comp_itr;
     T sum = 0;
     for (comp_itr i = components_.begin(); i != components_.end(); ++i)
       sum += (*i)->weight;
@@ -232,7 +232,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   }
 
   //: Sort the components in order of decreasing weight
-  void sort() { vcl_sort(components_.begin(), components_.end(), sort_weight() ); }
+  void sort() { std::sort(components_.begin(), components_.end(), sort_weight() ); }
 
   //: Sort the components using any StrictWeakOrdering function
   // The prototype should be
@@ -243,11 +243,11 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
   // \endcode
   template <class comp_type_>
   void sort(comp_type_ comp)
-  { vcl_sort(components_.begin(), components_.end(), sort_adaptor<comp_type_>(comp)); }
+  { std::sort(components_.begin(), components_.end(), sort_adaptor<comp_type_>(comp)); }
 
   template <class comp_type_>
   void sort(comp_type_ comp, unsigned int idx)
-  { vcl_sort(components_.begin(), components_.begin()+idx+1, sort_adaptor<comp_type_>(comp)); }
+  { std::sort(components_.begin(), components_.begin()+idx+1, sort_adaptor<comp_type_>(comp)); }
 
   //: sample from the mixture
   //  randomly selects a component wrt normalized component weights, then for now returns the mean of the selected component
@@ -258,8 +258,8 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
     for (unsigned i=0; i<num_components(); ++i)
       sum += components_[i]->weight;
 
-    vcl_vector<float> ps;
-    vcl_vector<unsigned> ids;
+    std::vector<float> ps;
+    std::vector<unsigned> ids;
     for (unsigned i=0; i<num_components(); ++i) {
       float w;
       if (sum > 0)
@@ -269,7 +269,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
       ps.push_back(w);
       ids.push_back(i);
     }
-    vcl_vector<unsigned> out;
+    std::vector<unsigned> out;
     bsta_sampler<unsigned>::sample(ids, ps, 1, out);
     assert(out.size() == 1);
 
@@ -279,7 +279,7 @@ class bsta_mixture : public bsta_distribution<typename dist_::math_type,
 };
 
 template <class dist_>
-inline vcl_ostream& operator<< (vcl_ostream& os,
+inline std::ostream& operator<< (std::ostream& os,
                                 bsta_mixture<dist_> const& m)
 {
   typedef typename dist_::math_type T;

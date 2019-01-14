@@ -23,7 +23,7 @@ public:
 
 	virtual ~dsm2_node_model() {}
 
-	inline static vcl_string gauss_type() {return vcl_string("full"); }
+	inline static std::string gauss_type() {return std::string("full"); }
 
 	virtual void b_write( vsl_b_ostream& os ) const;
 
@@ -59,7 +59,7 @@ void dsm2_node_model<T,n>::b_read( vsl_b_istream& is )
 		}//end case 1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm2_node_model::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm2_node_model::b_read() -- unknown version number." << std::flush;
 			return;
 		}//end default
 	}//end switch(v)
@@ -70,7 +70,7 @@ template class dsm2_node_model<double,2>;
 int main()
 {
 	
-	vcl_cout << "Running dsm2_node_size_main.exe..." << vcl_endl;
+	std::cout << "Running dsm2_node_size_main.exe..." << std::endl;
 
 	dsm2_node_gaussian<bsta_gaussian_full<double,2> >gaussian_full;
 		
@@ -78,10 +78,10 @@ int main()
 	dsm2_node_model<double,2> model;
 		 
 
-	vcl_cout << "Size of dsm2_node_gaussian_full: " << sizeof(gaussian_full)
-		     << " bytes." << vcl_endl;
+	std::cout << "Size of dsm2_node_gaussian_full: " << sizeof(gaussian_full)
+		     << " bytes." << std::endl;
 
-	vcl_cout << "Size of dsm2_node_model: " << sizeof(model)
-		     << " bytes." << vcl_endl;
+	std::cout << "Size of dsm2_node_model: " << sizeof(model)
+		     << " bytes." << std::endl;
 	return 0;
 }

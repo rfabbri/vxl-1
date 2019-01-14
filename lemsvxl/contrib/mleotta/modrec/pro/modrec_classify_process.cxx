@@ -10,7 +10,7 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vil/vil_math.h>
-#include <vcl_limits.h>
+#include <limits>
 
 #include <dbbgm/pro/dbbgm_image_storage.h>
 #include <bbgm/bbgm_image_sptr.h>
@@ -63,7 +63,7 @@ modrec_classify_process::modrec_classify_process()
       !parameters()->add( "YUV Color Space" ,  "-yuv",      false ) ||
       !parameters()->add( "mask foreground" ,  "-mask_fg",  false )  ||
       !parameters()->add( "debug" ,            "-debug",    false )   ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -83,7 +83,7 @@ modrec_classify_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 modrec_classify_process::name()
 {
   return "Model Classify";
@@ -107,9 +107,9 @@ modrec_classify_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > modrec_classify_process::get_input_type()
+std::vector< std::string > modrec_classify_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "bbgm_image" );
   to_return.push_back( "bbgm_image" );
@@ -119,9 +119,9 @@ vcl_vector< vcl_string > modrec_classify_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > modrec_classify_process::get_output_type()
+std::vector< std::string > modrec_classify_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   bool debug=false;
   bpro1_filepath models_file;
@@ -137,9 +137,9 @@ vcl_vector< vcl_string > modrec_classify_process::get_output_type()
 }
 
 //: Returns a vector of strings with suggested names for output classes
-vcl_vector< vcl_string > modrec_classify_process::suggest_output_names()
+std::vector< std::string > modrec_classify_process::suggest_output_names()
 {
-  vcl_vector< vcl_string > names;
+  std::vector< std::string > names;
   names.push_back("state labels");
 
   bool debug=false;
@@ -161,7 +161,7 @@ bool
 modrec_classify_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In modrec_classify_process::execute() - "
+    std::cout << "In modrec_classify_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -201,12 +201,12 @@ modrec_classify_process::execute()
     frame_model.vertical_cast(input_data_[0][1]);
   }
   else{ 
-    vcl_cerr << "background model not provided" << vcl_endl;
+    std::cerr << "background model not provided" << std::endl;
     return false;
   }
   model = dynamic_cast<bbgm_image_of<mix_gauss_type>*>(frame_model->dist_image().ptr());
   if(!model){
-    vcl_cerr << "background model not correct type" << vcl_endl;
+    std::cerr << "background model not correct type" << std::endl;
     return false;
   }
 
@@ -319,11 +319,11 @@ modrec_classify_process::finish()
   vnl_double_3x4 camera;
   if(result){
     bxml_element* elm = static_cast<bxml_element*>(result.ptr());
-    vcl_stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
+    std::stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
     s >> camera;
   }
   else{
-    vcl_cout << "error reading \"camera\" from XML" <<vcl_endl;
+    std::cout << "error reading \"camera\" from XML" <<std::endl;
     return false;
   }
 
@@ -333,45 +333,45 @@ modrec_classify_process::finish()
   double k[4];
   if(result){
     bxml_element* elm = static_cast<bxml_element*>(result.ptr());
-    vcl_stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
+    std::stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
     s >> k[0] >> k[1] >> k[2] >> k[3];
   }
   else{
-    vcl_cout << "error reading \"lens\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lens\" from XML" <<std::endl;
     return false;
   }
 
   float starttime;
   if(!modrec_pro_read_param(xdoc,"starttime",starttime)){
-    vcl_cout << "error reading \"starttime\" from XML" <<vcl_endl;
+    std::cout << "error reading \"starttime\" from XML" <<std::endl;
     return false;
   }
   hour += starttime;
 
   if(!modrec_pro_read_param(xdoc,"date",day)){
-    vcl_cout << "error reading \"date\" from XML" <<vcl_endl;
+    std::cout << "error reading \"date\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"lat",lat)){
-    vcl_cout << "error reading \"lat\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lat\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"lon",lon)){
-    vcl_cout << "error reading \"lon\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lon\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"heading",heading)){
-    vcl_cout << "error reading \"heading\" from XML" <<vcl_endl;
+    std::cout << "error reading \"heading\" from XML" <<std::endl;
     return false;
   }
 
   // read the models
   modrec_pro_read_models(models_file.path, mesh_, mesh_names_);
   if(mesh_.empty()){
-    vcl_cerr << "Error: no mesh files loaded" <<vcl_endl;
+    std::cerr << "Error: no mesh files loaded" <<std::endl;
     return false;
   }
 
@@ -408,7 +408,7 @@ modrec_classify_process::finish()
   double alt, az;
   dbul_solar_position(day, hour , lat, lon, alt, az);
   az = heading*3.1415926/180.0 - az;
-  double xa = -vcl_cos(az)/vcl_tan(alt), ya = -vcl_sin(az)/vcl_tan(alt);
+  double xa = -std::cos(az)/std::tan(alt), ya = -std::sin(az)/std::tan(alt);
 
 
   float scale, f_tol, initx, inity, initvx;
@@ -422,7 +422,7 @@ modrec_classify_process::finish()
   // the simplex minimizer
   vnl_vector<double> x1(3); x1(0)=initx; x1(1)=inity; x1(2)=initvx;
   vnl_vector<double> ds(3); ds(0)=10*scale; ds(1)=scale; ds(2)=scale;
-  vcl_vector<double> min_error(mesh_.size());
+  std::vector<double> min_error(mesh_.size());
   unsigned int best_ind = 0;
   double best_error = 0;
   {
@@ -436,7 +436,7 @@ modrec_classify_process::finish()
     best_error = min_error[0];
   }
 
-  vcl_vector<vnl_vector<double> > x(mesh_.size(),x1);
+  std::vector<vnl_vector<double> > x(mesh_.size(),x1);
   for(unsigned int i=1; i<mesh_.size(); ++i){
     modrec_motion_cost_func func(error_images_, camera, lens, mesh_[i], xa, ya);
     vnl_amoeba a(func);
@@ -451,11 +451,11 @@ modrec_classify_process::finish()
     }
   }
 
-  vcl_cout << "best model: "<< mesh_names_[best_ind] << vcl_endl;
+  std::cout << "best model: "<< mesh_names_[best_ind] << std::endl;
 
   for(unsigned int i=0; i<mesh_.size(); ++i){
-    vcl_cout << mesh_names_[i]<<": x="<<x[i](0)<< " y="<<x[i](1)<< " v="<<x[i](2)
-             <<"  error="<<min_error[i]<<vcl_endl;
+    std::cout << mesh_names_[i]<<": x="<<x[i](0)<< " y="<<x[i](1)<< " v="<<x[i](2)
+             <<"  error="<<min_error[i]<<std::endl;
   }
 
 

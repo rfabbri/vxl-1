@@ -1,9 +1,9 @@
 #include "dbinfo_imatch_minfo_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -44,7 +44,7 @@ dbinfo_imatch_minfo_process::dbinfo_imatch_minfo_process()
       !parameters()->add( "Forced Xform Scale:" , "-fscale" , 1.0f )
    )
   {
-    vcl_cerr << "ERROR: Adding parameters in dbinfo_imatch_minfo_process::dbinfo_imatch_minfo_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbinfo_imatch_minfo_process::dbinfo_imatch_minfo_process()" << std::endl;
   }
 
   total_info_ = 0;
@@ -88,10 +88,10 @@ bool dbinfo_imatch_minfo_process::execute()
   vil_image_resource_sptr image_q_sptr = frame_image2->get_image();
 
   unsigned ni_db = image_db_sptr->ni(), nj_db = image_db_sptr->nj();
-  vcl_cout << "Database image(" << ni_db << ' ' << nj_db << ")\n";
+  std::cout << "Database image(" << ni_db << ' ' << nj_db << ")\n";
 
   unsigned ni_q = image_q_sptr->ni(), nj_q = image_q_sptr->nj();
-  vcl_cout << "Query image(" << ni_q << ' ' << nj_q << ")\n";
+  std::cout << "Query image(" << ni_q << ' ' << nj_q << ")\n";
 
   //----------------------------------
   // create the observations with intensity and gradient
@@ -105,7 +105,7 @@ bool dbinfo_imatch_minfo_process::execute()
 
   total_info_ = dbinfo_object_matcher::minfo_rigid_alignment_rand(obs_q, obs_db, rigid_dx, rigid_dr, rigid_ds, rigid_ratio, Nob, temp_sptr1,temp_sptr2, match_sptr, true, forced_scale, use_intensity, use_gradient);
   
-  vcl_cout << "total_info: " << total_info_ << vcl_endl;
+  std::cout << "total_info: " << total_info_ << std::endl;
 
   //----------------------------------
   // create the output storage class

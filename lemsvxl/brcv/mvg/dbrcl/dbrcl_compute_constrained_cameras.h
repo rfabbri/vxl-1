@@ -7,7 +7,7 @@
 // \date 10/26/05
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vpgl/vpgl_proj_camera.h>
 
@@ -25,13 +25,13 @@ public:
   { return 2*image_points.size() + height_top_points.size(); }
 
   // Corresponding world and image points.
-  vcl_vector< vgl_point_3d<double> > world_points;
-  vcl_vector< vgl_point_2d<double> > image_points;
+  std::vector< vgl_point_3d<double> > world_points;
+  std::vector< vgl_point_2d<double> > image_points;
 
   // Tops and bottoms of objects in the world that point "up", i.e. parallel 
   // to the z axis.
-  vcl_vector< vgl_point_2d<double> > height_top_points;
-  vcl_vector< vgl_point_2d<double> > height_bot_points;
+  std::vector< vgl_point_2d<double> > height_top_points;
+  std::vector< vgl_point_2d<double> > height_bot_points;
 
 };
 
@@ -44,21 +44,21 @@ public:
   dbrcl_compute_constrained_cameras()
   { verbose = false; }
 
-  bool read_constraint_file( vcl_string constraint_file );
+  bool read_constraint_file( std::string constraint_file );
 
   bool compute_cameras(
-    vcl_vector< vpgl_proj_camera<double> >& cameras,
-    vcl_vector<int>& frames,
+    std::vector< vpgl_proj_camera<double> >& cameras,
+    std::vector<int>& frames,
     bool affine_camera = false );
 
   bool compute_cameras_separately(
-    vcl_vector< vpgl_proj_camera<double> >& cameras,
-    vcl_vector<int>& frames,
+    std::vector< vpgl_proj_camera<double> >& cameras,
+    std::vector<int>& frames,
     bool affine_camera = false );
 
 
   void get_world_points(
-    vcl_vector< vgl_point_3d<double> >& world_points );
+    std::vector< vgl_point_3d<double> >& world_points );
 
   void add_constraint( 
     dbrcl_camera_constraints new_constraint )
@@ -69,10 +69,10 @@ public:
 
 protected:
 
-  vcl_vector< dbrcl_camera_constraints > constraints_;
+  std::vector< dbrcl_camera_constraints > constraints_;
 
   // Other world points with no image correspondences, for visualization.
-  vcl_vector< vgl_point_3d<double> > unmatched_world_points_;
+  std::vector< vgl_point_3d<double> > unmatched_world_points_;
 
 };
 

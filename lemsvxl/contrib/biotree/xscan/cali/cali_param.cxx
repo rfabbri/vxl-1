@@ -1,21 +1,21 @@
 #include <cali/cali_param.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstddef.h>
-#include <vcl_cstdlib.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <cstdio>
+#include <cstddef>
+#include <cstdlib>
 #include <stdlib.h>
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 
 
 
-cali_param::cali_param(vcl_string pathname):pathname_(pathname)
+cali_param::cali_param(std::string pathname):pathname_(pathname)
 {
-        vcl_vector<vcl_string>filepath;
-        vcl_vector<double>parameters;
-        // vcl_ifstream fstream(pathname_.c_str(),vcl_ios::in);
-        vcl_ifstream qfstream(pathname_.c_str());
+        std::vector<std::string>filepath;
+        std::vector<double>parameters;
+        // std::ifstream fstream(pathname_.c_str(),std::ios::in);
+        std::ifstream qfstream(pathname_.c_str());
 
         char * val_string = new char[500];
         char* valstr;
@@ -31,7 +31,7 @@ cali_param::cali_param(vcl_string pathname):pathname_(pathname)
 
                 qfstream.getline(val_string, 500);
                 valstr = strtok(val_string,"=");
-                vcl_cout<<" val_string "<<val_string<<vcl_endl;
+                std::cout<<" val_string "<<val_string<<std::endl;
                 if ( strncmp(val_string,"#end_of_paths",13))
 
                 {
@@ -71,7 +71,7 @@ cali_param::cali_param(vcl_string pathname):pathname_(pathname)
  CORRESPONDENCEINFO = filepath[j++];
  OUTPUT_SCANFILE = filepath[j++];
 
- vcl_FILE *fp = vcl_fopen(LOGFILE.c_str(),"r");
+ std::FILE *fp = std::fopen(LOGFILE.c_str(),"r");
  imgr_skyscan_log_header header(fp);
 
 
@@ -99,40 +99,40 @@ cali_param::cali_param(vcl_string pathname):pathname_(pathname)
  INTERVAL = static_cast<int>(parameters[j++]);
  ERROR_MARGIN_FACTOR = static_cast<unsigned>(parameters[j++]);
 
- vcl_cout<<" no. of parameters " << parameters.size() <<vcl_endl;
- vcl_cout<<" centers " << CENTERS <<vcl_endl;
- vcl_cout<<" diff " << DIFF <<vcl_endl;
- vcl_cout<<" convergedvalues " << CONVERGEDVALUES <<vcl_endl;
- vcl_cout << "converged values stage 1 "<<CONVERGEDVALUES_STAGE1<<vcl_endl;
- vcl_cout << "converged values stage 2 "<<CONVERGEDVALUES_STAGE2<<vcl_endl;
- vcl_cout<<"  cmminfo " << CMMINFO <<vcl_endl;
- vcl_cout<<" logfile " << LOGFILE <<vcl_endl;
- vcl_cout<<" conics_bin_file_base " <<  CONICS_BIN_FILE_BASE <<vcl_endl;
- vcl_cout<<" correspondenceinfo " <<  CORRESPONDENCEINFO <<vcl_endl;
- vcl_cout<<" output_scanfile " <<  OUTPUT_SCANFILE <<vcl_endl;
+ std::cout<<" no. of parameters " << parameters.size() <<std::endl;
+ std::cout<<" centers " << CENTERS <<std::endl;
+ std::cout<<" diff " << DIFF <<std::endl;
+ std::cout<<" convergedvalues " << CONVERGEDVALUES <<std::endl;
+ std::cout << "converged values stage 1 "<<CONVERGEDVALUES_STAGE1<<std::endl;
+ std::cout << "converged values stage 2 "<<CONVERGEDVALUES_STAGE2<<std::endl;
+ std::cout<<"  cmminfo " << CMMINFO <<std::endl;
+ std::cout<<" logfile " << LOGFILE <<std::endl;
+ std::cout<<" conics_bin_file_base " <<  CONICS_BIN_FILE_BASE <<std::endl;
+ std::cout<<" correspondenceinfo " <<  CORRESPONDENCEINFO <<std::endl;
+ std::cout<<" output_scanfile " <<  OUTPUT_SCANFILE <<std::endl;
 
- vcl_cout<<" ball number " <<  BALL_NUMBER <<vcl_endl;
- vcl_cout<<" ball_radius_big " << BALL_RADIUS_BIG <<vcl_endl;
- vcl_cout<<" ball_density " << BALL_DENSITY  <<vcl_endl;
- vcl_cout<<" height" << HEIGHT <<vcl_endl;
- vcl_cout<<" radius" << RADIUS  <<vcl_endl;
- vcl_cout<<" threshold" << THRESHOLD  <<vcl_endl;
- vcl_cout<<" gaussian sigma" << GAUSSIAN_SIGMA  <<vcl_endl;
- vcl_cout<<" min fit length" << MIN_FIT_LENGTH <<vcl_endl;
- vcl_cout<<" rms distance" << RMS_DISTANCE  <<vcl_endl;
- vcl_cout<<" aspect ratio" << ASPECT_RATIO  <<vcl_endl;
- vcl_cout<<" width height diff threshold " << WIDTH_HEIGHT_DIFF_THRESHOLD <<vcl_endl;
- vcl_cout<<" width threshold" << WIDTH_THRESHOLD  <<vcl_endl;
- vcl_cout<<" x coord diff range " << X_COORD_DIFF_RANGE <<vcl_endl;
- vcl_cout<<" y coord diff range " << Y_COORD_DIFF_RANGE <<vcl_endl;
- vcl_cout<<" size_of_x " << SIZE_OF_X   <<vcl_endl;
- vcl_cout<<" num_of_corresp " << NUM_OF_CORRESP  <<vcl_endl;
- vcl_cout<<" num_of_conics " << NUM_OF_CONICS  <<vcl_endl;
- vcl_cout<<" num_of_parameters " << NUM_OF_PARAMETERS  <<vcl_endl;
- vcl_cout<<" starting at image " <<START <<vcl_endl;
- vcl_cout<<" ending at image " <<END <<vcl_endl;
- vcl_cout<<" interval " << INTERVAL  <<vcl_endl;
- vcl_cout<<" error margin factor " << ERROR_MARGIN_FACTOR <<vcl_endl;
+ std::cout<<" ball number " <<  BALL_NUMBER <<std::endl;
+ std::cout<<" ball_radius_big " << BALL_RADIUS_BIG <<std::endl;
+ std::cout<<" ball_density " << BALL_DENSITY  <<std::endl;
+ std::cout<<" height" << HEIGHT <<std::endl;
+ std::cout<<" radius" << RADIUS  <<std::endl;
+ std::cout<<" threshold" << THRESHOLD  <<std::endl;
+ std::cout<<" gaussian sigma" << GAUSSIAN_SIGMA  <<std::endl;
+ std::cout<<" min fit length" << MIN_FIT_LENGTH <<std::endl;
+ std::cout<<" rms distance" << RMS_DISTANCE  <<std::endl;
+ std::cout<<" aspect ratio" << ASPECT_RATIO  <<std::endl;
+ std::cout<<" width height diff threshold " << WIDTH_HEIGHT_DIFF_THRESHOLD <<std::endl;
+ std::cout<<" width threshold" << WIDTH_THRESHOLD  <<std::endl;
+ std::cout<<" x coord diff range " << X_COORD_DIFF_RANGE <<std::endl;
+ std::cout<<" y coord diff range " << Y_COORD_DIFF_RANGE <<std::endl;
+ std::cout<<" size_of_x " << SIZE_OF_X   <<std::endl;
+ std::cout<<" num_of_corresp " << NUM_OF_CORRESP  <<std::endl;
+ std::cout<<" num_of_conics " << NUM_OF_CONICS  <<std::endl;
+ std::cout<<" num_of_parameters " << NUM_OF_PARAMETERS  <<std::endl;
+ std::cout<<" starting at image " <<START <<std::endl;
+ std::cout<<" ending at image " <<END <<std::endl;
+ std::cout<<" interval " << INTERVAL  <<std::endl;
+ std::cout<<" error margin factor " << ERROR_MARGIN_FACTOR <<std::endl;
 
 SETPARAM.set_size(SIZE_OF_X);
 PARAM.set_size(SIZE_OF_X);
@@ -181,18 +181,18 @@ PARAM[k++] = header.object_to_source_dist_;
 
 for (int i =0;i<SIZE_OF_X;i++)
 {
-    vcl_cout<<" parameter: "<<i<<"  " <<PARAM[i] <<vcl_endl;
+    std::cout<<" parameter: "<<i<<"  " <<PARAM[i] <<std::endl;
 }
 
 delete valstr;
 delete val_string;
 qfstream.close();
 
-vcl_string txt_file = CORRESPONDENCEINFO;
+std::string txt_file = CORRESPONDENCEINFO;
 
 // reading out the information  from CORRESPONDENCEINFO file & storing in COORDS & HEIGHT_RADII
-vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
-vcl_cout << "opening " << txt_file << "\n";
+std::ifstream fstream(txt_file.c_str(),std::ios::in);
+std::cout << "opening " << txt_file << "\n";
  
   
 char val_string1[300];
@@ -210,15 +210,15 @@ if(fstream.good()){
            fstream >> w;
            fstream >> h;
 
-           vcl_cout << x << " " << y << " " << w << " " << h << "\n";
+           std::cout << x << " " << y << " " << w << " " << h << "\n";
 
-           COORDS.push_back(vcl_pair<double,double> (x,y));
-           HEIGHT_RADII.push_back(vcl_pair<double,double> (w,h));
+           COORDS.push_back(std::pair<double,double> (x,y));
+           HEIGHT_RADII.push_back(std::pair<double,double> (w,h));
    }  
 }
 else{
-            vcl_cerr << " bad CORRESPONDENCEINFO filename: " << txt_file << "\n";
-            vcl_cerr << "required for  reading out the information"
+            std::cerr << " bad CORRESPONDENCEINFO filename: " << txt_file << "\n";
+            std::cerr << "required for  reading out the information"
                     << " from  file & storing in COORDS & HEIGHT_RADII\n";
 
             exit(1);
@@ -229,33 +229,33 @@ else{
 
 
            fstream.getline(val_string1, 300);
-           vcl_cout << val_string1;
-           x = vcl_atof(val_string1);
+           std::cout << val_string1;
+           x = std::atof(val_string1);
 
 
            fstream.getline(val_string1, 300);
 
-           y = vcl_atof(val_string1);
+           y = std::atof(val_string1);
 
 
 
-           COORDS.push_back(vcl_pair<double,double> (x,y));
-
-           fstream.getline(val_string1, 300);
-           vcl_cout << val_string1;
-           w = vcl_atof(val_string1);
-
+           COORDS.push_back(std::pair<double,double> (x,y));
 
            fstream.getline(val_string1, 300);
+           std::cout << val_string1;
+           w = std::atof(val_string1);
 
-           h = vcl_atof(val_string1);
 
-           HEIGHT_RADII.push_back(vcl_pair<double,double> (w,h));
+           fstream.getline(val_string1, 300);
+
+           h = std::atof(val_string1);
+
+           HEIGHT_RADII.push_back(std::pair<double,double> (w,h));
    }
    */
   fstream.close();
   
-  vcl_fclose(fp);
+  std::fclose(fp);
 }
 
 cali_param::cali_param(void)

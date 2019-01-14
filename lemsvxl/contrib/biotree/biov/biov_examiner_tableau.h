@@ -21,7 +21,7 @@
 //              color appearing at left top corner of client window 
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bgui3d/bgui3d_fullviewer_tableau.h>
 #include <biov/biov_examiner_tableau_sptr.h>
@@ -55,7 +55,7 @@ SbVec2f pos3;
 /* defined but not used
 static void dummy()
 {
-  vcl_cerr << "Dummy function called\n";
+  std::cerr << "Dummy function called\n";
 }*/
 
 /* defined but not used
@@ -84,7 +84,7 @@ public:
   virtual bool handle(const vgui_event& event);
 
   //: Return the type name of this tableau
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Builds a popup menu
   virtual void get_popup(const vgui_popup_params&, vgui_menu &m);
@@ -146,7 +146,7 @@ protected:
   void loadColorMap();
 
   //: Given the current map, retrieve the string that represents it.
-  vcl_string getCMapString();
+  std::string getCMapString();
 
   //: Position the color map bar in the top left corner of screen
   //  and scale it screen height.

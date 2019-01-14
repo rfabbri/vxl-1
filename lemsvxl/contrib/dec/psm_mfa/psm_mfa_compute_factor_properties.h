@@ -1,8 +1,8 @@
 #ifndef psm_mfa_compute_factor_properties_h_
 #define psm_mfa_compute_factor_properties_h_
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
+#include <vector>
+#include <set>
 
 #include <vgl/vgl_point_2d.h>
 
@@ -34,7 +34,7 @@ class psm_mfa_compute_factor_properties_functor
 public:
   psm_mfa_compute_factor_properties_functor(psm_cell_id cell_id, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img_window,
     vil_image_view<float> &cell_vis, vil_image_view<float> &vis_inf, vil_image_view<float> &cell_pre, vil_image_view<float> &cell_post, vil_image_view<float> &seg_len,
-    vcl_set<psm_cell_id> &markov_blanket)
+    std::set<psm_cell_id> &markov_blanket)
     : cell_id_(cell_id), img_window_(img_window), markov_blanket_(markov_blanket),
     alpha_integral_(img_window.ni(), img_window.nj()), past_cell_(img_window.ni(), img_window.nj()), vis_img_(vis_inf), cell_vis_img_(cell_vis), pre_img_(cell_pre), post_img_(cell_post), seg_len_img_(seg_len)
   {
@@ -60,11 +60,11 @@ public:
     // compute appearance probability of observation
     const float PI  = psm_apm_traits<APM>::apm_processor::prob_density(cell_value.appearance, img_window_(i,j));
     // compute energy function value for case when observation taken from this cell
-    const float E = (float)vcl_log(PI + 0.001);
+    const float E = (float)std::log(PI + 0.001);
     // update alpha integral
     alpha_integral_(i,j) += cell_value.alpha * seg_len;
     // compute new visibility probability with updated alpha_integral
-    const float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    const float vis_prob_end = std::exp(-alpha_integral_(i,j));
     // compute weight for this cell
     const float Omega = vis_img_(i,j) - vis_prob_end;
 
@@ -108,7 +108,7 @@ private:
   vil_image_view<float> &post_img_;
 
   // for keeping track of cells in markov blanket 
-  vcl_set<psm_cell_id> &markov_blanket_;
+  std::set<psm_cell_id> &markov_blanket_;
 
 };
 
@@ -121,7 +121,7 @@ public:
 
   void operator()(typename psm_apm_traits<APM>::obs_datatype obs, float& PI)
   {
-    PI = (float)vcl_log(psm_apm_traits<APM>::apm_processor::prob_density(appearance_, obs) + 0.001);
+    PI = (float)std::log(psm_apm_traits<APM>::apm_processor::prob_density(appearance_, obs) + 0.001);
   }
 private:
   typename psm_apm_traits<APM>::apm_datatype const& appearance_;
@@ -159,7 +159,7 @@ private:
 
 
 template <psm_apm_type APM>
-bool psm_mfa_compute_factor_properties(psm_scene<APM> &scene, vpgl_perspective_camera<double> const& procam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, psm_cell_id const& cell_id,  vcl_vector<typename psm_apm_traits<APM>::obs_datatype> &obs_vector, vcl_vector<float> &vis_vector, vcl_vector<float> &mfa_pre_vector, vcl_vector<float> &mfa_post_vector, vcl_vector<float> &seg_len_vector, vcl_set<psm_cell_id> &markov_blanket, bool black_background = false)
+bool psm_mfa_compute_factor_properties(psm_scene<APM> &scene, vpgl_perspective_camera<double> const& procam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, psm_cell_id const& cell_id,  std::vector<typename psm_apm_traits<APM>::obs_datatype> &obs_vector, std::vector<float> &vis_vector, std::vector<float> &mfa_pre_vector, std::vector<float> &mfa_post_vector, std::vector<float> &seg_len_vector, std::set<psm_cell_id> &markov_blanket, bool black_background = false)
 {
 
   // compute the bounding box of the cell
@@ -174,8 +174,8 @@ bool psm_mfa_compute_factor_properties(psm_scene<APM> &scene, vpgl_perspective_c
       for (unsigned int i=0; i<2; ++i) {
         double u,v;
         procam.project(xverts_3d[i],yverts_3d[j],zverts_3d[k],u,v);
-        //const unsigned int u_int = (unsigned int)u;//vcl_min((unsigned int)(vcl_max(u,0.0)),img.ni()-1);
-        //const unsigned int v_int = (unsigned int)v;//vcl_min((unsigned int)(vcl_max(v,0.0)),img.nj()-1);
+        //const unsigned int u_int = (unsigned int)u;//std::min((unsigned int)(std::max(u,0.0)),img.ni()-1);
+        //const unsigned int v_int = (unsigned int)v;//std::min((unsigned int)(std::max(v,0.0)),img.nj()-1);
         projection.update(u,v);
       }
     }
@@ -185,10 +185,10 @@ bool psm_mfa_compute_factor_properties(psm_scene<APM> &scene, vpgl_perspective_c
       return false;
   }
 
-  const unsigned int xmin = (unsigned int)vcl_max(0.0,projection.xmin());
-  const unsigned int ymin = (unsigned int)vcl_max(0.0, projection.ymin());
-  const unsigned int xmax = (unsigned int)vcl_min(img.ni()-1.0, projection.xmax());
-  const unsigned int ymax = (unsigned int)vcl_min(img.nj()-1.0, projection.ymax());
+  const unsigned int xmin = (unsigned int)std::max(0.0,projection.xmin());
+  const unsigned int ymin = (unsigned int)std::max(0.0, projection.ymin());
+  const unsigned int xmax = (unsigned int)std::min(img.ni()-1.0, projection.xmax());
+  const unsigned int ymax = (unsigned int)std::min(img.nj()-1.0, projection.ymax());
 
   const unsigned int xdim = xmax - xmin + 1;
   const unsigned int ydim = ymax - ymin + 1;
@@ -216,7 +216,7 @@ bool psm_mfa_compute_factor_properties(psm_scene<APM> &scene, vpgl_perspective_c
 
   vil_image_view<float> PI_inf(cell_view.ni(), cell_view.nj());
   if (black_background) {
-    vcl_cout << ".";
+    std::cout << ".";
     psm_apm_traits<APM>::obs_datatype black(0.0f);
     float background_std_dev = 8.0f/255;
     typename psm_apm_traits<APM>::apm_datatype background_apm;

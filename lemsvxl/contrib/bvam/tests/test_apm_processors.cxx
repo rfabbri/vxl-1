@@ -4,9 +4,9 @@
 #include "bvam_mog_grey_processor.h"
 #include "bvam_memory_chunk.h"
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <vector>
+#include <iostream>
 
 #include <bsta/bsta_attributes.h>
 #include <bsta/bsta_mixture.h>

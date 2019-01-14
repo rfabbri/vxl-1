@@ -8,7 +8,7 @@
 
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_scene_parser.h>
@@ -25,14 +25,14 @@ bool boxm_load_scene_process_cons(bprb_func_process& pro)
   //process takes 2 inputs
   //input[0]: scene binary file
   //input[1]: APM type
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";
   if (!pro.set_input_types(input_types_))
     return false;
 
   // process has 1 output:
   // output[0]: scene sptr
-  vcl_vector<vcl_string>  output_types_(n_outputs_);
+  std::vector<std::string>  output_types_(n_outputs_);
   output_types_[0] = "boxm_scene_base_sptr";
   if (!pro.set_output_types(output_types_))
     return false;
@@ -45,13 +45,13 @@ bool boxm_load_scene_process(bprb_func_process& pro)
   using namespace boxm_load_scene_process_globals;
 
   if ( pro.n_inputs() < n_inputs_ ){
-    vcl_cout << pro.name() << ": The input number should be " << n_inputs_<< vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << n_inputs_<< std::endl;
     return false;
   }
 
   //get the inputs
   unsigned i = 0;
-  vcl_string scene_file = pro.get_input<vcl_string>(i++);
+  std::string scene_file = pro.get_input<std::string>(i++);
   
   boxm_scene_base_sptr scene= new boxm_scene_base();
   boxm_scene_parser parser;
@@ -63,7 +63,7 @@ bool boxm_load_scene_process(bprb_func_process& pro)
    // scene.unref(scene);
     scene = s;
   } else {
-    vcl_cout << "boxm_load_scene_process: undefined APM type" << vcl_endl;
+    std::cout << "boxm_load_scene_process: undefined APM type" << std::endl;
     return false;
   }
 

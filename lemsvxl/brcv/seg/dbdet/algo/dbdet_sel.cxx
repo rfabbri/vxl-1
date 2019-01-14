@@ -1,10 +1,10 @@
 #include "dbdet_sel.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <algorithm>
 
 //: form an edgel pair (ref_e->e2) or (e2->ref_e)
 template <class curve_model>
@@ -201,22 +201,22 @@ void dbdet_sel<curve_model>::form_an_edgel_pair(dbdet_edgel* ref_e, dbdet_edgel*
 //  // if ABC exists, then AC is redundant. 
 //  // so remove AC and all groups that AC formed.
 //
-//  vcl_set<vcl_pair<dbdet_edgel*, dbdet_edgel*> > redundant_pairs;
+//  std::set<std::pair<dbdet_edgel*, dbdet_edgel*> > redundant_pairs;
 //
 //  //go over the list of edgel triplets and find redundant pairs
-//  vcl_list<dbdet_curvelet* >::iterator t_it = trips.begin();
+//  std::list<dbdet_curvelet* >::iterator t_it = trips.begin();
 //  for (; t_it != trips.end(); t_it++)
 //  {
 //    dbdet_curvelet* trip = (*t_it);
 //
 //    //record the pair AC
 //    redundant_pairs.insert(
-//      vcl_pair<dbdet_edgel*, dbdet_edgel*>(trip->edgel_chain[0], trip->edgel_chain[2]));
+//      std::pair<dbdet_edgel*, dbdet_edgel*>(trip->edgel_chain[0], trip->edgel_chain[2]));
 //
 //  }
 //
 //  //now go over the redundant pairs list and check if any of them exist
-//  vcl_set<vcl_pair<dbdet_edgel*, dbdet_edgel*> >::iterator rp_it = redundant_pairs.begin();
+//  std::set<std::pair<dbdet_edgel*, dbdet_edgel*> >::iterator rp_it = redundant_pairs.begin();
 //  for (; rp_it != redundant_pairs.end(); rp_it++)
 //  {
 //    dbdet_edgel* eA = rp_it->first;
@@ -728,7 +728,7 @@ void dbdet_sel<curve_model>::build_curvelets_greedy_for_edge(dbdet_edgel* eA, un
                                 bool forward, bool centered, bool leading)
 {
   // 1) construct a structure to temporarily hold the pairwise-hypotheses
-  vcl_vector<sel_hyp> eA_hyps;
+  std::vector<sel_hyp> eA_hyps;
 
   //get the grid coordinates of this edgel
   unsigned const ii = dbdet_round(eA->pt.x());
@@ -775,7 +775,7 @@ void dbdet_sel<curve_model>::build_curvelets_greedy_for_edge(dbdet_edgel* eA, un
   }
 
   // 5) first sort the pair-wise hyps by distance
-  vcl_sort(eA_hyps.begin(), eA_hyps.end(), comp_dist_hyps_less);
+  std::sort(eA_hyps.begin(), eA_hyps.end(), comp_dist_hyps_less);
 
   // 6) for each pair-wise hyps formed by this edgel
   for (unsigned h1=0; h1<eA_hyps.size(); h1++)
@@ -787,7 +787,7 @@ void dbdet_sel<curve_model>::build_curvelets_greedy_for_edge(dbdet_edgel* eA, un
     if (use_hybrid_){ if (cId_[eA->id]==cId_[eA_hyps[h1].eN->id]) continue;}
 
     // 7) initialize a new edgel chain that will grow in a greedy depth-first fashion
-    vcl_deque<dbdet_edgel*> cur_edgel_chain; //chain can grow either way
+    std::deque<dbdet_edgel*> cur_edgel_chain; //chain can grow either way
 
     //insert ref edgel first
     cur_edgel_chain.push_back(eA); 
@@ -874,21 +874,21 @@ void dbdet_sel<curve_model>::build_curvelets_greedy_for_edge(dbdet_edgel* eA, un
 template <class curve_model>
 dbdet_curvelet* 
 dbdet_sel<curve_model>::form_an_edgel_grouping(dbdet_edgel* ref_e, 
-    vcl_deque<dbdet_edgel*> &edgel_chain, 
+    std::deque<dbdet_edgel*> &edgel_chain, 
     bool forward,  bool centered, bool leading)
 {
   //1) Go over the edgels in the chain and attempt to form a curvelet from it
   curve_model* chain_cm=0;
 
   // 2) form an ordered list based on distance from ref_edgel
-  vcl_map<double, unsigned > dist_order; // ordered list of edgels (closest to furthest)
+  std::map<double, unsigned > dist_order; // ordered list of edgels (closest to furthest)
   for (unsigned i=0; i< edgel_chain.size(); i++)
   {
     if (edgel_chain[i] == ref_e)   continue;
-    dist_order.insert(vcl_pair<double, unsigned>(vgl_distance(ref_e->pt, edgel_chain[i]->pt), i));
+    dist_order.insert(std::pair<double, unsigned>(vgl_distance(ref_e->pt, edgel_chain[i]->pt), i));
   } 
 
-  vcl_map<double, unsigned >::iterator it = dist_order.begin();
+  std::map<double, unsigned >::iterator it = dist_order.begin();
   for (; it!=dist_order.end(); it++)
   {
     dbdet_edgel* cur_e = edgel_chain[it->second];

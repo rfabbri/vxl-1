@@ -44,15 +44,15 @@
 /******************************************************************************/
 /* Libraries */
 
-#include <vcl_cstdio.h>
-#include <vcl_cstring.h>
-#include <vcl_cctype.h>
-#include <vcl_cstdlib.h>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <cstdlib>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h> //<queue>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <deque> //<queue>
 using namespace std;
 
 #include "surface_tracer.h"
@@ -343,19 +343,19 @@ int main(int argc, char ** argv)
 			}
 			//PUT BY FIRAT
 
-			vcl_cout << "eno_array.size() = " << eno_array.size() << vcl_endl;
-			vcl_cout << "eno_coords.size() = " << eno_coords.size() << vcl_endl;
+			std::cout << "eno_array.size() = " << eno_array.size() << std::endl;
+			std::cout << "eno_coords.size() = " << eno_coords.size() << std::endl;
 			/*for(int i = 0; i < eno_array.size(); i++)
 			{
 				EnoPoint ep = eno_array[i];
-				vcl_cout << "Indices: " << ep.indexes[0] << " " << ep.indexes[1] << " " << ep.indexes[2];
-				vcl_cout << " dim_index: " << int(ep.dim_index) << " used: " << ep.used << " coord:"<< eno_coords[i]<< vcl_endl;
+				std::cout << "Indices: " << ep.indexes[0] << " " << ep.indexes[1] << " " << ep.indexes[2];
+				std::cout << " dim_index: " << int(ep.dim_index) << " used: " << ep.used << " coord:"<< eno_coords[i]<< std::endl;
 
 			}*/
-			vcl_ofstream eno_file("/home/firat/lemsvxl/src/contrib/firat/courses/engn2500/rodehorst/eno/temp.eno");
+			std::ofstream eno_file("/home/firat/lemsvxl/src/contrib/firat/courses/engn2500/rodehorst/eno/temp.eno");
 			for(int pnt = 0; pnt < eno_coords.size(); pnt+=3)
 			{
-				eno_file << eno_coords[pnt] << " " << eno_coords[pnt+1] << " " << eno_coords[pnt+2] << vcl_endl;
+				eno_file << eno_coords[pnt] << " " << eno_coords[pnt+1] << " " << eno_coords[pnt+2] << std::endl;
 			}
 			eno_file.close();
 			//exit(0);
@@ -416,12 +416,12 @@ int main(int argc, char ** argv)
 					normal_list))
 			{
 				//FIRAT
-				vcl_cout << "AA" << vcl_endl;
-				vcl_cout << "eno_array.size() = " << eno_array.size() << vcl_endl;
-				vcl_cout << "eno_coords.size() = " << eno_coords.size() << vcl_endl;
-				vcl_cout << "poly_list.size() = " << poly_list.size() << vcl_endl;
-				vcl_cout << "normal_list.size() = " << normal_list.size() << vcl_endl;
-				vcl_cout << "wave_front.size() = " << wave_front.size() << vcl_endl;
+				std::cout << "AA" << std::endl;
+				std::cout << "eno_array.size() = " << eno_array.size() << std::endl;
+				std::cout << "eno_coords.size() = " << eno_coords.size() << std::endl;
+				std::cout << "poly_list.size() = " << poly_list.size() << std::endl;
+				std::cout << "normal_list.size() = " << normal_list.size() << std::endl;
+				std::cout << "wave_front.size() = " << wave_front.size() << std::endl;
 				//FIRAT
 				return TRUE;
 			}
@@ -491,7 +491,7 @@ int main(int argc, char ** argv)
 				//eno_array.clear();
 				wave_front.clear();
 				//FIRAT
-				vcl_cout << "BB" << vcl_endl;
+				std::cout << "BB" << std::endl;
 				//FIRAT
 				return FALSE;
 			}

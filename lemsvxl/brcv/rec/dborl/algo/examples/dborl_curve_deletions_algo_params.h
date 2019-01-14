@@ -35,14 +35,14 @@ public:
   dborl_parameter<float> sigma_add_;
   dborl_parameter<float> divident_add_;
 
-  dborl_parameter<vcl_string> db_index_;
-  dborl_parameter<vcl_string> cem_folder_to_create_;
+  dborl_parameter<std::string> db_index_;
+  dborl_parameter<std::string> cem_folder_to_create_;
 
-  dborl_parameter<vcl_string> input_extension_;
+  dborl_parameter<std::string> input_extension_;
 
-  vcl_string output_file_postfix_;
+  std::string output_file_postfix_;
 
-  dborl_curve_deletions_algo_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_curve_deletions_algo_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     delete_segments_.set_values(param_list_, "data", "delete_segments", "randomly delete segments?", true, true);
     add_segments_.set_values(param_list_, "data", "add_segments", "randomly add line segments?", true, true);
     
@@ -69,22 +69,22 @@ public:
 
   void update_output_file_postfix() {
 
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << perc_del_();
 
-    vcl_stringstream ss2;
+    std::stringstream ss2;
     ss2 << sigma_del_();
     
-    vcl_stringstream ss3;
+    std::stringstream ss3;
     ss3 << divident_del_();    
 
-    vcl_stringstream ss4;
+    std::stringstream ss4;
     ss4 << perc_add_();
     
-    vcl_stringstream ss5;
+    std::stringstream ss5;
     ss5 << sigma_add_();
     
-    vcl_stringstream ss6;
+    std::stringstream ss6;
     ss6 << divident_add_();
 
     if (delete_segments_()) {
@@ -99,7 +99,7 @@ public:
       }
     }
 
-    vcl_cout << "output_file_postfix_: " << output_file_postfix_ << vcl_endl;
+    std::cout << "output_file_postfix_: " << output_file_postfix_ << std::endl;
   }
 
 };

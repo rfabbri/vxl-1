@@ -23,8 +23,8 @@
 #ifndef _dbru_rcor_generator_h
 #define _dbru_rcor_generator_h
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <assert.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vgl/vgl_point_2d.h>
@@ -138,7 +138,7 @@ public:
 
   //: return the distance to the nearest polygon edge, together with arclength 
   //  of that nearest point on the polygon
-  static vcl_pair<double, double> dt(vgl_polygon<double> const& poly, double x, double y);
+  static std::pair<double, double> dt(vgl_polygon<double> const& poly, double x, double y);
 
   //: find correspondence of image regions based on correspondence of shock branches
   static bool find_correspondence_shock(dbru_rcor_sptr cor);
@@ -155,8 +155,8 @@ public:
 
   //: find region correspondence based on TPS
   static bool find_correspondence_tps(dbru_rcor_sptr cor, 
-                                      vcl_vector< vgl_homg_point_2d<double> >& hpts1, 
-                                      vcl_vector< vgl_homg_point_2d<double> >& hpts2, 
+                                      std::vector< vgl_homg_point_2d<double> >& hpts1, 
+                                      std::vector< vgl_homg_point_2d<double> >& hpts2, 
                                       mbl_thin_plate_spline_2d& ftps, 
                                       vgl_norm_trans_2d<double>& trans1, 
                                       vgl_norm_trans_2d<double>& trans2,

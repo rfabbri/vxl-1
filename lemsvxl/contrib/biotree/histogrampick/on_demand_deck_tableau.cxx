@@ -14,7 +14,7 @@ void on_demand_deck_tableau::next()
   if (index_ok(tmp))
     index_=tmp;
 
-  vcl_cerr << "on_demand_deck_tableau::next " << index_ << vcl_endl;
+  std::cerr << "on_demand_deck_tableau::next " << index_ << std::endl;
   observers.notify();
 }
 
@@ -32,6 +32,6 @@ void on_demand_deck_tableau::prev()
   if (index_ok(tmp))
     index_=tmp;
 
-  vcl_cerr << "on_demand_deck_tableau::prev " << index_ << vcl_endl;
+  std::cerr << "on_demand_deck_tableau::prev " << index_ << std::endl;
   observers.notify();
 }

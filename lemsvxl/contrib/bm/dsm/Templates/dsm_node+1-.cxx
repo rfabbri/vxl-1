@@ -70,7 +70,7 @@ void dsm_node<1>::b_write(vsl_b_ostream& os) const
 
 	//5. write the set of time stamps
 	vsl_b_write(os, this->relative_time_set_);
-	//vcl_set<unsigned>::const_iterator rts_itr, rts_end=this->relative_time_set_.end();
+	//std::set<unsigned>::const_iterator rts_itr, rts_end=this->relative_time_set_.end();
 	//for( rts_itr = this->relative_time_set_.begin(); rts_itr != rts_end; ++rts_itr )
 	//	vsl_b_write(os,*rts_itr);
 
@@ -100,7 +100,7 @@ void dsm_node<1>::b_read(vsl_b_istream& is)
 		}//end case1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm_node::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm_node::b_read() -- unknown version number." << std::flush;
 			return;
 		}
 	}

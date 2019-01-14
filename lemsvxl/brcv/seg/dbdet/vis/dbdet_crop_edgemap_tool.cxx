@@ -1,6 +1,6 @@
 #include "dbdet_crop_edgemap_tool.h"
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/vgui_style.h>
@@ -26,7 +26,7 @@ dbdet_crop_edgemap_tool::dbdet_crop_edgemap_tool() :
 {
 }
 
-vcl_string dbdet_crop_edgemap_tool::name() const
+std::string dbdet_crop_edgemap_tool::name() const
 {
   return "Crop Edgemap";
 }

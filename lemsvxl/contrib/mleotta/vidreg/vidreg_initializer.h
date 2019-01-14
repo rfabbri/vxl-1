@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_deque.h>
+#include <deque>
 #include <vnl/vnl_vector.h>
 #include <rgrl/rgrl_initializer.h>
 #include <rgrl/rgrl_view_sptr.h>
@@ -26,8 +26,8 @@ class vidreg_initializer : public rgrl_initializer
 {
   public:
     //: Constructor
-    vidreg_initializer(const vcl_vector<rgrl_feature_sptr>& fixed,
-                       const vcl_vector<rgrl_feature_sptr>& moving,
+    vidreg_initializer(const std::vector<rgrl_feature_sptr>& fixed,
+                       const std::vector<rgrl_feature_sptr>& moving,
                        rgrl_view_sptr view);
 
     //: Destructor
@@ -63,7 +63,7 @@ class vidreg_initializer : public rgrl_initializer
 
 
   private:
-    vcl_deque<match*> matches_;
+    std::deque<match*> matches_;
     rgrl_view_sptr prior_view_;
 };
 

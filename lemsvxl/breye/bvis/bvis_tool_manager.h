@@ -14,8 +14,8 @@
 //  \date 03/24/2007
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 #include <vgui/vgui_tableau_sptr.h>
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vgui/vgui_grid_tableau.h>

@@ -42,9 +42,9 @@ protected:
 class dbrec_compositor_visitor : public vbl_ref_count {
 public:
 
-  virtual void visit_compositor(dbrec_compositor* c, const vcl_vector<dbrec_part_sptr>& children) {}
-  virtual void visit_or_compositor(dbrec_or_compositor* c, const vcl_vector<dbrec_part_sptr>& children) {}
-  virtual void visit_central_compositor(dbrec_central_compositor* g, const vcl_vector<dbrec_part_sptr>& children) {}
+  virtual void visit_compositor(dbrec_compositor* c, const std::vector<dbrec_part_sptr>& children) {}
+  virtual void visit_or_compositor(dbrec_or_compositor* c, const std::vector<dbrec_part_sptr>& children) {}
+  virtual void visit_central_compositor(dbrec_central_compositor* g, const std::vector<dbrec_part_sptr>& children) {}
 
 protected:
   

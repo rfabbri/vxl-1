@@ -10,7 +10,7 @@
 // \date    2005-10-02
 // 
 
-#include <vcl_string.h>
+#include <string>
 #include "xmvg_filter_descriptor.h"
 #include <vnl/vnl_double_3.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -51,6 +51,6 @@ protected:
 private:
 };
 
-void x_write(vcl_ostream& os, xmvg_gaussian_edge_detector_descriptor d, vcl_string name);
+void x_write(std::ostream& os, xmvg_gaussian_edge_detector_descriptor d, std::string name);
 
 #endif

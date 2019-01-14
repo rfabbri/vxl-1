@@ -1,10 +1,10 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../dbrcl_compute_constrained_cameras.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vpgl/vpgl_proj_camera.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 static void test_constrained_camera()
 {
@@ -21,7 +21,7 @@ static void test_constrained_camera()
   constraints1.frame_number = 0;
   constraints2.frame_number = 1;
   vpgl_proj_camera<double> c1( m1 ), c2( m2 );
-  vcl_cerr << "True camera matrices:\nFrame 0:\n" << m1 << "Frame 1:\n" << m2;
+  std::cerr << "True camera matrices:\nFrame 0:\n" << m1 << "Frame 1:\n" << m2;
 
   // Create some world image correspondences.
   for( int i = 0; i < 6; i++ ){
@@ -38,9 +38,9 @@ static void test_constrained_camera()
     vgl_point_2d<double> new_image_point2 = c2.project( 
       vgl_homg_point_3d<double>(new_world_point) );
     vgl_point_3d<double> noisy_world_point(
-      new_world_point.x()+.2*(-.5+vcl_rand()/(double)RAND_MAX),
-      new_world_point.y()+.2*(-.5+vcl_rand()/(double)RAND_MAX),
-      new_world_point.z()+.2*(-.5+vcl_rand()/(double)RAND_MAX) );
+      new_world_point.x()+.2*(-.5+std::rand()/(double)RAND_MAX),
+      new_world_point.y()+.2*(-.5+std::rand()/(double)RAND_MAX),
+      new_world_point.z()+.2*(-.5+std::rand()/(double)RAND_MAX) );
     constraints1.world_points.push_back( noisy_world_point );
     constraints1.image_points.push_back( new_image_point1 );
     constraints2.world_points.push_back( noisy_world_point );
@@ -74,8 +74,8 @@ static void test_constrained_camera()
     constraints2.height_bot_points.push_back( new_bot_point2 );
   }
 
-  vcl_vector< vpgl_proj_camera<double> > estimated_cameras1;
-  vcl_vector<int> frames1;
+  std::vector< vpgl_proj_camera<double> > estimated_cameras1;
+  std::vector<int> frames1;
   dbrcl_compute_constrained_cameras cc1;
   cc1.add_constraint( constraints1 );
   cc1.add_constraint( constraints2 );
@@ -83,7 +83,7 @@ static void test_constrained_camera()
   vnl_matrix_fixed<double,3,4> em1 = estimated_cameras1[0].get_matrix();
   vnl_matrix_fixed<double,3,4> em2 = estimated_cameras1[1].get_matrix();
 
-  vcl_cerr << "\nEstimated camera matrices:\nFrame 0:\n" << em1 << "Frame 1:\n" << em2;
+  std::cerr << "\nEstimated camera matrices:\nFrame 0:\n" << em1 << "Frame 1:\n" << em2;
 
   TEST_NEAR( "Estimated camera from perfect world-image correspondences", 
     (c1.get_matrix()-em1).frobenius_norm() , 0, 2 );

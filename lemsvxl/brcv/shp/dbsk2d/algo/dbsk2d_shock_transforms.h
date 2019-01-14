@@ -41,7 +41,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 
-#include <vcl_set.h>
+#include <set>
 
 #define REGULAR_GAP             0
 #define SEMIDEGENERATE1_GAP     1
@@ -113,8 +113,8 @@ public:
 
   bgld_eulerspiral* get_eulerspiral() { return es_; }
 
-  vcl_vector<vsol_point_2d_sptr>& get_region_plus_points() { return region_plus_points_; }
-  vcl_vector<vsol_point_2d_sptr>& get_region_minus_points() { return region_minus_points_; }
+  std::vector<vsol_point_2d_sptr>& get_region_plus_points() { return region_plus_points_; }
+  std::vector<vsol_point_2d_sptr>& get_region_minus_points() { return region_minus_points_; }
 
   // merge edges till you hit a degree three node!! 
   // If we're at a degerate degree two node, immediate neighbors are degree threes
@@ -141,14 +141,14 @@ public:
     } 
   }
 
-  void get_eulerspirals(vcl_vector< vsol_spatial_object_2d_sptr >& contours);
+  void get_eulerspirals(std::vector< vsol_spatial_object_2d_sptr >& contours);
   void clear_eulerspirals() { ess_.clear(); }
 
 protected:
   bgld_eulerspiral* es_;
   double valid_gap_node_radius_;
-  vcl_vector<vsol_point_2d_sptr> region_plus_points_;
-  vcl_vector<vsol_point_2d_sptr> region_minus_points_;
+  std::vector<vsol_point_2d_sptr> region_plus_points_;
+  std::vector<vsol_point_2d_sptr> region_minus_points_;
 
   bool image_set_;
   vil_image_resource_sptr image_; ///< This is the image associated with the current geometry
@@ -159,17 +159,17 @@ protected:
   double color_gamma_, curve_gamma_;
   double curve_power_, curve_offset_, curve_length_gamma_;
 
-  vcl_vector<bgld_eulerspiral*> ess_;
+  std::vector<bgld_eulerspiral*> ess_;
 
   //: keep a list of degree two nodes which have become obsolete after performing a gap transform
   //  idea is to do "one closure per end node"
-  vcl_set<dbsk2d_ishock_node*> obsolete_degree_twos_;
+  std::set<dbsk2d_ishock_node*> obsolete_degree_twos_;
 
   //: keep these 
   dbsk2d_ishock_bpoint *bpoint1_, *bpoint2_;
   //: keep a list of end points which have become obsolete after performing a gap transform
-  vcl_set<dbsk2d_ishock_bpoint*> obsolete_end_points_;
-  typedef vcl_set<dbsk2d_ishock_bpoint*>::iterator obsolete_iter;
+  std::set<dbsk2d_ishock_bpoint*> obsolete_end_points_;
+  typedef std::set<dbsk2d_ishock_bpoint*>::iterator obsolete_iter;
   
   dbsk2d_shock_node_sptr coarse_shock_graph_source_;
   int gap_type_;

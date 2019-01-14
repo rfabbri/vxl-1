@@ -19,11 +19,11 @@
 #include <dbsk2d/dbsk2d_boundary_sptr.h>
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_set.h>
+#include <vector>
+#include <utility>
+#include <map>
+#include <string>
+#include <set>
 
 class dbsk2d_ishock_belm;
 class dbsk2d_ishock_bpoint;
@@ -45,49 +45,49 @@ public:
 
     //: Detect for whole shock graph
     void detect_gap1(
-        vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
+        std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
         gap_pairs);
     
     //: Detect for one endpoint
     void detect_gap1(
         dbsk2d_ishock_belm* belm,
-        vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
+        std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
         gap_pairs);
 
     //: Detect all gaps for a bunch of regions
-    void detect_gap1(vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& 
+    void detect_gap1(std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& 
                      region_outer_nodes,
-                     vcl_vector<
-                     vcl_pair< dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
+                     std::vector<
+                     std::pair< dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
                      gap_pairs);
 
     //: Detect all gaps for a bunch of regions
     void detect_all_gaps(
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& 
+        std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& 
         region_outer_nodes,
-        vcl_vector<
-        vcl_pair< dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
+        std::vector<
+        std::pair< dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >&
         gap_pairs,
-        vcl_vector<
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >&
+        std::vector<
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >&
         gap4_pairs);
 
     //: Detect for whole shock graph
     void detect_gap4(
-        vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
+        std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
         gap_pairs);
     
     //: Detect for endpoint
     void detect_gap4(dbsk2d_ishock_belm* belm,
-                     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& 
+                     std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& 
                      gap4_pair);
 
     //: Detect for endpoint
     void detect_gap4(dbsk2d_ishock_belm* belm,
-                     vcl_vector<
-                     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
+                     std::vector<
+                     std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
                      gap4_pair,
-                     vcl_set<int>& contour_id);
+                     std::set<int>& contour_id);
     
 
 private: 
@@ -101,11 +101,11 @@ private:
     //: Determine whether a point has a matching endpoint
     void gap_endpoint(
         dbsk2d_ishock_bpoint* bp, 
-        vcl_map< vcl_pair<int,int>,
-                 vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
+        std::map< std::pair<int,int>,
+                 std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
         gaps_visited,
         bool& flag,
-        vcl_set<int>& contour_ids);
+        std::set<int>& contour_ids);
 
     // Make copy ctor private
     dbsk2d_ishock_gap_detector(const dbsk2d_ishock_gap_detector&);

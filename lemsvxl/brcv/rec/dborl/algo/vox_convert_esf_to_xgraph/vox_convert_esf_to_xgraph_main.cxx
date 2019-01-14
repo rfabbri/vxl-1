@@ -27,10 +27,10 @@
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 
 #include <vul/vul_file.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 // Convert esf file to an xgraph
-bool convert_esf_to_xgraph(const vcl_string& esf_file, float tol,  
+bool convert_esf_to_xgraph(const std::string& esf_file, float tol,  
                            dbsksp_xshock_graph_sptr& xgraph);
 
 int main(int argc, char *argv[]) 
@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
   // interface
   if (!params->print_params_xml(params->print_params_file()))
   {
-    vcl_cerr << "problems in writing params file to: " 
-      << params->print_params_file() << vcl_endl;
+    std::cerr << "problems in writing params file to: " 
+      << params->print_params_file() << std::endl;
   }
 
   // exit if there is nothing else to do
@@ -69,24 +69,24 @@ int main(int argc, char *argv[])
   }
 
   // Averaging two xgraphs
-  vcl_cout<<"************  Convert esf to xgraph  *************\n";
+  std::cout<<"************  Convert esf to xgraph  *************\n";
 
  
-  vcl_string esf_file = params->object_dir_() + "/" + params->object_name_() + ".esf";
+  std::string esf_file = params->object_dir_() + "/" + params->object_name_() + ".esf";
   float tol = params->convert_sk2d_to_sksp_tol_();
 
-  vcl_cout 
+  std::cout 
     << "\nObject name = " << params->object_name_()
     << "\n  esf file  = " << esf_file
     << "\n  err tol   = " << tol << "\n";
 
-  vcl_cout << "\nConvering esf file to xgraph ...";
+  std::cout << "\nConvering esf file to xgraph ...";
   dbsksp_xshock_graph_sptr xgraph = 0;
   bool success = convert_esf_to_xgraph(esf_file, tol, xgraph);
 
   if (!success)
   {
-    vcl_cout << "ERROR: conversion failed.\n";
+    std::cout << "ERROR: conversion failed.\n";
     
     // Update status results
     params->percent_completed = 0.0f;
@@ -96,11 +96,11 @@ int main(int argc, char *argv[])
 
     return EXIT_FAILURE;
   }
-  vcl_cout << "[ OK ]\n";
+  std::cout << "[ OK ]\n";
   
   // save xgraph to folder
 
-  vcl_string xgraph_folder = params->save_to_object_folder_() ? 
+  std::string xgraph_folder = params->save_to_object_folder_() ? 
     params->object_dir_() : params->output_folder_();
 
   // create folder if it doesn't exist yet
@@ -109,13 +109,13 @@ int main(int argc, char *argv[])
     vul_file::make_directory(xgraph_folder);
   }
 
-  vcl_string xgraph_file = xgraph_folder + "/" + params->object_name_() + params->xgraph_extension_();
-  vcl_cout << "\nSaving xgraph to: " << xgraph_file << "\n";
+  std::string xgraph_file = xgraph_folder + "/" + params->object_name_() + params->xgraph_extension_();
+  std::cout << "\nSaving xgraph to: " << xgraph_file << "\n";
   success = x_write(xgraph_file, xgraph);
 
   if (!success)
   {
-    vcl_cout << "\nERROR: Saving xgraph file failed.\n";
+    std::cout << "\nERROR: Saving xgraph file failed.\n";
     // Update status results
     params->percent_completed = 0.0f;
     params->exit_code = 1;
@@ -133,8 +133,8 @@ int main(int argc, char *argv[])
 
   double vox_time = t.real()/1000.0;
   t.mark();
-  vcl_cout<<vcl_endl;
-  vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+  std::cout<<std::endl;
+  std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
   return 0;
 }
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 
 //------------------------------------------------------------------------------
 // Convert esf file to an xgraph
-bool convert_esf_to_xgraph(const vcl_string& esf_file, float tol,  
+bool convert_esf_to_xgraph(const std::string& esf_file, float tol,  
                            dbsksp_xshock_graph_sptr& xgraph)
 {
   // sanitize output container

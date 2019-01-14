@@ -1,8 +1,8 @@
 // This is algo/bcdg/bcdg_frame.cxx
 //: \file
 
-#include <vcl_algorithm.h>
-#include <vcl_cmath.h>
+#include <algorithm>
+#include <cmath>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vsol/vsol_point_2d.h>
@@ -14,7 +14,7 @@
 #include "bcdg_frame.h"
 
 //: Constructor
-bcdg_frame::bcdg_frame(const vcl_vector<vsol_digital_curve_2d_sptr>& v, int t, double neighbor_radius)
+bcdg_frame::bcdg_frame(const std::vector<vsol_digital_curve_2d_sptr>& v, int t, double neighbor_radius)
 : _curves(v), _time(t), _neighbor_radius(neighbor_radius)  {
 }
 
@@ -33,18 +33,18 @@ void bcdg_frame::discretize() {
   double maxX = 0.0, maxY = 0.0;
   for (bcdg_frame::point_iterator it = this->begin_linear();
        !it.is_done(); ++it) {
-    maxX = vcl_max(maxX, (*it).x());
-    maxY = vcl_max(maxY, (*it).y());
+    maxX = std::max(maxX, (*it).x());
+    maxY = std::max(maxY, (*it).y());
   }
 
-//    _point_buckets = vcl_vector< vcl_vector< vcl_vector<dbecl_episeg_point> > >[(int) maxX/r2][(int) maxY/r2];
-    _point_buckets = vcl_vector< vcl_vector <vcl_vector<dbecl_episeg_point> > >();
-    _point_buckets.resize((int) vcl_ceil(maxX / r2)); // FIXME- is this +2 okay?
+//    _point_buckets = std::vector< std::vector< std::vector<dbecl_episeg_point> > >[(int) maxX/r2][(int) maxY/r2];
+    _point_buckets = std::vector< std::vector <std::vector<dbecl_episeg_point> > >();
+    _point_buckets.resize((int) std::ceil(maxX / r2)); // FIXME- is this +2 okay?
     for(int i = 0; i < _point_buckets.size(); i++) {
-      _point_buckets[i] = vcl_vector< vcl_vector <dbecl_episeg_point> >();
-      _point_buckets[i].resize((int) vcl_ceil(maxY / r2));
+      _point_buckets[i] = std::vector< std::vector <dbecl_episeg_point> >();
+      _point_buckets[i].resize((int) std::ceil(maxY / r2));
       for(int j = 0; j < _point_buckets[i].size(); j++) {
-        _point_buckets[i][j] = vcl_vector< dbecl_episeg_point >();
+        _point_buckets[i][j] = std::vector< dbecl_episeg_point >();
       }
     }
 
@@ -53,24 +53,24 @@ void bcdg_frame::discretize() {
 //      vgl_point_2d<double> p = it.curve()->point(it.index());
       vgl_point_2d<double> p = *it;
 //      _point_buckets[(int) p->x_()/r2][(int) p->y_()/r2].push_back(*it);
-      int first = (int) vcl_max(0.,(p.x() / r2) - 1);
-      int second = (int) vcl_max(0.,(p.y() / r2) - 1);
+      int first = (int) std::max(0.,(p.x() / r2) - 1);
+      int second = (int) std::max(0.,(p.y() / r2) - 1);
 //      assert(first < _point_buckets.size());
 //      assert(second < _point_buckets[first].size());
       if(first >= _point_buckets.size()) {
-        vcl_cerr << "oops: 1st is " << first << " and size is "
+        std::cerr << "oops: 1st is " << first << " and size is "
           << _point_buckets.size() << "\n";
-        vcl_cerr << "\tmaxX = " << maxX << " and maxY = " << maxY << "\n";
+        std::cerr << "\tmaxX = " << maxX << " and maxY = " << maxY << "\n";
       } else if(second >= _point_buckets[first].size()) {
-        vcl_cerr << "oops2: 1st = " << first << ", 2nd = " << second 
+        std::cerr << "oops2: 1st = " << first << ", 2nd = " << second 
           << " and size of 2nd is " << _point_buckets[first].size() << "\n";
-        vcl_cerr << "\tmaxX = " << maxX << " and maxY = " << maxY << "\n";
+        std::cerr << "\tmaxX = " << maxX << " and maxY = " << maxY << "\n";
       } else {
         CNT++;
         _point_buckets[first][second].push_back(dbecl_episeg_point(it.curve(),it.index()));
       }
     }
-    vcl_cerr << "Count was " << CNT << "\n";
+    std::cerr << "Count was " << CNT << "\n";
 //  }
     
 }
@@ -81,7 +81,7 @@ void bcdg_frame::convert(bcdg_algo_params p) {
   dbecl_episeg_from_curve_converter factory(p->epipole());
   for(int i = 0; i < _curves.size(); i++) {
     vsol_digital_curve_2d_sptr curve = _curves[i];
-    vcl_vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
+    std::vector<dbecl_episeg_sptr> episegs = factory.convert_curve(curve);
     _epi_segs.insert(_epi_segs.end(), episegs.begin(), episegs.end());
   }
   _curves.clear();
@@ -94,7 +94,7 @@ int bcdg_frame::time() const {
 }
 
 //: Returns the neighbors of the specified point
-vcl_vector<dbecl_episeg_point> bcdg_frame::neighbors(const vgl_point_2d<double> p) const {
+std::vector<dbecl_episeg_point> bcdg_frame::neighbors(const vgl_point_2d<double> p) const {
   // neighbor radius
   double r = _neighbor_radius;
   double r2 = 2*r;
@@ -107,12 +107,12 @@ vcl_vector<dbecl_episeg_point> bcdg_frame::neighbors(const vgl_point_2d<double> 
   if(dmod(p.y(), r2) < r) {
     y = -1;
   }
-  vcl_vector<dbecl_episeg_point> ret;
+  std::vector<dbecl_episeg_point> ret;
   for (int i = 0; i < 2 && i > -2; i+=x) {
     for (int j = 0; j < 2 && j > -2; j+=y) {
       int ix = (int) (p.x()/r2) + i;
       int jy = (int) (p.y()/r2) + j;
-      vcl_vector<dbecl_episeg_point> bucket = _point_buckets[ix][jy];
+      std::vector<dbecl_episeg_point> bucket = _point_buckets[ix][jy];
       for (int k = 0; k < bucket.size(); ++k) {
         if (vgl_distance(p,bucket[k].episeg()->point(bucket[k].index())) <= r) {
           ret.push_back(bucket[k]);
@@ -126,7 +126,7 @@ vcl_vector<dbecl_episeg_point> bcdg_frame::neighbors(const vgl_point_2d<double> 
 
 bcdg_frame::point_iterator bcdg_frame::begin_linear() const {
   if(_epi_segs.size() == 0) {
-    vcl_cerr << "bcdg: WARNING: creating a point iterator BEFORE episeg conversion is pointless.\n";
+    std::cerr << "bcdg: WARNING: creating a point iterator BEFORE episeg conversion is pointless.\n";
   }
   return bcdg_frame::point_iterator(*this, true);
 }

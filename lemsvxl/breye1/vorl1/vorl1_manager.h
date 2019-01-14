@@ -13,8 +13,8 @@
 //               load_video_clip
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <string>
+#include <utility>
 #include <vul/vul_arg.h>
 #include <vidpro1/vidpro1_repository_sptr.h>
 #include <bpro1/bpro1_process_sptr.h>
@@ -41,7 +41,7 @@ class vorl1_manager
     { process_manager_.set_repository(rep); }
 
   //: Set the name for this application
-  void set_app_name(const vcl_string& name) { app_name_ = name; }
+  void set_app_name(const std::string& name) { app_name_ = name; }
 
   //: Add the process to the processing queue
   void add_process_to_queue(const bpro1_process_sptr& process);
@@ -57,8 +57,8 @@ class vorl1_manager
 
   //: save the repository binary
   // \note if \p names are provided, save only storage classes with matching names
-  bool save_repository( const vcl_string& filename, 
-                        const vcl_set<vcl_string>& names = vcl_set<vcl_string>());
+  bool save_repository( const std::string& filename, 
+                        const std::set<std::string>& names = std::set<std::string>());
 
   //: Parse the command line parameters
   void parse_params(int argc, char** argv);
@@ -74,22 +74,22 @@ class vorl1_manager
   // \param modified is an optional parameter.  If specified, all storage objects
   //                 modified by the process are added to the set
   bool run_process_on_current_frame( const bpro1_process_sptr& process,
-                                     vcl_set<bpro1_storage_sptr>* modified = NULL );
+                                     std::set<bpro1_storage_sptr>* modified = NULL );
 
   //: Runs the process queue on the current frame
   // \param modified is an optional parameter.  If specified, all storage objects
   //                 modified by the process are added to the set
-  bool run_process_queue_on_current_frame( vcl_set<bpro1_storage_sptr>* modified = NULL );
+  bool run_process_queue_on_current_frame( std::set<bpro1_storage_sptr>* modified = NULL );
 
   //: Calls the finish function on all processes in the queue
   // \param modified is an optional parameter.  If specified, all storage objects
   //                 modified by the process are added to the set
-  bool finish_process_queue( vcl_set<bpro1_storage_sptr>* modified = NULL );
+  bool finish_process_queue( std::set<bpro1_storage_sptr>* modified = NULL );
 
   //: Calls the finish function on all processes in the queue on a range of frames
   // \param modified is an optional parameter.  If specified, all storage objects
   //                 modified by the process are added to the set
-  bool finish_process_queue( int first, int last, vcl_set<bpro1_storage_sptr>* modified = NULL );
+  bool finish_process_queue( int first, int last, std::set<bpro1_storage_sptr>* modified = NULL );
 
   //: Return the current frame number
   unsigned int current_frame() const;
@@ -120,7 +120,7 @@ class vorl1_manager
   bool write_status(float status = -1.0) const;
 
   //: Write the performance file
-  bool write_performance(vcl_string category = "car") const;
+  bool write_performance(std::string category = "car") const;
 
   //: Write the parameters to an XML file
   bool write_params();
@@ -131,13 +131,13 @@ class vorl1_manager
   //: return the number of frames in the entire video
   int video_size();
 
-  vcl_string get_output_dir();
-  vcl_string get_output_video_dir();
-  vcl_string get_output_ps_dir();
-  vcl_string get_output_vrml_dir();
-  vcl_string get_output_svg_dir();
+  std::string get_output_dir();
+  std::string get_output_video_dir();
+  std::string get_output_ps_dir();
+  std::string get_output_vrml_dir();
+  std::string get_output_svg_dir();
 
-  vcl_string get_video_assoc_dir();
+  std::string get_video_assoc_dir();
 
   //: return the video id which is the parent video of the input object (or input video itself)
   int get_video_id();
@@ -172,16 +172,16 @@ class vorl1_manager
   vidpro1_process_manager process_manager_;
 
   //: The vector of processes used in the argument list
-  vcl_vector<bpro1_process_sptr> processes_;
+  std::vector<bpro1_process_sptr> processes_;
 
   //: The name of this application
-  vcl_string app_name_;
+  std::string app_name_;
 
   //: The system information for command line
-  vcl_vector<vcl_pair<vcl_string,vcl_string> > info_;
+  std::vector<std::pair<std::string,std::string> > info_;
 
   //: The performance scores
-  vcl_vector<vcl_pair<double,double> > performance_scores_;
+  std::vector<std::pair<double,double> > performance_scores_;
 
   //: Program argument list common to all
   vul_arg_info_list vorl1_args_;
@@ -189,16 +189,16 @@ class vorl1_manager
   vul_arg_info_list process_args_;
   // VORL common arguments
   // -------------------------------------------------
-  vul_arg<vcl_string> param_file_;
-  vul_arg<vcl_string> video_file_;
-  vul_arg<vcl_string> video_assoc_dir_;
-  vul_arg<vcl_string> status_file_;
-  vul_arg<vcl_string> perf_file_;
-  vul_arg<vcl_string> output_dir_;
-  vul_arg<vcl_string> out_video_dir_;
-  vul_arg<vcl_string> out_ps_dir_;
-  vul_arg<vcl_string> out_vrml_dir_;
-  vul_arg<vcl_string> out_svg_dir_;
+  vul_arg<std::string> param_file_;
+  vul_arg<std::string> video_file_;
+  vul_arg<std::string> video_assoc_dir_;
+  vul_arg<std::string> status_file_;
+  vul_arg<std::string> perf_file_;
+  vul_arg<std::string> output_dir_;
+  vul_arg<std::string> out_video_dir_;
+  vul_arg<std::string> out_ps_dir_;
+  vul_arg<std::string> out_vrml_dir_;
+  vul_arg<std::string> out_svg_dir_;
   vul_arg<int>        start_frame_;
   vul_arg<int>        end_frame_;
   vul_arg<int>        video_id_;

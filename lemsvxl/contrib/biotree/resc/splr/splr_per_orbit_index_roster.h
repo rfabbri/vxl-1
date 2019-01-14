@@ -5,16 +5,16 @@
 #include <biob/biob_worldpt_roster.h>
 #include <splr/splr_map.h>
 #include <xscan/xscan_scan.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //Maybe need to add io for this?
 
 class splr_per_orbit_index_roster : public biob_worldpt_roster {
  private:
-//   typedef value vcl_vector<worldpt>;
+//   typedef value std::vector<worldpt>;
 //   typedef key orbit_index;
 
-   typedef splr_map<orbit_index, vcl_vector<worldpt> > map;
+   typedef splr_map<orbit_index, std::vector<worldpt> > map;
    map map_;
    xscan_scan scan_;
    worldpt_box bounding_box_;

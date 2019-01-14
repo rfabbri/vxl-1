@@ -4,8 +4,8 @@
 #include <borld/borld_image_bbox_description_sptr.h>
 #include <borld/borld_image_bbox_description.h>
 #include <borld/borld_image_description.h>
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -25,7 +25,7 @@ static void test_image_object(int argc, char* argv[])
     img = vil_new_image_resource_of_view(image);  
   }
 
-  vcl_cout << "img size: " << img->ni() << " " << img->nj() << vcl_endl;
+  std::cout << "img size: " << img->ni() << " " << img->nj() << std::endl;
 
   dborl_image_object_sptr io = new dborl_image_object("test_image", img);
   TEST("test constructor ", io->get_object_type(), borld_object_type::image);
@@ -39,7 +39,7 @@ static void test_image_object(int argc, char* argv[])
   box_d->add_box("test_cat", b);
   TEST("test category_exists() ", box_d->category_exists("test_cat"), true);
 
-  vcl_vector<vsol_box_2d_sptr>& v = box_d->get_box_vector("test_cat");
+  std::vector<vsol_box_2d_sptr>& v = box_d->get_box_vector("test_cat");
   TEST("test get_box_vector() ", v.size(), 1);
   TEST("test get_box_vector() ", v[0]->area(), b->area());
 

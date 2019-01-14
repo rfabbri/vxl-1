@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_save_image_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_image_storage.h>
@@ -22,7 +22,7 @@ vidpro_save_image_process::vidpro_save_image_process() : bpro_process()
 {
   if( !parameters()->add( "Filename" , "-filename", bpro_filepath("","*") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -42,7 +42,7 @@ vidpro_save_image_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_save_image_process::name()
+std::string vidpro_save_image_process::name()
 {
   return "Save Image";
 }
@@ -57,10 +57,10 @@ vidpro_save_image_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro_save_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
 
@@ -69,10 +69,10 @@ vidpro_save_image_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro_save_image_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -97,7 +97,7 @@ bool
 vidpro_save_image_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_save_image_process::execute() - "
+    std::cout << "In vidpro_save_image_process::execute() - "
              << "not exactly one input images \n";
     return false;
   }

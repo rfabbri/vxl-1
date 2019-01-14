@@ -12,7 +12,7 @@
 // \date    2005-05-27
 // 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/algo/vnl_svd.h>
 
 template <class T>

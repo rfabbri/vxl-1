@@ -1,6 +1,6 @@
 // This is brcv/shp/dbsk2d/tests/test_file_load_cem.cxx
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include <testlib/testlib_test.h>
 #include <dbsk2d/dbsk2d_boundary_sptr.h>
@@ -11,7 +11,7 @@
 // Compare the results of loading different files with the true data
 // that's supposed to be in those files.
 
-extern vcl_string file_base;
+extern std::string file_base;
 
 bool
 load_cem_and_compare()

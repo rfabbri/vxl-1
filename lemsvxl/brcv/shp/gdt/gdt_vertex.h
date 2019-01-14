@@ -5,8 +5,8 @@
 #ifndef gdt_vertex_h_
 #define gdt_vertex_h_
 
-#include <vcl_set.h>
-#include <vcl_utility.h>
+#include <set>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 #include <gdt/gdt_numerical.h>
@@ -88,13 +88,13 @@ public:
   
 #if GDT_ALGO_WS // =============================================
 protected:
-  vcl_set<gdt_interval*> childIs_;
+  std::set<gdt_interval*> childIs_;
 
   //: true if the shock from it has already been launched.
   bool b_propagated_;
 
 public:
-  vcl_set<gdt_interval*>& childIs() {
+  std::set<gdt_interval*>& childIs() {
     return childIs_;
   }
   void _add_childI (const gdt_interval* I) {

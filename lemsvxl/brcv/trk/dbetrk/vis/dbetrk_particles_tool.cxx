@@ -131,7 +131,7 @@ dbetrk_particles_tool::handle( const vgui_event & e, const bvis1_view_tableau_sp
             return true;
   
        
-       vcl_vector<vgui_soview*> selcted_objects;
+       std::vector<vgui_soview*> selcted_objects;
     selcted_objects = tableau_->get_selected_soviews();
 
     for (unsigned int i = 0; i<selcted_objects.size() && i<1; i++) {
@@ -159,7 +159,7 @@ dbetrk_particles_tool::handle( const vgui_event & e, const bvis1_view_tableau_sp
 
        
        
-       vcl_vector<vgui_soview*> selcted_objects;
+       std::vector<vgui_soview*> selcted_objects;
     selcted_objects = tableau_->get_selected_soviews();
 
     for (int i = 0; i<(int)selcted_objects.size() && i<1; i++) {
@@ -189,7 +189,7 @@ dbetrk_particles_tool::handle( const vgui_event & e, const bvis1_view_tableau_sp
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbetrk_particles_tool::name() const
 {
 

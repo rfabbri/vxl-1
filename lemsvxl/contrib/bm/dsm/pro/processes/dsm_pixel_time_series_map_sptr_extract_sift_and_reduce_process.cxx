@@ -24,11 +24,11 @@ bool dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process_cons( bprb_f
 {
 	using namespace dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
-	input_types_[i++] = "vcl_string";//the image glob
+	input_types_[i++] = vcl_string";//the image glob
 	input_types_[i++] = "unsigned";//xmin
 	input_types_[i++] = "unsigned";//xmax
 	input_types_[i++] = "unsigned";//ymin
@@ -51,13 +51,13 @@ bool dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process( bprb_func_p
 	using namespace dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process_globals;
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get intputs
 	unsigned i = 0;
-	vcl_string img_glob = pro.get_input<vcl_string>(i++);
+	std::string img_glob = pro.get_input<std::string>(i++);
 	unsigned xmin		= pro.get_input<unsigned>(i++);
 	unsigned xmax		= pro.get_input<unsigned>(i++);
 	unsigned ymin		= pro.get_input<unsigned>(i++);
@@ -70,7 +70,7 @@ bool dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process( bprb_func_p
 
 	if(!video_stream.is_valid() || nframes < 1)
 	{
-		vcl_cout << pro.name() << " dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process: The video stream is not valid." << vcl_endl;
+		std::cout << pro.name() << " dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process: The video stream is not valid." << std::endl;
 		return false;
 	}
 
@@ -80,7 +80,7 @@ bool dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process( bprb_func_p
 
 	for( unsigned t = 0; t < nframes; ++t )
 	{
-		vcl_cout << "Processing Frame: " << t << vcl_endl;
+		std::cout << "Processing Frame: " << t << std::endl;
 
 		video_stream.seek_frame(t);
 
@@ -102,7 +102,7 @@ bool dsm_pixel_time_series_map_sptr_extract_sift_and_reduce_process( bprb_func_p
 		for(unsigned x = xmin; x <= xmax; ++x)
 			for(unsigned y = ymin; y <= ymax; ++y)
 			{
-				vcl_cout << "\tExtracting Sift at pixel: (" << x << "," << y << ")" << vcl_endl;
+				std::cout << "\tExtracting Sift at pixel: (" << x << "," << y << ")" << std::endl;
 				dsm_feature_sptr feature_sptr = new dsm_feature(dsift.vnl_dsift(x,y),t);
 				pixel_time_series_map_sptr->insert(vgl_point_2d<unsigned>(x,y),t,feature_sptr);
 			}

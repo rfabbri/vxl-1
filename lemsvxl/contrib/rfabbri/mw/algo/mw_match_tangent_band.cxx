@@ -15,12 +15,12 @@
 
 mw_match_tangent_band::
 mw_match_tangent_band (
-  const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &dg_points,
+  const std::vector<std::vector< vsol_point_2d_sptr > > &points,
+  const std::vector<std::vector< bdifd_3rd_order_point_2d > > &dg_points,
   bmcsd_discrete_corresp_n *corr,
-  const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
-  const vcl_vector<bdifd_camera> &cam,
-  const vcl_vector<mw_subpixel_point_set *> &sp,
+  const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm,
+  const std::vector<bdifd_camera> &cam,
+  const std::vector<mw_subpixel_point_set *> &sp,
   double err_pos,
   double err_t,
   bool debug_synthetic
@@ -66,9 +66,9 @@ mw_match_tangent_band (
     bbox_[i] = mw_algo_util::determine_right_bbox(pb,sp_[i]);
 
     w_[i] = new becld_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
-    vcl_cout << "BOUNDING BOX:\n";
-    vcl_cout << *(bbox_[i]);
-    vcl_cout << "SP DIMENSIONS:\n";
+    std::cout << "BOUNDING BOX:\n";
+    std::cout << *(bbox_[i]);
+    std::cout << "SP DIMENSIONS:\n";
     w_[i]->print();
   }
 
@@ -149,8 +149,8 @@ consider(unsigned vn)
             satisfies_reverse = false;
             d_fail = epband_[vn][iv]->distance(pt_tmp2);
             if (d_fail > 1) {
-              vcl_cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << vcl_endl;
-              vcl_cout << "============";
+              std::cout << "Reverse not satisf!\n" << "d_fail: " << d_fail << std::endl;
+              std::cout << "============";
             }
           }
         }

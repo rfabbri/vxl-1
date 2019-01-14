@@ -30,12 +30,12 @@ void vsl_b_read(vsl_b_istream &is, dsm2_state_machine_base* &p)
 							  dsm2_transition_map<unsigned,unsigned,double> >*> (p) );
 		else
 		{
-			vcl_cerr << "---- ERROR ----\n"
+			std::cerr << "---- ERROR ----\n"
 #ifdef __FILE__
 					 << __FILE__
 #endif//__FILE__
 					 << "\tvsl_b_read(vsl_b_istream &is,dsm2_feature_base* &p)\n"
-					 << "\tCould not determine type of feature.\n" << vcl_flush;
+					 << "\tCould not determine type of feature.\n" << std::flush;
 		}//end default condition
 
 		vsl_b_read(is,*p);
@@ -55,7 +55,7 @@ void vsl_b_write(vsl_b_ostream &os, const dsm2_state_machine_base* p)
 	}
 }
 
-void vsl_print_summary(vcl_ostream& os, const dsm2_state_machine_base *p)
+void vsl_print_summary(std::ostream& os, const dsm2_state_machine_base *p)
 {
-	os << "vsl_print_summary not yet implemented. " << vcl_flush;
+	os << "vsl_print_summary not yet implemented. " << std::flush;
 }

@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_cmath.h>
-#include <vcl_complex.h>
+#include <cmath>
+#include <complex>
 
 #include <base_points.h>
 #include <algo_euler.h>
@@ -33,7 +33,7 @@ Point2D<double> EulerSpiral::get_fresnel_integral(double x)
     int k,n,odd;
     double a,ax,fact,pix2,sign,sum,sumc,sums,term,test;
 
-    vcl_complex<double> b,cc,d,h,del,cs;
+    std::complex<double> b,cc,d,h,del,cs;
     Point2D<double> result;
     
     ax=fabs(x);
@@ -77,7 +77,7 @@ Point2D<double> EulerSpiral::get_fresnel_integral(double x)
                 n +=2;
                }
             if (k > MAXIT) 
-                vcl_cout<<"  series failed in fresnel";
+                std::cout<<"  series failed in fresnel";
             result.setY(sums); 
             result.setX(sumc);
            }
@@ -85,22 +85,22 @@ Point2D<double> EulerSpiral::get_fresnel_integral(double x)
           {
             /*Evaluate continued fraction by modified Lentz's method */
             pix2=M_PI*ax*ax;
-            b   = vcl_complex<double>(1.0,-pix2);
-            cc  = vcl_complex<double>(1.0/FPMIN,0.0);
-            d=h = vcl_complex<double>(1.0,0.0)/b;
+            b   = std::complex<double>(1.0,-pix2);
+            cc  = std::complex<double>(1.0/FPMIN,0.0);
+            d=h = std::complex<double>(1.0,0.0)/b;
             n = -1;
 
             for (k=2;k<=MAXIT;k++) 
               {
                 n +=2;
                 a = -n*(n+1);
-                b= b+vcl_complex<double>(4.0,0.0);
-                d=(vcl_complex<double>(1.0,0.0)/((a*d)+b));
+                b= b+std::complex<double>(4.0,0.0);
+                d=(std::complex<double>(1.0,0.0)/((a*d)+b));
 
 
                 /*Denominators cannot be zero.*/
 
-                cc=(b+(vcl_complex<double>(a,0.0)/cc));
+                cc=(b+(std::complex<double>(a,0.0)/cc));
 
                 del=(cc*d);
                 h=h*del;
@@ -108,10 +108,10 @@ Point2D<double> EulerSpiral::get_fresnel_integral(double x)
                     break;
                }
             if (k > MAXIT) 
-                vcl_cout<<"cf failed in frenel";
+                std::cout<<"cf failed in frenel";
             
-            h=vcl_complex<double>(ax,-ax)*h;
-            //cs=(vcl_complex<double>(0.5,0.5)*(vcl_complex<double>(1.0,0.0)-(vcl_complex<double>(cos(0.5*pix2),sin(0.5*pix2))*h)));
+            h=std::complex<double>(ax,-ax)*h;
+            //cs=(std::complex<double>(0.5,0.5)*(std::complex<double>(1.0,0.0)-(std::complex<double>(cos(0.5*pix2),sin(0.5*pix2))*h)));
             
             result.setX(cs.real());
             result.setY(cs.imag());

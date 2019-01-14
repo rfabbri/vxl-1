@@ -3,7 +3,7 @@
 #include <biob/biob_grid_worldpt_roster.h>
 
 #include <vsl/vsl_basic_xml_element.h>
-#include <vcl_string.h>
+#include <string>
 
 unsigned long splr_symmetry_worldpt_roster::num_points() const {
  return representatives_->num_points() * symmetry_->size();

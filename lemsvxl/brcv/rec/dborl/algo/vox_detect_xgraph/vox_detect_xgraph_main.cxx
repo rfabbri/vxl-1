@@ -27,7 +27,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_load.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 // =============================================================================
 //: VOX executable to detect objects, represented by xshock_graph, in images
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
   timer.mark();
 
   //1. Parse the input xml file ////////////////////////////////////////////////
-  vcl_cout
+  std::cout
     << "\n---------------------------------------------------------------------"
     << "\nLoad parameter file"
     << "\n--------------------------------------------------------------------\n";
@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
   {
-    vcl_cout << "problems in writing params file to: " 
-      << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " 
+      << params->print_params_file() << std::endl;
   }
 
   // exit if there is nothing else to do
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
   //2. Detect objects in image
   
   //> Make some announcements
-  vcl_cout 
+  std::cout 
     << "\n====================================================================="
     << "\nRun object detection on image: " << vul_file::strip_directory(params->get_image_file())
     << "\n  xgraph prototype: " << vul_file::strip_directory(params->get_xgraph_file()) 
@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
   vil_image_resource_sptr image_resource = 0;
 
   // List of detections to return
-  vcl_vector<dbsks_det_desc_xgraph_sptr > det_list;
+  std::vector<dbsks_det_desc_xgraph_sptr > det_list;
 
   // Unique id for pair of (prototype xgraph, image)
-  vcl_string det_group_id = params->get_xgraph_prototype_name() + "+" + params->input_object_name_();
+  std::string det_group_id = params->get_xgraph_prototype_name() + "+" + params->input_object_name_();
 
   // Path to folder where we will save detection results in
-  vcl_string work_folder = params->get_output_folder() + "/" + det_group_id;
+  std::string work_folder = params->get_output_folder() + "/" + det_group_id;
 
   //> Switch object-detection procedures
   int choice = 1;
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 
     if (!success)
     {
-      vcl_cout << "\nERROR: Xgraph detection failed. No results created." << vcl_endl;
+      std::cout << "\nERROR: Xgraph detection failed. No results created." << std::endl;
       return EXIT_FAILURE;
     }
 
@@ -176,31 +176,31 @@ int main(int argc, char *argv[])
   }
   else
   {
-    vcl_cout << "\nERROR: Unknown choice." << vcl_endl;
+    std::cout << "\nERROR: Unknown choice." << std::endl;
     return EXIT_FAILURE;
   }
 
   //> Sort the detection results based in the order of decreasing confidence
-  vcl_sort(det_list.begin(), det_list.end(), dbsks_decreasing_confidence);
-  vcl_cout << "\n  Final number of detections= " << det_list.size() << vcl_endl;
+  std::sort(det_list.begin(), det_list.end(), dbsks_decreasing_confidence);
+  std::cout << "\n  Final number of detections= " << det_list.size() << std::endl;
 
   //////////////////////////////////////////////////////////////////////////////
   // 3. Save detection results
 
-  vcl_cout
+  std::cout
     << "\n---------------------------------------------------------------------"
     << "\nSave detection results"
     << "\n--------------------------------------------------------------------\n";
 
   //> Save summary in VOC2008 format
-  vcl_string det_result_file = params->get_output_folder() + "/" + 
+  std::string det_result_file = params->get_output_folder() + "/" + 
     "VOC_det_result+" + params->get_xgraph_prototype_name() +
     "+" + params->input_object_name_() + ".txt";
 
-  vcl_cout << "\n>> Save summary in VOC2008 format: " << det_result_file << "...";
+  std::cout << "\n>> Save summary in VOC2008 format: " << det_result_file << "...";
   {
     // \todo turn this into a function
-    vcl_ofstream ofs(det_result_file.c_str(), vcl_ios::out);
+    std::ofstream ofs(det_result_file.c_str(), std::ios::out);
     for (unsigned i =0; i < det_list.size(); ++i)
     {
       vsol_box_2d_sptr bbox = det_list[i]->bbox();
@@ -213,10 +213,10 @@ int main(int argc, char *argv[])
     }
     ofs.close();
   }
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   //> Save each detection: xgraph + screenshot
-  vcl_cout << "\n>> Save each detected xgraph to output folder: " 
+  std::cout << "\n>> Save each detected xgraph to output folder: " 
     << params->get_output_folder() << "...";
 
   // Original image
@@ -229,42 +229,42 @@ int main(int argc, char *argv[])
     source_image,
     params->get_output_folder(),
     det_group_id);
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   //////////////////////////////////////////////////////////////////////////////
   // 4. Evaluate detection results (compare against groundtruth)
 
-  vcl_cout
+  std::cout
     << "\n---------------------------------------------------------------------"
     << "\nEvaluate detection results"
     << "\n--------------------------------------------------------------------\n";
   
   //> Load groundtruth file
-  vcl_string image_desc_file = params->input_object_dir_() + "/" + params->input_object_name_() + ".xml";
+  std::string image_desc_file = params->input_object_dir_() + "/" + params->input_object_name_() + ".xml";
 
-  vcl_cout << "\n>> Load groundtruth file: " << image_desc_file << "...";
+  std::cout << "\n>> Load groundtruth file: " << image_desc_file << "...";
 
   borld_image_description_sptr image_desc;
   if (!x_read(image_desc_file, image_desc))
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return EXIT_FAILURE;
   }
   else
   {
-    vcl_cout << "Done.\n";
+    std::cout << "Done.\n";
   }
 
   //> Evaluate the detection results against objects in the image description
-  vcl_cout << "\n>> Compare each detection against ground truth data ...";
+  std::cout << "\n>> Compare each detection against ground truth data ...";
   double min_required_overlap = 0.5; // PASCAL criteria
-  vcl_vector<double > confidence_vec;
-  vcl_vector<int > FP_vec;
-  vcl_vector<int > TP_vec;
+  std::vector<double > confidence_vec;
+  std::vector<int > FP_vec;
+  std::vector<int > TP_vec;
   int num_pos = -1;
 
   // Clone the detection list to its parent class
-  vcl_vector<dborl_det_desc_sptr > borl_det_list;
+  std::vector<dborl_det_desc_sptr > borl_det_list;
   borl_det_list.reserve(det_list.size());
   for (unsigned i =0; i < det_list.size(); ++i)
   {
@@ -272,20 +272,20 @@ int main(int argc, char *argv[])
   }
   dborl_VOC2008_eval_det(image_desc, params->input_model_category_(), min_required_overlap, borl_det_list,
     confidence_vec, FP_vec, TP_vec, num_pos);
-  vcl_cout << "\nFinished comparing against ground truth.\n";
+  std::cout << "\nFinished comparing against ground truth.\n";
 
   //> Print out the evaluation results
-  vcl_string eval_file = params->get_output_folder() + "/" + 
+  std::string eval_file = params->get_output_folder() + "/" + 
     "eval_det+" + params->get_xgraph_prototype_name() + "+" + 
     params->input_object_name_() + ".txt";
 
-  vcl_cout << "\n>> Print out evaluation results to file: " << eval_file << vcl_endl;
+  std::cout << "\n>> Print out evaluation results to file: " << eval_file << std::endl;
   dborl_VOC2008_print_eval_results(eval_file, num_pos, params->input_object_name_(),
     params->input_model_category_(), confidence_vec, TP_vec, FP_vec);
 
   // Display total time spent
-  vcl_cout << "\n\n>> Total time spent for the task: " 
-    << timer.all() / 1000 << " seconds.\n" << vcl_endl;  
+  std::cout << "\n\n>> Total time spent for the task: " 
+    << timer.all() / 1000 << " seconds.\n" << std::endl;  
   
   return EXIT_SUCCESS;
 };

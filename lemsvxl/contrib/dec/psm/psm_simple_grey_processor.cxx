@@ -12,7 +12,7 @@ float psm_simple_grey_processor::prob_density(apm_datatype const& appear, obs_da
 {
   const float norm =  float(appear.one_over_sigma() * vnl_math::one_over_sqrt2pi);
   const float diff = obs - appear.color();
-  const float p = norm * vcl_exp(-(diff*diff)*appear.one_over_sigma()*appear.one_over_sigma()*0.5f);
+  const float p = norm * std::exp(-(diff*diff)*appear.one_over_sigma()*appear.one_over_sigma()*0.5f);
   // normalize by area of distribution between 0 and 1
   //return p / total_prob(appear);
   return p * appear.gauss_weight() + (1.0f - appear.gauss_weight());
@@ -70,12 +70,12 @@ psm_simple_grey_processor::obs_datatype psm_simple_grey_processor::most_probable
 
 void psm_simple_grey_processor::init_appearance(psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype const& mean, float variance, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model)
 {
-  model = psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype(mean, vcl_sqrt(variance));
+  model = psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype(mean, std::sqrt(variance));
   return;
 }
 
 
-void psm_simple_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma)
+void psm_simple_grey_processor::compute_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma)
 {
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
@@ -93,7 +93,7 @@ void psm_simple_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM
 
   // compute estimate of gaussian parameters
   // Initialize the estimates
-  vcl_vector<float> obs_weights = vis;
+  std::vector<float> obs_weights = vis;
   psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype mean_est(0);
   float sigma_est = 0.0f;
 
@@ -118,7 +118,7 @@ void psm_simple_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM
         new_obs_weight = P1 / normalizing_factor;
       }
       // compute delta weight for convergence check
-      float weight_delta = vcl_fabs(obs_weights[n] - new_obs_weight);
+      float weight_delta = std::fabs(obs_weights[n] - new_obs_weight);
       if (weight_delta > max_weight_change) {
         max_weight_change = weight_delta;
       }
@@ -147,7 +147,7 @@ void psm_simple_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM
 }
 
 
-void psm_simple_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma)
+void psm_simple_grey_processor::update_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma)
 {
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
@@ -163,7 +163,7 @@ void psm_simple_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_
   } 
   else {
     // compute estimate of gaussian weight by summing probabilities
-    vcl_vector<float> obs_gauss_weights = weights;
+    std::vector<float> obs_gauss_weights = weights;
     float gauss_weight = 0.0f;
     float expected_nobs = 0.0f;
     if (USE_UNIFORM_COMPONENT) {
@@ -187,7 +187,7 @@ void psm_simple_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_
       expected_nobs = weight_sum;
     } 
     else {
-      vcl_vector<float>::const_iterator wit = weights.begin();
+      std::vector<float>::const_iterator wit = weights.begin();
       for (; wit != weights.end(); ++wit) {
         expected_nobs += *wit;
       }
@@ -216,13 +216,13 @@ void psm_simple_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_
   return;
 }
 
-void psm_simple_grey_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model)
+void psm_simple_grey_processor::finalize_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::apm_datatype &model)
 {
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
   const unsigned int nobs = obs.size();
   float expected_nobs = 0.0f;
-  vcl_vector<float>::const_iterator wit = weights.begin();
+  std::vector<float>::const_iterator wit = weights.begin();
   for (; wit != weights.end(); ++wit) {
     expected_nobs += *wit;
   }
@@ -239,7 +239,7 @@ void psm_simple_grey_processor::finalize_appearance(vcl_vector<psm_apm_traits<PS
 }
 
 
-void psm_simple_grey_processor::compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs, vcl_vector<float> weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma)
+void psm_simple_grey_processor::compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype> obs, std::vector<float> weights, psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma)
 {
   const unsigned int nobs = obs.size();
   const unsigned int dimension = 1;
@@ -278,7 +278,7 @@ void psm_simple_grey_processor::compute_gaussian_params(vcl_vector<psm_apm_trait
   var /= (1.0 - weight_norm_sqrd_sum);
 
   mean = (float)mean_d;
-  sigma = (float)vcl_sqrt(var);
+  sigma = (float)std::sqrt(var);
 
 }
 
@@ -291,8 +291,8 @@ float psm_simple_grey_processor::sigma_norm_factor(float nobs)
   }
 
   // linearly interpolate between integer values
-  float nobs_floor = vcl_floor(nobs);
-  float nobs_ceil = vcl_ceil(nobs);
+  float nobs_floor = std::floor(nobs);
+  float nobs_ceil = std::ceil(nobs);
   float floor_weight = nobs_ceil - nobs;
   float norm_factor = (sigma_norm_factor((unsigned int)nobs_floor) * floor_weight) + (sigma_norm_factor((unsigned int)nobs_ceil) * (1.0f - floor_weight));
 
@@ -318,9 +318,9 @@ float psm_simple_grey_processor::sigma_norm_factor(unsigned int nobs)
 }
     
   
-vcl_ostream& operator<<(vcl_ostream &os, psm_simple_grey const& apm) 
+std::ostream& operator<<(std::ostream &os, psm_simple_grey const& apm) 
 { 
-  os << "color: " << apm.color() << ", one_over_sigma: " << apm.one_over_sigma() << vcl_endl;
+  os << "color: " << apm.color() << ", one_over_sigma: " << apm.one_over_sigma() << std::endl;
   return os;
 }
 

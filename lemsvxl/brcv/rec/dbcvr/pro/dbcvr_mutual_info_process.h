@@ -45,20 +45,20 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Mutual Info Matching";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
   }

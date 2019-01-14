@@ -32,9 +32,9 @@
 #ifndef dbsk3d_fs_mesh_h_
 #define dbsk3d_fs_mesh_h_
 
-#include <vcl_map.h>
-#include <vcl_queue.h>
-#include <vcl_utility.h>
+#include <map>
+#include <queue>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbsk3d/dbsk3d_fs_vertex.h>
@@ -146,7 +146,7 @@ public:
   unsigned int del_invalid_FFs_complete ();
 
   //###### Functions to associate boundary and shocks ######    
-  bool check_all_G_asgn (vcl_vector<dbmsh3d_vertex*>& unasgn_genes); 
+  bool check_all_G_asgn (std::vector<dbmsh3d_vertex*>& unasgn_genes); 
 
   //###### Other Functions ######
   virtual bool check_integrity ();
@@ -174,19 +174,19 @@ void IFS_to_HE_print_mem_usage (dbsk3d_fs_mesh* fs_mesh, int seid_edge_map_size,
 
 // A vector to store the association cases of a generator. Used for
 // checking if a generator is associated to a shock sheet or curve element.
-// vcl_map<int, char>  G_asso_map_;
+// std::map<int, char>  G_asso_map_;
 //
 inline void mark_G_asso (const dbmsh3d_vertex* G, char asso,
-                         vcl_map<int, char>& G_asso_map) {    
-  vcl_map<int, char>::iterator it = G_asso_map.find (G->id());
+                         std::map<int, char>& G_asso_map) {    
+  std::map<int, char>::iterator it = G_asso_map.find (G->id());
   assert (it != G_asso_map.end());
   (*it).second = asso;
 }
 
 //###### Get associated boundary IFS mesh ######
 
-void FFs_get_bnd_mesh_Fs (const vcl_vector<dbsk3d_fs_face*>& fs_faces, 
-                          vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<dbmsh3d_face*>& Gfaces,
-                          vcl_set<dbmsh3d_face*>& Gfaces2, vcl_set<dbmsh3d_face*>& Gfaces1);
+void FFs_get_bnd_mesh_Fs (const std::vector<dbsk3d_fs_face*>& fs_faces, 
+                          std::set<dbmsh3d_vertex*>& Gset, std::set<dbmsh3d_face*>& Gfaces,
+                          std::set<dbmsh3d_face*>& Gfaces2, std::set<dbmsh3d_face*>& Gfaces1);
 
 #endif

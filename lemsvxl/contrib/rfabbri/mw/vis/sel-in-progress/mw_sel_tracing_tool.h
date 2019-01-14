@@ -29,7 +29,7 @@ public:
   virtual ~mw_sel_tracing_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -44,13 +44,13 @@ public:
 protected:
 
   vgui_event_condition gesture0_;
-  vcl_vector<int> frame_v_;   //: frame number for each view
+  std::vector<int> frame_v_;   //: frame number for each view
   const unsigned nviews_;
   dbdet_sel_storage_sptr sel_storage_;
   dbdet_sel_sptr sel_;
   
 
-  vcl_vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
+  std::vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
 
   vgui_soview2D_point *p0_; //:< edgel position in left curve segment
   vgui_style_sptr p0_style_;

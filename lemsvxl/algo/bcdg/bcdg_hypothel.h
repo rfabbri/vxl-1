@@ -10,7 +10,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbecl/dbecl_episeg_sptr.h>
 
 #include "bcdg_hypothel_sptr.h"
@@ -20,7 +20,7 @@ class bcdg_hypothel : public vbl_ref_count {
 public:
   //: Constructor description
   bcdg_hypothel(const vgl_point_3d<double>&, 
-                const vcl_vector< dbecl_episeg_sptr > &,
+                const std::vector< dbecl_episeg_sptr > &,
                 double d);
   
   //: Update the _next pointer
@@ -39,7 +39,7 @@ protected:
   //: the 3D point
   vgl_point_3d<double> _point_3d;
   //: the curve in each frame that this corresponds to
-  vcl_vector< dbecl_episeg_sptr > _curves_2d;
+  std::vector< dbecl_episeg_sptr > _curves_2d;
   //: pointer to the next one
   bcdg_hypothel_sptr _next;
   //: cost

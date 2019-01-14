@@ -14,7 +14,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vul/vul_file.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_adaptor.h>
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
   if (argc < 2)
   {
-    vcl_cout << "This program draws an xshock graph on postscript file.\n"
+    std::cout << "This program draws an xshock graph on postscript file.\n"
       << "Output file can have extension: .ps, .eps, .pdf (default), or .txt\n" 
       << "Usage: " << argv[0] << " input_xgraph_xml [ output_file ]\n";
     return 0;
@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
 
   vgui::init(argc, argv);
 
-  vcl_string xgraph_file = argv[1];
-  vcl_string output_file = "";
+  std::string xgraph_file = argv[1];
+  std::string output_file = "";
 
   if (argc > 2)
   {
@@ -61,13 +61,13 @@ int main(int argc, char *argv[])
   dbsksp_xshock_graph_sptr xgraph;
   if (!x_read(xgraph_file, xgraph))
   {
-    vcl_cout << "ERROR: couldn't read xgraph XML file - " << xgraph_file << vcl_endl;
+    std::cout << "ERROR: couldn't read xgraph XML file - " << xgraph_file << std::endl;
     return EXIT_FAILURE;
   }
 
   // scale the xgraph so that its size is 128 // arbitrary choice
   double norm_size = 128;
-  double cur_size = vcl_sqrt(xgraph->area());
+  double cur_size = std::sqrt(xgraph->area());
   xgraph->scale_up(0, 0, norm_size / cur_size);
 
   // Move the xgraph to the 1st quarter for drawing
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
   dbsksp_xgraph_displayer xgraph_displayer;
   vgui_tableau_sptr xgraph_tab = xgraph_displayer.make_tableau(xgraph_storage);
   
-  vcl_string title = "xgraph renderer";
+  std::string title = "xgraph renderer";
 
   // Put the image tableau inside a 2D viewer tableau (for zoom, etc).
   vgui_viewer2D_tableau_new viewer(xgraph_tab);

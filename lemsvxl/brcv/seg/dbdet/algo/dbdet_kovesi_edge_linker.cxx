@@ -20,15 +20,15 @@
 
 #include <buld/buld_random.h>
 
-#include<vcl_vector.h>
+#include<vector>
 
 #include<vpl/vpl.h>
 
 #define DBDET_CONVERT_EDGEMAP_TO_STH_OCTAVE_ARRAY(sth)\
-        vcl_vector<int> sizes(2);\
+        std::vector<int> sizes(2);\
         sizes[0] = in_EM->height(); sizes[1] = in_EM->width();\
         buld_octave_double_array sth_array = buld_octave_get_empty_double_array(sizes);\
-        vcl_vector<dbdet_edgel*> edgels = in_EM->edgels;\
+        std::vector<dbdet_edgel*> edgels = in_EM->edgels;\
         for(int i = 0; i < edgels.size(); i++)\
         {\
             dbdet_edgel* e = edgels[i];\
@@ -47,7 +47,7 @@ buld_octave_double_array dbdet_convert_edgemap_to_strength_octave_array(dbdet_ed
     DBDET_CONVERT_EDGEMAP_TO_STH_OCTAVE_ARRAY(strength)
 }
 
-dbdet_kovesi_edge_linker::dbdet_kovesi_edge_linker(const vcl_string& temp_dir)
+dbdet_kovesi_edge_linker::dbdet_kovesi_edge_linker(const std::string& temp_dir)
 {
     temp_dir_ = temp_dir;
     dbdet_extract_embedded_kovesi_files(temp_dir_.c_str());
@@ -76,7 +76,7 @@ void dbdet_kovesi_edge_linker::link_and_prune_edges(dbdet_edgemap_sptr& in_EM, i
 
     buld_octave.run(temp_dir_,"kovesi_main", inargs, outargs);
 
-    vcl_ifstream cems(temp_cem_file_.c_str());
+    std::ifstream cems(temp_cem_file_.c_str());
     out_EM = dbdet_load_cem_v1(cems, out_CFG, in_EM->width(), in_EM->height(), false);
     vpl_unlink(temp_cem_file_.c_str());
 }

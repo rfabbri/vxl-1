@@ -24,24 +24,24 @@ bool remove_erroneous_Fs_IFS (dbmsh3d_mesh* M);
 
 void merge_mesh_coplanar_faces (dbmsh3d_mesh* M);
 
-void add_mesh_faces_IFS (dbmsh3d_mesh* M, vcl_vector<vcl_vector<int> >& IFS_faces);
+void add_mesh_faces_IFS (dbmsh3d_mesh* M, std::vector<std::vector<int> >& IFS_faces);
 
-void get_faces_intersect_box (const vcl_vector<vcl_vector<int> >& input_faces, 
-                              const vcl_vector<vgl_point_3d<double> >& input_pts, 
+void get_faces_intersect_box (const std::vector<std::vector<int> >& input_faces, 
+                              const std::vector<vgl_point_3d<double> >& input_pts, 
                               const vgl_box_3d<double>& box,
-                              vcl_vector<vcl_vector<int> >& in_faces);
+                              std::vector<std::vector<int> >& in_faces);
 
 int erode_mesh_boundary (dbmsh3d_mesh* M, const int steps);
 
-dbmsh3d_mesh* build_mesh_from_IFS (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                                   const vcl_vector<vcl_vector<int> >& input_faces);
+dbmsh3d_mesh* build_mesh_from_IFS (const std::vector<vgl_point_3d<double> >& input_pts,
+                                   const std::vector<std::vector<int> >& input_faces);
 
 //: Check if introducing a face of vector<vids> to mesh M violates 2-manifold topology.
-bool check_F_M_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M);
+bool check_F_M_topo (std::vector<int>& vids, dbmsh3d_mesh* M);
 
 
 //Label mesh components and save large components to various mesh files.
-bool cclabel_save_mesh (dbmsh3d_mesh* M, const vcl_string& prefix,
+bool cclabel_save_mesh (dbmsh3d_mesh* M, const std::string& prefix,
                         const int th_n, const int option = 1);
 
 int label_mesh_component (dbmsh3d_mesh* M, dbmsh3d_face* seedF, const int label);
@@ -60,8 +60,8 @@ double compute_cen_var (dbmsh3d_mesh* M, vgl_point_3d<double>& C);
 
 //: Collect the set of faces given a seedF and a bounding curve (links).
 //  Assume M->reset_traverse_f() is already done.
-void collect_Fs_given_seed_bnd (dbmsh3d_face* seedF, vcl_set<dbmsh3d_edge*>& bnd_E_set, 
-                                dbmsh3d_mesh* M, vcl_set<dbmsh3d_face*>& Fset);
+void collect_Fs_given_seed_bnd (dbmsh3d_face* seedF, std::set<dbmsh3d_edge*>& bnd_E_set, 
+                                dbmsh3d_mesh* M, std::set<dbmsh3d_face*>& Fset);
 
 //#################################################################
 
@@ -77,12 +77,12 @@ public:
   //: Extract boundary of vertices of a manifold mesh
   // Return false if mesh is not 2-manifold
   static bool find_boundary(dbmsh3d_mesh& mesh, 
-    vcl_vector< vcl_vector< dbmsh3d_vertex* > >& boundary_list);
+    std::vector< std::vector< dbmsh3d_vertex* > >& boundary_list);
 
   //: Triangulate two "parallel" curves in space and create a "band-like" mesh
-  static bool make_band_trimesh(const vcl_vector<dbmsh3d_vertex* >& poly1,
-    const vcl_vector<dbmsh3d_vertex* >& poly2,
-    vcl_vector<dbmsh3d_face* >& new_faces);
+  static bool make_band_trimesh(const std::vector<dbmsh3d_vertex* >& poly1,
+    const std::vector<dbmsh3d_vertex* >& poly2,
+    std::vector<dbmsh3d_face* >& new_faces);
 
 
   //: Compute volume of a mesh when it is a polyhedron
@@ -95,7 +95,7 @@ public:
   //: Create a new mesh whose faces are a subset of the original mesh
   // Assumption: all faces in the face_list belong to ``mesh"
   static bool submesh(dbmsh3d_mesh& mesh, 
-    const vcl_vector<dbmsh3d_face* >& face_list, dbmsh3d_mesh& new_mesh);
+    const std::vector<dbmsh3d_face* >& face_list, dbmsh3d_mesh& new_mesh);
 
   //: crop a mesh with a retangular box
   // only faces that lie completely inside the box will retain
@@ -120,9 +120,9 @@ protected:
     //: re-arrange a 3D polyline/polygon so that it initial vertex and its
   // orientation match with a reference 3D polyline/polygon
   // Return re-arranged copy of moving_poly
-  static vcl_vector<dbmsh3d_vertex* > align_2_polys(
-    const vcl_vector<dbmsh3d_vertex* >& ref_poly,
-    const vcl_vector<dbmsh3d_vertex* >& moving_poly);  
+  static std::vector<dbmsh3d_vertex* > align_2_polys(
+    const std::vector<dbmsh3d_vertex* >& ref_poly,
+    const std::vector<dbmsh3d_vertex* >& moving_poly);  
 
 };
 

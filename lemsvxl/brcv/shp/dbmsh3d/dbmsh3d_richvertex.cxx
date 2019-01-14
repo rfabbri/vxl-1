@@ -3,7 +3,7 @@
 
 
 #include "dbmsh3d_richvertex.h"
-#include <vcl_utility.h>
+#include <utility>
 
 
 
@@ -13,12 +13,12 @@
 // scalar property
 
 // ----------------------------------------------------------------------------
-vcl_vector<vcl_string > dbmsh3d_richvertex::
+std::vector<std::string > dbmsh3d_richvertex::
 scalar_property_list() const
 {
-  vcl_vector<vcl_string > prop_list;
+  std::vector<std::string > prop_list;
   prop_list.reserve(this->scalar_properties_.size());
-  for (vcl_map<vcl_string, double >::const_iterator it = 
+  for (std::map<std::string, double >::const_iterator it = 
     this->scalar_properties_.begin(); it != this->scalar_properties_.end(); ++it)
   {
     prop_list.push_back(it->first);
@@ -27,17 +27,17 @@ scalar_property_list() const
 }
 
 // ----------------------------------------------------------------------------
-void dbmsh3d_richvertex::add_scalar_property(const vcl_string& tag, 
+void dbmsh3d_richvertex::add_scalar_property(const std::string& tag, 
                                              double value)
 {
-  this->scalar_properties_.insert(vcl_make_pair(tag, value));
+  this->scalar_properties_.insert(std::make_pair(tag, value));
 }
 
 // ----------------------------------------------------------------------------
 bool dbmsh3d_richvertex::
-get_scalar_property(const vcl_string& tag, double& value)
+get_scalar_property(const std::string& tag, double& value)
 {
-  vcl_map<vcl_string, double >::iterator it = 
+  std::map<std::string, double >::iterator it = 
     this->scalar_properties_.find(tag);
   if (it == this->scalar_properties_.end()) return false;
   value = it->second;

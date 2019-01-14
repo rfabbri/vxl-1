@@ -16,7 +16,7 @@
 #include <vul/vul_timer.h>
 #include <dbul/dbul_random.h>
 #include <vul/vul_file.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 //: Constructor
@@ -26,10 +26,10 @@ poisson_reconstruction_process()
 	if( 	!parameters()->add( "Reconstruction depth" , "-depth", int(11))
 			|| !parameters()->add( "Solver subdivision depth" , "-solverDivide", int(8))
 			|| !parameters()->add("Output folder:", "-out_folder", bpro1_filepath(""))
-			|| !parameters()->add("Output file name:", "-out_file", vcl_string("output.ply"))
+			|| !parameters()->add("Output file name:", "-out_file", std::string("output.ply"))
 	)
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -50,27 +50,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string poisson_reconstruction_process::
+std::string poisson_reconstruction_process::
 name()
 {
 	return "3D reconstruction from edges (Poisson)";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > poisson_reconstruction_process::
+std::vector< std::string > poisson_reconstruction_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_edges");
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > poisson_reconstruction_process::
+std::vector< std::string > poisson_reconstruction_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("mesh_file");
 	return to_return;
 }
@@ -91,29 +91,29 @@ output_frames()
 	return 1;
 }
 
-void poisson_reconstruction(const vcl_string& root_path, const vcl_string& in, const vcl_string& out, int recons_depth, int solver_divide)
+void poisson_reconstruction(const std::string& root_path, const std::string& in, const std::string& out, int recons_depth, int solver_divide)
 {
-	vcl_string* args[8];
-	args[0] = new vcl_string("--in");
-	args[1] = new vcl_string(in);
-	args[2] = new vcl_string("--out");
-	args[3] = new vcl_string(out);
-	args[4] = new vcl_string("--depth");
-	vcl_stringstream ss1, ss2;
+	std::string* args[8];
+	args[0] = new std::string("--in");
+	args[1] = new std::string(in);
+	args[2] = new std::string("--out");
+	args[3] = new std::string(out);
+	args[4] = new std::string("--depth");
+	std::stringstream ss1, ss2;
 	ss1 << recons_depth;
-	args[5] = new vcl_string(ss1.str());
-	args[6] = new vcl_string("--solverDivide");
+	args[5] = new std::string(ss1.str());
+	args[6] = new std::string("--solverDivide");
 	ss2 << solver_divide;
-	args[7] = new vcl_string(ss2.str());
+	args[7] = new std::string(ss2.str());
 
-	vcl_string cmd = root_path + POISSON_RECONSTRUCTION_COMMAND;
+	std::string cmd = root_path + POISSON_RECONSTRUCTION_COMMAND;
 	for(int i = 0; i < 8; i++)
 	{
 		cmd = cmd + " " + *(args[i]);
 		delete args[i];
 	}
-	vcl_cout << cmd << vcl_endl;
-	vcl_system(cmd.c_str());
+	std::cout << cmd << std::endl;
+	std::system(cmd.c_str());
 }
 
 
@@ -129,8 +129,8 @@ execute()
 
 	int depth, solverDivide;
 	bpro1_filepath folder_path;
-	vcl_string out_file;
-	vcl_string out_folder;
+	std::string out_file;
+	std::string out_folder;
 	parameters()->get_value( "-depth" , depth );
 	parameters()->get_value( "-solverDivide" , solverDivide );
 	parameters()->get_value( "-out_file" , out_file );
@@ -140,17 +140,17 @@ execute()
 
 	dbdet_third_order_3d_edge_storage_sptr in_edg_storage;
 	in_edg_storage.vertical_cast(input_data_[0][0]);
-	vcl_vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
+	std::vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
 
-	vcl_cout << "Saving edges in a temporary file..." << vcl_endl;
-	vcl_string cwd = vul_file::get_cwd();
+	std::cout << "Saving edges in a temporary file..." << std::endl;
+	std::string cwd = vul_file::get_cwd();
 	vul_file::make_directory_path(out_folder);
 	vul_file::change_directory(out_folder);
-	vcl_string rand_file = dbul_get_random_alphanumeric_string(10)+".xyz";
+	std::string rand_file = dbul_get_random_alphanumeric_string(10)+".xyz";
 
 	if(!dbdet_save_3d_edges(in_edg, rand_file, false))
 	{
-		vcl_cout << "Cannot save edges!" << vcl_endl;
+		std::cout << "Cannot save edges!" << std::endl;
 		return false;
 	}
 
@@ -166,7 +166,7 @@ execute()
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

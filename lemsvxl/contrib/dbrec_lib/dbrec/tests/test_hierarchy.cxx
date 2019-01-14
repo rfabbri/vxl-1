@@ -40,14 +40,14 @@ static void test_hierarchy()
   TEST("testing get_part()", c3 == g_mine, true);
 
   dbrec_hierarchy_sptr hs = dbrec_image_hierarchy_factory::construct_detector_steeple0();
-  hs->print(vcl_cout);
+  hs->print(std::cout);
   dbrec_part_sptr c = hs->get_part(11);
   if (!c)
-    vcl_cout << "part not found!\n";
+    std::cout << "part not found!\n";
   dbrec_part_sptr c2 = hs->get_part(11);
   TEST("testing get_part()", c == c2, true);
 
-  vcl_vector<dbrec_part_sptr> sps;
+  std::vector<dbrec_part_sptr> sps;
   hs->get_parts(1, sps);
   TEST("testing get_parts()", sps.size(), 5);
 
@@ -90,7 +90,7 @@ static void test_hierarchy()
   dbrec_write_xml_visitor wxml;
   for (unsigned i = 0; i < hs->class_cnt(); i++)
     hs->root(i)->accept(&wxml);
-  vcl_string test_name = "./steeple0_detector.xml";
+  std::string test_name = "./steeple0_detector.xml";
   wxml.write_doc(test_name);
 
   //: parse the hierarchy
@@ -104,12 +104,12 @@ static void test_hierarchy()
   dbrec_write_xml_visitor wxml2;
   for (unsigned i = 0; i < parsed_h->class_cnt(); i++)
     parsed_h->root(i)->accept(&wxml2);
-  vcl_string test_name2 = "./steeple0_detector2.xml";
+  std::string test_name2 = "./steeple0_detector2.xml";
   wxml2.write_doc(test_name2);
 
   //: test that the two files are the same word by word
-  vcl_ifstream if1( test_name.c_str() );
-  vcl_ifstream if2( test_name2.c_str() );
+  std::ifstream if1( test_name.c_str() );
+  std::ifstream if2( test_name2.c_str() );
   
   bool equal = true;
   vul_awk lawk1( if1 ); vul_awk lawk2( if2 );
@@ -122,7 +122,7 @@ static void test_hierarchy()
     }
     if ( lawk1.NF() == 0 ) continue; 
     for (int i = 0; i < lawk1.NF(); i++ ){
-      vcl_string s1(lawk1[i]); vcl_string s2(lawk2[i]);
+      std::string s1(lawk1[i]); std::string s2(lawk2[i]);
       if (s1.compare(s2)) { 
         equal = false; break; 
       }

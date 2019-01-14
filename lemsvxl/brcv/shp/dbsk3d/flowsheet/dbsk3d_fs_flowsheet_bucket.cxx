@@ -1,5 +1,5 @@
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vgl/vgl_distance.h>
 
@@ -33,7 +33,7 @@
 #include "fill_buckets.h"
 #include "sort3dpts_utils.h"*/
 
-#include <vcl_iostream.h>
+#include <iostream>
 ///using namespace std;
 
 
@@ -121,60 +121,60 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   
   ///opt_parse_args (argc, argv, optab);        
   /*if (pcFileNameIn == NULL){
-    vcl_fprintf(stderr, "ERROR(%s): Missing input (prefix) filename\n", pcFName);
-    vcl_fprintf(stderr, "\n\t use -h for more help.\n");
+    std::fprintf(stderr, "ERROR(%s): Missing input (prefix) filename\n", pcFName);
+    std::fprintf(stderr, "\n\t use -h for more help.\n");
     exit(-1);
   }*/
   if (iBuckAvg < 1 || iBuckAvg > 100000) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
         "ERROR(%s): Incorrect average number of genes per buckets = %d .\n",
         pcFName, iBuckAvg);
     exit(-1); 
   }
   if(fTolerance <= 0.0 || fTolerance > 50.0) {
-    vcl_fprintf(stderr, "ERROR(%s): Incorrect tolerance = %lf (in percent).\n",
+    std::fprintf(stderr, "ERROR(%s): Incorrect tolerance = %lf (in percent).\n",
         pcFName, fTolerance);
     exit(-1); 
   }
   if(iBuckMetaSize < 1 || iBuckMetaSize > 1000000) {
-    vcl_fprintf(stderr, "ERROR(%s): Incorrect size of meta-buckets = %d genes.\n",
+    std::fprintf(stderr, "ERROR(%s): Incorrect size of meta-buckets = %d genes.\n",
         pcFName, iBuckMetaSize);
     exit(-1); 
   }
   theDim.iMetaBuckSize = iBuckMetaSize;
   
-  vcl_strcpy(cInFile, pcFileNameIn);
+  std::strcpy(cInFile, pcFileNameIn);
   strcat(cInFile, ".g3d");
   pcInFile = &cInFile[0];
   fp1 = NULL;
   if((fp1 = fopen(pcInFile, "r")) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open input file %s\n",
+    std::fprintf(stderr, "ERROR(%s): Can't open input file %s\n",
         pcFName, pcInFile);
     exit(-1); 
   }
   if(fOffset < 0.1) {
-    vcl_fprintf(stderr, "ERROR(%s): Offset invalid = %lf\n",
+    std::fprintf(stderr, "ERROR(%s): Offset invalid = %lf\n",
         pcFName, fOffset);
     exit(-2);
   }
   theDim.fOff = fOffset;
   theDim.fOffset = 0;    //Initialized it to be 0 on PC.
   
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
       "\nMESG(%s):\n\tOffset = %lf (width of empty sausage added around).\n",
       pcFName, fOffset);
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
       "\tTolerance on target number of points per bucket = %.2f%%\n",
       fTolerance);
   if (!iSingleMetaBuck) {
-    vul_printf (vcl_cout, "\tTarget size of meta-bucket = %d generators.\n",
+    vul_printf (std::cout, "\tTarget size of meta-bucket = %d generators.\n",
           iBuckMetaSize);
   }
   if (iFlag2D) { /* No need for 3rd layer */
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "\tTwo-dimensional data: 3rd layer along Z dimension is fixed.\n");
   }
-  vcl_fprintf(stderr, "\n");
+  std::fprintf(stderr, "\n");
   
   theDim.iNumBuck = 0;
   
@@ -190,15 +190,15 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   
   pInData = NULL;
   if((pInData = (InputDataB *) calloc(iNumGenes, sizeof(InputDataB))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): CALLOC failed for pInData[%d].\n",
+    std::fprintf(stderr, "ERROR(%s): CALLOC failed for pInData[%d].\n",
         pcFName, iNumGenes);
     exit(-2); 
   }
   if(!SetInFile(pcInFile, pInData, &theDim, iFlagDuplic)) {
-    vcl_fprintf(stderr, "ERROR(%s): Reading input ... exiting.\n", pcFName);
+    std::fprintf(stderr, "ERROR(%s): Reading input ... exiting.\n", pcFName);
     exit(-2);
   }
-  vcl_fprintf(stderr, "\n");
+  std::fprintf(stderr, "\n");
   
   iX = theDim.iXdim;
   iY = theDim.iYdim;
@@ -220,13 +220,13 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     theDim.fRadMax -= 2.0;
     theDim.fRadMax /= 2.0;
     fRadMax = theDim.fRadMax;
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
         "MESG(%s):\n\tMax Ball Radius set to Min Box Radius = %.2f .\n",
         pcFName, fRadMax);
   }
   else {
     theDim.fRadMax = fRadMax;
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
         "MESG(%s):\n\tMax Ball Radius set to input value = %.2f .\n",
         pcFName, theDim.fRadMax);
   }
@@ -244,13 +244,13 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       iNumMetaBucket = (int) dTmp;
       if (iNumMetaBucket < 27)
         iNumMetaBucket = 27; /* At least a cubic power of 3 metabbuckets */
-      vul_printf (vcl_cout, "\tWe shall produce %d Meta-buckets,\n", iNumMetaBucket);
-      vul_printf (vcl_cout, "\twith about %d genes each (from %d).\n",
+      vul_printf (std::cout, "\tWe shall produce %d Meta-buckets,\n", iNumMetaBucket);
+      vul_printf (std::cout, "\twith about %d genes each (from %d).\n",
             iBuckMetaSize, iNumGenes);
     }
     else {
       iNumMetaBucket = 1;
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
         "\tThere are not enough genes (%d < 2*%d) to use Meta-buckets.\n",
         iNumGenes, iBuckMetaSize);
       iSingleMetaBuck = TRUE;
@@ -263,7 +263,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     iNumMetaBuckX = (int) dTmp;
     if (iNumMetaBuckX < 3) {
       /* Only a single Meta-Bucket0 is necessary */
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
         "MESG(%s):\n\tOnly a single MetaBucket is useful.\n", pcFName);
       iNumMetaBuckXYZ = iNumMetaBuckX = iNumMetaBucket = 1;
       iSingleMetaBuck = TRUE;
@@ -271,7 +271,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   }
   else {
     iNumMetaBuckXYZ = iNumMetaBuckX = iNumMetaBucket = 1;
-    vcl_fprintf(stderr, "\tSingle Meta-Bucket0 option selected.\n");
+    std::fprintf(stderr, "\tSingle Meta-Bucket0 option selected.\n");
   }
 
   if (!iSingleMetaBuck) {
@@ -283,7 +283,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckX = &theListOfMetaBuckX;
     pMetaBuckX->pBucket = NULL;
     if ((pMetaBuckX->pBucket = (Bucket0 *) calloc(iNumMetaBuckX, sizeof(Bucket0))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s): CALLOC failed for pMetaBuckX->pBucket[%d].\n",
             pcFName, iNumMetaBuckX);
       exit(-1); 
@@ -291,7 +291,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckX->iNumBucks = iNumMetaBuckX;
     pMetaBuckX->pBin = NULL;
     if ((pMetaBuckX->pBin = (BinB *) calloc(iNumBinsX, sizeof(BinB))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s): CALLOC failed for pMetaBuckX->pBin[%d].\n",
             pcFName, iNumBinsX);
       exit(-1); 
@@ -316,9 +316,9 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckX->Limits.iMinZ = 0;
     pMetaBuckX->Limits.iMaxZ = theDim.iZdim;
     
-    vcl_fprintf(stderr, "\tAllocated space for %d X-MetaBuckets,\n",
+    std::fprintf(stderr, "\tAllocated space for %d X-MetaBuckets,\n",
           iNumMetaBuckX);
-    vcl_fprintf(stderr, "\tand %d X-bins.\n", iNumBinsX);
+    std::fprintf(stderr, "\tand %d X-bins.\n", iNumBinsX);
     
     
     /* ------------------------------------------------------ *\
@@ -328,7 +328,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     FillFirstBucketsInX(pInData, pMetaBuckX, &theDim);
         
     if(!CheckBuck(pMetaBuckX)) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s):\n\tFailed loading X-MetaBuckets\n", pcFName);
       exit(-4);
     }
@@ -356,7 +356,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXY = &theListOfMetaBuckXY;
     pMetaBuckXY->pBucket = NULL;
     if ((pMetaBuckXY->pBucket = (Bucket0 *) calloc(iNumMetaBuckXY, sizeof(Bucket0))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s): CALLOC failed for pMetaBuckXY->pBucket[%d].\n",
             pcFName, iNumMetaBuckXY);
       exit(-1); 
@@ -364,7 +364,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXY->iNumBucks = iNumMetaBuckXY;
     pMetaBuckXY->pBin = NULL;
     if ((pMetaBuckXY->pBin = (BinB *)  calloc(iNumBinsXY, sizeof(BinB))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s): CALLOC failed for pMetaBuckXY->pBin[%d].\n",
             pcFName, iNumBinsXY);
       exit(-1); 
@@ -389,9 +389,9 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXY->Limits.iMinZ = 0;
     pMetaBuckXY->Limits.iMaxZ = theDim.iZdim;
     
-    vul_printf (vcl_cout, "MESG(%s): Allocated space for %d XY MetaBuckets,\n",
+    vul_printf (std::cout, "MESG(%s): Allocated space for %d XY MetaBuckets,\n",
           pcFName, iNumMetaBuckXY);
-    vcl_fprintf(stderr, "\tand %d XY-bins.\n\n", iNumBinsXY);
+    std::fprintf(stderr, "\tand %d XY-bins.\n\n", iNumBinsXY);
     
     /* ------------------------------------------------------ *\
      *  Establish Second set of Meta Buckets0
@@ -400,7 +400,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     FillBucketsInXY (pInData, pMetaBuckX, pMetaBuckXY, &theDim);
         
     if (!CheckBuck(pMetaBuckXY)) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
             "ERROR(%s):\n\tFailed loading XY-MetaBuckets\n", pcFName);
       exit(-4);
     }
@@ -432,7 +432,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pMetaBuckXYZ = &theListOfMetaBuckXYZ;
       pMetaBuckXYZ->pBucket = NULL;
       if ((pMetaBuckXYZ->pBucket = (Bucket0 *) calloc(iNumMetaBuckXYZ, sizeof(Bucket0))) == NULL) {
-        vcl_fprintf(stderr,
+        std::fprintf(stderr,
           "ERROR(%s): CALLOC failed for pMetaBuckXYZ->pBucket[%d].\n",
           pcFName, iNumMetaBuckXYZ);
         exit(-1); 
@@ -440,7 +440,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pMetaBuckXYZ->iNumBucks = iNumMetaBuckXYZ;
       pMetaBuckXYZ->pBin = NULL;
       if ((pMetaBuckXYZ->pBin = (BinB *) calloc(iNumBinsXYZ, sizeof(BinB))) == NULL) {
-        vcl_fprintf(stderr,
+        std::fprintf(stderr,
           "ERROR(%s): CALLOC failed for pMetaBuckXYZ->pBin[%d].\n",
           pcFName, iNumBinsXYZ);
         exit(-1); 
@@ -465,9 +465,9 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pMetaBuckXYZ->Limits.iMinZ = 0;
       pMetaBuckXYZ->Limits.iMaxZ = theDim.iZdim;
       
-      vcl_fprintf(stderr, "MESG(%s): Allocated space for %d XYZ Buckets0,\n",
+      std::fprintf(stderr, "MESG(%s): Allocated space for %d XYZ Buckets0,\n",
               pcFName, iNumMetaBuckXYZ);
-      vcl_fprintf(stderr, "\tand %d XYZ-bins.\n\n", iNumBinsXYZ);
+      std::fprintf(stderr, "\tand %d XYZ-bins.\n\n", iNumBinsXYZ);
       
       /* ------------------------------------------------------ *\
        *  Establish Third & Final set of Meta Buckets0
@@ -478,7 +478,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       iNumMetaBuckXYZ = pMetaBuckXYZ->iNumBucks;
             
       if (!CheckBuck(pMetaBuckXYZ)) {
-        vcl_fprintf(stderr,
+        std::fprintf(stderr,
           "ERROR(%s):\n\tFailed loading XYZ-MetaBuckets\n", pcFName);
         exit(-4);
       }
@@ -491,7 +491,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   \* ###################################################### */
   
   if (!iSingleMetaBuck) {
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "MESG(%s):\n\tNow processing each of the %d Meta Buckets0...\n",
           pcFName, iNumMetaBuckXYZ);
   }
@@ -501,7 +501,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXYZ->pBucket = NULL;
     if ((pMetaBuckXYZ->pBucket = (Bucket0 *)
       calloc(1, sizeof(Bucket0))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s): CALLOC failed for pMetaBuckXYZ->pBucket[%d].\n",
             pcFName, 1);
       exit(-1); 
@@ -512,7 +512,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXYZ->pBin = NULL;
     if ((pMetaBuckXYZ->pBin = (BinB *)
           calloc(iNumBinsXYZ, sizeof(BinB))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s): CALLOC failed for pMetaBuckXYZ->pBin[%d].\n",
             pcFName, iNumBinsXYZ);
       exit(-1); 
@@ -536,8 +536,8 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     pMetaBuckXYZ->Limits.iMinZ = 0;
     pMetaBuckXYZ->Limits.iMaxZ = theDim.iZdim;
 
-    vcl_fprintf(stderr, "\tAllocated space for 1 XYZ MetaBucket,\n");
-    vcl_fprintf(stderr, "\tand %d XYZ-bins (voxels).\n\n", iNumBinsXYZ);
+    std::fprintf(stderr, "\tAllocated space for 1 XYZ MetaBucket,\n");
+    std::fprintf(stderr, "\tand %d XYZ-bins (voxels).\n\n", iNumBinsXYZ);
 
     FillSingleMetaBucketInXYZ (pInData, pMetaBuckXYZ, &theDim);
 
@@ -555,49 +555,49 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     /* Allocate space to save info about each MetaBucket */
     pMBuckInfo->piNumBuckets = NULL;
     if ((pMBuckInfo->piNumBuckets = (int *)  calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piNumBuckets[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piNumBuckEmpty = NULL;
     if ((pMBuckInfo->piNumBuckEmpty = (int *) calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piNumBuckEmpty[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piNumBins = NULL;
     if ((pMBuckInfo->piNumBins = (int *)  calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piNumBins[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piNumGenes = NULL;
     if ((pMBuckInfo->piNumGenes = (int *) calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piNumGenes[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piAvgGene = NULL;
     if ((pMBuckInfo->piAvgGene = (int *)  calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piAvgGene[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piMinGene = NULL;
     if ((pMBuckInfo->piMinGene = (int *)  calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piMinGene[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
     }
     pMBuckInfo->piMaxGene = NULL;
     if ((pMBuckInfo->piMaxGene = (int *)  calloc(iNumMetaBuckXYZ, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
           "ERROR(%s): CALLOC failed on pMBuckInfo->piMaxGene[%d].\n",
           pcFName, iNumMetaBuckXYZ);
       exit(-1); 
@@ -613,12 +613,12 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pMetaBuck++;
       iNumGeneInMetaBuck = pMetaBuck->iNumEl;
       if (iNumGeneInMetaBuck < 1) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "\n\t---- MetaBucket %d has %d genes... skiping it. ----\n",
               i, iNumGeneInMetaBuck);
         continue;
       }
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "\n\t---- Processing MetaBucket %d with %d genes. ----\n",
             i, iNumGeneInMetaBuck);
   
@@ -653,8 +653,8 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       }
   
       if (iSingleMetaBuck) {
-        vul_printf (vcl_cout, "MESG(%s):\n", pcFName);
-        vul_printf (vcl_cout,
+        vul_printf (std::cout, "MESG(%s):\n", pcFName);
+        vul_printf (std::cout,
               "\tTargets in Buckets0: X = %d , XY = %d , XYZ = %d\n",
               iNumBucksX, iNumBucksXY, iNumBucksXYZ);
       }
@@ -662,7 +662,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pBucketsX = &theListOfBucketsX;
       pBucketsX->pBucket = NULL;
       if ((pBucketsX->pBucket = (Bucket0 *) calloc(iNumBucksX, sizeof(Bucket0))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s): CALLOC failed for pBucketsX->pBucket[%d].\n",
               pcFName, iNumBucksX);
         exit(-1); 
@@ -670,7 +670,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pBucketsX->iNumBucks = iNumBucksX;
       pBucketsX->pBin = NULL;
       if ((pBucketsX->pBin = (BinB *) calloc(iNumBinsX, sizeof(BinB))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s): CALLOC failed for pBucketsX->pBin[%d].\n",
               pcFName, iNumBinsX);
         exit(-1); 
@@ -702,7 +702,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       FillBucketsInXFromMetaBucket(pInData, pBins, pMetaBuck, pBucketsX, &theDim);
   
       if (!CheckBuck(pBucketsX)) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s):\n\tFailed loading X-buckets for MetaBucket %d\n",
               pcFName, i);
         exit(-4);
@@ -723,7 +723,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pBucketsXY = &theListOfBucketsXY;
       pBucketsXY->pBucket = NULL;
       if ((pBucketsXY->pBucket = (Bucket0 *) calloc(iNumBucksXY, sizeof(Bucket0))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s): CALLOC failed for pBucketsXY->pBucket[%d].\n",
               pcFName, iNumBucksXY);
         exit(-1); 
@@ -732,7 +732,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   
       pBucketsXY->pBin = NULL;
       if ((pBucketsXY->pBin = (BinB *) calloc(iNumBinsXY, sizeof(BinB))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s): CALLOC failed for pBucketsXY->pBin[%d].\n",
             pcFName, iNumBinsXY);
       exit(-1); 
@@ -764,7 +764,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       FillBucketsInXY(pInData, pBucketsX, pBucketsXY, &theDim);
 
       if (!CheckBuck(pBucketsXY)) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s):\n\tFailed loading XY-buckets for MetaBucket %d\n",
               pcFName, i);
         exit(-4);
@@ -785,7 +785,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       pBucketsXYZ = &theListOfBucketsXYZ;
       pBucketsXYZ->pBucket = NULL;
       if ((pBucketsXYZ->pBucket = (Bucket0 *) calloc(iNumBucksXYZ, sizeof(Bucket0))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s): CALLOC failed for pBucketsXYZ->pBucket[%d].\n",
         pcFName, iNumBucksXYZ);
         exit(-1); 
@@ -794,7 +794,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
 
       pBucketsXYZ->pBin = NULL;
       if ((pBucketsXYZ->pBin = (BinB *) calloc(iNumBinsXYZ, sizeof(BinB))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s): CALLOC failed for pBucketsXYZ->pBin[%d].\n",
               pcFName, iNumBinsXYZ);
         exit(-1); 
@@ -826,7 +826,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       FillBucketsInXYZ(pInData, pBucketsXY, pBucketsXYZ, &theDim);
 
       if (!CheckBuck(pBucketsXYZ)) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s):\n\tFailed loading XYZ-buckets for MetaBucket %d\n",
               pcFName, i);
         exit(-4);
@@ -844,16 +844,16 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
        *  Save set of XYZ-Buckets0 for MetaBucket
       \* ------------------------------------------------------ */
       
-      vcl_strcpy (cOutFile, pcFileNameIn);
+      std::strcpy (cOutFile, pcFileNameIn);
       pcOutFile = cOutFile;
-      vcl_sprintf (cTmp, ".MetaBuck%d.Data.txt", i);
+      std::sprintf (cTmp, ".MetaBuck%d.Data.txt", i);
       strcat (cOutFile, cTmp);
       SaveDataMetaBuck (pcInFile, pcOutFile, pInData,
                   pBucketsX, pBucketsXY, pBucketsXYZ, &theDim);
 
       if (iFlagSaveG3d) {
-        vcl_strcpy (cOutFile, pcFileNameIn);
-        vcl_sprintf (cTmp, ".MetaBuck%d.g3d", i);
+        std::strcpy (cOutFile, pcFileNameIn);
+        std::sprintf (cTmp, ".MetaBuck%d.g3d", i);
         strcat (cOutFile, cTmp);
         SaveG3dMetaBuck (pcOutFile, pInData, pBucketsXYZ, &theDim);
       }
@@ -863,11 +863,11 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
       \* ------------------------------------------------------ */
   
       if (iFlagConvexHull) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "MESG(%s): Compute Convex Hull for each bucket...\n",
               pcFName);
-        vcl_strcpy (cOutFile, pcFileNameIn);
-        vcl_sprintf (cTmp, ".MetaBuck%d.Qhull.txt", i);
+        std::strcpy (cOutFile, pcFileNameIn);
+        std::sprintf (cTmp, ".MetaBuck%d.Qhull.txt", i);
         strcat (cOutFile, cTmp);
       }
 
@@ -895,7 +895,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     iTmp = theDim.iWSpaceSize;
     pBins = NULL;
     if ((pBins = (BinB *) calloc(iTmp, sizeof(BinB))) == NULL) {
-      vul_printf (vcl_cout, "ERROR(%s): CALLOC fails on pBins[%d].\n",
+      vul_printf (std::cout, "ERROR(%s): CALLOC fails on pBins[%d].\n",
             pcFName, iTmp);
       exit(-1); 
     }
@@ -906,18 +906,18 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
      *    Save global information for MetaBuckets
     \* ------------------------------------------------------ */
 
-    vcl_strcpy(cOutFile, pcFileNameIn);
+    std::strcpy(cOutFile, pcFileNameIn);
     strcat(cOutFile, ".MetaBucks.Timings.txt");
     SaveTimingsMetaBuck (pcInFile, pcOutFile, pTime, pMetaBuckXYZ,
                   pMBuckInfo, &theDim);
 
-    vcl_strcpy(cOutFile, pcFileNameIn);
+    std::strcpy(cOutFile, pcFileNameIn);
     strcat(cOutFile, ".MetaBucks.Data.txt");
     SaveAllDataMetaBuck (pcInFile, pcOutFile, pInData, pBins, &theDim);
 
     if (iFlagSaveG3d) {
-      vcl_strcpy(cOutFile, pcFileNameIn);
-      vcl_sprintf(cTmp, ".MetaBucks.g3d", i);
+      std::strcpy(cOutFile, pcFileNameIn);
+      std::sprintf(cTmp, ".MetaBucks.g3d", i);
       strcat(cOutFile, cTmp);
       SaveG3dAll(pcOutFile, pInData, pBins, &theDim);
     }
@@ -925,8 +925,8 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
   } /* End of 3D case with many MetaBuckets */
 
   /* ---------- End Of Processing ---------- */
-  vcl_fprintf(stderr, "\nMESG(%s): This is it!\n\t", pcFName);
-  vcl_fprintf(stderr, "task has been performed ... bye ;)\n");
+  std::fprintf(stderr, "\nMESG(%s): This is it!\n\t", pcFName);
+  std::fprintf(stderr, "task has been performed ... bye ;)\n");
 
 }
 
@@ -992,10 +992,10 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   iZmax = pBucketsX->Limits.iMaxZ;
   iZdim = iZmax - iZmin;
   if (iXdim != pDim->iXdim || iYdim != pDim->iYdim || iZdim != pDim->iZdim) {
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "ERROR(%s): Dimensions of set of X-buckets = (%d , %d , %d)\n",
           pcFName, iXdim, iYdim, iZdim);
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "\tbut, we expected the full dataset size: (%d , %d , %d).\n",
           pDim->iXdim, pDim->iYdim, pDim->iZdim);
   }
@@ -1003,7 +1003,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   iNumBinsX = pBucketsX->iNumBins;
   iTmp = iXdim+1;
   if (iNumBinsX != iTmp) {
-    vul_printf (vcl_cout, "ERROR(%s): Wrong number of BinsX: %d != %d\n",
+    vul_printf (std::cout, "ERROR(%s): Wrong number of BinsX: %d != %d\n",
           pcFName, iNumBinsX, iTmp);
     exit(-3);
   }
@@ -1013,11 +1013,11 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   iAvgGene    = pBucketsX->iAvgGene; /* Init target of genes per bucket */
   iNumBucksX  = pBucketsX->iNumBucks;
   
-  vul_printf (vcl_cout, "MESG(%s): Initially, %d BucketsX to fill-in.\n",
+  vul_printf (std::cout, "MESG(%s): Initially, %d BucketsX to fill-in.\n",
         pcFName, iNumBucksX);
-  vul_printf (vcl_cout, "\tTarget Number of Generators per Bucket0 = %d\n", iAvgGene);
-  vul_printf (vcl_cout, "\tfrom a total of %d genes.\n", iNumGeneTot);
-  vul_printf (vcl_cout, "\tNumber of BinsX = %d\n", iNumBinsX);
+  vul_printf (std::cout, "\tTarget Number of Generators per Bucket0 = %d\n", iAvgGene);
+  vul_printf (std::cout, "\tfrom a total of %d genes.\n", iNumGeneTot);
+  vul_printf (std::cout, "\tNumber of BinsX = %d\n", iNumBinsX);
   
   /* ---- Fill-in X-Bins ---- */
   
@@ -1025,7 +1025,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   \*   how many generators per X-bin we may have     */
   pTmpBins = NULL;
   if ((pTmpBins = (BinB *) calloc(iNumBinsX, sizeof(BinB))) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
+    vul_printf (std::cout, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
           pcFName, iNumBinsX);
     exit(-2); 
   }
@@ -1036,7 +1036,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   for (i = 0; i < iNumBinsX; i++) {
     pBin->piGenes = NULL;
     if ((pBin->piGenes = (int *) calloc(iNumMax, sizeof(int))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
             pcFName, i, iNumMax);
       exit(-2); 
@@ -1054,7 +1054,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
     iX = (int) floor((double) fX);
     iBin = iX - iXmin; /* Bin label */
     if (iBin > iBinXlast) {
-      vul_printf (vcl_cout, "ERROR(%s):\n\tOverflow BinB number %d > max = %d\n",
+      vul_printf (std::cout, "ERROR(%s):\n\tOverflow BinB number %d > max = %d\n",
             pcFName, iBin, iBinXlast);
       exit(-2);
     }
@@ -1069,7 +1069,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
     if (iNum >= iMax) {
       iMax += iMax;
       if ((pBin->piGenes = (int *) realloc((int *) pBin->piGenes, iMax * sizeof(int))) == NULL) {
-        vul_printf (vcl_cout,
+        vul_printf (std::cout,
               "ERROR(%s):\n\tREALLOC fails on pBin[%d]->piGenes[%d].\n",
               pcFName, iBin, iMax);
         exit(-2); 
@@ -1087,14 +1087,14 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   for (i = 0; i < iNumBinsX; i++) {
     iNum = pBinOld->iNumEl;
     if (iNum > iNumMax) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s):\n\tOverflow: %d Genes (Max = %d) in X-BinB %d\n",
             pcFName, iNum, iNumMax, i);
       exit(-2);
     }
     pBinX->piGenes = NULL;
     if ((pBinX->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s):\n\tCALLOC failed for pBinX[%d]->piGenes[%d].\n",
             pcFName, i, iNum);
       exit(-2); 
@@ -1110,7 +1110,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
     iTmp += iNum;
   }
   if (iTmp != iNumGeneTot) {
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "ERROR(%s):\n\tExpected to load %d genes in X-Bins, not %d\n",
           pcFName, iNumGeneTot, iTmp);
     exit(-2); 
@@ -1131,8 +1131,8 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   iLowGene = iAvgGene;
   iAvgGene += iDelta;
   iHighGene = iAvgGene + iDelta;
-  vul_printf (vcl_cout, "\tFilling X-Buckets0 from X-Bins.\n");
-  vul_printf (vcl_cout,
+  vul_printf (std::cout, "\tFilling X-Buckets0 from X-Bins.\n");
+  vul_printf (std::cout,
         "\tTargets (genes per bucket): Min = %d , Avg = %d , Max = %d\n",
         iLowGene, iAvgGene, iHighGene);
   
@@ -1189,7 +1189,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
         iAvgGene += iDelta;
         iHighGene = iAvgGene + iDelta;
         if (iAvgGene < 10) {
-          vul_printf (vcl_cout, "WARNING(%s):\n\tiAvgGene = %d, for BucketX %d.\n",
+          vul_printf (std::cout, "WARNING(%s):\n\tiAvgGene = %d, for BucketX %d.\n",
                 pcFName, iAvgGene, i);
         }
         if (iAvgGene < 1) {
@@ -1211,12 +1211,12 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   } /* End of While loop */
   
   if (i < iNum) {
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "WARNING(%s):\n\tOnly %d BucketsX set, instead of %d.\n",
           pcFName, i, iNum);
   }
   if (iBinStart >= iNumBinsX) { /* Overflow */
-    vul_printf (vcl_cout,
+    vul_printf (std::cout,
           "WARNING(%s):\n\tOverflow: %d bins used, none left for last buckets.\n",
           pcFName, iBinStart);
   }
@@ -1304,7 +1304,7 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
      iNumBucksX++;
      if ((pBucketsX->pBucket = (Bucket0 *) realloc(
           (Bucket0 *) pBucketsX->pBucket, iNumBucksX * sizeof(Bucket0))) == NULL) {
-      vul_printf (vcl_cout,
+      vul_printf (std::cout,
             "ERROR(%s):\n\tREALLOC failed on pBucketsX->pBucket[%d].\n",
             pcFName, iNumBucksX);
       exit(-2); 
@@ -1400,28 +1400,28 @@ void FillFirstBucketsInX (InputDataB *pInData, Buckets0 *pBucketsX,
   
   pBucketsX->iNumBucks = iNumBucksX; /* Final number of Buckets0 */
   iTmp = iNumBucksX - iNumBucksOld;
-  vul_printf (vcl_cout, "\tAdded %d new Buckets0 to the initial %d.\n", iTmp,
+  vul_printf (std::cout, "\tAdded %d new Buckets0 to the initial %d.\n", iTmp,
         iNumBucksOld);
   }
   
-  vcl_fprintf(stderr, "\tAll (%d) BucketsX set.\n", i);
-  vcl_fprintf(stderr, "\t\tMax Number of Generators per BucketX = %d\n", iMaxGene);
-  vcl_fprintf(stderr, "\t\tMin Number of Generators per BucketX = %d\n", iMinGene);
+  std::fprintf(stderr, "\tAll (%d) BucketsX set.\n", i);
+  std::fprintf(stderr, "\t\tMax Number of Generators per BucketX = %d\n", iMaxGene);
+  std::fprintf(stderr, "\t\tMin Number of Generators per BucketX = %d\n", iMinGene);
   
   pBucketsX->iMaxGene = iMaxGene;
   pBucketsX->iMinGene = iMinGene;
   
   if (j < iNumBinsX) {
-    vcl_fprintf(stderr, "ERROR(%s):\n\tVisited too few BinsX: %d < %d .\n",
+    std::fprintf(stderr, "ERROR(%s):\n\tVisited too few BinsX: %d < %d .\n",
         pcFName, j, iNumBinsX);
     exit(-3);
   }
   else if (j > iNumBinsX) {
-    vcl_fprintf(stderr, "ERROR(%s):\n\tVisited too many BinsX: %d > %d .\n",
+    std::fprintf(stderr, "ERROR(%s):\n\tVisited too many BinsX: %d > %d .\n",
         pcFName, j, iNumBinsX);
     exit(-3);
   }
-  vcl_fprintf(stderr, "\n");
+  std::fprintf(stderr, "\n");
   
   return;
 }
@@ -1484,15 +1484,15 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
   iAvgGene += iDelta;
   iHighGene = iAvgGene + iDelta;
 
-  vcl_fprintf(stderr, "MESG(%s): %d BucketsXY to fill-in.\n", pcFName,
+  std::fprintf(stderr, "MESG(%s): %d BucketsXY to fill-in.\n", pcFName,
     iNumBucksXY);
-  vcl_fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n", iAvgGene);
-  vcl_fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneTot);
-  vcl_fprintf(stderr, "\tTarget range going from %d to %d\n", iLowGene,
+  std::fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n", iAvgGene);
+  std::fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneTot);
+  std::fprintf(stderr, "\tTarget range going from %d to %d\n", iLowGene,
     iHighGene);
   pBucketsXY->iAvgGene = iAvgGene;
   iNumBinsXY = pBucketsXY->iNumBins;
-  vcl_fprintf(stderr, "\tNumber of BinsXY = %d .\n", iNumBinsXY);
+  std::fprintf(stderr, "\tNumber of BinsXY = %d .\n", iNumBinsXY);
 
   /* --- For each X Bucket0 in BucketsX list, create --- *\
   \*    iNumBucksY along the Y dimension        */ 
@@ -1520,7 +1520,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     iXstart = pBuckX->Limits.iMinX;
     iXlast  = pBuckX->Limits.iMaxX;
     if(iXstart >= iXlast) {
-      vcl_fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
+      std::fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
         pcFName, iXstart, iXlast);
       exit(-2);
     }
@@ -1531,7 +1531,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     \*   how many generators per Y-bin we may have     */
     pTmpBins = NULL;
     if((pTmpBins = (BinB *) calloc(iNumBinsY, sizeof(BinB))) == NULL) {
-      vcl_fprintf(stderr, "ERROR(%s): CALLOC failed for pTmpBins[%d].\n",
+      std::fprintf(stderr, "ERROR(%s): CALLOC failed for pTmpBins[%d].\n",
         pcFName, iNumBinsY);
       exit(-2); }
 
@@ -1541,7 +1541,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     for(j = 0; j < iNumBinsY; j++) {
       pBin->piGenes = NULL;
       if((pBin->piGenes = (int *) calloc(iNumMax, sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s): CALLOC failed for pTmpBin[%d]->piGenes[%d].\n",
     pcFName, i, iNumMax);
   exit(-2); }
@@ -1566,7 +1566,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
 
   iBin = iY - iYmin; /* Y-bin label */
   if(iBin > iBinYlast) {
-    vcl_fprintf(stderr, "ERROR(%s): Overflow Y-bin number %d > max = %d\n",
+    std::fprintf(stderr, "ERROR(%s): Overflow Y-bin number %d > max = %d\n",
       pcFName, iBin, iBinYlast);
     exit(-2);
   }
@@ -1586,14 +1586,14 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     for(j = 0; j < iNumBinsY; j++) {
       iNum = pBinOld->iNumEl;
       if(iNum > iNumMax) {
-  vcl_fprintf(stderr, "ERROR(%s): %d Genes (Max allocated = %d) ",
+  std::fprintf(stderr, "ERROR(%s): %d Genes (Max allocated = %d) ",
     pcFName, iNum, iNumMax);
-  vcl_fprintf(stderr,  "in Y-bin %d from BucketX %d\n", j, i);
+  std::fprintf(stderr,  "in Y-bin %d from BucketX %d\n", j, i);
   exit(-3);
       }
       pBinXY->piGenes = NULL;
       if((pBinXY->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s): CALLOC failed for pBinXY[%d]->piGenes[%d].\n",
     pcFName, i, iNum);
   exit(-2); }
@@ -1608,7 +1608,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
       iTmp += iNum;
     } /* Next Y-bin : j++ */
     if(iTmp != pBuckX->iNumEl) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tExpected to load %d genes in Y-bins, not %d\n",
         pcFName, pBuckX->iNumEl, iTmp);
       exit(-2); }
@@ -1691,7 +1691,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     iAvgGene += iDelta;
     iHighGene = iAvgGene + iDelta;
     if(iAvgGene < 5) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "WARNING(%s):\n\tiAvgGene = %d, for BucketXY %d.\n",
         pcFName, iAvgGene, l);
     }
@@ -1716,7 +1716,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
 
     if(j < iNum) {
 #if FALSE
-      vcl_fprintf(stderr, "WARNING(%s): Only %d BucketsXY set, instead of %d.\n",
+      std::fprintf(stderr, "WARNING(%s): Only %d BucketsXY set, instead of %d.\n",
         pcFName, j, iNum);
 #endif
       /* --- Set remaining BucketsXY --- */
@@ -1757,7 +1757,7 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
       }
     }
     if(iBinStart > iYdim) { /* Overflow */
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "WARNING(%s): Overflow: No bins left for last bucket.\n",
         pcFName);
     }
@@ -1789,12 +1789,12 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
       if(iMinGeneXY > iMinGene) iMinGeneXY = iMinGene;
     }
   
-    vcl_fprintf(stderr, "\tAll (%d) BucketsXY set, for BucketX no. %d\n", j, i);
-    vcl_fprintf(stderr, "\t\tMax Number of Generators per BucketXY = %d\n",
+    std::fprintf(stderr, "\tAll (%d) BucketsXY set, for BucketX no. %d\n", j, i);
+    std::fprintf(stderr, "\t\tMax Number of Generators per BucketXY = %d\n",
       iMaxGene);
-    vcl_fprintf(stderr, "\t\tMin Number of Generators per BucketXY = %d\n",
+    std::fprintf(stderr, "\t\tMin Number of Generators per BucketXY = %d\n",
       iMinGene);
-    vcl_fprintf(stderr, "\t\t%d Empty Buckets0, of which %d are Virtual.\n",
+    std::fprintf(stderr, "\t\t%d Empty Buckets0, of which %d are Virtual.\n",
       iNumBuckEmpty, iNumBuckVirtual);
     iNumBuckEmptyTotal += iNumBuckEmpty;
     iNumBuckVirtualTotal += iNumBuckVirtual;
@@ -1804,39 +1804,39 @@ FillBucketsInXY(InputDataB *pInData, Buckets0 *pBucketsX,
     pBuckX++; /* Go process next BucketX : i++ */
   }
   if(l < iNumBucksXY) {
-    vcl_fprintf(stderr, "WARNING(%s): Set %d BucketsXY instead of %d\n",
+    std::fprintf(stderr, "WARNING(%s): Set %d BucketsXY instead of %d\n",
       pcFName, l, iNumBucksXY);
     pBucketsXY->iNumBucks = l;
   }
   else if(l > iNumBucksXY) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s): Set too many BucketsXY: %d > %d (allocated).\n",
       pcFName, l, iNumBucksXY);
     exit(-3);
   }
   else {
-    vcl_fprintf(stderr, "MESG(%s): Set all (allocated) %d BucketsXY.\n",
+    std::fprintf(stderr, "MESG(%s): Set all (allocated) %d BucketsXY.\n",
       pcFName, l);
   }
   /* m++; */
   if(m < iNumBinsXY) {
-    vcl_fprintf(stderr, "WARNING(%s): Visited %d BinsXY instead of %d .\n",
+    std::fprintf(stderr, "WARNING(%s): Visited %d BinsXY instead of %d .\n",
       pcFName, m, iNumBinsXY);
   }
   else if(m > iNumBinsXY) {
-    vcl_fprintf(stderr, "ERROR(%s): Visited too many BinsXY: %d > %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Visited too many BinsXY: %d > %d .\n",
       pcFName, m, iNumBinsXY);
    assert (0);
     exit(-4);
   }
 
-  vcl_fprintf(stderr, "\tTotal Number of Empty Bucket0 = %d\n",
+  std::fprintf(stderr, "\tTotal Number of Empty Bucket0 = %d\n",
     iNumBuckEmptyTotal);
-  vcl_fprintf(stderr, "\t\tof which %d are Virtual.\n",
+  std::fprintf(stderr, "\t\tof which %d are Virtual.\n",
     iNumBuckVirtualTotal);
-  vcl_fprintf(stderr, "\tMax Number of Generators per BucketXY = %d\n",
+  std::fprintf(stderr, "\tMax Number of Generators per BucketXY = %d\n",
     iMaxGeneXY);
-  vcl_fprintf(stderr, "\tMin Number of Generators per BucketXY = %d\n\n",
+  std::fprintf(stderr, "\tMin Number of Generators per BucketXY = %d\n\n",
     iMinGeneXY);
 
   pBucketsXY->iEmpty   = iNumBuckEmptyTotal;
@@ -1903,13 +1903,13 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
   iNumGeneTot = pBucketsXYZ->iTotGene;
   iAvgGene = pBucketsXYZ->iAvgGene; /* Init target of genes per bucket */
 
-  vcl_fprintf(stderr, "MESG(%s): %d BucketsXYZ to fill-in.\n", pcFName,
+  std::fprintf(stderr, "MESG(%s): %d BucketsXYZ to fill-in.\n", pcFName,
     iNumBucksXYZ);
-  vcl_fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n",
+  std::fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n",
     iAvgGene);
-  vcl_fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneTot);
+  std::fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneTot);
   iNumBinsXYZ = pBucketsXYZ->iNumBins;
-  vcl_fprintf(stderr, "\tNumber of BinsXYZ = %d .\n", iNumBinsXYZ);
+  std::fprintf(stderr, "\tNumber of BinsXYZ = %d .\n", iNumBinsXYZ);
 
   fDelta = pBucketsXYZ->fTolerance; /* Tolerance in percent */
 
@@ -1934,12 +1934,12 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     iYstart = pBuckXY->Limits.iMinY;
     iYlast  = pBuckXY->Limits.iMaxY;
     if(iXstart >= iXlast) {
-      vcl_fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
+      std::fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
         pcFName, iXstart, iXlast);
       exit(-2);
     }
     if(iYstart >= iYlast) {
-      vcl_fprintf(stderr, "ERROR(%s): MinY = %d >= MaxY = %d\n",
+      std::fprintf(stderr, "ERROR(%s): MinY = %d >= MaxY = %d\n",
         pcFName, iYstart, iYlast);
       exit(-2);
     }
@@ -1978,7 +1978,7 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
   iNumBuckVirtual++;
       }
 
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "\tAll (%d) BucketsXYZ are EMPTY, for BucketXY no. %d\n", j, i);
 
       iNumBuckEmptyTotal += iNumBuckEmpty;
@@ -2004,7 +2004,7 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     \*   how many generators per Z-bin we may have     */
     pTmpBins = NULL;
     if((pTmpBins = (BinB *) calloc(iNumBinsZ, sizeof(BinB))) == NULL) {
-      vcl_fprintf(stderr, "ERROR(%s): CALLOC failed for pTmpBins[%d].\n",
+      std::fprintf(stderr, "ERROR(%s): CALLOC failed for pTmpBins[%d].\n",
         pcFName, iNumBinsZ);
       exit(-2); }
 
@@ -2013,7 +2013,7 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     for(j = 0; j < iNumBinsZ; j++) {
       pBin->piGenes = NULL;
       if((pBin->piGenes = (int *) calloc(iNumMax, sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s): CALLOC failed for pTmpBin[%d]->piGenes[%d].\n",
     pcFName, i, iNumMax);
   exit(-2); }
@@ -2038,7 +2038,7 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
 
   iBin = iZ - iZmin; /* Z-Bin label */
   if(iBin > iBinZlast) {
-    vcl_fprintf(stderr, "ERROR(%s): Overflow BinB number %d > max = %d\n",
+    std::fprintf(stderr, "ERROR(%s): Overflow BinB number %d > max = %d\n",
       pcFName, iBin, iBinZlast);
     exit(-2);
   }
@@ -2058,14 +2058,14 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     for(j = 0; j < iNumBinsZ; j++) {
       iNum = pBinOld->iNumEl;
       if(iNum > iNumMax) {
-  vcl_fprintf(stderr, "ERROR(%s): Overflow: %d Genes (Max allocated = %d)\n",
+  std::fprintf(stderr, "ERROR(%s): Overflow: %d Genes (Max allocated = %d)\n",
     pcFName, iNum, iNumMax);
-  vcl_fprintf(stderr,  "\tin Z-BinB %d of BucketXY %d\n", j, i);
+  std::fprintf(stderr,  "\tin Z-BinB %d of BucketXY %d\n", j, i);
   exit(-2);
       }
       pBinXYZ->piGenes = NULL;
       if((pBinXYZ->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s): CALLOC failed for pBinXYZ[%d]->piGenes[%d].\n",
     pcFName, i, iNum);
   exit(-2); }
@@ -2080,7 +2080,7 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
       iTmp += iNum;
     } /* Next Z-bin : j++ */
     if(iTmp != pBuckXY->iNumEl) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tExpected to load %d genes in Z-Bins, not %d\n",
         pcFName, pBuckXY->iNumEl, iTmp);
       exit(-2); }
@@ -2206,16 +2206,16 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     } /* End of While(j < iNum) */
 
     if(iBinStart >= iNumBinsZ) { /* Overflow */
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "WARNING(%s):\n\tOverflow: No bins left for last BucketZ\n",
         pcFName);
-      vcl_fprintf(stderr, "\twhen processing BucketXY no.%d (out of %d).\n",
+      std::fprintf(stderr, "\twhen processing BucketXY no.%d (out of %d).\n",
         i, iNumBucksXY);
     }
     if(k >= iNumBinsZ) {
-      vcl_fprintf(stderr, "WARNING(%s):\n\tWent through all bins\n",
+      std::fprintf(stderr, "WARNING(%s):\n\tWent through all bins\n",
         pcFName);
-      vcl_fprintf(stderr, "\tbut did not find enough generators.\n");
+      std::fprintf(stderr, "\tbut did not find enough generators.\n");
     }
 
     if(iNumGenesLeft < 1) { /* No generators left : Set Empty buckets */
@@ -2278,16 +2278,16 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
       }
     }
 
-    ///vcl_fprintf(stderr, "\tAll (%d) BucketsXYZ set, for BucketXY no. %d\n", j, i);
-    ///vcl_fprintf(stderr, "\t\tMax Number of Generators per BucketXYZ = %d\n",
+    ///std::fprintf(stderr, "\tAll (%d) BucketsXYZ set, for BucketXY no. %d\n", j, i);
+    ///std::fprintf(stderr, "\t\tMax Number of Generators per BucketXYZ = %d\n",
    ///   iMaxGene);
-    ///vcl_fprintf(stderr, "\t\tMin Number of Generators per BucketXYZ = %d\n",
+    ///std::fprintf(stderr, "\t\tMin Number of Generators per BucketXYZ = %d\n",
    ///   iMinGene);
-    ///vcl_fprintf(stderr, "\t\t%d Empty Buckets0, of which %d are Virtual.\n",
+    ///std::fprintf(stderr, "\t\t%d Empty Buckets0, of which %d are Virtual.\n",
    ///   iNumBuckEmpty, iNumBuckVirtual);
 
     if(n != iNumBinsZ) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "WARNING(%s): Visited %d BinsXYZ instead of %d, for XY-Bucket0 %d\n",
         pcFName, n, iNumBinsZ, i);
     }
@@ -2300,27 +2300,27 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     pBuckXY++; /* Go process next BucketXY : i++ */
   }
   if(l < iNumBucksXYZ) {
-    vcl_fprintf(stderr, "WARNING(%s): Set %d BucketsXYZ instead of %d\n",
+    std::fprintf(stderr, "WARNING(%s): Set %d BucketsXYZ instead of %d\n",
       pcFName, l, iNumBucksXYZ);
     pBucketsXYZ->iNumBucks = l;
   }
   else if(l > iNumBucksXYZ) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s): Set too many BucketsXYZ: %d > %d (allocated).\n",
       pcFName, l, iNumBucksXYZ);
     exit(-3);
   }
   else {
-    vcl_fprintf(stderr, "MESG(%s): Set all (allocated) %d BucketsXYZ.\n",
+    std::fprintf(stderr, "MESG(%s): Set all (allocated) %d BucketsXYZ.\n",
       pcFName, l);
   }
   /* m++; */
   if(m < iNumBinsXYZ) {
-    vcl_fprintf(stderr, "WARNING(%s): Visited %d BinsXYZ instead of %d .\n",
+    std::fprintf(stderr, "WARNING(%s): Visited %d BinsXYZ instead of %d .\n",
       pcFName, m, iNumBinsXYZ);
   }
   else if(m > iNumBinsXYZ) {
-    vcl_fprintf(stderr, "ERROR(%s): Visited too many BinsXYZ: %d > %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Visited too many BinsXYZ: %d > %d .\n",
       pcFName, m, iNumBinsXYZ);
     exit(-4);
   }
@@ -2333,12 +2333,12 @@ FillBucketsInXYZ(InputDataB *pInData, Buckets0 *pBucketsXY,
     pBinXYZ++;
   }
 
-  vcl_fprintf(stderr, "\tTotal Number of Empty Bins = %d\n", iEmptyBins);
-  vcl_fprintf(stderr, "\tTotal Number of Empty XYZ-Buckets0 = %d\n",
+  std::fprintf(stderr, "\tTotal Number of Empty Bins = %d\n", iEmptyBins);
+  std::fprintf(stderr, "\tTotal Number of Empty XYZ-Buckets0 = %d\n",
     iNumBuckEmptyTotal);
-  vcl_fprintf(stderr, "\t\tof which %d are Virtual.\n",
+  std::fprintf(stderr, "\t\tof which %d are Virtual.\n",
     iNumBuckVirtualTotal);
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "\tNumber of Generators per XYZ-Bucket0: Min = %d , Max = %d\n",
     iMinGeneXYZ, iMaxGeneXYZ);
 
@@ -2393,15 +2393,15 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   iAvgGene = pBucketsX->iAvgGene;
   iNumBucksX = pBucketsX->iNumBucks;
 
-  vcl_fprintf(stderr, "MESG(%s):\n\tInitially, %d BucketsX to fill-in.\n",
+  std::fprintf(stderr, "MESG(%s):\n\tInitially, %d BucketsX to fill-in.\n",
     pcFName, iNumBucksX);
-  vcl_fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n",
+  std::fprintf(stderr, "\tTarget Number of Generators per Bucket0 = %d\n",
     iAvgGene);
-  vcl_fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneInMetaBuck);
-  vcl_fprintf(stderr, "\tNumber of BinsX = %d\n", iNumBinsX);
+  std::fprintf(stderr, "\tfrom a total of %d genes.\n", iNumGeneInMetaBuck);
+  std::fprintf(stderr, "\tNumber of BinsX = %d\n", iNumBinsX);
 
   if(iBinXfirst >= iBinXlast) {
-    vcl_fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
+    std::fprintf(stderr, "ERROR(%s): MinX = %d >= MaxX = %d\n",
       pcFName, iBinXfirst, iBinXlast);
     exit(-2);
   }
@@ -2412,7 +2412,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   \*     how many generators per bin we may have     */
   pTmpBins = NULL;
   if((pTmpBins = (BinB *) calloc(iNumBinsX, sizeof(BinB))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
+    std::fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
       pcFName, iNumBinsX);
     exit(-2); }
 
@@ -2421,7 +2421,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   for(i = 0; i < iNumBinsX; i++) {
     pBin->piGenes = NULL;
     if((pBin->piGenes = (int *) calloc(iNumMax, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
         pcFName, i, iNumMax);
       exit(-2); }
@@ -2446,7 +2446,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
       iX = (int) floor((double) fX);
       iBin = iX - iBinXfirst; /* Bin label */
       if(iBin > iBinXlast || iBin < 0) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s):\n\tOverflow in Bin number = %d (min = 0, max = %d).\n",
     pcFName, iBin, iBinXlast);
   exit(-2);
@@ -2461,7 +2461,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
     pBin++;
   } /* Next BinB : i++ */
   if(k != iNumGeneInMetaBuck) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s): Loaded %d genes instead of %d in TmpBins.\n",
       pcFName, k, iNumGeneInMetaBuck);
   }
@@ -2474,7 +2474,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
     iNum = pBinOld->iNumEl;
     pBin->piGenes = NULL;
     if((pBin->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
         pcFName, i, iNum);
       exit(-2); }
@@ -2489,7 +2489,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
     k += iNum;
   }
   if(k != iNumGeneInMetaBuck) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s): Transferred %d genes instead of %d from TmpBins.\n",
       pcFName, k, iNumGeneInMetaBuck);
   }
@@ -2510,8 +2510,8 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   iAvgGene += iDelta;
   iHighGene = iAvgGene + iDelta;
 #if MY_DEBUG
-  vcl_fprintf(stderr, "\tFilling BucketsX from BinsX\n");
-  vcl_fprintf(stderr,
+  std::fprintf(stderr, "\tFilling BucketsX from BinsX\n");
+  std::fprintf(stderr,
     "\tTargets (srcs per bucket): Min = %d , Avg = %d , Max = %d\n",
     iLowGene, iAvgGene, iHighGene);
 #endif
@@ -2570,7 +2570,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   iAvgGene += iDelta;
   iHighGene = iAvgGene + iDelta;
   if(iAvgGene < 10) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "WARNING(%s):\n\tiAvgGene = %d, for BucketX %d.\n",
       pcFName, iAvgGene, i);
   }
@@ -2593,13 +2593,13 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
   } /* End of While loop */
 #if MY_DEBUG
   if(i < iNum) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "WARNING(%s):\n\tOnly %d BucketsX set, instead of %d.\n",
       pcFName, i, iNum);
   }
 #endif
   if(iBinStart >= iNumBinsX) { /* Overflow */
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "WARNING(%s):\n\tOverflow: %d bins used: 0 left for last bucket.\n",
       pcFName, iBinStart);
   }
@@ -2684,7 +2684,7 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
       if((pBucketsX->pBucket =
     (Bucket0 *) realloc((Bucket0 *) pBucketsX->pBucket,
            iNumBucksX * sizeof(Bucket0))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s):\n\tREALLOC failed on pBucketsX->pBucket[%d].\n",
     pcFName, iNumBucksX);
   exit(-2); }
@@ -2774,24 +2774,24 @@ FillBucketsInXFromMetaBucket(InputDataB *pInData, BinB *pBins,
 
     pBucketsX->iNumBucks = iNumBucksX; /* Final number of Buckets0 */
     iTmp = iNumBucksX - iNumBucksOld;
-    vcl_fprintf(stderr, "\tAdded %d new BucketsX to the initial %d.\n", iTmp,
+    std::fprintf(stderr, "\tAdded %d new BucketsX to the initial %d.\n", iTmp,
       iNumBucksOld);
   }
 
-  vcl_fprintf(stderr, "\tAll (%d) BucketsX set.\n", i);
-  vcl_fprintf(stderr, "\t\tMax Number of Generators per BucketX = %d\n", iMaxGene);
-  vcl_fprintf(stderr, "\t\tMin Number of Generators per BucketX = %d\n", iMinGene);
+  std::fprintf(stderr, "\tAll (%d) BucketsX set.\n", i);
+  std::fprintf(stderr, "\t\tMax Number of Generators per BucketX = %d\n", iMaxGene);
+  std::fprintf(stderr, "\t\tMin Number of Generators per BucketX = %d\n", iMinGene);
 
   pBucketsX->iMaxGene = iMaxGene;
   pBucketsX->iMinGene = iMinGene;
 
 #if MY_DEBUG
   if(j < iNumBins) {
-    vcl_fprintf(stderr, "WARNING(%s):\n\tVisited %d BinsX instead of %d .\n",
+    std::fprintf(stderr, "WARNING(%s):\n\tVisited %d BinsX instead of %d .\n",
       pcFName, j, iNumBins);
   }
 #endif
-  vcl_fprintf(stderr, "\n");
+  std::fprintf(stderr, "\n");
 
   return;
 }
@@ -2820,7 +2820,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
 
   iNumBins = pDim->iWSpaceSize;
   iNumGeneTot = pDim->iNum3dPts;
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "MESG(%s): %d BinsXYZ (voxels) to fill-in from %d points...\n",
     pcFName, iNumBins, iNumGeneTot);
 
@@ -2829,7 +2829,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
   \*     how many generators per bin we may have     */
   pTmpBins = NULL;
   if((pTmpBins = (BinB *) calloc(iNumBins, sizeof(BinB))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
+    std::fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
       pcFName, iNumBins);
     exit(-2); }
 
@@ -2838,7 +2838,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
   for(i = 0; i < iNumBins; i++) {
     pBin->piGenes = NULL;
     if((pBin->piGenes = (int *) calloc(iNumMax, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
         pcFName, i, iNumMax);
       exit(-2); }
@@ -2862,7 +2862,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
 
     iBin = iZ * iSliceSize + iY * iXdim + iX;
     if(iBin > iNumBins) {
-      vcl_fprintf(stderr, "ERROR(%s):\n\tOverflow: BinB number %d > max = %d\n",
+      std::fprintf(stderr, "ERROR(%s):\n\tOverflow: BinB number %d > max = %d\n",
         pcFName, iBin, iNumBins);
       exit(-3);
     }
@@ -2879,7 +2879,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
       if((pBin->piGenes =
     (int *) realloc((int *) pBin->piGenes,
         iMax * sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s):\n\tREALLOC fails on pBin[%d]->piGenes[%d].\n",
     pcFName, iBin, iMax);
   exit(-2); }
@@ -2907,7 +2907,7 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
 
     pBin->piGenes = NULL;
     if((pBin->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
         pcFName, i, iNum);
       exit(-2); }
@@ -2922,13 +2922,13 @@ FillBinsInXYZ(InputDataB *pInData, BinB *pBins, DimensionB *pDim)
     k += iNum;
   }
 
-  vcl_fprintf(stderr, "\t(Min , Max) genes per bin = (%d , %d)\n",
+  std::fprintf(stderr, "\t(Min , Max) genes per bin = (%d , %d)\n",
     iMin, iMax);
-  vcl_fprintf(stderr, "\tNumber of empty bins = %d\n", iBinEmpty);
+  std::fprintf(stderr, "\tNumber of empty bins = %d\n", iBinEmpty);
   pDim->iNumBinEmpty = iBinEmpty;
 
   if(k != iNumGeneTot) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s): Transferred %d genes instead of %d from TmpBins.\n",
       pcFName, k, iNumGeneTot);
     exit(-3);
@@ -3010,14 +3010,14 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
   InputDataB     *pData;
   
   if ((fp1 = fopen(pcUPennFile, "r")) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): Can't open input UPenn file %s\n",
+    vul_printf (std::cout, "ERROR(%s): Can't open input UPenn file %s\n",
           pcFName, pcUPennFile);
     return(FALSE); 
   }
   
   fscanf(fp1, "%d", &iID);
   fscanf(fp1, "%d", &iNum3dPts);
-  vul_printf (vcl_cout, "MESG(%s): There are %d 3D points (input).\n",
+  vul_printf (std::cout, "MESG(%s): There are %d 3D points (input).\n",
         pcFName, iNum3dPts);
   
   /* Read-in 1st point coordinates */
@@ -3032,7 +3032,7 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
     pGene->fPosZ = fPosZ;
   }
   else {
-    vcl_fprintf(stderr, "ERROR(%s): Data input on line no.0\n", pcFName);
+    std::fprintf(stderr, "ERROR(%s): Data input on line no.0\n", pcFName);
     exit(-2); 
   }
   
@@ -3080,7 +3080,7 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
         iNumSamples++;
       }
       else {
-        vul_printf (vcl_cout, "ERROR(%s): Data input on line no.%d\n",
+        vul_printf (std::cout, "ERROR(%s): Data input on line no.%d\n",
               pcFName, i); 
       }
     }//end for i
@@ -3103,7 +3103,7 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
         iNumSamples++;
       }
       else {
-        vul_printf (vcl_cout, "ERROR(%s): Data input on line no.%d\n",
+        vul_printf (std::cout, "ERROR(%s): Data input on line no.%d\n",
               pcFName, i); 
       }
     } /* i++ */
@@ -3111,12 +3111,12 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
   fclose(fp1);
   
   if (iFlagDuplic) { //report duplicates
-    vul_printf (vcl_cout, "\tFound %d unique input samples; %d duplicated.\n",
+    vul_printf (std::cout, "\tFound %d unique input samples; %d duplicated.\n",
           iNumSamples, iNumDuplic);
     iNum3dPts = iNumSamples;
   }
   else {
-    vcl_fprintf(stderr, "\tLoaded %d input samples.\n", i);
+    std::fprintf(stderr, "\tLoaded %d input samples.\n", i);
   }
   
   /* We shift the origin of the dataset by (Off-MinX,Off-MinY,Off-MinZ) */
@@ -3157,15 +3157,15 @@ int SetInFile (const char *pcUPennFile, InputDataB *pInData, DimensionB *pDim,
   pDim->iMaxBlueShocks = iNum3dPts * (iNum3dPts - 1);
   pDim->iMaxBlueShocks >>= 1; /* Division by 2 */
   
-  vcl_fprintf(stderr, "\tDimensions: X = %d, Y = %d, Z = %d, Sausage = %d\n",
+  std::fprintf(stderr, "\tDimensions: X = %d, Y = %d, Z = %d, Sausage = %d\n",
       iXdim, iYdim, iZdim, iOffset);
-  vcl_fprintf(stderr, "\tMove = (%lf , %lf , %lf)\n", pDim->fMoveX, pDim->fMoveY,
+  std::fprintf(stderr, "\tMove = (%lf , %lf , %lf)\n", pDim->fMoveX, pDim->fMoveY,
       pDim->fMoveZ);
-  vcl_fprintf(stderr, "\tMin = (%lf , %lf , %lf)\n", pDim->fMinX, pDim->fMinY,
+  std::fprintf(stderr, "\tMin = (%lf , %lf , %lf)\n", pDim->fMinX, pDim->fMinY,
       pDim->fMinZ);
-  vcl_fprintf(stderr, "\tMax = (%lf , %lf , %lf)\n", pDim->fMaxX, pDim->fMaxY,
+  std::fprintf(stderr, "\tMax = (%lf , %lf , %lf)\n", pDim->fMaxX, pDim->fMaxY,
       pDim->fMaxZ);
-  vcl_fprintf(stderr, "\tMax (theoretical) number of initial blue shocks = %d\n",
+  std::fprintf(stderr, "\tMax (theoretical) number of initial blue shocks = %d\n",
       pDim->iMaxBlueShocks);
   
   return(TRUE);
@@ -3195,48 +3195,48 @@ void SaveDataBucks (char *pcInFile, char *pcOutFile, InputDataB *pInData,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if (f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); 
   }
   
-  vcl_fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
   
   /* -- First: Save Initial Source Data -- */
   
-  vcl_fprintf(f1, "Input filename: %s\n", pcInFile);
+  std::fprintf(f1, "Input filename: %s\n", pcInFile);
   
   iNum = pDim->iNum3dPts;
-  vcl_fprintf (f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
+  std::fprintf (f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
         pDim->iXdim, pDim->iYdim, pDim->iZdim);
-  vcl_fprintf (f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
+  std::fprintf (f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
         pDim->fMoveX, pDim->fMoveY, pDim->fMoveZ);
-  vcl_fprintf (f1, "Offset = %lf.\n", pDim->fOffset);
-  vcl_fprintf (f1, "Number of input 3D pts (sources): %d\n", iNum);
-  vcl_fprintf (f1, "ID: Coords (x,y,z)\n");
-  vcl_fprintf (f1, "-----------\n");
+  std::fprintf (f1, "Offset = %lf.\n", pDim->fOffset);
+  std::fprintf (f1, "Number of input 3D pts (sources): %d\n", iNum);
+  std::fprintf (f1, "ID: Coords (x,y,z)\n");
+  std::fprintf (f1, "-----------\n");
   
   for (i = 0; i < iNum; i++) {
     p3dPts = &((pInData+i)->Sample);
-    vcl_fprintf (f1, "%d: %lf , %lf , %lf\n", i, p3dPts->fPosX,
+    std::fprintf (f1, "%d: %lf , %lf , %lf\n", i, p3dPts->fPosX,
           p3dPts->fPosY, p3dPts->fPosZ);
   }
   
   /* -- Second: Save BucketsXYZ -- */
   
   iNum = pBucketsXYZ->iNumBucks;
-  vcl_fprintf (f1, "-----------\n");
-  vcl_fprintf (f1,
+  std::fprintf (f1, "-----------\n");
+  std::fprintf (f1,
         "BUCKETS XYZ: Total = %d , AvgGene (Target) = %d , Tolerance = %lf\n",
         iNum, pBucketsXYZ->iAvgGene, pBucketsXYZ->fTolerance);
-  vcl_fprintf (f1, " Empty buckets = %d of which %d are virtual.\n",
+  std::fprintf (f1, " Empty buckets = %d of which %d are virtual.\n",
         pBucketsXYZ->iEmpty, pBucketsXYZ->iVirtual);
-  vcl_fprintf (f1,
+  std::fprintf (f1,
         "ID: (1stBin NumBins) (MinX MaxX : MinY MaxY : MinZ MaxZ) NumGene\n");
-  vcl_fprintf (f1, "-----------\n");
+  std::fprintf (f1, "-----------\n");
   
   pBuck = pBucketsXYZ->pBucket;
   for (i = 0; i < iNum; i++) {
-    vcl_fprintf (f1,
+    std::fprintf (f1,
           "%d: (%d %d) (%d %d : %d %d : %d %d) %d\n", i, pBuck->iBinFirst,
           pBuck->iNumBins, pBuck->Limits.iMinX, pBuck->Limits.iMaxX,
           pBuck->Limits.iMinY, pBuck->Limits.iMaxY,
@@ -3247,35 +3247,35 @@ void SaveDataBucks (char *pcInFile, char *pcOutFile, InputDataB *pInData,
   /* -- Third: Save BinsXYZ -- */
   
   iNum = pBucketsXYZ->iNumBins;
-  vcl_fprintf (f1, "-----------\n");
-  vcl_fprintf (f1, "BINS XYZ: Total = %d\n", iNum);
-  vcl_fprintf (f1, "ID: NumGene: List of Sources\n");
-  vcl_fprintf (f1, "-----------\n");
+  std::fprintf (f1, "-----------\n");
+  std::fprintf (f1, "BINS XYZ: Total = %d\n", iNum);
+  std::fprintf (f1, "ID: NumGene: List of Sources\n");
+  std::fprintf (f1, "-----------\n");
   
   iTmp = 0;
   pBin = pBucketsXYZ->pBin;
   for (i = 0; i < iNum; i++) {
     iNumGene = pBin->iNumEl;
-    vcl_fprintf (f1, "%d: %d: ", i, iNumGene);
+    std::fprintf (f1, "%d: %d: ", i, iNumGene);
     if (iNumGene > 0) {
       pGene = pBin->piGenes;
       for (j = 0; j < iNumGene; j++) {
-        vcl_fprintf(f1, "%d ", *pGene++);
+        std::fprintf(f1, "%d ", *pGene++);
       }
     }
     else 
       iTmp++;
-    vcl_fprintf(f1, "\n");
+    std::fprintf(f1, "\n");
     pBin++;
   }
   
-  vcl_fprintf (f1, "-----------\n");
-  vcl_fprintf (f1, "Number of Empty Bins = %d\n", iTmp);
-  vcl_fprintf (f1, "-----------\n");
+  std::fprintf (f1, "-----------\n");
+  std::fprintf (f1, "Number of Empty Bins = %d\n", iTmp);
+  std::fprintf (f1, "-----------\n");
   
   fTmp = 100.0 * iTmp / iNum;
   pBucketsXYZ->iBinEmpty = iTmp;
-  vul_printf (vcl_cout, "\tNumber of Empty Bins = %d out of %d (%.2f percent).\n",
+  vul_printf (std::cout, "\tNumber of Empty Bins = %d out of %d (%.2f percent).\n",
         iTmp, iNum, fTmp);
   
   fclose(f1);
@@ -3300,85 +3300,85 @@ void SaveTimings (char *pcInFile, char *pcOutFile, TimingsB *pTime,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if (f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s): Saving data in\n\t%s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s): Saving data in\n\t%s.\n", pcFName, pcOutFile);
   
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Input filename: %s\n", pcInFile);
-  vcl_fprintf(f1, "Number of input 3D pts (genes) = %d\n", pDim->iNum3dPts);
-  vcl_fprintf(f1, "BUCKETS XYZ: Total = %d , AvgGene = %d , Tolerance = %lf\n",
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Input filename: %s\n", pcInFile);
+  std::fprintf(f1, "Number of input 3D pts (genes) = %d\n", pDim->iNum3dPts);
+  std::fprintf(f1, "BUCKETS XYZ: Total = %d , AvgGene = %d , Tolerance = %lf\n",
       pBucketsXYZ->iNumBucks, pBucketsXYZ->iAvgGene,
       pBucketsXYZ->fTolerance);
-  vcl_fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
+  std::fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
       pBucketsXYZ->iMaxGene, pBucketsXYZ->iMinGene);
-  vcl_fprintf(f1, "\tEmpty buckets = %d of which %d are virtual.\n",
+  std::fprintf(f1, "\tEmpty buckets = %d of which %d are virtual.\n",
       pBucketsXYZ->iEmpty, pBucketsXYZ->iVirtual);
-  vcl_fprintf(f1, "BINS XYZ: Total = %d , Empty = %d \n",
+  std::fprintf(f1, "BINS XYZ: Total = %d , Empty = %d \n",
       pBucketsXYZ->iNumBins, pBucketsXYZ->iBinEmpty);
-  vcl_fprintf(f1, "BUCKETS XY: Total = %d , AvgGene = %d\n",
+  std::fprintf(f1, "BUCKETS XY: Total = %d , AvgGene = %d\n",
       pBucketsXY->iNumBucks, pBucketsXY->iAvgGene);
-  vcl_fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
+  std::fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
       pBucketsXY->iMaxGene, pBucketsXY->iMinGene);
-  vcl_fprintf(f1, "BUCKETS X: Total = %d , AvgGene = %d\n",
+  std::fprintf(f1, "BUCKETS X: Total = %d , AvgGene = %d\n",
       pBucketsX->iNumBucks, pBucketsX->iAvgGene);
-  vcl_fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
+  std::fprintf(f1, "\t(Max , Min) genes per bucket = (%d , %d).\n",
       pBucketsX->iMaxGene, pBucketsX->iMinGene);
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
   
-  vcl_fprintf(stderr, " Timings in seconds:\n");
-  vcl_fprintf(f1, "Timings in seconds:\n");
+  std::fprintf(stderr, " Timings in seconds:\n");
+  std::fprintf(f1, "Timings in seconds:\n");
   
   fTmpSys  = pTime->fSysEnd;
   fTmpUser = pTime->fUserEnd;
   fTmpMem  = pTime->fMemEnd;
-  vcl_fprintf(stderr, " MAIN:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " MAIN:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "MAIN:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "MAIN:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
   fTmpSys = pTime->fSysQHull;
   fTmpUser = pTime->fUserQHull;
   fTmpMem = pTime->fMemQHull;
-  vcl_fprintf(stderr, " QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
   fTmpSys = pTime->fSysFillXYZ;
   fTmpUser = pTime->fUserFillXYZ;
   fTmpMem = pTime->fMemFillXYZ;
-  vcl_fprintf(stderr, " FillXYZ: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " FillXYZ: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillXYZ: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "FillXYZ: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
   fTmpSys = pTime->fSysFillXY;
   fTmpUser = pTime->fUserFillXY;
   fTmpMem = pTime->fMemFillXY;
-  vcl_fprintf(stderr, " FillXY: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " FillXY: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillXY: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "FillXY: Total = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
   fTmpSys = pTime->fSysFillX;
   fTmpUser = pTime->fUserFillX;
   fTmpMem = pTime->fMemFillX;
-  vcl_fprintf(stderr, " FillX:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " FillX:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillX:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "FillX:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
   fTmpSys  = pTime->fSysInit;
   fTmpUser = pTime->fUserInit;
   fTmpMem  = pTime->fMemInit;
-  vcl_fprintf(stderr, " INIT:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " INIT:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "INIT:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "INIT:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
       fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
   
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
   
   fclose(f1);
   
@@ -3412,15 +3412,15 @@ void SaveDataMetaBuck (const char *pcInFile, char *pcOutFile,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if(f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
   
   /* -- First: Save Initial Source Data -- */
   
-  vcl_fprintf(f1, "Input filename: %s\n", pcInFile);
-  vcl_fprintf(f1, "Data for MetaBucket no. %d (out of %d).\n",
+  std::fprintf(f1, "Input filename: %s\n", pcInFile);
+  std::fprintf(f1, "Data for MetaBucket no. %d (out of %d).\n",
       pDim->iMetaBuckId, pDim->iNumMetaBuckets);
   
   iNumGenes = pBucketsXYZ->iTotGene;
@@ -3434,20 +3434,20 @@ void SaveDataMetaBuck (const char *pcInFile, char *pcOutFile,
   iZmax = pBucketsXYZ->Limits.iMaxZ;
   iZdim = iZmax - iZmin;
   
-  vcl_fprintf(f1, "Min grid coords: X = %d , Y = %d , Z = %d\n",
+  std::fprintf(f1, "Min grid coords: X = %d , Y = %d , Z = %d\n",
       iXmin, iYmin, iZmin);
-  vcl_fprintf(f1, "Max grid coords: X = %d , Y = %d , Z = %d\n",
+  std::fprintf(f1, "Max grid coords: X = %d , Y = %d , Z = %d\n",
       iXmax, iYmax, iZmax);
-  vcl_fprintf(f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
+  std::fprintf(f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
       iXdim, iYdim, iZdim);
-  vcl_fprintf(f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
+  std::fprintf(f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
       pDim->fMoveX, pDim->fMoveY, pDim->fMoveZ);
-  vcl_fprintf(f1, "Offset = %lf.\n", pDim->fOffset);
-  vcl_fprintf(f1, "Number of generators: %d (out of %d)\n", iNumGenes,
+  std::fprintf(f1, "Offset = %lf.\n", pDim->fOffset);
+  std::fprintf(f1, "Number of generators: %d (out of %d)\n", iNumGenes,
       pDim->iNum3dPts);
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Original ID : Coords (x,y,z) : BinXYZ label\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Original ID : Coords (x,y,z) : BinXYZ label\n");
+  std::fprintf(f1, "-----------\n");
   
   pBinXYZ = pBucketsXYZ->pBin;
   iNumBinXYZ = pBucketsXYZ->iNumBins;
@@ -3458,14 +3458,14 @@ void SaveDataMetaBuck (const char *pcInFile, char *pcOutFile,
     for(j = 0; j < iNumGeneInBin; j++) {
       iGene = *piGene++;
       p3dPts = &((pInData+iGene)->Sample);
-      vcl_fprintf(f1, "%d : (%lf , %lf , %lf) : %d\n", iGene,
+      std::fprintf(f1, "%d : (%lf , %lf , %lf) : %d\n", iGene,
           p3dPts->fPosX, p3dPts->fPosY, p3dPts->fPosZ, i);
     }
     iNumTotGene += iNumGeneInBin;
     pBinXYZ++;
   } /* Next BinXYZ: i++ */
   if(iNumTotGene != iNumGenes) {
-    vcl_fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
         pcFName, iNumGenes, iNumTotGene);
     exit(-4);
   }
@@ -3473,17 +3473,17 @@ void SaveDataMetaBuck (const char *pcInFile, char *pcOutFile,
   /* -- Second: Save BucketsXYZ -- */
   
   iNumBuckXYZ = pBucketsXYZ->iNumBucks;
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "BUCKETS XYZ: Total = %d , AvgGene (Target) = %d , Tolerance = %lf\n",
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "BUCKETS XYZ: Total = %d , AvgGene (Target) = %d , Tolerance = %lf\n",
       iNumBuckXYZ, pBucketsXYZ->iAvgGene, pBucketsXYZ->fTolerance);
-  vcl_fprintf(f1, " Empty buckets = %d of which %d are virtual.\n",
+  std::fprintf(f1, " Empty buckets = %d of which %d are virtual.\n",
       pBucketsXYZ->iEmpty, pBucketsXYZ->iVirtual);
-  vcl_fprintf(f1, "ID: (1stBin NumBins) (MinX MaxX : MinY MaxY : MinZ MaxZ) : NumGene\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "ID: (1stBin NumBins) (MinX MaxX : MinY MaxY : MinZ MaxZ) : NumGene\n");
+  std::fprintf(f1, "-----------\n");
   
   pBuck = pBucketsXYZ->pBucket;
   for(i = 0; i < iNumBuckXYZ; i++) {
-    vcl_fprintf(f1,
+    std::fprintf(f1,
         "%d: (%d %d) (%d %d : %d %d : %d %d) :\t%d\n", i, pBuck->iBinFirst,
         pBuck->iNumBins, pBuck->Limits.iMinX, pBuck->Limits.iMaxX,
         pBuck->Limits.iMinY, pBuck->Limits.iMaxY,
@@ -3494,28 +3494,28 @@ void SaveDataMetaBuck (const char *pcInFile, char *pcOutFile,
   /* -- Third: Save BinsXYZ -- */
   
   iNumBinXYZ = pBucketsXYZ->iNumBins;
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "BINS XYZ: Total = %d\n", iNumBinXYZ);
-  vcl_fprintf(f1, "ID: Number of Genes\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "BINS XYZ: Total = %d\n", iNumBinXYZ);
+  std::fprintf(f1, "ID: Number of Genes\n");
+  std::fprintf(f1, "-----------\n");
   
   iTmp = 0;
   pBinXYZ = pBucketsXYZ->pBin;
   for(i = 0; i < iNumBinXYZ; i++) {
     iNumGeneInBin = pBinXYZ->iNumEl;
-    vcl_fprintf(f1, "%d: %d\n", i, iNumGeneInBin);
+    std::fprintf(f1, "%d: %d\n", i, iNumGeneInBin);
     if(iNumGeneInBin < 1)
       iTmp++;
     pBinXYZ++;
   }
   
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Number of Empty Bins = %d\n", iTmp);
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Number of Empty Bins = %d\n", iTmp);
+  std::fprintf(f1, "-----------\n");
   
   fTmp = 100.0 * (float) iTmp / (float) iNumBinXYZ;
   pBucketsXYZ->iBinEmpty = iTmp;
-  vcl_fprintf(stderr, "\tNumber of Empty Bins = %d out of %d (%.2f percent).\n",
+  std::fprintf(stderr, "\tNumber of Empty Bins = %d out of %d (%.2f percent).\n",
       iTmp, iNumBinXYZ, fTmp);
   
   fclose(f1);
@@ -3546,16 +3546,16 @@ SaveG3dMetaBuck(char *pcOutFile, InputDataB *pInData,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if(f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s):\n\tSaving G3D data in %s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s):\n\tSaving G3D data in %s.\n", pcFName, pcOutFile);
   
   /* -- First: Save Initial Source Data -- */
   
-  vcl_fprintf(f1, "3\n");
+  std::fprintf(f1, "3\n");
   iNumGenes = pBucketsXYZ->iTotGene;
-  vcl_fprintf(f1, "%d\n", iNumGenes);
+  std::fprintf(f1, "%d\n", iNumGenes);
   
   pBinXYZ = pBucketsXYZ->pBin;
   iNumBinXYZ = pBucketsXYZ->iNumBins;
@@ -3566,7 +3566,7 @@ SaveG3dMetaBuck(char *pcOutFile, InputDataB *pInData,
     for(j = 0; j < iNumGeneInBin; j++) {
       iGene = *piGene++;
       p3dPts = &((pInData+iGene)->Sample);
-      vcl_fprintf(f1, "%lf %lf %lf 1.0 1.0 1.0\n",
+      std::fprintf(f1, "%lf %lf %lf 1.0 1.0 1.0\n",
           p3dPts->fPosX, p3dPts->fPosY, p3dPts->fPosZ);
     }
     iNumTotGene += iNumGeneInBin;
@@ -3576,7 +3576,7 @@ SaveG3dMetaBuck(char *pcOutFile, InputDataB *pInData,
   fclose(f1);
   
   if(iNumTotGene != iNumGenes) {
-    vcl_fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
         pcFName, iNumGenes, iNumTotGene);
     exit(-4);
   }
@@ -3605,46 +3605,46 @@ SaveTimingsMetaBuck(const char *pcInFile, char *pcOutFile, TimingsB *pTime,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if(f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s): Saving data in\n\t%s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s): Saving data in\n\t%s.\n", pcFName, pcOutFile);
 
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Input filename: %s\n", pcInFile);
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Input filename: %s\n", pcInFile);
   iNumGeneTot = pDim->iNum3dPts;
-  vcl_fprintf(f1, "Total Number of input generators = %d\n", iNumGeneTot);
-  vcl_fprintf(f1, "\t(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
+  std::fprintf(f1, "Total Number of input generators = %d\n", iNumGeneTot);
+  std::fprintf(f1, "\t(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
     pDim->fMoveX, pDim->fMoveY, pDim->fMoveZ);
-  vcl_fprintf(f1, "\tOffset = %.2f\n", pDim->fOffset);
+  std::fprintf(f1, "\tOffset = %.2f\n", pDim->fOffset);
 
   iNumMBucks = pMetaBucksXYZ->iNumBucks;
-  vcl_fprintf(f1, "MetaBuckets XYZ: Total = %d , AvgGene = %d , Tolerance = %.2f\n",
+  std::fprintf(f1, "MetaBuckets XYZ: Total = %d , AvgGene = %d , Tolerance = %.2f\n",
     iNumMBucks, pMetaBucksXYZ->iAvgGene, pMetaBucksXYZ->fTolerance);
-  vcl_fprintf(f1, "\t(Min , Max) genes per MetaBucket = (%d , %d).\n",
+  std::fprintf(f1, "\t(Min , Max) genes per MetaBucket = (%d , %d).\n",
     pMetaBucksXYZ->iMinGene, pMetaBucksXYZ->iMaxGene);
-  vcl_fprintf(f1, "\tEmpty MetaBuckets = %d of which %d are virtual.\n",
+  std::fprintf(f1, "\tEmpty MetaBuckets = %d of which %d are virtual.\n",
     pMetaBucksXYZ->iEmpty, pMetaBucksXYZ->iVirtual);
 
-  vcl_fprintf(f1, "\tBins XYZ: Total = %d , Empty = %d \n",
+  std::fprintf(f1, "\tBins XYZ: Total = %d , Empty = %d \n",
     pMetaBucksXYZ->iNumBins, pMetaBucksXYZ->iBinEmpty);
-  vcl_fprintf(f1, "\tCoord ranges: %d < X < %d , %d < Y < %d , %d < Z < %d\n",
+  std::fprintf(f1, "\tCoord ranges: %d < X < %d , %d < Y < %d , %d < Z < %d\n",
     pMetaBucksXYZ->Limits.iMinX, pMetaBucksXYZ->Limits.iMaxX,
     pMetaBucksXYZ->Limits.iMinY, pMetaBucksXYZ->Limits.iMaxY,
     pMetaBucksXYZ->Limits.iMinZ, pMetaBucksXYZ->Limits.iMaxZ);
 
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
 
-  vcl_fprintf(f1, "MetaBucket no. : Bucks (Empty, Bins) : Genes (Avg, Min, Max)\n");
-  vcl_fprintf(f1, "\tRanges (Xmin < X < Xmax) : (Ymin < Y < Ymax) : (Zmin < Z < Zmax)\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "MetaBucket no. : Bucks (Empty, Bins) : Genes (Avg, Min, Max)\n");
+  std::fprintf(f1, "\tRanges (Xmin < X < Xmax) : (Ymin < Y < Ymax) : (Zmin < Z < Zmax)\n");
+  std::fprintf(f1, "-----------\n");
 
   pMBuck = pMetaBucksXYZ->pBucket;
   iNumGeneAcc = 0;
   for(i = 0; i < iNumMBucks; i++) {
 
     iNumGenes = *(pMBuckInfo->piNumGenes+i);
-    vcl_fprintf(f1, "%d : %d (%d , %d) : %d (%d , %d , %d)\n",
+    std::fprintf(f1, "%d : %d (%d , %d) : %d (%d , %d , %d)\n",
       i, *(pMBuckInfo->piNumBuckets+i),
       *(pMBuckInfo->piNumBuckEmpty+i),
       *(pMBuckInfo->piNumBins+i),
@@ -3654,87 +3654,87 @@ SaveTimingsMetaBuck(const char *pcInFile, char *pcOutFile, TimingsB *pTime,
       *(pMBuckInfo->piMaxGene+i));
     iNumGeneAcc += iNumGenes;
 
-    vcl_fprintf(f1, "\t%d < X < %d , %d < Y < %d , %d < Z < %d\n",
+    std::fprintf(f1, "\t%d < X < %d , %d < Y < %d , %d < Z < %d\n",
       pMBuck->Limits.iMinX, pMBuck->Limits.iMaxX,
       pMBuck->Limits.iMinY, pMBuck->Limits.iMaxY,
       pMBuck->Limits.iMinZ, pMBuck->Limits.iMaxZ);
     pMBuck++;
   }
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
 
-  vcl_fprintf(stderr, " Timings in seconds, memory in Megs:\n");
-  vcl_fprintf(f1, "Timings in seconds, memory in Megs:\n");
+  std::fprintf(stderr, " Timings in seconds, memory in Megs:\n");
+  std::fprintf(f1, "Timings in seconds, memory in Megs:\n");
 
   fTmpSys  = pTime->fSysEnd;
   fTmpUser = pTime->fUserEnd;
   fTmpMem  = pTime->fMemEnd;
-  vcl_fprintf(stderr, " MAIN: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(stderr, " MAIN: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "MAIN: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(f1, "MAIN: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 
   fTmpSys -= (pTime->fSysFillXYZ + pTime->fSysFillXY + pTime->fSysFillX);
   fTmpUser -= (pTime->fUserFillXYZ + pTime->fUserFillXY + pTime->fUserFillX);
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     " FillBuckets: Total = %lf (Sys = %lf , User = %lf)\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser);
-  vcl_fprintf(f1, "FillBuckets: Total = %lf (Sys = %lf , User = %lf)\n",
+  std::fprintf(f1, "FillBuckets: Total = %lf (Sys = %lf , User = %lf)\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser);
 
   fTmpSys = pTime->fSysFillXYZ;
   fTmpUser = pTime->fUserFillXYZ;
   fTmpMem = pTime->fMemFillXYZ;
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     " FillMetaXYZ: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillMetaXYZ: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(f1, "FillMetaXYZ: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 
   fTmpSys = pTime->fSysFillXY;
   fTmpUser = pTime->fUserFillXY;
   fTmpMem = pTime->fMemFillXY;
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     " FillMetaXY: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillMetaXY: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(f1, "FillMetaXY: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 
   fTmpSys = pTime->fSysFillX;
   fTmpUser = pTime->fUserFillX;
   fTmpMem = pTime->fMemFillX;
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     " FillMetaX: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "FillMetaX: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(f1, "FillMetaX: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 
   fTmpSys  = pTime->fSysInit;
   fTmpUser = pTime->fUserInit;
   fTmpMem  = pTime->fMemInit;
-  vcl_fprintf(stderr, " INIT: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(stderr, " INIT: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "INIT: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
+  std::fprintf(f1, "INIT: Total = %lf (Sys = %lf , User = %lf), Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 
 #if FALSE
   fTmpSys = pTime->fSysQHull;
   fTmpUser = pTime->fUserQHull;
   fTmpMem = pTime->fMemQHull;
-  vcl_fprintf(stderr, " QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(stderr, " QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
-  vcl_fprintf(f1, "QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
+  std::fprintf(f1, "QHull:\tTotal = %lf (Sys = %lf , User = %lf) , Mem = %.2f\n",
     fTmpSys+fTmpUser, fTmpSys, fTmpUser, fTmpMem);
 #endif
 
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
 
   fclose(f1);
 
   if(iNumGeneAcc != iNumGeneTot) {
-    vcl_fprintf(stderr, "ERROR(%s): The number of genes accumulated\n", pcFName);
-    vcl_fprintf(stderr, "\tfor the %d MetaBuckets = %d\n", iNumMBucks,
+    std::fprintf(stderr, "ERROR(%s): The number of genes accumulated\n", pcFName);
+    std::fprintf(stderr, "\tfor the %d MetaBuckets = %d\n", iNumMBucks,
       iNumGeneAcc);
-    vcl_fprintf(stderr, "\trather than the initial %d\n", iNumGeneTot);
+    std::fprintf(stderr, "\trather than the initial %d\n", iNumGeneTot);
     exit(-5);
   }
 
@@ -3765,31 +3765,31 @@ SaveAllDataMetaBuck(const char *pcInFile, char *pcOutFile, InputDataB *pInData,
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if(f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s):\n\tSaving data in %s.\n", pcFName, pcOutFile);
 
   /* -- First: Save Initial Source Data -- */
 
-  vcl_fprintf(f1, "Input filename: %s\n", pcInFile);
+  std::fprintf(f1, "Input filename: %s\n", pcInFile);
   iNumGenes  = pDim->iNum3dPts;
   iNumBinXYZ = pDim->iWSpaceSize;
-  vcl_fprintf(f1, "Voxel Data for (all) %d generators and %d voxels (bins),\n",
+  std::fprintf(f1, "Voxel Data for (all) %d generators and %d voxels (bins),\n",
     iNumGenes, iNumBinXYZ);
-  vcl_fprintf(f1, "\tof which %d are empty.\n", pDim->iNumBinEmpty);
-  vcl_fprintf(f1, "Min grid coords: X = %lf , Y = %lf , Z = %lf\n",
+  std::fprintf(f1, "\tof which %d are empty.\n", pDim->iNumBinEmpty);
+  std::fprintf(f1, "Min grid coords: X = %lf , Y = %lf , Z = %lf\n",
     pDim->fMinX, pDim->fMinY, pDim->fMinZ);
-  vcl_fprintf(f1, "Max grid coords: X = %lf , Y = %lf , Z = %lf\n",
+  std::fprintf(f1, "Max grid coords: X = %lf , Y = %lf , Z = %lf\n",
     pDim->fMaxX, pDim->fMaxY, pDim->fMaxZ);
-  vcl_fprintf(f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
+  std::fprintf(f1, "(Xdim, Ydim, Zdim) = (%d , %d , %d)\n",
     pDim->iXdim, pDim->iYdim, pDim->iZdim);
-  vcl_fprintf(f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
+  std::fprintf(f1, "(Xmove, Ymove, Zmove) = (%lf , %lf , %lf).\n",
     pDim->fMoveX, pDim->fMoveY, pDim->fMoveZ);
-  vcl_fprintf(f1, "Offset = %lf.\n", pDim->fOffset);
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Voxel ID : Number of Genes > 0\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Offset = %lf.\n", pDim->fOffset);
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Voxel ID : Number of Genes > 0\n");
+  std::fprintf(f1, "-----------\n");
 
   pBinXYZ = pBins-1;
   iBinEmpty = 0;
@@ -3806,15 +3806,15 @@ SaveAllDataMetaBuck(const char *pcInFile, char *pcOutFile, InputDataB *pInData,
     }
     if(iMax < iNumGeneInBin)
       iMax = iNumGeneInBin;
-    vcl_fprintf(f1, "%d : %d\n", i, iNumGeneInBin);
+    std::fprintf(f1, "%d : %d\n", i, iNumGeneInBin);
   }
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Number of empty voxels = %d\n", iBinEmpty);
-  vcl_fprintf(f1, "(Min , Max) number of genes per voxel = (%d , %d)\n",
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Number of empty voxels = %d\n", iBinEmpty);
+  std::fprintf(f1, "(Min , Max) number of genes per voxel = (%d , %d)\n",
     iMin, iMax);
-  vcl_fprintf(f1, "-----------\n");
-  vcl_fprintf(f1, "Original Gene ID : Coords (x,y,z) : Bin label\n");
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
+  std::fprintf(f1, "Original Gene ID : Coords (x,y,z) : Bin label\n");
+  std::fprintf(f1, "-----------\n");
 
   pBinXYZ = pBins-1;
   iNumTotGene = 0;
@@ -3827,26 +3827,26 @@ SaveAllDataMetaBuck(const char *pcInFile, char *pcOutFile, InputDataB *pInData,
     for(j = 0; j < iNumGeneInBin; j++) {
       iGene = *piGene++;
       p3dPts = &((pInData+iGene)->Sample);
-      vcl_fprintf(f1, "%d : (%lf , %lf , %lf) : %d\n", iGene,
+      std::fprintf(f1, "%d : (%lf , %lf , %lf) : %d\n", iGene,
         p3dPts->fPosX, p3dPts->fPosY, p3dPts->fPosZ, i);
     }
     iNumTotGene += iNumGeneInBin;
   } /* Next BinXYZ: i++ */
 
-  vcl_fprintf(f1, "-----------\n");
+  std::fprintf(f1, "-----------\n");
 
   fclose(f1);
 
   fTmp = 100.0 * (float) iBinEmpty / (float) iNumBinXYZ;
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "\tNumber of Empty Bins = %d out of %d (%.2f percent).\n",
     iBinEmpty, iNumBinXYZ, fTmp);
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "\t(Min , Max) number of genes per voxel = (%d , %d)\n",
     iMin, iMax);
 
   if(iNumTotGene != iNumGenes) {
-    vcl_fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
       pcFName, iNumGenes, iNumTotGene);
     exit(-4);
   }
@@ -3881,17 +3881,17 @@ SaveG3dAll(char *pcOutFile, InputDataB *pInData, BinB *pBins, DimensionB *pDim)
   f1 = NULL;
   f1 = fopen(pcOutFile, "w");
   if(f1 == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
+    std::fprintf(stderr, "ERROR(%s): Can't open file %s.\n", pcFName, pcOutFile);
     exit(-6); }
   
-  vcl_fprintf(stderr, "MESG(%s):\n\tSaving G3D data in %s.\n", pcFName, pcOutFile);
+  std::fprintf(stderr, "MESG(%s):\n\tSaving G3D data in %s.\n", pcFName, pcOutFile);
 
   /* -- First: Save Initial Source Data -- */
 
   iNumBinXYZ = pDim->iWSpaceSize;
   iNumGenes  = pDim->iNum3dPts;
-  vcl_fprintf(f1, "%d\n", iNumBinXYZ);
-  vcl_fprintf(f1, "%d\n", iNumGenes);
+  std::fprintf(f1, "%d\n", iNumBinXYZ);
+  std::fprintf(f1, "%d\n", iNumGenes);
 
   pBinXYZ = pBins-1;
   iNumTotGene = 0;
@@ -3909,7 +3909,7 @@ SaveG3dAll(char *pcOutFile, InputDataB *pInData, BinB *pBins, DimensionB *pDim)
       fTmpC = (float) iGene / (float) iNumGenes;
       fTmpC *= 255;
       p3dPts = &((pInData+iGene)->Sample);
-      vcl_fprintf(f1, "%lf %lf %lf %lf %lf %lf\n",
+      std::fprintf(f1, "%lf %lf %lf %lf %lf %lf\n",
         p3dPts->fPosX, p3dPts->fPosY, p3dPts->fPosZ,
         fTmp, fTmpC, fTmpB);
     }
@@ -3919,7 +3919,7 @@ SaveG3dAll(char *pcOutFile, InputDataB *pInData, BinB *pBins, DimensionB *pDim)
   fclose(f1);
 
   if(iNumTotGene != iNumGenes) {
-    vcl_fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
+    std::fprintf(stderr, "ERROR(%s): Expected to save %d genes, not %d .\n",
       pcFName, iNumGenes, iNumTotGene);
     exit(-4);
   }
@@ -4011,9 +4011,9 @@ CheckBuck(Buckets0 *pBuckets)
     pBin++;
   }
   if(iNumGenes != pBuckets->iTotGene) {
-    vcl_fprintf(stderr, "ERROR(%s): There are %d genes in %d bins,\n",
+    std::fprintf(stderr, "ERROR(%s): There are %d genes in %d bins,\n",
         pcFName, iNumGenes, iNumBins);
-    vcl_fprintf(stderr, "\trather than an expected total of %d\n",
+    std::fprintf(stderr, "\trather than an expected total of %d\n",
         pBuckets->iTotGene);
     return(FALSE);
   }
@@ -4031,9 +4031,9 @@ CheckBuck(Buckets0 *pBuckets)
       pBin++;
     }
     if(iNumGenes != pBuck->iNumEl) {
-      vcl_fprintf(stderr, "ERROR(%s): There are %d genes in %d bins,\n",
+      std::fprintf(stderr, "ERROR(%s): There are %d genes in %d bins,\n",
           pcFName, iNumGenes, iNumBins);
-      vcl_fprintf(stderr, "\trather than %d for bucket %d (out of %d).\n",
+      std::fprintf(stderr, "\trather than %d for bucket %d (out of %d).\n",
           pBuck->iNumEl, i, iNumBucks);
       return(FALSE);
     }
@@ -4041,9 +4041,9 @@ CheckBuck(Buckets0 *pBuckets)
     iNumGeneTot += iNumGenes;
   }
   if(iNumGeneTot != pBuckets->iTotGene) {
-    vcl_fprintf(stderr, "ERROR(%s): There are %d genes in %d buckets,\n",
+    std::fprintf(stderr, "ERROR(%s): There are %d genes in %d buckets,\n",
         pcFName, iNumGenes, iNumBucks);
-    vcl_fprintf(stderr, "\trather than an expected total of %d\n",
+    std::fprintf(stderr, "\trather than an expected total of %d\n",
         pBuckets->iTotGene);
     return(FALSE);
   }
@@ -4080,15 +4080,15 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
   iSliceSize = pDim->iSliceSize;
   iWSpaceSize = pDim->iWSpaceSize;
 
-  vcl_fprintf(stderr, "MESG(%s):\n", pcFName);
-  vcl_fprintf(stderr, "\tSet %d generators in %d Bins (voxels).\n",
+  std::fprintf(stderr, "MESG(%s):\n", pcFName);
+  std::fprintf(stderr, "\tSet %d generators in %d Bins (voxels).\n",
     iNumGeneTot, iNumBinsXYZ);
 
   /* Temp Buffer of bins : we do not know a priori *\
   \*   how many generators per voxel we may have   */
   pTmpBins = NULL;
   if((pTmpBins = (BinB *) calloc(iNumBinsXYZ, sizeof(BinB))) == NULL) {
-    vcl_fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
+    std::fprintf(stderr, "ERROR(%s):\n\tCALLOC failed for pTmpBins[%d].\n",
       pcFName, iNumBinsXYZ);
     exit(-2); }
   pBin = pTmpBins;
@@ -4096,7 +4096,7 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
   for(i = 0; i < iNumBinsXYZ; i++) {
     pBin->piGenes = NULL;
     if((pBin->piGenes = (int *) calloc(iMax, sizeof(int))) == NULL) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
         pcFName, i, iMax);
       exit(-2); }
@@ -4118,7 +4118,7 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
 
     iBin = iZ * iSliceSize  + iY * iXdim + iX;
     if(iBin > iWSpaceSize || iBin < 0) {
-      vcl_fprintf(stderr,
+      std::fprintf(stderr,
         "ERROR(%s):\n\tVoxel Position = %d out of range.\n",
         pcFName, iBin);
       exit(-4); }
@@ -4135,7 +4135,7 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
       if((pBin->piGenes =
     (int *) realloc((int *) pBin->piGenes,
         iMax * sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s):\n\tREALLOC fails on pBin[%d]->piGenes[%d].\n",
     pcFName, iBin, iMax);
   exit(-2); }
@@ -4160,7 +4160,7 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
       iEmpty++;
     else {
       if((pBin->piGenes = (int *) calloc(iNum, sizeof(int))) == NULL) {
-  vcl_fprintf(stderr,
+  std::fprintf(stderr,
     "ERROR(%s):\n\tCALLOC failed for pBin[%d]->piGenes[%d].\n",
     pcFName, i, iNum);
   exit(-2); }
@@ -4178,7 +4178,7 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
   } /* Next bin: i++ */
 
   if(iTmp != iNumGeneTot) {
-    vcl_fprintf(stderr,
+    std::fprintf(stderr,
       "ERROR(%s):\n\tExpected to load %d genes in XYZ-Bins, not %d\n",
       pcFName, iNumGeneTot, iTmp);
     exit(-2); }
@@ -4195,9 +4195,9 @@ FillSingleMetaBucketInXYZ(InputDataB *pInData,  Buckets0 *pBucketsXYZ,
   pBucketsXYZ->iMinGene = iNumMin;
   pBucketsXYZ->iBinEmpty = iEmpty;
 
-  vcl_fprintf(stderr, "\tOut of %d voxels, %d are empty.\n",
+  std::fprintf(stderr, "\tOut of %d voxels, %d are empty.\n",
     iNumBinsXYZ, iEmpty);
-  vcl_fprintf(stderr, "\t(Min , Max) gene per voxel = (%d , %d).\n",
+  std::fprintf(stderr, "\t(Min , Max) gene per voxel = (%d , %d).\n",
     iNumMin, iNumMax);
 
   /* --- Set up some parameters for Single Meta Bucket0 --- */

@@ -14,8 +14,8 @@
 #include <vgui/vgui_poly_tableau.h>
 #include <vgui/vgui_easy2D_tableau.h>
 #include <vgui/vgui_shell_tableau.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 
 #include <Inventor/actions/SoSearchAction.h>
 #include <Inventor/projectors/SbSphereSheetProjector.h>
@@ -136,7 +136,7 @@ biov_examiner_tableau::~biov_examiner_tableau()
 
 
 
-vcl_string biov_examiner_tableau::type_name() const {return "biov_examiner_tableau";}
+std::string biov_examiner_tableau::type_name() const {return "biov_examiner_tableau";}
 
 //: Handle the events coming in
 //:   Left mouse = spin
@@ -260,8 +260,8 @@ bool biov_examiner_tableau::handle(const vgui_event& e)
     const SbVec2s viewport_size(get_viewport_region().getViewportSizePixels());
     const SbVec2s viewport_origin(get_viewport_region().getViewportOriginPixels());
     const SbVec2s curr_pos = SbVec2s(e.wx, e.wy) - viewport_origin;
-    const SbVec2f curr_pos_norm((float) curr_pos[0] / (float) vcl_max((int)(viewport_size[0] - 1), 1),
-                                (float) curr_pos[1] / (float) vcl_max((int)(viewport_size[1] - 1), 1));
+    const SbVec2f curr_pos_norm((float) curr_pos[0] / (float) std::max((int)(viewport_size[0] - 1), 1),
+                                (float) curr_pos[1] / (float) std::max((int)(viewport_size[1] - 1), 1));
     const SbVec2f last_pos_norm = last_pos_;
     float aspect_ratio = get_viewport_region().getViewportAspectRatio();
   
@@ -294,18 +294,18 @@ bool biov_examiner_tableau::handle(const vgui_event& e)
       if (e.button == vgui_RIGHT) {
       if( e.modifier == vgui_CTRL)
       {
-              vcl_cerr << "ctrl right-click\n";
+              std::cerr << "ctrl right-click\n";
               SbVec2s pos = SbVec2s(e.wx, e.wy) - viewport_origin;
               SbVec2s evt(e.wx, e.wy);
-              vcl_cerr << "click = " <<  evt[0] << " " << evt[1] ;
-              vcl_cerr << "origin = " << viewport_origin[0] << " " << viewport_origin[1] ;
-              vcl_cerr << "pos = " << pos[0] << " " << pos[1] << "\n";
+              std::cerr << "click = " <<  evt[0] << " " << evt[1] ;
+              std::cerr << "origin = " << viewport_origin[0] << " " << viewport_origin[1] ;
+              std::cerr << "pos = " << pos[0] << " " << pos[1] << "\n";
 
 
               SbViewportRegion v = get_viewport_region();
 
               SbVec2s size = v.getViewportSizePixels();
-              vcl_cerr << "viewport size = " << size[0] << " " << size[1] << "\n";
+              std::cerr << "viewport size = " << size[0] << " " << size[1] << "\n";
 
               v.setViewportPixels( SbVec2s(0,0), v.getViewportSizePixels() ); 
               SoRayPickAction rpaction( v );
@@ -314,7 +314,7 @@ bool biov_examiner_tableau::handle(const vgui_event& e)
               rpaction.apply( user_scene_root_ );
               SoPickedPoint * point = rpaction.getPickedPoint();
               if (!point) {
-                      vcl_cerr << "no hit\n";
+                      std::cerr << "no hit\n";
               }
               else{
                       SbVec3f v = point->getPoint();
@@ -492,7 +492,7 @@ void biov_examiner_tableau::get_popup(const vgui_popup_params& params,
 {
   bgui3d_fullviewer_tableau::get_popup(params, menu);
 
-  vcl_string axis_item;
+  std::string axis_item;
   if( this->axis_visible() )
     axis_item = "Disable Axis";
   else
@@ -500,8 +500,8 @@ void biov_examiner_tableau::get_popup(const vgui_popup_params& params,
 
   menu.add(axis_item, new biov_axis_visible_command(this));
   
-  vcl_string check_on = "[x]";
-  vcl_string check_off = "[ ]";
+  std::string check_on = "[x]";
+  std::string check_off = "[ ]";
 
   vgui_menu seek_menu;
   SeekDistance seek = seek_distance_;
@@ -811,7 +811,7 @@ void biov_examiner_tableau::loadColorMap()
 }
 
 //: Given the current map, retrieve the string that represents it.
-vcl_string
+std::string
 biov_examiner_tableau::getCMapString()
 {
     if (map == SoTransferFunction::NONE)
@@ -900,7 +900,7 @@ biov_examiner_tableau::draw_axis_cross()
   const int view_x = vp[2];
   const int view_y = vp[3];
   const int pixelarea =
-    int(float(25)/100.0f * vcl_min(view_x, view_y));
+    int(float(25)/100.0f * std::min(view_x, view_y));
   // lower right of canvas
   glViewport(vp[0]+vp[2] - pixelarea, vp[1], pixelarea, pixelarea);
 
@@ -960,9 +960,9 @@ biov_examiner_tableau::draw_axis_cross()
     float val[3] = { xpos[2], ypos[2], zpos[2] };
 
     // Bubble sort.. :-}
-    if (val[0] < val[1]) { vcl_swap(val[0], val[1]); vcl_swap(idx[0], idx[1]); }
-    if (val[1] < val[2]) { vcl_swap(val[1], val[2]); vcl_swap(idx[1], idx[2]); }
-    if (val[0] < val[1]) { vcl_swap(val[0], val[1]); vcl_swap(idx[0], idx[1]); }
+    if (val[0] < val[1]) { std::swap(val[0], val[1]); std::swap(idx[0], idx[1]); }
+    if (val[1] < val[2]) { std::swap(val[1], val[2]); std::swap(idx[1], idx[2]); }
+    if (val[0] < val[1]) { std::swap(val[0], val[1]); std::swap(idx[0], idx[1]); }
     assert((val[0] >= val[1]) && (val[1] >= val[2])); // Just checking..
 
     for (int i=0; i < 3; i++) {

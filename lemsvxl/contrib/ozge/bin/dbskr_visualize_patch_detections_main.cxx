@@ -14,7 +14,7 @@
 
 #include "dbskr_visualize_patch_detections.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include <bxml/bxml_document.h>
 #include <bxml/bxml_read.h>
@@ -24,11 +24,11 @@ int main(int argc, char *argv[]) {
   // Arguments
   vul_arg_info_list arg_list;
  
-  vul_arg<vcl_string> query_name(arg_list,"-q","name of the query","");
-  vul_arg<vcl_string> query_path(arg_list,"-qp","path of the query","");
-  vul_arg<vcl_string> param_file(arg_list,"-x","the name of the parameter file","");
-  vul_arg<vcl_string> ext(arg_list,"-ext","the extension of the model and query image files","");
-  vul_arg<vcl_string> html_img_ext(arg_list,"-htmlext","the extension of the image used in html files","");
+  vul_arg<std::string> query_name(arg_list,"-q","name of the query","");
+  vul_arg<std::string> query_path(arg_list,"-qp","path of the query","");
+  vul_arg<std::string> param_file(arg_list,"-x","the name of the parameter file","");
+  vul_arg<std::string> ext(arg_list,"-ext","the extension of the model and query image files","");
+  vul_arg<std::string> html_img_ext(arg_list,"-htmlext","the extension of the image used in html files","");
   vul_arg<int> html_img_w(arg_list,"-htmlw","the width in pixel of the image used in html files",10);
   vul_arg<bool> create_only_html(arg_list, "-onlyhtml", "create only the html", false);
   vul_arg<bool> show_match_images(arg_list, "-withmatches", "show match images in the html", false);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     return 0;
   
   if (param_doc.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return 0;
   }
 
@@ -63,15 +63,15 @@ int main(int argc, char *argv[]) {
   algo.show_match_images_ = show_match_images();
  
   if (!algo.initialize()) {
-    vcl_cout << "Initialization failed\n";
+    std::cout << "Initialization failed\n";
     return -1;
   } else 
-    vcl_cout << "initialized..";
+    std::cout << "initialized..";
   
   algo.process();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
   algo.finalize();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   return 0;
 }

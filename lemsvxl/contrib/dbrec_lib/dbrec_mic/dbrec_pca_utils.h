@@ -17,7 +17,7 @@
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_image_view.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_random.h>
@@ -31,7 +31,7 @@ public:
   virtual ~dbrec_pca();
 
   //: turn the image into a vector and add to the data
-  void add_image(const vil_image_view<float>& inp, const vcl_string& class_name);
+  void add_image(const vil_image_view<float>& inp, const std::string& class_name);
 
   //: check the consistency of the data (sizes of the vectors)
   bool check_data();
@@ -40,18 +40,18 @@ public:
   bool construct_basis_vectors(double variance_proportion);
 
   //: return the class name of the instance in the dataset that's closes to the input image in the transformed space
-  bool classify_nn(const vil_image_view<float>& inp, vcl_string& out_str);
+  bool classify_nn(const vil_image_view<float>& inp, std::string& out_str);
   
 protected:
  
-  vcl_vector<vnl_vector<double> > data_;
-  vcl_vector<vcl_string> classes_; // save the class string for each data
+  std::vector<vnl_vector<double> > data_;
+  std::vector<std::string> classes_; // save the class string for each data
 
   vnl_matrix<double> EVecs_;
   vnl_vector<double> evals_,m_;
 
   //: keep the transformed data for fast access during classification
-  vcl_vector<vnl_vector<double> > data_transformed_;
+  std::vector<vnl_vector<double> > data_transformed_;
 };
 
 ////////////////// DESCRIPTORS ///////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ protected:
   int n_;
   int dim_;
   vnl_random rng_;
-  vcl_vector<vcl_pair<int, int> > random_pixels_;  // vector of size dim_+1, constructor fills this so each call of extract uses the same set
+  std::vector<std::pair<int, int> > random_pixels_;  // vector of size dim_+1, constructor fills this so each call of extract uses the same set
 };
 
 class dbrec_single_scale_blob_descriptor : public dbrec_descriptor {
@@ -98,8 +98,8 @@ protected:
   int n_;
   float lambda0_;
   float lambda1_;
-  vcl_vector<vbl_array_2d<double> > kernels_;
-  vcl_vector<vbl_array_2d<bool> > masks_;
+  std::vector<vbl_array_2d<double> > kernels_;
+  std::vector<vbl_array_2d<bool> > masks_;
   bool bright_;
 };
 
@@ -121,15 +121,15 @@ public:
   virtual ~dbrec_bayesian_pca();
 
   //: add one data point of size nxn per polygon in the ground truth
-  void add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const vcl_string& ground_truth_type, char class_id);
+  void add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const std::string& ground_truth_type, char class_id);
   //: the method adds cnt many new data vectors for a random selection of pixels in the map with given bool value 
   void add_image_rectangles(const vil_image_view<float>& inp, int n, const vil_image_view<bool>& class_map, bool value, char class_id, int cnt);
-  void save_image_rectangles(const vcl_string& prefix, int size, char class_id);
+  void save_image_rectangles(const std::string& prefix, int size, char class_id);
 
   //: check the consistency of the data (sizes of the vectors)
   bool check_data();
-  bool construct_basis_vectors(double variance_proportion, int patch_size, const vcl_string& output_path);
-  bool visualize_transformed_distributions(const vcl_string& output_path, char class_id);
+  bool construct_basis_vectors(double variance_proportion, int patch_size, const std::string& output_path);
+  bool visualize_transformed_distributions(const std::string& output_path, char class_id);
 
   //: classify each pixel in the image as the given class or not by generating a class map as the posterior map of the class
   bool classify_image_rectangles(const vil_image_view<float>& inp, const vil_image_view<bool>& inp_valid_map, int n, char class_id, float class_prior, vil_image_view<float>& output_map);
@@ -137,18 +137,18 @@ public:
   //: apply bayesian pca to gradient image - PCA-SIFT descriptor
 
 protected:
-  vcl_vector<vnl_vector<double> > data_;
-  vcl_vector<char> data_class_ids_; // assumes at max 255 classes
+  std::vector<vnl_vector<double> > data_;
+  std::vector<char> data_class_ids_; // assumes at max 255 classes
 
   vnl_matrix<double> EVecs_;
   vnl_vector<double> evals_, m_;
 
   //: keep the transformed data
-  vcl_vector<vnl_vector<double> > data_transformed_;
+  std::vector<vnl_vector<double> > data_transformed_;
   int transformed_size_;
-  vcl_vector<vcl_vector<double> > means_; // a set of means for each class
-  vcl_vector<vcl_vector<double> > vars_;  // a set of vars for each class
-  vcl_map<char,int> classes_;
+  std::vector<std::vector<double> > means_; // a set of means for each class
+  std::vector<std::vector<double> > vars_;  // a set of vars for each class
+  std::map<char,int> classes_;
 
   dbrec_descriptor_sptr desc_;
   vnl_random rng_;
@@ -166,10 +166,10 @@ public:
   static void standardize_vector(vnl_vector<double>& v);
 
   //: add one data point of size nxn per polygon in the ground truth
-  void add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const vcl_string& ground_truth_type, char class_id);
+  void add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const std::string& ground_truth_type, char class_id);
   //: the method adds cnt many new data vectors for a random selection of pixels in the map with given bool value 
   void add_image_rectangles(const vil_image_view<float>& inp, int n, const vil_image_view<bool>& class_map, bool value, char class_id, int cnt);
-  void save_image_rectangles(const vcl_string& prefix, int size, char class_id);
+  void save_image_rectangles(const std::string& prefix, int size, char class_id);
 
   //: check the consistency of the data (sizes of the vectors)
   bool check_data();
@@ -178,8 +178,8 @@ public:
   bool classify_image_rectangles(const vil_image_view<float>& inp, const vil_image_view<bool>& inp_valid_map, int n, char class_id, vil_image_view<float>& output_map);
 
 protected:
-  vcl_vector<vnl_vector<double> > data_;
-  vcl_vector<char> data_class_ids_; // assumes at max 255 classes
+  std::vector<vnl_vector<double> > data_;
+  std::vector<char> data_class_ids_; // assumes at max 255 classes
 
   vnl_random rng_;
 };

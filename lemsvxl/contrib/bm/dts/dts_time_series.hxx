@@ -4,7 +4,7 @@
 
 #include<dts/dts_time_series.h>
 
-#include<vcl_iostream.h>
+#include<iostream>
 
 #include<vnl/io/vnl_io_vector_fixed.h>
 
@@ -59,20 +59,20 @@ void dts_time_series<timeT, elementType, n>::
             //check if dimensions match
             if( this->dim != d )
             {
-                vcl_cerr << "----ERROR---- "
+                std::cerr << "----ERROR---- "
                          << "dts_time_series_fixed::b_read()\n"
                          << "\tDimension Mismatch.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
                 exit(-1);
             }
 
             //read the size of the time series
-            vcl_size_t tm_size;
+            std::size_t tm_size;
             vsl_b_read(is, tm_size);
 
-            for( vcl_size_t t_idx = vcl_size_t(0);
+            for( std::size_t t_idx = std::size_t(0);
                     t_idx < tm_size; ++t_idx )
             {
                 //read the time
@@ -91,12 +91,12 @@ void dts_time_series<timeT, elementType, n>::
         }//end case 1
     default:
         {
-            vcl_cerr << "----ERROR---- "
+            std::cerr << "----ERROR---- "
                          << "dts_time_series_fixed::b_read()\n"
                          << "\tUnknown version number.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
         }//end default
     }//end swtich(v)
@@ -106,12 +106,12 @@ void dts_time_series<timeT, elementType, n>::
 
 template<class timeT, class elementType, unsigned n>
 void dts_time_series<timeT, elementType, n>::
-write_txt( vcl_string const& filename) const
+write_txt( std::string const& filename) const
 {
     // each row will be a data point
     // first column will be time
     // next columns will be feature vectors
-    vcl_ofstream of( filename.c_str(), vcl_ios::out);
+    std::ofstream of( filename.c_str(), std::ios::out);
 
     typename map_type::const_iterator 
         ts_itr, ts_end = this->time_map.end();
@@ -139,12 +139,12 @@ write_txt( vcl_string const& filename) const
 
 template<class timeT, class elementType>
 void dts_time_series<timeT, elementType, 1>::
-write_txt( vcl_string const& filename) const
+write_txt( std::string const& filename) const
 {
     // each row will be a data point
     // first column will be time
     // the next column will be the feature
-    vcl_ofstream of( filename.c_str(), vcl_ios::out);
+    std::ofstream of( filename.c_str(), std::ios::out);
 
     typename map_type::const_iterator 
         ts_itr, ts_end = this->time_map.end();
@@ -212,20 +212,20 @@ void dts_time_series<timeT, elementType, 1>::
             //check if dimensions match
             if( this->dim != d )
             {
-                vcl_cerr << "----ERROR---- "
+                std::cerr << "----ERROR---- "
                          << "dts_time_series_fixed::b_read()\n"
                          << "\tDimension Mismatch.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
                 exit(-1);
             }
 
             //read the size of the time series
-            vcl_size_t tm_size;
+            std::size_t tm_size;
             vsl_b_read(is, tm_size);
 
-            for( vcl_size_t t_idx = vcl_size_t(0);
+            for( std::size_t t_idx = std::size_t(0);
                     t_idx < tm_size; ++t_idx )
             {
                 //read the time
@@ -244,12 +244,12 @@ void dts_time_series<timeT, elementType, 1>::
         }//end case 1
     default:
         {
-            vcl_cerr << "----ERROR---- "
+            std::cerr << "----ERROR---- "
                          << "dts_time_series_fixed::b_read()\n"
                          << "\tUnknown version number.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
         }//end default
     }//end swtich(v)

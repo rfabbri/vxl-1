@@ -19,7 +19,7 @@
 #include "dborl_bnd_generic_params.h"
 #include "dborl_bnd_generic_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
   //: always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -54,20 +54,20 @@ int main(int argc, char *argv[]) {
   pro.parameters()->set_value("-output_vsol", true);
 
   //load the input edge map
-  vcl_string input_edg;
+  std::string input_edg;
   if (params->input_edge_from_object_folder_()) 
     input_edg = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
   else 
     input_edg = params->input_edge_folder_() + "/" + params->input_object_name_() + params->input_extension_();
  
   if (!vul_file::exists(input_edg)) {
-    vcl_cout << "Cannot find edg file: " << input_edg << "\n";
+    std::cout << "Cannot find edg file: " << input_edg << "\n";
     return 0;
   }
 
   dbdet_edgemap_sptr edge_map;
   if (!dbdet_load_edg(input_edg, true, 1.0, edge_map)) {
-    vcl_cout << "Cannot find edg file: " << input_edg << "\n";
+    std::cout << "Cannot find edg file: " << input_edg << "\n";
     return 0;
   }
 
@@ -76,14 +76,14 @@ int main(int argc, char *argv[]) {
 
   pro.add_input(edgemap_sto);
   pro.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
   pro.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   //:get the output
-  vcl_vector<bpro1_storage_sptr> out = pro.get_output();
+  std::vector<bpro1_storage_sptr> out = pro.get_output();
   if (out.size() != 1) {
-    vcl_cout << "Process output does not contain a boundary map\n";
+    std::cout << "Process output does not contain a boundary map\n";
     return 0;
   }
 
@@ -92,11 +92,11 @@ int main(int argc, char *argv[]) {
     
     vidpro1_vsol2D_storage* output_vsol = dynamic_cast<vidpro1_vsol2D_storage*>(out[0].ptr());
     if (!output_vsol) {
-      vcl_cout << "Process output cannot be cast to a vsol storage\n";
+      std::cout << "Process output cannot be cast to a vsol storage\n";
       return 0;
     }
 
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -107,9 +107,9 @@ int main(int argc, char *argv[]) {
     
     output_file = output_file + params->input_object_name_() + params->output_extension_();
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
     if (!bsold_save_cem(vsol_list, output_file)) {
-      vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving edge file: " << output_file << std::endl;
       return 0;
     }
   }

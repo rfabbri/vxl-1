@@ -30,7 +30,7 @@ double compute_bending_angle (const dbsk3d_fs_edge* inputL,
   if (bgld_eq_m (cos_theta, 1))
     theta = 0;
   else
-    theta = vcl_acos (cos_theta);
+    theta = std::acos (cos_theta);
   return theta;
 }
 

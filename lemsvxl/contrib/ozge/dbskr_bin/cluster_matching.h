@@ -20,8 +20,8 @@
 //-------------------------------------------------------------------------
 
 // Includes
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
 
@@ -44,7 +44,7 @@ private:
     // Bioproc error type
     cluster_error m_error;
     // Exception message
-    vcl_string m_message;
+    std::string m_message;
     // MPI specific error.
     int m_mpierror;
     // System specific error code.
@@ -54,7 +54,7 @@ public:
     // Default is thrown when a container tries to fetch the filter response on non-LeadProcessor
     dbskr_cluster_exception() : m_error (Incomplete), m_message ("Response field is only complete on processor 0"), m_mpierror (0), m_syserror (0) {}
     // Customizable exception instance
-    dbskr_cluster_exception(cluster_error err, vcl_string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
+    dbskr_cluster_exception(cluster_error err, std::string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
 
     // Property accessors
     const char* get_message() { return m_message.data (); }
@@ -70,7 +70,7 @@ public:
    
     // Ctor/dtor
     // constructor for eth matching
-    dbskr_cluster_matching (vcl_string view_str, vcl_string patch_dir, vcl_string match_dir, vcl_string sampling_ds_str, 
+    dbskr_cluster_matching (std::string view_str, std::string patch_dir, std::string match_dir, std::string sampling_ds_str, 
         int verbose = TRACE_ERROR                           // Errors only
     );
     ~dbskr_cluster_matching ();
@@ -78,15 +78,15 @@ public:
     // Execute the algorithm and create the filter repsonse
     void execute_shock (bool match_with_circular_completions);
 
-    dbskr_shock_patch_storage_sptr load_str_from_file(vcl_string fname);
+    dbskr_shock_patch_storage_sptr load_str_from_file(std::string fname);
 
 private:
   
     unsigned int db_size_, num_pairs_;
-    vcl_vector<vcl_string> database_ins_names_; 
-    vcl_vector<vcl_string> database_cat_names_; 
-    vcl_vector<vcl_string> cat_par_ins_strs_;
-    vcl_string patch_dir_, match_dir_, sorting_method_str_, sampling_ds_str_;
+    std::vector<std::string> database_ins_names_; 
+    std::vector<std::string> database_cat_names_; 
+    std::vector<std::string> cat_par_ins_strs_;
+    std::string patch_dir_, match_dir_, sorting_method_str_, sampling_ds_str_;
     
     // Verbosity level
     int m_verbose;

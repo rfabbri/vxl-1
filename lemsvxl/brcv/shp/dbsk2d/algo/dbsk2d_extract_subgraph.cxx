@@ -20,7 +20,7 @@ dbsk2d_shock_node_sptr add_node(dbsk2d_shock_graph_sptr xshock_graph, dbsk2d_sho
   dbsk2d_xshock_node* xnode = dynamic_cast<dbsk2d_xshock_node*>(node.ptr());
   dbsk2d_shock_node_sptr new_xnode;
   if (xnode) {
-    /*vcl_vector<dbsk2d_xshock_sample_sptr > samples;
+    /*std::vector<dbsk2d_xshock_sample_sptr > samples;
     for (int i = 0; i < xnode->num_samples(); i++)
       samples.push_back(new dbsk2d_xshock_sample(*(xnode->sample(i))));
     
@@ -32,7 +32,7 @@ dbsk2d_shock_node_sptr add_node(dbsk2d_shock_graph_sptr xshock_graph, dbsk2d_sho
   }
 
   //compute extrinsic points for display purposes
-  vcl_vector<vgl_point_2d<double> > & pts = node->ex_pts();
+  std::vector<vgl_point_2d<double> > & pts = node->ex_pts();
   for (unsigned i = 0; i < pts.size(); i++) {
     new_xnode->ex_pts().push_back(pts[i]);
   }
@@ -55,7 +55,7 @@ dbsk2d_shock_edge_sptr add_edge(dbsk2d_shock_graph_sptr xshock_graph, dbsk2d_sho
   dbsk2d_xshock_edge* xedge = dynamic_cast<dbsk2d_xshock_edge*>(edge.ptr());
   dbsk2d_shock_edge_sptr new_xedge;
   if (xedge) {
-    vcl_vector<dbsk2d_xshock_sample_sptr > samples;
+    std::vector<dbsk2d_xshock_sample_sptr > samples;
     for (int i = 0; i < xedge->num_samples(); i++)
       samples.push_back(new dbsk2d_xshock_sample(*(xedge->sample(i))));
     
@@ -65,7 +65,7 @@ dbsk2d_shock_edge_sptr add_edge(dbsk2d_shock_graph_sptr xshock_graph, dbsk2d_sho
   }
 
   //compute extrinsic points for display purposes
-  vcl_vector<vgl_point_2d<double> > & pts = edge->ex_pts();
+  std::vector<vgl_point_2d<double> > & pts = edge->ex_pts();
   for (unsigned i = 0; i < pts.size(); i++) {
     new_xedge->ex_pts().push_back(pts[i]);
   }

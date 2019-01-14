@@ -8,8 +8,8 @@
 #ifndef MeshItem_h_
 #define MeshItem_h_
 
-#include <vcl_set.h>
-#include <vcl_cstdio.h>
+#include <set>
+#include <cstdio>
 
 class dbmsh_item {
 

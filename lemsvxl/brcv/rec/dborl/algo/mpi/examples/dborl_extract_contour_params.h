@@ -33,11 +33,11 @@ public:
   dborl_parameter<float> curvature_smoothing_beta;  
   dborl_parameter<int> intensity_threshold;
   dborl_parameter<bool> save_to_output_folder;       // if false saves each con file to the object's folder
-  dborl_parameter<vcl_string> index_filename;
-  dborl_parameter<vcl_string> output_directory;
-  dborl_parameter<vcl_string> image_extension;       // extensions of images to load, assumption: <obj name><.ext> is found in the object directory
+  dborl_parameter<std::string> index_filename;
+  dborl_parameter<std::string> output_directory;
+  dborl_parameter<std::string> image_extension;       // extensions of images to load, assumption: <obj name><.ext> is found in the object directory
   
-  dborl_extract_contour_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_extract_contour_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     sigma.set_values(param_list_, "data", "sigma", "sigma for smoothing", 1.0f, 1.0f); 
     nsteps.set_values(param_list_, "data", "nsteps", "number smoothing steps", 1, 1); 
     curvature_smoothing_beta.set_values(param_list_, "data", "beta", "curvature smoothing beta", 0.3f, 0.3f); 

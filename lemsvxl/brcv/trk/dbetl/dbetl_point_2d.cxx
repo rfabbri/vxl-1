@@ -18,7 +18,7 @@ dbetl_point_2d::dbetl_point_2d( const becld_episeg_sptr& episeg, double index,
    next_(NULL), prev_(NULL),
    camera_(camera)
 {
-  int i_prev = (int) vcl_floor(index);
+  int i_prev = (int) std::floor(index);
   if(i_prev >= (int)_episeg->curve()->size()-1)
     i_prev = _episeg->curve()->size()-2;
   vgl_point_2d<double> p1 = _episeg->curve()->point(i_prev)->get_p();

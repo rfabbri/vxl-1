@@ -6,7 +6,7 @@ biob_worldpt_roster::~biob_worldpt_roster(){}
 
 
 
-void biob_worldpt_roster::x_write_this(vcl_ostream& os){
+void biob_worldpt_roster::x_write_this(std::ostream& os){
   vsl_basic_xml_element elm("biob_worldpt_roster");
   elm.add_attribute("num_points", (int) num_points());
   elm.x_write_open(os);

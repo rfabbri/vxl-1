@@ -30,10 +30,10 @@
 //-----------------------------------------------------------------------------
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -76,19 +76,19 @@ public:
   bool construct_v();
   bool get_shortest_v_node_path(dbsk2d_shock_node_sptr n1, 
                                 dbsk2d_shock_node_sptr n2, 
-                                vcl_vector<dbskr_v_node_sptr>& path);
+                                std::vector<dbskr_v_node_sptr>& path);
 
   //: return all the paths whose normalized length is within length_thres
   //  restrict the search with this length constraint
   //  required because number of paths explode in complicated shock graphs
   bool get_all_v_node_paths(dbsk2d_shock_node_sptr n1, 
                               dbsk2d_shock_node_sptr n2, 
-                              vcl_vector<vcl_vector<dbskr_v_node_sptr> >& paths, vcl_vector<float>& abs_lengths, float normalization_length, float length_thres);
+                              std::vector<std::vector<dbskr_v_node_sptr> >& paths, std::vector<float>& abs_lengths, float normalization_length, float length_thres);
 
   bool get_all_scurves(dbsk2d_shock_node_sptr n1, 
                        dbsk2d_shock_node_sptr n2, 
-                       vcl_vector<dbskr_scurve_sptr>& scurves, 
-                       vcl_vector<float>& abs_lengths, float norm_length, float length_threshold, float interpolate_ds, float sample_ds);
+                       std::vector<dbskr_scurve_sptr>& scurves, 
+                       std::vector<float>& abs_lengths, float norm_length, float length_threshold, float interpolate_ds, float sample_ds);
 
 
   //: the input v graphs and all the paths between n1 and n2 induce various v graphs 
@@ -96,18 +96,18 @@ public:
   //  find all such v graphs using the paths and various unions of paths
   bool get_all_v_graphs(dbsk2d_shock_node_sptr n1, 
                               dbsk2d_shock_node_sptr n2, dbskr_v_graph_sptr v1, dbskr_v_graph_sptr v2,
-                              vcl_vector<dbskr_v_graph_sptr>& graphs, vcl_vector<float>& abs_lengths, float norm_length, float length_threshold);
+                              std::vector<dbskr_v_graph_sptr>& graphs, std::vector<float>& abs_lengths, float norm_length, float length_threshold);
 
-  bool get_edges_on_path(vcl_vector<dbskr_v_node_sptr>& path, 
-                         vcl_vector<dbsk2d_shock_edge_sptr>& edges);
+  bool get_edges_on_path(std::vector<dbskr_v_node_sptr>& path, 
+                         std::vector<dbsk2d_shock_edge_sptr>& edges);
 
   dbskr_v_graph_sptr get_v() { return v_; }
   dbsk2d_shock_graph_sptr get_sg() { return sg_; }
 
 protected:
-  bool get_path(vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >* vec, int ind1, int ind2, vcl_vector<dbskr_v_node_sptr>& path, float& length, int n1_id, int n2_id);
-  vcl_vector<dbskr_path_tree_node_sptr>* initialize_depth_zero(dbskr_v_node_sptr v1);
-  vcl_vector<dbskr_path_tree_node_sptr>* advance(vcl_vector<dbskr_path_tree_node_sptr>* last_vec, dbskr_v_node_sptr v1, float norm, float threshold);
+  bool get_path(std::vector<std::vector<dbskr_path_tree_node_sptr>* >* vec, int ind1, int ind2, std::vector<dbskr_v_node_sptr>& path, float& length, int n1_id, int n2_id);
+  std::vector<dbskr_path_tree_node_sptr>* initialize_depth_zero(dbskr_v_node_sptr v1);
+  std::vector<dbskr_path_tree_node_sptr>* advance(std::vector<dbskr_path_tree_node_sptr>* last_vec, dbskr_v_node_sptr v1, float norm, float threshold);
 
   dbsk2d_shock_graph_sptr sg_;
   dbskr_v_graph_sptr v_;
@@ -115,11 +115,11 @@ protected:
   //: a map from each node on the v_graph to its path_tree
   //  a path_tree is a vector indexed by depth, each depth contains a vector of tree_node's
   //  a tree_node contains the v_node of that depth and a pointer to its parent tree_node
-  vcl_map<int, vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >*> path_tree_map_; 
-  typedef vcl_map<int, vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >*> path_tree_map_type;
+  std::map<int, std::vector<std::vector<dbskr_path_tree_node_sptr>* >*> path_tree_map_; 
+  typedef std::map<int, std::vector<std::vector<dbskr_path_tree_node_sptr>* >*> path_tree_map_type;
   
   //: a map to keep track of path_tree_node's to prevent infinite loops while finding all possible paths
-  vcl_multimap<vcl_pair<int, int>, dbskr_path_tree_node_sptr> path_tree_multimap_;
+  std::multimap<std::pair<int, int>, dbskr_path_tree_node_sptr> path_tree_multimap_;
 };
 
 

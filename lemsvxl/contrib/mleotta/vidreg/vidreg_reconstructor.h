@@ -15,8 +15,8 @@
 
 #include <vidreg/vidreg_salient_group_sptr.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
+#include <vector>
+#include <deque>
 
 
 //: An object to reconstruct tracks into 3D
@@ -39,11 +39,11 @@ class vidreg_reconstructor
     //: The fixed internal camera parameters
     vpgl_calibration_matrix<double> K_;
 
-    vcl_deque<vidreg_salient_group_sptr>  groups_;
-    vcl_vector<vpgl_perspective_camera<double> > cameras_;
-    vcl_vector<vgl_point_2d<double> > image_points_;
-    vcl_vector<vgl_point_3d<double> > world_points_;
-    vcl_vector<vcl_vector<bool> > mask_;
+    std::deque<vidreg_salient_group_sptr>  groups_;
+    std::vector<vpgl_perspective_camera<double> > cameras_;
+    std::vector<vgl_point_2d<double> > image_points_;
+    std::vector<vgl_point_3d<double> > world_points_;
+    std::vector<std::vector<bool> > mask_;
 
 };
 

@@ -1,7 +1,7 @@
 #ifndef psm_opt_alpha_cost_function_h_
 #define psm_opt_alpha_cost_function_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -18,7 +18,7 @@ template <psm_apm_type APM>
 class psm_opt_alpha_cost_function : public vnl_least_squares_function
 {
 public:
-  psm_opt_alpha_cost_function(psm_sample<APM> &cell, vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data, float obs_range);
+  psm_opt_alpha_cost_function(psm_sample<APM> &cell, std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data, float obs_range);
 
   virtual void f(vnl_vector<double> const& x, vnl_vector<double>& fx);
 
@@ -34,7 +34,7 @@ protected:
   psm_sample<APM> &cell_;
 
   //: the edges used to drive the optimization
-  vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data_;
+  std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data_;
 
   //: (half) the range to integrate over for pixel probabilities
   float obs_range_;

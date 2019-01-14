@@ -107,9 +107,9 @@ void vsl_b_read(vsl_b_istream & is, dbsks_circ_arc_grid& arc_grid)
 
     break;
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_circ_arc_grid& arc_grid) \n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_circ_arc_grid& arc_grid) \n"
       << "         Unknown version number " << version << "\n";
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 
   return;

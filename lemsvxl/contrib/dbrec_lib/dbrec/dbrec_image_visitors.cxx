@@ -19,7 +19,7 @@
 #include "dbrec_image_models.h"
 #include "dbrec_image_pairwise_models.h"
 #include <vul/vul_file.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_rational.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -32,7 +32,7 @@ dbrec_write_xml_visitor::dbrec_write_xml_visitor()
   p_data->append_text("\n");
   part_data_ = p_data;
 }
-void dbrec_write_xml_visitor::write_doc(vcl_string& name) {
+void dbrec_write_xml_visitor::write_doc(std::string& name) {
   bxml_document doc;
   bxml_element * root = new bxml_element("hierarchy");
   doc.set_root_element(root);
@@ -41,14 +41,14 @@ void dbrec_write_xml_visitor::write_doc(vcl_string& name) {
   root->append_text("\n");
   root->append_data(part_data_);
   root->append_text("\n");
-  vcl_ofstream os(name.c_str());
+  std::ofstream os(name.c_str());
   bxml_write(os,doc);
   os.close();
 }
 void dbrec_write_xml_visitor::visit_composition(dbrec_composition* c)
 {
   //: check if the part has already been written
-  vcl_set<unsigned>::iterator it = part_set_.find(c->type());
+  std::set<unsigned>::iterator it = part_set_.find(c->type());
   if (it == part_set_.end()) {
     //: just dump the part as a new data node
     bxml_element * data = new bxml_element("composition");
@@ -69,7 +69,7 @@ void dbrec_write_xml_visitor::visit_composition(dbrec_composition* c)
     s_data->append_text("\n");
     s_data->set_attribute("type", c->type());
     s_data->set_attribute("nchildren", c->children().size());
-    vcl_stringstream ss;
+    std::stringstream ss;
     for (unsigned i = 0; i < c->children().size(); i++) 
       ss << c->children()[i]->type() << " ";
     s_data->append_text(ss.str());
@@ -86,7 +86,7 @@ void dbrec_write_xml_visitor::visit_composition(dbrec_composition* c)
 void dbrec_write_xml_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
 {
   //: check if the part has already been written
-  vcl_set<unsigned>::iterator it = part_set_.find(g->type());
+  std::set<unsigned>::iterator it = part_set_.find(g->type());
   if (it == part_set_.end()) {
     //: just dump the part as a new data node
     bxml_element * data = new bxml_element("gaussian_primitive");
@@ -107,33 +107,33 @@ void dbrec_write_xml_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
     part_set_.insert(g->type());
   }
 }
-bool dbrec_parse_hierarchy_xml::parse(const vcl_string& name)
+bool dbrec_parse_hierarchy_xml::parse(const std::string& name)
 {
-  vcl_ifstream is(name.c_str());
+  std::ifstream is(name.c_str());
   if (!is) return false;
   bxml_document doc = bxml_read(is);
   bxml_element query("hierarchy");
   bxml_data_sptr hierarchy_root = bxml_find_by_name(doc.root_element(), query);
   if (!hierarchy_root) {
-    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name hierarchy!\n";
+    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name hierarchy!\n";
     return false;
   }
   bxml_element query2("structure");
   bxml_data_sptr structural_data = bxml_find_by_name(hierarchy_root, query2);
   bxml_element* str_elm = dynamic_cast<bxml_element*>(structural_data.ptr());
   if (!structural_data || !str_elm) {
-    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name structure!\n";
+    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name structure!\n";
     return false;
   }
   bxml_element query3("parts");
   bxml_data_sptr parts_data = bxml_find_by_name(hierarchy_root, query3);
   bxml_element* parts_elm = dynamic_cast<bxml_element*>(parts_data.ptr());
   if (!parts_data || !parts_elm) {
-    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name parts!\n";
+    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name parts!\n";
     return false;
   }
   //: parse each part first and create part_id, part ptr map
-  vcl_map<unsigned, dbrec_part_sptr> part_map;
+  std::map<unsigned, dbrec_part_sptr> part_map;
 
   //: add the parsers for each type into the vector
   typedef dbrec_part_sptr (*parsers)(bxml_data_sptr);
@@ -147,7 +147,7 @@ bool dbrec_parse_hierarchy_xml::parse(const vcl_string& name)
       for (unsigned i = 0; i < parser_size; i++) {
         dbrec_part_sptr part = parser_array[i](*d_it);
         if (part) {
-          part_map_[part->type()] = vcl_pair<dbrec_part_sptr, bool>(part, false);
+          part_map_[part->type()] = std::pair<dbrec_part_sptr, bool>(part, false);
           break; // get out of the parser loop
         } 
       }
@@ -228,7 +228,7 @@ dbrec_part_sptr dbrec_parse_hierarchy_xml::parse_composition(bxml_data_sptr d)
     break;
   }
   
-  vcl_vector<dbrec_part_sptr> children;  // empty for now
+  std::vector<dbrec_part_sptr> children;  // empty for now
 
   dbrec_composition* cp = new dbrec_composition(type, children, compositor, radius);
   cp->set_class_prior(class_prior);
@@ -236,7 +236,7 @@ dbrec_part_sptr dbrec_parse_hierarchy_xml::parse_composition(bxml_data_sptr d)
   out_p = cp;
   return out_p;
 }
-bool dbrec_parse_hierarchy_xml::parse_composition_structure(bxml_data_sptr d, vcl_map<unsigned, vcl_pair<dbrec_part_sptr, bool> >& part_map)
+bool dbrec_parse_hierarchy_xml::parse_composition_structure(bxml_data_sptr d, std::map<unsigned, std::pair<dbrec_part_sptr, bool> >& part_map)
 {
   bxml_element query("composition");
   bxml_data_sptr root = bxml_find_by_name(d, query);
@@ -248,7 +248,7 @@ bool dbrec_parse_hierarchy_xml::parse_composition_structure(bxml_data_sptr d, vc
   c_root->get_attribute("type", type);
   c_root->get_attribute("nchildren", nchildren);
   //: retrieve the part
-  vcl_map<unsigned, vcl_pair<dbrec_part_sptr, bool> >::iterator it = part_map.find(type);
+  std::map<unsigned, std::pair<dbrec_part_sptr, bool> >::iterator it = part_map.find(type);
   if (it == part_map.end())
     return false;
   dbrec_part_sptr p = it->second.first;
@@ -261,15 +261,15 @@ bool dbrec_parse_hierarchy_xml::parse_composition_structure(bxml_data_sptr d, vc
   for (bxml_element::const_data_iterator s_it = c_root->data_begin(); s_it != c_root->data_end(); s_it++) {
     if ((*s_it)->type() == bxml_data::TEXT) {
       bxml_text* t = dynamic_cast<bxml_text*>((*s_it).ptr());
-      vcl_stringstream text_d(t->data()); vcl_string buf;
-      vcl_vector<vcl_string> tokens;
+      std::stringstream text_d(t->data()); std::string buf;
+      std::vector<std::string> tokens;
       while (text_d >> buf) {
         tokens.push_back(buf);
       }
       if (tokens.size() != nchildren)
         continue;
       for (unsigned i = 0; i < nchildren; i++) {
-        vcl_stringstream ss2(tokens[i]); unsigned c_type;
+        std::stringstream ss2(tokens[i]); unsigned c_type;
         ss2 >> c_type;
         it = part_map.find(c_type);
         if (it == part_map.end())
@@ -287,7 +287,7 @@ dbrec_hierarchy_sptr dbrec_parse_hierarchy_xml::get_hierarchy()
 {
   dbrec_hierarchy_sptr h = new dbrec_hierarchy;
   //: check the part map and find the parts which have never been in the child list of any node, those are the root nodes of the hierarchy
-  for (vcl_map<unsigned, vcl_pair<dbrec_part_sptr, bool> >::const_iterator it = part_map_.begin(); it != part_map_.end(); it++) {
+  for (std::map<unsigned, std::pair<dbrec_part_sptr, bool> >::const_iterator it = part_map_.begin(); it != part_map_.end(); it++) {
     if (it->second.second)
       continue;
     dbrec_part_sptr p = it->second.first;
@@ -298,7 +298,7 @@ dbrec_hierarchy_sptr dbrec_parse_hierarchy_xml::get_hierarchy()
   return h;
 }
 
-void dbrec_sample_2d_location_visitor::visit_or_compositor(dbrec_or_compositor* c, const vcl_vector<dbrec_part_sptr>& children)
+void dbrec_sample_2d_location_visitor::visit_or_compositor(dbrec_or_compositor* c, const std::vector<dbrec_part_sptr>& children)
 {
   children_locs_.clear();
   children_locs_.push_back(composition_loc_);
@@ -308,11 +308,11 @@ void dbrec_sample_2d_location_visitor::visit_or_compositor(dbrec_or_compositor* 
   }
 
 }
-void dbrec_sample_2d_location_visitor::visit_central_compositor(dbrec_central_compositor* g, const vcl_vector<dbrec_part_sptr>& children)
+void dbrec_sample_2d_location_visitor::visit_central_compositor(dbrec_central_compositor* g, const std::vector<dbrec_part_sptr>& children)
 {
   children_locs_.clear();
   children_locs_.push_back(composition_loc_);
-  vcl_vector<dbrec_pairwise_model_sptr>& mods = g->models();
+  std::vector<dbrec_pairwise_model_sptr>& mods = g->models();
   for (unsigned i = 0; i < mods.size(); i++) {
     vgl_point_2d<float> second_loc;
     mods[i]->sample_location(composition_loc_, scale_, children[0], second_loc);
@@ -323,14 +323,14 @@ void dbrec_sample_2d_location_visitor::visit_central_compositor(dbrec_central_co
 
 void dbrec_draw_bsvg_visitor::visit_composition(dbrec_composition* c)
 {
-  vcl_vector<vgl_point_2d<float> > locs;
+  std::vector<vgl_point_2d<float> > locs;
   dbrec_image_compositor* c_img_comp = dynamic_cast<dbrec_image_compositor*>(c->compositor().ptr());
   if (!c_img_comp) {
-    vcl_cout << "ERROR: dbrec_composition::draw() - compositor is not an image image compositor!\n";
+    std::cout << "ERROR: dbrec_composition::draw() - compositor is not an image image compositor!\n";
     return;
   }
   float rad_in_image = c->radius();
-  vcl_stringstream ss; ss << "radius in image: " << rad_in_image << " pixels.";
+  std::stringstream ss; ss << "radius in image: " << rad_in_image << " pixels.";
   bsvg_text* tmm = new bsvg_text(ss.str());
   tmm->set_location(15.0f, 15.0f);
   doc_.add_element(tmm);
@@ -339,10 +339,10 @@ void dbrec_draw_bsvg_visitor::visit_composition(dbrec_composition* c)
   //c->compositor()->sample_locations(current_loc_, c->children(), locs);
   c_img_comp->sample_locations(current_loc_, scale_, c->children(), locs);
   if (locs.size() != c->children().size()) {
-    vcl_cout << "ERROR: dbrec_composition::draw() - size of location vector is different from size of children vector!\n";
+    std::cout << "ERROR: dbrec_composition::draw() - size of location vector is different from size of children vector!\n";
     return;
   }
-  vcl_vector<dbrec_part_sptr>& cv = c->children();
+  std::vector<dbrec_part_sptr>& cv = c->children();
   for (unsigned i = 0; i < cv.size(); i++) {
     current_loc_ = locs[i];
     cv[i]->accept(this);
@@ -370,19 +370,19 @@ void dbrec_draw_bsvg_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
   ell->set_stroke_color("yellow");
   doc_.add_element(ell);
 
-  vcl_stringstream ss; ss << g->type(); 
+  std::stringstream ss; ss << g->type(); 
   bsvg_text* t = new bsvg_text(ss.str());
   t->set_location(current_loc_.x()+2*rx, current_loc_.y()+2*ry);
   t->set_fill_color(color_);
   doc_.add_element(t);
 }
 
-void dbrec_draw_bsvg_visitor::write(const vcl_string& file)
+void dbrec_draw_bsvg_visitor::write(const std::string& file)
 {
   bxml_write(file, doc_);
 }
 
-void dbrec_draw_class(dbrec_hierarchy_sptr h, const vcl_string& out, unsigned class_id, float visualization_radius, const vcl_string& color)
+void dbrec_draw_class(dbrec_hierarchy_sptr h, const std::string& out, unsigned class_id, float visualization_radius, const std::string& color)
 {
   if (h->class_cnt() <= class_id)
     return;
@@ -395,12 +395,12 @@ void dbrec_draw_class(dbrec_hierarchy_sptr h, const vcl_string& out, unsigned cl
   v.write(out);
 }
 
-void dbrec_draw_composition(dbrec_hierarchy_sptr h, const vcl_string& out, unsigned composition_type_id, float visualization_radius, const vcl_string& color)
+void dbrec_draw_composition(dbrec_hierarchy_sptr h, const std::string& out, unsigned composition_type_id, float visualization_radius, const std::string& color)
 {
-  //h->print(vcl_cout);
+  //h->print(std::cout);
   dbrec_part_sptr c = h->get_part(composition_type_id);
   if (!c) {
-    vcl_cout << "In dbrec_draw_composition() -- cannot find the composition with type id: " << composition_type_id << vcl_endl;
+    std::cout << "In dbrec_draw_composition() -- cannot find the composition with type id: " << composition_type_id << std::endl;
     return;
   }
 
@@ -414,7 +414,7 @@ void dbrec_draw_composition(dbrec_hierarchy_sptr h, const vcl_string& out, unsig
 
 void dbrec_get_direction_vector_visitor::visit_composition(dbrec_composition* c) 
 {
-  vcl_vector<dbrec_part_sptr>& ch = c->children();
+  std::vector<dbrec_part_sptr>& ch = c->children();
   //: return the direction vector using the compositor
   dbrec_image_compositor* compositor = dynamic_cast<dbrec_image_compositor*>(c->compositor().ptr());
   compositor->direction_vector(ch, v_);
@@ -433,7 +433,7 @@ void dbrec_mark_receptive_fields_visitor::visit_composition(dbrec_composition* c
   //: first check if the context has any parts and if their type is consistent with c
   dbrec_part_ins_sptr pi = c_->first();
   if (!pi) {
-    vcl_cout << "In dbrec_mark_receptive_fields_visitor::visit_composition() -- no part instances in the context, cannot mark receptive fields!\n";
+    std::cout << "In dbrec_mark_receptive_fields_visitor::visit_composition() -- no part instances in the context, cannot mark receptive fields!\n";
     return;
   }
   if (c->type() != pi->type()) 
@@ -454,7 +454,7 @@ void dbrec_mark_receptive_fields_visitor::visit_gaussian_primitive(dbrec_gaussia
   //: first check if the context has any parts and if their type is consistent with c
   dbrec_part_ins_sptr pi = c_->first();
   if (!pi) {
-    vcl_cout << "In dbrec_mark_receptive_fields_visitor::visit_composition() -- no part instances in the context, cannot mark receptive fields!\n";
+    std::cout << "In dbrec_mark_receptive_fields_visitor::visit_composition() -- no part instances in the context, cannot mark receptive fields!\n";
     return;
   }
   if (g->type() != pi->type()) 
@@ -474,7 +474,7 @@ void dbrec_mark_receptive_fields_visitor::get_colored_img(const vil_image_view<v
 {
   unsigned ni = img.ni(); unsigned nj = img.nj();
   if (ni != out.ni() || nj != out.nj() || ni != out_rec_field_map_.ni() || nj != out_rec_field_map_.nj() || out.nplanes() != 3) {
-    vcl_cout << "In dbrec_mark_receptive_field_visitor::get_colored_img() -- image sizes are incompatible or input images does not have 3 planes!\n";
+    std::cout << "In dbrec_mark_receptive_field_visitor::get_colored_img() -- image sizes are incompatible or input images does not have 3 planes!\n";
     return;
   }
   for (unsigned i = 0; i < ni; i++)
@@ -492,7 +492,7 @@ void dbrec_mark_receptive_fields_visitor::get_colored_img(const vil_image_view<v
   if (ni != out.ni() || nj != out.nj() || 
       ni != rec_fields_map.ni() || nj != rec_fields_map.nj() || out.nplanes() != 3 ||
       ni != center_map.ni() || nj != center_map.nj()) {
-    vcl_cout << "In dbrec_mark_receptive_field_visitor::get_colored_img() -- image sizes are incompatible or input images does not have 3 planes!\n";
+    std::cout << "In dbrec_mark_receptive_field_visitor::get_colored_img() -- image sizes are incompatible or input images does not have 3 planes!\n";
     return;
   }
   for (unsigned i = 0; i < ni; i++)
@@ -507,7 +507,7 @@ void dbrec_mark_receptive_fields_visitor::get_colored_img(const vil_image_view<v
 void dbrec_mark_receptive_field_visitor::visit_composition(dbrec_composition* c) {
   if (c->type() != pi_->type())
     return;
-  vcl_vector<dbrec_part_ins_sptr> ch_ins;
+  std::vector<dbrec_part_ins_sptr> ch_ins;
   //: we know pi_ is of type dbrec_composition_ins
   dbrec_composition_ins* cins = dynamic_cast<dbrec_composition_ins*>(pi_.ptr());
   if (!cins) {
@@ -516,7 +516,7 @@ void dbrec_mark_receptive_field_visitor::visit_composition(dbrec_composition* c)
   } else
     ch_ins = cins->children();
 
-  vcl_vector<dbrec_part_sptr>& ch = c->children();
+  std::vector<dbrec_part_sptr>& ch = c->children();
   //: determine which child/children needs to be recursively visited using the type ids of compositions children
   for (unsigned i = 0; i < ch_ins.size(); i++) {
     //: find the corresponding part in the child vector
@@ -551,10 +551,10 @@ void dbrec_mark_receptive_field_visitor::visit_gaussian_primitive(dbrec_gaussian
   int i = (int)pi_->pt().x();
   int j = (int)pi_->pt().y();
 
-  int js = (int)vcl_floor(j - (float)nrows/2.0f + 0.5f);
-  int is = (int)vcl_floor(i - (float)ncols/2.0f + 0.5f);
-  int je = (int)vcl_floor(j + (float)nrows/2.0f + 0.5f);
-  int ie = (int)vcl_floor(i + (float)ncols/2.0f + 0.5f);
+  int js = (int)std::floor(j - (float)nrows/2.0f + 0.5f);
+  int is = (int)std::floor(i - (float)ncols/2.0f + 0.5f);
+  int je = (int)std::floor(j + (float)nrows/2.0f + 0.5f);
+  int ie = (int)std::floor(i + (float)ncols/2.0f + 0.5f);
 
   int ni = (int)map_.ni();
   int nj = (int)map_.nj();
@@ -589,7 +589,7 @@ void dbrec_get_symmetry_angle_visitor::visit_gaussian_primitive(dbrec_gaussian* 
 //  but in our applications we did not need this feature yet!
 void dbrec_get_symmetry_angle_visitor::visit_composition(dbrec_composition* c) 
 {
-  vcl_cout << "In dbrec_get_symmetry_angle_visitor::visit_composition() -- WARNING: returns 360 for all compositions!\n";
+  std::cout << "In dbrec_get_symmetry_angle_visitor::visit_composition() -- WARNING: returns 360 for all compositions!\n";
   angle_ = 360;
 }
 
@@ -599,7 +599,7 @@ void dbrec_sample_and_draw_part_visitor::visit_composition(dbrec_composition* c)
   if (!pc) {
     dbrec_or_compositor* oc = dynamic_cast<dbrec_or_compositor*>(c->compositor().ptr());
     if (!oc) {
-      vcl_cout << "dbrec_sample_and_draw_part_visitor is not designed to work with compositors other then the type: dbrec_pairwise_compositor or dbrec_or_compositor!\n";
+      std::cout << "dbrec_sample_and_draw_part_visitor is not designed to work with compositors other then the type: dbrec_pairwise_compositor or dbrec_or_compositor!\n";
       throw 0;
     }
     //: pick one of the children randomly and sample from it
@@ -616,7 +616,7 @@ void dbrec_sample_and_draw_part_visitor::visit_composition(dbrec_composition* c)
   //: sample a d and find p and q depending on masses
   int d = pc->model_->sample_d(rng_);
   float q = d/((m2/m1)+1.0f); float p = d-q;  // these are the lenghts of displacement from the center towards each part
-  //vcl_cout << " sampled d: " << d << " q: " << q << " p: " << p << vcl_endl;
+  //std::cout << " sampled d: " << d << " q: " << q << " p: " << p << std::endl;
 
   vnl_vector_fixed<float,2> axis_vec;
 
@@ -634,24 +634,24 @@ void dbrec_sample_and_draw_part_visitor::visit_composition(dbrec_composition* c)
     
     //: rotate anti-clockwise
     double theta_rad = total_rot*vnl_math::pi/180.0;
-    float c = (float)vcl_cos(theta_rad);
-    float s = (float)vcl_sin(theta_rad);
+    float c = (float)std::cos(theta_rad);
+    float s = (float)std::sin(theta_rad);
     vnl_matrix_fixed<float, 2, 2> rot_matrix;
     rot_matrix(0,0) = c; rot_matrix(0,1) = -s; rot_matrix(1,0) = s; rot_matrix(1,1) = c;
     axis_vec = rot_matrix*v;
   } else {  // only rotate the x-axis unit vector by rotation angle
     vnl_vector_fixed<float,2> v; v(0) = 1.0f; v(1) = 0.0f;
     double theta_rad = rot_angle_*vnl_math::pi/180.0;
-    float c = (float)vcl_cos(theta_rad);
-    float s = (float)vcl_sin(theta_rad);
+    float c = (float)std::cos(theta_rad);
+    float s = (float)std::sin(theta_rad);
     vnl_matrix_fixed<float, 2, 2> rot_matrix;
     rot_matrix(0,0) = c; rot_matrix(0,1) = -s; rot_matrix(1,0) = s; rot_matrix(1,1) = c;
     axis_vec = rot_matrix*v;
   }
   //: now find the new centers using axis vector and the sampled translation in the image (i,j)
   int t_i = i_; int t_j = j_;  int rot_angle = rot_angle_;  // save the parameters
-  i_ = (int)vcl_floor(-p*axis_vec(0)+0.5f) + t_i;
-  j_ = (int)vcl_floor(-p*axis_vec(1)+0.5f) + t_j;
+  i_ = (int)std::floor(-p*axis_vec(0)+0.5f) + t_i;
+  j_ = (int)std::floor(-p*axis_vec(1)+0.5f) + t_j;
   p1->accept(this);
 
   //: the second part might be needed to be rotated by the sample alpha, so adjust its rotation angle
@@ -662,8 +662,8 @@ void dbrec_sample_and_draw_part_visitor::visit_composition(dbrec_composition* c)
     int gamma = pc->model_->sample_gamma(rng_);   
     rot_angle_ = rot_angle + gamma;
   }
-  i_ = (int)vcl_floor(q*axis_vec(0)+0.5f) + t_i;
-  j_ = (int)vcl_floor(q*axis_vec(1)+0.5f) + t_j;
+  i_ = (int)std::floor(q*axis_vec(0)+0.5f) + t_i;
+  j_ = (int)std::floor(q*axis_vec(1)+0.5f) + t_j;
   p2->accept(this);
   
 }
@@ -678,10 +678,10 @@ void dbrec_sample_and_draw_part_visitor::visit_gaussian_primitive(dbrec_gaussian
   brip_vil_float_ops::extrema_kernel_mask(g->lambda0_, g->lambda1_, new_theta, kernel, mask, 0.5f);
   unsigned nrows = mask.rows();
   unsigned ncols = mask.cols();
-  int js = (int)vcl_floor(j_ - (float)nrows/2.0f + 0.5f);
-  int is = (int)vcl_floor(i_ - (float)ncols/2.0f + 0.5f);
-  int je = (int)vcl_floor(j_ + (float)nrows/2.0f + 0.5f);
-  int ie = (int)vcl_floor(i_ + (float)ncols/2.0f + 0.5f);
+  int js = (int)std::floor(j_ - (float)nrows/2.0f + 0.5f);
+  int is = (int)std::floor(i_ - (float)ncols/2.0f + 0.5f);
+  int je = (int)std::floor(j_ + (float)nrows/2.0f + 0.5f);
+  int ie = (int)std::floor(i_ + (float)ncols/2.0f + 0.5f);
   int ni = (int)image_.ni();
   int nj = (int)image_.nj();
   vxl_byte val = (vxl_byte)(strength_*255);  // strength is a value in [0,1]
@@ -703,7 +703,7 @@ void dbrec_measure_fg_prob_visitor::visit_composition(dbrec_composition* c) {
   
   dbrec_rot_inv_composition_ins* rpi = dynamic_cast<dbrec_rot_inv_composition_ins*>(pi_.ptr());
   if (!rpi) {
-    vcl_cout << " In dbrec_measure_fg_prob_visitor::visit_composition() - wrong type of instance pointer!\n";
+    std::cout << " In dbrec_measure_fg_prob_visitor::visit_composition() - wrong type of instance pointer!\n";
     throw 0;
   }
   dbrec_part_ins_sptr p1i = rpi->children()[0];
@@ -729,10 +729,10 @@ void dbrec_measure_fg_prob_visitor::visit_gaussian_primitive(dbrec_gaussian* g) 
   unsigned ncols = mask.cols();
   unsigned ii = (unsigned)rpi->pt().x();
   unsigned jj = (unsigned)rpi->pt().y();
-  int js = (int)vcl_floor(jj - (float)nrows/2.0f + 0.5f);
-  int is = (int)vcl_floor(ii - (float)ncols/2.0f + 0.5f);
-  int je = (int)vcl_floor(jj + (float)nrows/2.0f + 0.5f);
-  int ie = (int)vcl_floor(ii + (float)ncols/2.0f + 0.5f);
+  int js = (int)std::floor(jj - (float)nrows/2.0f + 0.5f);
+  int is = (int)std::floor(ii - (float)ncols/2.0f + 0.5f);
+  int je = (int)std::floor(jj + (float)nrows/2.0f + 0.5f);
+  int ie = (int)std::floor(ii + (float)ncols/2.0f + 0.5f);
   int ni = (int)fg_prob_.ni();
   int nj = (int)fg_prob_.nj();
   float sum = 0.0f;
@@ -760,7 +760,7 @@ void dbrec_measure_fg_prob_visitor::visit_gaussian_primitive(dbrec_gaussian* g) 
 //: helper to set the appearance models of gaussian primitives
 void dbrec_parse_image_visitor_helper::visit_composition(dbrec_composition* c)
 {
-  vcl_vector<dbrec_part_sptr>& ch = c->children();
+  std::vector<dbrec_part_sptr>& ch = c->children();
   for (unsigned i = 0; i < ch.size(); i++) {
     ch[i]->accept(this);
   }
@@ -768,28 +768,28 @@ void dbrec_parse_image_visitor_helper::visit_composition(dbrec_composition* c)
 void dbrec_parse_image_visitor_helper::visit_gaussian_primitive(dbrec_gaussian* g)
 {
   //: if no model files are found don't do anything, the models are not available!
-  vcl_string str_id = g->string_identifier();
-  //vcl_string text_file = fg_app_model_path_ + str_id + "_fg_params_dbrec.txt";
-  vcl_string text_file = fg_app_model_path_ + str_id + file_fg_suffix;
+  std::string str_id = g->string_identifier();
+  //std::string text_file = fg_app_model_path_ + str_id + "_fg_params_dbrec.txt";
+  std::string text_file = fg_app_model_path_ + str_id + file_fg_suffix;
   
   if (!vul_file::exists(text_file)) {
-    vcl_cout << "WARNING: dbrec_parse_image_visitor_helper::visit_gaussian_primitive() -- app models in: " << text_file << " cannot be found!\n";
+    std::cout << "WARNING: dbrec_parse_image_visitor_helper::visit_gaussian_primitive() -- app models in: " << text_file << " cannot be found!\n";
     return;
   }
 
-  vcl_ifstream ifs(text_file.c_str());
+  std::ifstream ifs(text_file.c_str());
   double k1, lambda1, k2, lambda2;
   ifs >> k1; ifs >> lambda1;
   ifs >> k2; ifs >> lambda2;
   dbrec_gaussian_appearance_model_sptr m_class = new dbrec_gaussian_weibull_appearance_model(float(lambda1), float(k1));
   dbrec_gaussian_appearance_model_sptr m_non_class = new dbrec_gaussian_weibull_appearance_model(float(lambda2), float(k2));
-  vcl_vector<dbrec_gaussian_appearance_model_sptr> models;
+  std::vector<dbrec_gaussian_appearance_model_sptr> models;
   models.push_back(m_class); models.push_back(m_non_class);
   
   g->set_models(models);
 }
 ///////////////////////////////////////////////
-float dbrec_parse_image_visitor::marginal_value(const vcl_vector<dbrec_gaussian_appearance_model_sptr>& app_models, const vcl_vector<dbrec_prior_model_sptr>& priors, float res, unsigned i, unsigned j)
+float dbrec_parse_image_visitor::marginal_value(const std::vector<dbrec_gaussian_appearance_model_sptr>& app_models, const std::vector<dbrec_prior_model_sptr>& priors, float res, unsigned i, unsigned j)
 {
   float sum = 0.0f;
   for (unsigned ii = 0; ii < app_models.size(); ii++) {
@@ -799,7 +799,7 @@ float dbrec_parse_image_visitor::marginal_value(const vcl_vector<dbrec_gaussian_
   return sum;
 }
 
-void dbrec_parse_image_visitor::initialize(const vcl_string& model_path, float class_prior) {
+void dbrec_parse_image_visitor::initialize(const std::string& model_path, float class_prior) {
   //: use the helper visitor to initialize appearance models of the gaussians
   dbrec_parse_image_visitor_helper hv(model_path);
   for (unsigned i = 0; i < h_->class_cnt(); i++) {
@@ -816,8 +816,8 @@ void dbrec_parse_image_visitor::initialize(const vcl_string& model_path, float c
 
 dbrec_parse_image_visitor::dbrec_parse_image_visitor(dbrec_hierarchy_sptr h, 
                                                      vil_image_resource_sptr img, 
-                                                     float class_prior, const vcl_vector<float>& comp_priors,
-                                                     const vcl_string& model_path) : h_(h), img_(img), fg_model_path_(model_path), composition_priors_(comp_priors)
+                                                     float class_prior, const std::vector<float>& comp_priors,
+                                                     const std::string& model_path) : h_(h), img_(img), fg_model_path_(model_path), composition_priors_(comp_priors)
 {
   //: use rtree contexts
   cf_ = new dbrec_rtree_context_factory;
@@ -827,8 +827,8 @@ dbrec_parse_image_visitor::dbrec_parse_image_visitor(dbrec_hierarchy_sptr h,
 dbrec_parse_image_visitor::dbrec_parse_image_visitor(dbrec_hierarchy_sptr h, 
                                                      dbrec_context_factory_sptr cf, 
                                                      vil_image_resource_sptr img, 
-                                                     float class_prior, const vcl_vector<float>& comp_priors, 
-                                                     const vcl_string& model_path) : h_(h), img_(img), fg_model_path_(model_path), composition_priors_(comp_priors), cf_(cf)
+                                                     float class_prior, const std::vector<float>& comp_priors, 
+                                                     const std::string& model_path) : h_(h), img_(img), fg_model_path_(model_path), composition_priors_(comp_priors), cf_(cf)
 {
   initialize(model_path, class_prior);
 }
@@ -839,9 +839,9 @@ void dbrec_parse_image_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
   if (!c) { // if not populated yet
     //: first make sure that this g can do the parsing and has the models necessary
     if (g->models_.size() < 2) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
     } //else {
-      //vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
+      //std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
     //}
     c = cf_->new_context();
     cf_->add_context(g->type(), c);
@@ -853,7 +853,7 @@ void dbrec_parse_image_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
       extr = brip_vil_float_ops::extrema(fimg, g->lambda0_, g->lambda1_, g->theta_, g->bright_, true);
 
     if (extr.nplanes() < 2) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- Error in extracting gaussian primitive from image!\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- Error in extracting gaussian primitive from image!\n";
       return;
     }
 
@@ -878,11 +878,11 @@ void dbrec_parse_image_visitor::visit_gaussian_primitive(dbrec_gaussian* g)
       {
         if (res(i,j) > 1.0e-3f) {
           if (i == 796 && j == 545)
-            vcl_cout << "here!\n";
+            std::cout << "here!\n";
 
           float str = res(i,j);
           float marginal = marginal_value(g->models_, priors_, res(i,j), i, j);
-          if (marginal < vcl_numeric_limits<float>::epsilon())
+          if (marginal < std::numeric_limits<float>::epsilon())
             continue;
           dbrec_part_ins_sptr dp = new dbrec_part_ins(g->type(), (float)i, (float)j);
           c->add_part(dp);
@@ -902,24 +902,24 @@ void dbrec_parse_image_visitor::visit_composition(dbrec_composition* c)
   dbrec_part_context_sptr pc = cf_->get_context(c->type());
   if (!pc) {
     //: first parse the children
-    vcl_vector<dbrec_part_sptr>& ch = c->children();
+    std::vector<dbrec_part_sptr>& ch = c->children();
     for (unsigned i = 0; i < ch.size(); i++) {
       ch[i]->accept(this);
     }
 
-    //vcl_cout << "In dbrec_parse_image_visitor::visit_composition) -- part: " << c->type() << " finding the posteriors!\n";
+    //std::cout << "In dbrec_parse_image_visitor::visit_composition) -- part: " << c->type() << " finding the posteriors!\n";
 
     //: now, given this
     dbrec_image_compositor* compositor = dynamic_cast<dbrec_image_compositor*>(c->compositor().ptr());
     if (!compositor) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
       throw 0;
     }
     assert(composition_priors_.size() == 2); 
     
     dbrec_part_context_sptr c_context = compositor->detect_instances(c->type(), cf_, c->children(), composition_priors_, c->radius());
     if (!c_context) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
       throw 0;
     }
     cf_->add_context(c->type(), c_context);
@@ -952,8 +952,8 @@ dbrec_parse_image_with_fg_map_visitor::dbrec_parse_image_with_fg_map_visitor(dbr
                                                                              vil_image_resource_sptr img, 
                                                                              const vil_image_view<float>& fg_prob, 
                                                                              float class_prior,
-                                                                             const vcl_vector<float>& comp_priors,
-                                                                             const vcl_string& fg_model_path, const vcl_string& bg_model_path) 
+                                                                             const std::vector<float>& comp_priors,
+                                                                             const std::string& fg_model_path, const std::string& bg_model_path) 
                                                                              : dbrec_parse_image_visitor(h, img, class_prior, comp_priors, fg_model_path), fg_prob_(fg_prob), class_prior_(class_prior), bg_model_path_(bg_model_path)
 {
   //initialize_priors(fg_prob, class_prior);
@@ -964,8 +964,8 @@ dbrec_parse_image_with_fg_map_visitor::dbrec_parse_image_with_fg_map_visitor(dbr
                                                                              vil_image_resource_sptr img, 
                                                                              const vil_image_view<float>& fg_prob,
                                                                              float class_prior, 
-                                                                             const vcl_vector<float>& comp_priors, 
-                                                                             const vcl_string& fg_model_path, const vcl_string& bg_model_path)
+                                                                             const std::vector<float>& comp_priors, 
+                                                                             const std::string& fg_model_path, const std::string& bg_model_path)
                                                                              : dbrec_parse_image_visitor(h, cf, img, class_prior, comp_priors, fg_model_path), fg_prob_(fg_prob), class_prior_(class_prior), bg_model_path_(bg_model_path)
 {
   //initialize_priors(fg_prob, class_prior);
@@ -999,13 +999,13 @@ void dbrec_parse_image_with_fg_map_visitor::visit_gaussian_primitive(dbrec_gauss
   priors_.push_back(new dbrec_indep_prior_model(ncpm, bgpm));
 
   //: first check if the bg mu and sigma images have been computed for this primitive
-  vcl_string str_id = g->string_identifier();
-  vcl_string mu_file = bg_model_path_ + str_id + file_bg_mu_suffix;
-  vcl_string sigma_file = bg_model_path_ + str_id + file_bg_sigma_suffix;
+  std::string str_id = g->string_identifier();
+  std::string mu_file = bg_model_path_ + str_id + file_bg_mu_suffix;
+  std::string sigma_file = bg_model_path_ + str_id + file_bg_sigma_suffix;
   if (!vul_file::exists(mu_file) || !vul_file::exists(sigma_file)) {  // error
-    vcl_cout << "ERROR: In dbrec_parse_image_with_fg_map_visitor::visit_gaussian_primitive() -- bg mu and sigma images:\n" << mu_file << vcl_endl;
-    vcl_cout << "and:\n" << sigma_file << vcl_endl;
-    vcl_cout << "have not been computed and saved in:\n " << bg_model_path_ << "!\n";
+    std::cout << "ERROR: In dbrec_parse_image_with_fg_map_visitor::visit_gaussian_primitive() -- bg mu and sigma images:\n" << mu_file << std::endl;
+    std::cout << "and:\n" << sigma_file << std::endl;
+    std::cout << "have not been computed and saved in:\n " << bg_model_path_ << "!\n";
     return;
   }
   vil_image_view<float> mu_img = vil_load(mu_file.c_str());
@@ -1025,17 +1025,17 @@ void dbrec_parse_image_with_fg_map_visitor::visit_composition(dbrec_composition*
   dbrec_part_context_sptr pc = cf_->get_context(c->type());
   if (!pc) {
     //: first parse the children
-    vcl_vector<dbrec_part_sptr>& ch = c->children();
+    std::vector<dbrec_part_sptr>& ch = c->children();
     for (unsigned i = 0; i < ch.size(); i++) {
       ch[i]->accept(this);
     }
 
-    vcl_cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition) -- part: " << c->type() << " finding the posteriors!\n";
+    std::cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition) -- part: " << c->type() << " finding the posteriors!\n";
 
     //: now, given this
     dbrec_image_compositor* compositor = dynamic_cast<dbrec_image_compositor*>(c->compositor().ptr());
     if (!compositor) {
-      vcl_cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
+      std::cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
       throw 0;
     }
     
@@ -1046,7 +1046,7 @@ void dbrec_parse_image_with_fg_map_visitor::visit_composition(dbrec_composition*
     
     dbrec_part_context_sptr c_context = compositor->detect_instances(c->type(), cf_, c->children(), composition_priors_, c->radius());
     if (!c_context) {
-      vcl_cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
+      std::cout << "In dbrec_parse_image_with_fg_map_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
       throw 0;
     }
     cf_->add_context(c->type(), c_context);
@@ -1061,9 +1061,9 @@ void dbrec_parse_image_rot_inv_visitor::visit_gaussian_primitive(dbrec_gaussian*
   if (!c) { // if not populated yet
     //: first make sure that this g can do the parsing and has the models necessary
     if (g->models_.size() < 2) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
     } //else {
-      //vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
+      //std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
     //}
     c = cf_->new_context();
     cf_->add_context(g->type(), c);
@@ -1097,7 +1097,7 @@ void dbrec_parse_image_rot_inv_visitor::visit_gaussian_primitive(dbrec_gaussian*
         if (res(i,j) > 1.0e-3f) {
           float str = res(i,j);
           float marginal = dbrec_parse_image_visitor::marginal_value(g->models_, priors_, res(i,j), i, j);
-          if (marginal < vcl_numeric_limits<float>::epsilon())
+          if (marginal < std::numeric_limits<float>::epsilon())
             continue;
           vnl_vector_fixed<float, 2> dir_vec;
           g->get_direction_vector(res_angle(i,j), dir_vec);
@@ -1121,7 +1121,7 @@ void dbrec_parse_image_rot_inv_visitor::visit_composition(dbrec_composition* c)
   dbrec_part_context_sptr pc = cf_->get_context(c->type());
   if (!pc) {
     //: first parse the children
-    vcl_vector<dbrec_part_sptr>& ch = c->children();
+    std::vector<dbrec_part_sptr>& ch = c->children();
     for (unsigned i = 0; i < ch.size(); i++) {
       ch[i]->accept(this);
     }
@@ -1130,27 +1130,27 @@ void dbrec_parse_image_rot_inv_visitor::visit_composition(dbrec_composition* c)
     if (!compositor) {
       dbrec_or_compositor* or_comp = dynamic_cast<dbrec_or_compositor*>(c->compositor().ptr());
       if (!or_comp) {
-        vcl_cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot cast compositor* to either pairwise_compositor* nor or_compositor* !\n";
+        std::cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot cast compositor* to either pairwise_compositor* nor or_compositor* !\n";
         throw 0;
       }
-      dbrec_part_context_sptr or_context = or_comp->detect_instances(c->type(), cf_, c->children(), vcl_vector<float>(), c->radius());
+      dbrec_part_context_sptr or_context = or_comp->detect_instances(c->type(), cf_, c->children(), std::vector<float>(), c->radius());
       cf_->add_context(c->type(), or_context);
       return;
     }
     if (c->class_prior() < 0.0) {
-      vcl_cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot parse this composition as its prior is not set!\n";
+      std::cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot parse this composition as its prior is not set!\n";
       throw 0;
     }
     dbrec_part_context_sptr c_context = compositor->detect_instances_rot_inv(c->type(), cf_, c->children(), c->class_prior(), c->radius());
     if (!c_context) {
-      vcl_cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
+      std::cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
       throw 0;
     }
     cf_->add_context(c->type(), c_context);
   }
 }
 
-void dbrec_parse_image_rot_inv_with_fg_map_visitor::initialize(const vcl_string& fg_model_path)
+void dbrec_parse_image_rot_inv_with_fg_map_visitor::initialize(const std::string& fg_model_path)
 {
   dbrec_parse_image_visitor_helper hv(fg_model_path);
   for (unsigned i = 0; i < h_->class_cnt(); i++) {
@@ -1158,7 +1158,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::initialize(const vcl_string&
   }
 }
 dbrec_parse_image_rot_inv_with_fg_map_visitor::dbrec_parse_image_rot_inv_with_fg_map_visitor(dbrec_hierarchy_sptr h, vil_image_resource_sptr img, 
-    const vil_image_view<bool>& valid_region_mask, const vil_image_view<float>& fg_prob, float class_prior, float theta_inc, const vcl_string& fg_model_path, const vcl_string& bg_model_path) : 
+    const vil_image_view<bool>& valid_region_mask, const vil_image_view<float>& fg_prob, float class_prior, float theta_inc, const std::string& fg_model_path, const std::string& bg_model_path) : 
     h_(h), img_(img), fg_model_path_(fg_model_path), bg_model_path_(bg_model_path), fg_prob_(fg_prob), valid_region_mask_(valid_region_mask), class_prior_(class_prior), theta_inc_(theta_inc)
 {
   cf_ = new dbrec_rtree_context_factory;
@@ -1166,26 +1166,26 @@ dbrec_parse_image_rot_inv_with_fg_map_visitor::dbrec_parse_image_rot_inv_with_fg
 }
   
 dbrec_parse_image_rot_inv_with_fg_map_visitor::dbrec_parse_image_rot_inv_with_fg_map_visitor(dbrec_hierarchy_sptr h, dbrec_context_factory_sptr cf, vil_image_resource_sptr img, const vil_image_view<bool>& valid_region_mask,
-    const vil_image_view<float>& fg_prob, float class_prior, float theta_inc, const vcl_string& fg_model_path, const vcl_string& bg_model_path) : 
+    const vil_image_view<float>& fg_prob, float class_prior, float theta_inc, const std::string& fg_model_path, const std::string& bg_model_path) : 
     h_(h), cf_(cf), img_(img), fg_model_path_(fg_model_path), bg_model_path_(bg_model_path), fg_prob_(fg_prob), valid_region_mask_(valid_region_mask), class_prior_(class_prior), theta_inc_(theta_inc)
 {
   initialize(fg_model_path);
 }
 
 dbrec_gaussian_appearance_model_sptr dbrec_parse_image_rot_inv_with_fg_map_visitor::get_map(
-      vcl_map<float, dbrec_gaussian_appearance_model_sptr>& bg_model_map, float angle, dbrec_gaussian* g) 
+      std::map<float, dbrec_gaussian_appearance_model_sptr>& bg_model_map, float angle, dbrec_gaussian* g) 
 {
   dbrec_gaussian_appearance_model_sptr map;
-  vcl_map<float, dbrec_gaussian_appearance_model_sptr>::iterator it = bg_model_map.find(angle);
+  std::map<float, dbrec_gaussian_appearance_model_sptr>::iterator it = bg_model_map.find(angle);
   if (it == bg_model_map.end()) {
     //: first check if the bg mu and sigma images have been computed for this primitive
-    vcl_string str_id = g->string_identifier(angle);
-    vcl_string mu_file = bg_model_path_ + str_id + file_bg_mu_suffix;
-    vcl_string sigma_file = bg_model_path_ + str_id + file_bg_sigma_suffix;
+    std::string str_id = g->string_identifier(angle);
+    std::string mu_file = bg_model_path_ + str_id + file_bg_mu_suffix;
+    std::string sigma_file = bg_model_path_ + str_id + file_bg_sigma_suffix;
     if (!vul_file::exists(mu_file) || !vul_file::exists(sigma_file)) {  // error
-      vcl_cout << "ERROR: In dbrec_parse_image_with_fg_map_visitor::visit_gaussian_primitive() -- bg mu and sigma images:\n" << mu_file << vcl_endl;
-      vcl_cout << "and:\n" << sigma_file << vcl_endl;
-      vcl_cout << "have not been computed and saved in:\n " << bg_model_path_ << "!\n";
+      std::cout << "ERROR: In dbrec_parse_image_with_fg_map_visitor::visit_gaussian_primitive() -- bg mu and sigma images:\n" << mu_file << std::endl;
+      std::cout << "and:\n" << sigma_file << std::endl;
+      std::cout << "have not been computed and saved in:\n " << bg_model_path_ << "!\n";
       throw 0;
     }
     vil_image_view<float> mu_img = vil_load(mu_file.c_str());
@@ -1203,9 +1203,9 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_gaussian_primitive(dbr
   if (!c) { // if not populated yet
     //: first make sure that this g can do the parsing and has the models necessary
     if (g->models_.size() < 2) {
-      vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
+      std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have not been set, only finding the strength map!\n";
     } //else {
-      //vcl_cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
+      //std::cout << "In dbrec_parse_image_visitor::visit_gaussian_primitive() -- part: " << g->type() << " appearance models have been set, finding the strength map and the posteriors!\n";
     //}
     c = cf_->new_context();
     cf_->add_context(g->type(), c);
@@ -1230,7 +1230,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_gaussian_primitive(dbr
     c->add_map(vil_new_image_resource_of_view(res_mask));
     c->add_map(vil_new_image_resource_of_view(res_angle));
 
-    vcl_map<float, dbrec_gaussian_appearance_model_sptr> bg_model_map;
+    std::map<float, dbrec_gaussian_appearance_model_sptr> bg_model_map;
     float non_class_prior = 1.0f - class_prior_;
     for (unsigned j = 0; j<nj; ++j) {
       for (unsigned i = 0; i<ni; ++i)
@@ -1268,7 +1268,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_gaussian_primitive(dbr
 */
           float marginal = cfl + ncfl + cbgl + ncbgl;
 
-          if (marginal < vcl_numeric_limits<float>::epsilon())
+          if (marginal < std::numeric_limits<float>::epsilon())
             continue;
 
           vnl_vector_fixed<float, 2> dir_vec;
@@ -1292,7 +1292,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_composition(dbrec_comp
   dbrec_part_context_sptr pc = cf_->get_context(c->type());
   if (!pc) {
     //: first parse the children
-    vcl_vector<dbrec_part_sptr>& ch = c->children();
+    std::vector<dbrec_part_sptr>& ch = c->children();
     for (unsigned i = 0; i < ch.size(); i++) {
       ch[i]->accept(this);
     }
@@ -1300,10 +1300,10 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_composition(dbrec_comp
     dbrec_part_context_sptr c_context;
     dbrec_or_compositor* or_comp = dynamic_cast<dbrec_or_compositor*>(c->compositor().ptr());
     if (or_comp) {
-      c_context = or_comp->detect_instances(c->type(), cf_, c->children(), vcl_vector<float>(), c->radius());
+      c_context = or_comp->detect_instances(c->type(), cf_, c->children(), std::vector<float>(), c->radius());
     } else {
       if (c->class_prior() < 0.0) {
-        vcl_cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot parse this composition as its prior is not set!\n";
+        std::cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot parse this composition as its prior is not set!\n";
         throw 0;
       }
 
@@ -1316,7 +1316,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_composition(dbrec_comp
           c_context = d_comp->detect_instances_rot_inv(c->type(), cf_, c->children(), c->class_prior(), fg_prob_, c->radius());
           //c_context = d_comp->detect_instances_rot_inv(c->type(), cf_, c->children(), 0.3f, fg_prob_, c->radius());
         } else {
-          vcl_cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
+          std::cout << "In dbrec_parse_image_rot_inv_visitor::visit_composition() -- cannot detect instances of composition with type: " << c->type() << "!\n";
           throw 0;
         }
       }
@@ -1330,7 +1330,7 @@ void dbrec_parse_image_rot_inv_with_fg_map_visitor::visit_composition(dbrec_comp
 void dbrec_train_compositional_parts_visitor::visit_composition(dbrec_composition* c)
 {
   //: first train the children
-  vcl_vector<dbrec_part_sptr>& ch = c->children();
+  std::vector<dbrec_part_sptr>& ch = c->children();
   for (unsigned i = 0; i < ch.size(); i++) {
     ch[i]->accept(this);
   }
@@ -1341,12 +1341,12 @@ void dbrec_train_compositional_parts_visitor::visit_composition(dbrec_compositio
 
   dbrec_image_compositor* compositor = dynamic_cast<dbrec_image_compositor*>(c->compositor().ptr());
   if (!compositor) {
-    vcl_cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
+    std::cout << "In dbrec_parse_image_visitor::visit_composition() -- cannot cast compositor* to image_compositor* !\n";
     throw 0;
   }
     
   if (!compositor->train_instances(cf_, c->children(), c->radius())) {
-    vcl_cout << "In dbrec_train_compositional_parts_visitor::visit_composition() -- cannot train composition with type: " << c->type() << "!\n";
+    std::cout << "In dbrec_train_compositional_parts_visitor::visit_composition() -- cannot train composition with type: " << c->type() << "!\n";
     throw 0;
   }
 }
@@ -1358,7 +1358,7 @@ void dbrec_train_compositional_parts_visitor::visit_gaussian_primitive(dbrec_gau
 void dbrec_train_rot_inv_compositional_parts_visitor::visit_composition(dbrec_composition* c)
 {
   //: first train the children
-  vcl_vector<dbrec_part_sptr>& ch = c->children();
+  std::vector<dbrec_part_sptr>& ch = c->children();
   for (unsigned i = 0; i < ch.size(); i++) {
     ch[i]->accept(this);
   }
@@ -1369,12 +1369,12 @@ void dbrec_train_rot_inv_compositional_parts_visitor::visit_composition(dbrec_co
 
   dbrec_pairwise_discrete_compositor* compositor = dynamic_cast<dbrec_pairwise_discrete_compositor*>(c->compositor().ptr());
   if (!compositor) {
-    vcl_cout << "In dbrec_train_rot_inv_compositional_parts_visitor::visit_composition() -- cannot cast compositor* to dbrec_pairwise_discrete_compositor* !\n";
+    std::cout << "In dbrec_train_rot_inv_compositional_parts_visitor::visit_composition() -- cannot cast compositor* to dbrec_pairwise_discrete_compositor* !\n";
     throw 0;
   }  
     
   if (!compositor->train_instances(cf_, c->children(), c->radius())) {
-    vcl_cout << "In dbrec_train_rot_inv_compositional_parts_visitor::visit_composition() -- cannot train composition with type: " << c->type() << "!\n";
+    std::cout << "In dbrec_train_rot_inv_compositional_parts_visitor::visit_composition() -- cannot train composition with type: " << c->type() << "!\n";
     throw 0;
   }
 }

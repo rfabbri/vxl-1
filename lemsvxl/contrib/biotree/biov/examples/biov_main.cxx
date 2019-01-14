@@ -4,11 +4,11 @@
 // \author    Jason Mallios
 // \date        2005-07-05
 //
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdlib.h>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <cstring>
+#include <cstdlib>
 #include <vil/vil_image_view.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_image_resource.h>
@@ -75,7 +75,7 @@ inline void my_convert_given_range(const vil3d_image_view<T>& src,
                 dest(i,j,k,p) = static_cast<vxl_byte>( b*( src(i,j,k,p)+ a ) );
                 if(src(i,j,k,p) < min_b) dest(i,j,k,p) = 0;
                 if(src(i,j,k,p) > max_b) dest(i,j,k,p) = 255;
-                //vcl_cerr << src(i,j,k,p) << " --> " << (int)dest(i,j,k,p) << "\n" ;
+                //std::cerr << src(i,j,k,p) << " --> " << (int)dest(i,j,k,p) << "\n" ;
         }
 }
 
@@ -98,10 +98,10 @@ int main(int argc, char** argv)
 #endif
 
     if(argc < 2){
-                vcl_cerr << "usage : " << argv[0] << " <file>" << "\n" ;
+                std::cerr << "usage : " << argv[0] << " <file>" << "\n" ;
                 return 1;
     }
-    vcl_string file = argv[1];
+    std::string file = argv[1];
     vil3d_image_view<vxl_byte> volume_byte;
     if (file.find_first_of("#",0) == file.npos)
     {
@@ -112,44 +112,44 @@ int main(int argc, char** argv)
             bfs_in.close();
 
             if(volume.ni() == 0 || volume.nj() == 0 || volume.nk() == 0){
-                    vcl_cerr << "unable to load straight vil3d; trying sliceFile\n";
+                    std::cerr << "unable to load straight vil3d; trying sliceFile\n";
                     volume = sliceFileManager<float>::read(file);
             }
             if(volume.ni() == 0 || volume.nj() == 0 || volume.nk() == 0){
-                    vcl_cerr << "unable to load image, exiting\n";
+                    std::cerr << "unable to load image, exiting\n";
                     return 1;
             }
 
             /*
-            vcl_cerr << "taking log ... ";
+            std::cerr << "taking log ... ";
             for(int k = 0; k < volume.nk(); k++){
             for(int j = 0; j < volume.nj(); j++){
             for(int i = 0; i < volume.ni(); i++){
                     if(volume(i,j,k) != 0)
-                    volume(i,j,k) = vcl_log(volume(i,j,k));
+                    volume(i,j,k) = std::log(volume(i,j,k));
                     
             }}}
-            vcl_cerr << " done\n";
+            std::cerr << " done\n";
 
             */
 
 
             float min,max;
             vil3d_math_value_range(volume,min,max);
-            vcl_cerr << "stretching to range " << min << " " << max << "\n";
+            std::cerr << "stretching to range " << min << " " << max << "\n";
             vil3d_convert_stretch_range(volume,volume_byte);
 
             if(argc > 2 
-                            && (vcl_strncmp(argv[argc-1],"mip",3) != 0)
-                            && (vcl_strncmp(argv[argc-1],"sum",3) != 0) 
+                            && (std::strncmp(argv[argc-1],"mip",3) != 0)
+                            && (std::strncmp(argv[argc-1],"sum",3) != 0) 
                             ){
-                    vcl_cerr << "reading in " << argv[2] << "\n";
+                    std::cerr << "reading in " << argv[2] << "\n";
                     vil3d_image_view<float> volume2;
                     vsl_b_ifstream bfs_in(argv[2]);
                     vsl_b_read(bfs_in, volume2);
                     bfs_in.close();
 
-                    vcl_cerr << "creating new image resource\n";
+                    std::cerr << "creating new image resource\n";
                     vil3d_image_resource_sptr res = vil3d_new_image_resource(volume.ni(),
                                                                  volume.nj(),
                                                                  volume.nk() + volume2.nk(),
@@ -157,11 +157,11 @@ int main(int argc, char** argv)
                                                                  volume.pixel_format());
                     res->put_view(volume,0,0,0);
                     res->put_view(volume2,0,0,volume.nk());
-                    vcl_cerr << "getting view of image resource\n";
+                    std::cerr << "getting view of image resource\n";
                     vil3d_image_view<float> combined = res->get_view();
-                    vcl_cerr << "combined size is " 
+                    std::cerr << "combined size is " 
                             << combined.ni() << " " << combined.nj() << " " << combined.nk() << "\n";
-                    vcl_cerr << "converting to volume_byte\n";
+                    std::cerr << "converting to volume_byte\n";
 
 
                     vsl_b_ofstream bfs_out("combined.float");
@@ -176,7 +176,7 @@ int main(int argc, char** argv)
     else{
             vil3d_slice_list_format format;
             vil3d_image_resource_sptr res = format.make_input_image(file.c_str());
-            vcl_cerr << "loading from " << file 
+            std::cerr << "loading from " << file 
                     << " res size is " 
                     << res->ni () << " " << res->nj() << " " << res->nk() << "\n" ;
         int minx = 0;
@@ -188,51 +188,51 @@ int main(int argc, char** argv)
 
 
         if(argc > 7){
-                minx = vcl_atoi(argv[2]);
-                miny = vcl_atoi(argv[3]);
-                minz = vcl_atoi(argv[4]);
-                dimx = vcl_atoi(argv[5]);
-                dimy = vcl_atoi(argv[6]);
-                dimz = vcl_atoi(argv[7]);
+                minx = std::atoi(argv[2]);
+                miny = std::atoi(argv[3]);
+                minz = std::atoi(argv[4]);
+                dimx = std::atoi(argv[5]);
+                dimy = std::atoi(argv[6]);
+                dimz = std::atoi(argv[7]);
         }
 
-        vcl_cerr << "getting from " << minx << " " << miny << " " << minz << " dimension " << dimx << " " << dimy << " " << dimz << "\n";
+        std::cerr << "getting from " << minx << " " << miny << " " << minz << " dimension " << dimx << " " << dimy << " " << dimz << "\n";
         if(res->pixel_format() == VIL_PIXEL_FORMAT_UINT_16){
-                vcl_cerr << "VIL_PIXEL_FORMAT_UINT_16\n";
+                std::cerr << "VIL_PIXEL_FORMAT_UINT_16\n";
                 vil3d_image_view<vxl_uint_16> view = res->get_view(minx,dimx,miny,dimy,minz,dimz);
                 unsigned short min,max;
                 vil3d_math_value_range(view,min,max);
-                vcl_cerr << "image range " << min << " " << max << "\n";
+                std::cerr << "image range " << min << " " << max << "\n";
 
-                vcl_cerr << "view size = " << view.ni() << " "    << view.nj() << " "     << view.nk() << vcl_endl; 
+                std::cerr << "view size = " << view.ni() << " "    << view.nj() << " "     << view.nk() << std::endl; 
                 //vil3d_convert_stretch_range(view,volume_byte);
                 my_convert_given_range(view,volume_byte,(vxl_uint_16)0000,(vxl_uint_16)65535);
         }
         else if(res->pixel_format() == VIL_PIXEL_FORMAT_FLOAT){
-                vcl_cerr << "VIL_PIXEL_FORMAT_FLOAT\n";
+                std::cerr << "VIL_PIXEL_FORMAT_FLOAT\n";
             vil3d_image_view<float> view = res->get_view(minx,dimx,miny,dimy,minz,dimz);
                 float min,max;
                 vil3d_math_value_range(view,min,max);
-                vcl_cerr << "image range " << min << " " << max << "\n";
+                std::cerr << "image range " << min << " " << max << "\n";
 
                 /*
-            vcl_cerr << "taking log ... ";
+            std::cerr << "taking log ... ";
             for(int k = 0; k < view.nk(); k++){
             for(int j = 0; j < view.nj(); j++){
             for(int i = 0; i < view.ni(); i++){
                     if(view(i,j,k) != 0)
-                    view(i,j,k) = vcl_log(view(i,j,k));
+                    view(i,j,k) = std::log(view(i,j,k));
                     
             }}}
-            vcl_cerr << " done\n";
+            std::cerr << " done\n";
             */
 
-                vcl_cerr << "view size = " << view.ni() << " "    << view.nj() << " "     << view.nk() << vcl_endl; 
+                std::cerr << "view size = " << view.ni() << " "    << view.nj() << " "     << view.nk() << std::endl; 
                 vil3d_convert_stretch_range(view,volume_byte);
 
         }
         else{
-                vcl_cerr << "assuming byte ...\n";
+                std::cerr << "assuming byte ...\n";
                 vil3d_image_view<vxl_byte> view = res->get_view(minx,dimx,miny,dimy,minz,dimz);
                 volume_byte = view;
         }
@@ -242,13 +242,13 @@ int main(int argc, char** argv)
 
 
 
-    vcl_cerr << "volume size = " << volume_byte.ni() << " "    
+    std::cerr << "volume size = " << volume_byte.ni() << " "    
             << volume_byte.nj() << " "     
-            << volume_byte.nk() << vcl_endl; 
+            << volume_byte.nk() << std::endl; 
 
     vxl_byte min,max;
     vil3d_math_value_range(volume_byte,min,max);
-    vcl_cerr << " Min = " << (int)min << " Max = " << (int)max << "\n" ;
+    std::cerr << " Min = " << (int)min << " Max = " << (int)max << "\n" ;
     bgui3d_init();
   // make scene containing camera and light
   SoGroup *root = new SoGroup;
@@ -304,10 +304,10 @@ int main(int argc, char** argv)
 
   // Add VolumeRender to scene graph
   SoVolumeRender * volrend = new SoVolumeRender();
-  if(argc > 2 && !vcl_strncmp(argv[argc-1],"mip",3)){
+  if(argc > 2 && !std::strncmp(argv[argc-1],"mip",3)){
           volrend->composition = SoVolumeRender::MAX_INTENSITY;
   }
-  else if(argc > 2 && !vcl_strncmp(argv[argc-1],"sum",3)){
+  else if(argc > 2 && !std::strncmp(argv[argc-1],"sum",3)){
           volrend->composition = SoVolumeRender::SUM_INTENSITY;
   }
   else{

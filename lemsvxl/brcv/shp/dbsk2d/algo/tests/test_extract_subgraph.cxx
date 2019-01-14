@@ -24,7 +24,7 @@ static void test_extract_subgraph(int argc, char* argv[])
     dbsk2d_extract_subgraph(sub_sg, 0, *v_itr, depth);
 
     TEST("dbsk2d_extract_subgraph() ", !sub_sg, false);
-    vcl_cout << "n: " << sub_sg->number_of_vertices() << vcl_endl;
+    std::cout << "n: " << sub_sg->number_of_vertices() << std::endl;
     //TEST("dbsk2d_extract_subgraph() ", sub_sg->number_of_vertices(), 4);
   }
 
@@ -38,7 +38,7 @@ static void test_extract_subgraph(int argc, char* argv[])
     dbsk2d_extract_subgraph(sub_sg, 0, *v_itr, depth);
 
     TEST("dbsk2d_extract_subgraph() ", !sub_sg, false);
-    vcl_cout << "n: " << sub_sg->number_of_vertices() << vcl_endl;
+    std::cout << "n: " << sub_sg->number_of_vertices() << std::endl;
     //TEST("dbsk2d_extract_subgraph() ", sub_sg->number_of_vertices(), 4);
   }
 
@@ -52,7 +52,7 @@ static void test_extract_subgraph(int argc, char* argv[])
     dbsk2d_extract_subgraph(sub_sg, 0, *v_itr, depth);
 
     TEST("dbsk2d_extract_subgraph() ", !sub_sg, false);
-    vcl_cout << "n: " << sub_sg->number_of_vertices() << vcl_endl;
+    std::cout << "n: " << sub_sg->number_of_vertices() << std::endl;
     //TEST("dbsk2d_extract_subgraph() ", sub_sg->number_of_vertices(), 4);
   }
 
@@ -66,7 +66,7 @@ static void test_extract_subgraph(int argc, char* argv[])
     dbsk2d_extract_subgraph(sub_sg, 0, *v_itr, depth);
 
     TEST("dbsk2d_extract_subgraph() ", !sub_sg, false);
-    vcl_cout << "n: " << sub_sg->number_of_vertices() << vcl_endl;
+    std::cout << "n: " << sub_sg->number_of_vertices() << std::endl;
     //TEST("dbsk2d_extract_subgraph() ", sub_sg->number_of_vertices(), 4);
   }
 
@@ -80,7 +80,7 @@ static void test_extract_subgraph(int argc, char* argv[])
     dbsk2d_extract_subgraph(sub_sg, 0, *v_itr, depth);
 
     TEST("dbsk2d_extract_subgraph() ", !sub_sg, false);
-    vcl_cout << "n: " << sub_sg->number_of_vertices() << vcl_endl;
+    std::cout << "n: " << sub_sg->number_of_vertices() << std::endl;
     //TEST("dbsk2d_extract_subgraph() ", sub_sg->number_of_vertices(), 4);
   }
 

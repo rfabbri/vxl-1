@@ -26,13 +26,13 @@ bool pcl_convert_scene_to_pc_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_convert_scene_to_pc_process_globals ;
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
   input_types_[i++] = "boxm_scene_base_sptr";  //gradient scene
   input_types_[i++] = "boxm_scene_base_sptr";  //valid scene      
-  input_types_[i++] = "vcl_string";    //output path to pcd file -- this can be changed to a smart  pointer for point cloud
+  input_types_[i++] = vcl_string";    //output path to pcd file -- this can be changed to a smart  pointer for point cloud
 
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   //    output_types_[i++] = ";
 
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -47,12 +47,12 @@ bool pcl_convert_scene_to_pc_process(bprb_func_process& pro)
   unsigned i = 0;
   boxm_scene_base_sptr grad_scene_base = pro.get_input<boxm_scene_base_sptr>(i++);
   boxm_scene_base_sptr valid_scene_base = pro.get_input<boxm_scene_base_sptr>(i++);
-  vcl_string pcd_file = pro.get_input<vcl_string>(i++);
+  std::string pcd_file = pro.get_input<std::string>(i++);
 
   //cast valid scene
   boxm_scene<boct_tree<short, bool > > *valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool > > *> (valid_scene_base.as_pointer());
   if (!valid_scene) {
-    vcl_cerr << "Failed to valid scene\n";
+    std::cerr << "Failed to valid scene\n";
     return false;
   }
   

@@ -29,7 +29,7 @@ class vox_compute_composite_fragments_params : public dborl_algo_params
 {
 public:
   //: Constructor
-  vox_compute_composite_fragments_params(vcl_string algo_name);
+  vox_compute_composite_fragments_params(std::string algo_name);
 
   // MEMBER VARIABLES
 
@@ -37,33 +37,33 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
   
   //: Name of input object
-  dborl_parameter<vcl_string> input_object_name_;
+  dborl_parameter<std::string> input_object_name_;
   
   //: passes the folder of the input object
-  dborl_parameter<vcl_string> input_object_dir_;    
+  dborl_parameter<std::string> input_object_dir_;    
 
   //: passes the folder of the input assoc directory
-  dborl_parameter<vcl_string> input_assoc_dir_;    
+  dborl_parameter<std::string> input_assoc_dir_;    
 
   //: extension of the input cem file ( .cem ) 
-  dborl_parameter<vcl_string> input_contour_extension_;     
+  dborl_parameter<std::string> input_contour_extension_;     
 
   //: extension of the image for fragment extraction
-  dborl_parameter<vcl_string> input_image_extension_;     
+  dborl_parameter<std::string> input_image_extension_;     
 
   // if written to this folder as opposed to object folder then the 
   // composite fragments gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_cgraph_fragments_folder_;  
+  dborl_parameter<std::string> output_cgraph_fragments_folder_;  
 
   //: String for training data
-  dborl_parameter<vcl_string> training_path_;
+  dborl_parameter<std::string> training_path_;
 
   //: String for training data
-  dborl_parameter<vcl_string> texton_path_;
+  dborl_parameter<std::string> texton_path_;
 
   //: String for training extension
-  dborl_parameter<vcl_string> training_extension_;
+  dborl_parameter<std::string> training_extension_;
 
   //: Euler Spiral Completion offset 
   dborl_parameter<double> ess_completion_;
@@ -75,7 +75,7 @@ public:
   dborl_parameter<double> logistic_beta1_;
 
   //: tag for extraction of composite fragments
-  vcl_string tag_compute_composite_fragments_;
+  std::string tag_compute_composite_fragments_;
   
 };
 

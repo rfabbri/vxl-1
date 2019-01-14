@@ -43,7 +43,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -63,7 +63,7 @@ protected:
   vgui_style_sptr neighbor_style_;
   vgui_event_condition gesture_info_;
  
-  vcl_vector<bgui_vsol_soview2D_digital_curve*> dcs_;
+  std::vector<bgui_vsol_soview2D_digital_curve*> dcs_;
   dbctrk_soview2D* object_;
   bgui_vsol2D_tableau_sptr curr_tableau_;
   dbctrk_tracker_curve_sptr curr_curve_;
@@ -72,8 +72,8 @@ protected:
 
   Engine *ep;
 };
-  vcl_vector<double> normhist(vcl_vector<double> data,double x_lo, double x_hi, int n_bins);
-  double dist2pdf(vcl_vector<double> pdf1, vcl_vector<double> pdf2);
+  std::vector<double> normhist(std::vector<double> data,double x_lo, double x_hi, int n_bins);
+  double dist2pdf(std::vector<double> pdf1, std::vector<double> pdf2);
 
 
 #endif

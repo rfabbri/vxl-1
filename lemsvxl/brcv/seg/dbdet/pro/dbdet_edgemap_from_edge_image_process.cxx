@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -27,7 +27,7 @@ dbdet_edgemap_from_edge_image_process::dbdet_edgemap_from_edge_image_process()
 {
   if( !parameters()->add( "Edge Value", "-edge_val"   , (unsigned) 0 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ dbdet_edgemap_from_edge_image_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_edgemap_from_edge_image_process::name()
 {
   return "Edge Image to Edge Map";
@@ -69,18 +69,18 @@ dbdet_edgemap_from_edge_image_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_edgemap_from_edge_image_process::get_input_type()
+std::vector< std::string > dbdet_edgemap_from_edge_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_edgemap_from_edge_image_process::get_output_type()
+std::vector< std::string > dbdet_edgemap_from_edge_image_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -91,7 +91,7 @@ bool
 dbdet_edgemap_from_edge_image_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_edgemap_from_edge_image_process::execute() - not exactly one"
+    std::cout << "In dbdet_edgemap_from_edge_image_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -136,9 +136,9 @@ dbdet_edgemap_from_edge_image_process::execute()
   output_edgemap->set_edgemap(edge_map);
   output_data_[0].push_back(output_edgemap);
 
-  vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+  std::cout << "#edgels = " << edge_map->num_edgels() << std::endl;
 
-  vcl_cout.flush();
+  std::cout.flush();
 
   return true;
 }

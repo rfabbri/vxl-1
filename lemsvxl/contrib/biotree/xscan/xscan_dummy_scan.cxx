@@ -1,6 +1,6 @@
 #include "xscan_dummy_scan.h"
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <xscan/xscan_uniform_orbit.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3x3.h>

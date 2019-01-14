@@ -8,7 +8,7 @@
 //============================================================
 //Meshing lidar image
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 
 
@@ -33,7 +33,7 @@ class lidar_range_data
 public:
   vil_image_view<vxl_byte> img1;
   vil_image_view<vxl_byte> img2;
-  vcl_vector<vcl_vector<lidar_pixel*> > data_;
+  std::vector<std::vector<lidar_pixel*> > data_;
 
 public:
   lidar_range_data () {

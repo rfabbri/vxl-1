@@ -5,7 +5,7 @@
 // \brief Manager for multiview 3d reconstruction gui applications
 // \author Kongbin Kang
 
-#include <vcl_string.h>
+#include <string>
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vgui/vgui_easy3D_tableau.h>
 #include <vgui/vgui_easy3D_tableau_sptr.h>
@@ -41,7 +41,7 @@ class brct_windows_frame : public vgui_wrapper_tableau
   void load_image();
   void show_back_projection();
   void show_next_observes();
-  void add_predicted_curve2d(vcl_vector<vgl_point_2d<double> > &pts);
+  void add_predicted_curve2d(std::vector<vgl_point_2d<double> > &pts);
   void show_predicted_curve();
   void go();
   brct_windows_frame();
@@ -51,13 +51,13 @@ class brct_windows_frame : public vgui_wrapper_tableau
   // methods for run menu callbacks
   void creat_line();
   void quit();
-  void add_curve2d(vcl_vector<vgl_point_2d<double> > &pts,
+  void add_curve2d(std::vector<vgl_point_2d<double> > &pts,
                    float r = 1.0, float g = 0.0, float b = 0.0);
   void remove_curve2d();
   void remove_debug_info();
 
   void add_curve3d(bugl_curve_3d& c3d);
-  void add_next_observes(vcl_vector<vgl_point_2d<double> > &pts);
+  void add_next_observes(std::vector<vgl_point_2d<double> > &pts);
   void remove_curve3d();
   void init_kalman();
 
@@ -77,22 +77,22 @@ class brct_windows_frame : public vgui_wrapper_tableau
   void clean_up();
 
   //:show all epipolar lines for a 2-d curve
-  void show_epipolar_lines(vcl_vector<vgl_point_2d<double> > const& c2d);
+  void show_epipolar_lines(std::vector<vgl_point_2d<double> > const& c2d);
  private:
   //: get track of all the 3d points added into 3d tableau
-  vcl_vector<vgui_soview3D* > curves_3d_;
+  std::vector<vgui_soview3D* > curves_3d_;
 
   //: get predicted curves 2d
-  vcl_vector<vgui_soview2D* > predicted_curves_2d_;
+  std::vector<vgui_soview2D* > predicted_curves_2d_;
 
   //: 2d curve for the next frame, which is used for debugging
-  vcl_vector<vgui_soview2D* > debug_curves_2d_;
+  std::vector<vgui_soview2D* > debug_curves_2d_;
 
   //: 2d curve at time t
-  vcl_vector<vgui_soview2D* > curves_2d_;
+  std::vector<vgui_soview2D* > curves_2d_;
 
   //: 2d curve at time 0
-  vcl_vector<vgui_soview2D_lineseg* > curves_2d_0_;
+  std::vector<vgui_soview2D_lineseg* > curves_2d_0_;
 
   //: kalman filter
   kalman_filter* kalman_;
@@ -105,13 +105,13 @@ class brct_windows_frame : public vgui_wrapper_tableau
   vgui_rubberband_tableau_sptr tab_rubber_;
   vil1_image img_;
   vgui_grid_tableau_sptr grid_;
-  vcl_string data_file_name_;
+  std::string data_file_name_;
 
   bool show_epipolar_lines_;
   //: initial epipole
-  vcl_vector<vgl_homg_line_2d<double> > lines_;
+  std::vector<vgl_homg_line_2d<double> > lines_;
   vgl_point_2d<double> *e_;
-  vcl_string status_info_;
+  std::string status_info_;
   static brct_windows_frame *instance_;
 };
 

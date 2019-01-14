@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   dbru_osl_displayer(){}
 
   //: Return type string
-  virtual vcl_string type() const { return "dbru_osl_storage"; }
+  virtual std::string type() const { return "dbru_osl_storage"; }
 
   //: Create a tableau if the storage object is of type dbru_osl_storage
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

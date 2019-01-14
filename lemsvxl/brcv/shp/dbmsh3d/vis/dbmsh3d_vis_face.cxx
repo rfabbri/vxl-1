@@ -2,7 +2,7 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -48,7 +48,7 @@ SoCoordinate3* _draw_F_ifs_geom (SoGroup* group, const dbmsh3d_face* F)
     group->addChild (coords);
   }
   else
-    vul_printf (vcl_cout, "  -- Skip drawing face %d: only %d salient edges.\n", F->id(), count);
+    vul_printf (std::cout, "  -- Skip drawing face %d: only %d salient edges.\n", F->id(), count);
   delete[] verts;
   return coords;
 }
@@ -57,7 +57,7 @@ SoCoordinate3* _draw_F_ifs_geom (SoGroup* group, const dbmsh3d_face* F)
 //
 SoCoordinate3* _draw_F_mhe_geom (SoGroup* group, const dbmsh3d_face* F)
 {
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   F->get_bnd_Vs (vertices);
   const unsigned int nVertices = vertices.size();
   if (nVertices<3)
@@ -83,7 +83,7 @@ SoCoordinate3* _draw_F_mhe_geom (SoGroup* group, const dbmsh3d_face* F)
     group->addChild (coords);
   }
   else
-    vul_printf (vcl_cout, "  -- Skip drawing face %d: only %d salient edges.\n", F->id(), count);
+    vul_printf (std::cout, "  -- Skip drawing face %d: only %d salient edges.\n", F->id(), count);
   delete[] verts;
   return coords;
 }
@@ -174,7 +174,7 @@ SoSeparator* draw_F_with_id (const dbmsh3d_face* F, const SbColor& color,
 
   //show id
   char buf[64];
-  vcl_sprintf (buf, "%d", F->id());
+  std::sprintf (buf, "%d", F->id());
   vgl_point_3d<double> cen = F->compute_center_pt ();
   root->addChild (draw_text2d (buf, cen.x(), cen.y(), cen.z(), color));
 
@@ -268,7 +268,7 @@ SoSeparator* draw_F_textured (const dbmsh3d_textured_face_mc* F,
 
   //show id
   char buf[64];
-  vcl_sprintf (buf, "%d", F->id());
+  std::sprintf (buf, "%d", F->id());
   vgl_point_3d<double> C = F->compute_center_pt ();
   root->addChild (draw_text2d (buf, C.x(), C.y(), C.z(), color));
 

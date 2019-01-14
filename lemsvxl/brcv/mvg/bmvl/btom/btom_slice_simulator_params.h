@@ -11,7 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 class btom_slice_simulator_params : public gevd_param_mixin
 {
@@ -25,7 +25,7 @@ class btom_slice_simulator_params : public gevd_param_mixin
 
   bool SanityCheck();
   friend
-    vcl_ostream& operator<<(vcl_ostream&,const btom_slice_simulator_params& sp);
+    std::ostream& operator<<(std::ostream&,const btom_slice_simulator_params& sp);
  protected:
   void InitParams(int ncyl,
                   float min_xy_sigma,

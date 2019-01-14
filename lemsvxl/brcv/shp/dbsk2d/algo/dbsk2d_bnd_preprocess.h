@@ -34,11 +34,11 @@ public:
   //: vkey.first : the edge that will be modified
   // vkey.second : position (ratio) on the edge that modifications 
   // will take place
-  typedef vcl_pair<dbsk2d_bnd_edge_sptr, double > vkey;
-  typedef vcl_pair<vkey, dbsk2d_bnd_vertex_sptr > vkey_vertex_pair;
+  typedef std::pair<dbsk2d_bnd_edge_sptr, double > vkey;
+  typedef std::pair<vkey, dbsk2d_bnd_vertex_sptr > vkey_vertex_pair;
   
   // key_vertex_map.val : vertex that will be inserted at vkey
-  typedef vcl_multimap<vkey, dbsk2d_bnd_vertex_sptr > vkey_vertex_map;
+  typedef std::multimap<vkey, dbsk2d_bnd_vertex_sptr > vkey_vertex_map;
 
 protected:
   //********************************************
@@ -73,17 +73,17 @@ public:
 
   //: Pre-process a group of edges
   // Return false if preprocessing fails
-  bool preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  bool preprocess(std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   
   ////: Pre-process a group of edges
   //// Return false if preprocessing fails
-  //bool preprocess(vcl_list<dbsk2d_bnd_edge_sptr >& new_edges,
-  //  vcl_list<dbsk2d_bnd_edge_sptr >& preproc_edges);
+  //bool preprocess(std::list<dbsk2d_bnd_edge_sptr >& new_edges,
+  //  std::list<dbsk2d_bnd_edge_sptr >& preproc_edges);
 
   
   //: Return true if the set of edges needs preprocessing
-  bool need_preprocessing(vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  bool need_preprocessing(std::list<dbsk2d_bnd_edge_sptr >& edges);
 
 
   //***********************************************
@@ -106,38 +106,38 @@ public:
   // ------------ COMMON --------------------------------
 
   //: Remove "unlinked" edges in an edge list
-  void remove_unlinked_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  void remove_unlinked_edges(std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   //: Separate out the edges into three groups - points, lines, and arcs
   // Put a zero pointer for uninterested groups
-  void classify_edges(vcl_list<dbsk2d_bnd_edge_sptr >& edges,
-    vcl_list<dbsk2d_bnd_edge_sptr >* bnd_pts, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* bnd_lines, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* bnd_arcs); 
+  void classify_edges(std::list<dbsk2d_bnd_edge_sptr >& edges,
+    std::list<dbsk2d_bnd_edge_sptr >* bnd_pts, 
+    std::list<dbsk2d_bnd_edge_sptr >* bnd_lines, 
+    std::list<dbsk2d_bnd_edge_sptr >* bnd_arcs); 
 
   //: Convert too short lines and arcs into points
   // If the points are not stand-alone, the remove it
-  void remove_short_curves(vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  void remove_short_curves(std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   //: Merge vertices that are geometrically close
-  void merge_close_vertices(vcl_list<dbsk2d_bnd_vertex_sptr >* affected_vertices,
-    vcl_list<dbsk2d_bnd_vertex_sptr >* vertex_set1,
-    vcl_list<dbsk2d_bnd_vertex_sptr >* vertex_set2 =0);
+  void merge_close_vertices(std::list<dbsk2d_bnd_vertex_sptr >* affected_vertices,
+    std::list<dbsk2d_bnd_vertex_sptr >* vertex_set1,
+    std::list<dbsk2d_bnd_vertex_sptr >* vertex_set2 =0);
 
 
   //: Insert new vertices to the middle of the edges
   // The overall edge list will also be updated
   void insert_new_vertices(const vkey_vertex_map & new_vertex_map,
-    vcl_list<dbsk2d_bnd_edge_sptr >& all_edges,
-    vcl_list<dbsk2d_bnd_vertex_sptr >& affected_vertices);
+    std::list<dbsk2d_bnd_edge_sptr >& all_edges,
+    std::list<dbsk2d_bnd_vertex_sptr >& affected_vertices);
 
 
   //: Dissolve end vertices into curves(lines, arcs) when they are too close
   // Require: the vertex list is unique
   // \TODO handle cases for arcs
-  void dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges, 
-    vcl_list<dbsk2d_bnd_edge_sptr >& bnd_curves,
-    const vcl_list<dbsk2d_bnd_vertex_sptr >& vertices);
+  void dissolve_vertices_into_curves(std::list<dbsk2d_bnd_edge_sptr >& tainted_edges, 
+    std::list<dbsk2d_bnd_edge_sptr >& bnd_curves,
+    const std::list<dbsk2d_bnd_vertex_sptr >& vertices);
 
 
 
@@ -147,11 +147,11 @@ public:
 
   //: Remove unreal stand-alone points in the list of edges.
   // This operation should not affect the vertex list
-  void remove_unreal_stand_alone_points(vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  void remove_unreal_stand_alone_points(std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   //: Merge close points in a group of points
   // Require: all bnd_edges in `bnd_pts' are degenerate, i.e. points
-  void merge_close_points(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts);
+  void merge_close_points(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts);
 
   // -------------  PREPROCESS LINES -------------------------------
   
@@ -161,20 +161,20 @@ public:
   // be empty
   // `tainted_lines' contains all lines affected by intersection and need
   // further processing
-  void intersect_bnd_lines(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_lines, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* lineset1, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* lineset2=0);
+  void intersect_bnd_lines(std::list<dbsk2d_bnd_edge_sptr >* tainted_lines, 
+    std::list<dbsk2d_bnd_edge_sptr >* lineset1, 
+    std::list<dbsk2d_bnd_edge_sptr >* lineset2=0);
 
   //: Remove (exact) duplicate lines - lines with same end vertices
-  void remove_duplicate_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines);
+  void remove_duplicate_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_lines);
 
 
 
   // -------------  PREPROCESS POINT-LINES -------------------------
  
   //: Remove stand-alone points if they are too close to a line
-  void remove_points_close_to_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
-    const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines);
+  void remove_points_close_to_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts,
+    const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines);
 
 
   // -------------  PREPROCESS ARCS ---------------------------------
@@ -185,14 +185,14 @@ public:
   // be empty
   // `tainted_arcs' contains all arcs affected by intersection and need
   // further processing
-  void intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* arcset1, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* arcset2=0);
+  void intersect_bnd_arcs(std::list<dbsk2d_bnd_edge_sptr >* tainted_arcs, 
+    std::list<dbsk2d_bnd_edge_sptr >* arcset1, 
+    std::list<dbsk2d_bnd_edge_sptr >* arcset2=0);
 
 
   //: Remove (exact) duplicate arcs - 
   // arcs with same end vertices and maximum distance is < threshold
-  void remove_duplicate_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs);
+  void remove_duplicate_arcs(std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs);
 
 
 
@@ -200,8 +200,8 @@ public:
 
   //: Remove stand-alone points if they are too close to an arc
   // \TODO fix me
-  void remove_points_close_to_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
-    const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs);
+  void remove_points_close_to_arcs(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts,
+    const std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs);
 
 
 
@@ -210,15 +210,15 @@ public:
   //: Detect and form all intersection between `arcset' and `lineset'
   // `tainted_edges' contains all arcs affected by intersection and need
   // further processing
-  void intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* arcset, 
-    vcl_list<dbsk2d_bnd_edge_sptr >* lineset);
+  void intersect_lines_against_arcs(std::list<dbsk2d_bnd_edge_sptr >* tainted_edges, 
+    std::list<dbsk2d_bnd_edge_sptr >* arcset, 
+    std::list<dbsk2d_bnd_edge_sptr >* lineset);
 
 
   //: Remove arcs that share both vertices with another line and the maximum distance
   // between the arc and the line is less than distance threshold
-  void remove_arcs_duplicating_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs, 
-    const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines);
+  void remove_arcs_duplicating_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs, 
+    const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines);
 
   
 public:
@@ -229,8 +229,8 @@ public:
   
   //: Form bnd_contours from edges
   // require: the list of edges must be preprocessed
-  void form_contours_from_edges(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
-    vcl_list<dbsk2d_bnd_contour_sptr >& new_contours);
+  void form_contours_from_edges(const std::list<dbsk2d_bnd_edge_sptr >& edges,
+    std::list<dbsk2d_bnd_contour_sptr >& new_contours);
 
   
   //***********************************************
@@ -239,19 +239,19 @@ public:
 public:
 
   //: Return true if the set of points need preprocessing
-  bool points_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts);
+  bool points_need_preprocessing(const std::list<dbsk2d_bnd_edge_sptr >& bnd_pts);
  
 
   //: Return true if this set of line edges need preprocessor
-  bool lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines);
+  bool lines_need_preprocessing(const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines);
 
   //: Return true if this set of line edges need preprocessor
   bool point_lines_need_preprocessing(
-    const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines, 
-    const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts );
+    const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines, 
+    const std::list<dbsk2d_bnd_edge_sptr >& bnd_pts );
 
 
-  //void describe_edges(vcl_ostream& os = vcl_cout) const;
+  //void describe_edges(std::ostream& os = std::cout) const;
   
   //-------------------------------------------------------------------
   // PREPROCESSING

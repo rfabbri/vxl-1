@@ -4,39 +4,39 @@
 // \author  H. Can Aras
 // \date    2006-12-12
 // 
-#include <vcl_cstdio.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <cstdio>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include <vsol/vsol_point_3d.h>
 #include <bsold/bsold_interp_curve_3d.h>
 #include <bsold/algo/bsold_curve_3d_algs.h>
 #include <dbcvr/dbcvr_cvmatch_even_3d.h>
 
-void loadCON(vcl_string fileName, vcl_vector<vsol_point_3d_sptr> &points)
+void loadCON(std::string fileName, std::vector<vsol_point_3d_sptr> &points)
 {
-  vcl_ifstream infp(fileName.c_str());
+  std::ifstream infp(fileName.c_str());
   char magicNum[200];
 
   infp.getline(magicNum,200);
   if (strncmp(magicNum,"CONTOUR",7))
   {
-    vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cerr << "Should be CONTOUR " << magicNum << vcl_endl;
+    std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+    std::cerr << "Should be CONTOUR " << magicNum << std::endl;
     exit(1);
   }
 
   char openFlag[200];
   infp.getline(openFlag,200);
   if (!strncmp(openFlag,"OPEN",4))
-    vcl_cout << "Open Curve\n" << vcl_endl;
+    std::cout << "Open Curve\n" << std::endl;
   else if (!strncmp(openFlag,"CLOSE",5))
-    vcl_cout << "Closed Curve\n" << vcl_endl;
+    std::cout << "Closed Curve\n" << std::endl;
   else
   {
-    vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cerr << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+    std::cerr << "Should be OPEN/CLOSE " << openFlag << std::endl;
     exit(1);
   }
 
@@ -52,18 +52,18 @@ void loadCON(vcl_string fileName, vcl_vector<vsol_point_3d_sptr> &points)
   infp.close();
 }
 
-void writeCON(vcl_string fileName, bsold_interp_curve_3d &c, int numpoints)
+void writeCON(std::string fileName, bsold_interp_curve_3d &c, int numpoints)
 {
-  vcl_ofstream outfp(fileName.c_str());
+  std::ofstream outfp(fileName.c_str());
   assert(outfp != NULL);
-  outfp << "CONTOUR" << vcl_endl;
-  outfp << "OPEN" << vcl_endl;
-  outfp << numpoints << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
+  outfp << "OPEN" << std::endl;
+  outfp << numpoints << std::endl;
   double ds = c.length()/(numpoints-1);
   for(int i=0; i<numpoints; i++)
   {
     vsol_point_3d_sptr p = c.point_at(i*ds);
-    outfp << p->x() << " " << p->y() << " " << p->z() << vcl_endl;
+    outfp << p->x() << " " << p->y() << " " << p->z() << std::endl;
   }
   outfp.close();
 }
@@ -104,44 +104,44 @@ void writeCON(vcl_string fileName, bsold_interp_curve_3d &c, int numpoints)
 #if 0
 int main(int argc, char** argv)
 {
-  vcl_cout << "3D CURVE MATCHING EXAMPLE" << vcl_endl;
-  vcl_string batch_fname = argv[1];
-  vcl_ifstream infp(batch_fname.c_str());
+  std::cout << "3D CURVE MATCHING EXAMPLE" << std::endl;
+  std::string batch_fname = argv[1];
+  std::ifstream infp(batch_fname.c_str());
 
   while(1)
   {
-    vcl_string inp1, inp2, out;
+    std::string inp1, inp2, out;
     infp >> inp1;
     infp >> inp2;
     infp >> out;
     if(inp1.size() == 0)
       break;
 
-    vcl_cout << inp1 << vcl_endl;
-    vcl_cout << inp2 << vcl_endl;
-    vcl_cout << out << vcl_endl;
+    std::cout << inp1 << std::endl;
+    std::cout << inp2 << std::endl;
+    std::cout << out << std::endl;
 
     // construct the first curve
-    vcl_vector<vsol_point_3d_sptr> points1;
+    std::vector<vsol_point_3d_sptr> points1;
     loadCON(inp1, points1);
     bsold_interp_curve_3d curve1;
-    vcl_vector<double> samples1;
+    std::vector<double> samples1;
     bsold_curve_3d_algs::interpolate_eno_3d(&curve1,points1,samples1);
 
     // construct the second curve
-    vcl_vector<vsol_point_3d_sptr> points2;
+    std::vector<vsol_point_3d_sptr> points2;
     loadCON(inp2, points2);
     bsold_interp_curve_3d curve2;
-    vcl_vector<double> samples2;
+    std::vector<double> samples2;
     bsold_curve_3d_algs::interpolate_eno_3d(&curve2,points2,samples2);
 
     // match curve1 and curve2
     dbcvr_cvmatch_even_3d curvematch(&curve1, &curve2, curve1.size()+1, curve2.size()+1, R1, R2, 3, FORMULA_TYPE, ANG_DER_COMP);
     curvematch.Match();
 
-    vcl_string curve_out_1 = out;
-    vcl_string curve_out_2 = out;
-    vcl_string match_out = out;
+    std::string curve_out_1 = out;
+    std::string curve_out_2 = out;
+    std::string match_out = out;
     curve_out_1 += "curve1.con";
     curve_out_2 += "curve2.con";
     match_out += "match.txt";
@@ -151,16 +151,16 @@ int main(int argc, char** argv)
     writeCON(curve_out_2, curve2, curve2.size()+1);
     // write the matches
     FinalMapType* fmap = curvematch.finalMap();
-    vcl_ofstream outfp(match_out.c_str());
+    std::ofstream outfp(match_out.c_str());
     // cost normalized by the length
-    outfp << "Final Cost = " << curvematch.finalCost()/*/(curve1.length() + curve2.length())*20*/ << vcl_endl;
+    outfp << "Final Cost = " << curvematch.finalCost()/*/(curve1.length() + curve2.length())*20*/ << std::endl;
     
-    outfp << fmap->size() << vcl_endl;
+    outfp << fmap->size() << std::endl;
 
     for(unsigned i = 0; i < fmap->size(); i++)
-      outfp << (*fmap)[i].first << " " << (*fmap)[i].second << vcl_endl;
+      outfp << (*fmap)[i].first << " " << (*fmap)[i].second << std::endl;
 
-    vcl_cout << curvematch.finalCost()/*/(curve1.length() + curve2.length())*100*/ << vcl_endl;
+    std::cout << curvematch.finalCost()/*/(curve1.length() + curve2.length())*100*/ << std::endl;
   }
   return 0;
 }
@@ -195,23 +195,23 @@ int main(int argc, char** argv)
 #if 1
 int main(int argc, char** argv)
 {
-  vcl_cout << "3D CURVE MATCHING EXAMPLE" << vcl_endl;
-  vcl_string batch_fname = argv[1];
-  vcl_ifstream infp(batch_fname.c_str());
+  std::cout << "3D CURVE MATCHING EXAMPLE" << std::endl;
+  std::string batch_fname = argv[1];
+  std::ifstream infp(batch_fname.c_str());
 
-  vcl_vector<vcl_string> curve_names;
-  vcl_vector<bsold_interp_curve_3d> curves;
-  vcl_vector<bsold_interp_curve_3d> curves_inv;
+  std::vector<std::string> curve_names;
+  std::vector<bsold_interp_curve_3d> curves;
+  std::vector<bsold_interp_curve_3d> curves_inv;
 
-  vcl_string in_folder;
+  std::string in_folder;
   infp >> in_folder;
-  vcl_string out_folder;
+  std::string out_folder;
   infp >> out_folder;
   int num_curves;
   infp >> num_curves;
 
-  vcl_string out_fname = out_folder + "out.txt";
-  FILE *fp = vcl_fopen(out_fname.c_str(), "w");
+  std::string out_fname = out_folder + "out.txt";
+  FILE *fp = std::fopen(out_fname.c_str(), "w");
 
   curves.resize(num_curves);
   curves_inv.resize(num_curves);
@@ -219,32 +219,32 @@ int main(int argc, char** argv)
   // read the curves and store them
   for(int j=0; j<num_curves; j++)
   {
-    vcl_string inp;
+    std::string inp;
     infp >> inp;
     curve_names.push_back(inp);
 
     // construct the curve and its inverse
     inp = in_folder + inp + ".con";
-    vcl_vector<vsol_point_3d_sptr> points;
-    vcl_vector<vsol_point_3d_sptr> points_inv;
+    std::vector<vsol_point_3d_sptr> points;
+    std::vector<vsol_point_3d_sptr> points_inv;
 
     loadCON(inp, points);
     for(int i=points.size()-1; i>=0; i--)
       points_inv.push_back(points[i]);
     
-    vcl_vector<double> samples;
+    std::vector<double> samples;
     bsold_curve_3d_algs::interpolate_eno_3d(&(curves[j]),points,samples);
     bsold_curve_3d_algs::interpolate_eno_3d(&(curves_inv[j]),points_inv,samples);
   }
 
-  vcl_fprintf(fp, "        ");
+  std::fprintf(fp, "        ");
   for(unsigned i=0; i<curves.size(); i++)
-    vcl_fprintf(fp, "%s      ", curve_names[i].c_str());
-  vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "%s      ", curve_names[i].c_str());
+  std::fprintf(fp, "\n");
   
   for(unsigned i=0; i<curves.size(); i++)
   {
-    vcl_fprintf(fp, "%s  ", curve_names[i].c_str());
+    std::fprintf(fp, "%s  ", curve_names[i].c_str());
     double cost;
     for(unsigned j=0; j<curves.size(); j++)
     {
@@ -293,7 +293,7 @@ int main(int argc, char** argv)
           cost = cost4;
           which_pair = 4;
         }
-        vcl_fprintf(fp, "%4.6f | ", cost);
+        std::fprintf(fp, "%4.6f | ", cost);
 
         switch(which_pair)
         { 
@@ -321,32 +321,32 @@ int main(int argc, char** argv)
           break;
         }
 
-        vcl_string curve_out_1 = out_folder + curve_names[i] + "_" + curve_names[j] + "_curve1.con";
-        vcl_string curve_out_2 = out_folder + curve_names[i] + "_" + curve_names[j] + "_curve2.con";
-        vcl_string match_out = out_folder + curve_names[i] + "_" + curve_names[j] + "_match.txt";
+        std::string curve_out_1 = out_folder + curve_names[i] + "_" + curve_names[j] + "_curve1.con";
+        std::string curve_out_2 = out_folder + curve_names[i] + "_" + curve_names[j] + "_curve2.con";
+        std::string match_out = out_folder + curve_names[i] + "_" + curve_names[j] + "_match.txt";
         // write interpolated curves
 //        writeCON(curve_out_1, *write_curve_1, (*write_curve_1).size()+1);
 //        writeCON(curve_out_2, *write_curve_2, (*write_curve_2).size()+1);
         // write the match
-        vcl_ofstream outfp(match_out.c_str());
+        std::ofstream outfp(match_out.c_str());
         // cost normalized by the length
-        outfp << "Final Cost = " << cost << vcl_endl;
+        outfp << "Final Cost = " << cost << std::endl;
 
-        outfp << fmap->size() << vcl_endl;
+        outfp << fmap->size() << std::endl;
 
         for(unsigned k = 0; k < fmap->size(); k++)
-          outfp << (*fmap)[k].first << " " << (*fmap)[k].second << vcl_endl;
+          outfp << (*fmap)[k].first << " " << (*fmap)[k].second << std::endl;
 
-        vcl_printf("Matching %s and %s, Cost: %4.6f, Matched Config: %d\n", 
+        std::printf("Matching %s and %s, Cost: %4.6f, Matched Config: %d\n", 
           curve_names[i].c_str(), curve_names[j].c_str(), cost, which_pair);
       }
       else
-        vcl_fprintf(fp, "xxxxxxxx | ");
+        std::fprintf(fp, "xxxxxxxx | ");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
 
-  vcl_fclose(fp);
+  std::fclose(fp);
   return 0;
 }
 #endif

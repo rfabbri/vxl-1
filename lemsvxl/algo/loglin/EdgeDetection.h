@@ -1,12 +1,12 @@
 #ifndef EDGE_DETECTION_H
 #define EDGE_DETECTION_H
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include "points.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
-#include <vcl_fstream.h>
+#include <fstream>
 //#include <sstream>
 //#include <fstream>
 //#include <iomanip>
@@ -182,7 +182,7 @@ class EdgePoint
            }
 
 
-        void printValues(vcl_ostream& os) const
+        void printValues(std::ostream& os) const
           {
             if (_imageElementType==IMAGE_ELEMENT_EDGE)
                 os<<"EDGE :";
@@ -194,7 +194,7 @@ class EdgePoint
                         os<<"NLINE :";
 
             
-            os<<" "<<_pixelPoint<<"   "<<_pixelDirection<<" "<<_pixelConfidence<<"  "<<_subPixelPoint<<"  "<<_subPixelDirection<<" "<<_subPixelConfidence<<vcl_endl;
+            os<<" "<<_pixelPoint<<"   "<<_pixelDirection<<" "<<_pixelConfidence<<"  "<<_subPixelPoint<<"  "<<_subPixelDirection<<" "<<_subPixelConfidence<<std::endl;
            }
 
 
@@ -204,12 +204,12 @@ class EdgePoint
            }
 
 
-        vcl_string getDebugInformation()  const
+        std::string getDebugInformation()  const
           {
-            vcl_ostringstream info;
+            std::ostringstream info;
 
-            info<<" Pix Pt="<<_pixelPoint<<" Dir= "<<_pixelDirection*(180.0/vnl_math::pi)<<" Conf= "<<_pixelConfidence<<vcl_endl;
-            info<<" Sub Pt="<<_subPixelPoint<<" Dir= "<<_subPixelDirection*(180.0/vnl_math::pi)<<" Conf= "<<_subPixelConfidence<<vcl_endl;
+            info<<" Pix Pt="<<_pixelPoint<<" Dir= "<<_pixelDirection*(180.0/vnl_math::pi)<<" Conf= "<<_pixelConfidence<<std::endl;
+            info<<" Sub Pt="<<_subPixelPoint<<" Dir= "<<_subPixelDirection*(180.0/vnl_math::pi)<<" Conf= "<<_subPixelConfidence<<std::endl;
             return info.str();
            }
    };
@@ -315,7 +315,7 @@ class EdgePoint
    };
 */
 
-inline vcl_ostream& operator<<(vcl_ostream &os, const EdgePoint &pt)
+inline std::ostream& operator<<(std::ostream &os, const EdgePoint &pt)
   {
     pt.printValues(os); 
     return os;
@@ -333,18 +333,18 @@ class EdgeWriter
   {
     public:
         template<typename OutputDS>
-                void operator()(const OutputDS &edges, vcl_string filename, vcl_string header)
+                void operator()(const OutputDS &edges, std::string filename, std::string header)
                   {
-                    vcl_cerr<<" Creating Edge File = "<<filename<<vcl_endl;
-                    vcl_ofstream output_file(filename.c_str());
+                    std::cerr<<" Creating Edge File = "<<filename<<std::endl;
+                    std::ofstream output_file(filename.c_str());
                     assert(output_file.is_open());
 
-                    output_file<<"# EDGE_MAP : "<<header<<vcl_endl;
-                    output_file<<"# Version     :    4 "<<vcl_endl;
-                    output_file<<"# (Add [0.5, 0.5] to both pixel and sub-pixel for better display).  "<<vcl_endl;
-                    output_file<<"# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<vcl_endl;
-                    output_file<<" EDGE_COUNT="<<edges.size()<<vcl_endl;
-                    output_file<<vcl_endl<<vcl_endl;
+                    output_file<<"# EDGE_MAP : "<<header<<std::endl;
+                    output_file<<"# Version     :    4 "<<std::endl;
+                    output_file<<"# (Add [0.5, 0.5] to both pixel and sub-pixel for better display).  "<<std::endl;
+                    output_file<<"# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<std::endl;
+                    output_file<<" EDGE_COUNT="<<edges.size()<<std::endl;
+                    output_file<<std::endl<<std::endl;
 
                     for (unsigned int i=0;i<edges.size();i++)
                       {

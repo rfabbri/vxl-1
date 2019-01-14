@@ -2,8 +2,8 @@
 #include <borld/borld_category_info.h>
 #include <borld/borld_category_info_sptr.h>
 
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -20,7 +20,7 @@ MAIN_ARGS(test_category_info)
   TEST("test category_info constructor ", ci->prefix_list_.size(), 1);
   
   borld_category_info_sptr ci2 = new borld_category_info("test22");
-  vcl_vector<vcl_string> prefixes;
+  std::vector<std::string> prefixes;
   prefixes.push_back("test2");
   prefixes.push_back("test3");
   prefixes.push_back("test4");

@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vgui/vgui.h>
 #include <vnl/vnl_math.h>
 #include <vgui/vgui_image_tableau.h>
@@ -21,7 +21,7 @@
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_macro.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vgui/vgui_text_tableau.h>
@@ -29,10 +29,10 @@
 #include <vgui/vgui_text_graph.h>
 #include <vgui/vgui_tableau.h>
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <utility>
 #include <cplusplusclass/mygui_yong_star_tableau.h>
 #include <cplusplusclass/mygui_yong_star_tableau_sptr.h>
 #include <cplusplusclass/mygui_yong_star_tableau2.h>
@@ -41,14 +41,14 @@
 #include <cplusplusclass/my_rectangle_sptr.h>
 #include <cplusplusclass/yong_star.h>
 #include <cplusplusclass/yong_star_sptr.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 #include <vgui/vgui_style.h>
 
 #if 0
 
   // Create a yong_star vector;
-static  vcl_vector<yong_star_sptr> star_list;
+static  std::vector<yong_star_sptr> star_list;
 static  vgui_text_tableau_sptr text_tab;
 
 struct my_star_tableau_synchronizer_1to2 : public vgui_observer
@@ -78,8 +78,8 @@ struct my_star_tableau_synchronizer_1to2 : public vgui_observer
         {
             double x = star_list[i]->center_x();
             double y = star_list[i]->center_y();
-            vcl_stringstream number_SS;
-            vcl_string number_string;
+            std::stringstream number_SS;
+            std::string number_string;
             number_SS.clear();
             number_SS << i+1;
             number_SS >> number_string;

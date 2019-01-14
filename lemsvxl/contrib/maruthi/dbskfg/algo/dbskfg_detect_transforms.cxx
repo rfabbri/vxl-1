@@ -5,9 +5,9 @@
 #include <dbskfg/algo/dbskfg_detect_transforms.h>
 #include <dbskfg/algo/dbskfg_transformer.h>
 #include <dbskfg/dbskfg_utilities.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/vgl_clip.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbskfg/algo/dbskfg_transform_manager.h>
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <dbskfg/dbskfg_rag_graph.h>
@@ -76,23 +76,23 @@ void dbskfg_detect_transforms::detect_transforms(bool detect_gaps,
 
     if ( detect_gaps)
     {
-        vcl_cout<<"************ Detecting Gaps ***************"<<vcl_endl;
+        std::cout<<"************ Detecting Gaps ***************"<<std::endl;
         gap_detector_.set_ess_completion(ess_completion);
         gap_detector_.set_alpha(alpha);
         gap_detector_.detect_gaps(transforms_);
         gaps_found = transforms_.size();
-        vcl_cout<<"Gaps Found: "<<gaps_found<<vcl_endl;
+        std::cout<<"Gaps Found: "<<gaps_found<<std::endl;
     }
 
     if ( detect_loops )
     {
-        vcl_cout<<"************ Detecting Loops *****************"<<vcl_endl;
+        std::cout<<"************ Detecting Loops *****************"<<std::endl;
         loop_detector_.set_alpha(alpha);
         loop_detector_.detect_loops(transforms_);
         loops_found=transforms_.size() - gaps_found;
-        vcl_cout<<"Loops Found: "<<loops_found<<vcl_endl;
+        std::cout<<"Loops Found: "<<loops_found<<std::endl;
     }
-    vcl_cout<<"Total Number of Transforms: "<<transforms_.size()<<vcl_endl;
+    std::cout<<"Total Number of Transforms: "<<transforms_.size()<<std::endl;
 
     // Assign id to all transforms
     for ( unsigned int t=0; t < transforms_.size() ; ++t)
@@ -153,26 +153,26 @@ void dbskfg_detect_transforms::detect_transforms_simple(bool detect_gaps,
 
     if ( detect_gaps)
     {
-        vcl_cout<<"************ Detecting Gaps ***************"<<vcl_endl;
+        std::cout<<"************ Detecting Gaps ***************"<<std::endl;
         gap_detector_.set_ess_completion(ess_completion);
         gap_detector_.set_alpha(0.4);
         gap_detector_.detect_gaps(dbskfg_transform_manager::Instance()
                                   .objects());
 
         gaps_found = transforms_.size();
-        vcl_cout<<"Gaps Found: "<<gaps_found<<vcl_endl;
+        std::cout<<"Gaps Found: "<<gaps_found<<std::endl;
     }
 
     if ( detect_loops )
     {
-        vcl_cout<<"************ Detecting Loops *****************"<<vcl_endl;
+        std::cout<<"************ Detecting Loops *****************"<<std::endl;
         loop_detector_.set_alpha(1);
         loop_detector_.detect_loops(dbskfg_transform_manager::Instance()
                                     .objects());
         loops_found=transforms_.size() - gaps_found;
-        vcl_cout<<"Loops Found: "<<loops_found<<vcl_endl;
+        std::cout<<"Loops Found: "<<loops_found<<std::endl;
     }
-    vcl_cout<<"Total Number of Transforms: "<<transforms_.size()<<vcl_endl;
+    std::cout<<"Total Number of Transforms: "<<transforms_.size()<<std::endl;
 
     dbskfg_transform_manager::Instance().update_transforms_conflicts();
 
@@ -184,9 +184,9 @@ unsigned int dbskfg_detect_transforms::apply_transforms(
     double threshold,
     dbskfg_rag_graph_sptr rag_graph) 
 {
-    vcl_cout<<"Number of Transforms to Apply: "
+    std::cout<<"Number of Transforms to Apply: "
             <<transforms_valid(threshold)
-            <<vcl_endl;
+            <<std::endl;
     // Keep count of number of transforms actually applied
     unsigned int numb_transforms = 0;
 
@@ -197,7 +197,7 @@ unsigned int dbskfg_detect_transforms::apply_transforms(
              transform_affects_region(transforms_[k]) )
         {
             transforms_[k]->processed_=true;
-            vcl_vector<unsigned int> neighbors = transform_neighbors_
+            std::vector<unsigned int> neighbors = transform_neighbors_
                 [transforms_[k]->id_];
 
             // Apply the actual transform
@@ -219,7 +219,7 @@ unsigned int dbskfg_detect_transforms::apply_transforms(
         }
     }
 
-    vcl_cout<<"Numb transforms: "<<numb_transforms<<vcl_endl;
+    std::cout<<"Numb transforms: "<<numb_transforms<<std::endl;
     // After all transforms have been done lets grow the fragments
     if ( numb_transforms > 0 ) 
     {
@@ -241,7 +241,7 @@ void dbskfg_detect_transforms::apply_transforms(
     if ( !transforms_[k]->processed_ )
     {
         transforms_[k]->processed_=true;
-        vcl_vector<unsigned int> neighbors = transform_neighbors_
+        std::vector<unsigned int> neighbors = transform_neighbors_
             [transforms_[k]->id_];
         for ( unsigned int l=0; l < neighbors.size() ; ++l)
         {
@@ -270,10 +270,10 @@ bool dbskfg_detect_transforms::transform_affects_region(
     }
 
     //: Get wavefront
-    vcl_map<unsigned int, dbskfg_shock_node*> wavefront = 
+    std::map<unsigned int, dbskfg_shock_node*> wavefront = 
         rag_node_->get_wavefront();
 
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator it;
     for ( it = wavefront.begin() ; it != wavefront.end() ; ++it)
     {
     
@@ -294,10 +294,10 @@ bool dbskfg_detect_transforms::transform_affects_region(
 
 void dbskfg_detect_transforms::transform_affects_region(
     dbskfg_rag_node_sptr& rag_node,
-    vcl_set<unsigned int>& rag_con_ids)
+    std::set<unsigned int>& rag_con_ids)
 {
  
-    vcl_vector<dbskfg_composite_node_sptr> con_endpoints;
+    std::vector<dbskfg_composite_node_sptr> con_endpoints;
     rag_node->determine_contour_points(con_endpoints);
 
     gap_detector_.set_ess_completion(0.25);
@@ -308,7 +308,7 @@ void dbskfg_detect_transforms::transform_affects_region(
                  con_endpoints);
 
 
-    vcl_map<unsigned int, dbskfg_composite_node_sptr> local_map;
+    std::map<unsigned int, dbskfg_composite_node_sptr> local_map;
 
     // Insert all con_nodes into local map
     for ( unsigned int c=0; c < con_endpoints.size() ; ++c )
@@ -343,8 +343,8 @@ void dbskfg_detect_transforms::transform_affects_region(
     }    
 
     // Create loop endpoints
-    vcl_vector<dbskfg_composite_node_sptr> loop_endpoints;
-    vcl_map<unsigned int,dbskfg_composite_node_sptr>::iterator it;
+    std::vector<dbskfg_composite_node_sptr> loop_endpoints;
+    std::map<unsigned int,dbskfg_composite_node_sptr>::iterator it;
     for ( it = local_map.begin() ; it != local_map.end() ; ++it)
     {
         loop_endpoints.push_back((*it).second);
@@ -353,7 +353,7 @@ void dbskfg_detect_transforms::transform_affects_region(
     loop_detector_.detect_loops(transforms_,
                                loop_endpoints);
 
-    vcl_map<vcl_string,vcl_vector<double> > gap_costs;
+    std::map<std::string,std::vector<double> > gap_costs;
 
     // Assign id to all transforms
     for ( unsigned int t=0; t < transforms_.size() ; ++t)
@@ -367,7 +367,7 @@ void dbskfg_detect_transforms::transform_affects_region(
         {
             transforms_[t]->all_gaps_.push_back(transforms_[t]->gap_);
 
-            vcl_pair<vcl_string,vcl_string> gap_endpoints = 
+            std::pair<std::string,std::string> gap_endpoints = 
                 transforms_[t]->gap_endpoints();
           
             gap_costs[gap_endpoints.first].push_back(transforms_[t]->cost_);
@@ -386,21 +386,21 @@ void dbskfg_detect_transforms::transform_affects_region(
              LOOP)
         {
             // Make sure loop is not in set of rag node points
-            vcl_vector<dbskfg_composite_node_sptr> loop_endpoints
+            std::vector<dbskfg_composite_node_sptr> loop_endpoints
                 = transforms_[t]->loop_endpoints_;
             
             bool invalid_transform=false;
 
-            vcl_vector<unsigned int> contour_ids_affected = transforms_[t]
+            std::vector<unsigned int> contour_ids_affected = transforms_[t]
                 ->contour_ids_affected();
 
             // Print out nodes
-            vcl_set<unsigned int>::iterator it;
+            std::set<unsigned int>::iterator it;
             
             for ( it = rag_con_ids.begin() ; it != rag_con_ids.end() ; ++it)
             {
             
-                if ( vcl_find(contour_ids_affected.begin(),
+                if ( std::find(contour_ids_affected.begin(),
                               contour_ids_affected.end(),
                               *it) != contour_ids_affected.end())
                 {
@@ -417,16 +417,16 @@ void dbskfg_detect_transforms::transform_affects_region(
 
             if ( transforms_[t]->loop_endpoints_.size() )
             {
-                vcl_stringstream sstream1;
+                std::stringstream sstream1;
                 sstream1<<transforms_[t]->loop_endpoints_[0]->pt();
         
-                vcl_stringstream sstream2;
+                std::stringstream sstream2;
                 sstream2<<transforms_[t]->loop_endpoints_[1]->pt();
                 
                 if ( gap_costs.count(sstream1.str()) && 
                      !gap_costs.count(sstream2.str()) )
                 {
-                    double c1 = *vcl_min_element(
+                    double c1 = *std::min_element(
                         gap_costs[sstream1.str()].begin(),
                         gap_costs[sstream1.str()].end());
 
@@ -435,7 +435,7 @@ void dbskfg_detect_transforms::transform_affects_region(
                 else if ( gap_costs.count(sstream2.str()) &&
                           !gap_costs.count(sstream1.str()))
                 {
-                    double c1 = *vcl_min_element(
+                    double c1 = *std::min_element(
                         gap_costs[sstream2.str()].begin(),
                         gap_costs[sstream2.str()].end());
                     
@@ -444,15 +444,15 @@ void dbskfg_detect_transforms::transform_affects_region(
                 else if ( gap_costs.count(sstream2.str()) &&
                           gap_costs.count(sstream1.str()))
                 {
-                     double c1 = *vcl_min_element(
+                     double c1 = *std::min_element(
                         gap_costs[sstream1.str()].begin(),
                         gap_costs[sstream1.str()].end());
-                     double c2 = *vcl_min_element(
+                     double c2 = *std::min_element(
                         gap_costs[sstream2.str()].begin(),
                         gap_costs[sstream2.str()].end());
 
                      
-                     transforms_[t]->cost_ = 1.0-vcl_min(c1,c2);
+                     transforms_[t]->cost_ = 1.0-std::min(c1,c2);
 
                 }
                 else
@@ -467,9 +467,9 @@ void dbskfg_detect_transforms::transform_affects_region(
         }
     }
     
-    vcl_sort(transforms_.begin(),transforms_.end(),
+    std::sort(transforms_.begin(),transforms_.end(),
              dbskfg_utilities::comparison);
-    vcl_reverse(transforms_.begin(),transforms_.end());
+    std::reverse(transforms_.begin(),transforms_.end());
 
     for ( unsigned int v=0; v < transforms_.size() ; ++v)
     {
@@ -493,7 +493,7 @@ void dbskfg_detect_transforms::transform_affects_region(
     double alpha)
 {
  
-    vcl_vector<dbskfg_composite_node_sptr> con_endpoints;
+    std::vector<dbskfg_composite_node_sptr> con_endpoints;
     rag_node->determine_contour_points(con_endpoints);
 
     gap_detector_.set_ess_completion(ess);
@@ -503,7 +503,7 @@ void dbskfg_detect_transforms::transform_affects_region(
     gap_detector_.detect_gaps_endpoint(transforms_,
                  con_endpoints);
 
-    vcl_map<unsigned int, dbskfg_composite_node_sptr> local_map;
+    std::map<unsigned int, dbskfg_composite_node_sptr> local_map;
 
     // Insert all con_nodes into local map
     for ( unsigned int c=0; c < con_endpoints.size() ; ++c )
@@ -536,8 +536,8 @@ void dbskfg_detect_transforms::transform_affects_region(
     }    
 
     // Create loop endpoints
-    vcl_vector<dbskfg_composite_node_sptr> loop_endpoints;
-    vcl_map<unsigned int,dbskfg_composite_node_sptr>::iterator it;
+    std::vector<dbskfg_composite_node_sptr> loop_endpoints;
+    std::map<unsigned int,dbskfg_composite_node_sptr>::iterator it;
     for ( it = local_map.begin() ; it != local_map.end() ; ++it)
     {
         loop_endpoints.push_back((*it).second);
@@ -546,7 +546,7 @@ void dbskfg_detect_transforms::transform_affects_region(
     loop_detector_.detect_loops(transforms_,
                                loop_endpoints);
 
-    vcl_map<vcl_string,vcl_vector<double> > gap_costs;
+    std::map<std::string,std::vector<double> > gap_costs;
 
     // Assign id to all transforms
     for ( unsigned int t=0; t < transforms_.size() ; ++t)
@@ -560,7 +560,7 @@ void dbskfg_detect_transforms::transform_affects_region(
         {
             transforms_[t]->all_gaps_.push_back(transforms_[t]->gap_);
 
-            vcl_pair<vcl_string,vcl_string> gap_endpoints = 
+            std::pair<std::string,std::string> gap_endpoints = 
                 transforms_[t]->gap_endpoints();
           
             gap_costs[gap_endpoints.first].push_back(transforms_[t]->cost_);
@@ -581,16 +581,16 @@ void dbskfg_detect_transforms::transform_affects_region(
 
             if ( transforms_[t]->loop_endpoints_.size() )
             {
-                vcl_stringstream sstream1;
+                std::stringstream sstream1;
                 sstream1<<transforms_[t]->loop_endpoints_[0]->pt();
         
-                vcl_stringstream sstream2;
+                std::stringstream sstream2;
                 sstream2<<transforms_[t]->loop_endpoints_[1]->pt();
                 
                 if ( gap_costs.count(sstream1.str()) && 
                      !gap_costs.count(sstream2.str()) )
                 {
-                    double c1 = *vcl_min_element(
+                    double c1 = *std::min_element(
                         gap_costs[sstream1.str()].begin(),
                         gap_costs[sstream1.str()].end());
 
@@ -599,7 +599,7 @@ void dbskfg_detect_transforms::transform_affects_region(
                 else if ( gap_costs.count(sstream2.str()) &&
                           !gap_costs.count(sstream1.str()))
                 {
-                    double c1 = *vcl_min_element(
+                    double c1 = *std::min_element(
                         gap_costs[sstream2.str()].begin(),
                         gap_costs[sstream2.str()].end());
                     
@@ -608,15 +608,15 @@ void dbskfg_detect_transforms::transform_affects_region(
                 else if ( gap_costs.count(sstream2.str()) &&
                           gap_costs.count(sstream1.str()))
                 {
-                     double c1 = *vcl_min_element(
+                     double c1 = *std::min_element(
                         gap_costs[sstream1.str()].begin(),
                         gap_costs[sstream1.str()].end());
-                     double c2 = *vcl_min_element(
+                     double c2 = *std::min_element(
                         gap_costs[sstream2.str()].begin(),
                         gap_costs[sstream2.str()].end());
 
                      
-                     transforms_[t]->cost_ = 1.0-vcl_min(c1,c2);
+                     transforms_[t]->cost_ = 1.0-std::min(c1,c2);
 
                 }
                 else
@@ -631,9 +631,9 @@ void dbskfg_detect_transforms::transform_affects_region(
         }
     }
     
-    vcl_sort(transforms_.begin(),transforms_.end(),
+    std::sort(transforms_.begin(),transforms_.end(),
              dbskfg_utilities::comparison);
-    vcl_reverse(transforms_.begin(),transforms_.end());
+    std::reverse(transforms_.begin(),transforms_.end());
 
     for ( unsigned int v=0; v < transforms_.size() ; ++v)
     {

@@ -28,7 +28,7 @@ dbskfg_form_composite_graph_process::dbskfg_form_composite_graph_process(
        )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -44,25 +44,25 @@ dbskfg_form_composite_graph_process::clone() const
     return new dbskfg_form_composite_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_form_composite_graph_process::name()
 {
     return "Compute Composite Graph";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_composite_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "shock" );
     to_return.push_back( "image" );
     return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_composite_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "composite_graph" );
     return to_return;
 }

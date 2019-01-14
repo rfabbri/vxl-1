@@ -4,7 +4,7 @@
 // \file
 
 #include <vgui/vgui.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbskr/dbskr_compute_scurve.h>
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_tree.h>
@@ -53,32 +53,32 @@ void
 dbskr_debug_scurve_tool::activate()
 {
   if (!tableau()) {
-    vcl_cout << " dbskr_debug_scurve_tool::activate() - tableau is not set!\n";
+    std::cout << " dbskr_debug_scurve_tool::activate() - tableau is not set!\n";
     return;
   }
 
   dbsk2d_shock_graph_sptr sg = tableau()->get_shock_graph();
   if( sg.ptr() == 0 ) {if (tableau()->get_shock_graph())
-    vcl_cout << "shock graph pointer is zero!\n";
+    std::cout << "shock graph pointer is zero!\n";
     return;
   }
   
   tree_ = new dbskr_tree(subsample_ds_, interpolate_ds_);
   tree_->acquire(sg, elastic_splice_cost_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_);  
   dart_cnt_ = tree_->size();
-  vcl_cout << "tree # of darts: " << dart_cnt_ << " sorting costs...\n";
+  std::cout << "tree # of darts: " << dart_cnt_ << " sorting costs...\n";
 
   //: keep a sorted map of all darts based on splice costs to determine which get pruned 
   //  and which stay
   for (unsigned i = 0; i<dart_cnt_; i++) {
-    vcl_pair<double, unsigned> p(tree_->subtree_delete_cost(i), i);
+    std::pair<double, unsigned> p(tree_->subtree_delete_cost(i), i);
     dart_splice_map_[p] = true;
   }
   update_dart_splice_map();
-  vcl_cout << "printing shock graph: " << vcl_endl;
+  std::cout << "printing shock graph: " << std::endl;
   print_shock_graph(sg);
-  vcl_cout << "-----------------------" << vcl_endl;
-  vcl_cout << "tree total reconstructed boundary length: " << tree_->total_reconstructed_boundary_length() << vcl_endl;
+  std::cout << "-----------------------" << std::endl;
+  std::cout << "tree total reconstructed boundary length: " << tree_->total_reconstructed_boundary_length() << std::endl;
 
   /*dbskr_tree_sptr new_tree = new dbskr_tree(1.0f);
   new_tree->acquire_and_prune(sg, threshold_, true);
@@ -87,7 +87,7 @@ dbskr_debug_scurve_tool::activate()
 
 void 
 dbskr_debug_scurve_tool::update_dart_splice_map() {
-  vcl_map< vcl_pair<double, unsigned>, bool>::iterator iter;
+  std::map< std::pair<double, unsigned>, bool>::iterator iter;
   for (iter = dart_splice_map_.begin(); iter != dart_splice_map_.end(); iter++) {
     iter->second = true;
   }
@@ -113,12 +113,12 @@ dbskr_debug_scurve_tool::update_dart_splice_map() {
 #if 1
     for (iter = dart_splice_map_.begin(); iter != dart_splice_map_.end(); iter++) {
       if (iter->second)
-        vcl_cout << (iter->first).first << "\td: " << (iter->first).second << " stays\n";
+        std::cout << (iter->first).first << "\td: " << (iter->first).second << " stays\n";
       else
-        vcl_cout << (iter->first).first << "\td: " << (iter->first).second << " goes\n";
+        std::cout << (iter->first).first << "\td: " << (iter->first).second << " goes\n";
     }
 #endif
-  vcl_cout << "Total pruning: " << sum << vcl_endl;  
+  std::cout << "Total pruning: " << sum << std::endl;  
 
   
 }
@@ -127,7 +127,7 @@ dbskr_debug_scurve_tool::~dbskr_debug_scurve_tool()
 {
 }
 
-vcl_string
+std::string
 dbskr_debug_scurve_tool::name() const
 {
   return "Debug Scurve Tool";
@@ -143,7 +143,7 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
 
   if (e.type == vgui_MOTION)
   {
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     vgui::out << "[" << intx << " " << inty << "] : (" << pointx << " " << pointy << ") \n";
   }
 
@@ -166,8 +166,8 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
               selected_dart_ = i;
               int selected_dart_mate_ = tree_->mate(selected_dart_);
 
-              vcl_cout << "selected_dart:\t\t" << selected_dart_ << "\t splice: " << tree_->delete_cost(selected_dart_) << "\tsubtree delete:\t" << tree_->subtree_delete_cost(selected_dart_) << "\tcontract:\t" << tree_->contract_cost(selected_dart_) << vcl_endl; 
-              vcl_cout << "selected_dart_mate:\t" << selected_dart_mate_ << "\t splice: " << tree_->delete_cost(selected_dart_mate_) << "\tsubtree delete:\t" << tree_->subtree_delete_cost(selected_dart_mate_) << "\tcontract:\t" << tree_->contract_cost(selected_dart_mate_) << vcl_endl; 
+              std::cout << "selected_dart:\t\t" << selected_dart_ << "\t splice: " << tree_->delete_cost(selected_dart_) << "\tsubtree delete:\t" << tree_->subtree_delete_cost(selected_dart_) << "\tcontract:\t" << tree_->contract_cost(selected_dart_) << std::endl; 
+              std::cout << "selected_dart_mate:\t" << selected_dart_mate_ << "\t splice: " << tree_->delete_cost(selected_dart_mate_) << "\tsubtree delete:\t" << tree_->subtree_delete_cost(selected_dart_mate_) << "\tcontract:\t" << tree_->contract_cost(selected_dart_mate_) << std::endl; 
               
               tableau()->post_overlay_redraw();
               return true;
@@ -196,9 +196,9 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
         //construct the scurve from these edges
         cur_scurve = get_scurve();
         if (cur_scurve) {
-          vcl_cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << vcl_endl;
-          vcl_cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
-          vcl_cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << vcl_endl;         
+          std::cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << std::endl;
+          std::cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
+          std::cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << std::endl;         
           output_scurve();
         }
       }
@@ -225,10 +225,10 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
         //construct the scurve from these edges
         cur_scurve = get_scurve();
         if (cur_scurve) {
-          vcl_cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << vcl_endl;
+          std::cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << std::endl;
           output_scurve();
-          vcl_cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
-          vcl_cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << vcl_endl;
+          std::cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
+          std::cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << std::endl;
         }
       }
     }
@@ -247,16 +247,16 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
       //construct the scurve from these edges
       cur_scurve = get_scurve();
       if (cur_scurve) {
-        vcl_cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << vcl_endl;
-        vcl_cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
-        vcl_cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << vcl_endl;
+        std::cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << std::endl;
+        std::cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
+        std::cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << std::endl;
         output_scurve();
       }
     }
     else if (selected_edges.size()>0){ 
       //reverse the order of the edges in the selection 
       //and choose a new start node
-      vcl_reverse (selected_edges.begin(), selected_edges.end());
+      std::reverse (selected_edges.begin(), selected_edges.end());
 
       //pick the right starting node
       if (selected_edges[0]->source() == selected_edges[1]->source() ||
@@ -268,9 +268,9 @@ dbskr_debug_scurve_tool::handle( const vgui_event & e,
       //construct the scurve from these edges
       cur_scurve = get_scurve();
       if (cur_scurve) {
-        vcl_cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << vcl_endl;
-        vcl_cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
-        vcl_cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << vcl_endl;
+        std::cout << "splice cost = " << cur_scurve->splice_cost_new(R_, construct_circular_ends_, find_splice_cost_using_dpmatch_combined_) << std::endl;
+        std::cout << "\t plus bnd length: " << cur_scurve->boundary_plus_length() << " minus bnd length: ";
+        std::cout << cur_scurve->boundary_minus_length() << " total length: " << cur_scurve->boundary_plus_length() + cur_scurve->boundary_minus_length() << std::endl;
         output_scurve();
       }
     }
@@ -309,14 +309,14 @@ void dbskr_debug_scurve_tool::output_scurve()
     //compute the alignment
     dbskr_dpmatch prune_alignment(orig_sc, pruned_sc);
     prune_alignment.Match();
-    //vcl_cout << "recomputed cost: " << prune_alignment.recompute_final_cost() << vcl_endl;
+    //std::cout << "recomputed cost: " << prune_alignment.recompute_final_cost() << std::endl;
     
     //output the alignment mapping
-    vcl_ofstream outfp("sc1-sc2-alignment.txt", vcl_ios::out);
+    std::ofstream outfp("sc1-sc2-alignment.txt", std::ios::out);
     for (unsigned int j = 0; j<prune_alignment.finalMap()->size(); j++) {
       int k = (*prune_alignment.finalMap())[j].first;
       int m = (*prune_alignment.finalMap())[j].second;
-      outfp << k << " " << m << vcl_endl;
+      outfp << k << " " << m << std::endl;
     }
     outfp.close();
   }
@@ -380,7 +380,7 @@ void dbskr_debug_scurve_tool::draw_scurves()
 
 void dbskr_debug_scurve_tool::draw_spliced_shock_branches()
 {
-  vcl_map< vcl_pair<double, unsigned>, bool>::iterator iter;
+  std::map< std::pair<double, unsigned>, bool>::iterator iter;
   for (iter = dart_splice_map_.begin(); iter != dart_splice_map_.end(); iter++) {
     if (iter->second) continue;
     int dart = (iter->first).second;
@@ -422,7 +422,7 @@ void
 dbskr_debug_scurve_tool::get_popup( const vgui_popup_params& params, 
                                           vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( ((display_spliced_contours_)?on:off)+"Show Spliced Contours ", 
             bvis1_tool_toggle, (void*)(&display_spliced_contours_) );

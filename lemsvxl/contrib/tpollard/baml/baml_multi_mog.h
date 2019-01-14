@@ -8,9 +8,9 @@
 // \date 9/30/07
 
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 
 #include "baml_appearance.h"
@@ -51,7 +51,7 @@ public:
     const vnl_vector<float>& light);
 
   void draw_x3d(
-    vcl_ofstream& x3d_stream );
+    std::ofstream& x3d_stream );
 
   int get_light_bin(
     const vnl_vector<float>& light );

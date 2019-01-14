@@ -5,7 +5,7 @@
 
 #include "dbsk2d_bnd_contour.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbsk2d/dbsk2d_distance.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
@@ -19,7 +19,7 @@
 //: Constructor - from a list of edges
 // require: the edges are connected
 dbsk2d_bnd_contour::
-dbsk2d_bnd_contour( const vcl_vector<dbsk2d_bnd_edge_sptr >& bnd_edges, 
+dbsk2d_bnd_contour( const std::vector<dbsk2d_bnd_edge_sptr >& bnd_edges, 
                    int id) :
 vtol_one_chain()
 {
@@ -27,16 +27,16 @@ vtol_one_chain()
   if (bnd_edges.empty()) return;
 
   // check connectedness and determine edge directions
-  vcl_vector<signed char > directions;
+  std::vector<signed char > directions;
   if (!dbsk2d_bnd_utils::determine_edge_directions(bnd_edges, directions))
   {
-    vcl_cerr << "Error in dbsk2d_bnd_contour constructor: " << 
-        "The edges are not connected" << vcl_endl;
+    std::cerr << "Error in dbsk2d_bnd_contour constructor: " << 
+        "The edges are not connected" << std::endl;
     return;
   }
 
   // test for connectedness is passed. now put them into inferior list.
-  for ( vcl_vector<dbsk2d_bnd_edge_sptr >::const_iterator edge_it =
+  for ( std::vector<dbsk2d_bnd_edge_sptr >::const_iterator edge_it =
     bnd_edges.begin(); edge_it != bnd_edges.end(); ++edge_it )
   {
     this->link_inferior(*edge_it);
@@ -52,8 +52,8 @@ vtol_one_chain()
 //: Constructor - from a list of edges with known directions
 // no connectivity check
 dbsk2d_bnd_contour::
-dbsk2d_bnd_contour(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges, 
-                   const vcl_vector<signed char >& directions,
+dbsk2d_bnd_contour(const std::vector<dbsk2d_bnd_edge_sptr >& edges, 
+                   const std::vector<signed char >& directions,
                    int id) : vtol_one_chain()
 {
   dbsk2d_assert(edges.size() == directions.size());
@@ -62,7 +62,7 @@ dbsk2d_bnd_contour(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges,
   if (edges.empty()) return;
   
   // now put edges into inferior list.
-  for ( vcl_vector<dbsk2d_bnd_edge_sptr >::const_iterator eit =
+  for ( std::vector<dbsk2d_bnd_edge_sptr >::const_iterator eit =
     edges.begin(); eit != edges.end(); ++eit )
   {
     this->link_inferior(*eit);
@@ -135,8 +135,8 @@ edge_index_at(double s ) const
   if (s <0) return -1;
 
   // binary search for s in vector of arclens
-  const vcl_vector<double >::const_iterator p = 
-    vcl_lower_bound(this->len_cache().begin(), this->len_cache().end(), s);
+  const std::vector<double >::const_iterator p = 
+    std::lower_bound(this->len_cache().begin(), this->len_cache().end(), s);
 
   // if out of range, this will return len_cache_.size()
   return p - this->len_cache().begin();
@@ -181,7 +181,7 @@ arclength_at(dbsk2d_bnd_edge_sptr edge) const
   edge_list edges;
   this->edges(edges);
   edge_list::iterator edge_pos = 
-    vcl_find(edges.begin(), edges.end(), edge.ptr());
+    std::find(edges.begin(), edges.end(), edge.ptr());
   
   // if edge is not part of the contour, return -1
   if (edge_pos == edges.end())
@@ -227,7 +227,7 @@ bnd_vertex(int i) const
 // -------------------------------------------------------------
 //: Return pointer to the cached cumulated-length vector 
 // if `recompute' = true, the cache vector will be cleared and then recomputed
-const vcl_vector< double >& dbsk2d_bnd_contour::
+const std::vector< double >& dbsk2d_bnd_contour::
 len_cache() const
 {
   if (this->len_cache_.older(this))
@@ -343,8 +343,8 @@ add_edge(const dbsk2d_bnd_edge_sptr & new_edge)
 // if `end_edge' == 0, it is assumed = `start_edge'
 // No connectivity check in this function
 bool dbsk2d_bnd_contour::
-replace_edges(const vcl_vector<dbsk2d_bnd_edge_sptr >& new_edges,
-              const vcl_vector<signed char >& directions,
+replace_edges(const std::vector<dbsk2d_bnd_edge_sptr >& new_edges,
+              const std::vector<signed char >& directions,
               const dbsk2d_bnd_edge_sptr& start_edge,
               const dbsk2d_bnd_edge_sptr& end_edge)
 {
@@ -355,14 +355,14 @@ replace_edges(const vcl_vector<dbsk2d_bnd_edge_sptr >& new_edges,
   // 0. Locate position of `start_edge' and `end_edge' in contour
   // start_index
   topology_list::const_iterator eit_start = 
-    vcl_find(this->inferiors()->begin(), this->inferiors()->end(), 
+    std::find(this->inferiors()->begin(), this->inferiors()->end(), 
     start_edge->cast_to_topology_object());
   if (eit_start == this->inferiors()->end()) return false;
   int start_index= eit_start-this->inferiors()->begin();
 
   // end_index
   int end_index = (end_edge) ? 
-    vcl_find(this->inferiors()->begin(), this->inferiors()->end(), 
+    std::find(this->inferiors()->begin(), this->inferiors()->end(), 
     end_edge->cast_to_topology_object()) - this->inferiors()->begin()
   : start_index;
 
@@ -432,7 +432,7 @@ replace_edges(const vcl_vector<dbsk2d_bnd_edge_sptr >& new_edges,
 
 //: very brief description of the class
 void dbsk2d_bnd_contour::
-print(vcl_ostream &os) const
+print(std::ostream &os) const
 {
   os << "<" << this->is_a()<< "  " << 
     inferiors()->size() << " edges  " << 
@@ -441,8 +441,8 @@ print(vcl_ostream &os) const
 
 }
 
-//virtual void describe_directions(vcl_ostream &strm=vcl_cout, int blanking=0) const;
-//virtual void describe(vcl_ostream &strm=vcl_cout, int blanking=0) const;
+//virtual void describe_directions(std::ostream &strm=std::cout, int blanking=0) const;
+//virtual void describe(std::ostream &strm=std::cout, int blanking=0) const;
 
 
 

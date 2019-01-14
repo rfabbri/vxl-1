@@ -27,7 +27,7 @@ class dbgui_shockshape_tableau : public bgui_vsol2D_tableau //vgui_tableau
   dbgui_shockshape_tableau();
 
   //: Returns the type of tableau ('dbgui_shockshape_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Handle all events sent to this tableau.
   // bool handle(vgui_event const &);

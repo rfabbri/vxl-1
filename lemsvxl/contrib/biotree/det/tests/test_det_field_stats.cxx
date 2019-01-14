@@ -6,25 +6,25 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_field_stats.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 
 static void test_det_field_stats()
 {
-  vcl_cout << "---test constructor---" << vcl_endl;
+  std::cout << "---test constructor---" << std::endl;
   // create a vector of responses randomly
   unsigned num_points = 100;
   unsigned num_filters = 2;
-  vcl_vector< xmvg_filter_response<double> > responses(num_points);
-  vcl_srand( (unsigned)vcl_time( NULL ) );
+  std::vector< xmvg_filter_response<double> > responses(num_points);
+  std::srand( (unsigned)std::time( NULL ) );
   for(unsigned i=0;i<num_points;i++)
   {
     vnl_vector<double> res(num_filters);
     
     for(unsigned k=0;k<num_filters;k++)
-      res[k] = vcl_rand() / 1000.0;
+      res[k] = std::rand() / 1000.0;
     
     xmvg_filter_response<double> point_resp(res);
     responses[i] = point_resp;

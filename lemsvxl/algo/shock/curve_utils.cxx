@@ -8,36 +8,36 @@
 #include "ishock_sptr.h"
 #include "boundary-bucketing.h"
 
-#include <vcl_map.h>
+#include <map>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 
 potential_curve_completions_list 
-compute_potential_curve_completions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve_set)
+compute_potential_curve_completions(std::vector<std::vector<vgl_point_2d<double> > > curve_set)
 {
     
   //form a boundary out of the curves passed to this function
   Boundary_Bucketing* bound = new Boundary_Bucketing();
 
   //also keep a map of the endpoints back to the curves
-  vcl_map<BPoint*, vcl_pair<bool, int> > ept_to_curve_map;
+  std::map<BPoint*, std::pair<bool, int> > ept_to_curve_map;
 
   for (unsigned int b = 0 ; b < curve_set.size() ; b++ ) 
   {
-    vcl_vector<vgl_point_2d<double> > this_curve = curve_set[b];
+    std::vector<vgl_point_2d<double> > this_curve = curve_set[b];
 
     BPoint* first_bpoint = bound->addNonGUIPoint(this_curve.front().x(), this_curve.front().y());
 
     //add starting point to the endpoint map
-    ept_to_curve_map.insert(vcl_pair<BPoint*, vcl_pair<bool, int> >(first_bpoint, vcl_pair<bool, int>(true, b)));
+    ept_to_curve_map.insert(std::pair<BPoint*, std::pair<bool, int> >(first_bpoint, std::pair<bool, int>(true, b)));
 
     BPoint* last_bpoint = bound->addNonGUIPoint(this_curve.back().x(), this_curve.back().y());
 
     //add starting point to the endpoint map
-    ept_to_curve_map.insert(vcl_pair<BPoint*, vcl_pair<bool, int> >(last_bpoint, vcl_pair<bool, int>(false, b)));
+    ept_to_curve_map.insert(std::pair<BPoint*, std::pair<bool, int> >(last_bpoint, std::pair<bool, int>(false, b)));
 
     // compile the rest of the points into a vector of Points 
-    vcl_vector<Point> pts;
+    std::vector<Point> pts;
     for (unsigned int i=1; i<this_curve.size()-1;i++)
     {
       pts.push_back(Point(this_curve[i].x(), this_curve[i].y()));
@@ -68,8 +68,8 @@ compute_potential_curve_completions(vcl_vector<vcl_vector<vgl_point_2d<double> >
       if (pp_shock->lBPoint()->isEndPoint() && pp_shock->rBPoint()->isEndPoint())
       {
         //add as a potential completion pair
-        vcl_pair<bool, int> c1 = ept_to_curve_map.find(pp_shock->lBPoint())->second;
-        vcl_pair<bool, int> c2 = ept_to_curve_map.find(pp_shock->rBPoint())->second;
+        std::pair<bool, int> c1 = ept_to_curve_map.find(pp_shock->lBPoint())->second;
+        std::pair<bool, int> c2 = ept_to_curve_map.find(pp_shock->rBPoint())->second;
 
         potential_list.push_back(curve_pair(c1, c2));
       }
@@ -81,30 +81,30 @@ compute_potential_curve_completions(vcl_vector<vcl_vector<vgl_point_2d<double> >
 }
 
 potential_junctions_list 
-compute_potential_junctions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve_set)
+compute_potential_junctions(std::vector<std::vector<vgl_point_2d<double> > > curve_set)
 {
   //form a boundary out of the curves passed to this function
   Boundary_Bucketing* bound = new Boundary_Bucketing();
 
   //also keep a map of the endpoints back to the curves
-  vcl_map<BPoint*, vcl_pair<bool, int> > ept_to_curve_map;
+  std::map<BPoint*, std::pair<bool, int> > ept_to_curve_map;
 
   for (unsigned int b = 0 ; b < curve_set.size() ; b++ ) 
   {
-    vcl_vector<vgl_point_2d<double> > this_curve = curve_set[b];
+    std::vector<vgl_point_2d<double> > this_curve = curve_set[b];
 
     BPoint* first_bpoint = bound->addNonGUIPoint(this_curve.front().x(), this_curve.front().y());
 
     //add starting point to the endpoint map
-    ept_to_curve_map.insert(vcl_pair<BPoint*, vcl_pair<bool, int> >(first_bpoint, vcl_pair<bool, int>(true, b)));
+    ept_to_curve_map.insert(std::pair<BPoint*, std::pair<bool, int> >(first_bpoint, std::pair<bool, int>(true, b)));
 
     BPoint* last_bpoint = bound->addNonGUIPoint(this_curve.back().x(), this_curve.back().y());
 
     //add starting point to the endpoint map
-    ept_to_curve_map.insert(vcl_pair<BPoint*, vcl_pair<bool, int> >(last_bpoint, vcl_pair<bool, int>(false, b)));
+    ept_to_curve_map.insert(std::pair<BPoint*, std::pair<bool, int> >(last_bpoint, std::pair<bool, int>(false, b)));
 
     // compile the rest of the points into a vector of Points 
-    vcl_vector<Point> pts;
+    std::vector<Point> pts;
     for (unsigned int i=1; i<this_curve.size()-1;i++)
     {
       pts.push_back(Point(this_curve[i].x(), this_curve[i].y()));
@@ -147,7 +147,7 @@ compute_potential_junctions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve
           int curve_id = bp2->LinkedBElmList.front()->edge_id();
 
           //add as a potential junction pair
-          vcl_pair<bool, int> c1 = ept_to_curve_map.find(bp1)->second;
+          std::pair<bool, int> c1 = ept_to_curve_map.find(bp1)->second;
           potential_list.push_back(endpt_curve_pair(c1, curve_id));
         }
         if (!bp1->isEndPoint() && bp2->isEndPoint())
@@ -156,7 +156,7 @@ compute_potential_junctions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve
           int curve_id = bp1->LinkedBElmList.front()->edge_id();
 
           //add as a potential junction pair
-          vcl_pair<bool, int> c1 = ept_to_curve_map.find(bp2)->second;
+          std::pair<bool, int> c1 = ept_to_curve_map.find(bp2)->second;
           potential_list.push_back(endpt_curve_pair(c1, curve_id));
         }
       }
@@ -170,7 +170,7 @@ compute_potential_junctions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve
           int curve_id = b2->edge_id();
 
           //add as a potential junction pair
-          vcl_pair<bool, int> c1 = ept_to_curve_map.find(bp1)->second;
+          std::pair<bool, int> c1 = ept_to_curve_map.find(bp1)->second;
           potential_list.push_back(endpt_curve_pair(c1, curve_id));
         }
       }
@@ -184,7 +184,7 @@ compute_potential_junctions(vcl_vector<vcl_vector<vgl_point_2d<double> > > curve
           int curve_id = b1->edge_id();
 
           //add as a potential junction pair
-          vcl_pair<bool, int> c1 = ept_to_curve_map.find(bp2)->second;
+          std::pair<bool, int> c1 = ept_to_curve_map.find(bp2)->second;
           potential_list.push_back(endpt_curve_pair(c1, curve_id));
         }
       }

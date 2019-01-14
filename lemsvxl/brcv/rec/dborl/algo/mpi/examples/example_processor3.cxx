@@ -8,12 +8,12 @@
 //
 
 #include "example_processor3.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
 //bool example_processor3::parse_command_line(int argc, char *argv[])
-bool example_processor3::parse_command_line(vcl_vector<vcl_string>& argv)
+bool example_processor3::parse_command_line(std::vector<std::string>& argv)
 {
   param_file_ = "dummy";
   return true; // nothing to parse
@@ -29,16 +29,16 @@ bool example_processor3::parse(const char* param_file)
 }
 
 //: this method is run on each processor
-bool example_processor3::initialize(vcl_vector<int>& t)
+bool example_processor3::initialize(std::vector<int>& t)
 {
   for (unsigned i = 0; i < 4; i++) {
     t.push_back(int(i + var_));
   }
 
-  vcl_cout << "initialized " << t.size() << " integers as follows\n";
+  std::cout << "initialized " << t.size() << " integers as follows\n";
   for (unsigned i = 0; i < t.size(); i++)
-    vcl_cout << t[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << t[i] << " ";
+  std::cout << std::endl;
 
   return true;
 }
@@ -56,20 +56,20 @@ bool example_processor3::process(int t1, ex_class3& f)
 }
 
 //: this method is run on the lead processor once after results are collected from each processor
-bool example_processor3::finalize(vcl_vector<ex_class3>& results)
+bool example_processor3::finalize(std::vector<ex_class3>& results)
 {
   float sum = 0.0f;
   for (unsigned i = 0; i < results.size(); i++) {
     for (unsigned j = 0; j < c_size_; j++)
       sum += results[i].c[j];
   }
-  vcl_cout << "sum of the results: " << sum << " from " << results.size() << " sized vector, string is: ";
+  std::cout << "sum of the results: " << sum << " from " << results.size() << " sized vector, string is: ";
   for (unsigned i = 0; i < results.size(); i++) {
-    vcl_cout << results[i].b;
+    std::cout << results[i].b;
   }
-  vcl_cout << "\n";
-  vcl_cout << "sum of the results should be 110, and the string should be something like:\n";
-  vcl_cout << "b##...##c##...##a##...##b##...## with many #'s\n";
+  std::cout << "\n";
+  std::cout << "sum of the results should be 110, and the string should be something like:\n";
+  std::cout << "b##...##c##...##a##...##b##...## with many #'s\n";
   return true;
 }
 #ifdef MPI_CPP_BINDING

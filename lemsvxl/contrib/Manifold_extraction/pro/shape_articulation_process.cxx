@@ -6,9 +6,9 @@
 
 #include "shape_articulation_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <algorithm>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 
 #include <vsol/vsol_polyline_2d.h>
@@ -43,7 +43,7 @@ shape_articulation_process::shape_articulation_process()
          !parameters()->add( "Joint 10 scale " , "-scale_10" , 1.0 )  ||
          !parameters()->add( "Lie Costs file <filename...>" , "-filename", bpro1_filepath("","*")))
          {
-    vcl_cerr << "ERROR: Adding parameters in shape_articulation_process::shape_articulation_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in shape_articulation_process::shape_articulation_process()" << std::endl;
 }
 }
 
@@ -54,10 +54,10 @@ shape_articulation_process::clone() const
   return new shape_articulation_process(*this);
 }
 
-vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_structure(vcl_vector<vsol_point_2d_sptr> final_points)
+std::vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_structure(std::vector<vsol_point_2d_sptr> final_points)
                                                                                         
     {
-    vcl_vector<vsol_point_2d_sptr> closed_form;
+    std::vector<vsol_point_2d_sptr> closed_form;
 
     for (unsigned int i = 0;i<final_points.size();i++)
         {
@@ -65,7 +65,7 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
         closed_form.push_back(pt);
         }
 
-    vcl_vector<double> angle_2_vec,length_2_vec;
+    std::vector<double> angle_2_vec,length_2_vec;
     unsigned int num_points = final_points.size(),start_point;
     double initial_curve_length = 0,final_curve_length = 0,common_scale,scale,angle_2,diff_angle,gap_length,gap_x_comp,gap_y_comp;
     double length_2,pivot_x,pivot_y,scale_x,scale_y,thet;
@@ -73,7 +73,7 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
     double x_comp_r1_lb,x_comp_r1_ub,x_comp_r2_lb,x_comp_r2_ub,y_comp_lb,y_comp_ub;
 
   
-    ref_angle = vcl_atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
+    ref_angle = std::atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
 
     if ((ref_angle > 0 )&& (ref_angle < vnl_math::pi/2))
         {
@@ -129,7 +129,7 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
 
     for (unsigned int i = 0;i<num_points-1;i++)
         {
-        angle_2 = vcl_atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
+        angle_2 = std::atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
         length_2 = closed_form[i]->distance(closed_form[i+1]);
         angle_2_vec.push_back(angle_2);
         length_2_vec.push_back(length_2);
@@ -139,23 +139,23 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
                     num_x++;
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
                     num_y++;
                 }
             }
         }
 
     gap_length = closed_form[num_points-1]->distance(closed_form[0]);
-    gap_x_comp = gap_length*vcl_cos(ref_angle);
-    gap_y_comp = gap_length*vcl_sin(ref_angle);
+    gap_x_comp = gap_length*std::cos(ref_angle);
+    gap_y_comp = gap_length*std::sin(ref_angle);
 
-    length_add_x_comp = vcl_fabs(gap_x_comp)/num_x;
-    length_add_y_comp = vcl_fabs(gap_y_comp)/num_y;
+    length_add_x_comp = std::fabs(gap_x_comp)/num_x;
+    length_add_y_comp = std::fabs(gap_y_comp)/num_y;
 
 
 
@@ -168,17 +168,17 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
-                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*vcl_fabs(vcl_cos(angle_2)));
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
+                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*std::fabs(std::cos(angle_2)));
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
-                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*vcl_fabs(vcl_sin(angle_2)));
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
+                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*std::fabs(std::sin(angle_2)));
                 }
             }
 
-     // scale = vcl_sqrt(scale_x*scale_x*vcl_cos(angle_2)*vcl_cos(angle_2) + scale_y*scale_y*vcl_sin(angle_2)*vcl_sin(angle_2));
+     // scale = std::sqrt(scale_x*scale_x*std::cos(angle_2)*std::cos(angle_2) + scale_y*scale_y*std::sin(angle_2)*std::sin(angle_2));
 
       pivot_x = closed_form[i-1]->x();
       pivot_y = closed_form[i-1]->y();
@@ -215,8 +215,8 @@ vcl_vector<vsol_point_2d_sptr> shape_articulation_process::closed_articulated_st
 bool shape_articulation_process::execute()
 {
     bpro1_filepath file_path;
-    vcl_vector<double> thet_joint;
-    vcl_vector<double> scale;
+    std::vector<double> thet_joint;
+    std::vector<double> scale;
 
     unsigned int i;
 
@@ -273,12 +273,12 @@ bool shape_articulation_process::execute()
   // The contour needs to be a polygon
   vsol_polyline_2d_sptr poly1;
   {
-    const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
+    const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
     poly1 = vsol_list[0]->cast_to_curve()->cast_to_polyline();
  
   }
 
-  vcl_vector<vsol_point_2d_sptr> vertex_set,vertex_set_1;
+  std::vector<vsol_point_2d_sptr> vertex_set,vertex_set_1;
 
   for (unsigned int i = 0;i<poly1->size();i++)
       {
@@ -291,7 +291,7 @@ vertex_set_1.push_back(pt_1);
       }
 
     vsol_polyline_2d output_polyline;
-     vcl_vector<vsol_point_2d_sptr> points;
+     std::vector<vsol_point_2d_sptr> points;
   double pt1_x,pt1_y,pt2_x,pt2_y,thet,joint_ang,x_val,y_val,tx,ty,pivot_x = 0,pivot_y = 0;
  
   for (unsigned int i = 0;i<vertex_set_1.size();i++)
@@ -322,7 +322,7 @@ vertex_set_1.push_back(pt_1);
 
   for (unsigned int i = 0;i<vertex_set_1.size();i++)
       {
-      vcl_cout << "vertex set: " << vertex_set_1[i]->x() << " " << vertex_set_1[i]->y() << vcl_endl;
+      std::cout << "vertex set: " << vertex_set_1[i]->x() << " " << vertex_set_1[i]->y() << std::endl;
       }
 
         for (unsigned int i = 0;i<vertex_set_1.size();i++)
@@ -343,8 +343,8 @@ vertex_set_1.push_back(pt_1);
      pt1_x = vertex_set_1[i]->x() - pivot_x;
      pt1_y = vertex_set_1[i]->y() - pivot_y;
 
-      pt2_x = pt1_x*vcl_cos(thet) - pt1_y*vcl_sin(thet);
-      pt2_y = pt1_x*vcl_sin(thet) + pt1_y*vcl_cos(thet);
+      pt2_x = pt1_x*std::cos(thet) - pt1_y*std::sin(thet);
+      pt2_y = pt1_x*std::sin(thet) + pt1_y*std::cos(thet);
 
       pt2_x = pt2_x + pivot_x;
       pt2_y = pt2_y + pivot_y;
@@ -357,29 +357,29 @@ vertex_set_1.push_back(pt_1);
          x_val = vertex_set_1[j]->x() - pivot_x;
          y_val = vertex_set_1[j]->y() - pivot_y;
 
-        vertex_set_1[j]->set_x(x_val*vcl_cos(thet) - y_val*vcl_sin(thet) + pivot_x);
-        vertex_set_1[j]->set_y(x_val*vcl_sin(thet) + y_val*vcl_cos(thet) + pivot_y);
+        vertex_set_1[j]->set_x(x_val*std::cos(thet) - y_val*std::sin(thet) + pivot_x);
+        vertex_set_1[j]->set_y(x_val*std::sin(thet) + y_val*std::cos(thet) + pivot_y);
          }
       }
 
   for (unsigned int i =0;i<points.size();i++)
       {
-      vcl_cout << "points: " << points[i]->x() << " " << points[i]->y() << vcl_endl;
+      std::cout << "points: " << points[i]->x() << " " << points[i]->y() << std::endl;
       }
  
-  vcl_string save_fname = file_path.path;
+  std::string save_fname = file_path.path;
   double length_1,length_2,angle_1,angle_2;
-  vcl_vector<double> scale_comp,angle_comp;
-  vcl_ofstream ofst(save_fname.c_str());
+  std::vector<double> scale_comp,angle_comp;
+  std::ofstream ofst(save_fname.c_str());
 
   /* for (unsigned int i = 0;i<vertex_set.size();i++)
       {
-      ofst << "vertex set:" << vertex_set[i]->x() << " " << vertex_set[i]->y() << vcl_endl;
+      ofst << "vertex set:" << vertex_set[i]->x() << " " << vertex_set[i]->y() << std::endl;
       }
 
   for (unsigned int i = 0;i<points.size();i++)
       {
-      ofst << " " << points[i]->x() << " " << points[i]->y() << vcl_endl;
+      ofst << " " << points[i]->x() << " " << points[i]->y() << std::endl;
       }*/
 
   for (unsigned int i = 0;i<vertex_set.size()-1;i++)
@@ -387,31 +387,31 @@ vertex_set_1.push_back(pt_1);
       length_1 = vertex_set[i]->distance(vertex_set[i+1]);
       length_2 = points[i]->distance(points[i+1]);
 
-      angle_1 = vcl_atan2(vertex_set[i+1]->y()-vertex_set[i]->y(),vertex_set[i+1]->x()-vertex_set[i]->x());
-      angle_2 = vcl_atan2(points[i+1]->y()-points[i]->y(),points[i+1]->x()-points[i]->x());
+      angle_1 = std::atan2(vertex_set[i+1]->y()-vertex_set[i]->y(),vertex_set[i+1]->x()-vertex_set[i]->x());
+      angle_2 = std::atan2(points[i+1]->y()-points[i]->y(),points[i+1]->x()-points[i]->x());
 
-      // ofst << " " << i << " scale: " << vcl_log(length_2/length_1) << " angle: " << angle_2 - angle_1 <<  vcl_endl;
-      // ofst << " " << vcl_log(length_2/length_1) << " " << angle_2 - angle_1 <<  vcl_endl;
+      // ofst << " " << i << " scale: " << std::log(length_2/length_1) << " angle: " << angle_2 - angle_1 <<  std::endl;
+      // ofst << " " << std::log(length_2/length_1) << " " << angle_2 - angle_1 <<  std::endl;
 
-      scale_comp.push_back(vcl_log(length_2/length_1));
+      scale_comp.push_back(std::log(length_2/length_1));
       angle_comp.push_back( angle_2 - angle_1 );
       }
 
   if (!poly1) {
-    vcl_cout << "polyline one is not valid.\n";
+    std::cout << "polyline one is not valid.\n";
     return false;
   }
 
  /*double alpha,beta,min_alpha,min_beta,cost_temp,min_cost = 1e100,count = 0;
-   vcl_vector<double> cost;
+   std::vector<double> cost;
   for  (alpha = 0;alpha <= 1;alpha = alpha + 0.01)
       {
    beta = 1 - alpha;
    cost_temp = 0;
    for (unsigned int i = 0;i<scale_comp.size();i++)
        {
-       cost_temp = cost_temp + (alpha*vcl_fabs(scale_comp[i]))*(alpha*vcl_fabs(scale_comp[i])) + 
-           (beta*vcl_fabs(angle_comp[i]))*(beta*vcl_fabs(angle_comp[i]));
+       cost_temp = cost_temp + (alpha*std::fabs(scale_comp[i]))*(alpha*std::fabs(scale_comp[i])) + 
+           (beta*std::fabs(angle_comp[i]))*(beta*std::fabs(angle_comp[i]));
        }
    cost.push_back(cost_temp);
 
@@ -421,26 +421,26 @@ vertex_set_1.push_back(pt_1);
        min_beta = beta;
        min_cost = cost_temp;
        }
-   vcl_cout << " dist: " << count++ << " " << cost_temp << vcl_endl;
+   std::cout << " dist: " << count++ << " " << cost_temp << std::endl;
       }*/
-//ofst << "dist " << min_cost << vcl_endl;
-//ofst << "alpha: " << min_alpha << vcl_endl;
-//ofst << "beta: " << min_beta << vcl_endl;
+//ofst << "dist " << min_cost << std::endl;
+//ofst << "alpha: " << min_alpha << std::endl;
+//ofst << "beta: " << min_beta << std::endl;
 
-vcl_vector<vsol_point_2d_sptr> closed_points = closed_articulated_structure(points);
-ofst << "transformed articulated structure: " << vcl_endl;
+std::vector<vsol_point_2d_sptr> closed_points = closed_articulated_structure(points);
+ofst << "transformed articulated structure: " << std::endl;
 
 for (unsigned int i = 0;i<points.size();i++)
-ofst << points[i]->x() << " " << points[i]->y() << vcl_endl;
+ofst << points[i]->x() << " " << points[i]->y() << std::endl;
 
-ofst << "closed articulated structure: " << vcl_endl;
+ofst << "closed articulated structure: " << std::endl;
 
 for (unsigned int i = 0;i<closed_points.size();i++)
-ofst << closed_points[i]->x() << " " << closed_points[i]->y() << vcl_endl;
+ofst << closed_points[i]->x() << " " << closed_points[i]->y() << std::endl;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > articulated_structure;
+  std::vector< vsol_spatial_object_2d_sptr > articulated_structure;
   vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (closed_points);
  // vsol_polyline_2d_sptr polyline2 = new vsol_polyline_2d (points);
   articulated_structure.push_back(newpolyline->cast_to_spatial_object());

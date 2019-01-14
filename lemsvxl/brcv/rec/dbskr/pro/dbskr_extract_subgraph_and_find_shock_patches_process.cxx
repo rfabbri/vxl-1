@@ -18,7 +18,7 @@ dbskr_extract_subgraph_and_find_shock_patches_process() : bpro1_process()
   if ( !parameters()->add( "Image file:" , "-image_filepath", bpro1_filepath("", "*.bin")) ||
     !parameters()->add( "ESF file:" , "-esf_filepath", bpro1_filepath("", "*.esf")) ||
     !parameters()->add( "Output folder:" , "-output_folder", bpro1_filepath("", "")) ||
-    !parameters()->add( "Output file prefix:" , "-output_prefix", vcl_string("")) ||
+    !parameters()->add( "Output file prefix:" , "-output_prefix", std::string("")) ||
     !parameters()->add( "Contour ratio?" , "-contour_ratio", false ) ||
     !parameters()->add( "Circular ends?" , "-circular_ends", false ) ||
     !parameters()->add( "Area threshold ratio:" , "-area_thresh_ratio", (float) 0.01f ) ||
@@ -33,7 +33,7 @@ dbskr_extract_subgraph_and_find_shock_patches_process() : bpro1_process()
     !parameters()->add( "Save discarded images?" , "-save_disc_images", false )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -50,10 +50,10 @@ clone() const
 
 // -----------------------------------------------------------------------------
 //:
-vcl_vector< vcl_string > dbskr_extract_subgraph_and_find_shock_patches_process::
+std::vector< std::string > dbskr_extract_subgraph_and_find_shock_patches_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -61,10 +61,10 @@ get_input_type()
 
 // -----------------------------------------------------------------------------
 //:
-vcl_vector< vcl_string > dbskr_extract_subgraph_and_find_shock_patches_process::
+std::vector< std::string > dbskr_extract_subgraph_and_find_shock_patches_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -75,12 +75,12 @@ bool dbskr_extract_subgraph_and_find_shock_patches_process::
 execute()
 {
   // Process parameters
-  vcl_string image_file; 
-  vcl_string esf_file;
-  vcl_string boundary_file;
-  vcl_string kept_dir_name; 
-  vcl_string discarded_dir_name;
-  vcl_string output_name;
+  std::string image_file; 
+  std::string esf_file;
+  std::string boundary_file;
+  std::string kept_dir_name; 
+  std::string discarded_dir_name;
+  std::string output_name;
   bool contour_ratio;
   bool circular_ends; 
   float area_threshold_ratio;
@@ -106,9 +106,9 @@ execute()
   
   bpro1_filepath output_folder_filepath;
   this->parameters()->get_value("-output_folder", output_folder_filepath);
-  vcl_string output_folder = output_folder_filepath.path;
+  std::string output_folder = output_folder_filepath.path;
 
-  vcl_string output_prefix;
+  std::string output_prefix;
   this->parameters()->get_value("-output_prefix", output_prefix);
   this->parameters()->get_value("-contour_ratio", contour_ratio );
   this->parameters()->get_value("-circular_ends", circular_ends );

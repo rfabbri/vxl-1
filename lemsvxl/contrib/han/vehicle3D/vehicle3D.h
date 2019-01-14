@@ -16,12 +16,12 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 
 #include <vgl/algo/vgl_line_2d_regression.h>
@@ -36,7 +36,7 @@
 #include <vgl/vgl_line_3d_2_points.h>
 
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 
 #include <vnl/vnl_math.h>
@@ -49,19 +49,19 @@
 
 #include <vnl/vnl_double_3.h>
 #include <vul/vul_file.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 
 
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vgl/algo/vgl_convex_hull_2d.h>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-//#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+//#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
@@ -71,8 +71,8 @@
 
 class vehicle3D
 {
-  vcl_vector<vgl_point_3d<double> > pts_;
-  vcl_vector<vgl_point_3d<double> > pts_front_,pts_rear_;
+  std::vector<vgl_point_3d<double> > pts_;
+  std::vector<vgl_point_3d<double> > pts_front_,pts_rear_;
   
   vgl_point_3d<double> location_,center_,center1_,center2_,center3_,center4_;
   
@@ -87,25 +87,25 @@ class vehicle3D
 
   
   ~vehicle3D(void){}
-  vehicle3D(vcl_vector<vgl_point_3d<double> >, int pts_flag=0);
+  vehicle3D(std::vector<vgl_point_3d<double> >, int pts_flag=0);
 
   
 
-  void set(vcl_vector<vgl_point_3d<double> >, int pts_flag=0);
+  void set(std::vector<vgl_point_3d<double> >, int pts_flag=0);
   bool contains(vgl_point_3d<double>);
-  int  countIN(vcl_vector <vgl_point_3d<double> >);
+  int  countIN(std::vector <vgl_point_3d<double> >);
   void init();
-  vnl_vector <int> search(vcl_vector <vgl_point_3d<double> >, vgl_point_3d <double> );
+  vnl_vector <int> search(std::vector <vgl_point_3d<double> >, vgl_point_3d <double> );
 
-  int read_wrl_file(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv,bool rotation=false);
-  int read_bb_box_file(vcl_string);
+  int read_wrl_file(std::vector <vgl_point_3d<double> > & ptl,std::string argv,bool rotation=false);
+  int read_bb_box_file(std::string);
  
-  //int read_data_file(vcl_vector <p > & ptl,vcl_string argv);
+  //int read_data_file(std::vector <p > & ptl,std::string argv);
   double curvature(double=1.0,int=0);
 
-  vcl_vector <vgl_point_3d<double> > copy_out(int flag=0);
+  std::vector <vgl_point_3d<double> > copy_out(int flag=0);
 
-  //void ranger(vcl_vector<vgl_point_3d<double> > pts);
+  //void ranger(std::vector<vgl_point_3d<double> > pts);
 
   double curvature();
   double local_curvature(vgl_point_3d<double> p0,vgl_point_3d<double> p1,vgl_point_3d<double> p2)
@@ -117,7 +117,7 @@ class vehicle3D
     return ang;
   };
 
-  vcl_vector <double> distance(int flag=0);
+  std::vector <double> distance(int flag=0);
   double mean_length();
   double max_length();
   vgl_polygon<double> get_XY_con(int flag=0);

@@ -12,16 +12,16 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     June 2, 2006
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 
 
 //: frame struct
 struct dbdet_seg3d_info_frame
 {
-  vcl_string image_file;
-  vcl_vector<vcl_string > contour_file_list;
+  std::string image_file;
+  std::vector<std::string > contour_file_list;
 };
 
 class dbdet_seg3d_info: public vbl_ref_count {
@@ -32,18 +32,18 @@ public:
   // =================== DATA ACCESS FUNCTIONS ==================
   
   //: Image folder
-  vcl_string image_folder() const { return this->image_folder_; }
-  void set_image_folder( const vcl_string& folder_name )
+  std::string image_folder() const { return this->image_folder_; }
+  void set_image_folder( const std::string& folder_name )
   {this->image_folder_ = folder_name; }
 
 
   //: Contour folder
-  vcl_string contour_folder() const {return this->contour_folder_; }
-  void set_contour_folder( const vcl_string& folder_name )
+  std::string contour_folder() const {return this->contour_folder_; }
+  void set_contour_folder( const std::string& folder_name )
   {this->contour_folder_ = folder_name; }
 
   //: Frame list
-  const vcl_vector<dbdet_seg3d_info_frame >& frame_list() const
+  const std::vector<dbdet_seg3d_info_frame >& frame_list() const
   {return this->frame_list_; }
   
   //: return number of frames
@@ -59,7 +59,7 @@ public:
   { return this->frame_list_[i]; }
 
   //: Set frame list
-  void set_frame_list(const vcl_vector<dbdet_seg3d_info_frame >& frame_list)
+  void set_frame_list(const std::vector<dbdet_seg3d_info_frame >& frame_list)
   {this->frame_list_ = frame_list; }
 
   //: Add a frame
@@ -78,9 +78,9 @@ public:
   bool load_contours_from_image_names();
 
 protected:
-  vcl_string image_folder_;
-  vcl_string contour_folder_;
-  vcl_vector<dbdet_seg3d_info_frame > frame_list_;
+  std::string image_folder_;
+  std::string contour_folder_;
+  std::vector<dbdet_seg3d_info_frame > frame_list_;
 };
 
 #endif

@@ -17,9 +17,9 @@
 #define _Lie_cv_cor_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <vector>
+#include <utility>
+#include <string>
 #include <vsl/vsl_binary_io.h>
 #include <vgl/vgl_point_2d.h>
 #include <dbsol/dbsol_interp_curve_2d_sptr.h>
@@ -37,17 +37,17 @@ public:
 
     Lie_cv_cor(const dbsol_interp_curve_2d_sptr c1, 
                            const dbsol_interp_curve_2d_sptr c2, 
-                           vcl_vector< vcl_pair <int,int> >& map);
+                           std::vector< std::pair <int,int> >& map);
                
 
   virtual ~Lie_cv_cor(){};
 
   //access functions
-  vcl_vector<vgl_point_2d<double> >& get_contour_pts1() { return pts1_; }
-  vcl_vector<vgl_point_2d<double> >& get_contour_pts2() { return pts2_; }
+  std::vector<vgl_point_2d<double> >& get_contour_pts1() { return pts1_; }
+  std::vector<vgl_point_2d<double> >& get_contour_pts2() { return pts2_; }
 
-  void set_contour_pts1(const vcl_vector<vgl_point_2d<double> >& pts1) { pts1_ = pts1; }
-  void set_contour_pts2(const vcl_vector<vgl_point_2d<double> >& pts2) { pts2_ = pts2; }
+  void set_contour_pts1(const std::vector<vgl_point_2d<double> >& pts1) { pts1_ = pts1; }
+  void set_contour_pts2(const std::vector<vgl_point_2d<double> >& pts2) { pts2_ = pts2; }
 
   // interpolate alpha (correspondence function) piecewise linearly using the final map
   // alpha has vertical jumps, in those cases assign the jumped value to the point of jump on curve1
@@ -69,7 +69,7 @@ public:
   double get_length2() { return length2_; }
 
   //: write points to a file
-  bool write_correspondence(vcl_string file_name, int increment = 1);
+  bool write_correspondence(std::string file_name, int increment = 1);
 
   vsol_polygon_2d_sptr get_poly1() { return poly1_; }
   vsol_polygon_2d_sptr get_poly2() { return poly2_; }
@@ -85,10 +85,10 @@ public:
   virtual unsigned version() const {return 1;} 
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "Lie_cv_cor";}
+  virtual std::string is_a() const {return "Lie_cv_cor";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -106,10 +106,10 @@ public:
 
   // output anchor points of correspondece
   // correspondence is piewise linear between these anchor points
-  vcl_vector<vgl_point_2d<double> > pts1_;
-  vcl_vector<vgl_point_2d<double> > pts2_;
+  std::vector<vgl_point_2d<double> > pts1_;
+  std::vector<vgl_point_2d<double> > pts2_;
 
-  vcl_vector<double> arclengths1_, arclengths2_;
+  std::vector<double> arclengths1_, arclengths2_;
 
   double length1_, length2_;
   double final_cost_, final_norm_cost_;

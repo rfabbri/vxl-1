@@ -45,13 +45,13 @@
 
 vsol_polyline_2d_sptr smooth_poly(vsol_polyline_2d_sptr new_curve, unsigned smoothing_nsteps)
 {
-  vcl_vector<vgl_point_2d<double> > pv;
+  std::vector<vgl_point_2d<double> > pv;
   for (unsigned i = 0; i < new_curve->size(); i++)
     pv.push_back(new_curve->vertex(i)->get_p());
 
   bgld_csm( pv, 1.0, smoothing_nsteps);
 
-  vcl_vector<vsol_point_2d_sptr> vv;
+  std::vector<vsol_point_2d_sptr> vv;
   for (unsigned i = 0; i < pv.size(); i++)
     vv.push_back(new vsol_point_2d(pv[i]));
 
@@ -60,26 +60,26 @@ vsol_polyline_2d_sptr smooth_poly(vsol_polyline_2d_sptr new_curve, unsigned smoo
 
 vsol_polygon_2d_sptr smooth_polygon(vsol_polygon_2d_sptr new_curve, unsigned smoothing_nsteps)
 {
-  vcl_vector<vgl_point_2d<double> > pv;
+  std::vector<vgl_point_2d<double> > pv;
   for (unsigned i = 0; i < new_curve->size(); i++)
     pv.push_back(new_curve->vertex(i)->get_p());
 
   bgld_csm( pv, 1.0, smoothing_nsteps);
 
-  vcl_vector<vsol_point_2d_sptr> vv;
+  std::vector<vsol_point_2d_sptr> vv;
   for (unsigned i = 0; i < pv.size(); i++)
     vv.push_back(new vsol_point_2d(pv[i]));
 
   return new vsol_polygon_2d(vv);
 }
 
-bool write_contours_to_ps(vcl_vector< vsol_spatial_object_2d_sptr > image_curves, 
-                          vcl_vector< vsol_spatial_object_2d_sptr > euler_sps,
-                          vcl_string output_name)
+bool write_contours_to_ps(std::vector< vsol_spatial_object_2d_sptr > image_curves, 
+                          std::vector< vsol_spatial_object_2d_sptr > euler_sps,
+                          std::string output_name)
 {
-  //vcl_ostringstream s;
+  //std::ostringstream s;
   //s<<frameno;
-  vcl_string outputfile=output_name+".ps";
+  std::string outputfile=output_name+".ps";
   vul_psfile psfile(outputfile.c_str(), false);
   psfile.set_scale_x(50);
   psfile.set_scale_y(50);
@@ -137,7 +137,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
                                       double pruning_color_threshold, 
                                       double rms, unsigned smoothing_nsteps,
                                       double cont_t, double app_t, 
-                                      bool write_output, vcl_string out_shock_name, double edge_detection_sigma) 
+                                      bool write_output, std::string out_shock_name, double edge_detection_sigma) 
 {
   vil_image_view<vxl_byte> I = img_sptr->get_view(0, img_sptr->ni(), 0, img_sptr->nj() );
   vil_image_view<float> L, A, B;
@@ -158,11 +158,11 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   
   vul_timer t;
   t.mark();
-  vcl_cout << "edges... ";
+  std::cout << "edges... ";
     
   //make sure these images are one plane images
   if (I.nplanes() != 3){
-    vcl_cout << "In edge_detector - GREY image!!! \n";
+    std::cout << "In edge_detector - GREY image!!! \n";
     edge_map = dbdet_detect_third_order_edges(I, sigma, thresh, N, parabola_fit, grad_op, false);  // reduce_tokens is false
   } 
   else {
@@ -172,7 +172,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  vcl_cout << t.real()/1000.0f << " secs. linking... ";
+  std::cout << t.real()/1000.0f << " secs. linking... ";
 
   // link the edges ---------------------------------------------------------------------------------------------------
   double nrad = 2.0f, dx = 0.2f, dt = 15.0f;
@@ -194,10 +194,10 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   edge_linker->construct_the_link_graph(min_size_to_link, 0);  // linkgraph algo = 0 (TODO: ask Amir ? this zero seems redundant..?)
   edge_linker->extract_image_contours_from_the_link_graph();
 
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves_all;
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves_avg_mag_pruned;
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves_length_pruned;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves_all;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves_avg_mag_pruned;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves_length_pruned;
   
   vsol_box_2d_sptr bbox = new vsol_box_2d();
   double mean_color_dist_all = 0;
@@ -205,7 +205,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   double mean_color_dist_selected = 0;
   int cnt_sel = 0;
 
-  vcl_list<dbdet_edgel_chain*>::iterator f_it = curve_frag_graph.frags.begin();
+  std::list<dbdet_edgel_chain*>::iterator f_it = curve_frag_graph.frags.begin();
   for (; f_it != curve_frag_graph.frags.end(); f_it++)
   {
     dbdet_edgel_chain* chain = (*f_it);
@@ -221,7 +221,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     avg_contrast /= chain->edgels.size();
 
     //create a polyline out of the edgel chain
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     pts.reserve(chain->edgels.size());
     for (unsigned j=0; j<chain->edgels.size(); j++)
       pts.push_back(chain->edgels[j]->pt);
@@ -229,7 +229,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     //smooth this contour
     bgld_csm(pts, 1.0f, smoothing_nsteps);   // psi = 1.0f
 
-    vcl_vector<vsol_point_2d_sptr> vsol_pts;
+    std::vector<vsol_point_2d_sptr> vsol_pts;
     vsol_pts.reserve(pts.size());
     for (unsigned i=0; i<pts.size(); ++i)
       vsol_pts.push_back(new vsol_point_2d(pts[i]));
@@ -267,7 +267,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     }
 
 #if 0  // before April 25
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for (unsigned j=0; j<chain->edgels.size(); j++)
         pts.push_back(new vsol_point_2d(chain->edgels[j]->pt));
       vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);
@@ -294,8 +294,8 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
 #endif
   
   }
-  vcl_cout << "mean color dist of all curves: " << mean_color_dist_all/cnt_all << " of selected: " << mean_color_dist_selected/cnt_sel << " threshold was: " << pruning_color_threshold << vcl_endl;
-  vcl_cout << "bbox (minx, miny) (width, height): " << "(" << bbox->get_min_x() << ", " << bbox->get_min_y() << ") (" << bbox->width() << ", " << bbox->height() << ")\n";
+  std::cout << "mean color dist of all curves: " << mean_color_dist_all/cnt_all << " of selected: " << mean_color_dist_selected/cnt_sel << " threshold was: " << pruning_color_threshold << std::endl;
+  std::cout << "bbox (minx, miny) (width, height): " << "(" << bbox->get_min_x() << ", " << bbox->get_min_y() << ") (" << bbox->width() << ", " << bbox->height() << ")\n";
   int offset = 3;
   bbox->add_point(bbox->get_min_x()-offset, bbox->get_min_y()-offset);
   bbox->add_point(bbox->get_max_x()+offset, bbox->get_max_y()+offset);  // enlarge the box with 3 pixels
@@ -316,13 +316,13 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   edge_linker = 0;
 
   //-------------------------------------------------------------------------------------------------------------------
-  vcl_cout << t.real()/1000.0f << " secs. computing shocks... ";
+  std::cout << t.real()/1000.0f << " secs. computing shocks... ";
   // compute shocks ---------------------------------------------------------------------------------------------------
   float xmin=0, ymin=0, cell_width=1000.0f, cell_height=1000.0f; int num_rows=1, num_cols=1;
   dbsk2d_boundary_sptr boundary = dbsk2d_create_boundary(image_curves, false, xmin, ymin, num_rows, num_cols, cell_width, cell_height, true, true);
   dbsk2d_ishock_graph_sptr isg = dbsk2d_compute_ishocks(boundary);
   if (!isg) {
-    vcl_cout << "Problem in intrinsic shock computation! Exiting!\n";
+    std::cout << "Problem in intrinsic shock computation! Exiting!\n";
     return 0;
   }
   dbsk2d_shock_graph_sptr sg = new dbsk2d_shock_graph();
@@ -330,11 +330,11 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   ishock_pruner.prune(1.0f);  // prune threshold is 1.0f
   ishock_pruner.compile_coarse_shock_graph();
   if (!sg->number_of_vertices() || !sg->number_of_edges()) {
-    vcl_cout << "Problem in coarse shock computation!\n";
+    std::cout << "Problem in coarse shock computation!\n";
     return 0;
   }
   // -------------------------------------------------------------------------------------------------------------------
-  vcl_cout << (t.real()/1000.0f)/60.0 << " mins. " << " gap transforms... ";
+  std::cout << (t.real()/1000.0f)/60.0 << " mins. " << " gap transforms... ";
   // gap transforms ----------------------------------------------------------------------------------------------------
   //float low_cont_t = 0.1f, high_cont_t = 0.5f, low_app_t = 0.1f, high_app_t = 0.5f;
   float alpha_cont = 1.0f, alpha_app = 1.0f;
@@ -342,12 +342,12 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
   transformer.set_image(img_sptr);
   transformer.set_curve_length_gamma(2.0);
   transformer.perform_all_gap_transforms(cont_t, app_t, alpha_cont, alpha_app, true);
-  vcl_vector< vsol_spatial_object_2d_sptr > euler_sps;
+  std::vector< vsol_spatial_object_2d_sptr > euler_sps;
   transformer.get_eulerspirals(euler_sps);
   transformer.clear_eulerspirals();  // is this cleaning the spirals pointed by normal pointers??? TODO: check!!
 
   if (!sg->number_of_vertices() || !sg->number_of_edges()) {
-    vcl_cout << "Problem in gap transforms!\n";
+    std::cout << "Problem in gap transforms!\n";
     return 0;
   }
 
@@ -364,13 +364,13 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     bsold_save_cem(euler_sps, out_shock_name+"_boundary_gaps.cem");
   }
   
-  vcl_cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
+  std::cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
 
   return sampled_sg;
 }
 
 dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sptr, 
-                                      bool write_output, vcl_string out_shock_name, int smoothing_nsteps, double rms) 
+                                      bool write_output, std::string out_shock_name, int smoothing_nsteps, double rms) 
 {
 
   vul_timer t;
@@ -406,7 +406,7 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
     vil_threshold_above<vxl_byte>(image, binary_img, threshold_value);
   }
 
-  vcl_cout << "image ok..";
+  std::cout << "image ok..";
   float sigma = 1.0f;
   int nsteps = 1;
   float beta = 0.3f;
@@ -419,7 +419,7 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
   ctracer.trace(binary_img);
 
   if (ctracer.largest_contour().size() > 3) {
-    vcl_cout << "contour ok..";
+    std::cout << "contour ok..";
     vsol_polygon_2d_sptr poly = new vsol_polygon_2d(ctracer.largest_contour());
 
     vsol_polygon_2d_sptr spoly = smooth_polygon(poly, smoothing_nsteps);
@@ -428,12 +428,12 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
     if (!traced_poly_) 
       return 0;
 
-    vcl_vector< vsol_spatial_object_2d_sptr > conts;
+    std::vector< vsol_spatial_object_2d_sptr > conts;
     conts.push_back(traced_poly_->cast_to_spatial_object());
 
     if (write_output) {
       // save the boundary curves
-      vcl_string out_name_str = out_shock_name+"_boundary.con";
+      std::string out_name_str = out_shock_name+"_boundary.con";
       bsold_save_con_file(out_name_str.c_str(), poly);
     }
 
@@ -462,7 +462,7 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
       writer.save_xshock_graph(sampled_sg, out_shock_name+".esf");
     }
 
-    vcl_cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
+    std::cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
     return sampled_sg;
 
   } else
@@ -474,7 +474,7 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
 dbsk2d_shock_graph_sptr compute_shock(vsol_polygon_2d_sptr poly,float shock_pruning_threshold) {
 
 
-  vcl_vector< vsol_spatial_object_2d_sptr > conts;
+  std::vector< vsol_spatial_object_2d_sptr > conts;
   conts.push_back(poly->cast_to_spatial_object());
   float xmin=0, ymin=0, cell_width=1000.0f, cell_height=1000.0f; int num_rows=1, num_cols=1;
   dbsk2d_boundary_sptr boundary = dbsk2d_create_boundary(conts, false, xmin, ymin, num_rows, num_cols, cell_width, cell_height, true, true);

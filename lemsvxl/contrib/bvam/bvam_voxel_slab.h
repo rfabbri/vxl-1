@@ -7,7 +7,7 @@
 // \date 1/22/2008
 //
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_matrix_fixed.h>
 
 #include "bvam_voxel_slab_base.h"

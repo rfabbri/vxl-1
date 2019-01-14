@@ -6,7 +6,7 @@
 #include <dbsta/io/bsta_io_mixture.h>
 #include <dbsta/io/bsta_io_gaussian_indep.h>
 #include <dbbgm/bbgm_image_of.h>
-#include <vcl_string.h>
+#include <string>
 #include "kdu_sample_processing.h"
 
 class kdu_line_buf;

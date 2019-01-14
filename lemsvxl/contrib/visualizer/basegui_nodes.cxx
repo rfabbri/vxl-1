@@ -156,18 +156,18 @@ void GraphicsNode::pop() {
     node_above->removeSelf();
     delete node_above;
   } else {
-    vcl_cerr << "warning: pop called, but no local properties node to pop" << vcl_endl;
+    std::cerr << "warning: pop called, but no local properties node to pop" << std::endl;
   }
 }
 
-int GraphicsNode::getPoints_(vcl_vector<Point2D<double> >& pts_){
+int GraphicsNode::getPoints_(std::vector<Point2D<double> >& pts_){
   return 0;
 }
 bool GraphicsNode::setPoint_(int id_, const Point2D<double> pt_) {
   return false;
 }
 bool GraphicsNode::supportSelect_(){
-  vcl_vector<Point2D<double> > pts;
+  std::vector<Point2D<double> > pts;
   return getPoints_(pts)>0;
 }
 
@@ -197,8 +197,8 @@ GraphicsNode *Group::addChild(GraphicsNode *child, int location) {
   GraphicsNode *child_tmp = child;
   while(child_tmp->getLocalParent() != NULL) {
     if(dynamic_cast<LocalPropertyNode*>(child_tmp->getLocalParent()) == NULL)
-      vcl_cerr << "warning: addChild called, but child seems to already be in a tree\n"
-        "it has a parent which isn't a LocalPropertyNode" << vcl_endl;
+      std::cerr << "warning: addChild called, but child seems to already be in a tree\n"
+        "it has a parent which isn't a LocalPropertyNode" << std::endl;
     child_tmp = child_tmp->getLocalParent();
   }
 #endif
@@ -218,21 +218,21 @@ void Group::removeChild(GraphicsNode *child) {
     child = child->getLocalParent();
 #ifdef SCENEGRAPH_DEBUG
     if(child != this && dynamic_cast<LocalPropertyNode*>(child) == NULL)
-      vcl_cerr << "warning: Group::removeChild called, but child doesn't appear to belong to "
-        "this group" << vcl_endl;
+      std::cerr << "warning: Group::removeChild called, but child doesn't appear to belong to "
+        "this group" << std::endl;
 #endif
   }
 
   if(!child) {
-    vcl_cerr << "warning: Group::removeChild called, but child doesn't appear to belong to "
-      "this group" << vcl_endl;
+    std::cerr << "warning: Group::removeChild called, but child doesn't appear to belong to "
+      "this group" << std::endl;
     return;
   }
 
   children_t::iterator
       i = std::find(_children.begin(), _children.end(), child);
   if(i == _children.end()) {
-    vcl_cerr << "warning: Group::eraseChild called, but child not found" << vcl_endl;
+    std::cerr << "warning: Group::eraseChild called, but child not found" << std::endl;
     return;
   }
 
@@ -285,8 +285,8 @@ void LocalPropertyNode::setLocalChild(GraphicsNode *child) {
   _child = child;
 #ifdef SCENEGRAPH_DEBUG
   if(_child->getLocalParent() != NULL)
-    vcl_cerr << "warning: adding local property node which"
-      " already has non-null parent" << vcl_endl;
+    std::cerr << "warning: adding local property node which"
+      " already has non-null parent" << std::endl;
 #endif
   _child->setLocalParent(this);
 }

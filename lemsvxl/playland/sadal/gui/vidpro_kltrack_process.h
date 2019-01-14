@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <vidpro/vidpro_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgel/vgel_kl_params.h>
 #include <vgel/vgel_kl.h>
 #include <vgel/vgel_multi_view_data_vertex_sptr.h>
@@ -28,7 +28,7 @@ public:
   vidpro_kltrack_process();
   ~vidpro_kltrack_process();
 
-  vcl_string name();
+  std::string name();
 
   //: Clone the process
   virtual vidpro_process* clone() const;
@@ -36,8 +36,8 @@ public:
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();

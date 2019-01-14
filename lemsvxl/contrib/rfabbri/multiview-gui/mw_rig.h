@@ -33,7 +33,7 @@ public: // Methods
    mw_rig(): unit_x(1,0,0), unit_y(0,1,0), unit_z(0,0,1) {}
    ~mw_rig() {}
 
-   bool read(vcl_string img_name1, vcl_string img_name2);
+   bool read(std::string img_name1, std::string img_name2);
 
    void get_gama1(double u, double v,mw_vector_3d *gama1);
    void get_gama2(double u, double v,mw_vector_3d *gama2);

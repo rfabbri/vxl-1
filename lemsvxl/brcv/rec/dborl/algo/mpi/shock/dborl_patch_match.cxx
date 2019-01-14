@@ -17,9 +17,9 @@
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dborl/algo/dborl_utilities.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 
@@ -50,7 +50,7 @@ void dborl_patch_match_output::set_values(buld_exp_stat& stat)
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-bool dborl_patch_match::parse_command_line(vcl_vector<vcl_string>& argv)
+bool dborl_patch_match::parse_command_line(std::vector<std::string>& argv)
 {
 
   if (!params_.parse_command_line_args(argv))
@@ -58,7 +58,7 @@ bool dborl_patch_match::parse_command_line(vcl_vector<vcl_string>& argv)
 
   //: always print the params file if an executable to work with ORL web interface
   if (!params_.print_params_xml(params_.print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params_.print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params_.print_params_file() << std::endl;
 
   param_file_ = params_.input_param_filename_;
   return true;
@@ -78,20 +78,20 @@ bool dborl_patch_match::parse(const char* param_file)
 }
 
 //: this method is run on each processor
-bool dborl_patch_match::parse_index(vcl_string index_file, dborl_index_sptr& ind, dborl_index_node_sptr& root)
+bool dborl_patch_match::parse_index(std::string index_file, dborl_index_sptr& ind, dborl_index_node_sptr& root)
 {
   dborl_index_parser parser;
   parser.clear();
 
-  vcl_FILE *xmlFile = vcl_fopen(index_file.c_str(), "r");
+  std::FILE *xmlFile = std::fopen(index_file.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- error on opening" << vcl_endl;
+    std::cout << "dborl_shock_retrieval::parse_index() -- " << index_file << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
 
@@ -101,11 +101,11 @@ bool dborl_patch_match::parse_index(vcl_string index_file, dborl_index_sptr& ind
   if (!ind)
     return false;
 
-  vcl_cout << "parsed the index file with name: " << ind->name_ << vcl_endl;
+  std::cout << "parsed the index file with name: " << ind->name_ << std::endl;
 
   root = ind->root_->cast_to_index_node();
   if (root->names().size() != root->paths().size()) {
-    vcl_cout << "dborl_patch_match::parse_index() -- " << index_file << "-- number of names not equal number of paths!!" << vcl_endl;
+    std::cout << "dborl_patch_match::parse_index() -- " << index_file << "-- number of names not equal number of paths!!" << std::endl;
     return false;
   }
 
@@ -116,24 +116,24 @@ bool dborl_patch_match::parse_index(vcl_string index_file, dborl_index_sptr& ind
 //  run the algorithm to generate this file, then modify it  
 void dborl_patch_match::print_default_file(const char* def_file)
 {
-  params_.print_default_input_xml(vcl_string(def_file));
+  params_.print_default_input_xml(std::string(def_file));
 }
 
 //: this method is run on each processor
-bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
+bool dborl_patch_match::initialize(std::vector<dborl_patch_match_input>& t)
 {
   //: parse the index file 
   if (!parse_index(params_.db_index_prototype_(), proto_ind_, proto_root_)) {
-    vcl_cout << "cannot parse: " << params_.db_index_prototype_() << vcl_endl;
+    std::cout << "cannot parse: " << params_.db_index_prototype_() << std::endl;
     return false;
   }
 
   if (!parse_index(params_.db_index_query_(), query_ind_, query_root_)) {
-    vcl_cout << "cannot parse: " << params_.db_index_query_() << vcl_endl;
+    std::cout << "cannot parse: " << params_.db_index_query_() << std::endl;
     return false;
   }
-  vcl_cout << "parsed index files\n";
-  vcl_cout.flush();
+  std::cout << "parsed index files\n";
+  std::cout.flush();
 
   //: initialize each proto-query pair
   
@@ -141,9 +141,9 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
   unsigned P = proto_root_->names().size();
 
   for (unsigned i = 0; i < P; i++) {
-    vcl_string proto_gt_file = proto_root_->paths()[i] + "/" + proto_root_->names()[i] + ".xml";
+    std::string proto_gt_file = proto_root_->paths()[i] + "/" + proto_root_->names()[i] + ".xml";
     if (!vul_file::exists(proto_gt_file)) {
-      vcl_cout << "cannot find: " << proto_gt_file << vcl_endl;
+      std::cout << "cannot find: " << proto_gt_file << std::endl;
       return false;
     }
 
@@ -153,9 +153,9 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
   }
 
   for (unsigned i = 0; i < Q; i++) {
-    vcl_string query_gt_file = query_root_->paths()[i] + "/" + query_root_->names()[i] + ".xml";
+    std::string query_gt_file = query_root_->paths()[i] + "/" + query_root_->names()[i] + ".xml";
     if (!vul_file::exists(query_gt_file)) {
-      vcl_cout << "cannot find: " << query_gt_file << vcl_endl;
+      std::cout << "cannot find: " << query_gt_file << std::endl;
       return false;
     }
 
@@ -164,31 +164,31 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
     query_img_d_.push_back(query_id);
   }
 
-  vcl_cout << "parsed ground truth files\n";
-  vcl_cout.flush();
+  std::cout << "parsed ground truth files\n";
+  std::cout.flush();
 
-  vcl_string det_dir = vul_file::strip_extension(params_.evaluation_file());
+  std::string det_dir = vul_file::strip_extension(params_.evaluation_file());
 
   for (unsigned i = 0; i < P; i++) {
-    vcl_string proto_name = proto_root_->names()[i];
-    vcl_string proto_st_file = params_.patch_folder_assoc_prototype_() + "/" + 
+    std::string proto_name = proto_root_->names()[i];
+    std::string proto_st_file = params_.patch_folder_assoc_prototype_() + "/" + 
       params_.patch_folder_assoc_prototype_.file_type() + "/" + proto_name + "/" +
       proto_name + params_.patch_params_prototype_.output_file_postfix("p_e") + "/" + 
       proto_name + params_.patch_params_prototype_.output_file_postfix("p_e") + "-patch_strg.bin";
 
     for (unsigned j = 0; j < Q; j++) {
-      vcl_string query_name = query_root_->names()[j];
-      vcl_string query_st_file = params_.patch_folder_assoc_query_() + "/" + params_.patch_folder_assoc_query_.file_type() + "/" 
+      std::string query_name = query_root_->names()[j];
+      std::string query_st_file = params_.patch_folder_assoc_query_() + "/" + params_.patch_folder_assoc_query_.file_type() + "/" 
         + query_name + "/" + query_name + params_.patch_params_query_.output_file_postfix("p_e") + "/" 
         + query_name + params_.patch_params_query_.output_file_postfix("p_e") + "-patch_strg.bin";
 
       if (proto_st_file.compare(query_st_file) == 0) { // proto and query are identical continue
-        vcl_cout << "skipping:  " << query_name << " for the prototype: " << proto_name << " they have identical patch sets!!!!!!!!!!!!\n";
+        std::cout << "skipping:  " << query_name << " for the prototype: " << proto_name << " they have identical patch sets!!!!!!!!!!!!\n";
         continue;
       }
 
       if (params_.compute_one_per_computer_() && params_.use_saved_detections_()) {
-        vcl_string det_name = det_dir + "/" + proto_name + "/" + query_name + "_eval.out";
+        std::string det_name = det_dir + "/" + proto_name + "/" + query_name + "_eval.out";
         if (vul_file::exists(det_name)) {  // skip this one already computed
           continue;
         }
@@ -213,17 +213,17 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
 //: this method is run in a distributed mode on each processor on the cluster
 bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_output& f)
 {
-  vcl_vector<vsol_box_2d_sptr> det_boxes;
-  vcl_string det_dir = vul_file::strip_extension(params_.evaluation_file());
+  std::vector<vsol_box_2d_sptr> det_boxes;
+  std::string det_dir = vul_file::strip_extension(params_.evaluation_file());
   
   if (params_.use_saved_detections_()) {
-    vcl_string det_name = det_dir + "/" + inp.proto_name + "/" + inp.query_name + "_eval.out";
+    std::string det_name = det_dir + "/" + inp.proto_name + "/" + inp.query_name + "_eval.out";
     if (vul_file::exists(det_name)) {  // if not exists then compute
-      vcl_vector<vcl_string> names;
-      vcl_string obj_name;
+      std::vector<std::string> names;
+      std::string obj_name;
       buld_exp_stat stat;
       if (parse_obj_evaluation(det_name, obj_name, det_boxes, names, stat)) {
-        vcl_cout << "parsed: " << det_name << "\n";
+        std::cout << "parsed: " << det_name << "\n";
         f.set_values(stat);
         return true;
       }
@@ -231,14 +231,14 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   }
 
   //: load the proto patches
-  vcl_string storage_end = "patch_strg.bin";
+  std::string storage_end = "patch_strg.bin";
 
   if (!vul_file::exists(inp.proto_st_name)) {
-    vcl_cout << "proto st file: " << inp.proto_st_name << " does not exist!!!\n";
+    std::cout << "proto st file: " << inp.proto_st_name << " does not exist!!!\n";
     return false;
   }
-  vcl_cout << "proto: " << inp.proto_name << " query: " << inp.query_name << " ";
-  vcl_cout.flush();
+  std::cout << "proto: " << inp.proto_name << " query: " << inp.query_name << " ";
+  std::cout.flush();
 
   dbskr_shock_patch_storage_sptr proto_st = dbskr_shock_patch_storage_new();
   vsl_b_ifstream ifs(inp.proto_st_name.c_str());
@@ -246,10 +246,10 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   ifs.close();
 
   //: load the shock graphs --> assumes each shock graph for each patch is saved in the same folder
-  //vcl_cout << proto_st->size() << " patches in proto storage, reading shocks..\n";
+  //std::cout << proto_st->size() << " patches in proto storage, reading shocks..\n";
 
   if (!proto_st->size()) {
-    vcl_cout << "zero patches in proto st!!!: " << inp.proto_st_name << vcl_endl;
+    std::cout << "zero patches in proto st!!!: " << inp.proto_st_name << std::endl;
   }
 
   if (!proto_st->load_patch_shocks_and_create_trees(inp.proto_st_name, storage_end, 
@@ -262,7 +262,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
 
   //: load the query patches
   if (!vul_file::exists(inp.query_st_name)) {
-    vcl_cout << "query st file: " << inp.query_st_name << " does not exist!!!\n";
+    std::cout << "query st file: " << inp.query_st_name << " does not exist!!!\n";
     return false;
   }
 
@@ -272,13 +272,13 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   ifsq.close();
 
   //: load the shock graphs --> assumes each shock graph for each patch is saved in the same folder
-  //vcl_cout << query_st->size() << " patches in query storage, reading shocks..\n";
+  //std::cout << query_st->size() << " patches in query storage, reading shocks..\n";
 
-  vcl_cout << "p p#: " << proto_st->size() << " q p#: " << query_st->size() << "..";
-  vcl_cout.flush();
+  std::cout << "p p#: " << proto_st->size() << " q p#: " << query_st->size() << "..";
+  std::cout.flush();
 
   if (!query_st->size()) {
-    vcl_cout << "zero patches in proto st!!!: " << inp.query_st_name << vcl_endl;
+    std::cout << "zero patches in proto st!!!: " << inp.query_st_name << std::endl;
   }
 
   if (!query_st->load_patch_shocks_and_create_trees(inp.query_st_name, storage_end, 
@@ -298,7 +298,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   params_.edit_params_.get_edit_params_instance(edit_params);
   match->edit_params_ = edit_params;
 
-  vcl_string out_name;
+  std::string out_name;
   if (params_.use_assoc_match_folder_()) {
     out_name = params_.match_folder_assoc_() + 
                           "/" + params_.match_folder_to_create_.file_type() + 
@@ -306,14 +306,14 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
                           "/" + inp.proto_name + "-" + inp.query_name + params_.edit_params_.output_file_postfix() + ".bin";
     
     if (!vul_file::exists(out_name)) {
-      vcl_cout << "can not find: " << out_name << vcl_endl;
+      std::cout << "can not find: " << out_name << std::endl;
       return false;
     }
     vsl_b_ifstream ifs(out_name.c_str());
     match->b_read(ifs);
     ifs.close();
-    vcl_cout << "found!..";
-    vcl_cout.flush();
+    std::cout << "found!..";
+    std::cout.flush();
 
   } else {
 
@@ -332,36 +332,36 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
       vsl_b_ifstream ifs(out_name.c_str());
       match->b_read(ifs);
       ifs.close();
-      vcl_cout << "exists!..";
-      vcl_cout.flush();
+      std::cout << "exists!..";
+      std::cout.flush();
     } else {
-      vcl_vector<dbskr_shock_patch_sptr>& pv1 = proto_st->get_patches();
-      vcl_vector<dbskr_shock_patch_sptr>& pv2 = query_st->get_patches();
+      std::vector<dbskr_shock_patch_sptr>& pv1 = proto_st->get_patches();
+      std::vector<dbskr_shock_patch_sptr>& pv2 = query_st->get_patches();
   
-      //vcl_cout << pv1.size() << " patches: ";
+      //std::cout << pv1.size() << " patches: ";
       for (unsigned i = 0; i < pv1.size(); i++) {
-        //vcl_cout << i << " ";
+        //std::cout << i << " ";
         find_patch_correspondences(pv1[i], pv2, map, match->edit_params_);
         pv1[i]->kill_tree();
       }
-      //vcl_cout << "\n match map size: " << map.size() << " map[pv1[0]->id()] size: " << map[pv1[0]->id()]->size() << vcl_endl;
+      //std::cout << "\n match map size: " << map.size() << " map[pv1[0]->id()] size: " << map[pv1[0]->id()]->size() << std::endl;
       
       vsl_b_ofstream bfs(out_name.c_str());
       match->b_write(bfs);
       bfs.close();
-      vcl_cout << "Done!..";
-      vcl_cout.flush();
+      std::cout << "Done!..";
+      std::cout.flush();
     }
   }
 
 
   //: prepare id maps for this match
-  vcl_map<int, dbskr_shock_patch_sptr> model_map;
+  std::map<int, dbskr_shock_patch_sptr> model_map;
   for (unsigned ii = 0; ii < proto_st->size(); ii++) 
     model_map[proto_st->get_patch(ii)->id()] = proto_st->get_patch(ii);
   match->set_id_map1(model_map);
 
-  vcl_map<int, dbskr_shock_patch_sptr> query_map;
+  std::map<int, dbskr_shock_patch_sptr> query_map;
   for (unsigned ii = 0; ii < query_st->size(); ii++) 
     query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);
   match->set_id_map2(query_map);
@@ -380,7 +380,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
      
     vsol_box_2d_sptr box;
     if (!match->detect_instance(box, params_.detection_params_.top_N_(), params_.detection_params_.k_(), params_.detection_params_.sim_threshold_())) {
-     vcl_cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
+     std::cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
      return false;
     }
     det_boxes.push_back(box);
@@ -388,7 +388,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   } else {   // use patch quad algorithm
     
     //: load proto shock
-    vcl_string proto_shock_file;
+    std::string proto_shock_file;
     if (params_.use_object_shock_proto_()) {
       proto_shock_file = inp.proto_path + "/" + inp.proto_name + ".esf";
     } else {
@@ -397,11 +397,11 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
     }
     
     if (!vul_file::exists(proto_shock_file)) {
-      vcl_cout << "dborl_patch_match::process() - cannot find shock: " << proto_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot find shock: " << proto_shock_file << std::endl;
       return false;
     }
 
-    vcl_string query_shock_file;
+    std::string query_shock_file;
     if (params_.use_object_shock_query_()) {
       query_shock_file = inp.query_path + "/" + inp.query_name + ".esf";
     } else {
@@ -410,7 +410,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
     }
 
     if (!vul_file::exists(query_shock_file)) {
-      vcl_cout << "dborl_patch_match::process() - cannot find shock: " << query_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot find shock: " << query_shock_file << std::endl;
       return false;
     }
 
@@ -418,25 +418,25 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
     dbsk2d_xshock_graph_fileio file_io;
     dbsk2d_shock_graph_sptr proto_sg = file_io.load_xshock_graph(proto_shock_file);
     if (!proto_sg) {
-      vcl_cout << "dborl_patch_match::process() - cannot load shock: " << proto_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot load shock: " << proto_shock_file << std::endl;
       return false;
     }
 
     dbskr_shock_path_finder proto_f(proto_sg);
     if (!proto_f.construct_v()) {
-      vcl_cout << "dborl_patch_match::process() - cannot construct v from shock: " << proto_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot construct v from shock: " << proto_shock_file << std::endl;
       return false;
     }
 
     dbsk2d_shock_graph_sptr query_sg = file_io.load_xshock_graph(query_shock_file);
     if (!query_sg) {
-      vcl_cout << "dborl_patch_match::process() - cannot load shock: " << query_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot load shock: " << query_shock_file << std::endl;
       return false;
     }
 
     dbskr_shock_path_finder query_f(query_sg);
     if (!query_f.construct_v()) {
-      vcl_cout << "dborl_patch_match::process() - cannot construct v from shock: " << query_shock_file << vcl_endl;
+      std::cout << "dborl_patch_match::process() - cannot construct v from shock: " << query_shock_file << std::endl;
       return false;
     }
 
@@ -450,14 +450,14 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
         params_.detection_params_.impose_geom_cons_(), 
         params_.detection_params_.geom_threshold_(),
         params_.detection_params_.alpha_())) {
-        vcl_cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
+        std::cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
         return false;
       }
     } else {
       if (!match->detect_instance(box, proto_f, query_f, 
         params_.detection_params_.sim_threshold_(), 
         params_.detection_params_.upper_sim_threshold_(), 1.0f, 1.0f, edit_params, true, params_.detection_params_.alpha_())) {
-        vcl_cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
+        std::cout << "dborl_patch_match::process() - detection error for the match file:" << out_name << "!!!!\n";
         return false;
       }
     }
@@ -495,7 +495,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
       inp.query_id, box, params_.evaluate_params_.box_overlap_ratio_threshold_());
 
     //if (gt_box)
-     // vcl_cout << "\t\t gt_box: " << *gt_box << vcl_endl;
+     // std::cout << "\t\t gt_box: " << *gt_box << std::endl;
 
     //instance_stat.print_only_stats();
 
@@ -506,36 +506,36 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
   if (params_.save_detections_()) {
     if (!vul_file::exists(det_dir))
       vul_file::make_directory(det_dir);
-    vcl_string det_name = det_dir + "/" + inp.proto_name + "/";
+    std::string det_name = det_dir + "/" + inp.proto_name + "/";
     if (!vul_file::exists(det_name))
       vul_file::make_directory(det_name);
     det_name = det_name + inp.query_name + "_eval.out";
 
     buld_exp_stat_sptr es = f.get_exp_stat();
-    vcl_vector<vcl_string> categories(det_boxes.size(), inp.proto_id->get_first_category());
+    std::vector<std::string> categories(det_boxes.size(), inp.proto_id->get_first_category());
     print_obj_evaluation(det_name, inp.query_name, det_boxes, categories, *es);
   }
 
-  vcl_cout << "TP: " << f.TP_ << " FP: " << f.FP_ << " TN: " << f.TN_ << " FN: " << f.FN_ << vcl_endl;
-  vcl_cout.flush();
+  std::cout << "TP: " << f.TP_ << " FP: " << f.FP_ << " TN: " << f.TN_ << " FN: " << f.FN_ << std::endl;
+  std::cout.flush();
   return true;
 }
 
 void dborl_patch_match::print_time()
 {
-  vcl_cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
-  vcl_cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
+  std::cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
 }
 
 //: this method is run on the lead processor once after results are collected from each processor
-bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
+bool dborl_patch_match::finalize(std::vector<dborl_patch_match_output>& results)
 {
 
   params_.percent_completed = 10.0f;
   params_.print_status_xml();
 
-  vcl_map<vcl_string, buld_exp_stat_sptr> stat_map;
-  vcl_string algo_prefix;
+  std::map<std::string, buld_exp_stat_sptr> stat_map;
+  std::string algo_prefix;
   if (params_.detection_params_.use_only_patches_())
     algo_prefix = "patches ";
   else
@@ -544,26 +544,26 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
   unsigned Q = query_root_->names().size();
   unsigned P = proto_root_->names().size();
 
-  vcl_string det_dir = vul_file::strip_extension(params_.evaluation_file());
+  std::string det_dir = vul_file::strip_extension(params_.evaluation_file());
 
   unsigned cnt = 0;
   for (unsigned i = 0; i < P; i++) {
 
-    vcl_string proto_name = proto_root_->names()[i];
-    vcl_string proto_st_file = params_.patch_folder_assoc_prototype_() + "/" + 
+    std::string proto_name = proto_root_->names()[i];
+    std::string proto_st_file = params_.patch_folder_assoc_prototype_() + "/" + 
       params_.patch_folder_assoc_prototype_.file_type() + "/" + proto_name + "/" +
       proto_name + params_.patch_params_prototype_.output_file_postfix("p_e") + "/" + 
       proto_name + params_.patch_params_prototype_.output_file_postfix("p_e") + "-patch_strg.bin";
 
     //: find the stats for this proto
-    vcl_string name = algo_prefix + proto_root_->names()[i];
+    std::string name = algo_prefix + proto_root_->names()[i];
     buld_exp_stat_sptr s = new buld_exp_stat();
     stat_map[name] = s;
 
     for (unsigned j = 0; j < Q; j++) {
 
-      vcl_string query_name = query_root_->names()[j];
-      vcl_string query_st_file = params_.patch_folder_assoc_query_() + "/" + params_.patch_folder_assoc_query_.file_type() + "/" 
+      std::string query_name = query_root_->names()[j];
+      std::string query_st_file = params_.patch_folder_assoc_query_() + "/" + params_.patch_folder_assoc_query_.file_type() + "/" 
         + query_name + "/" + query_name + params_.patch_params_query_.output_file_postfix("p_e") + "/" 
         + query_name + params_.patch_params_query_.output_file_postfix("p_e") + "-patch_strg.bin";
 
@@ -572,7 +572,7 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
       }
 
       if (params_.compute_one_per_computer_() && params_.use_saved_detections_()) {
-        vcl_string det_name = det_dir + "/" + proto_name + "/" + query_name + "_eval.out";
+        std::string det_name = det_dir + "/" + proto_name + "/" + query_name + "_eval.out";
         if (vul_file::exists(det_name)) {  // skip this one already computed
           continue;
         }
@@ -590,7 +590,7 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
 
   //: find the cumulative statistics of all categories
   buld_exp_stat_sptr cum = new buld_exp_stat();
-  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
+  std::map<std::string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
   for ( ; it != stat_map.end(); it++) {
     cum->increment_TP_by(it->second->TP_);
     cum->increment_FP_by(it->second->FP_);
@@ -601,9 +601,9 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
   stat_map[algo_prefix] = cum;  // cumulative result for algo
 
   for (unsigned i = 0; i < P; i++) {
-    vcl_string cat = proto_img_d_[i]->get_first_category();
-    vcl_string name = algo_prefix + cat;
-    vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.find(name);
+    std::string cat = proto_img_d_[i]->get_first_category();
+    std::string name = algo_prefix + cat;
+    std::map<std::string, buld_exp_stat_sptr>::iterator it = stat_map.find(name);
     if (it == stat_map.end()) {
       buld_exp_stat_sptr s_cum = new buld_exp_stat();
       stat_map[name] = s_cum;
@@ -611,7 +611,7 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
         if (proto_img_d_[ii]->get_first_category().compare(cat) != 0)
           continue;
 
-        vcl_string name_ii = algo_prefix + proto_root_->names()[ii];
+        std::string name_ii = algo_prefix + proto_root_->names()[ii];
         buld_exp_stat_sptr s = stat_map[name_ii];
         s_cum->increment_TP_by(s->TP_);
         s_cum->increment_FP_by(s->FP_);

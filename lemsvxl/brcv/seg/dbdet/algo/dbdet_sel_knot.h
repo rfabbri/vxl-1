@@ -12,9 +12,9 @@
 //
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_deque.h>
+#include <vector>
+#include <iostream>
+#include <deque>
 #include <vnl/vnl_math.h>
 #include <vbl/vbl_array_2d.h>
 

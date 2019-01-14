@@ -40,7 +40,7 @@ dbknee_surface_points_from_contours_process()
     "-inner_p3d_file", bpro1_filepath("",".p3d"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -62,19 +62,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_surface_points_from_contours_process::
+std::vector< std::string > dbknee_surface_points_from_contours_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_surface_points_from_contours_process::
+std::vector< std::string > dbknee_surface_points_from_contours_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -186,21 +186,21 @@ finish()
 // points and save them to a .p3d file
 bool dbknee_surface_points_from_contours_process::
 extract_surface_points_from_cartilage_segmentation(
-  const vcl_string& seg_xml_file,
+  const std::string& seg_xml_file,
   double voxel_size[3],
-  const vcl_string& all_p3d_file)
+  const std::string& all_p3d_file)
 {
   dbdet_seg3d_info_sptr seg3d = new dbdet_seg3d_info();
   //: parse an xml file
-  vcl_cout << "Parse the volume segmentation file.\n";
+  std::cout << "Parse the volume segmentation file.\n";
   x_read(seg_xml_file, seg3d);
 
 
 
-  vcl_cout << "Load the contours ...";
+  std::cout << "Load the contours ...";
 
   // place holder for the contours
-  vcl_vector<vsol_polyline_3d_sptr > all_contours;
+  std::vector<vsol_polyline_3d_sptr > all_contours;
 
   for (int frame_index=0; frame_index<seg3d->num_frames(); ++frame_index)
   {
@@ -213,12 +213,12 @@ extract_surface_points_from_cartilage_segmentation(
     // load the polylines
 
     // load contours in the frame
-    vcl_vector<vsol_spatial_object_2d_sptr > contour_list;
+    std::vector<vsol_spatial_object_2d_sptr > contour_list;
     contour_list.reserve(frame.contour_file_list.size());
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
-      vcl_string contour_filename = seg3d->contour_folder() + 
+      std::string contour_filename = seg3d->contour_folder() + 
         "/" + frame.contour_file_list[k];
 
       // load the contour
@@ -227,7 +227,7 @@ extract_surface_points_from_cartilage_segmentation(
 
       if (! contour)
       {
-        vcl_cerr << "Failed to load contour file" << contour_filename << vcl_endl;
+        std::cerr << "Failed to load contour file" << contour_filename << std::endl;
         return false;
       }
       contour_list.push_back(contour);
@@ -235,7 +235,7 @@ extract_surface_points_from_cartilage_segmentation(
 
     
     // extract the polylines
-    vcl_vector<vsol_polyline_2d_sptr > poly_list;
+    std::vector<vsol_polyline_2d_sptr > poly_list;
     for (unsigned int m=0; m<contour_list.size(); ++m)
     {
       vsol_spatial_object_2d_sptr obj = contour_list[m];
@@ -245,7 +245,7 @@ extract_surface_points_from_cartilage_segmentation(
       }
       else
       {
-        vcl_cout << "contour is not polyline. Skip contour.\n";
+        std::cout << "contour is not polyline. Skip contour.\n";
         continue;
       }
     }
@@ -260,16 +260,16 @@ extract_surface_points_from_cartilage_segmentation(
     }
   }
 
-  vcl_cout << "Writing the two point cloud files... \n";
+  std::cout << "Writing the two point cloud files... \n";
 
   // output the two point clouds
   double spacing[] = {0.3125, 0.3125, 1.5};
 
-  vcl_cout << "Writing all the contours to: " << all_p3d_file << vcl_endl;
+  std::cout << "Writing all the contours to: " << all_p3d_file << std::endl;
   dbknee_surface_points_from_contours_process::
     save_contours_as_p3d(all_contours, spacing, all_p3d_file.c_str());
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
   return true;
 }
@@ -286,23 +286,23 @@ extract_surface_points_from_cartilage_segmentation(
 //: From a femoral segmentation in way of contour files, extract the surface
 // points for the inner and outer surfaces and save them to .p3d files
 bool dbknee_surface_points_from_contours_process::extract_surface_points_from_femoral_cartilage_segm(
-  const vcl_string& seg_xml_file,
+  const std::string& seg_xml_file,
   double voxel_size[3],
-  const vcl_string& inner_p3d_file,
-  const vcl_string& outer_p3d_file)
+  const std::string& inner_p3d_file,
+  const std::string& outer_p3d_file)
 {
   dbdet_seg3d_info_sptr seg3d = new dbdet_seg3d_info();
   //: parse an xml file
-  vcl_cout << "Parse the volume segmentation file.\n";
+  std::cout << "Parse the volume segmentation file.\n";
   x_read(seg_xml_file, seg3d);
 
 
 
-  vcl_cout << "Load and sort the contours into top and bot... ";
+  std::cout << "Load and sort the contours into top and bot... ";
 
   // place holder for the contours
-  vcl_vector<vsol_polyline_3d_sptr > outer_contours;
-  vcl_vector<vsol_polyline_3d_sptr > inner_contours;
+  std::vector<vsol_polyline_3d_sptr > outer_contours;
+  std::vector<vsol_polyline_3d_sptr > inner_contours;
 
   for (int frame_index=0; frame_index<seg3d->num_frames(); ++frame_index)
   {
@@ -315,12 +315,12 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_fe
     // load the polylines
 
     // load contours in the frame
-    vcl_vector<vsol_spatial_object_2d_sptr > contour_list;
+    std::vector<vsol_spatial_object_2d_sptr > contour_list;
     contour_list.reserve(frame.contour_file_list.size());
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
-      vcl_string contour_filename = seg3d->contour_folder() + 
+      std::string contour_filename = seg3d->contour_folder() + 
         "/" + frame.contour_file_list[k];
 
       // load the contour
@@ -329,7 +329,7 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_fe
 
       if (! contour)
       {
-        vcl_cerr << "Failed to load contour file" << contour_filename << vcl_endl;
+        std::cerr << "Failed to load contour file" << contour_filename << std::endl;
         return false;
       }
       contour_list.push_back(contour);
@@ -337,7 +337,7 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_fe
 
     
     // extract the polylines
-    vcl_vector<vsol_polyline_2d_sptr > poly_list;
+    std::vector<vsol_polyline_2d_sptr > poly_list;
     for (unsigned int m=0; m<contour_list.size(); ++m)
     {
       vsol_spatial_object_2d_sptr obj = contour_list[m];
@@ -347,15 +347,15 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_fe
       }
       else
       {
-        vcl_cout << "contour is not polyline. Skip contour.\n";
+        std::cout << "contour is not polyline. Skip contour.\n";
         continue;
       }
     }
 
     if ( poly_list.size() != 2)
     {
-      vcl_cerr << "ERROR. Number of polyline in a frame is not 2. Ignore frame\n";
-      vcl_cerr << "image name = " << frame.image_file << vcl_endl;
+      std::cerr << "ERROR. Number of polyline in a frame is not 2. Ignore frame\n";
+      std::cerr << "image name = " << frame.image_file << std::endl;
       break;
     }
 
@@ -376,21 +376,21 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_fe
       inner_polyline, frame_index));
   }
 
-  vcl_cout << "Writing the two point cloud files... \n";
+  std::cout << "Writing the two point cloud files... \n";
 
   // output the two point clouds
   //double spacing[] = {0.3125, 0.3125, 1.5};
 
-  vcl_cout << "Writing the inner contours to: " << inner_p3d_file << vcl_endl;
+  std::cout << "Writing the inner contours to: " << inner_p3d_file << std::endl;
   dbknee_surface_points_from_contours_process::
     save_contours_as_p3d(inner_contours, voxel_size, inner_p3d_file.c_str());
 
 
-  vcl_cout << "Writing the outer contours to: " << inner_p3d_file << vcl_endl;
+  std::cout << "Writing the outer contours to: " << inner_p3d_file << std::endl;
   dbknee_surface_points_from_contours_process::
     save_contours_as_p3d(outer_contours, voxel_size, outer_p3d_file.c_str());
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
   return true;
 }
@@ -464,21 +464,21 @@ determine_femur_inner_outer_contour(const vsol_polyline_2d_sptr& polyline1,
 //: From a tibial segmentation in way of contour files, extract the surface
 // points for the inner and outer surfaces and save them to .p3d files
 bool dbknee_surface_points_from_contours_process::extract_surface_points_from_tibial_cartilage_segm(
-  const vcl_string& seg_xml_file,
+  const std::string& seg_xml_file,
   double voxel_size[3],
-  const vcl_string& inner_p3d_file,
-  const vcl_string& outer_p3d_file)
+  const std::string& inner_p3d_file,
+  const std::string& outer_p3d_file)
 {
   dbdet_seg3d_info_sptr seg3d = new dbdet_seg3d_info();
   //: parse an xml file
-  vcl_cout << "Parse the volume segmentation file.\n";
+  std::cout << "Parse the volume segmentation file.\n";
   x_read(seg_xml_file, seg3d);
 
-  vcl_cout << "Load and sort the contours into inner and outer contours... ";
+  std::cout << "Load and sort the contours into inner and outer contours... ";
 
   // place holder for the contours
-  vcl_vector<vsol_polyline_3d_sptr > outer_contours;
-  vcl_vector<vsol_polyline_3d_sptr > inner_contours;
+  std::vector<vsol_polyline_3d_sptr > outer_contours;
+  std::vector<vsol_polyline_3d_sptr > inner_contours;
 
   for (int frame_index=0; frame_index<seg3d->num_frames(); ++frame_index)
   {
@@ -491,12 +491,12 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_ti
     // load the polylines
 
     // load contours in the frame
-    vcl_vector<vsol_spatial_object_2d_sptr > contour_list;
+    std::vector<vsol_spatial_object_2d_sptr > contour_list;
     contour_list.reserve(frame.contour_file_list.size());
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
-      vcl_string contour_filename = seg3d->contour_folder() + 
+      std::string contour_filename = seg3d->contour_folder() + 
         "/" + frame.contour_file_list[k];
 
       // load the contour
@@ -505,7 +505,7 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_ti
 
       if (! contour)
       {
-        vcl_cerr << "Failed to load contour file" << contour_filename << vcl_endl;
+        std::cerr << "Failed to load contour file" << contour_filename << std::endl;
         return false;
       }
       contour_list.push_back(contour);
@@ -513,7 +513,7 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_ti
 
     
     // extract the polylines
-    vcl_vector<vsol_polyline_2d_sptr > poly_list;
+    std::vector<vsol_polyline_2d_sptr > poly_list;
     for (unsigned int m=0; m<contour_list.size(); ++m)
     {
       vsol_spatial_object_2d_sptr obj = contour_list[m];
@@ -523,15 +523,15 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_ti
       }
       else
       {
-        vcl_cout << "contour is not polyline. Skip contour.\n";
+        std::cout << "contour is not polyline. Skip contour.\n";
         continue;
       }
     }
 
     if ( poly_list.size() != 2)
     {
-      vcl_cerr << "ERROR. Number of polyline in a frame is not 2. Ignore frame\n";
-      vcl_cerr << "image name = " << frame.image_file << vcl_endl;
+      std::cerr << "ERROR. Number of polyline in a frame is not 2. Ignore frame\n";
+      std::cerr << "image name = " << frame.image_file << std::endl;
       break;
     }
 
@@ -552,21 +552,21 @@ bool dbknee_surface_points_from_contours_process::extract_surface_points_from_ti
       inner_polyline, frame_index));
   }
 
-  vcl_cout << "Writing the two point cloud files... \n";
+  std::cout << "Writing the two point cloud files... \n";
 
   // output the two point clouds
   //double spacing[] = {0.3125, 0.3125, 1.5};
 
-  vcl_cout << "Writing the inner contours to: " << inner_p3d_file << vcl_endl;
+  std::cout << "Writing the inner contours to: " << inner_p3d_file << std::endl;
   dbknee_surface_points_from_contours_process::
     save_contours_as_p3d(inner_contours, voxel_size, inner_p3d_file.c_str());
 
 
-  vcl_cout << "Writing the outer contours to: " << inner_p3d_file << vcl_endl;
+  std::cout << "Writing the outer contours to: " << inner_p3d_file << std::endl;
   dbknee_surface_points_from_contours_process::
     save_contours_as_p3d(outer_contours, voxel_size, outer_p3d_file.c_str());
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
   return true;
 
@@ -597,7 +597,7 @@ determine_tibia_inner_outer_contour(const vsol_polyline_2d_sptr& polyline1,
     vsol_point_2d_sptr p1 = polyline1->vertex(i);
     vsol_point_2d_sptr p2 = polyline1->vertex(i+1);
 
-    double w = vcl_abs(p2->x() - p1->x()); 
+    double w = std::abs(p2->x() - p1->x()); 
     double y = p1->middle(*p2)->y();
 
     y_moment_sum += y* w;
@@ -614,7 +614,7 @@ determine_tibia_inner_outer_contour(const vsol_polyline_2d_sptr& polyline1,
     vsol_point_2d_sptr p1 = polyline2->vertex(i);
     vsol_point_2d_sptr p2 = polyline2->vertex(i+1);
 
-    double w = vcl_abs(p2->x() - p1->x()); 
+    double w = std::abs(p2->x() - p1->x()); 
     double y = p1->middle(*p2)->y();
 
     y_moment_sum += y* w;
@@ -642,7 +642,7 @@ determine_tibia_inner_outer_contour(const vsol_polyline_2d_sptr& polyline1,
 vsol_polyline_3d_sptr dbknee_surface_points_from_contours_process::
 polyline_2d_to_3d(const vsol_polyline_2d_sptr& poly2d, double z)
 {
-  vcl_vector<vsol_point_3d_sptr > vertices;
+  std::vector<vsol_point_3d_sptr > vertices;
   vertices.reserve(poly2d->size());
   for (unsigned i=0; i<poly2d->size(); ++i)
   {
@@ -655,7 +655,7 @@ polyline_2d_to_3d(const vsol_polyline_2d_sptr& poly2d, double z)
 
 //: save a set of 3d polylines as a point cloud
 bool dbknee_surface_points_from_contours_process::
-save_contours_as_p3d(const vcl_vector<vsol_polyline_3d_sptr >& contours,
+save_contours_as_p3d(const std::vector<vsol_polyline_3d_sptr >& contours,
                      double spacing[3],
                      const char* filename)
 {
@@ -668,9 +668,9 @@ save_contours_as_p3d(const vcl_vector<vsol_polyline_3d_sptr >& contours,
   }
 
   // write data to file
-  vcl_ofstream outfp(filename, vcl_ios_out);
-  outfp << "3" << vcl_endl
-    << num_pts << vcl_endl;
+  std::ofstream outfp(filename, std::ios::out);
+  outfp << "3" << std::endl
+    << num_pts << std::endl;
 
   double x_spacing = spacing[0];
   double y_spacing = spacing[1];
@@ -680,7 +680,7 @@ save_contours_as_p3d(const vcl_vector<vsol_polyline_3d_sptr >& contours,
     vsol_polyline_3d_sptr polyline = contours[i];
     if (!polyline) continue;
 
-    vcl_vector<vgl_point_2d<double > > curve;
+    std::vector<vgl_point_2d<double > > curve;
     curve.reserve(polyline->size());
     for (unsigned k=0; k<polyline->size(); ++k)
     {
@@ -688,7 +688,7 @@ save_contours_as_p3d(const vcl_vector<vsol_polyline_3d_sptr >& contours,
       double x = p->x() * x_spacing;
       double y = p->y() * y_spacing;
       double z = p->z() * z_spacing;
-      outfp << x << " " << y << " " << z << vcl_endl;
+      outfp << x << " " << y << " " << z << std::endl;
     }
   }
 

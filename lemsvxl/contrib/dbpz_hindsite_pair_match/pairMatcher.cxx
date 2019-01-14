@@ -1,7 +1,7 @@
 #include "pairMatcher.h"
 
 pairMatcher::pairMatcher( bgui_vsol2D_tableau_sptr invsol2D ){
-    vcl_cout << "pair Matcher Init" << vcl_endl;
+    std::cout << "pair Matcher Init" << std::endl;
 
     thevsol2D = invsol2D;
 
@@ -51,7 +51,7 @@ void pairMatcher::drawCurves(){
 
 
 int pairMatcher::runMatch(int startA, int endA, bool reverseA, int startB, int endB, bool reverseB, int matchStartA ){
-    vcl_cout << "pair Matcher Begin Running" << vcl_endl;
+    std::cout << "pair Matcher Begin Running" << std::endl;
 
     my_bsol_intrinsic_curve_2d *Aorig, *Borig;
     Aorig = new my_bsol_intrinsic_curve_2d( *curveA );
@@ -82,10 +82,10 @@ int pairMatcher::runMatch(int startA, int endA, bool reverseA, int startB, int e
     }
 
     //force end points to be at or before next corner
-    vcl_vector<vsol_point_2d> curveAcornerPoints = curveA->findCorners( 20.0f, 0.5f, 0.5236f );
-    vcl_vector<vsol_point_2d> curveBcornerPoints = curveB->findCorners( 20.0f, 0.5f, 0.5236f );
-    vcl_vector<int> *curveAcornerIndices = &(curveA->corners_);
-    vcl_vector<int> *curveBcornerIndices = &(curveB->corners_);
+    std::vector<vsol_point_2d> curveAcornerPoints = curveA->findCorners( 20.0f, 0.5f, 0.5236f );
+    std::vector<vsol_point_2d> curveBcornerPoints = curveB->findCorners( 20.0f, 0.5f, 0.5236f );
+    std::vector<int> *curveAcornerIndices = &(curveA->corners_);
+    std::vector<int> *curveBcornerIndices = &(curveB->corners_);
     //do some forcing!
 
 
@@ -93,24 +93,24 @@ int pairMatcher::runMatch(int startA, int endA, bool reverseA, int startB, int e
     //match them
     int delta = 15, i = 0, Lbarbest;
     double leastCost;
-    vcl_cout << "L  Lbar-cost NormCost" << vcl_endl;
+    std::cout << "L  Lbar-cost NormCost" << std::endl;
     for( int L = matchStartA; L < endA ; L++ ){
         leastCost = 999999999999999;
-        //vcl_cout << "mathching at L: " << L << vcl_endl;
+        //std::cout << "mathching at L: " << L << std::endl;
         for( int Lbar = L - delta; Lbar < L + delta; Lbar++ ){
             if( Lbar > 0 && Lbar < endB ){
                 curveMatcher->Match( 0, L, 0, Lbar );
-                vcl_cout << Lbar << " " << curveMatcher->finalCost() << vcl_endl;
+                std::cout << Lbar << " " << curveMatcher->finalCost() << std::endl;
                 if( curveMatcher->finalCost() < leastCost ){
                     leastCost = curveMatcher->finalCost();
                     Lbarbest = Lbar;
                 }
             }
         }
-        vcl_cout << L << "\t" << Lbarbest << "\t" << leastCost << "\t" << leastCost/min(L,Lbarbest) << vcl_endl;
+        std::cout << L << "\t" << Lbarbest << "\t" << leastCost << "\t" << leastCost/min(L,Lbarbest) << std::endl;
     }
     
-    //vcl_cout << "DP Table for most recent run" << vcl_endl;
+    //std::cout << "DP Table for most recent run" << std::endl;
     //curveMatcher->ListDPTable(endA, endB);
 
 
@@ -125,13 +125,13 @@ int pairMatcher::runMatch(int startA, int endA, bool reverseA, int startB, int e
 }
 
 void pairMatcher::showCorners(){
-    vcl_cout << "drawing corners" << vcl_endl;
+    std::cout << "drawing corners" << std::endl;
 
     curveA->computeProperties();
     curveB->computeProperties();
 
-    vcl_vector< vsol_point_2d > cornersA = curveA->findCorners( 30, 2.0f, float(3.14*30)/180.0);
-    vcl_vector< vsol_point_2d > cornersB = curveB->findCorners( 30, 2.0f, float(3.14*30)/180.0);
+    std::vector< vsol_point_2d > cornersA = curveA->findCorners( 30, 2.0f, float(3.14*30)/180.0);
+    std::vector< vsol_point_2d > cornersB = curveB->findCorners( 30, 2.0f, float(3.14*30)/180.0);
     
     for( int i = 0; i < cornersA.size(); i++ ){
         thevsol2D->add_circle( cornersA[i].x(), cornersA[i].y(), 5 );
@@ -149,40 +149,40 @@ void pairMatcher::showCorners(){
 
 void pairMatcher::drawMatchLines(){
 
-    vcl_cout << "drawing match lines (size: " << (curveMatcher->finalMap())->size() << vcl_endl;
+    std::cout << "drawing match lines (size: " << (curveMatcher->finalMap())->size() << std::endl;
 
-    vcl_vector< vcl_pair<int,int> > *matchPairs = curveMatcher->finalMap();
+    std::vector< std::pair<int,int> > *matchPairs = curveMatcher->finalMap();
 
     for( int i = 0; i < matchPairs->size(); i++ ){
         thevsol2D->add_line( curveA->x(((*matchPairs)[i]).first), curveA->y(((*matchPairs)[i]).first), 
                              curveB->x(((*matchPairs)[i]).second), curveB->y(((*matchPairs)[i]).second));
-        vcl_cout << "adding line (" << curveA->x(((*matchPairs)[i]).first) << "," << curveA->y(((*matchPairs)[i]).first) << ") to (" << curveB->x(((*matchPairs)[i]).second) << "," << curveB->y(((*matchPairs)[i]).second) << ")" << vcl_endl;
+        std::cout << "adding line (" << curveA->x(((*matchPairs)[i]).first) << "," << curveA->y(((*matchPairs)[i]).first) << ") to (" << curveB->x(((*matchPairs)[i]).second) << "," << curveB->y(((*matchPairs)[i]).second) << ")" << std::endl;
     }
 
     thevsol2D->post_redraw();
 }
 
 
-void pairMatcher::fatalError( vcl_string msg ){
-    vcl_cout << "FATAL: " << msg << vcl_endl << "-QUITING-" << vcl_endl;
+void pairMatcher::fatalError( std::string msg ){
+    std::cout << "FATAL: " << msg << std::endl << "-QUITING-" << std::endl;
     int x;
-    vcl_cin >> x;
+    std::cin >> x;
     exit(-1);
 }
 
 
-int pairMatcher::loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, vsol_polygon_2d_sptr &storagePoly, int start, int end, bool reverse ){
-    vcl_cout << "Loading: " << fn << vcl_endl;
+int pairMatcher::loadCon( std::string fn, my_bsol_intrinsic_curve_2d* &storage, vsol_polygon_2d_sptr &storagePoly, int start, int end, bool reverse ){
+    std::cout << "Loading: " << fn << std::endl;
     
     double x, y;
     int nPoints;
     char buffer[2048];
-    vcl_vector< vsol_point_2d_sptr > points, newpoints, temppoints;
+    std::vector< vsol_point_2d_sptr > points, newpoints, temppoints;
 
     //1)If file open fails, return.
-    vcl_ifstream fp(fn.c_str(), vcl_ios::in);
+    std::ifstream fp(fn.c_str(), std::ios::in);
     if (!fp) {
-      vcl_cout<<" : Unable to Open "<< fn << vcl_endl;
+      std::cout<<" : Unable to Open "<< fn << std::endl;
       return -1;
     }
 
@@ -193,18 +193,18 @@ int pairMatcher::loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, v
 
 
     if (!strncmp(openFlag,"OPEN",4)){
-        vcl_cout << "WARNING: CURVE IS MARKED __OPEN__ " << vcl_endl;
+        std::cout << "WARNING: CURVE IS MARKED __OPEN__ " << std::endl;
     } else if (!strncmp(openFlag,"CLOSE",5)){
         //perfect
     }else{
-        vcl_cout << "Invalid File " << fn << vcl_endl;
-        vcl_cout << "Should be OPEN/CLOSE: " << openFlag << vcl_endl;
+        std::cout << "Invalid File " << fn << std::endl;
+        std::cout << "Should be OPEN/CLOSE: " << openFlag << std::endl;
         return -1;
     }
   
 
     fp >> nPoints;
-    //vcl_cout << "Number of Points from Contour:" << nPoints << vcl_endl;
+    //std::cout << "Number of Points from Contour:" << nPoints << std::endl;
 
     int i;
     for ( i=0; i < nPoints; i++) {
@@ -213,7 +213,7 @@ int pairMatcher::loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, v
         points.push_back(newPt);
     }
     int size = i;
-    //vcl_cout << "size should be: " << i << vcl_endl;
+    //std::cout << "size should be: " << i << std::endl;
 
     if( reverse ){
         for( int i = size-1; i >= 0; i-- ){
@@ -237,7 +237,7 @@ int pairMatcher::loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, v
     //put it into storage = bsol_intrinsic_curve_2d_sptr
     storage = new my_bsol_intrinsic_curve_2d(newpoints);
     storage->computeProperties();
-    vcl_cout << "Size of my_intrinsic: " << storage->size() << vcl_endl;
+    std::cout << "Size of my_intrinsic: " << storage->size() << std::endl;
 
     //can also use vsol_polygon_2d in same fashion...
     storagePoly = new vsol_polygon_2d(newpoints);
@@ -250,7 +250,7 @@ int pairMatcher::loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, v
 }
 
 void pairMatcher::showCurvePoint( int curveNum, int pointNum ){
-    vcl_vector<vsol_point_2d_sptr> *theStorage;
+    std::vector<vsol_point_2d_sptr> *theStorage;
 
     if( curveNum == 1 ) theStorage = curveA->getStorage();
         else theStorage = curveB->getStorage();

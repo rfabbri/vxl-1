@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_random.h>
 
 #include "../psm_apm_traits.h"
@@ -12,9 +12,9 @@ static void test_psm_mog_grey_processor()
 {
   START("psm_mog_grey_processor test");
 
-  vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> obs_vec;
-  vcl_vector<float> vis_vec;
-  vcl_vector<float> pre_vec;
+  std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> obs_vec;
+  std::vector<float> vis_vec;
+  std::vector<float> pre_vec;
 
   // generate a bunch of random samples with visibility probability 1
   unsigned int nsamples = 5000;
@@ -48,10 +48,10 @@ static void test_psm_mog_grey_processor()
   psm_mog_grey_processor::compute_appearance(obs_vec, pre_vec, vis_vec, model, 0.001f);
 
   for (unsigned int m = 0; m < nmodes; ++m) {
-    vcl_cout << "-- Mode " << m << " --" << vcl_endl;
+    std::cout << "-- Mode " << m << " --" << std::endl;
     TEST_NEAR("Mode has correct mean", model.distribution(m).mean(), true_means[m], 0.01);
 
-    TEST_NEAR("Mode has correct sigma", vcl_sqrt(model.distribution(m).var()), true_sigmas[m], 0.02);
+    TEST_NEAR("Mode has correct sigma", std::sqrt(model.distribution(m).var()), true_sigmas[m], 0.02);
 
     TEST_NEAR("Mode has correct weight", model.weight(m), true_mode_weights[m], 0.10);
   }
@@ -68,10 +68,10 @@ static void test_psm_mog_grey_processor()
   psm_mog_grey_processor::compute_appearance(obs_vec, pre_vec, vis_vec, model, 0.05f);
 
   for (unsigned int m=0; m<3; ++m) {
-    vcl_cout << "-- Mode " << m << " --" << vcl_endl;
-    vcl_cout << "weight = " << model.weight(m) << vcl_endl;
-    vcl_cout << "mean = " << model.distribution(m).mean() << vcl_endl;
-    vcl_cout << "std_dev = " << vcl_sqrt(model.distribution(m).var()) << vcl_endl;
+    std::cout << "-- Mode " << m << " --" << std::endl;
+    std::cout << "weight = " << model.weight(m) << std::endl;
+    std::cout << "mean = " << model.distribution(m).mean() << std::endl;
+    std::cout << "std_dev = " << std::sqrt(model.distribution(m).var()) << std::endl;
   }
 
 

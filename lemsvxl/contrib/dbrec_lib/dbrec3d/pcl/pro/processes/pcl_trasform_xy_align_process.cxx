@@ -27,12 +27,12 @@ bool pcl_trasform_xy_align_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_trasform_xy_align_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -44,16 +44,16 @@ bool pcl_trasform_xy_align_process(bprb_func_process& pro)
   using namespace pcl_trasform_xy_align_process_globals;
   
   //get inputs
-  vcl_string cloud_in_file = pro.get_input<vcl_string>(0);
-  vcl_string cloud_out_file = pro.get_input<vcl_string>(1);
+  std::string cloud_in_file = pro.get_input<std::string>(0);
+  std::string cloud_out_file = pro.get_input<std::string>(1);
 
   //read in the point cloud
-  vcl_cout << "Loading: " << cloud_in_file <<vcl_endl;
+  std::cout << "Loading: " << cloud_in_file <<std::endl;
   pcl::PointCloud<pcl::PointNormal>::Ptr cloud_in(new pcl::PointCloud<pcl::PointNormal>);
   if (pcl::io::loadPCDFile (cloud_in_file, *cloud_in) < 0)
     return (false);
-  vcl_cout << " Done:" <<  cloud_in->width * cloud_in->height << " points\n";
-  vcl_cout << "Available dimensions: " << getFieldsList(*cloud_in).c_str ();
+  std::cout << " Done:" <<  cloud_in->width * cloud_in->height << " points\n";
+  std::cout << "Available dimensions: " << getFieldsList(*cloud_in).c_str ();
   
   //transform point cloud
   pcl::PointCloud<pcl::PointNormal>::Ptr cloud_out(new pcl::PointCloud<pcl::PointNormal>);

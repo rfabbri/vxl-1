@@ -6,7 +6,7 @@
 #include "dbknee_coord.h"
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/vnl_math.h>
@@ -66,8 +66,8 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
   // orientation in spherical coordinate
   double phi = x[3];
   double theta = x[4];
-  vgl_vector_3d<double > orientation(vcl_sin(phi)*vcl_cos(theta), 
-    vcl_sin(phi)*vcl_sin(theta), vcl_cos(phi));
+  vgl_vector_3d<double > orientation(std::sin(phi)*std::cos(theta), 
+    std::sin(phi)*std::sin(theta), std::cos(phi));
 
   // radius of cylinder
   double radius = x[5];
@@ -90,8 +90,8 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
 //  // orientation in spherical coordinate
 //  double phi = x[3];
 //  double theta = x[4];
-//  vgl_vector_3d<double > orientation(vcl_sin(phi)*vcl_cos(theta), 
-//    vcl_sin(phi)*vcl_sin(theta), vcl_cos(phi));
+//  vgl_vector_3d<double > orientation(std::sin(phi)*std::cos(theta), 
+//    std::sin(phi)*std::sin(theta), std::cos(phi));
 //
 //  // radius of cylinder
 //  double radius = x[5];
@@ -167,15 +167,15 @@ init_default()
 // cylinder_length 66.2678
 // fitting_error 2.21707
 bool dbknee_cylinder_based_coord::
-load_from_cs_file(const vcl_string& cs_file)
+load_from_cs_file(const std::string& cs_file)
 {
-  vcl_map<vcl_string, double > param_list;
+  std::map<std::string, double > param_list;
   dbknee_read_coord_param_file(cs_file, param_list);
 
   
   
   // if any param is specified then overwrite it
-  vcl_map< vcl_string, double >::const_iterator itr;
+  std::map< std::string, double >::const_iterator itr;
 
   // 1. origin
   double origin_x = 0;
@@ -311,7 +311,7 @@ void dbknee_cylinder_based_coord::
 build()
 {
   // 1. Crop the original full mesh
-  vcl_cout << "Crop the original point set.\n";
+  std::cout << "Crop the original point set.\n";
   vgl_box_3d<double > box = this->cropping_box();
 
   dbmsh3d_mesh_algos::crop_mesh(*this->point_set(), box, this->cropped_mesh_);
@@ -327,11 +327,11 @@ build()
   //  float(box.max_x()), float(box.max_y()), float(box.max_z()));
 
   // 2. Fit a cylinder to the remaining points
-  vcl_cout << "Fit a cylinder to the point set \n";
+  std::cout << "Fit a cylinder to the point set \n";
   this->build_cylinder();
 
   // 3. Build the coordinate system
-  vcl_cout << "Build a coordinate system \n";
+  std::cout << "Build a coordinate system \n";
   this->build_coord_system();
   
   return;
@@ -355,7 +355,7 @@ compute_z_of_band_centroids()
   // [0] - top regions
   // [1] - bottom regions
   enum {TOP = 0, BOTTOM = 1};
-  vcl_vector<vgl_point_3d<double > > point_groups[2];
+  std::vector<vgl_point_3d<double > > point_groups[2];
 
   this->point_set()->reset_vertex_traversal();
   for (dbmsh3d_vertex* vb = 0; this->point_set()->next_vertex(vb); )
@@ -416,7 +416,7 @@ compute_z_of_band_centroids()
 // ----------------------------------------------------------------------------
 //: write info of the coordinate system to an output stream
 void dbknee_cylinder_based_coord::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "origin_x" << " " << this->origin().x() << "\n"
     << "origin_y" << " " << this->origin().y() << "\n"
@@ -457,7 +457,7 @@ local_to_wcs(const vgl_point_3d<double >& pt) const
 vgl_point_3d<double > dbknee_cylinder_based_coord::
 local_cyl_to_wcs(double radius, double theta, double z)
 {
-  vgl_point_3d<double > p(radius*vcl_cos(theta), radius*vcl_sin(theta), z);
+  vgl_point_3d<double > p(radius*std::cos(theta), radius*std::sin(theta), z);
   return this->local_to_wcs(p);
 }
 
@@ -501,7 +501,7 @@ build_cylinder()
   vnl_vector<double > x = x_init;
  
   if (! lm.minimize(x)){
-    vcl_cerr << "vnl_levenberg_marquardt minimization failed.\n";
+    std::cerr << "vnl_levenberg_marquardt minimization failed.\n";
     return false;
   }
   
@@ -512,8 +512,8 @@ build_cylinder()
   // x = [px, py, pz, phi, theta]
   double phi = x[3];
   double theta = x[4];
-  vgl_vector_3d<double > orientation(vcl_sin(phi)*vcl_cos(theta), 
-    vcl_sin(phi)*vcl_sin(theta), vcl_cos(phi));
+  vgl_vector_3d<double > orientation(std::sin(phi)*std::cos(theta), 
+    std::sin(phi)*std::sin(theta), std::cos(phi));
   
   vgl_cylinder<double > cylinder;
   cylinder.set_orientation(orientation);
@@ -631,7 +631,7 @@ wc_to_local_cyl(const vgl_point_3d<double >& pt,
   
   vgl_vector_2d<double > xy_proj(local.x(), local.y());
   radius = xy_proj.length();
-  theta = vcl_atan2(xy_proj.y(), xy_proj.x());
+  theta = std::atan2(xy_proj.y(), xy_proj.x());
   return;
 }
 
@@ -648,14 +648,14 @@ crop_mesh_cylindrical(dbmsh3d_mesh& source_mesh,
                       double r_min, double r_max)
 {
   // for convenicence : angle check is a bit tricky, easier to use vector
-  vgl_vector_2d<double > vmin(vcl_cos(theta_min), vcl_sin(theta_min));
-  vgl_vector_2d<double > vmax(vcl_cos(theta_max), vcl_sin(theta_max));
+  vgl_vector_2d<double > vmin(std::cos(theta_min), std::sin(theta_min));
+  vgl_vector_2d<double > vmax(std::cos(theta_max), std::sin(theta_max));
   
   // angle range
   double angle_max = signed_angle(vmin, vmax);
   if (angle_max < 0) angle_max += 2*vnl_math::pi;
  
-  vcl_vector<dbmsh3d_face* > face_list;
+  std::vector<dbmsh3d_face* > face_list;
   source_mesh.reset_face_traversal();
   for ( dbmsh3d_face* face = 0; source_mesh.next_face(face); )
   {
@@ -672,7 +672,7 @@ crop_mesh_cylindrical(dbmsh3d_mesh& source_mesh,
       inside = inside && (z >= z_min) && (z <= z_max);
 
       // angle [0, 2pi] wrt to theta_min
-      vgl_vector_2d<double > v0(vcl_cos(theta), vcl_sin(theta));
+      vgl_vector_2d<double > v0(std::cos(theta), std::sin(theta));
       double angle = signed_angle(vmin, v0);
       if (angle < 0) angle += 2*vnl_math::pi;
       inside = inside && (angle <= angle_max);
@@ -694,7 +694,7 @@ crop_mesh_cylindrical(dbmsh3d_mesh& source_mesh,
 // ----------------------------------------------------------------------------
 dbknee_cylinder_based_coord_params::
 dbknee_cylinder_based_coord_params(const vgl_box_3d<double >& bounding_box,
-                                   const vcl_map<vcl_string, double >& param_list)
+                                   const std::map<std::string, double >& param_list)
 {
   // default: take 1/2 of x-axis as the cropping box
   this->cropping_box = bounding_box;
@@ -704,7 +704,7 @@ dbknee_cylinder_based_coord_params(const vgl_box_3d<double >& bounding_box,
 
 
   // if any param is specified then overwrite it
-  vcl_map< vcl_string, double >::const_iterator itr;
+  std::map< std::string, double >::const_iterator itr;
 
   // fraction of the object's width will be kept in cropping
   double crop_width_start = 0.0;
@@ -850,28 +850,28 @@ dbknee_cylinder_based_coord_params(const vgl_box_3d<double >& bounding_box,
 
 // ----------------------------------------------------------------------------
 //: Read a cropping parameter from a parameter file
-void dbknee_read_coord_param_file(const vcl_string& param_file,
-                                  vcl_map<vcl_string, double >& param_list
+void dbknee_read_coord_param_file(const std::string& param_file,
+                                  std::map<std::string, double >& param_list
                                   )
 {
 
   // open file for reading
-  vcl_ifstream infp(param_file.c_str(), vcl_ios_in);
+  std::ifstream infp(param_file.c_str(), std::ios::in);
   if (!infp) 
   {
-    vcl_cerr << " Error opening file  " << param_file << vcl_endl;
+    std::cerr << " Error opening file  " << param_file << std::endl;
     return;
   }
 
-  vcl_cout << "Parameter list: \n";
+  std::cout << "Parameter list: \n";
   while (!infp.eof())
   {
-    vcl_string param_name;
+    std::string param_name;
     double param_value;
     infp >> param_name >> param_value;
-    vcl_cout << param_name << " = " ;
-    vcl_cout << param_value << vcl_endl;
-    param_list.insert(vcl_make_pair(param_name, param_value));
+    std::cout << param_name << " = " ;
+    std::cout << param_value << std::endl;
+    param_list.insert(std::make_pair(param_name, param_value));
   }
   infp.close();
   return; 
@@ -884,14 +884,14 @@ void dbknee_read_coord_param_file(const vcl_string& param_file,
 
 // ----------------------------------------------------------------------------
 //: Read a coordinate system file and overwrite parameters in a coordinate system
-void dbknee_read_cs_file(const vcl_string& cs_file, dbknee_cylinder_based_coord& cs)
+void dbknee_read_cs_file(const std::string& cs_file, dbknee_cylinder_based_coord& cs)
 {
-  vcl_map<vcl_string, double > param_list;
+  std::map<std::string, double > param_list;
   dbknee_read_coord_param_file(cs_file, param_list);
 
   
   // if any param is specified then overwrite it
-  vcl_map< vcl_string, double >::const_iterator itr;
+  std::map< std::string, double >::const_iterator itr;
 
   double origin_x = 0;
   double origin_y = 0;
@@ -1004,7 +1004,7 @@ void dbknee_read_cs_file(const vcl_string& cs_file, dbknee_cylinder_based_coord&
 //: Write the coordinates 
 void dbknee_compute_write_local_coords_to_file(const dbknee_cylinder_based_coord& cs,
                                                dbmsh3d_mesh* pt_set,
-                                               const vcl_string& outfile)
+                                               const std::string& outfile)
 {
   // compute the local coordinates of the points
   vnl_matrix<double > pc(pt_set->num_vertices(), 3);
@@ -1030,7 +1030,7 @@ void dbknee_compute_write_local_coords_to_file(const dbknee_cylinder_based_coord
 
   // print out the matrix
   // open file for writing
-  vcl_ofstream outfp(outfile.c_str(), vcl_ios_out);
+  std::ofstream outfp(outfile.c_str(), std::ios::out);
   pc.print(outfp);
   outfp.close();  
 
@@ -1044,8 +1044,8 @@ void dbknee_compute_write_local_coords_to_file(const dbknee_cylinder_based_coord
 // ----------------------------------------------------------------------------
 //: Extract the regions of interest on the knee cartilage
 void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
-          vcl_vector<vcl_vector<vgl_point_3d<double > > >& top_regions,
-          vcl_vector<vcl_vector<vgl_point_3d<double > > >& bot_regions)
+          std::vector<std::vector<vgl_point_3d<double > > >& top_regions,
+          std::vector<std::vector<vgl_point_3d<double > > >& bot_regions)
 {
   double band_width_factor = 0.2;
   double angles[] = {-30, -70, -110, -150};
@@ -1054,7 +1054,7 @@ void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
   // [0] - top regions
   // [1] - bottom regions
   enum {TOP = 0, BOTTOM = 1};
-  vcl_vector<vgl_point_3d<double > > point_groups[2];
+  std::vector<vgl_point_3d<double > > point_groups[2];
 
   cs.point_set()->reset_vertex_traversal();
   for (dbmsh3d_vertex* vb = 0; cs.point_set()->next_vertex(vb); )
@@ -1071,7 +1071,7 @@ void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
   }
 
   // 2. Compute band-points for each group
-  vcl_vector<vcl_vector<vgl_point_3d<double > > >* point_regions[2];
+  std::vector<std::vector<vgl_point_3d<double > > >* point_regions[2];
   point_regions[0] = &top_regions;
   point_regions[1] = &bot_regions;
   for (int group = 0; group < 2; ++group)
@@ -1093,7 +1093,7 @@ void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
     point_regions[group]->clear();
     for (int m=0; m<3; ++m)
     {
-      (*point_regions[group]).push_back(vcl_vector<vgl_point_3d<double > >());
+      (*point_regions[group]).push_back(std::vector<vgl_point_3d<double > >());
     }
 
     for (int i=0; i< num_pts; ++i)
@@ -1107,7 +1107,7 @@ void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
         continue;
 
       // if outside angle range, ignore
-      double angle = vcl_atan2(local_pt.y(), local_pt.x()) * 180 / vnl_math::pi;
+      double angle = std::atan2(local_pt.y(), local_pt.x()) * 180 / vnl_math::pi;
 
       if (angle > angles[0])
         continue;
@@ -1139,18 +1139,18 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
                                           dbmsh3d_mesh& inner_mesh,
                                           dbmsh3d_mesh& outer_mesh)
 {
-  vcl_map<int, dbmsh3d_face* > face_map = mesh.facemap();
-  vcl_vector<dbmsh3d_face* > inner_face_list;
-  vcl_vector<dbmsh3d_face* > outer_face_list;
+  std::map<int, dbmsh3d_face* > face_map = mesh.facemap();
+  std::vector<dbmsh3d_face* > inner_face_list;
+  std::vector<dbmsh3d_face* > outer_face_list;
 
   // projection of face center onto the axis
   vgl_vector_3d<double > t = normalized(axis_dir);
 
 
-  vcl_cout << "\nSeparate mesh into inner and outer meshes\n.";
+  std::cout << "\nSeparate mesh into inner and outer meshes\n.";
   
   
-  vcl_cout << "1. Put the faces into buckets...";
+  std::cout << "1. Put the faces into buckets...";
   int ncols = 10;
   int nrows = 10;
   int nslabs = 10;
@@ -1167,11 +1167,11 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
 
   face_bucketing.add(mesh);
   
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
 
 
-  vcl_cout << "2. Classifying the faces ...";
+  std::cout << "2. Classifying the faces ...";
 
   
   // bruce-forge iterate thru all the faces
@@ -1185,7 +1185,7 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
     if (percent_processed_faces > (current_percentage + 5))
     {
       current_percentage += 5;
-      vcl_cout << current_percentage << "%  ";
+      std::cout << current_percentage << "%  ";
     }
 
     dbmsh3d_face* face = face_map.begin()->second;
@@ -1216,7 +1216,7 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
 
     // a different method to traverse the neighboring faces of ``face"
     // collect the containing bucket and neighboring bucket
-    vcl_vector<dbmsh3d_face_bucket_sptr > bucket_list;
+    std::vector<dbmsh3d_face_bucket_sptr > bucket_list;
     dbmsh3d_face_bucket_sptr bucket = 
       face_bucketing.get_bucket(face->compute_center_pt());
     if (bucket)
@@ -1235,7 +1235,7 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
     for (unsigned int i=0; i<bucket_list.size() && !found_face; ++i)
     {
       dbmsh3d_face_bucket_sptr b = bucket_list[i];
-      for (vcl_map<int, dbmsh3d_face* >::const_iterator itr = 
+      for (std::map<int, dbmsh3d_face* >::const_iterator itr = 
         b->face_list().begin(); itr != b->face_list().end(); ++itr)
       {
         dbmsh3d_face* face2 = itr->second;
@@ -1281,17 +1281,17 @@ void dbknee_separate_inner_outer_surfaces(dbmsh3d_mesh& mesh,
 
     if (!found_face)
     {
-      vcl_cout << "Face with no opposite face, face id = " << face->id() << vcl_endl;
-      vcl_cout << "Face center = " << face->compute_center_pt() << vcl_endl;
+      std::cout << "Face with no opposite face, face id = " << face->id() << std::endl;
+      std::cout << "Face center = " << face->compute_center_pt() << std::endl;
     }
   }
 
   
   // All faces have been classified, now output them to the mesh
-  vcl_cout << "\nCreating inner and outer meshes ...";
+  std::cout << "\nCreating inner and outer meshes ...";
   dbmsh3d_mesh_algos::submesh(mesh, inner_face_list, inner_mesh);
   dbmsh3d_mesh_algos::submesh(mesh, outer_face_list, outer_mesh);
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   return;
 }

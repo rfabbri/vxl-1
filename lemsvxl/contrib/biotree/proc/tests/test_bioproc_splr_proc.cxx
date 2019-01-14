@@ -10,7 +10,7 @@
 #include <xscan/xscan_dummy_scan.h>
 #include <proc/bioproc_splr_filtering_proc.h>
 #include <proc/bioproc_filtering_proc.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
 
 void test_bioproc_splr_proc(){
@@ -47,8 +47,8 @@ void test_bioproc_splr_proc(){
   // construct the filters
   xmvg_no_noise_filter_3d fz(fdz);
 
-//  vcl_vector<xmvg_atomic_filter_3d<double> > filters;
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+//  std::vector<xmvg_atomic_filter_3d<double> > filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   filters.push_back(fz);
 
   xmvg_composite_filter_3d<double, xmvg_no_noise_filter_3d> comp3d(filters);
@@ -67,29 +67,29 @@ void test_bioproc_splr_proc(){
   proc.execute();
 
   biob_worldpt_field<xmvg_filter_response<double> > & responses = proc.worldpt_field();
-  vcl_vector<xmvg_filter_response<double> > & samples = responses.values();
+  std::vector<xmvg_filter_response<double> > & samples = responses.values();
 
-  vcl_vector<xmvg_filter_response<double> > const & splr_samples = splr_proc.response_field().const_values();
-//  vcl_vector<xmvg_filter_response<double> > const & samples = proc.responses();
+  std::vector<xmvg_filter_response<double> > const & splr_samples = splr_proc.response_field().const_values();
+//  std::vector<xmvg_filter_response<double> > const & samples = proc.responses();
   double max_rel_error = 0.0;
   double sum_rel_errors = 0.0;
   TEST("splr_proc sample size equals proc sample size", splr_samples.size(), samples.size());
   unsigned long int count = 0;
   for (unsigned long int i = 0; i < splr_samples.size(); ++i){
-    double magnitude = vcl_max(vnl_math_abs(samples[i][0]),vnl_math_abs(splr_samples[i][0])); 
+    double magnitude = std::max(vnl_math_abs(samples[i][0]),vnl_math_abs(splr_samples[i][0])); 
     if (magnitude > 100000){
       double rel_error = vnl_math_abs((splr_samples[i][0] - samples[i][0])/magnitude);
-      //    max_rel_error = vcl_max(max_rel_error, rel_error);
+      //    max_rel_error = std::max(max_rel_error, rel_error);
       if (rel_error > max_rel_error){
       max_rel_error = rel_error;
-      vcl_cout << "test_bioproc_splr_proc max rel error: " << max_rel_error << "\n";
+      std::cout << "test_bioproc_splr_proc max rel error: " << max_rel_error << "\n";
       }
       sum_rel_errors += rel_error;
       count ++;
     }
   }
   double avg_rel_error = sum_rel_errors/splr_samples.size();
-  vcl_cout <<  "test_bioproc_splr_proc avg rel error: " << avg_rel_error << "\n";
+  std::cout <<  "test_bioproc_splr_proc avg rel error: " << avg_rel_error << "\n";
   TEST("small maximum relative error", max_rel_error < .1, true);
   TEST("small average relative error", avg_rel_error < .01, true);
 }

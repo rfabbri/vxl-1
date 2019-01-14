@@ -10,5 +10,5 @@ void vsl_b_read(vsl_b_istream& is,
   vsl_b_read(is, filter.x_);
 }
 
-void vsl_print_summary(vcl_ostream & os, const dummy_filter_2d & filter){
+void vsl_print_summary(std::ostream & os, const dummy_filter_2d & filter){
 }

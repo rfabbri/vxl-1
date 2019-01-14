@@ -18,9 +18,9 @@
 
 #include<dsm/dsm_features_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //:global variables
 namespace dsm_reduce_features_dimensionality_globals
@@ -34,7 +34,7 @@ bool dsm_reduce_features_dimensionality_process_cons(bprb_func_process& pro)
 	//set input/output types
 	using namespace dsm_reduce_features_dimensionality_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 	input_types_[0] = "dsm_features_sptr";
 	input_types_[1] = "unsigned";
 
@@ -50,7 +50,7 @@ bool dsm_reduce_features_dimensionality_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_reduce_feature_dimensionality_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_reduce_feature_dimensionality_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 

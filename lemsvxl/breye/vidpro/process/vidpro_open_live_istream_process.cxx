@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_open_live_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 
@@ -53,16 +53,16 @@ vidpro_open_live_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_open_live_istream_process::name()
+std::string vidpro_open_live_istream_process::name()
 {
     return "Open Video Istream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_open_live_istream_process::get_input_type()
+std::vector< std::string > vidpro_open_live_istream_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // no input type required
     to_return.clear();
@@ -72,9 +72,9 @@ vcl_vector< vcl_string > vidpro_open_live_istream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_open_live_istream_process::get_output_type()
+std::vector< std::string > vidpro_open_live_istream_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // output type
     to_return.push_back( "istream" );
@@ -96,7 +96,7 @@ vidpro_open_live_istream_process::execute()
     parameters()->get_value( "-config_file" , config_file );
 
     //get file name of directory
-    vcl_string device_name;
+    std::string device_name;
     parameters()->get_value( "-device_name" , device_name );
 
    
@@ -105,7 +105,7 @@ vidpro_open_live_istream_process::execute()
     if(!vis_storage)
     {
         return false;
-        vcl_cerr<<"Error: Opening the input stream\n";
+        std::cerr<<"Error: Opening the input stream\n";
     }
    
     
@@ -116,7 +116,7 @@ vidpro_open_live_istream_process::execute()
     output_data_[0].push_back(vis_storage);
     return true;
 
-    vcl_cerr<<"Error in Open Istream process: Not able to open the istream\n";
+    std::cerr<<"Error in Open Istream process: Not able to open the istream\n";
     return false;
 }
 
@@ -153,10 +153,10 @@ vidpro_open_live_istream_process::add_parameters()
 #endif
 
     if( !parameters()->add( "Select an Input Stream Type" , "-istream_type" , choices_, 0 )||
-        !parameters()->add( "Device Name" , "-device_name" , vcl_string("")) ||
+        !parameters()->add( "Device Name" , "-device_name" , std::string("")) ||
         !parameters()->add( "Configuration File" , "-config_file" ,bpro_filepath("","*") ) )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 
@@ -164,8 +164,8 @@ vidpro_open_live_istream_process::add_parameters()
 
 vidpro_istream_storage_sptr
 vidpro_open_live_istream_process::open_live_istream(int type, 
-                                                     vcl_string const& device_name, 
-                                                     vcl_string const& config_file)
+                                                     std::string const& device_name, 
+                                                     std::string const& config_file)
 {
     switch(choice_codes_[type]){
 #ifdef HAS_DSHOW
@@ -187,18 +187,18 @@ vidpro_open_live_istream_process::open_live_istream(int type,
 //: Use vgui dialogs to open a DSHOW_FILE istream
 //-----------------------------------------------------------------------------
 vidpro_istream_storage_sptr
-vidpro_open_live_istream_process::dshow_live_istream(vcl_string const& device_name,
-                                                      vcl_string const& config_file)
+vidpro_open_live_istream_process::dshow_live_istream(std::string const& device_name,
+                                                      std::string const& config_file)
 {
 #ifdef HAS_DSHOW
 
     vidl_dshow_live_istream<vidl_dshow_istream_params> *vis = new 
     vidl_dshow_live_istream<vidl_dshow_istream_params>(vidl_dshow_istream_params().set_device_name(device_name)
-    .set_properties(mbl_read_props(vcl_ifstream(config_file.c_str())))
+    .set_properties(mbl_read_props(std::ifstream(config_file.c_str())))
     );
 
     if (!vis || !vis->is_open()) {
-        vcl_cerr<<"Failed to open the input stream\n";
+        std::cerr<<"Failed to open the input stream\n";
         delete vis;
         return NULL;
     }
@@ -211,7 +211,7 @@ vidpro_open_live_istream_process::dshow_live_istream(vcl_string const& device_na
     ;
 
 #else // HAS_DSHOW
-    vcl_cerr <<"DSHOW Live support not compiled in\n";
+    std::cerr <<"DSHOW Live support not compiled in\n";
     return NULL;
 #endif // HAS_DSHOW
 

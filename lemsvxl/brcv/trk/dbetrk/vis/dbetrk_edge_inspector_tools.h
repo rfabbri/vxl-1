@@ -11,9 +11,9 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_tool.h>
-#include <vcl_map.h>
+#include <map>
 #include <vgui/vgui_style_sptr.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_easy2D_tableau.h>
@@ -32,7 +32,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 

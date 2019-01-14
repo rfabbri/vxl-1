@@ -1,8 +1,8 @@
 #ifndef _bvaml_supervoxel_cxx_
 #define _bvaml_supervoxel_cxx_
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <baml/baml_appearance.h>
 #include <baml/baml_mog.h>
 #include <baml/baml_multi_mog.h>
@@ -14,7 +14,7 @@
 //---------------------------------------------
 bvaml_supervoxel::bvaml_supervoxel(
   bvaml_params* params,
-  vcl_string file_namebase ) :
+  std::string file_namebase ) :
     file_namebase_( file_namebase ),
     params_( params ),
     occupancy_cache_( NULL ),
@@ -147,7 +147,7 @@ bvaml_supervoxel::load_local_appearance(
     appearance_cache_[a] = NULL;
 
   // Load each cache, record what needs to be initialized.
-  vcl_vector<bool> appearance_initialized;
+  std::vector<bool> appearance_initialized;
   bool all_appearances_initialized = true;
   for( int a = 0; a < num_appearance_components_; a++ ){
     appearance_initialized.push_back( load_cache( appearance_filename( appearance_ids_[a] ), 
@@ -209,7 +209,7 @@ bvaml_supervoxel::clear()
 //-------------------------------------------------------------
 bool
 bvaml_supervoxel::load_cache(
-  vcl_string file_name,
+  std::string file_name,
   int data_size,
   float*& cache,
   bool allocate_if_needed )
@@ -221,7 +221,7 @@ bvaml_supervoxel::load_cache(
       params_->supervoxel_length*params_->supervoxel_length;
 
   // Read from file if it exists.
-  vcl_ifstream s( file_name.c_str(), vcl_ifstream::binary );
+  std::ifstream s( file_name.c_str(), std::ifstream::binary );
   if( s.good() ){
     cache = new float[ cache_size ];
     char* byte_cache = (char*)cache;
@@ -240,7 +240,7 @@ bvaml_supervoxel::load_cache(
 //--------------------------------------------------------------
 void 
 bvaml_supervoxel::save_cache(
-  vcl_string file_name,
+  std::string file_name,
   int data_size,
   float*& cache )
 {
@@ -249,7 +249,7 @@ bvaml_supervoxel::save_cache(
   int cache_size = data_size*params_->supervoxel_length*
     params_->supervoxel_length*params_->supervoxel_length;
 
-  vcl_ofstream s( file_name.c_str(), vcl_ifstream::binary );
+  std::ofstream s( file_name.c_str(), std::ifstream::binary );
   if( s.good() ){
     char* byte_cache = (char*)cache;
     s.write( byte_cache, cache_size*sizeof(float) );
@@ -258,30 +258,30 @@ bvaml_supervoxel::save_cache(
 
 
 //--------------------------------------------------------------
-vcl_string 
+std::string 
 bvaml_supervoxel::occupancy_filename()
 {
-  vcl_string s = file_namebase_;
+  std::string s = file_namebase_;
   s = s + "_o";
   return s;
 };
 
 
 //--------------------------------------------------------------
-vcl_string 
+std::string 
 bvaml_supervoxel::misc_filename()
 {
-  vcl_string s = file_namebase_;
+  std::string s = file_namebase_;
   s = s + "_m";
   return s;
 };
 
 
 //------------------------------------------------------------
-vcl_string 
+std::string 
 bvaml_supervoxel::appearance_filename( int i )
 {
-  vcl_string s = file_namebase_;
+  std::string s = file_namebase_;
   char numberbuffer[8];
   s = s + "_a"; s = s + itoa(i,numberbuffer,10);
   return s;
@@ -297,7 +297,7 @@ bvaml_supervoxel::new_local_appearance()
   else if( params_->appearance_model == 1 )
     return new baml_multi_mog_local( params_->num_mixtures, local_light_ );
 
-  vcl_cerr << "ERROR: Appearance model not yet implemented.  ";
+  std::cerr << "ERROR: Appearance model not yet implemented.  ";
   return NULL;
 };
 

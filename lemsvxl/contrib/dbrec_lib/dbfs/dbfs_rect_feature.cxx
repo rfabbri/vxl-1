@@ -41,7 +41,7 @@ vil_image_resource_sptr dbfs_rect_feature::create_patch()
 
 void dbfs_rect_feature_set::populate(const vil_image_view<vxl_byte>& img, const vil_image_view<float>& img_f, int w, int h, float fg_thres)
 {
-  vcl_cout << "In populate features!\n";
+  std::cout << "In populate features!\n";
   int si = 0; int ei = img.ni()-w;
   int sj = 0; int ej = img.nj()-h;
 
@@ -49,7 +49,7 @@ void dbfs_rect_feature_set::populate(const vil_image_view<vxl_byte>& img, const 
     for (int j = sj; j < ej; j++) {
       dbfs_rect_feature_sptr f = new dbfs_rect_feature(img, i, j, w, h);
       float fg_m = f->measure_foreground(img_f, i, j);
-      vcl_cout << "fg_m is: " << fg_m << " threshold is " << fg_thres << vcl_endl;
+      std::cout << "fg_m is: " << fg_m << " threshold is " << fg_thres << std::endl;
       if (fg_m > fg_thres)
         this->add_feature(f);
     }
@@ -58,24 +58,24 @@ void dbfs_rect_feature_set::populate(const vil_image_view<vxl_byte>& img, const 
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbfs_rect_feature_set as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbfs_rect_feature_set const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbfs_rect_feature_set &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream& is, dbfs_rect_feature_set* ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_write(vsl_b_ostream& os, const dbfs_rect_feature_set* &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }

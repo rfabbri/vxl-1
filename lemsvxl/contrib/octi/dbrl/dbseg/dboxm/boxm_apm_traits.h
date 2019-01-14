@@ -16,7 +16,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_rgb.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_ostream.h>
+#include <ostream>
 #include <dboxm/boxm_edge_sample.h>
 
 class boxm_mog_grey_processor;
@@ -170,6 +170,6 @@ void vsl_b_write(vsl_b_ostream & os, boxm_simple_grey const &sample);
 void vsl_b_write(vsl_b_ostream & os, boxm_simple_grey const * &sample);
 void vsl_b_read(vsl_b_istream & is, boxm_simple_grey &sample);
 void vsl_b_read(vsl_b_istream & is, boxm_simple_grey *&sample);
-vcl_ostream& operator << (vcl_ostream& os, const boxm_simple_grey& sample);
+std::ostream& operator << (std::ostream& os, const boxm_simple_grey& sample);
 
 #endif

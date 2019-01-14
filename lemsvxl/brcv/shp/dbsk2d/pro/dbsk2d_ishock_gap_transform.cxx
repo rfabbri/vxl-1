@@ -18,7 +18,7 @@
 //: compute the salency of this shock element (edge/node)
 dbsk2d_ishock_gap_transform::dbsk2d_ishock_gap_transform(
     dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>& pair,
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>& pair,
     int euler_spiral_id)
     :dbsk2d_ishock_transform(intrinsic_shock_graph,
                              dbsk2d_ishock_transform::GAP),
@@ -184,11 +184,11 @@ bool dbsk2d_ishock_gap_transform::execute_transform()
         while ( true )
         {
             // Grab all elements of active shocks
-            vcl_vector<dbsk2d_ishock_edge*> invalid_shocks;
+            std::vector<dbsk2d_ishock_edge*> invalid_shocks;
             ishock_graph_->invalid_shocks(invalid_shocks);
             
             // Grab elements of delete shocks
-            vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
+            std::map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
                 = ishock_detector_.get_deleted_bnd_elements();
 
             if ( invalid_shocks.size() == 0 )
@@ -200,7 +200,7 @@ bool dbsk2d_ishock_gap_transform::execute_transform()
 
             if ( iteration == 5 )
             {
-                vcl_cerr<<"Error: Disconnecting Euler Spiral"<<vcl_endl;
+                std::cerr<<"Error: Disconnecting Euler Spiral"<<std::endl;
                 // Not Hidden need hide everything
                 if ( local_belm_list_[1]->is_a_GUIelm())
                 {
@@ -265,7 +265,7 @@ bool dbsk2d_ishock_gap_transform::execute_transform()
                 return false;
             }
 
-            vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+            std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
                   it != deleted_bnd_elements.end();
                   ++it)
@@ -342,7 +342,7 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
     fitter.set_rms_error_tol(0.5f);
     fitter.add_curve(init_samples_);
 
-    vcl_vector<vgl_line_segment_2d<double> > segs;
+    std::vector<vgl_line_segment_2d<double> > segs;
     if ( init_samples_.size() > 2 )
     {
         fitter.fit();
@@ -359,7 +359,7 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
     // See if segs intersects any bnd elements
     for ( unsigned int i=0; i < segs.size() ; ++i)
     {
-        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator bit;
+        std::map<unsigned int,dbsk2d_ishock_belm*>::iterator bit;
         for ( bit = interacting_bnd_elements_.begin(); 
               bit != interacting_bnd_elements_.end(); ++bit)
         {
@@ -394,12 +394,12 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
 
     if ( valid == false )
     {
-        vcl_cout<<
-        "Curve intersects with bnd elements insert a straight line"<<vcl_endl;
+        std::cout<<
+        "Curve intersects with bnd elements insert a straight line"<<std::endl;
     }
 
     // convert the pts into bnd_vertex and put into a list
-    vcl_vector<dbsk2d_bnd_vertex_sptr > bv_list;
+    std::vector<dbsk2d_bnd_vertex_sptr > bv_list;
 
     // Add in first two points of line segment
     bv_list.push_back(bp1->bnd_vertex());
@@ -419,7 +419,7 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
     bv_list.push_back(bp2->bnd_vertex());
 
     // now link all these vertices into a chain and save as a contour
-    vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges;
+    std::vector<dbsk2d_bnd_edge_sptr > bnd_edges;
     for (unsigned int i=0; i<bv_list.size()-1; ++i)
     {
        
@@ -430,7 +430,7 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
    
     }
 
-    vcl_vector<signed char > directions(bnd_edges.size(), 1);
+    std::vector<signed char > directions(bnd_edges.size(), 1);
 
     dbsk2d_bnd_contour_sptr euler_spiral = new dbsk2d_bnd_contour(
         bnd_edges, 
@@ -467,7 +467,7 @@ void dbsk2d_ishock_gap_transform::determine_likelihood()
 
     // Compute Euler Spiral
     // 1) Determine Tangent Pairs
-    vcl_pair<double,double> tangent_pair=this->get_tangent_pairs(bp1,
+    std::pair<double,double> tangent_pair=this->get_tangent_pairs(bp1,
                                                                  bp2);
     // 2) Compute Euler Spiral
     bgld_eulerspiral es(
@@ -512,7 +512,7 @@ void dbsk2d_ishock_gap_transform::determine_likelihood()
 }
 
 //: Add euler spiral to boundary and add all boundary elements
-vcl_pair<double,double> dbsk2d_ishock_gap_transform::get_tangent_pairs(
+std::pair<double,double> dbsk2d_ishock_gap_transform::get_tangent_pairs(
     dbsk2d_ishock_bpoint* bp1,
     dbsk2d_ishock_bpoint* bp2)
 {
@@ -552,6 +552,6 @@ vcl_pair<double,double> dbsk2d_ishock_gap_transform::get_tangent_pairs(
 
     }
 
-    return vcl_make_pair(ltan,rtan);
+    return std::make_pair(ltan,rtan);
 
 }

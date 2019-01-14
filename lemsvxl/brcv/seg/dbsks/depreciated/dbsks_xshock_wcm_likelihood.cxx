@@ -11,7 +11,7 @@
 #include <dbsks/dbsks_wcm.h>
 #include <dbsks/dbsks_xgraph_ccm_model.h>
 #include <dbsksp/algo/dbsksp_trace_boundary.h>
-#include <vcl_map.h>
+#include <map>
 #include <vnl/vnl_math.h>
 #include <bnld/bnld_angle.h>
 
@@ -48,7 +48,7 @@ loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const
   }
   else
   {
-    vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator iter = 
+    std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator iter = 
       this->xgraph_ccm_->map_edge2ccm().find(edge_id);
     assert(iter != this->xgraph_ccm_->map_edge2ccm().end());
    
@@ -61,7 +61,7 @@ loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const
   // compute cost
   float cost_left, cost_right;
 
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -125,7 +125,7 @@ f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, const vgl
   }
   else
   {
-    vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator iter = 
+    std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator iter = 
       this->xgraph_ccm_->map_edge2ccm().find(edge_id);
     assert(iter != this->xgraph_ccm_->map_edge2ccm().end());
    
@@ -138,7 +138,7 @@ f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, const vgl
   // compute cost
   float cost_left, cost_right;
 
-  static vcl_vector<int > x_vec, y_vec, angle_vec;
+  static std::vector<int > x_vec, y_vec, angle_vec;
   dbsksp_xshock_node_descriptor start = xfrag.start();
   dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -192,11 +192,11 @@ f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, const vgl
 //: Likelihood of a xshock graph using whole contour matching
 double dbsks_xshock_wcm_likelihood::
 f_whole_contour(const dbsksp_xshock_graph_sptr& xgraph, 
-                const vcl_vector<unsigned >& ignored_edges, bool verbose)
+                const std::vector<unsigned >& ignored_edges, bool verbose)
 {
   // Compute boundary of the xgraph as a polygon
   double approx_ds = 2;
-  vcl_vector<vgl_point_2d<double > > bnd_pts;
+  std::vector<vgl_point_2d<double > > bnd_pts;
   dbsksp_trace_xgraph_boundary_as_polygon(xgraph, bnd_pts, approx_ds);
   vgl_polygon<double > boundary(bnd_pts);
 
@@ -240,14 +240,14 @@ f_whole_contour(const dbsksp_xshock_graph_sptr& xgraph,
 
     if (verbose)
     {
-      vcl_cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
-      vcl_cout << "     parent_vid=" << xv_p->id() << "\n";
-      vcl_cout << "     child_vid=" << xv_c->id() << "\n";
+      std::cout << "   Edge_id=" << (*eit)->id() << " image_cost= " << fragment_cost << "\n";
+      std::cout << "     parent_vid=" << xv_p->id() << "\n";
+      std::cout << "     child_vid=" << xv_c->id() << "\n";
     }
   }
   if (verbose)
   {
-    vcl_cout << "   Total cost=" << sum_cost << vcl_endl;
+    std::cout << "   Total cost=" << sum_cost << std::endl;
   }
   return sum_cost;
 }

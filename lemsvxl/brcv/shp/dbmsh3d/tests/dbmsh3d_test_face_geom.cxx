@@ -4,10 +4,10 @@
 //  all D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbmsh3d\tests\data
 
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cassert>
 #include <vnl/vnl_math.h>
 
 #include <testlib/testlib_test.h>
@@ -51,8 +51,8 @@ MAIN (dbmsh3d_test_face_geom)
   M->_add_face (f0);
 
   //Test the 2D polygon of the face f0
-  vcl_vector<double> xs, ys;
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<double> xs, ys;
+  std::vector<dbmsh3d_vertex*> vertices;
   f0->get_bnd_Vs (vertices);
   get_2d_polygon (vertices, xs, ys);
 

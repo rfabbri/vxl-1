@@ -8,7 +8,7 @@
 //\date Mon Apr 24 22:36:01 EDT 2006
 //
 
-#include <vcl_map.h>
+#include <map>
 
 #include <bvis1/bvis1_tool.h>
 #include <vgui/vgui_event_condition.h>
@@ -31,7 +31,7 @@ public:
   virtual ~mw_correspond_point_tool_basic() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -47,36 +47,36 @@ public:
 
 protected:
 
-  vcl_vector<bdifd_camera> cam_; //: cameras for each view
-  vcl_vector<int> frame_v_;   //: frame number for each view
-  vcl_map<int,unsigned> iv_frame_; //: view number for each frame
+  std::vector<bdifd_camera> cam_; //: cameras for each view
+  std::vector<int> frame_v_;   //: frame number for each view
+  std::map<int,unsigned> iv_frame_; //: view number for each frame
   unsigned nviews_;
 
-  vcl_vector<vcl_vector< vsol_point_2d_sptr > > vsols_; //:< pointsets in each view
-  vcl_vector<vcl_vector< vsol_line_2d_sptr > > vsols_orig_cache_; //:< edgels in each view
+  std::vector<std::vector< vsol_point_2d_sptr > > vsols_; //:< pointsets in each view
+  std::vector<std::vector< vsol_line_2d_sptr > > vsols_orig_cache_; //:< edgels in each view
 
   bgui_vsol2D_tableau_sptr edgel_tableau_current_;
 
-  vcl_vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
+  std::vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
   
   //: p_[i] == selected point  in view i
   // if the i-th view point has not been selected at all, p_[i] == 0 
-  vcl_vector<vgui_soview2D_point *>p_; 
+  std::vector<vgui_soview2D_point *>p_; 
   bool any_selected_point_;
-  vcl_vector<unsigned> p_idx_; //:< idx of p_[i] in vsols[i]
-  vcl_vector<vgui_style_sptr> p_style_; //:< style of p_[i]
+  std::vector<unsigned> p_idx_; //:< idx of p_[i] in vsols[i]
+  std::vector<vgui_style_sptr> p_style_; //:< style of p_[i]
   vsol_line_2d_sptr selected_edgel_;
 
   //: ep_[i][k] : epipolar line from a point in view i, shown at view k
-  vcl_vector<vcl_vector<vgl_homg_line_2d<double> > > ep_;
-  vcl_vector<vcl_vector<vgui_soview2D_infinite_line *> > ep_soview_;
+  std::vector<std::vector<vgl_homg_line_2d<double> > > ep_;
+  std::vector<std::vector<vgui_soview2D_infinite_line *> > ep_soview_;
 
   //: ep_style_[i] == style of ep_[i][k] for all k
-  vcl_vector<vgui_style_sptr> ep_style_;
+  std::vector<vgui_style_sptr> ep_style_;
 
-//  vcl_list<unsigned> intercepts_id_;
+//  std::list<unsigned> intercepts_id_;
 
-//  vcl_vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
+//  std::vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
 //  bool display_all_intersections_; 
 //  bool compute_isets_; 
 
@@ -93,11 +93,11 @@ protected:
 //          const vsol_line_2d_sptr& selected_edgel, unsigned *idx);
   bool get_index_of_point(
           const vsol_point_2d_sptr& selected_point, 
-          const vcl_vector<vsol_point_2d_sptr> &pv,
+          const std::vector<vsol_point_2d_sptr> &pv,
           unsigned *idx);
   bool get_index_of_point(
           const vsol_line_2d_sptr& selected_edgel, 
-          const vcl_vector<vsol_line_2d_sptr> &pv,
+          const std::vector<vsol_line_2d_sptr> &pv,
           unsigned *idx);
 
   virtual bool handle_key(vgui_key key);

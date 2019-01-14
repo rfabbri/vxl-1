@@ -40,9 +40,9 @@
 //: Fit a shock branch to a list of xshock samples
 bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_node_descriptor& start_desc, 
                             const dbsksp_xshock_node_descriptor& end_desc, 
-                            const vcl_vector<dbsksp_xshock_node_descriptor >& xsamples, 
+                            const std::vector<dbsksp_xshock_node_descriptor >& xsamples, 
                             double error_threshold,
-                            vcl_vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc)
+                            std::vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc)
 {
   list_middle_xdesc.clear();
 
@@ -52,7 +52,7 @@ bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_n
   
 
   // For a polyline connecting the mid-points of the boundary point pairs
-  vcl_vector<vgl_point_2d<double > > list_bnd_centroid;
+  std::vector<vgl_point_2d<double > > list_bnd_centroid;
   list_bnd_centroid.reserve(xsamples.size());
   for (unsigned i =0; i < xsamples.size(); ++i)
   {
@@ -83,7 +83,7 @@ bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_n
   // we will manually code it for the polyline case
 
   // keep track of the arclength at the sample centroids
-  vcl_vector<double > list_length;
+  std::vector<double > list_length;
   list_length.reserve(list_bnd_centroid.size());
   
   double total_length = 0;
@@ -102,18 +102,18 @@ bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_n
   int num_intervals = 1;
   double rms_error = vnl_numeric_traits<double >::maxval;
   
-  vcl_vector<dbsksp_xshock_node_descriptor > list_all_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_all_xdesc;
 
   while (num_intervals <= max_number_intervals)
   {
     int num_shock_points = num_intervals - 1;
 
     // Determine position of the intermediate shock points
-    vcl_vector<dbsksp_xshock_node_descriptor > list_init_xdesc;
+    std::vector<dbsksp_xshock_node_descriptor > list_init_xdesc;
     list_init_xdesc.reserve(num_shock_points);
 
     // Index of sample points just after the end of each interval
-    vcl_vector<unsigned > list_interval_end_idx;
+    std::vector<unsigned > list_interval_end_idx;
     list_interval_end_idx.reserve(num_intervals+1);
     list_interval_end_idx.push_back(0);
     
@@ -184,7 +184,7 @@ bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_n
 
 
     // Group xsamples corresponding to each interval
-    vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval(num_intervals);
+    std::vector<std::vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval(num_intervals);
 
     for (int k =0; k < num_intervals; ++k)
     {
@@ -273,7 +273,7 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
 
   //2) Parametrize the descriptors by length along the mid-line
 
-  vcl_vector<vgl_point_2d<double > > mid_line;
+  std::vector<vgl_point_2d<double > > mid_line;
   in_path->get_mid_line(mid_line);
 
   // boundary length of the initial branch
@@ -289,7 +289,7 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
   }
 
   // keep track of the arclength at the sample centroids
-  vcl_vector<double > list_length;
+  std::vector<double > list_length;
   in_path->get_mid_line_lengths(list_length);
   double total_length = list_length.back();
 
@@ -302,7 +302,7 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
   double rms_error = vnl_numeric_traits<double >::maxval;
 
   // container for output
-  vcl_vector<dbsksp_xshock_node_descriptor > list_all_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_all_xdesc;
   double min_rms_error = vnl_numeric_traits<double >::maxval;
 
   // In the worst case, we can always use the orignal xsamples to fit this path!
@@ -311,12 +311,12 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
     int num_shock_points = num_intervals - 1;
     
     // Index of sample points just after the end of each interval
-    vcl_vector<unsigned > list_interval_end_idx;
+    std::vector<unsigned > list_interval_end_idx;
     list_interval_end_idx.reserve(num_intervals+1);
     list_interval_end_idx.push_back(0);
 
     // Approximate the intermiate descriptors
-    vcl_vector<dbsksp_xshock_node_descriptor > list_init_xdesc;
+    std::vector<dbsksp_xshock_node_descriptor > list_init_xdesc;
     list_init_xdesc.reserve(num_shock_points);
     
     unsigned cur_pos = 0;
@@ -346,7 +346,7 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
     list_interval_end_idx.push_back(list_length.size());
 
     // Group xsamples corresponding to each interval
-    vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval(num_intervals);
+    std::vector<std::vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval(num_intervals);
     for (int k =0; k < num_intervals; ++k)
     {
       for (unsigned i = list_interval_end_idx[k]; i < list_interval_end_idx[k+1]; ++i)

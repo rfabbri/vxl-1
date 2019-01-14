@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_bpoint.h>
 
 #include <dbsk2d/dbsk2d_ishock_bline.h>
@@ -152,7 +152,7 @@ void dbsk2d_ishock_bpoint::add_shock (dbsk2d_ishock_edge* shock)
   }
   
   //insert it into the map
-  bnd_ishock_map_iter it = shock_map_.insert(vcl_pair<dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*>(
+  bnd_ishock_map_iter it = shock_map_.insert(std::pair<dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*>(
     dbsk2d_ishock_bnd_key(start_eta, Stype, dbsk2d_ishock_bnd_key::ANGLE), shock)); 
 
   //if this shock is left-type the element to the left is the neighbor
@@ -572,24 +572,24 @@ void dbsk2d_ishock_bpoint::mergeWith (dbsk2d_ishock_bpoint* bpt)
   }
 }
 
-void dbsk2d_ishock_bpoint::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_bpoint::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   ostrm << "\n==============================\n";
   ostrm << "BP: [" << _id << "]\n";
-  vcl_sprintf(s, "Position : (%.3f, %.3f)\n", _pt.x(), _pt.y()); ostrm << s;
+  std::sprintf(s, "Position : (%.3f, %.3f)\n", _pt.x(), _pt.y()); ostrm << s;
 
-  vcl_sprintf (s, "Tangent: %.5f (= %.5f) \n", _dir, _dir*180/vnl_math::pi); ostrm<<s;
-  vcl_sprintf (s, "Confidence: %.5f \n", _conf); ostrm<<s;
-  vcl_sprintf (s, "Ref Vector: %.5f \n", _vref); ostrm<<s;
-  vcl_sprintf (s, "max Eta: %.5f \n", _max_eta); ostrm<<s;
+  std::sprintf (s, "Tangent: %.5f (= %.5f) \n", _dir, _dir*180/vnl_math::pi); ostrm<<s;
+  std::sprintf (s, "Confidence: %.5f \n", _conf); ostrm<<s;
+  std::sprintf (s, "Ref Vector: %.5f \n", _vref); ostrm<<s;
+  std::sprintf (s, "max Eta: %.5f \n", _max_eta); ostrm<<s;
   ostrm << "Visible: ";
   if (_is_visible) ostrm << "Yes\n";
   else ostrm <<  "No\n";
   
   if (is_a_free_point())
-    ostrm << "Singular Point" << vcl_endl;
+    ostrm << "Singular Point" << std::endl;
   else {
     ostrm << "Linked Elms: [" << nLinkedElms() << "] (";
     belm_list::iterator curB = LinkedBElmList.begin();
@@ -603,7 +603,7 @@ void dbsk2d_ishock_bpoint::getInfo (vcl_ostream& ostrm)
   bnd_ishock_map_iter curS = shock_map_.begin();
   ostrm << "\nShockMap: [" << id() << "]\n";
   for (; curS!=shock_map_.end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;

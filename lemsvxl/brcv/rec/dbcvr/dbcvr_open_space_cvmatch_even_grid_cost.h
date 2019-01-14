@@ -46,10 +46,10 @@ public:
   virtual double compute_interval_cost(int i, int ip, int j, int jp);
 
 protected:
-  int pick_points_for_eno(vcl_vector<double> &points, vcl_vector<double> &picked_points,    
-                          vcl_vector<double> &arclengths, vcl_vector<double> &picked_arclengths,
+  int pick_points_for_eno(std::vector<double> &points, std::vector<double> &picked_points,    
+                          std::vector<double> &arclengths, std::vector<double> &picked_arclengths,
                           int index);
-  void continuous_angles(vcl_vector<double> &angles);
+  void continuous_angles(std::vector<double> &angles);
   // variables
 public:
 
@@ -70,26 +70,26 @@ protected:
   double ds1_, ds2_;
 
   // arclength at each sampling point
-  vcl_vector<double>  curve1_lengths_;
-  vcl_vector<double>  curve2_lengths_;
+  std::vector<double>  curve1_lengths_;
+  std::vector<double>  curve2_lengths_;
   // curvature at each sampling point
-  vcl_vector<double>  curve1_curvatures_;
-  vcl_vector<double>  curve2_curvatures_;
+  std::vector<double>  curve1_curvatures_;
+  std::vector<double>  curve2_curvatures_;
   // torsion at each sampling point
-  vcl_vector<double>  curve1_torsions_;
-  vcl_vector<double>  curve2_torsions_;
+  std::vector<double>  curve1_torsions_;
+  std::vector<double>  curve2_torsions_;
   // phi (tilt angle of the tangent vector) at each sampling point
-  vcl_vector<double>  curve1_phis_;
-  vcl_vector<double>  curve2_phis_;
+  std::vector<double>  curve1_phis_;
+  std::vector<double>  curve2_phis_;
   // theta (azimuth angle of the tangent vector) at each sampling point
-  vcl_vector<double>  curve1_thetas_;
-  vcl_vector<double>  curve2_thetas_;
+  std::vector<double>  curve1_thetas_;
+  std::vector<double>  curve2_thetas_;
   // dphi at each sample point (derivative w.r.t. to arclength)
-  vcl_vector<double>  curve1_dphis_;
-  vcl_vector<double>  curve2_dphis_;
+  std::vector<double>  curve1_dphis_;
+  std::vector<double>  curve2_dphis_;
   // dtheta at each sample point (derivative w.r.t. to arclength)
-  vcl_vector<double>  curve1_dthetas_;
-  vcl_vector<double>  curve2_dthetas_;
+  std::vector<double>  curve1_dthetas_;
+  std::vector<double>  curve2_dthetas_;
 };
 
 #endif

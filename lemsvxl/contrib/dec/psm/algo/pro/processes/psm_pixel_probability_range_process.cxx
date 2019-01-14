@@ -31,7 +31,7 @@ namespace psm_pixel_probability_range_process_globals
   const unsigned int n_inputs_ = 4;
   const unsigned int n_outputs_ = 2;
   //Define parameters here
-  const vcl_string param_use_black_background_ =  "use_black_background";
+  const std::string param_use_black_background_ =  "use_black_background";
 }
 
 
@@ -46,7 +46,7 @@ bool psm_pixel_probability_range_process_cons(bprb_func_process& pro)
   //input[2]: The probability range
   //input[3]: The scene
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "float";
@@ -54,7 +54,7 @@ bool psm_pixel_probability_range_process_cons(bprb_func_process& pro)
 
   // process has 1 output:
   //output[0]: the image containing the pixel probabilities.
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0]= "vil_image_view_base_sptr";
 
   if (!pro.set_input_types(input_types_))
@@ -75,7 +75,7 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -99,7 +99,7 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
 
   //vpgl_perspective_camera<double> *pcam = dynamic_cast<vpgl_perspective_camera<double>*>(camera.ptr());
   //if (!pcam) {
-  //  vcl_cerr << "error: only perspective cameras allowed for now." << vcl_endl;
+  //  std::cerr << "error: only perspective cameras allowed for now." << std::endl;
    // return false;
   //}
 
@@ -110,12 +110,12 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_MOG_GREY>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_MOG_GREY>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_pixel_probability_range(*scene, camera.ptr(), *img, *prob_img, obs_range, use_black_background);
@@ -128,12 +128,12 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_pixel_probability_range(*scene, camera.ptr(), *img, *prob_img, obs_range, use_black_background);
@@ -147,14 +147,14 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         vil_image_view<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> img_rgb = vil_view_as_rgb(*img);
 
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_pixel_probability_range(*scene, camera.ptr(), *img, *prob_img, obs_range, use_black_background);
@@ -168,14 +168,14 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
 
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_mathtype> *img = dynamic_cast<vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_mathtype>*>(img_base_conv.ptr());
         if (!img) {
-          vcl_cerr << "error casting image to appropriate type " << vcl_endl;
+          std::cerr << "error casting image to appropriate type " << std::endl;
           return false;
         }
         vil_image_view<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> img_rgb = vil_view_as_rgb(*img);
 
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_pixel_probability_range(*scene, camera.ptr(), *img, *prob_img, obs_range, use_black_background);
@@ -183,7 +183,7 @@ bool psm_pixel_probability_range_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_pixel_probability_range_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_pixel_probability_range_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
 

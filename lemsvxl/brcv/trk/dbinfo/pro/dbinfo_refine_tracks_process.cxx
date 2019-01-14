@@ -4,7 +4,7 @@
 #include <bpro1/bpro1_parameters.h>
 
 #include <dbinfo/pro/dbinfo_refine_tracks_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_manager.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -29,7 +29,7 @@ dbinfo_refine_tracks_process::dbinfo_refine_tracks_process() : bpro1_process(),
       !parameters()->add( "Save refined tracks" , "-save", false) ||
       !parameters()->add( "Track path" , "-path",  bpro1_filepath("","*") ))
     {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -49,7 +49,7 @@ dbinfo_refine_tracks_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbinfo_refine_tracks_process::name()
+std::string dbinfo_refine_tracks_process::name()
 {
   return "Refine Tracks";
 }
@@ -64,10 +64,10 @@ dbinfo_refine_tracks_process::clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_refine_tracks_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   to_return.push_back( "image" );
@@ -77,10 +77,10 @@ dbinfo_refine_tracks_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_refine_tracks_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
@@ -134,7 +134,7 @@ dbinfo_refine_tracks_process::execute()
   if(!track_storage)
     return false;
   name_ = track_storage->name();
-  vcl_vector<dbinfo_track_sptr> tracks = track_storage->tracks();
+  std::vector<dbinfo_track_sptr> tracks = track_storage->tracks();
   if(!tracks.size())
     return false;
   //Don't do any refinement of the first frame since the tracking polygon
@@ -149,7 +149,7 @@ dbinfo_refine_tracks_process::execute()
       //initialize the new optimized tracks
       unsigned kt = 0;
       optimized_tracks_.resize(tracks.size());
-      for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+      for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
           trit != tracks.end(); trit++, kt++)
         {
           dbinfo_track_sptr new_track = new dbinfo_track();
@@ -167,11 +167,11 @@ dbinfo_refine_tracks_process::execute()
   opt_->set_resource(resc);
 
   //generate views of the track
-  vcl_vector<vsol_spatial_object_2d_sptr> polygons;
-  vcl_vector<vsol_spatial_object_2d_sptr> optimized_polygons;
+  std::vector<vsol_spatial_object_2d_sptr> polygons;
+  std::vector<vsol_spatial_object_2d_sptr> optimized_polygons;
   vidpro1_vsol2D_storage_sptr optimized_cog = vidpro1_vsol2D_storage_new();
   unsigned k = 0;
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
       trit != tracks.end(); trit++, k++)
     {
       dbinfo_observation_sptr obs = (*trit)->observ(frame);
@@ -183,8 +183,8 @@ dbinfo_refine_tracks_process::execute()
       polygons.push_back(so);
       // now optimize the geometry
       dbinfo_observation_sptr obs0 = (*trit)->observ(start_frame_);
-      vcl_cout << "Optimizing Frame " << frame << " Track Id "<< (*trit)->id()
-               << "\n"<< vcl_flush;
+      std::cout << "Optimizing Frame " << frame << " Track Id "<< (*trit)->id()
+               << "\n"<< std::flush;
       opt_->set_obs0(obs0);
       opt_->set_best_seed(obs);
       if(!opt_->optimize())
@@ -194,8 +194,8 @@ dbinfo_refine_tracks_process::execute()
       optimized_obs->set_score(static_cast<float>(c));
       optimized_tracks_[k]->extend_track(optimized_obs);
 #if 0
-      vcl_vector<double> par =  opt_->current_params();
-      vcl_cout <<"c["<< k << "]("<< par[0] << ' ' << par[1] << ' ' 
+      std::vector<double> par =  opt_->current_params();
+      std::cout <<"c["<< k << "]("<< par[0] << ' ' << par[1] << ' ' 
                << par[2] <<")= " << c << '\n';
 #endif
       dbinfo_region_geometry_sptr geoo = optimized_obs->geometry();
@@ -233,7 +233,7 @@ dbinfo_refine_tracks_process::finish()
     }
   bpro1_filepath track_path;
   parameters()->get_value( "-path" , track_path );
-  vcl_string path = track_path.path;
+  std::string path = track_path.path;
   // create the track storage class
   dbinfo_track_storage_sptr output_dbinfo = dbinfo_track_storage_new();
   //insert the tracks into storage

@@ -27,7 +27,7 @@ double right_app_std(dbdet_edgel_chain* chain);
 
 double avg_d2f(dbdet_edgel_chain* chain);
 
-void compute_curvatures(dbdet_edgel_chain* chain, vcl_vector<double> &ks);
+void compute_curvatures(dbdet_edgel_chain* chain, std::vector<double> &ks);
 double avg_curvature(dbdet_edgel_chain* chain);
 double max_curvature(dbdet_edgel_chain* chain);
 

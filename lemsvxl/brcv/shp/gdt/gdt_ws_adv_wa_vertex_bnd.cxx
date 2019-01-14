@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <gdt/gdt_manager.h>
@@ -47,7 +47,7 @@ void gdt_ws_manager::Create_rarefaction_of_L_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
   if (W->detect_project_to_L_dege (alphaCL) == false) {
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: No RF from W %d (%.3f, %.3f) at V %d to LE %d possible.\n", 
+      vul_printf (std::cerr, "  Qv: No RF from W %d (%.3f, %.3f) at V %d to LE %d possible.\n", 
                    W->edge()->id(), W->stau(), W->etau(), sv->id(), eL->id());
     #endif
     return;
@@ -67,7 +67,7 @@ void gdt_ws_manager::Create_rarefaction_of_L_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
     #if GDT_DEBUG_MSG
     n_V_bnd_RF_++;
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: Create L_contact S %d at v %d from W %d (%.3f, %.3f).\n", 
+      vul_printf (std::cerr, "  Qv: Create L_contact S %d at v %d from W %d (%.3f, %.3f).\n", 
                    S->id(), sv->id(), W->edge()->id(), W->stau(), W->etau());
     #endif
 
@@ -86,7 +86,7 @@ void gdt_ws_manager::Create_rarefaction_of_L_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
   else { //dege case if rfW is NULL
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: No shock created from W %d (%.3f, %.3f) at SV %d.\n", 
+      vul_printf (std::cerr, "  Qv: No shock created from W %d (%.3f, %.3f) at SV %d.\n", 
                    W->edge()->id(), W->stau(), W->etau(), sv->id());
     #endif
 
@@ -97,7 +97,7 @@ void gdt_ws_manager::Create_rarefaction_of_L_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
 
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: Create degeW %d (%.3f, %.3f).\n", 
+      vul_printf (std::cerr, "  Qv: Create degeW %d (%.3f, %.3f).\n", 
                    degeW->edge()->id(), degeW->stau(), degeW->etau());
     #endif
   }
@@ -169,7 +169,7 @@ void gdt_ws_manager::Create_rarefaction_of_R_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
   if (W->detect_project_to_R_dege (alphaCR) == false) {
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: No RF from W %d (%.3f, %.3f) at V %d to RE %d possible.\n", 
+      vul_printf (std::cerr, "  Qv: No RF from W %d (%.3f, %.3f) at V %d to RE %d possible.\n", 
                    W->edge()->id(), W->stau(), W->etau(), ev->id(), eR->id());
     #endif
     return;
@@ -189,7 +189,7 @@ void gdt_ws_manager::Create_rarefaction_of_R_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
     #if GDT_DEBUG_MSG
     n_V_bnd_RF_++;
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: Create R_contact S %d at v %d from W %d (%.3f, %.3f).\n", 
+      vul_printf (std::cerr, "  Qv: Create R_contact S %d at v %d from W %d (%.3f, %.3f).\n", 
                    S->id(), ev->id(), W->edge()->id(), W->stau(), W->etau());
     #endif
 
@@ -208,7 +208,7 @@ void gdt_ws_manager::Create_rarefaction_of_R_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
   else { //dege case if rfW is NULL
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: No shock created from W %d (%.3f, %.3f) at EV %d.\n", 
+      vul_printf (std::cerr, "  Qv: No shock created from W %d (%.3f, %.3f) at EV %d.\n", 
                    W->edge()->id(), W->stau(), W->etau(), ev->id());
     #endif
   
@@ -219,7 +219,7 @@ void gdt_ws_manager::Create_rarefaction_of_R_bnd_vertex (dbmsh3d_gdt_vertex_3d* 
 
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, "  Qv: Create degeW %d (%.3f, %.3f).\n", 
+      vul_printf (std::cerr, "  Qv: Create degeW %d (%.3f, %.3f).\n", 
                    degeW->edge()->id(), degeW->stau(), degeW->etau());
     #endif
   }

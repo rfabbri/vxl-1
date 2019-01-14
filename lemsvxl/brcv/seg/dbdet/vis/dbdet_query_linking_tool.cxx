@@ -60,7 +60,7 @@ dbdet_query_linking_tool::~dbdet_query_linking_tool()
 }
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbdet_query_linking_tool::name() const
 {
     return "Query Linking";
@@ -147,7 +147,7 @@ dbdet_query_linking_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
         edges_.push_back(cur_line_seg);
         edge_so_.push_back((bgui_vsol_soview2D_line_seg*)object_ptr);
-        vcl_cout << edges_.size() << "..";
+        std::cout << edges_.size() << "..";
 
         if (edges_.size()>1){
           ref_edge_ind_ = 0;
@@ -214,7 +214,7 @@ dbdet_query_linking_tool::handle( const vgui_event & e, const bvis1_view_tableau
         glColor3f(0.0f,1.0f,0.0f);
         glBegin(GL_LINE_STRIP);
         for (unsigned i=0; i<37; i++){
-          glVertex2f(cx + dpos_*vcl_cos(i*2*vnl_math::pi/36.0), cy + dpos_*vcl_sin(i*2*vnl_math::pi/36.0));
+          glVertex2f(cx + dpos_*std::cos(i*2*vnl_math::pi/36.0), cy + dpos_*std::sin(i*2*vnl_math::pi/36.0));
         }
         glEnd();
       }
@@ -224,8 +224,8 @@ dbdet_query_linking_tool::handle( const vgui_event & e, const bvis1_view_tableau
     glLineWidth(3);
     glColor3f(0.0f,0.0f,1.0f);
     glBegin(GL_LINE_STRIP);
-    glVertex2f(sel_pt_.x()+0.25*vcl_cos(sel_tan_), sel_pt_.y()+0.25*vcl_sin(sel_tan_));
-    glVertex2f(sel_pt_.x()-0.25*vcl_cos(sel_tan_), sel_pt_.y()-0.25*vcl_sin(sel_tan_));
+    glVertex2f(sel_pt_.x()+0.25*std::cos(sel_tan_), sel_pt_.y()+0.25*std::sin(sel_tan_));
+    glVertex2f(sel_pt_.x()-0.25*std::cos(sel_tan_), sel_pt_.y()-0.25*std::sin(sel_tan_));
     glEnd();
     //draw the box 
 
@@ -310,7 +310,7 @@ void dbdet_query_linking_tool::form_edgel_grouping()
 {
 //#define NPerturb 1
 //  //form edgels
-//  vcl_vector<dbdet_edgel> edgels;
+//  std::vector<dbdet_edgel> edgels;
 //  for (unsigned i=0; i<edges_.size(); i++)
 //    edgels.push_back(form_edgel_from_line(edges_[i]));
 //
@@ -329,8 +329,8 @@ void dbdet_query_linking_tool::form_edgel_grouping()
 //  #endif
 //
 //  //compute perturbed point and tangent corresponding to this position
-//  ref_edgel.pt = edgels[ref_edge_ind_].pt + vgl_vector_2d<double>(dp*vcl_cos(edgels[ref_edge_ind_].tangent+vnl_math::pi/2), 
-//                                                                  dp*vcl_sin(edgels[ref_edge_ind_].tangent+vnl_math::pi/2));
+//  ref_edgel.pt = edgels[ref_edge_ind_].pt + vgl_vector_2d<double>(dp*std::cos(edgels[ref_edge_ind_].tangent+vnl_math::pi/2), 
+//                                                                  dp*std::sin(edgels[ref_edge_ind_].tangent+vnl_math::pi/2));
 //  ref_edgel.tangent = edgels[ref_edge_ind_].tangent + dt;
 // 
 //  //record this edgel position to be drawn
@@ -354,13 +354,13 @@ void dbdet_query_linking_tool::form_edgel_grouping()
 //    {
 //      bool p_valid = edge_linker.edgel_pair_legal2(&edgels[i], &ref_edgel, &ref_edgel, cur_poly);
 //      pairs_valid_ = pairs_valid_ && p_valid;
-//      vcl_cout << "P" << i+1 << ": " << (p_valid?"Y":"N") << vcl_endl;
+//      std::cout << "P" << i+1 << ": " << (p_valid?"Y":"N") << std::endl;
 //      polys.push_back(cur_poly);
 //    }
 //    else if (i>ref_edge_ind_){
 //      bool p_valid = edge_linker.edgel_pair_legal2(&ref_edgel, &edgels[i], &ref_edgel, cur_poly);
 //      pairs_valid_ = pairs_valid_ && p_valid;
-//      vcl_cout << "P" << i+1 << ": " << (p_valid?"Y":"N") << vcl_endl;
+//      std::cout << "P" << i+1 << ": " << (p_valid?"Y":"N") << std::endl;
 //      polys.push_back(cur_poly);
 //    }
 //  }
@@ -383,7 +383,7 @@ void dbdet_query_linking_tool::form_edgel_grouping()
 //      p_int = p_int_new;
 //    }
 //
-//    vcl_cout << "Grouping valid: " << (grouping_valid_?"Yes.":"No.") << vcl_endl;
+//    std::cout << "Grouping valid: " << (grouping_valid_?"Yes.":"No.") << std::endl;
 //  }
 //
 //#undef NPerturb
@@ -410,7 +410,7 @@ void
 dbdet_query_linking_tool::get_popup( const vgui_popup_params& /*params*/, 
                                             vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( "Set dpos", 
             bvis1_tool_set_param, (void*)(&dpos_) );

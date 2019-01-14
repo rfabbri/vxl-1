@@ -14,7 +14,7 @@ class dbcl_classifier_factory
 public:
     
 
-    dbcl_classifier_factory( vcl_string const& xml_file );
+    dbcl_classifier_factory( std::string const& xml_file );
 
     dbcl_classifier_factory( registered_classifiers const& classifier_type, dbcl_classifier::feature_map_type training_data, dbcl_classifier::feature_map_type test_data);
 

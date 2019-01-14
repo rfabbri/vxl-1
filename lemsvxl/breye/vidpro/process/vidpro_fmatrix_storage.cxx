@@ -8,7 +8,7 @@
 
 
 //: Constructor
-vidpro_fmatrix_storage::vidpro_fmatrix_storage(const vcl_string& from_name)
+vidpro_fmatrix_storage::vidpro_fmatrix_storage(const std::string& from_name)
  : from_name_(from_name)
 {
 }
@@ -64,9 +64,9 @@ vidpro_fmatrix_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro_fmatrix_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro_fmatrix_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -75,7 +75,7 @@ vidpro_fmatrix_storage::b_read(vsl_b_istream &is)
 //: Add an FMatrix related to an object with \p name at \p frame
 void 
 vidpro_fmatrix_storage::add_fmatrix( const vnl_double_3x3& F, 
-                                     int frame, const vcl_string& name )
+                                     int frame, const std::string& name )
 {
   f_map_[frame][name] = F;
 }
@@ -84,12 +84,12 @@ vidpro_fmatrix_storage::add_fmatrix( const vnl_double_3x3& F,
 //: Retrieve an FMatrix related to an object with \p name at \p frame
 bool
 vidpro_fmatrix_storage::get_fmatrix( vnl_double_3x3& F, 
-                                     int frame, const vcl_string& name ) const
+                                     int frame, const std::string& name ) const
 {
   data_map::const_iterator s1 = f_map_.find(frame);
   if(s1 == f_map_.end())
     return false;
-  vcl_map<vcl_string, vnl_double_3x3>::const_iterator s2 = s1->second.find(name);
+  std::map<std::string, vnl_double_3x3>::const_iterator s2 = s1->second.find(name);
   if(s2 == s1->second.end())
     return false;
 

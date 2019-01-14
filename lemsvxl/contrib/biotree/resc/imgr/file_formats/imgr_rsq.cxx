@@ -8,10 +8,10 @@
 //
 //
 #include "imgr_rsq.h"
-#include <vcl_cstring.h>
-#include <vcl_cmath.h>
-#include <vcl_exception.h>
-#include <vcl_algorithm.h> //  std::swap()
+#include <cstring>
+#include <cmath>
+#include <exception>
+#include <algorithm> //  std::swap()
 #include <vil/vil_image_view.h>
 #if VXL_WIN32 
 #include <vil/vil_stream_fstream_64.h>
@@ -75,8 +75,8 @@ xscan_scan imgr_rsq :: get_scan() const
  
   if( ! header.is_valid() ){
     
-    vcl_cerr << " not a valid rsq header in imgr_rsq :: get_scan()\n";
-    throw  vcl_exception();
+    std::cerr << " not a valid rsq header in imgr_rsq :: get_scan()\n";
+    throw  std::exception();
   }
   
   return imgr_rsq_scan(&header);
@@ -88,15 +88,15 @@ void imgr_rsq::set_scan(xscan_scan scan)
 }
 
 
-vcl_vector<vil_image_resource_sptr> 
+std::vector<vil_image_resource_sptr> 
 imgr_rsq :: get_images() const 
 {
   return images(stream_);
 }
     //: get first two calibration images
-vcl_vector<vil_image_resource_sptr> imgr_rsq :: get_cali_images() const
+std::vector<vil_image_resource_sptr> imgr_rsq :: get_cali_images() const
 {
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
 
   images.clear();
 
@@ -122,11 +122,11 @@ vcl_vector<vil_image_resource_sptr> imgr_rsq :: get_cali_images() const
 }
 
 
-vcl_vector<vil_image_resource_sptr> 
+std::vector<vil_image_resource_sptr> 
 imgr_rsq :: images(vil_stream* vs) const 
 {
   
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
 
   images.clear();
 
@@ -150,17 +150,17 @@ imgr_rsq :: images(vil_stream* vs) const
   return images;
 }
 
-vcl_vector<vil_image_resource_sptr> 
+std::vector<vil_image_resource_sptr> 
 imgr_rsq :: get_images(unsigned int interval) const 
 {
   return interval_images(stream_,interval);
 }
 
-vcl_vector<vil_image_resource_sptr> 
+std::vector<vil_image_resource_sptr> 
 imgr_rsq :: interval_images(vil_stream* vs,unsigned int interval) const 
 {
   
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
 
   images.clear();
 
@@ -240,22 +240,22 @@ imgr_rsq_scan :: imgr_rsq_scan(imgr_rsq_header *header)
     vnl_double_3x3 Rx(0.0);
     double alpha = header->u_.area_.detector_angle_x_mdeg_*0.001*3.1415926/180;
     Rx[0][0] = 1;
-    Rx[1][1] = vcl_cos(alpha); Rx[1][2] = vcl_sin(alpha);
-    Rx[2][1] = -vcl_sin(alpha); Rx[2][2] = vcl_cos(alpha);
+    Rx[1][1] = std::cos(alpha); Rx[1][2] = std::sin(alpha);
+    Rx[2][1] = -std::sin(alpha); Rx[2][2] = std::cos(alpha);
 
     
     double beta = header->u_.area_.detector_angle_y_mdeg_*0.001*3.1415926/180;
 
     vnl_double_3x3 Ry(0.0);
-    Ry[0][0] = vcl_cos(beta); Ry[0][2] = -vcl_sin(beta);
+    Ry[0][0] = std::cos(beta); Ry[0][2] = -std::sin(beta);
     Ry[1][1] = 1;
-    Ry[2][0] = vcl_sin(beta); Ry[2][2] = vcl_cos(beta);
+    Ry[2][0] = std::sin(beta); Ry[2][2] = std::cos(beta);
 
 
     double gamma = header->u_.area_.detector_angle_z_mdeg_*0.001*3.1415926/180;
     vnl_double_3x3 Rz(0.0);
-    Rz[0][0] = vcl_cos(gamma); Rz[0][1] = vcl_sin(gamma);
-    Rz[1][0] = -vcl_sin(gamma); Rz[1][1] = vcl_cos(gamma);
+    Rz[0][0] = std::cos(gamma); Rz[0][1] = std::sin(gamma);
+    Rz[1][0] = -std::sin(gamma); Rz[1][1] = std::cos(gamma);
     Rz[2][2] = 1;
 
 
@@ -283,13 +283,13 @@ imgr_rsq_scan :: imgr_rsq_scan(imgr_rsq_header *header)
 
 #if 1
 //: get cropped images from original box
-vcl_vector<dbil_bounded_image_view<double> *>  
+std::vector<dbil_bounded_image_view<double> *>  
   imgr_rsq :: get_cali_bnded_view(vgl_box_2d<double> const& bounds)
 {
-  vcl_vector<dbil_bounded_image_view<double>* > double_views_2d;
+  std::vector<dbil_bounded_image_view<double>* > double_views_2d;
 
   xscan_scan scan = get_scan();
-  vcl_vector<vil_image_resource_sptr> resources = get_images();
+  std::vector<vil_image_resource_sptr> resources = get_images();
 
   vil_image_resource_sptr I_max = resources[bright_index_];
 
@@ -307,7 +307,7 @@ vcl_vector<dbil_bounded_image_view<double> *>
      //The file-based resource
       vil_image_resource_sptr r = resources[i];
 
-      vcl_cout << "calibrate and bound " << i << "th images\n";
+      std::cout << "calibrate and bound " << i << "th images\n";
            
       dbil_bounded_image_view<double>* bview = imgr_ff_algos::calibrate_image(r, I_max, I_min, bounds); 
 
@@ -350,7 +350,7 @@ imgr_rsq_image :: imgr_rsq_image(vil_stream *is, const imgr_rsq_header * header,
     vnj_ = 2*nj_;
 
 #if 0
-    vcl_cout << "start_pos_ = " << start_pos_ << '\n';
+    std::cout << "start_pos_ = " << start_pos_ << '\n';
 #endif
 
   }
@@ -427,7 +427,7 @@ vil_image_view_base_sptr imgr_rsq_image::get_raw_copy_view(unsigned i0, unsigned
         else{ // part of view is on the right of the real data
           for(unsigned k = 0; k < num_byte_zeros; k++)
             *(tmp+k) = 0;
-// vcl_cout<< " offset "<<start_pos_ + (unsigned long)bytes_per_page_*(j + j0 - nj_)<<vcl_endl;
+// std::cout<< " offset "<<start_pos_ + (unsigned long)bytes_per_page_*(j + j0 - nj_)<<std::endl;
 // if (start_pos_ + (unsigned long)bytes_per_page_*(j + j0 - nj_)<=2148450816)
 {
           is_->seek(start_pos_ + (unsigned long)bytes_per_page_*(j + j0 - nj_));
@@ -456,7 +456,7 @@ vil_image_view_base_sptr imgr_rsq_image::get_raw_copy_view(unsigned i0, unsigned
 
         
         for(unsigned k=0; k< bytes_view_raster*nj; k+=byte_per_pixel){
-          vcl_swap(data[k], data[k+1]);
+          std::swap(data[k], data[k+1]);
         }
 #endif
 
@@ -512,7 +512,7 @@ vil_image_view_base_sptr imgr_rsq_image :: get_copy_view(unsigned i0, unsigned n
       if(cd == 0 && bd == 0)
         data[l] = 0;
       else
-        //data[l] = -vcl_log( double(cd) / bd)*65535;
+        //data[l] = -std::log( double(cd) / bd)*65535;
         data[l] = static_cast<vxl_uint_16>(cd / bd * 65535 );
 #endif
       data[l] = c[l];

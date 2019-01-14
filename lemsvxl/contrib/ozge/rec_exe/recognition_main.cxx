@@ -1,6 +1,6 @@
 
 // aerial_vehicle_segmentation.cpp : Defines the entry point for the DLL application.
-#include<vcl_cstdio.h>
+#include<cstdio>
 //#include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 //#include <vidpro1/storage/vidpro1_image_storage.h>
 
@@ -39,7 +39,7 @@
 #include <brip/brip_vil1_float_ops.h>
 #include <vil1/vil1_vil.h>
 #include <vil/vil_save.h>
-//vcl_vector<vgl_point_2d<double> > meanpts;
+//std::vector<vgl_point_2d<double> > meanpts;
 
 bool check_labels(dbru_label_sptr input_label, dbru_label_sptr object_label) 
 {
@@ -60,26 +60,26 @@ bool check_labels(dbru_label_sptr input_label, dbru_label_sptr object_label)
 //  video_list_file_name is <id, directory> pair for each video which have objects in the database
 int createdb(int handle, const char *db_object_list_filename, const char *video_list_file_name, const char *osl_file_name) 
 { 
-  //vcl_ofstream ofile("temp.txt");
-  //vcl_string home("/projects/vorl1/");
-  //vcl_string home("d:/lockheed_videos/");
-  vcl_ifstream fp(video_list_file_name);
+  //std::ofstream ofile("temp.txt");
+  //std::string home("/projects/vorl1/");
+  //std::string home("d:/lockheed_videos/");
+  std::ifstream fp(video_list_file_name);
   if (!fp) {
-    vcl_cout << "Problems in opening video directory list file!\n";
+    std::cout << "Problems in opening video directory list file!\n";
     return 0;
   }
 
-  vcl_map<int, vidl1_movie_sptr> video_directories;
+  std::map<int, vidl1_movie_sptr> video_directories;
   int id = -1;
   fp >> id;
   while (!fp.eof()) {
-    vcl_string dir;
+    std::string dir;
     fp >> dir;
     vidl1_movie_sptr my_movie = vidl1_io::load_movie(dir.c_str());
     
     if (!my_movie) {
-      vcl_cout << "problems in loading video ";
-      vcl_cout << " with video file name: " << dir << vcl_endl;
+      std::cout << "problems in loading video ";
+      std::cout << " with video file name: " << dir << std::endl;
       return 0;
     }
     video_directories[id] = my_movie;
@@ -87,39 +87,39 @@ int createdb(int handle, const char *db_object_list_filename, const char *video_
   }
   fp.close();
   
-  vcl_cout << "loaded " << video_directories.size() << " video dirs from the file\n";
+  std::cout << "loaded " << video_directories.size() << " video dirs from the file\n";
   
   vbl_array_1d<dbru_object_sptr> *database_objects = reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (handle);  
   database_objects->clear();
-  vcl_cout << "initial database size should be zero: " << database_objects->size() << vcl_endl;
-  vcl_ifstream dbfp(db_object_list_filename);
+  std::cout << "initial database size should be zero: " << database_objects->size() << std::endl;
+  std::ifstream dbfp(db_object_list_filename);
   if (!dbfp) {
-    vcl_cout << "Problems in opening db object list file!\n";
+    std::cout << "Problems in opening db object list file!\n";
     return 0;
   }
 
-  vcl_cout << "reading database objects...\n";
+  std::cout << "reading database objects...\n";
   
   char buffer[1000]; 
   dbfp.getline(buffer, 1000);  // comment 
-  vcl_string dummy;
+  std::string dummy;
   dbfp >> dummy;   // <contour_segmentation   
   dbfp >> dummy; // object_cnt="23">
   unsigned int size;
   sscanf(dummy.c_str(), "object_cnt=\"%d\">", &size); 
 
   for (unsigned i = 0; i<size; i++) {
-    vcl_cout << "reading database object: " << i << "...\n";
+    std::cout << "reading database object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp)) { 
-      vcl_cout << "problems in reading database object number: " << i << vcl_endl;
+      std::cout << "problems in reading database object number: " << i << std::endl;
       return 0;
     }
 
     //: load video file for this database object
     vidl1_movie_sptr my_movie = video_directories[obj->video_id_];
     
-    vcl_cout << "read: " << obj << "extracting observations assuming 1 polygon per frame" << vcl_endl;
+    std::cout << "read: " << obj << "extracting observations assuming 1 polygon per frame" << std::endl;
     
     for (int j = obj->start_frame_; j<=obj->end_frame_; j++) {
       vidl1_frame_sptr frame = my_movie->get_frame(j);
@@ -130,7 +130,7 @@ int createdb(int handle, const char *db_object_list_filename, const char *video_
       dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly);
       dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
       dbinfo_feature_base_sptr gradf = new dbinfo_gradient_feature();
-      vcl_vector<dbinfo_feature_base_sptr> features;
+      std::vector<dbinfo_feature_base_sptr> features;
       features.push_back(intf);   features.push_back(gradf);
       obs->set_features(features);
       obs->scan(0, imgr);
@@ -138,17 +138,17 @@ int createdb(int handle, const char *db_object_list_filename, const char *video_
 #if 1
       // output the images
       char buffer[1000];
-      vcl_sprintf(buffer, "./objimages/image_obj%d-poly%d.png",i, j-obj->start_frame_);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "./objimages/image_obj%d-poly%d.png",i, j-obj->start_frame_);
+      std::string filename = buffer;
       poly->compute_bounding_box();
 
-      int w = (int)vcl_floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
-      int h = (int)vcl_floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
+      int w = (int)std::floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
+      int h = (int)std::floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
 
-      int mx = (int)vcl_floor(poly->get_min_x());
-      int my = (int)vcl_floor(poly->get_min_y());
-      int maxx = (int)vcl_ceil(poly->get_max_x());
-      int maxy = (int)vcl_ceil(poly->get_max_y());
+      int mx = (int)std::floor(poly->get_min_x());
+      int my = (int)std::floor(poly->get_min_y());
+      int maxx = (int)std::ceil(poly->get_max_x());
+      int maxy = (int)std::ceil(poly->get_max_y());
 
       dbinfo_region_geometry_sptr geo = obs->geometry();
       vil1_memory_image_of<float> image_out(w,h);
@@ -189,7 +189,7 @@ int createdb(int handle, const char *db_object_list_filename, const char *video_
       //database_objects.push_back(obj);
       database_objects->push_back(obj);
     else {
-      vcl_cout << "problems in object " << *(obj) << " skipping!\n";
+      std::cout << "problems in object " << *(obj) << " skipping!\n";
       continue;
     }
   }
@@ -202,7 +202,7 @@ int createdb(int handle, const char *db_object_list_filename, const char *video_
       (*database_objects)[i]->b_write(obfile);
     }
     obfile.close();
-    vcl_cout << "Objects and observations are written to binary output file\n";
+    std::cout << "Objects and observations are written to binary output file\n";
   }
 
   //ofile.close();
@@ -223,17 +223,17 @@ int loaddb(const char *osl_file_name)
   }
 
   obfile.close();
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   return reinterpret_cast<int>(database);
 }
 
 int main_curve(int argc, char *argv[]) {
-  vcl_cout << "computing shgms and finding mutual informations for a given database\n";
+  std::cout << "computing shgms and finding mutual informations for a given database\n";
 
-  vcl_string obj_file, out_osl, out_file; int n;
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::string obj_file, out_osl, out_file; int n;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 7) {
-    vcl_cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)> <line increment (20)>\n";
+    std::cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)> <line increment (20)>\n";
     return -1;
   }
 
@@ -252,18 +252,18 @@ int main_curve(int argc, char *argv[]) {
   /*
   vbl_array_1d<dbru_object_sptr> *database = new vbl_array_1d<dbru_object_sptr>();
   createdb(reinterpret_cast<int>(database), obj_file.c_str(), dir_list.c_str(), out_osl.c_str());
-  vcl_cout << "there are " << database->size() << " objects in the database\n";
+  std::cout << "there are " << database->size() << " objects in the database\n";
   */
 
   //LOAD DATABASE PREVIOUSLY CREATED
   vbl_array_1d<dbru_object_sptr> *database = 
     reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (loaddb(out_osl.c_str()));
 
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   
   //count the number of polygons
   int total_poly_cnt = 0;
-  vcl_vector<int> used_poly_cnts;
+  std::vector<int> used_poly_cnts;
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
@@ -274,9 +274,9 @@ int main_curve(int argc, char *argv[]) {
     used_poly_cnts.push_back(cnt);
     total_poly_cnt += cnt;
   }
-  vcl_ofstream of1((out_file+".out").c_str());
-  of1 << "total poylgon hence db size: " << total_poly_cnt << vcl_endl;
-  vcl_cout << "total poylgon hence db size: " << total_poly_cnt << vcl_endl;
+  std::ofstream of1((out_file+".out").c_str());
+  of1 << "total poylgon hence db size: " << total_poly_cnt << std::endl;
+  std::cout << "total poylgon hence db size: " << total_poly_cnt << std::endl;
 
   vbl_array_2d<double> curve_costs(total_poly_cnt, total_poly_cnt, 1000);
   vbl_array_2d<double> info_line_costs(total_poly_cnt, total_poly_cnt, 1000);
@@ -286,7 +286,7 @@ int main_curve(int argc, char *argv[]) {
   int info_dt_corrects = 0;
   //: run the experiment on all the object
 
-  vcl_map<vcl_string, int> category_id_map;
+  std::map<std::string, int> category_id_map;
   if (k == 4) {
     category_id_map["minivan"] = 0;
     category_id_map["suv"] = 1;
@@ -369,11 +369,11 @@ int main_curve(int argc, char *argv[]) {
           float info_dt;
     
           char buffer[1000];
-          vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
-          vcl_string filename = buffer;
-          vcl_cout << filename << vcl_endl;
-          vcl_string match_file = filename+"-cmatch.out";
-          vcl_ifstream mf(match_file.c_str());
+          std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
+          std::string filename = buffer;
+          std::cout << filename << std::endl;
+          std::string match_file = filename+"-cmatch.out";
+          std::ifstream mf(match_file.c_str());
           if (mf.is_open()) {
             mf >> curve_matching_cost;
             mf >> info_line;
@@ -389,7 +389,7 @@ int main_curve(int argc, char *argv[]) {
                                               0.05f,   // for line fitting before matching
                                               "",//filename,  // output image filename
                                               true);  // verbose
-            vcl_ofstream mfo(match_file.c_str());
+            std::ofstream mfo(match_file.c_str());
             mfo << curve_matching_cost << " " << info_line << " " << info_dt << "\n";
             mfo.close();
           }
@@ -417,7 +417,7 @@ int main_curve(int argc, char *argv[]) {
       }
 
       if (best_curve_match_obj_id < 0 || best_line_match_obj_id < 0 || best_dt_match_obj_id < 0) {
-        vcl_cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
+        std::cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
         continue;
       }
       
@@ -436,8 +436,8 @@ int main_curve(int argc, char *argv[]) {
 
        // output the best match's image
       char buffer[1000];
-      vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-line",i0, best_line_match_obj_id, p0, best_line_match_poly_id);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-line",i0, best_line_match_obj_id, p0, best_line_match_poly_id);
+      std::string filename = buffer;
       double dummy;
       dbru_object_sptr obji = (*database)[best_line_match_obj_id];
       dummy = dbru_object_matcher::minfo_thomas_curve_matching(obj0, obji, p0, best_line_match_poly_id,
@@ -449,7 +449,7 @@ int main_curve(int argc, char *argv[]) {
                                               0.05f,   // for line fitting before matching
                                               filename,  // output image filename
                                               false);  // verbose
-      vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-dt",i0, best_dt_match_obj_id, p0, best_dt_match_poly_id);
+      std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-dt",i0, best_dt_match_obj_id, p0, best_dt_match_poly_id);
       filename = buffer;
       obji = (*database)[best_dt_match_obj_id];
       dummy = dbru_object_matcher::minfo_thomas_curve_matching(obj0, obji, p0, best_dt_match_poly_id,
@@ -474,15 +474,15 @@ int main_curve(int argc, char *argv[]) {
 
   of1.close();
 
-  vcl_ofstream of((out_file+"matrix.out").c_str());
+  std::ofstream of((out_file+"matrix.out").c_str());
   of << "db size: " << total_poly_cnt << " names:\n";
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
     for (unsigned j = 0; j<obji->polygon_cnt_; j+=n) {
       char buffer[1000];
-      vcl_sprintf(buffer, "%s_obj%d-poly%d ",obji->category_.c_str(), i, j);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "%s_obj%d-poly%d ",obji->category_.c_str(), i, j);
+      std::string filename = buffer;
       of << filename << "\n";
     }
   }
@@ -494,7 +494,7 @@ int main_curve(int argc, char *argv[]) {
     for (int j = 0; j<curve_costs.cols(); j++) {
       of << curve_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n info distance transform costs: \n";
@@ -504,7 +504,7 @@ int main_curve(int argc, char *argv[]) {
     for (int j = 0; j<info_dt_costs.cols(); j++) {
       of << info_dt_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n info line costs: \n";
@@ -514,7 +514,7 @@ int main_curve(int argc, char *argv[]) {
     for (int j = 0; j<info_line_costs.cols(); j++) {
       of << info_line_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of.close();
@@ -523,12 +523,12 @@ int main_curve(int argc, char *argv[]) {
 }
 
 int main_create_db(int argc, char *argv[]) {
-  vcl_cout << "extracting observations and creating OSL for a given database\n";
+  std::cout << "extracting observations and creating OSL for a given database\n";
 
-  vcl_string dir_list, obj_file, out_osl;
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::string dir_list, obj_file, out_osl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc < 4) {
-    vcl_cout << "Usage: <program name> <dir_list_filename> <db_objs_file_name> <output_osl_name>\n";
+    std::cout << "Usage: <program name> <dir_list_filename> <db_objs_file_name> <output_osl_name>\n";
     return -1;
   }
 
@@ -539,19 +539,19 @@ int main_create_db(int argc, char *argv[]) {
   // CREATE DATABASE
   vbl_array_1d<dbru_object_sptr> *database = new vbl_array_1d<dbru_object_sptr>();
   createdb(reinterpret_cast<int>(database), obj_file.c_str(), dir_list.c_str(), out_osl.c_str());
-  vcl_cout << "there are " << database->size() << " objects in the database\n";
+  std::cout << "there are " << database->size() << " objects in the database\n";
 
   return 0;
 }
 
 int main_shock_selected(int argc, char *argv[]) {
-  vcl_cout << "run shock matching on selected frames as database\n";
+  std::cout << "run shock matching on selected frames as database\n";
 
-  vcl_string obj_file, out_osl, out_file;
+  std::string obj_file, out_osl, out_file;
   int n = 5;  // use every n frames in the database
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 8) {
-    vcl_cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> \n";
+    std::cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> \n";
     return -1;
   }
 
@@ -561,18 +561,18 @@ int main_shock_selected(int argc, char *argv[]) {
   double p_threshold = atof(argv[4]);
   int k = atoi(argv[5]);
   
-  vcl_string query_list = argv[6];
-  vcl_string db_list = argv[7];
+  std::string query_list = argv[6];
+  std::string db_list = argv[7];
 
   //LOAD DATABASE PREVIOUSLY CREATED
   vbl_array_1d<dbru_object_sptr> *database = 
     reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (loaddb(out_osl.c_str()));
 
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   //count the number of polygons
   
   int total_poly_cnt = 0;
-  vcl_vector<int> used_poly_cnts;
+  std::vector<int> used_poly_cnts;
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
@@ -584,41 +584,41 @@ int main_shock_selected(int argc, char *argv[]) {
     total_poly_cnt += cnt;
   }
 
-  vcl_ifstream fp(query_list.c_str());
+  std::ifstream fp(query_list.c_str());
   if (!fp) {
-    vcl_cout << "Problems in opening selected frames query list file!\n";
+    std::cout << "Problems in opening selected frames query list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > query_pairs;
+  std::vector<std::pair<int, int> > query_pairs;
   int query_size = 0;
   fp >> query_size;
   for (int i = 0; i<query_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp >> obj_pair.first;
     fp >> obj_pair.second;
     query_pairs.push_back(obj_pair);
   }
   fp.close();
 
-  vcl_ifstream fp2(db_list.c_str());
+  std::ifstream fp2(db_list.c_str());
   if (!fp2) {
-    vcl_cout << "Problems in opening selected frames database list file!\n";
+    std::cout << "Problems in opening selected frames database list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > database_pairs;
+  std::vector<std::pair<int, int> > database_pairs;
   int database_size = 0;
   fp2 >> database_size;
   for (int i = 0; i<database_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp2 >> obj_pair.first;
     fp2 >> obj_pair.second;
     database_pairs.push_back(obj_pair);
   }
   fp2.close();
 
-  vcl_map<vcl_string, int> category_id_map;
+  std::map<std::string, int> category_id_map;
   if (k == 4) {
     category_id_map["minivan"] = 0;
     category_id_map["suv"] = 1;
@@ -634,8 +634,8 @@ int main_shock_selected(int argc, char *argv[]) {
     category_id_map["van"] = 3;
   }
 
-  vcl_ofstream of1((out_file+".out").c_str());
-  of1 << "db size: " << database_size << vcl_endl;
+  std::ofstream of1((out_file+".out").c_str());
+  of1 << "db size: " << database_size << std::endl;
 
   vbl_array_2d<double> shock_costs(query_size, database_size, 1000);
   vbl_array_2d<double> info_costs(query_size, database_size, 1000);
@@ -687,11 +687,11 @@ int main_shock_selected(int argc, char *argv[]) {
       double shock_matching_cost, info;
     
       char buffer[1000];
-      vcl_sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
-      vcl_string filename = buffer;
-      vcl_cout << filename << vcl_endl;
-      vcl_string match_file = filename+"-smatch.out";
-      vcl_ifstream mf(match_file.c_str());
+      std::sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
+      std::string filename = buffer;
+      std::cout << filename << std::endl;
+      std::string match_file = filename+"-smatch.out";
+      std::ifstream mf(match_file.c_str());
       if (mf.is_open()) {
         mf >> shock_matching_cost;
         mf >> info;
@@ -703,7 +703,7 @@ int main_shock_selected(int argc, char *argv[]) {
                                           "",  //filename // output image filename
                                           p_threshold,
                                           true);  // verbose
-        vcl_ofstream mfo(match_file.c_str());
+        std::ofstream mfo(match_file.c_str());
         mfo << shock_matching_cost << " " << info << "\n";
         mfo.close();
       }
@@ -722,7 +722,7 @@ int main_shock_selected(int argc, char *argv[]) {
    }
       
    if (best_shock_match_obj_id < 0 || best_info_match_obj_id < 0) {
-     vcl_cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
+     std::cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
      continue;
    }
 
@@ -736,8 +736,8 @@ int main_shock_selected(int argc, char *argv[]) {
    results_collected++;
    // output the best match's image
    char buffer[1000];
-   vcl_sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
-   vcl_string filename = buffer;
+   std::sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
+   std::string filename = buffer;
    double dummy;
    dbru_object_sptr obji = (*database)[best_info_match_obj_id];
    vbl_array_1d< dbskr_tree_sptr > *obji_trees = database_objects_trees[best_info_match_obj_id];
@@ -755,15 +755,15 @@ int main_shock_selected(int argc, char *argv[]) {
   of1 << "info \t" << info_corrects << "\t" << (((double)info_corrects/results_collected)*100.0f) << "\n";
   of1.close();
 
-  vcl_ofstream of((out_file+"matrix.out").c_str());
+  std::ofstream of((out_file+"matrix.out").c_str());
   of << "query size: " << query_pairs.size() << " names (each row is a query):\n";
   for (unsigned q = 0; q<query_pairs.size(); q++) {
     int i = query_pairs[q].first;
     int j = query_pairs[q].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -773,8 +773,8 @@ int main_shock_selected(int argc, char *argv[]) {
     int j = database_pairs[d].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -785,7 +785,7 @@ int main_shock_selected(int argc, char *argv[]) {
     for (int j = 0; j<shock_costs.cols(); j++) {
       of << shock_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n infos: \n";
@@ -795,7 +795,7 @@ int main_shock_selected(int argc, char *argv[]) {
     for (int j = 0; j<info_costs.cols(); j++) {
       of << info_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of.close();
@@ -805,13 +805,13 @@ int main_shock_selected(int argc, char *argv[]) {
 
 //: MAIN OPT SELECTED
 int main_opt_selected(int argc, char *argv[]) {
-  vcl_cout << "run mutual info maximization on selected frames as database\n";
+  std::cout << "run mutual info maximization on selected frames as database\n";
 
-  vcl_string obj_file, out_osl, out_file;
+  std::string obj_file, out_osl, out_file;
   int n = 5;  // use every n frames in the database
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 11) {
-    vcl_cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> <dx> <dr> <ds>\n";
+    std::cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> <dx> <dr> <ds>\n";
     return -1;
   }
 
@@ -821,19 +821,19 @@ int main_opt_selected(int argc, char *argv[]) {
   double p_threshold = atof(argv[4]);
   int k = atoi(argv[5]);
   
-  vcl_string query_list = argv[6];
-  vcl_string db_list = argv[7];
+  std::string query_list = argv[6];
+  std::string db_list = argv[7];
   float dx = argv[8]; float dr = argv[9]; float ds = argv[10];
 
   //LOAD DATABASE PREVIOUSLY CREATED
   vbl_array_1d<dbru_object_sptr> *database = 
     reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (loaddb(out_osl.c_str()));
 
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   //count the number of polygons
   
   int total_poly_cnt = 0;
-  vcl_vector<int> used_poly_cnts;
+  std::vector<int> used_poly_cnts;
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
@@ -845,41 +845,41 @@ int main_opt_selected(int argc, char *argv[]) {
     total_poly_cnt += cnt;
   }
 
-  vcl_ifstream fp(query_list.c_str());
+  std::ifstream fp(query_list.c_str());
   if (!fp) {
-    vcl_cout << "Problems in opening selected frames query list file!\n";
+    std::cout << "Problems in opening selected frames query list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > query_pairs;
+  std::vector<std::pair<int, int> > query_pairs;
   int query_size = 0;
   fp >> query_size;
   for (int i = 0; i<query_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp >> obj_pair.first;
     fp >> obj_pair.second;
     query_pairs.push_back(obj_pair);
   }
   fp.close();
 
-  vcl_ifstream fp2(db_list.c_str());
+  std::ifstream fp2(db_list.c_str());
   if (!fp2) {
-    vcl_cout << "Problems in opening selected frames database list file!\n";
+    std::cout << "Problems in opening selected frames database list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > database_pairs;
+  std::vector<std::pair<int, int> > database_pairs;
   int database_size = 0;
   fp2 >> database_size;
   for (int i = 0; i<database_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp2 >> obj_pair.first;
     fp2 >> obj_pair.second;
     database_pairs.push_back(obj_pair);
   }
   fp2.close();
 
-  vcl_map<vcl_string, int> category_id_map;
+  std::map<std::string, int> category_id_map;
   if (k == 4) {
     category_id_map["minivan"] = 0;
     category_id_map["suv"] = 1;
@@ -895,8 +895,8 @@ int main_opt_selected(int argc, char *argv[]) {
     category_id_map["van"] = 3;
   }
 
-  vcl_ofstream of1((out_file+".out").c_str());
-  of1 << "db size: " << database_size << vcl_endl;
+  std::ofstream of1((out_file+".out").c_str());
+  of1 << "db size: " << database_size << std::endl;
 
   vbl_array_2d<double> info_costs(query_size, database_size, 1000);
   int info_corrects = 0;
@@ -927,9 +927,9 @@ int main_opt_selected(int argc, char *argv[]) {
 
       float info;
       char buffer[1000];
-      vcl_sprintf(buffer, "./outoptimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
-      vcl_string filename = buffer;
-      vcl_cout << filename << vcl_endl;
+      std::sprintf(buffer, "./outoptimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
+      std::string filename = buffer;
+      std::cout << filename << std::endl;
       
       dbru_object_matcher::minfo_rigid_alignment(obj0->get_observation(p0), obji->get_observation(pi), dx, dr, ds);  // verbose
       info_costs[q][d] = info;
@@ -941,7 +941,7 @@ int main_opt_selected(int argc, char *argv[]) {
    }
       
    if (best_info_match_obj_id < 0) {
-     vcl_cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
+     std::cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
      continue;
    }
 
@@ -952,8 +952,8 @@ int main_opt_selected(int argc, char *argv[]) {
    results_collected++;
    // output the best match's image
    char buffer[1000];
-   vcl_sprintf(buffer, "./outoptimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
-   vcl_string filename = buffer;
+   std::sprintf(buffer, "./outoptimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
+   std::string filename = buffer;
    double dummy;
    dbru_object_sptr obji = (*database)[best_info_match_obj_id];
    vil_image_resource_sptr dummy, image_r;
@@ -966,15 +966,15 @@ int main_opt_selected(int argc, char *argv[]) {
   of1 << "info \t" << info_corrects << "\t" << (((double)info_corrects/results_collected)*100.0f) << "\n";
   of1.close();
 
-  vcl_ofstream of((out_file+"matrix.out").c_str());
+  std::ofstream of((out_file+"matrix.out").c_str());
   of << "query size: " << query_pairs.size() << " names (each row is a query):\n";
   for (unsigned q = 0; q<query_pairs.size(); q++) {
     int i = query_pairs[q].first;
     int j = query_pairs[q].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -984,8 +984,8 @@ int main_opt_selected(int argc, char *argv[]) {
     int j = database_pairs[d].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -996,7 +996,7 @@ int main_opt_selected(int argc, char *argv[]) {
     for (int j = 0; j<info_costs.cols(); j++) {
       of << info_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of.close();
@@ -1007,13 +1007,13 @@ int main_opt_selected(int argc, char *argv[]) {
 
 
 int main_curve_selected(int argc, char *argv[]) {
-  vcl_cout << "run curve matching on selected frames as database\n";
+  std::cout << "run curve matching on selected frames as database\n";
 
-  vcl_string obj_file, out_osl, out_file;
+  std::string obj_file, out_osl, out_file;
   int n;  // use every n frames in the database
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 9) {
-    vcl_cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n> <k (number of classes)> <increment> <query pairs list> <db pairs list> \n";
+    std::cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n> <k (number of classes)> <increment> <query pairs list> <db pairs list> \n";
     return -1;
   }
 
@@ -1024,17 +1024,17 @@ int main_curve_selected(int argc, char *argv[]) {
   int k = atoi(argv[5]);
   int increment = atoi(argv[6]);
   
-  vcl_string query_list = argv[7];
-  vcl_string db_list = argv[8];
+  std::string query_list = argv[7];
+  std::string db_list = argv[8];
 
   //LOAD DATABASE PREVIOUSLY CREATED
   vbl_array_1d<dbru_object_sptr> *database = 
     reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (loaddb(out_osl.c_str()));
 
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   //count the number of polygons
   int total_poly_cnt = 0;
-  vcl_vector<int> used_poly_cnts;
+  std::vector<int> used_poly_cnts;
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
@@ -1046,42 +1046,42 @@ int main_curve_selected(int argc, char *argv[]) {
     total_poly_cnt += cnt;
   }
 
-  vcl_ifstream fp(query_list.c_str());
+  std::ifstream fp(query_list.c_str());
   if (!fp) {
-    vcl_cout << "Problems in opening selected frames query list file!\n";
+    std::cout << "Problems in opening selected frames query list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > query_pairs;
+  std::vector<std::pair<int, int> > query_pairs;
   int query_size = 0;
   fp >> query_size;
   for (int i = 0; i<query_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp >> obj_pair.first;
     fp >> obj_pair.second;
     query_pairs.push_back(obj_pair);
   }
   fp.close();
 
-  vcl_ifstream fp2(db_list.c_str());
+  std::ifstream fp2(db_list.c_str());
   if (!fp2) {
-    vcl_cout << "Problems in opening selected frames database list file!\n";
+    std::cout << "Problems in opening selected frames database list file!\n";
     return 0;
   }
                   // obj_id, poly_id
-  vcl_vector<vcl_pair<int, int> > database_pairs;
+  std::vector<std::pair<int, int> > database_pairs;
   int database_size = 0;
   fp2 >> database_size;
   for (int i = 0; i<database_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp2 >> obj_pair.first;
     fp2 >> obj_pair.second;
     database_pairs.push_back(obj_pair);
   }
   fp2.close();
-  vcl_cout << " there are " << query_pairs.size() << " pairs in the query list and " << database_pairs.size() << " pairs in the database list\n";
+  std::cout << " there are " << query_pairs.size() << " pairs in the query list and " << database_pairs.size() << " pairs in the database list\n";
 
-  vcl_map<vcl_string, int> category_id_map;
+  std::map<std::string, int> category_id_map;
   if (k == 4) {
     category_id_map["minivan"] = 0;
     category_id_map["suv"] = 1;
@@ -1097,8 +1097,8 @@ int main_curve_selected(int argc, char *argv[]) {
     category_id_map["van"] = 3;
   }
 
-  vcl_ofstream of1((out_file+".out").c_str());
-  of1 << "db size: " << database_size << vcl_endl;
+  std::ofstream of1((out_file+".out").c_str());
+  of1 << "db size: " << database_size << std::endl;
 
   vbl_array_2d<double> curve_costs(query_size, database_size, 1000);
   vbl_array_2d<double> info_line_costs(query_size, database_size, 1000);
@@ -1132,11 +1132,11 @@ int main_curve_selected(int argc, char *argv[]) {
       double curve_matching_cost, info_line;
       float info_dt;
       char buffer[1000];
-      vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
-      vcl_string filename = buffer;
-      vcl_cout << filename << vcl_endl;
-      vcl_string match_file = filename+"-cmatch.out";
-      vcl_ifstream mf(match_file.c_str());
+      std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
+      std::string filename = buffer;
+      std::cout << filename << std::endl;
+      std::string match_file = filename+"-cmatch.out";
+      std::ifstream mf(match_file.c_str());
       if (mf.is_open()) {
         mf >> curve_matching_cost;
         mf >> info_line;
@@ -1152,7 +1152,7 @@ int main_curve_selected(int argc, char *argv[]) {
                                           0.05f,   // for line fitting before matching
                                           "",//filename,  // output image filename
                                           true);  // verbose
-        vcl_ofstream mfo(match_file.c_str());
+        std::ofstream mfo(match_file.c_str());
         mfo << curve_matching_cost << " " << info_line << " " << info_dt << "\n";
         mfo.close();
       }
@@ -1177,7 +1177,7 @@ int main_curve_selected(int argc, char *argv[]) {
    }
       
    if (best_curve_match_obj_id < 0 || best_line_match_obj_id < 0 || best_dt_match_obj_id < 0) {
-     vcl_cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
+     std::cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
      continue;
    }
 
@@ -1196,8 +1196,8 @@ int main_curve_selected(int argc, char *argv[]) {
 
     // output the best match's image
    char buffer[1000];
-   vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-line",i0, best_line_match_obj_id, p0, best_line_match_poly_id);
-   vcl_string filename = buffer;
+   std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-line",i0, best_line_match_obj_id, p0, best_line_match_poly_id);
+   std::string filename = buffer;
    double dummy;
    dbru_object_sptr obji = (*database)[best_line_match_obj_id];
    dummy = dbru_object_matcher::minfo_thomas_curve_matching(obj0, obji, p0, best_line_match_poly_id,
@@ -1209,7 +1209,7 @@ int main_curve_selected(int argc, char *argv[]) {
                                               0.05f,   // for line fitting before matching
                                               filename,  // output image filename
                                               false);  // verbose
-   vcl_sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-dt",i0, best_dt_match_obj_id, p0, best_dt_match_poly_id);
+   std::sprintf(buffer, "./outcmimages/obj%d-obj%d-poly%d-poly%d-best-dt",i0, best_dt_match_obj_id, p0, best_dt_match_poly_id);
    filename = buffer;
    obji = (*database)[best_dt_match_obj_id];
    dummy = dbru_object_matcher::minfo_thomas_curve_matching(obj0, obji, p0, best_dt_match_poly_id,
@@ -1230,15 +1230,15 @@ int main_curve_selected(int argc, char *argv[]) {
   of1 << "info dt \t" << info_dt_corrects << "\t" << (((double)info_dt_corrects/results_collected)*100.0f) << "\n";
   of1.close();
 
-  vcl_ofstream of((out_file+"matrix.out").c_str());
+  std::ofstream of((out_file+"matrix.out").c_str());
   of << "query size: " << query_pairs.size() << " names (each row is a query):\n";
   for (unsigned q = 0; q<query_pairs.size(); q++) {
     int i = query_pairs[q].first;
     int j = query_pairs[q].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -1248,8 +1248,8 @@ int main_curve_selected(int argc, char *argv[]) {
     int j = database_pairs[d].second;
     dbru_object_sptr obji = (*database)[i];
     char buffer[1000];
-    vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-    vcl_string filename = buffer;
+    std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+    std::string filename = buffer;
     of << filename << "\n";
   }
 
@@ -1260,7 +1260,7 @@ int main_curve_selected(int argc, char *argv[]) {
     for (int j = 0; j<curve_costs.cols(); j++) {
       of << curve_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n info distance transform costs: \n";
@@ -1270,7 +1270,7 @@ int main_curve_selected(int argc, char *argv[]) {
     for (int j = 0; j<info_dt_costs.cols(); j++) {
       of << info_dt_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n info line costs: \n";
@@ -1280,7 +1280,7 @@ int main_curve_selected(int argc, char *argv[]) {
     for (int j = 0; j<info_line_costs.cols(); j++) {
       of << info_line_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of.close();
@@ -1289,13 +1289,13 @@ int main_curve_selected(int argc, char *argv[]) {
 }
 
 int main_shock(int argc, char *argv[]) {
-  vcl_cout << "IN MAIN SHOCK\n";
+  std::cout << "IN MAIN SHOCK\n";
 
-  vcl_string obj_file, out_osl, out_file;
+  std::string obj_file, out_osl, out_file;
   int n = 5;  // use every n frames in the database
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 6) {
-    vcl_cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <p_threshold 0.1> <k (number of classes)>\n";
+    std::cout << "Usage: <program name> <db_objs_file_name> <output_osl_name> <out_file> <p_threshold 0.1> <k (number of classes)>\n";
     return -1;
   }
 
@@ -1310,10 +1310,10 @@ int main_shock(int argc, char *argv[]) {
   vbl_array_1d<dbru_object_sptr> *database = 
     reinterpret_cast<vbl_array_1d<dbru_object_sptr> *> (loaddb(out_osl.c_str()));
 
-  vcl_cout << database->size() << " objects and observations are read from binary input file\n";
+  std::cout << database->size() << " objects and observations are read from binary input file\n";
   //count the number of polygons
   int total_poly_cnt = 0;
-  vcl_vector<int> used_poly_cnts;
+  std::vector<int> used_poly_cnts;
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
@@ -1324,7 +1324,7 @@ int main_shock(int argc, char *argv[]) {
     used_poly_cnts.push_back(cnt);
     total_poly_cnt += cnt;
   }
-  vcl_map<vcl_string, int> category_id_map;
+  std::map<std::string, int> category_id_map;
   if (k == 4) {
     category_id_map["minivan"] = 0;
     category_id_map["suv"] = 1;
@@ -1340,8 +1340,8 @@ int main_shock(int argc, char *argv[]) {
     category_id_map["van"] = 3;
   }
 
-  vcl_ofstream of1((out_file+".out").c_str());
-  of1 << "total poylgon hence db size: " << total_poly_cnt << vcl_endl;
+  std::ofstream of1((out_file+".out").c_str());
+  of1 << "total poylgon hence db size: " << total_poly_cnt << std::endl;
 
   vbl_array_2d<double> shock_costs(total_poly_cnt, total_poly_cnt, 1000);
   vbl_array_2d<double> info_costs(total_poly_cnt, total_poly_cnt, 1000);
@@ -1433,11 +1433,11 @@ int main_shock(int argc, char *argv[]) {
           double shock_matching_cost, info;
     
           char buffer[1000];
-          vcl_sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
-          vcl_string filename = buffer;
-          vcl_cout << filename << vcl_endl;
-          vcl_string match_file = filename+"-smatch.out";
-          vcl_ifstream mf(match_file.c_str());
+          std::sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, i, p0, pi);
+          std::string filename = buffer;
+          std::cout << filename << std::endl;
+          std::string match_file = filename+"-smatch.out";
+          std::ifstream mf(match_file.c_str());
           if (mf.is_open()) {
             mf >> shock_matching_cost;
             mf >> info;
@@ -1450,7 +1450,7 @@ int main_shock(int argc, char *argv[]) {
                                               "",  //filename // output image filename
                                               p_threshold,
                                               true);  // verbose
-            vcl_ofstream mfo(match_file.c_str());
+            std::ofstream mfo(match_file.c_str());
             mfo << shock_matching_cost << " " << info << "\n";
             mfo.close();
           }
@@ -1472,7 +1472,7 @@ int main_shock(int argc, char *argv[]) {
       }
       
       if (best_shock_match_obj_id < 0 || best_info_match_obj_id < 0) {
-        vcl_cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
+        std::cout << "obj " << i0 << " poly " << p0 << " has no comparable instance in the db, skipping it\n";
         continue;
       }
 
@@ -1486,8 +1486,8 @@ int main_shock(int argc, char *argv[]) {
       results_collected++;
       // output the best match's image
       char buffer[1000];
-      vcl_sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "./outsmimages/obj%d-obj%d-poly%d-poly%d",i0, best_info_match_obj_id, p0, best_info_match_poly_id);
+      std::string filename = buffer;
       double dummy;
       dbru_object_sptr obji = (*database)[best_info_match_obj_id];
       vbl_array_1d< dbskr_tree_sptr > *obji_trees = database_objects_trees[best_info_match_obj_id];
@@ -1508,15 +1508,15 @@ int main_shock(int argc, char *argv[]) {
   of1 << "info \t" << info_corrects << "\t" << (((double)info_corrects/results_collected)*100.0f) << "\n";
   of1.close();
 
-  vcl_ofstream of((out_file+"matrix.out").c_str());
+  std::ofstream of((out_file+"matrix.out").c_str());
   of << "db size: " << total_poly_cnt << " names:\n";
   for (unsigned i = 0; i<database->size(); i++) {
   //for (unsigned i = 0; i<2; i++) {
     dbru_object_sptr obji = (*database)[i];
     for (unsigned j = 0; j<obji->polygon_cnt_; j+=n) {
       char buffer[1000];
-      vcl_sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
-      vcl_string filename = buffer;
+      std::sprintf(buffer, "%s_obj%d_poly%d ",obji->category_.c_str(), i, j);
+      std::string filename = buffer;
       of << filename << "\n";
     }
   }
@@ -1528,7 +1528,7 @@ int main_shock(int argc, char *argv[]) {
     for (int j = 0; j<shock_costs.cols(); j++) {
       of << shock_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of << "\n infos: \n";
@@ -1538,7 +1538,7 @@ int main_shock(int argc, char *argv[]) {
     for (int j = 0; j<info_costs.cols(); j++) {
       of << info_costs[i][j] << " ";
     }
-    of << vcl_endl;
+    of << std::endl;
   }
 
   of.close();
@@ -1561,15 +1561,15 @@ int main(int argc, char *argv[]) {
   
   main_opt_selected(argc, argv);
   /*else {
-    vcl_cout << "Usage to create db: <program name> <video id path list file> <db_objs_file_name> <output_osl_name>\n";
-    vcl_cout << vcl_endl;
-    vcl_cout << "Usage for shocks: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)>\n";
-    vcl_cout << vcl_endl;
-    vcl_cout << "Usage for curve: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)> <increment for lines (20)>\n";
-    vcl_cout << vcl_endl;
-    vcl_cout << "Usage for shock selected: <program name> <db_objs_file_name> <output_osl_name> <out_file>  <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> \n";
-    vcl_cout << vcl_endl;
-    vcl_cout << "Usage for curve selected: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n> <k (number of classes)> <increment> <query pairs list> <db pairs list> \n";
+    std::cout << "Usage to create db: <program name> <video id path list file> <db_objs_file_name> <output_osl_name>\n";
+    std::cout << std::endl;
+    std::cout << "Usage for shocks: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)>\n";
+    std::cout << std::endl;
+    std::cout << "Usage for curve: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n (use every n frames for each object)> <k (number of classes)> <increment for lines (20)>\n";
+    std::cout << std::endl;
+    std::cout << "Usage for shock selected: <program name> <db_objs_file_name> <output_osl_name> <out_file>  <double p_threshold> <k (number of classes)> <query pairs list> <db pairs list> \n";
+    std::cout << std::endl;
+    std::cout << "Usage for curve selected: <program name> <db_objs_file_name> <output_osl_name> <out_file> <n> <k (number of classes)> <increment> <query pairs list> <db pairs list> \n";
   }*/
 
   return 0;

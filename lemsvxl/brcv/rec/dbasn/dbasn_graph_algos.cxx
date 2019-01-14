@@ -14,14 +14,14 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <fstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_random.h>
 #include <dbasn/dbasn_graph_algos.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 //: Contruct a random generated graph with # of nodes 'nN' and connectivity 'con'.
 void generate_random_graph (dbasn_graph* G, const int nN, const float con)
@@ -35,7 +35,7 @@ void generate_random_graph (dbasn_graph* G, const int nN, const float con)
   G->alloc_links ();
 
   //3) Setup links by parameter 'con'
-  int nL = vcl_floor (nN * nN * con);
+  int nL = std::floor (nN * nN * con);
   int i, j;
   for (int n = 0; n<nL; n++) {
     while (1) {
@@ -145,39 +145,39 @@ void generate_noisy_subgraph (dbasn_graph* g, dbasn_graph* inputG, int nN, int *
 }
 
 
-int load_GA_graph_file (dbasn_graph* G, const vcl_string& filename)
+int load_GA_graph_file (dbasn_graph* G, const std::string& filename)
 {
   char buffer[1024];
   int nN = 0, nL = 0;
  
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
   if (!infp) {
-    vcl_cout << " Error opening file!" << vcl_endl;
-    vcl_exit(-1); 
+    std::cout << " Error opening file!" << std::endl;
+    std::exit(-1); 
   }
 
-  vcl_vector<int> links_id;
-  vcl_vector<int> links_id2;
-  vcl_vector<double> links_attr;
+  std::vector<int> links_id;
+  std::vector<int> links_id2;
+  std::vector<double> links_attr;
 
   while (infp.getline(buffer,1024)) {    
     //ignore comment lines and empty lines
     if (strlen(buffer)<2 || buffer[0]=='#')
       continue;
 
-    if (!vcl_strncmp(buffer, "[BEGIN GRAPH]", sizeof("[END GRAPH]")-1))
+    if (!std::strncmp(buffer, "[BEGIN GRAPH]", sizeof("[END GRAPH]")-1))
       continue;
-    if (!vcl_strncmp(buffer, "[END GRAPH]", sizeof("[END GRAPH]")-1))
+    if (!std::strncmp(buffer, "[END GRAPH]", sizeof("[END GRAPH]")-1))
       continue;
  
     //read the line with the contour count info
-    if (!vcl_strncmp(buffer, "NODE_COUNT=", sizeof("NODE_COUNT=")-1)){
+    if (!std::strncmp(buffer, "NODE_COUNT=", sizeof("NODE_COUNT=")-1)){
       sscanf (buffer,"NODE_COUNT=%d", &nN);
       continue;
     }
  
     //read the beginning of a node block
-    if (!vcl_strncmp(buffer, "[BEGIN NODE]", sizeof("[BEGIN NODE]")-1)){
+    if (!std::strncmp(buffer, "[BEGIN NODE]", sizeof("[BEGIN NODE]")-1)){
       
       //each [BEGIN NODE] -- [END NODE] block is a node 
       infp.getline (buffer, 1024);
@@ -211,7 +211,7 @@ int load_GA_graph_file (dbasn_graph* G, const vcl_string& filename)
       }
    
       infp.getline (buffer, 1024);
-      if (vcl_strncmp(buffer, "[END NODE]", sizeof("[END NODE]")-1))
+      if (std::strncmp(buffer, "[END NODE]", sizeof("[END NODE]")-1))
         assert(false);
 
       G->_add_node (N);
@@ -235,27 +235,27 @@ int load_GA_graph_file (dbasn_graph* G, const vcl_string& filename)
   return nL;
 }
 
-void save_GA_graph_file (dbasn_graph* G, const vcl_string& filename)
+void save_GA_graph_file (dbasn_graph* G, const std::string& filename)
 { 
   FILE* fp;
   if ((fp = fopen(filename.c_str(), "w")) == NULL) {
-    vul_printf (vcl_cout, "ERROR(SaveGAGraphFile): Can't open output dbasn_graph file %s.\n", filename.c_str());
+    vul_printf (std::cout, "ERROR(SaveGAGraphFile): Can't open output dbasn_graph file %s.\n", filename.c_str());
     return; 
   }
 
-  vcl_fprintf (fp, "[BEGIN GRAPH]\n");
-  vcl_fprintf (fp, "NODE_COUNT=%d\n", G->nodes().size());
+  std::fprintf (fp, "[BEGIN GRAPH]\n");
+  std::fprintf (fp, "NODE_COUNT=%d\n", G->nodes().size());
   for (unsigned int i=0; i<G->nodes().size(); i++) {
     const dbasn_node* N = G->nodes (i);
-    vcl_fprintf (fp, "[BEGIN NODE]\n");
-    vcl_fprintf (fp, "NODE_NO=%d\n",  N->nid());
-    vcl_fprintf (fp, "NODE_ATTR=%lf\n", N->cost());
-    vcl_fprintf (fp, "LINK_COUNT=%d\n",  N->n_conn_nids());
+    std::fprintf (fp, "[BEGIN NODE]\n");
+    std::fprintf (fp, "NODE_NO=%d\n",  N->nid());
+    std::fprintf (fp, "NODE_ATTR=%lf\n", N->cost());
+    std::fprintf (fp, "LINK_COUNT=%d\n",  N->n_conn_nids());
     for (int j=0; j<N->n_conn_nids(); j++) {
       int j_id = N->conn_nids (j);
-      vcl_fprintf (fp, "  %d  %lf\n", j_id, G->links()[i][j_id]);
+      std::fprintf (fp, "  %d  %lf\n", j_id, G->links()[i][j_id]);
     }
-    vcl_fprintf (fp, "[END NODE]\n");
+    std::fprintf (fp, "[END NODE]\n");
   }
   fclose (fp);
 }

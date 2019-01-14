@@ -1,11 +1,11 @@
 #ifndef _dbrkf_simplerect_h_
 #define _dbrkf_simplerect_h_
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_2x2.h>
@@ -32,8 +32,8 @@ public:
     //: default constructor
     dbrkf_simplerect();
     //: initialize the set of corresponding points 
-    dbrkf_simplerect(vcl_vector<vsol_point_2d_sptr > pointsl,
-           vcl_vector<vsol_point_2d_sptr > pointsr,
+    dbrkf_simplerect(std::vector<vsol_point_2d_sptr > pointsl,
+           std::vector<vsol_point_2d_sptr > pointsr,
            vil_image_view<vxl_byte> imagel,
            vil_image_view<vxl_byte> imager);
     ~dbrkf_simplerect();
@@ -44,7 +44,7 @@ public:
     bool rect_step2();
 
     //: reverses the rectification steps so as to have a mapping of the original points to the rectified images.
-    vgl_point_2d<double> undo_steps(vgl_point_2d<double> p,vcl_string tag);
+    vgl_point_2d<double> undo_steps(vgl_point_2d<double> p,std::string tag);
 
     vil_image_view<vxl_byte> *imgl_step1;
     vil_image_view<vxl_byte> *imgr_step1;
@@ -55,8 +55,8 @@ public:
 
 private:
 
-    bool compute_fundamental_matrix(vcl_vector<vsol_point_2d_sptr > pointsl,
-                                    vcl_vector<vsol_point_2d_sptr > pointsr);
+    bool compute_fundamental_matrix(std::vector<vsol_point_2d_sptr > pointsl,
+                                    std::vector<vsol_point_2d_sptr > pointsr);
 
     bool map_epipoles_infinity(vnl_double_3x3 &H0,vgl_homg_point_2d<double> ep,double ci, double cj);
 
@@ -71,8 +71,8 @@ private:
     vil_image_view<vxl_byte> imgr;
 
 
-    vcl_vector<vsol_point_2d_sptr > pointsl_;
-    vcl_vector<vsol_point_2d_sptr > pointsr_;
+    std::vector<vsol_point_2d_sptr > pointsl_;
+    std::vector<vsol_point_2d_sptr > pointsr_;
 
     vgl_homg_point_2d<double> el;
     vgl_homg_point_2d<double> er;

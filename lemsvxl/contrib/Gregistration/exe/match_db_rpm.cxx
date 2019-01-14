@@ -1,8 +1,8 @@
 // compare pairs of observations
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <algorithm>
+#include <iostream>
 
 #include <georegister/dbrl_feature_sptr.h>
 #include <georegister/dbrl_feature_point_sptr.h>
@@ -14,17 +14,17 @@
 
 #include <vul/vul_timer.h>
 
-vcl_vector<dbrl_feature_sptr> read_con_from_file(vcl_string fname) {
+std::vector<dbrl_feature_sptr> read_con_from_file(std::string fname) {
   double x, y;
   char buffer[2000];
   int nPoints;
 
-  vcl_vector<dbrl_feature_sptr> inp;
+  std::vector<dbrl_feature_sptr> inp;
   inp.clear();
 
-  vcl_ifstream fp(fname.c_str());
+  std::ifstream fp(fname.c_str());
   if (!fp) {
-    vcl_cout<<" Unable to Open "<< fname <<vcl_endl;
+    std::cout<<" Unable to Open "<< fname <<std::endl;
     return inp;
   }
   //2)Read in file header.
@@ -32,7 +32,7 @@ vcl_vector<dbrl_feature_sptr> read_con_from_file(vcl_string fname) {
   fp.getline(buffer,2000); //OPEN/CLOSE flag (not important, we assume close)
   fp >> nPoints;
 #if 0
-  vcl_cout << "Number of Points from Contour: " << nPoints << vcl_endl;
+  std::cout << "Number of Points from Contour: " << nPoints << std::endl;
 #endif     
   for (int i=0;i<nPoints;i++) {
     fp >> x >> y;
@@ -47,11 +47,11 @@ vcl_vector<dbrl_feature_sptr> read_con_from_file(vcl_string fname) {
 
 
 int main(int argc, char *argv[]) {
-  vcl_cout << "Matching Edge Maps!\n";
+  std::cout << "Matching Edge Maps!\n";
 
-  vul_arg<vcl_string> databaselist("-i","list of input files","");
-  vul_arg<vcl_string> consdir("-ic","dir of con files","");
-  vul_arg<vcl_string> outfile("-o","Output file","");
+  vul_arg<std::string> databaselist("-i","list of input files","");
+  vul_arg<std::string> consdir("-ic","dir of con files","");
+  vul_arg<std::string> outfile("-o","Output file","");
 
 
   vul_arg<float> Tinit("-startT","T start",10);
@@ -68,52 +68,52 @@ int main(int argc, char *argv[]) {
     vul_arg_parse(argc,argv);
 
 
-  vcl_ifstream fpd(databaselist().c_str());
+  std::ifstream fpd(databaselist().c_str());
   if (!fpd.is_open()) {
-    vcl_cout << "Unable to open database file!\n";
+    std::cout << "Unable to open database file!\n";
     return -1;
   }
 
-  vcl_vector<vcl_string> database;
+  std::vector<std::string> database;
   char buffer[1000];
   while (!fpd.eof()) {
-    vcl_string temp;
+    std::string temp;
     fpd.getline(buffer, 1000);
     temp = buffer;
     if (temp.size() > 1) {
-      vcl_cout << "temp: " << temp << vcl_endl;
+      std::cout << "temp: " << temp << std::endl;
       database.push_back(temp);
     }
   }
   fpd.close();
   
   unsigned int D = database.size(); 
-  vcl_cout << " D: " << D << "\n";
+  std::cout << " D: " << D << "\n";
 #if 1
-  vcl_cout << "printing database list: \n";
+  std::cout << "printing database list: \n";
   for (unsigned int i = 0; i<D; i++) {
-    vcl_cout << database[i] << "\n";
+    std::cout << database[i] << "\n";
   }
 #endif
 
-  //vcl_cout << "out_file: " << out_file << vcl_endl;
-  //vcl_string dump_file = "dump_results_" + out_file;
-  //vcl_cout << "dump_file: " << dump_file << vcl_endl;
+  //std::cout << "out_file: " << out_file << std::endl;
+  //std::string dump_file = "dump_results_" + out_file;
+  //std::cout << "dump_file: " << dump_file << std::endl;
 
   //: load cons
-  vcl_vector<vcl_vector<dbrl_feature_sptr> > database_points;
+  std::vector<std::vector<dbrl_feature_sptr> > database_points;
   for (unsigned int i = 0; i<D; i++) {
-    vcl_string con_file = consdir() + database[i];
-    vcl_vector<dbrl_feature_sptr> inp = read_con_from_file(con_file.c_str());
+    std::string con_file = consdir() + database[i];
+    std::vector<dbrl_feature_sptr> inp = read_con_from_file(con_file.c_str());
     database_points.push_back(inp);
   }
 
-  vcl_cout<<" Read Con files\n";
-//  vcl_cout << " created trees\n";
+  std::cout<<" Read Con files\n";
+//  std::cout << " created trees\n";
   vbl_array_2d<double> matching_costs(D, D, 100000);
 
   //unsigned int i_start = 0, j_start = 1;
-  //vcl_ifstream if3;
+  //std::ifstream if3;
 
   //if3.open(dump_file.c_str());
   //if (if3) {
@@ -144,8 +144,8 @@ int main(int argc, char *argv[]) {
           dbrl_rpm_tps tpsrpm(params,database_points[i],database_points[j]);
           dbrl_match_set_sptr outset=tpsrpm.rpm();
           matching_costs[i][j]=matching_costs[j][i]=tpsrpm.energy();
-          vcl_ofstream of(outfile().c_str());
-          vcl_cout<<i<<" --> "<<j<<" : "<<matching_costs[i][j]<<"\n";
+          std::ofstream of(outfile().c_str());
+          std::cout<<i<<" --> "<<j<<" : "<<matching_costs[i][j]<<"\n";
           //of << "\n shock costs: \n" << D << " " << D << "\n";
           for (unsigned i = 0; i<D; i++) {
               for (unsigned j = 0; j<D; j++)

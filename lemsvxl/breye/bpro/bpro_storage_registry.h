@@ -14,10 +14,10 @@
 //  
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_fwd.h>
 #include <bpro/bpro_storage_sptr.h>
@@ -38,25 +38,25 @@ public:
   static bool register_type(const bpro_storage_sptr& dummy_storage);
 
   //: Returns the set of strings representing all registered types
-  static vcl_set< vcl_string > types();
+  static std::set< std::string > types();
 
   //: Clear all data from the storage_registry
   static void remove_all(){registered_types_.clear();}
 
   //: Remove data from the storage_registry except those with the given names
-  static void remove_all_except(const vcl_set<vcl_string>& retain);
+  static void remove_all_except(const std::set<std::string>& retain);
 
   //: Print a summary of the storage_registry structure to cout
   static void print_summary();
 
   //: Return the dummy storage class
-  static bpro_storage_sptr storage(vcl_string const& type)
+  static bpro_storage_sptr storage(std::string const& type)
     {return registered_types_[type];}
 
 protected:
 
   //: A vector of registered types
-  static vcl_map<vcl_string, bpro_storage_sptr> registered_types_;
+  static std::map<std::string, bpro_storage_sptr> registered_types_;
 
 };
 

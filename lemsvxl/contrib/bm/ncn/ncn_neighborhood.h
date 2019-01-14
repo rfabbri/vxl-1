@@ -14,17 +14,17 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_vector.h>
-#include<vcl_set.h>
+#include<map>
+#include<vector>
+#include<set>
 
 #include<vnl/vnl_matrix.h>
 
 namespace neighborhood_typedefs
 {
-	typedef vcl_vector<vgl_point_2d<unsigned> > target_pixel_type;
-    typedef vcl_set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than> pivot_pixel_candidate_type;
-	typedef vcl_map<target_pixel_type::const_iterator,vcl_vector<pivot_pixel_candidate_type::const_iterator> > neighborhood_type;
+	typedef std::vector<vgl_point_2d<unsigned> > target_pixel_type;
+    typedef std::set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than> pivot_pixel_candidate_type;
+	typedef std::map<target_pixel_type::const_iterator,std::vector<pivot_pixel_candidate_type::const_iterator> > neighborhood_type;
 }
 
 using namespace neighborhood_typedefs;

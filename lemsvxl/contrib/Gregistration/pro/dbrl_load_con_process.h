@@ -25,7 +25,7 @@
 #include <georegister/dbrl_id_point_2d_sptr.h>
 #include <pro/dbrl_id_point_2d_storage_sptr.h>
 #include <pro/dbrl_id_point_2d_storage.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process loads a .CON file into a vidpro1_vsol_storage class
 class dbrl_load_con_process : public bpro1_process
@@ -37,12 +37,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Load .CON(dbrl) File";
   }
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -56,7 +56,7 @@ public:
     return true;
   }
 
-  dbrl_id_point_2d_storage_sptr loadCON (vcl_string filename, float scale, float rot, float trans);
+  dbrl_id_point_2d_storage_sptr loadCON (std::string filename, float scale, float rot, float trans);
 
 protected:
   int num_frames_;

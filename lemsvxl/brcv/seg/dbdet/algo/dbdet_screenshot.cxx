@@ -49,7 +49,7 @@ bool dbdet_screenshot(dbdet_curve_fragment_graph& cfg,
     {
       vgl_point_2d<double > p = chain->edgels[j]->pt;
       double angle = chain->edgels[j]->tangent;
-      vgl_vector_2d<double > t(vcl_cos(angle), vcl_sin(angle));
+      vgl_vector_2d<double > t(std::cos(angle), std::sin(angle));
       vgl_vector_2d<double > n(-t.y(), t.x());
 
       // outer color

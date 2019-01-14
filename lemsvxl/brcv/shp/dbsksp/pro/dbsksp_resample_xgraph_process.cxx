@@ -20,7 +20,7 @@ dbsksp_resample_xgraph_process()
     !parameters()->add("Distance RMS error threshold (pixels): " , "-distance-rms-error-threshold" , 0.5f)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -45,7 +45,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_resample_xgraph_process::
+std::string dbsksp_resample_xgraph_process::
 name()
 { 
   return "Resample an xgraph"; 
@@ -54,10 +54,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_resample_xgraph_process::
+std::vector< std::string > dbsksp_resample_xgraph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   return to_return;
 }
@@ -66,10 +66,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_resample_xgraph_process::
+std::vector< std::string > dbsksp_resample_xgraph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
 }
@@ -111,7 +111,7 @@ execute()
   // Call the fitting function
   dbsksp_fit_xgraph fit_xgraph(distance_rms_error_threshold);
   dbsksp_xshock_graph_sptr resampled_xgraph = 0;
-  vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > map_new_node_to_old_node;
+  std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > map_new_node_to_old_node;
   fit_xgraph.fit_to(input_xgraph->xgraph(), resampled_xgraph, map_new_node_to_old_node, sample_ds);
 
   // Save computed xshock to output storage

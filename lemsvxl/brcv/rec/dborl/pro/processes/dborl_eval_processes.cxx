@@ -26,12 +26,12 @@ bool buld_exp_stat_initialize_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("buld_exp_stat_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -41,7 +41,7 @@ bool buld_exp_stat_initialize_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() != 0) {
-    vcl_cerr << "brec_create_hierarchy_process - invalid inputs\n";
+    std::cerr << "brec_create_hierarchy_process - invalid inputs\n";
     return false;
   }
   buld_exp_stat_sptr ins = new buld_exp_stat();
@@ -53,14 +53,14 @@ bool buld_exp_stat_print_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back("vcl_string"); // name of the output file
+  input_types.push_back(vcl_string"); // name of the output file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -69,15 +69,15 @@ bool buld_exp_stat_print_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "buld_exp_stat_print_process - invalid inputs\n";
+    std::cerr << "buld_exp_stat_print_process - invalid inputs\n";
     return false;
   }
   // get the inputs
   unsigned i = 0;
   buld_exp_stat_sptr es = pro.get_input<buld_exp_stat_sptr>(i++);
-  vcl_string out_name = pro.get_input<vcl_string>(i++);
+  std::string out_name = pro.get_input<std::string>(i++);
 
-  vcl_ofstream of(out_name.c_str());
+  std::ofstream of(out_name.c_str());
   es->print_stats(of);
 
   return true;
@@ -86,12 +86,12 @@ bool buld_exp_stat_print_process(bprb_func_process& pro)
 bool buld_exp_stat_read_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back("vcl_string"); // name of the input file
+  input_types.push_back(vcl_string"); // name of the input file
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -99,15 +99,15 @@ bool buld_exp_stat_read_process_cons(bprb_func_process& pro)
 bool buld_exp_stat_read_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "buld_exp_stat_print_process - invalid inputs\n";
+    std::cerr << "buld_exp_stat_print_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   buld_exp_stat_sptr es = pro.get_input<buld_exp_stat_sptr>(i++);
-  vcl_string name = pro.get_input<vcl_string>(i++);
-  vcl_ifstream ifs(name.c_str());
+  std::string name = pro.get_input<std::string>(i++);
+  std::ifstream ifs(name.c_str());
   if (!ifs) {
-    vcl_cout << "cannot open the file: " << name << vcl_endl;
+    std::cout << "cannot open the file: " << name << std::endl;
     return false;
   }
   es->read_stats(ifs);
@@ -117,11 +117,11 @@ bool buld_exp_stat_read_process(bprb_func_process& pro)
 bool buld_exp_stat_get_values_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("float");
   output_types.push_back("float");
   ok = pro.set_output_types(output_types);
@@ -131,7 +131,7 @@ bool buld_exp_stat_get_values_process_cons(bprb_func_process& pro)
 bool buld_exp_stat_get_values_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 1) {
-    vcl_cerr << "buld_exp_stat_print_process - invalid inputs\n";
+    std::cerr << "buld_exp_stat_print_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -145,15 +145,15 @@ bool buld_exp_stat_eval_classification_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back("vcl_string"); // gt class
-  input_types.push_back("vcl_string"); // outputted class by a classifier
+  input_types.push_back(vcl_string"); // gt class
+  input_types.push_back(vcl_string"); // outputted class by a classifier
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -162,14 +162,14 @@ bool buld_exp_stat_eval_classification_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "buld_exp_stat_print_process - invalid inputs\n";
+    std::cerr << "buld_exp_stat_print_process - invalid inputs\n";
     return false;
   }
   // get the inputs
   unsigned i = 0;
   buld_exp_stat_sptr es = pro.get_input<buld_exp_stat_sptr>(i++);
-  vcl_string gt_class = pro.get_input<vcl_string>(i++);
-  vcl_string outputted_class = pro.get_input<vcl_string>(i++);
+  std::string gt_class = pro.get_input<std::string>(i++);
+  std::string outputted_class = pro.get_input<std::string>(i++);
   borld_evaluation_evaluate_classification(es, gt_class, outputted_class);
   es->increment_positive_cnt(); // every time we see an instance, its a positive of one of our categories
   return true;
@@ -179,11 +179,11 @@ bool buld_exp_stat_eval_classification_process(bprb_func_process& pro)
 bool dborl_category_info_set_create_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
-  input_types.push_back("vcl_string"); // file name
+  std::vector<std::string> input_types;
+  input_types.push_back(vcl_string"); // file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("borld_category_info_set_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -192,15 +192,15 @@ bool dborl_category_info_set_create_process_cons(bprb_func_process& pro)
 bool dborl_category_info_set_create_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 1) {
-    vcl_cerr << "dborl_category_info_set_create_process - invalid inputs\n";
+    std::cerr << "dborl_category_info_set_create_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
-  vcl_string file_name = pro.get_input<vcl_string>(i++);
+  std::string file_name = pro.get_input<std::string>(i++);
   borld_category_info_set_sptr cs = new borld_category_info_set;
-  vcl_ifstream is(file_name.c_str());
+  std::ifstream is(file_name.c_str());
   if (!is) {
-    vcl_cerr << "dborl_category_info_set_create_process - cannot open file: " << file_name << "\n";
+    std::cerr << "dborl_category_info_set_create_process - cannot open file: " << file_name << "\n";
     return false;
   }
   cs->read_cats_from_a_simple_file(is);
@@ -212,12 +212,12 @@ bool dborl_category_info_set_create_process(bprb_func_process& pro)
 bool dborl_category_info_set_write_xml_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("borld_category_info_set_sptr");
-  input_types.push_back("vcl_string"); // output file name
+  input_types.push_back(vcl_string"); // output file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -225,14 +225,14 @@ bool dborl_category_info_set_write_xml_process_cons(bprb_func_process& pro)
 bool dborl_category_info_set_write_xml_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dborl_category_info_set_write_xml_process - invalid inputs\n";
+    std::cerr << "dborl_category_info_set_write_xml_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   borld_category_info_set_sptr cis = pro.get_input<borld_category_info_set_sptr>(i++);
-  vcl_string file_name = pro.get_input<vcl_string>(i++);
+  std::string file_name = pro.get_input<std::string>(i++);
   
-  vcl_ofstream ofs(file_name.c_str());
+  std::ofstream ofs(file_name.c_str());
   write_categories_xml(cis->categories(), ofs);
   ofs.close();
   return true;
@@ -241,12 +241,12 @@ bool dborl_category_info_set_write_xml_process(bprb_func_process& pro)
 bool dborl_category_info_set_get_id_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("borld_category_info_set_sptr");
-  input_types.push_back("vcl_string"); // category name
+  input_types.push_back(vcl_string"); // category name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("int");  // return category id
   ok = pro.set_output_types(output_types);
   return ok;
@@ -255,15 +255,15 @@ bool dborl_category_info_set_get_id_process_cons(bprb_func_process& pro)
 bool dborl_category_info_set_get_id_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dborl_category_info_set_create_process - invalid inputs\n";
+    std::cerr << "dborl_category_info_set_create_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   borld_category_info_set_sptr cs = pro.get_input<borld_category_info_set_sptr>(i++);
-  vcl_string cat_name = pro.get_input<vcl_string>(i++);
+  std::string cat_name = pro.get_input<std::string>(i++);
   borld_category_info_sptr cinfo = cs->find_category(cat_name);
   if (!cinfo) {
-    vcl_cout << "In dborl_category_info_set_get_id_process() -- no info is found in the set for the category: " << cat_name << "!\n";
+    std::cout << "In dborl_category_info_set_get_id_process() -- no info is found in the set for the category: " << cat_name << "!\n";
     return false;
   }
   pro.set_output_val<int>(0, cinfo->id_);
@@ -276,16 +276,16 @@ bool buld_exp_stat_eval_classification_using_id_process_cons(bprb_func_process& 
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
   input_types.push_back("borld_category_info_set_sptr");  // pass a category info set instance for this process to match the name to the id
-  input_types.push_back("vcl_string"); // gt class
+  input_types.push_back(vcl_string"); // gt class
   input_types.push_back("int"); // class id outputted by a classifier
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -294,14 +294,14 @@ bool buld_exp_stat_eval_classification_using_id_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 4) {
-    vcl_cerr << "buld_exp_stat_eval_classification_using_ids_process - invalid inputs\n";
+    std::cerr << "buld_exp_stat_eval_classification_using_ids_process - invalid inputs\n";
     return false;
   }
   // get the inputs
   unsigned i = 0;
   buld_exp_stat_sptr es = pro.get_input<buld_exp_stat_sptr>(i++);
   borld_category_info_set_sptr cis = pro.get_input<borld_category_info_set_sptr>(i++);
-  vcl_string gt_class = pro.get_input<vcl_string>(i++);
+  std::string gt_class = pro.get_input<std::string>(i++);
   int outputted_class = pro.get_input<int>(i++);
   borld_evaluation_evaluate_classification(es, cis, gt_class, outputted_class);
   es->increment_positive_cnt(); // every time we see an instance, its a positive of one of our categories

@@ -9,7 +9,7 @@
 #include <baml/baml_prob_img.h>
 #include <baml/baml_multi_mog.h>
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_line_3d_2_points.h>
@@ -38,7 +38,7 @@ bvaml_world::bvaml_world(
       for( int z = 0; z < params_->num_supervoxels.z(); z++ ){
 
         // Contruct this supervoxel's filename.
-        vcl_stringstream new_filename;
+        std::stringstream new_filename;
         new_filename << params_->model_dir << "/sv_";
         if( x < 10 ) new_filename << "00";
         else if( x < 100 ) new_filename << "0";
@@ -64,11 +64,11 @@ bvaml_world::bvaml_world(
 void
 bvaml_world::process(
   int mode,
-  vcl_string namebase,
+  std::string namebase,
   const vil_image_view<vxl_byte>& img,
   const vpgl_proj_camera<double>& camera,
   const vnl_vector<float>& light,
-  const vcl_vector< vgl_point_2d<int> >& inspect_pixels )
+  const std::vector< vgl_point_2d<int> >& inspect_pixels )
 {
   bvaml_log_writer log( "bvaml_world::process" );
 
@@ -128,7 +128,7 @@ bvaml_world::process(
   for( int subimg_x = 0; subimg_x < num_subimgs.x(); subimg_x++ ){
     for( int subimg_y = 0; subimg_y < num_subimgs.y(); subimg_y++ ){
 
-      vcl_stringstream subimg_msg;
+      std::stringstream subimg_msg;
       subimg_msg << "processing subimage " << subimg_x << ' ' << subimg_y;
       log.print_msg( subimg_msg.str() );
       bvaml_log_writer subimg_log( "bvaml_world::process_subimg" );
@@ -140,7 +140,7 @@ bvaml_world::process(
       for( int i = subimg_x*params_->supervoxel_length; i < (subimg_x+1)*params_->supervoxel_length; i++ ){
         for( int j = subimg_y*params_->supervoxel_length; j < (subimg_y+1)*params_->supervoxel_length; j++ ){
           if( i <= 0 || i >= (int)image_scaled.ni()-1 || j <= 0 || j >= (int)image_scaled.nj()-1 ) continue;
-          vcl_vector< vgl_point_3d<int> > supervoxels_on_pixel_ray;
+          std::vector< vgl_point_3d<int> > supervoxels_on_pixel_ray;
           rtsv.get_ray_voxels( vgl_point_2d<int>(i,j), supervoxels_on_pixel_ray, false );
           for( unsigned k = 0; k < supervoxels_on_pixel_ray.size(); k++ ){
             supervoxels_[supervoxel_index(supervoxels_on_pixel_ray[k])].load_local_appearance( light );
@@ -169,7 +169,7 @@ bvaml_world::process(
           float this_color = (float)( image_scaled(i,j)/255.0 ); 
           if( this_color < 0 ) this_color = 0; // Might happen with bicubic interpolation.
 
-          vcl_vector< vgl_point_3d<int> > voxels_on_pixel_ray;
+          std::vector< vgl_point_3d<int> > voxels_on_pixel_ray;
           bool unique_ray = true; if( mode == 4 || mode == 2 ) unique_ray = false;
           rtv.get_ray_voxels( vgl_point_2d<int>(i,j), voxels_on_pixel_ray, unique_ray );
 
@@ -190,8 +190,8 @@ bvaml_world::process(
               vgl_point_3d<int> voxel_to_inspect = params_->inspect_voxels[ivx];
               vgl_point_3d<int> this_voxel = voxels_on_pixel_ray[k];
               if( voxel_to_inspect == this_voxel ){
-                vcl_stringstream vx_stream; vx_stream << voxels_on_pixel_ray[k];
-                vcl_stringstream ivx_stream; ivx_stream << 
+                std::stringstream vx_stream; vx_stream << voxels_on_pixel_ray[k];
+                std::stringstream ivx_stream; ivx_stream << 
                   "Seen color: " << this_color << '\n' << 
                   "Occupancy prob: " << ray.voxels[k]->occupancy_prob[0] << '\n' <<
                   "Color prob: " << ray.voxels[k]->appearance->prob( this_color, light );
@@ -253,7 +253,7 @@ bvaml_world::process(
 
   // NEED TO UNSCALE OUTPUT IMAGES
   
-  vcl_string inspect_file = params_->output_dir + '/' + namebase + "_inspect.x3d";
+  std::string inspect_file = params_->output_dir + '/' + namebase + "_inspect.x3d";
   if( inspect_pixels.size() != 0 )
     viewer.save_inspection_file( inspect_file.c_str() );
   
@@ -265,10 +265,10 @@ bvaml_world::process(
       baml_multi_mog_local am( params_->num_mixtures, light );
       light_bin = (unsigned)am.get_light_bin( light );
     }
-    vcl_stringstream lb; lb << light_bin;
-    //vcl_string prob_map_file = params_->output_dir + '/' + namebase + "_prob_map" + lb.str() + ".png";
+    std::stringstream lb; lb << light_bin;
+    //std::string prob_map_file = params_->output_dir + '/' + namebase + "_prob_map" + lb.str() + ".png";
     //vil_save( changes_scaled, prob_map_file.c_str() );
-    vcl_string prob_map_file = params_->output_dir + '/' + namebase + "_prob_map" + lb.str() + ".tiff";
+    std::string prob_map_file = params_->output_dir + '/' + namebase + "_prob_map" + lb.str() + ".tiff";
     vil_save( changes_scaled_full, prob_map_file.c_str() );
 
     // Mark changes as red.
@@ -295,17 +295,17 @@ bvaml_world::process(
         red_img(i,j,2) = (int)floor( red_img(i,j,2)*this_prob );
       }
     }
-    vcl_string change_file = params_->output_dir + '/' + namebase + "_change.png";
+    std::string change_file = params_->output_dir + '/' + namebase + "_change.png";
     vil_save( red_img, change_file.c_str() );
   }
 
   else if( mode == 2 || mode == 4 ){
-    vcl_string render_file = params_->output_dir + '/' + namebase + "_render.png";
+    std::string render_file = params_->output_dir + '/' + namebase + "_render.png";
     vil_save( changes_scaled, render_file.c_str() );
   }
 
   else if( mode == 5 ){
-    vcl_string prob_img_file = params_->output_dir + '/' + namebase + "_prob_img.png";
+    std::string prob_img_file = params_->output_dir + '/' + namebase + "_prob_img.png";
     prob_img.write( prob_img_file );
   }
 
@@ -315,7 +315,7 @@ bvaml_world::process(
     last_norm_img_.set_size( img.ni(), img.nj(), img.nplanes() );
   
     // Normalize the image.
-    vcl_cerr << "\na: " << this_a << "  b: " << this_b << '\n';
+    std::cerr << "\na: " << this_a << "  b: " << this_b << '\n';
     for( unsigned k = 0; k < img.nplanes(); k++ ){
       for( unsigned i = 0; i < img.ni(); i++ ){
         for( unsigned j = 0; j < img.nj(); j++ ){
@@ -326,7 +326,7 @@ bvaml_world::process(
         }
       }
     }
-    vcl_string norm_img_file = params_->output_dir + '/' + namebase + "_norm_img.png";
+    std::string norm_img_file = params_->output_dir + '/' + namebase + "_norm_img.png";
     vil_save( last_norm_img_, norm_img_file.c_str() );
   }
 
@@ -344,10 +344,10 @@ bvaml_world::process_job()
     log.print_msg( "training on image " + params_->images[i] );
     vnl_vector<float> this_light; 
     if( params_->appearance_model != 0 ) this_light = params_->lights[i];
-    vcl_string namebase = vul_file::strip_extension(vul_file::basename( params_->images[i] ));
+    std::string namebase = vul_file::strip_extension(vul_file::basename( params_->images[i] ));
     vil_image_view<vxl_byte> this_img(1280,720);
     if( params_->process_modes[i] != 4 ) this_img = vil_load(params_->images[i].c_str());
-    vcl_string this_image_name = params_->images[i];
+    std::string this_image_name = params_->images[i];
     
     // Normalize if needed.
     if( params_->normalize_intensities && params_->process_modes[i] != 6 ){
@@ -377,14 +377,14 @@ bvaml_world::process_job()
 
   // Write world if needed.
   if( params_->write_x3d_world.size() != 0 ){
-    vcl_string world_file = params_->output_dir + "/world.x3d";
+    std::string world_file = params_->output_dir + "/world.x3d";
     //bvaml_world_viewer viewer( params_ );
     //viewer.write_x3d_world( this, world_file, 
       //params_->write_x3d_world[0], params_->write_x3d_world[1] );
     refine_surface();
   }
   if( params_->write_raw_world ){
-    vcl_string world_file = params_->output_dir + "/world.raw";
+    std::string world_file = params_->output_dir + "/world.raw";
     bvaml_world_viewer viewer( params_ );
     viewer.write_raw_world( this, world_file );
   }
@@ -419,7 +419,7 @@ bvaml_world::refine_surface()
     supervoxels_[sv].save();
 
   for( int x = 1; x < params_->num_voxels().x()-1; x++ ){
-    //vcl_cerr << x << ' ';
+    //std::cerr << x << ' ';
     if( (x % params_->supervoxel_length) == 1 )
       for( unsigned sv = 0; sv < supervoxels_.size(); sv++ )
         supervoxels_[sv].save();
@@ -489,7 +489,7 @@ bvaml_world::refine_surface2()
   vil_image_view<vxl_byte> pvimg( params_->num_voxels().x(), params_->num_voxels().y(), 1 );
 
   for( int x = 1; x < params_->num_voxels().x()-1; x++ ){
-    vcl_cerr << x << ' ';
+    std::cerr << x << ' ';
     if( (x % params_->supervoxel_length) == 1 )
       for( unsigned sv = 0; sv < supervoxels_.size(); sv++ )
         supervoxels_[sv].clear();
@@ -565,7 +565,7 @@ bvaml_world::refine_surface2()
   vil_save( pvimg, "D:/results/pv_heights.png" );
 
 
-  vcl_ofstream ofs( "D:/results/refined_surface.x3d" );
+  std::ofstream ofs( "D:/results/refined_surface.x3d" );
   ofs <<
     "<X3D version='3.0' profile='Immersive'>\n" <<
     " <Scene>\n" <<
@@ -649,7 +649,7 @@ bvaml_world::predict_appearance(
   vnl_vector<float> a3light(3); a3light(0) = a3light(1) = a3light(2) = (float)a3;
 
   for( unsigned sv = 0; sv < supervoxels_.size(); sv++ ){
-    vcl_stringstream ss; ss << "predicting supervoxel " << sv;
+    std::stringstream ss; ss << "predicting supervoxel " << sv;
     log.print_msg( ss.str() );
     float* a1_expval = new float[params_->supervoxel_length*params_->supervoxel_length*params_->supervoxel_length];
     for( int i = 0; i < params_->supervoxel_length; i++ ){
@@ -750,13 +750,13 @@ bvaml_world::heights_to_occupancy( unsigned m )
 //--------------------------------------------------
 void 
 bvaml_world::set_ground_plane(
-  vcl_string ground_file )
+  std::string ground_file )
 {
   bvaml_log_writer log( "bvaml_world::set_ground_plane" );
 
   // Check that the file is good.
   log.print_msg( "parsing file " + ground_file );
-  vcl_ifstream file_stream( ground_file.c_str() );
+  std::ifstream file_stream( ground_file.c_str() );
   if( !(file_stream.good()) ){
     log.print_error( "can't read file" );
     return;
@@ -764,8 +764,8 @@ bvaml_world::set_ground_plane(
 
   // Read the file.
   vul_awk awk( file_stream );
-  vcl_vector< vcl_vector< vgl_point_3d<float> > > planes;
-  vcl_vector< vgl_point_3d<float> > new_plane;
+  std::vector< std::vector< vgl_point_3d<float> > > planes;
+  std::vector< vgl_point_3d<float> > new_plane;
   while( awk ){
     if( awk.NF() == 0 ){
       if( new_plane.size() > 3 )
@@ -787,7 +787,7 @@ bvaml_world::set_ground_plane(
   log.print_msg( "updating ground plane" );
   for( unsigned plane = 0; plane < planes.size(); plane++ ){
 
-    vcl_vector< vgl_point_2d<float> > this_plane_2d;
+    std::vector< vgl_point_2d<float> > this_plane_2d;
     for( unsigned p = 0; p < planes[plane].size(); p++ )
       this_plane_2d.push_back( vgl_point_2d<float>( 
         planes[plane][p].x(), planes[plane][p].y() ) );

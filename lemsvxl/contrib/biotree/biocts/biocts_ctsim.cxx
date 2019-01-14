@@ -8,7 +8,7 @@
 
 #include "biocts_Volume3D.h"
 #include "biocts_ctsim.h"
-#include <vcl_cmath.h>
+#include <cmath>
 
 biocts_ctsim::biocts_ctsim(int _lambda, int _backgrnd_noise, int _gain, int _NViews, biocts_Volume3D* volume):
    lambda(_lambda), Backgrnd_Noise(_backgrnd_noise), gain(_gain), xdim(volume->xdim), ydim(volume->ydim), 

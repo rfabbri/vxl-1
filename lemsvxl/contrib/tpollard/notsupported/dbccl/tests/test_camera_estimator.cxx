@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../dbccl_camera_estimator.h"
 
@@ -13,7 +13,7 @@ static void test_camera_estimator()
     vpgl_perspective_camera<double> true_cam;
     true_cam.set_camera_center( vgl_point_3d<double>(1.0,2.0,3.0) );
     
-    vcl_vector< vgl_point_3d<double> > wps;
+    std::vector< vgl_point_3d<double> > wps;
     wps.push_back( vgl_point_3d<double>(0,-1,5) );
     wps.push_back( vgl_point_3d<double>(1,2,6) );
     wps.push_back( vgl_point_3d<double>(-3,1,10) );
@@ -25,7 +25,7 @@ static void test_camera_estimator()
     wps.push_back( vgl_point_3d<double>(3,0,11) );
     wps.push_back( vgl_point_3d<double>(0,3,4) );
 
-    vcl_vector< vgl_point_2d<double> > ips;
+    std::vector< vgl_point_2d<double> > ips;
     for( int t = 0; t < 10; t++ ){
       vgl_homg_point_2d<double> new_pt = true_cam.project( 
         vgl_homg_point_3d<double>( wps[t] ) );
@@ -41,7 +41,7 @@ static void test_camera_estimator()
     dbccl_camera_estimator ce;
     ce.find_best_camera( off_cam, wps, ips );
 
-    vcl_cerr << "\nTrue camera:\n" << true_cam.get_matrix()
+    std::cerr << "\nTrue camera:\n" << true_cam.get_matrix()
       << "\nEstimated camera:\n" << off_cam.get_matrix() << '\n';
     TEST_NEAR( "Testing find_best_camera:", 
       (true_cam.get_matrix()-off_cam.get_matrix()).frobenius_norm(), 0.0, .01 );
@@ -52,7 +52,7 @@ static void test_camera_estimator()
 
     // Set up the cameras.
     int num_cameras = 100;
-    vcl_vector< vpgl_perspective_camera<double> > true_cams;
+    std::vector< vpgl_perspective_camera<double> > true_cams;
     true_cams.push_back( vpgl_perspective_camera<double>() );
     for( int f = 1; f < num_cameras; f++ ){
       vpgl_perspective_camera<double> new_cam = true_cams[f-1];
@@ -72,7 +72,7 @@ static void test_camera_estimator()
 
     // Set up the world points.
     int num_tracks = 10;
-    vcl_vector< vgl_point_3d<double> > wps;
+    std::vector< vgl_point_3d<double> > wps;
     wps.push_back( vgl_point_3d<double>(0,-1,5) );
     wps.push_back( vgl_point_3d<double>(1,2,6) );
     wps.push_back( vgl_point_3d<double>(-3,1,10) );
@@ -85,11 +85,11 @@ static void test_camera_estimator()
     wps.push_back( vgl_point_3d<double>(0,3,4) );
 
     // Project into all frames.
-    vcl_vector< vcl_vector< vgl_point_2d<double> > > tracks;
-    vcl_vector< vcl_vector<bool> > track_masks;
+    std::vector< std::vector< vgl_point_2d<double> > > tracks;
+    std::vector< std::vector<bool> > track_masks;
     for( int f = 0; f < num_cameras; f++ ){
-      vcl_vector< vgl_point_2d<double> > new_track;
-      vcl_vector<bool> new_track_mask;
+      std::vector< vgl_point_2d<double> > new_track;
+      std::vector<bool> new_track_mask;
       for( int t = 0; t < num_tracks; t++ ){
         vgl_homg_point_2d<double> new_pt = true_cams[f].project( 
           vgl_homg_point_3d<double>( wps[t] ) );
@@ -101,7 +101,7 @@ static void test_camera_estimator()
       track_masks.push_back( new_track_mask );
     }
     
-    vcl_vector< vpgl_perspective_camera<double> > est_cams;
+    std::vector< vpgl_perspective_camera<double> > est_cams;
     dbccl_camera_estimator ce;
     ce.estimate( tracks, track_masks, 
       true_cams[0].get_calibration(), est_cams );
@@ -121,7 +121,7 @@ static void test_camera_estimator()
 
     // Set up the cameras.
     int num_cameras = 100;
-    vcl_vector< vpgl_perspective_camera<double> > true_cams;
+    std::vector< vpgl_perspective_camera<double> > true_cams;
     true_cams.push_back( vpgl_perspective_camera<double>() );
     for( int f = 1; f < num_cameras; f++ ){
       vpgl_perspective_camera<double> new_cam = true_cams[f-1];
@@ -140,7 +140,7 @@ static void test_camera_estimator()
 
     // Set up the world points.
     int num_tracks = 16;
-    vcl_vector< vgl_point_3d<double> > wps;
+    std::vector< vgl_point_3d<double> > wps;
     wps.push_back( vgl_point_3d<double>(0,-1,5) );
     wps.push_back( vgl_point_3d<double>(1,2,6) );
     wps.push_back( vgl_point_3d<double>(-3,1,10) );
@@ -160,11 +160,11 @@ static void test_camera_estimator()
 
     // Project into all frames.
     int split_frame = 50;
-    vcl_vector< vcl_vector< vgl_point_2d<double> > > tracks;
-    vcl_vector< vcl_vector<bool> > track_masks;
+    std::vector< std::vector< vgl_point_2d<double> > > tracks;
+    std::vector< std::vector<bool> > track_masks;
     for( int f = 0; f < num_cameras; f++ ){
 
-      vcl_vector< vgl_point_2d<double> > new_track;
+      std::vector< vgl_point_2d<double> > new_track;
       for( int t = 0; t < num_tracks; t++ ){
         vgl_homg_point_2d<double> new_pt = true_cams[f].project( 
           vgl_homg_point_3d<double>( wps[t] ) );
@@ -172,7 +172,7 @@ static void test_camera_estimator()
           new_pt.x()/new_pt.w(), new_pt.y()/new_pt.w() ) );
       }
       
-      vcl_vector<bool> new_track_mask;
+      std::vector<bool> new_track_mask;
       for( int t = 0; t < 8; t++ ){
         if( f <= split_frame ) new_track_mask.push_back( true );
         else new_track_mask.push_back( false );
@@ -187,7 +187,7 @@ static void test_camera_estimator()
       track_masks.push_back( new_track_mask );
     }
     
-    vcl_vector< vpgl_perspective_camera<double> > est_cams;
+    std::vector< vpgl_perspective_camera<double> > est_cams;
     dbccl_camera_estimator ce;
     ce.estimate( tracks, track_masks, 
       true_cams[0].get_calibration(), est_cams );
@@ -202,8 +202,8 @@ static void test_camera_estimator()
       double this_error = 
         (c_true.get_matrix()-c_est.get_matrix()).frobenius_norm();
       if( max_error < this_error ) max_error = this_error;
-      vcl_cerr << c_true.get_matrix() << c_est.get_matrix();
-      vcl_cerr << i << ' ' << this_error << '\n';
+      std::cerr << c_true.get_matrix() << c_est.get_matrix();
+      std::cerr << i << ' ' << this_error << '\n';
     }
     TEST_NEAR( "Testing estimate with split tracks:", 
       max_error, 0.0, .01 );

@@ -9,7 +9,7 @@
 #include <vdgl/vdgl_digital_curve.h>
 #include <vgui/vgui.h>
 #include <dbctrk/dbctrk_curve_clustering.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbctrk/dbctrk_utils.h> 
 #include <dbctrk/dbctrk_curveMatch.h> 
 #include <bvis1/bvis1_view_tableau.h>
@@ -86,15 +86,15 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
  //: tool to write rgb or IHS profile of a curve to a file.
   if (e.type == vgui_KEY_PRESS && e.key == 'w' ) {
     vgui_dialog rgb_dlg("Output file for Intesnity profile");
-    static vcl_string file_name = "";
-    static vcl_string ext = "*.*";
+    static std::string file_name = "";
+    static std::string ext = "*.*";
     rgb_dlg.file("File:", ext, file_name);
     if( !rgb_dlg.ask())
          return true;
-    vcl_ofstream ofile(file_name.c_str());
+    std::ofstream ofile(file_name.c_str());
     if(!ofile)
         return false;
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_selected_soviews();
     if(all_objects.size()==1)
     {
@@ -118,7 +118,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
   //: tool to plot a intensity profile of a curve using matlab
   if (e.type == vgui_KEY_PRESS && e.key == 'v' && vgui_SHIFT) {
     engEvalString(ep, "figure;"); 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_selected_soviews();
     if(all_objects.size()==1)
     {
@@ -278,7 +278,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
   }
     //: to check the distribution of intensity along the curve 
   if (e.type == vgui_KEY_PRESS && e.key == 'h' ) {
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_selected_soviews();
     if(all_objects.size()>=1)
       {
@@ -358,12 +358,12 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
     tableau_->deselect_all();
   }
     if (e.type == vgui_KEY_PRESS && e.key == 'j' && vgui_SHIFT) {
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_selected_soviews();
-    vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
-    vcl_map<vcl_string, vgui_tableau_sptr>::iterator iter;
-    vcl_vector<vgui_soview*>  selected_objects;
-    vcl_map<int,vcl_vector<dbctrk_soview2D* > >::iterator curveiter;
+    std::vector< std::map<std::string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
+    std::map<std::string, vgui_tableau_sptr>::iterator iter;
+    std::vector<vgui_soview*>  selected_objects;
+    std::map<int,std::vector<dbctrk_soview2D* > >::iterator curveiter;
     curr_tableau_=tableau_;
     for(int j=0;j<seq.size();j++)
        {    
@@ -411,8 +411,8 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
       double *nrdata=new double[c->desc->Nrcolor.size()];
       double *ngdata=new double[c->desc->Ngcolor.size()];
       double *nbdata=new double[c->desc->Nbcolor.size()];
-      vcl_cout<<"\n the size of the color array is "<<c->desc->Prcolor.size();
-      vcl_cout<<"\n";
+      std::cout<<"\n the size of the color array is "<<c->desc->Prcolor.size();
+      std::cout<<"\n";
       engEvalString(ep, "clear prdata pgdata pbdata nrdata ngdata nbdata;");
       for(int i=0;i<c->desc->Prcolor.size();i++)
         {
@@ -503,39 +503,39 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
       dbctrk_tracker_curve_sptr c1=((dbctrk_soview2D*)selected_objects[0])->dbctrk_sptr();
       dbctrk_tracker_curve_sptr c2=((dbctrk_soview2D*)selected_objects[1])->dbctrk_sptr();
       
-      vcl_vector<double> hist1pr=normhist(c1->desc->Prcolor,0,255,20);
-      vcl_vector<double> hist1pg=normhist(c1->desc->Pgcolor,0,255,20);
-      vcl_vector<double> hist1pb=normhist(c1->desc->Pbcolor,0,255,20);
-      vcl_vector<double> hist1nr=normhist(c1->desc->Nrcolor,0,255,20);
-      vcl_vector<double> hist1ng=normhist(c1->desc->Ngcolor,0,255,20);
-      vcl_vector<double> hist1nb=normhist(c1->desc->Nbcolor,0,255,20);
+      std::vector<double> hist1pr=normhist(c1->desc->Prcolor,0,255,20);
+      std::vector<double> hist1pg=normhist(c1->desc->Pgcolor,0,255,20);
+      std::vector<double> hist1pb=normhist(c1->desc->Pbcolor,0,255,20);
+      std::vector<double> hist1nr=normhist(c1->desc->Nrcolor,0,255,20);
+      std::vector<double> hist1ng=normhist(c1->desc->Ngcolor,0,255,20);
+      std::vector<double> hist1nb=normhist(c1->desc->Nbcolor,0,255,20);
 
-      vcl_vector<double> hist2pr=normhist(c2->desc->Prcolor,0,255,20);
-      vcl_vector<double> hist2pg=normhist(c2->desc->Pgcolor,0,255,20);
-      vcl_vector<double> hist2pb=normhist(c2->desc->Pbcolor,0,255,20);
-      vcl_vector<double> hist2nr=normhist(c2->desc->Nrcolor,0,255,20);
-      vcl_vector<double> hist2ng=normhist(c2->desc->Ngcolor,0,255,20);
-      vcl_vector<double> hist2nb=normhist(c2->desc->Nbcolor,0,255,20);
+      std::vector<double> hist2pr=normhist(c2->desc->Prcolor,0,255,20);
+      std::vector<double> hist2pg=normhist(c2->desc->Pgcolor,0,255,20);
+      std::vector<double> hist2pb=normhist(c2->desc->Pbcolor,0,255,20);
+      std::vector<double> hist2nr=normhist(c2->desc->Nrcolor,0,255,20);
+      std::vector<double> hist2ng=normhist(c2->desc->Ngcolor,0,255,20);
+      std::vector<double> hist2nb=normhist(c2->desc->Nbcolor,0,255,20);
 
       
-      vcl_cout<<" Dpr = "<<dist2pdf(hist1pr,hist2pr)
+      std::cout<<" Dpr = "<<dist2pdf(hist1pr,hist2pr)
         <<" Dpg = "<<dist2pdf(hist1pg,hist2pg)
         <<" Dpb = "<<dist2pdf(hist1pb,hist2pb)
         <<" Dnr = "<<dist2pdf(hist1nr,hist2nr)
         <<" Dnb = "<<dist2pdf(hist1ng,hist2ng)
         <<" Dng = "<<dist2pdf(hist1nb,hist2nb);
-      vcl_cout<<"\n";
+      std::cout<<"\n";
     }
       }
     tableau_->deselect_all();
   }
   //: tool to plot a intensity profile of matched curves using matlab
   if (e.type == vgui_KEY_PRESS && e.key == 's' ) {
-    vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
-    vcl_map<vcl_string, vgui_tableau_sptr>::iterator iter;
-    vcl_vector<vgui_soview*>  all_objects;
-    vcl_vector<vgui_soview*>  selected_objects;
-    vcl_map<int,vcl_vector<dbctrk_soview2D* > >::iterator curveiter;
+    std::vector< std::map<std::string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
+    std::map<std::string, vgui_tableau_sptr>::iterator iter;
+    std::vector<vgui_soview*>  all_objects;
+    std::vector<vgui_soview*>  selected_objects;
+    std::map<int,std::vector<dbctrk_soview2D* > >::iterator curveiter;
     curr_tableau_=tableau_;
     for(int j=0;j<seq.size();j++)
        {    
@@ -581,7 +581,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
     if(!m_dlg.ask())
         return false;
 
-    vcl_map<int,int> mapping;
+    std::map<int,int> mapping;
     vnl_matrix <double> R;
     vnl_matrix <double> Tbar;              
     tableau_=curr_tableau_;
@@ -599,7 +599,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
 
                 if(!reverse)
                 {
-                  vcl_vector<vgl_point_2d<double> > points= c2->desc->curve_->pointarray(); 
+                  std::vector<vgl_point_2d<double> > points= c2->desc->curve_->pointarray(); 
       vdgl_digital_curve_sptr dc1=dbctrk_algs::create_digital_curves(points);
                     bgui_vsol_soview2D_edgel_curve pcurve1(dc1);
                     neighbor_style_->rgba[0] =1 ;
@@ -609,7 +609,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
                     neighbor_style_->apply_all();
                     tableau_->add_edgel_curve(dc1);
                 
-                    vcl_map<int,int>::iterator iter;
+                    std::map<int,int>::iterator iter;
                     for(iter=mapping.begin();iter!=mapping.end();iter++)
 
                    {
@@ -636,11 +636,11 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
   }
 
   if (e.type == vgui_KEY_PRESS && e.key == 'm' && vgui_SHIFT ) {
-       vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
-       vcl_map<vcl_string, vgui_tableau_sptr>::iterator iter;
-       vcl_vector<vgui_soview*>  all_objects;
-       vcl_vector<vgui_soview*>  selected_objects;
-       vcl_map<int,vcl_vector<dbctrk_soview2D* > >::iterator curveiter;
+       std::vector< std::map<std::string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
+       std::map<std::string, vgui_tableau_sptr>::iterator iter;
+       std::vector<vgui_soview*>  all_objects;
+       std::vector<vgui_soview*>  selected_objects;
+       std::map<int,std::vector<dbctrk_soview2D* > >::iterator curveiter;
        curr_tableau_=tableau_;
    
        for(int j=0;j<seq.size();j++)
@@ -677,7 +677,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
 
     if(!m_dlg.ask())
         return false;
-    vcl_map<int,int> mapping;
+    std::map<int,int> mapping;
     vnl_matrix <double> R;
     vnl_matrix <double> Tbar;              
     tableau_=curr_tableau_;
@@ -701,7 +701,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
                     double *ngdata1=new double[mapping.size()]; double *ngdata2=new double[mapping.size()];
                     double *nbdata1=new double[mapping.size()]; double *nbdata2=new double[mapping.size()];
 
-                    vcl_map<int,int>::iterator iter;
+                    std::map<int,int>::iterator iter;
                     int i=0;
                     for(iter=mapping.begin();iter!=mapping.end();iter++,i++)
                     {
@@ -828,7 +828,7 @@ dbctrk_intensity_tool::handle(const vgui_event & e,
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_intensity_tool::name() const
 {
 
@@ -836,17 +836,17 @@ dbctrk_intensity_tool::name() const
 
 }
 
-vcl_vector<double>  normhist(vcl_vector<double> data,double x_lo, double x_hi, int n_bins)
+std::vector<double>  normhist(std::vector<double> data,double x_lo, double x_hi, int n_bins)
 {
   mbl_histogram hist(x_lo,x_hi,n_bins);
-  vcl_vector<double> normpdf;
+  std::vector<double> normpdf;
   if(data.size()<=0)
     return normpdf;
   for(int i=0;i<data.size();i++)
     {
       hist.obs(data[i]);
     }
-  vcl_vector<int> frequency=hist.frequency();
+  std::vector<int> frequency=hist.frequency();
   for(int i=0;i<frequency.size();i++)
     {
       normpdf.push_back(double(frequency[i])/data.size());
@@ -856,16 +856,16 @@ vcl_vector<double>  normhist(vcl_vector<double> data,double x_lo, double x_hi, i
 
 
 
-double dist2pdf(vcl_vector<double> pdf1, vcl_vector<double> pdf2)
+double dist2pdf(std::vector<double> pdf1, std::vector<double> pdf2)
 {
   if(pdf1.size()!=pdf2.size())
     return -1;
   double sum=0;
   for(int i=0;i<pdf1.size();i++)
     {
-      sum+=vcl_sqrt(pdf1[i]*pdf2[i]);
+      sum+=std::sqrt(pdf1[i]*pdf2[i]);
     }
-  return vcl_pow(vcl_fabs(vcl_log(sum)),2);
+  return std::pow(std::fabs(std::log(sum)),2);
 }
 void dbctrk_intensity_tool::prepare_vector(char matlab_name[], double data[], int dim1,Engine *ep) {
   /* Create matlab variables for our data */

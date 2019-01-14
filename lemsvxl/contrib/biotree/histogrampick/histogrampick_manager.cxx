@@ -1,8 +1,8 @@
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_cstring.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <cstdlib> // for std::exit()
+#include <cstring> // for std::exit()
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -32,8 +32,8 @@
 #include "histogrampick_manager.h"
 #include <slice/sliceFileManager.h>
 
-void parse_globbed_filenames(const vcl_string & input,
-                    vcl_vector<vcl_string> &filenames)  ;
+void parse_globbed_filenames(const std::string & input,
+                    std::vector<std::string> &filenames)  ;
 //static histogrampick_manager instance
 histogrampick_manager* histogrampick_manager::instance_ = 0;
 
@@ -84,17 +84,17 @@ void histogrampick_manager::init()
 
 void histogrampick_manager::pick_polygon()
 {
-        vcl_cout << "pick polygon, " << histogrampick_manager::nameOf(region_select_) << "\n";
+        std::cout << "pick polygon, " << histogrampick_manager::nameOf(region_select_) << "\n";
         polygon_ = 0;
         pick_->pick_polygon(polygon_);
         if(polygon_){
 
-                vcl_cout << "chose polygon\n";
-                polygon_->describe(vcl_cout);
-                vcl_cout << " convex = " <<  polygon_->is_convex() << "\n";
+                std::cout << "chose polygon\n";
+                polygon_->describe(std::cout);
+                std::cout << " convex = " <<  polygon_->is_convex() << "\n";
                 vsol_box_2d_sptr bbox = polygon_->get_bounding_box();
-                vcl_cout << "bbox ... ";
-                bbox->print_summary(vcl_cout);
+                std::cout << "bbox ... ";
+                bbox->print_summary(std::cout);
 
                 vglpoly_.clear(); 
                 vglpoly_.new_sheet();
@@ -104,16 +104,16 @@ void histogrampick_manager::pick_polygon()
                         vglpoly_.push_back(pt->x(),pt->y());
                 }
 
-                vcl_cout << "vglpoly = " ;
-                vglpoly_.print(vcl_cout);
+                std::cout << "vglpoly = " ;
+                vglpoly_.print(std::cout);
 
                 vil_image_view<float> im;
                 vil_convert_cast(curimg_->get_view(),im);
 
-                int starty = static_cast<int>(vcl_floor(bbox->get_min_y()));
-                int endy =   static_cast<int>(vcl_ceil(bbox->get_max_y()));
-                int startx = static_cast<int>(vcl_floor(bbox->get_min_x()));
-                int endx =   static_cast<int>(vcl_ceil(bbox->get_max_x()));
+                int starty = static_cast<int>(std::floor(bbox->get_min_y()));
+                int endy =   static_cast<int>(std::ceil(bbox->get_max_y()));
+                int startx = static_cast<int>(std::floor(bbox->get_min_x()));
+                int endx =   static_cast<int>(std::ceil(bbox->get_max_x()));
 
                 starty = starty < 0 ? 0 : starty;
                 endy = endy > im.nj() ? im.nj()-1 : endy;
@@ -135,7 +135,7 @@ void histogrampick_manager::pick_polygon()
 
 void histogrampick_manager::inside_vessel(){
         region_select_ = INSIDE_VESSEL;
-        vcl_cout << "easy2D_->set_foreground(1,0,0,0.5);\n";
+        std::cout << "easy2D_->set_foreground(1,0,0,0.5);\n";
         easy2D_->set_foreground(1,0,0,0.5);
         pick_->set_color(1,0,0);
         this->pick_polygon();
@@ -144,7 +144,7 @@ void histogrampick_manager::inside_vessel(){
 void histogrampick_manager::inside_boundary(){
         region_select_ = INSIDE_BOUNDARY;
 
-        vcl_cout << "easy2D_->set_foreground(1,0.2,0.5,0.5);\n";
+        std::cout << "easy2D_->set_foreground(1,0.2,0.5,0.5);\n";
         easy2D_->set_foreground(1,0.2,0.5,0.5);
         pick_->set_color(1,0,0);
 
@@ -153,7 +153,7 @@ void histogrampick_manager::inside_boundary(){
 
 void histogrampick_manager::outside_vessel(){
         region_select_ = OUTSIDE_VESSEL;
-        vcl_cout << "easy2D_->set_foreground(0,0,1,0.5);\n";
+        std::cout << "easy2D_->set_foreground(0,0,1,0.5);\n";
         easy2D_->set_foreground(0,0,1,0.5);
         pick_->set_color(0,0,1);
         this->pick_polygon();
@@ -161,7 +161,7 @@ void histogrampick_manager::outside_vessel(){
 
 void histogrampick_manager::outside_boundary(){
         region_select_ = OUTSIDE_BOUNDARY;
-        vcl_cout << "easy2D_->set_foreground(0.2,0.5,1,0.5);\n";
+        std::cout << "easy2D_->set_foreground(0.2,0.5,1,0.5);\n";
         easy2D_->set_foreground(0.2,0.5,1,0.5);
         pick_->set_color(0,0,1);
         this->pick_polygon();
@@ -185,7 +185,7 @@ bool histogrampick_manager::handle(vgui_event const & e)
                   if(itab){
                           itab->set_image_resource(0);
                   }
-                  else{ vcl_cerr << " error: no itab \n";}
+                  else{ std::cerr << " error: no itab \n";}
           }
   }
 
@@ -197,7 +197,7 @@ bool histogrampick_manager::handle(vgui_event const & e)
                   itab.vertical_cast(deck_->current()); 
                   curimg_ = vil_load_image_resource(filenames_[deck_->index()].c_str());
                   itab->set_image_resource(curimg_);
-                  vgui::out << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   vcl_endl;
+                  vgui::out << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   std::endl;
                   }
           }
           
@@ -211,7 +211,7 @@ bool histogrampick_manager::handle(vgui_event const & e)
                   easy2D_->post_redraw();
                   vgui::flush();
           }
-          else{ vcl_cerr << " error: no itab \n";}
+          else{ std::cerr << " error: no itab \n";}
   }
   return res;
 }
@@ -219,13 +219,13 @@ bool histogrampick_manager::handle(vgui_event const & e)
 void histogrampick_manager::quit()
 {
         vul_file::delete_file_glob("/tmp/tmp_tiff*.tif");
-        vcl_exit(1);
+        std::exit(1);
 }
 
 void histogrampick_manager::save_histogram()
 {
         vgui_dialog fname_dlg("Histogram File Output");
-        static vcl_string fname;
+        static std::string fname;
         fname_dlg.field("Filename:", fname);
         if (!fname_dlg.ask()) return;
 
@@ -233,22 +233,22 @@ void histogrampick_manager::save_histogram()
         max = rmp_->max_L_;
         unsigned nbins = 10;
         //defaults to starting at zero
-        vcl_vector<bsta_histogram<float> > histograms;
+        std::vector<bsta_histogram<float> > histograms;
         for(int region = 0; region < histogrampick_manager::N_REGION_TYPES; region++){
                 histograms.push_back(bsta_histogram<float> (max,nbins));
                 for(int sample = 0; sample < samples_[region].size(); sample++)
                         histograms[region].upcount(samples_[region][sample],1);
         }
         for(int region = 0; region < histogrampick_manager::N_REGION_TYPES; region++){
-                vcl_cout << nameOf(static_cast<region_type>(region)) << "\n";
+                std::cout << nameOf(static_cast<region_type>(region)) << "\n";
 
                 for(int i = 0; i < nbins; i++){
                         histograms[region].value_range(i,min,max);
-                        vcl_cout << min << "-" << max << ": " << histograms[region].counts(i) << "\n";
+                        std::cout << min << "-" << max << ": " << histograms[region].counts(i) << "\n";
                 }
         }
 
-        vcl_ofstream out(fname.c_str());
+        std::ofstream out(fname.c_str());
         for(int region = 0; region < histogrampick_manager::N_REGION_TYPES; region++){
                 out << nameOf(static_cast<region_type>(region)) << ' ';
                 out << histograms[region];
@@ -260,12 +260,12 @@ void histogrampick_manager::save_histogram()
 void histogrampick_manager::create_temporary_tifs(const char* fname, const char* output_prefix)
 {
         int ni,nj,nk;
-        vcl_ifstream* in =  sliceFileManager<float>::openSliceFileForRead(fname,ni,nj,nk);
+        std::ifstream* in =  sliceFileManager<float>::openSliceFileForRead(fname,ni,nj,nk);
         vil_image_view<float> slice(ni,nj);
 
         for(int i = 0; i < nk; i++){
                 if(sliceFileManager<float>::readOneSlice(in, slice, ni, nj)){
-                vcl_string num; vcl_stringstream s; s << i ; s >> num;
+                std::string num; std::stringstream s; s << i ; s >> num;
                 if(i < 10) num = "0" + num; 
                 if(i < 100) num = "0" + num; 
                 if(i < 1000) num = "0" + num; 
@@ -273,7 +273,7 @@ void histogrampick_manager::create_temporary_tifs(const char* fname, const char*
                 vil_save(slice,num.c_str(), "tiff");
                 }
                 else{
-                        vcl_cerr << "failed to read slice " << i << "\n";
+                        std::cerr << "failed to read slice " << i << "\n";
                         exit(1);
                 }
         }
@@ -285,7 +285,7 @@ void histogrampick_manager::load_image(const char* image_filename)
   extension_ =  vul_file::extension(image_filename);
   prefix_ = vul_file::basename(image_filename,extension_.c_str());
 
-  if(!vcl_strncmp(extension_.c_str(),".slicefile",10)){
+  if(!std::strncmp(extension_.c_str(),".slicefile",10)){
           create_temporary_tifs(image_filename,"/tmp/tmp_tiff");
           path_ = "/tmp";
           extension_ =  ".tif";
@@ -301,28 +301,28 @@ void histogrampick_manager::load_image(const char* image_filename)
 
   prefix_ = prefix_.substr(0,i+1);
 
-  vcl_cerr <<  "path_ = " << path_ << vcl_endl;
-  vcl_cerr <<  "prefix_ = " << prefix_ << vcl_endl;
-  vcl_cerr <<  "extension_ = " << extension_ << vcl_endl;
+  std::cerr <<  "path_ = " << path_ << std::endl;
+  std::cerr <<  "prefix_ = " << prefix_ << std::endl;
+  std::cerr <<  "extension_ = " << extension_ << std::endl;
 
   if(prefix_ != "" && extension_ != ""){
-  vcl_cerr << "load data from " << path_ <<  vcl_endl;
-  vcl_string slash = "/";
-  vcl_string pounds = "";
+  std::cerr << "load data from " << path_ <<  std::endl;
+  std::string slash = "/";
+  std::string pounds = "";
   for(int i = 0; i < digitcount; i++)
           pounds = pounds + "#";
             
 
-  vcl_string pattern = path_ + slash + prefix_ + pounds + extension_;
-  vcl_cerr << "pattern = " << pattern << "\n" ;
+  std::string pattern = path_ + slash + prefix_ + pounds + extension_;
+  std::cerr << "pattern = " << pattern << "\n" ;
   parse_globbed_filenames(pattern,filenames_);
 
   for(int i = 0; i < filenames_.size(); i++){
-          vcl_cerr << filenames_[i] << "\n" ; 
+          std::cerr << filenames_[i] << "\n" ; 
           deck_->add( bgui_image_tableau_new());
   }
 
-  vcl_cerr << "deck size is " << deck_->size() << "\n" ;
+  std::cerr << "deck size is " << deck_->size() << "\n" ;
   d_ = deck_->size();
 
   if(deck_->current()){
@@ -331,11 +331,11 @@ void histogrampick_manager::load_image(const char* image_filename)
           vil_image_resource_sptr res = vil_load_image_resource(filenames_[deck_->index()].c_str());
           if(res){
                   itab->set_image_resource(res);
-                  vgui::out << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   vcl_endl;
-                  vcl_cerr << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   vcl_endl;
+                  vgui::out << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   std::endl;
+                  std::cerr << "Slice " << deck_->index() << ": " << filenames_[deck_->index()] <<   std::endl;
           }
           else{
-                  vcl_cerr << "failed to load  " << filenames_[deck_->index()].c_str() << "\n";
+                  std::cerr << "failed to load  " << filenames_[deck_->index()].c_str() << "\n";
           }
   }
 
@@ -395,12 +395,12 @@ void histogrampick_manager::load_image(const char* image_filename)
 
                 }
                 else{
-                        vcl_cerr << "no resource " << "\n" ;
+                        std::cerr << "no resource " << "\n" ;
                 }
         }
   } 
   else{
-    vcl_cerr << "specify full path to an image file" << "\n" ;
+    std::cerr << "specify full path to an image file" << "\n" ;
   } 
 
   vgui_event noevent;
@@ -415,7 +415,7 @@ void histogrampick_manager::set_levelset_params()
 void histogrampick_manager::write_xml()
 {
         vgui_dialog xml_name_dlg("XML Output Name");
-        static vcl_string xmlname;
+        static std::string xmlname;
         xml_name_dlg.field("Filename:", xmlname);
         if (!xml_name_dlg.ask()) return;
 }
@@ -423,8 +423,8 @@ void histogrampick_manager::write_xml()
 void histogrampick_manager::load_image()
 {
   vgui_dialog load_image_dlg("Load image file");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext,
       image_filename);
   if (!load_image_dlg.ask())
@@ -445,8 +445,8 @@ void histogrampick_manager::set_range(){
   if (!load_image_dlg.ask())
     return;
 
-  vcl_cerr << "setting min to " << min << "\n" ;
-  vcl_cerr << "settaxg max to " << max << "\n" ;
+  std::cerr << "setting min to " << min << "\n" ;
+  std::cerr << "settaxg max to " << max << "\n" ;
   rmp_->min_L_ = min;
   rmp_->max_L_ = max;
   vgui_event noevent;

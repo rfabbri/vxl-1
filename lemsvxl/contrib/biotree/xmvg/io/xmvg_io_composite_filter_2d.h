@@ -11,6 +11,6 @@ template <class T>
 void vsl_b_read(vsl_b_istream & is, xmvg_composite_filter_2d<T> & filter);
 
 template <class T>
-void vsl_print_summary(vcl_ostream & os,const xmvg_composite_filter_2d<T> & p);
+void vsl_print_summary(std::ostream & os,const xmvg_composite_filter_2d<T> & p);
 
 #endif

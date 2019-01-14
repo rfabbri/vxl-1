@@ -70,8 +70,8 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize(bvam_voxel_w
     dynamic_cast<vpgl_perspective_camera<double>*>(curr_img.camera.ptr());
 
   if (!cam_est) {
-    vcl_cerr << "error: current camera estimate must be a vpgl_perspective_camera";
-    vcl_cerr << " with at least the calibration matrix set." << vcl_endl;
+    std::cerr << "error: current camera estimate must be a vpgl_perspective_camera";
+    std::cerr << " with at least the calibration matrix set." << std::endl;
     return prev_state;
   }
 
@@ -84,10 +84,10 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize(bvam_voxel_w
     optimize_once(vox_world,prev_img,mask,curr_img,prev_state, use_gps_);
 
   // debug
-  vcl_vector<vpgl_perspective_camera<double> > step_vec;
+  std::vector<vpgl_perspective_camera<double> > step_vec;
   step_vec.push_back(vpgl_perspective_camera<double>(cam_est->get_calibration(),step_state.get_point(),step_state.get_rotation()));
 
-  vcl_cout << "Pk = " << vcl_endl << step_state.get_error_covariance() << vcl_endl;
+  std::cout << "Pk = " << std::endl << step_state.get_error_covariance() << std::endl;
 
   // iteratively upate estimate, using expected images at intermediate steps as observations
   if (use_expected_) {
@@ -119,8 +119,8 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize(bvam_voxel_w
       step_vec.push_back(vpgl_perspective_camera<double>(cam_est->get_calibration(),substep_state.get_point(),substep_state.get_rotation()));
 
       double step_length = substep_state.get_state().magnitude();
-      vcl_cout << " step length = " << step_length << vcl_endl;
-      vcl_cout << "Pk = " << vcl_endl << substep_state.get_error_covariance() << vcl_endl;
+      std::cout << " step length = " << step_length << std::endl;
+      std::cout << "Pk = " << std::endl << substep_state.get_error_covariance() << std::endl;
       if (step_length < min_step_length)
         iterate_again = false;
     }
@@ -153,9 +153,9 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize(bvam_voxel_w
   }
   // debug
   for (unsigned i=0; i<step_vec.size(); ++i) {
-    vcl_cout << "step " << i << vcl_endl;
-    vcl_cout << "center = " << step_vec[i].get_camera_center() << vcl_endl;
-    vcl_cout << "rot = " << step_vec[i].get_rotation().as_rodrigues() << vcl_endl;
+    std::cout << "step " << i << std::endl;
+    std::cout << "center = " << step_vec[i].get_camera_center() << std::endl;
+    std::cout << "rot = " << step_vec[i].get_rotation().as_rodrigues() << std::endl;
   }
   return step_state;
 
@@ -194,9 +194,9 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize_once(bvam_vo
   double theta = acos(world_plane_cam.nz()/sqrt(world_plane_cam.nx()*world_plane_cam.nx() + world_plane_cam.nz()*world_plane_cam.nz()));
   double phi = acos(world_plane_cam.nz()/sqrt(world_plane_cam.ny()*world_plane_cam.ny() + world_plane_cam.nz()*world_plane_cam.nz()));
 
-  vcl_cout << "dz = " << dz << vcl_endl;
-  vcl_cout << "theta = " << theta << vcl_endl;
-  vcl_cout << "phi = " << phi << vcl_endl << vcl_endl;
+  std::cout << "dz = " << dz << std::endl;
+  std::cout << "theta = " << theta << std::endl;
+  std::cout << "phi = " << phi << std::endl << std::endl;
 
   // construct the measurement Jacobian
   unsigned nhomography = 6 + (use_proj_homography_? 2:0);
@@ -217,8 +217,8 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize_once(bvam_vo
   vnl_matrix<double> H_trans = H.transpose();
   vnl_matrix<double> K = P_pred*H_trans*vnl_matrix_inverse<double>(H*P_pred*H_trans + measurement_error_covar_);
 
-  vcl_cout << "H = " << H << vcl_endl;
-  vcl_cout << "measurement_error_covar = " << measurement_error_covar_ << vcl_endl;
+  std::cout << "H = " << H << std::endl;
+  std::cout << "measurement_error_covar = " << measurement_error_covar_ << std::endl;
 
   // predict measurement vector z
   vnl_vector<double> z_pred(nmeasurements);
@@ -238,7 +238,7 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize_once(bvam_vo
   vpgl_perspective_camera<double>  *curr_cam_perspective;
   curr_cam_perspective = dynamic_cast<vpgl_perspective_camera<double>*>(curr_img.camera.ptr());
   if (!curr_cam_perspective) {
-    vcl_cerr << "ERROR camera_optimizer expects vpgl_perspective cameras. " << vcl_endl;
+    std::cerr << "ERROR camera_optimizer expects vpgl_perspective cameras. " << std::endl;
     return prev_state;
   }
 
@@ -276,12 +276,12 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize_once(bvam_vo
   // Update estimate with measurement zk
   vnl_vector_fixed<double,6> x_post = x_pred + K*(z - z_pred);
 
-  vcl_cout << "K = " << K << vcl_endl;
+  std::cout << "K = " << K << std::endl;
 
-  vcl_cout << "z_pred = " << z_pred << vcl_endl;
-  vcl_cout << "z      = " << z << vcl_endl;
-  vcl_cout << "x_pred = " << x_pred << vcl_endl;
-  vcl_cout << "x_post = " << x_post << vcl_endl;
+  std::cout << "z_pred = " << z_pred << std::endl;
+  std::cout << "z      = " << z << std::endl;
+  std::cout << "x_pred = " << x_pred << std::endl;
+  std::cout << "x_post = " << x_post << std::endl;
 
 
   // Update error covariance
@@ -289,8 +289,8 @@ bvam_ekf_camera_optimizer_state bvam_ekf_camera_optimizer::optimize_once(bvam_vo
   I6.set_identity();
   vnl_matrix_fixed<double,6,6> P_post = (I6 - K*H)*P_pred;
 
-  vcl_cout << "P_pred = " << P_pred << vcl_endl;
-  vcl_cout << "P_post = " << P_post << vcl_endl;
+  std::cout << "P_pred = " << P_pred << std::endl;
+  std::cout << "P_post = " << P_post << std::endl;
 
   // update camera
   vnl_vector_fixed<double,6> x_post_unscaled;
@@ -326,7 +326,7 @@ vnl_vector<double> bvam_ekf_camera_optimizer::img_homography(vil_image_view_base
   vil_image_view<unsigned char> *base_img_view_char = dynamic_cast<vil_image_view<unsigned char>*>(base_img_viewb.ptr());
   vil_image_view<unsigned char> *img_view_char = dynamic_cast<vil_image_view<unsigned char>*>(img_viewb.ptr());
   if (!base_img_view_char || !img_view_char) {
-    vcl_cerr << "unsupported image type " << vcl_endl;
+    std::cerr << "unsupported image type " << std::endl;
     return vnl_vector<double>(0);
   }
 
@@ -350,11 +350,11 @@ vnl_vector<double> bvam_ekf_camera_optimizer::img_homography(vil_image_view_base
   vimt_image_2d_of<float> mask_img(mask_view, vimt_transform_2d());
 
   dbvrl_minimizer minimizer(base_img, img, mask_img, roi, true);
-  vcl_cout << " minimizing image error..";
+  std::cout << " minimizing image error..";
   minimizer.minimize(init_xform,true);
-  vcl_cout << "..done." << vcl_endl;
+  std::cout << "..done." << std::endl;
   double curr_error = minimizer.get_end_error();
-  vcl_cout << "end error = " << curr_error << vcl_endl;
+  std::cout << "end error = " << curr_error << std::endl;
   // computed homography maps pixels in current image to pixels in base image
 
   // convert to normalized camera matrix 
@@ -368,9 +368,9 @@ vnl_vector<double> bvam_ekf_camera_optimizer::img_homography(vil_image_view_base
   else
     lie_vector = matrix_to_coeffs_GA2(H);
 
-  vcl_cout << "optimized homograpy = " << vcl_endl << init_xform.inverse().matrix() << vcl_endl;
-  vcl_cout << "normalized homography = "<< vcl_endl << H << vcl_endl;
-  vcl_cout << "homography lie coeffs = " << lie_vector << vcl_endl << vcl_endl;
+  std::cout << "optimized homograpy = " << std::endl << init_xform.inverse().matrix() << std::endl;
+  std::cout << "normalized homography = "<< std::endl << H << std::endl;
+  std::cout << "homography lie coeffs = " << lie_vector << std::endl << std::endl;
 
   
   
@@ -384,7 +384,7 @@ vnl_vector_fixed<double,6> bvam_ekf_camera_optimizer::matrix_to_coeffs_SE3(vnl_m
   vnl_vector_fixed<double,6> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
@@ -406,13 +406,13 @@ vnl_vector_fixed<double,6> bvam_ekf_camera_optimizer::matrix_to_coeffs_GA2(vnl_m
   vnl_vector_fixed<double,6> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
 
-  vcl_cout << "M = " << M << vcl_endl;
-  vcl_cout << "logM = " << logM << vcl_endl;
+  std::cout << "M = " << M << std::endl;
+  std::cout << "logM = " << logM << std::endl;
 
   coeffs(0) = logM(0,2);
   coeffs(1) = logM(1,2);
@@ -431,7 +431,7 @@ vnl_vector_fixed<double,8> bvam_ekf_camera_optimizer::matrix_to_coeffs_P2(vnl_ma
   vnl_vector_fixed<double,8> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
@@ -471,14 +471,14 @@ vnl_matrix_fixed<double,4,4> bvam_ekf_camera_optimizer::coeffs_to_matrix_SE3(vnl
 
 vnl_matrix_fixed<double,3,3> bvam_ekf_camera_optimizer::coeffs_to_matrix_GA2(vnl_vector_fixed<double,6> const& a)
 {
-  vcl_cout << "not implemented yet" << vcl_endl;
+  std::cout << "not implemented yet" << std::endl;
   return vnl_matrix_fixed<double,3,3>(0.0);
 
 }
 
 vnl_matrix_fixed<double,3,3> bvam_ekf_camera_optimizer::coeffs_to_matrix_P2(vnl_vector_fixed<double,8> const &a)
 {
-  vcl_cout << "not implemented yet" << vcl_endl;
+  std::cout << "not implemented yet" << std::endl;
   return vnl_matrix_fixed<double,3,3>(0.0);
 }
 
@@ -490,7 +490,7 @@ bool bvam_ekf_camera_optimizer::logm_approx(vnl_matrix<double> const& A, vnl_mat
   unsigned nr = A.rows();
   unsigned nc = A.cols();
   if (nr != nc) {
-    vcl_cout << "error: logm_approx called with non-square matrix." << vcl_endl;
+    std::cout << "error: logm_approx called with non-square matrix." << std::endl;
     return false;
   }
   logA.set_size(nr,nr);
@@ -506,21 +506,21 @@ bool bvam_ekf_camera_optimizer::logm_approx(vnl_matrix<double> const& A, vnl_mat
   vnl_matrix<double> Wpow = I;
   while(term_norm > tol) {
     if (i >= max_iterations) {
-      vcl_cerr << vcl_endl;
-      vcl_cerr << "*************************************************************" << vcl_endl;
-      vcl_cerr << "ERROR: logm_approx did not converge." << vcl_endl;
-      vcl_cerr << "*************************************************************" << vcl_endl << vcl_endl;
+      std::cerr << std::endl;
+      std::cerr << "*************************************************************" << std::endl;
+      std::cerr << "ERROR: logm_approx did not converge." << std::endl;
+      std::cerr << "*************************************************************" << std::endl << std::endl;
       return false;
     }
     Wpow = Wpow*W;
     vnl_matrix<double> term = -Wpow/i;
     term_norm = term.frobenius_norm();
     logA += term;
-    //vcl_cout << "iteration " << i <<": W = " << W << vcl_endl << "Wpow = " << Wpow << vcl_endl << "term = " << term << vcl_endl;
-    //vcl_cout << "logA = " << logA << vcl_endl;
+    //std::cout << "iteration " << i <<": W = " << W << std::endl << "Wpow = " << Wpow << std::endl << "term = " << term << std::endl;
+    //std::cout << "logA = " << logA << std::endl;
     ++i;
   }
-  vcl_cout << "logM converged in " << i << " iterations. " << vcl_endl;
+  std::cout << "logM converged in " << i << " iterations. " << std::endl;
 
   return true;
 }

@@ -32,7 +32,7 @@ public:
   //virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const {return "Levselset Segmentation"; }
+  virtual std::string name() const {return "Levselset Segmentation"; }
 
   ////: Allow the tool to add to the popup menu as a tableau would
   //virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -115,13 +115,13 @@ protected:
   //dbdet_dlvwr intsciss_; 
 
   ////: stores the curve points delineating the cartilage boundaries
-  //vcl_vector< vgl_point_2d<double > > contour_;
+  //std::vector< vgl_point_2d<double > > contour_;
 
   ////: stores temporary path returned by livewire
-  //vcl_vector< vgl_point_2d<int > > path_;
+  //std::vector< vgl_point_2d<int > > path_;
 
   ////: stores edge points manually selected by users
-  //vcl_vector<vgl_point_2d<int > > manual_points_;
+  //std::vector<vgl_point_2d<int > > manual_points_;
 
 
 

@@ -12,7 +12,7 @@
 // \endverbatim
 
 #include <vxl_config.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource.h>
 #include <bapl/bapl_keypoint_sptr.h>
@@ -24,11 +24,11 @@
 
 //: Extract the lowe keypoints from an image
 bool bapl_keypoint_extractor( const vil_image_resource_sptr & image,
-                              vcl_vector<bapl_keypoint_sptr> & keypoints,
+                              std::vector<bapl_keypoint_sptr> & keypoints,
                               float curve_ratio = 10.0f );
 
 //: Find the peaks in the DoG pyramid
-void bapl_dog_peaks( vcl_vector<vgl_point_3d<float> >& peak_pts,
+void bapl_dog_peaks( std::vector<vgl_point_3d<float> >& peak_pts,
                      bapl_lowe_pyramid_set_sptr pyramid_set,
                      float curve_ratio = 10.0f);
 
@@ -41,7 +41,7 @@ public:
   void orient_at( float x, float y, float scale,
                   const vil_image_view<float> & grad_orient,
                   const vil_image_view<float> & grad_mag,
-                  vcl_vector<float> & orientations  );
+                  std::vector<float> & orientations  );
 private:
   float sigma_;
   unsigned num_bins_;

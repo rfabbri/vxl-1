@@ -15,9 +15,9 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <dbinfo/dbinfo_track.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
 
@@ -38,11 +38,11 @@ class dbinfo_mi_track : public dbinfo_track
 
   // methods associated with seeds
   //: get all seeds
-  vcl_vector<dbinfo_observation_sptr> seeds() const {return seeds_;}
+  std::vector<dbinfo_observation_sptr> seeds() const {return seeds_;}
 
   //: set all seeds
 
-  void set_seeds(vcl_vector<dbinfo_observation_sptr> const& seeds)
+  void set_seeds(std::vector<dbinfo_observation_sptr> const& seeds)
     {seeds_.clear(); seeds_ = seeds;}
 
   //: add a single seed
@@ -64,7 +64,7 @@ class dbinfo_mi_track : public dbinfo_track
 
  protected:
   //: A set of observations that were ranked highest in compatibility with the track
-  vcl_vector<dbinfo_observation_sptr> seeds_;
+  std::vector<dbinfo_observation_sptr> seeds_;
 };
 #include <dbinfo/dbinfo_mi_track_sptr.h>
 #endif // dbinfo_mi_track_h_

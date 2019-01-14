@@ -5,8 +5,8 @@
 
 #include "bpro_mview_process_manager.h"
 
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
+#include <cassert>
+#include <utility>
 #include <vul/vul_arg.h>
 
 #include <brdb/brdb_database_manager.h>
@@ -36,7 +36,7 @@ bpro_mview_process_manager::~bpro_mview_process_manager()
 //: Run a process on the current frame
 bool bpro_mview_process_manager::
 run_process( const bpro_process_sptr& process,
-             vcl_set<bpro_storage_sptr>* modified)
+             std::set<bpro_storage_sptr>* modified)
 {
   bool to_return = false;
   if(!process)
@@ -51,8 +51,8 @@ run_process( const bpro_process_sptr& process,
     return false;
   // SET INPUTS ////////////////////////////////////////////
 
-  vcl_vector< vcl_string > input_type_list = process->get_input_type();
-  vcl_vector< vcl_string > input_names = process->input_names();
+  std::vector< std::string > input_type_list = process->get_input_type();
+  std::vector< std::string > input_names = process->input_names();
 
   for( unsigned int i = 0 ;
       i < input_names.size();
@@ -81,9 +81,9 @@ run_process( const bpro_process_sptr& process,
   if( to_return ) {
     for( int index = 0 ; index < num_outputs;  index++ )
       {
-        vcl_vector < bpro_storage_sptr > output_storage_classes =
+        std::vector < bpro_storage_sptr > output_storage_classes =
           process->get_output(index);
-        vcl_vector< vcl_string > output_names = process->output_names();
+        std::vector< std::string > output_names = process->output_names();
 
       // Any outputs beyond those specified with output_names() are 
       // added to the modified set but not added to the repository

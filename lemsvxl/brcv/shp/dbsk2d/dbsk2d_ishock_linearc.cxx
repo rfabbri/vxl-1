@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_linearc.h>
 
 dbsk2d_ishock_linearc::
@@ -326,10 +326,10 @@ double dbsk2d_ishock_linearc::RTau (double LTau)
   double rtau;
 
   if (_nu==1){
-    double d = 2*_c/(1+(_s*_nud)*vcl_cos(LTau));
+    double d = 2*_c/(1+(_s*_nud)*std::cos(LTau));
     dbsk2d_assert (d>=0);
 
-    rtau = vcl_fabs(d*vcl_sin(LTau));
+    rtau = std::fabs(d*std::sin(LTau));
   }
   else {
     if (LTau==0) {
@@ -337,10 +337,10 @@ double dbsk2d_ishock_linearc::RTau (double LTau)
     }
     else {
       double alpha;
-      if (LTau>0) alpha = vcl_atan(-2*_c/LTau);
-      else        alpha = vcl_atan(-2*_c/LTau) + vnl_math::pi;
+      if (LTau>0) alpha = std::atan(-2*_c/LTau);
+      else        alpha = std::atan(-2*_c/LTau) + vnl_math::pi;
 
-      rtau = angle0To2Pi(vcl_acos(-LTau/vcl_sqrt(LTau*LTau + 4*_c*_c)) + alpha);
+      rtau = angle0To2Pi(std::acos(-LTau/std::sqrt(LTau*LTau + 4*_c*_c)) + alpha);
       if (_s*_nud==1)
         rtau = 2*vnl_math::pi - rtau;
       else
@@ -367,8 +367,8 @@ double dbsk2d_ishock_linearc::LTau (double RTau)
   double ltau;
 
   if (_nu==-1){
-    double d = 2*_c/(1+(_s*_nud)*vcl_cos(RTau));
-    ltau = vcl_fabs(d*vcl_sin(RTau));
+    double d = 2*_c/(1+(_s*_nud)*std::cos(RTau));
+    ltau = std::fabs(d*std::sin(RTau));
   }
   else {
     if (RTau==0) {
@@ -376,10 +376,10 @@ double dbsk2d_ishock_linearc::LTau (double RTau)
     }
     else {
       double alpha;
-      if (RTau>0) alpha = vcl_atan(-2*_c/RTau);
-      else        alpha = vcl_atan(-2*_c/RTau) + vnl_math::pi;
+      if (RTau>0) alpha = std::atan(-2*_c/RTau);
+      else        alpha = std::atan(-2*_c/RTau) + vnl_math::pi;
 
-      ltau = angle0To2Pi(vcl_acos(-RTau/vcl_sqrt(RTau*RTau + 4*_c*_c)) + alpha);
+      ltau = angle0To2Pi(std::acos(-RTau/std::sqrt(RTau*RTau + 4*_c*_c)) + alpha);
 
       if (_s*_nud<0)
         ltau = ltau+vnl_math::pi;
@@ -524,7 +524,7 @@ double dbsk2d_ishock_linearc::dFromLTau (double Ltau)
   double H = _R+(_nud*_s)*_H;
 
   if (_nu==1){
-    double denom =1+(_nud*_s)*vcl_cos(Ltau);
+    double denom =1+(_nud*_s)*std::cos(Ltau);
     if (AisEq(denom, 0))
       return ISHOCK_DIST_HUGE;
     return H/denom;
@@ -539,7 +539,7 @@ double dbsk2d_ishock_linearc::dFromRTau (double Rtau)
   double H = _R+(_nud*_s)*_H;
 
   if (_nu==-1){
-    double denom =1+(_nud*_s)*vcl_cos(Rtau);
+    double denom =1+(_nud*_s)*std::cos(Rtau);
     if (AisEq(denom, 0))
       return ISHOCK_DIST_HUGE;
     return H/denom;
@@ -578,7 +578,7 @@ double dbsk2d_ishock_linearc::rFromRTau  (double Rtau)
 
 double dbsk2d_ishock_linearc::d (double ptau) 
 {
-  double denom =1+(_nud*_s)*vcl_cos(ptau);
+  double denom =1+(_nud*_s)*std::cos(ptau);
   if (_isEq(denom, 0, 1e-10))
     return ISHOCK_DIST_HUGE;
 
@@ -600,12 +600,12 @@ double dbsk2d_ishock_linearc::r (double tau)
  
 double dbsk2d_ishock_linearc::rp (double tau)
 {
-   return _H*vcl_sin(tau)/((1*vcl_cos(tau)) * (1*vcl_cos(tau)));
+   return _H*std::sin(tau)/((1*std::cos(tau)) * (1*std::cos(tau)));
 }
 
 double dbsk2d_ishock_linearc::rpp(double tau)
 {
-   return _H*(2-vcl_cos(tau))/( (1+vcl_cos(tau)) * (1+vcl_cos(tau)) );
+   return _H*(2-std::cos(tau))/( (1+std::cos(tau)) * (1+std::cos(tau)) );
 }
 
 double dbsk2d_ishock_linearc::tangent(double tau)
@@ -615,25 +615,25 @@ double dbsk2d_ishock_linearc::tangent(double tau)
       return angle0To2Pi(_u+vnl_math::pi_over_2);
 
   double dx = -_s;
-  double dy = (vcl_cos(tau)+_s*_nud)/(_s*vcl_sin(tau));
-  double result = vcl_atan2 (dy, dx) + _u;
+  double dy = (std::cos(tau)+_s*_nud)/(_s*std::sin(tau));
+  double result = std::atan2 (dy, dx) + _u;
 
   return result;
 }
 
 double dbsk2d_ishock_linearc::g  (double tau)
 {
-   return _H*vcl_sqrt(2/( (1+vcl_cos(tau)) * (1+vcl_cos(tau)) * (1+vcl_cos(tau)) ));
+   return _H*std::sqrt(2/( (1+std::cos(tau)) * (1+std::cos(tau)) * (1+std::cos(tau)) ));
 }
 
 double dbsk2d_ishock_linearc::k  (double tau)
 {
-   return _H/vcl_sqrt(8.0);
+   return _H/std::sqrt(8.0);
 }
 
 double dbsk2d_ishock_linearc::v  (double tau) //FIX ME
 {
-   //return -vcl_sqrt(2.0)*_H*vcl_sqrt(1+vcl_cos(tau))/(1+vcl_sin(tau));
+   //return -std::sqrt(2.0)*_H*std::sqrt(1+std::cos(tau))/(1+std::sin(tau));
 
   //look for infinite conditions
   switch (_case){
@@ -651,9 +651,9 @@ double dbsk2d_ishock_linearc::v  (double tau) //FIX ME
     case 12: if (tau==2*vnl_math::pi) return 100000; //same as 8
   }
   if (_s*_nud==1)
-    return vcl_fabs(vcl_sqrt(2+2*vcl_cos(tau))/vcl_sin(tau));
+    return std::fabs(std::sqrt(2+2*std::cos(tau))/std::sin(tau));
   else
-    return vcl_fabs(vcl_sqrt(2+2*vcl_cos(tau+vnl_math::pi))/vcl_sin(tau+vnl_math::pi)); //vcl_fabs(vcl_sqrt(2-2*vcl_cos(tau))/vcl_sin(tau));
+    return std::fabs(std::sqrt(2+2*std::cos(tau+vnl_math::pi))/std::sin(tau+vnl_math::pi)); //std::fabs(std::sqrt(2-2*std::cos(tau))/std::sin(tau));
 }
 
 double dbsk2d_ishock_linearc::a  (double tau)
@@ -669,24 +669,24 @@ double dbsk2d_ishock_linearc::phi (double tau)
 double dbsk2d_ishock_linearc::getPointTauFromTime (double time)
 {
   double ptau;
-  //ptau = vcl_acos ( (2*_c-time)*(_s*_nud)/time );
-  ptau = vcl_acos (-time/(time+2*_c));
+  //ptau = std::acos ( (2*_c-time)*(_s*_nud)/time );
+  ptau = std::acos (-time/(time+2*_c));
   return (_nu==1) ? ptau : 2*vnl_math::pi-ptau;
 }
 
 double dbsk2d_ishock_linearc::getLTauFromTime (double time) //FIX ME
 {
   double ptau;
-  //ptau = vcl_acos ( (2*_c-time)*(_s*_nud)/time );
-  ptau = vcl_acos (-time/(time+2*_c));
+  //ptau = std::acos ( (2*_c-time)*(_s*_nud)/time );
+  ptau = std::acos (-time/(time+2*_c));
   return (_nu==1) ? ptau : 2*vnl_math::pi-ptau;
 }
 
 double dbsk2d_ishock_linearc::getRTauFromTime (double time) //FIX ME
 {
   double ptau;
-  //ptau = vcl_acos ( (2*_c-time)*(_s*_nud)/time );
-  ptau = vcl_acos (-time/(time+2*_c));
+  //ptau = std::acos ( (2*_c-time)*(_s*_nud)/time );
+  ptau = std::acos (-time/(time+2*_c));
   return (_nu==1) ? ptau : 2*vnl_math::pi-ptau;
 }
 
@@ -712,8 +712,8 @@ dbsk2d_ishock_linearc::tauDir()
 vgl_point_2d<double> dbsk2d_ishock_linearc::getPtFromPointTau (double ptau)
 {
   double c2 = _c*2;
-  double d = c2/(1+(_s*_nud)*vcl_cos(ptau));
-  vgl_point_2d<double> pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*vcl_cos(ptau),d*vcl_sin(ptau)), _u);
+  double d = c2/(1+(_s*_nud)*std::cos(ptau));
+  vgl_point_2d<double> pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*std::cos(ptau),d*std::sin(ptau)), _u);
 
   return pt;
 }
@@ -794,97 +794,97 @@ void dbsk2d_ishock_linearc::compute_extrinsic_locus()
   const int NUM_SUBDIVISIONS = 100;
   double DELTA_TAU = 2*vnl_math::pi/NUM_SUBDIVISIONS; 
 
-  d = H/(1+vcl_cos(stau));
-  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*vcl_cos(stau), d*vcl_sin(stau)), u);
+  d = H/(1+std::cos(stau));
+  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*std::cos(stau), d*std::sin(stau)), u);
   ex_pts_.push_back(pt);
 
   last_pt = pt;
 
   for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-    d = H/(1+vcl_cos(tau));
-    pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*vcl_cos(tau), d*vcl_sin(tau)), u);
+    d = H/(1+std::cos(tau));
+    pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*std::cos(tau), d*std::sin(tau)), u);
 
     ex_pts_.push_back(pt);
     last_pt = pt;
   }
 
-  d = H/(1+vcl_cos(etau));
-  vgl_point_2d<double> e_pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*vcl_cos(etau), d*vcl_sin(etau)), u);
+  d = H/(1+std::cos(etau));
+  vgl_point_2d<double> e_pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*std::cos(etau), d*std::sin(etau)), u);
   ex_pts_.push_back(e_pt);
 }
 
-void dbsk2d_ishock_linearc::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_linearc::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   char endx[32], endy[32], simtime[32], endtime[32];
 
   ostrm << "\n==============================\n";
   ostrm << "L-A: [" << _id << "] " << "{ "  << (_bActive ? "A" : "nA" ) << ", ";
-  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << vcl_endl;
+  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << std::endl;
 
   vgl_point_2d<double> start = getStartPt ();
   vgl_point_2d<double> end = getEndPt ();
 
   if (_endTime==ISHOCK_DIST_HUGE) {
-    vcl_sprintf(endtime, "INF");
-    vcl_sprintf(endx, "INF");
-    vcl_sprintf(endy, "INF");
+    std::sprintf(endtime, "INF");
+    std::sprintf(endx, "INF");
+    std::sprintf(endy, "INF");
   }
   else {
-    vcl_sprintf(endtime, "%.7f", _endTime);
-    vcl_sprintf(endx, "%.3f", end.x());
-    vcl_sprintf(endy, "%.3f", end.y());
+    std::sprintf(endtime, "%.7f", _endTime);
+    std::sprintf(endx, "%.3f", end.x());
+    std::sprintf(endy, "%.3f", end.y());
   }
 
   if (_simTime==ISHOCK_DIST_HUGE) 
-    vcl_sprintf(simtime, "INF");
+    std::sprintf(simtime, "INF");
   else 
-    vcl_sprintf(simtime, "%.7f", _simTime);
+    std::sprintf(simtime, "%.7f", _simTime);
 
-  vcl_sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
-  vcl_sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
-  vcl_sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<vcl_endl;
+  std::sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
+  std::sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
+  std::sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<std::endl;
 
-  ostrm << "lB: " << _lBElement->id(); vcl_sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
-  ostrm << "rB: " << _rBElement->id(); vcl_sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
+  ostrm << "lB: " << _lBElement->id(); std::sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
+  ostrm << "rB: " << _rBElement->id(); std::sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
   ostrm << "[ lS: " << (_lShock?_lShock->id():-1)  << ", rS: " << (_rShock?_rShock->id():-1) << "]\n";
   ostrm << "[ lN: " << (_lNeighbor?_lNeighbor->id():-1)  << ", rN: " << (_rNeighbor?_rNeighbor->id():-1);
-  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << vcl_endl;
+  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << std::endl;
   
-  vcl_sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
-  vcl_sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
+  std::sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
+  std::sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
 
-  vcl_sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
-  vcl_sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
 
-  vcl_sprintf(s, "case: %d\n", _case); ostrm << s;
-  vcl_sprintf(s, "H: %f\n", _H); ostrm << s;
-  vcl_sprintf(s, "u: %f\n", _u); ostrm << s;
-  vcl_sprintf(s, "mu: %d\n", _mu); ostrm << s;
-  vcl_sprintf(s, "nu: %d\n", _nu); ostrm << s;
-  vcl_sprintf(s, "sigma: %d\n", _s); ostrm << s;
-  vcl_sprintf(s, "nud: %s\n", ((_nud<0) ? "CCW" : "CW")); ostrm << s;
-  vcl_sprintf(s, "delta: %d\n", _delta); ostrm << s;
-  vcl_sprintf(s, "L: %d\n", _l); ostrm << s;
-  vcl_sprintf(s, "R: %d\n \n", _R); ostrm << s;
+  std::sprintf(s, "case: %d\n", _case); ostrm << s;
+  std::sprintf(s, "H: %f\n", _H); ostrm << s;
+  std::sprintf(s, "u: %f\n", _u); ostrm << s;
+  std::sprintf(s, "mu: %d\n", _mu); ostrm << s;
+  std::sprintf(s, "nu: %d\n", _nu); ostrm << s;
+  std::sprintf(s, "sigma: %d\n", _s); ostrm << s;
+  std::sprintf(s, "nud: %s\n", ((_nud<0) ? "CCW" : "CW")); ostrm << s;
+  std::sprintf(s, "delta: %d\n", _delta); ostrm << s;
+  std::sprintf(s, "L: %d\n", _l); ostrm << s;
+  std::sprintf(s, "R: %d\n \n", _R); ostrm << s;
 
-  //vcl_sprintf(s, "a: %d\n", _a); ostrm << s;
-  //vcl_sprintf(s, "b2: %d\n", _b2); ostrm << s;
-  vcl_sprintf(s, "c: %d\n \n", _c); ostrm << s;
+  //std::sprintf(s, "a: %d\n", _a); ostrm << s;
+  //std::sprintf(s, "b2: %d\n", _b2); ostrm << s;
+  std::sprintf(s, "c: %d\n \n", _c); ostrm << s;
 
   //boundary intersection
   ostrm << "Termination: ";
   if (_cSNode)
-    ostrm << "at intersection." << vcl_endl;
+    ostrm << "at intersection." << std::endl;
   else {
     if (this->cell_bnd()){
       if (this->cell_bnd()->is_vert())
-        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << std::endl;
       else        
-        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << std::endl;
     }
     else
-      ostrm << "in mid air." << vcl_endl;
+      ostrm << "in mid air." << std::endl;
   }
 }
 

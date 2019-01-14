@@ -39,13 +39,13 @@
 
 
 //: Some useful type definitions
-typedef vcl_list<dbsk2d_bnd_contour_sptr > bnd_contour_list;
-typedef vcl_list<dbsk2d_bnd_edge_sptr > bnd_edge_list;
-typedef vcl_list<dbsk2d_bnd_vertex_sptr > bnd_vertex_list;
+typedef std::list<dbsk2d_bnd_contour_sptr > bnd_contour_list;
+typedef std::list<dbsk2d_bnd_edge_sptr > bnd_edge_list;
+typedef std::list<dbsk2d_bnd_vertex_sptr > bnd_vertex_list;
 
-typedef vcl_vector<dbsk2d_bnd_contour_sptr > bnd_contour_vector;
-typedef vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edge_vector;
-typedef vcl_vector<dbsk2d_bnd_vertex_sptr > bnd_vertex_vector;
+typedef std::vector<dbsk2d_bnd_contour_sptr > bnd_contour_vector;
+typedef std::vector<dbsk2d_bnd_edge_sptr > bnd_edge_vector;
+typedef std::vector<dbsk2d_bnd_vertex_sptr > bnd_vertex_vector;
 
 
 
@@ -85,18 +85,18 @@ protected:
   dbsk2d_shock_graph_sptr shock_graph_;
 
   //: a list of bnd_edges in the boundary
-  mutable vcl_list<dbsk2d_bnd_edge_sptr > all_edges_;
+  mutable std::list<dbsk2d_bnd_edge_sptr > all_edges_;
 
   //: a list of belm in the boundary. This list is for fast accessing
   // purpose only and is created from 
   // preproc_contours and scratch_contours_
-  mutable vcl_vector<dbsk2d_ishock_belm* > belm_list_;
+  mutable std::vector<dbsk2d_ishock_belm* > belm_list_;
 
   //: a list of all gaps in the boundary
-  mutable vcl_vector<vcl_vector<dbsk2d_ishock_belm*> > gaps_;
+  mutable std::vector<std::vector<dbsk2d_ishock_belm*> > gaps_;
 
   //: a set of all belms that are off by loops
-  mutable vcl_set<int> belms_off_;
+  mutable std::set<int> belms_off_;
 
   //: 2d array of cells, rectangular partition of the boundary
   // All cells have identical width and height
@@ -134,11 +134,11 @@ public:
   { return !(this->scratch_contours_.empty()); }
 
   //: Return reference to list of contours that have been preprocesed
-  const vcl_list<dbsk2d_bnd_contour_sptr >& preproc_contours() const
+  const std::list<dbsk2d_bnd_contour_sptr >& preproc_contours() const
   { return this->preproc_contours_; }
 
   //: Return reference to list of contours that need preprocessing
-  const vcl_list<dbsk2d_bnd_contour_sptr >& scratch_contours() const
+  const std::list<dbsk2d_bnd_contour_sptr >& scratch_contours() const
   { return this->scratch_contours_; }
 
   //: Obtain list of all contours, including preprocessed and scratch
@@ -197,22 +197,22 @@ public:
   //: Local update of belm list
   // This is a local update of belm list with new contour
   void update_belm_list(dbsk2d_bnd_contour_sptr& new_contour,
-                        vcl_vector<dbsk2d_ishock_belm*>& ret_belms);
+                        std::vector<dbsk2d_ishock_belm*>& ret_belms);
 
   //: Return reference to the belm list
   // Need to run update_belm_list() first before first use.
-  const vcl_vector< dbsk2d_ishock_belm* >& belm_list() const
+  const std::vector< dbsk2d_ishock_belm* >& belm_list() const
   { return (this->belm_list_); }
 
   //: Return reference to the all gaps
-  const vcl_vector< vcl_vector<dbsk2d_ishock_belm* > >& gaps() const
+  const std::vector< std::vector<dbsk2d_ishock_belm* > >& gaps() const
   { return (this->gaps_); }
 
   //: Return number of belm in the boundary
   unsigned int num_belms(){ return this->belm_list().size(); }
 
   //: Return reference to list of all edges in the boundary
-  const vcl_list<dbsk2d_bnd_edge_sptr >& all_edges() const
+  const std::list<dbsk2d_bnd_edge_sptr >& all_edges() const
   { return (this->all_edges_); }
 
   //: compute bounding box
@@ -290,26 +290,26 @@ public:
   // Return a sorted list of parameters of intersections points
   void intersect_line_with_cell_grids(const vgl_point_2d<double >& p1, 
     const vgl_point_2d<double >& p2, 
-    vcl_list<double >& intersections) const;
+    std::list<double >& intersections) const;
 
   //: intersect a circular arc with `this' boundary's grid lines
   // Return a sorted list of parameters of intersections points
   void intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1, 
     const vgl_point_2d<double >& arc_p2, double arc_k,
-    vcl_list<double >& intersections) const;
+    std::list<double >& intersections) const;
 
   //: Compute list of cells that a point belongs to (fuzzily)
-  vcl_vector<dbsk2d_bnd_cell_sptr > compute_cell_membership_of_point(
+  std::vector<dbsk2d_bnd_cell_sptr > compute_cell_membership_of_point(
     const vgl_point_2d<double >& pt, double tol = 0) const;
 
 
   //: Compute list of cells that a line segment intersect with (no fuzzy)
   void compute_cell_membership_of_line(const vgl_point_2d<double >& p1, 
     const vgl_point_2d<double >& p2, 
-    vcl_list<dbsk2d_bnd_cell_sptr >& ret_cells) const;
+    std::list<dbsk2d_bnd_cell_sptr >& ret_cells) const;
 
   //: COmpute list of cells that a bounding box intersect with (no fuzzy)
-  vcl_vector<dbsk2d_bnd_cell_sptr > compute_cell_membership_of_bbox(
+  std::vector<dbsk2d_bnd_cell_sptr > compute_cell_membership_of_bbox(
     const vgl_box_2d<double >& bbox, double tol) const;
 
   //: Break long lines into shorter segments such that each segment does not
@@ -364,7 +364,7 @@ public:
   //: Add a set of connected lines to the boundary. 
   // This is a common function for add_a_polyline and add_a_polygon
   dbsk2d_bnd_contour_sptr add_connected_lines(
-    const vcl_vector<vgl_point_2d<double > > & vertices, 
+    const std::vector<vgl_point_2d<double > > & vertices, 
     bool closed = false, bool preproc_needed = true );
 
 
@@ -374,8 +374,8 @@ public:
 
   //: Add a set of connected arcs to the boundary
   dbsk2d_bnd_contour_sptr add_connected_arcs(
-    const vcl_vector<vgl_point_2d<double > > &vertices,
-    const vcl_vector<double >& curvatures,
+    const std::vector<vgl_point_2d<double > > &vertices,
+    const std::vector<double >& curvatures,
     bool closed = false, bool preproc_needed = true );
 
   //: Add a boundary contour to the boundary.
@@ -400,12 +400,12 @@ public:
   virtual vsol_spatial_object_2d* clone() const {return 0; }
 
   //: Print the belm list
-  void print_belm_list(vcl_ostream& os = vcl_cout );
+  void print_belm_list(std::ostream& os = std::cout );
 
   // Binary I/O-----------------------------------------------------------------
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return vcl_string("dbsk2d_boundary");}
+  virtual std::string is_a() const {return std::string("dbsk2d_boundary");}
 
   ////: Return IO version number;
   //short version() const;
@@ -418,14 +418,14 @@ public:
 
   //: print a quick summary
   // Need rewrite.
-  virtual void print(vcl_ostream &os=vcl_cout) const;
+  virtual void print(std::ostream &os=std::cout) const;
   
   //: describe
   // Need rewrite.
-  virtual void describe(vcl_ostream &strm=vcl_cout, int blanking=0) const;
+  virtual void describe(std::ostream &strm=std::cout, int blanking=0) const;
 
   //: print a summary of partition parameters
-  void print_partition_summary(vcl_ostream& os=vcl_cout) const;
+  void print_partition_summary(std::ostream& os=std::cout) const;
 
 
 
@@ -437,7 +437,7 @@ public:
   //: An iterator to iterate through all dbsk2d_ishock_belm
   // elements in the boundary
 
-  typedef vcl_vector<dbsk2d_ishock_belm* >::iterator belm_iterator;
+  typedef std::vector<dbsk2d_ishock_belm* >::iterator belm_iterator;
   //: begin belm_iterator
   belm_iterator belm_begin() { return this->belm_list_.begin(); }
 
@@ -452,7 +452,7 @@ public:
   //{
 //  protected:
 //    dbsk2d_boundary* boundary_;
-//    vcl_vector< dbsk2d_ishock_belm* >::iterator belm_iter_;
+//    std::vector< dbsk2d_ishock_belm* >::iterator belm_iter_;
 //  public:
 //
 //    //: Constructor - defaul
@@ -503,7 +503,7 @@ public:
 //  {
 //  protected:
 //    dbsk2d_boundary* boundary_;
-//    vcl_vector< dbsk2d_ishock_belm* >::iterator belm_iter_;
+//    std::vector< dbsk2d_ishock_belm* >::iterator belm_iter_;
 //  public:
 //
 //    //: Constructor - defaul

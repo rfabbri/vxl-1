@@ -16,7 +16,7 @@ dbskr_save_shock_patch_process() : bpro1_process()
 {
   if( !parameters()->add( "Filename (-patch_strg.bin)" , "-filepath", bpro1_filepath("","*.bin") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ clone() const
 
 // -----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbskr_save_shock_patch_process::
+std::string dbskr_save_shock_patch_process::
 name()
 {
   return "Save Shock Patch Storage";
@@ -63,10 +63,10 @@ clear_output()
 
 // -----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskr_save_shock_patch_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock_patch" );
   return to_return;
 }
@@ -75,10 +75,10 @@ dbskr_save_shock_patch_process::get_input_type()
 
 // -----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbskr_save_shock_patch_process::
+std::vector< std::string > dbskr_save_shock_patch_process::
 get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -110,7 +110,7 @@ bool dbskr_save_shock_patch_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In dbskr_save_shock_patch_process::execute() - "
+    std::cout << "In dbskr_save_shock_patch_process::execute() - "
              << "not exactly one input frame.\n";
     return false;
   }
@@ -130,7 +130,7 @@ bool dbskr_save_shock_patch_process::execute()
   shock_patch_storage->b_write(bfs);
   bfs.close();
 
-  vcl_cout << "\nFinished writing shock patch storage to file " << filepath.path << vcl_endl;
+  std::cout << "\nFinished writing shock patch storage to file " << filepath.path << std::endl;
   return true;
 }
 

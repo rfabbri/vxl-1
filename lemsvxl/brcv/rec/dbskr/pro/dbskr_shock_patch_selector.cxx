@@ -12,7 +12,7 @@
 
 #include <vil/vil_image_resource.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <vil/vil_load.h>
@@ -46,7 +46,7 @@ void dbskr_shock_patch_selector::set_image(vil_image_resource_sptr img_sptr)
 void dbskr_shock_patch_selector::clear() 
 {
   for (unsigned d = 0; d < patch_sets_.size(); d++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[d];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[d];
     for (unsigned i = 0; i < pv->size(); i++) {
       (*pv)[i].second = 0;
     }
@@ -57,8 +57,8 @@ void dbskr_shock_patch_selector::clear()
   patch_sets_.clear();
 
   for (unsigned d = 0; d < patch_set_id_maps_.size(); d++) {
-    vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> > *pv = patch_set_id_maps_[d];
-    for (vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >::iterator it = pv->begin();
+    std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> > *pv = patch_set_id_maps_[d];
+    for (std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >::iterator it = pv->begin();
       it != pv->end(); it++) {
         (it->second).first = 0;
         (it->second).second = 0;
@@ -70,7 +70,7 @@ void dbskr_shock_patch_selector::clear()
   patch_set_id_maps_.clear();
 
   for (unsigned d = 0; d < disc_patch_sets_.size(); d++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = disc_patch_sets_[d];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = disc_patch_sets_[d];
     for (unsigned i = 0; i < pv->size(); i++) {
       (*pv)[i].second = 0;
     }
@@ -80,13 +80,13 @@ void dbskr_shock_patch_selector::clear()
     delete disc_patch_sets_[d];
   disc_patch_sets_.clear();
 
-  for (vcl_map<dbskr_shock_patch_sptr, vcl_vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.begin();
+  for (std::map<dbskr_shock_patch_sptr, std::vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.begin();
     iter != disc_patch_map_.end(); iter++) {
       for (unsigned i = 0; i < iter->second->size(); i++)
         (*iter->second)[i] = 0;
   }
 
-  for (vcl_map<dbskr_shock_patch_sptr, vcl_vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.begin();
+  for (std::map<dbskr_shock_patch_sptr, std::vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.begin();
     iter != disc_patch_map_.end(); iter++) {
       iter->first->clear();
       delete iter->second;
@@ -104,26 +104,26 @@ bool dbskr_shock_patch_selector::extract(int depth, bool circular_ends)
   if (!sg_)
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
-  vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >* pvm = 
-    new vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >();
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
+  std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >* pvm = 
+    new std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >();
   //int cnt = 0;
   for (dbsk2d_shock_graph::vertex_iterator v_itr = sg_->vertices_begin(); v_itr != sg_->vertices_end(); v_itr++)
   { 
     if ((*v_itr)->degree() < 3)
       continue;
 
-    //vcl_cout << cnt << vcl_endl;
+    //std::cout << cnt << std::endl;
     //: create a patch from the tree rooted at *v_itr and keep the id of this shock node as start_node_id in this patch
     dbskr_shock_patch_sptr sp = extract_patch_from_subgraph(sg_, *v_itr, depth, area_threshold_, circular_ends);
     if (!sp) 
       return false;
 
     if (sp->get_outer_boundary()) {
-      vcl_pair<float, dbskr_shock_patch_sptr> p;
+      std::pair<float, dbskr_shock_patch_sptr> p;
       p.first = -1; p.second = sp;
       pv->push_back(p);
-      vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> pp;
+      std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> pp;
       pp.first = sp;
       pp.second = *v_itr;
       (*pvm)[sp->start_node_id()] = pp;
@@ -143,7 +143,7 @@ bool dbskr_shock_patch_selector::extract(int depth, bool circular_ends)
 //  if the starting point of any real boundary of the patch is "on" the bounding box, then eliminate the patch
 bool dbskr_shock_patch_selector::prune_bounding_box_patches(int depth, vsol_box_2d_sptr bbox)
 {
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -151,9 +151,9 @@ bool dbskr_shock_patch_selector::prune_bounding_box_patches(int depth, vsol_box_
   if (index >= int(patch_sets_.size()))
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > patches_to_keep;
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > patches_to_keep;
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
     if (sp->boundary_on_the_box(bbox))  // delete this one
@@ -175,7 +175,7 @@ bool dbskr_shock_patch_selector::clear_bounding_box_contours(int depth, vsol_box
   if (!bbox || !(bbox->area() > 0))
     return false;
 
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -183,7 +183,7 @@ bool dbskr_shock_patch_selector::clear_bounding_box_contours(int depth, vsol_box
   if (index >= int(patch_sets_.size()))
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
     sp->clean_real_boundaries(bbox);
@@ -195,8 +195,8 @@ bool dbskr_shock_patch_selector::clear_bounding_box_contours(int depth, vsol_box
 
 //: For sorting pairs by their first element
 inline
-bool first_less( const vcl_pair<float,dbskr_shock_patch_sptr>& left,
-                 const vcl_pair<float,dbskr_shock_patch_sptr>& right )
+bool first_less( const std::pair<float,dbskr_shock_patch_sptr>& left,
+                 const std::pair<float,dbskr_shock_patch_sptr>& right )
 {
   return left.first < right.first;
 }
@@ -207,7 +207,7 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_color_contrast(int depth, flo
   if (!image_set_ || !color_image_)
     return false;
 
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -215,18 +215,18 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_color_contrast(int depth, flo
   if (index >= int(patch_sets_.size()))
     return false;
 
-  //vcl_cout << " finding color contrasts..";
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  //std::cout << " finding color contrasts..";
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
     sp->find_color_contrast(L_, A_, B_);
     (*pv)[i].first = sp->color_contrast();
   }
 
-  //vcl_cout << " deleting based on threshold..";
+  //std::cout << " deleting based on threshold..";
   if (color_threshold > 0) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > temp;
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > temp;
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i].second;
       if ((*pv)[i].first < color_threshold)
@@ -242,9 +242,9 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_color_contrast(int depth, flo
     disc_patch_sets_.push_back(disc_vec);
   }
 
-  //vcl_cout << " sorting..";
-  vcl_sort(pv->begin(), pv->end(), first_less );
-  //vcl_cout << " all done..";
+  //std::cout << " sorting..";
+  std::sort(pv->begin(), pv->end(), first_less );
+  //std::cout << " all done..";
 
   return true;
 }
@@ -255,7 +255,7 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_app_contrast(int depth, float
   if (!image_set_ || color_image_)
     return false;
  
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -263,7 +263,7 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_app_contrast(int depth, float
   if (index >= int(patch_sets_.size()))
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
     vsol_polygon_2d_sptr poly = sp->get_traced_boundary();
@@ -281,8 +281,8 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_app_contrast(int depth, float
   }
 
   if (app_threshold > 0) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > temp;
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > temp;
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i].second;
       if ((*pv)[i].first < app_threshold)
@@ -298,7 +298,7 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_app_contrast(int depth, float
     disc_patch_sets_.push_back(disc_vec);
   }
 
-  vcl_sort(pv->begin(), pv->end(), first_less);
+  std::sort(pv->begin(), pv->end(), first_less);
 
   return true;
 }
@@ -307,7 +307,7 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_app_contrast(int depth, float
 //: use the real contour to total length ratio to sort the patches
 bool dbskr_shock_patch_selector::find_and_sort_wrt_contour_ratio(int depth, float contour_rat_thres)
 {
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -315,17 +315,17 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_contour_ratio(int depth, floa
   if (index >= int(patch_sets_.size()))
     return false;
 
-  //vcl_cout << " finding ratios..";
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  //std::cout << " finding ratios..";
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
     (*pv)[i].first = 1.0f - sp->contour_ratio();  // the less the better now!!
   }
 
-  vcl_cout << " deleting using ratio..";
+  std::cout << " deleting using ratio..";
   if (contour_rat_thres > 0) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > temp;
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > temp;
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i].second;
       if ((*pv)[i].first < contour_rat_thres)
@@ -341,9 +341,9 @@ bool dbskr_shock_patch_selector::find_and_sort_wrt_contour_ratio(int depth, floa
     disc_patch_sets_.push_back(disc_vec);
   }
 
-  //vcl_cout << " sorting..";
-  vcl_sort(pv->begin(), pv->end(), first_less);
-  //vcl_cout << " done..\n";
+  //std::cout << " sorting..";
+  std::sort(pv->begin(), pv->end(), first_less);
+  //std::cout << " done..\n";
 
   return true;
 }
@@ -355,7 +355,7 @@ bool dbskr_shock_patch_selector::prune(int depth, int pruning_depth, bool keep_p
   if (pruning_depth > depth)
     return false;
 
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -363,21 +363,21 @@ bool dbskr_shock_patch_selector::prune(int depth, int pruning_depth, bool keep_p
   if (index >= int(patch_sets_.size()))
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
-  vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> > *pvm = patch_set_id_maps_[index];
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> > *pvm = patch_set_id_maps_[index];
 
-  vcl_map<dbskr_shock_patch_sptr, bool> deleted_patches;
+  std::map<dbskr_shock_patch_sptr, bool> deleted_patches;
   
   //: get the sorted patch vector
   //  if the current patch is not in deleted patches then it hasn't been removed, find its list of patches to be pruned
   
-  vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >::iterator pvm_itr;
-  //vcl_cout << "pruning: ";
+  std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >::iterator pvm_itr;
+  //std::cout << "pruning: ";
   for (unsigned i = 0; i < pv->size(); i++) {
-    //vcl_cout << ".";
+    //std::cout << ".";
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
 
-    vcl_map<dbskr_shock_patch_sptr, bool>::iterator iter = deleted_patches.find(sp);
+    std::map<dbskr_shock_patch_sptr, bool>::iterator iter = deleted_patches.find(sp);
     if (iter != deleted_patches.end()) {  // it's been deleted 
       // it doesn't need to crowd the deleted patches list, since the order in pv is fixed
       deleted_patches.erase(iter);
@@ -385,20 +385,20 @@ bool dbskr_shock_patch_selector::prune(int depth, int pruning_depth, bool keep_p
       continue;
     }
     
-    vcl_map<dbskr_shock_patch_sptr, vcl_vector<dbskr_shock_patch_sptr>*>::iterator dpm_itr;
-    vcl_vector<dbskr_shock_patch_sptr>* tv;
+    std::map<dbskr_shock_patch_sptr, std::vector<dbskr_shock_patch_sptr>*>::iterator dpm_itr;
+    std::vector<dbskr_shock_patch_sptr>* tv;
     //: keep all the patches that are deleted due to this patch for debugging purposes
     if (keep_pruned) {
       dpm_itr = disc_patch_map_.find(sp);
       if (dpm_itr == disc_patch_map_.end()) {
-        tv = new vcl_vector<dbskr_shock_patch_sptr>();
+        tv = new std::vector<dbskr_shock_patch_sptr>();
         disc_patch_map_[sp] = tv;
       } else {
         tv = dpm_itr->second;
       }
     }
 
-    vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> pp = (*pvm)[sp->start_node_id()];
+    std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> pp = (*pvm)[sp->start_node_id()];
     dbskr_v_graph_sptr vg = construct_v_graph(sg_, pp.second, pruning_depth);
 
     //: delete all the patches which are covered by this tree at the pruning_depth rooted at our patch's root node
@@ -417,8 +417,8 @@ bool dbskr_shock_patch_selector::prune(int depth, int pruning_depth, bool keep_p
   }
 
   //: now actually delete all the deleted ones from the patch_sets_
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > temp;
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > temp;
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
   for (unsigned i = 0; i < pv->size(); i++) {
     float first = (*pv)[i].first;
     if (first < 0)  // deleted
@@ -439,7 +439,7 @@ bool dbskr_shock_patch_selector::prune(int depth, int pruning_depth, bool keep_p
 //: prune all the patches at this depth for which all the nodes in v_graph's are overlapping
 bool dbskr_shock_patch_selector::prune_same_patches(int depth)
 {
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -447,8 +447,8 @@ bool dbskr_shock_patch_selector::prune_same_patches(int depth)
   if (index >= int(patch_sets_.size()))
     return false;
 
-  //vcl_cout << " finding ratios..";
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+  //std::cout << " finding ratios..";
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
     dbskr_shock_patch_sptr sp = (*pv)[i].second;
       if ((*pv)[i].first == 2.0f)  // CAUTION: make sure initially these values are set to some value other than 2 (even after sorting contrast value can never be 2!!)
@@ -465,8 +465,8 @@ bool dbskr_shock_patch_selector::prune_same_patches(int depth)
   }
 
   //: now actually delete all the deleted ones from the patch_sets_
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > temp;
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > temp;
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
   for (unsigned i = 0; i < pv->size(); i++) {
     float first = (*pv)[i].first;
     if (first == 2.0f)  // deleted
@@ -490,7 +490,7 @@ bool dbskr_shock_patch_selector::prune_same_patches(int depth)
 bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_pruned, bool kill_v_graphs)
 {
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
     
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i].second;
@@ -511,7 +511,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
   //: CAUTION: the following code assumes that depths are in increasing order
   //  in the patch_sets_ vector
   for (int index = patch_sets_.size()-1; index >= 0; index--) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
     
     for (unsigned i = 0; i < pv->size(); i++) {
 
@@ -521,7 +521,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
         
       // now go through all the remaining depths
       for (int ind2 = index-1; ind2 >= 0; ind2--) { 
-        vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv2 = patch_sets_[ind2];
+        std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv2 = patch_sets_[ind2];
          
         for (unsigned j = 0; j <pv2->size(); j++) {
           dbskr_shock_patch_sptr sp2 = (*pv2)[j].second;
@@ -545,7 +545,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
   //  e.g. one traced from outer shocks of an object, and one traced from inner shocks
   //  check if areas and bounding box centers are almost exactly the same
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
     
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i].second;
@@ -564,7 +564,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
   }
 
   for (int index = patch_sets_.size()-1; index >= 0; index--) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
     
     for (unsigned i = 0; i < pv->size(); i++) {
 
@@ -574,7 +574,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
         
       // now go through all the remaining depths
       for (int ind2 = index-1; ind2 >= 0; ind2--) { 
-        vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv2 = patch_sets_[ind2];
+        std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv2 = patch_sets_[ind2];
          
         for (unsigned j = 0; j <pv2->size(); j++) {
           dbskr_shock_patch_sptr sp2 = (*pv2)[j].second;
@@ -591,11 +591,11 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
   }
 
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
     
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > patches_to_keep;
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> > patches_to_keep;
     if (keep_pruned) {
-      vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *disc_vec = new vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >();
+      std::vector<std::pair<float, dbskr_shock_patch_sptr> > *disc_vec = new std::vector<std::pair<float, dbskr_shock_patch_sptr> >();
       for (unsigned i = 0; i < pv->size(); i++) {
         if ((*pv)[i].first < 0)
           disc_vec->push_back((*pv)[i]);
@@ -620,7 +620,7 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
   // now prune over all depths
   if (kill_v_graphs) {
     for (unsigned index = 0; index < patch_sets_.size(); index++) {
-      vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
+      std::vector<std::pair<float, dbskr_shock_patch_sptr> > *pv = patch_sets_[index];
       for (unsigned i = 0; i < pv->size(); i++) {
         (*pv)[i].second->kill_v_graph();
       }
@@ -632,9 +632,9 @@ bool dbskr_shock_patch_selector::prune_overlaps(float overlap_ratio, bool keep_p
 
 
 //: return the patch set pruned due to a given patch
-vcl_vector<dbskr_shock_patch_sptr>* dbskr_shock_patch_selector::pruned_set(dbskr_shock_patch_sptr sp)
+std::vector<dbskr_shock_patch_sptr>* dbskr_shock_patch_selector::pruned_set(dbskr_shock_patch_sptr sp)
 {
-  vcl_map<dbskr_shock_patch_sptr, vcl_vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.find(sp);
+  std::map<dbskr_shock_patch_sptr, std::vector<dbskr_shock_patch_sptr>*>::iterator iter = disc_patch_map_.find(sp);
   if (iter == disc_patch_map_.end())
     return 0;
   else
@@ -644,7 +644,7 @@ vcl_vector<dbskr_shock_patch_sptr>* dbskr_shock_patch_selector::pruned_set(dbskr
 //: add the patches that are kept at this depth to the storage
 bool dbskr_shock_patch_selector::create_shocks_and_add_to_storage(int depth, dbskr_shock_patch_storage_sptr str)
 {
-  vcl_map<int, int>::iterator iter = depth_index_map_.find(depth);
+  std::map<int, int>::iterator iter = depth_index_map_.find(depth);
   if (iter == depth_index_map_.end())
     return false;
 
@@ -652,14 +652,14 @@ bool dbskr_shock_patch_selector::create_shocks_and_add_to_storage(int depth, dbs
   if (index >= int(patch_sets_.size()))
     return false;
 
-  vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >* pv = patch_sets_[index];
+  std::vector<std::pair<float, dbskr_shock_patch_sptr> >* pv = patch_sets_[index];
   for (unsigned i = 0; i < pv->size(); i++) {
-    //vcl_cout << "patch: " << i << " ";
+    //std::cout << "patch: " << i << " ";
     if ((*pv)[i].second->extract_simple_shock() && (*pv)[i].second->shock_graph() && (*pv)[i].second->shock_graph()->number_of_vertices()) {
       str->add_patch((*pv)[i].second);
-      //vcl_cout << " number of vertices in the shock graph: " << (*pv)[i].second->shock_graph()->number_of_vertices() << vcl_endl;
+      //std::cout << " number of vertices in the shock graph: " << (*pv)[i].second->shock_graph()->number_of_vertices() << std::endl;
     } else {
-      //vcl_cout << " problems in shock graph extraction\n";
+      //std::cout << " problems in shock graph extraction\n";
     }
   }
 
@@ -672,7 +672,7 @@ bool dbskr_shock_patch_selector::add_discarded_to_storage(int depth, dbskr_shock
   //: discarded index might be different than the patch_sets_ index, so find the index
   bool found_it = false;
   for (unsigned i = 0; i < disc_patch_sets_.size(); i++) {
-    vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >* pv = disc_patch_sets_[i];
+    std::vector<std::pair<float, dbskr_shock_patch_sptr> >* pv = disc_patch_sets_[i];
     if (!pv->size())
       continue;
 
@@ -687,7 +687,7 @@ bool dbskr_shock_patch_selector::add_discarded_to_storage(int depth, dbskr_shock
   return found_it;
 }
 
-dbsk2d_shock_graph_sptr read_esf_from_file(vcl_string fname) {
+dbsk2d_shock_graph_sptr read_esf_from_file(std::string fname) {
   dbsk2d_xshock_graph_fileio loader;
   dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(fname);
   return sg;
@@ -718,11 +718,11 @@ void set_images(vil_image_resource_sptr img_sptr,
     img_g = vil_plane(img_sptr, 1);
     img_b = vil_plane(img_sptr, 2);
   }
-  vcl_cout << "loaded and processed images...\n";
+  std::cout << "loaded and processed images...\n";
 }
 
 void save_image_poly(dbskr_shock_patch_sptr sp, 
-                     vcl_string name_initial, 
+                     std::string name_initial, 
                      vil_image_resource_sptr img_r, 
                      vil_image_resource_sptr img_g, 
                      vil_image_resource_sptr img_b) {
@@ -742,7 +742,7 @@ void save_image_poly(dbskr_shock_patch_sptr sp,
   double poly_area_threshold = 20.0f;
 
   if (!sg || !sg->number_of_vertices() || !sg->number_of_edges() ) {
-    vcl_cout << "Patch graph sg is not computed or has 0 nodes and endges !! IMAGE NOT SAVED for " << sp->id() << "\n";
+    std::cout << "Patch graph sg is not computed or has 0 nodes and endges !! IMAGE NOT SAVED for " << sp->id() << "\n";
     return; 
   }
   
@@ -763,7 +763,7 @@ void save_image_poly(dbskr_shock_patch_sptr sp,
       double minx = bbox->get_min_x()-5 < 0 ? 0 : bbox->get_min_x()-5;
       double miny = bbox->get_min_y()-5 < 0 ? 0 : bbox->get_min_y()-5;
 
-      vil_image_view<vil_rgb<vxl_byte> > temp((int)vcl_ceil(bbox->width() + 10), (int)vcl_ceil(bbox->height() + 10), 1); 
+      vil_image_view<vil_rgb<vxl_byte> > temp((int)std::ceil(bbox->width() + 10), (int)std::ceil(bbox->height() + 10), 1); 
       vil_rgb<vxl_byte> bg_col(255, 255, 255);
       temp.fill(bg_col);
 
@@ -780,7 +780,7 @@ void save_image_poly(dbskr_shock_patch_sptr sp,
             continue;
           if (x >= int(img_r->ni()) || y >= int(img_r->nj())) 
             continue;
-          int xx = (int)vcl_floor(x - minx + 0.5), yy = (int)vcl_floor(y - miny + 0.5);
+          int xx = (int)std::floor(x - minx + 0.5), yy = (int)std::floor(y - miny + 0.5);
           if (xx < 0 || yy < 0)
             continue;
           if (double(xx) > bbox->width() || double(yy) > bbox->height())
@@ -805,21 +805,21 @@ void save_image_poly(dbskr_shock_patch_sptr sp,
 
       char buffer[1000];
       sprintf(buffer, "%d", sp->id());
-      vcl_string cnt_str = buffer;
+      std::string cnt_str = buffer;
       sprintf(buffer, "%d", sp->depth());
-      vcl_string d_str = buffer;
+      std::string d_str = buffer;
       vil_save_image_resource(out_img, (name_initial+cnt_str+"_"+d_str+".png").c_str()); 
   } else {
-    vcl_cout << "Patch graph outer boundary could not be traced!! IMAGE NOT SAVED for " << sp->id() << "\n";
+    std::cout << "Patch graph outer boundary could not be traced!! IMAGE NOT SAVED for " << sp->id() << "\n";
   }
 }
 
-void extract_subgraph_and_find_shock_patches(vcl_string image_file, 
-                                             vcl_string esf_file, 
-                                             vcl_string boundary_file,
-                                             vcl_string kept_dir_name, 
-                                             vcl_string discarded_dir_name, 
-                                             vcl_string output_name,
+void extract_subgraph_and_find_shock_patches(std::string image_file, 
+                                             std::string esf_file, 
+                                             std::string boundary_file,
+                                             std::string kept_dir_name, 
+                                             std::string discarded_dir_name, 
+                                             std::string output_name,
                                              bool contour_ratio,
                                              bool circular_ends, 
                                              float area_threshold_ratio,
@@ -831,14 +831,14 @@ void extract_subgraph_and_find_shock_patches(vcl_string image_file,
 {
   //: load esf and create trees
   dbsk2d_shock_graph_sptr sg = read_esf_from_file(esf_file.c_str());
-  vcl_cout << "loaded esf...\n";
+  std::cout << "loaded esf...\n";
 
   //get the bounding box from the saved contour set (assuming that bnd name can be deduced from the esf name)
   vsol_box_2d_sptr bbox;
   
   if (vul_file::exists(boundary_file)) {
     // new vector to store the contours
-    vcl_vector< vsol_spatial_object_2d_sptr > geoms;
+    std::vector< vsol_spatial_object_2d_sptr > geoms;
 
     dbsk2d_file_io::load_bnd_v3_0(boundary_file, geoms);
 
@@ -864,12 +864,12 @@ void extract_subgraph_and_find_shock_patches(vcl_string image_file,
 }
 
 
-bool find_shock_patches(vcl_string image_file, 
+bool find_shock_patches(std::string image_file, 
                        dbsk2d_shock_graph_sptr sg, 
                        vsol_box_2d_sptr bbox,
-                       vcl_string kept_dir_name, 
-                       vcl_string discarded_dir_name, 
-                       vcl_string output_name,
+                       std::string kept_dir_name, 
+                       std::string discarded_dir_name, 
+                       std::string output_name,
                        bool contour_ratio,
                        bool circular_ends, 
                        float area_threshold_ratio,
@@ -880,7 +880,7 @@ bool find_shock_patches(vcl_string image_file,
                        bool save_discarded_images)
 {
 
-  vcl_cout << "extracting from an image NOT from a MASK, sd:  " << min_depth << " md: " << max_depth << " di: " << depth_int << " pd: " << pruning_depth << "\n";
+  std::cout << "extracting from an image NOT from a MASK, sd:  " << min_depth << " md: " << max_depth << " di: " << depth_int << " pd: " << pruning_depth << "\n";
 
   //: load the image
   vil_image_view<float> L_, A_, B_;
@@ -888,7 +888,7 @@ bool find_shock_patches(vcl_string image_file,
   vil_image_resource_sptr img_sptr, img_r, img_g, img_b;
   img_sptr = vil_load_image_resource(image_file.c_str());
   if (!img_sptr) {
-    vcl_cout << "image file: " << image_file << "could not be found\n";
+    std::cout << "image file: " << image_file << "could not be found\n";
     return false;
   }
 
@@ -916,7 +916,7 @@ bool find_shock_patches(vcl_string image_file,
   selector.set_image(img_sptr);
   
   for (int d = min_depth; d <= max_depth; d += depth_int) {
-    vcl_cout << "d: " << d << "..";
+    std::cout << "d: " << d << "..";
     if (!selector.extract(d, circular_ends)) 
       return false;
 
@@ -935,7 +935,7 @@ bool find_shock_patches(vcl_string image_file,
 
     selector.prune(d, pruning_depth, keep_pruned);
     
-    vcl_cout << ".DONE! ";
+    std::cout << ".DONE! ";
   }
   selector.prune_overlaps(overlap_threshold, keep_pruned, true);
   for (int d = min_depth; d <= max_depth; d += depth_int) {
@@ -945,27 +945,27 @@ bool find_shock_patches(vcl_string image_file,
   }
     
   if (save_images) {
-    vcl_cout << "saving images, total # of patches: " << output->size() << "... \n";
+    std::cout << "saving images, total # of patches: " << output->size() << "... \n";
   for (unsigned i = 0; i < output->size(); i++) {
     dbskr_shock_patch_sptr sp = output->get_patch(i);
     save_image_poly(sp, kept_dir_name, img_r, img_g, img_b);
-    vcl_cout << ".";
+    std::cout << ".";
 
     if (keep_pruned && save_discarded_images) {
-      vcl_cout << " disc: ";
-    vcl_vector<dbskr_shock_patch_sptr>* pruned_set = selector.pruned_set(sp);
+      std::cout << " disc: ";
+    std::vector<dbskr_shock_patch_sptr>* pruned_set = selector.pruned_set(sp);
     if (pruned_set) {
       for (unsigned i = 0; i < pruned_set->size(); i++) {
         dbskr_shock_patch_sptr psp = (*pruned_set)[i];
         char buffer[1000];
         sprintf(buffer, "%d", sp->id());
-        vcl_string cnt_str = buffer;
+        std::string cnt_str = buffer;
         sprintf(buffer, "%d", sp->depth());
-        vcl_string d_str = buffer;
-        vcl_string discarded_dir_name_patch = kept_dir_name+cnt_str+"_"+d_str+"_prn_set/";
+        std::string d_str = buffer;
+        std::string discarded_dir_name_patch = kept_dir_name+cnt_str+"_"+d_str+"_prn_set/";
         vul_file::make_directory_path(discarded_dir_name_patch);
         save_image_poly(psp, discarded_dir_name_patch, img_r, img_g, img_b);
-        vcl_cout << ".";
+        std::cout << ".";
       }
     }
     }
@@ -974,27 +974,27 @@ bool find_shock_patches(vcl_string image_file,
   }
 
   if (save_discarded_images) {
-    vcl_cout << " saving discarded images, total #: " << discarded->size() << "... ";
+    std::cout << " saving discarded images, total #: " << discarded->size() << "... ";
     for (unsigned i = 0; i < discarded->size(); i++) {
       dbskr_shock_patch_sptr sp = discarded->get_patch(i);
       save_image_poly(sp, discarded_dir_name, img_r, img_g, img_b);
-      vcl_cout << ".";
+      std::cout << ".";
     }
   }
-  vcl_cout <<"\n";
+  std::cout <<"\n";
     
   vsl_b_ofstream bfs(output_name.c_str());
   output->b_write(bfs);
   bfs.close();
 
-  vcl_cout << output->size() << " patches in the storage, saving shocks..\n";
+  std::cout << output->size() << " patches in the storage, saving shocks..\n";
   //: save esfs for each patch to load later
-  //vcl_string str_name_end = "patch_storage.bin";
-  vcl_string str_name_end = "patch_strg.bin";
+  //std::string str_name_end = "patch_storage.bin";
+  std::string str_name_end = "patch_strg.bin";
   for (unsigned i = 0; i < output->size(); i++) {
     dbskr_shock_patch_sptr sp = output->get_patch(i);
-    vcl_string patch_esf_name = output_name.substr(0, output_name.length()-str_name_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = output_name.substr(0, output_name.length()-str_name_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_xshock_graph_fileio file_io;

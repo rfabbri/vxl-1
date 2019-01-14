@@ -12,7 +12,7 @@
 //   J.L. Mundy March 09, 2005    Initial version.
 // \endverbatim
 //---------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vgui/vgui_deck_tableau_sptr.h>
 #include <vgui/vgui_range_map_params_sptr.h>
 #include <vgui/vgui_wrapper_tableau.h>

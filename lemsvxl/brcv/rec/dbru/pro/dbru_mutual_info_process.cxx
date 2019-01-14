@@ -1,9 +1,9 @@
 #include "dbru_mutual_info_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -59,7 +59,7 @@ dbru_mutual_info_process::dbru_mutual_info_process()
       !parameters()->add( "If none of the three algs, Number random iterations for initialization:" , "-Nob" , 10 )  ||
       !parameters()->add( "prune threshold for shock extractions: " , "-lambda" , 1.0f ) 
       ) {
-    vcl_cerr << "ERROR: Adding parameters in dbru_mutual_info_process::dbru_mutual_info_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbru_mutual_info_process::dbru_mutual_info_process()" << std::endl;
   }
 
   total_info_ = 0;
@@ -112,11 +112,11 @@ bool dbru_mutual_info_process::execute()
 
   int increment=0;
   parameters()->get_value("-increment", increment);
-  //vcl_cout << "increment value is: " << increment << vcl_endl;
+  //std::cout << "increment value is: " << increment << std::endl;
 
   int image_bits=0;
   parameters()->get_value("-imagebits", image_bits);
-  float max_value = float(vcl_pow(double(2.0), double(image_bits))-1);
+  float max_value = float(std::pow(double(2.0), double(image_bits))-1);
 
   clear_output();
 
@@ -126,11 +126,11 @@ bool dbru_mutual_info_process::execute()
   vidpro1_vsol2D_storage_sptr input_vsol2;
   input_vsol2.vertical_cast(input_data_[0][2]);
 
-  vcl_vector<vsol_point_2d_sptr> inp1, inp2;
+  std::vector<vsol_point_2d_sptr> inp1, inp2;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_curve())
@@ -206,23 +206,23 @@ bool dbru_mutual_info_process::execute()
     sg1 = dbsk2d_compute_shocks(poly1, prune_t);
     sg2 = dbsk2d_compute_shocks(poly2, prune_t);
   
-    vcl_cout << " sg1 number of vertices: " << sg1->number_of_vertices() << " ";
-    vcl_cout << " sg2 number of vertices: " << sg2->number_of_vertices() << vcl_endl;
+    std::cout << " sg1 number of vertices: " << sg1->number_of_vertices() << " ";
+    std::cout << " sg2 number of vertices: " << sg2->number_of_vertices() << std::endl;
 
     if (sg1->number_of_vertices() == 0) {
-      vcl_cout << "First shock: ZERO number of vertices, skipping\n";
+      std::cout << "First shock: ZERO number of vertices, skipping\n";
       total_info_ = 0;
       return 0;
     }
     if (sg2->number_of_vertices() == 0) {
-      vcl_cout << "Second shock: ZERO number of vertices, skipping\n";
+      std::cout << "Second shock: ZERO number of vertices, skipping\n";
       total_info_ = 0;
       return 0;
     }
   }
   if (shock_matching && (!sg1 || !sg2))
   {
-    vcl_cout << "Problems in getting shock graphs!\n";
+    std::cout << "Problems in getting shock graphs!\n";
     return 0;
   }
  
@@ -257,7 +257,7 @@ bool dbru_mutual_info_process::execute()
   else if (line_intersections) {
     output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,R, rms, restricted_cvmatch_ratio, increment, false);  // verbose
   } else {
-    vcl_cout << "CAUTION WHEN INPUT IMAGE IS 16 bit, max value is not used in this algorithm\n";
+    std::cout << "CAUTION WHEN INPUT IMAGE IS 16 bit, max value is not used in this algorithm\n";
     total_info_ = dbskr_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, rigid_dx, rigid_dr, rigid_ds, rigid_ratio, Nob, output_sptr2, output_sptr3, output_sptr, true);
   }
 
@@ -266,7 +266,7 @@ bool dbru_mutual_info_process::execute()
     output_sptr = output_rcor->get_appearance2_on_pixels1();
   }
 
-  vcl_cout << "total_info: " << total_info_ << vcl_endl;
+  std::cout << "total_info: " << total_info_ << std::endl;
 
   //----------------------------------
   // create the output storage class

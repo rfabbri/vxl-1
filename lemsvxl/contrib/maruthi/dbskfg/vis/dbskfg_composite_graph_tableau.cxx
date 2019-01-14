@@ -15,7 +15,7 @@
 
 #include <vgui/vgui_command.h>
 #include <vgui/vgui_menu.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 //==============================================================================
 // dbskfg_composite_graph_tableau_toggle_command
@@ -85,7 +85,7 @@ void dbskfg_composite_graph_tableau::
 add_popup(vgui_menu& menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
 
   submenu.add( ((this->display_composite_contour_nodes_)?on:off) 
@@ -135,10 +135,10 @@ bool dbskfg_composite_graph_tableau::
 handle(const vgui_event &e)
 {
   // set the display (hide/show) flags of the soviews
-  for (vcl_map< vcl_string , vgui_displaybase_tableau_grouping >::iterator it 
+  for (std::map< std::string , vgui_displaybase_tableau_grouping >::iterator it 
     = groupings.begin(); it != groupings.end(); it++ )
   {
-    vcl_string group_name = it->first;
+    std::string group_name = it->first;
     
     if (group_name == "node_contour")
     {
@@ -184,7 +184,7 @@ handle(const vgui_event &e)
 dbskfg_soview_composite_node* dbskfg_composite_graph_tableau::
 add_composite_node(const dbskfg_composite_node_sptr& xv, 
                    const vgui_style_sptr& style,
-                   vcl_string grouping)
+                   std::string grouping)
 {
     dbskfg_soview_composite_node* obj = new dbskfg_soview_composite_node(xv);
     obj->set_selectable(true);
@@ -200,7 +200,7 @@ add_composite_node(const dbskfg_composite_node_sptr& xv,
 dbskfg_soview_contour_link* dbskfg_composite_graph_tableau::
 add_contour_link(dbskfg_contour_link* xv, 
                  const vgui_style_sptr& style,
-                 vcl_string grouping)
+                 std::string grouping)
 {
 
     dbskfg_soview_contour_link* obj = new dbskfg_soview_contour_link(xv);
@@ -218,7 +218,7 @@ add_contour_link(dbskfg_contour_link* xv,
 dbskfg_soview_shock_link* dbskfg_composite_graph_tableau::
 add_shock_link(dbskfg_shock_link* xv, 
                const vgui_style_sptr& style,
-               vcl_string grouping)
+               std::string grouping)
 {
 
     dbskfg_soview_shock_link* obj = new dbskfg_soview_shock_link(xv);
@@ -236,7 +236,7 @@ add_shock_link(dbskfg_shock_link* xv,
 dbskfg_soview_shock_ray* dbskfg_composite_graph_tableau::
 add_shock_ray(dbskfg_shock_link* xv, 
               const vgui_style_sptr& style,
-              vcl_string grouping)
+              std::string grouping)
 {
 
     dbskfg_soview_shock_ray* obj = new dbskfg_soview_shock_ray(xv);
@@ -253,7 +253,7 @@ add_shock_ray(dbskfg_shock_link* xv,
 dbskfg_soview_rag_node* dbskfg_composite_graph_tableau::
 add_rag_node(const dbskfg_rag_node_sptr& xv, 
              const vgui_style_sptr& style,
-             vcl_string grouping)
+             std::string grouping)
 {
 
     dbskfg_soview_rag_node* obj = new dbskfg_soview_rag_node(xv);
@@ -274,7 +274,7 @@ add_rag_node(const dbskfg_rag_node_sptr& xv,
 dbskfg_soview_transform* dbskfg_composite_graph_tableau::
 add_transform(const dbskfg_transform_descriptor_sptr& xv, 
               const vgui_style_sptr style,
-              vcl_string grouping)
+              std::string grouping)
 {
 
     dbskfg_soview_transform* obj = new dbskfg_soview_transform(xv);
@@ -391,7 +391,7 @@ bool dbskfg_composite_graph_tableau::add_transforms_to_display()
 
     if (transforms_)
     {
-        vcl_vector<dbskfg_transform_descriptor_sptr> results=
+        std::vector<dbskfg_transform_descriptor_sptr> results=
             transforms_->objects();
    
         for ( unsigned int i(0) ; i < results.size() ; ++i)

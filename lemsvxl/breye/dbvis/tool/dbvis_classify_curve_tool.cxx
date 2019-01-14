@@ -96,8 +96,8 @@ dbvis_classify_curve_tool::handle( const vgui_event & e, const bvis_view_tableau
   //: to record the seclected curves
   if (e.type == vgui_KEY_PRESS && e.key == 's' && vgui_SHIFT ) 
     {    
-      vcl_vector<vgui_soview*> selected_objects;
-      vcl_vector<vgui_soview*>::iterator k;
+      std::vector<vgui_soview*> selected_objects;
+      std::vector<vgui_soview*>::iterator k;
       selected_objects = tableau_->get_selected_soviews();    
       if(current_id_>0)    
   {     
@@ -120,8 +120,8 @@ dbvis_classify_curve_tool::handle( const vgui_event & e, const bvis_view_tableau
   
   //: to split a  curve
   if (e.type == vgui_KEY_PRESS && e.key == 'p' && vgui_SHIFT ) {
-    vcl_vector<vgui_soview*> selected_objects;
-    vcl_vector<vgui_soview*>::iterator k;
+    std::vector<vgui_soview*> selected_objects;
+    std::vector<vgui_soview*>::iterator k;
     selected_objects = tableau_->get_selected_soviews();
     if(selected_objects.size()==1)
       {
@@ -132,7 +132,7 @@ dbvis_classify_curve_tool::handle( const vgui_event & e, const bvis_view_tableau
       vsol_digital_curve_2d_sptr c1,c2;
       vgl_point_2d<double> point((double)last_x,(double)last_y);
       //split(point,c,c1,c2);
-      vcl_cout<<"\n"<<c1->size()<<" "<<c2->size();
+      std::cout<<"\n"<<c1->size()<<" "<<c2->size();
       tableau_->remove(selected_objects[0]);
       
       
@@ -151,14 +151,14 @@ dbvis_classify_curve_tool::handle( const vgui_event & e, const bvis_view_tableau
       storage_->clear_all();
       background_curves_=tableau_->get_all();
       
-      vcl_vector<vsol_spatial_object_2d_sptr> bg;
-      vcl_string backs="BACKGROUND";
+      std::vector<vsol_spatial_object_2d_sptr> bg;
+      std::string backs="BACKGROUND";
       
-      vcl_map<int, vcl_map<vcl_string, vcl_vector<vsol_spatial_object_2d_sptr> > >::iterator iter;
-      vcl_map<vcl_string, vcl_vector<vsol_spatial_object_2d_sptr> >::iterator iter1;
+      std::map<int, std::map<std::string, std::vector<vsol_spatial_object_2d_sptr> > >::iterator iter;
+      std::map<std::string, std::vector<vsol_spatial_object_2d_sptr> >::iterator iter1;
       for(iter=curves_selected_.begin();iter!=curves_selected_.end();iter++)
   {
-    vcl_ostringstream s;
+    std::ostringstream s;
     s<<"OBJECT"<<(*iter).first;
     for(iter1=(*iter).second.begin();iter1!=(*iter).second.end();iter1++)
       {
@@ -192,7 +192,7 @@ dbvis_classify_curve_tool::handle( const vgui_event & e, const bvis_view_tableau
 }
 
 //: Return the name of this tool
-vcl_string dbvis_classify_curve_tool::name() const
+std::string dbvis_classify_curve_tool::name() const
 {
   return "classify curve";
 }

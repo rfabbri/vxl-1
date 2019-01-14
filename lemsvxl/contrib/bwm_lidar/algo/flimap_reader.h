@@ -13,12 +13,12 @@
 #define flimap_reader_h
 
 ///#include "all_includes.h"
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_matrix.h>
 
 class flimap_reader
 {
 public:
-  static void read_flimap_file(vcl_string flimap_file_path, vnl_matrix<double>& points);
+  static void read_flimap_file(std::string flimap_file_path, vnl_matrix<double>& points);
 };
 #endif

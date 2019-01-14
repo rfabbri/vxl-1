@@ -21,15 +21,15 @@
 //#include "dbseg_seg_object.h"
 #include <structure/dbseg_seg_object_base.h>
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <string>
 
 class dbseg_seg_storage : public bpro1_storage {
 
 public:
-  typedef vcl_map< vcl_string, dbseg_seg_object_base> data_map;
-  //typedef vcl_map<vcl_string, vcl_vector<double> > attribute_map;
+  typedef std::map< std::string, dbseg_seg_object_base> data_map;
+  //typedef std::map<std::string, std::vector<double> > attribute_map;
 
   //: Constructor
   dbseg_seg_storage();
@@ -40,7 +40,7 @@ public:
   virtual ~dbseg_seg_storage();
 
   //: Return the type identifier string
-  virtual vcl_string type() const { return "seg"; }
+  virtual std::string type() const { return "seg"; }
  
   /*
   //: Register vsol_spatial_object_2d types for I/O
@@ -63,7 +63,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbseg_seg_storage"; }
+  virtual std::string is_a() const { return "dbseg_seg_storage"; }
 
 
   //: Add an object to the group named \p which

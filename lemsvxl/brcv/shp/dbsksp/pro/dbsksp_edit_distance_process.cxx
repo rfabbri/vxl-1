@@ -23,7 +23,7 @@ dbsksp_edit_distance_process()
     !parameters()->add("Scurve sample ds: " , "-scurve-sample-ds" , 3.0f)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_edit_distance_process::
+std::string dbsksp_edit_distance_process::
 name()
 { 
   return "Edit distance between two xgraphs"; 
@@ -57,10 +57,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_edit_distance_process::
+std::vector< std::string > dbsksp_edit_distance_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   to_return.push_back("dbsksp_xgraph");
   return to_return;
@@ -70,10 +70,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_edit_distance_process::
+std::vector< std::string > dbsksp_edit_distance_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   //to_return.push_back( "dbsksp_xgraph" );  
   //to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
@@ -110,7 +110,7 @@ execute()
   this->parameters()->get_value("-scurve-sample-ds" , scurve_sample_ds);
 
 
-  vcl_cout << "\nRetrieve two xgraphs from repository ...";
+  std::cout << "\nRetrieve two xgraphs from repository ...";
 
   // input shock graphs
   dbsksp_xgraph_storage_sptr input_xgraph1;
@@ -127,12 +127,12 @@ execute()
 
   if (!xgraph1 || !xgraph2)
   {
-    vcl_cout << "failed. Quit now.\n";
+    std::cout << "failed. Quit now.\n";
     return false;
   }
   else
   {
-    vcl_cout << "done.\n";
+    std::cout << "done.\n";
   }
 
   // Call edit distance
@@ -141,12 +141,12 @@ execute()
   edit_distance.save_path(true);
   edit_distance.edit();
 
-  vcl_vector<pathtable_key > corr;
+  std::vector<pathtable_key > corr;
   edit_distance.get_final_correspondence(corr);
   double deform_cost = edit_distance.get_deform_cost(corr);
 
   // Print out cost
-  vcl_cout 
+  std::cout 
     << "\nFinal editing cost = " << edit_distance.final_cost()
     << "\n  Deformation cost = " << deform_cost   
     << "\n  Total splice cost - tree1 = " << edit_distance.tree1()->total_splice_cost()

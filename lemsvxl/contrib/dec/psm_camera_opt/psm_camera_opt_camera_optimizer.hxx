@@ -92,10 +92,10 @@ bool psm_camera_opt_camera_optimizer<APM>::optimize(psm_scene<APM> &scene, vil_i
   mask.fill(1.0f);
 
   // debug
-  vcl_vector<vpgl_perspective_camera<double> > step_vec;
+  std::vector<vpgl_perspective_camera<double> > step_vec;
   step_vec.push_back(camera);
 
-  vcl_cout << "computing plane estimate. " << vcl_endl;
+  std::cout << "computing plane estimate. " << std::endl;
 
   // estimate a plane using the expected depth image
   vil_image_view<float> expected_depth(img.ni(), img.nj());
@@ -103,7 +103,7 @@ bool psm_camera_opt_camera_optimizer<APM>::optimize(psm_scene<APM> &scene, vil_i
   psm_compute_expected_depth(scene, &camera, expected_depth, vis_inf_prob);
   // for each pixel compute the point location and fit a plane to collection.
   vgl_point_3d<double> cam_center(camera.get_camera_center());
-  vcl_vector<vgl_homg_point_3d<double> > scene_points;
+  std::vector<vgl_homg_point_3d<double> > scene_points;
 
   for (unsigned int j=0; j<expected_depth.nj(); ++j) {
     for (unsigned int i=0; i<expected_depth.ni(); ++i) {
@@ -116,13 +116,13 @@ bool psm_camera_opt_camera_optimizer<APM>::optimize(psm_scene<APM> &scene, vil_i
       }
     }
   }
-  vcl_cout << "estimating plane using " << scene_points.size() << " points. " << vcl_endl;
+  std::cout << "estimating plane using " << scene_points.size() << " points. " << std::endl;
   vgl_fit_plane_3d<double> plane_fit(scene_points);
   const double plane_fit_error_marg = 1e6; // allow a big error - points are probably not actually co-planar
   plane_fit.fit(plane_fit_error_marg);
   vgl_plane_3d<double> scene_plane(plane_fit.get_plane());
 
-  vcl_cout << "estimated scene plane = " << scene_plane << vcl_endl;
+  std::cout << "estimated scene plane = " << scene_plane << std::endl;
 
 
   // iteratively update estimate, using expected images at intermediate steps as observations
@@ -168,8 +168,8 @@ bool psm_camera_opt_camera_optimizer<APM>::optimize(psm_scene<APM> &scene, vil_i
 
     const double step_length = ekf_state.get_state().magnitude();
 
-    vcl_cout << " step length = " << step_length << vcl_endl;
-    vcl_cout << "Pk = " << vcl_endl << ekf_state.get_error_covariance() << vcl_endl;
+    std::cout << " step length = " << step_length << std::endl;
+    std::cout << "Pk = " << std::endl << ekf_state.get_error_covariance() << std::endl;
     if (step_length < min_step_length)
       iterate_again = false;
   }
@@ -203,9 +203,9 @@ bool psm_camera_opt_camera_optimizer<APM>::optimize(psm_scene<APM> &scene, vil_i
   }
   // debug
   for (unsigned i=0; i<step_vec.size(); ++i) {
-    vcl_cout << "step " << i << vcl_endl;
-    vcl_cout << "center = " << step_vec[i].get_camera_center() << vcl_endl;
-    vcl_cout << "rot = " << step_vec[i].get_rotation().as_rodrigues() << vcl_endl;
+    std::cout << "step " << i << std::endl;
+    std::cout << "center = " << step_vec[i].get_camera_center() << std::endl;
+    std::cout << "rot = " << step_vec[i].get_rotation().as_rodrigues() << std::endl;
   }
 #endif
 
@@ -250,9 +250,9 @@ psm_camera_opt_ekf_state psm_camera_opt_camera_optimizer<APM>::optimize_once(vgl
   //double phi = acos(-plane_approx_cam.nz()/sqrt(plane_approx_cam.ny()*plane_approx_cam.ny() + plane_approx_cam.nz()*plane_approx_cam.nz()));
   double phi = atan2(plane_approx_cam.ny(),-plane_approx_cam.nz());
 
-  vcl_cout << "dz = " << dz << vcl_endl;
-  vcl_cout << "theta = " << theta << vcl_endl;
-  vcl_cout << "phi = " << phi << vcl_endl << vcl_endl;
+  std::cout << "dz = " << dz << std::endl;
+  std::cout << "theta = " << theta << std::endl;
+  std::cout << "phi = " << phi << std::endl << std::endl;
 
   // construct the measurement Jacobian
   unsigned nhomography = 6 + (use_proj_homography_? 2:0);
@@ -266,8 +266,8 @@ psm_camera_opt_ekf_state psm_camera_opt_camera_optimizer<APM>::optimize_once(vgl
   vnl_matrix<double> H_trans = H.transpose();
   vnl_matrix<double> K = P_pred*H_trans*vnl_matrix_inverse<double>(H*P_pred*H_trans + measurement_error_covar_);
 
-  vcl_cout << "H = " << H << vcl_endl;
-  vcl_cout << "measurement_error_covar = " << measurement_error_covar_ << vcl_endl;
+  std::cout << "H = " << H << std::endl;
+  std::cout << "measurement_error_covar = " << measurement_error_covar_ << std::endl;
 
   // predict measurement vector z
   vnl_vector<double> z_pred(nmeasurements);
@@ -285,12 +285,12 @@ psm_camera_opt_ekf_state psm_camera_opt_camera_optimizer<APM>::optimize_once(vgl
   // Update estimate with measurement zk
   vnl_vector_fixed<double,6> x_post = x_pred + K*(z - z_pred);
 
-  vcl_cout << "K = " << K << vcl_endl;
+  std::cout << "K = " << K << std::endl;
 
-  vcl_cout << "z_pred = " << z_pred << vcl_endl;
-  vcl_cout << "z      = " << z << vcl_endl;
-  vcl_cout << "x_pred = " << x_pred << vcl_endl;
-  vcl_cout << "x_post = " << x_post << vcl_endl;
+  std::cout << "z_pred = " << z_pred << std::endl;
+  std::cout << "z      = " << z << std::endl;
+  std::cout << "x_pred = " << x_pred << std::endl;
+  std::cout << "x_post = " << x_post << std::endl;
 
 
   // Update error covariance
@@ -298,8 +298,8 @@ psm_camera_opt_ekf_state psm_camera_opt_camera_optimizer<APM>::optimize_once(vgl
   I6.set_identity();
   vnl_matrix_fixed<double,6,6> P_post = (I6 - K*H)*P_pred;
 
-  vcl_cout << "P_pred = " << P_pred << vcl_endl;
-  vcl_cout << "P_post = " << P_post << vcl_endl;
+  std::cout << "P_pred = " << P_pred << std::endl;
+  std::cout << "P_post = " << P_post << std::endl;
 
   // update camera
   vnl_vector_fixed<double,6> x_post_unscaled;
@@ -354,9 +354,9 @@ vnl_vector<double> psm_camera_opt_camera_optimizer<APM>::img_homography(vil_imag
   else
     lie_vector = matrix_to_coeffs_GA2(H);
 
-  vcl_cout << "optimized homography = " << vcl_endl << xform.inverse().matrix() << vcl_endl;
-  vcl_cout << "normalized homography = "<< vcl_endl << H << vcl_endl;
-  vcl_cout << "homography lie coeffs = " << lie_vector << vcl_endl << vcl_endl;
+  std::cout << "optimized homography = " << std::endl << xform.inverse().matrix() << std::endl;
+  std::cout << "normalized homography = "<< std::endl << H << std::endl;
+  std::cout << "homography lie coeffs = " << lie_vector << std::endl << std::endl;
 
   return lie_vector;
 }
@@ -369,7 +369,7 @@ vnl_vector_fixed<double,6> psm_camera_opt_camera_optimizer<APM>::matrix_to_coeff
   vnl_vector_fixed<double,6> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
@@ -392,13 +392,13 @@ vnl_vector_fixed<double,6> psm_camera_opt_camera_optimizer<APM>::matrix_to_coeff
   vnl_vector_fixed<double,6> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
 
-  vcl_cout << "M = " << M << vcl_endl;
-  vcl_cout << "logM = " << logM << vcl_endl;
+  std::cout << "M = " << M << std::endl;
+  std::cout << "logM = " << logM << std::endl;
 
   coeffs(0) = logM(0,2);
   coeffs(1) = logM(1,2);
@@ -418,7 +418,7 @@ vnl_vector_fixed<double,8> psm_camera_opt_camera_optimizer<APM>::matrix_to_coeff
   vnl_vector_fixed<double,8> coeffs;
 
   if(!logm_approx(M,logM)) {
-    vcl_cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << vcl_endl;
+    std::cout << "error converting matrix to lie coefficents.  matrix could be too far from Identity." << std::endl;
     coeffs.fill(0.0);
     return coeffs;
   }
@@ -460,7 +460,7 @@ vnl_matrix_fixed<double,4,4> psm_camera_opt_camera_optimizer<APM>::coeffs_to_mat
 template<psm_apm_type APM>
 vnl_matrix_fixed<double,3,3> psm_camera_opt_camera_optimizer<APM>::coeffs_to_matrix_GA2(vnl_vector_fixed<double,6> const& a)
 {
-  vcl_cout << "not implemented yet" << vcl_endl;
+  std::cout << "not implemented yet" << std::endl;
   return vnl_matrix_fixed<double,3,3>(0.0);
 
 }
@@ -468,7 +468,7 @@ vnl_matrix_fixed<double,3,3> psm_camera_opt_camera_optimizer<APM>::coeffs_to_mat
 template<psm_apm_type APM>
 vnl_matrix_fixed<double,3,3> psm_camera_opt_camera_optimizer<APM>::coeffs_to_matrix_P2(vnl_vector_fixed<double,8> const &a)
 {
-  vcl_cout << "not implemented yet" << vcl_endl;
+  std::cout << "not implemented yet" << std::endl;
   return vnl_matrix_fixed<double,3,3>(0.0);
 }
 
@@ -480,7 +480,7 @@ bool psm_camera_opt_camera_optimizer<APM>::logm_approx(vnl_matrix<double> const&
   unsigned nr = A.rows();
   unsigned nc = A.cols();
   if (nr != nc) {
-    vcl_cout << "error: logm_approx called with non-square matrix." << vcl_endl;
+    std::cout << "error: logm_approx called with non-square matrix." << std::endl;
     return false;
   }
   logA.set_size(nr,nr);
@@ -496,21 +496,21 @@ bool psm_camera_opt_camera_optimizer<APM>::logm_approx(vnl_matrix<double> const&
   vnl_matrix<double> Wpow = I;
   while(term_norm > tol) {
     if (i >= max_iterations) {
-      vcl_cerr << vcl_endl;
-      vcl_cerr << "*************************************************************" << vcl_endl;
-      vcl_cerr << "ERROR: logm_approx did not converge." << vcl_endl;
-      vcl_cerr << "*************************************************************" << vcl_endl << vcl_endl;
+      std::cerr << std::endl;
+      std::cerr << "*************************************************************" << std::endl;
+      std::cerr << "ERROR: logm_approx did not converge." << std::endl;
+      std::cerr << "*************************************************************" << std::endl << std::endl;
       return false;
     }
     Wpow = Wpow*W;
     vnl_matrix<double> term = -Wpow/i;
     term_norm = term.frobenius_norm();
     logA += term;
-    //vcl_cout << "iteration " << i <<": W = " << W << vcl_endl << "Wpow = " << Wpow << vcl_endl << "term = " << term << vcl_endl;
-    //vcl_cout << "logA = " << logA << vcl_endl;
+    //std::cout << "iteration " << i <<": W = " << W << std::endl << "Wpow = " << Wpow << std::endl << "term = " << term << std::endl;
+    //std::cout << "logA = " << logA << std::endl;
     ++i;
   }
-  vcl_cout << "logM converged in " << i << " iterations. " << vcl_endl;
+  std::cout << "logM converged in " << i << " iterations. " << std::endl;
 
   return true;
 }

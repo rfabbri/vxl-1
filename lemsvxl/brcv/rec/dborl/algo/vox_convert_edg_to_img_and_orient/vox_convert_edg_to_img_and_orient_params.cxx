@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_convert_edg_to_img_and_orient_params::vox_convert_edg_to_img_and_orient_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_convert_edg_to_img_and_orient_params::vox_convert_edg_to_img_and_orient_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
 
     //: Name of input object

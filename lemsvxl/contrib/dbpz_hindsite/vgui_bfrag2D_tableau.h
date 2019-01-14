@@ -47,7 +47,7 @@ public:
     //TEST
     /*
     virtual bool mouse_down(int x,int y, vgui_button button, vgui_modifier modifier ){
-        vcl_cout << myIndex << "mouse down at: (" << x << "," << y << ")" << vcl_endl;
+        std::cout << myIndex << "mouse down at: (" << x << "," << y << ")" << std::endl;
         return true;
     }
     */
@@ -68,12 +68,12 @@ public:
     void setNumPairs( int n ){ numPairs = n; };
     void setNumPuzzles( int n ){ numPuzzles = n; };
 
-    virtual vcl_string type_name() const;
+    virtual std::string type_name() const;
 
 
     vgui_soview2D_bfrag2D *addbfrag2D( bfrag2D *theFrag, XForm3x3 *theXform = &XForm3x3() );
     //set views to 0 if you don't wish to keep reference to all created views
-    vgui_soview2D_bfrag2D_assembly *addbfrag2D_assembly( bfrag2D_assembly *theAssembly, vcl_vector<vgui_soview2D_bfrag2D*> *views );
+    vgui_soview2D_bfrag2D_assembly *addbfrag2D_assembly( bfrag2D_assembly *theAssembly, std::vector<vgui_soview2D_bfrag2D*> *views );
 
     //overrode this (prevously of vgui_easy2D_tab to force alpha blending ON
     vgui_soview2D_image *add_image( float x, float y, vil_image_view_base const& img );

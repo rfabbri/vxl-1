@@ -14,11 +14,11 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 class bvam_normalize_image_process : public bprb_process
 {
@@ -34,7 +34,7 @@ class bvam_normalize_image_process : public bprb_process
   //: Clone the process
   virtual bvam_normalize_image_process* clone() const {return new bvam_normalize_image_process(*this);}
 
-  vcl_string name(){return "BvamNormalizeImageProcess";}
+  std::string name(){return "BvamNormalizeImageProcess";}
 
   bool init() { return true; }
   bool execute();
@@ -58,7 +58,7 @@ inline bool normalize_image(const vil_image_view<T>& in_view, vil_image_view<T>&
     for (unsigned j=0;j<nj;++j)
       for (unsigned i=0;i<ni;++i)
       {
-        //T p = (T)vcl_floor(a*in_view(i,j,k) + b);
+        //T p = (T)std::floor(a*in_view(i,j,k) + b);
         T p = (T)(a*in_view(i,j,k) + b);
         if (p < 0) 
           out_img(i,j,k) = 0;

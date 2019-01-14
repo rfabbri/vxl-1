@@ -7,8 +7,8 @@
 // \author  Gamze Tunali
 // \date    Dec 29, 2005
 #include <mpi.h>
-#include <vcl_ctime.h>
-#include <vcl_vector.h>
+#include <ctime>
+#include <vector>
 #include <vgl/xio/vgl_xio_box_3d.h>
 #include <vgl/xio/vgl_xio_vector_3d.h>
 
@@ -28,8 +28,8 @@ int main(int argc, char** argv)
   int verbose = TRACE_ERROR;
   bool binary = true;
   proc_io_run_xml_parser parser;
-  vcl_string fname = "", bin_fname="";
-  vcl_FILE *xmlFile;
+  std::string fname = "", bin_fname="";
+  std::FILE *xmlFile;
   try
     {
       // Initialize MPI interface
@@ -41,20 +41,20 @@ int main(int argc, char** argv)
 
       // Parse arguments
       for (int i = 1; i < argc; i++) {
-        vcl_string arg (argv[i]);
-        if (arg == vcl_string ("-v")) verbose = atoi (argv[++i]);
-        else  if (arg == vcl_string ("-x")) { fname = vcl_string(argv[++i]);}
-        else if (arg == vcl_string ("-b")) { binary = true; bin_fname = vcl_string (argv[++i]); }
+        std::string arg (argv[i]);
+        if (arg == std::string ("-v")) verbose = atoi (argv[++i]);
+        else  if (arg == std::string ("-x")) { fname = std::string(argv[++i]);}
+        else if (arg == std::string ("-b")) { binary = true; bin_fname = std::string (argv[++i]); }
         else
         {
-          vcl_cout << "Usage: " << argv[0] << "[-help] [-v {0|1|2}] [-x xml_script]" << vcl_endl;
+          std::cout << "Usage: " << argv[0] << "[-help] [-v {0|1|2}] [-x xml_script]" << std::endl;
           throw -1;
         }
       }
   
-    xmlFile = vcl_fopen(fname.c_str(), "r");
+    xmlFile = std::fopen(fname.c_str(), "r");
     if (!xmlFile){
-      vcl_cout << fname << " error on opening" << vcl_endl;
+      std::cout << fname << " error on opening" << std::endl;
       return(1);
     }
     if (!parser.parseFile(xmlFile)) {
@@ -65,24 +65,24 @@ int main(int argc, char** argv)
         );
       return 1;
     }
-    vcl_cout << "parsing finished!" << vcl_endl;
+    std::cout << "parsing finished!" << std::endl;
 
    if (proc_flow_manage(parser, xmlFile, fname, bin_fname) == 1)
      return 1;
     // get the parameters from parser
-  /*  vcl_string logfile = parser.log();
-    vcl_string scanfile = parser.scan();
-    vcl_string boxfile = parser.box();
+  /*  std::string logfile = parser.log();
+    std::string scanfile = parser.scan();
+    std::string boxfile = parser.box();
     double filter_radius = parser.filter_radius();
     double filter_length = parser.filter_length();
     double res = parser.res();
-    vcl_string outputfile = parser.output_file();
+    std::string outputfile = parser.output_file();
 
     if (file_check(logfile, scanfile, boxfile) == 0)
       return 1;
  
     // open output file to write the xml elements and the filter response
-    vcl_ofstream xml_file(outputfile.data());
+    std::ofstream xml_file(outputfile.data());
     xml_file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << "\n";
 
     // create a main node for the whole xml document
@@ -93,23 +93,23 @@ int main(int argc, char** argv)
     // get the scan from the file and correct the created scan
     imgr_skyscan_log log(logfile.data());
     xscan_scan scan = log.get_scan();
-    vcl_cout << "SCAN BEFORE\n" << scan << vcl_endl;
+    std::cout << "SCAN BEFORE\n" << scan << std::endl;
 
-    vcl_ifstream scan_file(scanfile.c_str());
+    std::ifstream scan_file(scanfile.c_str());
     scan_file >> scan;
     scan_file.close();
-    vcl_cout << "SCAN AFTER\n" << scan << vcl_endl;
+    std::cout << "SCAN AFTER\n" << scan << std::endl;
     x_write(xml_file, scan);
 
     log.set_scan(scan);
     x_write(xml_file, log);
 
     //get the box
-    vcl_ifstream box_file(boxfile.c_str());
+    std::ifstream box_file(boxfile.c_str());
     vgl_box_3d<double> box;
     box.read(box_file);
     box_file.close();
-    vcl_cout << "BOX\n" << box << vcl_endl;
+    std::cout << "BOX\n" << box << std::endl;
     x_write(xml_file, box, "active_box");
 
     // resolution
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
     PROC_SPLAT_TYPE splatting_type = parser.splatting_type();
     PROC_ALGO_TYPE algo_type = parser.algo_type();
 
-    vcl_vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
+    std::vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
     proc_run_args args(orientation_list, f_radius, f_length, f_centre, box, log, resolution, xml_file, bin_fname);
     if (run_proc(filter_type, splatting_type, algo_type, args) == 1)
       return 1;
@@ -140,10 +140,10 @@ int main(int argc, char** argv)
         if (e.GetError () != e.Incomplete)
         {
           if (verbose >= TRACE_ERROR) 
-              vcl_cout << "BioProcException: " //<< e.GetMessage()
+              std::cout << "BioProcException: " //<< e.GetMessage()
               << " err: " << e.GetError() << " mpi: " 
               << e.GetMPIError() << " sys: " 
-              << e.GetSysError() << vcl_endl;
+              << e.GetSysError() << std::endl;
           returnStatus = e.GetError();
         }
   }

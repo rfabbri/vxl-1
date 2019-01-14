@@ -23,19 +23,19 @@ class vox_train_xgraph_ccm_model_params : public dborl_algo_params
 public:
 
     //: Constructor
-    vox_train_xgraph_ccm_model_params(vcl_string algo_name);
+    vox_train_xgraph_ccm_model_params(std::string algo_name);
 
     // MEMBER VARIABLES
 
     //parameter for the index file
     //Is a flat image database
-    dborl_parameter<vcl_string> index_filename_;
+    dborl_parameter<std::string> index_filename_;
 
-    dborl_parameter<vcl_string> output_ccm_dir_;
+    dborl_parameter<std::string> output_ccm_dir_;
 
-    dborl_parameter<vcl_string> matlab_file_extraction_path_;
+    dborl_parameter<std::string> matlab_file_extraction_path_;
 
-    dborl_parameter<vcl_string> bfrags_to_ignore_;
+    dborl_parameter<std::string> bfrags_to_ignore_;
 };
 
 #endif /* VOX_TRAIN_XGRAPH_CCM_MODEL_PARAMS_H_ */

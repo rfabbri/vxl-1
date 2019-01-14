@@ -111,8 +111,8 @@ xmvg_atomic_filter_2d<T> xmvg_parallel_beam_filter_3d<filter_3d, T>::splat(vgl_p
       double val = line_integrator.increment_ray_start_and_integrate();
 #if defined(XMVG_PARALLEL_BEAM_FILTER_3D_TEST)
       double old_integrator_val = test_line_integrator.increment_ray_start_and_integrate();
-      if (vcl_abs(val-old_integrator_val)>.000001){
-        vcl_cout << "xmvg_parallel_beam_filter_3d.hxx INTEGRATOR DISCREPANCY\n";
+      if (std::abs(val-old_integrator_val)>.000001){
+        std::cout << "xmvg_parallel_beam_filter_3d.hxx INTEGRATOR DISCREPANCY\n";
       }
       //test against traditional approach
       vgl_point_3d<double> test_ray_start_vgl(ray_start[0] + (i-min_x+1)*image_plane_basis.get(0,0),
@@ -121,8 +121,8 @@ xmvg_atomic_filter_2d<T> xmvg_parallel_beam_filter_3d<filter_3d, T>::splat(vgl_p
       double inner = line_integral(test_ray_start_vgl, ray_direction, filter_.descriptor().inner_radius());
       double outer = line_integral(test_ray_start_vgl, ray_direction, filter_.descriptor().outer_radius());
       double val_check = 2 * inner - outer;
-      if (vcl_abs(val - val_check) > .000001){
-        vcl_cout << "xmvg_parallel_beam_filter_3d.hxx DISREPANCY\n";
+      if (std::abs(val - val_check) > .000001){
+        std::cout << "xmvg_parallel_beam_filter_3d.hxx DISREPANCY\n";
       }
 #endif
       image[i - min_x][j - min_y] = val;
@@ -144,14 +144,14 @@ vgl_box_2d<int> xmvg_parallel_beam_filter_3d<filter_3d, T>::get_box_2d(const xmv
                                                                        vgl_box_3d<double> const & box){
   //OLD CODE HERE
     vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(cam, box);
-    int min_x = int(vcl_floor(box_2d.min_x()));   int max_x = int(vcl_ceil(box_2d.max_x()));
-    int min_y = int(vcl_floor(box_2d.min_y()));   int max_y = int(vcl_ceil(box_2d.max_y()));
+    int min_x = int(std::floor(box_2d.min_x()));   int max_x = int(std::ceil(box_2d.max_x()));
+    int min_y = int(std::floor(box_2d.min_y()));   int max_y = int(std::ceil(box_2d.max_y()));
     return vgl_box_2d<int>(min_x, max_x, min_y, max_y);
 }
 
 //: XML write
 template <class filter_3d, class T>
-void x_write(vcl_ostream& os, xmvg_parallel_beam_filter_3d<filter_3d, T> f)
+void x_write(std::ostream& os, xmvg_parallel_beam_filter_3d<filter_3d, T> f)
 {
   x_write(os, f.filter());
 }
@@ -204,7 +204,7 @@ double xmvg_parallel_beam_filter_3d<filter_3d, T>::line_integral(vgl_point_3d<do
     // Handle another special case here where the ray direction is parallel to the cylinder taps
     if(z1 == 0)
     {
-      if(vcl_abs(z0) > h)
+      if(std::abs(z0) > h)
         return 0;
       else
       {
@@ -262,9 +262,9 @@ double xmvg_parallel_beam_filter_3d<filter_3d, T>::line_integral(vgl_point_3d<do
 
 #define XMVG_PARALLEL_BEAM_FILTER_3D_INSTANTIATE_ALL_ARGS(Filter, T) \
   template class xmvg_parallel_beam_filter_3d<Filter, T >; \
-  template void x_write(vcl_ostream& , xmvg_parallel_beam_filter_3d<Filter, T>)
+  template void x_write(std::ostream& , xmvg_parallel_beam_filter_3d<Filter, T>)
 
 #define XMVG_PARALLEL_BEAM_FILTER_3D_INSTANTIATE(Filter) \
   template class xmvg_parallel_beam_filter_3d<Filter >; \
-  template void x_write(vcl_ostream& , xmvg_parallel_beam_filter_3d<Filter>)
+  template void x_write(std::ostream& , xmvg_parallel_beam_filter_3d<Filter>)
 #endif

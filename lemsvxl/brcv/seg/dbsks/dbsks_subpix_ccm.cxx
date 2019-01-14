@@ -167,7 +167,7 @@ compute(const vgl_box_2d<int >& roi, edge_correspondence_method method,
   }
   else
   {
-    vcl_cout << "\nERROR: unknown edge correspondence method.\n";
+    std::cout << "\nERROR: unknown edge correspondence method.\n";
   }
   return;
 }
@@ -178,7 +178,7 @@ compute(const vgl_box_2d<int >& roi, edge_correspondence_method method,
 //: average cost of an ordered set of oriented points, each represented by an
 // index triplet (i_x, i_y, i_orient), where 0 <= i_orient < 2*nbins_0topi
 float dbsks_subpix_ccm::
-f(const vcl_vector<int >& xs, const vcl_vector<int >& ys, const vcl_vector<int >& orient_bins) const
+f(const std::vector<int >& xs, const std::vector<int >& ys, const std::vector<int >& orient_bins) const
 {
   assert(xs.size() == ys.size() && ys.size() == orient_bins.size());
 
@@ -286,7 +286,7 @@ float dbsks_subpix_ccm::
 edge_orient_cost(double signed_angle_diff) const
 {
   // modulo the angle difference to [0, pi]
-  double diff = vcl_fmod(signed_angle_diff, vnl_math::pi);
+  double diff = std::fmod(signed_angle_diff, vnl_math::pi);
   if (diff < 0)
     diff += vnl_math::pi;
 
@@ -344,7 +344,7 @@ contour_orient_cost(int cur_x, int cur_y, int cur_orient_bin,
   {
     // use the edge orientation as the contour orientation
     double edge_contour_angle = cur_edgel->tangent;
-    vgl_vector_2d<double > v_edge(vcl_cos(edge_contour_angle), vcl_sin(edge_contour_angle));
+    vgl_vector_2d<double > v_edge(std::cos(edge_contour_angle), std::sin(edge_contour_angle));
     
     angle_diff = vnl_math::abs(signed_angle(v_query, v_edge));
 
@@ -398,11 +398,11 @@ compute_matched_edgels_using_ocm_cost()
   int norient = 2*this->nbins_0topi();
 
   // Pre-computed direction vector for each angle bin
-  vcl_vector<vgl_vector_2d<double > > precomputed_tangents(norient);
+  std::vector<vgl_vector_2d<double > > precomputed_tangents(norient);
   for (int i=0; i < norient; ++i)
   {
     double angle = i * this->radians_per_bin();
-    precomputed_tangents[i].set(vcl_cos(angle), vcl_sin(angle));
+    precomputed_tangents[i].set(std::cos(angle), std::sin(angle));
   }
     
   // iterate thru every point in the image and locate the best matched edges
@@ -426,7 +426,7 @@ compute_matched_edgels_using_ocm_cost()
       vgl_point_2d<double > query_pt(i, j);
 
       //b) Collect locations of all the edges in the neighborhood
-      vcl_vector<dbdet_edgel* > neighbor_edgels;
+      std::vector<dbdet_edgel* > neighbor_edgels;
       neighbor_edgels.reserve((wmax_x-wmin_x+1)*(wmax_y-wmin_y+1));
       for (int wx = wmin_x; wx <= wmax_x; ++wx)
       {
@@ -435,7 +435,7 @@ compute_matched_edgels_using_ocm_cost()
           if (vnl_math::hypot(wx-i, wy-j) > radius)
             continue;
 
-          const vcl_vector<dbdet_edgel* >& edgels = this->edgemap()->cell(wx, wy);
+          const std::vector<dbdet_edgel* >& edgels = this->edgemap()->cell(wx, wy);
           neighbor_edgels.insert(neighbor_edgels.end(), edgels.begin(), edgels.end());          
         }
       }
@@ -554,7 +554,7 @@ compute_cost_components_from_matched_edgels()
       vnl_vector<float >& f_edge_orient = this->edge_orient_cost_(i, j);
       vnl_vector<float >& f_contour_orient = this->contour_orient_cost_(i, j);
 
-      vcl_vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(i, j);
+      std::vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(i, j);
 
 
       // a) if there is no corresponding edges then all costs for all orientation are maximum
@@ -605,8 +605,8 @@ compute_cost_components_from_matched_edgels()
           double query_angle = p * this->radians_per_bin();
 
           // Coordinate of next point along contour's tangent
-          int next_point_x = vnl_math::rnd(i + vcl_cos(query_angle) * neighborhood_radius);
-          int next_point_y = vnl_math::rnd(j + vcl_sin(query_angle) * neighborhood_radius);
+          int next_point_x = vnl_math::rnd(i + std::cos(query_angle) * neighborhood_radius);
+          int next_point_y = vnl_math::rnd(j + std::sin(query_angle) * neighborhood_radius);
 
           // assuming orientation doesn't change
           // \todo alternatively, we can average the cost for various next_point_p,
@@ -644,7 +644,7 @@ compute_ortho_dist_from_matched_edgels()
       vnl_vector<float >& d_ortho = this->ortho_dist_to_matched_edgel_(i, j);
       
       // list of matched edgels for each orientation
-      vcl_vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(i, j);
+      std::vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(i, j);
 
       // a) if there is no corresponding edges then all costs for all orientation are maximum
       if (matched_edgels.empty())
@@ -664,8 +664,8 @@ compute_ortho_dist_from_matched_edgels()
       for (int p =0; p < num_orients; ++p)
       {
         double query_angle = p * this->radians_per_bin();
-        vgl_vector_2d<double > query_normal(vcl_cos(query_angle+vnl_math::pi_over_2), 
-                                            vcl_sin(query_angle+vnl_math::pi_over_2));
+        vgl_vector_2d<double > query_normal(std::cos(query_angle+vnl_math::pi_over_2), 
+                                            std::sin(query_angle+vnl_math::pi_over_2));
         dbdet_edgel* edgel = matched_edgels[p];
 
         if (!edgel)
@@ -776,7 +776,7 @@ matched_edgel(int ix, int iy, int ibin) const
   if (!this->roi_.contains(ix, iy))
     return 0;
 
-  const vcl_vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(ix, iy);
+  const std::vector<dbdet_edgel* >& matched_edgels = this->matched_edgel_(ix, iy);
 
   if (matched_edgels.empty())
   {

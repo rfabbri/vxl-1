@@ -10,9 +10,9 @@
 //      
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 
 //: class to hold label information of vehicle objects in video
@@ -21,7 +21,7 @@ class dbru_label : public vbl_ref_count
 
  public:
 
-  dbru_label(const vcl_string name = "null",
+  dbru_label(const std::string name = "null",
             const int motion_orientation_bin = -1,
             const int view_angle_bin = -1,
             const int shadow_angle_bin = -1,
@@ -30,10 +30,10 @@ class dbru_label : public vbl_ref_count
   dbru_label(const dbru_label& old_label);
  ~dbru_label(){}
 
-  vcl_string category() { return category_name_; }
+  std::string category() { return category_name_; }
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const;
+  virtual void print(std::ostream& os = std::cout) const;
   
   dbru_label& operator=(const dbru_label& right);
 
@@ -45,10 +45,10 @@ class dbru_label : public vbl_ref_count
  virtual unsigned version() const {return 1;}
 
  //: Return a platform independent string identifying the class
- virtual vcl_string is_a() const {return "dbru_label";}
+ virtual std::string is_a() const {return "dbru_label";}
 
  //: determine if this is the given class
- virtual bool is_class(vcl_string const& cls) const
+ virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
  //: Binary save self to stream.
@@ -58,7 +58,7 @@ class dbru_label : public vbl_ref_count
  virtual void b_read(vsl_b_istream &is);
 
  protected:
-  void Init(vcl_string name,
+  void Init(std::string name,
             int motion_orientation_bin,
             int view_angle_bin,
             int shadow_angle_bin,
@@ -67,7 +67,7 @@ class dbru_label : public vbl_ref_count
   //
   // Parameter blocks and parameters
   //
-  vcl_string category_name_;  //!< 
+  std::string category_name_;  //!< 
   int motion_orientation_bin_;    //!< 
   int view_angle_bin_;                   //!< 
   int shadow_angle_bin_;   //!< 
@@ -76,7 +76,7 @@ class dbru_label : public vbl_ref_count
                                       
 };
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbru_label const& fb)
+inline std::ostream &operator<<(std::ostream &os, dbru_label const& fb)
 {
   fb.print(os);
   return os;

@@ -17,7 +17,7 @@
 #include <dbsksp/dbsksp_xshock_graph.h>
 
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_set.h>
+#include <set>
 
 //==============================================================================
 // dbsksp_edit_distance
@@ -119,7 +119,7 @@ get_cost(int td1, int d1, int td2, int d2)
   // place holder for the final cost
   float match_cost = vnl_numeric_traits<float>::maxval;
  
-  vcl_map<pathtable_key, float>::iterator iter;
+  std::map<pathtable_key, float>::iterator iter;
   iter = pathtable_.find(key);   // searching for either key or key2 is enough
   if (iter == pathtable_.end()) 
   {
@@ -141,7 +141,7 @@ get_cost(int td1, int d1, int td2, int d2)
     float init_alp = d.init_phi();
     match_cost = float(d.finalCost() + init_dr + init_alp);
 
-    vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());    
+    std::vector<std::pair<int,int> > fmap=*(d.finalMap());    
 
 
     // Save the cost for this pair of shock curves
@@ -180,14 +180,14 @@ get_cost(int td1, int d1, int td2, int d2)
 // a pair of darts in tree2. Each pair of darts, in return, represents a path
 // in the trees.
 void dbsksp_edit_distance::
-get_final_correspondence(vcl_vector<pathtable_key >& final_correspondence)
+get_final_correspondence(std::vector<pathtable_key >& final_correspondence)
 {
   final_correspondence.clear();
 
   // sanity check
   if (this->final_a1_ < 0)
   {
-    vcl_cout << "\nERROR: Paths are not computed, call edit() first! \n";
+    std::cout << "\nERROR: Paths are not computed, call edit() first! \n";
     return;
   }
 
@@ -199,7 +199,7 @@ get_final_correspondence(vcl_vector<pathtable_key >& final_correspondence)
 //------------------------------------------------------------------------------
 //: Compute sum of deformation costs
 float dbsksp_edit_distance::
-get_deform_cost(const vcl_vector<pathtable_key >& correspondence)
+get_deform_cost(const std::vector<pathtable_key >& correspondence)
 {
   float cost_sum = 0.0f;
 
@@ -288,21 +288,21 @@ trim_source_tree_to_common_topology(bool use_tree1) const
   // sanity check
   if (this->final_a1_ < 0)
   {
-    vcl_cout << "\nERROR: Paths are not computed, call edit() first! \n";
+    std::cout << "\nERROR: Paths are not computed, call edit() first! \n";
     return 0;
   }
 
   dbsksp_xshock_directed_tree_sptr orig_tree = use_tree1 ? this->tree1() : this->tree2();
 
   // Optimal correspondence between the two trees
-  vcl_vector<pathtable_key > optimal_correspondence = this->CP_[this->final_a1_];
+  std::vector<pathtable_key > optimal_correspondence = this->CP_[this->final_a1_];
 
   // Start from original tree, then delete darts/ branches that no longer exist
   dbsksp_xshock_graph_sptr common_xgraph = new dbsksp_xshock_graph(*orig_tree->xgraph());
 
   // Now find out the list of edges and nodes to retain from the correspondence map
   typedef unsigned xgraph_edge_id;
-  vcl_set<xgraph_edge_id > edge_ids_to_keep;
+  std::set<xgraph_edge_id > edge_ids_to_keep;
 
   for (unsigned k =0; k < optimal_correspondence.size(); ++k)
   {
@@ -322,8 +322,8 @@ trim_source_tree_to_common_topology(bool use_tree1) const
 
     // list of shock edges corresponding to this path
     dbsksp_xshock_node_sptr start_node = 0;
-    vcl_vector<dbsksp_xshock_edge_sptr > list_shock_edge;
-    vcl_vector<int >& dart_path = orig_tree->get_dart_path(d1, d2);
+    std::vector<dbsksp_xshock_edge_sptr > list_shock_edge;
+    std::vector<int >& dart_path = orig_tree->get_dart_path(d1, d2);
     orig_tree->get_edge_list(dart_path, start_node, list_shock_edge);
     for (unsigned i =0; i < list_shock_edge.size(); ++i)
     {
@@ -332,7 +332,7 @@ trim_source_tree_to_common_topology(bool use_tree1) const
   }
 
   // Determine list of edges to remove in the new graph
-  vcl_vector<dbsksp_xshock_edge_sptr > list_shock_edge_to_remove;
+  std::vector<dbsksp_xshock_edge_sptr > list_shock_edge_to_remove;
   list_shock_edge_to_remove.reserve(common_xgraph->number_of_edges());
   for (dbsksp_xshock_graph::edge_iterator eit = common_xgraph->edges_begin(); eit !=
     common_xgraph->edges_end(); ++eit)
@@ -377,7 +377,7 @@ trim_source_tree_to_common_topology(bool use_tree1) const
   
   if (common_xgraph->number_of_vertices() != (common_xgraph->number_of_edges() +1))
   {
-    vcl_cerr << "\nERROR: in dbsksp_edit_distance::trim_source_tree_to_common_topology() - "
+    std::cerr << "\nERROR: in dbsksp_edit_distance::trim_source_tree_to_common_topology() - "
       << " the remaining (common) graph is not a tree. Return 0";
     return 0;
   }
@@ -406,21 +406,21 @@ apply_optimal_splice_edits(bool use_tree1) const
   // sanity check
   if (this->final_a1_ < 0)
   {
-    vcl_cout << "\nERROR: Paths are not computed, call edit() first! \n";
+    std::cout << "\nERROR: Paths are not computed, call edit() first! \n";
     return 0;
   }
 
   dbsksp_xshock_directed_tree_sptr orig_tree = use_tree1 ? this->tree1() : this->tree2();
 
   // Optimal correspondence between the two trees
-  vcl_vector<pathtable_key > optimal_correspondence = this->CP_[this->final_a1_];
+  std::vector<pathtable_key > optimal_correspondence = this->CP_[this->final_a1_];
 
   // Start from original tree, then delete darts/ branches that no longer exist
   dbsksp_xshock_graph_sptr common_xgraph = new dbsksp_xshock_graph(*orig_tree->xgraph());
 
   // Now find out the list of edges and nodes to retain from the correspondence map
   typedef unsigned xgraph_edge_id;
-  vcl_set<xgraph_edge_id > edge_ids_to_keep;
+  std::set<xgraph_edge_id > edge_ids_to_keep;
 
   for (unsigned k =0; k < optimal_correspondence.size(); ++k)
   {
@@ -440,8 +440,8 @@ apply_optimal_splice_edits(bool use_tree1) const
 
     // list of shock edges corresponding to this path
     dbsksp_xshock_node_sptr start_node = 0;
-    vcl_vector<dbsksp_xshock_edge_sptr > list_shock_edge;
-    vcl_vector<int >& dart_path = orig_tree->get_dart_path(d1, d2);
+    std::vector<dbsksp_xshock_edge_sptr > list_shock_edge;
+    std::vector<int >& dart_path = orig_tree->get_dart_path(d1, d2);
     orig_tree->get_edge_list(dart_path, start_node, list_shock_edge);
     for (unsigned i =0; i < list_shock_edge.size(); ++i)
     {
@@ -450,7 +450,7 @@ apply_optimal_splice_edits(bool use_tree1) const
   }
 
   // Determine list of edges to remove in the new graph
-  vcl_list<dbsksp_xshock_edge_sptr > list_shock_edge_to_remove;
+  std::list<dbsksp_xshock_edge_sptr > list_shock_edge_to_remove;
   for (dbsksp_xshock_graph::edge_iterator eit = common_xgraph->edges_begin(); eit !=
     common_xgraph->edges_end(); ++eit)
   {
@@ -470,7 +470,7 @@ apply_optimal_splice_edits(bool use_tree1) const
   while (!list_shock_edge_to_remove.empty())
   {
     // Find a terminal edge 
-    vcl_list<dbsksp_xshock_edge_sptr >::iterator eit = list_shock_edge_to_remove.begin();
+    std::list<dbsksp_xshock_edge_sptr >::iterator eit = list_shock_edge_to_remove.begin();
     for (; eit != list_shock_edge_to_remove.end() && !(*eit)->is_terminal_edge(); ++eit);
 
     // if there is no remaining terminal edge (leaf edge), we are done
@@ -495,7 +495,7 @@ apply_optimal_splice_edits(bool use_tree1) const
       common_xgraph->remove_A_infty_branch(xv, xe, 0.5);
       break;
     default:
-      vcl_cout << "\nERROR: can't handle non-leaf node with degree = " << xv->degree() << "\n";
+      std::cout << "\nERROR: can't handle non-leaf node with degree = " << xv->degree() << "\n";
       break;
     }
   }
@@ -503,7 +503,7 @@ apply_optimal_splice_edits(bool use_tree1) const
   // Verify that the remaining shock graph is still a connected tree  
   if (common_xgraph->number_of_vertices() != (common_xgraph->number_of_edges() +1))
   {
-    vcl_cerr << "\nERROR: in dbsksp_edit_distance::apply_optimal_splice_edits() - "
+    std::cerr << "\nERROR: in dbsksp_edit_distance::apply_optimal_splice_edits() - "
       << " the remaining (common) graph is not a tree. Return 0";
     return 0;
   }

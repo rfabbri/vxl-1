@@ -14,7 +14,7 @@
 //   <none yet>
 // \endverbatim
 #include<vsl/vsl_binary_io.h>
-#include<vcl_iostream.h>
+#include<iostream>
 #include"../dsm_target_neighborhood_map.h"
 
 //: Binary save parameters to stream.
@@ -22,6 +22,6 @@ void vsl_b_read(vsl_b_istream &is, dsm_target_neighborhood_map& target_neighborh
 void vsl_b_write(vsl_b_ostream &os, dsm_target_neighborhood_map const& target_neighborhood_map);
 void vsl_b_read(vsl_b_istream &is, dsm_target_neighborhood_map* &p);
 void vsl_b_write(vsl_b_ostream &os, const dsm_target_neighborhood_map* p);
-void vsl_print_summary(vcl_ostream& os, const dsm_target_neighborhood_map *p);
+void vsl_print_summary(std::ostream& os, const dsm_target_neighborhood_map *p);
 
 #endif //DSM_IO_TARGET_NEIGHBORHOOD_MAP_H_

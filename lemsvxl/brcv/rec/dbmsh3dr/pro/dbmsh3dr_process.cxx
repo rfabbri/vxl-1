@@ -1,7 +1,7 @@
 //: This is lemsvxlsrc/brcv/shp/dbmsh3dr/pro/dbmsh3dr_process.h
 //  Feb 27, 2007   Ming-Ching Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <rsdl/rsdl_kd_tree.h>
@@ -17,21 +17,21 @@
 
 void dbmsh3dr_pro_base::output_min_dist (const char* filename)
 {
-  vul_printf (vcl_cout, "output_min_dist(): size %u.\n", min_dists_.size());
+  vul_printf (std::cout, "output_min_dist(): size %u.\n", min_dists_.size());
 
   FILE  *fp;
   if ((fp = fopen(filename, "w")) == NULL) {
-    vul_printf (vcl_cout, "ERROR: Can't open output file %s.\n", filename);
+    vul_printf (std::cout, "ERROR: Can't open output file %s.\n", filename);
     return; 
   }
 
   for (unsigned int i=0; i<min_dists_.size(); i++) {
-    vcl_fprintf (fp, "%.16f\n", min_dists_[i]);
+    std::fprintf (fp, "%.16f\n", min_dists_[i]);
   }
   fclose (fp); 
 }
 
-bool dbmsh3dr_pro_base::load_hmatrix_01 (vcl_string dirfile)
+bool dbmsh3dr_pro_base::load_hmatrix_01 (std::string dirfile)
 {
   return dbmsh3d_read_xform_file (dirfile.c_str(), hmatrix_01_);
 }
@@ -62,33 +62,33 @@ bool dbmsh3dr_pro_base::read_list_file (const char* list_file)
 bool dbmsh3dr_pro_base::save_all_pts_xyz (const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen (file, "w")) == NULL) {
-    ///vul_printf (vcl_cout, "  can't open output .XYZ file %s\n", file);
+  if ((fp = std::fopen (file, "w")) == NULL) {
+    ///vul_printf (std::cout, "  can't open output .XYZ file %s\n", file);
     return false; 
   }
-  vul_printf (vcl_cout, "  saving %s : %d files of points ...\n", 
+  vul_printf (std::cout, "  saving %s : %d files of points ...\n", 
                file, pro_.size());
   
   unsigned int total_pt = 0;
   for (unsigned int i=0; i<pro_.size(); i++) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pro_[i]->mesh()->vertexmap().begin();
     for (; it != pro_[i]->mesh()->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
-      vcl_fprintf (fp, "%.16f %.16f %.16f\n", V->pt().x(), V->pt().y(), V->pt().z());
+      std::fprintf (fp, "%.16f %.16f %.16f\n", V->pt().x(), V->pt().y(), V->pt().z());
       total_pt++;
     }
   }
 
   fclose (fp);
-  vul_printf (vcl_cout, "  totally %d points saved.\n", total_pt);
+  vul_printf (std::cout, "  totally %d points saved.\n", total_pt);
   return true;
 }
 
 bool dbmsh3dr_pro_base::save_all_to_ply2 (const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen (file, "w")) == NULL) {
-    ///vul_printf (vcl_cout, "  can't open PLY2 file %s to write.\n", file);
+  if ((fp = std::fopen (file, "w")) == NULL) {
+    ///vul_printf (std::cout, "  can't open PLY2 file %s to write.\n", file);
     return false; 
   }
 
@@ -102,30 +102,30 @@ bool dbmsh3dr_pro_base::save_all_to_ply2 (const char* file)
     total_faces += M->facemap().size();
     
     //Use v->vid() to re-index vertices, starting with id 0.
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
     for (; it != M->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
       V->set_vid (vidcounter++);
     }
   }
-  vul_printf (vcl_cout, "  saving %s : \n\t%d points, %d faces ...\n", 
+  vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
               file, total_pts, total_faces);
   assert (vidcounter == total_pts);
 
-  vcl_fprintf (fp, "%d\n", total_pts);
-  vcl_fprintf (fp, "%d\n", total_faces);
+  std::fprintf (fp, "%d\n", total_pts);
+  std::fprintf (fp, "%d\n", total_faces);
 
   //Go through each mesh M and save all vertices.
   vidcounter=0;
   for (unsigned int i=0; i<pro_.size(); i++) {
     dbmsh3d_mesh* M = pro_[i]->mesh();    
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
     for (; it != M->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
-      vcl_fprintf (fp, "%.16f ", V->pt().x());
-      vcl_fprintf (fp, "%.16f ", V->pt().y());
-      vcl_fprintf (fp, "%.16f ", V->pt().z());
-      vcl_fprintf (fp, "\n");
+      std::fprintf (fp, "%.16f ", V->pt().x());
+      std::fprintf (fp, "%.16f ", V->pt().y());
+      std::fprintf (fp, "%.16f ", V->pt().z());
+      std::fprintf (fp, "\n");
       assert (V->vid() == vidcounter);
       vidcounter++;
     }
@@ -135,24 +135,24 @@ bool dbmsh3dr_pro_base::save_all_to_ply2 (const char* file)
   int fcounter=0;
   for (unsigned int i=0; i<pro_.size(); i++) {
     dbmsh3d_mesh* M = pro_[i]->mesh();    
-    vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
     for (; fit != M->facemap().end(); fit++) {
       dbmsh3d_face* F = (*fit).second;
       F->_ifs_track_ordered_vertices ();
 
-      vcl_fprintf (fp, "%d ", F->vertices().size());
+      std::fprintf (fp, "%d ", F->vertices().size());
       for (unsigned j=0; j<F->vertices().size(); j++) {
         dbmsh3d_vertex* V = F->vertices(j);
-        vcl_fprintf (fp, "%d ", V->vid());
+        std::fprintf (fp, "%d ", V->vid());
       }
-      vcl_fprintf (fp, "\n");
+      std::fprintf (fp, "\n");
       fcounter++;
     }
   }
   assert (fcounter == total_faces);
 
-  vcl_fclose (fp);
-  vul_printf (vcl_cout, "  done.\n");
+  std::fclose (fp);
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 
@@ -163,7 +163,7 @@ bool dbmsh3dr_pro_base::save_all_to_ply2 (const char* file)
 // If the corresponding distance > dist_th, do not consider this pair (0 pulling force).
 bool dbmsh3dr_pro_base::run_pp_icp_regstr (const int max_iter, const float conv_th, const float dist_th)
 {
-  vul_printf (vcl_cout, "run_pp_icp_regstr(): max_iter %d, conv_th %f, dist_th %f.\n", 
+  vul_printf (std::cout, "run_pp_icp_regstr(): max_iter %d, conv_th %f, dist_th %f.\n", 
               max_iter, conv_th, dist_th);
   bool b_conv;
 
@@ -179,14 +179,14 @@ bool dbmsh3dr_pro_base::run_pp_icp_regstr (const int max_iter, const float conv_
     if (pro_[0]->mesh()->vertexmap().size()==0 || pro_[1]->mesh()->vertexmap().size()==0)
       return false; //failed.
 
-    vcl_vector<vgl_point_3d<double> > pts1;
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pro_[0]->mesh()->vertexmap().begin();
+    std::vector<vgl_point_3d<double> > pts1;
+    std::map<int, dbmsh3d_vertex*>::iterator it = pro_[0]->mesh()->vertexmap().begin();
     for (; it != pro_[0]->mesh()->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
       pts1.push_back (V->pt());
     }
 
-    vcl_vector<vgl_point_3d<double> > pts2;
+    std::vector<vgl_point_3d<double> > pts2;
     it = pro_[1]->mesh()->vertexmap().begin();
     for (; it != pro_[1]->mesh()->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
@@ -210,7 +210,7 @@ bool dbmsh3dr_pro_base::run_pp_icp_regstr (const int max_iter, const float conv_
 
 bool dbmsh3dr_pro_base::run_pf_icp_regstr (const int max_iter, const float conv_th, const float dist_th)
 {
-  vul_printf (vcl_cout, "run_pf_icp_regstr(): max_iter %d, conv_th %f, dist_th %f.\n", 
+  vul_printf (std::cout, "run_pf_icp_regstr(): max_iter %d, conv_th %f, dist_th %f.\n", 
               max_iter, conv_th, dist_th);
 
   assert (pro_[0]->pro_data() == dbmsh3d_pro_base::PD_MESH); 
@@ -228,9 +228,9 @@ bool dbmsh3dr_pro_base::run_rgrl_icp_oripts (const int subsam1, const int subsam
 {
   unsigned int i;
   vnl_vector_fixed<double,3> P, N;
-  vcl_vector<rgrl_feature_sptr> fixedFV, movingFV; 
+  std::vector<rgrl_feature_sptr> fixedFV, movingFV; 
 
-  vul_printf (vcl_cout, "run_rgrl_icp_oripts(): subsam1 = %d, subsam2 = %d.\n",
+  vul_printf (std::cout, "run_rgrl_icp_oripts(): subsam1 = %d, subsam2 = %d.\n",
               subsam1, subsam2);
 
   //Generate the first feature vector from the oriented points.
@@ -270,10 +270,10 @@ bool dbmsh3dr_pro_base::run_rgrl_icp_oripts (const int subsam1, const int subsam
 
   // Output Results
   if (success) {
-    vcl_cout<<"Final xform:"<<vcl_endl;
+    std::cout<<"Final xform:"<<std::endl;
 
-    vcl_cout<<"R =\n"<< r_xform_.R() <<"t = "<< r_xform_.t() <<vcl_endl
-            <<"Final alignment error = "<< error_ <<vcl_endl;
+    std::cout<<"R =\n"<< r_xform_.R() <<"t = "<< r_xform_.t() <<std::endl
+            <<"Final alignment error = "<< error_ <<std::endl;
     
     //write r_xform_ to hmatrix_01_
     vnl_matrix<double> R = r_xform_.R();
@@ -372,7 +372,7 @@ int dbmsh3dr_pro_base::get_overlapped_pts (const float dist_th)
 
   if (compute_pp_error (dist_th) == false) {
     //no point overlaps.
-    vul_printf (vcl_cout, "get_overlapped_pts(): (M1 %u M2 %u), overlapping 0 points.\n", 
+    vul_printf (std::cout, "get_overlapped_pts(): (M1 %u M2 %u), overlapping 0 points.\n", 
                 pro_[0]->pts().size(), pro_[1]->pts().size());
     return 0;
   }
@@ -381,7 +381,7 @@ int dbmsh3dr_pro_base::get_overlapped_pts (const float dist_th)
   pro_[0]->move_pts_to_mesh ();
   pro_[1]->move_pts_to_mesh ();
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[0]->mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[0]->mesh()->vertexmap().begin();
   for (; vit != pro_[0]->mesh()->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_valid (false);
@@ -409,7 +409,7 @@ int dbmsh3dr_pro_base::get_overlapped_pts (const float dist_th)
     }
   }
 
-  vul_printf (vcl_cout, "get_overlapped_pts(): (M1 %u M2 %u), overlapping %d points.\n", 
+  vul_printf (std::cout, "get_overlapped_pts(): (M1 %u M2 %u), overlapping %d points.\n", 
               pro_[0]->mesh()->vertexmap().size(), pro_[1]->mesh()->vertexmap().size(), count);
   return count;
 }
@@ -426,7 +426,7 @@ typedef enum {
 bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
                                                   vnl_matrix<double>& adj_graph)
 {
-  vul_printf (vcl_cout, "compute_adj_graph_weight(): dthr = %f, adj_graph matrix size: %dx%d.\n", 
+  vul_printf (std::cout, "compute_adj_graph_weight(): dthr = %f, adj_graph matrix size: %dx%d.\n", 
               dthr, data_files_.size(), data_files_.size());
 
   adj_graph.set_size (data_files_.size(), data_files_.size());
@@ -438,12 +438,12 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
     pro_[0]->reset_mesh();
     //Read in the data_files_[i] .3pi file
     pro_[0]->set_dir_prefix (data_files_[i]);    
-    vcl_string suffix = buld_get_suffix (data_files_[i]);
+    std::string suffix = buld_get_suffix (data_files_[i]);
 
-    if (vcl_strcmp (suffix.c_str(), ".3pi")==0 && pro_[0]->load_3pi (data_files_[i])) {
+    if (std::strcmp (suffix.c_str(), ".3pi")==0 && pro_[0]->load_3pi (data_files_[i])) {
       dfi = DATAFILE_3PI;      
     }
-    else if (vcl_strcmp (suffix.c_str(), ".ply2")==0 && pro_[0]->load_ply2 (data_files_[i])) {
+    else if (std::strcmp (suffix.c_str(), ".ply2")==0 && pro_[0]->load_ply2 (data_files_[i])) {
       pro_[0]->set_pro_data (dbmsh3d_pro_base::PD_MESH); 
       dfi = DATAFILE_PLY2;      
     }
@@ -453,7 +453,7 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
     if (dfi == DATAFILE_BOGUS) {
       //Put weight value to be -1.
       for (unsigned int j=i+1; j< data_files_.size(); j++) { 
-        vul_printf (vcl_cout, "\n\n  Can't read data_files_[i %d] %s, adj_graph[%d][%d] = -1.\n\n",
+        vul_printf (std::cout, "\n\n  Can't read data_files_[i %d] %s, adj_graph[%d][%d] = -1.\n\n",
                     i, data_files_[i].c_str(), i, j);
         adj_graph.put (i, j, -1);
       }
@@ -479,10 +479,10 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
       pro_[1]->set_dir_prefix (data_files_[j]);
       suffix = buld_get_suffix (data_files_[j]);
 
-      if (vcl_strcmp (suffix.c_str(), ".3pi")==0 && pro_[1]->load_3pi (data_files_[j])) {    
+      if (std::strcmp (suffix.c_str(), ".3pi")==0 && pro_[1]->load_3pi (data_files_[j])) {    
         dfj = DATAFILE_3PI;
       }
-      else if (vcl_strcmp (suffix.c_str(), ".ply2")==0 && pro_[1]->load_ply2 (data_files_[j])) {
+      else if (std::strcmp (suffix.c_str(), ".ply2")==0 && pro_[1]->load_ply2 (data_files_[j])) {
         pro_[1]->set_pro_data (dbmsh3d_pro_base::PD_MESH); 
         dfj = DATAFILE_PLY2;
       }
@@ -491,7 +491,7 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
 
       if (dfj == DATAFILE_BOGUS) {
         //Put weight value to be -1.
-        vul_printf (vcl_cout, "\n\n  Can't read data_files_[j %d] %s, adj_graph[%d][%d] = -1.\n\n",
+        vul_printf (std::cout, "\n\n  Can't read data_files_[j %d] %s, adj_graph[%d][%d] = -1.\n\n",
                     j, data_files_[j].c_str(), i, j);
         adj_graph.put (i, j, -1);
         continue;
@@ -512,9 +512,9 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
       adj_graph.put (i, j, n_overlap);
       adj_graph.put (j, i, n_overlap);
       
-      vul_printf (vcl_cout, "\n\n  data_files_[i %d] %s, data_files_[j %d] %s,\n",
+      vul_printf (std::cout, "\n\n  data_files_[i %d] %s, data_files_[j %d] %s,\n",
                   i, data_files_[i].c_str(), j, data_files_[j].c_str());
-      vul_printf (vcl_cout, "\n  adj_graph[i %d][j %d] = %d.\n\n",
+      vul_printf (std::cout, "\n  adj_graph[i %d][j %d] = %d.\n\n",
                   i, j, n_overlap);
     }
   }
@@ -523,12 +523,12 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
   for (unsigned int i=0; i< data_files_.size(); i++)
     adj_graph.put (i, i, 0);
 
-  vul_printf (vcl_cout, "\n\n Final adj_graph matrix:\n\n");
+  vul_printf (std::cout, "\n\n Final adj_graph matrix:\n\n");
 
   //Print adjacency matrix.
-  adj_graph.print (vcl_cout);
+  adj_graph.print (std::cout);
 
-  vul_printf (vcl_cout, "\n\n");
+  vul_printf (std::cout, "\n\n");
 
   return true;
 }
@@ -539,16 +539,16 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
 //: Fuse scans using pt-mesh ICP following MST.
 //  Save results to alignment file scan_##_mst.txt
 //
-bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MST, 
+bool dbmsh3dr_pro_base::fuse_scan_MST (const std::vector<std::pair<int, int> >& MST, 
                                        const int root_sid, const float dthr,
                                        const int max_ICP_iter, const float icpcv)
 {
-  vul_printf (vcl_cout, "\n\n fuse_scan_MST(): MST size %d, root_sid %d.\n",
+  vul_printf (std::cout, "\n\n fuse_scan_MST(): MST size %d, root_sid %d.\n",
               MST.size(), root_sid);
-  vul_printf (vcl_cout, "  dthr %f, max_ICP_iter %d, icpcv %f.\n\n",
+  vul_printf (std::cout, "  dthr %f, max_ICP_iter %d, icpcv %f.\n\n",
               dthr, max_ICP_iter, icpcv);
 
-  vcl_vector<bool> fusion_idx;
+  std::vector<bool> fusion_idx;
   const unsigned sz = data_files_.size();
   fusion_idx.resize (sz);
   assert (data_files_.size() == align_files_.size());
@@ -566,8 +566,8 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
   int cur_sid, next_sid;
   //A loop to fuse the next_scan to cur_sid until finish.
   while (find_next_scan_to_fuse (MST, fusion_idx, cur_sid, next_sid)) {
-    vul_printf (vcl_cout, "\n\n==================================================\n");
-    vul_printf (vcl_cout, "  Fuse together cur_scan %d and next_scan %d:\n",
+    vul_printf (std::cout, "\n\n==================================================\n");
+    vul_printf (std::cout, "  Fuse together cur_scan %d and next_scan %d:\n",
                 cur_sid+1, next_sid+1);
     //Fix the position of cur_scan and move next_scan to fuse with cur_scan.
 
@@ -599,7 +599,7 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
     pro_[1]->apply_xform_hmatrix ();
 
     //Estimate the Pt-Mesh dist. d_pt-mesh (A*, B*) of init. alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of init. alignment:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B*) of init. alignment:\n\n");
     result = compute_pf_error (1, error_dist_th);
     assert (result);
     double d_pt_mesh_A_B_mean = dist_mean();
@@ -608,24 +608,24 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
     run_pf_icp_regstr (max_ICP_iter, icpcv, error_dist_th);
 
     //Estimate the Pt-Mesh dist. d_pt-mesh (A*, B^*) after Pt-Mesh ICP alignment.
-    vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
+    vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A*, B^*) after Pt-Mesh ICP:\n\n");
     result = compute_pf_error (1, error_dist_th);
     assert (result);
     double d_pt_mesh_A_Bh_mean = dist_mean();
 
     //Result: save alignment file of next_scan to scan_##_mst.txt.
-    vul_printf (vcl_cout, "\n  Writing resulting alignment file %s.\n", (pro_[1]->dir_prefix() + "_mst.txt").c_str());
+    vul_printf (std::cout, "\n  Writing resulting alignment file %s.\n", (pro_[1]->dir_prefix() + "_mst.txt").c_str());
     vgl_h_matrix_3d<double> newH2 = hmatrix_01_ * pro_[1]->hmatrix();
     dbmsh3d_write_xform_file (pro_[1]->dir_prefix() + "_mst.txt", newH2);
 
     //7) Output summary.
-    vul_printf (vcl_cout, "\n Summary of fusing cur_scan %d and next_scan %d:\n",
+    vul_printf (std::cout, "\n Summary of fusing cur_scan %d and next_scan %d:\n",
                 cur_sid+1, next_sid+1);
-    vul_printf (vcl_cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
+    vul_printf (std::cout, "  error_dist_th %f = dist_thr %.2f * avg_samp_dist %f.\n", 
                 error_dist_th, dthr, avg_samp_dist);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
-    vul_printf (vcl_cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
-    vul_printf (vcl_cout, "  Alignment error is reduced by %.3f%%.\n", 
+    vul_printf (std::cout, "  d_pt-mesh (A*, B*)  mean: %f\n", d_pt_mesh_A_B_mean);
+    vul_printf (std::cout, "  d_pt-mesh (A*, B^*) mean: %f\n", d_pt_mesh_A_Bh_mean);
+    vul_printf (std::cout, "  Alignment error is reduced by %.3f%%.\n", 
                 (d_pt_mesh_A_Bh_mean - d_pt_mesh_A_B_mean)/d_pt_mesh_A_B_mean * 100);
 
     //Set next_scan to be finished.
@@ -644,8 +644,8 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
 //    cur_sid = already fused scan and next_sid = un-visited scan.
 //  Return false if such edge is not found (Fusing is done).
 //
-bool dbmsh3dr_pro_base::find_next_scan_to_fuse (const vcl_vector<vcl_pair<int, int> >& MST, 
-                                                const vcl_vector<bool>& fusion_idx,                             
+bool dbmsh3dr_pro_base::find_next_scan_to_fuse (const std::vector<std::pair<int, int> >& MST, 
+                                                const std::vector<bool>& fusion_idx,                             
                                                 int& cur_sid, int& next_sid)
 {
   //Loop through all edges in MST (in order)
@@ -674,18 +674,18 @@ bool dbmsh3dr_pro_base::find_next_scan_to_fuse (const vcl_vector<vcl_pair<int, i
 double dbmsh3dr_pro_base::estimate_surf_var_along_normal (const float dthr, const int top_n,
                                                           const int option)
 {
-  vul_printf (vcl_cout, "\nestimate_surf_var_along_normal():\n");
+  vul_printf (std::cout, "\nestimate_surf_var_along_normal():\n");
   const int N_DATA = data_files_.size();
 
   double avg_sample_dist;
   if (setup_n_surfs (dthr, avg_sample_dist) == false) {
-    vul_printf (vcl_cout, "\nsetup_n_surfs() returns error!\n");
+    vul_printf (std::cout, "\nsetup_n_surfs() returns error!\n");
     return -1;
   }
 
   //Estimate the error threshold dist_th from the first data.
   double dist_th = avg_sample_dist * dthr;
-  vul_printf (vcl_cout, "  dist_th %f = dthr %f * avg_samp_dist %f.\n", 
+  vul_printf (std::cout, "  dist_th %f = dthr %f * avg_samp_dist %f.\n", 
               dist_th, dthr, avg_sample_dist);
     
   //Loop through each pro_[].mesh and compute mesh-mesh avg-dist (within th.).
@@ -703,24 +703,24 @@ double dbmsh3dr_pro_base::estimate_surf_var_along_normal (const float dthr, cons
 bool dbmsh3dr_pro_base::reduce_surf_thickness (const float dthr, const int n_iter, const int top_n,
                                                const int option)
 {
-  vul_printf (vcl_cout, "\nreduce_surf_thickness():\n");
+  vul_printf (std::cout, "\nreduce_surf_thickness():\n");
   const int N_DATA = data_files_.size();
 
   double avg_sample_dist;
   if (setup_n_surfs (dthr, avg_sample_dist) == false) {
-    vul_printf (vcl_cout, "\nsetup_n_surfs() returns error!\n");
+    vul_printf (std::cout, "\nsetup_n_surfs() returns error!\n");
     return false;
   }
 
   //Estimate the error threshold dist_th from the first data.
   double dist_th = avg_sample_dist * dthr;
-  vul_printf (vcl_cout, "  dist_th %f = dthr %f * avg_samp_dist %f.\n", 
+  vul_printf (std::cout, "  dist_th %f = dthr %f * avg_samp_dist %f.\n", 
               dist_th, dthr, avg_sample_dist);
 
   //Reduce surf. thickness.
   for (int i=0; i<n_iter; i++) {
-    vul_printf (vcl_cout, "  ===================================\n");
-    vul_printf (vcl_cout, "  move_surf_avg_closest_pt ITER %d : \n", i);
+    vul_printf (std::cout, "  ===================================\n");
+    vul_printf (std::cout, "  move_surf_avg_closest_pt ITER %d : \n", i);
     if (option == 1 || option == 4)
       move_surf_avg_closest_pt (top_n, dist_th);
     else if (option == 2 || option == 5)
@@ -733,7 +733,7 @@ bool dbmsh3dr_pro_base::reduce_surf_thickness (const float dthr, const int n_ite
 
   //Loop through each pro_[].mesh and compute mesh-mesh avg-dist (within th.).
   if (option == 4 || option == 5 || option == 6) {
-    vul_printf (vcl_cout, "\n  ==========> Average dist. of dthr 2");
+    vul_printf (std::cout, "\n  ==========> Average dist. of dthr 2");
     if (option == 4)      
       compute_M_M_avg_dist (top_n, avg_sample_dist* 2);
     else if (option == 5)      
@@ -750,7 +750,7 @@ bool dbmsh3dr_pro_base::reduce_surf_thickness_bkt (const float dthr, const int n
                                                    const int npbkt)
 {  
   //Read in all mesh vertices into pts to run bucketing.
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
 
   //The bucketing structure
   bool b_check_dup = false;
@@ -764,7 +764,7 @@ bool dbmsh3dr_pro_base::setup_n_surfs (const float dthr, double& avg_sample_dist
 {
   const int N_DATA = data_files_.size();
   assert (N_DATA > 1);
-  vul_printf (vcl_cout, "\n  setup_n_surfs(): N_DATA: %d, dthr: %f\n", 
+  vul_printf (std::cout, "\n  setup_n_surfs(): N_DATA: %d, dthr: %f\n", 
               N_DATA, dthr);
 
   //Read in all data files in data_files[] to pro_[] 
@@ -785,7 +785,7 @@ bool dbmsh3dr_pro_base::setup_n_surfs (const float dthr, double& avg_sample_dist
   avg_sample_dist = pro_[0]->get_avg_samp_dist();
   pro_[0]->mesh()->MHE_to_IFS();
 
-  vul_printf (vcl_cout, "\n    done.\n");
+  vul_printf (std::cout, "\n    done.\n");
 
   return true;
 }
@@ -794,14 +794,14 @@ bool dbmsh3dr_pro_base::setup_n_surfs (const float dthr, double& avg_sample_dist
 double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& dist_th)
 {
   const int N_DATA = data_files_.size();
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist(): %d meshes.\n", N_DATA);
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist(): %d meshes.\n", N_DATA);
 
   //For each pro_[] build a kd-tree to store all mesh vertices.
-  vcl_vector<rsdl_kd_tree*> kdtrees (N_DATA);
+  std::vector<rsdl_kd_tree*> kdtrees (N_DATA);
   for (int i=0; i<N_DATA; i++) {
     kdtrees[i] = dbmsh3d_build_kdtree_vertices (pro_[i]->mesh()); 
   }
-  vul_printf (vcl_cout, "    %d kd-trees built for each data mesh.\n", N_DATA);  
+  vul_printf (std::cout, "    %d kd-trees built for each data mesh.\n", N_DATA);  
   
   for (int i=0; i<N_DATA; i++) { //Need MHE
     pro_[i]->mesh()->IFS_to_MHE();
@@ -813,7 +813,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& d
   double M_M_avg_dist = 0;
   unsigned int sz = 0;
   for (int i=0; i<N_DATA; i++) {
-    vul_printf (vcl_cout, "    mesh %d: \n", i);
+    vul_printf (std::cout, "    mesh %d: \n", i);
     //Compute avg_dist from data[i] to all other data[j].
     //Note that the dist is not symmetric (since we only use approx. pt-mesh dist.).
     //But ignoring half of computation is reasonable.
@@ -821,7 +821,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& d
       if (j==i)
         continue;
 
-      vul_printf (vcl_cout, "m%d ", j);
+      vul_printf (std::cout, "m%d ", j);
       //Compute avg_dist of of M_i to M_j.
       //Only consider points within dist_th.
       double avg_dist = dbmsh3d_mesh_mesh_avg_dist (pro_[i]->mesh(), kdtrees[i],
@@ -829,7 +829,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& d
       M_M_avg_dist += avg_dist;
       sz++;
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
   assert (sz > 0);
@@ -838,13 +838,13 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& d
   //Clean up memory and return.
   for (int i=0; i<N_DATA; i++)
     delete kdtrees[i];
-  vul_printf (vcl_cout, "    %d kd-trees cleared.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees cleared.\n", N_DATA);
 
   for (int i=0; i<N_DATA; i++) { //Need MHE
     pro_[i]->mesh()->MHE_to_IFS();
   }
 
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist(): M_M_avg_dist: %f.\n\n", M_M_avg_dist);
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist(): M_M_avg_dist: %f.\n\n", M_M_avg_dist);
   return M_M_avg_dist;
 }
 
@@ -853,10 +853,10 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist (const int top_n, const double& d
 //
 double dbmsh3dr_pro_base::compute_M_M_avg_dist_1v (const double& dist_th)
 {
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist_1v():\n");
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist_1v():\n");
   const int N_DATA = data_files_.size();
 
-  vcl_vector<vcl_vector<dbmsh3d_vertex*> >* M_V_CV = new vcl_vector<vcl_vector<dbmsh3d_vertex*> >[N_DATA];
+  std::vector<std::vector<dbmsh3d_vertex*> >* M_V_CV = new std::vector<std::vector<dbmsh3d_vertex*> >[N_DATA];
 
   //For each vertex of each mesh, build a CV[N_DATA] to store the closest vertex on other meshes.
   //  M_V_CV[M][V][N_DATA]. Non-used data set to NULL.
@@ -866,13 +866,13 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_1v (const double& dist_th)
   double M_M_avg_dist = 0;
   unsigned int count = 0;
 
-  vul_printf (vcl_cout, "\n  Compute the average vector for each V of each M:\n");
+  vul_printf (std::cout, "\n  Compute the average vector for each V of each M:\n");
 
   //Loop through all meshes: pro_[i]->mesh()
   for (int i=0; i<N_DATA; i++) {
-    vul_printf (vcl_cout, "    mesh %d: \n", i);
+    vul_printf (std::cout, "    mesh %d: \n", i);
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (unsigned int v=0; vit != pro_[i]->mesh()->vertexmap().end(); vit++, v++) {
       dbmsh3d_vertex* V = (*vit).second;
       assert (v < pro_[i]->mesh()->vertexmap().size());
@@ -917,24 +917,24 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_1v (const double& dist_th)
   assert (count > 0);
   M_M_avg_dist /= count;
 
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist_1v() done: M_M_avg_dist: %f.\n\n", M_M_avg_dist);
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist_1v() done: M_M_avg_dist: %f.\n\n", M_M_avg_dist);
   return M_M_avg_dist;
 }
 
 //: Reduce surfaces thickness by moving toward avg. closest point on other meshes.
 void dbmsh3dr_pro_base::move_surf_avg_closest_pt (const int top_n, const double& dist_th)
 {
-  vul_printf (vcl_cout, "\n  move_surf_avg_closest_pt():\n");
+  vul_printf (std::cout, "\n  move_surf_avg_closest_pt():\n");
   const int N_DATA = data_files_.size();
   
   //For each pro_[] build a kd-tree to store all mesh vertices.
-  vcl_vector<rsdl_kd_tree*> kdtrees (N_DATA);
+  std::vector<rsdl_kd_tree*> kdtrees (N_DATA);
   for (int i=0; i<N_DATA; i++) {
     kdtrees[i] = dbmsh3d_build_kdtree_vertices (pro_[i]->mesh()); 
   }
-  vul_printf (vcl_cout, "    %d kd-trees built for each data mesh.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees built for each data mesh.\n", N_DATA);
 
-  vcl_vector<vcl_vector<vgl_point_3d<float> > > newpts;
+  std::vector<std::vector<vgl_point_3d<float> > > newpts;
   newpts.resize (N_DATA);
 
   //Loop through each vertex of each pro_[].mesh, 
@@ -944,7 +944,7 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt (const int top_n, const double&
   //Loop through all meshes: pro_[i]->mesh()
   for (int i=0; i<N_DATA; i++) {
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (; vit != pro_[i]->mesh()->vertexmap().end(); vit++) {
       dbmsh3d_vertex* V = (*vit).second;
 
@@ -986,12 +986,12 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt (const int top_n, const double&
   //Clean up memory and return.
   for (int i=0; i<N_DATA; i++)
     delete kdtrees[i];
-  vul_printf (vcl_cout, "    %d kd-trees cleared.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees cleared.\n", N_DATA);
 
   //Update each vertex's pts.  
   for (int i=0; i<N_DATA; i++) {
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (int j=0; vit != pro_[i]->mesh()->vertexmap().end(); vit++, j++) {
       dbmsh3d_vertex* V = (*vit).second;
       vgl_point_3d<double> P;
@@ -1008,18 +1008,18 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt (const int top_n, const double&
 //
 void dbmsh3dr_pro_base::move_surf_avg_closest_pt_1v (const double& dist_th)
 {
-  vul_printf (vcl_cout, "\n  move_surf_avg_closest_pt_1v():\n");
+  vul_printf (std::cout, "\n  move_surf_avg_closest_pt_1v():\n");
   const int N_DATA = data_files_.size();
 
-  ///vcl_vector<vcl_vector<vcl_vector<dbmsh3d_vertex*> > > M_V_CV;
-  vcl_vector<vcl_vector<dbmsh3d_vertex*> > * M_V_CV = new vcl_vector<vcl_vector<dbmsh3d_vertex*> >[N_DATA];
+  ///std::vector<std::vector<std::vector<dbmsh3d_vertex*> > > M_V_CV;
+  std::vector<std::vector<dbmsh3d_vertex*> > * M_V_CV = new std::vector<std::vector<dbmsh3d_vertex*> >[N_DATA];
   setup_M_V_CV (M_V_CV);
   
   //Loop through each vertex of each pro_[].mesh, 
   //compute the average dist to all other meshes (within th.).
   //Move the current vertex by the avg_vector.
-  /*vul_printf (vcl_cout, "\n  allocate space for newpts[%d].\n", N_DATA);
-  vcl_vector<vcl_vector<vgl_point_3d<double> > > newpts;
+  /*vul_printf (std::cout, "\n  allocate space for newpts[%d].\n", N_DATA);
+  std::vector<std::vector<vgl_point_3d<double> > > newpts;
   newpts.resize (N_DATA);
   for (int i=0; i<N_DATA; i++) {
     newpts[i].resize (pro_[i]->mesh()->vertexmap().size());
@@ -1028,19 +1028,19 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_1v (const double& dist_th)
   
   const char* out_tmp_file = "out_tmp.xyz";
   FILE* fp;
-  if ((fp = vcl_fopen (out_tmp_file, "w")) == NULL) {
-    vul_printf (vcl_cout, "  can't open output %s file %s\n", out_tmp_file);
+  if ((fp = std::fopen (out_tmp_file, "w")) == NULL) {
+    vul_printf (std::cout, "  can't open output %s file %s\n", out_tmp_file);
     return;
   }
   unsigned int out_tmp_count = 0;
 
-  vul_printf (vcl_cout, "\n  Move to the average vector for each V of each M:\n");
+  vul_printf (std::cout, "\n  Move to the average vector for each V of each M:\n");
 
   //Loop through all meshes: pro_[i]->mesh()
   for (int i=0; i<N_DATA; i++) {
-    vul_printf (vcl_cout, "    mesh %d: \n", i);
+    vul_printf (std::cout, "    mesh %d: \n", i);
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (unsigned int v=0; vit != pro_[i]->mesh()->vertexmap().end(); vit++, v++) {
       dbmsh3d_vertex* V = (*vit).second;
       assert (v < pro_[i]->mesh()->vertexmap().size());
@@ -1079,19 +1079,19 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_1v (const double& dist_th)
       }
 
       ///newpts[i][v] = new_pt;
-      vcl_fprintf (fp, "%.16f %.16f %.16f\n", new_pt.x(), new_pt.y(), new_pt.z());
+      std::fprintf (fp, "%.16f %.16f %.16f\n", new_pt.x(), new_pt.y(), new_pt.z());
       out_tmp_count++;
     }
   }
-  vcl_fclose (fp);
+  std::fclose (fp);
 
   ///M_V_CV.clear();
   for (int i=0; i<N_DATA; i++)
     M_V_CV[i].clear();
   ///delete M_V_CV;
 
-  if ((fp = vcl_fopen (out_tmp_file, "r")) == NULL) {
-    vul_printf (vcl_cout, "  can't open input %s file %s\n", out_tmp_file);
+  if ((fp = std::fopen (out_tmp_file, "r")) == NULL) {
+    vul_printf (std::cout, "  can't open input %s file %s\n", out_tmp_file);
     return; 
   }
 
@@ -1099,12 +1099,12 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_1v (const double& dist_th)
   unsigned int count = 0;
   for (int i=0; i<N_DATA; i++) {
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (int j=0; vit != pro_[i]->mesh()->vertexmap().end(); vit++, j++) {
       dbmsh3d_vertex* V = (*vit).second;
       ///V->set_pt (newpts[i][j]);
       double x, y, z;
-      int ret = vcl_fscanf (fp, "%lf %lf %lf\n", &x, &y, &z);
+      int ret = std::fscanf (fp, "%lf %lf %lf\n", &x, &y, &z);
       V->set_pt (x, y, z);
       assert (ret != EOF);
       count++;
@@ -1115,9 +1115,9 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_1v (const double& dist_th)
   assert (out_tmp_count == count);
 }
 
-void dbmsh3dr_pro_base::setup_M_V_CV (vcl_vector<vcl_vector<dbmsh3d_vertex*> > * M_V_CV)
+void dbmsh3dr_pro_base::setup_M_V_CV (std::vector<std::vector<dbmsh3d_vertex*> > * M_V_CV)
 {
-  vul_printf (vcl_cout, "\n    setup_M_V_CV():\n");
+  vul_printf (std::cout, "\n    setup_M_V_CV():\n");
   const int N_DATA = data_files_.size();
 
   //Loop through each pro_[i] mesh, build a kd-tree to query the closest V on this mesh.
@@ -1131,7 +1131,7 @@ void dbmsh3dr_pro_base::setup_M_V_CV (vcl_vector<vcl_vector<dbmsh3d_vertex*> > *
       M_V_CV[j].resize (pro_[j]->mesh()->vertexmap().size());
 
       //Loop through all vertices of mesh[j]
-      vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[j]->mesh()->vertexmap().begin();
+      std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[j]->mesh()->vertexmap().begin();
       for (unsigned int v=0; vit != pro_[j]->mesh()->vertexmap().end(); vit++, v++) {
         dbmsh3d_vertex* V = (*vit).second;
         assert (v < pro_[j]->mesh()->vertexmap().size());
@@ -1141,8 +1141,8 @@ void dbmsh3dr_pro_base::setup_M_V_CV (vcl_vector<vcl_vector<dbmsh3d_vertex*> > *
           M_V_CV[j][v][i] = NULL;
         else {
           //Find the closest vertex from V to mesh[i].
-          vcl_vector<rsdl_point> near_neighbor_pts;
-          vcl_vector<int> near_neighbor_indices;
+          std::vector<rsdl_point> near_neighbor_pts;
+          std::vector<int> near_neighbor_indices;
           rsdl_point query_pt (3, 0);
           vnl_vector_fixed<double,3> P3 (V->pt().x(), V->pt().y(), V->pt().z());
           query_pt.set_cartesian (P3);
@@ -1158,26 +1158,26 @@ void dbmsh3dr_pro_base::setup_M_V_CV (vcl_vector<vcl_vector<dbmsh3d_vertex*> > *
       }
     }
 
-    vul_printf (vcl_cout, "    kd-tree cleared.\n");
+    vul_printf (std::cout, "    kd-tree cleared.\n");
     delete kdtree;
   }
-  vul_printf (vcl_cout, "\n    setup_M_V_CV() done.\n");
+  vul_printf (std::cout, "\n    setup_M_V_CV() done.\n");
 }
 
 //: Reduce surfaces thickness by moving toward avg. closest point using bucketing.
 void dbmsh3dr_pro_base::move_surf_avg_closest_pt_bkt (const int top_n, const double& dist_th)
 {  
-  vul_printf (vcl_cout, "\n  move_surf_avg_closest_pt_bkt():\n");
+  vul_printf (std::cout, "\n  move_surf_avg_closest_pt_bkt():\n");
   const int N_DATA = data_files_.size();
   
   //For each pro_[] build a kd-tree to store all mesh vertices.
-  vcl_vector<rsdl_kd_tree*> kdtrees (N_DATA);
+  std::vector<rsdl_kd_tree*> kdtrees (N_DATA);
   for (int i=0; i<N_DATA; i++) {
     kdtrees[i] = dbmsh3d_build_kdtree_vertices (pro_[i]->mesh()); 
   }
-  vul_printf (vcl_cout, "    %d kd-trees built for each data mesh.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees built for each data mesh.\n", N_DATA);
 
-  vcl_vector<vcl_vector<vgl_point_3d<float> > > newpts;
+  std::vector<std::vector<vgl_point_3d<float> > > newpts;
   newpts.resize (N_DATA);
 
   //Loop through each vertex of each pro_[].mesh, 
@@ -1187,7 +1187,7 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_bkt (const int top_n, const dou
   //Loop through all meshes: pro_[i]->mesh()
   for (int i=0; i<N_DATA; i++) {
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (; vit != pro_[i]->mesh()->vertexmap().end(); vit++) {
       dbmsh3d_vertex* V = (*vit).second;
 
@@ -1229,12 +1229,12 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_bkt (const int top_n, const dou
   //Clean up memory and return.
   for (int i=0; i<N_DATA; i++)
     delete kdtrees[i];
-  vul_printf (vcl_cout, "    %d kd-trees cleared.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees cleared.\n", N_DATA);
 
   //Update each vertex's pts.  
   for (int i=0; i<N_DATA; i++) {
     //Loop through all vertices of pro_[i]->mesh()
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[i]->mesh()->vertexmap().begin();
     for (int j=0; vit != pro_[i]->mesh()->vertexmap().end(); vit++, j++) {
       dbmsh3d_vertex* V = (*vit).second;
       vgl_point_3d<double> P;
@@ -1244,9 +1244,9 @@ void dbmsh3dr_pro_base::move_surf_avg_closest_pt_bkt (const int top_n, const dou
   }
 }
 
-void dbmsh3dr_pro_base::setup_M_V_CV_bkt (vcl_vector<vcl_vector<dbmsh3d_vertex*> > * M_V_CV)
+void dbmsh3dr_pro_base::setup_M_V_CV_bkt (std::vector<std::vector<dbmsh3d_vertex*> > * M_V_CV)
 {
-  vul_printf (vcl_cout, "\n    setup_M_V_CV_bkt():\n");
+  vul_printf (std::cout, "\n    setup_M_V_CV_bkt():\n");
   const int N_DATA = data_files_.size();
 
   //Loop through each pro_[i] mesh, build a kd-tree to query the closest V on this mesh.
@@ -1260,7 +1260,7 @@ void dbmsh3dr_pro_base::setup_M_V_CV_bkt (vcl_vector<vcl_vector<dbmsh3d_vertex*>
       M_V_CV[j].resize (pro_[j]->mesh()->vertexmap().size());
 
       //Loop through all vertices of mesh[j]
-      vcl_map<int, dbmsh3d_vertex*>::iterator vit = pro_[j]->mesh()->vertexmap().begin();
+      std::map<int, dbmsh3d_vertex*>::iterator vit = pro_[j]->mesh()->vertexmap().begin();
       for (unsigned int v=0; vit != pro_[j]->mesh()->vertexmap().end(); vit++, v++) {
         dbmsh3d_vertex* V = (*vit).second;
         assert (v < pro_[j]->mesh()->vertexmap().size());
@@ -1270,8 +1270,8 @@ void dbmsh3dr_pro_base::setup_M_V_CV_bkt (vcl_vector<vcl_vector<dbmsh3d_vertex*>
           M_V_CV[j][v][i] = NULL;
         else {
           //Find the closest vertex from V to mesh[i].
-          vcl_vector<rsdl_point> near_neighbor_pts;
-          vcl_vector<int> near_neighbor_indices;
+          std::vector<rsdl_point> near_neighbor_pts;
+          std::vector<int> near_neighbor_indices;
           rsdl_point query_pt (3, 0);
           vnl_vector_fixed<double,3> P3 (V->pt().x(), V->pt().y(), V->pt().z());
           query_pt.set_cartesian (P3);
@@ -1287,24 +1287,24 @@ void dbmsh3dr_pro_base::setup_M_V_CV_bkt (vcl_vector<vcl_vector<dbmsh3d_vertex*>
       }
     }
 
-    vul_printf (vcl_cout, "    kd-tree cleared.\n");
+    vul_printf (std::cout, "    kd-tree cleared.\n");
     delete kdtree;
   }
-  vul_printf (vcl_cout, "\n    setup_M_V_CV_bkt() done.\n");
+  vul_printf (std::cout, "\n    setup_M_V_CV_bkt() done.\n");
 }
 
 //: Loop through each pro_[].mesh and compute mesh-mesh avg-dist using bucketing.
 double dbmsh3dr_pro_base::compute_M_M_avg_dist_bkt (const int top_n, const double& dist_th)
 {
   const int N_DATA = data_files_.size();
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist_bkt(): %d meshes.\n", N_DATA);
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist_bkt(): %d meshes.\n", N_DATA);
 
   //For each pro_[] build a kd-tree to store all mesh vertices.
-  vcl_vector<rsdl_kd_tree*> kdtrees (N_DATA);
+  std::vector<rsdl_kd_tree*> kdtrees (N_DATA);
   for (int i=0; i<N_DATA; i++) {
     kdtrees[i] = dbmsh3d_build_kdtree_vertices (pro_[i]->mesh()); 
   }
-  vul_printf (vcl_cout, "    %d kd-trees built for each data mesh.\n", N_DATA);  
+  vul_printf (std::cout, "    %d kd-trees built for each data mesh.\n", N_DATA);  
   
   for (int i=0; i<N_DATA; i++) { //!! Need MHE !!
     pro_[i]->mesh()->IFS_to_MHE();
@@ -1316,7 +1316,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_bkt (const int top_n, const doubl
   double M_M_avg_dist = 0;
   unsigned int sz = 0;
   for (int i=0; i<N_DATA; i++) {
-    vul_printf (vcl_cout, "    mesh %d: \n", i);
+    vul_printf (std::cout, "    mesh %d: \n", i);
     //Compute avg_dist from data[i] to all other data[j].
     //Note that the dist is not symmetric (since we only use approx. pt-mesh dist.).
     //But ignoring half of computation is reasonable.
@@ -1324,7 +1324,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_bkt (const int top_n, const doubl
       if (j==i)
         continue;
 
-      vul_printf (vcl_cout, "m%d ", j);
+      vul_printf (std::cout, "m%d ", j);
       //Compute avg_dist of of M_i to M_j.
       //Only consider points within dist_th.
       double avg_dist = dbmsh3d_mesh_mesh_avg_dist (pro_[i]->mesh(), kdtrees[i],
@@ -1332,7 +1332,7 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_bkt (const int top_n, const doubl
       M_M_avg_dist += avg_dist;
       sz++;
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
   assert (sz > 0);
@@ -1341,9 +1341,9 @@ double dbmsh3dr_pro_base::compute_M_M_avg_dist_bkt (const int top_n, const doubl
   //Clean up memory and return.
   for (int i=0; i<N_DATA; i++)
     delete kdtrees[i];
-  vul_printf (vcl_cout, "    %d kd-trees cleared.\n", N_DATA);
+  vul_printf (std::cout, "    %d kd-trees cleared.\n", N_DATA);
 
-  vul_printf (vcl_cout, "\n  compute_M_M_avg_dist_bkt(): M_M_avg_dist: %f.\n\n", M_M_avg_dist);
+  vul_printf (std::cout, "\n  compute_M_M_avg_dist_bkt(): M_M_avg_dist: %f.\n\n", M_M_avg_dist);
   return M_M_avg_dist;
 }
 

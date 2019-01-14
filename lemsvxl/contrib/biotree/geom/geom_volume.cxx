@@ -3,7 +3,7 @@
 #include <vsol/vsol_box_3d_sptr.h>
 #include <vgl/vgl_box_3d.h>
 #include <vsol/vsol_volume_3d.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include "geom_voxel_enumerator_from_box.h"
 
 bool geom_volume::contains(worldpt pt)

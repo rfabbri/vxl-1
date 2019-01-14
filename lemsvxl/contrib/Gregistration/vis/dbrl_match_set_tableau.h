@@ -21,7 +21,7 @@ class dbrl_match_set_tableau: public vgui_tableau
         ~dbrl_match_set_tableau();
 
         //: Returns the type of this tableau ('dbrl_match_set_tableau').
-        vcl_string type_name() const;
+        std::string type_name() const;
         virtual bool handle( vgui_event const& e );
         //: Generate the popup menu
         void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -42,14 +42,14 @@ class dbrl_match_set_tableau: public vgui_tableau
         bool correspondence_inspector_;
         bool point_inspector_;
         bool show_velocity_flow_;
-        vcl_vector<vgl_line_segment_2d<double> > clines;
+        std::vector<vgl_line_segment_2d<double> > clines;
         void draw_a_feature(dbrl_feature_sptr f);
         void draw_a_correspondence(dbrl_feature_sptr f1,dbrl_feature_sptr f2);
         void draw_a_point(dbrl_feature_point *pt);
         void draw_a_point_tangent(dbrl_feature_point_tangent *pt);
         void draw_a_point_tangent_curvature(dbrl_feature_point_tangent_curvature *pt);
         void draw_a_point_tangent_curvature_groupings(dbrl_feature_point_tangent_curvature_groupings *pt,
-                                                      bool flag,vcl_vector<dbrl_feature_sptr> map);
+                                                      bool flag,std::vector<dbrl_feature_sptr> map);
 void draw_flow();
 
         int minindex;

@@ -1,8 +1,8 @@
 
-#include <vcl_cmath.h> // for log(), exp() ..
+#include <cmath> // for log(), exp() ..
 #include <vul/vul_timer.h> 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <cstdio>
+#include <cstdlib> // for rand()
 
 #include <dbru/dbru_object.h>
 #include <dbskr/algo/dbskr_object_matcher.h>
@@ -59,12 +59,12 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_thomas_curve_matching(dbru_o
   vsol_polygon_2d_sptr polyi = obji->get_polygon(obji_poly_id);
 
   if (obj0->n_observations() <= 0) {
-    vcl_cout << "Observations of this object are not created, exiting!\n";
+    std::cout << "Observations of this object are not created, exiting!\n";
     return 0;
   }
 
   if (obji->n_observations() <= 0) {
-    vcl_cout << "Observations of this object are not created, exiting!\n";
+    std::cout << "Observations of this object are not created, exiting!\n";
     return 0;
   }
 
@@ -79,32 +79,32 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_thomas_curve_matching(dbru_o
   int minIndex;                                                           // get normalized cost
   curve_matching_cost = d1->finalBestCostRestrictedStartingPoint(minIndex, 0.25f, true);
   if (verbose)
-    vcl_printf("%9.6f\n",curve_matching_cost);
+    std::printf("%9.6f\n",curve_matching_cost);
 
   dbcvr_cv_cor_sptr sil_cor = d1->get_cv_cor(minIndex);
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi);
   
   if (!dbru_rcor_generator::find_correspondence_line(rcor, sil_cor, increment) ) {
-    vcl_cout << "Region correspondence based on line intersections could not be found!\n";
+    std::cout << "Region correspondence based on line intersections could not be found!\n";
     return 0;
   }
 
-  vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+  std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
   
   info_line_cost = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, verbose);
 
   if (verbose)
-    vcl_cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    std::cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
 
   vil_image_resource_sptr output_sptr = rcor->get_appearance2_on_pixels1();
   /*if (output_image != "") {
-    vcl_string output_image_name = output_image+"-line.png";
+    std::string output_image_name = output_image+"-line.png";
     vil_image_resource_sptr output_sptr = rcor->get_appearance2_on_pixels1();
     vil_save_image_resource(output_sptr, output_image_name.c_str());
   }*/
 
   if (find_and_return_dt_cost) {
-    //vcl_cout << "Using distance transform to find region correspondences!\n";
+    //std::cout << "Using distance transform to find region correspondences!\n";
     //: use interpolated curves for interpolation based on arclength
     
     bsold_interp_curve_2d_sptr curve11 = new bsold_interp_curve_2d();
@@ -116,11 +116,11 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_thomas_curve_matching(dbru_o
 
     float scale = (float)((double)rcor->get_upper2_x()/(double)rcor->get_upper1_x());
     if (!dbru_rcor_generator::find_correspondence_dt(rcor, sil_cor, curve11, curve22, scale)) { 
-      vcl_cout << "Region correspondence based on distance transform could not be found!\n";
+      std::cout << "Region correspondence based on distance transform could not be found!\n";
       return 0;
     }
 
-    vcl_vector <vcl_pair< unsigned, unsigned > >& corrs2 = rcor->get_correspondences();
+    std::vector <std::pair< unsigned, unsigned > >& corrs2 = rcor->get_correspondences();
     info_dt_cost = dbinfo_observation_matcher::minfo(obs0, obsi, corrs2, false);
 
     return rcor->get_appearance2_on_pixels1();
@@ -146,12 +146,12 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
   vsol_polygon_2d_sptr polyi = obji->get_polygon(obji_poly_id);
 
   if (obj0->n_observations() <= 0) {
-    vcl_cout << "Observations of this object are not created, exiting!\n";
+    std::cout << "Observations of this object are not created, exiting!\n";
     return 0;
   }
 
   if (obji->n_observations() <= 0) {
-    vcl_cout << "Observations of this object are not created, exiting!\n";
+    std::cout << "Observations of this object are not created, exiting!\n";
     return 0;
   }
 
@@ -176,7 +176,7 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
     // CAUTION: currently we're making an UGLY system call
     // this is gonna be replaced with AMir's shock extractor algorithm in dbsk2d
     // once the bugs are cleared
-      vcl_ofstream of("tmp_con.con");
+      std::ofstream of("tmp_con.con");
       of << "CONTOUR\nCLOSE\n";
       of << poly0->size() << "\n";
       for (unsigned int i = 0; i<poly0->size(); i++) {
@@ -191,22 +191,22 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
       //  if this length halves, use 0.2/4
       //  if this length doubles use 0.2*4
       poly0->compute_bounding_box();
-      int w = (int)vcl_floor(poly0->get_max_x()-poly0->get_min_x()+0.5);
-      int h = (int)vcl_floor(poly0->get_max_y()-poly0->get_min_y()+0.5);
-      vcl_cout << "w: " << w << " h: " << h << vcl_endl;
-      double pruning_threshold = vcl_pow((2*(w+h))/100.0f, 2)*thres;
-      vcl_sprintf(command, "shockcmd.exe -i tmp_con.con -o tmp_esf.esf -t %f", (float)pruning_threshold);
-      vcl_cout << "command: " << command << vcl_endl;
+      int w = (int)std::floor(poly0->get_max_x()-poly0->get_min_x()+0.5);
+      int h = (int)std::floor(poly0->get_max_y()-poly0->get_min_y()+0.5);
+      std::cout << "w: " << w << " h: " << h << std::endl;
+      double pruning_threshold = std::pow((2*(w+h))/100.0f, 2)*thres;
+      std::sprintf(command, "shockcmd.exe -i tmp_con.con -o tmp_esf.esf -t %f", (float)pruning_threshold);
+      std::cout << "command: " << command << std::endl;
       system(command);
 
       dbsk2d_xshock_graph_fileio loader;
       dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph("tmp_esf.esf");
      
       if (verbose)
-        vcl_cout << "Number of vertices in shock graph: " << sg->number_of_vertices() << vcl_endl;
+        std::cout << "Number of vertices in shock graph: " << sg->number_of_vertices() << std::endl;
      
       if (sg->number_of_vertices() == 0) {
-        vcl_cout << "tmp_esf.esf" << " .esf has 0 vertices!!\n";
+        std::cout << "tmp_esf.esf" << " .esf has 0 vertices!!\n";
         return 0;
       }
 
@@ -218,7 +218,7 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
 
   dbskr_tree_sptr treei = (*obji_trees)[obji_poly_id];
   if (!treei) {  //create this tree, its not created before
-      vcl_ofstream of("tmp_con.con");
+      std::ofstream of("tmp_con.con");
       of << "CONTOUR\nCLOSE\n";
       of << polyi->size() << "\n";
       for (unsigned int i = 0; i<polyi->size(); i++) {
@@ -229,22 +229,22 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
 
       char command[1000];
       polyi->compute_bounding_box();
-      int w = (int)vcl_floor(polyi->get_max_x()-polyi->get_min_x()+0.5);
-      int h = (int)vcl_floor(polyi->get_max_y()-polyi->get_min_y()+0.5);
-      vcl_cout << "w: " << w << " h: " << h << vcl_endl;
-      double pruning_threshold = vcl_pow((2*(w+h))/100.0f, 2)*thres;
-      vcl_sprintf(command, "shockcmd.exe -i tmp_con.con -o tmp_esf.esf -t %f", pruning_threshold);
-      vcl_cout << "command: " << command << vcl_endl;
+      int w = (int)std::floor(polyi->get_max_x()-polyi->get_min_x()+0.5);
+      int h = (int)std::floor(polyi->get_max_y()-polyi->get_min_y()+0.5);
+      std::cout << "w: " << w << " h: " << h << std::endl;
+      double pruning_threshold = std::pow((2*(w+h))/100.0f, 2)*thres;
+      std::sprintf(command, "shockcmd.exe -i tmp_con.con -o tmp_esf.esf -t %f", pruning_threshold);
+      std::cout << "command: " << command << std::endl;
       system(command);
 
       dbsk2d_xshock_graph_fileio loader;
       dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph("tmp_esf.esf");
      
       if (verbose)
-        vcl_cout << "Number of vertices in shock graph: " << sg->number_of_vertices() << vcl_endl;
+        std::cout << "Number of vertices in shock graph: " << sg->number_of_vertices() << std::endl;
      
       if (sg->number_of_vertices() == 0) {
-        vcl_cout << "tmp_esf.esf" << " .esf has 0 vertices!!\n";
+        std::cout << "tmp_esf.esf" << " .esf has 0 vertices!!\n";
         return 0;
       }
 
@@ -267,14 +267,14 @@ vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_s
   else
     shock_matching_cost = cost2;
 
-  vcl_cout << " cost " << shock_matching_cost;
+  std::cout << " cost " << shock_matching_cost;
   if (info1 > info2) {
     info_cost = info1;
-    vcl_cout << " info: " << info1 << " matching time: "<< t.real()/1000.0f << " secs\n";
+    std::cout << " info: " << info1 << " matching time: "<< t.real()/1000.0f << " secs\n";
     return rcor1->get_appearance2_on_pixels1();
   } else {
     info_cost = info2;
-    vcl_cout << " info: " << info2 << " matching time: "<< t.real()/1000.0f << " secs\n";
+    std::cout << " info: " << info2 << " matching time: "<< t.real()/1000.0f << " secs\n";
     return rcor2->get_appearance2_on_pixels1();
   }
   return 0;
@@ -295,7 +295,7 @@ dbskr_object_matcher::compute_curve_alignment(dbinfo_observation_sptr obs0,
                                              bool verbose)
 {
   if (verbose)
-    vcl_cout << "Computing curve alignment...\n" ;
+    std::cout << "Computing curve alignment...\n" ;
 
   //extract the polygons from the observations (assuming only one poly per observation)
   vsol_polygon_2d_sptr poly0 = obs0->geometry()->poly(0);
@@ -309,7 +309,7 @@ dbskr_object_matcher::compute_curve_alignment(dbinfo_observation_sptr obs0,
   curve_matching_cost = d1->finalBestCostRestrictedStartingPoint(minIndex, restricted_cvmatch_ratio, true);
 
   if (verbose)
-    vcl_printf("%9.6f\n",curve_matching_cost);
+    std::printf("%9.6f\n",curve_matching_cost);
 
   dbcvr_cv_cor_sptr sil_cor = d1->get_cv_cor(minIndex);
 
@@ -327,7 +327,7 @@ dbskr_object_matcher::compute_curve_alignment (vsol_polygon_2d_sptr poly0,
                                                     bool verbose)
 {
   if (verbose)
-    vcl_cout << "Computing curve alignment...\n" ;
+    std::cout << "Computing curve alignment...\n" ;
 
   dbcvr_clsd_cvmatch_sptr d1 = new dbcvr_clsd_cvmatch(poly0, polyi, R, rms, 3);
   d1->setStretchCostFlag(false);   // cost: |ds1-ds2| + R|d_theta1-d_theta2|
@@ -337,7 +337,7 @@ dbskr_object_matcher::compute_curve_alignment (vsol_polygon_2d_sptr poly0,
   curve_matching_cost = d1->finalBestCostRestrictedStartingPoint(minIndex, restricted_cvmatch_ratio, true);
 
   if (verbose)
-    vcl_printf("%9.6f\n",curve_matching_cost);
+    std::printf("%9.6f\n",curve_matching_cost);
 
   dbcvr_cv_cor_sptr sil_cor = d1->get_cv_cor(minIndex);
   return sil_cor;
@@ -357,7 +357,7 @@ dbskr_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr ob
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi);
 
   if (verbose)
-    vcl_cout << "Using distance transform to find region correspondences!\n";
+    std::cout << "Using distance transform to find region correspondences!\n";
 
   //extract the polygons from the observations (assuming only one poly per observation)
   vsol_polygon_2d_sptr poly0 = obs0->geometry()->poly(0);
@@ -371,7 +371,7 @@ dbskr_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr ob
   
   float scale = float((double)rcor->get_upper2_x()/(double)rcor->get_upper1_x());
   if (!dbru_rcor_generator::find_correspondence_dt(rcor, sil_cor, curve11, curve22, scale) ) {
-    vcl_cout << "Region correspondence based on distance transform could not be found!\n";
+    std::cout << "Region correspondence based on distance transform could not be found!\n";
     return 0;
   }
 
@@ -407,7 +407,7 @@ dbskr_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
 {
   dbru_rcor_sptr rcor = generate_rcor_curve_matching_dt(obs0, obsi, sil_cor, verbose);
 
-  vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+  std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
   info_dt = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, false);
 
   vil_image_resource_sptr output_sptr = rcor->get_appearance2_on_pixels1();
@@ -437,7 +437,7 @@ dbskr_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
                                                                 verbose);
   
   if (verbose)
-    vcl_cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    std::cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
   
   return output_sptr;
 }
@@ -457,7 +457,7 @@ dbskr_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr o
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi);
 
   if (verbose)
-    vcl_cout << "Using distance transform to find region correspondences!\n";
+    std::cout << "Using distance transform to find region correspondences!\n";
 
   //extract the polygons from the observations (assuming only one poly per observation)
   vsol_polygon_2d_sptr poly0 = obs0->geometry()->poly(0);
@@ -471,7 +471,7 @@ dbskr_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr o
   
   float scale = float((double)rcor->get_upper2_x()/(double)rcor->get_upper1_x());
   if (!dbru_rcor_generator::find_correspondence_dt2(rcor, sil_cor, curve11, curve22, scale, ratio) ) {
-    vcl_cout << "Region correspondence based on distance transform could not be found!\n";
+    std::cout << "Region correspondence based on distance transform could not be found!\n";
     return 0;
   }
   return rcor;
@@ -512,12 +512,12 @@ dbskr_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr 
                                                        bool verbose)
 {
   if (verbose)
-    vcl_cout << "Using line intersections to find region correspondences!\n";
+    std::cout << "Using line intersections to find region correspondences!\n";
 
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi, save_histograms);
 
   if (!dbru_rcor_generator::find_correspondence_line(rcor, sil_cor, increment)) {
-    vcl_cout << "Region correspondence based on line intersections could not be found!\n";
+    std::cout << "Region correspondence based on line intersections could not be found!\n";
     return 0;
   }
 
@@ -557,7 +557,7 @@ dbskr_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
 {
   dbru_rcor_sptr rcor = generate_rcor_curve_matching_line(obs0, obsi, sil_cor, increment, verbose);
 
-  vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+  std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
   info_line = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, verbose);
   
   vil_image_resource_sptr output_sptr = rcor->get_appearance2_on_pixels1();
@@ -590,7 +590,7 @@ dbskr_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
                                                                   verbose);
 
   if (verbose)
-    vcl_cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    std::cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
   
   return output_sptr;
 }
@@ -609,12 +609,12 @@ dbskr_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr
                                                         bool verbose) 
 {
   if (verbose)
-    vcl_cout << "Using line intersections version 2 to find region correspondences!\n";
+    std::cout << "Using line intersections version 2 to find region correspondences!\n";
 
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi, save_histograms);
 
   if (!dbru_rcor_generator::find_correspondence_line2(rcor, sil_cor, ratio)) {
-    vcl_cout << "Region correspondence based on line intersections version 2 could not be found!\n";
+    std::cout << "Region correspondence based on line intersections version 2 could not be found!\n";
     return 0;
   }
 
@@ -654,12 +654,12 @@ dbru_rcor_sptr dbskr_object_matcher::generate_rcor_curve_matching_line3(dbinfo_o
                                                                        bool verbose) 
 {
   if (verbose)
-    vcl_cout << "Using line intersections version 3 to find region correspondences!\n";
+    std::cout << "Using line intersections version 3 to find region correspondences!\n";
 
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi, save_histograms);
 
   if (!dbru_rcor_generator::find_correspondence_line3(rcor, sil_cor, increment)) {
-    vcl_cout << "Region correspondence based on line intersections version 3 could not be found!\n";
+    std::cout << "Region correspondence based on line intersections version 3 could not be found!\n";
     return 0;
   }
 
@@ -700,10 +700,10 @@ dbskr_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr
                                                         bool verbose) 
 {
   if (verbose)
-    vcl_cout << "Using line intersections version 4 to find region correspondences!\n";
+    std::cout << "Using line intersections version 4 to find region correspondences!\n";
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi, save_histograms);
   if (!dbru_rcor_generator::find_correspondence_line4(rcor, sil_cor, total_votes)) {
-    vcl_cout << "Region correspondence based on line intersections version 3 could not be found!\n";
+    std::cout << "Region correspondence based on line intersections version 3 could not be found!\n";
     return 0;
   }
   return rcor;
@@ -742,13 +742,13 @@ dbskr_object_matcher::compute_shock_alignment(dbskr_tree_sptr tree0,
 {
   // do the shock matching
   if (verbose)
-    vcl_cout << " matching shock graphs... \n";
+    std::cout << " matching shock graphs... \n";
 
   dbskr_tree_edit edit(tree0, treei);
   edit.save_path(true);
   
   if (!edit.edit()) {
-    vcl_cout << "Problems in editing trees\n";
+    std::cout << "Problems in editing trees\n";
     return 0;
   }
 
@@ -758,7 +758,7 @@ dbskr_object_matcher::compute_shock_alignment(dbskr_tree_sptr tree0,
   shock_matching_cost = val;
 
   if (verbose)
-    vcl_cout << "shock matching cost: " << shock_matching_cost << vcl_endl;
+    std::cout << "shock matching cost: " << shock_matching_cost << std::endl;
 
   //edit.write_shgm(shgm_file);
   dbskr_sm_cor_sptr sm_cor = edit.get_correspondence();
@@ -776,13 +776,13 @@ dbskr_object_matcher::compute_shock_alignment_pmi(dbinfo_observation_sptr obs0,
 {
 // do the shock matching
   if (verbose)
-    vcl_cout << " matching shock graphs... \n";
+    std::cout << " matching shock graphs... \n";
 
   dbskr_tree_edit_pmi edit(tree0, treei, obs0, obsi);
   edit.save_path(true);
   
   if (!edit.edit()) {
-    vcl_cout << "Problems in editing trees\n";
+    std::cout << "Problems in editing trees\n";
     return 0;
   }
 
@@ -791,7 +791,7 @@ dbskr_object_matcher::compute_shock_alignment_pmi(dbinfo_observation_sptr obs0,
   shock_matching_cost = val;
 
   if (verbose)
-    vcl_cout << "shock matching cost: " << shock_matching_cost << vcl_endl;
+    std::cout << "shock matching cost: " << shock_matching_cost << std::endl;
 
   //edit.write_shgm(shgm_file);
   dbskr_sm_cor_sptr sm_cor = edit.get_correspondence();
@@ -811,12 +811,12 @@ dbskr_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
                                                   bool verbose)
 {
   if (verbose)
-    vcl_cout << "Using shock matching to find region correspondences!\n";
+    std::cout << "Using shock matching to find region correspondences!\n";
 
   dbru_rcor_sptr rcor = new dbru_rcor(obs0, obsi);
 
   if (!dbru_rcor_generator::find_correspondence_shock(rcor, sm_cor) ) {
-    vcl_cout << "Region correspondence based on shock matching could not be found!\n";
+    std::cout << "Region correspondence based on shock matching could not be found!\n";
     return 0;
   }
 
@@ -851,7 +851,7 @@ dbskr_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
 {
   dbru_rcor_sptr rcor = generate_rcor_shock_matching(obs0, obsi, sm_cor, verbose);
 
-  vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+  std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
   info_shock = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, verbose);
 
   vil_image_resource_sptr output_sptr = rcor->get_appearance2_on_pixels1();
@@ -880,7 +880,7 @@ dbskr_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
                                                              sm_cor, info_shock, 
                                                              verbose);
   if (verbose)
-    vcl_cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    std::cout<< "time: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
   
   return output_sptr;
 }
@@ -894,7 +894,7 @@ vil_image_resource_sptr make_image(dbinfo_observation_sptr obs, int w, int h, do
   // fill with random noise
   for (int y = 0; y<h; y++ ) 
     for (int x = 0; x<w; x++)
-      image_out(x,y) = 255*float(vcl_rand()/(RAND_MAX+1.0));     
+      image_out(x,y) = 255*float(std::rand()/(RAND_MAX+1.0));     
 
   dbinfo_feature_data_base_sptr d = (obs->features())[0]->data();
   assert(d->format() == DBINFO_INTENSITY_FEATURE);
@@ -905,16 +905,16 @@ vil_image_resource_sptr make_image(dbinfo_observation_sptr obs, int w, int h, do
   {
     float vv0 = v[k];
     vgl_point_2d<float> coord = geo->point(k);
-    int yy = (int)vcl_floor(coord.y()+translation_y+0.5);
-    int xx = (int)vcl_floor(coord.x()+translation_x+0.5);
+    int yy = (int)std::floor(coord.y()+translation_y+0.5);
+    int xx = (int)std::floor(coord.x()+translation_x+0.5);
     if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
     image_out(xx,yy) = vv0;
   }
   if (show_contour) {
     for (unsigned k = 0; k<poly->size(); k++) {
       vsol_point_2d_sptr p = poly->vertex(k);
-      int yy = (int)vcl_floor(p->y()+translation_y+0.5);
-      int xx = (int)vcl_floor(p->x()+translation_x+0.5);
+      int yy = (int)std::floor(p->y()+translation_y+0.5);
+      int xx = (int)std::floor(p->x()+translation_x+0.5);
       if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
       image_out(xx,yy) = 0;
     }
@@ -953,13 +953,13 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
   //double radius_q = geo_q->diameter()/2.0f;
   vsol_point_2d_sptr cent_db = geo_db->centroid();
   vsol_point_2d_sptr cent_q = geo_q->centroid();
-  vcl_cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
+  std::cout << "center of db obs: " << *cent_db << " center of query: " << *cent_q << "\n";
 
   int w = geo_db->cols();
   int h = geo_db->rows();
   
   image_r1 = make_image(obs0, w, h, (-cent_q->x()+cent_db->x()), (-cent_q->y()+cent_db->y()), false);
-  vcl_cout << "making the image of database observation also\n";
+  std::cout << "making the image of database observation also\n";
   image_r2 = make_image(obsi, w, h, 0, 0, true);
 
   vgl_h_matrix_2d<float> H;  H.set_identity();
@@ -967,19 +967,19 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
   initial_obs->scan(0, image_r1);
   //image_r2 = make_image(initial_obs, w, h, 0, 0, true);
   float initial_info = dbinfo_observation_matcher::minfo(obsi, initial_obs);
-  vcl_cout << "before random iterations info is: " << initial_info << vcl_endl;
+  std::cout << "before random iterations info is: " << initial_info << std::endl;
   
-  vcl_cout << " size of query obs: " << geo_q->size() << vcl_endl;
+  std::cout << " size of query obs: " << geo_q->size() << std::endl;
   // before optimizing randomly search for a good starting point
   // we know database cog should align with some point "on" the query,
   // so pick points randomly inside the query Nob times
   float max_info = initial_info;
-  vcl_srand(static_cast<unsigned int>(vcl_time(0)));
+  std::srand(static_cast<unsigned int>(std::time(0)));
   float radius_ok = ratio*(float(geo_q->diameter())/2.0f);
   
   for (int i = 0; i<Nob; i++) {
-    float x = 2*radius_ok*float(vcl_rand() / (RAND_MAX+1.0)) - radius_ok;
-    float y = 2*radius_ok*float(vcl_rand() / (RAND_MAX+1.0)) - radius_ok;
+    float x = 2*radius_ok*float(std::rand() / (RAND_MAX+1.0)) - radius_ok;
+    float y = 2*radius_ok*float(std::rand() / (RAND_MAX+1.0)) - radius_ok;
     H.set_translation(x, y); 
     dbinfo_observation_sptr obs = dbinfo_observation_generator::generate(obsi, H);
     if (!obs) continue;
@@ -997,7 +997,7 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
   int count = 0;
   for (float x = -radius_ok; x < radius_ok; x++)
     for (float y = -radius_ok; y < radius_ok; y++) {
-    vcl_cout << "x: " << x << "y: " << y << " ";
+    std::cout << "x: " << x << "y: " << y << " ";
     vul_timer t2;
     H.set_translation(x, y); 
     dbinfo_observation_sptr obs = dbinfo_observation_generator::generate(obsi, H);
@@ -1008,13 +1008,13 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
       initial_obs = obs;
       max_info = info;
     }
-    vcl_cout << "info is: " << info << " time: " << t2.real()/1000.0f << " seconds.\n";
+    std::cout << "info is: " << info << " time: " << t2.real()/1000.0f << " seconds.\n";
     count++;
   }
 #endif
   
-  vcl_cout << "after " << Nob << " random iterations the best info is: " << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
-  //vcl_cout << "after " << count << " iterations the best info is: " << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
+  std::cout << "after " << Nob << " random iterations the best info is: " << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
+  //std::cout << "after " << count << " iterations the best info is: " << max_info << " time: " << t.real()/1000.0f << " seconds.\n";
   //image_r2 = make_image(initial_obs, w, h, 0, 0, true);
   //image_r3 = make_image(initial_obs, w, h, 0, 0, true);
   //return max_info;
@@ -1034,8 +1034,8 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
 
   image_r3 = make_image(final_obs, w, h, 0, 0, true);
   //float info = dbinfo_observation_matcher::minfo(obsi, final_obs);
-  //vcl_cout << "final minfo: " << 10.0f-opt.current_cost() << " our info: " << info << vcl_endl;
-  vcl_cout << "optimization time: " << t3.real()/1000.0f << vcl_endl;
+  //std::cout << "final minfo: " << 10.0f-opt.current_cost() << " our info: " << info << std::endl;
+  std::cout << "optimization time: " << t3.real()/1000.0f << std::endl;
   max_info = float(10.0f-opt.current_cost());
   return initial_info>max_info?initial_info:max_info;
   
@@ -1078,12 +1078,12 @@ float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr o
   // we know database cog should align with some point "on" the query,
   // so pick points randomly inside the query Nob times
   float max_info = initial_info;
-  vcl_srand(static_cast<unsigned int>(vcl_time(0)));
+  std::srand(static_cast<unsigned int>(std::time(0)));
   float radius_ok = ratio*(float(geo_q->diameter())/2.0f);
   
   for (int i = 0; i<Nob; i++) {
-    float x = 2*radius_ok*float(vcl_rand() / (RAND_MAX+1.0)) - radius_ok;
-    float y = 2*radius_ok*float(vcl_rand() / (RAND_MAX+1.0)) - radius_ok;
+    float x = 2*radius_ok*float(std::rand() / (RAND_MAX+1.0)) - radius_ok;
+    float y = 2*radius_ok*float(std::rand() / (RAND_MAX+1.0)) - radius_ok;
     H.set_translation(x, y); 
     dbinfo_observation_sptr obs = dbinfo_observation_generator::generate(obsi, H);
     if (!obs) continue;
@@ -1166,7 +1166,7 @@ float dbskr_object_matcher::minfo_rigid_alignment_search(dbinfo_observation_sptr
       }
       count++;
     }
-  //vcl_cout << "tried " << count << " translations\n";
+  //std::cout << "tried " << count << " translations\n";
 
   initial_info = max_info;
   dbinfo_match_optimizer opt(10.0f,   dx,           dr,         ds);
@@ -1235,7 +1235,7 @@ float dbskr_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0,
 
   image_r3 = make_image(final_obs, w, h, 0, 0, true);
   float info = dbinfo_observation_matcher::minfo(obsi, final_obs);
-  vcl_cout << "final minfo: " << 10.0f-opt.current_cost() << " our info: " << info << vcl_endl;
+  std::cout << "final minfo: " << 10.0f-opt.current_cost() << " our info: " << info << std::endl;
   return info;
 }
 
@@ -1303,7 +1303,7 @@ float dbskr_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0,
   H.set_translation(-(cent->x()-radius), -(cent->y()-radius));
   // make a new observation from database geometry to run it over query image (translated into 
   // the valid image area, just to start with)
-  vcl_vector<vsol_polygon_2d_sptr> new_polys;
+  std::vector<vsol_polygon_2d_sptr> new_polys;
   for (unsigned i = 0; i<geo_i->n_polys(); i++) {
     vsol_polygon_2d_sptr new_p = bsol_algs::transform_about_point(geo_i->poly(i), cent, H);
     new_polys.push_back(new_p);
@@ -1358,7 +1358,7 @@ dbru_rcor_sptr dbskr_object_matcher::generate_rcor_tps(dbinfo_observation_sptr o
   vgl_norm_trans_2d<double> trans1, trans2;
   
   if (!dbru_rcor_generator::find_correspondence_tps_curve(rcor, tps, trans1, trans2, increment) ) {
-    vcl_cout << "Region correspondence based on TPS could not be found!\n";
+    std::cout << "Region correspondence based on TPS could not be found!\n";
     return 0;
   }
   return rcor;

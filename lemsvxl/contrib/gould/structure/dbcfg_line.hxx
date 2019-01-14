@@ -200,7 +200,7 @@ vgl_point_2d<T> dbcfg_line<T>::get_intersection(line_t& line, T epsilon) {
 // returns the transformed line(s) based on forced-intersections with the given points
 // TODO : pierce lines with mid-line intersections to form multiple lines
 template <class T>
-vcl_vector<dbcfg_line<T> > dbcfg_line<T>::get_transform(vcl_vector<unsigned>& point_nums, points_t& points, T epsilon) {
+std::vector<dbcfg_line<T> > dbcfg_line<T>::get_transform(std::vector<unsigned>& point_nums, points_t& points, T epsilon) {
   lines_t new_lines;
   if (point_nums.size() == 0) {
     new_lines.push_back(*this);

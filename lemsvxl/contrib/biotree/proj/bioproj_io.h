@@ -13,17 +13,17 @@
 // we assume that the camera is on -y axis and rotates towards x axis for now
 // we assume square image pixels on the sensor for now
 
-#include <vcl_string.h>
+#include <string>
 #include <xscan/xscan_scan.h>
 #include <vgl/vgl_box_3d.h>
 
 class bioproj_io{
 public:
   //: constructor getting the parameters one-by-one
-  bioproj_io(vcl_string scan_fname, vcl_string box_fname, 
+  bioproj_io(std::string scan_fname, std::string box_fname, 
           double resolution, double sensor_pix_size, 
           double source_origin_dist, double source_sensor_dist,
-          vnl_int_2 const sensor_dim, double rot_step_angle, vcl_string file_path,
+          vnl_int_2 const sensor_dim, double rot_step_angle, std::string file_path,
           double sigma_r, double sigma_z, int sigma_r_extent, int sigma_z_extent,
           int num_comp_planes);
 
@@ -42,7 +42,7 @@ public:
   unsigned nviews_;
   //: in degrees
   double rot_step_angle_;
-  vcl_string file_path_;
+  std::string file_path_;
 
   //: in microns, used either for sigma_x or sigma_y
   double sigma_r_;

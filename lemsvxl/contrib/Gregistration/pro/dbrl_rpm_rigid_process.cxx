@@ -12,7 +12,7 @@ dbrl_rpm_rigid_process::dbrl_rpm_rigid_process(void): bpro1_process()
     if( !parameters()->add( "Initial temperature" , "-initT" , (float)100) ||
       !parameters()->add( "Annealing Rate" , "-annealrate" , (float) 0.93 ) ) 
      {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_rpm_rigid_process::dbrl_rpm_rigid_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_rpm_rigid_process::dbrl_rpm_rigid_process()" << std::endl;
      }
     
 }
@@ -25,7 +25,7 @@ dbrl_rpm_rigid_process::~dbrl_rpm_rigid_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_rpm_rigid_process::name()
 {
   return "RPM RIGID";
@@ -49,9 +49,9 @@ dbrl_rpm_rigid_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_rpm_rigid_process::get_input_type()
+std::vector< std::string > dbrl_rpm_rigid_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
 
@@ -60,9 +60,9 @@ vcl_vector< vcl_string > dbrl_rpm_rigid_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_rpm_rigid_process::get_output_type()
+std::vector< std::string > dbrl_rpm_rigid_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbrl_match_set" );
   return to_return;
 }
@@ -73,7 +73,7 @@ bool
 dbrl_rpm_rigid_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbrl_rpm_rigid_process::execute() - "
+    std::cout << "In dbrl_rpm_rigid_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }

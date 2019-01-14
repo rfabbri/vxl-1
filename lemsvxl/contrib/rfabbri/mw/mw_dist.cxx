@@ -1,7 +1,7 @@
 #include "mw_dist.h"
 
 double mw_dist::
-hdist(vcl_vector<bmcsd_vector_3d> &c1, vcl_vector<bmcsd_vector_3d> &c2)
+hdist(std::vector<bmcsd_vector_3d> &c1, std::vector<bmcsd_vector_3d> &c2)
 {
   double hd12 = dir_hausdorff_distance(c1,c2);
   double hd21 = dir_hausdorff_distance(c2,c1);
@@ -14,12 +14,12 @@ hdist(vcl_vector<bmcsd_vector_3d> &c1, vcl_vector<bmcsd_vector_3d> &c2)
 
 
 double mw_dist::
-dir_hausdorff_distance(vcl_vector<bmcsd_vector_3d> &c1, vcl_vector<bmcsd_vector_3d> &c2)
+dir_hausdorff_distance(std::vector<bmcsd_vector_3d> &c1, std::vector<bmcsd_vector_3d> &c2)
 {
   double d=0;
 
   for (unsigned i=0; i<c1.size(); ++i) {
-    double dmin = vcl_numeric_limits<double>::infinity();
+    double dmin = std::numeric_limits<double>::infinity();
     double px = c1[i][0];
     double py = c1[i][1];
     double pz = c1[i][2];

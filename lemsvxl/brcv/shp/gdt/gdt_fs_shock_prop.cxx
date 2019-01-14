@@ -17,17 +17,17 @@ void gdt_shock_prop::propagate_gdt_shocks ()
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cerr, "\n     ----> Total shocks to propagate: %d\n", shock_queue_.size());
+    vul_printf (std::cerr, "\n     ----> Total shocks to propagate: %d\n", shock_queue_.size());
 
   int n_prop_iter = 0;
 
   while (shock_queue_.size() != 0) {
     if (n_verbose_>1)
-      vul_printf (vcl_cerr, "           s_iter %d \n", n_prop_iter);
+      vul_printf (std::cerr, "           s_iter %d \n", n_prop_iter);
     propagate_gdt_shock_one_step ();
     n_prop_iter++;
   }
-  vul_printf (vcl_cerr, "     ----> Total s_iter %d.\n", n_prop_iter);
+  vul_printf (std::cerr, "     ----> Total s_iter %d.\n", n_prop_iter);
 #else
   while (shock_queue_.size() != 0)
     propagate_gdt_shock_one_step ();
@@ -38,20 +38,20 @@ void gdt_shock_prop::propagate_gdt_shock_one_step ()
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>1) {
-    vul_printf (vcl_cerr, "shock_queue %d: ", shock_queue_.size());
-    vcl_map<vcl_pair<double, int>, gdt_shock*>::iterator sit =  shock_queue_.begin();
+    vul_printf (std::cerr, "shock_queue %d: ", shock_queue_.size());
+    std::map<std::pair<double, int>, gdt_shock*>::iterator sit =  shock_queue_.begin();
     if (n_verbose_>2) {
       for (; sit != shock_queue_.end(); sit++) {
         gdt_shock* S = (*sit).second;
-        vul_printf (vcl_cerr, "%d(%f) ", S->id(), (float)(*sit).first.first);
+        vul_printf (std::cerr, "%d(%f) ", S->id(), (float)(*sit).first.first);
       }
     }
-    vul_printf (vcl_cerr, "\n");
+    vul_printf (std::cerr, "\n");
   }
 #endif
 
   //: pop the closest shock from the shock_queue_ and propagate it.
-  vcl_map<vcl_pair<double, int>, gdt_shock*>::iterator sit = shock_queue_.begin();
+  std::map<std::pair<double, int>, gdt_shock*>::iterator sit = shock_queue_.begin();
 
   // ASSUME ALL SHOCK ARE LINEAR NOW !!
   gdt_shock* S = (gdt_shock*) (*sit).second;

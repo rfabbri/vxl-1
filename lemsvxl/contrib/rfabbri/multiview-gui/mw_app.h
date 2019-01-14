@@ -7,7 +7,7 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Sat Apr 16 22:49:00 EDT 2005
 //
-#include <vcl_string.h>
+#include <string>
 #include <vpgl/dvpgl_perspective_camera.h>
 #include <vpgl/dvpgl_fundamental_matrix.h>
 

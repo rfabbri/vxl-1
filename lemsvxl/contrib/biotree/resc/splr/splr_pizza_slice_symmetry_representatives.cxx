@@ -1,12 +1,12 @@
 #include "splr_pizza_slice_symmetry_representatives.h"
 
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 double distance_from_origin_to_box_2d(vgl_box_2d<double> box){
   //if box contains origin then zero
@@ -20,8 +20,8 @@ double distance_from_origin_to_box_2d(vgl_box_2d<double> box){
 }
 
 double distance_from_origin_to_farthest_point_in_box_2d(vgl_box_2d<double> box){
-  double xsq = vcl_max(box.min_x() * box.min_x(), box.max_x() * box.max_x());
-  double ysq = vcl_max(box.min_y() * box.min_y(), box.max_y() * box.max_y());
+  double xsq = std::max(box.min_x() * box.min_x(), box.max_x() * box.max_x());
+  double ysq = std::max(box.min_y() * box.min_y(), box.max_y() * box.max_y());
   return sqrt(xsq + ysq);
 }
 

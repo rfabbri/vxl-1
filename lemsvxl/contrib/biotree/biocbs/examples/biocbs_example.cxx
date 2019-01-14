@@ -7,7 +7,7 @@
 
 #include <biocbs/biocbs_scan.h>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
   unsigned short fill_value = 0;
 #if 0
   int val;
-  FILE *fp = vcl_fopen("D:\\MyDocs\\projects\\BioTree\\daily_news_2006\\aug1_volumetric_vs_projected\\straight_big\\vol.txt", "r");
-  vcl_fscanf(fp, "%d %d %d\n", &dimx, &dimy, &dimz);
+  FILE *fp = std::fopen("D:\\MyDocs\\projects\\BioTree\\daily_news_2006\\aug1_volumetric_vs_projected\\straight_big\\vol.txt", "r");
+  std::fscanf(fp, "%d %d %d\n", &dimx, &dimy, &dimz);
 
   vbl_array_3d<unsigned short> vol(dimx, dimy, dimz, fill_value);
   for(int k=0;k<dimz;k++)
@@ -26,12 +26,12 @@ int main(int argc, char *argv[])
     {
       for(int i=0;i<dimx;i++)
       {
-        vcl_fscanf(fp,"%d", &val);
+        std::fscanf(fp,"%d", &val);
         vol(i,j,k) = (unsigned short)(val);
       }
     }
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 #endif
 
 // sphere test
@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
   dimy = 51;
   dimz = 51;
 
-  FILE *fp = vcl_fopen("D:\\MyDocs\\Temp\\sphere_vol.txt", "w");
-  vcl_fprintf(fp, "%d %d %d\n", dimx, dimy, dimz);
+  FILE *fp = std::fopen("D:\\MyDocs\\Temp\\sphere_vol.txt", "w");
+  std::fprintf(fp, "%d %d %d\n", dimx, dimy, dimz);
 
   int x0 = 25;
   int y0 = 25;
@@ -55,16 +55,16 @@ int main(int argc, char *argv[])
     {
       for(int i=0;i<dimx;i++)
       {
-        val = vcl_pow((i-x0),2.0) + vcl_pow((j-y0),2.0) + vcl_pow((k-z0),2.0);
-        if(val <= vcl_pow(r,2.0))
+        val = std::pow((i-x0),2.0) + std::pow((j-y0),2.0) + std::pow((k-z0),2.0);
+        if(val <= std::pow(r,2.0))
           vol(i,j,k) = 1;
-        vcl_fprintf(fp, "%d ", vol(i,j,k));
+        std::fprintf(fp, "%d ", vol(i,j,k));
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 #endif
 
   biocbs_scan cbs(46.8, 261.5, 345.712, vnl_int_2(590, 524),
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
   for(int i=0; i < numviews; i++)
   {
-    vcl_cout << i << vcl_endl;
+    std::cout << i << std::endl;
     cbs.project_volume(i);
   }
 

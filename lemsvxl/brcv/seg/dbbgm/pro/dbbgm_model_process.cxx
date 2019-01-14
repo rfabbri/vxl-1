@@ -42,7 +42,7 @@ dbbgm_model_process::dbbgm_model_process()
       !parameters()->add( "YUV Color Space" ,      "-yuv",       false        ) ||
       !parameters()->add( "S-G Approx." ,          "-grimson",   true         ) ||
       !parameters()->add( "Use Mask" ,             "-bg_mask",   false        ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -62,7 +62,7 @@ dbbgm_model_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_model_process::name()
 {
   return "Model Background";
@@ -86,9 +86,9 @@ dbbgm_model_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_model_process::get_input_type()
+std::vector< std::string > dbbgm_model_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
   bool mask=false;
@@ -101,9 +101,9 @@ vcl_vector< vcl_string > dbbgm_model_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_model_process::get_output_type()
+std::vector< std::string > dbbgm_model_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
 
   return to_return;
 }
@@ -114,7 +114,7 @@ bool
 dbbgm_model_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_model_process::execute() - "
+    std::cout << "In dbbgm_model_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }
@@ -203,7 +203,7 @@ dbbgm_model_process::execute()
       vil_threshold_inside(temp,mask_img,vxl_byte(1),vxl_byte(1));
     }
     else{
-      vcl_cerr << "can not use mask of type "<<image_rsc->pixel_format()<<vcl_endl;
+      std::cerr << "can not use mask of type "<<image_rsc->pixel_format()<<std::endl;
       return false;
     }
   }

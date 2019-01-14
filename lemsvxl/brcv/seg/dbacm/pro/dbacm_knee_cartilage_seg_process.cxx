@@ -51,7 +51,7 @@ dbacm_knee_cartilage_seg_process()
   //  !parameters()->add("Min contour length", "-len_thresh", 20.0f)
       ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -76,7 +76,7 @@ clone() const
 
 // ------------------------------------------------------------------
 //: Return the name of this process
-vcl_string dbacm_knee_cartilage_seg_process::
+std::string dbacm_knee_cartilage_seg_process::
 name()
 {
   return "Knee cartilage seg";
@@ -104,10 +104,10 @@ output_frames()
 
 // ------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbacm_knee_cartilage_seg_process::
+std::vector< std::string > dbacm_knee_cartilage_seg_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   to_return.push_back( "image" );
@@ -117,10 +117,10 @@ get_input_type()
 
 // ------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbacm_knee_cartilage_seg_process::
+std::vector< std::string > dbacm_knee_cartilage_seg_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -133,7 +133,7 @@ execute()
 {  
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In dbacm_knee_cartilage_seg_process::execute()-not exactly one"
+    std::cout << "In dbacm_knee_cartilage_seg_process::execute()-not exactly one"
              << " input images \n";
     return false;
   }
@@ -144,7 +144,7 @@ execute()
   // a. Inner contour of cartilage
   vidpro1_vsol2D_storage_sptr frame_vsol1;
   frame_vsol1.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_spatial_object_2d_sptr > all_vsol1 = frame_vsol1->all_data();
+  std::vector<vsol_spatial_object_2d_sptr > all_vsol1 = frame_vsol1->all_data();
  
   // consider the first polygon as the inner contour
   vsol_polygon_2d_sptr polygon = 0;
@@ -163,7 +163,7 @@ execute()
   // safety check
   if (!polygon)
   {
-    vcl_cerr << "Error: Could not find cartilage inner contour " __FILE__ << vcl_endl;
+    std::cerr << "Error: Could not find cartilage inner contour " __FILE__ << std::endl;
     return false;
   }
 
@@ -173,11 +173,11 @@ execute()
   // a. Inner contour of cartilage
   vsol_point_2d_sptr start_pt = 0;
   vsol_point_2d_sptr end_pt = 0;
-  vcl_vector<vsol_point_2d_sptr > user_pts;
+  std::vector<vsol_point_2d_sptr > user_pts;
 
   vidpro1_vsol2D_storage_sptr frame_vsol2;
   frame_vsol2.vertical_cast(input_data_[0][1]);
-  vcl_vector<vsol_spatial_object_2d_sptr > all_vsol2 = frame_vsol2->all_data();
+  std::vector<vsol_spatial_object_2d_sptr > all_vsol2 = frame_vsol2->all_data();
  
   // extract all the points.
   for (unsigned int i=0; i<all_vsol2.size(); ++i)
@@ -192,7 +192,7 @@ execute()
   // safety check
   if (user_pts.size() < 4)
   {
-    vcl_cerr << "Error: Not enough contour points " __FILE__ << vcl_endl;
+    std::cerr << "Error: Not enough contour points " __FILE__ << std::endl;
     return false;
   }
 
@@ -231,7 +231,7 @@ execute()
   // ==================================================
   // ALGORITHM
   // >> Find correpondence on contour to user selection points
-  vcl_vector<int > user_pts_corr;
+  std::vector<int > user_pts_corr;
   for (unsigned int i=0; i<user_pts.size(); ++i)
   {
     vsol_point_2d_sptr pt = user_pts[i];
@@ -263,7 +263,7 @@ execute()
   // >> Extract points cartilage contour points form the polygon
 
   // a polyline of cartilage inner contour
-  vcl_vector<vsol_point_2d_sptr > inner_contour_pts;
+  std::vector<vsol_point_2d_sptr > inner_contour_pts;
   count = 0;
   int num_user_pts = user_pts_corr.size();
   //unused bool stop = false;
@@ -284,7 +284,7 @@ execute()
     if (i == end_param) break;
   }
 
-  vcl_vector<vsol_point_2d_sptr > non_inner_contour_pts;
+  std::vector<vsol_point_2d_sptr > non_inner_contour_pts;
   for (int i = (end_param + direction+polygon->size()) % polygon->size();
     i != start_param; 
     i = (i+direction+polygon->size()) % polygon->size())
@@ -303,12 +303,12 @@ execute()
   // by linear interpolation of distance
   
   // interpolate for every interval
-  vcl_vector<vsol_point_2d_sptr > outer_contour_pts;
+  std::vector<vsol_point_2d_sptr > outer_contour_pts;
 
   int dir = (segment_femur) ? 1 : -1;
   for (unsigned int i=0; i<user_pts.size()-1; ++i)
   {
-    vcl_vector<vsol_point_2d_sptr > segment_pts;
+    std::vector<vsol_point_2d_sptr > segment_pts;
     for (int j=user_pts_corr[i]; j <= user_pts_corr[i+1]; ++j)
     {
       segment_pts.push_back(inner_contour->vertex(j));

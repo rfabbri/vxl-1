@@ -1,9 +1,9 @@
 // create shock patches from a given image and sampled coarse shock graph
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <ctime>
+#include <algorithm>
+#include <iostream>
+#include <cstdlib>
 
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/dbsk2d_shock_graph.h>
@@ -33,17 +33,17 @@
 #include <dbil/algo/dbil_color_conversions.h>
 
 
-vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
+vsol_polygon_2d_sptr read_con_from_file(std::string fname) {
   double x, y;
   char buffer[2000];
   int nPoints;
 
-  vcl_vector<vsol_point_2d_sptr> inp;
+  std::vector<vsol_point_2d_sptr> inp;
   inp.clear();
 
-  vcl_ifstream fp(fname.c_str());
+  std::ifstream fp(fname.c_str());
   if (!fp) {
-    vcl_cout<<" Unable to Open "<< fname <<vcl_endl;
+    std::cout<<" Unable to Open "<< fname <<std::endl;
     return 0;
   }
   //2)Read in file header.
@@ -51,7 +51,7 @@ vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
   fp.getline(buffer,2000); //OPEN/CLOSE flag (not important, we assume close)
   fp >> nPoints;
 #if 0
-  vcl_cout << "Number of Points from Contour: " << nPoints << vcl_endl;
+  std::cout << "Number of Points from Contour: " << nPoints << std::endl;
 #endif     
   for (int i=0;i<nPoints;i++) {
     fp >> x >> y;
@@ -64,15 +64,15 @@ vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
 }
 
 int main(int argc, char *argv[]) {
-  vcl_cout << "Take a simple closed contour (shock graph has no loops) and extract its shock patch!\n";
+  std::cout << "Take a simple closed contour (shock graph has no loops) and extract its shock patch!\n";
 
   //: out file contains the wrong mathces if any
-  vcl_string con_file, output_dir, image_file;
+  std::string con_file, output_dir, image_file;
 
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   
   if (argc != 4) {
-    vcl_cout << "Usage: <program name> <image_file> <con_file> <output_dir (binary patch storage will be put here)>\n";
+    std::cout << "Usage: <program name> <image_file> <con_file> <output_dir (binary patch storage will be put here)>\n";
     return -1;
   }
   image_file = argv[1];
@@ -81,10 +81,10 @@ int main(int argc, char *argv[]) {
   
   //: load esfs and create trees
   vsol_polygon_2d_sptr poly = read_con_from_file(con_file.c_str());
-  vcl_cout << "loaded con...\n";
+  std::cout << "loaded con...\n";
 
-  vcl_string::size_type pos = con_file.find_last_of("//");
-  vcl_string only_con_name = con_file.substr(pos, con_file.length());
+  std::string::size_type pos = con_file.find_last_of("//");
+  std::string only_con_name = con_file.substr(pos, con_file.length());
 
    //: load the image
   vil_image_resource_sptr img_sptr = vil_load_image_resource(image_file.c_str());
@@ -108,13 +108,13 @@ int main(int argc, char *argv[]) {
     img_g = vil_plane(img_sptr, 1);
     img_b = vil_plane(img_sptr, 2);
   }
-  vcl_cout << "loaded and processed images...\n";
+  std::cout << "loaded and processed images...\n";
 
 
   // create the output storage class
   dbskr_shock_patch_storage_sptr output = dbskr_shock_patch_storage_new();
-  vcl_srand(int(vcl_time(NULL)));
-  dbskr_shock_patch_sptr sp = new dbskr_shock_patch(int(1000*(vcl_rand()/(RAND_MAX+1.0))), 10);
+  std::srand(int(std::time(NULL)));
+  dbskr_shock_patch_sptr sp = new dbskr_shock_patch(int(1000*(std::rand()/(RAND_MAX+1.0))), 10);
   sp->set_outer_boundary(poly);
 
   if (poly) {
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
     
     char buffer[1000];
     sprintf(buffer, "%d", sp->id());
-    vcl_string cnt_str = buffer;
+    std::string cnt_str = buffer;
 
     vil_save_image_resource(out_img, (output_dir+only_con_name+"_patch_"+cnt_str+".png").c_str()); 
   }

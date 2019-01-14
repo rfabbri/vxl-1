@@ -73,10 +73,10 @@ public:
   
   //: Compute silhouette errors
   static void 
-  compute_silhouette_errors(const vcl_vector<vgl_point_2d<double> >& pts,
-                            const vcl_vector<vgl_vector_2d<double> >& norms,
+  compute_silhouette_errors(const std::vector<vgl_point_2d<double> >& pts,
+                            const std::vector<vgl_vector_2d<double> >& norms,
                             const vgl_polygon<double>& silhouette,
-                            vcl_vector<double>& errors);
+                            std::vector<double>& errors);
   
   //: Estimate the initial M-estimator scale from parameter standard deviations
   virtual double estimate_initial_scale(const modrec_pca_vehicle& mesh,

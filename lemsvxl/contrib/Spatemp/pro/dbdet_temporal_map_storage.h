@@ -7,7 +7,7 @@
 #include <bpro1/bpro1_storage.h>
 #include "dbdet_temporal_map_storage_sptr.h"
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_2d.h>
 
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -31,7 +31,7 @@ public:
   virtual ~dbdet_temporal_map_storage(){}
 
   //: Returns the type string "sel"
-  virtual vcl_string type() const { return "temporalmap"; }
+  virtual std::string type() const { return "temporalmap"; }
 
   //: Return IO version number;
   short version() const;
@@ -41,7 +41,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_temporal_map_storage"; }
+  virtual std::string is_a() const { return "dbdet_temporal_map_storage"; }
 
   // Data Access Functions
 

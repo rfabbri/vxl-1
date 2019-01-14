@@ -2,8 +2,8 @@
 #ifndef __TBS_UTILS_DP_DEF__
 #define __TBS_UTILS_DP_DEF__
 
-//#include <vcl_string.h>
-#include <vcl_vector.h>
+//#include <string>
+#include <vector>
 
 #include "Point.h"
 #include "global.h"
@@ -96,12 +96,12 @@ floatType pointDist(floatType x1, floatType y1, floatType x2, floatType y2) {
   return sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 }
 
-//vcl_vector<vcl_string>  readParamters(int argc, char *argv[])
+//std::vector<std::string>  readParamters(int argc, char *argv[])
 // {
 //   int i;
 //   COUT  << "Reading paramters" << endl;
-//   // vcl_string of paramters: [file1,file2,n11,n12,n21,n22,R1,R2,scale]
-//   vcl_vector<vcl_string> params;
+//   // std::string of paramters: [file1,file2,n11,n12,n21,n22,R1,R2,scale]
+//   std::vector<std::string> params;
 //   for (i=0;i<9;i++)
 //     params.push_back("0");
   
@@ -118,7 +118,7 @@ floatType pointDist(floatType x1, floatType y1, floatType x2, floatType y2) {
 //       if (strcmp( *argv, "f1")== 0){
 //   //COUT << *argv << endl;
 //   //COUT << *++argv << endl;
-//   vcl_string tmp(*++argv);
+//   std::string tmp(*++argv);
 //   params[0] = tmp;
 //       }
 //       else if (strcmp( *argv, "f2")== 0){
@@ -209,7 +209,7 @@ template<class floatType>
 
 */
 
-//map<vcl_string, vcl_vector<vcl_string> > readParamters(int argc, char *argv[]);
+//map<std::string, std::vector<std::string> > readParamters(int argc, char *argv[]);
 
 #endif
 

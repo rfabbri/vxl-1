@@ -16,7 +16,7 @@ static void test_psm_condense_scene()
   START("psm_condense_scene test");
 
   // create a scene
-  vcl_string storage_dir("./psm_condense_scene_test_data");
+  std::string storage_dir("./psm_condense_scene_test_data");
   vul_file::make_directory(storage_dir);
   psm_scene<PSM_APM_SIMPLE_GREY> scene(vgl_point_3d<double>(0,0,0), 1.0, storage_dir, bgeo_lvcs_sptr(), 3);
   // set all cell to zero alpha
@@ -33,7 +33,7 @@ static void test_psm_condense_scene()
   // examine remaining cells
   unsigned int ncells_end = block.size();
 
-  vcl_cout << "ncells_begin = " << ncells_begin << "  ncells_end = " << ncells_end << vcl_endl;
+  std::cout << "ncells_begin = " << ncells_begin << "  ncells_end = " << ncells_end << std::endl;
   TEST_EQUAL("cells condensed to correct number",ncells_end,22);
 
   return;

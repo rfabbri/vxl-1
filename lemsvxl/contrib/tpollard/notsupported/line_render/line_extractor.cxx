@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
 #include <vil/vil_image_view.h>
@@ -10,26 +10,26 @@
 int main( int argc, char* argv[] )
 {
   if( argc!=6 ) {
-    vcl_cout<<"Usage : line_extractor image_dir comp_image line_number degrees_rotated image_skip\n";
+    std::cout<<"Usage : line_extractor image_dir comp_image line_number degrees_rotated image_skip\n";
     return -1;
   }
-  vcl_string image_dir(argv[1]); image_dir += "/*.*";
-  vcl_string comp_image(argv[2]);
+  std::string image_dir(argv[1]); image_dir += "/*.*";
+  std::string comp_image(argv[2]);
   int line_number = atoi(argv[3]);
   float degrees_rotated = atof(argv[4]);
   int image_skip = atoi(argv[5]); if( image_skip < 1 ) image_skip = 1;
 
   // Get the image names.
-  vcl_vector< vcl_string > image_names;
+  std::vector< std::string > image_names;
   int image_counter = image_skip;
   for( vul_file_iterator fit = image_dir; fit; ++fit ){
     if (vul_file::is_directory(fit()))
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
-      vcl_cerr << " cannot read image " << image_name << '\n';
+      std::cerr << " cannot read image " << image_name << '\n';
       continue;
     }
     if( image_counter == image_skip ){
@@ -44,7 +44,7 @@ int main( int argc, char* argv[] )
   for( int i = 0; i < image_names.size(); i++ ){
 
     int image_number = i;
-    vcl_cerr << '\n' << image_names[image_number];
+    std::cerr << '\n' << image_names[image_number];
 
     // Get the angle for this image.
     float this_angle = i*degrees_rotated/(image_names.size()-1.0);

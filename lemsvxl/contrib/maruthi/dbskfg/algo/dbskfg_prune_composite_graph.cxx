@@ -8,8 +8,8 @@
 #include <dbskfg/dbskfg_shock_node.h>
 #include <dbskfg/dbskfg_rag_node.h>
 #include <dbsk2d/dbsk2d_defines.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 dbskfg_prune_composite_graph::dbskfg_prune_composite_graph
 ( 
@@ -84,13 +84,13 @@ void dbskfg_prune_composite_graph::prune_link(dbskfg_shock_link* link)
         ps_dPnCost = cgraph_saliency_map_[link->source()->id()].dPnCost;
     }
 
-    vcl_vector<double> costs;
+    std::vector<double> costs;
     link->splice_cost(costs);
 
     double dOC = costs[0];
     double dNC = costs[1];
     double dPnCost(0.0);
-    dPnCost = vcl_fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
+    dPnCost = std::fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
 
     cgraph_saliency_map_[link->id()].dOC = dOC;
     cgraph_saliency_map_[link->id()].dNC = dNC;
@@ -103,11 +103,11 @@ void dbskfg_prune_composite_graph::update_costs_at_source_sink_nodes()
 {
     //: Return all shock links of this node
     //: inline function
-    vcl_map<unsigned int,dbskfg_shock_link*> shock_links = rag_node_->
+    std::map<unsigned int,dbskfg_shock_link*> shock_links = rag_node_->
         get_shock_links();
 
     //: Create ordered list
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator eit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator eit;
     
     for ( eit = shock_links.begin() ; eit != shock_links.end() ; ++eit)
     {
@@ -139,14 +139,14 @@ void dbskfg_prune_composite_graph::update_costs_at_junctions()
 {
     //: Return all shock links of this node
     //: inline function
-    vcl_map<unsigned int,dbskfg_shock_link*> shock_links = rag_node_->
+    std::map<unsigned int,dbskfg_shock_link*> shock_links = rag_node_->
         get_shock_links();
 
     //: Create ordered list
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator eit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator eit;
     
     // Keep a sorted list by radius
-    vcl_map<double,dbskfg_composite_node_sptr> junction_nodes;
+    std::map<double,dbskfg_composite_node_sptr> junction_nodes;
     for ( eit = shock_links.begin() ; eit != shock_links.end() ; ++eit)
     {
         
@@ -179,7 +179,7 @@ void dbskfg_prune_composite_graph::update_costs_at_junctions()
 
     }
 
-    vcl_map<double,dbskfg_composite_node_sptr>::iterator it;
+    std::map<double,dbskfg_composite_node_sptr>::iterator it;
     for ( it = junction_nodes.begin() ; it != junction_nodes.end() ; ++it)
     {
 

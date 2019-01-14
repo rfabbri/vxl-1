@@ -13,9 +13,9 @@ imgr_image_view_3d_base_sptr
 imgr_scan_images_resource:: get_bounded_view(vgl_box_3d<double> const& bounds) const
 {
   //containers for the two likely image data types
-  vcl_vector<dbil_bounded_image_view<unsigned char>* > char_views_2d;
-  vcl_vector<dbil_bounded_image_view<unsigned short>* > short_views_2d;
-  vcl_vector<dbil_bounded_image_view<double>* > double_view_2d;
+  std::vector<dbil_bounded_image_view<unsigned char>* > char_views_2d;
+  std::vector<dbil_bounded_image_view<unsigned short>* > short_views_2d;
+  std::vector<dbil_bounded_image_view<double>* > double_view_2d;
 
   xscan_scan scan = get_scan();
 
@@ -23,7 +23,7 @@ imgr_scan_images_resource:: get_bounded_view(vgl_box_3d<double> const& bounds) c
   // scan.set_scan_size(1);
   // FOR DEBUGGING
 
-  vcl_vector<vil_image_resource_sptr> resources = get_images();
+  std::vector<vil_image_resource_sptr> resources = get_images();
 
   unsigned long nk = scan.scan_size();
   enum vil_pixel_format format = VIL_PIXEL_FORMAT_UNKNOWN;

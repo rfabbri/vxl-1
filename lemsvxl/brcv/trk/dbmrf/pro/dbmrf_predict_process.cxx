@@ -26,7 +26,7 @@ dbmrf_predict_process::dbmrf_predict_process()
       !parameters()->add( "Min gamma" , "-min_gamma" ,  0.02f ) ||
       !parameters()->add( "Max gamma" , "-max_gamma" ,  0.05f ) ||
       !parameters()->add( "Min size" ,  "-min_size"  ,  5 )  ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -52,7 +52,7 @@ dbmrf_predict_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_predict_process::name()
 {
   return "BMRF Predict";
@@ -60,18 +60,18 @@ dbmrf_predict_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_predict_process::get_input_type()
+std::vector< std::string > dbmrf_predict_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_predict_process::get_output_type()
+std::vector< std::string > dbmrf_predict_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol" );
   return to_return;
 }
@@ -98,7 +98,7 @@ bool
 dbmrf_predict_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -117,13 +117,13 @@ dbmrf_predict_process::execute()
 
   int frame = frame_network->frame();
 
-  vcl_vector< vsol_spatial_object_2d_sptr > curves;
+  std::vector< vsol_spatial_object_2d_sptr > curves;
   for(bmrf_network::seg_node_map::const_iterator n = network->begin(frame);
       n != network->end(frame); ++n){
     bmrf_node_sptr node = n->second;
     bmrf_gamma_func_sptr gamma_func = node->gamma();
     if(!gamma_func){
-      vcl_cout << "skipped\n" <<vcl_endl;
+      std::cout << "skipped\n" <<std::endl;
       continue;
     }
     double g = gamma_func->mean();
@@ -134,8 +134,8 @@ dbmrf_predict_process::execute()
 
     bmrf_epi_seg_sptr t_seg = bmrf_epi_transform(n->first,gamma_func,time,true);
 
-    vcl_vector< vsol_point_2d_sptr > points;
-    for(vcl_vector<bmrf_epi_point_sptr>::const_iterator pi = t_seg->begin();
+    std::vector< vsol_point_2d_sptr > points;
+    for(std::vector<bmrf_epi_point_sptr>::const_iterator pi = t_seg->begin();
         pi != t_seg->end(); ++pi)
     {
       points.push_back(new vsol_point_2d((*pi)->p()));

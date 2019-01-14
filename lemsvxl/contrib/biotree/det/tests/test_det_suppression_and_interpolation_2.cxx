@@ -11,8 +11,8 @@
 #include <biob/biob_grid_worldpt_roster.h>
 #include <vgl/vgl_vector_3d.h>
 #include <det/det_suppression_and_interpolation.h>
-#include <vcl_iostream.h>
-//#include <vcl_fstream.h>
+#include <iostream>
+//#include <fstream>
 #include <vsl/vsl_binary_io.h>
 #include <vsol/vsol_cylinder.h>
 #include <vsol/vsol_cylinder_sptr.h>
@@ -20,8 +20,8 @@
 
 static void test_det_suppression_and_interpolation_2(){
 
-    vcl_FILE *xmlFile;
-    xmlFile = vcl_fopen(fname.c_str(), "r");
+    std::FILE *xmlFile;
+    xmlFile = std::fopen(fname.c_str(), "r");
     parser.parseFile(xmlFile);
 
   double r[] = {738275.288758, 767711.099434, 776028.708381, 762280.705338, 726309.258166, 668884.505408, 591912.938476, 498559.621718, 393141.616198, 280864.922805, 167281.583462, 
@@ -167,7 +167,7 @@ static void test_det_suppression_and_interpolation_2(){
     for(int j=0; j<dim; j++) {
       for(int k=0; k<dim; k++) {
         double strength = r[counter++];
-        vcl_cout << "(" << i << ", " << j << ", " << k << "): " << strength << "\n";
+        std::cout << "(" << i << ", " << j << ", " << k << "): " << strength << "\n";
         field.values()[(grid->index_3d_2_1d(i,j,k)).index()] = strength * vertical;
       }
     }
@@ -176,8 +176,8 @@ static void test_det_suppression_and_interpolation_2(){
   biob_worldpt_field<vgl_vector_3d<double> >  new_field = sup.apply(field, 1.5, 1.5, 2.*3.14*40./360, .4);
   
   // create cylinder and write to binary stream
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
   vsl_b_ofstream stream("cylinders_after_suppression");
   
   const double CYL_RADIUS = 0.5;

@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -30,15 +30,15 @@
 //: Constructor
 dbdet_composite_edge_detection_process::dbdet_composite_edge_detection_process() : num_frames_(0)
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
-  vcl_vector<vcl_string> edge_output_type;
+  std::vector<std::string> edge_output_type;
   edge_output_type.push_back("Points");            //0
   edge_output_type.push_back("Line segments");     //1
   //edge_output_type.push_back("Other");           //2
@@ -54,7 +54,7 @@ dbdet_composite_edge_detection_process::dbdet_composite_edge_detection_process()
       !parameters()->add( "Take average of edgels on the same pixel?", "-average", false) ||
       !parameters()->add( "Split the edgels onto 3 frames?", "-split", false) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -74,7 +74,7 @@ dbdet_composite_edge_detection_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_composite_edge_detection_process::name()
 {
   return "RGB Composite Edge Detector";
@@ -104,18 +104,18 @@ dbdet_composite_edge_detection_process::clear_output(int resize)
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_composite_edge_detection_process::get_input_type()
+std::vector< std::string > dbdet_composite_edge_detection_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_composite_edge_detection_process::get_output_type()
+std::vector< std::string > dbdet_composite_edge_detection_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   //to_return.push_back( "vsol2D" );
   to_return.push_back( "edge_map" );
   return to_return;
@@ -127,14 +127,14 @@ bool
 dbdet_composite_edge_detection_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_composite_edge_detection_process::execute() - not exactly one"
+    std::cout << "In dbdet_composite_edge_detection_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Third_order edge detection...";
-  vcl_cout.flush();
+  std::cout << "Third_order edge detection...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -171,12 +171,12 @@ dbdet_composite_edge_detection_process::execute()
     dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
     output_edgemap->set_edgemap(edge_map);
     if (output_data_.size() == 0) 
-      output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemap));
+      output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemap));
     else
       output_data_[0].push_back(output_edgemap);
 
   } else if (combine_channels && image_view.nplanes() == 3) {
-    vcl_cout << "combining edgels from R, G and B channels!\n";
+    std::cout << "combining edgels from R, G and B channels!\n";
     vil_image_resource_sptr Rimg = vil_plane(image_sptr, 0);
     vil_image_resource_sptr Gimg = vil_plane(image_sptr, 1);
     vil_image_resource_sptr Bimg = vil_plane(image_sptr, 2);
@@ -189,7 +189,7 @@ dbdet_composite_edge_detection_process::execute()
 
     if (edge_mapR->width() != edge_mapG->width() || edge_mapR->width() != edge_mapB->width() ||
         edge_mapR->height() != edge_mapG->height() || edge_mapR->height() != edge_mapB->height()) {
-        vcl_cout << "Inconsistencies in edge map sizes of color channels!\n";
+        std::cout << "Inconsistencies in edge map sizes of color channels!\n";
         return false;
     }
 
@@ -257,17 +257,17 @@ dbdet_composite_edge_detection_process::execute()
         num_frames_ = 3;
 
       if (output_data_.size() == 0) {
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapR));
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapG));
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapB));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapR));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapG));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapB));
       } else if (output_data_.size() == 1) {
         output_data_[0].push_back(output_edgemapR);
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapG));
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapB));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapG));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapB));
       } else if (output_data_.size() == 2) {
         output_data_[0].push_back(output_edgemapR);
         output_data_[1].push_back(output_edgemapG);
-        output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemapB));
+        output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemapB));
       } else if (output_data_.size() > 2) {
         output_data_[0].push_back(output_edgemapR);
         output_data_[1].push_back(output_edgemapG);
@@ -277,12 +277,12 @@ dbdet_composite_edge_detection_process::execute()
     }
 
   } else {
-    vcl_cout << "the image does not have 3 channels, cannot combine edgels\n";
+    std::cout << "the image does not have 3 channels, cannot combine edgels\n";
     return false;
   }
 
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout.flush();
+  std::cout << "done!" << std::endl;
+  std::cout.flush();
 /*
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
@@ -290,15 +290,15 @@ dbdet_composite_edge_detection_process::execute()
   output_data_[0].push_back(output_edgemap);
 */
   ////output the edgels
-  //vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+  //std::vector< vsol_spatial_object_2d_sptr > edgels;
   //for (unsigned i=0; i<edge_locations.size(); i++){
   //  if (out_type==1)//lines
   //  { 
   //    double edge_len = 0.5/scale;
-  //    vsol_point_2d_sptr line_start = new vsol_point_2d(edge_locations[i].x() - edge_len*vcl_cos(edge_orientations[i]), 
-  //                                                      edge_locations[i].y() - edge_len*vcl_sin(edge_orientations[i]));
-  //    vsol_point_2d_sptr line_end = new vsol_point_2d(edge_locations[i].x() + edge_len*vcl_cos(edge_orientations[i]), 
-  //                                                    edge_locations[i].y() + edge_len*vcl_sin(edge_orientations[i]));
+  //    vsol_point_2d_sptr line_start = new vsol_point_2d(edge_locations[i].x() - edge_len*std::cos(edge_orientations[i]), 
+  //                                                      edge_locations[i].y() - edge_len*std::sin(edge_orientations[i]));
+  //    vsol_point_2d_sptr line_end = new vsol_point_2d(edge_locations[i].x() + edge_len*std::cos(edge_orientations[i]), 
+  //                                                    edge_locations[i].y() + edge_len*std::sin(edge_orientations[i]));
   //    vsol_line_2d_sptr new_line = new vsol_line_2d(line_start, line_end);
   //    edgels.push_back(new_line->cast_to_spatial_object());  
   //  }

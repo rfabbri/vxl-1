@@ -60,7 +60,7 @@ dbctrk_process::dbctrk_process() : bpro1_process(),dp(),tp(),tracker_(NULL)
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     else
     {
@@ -94,10 +94,10 @@ dbctrk_process::clone() const
 /*************************************************************************
 * Function Name: dbctrk_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbctrk_process::name()
 {
     return "Curve Tracking";
@@ -107,12 +107,12 @@ dbctrk_process::name()
 /*************************************************************************
 * Function Name: ddbctrk_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbctrk_process::get_input_type()
+std::vector< std::string > dbctrk_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     bool issel=false;
     parameters()->get_value( "-ssel" ,  issel);
     bool isvsol=false;
@@ -131,12 +131,12 @@ vcl_vector< vcl_string > dbctrk_process::get_input_type()
 /*************************************************************************
 * Function Name: dbctrk_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbctrk_process::get_output_type()
+std::vector< std::string > dbctrk_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "ctrk" );
         to_return.push_back( "vsol2D" );
 
@@ -168,7 +168,7 @@ bool
 dbctrk_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbctrk_process::execute() - not exactly one"
+        std::cout << "In dbctrk_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -192,7 +192,7 @@ dbctrk_process::execute()
     }
     else
     {
-        vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+        std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
         return false;
     }
 
@@ -275,9 +275,9 @@ dbctrk_process::execute()
             tracker_->plane1.push_back(p1);
             tracker_->plane2.push_back(p2);
     }
-    vcl_vector<vtol_edge_2d_sptr> ecl;
+    std::vector<vtol_edge_2d_sptr> ecl;
     ecl.clear();
-    vcl_vector<vsol_spatial_object_2d_sptr> contours;
+    std::vector<vsol_spatial_object_2d_sptr> contours;
 
     bool issel=false;
     parameters()->get_value( "-ssel" ,  issel);
@@ -292,9 +292,9 @@ dbctrk_process::execute()
 
         for(dbdet_edgel_chain_list_iter iter=cfg.frags.begin();iter!=cfg.frags.end();iter++)
         {
-            vcl_deque<dbdet_edgel*>::iterator lit;
-            vcl_vector<vdgl_edgel> edgel_chain;
-            vcl_vector<vsol_point_2d_sptr> points;
+            std::deque<dbdet_edgel*>::iterator lit;
+            std::vector<vdgl_edgel> edgel_chain;
+            std::vector<vsol_point_2d_sptr> points;
 
             if ((*iter)->edgels.size()>tp.min_length_of_curves)
             {
@@ -325,7 +325,7 @@ dbctrk_process::execute()
     sdet_detector detector(dp);
     detector.SetImage(img);
     detector.DoContour();
-    vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+    std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
 
 
 
@@ -349,7 +349,7 @@ dbctrk_process::execute()
     {
         c  = (*edges)[i]->curve();
         ec=c->cast_to_vdgl_digital_curve()->get_interpolator()->get_edgel_chain();
-        vcl_vector<vsol_point_2d_sptr> points;
+        std::vector<vsol_point_2d_sptr> points;
         for(unsigned j=0;j<ec->size();j++)
         {
             points.push_back(new vsol_point_2d(ec->edgel(j).get_pt()));

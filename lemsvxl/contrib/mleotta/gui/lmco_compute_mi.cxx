@@ -4,7 +4,7 @@
 // \file
 // \author Matt Leotta
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_bilin_interp.h>
 #include <imesh/algo/imesh_project.h>
@@ -44,13 +44,13 @@ double mesh_mi_cost_func::f(vnl_vector<double> const& x)
   unsigned int ni = eo_data1_.ni();
   unsigned int nj = eo_data1_.nj();
   
-  vcl_vector<vgl_point_2d<double> > img_pts1, img_pts2;
+  std::vector<vgl_point_2d<double> > img_pts1, img_pts2;
   compute_point_mapping(cam1, cam2_, ni, nj, step_, 
                         mesh_, mesh_.faces().normals(), img_pts1, img_pts2);
   
   
   // sample IR and EO intensities
-  vcl_vector<vcl_vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
+  std::vector<std::vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
   for(unsigned i=0; i<3; ++i){
     bilin_sample(img_pts1, ir_data1_, d1_ir[i], i);
     bilin_sample(img_pts1, eo_data1_, d1_eo[i], i);
@@ -113,13 +113,13 @@ double mesh_joint_mi_cost_func::f(vnl_vector<double> const& x)
   unsigned int ni = eo_data1_.ni();
   unsigned int nj = eo_data1_.nj();
   
-  vcl_vector<vgl_point_2d<double> > img_pts1, img_pts2;
+  std::vector<vgl_point_2d<double> > img_pts1, img_pts2;
   compute_point_mapping(cam1, cam2, ni, nj, step_, 
                         mesh_, normals_, img_pts1, img_pts2);
 
   
   // sample IR and EO intensities
-  vcl_vector<vcl_vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
+  std::vector<std::vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
   for(unsigned i=0; i<3; ++i){
     bilin_sample(img_pts1, ir_data1_, d1_ir[i], i);
     bilin_sample(img_pts1, eo_data1_, d1_eo[i], i);
@@ -168,26 +168,26 @@ void compute_point_mapping(const vpgl_perspective_camera<double>& cam1,
                            const vpgl_perspective_camera<double>& cam2,
                            unsigned int ni, unsigned int nj, double step,
                            const imesh_mesh& mesh,
-                           const vcl_vector<vgl_vector_3d<double> >& normals,
-                           vcl_vector<vgl_point_2d<double> >& img_pts1, 
-                           vcl_vector<vgl_point_2d<double> >& img_pts2)
+                           const std::vector<vgl_vector_3d<double> >& normals,
+                           std::vector<vgl_point_2d<double> >& img_pts1, 
+                           std::vector<vgl_point_2d<double> >& img_pts2)
 {  
   
   // find a bounding box of the mesh in img1
-  vcl_vector<vgl_point_2d<double> > img_pts;
+  std::vector<vgl_point_2d<double> > img_pts;
   imesh_project_verts(mesh.vertices<3>(), cam1, img_pts);
   vgl_box_2d<unsigned int> bbox(0, ni, 0, nj);
   imesh_projection_bounds(img_pts, bbox);
   
   // generate sample points on a grid
-  vcl_vector< vgl_point_2d<double> > grid;
+  std::vector< vgl_point_2d<double> > grid;
   for(double i=bbox.min_x(); i<= bbox.max_x(); i+=step)
     for(double j=bbox.min_y(); j<= bbox.max_y(); j+=step)
       grid.push_back(vgl_point_2d<double>(i,j));
   
   // backproject the grid points onto the mesh
-  vcl_vector<unsigned int > idx_2d;
-  vcl_vector<vgl_point_3d<double> > pts_3d;
+  std::vector<unsigned int > idx_2d;
+  std::vector<vgl_point_3d<double> > pts_3d;
   imesh_project_onto_mesh(mesh, normals, cam1,
                           grid, idx_2d, pts_3d);
   
@@ -197,15 +197,15 @@ void compute_point_mapping(const vpgl_perspective_camera<double>& cam1,
     img_pts.push_back(grid[idx_2d[i]]);
   
   
-  vcl_vector<vgl_point_2d<double> > new_img_grid;
+  std::vector<vgl_point_2d<double> > new_img_grid;
   for(unsigned int i=0; i<pts_3d.size(); ++i)
   {
     new_img_grid.push_back(cam2(vgl_homg_point_3d<double>(pts_3d[i])));
   }
   
   //check for occuluded points
-  vcl_vector<unsigned int > new_idx_2d;
-  vcl_vector<vgl_point_3d<double> > new_pts_3d;
+  std::vector<unsigned int > new_idx_2d;
+  std::vector<vgl_point_3d<double> > new_pts_3d;
   imesh_project_onto_mesh(mesh, normals, cam2,
                           new_img_grid, new_idx_2d, new_pts_3d);
   assert(pts_3d.size() == new_pts_3d.size());
@@ -225,12 +225,12 @@ void compute_point_mapping(const vpgl_perspective_camera<double>& cam1,
 
 //: compute mutual info by sampling the images at the specified points
 double compute_mi_at_pts(const vil_image_resource_sptr& img1,
-                         const vcl_vector<vgl_point_2d<double> >& pts1,
+                         const std::vector<vgl_point_2d<double> >& pts1,
                          const vil_image_resource_sptr& img2,
-                         const vcl_vector<vgl_point_2d<double> >& pts2,
+                         const std::vector<vgl_point_2d<double> >& pts2,
                                unsigned int plane)
 {
-  vcl_vector<double> d1, d2;
+  std::vector<double> d1, d2;
   bilin_sample(pts1, img1, d1, plane);
   bilin_sample(pts2, img2, d2, plane);
   return mutual_info(d1,d2);
@@ -241,9 +241,9 @@ double compute_mi_at_pts(const vil_image_resource_sptr& img1,
 
 //: Sample the image by bilinear interpolation at the requested points
 //  sampling is done in the desired plane, values are scaled into [0 1]
-void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
+void bilin_sample(const std::vector<vgl_point_2d<double> >& pts,
                   const vil_image_resource_sptr& image,
-                        vcl_vector<double>& data,
+                        std::vector<double>& data,
                         unsigned int plane)
 {
   if (image->pixel_format()==VIL_PIXEL_FORMAT_BYTE)
@@ -269,9 +269,9 @@ void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
 
 //: Sample the image by bilinear interpolation at the requested points
 //  sampling is done in the desired plane
-void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
+void bilin_sample(const std::vector<vgl_point_2d<double> >& pts,
                   const vil_image_view<float>& img,
-                        vcl_vector<double>& data,
+                        std::vector<double>& data,
                         unsigned int plane)
 {
   for(unsigned n=0; n<pts.size(); ++n){
@@ -285,17 +285,17 @@ void bilin_sample(const vcl_vector<vgl_point_2d<double> >& pts,
 //: Compute the mutual information between vectors of corresponding data
 //  it is assumed that the data are normalized to the range [0 1]
 //  \param nbins is the number of bins used in the range [0 1]
-double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, unsigned nbins)
+double mutual_info(const std::vector<double>& d1, const std::vector<double>& d2, unsigned nbins)
 {
   assert(d1.size() == d2.size());
   //joint histogram
-  vcl_vector< vcl_vector< double > > jhist(nbins, vcl_vector< double >(nbins, 0.0));
+  std::vector< std::vector< double > > jhist(nbins, std::vector< double >(nbins, 0.0));
   for(unsigned int n = 0; n<d1.size(); ++n){
     assert(d1[n] >= 0.0 && d1[n] <= 1.0);
-    unsigned int i = static_cast<unsigned int>(vcl_floor(nbins*d1[n]));
+    unsigned int i = static_cast<unsigned int>(std::floor(nbins*d1[n]));
     if(i == nbins) --i; 
     assert(d2[n] >= 0.0 && d2[n] <= 1.0);
-    unsigned int j = static_cast<unsigned int>(vcl_floor(nbins*d2[n]));
+    unsigned int j = static_cast<unsigned int>(std::floor(nbins*d2[n]));
     if(j == nbins) --j; 
     jhist[i][j] += 1.0/d1.size(); 
   }
@@ -304,7 +304,7 @@ double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, u
   for(unsigned int i = 0; i<nbins; ++i){
     for(unsigned int j = 0; j<nbins; ++j){
       double prob = jhist[i][j];
-      H_ij += -(prob?prob*vcl_log(prob):0);
+      H_ij += -(prob?prob*std::log(prob):0);
     }
   }
   
@@ -314,7 +314,7 @@ double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, u
     for(unsigned int j = 0; j<nbins; ++j){
       prob += jhist[i][j];
     }
-    H_i += -(prob?prob*vcl_log(prob):0);
+    H_i += -(prob?prob*std::log(prob):0);
   }
   
   double H_j = 0.0;
@@ -323,7 +323,7 @@ double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, u
     for(unsigned int i = 0; i<nbins; ++i){
       prob += jhist[i][j];
     }
-    H_j += -(prob?prob*vcl_log(prob):0);
+    H_j += -(prob?prob*std::log(prob):0);
   }
   
   return (H_i + H_j - H_ij)/0.69314718056;
@@ -333,8 +333,8 @@ double mutual_info(const vcl_vector<double>& d1, const vcl_vector<double>& d2, u
 //: Compute the mutual information between vectors of corresponding data with weights
 //  it is assumed that the data are normalized to the range [0 1]
 //  \param nbins is the number of bins used in the range [0 1]
-double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<double>& d2, 
-                            const vcl_vector<double>& w1, const vcl_vector<double>& w2, 
+double mutual_info_weighted(const std::vector<double>& d1, const std::vector<double>& d2, 
+                            const std::vector<double>& w1, const std::vector<double>& w2, 
                             unsigned nbins)
 {
   assert(d1.size() == d2.size());
@@ -342,14 +342,14 @@ double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<doubl
   assert(d1.size() == w1.size());
   
   //joint histogram
-  vcl_vector< vcl_vector< double > > jhist(nbins, vcl_vector< double >(nbins, 0.0));
+  std::vector< std::vector< double > > jhist(nbins, std::vector< double >(nbins, 0.0));
   double total_weight = 0.0;
   for(unsigned int n = 0; n<d1.size(); ++n){
     assert(d1[n] >= 0.0 && d1[n] <= 1.0 );
-    unsigned int i = static_cast<unsigned int>(vcl_floor(nbins*d1[n]));
+    unsigned int i = static_cast<unsigned int>(std::floor(nbins*d1[n]));
     if(i == nbins) --i; 
     assert(d2[n] >= 0.0 && d2[n] <= 1.0);
-    unsigned int j = static_cast<unsigned int>(vcl_floor(nbins*d2[n]));
+    unsigned int j = static_cast<unsigned int>(std::floor(nbins*d2[n]));
     if(j == nbins) --j; 
     double w = w1[n]*w2[n]; 
     jhist[i][j] += w;
@@ -363,7 +363,7 @@ double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<doubl
     for(unsigned int j = 0; j<nbins; ++j){
       jhist[i][j] /= total_weight;
       double prob = jhist[i][j];
-      H_ij += -(prob?prob*vcl_log(prob):0);
+      H_ij += -(prob?prob*std::log(prob):0);
     }
   }
   
@@ -373,7 +373,7 @@ double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<doubl
     for(unsigned int j = 0; j<nbins; ++j){
       prob += jhist[i][j];
     }
-    H_i += -(prob?prob*vcl_log(prob):0);
+    H_i += -(prob?prob*std::log(prob):0);
   }
   
   double H_j = 0.0;
@@ -382,7 +382,7 @@ double mutual_info_weighted(const vcl_vector<double>& d1, const vcl_vector<doubl
     for(unsigned int i = 0; i<nbins; ++i){
       prob += jhist[i][j];
     }
-    H_j += -(prob?prob*vcl_log(prob):0);
+    H_j += -(prob?prob*std::log(prob):0);
   }
   
   return (H_i + H_j - H_ij)/0.69314718056;

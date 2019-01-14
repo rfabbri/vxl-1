@@ -18,7 +18,7 @@
 //#=====================================================================================
 
 #include <vnl/vnl_double_3x3.h>
-#include <vcl_vector.h>
+#include <vector>
 
 // a structure used to store the lens distortion parameters
 // It provides facility for setting it on and off.
@@ -53,7 +53,7 @@ class bcal_camera
  public:
   int getID() const { return id_;}
   vnl_double_3x3 get_intrisic_matrix() const { return k_;}
-  void set_lens_model(vcl_vector<bool> flags);
+  void set_lens_model(std::vector<bool> flags);
 
   void set_intrisic_matrix(vnl_double_3x3 k) {k_ = k;}
 

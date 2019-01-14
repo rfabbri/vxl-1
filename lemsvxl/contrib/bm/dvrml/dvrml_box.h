@@ -16,9 +16,9 @@ public:
 
     ~dvrml_box(){}
 
-    virtual void draw( vcl_ostream& os );
+    virtual void draw( std::ostream& os );
 
-    virtual vcl_string shape(){ return "box"; }
+    virtual std::string shape(){ return "box"; }
                 
 };
 

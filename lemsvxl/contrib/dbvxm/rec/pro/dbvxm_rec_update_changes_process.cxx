@@ -83,7 +83,7 @@ bool dbvxm_rec_update_changes_process::execute()
   //fgbgp.set_sigma(0.02);
   //fgbgp.set_sigma(0.2);
   fgbgp.set_sigma(sigma);
-  vcl_cout << "\t update process running with sigma: " << sigma << vcl_endl;
+  std::cout << "\t update process running with sigma: " << sigma << std::endl;
 
   dbvxm_bayesian_propagation bp(orig_img, change_map_f); 
   bp.initialize_bg_map(); // just turning change_map_f (a density map) into a probability map with values in [0,1]
@@ -100,7 +100,7 @@ bool dbvxm_rec_update_changes_process::execute()
   brdb_value_sptr output2 = new brdb_value_t<vil_image_view_base_sptr>(out_map_sptr2);
   output_data_[1] = output2;
 
-  vcl_cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
 
   return true;
 }

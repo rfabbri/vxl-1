@@ -9,7 +9,7 @@
 // 
 //   This is....
 
-#include <vcl_vector.h>
+#include <vector>
 #include "bvaml_params.h"
 #include "bvaml_voxel.h"
 
@@ -20,7 +20,7 @@ public:
 
   bvaml_supervoxel(
     bvaml_params* params,
-    vcl_string file_namebase );
+    std::string file_namebase );
 
   ~bvaml_supervoxel();
 
@@ -51,19 +51,19 @@ protected:
   float** appearance_cache_;
 
   bool load_cache( // return true if initialized.
-    vcl_string file_name,
+    std::string file_name,
     int data_size,
     float*& cache,
     bool allocate_if_needed = true );
   void save_cache(
-    vcl_string file_name,
+    std::string file_name,
     int data_size,
     float*& cache );
 
-  vcl_string file_namebase_;
-  vcl_string occupancy_filename();
-  vcl_string misc_filename();
-  vcl_string appearance_filename( int i );
+  std::string file_namebase_;
+  std::string occupancy_filename();
+  std::string misc_filename();
+  std::string appearance_filename( int i );
 
   vnl_vector<int> appearance_sizes_;
   vnl_vector<int> appearance_ids_;

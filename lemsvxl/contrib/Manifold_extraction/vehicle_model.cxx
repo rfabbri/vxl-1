@@ -1,7 +1,7 @@
 #include "vehicle_model.h"
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgl/vgl_homg_point_2d.h>
 
 //helper function to transform the model
@@ -85,50 +85,50 @@ vehicle_model::vehicle_model(vsol_rectangle_2d  engine,vsol_rectangle_2d  body,v
         }
 
 
-    vcl_ostream& vehicle_model::print(vcl_ostream& out) const
+    std::ostream& vehicle_model::print(std::ostream& out) const
         {
-        out << engine_.p0()->x() <<" " <<engine_.p0()->y() << " " << vcl_endl;
-        out << engine_.p1()->x() <<" " <<engine_.p1()->y() << " " << vcl_endl;
-        out << engine_.p2()->x() <<" " <<engine_.p2()->y() << " " << vcl_endl;
-        out << engine_.p3()->x() <<" " <<engine_.p3()->y() << " " << vcl_endl;
+        out << engine_.p0()->x() <<" " <<engine_.p0()->y() << " " << std::endl;
+        out << engine_.p1()->x() <<" " <<engine_.p1()->y() << " " << std::endl;
+        out << engine_.p2()->x() <<" " <<engine_.p2()->y() << " " << std::endl;
+        out << engine_.p3()->x() <<" " <<engine_.p3()->y() << " " << std::endl;
 
-        out << body_.p0()->x() <<" " <<body_.p0()->y() << " " << vcl_endl;
-        out << body_.p1()->x() <<" " <<body_.p1()->y() << " " << vcl_endl;
-        out << body_.p2()->x() <<" " <<body_.p2()->y() << " " << vcl_endl;
-        out << body_.p3()->x() <<" " <<body_.p3()->y() << " " << vcl_endl;
+        out << body_.p0()->x() <<" " <<body_.p0()->y() << " " << std::endl;
+        out << body_.p1()->x() <<" " <<body_.p1()->y() << " " << std::endl;
+        out << body_.p2()->x() <<" " <<body_.p2()->y() << " " << std::endl;
+        out << body_.p3()->x() <<" " <<body_.p3()->y() << " " << std::endl;
 
-        out << rear_.p0()->x() <<" " <<rear_.p0()->y() << " " << vcl_endl;
-        out << rear_.p1()->x() <<" " <<rear_.p1()->y() << " " << vcl_endl;
-        out << rear_.p2()->x() <<" " <<rear_.p2()->y() << " " << vcl_endl;
-        out << rear_.p3()->x() <<" " <<rear_.p3()->y() << " " << vcl_endl;
+        out << rear_.p0()->x() <<" " <<rear_.p0()->y() << " " << std::endl;
+        out << rear_.p1()->x() <<" " <<rear_.p1()->y() << " " << std::endl;
+        out << rear_.p2()->x() <<" " <<rear_.p2()->y() << " " << std::endl;
+        out << rear_.p3()->x() <<" " <<rear_.p3()->y() << " " << std::endl;
 
         return out;
         }
 
-      void vehicle_model::vrml_print(vcl_ostream& out) 
+      void vehicle_model::vrml_print(std::ostream& out) 
         {
-        out << engine_.p0()->x() <<" " <<engine_.p0()->y() << " " << "1" << vcl_endl;
-        out << engine_.p1()->x() <<" " <<engine_.p1()->y() << " " <<  "1" << vcl_endl;
-        out << engine_.p2()->x() <<" " <<engine_.p2()->y() << " " << "1" <<vcl_endl;
-        out << engine_.p3()->x() <<" " <<engine_.p3()->y() << " " << "1" <<vcl_endl;
+        out << engine_.p0()->x() <<" " <<engine_.p0()->y() << " " << "1" << std::endl;
+        out << engine_.p1()->x() <<" " <<engine_.p1()->y() << " " <<  "1" << std::endl;
+        out << engine_.p2()->x() <<" " <<engine_.p2()->y() << " " << "1" <<std::endl;
+        out << engine_.p3()->x() <<" " <<engine_.p3()->y() << " " << "1" <<std::endl;
 
-        out << body_.p0()->x() <<" " <<body_.p0()->y() << " " << "1" <<vcl_endl;
-        out << body_.p1()->x() <<" " <<body_.p1()->y() << " " << "1" <<vcl_endl;
-        out << body_.p2()->x() <<" " <<body_.p2()->y() << " " << "1" <<vcl_endl;
-        out << body_.p3()->x() <<" " <<body_.p3()->y() << " " << "1" <<vcl_endl;
+        out << body_.p0()->x() <<" " <<body_.p0()->y() << " " << "1" <<std::endl;
+        out << body_.p1()->x() <<" " <<body_.p1()->y() << " " << "1" <<std::endl;
+        out << body_.p2()->x() <<" " <<body_.p2()->y() << " " << "1" <<std::endl;
+        out << body_.p3()->x() <<" " <<body_.p3()->y() << " " << "1" <<std::endl;
 
-        out << rear_.p0()->x() <<" " <<rear_.p0()->y() << " " << "1" <<vcl_endl;
-        out << rear_.p1()->x() <<" " <<rear_.p1()->y() << " " << "1" <<vcl_endl;
-        out << rear_.p2()->x() <<" " <<rear_.p2()->y() << " " << "1" <<vcl_endl;
-        out << rear_.p3()->x() <<" " <<rear_.p3()->y() << " " << "1" <<vcl_endl;
+        out << rear_.p0()->x() <<" " <<rear_.p0()->y() << " " << "1" <<std::endl;
+        out << rear_.p1()->x() <<" " <<rear_.p1()->y() << " " << "1" <<std::endl;
+        out << rear_.p2()->x() <<" " <<rear_.p2()->y() << " " << "1" <<std::endl;
+        out << rear_.p3()->x() <<" " <<rear_.p3()->y() << " " << "1" <<std::endl;
 
         }
 
-    vcl_istream& vehicle_model::read(vcl_istream& in) const
+    std::istream& vehicle_model::read(std::istream& in) const
         {
         int j,k;
         double x,y;
-        vcl_vector<vsol_rectangle_2d> rec_vec;
+        std::vector<vsol_rectangle_2d> rec_vec;
         //reading the three rectangles..the engine,box and the rear
         for (j =0;j<3;j++)
             {  
@@ -198,12 +198,12 @@ vehicle_model::vehicle_model(vsol_rectangle_2d  engine,vsol_rectangle_2d  body,v
         }
 
 
-    vcl_ostream& operator<<(vcl_ostream& out,vehicle_model const& M)
+    std::ostream& operator<<(std::ostream& out,vehicle_model const& M)
         {
         return M.print(out);
         }
 
-    vcl_istream& operator>>(vcl_istream& in,vehicle_model &M)
+    std::istream& operator>>(std::istream& in,vehicle_model &M)
         {
         return M.read(in);
         }

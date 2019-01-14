@@ -22,7 +22,7 @@ feature_base_new()
 }
 
 
-void dbinfo_feature_base::print(vcl_ostream& os) const
+void dbinfo_feature_base::print(std::ostream& os) const
 {
   os << this->is_a() << " [\n"
      << "margin " << margin_ << '\n';

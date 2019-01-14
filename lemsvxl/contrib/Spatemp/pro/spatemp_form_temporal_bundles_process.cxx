@@ -32,7 +32,7 @@
 //: Constructor
 spatemp_form_temporal_bundles_process::spatemp_form_temporal_bundles_process(void): bpro1_process()
     {
-        vcl_vector<vcl_string> model_choices;
+        std::vector<std::string> model_choices;
         model_choices.push_back("constant_velocity");                   //0
         model_choices.push_back("normal_velocity");                     //1
 
@@ -54,7 +54,7 @@ spatemp_form_temporal_bundles_process::~spatemp_form_temporal_bundles_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 spatemp_form_temporal_bundles_process::name()
     {
     return "Form Temporal Bundles";
@@ -87,18 +87,18 @@ spatemp_form_temporal_bundles_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > spatemp_form_temporal_bundles_process::get_input_type()
+std::vector< std::string > spatemp_form_temporal_bundles_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "sel" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > spatemp_form_temporal_bundles_process::get_output_type()
+std::vector< std::string > spatemp_form_temporal_bundles_process::get_output_type()
     {  
-        vcl_vector<vcl_string > to_return;
+        std::vector<std::string > to_return;
         to_return.push_back( "temporalmap" );
         return to_return;
     }
@@ -130,8 +130,8 @@ spatemp_form_temporal_bundles_process::execute()
 
         dbdet_temporal_map_storage_sptr tmap_storage=dbdet_temporal_map_storage_new();
 
-        vcl_map<int,dbdet_curvelet_map*> neighbor_cmap;
-        vcl_map<int,dbdet_edgemap_sptr> neighbor_emap;
+        std::map<int,dbdet_curvelet_map*> neighbor_cmap;
+        std::map<int,dbdet_edgemap_sptr> neighbor_emap;
         dbdet_temporal_map_sptr tmap;
         for (int i =0;i<2*nframes+1;i++){
             // get vsol from the storage class

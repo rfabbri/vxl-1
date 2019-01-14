@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cassert>
 #include <vnl/vnl_file_matrix.h>
 #include <vil/vil_convert.h>
 
@@ -97,16 +97,16 @@ vil_image_view<double> dbdet_filter_2d::applyPadded19(vil_image_view<vxl_byte> i
 
 
 
-dbdet_filter_bank::dbdet_filter_bank(vcl_string baseDir)
+dbdet_filter_bank::dbdet_filter_bank(std::string baseDir)
 {
   filtersMaxSize = 0;
-  vcl_ifstream filterFiles((baseDir + "/filter_list.txt").c_str());
+  std::ifstream filterFiles((baseDir + "/filter_list.txt").c_str());
   if (filterFiles.good())
   {
-    vcl_string line;
+    std::string line;
     while (!filterFiles.eof())
     {
-      vcl_getline(filterFiles, line);
+      std::getline(filterFiles, line);
       if(line.length() > 0) 
       {
         line = baseDir + "/" + line;
@@ -124,9 +124,9 @@ int dbdet_filter_bank::numFilters()
   return filters.size();
 }
 
-vcl_vector<vil_image_view<double> > dbdet_filter_bank::decompose(vil_image_view<vil_rgb<vxl_byte> > image)
+std::vector<vil_image_view<double> > dbdet_filter_bank::decompose(vil_image_view<vil_rgb<vxl_byte> > image)
 {
-  vcl_vector<vil_image_view<double> > ret;
+  std::vector<vil_image_view<double> > ret;
   ret.resize(filters.size());
   int padSize = filtersMaxSize / 2;
   vil_image_view<vxl_byte> grey_img;

@@ -44,14 +44,14 @@ public:
   //: Destructor
   virtual ~dbsk2d_shock_storage();
 
-  virtual vcl_string type() const { return "shock"; }
+  virtual std::string type() const { return "shock"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbsk2d_shock_storage"; }
+  virtual std::string is_a() const { return "dbsk2d_shock_storage"; }
 
   //: get the boundary
   dbsk2d_boundary_sptr get_boundary() { return boundary_; }

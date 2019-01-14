@@ -14,12 +14,12 @@
 #ifndef DBORL_SEARCH_INDEX_FILE_H_
 #define DBORL_SEARCH_INDEX_FILE_H_
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <dborl/dborl_index_query.h>
 
-vcl_vector<vcl_string> dborl_get_assoc_file_paths(const vcl_string& index_file_path, dborl_index_query& query);
-vcl_vector<vcl_string> dborl_get_object_folders(const vcl_string& index_file_path, dborl_index_query& query);
-vcl_vector<vcl_string> dborl_get_object_full_paths(const vcl_string& index_file_path, dborl_index_query& query, vcl_string ext);
+std::vector<std::string> dborl_get_assoc_file_paths(const std::string& index_file_path, dborl_index_query& query);
+std::vector<std::string> dborl_get_object_folders(const std::string& index_file_path, dborl_index_query& query);
+std::vector<std::string> dborl_get_object_full_paths(const std::string& index_file_path, dborl_index_query& query, std::string ext);
 
 #endif /* DBORL_SEARCH_INDEX_FILE_H_ */

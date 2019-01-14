@@ -15,10 +15,10 @@
 //   19-MAR-2007  Eduardo Almeida - Removed video related members
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -62,10 +62,10 @@ public:
   vgui_tableau_sptr active_tableau();
 
   //: Set the active tableau in the active view
-  void set_active_tableau(const vcl_string& name);
+  void set_active_tableau(const std::string& name);
 
   //: Find the names of the visible data in the active view
-  vcl_set<vcl_string> visible_storage();
+  std::set<std::string> visible_storage();
 
   //: Look up the storage class that created the given tableau
   bpro_storage_sptr storage_from_tableau(const vgui_tableau_sptr& tab);
@@ -129,16 +129,16 @@ public:
     const bpro_storage_sptr& storage ) const;
 
   //:return the view vector
-  vcl_vector<bvis_view_tableau_sptr> get_views() {return view_tabs_;}
+  std::vector<bvis_view_tableau_sptr> get_views() {return view_tabs_;}
 
   //:get a new view tableau of the appropriate sub_class
   virtual bvis_view_tableau_sptr view_tableau(bvis_proc_selector_tableau_sptr& selector)=0;
 
   //: get a displayer by type name e.g. vsol2D
-  bvis_displayer_sptr displayer(  vcl_string const& type );
+  bvis_displayer_sptr displayer(  std::string const& type );
 
   //: dialog content methods
-  bool parameter_dialog(vcl_vector< bpro_param* >& param_vector,
+  bool parameter_dialog(std::vector< bpro_param* >& param_vector,
                         vgui_dialog& param_dialog);
 protected:
   static T * instance_;
@@ -156,13 +156,13 @@ protected:
   vgui_grid_tableau_sptr grid_tab_;
 
   //: The view tableaux that provided a view of the data
-  vcl_vector<bvis_view_tableau_sptr> view_tabs_;
+  std::vector<bvis_view_tableau_sptr> view_tabs_;
 
   //: A map from storage object pointers to tableaux
-  vcl_map< bpro_storage*, vgui_tableau_sptr > tableau_map_;
+  std::map< bpro_storage*, vgui_tableau_sptr > tableau_map_;
 
   //: Vector of maps from type to displayer
-  static vcl_map< vcl_string, bvis_displayer_sptr > displayers_;
+  static std::map< std::string, bvis_displayer_sptr > displayers_;
 
   //: Display all visible tableaux
   virtual void display_visible_data(bool clear_old = false)=0;

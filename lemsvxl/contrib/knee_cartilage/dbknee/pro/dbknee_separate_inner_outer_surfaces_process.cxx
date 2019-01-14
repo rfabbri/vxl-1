@@ -24,7 +24,7 @@ dbknee_separate_inner_outer_surfaces_process()
     "-outer_mesh_file", bpro1_filepath("",".txt"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,19 +46,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_separate_inner_outer_surfaces_process::
+std::vector< std::string > dbknee_separate_inner_outer_surfaces_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_separate_inner_outer_surfaces_process::
+std::vector< std::string > dbknee_separate_inner_outer_surfaces_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -111,10 +111,10 @@ finish()
 //: Take in the data (mesh file, cs_file) and execute
 bool dbknee_separate_inner_outer_surfaces_process::
 separate_inner_outer_surface_using_cylinder_cs(
-  const vcl_string& data_file,
-  const vcl_string& cs_file,
-  const vcl_string& inner_mesh_file,
-  const vcl_string& outer_mesh_file,
+  const std::string& data_file,
+  const std::string& cs_file,
+  const std::string& inner_mesh_file,
+  const std::string& outer_mesh_file,
   bool show_gui)
 {
   dbmsh3d_mesh inner_mesh;
@@ -122,21 +122,21 @@ separate_inner_outer_surface_using_cylinder_cs(
   dbmsh3d_mesh mesh;
 
   dbmsh3d_load_ply(&mesh, data_file.c_str());
-  mesh.print_summary(vcl_cout);
+  mesh.print_summary(std::cout);
 
   dbknee_cylinder_based_coord coord;
   coord.load_from_cs_file(cs_file);
   vgl_point_3d<double > axis_origin = coord.origin();
   vgl_vector_3d<double > axis_dir = coord.z_axis();
 
-  vcl_cout << "Separating the cartilage into inner and outer meshes.\n";
+  std::cout << "Separating the cartilage into inner and outer meshes.\n";
   dbknee_separate_inner_outer_surfaces(mesh, 
                                         axis_origin,
                                         axis_dir,
                                         inner_mesh,
                                         outer_mesh);
 
-  vcl_cout << "Writing inner and outer meshes to files.\n";
+  std::cout << "Writing inner and outer meshes to files.\n";
   dbmsh3d_save_ply(&inner_mesh, inner_mesh_file.c_str(), false);
   dbmsh3d_save_ply(&outer_mesh, outer_mesh_file.c_str(), false);
   return false;

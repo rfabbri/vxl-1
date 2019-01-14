@@ -25,7 +25,7 @@
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/process/vidpro1_save_image_process.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
 #include <pro/dbrl_oriented_edgemap_to_edge_image_process.h>
 #include <pro/dbrl_edge_image_to_oriented_edgemap_process.h>
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     //Print the parameters file
     if(!params->print_params_xml(params->print_params_file()))
-	vcl_cerr << "ERROR: Problems in writing params file to: " << params->print_params_file() << vcl_endl;
+	std::cerr << "ERROR: Problems in writing params file to: " << params->print_params_file() << std::endl;
 
     //Exit if there's nothing else to do
     if(params->exit_with_no_processing() || params->print_params_only())
@@ -62,22 +62,22 @@ int main(int argc, char *argv[])
 	return 1;
 
     //Locate the text file that contains the filenames of every image, one filename per line
-    vcl_string list_file_location = params->input_object_dir_() + "/input_sequence.txt";
+    std::string list_file_location = params->input_object_dir_() + "/input_sequence.txt";
 
-    vcl_ifstream list_file(list_file_location.c_str());
+    std::ifstream list_file(list_file_location.c_str());
     
     if(!list_file.is_open())
     {
-	vcl_cerr << "ERROR: Cannot open \"input_sequence.txt\"!" << vcl_endl;
+	std::cerr << "ERROR: Cannot open \"input_sequence.txt\"!" << std::endl;
 	return 1;
     }
 
-    vcl_vector<vcl_string> filenames;
+    std::vector<std::string> filenames;
 
     //Parse the input sequence text file for filenames to be processed
     while(list_file)
     {
-	vcl_string current_filename;
+	std::string current_filename;
 	list_file >> current_filename;
         if(!current_filename.empty())
             filenames.push_back(current_filename);
@@ -85,23 +85,23 @@ int main(int argc, char *argv[])
 
     unsigned num_frames = filenames.size();
 
-    vcl_vector<bpro1_storage_sptr> edge_images;
+    std::vector<bpro1_storage_sptr> edge_images;
 
-    vcl_cout << "---------------------------" << vcl_endl;
-    vcl_cout << "COMPUTING EDGE IMAGES" << vcl_endl;
-    vcl_cout << "---------------------------" << vcl_endl;
+    std::cout << "---------------------------" << std::endl;
+    std::cout << "COMPUTING EDGE IMAGES" << std::endl;
+    std::cout << "---------------------------" << std::endl;
 
     //Loop over all images and compute edge images for each of them
     for(unsigned i=0; i<num_frames; ++i)
     {
-        vcl_cout << "Frame No: " << i << vcl_endl;
+        std::cout << "Frame No: " << i << std::endl;
 
 	//Load the input image
-	vcl_string input_img_dir = params->input_object_dir_() + "/" + filenames[i];
+	std::string input_img_dir = params->input_object_dir_() + "/" + filenames[i];
 
 	if(!vul_file::exists(input_img_dir))
 	{
-	    vcl_cerr << "ERROR: Cannot find image: " << input_img_dir << vcl_endl;
+	    std::cerr << "ERROR: Cannot find image: " << input_img_dir << std::endl;
 	    return 1;
 	}
 
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     
 	if(!input_img_rsc)
 	{
-	    vcl_cerr << "ERROR: Cannot load image: " << input_img_dir << vcl_endl;
+	    std::cerr << "ERROR: Cannot load image: " << input_img_dir << std::endl;
 	    return 1;
 	}
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
         bool edge_det_status = edge_det_pro.execute();
         edge_det_pro.finish();
 
-        vcl_vector<bpro1_storage_sptr> edge_det_results;
+        std::vector<bpro1_storage_sptr> edge_det_results;
 
         if(edge_det_status)
             edge_det_results = edge_det_pro.get_output();
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 
         if(edge_det_results.size() != 1)
         {
-            vcl_cerr << "ERROR: Third order color edge detection failed!" << vcl_endl;
+            std::cerr << "ERROR: Third order color edge detection failed!" << std::endl;
             return 1;
         }
 
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         bool edge_image_status = edge_image_pro.execute();
         edge_image_pro.finish();
 
-        vcl_vector<bpro1_storage_sptr> edge_image_results;
+        std::vector<bpro1_storage_sptr> edge_image_results;
         
         if(edge_image_status)
             edge_image_results = edge_image_pro.get_output();
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 
         if(edge_image_results.size() != 1)
         {
-            vcl_cerr << "ERROR: Edgemap to edge image conversion failed!" << vcl_endl;
+            std::cerr << "ERROR: Edgemap to edge image conversion failed!" << std::endl;
             return 1;
         }
 
@@ -179,13 +179,13 @@ int main(int argc, char *argv[])
     //i.e. frames that are not in the padding area
     unsigned num_fg_frames = num_frames - 40;
 
-    vcl_cout << "---------------------------" << vcl_endl;
-    vcl_cout << "EXTRACTING FOREGROUND" << vcl_endl;
-    vcl_cout << "---------------------------" << vcl_endl;
+    std::cout << "---------------------------" << std::endl;
+    std::cout << "EXTRACTING FOREGROUND" << std::endl;
+    std::cout << "---------------------------" << std::endl;
 
     for(unsigned i=0; i<num_fg_frames; ++i)
     {
-        vcl_cout << "Frame No: " << i+20 << vcl_endl;
+        std::cout << "Frame No: " << i+20 << std::endl;
         //Sequence of frame numbers -relative to the current fg frame- that will be used as training
         int seq[8] = {-10, 10, -20, 20, -5, 5, -17, 17};
 
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
             bg_model_pro.finish();
         }
 
-        vcl_vector<bpro1_storage_sptr> bg_model_results;
+        std::vector<bpro1_storage_sptr> bg_model_results;
 
         if(bg_model_status)
             bg_model_results = bg_model_pro.get_output();
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
 
         if(bg_model_results.size() != 1)
         {
-            vcl_cerr << "ERROR: Background modeling failed!" << vcl_endl;
+            std::cerr << "ERROR: Background modeling failed!" << std::endl;
             return 1;
         }
 
@@ -251,8 +251,8 @@ int main(int argc, char *argv[])
         vidpro1_image_storage_sptr input_edg_image = new vidpro1_image_storage();
         input_edg_image->set_image(input_edg_rsc_copy);
 
-        //vcl_cout << input_edg_image << vcl_endl;
-        //vcl_cout << edge_images[i+20] << vcl_endl;
+        //std::cout << input_edg_image << std::endl;
+        //std::cout << edge_images[i+20] << std::endl;
         //bpro1_storage input_edg_data = *(edge_images[i+20]);
         //vidpro1_image_storage v = static_cast<vidpro1_image_storage>(input_edg_data);
 
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
         bool fg_detect_status = fg_detect_pro.execute();
         fg_detect_pro.finish();
 
-        vcl_vector<bpro1_storage_sptr> fg_detect_results;
+        std::vector<bpro1_storage_sptr> fg_detect_results;
 
         if(fg_detect_status)
             fg_detect_results = fg_detect_pro.get_output();
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
 
         if(fg_detect_results.size() != 2)
         {
-            vcl_cerr << "ERROR: Foreground extraction failed!" << vcl_endl;
+            std::cerr << "ERROR: Foreground extraction failed!" << std::endl;
             return 1;
         }
 
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
         bool edge_map_status = edge_map_pro.execute();
         edge_map_pro.finish();
 
-        vcl_vector<bpro1_storage_sptr> edge_map_results;
+        std::vector<bpro1_storage_sptr> edge_map_results;
         
         if(edge_map_status)
             edge_map_results = edge_map_pro.get_output();
@@ -302,7 +302,7 @@ int main(int argc, char *argv[])
 
         if(edge_map_results.size() != 1)
         {
-            vcl_cerr << "ERROR: Edge image to edge map conversion failed!" << vcl_endl;
+            std::cerr << "ERROR: Edge image to edge map conversion failed!" << std::endl;
             return 1;
         }
 
@@ -327,10 +327,10 @@ int main(int argc, char *argv[])
             save_image_pro.clear_input();
             save_image_pro.clear_output();
 
-            vcl_string current_basename = vul_file::strip_extension(filenames[i+20]);
+            std::string current_basename = vul_file::strip_extension(filenames[i+20]);
 
             //Save the foreground in the form of edge maps
-            vcl_cout << "I am saving edge maps" << vcl_endl;
+            std::cout << "I am saving edge maps" << std::endl;
             dbdet_save_edg_process save_edg_pro;
             bpro1_parameters_sptr save_edg_params = new bpro1_parameters();
             save_edg_params->add("Output file <filename...>" , "-edgoutput" , bpro1_filepath("./output/" + current_basename + ".edg","*.edg"));

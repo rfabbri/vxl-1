@@ -14,13 +14,13 @@ class dbskfg_rtree_poly_box_2d
  
 public:
 
-    typedef vcl_vector< vgl_point_2d<T> > v_type ;
+    typedef std::vector< vgl_point_2d<T> > v_type ;
     typedef vgl_bbox_2d<T> b_type;
     typedef T t_type;
 
     // Operations------
     static void  init  (vgl_bbox_2d<T>& b, 
-                        vcl_vector<vgl_point_2d<T> > const& v)
+                        std::vector<vgl_point_2d<T> > const& v)
     { b = vgl_bbox_2d<T>();  
         
         for (unsigned int s = 0; s < v.size(); ++s)
@@ -30,7 +30,7 @@ public:
     }
 
     static void  update(vgl_bbox_2d<T>& b, 
-                        vcl_vector<vgl_point_2d<T> > const& v)
+                        std::vector<vgl_point_2d<T> > const& v)
     {
         for (unsigned int s = 0; s < v.size(); ++s)
         { 
@@ -42,7 +42,7 @@ public:
     { b0.add(b1.min_point());  b0.add(b1.max_point()); }
  
     static bool meet(vgl_bbox_2d<T> const& b0, 
-                     vcl_vector<vgl_point_2d<T> > const& v) 
+                     std::vector<vgl_point_2d<T> > const& v) 
     {  
         for (unsigned int s = 0; s < v.size(); ++s)
         { 
@@ -64,7 +64,7 @@ public:
     { return static_cast<float>(b.area()); }
  
     // point meets for a polygon, used by generic rtree probe
-    static bool meets(vcl_vector< vgl_point_2d<T> > const& v, 
+    static bool meets(std::vector< vgl_point_2d<T> > const& v, 
                       vgl_polygon<T> poly)
     {    for (unsigned int s = 0; s < v.size(); ++s)
         { 

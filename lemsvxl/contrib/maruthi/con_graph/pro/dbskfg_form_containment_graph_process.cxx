@@ -38,7 +38,7 @@ dbskfg_form_containment_graph_process::dbskfg_form_containment_graph_process()
          !parameters()->add( "One bbox (size of contours)  " , 
                              "-all", bool(false)))
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -55,25 +55,25 @@ dbskfg_form_containment_graph_process::clone() const
     return new dbskfg_form_containment_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_form_containment_graph_process::name()
 {
     return "Compute Containment Graph";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_containment_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_containment_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 
@@ -110,7 +110,7 @@ bool dbskfg_form_containment_graph_process::execute()
     // parameters()->get_value( "-y_sample" , ysample );
     // parameters()->get_value( "-all", use_all_contours);
 
-    // vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    // std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
     //     input_vsol->all_data();
 
     // if ( use_all_contours )
@@ -130,7 +130,7 @@ bool dbskfg_form_containment_graph_process::execute()
     // vgl_box_2d<double> window(0,window_size,0,window_size);
 
     // // Keep centroids
-    // vcl_vector<vgl_point_2d<double> > centroids;
+    // std::vector<vgl_point_2d<double> > centroids;
 
     // vil_image_resource_sptr image = frame_image->get_image();
 

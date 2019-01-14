@@ -12,7 +12,7 @@
 #include "dbrec_compositor_sptr.h"
 
 dbrec_part_sptr dbrec_primitive_factory::get_primitive(unsigned type) {
-  vcl_map<unsigned, dbrec_part_sptr>::iterator it = flyweights_.find(type);
+  std::map<unsigned, dbrec_part_sptr>::iterator it = flyweights_.find(type);
   if (it != flyweights_.end())
     return (it->second);
   else 
@@ -29,7 +29,7 @@ dbrec_hierarchy_sptr dbrec_primitive_factory::construct_random_classifier(int nc
   dbrec_hierarchy_sptr h = new dbrec_hierarchy();
   for (int i = 0; i < nclasses; i++) {
     dbrec_compositor_sptr compositor = new dbrec_or_compositor();
-    vcl_vector<dbrec_part_sptr> composing_parts;
+    std::vector<dbrec_part_sptr> composing_parts;
     for (part_const_iterator it = parts_const_begin(); it != parts_const_end(); it++) {
       composing_parts.push_back(it->second);
     }
@@ -39,7 +39,7 @@ dbrec_hierarchy_sptr dbrec_primitive_factory::construct_random_classifier(int nc
   return h;
 }
 
-vcl_ostream& dbrec_primitive_factory::print(vcl_ostream& out) const
+std::ostream& dbrec_primitive_factory::print(std::ostream& out) const
 {
   out << "------factory:\n";
   for (dbrec_primitive_factory::part_const_iterator it = this->parts_const_begin(); it != this->parts_const_end(); it++)
@@ -48,7 +48,7 @@ vcl_ostream& dbrec_primitive_factory::print(vcl_ostream& out) const
   return out;
 }
 
-vcl_ostream & operator<<(vcl_ostream& out, const dbrec_primitive_factory& p)
+std::ostream & operator<<(std::ostream& out, const dbrec_primitive_factory& p)
 {
   return p.print(out);
 }

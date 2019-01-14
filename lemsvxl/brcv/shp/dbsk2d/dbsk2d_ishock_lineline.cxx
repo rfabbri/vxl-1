@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_lineline.h>
 #include <dbsk2d/dbsk2d_lagrangian_cell_bnd.h>
 
@@ -26,8 +26,8 @@ dbsk2d_ishock_edge (newid, stime, pse, lbe, rbe)
   _lL = _distPointPoint (_Al, _Bl);
   _lR = _distPointPoint (_Ar, _Br);
 
-  _ul = angle0To2Pi (vcl_atan2(_Bl.y() - _Al.y(), _Bl.x() - _Al.x()));
-  _ur = angle0To2Pi (vcl_atan2(_Br.y() - _Ar.y(), _Br.x() - _Ar.x()));
+  _ul = angle0To2Pi (std::atan2(_Bl.y() - _Al.y(), _Bl.x() - _Al.x()));
+  _ur = angle0To2Pi (std::atan2(_Br.y() - _Ar.y(), _Br.x() - _Ar.x()));
 
   _phi = CCW (_ur, _ul+vnl_math::pi)/2;
 
@@ -49,11 +49,11 @@ dbsk2d_ishock_edge (newid, stime, pse, lbe, rbe)
   _thetaL = CCW (_ul-vnl_math::pi_over_2, _ur);
   _thetaR = CCW (_ur-vnl_math::pi_over_2, _ul);
 
-  _N1L = vcl_tan(_phi);
-  _N1R = vcl_tan(_phi);
+  _N1L = std::tan(_phi);
+  _N1R = std::tan(_phi);
 
-  _N2L = (-vcl_sin(_ur)*(_Bl.x() - _Ar.x())+vcl_cos(_ur)*(_Bl.y() - _Ar.y()))/(1.0-vcl_cos(_ul - _ur));
-  _N2R = (-vcl_sin(_ul)*(_Ar.x() - _Bl.x())+vcl_cos(_ul)*(_Ar.y() - _Bl.y()))/(1.0-vcl_cos(_ur - _ul));
+  _N2L = (-std::sin(_ur)*(_Bl.x() - _Ar.x())+std::cos(_ur)*(_Bl.y() - _Ar.y()))/(1.0-std::cos(_ul - _ur));
+  _N2R = (-std::sin(_ul)*(_Ar.x() - _Bl.x())+std::cos(_ul)*(_Ar.y() - _Bl.y()))/(1.0-std::cos(_ur - _ul));
 
   //compute _LsTau and _RsTau
   _LsTau = LEtaToLTau(lsEta, constrained);
@@ -222,7 +222,7 @@ double dbsk2d_ishock_lineline::rFromRTau (double Rtau)
 
 double dbsk2d_ishock_lineline::rp (double tau)
 {
-   return -1/vcl_tan(vnl_math::pi_over_2/2 - _thetaL/2); 
+   return -1/std::tan(vnl_math::pi_over_2/2 - _thetaL/2); 
 }
 
 double dbsk2d_ishock_lineline::rpp(double tau)
@@ -232,7 +232,7 @@ double dbsk2d_ishock_lineline::rpp(double tau)
 
 double dbsk2d_ishock_lineline::g (double tau)
 {
-   return 1/vcl_cos(vnl_math::pi_over_2/2 - _thetaL/2);
+   return 1/std::cos(vnl_math::pi_over_2/2 - _thetaL/2);
 }
 
 double dbsk2d_ishock_lineline::tangent (double tau)
@@ -248,7 +248,7 @@ double dbsk2d_ishock_lineline::k (double tau)
 
 double dbsk2d_ishock_lineline::v (double tau)
 {
-  return -1/vcl_cos(phi(tau));
+  return -1/std::cos(phi(tau));
 }
 
 double dbsk2d_ishock_lineline::a (double tau)
@@ -294,8 +294,8 @@ vgl_point_2d<double> dbsk2d_ishock_lineline::getPtFromLTau (double tau)
 
   //Here we compute the vgl_point_2d<double> directly, without reference to _origin
   double radius = rFromLTau(tau);
-  pt.set(_Bl.x() - tau*vcl_cos(_ul) - radius*vcl_sin(_ul), 
-         _Bl.y() - tau*vcl_sin(_ul) + radius*vcl_cos(_ul));
+  pt.set(_Bl.x() - tau*std::cos(_ul) - radius*std::sin(_ul), 
+         _Bl.y() - tau*std::sin(_ul) + radius*std::cos(_ul));
   return pt;
 }
 
@@ -328,78 +328,78 @@ void dbsk2d_ishock_lineline::compute_extrinsic_locus()
 
 }
 
-void dbsk2d_ishock_lineline::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_lineline::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   char endx[32], endy[32], simtime[32], endtime[32];
 
   ostrm << "\n==============================\n";
   ostrm << "L-L: [" << _id << "] " << "{ "  << (_bActive ? "A" : "nA" ) << ", ";
-  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << vcl_endl;
+  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << std::endl;
 
   vgl_point_2d<double> start = getStartPt ();
   vgl_point_2d<double> end = getEndPt ();
 
   if (_endTime==ISHOCK_DIST_HUGE) {
-    vcl_sprintf(endtime, "INF");
-    vcl_sprintf(endx, "INF");
-    vcl_sprintf(endy, "INF");
+    std::sprintf(endtime, "INF");
+    std::sprintf(endx, "INF");
+    std::sprintf(endy, "INF");
   }
   else {
-    vcl_sprintf(endtime, "%.7f", _endTime);
-    vcl_sprintf(endx, "%.3f", end.x());
-    vcl_sprintf(endy, "%.3f", end.y());
+    std::sprintf(endtime, "%.7f", _endTime);
+    std::sprintf(endx, "%.3f", end.x());
+    std::sprintf(endy, "%.3f", end.y());
   }
 
   if (_simTime==ISHOCK_DIST_HUGE) 
-    vcl_sprintf(simtime, "INF");
+    std::sprintf(simtime, "INF");
   else 
-    vcl_sprintf(simtime, "%.7f", _simTime);
+    std::sprintf(simtime, "%.7f", _simTime);
 
-  vcl_sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
-  vcl_sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
-  vcl_sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<vcl_endl;
+  std::sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
+  std::sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
+  std::sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<std::endl;
 
-  ostrm << "lB: " << _lBElement->id(); vcl_sprintf(s, " (%f, %f)\n", LeEta(), LsEta()); ostrm <<s;
-  ostrm << "rB: " << _rBElement->id(); vcl_sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
+  ostrm << "lB: " << _lBElement->id(); std::sprintf(s, " (%f, %f)\n", LeEta(), LsEta()); ostrm <<s;
+  ostrm << "rB: " << _rBElement->id(); std::sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
   ostrm << "[ lS: " << (_lShock?_lShock->id():-1)  << ", rS: " << (_rShock?_rShock->id():-1) << "]\n";
   ostrm << "[ lN: " << (_lNeighbor?_lNeighbor->id():-1)  << ", rN: " << (_rNeighbor?_rNeighbor->id():-1);
-  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << vcl_endl;
+  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << std::endl;
   
-  vcl_sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
-  vcl_sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
+  std::sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
+  std::sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
 
-  vcl_sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
-  vcl_sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
 
-  vcl_sprintf(s, "H: %f\n", _H); ostrm << s;
-  vcl_sprintf(s, "ul: %f (%.2f deg)\n", _ul, _ul*180/vnl_math::pi ); ostrm << s;
-  vcl_sprintf(s, "ur: %f (%.2f deg)\n", _ur, _ur*180/vnl_math::pi ); ostrm << s;
-  vcl_sprintf(s, "_leftL: %f\n", _lL ); ostrm << s;
-  vcl_sprintf(s, "_rightL: %f\n", _lR ); ostrm << s;
-  vcl_sprintf(s, "sigma (nl dot nr): %f\n", _sigma ); ostrm << s;
-  vcl_sprintf(s, "thetaL: %f\n", _thetaL ); ostrm << s;
-  vcl_sprintf(s, "thetaR: %f\n", _thetaR ); ostrm << s;
-  vcl_sprintf(s, "phi: %f\n", _phi ); ostrm << s;
-  vcl_sprintf(s, "_N1L (slope): %f\n", _N1L ); ostrm << s;
-  vcl_sprintf(s, "_N1R (slope): %f\n", _N1R ); ostrm << s;
-  vcl_sprintf(s, "_N2L: %f\n", _N2L ); ostrm << s;
-  vcl_sprintf(s, "_N2R: %f\n", _N2R ); ostrm << s;
-  vcl_sprintf(s, "v (1/vcl_cos(vnl_math::pi/4 - _thetaL/2)): %f\n\n", v(_LeTau) ); ostrm << s;
+  std::sprintf(s, "H: %f\n", _H); ostrm << s;
+  std::sprintf(s, "ul: %f (%.2f deg)\n", _ul, _ul*180/vnl_math::pi ); ostrm << s;
+  std::sprintf(s, "ur: %f (%.2f deg)\n", _ur, _ur*180/vnl_math::pi ); ostrm << s;
+  std::sprintf(s, "_leftL: %f\n", _lL ); ostrm << s;
+  std::sprintf(s, "_rightL: %f\n", _lR ); ostrm << s;
+  std::sprintf(s, "sigma (nl dot nr): %f\n", _sigma ); ostrm << s;
+  std::sprintf(s, "thetaL: %f\n", _thetaL ); ostrm << s;
+  std::sprintf(s, "thetaR: %f\n", _thetaR ); ostrm << s;
+  std::sprintf(s, "phi: %f\n", _phi ); ostrm << s;
+  std::sprintf(s, "_N1L (slope): %f\n", _N1L ); ostrm << s;
+  std::sprintf(s, "_N1R (slope): %f\n", _N1R ); ostrm << s;
+  std::sprintf(s, "_N2L: %f\n", _N2L ); ostrm << s;
+  std::sprintf(s, "_N2R: %f\n", _N2R ); ostrm << s;
+  std::sprintf(s, "v (1/std::cos(vnl_math::pi/4 - _thetaL/2)): %f\n\n", v(_LeTau) ); ostrm << s;
   
   //boundary intersection
   ostrm << "Termination: ";
   if (_cSNode)
-    ostrm << "at intersection." << vcl_endl;
+    ostrm << "at intersection." << std::endl;
   else {
     if (this->cell_bnd()){
       if (this->cell_bnd()->is_vert())
-        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << std::endl;
       else        
-        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << std::endl;
     }
     else
-      ostrm << "in mid air." << vcl_endl;
+      ostrm << "in mid air." << std::endl;
   }
 }
 

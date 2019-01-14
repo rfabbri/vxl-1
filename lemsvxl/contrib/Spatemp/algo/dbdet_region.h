@@ -9,11 +9,11 @@ public:
     dbdet_region(){};
     ~dbdet_region(){};
     //: collect the triangles
-    vcl_vector<int> triangles_;
+    std::vector<int> triangles_;
     
     int id_;
     //: collect the ids of the edges
-    vcl_set<int> node_ids_;
+    std::set<int> node_ids_;
 
     dbdet_3D_velocity_model * V;
 
@@ -22,16 +22,16 @@ public:
     //: id of the second contour
     int c_id2;
 
-    //vcl_map<int,int> ids_ws;
+    //std::map<int,int> ids_ws;
 
-    // vcl_map<int,float> ids_weights;
+    // std::map<int,float> ids_weights;
 
-    //vcl_map<int,dbdet_temporal_model*> ids_model;
+    //std::map<int,dbdet_temporal_model*> ids_model;
 
-    //vcl_map<int,double> label_prob_;
+    //std::map<int,double> label_prob_;
     void compute_V();
 
-    vcl_map<int,dbdet_spherical_histogram_sptr > Vs;
+    std::map<int,dbdet_spherical_histogram_sptr > Vs;
     dbdet_spherical_histogram_sptr Vdist;
 
     void range_for_phi();
@@ -43,7 +43,7 @@ public:
     //vnl_matrix<float> v1v2;
     //vnl_matrix<float> v2v2;
 
-    vcl_vector<float> ps;
+    std::vector<float> ps;
 
     //double l1;
     //double l2;

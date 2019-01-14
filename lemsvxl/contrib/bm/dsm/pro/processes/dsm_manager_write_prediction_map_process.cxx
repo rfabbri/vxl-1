@@ -3,9 +3,9 @@
 
 #include<dsm/dsm_manager_base_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_iomanip.h>
-#include<vcl_sstream.h>
+#include<iostream>
+#include<iomanip>
+#include<sstream>
 
 #include<vul/vul_file.h>
 
@@ -19,14 +19,14 @@ bool dsm_manager_write_prediction_map_process_cons( bprb_func_process& pro )
 {
 	using namespace dsm_manager_write_prediction_map_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_manager_base_sptr";
 	input_types_[i++] = "unsigned";//(ni = image width)
 	input_types_[i++] = "unsigned";//(nj = image height)
-	input_types_[i++] = "vcl_string";//output directory
-	input_types_[i++] = "vcl_string";//output format
+	input_types_[i++] = vcl_string";//output directory
+	input_types_[i++] = vcl_string";//output format
 
 	if(!pro.set_input_types(input_types_))
 		return false;
@@ -40,9 +40,9 @@ bool dsm_manager_write_prediction_map_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() 
+		std::cout << pro.name() 
 			     << " dsm_manager_write_change_maps_process: The input number should be " 
-				 << n_inputs_ << vcl_endl;
+				 << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -51,13 +51,13 @@ bool dsm_manager_write_prediction_map_process( bprb_func_process& pro )
 	dsm_manager_base_sptr manager_sptr = pro.get_input<dsm_manager_base_sptr>(i++);
 	unsigned ni = pro.get_input<unsigned>(i++);
 	unsigned nj = pro.get_input<unsigned>(i++);
-	vcl_string result_dir = pro.get_input<vcl_string>(i++);
-	vcl_string format = pro.get_input<vcl_string>(i++);
+	std::string result_dir = pro.get_input<std::string>(i++);
+	std::string format = pro.get_input<std::string>(i++);
 
 	if(!vul_file::is_directory(result_dir))
 		vul_file::make_directory(result_dir);
 
-	vcl_map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+	std::map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 		tsm_itr, tsm_end = manager_sptr->target_stateMachine_map_.end();
 
 	unsigned nframes = manager_sptr->target_stateMachine_map_.begin()->second->frame_change_map_.size();
@@ -65,10 +65,10 @@ bool dsm_manager_write_prediction_map_process( bprb_func_process& pro )
 	format = "." + format;
 	for( unsigned frame = 0; frame < nframes; ++frame )
 	{
-		vcl_stringstream filename;
+		std::stringstream filename;
 
 		filename << result_dir << "/predicted_change_map_"  
-				 << vcl_setfill('0') << vcl_setw(8) << frame << format;
+				 << std::setfill('0') << std::setw(8) << frame << format;
 
 	   /* if(format.compare("png") == 0)
 			filename << ".png";
@@ -77,8 +77,8 @@ bool dsm_manager_write_prediction_map_process( bprb_func_process& pro )
 		else
 			filename << ".tiff";*/
 		
-		vcl_cout << "Writing Binary Prediction Change Map " << frame+1 << " of " << nframes;
-		vcl_cout << "\t" << filename.str() << vcl_endl;
+		std::cout << "Writing Binary Prediction Change Map " << frame+1 << " of " << nframes;
+		std::cout << "\t" << filename.str() << std::endl;
 
 		vil_image_view<vxl_byte> change_view(ni,nj,1);
 

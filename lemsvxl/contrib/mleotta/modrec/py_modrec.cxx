@@ -6,7 +6,7 @@
 // \date 11/12/08
 
 #include "Python.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include "py_modrec_manager.h"
 
 
@@ -103,15 +103,15 @@ set_vehicle_model(PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "s:set_vehicle_model", &type))
     return NULL;
   
-  if(vcl_string(type) == "Detailed1")
+  if(std::string(type) == "Detailed1")
     py_modrec_manager::instance()->set_vehicle_model(py_modrec_manager::DETAILED1);
-  else if(vcl_string(type) == "Detailed2")
+  else if(std::string(type) == "Detailed2")
     py_modrec_manager::instance()->set_vehicle_model(py_modrec_manager::DETAILED2);
-  else if(vcl_string(type) == "Detailed3")
+  else if(std::string(type) == "Detailed3")
     py_modrec_manager::instance()->set_vehicle_model(py_modrec_manager::DETAILED3);
-  else if(vcl_string(type) == "Dodecahedral")
+  else if(std::string(type) == "Dodecahedral")
     py_modrec_manager::instance()->set_vehicle_model(py_modrec_manager::DODECAHEDRAL);
-  else if(vcl_string(type) == "Ferryman")
+  else if(std::string(type) == "Ferryman")
     py_modrec_manager::instance()->set_vehicle_model(py_modrec_manager::FERRYMAN);
   else
     return Py_BuildValue("b", false);
@@ -127,9 +127,9 @@ set_fit_mode(PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "s:set_fit_mode_video", &mode))
     return NULL;
   
-  if(vcl_string(mode) == "video")
+  if(std::string(mode) == "video")
     py_modrec_manager::instance()->set_fit_mode(true);
-  else if(vcl_string(mode) == "multiview")
+  else if(std::string(mode) == "multiview")
     py_modrec_manager::instance()->set_fit_mode(false);
   else
     return Py_BuildValue("b", false);
@@ -151,7 +151,7 @@ set_options(PyObject *self, PyObject *args)
     return NULL;
   }
   
-  vcl_vector<bool> options(7,false);
+  std::vector<bool> options(7,false);
   unsigned int num_pc = 0;
   for(int i=0; i<len; ++i){
     PyObject * el;
@@ -159,7 +159,7 @@ set_options(PyObject *self, PyObject *args)
       return NULL;
     }
     if (PyString_Check(el)){
-      vcl_string p(PyString_AsString(el));
+      std::string p(PyString_AsString(el));
       if(p == "tx")       options[1] = true;
       else if(p == "ty")  options[2] = true;
       else if(p == "tz")  options[3] = true;
@@ -231,7 +231,7 @@ set_params(PyObject *self, PyObject *args)
   if (len < 0) {
     return NULL;
   }
-  vcl_vector<double> params(len);
+  std::vector<double> params(len);
   for(int i=0; i<len; ++i){
     PyObject * el;
     if (!(el = PyList_GetItem(list, i))){
@@ -393,10 +393,10 @@ get_params(PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple(args, "|s:get_params", &opt))
     return NULL;
   
-  vcl_vector<double> params;
+  std::vector<double> params;
   py_modrec_manager::instance()->get_params(params);
   unsigned num_params = py_modrec_manager::instance()->num_pc();
-  if(opt && vcl_string(opt) == "all")
+  if(opt && std::string(opt) == "all")
     num_params = params.size();
   
   PyObject* list = PyList_New(num_params);
@@ -409,7 +409,7 @@ get_params(PyObject *self, PyObject *args)
 static PyObject *
 get_vehicle_model(PyObject *self, PyObject *args)
 {
-  vcl_string model;
+  std::string model;
   py_modrec_manager::vehicle_model vm;
   py_modrec_manager::instance()->get_vehicle_model(vm);
   switch(vm){
@@ -435,7 +435,7 @@ get_vehicle_model(PyObject *self, PyObject *args)
 static PyObject *
 get_vehicle_states(PyObject *self, PyObject *args)
 {
-  const vcl_vector<modrec_vehicle_state>& states =
+  const std::vector<modrec_vehicle_state>& states =
       py_modrec_manager::instance()->get_vehicle_states();
   
   PyObject* list = PyList_New(states.size());

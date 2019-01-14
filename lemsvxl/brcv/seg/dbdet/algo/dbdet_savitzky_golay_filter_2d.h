@@ -27,14 +27,14 @@
 //  of the desired order oriented in the direction defined by theta
 inline void Savitzky_Golay_filter_2d(vil_image_view<double>& src, vil_image_view<double>& dest, int order, int masksz, double theta)
 {
-  double ra = vcl_max(1.5, double(masksz/2.0));
-  double rb = vcl_max(1.5, double(masksz/4.0));
+  double ra = std::max(1.5, double(masksz/2.0));
+  double rb = std::max(1.5, double(masksz/4.0));
   double ira2 = 1 / (ra*ra);
   double irb2 = 1 / (rb*rb);
   int wr = masksz;
   double wd = 2*wr+1;
-  double sint = vcl_sin(theta);
-  double cost = vcl_cos(theta);
+  double sint = std::sin(theta);
+  double cost = std::cos(theta);
 
   // 1. compute linear filters for coefficients
   // (a) compute inverse of least-squares problem matrix

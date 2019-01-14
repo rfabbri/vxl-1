@@ -1,8 +1,8 @@
 // This is brcv/seg/dbdet/tests/test_graphical_model_contour_merge.cxx
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vil/vil_convert.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
@@ -23,14 +23,14 @@ static const double tolerance=1e-3;
 
 bool not_equivalent_edgel(dbdet_edgel * e1, dbdet_edgel * e2)
 {
-  double x_diff = vcl_abs(e1->pt.x() - e2->pt.x());
-  double y_diff = vcl_abs(e1->pt.y() - e2->pt.y());
+  double x_diff = std::abs(e1->pt.x() - e2->pt.x());
+  double y_diff = std::abs(e1->pt.y() - e2->pt.y());
   double t1 = e1->tangent;
   double t2 = e2->tangent;
-  double t_diff = vcl_abs(t1 - t2);
+  double t_diff = std::abs(t1 - t2);
   t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
   t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
-  t_diff = vcl_min(t_diff, t1 - t2);
+  t_diff = std::min(t_diff, t1 - t2);
   return (x_diff > tolerance || y_diff > tolerance || t_diff > tolerance || e1->id != e2->id);
 }
 
@@ -46,17 +46,17 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img,
       )
 {
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
+  std::string root = dbtest_root_dir();
+  std::string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
 
   //TODO Gen test data, using wrong test data atm
-  vcl_string image_path = base_path + "2018.jpg";
-  vcl_string frags_ref_path = base_path + "2018_merged.cem";
-  vcl_string frags_ori_path = base_path + "2018_geom.cem";
-  vcl_string edge_path = base_path + "2018.edg";
-  vcl_string tmap_path = base_path + "2018_tmap.txt";
-  vcl_string params_geom_path = base_path + "gPb_SEL_beta_of_geomcon_cue_for_merging.txt";
-  vcl_string params_sem_path = base_path + "gPb_SEL_beta_of_cues_for_merging.txt";
+  std::string image_path = base_path + "2018.jpg";
+  std::string frags_ref_path = base_path + "2018_merged.cem";
+  std::string frags_ori_path = base_path + "2018_geom.cem";
+  std::string edge_path = base_path + "2018.edg";
+  std::string tmap_path = base_path + "2018_tmap.txt";
+  std::string params_geom_path = base_path + "gPb_SEL_beta_of_geomcon_cue_for_merging.txt";
+  std::string params_sem_path = base_path + "gPb_SEL_beta_of_cues_for_merging.txt";
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));

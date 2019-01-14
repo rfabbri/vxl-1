@@ -13,7 +13,7 @@
 // \verbatim
 //  Modifications
 // \endverbatim
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_2d.h>
 class bsta_gauss
 {
@@ -23,11 +23,11 @@ class bsta_gauss
 
   static void bsta_1d_gaussian_kernel(const double sigma, const double fuzz,
                                       int& radius,
-                                      vcl_vector<double>& kernel);
+                                      std::vector<double>& kernel);
 
   static void bsta_1d_gaussian(const double sigma,
-                               vcl_vector<double> const& in_buf,
-                               vcl_vector<double>& out_buf);
+                               std::vector<double> const& in_buf,
+                               std::vector<double>& out_buf);
 
   static void bsta_2d_gaussian(const double sigma,
                                vbl_array_2d<double> const& in_buf,

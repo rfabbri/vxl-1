@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
 #include <vil/vil_load.h>
@@ -10,20 +10,20 @@
 //-------------------------------------------
 int main( int argc, char* argv[] )
 {
-  vcl_string input_dir = "D:\\images_multiview\\prov_c\\seq1";
-  vcl_string prob_dir = "D:\\results\\prov_c_large\\raw";
-  vcl_string output_dir = "D:\\results\\prov_c_large\\red";
+  std::string input_dir = "D:\\images_multiview\\prov_c\\seq1";
+  std::string prob_dir = "D:\\results\\prov_c_large\\raw";
+  std::string output_dir = "D:\\results\\prov_c_large\\red";
   double prob_thresh = .50;
   double prob_image_scale = .5;
 
   // Get all the image names.
-  vcl_vector< vcl_string > input_images, prob_images, output_images;
+  std::vector< std::string > input_images, prob_images, output_images;
   char line_buffer[256];
   input_dir += "/*.*"; prob_dir += "/*.*";
   for( vul_file_iterator fit = input_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
@@ -34,7 +34,7 @@ int main( int argc, char* argv[] )
   for( vul_file_iterator fit = prob_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
@@ -45,7 +45,7 @@ int main( int argc, char* argv[] )
   int num_images = input_images.size(); 
   if( num_images > prob_images.size() ) num_images = prob_images.size();
   for( int i = 0; i < num_images; i++ ){
-    vcl_stringstream image_name;
+    std::stringstream image_name;
     image_name << output_dir << "//" << i << ".png";
     output_images.push_back( image_name.str() );
   }
@@ -53,7 +53,7 @@ int main( int argc, char* argv[] )
   // Process each image pair.
   for( int img = 0; img < num_images; img++ ){
     
-    vcl_cerr << "Processing image: " << input_images[img] << '\n';
+    std::cerr << "Processing image: " << input_images[img] << '\n';
     vil_image_view<vxl_byte> input_image = vil_load( input_images[img].c_str() ); 
     vil_image_view<vxl_byte> prob_image = vil_load( prob_images[img].c_str() );
     unsigned image_height = input_image.nj();

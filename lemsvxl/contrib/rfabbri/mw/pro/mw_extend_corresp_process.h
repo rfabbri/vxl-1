@@ -12,8 +12,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <bmcsd/bmcsd_discrete_corresp.h>
 
@@ -34,24 +34,24 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
 
 private:
-  vcl_vector< vsol_polyline_2d_sptr > a0_;
-  vcl_vector< vsol_polyline_2d_sptr > a1_;
-  vcl_vector< vsol_polyline_2d_sptr > b0_;
-  vcl_vector< vsol_polyline_2d_sptr > b1_;
+  std::vector< vsol_polyline_2d_sptr > a0_;
+  std::vector< vsol_polyline_2d_sptr > a1_;
+  std::vector< vsol_polyline_2d_sptr > b0_;
+  std::vector< vsol_polyline_2d_sptr > b1_;
   bmcsd_discrete_corresp *acorr_;
-  bool get_vsols(unsigned v, unsigned input_id, vcl_vector< vsol_polyline_2d_sptr > *pcurves);
+  bool get_vsols(unsigned v, unsigned input_id, std::vector< vsol_polyline_2d_sptr > *pcurves);
 };
 
 #endif

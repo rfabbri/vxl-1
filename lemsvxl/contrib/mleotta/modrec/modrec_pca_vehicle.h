@@ -23,14 +23,14 @@
 class modrec_pca_vehicle : public imesh_pca_mesh
 {
 public:
-  typedef vcl_map<vcl_string, vgl_polygon<double> > part_map;
+  typedef std::map<std::string, vgl_polygon<double> > part_map;
 
   //: Constructor
   modrec_pca_vehicle() {}
 
   //: Constructor - compute the pca from a joint collection of meshes and parts
-  modrec_pca_vehicle(const vcl_vector<imesh_mesh>& meshes,
-                     const vcl_vector<part_map>& part_groups);
+  modrec_pca_vehicle(const std::vector<imesh_mesh>& meshes,
+                     const std::vector<part_map>& part_groups);
 
   //: Constructor 
   modrec_pca_vehicle(const imesh_pca_mesh& pca_mesh,
@@ -102,11 +102,11 @@ public:
   const vnl_matrix<double>& parts_principal_comps() const {return parts_pc_; }
 
   //: Access the 3D surface projection of the parts
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >&
+  const std::vector<std::vector<vgl_point_3d<double> > >&
   parts_3d() const { return parts_3d_; }
 
   //: Access the structures containing barycentric coordinates
-  const vcl_vector<vcl_vector<uv_point> >&
+  const std::vector<std::vector<uv_point> >&
   parts_bary() const { return parts_uv_; }
 
   //: Look up part number \a p and index \a i from the PC index \a pc
@@ -134,16 +134,16 @@ private:
   part_map mean_parts_;
   
   //: used to covert PC index to (part,point) indices
-  vcl_vector<unsigned int> part_idx_offsets_;
+  std::vector<unsigned int> part_idx_offsets_;
   
   //: parts principal components
   vnl_matrix<double> parts_pc_;
   
   //: UV (barycentric) coordinates of all points 
-  vcl_vector<vcl_vector<uv_point> > parts_uv_;
+  std::vector<std::vector<uv_point> > parts_uv_;
   
   //: the UV points mapped into 3-d
-  vcl_vector<vcl_vector<vgl_point_3d<double> > > parts_3d_;
+  std::vector<std::vector<vgl_point_3d<double> > > parts_3d_;
 };
 
 
@@ -153,9 +153,9 @@ private:
 
 
 //: Write the mean mesh, mean parts, and PCA file
-void modrec_write_pca_vehicle(const vcl_string& mesh_file,
-                              const vcl_string& parts_file,
-                              const vcl_string& pca_file,
+void modrec_write_pca_vehicle(const std::string& mesh_file,
+                              const std::string& parts_file,
+                              const std::string& pca_file,
                               const modrec_pca_vehicle& pmesh);
 
 

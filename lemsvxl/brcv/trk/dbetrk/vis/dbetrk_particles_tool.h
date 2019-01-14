@@ -11,9 +11,9 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_tool.h>
-#include <vcl_map.h>
+#include <map>
 #include <vgui/vgui_style_sptr.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_easy2D_tableau.h>
@@ -32,7 +32,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -52,7 +52,7 @@ protected:
   dbetrk_edge_sptr curr_edge_node_;
  vgui_style_sptr neighbor_style_;
   vgui_event_condition gesture_info_;
-  vcl_vector<dbetrk_edge_sptr> nodes_to_draw;
+  std::vector<dbetrk_edge_sptr> nodes_to_draw;
 
 };
 

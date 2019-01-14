@@ -3,12 +3,12 @@
 #endif
 
 #include <imgr/imgr_scan_resource_io.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstddef.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cstddef>
 #include <vcl_compiler.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vil/vil_load.h>
@@ -19,23 +19,23 @@
 // The globbing format expects only '#' to represent numbers.
 // Do not use "*" or "?"
 // All "#" should be in one contiguous group.
-static void parse_globbed_filenames(const vcl_string & input,
-                                    vcl_vector<vcl_string> &filenames)
+static void parse_globbed_filenames(const std::string & input,
+                                    std::vector<std::string> &filenames)
 {
   filenames.clear();
-  vcl_string filename = input;
+  std::string filename = input;
 
   // Avoid confusing globbing functions
   if (filename.find("*") != filename.npos) return;
   if (filename.find("?") != filename.npos) return;
 
   // Check that all the #s are in a single group.
-  vcl_size_t start = filename.find_first_of("#");
+  std::size_t start = filename.find_first_of("#");
   if (start == filename.npos) return;
-  vcl_size_t end = filename.find_first_not_of("#", start);
+  std::size_t end = filename.find_first_not_of("#", start);
   if (filename.find_first_of("#",end) != filename.npos) return;
   if (end == filename.npos) end = filename.length();
-  for (vcl_size_t i=start, j=start; i!=end; ++i, j+=12)
+  for (std::size_t i=start, j=start; i!=end; ++i, j+=12)
     filename.replace(j,1,"[0123456789]");
 
 
@@ -50,14 +50,14 @@ static void parse_globbed_filenames(const vcl_string & input,
   end = (end + filenames.front().size()) - input.size();
 
   // Put them all in numeric order.
-  vcl_sort(filenames.begin(), filenames.end());
+  std::sort(filenames.begin(), filenames.end());
 
   // Now discard non-contiguously numbered files.
-  long count = vcl_atol(filenames.front().substr(start, end-start).c_str());
-  vcl_vector<vcl_string>::iterator it=filenames.begin()+1;
+  long count = std::atol(filenames.front().substr(start, end-start).c_str());
+  std::vector<std::string>::iterator it=filenames.begin()+1;
   while (it != filenames.end())
   {
-    if (vcl_atol(it->substr(start, end-start).c_str()) != ++count)
+    if (std::atol(it->substr(start, end-start).c_str()) != ++count)
       break;
     ++it;
   }
@@ -65,8 +65,8 @@ static void parse_globbed_filenames(const vcl_string & input,
 }
 
 
-void parse_multiple_filenames(const vcl_string & input,
-                              vcl_vector<vcl_string> &filenames)
+void parse_multiple_filenames(const std::string & input,
+                              std::vector<std::string> &filenames)
 {
   filenames.clear();
   unsigned start=0;
@@ -84,8 +84,8 @@ void parse_multiple_filenames(const vcl_string & input,
 imgr_scan_resource_sptr
 imgr_scan_resource_io::read_resource(xscan_scan const& scan)
 {
-  vcl_vector<vcl_string> filenames;
-  vcl_string filename = scan.image_file_path();
+  std::vector<std::string> filenames;
+  std::string filename = scan.image_file_path();
   parse_multiple_filenames(filename, filenames);
 
   for (unsigned i=0; i<filenames.size(); ++i)
@@ -104,15 +104,15 @@ imgr_scan_resource_io::read_resource(xscan_scan const& scan)
 
   //A hack for the moment to increase the number of files for WINDOWS
 #if defined(VCL_WIN32)
-vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
 _setmaxstdio(2048);
 #endif
-  vcl_vector<vil_image_resource_sptr> rescs(filenames.size());
+  std::vector<vil_image_resource_sptr> rescs(filenames.size());
   // load all the slices
   for (unsigned i=0; i<filenames.size(); ++i)
   {
     //DEBUG
-//  vcl_cout << "["<<i<<"]  "<< filenames[i].c_str() <<'\n';
+//  std::cout << "["<<i<<"]  "<< filenames[i].c_str() <<'\n';
   
   vil_image_resource_sptr resc  =
       vil_load_image_resource(filenames[i].c_str());

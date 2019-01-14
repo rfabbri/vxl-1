@@ -10,17 +10,17 @@
 
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbdet/sel/dbdet_curvelet.h>
 #include <dbdet/sel/dbdet_curvelet_map.h>
-#include <vcl_set.h>
+#include <set>
 
 class dbdet_edgel_chain;
 class dbdet_edgemap;
 
-typedef vcl_vector<dbdet_edgel> dbcsi_edgel_seq;
-typedef vcl_vector<dbdet_edgel>::iterator dbcsi_edgel_seq_iter;
-typedef vcl_vector<dbdet_edgel>::const_iterator dbcsi_edgel_seq_const_iter;
+typedef std::vector<dbdet_edgel> dbcsi_edgel_seq;
+typedef std::vector<dbdet_edgel>::iterator dbcsi_edgel_seq_iter;
+typedef std::vector<dbdet_edgel>::const_iterator dbcsi_edgel_seq_const_iter;
 
 class dbcsi_curve_distance {
 public:
@@ -35,7 +35,7 @@ public:
       const vil_image_view<vxl_uint_32> &dt,
       const vil_image_view<vxl_uint_32> &label,
       const dbdet_edgemap &em,
-      vcl_set<unsigned> *inliers
+      std::set<unsigned> *inliers
     );
 
   //: Convenience function that does not return the inlier set.
@@ -63,7 +63,7 @@ public:
       const vil_image_view<vxl_uint_32> &dt,
       const vil_image_view<vxl_uint_32> &label,
       const dbdet_edgemap &em,
-      vcl_list<unsigned> *inliers
+      std::list<unsigned> *inliers
     );
 
   //: Convenience function that does not return the inlier set.

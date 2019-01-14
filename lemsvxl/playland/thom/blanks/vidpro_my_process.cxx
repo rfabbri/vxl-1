@@ -23,7 +23,7 @@ vidpro_my_process::vidpro_my_process()
   // Set up the parameters for this process
   if( !parameters_sptr_->add_parameter( "Parameter Name 1" , "-p1" , vidpro_parameters::FLOAT , 10.0f ) ||
       !parameters_sptr_->add_parameter( "Parameter Name 2" , "-p2" , vidpro_parameters::BOOL , true ) ) {
-    vcl_cerr << "ERROR: Adding parameters in vidpro_my_process::vidpro_my_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro_my_process::vidpro_my_process()" << std::endl;
   }
 }
 
@@ -35,7 +35,7 @@ vidpro_my_process::~vidpro_my_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_my_process::name()
 {
   return "My Process";
@@ -61,12 +61,12 @@ vidpro_my_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_my_process::get_input_type()
 {
   // this process looks for an image and vsol2D storage class
   // at each input frame
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -74,11 +74,11 @@ vidpro_my_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_my_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -90,8 +90,8 @@ vidpro_my_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In vidpro_my_process::execute() - not exactly two"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro_my_process::execute() - not exactly two"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
@@ -107,7 +107,7 @@ vidpro_my_process::execute()
   vidpro_vsol2D_storage_sptr curr_frame_vsol2D;
   curr_frame_vsol2D.vertical_cast(input_data_[0][1]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol2D_data = curr_frame_vsol2D->get_vsol_list();
+  std::vector< vsol_spatial_object_2d_sptr > vsol2D_data = curr_frame_vsol2D->get_vsol_list();
 
  
   //get parameters

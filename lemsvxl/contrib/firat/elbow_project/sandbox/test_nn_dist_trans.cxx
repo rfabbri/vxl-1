@@ -9,7 +9,7 @@
 
 int main()
 {
-	vcl_vector<dbdet_3d_edge_sptr> edges;
+	std::vector<dbdet_3d_edge_sptr> edges;
 	dbdet_3d_edge_sptr edg = new dbdet_3d_edge;
 	edg->x = 5.1;
 	edg->y = 4.2;
@@ -28,12 +28,12 @@ int main()
 		for(int i = 0; i < DT.ni(); i++)
 		{
 
-			vcl_cout << DT(i,j) << " ";
+			std::cout << DT(i,j) << " ";
 		}
-		vcl_cout << vcl_endl;
+		std::cout << std::endl;
 	}
 
-	vcl_cout << vcl_endl << vcl_endl;
+	std::cout << std::endl << std::endl;
 	nn_subpixel_distance_transform(edges, DT, 10, 10, 3, 1, 1, 1);
 
 		for(int j = 0; j < DT.nj(); j++)
@@ -41,9 +41,9 @@ int main()
 			for(int i = 0; i < DT.ni(); i++)
 			{
 
-				vcl_cout << DT(i,j) << " ";
+				std::cout << DT(i,j) << " ";
 			}
-			vcl_cout << vcl_endl;
+			std::cout << std::endl;
 		}
 
 	return 0;

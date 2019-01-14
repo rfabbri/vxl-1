@@ -60,7 +60,7 @@ void dbrec3d_kernel_max_functor<T>::apply(T& part)
 {
   //missing to check that this is not the central part
   if(!init_called_){
-    vcl_cerr << "Cannot apply functor without initializing first" << vcl_endl;
+    std::cerr << "Cannot apply functor without initializing first" << std::endl;
     return;
   }
   if(part.type_id()<0)

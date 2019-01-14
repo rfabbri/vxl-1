@@ -2,12 +2,12 @@
 //:
 // \file
 #include <vgl/vgl_point_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <cmath>
+#include <fstream>
 #include <vnl/vnl_math.h>
 
-#include <vcl_string.h>
+#include <string>
 
 //***************************************************************************
 // Initialization
@@ -18,17 +18,17 @@
 //---------------------------------------------------------------------------
 dbsk3dr_ms_curve::dbsk3dr_ms_curve()
 {
-  storage_=new vcl_vector<vgl_point_3d<double>*>();
+  storage_=new std::vector<vgl_point_3d<double>*>();
   isOpen_=true;
 }
 
 //---------------------------------------------------------------------------
-//: Constructor from a vcl_vector of points
+//: Constructor from a std::vector of points
 //---------------------------------------------------------------------------
 
-dbsk3dr_ms_curve::dbsk3dr_ms_curve(const vcl_vector<vgl_point_3d<double>*> &new_vertices)
+dbsk3dr_ms_curve::dbsk3dr_ms_curve(const std::vector<vgl_point_3d<double>*> &new_vertices)
 {
-  storage_=new vcl_vector<vgl_point_3d<double>*>(new_vertices);
+  storage_=new std::vector<vgl_point_3d<double>*>(new_vertices);
   isOpen_=true;
 }
 
@@ -38,9 +38,9 @@ dbsk3dr_ms_curve::dbsk3dr_ms_curve(const vcl_vector<vgl_point_3d<double>*> &new_
 
 dbsk3dr_ms_curve::dbsk3dr_ms_curve (dbsk3d_ms_curve* MC, const bool flip)
 {
-  storage_=new vcl_vector<vgl_point_3d<double>*>();
+  storage_=new std::vector<vgl_point_3d<double>*>();
 
-  vcl_vector<dbmsh3d_vertex*> V_vec;
+  std::vector<dbmsh3d_vertex*> V_vec;
   MC->get_V_vec (V_vec);
 
   if (flip == false) {
@@ -176,13 +176,13 @@ void dbsk3dr_ms_curve::insert_vertex(const int i, double x, double y, double z, 
 {
   assert (valid_index(i));
   vgl_point_3d<double>* pt = new vgl_point_3d<double>(x, y, z);
-  vcl_vector<vgl_point_3d<double>*>::iterator it = storage_->begin();
+  std::vector<vgl_point_3d<double>*>::iterator it = storage_->begin();
   it += i;
   storage_->insert(it, pt);
   if (bRecomputeProperties) computeProperties();
 }
 
-void dbsk3dr_ms_curve::read_con3_file (vcl_string fileName)
+void dbsk3dr_ms_curve::read_con3_file (std::string fileName)
 {
   double x, y, z;
   char buffer[2000];
@@ -193,9 +193,9 @@ void dbsk3dr_ms_curve::read_con3_file (vcl_string fileName)
     clear();
 
   //1)If file open fails, return.
-  vcl_ifstream fp(fileName.c_str(), vcl_ios::in);
+  std::ifstream fp(fileName.c_str(), std::ios::in);
   if (!fp) {
-    vcl_cout<<" : Unable to Open "<<fileName<<vcl_endl;
+    std::cout<<" : Unable to Open "<<fileName<<std::endl;
     return;
   }
 
@@ -204,23 +204,23 @@ void dbsk3dr_ms_curve::read_con3_file (vcl_string fileName)
 
   //fp.getline(buffer,2000); //OPEN/CLOSE
   //char openFlag[2000];
-  vcl_string openFlag;
+  std::string openFlag;
   //fp.getline(openFlag,2000);
-  vcl_getline(fp, openFlag);
+  std::getline(fp, openFlag);
   //if (!vcl_Strncmp(openFlag,"OPEN",4))
-  if (openFlag.find("OPEN",0) != vcl_string::npos)
+  if (openFlag.find("OPEN",0) != std::string::npos)
     isOpen_ = true;
   //else if (!vcl_Strncmp(openFlag,"CLOSE",5))
-  else if (openFlag.find("CLOSE",0) != vcl_string::npos)
+  else if (openFlag.find("CLOSE",0) != std::string::npos)
     isOpen_ = false;
   else{
-    vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << fileName.c_str() << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return;
   }
 
   fp >> nPoints;
-  vcl_cout << "Number of Points from Contour: " << nPoints
+  std::cout << "Number of Points from Contour: " << nPoints
            << "\nContour flag is "<< isOpen_ << " (1 for open, 0 for close)\n";
 
   for (int i=0;i<nPoints;i++) {
@@ -310,15 +310,15 @@ void dbsk3dr_ms_curve::computeProperties()
     double cur_dx = cur_x - prev_x;
     double cur_dy = cur_y - prev_y;
     double cur_dz = cur_z - prev_z;
-    double dL = vcl_sqrt(cur_dx*cur_dx + cur_dy*cur_dy + cur_dz*cur_dz);
+    double dL = std::sqrt(cur_dx*cur_dx + cur_dy*cur_dy + cur_dz*cur_dz);
     s_.push_back(dL);
     length += dL;
     arcLength_.push_back(length);
 
-    double phi = vcl_acos(cur_dz/dL);
+    double phi = std::acos(cur_dz/dL);
     phi_.push_back(phi);
-    double dLxy = dL*vcl_sin(phi);
-    double theta = vcl_acos(cur_dx/dLxy);
+    double dLxy = dL*std::sin(phi);
+    double theta = std::acos(cur_dx/dLxy);
     theta_.push_back(theta);
 
     vgl_vector_3d<double>* tangent = new vgl_vector_3d<double>(cur_dx, cur_dy, cur_dz);
@@ -344,23 +344,23 @@ void dbsk3dr_ms_curve::computeProperties()
     phis_.push_back(phis);
     double thetas = (theta_[i] - theta_[i-1])/s_[i];
     thetas_.push_back(thetas);
-    double curvature = vnl_math::hypot(phis, vcl_sin(phi_[i])*thetas);
+    double curvature = vnl_math::hypot(phis, std::sin(phi_[i])*thetas);
     curvature_.push_back(curvature);
 
     //the Tangent[] is normalized.
-    double angle = vcl_acos (vcl_fabs (dot_product (*(Tangent_[i]), *(Tangent_[i-1]))));
+    double angle = std::acos (std::fabs (dot_product (*(Tangent_[i]), *(Tangent_[i-1]))));
     angle_.push_back (angle); //at pos [i-1]
 
     totalCurvature_ += curvature;
-    totalAngleChange_ += vcl_fabs(curvature);
+    totalAngleChange_ += std::fabs(curvature);
 
-    double cos_phi = vcl_cos(phi_[i]);
-    double sin_phi = vcl_sin(phi_[i]);
-    double cos_theta = vcl_cos(theta_[i]);
-    double sin_theta = vcl_sin(theta_[i]);
+    double cos_phi = std::cos(phi_[i]);
+    double sin_phi = std::sin(phi_[i]);
+    double cos_theta = std::cos(theta_[i]);
+    double sin_theta = std::sin(theta_[i]);
     double normalx = cos_phi * cos_theta * phis - sin_phi * sin_theta * thetas;
     double normaly = cos_phi * sin_theta * phis - sin_phi * cos_theta * thetas;
-    double normalz = - vcl_sin(phi_[i]) * phis;
+    double normalz = - std::sin(phi_[i]) * phis;
     vgl_vector_3d<double>* normal = new vgl_vector_3d<double>(normalx, normaly, normalz);
     normalize(*normal); //normalize the normal vector.
     Normal_.push_back(normal);
@@ -473,13 +473,13 @@ void dbsk3dr_ms_curve::computeArcLength()
     normArcLength_.push_back(arcLength_[i]/length_);
 
 #ifdef DEBUG
-  vcl_cout << "Norm arc length values:\n";
+  std::cout << "Norm arc length values:\n";
   for (int i = 0; i<size(); i++)
-    vcl_cout << "normArcLength_[" << i << "]: " << normArcLength_[i] << vcl_endl;
+    std::cout << "normArcLength_[" << i << "]: " << normArcLength_[i] << std::endl;
 
-  vcl_cout << "arc length values:\n";
+  std::cout << "arc length values:\n";
   for (int i = 0; i<size(); i++)
-    vcl_cout << "arcLength_[" << i << "]: " << arcLength_[i] << vcl_endl;
+    std::cout << "arcLength_[" << i << "]: " << arcLength_[i] << std::endl;
 #endif
 }
 
@@ -504,10 +504,10 @@ void dbsk3dr_ms_curve::computeCurvatures()
       d2y=(cdy-pdy)/dL;
     }
     double K = 0;
-    if (vcl_fabs(cdx) >= ZERO_TOLERANCE || vcl_fabs(cdy) >= ZERO_TOLERANCE)
-      K=(d2y*cdx-d2x*cdy)/vcl_pow((vcl_pow(cdx,2)+vcl_pow(cdy,2)),3/2);
+    if (std::fabs(cdx) >= ZERO_TOLERANCE || std::fabs(cdy) >= ZERO_TOLERANCE)
+      K=(d2y*cdx-d2x*cdy)/std::pow((std::pow(cdx,2)+std::pow(cdy,2)),3/2);
 #ifdef DEBUG
-    vcl_cout << d2x << ' ' << d2y << ' ' << dL << ' ' << cdx << ' ' << cdy << ' ' << K << vcl_endl;
+    std::cout << d2x << ' ' << d2y << ' ' << dL << ' ' << cdx << ' ' << cdy << ' ' << K << std::endl;
 #endif
     curvature_.push_back(K);
     totalCurvature_+=K;
@@ -530,10 +530,10 @@ void dbsk3dr_ms_curve::computeCurvatures()
     else
       d2x=d2y=0;
     double K;
-    if (vcl_fabs(cdx) < ZERO_TOLERANCE && vcl_fabs(cdy) < ZERO_TOLERANCE)
+    if (std::fabs(cdx) < ZERO_TOLERANCE && std::fabs(cdy) < ZERO_TOLERANCE)
       K=0;
     else
-      K=(d2y*cdx-d2x*cdy)/vcl_pow((vcl_pow(cdx,2)+vcl_pow(cdy,2)),3/2);
+      K=(d2y*cdx-d2x*cdy)/std::pow((std::pow(cdx,2)+std::pow(cdy,2)),3/2);
     curvature_[0]=K;
   }
 #endif // 0
@@ -554,7 +554,7 @@ void dbsk3dr_ms_curve::computeDerivatives()
   {
     double cx=(*storage_)[i]->x();
     double cy=(*storage_)[i]->y();
-    double dL=vcl_sqrt(vcl_pow(cx-px,2)+vcl_pow(cy-py,2));
+    double dL=std::sqrt(std::pow(cx-px,2)+std::pow(cy-py,2));
     if (dL > ZERO_TOLERANCE) {
       dx_.push_back((cx-px)/dL);
       dy_.push_back((cy-py)/dL);
@@ -575,7 +575,7 @@ void dbsk3dr_ms_curve::computeDerivatives()
     double py=(*storage_)[size()-1]->y();
     double cx=(*storage_)[0]->x();
     double cy=(*storage_)[0]->y();
-    double dL=vcl_sqrt(vcl_pow(cx-px,2)+vcl_pow(cy-py,2));
+    double dL=std::sqrt(std::pow(cx-px,2)+std::pow(cy-py,2));
     dx_[0]=(cx-px)/dL;
     dy_[0]=(cy-py)/dL;
   }
@@ -595,7 +595,7 @@ void dbsk3dr_ms_curve::computeAngles()
   {
     double cx=(*storage_)[i]->x();
     double cy=(*storage_)[i]->y();
-    double theta=vcl_atan2(cy-py,cx-px);
+    double theta=std::atan2(cy-py,cx-px);
     angle_.push_back(theta);
     px=cx;
     py=cy;
@@ -605,9 +605,9 @@ void dbsk3dr_ms_curve::computeAngles()
     angle_[0]=angle_[1];
     for (unsigned int i=1;i<angle_.size();i++) {
 #ifdef DEBUG
-      vcl_cout << angle_[i] << ' ' << angle_[i-1] << vcl_endl;
+      std::cout << angle_[i] << ' ' << angle_[i-1] << std::endl;
 #endif
-      totalAngleChange_ += vcl_fabs(angle_[i]-angle_[i-1]);
+      totalAngleChange_ += std::fabs(angle_[i]-angle_[i-1]);
     }
   }
 
@@ -625,13 +625,13 @@ void dbsk3dr_ms_curve::computeAngles()
     double py=(*storage_)[size()-1]->y();
     double cx=(*storage_)[0]->x();
     double cy=(*storage_)[0]->y();
-    double theta=vcl_atan2(cy-py,cx-px);
+    double theta=std::atan2(cy-py,cx-px);
     angle_[0]=theta;
 
 #if 0 // commented out
     // TBS source code tests the distance between first and last points!!
-    if (vcl_sqrt((cx-px)*(cx-px)+(cy-py)*(cy-py))<2)
-      c->angle[0]=vcl_atan2(cy-py,cx-px);
+    if (std::sqrt((cx-px)*(cx-px)+(cy-py)*(cy-py))<2)
+      c->angle[0]=std::atan2(cy-py,cx-px);
 #endif // 0
   }
 #endif

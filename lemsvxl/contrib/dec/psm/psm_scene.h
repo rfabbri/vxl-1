@@ -1,8 +1,8 @@
 #ifndef psm_scene_h_
 #define psm_scene_h_
 
-#include <vcl_string.h>
-#include <vcl_set.h>
+#include <string>
+#include <set>
 #include <vul/vul_file.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -38,7 +38,7 @@ public:
   ~psm_scene() { delete block_storage_; }
 
   //: constructor
-  psm_scene(vgl_point_3d<double> origin, double block_len, vcl_string storage_dir, bgeo_lvcs_sptr lvcs, unsigned int max_subdivision_levels = hsds_fd_tree_node_index<3>::MAX_LEVELS)
+  psm_scene(vgl_point_3d<double> origin, double block_len, std::string storage_dir, bgeo_lvcs_sptr lvcs, unsigned int max_subdivision_levels = hsds_fd_tree_node_index<3>::MAX_LEVELS)
     : psm_scene_base(origin, block_len, lvcs), max_subdivision_levels_(max_subdivision_levels), block_storage_(new psm_scene_block_storage_single<psm_sample<APM> >(storage_dir)) 
   { 
     // discover blocks already on disk
@@ -69,28 +69,28 @@ public:
   void init_block(vgl_point_3d<int> block_idx, unsigned int block_level, float init_alpha = 0.001);
 
   //: access storage dir
-  vcl_string storage_dir(){return block_storage_->storage_directory();}
+  std::string storage_dir(){return block_storage_->storage_directory();}
 
   //: return appearance model type
   virtual psm_apm_type appearance_model_type() const {return psm_sample<APM> ::apm_type;}
 
   template <psm_aux_type AUX_T> 
-  psm_aux_scene_base_sptr get_aux_scene(vcl_string storage_suffix = "")
+  psm_aux_scene_base_sptr get_aux_scene(std::string storage_suffix = "")
   {
-    vcl_string aux_storage_dir(storage_dir() + "/" + psm_aux_traits<AUX_T>::storage_subdir() + storage_suffix);
+    std::string aux_storage_dir(storage_dir() + "/" + psm_aux_traits<AUX_T>::storage_subdir() + storage_suffix);
     psm_aux_scene_base_sptr aux_sptr = new psm_aux_scene<AUX_T>(origin(), block_len(), aux_storage_dir);
     return aux_sptr;
   }
 
   template<psm_aux_type AUX_T>
-  void init_aux_scene(vcl_string storage_suffix = "") 
+  void init_aux_scene(std::string storage_suffix = "") 
   {
-    vcl_string aux_storage_dir(storage_dir() + "/" + psm_aux_traits<AUX_T>::storage_subdir() + storage_suffix);
+    std::string aux_storage_dir(storage_dir() + "/" + psm_aux_traits<AUX_T>::storage_subdir() + storage_suffix);
     vul_file::make_directory(aux_storage_dir);
     psm_aux_scene_base_sptr aux_scene_base = get_aux_scene<AUX_T>(storage_suffix);
     psm_aux_scene<AUX_T> *aux_scene = dynamic_cast<psm_aux_scene<AUX_T>*>(aux_scene_base.ptr());
     // loop through valid blocks and init same blocks in aux scene
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks_.begin();
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks_.begin();
     for (; vbit != valid_blocks_.end(); ++vbit) {
       hsds_fd_tree<psm_sample<APM>,3> &block = this->get_block(*vbit);
       hsds_fd_tree<typename psm_aux_traits<AUX_T>::sample_datatype,3> aux_block = block.twin_tree(typename psm_aux_traits<AUX_T>::sample_datatype());
@@ -99,7 +99,7 @@ public:
     return;
   }
 
-  void save_alpha_raw(vcl_string filename, vgl_point_3d<int> block_idx, unsigned int resolution_level);
+  void save_alpha_raw(std::string filename, vgl_point_3d<int> block_idx, unsigned int resolution_level);
 
 private:
   //: discover already existing blocks on disk

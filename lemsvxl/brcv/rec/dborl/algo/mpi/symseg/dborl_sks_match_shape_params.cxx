@@ -23,14 +23,14 @@
 bool dborl_sks_match_shape_params::
 parse_from_data(bxml_data_sptr root)
 {
-  vcl_cout << "parsing dborl_sks_match_shape_params\n";
+  std::cout << "parsing dborl_sks_match_shape_params\n";
   bxml_element query("dborl_sks_match_shape_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   
   if (!result) 
   {
-    vcl_cout << "dborl_sks_match_shape_params::parse_from_data() - "
+    std::cout << "dborl_sks_match_shape_params::parse_from_data() - "
       << " could not find the node dborl_sks_match_shape_params\n";
     return false;
   }
@@ -41,7 +41,7 @@ parse_from_data(bxml_data_sptr root)
 
   if (!result2) 
   {
-    vcl_cout << "dborl_sks_match_shape_params::parse_from_data() - "
+    std::cout << "dborl_sks_match_shape_params::parse_from_data() - "
       << "could not find the node data\n";
     return false;
   }
@@ -63,7 +63,7 @@ parse_from_data(bxml_data_sptr root)
 
   if (!result3) 
   {
-    vcl_cout << "dborl_sks_match_shape_params::parse_from_data() - "
+    std::cout << "dborl_sks_match_shape_params::parse_from_data() - "
       << "could not find the node dbsks_compute_image_cost_params\n";
     return false;
   }
@@ -84,7 +84,7 @@ parse_from_data(bxml_data_sptr root)
 
   if (!result4) 
   {
-    vcl_cout << "dborl_sks_match_shape_params::parse_from_data() - "
+    std::cout << "dborl_sks_match_shape_params::parse_from_data() - "
       << "could not find the node dbsks_detect_shape_params\n";
     return false;
   }
@@ -104,7 +104,7 @@ parse_from_data(bxml_data_sptr root)
 
   if (!result5) 
   {
-    vcl_cout << "dborl_sks_match_shape_params::parse_from_data() - "
+    std::cout << "dborl_sks_match_shape_params::parse_from_data() - "
       << "could not find the node dbsks_local_match_params\n";
     return false;
   }

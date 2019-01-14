@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -25,7 +25,7 @@ public:
   dbknee_vsol2D_displayer(){}
 
   //: Return type string "vsol2D"
-  virtual vcl_string type() const { return "vsol2D"; }
+  virtual std::string type() const { return "vsol2D"; }
 
   //: Create a tableau if the storage object is of type vsol2D
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

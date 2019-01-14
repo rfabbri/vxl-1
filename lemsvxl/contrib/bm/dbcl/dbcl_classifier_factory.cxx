@@ -13,7 +13,7 @@ dbcl_classifier_factory::dbcl_classifier_factory( registered_classifiers const& 
             classifier_ = new dbcl_state_machine_classifier(training_data,test_data);
                 break;
         default:
-            vcl_cerr << "ERROR: dbcl_classifier_factory -- unregistered classifier requested." << vcl_flush; 
+            std::cerr << "ERROR: dbcl_classifier_factory -- unregistered classifier requested." << std::flush; 
             break;
     }
 }//end dbcl_classifier_factory::dbcl_classifier_factory

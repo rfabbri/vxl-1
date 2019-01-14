@@ -2,10 +2,10 @@
 #define PLUGIN_BASE
 #include "basegui_BaseWindow.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 class BaseWindow;
 class MainGUIWindow;
@@ -24,54 +24,54 @@ class BasePlugin
 
        virtual ~BasePlugin(){};
 
-        const vcl_string& GetPluginName()     
+        const std::string& GetPluginName()     
           {
             return _name; 
            }
 
-        const vcl_string& GetPluginMenuName()     
+        const std::string& GetPluginMenuName()     
           {
             return _pretty_name; 
            }
 
-        const vcl_vector<vcl_string>& GetPluginServices()     
+        const std::vector<std::string>& GetPluginServices()     
           {
             return _services; 
            }
 
-        const vcl_string& GetPluginDescription()
+        const std::string& GetPluginDescription()
           {
             return _description; 
            }
 
-        int SetPluginName(const vcl_string& name)     
+        int SetPluginName(const std::string& name)     
           {
             _name = name;
             return 0;
            }
 
-        int SetPluginMenuName(const vcl_string& name)     
+        int SetPluginMenuName(const std::string& name)     
           {
             _pretty_name = name;
 
             return 0;
            }
         
-        int SetPluginServices(const vcl_vector<vcl_string> &services)
+        int SetPluginServices(const std::vector<std::string> &services)
           {
             _services = services;
 
             return 0;
            }
        
-        int AddToPluginServices(const vcl_string & service)
+        int AddToPluginServices(const std::string & service)
           {
             _services.push_back(service);
 
             return 0;
            }
         
-        int SetPluginDescription(const vcl_string &desc)
+        int SetPluginDescription(const std::string &desc)
           {
             _description = desc;
             return 0;
@@ -124,10 +124,10 @@ class BasePlugin
     private:
         int _plugin_id;  // Used in the plugins menu.
         int _priority;
-        vcl_string _name;
-        vcl_string _pretty_name;
-        vcl_string _description;
-        vcl_vector<vcl_string> _services;
+        std::string _name;
+        std::string _pretty_name;
+        std::string _description;
+        std::vector<std::string> _services;
         int _window_count;
    };
 

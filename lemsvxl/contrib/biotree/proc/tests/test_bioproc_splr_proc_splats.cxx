@@ -12,9 +12,9 @@
 #include <proc/bioproc_filtering_proc.h>
 #include <biob/biob_worldpt_roster_sptr.h>
 #include <biob/biob_worldpt_roster.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 void test_bioproc_splr_proc_splats(){
   // scan
@@ -44,8 +44,8 @@ void test_bioproc_splr_proc_splats(){
   // construct the filter
   bioproc_tests_modified_no_noise_filter_3d fz(fdz);
 
-//  vcl_vector<xmvg_atomic_filter_3d<double> > filters;
-  vcl_vector<bioproc_tests_modified_no_noise_filter_3d> filters;
+//  std::vector<xmvg_atomic_filter_3d<double> > filters;
+  std::vector<bioproc_tests_modified_no_noise_filter_3d> filters;
   filters.push_back(fz);
 
   xmvg_composite_filter_3d<double, bioproc_tests_modified_no_noise_filter_3d> comp3d(filters);
@@ -66,36 +66,36 @@ void test_bioproc_splr_proc_splats(){
        xmvg_atomic_filter_2d<double> dummy_atomic_splat = dummy_splat.atomic_filter(0);
        double splr_sum = splr_atomic_splat.weights_sum();
        double dummy_sum = dummy_atomic_splat.weights_sum();
-       int discrepancy = vnl_math_abs(splr_sum - dummy_sum) > .1*vcl_max(vnl_math_abs(splr_sum), vnl_math_abs(dummy_sum));
+       int discrepancy = vnl_math_abs(splr_sum - dummy_sum) > .1*std::max(vnl_math_abs(splr_sum), vnl_math_abs(dummy_sum));
        if (discrepancy){
                 ++ num_discrepancies;
-                vcl_cout << "******* DISCREPANCY ************\n";
-                vcl_cout << "splr_splat:\n";
-                vsl_print_summary(vcl_cout, splr_atomic_splat);
+                std::cout << "******* DISCREPANCY ************\n";
+                std::cout << "splr_splat:\n";
+                vsl_print_summary(std::cout, splr_atomic_splat);
                 {int c = 0;
                 vnl_int_2 splr_splat_size = splr_atomic_splat.size();
                 for (int j = 0; j < splr_splat_size[0]; ++j){
                   for (int k = 0; k < splr_splat_size[1]; ++k){
-                   vcl_cout << splr_atomic_splat[j][k] << " ";
+                   std::cout << splr_atomic_splat[j][k] << " ";
                   }
-                  vcl_cout << "\n";
+                  std::cout << "\n";
                 }
                 }
-                vcl_cout << "dummy_splat:\n";
-                vsl_print_summary(vcl_cout, dummy_atomic_splat);
+                std::cout << "dummy_splat:\n";
+                vsl_print_summary(std::cout, dummy_atomic_splat);
                 {int c = 0;
                 for (int j = 0; j <  dummy_atomic_splat.size()[0]; ++j){
                   for (int k = 0; k <  dummy_atomic_splat.size()[1]; ++k){
-                   vcl_cout << dummy_atomic_splat[j][k] << " ";
+                   std::cout << dummy_atomic_splat[j][k] << " ";
                   }
-                  vcl_cout << "\n";
+                  std::cout << "\n";
                 }
                 }
    
        }
        if (i % 1000 == 0 || discrepancy){
-                vcl_cout << "orbit index " << t << " and point number " << i << "\n";
-                vcl_cout << " splr weight: " << splr_sum
+                std::cout << "orbit index " << t << " and point number " << i << "\n";
+                std::cout << " splr weight: " << splr_sum
                          << " dummy weight: " << dummy_sum << "\n";
        }
       }

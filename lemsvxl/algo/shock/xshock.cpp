@@ -3,8 +3,8 @@
 // This file contains code to maintain and ouput an
 // Extrisic Shock Data Structure
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 
 #include <extrautils/common.h>
 #include "xshock.h"
@@ -49,16 +49,16 @@ void XShock::clear()
   }
 }
 
-void XShock::OutputXShockToFile(const char* filename, vcl_vector<const char*> miscInfo)
+void XShock::OutputXShockToFile(const char* filename, std::vector<const char*> miscInfo)
 {
   // 1. open the esf file
    if (!filename){
-      //COUT << " No esg shock filename given"<<vcl_endl;
+      //COUT << " No esg shock filename given"<<std::endl;
       return;
    }
-   vcl_ofstream fp(filename);
+   std::ofstream fp(filename);
    if (!fp){
-      //cout<<" : Unable to Open "<<filename<<vcl_endl;
+      //cout<<" : Unable to Open "<<filename<<std::endl;
       return;
    }
 
@@ -76,33 +76,33 @@ void XShock::OutputXShockToFile(const char* filename, vcl_vector<const char*> mi
 
 }
 
-void XShock::OutputHeaderToFile(const char* filename, vcl_ofstream & fp, vcl_vector<const char*> miscInfo)
+void XShock::OutputHeaderToFile(const char* filename, std::ofstream & fp, std::vector<const char*> miscInfo)
 {
-  //fp <<"Extrinsic Shock File v2.0"<<vcl_endl<<vcl_endl;
-   fp <<"Extrinsic Shock File v1.0"<<vcl_endl<<vcl_endl;
+  //fp <<"Extrinsic Shock File v2.0"<<std::endl<<std::endl;
+   fp <<"Extrinsic Shock File v1.0"<<std::endl<<std::endl;
 
-  fp <<"Begin [GENERAL INFO]"<<vcl_endl<<vcl_endl;
+  fp <<"Begin [GENERAL INFO]"<<std::endl<<std::endl;
 
-  fp <<"Input Contour File: "<<filename<<vcl_endl;
+  fp <<"Input Contour File: "<<filename<<std::endl;
   for (int i=0; i<miscInfo.size(); i++)
-    fp << miscInfo[i] <<vcl_endl;
+    fp << miscInfo[i] <<std::endl;
 
-  fp <<"Date of Creation: 12/26/2002"<<vcl_endl<<vcl_endl;
+  fp <<"Date of Creation: 12/26/2002"<<std::endl<<std::endl;
 
-  fp <<"Number of Nodes: "<<nodeIDcnt<<vcl_endl;
-  fp <<"Number of Edges: "<<edgeIDcnt<<vcl_endl;
-  fp <<"Number of Sample Points: "<<sampleIDcnt<<vcl_endl<<vcl_endl;
+  fp <<"Number of Nodes: "<<nodeIDcnt<<std::endl;
+  fp <<"Number of Edges: "<<edgeIDcnt<<std::endl;
+  fp <<"Number of Sample Points: "<<sampleIDcnt<<std::endl<<std::endl;
 
-  fp <<"End [GENERAL INFO]"<<vcl_endl<<vcl_endl;
+  fp <<"End [GENERAL INFO]"<<std::endl<<std::endl;
 
 }
 
-void XShock::OutputNodeSectionToFile(vcl_ofstream & fp)
+void XShock::OutputNodeSectionToFile(std::ofstream & fp)
 {
   int j;
 
-   fp <<"Begin [NODE DESCRIPTION]"<<vcl_endl;
-   fp <<"# node_ID  node_type Inside/Outside [CW linked node_IDs] [corresponding sample points]"<<vcl_endl;
+   fp <<"Begin [NODE DESCRIPTION]"<<std::endl;
+   fp <<"# node_ID  node_type Inside/Outside [CW linked node_IDs] [corresponding sample points]"<<std::endl;
 
   for (int i=0; i<ExNodeList.size(); i++){
     ExNode* cur_node = ExNodeList[i];
@@ -141,38 +141,38 @@ void XShock::OutputNodeSectionToFile(vcl_ofstream & fp)
       fp << cur_sample->_id <<" ";
     }
     fp <<"] ";
-    fp <<vcl_endl;
+    fp <<std::endl;
   }
-   fp <<"End [NODE DESCRIPTION]"<<vcl_endl<<vcl_endl;
+   fp <<"End [NODE DESCRIPTION]"<<std::endl<<std::endl;
 }
 
-void XShock::OutputSample (vcl_ofstream & fp, ExSample* sample)
+void XShock::OutputSample (std::ofstream & fp, ExSample* sample)
 {
-   fp <<"Begin SAMPLE"<<vcl_endl;
-   fp <<"sample_id "<< sample->_id<<vcl_endl;
-   fp <<"(x, y, t) ("<< sample->_pt.getX() <<", " << sample->_pt.getY() <<", " << sample->_t <<")"<<vcl_endl;
-   fp <<"edge_id "<< sample->_edge_id <<vcl_endl;
+   fp <<"Begin SAMPLE"<<std::endl;
+   fp <<"sample_id "<< sample->_id<<std::endl;
+   fp <<"(x, y, t) ("<< sample->_pt.getX() <<", " << sample->_pt.getY() <<", " << sample->_t <<")"<<std::endl;
+   fp <<"edge_id "<< sample->_edge_id <<std::endl;
 
   if (sample->_label==ExSample::REGULAR)            fp <<"label regular";
   else if (sample->_label==ExSample::SEMI_DEGENERATE)  fp <<"label regular";
   else if (sample->_label==ExSample::DEGENERATE)      fp <<"label degenerate";
-  fp <<vcl_endl;
+  fp <<std::endl;
 
-  if (sample->_type == ExSample::NORMALSAMPLE)      fp <<"type "<< "N"<<vcl_endl;
-  else if (sample->_type == ExSample::PRUNEDSAMPLE)  fp <<"type "<< "P"<<vcl_endl;
-  else                                fp <<"type "<< "C"<<vcl_endl;
+  if (sample->_type == ExSample::NORMALSAMPLE)      fp <<"type "<< "N"<<std::endl;
+  else if (sample->_type == ExSample::PRUNEDSAMPLE)  fp <<"type "<< "P"<<std::endl;
+  else                                fp <<"type "<< "C"<<std::endl;
 
-   fp <<"theta "<< sample->_theta<<vcl_endl;
-   fp <<"speed "<< sample->_speed<<vcl_endl;
+   fp <<"theta "<< sample->_theta<<std::endl;
+   fp <<"speed "<< sample->_speed<<std::endl;
    fp <<"boundaryPoints [(" << sample->_lBPoint.getX() <<", "<< sample->_lBPoint.getY() <<")";
-  fp <<", (" << sample->_rBPoint.getX() <<", " << sample->_rBPoint.getY() <<")]"<<vcl_endl;
-   fp <<"boundaryTangents ["<< sample->_lBTangent <<", "<< sample->_rBTangent <<"]"<<vcl_endl;
-   fp <<"End SAMPLE"<<vcl_endl<<vcl_endl;
+  fp <<", (" << sample->_rBPoint.getX() <<", " << sample->_rBPoint.getY() <<")]"<<std::endl;
+   fp <<"boundaryTangents ["<< sample->_lBTangent <<", "<< sample->_rBTangent <<"]"<<std::endl;
+   fp <<"End SAMPLE"<<std::endl<<std::endl;
 }
 
-void XShock::OutputNodeSamplesToFile(vcl_ofstream & fp)
+void XShock::OutputNodeSamplesToFile(std::ofstream & fp)
 {
-   fp <<"Begin [NODE SAMPLE POINTS]"<<vcl_endl<<vcl_endl;
+   fp <<"Begin [NODE SAMPLE POINTS]"<<std::endl<<std::endl;
 
   for (int i=0; i<ExNodeList.size(); i++){
     ExNode* cur_node = ExNodeList[i];
@@ -185,13 +185,13 @@ void XShock::OutputNodeSamplesToFile(vcl_ofstream & fp)
       OutputSample (fp, cur_sample);
     }
   }
-   fp <<"End [NODE SAMPLE POINTS]"<<vcl_endl<<vcl_endl;
+   fp <<"End [NODE SAMPLE POINTS]"<<std::endl<<std::endl;
 }
 
-void XShock::OutputEdgeSectionToFile(vcl_ofstream & fp)
+void XShock::OutputEdgeSectionToFile(std::ofstream & fp)
 {
-   fp <<"Begin [EDGE DESCRIPTION]"<<vcl_endl;
-   fp <<"# Edge_ID Inside/Outside [From_NODE To_NODE] [IDs of the sample points]"<<vcl_endl;
+   fp <<"Begin [EDGE DESCRIPTION]"<<std::endl;
+   fp <<"# Edge_ID Inside/Outside [From_NODE To_NODE] [IDs of the sample points]"<<std::endl;
 
   for (int i=0; i<ExEdgeList.size(); i++){
     ExEdge* cur_edge = ExEdgeList[i];
@@ -222,15 +222,15 @@ void XShock::OutputEdgeSectionToFile(vcl_ofstream & fp)
       if (cur_sample->_edge_id == -1) continue;
       fp << cur_sample->_id <<" ";
     }
-    fp <<"]"<<vcl_endl;
+    fp <<"]"<<std::endl;
   }
 
-  fp <<"End [EDGE DESCRIPTION]"<<vcl_endl<<vcl_endl;
+  fp <<"End [EDGE DESCRIPTION]"<<std::endl<<std::endl;
 }
 
-void XShock::OutputEdgeSamplesToFile(vcl_ofstream & fp)
+void XShock::OutputEdgeSamplesToFile(std::ofstream & fp)
 {
-   fp <<"Begin [EDGE SAMPLE POINTS]"<<vcl_endl<<vcl_endl;
+   fp <<"Begin [EDGE SAMPLE POINTS]"<<std::endl<<std::endl;
 
   for (int i=0; i<ExEdgeList.size(); i++){
     ExEdge* cur_edge = ExEdgeList[i];
@@ -249,14 +249,14 @@ void XShock::OutputEdgeSamplesToFile(vcl_ofstream & fp)
       OutputSample (fp, cur_sample);
     }
   }
-   fp <<"End [EDGE SAMPLE POINTS]"<<vcl_endl<<vcl_endl;
+   fp <<"End [EDGE SAMPLE POINTS]"<<std::endl<<std::endl;
 }
 
 void XShock::cropESF(Point2D<double>topLeft, Point2D<double>bottomRight)
 {
   //this will delete all the extrinsic shocks that are outside the window
 
-  vcl_vector<ExEdge*>::iterator curEdge = ExEdgeList.begin();
+  std::vector<ExEdge*>::iterator curEdge = ExEdgeList.begin();
   for (;curEdge!=ExEdgeList.end();curEdge++){
     ExEdge* cEdge = (*curEdge);
     Point2D<double> edge_start = cEdge->_fromNode->_samples.front()->_pt;
@@ -307,7 +307,7 @@ void XShock::cropESF(Point2D<double>topLeft, Point2D<double>bottomRight)
       //traverse the list of the samples in this edge and find the sample 
       //that is just inside the box
       ExSample* endSample=NULL;
-      vcl_vector<ExSample*>::iterator curSample = cEdge->_EdgeSamples.begin();
+      std::vector<ExSample*>::iterator curSample = cEdge->_EdgeSamples.begin();
       for (;curSample!=cEdge->_EdgeSamples.end();curSample++){
         ExSample* curS = (*curSample);
 

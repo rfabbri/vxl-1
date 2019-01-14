@@ -44,13 +44,13 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       dbmsh3d_cmd_align_ofile()) {
     if (dbmsh3d_cmd_align_file()) { 
       //-af xform_file.txt: read the alignment from file to mpvr->hmatrix_
-      vcl_string xform_file = dbmsh3d_cmd_align_file();
+      std::string xform_file = dbmsh3d_cmd_align_file();
       mpvr->load_hmatrix_01 (xform_file);
     }
   }
   if (dbmsh3d_cmd_align_listfile()) {
     //-aflist xform_list.txt: read the alignments from list file and compute final xform to mpvr->hmatrix_
-    vcl_string xform_listfile = dbmsh3d_cmd_align_listfile();
+    std::string xform_listfile = dbmsh3d_cmd_align_listfile();
     dbmsh3d_read_xform_listfile (xform_listfile, mpvr->hmatrix_01());
   }
   //##########################################################################
@@ -71,8 +71,8 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d";
-        vul_printf (vcl_cout, "Writing transformed file (*.p3d) %s...\n", dirfile.c_str());
+        std::string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d";
+        vul_printf (std::cout, "Writing transformed file (*.p3d) %s...\n", dirfile.c_str());
         dbmsh3d_save_p3d (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
 
@@ -94,8 +94,8 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
-        vul_printf (vcl_cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
+        std::string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
+        vul_printf (std::cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
         dbmsh3d_save_xyz (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
 
@@ -110,12 +110,12 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
     mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyzn1_file2()));
   }
   if (mpvr->pv1()->b_view_xyzn1_) {
-    vcl_string xyzn1_file = mpvr->pv1()->dir_file() + ".xyzn1";
+    std::string xyzn1_file = mpvr->pv1()->dir_file() + ".xyzn1";
     mpvr->pv1()->set_pro_data (dbmsh3d_pro::PD_ORIPTS);
     mpvr->pv1()->oripts().clear();
 
     if (dbmsh3d_load_xyzn1 (mpvr->pv1()->oripts(), xyzn1_file.c_str()) == false)
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
     else { 
       //transform pro[1] using the specified affine xform file
       mpvr->pv1()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
@@ -140,8 +140,8 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->pv1()->move_sg3pi_to_mesh ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
-        vul_printf (vcl_cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
+        std::string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
+        vul_printf (std::cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
         dbmsh3d_save_xyz (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
 
@@ -157,15 +157,15 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   }
   if (mpvr->pv1()->b_view_ply_) {
     if (mpvr->pv1()->load_ply (mpvr->pv1()->dir_file()) == false)
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
     else {    
       //transform pro[1] using the specified affine xform file
       mpvr->pv1()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply";
-        vul_printf (vcl_cout, "Writing transformed file (*.ply) %s...\n", dirfile.c_str());
+        std::string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply";
+        vul_printf (std::cout, "Writing transformed file (*.ply) %s...\n", dirfile.c_str());
         dbmsh3d_save_ply (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
  
@@ -184,15 +184,15 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   if (mpvr->pv1()->b_view_ply2_) {
     mpvr->pv1()->reset_mesh ();
     if (mpvr->pv1()->load_ply2 (mpvr->pv1()->dir_file()) == false)
-      vul_printf (vcl_cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
+      vul_printf (std::cout, "\n!! File %s does not exist!\n", mpvr->pv1()->dir_file().c_str());
     else {
       //transform pro[1] using the specified affine xform file
       mpvr->pv1()->set_pro_data (dbmsh3d_pro_base::PD_MESH);
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply2";
-        vul_printf (vcl_cout, "Writing transformed file (*.ply2) %s...\n", dirfile.c_str());
+        std::string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply2";
+        vul_printf (std::cout, "Writing transformed file (*.ply2) %s...\n", dirfile.c_str());
         dbmsh3d_save_ply2 (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
 
@@ -218,7 +218,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
     //Read the list file and view each file.
     //-v 0: regular, 1: draw in single color.
     //-op3d, -oply, -oply2: save output file.
-    vcl_string listfile = dbmsh3dr_cmd_listfile();
+    std::string listfile = dbmsh3dr_cmd_listfile();
     if (dbmsh3d_cmd_xyz_ofile() || dbmsh3d_cmd_p3d_ofile())
       _root->addChild (mpvr->pv1()->vis_list_file (listfile, 1, dbmsh3d_cmd_v()));
     else if (dbmsh3d_cmd_ply_ofile() || dbmsh3d_cmd_ply2_ofile())
@@ -271,7 +271,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
     //compute the matched scale (identical variance).
     float scale = float (var1 / var0);
 
-    vul_printf (vcl_cout, "\n var0: %f, var1: %f, scale: %f.\n",
+    vul_printf (std::cout, "\n var0: %f, var1: %f, scale: %f.\n",
                 var0, var1, scale);
 
     //Scale the input object and translate to C1.
@@ -368,16 +368,16 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       _root->addChild (mpvr->vis_oripts2());
     }
     
-    vul_printf (vcl_cout, "\n\nRegistration Result:\n");
-    vul_printf (vcl_cout, "  Input fixed point cloud (-f1 %s, %u points) in Green.\n", 
+    vul_printf (std::cout, "\n\nRegistration Result:\n");
+    vul_printf (std::cout, "  Input fixed point cloud (-f1 %s, %u points) in Green.\n", 
                 mpvr->p0()->dir_prefix().c_str(), mpvr->p0()->mesh()->vertexmap().size());
-    vul_printf (vcl_cout, "  Input moving point cloud (-f2 %s, %u points) in Blue.\n", 
+    vul_printf (std::cout, "  Input moving point cloud (-f2 %s, %u points) in Blue.\n", 
                 mpvr->p1()->dir_prefix().c_str(), mpvr->p1()->mesh()->vertexmap().size());
-    vul_printf (vcl_cout, "  Resulting moving point cloud in Red.\n");
+    vul_printf (std::cout, "  Resulting moving point cloud in Red.\n");
 
-    vul_printf (vcl_cout, "\n  Final transformation matrix:\n");
-    vcl_cerr << mpvr->hmatrix_01();
-    vul_printf (vcl_cout, "\n\n");    
+    vul_printf (std::cout, "\n  Final transformation matrix:\n");
+    std::cerr << mpvr->hmatrix_01();
+    vul_printf (std::cout, "\n\n");    
 
     dbmsh3d_app_window_title += " -- ICP on " + mpvr->pv0()->dir_file() + " and " + mpvr->pv1()->dir_file();    
   }
@@ -485,7 +485,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       //-msr: dist_th_ratio for error estimation.
       mpvr->compute_pf_error (dbmsh3d_cmd_n3(), error_dist_th);
       double d_pt_mesh_A_B_mean = mpvr->dist_mean();
-      vul_printf (vcl_cout, "\nPt-Mesh dist. d_pt-mesh(A, B): %f.\n\n", d_pt_mesh_A_B_mean);
+      vul_printf (std::cout, "\nPt-Mesh dist. d_pt-mesh(A, B): %f.\n\n", d_pt_mesh_A_B_mean);
       mpvr->normalize_pf_error (error_dist_th); 
 
       //draw the 2nd mesh 
@@ -525,7 +525,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
         _root->addChild (mpvr->pv0()->vis_ptset (COLOR_DARKGREEN));
     }
     else {      
-      vul_printf (vcl_cout, "\n!! Point file %s does not exist!\n", mpvr->p0()->dir_file().c_str());
+      vul_printf (std::cout, "\n!! Point file %s does not exist!\n", mpvr->p0()->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
 
@@ -536,7 +536,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
         _root->addChild (mpvr->pv1()->vis_ptset (COLOR_BLUE));
     }
     else {      
-      vul_printf (vcl_cout, "\n!! Point file %s does not exist!\n", mpvr->p1()->dir_file().c_str());
+      vul_printf (std::cout, "\n!! Point file %s does not exist!\n", mpvr->p1()->dir_file().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
 
@@ -568,7 +568,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       _root->addChild (draw_cube (pt, dbmsh3d_cmd_rc()*30, SbColor (1,0,0)));
     }
     else {
-      vul_printf (vcl_cout, "\n\n  Test of Perturbation & Mesh Distance Query (%d Iterations) Passed!\n", dbmsh3d_cmd_n2());
+      vul_printf (std::cout, "\n\n  Test of Perturbation & Mesh Distance Query (%d Iterations) Passed!\n", dbmsh3d_cmd_n2());
     }
   }
 
@@ -606,7 +606,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->reduce_surf_thickness (dbmsh3dr_cmd_dthr(), dbmsh3d_cmd_n2(), dbmsh3d_cmd_n3(), dbmsh3d_cmd_o());
       
       //Save all pt clouds into "prefix_all_pts.xyz" file.
-      vcl_string all_pts_file = buld_get_dir_prefix (dbmsh3d_cmd_fileprefix());
+      std::string all_pts_file = buld_get_dir_prefix (dbmsh3d_cmd_fileprefix());
       all_pts_file += "-all-pts.xyz";
       mpvr->save_all_pts_xyz (all_pts_file.c_str());
     }
@@ -631,7 +631,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //############### Write Affine Transform File ###############  
   if (dbmsh3dr_cmd_icp() && dbmsh3d_cmd_align_ofile()) {
     //write mpvr->hmatrix_ to an alignment file
-    vcl_string xform_file = dbmsh3d_cmd_align_ofile();
+    std::string xform_file = dbmsh3d_cmd_align_ofile();
     dbmsh3d_write_xform_file (xform_file, mpvr->hmatrix_01());
   }
 

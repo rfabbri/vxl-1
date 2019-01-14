@@ -2,5 +2,5 @@
 
 #include "dborl_categorization_simple.h"
 
-DBORL_CLUSTER_INSTANTIATE(vcl_string, dborl_categorization_simple, float);
+DBORL_CLUSTER_INSTANTIATE(std::string, dborl_categorization_simple, float);
 

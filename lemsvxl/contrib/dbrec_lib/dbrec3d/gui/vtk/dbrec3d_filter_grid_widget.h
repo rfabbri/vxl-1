@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QSlider>
 
-#include <vcl_string.h>
+#include <string>
 #include <bvpl/kernels/bvpl_kernel.h>
 #include <dbrec3d/gui/dbrec3d_double_slider.h>
 #include "dbrec3d_regular_grid_widget.h"
@@ -34,7 +34,7 @@ public:
                              vnl_vector_fixed<float,5> filter_z, float tf_min, float tf_max);
   dbrec3d_filter_grid_widget(vgl_box_3d<double> const &bbox,
                              double cell_length,
-                             vcl_vector<boct_cell_data<short, float> > const &cell_data,
+                             std::vector<boct_cell_data<short, float> > const &cell_data,
                              float min_val, float max_val, unsigned resolution_level);
   
   ~dbrec3d_filter_grid_widget();

@@ -1,10 +1,10 @@
 #include "dbdet_sel_knot.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <algorithm>
 
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_distance.h>

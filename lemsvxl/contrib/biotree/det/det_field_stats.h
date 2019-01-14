@@ -10,7 +10,7 @@
 // \date    2005-05-02
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vnl/vnl_matrix.h>
@@ -30,14 +30,14 @@ public:
   //: default constructor
   det_field_stats();
   //: constructor from a vector of responses
-  det_field_stats(vcl_vector< xmvg_filter_response<double> > responses);
+  det_field_stats(std::vector< xmvg_filter_response<double> > responses);
   //: take a vector of points, compute responses at these, and populate responses member
   void compute_responses_at(xscan_dummy_scan scan, vgl_box_3d<double> box);
   //: write responses as .mat file
   void write_responses(char *filename);
 
 public:
-  vcl_vector< xmvg_filter_response<double> > responses_;
+  std::vector< xmvg_filter_response<double> > responses_;
 };
 
 #endif

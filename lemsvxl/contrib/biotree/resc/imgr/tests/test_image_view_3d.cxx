@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_box_3d.h>
@@ -7,7 +7,7 @@
 #include <imgr/imgr_bounded_image_view_3d.h>
 static void test_image_view_3d()
 {
-  vcl_cout << "===========Testing image view 3-d ========\n";
+  std::cout << "===========Testing image view 3-d ========\n";
 
   unsigned ni = 5, nj = 5;
   unsigned ib0 = 3, jb0=4;
@@ -19,17 +19,17 @@ static void test_image_view_3d()
   dbil_bounded_image_view<unsigned short>* bv = 
     new dbil_bounded_image_view<unsigned short>(v, ib0, jb0, nib, njb);
   //Add to a vector
-  vcl_vector<dbil_bounded_image_view<unsigned short>* > views;
+  std::vector<dbil_bounded_image_view<unsigned short>* > views;
   views.push_back(bv);
   //Construct the 3-d view
   imgr_bounded_image_view_3d<unsigned short> v3d(views, vgl_box_3d<double>());
-  vcl_cout << "(ni, nj, nk, planes, size, format)=(" 
+  std::cout << "(ni, nj, nk, planes, size, format)=(" 
            << v3d.ni() << ' ' << v3d.nj() << ' ' << v3d.nk() 
            << ' ' << v3d.nplanes() << ' ' << v3d.size() << ' '
            << v3d.pixel_format() << ")\n";
   //Get a 2-d view back out of the 3-d view
   dbil_bounded_image_view<unsigned short> biv = v3d.view_2d(0);
-  vcl_cout << "(ni, nj, nib, njb, ib0, jb0)=(" 
+  std::cout << "(ni, nj, nib, njb, ib0, jb0)=(" 
            << biv.ni() << ' ' << biv.nj() << ' ' << biv.nib() 
            << ' ' << biv.njb() << ' ' << biv.ib0() << ' '
            << biv.jb0() << ")\n";

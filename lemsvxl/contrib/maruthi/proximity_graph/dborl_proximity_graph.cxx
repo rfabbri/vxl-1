@@ -1,21 +1,21 @@
 #include <proximity_graph/dborl_proximity_graph.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
-#include <vcl_map.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <cmath>
+#include <map>
+#include <algorithm>
 #include <boost/graph/graphml.hpp>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_math.h>
-#include <vcl_cfloat.h>
-#include <vcl_numeric.h>
+#include <cfloat>
+#include <numeric>
 
 void dborl_proximity_graph::construct_graph(
-    vcl_string exemplar_dataset_file, 
-    vcl_string exemplar_label_file,
-    vcl_string exemplar_category_file,
-    vcl_string output_graph,
+    std::string exemplar_dataset_file, 
+    std::string exemplar_label_file,
+    std::string exemplar_category_file,
+    std::string output_graph,
     double beta,
     bool verbose,
     bool perform_wilson_edit,
@@ -58,17 +58,17 @@ void dborl_proximity_graph::construct_graph(
 
 }
 
-void dborl_proximity_graph::read_files(vcl_string dataset_file, 
-                                       vcl_string node_name_file,
-                                       vcl_string category_name_file)
+void dborl_proximity_graph::read_files(std::string dataset_file, 
+                                       std::string node_name_file,
+                                       std::string category_name_file)
 {
 
     // Open the file
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(node_name_file.c_str());
 
     // Read each exemplar name
-    vcl_string temp;
+    std::string temp;
     while(file_opener)
     {
         getline(file_opener,temp);
@@ -150,7 +150,7 @@ void dborl_proximity_graph::preprocess_graph()
 void dborl_proximity_graph::build_beta_graph()
 {
 
-    vcl_cout<<"Creating Proximity Graph with beta: "<< beta_ <<vcl_endl;
+    std::cout<<"Creating Proximity Graph with beta: "<< beta_ <<std::endl;
 
     // Build gabriel graph brute force computation O(N^3)
 
@@ -182,7 +182,7 @@ void dborl_proximity_graph::build_beta_graph()
                         if (  (dij*dij) 
                             > ((dik*dik) + 
                                (djk*djk) +
-                               2*vcl_sqrt(1-(beta_*beta_))*
+                               2*std::sqrt(1-(beta_*beta_))*
                                (dik*djk)  ))
                         {
                             flag=false;
@@ -192,7 +192,7 @@ void dborl_proximity_graph::build_beta_graph()
                     else
                     {
                         // Beta_ greater than 1 case
-                        if ( dij*dij > vcl_max(
+                        if ( dij*dij > std::max(
                                  ((dik*dik)*((2/beta_)-1))+(djk*djk)
                                  ,(dik*dik)+(((2/beta_)-1)*(djk*djk)) ))
                         {
@@ -226,8 +226,8 @@ void dborl_proximity_graph::build_beta_graph()
     }
     
     // Print out minimal information
-    vcl_cout << "Number of Edges: "<< num_edges(proximity_graph_)<<vcl_endl;
-    vcl_cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<vcl_endl;
+    std::cout << "Number of Edges: "<< num_edges(proximity_graph_)<<std::endl;
+    std::cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<std::endl;
 
 }
 
@@ -243,18 +243,18 @@ void dborl_proximity_graph::wilson_edit()
         edge_distance = get(edge_weight, proximity_graph_);
  
     // Define a vector of vertex of objects to delete
-    vcl_vector<vcl_string> vertex_to_delete;
+    std::vector<std::string> vertex_to_delete;
 
     // Iterate through graph
     typedef graph_traits<Undirected_Graph>::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
     // Loop thru all nodes
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
     {
         
         // neighbors of edge in question
-        vcl_map<vcl_string,vcl_vector<double> > neighbors;
+        std::map<std::string,std::vector<double> > neighbors;
 
         //Look through all adjacent vertices of the graph
         graph_traits<dborl_proximity_graph::Undirected_Graph>
@@ -277,15 +277,15 @@ void dborl_proximity_graph::wilson_edit()
 
         //create iterator
         unsigned int count_neighbors(0);
-        vcl_string neighbor_index;
+        std::string neighbor_index;
         double mean(DBL_MAX);
 
-        vcl_map<vcl_string,vcl_vector<double> >::iterator it;
+        std::map<std::string,std::vector<double> >::iterator it;
         for (it = neighbors.begin() ; it != neighbors.end() ; it++)
         {
         
             unsigned int temp = (it->second).size();
-            double temp_mean = vcl_accumulate((it->second).begin(),
+            double temp_mean = std::accumulate((it->second).begin(),
                                           (it->second).end(),
                                           0.0f)/(it->second).size();
 
@@ -328,9 +328,9 @@ void dborl_proximity_graph::wilson_edit()
 
 
     // Print out minimal information
-    vcl_cout << "Wilson Editing "<< vcl_endl;
-    vcl_cout << "Number of Edges: "<< num_edges(proximity_graph_)<<vcl_endl;
-    vcl_cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<vcl_endl;
+    std::cout << "Wilson Editing "<< std::endl;
+    std::cout << "Number of Edges: "<< num_edges(proximity_graph_)<<std::endl;
+    std::cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<std::endl;
     
 }
 
@@ -344,18 +344,18 @@ void dborl_proximity_graph::thinning()
         node_name = get(vertex_name, proximity_graph_);
 
     // Define a vector of vertex of objects to delete
-    vcl_vector<vcl_string> vertex_to_delete;
+    std::vector<std::string> vertex_to_delete;
 
     // Iterate through graph
     typedef graph_traits<Undirected_Graph>::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
     // Loop thru all nodes
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
     {
         
         // neighbors of edge in question
-        vcl_map<vcl_string,unsigned int> neighbors;
+        std::map<std::string,unsigned int> neighbors;
 
         //Look through all adjacent vertices of the graph
         graph_traits<dborl_proximity_graph::Undirected_Graph>
@@ -392,14 +392,14 @@ void dborl_proximity_graph::thinning()
 
 
     // Print out minimal information
-    vcl_cout << "Proximity Graph Thinning "<< vcl_endl;
-    vcl_cout << "Number of Edges: "<< num_edges(proximity_graph_)<<vcl_endl;
-    vcl_cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<vcl_endl;
+    std::cout << "Proximity Graph Thinning "<< std::endl;
+    std::cout << "Number of Edges: "<< num_edges(proximity_graph_)<<std::endl;
+    std::cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<std::endl;
 
 
 }
 
-void dborl_proximity_graph::write_graph(vcl_string output_graph)
+void dborl_proximity_graph::write_graph(std::string output_graph)
 {
 
     // Write out graph
@@ -409,7 +409,7 @@ void dborl_proximity_graph::write_graph(vcl_string output_graph)
     dp.property("category",get(vertex_cat_t(),proximity_graph_));
     dp.property("abs_index",get(vertex_index2_t(),proximity_graph_));
 
-    vcl_ofstream ofile(output_graph.c_str());
+    std::ofstream ofile(output_graph.c_str());
     write_graphml(ofile, proximity_graph_, dp);
     ofile.close();
 
@@ -417,14 +417,14 @@ void dborl_proximity_graph::write_graph(vcl_string output_graph)
 
 }
 
-void dborl_proximity_graph::delete_node(vcl_string node_to_delete)
+void dborl_proximity_graph::delete_node(std::string node_to_delete)
 {
     //For each vertex grab property map to get names and vertex index
     property_map<Undirected_Graph, vertex_name_t>::type
         node_name = get(vertex_name, proximity_graph_);
     // Print out node information 
     typedef graph_traits<Undirected_Graph>::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
     {
@@ -460,22 +460,22 @@ void dborl_proximity_graph::print_graph()
  
     // Print out node information 
     typedef graph_traits<Undirected_Graph>::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
-    vcl_cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<vcl_endl;
+    std::cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<std::endl;
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
     {
-        vcl_cout << "Node Name: "<< node_name[*vp.first] << "  Node Index: " 
+        std::cout << "Node Name: "<< node_name[*vp.first] << "  Node Index: " 
                  << node_index[*vp.first]<<" abs index: "<< 
-                  abs_index[*vp.first]<<vcl_endl << " Node Category: "
-                 << node_category[*vp.first] << vcl_endl;
+                  abs_index[*vp.first]<<std::endl << " Node Category: "
+                 << node_category[*vp.first] << std::endl;
     }
    
     // Print out edge information
-    vcl_cout << " Number of Edges: "<< num_edges(proximity_graph_)<<vcl_endl;
+    std::cout << " Number of Edges: "<< num_edges(proximity_graph_)<<std::endl;
 
     typedef graph_traits<Undirected_Graph>::edge_iterator edge_iter;
-    vcl_pair<edge_iter, edge_iter> ep;
+    std::pair<edge_iter, edge_iter> ep;
     edge_iter ei, ei_end;
 
     // Create an adjancency matrix
@@ -490,9 +490,9 @@ void dborl_proximity_graph::print_graph()
     for (tie(ei, ei_end) = edges(proximity_graph_); ei != ei_end; ++ei)
     {
 
-        vcl_cout << edge_distance[*ei] << vcl_endl;
-        vcl_cout << "(" << source(*ei, proximity_graph_) 
-                 << "," << target(*ei, proximity_graph_) << ")" << vcl_endl;
+        std::cout << edge_distance[*ei] << std::endl;
+        std::cout << "(" << source(*ei, proximity_graph_) 
+                 << "," << target(*ei, proximity_graph_) << ")" << std::endl;
 
         adjancency_matrix(source(*ei, proximity_graph_),
                           target(*ei, proximity_graph_))=1;
@@ -508,8 +508,8 @@ void dborl_proximity_graph::print_graph()
 
     }
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Matrix form of graph adjancency"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Matrix form of graph adjancency"<<std::endl;
 
     // print matrix form
     // write out matrix form
@@ -517,26 +517,26 @@ void dborl_proximity_graph::print_graph()
     {
         if ( k==0 )
         {
-            vcl_cout<<"graph=[";
+            std::cout<<"graph=[";
         }
 
         for ( unsigned int m=0; m < number_of_nodes_ ; m++ )
         {
 
-            vcl_cout<<adjancency_matrix(k,m)<<" ";
+            std::cout<<adjancency_matrix(k,m)<<" ";
         }
         if ( k == number_of_nodes_-1 )
         {
-            vcl_cout<<"];"<<vcl_endl;
+            std::cout<<"];"<<std::endl;
         }
         else
         {
-            vcl_cout<<"; ..."<<vcl_endl;
+            std::cout<<"; ..."<<std::endl;
         }
     }
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Matrix form of graph distances"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Matrix form of graph distances"<<std::endl;
 
     // print matrix form
     // write out matrix form
@@ -544,23 +544,23 @@ void dborl_proximity_graph::print_graph()
     {
         if ( k==0 )
         {
-            vcl_cout<<"graph_dist=[";
+            std::cout<<"graph_dist=[";
         }
 
         for ( unsigned int m=0; m < number_of_nodes_ ; m++ )
         {
 
-            vcl_cout<<dist_matrix(k,m)<<" ";
+            std::cout<<dist_matrix(k,m)<<" ";
         }
         if ( k == number_of_nodes_-1 )
         {
-            vcl_cout<<"];"<<vcl_endl;
+            std::cout<<"];"<<std::endl;
         }
         else
         {
-            vcl_cout<<"; ..."<<vcl_endl;
+            std::cout<<"; ..."<<std::endl;
         }
     }
 
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 }

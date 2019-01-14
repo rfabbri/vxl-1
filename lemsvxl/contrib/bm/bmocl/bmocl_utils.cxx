@@ -1,6 +1,6 @@
 #include "bmocl_utils.h"
 
-vcl_size_t RoundUp(int global_size,int group_size)
+std::size_t RoundUp(int global_size,int group_size)
 {
     if (group_size==0)
         return global_size;
@@ -15,9 +15,9 @@ vcl_size_t RoundUp(int global_size,int group_size)
     }
 }
 
-vcl_string error_to_string(cl_int  status )
+std::string error_to_string(cl_int  status )
 {
-    vcl_string output="";
+    std::string output="";
 
     if      ( status == 0) output="CL_SUCCESS";
     else if ( status == CL_DEVICE_NOT_FOUND)  output="CL_DEVICE_NOT_FOUND";

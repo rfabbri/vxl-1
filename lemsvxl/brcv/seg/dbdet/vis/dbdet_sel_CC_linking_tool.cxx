@@ -1,8 +1,8 @@
 #include "dbdet_sel_CC_linking_tool.h"
 
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
-#include <vcl_queue.h>
+#include <limits>
+#include <algorithm>
+#include <queue>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -27,7 +27,7 @@ class dbdet_sel_tableau_set_display_params_double_command : public vgui_command
 {
  public:
   dbdet_sel_tableau_set_display_params_double_command(dbdet_sel_tableau* tab, 
-    const vcl_string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
+    const std::string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
 
   void execute() 
   { 
@@ -43,7 +43,7 @@ class dbdet_sel_tableau_set_display_params_double_command : public vgui_command
 
   dbdet_sel_tableau* sel_tableau;
   double* dref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class dbdet_sel_CC_linking_tool_misc_commands : public vgui_command
@@ -87,7 +87,7 @@ dbdet_sel_CC_linking_tool::dbdet_sel_CC_linking_tool():
 }
 
 
-vcl_string dbdet_sel_CC_linking_tool::name() const
+std::string dbdet_sel_CC_linking_tool::name() const
 {
   return "SEL Explore CC Linking";
 }
@@ -202,7 +202,7 @@ bool dbdet_sel_CC_linking_tool::handle( const vgui_event & e,
     if (cur_edgel){ //if edgel selected, draw the curvelets anchored on it
       
       ////display all the groupings of the current edgel
-      //vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
+      //std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
       //for ( ; cv_it!=CM->curvelets(cur_edgel->id).end(); cv_it++)
       //  sel_tab_->draw_selected_cvlet((*cv_it));
 
@@ -224,11 +224,11 @@ bool dbdet_sel_CC_linking_tool::handle( const vgui_event & e,
       //glBegin( GL_LINE_STRIP );
       //for (int th=0; th<=20; th++){
       //  double theta = cur_edgel->tangent - vnl_math::pi/2 + th*2*vnl_math::pi/20.0;
-      //  glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(theta), 
-      //             cur_edgel->pt.y() + rad*vcl_sin(theta));
+      //  glVertex2f(cur_edgel->pt.x() + rad*std::cos(theta), 
+      //             cur_edgel->pt.y() + rad*std::sin(theta));
       //}
-      ////glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(cur_edgel->tangent - vnl_math::pi/2), 
-      ////           cur_edgel->pt.y() + rad*vcl_sin(cur_edgel->tangent - vnl_math::pi/2));
+      ////glVertex2f(cur_edgel->pt.x() + rad*std::cos(cur_edgel->tangent - vnl_math::pi/2), 
+      ////           cur_edgel->pt.y() + rad*std::sin(cur_edgel->tangent - vnl_math::pi/2));
       //glEnd();
 
     }
@@ -243,12 +243,12 @@ bool dbdet_sel_CC_linking_tool::handle( const vgui_event & e,
 void dbdet_sel_CC_linking_tool::construct_hyp_tree(dbdet_edgel* e)
 {
   if (ELG->cLinks.size()==0){
-    vcl_cout << "No Link Graph !" <<vcl_endl;
+    std::cout << "No Link Graph !" <<std::endl;
     return;
   }
 
   //construct 2 HTs: one in the forward direction and one in the reverse direction
-  vcl_queue<dbdet_EHT_node*> BFS_queue;
+  std::queue<dbdet_EHT_node*> BFS_queue;
 
   //forward HT
   dbdet_EHT_node* root1 = new dbdet_EHT_node(e);
@@ -257,7 +257,7 @@ void dbdet_sel_CC_linking_tool::construct_hyp_tree(dbdet_edgel* e)
 
   depth = 0;
 
-  while (!BFS_queue.empty() && vcl_log10(double(depth))<3)
+  while (!BFS_queue.empty() && std::log10(double(depth))<3)
   {
     dbdet_EHT_node* cur_node = BFS_queue.front();
     BFS_queue.pop();
@@ -282,7 +282,7 @@ void dbdet_sel_CC_linking_tool::construct_hyp_tree(dbdet_edgel* e)
         double dx2 = (*lit)->ce->pt.x() - cur_node->e->pt.x();
         double dy2 = (*lit)->ce->pt.y() - cur_node->e->pt.y();
 
-        if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<smooth_thresh) //not consistent
+        if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<smooth_thresh) //not consistent
           continue;
       }
 
@@ -306,7 +306,7 @@ void dbdet_sel_CC_linking_tool::construct_hyp_tree(dbdet_edgel* e)
 
   depth = 0; //reset depth
 
-  while (!BFS_queue.empty()  && vcl_log10(double(depth))<3)
+  while (!BFS_queue.empty()  && std::log10(double(depth))<3)
   {
     dbdet_EHT_node* cur_node = BFS_queue.front();
     BFS_queue.pop();
@@ -322,7 +322,7 @@ void dbdet_sel_CC_linking_tool::construct_hyp_tree(dbdet_edgel* e)
         double dx2 = (*lit)->ce->pt.x() - cur_node->e->pt.x();
         double dy2 = (*lit)->ce->pt.y() - cur_node->e->pt.y();
 
-        if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<smooth_thresh) //not consistent
+        if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<smooth_thresh) //not consistent
           continue;
       }
 
@@ -339,7 +339,7 @@ void dbdet_sel_CC_linking_tool::resolve_contour()
 {
   //basically go thorough the hyp tree and evaluate all the paths
   //keep only the viable ones
-  vcl_vector<dbdet_edgel*> dummy_chain;
+  std::vector<dbdet_edgel*> dummy_chain;
   
   double min_cost = 1000000;
   dbdet_EHT::path_iterator best_pit(0);
@@ -347,7 +347,7 @@ void dbdet_sel_CC_linking_tool::resolve_contour()
   dbdet_EHT::path_iterator pit = HTF.path_begin();
   for (; pit != HTF.path_end(); pit++)
   { 
-    vcl_vector<dbdet_edgel*>& edgel_chain = pit.get_cur_path();
+    std::vector<dbdet_edgel*>& edgel_chain = pit.get_cur_path();
 
     dbdet_edgel* le = edgel_chain.back();
     if (CFG->pFrags[le->id].size()==0 &&
@@ -384,7 +384,7 @@ void dbdet_sel_CC_linking_tool::resolve_contour()
 
 }
 
-void dbdet_sel_CC_linking_tool::draw_edgel_chain(vcl_vector<dbdet_edgel*>& edgel_chain, float R, float G, float B)
+void dbdet_sel_CC_linking_tool::draw_edgel_chain(std::vector<dbdet_edgel*>& edgel_chain, float R, float G, float B)
 {
   glColor3f(R, G, B);
   glLineWidth (1.0);
@@ -395,15 +395,15 @@ void dbdet_sel_CC_linking_tool::draw_edgel_chain(vcl_vector<dbdet_edgel*>& edgel
   
 }
 
-void dbdet_sel_CC_linking_tool::draw_arc_spline(vcl_vector<dbdet_edgel*>& edgel_chain, float R, float G, float B)
+void dbdet_sel_CC_linking_tool::draw_arc_spline(std::vector<dbdet_edgel*>& edgel_chain, float R, float G, float B)
 {
   //construct an arc spline from a vector of points
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vgl_vector_2d<double> >tans;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_vector_2d<double> >tans;
   for (unsigned i=0; i<edgel_chain.size(); i++)
     pts.push_back(edgel_chain[i]->pt);
 
-  vcl_vector<bgld_circ_arc > arc_list;
+  std::vector<bgld_circ_arc > arc_list;
   bgld_fit_circ_arc_spline_to_polyline(arc_list, pts, tolerance);
 
   pts.clear(); tans.clear();
@@ -456,7 +456,7 @@ void dbdet_sel_CC_linking_tool::draw_link(dbdet_EHT_node* cur_node)
   if (!cur_node)
     return;
 
-  vcl_list<dbdet_EHT_node*>::iterator cit = cur_node->children.begin();
+  std::list<dbdet_EHT_node*>::iterator cit = cur_node->children.begin();
   for (; cit != cur_node->children.end(); cit++){
     glBegin(GL_LINE_STRIP);
     glVertex2f(cur_node->e->pt.x(), cur_node->e->pt.y());
@@ -470,7 +470,7 @@ void dbdet_sel_CC_linking_tool::draw_link(dbdet_EHT_node* cur_node)
 void dbdet_sel_CC_linking_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                 vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add(((draw_chain)?on:off)+"Draw Edgel Chain", 
             bvis1_tool_toggle, (void*)(&draw_chain) );

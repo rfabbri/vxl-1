@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = lmco_menus::get_menu();
   unsigned w = 1000, h = 800;
 
-  vcl_string title = "Lockheed Martin Test GUI";
+  std::string title = "Lockheed Martin Test GUI";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(lmco_manager::instance());
   win->set_statusbar(true);

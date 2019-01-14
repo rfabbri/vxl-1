@@ -12,7 +12,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class bvam_generate_edge_map_process : public bprb_process
@@ -30,7 +30,7 @@ class bvam_generate_edge_map_process : public bprb_process
   virtual bvam_generate_edge_map_process* clone() const 
   { return new bvam_generate_edge_map_process(*this); }
 
-  vcl_string name(){return "BvamGenerateEdgeMapProcess";}
+  std::string name(){return "BvamGenerateEdgeMapProcess";}
 
   bool init() { return true; }
   bool execute();

@@ -2,9 +2,9 @@
 #define dbbgm_model_data_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsl/vsl_binary_io.h>
 
 class dbbgm_model_data
@@ -15,7 +15,7 @@ public:
 
 
     void initialize(int numofmodels, int ni,int nj);
-    void print_summary(vcl_ostream &os) const;
+    void print_summary(std::ostream &os) const;
 
 
     //: Binary save self to stream.
@@ -25,10 +25,10 @@ public:
     //: Return IO version number;
     short version() const;
 
-    vcl_vector<vbl_array_2d<float> > standarddev;
-    vcl_vector<vbl_array_2d<float> > weight;
-    vcl_vector<vbl_array_2d<int> > mean;
-    vcl_vector<vbl_array_2d<int> > samplecount;
+    std::vector<vbl_array_2d<float> > standarddev;
+    std::vector<vbl_array_2d<float> > weight;
+    std::vector<vbl_array_2d<int> > mean;
+    std::vector<vbl_array_2d<int> > samplecount;
  
     vbl_array_2d<int> usedmodels;
     vbl_array_2d<int> no_of_observations;

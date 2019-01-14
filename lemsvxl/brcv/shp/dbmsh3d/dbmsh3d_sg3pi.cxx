@@ -2,8 +2,8 @@
 // This is brcv/shp/dbmsh3d/algo/dbmsh3d_sg_scan.cxx
 //-------------------------------------------------------------------------
 
-#include <vcl_cfloat.h>
-#include <vcl_iostream.h>
+#include <cfloat>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -40,11 +40,11 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
 {
   if (intra_sl_dist_ > 0 && inter_sl_dist_ > 0)
     return;
-  vul_printf (vcl_cout, "get_sl_sample_dist():\n");
+  vul_printf (std::cout, "get_sl_sample_dist():\n");
   assert (data_.size() > 0);
 
   //Store all intra-scanline dists to a vector.
-  vcl_vector<double> sqdists;
+  std::vector<double> sqdists;
   for (unsigned int i=0; i<data_.size(); i++) {
     for (int j=0; j<int(data_[i].size())-1; j++) {
       double sqd = bgld_sqdist_3d (data_[i][j]->pt(), data_[i][j+1]->pt());
@@ -53,12 +53,12 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
   }
 
   //Compute the median of sqdists.
-  vcl_nth_element (sqdists.begin(),
+  std::nth_element (sqdists.begin(),
                    sqdists.begin() + int(sqdists.size()/2), 
                    sqdists.end());
   double median = *(sqdists.begin() + int(sqdists.size()/2));
-  intra_sl_dist_ = (float) vcl_sqrt (median);
-  vul_printf (vcl_cout, "  avg. intra-scanline sample dist = %f\n", intra_sl_dist_);
+  intra_sl_dist_ = (float) std::sqrt (median);
+  vul_printf (std::cout, "  avg. intra-scanline sample dist = %f\n", intra_sl_dist_);
 
   if (data_.size() < 2)
     return;
@@ -66,8 +66,8 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
   //Store all min_sq_dists between samples of two scanlines int a vector.
   sqdists.clear();
   for (int i=0; i<int(data_.size())-1; i++) {
-    vcl_vector<dbmsh3d_sg3pi_pt*> scanline0 = data_[i];
-    vcl_vector<dbmsh3d_sg3pi_pt*> scanline1 = data_[i+1];
+    std::vector<dbmsh3d_sg3pi_pt*> scanline0 = data_[i];
+    std::vector<dbmsh3d_sg3pi_pt*> scanline1 = data_[i+1];
 
     //Only add this min_sq_dist if both scanlines are non-empty.
     if (scanline0.size() != 0 && scanline1.size() != 0) {
@@ -77,13 +77,13 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
   }
 
   //Compute the median of sqdists.
-  vcl_nth_element (sqdists.begin(),
+  std::nth_element (sqdists.begin(),
                    sqdists.begin() + int(sqdists.size()/2), 
                    sqdists.end());
   median = *(sqdists.begin() + int(sqdists.size()/2));
   sqdists.clear();
-  inter_sl_dist_ = (float) vcl_sqrt (median);
-  vul_printf (vcl_cout, "  avg. inter-scanline sample dist = %f\n", inter_sl_dist_);
+  inter_sl_dist_ = (float) std::sqrt (median);
+  vul_printf (std::cout, "  avg. inter-scanline sample dist = %f\n", inter_sl_dist_);
 }
 
 //: Estimate the range coordinate system Vx, Vy, Vz for this scan.
@@ -92,7 +92,7 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
 //          Vz = Vx cross Vy.
 void dbmsh3d_sg3pi::estimate_range_coord ()
 {
-  vul_printf (vcl_cout, "  estimate_range_coord():\n");
+  vul_printf (std::cout, "  estimate_range_coord():\n");
 
   vgl_vector_3d<double> sumx, sumy, normal;
   unsigned count = 0;
@@ -122,9 +122,9 @@ void dbmsh3d_sg3pi::estimate_range_coord ()
   Vy_.set (0, 1, 0);
   Vz_.set (0, 0, 1);
 
-  vul_printf (vcl_cout, "\tVx: (%lf, %lf, %lf)\n", Vx_.x(), Vx_.y(), Vx_.z());  
-  vul_printf (vcl_cout, "\tVy: (%lf, %lf, %lf)\n", Vy_.x(), Vy_.y(), Vy_.z());  
-  vul_printf (vcl_cout, "\tVz: (%lf, %lf, %lf)\n", Vz_.x(), Vz_.y(), Vz_.z());  
+  vul_printf (std::cout, "\tVx: (%lf, %lf, %lf)\n", Vx_.x(), Vx_.y(), Vx_.z());  
+  vul_printf (std::cout, "\tVy: (%lf, %lf, %lf)\n", Vy_.x(), Vy_.y(), Vy_.z());  
+  vul_printf (std::cout, "\tVz: (%lf, %lf, %lf)\n", Vz_.x(), Vz_.y(), Vz_.z());  
 }
 
 void dbmsh3d_sg3pi::compute_range ()
@@ -152,8 +152,8 @@ void dbmsh3d_sg3pi::compute_range ()
 
 // #################################################################
 
-double _min_sqd_between_scanlines (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0, 
-                                   vcl_vector<dbmsh3d_sg3pi_pt*>& scanline1)
+double _min_sqd_between_scanlines (std::vector<dbmsh3d_sg3pi_pt*>& scanline0, 
+                                   std::vector<dbmsh3d_sg3pi_pt*>& scanline1)
 {
   double min_sq_dist = 1000000;
 
@@ -168,7 +168,7 @@ double _min_sqd_between_scanlines (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0,
   return min_sq_dist;
 }
 
-vgl_vector_3d<double> _compute_scanline_normal (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline)
+vgl_vector_3d<double> _compute_scanline_normal (const std::vector<dbmsh3d_sg3pi_pt*>& scanline)
 {
   assert (scanline.size() > 2);
   vgl_point_3d<double> A = scanline[0]->pt();
@@ -181,7 +181,7 @@ vgl_vector_3d<double> _compute_scanline_normal (const vcl_vector<dbmsh3d_sg3pi_p
   for (unsigned int i=1; i<scanline.size()-1; i++) {
     vgl_point_3d<double> P = scanline[i]->pt();
     double t = dot_product (P-A, AB) / vgl_distance (A, B);
-    double d = vcl_sqrt (bgld_sqdist_3d (A, P) - t*t);
+    double d = std::sqrt (bgld_sqdist_3d (A, P) - t*t);
     if (d > dmax) {
       dmax = d;
       Pmax = P;
@@ -195,7 +195,7 @@ vgl_vector_3d<double> _compute_scanline_normal (const vcl_vector<dbmsh3d_sg3pi_p
 
 //: for input scan point SP, find the two closest points on the given scanline
 //  m, n are the indices of two points containing the footpt of SP.
-bool _get_closest_pts (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
+bool _get_closest_pts (const std::vector<dbmsh3d_sg3pi_pt*>& scanline, 
                        const dbmsh3d_sg3pi_pt* SP, const double& intra_scanline_th,
                        int& m, int& n)
 {
@@ -219,8 +219,8 @@ bool _get_closest_pts (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,
 
 //: Add the closest point on the scanline within dist_th to the kernel.
 void _add_to_kernel_1 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
-                       const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,
-                       vcl_vector<float>& kernel)
+                       const std::vector<dbmsh3d_sg3pi_pt*>& scanline,
+                       std::vector<float>& kernel)
 {
   if (scanline.size() == 0)
     return;
@@ -235,14 +235,14 @@ void _add_to_kernel_1 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
     }
   }
 
-  if (vcl_sqrt (min_sqd) < dist_th)
+  if (std::sqrt (min_sqd) < dist_th)
     kernel.push_back (scanline[min_i]->depth());
 }
 
 //: Brute-force add neighboring scan points within threshold.
 void _add_to_kernel_2 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
-                       const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,
-                       vcl_vector<float>& kernel)
+                       const std::vector<dbmsh3d_sg3pi_pt*>& scanline,
+                       std::vector<float>& kernel)
 {
   if (scanline.size() == 0)
     return;

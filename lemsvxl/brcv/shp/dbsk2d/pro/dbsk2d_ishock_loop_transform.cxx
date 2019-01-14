@@ -36,19 +36,19 @@ bool dbsk2d_ishock_loop_transform::execute_transform()
 {
     outer_wavefront_.clear();
     shocks_removed_.clear();
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it=
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it=
         removal_bnd_elements_.begin();
 
     bool flag=true;
     if ( removal_bnd_elements_.size() ==0 || 
          (*it).second->is_a_GUIelm())
     {
-        // vcl_cout<<"Removing contour"<<vcl_endl;
+        // std::cout<<"Removing contour"<<std::endl;
         flag=remove_contour();
     }
     else
     {
-        //vcl_cout<<"Reinsert contour"<<vcl_endl;
+        //std::cout<<"Reinsert contour"<<std::endl;
         flag=reinsert_contour();
     }
 
@@ -58,8 +58,8 @@ bool dbsk2d_ishock_loop_transform::execute_transform()
 
 
 void dbsk2d_ishock_loop_transform::sample_contour(
-    vcl_vector<vgl_point_2d<double> >& foreground_grid,
-    vcl_vector<vgl_point_2d<double> >& background_grid)
+    std::vector<vgl_point_2d<double> >& foreground_grid,
+    std::vector<vgl_point_2d<double> >& background_grid)
 {
 
     // Get image coordinates to check out of bounds
@@ -69,11 +69,11 @@ void dbsk2d_ishock_loop_transform::sample_contour(
     
 
     // Determine elements on each side 
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
-    vcl_map<int,dbsk2d_ishock_edge*> side1_contour;
-    vcl_map<int,dbsk2d_ishock_edge*> side2_contour;
-    vcl_set<int> visited_belms;
-    vcl_set<int> pts_visited;
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    std::map<int,dbsk2d_ishock_edge*> side1_contour;
+    std::map<int,dbsk2d_ishock_edge*> side2_contour;
+    std::set<int> visited_belms;
+    std::set<int> pts_visited;
 
     for ( it = removal_bnd_elements_.begin(); 
           it != removal_bnd_elements_.end(); ++it)
@@ -226,7 +226,7 @@ void dbsk2d_ishock_loop_transform::sample_contour(
     sampler.set_sample_resolution(0.5);
     double step_size=1.0;
 
-    vcl_map<int,dbsk2d_ishock_edge*>::iterator sit;
+    std::map<int,dbsk2d_ishock_edge*>::iterator sit;
     for ( sit = side1_contour.begin() ; sit != side1_contour.end() ; ++sit)
     {
         dbsk2d_ishock_edge* cur_iedge=(*sit).second;
@@ -275,7 +275,7 @@ void dbsk2d_ishock_loop_transform::sample_contour(
 
             if (sample->speed != 0 && sample->speed < 99990)
             {
-                phi=vcl_acos(-1.0/sample->speed);
+                phi=std::acos(-1.0/sample->speed);
             }
             else
             {
@@ -371,7 +371,7 @@ void dbsk2d_ishock_loop_transform::sample_contour(
 
             if (sample->speed != 0 && sample->speed < 99990)
             {
-                phi=vcl_acos(-1.0/sample->speed);
+                phi=std::acos(-1.0/sample->speed);
             }
             else
             {
@@ -423,14 +423,14 @@ void dbsk2d_ishock_loop_transform::sample_contour(
 
 double dbsk2d_ishock_loop_transform::likelihood()
 {
-    // vcl_vector<vgl_point_2d<double> > fg_samples;
-    // vcl_vector<vgl_point_2d<double> > bg_samples;
+    // std::vector<vgl_point_2d<double> > fg_samples;
+    // std::vector<vgl_point_2d<double> > bg_samples;
     // this->sample_contour(fg_samples,bg_samples);
     // return 1.0-dbsk2d_transform_manager::Instance().transform_probability
     //     (fg_samples,bg_samples);
 
-    // vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
-    // vcl_map<int,dbsk2d_ishock_bpoint*> curve_map;
+    // std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    // std::map<int,dbsk2d_ishock_bpoint*> curve_map;
     // for ( it = removal_bnd_elements_.begin(); 
     //       it != removal_bnd_elements_.end(); ++it)
     // {
@@ -451,14 +451,14 @@ double dbsk2d_ishock_loop_transform::likelihood()
     //     } 
     // }
 
-    // vcl_vector<vgl_point_2d<double> > curve;
+    // std::vector<vgl_point_2d<double> > curve;
 
     // if ( contour_pair_.first->nLinkedElms()>= 6 )
     // {
     //     curve.push_back(contour_pair_.first->pt());
     // }
 
-    // vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
+    // std::map<int,dbsk2d_ishock_bpoint*>::iterator mit;
     // for ( mit = curve_map.begin() ; mit != curve_map.end() ; ++mit)
     // {
     //     curve.push_back((*mit).second->pt());
@@ -500,7 +500,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
     removal_bnd_elements_[bline->twinLine()->id()]=bline->twinLine();
 
     
-    vcl_vector<dbsk2d_ishock_bpoint*> stack;
+    std::vector<dbsk2d_ishock_bpoint*> stack;
     if ( bline->s_pt()->id()==contour_point_->id())
     {
         stack.push_back(bline->e_pt());
@@ -571,7 +571,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
 
       if ( stack.size() == 0 )
       {
-          vcl_cout<<"We have reached a loop"<<vcl_endl;
+          std::cout<<"We have reached a loop"<<std::endl;
           valid_transform_=false;
           return;
       }
@@ -592,7 +592,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
       }
     }
 
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     for ( it = removal_bnd_elements_.begin(); 
           it != removal_bnd_elements_.end(); ++it)
     {
@@ -625,7 +625,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                             dbsk2d_ishock_belm* pair2=
                                 bpoint->getElmToTheRightOf(bline);
                             contact_shock_pairs_[bpoint->id()]=
-                                vcl_make_pair(pair1,pair2);
+                                std::make_pair(pair1,pair2);
                         }
                         else
                         {
@@ -634,7 +634,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                             dbsk2d_ishock_belm* pair2=
                                 bpoint->getElmToTheLeftOf(bline);
                             contact_shock_pairs_[bpoint->id()]=
-                                vcl_make_pair(pair1,pair2);
+                                std::make_pair(pair1,pair2);
 
                         }
                         
@@ -662,7 +662,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                             dbsk2d_ishock_belm* pair2=
                                 bpoint->getElmToTheRightOf(bline);
                             contact_shock_pairs_[bpoint->id()]=
-                                vcl_make_pair(pair1,pair2);
+                                std::make_pair(pair1,pair2);
                         }
                         else
                         {
@@ -671,7 +671,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                             dbsk2d_ishock_belm* pair2=
                                 bpoint->getElmToTheLeftOf(bline);
                             contact_shock_pairs_[bpoint->id()]=
-                                vcl_make_pair(pair1,pair2);
+                                std::make_pair(pair1,pair2);
 
                         }
                         
@@ -693,9 +693,9 @@ void dbsk2d_ishock_loop_transform::detect_contour(
         {
             dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belm;
             dbsk2d_bnd_edge* edge=bline->bnd_edge();
-            const vcl_list< vtol_topology_object * > * 
+            const std::list< vtol_topology_object * > * 
                 superiors  = edge->superiors_list();
-            vcl_list<vtol_topology_object*>::const_iterator tit;
+            std::list<vtol_topology_object*>::const_iterator tit;
             for ( tit=(*superiors).begin(); tit!= (*superiors).end(); ++tit)
             {
                 if ( (*tit)->get_id() < 0 )
@@ -727,8 +727,8 @@ void dbsk2d_ishock_loop_transform::detect_contour(
 bool dbsk2d_ishock_loop_transform::remove_contour()
 {
 
-    vcl_map<unsigned int,bool> local_visibility_map;
-    vcl_map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
+    std::map<unsigned int,bool> local_visibility_map;
+    std::map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
     for ( kit = higher_degree_nodes_.begin() ; 
           kit != higher_degree_nodes_.end(); ++kit )
     {
@@ -736,7 +736,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
         local_visibility_map[(*kit).first]=bpoint->is_visible();
     }
 
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     for ( it = removal_bnd_elements_.begin(); 
           it != removal_bnd_elements_.end(); ++it)
     {
@@ -780,9 +780,9 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
     {
 
         dbsk2d_ishock_belm* belm = (*it).second;
-        vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
+        std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
             = contact_shock_pairs_[belm->id()];
-        vcl_list<dbsk2d_ishock_belm*> interacting_belm_list;
+        std::list<dbsk2d_ishock_belm*> interacting_belm_list;
         belm->get_interacting_belements(interacting_belm_list);
 
         if ( interacting_belm_list.size() == 0 )
@@ -827,7 +827,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
             
         }
         bool flag=false;
-        vcl_list<dbsk2d_ishock_belm*>::iterator bit;
+        std::list<dbsk2d_ishock_belm*>::iterator bit;
         for ( bit = interacting_belm_list.begin() ; bit 
                   != interacting_belm_list.end() ; ++bit)
         {
@@ -848,7 +848,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
 
     if ( minimal_interacting_elements_.size() == 0 )
     {
-        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator sit;
+        std::map<unsigned int,dbsk2d_ishock_belm*>::iterator sit;
         for ( sit=interacting_bnd_elements_.begin(); sit !=
                   interacting_bnd_elements_.end() ; ++sit)
         {
@@ -865,12 +865,12 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
     delete_shock_vertices();
 
     
-    vcl_map<unsigned int,vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
+    std::map<unsigned int,std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
         ::iterator cit;
     for ( cit = contact_shock_pairs_.begin(); cit != contact_shock_pairs_.end();
           ++cit)
     {
-        vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
+        std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
             = (*cit).second;
         unsigned int id=(*cit).first;
         dbsk2d_ishock_bline* bl1(0);
@@ -904,11 +904,11 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
         while ( true )
         {
             // Grab all elements of active shocks
-            vcl_vector<dbsk2d_ishock_edge*> invalid_shocks;
+            std::vector<dbsk2d_ishock_edge*> invalid_shocks;
             ishock_graph_->invalid_shocks(invalid_shocks);
             
             // Grab elements of delete shocks
-            vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
+            std::map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
                 = ishock_detector_.get_deleted_bnd_elements();
 
             if ( invalid_shocks.size() == 0 )
@@ -921,11 +921,11 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
 
             if ( iteration == 5 )
             {
-                vcl_cerr<<"Error: Reinsert Contour"<<vcl_endl;
+                std::cerr<<"Error: Reinsert Contour"<<std::endl;
         
                 // 2. Reactivate contour
 
-                vcl_vector<dbsk2d_ishock_belm*> contact_shock_set;
+                std::vector<dbsk2d_ishock_belm*> contact_shock_set;
                 for ( it = removal_bnd_elements_.begin(); 
                       it != removal_bnd_elements_.end() ; ++it)
                 {
@@ -977,7 +977,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
                 return false;
             }
 
-            vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+            std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
                   it != deleted_bnd_elements.end();
                   ++it)
@@ -1014,7 +1014,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
 {
 
     // 1) Delete all shocks formed by interacting bnds
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     for ( it = interacting_bnd_elements_.begin(); 
           it != interacting_bnd_elements_.end() ; ++it)
     {
@@ -1068,12 +1068,12 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
     }
 
     // 3 See if any contact shocks need to be deleted
-    vcl_map<unsigned int,vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
+    std::map<unsigned int,std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> >
         ::iterator cit;
     for ( cit = contact_shock_pairs_.begin(); cit != contact_shock_pairs_.end();
           ++cit)
     {
-        vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
+        std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> pair
             = (*cit).second;
 
         dbsk2d_ishock_belm* lbe=pair.first;
@@ -1124,9 +1124,9 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
     delete_shock_vertices();
 
     // 2. Reactivate contour
-    vcl_vector<vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*> > 
+    std::vector<std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*> > 
         junction_contacts;
-    vcl_vector<dbsk2d_ishock_belm*> contact_shock_set;
+    std::vector<dbsk2d_ishock_belm*> contact_shock_set;
     for ( it = removal_bnd_elements_.begin(); 
           it != removal_bnd_elements_.end() ; ++it)
     {
@@ -1160,7 +1160,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
                 dbsk2d_ishock_bpoint* degree_three=
                     (dbsk2d_ishock_bpoint*)bpoint_spt;
                 degree_three->connectTo((*it).second);
-                vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
+                std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
                     pair(bline,degree_three);
                 junction_contacts.push_back(pair);
 
@@ -1171,7 +1171,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
                 dbsk2d_ishock_bpoint* degree_three=
                     (dbsk2d_ishock_bpoint*)bpoint_ept;
                 degree_three->connectTo((*it).second);
-                vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
+                std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
                     pair(bline,degree_three);
                 junction_contacts.push_back(pair);
 
@@ -1186,7 +1186,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
         ishock_detector_.initialize_contacts_and_A3s(contact_shock_set);
     }
 
-    vcl_vector<vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*> > 
+    std::vector<std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*> > 
         ::iterator bit;
     for ( bit=junction_contacts.begin(); bit != junction_contacts.end();
           ++bit)
@@ -1248,11 +1248,11 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
         while ( true )
         {
             // Grab all elements of active shocks
-            vcl_vector<dbsk2d_ishock_edge*> invalid_shocks;
+            std::vector<dbsk2d_ishock_edge*> invalid_shocks;
             ishock_graph_->invalid_shocks(invalid_shocks);
             
             // Grab elements of delete shocks
-            vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
+            std::map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
                 = ishock_detector_.get_deleted_bnd_elements();
 
             if ( invalid_shocks.size() == 0 )
@@ -1265,9 +1265,9 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
 
             if ( iteration == 5 )
             {
-                vcl_cerr<<"Error: recomputing loop reinsert"<<vcl_endl;
+                std::cerr<<"Error: recomputing loop reinsert"<<std::endl;
                 
-                vcl_vector<dbsk2d_ishock_belm*> contact_shock_set;
+                std::vector<dbsk2d_ishock_belm*> contact_shock_set;
                 for ( it = removal_bnd_elements_.begin(); 
                       it != removal_bnd_elements_.end() ; ++it)
                 {
@@ -1286,7 +1286,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
 
                 }
                 
-                vcl_map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
+                std::map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
                 for ( kit = higher_degree_nodes_.begin() ; 
                       kit != higher_degree_nodes_.end(); ++kit )
                 {
@@ -1300,7 +1300,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
 
                 return false;
             }
-            vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+            std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
                   it != deleted_bnd_elements.end();
                   ++it)

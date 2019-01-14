@@ -9,7 +9,7 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #include <vpgld/pro/vpgld_camera_storage.h>
 
-#include <vcl_set.h>
+#include <set>
 #include <vnl/vnl_math.h>
 
 #include <vsol/vsol_polyline_2d.h>
@@ -78,7 +78,7 @@ mw_curve_tracing_tool_2()
   gesture0 = vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true);
 }
 
-vcl_string
+std::string
 mw_curve_tracing_tool_2::name() const
 {
   return "Binocular curve tracing";
@@ -87,26 +87,26 @@ mw_curve_tracing_tool_2::name() const
 void   
 mw_curve_tracing_tool_2::activate ()
 {
-  vcl_cout << "mw_curve_tracing_tool_2 ON\n";
+  std::cout << "mw_curve_tracing_tool_2 ON\n";
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   if (views.size() < 2) {
-    vgui::out << "Error: need at least 2 views for this tool" << vcl_endl;
-    vcl_cerr  << "Error: need at least 2 views for this tool" << vcl_endl;
+    vgui::out << "Error: need at least 2 views for this tool" << std::endl;
+    std::cerr  << "Error: need at least 2 views for this tool" << std::endl;
     return;
   }
 
   frame_v1_ = views[0]->frame();
   frame_v2_ = views[1]->frame();
   
-  vcl_cout << "Working in frames " << frame_v1_ << " and " << frame_v2_ << vcl_endl;
+  std::cout << "Working in frames " << frame_v1_ << " and " << frame_v2_ << std::endl;
 
   // -------- Get camera matrices from each frame
 
   {
-    //  vcl_string datatype();
+    //  std::string datatype();
 
     // camera 1
     bpro1_storage_sptr 
@@ -118,13 +118,13 @@ mw_curve_tracing_tool_2::activate ()
 
     cam1_ = cam_storage->get_camera()->cast_to_perspective_camera();
     if(!cam1_) {
-      vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+      std::cerr << "Error: tool requires a perspective camera" << std::endl;
       return;
     }
 
-    vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-    vcl_cout << "Camera1: \n" << cam1_->get_matrix();
-//    vcl_cout << "Camera1: \n" << *cam1_;
+    std::cout << "NAME: " << cam_storage->name() << std::endl;
+    std::cout << "Camera1: \n" << cam1_->get_matrix();
+//    std::cout << "Camera1: \n" << *cam1_;
 
     // camera 2
     p = MANAGER->repository()->get_data_at("vpgl camera",frame_v2_);
@@ -134,12 +134,12 @@ mw_curve_tracing_tool_2::activate ()
     cam2_ = cam_storage->get_camera()->cast_to_perspective_camera();
 
     if(!cam2_) {
-      vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+      std::cerr << "Error: tool requires a perspective camera" << std::endl;
       return;
     }
 
-    vcl_cout << "NAME2: " << cam_storage->name() << vcl_endl;
-    vcl_cout << "Camera2: \n" << cam2_->get_matrix();
+    std::cout << "NAME2: " << cam_storage->name() << std::endl;
+    std::cout << "Camera2: \n" << cam2_->get_matrix();
 
     // Fundamental matrix
     fm_ = new vpgl_fundamental_matrix <double> (*cam1_,*cam2_);
@@ -155,15 +155,15 @@ mw_curve_tracing_tool_2::activate ()
       curve_tableau_l_.vertical_cast(tab_ptr1);
       curve_tableau_r_.vertical_cast(tab_ptr2);
       if (!curve_tableau_l_) {
-        vcl_cerr << "error: no active vsol in left tableau\n";
+        std::cerr << "error: no active vsol in left tableau\n";
         return;
       }
       if (!curve_tableau_r_) {
-        vcl_cerr << "error: no active vsol in right tableau\n";
+        std::cerr << "error: no active vsol in right tableau\n";
         return;
       }
     } else {
-      vcl_cerr << "error: Could not find active child tableaus in selector; line" << __LINE__ << vcl_endl;
+      std::cerr << "error: Could not find active child tableaus in selector; line" << __LINE__ << std::endl;
       return ;
     }
   }
@@ -171,10 +171,10 @@ mw_curve_tracing_tool_2::activate ()
 
   // -------- Add tableaus to draw on
  
-  vcl_string type("vsol2D");
-  vcl_string name("mw_curve_tracer");
-  vcl_string type2("vsol2D");
-  vcl_string name2("mw_curve_tracer");
+  std::string type("vsol2D");
+  std::string name("mw_curve_tracer");
+  std::string type2("vsol2D");
+  std::string name2("mw_curve_tracer");
 
   bpro1_storage_sptr 
     n_data  = MANAGER->repository()->new_data_at(type,name,frame_v1_),
@@ -185,7 +185,7 @@ mw_curve_tracing_tool_2::activate ()
      MANAGER->add_to_display(n_data2);
      MANAGER->display_current_frame();
   } else {
-     vcl_cerr << "error: unable to register new data\n";
+     std::cerr << "error: unable to register new data\n";
      return ;
   }
 
@@ -195,11 +195,11 @@ mw_curve_tracing_tool_2::activate ()
     tab_l_.vertical_cast(tab_ptr1);
     tab_r_.vertical_cast(tab_ptr2);
   } else {
-    vcl_cerr << "error: Could not find child tableaus in selector\n";
+    std::cerr << "error: Could not find child tableaus in selector\n";
     return ;
   }
 
-  vcl_string active;
+  std::string active;
   active = views[0]->selector()->active_name();
 
   views[0]->selector()->set_active(name);
@@ -218,13 +218,13 @@ mw_curve_tracing_tool_2::activate ()
 
   vsols_right_sto.vertical_cast(MANAGER->storage_from_tableau(views[1]->selector()->active_tableau()));
   if (vsols_right_sto == 0) {
-    vcl_cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
+    std::cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
     return;
   }
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsols_right_base = vsols_right_sto->all_data ();
+  std::vector< vsol_spatial_object_2d_sptr > vsols_right_base = vsols_right_sto->all_data ();
 
-  vcl_cout << "Number of vsols in storage named " << vsols_right_sto->name() <<  ": " << vsols_right_base.size() << vcl_endl;
+  std::cout << "Number of vsols in storage named " << vsols_right_sto->name() <<  ": " << vsols_right_base.size() << std::endl;
 
 
   vsols_right_.resize(vsols_right_base.size(),0);
@@ -235,8 +235,8 @@ mw_curve_tracing_tool_2::activate ()
     vsols_right_[i] = dynamic_cast<vsol_polyline_2d *> (vsols_right_base[i].ptr());
 
     if (!vsols_right_[i]) {
-      vcl_cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << vcl_endl;
-      //vcl_cout << "Object type found: " << vsols_right_base[i]->type_name() << vcl_endl;
+      std::cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << std::endl;
+      //std::cout << "Object type found: " << vsols_right_base[i]->type_name() << std::endl;
       return ;
     }
   } 
@@ -248,7 +248,7 @@ void
 mw_curve_tracing_tool_2::deactivate ()
 {
   delete fm_;
-  vcl_cout << "mw_curve_tracing_tool_2 OFF\n";
+  std::cout << "mw_curve_tracing_tool_2 OFF\n";
 }
 
 bool 
@@ -257,7 +257,7 @@ mw_curve_tracing_tool_2::set_tableau( const vgui_tableau_sptr& tableau )
 
   curve_tableau_current_.vertical_cast(tableau);
   if( curve_tableau_current_ == 0 )  {
-    vcl_cerr << "Warning: working in a tableau which is not expected\n";
+    std::cerr << "Warning: working in a tableau which is not expected\n";
     return false;
   }
 
@@ -280,7 +280,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
 
     // Just a test
 //    if (curve_tableau_current_.ptr() != curve_tableau_r_.ptr() && curve_tableau_current_.ptr() != curve_tableau_l_.ptr())
-//      vcl_cout <<"Current tableau is not either one of left or right taubleaux!" << vcl_endl;
+//      std::cout <<"Current tableau is not either one of left or right taubleaux!" << std::endl;
 
 
 
@@ -289,25 +289,25 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
 
 
 //    if (!selected_curve_soview_base) {
-//      vcl_cout << "No highlighted curve in 1st view... checking 2nd..." << vcl_endl;
+//      std::cout << "No highlighted curve in 1st view... checking 2nd..." << std::endl;
 //      selected_curve_soview_base =  (vgui_soview2D*)curve_tableau_r_->get_highlighted_soview();
 //
 //      if (!selected_curve_soview_base)
-//        vcl_cout << "No highlighted curve in SECOND view either. WORK HARDER!" << vcl_endl;
+//        std::cout << "No highlighted curve in SECOND view either. WORK HARDER!" << std::endl;
 //      else
-//        vcl_cout << "Highlighted a curve in 2nd view!!! YEAH!" << vcl_endl;
+//        std::cout << "Highlighted a curve in 2nd view!!! YEAH!" << std::endl;
 //
 //      return false;
 //    }
 
 
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "Frame index: " << view->frame() << std::endl;
     
     bgui_vsol_soview2D_polyline *selected_curve_soview_poly
       = dynamic_cast<bgui_vsol_soview2D_polyline *>(selected_curve_soview_base); 
 
     if (!selected_curve_soview_poly) {
-      vcl_cout << "Selected non-Polyline object" << vcl_endl;
+      std::cout << "Selected non-Polyline object" << std::endl;
       return false;
     }
 
@@ -315,7 +315,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
 //    selected_curve_soview_poly->set_colour(1,1,0);
 //    curve_tableau_current_->post_redraw();
     crv_ = selected_curve_soview_poly->sptr();
-    vcl_cout << "Size of selected curve: " << crv_->size() << vcl_endl;
+    std::cout << "Size of selected curve: " << crv_->size() << std::endl;
 
     if (view->frame() == frame_v1_) {
 
@@ -327,7 +327,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
 
 
       if (selected_new_curve_) {
-        vcl_cout << "New curve selected.\n";
+        std::cout << "New curve selected.\n";
 
         if (p0_) { //: if there are previously selected curve segment, erase it 
            tab_l_->remove(p0_);
@@ -388,7 +388,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
         update_pn_(pt);
       }
     } else { // (frame == 1)
-      vcl_cout << "Processing a curve in right hand" << vcl_endl;
+      std::cout << "Processing a curve in right hand" << std::endl;
       print_index_of_candidate_curve();
     }
 
@@ -405,7 +405,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case '.': { // advance pn outwards
         vgui::out << "Moving outwards\n";
-        vcl_cout  << "Moving outwards\n";
+        std::cout  << "Moving outwards\n";
         if (pn_idx_ > p0_idx_ && (pn_idx_+1) < crv_->size()) {
           pn_idx_++;
           vsol_point_2d_sptr pt = crv_->vertex(pn_idx_);
@@ -424,7 +424,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case ',': { // advance pn inwards
         vgui::out << "Moving inwards\n";
-        vcl_cout  << "Moving inwards\n";
+        std::cout  << "Moving inwards\n";
         if (pn_idx_ >= p0_idx_ && (pn_idx_-1) != 0) {
           pn_idx_--;
         } else  {
@@ -442,7 +442,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case 'g': { 
         // toggle if should display all intersections of pencil ep0..ep1 and edges in image 2
-        vcl_cout << "Toggling display intersections\n";
+        std::cout << "Toggling display intersections\n";
         vgui::out << "Toggling display intersections\n";
 
         display_all_intersections_ = !display_all_intersections_;
@@ -454,7 +454,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case 'i': { 
         // toggle if should display+compute all intersections of pencil ep0..ep1 and edges in image 2
-        vcl_cout << "Toggling compute intersections\n";
+        std::cout << "Toggling compute intersections\n";
         vgui::out << "Toggling compute intersections\n";
 
         compute_isets_ = !compute_isets_;
@@ -469,7 +469,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case 'e': {
         // toggle if should display+compute all ep0..ep1 in image 2
-        vcl_cout << "Toggling display epipolars in image 2\n";
+        std::cout << "Toggling display epipolars in image 2\n";
         vgui::out << "Toggling display epipolars in image 2\n";
 
         display_all_right_epips_ = !display_all_right_epips_;
@@ -481,7 +481,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case 'w': {
         // toggle if should display+compute all ep0..ep1 in image 1
-        vcl_cout << "Toggling display epipolars in image 1\n";
+        std::cout << "Toggling display epipolars in image 1\n";
         vgui::out << "Toggling display epipolars in image 1\n";
 
         display_all_left_epips_ = !display_all_left_epips_;
@@ -493,7 +493,7 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
       }
       case 'r': {
 
-        vcl_cout << "Reconstructing possible matches\n";
+        std::cout << "Reconstructing possible matches\n";
         vgui::out << "Reconstructing possible matches\n";
         reconstruct_possible_matches();
 
@@ -501,14 +501,14 @@ mw_curve_tracing_tool_2::handle( const vgui_event & e,
         break;
       }
       case '1': { 
-        vcl_cout << "Breaking the curves into episegs\n";
+        std::cout << "Breaking the curves into episegs\n";
         vgui::out << "Breaking the curves into episegs\n";
         break_curves_into_episegs();
         break;
       }
 
       default:
-        vcl_cout << "Unassigned key: " << e.key << " pressed.\n";
+        std::cout << "Unassigned key: " << e.key << " pressed.\n";
         break;
     }
   }
@@ -655,7 +655,7 @@ update_display_for_epipolar_curve_pencil()
 
   if (display_all_right_epips_) {
 
-    vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+    std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
     for (itr = ep_soviews_.begin(); itr != ep_soviews_.end(); ++itr) {
       tab_r_->remove(*itr);
     }
@@ -666,7 +666,7 @@ update_display_for_epipolar_curve_pencil()
       ep_soviews_.back()->set_style(ep_style_);
     }
   } else { //: remove soviews from tableau
-    vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+    std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
     for (itr = ep_soviews_.begin(); itr != ep_soviews_.end(); ++itr) {
       tab_r_->remove(*itr);
     }
@@ -678,7 +678,7 @@ update_display_for_epipolar_curve_pencil()
 
   // LEFT
   if (display_all_left_epips_) {
-    vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+    std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
     for (itr = ep_soviews_left_.begin(); itr != ep_soviews_left_.end(); ++itr) {
       tab_l_->remove(*itr);
     }
@@ -691,7 +691,7 @@ update_display_for_epipolar_curve_pencil()
       ep_soviews_left_.back()->set_style(ep_style_);
     }
   } else { //: remove soviews from tableau
-    vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+    std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
     for (itr = ep_soviews_left_.begin(); itr != ep_soviews_left_.end(); ++itr) {
       tab_l_->remove(*itr);
     }
@@ -707,7 +707,7 @@ void mw_curve_tracing_tool_2::
 show_all_intersection_points()
 {
 
-  vcl_vector<vcl_vector<unsigned> > pts_idx;
+  std::vector<std::vector<unsigned> > pts_idx;
   isets_.all_points(pts_idx);
   for (unsigned long i=0; i < all_intercept_pts_soviews_.size(); ++i)
     tab_r_->remove(all_intercept_pts_soviews_[i]);
@@ -756,8 +756,8 @@ swap_p0_and_pn_()
 void mw_curve_tracing_tool_2::
 draw_candidate_curves()
 {
-  vcl_list<unsigned> crv_prelim_candidates; //: index into vsols_right_ of candidate (whole) curves
-  vcl_vector<vsol_polyline_2d_sptr> crv_prelim_candidates_ptrs;
+  std::list<unsigned> crv_prelim_candidates; //: index into vsols_right_ of candidate (whole) curves
+  std::vector<vsol_polyline_2d_sptr> crv_prelim_candidates_ptrs;
 
   unsigned ini_idx, end_idx;
 
@@ -767,12 +767,12 @@ draw_candidate_curves()
   crv_candidates_.clear();
   crv_candidates_ptrs_.clear();
 
-  vcl_list<bgui_vsol_soview2D_polyline *>::const_iterator citer; 
+  std::list<bgui_vsol_soview2D_polyline *>::const_iterator citer; 
   for (citer = crv_candidates_soviews_.begin(); citer!=crv_candidates_soviews_.end(); ++citer) {
     tab_r_->remove(*citer);
   }
   crv_candidates_soviews_.clear();
-  vcl_vector<bool> is_candidate(vsols_right_.size(),false);
+  std::vector<bool> is_candidate(vsols_right_.size(),false);
 
 
 
@@ -784,7 +784,7 @@ draw_candidate_curves()
     end_idx = p0_idx_;
   }
 
-//  vcl_cout << "Curve segmt size: " << end_idx - ini_idx + 1 << vcl_endl;
+//  std::cout << "Curve segmt size: " << end_idx - ini_idx + 1 << std::endl;
 
   ep_.clear();
   ep_left_.clear();
@@ -834,7 +834,7 @@ draw_candidate_curves()
     {
       tab_r_->set_current_grouping("Drawing");
 
-      vcl_list<unsigned>::const_iterator itr = crv_prelim_candidates.begin(); 
+      std::list<unsigned>::const_iterator itr = crv_prelim_candidates.begin(); 
 
       for (unsigned j=0;  j < isets_.ncurves();  ++j,++itr) {
         if ( ! isets_.L_[j].intercepts.empty()) {
@@ -847,7 +847,7 @@ draw_candidate_curves()
       }
     }
   }
-  vcl_cout << "Number of curves intercepting pencil: " << crv_candidates_.size() << vcl_endl;
+  std::cout << "Number of curves intercepting pencil: " << crv_candidates_.size() << std::endl;
 
 }
 
@@ -862,7 +862,7 @@ reconstruct_possible_matches()
   //      - reconstruct
   //      - output with proper name
 
-  vcl_cout << "Ric!\n\n";// XXX
+  std::cout << "Ric!\n\n";// XXX
 
   bdifd_rig rig(*cam1_, *cam2_);
 
@@ -883,20 +883,20 @@ reconstruct_possible_matches()
 
   assert(isets_.n_intersecting_curves() == crv_candidates_ptrs_.size());
 
-  vcl_cout << "# candidate curves: " << crv_candidates_ptrs_.size() << vcl_endl;
+  std::cout << "# candidate curves: " << crv_candidates_ptrs_.size() << std::endl;
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d, fcrv_2d;
 
-  vcl_string prefix("dat/reconstr-tracer-");
-  vcl_string prefix2("dat/curve2d-tracer-");
-  vcl_string ext(".dat");
+  std::string prefix("dat/reconstr-tracer-");
+  std::string prefix2("dat/curve2d-tracer-");
+  std::string ext(".dat");
 
-  vcl_string cmd;
-  cmd = vcl_string("rm -f ") + prefix + vcl_string("*dat  ") + prefix2 + vcl_string("*dat");
+  std::string cmd;
+  cmd = std::string("rm -f ") + prefix + std::string("*dat  ") + prefix2 + std::string("*dat");
 
   if (system(cmd.c_str()) == -1)
-    vcl_cout << "Error removing old reconstructions\n";
+    std::cout << "Error removing old reconstructions\n";
 
 
   jnz = (unsigned)-1;
@@ -906,20 +906,20 @@ reconstruct_possible_matches()
 
     ++jnz;
 
-    vcl_ostringstream j_str; //:< number of first or central image
+    std::ostringstream j_str; //:< number of first or central image
     j_str << jnz;
 
-    vcl_string 
+    std::string 
       fname=prefix + j_str.str() + ext;
 
-    fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-    vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+    fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
+    std::cout << "Writing 3d curve: " << fname << std::endl;
 
     fname = prefix2 + j_str.str() + ext;
 
     // write candidate curve jnz
-    fcrv_2d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-    vcl_cout << "Writing 2d curve: " << fname << vcl_endl;
+    fcrv_2d.open(fname.c_str(),std::ios::out | std::ios::binary);
+    std::cout << "Writing 2d curve: " << fname << std::endl;
 
     for (unsigned k=0; k < crv_candidates_ptrs_[jnz]->size(); ++k) {
       const vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(k);
@@ -932,7 +932,7 @@ reconstruct_possible_matches()
 
 
     // traverse L_[j] 
-    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
+    std::list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
     for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
       unsigned k = ptr->ep_number;
@@ -941,7 +941,7 @@ reconstruct_possible_matches()
       unsigned lmin=0;
 
       { // determine point of this iset minimizing epipolar distance (assume accurate calib)
-        double cost_min = vcl_numeric_limits<double>::infinity(); 
+        double cost_min = std::numeric_limits<double>::infinity(); 
         double cost;
 
         assert(ptr->index.size() > 0);
@@ -969,7 +969,7 @@ reconstruct_possible_matches()
 
         bool intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[k]),seg,ipt);
         if (intersects) {
-          vcl_cout <<"Intersects!\n";
+          std::cout <<"Intersects!\n";
           pt_img2 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[k],vgl_homg_point_2d<double>(ipt));
           assert(cost < 1e-8 && cost > -1e-8);
@@ -994,11 +994,11 @@ print_index_of_candidate_curve()
 
   for (unsigned i=0; i<crv_candidates_ptrs_.size(); ++i) {
     if (crv_candidates_ptrs_[i] == crv_) {  // Pointer comparison
-      vcl_cout << "You selected curve number: (" << i+1 << ") out of " << crv_candidates_ptrs_.size() << vcl_endl;
+      std::cout << "You selected curve number: (" << i+1 << ") out of " << crv_candidates_ptrs_.size() << std::endl;
       return ;
     }
   } 
-  vcl_cout << "Selected soview not found in list of candidate vsols.\n";
+  std::cout << "Selected soview not found in list of candidate vsols.\n";
 
 }
 
@@ -1014,22 +1014,22 @@ break_curves_into_episegs()
   break_curves_into_episegs(vsols_right_, e_prime, frame_v2_, 1 /*view*/);
 
 
-  vcl_vector< vsol_polyline_2d_sptr > vsols_left;
+  std::vector< vsol_polyline_2d_sptr > vsols_left;
 
   vidpro1_vsol2D_storage_sptr vsols_left_sto=0;
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
   // Do the same for left curve ------------------------------
   vsols_left_sto.vertical_cast(MANAGER->storage_from_tableau( views[0]->selector()->active_tableau() ));
   if (vsols_left_sto == 0) {
-    vcl_cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
+    std::cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
     return;
   }
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsols_left_base = vsols_left_sto->all_data ();
+  std::vector< vsol_spatial_object_2d_sptr > vsols_left_base = vsols_left_sto->all_data ();
 
-  vcl_cout << "Number of vsols in storage named " << vsols_left_sto->name() <<  ": " << vsols_left_base.size() << vcl_endl;
+  std::cout << "Number of vsols in storage named " << vsols_left_sto->name() <<  ": " << vsols_left_base.size() << std::endl;
 
   vsols_left.resize(vsols_left_base.size(),0);
 
@@ -1039,8 +1039,8 @@ break_curves_into_episegs()
     vsols_left[i] = dynamic_cast<vsol_polyline_2d *> (vsols_left_base[i].ptr());
 
     if (!vsols_left[i]) {
-      vcl_cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << vcl_endl;
-      //vcl_cout << "Object type found: " << vsols_left_base[i]->type_name() << vcl_endl;
+      std::cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << std::endl;
+      //std::cout << "Object type found: " << vsols_left_base[i]->type_name() << std::endl;
       return ;
     }
   } 
@@ -1048,13 +1048,13 @@ break_curves_into_episegs()
   break_curves_into_episegs(vsols_left, e, frame_v1_, 0 /*view*/);
 
   // todo: Threshold small curves!
-  vcl_cout <<" Done breaking !! " << vcl_endl;
+  std::cout <<" Done breaking !! " << std::endl;
 }
 
 
 void mw_curve_tracing_tool_2::
 break_curves_into_episegs(
-  const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
+  const std::vector< vsol_polyline_2d_sptr >  &vsols,
   const vgl_homg_point_2d<double> &e, int frame, int view) const
 {
   static const double threshold_number_of_points=2;
@@ -1066,7 +1066,7 @@ break_curves_into_episegs(
 
   // A) For each vsol, do:
   
-  vcl_vector<becld_episeg_sptr> all_episegs;
+  std::vector<becld_episeg_sptr> all_episegs;
   for (unsigned i=0; i < vsols.size(); ++i) {
     
     // A1 - convert to digital curve
@@ -1075,16 +1075,16 @@ break_curves_into_episegs(
       dc->add_vertex(vsols[i]->vertex(k));
 
     // A2 - apply episeg
-    vcl_vector<becld_episeg_sptr> eps = factory.convert_curve(dc);
+    std::vector<becld_episeg_sptr> eps = factory.convert_curve(dc);
 
-    for(vcl_vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
+    for(std::vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
         itr != eps.end();  ++itr)
       all_episegs.push_back(*itr);
   }
 
   // B) Extract vsol from episegs
 
-  vcl_vector<vsol_polyline_2d_sptr> vsols2;
+  std::vector<vsol_polyline_2d_sptr> vsols2;
   vsols2.reserve(all_episegs.size());
 
   for(unsigned k=0; k < all_episegs.size(); ++k) {
@@ -1094,7 +1094,7 @@ break_curves_into_episegs(
 
     vsols2.push_back(new vsol_polyline_2d);
     // B1 - traverse episegs
-    for (unsigned i=(unsigned ) vcl_ceil(all_episegs[k]->min_index()); i <= (unsigned ) vcl_floor(all_episegs[k]->max_index()); ++i) {
+    for (unsigned i=(unsigned ) std::ceil(all_episegs[k]->min_index()); i <= (unsigned ) std::floor(all_episegs[k]->max_index()); ++i) {
       vsols2.back()->add_vertex( all_episegs[k]->curve()->point(i) );
     }
   }
@@ -1103,7 +1103,7 @@ break_curves_into_episegs(
   //----------------------------------------------------------------------
   // C) Create vsol storage; add to repository; make it active
 
-  vcl_vector<vsol_spatial_object_2d_sptr> base_vsols2;
+  std::vector<vsol_spatial_object_2d_sptr> base_vsols2;
   base_vsols2.resize(vsols2.size());
   for (unsigned i=0; i< vsols2.size(); ++i)
     base_vsols2[i] = vsols2[i].ptr();
@@ -1111,7 +1111,7 @@ break_curves_into_episegs(
   {
   // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-  output_vsol->add_objects(base_vsols2, vcl_string("broken_vsols"));
+  output_vsol->add_objects(base_vsols2, std::string("broken_vsols"));
   output_vsol->set_name("broken_vsols");
   MANAGER->repository()->store_data_at(output_vsol, frame);
   MANAGER->add_to_display(output_vsol);
@@ -1119,7 +1119,7 @@ break_curves_into_episegs(
   }
 
   // make it active
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
   views[view]->selector()->set_active("broken_vsols");
 }

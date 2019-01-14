@@ -1,8 +1,8 @@
 #include "dbdet_sel_curvelet_linking_tool.h"
 
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
-#include <vcl_queue.h>
+#include <limits>
+#include <algorithm>
+#include <queue>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -112,7 +112,7 @@ dbdet_sel_curvelet_linking_tool::dbdet_sel_curvelet_linking_tool():
 }
 
 
-vcl_string dbdet_sel_curvelet_linking_tool::name() const
+std::string dbdet_sel_curvelet_linking_tool::name() const
 {
   return "SEL Explore Curvelet Linking";
 }
@@ -229,7 +229,7 @@ bool dbdet_sel_curvelet_linking_tool::handle( const vgui_event & e,
     clear_contour();
 
     if (cur_cvlet){
-      vcl_cout << "New Contour Started... " << vcl_endl;
+      std::cout << "New Contour Started... " << std::endl;
       add_cvlet(cur_cvlet);
     }
 
@@ -240,7 +240,7 @@ bool dbdet_sel_curvelet_linking_tool::handle( const vgui_event & e,
   else if (con_next(e)){ //add next curvelet to the contour
 
     if (!add_next_curvelet())
-      vcl_cout << "No legal curvelets available to extend contour." << vcl_endl;
+      std::cout << "No legal curvelets available to extend contour." << std::endl;
 
     sel_tab_->post_redraw();
     sel_tab_->post_overlay_redraw();
@@ -267,7 +267,7 @@ bool dbdet_sel_curvelet_linking_tool::handle( const vgui_event & e,
     if (cur_edgel) //if edgel selected, draw the curvelets anchored on it
     {
       //display all the groupings of the current edgel
-      vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
+      std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(cur_edgel->id).begin();
       for ( ; cv_it!=CM->curvelets(cur_edgel->id).end(); cv_it++)
         sel_tab_->draw_selected_cvlet((*cv_it));
 
@@ -290,11 +290,11 @@ bool dbdet_sel_curvelet_linking_tool::handle( const vgui_event & e,
       glBegin( GL_LINE_STRIP );
       for (int th=0; th<=20; th++){
         double theta = cur_edgel->tangent - vnl_math::pi/2 + th*2*vnl_math::pi/20.0;
-        glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(theta), 
-                   cur_edgel->pt.y() + rad*vcl_sin(theta));
+        glVertex2f(cur_edgel->pt.x() + rad*std::cos(theta), 
+                   cur_edgel->pt.y() + rad*std::sin(theta));
       }
-      //glVertex2f(cur_edgel->pt.x() + rad*vcl_cos(cur_edgel->tangent - vnl_math::pi/2), 
-      //           cur_edgel->pt.y() + rad*vcl_sin(cur_edgel->tangent - vnl_math::pi/2));
+      //glVertex2f(cur_edgel->pt.x() + rad*std::cos(cur_edgel->tangent - vnl_math::pi/2), 
+      //           cur_edgel->pt.y() + rad*std::sin(cur_edgel->tangent - vnl_math::pi/2));
       glEnd();
 
     }
@@ -326,7 +326,7 @@ dbdet_curvelet* dbdet_sel_curvelet_linking_tool::best_curvelet(dbdet_edgel* e)
   //  dbdet_curvelet* best_cvlet = 0;
   //  double best_val = -1;
 
-  //  vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
+  //  std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
   //  for ( ; cv_it!=CM->curvelets(e->id).end(); cv_it++)
   //  {
   //    if ((*cv_it)->quality>best_val){ 
@@ -359,7 +359,7 @@ dbdet_curvelet* dbdet_sel_curvelet_linking_tool::random_curvelet(dbdet_edgel* e)
     if (CM->curvelets(e->id).size()>0){
       int rand_ind = rand() % CM->curvelets(e->id).size();
 
-      vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
+      std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
       for (int i=0; i<rand_ind; i++)
         cv_it++;
 
@@ -370,7 +370,7 @@ dbdet_curvelet* dbdet_sel_curvelet_linking_tool::random_curvelet(dbdet_edgel* e)
     if (CM->Rcurvelets(e->id).size()>0){
       int rand_ind = rand() % CM->Rcurvelets(e->id).size();
 
-      vcl_list<dbdet_curvelet* >::iterator cv_it = CM->Rcurvelets(e->id).begin();
+      std::list<dbdet_curvelet* >::iterator cv_it = CM->Rcurvelets(e->id).begin();
       for (int i=0; i<rand_ind; i++)
         cv_it++;
 
@@ -415,9 +415,9 @@ void dbdet_sel_curvelet_linking_tool::add_cvlet(dbdet_curvelet* cvlet)
   ////debug
   //switch(comp.Corder)
   //{
-  //  case 2: vcl_cout << "C2  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
-  //  case 1: vcl_cout << "C1  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
-  //  case 0: vcl_cout << "C0  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
+  //  case 2: std::cout << "C2  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
+  //  case 1: std::cout << "C1  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
+  //  case 0: std::cout << "C0  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
   //}
 }
 
@@ -442,7 +442,7 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 
   bool cvlet_added = false;
 
-  vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
+  std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
   for ( ; cv_it!=CM->curvelets(e->id).end(); cv_it++)
   {
     dbdet_curvelet* cvlet = (*cv_it);
@@ -527,7 +527,7 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 //  //            - if order is the same
 //  //               - compute difference in models (difference in k)
 //  //               - compute bundle size
-//  vcl_list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
+//  std::list<dbdet_curvelet* >::iterator cv_it = CM->curvelets(e->id).begin();
 //  for ( ; cv_it!=CM->curvelets(e->id).end(); cv_it++)
 //  {
 //    dbdet_curvelet* cvlet = (*cv_it);
@@ -572,7 +572,7 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 //  //dbdet_edgel* m_e = cur_CF.back()->edgel_chain[(cur_CF.back()->edgel_chain.size()-1)/2];
 //
 //  //if (e != m_e){//avoid infinite loop
-//  //  vcl_cout << "Backtracking..." << vcl_endl;
+//  //  std::cout << "Backtracking..." << std::endl;
 //  //  return add_next_curvelet(m_e);
 //  //}
 //
@@ -596,26 +596,26 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 //  cur_chain.append(cur_CF.back()->edgel_chain);
 //
 //  if (cur_CF.size()==1){//just add the cvlet, this is the first curvelet in the set
-//    transition_data.push_back(vcl_pair<int,int>(-1,-1));
-//    vcl_cout << "First Contourlet: No continuity constraint. " << vcl_endl;
+//    transition_data.push_back(std::pair<int,int>(-1,-1));
+//    std::cout << "First Contourlet: No continuity constraint. " << std::endl;
 //    return;
 //  }
 //  
 //  //debug
 //  switch(comp.Corder)
 //  {
-//    case 2: vcl_cout << "C2  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
-//    case 1: vcl_cout << "C1  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
-//    case 0: vcl_cout << "C0  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << vcl_endl; break;
+//    case 2: std::cout << "C2  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
+//    case 1: std::cout << "C1  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
+//    case 0: std::cout << "C0  Continuity. (k= " << dbdet_k_classes[comp.trans_k] << " )" << std::endl; break;
 //  }
 //
 //  if (!enforce_consistency){ //don't bother updating the bundles
 //    //record simple transition
-//    transition_data.push_back(vcl_pair<int,int>(-1,-1));
+//    transition_data.push_back(std::pair<int,int>(-1,-1));
 //  }
 //  else {
 //    //record transition
-//    transition_data.push_back(vcl_pair<int,int>(comp.Corder, comp.trans_k));
+//    transition_data.push_back(std::pair<int,int>(comp.Corder, comp.trans_k));
 //
 //    //now we need to modify the local curvelet's curve bundle to reflect global continuity constraint
 //    //  a) update CB2 with the intersection
@@ -718,7 +718,7 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 //
 //      if (int_p.num_sheets()!=1)//backtracking failed
 //      {
-//        vcl_cout << "!!!!!!!!!! C0 Issue !!!!!!!" << vcl_endl;
+//        std::cout << "!!!!!!!!!! C0 Issue !!!!!!!" << std::endl;
 //        ////pick the nearest point on the bundle to the current solution
 //        //double min_d=1000.0; unsigned min_p=0;
 //        //for (unsigned p=0; p<trans_cb1->cv_bundles[transition_data[i+1].second][0].size(); p++){
@@ -751,7 +751,7 @@ bool dbdet_sel_curvelet_linking_tool::add_next_curvelet(dbdet_edgel* e)
 //    //if transportation went wrong,pick the centroid arbitrarily
 //    if (!valid)
 //    {
-//      vcl_cout << "!!!!!!!!!! Transport failed !!!!!!!" << vcl_endl;
+//      std::cout << "!!!!!!!!!! Transport failed !!!!!!!" << std::endl;
 //      return;
 //    }
 //
@@ -776,7 +776,7 @@ void dbdet_sel_curvelet_linking_tool::construct_hyp_tree(dbdet_curvelet* cvlet)
 
   ////trace as far as possible
   ////breadth-first search through the tree
-  //vcl_queue<dbdet_hyp_tree_node*> BFS_queue;
+  //std::queue<dbdet_hyp_tree_node*> BFS_queue;
 
   ////BFS_queue.push(HT->root);
   ////while (!BFS_queue.empty())
@@ -806,10 +806,10 @@ void dbdet_sel_curvelet_linking_tool::draw_CC_segment(vgl_point_2d<double> pt, d
   //gl2psLineWidth(3.0);
   
   if (forward){
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
       glVertex2f(sx, sy);
-      glVertex2f(sx + L*vcl_cos(theta), sy+L*vcl_sin(theta));
+      glVertex2f(sx + L*std::cos(theta), sy+L*std::sin(theta));
       glEnd();
       return;
     }
@@ -817,16 +817,16 @@ void dbdet_sel_curvelet_linking_tool::draw_CC_segment(vgl_point_2d<double> pt, d
     glBegin(GL_LINE_STRIP);
     for (double s=0; s<L; s+=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
   else {
-    if (vcl_fabs(k)<1e-7){ //arc degenerate draw a line
+    if (std::fabs(k)<1e-7){ //arc degenerate draw a line
       glBegin(GL_LINE_STRIP);
       glVertex2f(sx, sy);
-      glVertex2f(sx - L*vcl_cos(theta), sy-L*vcl_sin(theta));
+      glVertex2f(sx - L*std::cos(theta), sy-L*std::sin(theta));
       glEnd();
       return;
     }
@@ -834,8 +834,8 @@ void dbdet_sel_curvelet_linking_tool::draw_CC_segment(vgl_point_2d<double> pt, d
     glBegin(GL_LINE_STRIP);
     for (double s=0; s>-L; s-=0.1){
       double th = theta + s*k;  
-      glVertex2f(sx + vcl_cos(theta+vnl_math::pi_over_2)/k + vcl_cos(th-vnl_math::pi_over_2)/k, 
-                 sy + vcl_sin(theta+vnl_math::pi_over_2)/k + vcl_sin(th-vnl_math::pi_over_2)/k );  
+      glVertex2f(sx + std::cos(theta+vnl_math::pi_over_2)/k + std::cos(th-vnl_math::pi_over_2)/k, 
+                 sy + std::sin(theta+vnl_math::pi_over_2)/k + std::sin(th-vnl_math::pi_over_2)/k );  
     }
     glEnd();
   }
@@ -940,7 +940,7 @@ void dbdet_sel_curvelet_linking_tool::draw_HT()
       return;
 
     //find the curvelet list corresponding to the best path
-    vcl_vector<dbdet_curvelet*> best_path;
+    std::vector<dbdet_curvelet*> best_path;
     if (HT.best_path){
       dbdet_hyp_tree::iterator pit = HT.begin();
       for ( ; pit != HT.end(); pit++){
@@ -1013,26 +1013,26 @@ void dbdet_sel_curvelet_linking_tool::draw_local_hyp_tree(dbdet_hyp_tree* HT)
 
 void dbdet_sel_curvelet_linking_tool::print_cvlet_info(dbdet_curvelet* cvlet, double cost)
 {
-  vcl_cout << "Chain: ";
-  if (cvlet->forward) vcl_cout << "F : ";
-  else                vcl_cout << "B : ";
+  std::cout << "Chain: ";
+  if (cvlet->forward) std::cout << "F : ";
+  else                std::cout << "B : ";
 
   for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i)
-    vcl_cout << "\t" << cvlet->edgel_chain[i]->id;
+    std::cout << "\t" << cvlet->edgel_chain[i]->id;
 
   //print curve params
   cvlet->curve_model->print_info();
 
   //print curvelet quality info
-  vcl_cout << ", L= " << cvlet->length << ", Q= " << cvlet->quality << ", cost = " << cost ;
-  vcl_cout << vcl_endl;
+  std::cout << ", L= " << cvlet->length << ", Q= " << cvlet->quality << ", cost = " << cost ;
+  std::cout << std::endl;
 }
 
 
 void dbdet_sel_curvelet_linking_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                 vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add(((enforce_global_consistency)?on:off)+"Enforce Global Consistency", 
             bvis1_tool_toggle, (void*)(&enforce_global_consistency) );

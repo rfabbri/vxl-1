@@ -36,7 +36,7 @@ dbsk2d_ishock_loop_transform_tool::handle( const vgui_event & e,
         dbsk2d_ishock_bpoint* bpoint = (dbsk2d_ishock_bpoint*)elm;
         dbsk2d_ishock_loop_transform transformer(isg,bpoint);
         bool flag = transformer.execute_transform();
-        vcl_cout<<"Shock Computation Valid: "<<flag<<vcl_endl;
+        std::cout<<"Shock Computation Valid: "<<flag<<std::endl;
         tableau()->post_overlay_redraw();
     }
     return true;
@@ -45,7 +45,7 @@ dbsk2d_ishock_loop_transform_tool::handle( const vgui_event & e,
   return dbsk2d_ishock_highlight_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_ishock_loop_transform_tool::name() const
 {
   return "Loop Transform";

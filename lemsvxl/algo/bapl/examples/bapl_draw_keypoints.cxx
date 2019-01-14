@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -18,8 +18,8 @@
 
 int main( int argc, char* argv[] )
 {
-  vul_arg<vcl_string> in_path("-i","Input image");
-  vul_arg<vcl_string> out_path("-o","Output image");
+  vul_arg<std::string> in_path("-i","Input image");
+  vul_arg<std::string> out_path("-o","Output image");
   vul_arg_parse(argc, argv);
 
   if(!in_path.set())
@@ -30,16 +30,16 @@ int main( int argc, char* argv[] )
   grey_image_sptr = vil_new_image_resource_of_view( *vil_convert_to_grey_using_rgb_weighting ( color_image_sptr->get_view() ) );
   if (grey_image_sptr->ni()==0)
   {
-    vcl_cout<<"Failed to load image."<<vcl_endl;
+    std::cout<<"Failed to load image."<<std::endl;
     return 1;
   }
 
-  vcl_cout << "Finding Keypoints" << vcl_endl;
+  std::cout << "Finding Keypoints" << std::endl;
 
-  vcl_vector< bapl_keypoint_sptr > keypoints;
+  std::vector< bapl_keypoint_sptr > keypoints;
   bapl_keypoint_extractor( grey_image_sptr, keypoints);
 
-  vcl_cout << "Drawing Keypoints" << vcl_endl;
+  std::cout << "Drawing Keypoints" << std::endl;
 
   vil_image_view<vxl_byte> color_img(color_image_sptr->get_view());
   for (unsigned i=0;i<keypoints.size();++i){
@@ -51,12 +51,12 @@ int main( int argc, char* argv[] )
                                  int(kp->scale()+0.5), vxl_byte(255) );
   }
 
-  vcl_cout << "Saving the results" << vcl_endl;
+  std::cout << "Saving the results" << std::endl;
   
   vil_save(color_img, out_path().c_str() );
 
 
-  vcl_cout <<  "done!" <<vcl_endl;
+  std::cout <<  "done!" <<std::endl;
   return 0;
 }
 

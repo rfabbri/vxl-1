@@ -30,7 +30,7 @@ dbsksp_morph_shock_graph_process()
       (int) 5)
   )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -54,7 +54,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_morph_shock_graph_process::
+std::string dbsksp_morph_shock_graph_process::
 name()
 { 
   return "Morph Shock Graph"; 
@@ -72,10 +72,10 @@ clear_output(int resize)
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_morph_shock_graph_process::
+std::vector< std::string > dbsksp_morph_shock_graph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_shock");
   to_return.push_back("dbsksp_shock");
   
@@ -86,10 +86,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_morph_shock_graph_process::
+std::vector< std::string > dbsksp_morph_shock_graph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_shock" );  
   return to_return;
 }
@@ -122,7 +122,7 @@ execute()
 {
   unsigned int morph_type = 0;
   parameters()->get_value( "-morph_type" , morph_type);
-  vcl_string mode = this->morph_type_descriptions_[morph_type];
+  std::string mode = this->morph_type_descriptions_[morph_type];
 
 
   int num_sequences = 0;
@@ -141,12 +141,12 @@ execute()
   if (mode == "same topology")
   {
     if ( this->input_data_.size() != num_sequences ){
-      vcl_cerr << "ERROR: executing " __FILE__ "not exactly " 
+      std::cerr << "ERROR: executing " __FILE__ "not exactly " 
         << num_sequences << " input frame.\n";
       return false;
     }
 
-    vcl_vector<vcl_vector<bpro1_storage_sptr > > frame_storage_list;
+    std::vector<std::vector<bpro1_storage_sptr > > frame_storage_list;
 
     // Need to go backward on the sequence order
     for (int sequence = (num_sequences-1); sequence >= 0; --sequence)
@@ -166,13 +166,13 @@ execute()
       bool success = morpher.compute_correspondence();
       if (! success)
       {
-        vcl_cout << "ERROR: could not establish correspondence between two shock graphs.\n";
+        std::cout << "ERROR: could not establish correspondence between two shock graphs.\n";
         return false;
       }
       else
       {
-        vcl_cout << "Computing correspondence succeeded.\n";
-        //morpher.print(vcl_cout);
+        std::cout << "Computing correspondence succeeded.\n";
+        //morpher.print(std::cout);
 
         morpher.morph();
 
@@ -189,7 +189,7 @@ execute()
           output_shock->set_shock_graph(graph_t);
 
           // put the shock storage in a frame
-          vcl_vector<bpro1_storage_sptr > frame_storage;
+          std::vector<bpro1_storage_sptr > frame_storage;
           frame_storage.push_back(output_shock);
 
           // save the frame to the frame list
@@ -199,7 +199,7 @@ execute()
     }
 
     // Save the frame list to the repository
-    for (vcl_vector<vcl_vector<bpro1_storage_sptr > >::reverse_iterator itr =
+    for (std::vector<std::vector<bpro1_storage_sptr > >::reverse_iterator itr =
       frame_storage_list.rbegin(); itr != frame_storage_list.rend(); ++itr)
     {
       output_data_.push_back(*itr);

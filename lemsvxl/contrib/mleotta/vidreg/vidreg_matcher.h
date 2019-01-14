@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <rgrl/rgrl_feature_sptr.h>
 #include <rgrl/rgrl_view_sptr.h>
 #include <rgrl/rgrl_data_manager_sptr.h>
@@ -31,15 +31,15 @@ class vidreg_matcher
     //: Destructor
     ~vidreg_matcher();
 
-    bool match(const vcl_vector<vidreg_salient_group_sptr>& groups,
+    bool match(const std::vector<vidreg_salient_group_sptr>& groups,
                const vidreg_feature_group& last_features,
                const vidreg_feature_group& new_features);
 
-    bool assisted_match(const vcl_vector<rgrl_transformation_sptr>& xforms,
+    bool assisted_match(const std::vector<rgrl_transformation_sptr>& xforms,
                         const vidreg_feature_group& last_features,
                         const vidreg_feature_group& new_features);
 
-    const vcl_vector<vidreg_salient_group_sptr>& salient_groups() const {return salient_groups_;}
+    const std::vector<vidreg_salient_group_sptr>& salient_groups() const {return salient_groups_;}
 
   protected:
     void setup(const vidreg_feature_group& fixed,
@@ -55,7 +55,7 @@ class vidreg_matcher
                                                    const rgrl_data_manager_sptr& data);
 
     //: assign the features to only one the the resulting salient groups
-    void assign_features(const vcl_vector<rgrl_feature_sptr>& features,
+    void assign_features(const std::vector<rgrl_feature_sptr>& features,
                          const rgrl_feature_set& to_set,
                          unsigned f_idx);
 
@@ -67,10 +67,10 @@ class vidreg_matcher
     void robust_crop(vidreg_salient_group& group) const;
 
     //: use edge connectivity to resolve match conflicts
-    void group_edges(const vcl_vector<vidreg_edge>& edges);
+    void group_edges(const std::vector<vidreg_edge>& edges);
 
   private:
-    vcl_vector<vidreg_salient_group_sptr> salient_groups_;
+    std::vector<vidreg_salient_group_sptr> salient_groups_;
 };
 
 

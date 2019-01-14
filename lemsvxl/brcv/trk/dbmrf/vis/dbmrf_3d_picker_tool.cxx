@@ -61,7 +61,7 @@ dbmrf_3d_picker_tool::pick(int x, int y) const
   if(bgui3d_project2d_tableau_sptr proj =
       dynamic_cast<bgui3d_project2d_tableau*>(tableau_.ptr())){
 
-    vcl_auto_ptr<vpgl_proj_camera<double> > cam(proj->camera());
+    std::auto_ptr<vpgl_proj_camera<double> > cam(proj->camera());
     if(!cam.get())
       return NULL;
     vnl_double_3x4 C = cam->get_matrix();

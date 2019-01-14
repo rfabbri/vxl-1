@@ -6,8 +6,8 @@
 #include <borld/borld_image_description.h>
 #include <dborl/dborl_dataset.h>
 #include <dborl/dborl_dataset_sptr.h>
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -62,19 +62,19 @@ MAIN_ARGS(test_dataset)
   ds->add_object(io2->cast_to_object_base());
   TEST("test dataset size() ", ds->size(), 2);
 
-  vcl_map<vcl_string, int> cnts;
+  std::map<std::string, int> cnts;
   ds->get_category_cnts(cnts);
   TEST("test dataset get_category_cnts() ", cnts.size(), 2);
   TEST("test dataset get_category_cnts() ", cnts["test_cat"], 2);
   TEST("test dataset get_category_cnts() ", cnts["test_cat2"], 1);
 
-  vcl_map<vcl_string, vcl_vector<dborl_object_base_sptr> > assign;
+  std::map<std::string, std::vector<dborl_object_base_sptr> > assign;
   ds->get_category_assignments(assign);
   TEST("test dataset get_category_assignments() ", assign.size(), 2);
   TEST("test dataset get_category_assignments() ", assign["test_cat"].size(), 2);
   TEST("test dataset get_category_assignments() ", assign["test_cat2"].size(), 1);
 
-  vcl_vector<dborl_object_base_sptr>& objs = assign["test_cat"];
+  std::vector<dborl_object_base_sptr>& objs = assign["test_cat"];
   TEST("test dataset get_category_assignments() ", !(objs[0]->cast_to_image_object()), false);
   TEST("test dataset get_category_assignments() ", objs[0]->cast_to_image_object()->desc_->category_list_.size(), 1);
   TEST("test dataset get_category_assignments() ", objs[1]->cast_to_image_object()->desc_->category_list_.size(), 2);

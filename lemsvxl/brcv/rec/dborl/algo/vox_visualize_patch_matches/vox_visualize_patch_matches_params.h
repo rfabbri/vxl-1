@@ -29,7 +29,7 @@ class vox_visualize_patch_matches_params : public dborl_algo_params
 {
 public:
   //: Constructor
-  vox_visualize_patch_matches_params(vcl_string algo_name);
+  vox_visualize_patch_matches_params(std::string algo_name);
 
   // MEMBER VARIABLES
  
@@ -37,31 +37,31 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
 
   //: Name of model to compare against
-  dborl_parameter<vcl_string> model_object_name_;
+  dborl_parameter<std::string> model_object_name_;
   
   //: Passes the folder of the model shock graph
-  dborl_parameter<vcl_string> model_object_dir_;    
+  dborl_parameter<std::string> model_object_dir_;    
 
   //: Name of query to compare against
-  dborl_parameter<vcl_string> query_object_name_;
+  dborl_parameter<std::string> query_object_name_;
   
   //: Passes the folder of the query shock graph
-  dborl_parameter<vcl_string> query_object_dir_;    
+  dborl_parameter<std::string> query_object_dir_;    
 
   //: Passes the folder of where the match objects can live
-  dborl_parameter<vcl_string> query_assoc_dir_;
+  dborl_parameter<std::string> query_assoc_dir_;
 
   //: extension of the folder where shock patches can be found
-  dborl_parameter<vcl_string> input_shock_patch_extension_;     
+  dborl_parameter<std::string> input_shock_patch_extension_;     
 
   //: Passes the folder where to write images for html file
-  dborl_parameter<vcl_string> image_write_folder_;    
+  dborl_parameter<std::string> image_write_folder_;    
 
   //: extension of the input image image file, same for both model and query 
-  dborl_parameter<vcl_string> input_image_extension_;     
+  dborl_parameter<std::string> input_image_extension_;     
 
   //: extension of the image file that html will address
-  dborl_parameter<vcl_string> html_image_extension_;     
+  dborl_parameter<std::string> html_image_extension_;     
   
   //: show matching shock graphs in html file
   dborl_parameter<bool> show_html_matches_;  
@@ -72,7 +72,7 @@ public:
   // if written to this folder as opposed to object folder then the 
   // shock matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_visualize_folder_;  
+  dborl_parameter<std::string> output_visualize_folder_;  
 
 };
 

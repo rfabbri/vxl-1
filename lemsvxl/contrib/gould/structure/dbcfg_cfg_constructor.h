@@ -16,7 +16,7 @@
 #include "dbcfg_line.h"
 #include "dbcfg_curve.h"
 #include "dbcfg_contour_fragment_graph.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vgl/vgl_polygon.h>
 #include <dbdet/sel/dbdet_edgel.h>
@@ -34,21 +34,21 @@ private:
 
   // typedef point, points, line, and lines
   typedef vgl_point_2d<T> point_t;
-  typedef vcl_vector<point_t> points_t;
+  typedef std::vector<point_t> points_t;
   typedef dbcfg_line<T> line_t;
-  typedef vcl_vector<line_t> lines_t;
+  typedef std::vector<line_t> lines_t;
 
   int xsize_;
   int ysize_;
 
   T epsilon_;
 
-  vcl_vector<lines_t> _lines;
+  std::vector<lines_t> _lines;
 
   // functions
 
   // creates a depth sorted collection of transformed lines
-  void forge_transform(vcl_vector<lines_t>& final_lines);
+  void forge_transform(std::vector<lines_t>& final_lines);
 
   // merges the given line cluster into a single line
   line_t merge_line_cluster(lines_t& cluster);

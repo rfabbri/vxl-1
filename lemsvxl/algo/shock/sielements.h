@@ -5,13 +5,13 @@
 // INTRINSIC SHOCK
 /////////////////////////////////////////////////////
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <utility>
 #include <vnl/vnl_math.h>
 
 #include "BaseGUIGeometry.h"
@@ -66,8 +66,8 @@ class SIElement;
     class SIPointArcContact;
 
 //some useful type definitions
-typedef vcl_list<SILink* >SILinksList;
-typedef vcl_list<SINode* >SINodesList;
+typedef std::list<SILink* >SILinksList;
+typedef std::list<SINode* >SINodesList;
 
 //this needs to be converted to a == operator
 //int isSameSource(SISource* A, SISource* B);
@@ -179,7 +179,7 @@ public:
           SHOCKLABEL newlabel, RADIUS_TYPE stime);
   virtual ~SIElement() {}
 
-  virtual void getInfo (vcl_ostream& ostrm) {}
+  virtual void getInfo (std::ostream& ostrm) {}
 
   // FOR SYMMETRY TRANSFORMS
   double  dPnCost() { return _dPnCost; }
@@ -217,10 +217,10 @@ protected:
   SILink* _cSLink2;
 
 public:
-  //vcl_list of boundary elements forming this node
+  //std::list of boundary elements forming this node
   BElementList bndList;
 
-  //vcl_list of parent shocks
+  //std::list of parent shocks
   SILinksList PSElementList;
   
   SINode (int newid, int neworder, SHOCKLABEL newlabel, RADIUS_TYPE stime);
@@ -282,7 +282,7 @@ public:
 
   //VALIDATION
   virtual bool validate (Boundary *bnd);
-   virtual void getInfo (vcl_ostream& ostrm);
+   virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -313,7 +313,7 @@ public:
     return bndList.back(); 
   }
 
-   virtual void getInfo (vcl_ostream& ostrm);
+   virtual void getInfo (std::ostream& ostrm);
   virtual void computeSalience (void);
 
   // DYNAMICS DEFINITIONS
@@ -353,7 +353,7 @@ public:
   virtual bool validate (Boundary *bnd);
   virtual void computeSalience (void);
 
-   virtual void getInfo (vcl_ostream& ostrm);
+   virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -380,7 +380,7 @@ public:
   virtual bool validate (Boundary *bnd);
   virtual void computeSalience (void);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
   
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -708,7 +708,7 @@ public:
   virtual TAU_TYPE computeMinRTau() { return (TAU_TYPE) M_PI_2*3; }
   virtual TAU_TYPE computeMaxRTau() { return _RsTau; }
 
-  virtual TAU_TYPE getLTauFromTime (RADIUS_TYPE time) { return vcl_acos(_H/(2*time)); }
+  virtual TAU_TYPE getLTauFromTime (RADIUS_TYPE time) { return std::acos(_H/(2*time)); }
   virtual TAU_TYPE getRTauFromTime (RADIUS_TYPE time) { return 2*M_PI - getLTauFromTime(time); }
   virtual TAU_TYPE getTauFromTime (RADIUS_TYPE time) { return getLTauFromTime(time); }
   virtual TAU_TYPE getMidTau (RADIUS_TYPE curtime) { return (sTau()+getTauFromTime(curtime))/2; }
@@ -736,7 +736,7 @@ public:
       return getEndPt ();
   }
 
-   virtual void getInfo (vcl_ostream& ostrm);
+   virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void);
 
@@ -774,7 +774,7 @@ public:
   virtual Point getEndPtWithinRange (void) 
     { return _vectorPoint (_origin, _n,  vnl_math_min (_endTime,MAX_RADIUS)); }
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void) {}
 
@@ -814,7 +814,7 @@ public:
   virtual Point getEndPtWithinRange (void) 
     { return _vectorPoint (_origin, _n,  vnl_math_min (_endTime,MAX_RADIUS)); }
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void) {}
 
@@ -831,8 +831,8 @@ public:
 class SIPointLine : public  SILink 
 {
 private:
-  VECTOR_TYPE _n;  //angle of unit vcl_vector in the direction AB
-  VECTOR_TYPE _u;  //angle of unit vcl_vector normal to n (i.e. - PI/2)
+  VECTOR_TYPE _n;  //angle of unit std::vector in the direction AB
+  VECTOR_TYPE _u;  //angle of unit std::vector normal to n (i.e. - PI/2)
   int _nu;    // +1 if shock is in the direction of n, else -1.
   DIST_TYPE _delta;  //delta = distance from A to M (foot)
   DIST_TYPE _l;  //length of the line
@@ -891,7 +891,7 @@ public:
 
   virtual TAU_TYPE getPointTauFromTime (RADIUS_TYPE time)
   { 
-    TAU_TYPE ptau = vcl_acos (_H/time -1);
+    TAU_TYPE ptau = std::acos (_H/time -1);
     return (_nu==1) ? ptau : 2*M_PI-ptau; 
   }
   virtual LTAU_TYPE getLTauFromTime (RADIUS_TYPE time)
@@ -927,7 +927,7 @@ public:
   virtual Point getLFootPt (TAU_TYPE ptau);
   virtual Point getRFootPt (TAU_TYPE ptau);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void);
 
@@ -951,7 +951,7 @@ public:
 class SIPointArc : public  SILink 
 {
 private:
-  VECTOR_TYPE _u;  //angle of unit vcl_vector normal to n (i.e. - PI/2)
+  VECTOR_TYPE _u;  //angle of unit std::vector normal to n (i.e. - PI/2)
   int _nu;    //+1: LeftPoint, RightArc
           //-1: LeftArc, RightPoint
   int _s;     //sigma: +1:H>R  and -1:R>H
@@ -1080,7 +1080,7 @@ public:
 
   virtual void computeSalience (void);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   // DYNAMICS DEFINITIONS
   virtual double r  (TAU_TYPE tau=0); 
@@ -1106,9 +1106,9 @@ private:
   DIST_TYPE _lL;    // length of the line segment
   DIST_TYPE _lR;
 
-  VECTOR_TYPE _nl;  //angle of unit vcl_vector along left line
+  VECTOR_TYPE _nl;  //angle of unit std::vector along left line
   VECTOR_TYPE _ul;  //angle of normal (nl - Pi/2)
-  VECTOR_TYPE _nr;  //angle of unit vcl_vector along right line
+  VECTOR_TYPE _nr;  //angle of unit std::vector along right line
   VECTOR_TYPE _ur;  //angle of normal (nr - Pi/2)
   double _sigma; // nl dot nr
 
@@ -1179,8 +1179,8 @@ public:
 
   virtual TAU_DIRECTION_TYPE tauDir() {return TAU_DECREASING;}
 
-  virtual TAU_TYPE getLTauFromTime (RADIUS_TYPE time) { return _deltaL - time/vcl_tan(_phi); }
-  virtual TAU_TYPE getRTauFromTime (RADIUS_TYPE time) { return time/vcl_tan(_phi) + _deltaR; }
+  virtual TAU_TYPE getLTauFromTime (RADIUS_TYPE time) { return _deltaL - time/std::tan(_phi); }
+  virtual TAU_TYPE getRTauFromTime (RADIUS_TYPE time) { return time/std::tan(_phi) + _deltaR; }
 
   virtual Point getStartPt (void) { return getPtFromLTau(_LsTau); }
   virtual Point getEndPt (void) { return getPtFromLTau(_LeTau); }
@@ -1210,7 +1210,7 @@ public:
     return _vectorPoint (_Ar, _nr, rtau); 
   }
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
   virtual void computeSalience (void);
 
   // DYNAMICS DEFINITIONS
@@ -1342,7 +1342,7 @@ public:
   virtual Point getLFootPt (TAU_TYPE ptau);
   virtual Point getRFootPt (TAU_TYPE ptau);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void);
 
@@ -1365,7 +1365,7 @@ public:
 
 class SIArcArc : public SILink {
 private:
-  VECTOR_TYPE _u;  //angle of unit vcl_vector from left Arc to Right arc
+  VECTOR_TYPE _u;  //angle of unit std::vector from left Arc to Right arc
   int _nu;    //+1: LeftSmallerR
           //-1: RightSmallerR
   int _s;     //sigma: +1:H>(R1+R2), -1:H<|R1-R2| and
@@ -1425,8 +1425,8 @@ public:
 
   DIST_TYPE d (TAU_TYPE ltau) //distance from the left origin
   {
-    if (_s>0) return _b2/(_c*vcl_cos(ltau) - _a);
-    else      return _b2/(_a - _c*vcl_cos(ltau));
+    if (_s>0) return _b2/(_c*std::cos(ltau) - _a);
+    else      return _b2/(_a - _c*std::cos(ltau));
   }
 
   BArc*  lBArc() { return (BArc*) _lBElement; }
@@ -1512,7 +1512,7 @@ public:
   virtual Point getLFootPt (TAU_TYPE ltau);
   virtual Point getRFootPt (TAU_TYPE rtau);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void);
 
@@ -1536,7 +1536,7 @@ public:
 
 class SIThirdOrder : public  SILink {
 protected:
-  VECTOR_TYPE _nl;  //angle of unit vcl_vector along left line
+  VECTOR_TYPE _nl;  //angle of unit std::vector along left line
   VECTOR_TYPE _ul;  //nl - Pi/2
   DIST_TYPE  _lL;  // length of the line segment
   DIST_TYPE  _lR;
@@ -1583,7 +1583,7 @@ public:
   virtual Point getLFootPt (TAU_TYPE tau) { return _vectorPoint (_Al, _nl, tau); }
   virtual Point getRFootPt (TAU_TYPE tau) { return _vectorPoint (_Ar, _nl+M_PI, RTau(tau)); }
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
   virtual void computeSalience (void) {_dPnCost=ISHOCK_DIST_HUGE;}
 
   // DYNAMICS DEFINITIONS
@@ -1664,7 +1664,7 @@ public:
   virtual Point getLFootPt (TAU_TYPE ltau);
   virtual Point getRFootPt (TAU_TYPE rtau);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   virtual void computeSalience (void) { _dPnCost = ISHOCK_DIST_HUGE; }
 
@@ -1691,7 +1691,7 @@ public:
 class VisFrag: public BaseGUIGeometry
 {
 public:
-  typedef vcl_vector<Point > Polygon;
+  typedef std::vector<Point > Polygon;
 protected:
   Polygon _frag_poly;
   SIEdge* _shock_edge;
@@ -1715,7 +1715,7 @@ public:
 
   void push_back(Point newpt){_frag_poly.push_back(newpt);}
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif

@@ -26,7 +26,7 @@ dbsk2d_xshock_node::dbsk2d_xshock_node(int id, bool bIO) :
 }
 
 //: Constructor 2
-dbsk2d_xshock_node::dbsk2d_xshock_node(int id,vcl_vector<dbsk2d_xshock_sample_sptr > samples, 
+dbsk2d_xshock_node::dbsk2d_xshock_node(int id,std::vector<dbsk2d_xshock_sample_sptr > samples, 
                                        bool bIO):
   dbsk2d_shock_node(), bIO_(bIO), samples_(samples) 
 { 
@@ -55,7 +55,7 @@ void dbsk2d_xshock_node::form_shock_fragment()
 
   ////2.2) go along the contour
   ////  This needs to be obtained from reconstruction (TODO!!)
-  //vcl_vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
+  //std::vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
   //for( ; s_itr != samples_.end(); ++s_itr)
   //{
   //  dbsk2d_xshock_sample_sptr cur_sample = (*s_itr);

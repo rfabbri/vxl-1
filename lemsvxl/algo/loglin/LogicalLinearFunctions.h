@@ -5,7 +5,7 @@
 //#include <time.h>
 //#endif
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vnl/vnl_math.h>
 
 #include "EdgeDetection.h"
@@ -53,8 +53,8 @@ class LogicalLinearBasisFunctions
           {
             assert(_sigma>0);
 
-            _gaussianConstant            = (1.0/((vcl_sqrt(2*vnl_math::pi))*_sigma));
-            _invSqrt2Sigma               = 1.0/(vcl_sqrt(2.0)*_sigma);
+            _gaussianConstant            = (1.0/((std::sqrt(2*vnl_math::pi))*_sigma));
+            _invSqrt2Sigma               = 1.0/(std::sqrt(2.0)*_sigma);
             _invSigmaSquare              = 1.0/(_sigma*_sigma);
             _gaussianConstantinvSigma2   = _gaussianConstant*(1.0/(2.0*_sigma*_sigma));
             _gaussianConstantinvSigma4   = _gaussianConstantinvSigma2*(1.0/(2.0*_sigma*_sigma));
@@ -115,7 +115,7 @@ class LogicalLinearBasisFunctions
                
                 for (int i=0;i<EXP_MINUS_X_SQUARE_ARRAY_SIZE;++i)
                   {
-                    _expMinusXSquareArray[i] = vcl_exp(-((i)*_argStep)*((i)*_argStep));
+                    _expMinusXSquareArray[i] = std::exp(-((i)*_argStep)*((i)*_argStep));
                    }
                }
               
@@ -153,7 +153,7 @@ class LLEdgeTag
               LEFT_LIMIT               = (HALF_MAX_TAN_COMPONENTS-1)*MAX_NORMAL_COMPONENTS,
               RIGHT_LIMIT              = (HALF_MAX_TAN_COMPONENTS+1)*MAX_NORMAL_COMPONENTS};
 
-        inline static vcl_string getFunctionName() 
+        inline static std::string getFunctionName() 
           {
             return "LogicalLinear-Edge";
            }
@@ -200,7 +200,7 @@ class LLPLineTag
               LEFT_LIMIT               = (HALF_MAX_TAN_COMPONENTS-1)*MAX_NORMAL_COMPONENTS,
               RIGHT_LIMIT              = (HALF_MAX_TAN_COMPONENTS+1)*MAX_NORMAL_COMPONENTS};
     
-        static vcl_string getFunctionName() 
+        static std::string getFunctionName() 
           {
             return "LogicalLinear-PLine";
            }
@@ -244,7 +244,7 @@ class LLNLineTag
               LEFT_LIMIT               = (HALF_MAX_TAN_COMPONENTS-1)*MAX_NORMAL_COMPONENTS,
               RIGHT_LIMIT              = (HALF_MAX_TAN_COMPONENTS+1)*MAX_NORMAL_COMPONENTS};
         
-        static vcl_string getFunctionName() 
+        static std::string getFunctionName() 
           {
             return "LogicalLinear-NLine";
            }
@@ -642,32 +642,32 @@ class SubPixelLLOptions :public SubPixelOptionsBase
 
  
 
-        virtual vcl_string printOptions(vcl_string str="") const
+        virtual std::string printOptions(std::string str="") const
           {
-            vcl_string base_options=SubPixelOptionsBase::printOptions(str);
+            std::string base_options=SubPixelOptionsBase::printOptions(str);
 
-            vcl_ostringstream ostrm;
+            std::ostringstream ostrm;
            
-            ostrm<<vcl_endl;
-            ostrm<<str<<" Logical-Linear              : "<<vcl_endl;
-            ostrm<<str<<" \tEpsilon                   : "<<_epsilon<<vcl_endl;
-            ostrm<<str<<" \tMask  Rho                 : "<<_maskCreationRho<<vcl_endl;
-            ostrm<<str<<" \tLLCombinator Rho          : "<<_llCombinatorRho<<vcl_endl;
-            ostrm<<str<<" \tStabilizerB               : "<<_stablizerB<<vcl_endl;
-            ostrm<<str<<" \tQuality Factor            : "<<_qualityFactor<<vcl_endl;
-            ostrm<<str<<" \tPowell Tol                : "<<getPowellTolerence()<<vcl_endl;
-            ostrm<<str<<" \tPowell Tiny Value         : "<<getPowellTinyValue()<<vcl_endl;
-            ostrm<<str<<" \tPowell It Max             : "<<getPowellItMax()<<vcl_endl;
-            ostrm<<str<<" \tBrent  It Max             : "<<getBrentItMax()<<vcl_endl;
+            ostrm<<std::endl;
+            ostrm<<str<<" Logical-Linear              : "<<std::endl;
+            ostrm<<str<<" \tEpsilon                   : "<<_epsilon<<std::endl;
+            ostrm<<str<<" \tMask  Rho                 : "<<_maskCreationRho<<std::endl;
+            ostrm<<str<<" \tLLCombinator Rho          : "<<_llCombinatorRho<<std::endl;
+            ostrm<<str<<" \tStabilizerB               : "<<_stablizerB<<std::endl;
+            ostrm<<str<<" \tQuality Factor            : "<<_qualityFactor<<std::endl;
+            ostrm<<str<<" \tPowell Tol                : "<<getPowellTolerence()<<std::endl;
+            ostrm<<str<<" \tPowell Tiny Value         : "<<getPowellTinyValue()<<std::endl;
+            ostrm<<str<<" \tPowell It Max             : "<<getPowellItMax()<<std::endl;
+            ostrm<<str<<" \tBrent  It Max             : "<<getBrentItMax()<<std::endl;
 /*#ifdef _LINUX_
             time_t current_date_and_time;
             time(&current_date_and_time);
             ostrm<<str<<" \tDate Created              : "<<asctime(localtime(&current_date_and_time)); 
 #else 
-            ostrm<<str<<" \tDate Created              : Produced on Micro$oft !@#$%^&"<<vcl_endl;
+            ostrm<<str<<" \tDate Created              : Produced on Micro$oft !@#$%^&"<<std::endl;
 #endif
 */
-            ostrm<<str<<" \tDate Created              : yet to be implemented in VXL-supported code" << vcl_endl;
+            ostrm<<str<<" \tDate Created              : yet to be implemented in VXL-supported code" << std::endl;
             return base_options+ostrm.str();
            }
   
@@ -676,7 +676,7 @@ class SubPixelLLOptions :public SubPixelOptionsBase
         template <typename CommandLineParserType>
                 void registerOptions(CommandLineParserType &parser) 
                   {
-                    vcl_ostringstream ostrm;
+                    std::ostringstream ostrm;
 
                     ostrm<<"("<<_tangentialSigma<<") ";
                     parser.register_option(_tangentialSigma,     "tan-sigma",      '\0',   "The Value of Tangential Sigma",            ostrm.str().c_str());
@@ -760,8 +760,8 @@ class LLFunction
             _options      = ops;
 
             _theta        = theta;
-            _cosTheta     = vcl_cos(_theta);
-            _sinTheta     = vcl_sin(_theta);
+            _cosTheta     = std::cos(_theta);
+            _sinTheta     = std::sin(_theta);
 
 
             _tanOffset    = tan_offset;
@@ -771,7 +771,7 @@ class LLFunction
 
             for(int i=0;i<LogicalLinearTagType::HALF_MAX_TAN_COMPONENTS-1;++i)
               {
-                _partitionPoints[i]=-tan_sigma*vcl_sqrt(2.0)*erfinv((2.0*(LogicalLinearTagType::HALF_MAX_TAN_COMPONENTS-1-i))/(LogicalLinearTagType::MAX_TAN_COMPONENTS));
+                _partitionPoints[i]=-tan_sigma*std::sqrt(2.0)*erfinv((2.0*(LogicalLinearTagType::HALF_MAX_TAN_COMPONENTS-1-i))/(LogicalLinearTagType::MAX_TAN_COMPONENTS));
                }
             _partitionPoints[LogicalLinearTagType::HALF_MAX_TAN_COMPONENTS-1]=0;
 
@@ -945,8 +945,8 @@ class LLFunction
         void setParams(double theta, double tan_offset, double norm_offset)
           {
             _theta         = theta;
-            _cosTheta      = vcl_cos(_theta);
-            _sinTheta      = vcl_sin(_theta);
+            _cosTheta      = std::cos(_theta);
+            _sinTheta      = std::sin(_theta);
             
             _tanOffset     = tan_offset;
             _normalOffset  = norm_offset;
@@ -973,7 +973,7 @@ class LLFunction
             return (((int)LogicalLinearTagType::MAX_NORMAL_COMPONENTS)*((int)LogicalLinearTagType::MAX_TAN_COMPONENTS));
            }
         
-        vcl_string   getFunctionName() const
+        std::string   getFunctionName() const
           {
             return LogicalLinearTagType::getFunctionName();
            };

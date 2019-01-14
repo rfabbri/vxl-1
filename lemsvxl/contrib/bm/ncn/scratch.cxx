@@ -2,7 +2,7 @@
 //this is /contrib/bm/ncn1/scratch.cxx
 //executable for testing
 
-#include < vcl_iostream.h >
+#include < iostream >
 #include < vnl/vnl_matrix.h >
 
 int main()
@@ -17,6 +17,6 @@ int main()
             mat(i,j) = j*nrows + i;
         }
  
-        vcl_cout << mat << vcl_endl;
+        std::cout << mat << std::endl;
     return 0;
 }

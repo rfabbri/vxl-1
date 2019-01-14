@@ -33,14 +33,14 @@ public:
   virtual dbskr_sm_cor_sptr get_correspondence_just_map();
 
   //: return the corresponding shock curves and their maps
-  virtual bool get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                          vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                          vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                          vcl_vector< pathtable_key >& path_map); 
+  virtual bool get_correspondence(std::vector<dbskr_scurve_sptr>& curve_list1, 
+                          std::vector<dbskr_scurve_sptr>& curve_list2, 
+                          std::vector< std::vector < std::pair <int,int> > >& map_list,
+                          std::vector< pathtable_key >& path_map); 
 
   //: return the corresponding shock curves and their maps
-  virtual bool get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                                   vcl_vector< pathtable_key >& path_map); 
+  virtual bool get_correspondence_just_map_helper(std::vector< std::vector < std::pair <int,int> > >& map_list,
+                                   std::vector< pathtable_key >& path_map); 
 
 protected:
   

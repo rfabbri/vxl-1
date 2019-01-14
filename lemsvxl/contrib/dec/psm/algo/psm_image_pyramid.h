@@ -1,7 +1,7 @@
 #ifndef psm_image_pyramid_h_
 #define psm_image_pyramid_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vil/vil_bilin_interp.h>
 #include <vil/algo/vil_gauss_reduce.h>
@@ -24,7 +24,7 @@ public:
   T operator()(double i, double j, unsigned int plane, unsigned int level)
   {
     if (level >= images_.size()) {
-      vcl_cerr << "error: psm_image_pyramid: asked for level " << level <<", images_.size() == " << images_.size() << vcl_endl;
+      std::cerr << "error: psm_image_pyramid: asked for level " << level <<", images_.size() == " << images_.size() << std::endl;
       return T(0);
     }
     double scaled_i = i / (1 << level); 
@@ -60,7 +60,7 @@ protected:
       half_j = (half_j + 1)/2;
     }
   }
-  vcl_vector<vil_image_view<T> > images_;
+  std::vector<vil_image_view<T> > images_;
 };
 
 

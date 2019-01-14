@@ -25,8 +25,8 @@
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_line_3d_2_points.h>
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 
 template<class F, class T_loc, class T_data, class T_aux>
 class boxm_raytrace_function
@@ -58,7 +58,7 @@ class boxm_raytrace_function
         boxm_block_vis_graph_iterator<tree_type > block_vis_iter(cam_, &scene_, img_ni_,img_nj_);
         while (block_vis_iter.next())
         {
-            vcl_vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
+            std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
             for (unsigned i=0; i<block_indices.size(); i++) // code for each block
             {
                 scene_.load_block(block_indices[i]);
@@ -68,7 +68,7 @@ class boxm_raytrace_function
                     curr_aux_block=aux_scene_.get_block(block_indices[i]);
 
                 if (debug_lvl_ > 0)
-                    vcl_cout << "processing block at index (" <<block_indices[i] << ')' << vcl_endl;
+                    std::cout << "processing block at index (" <<block_indices[i] << ')' << std::endl;
                 // make sure block projects to inside of image
                 vgl_box_3d<double> block_bb = curr_block->bounding_box();
 
@@ -93,7 +93,7 @@ class boxm_raytrace_function
                         vgl_point_3d<double> ray_origin;
                         vgl_vector_3d<double> direction;
                         vgl_point_3d<double> enter_pt(0.0,0.0,0.0);
-                        vcl_vector<vgl_point_3d<double> > plane_intersections(6);
+                        std::vector<vgl_point_3d<double> > plane_intersections(6);
                         // add 0.5 to get center of pixel
                         generate_ray(i , j, block_bb, ray_origin, direction);
 
@@ -179,7 +179,7 @@ class boxm_raytrace_function
                             boct_face_idx face_id=NONE;
                             bool found_exit =boxm_utils::cube_exit_point(cell_bb,enter_pt,direction, exit_pt,lambda,face_id);
                             if (!found_exit) {
-                                vcl_cerr << "error: could not find cell exit point\n"
+                                std::cerr << "error: could not find cell exit point\n"
                                          << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]\n"
                                          << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "]\n"
                                          << "   cell_bb = [" << cell_bb.min_x() <<", " << cell_bb.max_x() << "]  [" << cell_bb.min_y()
@@ -206,7 +206,7 @@ class boxm_raytrace_function
                                 curr_cell=neighborcell->traverse_force(exit_loc_code);
                             else
                             {
-                                vcl_cout<<"NO NEIGBORS FOUND!"<<vcl_endl;
+                                std::cout<<"NO NEIGBORS FOUND!"<<std::endl;
                                 break;
                             }
                             enter_pt=exit_pt;
@@ -229,14 +229,14 @@ class boxm_raytrace_function
         boxm_block_vis_graph_iterator<tree_type > block_vis_iter(cam_, &scene_, img_ni_,img_nj_);
         while (block_vis_iter.next())
         {
-            vcl_vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
+            std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
             for (unsigned i=0; i<block_indices.size(); i++) // code for each block
             {
                 scene_.load_block(block_indices[i]);
                 boxm_block<tree_type> * curr_block=scene_.get_active_block();
 
                 if (debug_lvl_ > 0)
-                    vcl_cout << "processing block at index (" <<block_indices[i] << ')' << vcl_endl;
+                    std::cout << "processing block at index (" <<block_indices[i] << ')' << std::endl;
                 // make sure block projects to inside of image
                 vgl_box_3d<double> block_bb = curr_block->bounding_box();
 
@@ -262,7 +262,7 @@ class boxm_raytrace_function
                 {
                     if (debug_lvl_ > 1) {
                         if (!(i % 10))
-                            vcl_cout << '.';
+                            std::cout << '.';
                     }
                     for (unsigned int j = int(img_bb.min_y()+0.99); j <= img_bb.max_y(); ++j)
                     {
@@ -301,7 +301,7 @@ class boxm_raytrace_function
                             boct_face_idx face_id=NONE;
                             bool found_exit =boxm_utils::cube_exit_point(cell_bb,enter_pt,direction, exit_pt,lambda,face_id);
                             if (!found_exit) {
-                                vcl_cerr << "error: could not find cell exit point\n"
+                                std::cerr << "error: could not find cell exit point\n"
                                          << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]\n"
                                          << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "]\n"
                                          << "   cell_bb = [" << cell_bb.min_x() <<", " << cell_bb.max_x() << "]  [" << cell_bb.min_y()
@@ -398,14 +398,14 @@ class boxm_raytrace_function
         vpgl_ray::ray(*lrcam,(double)i, (double)j, ray_origin, norm_direction);
         return;
       }else{
-        vcl_cerr << "In boxm_raytrace_function: camera type not handled\n";
+        std::cerr << "In boxm_raytrace_function: camera type not handled\n";
         assert(false);
       }
     }
     bool entry_point(vgl_box_3d<double> & block_bb, vgl_point_3d<double>  ray_origin, 
         vgl_vector_3d<double> direction, vgl_point_3d<double> & enter_pt){
             double lambda[6];
-            vcl_vector<vgl_point_3d<double> > plane_intersections(6);
+            std::vector<vgl_point_3d<double> > plane_intersections(6);
 
             lambda[0] = (block_bb.min_x() - ray_origin.x())/direction.x();
             lambda[1] = (block_bb.max_x() - ray_origin.x())/direction.x();
@@ -512,7 +512,7 @@ class boxm_iterate_cells_function
         boxm_block_vis_graph_iterator<tree_type > block_vis_iter(cam_, &scene_, img_ni_,img_nj_);
         while (block_vis_iter.next())
         {
-            vcl_vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
+            std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
             for (unsigned i=0; i<block_indices.size(); i++) // code for each block
             {
                 scene_.load_block(block_indices[i]);
@@ -521,7 +521,7 @@ class boxm_iterate_cells_function
                 tree_type * tree=curr_block->get_tree();
                 aux_tree_type * aux_tree=curr_aux_block->get_tree();
 
-                vcl_vector<cell_type*> leaves=tree->leaf_cells();
+                std::vector<cell_type*> leaves=tree->leaf_cells();
                 for (unsigned i=0;i<leaves.size();i++)
                 {
                     T_data cell_val=leaves[i]->data();

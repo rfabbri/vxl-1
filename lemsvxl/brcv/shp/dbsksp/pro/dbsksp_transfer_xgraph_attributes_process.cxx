@@ -19,7 +19,7 @@
 dbsksp_transfer_xgraph_attributes_process::
 dbsksp_transfer_xgraph_attributes_process()
 {
-    vcl_vector<vcl_string > transfer_options_;
+    std::vector<std::string > transfer_options_;
     transfer_options_.push_back("Scale");
     transfer_options_.push_back("Translate");
     transfer_options_.push_back("Transfer node attributes");
@@ -29,7 +29,7 @@ dbsksp_transfer_xgraph_attributes_process()
             !parameters()->add("Target xnode id: " , "-dest_node_id", unsigned(0))
     )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -54,7 +54,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_transfer_xgraph_attributes_process::
+std::string dbsksp_transfer_xgraph_attributes_process::
 name()
 {
     return "Transfer xgraph attributes";
@@ -63,10 +63,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_transfer_xgraph_attributes_process::
+std::vector< std::string > dbsksp_transfer_xgraph_attributes_process::
 get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back("dbsksp_xgraph");
     to_return.push_back("dbsksp_xgraph");
     return to_return;
@@ -76,10 +76,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_transfer_xgraph_attributes_process::
+std::vector< std::string > dbsksp_transfer_xgraph_attributes_process::
 get_output_type()
 {
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     return to_return;
 }
 
@@ -120,21 +120,21 @@ execute()
     input_storage2.vertical_cast(input_data_[0][1]);
     dbsksp_xshock_graph_sptr xg1 = input_storage1->xgraph();
     dbsksp_xshock_graph_sptr xg2 = input_storage2->xgraph();
-    vcl_cout << "Source node: " << source_id << vcl_endl;
-    vcl_cout << "Target node: " << target_id << vcl_endl;
+    std::cout << "Source node: " << source_id << std::endl;
+    std::cout << "Target node: " << target_id << std::endl;
 
 
     if(transfer_type == 0) // scale up the target xgraph so that both xgraphs have the same area
     {
-        vcl_cout << "SCALE" << vcl_endl;
+        std::cout << "SCALE" << std::endl;
         vgl_point_2d<double> pt2 = xg2->node_from_id(target_id)->pt();
         double area1 = xg1->area();
         double area2 = xg2->area();
-        xg2->scale_up(pt2.x(), pt2.y(), vcl_sqrt(area1/area2));
+        xg2->scale_up(pt2.x(), pt2.y(), std::sqrt(area1/area2));
     }
     else if(transfer_type == 1) // translate the target xgraph so that it coincides with the selected source xgraph node
     {
-        vcl_cout << "TRANSLATE" << vcl_endl;
+        std::cout << "TRANSLATE" << std::endl;
         vgl_point_2d<double> pt1 = xg1->node_from_id(source_id)->pt();
         vgl_point_2d<double> pt2 = xg2->node_from_id(target_id)->pt();
         double dx = pt1.x() - pt2.x();
@@ -143,11 +143,11 @@ execute()
     }
     else if(transfer_type == 2) // transfer all attributes of a selected source node to a target node
     {
-        vcl_cout << "TRANSFER" << vcl_endl;
+        std::cout << "TRANSFER" << std::endl;
         dbsksp_xshock_node_sptr source_node = xg1->node_from_id(source_id);
         dbsksp_xshock_node_sptr target_node = xg2->node_from_id(target_id);
-        vcl_list<dbsksp_xshock_edge_sptr>::const_iterator source_edgelist_iterator = source_node->edge_list().begin();
-        vcl_list<dbsksp_xshock_edge_sptr>::const_iterator target_edgelist_iterator = target_node->edge_list().begin();
+        std::list<dbsksp_xshock_edge_sptr>::const_iterator source_edgelist_iterator = source_node->edge_list().begin();
+        std::list<dbsksp_xshock_edge_sptr>::const_iterator target_edgelist_iterator = target_node->edge_list().begin();
         dbsksp_xshock_node_sptr source_terminal_node = 0;
         dbsksp_xshock_node_sptr target_terminal_node = 0;
         for(;source_edgelist_iterator != source_node->edge_list().end(); ++source_edgelist_iterator,++target_edgelist_iterator)
@@ -155,14 +155,14 @@ execute()
             dbsksp_xshock_node_sptr source_neighbor_node = (*source_edgelist_iterator)->opposite(source_node);
             if(source_neighbor_node->degree() == 1)
             {
-                vcl_cout << source_neighbor_node->id() << " is a terminal node of source xgraph!" << vcl_endl;
+                std::cout << source_neighbor_node->id() << " is a terminal node of source xgraph!" << std::endl;
                 source_terminal_node = source_neighbor_node;
             }
 
             dbsksp_xshock_node_sptr target_neighbor_node = (*target_edgelist_iterator)->opposite(target_node);
             if(target_neighbor_node->degree() == 1)
             {
-                vcl_cout << target_neighbor_node->id() << " is a terminal node of target xgraph!" << vcl_endl;
+                std::cout << target_neighbor_node->id() << " is a terminal node of target xgraph!" << std::endl;
                 target_terminal_node = target_neighbor_node;
             }
             dbsksp_xshock_node_descriptor* source_node_descriptor = source_node->descriptor(*source_edgelist_iterator);

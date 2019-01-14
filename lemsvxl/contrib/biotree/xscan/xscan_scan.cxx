@@ -1,5 +1,5 @@
 #include "xscan_scan.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <xscan/xscan_uniform_orbit.h>
 
 #include <vsl/vsl_basic_xml_element.h>
@@ -12,7 +12,7 @@ void xscan_scan::correct_uniform_orbit(xscan_scan& scan, const double& rotation_
   if(n_views != scan.n_views()){
     xscan_orbit_base_sptr orbit_base = (scan.orbit());
     xscan_uniform_orbit orbit = static_cast<const xscan_uniform_orbit&>(*orbit_base);
-    vcl_cerr << "old orbit was : " << orbit << "\n";
+    std::cerr << "old orbit was : " << orbit << "\n";
 
     vnl_double_3 rot_axis(0.0, 0.0, 1.0);
     // rotation in clockwise direction
@@ -23,9 +23,9 @@ void xscan_scan::correct_uniform_orbit(xscan_scan& scan, const double& rotation_
         orbit.r0(),
         orbit.t0());
     scan.set_orbit(new_orbit);
-    vcl_cerr << "new orbit is : " << static_cast<const xscan_uniform_orbit&>(*new_orbit) << "\n";
+    std::cerr << "new orbit is : " << static_cast<const xscan_uniform_orbit&>(*new_orbit) << "\n";
     scan.set_scan_size(n_views);
-    vcl_cerr << "new scan size : " << scan.n_views() << "\n";
+    std::cerr << "new scan size : " << scan.n_views() << "\n";
   }
 }
 
@@ -53,7 +53,7 @@ xmvg_perspective_camera<double> xscan_scan::operator()(orbit_index i) const
 }
 
 xscan_scan::xscan_scan(unsigned nviews, 
-                      const vcl_string path,
+                      const std::string path,
                       const xmvg_source& source, 
                       const vpgl_calibration_matrix<double>& K,
                       xscan_orbit_base_sptr orbit) :
@@ -61,7 +61,7 @@ xscan_scan::xscan_scan(unsigned nviews,
 {
 }
 
-vcl_ostream& operator << (vcl_ostream& stream, const xscan_scan& scan)
+std::ostream& operator << (std::ostream& stream, const xscan_scan& scan)
 {
   stream.precision(15);
   stream << scan.n_views_ << '\n';
@@ -74,10 +74,10 @@ vcl_ostream& operator << (vcl_ostream& stream, const xscan_scan& scan)
 }
 
 
-vcl_istream& operator >> (vcl_istream& stream, xscan_scan & scan)
+std::istream& operator >> (std::istream& stream, xscan_scan & scan)
 {
   vnl_double_3x3 K;
-  vcl_string str;
+  std::string str;
   stream >> scan.n_views_;
   stream >> scan.image_file_path_  >>   K;
   scan.kk_ = K;
@@ -91,7 +91,7 @@ vcl_istream& operator >> (vcl_istream& stream, xscan_scan & scan)
   return stream;
 }
 
-void x_write(vcl_ostream& os, xscan_scan scan)
+void x_write(std::ostream& os, xscan_scan scan)
 {
   vsl_basic_xml_element element("xscan_scan");
   element.x_write_open(os);
@@ -115,7 +115,7 @@ void x_write(vcl_ostream& os, xscan_scan scan)
   //orbit.x_write(os);
   
   if(scan.orbit()!= (xscan_orbit_base*) 0)
-    if (vcl_strcmp(scan.orbit()->class_id().data(), "xscan_uniform_orbit") == 0) {
+    if (std::strcmp(scan.orbit()->class_id().data(), "xscan_uniform_orbit") == 0) {
       xscan_orbit_base_sptr orbit_base = (scan.orbit());
       xscan_uniform_orbit orbit = static_cast<const xscan_uniform_orbit&>(*orbit_base);
       x_write(os, orbit, "xscan_uniform_orbit");

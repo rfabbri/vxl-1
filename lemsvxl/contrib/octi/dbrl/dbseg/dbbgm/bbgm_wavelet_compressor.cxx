@@ -4,7 +4,7 @@
 #include <vnl/vnl_double_3x3.h>
 #include <gevd/gevd_float_operators.h>
 #include <gevd/gevd_bufferxy.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <dbbgm/bbgm_loader.h>
 #include <vil/vil_copy.h>
 #include <vul/vul_arg.h>
@@ -23,9 +23,9 @@ bbgm_wavelet_compressor::bbgm_wavelet_compressor(const vidl_istream_sptr& istr)
 	video_stream=istr;
 	this->isValid_=true;
 	if (video_stream->is_valid()){
-		spatial_vector=new vcl_vector<vil_image_view<float> >();
-		wavelet_vector=new vcl_vector<bbgm_vil_wavelet<float>* >();
-		background_key_map= new vcl_map<int, vil_image_view<float> >();
+		spatial_vector=new std::vector<vil_image_view<float> >();
+		wavelet_vector=new std::vector<bbgm_vil_wavelet<float>* >();
+		background_key_map= new std::map<int, vil_image_view<float> >();
 		bool success=this->formFrameVector(istr,spatial_vector);
 		if (!success)
 			this->isValid_=false;
@@ -36,22 +36,22 @@ bbgm_wavelet_compressor::bbgm_wavelet_compressor(const vidl_istream_sptr& istr)
 	}
 
 
-bbgm_wavelet_compressor::bbgm_wavelet_compressor(vcl_string path)
+bbgm_wavelet_compressor::bbgm_wavelet_compressor(std::string path)
 {
 
 	this->isValid_=true;
-	this->video_stream=new vidl_image_list_istream(static_cast<vcl_string>(path));
+	this->video_stream=new vidl_image_list_istream(static_cast<std::string>(path));
 	if(!this->video_stream->is_open())
 	{
-		vcl_cerr<<"could not open path :"<<path<<" !";
+		std::cerr<<"could not open path :"<<path<<" !";
 		this->isValid_=false;
 		
 	}
 	else 
 	{
-		spatial_vector=new vcl_vector<vil_image_view<float> >();
-		wavelet_vector=new vcl_vector<bbgm_vil_wavelet<float>* >();
-		background_key_map= new vcl_map<int, vil_image_view<float> >();
+		spatial_vector=new std::vector<vil_image_view<float> >();
+		wavelet_vector=new std::vector<bbgm_vil_wavelet<float>* >();
+		background_key_map= new std::map<int, vil_image_view<float> >();
 		bool success=this->formFrameVector(this->video_stream,spatial_vector);
 		if (!success)
 			this->isValid_=false;
@@ -76,8 +76,8 @@ bbgm_wavelet_compressor::bbgm_wavelet_compressor(int argc, char* argv[])
 	vul_arg<float> initstd("-ivar","initial variance",0.06f);
 	vul_arg_parse(argc,argv);
 
-	vcl_vector<int> intVector;
-	vcl_vector<float> floatVector;
+	std::vector<int> intVector;
+	std::vector<float> floatVector;
 	intVector.push_back(waveletType.value_);
 	intVector.push_back(maxComponents.value_);
 	intVector.push_back(windowSize.value_);
@@ -91,19 +91,19 @@ bbgm_wavelet_compressor::bbgm_wavelet_compressor(int argc, char* argv[])
 
 
 	this->isValid_=true;
-	this->video_stream=new vidl_image_list_istream(static_cast<vcl_string>(inputPath.value_));
+	this->video_stream=new vidl_image_list_istream(static_cast<std::string>(inputPath.value_));
 	if(!this->video_stream->is_open())
 	{
-		vcl_cerr<<"could not open path :"<<inputPath.value_<<" !";
+		std::cerr<<"could not open path :"<<inputPath.value_<<" !";
 		this->isValid_=false;
 				
 	}
 	else 
 	{
 		bbgm_wavelet_compressor_params * params=new bbgm_wavelet_compressor_params(intVector,floatVector);
-		spatial_vector=new vcl_vector<vil_image_view<float> >();
-		wavelet_vector=new vcl_vector<bbgm_vil_wavelet<float>* >();
-		background_key_map= new vcl_map<int, vil_image_view<float> >();
+		spatial_vector=new std::vector<vil_image_view<float> >();
+		wavelet_vector=new std::vector<bbgm_vil_wavelet<float>* >();
+		background_key_map= new std::map<int, vil_image_view<float> >();
 		bool success=this->formFrameVector(this->video_stream,spatial_vector);
 		if (!success)
 			this->isValid_=false;
@@ -118,7 +118,7 @@ bool bbgm_wavelet_compressor::wavelet_decomposition_full(int waveletNo,int level
 
 	if (!this->isValid_ || spatial_vector->empty())
 	{
-		vcl_cerr<<"null video stream! or empty image vector "<<vcl_endl;
+		std::cerr<<"null video stream! or empty image vector "<<std::endl;
 		return false;
 	}
 
@@ -131,9 +131,9 @@ bool bbgm_wavelet_compressor::wavelet_decomposition_full(int waveletNo,int level
 			bbgm_vil_wavelet<float>*  destImg=new bbgm_vil_wavelet<float>(im,levels,waveletNo);
 			if (destImg){
 			wavelet_vector->push_back(destImg);
-			vcl_cerr<<"processed wavelet transform of frame "<< i<<"\n";
+			std::cerr<<"processed wavelet transform of frame "<< i<<"\n";
 			}else
-		    vcl_cerr<<"Error in the wavelet transform at "<< i<<"\n";
+		    std::cerr<<"Error in the wavelet transform at "<< i<<"\n";
 		}
 	}
 	return true;
@@ -148,7 +148,7 @@ bbgm_wavelet<vil_image_view <float> > bbgm_wavelet_compressor::wavelet_decomposi
 	return bbgm_wavelet<vil_image_view<float> >(&src,&tmpIm,level,waveletNo); 
 	}
 	else{
-	vcl_cerr<<"Invalid compressor! possibly due to invalid video data "<<vcl_endl;
+	std::cerr<<"Invalid compressor! possibly due to invalid video data "<<std::endl;
 	return bbgm_wavelet<vil_image_view<float> >();
 	}
 }
@@ -160,7 +160,7 @@ bool bbgm_wavelet_compressor::wavelet_decomposition_model (int level,int wavelet
 {
 	if (!model_sptr)
 	{
-		vcl_cerr<<"model is null, train it on the video sequence first"<<vcl_endl;
+		std::cerr<<"model is null, train it on the video sequence first"<<std::endl;
 		return false;
 	}
 
@@ -175,14 +175,14 @@ bool bbgm_wavelet_compressor::wavelet_decomposition_model (int level,int wavelet
 		 return true;
 }
 
-vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,vcl_string attr,int comp_index,bool scale,vcl_string path)
+vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,std::string attr,int comp_index,bool scale,std::string path)
 {
 	// Sanity check
 	bbgm_image_sptr bgm;
 	// Retrieve background image
 	if (!this->isValid_)
 	{
-		vcl_cout<<"invalid compressed background model !"<<vcl_endl;
+		std::cout<<"invalid compressed background model !"<<std::endl;
 		return 0;
 	}
 	if (waveletModel && this->wv_model_sptr)
@@ -201,11 +201,11 @@ vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,vc
 		viewer = new bbgm_weight_viewer();
 		register_weight_viewers();
 	} else {
-		vcl_cout  << " display attribute not available\n";
+		std::cout  << " display attribute not available\n";
 		return 0;
 	}
 	if (!viewer->probe(bgm)){
-		vcl_cout << " displayer cannot process distribution image type\n"
+		std::cout << " displayer cannot process distribution image type\n"
 			<< bgm->is_a() << '\n';
 		return 0;
 	}
@@ -213,7 +213,7 @@ vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,vc
 	vil_image_view<double> d_image;
 	
 	if (!viewer->apply(bgm, d_image)){
-		vcl_cout <<" extract view (apply) failed\n";
+		std::cout <<" extract view (apply) failed\n";
 		return 0;
 
 	}
@@ -227,7 +227,7 @@ vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,vc
 		if(scale){
 			double dmin, dmax;
 			vil_math_value_range(d_image, dmin, dmax);
-			vcl_cout<<"max and min are : "<<dmin<<" , "<<dmax<<vcl_endl;
+			std::cout<<"max and min are : "<<dmin<<" , "<<dmax<<std::endl;
 			vil_convert_stretch_range_limited(d_image, byte_image, dmin, dmax);
 			vil_save(byte_image,path.c_str());
 
@@ -246,13 +246,13 @@ vil_image_view<float> bbgm_wavelet_compressor::displayParam(bool waveletModel,vc
 }
  
  
-bool bbgm_wavelet_compressor::dumpVectorToDisk(vcl_string path,vcl_string base,vcl_string ext)
+bool bbgm_wavelet_compressor::dumpVectorToDisk(std::string path,std::string base,std::string ext)
 {
 
-	vcl_vector<vil_image_view<float> >* vec=this->spatial_vector;	
+	std::vector<vil_image_view<float> >* vec=this->spatial_vector;	
 	if (!this->isValid_ || vec->empty())
 	{
-		vcl_cerr<<"empty image vector "<<vcl_endl;
+		std::cerr<<"empty image vector "<<std::endl;
 		return false;
  	}
 
@@ -271,14 +271,14 @@ bool bbgm_wavelet_compressor::dumpVectorToDisk(vcl_string path,vcl_string base,v
 }
 
 
-bool bbgm_wavelet_compressor::saveWaveletVector(vcl_string path,vcl_string base,vcl_string ext)
+bool bbgm_wavelet_compressor::saveWaveletVector(std::string path,std::string base,std::string ext)
 
 {
-	vcl_vector<bbgm_vil_wavelet<float>* > *vec=this->wavelet_vector;
+	std::vector<bbgm_vil_wavelet<float>* > *vec=this->wavelet_vector;
 	
 	if (!this->isValid_ || vec->empty())
 	{
-		vcl_cerr<<"empty wavelet vector "<<vcl_endl;
+		std::cerr<<"empty wavelet vector "<<std::endl;
 		return false;
 	}
 	
@@ -293,22 +293,22 @@ bool bbgm_wavelet_compressor::saveWaveletVector(vcl_string path,vcl_string base,
 }
 
 bool bbgm_wavelet_compressor::saveBackgroundVideoSequence(int startFrame,int endFrame,float tolerance,bool useSpatialModel,
-														  vcl_string path,vcl_string base,vcl_string ext,int quality)
+														  std::string path,std::string base,std::string ext,int quality)
 
 {
 	if (!this->isValid_)
 	{
-		vcl_cerr<<" null background video sequence. train the model then measure the backgrund probability first "<<vcl_endl;
+		std::cerr<<" null background video sequence. train the model then measure the backgrund probability first "<<std::endl;
 		return false;
 	}
 	if (!model_sptr && useSpatialModel)
 	{
-		vcl_cerr<<"background model is null !"<<vcl_endl;
+		std::cerr<<"background model is null !"<<std::endl;
 		return false;
 	}
 	if (!wv_model_sptr && !useSpatialModel)
 	{
-		vcl_cerr<<"wavelet background model is null !"<<vcl_endl;
+		std::cerr<<"wavelet background model is null !"<<std::endl;
 		return false;
 	}
 if(!startFrame)
@@ -331,34 +331,34 @@ if(!startFrame)
 	  	float sum,sum_sq;
 		vil_math_sum_squares(sum,sum_sq,result,0);
 		fstream file_look;
-		vcl_cout<<"average background probability is "<<sum/(result.ni()*result.nj())<<vcl_endl;
-		file_look<<sum/(result.ni()*result.nj())<<vcl_endl;
+		std::cout<<"average background probability is "<<sum/(result.ni()*result.nj())<<std::endl;
+		file_look<<sum/(result.ni()*result.nj())<<std::endl;
 		vil_image_view<vxl_byte> tmp;
 
 		vil_convert_stretch_range_limited(result,tmp,0.0f,1.0f,0,255);
-		vcl_string final=path+"\\"+base+this->determine_prefix(i,spatial_vector->size())+"."+ext;
+		std::string final=path+"\\"+base+this->determine_prefix(i,spatial_vector->size())+"."+ext;
 		vil_save(tmp,final.c_str());
-		vcl_cerr<<"measured background on frame "<<i<<vcl_endl;
+		std::cerr<<"measured background on frame "<<i<<std::endl;
 		this->pMap_=result;
 	}
 	return true;
 	
 }
 
-bool bbgm_wavelet_compressor::saveModel(bool useSpatialModel,vcl_string path)
+bool bbgm_wavelet_compressor::saveModel(bool useSpatialModel,std::string path)
 {
   bbgm_image_sptr mdl=useSpatialModel ? this->model_sptr:this->wv_model_sptr;
   vsl_b_ofstream ostr(path);
   if (!ostr) {
-    vcl_cerr << "Failed to save background image to "
-             << path << vcl_endl;
+    std::cerr << "Failed to save background image to "
+             << path << std::endl;
     return false;
   }
 
   vsl_b_ostream& bos = static_cast<vsl_b_ostream&>(ostr);
 
    if (!mdl) {
-    vcl_cerr << "Null background model\n";
+    std::cerr << "Null background model\n";
     return false;
   }
 
@@ -367,12 +367,12 @@ bool bbgm_wavelet_compressor::saveModel(bool useSpatialModel,vcl_string path)
   return true;
  }
 
-bool bbgm_wavelet_compressor::saveWaveletModel(vcl_string path)
+bool bbgm_wavelet_compressor::saveWaveletModel(std::string path)
 {
   vsl_b_ofstream ostr(path);
   if (!ostr) {
-    vcl_cerr << "Failed to save background image to "
-             << path << vcl_endl;
+    std::cerr << "Failed to save background image to "
+             << path << std::endl;
     return false;
   }
   
@@ -382,13 +382,13 @@ bool bbgm_wavelet_compressor::saveWaveletModel(vcl_string path)
   return true;
  }
 
-bool bbgm_wavelet_compressor::loadModel(vcl_string path,bool isSpatialModel)
+bool bbgm_wavelet_compressor::loadModel(std::string path,bool isSpatialModel)
 {
 
   vsl_b_ifstream istr(path);
   if (!istr) {
-    vcl_cerr << "Failed to load background image from "
-             << path << vcl_endl;
+    std::cerr << "Failed to load background image from "
+             << path << std::endl;
     return false;
   }
   bbgm_loader::register_loaders();
@@ -404,13 +404,13 @@ bool bbgm_wavelet_compressor::loadModel(vcl_string path,bool isSpatialModel)
 
 }
 
-bool bbgm_wavelet_compressor::loadWaveletModel(vcl_string path)
+bool bbgm_wavelet_compressor::loadWaveletModel(std::string path)
 {
 
   vsl_b_ifstream istr(path);
   if (!istr) {
-    vcl_cerr << "Failed to load background image from "
-             << path << vcl_endl;
+    std::cerr << "Failed to load background image from "
+             << path << std::endl;
     return false;
   }
   bbgm_loader::register_loaders();
@@ -423,7 +423,7 @@ bool bbgm_wavelet_compressor::loadWaveletModel(vcl_string path)
 }
 
 
-bool bbgm_wavelet_compressor::formFrameVector(const vidl_istream_sptr& istr,vcl_vector<vil_image_view<float> >* vec)
+bool bbgm_wavelet_compressor::formFrameVector(const vidl_istream_sptr& istr,std::vector<vil_image_view<float> >* vec)
 {
 	int end_frame = istr->num_frames();
 	int start_frame=0;
@@ -434,7 +434,7 @@ bool bbgm_wavelet_compressor::formFrameVector(const vidl_istream_sptr& istr,vcl_
 			vil_image_view_base_sptr fb = vidl_convert_wrap_in_view(*f);
 			if (!fb)
 			{
-				vcl_cerr<<"blank frame encountered at "<<(int)(istr->frame_number())<<"\n";
+				std::cerr<<"blank frame encountered at "<<(int)(istr->frame_number())<<"\n";
 				return false;
 			}
 			vil_image_view<float> frame = *vil_convert_cast(float(), fb);
@@ -442,7 +442,7 @@ bool bbgm_wavelet_compressor::formFrameVector(const vidl_istream_sptr& istr,vcl_
 			vil_copy_deep(frame,solid_frame);
 			if (fb->pixel_format() == VIL_PIXEL_FORMAT_BYTE)
 				vil_math_scale_values(solid_frame,1.0/255.0);
-			vcl_cerr<<"read frame "<<(int)(istr->frame_number())<<"\n";
+			std::cerr<<"read frame "<<(int)(istr->frame_number())<<"\n";
 			vec->push_back(solid_frame);
 		}
 	}
@@ -459,7 +459,7 @@ bbgm_wavelet_compressor::~bbgm_wavelet_compressor(){
 	delete this->background_key_map;
 }
 
-vcl_string bbgm_wavelet_compressor::determine_prefix(unsigned int num,int maxn)
+std::string bbgm_wavelet_compressor::determine_prefix(unsigned int num,int maxn)
 {
 	string prefix;
 	string out;
@@ -472,7 +472,7 @@ vcl_string bbgm_wavelet_compressor::determine_prefix(unsigned int num,int maxn)
 	int diff=digits_maxn-digits_num;
 	for (int i=0;i<diff;i++,prefix+="0");
 	
-	vcl_stringstream  prefixsstream;
+	std::stringstream  prefixsstream;
 	prefixsstream<<prefix<<num;
 	prefixsstream>>out;		
  	return out;
@@ -486,8 +486,8 @@ void bbgm_wavelet_compressor::initParams(bbgm_wavelet_compressor_params* params)
 	if (!params)
  {
 
-	vcl_vector<int> intVector;
-	vcl_vector<float> floatVector;
+	std::vector<int> intVector;
+	std::vector<float> floatVector;
 	
 	intVector.push_back(0);
 	intVector.push_back(3);
@@ -524,7 +524,7 @@ bool bbgm_wavelet_compressor::trainModel(int startFrame, int endFrame)
 {
 	if (!this->isValid_)
 	{
-		vcl_cerr<<"empty spatial vector!"<<vcl_endl;
+		std::cerr<<"empty spatial vector!"<<std::endl;
 		return false;
 	}
 
@@ -536,8 +536,8 @@ bool bbgm_wavelet_compressor::trainModel(int startFrame, int endFrame)
   // get the templated mixture model
   if (!model_sptr) {
 	  model_sptr = new bbgm_image_of<obs_mix_gauss_type3>(spatial_vector->at(0).ni(), spatial_vector->at(0).nj(), obs_mix_gauss_type3());
-    vcl_cout << " Initialized the bbgm image\n";
-    vcl_cout.flush();
+    std::cout << " Initialized the bbgm image\n";
+    std::cout.flush();
 
   }
     bbgm_image_of<obs_mix_gauss_type3> *model =
@@ -561,12 +561,12 @@ bool bbgm_wavelet_compressor::trainModel(int startFrame, int endFrame)
  else	
 	 finalFrame=endFrame;
 
-  vcl_cout << " will start at frame # " << startFrame << " will end at frame # " << finalFrame << vcl_endl;
+  std::cout << " will start at frame # " << startFrame << " will end at frame # " << finalFrame << std::endl;
 
  for (int i=startFrame;i<finalFrame;i++)
  {	 
 	 update(*model,spatial_vector->at(i),updater);
-	 vcl_cerr<<"updated frame "<<i<<endl;
+	 std::cerr<<"updated frame "<<i<<endl;
   }	
  return true;
 
@@ -574,7 +574,7 @@ bool bbgm_wavelet_compressor::trainModel(int startFrame, int endFrame)
 vil_image_view<float> bbgm_wavelet_compressor::measureBackground(bbgm_image_sptr bgm,vil_image_view<float> image,float tolerance,int quality,int frameNo)
 {
   if (!bgm) {
-    vcl_cerr << "null distribution image\n";
+    std::cerr << "null distribution image\n";
     return 0;
   }
   unsigned np = image.nplanes();
@@ -592,14 +592,14 @@ vil_image_view<float> bbgm_wavelet_compressor::measureBackground(bbgm_image_sptr
         bbgm_image_of<obs_mix_gauss_type3> *model =
         static_cast<bbgm_image_of<obs_mix_gauss_type3>*>(bgm.ptr());
         bsta_probability_functor<obs_mix_gauss_type3> functor_;
-		vcl_string path=vcl_string("C:\\Users\\octi\\Documents\\Mundy Group\\datafiles\\");
+		std::string path=std::string("C:\\Users\\octi\\Documents\\Mundy Group\\datafiles\\");
 		//bbgm_interp_bicubic_ftr<imageofgaussmix3,obs_mix_gauss_type3> interp_ftr_cub;
 		bbgm_interp_bilinear_ftr<imageofgaussmix3,obs_mix_gauss_type3> interp_ftr_bil;
 		//bbgm_interp_nearest_ftr<imageofgaussmix3,obs_mix_gauss_type3> interp_ftr_nn;
 		//bbgm_interp_lanczos_ftr<imageofgaussmix3,obs_mix_gauss_type3> interp_ftr_lcz;
 		//measure_sparse_image(*model, image, result, functor_,interp_ftr_bil, tolerance,int(pow(2.0,quality)));
 		
-		measure_wv_lookup(*this->modelWavelet(), image, result, functor_,interp_ftr_bil, tolerance,path,vcl_string("frm")+determine_prefix(frameNo,300),0.5);
+		measure_wv_lookup(*this->modelWavelet(), image, result, functor_,interp_ftr_bil, tolerance,path,std::string("frm")+determine_prefix(frameNo,300),0.5);
 		//measure(*model, image, result, functor_, tolerance);
     }
    return result;

@@ -22,7 +22,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <bil/algo/bil_scale_image.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -34,7 +34,7 @@
 //                    corner-like points.
 // \param contrast_thresh is the minimum contrast allow (used to prune weak peaks)
 void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
-                             vcl_vector<vgl_point_3d<float> >& peak_pts,
+                             std::vector<vgl_point_3d<float> >& peak_pts,
                              float curve_ratio = 10.0f,
                              float contrast_thresh = 0.03f);
 
@@ -65,7 +65,7 @@ struct dbdet_ssp_orientation_params
 
    
 //: Compute the peak orientations of a scale space point
-vcl_vector<float>
+std::vector<float>
 dbdet_ssp_orientations(vgl_point_3d<float> ssp,
                        const dbdet_ssp_orientation_params& params);
 

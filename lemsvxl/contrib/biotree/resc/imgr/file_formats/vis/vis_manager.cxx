@@ -1,7 +1,7 @@
 #include "vis_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_matlab_read.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
@@ -67,7 +67,7 @@ void vis_manager::init()
 
 void vis_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void vis_manager::cine_mode()
@@ -100,8 +100,8 @@ void vis_manager::stop_cine_mode()
 void vis_manager::load_cali_bnd_views()
 {
   vgui_dialog load_view_3d_dlg("Load RSQ file");
-  static vcl_string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Scan Filename:", ext, image_filename);
 
   if (!load_view_3d_dlg.ask())
@@ -111,7 +111,7 @@ void vis_manager::load_cali_bnd_views()
 
   is->ref();
 
-  vcl_cout << image_filename << '\n';
+  std::cout << image_filename << '\n';
 
   double min = 0, max = 65536; 
 
@@ -119,7 +119,7 @@ void vis_manager::load_cali_bnd_views()
 
   vgl_box_2d<double> bounds(vgl_point_2d<double>(1024, 54), vgl_point_2d<double>(2047, 107));
 
-  vcl_vector<dbil_bounded_image_view<double> *> views = rsq_reader.get_cali_bnded_view(bounds);
+  std::vector<dbil_bounded_image_view<double> *> views = rsq_reader.get_cali_bnded_view(bounds);
 
   range_params_ = new vgui_range_map_params(min, max, 1.0, false);
 
@@ -131,21 +131,21 @@ void vis_manager::load_cali_bnd_views()
   for(unsigned k = 0; k<nk; ++k)
   {
     dbil_bounded_image_view<double> * v = views[k];
-    vcl_cout << "open view [ " << k <<"] " << v->ni() << ' ' << v->nj() << '\n';
+    std::cout << "open view [ " << k <<"] " << v->ni() << ' ' << v->nj() << '\n';
     vgui_image_tableau_sptr itab = vgui_image_tableau_new(*v, range_params_);
     img_tabs_.push_back(itab);
     dtab_->add(itab);
   }
 
   is->unref();
-  vcl_cout << img_tabs_.size() << vcl_endl;
+  std::cout << img_tabs_.size() << std::endl;
 }
 
 void vis_manager::load_view_3d()
 {
   vgui_dialog load_view_3d_dlg("Load RSQ file");
-  static vcl_string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Scan Filename:", ext, image_filename);
 
   // file type
@@ -158,14 +158,14 @@ void vis_manager::load_view_3d()
 
   is->ref();
 
-  vcl_cout << image_filename << '\n';
+  std::cout << image_filename << '\n';
 
-  vcl_vector<vil_image_resource_sptr> img_res_sptrs;
+  std::vector<vil_image_resource_sptr> img_res_sptrs;
   double min, max; 
 
   if(file_type_ == 0){ // read rsq file
 
-    vcl_cout << "we are in rsq\n";
+    std::cout << "we are in rsq\n";
     imgr_rsq rsq_reader(is);
 
     img_res_sptrs = rsq_reader.get_images();
@@ -180,7 +180,7 @@ void vis_manager::load_view_3d()
 
   }else{
 
-    vcl_cout << "we are in isq\n";
+    std::cout << "we are in isq\n";
     imgr_isq_file_format isq_reader(is);
 
     img_res_sptrs = isq_reader.get_images();
@@ -193,40 +193,40 @@ void vis_manager::load_view_3d()
   range_params_ = new vgui_range_map_params(min, max, 1.0, false);
 
   unsigned nk = img_res_sptrs.size();
-  vcl_cout << nk << vcl_endl;
+  std::cout << nk << std::endl;
 
   img_tabs_.clear();
 
   for(unsigned k = 0; k<nk; ++k)
   {
-    vcl_cout <<"enter the " << k <<"th resource "<< vcl_flush;
+    std::cout <<"enter the " << k <<"th resource "<< std::flush;
     unsigned ni = img_res_sptrs[k]->ni() / 2;
     unsigned nj = img_res_sptrs[k]->nj() / 2;
     vil_image_view<unsigned short> v(img_res_sptrs[k]->get_copy_view(ni, ni, nj, nj));
     dbil_bounded_image_view<unsigned short> bv(v, ni, nj, 2*ni, 2*nj);
-    vcl_cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
+    std::cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
     vgui_image_tableau_sptr itab = vgui_image_tableau_new(bv, range_params_);
     img_tabs_.push_back(itab);
     dtab_->add(itab);
   }
 
   is->unref();
-  vcl_cout << img_tabs_.size() << vcl_endl;
+  std::cout << img_tabs_.size() << std::endl;
 }
 
 
 void vis_manager::save_scan()
 {
   vgui_dialog save_scan_dlg("save scan file");
-  static vcl_string filename = "scan.scn";
-  static vcl_string ext = "*.scn";
+  static std::string filename = "scan.scn";
+  static std::string ext = "*.scn";
   save_scan_dlg.file("Scan Filename:", ext, filename);
 
   if ( ! save_scan_dlg.ask())
     return;
 
-  vcl_cout << filename << "\n";
-  vcl_ofstream fout(filename.c_str() );
+  std::cout << filename << "\n";
+  std::ofstream fout(filename.c_str() );
 
   fout << scan_;
 }
@@ -264,12 +264,12 @@ void vis_manager::set_range_params()
 void vis_manager::box_projection()
 {
   if(img_tabs_.size() == 0)
-    vcl_cout << "No images loaded yet!" << vcl_endl;
+    std::cout << "No images loaded yet!" << std::endl;
   else
   {
     vgui_dialog projection_dlg("Box Files");
-    static vcl_string box_filename = "*.bx3";
-    static vcl_string ext = "*.*";
+    static std::string box_filename = "*.bx3";
+    static std::string ext = "*.*";
     projection_dlg.file("Box Filename:", ext, box_filename);
     if (!projection_dlg.ask())
       return;
@@ -279,21 +279,21 @@ void vis_manager::box_projection()
     if(box_filename[size-1] != '3' || box_filename[size-2] != 'x' ||
       box_filename[size-3] != 'b' || box_filename[size-4] != '.')
     {
-      vcl_cerr << "Box file does not have a valid extension. Aborting process..." << vcl_endl;
+      std::cerr << "Box file does not have a valid extension. Aborting process..." << std::endl;
       return;
     }
 
     // get the box
-    vcl_ifstream box_file(box_filename.c_str());
+    std::ifstream box_file(box_filename.c_str());
     vgl_box_3d<double> box3;
     box3.read(box_file);
     box_file.close();
-    vcl_cout << box3 << vcl_endl;
+    std::cout << box3 << std::endl;
     
     // error check
     if(img_tabs_.size() != scan_.n_views())
     {
-      vcl_cout << "Number of views in scan is not the same as the number of slices in rsq file. Aborting process..." << vcl_endl;
+      std::cout << "Number of views in scan is not the same as the number of slices in rsq file. Aborting process..." << std::endl;
       return;
     }
 
@@ -308,7 +308,7 @@ void vis_manager::box_projection()
       double cy = box2.centroid_y() - 54;
       box2.set_centroid_x(cx);  
       box2.set_centroid_y(cy);
-      vcl_cout << box2 << vcl_endl;
+      std::cout << box2 << std::endl;
       img_box_.push_back(box2);
     }
 
@@ -355,21 +355,21 @@ void vis_manager::get_pixel_info(const int x, const int y,vgui_event const &e, c
     {
       vil_image_view<unsigned short> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y>= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, vim(x,y), index);
     }
     else if(pix_type == VIL_PIXEL_FORMAT_DOUBLE)
     {
       vil_image_view<double> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", x, y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", x, y, vim(x,y), index);
     }
   }
   else
-    vcl_sprintf(msg, "No images loaded...");
+    std::sprintf(msg, "No images loaded...");
 
   return;
 }
@@ -391,13 +391,13 @@ bool vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   else if(e.type == vgui_KEY_UP)
   {
@@ -405,13 +405,13 @@ bool vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(wx_, wy_, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   return base::handle(e);
 }

@@ -28,9 +28,9 @@ extern "C" {
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <string>
+#include <map>
+#include <vector>
 
 //: Form Composite Graph algorithm
 class dbskr_train_routines
@@ -55,7 +55,7 @@ public:
     };
 
     //: Constructor
-    dbskr_train_routines(vcl_string model_filename,
+    dbskr_train_routines(std::string model_filename,
                          DescriptorType descr_type,
                          ColorSpace color_space,
                          int keywords=1024,
@@ -86,17 +86,17 @@ private:
     int stride_;
 
     // Keep track of masks per image
-    vcl_vector<vgl_polygon<double> > masks_;
+    std::vector<vgl_polygon<double> > masks_;
 
     // Keep track of original files
-    vcl_vector<vil_image_view<double> > model_chan_1_;
-    vcl_vector<vil_image_view<double> > model_chan_2_;
-    vcl_vector<vil_image_view<double> > model_chan_3_;
+    std::vector<vil_image_view<double> > model_chan_1_;
+    std::vector<vil_image_view<double> > model_chan_2_;
+    std::vector<vil_image_view<double> > model_chan_3_;
 
     // Keep track of gradients
-    vcl_vector<vl_sift_pix* > grad_chan_1_;
-    vcl_vector<vl_sift_pix* > grad_chan_2_;
-    vcl_vector<vl_sift_pix* > grad_chan_3_;
+    std::vector<vl_sift_pix* > grad_chan_1_;
+    std::vector<vl_sift_pix* > grad_chan_2_;
+    std::vector<vl_sift_pix* > grad_chan_3_;
 
     // Keep all descriptors
     vnl_matrix<vl_sift_pix> descriptor_matrix_;
@@ -106,10 +106,10 @@ private:
     vnl_vector<vl_sift_pix> PCA_mean_;
 
     //: Match
-    void train(vcl_string& gmm_filename);
+    void train(std::string& gmm_filename);
 
     // Load model file
-    void load_model_file(vcl_string& filename);
+    void load_model_file(std::string& filename);
 
     void convert_to_color_space(
         vil_image_view<vxl_byte>& image,
@@ -129,7 +129,7 @@ private:
     
     void compute_gradients();
 
-    void compute_pca(vcl_string& M_filename,vcl_string& mean_filename);
+    void compute_pca(std::string& M_filename,std::string& mean_filename);
 
     void compute_sift_descr(
         vgl_point_2d<double>& pt,

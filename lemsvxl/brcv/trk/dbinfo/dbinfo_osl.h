@@ -17,12 +17,12 @@
 //---------------------------------------------------------------------
 // A simple object signature library that stores a set of observations of
 // a given class. 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
 
@@ -33,44 +33,44 @@ class dbinfo_osl : public vbl_ref_count
   dbinfo_osl();
   ~dbinfo_osl();
 
-  dbinfo_osl(vcl_vector<vcl_string> const& classes,
-             vcl_vector<vcl_vector<dbinfo_observation_sptr> > const& prototypes
+  dbinfo_osl(std::vector<std::string> const& classes,
+             std::vector<std::vector<dbinfo_observation_sptr> > const& prototypes
              );
 
   //: copy constructor
   dbinfo_osl(const dbinfo_osl& rhs);
 
   //:mutators
-  void add_prototype(vcl_string const& cls,
+  void add_prototype(std::string const& cls,
                      dbinfo_observation_sptr const& proto);
 
-  void add_prototypes(vcl_vector<vcl_string> const& classes,
-                      vcl_vector<vcl_vector<dbinfo_observation_sptr> > const& prototypes);
+  void add_prototypes(std::vector<std::string> const& classes,
+                      std::vector<std::vector<dbinfo_observation_sptr> > const& prototypes);
   //: remove a prototype observation. Return false if not in osl
-  bool remove_prototype(vcl_string const& cls, vcl_string const& obs_doc);
+  bool remove_prototype(std::string const& cls, std::string const& obs_doc);
   //: remove all the prototypes for a class and delete the class from the osl
-  bool remove_class(vcl_string const& cls);
+  bool remove_class(std::string const& cls);
     
   //:accessors
-  bool find_prototype_vector(vcl_string const& cls, 
-                             vcl_vector<dbinfo_observation_sptr>*& prototypes );
-  bool prototypes(vcl_string const& cls, 
-                  vcl_vector<dbinfo_observation_sptr>& prototypes);
+  bool find_prototype_vector(std::string const& cls, 
+                             std::vector<dbinfo_observation_sptr>*& prototypes );
+  bool prototypes(std::string const& cls, 
+                  std::vector<dbinfo_observation_sptr>& prototypes);
 
-  dbinfo_observation_sptr prototype(vcl_string const& cls, const unsigned index);
+  dbinfo_observation_sptr prototype(std::string const& cls, const unsigned index);
 
-  vcl_vector<vcl_string> classes() const;
+  std::vector<std::string> classes() const;
 
   //:total number of classes
   unsigned size(){return osl_.size();}
   
   //: the number of prototypes per class
-  unsigned n_protos_in_class(vcl_string const& cls);
+  unsigned n_protos_in_class(std::string const& cls);
 
   //: the vector of number of class prototypes by enumerated by class
-  vcl_vector<unsigned> n_prototypes();
+  std::vector<unsigned> n_prototypes();
 
-  void print(vcl_ostream& os = vcl_cout) const;
+  void print(std::ostream& os = std::cout) const;
 
   //-----------------------
   //:  BINARY I/O METHODS |
@@ -80,10 +80,10 @@ class dbinfo_osl : public vbl_ref_count
   virtual unsigned version() const {return 1;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbinfo_object_signature_library";}
+  virtual std::string is_a() const {return "dbinfo_object_signature_library";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
     { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -93,7 +93,7 @@ class dbinfo_osl : public vbl_ref_count
   virtual void b_read(vsl_b_istream &is);
 
  private:
-  vcl_map<vcl_string, vcl_vector<dbinfo_observation_sptr>* > osl_;
+  std::map<std::string, std::vector<dbinfo_observation_sptr>* > osl_;
 
 };
 
@@ -121,13 +121,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_osl* &osl)
   vsl_b_read(is, *osl);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_osl const& osl)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_osl const& osl)
 {
   osl.print(os);
   return os;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, dbinfo_osl const*  osl)
+inline void vsl_print_summary(std::ostream& os, dbinfo_osl const*  osl)
 {os << osl;}
 
 

@@ -2,7 +2,7 @@
 #define smw_freq_histogram_txx_
 
 #include "smw_freq_matrix.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //add a row and fill it with zeros
 template<class T>
@@ -55,9 +55,9 @@ bool smw_freq_matrix<T>::remove_row(unsigned const& row)
 {
     if( row > this->rows() )
     {
-        vcl_cerr << "Error: smw_freq_matrix<T>::remove_col(unsigned const& col)"
+        std::cerr << "Error: smw_freq_matrix<T>::remove_col(unsigned const& col)"
                  << '\n' << "Attempted to remove a column past the last"
-                 << " in the matrix" << '\n' << vcl_flush;
+                 << " in the matrix" << '\n' << std::flush;
         return 0;
     }
 
@@ -86,9 +86,9 @@ bool smw_freq_matrix<T>::remove_col(unsigned const& col)
 {
     if( col > this->cols() )
     {
-        vcl_cerr << "Error: smw_freq_matrix<T>::remove_col(unsigned const& col)"
+        std::cerr << "Error: smw_freq_matrix<T>::remove_col(unsigned const& col)"
                  << '\n' << "Attempted to remove a colunm past the last"
-                 << " in the matrix " << '\n' << vcl_flush;
+                 << " in the matrix " << '\n' << std::flush;
         return 0;
     }
 

@@ -28,7 +28,7 @@ void dbdet_image_seg_tool::
 activate() 
 {
   this->select_io_storage();
-  vcl_cerr<<this->vsol2d_name_<<vcl_endl;
+  std::cerr<<this->vsol2d_name_<<std::endl;
 }
 
 
@@ -71,16 +71,16 @@ select_io_storage()
   vgui_dialog io_dialog("Select Inputs and outputs" );
 
   //display input options
-  //vcl_vector< vcl_string > input_type_list = process_->get_input_type();
-  vcl_vector< vcl_string > input_type_list;
+  //std::vector< std::string > input_type_list = process_->get_input_type();
+  std::vector< std::string > input_type_list;
   input_type_list.push_back("image");
   input_type_list.push_back("vsol2D");
   io_dialog.message("Select Input(s) From Available ones:");
 
   //store the choices
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
   
   for( unsigned int i = 0; i < input_type_list.size(); ++i )
   {

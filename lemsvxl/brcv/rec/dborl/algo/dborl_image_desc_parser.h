@@ -24,8 +24,8 @@
 #include <expat.h>
 #endif
 #include <stdio.h>
-#include <vcl_string.h>
-#include <vcl_cstdio.h>
+#include <string>
+#include <cstdio>
 
 #include <borld/borld_image_description_sptr.h>
 #include <borld/borld_image_bbox_description_sptr.h>
@@ -54,7 +54,7 @@ public:
   void set_pascal_tags() { category_tag_ = "name", instance_tag_ = "object", box_tag_ = "bndbox", description_tag_ = "annotation"; }
   void set_default_tags() { category_tag_ = "category", instance_tag_ = "instance", box_tag_ = "bndbox", description_tag_ = "description"; }
 
-  vcl_string category_tag_, instance_tag_, box_tag_, polygon_tag_, description_tag_;
+  std::string category_tag_, instance_tag_, box_tag_, polygon_tag_, description_tag_;
 protected:
   virtual void startElement(const XML_Char* name, const XML_Char** atts);
   virtual void endElement(const XML_Char* name);
@@ -62,7 +62,7 @@ protected:
 
 private:
   void handleAtts(const XML_Char** atts);
-  void cdataHandler(vcl_string name, vcl_string data);
+  void cdataHandler(std::string name, std::string data);
   void WriteIndent();
   
   void reset_box() { current_box_ = 0; current_minx_ = -1; current_miny_ = -1; current_maxx_ = -1; current_maxy_ = -1; }
@@ -71,9 +71,9 @@ private:
   int version;
 
   // filter response paramaters
-  vcl_string cdata_;
-  vcl_string current_cat_;
-  vcl_vector<vcl_string> cats_;
+  std::string cdata_;
+  std::string current_cat_;
+  std::vector<std::string> cats_;
 
   vsol_box_2d_sptr current_box_;
   float current_minx_, current_miny_, current_maxx_, current_maxy_;
@@ -85,9 +85,9 @@ private:
   borld_image_polygon_description_sptr poly_desc_;
 };
 
-borld_image_description_sptr borld_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser);
+borld_image_description_sptr borld_image_description_parse(std::string fname, dborl_image_desc_parser& parser);
 
-void parse_pascal_write_default_xml(vcl_string input_fname, vcl_string output_fname);
-bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string category, vcl_string output_fname);
+void parse_pascal_write_default_xml(std::string input_fname, std::string output_fname);
+bool read_con_write_image_description_xml(std::string input_fname, std::string category, std::string output_fname);
 
 #endif  // _DBORL_IMAGE_DESC_PARSER_H

@@ -59,7 +59,7 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
   
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -136,7 +136,7 @@ protected:
   //dbsks_ccm ccm_;
   //bpro1_parameters_sptr ccm_params_;
   //vidpro1_image_storage_sptr ccm_edgemap_storage_;
-  //vcl_string ccm_edgeorient_file_;
+  //std::string ccm_edgeorient_file_;
 
   ////: WCM model
   //bool examine_wcm_model_;
@@ -154,8 +154,8 @@ protected:
 
 
   // sample points used to compute cost
-  vcl_vector<float > sample_x_[2], sample_y_[2], sample_angle_[2]; // 0: left, 1: right
-  vcl_vector<float > edgel_x_[2], edgel_y_[2], edgel_angle_[2]; // 0: left, 1: right
+  std::vector<float > sample_x_[2], sample_y_[2], sample_angle_[2]; // 0: left, 1: right
+  std::vector<float > edgel_x_[2], edgel_y_[2], edgel_angle_[2]; // 0: left, 1: right
   
 
   // Gesture lists
@@ -180,12 +180,12 @@ void dbsks_exgc_prepare_image_cost_fnt_wrapper(const void* toolref);
 class dbsks_exgc_set_storage_command: public vgui_command
 {
 public:  
-  dbsks_exgc_set_storage_command(vcl_string storage_type, bpro1_storage_sptr* storage): 
+  dbsks_exgc_set_storage_command(std::string storage_type, bpro1_storage_sptr* storage): 
     storage_type_(storage_type), storage_(storage){}
   virtual ~dbsks_exgc_set_storage_command(){}
   void execute();
 protected:
-  vcl_string storage_type_;
+  std::string storage_type_;
   bpro1_storage_sptr* storage_;
 };
 

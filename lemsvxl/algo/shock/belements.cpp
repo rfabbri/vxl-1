@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 #include "belements.h"
 #include "ishock.h"
@@ -90,7 +90,7 @@ double
 BElement::intersect_distance(Point* origin, double line_angle)
 {
   vgl_homg_point_2d<double> start_pt(origin->x, origin->y);
-  vgl_homg_point_2d<double> end_pt(origin->x + vcl_cos(line_angle), origin->y+vcl_sin(line_angle));
+  vgl_homg_point_2d<double> end_pt(origin->x + std::cos(line_angle), origin->y+std::sin(line_angle));
   vgl_homg_line_2d<double> line(start_pt, end_pt); 
   switch (type()) {
       case BPOINT : 
@@ -105,10 +105,10 @@ BElement::intersect_distance(Point* origin, double line_angle)
           return vgl_distance(start_homg_pt, intersect_pt);
         }
       case BARC :
-        vcl_cout << "ERROR: belm->type = BARC -> not yet considered" << vcl_endl;
+        std::cout << "ERROR: belm->type = BARC -> not yet considered" << std::endl;
         return 0;
       default :
-        vcl_cout << "ERROR: something is wrong. The program should not get here." ;
+        std::cout << "ERROR: something is wrong. The program should not get here." ;
         return 0;
   }
 }
@@ -470,7 +470,7 @@ DETERMINE_CC1_CC2:
   return true;
 }
 
-void BPoint::getInfo (vcl_ostream& ostrm)
+void BPoint::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
@@ -613,7 +613,7 @@ double BLine::isPointValidInTPlaneFuzzy (Point pt)
   return 0;
 }
 
-void BLine::getInfo (vcl_ostream& ostrm)
+void BLine::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
@@ -871,7 +871,7 @@ DIST_TYPE BArc::validDistPoint (Point pt)
   double a;
   if (isPointValidInRAngleFuzzy (pt, a)) {
     double d = _distPointPoint (_center, pt);
-    return vcl_fabs (d-_R);
+    return std::fabs (d-_R);
   }
   else
     return ISHOCK_DIST_HUGE;
@@ -898,7 +898,7 @@ DIST_TYPE BArc::initDistSqPointGUI (Point pt)
   double a = _vPointPoint (_center, pt);
   if (isVectorValid (a)) {
     double d = _distPointPoint(pt, _center);
-    return vcl_fabs(d-_R)*vcl_fabs(d-_R);    //kind of redundant!!
+    return std::fabs(d-_R)*std::fabs(d-_R);    //kind of redundant!!
   }
   else { //2)Slow: Choose the closer one from startPt and endPt
     double dists = _distSqPointPoint (_start, pt);
@@ -907,7 +907,7 @@ DIST_TYPE BArc::initDistSqPointGUI (Point pt)
   }
 }
 
-void BArc::getInfo (vcl_ostream& ostrm)
+void BArc::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
@@ -967,7 +967,7 @@ BContour::BContour(int id):
   elms.clear();
 }
 
-void BContour::getInfo (vcl_ostream& ostrm)
+void BContour::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 

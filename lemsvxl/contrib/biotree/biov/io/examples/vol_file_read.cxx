@@ -15,14 +15,14 @@
 #include <Inventor/nodes/SoSeparator.h>
 
 #include <vgui/vgui_dialog.h>
-#include <vcl_cstddef.h>
+#include <cstddef>
 
 
 
 int main(int narg, char** argv) {
 
-  static vcl_string fname = "*.vol";
-  static vcl_string ext = "*.*";
+  static std::string fname = "*.vol";
+  static std::string ext = "*.*";
 
 //find filename
   vgui::init(narg, argv);
@@ -40,12 +40,12 @@ int main(int narg, char** argv) {
   else
   {
 //    vgui::quit();
-    vcl_size_t dot_pos = fname.find_first_of(".");
-    if(vcl_strcmp(fname.substr(dot_pos+1, 3).data(), "vol") != 0 && vcl_strcmp(fname.substr(dot_pos+1, 3).data(), "VOL") != 0)
+    std::size_t dot_pos = fname.find_first_of(".");
+    if(std::strcmp(fname.substr(dot_pos+1, 3).data(), "vol") != 0 && std::strcmp(fname.substr(dot_pos+1, 3).data(), "VOL") != 0)
     {
-      vcl_cout << "**************************************" << vcl_endl;
-      vcl_cout << "The file does not have a vol extension" << vcl_endl;
-      vcl_cout << "**************************************" << vcl_endl;
+      std::cout << "**************************************" << std::endl;
+      std::cout << "The file does not have a vol extension" << std::endl;
+      std::cout << "**************************************" << std::endl;
       return 0;
     }
    }

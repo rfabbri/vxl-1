@@ -15,8 +15,8 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 
 // other includes needed
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 
 
 #include <vsol/vsol_spatial_object_2d_sptr.h>
@@ -62,7 +62,7 @@ vidpro1_plane_opt_process::vidpro1_plane_opt_process()
 
   if (
 
-      (!parameters()->add( "BB Filename" , "-BB_fname" , (vcl_string)"d://error_fname.txt" ) )
+      (!parameters()->add( "BB Filename" , "-BB_fname" , (std::string)"d://error_fname.txt" ) )
       ||
       (!parameters()->add( "Filter Sigma" , "-filter_sigma" , (float)1.5 ) )
       ||
@@ -156,7 +156,7 @@ vidpro1_plane_opt_process::vidpro1_plane_opt_process()
       )
           
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_plane_opt_process::vidpro1_plane_opt_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_plane_opt_process::vidpro1_plane_opt_process()" << std::endl;
   }
  
 }
@@ -171,7 +171,7 @@ vidpro1_plane_opt_process::~vidpro1_plane_opt_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_plane_opt_process::name()
 {
   return "BB Plane Optimization";
@@ -203,13 +203,13 @@ return 1;
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_plane_opt_process::get_input_type()
 {
   // this process looks for  vsol2D storage classes
   // at each input frame
  
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -223,12 +223,12 @@ vidpro1_plane_opt_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_plane_opt_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
         
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -243,15 +243,15 @@ vidpro1_plane_opt_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_plane_opt_process::execute() - not exactly one"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro1_plane_opt_process::execute() - not exactly one"
+             << " input frames" << std::endl;
     return false;
   }
   bool error_plot;
    double number_of_res_from_left, number_of_res_from_right; 
-  vcl_ofstream error_fname("c:\\errors.txt", vcl_ios::out);
+  std::ofstream error_fname("c:\\errors.txt", std::ios::out);
   
-  vcl_string BB_fname;
+  std::string BB_fname;
   
    
   float sigma ;
@@ -318,7 +318,7 @@ vidpro1_plane_opt_process::execute()
   double alpha;
   vnl_double_4 CameraCenter;
   vnl_double_4x4 BBMatrix;
-  vcl_vector<vnl_double_4> WorldPoints;
+  std::vector<vnl_double_4> WorldPoints;
 
   
  // Get parameters
@@ -340,9 +340,9 @@ vidpro1_plane_opt_process::execute()
 //Read BB and Proj Mat info from file.
    
   
-   vcl_ifstream BB_file(BB_fname.c_str(), vcl_ios::in);
-   vcl_ofstream new_BB_file((BB_fname+vcl_string("opt")).c_str(), vcl_ios::out);
-   vcl_string str("");
+   std::ifstream BB_file(BB_fname.c_str(), std::ios::in);
+   std::ofstream new_BB_file((BB_fname+std::string("opt")).c_str(), std::ios::out);
+   std::string str("");
    while (str!="Transform")
    {BB_file>>str;
    new_BB_file<<str<<"  ";
@@ -380,7 +380,7 @@ vidpro1_plane_opt_process::execute()
   int minimizing_parami;
   int minimizing_paramj;
   vnl_double_4x4 OptimalBBMatrix;
-  vcl_cout<<"Initial BB Matrix:  "<<BBMatrix<<"\n";
+  std::cout<<"Initial BB Matrix:  "<<BBMatrix<<"\n";
  
   double prev_opt_paramt = 0.0;
   double prev_opt_paramalpha = 0.0;
@@ -410,8 +410,8 @@ vidpro1_plane_opt_process::execute()
   { 
       double newcoef =prev_opt_paramt+i*tinterval;
       double newalpha = prev_opt_paramalpha + j*alphainterval;
-      vcl_cout<<"i: "<<i<<"  newcoef:  "<<newcoef<<"\t";
-      vcl_cout<<newalpha<<"\n";
+      std::cout<<"i: "<<i<<"  newcoef:  "<<newcoef<<"\t";
+      std::cout<<newalpha<<"\n";
 
       int num_of_res;
 
@@ -428,12 +428,12 @@ vidpro1_plane_opt_process::execute()
           minimizing_paramj = j;
           minerr = error;
           OptimalBBMatrix = UpdatedBBMatrix;
-          vcl_cout<<"i:  "<<i<<"   New coef  "<<newcoef;
-          vcl_cout<<" \t Best  error up to date:   "<<error<<"\n";
+          std::cout<<"i:  "<<i<<"   New coef  "<<newcoef;
+          std::cout<<" \t Best  error up to date:   "<<error<<"\n";
          // number_of_residuals = num_of_res;
       }
       WorldPoints.clear();
-      vcl_cout<<"error is "<<error<<"\n";
+      std::cout<<"error is "<<error<<"\n";
       error_fname<<newcoef<<"\t"<<newalpha<<"\t"<<error<<"\n";
  
      
@@ -443,15 +443,15 @@ vidpro1_plane_opt_process::execute()
   double param2 = prev_opt_paramalpha + minimizing_paramj*alphainterval;
   double start_paramt = param1;
   double start_paramalpha = param2;
-  vcl_cout<<" Starting LM with param1 = "<<param1<<"   and param2 = "<<param2<<"\n";
+  std::cout<<" Starting LM with param1 = "<<param1<<"   and param2 = "<<param2<<"\n";
 
 
   double lmsampx= samplexf;
   double lmsampy = sampleyf;
   if (WP_point_samp)
-  number_of_residuals = (unsigned int)vcl_floor((1.0/lmsampx)*(1.0/lmsampy));
+  number_of_residuals = (unsigned int)std::floor((1.0/lmsampx)*(1.0/lmsampy));
   
-vcl_cout<<"Number of _residuals"<<number_of_residuals<<"\n";
+std::cout<<"Number of _residuals"<<number_of_residuals<<"\n";
   BB_optimization_problem *BB_opt_inst = new BB_optimization_problem(translation, rotation, trans_from_KT,WP_point_samp, 
       lmsampx,lmsampy,BBMatrix,number_of_residuals,LeftProjMat, RightProjMat);
  
@@ -468,8 +468,8 @@ vcl_cout<<"Number of _residuals"<<number_of_residuals<<"\n";
 
 vnl_levenberg_marquardt  *LM_inst= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(BB_opt_inst)));
  LM_inst->minimize_without_gradient(param_vec);
-// LM_inst->diagnose_outcome(vcl_cout);
-vcl_cout<<"optimized coef  "<<param_vec[0]<< " optimized angle:  "<<param_vec[1];
+// LM_inst->diagnose_outcome(std::cout);
+std::cout<<"optimized coef  "<<param_vec[0]<< " optimized angle:  "<<param_vec[1];
 updateBBMat(BBMatrix,BBMatrix_LM,param_vec[0],param_vec[1]);
 param1 = param_vec[0];
 param2 = param_vec[1];
@@ -483,17 +483,17 @@ prev_opt_paramalpha = param2;
 
 
   //Printing out results
-vcl_cout<<" alpha is " <<param_vec[1]<<"\n";
-vcl_cout<<" t is" <<param_vec[0]<<"\n";
-vcl_cout<<" Optimal BB Matrix is "<< OptimalBBMatrix<<"\n";
-vcl_cout<<" Optimal BB  Matrix after LM is "<< BBMatrix_LM<<"\n";
-vcl_cout<<"  minimizing i is  "<<minimizing_parami<<"\n";
-vcl_cout<<"  minimizing j is  "<<minimizing_paramj<<"\n";
-vcl_cout<<" Started LM with t = "<<start_paramt<<"\t";
-vcl_cout<<" alpha = "<<start_paramalpha<<"\n";
-//vcl_cout<<" errors are  \n";
+std::cout<<" alpha is " <<param_vec[1]<<"\n";
+std::cout<<" t is" <<param_vec[0]<<"\n";
+std::cout<<" Optimal BB Matrix is "<< OptimalBBMatrix<<"\n";
+std::cout<<" Optimal BB  Matrix after LM is "<< BBMatrix_LM<<"\n";
+std::cout<<"  minimizing i is  "<<minimizing_parami<<"\n";
+std::cout<<"  minimizing j is  "<<minimizing_paramj<<"\n";
+std::cout<<" Started LM with t = "<<start_paramt<<"\t";
+std::cout<<" alpha = "<<start_paramalpha<<"\n";
+//std::cout<<" errors are  \n";
 //for (int u=0; u<(num_of_error_samples*2+1)*(2*num_of_ang_samples+1); u++)
-//vcl_cout<<"\n "<<errorlist[u];
+//std::cout<<"\n "<<errorlist[u];
 tinterval/=2;
 alphainterval/=2;
 
@@ -508,15 +508,15 @@ alphainterval/=2;
 //Creating 3d projections onto world plane
       vidpro1_3D_planar_curve_reconst_process *curve_compare = new vidpro1_3D_planar_curve_reconst_process;
       
-      vcl_vector<bpro1_storage_sptr> curve_inputs;
+      std::vector<bpro1_storage_sptr> curve_inputs;
       curve_inputs.push_back(input_data_[0][4]);
       curve_inputs.push_back(input_data_[0][5]);
       curve_inputs.push_back(input_data_[0][2]);
       curve_inputs.push_back(input_data_[0][3]);
       curve_compare->set_input(curve_inputs);
-      vcl_cout<<"vidpro1_3D_planar_curve_reconst_process::initialize()\n ";
+      std::cout<<"vidpro1_3D_planar_curve_reconst_process::initialize()\n ";
       curve_compare->initialize();
-         vcl_cout<<"vidpro1_3D_planar_curve_reconst_process::set_BB_Matrix()\n ";
+         std::cout<<"vidpro1_3D_planar_curve_reconst_process::set_BB_Matrix()\n ";
       curve_compare->set_BB_matrix(BBMatrix_LM);
       curve_compare->execute();
       curve_compare->finish();
@@ -544,15 +544,15 @@ if (error_plot)
 {
       tinterval= 0.005;
       alphainterval= 0.005;
-vcl_cout<<"Computing errors to draw 3d plot\n";
+std::cout<<"Computing errors to draw 3d plot\n";
 
       for (int i = -num_of_error_samples;  i< num_of_error_samples+1; i++)
           for (int j = -num_of_ang_samples; j<num_of_ang_samples+1; j++)
           { 
               double newcoef =param_vec[0]+i*tinterval;
               double newalpha = param_vec[1]+ j*alphainterval;
-             // vcl_cout<<"i: "<<i<<"  newcoef:  "<<newcoef<<"\t";
-             // vcl_cout<<newalpha<<"\n";
+             // std::cout<<"i: "<<i<<"  newcoef:  "<<newcoef<<"\t";
+             // std::cout<<newalpha<<"\n";
               error_fname<<newcoef<<"\t"<<newalpha<<"\t";
 
 
@@ -566,7 +566,7 @@ vcl_cout<<"Computing errors to draw 3d plot\n";
               error_fname<<error<<"\n";
              
               WorldPoints.clear();
-             // vcl_cout<<"error is "<<error<<"\n";
+             // std::cout<<"error is "<<error<<"\n";
               //     errorlist[(i+num_of_error_samples)*(2*num_of_error_samples+1)+j+num_of_ang_samples] = error;
 
 
@@ -618,7 +618,7 @@ vidpro1_plane_opt_process::finish()
 
 double
 vidpro1_plane_opt_process::compute_err(const vil_image_view<float>  &left_image_view_filt, const vil_image_view<float>  &right_image_view_filt,
-                                      vcl_vector<vnl_double_4> &WorldPoints
+                                      std::vector<vnl_double_4> &WorldPoints
                                       ,const vnl_double_4x4 &BoundBoxTransf,int &num_of_samples)
 {
 if (WP_point_samp)
@@ -685,8 +685,8 @@ if (WP_point_samp)
 
  vil_math_sum(m,mapleft, 0);
  vil_math_sum(n,mapright, 0);
- vcl_cout<<"\n m is "<<m<<"\t n is  "<<n <<"\n";
-// vcl_cout<<" inside  "<<pixels_inside<<"    outside:  "<<pixels_outside<<"\n";
+ std::cout<<"\n m is "<<m<<"\t n is  "<<n <<"\n";
+// std::cout<<" inside  "<<pixels_inside<<"    outside:  "<<pixels_outside<<"\n";
  
 double normalize = MIN(m,n);
  double normalized_error;
@@ -754,12 +754,12 @@ else
              vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
 
              LM_instance->minimize_without_gradient(homog_coords);
-             //   LM_instance->diagnose_outcome(vcl_cout);
+             //   LM_instance->diagnose_outcome(std::cout);
              vnl_double_4 newpt (test_BB_point[0],homog_coords[0]/homog_coords[2], homog_coords[1]/homog_coords[2],1.0);
              vnl_double_3 proj_point = RightProjMat*newpt;
       
              vgl_homg_point_2d<double> right_point(proj_point[0]/proj_point[2],proj_point[1]/proj_point[2]);
-            // vcl_cout<<"right_point :: "<<right_point;
+            // std::cout<<"right_point :: "<<right_point;
              assert(right_point.x()<right_mask_view.ni());
              assert(right_point.y()<right_mask_view.nj()); 
              assert(right_point.x()>0);
@@ -802,8 +802,8 @@ else
   }
       vil_math_sum(m,mapleft ,0);
      error_left/=m;
-    // vcl_cout<<"pixels_insidE:: "<<pixels_inside<<"\n";
-    // vcl_cout<<"pixels_outsidE:: "<<pixels_outside<<"\n";
+    // std::cout<<"pixels_insidE:: "<<pixels_inside<<"\n";
+    // std::cout<<"pixels_outsidE:: "<<pixels_outside<<"\n";
      pixels_inside =0;
      pixels_outside = 0;
      vnl_svd<double> svd_decomp_R(RightProjMat);
@@ -839,11 +839,11 @@ else
                  planar_curve_reconst_problem *reconstructor = new  planar_curve_reconst_problem (BoundBoxTransf,orig_point,RightProjMat);
                  vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
                  LM_instance->minimize_without_gradient(homog_coords);
-             //    LM_instance->diagnose_outcome(vcl_cout);
+             //    LM_instance->diagnose_outcome(std::cout);
                  vnl_double_4 newpt(test_BB_point[0], homog_coords[0]/homog_coords[2], homog_coords[1]/homog_coords[2],1.0);
                  vnl_double_3 proj_point= LeftProjMat*newpt;
                  vgl_homg_point_2d<double> left_point(proj_point[0]/proj_point[2],proj_point[1]/proj_point[2]);
-               //  vcl_cout<<"left_point :: "<<left_point;
+               //  std::cout<<"left_point :: "<<left_point;
                  assert(left_point.x()<left_mask_view.ni());
                  assert(left_point.y()<left_mask_view.nj());
                  assert(left_point.x()>0);
@@ -881,10 +881,10 @@ else
              error_right+= diff*diff;
          }
          vil_math_sum(n,mapright, 0);
-    //     vcl_cout<<"pixels_insidE:: "<<pixels_inside<<"\n";
-        // vcl_cout<<"pixels_outsidE:: "<<pixels_outside<<"\n";
+    //     std::cout<<"pixels_insidE:: "<<pixels_inside<<"\n";
+        // std::cout<<"pixels_outsidE:: "<<pixels_outside<<"\n";
          error_right/=n;
-     //    vcl_cout<<"m is  "<<m<<"  n is "<<n<<"\n";
+     //    std::cout<<"m is  "<<m<<"  n is "<<n<<"\n";
         
          
          num_of_samples = num_of_res;
@@ -905,16 +905,16 @@ else
      compute_plane_params(UpdatedBBMatrix);
 
      d = trans_vec.two_norm();
-     vcl_cout<<"d is  "<<d<<"\n";
+     std::cout<<"d is  "<<d<<"\n";
      aleph = 0.0;
 
 
  }
  void
-     vidpro1_plane_opt_process::computeWorldPoints(vcl_vector<vnl_double_4>  &WP, const double sampx,const double sampy,const vnl_double_4x4 &BBMat)
+     vidpro1_plane_opt_process::computeWorldPoints(std::vector<vnl_double_4>  &WP, const double sampx,const double sampy,const vnl_double_4x4 &BBMat)
  {
-     int  numx = (int)vcl_floor(1.0/sampx);
-     int  numy = (int)vcl_floor(1.0/sampy);
+     int  numx = (int)std::floor(1.0/sampx);
+     int  numy = (int)std::floor(1.0/sampy);
      vnl_double_4 newpoint_World;
      vnl_double_4 newp;
        //*****Depends on front plane x=0 or x=1******/////
@@ -947,7 +947,7 @@ else
 
      vnl_double_4 Normal;
 
- //    vcl_cout<<trans_vec;
+ //    std::cout<<trans_vec;
    //  temp= RSt;
 //     vnl_double_4 Normal(-1.0,0.0,0.0,1.0);
      vnl_double_3x1 tempt, Normaltemp;
@@ -963,11 +963,11 @@ else
 
      
      double d = trans_vec.two_norm();
-  //  vcl_cout<<"Normal1:   "<<Normal<<"\n";
-//     vcl_cout<<"d:   "<<d;
-//     vcl_cout<<"\t t:  "<<t;
+  //  std::cout<<"Normal1:   "<<Normal<<"\n";
+//     std::cout<<"d:   "<<d;
+//     std::cout<<"\t t:  "<<t;
     // double coef= (t-d)/d;
-//     vcl_cout<<"\tcoef:  "<<updcoef<<"\t"<<"alpha:  "<<updalpha<<"\n";
+//     std::cout<<"\tcoef:  "<<updcoef<<"\t"<<"alpha:  "<<updalpha<<"\n";
      vnl_double_4x4 Temp;
      Temp.set_identity();
      
@@ -996,13 +996,13 @@ else
              cornerpointtwo = OrigBBMatrix*cornerpointtwo;
              cornerpointthr = OrigBBMatrix*cornerpointthr;
              cornerpointfou = OrigBBMatrix*cornerpointfou;
-             vcl_vector<vnl_double_4> corners(4);
+             std::vector<vnl_double_4> corners(4);
              corners[0] = cornerpointone;
              corners[1] = cornerpointtwo;
              corners[2] = cornerpointthr;
              corners[3] = cornerpointfou;
              compute_plane_Normal(corners, Normal);
-  //           vcl_cout<<"\nNormal2:   "<<Normal<<"\n";
+  //           std::cout<<"\nNormal2:   "<<Normal<<"\n";
              double dist = compute_lengthBB(OrigBBMatrix);
              Temp[0][3] = trans_vec[0]+updcoef*Normal[0]*dist;
              Temp[1][3] = trans_vec[1]+updcoef*Normal[1]*dist;
@@ -1023,18 +1023,18 @@ else
 
 
 
-//vcl_cout<<"Temp is  "<<Temp;
+//std::cout<<"Temp is  "<<Temp;
 
 
 //vnl_double_4x4 testR = rot_mat(pivot_point,rot_axis, 0);
-//vcl_cout<<"test: (should be identity) "<<testR<<"\n";
+//std::cout<<"test: (should be identity) "<<testR<<"\n";
      R = rot_mat(pivot_point, rot_axis, updalpha);
-    // vcl_cout<<" R is " <<R;
+    // std::cout<<" R is " <<R;
      if (rotation)
          UpdatedBBMatrix = R*Temp;
      else
          UpdatedBBMatrix = Temp;
-  //   vcl_cout<<"New Mat:\n"<<UpdatedBBMatrix;
+  //   std::cout<<"New Mat:\n"<<UpdatedBBMatrix;
      
 
  }
@@ -1141,8 +1141,8 @@ vnl_double_4x4
          eye.set_identity();
          assert(A*Ainv==eye);
          //assert(B*Binv==eye);
-        // vcl_cout<<"Test rot matrix: (should be Id)";
-        // vcl_cout<<B*Binv;
+        // std::cout<<"Test rot matrix: (should be Id)";
+        // std::cout<<B*Binv;
         
 
 
@@ -1171,7 +1171,7 @@ vnl_double_4x4
 
 
  void
-     vidpro1_plane_opt_process::compute_plane_Normal(const vcl_vector<vnl_double_4> & corners, vnl_double_4 &Normal)
+     vidpro1_plane_opt_process::compute_plane_Normal(const std::vector<vnl_double_4> & corners, vnl_double_4 &Normal)
  {
      assert(corners.size()==4);
 
@@ -1226,7 +1226,7 @@ vnl_double_4x4
      //// Calculating Homographies
 
      vgl_h_matrix_2d_compute_4point hcl;
-     vcl_vector <vgl_homg_point_2d <double> > point_set1, point_set2;
+     std::vector <vgl_homg_point_2d <double> > point_set1, point_set2;
      vnl_double_3 projcponeL = LeftProjMat*cornerpointone;
      vnl_double_3 projcptwoL = LeftProjMat*cornerpointtwo;
      vnl_double_3 projcpthrL = LeftProjMat*cornerpointthr;
@@ -1257,7 +1257,7 @@ vnl_double_4x4
      // H represents the homography that
      // transforms points from  plane1 into plane2.
      Hright = hcl.compute(point_set1, point_set2);
-   //  vcl_cout<<Hleft<<"\n"<<Hright<<"\n";
+   //  std::cout<<Hleft<<"\n"<<Hright<<"\n";
      Left2Right = Hleft*Hright.get_inverse();
 
 
@@ -1265,7 +1265,7 @@ vnl_double_4x4
 
 
 
-     vcl_vector<vnl_double_4> corners(4);
+     std::vector<vnl_double_4> corners(4);
      corners[0] = cornerpointone;
      corners[1] = cornerpointtwo;
      corners[2] = cornerpointthr;

@@ -38,7 +38,7 @@ bool dts_pca_process_cons( bprb_func_process& pro )
     
     using namespace dts_pca_process_globals;
 
-    vcl_vector<vcl_string> input_types_(n_inputs_);
+    std::vector<std::string> input_types_(n_inputs_);
 
     unsigned i = 0;
     input_types_[i++] = "dts_time_series_base_sptr";
@@ -59,13 +59,13 @@ bool dts_pca_process( bprb_func_process& pro )
 
     if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cerr << "----ERROR---- " 
+        std::cerr << "----ERROR---- " 
                  << pro.name() << '\n'
                  << "\tdts_pca_process: The input number should be: "
                  << n_inputs_ << '\n'
                  << "\tFILE: " << __FILE__ << '\n'
                  << "\tLINE: " << __LINE__ << '\n'
-                 << vcl_flush;
+                 << std::flush;
     }
 
     //get inputs
@@ -73,11 +73,11 @@ bool dts_pca_process( bprb_func_process& pro )
     dts_time_series_base_sptr ts_sptr = 
         pro.get_input<dts_time_series_base_sptr>(i++);
 
-    vcl_string time_type =
-        pro.get_input<vcl_string>(i++);
+    std::string time_type =
+        pro.get_input<std::string>(i++);
 
-    vcl_string element_type = 
-        pro.get_input<vcl_string>(i++);
+    std::string element_type = 
+        pro.get_input<std::string>(i++);
 
     unsigned src_dim = 
         pro.get_input<unsigned>(i++);
@@ -102,12 +102,12 @@ bool dts_pca_process( bprb_func_process& pro )
                     }//end case 2
                 default:
                     {
-                        vcl_cerr << "----ERROR---- "
+                        std::cerr << "----ERROR---- "
                          << "dts_pca_process: Unknown Destination dimension, "
                          << " please augment.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                         << vcl_flush;
+                         << std::flush;
                         return false;
                     }//end default
                 }//end switch(dest_dim)
@@ -129,31 +129,31 @@ bool dts_pca_process( bprb_func_process& pro )
             }
         default:
             {
-                vcl_cerr << "----ERROR---- "
+                std::cerr << "----ERROR---- "
                          << "dts_pca_process: Unknown Source dimension, "
                          << " please augment.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                         << vcl_flush;
+                         << std::flush;
                 return false;
             }
         }//end swtich
     }
     else if( time_type == "unsigned" && element_type == "float" )
     {
-        vcl_cerr << "----ERROR---- NOT YET IMPLEMENTED!"
+        std::cerr << "----ERROR---- NOT YET IMPLEMENTED!"
                  << "\tFLIE: " << __FILE__ << '\n'
                  << "\tLINE: " << __LINE__ << '\n'
-                 << vcl_flush;
+                 << std::flush;
         return false;
     }
     else
     {
-        vcl_cerr << "----ERROR ---- "
+        std::cerr << "----ERROR ---- "
                  << "dts_pca_process: Unknown time/element type.\n"
                  << "\tFILE: " << __FILE__ << '\n'
                  << "\tLINE: " << __LINE__ << '\n'
-                 << vcl_flush;
+                 << std::flush;
         return false;
     }
 

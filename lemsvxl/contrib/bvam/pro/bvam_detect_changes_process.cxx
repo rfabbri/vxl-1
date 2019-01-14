@@ -28,7 +28,7 @@ bvam_detect_changes_process::bvam_detect_changes_process()
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "bvam_voxel_world_sptr";
-  input_types_[3] = "vcl_string";
+  input_types_[3] = std::string";
   input_types_[4] = "unsigned";
 
 
@@ -62,9 +62,9 @@ bool bvam_detect_changes_process::execute()
     static_cast<brdb_value_t<bvam_voxel_world_sptr>* >(input_data_[2].ptr());
   bvam_voxel_world_sptr world = input2->value();
 
-  brdb_value_t<vcl_string>* input3 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
-  vcl_string voxel_type = input3->value();
+  brdb_value_t<std::string>* input3 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());

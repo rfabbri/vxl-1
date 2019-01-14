@@ -13,9 +13,9 @@
 //  J.L. Mundy added min,max, percentile methods
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <cassert>
+#include <iostream>
 #include <dbsta/bsta_histogram_base.h>
 template <class T> class bsta_histogram : public bsta_histogram_base
 {
@@ -32,7 +32,7 @@ template <class T> class bsta_histogram : public bsta_histogram_base
                  const T min_prob = 0.0);
 
   //:construct from other histogram data
-  bsta_histogram(const T min, const T max, vcl_vector<T> const& data,
+  bsta_histogram(const T min, const T max, std::vector<T> const& data,
                  const T min_prob = 0.0);
 
   ~bsta_histogram() {}
@@ -121,31 +121,31 @@ template <class T> class bsta_histogram : public bsta_histogram_base
   { if (bin<nbins_) counts_[bin]=count; }
 
   //: array of bin values
-  vcl_vector<T> value_array() const {
-    vcl_vector<T> v(nbins_);
+  std::vector<T> value_array() const {
+    std::vector<T> v(nbins_);
     for (unsigned b = 0; b<nbins_; ++b) v[b]=avg_bin_value(b); return v; }
 
   //: array of bin counts
-  vcl_vector<T> count_array() const {
-    vcl_vector<T> v(nbins_);
+  std::vector<T> count_array() const {
+    std::vector<T> v(nbins_);
     for (unsigned b = 0; b<nbins_; ++b) v[b]=counts(b); return v; }
 
  //: Smooth the histogram with a Parzen window of sigma
   void parzen(const T sigma);
 
   //: Write to stream
-  vcl_ostream& write(vcl_ostream&) const;
+  std::ostream& write(std::ostream&) const;
 
   //: Read from stream
-  vcl_istream& read(vcl_istream&);
+  std::istream& read(std::istream&);
 
-  void print(vcl_ostream& os = vcl_cout) const;
+  void print(std::ostream& os = std::cout) const;
 
   //: print as a matlab plot command
-  void print_to_m(vcl_ostream& os = vcl_cout) const;
+  void print_to_m(std::ostream& os = std::cout) const;
 
   //: print values and bin probability in full (even if counts ==0)
-  void print_vals_prob(vcl_ostream& os = vcl_cout) const;
+  void print_vals_prob(std::ostream& os = std::cout) const;
 
  private:
   void compute_area() const; // mutable const
@@ -157,18 +157,18 @@ template <class T> class bsta_histogram : public bsta_histogram_base
   T min_prob_;
   T min_;
   T max_;
-  vcl_vector<T> counts_;
+  std::vector<T> counts_;
 };
 
 //: Write histogram to stream
 // \relatesalso bsta_histogram
 template <class T>
-vcl_ostream&  operator<<(vcl_ostream& s, bsta_histogram<T> const& h);
+std::ostream&  operator<<(std::ostream& s, bsta_histogram<T> const& h);
 
 //: Read histogram from stream
 // \relatesalso bsta_histogram
 template <class T>
-vcl_istream&  operator>>(vcl_istream& is,  bsta_histogram<T>& h);
+std::istream&  operator>>(std::istream& is,  bsta_histogram<T>& h);
 
 
 #define BSTA_HISTOGRAM_INSTANTIATE(T) extern "Please #include <dbsta/bsta_histogram.hxx>"

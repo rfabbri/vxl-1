@@ -4,7 +4,7 @@
 #include "ishock.h"
 #include "biarc_shock.h"
 #include "boundary.h"
-//#include <vcl_cmath.h>
+//#include <cmath>
 
 
 //#########################################################################
@@ -131,7 +131,7 @@ void IShock::GD_SymTrans(long step)
 bool IShock::GD_SymTrans_step(double threshold)
 {
   if (GDList.size()==0) {
-    vcl_cout << "Gradient Descent Symmetry Transform Finished."<<vcl_endl;
+    std::cout << "Gradient Descent Symmetry Transform Finished."<<std::endl;
     return false;
   }
 
@@ -141,7 +141,7 @@ bool IShock::GD_SymTrans_step(double threshold)
   SILink* sElm = (SILink*) GDList.begin()->second;
 
   if (sElm->dPnCost() >= threshold){
-    vcl_cout << "Symmetry Transform Threshold Reached."<<vcl_endl;
+    std::cout << "Symmetry Transform Threshold Reached."<<std::endl;
     return false;
   }
   
@@ -151,14 +151,14 @@ bool IShock::GD_SymTrans_step(double threshold)
       sElm->rBElement()->id() <=8){
       //this shock comes from the boundary() limit
       //so it's time to stop symmetry transform
-      vcl_cout <<"Symmetry Transform cannot proceed further!"<<vcl_endl;
+      std::cout <<"Symmetry Transform cannot proceed further!"<<std::endl;
       return false;
     }
   }
   
   //keep count of the number of steps
   GD_step_count++;
-  vcl_cout <<"Step: "<< GD_step_count <<" ID: "<<sElm->id()<<" vcl_cost: "<<sElm->dPnCost() <<vcl_endl;
+  std::cout <<"Step: "<< GD_step_count <<" ID: "<<sElm->id()<<" vcl_cost: "<<sElm->dPnCost() <<std::endl;
 
   //we need to pick the right transform to use here
   //My current observation is that the shocks that originate
@@ -167,11 +167,11 @@ bool IShock::GD_SymTrans_step(double threshold)
 
   if (sElm->pSNode()->type() == SIElement::SOURCE){
     remove_gap(sElm);
-    //vcl_cout << "Gap Transform"<<vcl_endl;
+    //std::cout << "Gap Transform"<<std::endl;
   }
   else {
     splice(sElm, 0); //testing option 2
-    //vcl_cout << "Splice Transform"<<vcl_endl;
+    //std::cout << "Splice Transform"<<std::endl;
   }
 
   //patch the shock structure after the symmetry transorm
@@ -276,8 +276,8 @@ double IShock::computeGapTransSalience (SIElement* shock)
         SIPointPoint* spp = (SIPointPoint*)shock;
 
         //favor the tangent information and subtract the operator length
-        double sL = 1*vcl_fabs(_dot(spt->tangent(), spp->u()));
-        double eL = 1*vcl_fabs(_dot(ept->tangent(), spp->u()));
+        double sL = 1*std::fabs(_dot(spt->tangent(), spp->u()));
+        double eL = 1*std::fabs(_dot(ept->tangent(), spp->u()));
         
         //only for integer points
         compL = newL - (sL+eL);
@@ -319,7 +319,7 @@ double IShock::computeGapTransSalience (SIElement* shock)
       return ISHOCK_DIST_HUGE;
     }
     //else if (compL>newL){
-      //vcl_cout << "ShockID: "<<shock->id() <<", Biarc length is greater by: " <<compL-newL <<vcl_endl;
+      //std::cout << "ShockID: "<<shock->id() <<", Biarc length is greater by: " <<compL-newL <<std::endl;
     //else {
     //  CompletionType = SIElement::PP_ONLY;
     //  shock->setComp_type(CompletionType);
@@ -367,8 +367,8 @@ void IShock::computeSymTransSalience (SIElement* shock)
         bool test = false;
         if (  ((BPoint*)spp->lBElement())->hasATangent() &&
           ((BPoint*)spp->rBElement())->hasATangent() ){
-          double dot1 = vcl_fabs(_angle_vector_dot( ((BPoint*)spp->lBElement())->tangent(), spp->u()));
-          double dot2 = vcl_fabs(_angle_vector_dot( ((BPoint*)spp->rBElement())->tangent(), spp->u()));
+          double dot1 = std::fabs(_angle_vector_dot( ((BPoint*)spp->lBElement())->tangent(), spp->u()));
+          double dot2 = std::fabs(_angle_vector_dot( ((BPoint*)spp->rBElement())->tangent(), spp->u()));
 
           test = ((dot1 < 0.707) && (dot2 < 0.707) && 
                  (spp->H()>1)); //some random threshold 
@@ -727,7 +727,7 @@ int IShock::splice(SIElement* current, int option)
 
         //the center and radius if the arc has to be recalculated
         //double thetaE = CCW (spl->ul(),spl->ur());
-        //double dR = DELTA/vcl_tan(thetaE/2);
+        //double dR = DELTA/std::tan(thetaE/2);
         //double dR = 1;
 
         //R = spl->endTime() + dR; //radius of the arc to be added
@@ -745,13 +745,13 @@ int IShock::splice(SIElement* current, int option)
         if (spl->nu()==1){
           dir = rBElm->TangentAgainstCurveAtPoint(rend);
           theta = CCW(_vPointPoint( rend, lstart), dir);
-          R = d/(2*vcl_sin(theta));
+          R = d/(2*std::sin(theta));
           center = _vectorPoint(rend, dir-M_PI/2, R);
         }
         else {
           dir = lBElm->TangentAlongCurveAtPoint(lstart);
           theta = CCW(_vPointPoint( lstart, rend), dir);                  
-          R = d/(2*vcl_sin(theta));
+          R = d/(2*std::sin(theta));
           center = _vectorPoint(lstart, dir-M_PI/2, R);
         }
 
@@ -888,7 +888,7 @@ int IShock::splice(SIElement* current, int option)
 
         //the center and radius if the arc has to be recalculated
         double thetaE = CCW (sll->ul(),sll->ur());
-        double dR = DELTA/vcl_tan(thetaE/2);
+        double dR = DELTA/std::tan(thetaE/2);
         //double dR = 1;
 
         R = sll->endTime() + dR; //radius of the arc to be added
@@ -1049,7 +1049,7 @@ int IShock::splice(SIElement* current, int option)
 
         //the center and radius if the arc has to be recalculated
         //double thetaE = CCW (spa->ul(),spa->ur());
-        //double dR = DELTA/vcl_tan(thetaE/2);
+        //double dR = DELTA/std::tan(thetaE/2);
         //double dR = 1;
 
         //R = spa->endTime() + dR; //radius of the arc to be added
@@ -1067,13 +1067,13 @@ int IShock::splice(SIElement* current, int option)
         if (spa->nu()==1){
           dir = rBElm->TangentAgainstCurveAtPoint(rend);
           theta = CCW(_vPointPoint( rend, lstart), dir);
-          R = d/(2*vcl_sin(theta));
+          R = d/(2*std::sin(theta));
           center = _vectorPoint(rend, dir-M_PI/2, R);
         }
         else {
           dir = lBElm->TangentAlongCurveAtPoint(lstart);
           theta = CCW(_vPointPoint( lstart, rend), dir);                  
-          R = d/(2*vcl_sin(theta));
+          R = d/(2*std::sin(theta));
           center = _vectorPoint(lstart, dir-M_PI/2, R);
         }
 
@@ -1237,7 +1237,7 @@ int IShock::splice(SIElement* current, int option)
 
         //the center and radius if the arc has to be recalculated
         //double thetaE = CCW (sla->ul(),sla->ur());
-        //double dR = DELTA/vcl_tan(thetaE/2);
+        //double dR = DELTA/std::tan(thetaE/2);
         //double dR = 1;
 
         //R = sla->endTime() + dR; //radius of the arc to be added
@@ -1416,7 +1416,7 @@ int IShock::splice(SIElement* current, int option)
 
         //the center and radius if the arc has to be recalculated
         //double thetaE = CCW (saa->ul(),saa->ur());
-        //double dR = DELTA/vcl_tan(thetaE/2);
+        //double dR = DELTA/std::tan(thetaE/2);
         //double dR = 1;
 
         //R = saa->endTime() + dR; //radius of the arc to be added
@@ -1582,12 +1582,12 @@ double IShock::PointPointTangentCompletion (BPoint* startpt, BPoint* endpt, bool
 
   d = _distPointPoint(ept->pt(), spt->pt());
   theta = CCW(_vPointPoint( spt->pt(), ept->pt()), dir);
-  R = d/(2*vcl_sin(theta));
+  R = d/(2*std::sin(theta));
 
   cen = _vectorPoint(spt->pt(), dir-M_PI/2, R);
 
   if (complete){
-    if (vcl_fabs(R)>MAX_RADIUS){
+    if (std::fabs(R)>MAX_RADIUS){
       boundary()->addGUILineBetween(spt, ept);
     }
     else {
@@ -1599,7 +1599,7 @@ double IShock::PointPointTangentCompletion (BPoint* startpt, BPoint* endpt, bool
     }
   }
   else {
-    if (vcl_fabs(R)>MAX_RADIUS){
+    if (std::fabs(R)>MAX_RADIUS){
       return d;
     }
     else {
@@ -1609,7 +1609,7 @@ double IShock::PointPointTangentCompletion (BPoint* startpt, BPoint* endpt, bool
       }
       else {
         double theta = CCW(_vPointPoint(cen, spt->pt()), _vPointPoint(cen, ept->pt()));
-        return vcl_fabs(theta*R);
+        return std::fabs(theta*R);
       }
     }
   }
@@ -2069,7 +2069,7 @@ int IShock::remove_gap(SIElement* current)
 
         double E;
         E = lambda*lambda*L*L*L + K_avg*K_avg*L*L*L + L; 
-        //E = (lambda*lambda*L*L*L/3 + vcl_fabs(K_0*K_L*L)); 
+        //E = (lambda*lambda*L*L*L/3 + std::fabs(K_0*K_L*L)); 
         //E = lambda*lambda*L;
 
         //shock->dPnScore = 1 - exp(-E);
@@ -2231,8 +2231,8 @@ int IShock::A4_A2Transform(SISource* src, SISink* vcl_sink, SILink* first_link, 
     center1 = new_biArc.bi_arc_params.center1;
     center2 = new_biArc.bi_arc_params.center2;
 
-    R1 = vcl_fabs(new_biArc.bi_arc_params.radius1);
-    R2 = vcl_fabs(new_biArc.bi_arc_params.radius2);
+    R1 = std::fabs(new_biArc.bi_arc_params.radius1);
+    R2 = std::fabs(new_biArc.bi_arc_params.radius2);
 
     dir1 = new_biArc.bi_arc_params.dir1;
     dir2 = new_biArc.bi_arc_params.dir2;
@@ -2292,8 +2292,8 @@ int IShock::A4_A2Transform(SISource* src, SISink* vcl_sink, SILink* first_link, 
     center1 = new_biArc.bi_arc_params.center1;
     center2 = new_biArc.bi_arc_params.center2;
 
-    R1 = vcl_fabs(new_biArc.bi_arc_params.radius1);
-    R2 = vcl_fabs(new_biArc.bi_arc_params.radius2);
+    R1 = std::fabs(new_biArc.bi_arc_params.radius1);
+    R2 = std::fabs(new_biArc.bi_arc_params.radius2);
 
     dir1 = new_biArc.bi_arc_params.dir1;
     dir2 = new_biArc.bi_arc_params.dir2;

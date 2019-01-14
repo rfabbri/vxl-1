@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_tracking_face_2d.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
@@ -17,15 +17,15 @@ static void test_feature_data(int argc, char* argv[])
   //Test construction and pointer casting
   dbinfo_feature_data<vbl_array_1d<float> >* fp=
     new dbinfo_feature_data<vbl_array_1d<float> >(VIL_PIXEL_FORMAT_UNKNOWN, 1, DBINFO_INTENSITY_FEATURE, 3);
-  vcl_cout << "size of new feature " << fp->size() 
+  std::cout << "size of new feature " << fp->size() 
            << "  address " << fp << '\n';
   dbinfo_feature_data_base_sptr fbp = fp;
   dbinfo_feature_data<vbl_array_1d<float> >* nfp = dbinfo_feature_data<vbl_array_1d<float> >::ptr(fbp);
-  vcl_cout << "size of re-casted feature data " << nfp->size()  
+  std::cout << "size of re-casted feature data " << nfp->size()  
            << " address " << nfp << '\n';
   TEST("Cast preserves pointer equality",fp, nfp);
 
-  vcl_cout << "Stream operator dbinfo_feature_data<vbl_array_1d<float> >: " 
+  std::cout << "Stream operator dbinfo_feature_data<vbl_array_1d<float> >: " 
            << *fp << '\n';
 
   //Test frame/index conversion and array_1d data retrieval
@@ -34,7 +34,7 @@ static void test_feature_data(int argc, char* argv[])
   nfp->set_sample(15, s15, 0.2f);
   nfp->set_sample(30, s30, 0.4f);
   for(unsigned index = 0; index<3; ++index)
-    vcl_cout << "frame[" << index << "]= " << nfp->frame(index) 
+    std::cout << "frame[" << index << "]= " << nfp->frame(index) 
              << "  index = " << nfp->index(nfp->frame(index)) 
              << " w = " << nfp->w(nfp->frame(index)) << '\n';
   bool good = nfp->index(nfp->frame(2))==2&& (nfp->data(15))[0]==50.5;
@@ -51,11 +51,11 @@ static void test_feature_data(int argc, char* argv[])
       fap->set_sample(frame, a);
     }
   for(unsigned frame = 10; frame<40; frame+=10)
-    vcl_cout << fap->data(frame) << '\n';
+    std::cout << fap->data(frame) << '\n';
 
   TEST("vbl_array data storage and retrieval", (fap->data(30))[1][4] , 39);
 
-  vcl_cout << "Stream operator dbinfo_feature_data<vbl_array_2d<float> >: " 
+  std::cout << "Stream operator dbinfo_feature_data<vbl_array_2d<float> >: " 
            << *fap << '\n';
 
   //====== Test binary I/0=========
@@ -73,15 +73,15 @@ static void test_feature_data(int argc, char* argv[])
   dbinfo_feature_data<vbl_array_2d<float> > fdin;
   vsl_b_read(bp_in, fdin);
   bp_in.close();
-  vcl_cout << "recovered feature data " << fdin << '\n';
+  std::cout << "recovered feature data " << fdin << '\n';
 
   vpl_unlink ("test_feature_data_io.tmp");
-  vcl_cout << "Recovered Map \n";
+  std::cout << "Recovered Map \n";
   for(unsigned frame = 10; frame<40; frame+=10)
-    vcl_cout << fdin.data(frame) << '\n';
+    std::cout << fdin.data(frame) << '\n';
 
-  vcl_cout << "fdin.data(30))[1][4](orig) = " << (fap->data(30))[1][4] << '\n';
-  vcl_cout << "fdin.data(30))[1][4](rec) = " <<  (fdin.data(30))[1][4] << '\n';
+  std::cout << "fdin.data(30))[1][4](orig) = " << (fap->data(30))[1][4] << '\n';
+  std::cout << "fdin.data(30))[1][4](rec) = " <<  (fdin.data(30))[1][4] << '\n';
   TEST("recovered feature data valid ", (fdin.data(30))[1][4] , 39);
 
   //Test writing the generic feature data pointer
@@ -95,7 +95,7 @@ static void test_feature_data(int argc, char* argv[])
   vsl_b_read(bp_in2, fdb_in);
   bp_in2.close();
   if(fdb_in)
-    vcl_cout << "recovered feature type " << fdb_in->is_a()<< ' ' << fdb_in->format() << '\n';
+    std::cout << "recovered feature type " << fdb_in->is_a()<< ' ' << fdb_in->format() << '\n';
   vpl_unlink ("test_feature_data_io.tmp");
   TEST("recover from generic pointer ",
        fdb_in->format() , DBINFO_GRADIENT_FEATURE);

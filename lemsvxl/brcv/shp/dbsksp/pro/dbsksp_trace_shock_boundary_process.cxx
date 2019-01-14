@@ -21,7 +21,7 @@ dbsksp_trace_shock_boundary_process::
 dbsksp_trace_shock_boundary_process()
 {
   // two types of shock graph - intrinsic and extrinsic
-  vcl_vector<vcl_string > shock_graph_types;
+  std::vector<std::string > shock_graph_types;
   shock_graph_types.push_back("dbsksp_shock_graph");
   shock_graph_types.push_back("dbsksp_xshock_graph");
 
@@ -30,7 +30,7 @@ dbsksp_trace_shock_boundary_process()
     !parameters()->add("Approximate sampling resolution (in pixels) (only for xshock):", "-approx_ds", double(5.0))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 
 }
@@ -51,27 +51,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_trace_shock_boundary_process::
+std::string dbsksp_trace_shock_boundary_process::
 name()
 { 
   return "Trace shock boundary"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_trace_shock_boundary_process::
+std::vector< std::string > dbsksp_trace_shock_boundary_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsksp_shock" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_trace_shock_boundary_process::
+std::vector< std::string > dbsksp_trace_shock_boundary_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   
   return to_return;
@@ -97,8 +97,8 @@ bool dbsksp_trace_shock_boundary_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsksp_trace_shock_boundary_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsksp_trace_shock_boundary_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -124,7 +124,7 @@ execute()
   if (shock_graph_type == 0)
   {
     dbsksp_shock_graph_sptr shock_graph = shock_storage->shock_graph();
-    vcl_vector<vsol_spatial_object_2d_sptr > boundary(shock_graph->trace_boundary());
+    std::vector<vsol_spatial_object_2d_sptr > boundary(shock_graph->trace_boundary());
     vsol_storage->add_objects(boundary, "boundary");
   }
   else if (shock_graph_type == 1)
@@ -133,11 +133,11 @@ execute()
     
     
     // trace the boundary
-    vcl_vector<vgl_point_2d<double > > bnd_pts;
+    std::vector<vgl_point_2d<double > > bnd_pts;
     dbsksp_trace_xgraph_boundary_as_polygon(xgraph, bnd_pts, approx_ds);
 
     // convert to vsol polygon
-    vcl_vector<vsol_point_2d_sptr > vertices(bnd_pts.size(), 0);
+    std::vector<vsol_point_2d_sptr > vertices(bnd_pts.size(), 0);
     for (unsigned i =0; i < bnd_pts.size(); ++i)
     {
       vertices[i] = new vsol_point_2d(bnd_pts[i]);

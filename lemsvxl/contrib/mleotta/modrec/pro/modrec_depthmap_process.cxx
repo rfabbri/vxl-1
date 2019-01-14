@@ -10,7 +10,7 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vil/vil_math.h>
-#include <vcl_limits.h>
+#include <limits>
 
 
 #include <vpgl/vpgl_proj_camera.h>
@@ -34,7 +34,7 @@ modrec_depthmap_process::modrec_depthmap_process()
       !parameters()->add( "nj" ,        "-nj" ,     int(768)  ) ||
       !parameters()->add( "mean bg" ,   "-mean_bg", false  ) ||
       !parameters()->add( "invert" ,    "-invert" , false  ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -54,7 +54,7 @@ modrec_depthmap_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 modrec_depthmap_process::name()
 {
   return "Model Depth Map";
@@ -78,18 +78,18 @@ modrec_depthmap_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > modrec_depthmap_process::get_input_type()
+std::vector< std::string > modrec_depthmap_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > modrec_depthmap_process::get_output_type()
+std::vector< std::string > modrec_depthmap_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
 
   return to_return;
@@ -97,9 +97,9 @@ vcl_vector< vcl_string > modrec_depthmap_process::get_output_type()
 
 
 //: Returns a vector of strings with suggested names for output classes
-vcl_vector< vcl_string > modrec_depthmap_process::suggest_output_names()
+std::vector< std::string > modrec_depthmap_process::suggest_output_names()
 {
-  vcl_vector< vcl_string > names;
+  std::vector< std::string > names;
   names.push_back("depth map");
 
   return names;
@@ -133,19 +133,19 @@ modrec_depthmap_process::execute()
     return false;
 
   vnl_double_3x4 camera;
-  vcl_fstream fh(camera_file.path.c_str());
+  std::fstream fh(camera_file.path.c_str());
   fh >> camera;
   fh.close();
 
   imesh_project_depth(mesh, vpgl_proj_camera<double>(camera), depths);
 
   if(mean_bg){
-    double min_val = vcl_numeric_limits<double>::infinity();
+    double min_val = std::numeric_limits<double>::infinity();
     double max_val = -min_val;
     for (unsigned i=0; i<ni; ++i){
       for (unsigned j=0; j<nj; ++j){
         const double& pixel = depths(i,j);
-        if(pixel != vcl_numeric_limits<double>::infinity()){
+        if(pixel != std::numeric_limits<double>::infinity()){
           if(pixel > max_val) max_val = pixel;
           if(pixel < min_val) min_val = pixel;
         }
@@ -154,7 +154,7 @@ modrec_depthmap_process::execute()
     double mean = (min_val + max_val)/2.0;
     for (unsigned i=0; i<ni; ++i)
       for (unsigned j=0; j<nj; ++j){
-        if(depths(i,j) == vcl_numeric_limits<double>::infinity())
+        if(depths(i,j) == std::numeric_limits<double>::infinity())
           depths(i,j) = mean;
       }
   }

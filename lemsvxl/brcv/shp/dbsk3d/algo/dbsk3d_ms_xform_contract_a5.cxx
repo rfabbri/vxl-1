@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Oct 4, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
@@ -49,7 +49,7 @@ bool MC_valid_for_A5_contract_xform (dbsk3d_ms_curve* MC)
 //: Find a valid trimming path for the A5-contract-xform.
 //  Return false if fail to find a trimming path for the xform.
 bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
-                          vcl_set<dbmsh3d_face*>& FF_to_trim)
+                          std::set<dbmsh3d_face*>& FF_to_trim)
 {
   //0) Setup the local config: SCS - Ns:MC:Ne - SCE.  
   dbsk3d_ms_node* Ns = MC->s_MN();
@@ -63,7 +63,7 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   //1) Find the middle fine-scale fs_vertex M and two valid trimming path 
   //MUvec[] and MVvec[] by a zig-zag search and via Dijkstra's shortest path on elms of MS.
   dbsk3d_fs_vertex *U = NULL, *V = NULL;  
-  vcl_vector<dbmsh3d_edge*> UM_Evec, VM_Evec;
+  std::vector<dbmsh3d_edge*> UM_Evec, VM_Evec;
   //Create a temporary mesh MSM (no need to destruct elements when deleting).
   dbmsh3d_mesh* MSM = new dbmsh3d_mesh (MS->facemap(), false);
 
@@ -84,9 +84,9 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   }
   else {
     //1-4) Handle UMvec[] and VMvec[] for the special cases.
-    vul_printf (vcl_cout, "Valid M %d, U %d, V %d found, ", M->id(), U->id(), V->id());
+    vul_printf (std::cout, "Valid M %d, U %d, V %d found, ", M->id(), U->id(), V->id());
     if (s_trim != '0') {
-      vul_printf (vcl_cout, "s_trim: %c, ",  s_trim);      
+      vul_printf (std::cout, "s_trim: %c, ",  s_trim);      
       if (s_trim == 'U') {
         //For s_trim == U: clean up the VM_Evec. set V = E
         VM_Evec.clear();
@@ -104,7 +104,7 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
 
   //1-5) If MC has shared_E, try to remove it from Cs and Ce.
   if (MC->have_shared_Es()) {
-    vul_printf (vcl_cout, "MC has shared_E. Skip xform! ", M->id(), U->id(), V->id());
+    vul_printf (std::cout, "MC has shared_E. Skip xform! ", M->id(), U->id(), V->id());
     //Remove shared_E from MC and Cs.
     //Remove shared_E from MC and Ce.
     ///assert (0); possible
@@ -116,12 +116,12 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   dbmsh3d_node* Nss = (dbmsh3d_node*) Cs->other_V (Ns);
   dbmsh3d_node* Nee = (dbmsh3d_node*) Ce->other_V (Ne);
   if (Nss->V() == U) {
-    vul_printf (vcl_cout, "Nss %d's V = U %d. Skip xform! ", Nss->id(), U->id());
+    vul_printf (std::cout, "Nss %d's V = U %d. Skip xform! ", Nss->id(), U->id());
     delete MSM;
     return false;
   }
   if (Nee->V() == V) {
-    vul_printf (vcl_cout, "Nee %d's V = V %d. Skip xform! ", Nee->id(), V->id());
+    vul_printf (std::cout, "Nee %d's V = V %d. Skip xform! ", Nee->id(), V->id());
     delete MSM;
     return false;
   }
@@ -131,22 +131,22 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   //2A-1) Label faces to be pruned in the U side of swallow-tail wing.
   //     The starting (seed) fs_faces are on the wing bordering at Cs.
   //     Considering degenerate cases, need to add all possible seeds bordering Cs.
-  vcl_vector<dbsk3d_fs_face*> seedFF_vec;
-  vcl_vector<dbmsh3d_edge*> SU_Evec;
+  std::vector<dbsk3d_fs_face*> seedFF_vec;
+  std::vector<dbmsh3d_edge*> SU_Evec;
   get_rib_trim_Evec (Ns, Cs, U, SU_Evec);
   get_rib_trim_seedFF (SU_Evec, UM_Evec, seedFF_vec);
   
   //The bnd_E_set is the bordering edges where propagation should stop.
-  vcl_set<dbmsh3d_edge*> bnd_E_set;
+  std::set<dbmsh3d_edge*> bnd_E_set;
   bnd_E_set.insert (UM_Evec.begin(), UM_Evec.end());
 
   //Put all MS's incident MC's shared_Es into the bnd_E_set.
-  vcl_set<dbmsh3d_edge*> MS_shared_Es;
+  std::set<dbmsh3d_edge*> MS_shared_Es;
   MS->get_incident_C_shared_Es (MS_shared_Es);
   bnd_E_set.insert (MS_shared_Es.begin(), MS_shared_Es.end());
 
   MSM->reset_traverse_f(); //Reset MSM face traversal (may not need this).
-  vcl_set<dbmsh3d_face*> FF_to_trim_U;
+  std::set<dbmsh3d_face*> FF_to_trim_U;
 
   //2A-2) Collect all the swallow-tail wing of fs_faces.
   //      Stop propagation when the set of fs_edges in UM_Evec are reaches.
@@ -160,14 +160,14 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   //make sure no face in FF_to_trim_U incident to the immediate FE of E on MC.
   dbmsh3d_edge* eFE = MC->E_vec_last();
   if (M != Ne->FV() && eFE->only_incident_to_Fset_in_Fmap (FF_to_trim_U, MS->facemap())) {
-    vul_printf (vcl_cout, "U side no valid trim path: eFE %d only incident to FF_to_trim! ", eFE->id());
+    vul_printf (std::cout, "U side no valid trim path: eFE %d only incident to FF_to_trim! ", eFE->id());
     U_side_trim_FF_valid = false;
   }
 
   //check if any FF_to_trim_U incident to A13 other than MC.
   dbsk3d_fs_edge* otherFE = FF_to_trim_incident_to_otherMC (FF_to_trim_U, MC);
   if (otherFE) { 
-    vul_printf (vcl_cout, "U side no valid trim path: FF_to_trim incident to other A13 FE %d! ", otherFE->id());
+    vul_printf (std::cout, "U side no valid trim path: FF_to_trim incident to other A13 FE %d! ", otherFE->id());
     U_side_trim_FF_valid = false;
   }
 
@@ -181,7 +181,7 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   //      The starting (seed) fs_faces are on the wing bordering at Ce.
   //      Considering degenerate cases, need to add all possible seeds bordering Cs.  
   seedFF_vec.clear();
-  vcl_vector<dbmsh3d_edge*> EV_Evec;
+  std::vector<dbmsh3d_edge*> EV_Evec;
   get_rib_trim_Evec (Ne, Ce, V, EV_Evec);
   get_rib_trim_seedFF (EV_Evec, VM_Evec, seedFF_vec);
 
@@ -193,7 +193,7 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   bnd_E_set.insert (MS_shared_Es.begin(), MS_shared_Es.end());
 
   MSM->reset_traverse_f(); //Reset MSM face traversal.
-  vcl_set<dbmsh3d_face*> FF_to_trim_V;
+  std::set<dbmsh3d_face*> FF_to_trim_V;
 
   //2B-2) Collect all the swallow-tail wing of fs_faces.
   //      Stop propagation when the set of fs_edges in MU_Le are reaches.
@@ -208,14 +208,14 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
   //make sure no face in FF_to_trim_V incident to the immediate FE of S on MC.
   dbmsh3d_edge* sFE = MC->E_vec(0);
   if (M != Ns->FV() && sFE->only_incident_to_Fset_in_Fmap (FF_to_trim_V, MS->facemap())) {
-    vul_printf (vcl_cout, "V side no valid trim path: sFE %d only incident to FF_to_trim! ", sFE->id());
+    vul_printf (std::cout, "V side no valid trim path: sFE %d only incident to FF_to_trim! ", sFE->id());
     U_side_trim_FF_valid = false;
   }
   
   //check if any FF_to_trim_V incident to A13 other than MC.
   otherFE = FF_to_trim_incident_to_otherMC (FF_to_trim_V, MC);
   if (otherFE) { 
-    vul_printf (vcl_cout, "V side no valid trim path: FF_to_trim incident to other A13 FE %d! ", otherFE->id());
+    vul_printf (std::cout, "V side no valid trim path: FF_to_trim incident to other A13 FE %d! ", otherFE->id());
     V_side_trim_FF_valid = false;
   }
 
@@ -232,7 +232,7 @@ bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex*& M,
         continue;
 
       //Check if all fine-scale edges of this icurve-loop incident to FF_to_trim[]
-      vcl_vector<dbmsh3d_edge*> Evec;
+      std::vector<dbmsh3d_edge*> Evec;
       _get_chain_C_Evec (headHE, Evec);
 
       //If all edges element in Eset are incident to any of FF_to_trim[], return false.
@@ -261,11 +261,11 @@ bool A5_find_trim_M_path (const dbsk3d_ms_curve* MC,
                           const dbsk3d_ms_curve* Cs, const dbsk3d_ms_curve* Ce, 
                           dbmsh3d_mesh* MSM, const bool b_extensive_search,
                           dbsk3d_fs_vertex*& M, dbsk3d_fs_vertex*& U, dbsk3d_fs_vertex*& V,
-                          vcl_vector<dbmsh3d_edge*>& UM_Evec, vcl_vector<dbmsh3d_edge*>& VM_Evec,
+                          std::vector<dbmsh3d_edge*>& UM_Evec, std::vector<dbmsh3d_edge*>& VM_Evec,
                           char& s_trim)
 {
   s_trim = '0';
-  vcl_vector<dbmsh3d_vertex*> MC_Vvec;
+  std::vector<dbmsh3d_vertex*> MC_Vvec;
   MC->get_V_vec (MC_Vvec);
   int pos = int (MC_Vvec.size() / 2);
 
@@ -313,7 +313,7 @@ bool A5_find_trim_M_path (const dbsk3d_ms_curve* MC,
   }
 
   //No valid trimming vertex M and paths M-U and M-V found.
-  vul_printf (vcl_cout, "M (pos %d, M_range %d to %d): No valid trim_M_path found!\n", 
+  vul_printf (std::cout, "M (pos %d, M_range %d to %d): No valid trim_M_path found!\n", 
               pos, -M_range, M_range);
   return false; 
 }
@@ -321,7 +321,7 @@ bool A5_find_trim_M_path (const dbsk3d_ms_curve* MC,
 //: Find a valid trimming path by avoiding pathes causing non-local changes of ms_hypg topo. 
 bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const dbsk3d_ms_curve* ribMC, 
                        dbmsh3d_mesh* MSM, const dbsk3d_fs_vertex* M, const bool b_extensive_search,
-                       dbsk3d_fs_vertex*& U, vcl_vector<dbmsh3d_edge*>& UM_Evec)
+                       dbsk3d_fs_vertex*& U, std::vector<dbmsh3d_edge*>& UM_Evec)
 {
   assert (MC->data_type() == C_DATA_TYPE_EDGE); 
   const dbsk3d_ms_node* MN = MC_s_side ? MC->s_MN() : MC->e_MN(); 
@@ -336,7 +336,7 @@ bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const db
 
   //Estimate the trim_vertex U position.
   int pos = int (MC->E_vec().size() * U_start_pos_ratio);  
-  vcl_vector<dbmsh3d_vertex*> ribMC_Vvec;
+  std::vector<dbmsh3d_vertex*> ribMC_Vvec;
   ribMC->get_V_vec (ribMC_Vvec);
   int sz = (int) ribMC_Vvec.size();
 
@@ -348,14 +348,14 @@ bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const db
     pos = sz-1;
     
   //Only allow the trim path on MS's interior (avoid incident MC's and MN's elements).  
-  vcl_set<dbmsh3d_edge*> MS_incident_FE_set;
-  vcl_set<dbmsh3d_vertex*> MS_incident_FV_set;
+  std::set<dbmsh3d_edge*> MS_incident_FE_set;
+  std::set<dbmsh3d_vertex*> MS_incident_FV_set;
   MS->get_incident_FEs (MS_incident_FE_set);
   MS->get_incident_FVs (MS_incident_FV_set);
 
   //Search -/+ i candidate FV's near the pos on ribMC.
-  int U_range = vcl_max (int(MC->E_vec().size() * U_find_max_ratio), U_range_min);
-  U_range = vcl_min (sz-1, U_range);
+  int U_range = std::max (int(MC->E_vec().size() * U_find_max_ratio), U_range_min);
+  U_range = std::min (sz-1, U_range);
   for (int r=0; r<U_range; r++) {
     int prev = -1;
     for (int sign=-1; sign<=1; sign+=2) {      
@@ -377,9 +377,9 @@ bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const db
 
       //Candidate trimming vertex U determined.
       //Next: find a valid shortest trimming path from M to U.                 
-      vcl_set<dbmsh3d_edge*> avoid_Eset;
+      std::set<dbmsh3d_edge*> avoid_Eset;
       avoid_Eset.insert (MS_incident_FE_set.begin(), MS_incident_FE_set.end());
-      vcl_set<dbmsh3d_vertex*> avoid_Vset;
+      std::set<dbmsh3d_vertex*> avoid_Vset;
       avoid_Vset.insert (MS_incident_FV_set.begin(), MS_incident_FV_set.end());
 
       //Determine the constraint on the trim path.
@@ -398,7 +398,7 @@ bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const db
   
   //Can't find a valid trim curve via shortest path.
   #if DBMSH3D_DEBUG > 3
-  vul_printf (vcl_cout, "  M %d, %s (pos %d, U_range %d to %d): No valid trim path found.\n", 
+  vul_printf (std::cout, "  M %d, %s (pos %d, U_range %d to %d): No valid trim path found.\n", 
               M->id(), MC_s_side ? "U" : "V", pos, -U_range, U_range);
   #endif
   U = NULL;
@@ -408,13 +408,13 @@ bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const db
 void A5_get_trim_path_constraints (const dbsk3d_ms_curve* MC, const bool MC_s_side,
                                    const dbsk3d_ms_curve* ribMC,
                                    const dbsk3d_fs_vertex* M, const dbsk3d_fs_vertex* U,
-                                   vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                   vcl_set<dbmsh3d_vertex*>& avoid_Vset)
+                                   std::set<dbmsh3d_edge*>& avoid_Eset,
+                                   std::set<dbmsh3d_vertex*>& avoid_Vset)
 {
   //1) Constraint on mesh edges.
   //Allow the trim path U-M to be possibly on the E-M part of the curve MC.
   //Allow the trim path U-M to be possibly on the S-U (or E-V) part of the rib.
-  vcl_set<dbmsh3d_edge*> allow_Eset;
+  std::set<dbmsh3d_edge*> allow_Eset;
   if (MC_s_side) {
     MC->get_Eset_M_E (M, allow_Eset);
     if (ribMC->sV() == MC->sV())
@@ -434,7 +434,7 @@ void A5_get_trim_path_constraints (const dbsk3d_ms_curve* MC, const bool MC_s_si
     }
   }
 
-  vcl_set<dbmsh3d_edge*>::iterator eit = allow_Eset.begin();
+  std::set<dbmsh3d_edge*>::iterator eit = allow_Eset.begin();
   for (; eit != allow_Eset.end(); eit++) {
     dbmsh3d_edge* E = (*eit);
     avoid_Eset.erase (E);
@@ -443,7 +443,7 @@ void A5_get_trim_path_constraints (const dbsk3d_ms_curve* MC, const bool MC_s_si
   //2) Constraint on mesh vertices.
   //Allow the trim path U-M to be possibly on the E-M part of the curve MC.
   //Allow the trim path U-M to be possibly on the S-U (or E-V) part of the rib.
-  vcl_set<dbmsh3d_vertex*> allow_Vset;
+  std::set<dbmsh3d_vertex*> allow_Vset;
   if (MC_s_side) {
     MC->get_V_set_M_E (M, allow_Vset);
     if (ribMC->sV() == MC->sV())
@@ -467,7 +467,7 @@ void A5_get_trim_path_constraints (const dbsk3d_ms_curve* MC, const bool MC_s_si
   allow_Vset.erase (ribMC->s_MN()->V());
   allow_Vset.erase (ribMC->e_MN()->V());
 
-  vcl_set<dbmsh3d_vertex*>::iterator vit = allow_Vset.begin();
+  std::set<dbmsh3d_vertex*>::iterator vit = allow_Vset.begin();
   for (; vit != allow_Vset.end(); vit++) {
     dbmsh3d_vertex* V = (*vit);
     avoid_Vset.erase (V);
@@ -527,11 +527,11 @@ dbsk3d_ms_curve* A5_contract_merge_ribs (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_shee
                                          dbsk3d_ms_curve* Cs, dbsk3d_ms_curve* Ce)
 {
   //Merge Ce to Cs.
-  vul_printf (vcl_cout, "merge C%d to %d, ", Ce->id(), Cs->id());
+  vul_printf (std::cout, "merge C%d to %d, ", Ce->id(), Cs->id());
 
   //Save Ce's sharedEs in vector and determine endV for tracing ribMC.
   dbmsh3d_vertex* endV = Nee->FV();
-  vcl_vector<dbmsh3d_edge*> last_shared_Es;
+  std::vector<dbmsh3d_edge*> last_shared_Es;
 
   //Makes the fs_edges in Ce ordered from Nee.
   if (Ce->e_MN() == Nee)
@@ -586,10 +586,10 @@ dbsk3d_ms_curve* A5_contract_merge_ribs (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_shee
   return Cs;
 }
 
-dbsk3d_fs_edge* FF_to_trim_incident_to_otherMC (vcl_set<dbmsh3d_face*> FF_to_trim, 
+dbsk3d_fs_edge* FF_to_trim_incident_to_otherMC (std::set<dbmsh3d_face*> FF_to_trim, 
                                                 const dbsk3d_ms_curve* MC)
 {
-  vcl_set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
+  std::set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
   for (; it != FF_to_trim.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     //check ech FE of this FF.

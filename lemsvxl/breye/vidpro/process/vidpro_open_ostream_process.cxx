@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_open_ostream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 
@@ -56,16 +56,16 @@ vidpro_open_ostream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_open_ostream_process::name()
+std::string vidpro_open_ostream_process::name()
 {
     return "Open Video Ostream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_open_ostream_process::get_input_type()
+std::vector< std::string > vidpro_open_ostream_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // no input type required
     to_return.clear();
@@ -75,9 +75,9 @@ vcl_vector< vcl_string > vidpro_open_ostream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_open_ostream_process::get_output_type()
+std::vector< std::string > vidpro_open_ostream_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // output type
     to_return.clear();
@@ -101,14 +101,14 @@ vidpro_open_ostream_process::execute()
       unsigned vos_fmt=0;
     parameters()->get_value( "-ostream_fmt" , vos_fmt );
 
-      vcl_string filename_fmt;
+      std::string filename_fmt;
     parameters()->get_value( "-filename_fmt" , filename_fmt );
 
      unsigned start_index=0;
     parameters()->get_value( "-start_index" , start_index );
 
     
-    vcl_string ostream_name;
+    std::string ostream_name;
     parameters()->get_value( "-ostream_name" , ostream_name );
    
     vidpro_ostream_storage_sptr vos_storage = this->open_ostream(vos_type,
@@ -120,7 +120,7 @@ vidpro_open_ostream_process::execute()
     if(!vos_storage)
     {
         return false;
-        vcl_cerr<<"Error: Opening the input stream\n";
+        std::cerr<<"Error: Opening the input stream\n";
     }
    
     //no input storage class for this process
@@ -136,7 +136,7 @@ vidpro_open_ostream_process::execute()
 
 
    
-    vcl_cerr<<"Error in Open Istream process: Not able to open the istream\n";
+    std::cerr<<"Error in Open Istream process: Not able to open the istream\n";
     return false;
 }
 
@@ -180,17 +180,17 @@ vidpro_open_ostream_process::add_parameters()
   
   static int fmt_idx = 0;
   static unsigned int start_index = 0;
-  static vcl_string name_format = "%05u";
+  static std::string name_format = "%05u";
        
 
     if( !parameters()->add( "Select an Onput Stream Type" , "-ostream_type" , choices_, 0 )||
-        !parameters()->add( "Output Stream Name" , "-ostream_name" ,vcl_string(""))|| 
+        !parameters()->add( "Output Stream Name" , "-ostream_name" ,std::string(""))|| 
         !parameters()->add( "Output stream Directory" , "-ostream_directory" ,bpro_filepath("","*")) ||
         !parameters()->add( "Image File Format", "-ostream_fmt", fmt_choices_, fmt_idx) ||
         !parameters()->add ("Starting Index", "-start_index", start_index) ||
         !parameters()->add ("Filename Formate", "-filename_fmt", name_format))
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 
@@ -198,9 +198,9 @@ vidpro_open_ostream_process::add_parameters()
 
 vidpro_ostream_storage_sptr
 vidpro_open_ostream_process::open_ostream(int type, 
-                                           vcl_string const& directory,
-                                           vcl_string const &name_format,
-                                           vcl_string const &imagefile_fmt,
+                                           std::string const& directory,
+                                           std::string const &name_format,
+                                           std::string const &imagefile_fmt,
                                            unsigned int start_index)
 {
     switch(choice_codes_[type]){
@@ -220,9 +220,9 @@ vidpro_open_ostream_process::open_ostream(int type,
 //: Use vgui dialogs to open an image list ostream
 //-----------------------------------------------------------------------------
 vidpro_ostream_storage_sptr
-vidpro_open_ostream_process::image_list_ostream(vcl_string const &directory,
-                                                 vcl_string const &name_format,
-                                                 vcl_string const &imagefile_fmt,
+vidpro_open_ostream_process::image_list_ostream(std::string const &directory,
+                                                 std::string const &name_format,
+                                                 std::string const &imagefile_fmt,
                                                  unsigned int start_index)
 {
 
@@ -232,7 +232,7 @@ vidpro_open_ostream_process::image_list_ostream(vcl_string const &directory,
                                             start_index);
 
   if (!vos || !vos->is_open()) {
-    vcl_cerr<<"Failed to create output image list stream\n";
+    std::cerr<<"Failed to create output image list stream\n";
     delete vos;
     return NULL;
   }

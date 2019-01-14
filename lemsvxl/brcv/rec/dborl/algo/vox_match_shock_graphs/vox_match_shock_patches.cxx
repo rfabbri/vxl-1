@@ -90,15 +90,15 @@ bool vox_match_shock_patches::initialize()
     bool model_status = vul_file::exists(model_file_);
     if (!model_status ) 
     {
-        vcl_cerr << "Cannot find model shock storage (.bin) file: " << 
-            model_file_ << vcl_endl;
+        std::cerr << "Cannot find model shock storage (.bin) file: " << 
+            model_file_ << std::endl;
     }
 
     bool query_status = vul_file::exists(query_file_);
     if ( !query_status ) 
     {
-        vcl_cerr << "Cannot find query shock storage (.bin) file: " << 
-            query_file_ << vcl_endl;
+        std::cerr << "Cannot find query shock storage (.bin) file: " << 
+            query_file_ << std::endl;
     }
 
     return query_status & model_status;
@@ -110,7 +110,7 @@ bool vox_match_shock_patches::perform_matching()
 {
 
     //******************** Match Shock Graphs ****************************
-    vcl_cout<<"************  Match Shock Patches  *************"<<vcl_endl;
+    std::cout<<"************  Match Shock Patches  *************"<<std::endl;
 
     // Create file path objects
     bpro1_filepath shock_patch_model(model_file_,".bin");
@@ -143,8 +143,8 @@ bool vox_match_shock_patches::perform_matching()
 
     if (!matchsg_status) 
     {
-        vcl_cerr << "Extracting of shock patches failed !"
-                 << vcl_endl;
+        std::cerr << "Extracting of shock patches failed !"
+                 << std::endl;
         return false;
     }
   

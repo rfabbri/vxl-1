@@ -1,7 +1,7 @@
 #include "brct_corr.h"
 //:
 // \file
-#include <vcl_iostream.h>
+#include <iostream>
 
 brct_corr::brct_corr()
 {
@@ -32,7 +32,7 @@ void brct_corr::set_match(const int cam, const double x, const double y)
 
 
 //external functions
-vcl_ostream& operator<<(vcl_ostream& s, brct_corr const& c)
+std::ostream& operator<<(std::ostream& s, brct_corr const& c)
 {
   s << "NCAMS: " << c.n_cams_ << '\n';
   for (int i = 0; i<c.n_cams_ ; i++)

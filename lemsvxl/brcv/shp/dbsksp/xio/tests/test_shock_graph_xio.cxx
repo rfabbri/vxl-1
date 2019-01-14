@@ -14,18 +14,18 @@
 
 void test_shock_graph_xio()
 {
-  vcl_string xml_file = "V:/projects/kimia/shockshape/symmetry-shape-model/results/shock-graphs-xml/one_A12_fragment.xml";
+  std::string xml_file = "V:/projects/kimia/shockshape/symmetry-shape-model/results/shock-graphs-xml/one_A12_fragment.xml";
 
   dbsksp_shock_graph_sptr shock_graph = 0;
   if ( !x_read(xml_file, shock_graph) )
   {
-    vcl_cerr << "Loading shock graph XML file failed.\n";
+    std::cerr << "Loading shock graph XML file failed.\n";
     shock_graph = 0;
     return;
   }
   else
   {
-    vcl_cout << "Loading shock graph XML file completed.\n";
+    std::cout << "Loading shock graph XML file completed.\n";
     shock_graph->compute_all_dependent_params();
   };
 
@@ -46,12 +46,12 @@ void test_shock_graph_xio()
 
     if (!e0)
     {
-      vcl_cout << "ERROR: no non-terminal edge in the graph.\n";
+      std::cout << "ERROR: no non-terminal edge in the graph.\n";
       return;
     }
 
 
-    //e0->print(vcl_cout);
+    //e0->print(std::cout);
     double m0 = e0->param_m();
     double len0 = e0->chord_length();
 
@@ -69,7 +69,7 @@ void test_shock_graph_xio()
     double m2 = e2->param_m();
     double len2 = e2->chord_length();
 
-    vcl_cout << "i= " << i 
+    std::cout << "i= " << i 
       << " m0 m1 m2 (m1+m2-m0) m0/len0 m1/len1 m2/len2: "
       << m0 << " " 
       << m1 << " "
@@ -78,7 +78,7 @@ void test_shock_graph_xio()
       << m0 / len0 << " "
       << m1 / len1 << " "
       << m2 / len2 << " "
-      << vcl_endl;    
+      << std::endl;    
   }
 
 
@@ -93,7 +93,7 @@ void test_shock_graph_xio()
 
   if (!e0)
   {
-    vcl_cout << "ERROR: no non-terminal edge in the graph.\n";
+    std::cout << "ERROR: no non-terminal edge in the graph.\n";
     return;
   }
 
@@ -106,11 +106,11 @@ void test_shock_graph_xio()
     double t = double(i) / num_pts;
     double k = shock_curve.curvature_at(t);
     double phi = s->phi_at(t);
-    vcl_cout << "t k phi k/sin(phi): "
+    std::cout << "t k phi k/sin(phi): "
       << t << " "
       << k << " "
       << phi << " "
-      << k / vcl_sin(phi) << vcl_endl;
+      << k / std::sin(phi) << std::endl;
   }
 }
 

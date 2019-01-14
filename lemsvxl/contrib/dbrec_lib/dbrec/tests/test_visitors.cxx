@@ -27,14 +27,14 @@ static void test_visitors()
   bsta_gaussian_sphere<double, 1> angle_model(vnl_math::pi, vnl_math::pi/100.0);
   dbrec_pairwise_model_sptr pm2 = new dbrec_pairwise_indep_gaussian_model(dist_model, angle_model);
 
-  vcl_vector<dbrec_pairwise_model_sptr> models; models.push_back(pm1); models.push_back(pm2);
+  std::vector<dbrec_pairwise_model_sptr> models; models.push_back(pm1); models.push_back(pm2);
   dbrec_central_compositor* cc = new dbrec_central_compositor(models);
 
   dbrec_type_id_factory* ins = dbrec_type_id_factory::instance();
   dbrec_gaussian* g1 = new dbrec_gaussian(ins->new_type(), 2.0f, 1.0f, 45.0f, true);
   dbrec_gaussian* g2 = new dbrec_gaussian(ins->new_type(), 2.0f, 1.0f, 0.0f, true);
   dbrec_gaussian* g3 = new dbrec_gaussian(ins->new_type(), 1.0f, 1.0f, 0.0f, true);
-  vcl_vector<dbrec_part_sptr> parts; parts.push_back(g1); parts.push_back(g2); parts.push_back(g3);
+  std::vector<dbrec_part_sptr> parts; parts.push_back(g1); parts.push_back(g2); parts.push_back(g3);
   dbrec_composition* c = new dbrec_composition(ins->new_type(), parts, cc, 10.0f);
 
   dbrec_draw_bsvg_visitor v(200.0f, 200.0f, 100.0f, 100.0f, 10.0f, "blue");
@@ -45,7 +45,7 @@ static void test_visitors()
   dbrec_gaussian_appearance_model_sptr cfam = new dbrec_gaussian_weibull_appearance_model(2.1f, 1.1f);
   dbrec_gaussian_appearance_model_sptr ncfam = new dbrec_gaussian_weibull_appearance_model(1.1f, 1.5f);
   //: we want to model class-foreground, non-class-foreground, class-background, non-class background appearance 
-  vcl_vector<dbrec_gaussian_appearance_model_sptr> app_models; 
+  std::vector<dbrec_gaussian_appearance_model_sptr> app_models; 
   app_models.push_back(cfam); 
   app_models.push_back(ncfam); 
   
@@ -78,7 +78,7 @@ static void test_visitors()
   dbrec_hierarchy_sptr h = gf->construct_random_classifier(2);
 
   //: for now use the same class_prior for both compositional parts and primitive parts
-  vcl_vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
+  std::vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
   dbrec_parse_image_visitor piv(h, test_img_sptr, class_prior, comp_priors);
   g1->accept(&piv);
   dbrec_part_context_sptr out_c1 = piv.context_factory()->get_context(g1->type());
@@ -93,7 +93,7 @@ static void test_visitors()
     h->root(i)->accept(&bgmv);
   }
 
-  vcl_vector<float> comp_fg_bg_priors; 
+  std::vector<float> comp_fg_bg_priors; 
   comp_fg_bg_priors.push_back(0.15f); comp_fg_bg_priors.push_back(0.15f); 
   comp_fg_bg_priors.push_back(0.15f); comp_fg_bg_priors.push_back(1.0f - (0.15f + 0.15f + 0.15f));
   dbrec_parse_image_with_fg_map_visitor pv(h, test_img_sptr, fg_prob, class_prior, comp_fg_bg_priors, "./", "./");

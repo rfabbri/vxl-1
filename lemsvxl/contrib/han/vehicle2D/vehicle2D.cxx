@@ -1,9 +1,9 @@
 #include "vehicle2D.h"
-#include <vcl_cmath.h> // for vcl_sqrt()
+#include <cmath> // for std::sqrt()
 
 
 //constructor from 2 sets of points.. 
-vehicle2D::vehicle2D(vcl_vector<vnl_double_2 >p0,vcl_vector<vnl_double_2 >p1)
+vehicle2D::vehicle2D(std::vector<vnl_double_2 >p0,std::vector<vnl_double_2 >p1)
 {
   for (unsigned i=0;i<p0.size();i++)
     p0_.push_back(p0[i]);
@@ -37,7 +37,7 @@ vehicle2D::vehicle2D(vcl_vector<vnl_double_2 >p0,vcl_vector<vnl_double_2 >p1)
       min_z0=p0[i][1]; 
     }
   }
-  water_level_step_=vcl_fabs(p0[1][1]-p0[0][1]);
+  water_level_step_=std::fabs(p0[1][1]-p0[0][1]);
   water_level_min_=min_z0;
   water_level_max_=max_z;
   //
@@ -47,14 +47,14 @@ vehicle2D::vehicle2D(vcl_vector<vnl_double_2 >p0,vcl_vector<vnl_double_2 >p1)
 //
 void vehicle2D::print()
 {
-  vcl_cout<<"*******************************"<<vcl_endl;
-  vcl_cout<<"max  z: "<<water_level_max_<<vcl_endl;
-  vcl_cout<<"min  z: "<<water_level_min_<<vcl_endl;
-  vcl_cout<<"step z: "<<water_level_step_<<vcl_endl;
-  vcl_cout<<"-------------------------------"<<vcl_endl;
+  std::cout<<"*******************************"<<std::endl;
+  std::cout<<"max  z: "<<water_level_max_<<std::endl;
+  std::cout<<"min  z: "<<water_level_min_<<std::endl;
+  std::cout<<"step z: "<<water_level_step_<<std::endl;
+  std::cout<<"-------------------------------"<<std::endl;
   for (unsigned i=0;i<p0_.size();i++)
-    vcl_cout<<(p0_[i][0]-p1_[i][0])<<vcl_endl;
-  vcl_cout<<"*******************************"<<vcl_endl;
+    std::cout<<(p0_[i][0]-p1_[i][0])<<std::endl;
+  std::cout<<"*******************************"<<std::endl;
 
 }
 
@@ -62,36 +62,36 @@ void vehicle2D::print()
 
 void vehicle2D::com()  //center of mass
 {
-  vcl_cout<<"*******************************"<<vcl_endl;
-  vcl_cout<<"max  z: "<<water_level_max_<<vcl_endl;
-  vcl_cout<<"min  z: "<<water_level_min_<<vcl_endl;
-  vcl_cout<<"step z: "<<water_level_step_<<vcl_endl;
-  vcl_cout<<"-------------------------------"<<vcl_endl;
+  std::cout<<"*******************************"<<std::endl;
+  std::cout<<"max  z: "<<water_level_max_<<std::endl;
+  std::cout<<"min  z: "<<water_level_min_<<std::endl;
+  std::cout<<"step z: "<<water_level_step_<<std::endl;
+  std::cout<<"-------------------------------"<<std::endl;
   double percentage=65;
   double sum0=0.0; int counter=0;
   for (unsigned i=0;i<percentage/100.0*p0_.size();i++)
   {
 
     sum0+=(p0_[i][0]+p1_[i][0])/2.0;
-    vcl_cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<vcl_endl;
+    std::cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<std::endl;
     counter++;
   }
 
-  vcl_cout<<"lower part sum: "<<sum0/counter/50<<vcl_endl;
-  vcl_cout<<"-------------------------------"<<vcl_endl;
+  std::cout<<"lower part sum: "<<sum0/counter/50<<std::endl;
+  std::cout<<"-------------------------------"<<std::endl;
   double sum1=0.0;
   counter=0;
   for (unsigned i=unsigned (percentage/100.0*p0_.size());i<(p0_.size()-2);i++) //don't use top 2...
   {
     sum1+=(p0_[i][0]+p1_[i][0])/2.0;
-    vcl_cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<vcl_endl;
+    std::cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<std::endl;
     counter++;
   }
 
-  vcl_cout<<"cabin part sum: "<<sum1/counter/50<<vcl_endl;
-  vcl_cout<<"-------------------------------"<<vcl_endl;
+  std::cout<<"cabin part sum: "<<sum1/counter/50<<std::endl;
+  std::cout<<"-------------------------------"<<std::endl;
 
-  vcl_cout<<"*******************************"<<vcl_endl;
+  std::cout<<"*******************************"<<std::endl;
 
 }
 
@@ -105,7 +105,7 @@ vnl_double_4 vehicle2D::sum(double z_lower_bound, double z_upper_bound)
   for (unsigned i=unsigned (z_lower_bound/100.0*p0_.size());i<(p0_.size()-1)&& i<z_upper_bound/100.0*p0_.size();i++) //don't use top 2...
   {
     sum_center+=(p0_[i][0]+p1_[i][0])/2.0;
-    //vcl_cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<vcl_endl;
+    //std::cout<<(p0_[i][0]+p1_[i][0])/2.0<<" "<<(p0_[i][0]-p1_[i][0])<<std::endl;
     counter_center++;
 
     sum_p0+=p0_[i][0];
@@ -119,15 +119,15 @@ vnl_double_4 vehicle2D::sum(double z_lower_bound, double z_upper_bound)
   double counter_length=0;
   for (unsigned i=unsigned (z_lower_bound/100.0*p0_.size());i<(p0_.size()-1)&&i<z_upper_bound/100.0*p0_.size();i++) //don't use top 2...
   {
-    sum_length+=vcl_fabs((p0_[i][0]-p1_[i][0]));
+    sum_length+=std::fabs((p0_[i][0]-p1_[i][0]));
 
     counter_length++;
   }
   sum_length/=counter_length;
 
   vnl_double_4 a(sum_length,sum_center,sum_p0,sum_p1);
-  vcl_cout<<z_lower_bound<<" "<<z_upper_bound<<" :"<<"length: "<<a[0]<<" center: "<<a[1]
-  <<" p0: "<<a[2]<<" p1: "<<a[3]<< " #:"<<counter_center<<vcl_endl;
+  std::cout<<z_lower_bound<<" "<<z_upper_bound<<" :"<<"length: "<<a[0]<<" center: "<<a[1]
+  <<" p0: "<<a[2]<<" p1: "<<a[3]<< " #:"<<counter_center<<std::endl;
   return a;
 
 }
@@ -140,7 +140,7 @@ vnl_double_4 vehicle2D::sum(double z_lower_bound, double z_upper_bound)
 void vehicle2D::find_probe_8() 
 {
 
-   vcl_cout<<"--- find probe 8 ---"<<vcl_endl;
+   std::cout<<"--- find probe 8 ---"<<std::endl;
   // first, find best difference between cabin and body susing banded filter.
   double percentage=65;
   double sum0=0.0; int counter=0;
@@ -148,11 +148,11 @@ void vehicle2D::find_probe_8()
   double diff_max_perc=-1.0;
   for (double perc=25; perc<=75; perc+=2.5)
   {
-    vcl_cout<<"--- "<<perc-30<<"~"<<perc<<"~"<<perc+30<< " ---"<<vcl_endl;
+    std::cout<<"--- "<<perc-30<<"~"<<perc<<"~"<<perc+30<< " ---"<<std::endl;
     vnl_double_4 body=sum(perc-30, perc);
     vnl_double_4 high=sum(perc, perc+30);
     double diff=body[0]-high[0];
-    vcl_cout<<diff<<vcl_endl;
+    std::cout<<diff<<std::endl;
 
     if (diff>diff_max) {
       diff_max=diff;
@@ -169,7 +169,7 @@ void vehicle2D::find_probe_8()
 
   for (double perc=20; perc<=50; perc+=2.5)
   {
-    vcl_cout<<"--- "<<perc-20<<"~"<<perc<< " ---"<<vcl_endl;
+    std::cout<<"--- "<<perc-20<<"~"<<perc<< " ---"<<std::endl;
     vnl_double_4 body=sum(perc-20, perc);
     //vnl_double_4 high=sum(perc, perc+30);
 
@@ -190,16 +190,16 @@ void vehicle2D::find_probe_8()
   //third, find canbin top
 
   vnl_double_4 cabin=sum(diff_max_perc,diff_max_perc+20); //20 is good?
-  vcl_cout<<"cabin "<<cabin<<vcl_endl;
+  std::cout<<"cabin "<<cabin<<std::endl;
   vnl_double_2 probe_8(cabin[2]/50,perc_translator(diff_max_perc)/50);
 
 
-  vcl_cout <<"probe_7: "<< probe_7<<" --probe_8: "<<probe_8<<" --probe_0: "<<probe_0<<" perc 0% is "<<perc_translator(0)/50<<vcl_endl;
-  vcl_cout <<"ratio(cabin/length) "<< (probe_8[0]-probe_0[0])/(probe_7[0]-probe_0[0])<<vcl_endl;
+  std::cout <<"probe_7: "<< probe_7<<" --probe_8: "<<probe_8<<" --probe_0: "<<probe_0<<" perc 0% is "<<perc_translator(0)/50<<std::endl;
+  std::cout <<"ratio(cabin/length) "<< (probe_8[0]-probe_0[0])/(probe_7[0]-probe_0[0])<<std::endl;
 
-  vcl_cout <<"vehicle height is "<<water_level_max_/50-perc_translator(0)/50+.5<<vcl_endl;
+  std::cout <<"vehicle height is "<<water_level_max_/50-perc_translator(0)/50+.5<<std::endl;
 
-  vcl_cout<<"--- find probe 8 end ---"<<vcl_endl;
+  std::cout<<"--- find probe 8 end ---"<<std::endl;
 }
 
 //translate percentage to feet
@@ -287,8 +287,8 @@ double vehicle2D::overlap(vnl_double_2 a, vnl_double_2 b,vnl_double_2 c, vnl_dou
   //a[0]<b[0] by definition c[0]<d[0]
 
 
-  double ab=vcl_fabs(a[0]-b[0]);
-  double cd=vcl_fabs(c[0]-d[0]);
+  double ab=std::fabs(a[0]-b[0]);
+  double cd=std::fabs(c[0]-d[0]);
 
   if (ab==0||cd==0) return 0;
 
@@ -297,16 +297,16 @@ double vehicle2D::overlap(vnl_double_2 a, vnl_double_2 b,vnl_double_2 c, vnl_dou
   if (c[0]<=a[0]&&b[0]<=d[0]) return ab;  //   c---a===b---d case
   if (c[0]>=a[0]&&b[0]>=d[0]) return cd;  //   a---c===d---b case
 
-  if (a[0]<=c[0]&&c[0]<=b[0]&& b[0]<=d[0]) return vcl_abs(b[0]-c[0]);
+  if (a[0]<=c[0]&&c[0]<=b[0]&& b[0]<=d[0]) return std::abs(b[0]-c[0]);
 
   return -.1;
 }
 
-vehicle2D::vehicle2D(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
+vehicle2D::vehicle2D(std::vector<vgl_point_3d<double> >pts, int pts_flag)
 {
   if (pts_flag==0) {//all pts
     pts_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_.push_back(*it);
@@ -315,7 +315,7 @@ vehicle2D::vehicle2D(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
   else if (pts_flag==1) //front pts
   {
     pts_front_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_front_.push_back(*it);
@@ -324,7 +324,7 @@ vehicle2D::vehicle2D(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
   else if (pts_flag==2) //rear pts
   {
     pts_rear_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_rear_.push_back(*it);
@@ -334,7 +334,7 @@ vehicle2D::vehicle2D(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
 
 }
 
-/*void vehicle2D::multiscale_angle(const vcl_vector <vnl_double_2> a)
+/*void vehicle2D::multiscale_angle(const std::vector <vnl_double_2> a)
 {
 for (unsigned i=0; i<a.size();i++) 
 {
@@ -351,11 +351,11 @@ for (unsigned i=0; i<a.size();i++)
 ///////////
 ///////////
 
-void vehicle2D::set(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
+void vehicle2D::set(std::vector<vgl_point_3d<double> >pts, int pts_flag)
 {
   if (pts_flag==0) {//all pts
     pts_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_.push_back(*it);
@@ -364,7 +364,7 @@ void vehicle2D::set(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
   else if (pts_flag==1) //front pts
   {
     pts_front_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_front_.push_back(*it);
@@ -373,7 +373,7 @@ void vehicle2D::set(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
   else if (pts_flag==2) //rear pts
   {
     pts_rear_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts.begin(); it != pts.end(); ++it)
     {
       pts_rear_.push_back(*it);
@@ -387,7 +387,7 @@ void vehicle2D::set(vcl_vector<vgl_point_3d<double> >pts, int pts_flag)
 
 double vehicle2D::curvature(double scale,int pts_flag) 
 {
-  vcl_vector<vgl_point_3d<double> > pts_here=copy_out(pts_flag);
+  std::vector<vgl_point_3d<double> > pts_here=copy_out(pts_flag);
 
   for (unsigned i=1;i<pts_here.size()-1;i++) { //avoid first and end points
     bool flag=true;
@@ -396,7 +396,7 @@ double vehicle2D::curvature(double scale,int pts_flag)
     unsigned j=0;
     nsp=pts_here[i];
     nep=pts_here[i+1];
-    //vcl_cout<<nsp<<nep<<vcl_endl;
+    //std::cout<<nsp<<nep<<std::endl;
     while (u.contains(nep)) {
       j++;
       if (i+j>pts_here.size()-1 || i+j-1<0 ) {
@@ -434,18 +434,18 @@ double vehicle2D::curvature(double scale,int pts_flag)
 
 
     double C=local_curvature(Ppos,pts_here[i],Pneg);
-    vcl_cout<<i<<" "<<C<<vcl_endl;
+    std::cout<<i<<" "<<C<<std::endl;
   }
   return 0.0;
 }
 
 
-vcl_vector<vgl_point_3d<double> > vehicle2D::copy_out(int pts_flag)
+std::vector<vgl_point_3d<double> > vehicle2D::copy_out(int pts_flag)
 {
-  vcl_vector<vgl_point_3d<double> >pts_here;
+  std::vector<vgl_point_3d<double> >pts_here;
   if (pts_flag==0) {//all pts
     //pts_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts_.begin(); it != pts_.end(); ++it)
     {
       pts_here.push_back(*it);
@@ -454,7 +454,7 @@ vcl_vector<vgl_point_3d<double> > vehicle2D::copy_out(int pts_flag)
   else if (pts_flag==1) //front pts
   {
     //pts_front_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts_front_.begin(); it != pts_front_.end(); ++it)
     {
       pts_here.push_back(*it);
@@ -463,7 +463,7 @@ vcl_vector<vgl_point_3d<double> > vehicle2D::copy_out(int pts_flag)
   else if (pts_flag==2) //rear pts
   {
     //pts_rear_.clear();
-    vcl_vector<vgl_point_3d<double> >::const_iterator it;
+    std::vector<vgl_point_3d<double> >::const_iterator it;
     for (it=pts_rear_.begin(); it != pts_rear_.end(); ++it)
     {
       pts_here.push_back(*it);
@@ -475,11 +475,11 @@ vcl_vector<vgl_point_3d<double> > vehicle2D::copy_out(int pts_flag)
 
 }
 
-vcl_vector <double> vehicle2D::distance(int flag)
+std::vector <double> vehicle2D::distance(int flag)
 {
 
-  vcl_vector<vgl_point_3d<double> >pts=copy_out(flag);
-  vcl_vector <double> dl;
+  std::vector<vgl_point_3d<double> >pts=copy_out(flag);
+  std::vector <double> dl;
   for (unsigned i=1;i<pts.size();i++) {
     double d=vgl_distance(pts[i-1],pts[i]);
     dl.push_back(d);
@@ -491,19 +491,19 @@ vcl_vector <double> vehicle2D::distance(int flag)
 
 
 // usage:    eg.) read_wrl_file(pts_f,"delf.wrl",true);
-int vehicle2D::read_wrl_file(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv,bool rotation){
-  vcl_ifstream in(argv.c_str());
+int vehicle2D::read_wrl_file(std::vector <vgl_point_3d<double> > & ptl,std::string argv,bool rotation){
+  std::ifstream in(argv.c_str());
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     exit(-4);
     return -1;
   }
 
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
   while (!in.eof()) {
 
     in>>hhh;
@@ -511,59 +511,59 @@ int vehicle2D::read_wrl_file(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string
       in>>x>>y>>z;
       vgl_point_3d<double> p3d(x,y,z);
       ptl.push_back(p3d);
-      /////##comented out 10-2-2006##/// vcl_cout<<p3d<<vcl_endl;
+      /////##comented out 10-2-2006##/// std::cout<<p3d<<std::endl;
     }
   }
-  vcl_cerr<<"vrml points size: "<<ptl.size()<<vcl_endl;
+  std::cerr<<"vrml points size: "<<ptl.size()<<std::endl;
   if (0&&ptl.size()<20) {
-    vcl_cout<<"Not enough points for recognition"<<vcl_endl;
-    ////  vcl_cerr<<"Not enough points for recognition"<<vcl_endl;
+    std::cout<<"Not enough points for recognition"<<std::endl;
+    ////  std::cerr<<"Not enough points for recognition"<<std::endl;
     exit(555);
   }
 
   if (!rotation) return 1;
-  vcl_cout<<R_<<vcl_endl;
-  vcl_vector<vnl_double_3> pts_z;
+  std::cout<<R_<<std::endl;
+  std::vector<vnl_double_3> pts_z;
   for (unsigned i=0;i<ptl.size();i++) {
     vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
     pts_z.push_back(R_*p);
-    /////##comented out 10-2-2006##///vcl_cout<<R_*p<<vcl_endl;
+    /////##comented out 10-2-2006##///std::cout<<R_*p<<std::endl;
   }
 
-  // ///##comented out 10-2-2006##/// vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+  // ///##comented out 10-2-2006##/// std::cout<<"------------------------------------------------------"<<std::endl;
   ptl.clear();
 
   for (unsigned i=0;i<pts_z.size();i++) {
     vgl_point_3d <double> p(pts_z[i](0),pts_z[i](1),pts_z[i](2));
 
     ptl.push_back(p);
-    /////##comented out 10-2-2006##/// vcl_cout<<p<<vcl_endl;
+    /////##comented out 10-2-2006##/// std::cout<<p<<std::endl;
   }
-  // ///##comented out 10-2-2006##/// vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+  // ///##comented out 10-2-2006##/// std::cout<<"------------------------------------------------------"<<std::endl;
   in.close();
 
   return 1;
 }
 
-//int vehicle2D::read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
-int vehicle2D::read_bb_box_file(vcl_string argv){
-  vcl_ifstream in(argv.c_str());
+//int vehicle2D::read_bb_box_file(std::vector <vgl_point_3d<double> > & ptl,char* argv){
+int vehicle2D::read_bb_box_file(std::string argv){
+  std::ifstream in(argv.c_str());
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     return -1;
   }
 
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
   double dummy;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
 
   for (unsigned j=0;j<3;j++) {
     in >>hhh;
-    vcl_cout<<hhh<<vcl_endl;
+    std::cout<<hhh<<std::endl;
   }
 
   double temp;
@@ -582,7 +582,7 @@ int vehicle2D::read_bb_box_file(vcl_string argv){
   R_[2][0]=RT[2][0];R_[2][1]=RT[2][1];R_[2][2]=RT[2][2];
 
   R_.normalize_columns();
-  vcl_cout<<R_<<vcl_endl;
+  std::cout<<R_<<std::endl;
 
   while (!in.eof()) {
 
@@ -597,11 +597,11 @@ int vehicle2D::read_bb_box_file(vcl_string argv){
     in>>y>>z;
     vgl_point_3d<double> p3d(x,y,z);
     ptl.push_back(p3d);
-    vcl_cout<<p3d<<vcl_endl; 
+    std::cout<<p3d<<std::endl; 
     //exit(1);
     }*/
   }
-  //vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  //std::cout<<"size: "<<ptl.size()<<std::endl;
   in.close();
   //exit(0);
   return 1;
@@ -615,9 +615,9 @@ void vehicle2D::pts_from_pts_f_and_r()
 
 vgl_polygon<double> vehicle2D::get_XY_con(int flag)
 {
-  vcl_vector <vgl_point_3d<double> >  pts=copy_out(flag);
+  std::vector <vgl_point_3d<double> >  pts=copy_out(flag);
 
-  vcl_vector<vgl_point_2d<double> > ps;
+  std::vector<vgl_point_2d<double> > ps;
   for(unsigned i=0;i<pts.size();i++)
   {
     vgl_point_2d<double> p(pts[i].x(),pts[i].z());

@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_polyline_3d_sptr.h>
@@ -35,10 +35,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Surface points from volume segmentation"; }
+  std::string name() {  return "Surface points from volume segmentation"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -51,27 +51,27 @@ public:
   //: From a femoral segmentation in way of contour files, extract the surface
   // points for the inner and outer surfaces and save them to .p3d files
   static bool extract_surface_points_from_femoral_cartilage_segm(
-    const vcl_string& seg_xml_file,
+    const std::string& seg_xml_file,
     double voxel_size[3],
-    const vcl_string& inner_p3d_file,
-    const vcl_string& outer_p3d_file);
+    const std::string& inner_p3d_file,
+    const std::string& outer_p3d_file);
 
   
   
   //: From a tibial segmentation in way of contour files, extract the surface
   // points for the inner and outer surfaces and save them to .p3d files
   static bool extract_surface_points_from_tibial_cartilage_segm(
-    const vcl_string& seg_xml_file,
+    const std::string& seg_xml_file,
     double voxel_size[3],
-    const vcl_string& inner_p3d_file,
-    const vcl_string& outer_p3d_file);
+    const std::string& inner_p3d_file,
+    const std::string& outer_p3d_file);
 
   //: From a segmentation in way of contour files, extract all the surface
   // points and save them to a .p3d file
   static bool extract_surface_points_from_cartilage_segmentation(
-    const vcl_string& seg_xml_file,
+    const std::string& seg_xml_file,
     double voxel_size[3],
-    const vcl_string& all_p3d_file);
+    const std::string& all_p3d_file);
 
 
 
@@ -88,7 +88,7 @@ public:
     vsol_polyline_2d_sptr& outer_polyline);
 
   static bool save_contours_as_p3d(
-    const vcl_vector<vsol_polyline_3d_sptr >& contours,
+    const std::vector<vsol_polyline_3d_sptr >& contours,
     double spacing[3],
     const char* filename);
 

@@ -9,9 +9,9 @@
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_sc_pair.h>
 
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
+#include <fstream>
+#include <cstdio>
+#include <cassert>
 
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_distance.h>
@@ -140,7 +140,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 
   this->composite_graph_=composite_graph;
 
-  vcl_map<unsigned int,vgl_point_2d<double> > orig_coordinates;
+  std::map<unsigned int,vgl_point_2d<double> > orig_coordinates;
 
   if ( mirror_)
   {
@@ -171,21 +171,21 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
   }
 
   // Grab all shock links from this node
-  vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
+  std::map<unsigned int,dbskfg_shock_link*> shock_links;
 
   // Grab all virtual nodes
-  vcl_map<unsigned int,dbskfg_composite_node*> virtual_nodes;
+  std::map<unsigned int,dbskfg_composite_node*> virtual_nodes;
 
   // Create a temp map to make sure nodes dont overlap
   // To get the nodes in a correct ordered list we will graph all degree one
   // and degree three nodes in two separate lists
-  vcl_vector<dbskfg_composite_node_sptr> degree_1_nodes;
-  vcl_vector<dbskfg_composite_node_sptr> degree_3_nodes;
+  std::vector<dbskfg_composite_node_sptr> degree_1_nodes;
+  std::vector<dbskfg_composite_node_sptr> degree_3_nodes;
 
-  vcl_map<unsigned int,dbskfg_composite_node_sptr > temp_map;
-  vcl_vector<vcl_pair<double,unsigned int> > node_pairs;
-  vcl_vector<vcl_pair<double,unsigned int> > node_pairs_deg1;
-  vcl_vector<vcl_pair<double,unsigned int> > node_pairs_deg3;
+  std::map<unsigned int,dbskfg_composite_node_sptr > temp_map;
+  std::vector<std::pair<double,unsigned int> > node_pairs;
+  std::vector<std::pair<double,unsigned int> > node_pairs_deg1;
+  std::vector<std::pair<double,unsigned int> > node_pairs_deg3;
   
   // On the off chance that radius will be exact lets use multiple map
   // Grab all degree 1 nodes first
@@ -213,7 +213,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
                       temp_map[source_node->id()]=source_node;
                       degree_1_nodes.insert(degree_1_nodes.begin(),
                                             source_node);
-                      node_pairs_deg1.push_back(vcl_make_pair(0,
+                      node_pairs_deg1.push_back(std::make_pair(0,
                                                          source_node->id()));
                   }
               }
@@ -226,7 +226,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
                                             source_node);
                       dbskfg_shock_node* snode =
                           dynamic_cast<dbskfg_shock_node*>(&(*source_node));
-                      node_pairs_deg1.push_back(vcl_make_pair
+                      node_pairs_deg1.push_back(std::make_pair
                                                 (snode->get_radius(),
                                                  source_node->id()));
                       // Check if node is virtual node
@@ -246,7 +246,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
                       temp_map[target_node->id()]=target_node;
                       degree_1_nodes.insert(degree_1_nodes.begin(),
                                             target_node);
-                      node_pairs_deg1.push_back(vcl_make_pair(0,
+                      node_pairs_deg1.push_back(std::make_pair(0,
                                                          target_node->id()));
 
                   }
@@ -261,7 +261,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 
                       dbskfg_shock_node* snode =
                           dynamic_cast<dbskfg_shock_node*>(&(*target_node));
-                      node_pairs_deg1.push_back(vcl_make_pair
+                      node_pairs_deg1.push_back(std::make_pair
                                                 (snode->get_radius(),
                                                  target_node->id()));
                
@@ -293,7 +293,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 
                 dbskfg_shock_node* snode =
                     dynamic_cast<dbskfg_shock_node*>(&(*node));
-                node_pairs_deg3.push_back(vcl_make_pair(snode->get_radius(),
+                node_pairs_deg3.push_back(std::make_pair(snode->get_radius(),
                                                    node->id()));
                
             }
@@ -302,14 +302,14 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
   
   // Sort node pairs
 
-  // vcl_sort(node_pairs_deg1.begin(),node_pairs_deg1.end(),
+  // std::sort(node_pairs_deg1.begin(),node_pairs_deg1.end(),
   //          this->compare_node_radius_pairs);
-  // vcl_sort(node_pairs_deg3.begin(),node_pairs_deg3.end(),
+  // std::sort(node_pairs_deg3.begin(),node_pairs_deg3.end(),
   //          this->compare_node_radius_pairs);
 
  
   // Set up all nodes to retain
-  vcl_vector<dbskfg_composite_node_sptr> nodes_to_retain;
+  std::vector<dbskfg_composite_node_sptr> nodes_to_retain;
 
   for ( unsigned int t=0; t < node_pairs_deg3.size() ; ++t)
   {
@@ -321,7 +321,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
       node_pairs.push_back(node_pairs_deg1[t]);
   }
 
-  vcl_sort(node_pairs.begin(),node_pairs.end(),this->compare_node_radius_pairs);
+  std::sort(node_pairs.begin(),node_pairs.end(),this->compare_node_radius_pairs);
 
   for ( unsigned int t=0; t < node_pairs.size() ; ++t)
   {
@@ -353,7 +353,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
   //: make a map of nodes_to_retain list for fast access
   // first: id of the node in the shock graph
   // second: index of the node in the nodes_to_retain vector
-  vcl_map<unsigned int,unsigned int > nodes_to_retain_map;
+  std::map<unsigned int,unsigned int > nodes_to_retain_map;
 
   for (unsigned int v = 0; v<nodes_to_retain.size(); v++) 
   {
@@ -366,7 +366,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
   // corresponding to the two ends of the tree edge. The pair is ordered: 
   // start-node --> end-node.
   // second: list of shock links
-  vcl_map<vcl_pair<int, int>, vcl_vector<dbskfg_composite_link_sptr> > 
+  std::map<std::pair<int, int>, std::vector<dbskfg_composite_link_sptr> > 
       ids_to_edge_vector_map;
   
   // Storage for the neighrboring nodes and costs of neighboring edges 
@@ -375,12 +375,12 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
   // arranged in the same order as in "nodes_to_retain".
   // Each member of the inner vector corresponds to an edge incident at the 
   // node, arranged counter-clockwise
-  vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > > nodes;
+  std::vector< std::vector<std::pair<int, dbskr_edge_info> > > nodes;
 
   // Define iterator for map
   for ( unsigned int n=0 ; n < nodes_to_retain.size() ; ++n )
   {
-      vcl_vector<vcl_pair<int, dbskr_edge_info> > current_node; 
+      std::vector<std::pair<int, dbskr_edge_info> > current_node; 
       dbskfg_composite_node_sptr cur_node = nodes_to_retain[n];
       dbskfg_composite_link_sptr e = dbskfg_utilities::
           first_adj_shock(cur_node);
@@ -389,7 +389,7 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
       bool ccw=false;
       if ( cur_node->get_composite_degree() == 3 ) 
       {
-          vcl_vector<dbskfg_shock_link*>  cw_links=dbskfg_utilities::
+          std::vector<dbskfg_shock_link*>  cw_links=dbskfg_utilities::
               clockwise(cur_node);
           if ( cw_links.size() )
           {
@@ -402,11 +402,11 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
           dbskfg_composite_node_sptr adj_node = e->opposite(cur_node);
 
           // List of edges of the current chain
-          vcl_vector<dbskfg_composite_link_sptr> tmp;
+          std::vector<dbskfg_composite_link_sptr> tmp;
           tmp.push_back(e);
 
           // See if this node is within nodes_to_retain_map
-          vcl_map<unsigned int,unsigned int>::iterator find_it 
+          std::map<unsigned int,unsigned int>::iterator find_it 
               = nodes_to_retain_map.find(adj_node->id());
 
           // advance until you hit a node which is nodes_to_retain_map
@@ -486,13 +486,13 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
           unsigned int tree_node_id = find_it->second;
 
           // We are done with this neighbor
-          vcl_pair<unsigned int,unsigned int> ids;
+          std::pair<unsigned int,unsigned int> ids;
           ids.first  = cur_node->id();
           ids.second = nodes_to_retain[tree_node_id]->id(); 
           ids_to_edge_vector_map[ids]=tmp;
 
           // Create holder for contract and delete costs
-          vcl_pair<unsigned int,dbskr_edge_info> p;
+          std::pair<unsigned int,dbskr_edge_info> p;
           p.first = tree_node_id;
           // costs are unknown for now
           (p.second).first = -1.0f;   // contract cost
@@ -530,17 +530,17 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
       int tail = tail_[i];
       
       // ids of shock nodes at two ends of dart
-      vcl_pair<int, int> ids;
+      std::pair<int, int> ids;
       ids.first = nodes_to_retain[tail]->id();
       ids.second = nodes_to_retain[head]->id();
 
       // retrieve list edges corresponding to the dart
-      vcl_vector<dbskfg_composite_link_sptr> tmp = ids_to_edge_vector_map[ids];
+      std::vector<dbskfg_composite_link_sptr> tmp = ids_to_edge_vector_map[ids];
       shock_edges_.push_back(tmp);
       starting_nodes_.push_back(nodes_to_retain[tail]);
 
       // Hold darts that have virtual nodes
-      vcl_map<unsigned int,dbskfg_composite_node*>::iterator bit;
+      std::map<unsigned int,dbskfg_composite_node*>::iterator bit;
       for ( bit=virtual_nodes.begin() ; bit != virtual_nodes.end() ; ++bit)
       {
           if ( dbskfg_utilities::is_node_in_set_of_links(tmp,(*bit).second))
@@ -620,7 +620,7 @@ compute_delete_and_contract_costs(bool elastic_splice_cost,
 
           if (parent_dart(i) == static_cast<int>(i)) 
           {
-              vcl_vector<int>::iterator find_it = vcl_find(
+              std::vector<int>::iterator find_it = std::find(
                   darts_virtual_nodes_.begin(),
                   darts_virtual_nodes_.end(),
                   i);
@@ -696,7 +696,7 @@ set_delete_and_contract_costs(bool elastic_splice_cost,
 
           if (parent_dart(i) == static_cast<int>(i)) 
           {
-              vcl_vector<int>::iterator find_it = vcl_find(
+              std::vector<int>::iterator find_it = std::find(
                   darts_virtual_nodes_.begin(),
                   darts_virtual_nodes_.end(),
                   i);
@@ -748,11 +748,11 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
 //------------------------------------------------------------------------------
 //: find and cache the shock curve for this pair of darts, if not already cached
 // \todo write this
-vcl_vector<vnl_vector_fixed<vl_sift_pix,384> >& dbskfg_cgraph_directed_tree::
+std::vector<vnl_vector_fixed<vl_sift_pix,384> >& dbskfg_cgraph_directed_tree::
 get_sift_along_curve(int start_dart, int end_dart)
 {
 
-  vcl_pair<int, int> p;
+  std::pair<int, int> p;
   p.first = start_dart;
   p.second = end_dart;
  
@@ -763,7 +763,7 @@ get_sift_along_curve(int start_dart, int end_dart)
        dbskr_scurve_sptr sc1 = sc_pair->coarse;
 
        unsigned int num_points = sc1->num_points();
-       vcl_vector<vnl_vector_fixed<vl_sift_pix,384> > sift_descrs;
+       std::vector<vnl_vector_fixed<vl_sift_pix,384> > sift_descrs;
        sift_descrs.reserve(num_points);
        for ( unsigned int i=0; i < num_points; ++i)
        {
@@ -799,11 +799,11 @@ get_sift_along_curve(int start_dart, int end_dart)
            else
            {
                double width = bbox_->width();
-               ps1_red.set(vcl_fabs(width-(ps1_red.x()/scale_ratio_)),
+               ps1_red.set(std::fabs(width-(ps1_red.x()/scale_ratio_)),
                            ps1_red.y()/scale_ratio_);
-               ps1_green.set(vcl_fabs(width-(ps1_green.x()/scale_ratio_)),
+               ps1_green.set(std::fabs(width-(ps1_green.x()/scale_ratio_)),
                              ps1_green.y()/scale_ratio_);
-               ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/scale_ratio_)),
+               ps1_blue.set(std::fabs(width-(ps1_blue.x()/scale_ratio_)),
                             ps1_blue.y()/scale_ratio_);
 
            }
@@ -872,18 +872,18 @@ get_sift_along_curve(int start_dart, int end_dart)
 dbskr_sc_pair_sptr dbskfg_cgraph_directed_tree::
 get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 {
-  vcl_pair<int, int> p;
+  std::pair<int, int> p;
   p.first = start_dart;
   p.second = end_dart;
-  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+  std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
       dart_path_scurve_map_.find(p);
 
   if (iter == dart_path_scurve_map_.end()) // not found yet
   {    
-    vcl_vector<int>& dart_list = this->get_dart_path(start_dart, end_dart);
+    std::vector<int>& dart_list = this->get_dart_path(start_dart, end_dart);
     
     dbskfg_composite_node_sptr start_node;  
-    vcl_vector<dbskfg_composite_link_sptr> edges;
+    std::vector<dbskfg_composite_link_sptr> edges;
 
     // get the underlying shock graph edge list for this dart path on the tree
     this->get_edge_list(dart_list, start_node, edges);
@@ -912,7 +912,7 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
         sc = reconstructor.compute_curve(start_node, edges, 
                                          leaf_[end_dart], 
                                          true, true, 
-                                         vcl_min((float)scurve_sample_ds_, 
+                                         std::min((float)scurve_sample_ds_, 
                                                  interpolate_ds_), 
                                          scurve_sample_ds_,
                                          scale_ratio_,
@@ -924,7 +924,7 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
         sc = reconstructor.compute_curve(start_node, edges, 
                                          false, 
                                          true, true, 
-                                         vcl_min((float)scurve_sample_ds_, 
+                                         std::min((float)scurve_sample_ds_, 
                                                  interpolate_ds_), 
                                          scurve_sample_ds_,
                                          scale_ratio_,
@@ -938,8 +938,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     curve_pair->dense = 0;
 
     //: note: even if interpolate_ds_ is not properly set by the user 
-    //  vcl_min takes care of it
-    //curve_pair->dense = new dbskr_scurve(*sc, curve_pair->c_d_map, vcl_min(scurve_sample_ds_, interpolate_ds_));
+    //  std::min takes care of it
+    //curve_pair->dense = new dbskr_scurve(*sc, curve_pair->c_d_map, std::min(scurve_sample_ds_, interpolate_ds_));
 
     dart_path_scurve_map_[p] = curve_pair;
 
@@ -953,7 +953,7 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     // if ( grad_data_ )
     // {
     //     unsigned int num_points = sc->num_points();
-    //     vcl_vector<vnl_vector_fixed<vl_sift_pix,128> > sift_descrs;
+    //     std::vector<vnl_vector_fixed<vl_sift_pix,128> > sift_descrs;
     //     sift_descrs.reserve(num_points);
     //     for ( unsigned int i=0; i < num_points; ++i)
     //     {
@@ -990,9 +990,9 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 //: return a vector of pointers to the edges in underlying composite graph 
 //   for the given dart list
 void dbskfg_cgraph_directed_tree::
-get_edge_list(const vcl_vector<int>& dart_list,  
+get_edge_list(const std::vector<int>& dart_list,  
               dbskfg_composite_node_sptr& start_node,  
-              vcl_vector<dbskfg_composite_link_sptr>& path) 
+              std::vector<dbskfg_composite_link_sptr>& path) 
 {
   
   int dart_id = dart_list[0];
@@ -1013,39 +1013,39 @@ get_edge_list(const vcl_vector<int>& dart_list,
 
 //------------------------------------------------------------------------------
 //: create and write .shg file to debug splice and contract costs
-bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
+bool dbskfg_cgraph_directed_tree::create_shg(std::string fname)
 {
   //create a file
-  vcl_ofstream outf(fname.c_str(), vcl_ios::out);
+  std::ofstream outf(fname.c_str(), std::ios::out);
   if (!outf){
-    vcl_cerr << "file could not be created";
+    std::cerr << "file could not be created";
     return false;
   }
 
   //Header
   outf << "Shock Graph v1.0 " << "0.0" << " " << 
-      this->total_splice_cost() << " " << this->node_size() << vcl_endl;
+      this->total_splice_cost() << " " << this->node_size() << std::endl;
 
   outf.precision(6);
 
   //costs for the rest of the graph
   for (int nn=0;nn<node_size();nn++)
   {
-    vcl_vector<int>& odarts = out_darts(nn) ;
+    std::vector<int>& odarts = out_darts(nn) ;
     dbskfg_composite_node_sptr cg_node = this->starting_nodes_[odarts.front()];
     dbskfg_shock_node* snode=(dbskfg_shock_node*)(&(*cg_node));
     outf<<snode->pt().x()<<" "<<snode->pt().y()<<" "<<
-        snode->get_radius()<<vcl_endl;
+        snode->get_radius()<<std::endl;
 
     for (unsigned j=0; j<odarts.size(); j++)
     {
         outf << this->head(odarts[j]) << " "   << 
             this->contract_cost(odarts[j]) << " " << 
-            this->delete_cost(odarts[j]) << vcl_endl;
+            this->delete_cost(odarts[j]) << std::endl;
     }
 
     
-    outf << vcl_endl;
+    outf << std::endl;
   }
 
   outf.close();
@@ -1055,21 +1055,21 @@ bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
 //------------------------------------------------------------------------------
 //: compute region descriptor
 void dbskfg_cgraph_directed_tree::compute_region_descriptor(
-    vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment,
+    std::map<int,std::vector<dbskfg_sift_data> >& fragment,
     vsol_box_2d_sptr& bbox)
 {
   // sampling size
   double step_size=2.0;
 
   // Store mates visited
-  vcl_set<int> mates_visited;
+  std::set<int> mates_visited;
 
   bbox=new vsol_box_2d();
 
   // find contract and delete costs for each dart
   for (unsigned int di = 0; di<dart_cnt_; di++) 
   {
-      vcl_pair<int, int> p;
+      std::pair<int, int> p;
       p.first = di;
       p.second = di;
 
@@ -1085,14 +1085,14 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor(
 
       mates_visited.insert(mate_[di]);
 
-      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+      std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
           dart_path_scurve_map_.find(p);
       dbskr_sc_pair_sptr curve_pair=iter->second;
       dbskr_scurve_sptr sc=curve_pair->coarse;
       
-      // vcl_stringstream model_stream;
+      // std::stringstream model_stream;
       // model_stream<<"Dart_model_"<<di<<"_app_correspondence.txt";
-      // vcl_ofstream model_file(model_stream.str().c_str());
+      // std::ofstream model_file(model_stream.str().c_str());
       
       for ( int index=0; index < sc->num_points(); ++index)
       {
@@ -1126,14 +1126,14 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor(
               //           <<","
               //           <<R1-r
               //           <<","
-              //           <<theta<<vcl_endl;
+              //           <<theta<<std::endl;
               // model_file<<pt_minus.x()
               //           <<","
               //           <<pt_minus.y()
               //           <<","
               //           <<R1-r
               //           <<","
-              //           <<theta<<vcl_endl;
+              //           <<theta<<std::endl;
               r +=step_size;
           }
 
@@ -1143,7 +1143,7 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor(
           //           <<","
           //           <<R1
           //           <<","
-          //           <<theta<<vcl_endl;
+          //           <<theta<<std::endl;
           dbskfg_sift_data data_orig;
           data_orig.location_=orig_pt;
           data_orig.radius_=R1;
@@ -1173,7 +1173,7 @@ double  dbskfg_cgraph_directed_tree::
 compute_total_reconstructed_boundary_length()
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1201,10 +1201,10 @@ compute_total_reconstructed_boundary_length()
   {
     unsigned i = to_use[j];
 
-    vcl_pair<int, int> p;
+    std::pair<int, int> p;
     p.first = i;
     p.second = i;
-    vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+    std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
         dart_path_scurve_map_.find(p);
 
     dbskr_scurve_sptr sc = (iter->second)->coarse;
@@ -1223,7 +1223,7 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 (vgl_polygon<double>& poly)
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1246,7 +1246,7 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
   }
 
   //: now concatanate the scurves  
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   unsigned j = 0;
   for (unsigned i = 0; i < dart_cnt_; i++) 
   { 
@@ -1254,10 +1254,10 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
     if (i == to_use[j]) 
     {
 
-        vcl_pair<int, int> p;
+        std::pair<int, int> p;
         p.first = i;
         p.second = i;
-        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
             dart_path_scurve_map_.find(p);
         dbskr_scurve_sptr sc = (iter->second)->coarse;
 
@@ -1273,10 +1273,10 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
     {  
 
         // then mate of i is in to_use
-        vcl_pair<int, int> p;
+        std::pair<int, int> p;
         p.first = mate_[i];
         p.second = mate_[i];
-        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
             dart_path_scurve_map_.find(p);
         dbskr_scurve_sptr sc = (iter->second)->coarse;
 
@@ -1303,7 +1303,7 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 void dbskfg_cgraph_directed_tree::verify_mapping()
 {
     //: find the set of darts to use
-    vcl_vector<unsigned> to_use;
+    std::vector<unsigned> to_use;
     for (unsigned i = 0; i < dart_cnt_; i++) {
         if (leaf_[i]) {
             to_use.push_back(i);
@@ -1325,8 +1325,8 @@ void dbskfg_cgraph_directed_tree::verify_mapping()
             to_use.push_back(i);
     }
 
-    vcl_vector<vgl_point_2d<double> > points;
-    vcl_vector<double > distances;
+    std::vector<vgl_point_2d<double> > points;
+    std::vector<double > distances;
 
     //: now concatanate the scurves  
     for (unsigned j = 0; j < to_use.size() ; j++) 
@@ -1334,10 +1334,10 @@ void dbskfg_cgraph_directed_tree::verify_mapping()
 
         unsigned i = to_use[j];
 
-        vcl_pair<int, int> p;
+        std::pair<int, int> p;
         p.first = i;
         p.second = i;
-        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
             dart_path_scurve_map_.find(p);
 
         dbskr_scurve_sptr sc = (iter->second)->coarse;
@@ -1378,7 +1378,7 @@ void dbskfg_cgraph_directed_tree::verify_mapping()
     }
 
 
-    vcl_stringstream streamer;
+    std::stringstream streamer;
 
     if ( id_ < 10 )
     {
@@ -1393,12 +1393,12 @@ void dbskfg_cgraph_directed_tree::verify_mapping()
         streamer<<"Model_0"<<id_<<"_mapping.txt";
     }
 
-    vcl_ofstream output(streamer.str().c_str());
+    std::ofstream output(streamer.str().c_str());
 
     for ( unsigned int kk=0; kk < distances.size() ; ++kk)
     {
         output<<points[kk].x()<<" "<<points[kk].y()<<" "
-              <<distances[kk]<<vcl_endl;
+              <<distances[kk]<<std::endl;
     }
     
     
@@ -1415,10 +1415,10 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
 
     int N=5;
     double step_size=1;
-    vcl_vector<rsdl_point> xy_points;
+    std::vector<rsdl_point> xy_points;
 
     //: find the set of darts to use
-    vcl_vector<unsigned> to_use;
+    std::vector<unsigned> to_use;
     for (unsigned i = 0; i < dart_cnt_; i++) {
         if (leaf_[i]) {
             to_use.push_back(i);
@@ -1447,10 +1447,10 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
 
         unsigned i = to_use[j];
 
-        vcl_pair<int, int> p;
+        std::pair<int, int> p;
         p.first = i;
         p.second = i;
-        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
             dart_path_scurve_map_.find(p);
       
         dbskr_scurve_sptr sc = (iter->second)->coarse;
@@ -1516,12 +1516,12 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
     //         vnl_double_2 temp(x,y);
     //         rsdl_point query(temp);
 
-    //         vcl_vector< rsdl_point > cpoints;
-    //         vcl_vector< int > cindices;
+    //         std::vector< rsdl_point > cpoints;
+    //         std::vector< int > cindices;
 
     //         kd_tree.n_nearest( query, 1, cpoints, cindices);
 
-    //         vcl_pair<int,int> key(x,y);
+    //         std::pair<int,int> key(x,y);
     //         xy_st_mapping_[key]=st_points_[cindices[0]];
     //     }
 
@@ -1538,12 +1538,12 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
 void dbskfg_cgraph_directed_tree::compute_grid()
 {
 
-    vcl_vector<vcl_pair<vgl_point_2d<double>,
+    std::vector<std::pair<vgl_point_2d<double>,
                         vgl_point_2d<double> > > lines;
-    vcl_vector<bool> shock_lines;
+    std::vector<bool> shock_lines;
 
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1566,17 +1566,17 @@ void dbskfg_cgraph_directed_tree::compute_grid()
   }
 
   //: now concatanate the scurves  
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   unsigned j = 0;
   for (unsigned i = 0; i < dart_cnt_; i++) 
   { 
 
     if (i == to_use[j]) 
     {
-      vcl_pair<int, int> p;
+      std::pair<int, int> p;
       p.first = i;
       p.second = i;
-      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+      std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
           dart_path_scurve_map_.find(p);
       dbskr_scurve_sptr sc = (iter->second)->coarse;
 
@@ -1585,20 +1585,20 @@ void dbskfg_cgraph_directed_tree::compute_grid()
     }
   }
 
-  vcl_stringstream sstream;
+  std::stringstream sstream;
   sstream<<"Model_grid_000"<<id_<<".txt";
 
-  vcl_ofstream stream(sstream.str().c_str());
+  std::ofstream stream(sstream.str().c_str());
 
   for ( unsigned int kk=0; kk < lines.size(); ++kk)
   {
-      vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+      std::pair<vgl_point_2d<double>,vgl_point_2d<double> >
           pair=lines[kk];
       stream<<pair.first.x()<<" "
             <<pair.first.y()<<" "
             <<pair.second.x()<<" "
             <<pair.second.y()<<" "
-            <<shock_lines[kk]<<vcl_endl;
+            <<shock_lines[kk]<<std::endl;
 
   }
 
@@ -1610,10 +1610,10 @@ void dbskfg_cgraph_directed_tree::compute_grid()
 //: uses the already existing scurves, so if circular_ends = true 
 // while acquiring the tree then the outline will have circular completions
 void dbskfg_cgraph_directed_tree::compute_scurve_polygons
-(vcl_string& prefix)
+(std::string& prefix)
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1636,7 +1636,7 @@ void dbskfg_cgraph_directed_tree::compute_scurve_polygons
   }
 
   //: now concatanate the scurves  
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   unsigned j = 0;
   for (unsigned i = 0; i < dart_cnt_; i++) 
   { 
@@ -1644,13 +1644,13 @@ void dbskfg_cgraph_directed_tree::compute_scurve_polygons
     if (i == to_use[j]) 
     {
 
-      vcl_stringstream streamer;
+      std::stringstream streamer;
       streamer<<prefix<<"_"<<i<<"_dart.txt";
 
-      vcl_pair<int, int> p;
+      std::pair<int, int> p;
       p.first = i;
       p.second = i;
-      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+      std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
           dart_path_scurve_map_.find(p);
       dbskr_scurve_sptr sc = (iter->second)->coarse;
 
@@ -1667,10 +1667,10 @@ void dbskfg_cgraph_directed_tree::compute_scurve_polygons
 //: uses the already existing scurves, so if circular_ends = true 
 // while acquiring the tree then the outline will have circular completions
 void dbskfg_cgraph_directed_tree::get_polygon_scurves
-(vcl_vector<vgl_polygon<double> >& polys)
+(std::vector<vgl_polygon<double> >& polys)
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1693,7 +1693,7 @@ void dbskfg_cgraph_directed_tree::get_polygon_scurves
   }
 
   //: now concatanate the scurves  
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   unsigned j = 0;
   for (unsigned i = 0; i < dart_cnt_; i++) 
   { 
@@ -1701,10 +1701,10 @@ void dbskfg_cgraph_directed_tree::get_polygon_scurves
     if (i == to_use[j]) 
     {
 
-      vcl_pair<int, int> p;
+      std::pair<int, int> p;
       p.first = i;
       p.second = i;
-      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+      std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
           dart_path_scurve_map_.find(p);
       dbskr_scurve_sptr sc = (iter->second)->coarse;
 
@@ -1730,10 +1730,10 @@ void dbskfg_cgraph_directed_tree::get_polygon_scurves
 //: uses the already existing scurves, so if circular_ends = true 
 // while acquiring the tree then the outline will have circular completions
 void dbskfg_cgraph_directed_tree::compute_sift_tree
-(vcl_vector<vl_sift_pix>& descriptors)
+(std::vector<vl_sift_pix>& descriptors)
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1762,10 +1762,10 @@ void dbskfg_cgraph_directed_tree::compute_sift_tree
 
       unsigned i = to_use[j];
 
-      vcl_pair<int, int> p;
+      std::pair<int, int> p;
       p.first = i;
       p.second = i;
-      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+      std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
           dart_path_scurve_map_.find(p);
       
       dbskr_scurve_sptr sc = (iter->second)->coarse;
@@ -1824,7 +1824,7 @@ void dbskfg_cgraph_directed_tree::compute_descriptor(
     vgl_point_2d<double>& model_pt,
     double& model_radius,
     double& model_theta,
-    vcl_vector<vl_sift_pix>& descriptors)
+    std::vector<vl_sift_pix>& descriptors)
 {
 
     vl_sift_pix descr_ps1_red[128];
@@ -1897,7 +1897,7 @@ void dbskfg_cgraph_directed_tree::compute_descriptor(
 void  dbskfg_cgraph_directed_tree::compute_average_ds()
 {
   //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
+  std::vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
     if (leaf_[i]) {
       to_use.push_back(i);
@@ -1918,39 +1918,39 @@ void  dbskfg_cgraph_directed_tree::compute_average_ds()
     if (!contain)
       to_use.push_back(i);
   }
-  vcl_vector<double> ds_boundary;
-  vcl_vector<double> ds_shock;
+  std::vector<double> ds_boundary;
+  std::vector<double> ds_shock;
 
   //: now add up the scurves lengths
   for (unsigned j = 0; j < to_use.size(); j++) 
   {
     unsigned i = to_use[j];
 
-    vcl_pair<int, int> p;
+    std::pair<int, int> p;
     p.first = i;
     p.second = i;
-    vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+    std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
         dart_path_scurve_map_.find(p);
 
     dbskr_scurve_sptr sc = (iter->second)->coarse;
     
     for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
     {
-        double ds=vcl_fabs(sc->boundary_plus_arclength(kk)-
+        double ds=std::fabs(sc->boundary_plus_arclength(kk)-
                            sc->boundary_plus_arclength(kk-1));
         ds_boundary.push_back(ds);
     }
 
     for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
     {
-        double ds=vcl_fabs(sc->boundary_minus_arclength(kk)-
+        double ds=std::fabs(sc->boundary_minus_arclength(kk)-
                            sc->boundary_minus_arclength(kk-1));
         ds_boundary.push_back(ds);
     }
 
     for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
     {
-        double ds=vcl_fabs(sc->arclength(kk)-
+        double ds=std::fabs(sc->arclength(kk)-
                            sc->arclength(kk-1));
         ds_shock.push_back(ds);
     }
@@ -2013,8 +2013,8 @@ void dbskfg_cgraph_directed_tree::compute_bounding_box()
 void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
 {
 
-    vcl_vector<double> bdry_plus_outer_shock_radius;
-    vcl_vector<double> bdry_minus_outer_shock_radius;
+    std::vector<double> bdry_plus_outer_shock_radius;
+    std::vector<double> bdry_minus_outer_shock_radius;
 
     unsigned int num_points = sc->num_points();
     for ( unsigned int i=0; i < num_points; ++i)
@@ -2028,8 +2028,8 @@ void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
         if ( mirror_)
         {
             double width = bbox_->width();
-            plus_pt.set(vcl_fabs(width-plus_pt.x()),plus_pt.y());
-            minus_pt.set(vcl_fabs(width-minus_pt.x()),minus_pt.y());
+            plus_pt.set(std::fabs(width-plus_pt.x()),plus_pt.y());
+            minus_pt.set(std::fabs(width-minus_pt.x()),minus_pt.y());
         }
 
         double plus_radius = this->composite_graph_->get_nn_radius(plus_pt);

@@ -10,7 +10,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -39,13 +39,13 @@ bool psm_refine_scene_process_cons(bprb_func_process& pro)
   // input[1]: The threshold for occlusion probability for refining octree cells.
   // input[2]: "true" if appearance of refined cells is to be reset
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
   input_types_[1] = "float";
   input_types_[2] = "bool";
 
   // output[0]: The number of leaf nodes in the scene
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "unsigned int";
 
   if (!pro.set_input_types(input_types_))
@@ -67,7 +67,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -88,7 +88,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_refine_scene(*scene, occlusion_prob_thresh, reset_refined_appearance);
@@ -99,7 +99,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_refine_scene(*scene, occlusion_prob_thresh, reset_refined_appearance);
@@ -110,7 +110,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_refine_scene(*scene, occlusion_prob_thresh, reset_refined_appearance);
@@ -121,7 +121,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_refine_scene(*scene, occlusion_prob_thresh, reset_refined_appearance);
@@ -129,7 +129,7 @@ bool psm_refine_scene_process(bprb_func_process &pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_refine_scene_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_refine_scene_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
 

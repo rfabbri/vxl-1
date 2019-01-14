@@ -4,9 +4,9 @@
 // \author    Kongbin Kang
 // \date        2006-04-03
 // 
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
+#include <fstream>
+#include <vector>
+#include <sstream>
 #include <vgl/vgl_vector_3d.h>
 #include <vsol/vsol_cylinder.h>
 #include <xscan/xscan_scan.h>
@@ -20,7 +20,7 @@ struct CYLINDER
   CYLINDER(vsol_cylinder const & cyl, double strength) : cyl_(cyl), intensity_(strength) {}
 };
 
-typedef vcl_vector<CYLINDER > cylinder_vec;
+typedef std::vector<CYLINDER > cylinder_vec;
 
 cylinder_vec  read_cylinders(char* file_name, int& num, double& min_strength, double& max_strength)
 {
@@ -39,14 +39,14 @@ cylinder_vec  read_cylinders(char* file_name, int& num, double& min_strength, do
     if (max_strength < strength)
       max_strength = strength;
   
-    vcl_cout << strength << " min=" << min_strength << " max=" << max_strength << vcl_endl;
+    std::cout << strength << " min=" << min_strength << " max=" << max_strength << std::endl;
 
     vsol_cylinder cylinder;
     cylinder.b_read(istream);
     
     cylinders.push_back(CYLINDER(cylinder, strength));
 
-    vcl_cout << cylinder << vcl_endl;
+    std::cout << cylinder << std::endl;
 
   }
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 {
   if(argc < 12)
   {
-    vcl_cout << "Usage: " << argv[0] <<" cylinder_file reconlog_file scan_file output_file minx(mm) miny(mm) minz(mm) maxx(mm) maxy(mm) maxz(mm) spacing(mm)\n ";
+    std::cout << "Usage: " << argv[0] <<" cylinder_file reconlog_file scan_file output_file minx(mm) miny(mm) minz(mm) maxx(mm) maxy(mm) maxz(mm) spacing(mm)\n ";
     exit(1);
   }
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
   
   double minx, miny, minz, maxx, maxy, maxz, spacing;
 
-  vcl_stringstream ss;
+  std::stringstream ss;
   ss << argv[5];
   ss >> minx;
   ss.clear();
@@ -101,10 +101,10 @@ int main(int argc, char* argv[])
 
   vsl_b_ofstream ostream(argv[4]);
 
-  vcl_ifstream scanfile(argv[3]);
+  std::ifstream scanfile(argv[3]);
   if(!scanfile)
   {
-    vcl_cout <<"Open scan file failed\n";
+    std::cout <<"Open scan file failed\n";
     exit(2);
   }
 
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 #endif
     if(1)
     {
-       vcl_cout <<"cylinder segment is centered on" << c <<"\n";
+       std::cout <<"cylinder segment is centered on" << c <<"\n";
        selected_cyls.push_back(cylinders[i]);
     }
      
@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
     selected_cyls[i].cyl_.b_write(ostream);
   }
 
-  vcl_cout <<"center of the box is on " << 
+  std::cout <<"center of the box is on " << 
     skyscan.bsc_to_fbpc(vgl_point_3d<double>((minx+maxx)/2, (miny+maxy)/2, (minz+maxz)/2) )<<"\n";
   return 0;
 }

@@ -4,12 +4,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -21,14 +21,14 @@
 #include <bgui3d/bgui3d.h>
 
 
-vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_models)
+std::vector<vehicle_model> read_models(std::string vehicle_model_info,int num_models)
     {
     int i,j,k;
     double x,y;
     char ch;
-    vcl_ifstream ifst(vehicle_model_info.c_str());
-    vcl_vector<vehicle_model> model_vec;
-    vcl_vector<vsol_rectangle_2d> box1,box2,box3;
+    std::ifstream ifst(vehicle_model_info.c_str());
+    std::vector<vehicle_model> model_vec;
+    std::vector<vsol_rectangle_2d> box1,box2,box3;
 
     vsol_point_2d p0,p1,p2,p3;
 
@@ -96,10 +96,10 @@ vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_mode
 
 int main(int argc,char **argv)
     {
-    vcl_string vehicle_model_info = argv[1];
-    vcl_string intrinsic_mean_info = argv[2];
-    vcl_string vrml_file = argv[3];
-    vcl_string text_file = argv[4];
+    std::string vehicle_model_info = argv[1];
+    std::string intrinsic_mean_info = argv[2];
+    std::string vrml_file = argv[3];
+    std::string text_file = argv[4];
 
    /* int my_argc = 1;
     char ** my_argv = new char*[argc+1];
@@ -115,33 +115,33 @@ int main(int argc,char **argv)
     double diag_engine_ref,diag_body_ref,diag_rear_ref;
     double diag_engine,diag_body,diag_rear;
 
-    vcl_vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
-    vcl_vector<vehicle_model> intrinsic_mean_model = read_models(intrinsic_mean_info,1);
+    std::vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
+    std::vector<vehicle_model> intrinsic_mean_model = read_models(intrinsic_mean_info,1);
 
     //set the reference model as the intrinsic mean model
     //vehicle_model ref_model(model_vec[0].engine(),model_vec[0].body(),model_vec[0].rear());
      vehicle_model ref_model(intrinsic_mean_model[0].engine(),intrinsic_mean_model[0].body(),intrinsic_mean_model[0].rear());
 
-    diag_engine_ref = vcl_pow((ref_model.engine().height()),2) + vcl_pow((ref_model.engine().width()),2);
-    diag_body_ref = vcl_pow((ref_model.body().height()),2) + vcl_pow((ref_model.body().width()),2);
-    diag_rear_ref = vcl_pow((ref_model.rear().height()),2) + vcl_pow((ref_model.rear().width()),2);
+    diag_engine_ref = std::pow((ref_model.engine().height()),2) + std::pow((ref_model.engine().width()),2);
+    diag_body_ref = std::pow((ref_model.body().height()),2) + std::pow((ref_model.body().width()),2);
+    diag_rear_ref = std::pow((ref_model.rear().height()),2) + std::pow((ref_model.rear().width()),2);
 
 
-    vcl_vector<double> s1,s2,s3;
+    std::vector<double> s1,s2,s3;
 
     for (i = 0;i<num_models;i++)
         {
-        diag_engine = vcl_pow((model_vec[i].engine().height()),2) + vcl_pow((model_vec[i].engine().width()),2);
-        diag_body = vcl_pow((model_vec[i].body().height()),2) + vcl_pow((model_vec[i].body().width()),2);
-        diag_rear = vcl_pow((model_vec[i].rear().height()),2) + vcl_pow((model_vec[i].rear().width()),2);
+        diag_engine = std::pow((model_vec[i].engine().height()),2) + std::pow((model_vec[i].engine().width()),2);
+        diag_body = std::pow((model_vec[i].body().height()),2) + std::pow((model_vec[i].body().width()),2);
+        diag_rear = std::pow((model_vec[i].rear().height()),2) + std::pow((model_vec[i].rear().width()),2);
 
         s1.push_back(diag_engine/diag_engine_ref);
         s2.push_back(diag_body/diag_body_ref);
         s3.push_back(diag_rear/diag_rear_ref);
         }
 
-    vcl_ofstream out(vrml_file.c_str());
-    vcl_ofstream text_file_info(text_file.c_str());
+    std::ofstream out(vrml_file.c_str());
+    std::ofstream text_file_info(text_file.c_str());
 
     out <<      "#VRML V2.0 utf8\n";
     out <<      "Background { \n";
@@ -208,7 +208,7 @@ out << "} \n";
 //s_b1 = k*0.6589;
 //s_b2 = k*0.3116;
 //s_b3 = k*0.6847;
-//out <<" " << s_b1<<" " << s_b2 << " " <<s_b3 << vcl_endl;
+//out <<" " << s_b1<<" " << s_b2 << " " <<s_b3 << std::endl;
 //num_points++;
 //    }
 //

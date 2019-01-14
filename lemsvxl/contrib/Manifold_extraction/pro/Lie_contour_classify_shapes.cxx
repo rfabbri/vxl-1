@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -34,7 +34,7 @@ Lie_contour_classify_shapes::Lie_contour_classify_shapes()
         !parameters()->add( "samples curve 2: " , "-num_samples_c2" , 100 ))
 
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_contour_classify_shapes::Lie_contour_classify_shapes()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_contour_classify_shapes::Lie_contour_classify_shapes()" << std::endl;
         }
 
     }
@@ -59,7 +59,7 @@ bool Lie_contour_classify_shapes::execute()
     clear_output();
 
     bpro1_filepath mean_file_1,mean_file_2,new_file,geodesic_file_1,geodesic_file_2,costs_new_file;
-    vcl_string mean_path_1,mean_path_2,new_class_path,geodesic_path_1,geodesic_path_2,costs_new_shapes;
+    std::string mean_path_1,mean_path_2,new_class_path,geodesic_path_1,geodesic_path_2,costs_new_shapes;
 
     int num_samples_c1,num_samples_c2;
 
@@ -81,24 +81,24 @@ bool Lie_contour_classify_shapes::execute()
    
 
     // construct the first curve
-    vcl_vector<vsol_point_2d_sptr> mean_points_1,mean_points_2;
+    std::vector<vsol_point_2d_sptr> mean_points_1,mean_points_2;
 
     loadCON(mean_path_1,mean_points_1);
     loadCON(mean_path_2,mean_points_2);
 
-    vcl_ifstream infp(new_class_path.c_str());
-    vcl_ofstream ofst(costs_new_shapes.c_str());
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > curve_points;
+    std::ifstream infp(new_class_path.c_str());
+    std::ofstream ofst(costs_new_shapes.c_str());
+    std::vector<std::vector<vsol_point_2d_sptr> > curve_points;
 
     while (1)
         {
-        vcl_string inp1;
+        std::string inp1;
         infp >>inp1;
 
         if(inp1.size() == 0)
             break;
 
-        vcl_vector<vsol_point_2d_sptr> points1;
+        std::vector<vsol_point_2d_sptr> points1;
         loadCON(inp1, points1);
         dbsol_interp_curve_2d curve1;
         vnl_vector<double> samples1;
@@ -106,7 +106,7 @@ bool Lie_contour_classify_shapes::execute()
        
         double s;
 
-         vcl_vector<vsol_point_2d_sptr> curve1_samples;
+         std::vector<vsol_point_2d_sptr> curve1_samples;
 
         for (unsigned int i = 0;i<num_samples_c1;i++)
             {
@@ -120,23 +120,23 @@ bool Lie_contour_classify_shapes::execute()
         }
     double cost_1,cost_2;
 
-    ofst << "class 1 mean costs: " << "class 2 mean costs: " << vcl_endl;
+    ofst << "class 1 mean costs: " << "class 2 mean costs: " << std::endl;
 
     for (unsigned int i = 0;i<curve_points.size();i++)
         {
         cost_1 = compute_lie_cost(curve_points[i],mean_points_1);
         cost_2 = compute_lie_cost(curve_points[i],mean_points_2);
-        ofst << cost_1 << " " << cost_2 << vcl_endl;
+        ofst << cost_1 << " " << cost_2 << std::endl;
         }
 
-    vcl_vector<double> instance_angles_1,instance_scales_1,instance_angles_2,instance_scales_2;
+    std::vector<double> instance_angles_1,instance_scales_1,instance_angles_2,instance_scales_2;
 
     char* num = new char[1];
     num[0] = '0';
 
     for (unsigned int iter = 1;iter<=3;iter++)
         {
-        vcl_vector<double> geodesic_angles_1,geodesic_scales_1,geodesic_angles_2,geodesic_scales_2;
+        std::vector<double> geodesic_angles_1,geodesic_scales_1,geodesic_angles_2,geodesic_scales_2;
         double proj_cost_1,proj_cost_2;
         int proj_coeff_1,proj_coeff_2;
         sprintf (num, "%d", iter);
@@ -147,11 +147,11 @@ bool Lie_contour_classify_shapes::execute()
         read_geodesic_info(geodesic_path_1,geodesic_angles_1,geodesic_scales_1);
         read_geodesic_info(geodesic_path_2,geodesic_angles_2,geodesic_scales_2);
 
-        ofst << "class 1 geodesic costs: " << "class 2 geodesic costs: " << vcl_endl;
+        ofst << "class 1 geodesic costs: " << "class 2 geodesic costs: " << std::endl;
 
         for (unsigned int i = 0;i<curve_points.size();i++)
             {
-            vcl_vector<double> proj_angles_1,proj_scales_1,proj_angles_2,proj_scales_2;
+            std::vector<double> proj_angles_1,proj_scales_1,proj_angles_2,proj_scales_2;
 
             angles_scales(curve_points[i],mean_points_1,instance_angles_1,instance_scales_1);
             angles_scales(curve_points[i],mean_points_2,instance_angles_2,instance_scales_2);
@@ -163,7 +163,7 @@ bool Lie_contour_classify_shapes::execute()
                 proj_angles_2,proj_scales_2,proj_cost_2,proj_coeff_2);
 
 
-            ofst << proj_cost_1 << " " << proj_cost_2 << " " << proj_coeff_1 << " " << proj_coeff_2 << vcl_endl;
+            ofst << proj_cost_1 << " " << proj_cost_2 << " " << proj_coeff_1 << " " << proj_coeff_2 << std::endl;
             }
         }
 

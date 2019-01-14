@@ -71,9 +71,9 @@ void dbsk2d_sample_ishock::mark_inside_outside()
     dbsk2d_shock_node_sptr cur_node = (*curN);
 
     //create a new component with it and its children
-    cc_label_map.insert(vcl_pair<int, int>(cur_node->id(), cur_node->id()));
+    cc_label_map.insert(std::pair<int, int>(cur_node->id(), cur_node->id()));
     
-    vcl_vector<int> components;
+    std::vector<int> components;
     components.push_back(cur_node->id());
 
     for (dbsk2d_shock_node::edge_iterator e_it = cur_node->out_edges_begin();
@@ -81,20 +81,20 @@ void dbsk2d_sample_ishock::mark_inside_outside()
     {
       dbsk2d_shock_edge_sptr ch_edge = (*e_it);
 
-      cc_label_map.insert(vcl_pair<int, int>(ch_edge->id(), cur_node->id()));
+      cc_label_map.insert(std::pair<int, int>(ch_edge->id(), cur_node->id()));
       components.push_back(ch_edge->id());
     }
 
     //save this component
-    cc_elms.insert(vcl_pair<int, vcl_vector<int> >(cur_node->id(), components));
+    cc_elms.insert(std::pair<int, std::vector<int> >(cur_node->id(), components));
   }
 
   ////FOR DEBUG
-  //vcl_cout << "Components list before connecting: \n";
-  //for (vcl_map<int, vcl_vector<int> >::iterator it = cc_elms.begin();
+  //std::cout << "Components list before connecting: \n";
+  //for (std::map<int, std::vector<int> >::iterator it = cc_elms.begin();
   //     it != cc_elms.end(); it++)
   //{
-  //  vcl_cout << it->first << ": " << it->second.size() << vcl_endl;
+  //  std::cout << it->first << ": " << it->second.size() << std::endl;
   //}
 
   //2) Traverse over all junctions and sinks and relabel
@@ -160,11 +160,11 @@ void dbsk2d_sample_ishock::mark_inside_outside()
   }
 
   ////FOR DEBUG
-  //vcl_cout << "Components list: \n";
-  //for (vcl_map<int, vcl_vector<int> >::iterator it = cc_elms.begin();
+  //std::cout << "Components list: \n";
+  //for (std::map<int, std::vector<int> >::iterator it = cc_elms.begin();
   //     it != cc_elms.end(); it++)
   //{
-  //  vcl_cout << it->first << ": " << it->second.size() << vcl_endl;
+  //  std::cout << it->first << ": " << it->second.size() << std::endl;
   //}
 
   //3) Go over all the components and remove all the components
@@ -184,13 +184,13 @@ void dbsk2d_sample_ishock::mark_inside_outside()
     dbsk2d_shock_edge_sptr cur_edge = (*curE);
     if (!cur_edge->target()){ //remove this edge's component
       cc_elms[cc_label_map[cur_edge->id()]].clear();
-      //vcl_cout << "E:"<<cur_edge->id() << "goes to inf.\n";
+      //std::cout << "E:"<<cur_edge->id() << "goes to inf.\n";
     }
   }
 
   //4) label the largest remaining group as the inside shock graph
   unsigned cur_largest_size = 0;
-  for (vcl_map<int, vcl_vector<int> >::iterator it = cc_elms.begin();
+  for (std::map<int, std::vector<int> >::iterator it = cc_elms.begin();
        it != cc_elms.end(); it++)
   {
     int component_id = it->first;
@@ -229,7 +229,7 @@ void dbsk2d_sample_ishock::sample_all_nodes(int option)
     xshock_graph->add_vertex(new_xnode->cast_to_shock_node());
 
     //insert it into the nodes map
-    nodes_map.insert(vcl_pair<int, dbsk2d_shock_node_sptr>(cur_node->id(), new_xnode));
+    nodes_map.insert(std::pair<int, dbsk2d_shock_node_sptr>(cur_node->id(), new_xnode));
 
     //sample this node if degenerate
     sample_shock_node(cur_node, (dbsk2d_xshock_node*)new_xnode.ptr());
@@ -241,7 +241,7 @@ void dbsk2d_sample_ishock::sample_shock_node(dbsk2d_shock_node_sptr snode,
                                              dbsk2d_xshock_node* new_xnode)
 {
   // sample any (virtual) A-infinity edges on this node
-  vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
+  std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
   for (; p_itr != snode->descriptor_list().end(); ++ p_itr)
   {
     dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
@@ -306,7 +306,7 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
     xshock_graph->add_edge(new_xedge);
 
     //insert it into the edges map
-    edges_map.insert(vcl_pair<int, dbsk2d_shock_edge_sptr>(cur_edge->id(), new_xedge));
+    edges_map.insert(std::pair<int, dbsk2d_shock_edge_sptr>(cur_edge->id(), new_xedge));
 
     //For now, don't sample shock edges that go to infinity
     if (!tgt_xnode){
@@ -315,7 +315,7 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
 
     //2) go through the list of intrinsic shock edges and sample them
     dbsk2d_ishock_edge* last_iedge=0;
-    vcl_list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin();
+    std::list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin();
     for (; curIE != cur_edge->edges().end(); ++ curIE)
     {
       dbsk2d_ishock_edge* cur_iedge = (*curIE);
@@ -387,14 +387,14 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
   }
 
   // Uncomment for debugging
-  // vcl_ofstream file("actual_shock_sample.txt");
-  // vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
+  // std::ofstream file("actual_shock_sample.txt");
+  // std::map<int,std::vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
   // for ( mit = ishock_sample_map_.begin(); mit != ishock_sample_map_.end() ; ++mit)
   // {
   //     for ( unsigned int k=0; k < (*mit).second.size() ; ++k)
   //     {
   //         file<<(*mit).second[k]->pt.x()<<" "
-  //             <<(*mit).second[k]->pt.y()<<vcl_endl;
+  //             <<(*mit).second[k]->pt.y()<<std::endl;
   //     }
   // }
   // file.close();
@@ -437,7 +437,7 @@ void dbsk2d_sample_ishock::sample_ishock_edge(dbsk2d_ishock_pointpoint* spp, dbs
 
     double ds = delta_sample;
     //increment tau to unit arclength on shock
-    next_tau = vcl_atan(2*ds/spp->H() + vcl_tan(tau));
+    next_tau = std::atan(2*ds/spp->H() + std::tan(tau));
 
     //use this next_tau
     tau = next_tau;
@@ -552,7 +552,7 @@ void dbsk2d_sample_ishock::sample_ishock_edge(dbsk2d_ishock_lineline* sll, dbsk2
 
     double ds = delta_sample;
     //increment tau to unit arclength on shock
-    double next_tau = tau + vcl_sqrt(ds*ds/(1+sll->N1L()*sll->N1L())); 
+    double next_tau = tau + std::sqrt(ds*ds/(1+sll->N1L()*sll->N1L())); 
 
     //use this next_tau
     tau = next_tau;
@@ -920,7 +920,7 @@ void dbsk2d_sample_ishock::sample_A1_Ainf_node(dbsk2d_ishock_node* a1ainf,
     double tangent = angle0To2Pi(tan_in + nu*tau);
     cur_sample->theta = tangent;
     double phi = phi_in - tau; //phi always decreases
-    cur_sample->speed = -1/vcl_cos(phi);
+    cur_sample->speed = -1/std::cos(phi);
     cur_sample->left_bnd_pt = _translatePoint(a1ainf->origin(), tangent+phi, a1ainf->startTime()); //FIX ME!! (this will only work with A1-Ainf not Ainf-Ainf)
     cur_sample->right_bnd_pt = _translatePoint(a1ainf->origin(), tangent-phi, a1ainf->startTime());//FIX ME!!
     cur_sample->left_bnd_tangent = 0; //xx
@@ -944,7 +944,7 @@ void dbsk2d_sample_ishock::sample_A1_Ainf_node(dbsk2d_ishock_node* a1ainf,
   double tangent = angle0To2Pi(tan_in + nu*etau);
   cur_sample->theta = tangent;
   double phi = phi_in - etau; //phi always decreases
-  cur_sample->speed = -1/vcl_cos(phi);
+  cur_sample->speed = -1/std::cos(phi);
   cur_sample->left_bnd_pt = _translatePoint(a1ainf->origin(), tangent+phi, a1ainf->startTime()); //FIX ME!! (this will only work with A1-Ainf not Ainf-Ainf)
   cur_sample->right_bnd_pt = _translatePoint(a1ainf->origin(), tangent-phi, a1ainf->startTime());//FIX ME!!
   cur_sample->left_bnd_tangent = 0; //xx

@@ -14,7 +14,7 @@
 #include <vgui/vgui_displaybase_tableau.h>
 
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vul/vul_timer.h>
 
 #include <bvis/bvis_gl_codec.h>
@@ -87,7 +87,7 @@ void
 bvis_video_manager::set_costum_window()
 {
   vgui_dialog frames_dlg("Costum Window Size");
-  vcl_stringstream prompt;
+  std::stringstream prompt;
   prompt << "Enter window size ";
   int size = 0;
   frames_dlg.field(prompt.str().c_str(), size);
@@ -107,7 +107,7 @@ bvis_video_manager::unset_costum_window()
 void
 bvis_video_manager::start_recording_macro()
 {
-  vcl_cout << "Recording Process Macro Started..." << vcl_endl;
+  std::cout << "Recording Process Macro Started..." << std::endl;
   process_manager_.start_recording_macro();
   recording_macro_bool_ = true;
 }
@@ -116,7 +116,7 @@ bvis_video_manager::start_recording_macro()
 void 
 bvis_video_manager::stop_recording_macro()
 {
-  vcl_cout << "Stopped Recording Process Macro." << vcl_endl;
+  std::cout << "Stopped Recording Process Macro." << std::endl;
   process_manager_.stop_recording_macro();
   recording_macro_bool_ = false;
 }
@@ -126,8 +126,8 @@ bvis_video_manager::stop_recording_macro()
 void bvis_video_manager::load_repository()
 {
   vgui_dialog load_rep_dlg("Load the repository from a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   load_rep_dlg.file("File:", ext, file_name);
   if( !load_rep_dlg.ask())
     return;
@@ -151,8 +151,8 @@ void bvis_video_manager::load_repository()
 void bvis_video_manager::add_to_repository()
 {
   vgui_dialog add_to_rep_dlg("Add to the repository from a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   add_to_rep_dlg.file("File:", ext, file_name);
   if( !add_to_rep_dlg.ask())
     return;
@@ -174,8 +174,8 @@ void bvis_video_manager::add_to_repository()
 void bvis_video_manager::save_repository()
 {
   vgui_dialog save_rep_dlg("Save the repository to a file");
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.rep";
+  static std::string file_name = "";
+  static std::string ext = "*.rep";
   static bool save_visible = false;
   save_rep_dlg.file("File:", ext, file_name);
   save_rep_dlg.checkbox("Save Visible Only",save_visible);
@@ -184,7 +184,7 @@ void bvis_video_manager::save_repository()
     return;
 
   if(save_visible){
-    vcl_set<vcl_string> names = this->visible_storage();
+    std::set<std::string> names = this->visible_storage();
     repository_->remove_all_except(names);
     repository_->save_data(file_name);
   }
@@ -239,8 +239,8 @@ bvis_video_manager::regenerate_all_tableaux()
   repository_->go_to_frame(0);
   // for each frame
   do{
-    vcl_set<bpro_storage_sptr> all_storages = repository_->get_all_storage_classes();
-    for (vcl_set<bpro_storage_sptr>::iterator asit = all_storages.begin();
+    std::set<bpro_storage_sptr> all_storages = repository_->get_all_storage_classes();
+    for (std::set<bpro_storage_sptr>::iterator asit = all_storages.begin();
       asit != all_storages.end(); asit++)
     {
       add_to_display(*asit);
@@ -262,14 +262,14 @@ void
 bvis_video_manager::make_empty_storage()
 {
   vgui_dialog make_storage_dlg("Make an empty storage class");
-  vcl_vector<vcl_string> types;
-  vcl_set<vcl_string> typeset = repository_->types();
-  for ( vcl_set<vcl_string>::iterator itr = typeset.begin();
+  std::vector<std::string> types;
+  std::set<std::string> typeset = repository_->types();
+  for ( std::set<std::string>::iterator itr = typeset.begin();
     itr != typeset.end();  ++itr )
     types.push_back(*itr);
   static unsigned int choice = 0;
   make_storage_dlg.choice("Type",types,choice);
-  vcl_string name;
+  std::string name;
   make_storage_dlg.field("Name",name);
   bool all_frames = false;
   bool global = false;
@@ -307,8 +307,8 @@ bvis_video_manager::save_view_as_movie() const
   vgui_dialog save_rep_dlg("Save AVI");
   static int start = 1;
   static int end = bvis_video_manager::instance()->repository()->num_frames();
-  static vcl_string file_name = "";
-  static vcl_string ext = "*.avi";
+  static std::string file_name = "";
+  static std::string ext = "*.avi";
   save_rep_dlg.file("File:", ext, file_name);
   save_rep_dlg.field("Start Frame:",start);
   save_rep_dlg.field("End Frame:",end);
@@ -381,7 +381,7 @@ bvis_video_manager::stop_video()
 //
 //  vgui_dialog frames_dlg("Process and Play Video");
 //  int first_frame = repository_->current_frame();   //make sure it is coordinated with the current frame of istream
-//  vcl_stringstream prompt;
+//  std::stringstream prompt;
 //  prompt << "Process from frame "<<first_frame+1<<" to ";
 //  //int last_frame = repository_->num_frames();
 //  int last_frame = 0;
@@ -396,7 +396,7 @@ bvis_video_manager::stop_video()
 //  if (vistream_->is_seekable()) {
 //    if (!vistream_->seek_frame(first_frame + skip_frames_))
 //    {
-//        vcl_cerr<<"ERROR: cannot skip the giving amount of frames\n";
+//        std::cerr<<"ERROR: cannot skip the giving amount of frames\n";
 //        return;
 //    }
 //    
@@ -419,9 +419,9 @@ bvis_video_manager::stop_video()
 //
 //      //load inputs into the repository
 //      //process_manager_.initialize_process_inputs();
-//      vcl_set<bpro_storage_sptr> modified; 
+//      std::set<bpro_storage_sptr> modified; 
 //      process_manager_.run_process_queue_on_current_frame(&modified);
-//      for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+//      for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
 //          itr != modified.end(); ++itr ) {
 //              this->add_to_display(*itr);
 //
@@ -434,14 +434,14 @@ bvis_video_manager::stop_video()
 //
 //  last_frame = vistream_->frame_number();
 //  
-//  vcl_cout << "finish frames " << first_frame+1 << " to " << last_frame+1 << vcl_endl;
+//  std::cout << "finish frames " << first_frame+1 << " to " << last_frame+1 << std::endl;
 //  // finish the process queue
-//  vcl_set<bpro_storage_sptr> modified; 
+//  std::set<bpro_storage_sptr> modified; 
 //  process_manager_.finish_process_queue(first_frame,last_frame,&modified);
 //
 //  //close_ostream();
 //
-//  for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+//  for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
 //    itr != modified.end(); ++itr ) {
 //      this->add_to_display(*itr);
 //  }
@@ -461,7 +461,7 @@ bvis_video_manager::process_and_play_video()
 
   vgui_dialog frames_dlg("Process and Play Video");
   int first_frame = repository_->current_frame();   //make sure it is coordinated with the current frame of istream
-  vcl_stringstream prompt;
+  std::stringstream prompt;
   prompt << "Process from frame "<<first_frame+1<<" to ";
   //int last_frame = repository_->num_frames();
   int last_frame = 0;
@@ -479,9 +479,9 @@ bvis_video_manager::process_and_play_video()
 
     //load inputs into the repository
     //process_manager_.initialize_process_inputs();
-    vcl_set<bpro_storage_sptr> modified; 
+    std::set<bpro_storage_sptr> modified; 
     process_manager_.run_process_queue_on_current_frame(&modified);
-    for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+    for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
       itr != modified.end(); ++itr ) {
         this->add_to_display(*itr);
 
@@ -491,13 +491,13 @@ bvis_video_manager::process_and_play_video()
   }
   is_playing_ = false;
 
-  vcl_cout << "finish frames " << first_frame+1 << " to " << last_frame << vcl_endl;
+  std::cout << "finish frames " << first_frame+1 << " to " << last_frame << std::endl;
 
   // finish the process queue
-  vcl_set<bpro_storage_sptr> modified; 
+  std::set<bpro_storage_sptr> modified; 
   process_manager_.finish_process_queue(first_frame, last_frame, &modified);
 
-  for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+  for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
     itr != modified.end(); ++itr ) {
       this->add_to_display(*itr);
   }
@@ -529,8 +529,8 @@ void bvis_video_manager::prev_frame()
 void
 bvis_video_manager::first_frame()
 {
-  vcl_vector<vcl_string> istream_names = repository_->get_all_storage_class_names("istream");
-  vcl_vector<vcl_string>::iterator is_itr = istream_names.begin();
+  std::vector<std::string> istream_names = repository_->get_all_storage_class_names("istream");
+  std::vector<std::string>::iterator is_itr = istream_names.begin();
   for( ; is_itr != istream_names.end();is_itr++)
   {
     vidpro_istream_storage_sptr vis_sto;
@@ -571,9 +571,9 @@ void bvis_video_manager::goto_frame()
 void
 bvis_video_manager::process_frame()
 {
-  vcl_set<bpro_storage_sptr> modified; 
+  std::set<bpro_storage_sptr> modified; 
   process_manager_.run_process_queue_on_current_frame(&modified);
-  for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+  for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
     itr != modified.end(); ++itr ) {
       this->add_to_display(*itr);
   }
@@ -610,7 +610,7 @@ bvis_video_manager::display_current_frame(bool clear_old)
   }
 
   // update each of the views
-  for( vcl_vector<bvis_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
+  for( std::vector<bvis_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
     v_itr != view_tabs_.end(); ++v_itr ){
 
       // determine which frame this view should use
@@ -624,15 +624,15 @@ bvis_video_manager::display_current_frame(bool clear_old)
       }
 
       // all storage classes at the current frame
-      vcl_set<bpro_storage_sptr> storage_set = repository()->get_all_storage_classes(curr_frame);
+      std::set<bpro_storage_sptr> storage_set = repository()->get_all_storage_classes(curr_frame);
       // all names of tableau attached to the current view
-      const vcl_vector<vcl_string>& all_names = (*v_itr)->selector()->child_names();
+      const std::vector<std::string>& all_names = (*v_itr)->selector()->child_names();
 
       // Check each tableau currently drawn in this view.  For each, do one of the following
       // - remove it if there is no related storage class
       // - replace it with a cached tableau
       // - update it with the data of the storage class
-      for ( vcl_vector<vcl_string>::const_iterator itr = all_names.begin();
+      for ( std::vector<std::string>::const_iterator itr = all_names.begin();
         itr != all_names.end(); ++itr ){
           vgui_tableau_sptr tab = (*v_itr)->selector()->get_tableau(*itr);
           bpro_storage_sptr stg = repository()->get_data_by_name_at(*itr,curr_frame);
@@ -645,7 +645,7 @@ bvis_video_manager::display_current_frame(bool clear_old)
           }
           // check the cache
           if(cache_tableau_){
-            typedef vcl_map< bpro_storage*, vgui_tableau_sptr >::iterator m_itr_t;
+            typedef std::map< bpro_storage*, vgui_tableau_sptr >::iterator m_itr_t;
             m_itr_t search_itr = tableau_map_.find(stg.ptr());
             if(search_itr != tableau_map_.end()){
               storage_set.erase(stg);
@@ -662,17 +662,17 @@ bvis_video_manager::display_current_frame(bool clear_old)
           }
       }
       // create any missing tableau from the storage
-      for(vcl_set<bpro_storage_sptr>::iterator s_itr = storage_set.begin();
+      for(std::set<bpro_storage_sptr>::iterator s_itr = storage_set.begin();
         s_itr != storage_set.end();  ++s_itr)
       {
-        //vcl_string name = (*s_itr)->name();
-        vcl_string name; repository_->get_storage_name(*s_itr,name);
-        vcl_string type; repository_->get_storage_type(*s_itr,type);
+        //std::string name = (*s_itr)->name();
+        std::string name; repository_->get_storage_name(*s_itr,name);
+        std::string type; repository_->get_storage_type(*s_itr,type);
         /*  if (type == "istream") 
         continue;*/
 
         // only create a new tableau if it hasn't already been created
-        typedef vcl_map< bpro_storage*, vgui_tableau_sptr >::iterator m_itr_t;
+        typedef std::map< bpro_storage*, vgui_tableau_sptr >::iterator m_itr_t;
         m_itr_t search_itr = tableau_map_.find(s_itr->ptr());
         if(search_itr != tableau_map_.end()){
           (*v_itr)->selector()->add(search_itr->second, name);
@@ -703,7 +703,7 @@ void bvis_video_manager::redraw()
   redraw(vistream_);
 }
 
-void bvis_video_manager::redraw(vidl_istream_sptr const&vistream, vcl_string const &istream_name)
+void bvis_video_manager::redraw(vidl_istream_sptr const&vistream, std::string const &istream_name)
 {
 
   if (vistream) {
@@ -729,20 +729,20 @@ void bvis_video_manager::redraw(vidl_istream_sptr const&vistream, vcl_string con
 
         int cf = repository_->current_frame();
 
-        brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, vcl_string(istream_name + "_unpro" ));
+        brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, std::string(istream_name + "_unpro" ));
         brdb_selection_sptr s = DATABASE->select("image", Q);
 
         if(s->empty())
         {
           DATABASE->
-            add_tuple("image", new brdb_tuple(cf+1,vcl_string(istream_name + "_unpro"),sto));
+            add_tuple("image", new brdb_tuple(cf+1,std::string(istream_name + "_unpro"),sto));
           repository_->go_to_next_frame();
         }
         s->update_selected_tuple_value("sptr",sto);
       }
       else
       {
-        vcl_cerr<<"Warning at bvis_manager::redraw\n"
+        std::cerr<<"Warning at bvis_manager::redraw\n"
           <<"Cannot display requested frame\n";
       }
     }

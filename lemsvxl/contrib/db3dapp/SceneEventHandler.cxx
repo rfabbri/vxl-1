@@ -137,7 +137,7 @@ void
 SceneEventHandler::interrogation( SoPath* path )
 {
   // GET THE NAME
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   
   // NODE SHAPE
   if( path->getTail()->getTypeId() == dbmsh_vis_node::getClassTypeId() )
@@ -177,7 +177,7 @@ SceneEventHandler::addition( SoPath* path )
 {
   // addition can only happen on an unclick
   // so this just keeps track of the highlighted cubes
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   if( !strcmp( name.c_str(), "dbmsh_vis_node" ) )
   {
     dbmsh_vis_node* cube = (dbmsh_vis_node*)path->getTail();
@@ -211,7 +211,7 @@ SceneEventHandler::addition( dbmsh_vis_node* cube )
 void
 SceneEventHandler::deletion( SoPath* path )
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   if( path->getTail()->getTypeId() == dbmsh_vis_node::getClassTypeId() )
   {
     dbmsh_vis_node* node = (dbmsh_vis_node*)path->getTail();
@@ -240,7 +240,7 @@ SceneEventHandler::deletion( SoPath* path )
 void 
 SceneEventHandler::alteration( SoPath* path )
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   if( path->getTail()->getTypeId() == dbmsh_vis_node::getClassTypeId() )
   {
     alteration( (dbmsh_vis_node*)path->getTail() );

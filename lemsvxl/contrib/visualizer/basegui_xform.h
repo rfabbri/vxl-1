@@ -1,9 +1,9 @@
 #ifndef XFORM_H_INCLUDED
 #define XFORM_H_INCLUDED
 
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <string>
+#include <cassert>
+#include <cmath>
 
 class XForm3x3;
 class Vect3;

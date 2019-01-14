@@ -16,13 +16,13 @@
 #ifndef _Lie_contour_match_h
 #define _Lie_contour_match_h
 
-#include <vcl_ctime.h>
+#include <ctime>
 #include <dbsol/dbsol_interp_curve_2d_sptr.h>
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <string>
+#include <utility>
 #define DP_VERY_LARGE_COST 1E10
 
 //value in (-Pi,Pi]
@@ -33,9 +33,9 @@ double Lie_curve_angleDiff (double a1, double a2);
 
 double  Lie_curve_maxof (double a, double b, double c);
 
-typedef vcl_vector< vcl_vector<double> >            DPCostType;
-typedef vcl_vector< vcl_vector< vcl_pair <int,int> > >  DPMapType;
-typedef vcl_vector< vcl_pair<int,int> >            FinalMapType;
+typedef std::vector< std::vector<double> >            DPCostType;
+typedef std::vector< std::vector< std::pair <int,int> > >  DPMapType;
+typedef std::vector< std::pair<int,int> >            FinalMapType;
 
 class Lie_contour_match : public vbl_ref_count
 {
@@ -46,27 +46,27 @@ protected:
   dbsol_interp_curve_2d_sptr _curve2;
 
   DPCostType _cost; //Temporary array for each match (2_n x _m)
-  vcl_vector<int> _leftMask;
-  vcl_vector<int> _rightMask;
+  std::vector<int> _leftMask;
+  std::vector<int> _rightMask;
 
   DPMapType _map; //Temporary array for each match (2_n x _m)
   DPMapType _finalMap; //Shortest Path for each start point (_n+1 x 1)
-  vcl_vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
+  std::vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
 
   //: compute tangents and arclengths at each sample on the curves
-  vcl_vector<double>  _tangents_curve1;
-  vcl_vector<double>  _tangents_curve2;
+  std::vector<double>  _tangents_curve1;
+  std::vector<double>  _tangents_curve2;
 
-  vcl_vector<double>  _lengths_curve1;
-  vcl_vector<double>  _lengths_curve2;
+  std::vector<double>  _lengths_curve1;
+  std::vector<double>  _lengths_curve2;
 
   int _n1;
   int _n2;
   double _R;
   bool _normalized_stretch_cost;
   int _template_size;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 
   double L1, L2;
   double _delta_s1, _delta_s2;
@@ -100,7 +100,7 @@ public:
   double finalCost(int index){return _finalCost[index];};
 
   DPCostType DPcost(){return _cost;};
-  vcl_vector<double> finalCost(){return _finalCost;};
+  std::vector<double> finalCost(){return _finalCost;};
   FinalMapType finalMap(int index){return _finalMap[index];};
   int n1(){return _n1;};
   int n2(){return _n2;};
@@ -112,7 +112,7 @@ public:
 
   //display functions (debug)
   void printCost();
-  void writeCost(vcl_string f);
+  void writeCost(std::string f);
   void printMap();
   
   // Match() corresponds to closedCurveDPMatch(ClosedDPMatch *d) in original source code

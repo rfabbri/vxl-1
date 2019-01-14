@@ -1,7 +1,7 @@
 //: dbsk3d_ms_algos.cxx
 //  MingChing Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 
@@ -20,7 +20,7 @@ void count_ms_vertices (dbmsh3d_graph* SG, int& nA1A3, int& nA14, int& nDegeA1A3
   nDegeA1A3 = 0;
   nDegeA14 = 0;
   nLN = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = SG->vertexmap().begin();
   for (; it != SG->vertexmap().end(); it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*it).second;
     switch (MN->n_type()) {
@@ -54,7 +54,7 @@ void count_ms_curves (dbmsh3d_graph* SG, int& nA3, int& nA13, int& nDege, int& n
   nDege = 0;
   nLC = 0;
   nVirtual = 0;
-  vcl_map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = SG->edgemap().begin();
   for (; it != SG->edgemap().end(); it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it).second;
     switch (MC->c_type()) {
@@ -83,11 +83,11 @@ void count_ms_curves (dbmsh3d_graph* SG, int& nA3, int& nA13, int& nDege, int& n
 //  Check Integrity 
 //#####################################################################
 
-bool check_integrity (vcl_set<dbsk3d_ms_sheet*> MS_set,
-                      vcl_set<dbsk3d_ms_curve*> MC_set,
-                      vcl_set<dbsk3d_ms_node*> MN_set)
+bool check_integrity (std::set<dbsk3d_ms_sheet*> MS_set,
+                      std::set<dbsk3d_ms_curve*> MC_set,
+                      std::set<dbsk3d_ms_node*> MN_set)
 {
-  vcl_set<dbsk3d_ms_sheet*>::iterator sit = MS_set.begin();
+  std::set<dbsk3d_ms_sheet*>::iterator sit = MS_set.begin();
   for (; sit != MS_set.end(); sit++) {
     dbsk3d_ms_sheet* MS = (*sit);
     if (MS->check_integrity() == false) {
@@ -95,7 +95,7 @@ bool check_integrity (vcl_set<dbsk3d_ms_sheet*> MS_set,
       return false;
     }
   }
-  vcl_set<dbsk3d_ms_curve*>::iterator cit = MC_set.begin();
+  std::set<dbsk3d_ms_curve*>::iterator cit = MC_set.begin();
   for (; cit != MC_set.end(); cit++) {
     dbsk3d_ms_curve* MC = (*cit);
     if (MC->check_integrity() == false) {
@@ -103,7 +103,7 @@ bool check_integrity (vcl_set<dbsk3d_ms_sheet*> MS_set,
       return false;
     }
   }
-  vcl_set<dbsk3d_ms_node*>::iterator vit = MN_set.begin();
+  std::set<dbsk3d_ms_node*>::iterator vit = MN_set.begin();
   for (; vit != MN_set.end(); vit++) {
     dbsk3d_ms_node* MN = (*vit);
     if (MN->check_integrity() == false) {
@@ -120,35 +120,35 @@ bool check_integrity (vcl_set<dbsk3d_ms_sheet*> MS_set,
 
 //: Get fs_faces that are with 3 or more coarse-scale shock curves.
 int get_SS_P_n_SCxforms (dbsk3d_ms_hypg* ms_hypg, const int n_xform_th,
-                         vcl_vector<vcl_pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*> >& SS_P_n_SCxforms)
+                         std::vector<std::pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*> >& SS_P_n_SCxforms)
 {
-  vcl_map<int, dbmsh3d_sheet*>::iterator SS_it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator SS_it = ms_hypg->sheetmap().begin();
   for (; SS_it != ms_hypg->sheetmap().end(); SS_it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*SS_it).second;
 
-    vcl_set<dbmsh3d_edge*> incident_Es;
+    std::set<dbmsh3d_edge*> incident_Es;
     MS->get_incident_Es (incident_Es);    
     
-    vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
 
       //Check if FF is incident with more than 2 shock curves.      
-      vcl_set<dbsk3d_ms_curve*> P_incident_SCs;
+      std::set<dbsk3d_ms_curve*> P_incident_SCs;
       get_FF_incident_MCs (FF, incident_Es, P_incident_SCs);
       if (int(P_incident_SCs.size()) > n_xform_th)
-        SS_P_n_SCxforms.push_back (vcl_pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*>(MS, FF));
+        SS_P_n_SCxforms.push_back (std::pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*>(MS, FF));
     }
   }
 
-  vul_printf (vcl_cout, "get_SS_P_n_SCxforms(): %d fs_faces detected.\n", 
+  vul_printf (std::cout, "get_SS_P_n_SCxforms(): %d fs_faces detected.\n", 
               SS_P_n_SCxforms.size());
   return SS_P_n_SCxforms.size();
 }
 
 bool get_FF_incident_MCs (const dbsk3d_fs_face* FF, 
-                          vcl_set<dbmsh3d_edge*>& incident_Es, 
-                          vcl_set<dbsk3d_ms_curve*>& P_incident_SCs)
+                          std::set<dbmsh3d_edge*>& incident_Es, 
+                          std::set<dbsk3d_ms_curve*>& P_incident_SCs)
 {
   dbmsh3d_halfedge* HE = FF->halfedge();
   do {
@@ -162,11 +162,11 @@ bool get_FF_incident_MCs (const dbsk3d_fs_face* FF,
   return P_incident_SCs.empty() == false;
 }
 
-dbsk3d_ms_curve* find_MC_containing_E (vcl_set<dbmsh3d_edge*>& incident_Es, 
+dbsk3d_ms_curve* find_MC_containing_E (std::set<dbmsh3d_edge*>& incident_Es, 
                                        dbsk3d_fs_edge* inputE)
 {
   //Go through each MC in incident_Es and find the inputL.
-  vcl_set<dbmsh3d_edge*>::iterator it = incident_Es.begin();
+  std::set<dbmsh3d_edge*>::iterator it = incident_Es.begin();
   for (; it != incident_Es.end(); it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it);
     if (MC->contain_E (inputE))
@@ -182,18 +182,18 @@ dbsk3d_ms_curve* find_MC_containing_E (vcl_set<dbmsh3d_edge*>& incident_Es,
 void ms_hypg_rib_smooth_within_face (dbsk3d_ms_hypg* ms_hypg, const float psi, const int iter, 
                                      const float tiny_rib_ratio)
 {
-  vul_printf (vcl_cout, "ms_hypg_rib_smooth_within_face(): DCS step_size %f, iter %d, tiny_rib_ratio %f.\n", 
+  vul_printf (std::cout, "ms_hypg_rib_smooth_within_face(): DCS step_size %f, iter %d, tiny_rib_ratio %f.\n", 
               psi, iter, tiny_rib_ratio);
 
   //Loop through all MS with bordering A3ribs.
-  vcl_map<int, dbmsh3d_sheet*>::iterator MSit = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator MSit = ms_hypg->sheetmap().begin();
   for (; MSit != ms_hypg->sheetmap().end(); MSit++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*MSit).second;
     if (MS->has_incident_A3rib() == false)
       continue;
 
     //Loop through each FF with bordering A3rib elements.
-    vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
       if (FF->find_1st_bnd_HE() == false)
@@ -240,7 +240,7 @@ bool remove_tiny_rib_edges (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS,
           FV2 = tmp;
         }
         else {
-          ///vul_printf (vcl_cout, "\t  failed!!\n");
+          ///vul_printf (std::cout, "\t  failed!!\n");
           return false; //TO-DO!!
         }
 
@@ -251,7 +251,7 @@ bool remove_tiny_rib_edges (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS,
           b_break = true;
 
         //Remove nextHE and FE. 
-        vul_printf (vcl_cout, "remove tiny rib FE %d from FF %d.\n",
+        vul_printf (std::cout, "remove tiny rib FE %d from FF %d.\n",
                     FE->id(), FF->id());
 
         //Find the rib MC containing FE.
@@ -320,11 +320,11 @@ bool remove_tiny_rib_edges (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS,
 void ms_hypg_rib_smooth_DCS (dbsk3d_ms_hypg* ms_hypg, const float psi, const int iter, 
                              const float tiny_rib_ratio)
 {
-  vul_printf (vcl_cout, "ms_hypg_rib_smooth_DCS(): DCS step_size %f, iter %d, tiny_rib_ratio %f.\n", 
+  vul_printf (std::cout, "ms_hypg_rib_smooth_DCS(): DCS step_size %f, iter %d, tiny_rib_ratio %f.\n", 
               psi, iter, tiny_rib_ratio);
 
   //Loop through all A3ribs.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = ms_hypg->edgemap().begin();
   for (; eit != ms_hypg->edgemap().end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     if (MC->n_incident_Fs() != 1)
@@ -341,7 +341,7 @@ bool MC_DCS_smooth (dbsk3d_ms_curve* MC, const float psi, const int nsteps)
     return false;
 
   //Identify all sample points to apply DCS.
-  vcl_vector<vgl_point_3d<double> > curve;
+  std::vector<vgl_point_3d<double> > curve;
   get_digi_curve_E_chain (MC->E_vec(), curve);
 
   //DCS smooth the curve.
@@ -356,11 +356,11 @@ bool MC_DCS_smooth (dbsk3d_ms_curve* MC, const float psi, const int nsteps)
 //
 void ms_hypg_rib_smooth_gaussian (dbsk3d_ms_hypg* ms_hypg, const int iter, const float sigma)
 {
-  vul_printf (vcl_cout, "ms_hypg_rib_smooth_gaussian(): Gaussian sigma %f, iter %d.\n", 
+  vul_printf (std::cout, "ms_hypg_rib_smooth_gaussian(): Gaussian sigma %f, iter %d.\n", 
               sigma, iter);
 
   //Loop through all A3ribs.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = ms_hypg->edgemap().begin();
   for (; eit != ms_hypg->edgemap().end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     if (MC->n_incident_Fs() != 1)
@@ -380,7 +380,7 @@ bool MC_gaussian_smooth (dbsk3d_ms_curve* MC, const int iter, const float sigma)
     return false;
 
   //Identify all sample points to apply DCS.
-  vcl_vector<vgl_point_3d<double> > curve;
+  std::vector<vgl_point_3d<double> > curve;
   get_digi_curve_E_chain (MC->E_vec(), curve);
 
   //Gaussian smooth the curve.
@@ -394,8 +394,8 @@ bool MC_gaussian_smooth (dbsk3d_ms_curve* MC, const int iter, const float sigma)
       int step = CURVE_GAUSSIAN_SEG + rand.lrand32 (-5, 5);
       for (int i=0; i<int(curve.size()); i+=step) {
         //smooth curve[i] to curve[i+step-1] (or last)        
-        vcl_vector<vgl_point_3d<double> > sc;
-        int last = vcl_min (i+step, int(curve.size()));
+        std::vector<vgl_point_3d<double> > sc;
+        int last = std::min (i+step, int(curve.size()));
         sc.insert (sc.begin(), curve.begin()+i, curve.begin()+last);
 
         bgld_gaussian_smooth_curve_3d_fixedendpt (sc, sigma, 1);
@@ -427,7 +427,7 @@ dbsk3d_ms_hypg* sub_sampled_w_noise (dbsk3d_ms_hypg* MSH, const float noise)
   vnl_random mzr;
   float d = MSH2->fs_mesh()->compute_median_A122_dist ();
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = MSH2->fs_mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = MSH2->fs_mesh()->vertexmap().begin();
   for (; vit != MSH2->fs_mesh()->vertexmap().end(); vit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*vit).second;
     vgl_point_3d<double> P = FV->pt();

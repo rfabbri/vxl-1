@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include "../vpgl_rays_to_voxels.h"
@@ -97,7 +97,7 @@ static void test_rays_to_voxels()
     int incorrect_proj = 0;
     for( int i = 0; i < 1000; i++ ){
       for( int j = 0; j < 1000; j++ ){
-        vcl_vector< vgl_point_3d<int> > these_ray_voxels;
+        std::vector< vgl_point_3d<int> > these_ray_voxels;
         rtv0.get_ray_voxels( vgl_point_2d<int>(i,j), these_ray_voxels, true );
         if( these_ray_voxels.size() == 0 ) continue;
         for( int v = 0; v < these_ray_voxels.size(); v++ ){
@@ -132,7 +132,7 @@ static void test_rays_to_voxels()
       seen_voxels[i] = false;
     for( int i = 0; i < 1000; i++ ){
       for( int j = 0; j < 1000; j++ ){
-        vcl_vector< vgl_point_3d<int> > these_ray_voxels;
+        std::vector< vgl_point_3d<int> > these_ray_voxels;
         rtv1.get_ray_voxels( vgl_point_2d<int>(i,j), these_ray_voxels, false );
         if( these_ray_voxels.size() == 0 ) continue;
         for( int v = 0; v < these_ray_voxels.size(); v++ ){
@@ -173,21 +173,21 @@ static void test_rays_to_voxels()
     for( double i = -1; i < 1; i+=.2 ){
       for( double j = -1; j < 1; j+=.2 ){
         vgl_homg_point_2d<double> p = C.project( vgl_homg_point_3d<double>(i,j,1) );
-        vcl_cerr << '\n' << p.x()/p.w() << ' ' << p.y()/p.w();
+        std::cerr << '\n' << p.x()/p.w() << ' ' << p.y()/p.w();
       }
     }
 
     for( int i = 0; i < 10; i++ ){
       for( int j = 0; j < 10; j++ ){
-        vcl_cerr << "\npoint " << i << ' ' << j << '\n';
-        vcl_vector< vgl_point_3d<int> > ray_voxels;
+        std::cerr << "\npoint " << i << ' ' << j << '\n';
+        std::vector< vgl_point_3d<int> > ray_voxels;
         rtv.get_ray_voxels( vgl_point_2d<int>(i,j), ray_voxels, true );
         for( unsigned k = 0; k < ray_voxels.size(); k++ ){
           vgl_point_3d<double> voxel_coords = volume_corner + voxel_length*
             vgl_vector_3d<double>( ray_voxels[k].x(), ray_voxels[k].y(), ray_voxels[k].z() );
           vgl_homg_point_2d<double> proj = C.project( 
             vgl_homg_point_3d<double>( voxel_coords ) );
-          vcl_cerr << ray_voxels[k] << "   " <<  proj.x()/proj.w() << ' ' << 
+          std::cerr << ray_voxels[k] << "   " <<  proj.x()/proj.w() << ' ' << 
             proj.y()/proj.w() << '\n';
         }
       }
@@ -214,7 +214,7 @@ static void test_rays_to_voxels()
       seen_voxels[i] = false;
     for( int i = 0; i < 1000; i++ ){
       for( int j = 0; j < 1000; j++ ){
-        vcl_vector< vgl_point_3d<int> > these_ray_voxels;
+        std::vector< vgl_point_3d<int> > these_ray_voxels;
         rtv2.get_ray_voxels( vgl_point_2d<int>(i,j), these_ray_voxels, true );
         if( these_ray_voxels.size() == 0 ) continue;
         for( unsigned v = 0; v < these_ray_voxels.size(); v++ ){

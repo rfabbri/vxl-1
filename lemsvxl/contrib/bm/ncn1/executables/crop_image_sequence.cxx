@@ -16,7 +16,7 @@
 int main(int argc, char *argv[])
 {
     
-    vcl_string video_glob, out_dir;
+    std::string video_glob, out_dir;
  
     if( argc > 2 )
     {
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        vcl_cerr << "Error must provide video glob string and output directory." << vcl_flush;
+        std::cerr << "Error must provide video glob string and output directory." << std::flush;
         return 1;
     }
 
@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
 
     for(unsigned t = 0; t < video_stream.num_frames(); ++t)
     {
-        vcl_cout << "Cropping Frame " << t << " out of " << video_stream.num_frames() << vcl_endl;
+        std::cout << "Cropping Frame " << t << " out of " << video_stream.num_frames() << std::endl;
         vil_image_view<vxl_byte> curr_img,crop_image;
         video_stream.seek_frame(t);
         vidl_convert_to_view(*video_stream.current_frame(),curr_img);
         crop_image = vil_crop(curr_img,185,144,312,45);     
-        vcl_string filename = out_dir + '\\' + vul_file::basename(video_stream.current_path());
+        std::string filename = out_dir + '\\' + vul_file::basename(video_stream.current_path());
         vil_save(crop_image,filename.c_str());
     }
 

@@ -1,7 +1,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "dbvrl_compute_homography_fast_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -44,7 +44,7 @@
 dbvrl_compute_homography_fast_process::dbvrl_compute_homography_fast_process(void): bpro1_process(),total_xform()
 {
 
-  if(!parameters()->add( "Homography Type" , "-transform_type", vcl_string("Affine")) ||
+  if(!parameters()->add( "Homography Type" , "-transform_type", std::string("Affine")) ||
      !parameters()->add( "Downsample image", "-downsample",(bool)false) ||
      !parameters()->add( "Compute Entropy ","-use_entropy",(bool)true) ||
      !parameters()->add( "Entropy Top Percentage To Keep ","-entropythresh_pcent",(float)0.1) ||
@@ -67,7 +67,7 @@ dbvrl_compute_homography_fast_process::dbvrl_compute_homography_fast_process(voi
      !parameters()->add( "Output file < filename ..>" ,          "-fout" ,  bpro1_filepath("","*.*")) 
      )
     {
-      vcl_cerr << "ERROR: Adding parameters in dbvrl_compute_homography_fast_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbvrl_compute_homography_fast_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
   else
     {
@@ -86,7 +86,7 @@ dbvrl_compute_homography_fast_process::~dbvrl_compute_homography_fast_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbvrl_compute_homography_fast_process::name()
 {
   return "Compute Fast Homography";
@@ -110,18 +110,18 @@ dbvrl_compute_homography_fast_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbvrl_compute_homography_fast_process::get_input_type()
+std::vector< std::string > dbvrl_compute_homography_fast_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbvrl_compute_homography_fast_process::get_output_type()
+std::vector< std::string > dbvrl_compute_homography_fast_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -132,22 +132,22 @@ bool
 dbvrl_compute_homography_fast_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbvrl_compute_homography_fast_process::execute() - "
+    std::cout << "In dbvrl_compute_homography_fast_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
-  vcl_cout<<"\n Computing Fast Homography for frame no "<<last_frame_no << '\n';
+  std::cout<<"\n Computing Fast Homography for frame no "<<last_frame_no << '\n';
   clear_output();
   parameters()->get_value( "-rerode" , eroderadius );
   parameters()->get_value( "-rdilate" , dilateradius );
   bpro1_filepath filename;
   parameters()->get_value("-fout",filename);
-  vcl_string fname=filename.path;
+  std::string fname=filename.path;
 
-  vcl_ofstream ofp(fname.c_str(),vcl_ios::out|vcl_ios::app);
+  std::ofstream ofp(fname.c_str(),std::ios::out|std::ios::app);
   if(!ofp)
     {
-      vcl_cout<<"\n Could not open file "<<fname;
+      std::cout<<"\n Could not open file "<<fname;
       return false;
     }
   parameters()->get_value( "-first" , first_frame_ );
@@ -253,11 +253,11 @@ register_image_with_mask(vil_image_view<float> & curr_view,
 {
   //: do registration
   vimt_transform_2d init_xform;
-  vcl_string transform_type;
+  std::string transform_type;
   parameters()->get_value( "-transform_type" , transform_type );
   if(transform_type  ==  "Identity")
     {
-      vcl_cout << "In dbvrl_compute_homograpy_process:: an identity "
+      std::cout << "In dbvrl_compute_homograpy_process:: an identity "
                << "transform doesn't make sense \n";
       assert (false);
     }
@@ -305,7 +305,7 @@ register_image_with_mask(vil_image_view<float> & curr_view,
       init_xform.set_reflection(m1, m2);
     }
   else {
-    vcl_cout << "Unrecoverable error in dbvrl_compute_homography_fast_process"
+    std::cout << "Unrecoverable error in dbvrl_compute_homography_fast_process"
              << " Unkown vimt transform type \n";
     assert(false);
   }
@@ -366,7 +366,7 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
     brip_vil_float_ops::Lucas_KanadeMotion(curr_view,last_view,100,1.0f,vx,vy);
   }
   if (flow_type) {
-    vcl_cout << "Optical flow took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
+    std::cout << "Optical flow took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
 
     //: computing the mean of the velocities of the pixels
     float vxmean,vymean;
@@ -383,7 +383,7 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
     parameters()->get_value("-lmotion",motionthresh);
 
     //: using otsu thresholding method to select the threshold for motion
-    //vcl_vector<double> hist;
+    //std::vector<double> hist;
     //vil_histogram<float>(vsum,hist,lrange_,hrange_,no_of_bins);
     //bsta_otsu_threshold<double> ot(hist,lrange_,hrange_);
     //motionthresh=ot.threshold();
@@ -411,15 +411,15 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
     entropy_img = brip_vil_float_ops::entropy(compute_radius, compute_radius, region_step,
                                               curr_view_resrc, 1.0f, true, false, false);
     
-    vcl_cout << "Entropy Computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
-    vcl_cout << "Entropy Image Size = "<< entropy_img.ni() <<" x "<< entropy_img.nj() << "\n";
+    std::cout << "Entropy Computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
+    std::cout << "Entropy Image Size = "<< entropy_img.ni() <<" x "<< entropy_img.nj() << "\n";
 
 
 
     vil_math_value_range_percentile<float>(entropy_img,
                                              1.0f - entropythresh_pcent,
                                              entropythresh_val);
-    vcl_cout << "Entropy Threshold = "<<entropythresh_val << "\n";
+    std::cout << "Entropy Threshold = "<<entropythresh_val << "\n";
   
   }
 
@@ -428,13 +428,13 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
   parameters()->get_value("-randkeep",rand_keep_pcent);
   rand_keep_pcent = 1.0f - rand_keep_pcent;
 
-  //vil_image_view<float> static_cast<unsigned>(rand_img(vcl_ceil(((float)ni_)/region_step),vcl_ceil(((float)nj_)/region_step)));
+  //vil_image_view<float> static_cast<unsigned>(rand_img(std::ceil(((float)ni_)/region_step),std::ceil(((float)nj_)/region_step)));
   //error: expected unqualified-id before 'static_cast'
-  vil_image_view<float> rand_img(static_cast<unsigned>(vcl_ceil(((float)ni_)/region_step)),static_cast<unsigned>(vcl_ceil(((float)nj_)/region_step)));
+  vil_image_view<float> rand_img(static_cast<unsigned>(std::ceil(((float)ni_)/region_step)),static_cast<unsigned>(std::ceil(((float)nj_)/region_step)));
   if (rand_keep_pcent > 0.0) {
     vnl_random rand_gen;
-    for(unsigned i=0; i < vcl_ceil(((float)ni_)/region_step); i++) 
-      for(unsigned j=0; j < vcl_ceil(((float)nj_)/region_step); j++) 
+    for(unsigned i=0; i < std::ceil(((float)ni_)/region_step); i++) 
+      for(unsigned j=0; j < std::ceil(((float)nj_)/region_step); j++) 
         rand_img(i,j) = (float)rand_gen.drand32(0.0,1.0);
   }
   else 
@@ -509,7 +509,7 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
       else
         mask(i,j)=0.0f;
 
-  vcl_cout << pix_count <<" of "<< ni_*nj_ <<" pixels are above threshold ("<<((float)pix_count)*100.0f / (ni_*nj_) << "%)\n";
+  std::cout << pix_count <<" of "<< ni_*nj_ <<" pixels are above threshold ("<<((float)pix_count)*100.0f / (ni_*nj_) << "%)\n";
                          
   
 
@@ -524,10 +524,10 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
     vil_gauss_reduce(last_view,last_view_small,work_im);
     vil_gauss_reduce(mask,mask_small,work_im);
 
-    vcl_cout << "downsampled - using "<<pix_count<<" pixels for homography\n";
+    std::cout << "downsampled - using "<<pix_count<<" pixels for homography\n";
     timer.mark();
     vimt_transform_2d t2d = this->register_image_with_mask(curr_view_small, last_view_small, mask_small);
-    vcl_cout << "Homography computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
+    std::cout << "Homography computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
 
     // bring transform back to full resolution
     t2d.set_origin( vgl_point_2d<double>(t2d.origin().x()*2.0, 
@@ -536,11 +536,11 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
     return t2d;
 
   }else {
-    vcl_cout << "using "<<pix_count<<" pixels for homography\n";
+    std::cout << "using "<<pix_count<<" pixels for homography\n";
   
     timer.mark();
     vimt_transform_2d t2d = this->register_image_with_mask(curr_view, last_view, mask);
-    vcl_cout << "Homography computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
+    std::cout << "Homography computation took " << timer.real() << "ms, " << timer.user() << "ms user.\n";
 
     return t2d;
   }

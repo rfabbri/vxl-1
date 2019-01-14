@@ -1,7 +1,7 @@
 // This is vidpro/process/vidpro_save_ps_process.h
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include <vidpro/process/vidpro_save_ps_process.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -15,7 +15,7 @@ vidpro_save_ps_process::vidpro_save_ps_process() : bpro_process()
 {
   if( !parameters()->add( "Output file <filename...>" , "-psoutput" , bpro_filepath("","*.ps") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -28,18 +28,18 @@ vidpro_save_ps_process::clone() const
 }
 
 
-vcl_vector< vcl_string > vidpro_save_ps_process::get_input_type()
+std::vector< std::string > vidpro_save_ps_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vsol2D" );
 
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_save_ps_process::get_output_type()
+std::vector< std::string > vidpro_save_ps_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.clear();
 
@@ -53,7 +53,7 @@ bool vidpro_save_ps_process::execute()
   return savePS(output.path);
 }
 
-bool vidpro_save_ps_process::savePS (vcl_string filename)
+bool vidpro_save_ps_process::savePS (std::string filename)
 {
   // get input storage class
   vidpro_vsol2D_storage_sptr input_vsol;
@@ -63,7 +63,7 @@ bool vidpro_save_ps_process::savePS (vcl_string filename)
   vul_psfile psfile1(filename.c_str(), false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -78,7 +78,7 @@ bool vidpro_save_ps_process::savePS (vcl_string filename)
   psfile1.set_fg_color(0,0,1);
 
   // parse through all the vsol classes and save curve objects only
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_curve())

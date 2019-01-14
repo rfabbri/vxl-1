@@ -1,10 +1,10 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_edge_map.h>
 #include <det/edge_det_nonmaximum_suppression.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_erf.h>
@@ -22,26 +22,26 @@ void create_2d_circle_data_analytically(int radius, int centre_x , int centre_y,
   {
     for(int x=0; x<dim; x++)
     {
-      double dist = vcl_sqrt(vcl_pow(x-xc,2.0) + vcl_pow(y-yc,2.0)) - r;
-      img[x][y] = vcl_exp(-vcl_pow(dist,2.0)/(2*vcl_pow(sigma,2.0)));
+      double dist = std::sqrt(std::pow(x-xc,2.0) + std::pow(y-yc,2.0)) - r;
+      img[x][y] = std::exp(-std::pow(dist,2.0)/(2*std::pow(sigma,2.0)));
     }
   }
   //write super resolution image to file
-/*  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
+/*  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
   char buffer[10];
   fname = fname + "radius=" + itoa(radius, buffer, 10) + ",center=" + itoa(centre_x, buffer, 10) + 
                                                          "," + itoa(centre_y, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   
   for(int y=0; y<dim; y++)
   {
     for(int x=0; x<dim; x++)
     {
-      vcl_fprintf(fp, "%f ", img[x][y]);
+      std::fprintf(fp, "%f ", img[x][y]);
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 
   // fill the cylinder map
   for(int y=0; y<dim; y++)
@@ -75,8 +75,8 @@ void create_2d_circle_data_analytically_v2(int radius, int centre_x , int centre
   {
     for(int x=0; x<dim; x++)
     {
-      double dist = vcl_sqrt(vcl_pow(x-xc,2.0) + vcl_pow(y-yc,2.0)) - r;
-      img[x][y] = vnl_erf(dist / (vcl_sqrt(2.0)*erf_sigma));
+      double dist = std::sqrt(std::pow(x-xc,2.0) + std::pow(y-yc,2.0)) - r;
+      img[x][y] = vnl_erf(dist / (std::sqrt(2.0)*erf_sigma));
     }
   }
 
@@ -90,8 +90,8 @@ void create_2d_circle_data_analytically_v2(int radius, int centre_x , int centre
   {
     for(int y = -offset; y <= offset; y++)
     {
-      gauss_x[x+offset][y+offset] = (x/(vcl_pow(sigma,2.0)))*vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0))/(2*vcl_pow(sigma,2.0)))/(2*vnl_math::pi*vcl_pow(sigma,2.0));
-      gauss_y[x+offset][y+offset] = (y/(vcl_pow(sigma,2.0)))*vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0))/(2*vcl_pow(sigma,2.0)))/(2*vnl_math::pi*vcl_pow(sigma,2.0));
+      gauss_x[x+offset][y+offset] = (x/(std::pow(sigma,2.0)))*std::exp(-(std::pow(x,2.0)+std::pow(y,2.0))/(2*std::pow(sigma,2.0)))/(2*vnl_math::pi*std::pow(sigma,2.0));
+      gauss_y[x+offset][y+offset] = (y/(std::pow(sigma,2.0)))*std::exp(-(std::pow(x,2.0)+std::pow(y,2.0))/(2*std::pow(sigma,2.0)))/(2*vnl_math::pi*std::pow(sigma,2.0));
     }
   }
   // convolve the image with the gaussian edge detector kernels
@@ -134,36 +134,36 @@ void create_2d_circle_data_analytically_v2(int radius, int centre_x , int centre
   }
 
   //write image to file
-/*  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
+/*  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
   char buffer[10];
   fname = fname + "radius=" + itoa(radius, buffer, 10) + ",center=" + itoa(centre_x, buffer, 10) + 
                                                          "," + itoa(centre_y, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   
   for(int y=0; y<dim; y++)
   {
     for(int x=0; x<dim; x++)
     {
-      vcl_fprintf(fp, "%f ", img[x][y]);
+      std::fprintf(fp, "%f ", img[x][y]);
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 
   //write gradient to file
 /*  fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\grad_";
   fname = fname + "radius=" + itoa(radius, buffer, 10) + ",center=" + itoa(centre_x, buffer, 10) + 
                                                          "," + itoa(centre_y, buffer, 10) + ".txt";
-  fp = vcl_fopen(fname.data(),"w");
+  fp = std::fopen(fname.data(),"w");
   
   for(int y=0; y<dim; y++)
   {
     for(int x=0; x<dim; x++)
     {
       vgl_vector_3d<double> dir(grad_x[x][y], grad_y[x][y], 0.0);
-      vcl_fprintf(fp, "%f ", dir.length());
+      std::fprintf(fp, "%f ", dir.length());
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 }

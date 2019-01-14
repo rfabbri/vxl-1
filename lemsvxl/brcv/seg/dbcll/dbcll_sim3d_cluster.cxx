@@ -8,8 +8,8 @@
 
 
 #include "dbcll_sim3d_cluster.h"
-#include <vcl_cassert.h>
-#include <vcl_limits.h>
+#include <cassert>
+#include <limits>
 #include <vnl/algo/vnl_svd.h>
 
 
@@ -25,7 +25,7 @@ double dbcll_sim3d_cluster::similarity(const dbcll_cluster& other) const
 
 #if 0
   double d=0.0;
-  for(vcl_vector<unsigned>::const_iterator i=members_.begin();
+  for(std::vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
     d += c2.similarity((*xforms_)[*i]);
@@ -46,7 +46,7 @@ double dbcll_sim3d_cluster::similarity(const bgld_similarity_3d<double>& pt) con
 #if 0
   bgld_similarity_3d<double> pti = pt.inverse();
   double d = 0.0;
-  for(vcl_vector<unsigned>::const_iterator i=members_.begin();
+  for(std::vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
     d += (pti*(*xforms_)[*i]).lie_algebra_basis().squared_magnitude();
@@ -92,31 +92,31 @@ void dbcll_sim3d_cluster::compute_stats()
   assert(num>0);
 
   // compute mean scale in closed form and mean rotation iteratively
-  vcl_vector<vgl_rotation_3d<double> > rotations;
+  std::vector<vgl_rotation_3d<double> > rotations;
   double ls = 0.0;
-  for(vcl_vector<unsigned>::const_iterator i=members_.begin();
+  for(std::vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
     const bgld_similarity_3d<double>& sim = (*xforms_)[*i];
     rotations.push_back(sim.rotation());
-    ls += vcl_log(sim.scale());
+    ls += std::log(sim.scale());
   }
   ls /= num;
-  mean_.set_scale(vcl_exp(ls));
+  mean_.set_scale(std::exp(ls));
 
   vgl_rotation_3d<double> mean_Ri(mean_.rotation().inverse());
   vnl_vector_fixed<double,3> r(0.0);
   for(unsigned j=0; j<20; ++j){
     mean_Ri = vgl_rotation_3d<double>(-r)*mean_Ri;
     r.fill(0.0);
-    for(vcl_vector<vgl_rotation_3d<double> >::const_iterator i=rotations.begin();
+    for(std::vector<vgl_rotation_3d<double> >::const_iterator i=rotations.begin();
         i!=rotations.end(); ++i)
     {
       r += (mean_Ri*(*i)).as_rodrigues();
     }
     r /= num;
-    //vcl_cout << "merge dm: "<<r<<vcl_endl;
-    if( r.squared_magnitude() < vcl_numeric_limits<double>::epsilon() )
+    //std::cout << "merge dm: "<<r<<std::endl;
+    if( r.squared_magnitude() < std::numeric_limits<double>::epsilon() )
       break;
   }
 
@@ -128,7 +128,7 @@ void dbcll_sim3d_cluster::compute_stats()
 
   vnl_double_3x3 Ac(0.0);
   vnl_double_3 t(0.0,0.0,0.0);
-  for(vcl_vector<unsigned>::const_iterator i=members_.begin();
+  for(std::vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
     const bgld_similarity_3d<double>& sim = (*xforms_)[*i];
@@ -145,7 +145,7 @@ void dbcll_sim3d_cluster::compute_stats()
   // compute variance
   mi = mean_.inverse();
   var_ = 0.0;
-  for(vcl_vector<unsigned>::const_iterator i=members_.begin();
+  for(std::vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
     var_ += ((mi*(*xforms_)[*i]).lie_algebra_basis()).squared_magnitude();
@@ -158,10 +158,10 @@ void dbcll_sim3d_cluster::compute_stats()
 
 
 //: Generate a vector of single element clusters
-vcl_vector<dbcll_cluster_sptr> 
-dbcll_init_sim3d_clusters(const vcl_vector<bgld_similarity_3d<double> >& pts)
+std::vector<dbcll_cluster_sptr> 
+dbcll_init_sim3d_clusters(const std::vector<bgld_similarity_3d<double> >& pts)
 {
-  vcl_vector<dbcll_cluster_sptr> results;
+  std::vector<dbcll_cluster_sptr> results;
   for(unsigned i=0; i<pts.size(); ++i)
     results.push_back(new dbcll_sim3d_cluster(pts,i));
   return results;

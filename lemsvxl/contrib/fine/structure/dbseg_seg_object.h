@@ -175,7 +175,7 @@ public:
 
 
     //returns the text to put into the save file
-    vcl_ostream& save_text(vcl_ostream & = vcl_cerr);
+    std::ostream& save_text(std::ostream & = std::cerr);
 
     //clears all neighborhood relationships with this object and resets them
     void reset_neighbors(int o, list<int> l);
@@ -200,14 +200,14 @@ public:
       short version() const;
 
       //: Print an ascii summary to the stream
-      void print_summary(vcl_ostream &os) const;
+      void print_summary(std::ostream &os) const;
 
       //: Return a platform independent string identifying the class
-      virtual vcl_string is_a() const {
-          return vcl_string("dbseg_seg_object"+vcl_string(typeid(T).name())); }
+      virtual std::string is_a() const {
+          return std::string("dbseg_seg_object"+std::string(typeid(T).name())); }
 
       //: Return true if the argument matches the string identifying the class or any parent class
-      virtual bool is_class(vcl_string const& cls) const { return cls==is_a(); }
+      virtual bool is_class(std::string const& cls) const { return cls==is_a(); }
 
 
 

@@ -1,23 +1,23 @@
 #include"ncn1_utilities.h"
 
-void ncn1_utilities::save_pivot_pixel_candidate_matlab( vcl_string const& filename, pivot_pixel_list_type& pivot_pixel_candidates )
+void ncn1_utilities::save_pivot_pixel_candidate_matlab( std::string const& filename, pivot_pixel_list_type& pivot_pixel_candidates )
 {
 
-    vcl_ofstream of(filename.c_str());
+    std::ofstream of(filename.c_str());
 
     pivot_pixel_list_type::iterator pitr;
     pivot_pixel_list_type::iterator pend = pivot_pixel_candidates.end();
 
     for( pitr = pivot_pixel_candidates.begin(); pitr != pend; ++pitr )
-        of << pitr->x() << '\t' << pitr->y() << vcl_endl;
+        of << pitr->x() << '\t' << pitr->y() << std::endl;
     
 
     of.close();
 }//end save_pivot_pixel_candidate_matlab
 
-void ncn1_utilities::save_neighborhood_dat( vcl_string const& filename, ncn1_neighborhood_sptr neighborhood_sptr )
+void ncn1_utilities::save_neighborhood_dat( std::string const& filename, ncn1_neighborhood_sptr neighborhood_sptr )
 {
-    vcl_ofstream of(filename.c_str());
+    std::ofstream of(filename.c_str());
 
     neighborhood_type nbrhd = neighborhood_sptr->neighborhood();
 
@@ -49,9 +49,9 @@ void ncn1_utilities::save_neighborhood_dat( vcl_string const& filename, ncn1_nei
     }
 }
 
-//void ncn1_utilities::save_neighborhood_dat( vcl_string const& filename, ncn1_neighborhood_sptr neighborhood_sptr)
+//void ncn1_utilities::save_neighborhood_dat( std::string const& filename, ncn1_neighborhood_sptr neighborhood_sptr)
 //{
-//    vcl_ofstream of(filename.c_str());
+//    std::ofstream of(filename.c_str());
 //
 //    neighborhood_type nbrhd = neighborhood_sptr->neighborhood();
 //
@@ -77,9 +77,9 @@ void ncn1_utilities::save_neighborhood_dat( vcl_string const& filename, ncn1_nei
 //    }
 //}
 
-//void ncn1_utilities::save_feature_dat( vcl_string const& filename, ncn1_neighborhood_sptr neighborhood_sptr )
+//void ncn1_utilities::save_feature_dat( std::string const& filename, ncn1_neighborhood_sptr neighborhood_sptr )
 //{
-//    vcl_ofstream of(filename.c_str());
+//    std::ofstream of(filename.c_str());
 //
 //    feature_map_type feature_map = neighborhood_sptr->feature_map();
 //
@@ -115,16 +115,16 @@ void ncn1_utilities::save_neighborhood_dat( vcl_string const& filename, ncn1_nei
 //        unsigned target_cnt = 1;
 //        for( ; fv_itr != fv_end; ++fv_itr )
 //        {
-//            //vcl_cout << "target = " << fv_itr->first << vcl_endl;
-//            vcl_vector<vxl_byte> intensity_vector = fv_itr->second;
-//            vcl_vector<vxl_byte>::const_iterator intensity_itr;
-//            vcl_vector<vxl_byte>::const_iterator intensity_end = intensity_vector.end();
+//            //std::cout << "target = " << fv_itr->first << std::endl;
+//            std::vector<vxl_byte> intensity_vector = fv_itr->second;
+//            std::vector<vxl_byte>::const_iterator intensity_itr;
+//            std::vector<vxl_byte>::const_iterator intensity_end = intensity_vector.end();
 //            
 //            of << "features{" << frame_cnt+1 << "," << target_cnt << "} = [";
 //            for( intensity_itr = intensity_vector.begin(); intensity_itr != intensity_end; ++intensity_itr )
 //            {
 //                of << unsigned(*intensity_itr);
-//                //vcl_cout << '\t' << unsigned(*intensity_itr) << vcl_endl;
+//                //std::cout << '\t' << unsigned(*intensity_itr) << std::endl;
 //                if( intensity_itr != intensity_end - 1)
 //                    of << ", ";
 //            }//end intensity vector iteration

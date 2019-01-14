@@ -28,14 +28,14 @@ public:
   bof_labels_keypoint_joint(unsigned num_classes, unsigned num_keypoints):ncategories_(num_classes), nkeypoints_(num_keypoints) 
   {
     for (unsigned ci = 0 ; ci < num_classes; ci++) {
-      all_class_clusters_.push_back(vcl_vector< dbcll_euclidean_cluster_light<10> >(num_keypoints));
+      all_class_clusters_.push_back(std::vector< dbcll_euclidean_cluster_light<10> >(num_keypoints));
     }
     
   }
   
   //: Return the maximum aposteriori class, given the object represented by classify_clusters
-  const char max_aposteriori(const vcl_vector< dbcll_euclidean_cluster_light<10> > classify_clusters, 
-                             vcl_vector<double> &log_p_c_given_obj) const;
+  const char max_aposteriori(const std::vector< dbcll_euclidean_cluster_light<10> > classify_clusters, 
+                             std::vector<double> &log_p_c_given_obj) const;
   
   //: P(X,C) return the number of times feature X happens in all objects of class referred by class_i  
   const double p_xc(unsigned x_idx, unsigned class_id) const
@@ -43,7 +43,7 @@ public:
     return (double) (all_class_clusters_[class_id][x_idx].size());
   }
   
-  inline const double log_p_xc(unsigned x_idx, unsigned class_id) const { return vcl_log(p_xc(x_idx,class_id)); }
+  inline const double log_p_xc(unsigned x_idx, unsigned class_id) const { return std::log(p_xc(x_idx,class_id)); }
   
   //: P(C) return the number of times all features happen in all objects of class referred by class_i  
   const double p_c(unsigned class_id) const
@@ -55,28 +55,28 @@ public:
     return (double) (p_c);
   }
   
-  inline const double log_p_c(unsigned class_id) const { return vcl_log(p_c(class_id)); } 
+  inline const double log_p_c(unsigned class_id) const { return std::log(p_c(class_id)); } 
   
   //: Merge the clusters in clusters2, with the clusters associated with this class
-  void merge_clusters(char class_id, const vcl_vector< dbcll_euclidean_cluster_light<10> > &class_cluster2);
+  void merge_clusters(char class_id, const std::vector< dbcll_euclidean_cluster_light<10> > &class_cluster2);
   
   //: Read xml clsuter files and combine them
-  void xml_read_and_combine(vcl_string xml_scen_prfx, vcl_vector< vnl_vector_fixed<double, 10> > common_means,
+  void xml_read_and_combine(std::string xml_scen_prfx, std::vector< vnl_vector_fixed<double, 10> > common_means,
                             unsigned nscenes, unsigned ncategories);
   
   //: Read the clusters in an xml file 
-  void xml_read(vcl_string xml_path, vcl_vector< vnl_vector_fixed<double, 10> > common_means);
+  void xml_read(std::string xml_path, std::vector< vnl_vector_fixed<double, 10> > common_means);
   
   //: Write this class' cluster to xml
-  void xml_write(vcl_string xml_path);
+  void xml_write(std::string xml_path);
   
   //: Save the clusters associated with this class as bsta histograms
-  void bsta_save_and_plot(vcl_string path_out);
+  void bsta_save_and_plot(std::string path_out);
   
 protected:
   //: quantizing number of times this keypoint "X" (10-d feature) occurs in all objects of the current label C
   //  outer vector indexed by class label e.g tree building, inner vecor by features/cluster-means
-  vcl_vector<vcl_vector< dbcll_euclidean_cluster_light<10> > > all_class_clusters_;
+  std::vector<std::vector< dbcll_euclidean_cluster_light<10> > > all_class_clusters_;
   
   unsigned ncategories_;
   unsigned nkeypoints_;
@@ -95,7 +95,7 @@ void vsl_b_write(vsl_b_ostream & os, bof_labels_keypoint_joint const &v);
 void vsl_b_read(vsl_b_istream & is, bof_labels_keypoint_joint &v);
 
 
-void vsl_print_summary(vcl_ostream &os, const bof_labels_keypoint_joint &v);
+void vsl_print_summary(std::ostream &os, const bof_labels_keypoint_joint &v);
 
 
 void vsl_b_read(vsl_b_istream& is, bof_labels_keypoint_joint* v);
@@ -103,7 +103,7 @@ void vsl_b_read(vsl_b_istream& is, bof_labels_keypoint_joint* v);
 
 void vsl_b_write(vsl_b_ostream& os, const bof_labels_keypoint_joint* &v);
 
-void vsl_print_summary(vcl_ostream& os, const bof_labels_keypoint_joint* &v);
+void vsl_print_summary(std::ostream& os, const bof_labels_keypoint_joint* &v);
 
 
 #endif

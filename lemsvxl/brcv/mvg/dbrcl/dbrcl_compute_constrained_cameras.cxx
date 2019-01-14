@@ -4,13 +4,13 @@
 #include "dbrcl_compute_constrained_cameras.h"
 
 #include <vgl/vgl_distance.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
 //---------------------------------------------
 bool 
 dbrcl_compute_constrained_cameras::read_constraint_file( 
-  vcl_string constraint_file )
+  std::string constraint_file )
 {
   // Declare some needed variables.
   char line_buffer[256];
@@ -18,18 +18,18 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
   int line_counter = 2;
 
   // Check that the file is good.
-  vcl_cerr << "\ndbrcl_compute_constrained_cameras::read_constraint_file\n"
+  std::cerr << "\ndbrcl_compute_constrained_cameras::read_constraint_file\n"
     << " parsing constraint file\n";
-  vcl_ifstream constraints_stream( constraint_file.c_str() );
+  std::ifstream constraints_stream( constraint_file.c_str() );
   if( constraints_stream.bad() ){
-    vcl_cerr << "  can't read file: " << constraint_file.c_str() << '\n';
+    std::cerr << "  can't read file: " << constraint_file.c_str() << '\n';
     return false;
   }
   constraints_stream.getline(line_buffer,256);
-  vcl_stringstream first_line;
+  std::stringstream first_line;
   first_line << line_buffer;
   if( first_line.str() != "dbrcl camera constraint file" ){
-    vcl_cerr << "  invalid file: " << constraint_file.c_str() << '\n';
+    std::cerr << "  invalid file: " << constraint_file.c_str() << '\n';
     return false;
   }
 
@@ -37,26 +37,26 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
   dbrcl_camera_constraints* current_constraint = NULL;
   while( constraints_stream.eof() == 0 ){
     constraints_stream.getline(line_buffer,256);
-    vcl_stringstream this_line;
+    std::stringstream this_line;
     this_line << line_buffer;
 
     // Make sure this line doesn't begin with a number.
     char c = this_line.str().c_str()[0];
     if( c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || 
         c == '5' || c == '6' || c == '7' || c == '8' || c == '9'  ){
-      vcl_cerr << " error in constraint file on line " << line_counter << '\n';
+      std::cerr << " error in constraint file on line " << line_counter << '\n';
       line_counter++;
     }
 
     // Case 0: specifies a new frame.
     else if( this_line.str() == "frame" ){
       constraints_stream.getline(number_buffer,16);
-      int frame = vcl_atoi( number_buffer );
+      int frame = std::atoi( number_buffer );
       constraints_.push_back( dbrcl_camera_constraints() );
       current_constraint = &( constraints_[ constraints_.size() -1 ] );
       current_constraint->frame_number = frame;
       if( verbose )
-        vcl_cerr << "\n frame: " << frame << '\n'; 
+        std::cerr << "\n frame: " << frame << '\n'; 
       line_counter+=2;
     }
 
@@ -80,7 +80,7 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
       current_constraint->image_points.push_back( image_point );
 
       if( verbose ){
-        vcl_cerr << " world image correspondence:\n" 
+        std::cerr << " world image correspondence:\n" 
           << "  world point: " << world_point << '\n' 
           << "  image point: " << image_point << '\n';
       }
@@ -104,7 +104,7 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
       current_constraint->height_top_points.push_back( top_point );
 
       if( verbose ){
-        vcl_cerr << " height:\n"
+        std::cerr << " height:\n"
           << "  bottom point: " << bot_point << '\n' 
           << "  top point: " << top_point << '\n';
       }
@@ -123,7 +123,7 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
       unmatched_world_points_.push_back( world_point );
 
       if( verbose ){
-        vcl_cerr << " world point:\n" 
+        std::cerr << " world point:\n" 
           << "  world point: " << world_point << '\n';
       }
       line_counter+=2;
@@ -135,7 +135,7 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
     }
 
   } // iteration over file lines
-  vcl_cerr << "  success\n";
+  std::cerr << "  success\n";
   return true;
 }
 
@@ -143,11 +143,11 @@ dbrcl_compute_constrained_cameras::read_constraint_file(
 //---------------------------------------------
 bool 
 dbrcl_compute_constrained_cameras::compute_cameras(
- vcl_vector< vpgl_proj_camera<double> >& cameras,
-  vcl_vector<int>& frames,
+ std::vector< vpgl_proj_camera<double> >& cameras,
+  std::vector<int>& frames,
   bool affine_camera )
 {
-  vcl_cerr << "\ndbrcl_compute_constrained_cameras::compute_known_cameras\n"
+  std::cerr << "\ndbrcl_compute_constrained_cameras::compute_known_cameras\n"
     << " computing " << constraints_.size() << " cameras.\n";
   frames.clear();
   cameras.clear();
@@ -207,7 +207,7 @@ dbrcl_compute_constrained_cameras::compute_cameras(
   vnl_svd<double> Ssvd(S);
   V = Ssvd.solve( B );
   // Reform the cameras.
-  vcl_vector< vnl_matrix_fixed<double,3,4> > init_cameras;
+  std::vector< vnl_matrix_fixed<double,3,4> > init_cameras;
   for( int i = 0; i < constraints_.size(); i++ ){
     vnl_matrix_fixed<double,3,4> P;
     P(0,0) = V(0); P(0,1) = V(1); P(0,3) = V(2);
@@ -219,7 +219,7 @@ dbrcl_compute_constrained_cameras::compute_cameras(
     P(0,2) = V(cstart+2*i+0); P(1,2) = V(cstart+2*i+1); 
     cameras.push_back( vpgl_proj_camera<double>( P ) );
   }
-  vcl_cerr << "  success\n";
+  std::cerr << "  success\n";
   return true;
 }
 
@@ -227,11 +227,11 @@ dbrcl_compute_constrained_cameras::compute_cameras(
 //---------------------------------------------
 bool 
 dbrcl_compute_constrained_cameras::compute_cameras_separately(
-  vcl_vector< vpgl_proj_camera<double> >& cameras,
-  vcl_vector<int>& frames,
+  std::vector< vpgl_proj_camera<double> >& cameras,
+  std::vector<int>& frames,
   bool affine_camera )
 {
-  vcl_cerr << "\ndbrcl_compute_constrained_cameras::compute_individual_cameras\n"
+  std::cerr << "\ndbrcl_compute_constrained_cameras::compute_individual_cameras\n"
     << " computing " << constraints_.size() << " cameras.\n";
   frames.clear();
   cameras.clear();
@@ -298,7 +298,7 @@ dbrcl_compute_constrained_cameras::compute_cameras_separately(
       P(2,0) = V(8); P(2,1) = V(9); P(2,2) = V(10); P(2,3) = 1; }
     cameras.push_back( vpgl_proj_camera<double>( P ) );
   }
-  vcl_cerr << "  success\n";
+  std::cerr << "  success\n";
   return true;
 };
 
@@ -306,7 +306,7 @@ dbrcl_compute_constrained_cameras::compute_cameras_separately(
 //---------------------------------------------
 void 
 dbrcl_compute_constrained_cameras::get_world_points(
-  vcl_vector< vgl_point_3d<double> >& world_points )
+  std::vector< vgl_point_3d<double> >& world_points )
 {
   world_points = unmatched_world_points_;
 }

@@ -5,7 +5,7 @@
 #include "dbrl_rigid_transformation.h"
 #include "dbrl_translation.h"
 #include <vnl/io/vnl_io_vector.h>
-#include <vcl_string.h>
+#include <string>
 dbrl_feature_point_tangent_curvature::dbrl_feature_point_tangent_curvature():/*circarc_(),*/is_k_set_(false)
     {
         location_(0);
@@ -32,16 +32,16 @@ bool dbrl_feature_point_tangent_curvature::compute_arc(double arclength)
      //dbgl_circ_arc cright;
      //dbgl_circ_arc cleft;
 
-     //cright.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(vcl_cos(dir_),vcl_sin(dir_)),k_,arclength);
-     //cleft.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(-vcl_cos(dir_),-vcl_sin(dir_)),-k_,arclength);
+     //cright.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(std::cos(dir_),std::sin(dir_)),k_,arclength);
+     //cleft.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(-std::cos(dir_),-std::sin(dir_)),-k_,arclength);
 
      //circarc_.set(cright.point_at_length(arclength),cleft.point_at_length(arclength),-k_);
 
 
      return true;
  }
-    // return circarc_.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(vcl_cos(dir_),vcl_sin(dir_)),k_,arclength);
-    //return circarc_.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(vcl_cos(dir_),vcl_sin(dir_)),-k_,arclength,arclength);
+    // return circarc_.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(std::cos(dir_),std::sin(dir_)),k_,arclength);
+    //return circarc_.set_from(vgl_point_2d<double>(location_[0],location_[1]),vgl_vector_2d<double>(std::cos(dir_),std::sin(dir_)),-k_,arclength,arclength);
  else
      return false;
 }
@@ -54,7 +54,7 @@ double dbrl_feature_point_tangent_curvature::distance(const dbrl_feature_sptr & 
             }
         //else if(dbrl_feature_point_tangent_curvature_tangent *fpt=dynamic_cast<dbrl_feature_point_tangent_curvature_tangent*>(pt.ptr()))
         //    {
-        //        vcl_cout<<"\n NYI";
+        //        std::cout<<"\n NYI";
         //        return 0;
         //    }
         else
@@ -62,7 +62,7 @@ double dbrl_feature_point_tangent_curvature::distance(const dbrl_feature_sptr & 
                 return 0;
             }
     }
-void dbrl_feature_point_tangent_curvature::print_feature(vcl_ostream &os)
+void dbrl_feature_point_tangent_curvature::print_feature(std::ostream &os)
     {
     os<<"\n point location is "<<location_;
     os<<"\n direction is "<<dir_;
@@ -86,27 +86,27 @@ double dbrl_feature_point_tangent_curvature::dir() const
 
 //: write feature
 void
-dbrl_feature_point_tangent_curvature::write( vcl_ostream& os ) const
+dbrl_feature_point_tangent_curvature::write( std::ostream& os ) const
 {
-    os << "POINT-TANGENT-CURVATURE" << vcl_endl;
-    os << location_.size() << vcl_endl;
-    os << location_ <<vcl_endl;
-    os << dir_ <<vcl_endl;
-    os << k_ <<vcl_endl;
+    os << "POINT-TANGENT-CURVATURE" << std::endl;
+    os << location_.size() << std::endl;
+    os << location_ <<std::endl;
+    os << dir_ <<std::endl;
+    os << k_ <<std::endl;
 
 }
 
 //: read  feature
 bool 
 dbrl_feature_point_tangent_curvature::
-read( vcl_istream& is)
+read( std::istream& is)
 {
-    vcl_string str;
-    vcl_getline( is, str );
+    std::string str;
+    std::getline( is, str );
     
     // The token should appear at the beginning of line
     if ( str.find( "POINT-TANGENT-CURVATURE" ) != 0 ) {
-      vcl_cout<< "It is not a POINT-TANGENT-CURVATURE. reading is aborted.\n" ;
+      std::cout<< "It is not a POINT-TANGENT-CURVATURE. reading is aborted.\n" ;
       return false;
     }
   
@@ -154,7 +154,7 @@ dbrl_feature_point_tangent_curvature::b_read(vsl_b_istream &is)
             vsl_b_read(is, id_);
             break;
         default:
-            vcl_cerr << "dbrl_feature_point_tangent_curvature: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_feature_point_tangent_curvature: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -163,7 +163,7 @@ dbrl_feature_point_tangent_curvature::version() const
     {
     return 1;
     }
-void dbrl_feature_point_tangent_curvature::print_summary(vcl_ostream &os) const
+void dbrl_feature_point_tangent_curvature::print_summary(std::ostream &os) const
 {
   
 }

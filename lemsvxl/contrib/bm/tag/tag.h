@@ -3,20 +3,20 @@
 #ifndef TAG_H_
 #define TAG_H_
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <utility>
 
-#include <vcl_iostream.h>
+#include <iostream>
 namespace tagNameSpace{
 
     typedef unsigned time_type;
     typedef unsigned node_id_type;
     typedef unsigned frequency_type;
-    typedef vcl_vector<frequency_type> freq_array;
-    typedef vcl_map<node_id_type, freq_array> tag_col;
-    typedef vcl_map<node_id_type, tag_col> tag_row;
+    typedef std::vector<frequency_type> freq_array;
+    typedef std::map<node_id_type, freq_array> tag_col;
+    typedef std::map<node_id_type, tag_col> tag_row;
 
     class tag
     {
@@ -25,7 +25,7 @@ namespace tagNameSpace{
         tag(unsigned binWidth);
         ~tag(){}
     
-        vcl_pair<tag_row::iterator,bool> addNode(node_id_type nodeID);
+        std::pair<tag_row::iterator,bool> addNode(node_id_type nodeID);
         //add a node with nodeID to the tag
 
         bool deleteNode(node_id_type nodeID);
@@ -47,7 +47,7 @@ namespace tagNameSpace{
         //at time t. This quantity is important to calculating the transition
         //probability normalizing constant.
 
-        bool writeDotTrellis(vcl_ostream& os, time_type trelBegin,
+        bool writeDotTrellis(std::ostream& os, time_type trelBegin,
                          time_type trelEnd);
         //time expanded graph
 

@@ -47,24 +47,24 @@ copyright notice is not removed.  Question to orourke@cs.smith.edu.
 
 //------------------------- LIBRARIES -----------------------------------
 
-#include <vcl_iostream.h>
-#include <vcl_cctype.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cctype>
+#include <cstdlib>
+#include <cmath>
 ///#include <values.h>
 
-#include <vcl_iomanip.h>
-#include <vcl_fstream.h>
+#include <iomanip>
+#include <fstream>
 
 #include "mathops.h"
 #include "llist.h"
 #include "ctree.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 ///#include <sys/time.h>
 ///#include <sys/resource.h>
 ///#include <unistd.h> //linux
 
-#include <vcl_cfloat.h>
+#include <cfloat>
 #define MAXFLOAT FLT_MAX
 
 #ifndef M_PI
@@ -126,7 +126,7 @@ double colin = 0;
 #ifdef MEM_COUNT
 size_t maxmemory = 0;
 size_t maxm = 0;
-vcl_ofstream cntout("count", vcl_ios::out | vcl_ios::app); 
+std::ofstream cntout("count", std::ios::out | std::ios::app); 
 #endif
 
 // ---------------------- PROTOTYPES ------------------------------------
@@ -172,8 +172,8 @@ int main()
 #ifdef MEM_COUNT
   struct rusage r;
   getrusage(RUSAGE_SELF, &r);
-  cntout << "User time: " << (r.ru_utime.tv_sec) <<vcl_endl;
-  cntout << "System time: " << (r.ru_stime.tv_sec) <<vcl_endl;
+  cntout << "User time: " << (r.ru_utime.tv_sec) <<std::endl;
+  cntout << "System time: " << (r.ru_stime.tv_sec) <<std::endl;
 #endif
   return 0;  
 }
@@ -230,7 +230,7 @@ void ComputePath( Cone *c)
 void FindShortest()
 {
 
-  vcl_cout << d.num_vertices << vcl_endl;
+  std::cout << d.num_vertices << std::endl;
   for (int i=0; i < d.num_vertices; i++)
     {
       double spath = MAXFLOAT, temp = MAXFLOAT;
@@ -252,9 +252,9 @@ void FindShortest()
       
       if (c == NULL)
         {
-          vcl_cout << "BOOM compute path" << vcl_endl;
-          vcl_cout << "Error in FindShortest()" << vcl_endl;
-          vcl_cout << "i=" << i << ":c is null, spath=" << spath << vcl_endl;
+          std::cout << "BOOM compute path" << std::endl;
+          std::cout << "Error in FindShortest()" << std::endl;
+          std::cout << "i=" << i << ":c is null, spath=" << spath << std::endl;
           //exit(1);  Keep going to gain more information on problem
         }
       else
@@ -266,7 +266,7 @@ void FindShortest()
       d.paths.path = new NList();
     }
 
-  vcl_cout << d.faces[0][d.startface].v[d.sindex].label << vcl_endl;
+  std::cout << d.faces[0][d.startface].v[d.sindex].label << std::endl;
   
 }
 
@@ -277,16 +277,16 @@ void PrintPath()
 {
   NConeF *p;
   
-  vcl_cout << d.paths.num << " ";
+  std::cout << d.paths.num << " ";
       
   for (p=(NConeF *)d.paths.path->getHead()->next; p!=NULL; 
        p=(NConeF *)p->next)
     {
-      vcl_cout << p->p->currface << " " << p->p->f.v[0].label 
+      std::cout << p->p->currface << " " << p->p->f.v[0].label 
            << " "<< p->fraction << " ";
       
     }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
 }
 
@@ -302,14 +302,14 @@ void RollOut()
   long count;
 
 #ifdef DOUTPUT
-  vcl_ofstream ciout("info", vcl_ios::out); 
+  std::ofstream ciout("info", std::ios::out); 
 #endif
   
   for ( i=0; i < d.num_faces-1; i++)
     {
 #ifdef DOUTPUT
       clips = 0;
-      ciout << i << vcl_endl;
+      ciout << i << std::endl;
 #endif
       for (p=d.clevel[d.level++]->next; p!=NULL; p=p->next)
         {
@@ -377,8 +377,8 @@ void RollOut()
           count++;
         }
 
-      ciout << "Cones :" << count << " Clipped Cones: " << clips << vcl_endl;
-      ciout << "Collinear points: " << colin << vcl_endl;
+      ciout << "Cones :" << count << " Clipped Cones: " << clips << std::endl;
+      ciout << "Collinear points: " << colin << std::endl;
 #endif      
 
     }
@@ -392,11 +392,11 @@ void RollOut()
         } 
     }
 
-  cntout << "Total number of nodes (with deletion) " << count << vcl_endl;
+  cntout << "Total number of nodes (with deletion) " << count << std::endl;
   cntout << "Maximal memory " << maxm << " bytes " << (maxm*1.0/(1024*1024)) 
-         << "Mb" << vcl_endl;
+         << "Mb" << std::endl;
   cntout << "Total memoty before completion " << maxmemory 
-         << " bytes " << (maxmemory*1.0/(1024*1024)) << "Mb" << vcl_endl;
+         << " bytes " << (maxmemory*1.0/(1024*1024)) << "Mb" << std::endl;
 #endif
 }
 
@@ -473,8 +473,8 @@ int VertexAnglegt2PI(Cone *c, int j)
     
     if (d.faces[0][face].v[v_index].label != c->f.v[j].label)
       {
-        vcl_cout << "BOOM! Vertex " << d.faces[0][face].v[v_index].label 
-             << " " << c->f.v[j].label<< vcl_endl;
+        std::cout << "BOOM! Vertex " << d.faces[0][face].v[v_index].label 
+             << " " << c->f.v[j].label<< std::endl;
         
       }  
     
@@ -502,8 +502,8 @@ int VertexAnglegt2PI(Cone *c, int j)
         
         if (d.faces[0][face].v[v_index].label != c->f.v[j].label)
           {
-            vcl_cout << "BOOM! Vertex " << d.faces[0][face].v[v_index].label 
-                 << " " << c->f.v[j].label<< vcl_endl;      
+            std::cout << "BOOM! Vertex " << d.faces[0][face].v[v_index].label 
+                 << " " << c->f.v[j].label<< std::endl;      
           }  
         
         angle_sum+=(d.angles[face][v_index]);
@@ -751,10 +751,10 @@ void CreateChildren( Cone *c,int j)
     gl_edge=v_index%3;
     if (d.faces[0][currf].v[v_index].label != c->f.v[j].label)
       {
-        vcl_cout << d.faces[0][currf].v[v_index].label 
+        std::cout << d.faces[0][currf].v[v_index].label 
              << " " << c->f.v[j].label;
-        vcl_cout << currf << vcl_endl;
-        vcl_cout << " BOOM! Child end" << vcl_endl;
+        std::cout << currf << std::endl;
+        std::cout << " BOOM! Child end" << std::endl;
       }
     
     angle_sum+=(d.angles[currf][v_index]);
@@ -775,10 +775,10 @@ void CreateChildren( Cone *c,int j)
     gl_edge=(v_index+2)%3;
     if (d.faces[0][currf].v[v_index].label != c->f.v[j].label)
       {
-        vcl_cout << d.faces[0][currf].v[v_index].label 
+        std::cout << d.faces[0][currf].v[v_index].label 
              << " " << c->f.v[j].label;
-        vcl_cout << currf << vcl_endl;
-        vcl_cout << "BOOM! Children start" << vcl_endl;
+        std::cout << currf << std::endl;
+        std::cout << "BOOM! Children start" << std::endl;
       }
     
     
@@ -798,10 +798,10 @@ void CreateChildren( Cone *c,int j)
         gl_edge=v_index%3;
         if (d.faces[0][currf].v[v_index].label != c->f.v[j].label)
           {
-            vcl_cout << d.faces[0][currf].v[v_index].label 
+            std::cout << d.faces[0][currf].v[v_index].label 
                  << " " << c->f.v[j].label;
-            vcl_cout << currf << vcl_endl;
-            vcl_cout << " BOOM! Child end" << vcl_endl;
+            std::cout << currf << std::endl;
+            std::cout << " BOOM! Child end" << std::endl;
           }
         
         angle_sum+=(d.angles[currf][v_index]);
@@ -1413,7 +1413,7 @@ void CheckIfCorrect()
             correct=true;
         if (!correct)
           {
-            vcl_cout << "Incorrect input Face="<< i<< " Edge="<<j<< vcl_endl;
+            std::cout << "Incorrect input Face="<< i<< " Edge="<<j<< std::endl;
             exit(0);
           }
       }
@@ -1422,7 +1422,7 @@ void CheckIfCorrect()
     for (j=0; j < 3; j++)
       if (d.glarr[d.adjf[i][j]][d.glarr[i][j]]!=j)
         {
-          vcl_cout << "Incorrect input Face="<< i << vcl_endl;
+          std::cout << "Incorrect input Face="<< i << std::endl;
           exit(0);
         }
 }
@@ -1440,9 +1440,9 @@ void GetInput()
   int i,j;
   
   ReadComments();
-  vcl_cin >> d.num_faces;
+  std::cin >> d.num_faces;
   ReadComments();
-  vcl_cin >> d.num_vertices;
+  std::cin >> d.num_vertices;
   ReadComments();
   d.voccupy= new NList*[d.num_vertices];
   for (i=0; i < d.num_vertices; i++)
@@ -1475,20 +1475,20 @@ void GetInput()
   d.clevel[i]=new Cone();
   // get coordinates of the vertices
   for (i=0; i < d.num_faces; i++)
-    vcl_cin >> d.faces[0][i];
+    std::cin >> d.faces[0][i];
   
   ReadComments();
   
   // get gluing instructions
   for ( i=0; i < d.num_faces; i++)
     for ( j=0; j < 3; j++)
-      vcl_cin >> d.adjf[i][j] >> d.glarr[i][j];
+      std::cin >> d.adjf[i][j] >> d.glarr[i][j];
   
   ReadComments();
   
   //faces to be crossed
-  vcl_cin >> d.startface;
-  vcl_cin >> d.sindex;
+  std::cin >> d.startface;
+  std::cin >> d.sindex;
   
 }
 
@@ -1543,10 +1543,10 @@ void ReadComments()
   char line[80];
   
   while (true) {
-    vcl_cin >> vcl_ws;
-    if (vcl_cin.peek()=='#')
+    std::cin >> std::ws;
+    if (std::cin.peek()=='#')
       {
-        vcl_cin.get(line, 79, '\n');
+        std::cin.get(line, 79, '\n');
         continue;
       }
     return;

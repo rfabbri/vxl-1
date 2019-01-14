@@ -70,19 +70,19 @@ bool vox_eval_shock_patches::initialize()
 
     if ( !ind_ )
     {
-        vcl_cerr<<"Paring index file failed!!"<<vcl_endl;
+        std::cerr<<"Paring index file failed!!"<<std::endl;
         return false;
     }
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
     // Grab the model shock
-    vcl_string model_gt_file = params_->model_object_dir_() + "/" +
+    std::string model_gt_file = params_->model_object_dir_() + "/" +
         params_->model_object_name_()+".xml";
 
     // Read in model gt file
     if ( !x_read(model_gt_file,model_id_) )
     {
-        vcl_cerr<<"Error parsing model xml groundtruth file"<<vcl_endl;
+        std::cerr<<"Error parsing model xml groundtruth file"<<std::endl;
         return false;
     }
 
@@ -110,14 +110,14 @@ bool vox_eval_shock_patches::initialize()
     // To determine number of thresholds lets look at one of the detect_results
     // file
     dborl_index_node_sptr root    = ind_->root_->cast_to_index_node();
-    vcl_string query_bbox_detect_file = root->paths()[0] + "/" 
+    std::string query_bbox_detect_file = root->paths()[0] + "/" 
         + root->names()[0] + 
         params_->input_bbox_detect_extension_();
 
     if ( !vul_file::exists(query_bbox_detect_file))
     {
-        vcl_cerr<<"Cannot find xml detect results, "<<
-            query_bbox_detect_file<<vcl_endl;
+        std::cerr<<"Cannot find xml detect results, "<<
+            query_bbox_detect_file<<std::endl;
         return false;
 
     }
@@ -136,7 +136,7 @@ bool vox_eval_shock_patches::initialize()
     // Declare some variables before we start
     unsigned int number_of_queries = root->paths().size();
     unsigned int i(0);
-    vcl_string query_gt_file;
+    std::string query_gt_file;
     borld_image_description_sptr query_id;
 
     // Find number of negative instances and postive instances
@@ -150,7 +150,7 @@ bool vox_eval_shock_patches::initialize()
         
         if ( !x_read(query_gt_file,query_id) )
         {
-            vcl_cerr<<"Error parsing query xml groundtruth file"<<vcl_endl;
+            std::cerr<<"Error parsing query xml groundtruth file"<<std::endl;
             return false;
         }
 
@@ -204,13 +204,13 @@ bool vox_eval_shock_patches::perform_eval()
             ((thresholds_[thres]).ptr());
 
         // Threshold hold to find in each detect_results file
-        vcl_string att_threshold = data_elm->attribute("value");
+        std::string att_threshold = data_elm->attribute("value");
 
-        vcl_cout<<"Processing Point "<< thres <<" at threshold of "
-                <<att_threshold<<vcl_endl;
+        std::cout<<"Processing Point "<< thres <<" at threshold of "
+                <<att_threshold<<std::endl;
 
         // Holds the detection resutls for query
-        vcl_string query_bbox_detect_file;
+        std::string query_bbox_detect_file;
   
         // Loop over children of index file
         unsigned int i(0);
@@ -224,8 +224,8 @@ bool vox_eval_shock_patches::perform_eval()
 
             if ( !vul_file::exists(query_bbox_detect_file ))
             {
-                vcl_cerr<<"Cannot file xml detect results, "<<
-                    query_bbox_detect_file<<vcl_endl;
+                std::cerr<<"Cannot file xml detect results, "<<
+                    query_bbox_detect_file<<std::endl;
                 return false;
 
             }
@@ -273,7 +273,7 @@ bool vox_eval_shock_patches::perform_eval()
         }
         
         stats_at_threshold_[thres].print_only_stats();
-        vcl_cout<<vcl_endl;
+        std::cout<<std::endl;
     }
     return true;
 }
@@ -282,7 +282,7 @@ bool vox_eval_shock_patches::perform_eval()
 bool vox_eval_shock_patches::write_out()
 {
     //******************** Write Evaluation Results ****************************
-    vcl_cout<<"************  Write Evaluation Results  *************"<<vcl_endl;
+    std::cout<<"************  Write Evaluation Results  *************"<<std::endl;
    
     // Xml Tree: eval_results->dataset->stats
 
@@ -333,7 +333,7 @@ bool vox_eval_shock_patches::write_out()
         bxml_element* tn_elm=dbxml_algos::cast_to_element(tn,"TN");
         bxml_element* fn_elm=dbxml_algos::cast_to_element(fn,"FN");
        
-        vcl_stringstream tpvalue,fpvalue,tnvalue,fnvalue;
+        std::stringstream tpvalue,fpvalue,tnvalue,fnvalue;
         
         tpvalue<<stats_at_threshold_[i].TP_;
         fpvalue<<stats_at_threshold_[i].FP_;

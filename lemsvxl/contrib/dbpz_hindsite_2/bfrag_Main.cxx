@@ -139,7 +139,7 @@ int main(int argc, char** argv)
   bfrag_Main_Menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 1024, h = 768;
-  vcl_string title = "HindSite v.2 - The Fragment Assembler";
+  std::string title = "HindSite v.2 - The Fragment Assembler";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
 
   win->set_statusbar(true);

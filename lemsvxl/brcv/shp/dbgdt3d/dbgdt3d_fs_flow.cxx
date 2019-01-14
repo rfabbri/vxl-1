@@ -220,8 +220,8 @@ void gdt_fs_manager::propagate_shocks_on_cur_face ()
 
 CL_FLOW_CASES gdt_fs_manager::determine_CL_cases ()
 {
-  vcl_map<double, gdt_ibase*>::iterator it;
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit;
+  std::map<double, gdt_ibase*>::iterator it;
+  std::map<double, gdt_ibase*>::reverse_iterator rit;
 
   //: the first I of cur_edge_
   it = cur_edge_->interval_section()->I_map()->begin();
@@ -340,8 +340,8 @@ CL_FLOW_CASES gdt_fs_manager::determine_CL_cases ()
 
 CR_FLOW_CASES gdt_fs_manager::determine_CR_cases ()
 {
-  vcl_map<double, gdt_ibase*>::iterator it;
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit;
+  std::map<double, gdt_ibase*>::iterator it;
+  std::map<double, gdt_ibase*>::reverse_iterator rit;
 
   //: the last I of cur_edge_
   rit = cur_edge_->interval_section()->I_map()->rbegin();

@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -20,20 +20,20 @@
 //i.e one file ignores the 5th exposure, another may ignore the 6th, etc...
 void get_min_variance(btpl_hdr hdr_converter,
                       vil_image_view<vxl_byte>stacked_image, 
-                      vcl_vector<vcl_string>shutter_files, 
+                      std::vector<std::string>shutter_files, 
                       unsigned &min_var_index)
 {
   float min_var = 1.0;
 
   for(unsigned i=0; i<shutter_files.size(); i++)
   {
-    vcl_string shutter_file = shutter_files[i];
+    std::string shutter_file = shutter_files[i];
     // Parse the png image into sub images.
     int image_width = stacked_image.ni();
     int image_height = stacked_image.nj()/12;
-    vcl_vector< vil_image_view<vxl_byte> > imgs;
-    vcl_vector<float> shutter_speeds;
-    vcl_ifstream ssif( shutter_file.c_str() );
+    std::vector< vil_image_view<vxl_byte> > imgs;
+    std::vector<float> shutter_speeds;
+    std::ifstream ssif( shutter_file.c_str() );
     for( int img = 0; img < 12; img++ ){
       float new_shutter; ssif >> new_shutter;
       if( new_shutter == 0 ) continue;
@@ -69,7 +69,7 @@ void get_min_variance(btpl_hdr hdr_converter,
 int main( int argc, char* argv[] )
 {  
   // Set these:
-  vcl_vector<vcl_string> dirs;
+  std::vector<std::string> dirs;
   dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_109");
   dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_110");
   dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_111");
@@ -88,11 +88,11 @@ int main( int argc, char* argv[] )
 
   for( unsigned d= 0; d< dirs.size(); d++)
   {
-    vcl_string img_dir = dirs[d];
+    std::string img_dir = dirs[d];
 
     //shutter speeds' files : different files ignore different exposures
 
-    vcl_vector<vcl_string> shutter_files;
+    std::vector<std::string> shutter_files;
     shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds.txt");
     shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds05.txt");
     shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds07.txt");
@@ -105,22 +105,22 @@ int main( int argc, char* argv[] )
 
     //g files: one per camera
 
-    vcl_string g1 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_1_g.txt";
-    vcl_string g2 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_2_g.txt";
-    vcl_string g3 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_3_g.txt";
-    vcl_string g4 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_4_g.txt";
-    vcl_string g5 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_5_g.txt";
-    vcl_string g6 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_6_g.txt";
-    vcl_string g7 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_7_g.txt";
-    vcl_string g8 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_8_g.txt";
-    vcl_string g9 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_9_g.txt";
-    vcl_string g10 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_10_g.txt";
-    vcl_string g11 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_11_g.txt";
-    vcl_string g12 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_12_g.txt";
-    vcl_string g13 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_13_g.txt";
-    vcl_string g14 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_14_g.txt";
-    vcl_string g15 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_15_g.txt";
-    vcl_string g16 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_16_g.txt";
+    std::string g1 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_1_g.txt";
+    std::string g2 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_2_g.txt";
+    std::string g3 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_3_g.txt";
+    std::string g4 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_4_g.txt";
+    std::string g5 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_5_g.txt";
+    std::string g6 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_6_g.txt";
+    std::string g7 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_7_g.txt";
+    std::string g8 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_8_g.txt";
+    std::string g9 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_9_g.txt";
+    std::string g10 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_10_g.txt";
+    std::string g11 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_11_g.txt";
+    std::string g12 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_12_g.txt";
+    std::string g13 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_13_g.txt";
+    std::string g14 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_14_g.txt";
+    std::string g15 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_15_g.txt";
+    std::string g16 = "E:\\dome_images\\response_curves\\best\\fitted\\cam_16_g.txt";
 
 
 
@@ -128,16 +128,16 @@ int main( int argc, char* argv[] )
     for( vul_file_iterator f= (img_dir+"\\*").c_str(); f; ++f ){
 
       // Get all needed filenames.
-      vcl_string current_file( f() );
+      std::string current_file( f() );
       for( int c = current_file.size()-1; c > 0; c-- )
         if( current_file[c] == '.' ){ last_period = c; break; }
-        vcl_string current_file_ext, new_file;
+        std::string current_file_ext, new_file;
 
-        vcl_string camera_string;
+        std::string camera_string;
         camera_string += current_file[last_period-2];
         camera_string += current_file[last_period-1];
         int camera_index = atoi( camera_string.c_str() );
-        vcl_string g_file;
+        std::string g_file;
 
         if( camera_index == 1 ) g_file = g1;
         if( camera_index == 2 ) g_file = g2;
@@ -169,29 +169,29 @@ int main( int argc, char* argv[] )
         if( current_file_ext != "png" )
           continue;
 
-        vcl_cerr << new_file << '\n';
+        std::cerr << new_file << '\n';
 
         // Parse the png image into sub images.
         vil_image_view<vxl_byte> stacked_image = vil_load( current_file.c_str() );
         int image_width = stacked_image.ni();
         int image_height = stacked_image.nj()/12;
-        vcl_vector< vil_image_view<vxl_byte> > imgs;
-        vcl_vector<float> shutter_speeds;
+        std::vector< vil_image_view<vxl_byte> > imgs;
+        std::vector<float> shutter_speeds;
 
         // here we need to determine which shutter speeds to use
         unsigned min_index = 0;
         get_min_variance( hdr_converter, stacked_image, shutter_files, min_index);
-        vcl_string shutter_file = shutter_files[min_index];
+        std::string shutter_file = shutter_files[min_index];
 
         //write a file that indicates which file index was used
-        vcl_string index_file = img_dir + "\\index_file_used.txt";
-        vcl_ofstream fs;
-        fs.open(index_file.c_str() , vcl_ios::app);
-        fs << new_file << ' ' << min_index << vcl_endl;
+        std::string index_file = img_dir + "\\index_file_used.txt";
+        std::ofstream fs;
+        fs.open(index_file.c_str() , std::ios::app);
+        fs << new_file << ' ' << min_index << std::endl;
 
         // get proper png images 
 
-        vcl_ifstream ssif( shutter_file.c_str() );
+        std::ifstream ssif( shutter_file.c_str() );
         for( int img = 0; img < 12; img++ ){
           float new_shutter; ssif >> new_shutter;
           if( new_shutter == 0 ) continue;

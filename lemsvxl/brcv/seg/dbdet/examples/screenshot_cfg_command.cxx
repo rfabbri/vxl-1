@@ -23,13 +23,13 @@
 int main( int argc, char* argv[] )
 {
   if (argc != 4) {
-    vcl_cout << "USAGE: " << argv[0] << " <image file name> <curve fragment map file (.cem)> <screenshot image file>\n";
+    std::cout << "USAGE: " << argv[0] << " <image file name> <curve fragment map file (.cem)> <screenshot image file>\n";
     return 1;
   }
 
-  vcl_string image_file = argv[1];
-  vcl_string cfg_file = argv[2];
-  vcl_string screenshot_file = argv[3];
+  std::string image_file = argv[1];
+  std::string cfg_file = argv[2];
+  std::string screenshot_file = argv[3];
   
   // load image
   vil_image_view<vxl_byte> image_view  = vil_load(image_file.c_str());
@@ -42,7 +42,7 @@ int main( int argc, char* argv[] )
 
   if (!EM) 
   {
-    vcl_cout << "Unable to load the boundary .cem file " 
+    std::cout << "Unable to load the boundary .cem file " 
       << cfg_file << ". Quit now.\n";
     return 1;
   }
@@ -53,7 +53,7 @@ int main( int argc, char* argv[] )
   // save the screenshot to file
   if (!vil_save(image_view, screenshot_file.c_str()))
   {
-    vcl_cout << "\nERROR: couldn't save screenshot to file: " << screenshot_file << vcl_endl;
+    std::cout << "\nERROR: couldn't save screenshot to file: " << screenshot_file << std::endl;
     return 1;
   }
 

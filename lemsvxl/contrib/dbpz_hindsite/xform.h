@@ -140,11 +140,11 @@ public:
 
     void print(){
         for( int i = 0; i < R; i++ ){
-            vcl_cout << "[";
+            std::cout << "[";
             for( int j = 0; j  < C; j++ ){
-                vcl_cout << " " << (*this)(i,j);
+                std::cout << " " << (*this)(i,j);
             }
-            vcl_cout << " ]" << vcl_endl;
+            std::cout << " ]" << std::endl;
         }
     }
 

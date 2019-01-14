@@ -15,12 +15,12 @@
 
 bool dbskr_extract_shock_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "parsing dbskr_extract_shock_params\n";
+  //std::cout << "parsing dbskr_extract_shock_params\n";
   bxml_element query("dbskr_extract_shock_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_extract_shock_params::parse_from_data() - could not find the node dbskr_extract_shock_params\n";
+    std::cout << "dbskr_extract_shock_params::parse_from_data() - could not find the node dbskr_extract_shock_params\n";
     return false;
   }
 
@@ -28,7 +28,7 @@ bool dbskr_extract_shock_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_extract_shock_params::parse_from_data() - could not find the node data\n";
+    std::cout << "dbskr_extract_shock_params::parse_from_data() - could not find the node data\n";
     return false;
   }
    
@@ -36,12 +36,12 @@ bool dbskr_extract_shock_params::parse_from_data(bxml_data_sptr root)
   if (!data1)
     return false;
 
-  vcl_string prune_threshold_str, sampling_ds_str, curve_length_gamma_str, cont_thres_str, app_thres_str, alpha_cont_str;
+  std::string prune_threshold_str, sampling_ds_str, curve_length_gamma_str, cont_thres_str, app_thres_str, alpha_cont_str;
   data1->get_attribute("prune_threshold", prune_threshold_);
   data1->get_attribute("prune_threshold", prune_threshold_str);
   data1->get_attribute("sampling_ds", sampling_ds_);
   data1->get_attribute("sampling_ds", sampling_ds_str);
-  vcl_string val;
+  std::string val;
   data1->get_attribute("add_noise_in_a_loop", val);  // if output shock has zero nodes then adds the following amount of noise randomly in a loop for at most 100 times
   add_noise_in_a_loop_ = val.compare("off") == 0 ? false : true;
   data1->get_attribute("noise_radius", noise_radius_);
@@ -65,7 +65,7 @@ bool dbskr_extract_shock_params::parse_from_data(bxml_data_sptr root)
   if (perform_gap_transforms_) 
     output_file_postfix_ = output_file_postfix_ + "-gaptr-" + "-cg-" + curve_length_gamma_str + "-ct-" + cont_thres_str + "-at-" + app_thres_str + "-a-" + alpha_cont_str;
   
-  //vcl_cout << "output_file_postfix: " << output_file_postfix_ << vcl_endl;
+  //std::cout << "output_file_postfix: " << output_file_postfix_ << std::endl;
 
   return true;
 }

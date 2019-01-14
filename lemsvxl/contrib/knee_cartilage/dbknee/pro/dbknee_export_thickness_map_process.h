@@ -15,8 +15,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_export_thickness_map_process : public bpro1_process 
@@ -33,10 +33,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Export thickness map"; }
+  std::string name() {  return "Export thickness map"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -48,20 +48,20 @@ public:
   
   //: Take in the data and execute
   static bool export_thickness_map_to_file(
-    const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
+    const std::string& thickness_mesh_file,
+    const std::string& cs_file,
     double band_width_ratio,
     double start_angle,
     double end_angle,
-    const vcl_string& thickness_map_file,
+    const std::string& thickness_map_file,
     bool show_gui);
 
 
   //: Take in the data and execute
   static bool export_full_thickness_map_to_file(
-    const vcl_string& thickness_mesh_file,
-    const vcl_string& cs_file,
-    const vcl_string& thickness_map_file);
+    const std::string& thickness_mesh_file,
+    const std::string& cs_file,
+    const std::string& thickness_map_file);
 
 
 };

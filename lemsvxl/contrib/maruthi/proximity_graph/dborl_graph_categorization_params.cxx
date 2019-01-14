@@ -6,7 +6,7 @@
 
 //: Constructor
 dborl_graph_categorization_params::
-dborl_graph_categorization_params(vcl_string algo_name) : 
+dborl_graph_categorization_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
 

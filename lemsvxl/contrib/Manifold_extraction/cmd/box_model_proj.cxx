@@ -8,13 +8,13 @@
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -161,26 +161,26 @@ double matrix_log_dist(vnl_matrix<double> M1,vnl_matrix<double> M2)
 vnl_matrix<double>resultant = M1*vnl_matrix_inverse<double>(M2);
 
  
-double sx = vcl_log(resultant.get(0,0));
-double sy = vcl_log(resultant.get(1,1));
+double sx = std::log(resultant.get(0,0));
+double sy = std::log(resultant.get(1,1));
 double tx = resultant.get(0,2);
 double ty = resultant.get(1,2);
 double distance = 1e10;
 
 // in order to take the log of the scaling factors,they have to be non negative
-sx = vcl_abs(sx);
-sy = vcl_abs(sy);
+sx = std::abs(sx);
+sy = std::abs(sy);
 
 if (~(sx == 1)&&~(sy == 1))
-distance = vcl_sqrt(vcl_pow((sx),2) + vcl_pow((sy),2) +
-                  vcl_pow((tx*vcl_log(sx))/(sx-1),2) + vcl_pow((ty*vcl_log(sy))/(sy-1),2));
+distance = std::sqrt(std::pow((sx),2) + std::pow((sy),2) +
+                  std::pow((tx*std::log(sx))/(sx-1),2) + std::pow((ty*std::log(sy))/(sy-1),2));
 
 
 return distance;
     }
 
 double calculate_Lie_distance_between_vectors
-(vcl_vector<vgl_box_2d<double> >model1,vcl_vector<vgl_box_2d<double> >model2,vcl_vector<vgl_box_2d<double> >ref_model)
+(std::vector<vgl_box_2d<double> >model1,std::vector<vgl_box_2d<double> >model2,std::vector<vgl_box_2d<double> >ref_model)
     {
 vnl_matrix<double> T11 = get_transformation_matrix(model1[0],ref_model[0]);
 vnl_matrix<double> T21 = get_transformation_matrix(model1[1],ref_model[1]);
@@ -190,7 +190,7 @@ vnl_matrix<double> T12 = get_transformation_matrix(model2[0],ref_model[0]);
 vnl_matrix<double> T22 = get_transformation_matrix(model2[1],ref_model[1]);
 vnl_matrix<double> T32 = get_transformation_matrix(model2[2],ref_model[2]);
 
-// vcl_cout << T11 << vcl_endl;
+// std::cout << T11 << std::endl;
 
 double d = matrix_log_dist(T11,T12) + matrix_log_dist(T21,T22) + matrix_log_dist(T31,T32);
   //  double d = 0;
@@ -207,7 +207,7 @@ vnl_matrix<double> T12 = get_transformation_matrix(M2.engine(),RM.engine());
 vnl_matrix<double> T22 = get_transformation_matrix(M2.body(),RM.body());
 vnl_matrix<double> T32 = get_transformation_matrix(M2.rear(),RM.rear());
 
-// vcl_cout << T11 << vcl_endl;
+// std::cout << T11 << std::endl;
 
 double d = matrix_log_dist(T11,T12) + matrix_log_dist(T21,T22) + matrix_log_dist(T31,T32);
   //  double d = 0;
@@ -217,13 +217,13 @@ return d;
 
 int main(int argc,char **argv)
     {
-vcl_string boxes_info = argv[1];
-vcl_string output_file = argv[2];
-vcl_string debug_info_file = argv[3];
+std::string boxes_info = argv[1];
+std::string output_file = argv[2];
+std::string debug_info_file = argv[3];
 
-vcl_ofstream ofstr(boxes_info.c_str());
-vcl_ofstream out(output_file.c_str());
-vcl_ofstream debug_info(debug_info_file.c_str());
+std::ofstream ofstr(boxes_info.c_str());
+std::ofstream out(output_file.c_str());
+std::ofstream debug_info(debug_info_file.c_str());
 
 int my_argc = 1;
     char ** my_argv = new char*[argc+1];
@@ -237,9 +237,9 @@ int my_argc = 1;
 print_vrml_header(out);
    
     
-//vcl_vector< vgl_box_2d<double> >boxes1;
-//vcl_vector< vgl_box_2d<double> >boxes2;
-//vcl_vector< vgl_box_2d<double> >boxes3;
+//std::vector< vgl_box_2d<double> >boxes1;
+//std::vector< vgl_box_2d<double> >boxes2;
+//std::vector< vgl_box_2d<double> >boxes3;
 //vgl_box_2d<double>transformed_box1,transformed_box2,transformed_box3;
 
 
@@ -268,14 +268,14 @@ double s1x = 3,t1x = 10,s1y = 3,t1y = 10,s2x = 4,s2y = 4,s3x = 2,s3y = 2;
 set_transformation_matrices(m1,m2,m3,M,s1x,t1x,s1y,t1y,s2x,s2y,s3x,s3y);
 
 
-ofstr <<  M.engine() << vcl_endl;
-ofstr <<  M.body() << vcl_endl;
-ofstr <<  M.rear() << vcl_endl;
+ofstr <<  M.engine() << std::endl;
+ofstr <<  M.body() << std::endl;
+ofstr <<  M.rear() << std::endl;
 
 double color_coeff =0.25;
  print_vrml_model(out,M,color_coeff);
 
-  vcl_vector<vehicle_model> vehic_set;
+  std::vector<vehicle_model> vehic_set;
   vehic_set.push_back(M);
 
   int num_models = 10;
@@ -288,9 +288,9 @@ for (int i = 0;i<num_models;i++)
 
     vehic_set.push_back(MT);
    
-ofstr <<  MT.engine() << vcl_endl;
-ofstr <<  MT.body() << vcl_endl;
-ofstr <<  MT.rear() << vcl_endl;    
+ofstr <<  MT.engine() << std::endl;
+ofstr <<  MT.body() << std::endl;
+ofstr <<  MT.rear() << std::endl;    
 
 set_transformation_matrices(m1,m2,m3,M,s1x+i,t1x+i,s1y+i,t1y+i,s2x+i,s2y+i,s3x+i,s3y+i);
 
@@ -311,10 +311,10 @@ set_transformation_matrices(m1,m2,m3,M,s1x+k,t1x+k,s1y+k,t1y+k,s2x+k,s2y+k,s3x+k
  color_coeff =0.0;
  print_vrml_model(out,new_model,color_coeff);
 
-ofstr << "printing the new model" << vcl_endl;
-ofstr <<  new_model.engine() << vcl_endl;
-ofstr <<  new_model.body() << vcl_endl;
-ofstr <<  new_model.rear() << vcl_endl;   
+ofstr << "printing the new model" << std::endl;
+ofstr <<  new_model.engine() << std::endl;
+ofstr <<  new_model.body() << std::endl;
+ofstr <<  new_model.rear() << std::endl;   
 
 int closest_model_index = 1e10;
 double dist,min_dist = 1e10;
@@ -322,7 +322,7 @@ double dist,min_dist = 1e10;
 for (int i = 0;i<num_models;i++)
     {
    dist = calculate_Lie_distance(vehic_set[i],new_model,vehic_set[0]);
-ofstr <<dist << vcl_endl;
+ofstr <<dist << std::endl;
 if (dist < min_dist)
     {
     min_dist = dist;
@@ -330,7 +330,7 @@ closest_model_index = i;
     }
     }
 
-ofstr << " closest model index " << closest_model_index << vcl_endl;
+ofstr << " closest model index " << closest_model_index << std::endl;
     ofstr.close();
 
      print_vrml_model(out,vehic_set[closest_model_index],0.0);
@@ -347,29 +347,29 @@ ofstr << " closest model index " << closest_model_index << vcl_endl;
 
 
 
-//debug_info << "transformation matrix 2:" << vcl_endl;
-//    debug_info << m2 << vcl_endl;
-//     debug_info << vcl_endl;
+//debug_info << "transformation matrix 2:" << std::endl;
+//    debug_info << m2 << std::endl;
+//     debug_info << std::endl;
 //
-//    debug_info << "M body:" << vcl_endl;
-//    debug_info << M.body() << vcl_endl;
-//     debug_info << vcl_endl;
+//    debug_info << "M body:" << std::endl;
+//    debug_info << M.body() << std::endl;
+//     debug_info << std::endl;
 //
-//    debug_info << "MT body:" << vcl_endl;
-//    debug_info << MT.body() << vcl_endl;
-//     debug_info << vcl_endl;
+//    debug_info << "MT body:" << std::endl;
+//    debug_info << MT.body() << std::endl;
+//     debug_info << std::endl;
 //
-//      debug_info << vcl_endl;
-//    debug_info << "transformation matrix 3:" << vcl_endl;
-//    debug_info << m3 << vcl_endl;
+//      debug_info << std::endl;
+//    debug_info << "transformation matrix 3:" << std::endl;
+//    debug_info << m3 << std::endl;
 //    
-//    debug_info << "M rear:" << vcl_endl;
-//    debug_info << M.rear() << vcl_endl;
-//     debug_info << vcl_endl;
+//    debug_info << "M rear:" << std::endl;
+//    debug_info << M.rear() << std::endl;
+//     debug_info << std::endl;
 //
-//    debug_info << "MT rear:" << vcl_endl;
-//    debug_info << MT.rear() << vcl_endl;
-//     debug_info << vcl_endl;
+//    debug_info << "MT rear:" << std::endl;
+//    debug_info << MT.rear() << std::endl;
+//     debug_info << std::endl;
 /*
 for (i = 0;i<10;i++)
     {
@@ -380,25 +380,25 @@ for (i = 0;i<10;i++)
     print_vrml_model(out,MT);
  
 
-ofstr <<  MT.engine() << vcl_endl;
-ofstr <<  MT.body() << vcl_endl;
-ofstr <<  MT.rear() << vcl_endl;    
+ofstr <<  MT.engine() << std::endl;
+ofstr <<  MT.body() << std::endl;
+ofstr <<  MT.rear() << std::endl;    
 
-//debug_info << vcl_endl;
-//debug_info << "printing the model " << vcl_endl;
-//debug_info <<  MT.engine() << vcl_endl;
-//debug_info <<  MT.body() << vcl_endl;
-//debug_info <<  MT.rear() << vcl_endl;  
-//debug_info << vcl_endl;
+//debug_info << std::endl;
+//debug_info << "printing the model " << std::endl;
+//debug_info <<  MT.engine() << std::endl;
+//debug_info <<  MT.body() << std::endl;
+//debug_info <<  MT.rear() << std::endl;  
+//debug_info << std::endl;
 
  /*transformed_box1 = transform_box(m1,starting_box1);
  transformed_box2 = transform_box(m2,starting_box2);
  transformed_box3 = transform_box(m3,starting_box3);*/
 
- /*debug_info << "printing the vectors " << vcl_endl;
- debug_info <<  transformed_box1 << vcl_endl;
-debug_info <<  transformed_box2 << vcl_endl;
-debug_info <<  transformed_box3 << vcl_endl;*/
+ /*debug_info << "printing the vectors " << std::endl;
+ debug_info <<  transformed_box1 << std::endl;
+debug_info <<  transformed_box2 << std::endl;
+debug_info <<  transformed_box3 << std::endl;*/
 
  /*vehicle_model Mod(transformed_box1,transformed_box2,transformed_box3);
 
@@ -408,9 +408,9 @@ debug_info <<  transformed_box3 << vcl_endl;*/
 //boxes2.push_back(transformed_box2);
 //boxes3.push_back(transformed_box3);
 //
-//ofstr <<  transformed_box1 << vcl_endl;
-//ofstr <<  transformed_box2 << vcl_endl;
-//ofstr <<  transformed_box3 << vcl_endl;
+//ofstr <<  transformed_box1 << std::endl;
+//ofstr <<  transformed_box2 << std::endl;
+//ofstr <<  transformed_box3 << std::endl;
 
 m1.put(0,0,s1x+i);
 m1.put(0,2,t1x+i);
@@ -432,7 +432,7 @@ m3.put(2,2,1);
     }
 */
 
-//vcl_vector<vgl_box_2d<double> >ref_model;
+//std::vector<vgl_box_2d<double> >ref_model;
 //
 //ref_model.push_back(boxes1[0]);
 //ref_model.push_back(boxes2[0]);
@@ -440,7 +440,7 @@ m3.put(2,2,1);
 //
 //for (i = 0;i<9;i++)
 //    {
-//vcl_vector<vgl_box_2d<double> >model1,model2;
+//std::vector<vgl_box_2d<double> >model1,model2;
 //
 //model1.push_back(boxes1[i]);
 //model1.push_back(boxes2[i]);
@@ -450,19 +450,19 @@ m3.put(2,2,1);
 //model2.push_back(boxes2[i+1]);
 //model2.push_back(boxes3[i+1]);
 //
-//debug_info << vcl_endl;
-//debug_info << "printing the model " << vcl_endl;
-//debug_info <<  vehic_set[i].engine() << vcl_endl;
-//debug_info <<  vehic_set[i].body() << vcl_endl;
-//debug_info <<  vehic_set[i].rear()  << vcl_endl;  
-//debug_info << vcl_endl;
+//debug_info << std::endl;
+//debug_info << "printing the model " << std::endl;
+//debug_info <<  vehic_set[i].engine() << std::endl;
+//debug_info <<  vehic_set[i].body() << std::endl;
+//debug_info <<  vehic_set[i].rear()  << std::endl;  
+//debug_info << std::endl;
 //
-//debug_info << "printing the vectors " << vcl_endl;
-// debug_info <<  boxes1[i] << vcl_endl;
-//debug_info <<  boxes2[i] << vcl_endl;
-//debug_info <<  boxes3[i] << vcl_endl;
+//debug_info << "printing the vectors " << std::endl;
+// debug_info <<  boxes1[i] << std::endl;
+//debug_info <<  boxes2[i] << std::endl;
+//debug_info <<  boxes3[i] << std::endl;
 //
-//ofstr << calculate_Lie_distance_between_vectors(model1,model2,ref_model)<< vcl_endl;
+//ofstr << calculate_Lie_distance_between_vectors(model1,model2,ref_model)<< std::endl;
 //
 //
 //    }

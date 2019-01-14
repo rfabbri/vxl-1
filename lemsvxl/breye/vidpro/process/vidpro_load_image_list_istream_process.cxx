@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_load_image_list_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_istream_storage.h>
@@ -17,7 +17,7 @@ vidpro_load_image_list_istream_process::vidpro_load_image_list_istream_process()
 {
  if( !parameters()->add( "Video stream file <filename...>" , "-istream_filename" , bpro_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,16 +37,16 @@ vidpro_load_image_list_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_load_image_list_istream_process::name()
+std::string vidpro_load_image_list_istream_process::name()
 {
   return "Load Input Stream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_load_image_list_istream_process::get_input_type()
+std::vector< std::string > vidpro_load_image_list_istream_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -56,9 +56,9 @@ vcl_vector< vcl_string > vidpro_load_image_list_istream_process::get_input_type(
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_load_image_list_istream_process::get_output_type()
+std::vector< std::string > vidpro_load_image_list_istream_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "istream" );

@@ -23,7 +23,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_analytic_integrant.h>
 #include <vnl/algo/vnl_simpson_integral.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
@@ -64,6 +64,6 @@ class xmvg_gaussian_filter_3d : public xmvg_atomic_filter_3d <double>
 };
 
 // XML write
-void x_write(vcl_ostream& os, xmvg_gaussian_filter_3d f);
+void x_write(std::ostream& os, xmvg_gaussian_filter_3d f);
 
 #endif

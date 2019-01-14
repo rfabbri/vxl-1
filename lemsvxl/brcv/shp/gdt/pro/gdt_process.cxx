@@ -61,7 +61,7 @@ void dbmsh3d_pro_base::_copy_pts_to_mesh ()
 
 void dbmsh3d_pro_base::_copy_mesh_to_pts ()
 {
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = mesh_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = mesh_->vertexmap().begin();
   for (; it != mesh_->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     V->set_vid (pts_.size());
@@ -71,10 +71,10 @@ void dbmsh3d_pro_base::_copy_mesh_to_pts ()
 
 void dbmsh3d_pro_base::_copy_mesh_to_ifs_faces ()
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
   for (; it != mesh_->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
-    vcl_vector<int> vids;
+    std::vector<int> vids;
     for (unsigned int j=0; j<F->vertices().size(); j++)
       vids.push_back (F->vertices(j)->vid());
     ifs_faces_.push_back (vids);
@@ -109,7 +109,7 @@ void dbmsh3d_pro_base::_copy_sg3pi_to_mesh ()
 void dbmsh3d_pro_base::_copy_valid_V_to_pts (const bool valid)
 {
   pts_.clear();
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = mesh_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = mesh_->vertexmap().begin();
   for (; it != mesh_->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     if (valid) {
@@ -164,7 +164,7 @@ void dbmsh3d_pro_base::apply_xform_hmatrix ()
 //###############################################################
 double dbmsh3d_pro_base::get_avg_samp_dist ()
 {  
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
 
   if (pro_data_ == PD_PTS) {
     //Estimate avg_samp_dist by avg of k-N-N.
@@ -187,7 +187,7 @@ double dbmsh3d_pro_base::get_avg_samp_dist ()
     sg3pi_->get_sl_sample_dist();
     double d1 = (double) sg3pi_->intra_sl_dist();
     double d2 = (double) sg3pi_->inter_sl_dist();
-    avg_samp_dist_ = (float) vcl_max (d1, d2);
+    avg_samp_dist_ = (float) std::max (d1, d2);
   }
   else if (pro_data_ == PD_MESH) {
     if (mesh_->facemap().size() != 0)
@@ -201,7 +201,7 @@ double dbmsh3d_pro_base::get_avg_samp_dist ()
     assert (0);
     avg_samp_dist_ = 0.0f;
   }
-  vul_printf (vcl_cerr, "\testimate_avg_samp_dist(): %f.\n", avg_samp_dist_);
+  vul_printf (std::cerr, "\testimate_avg_samp_dist(): %f.\n", avg_samp_dist_);
   return avg_samp_dist_;
 }
 
@@ -211,7 +211,7 @@ double dbmsh3d_pro_base::get_avg_samp_dist ()
 //  The file prefix is in dir_prefix_
 //  Note the order of trying various input file types.
 //
-bool dbmsh3d_pro_base::load_points_files (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_points_files (std::string dirfile)
 {  
   if (dirfile == "")
     dirfile = dir_file();
@@ -229,7 +229,7 @@ bool dbmsh3d_pro_base::load_points_files (vcl_string dirfile)
 }
 
 //: Load input face (already meshed) from various file types.
-bool dbmsh3d_pro_base::load_faces_files (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_faces_files (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -243,7 +243,7 @@ bool dbmsh3d_pro_base::load_faces_files (vcl_string dirfile)
 }
 
 //: Load input meshe from various file types.
-bool dbmsh3d_pro_base::load_meshes_files (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_meshes_files (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -264,7 +264,7 @@ bool dbmsh3d_pro_base::load_meshes_files (vcl_string dirfile)
 
 //###############################################################
 
-void dbmsh3d_pro_base::save_xyz (vcl_string dirfile)
+void dbmsh3d_pro_base::save_xyz (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -279,7 +279,7 @@ void dbmsh3d_pro_base::save_xyz (vcl_string dirfile)
     assert (0);
 }
 
-bool dbmsh3d_pro_base::load_xyz (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_xyz (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -299,7 +299,7 @@ bool dbmsh3d_pro_base::load_xyz (vcl_string dirfile)
   }
 }
 
-void dbmsh3d_pro_base::save_p3d (vcl_string dirfile)
+void dbmsh3d_pro_base::save_p3d (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -314,7 +314,7 @@ void dbmsh3d_pro_base::save_p3d (vcl_string dirfile)
     assert (0);
 }
 
-bool dbmsh3d_pro_base::load_p3d (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_p3d (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -334,7 +334,7 @@ bool dbmsh3d_pro_base::load_p3d (vcl_string dirfile)
   }
 }
 
-void dbmsh3d_pro_base::save_xyzn1 (vcl_string dirfile)
+void dbmsh3d_pro_base::save_xyzn1 (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -345,7 +345,7 @@ void dbmsh3d_pro_base::save_xyzn1 (vcl_string dirfile)
   dbmsh3d_save_xyzn1 (oripts_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_xyzn1 (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_xyzn1 (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -359,7 +359,7 @@ bool dbmsh3d_pro_base::load_xyzn1 (vcl_string dirfile)
   return result;
 }
 
-void dbmsh3d_pro_base::save_3pi (vcl_string dirfile)
+void dbmsh3d_pro_base::save_3pi (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -370,7 +370,7 @@ void dbmsh3d_pro_base::save_3pi (vcl_string dirfile)
   dbmsh3d_save_sg3pi (sg3pi_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_3pi (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_3pi (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -384,7 +384,7 @@ bool dbmsh3d_pro_base::load_3pi (vcl_string dirfile)
   return result;
 }
 
-void dbmsh3d_pro_base::save_ply (vcl_string dirfile, const bool ascii_mode)
+void dbmsh3d_pro_base::save_ply (std::string dirfile, const bool ascii_mode)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -395,7 +395,7 @@ void dbmsh3d_pro_base::save_ply (vcl_string dirfile, const bool ascii_mode)
   dbmsh3d_save_ply (mesh_, dirfile.c_str(), ascii_mode);
 }
 
-bool dbmsh3d_pro_base::load_ply (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_ply (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -410,7 +410,7 @@ bool dbmsh3d_pro_base::load_ply (vcl_string dirfile)
 }
 
 //: only load the vertices to the mesh_
-bool dbmsh3d_pro_base::load_ply_v (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_ply_v (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -422,7 +422,7 @@ bool dbmsh3d_pro_base::load_ply_v (vcl_string dirfile)
 }
 
 //: only load the faces to the mesh_
-bool dbmsh3d_pro_base::load_ply_f (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_ply_f (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -431,7 +431,7 @@ bool dbmsh3d_pro_base::load_ply_f (vcl_string dirfile)
   return dbmsh3d_load_ply_f (mesh_, dirfile.c_str());
 }
 
-void dbmsh3d_pro_base::save_ply2 (vcl_string dirfile)
+void dbmsh3d_pro_base::save_ply2 (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -446,7 +446,7 @@ void dbmsh3d_pro_base::save_ply2 (vcl_string dirfile)
     assert (0);
 }
 
-bool dbmsh3d_pro_base::load_ply2 (vcl_string dirfile, const bool IFS_to_MHE)
+bool dbmsh3d_pro_base::load_ply2 (std::string dirfile, const bool IFS_to_MHE)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -463,7 +463,7 @@ bool dbmsh3d_pro_base::load_ply2 (vcl_string dirfile, const bool IFS_to_MHE)
 }
 
 //: only load the vertices to the mesh_
-bool dbmsh3d_pro_base::load_ply2_v (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_ply2_v (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -475,7 +475,7 @@ bool dbmsh3d_pro_base::load_ply2_v (vcl_string dirfile)
 }
 
 //: only load the faces to the mesh_
-bool dbmsh3d_pro_base::load_ply2_f (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_ply2_f (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -485,7 +485,7 @@ bool dbmsh3d_pro_base::load_ply2_f (vcl_string dirfile)
   return dbmsh3d_load_ply2_f (mesh_, dirfile.c_str());
 }
 
-void dbmsh3d_pro_base::save_off (vcl_string dirfile)
+void dbmsh3d_pro_base::save_off (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -496,7 +496,7 @@ void dbmsh3d_pro_base::save_off (vcl_string dirfile)
   dbmsh3d_save_off (mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_off (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_off (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -507,7 +507,7 @@ bool dbmsh3d_pro_base::load_off (vcl_string dirfile)
   return dbmsh3d_load_off (mesh_, dirfile.c_str());
 }
 
-void dbmsh3d_pro_base::save_obj (vcl_string dirfile)
+void dbmsh3d_pro_base::save_obj (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -518,7 +518,7 @@ void dbmsh3d_pro_base::save_obj (vcl_string dirfile)
   dbmsh3d_save_obj (mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_obj (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_obj (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -529,7 +529,7 @@ bool dbmsh3d_pro_base::load_obj (vcl_string dirfile)
   return dbmsh3d_load_obj (mesh_, dirfile.c_str());
 }
 
-void dbmsh3d_pro_base::save_iv_ifs (vcl_string dirfile)
+void dbmsh3d_pro_base::save_iv_ifs (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -540,7 +540,7 @@ void dbmsh3d_pro_base::save_iv_ifs (vcl_string dirfile)
   dbmsh3d_save_iv_ifs (mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_iv_ifs (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_iv_ifs (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -551,7 +551,7 @@ bool dbmsh3d_pro_base::load_iv_ifs (vcl_string dirfile)
   return dbmsh3d_load_iv_ifs (mesh_, dirfile.c_str());
 }
 
-void dbmsh3d_pro_base::save_m (vcl_string dirfile)
+void dbmsh3d_pro_base::save_m (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -562,7 +562,7 @@ void dbmsh3d_pro_base::save_m (vcl_string dirfile)
   dbmsh3d_save_m (mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_m (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_m (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -573,7 +573,7 @@ bool dbmsh3d_pro_base::load_m (vcl_string dirfile)
   return dbmsh3d_load_m (mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro_base::load_hmatrix (vcl_string dirfile)
+bool dbmsh3d_pro_base::load_hmatrix (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -584,7 +584,7 @@ bool dbmsh3d_pro_base::load_hmatrix (vcl_string dirfile)
 
 //######################################################################
 
-bool dbmsh3d_pro::load_ply2_fmm (vcl_string dirfile)
+bool dbmsh3d_pro::load_ply2_fmm (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -595,7 +595,7 @@ bool dbmsh3d_pro::load_ply2_fmm (vcl_string dirfile)
   return dbmsh3d_load_ply2 (fmm_mesh_, dirfile.c_str());
 }
 
-bool dbmsh3d_pro::load_ply2_gdt (vcl_string dirfile)
+bool dbmsh3d_pro::load_ply2_gdt (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
@@ -610,8 +610,8 @@ bool dbmsh3d_pro::load_ply2_gdt (vcl_string dirfile)
 
 bool dbmsh3d_pro::sample_iv_to_pts (int opt, float th, float noise)
 {
-  vcl_string strFile_IV = dir_file() + ".iv";
-  vcl_string strFile_P3D = dir_file() + ".p3d";
+  std::string strFile_IV = dir_file() + ".iv";
+  std::string strFile_P3D = dir_file() + ".p3d";
 
   //1) Read in the IV File using home-made pharser (extract vertices and links)
   //   and output to point cloud file.  

@@ -22,7 +22,7 @@ dbknee_compute_thickness_process()
     "-output_file", bpro1_filepath("",".ply"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -44,19 +44,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_compute_thickness_process::
+std::vector< std::string > dbknee_compute_thickness_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_compute_thickness_process::
+std::vector< std::string > dbknee_compute_thickness_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -103,21 +103,21 @@ finish()
 
 //: Take in the data and execute
 bool dbknee_compute_thickness_process::
-compute_thickness(const vcl_string& inner_mesh_file,
-                  const vcl_string& outer_mesh_file, 
-                  const vcl_string& thickness_mesh_file,
+compute_thickness(const std::string& inner_mesh_file,
+                  const std::string& outer_mesh_file, 
+                  const std::string& thickness_mesh_file,
                   bool show_gui)
 {
   // i. Load inner mesh
-  vcl_cout << "\nLoad mesh file = " << inner_mesh_file << vcl_endl;
+  std::cout << "\nLoad mesh file = " << inner_mesh_file << std::endl;
   dbmsh3d_richmesh inner_mesh;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.clear();
   
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
   //////////////////////////////
   dbmsh3d_load_ply(&inner_mesh, inner_mesh_file.c_str(), vertex_prop_list, face_prop_list);
@@ -126,7 +126,7 @@ compute_thickness(const vcl_string& inner_mesh_file,
   remove_erroneous_Fs_IFS(&inner_mesh);
 
   // ii. Load outer mesh
-  vcl_cout << "\n Load outer mesh file = " << outer_mesh_file << vcl_endl;
+  std::cout << "\n Load outer mesh file = " << outer_mesh_file << std::endl;
   dbmsh3d_mesh outer_mesh;
   dbmsh3d_load_ply(&outer_mesh, outer_mesh_file.c_str());
   remove_erroneous_Fs_IFS(&outer_mesh);
@@ -144,7 +144,7 @@ compute_thickness(const vcl_string& inner_mesh_file,
   dbmsh3d_save_ply(&inner_mesh, thickness_mesh_file.c_str(), 
     vertex_prop_list, face_prop_list, BINARY);
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return false;
 
 }

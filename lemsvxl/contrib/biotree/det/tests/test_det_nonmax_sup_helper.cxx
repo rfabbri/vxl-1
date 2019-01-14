@@ -6,10 +6,10 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_nonmax_sup_helper.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 #include <vgl/vgl_point_3d.h>
 #include <vbl/vbl_array_3d.h>
 
@@ -22,14 +22,14 @@ void test_intersect()
   // set up the vertice
 
   int nv = dim + 1;
-  vcl_vector<vgl_point_3d<double> > vertice(nv*nv*nv);
+  std::vector<vgl_point_3d<double> > vertice(nv*nv*nv);
 
   for(int i=0; i<nv; i++)
     for(int j=0; j<nv; j++)
       for(int k=0; k<nv; k++)
         vertice[i*nv*nv + j*nv + k].set(-(double)(dim)/2.0+i, -double(dim)/2.0+j, -double(dim)/2.0+k);
 
-  vcl_vector<vbl_array_3d<int> > vertice_map;
+  std::vector<vbl_array_3d<int> > vertice_map;
   
   // setup the vertice map
   for(int i=0; i<8; i++)
@@ -89,14 +89,14 @@ void test_projection()
   // set up the vertice
 
   int nv = dim + 1;
-  vcl_vector<vgl_point_3d<double> > vertice(nv*nv*nv);
+  std::vector<vgl_point_3d<double> > vertice(nv*nv*nv);
 
   for(int i=0; i<nv; i++)
     for(int j=0; j<nv; j++)
       for(int k=0; k<nv; k++)
         vertice[i*nv*nv + j*nv + k].set(-(double)(dim)/2.0+i, -double(dim)/2.0+j, -double(dim)/2.0+k);
 
-  vcl_vector<vbl_array_3d<int> > vertice_map;
+  std::vector<vbl_array_3d<int> > vertice_map;
   
   // setup the vertice map
   for(int i=0; i<8; i++)
@@ -117,9 +117,9 @@ void test_projection()
         vertice_map[7].operator()(i,j,k) = i*nv*nv + (j+1)*nv + k+1;
       }
   
-  vcl_cout <<"---------------------------------------------------------\n";
-  vcl_cout <<"Starting Testing projection from plane (0, 1, 1, 0) to x-z plane\n";
-  vcl_cout <<"---------------------------------------------------------\n";
+  std::cout <<"---------------------------------------------------------\n";
+  std::cout <<"Starting Testing projection from plane (0, 1, 1, 0) to x-z plane\n";
+  std::cout <<"---------------------------------------------------------\n";
 
   vgl_vector_3d<double> dir(0, 1., 1.);
   
@@ -132,9 +132,9 @@ void test_projection()
     for(int j=0; j<dim; j++)
       TEST("testing projection", proj[i][j], (i+7-2)*225+(15-1-(j+7-2))*15+(j+7-2));
 
-  vcl_cout <<"---------------------------------------------------------\n";
-  vcl_cout <<"Starting Testing projection from plane ( 1, 0, 1, 0) to y-z plane\n";
-  vcl_cout <<"---------------------------------------------------------\n";
+  std::cout <<"---------------------------------------------------------\n";
+  std::cout <<"Starting Testing projection from plane ( 1, 0, 1, 0) to y-z plane\n";
+  std::cout <<"---------------------------------------------------------\n";
 
   dir.set(1.0, 0, 1.);
   
@@ -147,9 +147,9 @@ void test_projection()
     for(int j=0; j<dim; j++)
       TEST("testing projection", proj[i][j], (15-1-(j+7-2))*225+(i+7-2)*15+(j+7-2));
 
-  vcl_cout <<"---------------------------------------------------------\n";
-  vcl_cout <<"Starting Testing projection from plane ( 1, 1, 0, 0) to y-z plane\n";
-  vcl_cout <<"---------------------------------------------------------\n";
+  std::cout <<"---------------------------------------------------------\n";
+  std::cout <<"Starting Testing projection from plane ( 1, 1, 0, 0) to y-z plane\n";
+  std::cout <<"---------------------------------------------------------\n";
 
   dir.set(1.0, 1., 0.);
   
@@ -166,7 +166,7 @@ void test_projection()
 
 static void test_det_nonmax_sup_helper()
 {
-  vcl_cout << "---test nonmaxium_suppression_helper ---" << vcl_endl;
+  std::cout << "---test nonmaxium_suppression_helper ---" << std::endl;
 
   test_intersect();
 

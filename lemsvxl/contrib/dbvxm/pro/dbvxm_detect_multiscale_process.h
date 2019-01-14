@@ -12,7 +12,7 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 #include <vpgl/vpgl_camera.h>
 
@@ -30,7 +30,7 @@ class dbvxm_detect_multiscale_process : public bprb_process
   //: Clone the process
   virtual dbvxm_detect_multiscale_process* clone() const {return new dbvxm_detect_multiscale_process(*this);}
 
-  vcl_string name(){return "dbvxmDetectMultiScaleProcess";}
+  std::string name(){return "dbvxmDetectMultiScaleProcess";}
 
   bool init() { return true; }
   bool execute();

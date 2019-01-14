@@ -23,14 +23,14 @@ static void test_compositor()
   bsta_gaussian_sphere<double, 1> angle_model(vnl_math::pi, vnl_math::pi/100.0);
   dbrec_pairwise_model_sptr pm2 = new dbrec_pairwise_indep_gaussian_model(dist_model, angle_model);
 
-  vcl_vector<dbrec_pairwise_model_sptr> models; models.push_back(pm1); models.push_back(pm2);
+  std::vector<dbrec_pairwise_model_sptr> models; models.push_back(pm1); models.push_back(pm2);
   dbrec_central_compositor* cc = new dbrec_central_compositor(models);
 
   dbrec_type_id_factory* ins = dbrec_type_id_factory::instance();
   dbrec_gaussian* g1 = new dbrec_gaussian(ins->new_type(), 2.0f, 1.0f, 45.0f, true);
   dbrec_gaussian* g2 = new dbrec_gaussian(ins->new_type(), 2.0f, 1.0f, 0.0f, true);
   dbrec_gaussian* g3 = new dbrec_gaussian(ins->new_type(), 1.0f, 1.0f, 0.0f, true);
-  vcl_vector<dbrec_part_sptr> parts; parts.push_back(g1); parts.push_back(g2); parts.push_back(g3);
+  std::vector<dbrec_part_sptr> parts; parts.push_back(g1); parts.push_back(g2); parts.push_back(g3);
   dbrec_composition* c = new dbrec_composition(ins->new_type(), parts, cc, 10.0f);
 
   dbrec_draw_bsvg_visitor v(200.0f, 200.0f, 100.0f, 100.0f, 10.0f, "blue");
@@ -54,7 +54,7 @@ static void test_compositor()
   dpdm->update_models(central_part_direction_vec, central_part_loc, second_part_loc4);
 
   //: visualize
-  vcl_ofstream out_vrml("./test_hist.vrml");
+  std::ofstream out_vrml("./test_hist.vrml");
   dpdm->print_hist_to_vrml(out_vrml);
   out_vrml.close();
 
@@ -118,7 +118,7 @@ static void test_compositor()
     int i = rng.lrand32(10, ni-10); int j = rng.lrand32(10, nj-10);
     //int angle = rng.lrand32(0, 359);
     int angle = 0;
-    //vcl_cout << "angle: " << angle << vcl_endl;
+    //std::cout << "angle: " << angle << std::endl;
     dbrec_sample_and_draw_part_visitor sdpv(img, i, j, angle, 1.0f, rng);
     test_c->accept(&sdpv);
   }

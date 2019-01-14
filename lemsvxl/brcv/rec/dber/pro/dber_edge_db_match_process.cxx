@@ -41,7 +41,7 @@ dber_edge_db_match_process::dber_edge_db_match_process() : bpro1_process()
        !parameters()->add( "instance2: " , "-instance2" , (int) 1 ) 
        )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -52,24 +52,24 @@ dber_edge_db_match_process::clone() const
   return new dber_edge_db_match_process(*this);
 }
 
-vcl_vector< vcl_string > dber_edge_db_match_process::get_input_type()
+std::vector< std::string > dber_edge_db_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );  // image 1 
   to_return.push_back( "vsol2D" );  // vsol2D 1
   to_return.push_back( "vsol2D" ); // polygon 1
   return to_return;
 }
 
-vcl_vector< vcl_string > dber_edge_db_match_process::get_output_type()
+std::vector< std::string > dber_edge_db_match_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("edge_match");
   to_return.push_back("image");
   return to_return;
 }
 
-void read_file(const char *filename, vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames)
+void read_file(const char *filename, std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames)
 {
  //   filename="D:\\Lockheed_Deliveries\\Nov_03_06\\280-203-303-0-20multi.dat";
     vsl_b_ifstream ifile(filename);
@@ -77,9 +77,9 @@ void read_file(const char *filename, vcl_vector< vcl_vector<dbru_multiple_instan
     vsl_b_read(ifile,numframes);
     for(unsigned i=0;i<numframes;i++)
     {
-        vcl_vector<dbru_multiple_instance_object_sptr> temp;
+        std::vector<dbru_multiple_instance_object_sptr> temp;
         vsl_b_read(ifile,temp);
-        vcl_cout << "frame: " << i << " size: " << temp.size() << vcl_endl;
+        std::cout << "frame: " << i << " size: " << temp.size() << std::endl;
         frames.push_back(temp);
     }
 }
@@ -115,19 +115,19 @@ bool dber_edge_db_match_process::execute()
 
   bpro1_filepath image_path;
   parameters()->get_value( "-image_filename" , image_path );
-  vcl_string filename = image_path.path;
+  std::string filename = image_path.path;
 
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> > frames;
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> > frames;
   read_file(filename.c_str(), frames);
-  vcl_cout << "read: " << frames.size() << " frames\n";
+  std::cout << "read: " << frames.size() << " frames\n";
 
   bpro1_filepath image_path2;
   parameters()->get_value( "-image_filename2" , image_path2 );
-  vcl_string filename2 = image_path2.path;
+  std::string filename2 = image_path2.path;
 
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> > frames2;
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> > frames2;
   read_file(filename2.c_str(), frames2);
-  vcl_cout << "read: " << frames2.size() << " frames from the second video\n";
+  std::cout << "read: " << frames2.size() << " frames from the second video\n";
 
 
   //2) get input storage classes
@@ -142,13 +142,13 @@ bool dber_edge_db_match_process::execute()
   vidpro1_vsol2D_storage_sptr input_vsol3;
   input_vsol3.vertical_cast(input_data_[0][2]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list3 = input_vsol3->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list3 = input_vsol3->all_data();
   vsol_polygon_2d_sptr poly = vsol_list3[0]->cast_to_region()->cast_to_polygon();
 */
   dber_match matcher;
 /*
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
-  vcl_vector<vsol_line_2d_sptr> temp_lines;
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector<vsol_line_2d_sptr> temp_lines;
 
   for (unsigned int b = 0 ; b < vsol_list.size() ; b += skip ) 
   {
@@ -164,7 +164,7 @@ bool dber_edge_db_match_process::execute()
   }
 
   //: database instance will be lines2 in the matcher
-  vcl_vector<vsol_line_2d_sptr>& lines2 = matcher.get_lines2();
+  std::vector<vsol_line_2d_sptr>& lines2 = matcher.get_lines2();
 
   //mask the edgels using the polygon
   vgl_polygon<double> polyg = bsol_algs::vgl_from_poly(poly);
@@ -177,7 +177,7 @@ bool dber_edge_db_match_process::execute()
     else
       cnt_elim++;
   }
-  vcl_cout << "for database set: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
+  std::cout << "for database set: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
 
   vsol_box_2d_sptr box2 = dber_match::get_box(lines2);
   */
@@ -207,16 +207,16 @@ bool dber_edge_db_match_process::execute()
   double x_min = ibox->get_min_x();
   double y_min = ibox->get_min_y();
   vgl_vector_2d<double> trans(-x_min, -y_min);
-  vcl_vector<vsol_line_2d_sptr> edgels = ins->get_edges();
+  std::vector<vsol_line_2d_sptr> edgels = ins->get_edges();
   for (unsigned i = 0; i<edgels.size(); i++) {
     vsol_line_2d_sptr ll = edgels[i];
     ll->p0()->add_vector(trans);
     ll->p1()->add_vector(trans);
   }
 
-  vcl_cout << "eliminating edgels...\n";
+  std::cout << "eliminating edgels...\n";
   //eliminate extra edgels within 1 pixel
-  vcl_vector<bool> eliminate(edgels.size(), false);
+  std::vector<bool> eliminate(edgels.size(), false);
   for (unsigned i = 0; i<edgels.size(); i++) {
     if (eliminate[i]) continue;
     vsol_point_2d_sptr mi = edgels[i]->middle();
@@ -228,7 +228,7 @@ bool dber_edge_db_match_process::execute()
     }
   }
   int cnt = 0; 
-  vcl_vector<vsol_line_2d_sptr> newedgels;
+  std::vector<vsol_line_2d_sptr> newedgels;
   for (unsigned i = 0; i<edgels.size(); i++) {
     if (eliminate[i]) {
       cnt++;
@@ -236,7 +236,7 @@ bool dber_edge_db_match_process::execute()
     }
     newedgels.push_back(edgels[i]);
   }
-  vcl_cout << "eliminated: " << cnt << " out of " << edgels.size() << " for self_similarity\n";
+  std::cout << "eliminated: " << cnt << " out of " << edgels.size() << " for self_similarity\n";
   
   vsol_polygon_2d_sptr poly = ins->get_poly();
   for (unsigned i = 0; i<poly->size(); i++) {
@@ -253,7 +253,7 @@ bool dber_edge_db_match_process::execute()
   x_min = ibox->get_min_x();
   y_min = ibox->get_min_y();
   vgl_vector_2d<double> trans2(-x_min, -y_min);
-  vcl_vector<vsol_line_2d_sptr> edgels2 = ins2->get_edges();
+  std::vector<vsol_line_2d_sptr> edgels2 = ins2->get_edges();
   for (unsigned i = 0; i<edgels2.size(); i++) {
     vsol_line_2d_sptr ll = edgels2[i];
     ll->p0()->add_vector(trans2);
@@ -261,7 +261,7 @@ bool dber_edge_db_match_process::execute()
   }
   
   //eliminate extra edgels within 1 pixel
-  vcl_vector<bool> eliminate2(edgels2.size(), false);
+  std::vector<bool> eliminate2(edgels2.size(), false);
   for (unsigned i = 0; i<edgels2.size(); i++) {
     if (eliminate2[i]) continue;
     vsol_point_2d_sptr mi = edgels2[i]->middle();
@@ -273,7 +273,7 @@ bool dber_edge_db_match_process::execute()
     }
   }
   cnt = 0; 
-  vcl_vector<vsol_line_2d_sptr> newedgels2;
+  std::vector<vsol_line_2d_sptr> newedgels2;
   for (unsigned i = 0; i<edgels2.size(); i++) {
     if (eliminate2[i]) {
       cnt++;
@@ -281,7 +281,7 @@ bool dber_edge_db_match_process::execute()
     }
     newedgels2.push_back(edgels2[i]);
   }
-  vcl_cout << "eliminated: " << cnt << " out of " << edgels2.size() << " for self_similarity\n";
+  std::cout << "eliminated: " << cnt << " out of " << edgels2.size() << " for self_similarity\n";
 
   poly = ins2->get_poly();
   for (unsigned i = 0; i<poly->size(); i++) {
@@ -299,7 +299,7 @@ bool dber_edge_db_match_process::execute()
   matcher.set_lines1(insnew->get_edges());
   matcher.set_poly1(insnew->get_poly());
 
-  vcl_vector<dbinfo_observation_sptr> o_obs;
+  std::vector<dbinfo_observation_sptr> o_obs;
   for (unsigned i = 0; i<insnew->imgs_size(); i++) {
     vil_image_view<vxl_byte> img = insnew->get_image_i(i);
     vil_image_resource_sptr img_r = vil_new_image_resource_of_view(img);
@@ -316,10 +316,10 @@ bool dber_edge_db_match_process::execute()
   matcher.match_greedy(threshold);
 
   if (!matcher.find_tps(false)) {
-    vcl_cout << "tps could not be found\n";
+    std::cout << "tps could not be found\n";
     return false;
   }
-  vcl_vector<dbinfo_observation_sptr> db_o_obs;
+  std::vector<dbinfo_observation_sptr> db_o_obs;
   for (unsigned i = 0; i<insnew2->imgs_size(); i++) {
     vil_image_view<vxl_byte> img = insnew2->get_image_i(i);
     vil_image_resource_sptr img_r = vil_new_image_resource_of_view(img);
@@ -332,7 +332,7 @@ bool dber_edge_db_match_process::execute()
     for (unsigned j = 0; j < o_obs.size(); j++) 
       mi += matcher.find_global_mi(o_obs[j], db_o_obs[i]);    
 
-  vcl_cout << " final mi: " << mi << " in " << t.real()/1000.0f << " seconds.\n";
+  std::cout << " final mi: " << mi << " in " << t.real()/1000.0f << " seconds.\n";
     
   vil_image_resource_sptr correspondence_im = matcher.get_correspondence_image(); 
 
@@ -355,7 +355,7 @@ bool dber_edge_db_match_process::execute()
   output_storage->set_image(correspondence_im);
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_match));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_match));
   output_data_[0].push_back(output_storage);
 
   return true;
@@ -363,17 +363,17 @@ bool dber_edge_db_match_process::execute()
 
 /************ Returning the current-matching norm after scaling and translation
   double support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "support before scaling & translation: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "support before scaling & translation: " << support << " time: " << t.real()/1000.0f << std::endl;
 
   double scale_factor = box1->width()/box2->width();
   matcher.scale_lines(lines2, scale_factor);
   support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "support before translation: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "support before translation: " << support << " time: " << t.real()/1000.0f << std::endl;
 
   vsol_point_2d_sptr gc1 = dber_match::center_of_gravity(lines1);
   vsol_point_2d_sptr gc2 = dber_match::center_of_gravity(lines2);
   matcher.translate_lines(lines2, gc1->x()-gc2->x(), gc1->y()-gc2->y());
   support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "final support: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "final support: " << support << " time: " << t.real()/1000.0f << std::endl;
   */
 

@@ -3,7 +3,7 @@
 //  Code adapted from rgrl/examples/registration_range_data.cxx
 //  Feb 27, 2007  MingChing Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector_fixed.h>

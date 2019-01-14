@@ -1,8 +1,8 @@
 // MingChing Chang 040226
 // Visualization of fine shock flow type
 
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgld/bgld_triangle.h>
@@ -37,7 +37,7 @@
 
 SoSeparator* vis_fs_surface_inflow_Ls (dbsk3d_fs_mesh* fs_mesh, const bool user_defined_class)
 {
-  vul_printf (vcl_cout, "\n  vis_fs_surface_inflow_Ls(): %u fs_edges\n", 
+  vul_printf (std::cout, "\n  vis_fs_surface_inflow_Ls(): %u fs_edges\n", 
               fs_mesh->edgemap().size());
   SoSeparator* root = new SoSeparator;
 
@@ -51,7 +51,7 @@ SoSeparator* vis_fs_surface_inflow_Ls (dbsk3d_fs_mesh* fs_mesh, const bool user_
   unsigned int min_ng = 10000;
   unsigned int max_ng = 0;
   
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
   for (; lit != fs_mesh->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
 
@@ -99,11 +99,11 @@ SoSeparator* vis_fs_surface_inflow_Ls (dbsk3d_fs_mesh* fs_mesh, const bool user_
       max_ng = ng;
   }
 
-  vul_printf (vcl_cout, "\tn_L_inf: %u.\n", n_L_inf);
-  vul_printf (vcl_cout, "\tn_L_drawn: %u.\n", n_L_drawn);
+  vul_printf (std::cout, "\tn_L_inf: %u.\n", n_L_inf);
+  vul_printf (std::cout, "\tn_L_drawn: %u.\n", n_L_drawn);
   
-  vul_printf (vcl_cout, "\n\tmin. in-flow gene for fs_edge: %u.\n", min_ng);
-  vul_printf (vcl_cout, "\tmax. in-flow gene for fs_edge: %u.\n", max_ng);
+  vul_printf (std::cout, "\n\tmin. in-flow gene for fs_edge: %u.\n", min_ng);
+  vul_printf (std::cout, "\tmax. in-flow gene for fs_edge: %u.\n", max_ng);
 
   return root;
 }
@@ -112,7 +112,7 @@ SoSeparator* vis_fs_surface_inflow_Ps (dbsk3d_fs_mesh* fs_mesh,
                                        const float width, const float cube_size,
                                        const bool user_defined_class)
 {
-  vul_printf (vcl_cout, "\n  vis_fs_surface_inflow_Ps(): %u fs_faces\n", 
+  vul_printf (std::cout, "\n  vis_fs_surface_inflow_Ps(): %u fs_faces\n", 
               fs_mesh->facemap().size());
   SoSeparator* root = new SoSeparator;
 
@@ -123,7 +123,7 @@ SoSeparator* vis_fs_surface_inflow_Ps (dbsk3d_fs_mesh* fs_mesh,
   unsigned int n_visited = 0;
   unsigned int n_unvisited = 0;
   
-  vcl_map<int, dbmsh3d_face*>::iterator lit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator lit = fs_mesh->facemap().begin();
   for (; lit != fs_mesh->facemap().end(); lit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*lit).second;
 
@@ -138,8 +138,8 @@ SoSeparator* vis_fs_surface_inflow_Ps (dbsk3d_fs_mesh* fs_mesh,
     }
   }
 
-  vul_printf (vcl_cout, "\tn_visited: %u.\n", n_visited);
-  vul_printf (vcl_cout, "\tn_unvisited: %u.\n", n_unvisited);
+  vul_printf (std::cout, "\tn_visited: %u.\n", n_visited);
+  vul_printf (std::cout, "\tn_unvisited: %u.\n", n_unvisited);
 
   return root;
 }
@@ -254,7 +254,7 @@ SoSeparator* vis_fs_patches_flow_type (dbsk3d_fs_mesh* fs_mesh)
   compute_fs_patches_flow_type (fs_mesh);
 
   //Draw each fs_face
-  vcl_map<int, dbmsh3d_face*>::iterator fit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = fs_mesh->facemap().begin();
   for (; fit != fs_mesh->facemap().end(); fit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*fit).second;
     SbColor col;
@@ -281,7 +281,7 @@ SoSeparator* vis_fs_links_flow_type (dbsk3d_fs_mesh* fs_mesh)
   compute_fs_links_flow_type (fs_mesh);
 
   //Draw each fs_edge
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = fs_mesh->edgemap().begin();
   for (; eit != fs_mesh->edgemap().end(); eit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*eit).second;
     SbColor col;
@@ -312,9 +312,9 @@ SoSeparator* vis_fs_nodes_iof_type (dbsk3d_fs_mesh* fs_mesh, const float pt_size
   SoSeparator* root = new SoSeparator;
 
   //Draw each type of fs_vertices in a group.
-  vcl_vector<vgl_point_3d<double> > N_type_4, N_type_3, N_type_2;
+  std::vector<vgl_point_3d<double> > N_type_4, N_type_3, N_type_2;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
   for (; vit != fs_mesh->vertexmap().end(); vit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*vit).second;
     if (FV->is_inf_from_FE())
@@ -341,7 +341,7 @@ SoSeparator* vis_fs_nodes_iof_type_idv (dbsk3d_fs_mesh* fs_mesh, const float siz
   SoSeparator* root = new SoSeparator;
 
   //Draw each fs_vertex
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
   for (; vit != fs_mesh->vertexmap().end(); vit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*vit).second;
     if (FV->is_inf_from_FE())
@@ -369,60 +369,60 @@ VIS_COLOR_CODE get_N_flow_type_ccode (const dbsk3d_fs_vertex* FV)
   switch (FV->flow_type()) {
   case FV_FT_4641: //'1'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4641.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4641.\n", FV->id());
     #endif
     return COLOR_RED;
   break;
   case FV_FT_4631: //'2'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4631.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4631.\n", FV->id());
     #endif
     return COLOR_RED;
   break;
   case FV_FT_4531: //'3'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4531.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4531.\n", FV->id());
     #endif
     return COLOR_ORANGE;
   break;
   case FV_FT_4520: //'4'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4520.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4520.\n", FV->id());
     #endif
     return COLOR_ORANGE;
   break;
   case FV_FT_4421_O: //'5'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4421_O.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4421_O.\n", FV->id());
     #endif
     return COLOR_PURPLE;
   break;
   case FV_FT_4410_O: //'6'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4410_O.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4410_O.\n", FV->id());
     #endif
     return COLOR_GREEN;
   break;
   case FV_FT_4410_P: //'7'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4410_P.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4410_P.\n", FV->id());
     #endif
     return COLOR_BLUE;
   break;
   case FV_FT_4300_T: //'8'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4300_T.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4300_T.\n", FV->id());
     #endif
     return COLOR_CYAN;
   break;
   case FV_FT_4300_L: //'9'
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FV %d flow_type FV_FT_4300_L.\n", FV->id());
+    vul_printf (std::cout, "FV %d flow_type FV_FT_4300_L.\n", FV->id());
     #endif
     return COLOR_PINK;
   break;
   case FV_FT_UNCLASSIFIED: //'U' Gray
-    ///vul_printf (vcl_cout, "FV %d flow_type FV_FT_UNCLASSIFIED.\n", FV->id());
+    ///vul_printf (std::cout, "FV %d flow_type FV_FT_UNCLASSIFIED.\n", FV->id());
     return COLOR_GRAY;
   break;
   default:
@@ -440,7 +440,7 @@ SoSeparator* vis_fs_nodes_flow_type (dbsk3d_fs_mesh* fs_mesh, const float pt_siz
   unsigned int n_ft_inf = 0;
 
   //Visualize each fs_vertex in color.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
   for (; vit != fs_mesh->vertexmap().end(); vit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*vit).second;
     if (FV->flow_type() == FV_FT_INF) { //'I' For shock vertex at infinity. Skip
@@ -476,7 +476,7 @@ SoSeparator* vis_fs_nodes_flow_type_idv (dbsk3d_fs_mesh* fs_mesh, const float si
   unsigned int n_ft_unclassified = 0;
   
   //Visualize each fs_vertex in color.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->vertexmap().begin();
   for (; vit != fs_mesh->vertexmap().end(); vit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*vit).second;
     if (FV->flow_type() == FV_FT_INF) { //'I' For shock vertex at infinity. Skip
@@ -505,20 +505,20 @@ SoSeparator* vis_fs_nodes_flow_type_idv (dbsk3d_fs_mesh* fs_mesh, const float si
     root->addChild (draw_fs_vertex (FV, col, size));
   }
 
-  vul_printf (vcl_cout, "\nvis_fs_nodes_flow_type_idv(): %d total fs_vertices:\n", 
+  vul_printf (std::cout, "\nvis_fs_nodes_flow_type_idv(): %d total fs_vertices:\n", 
               fs_mesh->vertexmap().size());
 
-  vul_printf (vcl_cout, "  n_ft_inf    (hidden): %d\n", n_ft_inf);
-  vul_printf (vcl_cout, "  n_ft_4641   (1, red): %d\n", n_ft_4641);
-  vul_printf (vcl_cout, "  n_ft_4631   (2, red): %d\n", n_ft_4631);
-  vul_printf (vcl_cout, "  n_ft_4531   (3, orange): %d\n", n_ft_4531);
-  vul_printf (vcl_cout, "  n_ft_4520   (4, orange): %d\n", n_ft_4520);
-  vul_printf (vcl_cout, "  n_ft_4421_O (5, purple): %d\n", n_ft_4421_O);
-  vul_printf (vcl_cout, "  n_ft_4410_O (6, green): %d\n", n_ft_4410_O);
-  vul_printf (vcl_cout, "  n_ft_4410_P (7, blue): %d\n", n_ft_4410_P);
-  vul_printf (vcl_cout, "  n_ft_4300_T (8, cyan): %d\n", n_ft_4300_T);
-  vul_printf (vcl_cout, "  n_ft_4300_L (9, pink): %d\n", n_ft_4300_L);
-  vul_printf (vcl_cout, "  n_ft_unclassified (gray): %d\n", n_ft_unclassified);
+  vul_printf (std::cout, "  n_ft_inf    (hidden): %d\n", n_ft_inf);
+  vul_printf (std::cout, "  n_ft_4641   (1, red): %d\n", n_ft_4641);
+  vul_printf (std::cout, "  n_ft_4631   (2, red): %d\n", n_ft_4631);
+  vul_printf (std::cout, "  n_ft_4531   (3, orange): %d\n", n_ft_4531);
+  vul_printf (std::cout, "  n_ft_4520   (4, orange): %d\n", n_ft_4520);
+  vul_printf (std::cout, "  n_ft_4421_O (5, purple): %d\n", n_ft_4421_O);
+  vul_printf (std::cout, "  n_ft_4410_O (6, green): %d\n", n_ft_4410_O);
+  vul_printf (std::cout, "  n_ft_4410_P (7, blue): %d\n", n_ft_4410_P);
+  vul_printf (std::cout, "  n_ft_4300_T (8, cyan): %d\n", n_ft_4300_T);
+  vul_printf (std::cout, "  n_ft_4300_L (9, pink): %d\n", n_ft_4300_L);
+  vul_printf (std::cout, "  n_ft_unclassified (gray): %d\n", n_ft_unclassified);
 
   return root;
 }
@@ -532,7 +532,7 @@ SoSeparator* vis_fs_links_type (dbsk3d_fs_mesh* fs_mesh, const int type,
                                 const float len)
 {
   SoSeparator* root = new SoSeparator;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > links;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > links;
   
   char ctype;
   if (type == 1)
@@ -555,7 +555,7 @@ SoSeparator* vis_fs_links_type (dbsk3d_fs_mesh* fs_mesh, const int type,
   else
     assert (0);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;      
     if (FE->detect_flow_type() == ctype) {
@@ -567,7 +567,7 @@ SoSeparator* vis_fs_links_type (dbsk3d_fs_mesh* fs_mesh, const int type,
       ev /= ev.length ();
       vgl_point_3d<double> s_FV = C + sv * len;
       vgl_point_3d<double> e_FV = C + ev * len;
-      links.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (s_FV, e_FV));
+      links.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (s_FV, e_FV));
     }
   }
   root->addChild (draw_line_set (links, col));
@@ -610,11 +610,11 @@ SoSeparator* vis_fs_links_type_tris (dbsk3d_fs_mesh* fs_mesh,
     assert (0);
 
   //Put all points into a vector.
-  vcl_vector<vgl_point_3d<double> > ifs_pts;
-  vcl_vector<vcl_vector<int> > ifs_faces;
+  std::vector<vgl_point_3d<double> > ifs_pts;
+  std::vector<std::vector<int> > ifs_faces;
 
   //Go through all generators and assign vid to be [0 to n-1].  
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->bnd_mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->bnd_mesh()->vertexmap().begin();
   for (unsigned int i=0; vit != fs_mesh->bnd_mesh()->vertexmap().end(); vit++, i++) {
     dbmsh3d_vertex* G = (*vit).second;
     G->set_vid (i);
@@ -628,18 +628,18 @@ SoSeparator* vis_fs_links_type_tris (dbsk3d_fs_mesh* fs_mesh,
   }
 
   //Go through all shock links and visualize all A13-2 sources.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->b_inf())
       continue; //skip the 'infinite' shock links.
 
     if (FE->detect_flow_type() == ctype) {
-      vcl_vector<dbmsh3d_vertex*> genes;
+      std::vector<dbmsh3d_vertex*> genes;
       bool result = FE->get_ordered_Gs_via_FF (genes);
       assert (genes.size() > 2);
       assert (result);
-      vcl_vector<int> face_vids;
+      std::vector<int> face_vids;
       for (unsigned int i=0; i<genes.size(); i++)
         face_vids.push_back (genes[i]->vid());
 
@@ -658,7 +658,7 @@ SoSeparator* vis_fs_links_type_tris (dbsk3d_fs_mesh* fs_mesh,
 
   //Draw all corresponding triangles.
   root->addChild (draw_ifs (ifs_pts, ifs_faces, col, true));
-  vul_printf (vcl_cout, "# A13 triangles %d.\n", ifs_faces.size());
+  vul_printf (std::cout, "# A13 triangles %d.\n", ifs_faces.size());
   ifs_pts.clear();
   ifs_faces.clear();
   return root;
@@ -682,13 +682,13 @@ SoSeparator* vis_fs_links_color_nG (dbsk3d_fs_mesh* fs_mesh, const float width,
   //Count the max # genes of FV.
   unsigned int max_n_genes = 0;
   unsigned int min_n_genes = 1000;
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->flow_type() != '3')
       continue;
 
-    vcl_set<dbmsh3d_vertex*> pass_genes;
+    std::set<dbmsh3d_vertex*> pass_genes;
     unsigned int n_genes = FE->get_pass_Gs (pass_genes);
 
     if (n_genes > max_n_genes)
@@ -697,12 +697,12 @@ SoSeparator* vis_fs_links_color_nG (dbsk3d_fs_mesh* fs_mesh, const float width,
       min_n_genes =n_genes;
   }
 
-  vul_printf (vcl_cout, "vis_fs_links_color_nG(): %u fs_edges.\n", 
+  vul_printf (std::cout, "vis_fs_links_color_nG(): %u fs_edges.\n", 
               fs_mesh->edgemap().size());
 
   //For # genes > threshold nG_th, draw in dart red color
-  vul_printf (vcl_cout, "\tmax_n_genes: %u, min_n_genes: %u.\n", max_n_genes, min_n_genes);
-  vul_printf (vcl_cout, "\tn_genes_th: %u\n", n_genes_th);
+  vul_printf (std::cout, "\tmax_n_genes: %u, min_n_genes: %u.\n", max_n_genes, min_n_genes);
+  vul_printf (std::cout, "\tn_genes_th: %u\n", n_genes_th);
 
   it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
@@ -726,7 +726,7 @@ SoSeparator* vis_fs_links_color_nG (dbsk3d_fs_mesh* fs_mesh, const float width,
     else {
       if (option == 0 || option == 3) {
         //Color the type III fs_edge by # genes with threshold.
-        vcl_set<dbmsh3d_vertex*> pass_genes;
+        std::set<dbmsh3d_vertex*> pass_genes;
         unsigned int n_genes = FE->get_pass_Gs (pass_genes);
 
         if (n_genes > n_genes_th)
@@ -757,7 +757,7 @@ SoSeparator* vis_fs_link_type_2_points (dbsk3d_fs_mesh* fs_mesh, const int optio
   //Index 2 critical points:
   // - our A13-2 sources.
   // - the intersection point of a Delaunay facet and its dual Voronoi edge.
-  vcl_vector<vgl_point_3d<double> > slink_type_2_pts;
+  std::vector<vgl_point_3d<double> > slink_type_2_pts;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -774,11 +774,11 @@ SoSeparator* vis_fs_link_type_2_points (dbsk3d_fs_mesh* fs_mesh, const int optio
   root->addChild (hints);
 
   //Put all points into a vector.
-  vcl_vector<vgl_point_3d<double> > ifs_pts;
-  vcl_vector<vcl_vector<int> > ifs_faces;
+  std::vector<vgl_point_3d<double> > ifs_pts;
+  std::vector<std::vector<int> > ifs_faces;
 
   //Go through all generators and assign vid to be [0 to n-1].  
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->bnd_mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_mesh->bnd_mesh()->vertexmap().begin();
   for (unsigned int i=0; vit != fs_mesh->bnd_mesh()->vertexmap().end(); vit++, i++) {
     dbmsh3d_vertex* G = (*vit).second;
     G->set_vid (i);
@@ -786,7 +786,7 @@ SoSeparator* vis_fs_link_type_2_points (dbsk3d_fs_mesh* fs_mesh, const int optio
   }
 
   //Go through all shock links and visualize all A13-2 sources.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->b_inf())
@@ -795,11 +795,11 @@ SoSeparator* vis_fs_link_type_2_points (dbsk3d_fs_mesh* fs_mesh, const int optio
     vgl_point_3d<double> C;
     FE->compute_circum_cen (C);      
     if (FE->detect_flow_type(C) == '2') {
-      vcl_vector<dbmsh3d_vertex*> genes;
+      std::vector<dbmsh3d_vertex*> genes;
       bool result = FE->get_ordered_Gs_via_FF (genes);
       assert (result);
 
-      vcl_vector<int> face_vids;
+      std::vector<int> face_vids;
       for (unsigned int i=0; i<genes.size(); i++)
         face_vids.push_back (genes[i]->vid());
       //add to IFS faces.
@@ -815,7 +815,7 @@ SoSeparator* vis_fs_link_type_2_points (dbsk3d_fs_mesh* fs_mesh, const int optio
   if (option == 2 || option == 3) //Draw all A13-2 acute triangles.
     root->addChild (draw_ifs (ifs_pts, ifs_faces, COLOR_DARKYELLOW, true));
 
-  vul_printf (vcl_cout, "# type 2 shock curves (A13-2 not in tri.): %d.\n", slink_type_2_pts.size());
+  vul_printf (std::cout, "# type 2 shock curves (A13-2 not in tri.): %d.\n", slink_type_2_pts.size());
   ifs_pts.clear();
   ifs_faces.clear();
   return root;
@@ -826,7 +826,7 @@ SoSeparator* vis_fs_link_type_3_pts (dbsk3d_fs_mesh* fs_mesh, const float pt_siz
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_vector<vgl_point_3d<double> > slink_type_3_pts;
+  std::vector<vgl_point_3d<double> > slink_type_3_pts;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -838,7 +838,7 @@ SoSeparator* vis_fs_link_type_3_pts (dbsk3d_fs_mesh* fs_mesh, const float pt_siz
   root->addChild(drawstyle);
 
   //Go through all shock links and visualize all A13-2 sources.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->b_inf())
@@ -854,7 +854,7 @@ SoSeparator* vis_fs_link_type_3_pts (dbsk3d_fs_mesh* fs_mesh, const float pt_siz
   //Draw all critical points.
   draw_ptset_geom (root, slink_type_3_pts);
 
-  vul_printf (vcl_cout, "# type 3 shock curves (A13-2 not in tri.): %d.\n", slink_type_3_pts.size());
+  vul_printf (std::cout, "# type 3 shock curves (A13-2 not in tri.): %d.\n", slink_type_3_pts.size());
   return root;
 }
 
@@ -864,8 +864,8 @@ SoSeparator* vis_fs_link_type_3 (dbsk3d_fs_mesh* fs_mesh, const int option,
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_vector<vgl_point_3d<double> > slink_type_3_pts;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > slink_type_3_lines;
+  std::vector<vgl_point_3d<double> > slink_type_3_pts;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > slink_type_3_lines;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -877,7 +877,7 @@ SoSeparator* vis_fs_link_type_3 (dbsk3d_fs_mesh* fs_mesh, const int option,
   root->addChild(drawstyle);
 
   //Go through all shock links and visualize all A13-2 sources.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->b_inf())
@@ -887,7 +887,7 @@ SoSeparator* vis_fs_link_type_3 (dbsk3d_fs_mesh* fs_mesh, const int option,
     FE->compute_circum_cen (C);      
     if (FE->detect_flow_type(C) == '3') {
       slink_type_3_pts.push_back (C);
-      slink_type_3_lines.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FE->s_FV()->pt(), FE->e_FV()->pt()));
+      slink_type_3_lines.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FE->s_FV()->pt(), FE->e_FV()->pt()));
     }
   }
 
@@ -897,7 +897,7 @@ SoSeparator* vis_fs_link_type_3 (dbsk3d_fs_mesh* fs_mesh, const int option,
   if (option == 2 || option == 3) //Draw all A13-2 acute triangles.
     root->addChild (draw_line_set (slink_type_3_lines, color));
 
-  vul_printf (vcl_cout, "# type 3 shock curves (A13-2 not in tri.): %d.\n", slink_type_3_pts.size());
+  vul_printf (std::cout, "# type 3 shock curves (A13-2 not in tri.): %d.\n", slink_type_3_pts.size());
   return root;
 }
 
@@ -913,7 +913,7 @@ SoSeparator* vis_fs_nodes_color_nG (dbsk3d_fs_mesh* fs_mesh, const float size,
   //Count the max # genes of FV.
   unsigned int max_n_genes = 0;
   unsigned int min_n_genes = 1000;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
   for (; it != fs_mesh->vertexmap().end(); it++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*it).second;  
     unsigned int nG = FV->n_asgn_Gs();
@@ -923,12 +923,12 @@ SoSeparator* vis_fs_nodes_color_nG (dbsk3d_fs_mesh* fs_mesh, const float size,
       min_n_genes = nG;
   }
 
-  vul_printf (vcl_cout, "vis_fs_nodes_color_nG(): %u fs_vertices.\n", 
+  vul_printf (std::cout, "vis_fs_nodes_color_nG(): %u fs_vertices.\n", 
               fs_mesh->vertexmap().size());
 
   //For # genes > threshold nG_th, draw in dart red color
-  vul_printf (vcl_cout, "\tmax_n_genes: %u, min_n_genes: %u.\n", max_n_genes, min_n_genes);
-  vul_printf (vcl_cout, "\tn_genes_th: %u\n", n_genes_th);
+  vul_printf (std::cout, "\tmax_n_genes: %u, min_n_genes: %u.\n", max_n_genes, min_n_genes);
+  vul_printf (std::cout, "\tn_genes_th: %u\n", n_genes_th);
 
   it = fs_mesh->vertexmap().begin();
   for (; it != fs_mesh->vertexmap().end(); it++) {

@@ -34,18 +34,18 @@ bool dbrec_image_parse_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("vil_image_view_base_sptr");      // input image
   input_types.push_back("dbrec_hierarchy_sptr");
   input_types.push_back("dbrec_context_factory_sptr");      // if a context factory is available for the image pass it if you want to re-use previous parses of the parts which exist in this context factory
                                                             // otherwise call the initialization method of the process which sets this input to zero
   input_types.push_back("float");      // class prior for primitive parts' posterior calculations
-  input_types.push_back("vcl_string");  // model path which contains fg appearance model parameters
+  input_types.push_back(vcl_string");  // model path which contains fg appearance model parameters
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_context_factory_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -60,7 +60,7 @@ bool dbrec_image_parse_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 5) {
-    vcl_cerr << "dbrec_image_parse_process - invalid inputs\n";
+    std::cerr << "dbrec_image_parse_process - invalid inputs\n";
     return false;
   }
 
@@ -72,7 +72,7 @@ bool dbrec_image_parse_process(bprb_func_process& pro)
 
   vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_image_parse_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_image_parse_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -88,10 +88,10 @@ bool dbrec_image_parse_process(bprb_func_process& pro)
   dbrec_context_factory_sptr cf = pro.get_input<dbrec_context_factory_sptr>(i++);
   
   float class_prior = pro.get_input<float>(i++);
-  vcl_string model_path = pro.get_input<vcl_string>(i++);
+  std::string model_path = pro.get_input<std::string>(i++);
 
   //: for now use the same class_prior for both compositional parts and primitive parts
-  vcl_vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
+  std::vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
 
   if (!cf) {
     dbrec_parse_image_visitor pv(h, input_sptr, class_prior, comp_priors, model_path);
@@ -114,7 +114,7 @@ bool dbrec_image_parse_with_fg_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("vil_image_view_base_sptr");      // input image
   input_types.push_back("dbrec_hierarchy_sptr");      
   input_types.push_back("dbrec_context_factory_sptr");      // if a context factory is available for the image pass it if you want to re-use previous parses of the parts which exist in this context factory
@@ -126,13 +126,13 @@ bool dbrec_image_parse_with_fg_process_cons(bprb_func_process& pro)
   input_types.push_back("float");      // prior for compositional parts' posterior calculations, prior for class-background composition
                                        // prior for non-class-background composition will be 1.0-(prior_cf + prior_ncf + prior_cb);
 
-  input_types.push_back("vcl_string");  // model path which contains fg appearance model parameters
-  input_types.push_back("vcl_string");  // model path for background image mean and std dev of operator responses
+  input_types.push_back(vcl_string");  // model path which contains fg appearance model parameters
+  input_types.push_back(vcl_string");  // model path for background image mean and std dev of operator responses
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_context_factory_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -147,7 +147,7 @@ bool dbrec_image_parse_with_fg_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 10) {
-    vcl_cerr << "dbrec_image_parse_with_fg_process - invalid inputs\n";
+    std::cerr << "dbrec_image_parse_with_fg_process - invalid inputs\n";
     return false;
   }
 
@@ -159,7 +159,7 @@ bool dbrec_image_parse_with_fg_process(bprb_func_process& pro)
 
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_image_parse_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_image_parse_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -177,7 +177,7 @@ bool dbrec_image_parse_with_fg_process(bprb_func_process& pro)
   vil_image_view_base_sptr fg_map_sptr = pro.get_input<vil_image_view_base_sptr>(i++);
 
   if (fg_map_sptr->pixel_format() == VIL_PIXEL_FORMAT_BOOL) { 
-    vcl_cout << "In dbrec_image_parse_with_fg_process() - passed the ground truth map as the prob map so casting BOOL img to FLOAT img, assuming true pixels have prob 1.0\n";
+    std::cout << "In dbrec_image_parse_with_fg_process() - passed the ground truth map as the prob map so casting BOOL img to FLOAT img, assuming true pixels have prob 1.0\n";
     fg_map_sptr = vil_convert_cast(float(), fg_map_sptr);
   } else if (fg_map_sptr->pixel_format() != VIL_PIXEL_FORMAT_FLOAT)
     return false;
@@ -185,17 +185,17 @@ bool dbrec_image_parse_with_fg_process(bprb_func_process& pro)
 
   float min, max;
   vil_math_value_range(fg_map, min, max);
-  vcl_cout << "min value in the fg map: " << min << " max value: " << max << vcl_endl;
+  std::cout << "min value in the fg map: " << min << " max value: " << max << std::endl;
   
   float class_prior = pro.get_input<float>(i++);
   float prior_cf = pro.get_input<float>(i++);
   float prior_ncf = pro.get_input<float>(i++);
   float prior_cb = pro.get_input<float>(i++);
   float prior_ncb = 1.0f - (prior_cf + prior_ncf + prior_cb);
-  vcl_string fg_model_path = pro.get_input<vcl_string>(i++);
-  vcl_string bg_model_path = pro.get_input<vcl_string>(i++);
+  std::string fg_model_path = pro.get_input<std::string>(i++);
+  std::string bg_model_path = pro.get_input<std::string>(i++);
 
-  vcl_vector<float> comp_priors; 
+  std::vector<float> comp_priors; 
   comp_priors.push_back(prior_cf); comp_priors.push_back(prior_ncf); comp_priors.push_back(prior_cb); comp_priors.push_back(prior_ncb);
 
   if (!cf) {
@@ -218,21 +218,21 @@ bool dbrec_image_parse_with_fg_process(bprb_func_process& pro)
 bool dbrec_image_train_composite_parts_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr");
   input_types.push_back("int");  // depth of the compositional parts to be trained
   input_types.push_back("dbrec_context_factory_sptr");      // pass the context factory of the image
   input_types.push_back("int");  // class id of the training img
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_image_train_composite_parts_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 4) {
-    vcl_cerr << "In dbrec_image_train_composite_parts_process - invalid inputs!!!!!!!!!!\n";
+    std::cerr << "In dbrec_image_train_composite_parts_process - invalid inputs!!!!!!!!!!\n";
     return false;
   }
   unsigned i = 0;
@@ -244,7 +244,7 @@ bool dbrec_image_train_composite_parts_process(bprb_func_process& pro)
   dbrec_train_compositional_parts_visitor pv(h, depth, cf);
   dbrec_part_sptr cp = h->root(class_id);
   if (!cp) {
-    vcl_cout << "In dbrec_image_train_parts_process() - cannot find the class root with id: " << class_id << "!\n";
+    std::cout << "In dbrec_image_train_parts_process() - cannot find the class root with id: " << class_id << "!\n";
     return false;
   }
   cp->accept(&pv);
@@ -255,7 +255,7 @@ bool dbrec_image_train_composite_parts_process(bprb_func_process& pro)
 bool dbrec_context_factory_get_map_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_context_factory_sptr");      // input context factory
   input_types.push_back("dbrec_hierarchy_sptr");      // input hierarchy
   input_types.push_back("vil_image_view_base_sptr");      // input image
@@ -263,7 +263,7 @@ bool dbrec_context_factory_get_map_process_cons(bprb_func_process& pro)
   input_types.push_back("int");      // id of the posterior map to output, for instance primitive parts possibly have 4 maps: class-foreground map, non-class fg map, class bg map, non-class bg map
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("vil_image_view_base_sptr");      // output prob map
   output_types.push_back("vil_image_view_base_sptr");      // output map overlayed on orig view as a byte image
   ok = pro.set_output_types(output_types);
@@ -272,7 +272,7 @@ bool dbrec_context_factory_get_map_process_cons(bprb_func_process& pro)
 bool dbrec_context_factory_get_map_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 5) {
-    vcl_cerr << "dbrec_image_parse_process - invalid inputs\n";
+    std::cerr << "dbrec_image_parse_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -291,13 +291,13 @@ bool dbrec_context_factory_get_map_process(bprb_func_process& pro)
   dbrec_part_sptr p = h->get_part(type_id);
 
   if (!pc || !p) {
-    vcl_cout << "In dbrec_context_factory_get_map_process() -- The context of type: " << type_id << " is not created or a part with this id does not exist!\n";
+    std::cout << "In dbrec_context_factory_get_map_process() -- The context of type: " << type_id << " is not created or a part with this id does not exist!\n";
     return false;
   }
 
   vil_image_resource_sptr cfm = pc->get_posterior_map(map_id, orig_img.ni(), orig_img.nj());
   if (!cfm) {
-    vcl_cout << "In dbrec_context_factory_get_map_process() -- Problems in retrieving posterior map in the context of type: " << type_id << " with map id: " << map_id << "!\n";
+    std::cout << "In dbrec_context_factory_get_map_process() -- Problems in retrieving posterior map in the context of type: " << type_id << " with map id: " << map_id << "!\n";
     return false;
   }
   vil_image_view<float> out = cfm->get_view();
@@ -318,7 +318,7 @@ bool dbrec_context_factory_get_map_process(bprb_func_process& pro)
   //: min and max values
   float min, max;
   vil_math_value_range(out, min, max);
-  vcl_cout << "min value in the output map: " << min << " max value: " << max << vcl_endl;
+  std::cout << "min value in the output map: " << min << " max value: " << max << std::endl;
 
   return true;
 }
@@ -326,23 +326,23 @@ bool dbrec_context_factory_get_map_process(bprb_func_process& pro)
 bool dbrec_context_factory_write_maps_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_context_factory_sptr");      // input context factory
   input_types.push_back("dbrec_hierarchy_sptr");      // input hierarchy
   input_types.push_back("vil_image_view_base_sptr");      // input image
-  input_types.push_back("vcl_string");      // prefix (includes the path) to write the output maps to
-  input_types.push_back("vcl_string");      // suffix to write the output maps to
+  input_types.push_back(vcl_string");      // prefix (includes the path) to write the output maps to
+  input_types.push_back(vcl_string");      // suffix to write the output maps to
   input_types.push_back("int");      // id of the posterior map to output, for instance primitive parts possibly have 4 maps: class-foreground map, non-class fg map, class bg map, non-class bg map
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_context_factory_write_maps_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 6) {
-    vcl_cerr << "dbrec_image_parse_process - invalid inputs\n";
+    std::cerr << "dbrec_image_parse_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -354,23 +354,23 @@ bool dbrec_context_factory_write_maps_process(bprb_func_process& pro)
     return false;
   vil_image_view<vxl_byte> orig_img(orig_view);
 
-  vcl_string prefix = pro.get_input<vcl_string>(i++);
-  vcl_string suffix = pro.get_input<vcl_string>(i++);
+  std::string prefix = pro.get_input<std::string>(i++);
+  std::string suffix = pro.get_input<std::string>(i++);
   int map_id = pro.get_input<int>(i++);
 
-  vcl_vector<dbrec_part_sptr> all_parts;
+  std::vector<dbrec_part_sptr> all_parts;
   h->get_all_parts(all_parts);
 
   for (unsigned i = 0; i < all_parts.size(); i++) {
     dbrec_part_sptr p = all_parts[i];
     dbrec_part_context_sptr pc = cf->get_context(p->type());
     if (!pc) {
-      vcl_cout << "In dbrec_context_factory_write_map_process() -- The context of type: " << p->type() << " is not created or a part with this id does not exist!\n";
+      std::cout << "In dbrec_context_factory_write_map_process() -- The context of type: " << p->type() << " is not created or a part with this id does not exist!\n";
       return false;
     }
     vil_image_resource_sptr cfm = pc->get_posterior_map(map_id, orig_img.ni(), orig_img.nj());
     if (!cfm) {
-      vcl_cout << "In dbrec_context_factory_write_maps_process() -- Problems in retrieving posterior map in the context of type: " << p->type() << " with map id: " << map_id << "!\n";
+      std::cout << "In dbrec_context_factory_write_maps_process() -- Problems in retrieving posterior map in the context of type: " << p->type() << " with map id: " << map_id << "!\n";
       return true;
     }
     vil_image_view<float> out = cfm->get_view();
@@ -384,8 +384,8 @@ bool dbrec_context_factory_write_maps_process(bprb_func_process& pro)
     vil_image_view<vxl_byte>* out_colored_img = new vil_image_view<vxl_byte>(orig_img.ni(), orig_img.nj(), 3);
     mrfv.get_colored_img(orig_img, *out_colored_img);
     //vil_image_view_base_sptr out_colored_img_sptr = out_colored_img;
-    vcl_stringstream typess; typess << p->type();
-    vcl_string name = prefix + "part_"+ typess.str() + "_" +  suffix;
+    std::stringstream typess; typess << p->type();
+    std::string name = prefix + "part_"+ typess.str() + "_" +  suffix;
     vil_save(*out_colored_img, name.c_str());
 
   }
@@ -396,13 +396,13 @@ bool dbrec_context_factory_write_maps_process(bprb_func_process& pro)
 bool dbrec_context_factory_get_response_map_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_context_factory_sptr");      // input context factory
   input_types.push_back("vil_image_view_base_sptr");      // input image
   input_types.push_back("int");      // type id of the part to generate output maps for
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("vil_image_view_base_sptr");      // output map overlayed on orig view as a byte image
   ok = pro.set_output_types(output_types);
   return ok;
@@ -410,7 +410,7 @@ bool dbrec_context_factory_get_response_map_process_cons(bprb_func_process& pro)
 bool dbrec_context_factory_get_response_map_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 3) {
-    vcl_cerr << "dbrec_context_factory_get_response_map_process - invalid inputs\n";
+    std::cerr << "dbrec_context_factory_get_response_map_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -425,7 +425,7 @@ bool dbrec_context_factory_get_response_map_process(bprb_func_process& pro)
   dbrec_part_context_sptr pc = cf->get_context(type_id);
 
   if (!pc || pc->maps_size() < 2) {
-    vcl_cout << "In dbrec_context_factory_get_response_map_process() -- The context of type: " << type_id << " is not created or it does not contains both a response map and a mask img!\n";
+    std::cout << "In dbrec_context_factory_get_response_map_process() -- The context of type: " << type_id << " is not created or it does not contains both a response map and a mask img!\n";
     return false;
   }
 
@@ -447,22 +447,22 @@ bool dbrec_context_factory_get_response_map_process(bprb_func_process& pro)
 bool dbrec_context_factory_create_response_histogram_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_context_factory_sptr");      // input context factory
   input_types.push_back("dbrec_hierarchy_sptr");      // input hierarchy
   input_types.push_back("vil_image_view_base_sptr");      // input gt image, two response histograms will be created, one of them will use this gt
   input_types.push_back("int");      // type id of the part to generate output maps for
-  input_types.push_back("vcl_string"); // output prefix for the histograms
+  input_types.push_back(vcl_string"); // output prefix for the histograms
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbrec_context_factory_create_response_histogram_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 5) {
-    vcl_cerr << "dbrec_context_factory_get_response_map_process - invalid inputs\n";
+    std::cerr << "dbrec_context_factory_get_response_map_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -474,7 +474,7 @@ bool dbrec_context_factory_create_response_histogram_process(bprb_func_process& 
   vil_image_view<bool> gt_img(gt_view);
 
   int type_id = pro.get_input<int>(i++);
-  vcl_string output_prefix = pro.get_input<vcl_string>(i++);
+  std::string output_prefix = pro.get_input<std::string>(i++);
 
   dbrec_part_context_sptr pc = cf->get_context(type_id);
   dbrec_part_sptr part = h->get_part(type_id);
@@ -484,7 +484,7 @@ bool dbrec_context_factory_create_response_histogram_process(bprb_func_process& 
   gpart->mask_dilate(gt_img, gt_img_dilated);
 
   if (!pc || pc->maps_size() < 2) {
-    vcl_cout << "In dbrec_context_factory_get_response_map_process() -- The context of type: " << type_id << " is not created or it does not contains both a response map and a mask img!\n";
+    std::cout << "In dbrec_context_factory_get_response_map_process() -- The context of type: " << type_id << " is not created or it does not contains both a response map and a mask img!\n";
     return false;
   }
 
@@ -510,33 +510,33 @@ bool dbrec_context_factory_create_response_histogram_process(bprb_func_process& 
   for (unsigned i = 0; i < res.ni(); i++)
     for (unsigned j = 0; j < res.nj(); j++) {
       if (!gt_img_dilated(i,j) && res(i,j) >= min_response) { 
-        hist.upcount(vcl_log10(res(i,j)),1.0);
-        joint_hist.upcount(0.0f,0.0f, vcl_log10(res(i,j)), 1.0f);
+        hist.upcount(std::log10(res(i,j)),1.0);
+        joint_hist.upcount(0.0f,0.0f, std::log10(res(i,j)), 1.0f);
       }
       if (gt_img_dilated(i,j) && res(i,j) >= min_response)
-        joint_hist.upcount(2.0f,0.0f, vcl_log10(res(i,j)), 1.0f);
+        joint_hist.upcount(2.0f,0.0f, std::log10(res(i,j)), 1.0f);
     }
 
   for (unsigned i = 0; i < res.ni(); i++)
     for (unsigned j = 0; j < res.nj(); j++) {
       if (gt_img_dilated(i,j) && res(i,j) >= min_response)
-        gt_hist.upcount(vcl_log10(res(i,j)),1.0);
+        gt_hist.upcount(std::log10(res(i,j)),1.0);
     }
   
   float width = 600.0, height = 600.0, margin = 30.0;
   int font_size = 15;
-  vcl_string name = output_prefix + "_response_hist.svg";
+  std::string name = output_prefix + "_response_hist.svg";
   write_svg<float>(hist, name, width, height, margin, font_size);
   name = output_prefix + "_gt_response_hist.svg";
   write_svg<float>(gt_hist, name, width, height, margin, font_size);
-  vcl_cout << output_prefix << " joint histogram entropy: " << joint_hist.entropy() << " marginal a: " << joint_hist.entropy_marginal_a() << "\n";
+  std::cout << output_prefix << " joint histogram entropy: " << joint_hist.entropy() << " marginal a: " << joint_hist.entropy_marginal_a() << "\n";
   name = output_prefix + "_joint_response_hist.vrml";
-  vcl_ofstream os(name.c_str());
+  std::ofstream os(name.c_str());
   joint_hist.print_to_vrml(os);
   os.close();
 
   name = output_prefix + "_joint_response_hist.txt";
-  vcl_ofstream os2(name.c_str());
+  std::ofstream os2(name.c_str());
   joint_hist.print_to_text(os2);
   os2.close();
   return true;
@@ -548,13 +548,13 @@ bool dbrec_context_factory_create_response_histogram_process(bprb_func_process& 
 bool dbrec_classify_image_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_context_factory_sptr");      // input context factory
   input_types.push_back("dbrec_hierarchy_sptr");      // input hierarchy
   input_types.push_back("vil_image_view_base_sptr");      // input image
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("int");      // output class id
   output_types.push_back("vil_image_view_base_sptr");      // output map overlayed on orig view as a byte image
   ok = pro.set_output_types(output_types);
@@ -565,7 +565,7 @@ bool dbrec_classify_image_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 3) {
-    vcl_cerr << "dbrec_classify_image_process - invalid inputs\n";
+    std::cerr << "dbrec_classify_image_process - invalid inputs\n";
     return false;
   }
 
@@ -589,7 +589,7 @@ bool dbrec_classify_image_process(bprb_func_process& pro)
     dbrec_part_sptr p = h->root(i);
     dbrec_part_context_sptr pc = cf->get_context(p->type());
     if (!pc) {
-      vcl_cout << "In dbrec_context_factory_get_map_process() -- The context of class: " << i << " is not created in the passed factory!\n";
+      std::cout << "In dbrec_context_factory_get_map_process() -- The context of class: " << i << " is not created in the passed factory!\n";
       return false;
     }
     //: find the instance with the largest posterior in the image
@@ -606,14 +606,14 @@ bool dbrec_classify_image_process(bprb_func_process& pro)
     }
     
     if ((max > max_class_posterior) ||
-        (vcl_abs(max-max_class_posterior) < 0.0001 && rng.drand32() <= 0.5) ) { // decide randomly which class to pick in the case of ties
+        (std::abs(max-max_class_posterior) < 0.0001 && rng.drand32() <= 0.5) ) { // decide randomly which class to pick in the case of ties
       max_class_posterior = max;
       ins_max_class = ins_max;
       out_class = i;
     }
   }
   if (out_class < 0 || !ins_max_class) {
-    vcl_cout << "In dbrec_classify_image_process() - the max posterior class cannot be found!\n";
+    std::cout << "In dbrec_classify_image_process() - the max posterior class cannot be found!\n";
     pro.set_output_val<int>(0, out_class);
     return false;
   }

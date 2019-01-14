@@ -34,7 +34,7 @@ dbbgm_bgmodel_edges_process::dbbgm_bgmodel_edges_process() : bpro_process()
         !parameters()->add( "Is 3D"                      ,   "-is3D"        ,  (bool) true )
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -62,10 +62,10 @@ dbbgm_bgmodel_edges_process::clone() const
 /*************************************************************************
 * Function Name: dbbgm_bgmodel_edges_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbbgm_bgmodel_edges_process::name()
 {
     return "Bg Modeling of Edges";
@@ -75,12 +75,12 @@ dbbgm_bgmodel_edges_process::name()
 /*************************************************************************
 * Function Name: ddbil_osl_canny_edges_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbbgm_bgmodel_edges_process::get_input_type()
+std::vector< std::string > dbbgm_bgmodel_edges_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map" );
     to_return.push_back( "dbbgm_image" );
     return to_return;
@@ -90,12 +90,12 @@ vcl_vector< vcl_string > dbbgm_bgmodel_edges_process::get_input_type()
 /*************************************************************************
 * Function Name: dbbgm_bgmodel_edges_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbbgm_bgmodel_edges_process::get_output_type()
+std::vector< std::string > dbbgm_bgmodel_edges_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 //: Returns the number of input frames to this process
@@ -124,7 +124,7 @@ dbbgm_bgmodel_edges_process::output_frames()
 //dbbgm_bgmodel_edges_process::execute()
 //{
 //    if ( input_data_.size() != 1 ){
-//        vcl_cout << "In dbbgm_bgmodel_edges_process::execute() - not exactly one"
+//        std::cout << "In dbbgm_bgmodel_edges_process::execute() - not exactly one"
 //            << " input image \n";
 //        return false;
 //    }
@@ -159,20 +159,20 @@ dbbgm_bgmodel_edges_process::output_frames()
 //    
 //    vil_image_view<float> dir_img(image_sptr->ni(),image_sptr->nj(),3);
 //    dir_img.fill(-100.0);
-//    //vcl_vector<dbrl_id_point_2d_sptr> pointids;
+//    //std::vector<dbrl_id_point_2d_sptr> pointids;
 //
-//    vcl_vector<vsol_point_2d_sptr> edges=ns.get_points();
-//    //vcl_vector<double> tangents=det.get_tangents();
-//    vcl_vector<vgl_vector_2d<double> > dirs=ns.get_directions();
+//    std::vector<vsol_point_2d_sptr> edges=ns.get_points();
+//    //std::vector<double> tangents=det.get_tangents();
+//    std::vector<vgl_vector_2d<double> > dirs=ns.get_directions();
 //    for(unsigned i=0;i<edges.size();i++)
 //        {
-//        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),0)=edges[i]->x();
-//        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),1)=edges[i]->y();
-//        double dir=vcl_atan2(dirs[i].y(),dirs[i].x());
-//        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),2)=dir;
+//        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),0)=edges[i]->x();
+//        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),1)=edges[i]->y();
+//        double dir=std::atan2(dirs[i].y(),dirs[i].x());
+//        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),2)=dir;
 //        }
 //
-//    vcl_cout<<"Computed Edges for "<<frame_image->frame()<<" .. # Edges : "<<edges.size()<<"\n";
+//    std::cout<<"Computed Edges for "<<frame_image->frame()<<" .. # Edges : "<<edges.size()<<"\n";
 //
 //    vil_image_view<float> directionplane=vil_plane(dir_img,2);
 //
@@ -229,7 +229,7 @@ bool
 dbbgm_bgmodel_edges_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbbgm_bgmodel_edges_process::execute() - not exactly one"
+        std::cout << "In dbbgm_bgmodel_edges_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -241,7 +241,7 @@ dbbgm_bgmodel_edges_process::execute()
     input_edgemap.vertical_cast(input_data_[0][0]);
 
     dbdet_edgemap_sptr edgemap=input_edgemap->get_edgemap();
-    vcl_cout<<" .. # Edges : "<<edgemap->num_edgels<<"\n";
+    std::cout<<" .. # Edges : "<<edgemap->num_edgels<<"\n";
 
     //vil_image_view<float> directionplane=vil_plane(dir_img,2);
 
@@ -304,13 +304,13 @@ dbbgm_bgmodel_edges_process::execute()
 
 
         dbbgm_image_of<mix_gauss_type_3d> *model = static_cast<dbbgm_image_of<mix_gauss_type_3d>*>(model_.ptr());
-        vbl_array_2d<vcl_vector<dbdet_edgel*> >::iterator iter=edgemap->edge_cells.begin();
+        vbl_array_2d<std::vector<dbdet_edgel*> >::iterator iter=edgemap->edge_cells.begin();
 
         for(unsigned i=0;i<edgemap->edge_cells.rows();i++)
         {
             for(unsigned j=0;j<edgemap->edge_cells.cols();j++)
             {
-                vcl_vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
+                std::vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
                 if(es.size()==0)
                 {
                     mix_gauss_type_3d * dist=&(*model)(j,i);
@@ -328,25 +328,25 @@ dbbgm_bgmodel_edges_process::execute()
 
                     //vnl_matrix_fixed<float,3,3> R;
                     //vnl_matrix_fixed<float,3,3> final_covariance;
-                    //R(0,0)=vcl_cos(angle);R(0,1)=-vcl_sin(angle);R(0,2)=0.0;
-                    //R(1,0)=vcl_sin(angle);R(1,1)=vcl_cos(angle);R(1,2)=0.0;
+                    //R(0,0)=std::cos(angle);R(0,1)=-std::sin(angle);R(0,2)=0.0;
+                    //R(1,0)=std::sin(angle);R(1,1)=std::cos(angle);R(1,2)=0.0;
                     //R(2,0)=0.0;R(2,1)=0.0;R(2,2)=1.0;
                     //final_covariance=init_covariance*R;
 
 
-                    //mix_gauss_type_3d * dist1=&(*model)(vcl_floor(pt.x()),vcl_floor(pt.y()));
-                    updater((*model)(vcl_floor(pt.x()),vcl_floor(pt.y())),data);//,final_covariance);
+                    //mix_gauss_type_3d * dist1=&(*model)(std::floor(pt.x()),std::floor(pt.y()));
+                    updater((*model)(std::floor(pt.x()),std::floor(pt.y())),data);//,final_covariance);
                     
 
-                   // mix_gauss_type_3d * dist2=&(*model)(vcl_ceil(pt.x()),vcl_floor(pt.y()));
-                    updater((*model)(vcl_ceil(pt.x()),vcl_floor(pt.y())),data);//,final_covariance);
+                   // mix_gauss_type_3d * dist2=&(*model)(std::ceil(pt.x()),std::floor(pt.y()));
+                    updater((*model)(std::ceil(pt.x()),std::floor(pt.y())),data);//,final_covariance);
 
-                   // mix_gauss_type_3d * dist3=&(*model)(vcl_floor(pt.x()),vcl_ceil(pt.y()));
-                    updater((*model)(vcl_floor(pt.x()),vcl_ceil(pt.y())),data);//,final_covariance);
+                   // mix_gauss_type_3d * dist3=&(*model)(std::floor(pt.x()),std::ceil(pt.y()));
+                    updater((*model)(std::floor(pt.x()),std::ceil(pt.y())),data);//,final_covariance);
 
 
-                   // mix_gauss_type_3d * dist4=&(*model)(vcl_ceil(pt.x()),vcl_ceil(pt.y()));
-                    updater((*model)(vcl_ceil(pt.x()),vcl_ceil(pt.y())),data);//,final_covariance);
+                   // mix_gauss_type_3d * dist4=&(*model)(std::ceil(pt.x()),std::ceil(pt.y()));
+                    updater((*model)(std::ceil(pt.x()),std::ceil(pt.y())),data);//,final_covariance);
                 }
             }
         }
@@ -385,14 +385,14 @@ dbbgm_bgmodel_edges_process::execute()
             output_data_[0].push_back(frame_distimg);
         }
         dbbgm_image_of<mix_gauss_type> *model = static_cast<dbbgm_image_of<mix_gauss_type>*>(model_.ptr());
-        vbl_array_2d<vcl_vector<dbdet_edgel*> >::iterator iter=edgemap->edge_cells.begin();
+        vbl_array_2d<std::vector<dbdet_edgel*> >::iterator iter=edgemap->edge_cells.begin();
 
         vnl_random rand;
         for(unsigned i=0;i<edgemap->edge_cells.rows();i++)
         {
             for(unsigned j=0;j<edgemap->edge_cells.cols();j++)
             {
-                vcl_vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
+                std::vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
                 if(es.size()==0)
                 {
                     mix_gauss_type * dist=&(*model)(j,i);
@@ -402,16 +402,16 @@ dbbgm_bgmodel_edges_process::execute()
                 {
                     vgl_point_2d<double> pt=es[k]->pt;
                     double angle=es[k]->tangent;
-                    mix_gauss_type * dist=&(*model)(vcl_floor(pt.x()),vcl_floor(pt.y()));
+                    mix_gauss_type * dist=&(*model)(std::floor(pt.x()),std::floor(pt.y()));
                     updater(*dist,angle);
-                    dist=&(*model)(vcl_ceil(pt.x()),vcl_floor(pt.y()));
+                    dist=&(*model)(std::ceil(pt.x()),std::floor(pt.y()));
                     updater(*dist,angle);
-                    dist=&(*model)(vcl_ceil(pt.x()),vcl_ceil(pt.y()));
+                    dist=&(*model)(std::ceil(pt.x()),std::ceil(pt.y()));
                     updater(*dist,angle);
-                    dist=&(*model)(vcl_floor(pt.x()),vcl_ceil(pt.y()));
+                    dist=&(*model)(std::floor(pt.x()),std::ceil(pt.y()));
                     updater(*dist,angle);
 
-                    //                    mix_gauss_type * dist1=&(*model)(vcl_ceil(pt.x()),vcl_floor(pt.y()));
+                    //                    mix_gauss_type * dist1=&(*model)(std::ceil(pt.x()),std::floor(pt.y()));
                     //updater(*dist1,angle);
 
                 }

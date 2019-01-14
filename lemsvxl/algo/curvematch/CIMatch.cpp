@@ -1,5 +1,5 @@
 #include "CIMatch.h"
-#include <vcl_cmath.h>
+#include <cmath>
 //#include "msgout.h"
 
 
@@ -123,8 +123,8 @@ inline short int DeltaXYToStep (short int deltax, short int deltay)
   if (deltax==0 && deltay==0)
     return 0;
 
-  ////deltax = vcl_abs(deltax);
-  ////deltay = vcl_abs(deltay);
+  ////deltax = std::abs(deltax);
+  ////deltay = std::abs(deltay);
   if (deltax>2 || deltay>2)
     return 3;
   if (deltax>1 || deltay>1)
@@ -631,7 +631,7 @@ void CurveImageMatch::Match ()
 
       }//end loop x
     j++; //next step
-    vcl_cout << "Step/Total: "<< j <<"/"<< _inputCurveLength;
+    std::cout << "Step/Total: "<< j <<"/"<< _inputCurveLength;
     //STATUSOUT;
   }//DP_step loop
 
@@ -662,7 +662,7 @@ void CurveImageMatch::Match ()
     //6-2)Build the Output bsol_intrinsic_curve_2d. (OutputCurve is in absolute position)
     j = _inputCurveLength-1;  //index of the DPTable (n-1 to 0)
     int ii=0;            //index of the image curve  (0 to m)
-    vcl_pair <int,int> p (j,ii);
+    std::pair <int,int> p (j,ii);
     _fmap[i].push_back (p);
     short int curx = bestX;
     short int cury = bestY;
@@ -678,7 +678,7 @@ void CurveImageMatch::Match ()
 
       _outputCurve[i].add_vertex (prevx+_SearchWindowLeft, prevy+_SearchWindowTop);
 
-      vcl_pair <int,int> p (j,ii);
+      std::pair <int,int> p (j,ii);
       _fmap[i].push_back (p);
 
       curx = prevx;
@@ -760,8 +760,8 @@ double bengCostImage (int i1x, int i1y, int i2x, int i2y, int prevx, int prevy)
   if (prevx==i1x && prevy==i1y)
     return CIM_COST_INFINITY;
 
-  double tangent01 = vcl_atan2 ((double)i1y-prevy, (double)i1x-prevx);
-  double tangent12 = vcl_atan2 ((double)i2y-i1y, (double)i2x-i1x);
+  double tangent01 = std::atan2 ((double)i1y-prevy, (double)i1x-prevx);
+  double tangent12 = std::atan2 ((double)i2y-i1y, (double)i2x-i1x);
   double result = curve_angleDiff (tangent12, tangent01); //current-previous
   return result;
 }
@@ -772,7 +772,7 @@ double orientCostImage (int i1x, int i1y, int i2x, int i2y, double startTan)
   if (i2x==i1x && i2y==i1y)
     return 0;
 
-  double tangent12 = vcl_atan2 ((double)i2y-i1y, (double)i2x-i1x);
+  double tangent12 = std::atan2 ((double)i2y-i1y, (double)i2x-i1x);
   double result = curve_angleDiff (tangent12, startTan); //current-previous
   return result;
 }
@@ -793,13 +793,13 @@ double CurveImageMatch::computeCost (int j1, int j2, int i1x, int i1y, int i2x, 
   else {
     double curvelength1 = stretchCost (_inputCurve, j2, j1);
     double curvelength2 = hypot (i2x-i1x, i2y-i1y);
-    dStretchCost = vcl_fabs(curvelength1-curvelength2);
+    dStretchCost = std::fabs(curvelength1-curvelength2);
   }
 
   //1-B)OrientationCost
   //double orientCost1 = _inputCurve.bendCost (j2, 0);
   //double orientCost2 = orientCostImage (i1x, i1y, i2x, i2y, _startTan);
-  //double orientCost = vcl_fabs(orientCost1-orientCost2);
+  //double orientCost = std::fabs(orientCost1-orientCost2);
 
   //1-C)BendingCost
   double dBendCost;
@@ -819,7 +819,7 @@ double CurveImageMatch::computeCost (int j1, int j2, int i1x, int i1y, int i2x, 
     double bendCost2 = bengCostImage (i1x, i1y, i2x, i2y, prevx, prevy);
     if (bendCost2 == CIM_COST_INFINITY)
       return CIM_COST_INFINITY;
-    dBendCost = vcl_fabs(bendCost2 - bendCost1);
+    dBendCost = std::fabs(bendCost2 - bendCost1);
   }
 
   #define _R 3 //10
@@ -853,7 +853,7 @@ double CurveImageMatch::computeCost (int j1, int j2, int i1x, int i1y, int i2x, 
   //                               _inputCurve.y(j2)-_oldStartPointY+_startPointY,
   //                               curTangent);
   //double ImageCost2 = _R2*(ImageCost1_p1+ImageCost1_p2);
-  //double ImageCost = vcl_fabs (ImageCost1 - ImageCost2);
+  //double ImageCost = std::fabs (ImageCost1 - ImageCost2);
 
 int GradientTemplate[][9] = {
   { 0, 1, 1, //0
@@ -904,7 +904,7 @@ double CurveImageMatch::computeImageCost (int posx, int posy, int dir)
       i++;
     }
   }
-  sum = vcl_fabs (sum);
+  sum = std::fabs (sum);
   imageCost = (512-sum)/512; //0: perfect edge, 1: no edge, normalized!*/
   return imageCost;
 }
@@ -916,7 +916,7 @@ void CurveImageMatch::computeCannyMagnitudeDir (void)
 /*  int x, y;
 
   if (_image==NULL) {
-    COUT<< "No image!" <<vcl_endl;
+    COUT<< "No image!" <<std::endl;
     MSGOUT (0);
     return;
   }
@@ -963,10 +963,10 @@ void CurveImageMatch::computeCannyMagnitudeDir (void)
     }
   }
 
-  COUT<< "\nCanny Edge..." <<vcl_endl;
+  COUT<< "\nCanny Edge..." <<std::endl;
   COUT<< "High Threshold = " << high_threshold;
   COUT<< ", Low Threshold = " << low_threshold;
-  COUT<< ", Sigma = " << sigma <<vcl_endl;
+  COUT<< ", Sigma = " << sigma <<std::endl;
   COUT<< "Image Size: "<< img->width() <<"x"<< img->height() <<", ";
 
   MSGOUT (0);
@@ -1012,7 +1012,7 @@ double CurveImageMatch::computeImageCostCanny (int posx, int posy, int dir)
   double tanx = cos(_edgeMagImage->tan(posx,posy));
   double tany = sin(_edgeMagImage->tan(posx,posy));
   double dot = tanx*dx + tany*dy;
-  double dotcost = vcl_fabs(dot);
+  double dotcost = std::fabs(dot);
   assert (dotcost <=1 && dotcost>=0);
 
   imageCost = dotcost*imageCost;
@@ -1068,7 +1068,7 @@ double CurveImageMatch::computeImageCost1Canny (int posx, int posy, int dir)
   double tanx = cos(tanbuf[posx*h+posy]);
   double tany = sin(tanbuf[posx*h+posy]);
   double dot = tanx*dx + tany*dy;
-  double dotcost = vcl_fabs(dot);
+  double dotcost = std::fabs(dot);
   assert (dotcost <=1 && dotcost>=0);
 
   //dotcost = 1-dotcost;
@@ -1107,7 +1107,7 @@ void ResampleCurve (RESAMPLE_CURVE_TYPE resample_type, bsol_intrinsic_curve_2d* 
       y = inputCurve->y(i);
       double dist = hypot(x-prevx, y-prevy);
       if (dist>3) {
-        vcl_cout << "hypot dist > 3" <<vcl_endl;
+        std::cout << "hypot dist > 3" <<std::endl;
       }
       if (dist>2) {
         outputCurve->add_vertex ((x+prevx)/2, (y+prevy)/2);

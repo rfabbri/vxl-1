@@ -20,8 +20,8 @@
 #include <dbskfg/dbskfg_rag_graph_sptr.h>
 #include <dbskfg/dbskfg_rag_node_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
 //: Form Composite Graph algorithm
 class dbskfg_extract_fragments
@@ -44,8 +44,8 @@ public:
                  double transform_thresh,
                  double contour_ratio,
                  double prune_thres,
-                 vcl_string output_folder,
-                 vcl_string output_prefix);
+                 std::string output_folder,
+                 std::string output_prefix);
 
     //: Extract the fragments
     void extract_two(bool detect_gaps,
@@ -55,8 +55,8 @@ public:
                      double transform_thresh,
                      double contour_ratio,
                      double prune_thres,
-                     vcl_string output_folder,
-                     vcl_string output_prefix);
+                     std::string output_folder,
+                     std::string output_prefix);
 
 
     //: Extract the fragments
@@ -67,8 +67,8 @@ public:
                        double transform_thresh,
                        double contour_ratio,
                        double prune_thres,
-                       vcl_string output_folder,
-                       vcl_string output_prefix);
+                       std::string output_folder,
+                       std::string output_prefix);
 
 private:
 
@@ -83,7 +83,7 @@ private:
     vil_image_resource_sptr image_; 
 
     //: Keep a map off all rag nodes to start growing from
-    vcl_map<double,unsigned int> start_rag_nodes_;
+    std::map<double,unsigned int> start_rag_nodes_;
 
     // Compute first layer of graph
     void compute_first_graph(vidpro1_vsol2D_storage_sptr& input_vsol,
@@ -98,8 +98,8 @@ private:
                         double transform_thresh,
                         double contour_ratio,
                         double prune_thres,
-                        vcl_string output_folder,
-                        vcl_string output_prefix);
+                        std::string output_folder,
+                        std::string output_prefix);
 
     // Determine start regions
     void determine_start_regions(double contour_ratio);

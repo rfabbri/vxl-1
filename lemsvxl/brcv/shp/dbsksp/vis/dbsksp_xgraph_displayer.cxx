@@ -119,7 +119,7 @@ update_xgraph_tableau(dbsksp_xgraph_tableau_sptr shock_tab,
 
 
   // Add the shock fragments
-  vcl_vector<dbsksp_xshock_fragment_sptr >& xfrag_list = xgraph_storage->xfrag_list();
+  std::vector<dbsksp_xshock_fragment_sptr >& xfrag_list = xgraph_storage->xfrag_list();
   for (unsigned i =0; i < xfrag_list.size(); ++i)
   {
     shock_tab->add_xfrag(xfrag_list[i]);

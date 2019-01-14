@@ -12,12 +12,12 @@ class on_demand_deck_tableau : public vgui_deck_tableau{
          { }
         ~on_demand_deck_tableau() { }
 
-    void set_filenames(const vcl_vector<vcl_string> & names){
+    void set_filenames(const std::vector<std::string> & names){
       filenames_ = names;
     }
     
   private: 
-    vcl_vector<vcl_string> filenames_;
+    std::vector<std::string> filenames_;
 };
 
 

@@ -6,13 +6,13 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <xmvg/xmvg_filter_response.h>
 
 static void test_filter_response()
 {
   xmvg_filter_response<double> resp(10, 0.0);
-  vcl_cout << "testing constructor successful" << vcl_endl;
+  std::cout << "testing constructor successful" << std::endl;
 }
 
 TESTMAIN(test_filter_response);

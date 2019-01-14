@@ -16,7 +16,7 @@
 #include <bpro1/bpro1_storage.h>
 #include <dbbgm/pro/dbbgm_image_storage_sptr.h>
 #include <bbgm/bbgm_image_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: Storage class for bbgm_image_sptr
 class dbbgm_image_storage : public bpro1_storage {
@@ -33,10 +33,10 @@ public:
 
 
   //: Returns the type string "dbbgm_image"
-  virtual vcl_string type() const { return "dbbgm_image"; }
+  virtual std::string type() const { return "dbbgm_image"; }
 
   //: Returns the type string "dbbgm_image"
-  virtual vcl_string name() const { return "dbbgm_image"; }
+  virtual std::string name() const { return "dbbgm_image"; }
 
   //: Set the distribution image
   void set_dist_image(const bbgm_image_sptr &dimg) { dimg_ = dimg; }
@@ -44,7 +44,7 @@ public:
   //: Retrieve the distribution image
   bbgm_image_sptr dist_image() const { return dimg_; }
 
-  virtual vcl_string is_a() const {return "dbbgm_image_storage";}
+  virtual std::string is_a() const {return "dbbgm_image_storage";}
 
   virtual bpro1_storage* clone() const;
 

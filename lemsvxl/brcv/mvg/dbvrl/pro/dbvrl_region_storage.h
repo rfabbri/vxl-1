@@ -32,7 +32,7 @@ public:
   virtual ~dbvrl_region_storage(){}
 
   //: Returns the type string "bvrl"
-  virtual vcl_string type() const { return "bvrl"; }
+  virtual std::string type() const { return "bvrl"; }
 
   //: Return IO version number;
   short version() const;
@@ -48,7 +48,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbvrl_region_storage"; }
+  virtual std::string is_a() const { return "dbvrl_region_storage"; }
 
   //: Set the region 
   void set_region( const dbvrl_region_sptr& region );

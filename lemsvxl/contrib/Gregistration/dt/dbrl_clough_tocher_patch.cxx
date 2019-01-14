@@ -223,10 +223,10 @@ vgl_vector_3d<double> dbrl_clough_tocher_patch::convert_to_barycentric(vgl_point
                                                                        vgl_point_2d<double> p3) const
 {
 
-    double tarea=vcl_fabs(cross_product(p2-p1,p3-p1));
-    double u=vcl_fabs(cross_product(p2-p,p3-p))/tarea;
-    double v=vcl_fabs(cross_product(p3-p,p1-p))/tarea;
-    double w=vcl_fabs(cross_product(p1-p,p2-p))/tarea;
+    double tarea=std::fabs(cross_product(p2-p1,p3-p1));
+    double u=std::fabs(cross_product(p2-p,p3-p))/tarea;
+    double v=std::fabs(cross_product(p3-p,p1-p))/tarea;
+    double w=std::fabs(cross_product(p1-p,p2-p))/tarea;
 
     return vgl_vector_3d<double>(u,v,w);
     

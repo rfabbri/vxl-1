@@ -1,14 +1,14 @@
 // This is brl/bseg/dboxm/opt/open_cl/boxm_ray_trace_manager.hxx
 #ifndef boxm_ray_trace_manager_txx_
 #define boxm_ray_trace_manager_txx_
-#include <vcl_fstream.h>
-#include <vcl_iomanip.h>
-#include <vcl_sstream.h>
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
 #include <vbl/io/vbl_io_array_2d.h>
 #include "boxm_ray_trace_manager.h"
 #include <vpgl/vpgl_perspective_camera.h>
@@ -17,7 +17,7 @@
 
 //allocate child cells on the array
 template<class T>
-static void split(vcl_vector<vnl_vector_fixed<int, 4> >& cell_array,
+static void split(std::vector<vnl_vector_fixed<int, 4> >& cell_array,
                   int parent_ptr,
                   int& child_ptr)
 {
@@ -34,8 +34,8 @@ static void split(vcl_vector<vnl_vector_fixed<int, 4> >& cell_array,
 template<class T>
 static void
 copy_to_arrays(boct_tree_cell<short, T >* cell_ptr,
-               vcl_vector<vnl_vector_fixed<int, 4> >& cell_array,
-               vcl_vector<vnl_vector_fixed<float, 16> >& data_array,
+               std::vector<vnl_vector_fixed<int, 4> >& cell_array,
+               std::vector<vnl_vector_fixed<float, 16> >& data_array,
                int cell_input_ptr)
 {
   //cell_input_ptr is the array index for the cell being constructed
@@ -141,7 +141,7 @@ bool boxm_ray_trace_manager<T>::setup_tree()
 #endif
   if (cells_== NULL||cell_data_ == NULL)
   {
-    vcl_cout << "Failed to allocate host memory. (tree input)\n";
+    std::cout << "Failed to allocate host memory. (tree input)\n";
     return false;
   }
   for (unsigned i = 0, j = 0; i<cell_input_.size()*4; i+=4, j++)
@@ -189,7 +189,7 @@ bool boxm_ray_trace_manager<T>::setup_tree_results()
 
   if (tree_results_ == NULL)
   {
-    vcl_cout << "Failed to allocate host memory. (tree_results)\n";
+    std::cout << "Failed to allocate host memory. (tree_results)\n";
     return SDK_FAILURE;
   }
   this->clear_tree_results();
@@ -460,7 +460,7 @@ template<class T>
 int boxm_ray_trace_manager<T>::build_kernel_program()
 {
   cl_int status = CL_SUCCESS;
-  vcl_size_t sourceSize[] = { prog_.size() };
+  std::size_t sourceSize[] = { prog_.size() };
   if (!sourceSize[0]) return SDK_FAILURE;
   if (program_) {
     status = clReleaseProgram(program_);
@@ -493,11 +493,11 @@ int boxm_ray_trace_manager<T>::build_kernel_program()
                        CL_SUCCESS,
                        error_to_string(status)))
   {
-    vcl_size_t len;
+    std::size_t len;
     char buffer[2048];
     clGetProgramBuildInfo(program_, this->devices_[0],
                           CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
-    vcl_printf("%s\n", buffer);
+    std::printf("%s\n", buffer);
     return SDK_FAILURE;
   }
   else
@@ -505,7 +505,7 @@ int boxm_ray_trace_manager<T>::build_kernel_program()
 }
 
 template<class T>
-int boxm_ray_trace_manager<T>::create_kernel(vcl_string const& kernel_name)
+int boxm_ray_trace_manager<T>::create_kernel(std::string const& kernel_name)
 {
   cl_int status = CL_SUCCESS;
   // get a kernel object handle for a kernel with the given name
@@ -551,10 +551,10 @@ void boxm_ray_trace_manager<T>::clear_ray_results()
 }
 
 template<class T>
-vcl_size_t boxm_ray_trace_manager<T>::n_ray_groups()
+std::size_t boxm_ray_trace_manager<T>::n_ray_groups()
 {
-  vcl_size_t nr = this->n_rays();
-  vcl_size_t ng = nr/this->group_size();
+  std::size_t nr = this->n_rays();
+  std::size_t ng = nr/this->group_size();
   if (ng == 0)
     ng = 1;
   return ng;
@@ -586,30 +586,30 @@ int boxm_ray_trace_manager<T>::setup_ray_processing()
 template<class T>
 void boxm_ray_trace_manager<T>::print_tree_input()
 {
-  vcl_cout << "Tree Input\n";
+  std::cout << "Tree Input\n";
   if (cells_)
     for (unsigned i = 0; i<cell_input_.size()*4; i+=4) {
       int data_ptr = 2*cells_[i+2];
-      vcl_cout << "tree input[" << i/4 << "]("
+      std::cout << "tree input[" << i/4 << "]("
                << cells_[i]   << ' '
                << cells_[i+1] << ' '
                << cells_[i+2] << ' '
                << cells_[i+3];
       if (data_ptr>0)
-        vcl_cout << ' ' << cell_data_[data_ptr] << ':'
+        std::cout << ' ' << cell_data_[data_ptr] << ':'
                  << cell_data_[data_ptr+1];
-      vcl_cout << ")\n";
+      std::cout << ")\n";
     }
 }
 
 template<class T>
 void boxm_ray_trace_manager<T>::print_ray_input()
 {
-  vcl_cout << "Ray Input\n";
-  vcl_size_t n = this->n_rays();
+  std::cout << "Ray Input\n";
+  std::size_t n = this->n_rays();
   if (ray_origin_&&ray_dir_)
     for (unsigned i = 0; i<n*4; i+=4)
-      vcl_cout << "ray origin[" << i/4 << "](" << ray_origin_[i] << ' '
+      std::cout << "ray origin[" << i/4 << "](" << ray_origin_[i] << ' '
                << ray_origin_[i+1] << ' '
                << ray_origin_[i+2] << ' '
                << ray_origin_[i+3] << ")\n"
@@ -622,11 +622,11 @@ void boxm_ray_trace_manager<T>::print_ray_input()
 template<class T>
 void boxm_ray_trace_manager<T>::print_ray_results()
 {
-  vcl_size_t n = this->n_rays()*4;
+  std::size_t n = this->n_rays()*4;
   if (ray_results_) {
-    vcl_cout << "--Ray Results--\n";
+    std::cout << "--Ray Results--\n";
     for (unsigned i = 0; i<n; i+=4)
-      vcl_cout << "ray_out[" << i/4 << "](" << ray_results_[i] << ' '
+      std::cout << "ray_out[" << i/4 << "](" << ray_results_[i] << ' '
                << ray_results_[i+1] << ' '
                << ray_results_[i+2] << ' '
                << ray_results_[i+3] << ")\n";
@@ -732,17 +732,17 @@ boxm_ray_trace_manager<T>::~boxm_ray_trace_manager()
 }
 
 template<class T>
-bool boxm_ray_trace_manager<T>::load_kernel_source(vcl_string const& path)
+bool boxm_ray_trace_manager<T>::load_kernel_source(std::string const& path)
 {
   prog_ = "";
-  vcl_ifstream is(path.c_str());
+  std::ifstream is(path.c_str());
   if (!is.is_open())
     return false;
   char temp[256];
-  vcl_ostringstream ostr;
+  std::ostringstream ostr;
   while (!is.eof()) {
     is.getline(temp, 256);
-    vcl_string s(temp);
+    std::string s(temp);
     ostr << s << '\n';
   }
   prog_ =  ostr.str();
@@ -750,16 +750,16 @@ bool boxm_ray_trace_manager<T>::load_kernel_source(vcl_string const& path)
 }
 
 template<class T>
-bool boxm_ray_trace_manager<T>::append_process_kernels(vcl_string const& path)
+bool boxm_ray_trace_manager<T>::append_process_kernels(std::string const& path)
 {
-  vcl_ifstream is(path.c_str());
+  std::ifstream is(path.c_str());
   if (!is.is_open())
     return false;
   char temp[256];
-  vcl_ostringstream ostr;
+  std::ostringstream ostr;
   while (!is.eof()) {
     is.getline(temp, 256);
-    vcl_string s(temp);
+    std::string s(temp);
     ostr << s << '\n';
   }
   prog_ += ostr.str();
@@ -767,9 +767,9 @@ bool boxm_ray_trace_manager<T>::append_process_kernels(vcl_string const& path)
 }
 
 template<class T>
-bool boxm_ray_trace_manager<T>::write_program(vcl_string const& path)
+bool boxm_ray_trace_manager<T>::write_program(std::string const& path)
 {
-  vcl_ofstream os(path.c_str());
+  std::ofstream os(path.c_str());
   if (!os.is_open())
     return false;
   os << prog_;
@@ -777,12 +777,12 @@ bool boxm_ray_trace_manager<T>::write_program(vcl_string const& path)
 }
 
 template<class T>
-bool boxm_ray_trace_manager<T>::load_tree(vcl_string const& path)
+bool boxm_ray_trace_manager<T>::load_tree(std::string const& path)
 {
   if (tree_)
     delete tree_;
   tree_ =new boct_tree<short, T >();
-  vsl_b_ifstream is(path.c_str(), vcl_ios_binary);
+  vsl_b_ifstream is(path.c_str(), std::ios::binary);
   if (!is)
     return false;
   tree_->b_read(is);
@@ -790,7 +790,7 @@ bool boxm_ray_trace_manager<T>::load_tree(vcl_string const& path)
 }
 
 template<class T>
-bool boxm_ray_trace_manager<T>::write_tree(vcl_string const& path)
+bool boxm_ray_trace_manager<T>::write_tree(std::string const& path)
 {
   if (!tree_)
     return false;
@@ -806,10 +806,10 @@ bool boxm_ray_trace_manager<T>::write_tree(vcl_string const& path)
 
 #if 0
 template<boxm_apm_type APM_MODEL>
-bool boxm_ray_trace_manager<APM_MODEL>::load_perspective_camera(vcl_string filename)
+bool boxm_ray_trace_manager<APM_MODEL>::load_perspective_camera(std::string filename)
 {
   pcam =new vpgl_perspective_camera<double>;
-  vcl_ifstream ifs(filename.c_str());
+  std::ifstream ifs(filename.c_str());
   if (!ifs)
     return false;
   else
@@ -824,19 +824,19 @@ bool boxm_ray_trace_manager<T>::run()
 {
   cl_int status = CL_SUCCESS;  cl_event events[2];
 
-  vcl_string error_message="";
+  std::string error_message="";
   // set up a command queue
   cl_command_queue command_queue = clCreateCommandQueue(this->context(),this->devices()[0],0,&status);
   if (!this->check_val(status,CL_SUCCESS,"Falied in command queue creation" + error_to_string(status)))
     return false;
 
-  if (!load_kernel_source(vcl_string(VCL_SOURCE_ROOT_DIR)
+  if (!load_kernel_source(std::string(VCL_SOURCE_ROOT_DIR)
                           +"/contrib/brl/bseg/boxm/opt/open_cl/octree_library_functions.cl") ||
-      !append_process_kernels(vcl_string(VCL_SOURCE_ROOT_DIR)
+      !append_process_kernels(std::string(VCL_SOURCE_ROOT_DIR)
                               +"/contrib/brl/bseg/boxm/opt/open_cl/expected_functor.cl") ||
-      !append_process_kernels(vcl_string(VCL_SOURCE_ROOT_DIR)
+      !append_process_kernels(std::string(VCL_SOURCE_ROOT_DIR)
                               +"/contrib/brl/bseg/boxm/opt/open_cl/backproject.cl") ||
-     !append_process_kernels(vcl_string(VCL_SOURCE_ROOT_DIR)
+     !append_process_kernels(std::string(VCL_SOURCE_ROOT_DIR)
                              +"/contrib/brl/bseg/boxm/opt/open_cl/expected_ray_trace.cl") )
      return false;
   if (build_kernel_program())
@@ -897,12 +897,12 @@ bool boxm_ray_trace_manager<T>::run()
   if (!this->check_val(status,CL_SUCCESS,"clGetKernelWorkGroupInfo CL_KERNEL_WORK_GROUP_SIZE, failed."))
    return SDK_FAILURE;
 
-  vcl_size_t globalThreads[]= {RoundUp((imgdims_[0])*(imgdims_[1]),64)};
-  vcl_size_t localThreads[] = {64};
+  std::size_t globalThreads[]= {RoundUp((imgdims_[0])*(imgdims_[1]),64)};
+  std::size_t localThreads[] = {64};
 
   if (used_local_memory > this->total_local_memory())
   {
-    vcl_cout << "Unsupported: Insufficient local memory on device.\n";
+    std::cout << "Unsupported: Insufficient local memory on device.\n";
     return SDK_FAILURE;
   }
   cl_event ceEvent;

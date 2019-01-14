@@ -13,7 +13,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/algo/vil_greyscale_dilate.h>
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_3.h>
@@ -33,7 +33,7 @@ dbmrf_rocdata_process::dbmrf_rocdata_process()
   if( !parameters()->add( "min gamma" ,  "-min_gamma" ,   0.02f   ) ||
       !parameters()->add( "min length" , "-min_length" ,  5       ) ||
       !parameters()->add( "output file" ,   "-mat_file" ,    bpro1_filepath("","*")  ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -59,7 +59,7 @@ dbmrf_rocdata_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_rocdata_process::name()
 {
   return "Export ROC Data";
@@ -67,9 +67,9 @@ dbmrf_rocdata_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_rocdata_process::get_input_type()
+std::vector< std::string > dbmrf_rocdata_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   to_return.push_back( "image" );
   return to_return;
@@ -77,9 +77,9 @@ vcl_vector< vcl_string > dbmrf_rocdata_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_rocdata_process::get_output_type()
+std::vector< std::string > dbmrf_rocdata_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -105,7 +105,7 @@ bool
 dbmrf_rocdata_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -140,7 +140,7 @@ dbmrf_rocdata_process::execute()
   vil_greyscale_dilate(image,dimage,disk);
 
 
-  vcl_ofstream mat_out(mat_file.path.c_str(), vcl_fstream::app);
+  std::ofstream mat_out(mat_file.path.c_str(), std::fstream::app);
 
   unsigned long count = 0;
   for(bmrf_network::seg_node_map::const_iterator n = network->begin(frame);
@@ -154,19 +154,19 @@ dbmrf_rocdata_process::execute()
     ++count;
     unsigned int ni = image.ni(), nj = image.nj();
     mat_out << "curve{"<<frame<<","<<count<<"} = [";
-    for(vcl_vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
+    for(std::vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
         pi != n->first->end(); ++pi)
     {
       vgl_point_2d<double> gpt((*pi)->p());
-      int x1 = int(vcl_floor(gpt.x())),  x2 = int(vcl_ceil(gpt.x()));
-      int y1 = int(vcl_floor(gpt.y())),  y2 = int(vcl_ceil(gpt.y()));
+      int x1 = int(std::floor(gpt.x())),  x2 = int(std::ceil(gpt.x()));
+      int y1 = int(std::floor(gpt.y())),  y2 = int(std::ceil(gpt.y()));
       bool fg = false;
       if(x2 < ni && x1 >= 0 && y2 < nj && y1 >= 0){
         fg = (dimage(x1,y1)!=0) || (dimage(x2,y1)!=0) || (dimage(x1,y2)!=0)|| (dimage(x2,y2)!=0);
       }
       mat_out << gpt.x()<<" "<<gpt.y()<<" "<<(*gamma_func)((*pi)->alpha())<<" "<<(fg?1:0)<<"; ";
     }
-    mat_out << "];"<< vcl_endl;
+    mat_out << "];"<< std::endl;
   }
 
   mat_out.close();

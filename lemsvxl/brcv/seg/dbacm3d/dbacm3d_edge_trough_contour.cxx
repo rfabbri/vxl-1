@@ -66,7 +66,7 @@ init_levelset_surf(const vil3d_image_view<float >& init_phi)
 void dbacm3d_edge_trough_contour::
 init_levelset_surf_with_binary_mask(const vil3d_image_view<bool >& mask_binary)
 {
-  vcl_cerr << "Not yet implemented" << vcl_endl;
+  std::cerr << "Not yet implemented" << std::endl;
 /*
   // convert to type `unsigned' to compute signed EDT
   vil3d_image_view<unsigned > mask_unsigned;
@@ -98,7 +98,7 @@ init_levelset_surf_with_binary_mask(const vil3d_image_view<bool >& mask_binary)
 void dbacm3d_edge_trough_contour::
 evolve(bool verbose)
 {
-    vcl_cerr << "evolve " << vcl_endl;;
+    std::cerr << "evolve " << std::endl;;
   float dt = this->timestep();
   //int num_iters_to_initialize = 10;
   for (unsigned int i=0; i<this->num_iterations(); ++i)
@@ -107,15 +107,15 @@ evolve(bool verbose)
     {
       this->levelset_func()->reinitialize_levelset_surf();
       if (verbose)
-        vcl_cout << " \n- ";
+        std::cout << " \n- ";
     }
           /*
     if (verbose)
     {
-      vcl_cout << " " << i;
+      std::cout << " " << i;
     }
     */
-    vcl_cerr << " " << i;
+    std::cerr << " " << i;
     this->levelset_func()->evolve_one_timestep(dt);
   }
   return;

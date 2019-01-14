@@ -44,8 +44,8 @@
 #define _dbcvr_clsd_interp_cvmatch_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 
 #include <vsol/vsol_point_2d_sptr.h>
 
@@ -57,7 +57,7 @@
 struct dptcell
 {
   double cost;
-  vcl_pair<int, int> prev_cell_coord;  // to trace back alignment curve when finished
+  std::pair<int, int> prev_cell_coord;  // to trace back alignment curve when finished
   double s1;
   double s2;
   double theta1;   // store tangent angle of first curve at this cell, required for fast computation of bending cost
@@ -79,8 +79,8 @@ protected:
   //  cells down for negative eta,  we need two cost arrays since we cannot use negative indices.
   //  CU[i][j]  i runs along diogonal
   //            j runs along axis perpendicular to the diagonal
-  vcl_vector< vcl_vector<dptcell> > CU; //cells up, cost array, positive indices
-  vcl_vector< vcl_vector<dptcell> > CD; //cells down, cost array, negative indices
+  std::vector< std::vector<dptcell> > CU; //cells up, cost array, positive indices
+  std::vector< std::vector<dptcell> > CD; //cells down, cost array, negative indices
   
   double _delta;              // step size along the min length alignment curve
   double _delta_eta;          // step size along the axis orthogonal to min length alignment curve axis
@@ -100,20 +100,20 @@ protected:
   double L2;
 
   int k_;   // number of starting points
-  vcl_vector< vcl_pair<int, int> > start_cells_; // vector with size k, holding starting points on the grid
-  vcl_vector< vcl_pair<int, int> > end_cells_; // vector with size k, holding end points
-  vcl_vector< vcl_vector <int> > paths_;   // for each starting point k, there is a path such that
+  std::vector< std::pair<int, int> > start_cells_; // vector with size k, holding starting points on the grid
+  std::vector< std::pair<int, int> > end_cells_; // vector with size k, holding end points
+  std::vector< std::vector <int> > paths_;   // for each starting point k, there is a path such that
                                            // paths_[k][i] shows on which j is the alignment curve passing
                                            // j negative for CD, if that i is irrelevant for a given
                                            // starting point, then the value should never be checked,
                                            // so it can be anything, will just put 0 in that case.
 
-  vcl_vector<double> final_cost_;
+  std::vector<double> final_cost_;
   int k_min_;
 
-  // to construct bsol_intrinsic_curve_2d(const vcl_vector<vsol_point_2d_sptr> &new_vertices);
-  vcl_vector<vsol_point_2d_sptr> out_curve1_;   // best alignment's points along 1st curve
-  vcl_vector<vsol_point_2d_sptr> out_curve2_;   // best alignment's points along 2nd curve
+  // to construct bsol_intrinsic_curve_2d(const std::vector<vsol_point_2d_sptr> &new_vertices);
+  std::vector<vsol_point_2d_sptr> out_curve1_;   // best alignment's points along 1st curve
+  std::vector<vsol_point_2d_sptr> out_curve2_;   // best alignment's points along 2nd curve
   
   //Functions
   //: construct the grid 
@@ -163,8 +163,8 @@ public:
   bsold_interp_curve_2d_sptr curve1() { return _curve1; }
   bsold_interp_curve_2d_sptr curve2() { return _curve2; }
 
-  vcl_vector<vsol_point_2d_sptr> output_curve1() { return out_curve1_; }
-  vcl_vector<vsol_point_2d_sptr> output_curve2() { return out_curve2_; }
+  std::vector<vsol_point_2d_sptr> output_curve1() { return out_curve1_; }
+  std::vector<vsol_point_2d_sptr> output_curve2() { return out_curve2_; }
 };
 
 #endif // _dbcvr_clsd_interp_cvmatch_h

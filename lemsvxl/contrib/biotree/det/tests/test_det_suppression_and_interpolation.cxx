@@ -11,7 +11,7 @@
 #include <biob/biob_grid_worldpt_roster.h>
 #include <vgl/vgl_vector_3d.h>
 #include <det/det_suppression_and_interpolation.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 static void test_det_suppression_and_interpolation(){
 
@@ -28,7 +28,7 @@ static void test_det_suppression_and_interpolation(){
         double strength = 2*center*center - (i - center - 0.3)*(i -center - 0.3)
           -(j - center - 0.2)*(j - center - 0.2);
         //maximized at points (2.3, 2.2, z)
-        vcl_cout << "(" << i << ", " << j << ", " << k << "): " << strength << "\n";
+        std::cout << "(" << i << ", " << j << ", " << k << "): " << strength << "\n";
         field.values()[(grid->index_3d_2_1d(i,j,k)).index()] = strength * vertical;
       }
     }

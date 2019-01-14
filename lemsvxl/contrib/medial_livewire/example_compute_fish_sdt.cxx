@@ -2,9 +2,9 @@
 // AM282 project) and produce a smoothed signed distance transform of the
 // contour. 
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <string>
+#include <cmath>
 #include <vul/vul_file.h>
 
 #include <vil/vil_image_view.h>
@@ -30,25 +30,25 @@ int main(int argc, char **argv)
 {
   if (argc <= 2)
   {
-    vcl_cerr << "Syntax: arg[0] in_foldername out_foldername \n";
+    std::cerr << "Syntax: arg[0] in_foldername out_foldername \n";
     return 0;
   }
 
   // parse command-line arguments
-  vcl_string in_folder(argv[1]);
-  vcl_string out_folder(argv[2]);
+  std::string in_folder(argv[1]);
+  std::string out_folder(argv[2]);
 
   // print out parsed variables
-  vcl_cout << "Input contour folder = " << in_folder << vcl_endl;
-  vcl_cout << "Ouput folder name = " << out_folder << vcl_endl;
+  std::cout << "Input contour folder = " << in_folder << std::endl;
+  std::cout << "Ouput folder name = " << out_folder << std::endl;
 
   // load the contours
-  vcl_string fish_label = vul_file::strip_directory(in_folder);
+  std::string fish_label = vul_file::strip_directory(in_folder);
   
   // a. upper body
-  vcl_string upb_con_file = fish_label + "_upb-2-0.15.con";
+  std::string upb_con_file = fish_label + "_upb-2-0.15.con";
   vsol_polyline_2d_sptr upb = 0;
-  vcl_string fullfile = in_folder + "/" + upb_con_file;
+  std::string fullfile = in_folder + "/" + upb_con_file;
   vsol_spatial_object_2d_sptr obj = dbsol_load_con_file(fullfile.c_str());
   if (obj && obj->cast_to_curve())
   {
@@ -60,13 +60,13 @@ int main(int argc, char **argv)
   // check validity
   if (!upb)
   {
-    vcl_cerr << "Error loading upper body contour file. Exit now";
+    std::cerr << "Error loading upper body contour file. Exit now";
     return 0;
   }
 
 
   // b. tail
-  vcl_string tail_con_file = fish_label + "_tail-2-0.15.con";
+  std::string tail_con_file = fish_label + "_tail-2-0.15.con";
   vsol_polyline_2d_sptr tail = 0;
   fullfile = in_folder + "/" + tail_con_file;
   obj = dbsol_load_con_file(fullfile.c_str());
@@ -81,12 +81,12 @@ int main(int argc, char **argv)
   // check validity
   if (!tail)
   {
-    vcl_cerr << "Error loading tail contour file. Exit now";
+    std::cerr << "Error loading tail contour file. Exit now";
     return 0;
   }
 
   // b. lower body
-  vcl_string lowb_con_file = fish_label + "_lowb-2-0.15.con";
+  std::string lowb_con_file = fish_label + "_lowb-2-0.15.con";
   vsol_polyline_2d_sptr lowb = 0;
   fullfile = in_folder + "/" + lowb_con_file;
   obj = dbsol_load_con_file(fullfile.c_str());
@@ -101,13 +101,13 @@ int main(int argc, char **argv)
   // check validity
   if (!lowb)
   {
-    vcl_cerr << "Error loading lower body contour file. Exit now";
+    std::cerr << "Error loading lower body contour file. Exit now";
     return 0;
   }
 
   // Now we've got all the contours loaded. Let's merge them to form a closed
   // contour of the fish.
-  vcl_vector<vsol_point_2d_sptr > pts;
+  std::vector<vsol_point_2d_sptr > pts;
   for (unsigned int i=0; i<upb->size(); ++i)
   {
     pts.push_back(upb->vertex(i));
@@ -146,16 +146,16 @@ int main(int argc, char **argv)
   }
 
   // write polygon file
-  vcl_string fish_contour_file =  fish_label + ".con";
+  std::string fish_contour_file =  fish_label + ".con";
   fullfile = out_folder + "/" + fish_contour_file;
   if (!dbsol_save_con_file(fullfile.c_str(), fish_polygon))
   {
-    vcl_cerr << "Error writing fish contour file";
+    std::cerr << "Error writing fish contour file";
     return 0;
   }
 
   // turn into a vgl_polygon
-  vcl_vector<vgl_point_2d<double > > vgl_pts;
+  std::vector<vgl_point_2d<double > > vgl_pts;
   for (unsigned m=0; m<fish_polygon->size(); ++m)
   {
     vgl_pts.push_back(fish_polygon->vertex(m)->get_p());
@@ -165,8 +165,8 @@ int main(int argc, char **argv)
 
   fish_polygon->compute_bounding_box();
   // create an empty image that is slightly larger than the fish
-  vil_image_view<bool > fish_mask((unsigned int)vcl_ceil(1.25*fish_polygon->get_bounding_box()->width()),
-    (unsigned int)vcl_ceil(2*fish_polygon->get_bounding_box()->height()));
+  vil_image_view<bool > fish_mask((unsigned int)std::ceil(1.25*fish_polygon->get_bounding_box()->width()),
+    (unsigned int)std::ceil(2*fish_polygon->get_bounding_box()->height()));
   fish_mask.fill(false);
 
   // super-impose the fish polygon on the image
@@ -177,12 +177,12 @@ int main(int argc, char **argv)
   vil_image_view<vxl_byte > fish_mask_byte;
   vil_convert_stretch_range(fish_mask, fish_mask_byte);
 
-  vcl_string fish_binary_file = fish_label + "_binary.tif";
+  std::string fish_binary_file = fish_label + "_binary.tif";
   fullfile = out_folder + "/" + fish_binary_file;
   // write the image out
   if (!vil_save(fish_mask_byte, fullfile.c_str()))
   {
-    vcl_cerr << "Error saving binary image of fish" << vcl_endl;
+    std::cerr << "Error saving binary image of fish" << std::endl;
     return 0;
   }
   
@@ -205,12 +205,12 @@ int main(int argc, char **argv)
   // write distance transform to an image
   vil_image_view<vxl_byte > fish_sedt_byte;
   vil_convert_stretch_range(fish_sedt_smoothed, fish_sedt_byte);
-  vcl_string fish_sedt_file = fish_label + "_sedt_smoothed.tif";
+  std::string fish_sedt_file = fish_label + "_sedt_smoothed.tif";
   fullfile = out_folder + "/" + fish_sedt_file;
   // write the image out
   if (!vil_save(fish_sedt_byte, fullfile.c_str()))
   {
-    vcl_cerr << "Error saving distance transform image of fish" << vcl_endl;
+    std::cerr << "Error saving distance transform image of fish" << std::endl;
     return 0;
   }
   

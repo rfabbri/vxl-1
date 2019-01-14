@@ -34,7 +34,7 @@ dbdet_lvwr_process::dbdet_lvwr_process()
   if (!parameters()->add( "Input track file <filename...>" , "-input" , bpro1_filepath("","*.tr") ) ||
       !parameters()->add( "Smoothing sigma: " , "-sigma" , 1.0f) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -50,21 +50,21 @@ bpro1_process* dbdet_lvwr_process::clone() const
 }
 
 
-vcl_string dbdet_lvwr_process::name()
+std::string dbdet_lvwr_process::name()
 {
   return "Recorded Wire";
 }
 
-vcl_vector< vcl_string > dbdet_lvwr_process::get_input_type()
+std::vector< std::string > dbdet_lvwr_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_lvwr_process::get_output_type()
+std::vector< std::string > dbdet_lvwr_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -89,10 +89,10 @@ dbdet_lvwr_process::execute()
   bpro1_filepath input;
   parameters()->get_value( "-input" , input);
   input_file = input.path;
-  vcl_cout << " input file: " << input_file.c_str() << vcl_endl;
+  std::cout << " input file: " << input_file.c_str() << std::endl;
   
   parameters()->get_value( "-sigma" , sigma);
-  vcl_cout << "sigma: " << sigma << "\n";
+  std::cout << "sigma: " << sigma << "\n";
 
   //get_intscissors_params(&iparams, &canny_params);
   
@@ -105,14 +105,14 @@ dbdet_lvwr_process::finish()
 
   char file_name[1000];
 
-  vcl_ifstream infp(input_file.c_str(), vcl_ios::in);
+  std::ifstream infp(input_file.c_str(), std::ios::in);
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << input_file << vcl_endl;
+    std::cout << " Error opening file  " << input_file << std::endl;
     return false;
   }
 
-  vcl_string temp;
+  std::string temp;
   float tempf;
   infp >> temp;  // START_FRAME;
   infp >> tempf;
@@ -121,11 +121,11 @@ dbdet_lvwr_process::finish()
   infp >> temp;
   infp >> frame_cnt;
 
-  vcl_cout << " input size: " << input_data_.size() << vcl_endl;
-  vcl_cout << " frame cnt in track file: " << frame_cnt << vcl_endl;
+  std::cout << " input size: " << input_data_.size() << std::endl;
+  std::cout << " frame cnt in track file: " << frame_cnt << std::endl;
   
   if (frame_cnt != input_data_.size()) 
-    vcl_cout << " WARNING: Mismatch!\n";
+    std::cout << " WARNING: Mismatch!\n";
 
   int input_cnt; // number of points on the polygon
   infp >> temp;
@@ -137,12 +137,12 @@ dbdet_lvwr_process::finish()
     infp >> tempf;  infp >> tempf;
   }
 
-  vcl_vector<vcl_vector< float > > inp_x;
-  vcl_vector<vcl_vector< float > > inp_y;
+  std::vector<std::vector< float > > inp_x;
+  std::vector<std::vector< float > > inp_y;
   for (unsigned i = 0; i<frame_cnt; i++) {
-    vcl_vector<float> tmp1(input_cnt, 0);
+    std::vector<float> tmp1(input_cnt, 0);
     inp_x.push_back(tmp1);
-    vcl_vector<float> tmp2(input_cnt, 0);
+    std::vector<float> tmp2(input_cnt, 0);
     inp_y.push_back(tmp2);
   }
 
@@ -165,37 +165,37 @@ dbdet_lvwr_process::finish()
   infp.close();
 
   //determine the name of output files
-  vcl_string output_initial;
+  std::string output_initial;
   
   output_initial = input_file;
   int ii = output_initial.rfind("_",output_initial.size()); 
   // assuming track files has the extension .tr
   // and name is like: path/pickup1_1227.tr
-  vcl_string frame_no = output_initial.substr(ii+1, 4);
+  std::string frame_no = output_initial.substr(ii+1, 4);
   int fno = atoi(frame_no.c_str());
-  vcl_cout << "frame_no: " << frame_no << vcl_endl;
-  vcl_cout << "frame_no nmbr: " << fno << vcl_endl;
+  std::cout << "frame_no: " << frame_no << std::endl;
+  std::cout << "frame_no nmbr: " << fno << std::endl;
 
   output_initial.erase(ii);
-  vcl_cout << "output_initial: " << output_initial << vcl_endl;
+  std::cout << "output_initial: " << output_initial << std::endl;
 
   
 
   // parse through all the vsol classes and save point objects only
-/*  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+/*  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
-  vcl_vector<vsol_point_2d_sptr> inp_pts;
+  std::vector<vsol_point_2d_sptr> inp_pts;
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_point())
       inp_pts.push_back(vsol_list[b]->cast_to_point());
   }
 
-  vcl_cout << "Number of points: " << inp_pts.size() << vcl_endl;
+  std::cout << "Number of points: " << inp_pts.size() << std::endl;
 
   for (unsigned int b = 0 ; b < inp_pts.size() ; b++ )
   {
-      vcl_cout << *(inp_pts[b]) << vcl_endl;
+      std::cout << *(inp_pts[b]) << std::endl;
   }
 
   vsol_digital_curve_2d cv(inp_pts);
@@ -204,7 +204,7 @@ dbdet_lvwr_process::finish()
   int min_y = cv.get_min_y();
   int max_x = cv.get_max_x();
   int max_y = cv.get_max_y();
-  vcl_cout << "min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y: " << max_y << vcl_endl;
+  std::cout << "min_x: " << min_x << " min_y: " << min_y << " max_x: " << max_x << " max_y: " << max_y << std::endl;
 
   */
 
@@ -216,8 +216,8 @@ dbdet_lvwr_process::finish()
 
   vil_image_resource_sptr image_sptr = frame_image->get_image();
 
-  vcl_vector<vsol_spatial_object_2d_sptr> out_pts_smt;
-  vcl_vector<vsol_spatial_object_2d_sptr> out_pts;
+  std::vector<vsol_spatial_object_2d_sptr> out_pts_smt;
+  std::vector<vsol_spatial_object_2d_sptr> out_pts;
   process_frame(image_sptr, inp_x[frame], inp_y[frame], out_pts_smt, out_pts, sigma);
 
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
@@ -230,12 +230,12 @@ dbdet_lvwr_process::finish()
   output_data_[frame].push_back(output_vsol2);
 
   sprintf(file_name, "%s_%04d.con", output_initial.c_str(), fno+frame);
-  vcl_cout << "file_name: " << file_name << vcl_endl;
+  std::cout << "file_name: " << file_name << std::endl;
 
-  vcl_ofstream ofp(file_name, vcl_ios::out);
+  std::ofstream ofp(file_name, std::ios::out);
 
   if (!ofp) {
-    vcl_cout << " Error opening file  " << file_name << vcl_endl;
+    std::cout << " Error opening file  " << file_name << std::endl;
     return false;
   }
 
@@ -253,9 +253,9 @@ dbdet_lvwr_process::finish()
 
 bool 
 dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr, 
-                   vcl_vector<float> inp_x, vcl_vector<float> inp_y,  
-                   vcl_vector<vsol_spatial_object_2d_sptr> &out_pts_smt,
-                   vcl_vector<vsol_spatial_object_2d_sptr> &out_pts2, float sigma)
+                   std::vector<float> inp_x, std::vector<float> inp_y,  
+                   std::vector<vsol_spatial_object_2d_sptr> &out_pts_smt,
+                   std::vector<vsol_spatial_object_2d_sptr> &out_pts2, float sigma)
 {
   
   vil_image_view< unsigned char > image_view = image_sptr->get_view(0, image_sptr->ni(), 0, image_sptr->nj() );
@@ -268,7 +268,7 @@ dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr,
   else if ( image_view.nplanes() == 1 ) {
     greyscale_view = image_view;
   } else {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
 
@@ -277,13 +277,13 @@ dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr,
   unsigned n_i = (unsigned)(max_x + 20 - i0) ;
   unsigned n_j = (unsigned)(max_y + 20 - j0);
   
-  vcl_cout << "i0: " << i0 << " j0: " << j0 << " n_i: " << n_i << " n_j: " << n_j << vcl_endl;
+  std::cout << "i0: " << i0 << " j0: " << j0 << " n_i: " << n_i << " n_j: " << n_j << std::endl;
   
   vil_image_view< unsigned char > cropped;
   cropped = vil_crop(greyscale_view, i0, n_i, j0, n_j);
   
   if (!cropped)
-    vcl_cout << "In dbdet_lvwr_process - crop failed\n";
+    std::cout << "In dbdet_lvwr_process - crop failed\n";
   
 
   
@@ -303,23 +303,23 @@ dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr,
   float seed_x = inp_x[0];
   float seed_y = inp_y[0];
 
-  vcl_cout << "seed_x: " << seed_x << " seed_y: " << seed_y << vcl_endl;
+  std::cout << "seed_x: " << seed_x << " seed_y: " << seed_y << std::endl;
 
-      int seed_x_int = static_cast<int>(vcl_floor(seed_x+0.5));
-      int seed_y_int = static_cast<int>(vcl_floor(seed_y+0.5));
+      int seed_x_int = static_cast<int>(std::floor(seed_x+0.5));
+      int seed_y_int = static_cast<int>(std::floor(seed_y+0.5));
 
   intsciss.compute(img, seed_x_int, seed_y_int);
-  vcl_cout << "Paths are computed...\n";
+  std::cout << "Paths are computed...\n";
 
-  vcl_vector<vcl_pair<int, int> > cor;
-  vcl_vector< vsol_point_2d_sptr > out_pts;
+  std::vector<std::pair<int, int> > cor;
+  std::vector< vsol_point_2d_sptr > out_pts;
 
   bool out = false;
   unsigned int b;
-  vcl_vector<vcl_pair<int, int> >::iterator p;
+  std::vector<std::pair<int, int> >::iterator p;
   for (b = 1 ; b < inp_x.size() ; b++ )
   {
-    out = intsciss.get_path((int)vcl_floor(inp_x[b]+0.5), (int)vcl_floor(inp_y[b]+0.5), cor);
+    out = intsciss.get_path((int)std::floor(inp_x[b]+0.5), (int)std::floor(inp_y[b]+0.5), cor);
     if (!out) {   // in the rectangle
 
       //process cor to see if there is repetition
@@ -353,13 +353,13 @@ dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr,
         }
 
     } else {
-      vcl_cout << "It's out b: " << b << " !!!\n";
+      std::cout << "It's out b: " << b << " !!!\n";
     }
 
-    intsciss.compute_directions((int)vcl_floor(inp_x[b]), (int)vcl_floor(inp_y[b]));
+    intsciss.compute_directions((int)std::floor(inp_x[b]), (int)std::floor(inp_y[b]));
   }
 
-  out = intsciss.get_path((int)vcl_floor(inp_x[0]), (int)vcl_floor(inp_y[0]), cor);
+  out = intsciss.get_path((int)std::floor(inp_x[0]), (int)std::floor(inp_y[0]), cor);
   if (!out) {   // in the rectangle
 
     //process cor to see if there is repetition
@@ -393,12 +393,12 @@ dbdet_lvwr_process::process_frame(vil_image_resource_sptr image_sptr,
         out_pts.push_back(pt);
     }
    } else {
-      vcl_cout << "It's out!!!\n";
+      std::cout << "It's out!!!\n";
     }
 
    // smooth
-   vcl_cout << "smoothing the curve...\n";
-    vcl_vector<vgl_point_2d<double> > curve;
+   std::cout << "smoothing the curve...\n";
+    std::vector<vgl_point_2d<double> > curve;
     
     for (unsigned i = 0; i<out_pts.size(); i++) {
       curve.push_back(vgl_point_2d<double>((out_pts[i])->x(), 

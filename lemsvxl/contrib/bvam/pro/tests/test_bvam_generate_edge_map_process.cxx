@@ -8,9 +8,9 @@
 #include "../bvam_generate_edge_map_process.h"
 #include <bvam/bvam_voxel_world.h>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <vector>
+#include <iostream>
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -46,13 +46,13 @@ MAIN( test_bvam_generate_edge_map_process )
   brdb_query_aptr Q1 = brdb_query_comp_new("id", brdb_query::EQ, id0);
   brdb_selection_sptr S1 = DATABASE->select("vil_image_view_base_sptr_data", Q1);
   if(S1->size()!=1){
-    vcl_cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
+    std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
     << " no selections\n";
   }
 
   brdb_value_sptr value;
-  if (!S1->get_value(vcl_string("value"), value)) {
-    vcl_cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
+  if (!S1->get_value(std::string("value"), value)) {
+    std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
      << " didn't get value\n";
   }
   bool non_null = (value != 0);

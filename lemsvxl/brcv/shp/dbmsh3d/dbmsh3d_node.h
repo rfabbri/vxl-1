@@ -78,7 +78,7 @@ public:
   virtual dbmsh3d_vertex* clone () const;
   virtual dbmsh3d_node* clone (dbmsh3d_mesh* M) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
   //###### Handle Incident Virtual Curves ######
   unsigned int n_incident_Cs_nv () const;
@@ -86,9 +86,9 @@ public:
 
   dbmsh3d_curve* find_C_containing_E_nv (const dbmsh3d_edge* E) const;
 
-  void get_incident_Es_nv (vcl_set<void*>& incident_Es) const;
+  void get_incident_Es_nv (std::set<void*>& incident_Es) const;
 
-  bool all_incident_Es_in_set_nv (vcl_set<dbmsh3d_edge*>& E_set) const;
+  bool all_incident_Es_in_set_nv (std::set<dbmsh3d_edge*>& E_set) const;
 
 };
 

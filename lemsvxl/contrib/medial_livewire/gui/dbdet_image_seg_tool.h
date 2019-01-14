@@ -26,7 +26,7 @@ public:
   dbdet_image_seg_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const {return "image seg"; }
+  virtual std::string name() const {return "image seg"; }
 
   //: Set the tableau associated with the current view
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
@@ -56,17 +56,17 @@ public:
   bool select_io_storage();
   
   //: Return name of image storage
-  vcl_string image_name() const {return this->image_name_; }
+  std::string image_name() const {return this->image_name_; }
 
   //: Set name of image
-  void set_image_name(const vcl_string& image_name)
+  void set_image_name(const std::string& image_name)
   {this->image_name_ = image_name; }
 
   //: Return name of vsol2d storage
-  vcl_string vsol2d_name() const {return this->vsol2d_name_; }
+  std::string vsol2d_name() const {return this->vsol2d_name_; }
 
   //: Set name of vsol2d storage
-  void set_vsol2d_name(const vcl_string& vsol2d_name ) 
+  void set_vsol2d_name(const std::string& vsol2d_name ) 
   {this->vsol2d_name_ = vsol2d_name; }
 
   //========================================================
@@ -81,10 +81,10 @@ public:
 
 protected:
   //: name of image storage
-  vcl_string image_name_;
+  std::string image_name_;
 
   //: name of vsol2d storage
-  vcl_string vsol2d_name_;
+  std::string vsol2d_name_;
     
   //: active tableau
   vgui_image_tableau_sptr tableau_;

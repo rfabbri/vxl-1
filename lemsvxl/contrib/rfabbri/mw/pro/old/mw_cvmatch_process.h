@@ -32,19 +32,19 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Multiview Curve Matching";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > input_types;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > input_types;
     input_types.push_back( "vsol2D" );
     input_types.push_back( "vpgl perspective camera" );
 //    input_types.push_back( "image" );
     return input_types;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "curvematch" );
     return to_return;
   }

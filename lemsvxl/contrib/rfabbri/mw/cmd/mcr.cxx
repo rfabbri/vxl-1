@@ -13,7 +13,7 @@
 #include <bmcsd/pro/bmcsd_load_edg_source.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; abort(); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; abort(); }
 
 
 //: Stores the concatenation of all inputs from many bmcsd_stereo_jobs
@@ -62,13 +62,13 @@ void vcpld_reproject_to_find_inliers (
 int
 main(int argc, char **argv)
 {
-  vcl_string prefix_default(".");
+  std::string prefix_default(".");
 
-  vul_arg<vcl_string> a_prefix("-prefix", 
+  vul_arg<std::string> a_prefix("-prefix", 
       "path to main directory of files",prefix_default.c_str());
-  vul_arg<vcl_string> a_cam_type("-cam_type",
+  vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
-  vul_arg<vcl_string> a_csk("-curvesketch", "input 3D curve sketch file or directory", "out/");
+  vul_arg<std::string> a_csk("-curvesketch", "input 3D curve sketch file or directory", "out/");
   vul_arg<unsigned> a_total_support("-totalsupport", 
       "threshold on the total support of the curves", 0);
 
@@ -78,7 +78,7 @@ main(int argc, char **argv)
       "(in degrees) threshold in orientation difference for an edgel to be an inlier to reprojected curve in each view", 10.0);
 
   vul_arg_parse(argc,argv);
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   bmcsd_util::camera_file_type cam_type;
 
@@ -88,7 +88,7 @@ main(int argc, char **argv)
     if (a_cam_type() == "projcamera")
       cam_type = bmcsd_util::BMCS_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
     }
   }
@@ -97,13 +97,13 @@ main(int argc, char **argv)
   bool retval = 
     bmcsd_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
 
 
   bmcsd_curve_3d_sketch *csk = new bmcsd_curve_3d_sketch;
-  vcl_string csk_fname = a_prefix() + "/" + a_csk();
+  std::string csk_fname = a_prefix() + "/" + a_csk();
   retval  = csk->read_dir_format(csk_fname);
-  MW_ASSERT(vcl_string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
+  MW_ASSERT(std::string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
 
   // Now define vcpld_bundle_adjust_driver.
   vcpld_reproject_to_find_inliers(dpath, csk, a_distance_threshold(), a_dtheta_threshold(),
@@ -112,11 +112,11 @@ main(int argc, char **argv)
   //: Write out:
   // - new attributes
 
-  vcl_cout << "Writing new attributes\n";
+  std::cout << "Writing new attributes\n";
   vsl_b_ofstream f(csk_fname + "/attributes.vsl");
   vsl_b_write(f, csk->attributes());
-  vcl_cout << "num curves in csk: " << csk->num_curves() << vcl_endl;
-  vcl_cout << "num curves in attr: " << csk->attributes().size() << vcl_endl;
+  std::cout << "num curves in csk: " << csk->num_curves() << std::endl;
+  std::cout << "num curves in attr: " << csk->attributes().size() << std::endl;
 
   return 0;
 }
@@ -163,7 +163,7 @@ void vcpld_reproject_to_find_inliers (
 
     // reproject and count the number of inliers
     
-    vcl_cout << "Reprojecting and looking for inliers\n";
+    std::cout << "Reprojecting and looking for inliers\n";
     // for each 3d curve 
     for (unsigned k=0; k < csk->curves_3d().size(); ++k) {
       if (csk->attributes()[k].total_support_ < tau_support)
@@ -203,7 +203,7 @@ void vcpld_reproject_to_find_inliers (
 
       unsigned tau_min_inliers = static_cast<unsigned>(0.9*reprojected_curve.size());
       if (d_vote > tau_min_inliers) {
-        vcl_cout << "Inlier view found.\n";
+        std::cout << "Inlier view found.\n";
         csk->attr_[k].inlier_views_.push_back(v);
       }
     }

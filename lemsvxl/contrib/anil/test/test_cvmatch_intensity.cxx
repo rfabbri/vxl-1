@@ -1,11 +1,11 @@
 #include "dbcvr_cvmatch_intensity.h"
-#include <vcl_fstream.h>
+#include <fstream>
 
 int main()
 {
 
-    vcl_vector<double> vector1(50,0);
-    vcl_vector<double> vector2(50,0);
+    std::vector<double> vector1(50,0);
+    std::vector<double> vector2(50,0);
 
     for(unsigned i=0; i<50; ++i)
     {
@@ -32,16 +32,16 @@ int main()
             vector2[i] = 100;
     }
 
-    vcl_string vector1_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/vector1.txt"; 
-    vcl_string vector2_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/vector2.txt";  
+    std::string vector1_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/vector1.txt"; 
+    std::string vector2_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/vector2.txt";  
 
-    vcl_ofstream vector1_file(vector1_filename.c_str());
-    vcl_ofstream vector2_file(vector2_filename.c_str());
+    std::ofstream vector1_file(vector1_filename.c_str());
+    std::ofstream vector2_file(vector2_filename.c_str());
 
     for(unsigned n=0; n<50; ++n)
     {
-        vector1_file << vector1[n] << vcl_endl;
-        vector2_file << vector2[n] << vcl_endl;
+        vector1_file << vector1[n] << std::endl;
+        vector2_file << vector2[n] << std::endl;
     }
 
     vector1_file.close();
@@ -53,11 +53,11 @@ int main()
     DP->setTemplateSize(5);
     DP->Match();
 
-    vcl_string corr1_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/corr-1.txt";
-    vcl_string corr2_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/corr-2.txt";
+    std::string corr1_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/corr-1.txt";
+    std::string corr2_filename = "/home/anilusumezbas/Desktop/appearance-DP-test/corr-2.txt";
 
-    vcl_ofstream corr1(corr1_filename.c_str());
-    vcl_ofstream corr2(corr2_filename.c_str());
+    std::ofstream corr1(corr1_filename.c_str());
+    std::ofstream corr2(corr2_filename.c_str());
     
     for(unsigned i=0; i<DP->finalMapSize(); ++i)
     {
@@ -68,7 +68,7 @@ int main()
     corr1.close();
     corr2.close();
 
-    vcl_cout << "Final cost is: " << DP->finalCost() << vcl_endl;
+    std::cout << "Final cost is: " << DP->finalCost() << std::endl;
 
     return 0;
 }

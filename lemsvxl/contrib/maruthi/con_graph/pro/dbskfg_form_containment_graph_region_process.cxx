@@ -35,8 +35,8 @@
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <vul/vul_timer.h>
 
-#include <vcl_numeric.h>
-#include <vcl_algorithm.h>
+#include <numeric>
+#include <algorithm>
 
 //: Constructor
 dbskfg_form_containment_graph_region_process::
@@ -79,10 +79,10 @@ dbskfg_form_containment_graph_region_process()
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
-                            "-output_prefix", vcl_string(""))
+                            "-output_prefix", std::string(""))
         )
     {
-         vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+         std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 
     }
 
@@ -101,25 +101,25 @@ dbskfg_form_containment_graph_region_process::clone() const
     return new dbskfg_form_containment_graph_region_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_form_containment_graph_region_process::name()
 {
     return "Compute Containment Graph From Region";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_containment_graph_region_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_form_containment_graph_region_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 
@@ -143,7 +143,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
     int expand_type(1);
     double transform_threshold(0.5);
     double path_threshold(0.2);
-    vcl_string output_prefix;
+    std::string output_prefix;
     double ess(0.25);
     bool remove_closed(false);
     bool expand_single(false);
@@ -151,7 +151,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
 
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
     
 
     parameters()->get_value( "-transform_threshold" , transform_threshold );
@@ -177,11 +177,11 @@ bool dbskfg_form_containment_graph_region_process::execute()
     // Redo input vsol storage
 
     // 2) Set id equivalent to what they are
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
         input_vsol->all_data();
 
     // 3) Keep track of objects to remove
-    vcl_vector< vsol_spatial_object_2d_sptr > objects_to_erase;
+    std::vector< vsol_spatial_object_2d_sptr > objects_to_erase;
 
     vsol_box_2d_sptr bbox=0;
 
@@ -206,21 +206,21 @@ bool dbskfg_form_containment_graph_region_process::execute()
         double xmax_scaled = ((image->ni()-xcenter)*2)+xcenter;
         double ymax_scaled = ((image->nj()-ycenter)*2)+ycenter;
         
-        vcl_cout<<xmin_scaled<<" "<<ymin_scaled<<vcl_endl;
+        std::cout<<xmin_scaled<<" "<<ymin_scaled<<std::endl;
         bbox->add_point(xmin_scaled,ymin_scaled);
         bbox->add_point(xmax_scaled,ymax_scaled);
 
-        vcl_cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
+        std::cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
                  << "("   << bbox->get_min_x() << ", " << bbox->get_min_y() 
                  << ") (" << bbox->get_max_x() << ", " << bbox->get_max_y() 
                  << ") (" 
                  << bbox->width() << ", " 
-                 << bbox->height() << ")"<<vcl_endl;
+                 << bbox->height() << ")"<<std::endl;
  
         // Add to vidpro storage this new bounding box
         vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
         input_vsol->add_object(box_poly->cast_to_spatial_object());
-        box_poly->print(vcl_cout);
+        box_poly->print(std::cout);
         bbox=0;
     }
    
@@ -242,7 +242,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
                     objects_to_erase.push_back(vsol_list[i]);
 
                     // Grab all points from vsol
-                    vcl_vector<vgl_point_2d<double> > points;
+                    std::vector<vgl_point_2d<double> > points;
                     for (unsigned p=0; p<curve->size(); p++)
                     {
                         points.push_back( curve->vertex(p)->get_p());
@@ -251,11 +251,11 @@ bool dbskfg_form_containment_graph_region_process::execute()
                     // Create polygon
                     vgl_polygon<double> poly(points);
 
-                    vcl_stringstream streamer;
+                    std::stringstream streamer;
                     streamer<<i;
 
                     // Create node name
-                    vcl_string filename = output_folder+"/" + output_prefix +
+                    std::string filename = output_folder+"/" + output_prefix +
                         "_cgraph_closed_"+streamer.str()+"_mask.png";
 
                     dbskfg_utilities::save_image_mask(poly,
@@ -279,7 +279,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
     }
 
     // 3) Grab new vsol list
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list_new = 
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list_new = 
         input_vsol->all_data();
 
     // Reset ids
@@ -290,7 +290,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
   
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
         dbsk2d_compute_ishock_process shock_pro;
@@ -321,7 +321,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
     }
   
     /*********************** Compute Composite Graph ************************/
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     {
         // Lets vertical cast to shock stroge
         // Holds shock storage
@@ -390,9 +390,9 @@ bool dbskfg_form_containment_graph_region_process::execute()
     {
         image=frame_image->get_image();
 
-        vcl_string output_binary_file = output_folder+"/"+
+        std::string output_binary_file = output_folder+"/"+
             output_prefix+"_regions_binary.bin";
-        vcl_string output_region_file = output_folder+"/"+
+        std::string output_region_file = output_folder+"/"+
             output_prefix+"_regions_contours_binary.bin";
   
         dbskfg_transform_manager::Instance().set_image(image);
@@ -432,13 +432,13 @@ bool dbskfg_form_containment_graph_region_process::execute()
         expand_flag = dbskfg_containment_node::EXPLICIT;
     }
 
-    vcl_string filename = output_folder+"/" + output_prefix +"_cgraph.dot";
+    std::string filename = output_folder+"/" + output_prefix +"_cgraph.dot";
 
-    vcl_string stats_filename = output_folder+"/" + output_prefix +
+    std::string stats_filename = output_folder+"/" + output_prefix +
         "_stats_file.txt";
-    vcl_ofstream stats_filestream(stats_filename.c_str());
-    stats_filestream<<"Number of Contours: "<<vsol_list_new.size()<<vcl_endl;
-    stats_filestream<<vcl_endl;
+    std::ofstream stats_filestream(stats_filename.c_str());
+    stats_filestream<<"Number of Contours: "<<vsol_list_new.size()<<std::endl;
+    stats_filestream<<std::endl;
 
     // Kick of containment graph building
     dbskfg_containment_graph_sptr cgraph =
@@ -448,7 +448,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
     
     cgraph->set_output_filename(filename);
 
-    vcl_vector<double> times_per_node;
+    std::vector<double> times_per_node;
 
     // Start timer
     vul_timer t2;
@@ -461,13 +461,13 @@ bool dbskfg_form_containment_graph_region_process::execute()
                      
             dbskfg_rag_node_sptr rag_node = *vit;
 
-            vcl_cout<<"Working on rag_node , id: "<<rag_node->id()<<vcl_endl;
+            std::cout<<"Working on rag_node , id: "<<rag_node->id()<<std::endl;
             if ( expand_single )
             {
                 if ( rag_node->id() == region_id )
                 {
                     // Create node name
-                    vcl_string node_name = dbskfg_transform_manager::Instance().
+                    std::string node_name = dbskfg_transform_manager::Instance().
                         get_output_prefix()+"_cgraph_node_1_0";
 
                     // Print region
@@ -502,7 +502,7 @@ bool dbskfg_form_containment_graph_region_process::execute()
                     vul_timer t3;
 
                     // Create node name
-                    vcl_string node_name = dbskfg_transform_manager::Instance().
+                    std::string node_name = dbskfg_transform_manager::Instance().
                         get_output_prefix()+"_cgraph_node_1_0";
 
                     // Print region
@@ -535,26 +535,26 @@ bool dbskfg_form_containment_graph_region_process::execute()
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
 
-    double average_node_time = vcl_accumulate(times_per_node.begin(),
+    double average_node_time = std::accumulate(times_per_node.begin(),
                                           times_per_node.end(),
                                           0.0);
 
-    stats_filestream<<"Depth: "<<0<<" Node: "<<times_per_node.size()<<vcl_endl;
+    stats_filestream<<"Depth: "<<0<<" Node: "<<times_per_node.size()<<std::endl;
     stats_filestream<<"Average Node Time: "
                     <<average_node_time/times_per_node.size()
-                    <<vcl_endl;
-    stats_filestream<<"Time: "<<vox_time2<<" sec"<<vcl_endl;
-    stats_filestream<<vcl_endl;
+                    <<std::endl;
+    stats_filestream<<"Time: "<<vox_time2<<" sec"<<std::endl;
+    stats_filestream<<std::endl;
 
     cgraph->expand_tree(stats_filestream);
 
     double vox_time = t.real()/1000.0;
     t.mark(); 
-    stats_filestream<<"Total Nodes: "<<cgraph->number_of_vertices()<<vcl_endl;
-    stats_filestream<<"Total Edges: "<<cgraph->number_of_edges()<<vcl_endl;
-    stats_filestream<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    stats_filestream<<"Total Nodes: "<<cgraph->number_of_vertices()<<std::endl;
+    stats_filestream<<"Total Edges: "<<cgraph->number_of_edges()<<std::endl;
+    stats_filestream<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
-    cgraph->print(vcl_cout);
+    cgraph->print(std::cout);
     cgraph->clear();
     cgraph=0;
 

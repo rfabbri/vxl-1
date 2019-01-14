@@ -20,7 +20,7 @@ dbkpr_span_match_process::dbkpr_span_match_process()
   if( !parameters()->add( "Max bins searched"        , "-max_bins"  , (int)50 ) ||
       !parameters()->add( "Number of RANSAC samples" , "-ran_sam"   , (int)20 ) ||
       !parameters()->add( "F constraint std. dev."   , "-std"       , 1.0f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,7 +40,7 @@ dbkpr_span_match_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_span_match_process::name()
 {
   return "Global Match Keypoints";
@@ -64,18 +64,18 @@ dbkpr_span_match_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_span_match_process::get_input_type()
+std::vector< std::string > dbkpr_span_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_span_match_process::get_output_type()
+std::vector< std::string > dbkpr_span_match_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints" );
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
@@ -97,7 +97,7 @@ dbkpr_span_match_process::finish()
 {
 
   // cast the storage classels
-  vcl_vector<vcl_vector< dbdet_keypoint_sptr > > all_keypoints;
+  std::vector<std::vector< dbdet_keypoint_sptr > > all_keypoints;
   for(unsigned int i=0; i<input_data_.size(); ++i){
     dbdet_keypoint_storage_sptr frame_keypoints;
     frame_keypoints.vertical_cast(input_data_[i][0]);
@@ -114,13 +114,13 @@ dbkpr_span_match_process::finish()
 
   dbkpr_view_span_tree &span = *span_ptr;
 
-  //vcl_cout << span.match_matrix() << vcl_endl;
+  //std::cout << span.match_matrix() << std::endl;
 
   // compute the global correspondences
-  vcl_vector<vcl_vector<dbdet_keypoint_sptr> > matches = span.global_correspondence();
+  std::vector<std::vector<dbdet_keypoint_sptr> > matches = span.global_correspondence();
 
   // compute the global correspondence points
-  vcl_vector<dbdet_keypoint_corr3d_sptr> corr_pts = span.global_corr3d_points();
+  std::vector<dbdet_keypoint_corr3d_sptr> corr_pts = span.global_corr3d_points();
 
   vpgl_calibration_matrix<double> K(2000.0,vgl_homg_point_2d<double>(512,384));
   vgl_rotation_3d<double> R;

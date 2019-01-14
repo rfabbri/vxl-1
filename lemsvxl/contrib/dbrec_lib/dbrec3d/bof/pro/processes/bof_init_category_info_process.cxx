@@ -24,10 +24,10 @@ bool bof_init_category_info_process_cons(bprb_func_process& pro)
 {
   using namespace bof_init_category_info_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";  //bof_dir
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";  //bof_dir
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -39,7 +39,7 @@ bool bof_init_category_info_process(bprb_func_process& pro)
   using namespace bof_init_category_info_process_globals;
   
   //get inputs
-  vcl_string bof_dir = pro.get_input<vcl_string>(0);
+  std::string bof_dir = pro.get_input<std::string>(0);
   
   bof_init_scene_categories_xml(bof_dir);
   

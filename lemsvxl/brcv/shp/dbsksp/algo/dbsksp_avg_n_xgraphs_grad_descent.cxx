@@ -20,9 +20,9 @@
 #include <vnl/algo/vnl_powell.h>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
-//#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-//#include <vcl_cstdio.h>
+//#include <iostream>
+#include <fstream>
+//#include <cstdio>
 #include <vnl/vnl_math.h>
 //#include <vnl/vnl_numeric_traits.h>
 #include <vul/vul_timer.h>
@@ -126,7 +126,7 @@ update_avg_distance()
     this->deform_cost_parent_to_avg_.push_back(deform_cost);
     this->distance_parent_to_avg_[i] = distance;
   }
-  this->cur_avg_distance_ = vcl_sqrt(sum/this->num_parents_);
+  this->cur_avg_distance_ = std::sqrt(sum/this->num_parents_);
 }
 
 
@@ -135,7 +135,7 @@ update_avg_distance()
 bool dbsksp_avg_n_xgraphs_grad_descent::
 compute()
 {
-  vcl_cout 
+  std::cout 
     << "\nCompute average of N xgraphs using gradient descent approach"
     << "\n  base name for saving intermediate files= " << this->base_name_ << "\n";
 
@@ -144,7 +144,7 @@ compute()
   {
     for (unsigned i =0; i < this->parent_xgraphs_.size(); ++i)
     {
-      vcl_string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
+      std::string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
       x_write(fname, this->parent_xgraphs_[i]);
     }
   }
@@ -152,7 +152,7 @@ compute()
 
   if (this->parent_xgraphs_.empty())
   {
-    vcl_cout << "\nERROR: No parent xgraphs....\n";
+    std::cout << "\nERROR: No parent xgraphs....\n";
     return false;
   }
 
@@ -170,7 +170,7 @@ compute()
   this->model_tree_ = dbsksp_edit_distance::new_tree(this->model_xgraph_, 
     this->scurve_matching_R(), this->scurve_sample_ds());
 
-  vcl_cout 
+  std::cout 
     << "\n Model xgraph: #vertices = " << this->model_xgraph_->number_of_vertices()
     << "\n               #edges    = " << this->model_xgraph_->number_of_edges() << "\n";
 
@@ -178,7 +178,7 @@ compute()
     vul_sprintf("num_vertices_in_model_xgraph %d\n", this->model_xgraph_->number_of_vertices()));
 
   //4) Choose a root node for the model xgraph
-  vcl_cout << "\nChoosing a root node ...";
+  std::cout << "\nChoosing a root node ...";
   {
     dbsksp_xshock_node_sptr model_root_node;
     dbsksp_xshock_edge_sptr model_pseudo_parent_edge;
@@ -187,7 +187,7 @@ compute()
     this->model_root_vid_ = model_root_node->id();
     this->model_pseudo_parent_eid_ = model_pseudo_parent_edge->id();
   }
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   this->print_debug_info(
     vul_sprintf("model_root_vid %d\n", this->model_root_vid_) + 
@@ -209,7 +209,7 @@ compute()
     double deform_cost = work.get_deform_cost(this->dart_corr_parent_to_model_[i]);
     this->parent_contract_and_splice_cost_[i] = edit_cost - deform_cost;
 
-    vcl_cout 
+    std::cout 
       << "\nDistance trimmed"<< i+1 << " --> model = " << edit_cost
       << "\n  Deformation cost           = " << deform_cost
       << "\n  Contract + splice cost     = " << this->parent_contract_and_splice_cost_[i] << "\n";
@@ -218,7 +218,7 @@ compute()
   //7) Optimize model tree
 
   //a) Form Euler tour of nodes to visit
-  vcl_vector<dbsksp_xshock_node_sptr > nodes_on_euler_tour;
+  std::vector<dbsksp_xshock_node_sptr > nodes_on_euler_tour;
   dbsksp_compute_coarse_euler_tour(this->model_xgraph_, nodes_on_euler_tour);
 
   //b) Shape model to modify the model_xgraph
@@ -246,7 +246,7 @@ compute()
     vul_sprintf("f_tol              %f\n", f_tol));
 
   //b) Move along the Euler tour and optimize
-  vcl_vector<double > trace_avg_distance;
+  std::vector<double > trace_avg_distance;
   this->print_debug_info("begin_trace_average_distance [time(ms) average_distance]\n");
   this->print_debug_info(vul_sprintf("%f %g\n", 0, this->cur_avg_distance_));
 
@@ -258,7 +258,7 @@ compute()
   xgraph_model.get_xgraph_state(argmin_avg_distance);
   for (unsigned kk = 0; kk < 5; ++kk)
   {
-    vcl_cout << "\nEuler tour round = " << kk << "\n";
+    std::cout << "\nEuler tour round = " << kk << "\n";
     
     double start_avg_distance = this->cur_avg_distance_;
     for (unsigned k =0; k < nodes_on_euler_tour.size(); ++k)
@@ -277,10 +277,10 @@ compute()
       prev_xv = xv;
 
       //i) construct cost function
-      vcl_cout << "\nnode id= " << xv->id() << "\n";
-      xv->print(vcl_cout);
+      std::cout << "\nnode id= " << xv->id() << "\n";
+      xv->print(std::cout);
 
-      vcl_vector<double > weights(this->num_parents_, 1);
+      std::vector<double > weights(this->num_parents_, 1);
       dbsksp_weighted_avg_n_xgraphs_one_node_cost_function one_node_cost(
         this->model_tree_, this->parent_trees_, weights,
         this->dart_corr_parent_to_model_,
@@ -296,7 +296,7 @@ compute()
 
       // Use Powell to minimize cost
       double f0 = one_node_cost.f(x);
-      vcl_cout << "Init cost = " << f0 << "\n";
+      std::cout << "Init cost = " << f0 << "\n";
 
       // Powell
       vnl_powell powell(&one_node_cost);
@@ -305,7 +305,7 @@ compute()
       powell.minimize(x);
       
       double final_cost = one_node_cost.f(x);
-      vcl_cout << "Final cost = " << final_cost << "\n";
+      std::cout << "Final cost = " << final_cost << "\n";
 
       // True distance to two original shape
       this->update_avg_distance();
@@ -327,7 +327,7 @@ compute()
 
       // print debug info
       this->print_debug_info(vul_sprintf("%f %f\n", float(timer.real())/1000, this->cur_avg_distance_));
-      vcl_cout << "Time: " << timer1.real() / 1000 << " secs\n";
+      std::cout << "Time: " << timer1.real() / 1000 << " secs\n";
     }
     double end_avg_distance = this->cur_avg_distance_;
 
@@ -348,7 +348,7 @@ compute()
   {
     x_write(this->base_name_ + "-model-grad-descent-last.xml", this->average_xgraph_);
   }
-  vcl_cout << "\nTimer - real time: " << timer.real() / 1000 << " seconds\n";
+  std::cout << "\nTimer - real time: " << timer.real() / 1000 << " seconds\n";
 
   this->update_avg_distance();
   for (int i =0; i < this->num_parents_; ++i)
@@ -362,12 +362,12 @@ compute()
 //------------------------------------------------------------------------------
 //: Print debug info to a file
 void dbsksp_avg_n_xgraphs_grad_descent::
-print_debug_info(const vcl_string& str) const
+print_debug_info(const std::string& str) const
 {
   if (this->debugging())
   {
-    vcl_string fname = this->base_name_ + "-debug.txt";
-    vcl_ofstream ofs(fname.c_str(), vcl_ofstream::app);
+    std::string fname = this->base_name_ + "-debug.txt";
+    std::ofstream ofs(fname.c_str(), std::ofstream::app);
     ofs << str;
     ofs.close();
   }

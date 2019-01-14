@@ -13,10 +13,10 @@
 //--------------------------------------
 bool 
 dbrcl_point_tracker::track_points(
-  vcl_vector< vil_image_resource_sptr >& images,
+  std::vector< vil_image_resource_sptr >& images,
   vgel_multi_view_data_vertex_sptr& tracked_points )
 {
-  vcl_cerr << "dbrcl_point_tracker::track_points:\n" 
+  std::cerr << "dbrcl_point_tracker::track_points:\n" 
     << " tracking points\n";
 
   // Use KLT to get image correspondences.
@@ -31,7 +31,7 @@ dbrcl_point_tracker::track_points(
   // If the images have been registered we'll want to eliminate points along the 
   // boundary. If the images are not registered, the following should do nothing.
   for( int i = 0; i < tracked_points->get_nb_views(); i++ ){
-    vcl_vector< vtol_vertex_2d_sptr > points;
+    std::vector< vtol_vertex_2d_sptr > points;
     tracked_points->get( i, points );
     vil_image_view<double> this_image = 
       vil_convert_to_grey_using_average(
@@ -51,7 +51,7 @@ dbrcl_point_tracker::track_points(
     }
   }
 
-  vcl_cerr << "dbrcl_point_tracker::track_points:\n" 
+  std::cerr << "dbrcl_point_tracker::track_points:\n" 
     << "  success\n";
   return true;
 }

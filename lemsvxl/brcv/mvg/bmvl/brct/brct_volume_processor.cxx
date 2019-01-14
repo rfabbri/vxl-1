@@ -1,5 +1,5 @@
 #include "brct_volume_processor.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vsol/vsol_box_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
 #include <vsol/vsol_point_3d.h>
@@ -27,38 +27,38 @@ brct_volume_processor::~brct_volume_processor()
   delete change_index_;
 }
 
-bool brct_volume_processor::read_points_3d_vrml(vcl_string const& filename)
+bool brct_volume_processor::read_points_3d_vrml(std::string const& filename)
 {
-  vcl_ifstream is(filename.c_str());
+  std::ifstream is(filename.c_str());
   if (!is)
   {
-    vcl_cout << "In brct_volume_processor::read points vrml -"
+    std::cout << "In brct_volume_processor::read points vrml -"
              << " could not open file " << filename << '\n';
     return false;
   }
-  vcl_vector<vsol_point_3d_sptr> pts3d;
+  std::vector<vsol_point_3d_sptr> pts3d;
   brct_algos::read_vrml_points(is, pts3d);
   int npts = pts3d.size(),nin = 0;
   for (int i = 0; i<npts; i++)
     if ((*index_).add_point(pts3d[i]))
       nin++;
-  vcl_cout << "Added " << nin << "out of " << npts << " points\n"
+  std::cout << "Added " << nin << "out of " << npts << " points\n"
            << "Point Bounds\n";
   bsol_algs::print((*index_).point_bounds());
   return true;
 }
 
-bool brct_volume_processor::write_prob_volumes_vrml(vcl_string const&  filename)
+bool brct_volume_processor::write_prob_volumes_vrml(std::string const&  filename)
 {
-  vcl_ofstream os(filename.c_str());
+  std::ofstream os(filename.c_str());
   if (!os)
   {
-    vcl_cout << "In brct_volume_processor::write_prob_volumes vrml -"
+    std::cout << "In brct_volume_processor::write_prob_volumes vrml -"
              << " could not open file " << filename << '\n';
     return false;
   }
   brct_algos::write_vrml_header(os);
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
 #if 0 // "scal" is not used !?!
   float scal = 100.f;
   if ((*index_).n_points() != 0)
@@ -80,17 +80,17 @@ bool brct_volume_processor::write_prob_volumes_vrml(vcl_string const&  filename)
   return true;
 }
 
-bool brct_volume_processor::read_change_data_vrml(vcl_string const&  filename)
+bool brct_volume_processor::read_change_data_vrml(std::string const&  filename)
 {
-  vcl_ifstream is(filename.c_str());
+  std::ifstream is(filename.c_str());
   if (!is)
   {
-    vcl_cout << "In brct_volume_processor::read change data vrml -"
+    std::cout << "In brct_volume_processor::read change data vrml -"
              << " could not open file " << filename << '\n';
     return false;
   }
   (*change_index_).clear();
-  vcl_vector<vsol_point_3d_sptr> pts3d;
+  std::vector<vsol_point_3d_sptr> pts3d;
   brct_algos::read_vrml_points(is, pts3d);
   int npts = pts3d.size(),nin = 0;
   for (int i = 0; i<npts; i++)
@@ -98,7 +98,7 @@ bool brct_volume_processor::read_change_data_vrml(vcl_string const&  filename)
       nin++;
   if (!npts||!nin)
   {
-    vcl_cout << "In brct_volume_processor::read_change_data_vrml -"
+    std::cout << "In brct_volume_processor::read_change_data_vrml -"
              << " no data or can't index data\n";
     return false;
   }
@@ -117,24 +117,24 @@ bool brct_volume_processor::compute_change()
         if (nc>cell_thresh_&&ni<cell_thresh_)
           change_volumes_.push_back((*index_).index_cell(r, c, s));
       }
-  vcl_cout << "Found " << change_volumes_.size() << " change cells\n";
+  std::cout << "Found " << change_volumes_.size() << " change cells\n";
   return true;
 }
 
 bool brct_volume_processor::
-write_changed_volumes_vrml(vcl_string const&  filename)
+write_changed_volumes_vrml(std::string const&  filename)
 {
   int nv = change_volumes_.size();
   if (!nv)
   {
-    vcl_cout << "In bool brct_volume_processor::write_changed_volumes_vrml -"
+    std::cout << "In bool brct_volume_processor::write_changed_volumes_vrml -"
              << " no change volumes\n";
     return false;
   }
-  vcl_ofstream os(filename.c_str());
+  std::ofstream os(filename.c_str());
   if (!os)
   {
-    vcl_cout << "In brct_volume_processor::write_changed_volumes_vrml -"
+    std::cout << "In brct_volume_processor::write_changed_volumes_vrml -"
              << " could not open file " << filename << '\n';
     return false;
   }

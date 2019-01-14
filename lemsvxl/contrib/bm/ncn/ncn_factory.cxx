@@ -2,14 +2,14 @@
 #include "ncn_factory.h"
 
 
-ncn_factory::ncn_factory(vcl_string const& video_list_glob, target_pixel_type const& target_pixels,unsigned const& n_neighbors):
+ncn_factory::ncn_factory(std::string const& video_list_glob, target_pixel_type const& target_pixels,unsigned const& n_neighbors):
 				num_pivot_pixels_(2000),n_particles_(10000)
 {
 	video_stream_.open(video_list_glob.c_str());
 	if(video_stream_.is_seekable())
 		video_stream_.seek_frame(0);
 	else
-		vcl_cerr << "\n Error ncn_factory constructor: need to supply a seekable video stream." << vcl_flush;
+		std::cerr << "\n Error ncn_factory constructor: need to supply a seekable video stream." << std::flush;
 
 	
 	neighborhood_sptr_ = new ncn_neighborhood;
@@ -22,13 +22,13 @@ ncn_factory::ncn_factory(vcl_string const& video_list_glob, target_pixel_type co
 }//end ncn_factory(video_list_glob,target_pixel_list)
 
 
-ncn_factory::ncn_factory(vcl_string const& video_list_glob)
+ncn_factory::ncn_factory(std::string const& video_list_glob)
 {
 	video_stream_.open(video_list_glob.c_str());
 	if(video_stream_.is_seekable())
 		video_stream_.seek_frame(0);
 	else
-		vcl_cerr << "\n Error ncn_factory constructor: need to supply a seekable video stream." << vcl_flush;
+		std::cerr << "\n Error ncn_factory constructor: need to supply a seekable video stream." << std::flush;
 
 	vil_image_view<double> curr_img;
 	vidl_convert_to_view(*video_stream_.current_frame(),curr_img);
@@ -58,7 +58,7 @@ ncn_factory::ncn_factory(vcl_string const& video_list_glob)
 
 void ncn_factory::calculate_temporal_entropy()
 {
-	vcl_cout << "Calculating Temporal Entropy..." << vcl_endl;	
+	std::cout << "Calculating Temporal Entropy..." << std::endl;	
 	video_stream_.seek_frame(0);
 	vil_image_view<vxl_byte> curr_img;
 	vil_image_view<vxl_byte> grey_img;
@@ -76,7 +76,7 @@ void ncn_factory::calculate_temporal_entropy()
 	entropy_view_.set_size(ncols,nrows);
 
 	//load all images into memory for speed.
-	vcl_map<unsigned, vil_image_view<vxl_byte> > img_seq;
+	std::map<unsigned, vil_image_view<vxl_byte> > img_seq;
 	for(unsigned t = 0; t < num_frames; ++t)
 	{
 		video_stream_.seek_frame(t);
@@ -96,31 +96,31 @@ void ncn_factory::calculate_temporal_entropy()
 		for(unsigned col = 0; col < ncols; ++col)
 		{
 			histogram.clear();
-			//vcl_cout << "col = " << col << vcl_endl;
+			//std::cout << "col = " << col << std::endl;
 			for(unsigned t = 0; t < num_frames; ++t)
 			{
 				histogram.upcount(img_seq[t](col,row,0),1);				
 			}
 			entropy_view_(col,row) = histogram.entropy();		
-			//vcl_cout << float(col*nrows + row)/float(row) << "% temporal entropy completed. " << vcl_endl;
-			//vcl_cout << "row = " << row << vcl_endl;
-			vcl_cout << float(row*ncols+col)/float(nrows*ncols) << "% temporal entropy completed. " << vcl_endl;
+			//std::cout << float(col*nrows + row)/float(row) << "% temporal entropy completed. " << std::endl;
+			//std::cout << "row = " << row << std::endl;
+			std::cout << float(row*ncols+col)/float(nrows*ncols) << "% temporal entropy completed. " << std::endl;
 		}
 	}
 
 	//write out bin file
-	vcl_string entropy_view_bin_file = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\entropy_view.bin";
+	std::string entropy_view_bin_file = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\entropy_view.bin";
 	vsl_b_ofstream bofs(entropy_view_bin_file.c_str());
 	vsl_b_write(bofs,entropy_view_);
 
 	//write out matlab file
-	vcl_string entropy_view_dat_file = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\entropy_view.dat";
-	vcl_ofstream os_dat(entropy_view_dat_file.c_str());
+	std::string entropy_view_dat_file = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\entropy_view.dat";
+	std::ofstream os_dat(entropy_view_dat_file.c_str());
 	for(unsigned i = 0; i < entropy_view_.ni(); ++i)
 	{
 		for(unsigned j = 0; j < entropy_view_.nj(); ++j)
 			os_dat << entropy_view_(i,j,0) << '\t';
-		vcl_cout << "\n";
+		std::cout << "\n";
 	}
 
 	
@@ -130,10 +130,10 @@ void ncn_factory::calculate_temporal_entropy()
 //main function to build and return the neighborhood
 void ncn_factory::build_neighborhood()
 {
-	vcl_cout << "Building Neighborhood..." << vcl_endl;
+	std::cout << "Building Neighborhood..." << std::endl;
 	neighborhood_type neighborhood;
 	unsigned nbins = 16;
-	vcl_map<double,vcl_set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::const_iterator > mi_point_map;
+	std::map<double,std::set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::const_iterator > mi_point_map;
 	bsta_joint_histogram<double> joint_histogram(255,nbins);
 
 	pivot_pixel_candidate_type pivot_pixel_candidates;
@@ -155,7 +155,7 @@ void ncn_factory::build_neighborhood()
 
 	//load all images to memory to speed up
 	vil_image_view<vxl_byte> grey_img, curr_img;
-	vcl_map<unsigned, vil_image_view<vxl_byte> > image_sequence;
+	std::map<unsigned, vil_image_view<vxl_byte> > image_sequence;
 	for(unsigned t = 0; t < nframes; ++t)
 	{
 		vidl_convert_to_view(*video_stream_.current_frame(),curr_img);
@@ -163,8 +163,8 @@ void ncn_factory::build_neighborhood()
 		image_sequence[t] = grey_img;
 	}
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> >::const_iterator image_sequence_itr;
-	vcl_map<unsigned, vil_image_view<vxl_byte> >::const_iterator image_sequence_end = image_sequence.end();
+	std::map<unsigned, vil_image_view<vxl_byte> >::const_iterator image_sequence_itr;
+	std::map<unsigned, vil_image_view<vxl_byte> >::const_iterator image_sequence_end = image_sequence.end();
 
 	unsigned counts = 0;
 	for(target_pixel_itr = target_pixels.begin(); target_pixel_itr != target_pixel_end; ++target_pixel_itr)
@@ -189,17 +189,17 @@ void ncn_factory::build_neighborhood()
 
 		//create the neighborhood vector
 		unsigned  i = 0;
-		vcl_map<double,vcl_set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::const_iterator >::const_iterator mi_point_map_itr = mi_point_map.end();
+		std::map<double,std::set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::const_iterator >::const_iterator mi_point_map_itr = mi_point_map.end();
 		--mi_point_map_itr;
 		
-		vcl_vector<pivot_pixel_candidate_type::const_iterator> nbrhd;
+		std::vector<pivot_pixel_candidate_type::const_iterator> nbrhd;
 		for(;i<n_neighbors; --mi_point_map_itr)
 			nbrhd.push_back(mi_point_map_itr->second);
 
 		//associate the point and the neighborhood
-		vcl_pair<target_pixel_type::const_iterator,vcl_vector<pivot_pixel_candidate_type::const_iterator> > ni(target_pixel_itr,nbrhd);
+		std::pair<target_pixel_type::const_iterator,std::vector<pivot_pixel_candidate_type::const_iterator> > ni(target_pixel_itr,nbrhd);
 		neighborhood.insert(ni);
-		vcl_cout << counts << " out of " << target_pixels.size() << " neighbors build." << vcl_endl;
+		std::cout << counts << " out of " << target_pixels.size() << " neighbors build." << std::endl;
 		++counts;
 	}
 
@@ -210,13 +210,13 @@ void ncn_factory::build_neighborhood()
 
 pivot_pixel_candidate_type ncn_factory::sample_pivot_pixels()
 {
-	vcl_cout << "Sampling Pivot Pixels..." << vcl_endl;
+	std::cout << "Sampling Pivot Pixels..." << std::endl;
 	pivot_pixel_candidate_type pivot_pixel_candidates;
 
 	vnl_random rand;
 	unsigned npix = entropy_view_.size();
 	unsigned nrows = entropy_view_.nj();
-	vcl_map<vgl_point_2d<unsigned>,double,ncn_vgl_point_2d_less_than> particle_map;
+	std::map<vgl_point_2d<unsigned>,double,ncn_vgl_point_2d_less_than> particle_map;
 	vgl_point_2d<unsigned> point;
 
 	
@@ -232,12 +232,12 @@ pivot_pixel_candidate_type ncn_factory::sample_pivot_pixels()
 	}
 
 	//2. Reweight each sample and simultaneously construct the cdf
-	vcl_map<vgl_point_2d<unsigned>, double, ncn_vgl_point_2d_less_than >::iterator pmit;
-	vcl_map<vgl_point_2d<unsigned>, double, ncn_vgl_point_2d_less_than >::iterator pmend = particle_map.end();
+	std::map<vgl_point_2d<unsigned>, double, ncn_vgl_point_2d_less_than >::iterator pmit;
+	std::map<vgl_point_2d<unsigned>, double, ncn_vgl_point_2d_less_than >::iterator pmend = particle_map.end();
 
 	vbl_array_1d<double> cdf;
 
-	vcl_vector<vgl_point_2d<unsigned> > particle_vector; //to ease with indexing
+	std::vector<vgl_point_2d<unsigned> > particle_vector; //to ease with indexing
 	double cdf_tot = 0.0;
 	for(pmit = particle_map.begin(); pmit != pmend; ++pmit)
 	{
@@ -248,7 +248,7 @@ pivot_pixel_candidate_type ncn_factory::sample_pivot_pixels()
 	}
 
 	//3. Sample a unique set of size num_piv_pix via inverse cdf method.
-	vcl_pair<vcl_set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::iterator,bool> ret;
+	std::pair<std::set<vgl_point_2d<unsigned>,ncn_vgl_point_2d_less_than>::iterator,bool> ret;
 
 	pmit = particle_map.begin();
 	while(pivot_pixel_candidates.size() < num_pivot_pixels_)
@@ -258,9 +258,9 @@ pivot_pixel_candidate_type ncn_factory::sample_pivot_pixels()
 		point.set(particle_vector[bin].x(),particle_vector[bin].y());
 		ret = pivot_pixel_candidates.insert(point);
 		if(ret.second == true)
-			vcl_cout << vcl_setprecision(2) << vcl_fixed 
+			std::cout << std::setprecision(2) << std::fixed 
                      << (float(pivot_pixel_candidates.size())/float(num_pivot_pixels_)) * 100 
-                     << "% pivot pixels sampled." << vcl_endl;
+                     << "% pivot pixels sampled." << std::endl;
 	}//end sample loop
 
 	return pivot_pixel_candidates;
@@ -304,7 +304,7 @@ unsigned ncn_factory::find_bin(vbl_array_1d<double> const& cdf, double const& ta
 
     if( !bin_found )
     {
-        vcl_cerr << "Error: ncn_utilities::find_bin bin was not found." << vcl_flush;
+        std::cerr << "Error: ncn_utilities::find_bin bin was not found." << std::flush;
     }
 
     return mid;

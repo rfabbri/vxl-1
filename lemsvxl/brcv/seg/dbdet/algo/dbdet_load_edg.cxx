@@ -1,6 +1,6 @@
 #include "dbdet_load_edg.h"
-#include <vcl_cstring.h>
-#include <vcl_locale.h>
+#include <cstring>
+#include <locale>
 
 #include <vul/vul_file.h>
 #include <vsol/vsol_line_2d.h>
@@ -16,8 +16,8 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #endif
 
-bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double scale,
-                    vcl_vector< vsol_spatial_object_2d_sptr > &edgels)
+bool dbdet_load_edg(std::string input_file, bool bSubPixel, bool blines, double scale,
+                    std::vector< vsol_spatial_object_2d_sptr > &edgels)
 {
   double x, y;
   char lineBuffer[1024];
@@ -26,10 +26,10 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
   double idir, iconf, dir, conf;
   
   //1)If file open fails, return.
-  vcl_ifstream infp(input_file.c_str(), vcl_ios::in);
+  std::ifstream infp(input_file.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << input_file.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << input_file.c_str() << std::endl;
     return false;
   }
 
@@ -42,44 +42,44 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
     infp.getline(lineBuffer,1024);
 
     //read the line with the file type
-    if (!vcl_strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
+    if (!std::strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
       file_valid = true;
       continue;
     }
 
     //ignore all other comment lines and empty lines
-    if (vcl_strlen(lineBuffer)<2 || lineBuffer[0]=='#')
+    if (std::strlen(lineBuffer)<2 || lineBuffer[0]=='#')
       continue;
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
       sscanf(lineBuffer," WIDTH=%d",&(w));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
       sscanf(lineBuffer,"WIDTH=%d",&(w));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
       sscanf(lineBuffer," HEIGHT=%d",&(h));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
       sscanf(lineBuffer,"HEIGHT=%d",&(h));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
       sscanf(lineBuffer," EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
@@ -87,7 +87,7 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
   
   //make sure the file is valid
   if (!file_valid){
-    vcl_cout << "Invalid .edg file (vsol/ascii)" << vcl_endl;
+    std::cout << "Invalid .edg file (vsol/ascii)" << std::endl;
     return false;
   }
 
@@ -98,7 +98,7 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
   while (infp.getline(lineBuffer,1024)) {
 
     //there are two variations of this file in existence
-    if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
+    if (!std::strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
       sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
         &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
     else
@@ -114,7 +114,7 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
 
     if (bSubPixel){
       if ( blines){
-        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(dir)/2.0, vcl_sin(dir)/2.0), vgl_point_2d<double>(x,y));
+        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(dir)/2.0, std::sin(dir)/2.0), vgl_point_2d<double>(x,y));
         edgels.push_back(newLine->cast_to_spatial_object());
       }
       else {
@@ -124,7 +124,7 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
     }
     else { //pixel edges
       if (blines){
-        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(idir), vcl_sin(idir)), vgl_point_2d<double>((double)ix, (double)iy));
+        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(idir), std::sin(idir)), vgl_point_2d<double>((double)ix, (double)iy));
         edgels.push_back(newLine->cast_to_spatial_object());
       }
       else {
@@ -140,17 +140,17 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, bool blines, double s
 }
 
 #ifdef HAS_BOOST
-static bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map);
-static bool dbdet_save_edg_gzip(vcl_string filename, dbdet_edgemap_sptr edgemap);
+static bool dbdet_load_edg_gzip(std::string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map);
+static bool dbdet_save_edg_gzip(std::string filename, dbdet_edgemap_sptr edgemap);
 #endif
 
-static bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map);
+static bool dbdet_load_edg_ascii(std::string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map);
 
-static bool dbdet_save_edg_ascii(vcl_string filename, dbdet_edgemap_sptr edgemap);
+static bool dbdet_save_edg_ascii(std::string filename, dbdet_edgemap_sptr edgemap);
 
-bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
+bool dbdet_load_edg(std::string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
 {
-  vcl_string ext = vul_file::extension(input_file);
+  std::string ext = vul_file::extension(input_file);
   bool ret;
 
   char * cur_locale, * dup_locale;
@@ -162,7 +162,7 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, double scale, dbdet_e
 #ifdef HAS_BOOST
     ret = dbdet_load_edg_gzip(input_file, bSubPixel, scale, edge_map);
 #else
-    vcl_cerr << "Error: .gz compressed edg file was provided, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed edg file was provided, but boost wasn't found\n";
 #endif
   } else
     ret = dbdet_load_edg_ascii(input_file, bSubPixel, scale, edge_map);
@@ -173,9 +173,9 @@ bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, double scale, dbdet_e
   return ret;
 }
 
-bool dbdet_save_edg(vcl_string filename, dbdet_edgemap_sptr edgemap)
+bool dbdet_save_edg(std::string filename, dbdet_edgemap_sptr edgemap)
 {
-  vcl_string ext = vul_file::extension(filename);
+  std::string ext = vul_file::extension(filename);
   bool ret;
 
   char * cur_locale, * dup_locale;
@@ -187,7 +187,7 @@ bool dbdet_save_edg(vcl_string filename, dbdet_edgemap_sptr edgemap)
 #ifdef HAS_BOOST
     ret = dbdet_save_edg_gzip(filename, edgemap);
 #else
-    vcl_cerr << "Error: .gz compressed output edg file requested, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed output edg file requested, but boost wasn't found\n";
 #endif
   } else
     ret = dbdet_save_edg_ascii(filename, edgemap);
@@ -198,7 +198,7 @@ bool dbdet_save_edg(vcl_string filename, dbdet_edgemap_sptr edgemap)
   return ret;
 }
 
-bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
+bool dbdet_load_edg_ascii(std::string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
 {
   double x, y;
   char lineBuffer[1024];
@@ -207,10 +207,10 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
   double idir, iconf, dir, conf, uncer=0;
   
   //1)If file open fails, return.
-  vcl_ifstream infp(input_file.c_str(), vcl_ios::in);
+  std::ifstream infp(input_file.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << input_file.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << input_file.c_str() << std::endl;
     return false;
   }
 
@@ -224,12 +224,12 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
     infp.getline(lineBuffer,1024);
 
     //read the line with the file type
-    if (!vcl_strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
+    if (!std::strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
       file_valid = true;
 
-      if (!vcl_strncmp(lineBuffer, "# EDGE_MAP v2.0", sizeof("# EDGE_MAP v2.0")-1))
+      if (!std::strncmp(lineBuffer, "# EDGE_MAP v2.0", sizeof("# EDGE_MAP v2.0")-1))
         ver = 2;
-      else if (!vcl_strncmp(lineBuffer, "# EDGE_MAP v3.0", sizeof("# EDGE_MAP v3.0")-1))
+      else if (!std::strncmp(lineBuffer, "# EDGE_MAP v3.0", sizeof("# EDGE_MAP v3.0")-1))
         ver = 3;
       else
         ver = 1;
@@ -238,38 +238,38 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
     }
 
     //ignore all other comment lines and empty lines
-    if (vcl_strlen(lineBuffer)<2 || lineBuffer[0]=='#')
+    if (std::strlen(lineBuffer)<2 || lineBuffer[0]=='#')
       continue;
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
       sscanf(lineBuffer," WIDTH=%d",&(w));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
       sscanf(lineBuffer,"WIDTH=%d",&(w));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
       sscanf(lineBuffer," HEIGHT=%d",&(h));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
       sscanf(lineBuffer,"HEIGHT=%d",&(h));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
       sscanf(lineBuffer," EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
@@ -277,7 +277,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
   
   //make sure the file is valid
   if (!file_valid){
-    vcl_cout << "Invalid .edg file (ascii)" << vcl_endl;
+    std::cout << "Invalid .edg file (ascii)" << std::endl;
     return false;
   }
 
@@ -295,14 +295,14 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
     //there are two variations of this file in existence
     if (ver<3){
       int a = 0;
-      if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1)){
+      if (!std::strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1)){
         a=sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
       }else{
         a=sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));}
       if(a!=8) {
-         vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+         std::cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << std::endl;
       }
     }
     else {
@@ -310,7 +310,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
 
       if (a!=9) {
-        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+        std::cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << std::endl;
       }
     }
 
@@ -342,7 +342,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
 //: Load .edg.gz file compressed with zlib, gzip style.
 // TODO: use templating and/or istream inheritance to avoid duplicating almost
 // identical code to bsold_load_cem_ascii
-bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
+bool dbdet_load_edg_gzip(std::string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
 {
   double x, y;
   char lineBuffer[1024];
@@ -351,10 +351,10 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
   double idir, iconf, dir, conf, uncer=0;
   
   //1)If file open fails, return.
-  vcl_ifstream infp_orig(input_file.c_str(), vcl_ios::in  | vcl_ios::binary);
+  std::ifstream infp_orig(input_file.c_str(), std::ios::in  | std::ios::binary);
 
   if (!infp_orig){
-    vcl_cout << " Error opening file  " << input_file.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << input_file.c_str() << std::endl;
     return false;
   }
 
@@ -372,12 +372,12 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
     infp.getline(lineBuffer,1024);
 
     //read the line with the file type
-    if (!vcl_strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
+    if (!std::strncmp(lineBuffer, "# EDGE_MAP", sizeof("# EDGE_MAP")-1)){
       file_valid = true;
 
-      if (!vcl_strncmp(lineBuffer, "# EDGE_MAP v2.0", sizeof("# EDGE_MAP v2.0")-1))
+      if (!std::strncmp(lineBuffer, "# EDGE_MAP v2.0", sizeof("# EDGE_MAP v2.0")-1))
         ver = 2;
-      else if (!vcl_strncmp(lineBuffer, "# EDGE_MAP v3.0", sizeof("# EDGE_MAP v3.0")-1))
+      else if (!std::strncmp(lineBuffer, "# EDGE_MAP v3.0", sizeof("# EDGE_MAP v3.0")-1))
         ver = 3;
       else
         ver = 1;
@@ -386,38 +386,38 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
     }
 
     //ignore all other comment lines and empty lines
-    if (vcl_strlen(lineBuffer)<2 || lineBuffer[0]=='#')
+    if (std::strlen(lineBuffer)<2 || lineBuffer[0]=='#')
       continue;
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, " WIDTH=", sizeof(" WIDTH=")-1)){
       sscanf(lineBuffer," WIDTH=%d",&(w));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
+    if (!std::strncmp(lineBuffer, "WIDTH=", sizeof("WIDTH=")-1)){
       sscanf(lineBuffer,"WIDTH=%d",&(w));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, " HEIGHT=", sizeof(" HEIGHT=")-1)){
       sscanf(lineBuffer," HEIGHT=%d",&(h));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
+    if (!std::strncmp(lineBuffer, "HEIGHT=", sizeof("HEIGHT=")-1)){
       sscanf(lineBuffer,"HEIGHT=%d",&(h));
       continue;
     }
 
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, " EDGE_COUNT=", sizeof(" EDGE_COUNT=")-1)){
       sscanf(lineBuffer," EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
     //read the line with the edge count info
-    if (!vcl_strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
+    if (!std::strncmp(lineBuffer, "EDGE_COUNT=", sizeof("EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numGeometry));
       continue;
     }
@@ -425,7 +425,7 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
   
   //make sure the file is valid
   if (!file_valid){
-    vcl_cout << "Invalid .edg file (gzip)" << vcl_endl;
+    std::cout << "Invalid .edg file (gzip)" << std::endl;
     return false;
   }
 
@@ -443,7 +443,7 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
     //there are two variations of this file in existence
     if (ver<3){
       int a = 0;
-      if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
+      if (!std::strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
       {
         a = sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
@@ -454,7 +454,7 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
       }
       if (a!=8) {
-        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+        std::cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << std::endl;
       }
     }
     else
@@ -462,7 +462,7 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
       int a = sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
       if (a!=9) {
-        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+        std::cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << std::endl;
       }
     }
 
@@ -495,24 +495,24 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
 #endif
 
 
-bool dbdet_save_edg_ascii(vcl_string filename, dbdet_edgemap_sptr edgemap)
+bool dbdet_save_edg_ascii(std::string filename, dbdet_edgemap_sptr edgemap)
 {
   //1) If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   //2) write out the header block
-  outfp << "# EDGE_MAP v3.0" << vcl_endl << vcl_endl;
-  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Strength Uncer" << vcl_endl;
-  outfp << vcl_endl;
-  outfp << "WIDTH=" << edgemap->width() << vcl_endl;
-  outfp << "HEIGHT=" << edgemap->height() << vcl_endl;
-  outfp << "EDGE_COUNT=" << edgemap->num_edgels()  << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "# EDGE_MAP v3.0" << std::endl << std::endl;
+  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Strength Uncer" << std::endl;
+  outfp << std::endl;
+  outfp << "WIDTH=" << edgemap->width() << std::endl;
+  outfp << "HEIGHT=" << edgemap->height() << std::endl;
+  outfp << "EDGE_COUNT=" << edgemap->num_edgels()  << std::endl;
+  outfp << std::endl << std::endl;
 
   //save the edgel tokens
   for (unsigned row=0; row<edgemap->edge_cells.rows(); row++){
@@ -532,7 +532,7 @@ bool dbdet_save_edg_ascii(vcl_string filename, dbdet_edgemap_sptr edgemap)
 //               d2f=edgel->deriv, 
                uncer=edgel->uncertainty;
 
-        outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << " " << uncer << vcl_endl;
+        outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << " " << uncer << std::endl;
       }
     }
   }
@@ -543,13 +543,13 @@ bool dbdet_save_edg_ascii(vcl_string filename, dbdet_edgemap_sptr edgemap)
 }
 
 #ifdef HAS_BOOST
-bool dbdet_save_edg_gzip(vcl_string filename, dbdet_edgemap_sptr edgemap)
+bool dbdet_save_edg_gzip(std::string filename, dbdet_edgemap_sptr edgemap)
 {
   //1) If file open fails, return.
-  vcl_ofstream outfp_orig(filename.c_str(), vcl_ios::out  | vcl_ios::binary);
+  std::ofstream outfp_orig(filename.c_str(), std::ios::out  | std::ios::binary);
 
   if (!outfp_orig){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -558,13 +558,13 @@ bool dbdet_save_edg_gzip(vcl_string filename, dbdet_edgemap_sptr edgemap)
   outfp.push(outfp_orig);
 
   //2) write out the header block
-  outfp << "# EDGE_MAP v3.0" << vcl_endl << vcl_endl;
-  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Strength Uncer" << vcl_endl;
-  outfp << vcl_endl;
-  outfp << "WIDTH=" << edgemap->width() << vcl_endl;
-  outfp << "HEIGHT=" << edgemap->height() << vcl_endl;
-  outfp << "EDGE_COUNT=" << edgemap->num_edgels()  << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "# EDGE_MAP v3.0" << std::endl << std::endl;
+  outfp << "# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Strength Uncer" << std::endl;
+  outfp << std::endl;
+  outfp << "WIDTH=" << edgemap->width() << std::endl;
+  outfp << "HEIGHT=" << edgemap->height() << std::endl;
+  outfp << "EDGE_COUNT=" << edgemap->num_edgels()  << std::endl;
+  outfp << std::endl << std::endl;
 
   //save the edgel tokens
   for (unsigned row=0; row<edgemap->edge_cells.rows(); row++){
@@ -584,7 +584,7 @@ bool dbdet_save_edg_gzip(vcl_string filename, dbdet_edgemap_sptr edgemap)
 //               d2f=edgel->deriv, 
                uncer=edgel->uncertainty;
 
-        outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << " " << uncer << vcl_endl;
+        outfp << "[" << ix << ", " << iy << "]    " << idir << " " << iconf << "   [" << x << ", " << y << "]   " << dir << " " << conf << " " << uncer << std::endl;
       }
     }
   }

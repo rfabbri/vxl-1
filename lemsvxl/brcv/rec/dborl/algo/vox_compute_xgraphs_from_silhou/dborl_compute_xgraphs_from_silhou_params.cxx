@@ -21,7 +21,7 @@
 
 //: Constructor
 dborl_compute_xgraphs_from_silhou_params::
-dborl_compute_xgraphs_from_silhou_params(vcl_string algo_name) : 
+dborl_compute_xgraphs_from_silhou_params(std::string algo_name) : 
     dborl_algo_params(algo_name),
     tag_contour_tracing_("Contour_Tracer"),
     tag_compute_ishock_("Compute_Ishock"),
@@ -158,7 +158,7 @@ dborl_compute_xgraphs_from_silhou_params(vcl_string algo_name) :
 
   //: add the parameter for contour tracing
   dbdet_contour_tracer_process pro1;
-  vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+  std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
 //  pars = pro6.parameters()->get_param_list();
   for (unsigned i = 0; i < pars.size(); i++) 
   {

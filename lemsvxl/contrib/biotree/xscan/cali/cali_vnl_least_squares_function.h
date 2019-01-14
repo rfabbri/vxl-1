@@ -3,7 +3,7 @@
 
 #include <vnl/vnl_least_squares_function.h>
 #include <xscan/xscan_scan.h>
-#include <vcl_string.h>
+#include <string>
 #include <vil/vil_image_resource_sptr.h>
 #include <cali/cali_artf_corresponder.h>
 #include <cali/cali_simulated_scan_resource.h>
@@ -14,15 +14,15 @@ class cali_vnl_least_squares_function: public vnl_least_squares_function
 {
 public:
     cali_param par_;
-  cali_vnl_least_squares_function(vcl_vector<vil_image_resource_sptr> scan_resources, 
+  cali_vnl_least_squares_function(std::vector<vil_image_resource_sptr> scan_resources, 
     xscan_scan scan, 
-    vcl_string file_base, 
+    std::string file_base, 
     int interval, 
      int num_of_images);
 
-  cali_vnl_least_squares_function(cali_param par,vcl_vector<vil_image_resource_sptr> scan_resources, 
+  cali_vnl_least_squares_function(cali_param par,std::vector<vil_image_resource_sptr> scan_resources, 
     xscan_scan scan, 
-    vcl_string file_base, 
+    std::string file_base, 
     int interval, 
      int num_of_images);
 
@@ -42,8 +42,8 @@ public:
   void set_lsqr_fn_params_with_tolerance(vnl_vector<double> &x, 
                           vnl_quaternion<double> const& artf_rot, 
                           vgl_point_3d<double> const& artf_trans,
-                          xscan_scan& scan,vcl_vector<double>& x_coord_tol,vcl_vector<double>& y_coord_tol,
-                          vcl_vector<double>& z_coord_tol,vcl_vector<double>& rad_tol);
+                          xscan_scan& scan,std::vector<double>& x_coord_tol,std::vector<double>& y_coord_tol,
+                          std::vector<double>& z_coord_tol,std::vector<double>& rad_tol);
 
     static void gen_scan_lsqr_fn_params(vnl_vector<double> const& x, 
                       vnl_quaternion<double> &artf_rot, 
@@ -71,18 +71,18 @@ public:
                       double &x_scale,
                       double &y_scale,
                       vgl_point_2d<double> &princp_point,
-                      vcl_vector<double>& x_coord_tol,vcl_vector<double>& y_coord_tol,
-                          vcl_vector<double>& z_coord_tol,vcl_vector<double>& rad_tol );
+                      std::vector<double>& x_coord_tol,std::vector<double>& y_coord_tol,
+                          std::vector<double>& z_coord_tol,std::vector<double>& rad_tol );
 protected:
 
   
   cali_artf_corresponder corresp;
-  vcl_vector<vil_image_resource_sptr> scan_res_;
+  std::vector<vil_image_resource_sptr> scan_res_;
   xscan_scan scan_;
   
   int interval_;
   int num_of_images_;
-  vcl_vector<conic_vector_set> real_img_conics;
+  std::vector<conic_vector_set> real_img_conics;
 
 };
 

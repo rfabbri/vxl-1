@@ -19,10 +19,10 @@
 #include <rgrl/rgrl_convergence_on_median_error.h>
 #include <rgrl/rgrl_event.h>
 #include <rgrl/rgrl_view.h>
-#include <vcl_cassert.h>
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <cassert>
+#include <limits>
+#include <algorithm>
+#include <utility>
 #include <vidreg/vidreg_salient_group.h>
 #include <vidreg/vidreg_initializer.h>
 
@@ -263,7 +263,7 @@ register_single_feature( rgrl_view_sptr           initial_view,
   rgrl_scale_estimator_wgted_sptr   wgted_scale_est;
   rgrl_weighter_sptr                weighter;
   rgrl_match_set_sptr               match_set;
-  vcl_vector<rgrl_estimator_sptr>   xform_estimators;
+  std::vector<rgrl_estimator_sptr>   xform_estimators;
   rgrl_estimator_sptr               xform_estimator;
   bool                              failed, scale_in_range;
   unsigned                          prev_resol = 0;
@@ -435,8 +435,8 @@ register_single_feature( rgrl_view_sptr           initial_view,
                                       should_penalize_scaling_ );
       DebugMacro(  3, "run: (iterations = " << iterations_at_stage_
                    << ") oscillation count = " << current_status->oscillation_count() << '\n' );
-      DebugMacro(  3, "run: error = " << current_status->error() << vcl_endl );
-      DebugMacro(  3, "run: error_diff = " << current_status->error_diff() << vcl_endl );
+      DebugMacro(  3, "run: error = " << current_status->error() << std::endl );
+      DebugMacro(  3, "run: error_diff = " << current_status->error_diff() << std::endl );
 
       ++iterations_at_stage_;
 
@@ -471,9 +471,9 @@ register_single_feature( rgrl_view_sptr           initial_view,
     //                                current_xform_estimate_, resolution );
     int level_diff = prev_resol - initial_view->resolution();
     double dim_increase = current_data_->dimension_increase_for_next_stage(prev_resol);
-//  double scale_multipler = vcl_pow(dim_increase, level_diff);
+//  double scale_multipler = std::pow(dim_increase, level_diff);
     scale->set_geometric_scale( scale->geometric_scale()*
-                                vcl_pow(dim_increase, level_diff) );
+                                std::pow(dim_increase, level_diff) );
 
   } while ( !failed &&
              (!current_view_->resolution() == 0 ||
@@ -491,8 +491,8 @@ register_single_feature( rgrl_view_sptr           initial_view,
     DebugMacro( 1, "Obj value after convergence = "<<current_status->objective_value()<<'\n');
 
     best_salient_group_ = new vidreg_salient_group(current_view_,
-                                                    vcl_vector<rgrl_match_set_sptr>(1,match_set),
-                                                    vcl_vector<rgrl_scale_sptr>(1,scale),
+                                                    std::vector<rgrl_match_set_sptr>(1,match_set),
+                                                    std::vector<rgrl_scale_sptr>(1,scale),
                                                     current_status);
     DebugMacro( 1, "Set best xform estimate\n" );
 
@@ -506,13 +506,13 @@ register_multi_feature( rgrl_view_sptr           initial_view,
                         rgrl_scale_sptr          prior_scale )
 {
   rgrl_converge_status_sptr                     current_status;
-  vcl_vector<rgrl_feature_set_sptr>             from_sets;
-  vcl_vector<rgrl_feature_set_sptr>             to_sets;
-  vcl_vector<rgrl_matcher_sptr>                 matchers;
-  vcl_vector<rgrl_scale_estimator_unwgted_sptr> unwgted_scale_ests;
-  vcl_vector<rgrl_scale_estimator_wgted_sptr>   wgted_scale_ests;
-  vcl_vector<rgrl_weighter_sptr>                weighters;
-  vcl_vector<rgrl_estimator_sptr>               xform_estimators;
+  std::vector<rgrl_feature_set_sptr>             from_sets;
+  std::vector<rgrl_feature_set_sptr>             to_sets;
+  std::vector<rgrl_matcher_sptr>                 matchers;
+  std::vector<rgrl_scale_estimator_unwgted_sptr> unwgted_scale_ests;
+  std::vector<rgrl_scale_estimator_wgted_sptr>   wgted_scale_ests;
+  std::vector<rgrl_weighter_sptr>                weighters;
+  std::vector<rgrl_estimator_sptr>               xform_estimators;
   rgrl_estimator_sptr                           xform_estimator;
   bool                                          failed, scale_in_range, use_prior_scale;
   unsigned                                      prev_resol = 0;
@@ -565,7 +565,7 @@ register_multi_feature( rgrl_view_sptr           initial_view,
 
     iterations_at_stage_ = 0; //keeps track of total iter at level
     current_status = 0;
-    vcl_vector<bool> should_estimate_scale(data_count, true);
+    std::vector<bool> should_estimate_scale(data_count, true);
     int  scale_est_count = 0;
 
     bool global_stage = false, global_stage_done = false;
@@ -578,7 +578,7 @@ register_multi_feature( rgrl_view_sptr           initial_view,
       // Compute matches, and scales for each feature set.
       //
       for ( unsigned int fs=0; fs < data_count; ++fs ) {
-        DebugMacro(  2, "   Data set " << fs << vcl_endl );
+        DebugMacro(  2, "   Data set " << fs << std::endl );
         rgrl_match_set_sptr new_matches =
           matchers[fs]->compute_matches( *from_sets[fs],
                                          *to_sets[fs],
@@ -709,8 +709,8 @@ register_multi_feature( rgrl_view_sptr           initial_view,
 
       DebugMacro( 3, "run: (iterations = " << iterations_at_stage_
                   << ") oscillation count = " << current_status->oscillation_count() << '\n' );
-      DebugMacro( 3, "run: error = " << current_status->error() << vcl_endl );
-      DebugMacro( 3, "run: error_diff = " << current_status->error_diff() << vcl_endl );
+      DebugMacro( 3, "run: error = " << current_status->error() << std::endl );
+      DebugMacro( 3, "run: error_diff = " << current_status->error_diff() << std::endl );
 
       if( current_status->is_failed() ){
         failed = true;
@@ -730,7 +730,7 @@ register_multi_feature( rgrl_view_sptr           initial_view,
         //                                           0.0, 0, 0.0 );
         iterations_at_stage_ = 0;
         global_stage = true;
-        DebugMacro(  2, "expand to full region!" <<vcl_endl );
+        DebugMacro(  2, "expand to full region!" <<std::endl );
       }
 
 
@@ -769,7 +769,7 @@ register_multi_feature( rgrl_view_sptr           initial_view,
       //**                              current_xform_estimate_, resolution );
       int level_diff = prev_resol - current_view_->resolution();
       double dim_increase = current_data_->dimension_increase_for_next_stage(prev_resol);
-      double scale_multipler = vcl_pow(dim_increase, level_diff);
+      double scale_multipler = std::pow(dim_increase, level_diff);
       for ( unsigned int fs=0; fs < data_count; ++fs ) {
         if(current_scales_[fs])
         current_scales_[fs]->set_geometric_scale( current_scales_[fs]->geometric_scale()*scale_multipler );
@@ -793,8 +793,8 @@ register_multi_feature( rgrl_view_sptr           initial_view,
   if ( !failed ){
     DebugMacro( 1, "Obj value after convergence = "<<current_status->objective_value()<<'\n');
 
-    vcl_vector<rgrl_match_set_sptr> best_matches(current_match_sets_.size(),0);
-    vcl_vector<rgrl_scale_sptr> best_scales(current_scales_.size(),0);
+    std::vector<rgrl_match_set_sptr> best_matches(current_match_sets_.size(),0);
+    std::vector<rgrl_scale_sptr> best_scales(current_scales_.size(),0);
     for(unsigned i=0; i<current_match_sets_.size(); ++i){
       best_matches[i] = current_match_sets_[i];
       best_scales[i] = current_scales_[i];
@@ -838,7 +838,7 @@ initialize_for_next_resolution(  rgrl_mask_box            & from_image_region,
   //
   int level_diff = current_resol - new_resol;
   double dim_increase = current_data_->dimension_increase_for_next_stage(current_resol);
-  double scale = vcl_pow(dim_increase, level_diff);
+  double scale = std::pow(dim_increase, level_diff);
 
   from_image_region.set_x0( from_image_region.x0()*scale );
   from_image_region.set_x1( from_image_region.x1()*scale );
@@ -887,14 +887,14 @@ vidreg_registration::expand_view(const rgrl_view_sptr& view)
           var_in_from_feature_loc * ( vnl_transpose( jac_loc ) * jac_loc );
 
       //trans_err_covar = scale_estimate * xform.transfer_error_covar( p );
-      //       vcl_cout << "p="<<p<<"\n";
-      //      vcl_cout << "Xformed p="<<xformed_p<<"\n";
-      //       vcl_cout << "Normal="<<normal<<"\n";
-      //       vcl_cout << "Xformed normal="<<xformed_normal<<"\n";
-      //       vcl_cout << "Xfer error covar=\n"<<trans_err_covar<<"\n";
+      //       std::cout << "p="<<p<<"\n";
+      //      std::cout << "Xformed p="<<xformed_p<<"\n";
+      //       std::cout << "Normal="<<normal<<"\n";
+      //       std::cout << "Xformed normal="<<xformed_normal<<"\n";
+      //       std::cout << "Xfer error covar=\n"<<trans_err_covar<<"\n";
 
       //double sigma_s_sqr = dot_product( xformed_normal, trans_err_covar*xformed_normal );
-      //vcl_cout << ((d==0)?"Left ":"Right ") << sigma_s_sqr <<vcl_endl;
+      //std::cout << ((d==0)?"Left ":"Right ") << sigma_s_sqr <<std::endl;
     }
 
     // Faces intersecting at x1
@@ -914,7 +914,7 @@ vidreg_registration::expand_view(const rgrl_view_sptr& view)
       //trans_err_covar = scale_estimate * xform.transfer_error_covar( p );
       
       //double sigma_s_sqr = dot_product( xformed_normal, trans_err_covar*xformed_normal );
-      //vcl_cout << ((d==0)?"Up ":"Down ") << sigma_s_sqr <<vcl_endl;
+      //std::cout << ((d==0)?"Up ":"Down ") << sigma_s_sqr <<std::endl;
     }
 
     // reset for next iteration
@@ -935,7 +935,7 @@ vidreg_registration::expand_view(const rgrl_view_sptr& view)
   region.set_x0(new_x0);
   region.set_x1(new_x1);
 
-  //vcl_cout << "new region " << region <<vcl_endl;
+  //std::cout << "new region " << region <<std::endl;
 
   view->set_region(region);
 

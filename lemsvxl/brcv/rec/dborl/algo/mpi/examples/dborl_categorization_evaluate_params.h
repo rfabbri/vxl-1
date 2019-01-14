@@ -28,10 +28,10 @@ class dborl_categorization_evaluate_params : public dborl_algo_params
 {
 public:
 
-  dborl_parameter<vcl_string> index_filename;
-  dborl_parameter<vcl_string> output_directory;
+  dborl_parameter<std::string> index_filename;
+  dborl_parameter<std::string> output_directory;
   
-  dborl_categorization_evaluate_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_categorization_evaluate_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     index_filename.set_values(param_list_, "io_data", "index_filename", "path of index file", "", "", -1, dborl_parameter_system_info::NOT_APPLICABLE, "flat_job", dborl_parameter_type_info::FILEASSOC); 
     output_directory.set_values(param_list_, "io_data", "output_directory", "output directory", "", "", -1, dborl_parameter_system_info::OUTPUT_FILE, "");
   }

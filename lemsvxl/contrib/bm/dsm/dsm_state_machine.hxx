@@ -5,21 +5,21 @@
 #include"dsm_state_machine.h"
 
 template<int T>
-vcl_map<unsigned, dsm_node_base_sptr>::iterator dsm_state_machine<T>::add_node()
+std::map<unsigned, dsm_node_base_sptr>::iterator dsm_state_machine<T>::add_node()
 {
 	//create the new node
 	dsm_node_base_sptr new_node = new dsm_node<T>(this->next_node_id_);
     ++this->next_node_id_;
 
-    vcl_pair<vcl_map<unsigned,dsm_node_base_sptr>::iterator,bool> ret;
+    std::pair<std::map<unsigned,dsm_node_base_sptr>::iterator,bool> ret;
     //insert node into graph.
-	ret = this->graph_.insert( vcl_make_pair(new_node->id(),new_node) );
+	ret = this->graph_.insert( std::make_pair(new_node->id(),new_node) );
 
     //Traverse the graph and adjust the transition tables of every
     //node to include the new node id with appropriate modifications.
-    vcl_map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end =this->graph_.end();
+    std::map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end =this->graph_.end();
 
-    vcl_set<unsigned>::iterator rel_time_set_itr, rel_time_set_end;
+    std::set<unsigned>::iterator rel_time_set_itr, rel_time_set_end;
 
     for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
     {
@@ -39,13 +39,13 @@ bool dsm_state_machine<T>::remove_node( unsigned const& node_id )
     //Temporarily save the position elements so we don't hve to run
     //find twice, to check for existence then to erase.
 
-    vcl_map<unsigned,dsm_node_base_sptr>::iterator g_element = this->graph_.find(node_id);
+    std::map<unsigned,dsm_node_base_sptr>::iterator g_element = this->graph_.find(node_id);
 
     if( g_element != this->graph_.end() )
     {
         this->graph_.erase(g_element);
 
-        vcl_map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+        std::map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
 
         for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
             g_itr->second->transition_table_.erase(node_id);
@@ -54,9 +54,9 @@ bool dsm_state_machine<T>::remove_node( unsigned const& node_id )
     }
     else
     {
-       vcl_cerr << "ERROR: dsm_state_machine::remove_node \n"
+       std::cerr << "ERROR: dsm_state_machine::remove_node \n"
                 << "node_id: " << node_id << '\n'
-                << "Not found in the classifier's graph. " << vcl_flush;
+                << "Not found in the classifier's graph. " << std::flush;
         return false;
     }
     
@@ -65,9 +65,9 @@ bool dsm_state_machine<T>::remove_node( unsigned const& node_id )
 template<int T>
 void dsm_state_machine<T>::prune_graph()
 {
-    vcl_map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+    std::map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
 
-    vcl_set<unsigned> nodes_to_delete;
+    std::set<unsigned> nodes_to_delete;
 
     unsigned absolute_time = this->frame_clock_ptr_->time();
     unsigned diff;
@@ -83,7 +83,7 @@ void dsm_state_machine<T>::prune_graph()
 
     }//end graph iteration
 
-    vcl_set<unsigned>::iterator nodes_to_delete_itr, nodes_to_delete_end = nodes_to_delete.end();
+    std::set<unsigned>::iterator nodes_to_delete_itr, nodes_to_delete_end = nodes_to_delete.end();
 
     for( nodes_to_delete_itr = nodes_to_delete.begin(); nodes_to_delete_itr != nodes_to_delete_end; ++nodes_to_delete_itr )
         this->remove_node(*nodes_to_delete_itr);
@@ -95,14 +95,14 @@ bool dsm_state_machine<T>::update_manhalanobis_distance( vnl_vector<double> cons
 {
 	if( this->graph_.empty() )
 	{
-		vcl_map<unsigned,dsm_node_base_sptr>::iterator new_node_itr = this->add_node();
+		std::map<unsigned,dsm_node_base_sptr>::iterator new_node_itr = this->add_node();
 		new_node_itr->second->init_model(obs,this->init_covar_);		
 		new_node_itr->second->last_time_curr_ = this->frame_clock_ptr_->time();
 	}
 	else //the graph is not empty
 	{
-		vcl_map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
-		vcl_map<double,dsm_node_base_sptr> weight_node_map;
+		std::map<unsigned,dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+		std::map<double,dsm_node_base_sptr> weight_node_map;
 
 		for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 		{	
@@ -114,24 +114,24 @@ bool dsm_state_machine<T>::update_manhalanobis_distance( vnl_vector<double> cons
 			if( node_ptr->sqr_mahalanobis_dist(obs) < mahalan_dist_factor_ );
 			{
 				double covar_det = node_ptr->model_.det_covar();
-				weight_node_map.insert(vcl_make_pair(transition_prob/covar_det,g_itr->second));
+				weight_node_map.insert(std::make_pair(transition_prob/covar_det,g_itr->second));
 			}
 		}//end graph iteration
 
 		if( !weight_node_map.empty() ) //there is a posteriori above the threshold
 		{
-			//keys are stored in a vcl_map in order from lowest to highest.
+			//keys are stored in a std::map in order from lowest to highest.
 			dsm_node_base_sptr node_base_sptr = weight_node_map.begin()->second;
 			node_base_sptr->update_model(obs,0,this->min_covar_);
 		}
 		else //we need a new node.
 		{
-			vcl_map<unsigned,dsm_node_base_sptr>::iterator new_node_itr = this->add_node();
+			std::map<unsigned,dsm_node_base_sptr>::iterator new_node_itr = this->add_node();
 			new_node_itr->second->init_model(obs,this->init_covar_);
 			new_node_itr->second->last_time_curr_ = this->frame_clock_ptr_->time();
 		}
 	}//end graph is empty check
-	vcl_map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+	std::map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
 	for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 	{
 		dsm_node<T>* node_ptr = static_cast<dsm_node<T>*>(g_itr->second.as_pointer());
@@ -158,8 +158,8 @@ bool dsm_state_machine<T>::classify( vnl_vector<double> const& obs )
 		//check if any nodes need to be deleted due to to_forget_
 		this->prune_graph();
 		
-		vcl_map<double, vcl_map<unsigned, dsm_node_base_sptr>::iterator> weight_node_map;
-		vcl_map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr, g_itr, g_end = this->graph_.end();
+		std::map<double, std::map<unsigned, dsm_node_base_sptr>::iterator> weight_node_map;
+		std::map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr, g_itr, g_end = this->graph_.end();
 		
 		for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 		{
@@ -172,13 +172,13 @@ bool dsm_state_machine<T>::classify( vnl_vector<double> const& obs )
 				//double transition_prob = node_ptr->transition_prob(g_itr->first, this->rel_time_curr_);
 				double transition_prob = this->curr_node_itr_->second->transition_prob(g_itr->first, this->rel_time_curr_);
 				double covar_det = node_ptr->model_.det_covar();
-				weight_node_map.insert( vcl_make_pair( transition_prob/covar_det, g_itr ) );
+				weight_node_map.insert( std::make_pair( transition_prob/covar_det, g_itr ) );
 			}
 		}//end graph iteration	
 
 		if( !weight_node_map.empty() )
 		{
-			vcl_map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.begin()->second;
+			std::map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.begin()->second;
 			unsigned most_prob_id = most_prob_itr->first;
 
 			this->curr_node_itr_->second->inc_trans_freq(most_prob_id, rel_time_curr_);
@@ -197,7 +197,7 @@ bool dsm_state_machine<T>::classify( vnl_vector<double> const& obs )
 		}
 		else //the point was not within mahalan_factor of any distribution, need a new node
 		{
-			vcl_map<unsigned, dsm_node_base_sptr>::iterator old_curr_itr = this->curr_node_itr_;
+			std::map<unsigned, dsm_node_base_sptr>::iterator old_curr_itr = this->curr_node_itr_;
 			this->curr_node_itr_ = this->add_node();
 			this->curr_node_id_ = this->curr_node_itr_->first;
 
@@ -211,7 +211,7 @@ bool dsm_state_machine<T>::classify( vnl_vector<double> const& obs )
 		}		
 	}
 
-	vcl_set<unsigned>::iterator itr = this->target_visited_.find(this->curr_node_id_);
+	std::set<unsigned>::iterator itr = this->target_visited_.find(this->curr_node_id_);
 
 	if( itr == this->target_visited_.end() ) //the node hasn't been visited by the target
 		this->change_ = true;
@@ -219,11 +219,11 @@ bool dsm_state_machine<T>::classify( vnl_vector<double> const& obs )
 		this->change_ = false;
 
 	this->target_visited_.insert(this->curr_node_id_);
-	this->frame_change_map_.insert( vcl_make_pair( this->frame_clock_ptr_->time(), this->change_ ) );
-	this->frame_state_map_.insert( vcl_make_pair( this->frame_clock_ptr_->time(), this->curr_node_id_ ) );
+	this->frame_change_map_.insert( std::make_pair( this->frame_clock_ptr_->time(), this->change_ ) );
+	this->frame_state_map_.insert( std::make_pair( this->frame_clock_ptr_->time(), this->curr_node_id_ ) );
 	
 	//update the mean and covariance maps
-	vcl_map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+	std::map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
 	for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 	{
 		dsm_node<T>* node_ptr = static_cast<dsm_node<T>*>(g_itr->second.as_pointer());
@@ -255,8 +255,8 @@ bool dsm_state_machine<T>::classify(dsm_feature_sptr feature_sptr)
 	{
 		this->prune_graph();
 
-		vcl_map<double, vcl_map<unsigned, dsm_node_base_sptr>::iterator > weight_node_map;
-		vcl_map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr, g_itr, g_end = this->graph_.end();
+		std::map<double, std::map<unsigned, dsm_node_base_sptr>::iterator > weight_node_map;
+		std::map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr, g_itr, g_end = this->graph_.end();
 
 		for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 		{
@@ -271,17 +271,17 @@ bool dsm_state_machine<T>::classify(dsm_feature_sptr feature_sptr)
 				//the transition probability from the current node to the query node
 				double transition_prob = this->curr_node_itr_->second->transition_prob(g_itr->first, this->rel_time_curr_);
 				double covar_det = node_ptr->model_.det_covar();
-				//not that vcl_log is the natrual logarithm not base 10
-				double discriminant = -.5*curr_sqr_mahalanobis_distance + vcl_log(transition_prob) - .5*covar_det;
-				//weight_node_map.insert( vcl_make_pair( transition_prob/covar_det, g_itr ) );
-				weight_node_map.insert(vcl_make_pair(discriminant, g_itr) );
+				//not that std::log is the natrual logarithm not base 10
+				double discriminant = -.5*curr_sqr_mahalanobis_distance + std::log(transition_prob) - .5*covar_det;
+				//weight_node_map.insert( std::make_pair( transition_prob/covar_det, g_itr ) );
+				weight_node_map.insert(std::make_pair(discriminant, g_itr) );
 			}
 		}//end graph iteration
 		
 		if( !weight_node_map.empty() )//ther are nodes that are within the threshold
 		{
-			//vcl_map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.begin()->second;
-			vcl_map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.rbegin()->second;
+			//std::map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.begin()->second;
+			std::map<unsigned, dsm_node_base_sptr>::iterator most_prob_itr = weight_node_map.rbegin()->second;
 			unsigned most_prob_id = most_prob_itr->first;
 
 			this->curr_node_itr_->second->inc_trans_freq(most_prob_id, rel_time_curr_);
@@ -300,7 +300,7 @@ bool dsm_state_machine<T>::classify(dsm_feature_sptr feature_sptr)
 		}//end if(!weight_node_map.empty())
 		else//the point wass not within mahalan_factor of any distribution
 		{
-			vcl_map<unsigned, dsm_node_base_sptr>::iterator old_curr_itr = this->curr_node_itr_;
+			std::map<unsigned, dsm_node_base_sptr>::iterator old_curr_itr = this->curr_node_itr_;
 			this->curr_node_itr_ = this->add_node();
 			this->curr_node_id_ = this->curr_node_itr_->first;
 
@@ -315,7 +315,7 @@ bool dsm_state_machine<T>::classify(dsm_feature_sptr feature_sptr)
 	}//end else graph is not empty
 
 
-	vcl_set<unsigned>::iterator itr = this->target_visited_.find(this->curr_node_id_);
+	std::set<unsigned>::iterator itr = this->target_visited_.find(this->curr_node_id_);
 	
 	if( itr == this->target_visited_.end() ) //the node hasn't been visited by the target
 		this->change_ = true;
@@ -323,10 +323,10 @@ bool dsm_state_machine<T>::classify(dsm_feature_sptr feature_sptr)
 		this->change_ = false;
 
 	this->target_visited_.insert(this->curr_node_id_);
-	this->frame_change_map_.insert( vcl_make_pair( feature_sptr->t, this->change_ ) );
-	this->frame_state_map_.insert( vcl_make_pair( feature_sptr->t, this->curr_node_id_ ) );
+	this->frame_change_map_.insert( std::make_pair( feature_sptr->t, this->change_ ) );
+	this->frame_state_map_.insert( std::make_pair( feature_sptr->t, this->curr_node_id_ ) );
 	//update the mean and covariance maps
-	vcl_map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
+	std::map<unsigned, dsm_node_base_sptr>::iterator g_itr, g_end = this->graph_.end();
 	for( g_itr = this->graph_.begin(); g_itr != g_end; ++g_itr )
 	{
 		dsm_node<T>* node_ptr = static_cast<dsm_node<T>*>(g_itr->second.as_pointer());
@@ -354,7 +354,7 @@ void dsm_state_machine<T>::b_write(vsl_b_ostream& os) const
 
 	//3. write the graph
 	vsl_b_write(os, this->graph_.size());
-    for( vcl_map<unsigned, dsm_node_base_sptr>::const_iterator itr = this->graph_.begin(); itr != this->graph_.end(); ++itr )
+    for( std::map<unsigned, dsm_node_base_sptr>::const_iterator itr = this->graph_.begin(); itr != this->graph_.end(); ++itr )
     {
         vsl_b_write(os,(*itr).first);
         (*itr).second->b_write(os);
@@ -410,7 +410,7 @@ void dsm_state_machine<T>::b_write(vsl_b_ostream& os) const
 	//18. write the frame mean map
 	unsigned nframes_mean_map = frame_mean_map_.size();
 	vsl_b_write(os, nframes_mean_map);
-	vcl_map<unsigned, vcl_map<unsigned, vnl_vector<double> > >::const_iterator 
+	std::map<unsigned, std::map<unsigned, vnl_vector<double> > >::const_iterator 
 		fmm_itr, fmm_end = this->frame_mean_map_.end();
 
 	for( fmm_itr = this->frame_mean_map_.begin(); fmm_itr != fmm_end; ++fmm_itr )
@@ -422,7 +422,7 @@ void dsm_state_machine<T>::b_write(vsl_b_ostream& os) const
 		//write the number of nodes
 		vsl_b_write(os,fmm_itr->second.size());
 		
-		vcl_map<unsigned, vnl_vector<double> >::const_iterator n_itr, n_end = fmm_itr->second.end();
+		std::map<unsigned, vnl_vector<double> >::const_iterator n_itr, n_end = fmm_itr->second.end();
 
 		for( n_itr = fmm_itr->second.begin(); n_itr != n_end; ++n_itr )
 		{
@@ -437,7 +437,7 @@ void dsm_state_machine<T>::b_write(vsl_b_ostream& os) const
 	//19. write the frame_covar_map
 	unsigned nframe_covar_map = this->frame_covar_map_.size();
 	vsl_b_write(os, nframe_covar_map);
-	vcl_map<unsigned, vcl_map<unsigned, vnl_matrix<double> > >::const_iterator 
+	std::map<unsigned, std::map<unsigned, vnl_matrix<double> > >::const_iterator 
 		fcm_itr, fcm_end = this->frame_covar_map_.end();
 
 	for( fcm_itr = this->frame_covar_map_.begin(); fcm_itr != fcm_end; ++fcm_itr )
@@ -448,7 +448,7 @@ void dsm_state_machine<T>::b_write(vsl_b_ostream& os) const
 		//write the number of nodes
 		vsl_b_write(os,fcm_itr->second.size());
 
-		vcl_map<unsigned, vnl_matrix<double> >::const_iterator
+		std::map<unsigned, vnl_matrix<double> >::const_iterator
 			n_itr, n_end = fcm_itr->second.end();
 
 		for( n_itr = fcm_itr->second.begin(); n_itr != n_end; ++n_itr )
@@ -520,7 +520,7 @@ void dsm_state_machine<T>::b_read(vsl_b_istream& is)
 				unsigned num_nodes;
 				vsl_b_read(is, num_nodes);
 
-				vcl_map<unsigned, vnl_vector<double> > node_mean_map;
+				std::map<unsigned, vnl_vector<double> > node_mean_map;
 				
 				for( unsigned node_idx = 0; node_idx < num_nodes; ++node_idx )
 				{
@@ -552,7 +552,7 @@ void dsm_state_machine<T>::b_read(vsl_b_istream& is)
 				unsigned num_nodes;
 				vsl_b_read(is, num_nodes);
 
-				vcl_map<unsigned, vnl_matrix<double> > node_covar_map;
+				std::map<unsigned, vnl_matrix<double> > node_covar_map;
 				for( unsigned node_idx = 0; node_idx < num_nodes; ++node_idx )
 				{
 					//read node id
@@ -574,22 +574,22 @@ void dsm_state_machine<T>::b_read(vsl_b_istream& is)
         break;
     default:
         {
-            vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_state_machine<T>&)\n"
+            std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_state_machine<T>&)\n"
                 << "           Unknown version number "<< ver << '\n';
-            is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+            is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
             return;
         }//end default
     }//end switch
 }//end dsm_state_machine<T>::b_read
 
 template<int T>
-void dsm_state_machine<T>::write_dot_file( vcl_string const& filename)
+void dsm_state_machine<T>::write_dot_file( std::string const& filename)
 {
 
 }//end dsm_state_machine<T>::write_dot_file
 
 template<int T>
-void dsm_state_machine<T>::write_dot_file_full( vcl_string const& filename )
+void dsm_state_machine<T>::write_dot_file_full( std::string const& filename )
 {
 }
 

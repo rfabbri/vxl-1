@@ -2,22 +2,22 @@
 
 Options GOptions;
 
-bool Options::isDefined(const vcl_string& className, const vcl_string& attrName)
+bool Options::isDefined(const std::string& className, const std::string& attrName)
 {
   return ((*this)[className].count(attrName)>0);
 }
 
-vcl_string Options::valueOf(const vcl_string& className, const vcl_string& attrName)
+std::string Options::valueOf(const std::string& className, const std::string& attrName)
 {
   if(isDefined(className,attrName)){
     return (*this)[className][attrName];
   }else{
-    return vcl_string();
+    return std::string();
   }
 }
 
 void Options::setValue
-(const vcl_string& className, const vcl_string& attrName, const vcl_string& value)
+(const std::string& className, const std::string& attrName, const std::string& value)
 {
   (*this)[className][attrName] = value;
 }

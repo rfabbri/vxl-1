@@ -19,11 +19,11 @@
 #include <dbskfg/dbskfg_composite_node_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <vgl/vgl_polygon.h>
 #include <vsol/vsol_box_2d_sptr.h>
-#include <vcl_string.h>
+#include <string>
 #include <bxml/bxml_write.h>
 
 class dbskfg_shock_link;
@@ -86,34 +86,34 @@ public:
     bool t_type_transform_;
 
     // Store all contours to remove
-    vcl_vector<dbskfg_composite_node_sptr> contours_to_remove_;
+    std::vector<dbskfg_composite_node_sptr> contours_to_remove_;
 
     // Store all contours affected
-    vcl_vector<dbskfg_composite_link_sptr> contour_links_to_remove_;
+    std::vector<dbskfg_composite_link_sptr> contour_links_to_remove_;
 
     // Store all contours affected
-    vcl_vector<dbskfg_composite_link_sptr> contours_affected_;
+    std::vector<dbskfg_composite_link_sptr> contours_affected_;
 
     // Store all contours affected
-    vcl_vector<dbskfg_composite_node_sptr> contours_nodes_affected_;
+    std::vector<dbskfg_composite_node_sptr> contours_nodes_affected_;
 
     // Store all shock nodes affected
-    vcl_vector<dbskfg_composite_node_sptr> shock_nodes_affected_;
+    std::vector<dbskfg_composite_node_sptr> shock_nodes_affected_;
 
     // Store all shock links affected
-    vcl_vector<dbskfg_composite_link_sptr> shock_links_affected_;
+    std::vector<dbskfg_composite_link_sptr> shock_links_affected_;
 
     // Store all contours as vsol objects in this transform
-    vcl_vector<vsol_spatial_object_2d_sptr> contours_spatial_objects_;
+    std::vector<vsol_spatial_object_2d_sptr> contours_spatial_objects_;
 
     // Keep a list of outer shock nodes affected
-    vcl_vector<dbskfg_composite_node_sptr> outer_shock_nodes_;
+    std::vector<dbskfg_composite_node_sptr> outer_shock_nodes_;
  
     // In this case this will be one polyline 
-    vcl_vector<vsol_spatial_object_2d_sptr> new_contours_spatial_objects_;
+    std::vector<vsol_spatial_object_2d_sptr> new_contours_spatial_objects_;
 
     // The gap is represented by two endpoints
-    vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> gap_;
+    std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> gap_;
     
     // Store a vgl polygon
     vgl_polygon<double> poly_;
@@ -125,7 +125,7 @@ public:
     bool endpoint_in_gap(dbskfg_composite_node_sptr node);
 
     // Determine contour ids affected
-    vcl_vector<unsigned int> contour_ids_affected();
+    std::vector<unsigned int> contour_ids_affected();
 
     // Get bounding box of all contours
     vsol_box_2d_sptr bounding_box_context();
@@ -147,24 +147,24 @@ public:
     void compute_polygon_string();
 
     // print information about this transform
-    void print(vcl_ostream& os);
+    void print(std::ostream& os);
 
     // Return unique gap string
-    vcl_pair<vcl_string,vcl_string> gap_string();
+    std::pair<std::string,std::string> gap_string();
 
     // Return unique gap string
-    vcl_pair<vcl_string,vcl_string> gap_endpoints();
+    std::pair<std::string,std::string> gap_endpoints();
 
     // Determine loop endpoints
-    vcl_vector<dbskfg_composite_node_sptr> loop_endpoints_;
+    std::vector<dbskfg_composite_node_sptr> loop_endpoints_;
 
     // Keep track of all compounded gaps
-    vcl_vector<
-        vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> > 
+    std::vector<
+        std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> > 
         all_gaps_;
 
     // Store a string representation of polygon
-    vcl_map<vcl_string,unsigned int> polygon_string_rep_;
+    std::map<std::string,unsigned int> polygon_string_rep_;
 
     // Store the new contour id associated by transorm manager
     unsigned int gap_id_;
@@ -177,7 +177,7 @@ public:
 
     // write transform 
     void write_transform(const bxml_data_sptr& root_xml,
-                         vcl_string filename,
+                         std::string filename,
                          bool flag);
 
     // test whether all shock links surrounding node are in shock links affected

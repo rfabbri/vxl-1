@@ -1,12 +1,12 @@
 #include "dbdet_sel_base.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <map>
+#include <set>
+#include <algorithm>
 #include <pdf1d/pdf1d_calc_mean_var.h>
 #include <mbl/mbl_stats_1d.h>
 
@@ -25,7 +25,7 @@ app_usage_(0), app_thresh_(2),
 rad_(cvlet_params.rad_), gap_(cvlet_params.gap_),dtheta_(cvlet_params.dtheta_*vnl_math::pi/180), dpos_(cvlet_params.dpos_), 
 badap_uncer_(cvlet_params.badap_uncer_),
 token_len_(cvlet_params.token_len_), max_k_(cvlet_params.max_k_), max_gamma_(cvlet_params.max_gamma_),
-nrad_((unsigned) vcl_ceil(rad_)+1), maxN_(2*nrad_),
+nrad_((unsigned) std::ceil(rad_)+1), maxN_(2*nrad_),
 centered_(cvlet_params.centered_), bidir_(cvlet_params.bidirectional_),
 use_anchored_curvelets_(true),
 min_deg_to_link_(4), 
@@ -72,23 +72,23 @@ void dbdet_sel_base::extract_image_contours()
 //: form curvelets in a hierarchical fashion using combination rules
 void dbdet_sel_base::build_curvelets_using_combination_rules()
 {
-  vcl_cout << "Building All Possible Groupings (Hierarchical Rule based)...\n" ;
-  vcl_cout.flush();
+  std::cout << "Building All Possible Groupings (Hierarchical Rule based)...\n" ;
+  std::cout.flush();
 
   build_pairs();
   build_triplets();
   build_quadruplets();
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 //: group pairs of edgels into curvelets
 void dbdet_sel_base::build_pairs()
 {
-  vcl_cout << "Building pairs ...";
-  vcl_cout.flush();
+  std::cout << "Building pairs ...";
+  std::cout.flush();
 
-  //vcl_ofstream outfp("pair_distribution.txt", vcl_ios::out);
+  //std::ofstream outfp("pair_distribution.txt", std::ios::out);
 
   //form pairs from the edgels in the local neighborhood
   for (unsigned i=0; i<edgemap_->edgels.size(); i++){
@@ -121,19 +121,19 @@ void dbdet_sel_base::build_pairs()
       }
     }
     // save the neighboring edge count 
-    //outfp << cnt <<vcl_endl;
+    //outfp << cnt <<std::endl;
   }
     
   //close file
   //outfp.close();
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 void dbdet_sel_base::build_triplets()
 {
-  vcl_cout << "Building triplets ..." ;
-  vcl_cout.flush();
+  std::cout << "Building triplets ..." ;
+  std::cout.flush();
 
   ////go over all the edgels
   //for (unsigned i=0; i<edgemap_->edgemap_->edgels.size(); i++){
@@ -156,18 +156,18 @@ void dbdet_sel_base::build_triplets()
   //}
   //prune redundant pairs and triplets arising from them 
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 
 void dbdet_sel_base::build_quadruplets()
 {
   //Form the quads from pairs of triplets
-  vcl_cout << "Building Quadruplets ..." ;
-  vcl_cout.flush();
+  std::cout << "Building Quadruplets ..." ;
+  std::cout.flush();
 
   ////go over all the edgel pairs
-  //vcl_list<dbdet_curvelet* >::iterator p_it = pairs.begin();
+  //std::list<dbdet_curvelet* >::iterator p_it = pairs.begin();
   //for (; p_it != pairs.end(); p_it++)
   //{
   //  dbdet_curvelet* p1 = (*p_it);
@@ -188,7 +188,7 @@ void dbdet_sel_base::build_quadruplets()
   //}
 
   ////go over all quads and compute best estimates of the curve from the curve bundle
-  //vcl_list<dbdet_curvelet* >::iterator q_it = quads.begin();
+  //std::list<dbdet_curvelet* >::iterator q_it = quads.begin();
   //for (; q_it != quads.end(); q_it++)
   //{
   //  dbdet_curvelet* q1 = (*q_it);
@@ -228,8 +228,8 @@ void dbdet_sel_base::build_quadruplets()
   //        #endif
 
   //        //compute perturbed point and tangent corresponding to this position
-  //        cb->pt = e->pt + vgl_vector_2d<double>(dp*vcl_cos(e->tangent+vnl_math::pi/2), 
-  //                                              dp*vcl_sin(e->tangent+vnl_math::pi/2));
+  //        cb->pt = e->pt + vgl_vector_2d<double>(dp*std::cos(e->tangent+vnl_math::pi/2), 
+  //                                              dp*std::sin(e->tangent+vnl_math::pi/2));
   //        cb->theta = e->tangent + dt;
 
   //        //assign the rough centroid of this bundle
@@ -255,7 +255,7 @@ void dbdet_sel_base::build_quadruplets()
   //  }
   //}
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 //: form curvelets in a hierarchical fashion (use the add pair to existing grouping rule)
@@ -264,8 +264,8 @@ void dbdet_sel_base::build_curvelets_hierarchically()
   //first build pairs
   build_pairs();
 
-  vcl_cout << "Building All Possible Groupings (Hierarchical)..." ;
-  vcl_cout.flush();
+  std::cout << "Building All Possible Groupings (Hierarchical)..." ;
+  std::cout.flush();
 
   ////for all the edgels 
   //for (unsigned i=0; i<edgemap_->edgels.size(); i++){
@@ -298,15 +298,15 @@ void dbdet_sel_base::build_curvelets_hierarchically()
   //  }
   //}
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 //: form curvelets around each edgel in a greedy fashion
 void dbdet_sel_base::build_curvelets_greedy(unsigned max_size_to_group,bool use_flag, bool clear_existing, bool verbose)
 {
   if (verbose){
-    vcl_cout << "Building All Possible Curvelets (Greedy) ..." ;
-    vcl_cout.flush();
+    std::cout << "Building All Possible Curvelets (Greedy) ..." ;
+    std::cout.flush();
   }
 
   if (clear_existing){
@@ -317,8 +317,8 @@ void dbdet_sel_base::build_curvelets_greedy(unsigned max_size_to_group,bool use_
     curvelet_map_.resize(edgemap_->num_edgels());
 
     if (verbose){
-      vcl_cout << "curvelet map cleared..." ;
-      vcl_cout.flush();
+      std::cout << "curvelet map cleared..." ;
+      std::cout.flush();
     }
   }
 
@@ -396,7 +396,7 @@ void dbdet_sel_base::build_curvelets_greedy(unsigned max_size_to_group,bool use_
   //  }
   //}
   if (verbose)
-    vcl_cout << "done!" << vcl_endl;
+    std::cout << "done!" << std::endl;
 }
 
 
@@ -459,7 +459,7 @@ void dbdet_sel_base::form_full_cvlet_map()
 }
 
 //: check to see if curvelets are balanced
-bool dbdet_sel_base::curvelet_is_balanced(dbdet_edgel* ref_e, vcl_deque<dbdet_edgel*> &edgel_chain)
+bool dbdet_sel_base::curvelet_is_balanced(dbdet_edgel* ref_e, std::deque<dbdet_edgel*> &edgel_chain)
 {
   //looks like this is one of the qualitites we need of an edgel grouping before it can qualify to be a curvelet
 
@@ -505,7 +505,7 @@ void dbdet_sel_base::prune_curvelets_by_gaps(double gap_threshold)
   edge_link_graph_.resize(edgemap_->num_edgels());
 
   //go over the curvelets in the curvelet map
-  vcl_vector<dbdet_curvelet*> cvlets_to_del;
+  std::vector<dbdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
@@ -538,7 +538,7 @@ void dbdet_sel_base::prune_curvelets_by_length(double length_threshold)
   edge_link_graph_.resize(edgemap_->num_edgels());
 
   //go over the curvelets in the curvelet map
-  vcl_vector<dbdet_curvelet*> cvlets_to_del;
+  std::vector<dbdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
@@ -566,7 +566,7 @@ void dbdet_sel_base::prune_the_curvelets(double quality_threshold)
   edge_link_graph_.resize(edgemap_->num_edgels());
 
   //go over the curvelets in the curvelet map
-  vcl_vector<dbdet_curvelet*> cvlets_to_del;
+  std::vector<dbdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     curvelet_list_iter cv_it = curvelet_map_.curvelets(i).begin();
@@ -594,7 +594,7 @@ void dbdet_sel_base::prune_curvelets_by_c1_condition()
   edge_link_graph_.resize(edgemap_->num_edgels());
 
   //go over all the edgels and look at the curvelets on it
-  vcl_vector<dbdet_curvelet*> cvlets_to_del;
+  std::vector<dbdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     dbdet_edgel* eA = edgemap_->edgels[i];
@@ -641,7 +641,7 @@ void dbdet_sel_base::construct_naive_link_graph(double proximity_threshold, doub
   edge_link_graph_.clear();
   edge_link_graph_.resize(edgemap_->num_edgels());
 
-  unsigned R = (unsigned) vcl_ceil(proximity_threshold);
+  unsigned R = (unsigned) std::ceil(proximity_threshold);
 
   // 2a) go over all the curvelets and reset the used flags
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
@@ -709,7 +709,7 @@ void dbdet_sel_base::construct_the_link_graph(unsigned min_group_size, int metho
   }
 
   // 2) now construct the link graph from the curvelet map
-  vcl_cout << "Constructing the Link Graph using (N >= " << min_group_size << ")..." ;
+  std::cout << "Constructing the Link Graph using (N >= " << min_group_size << ")..." ;
 
   // 2a) go over all the curvelets and reset the used flags
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
@@ -735,7 +735,7 @@ void dbdet_sel_base::construct_the_link_graph(unsigned min_group_size, int metho
       form_links_from_a_curvelet(eA, cvlet, min_group_size, method);
     }
   }
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   ////3) prune duplicate curvelets (Assuming that once the curvelets are formed, they are independent)
   //for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++){
@@ -1189,7 +1189,7 @@ bool dbdet_sel_base::triplet_is_supported(dbdet_edgel* eX, dbdet_edgel* eA, dbde
 void dbdet_sel_base::prune_the_link_graph()
 {
   //prune the link graph of spurious links (ie links that cannot be extended)
-  vcl_vector<dbdet_link*> links_to_del;
+  std::vector<dbdet_link*> links_to_del;
   for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++)
   {
     dbdet_link_list_iter l_it = edge_link_graph_.cLinks[i].begin();
@@ -1214,7 +1214,7 @@ void dbdet_sel_base::make_link_graph_consistent()
   bool LG_consistent = false;
   while (!LG_consistent)
   {  
-    vcl_vector<dbdet_link*> links_to_del;
+    std::vector<dbdet_link*> links_to_del;
 
     // go over all the links of the link graph and determine if there is a counterpart to each of the links
     for (unsigned i=0; i<edge_link_graph_.cLinks.size(); i++)
@@ -1265,7 +1265,7 @@ void dbdet_sel_base::clear_all_contours()
 // extracting regular contours in successive stages
 void dbdet_sel_base::extract_image_contours_from_the_link_graph(unsigned num_link_iters)
 {
-  vcl_cout << "Extracting regular contours from the Link Graph..." ;
+  std::cout << "Extracting regular contours from the Link Graph..." ;
 
   //first remove any existing contours
   clear_all_contours();
@@ -1319,7 +1319,7 @@ void dbdet_sel_base::extract_image_contours_from_the_link_graph(unsigned num_lin
     link_graph_temp.cLinks.clear();
     link_graph_temp.pLinks.clear();
 
-    vcl_cout << i << "...";
+    std::cout << i << "...";
   }
 
   //Now sew together any distinct but connected edgel chains
@@ -1328,7 +1328,7 @@ void dbdet_sel_base::extract_image_contours_from_the_link_graph(unsigned num_lin
   //remove any short segments
   //TODO: prune_contours(0.0, 4.0);
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 
@@ -1345,7 +1345,7 @@ void dbdet_sel_base::extract_regular_contours_from_the_link_graph()
   extract_one_chains_from_the_link_graph(edge_link_graph_);
 
 	// added by Yuliang, count in unambiguous edges
-	vcl_cout << "Num unambiguous frags: " << curve_frag_graph_.frags.size()<<vcl_endl;
+	std::cout << "Num unambiguous frags: " << curve_frag_graph_.frags.size()<<std::endl;
 	/*
 	dbdet_edgel_chain_list_iter it_9 = curve_frag_graph_.frags.begin();
 	for (; it_9!= curve_frag_graph_.frags.end(); it_9++)
@@ -1354,7 +1354,7 @@ void dbdet_sel_base::extract_regular_contours_from_the_link_graph()
 		for(; it_99!=(*it_9)->edgels.end(); it_99++)
 			curve_frag_graph_.participate_edge_id.insert((*it_99)->id);
 	}
-	vcl_cout << "Num used inds: " << curve_frag_graph_.participate_edge_id.size()<< vcl_endl; 
+	std::cout << "Num used inds: " << curve_frag_graph_.participate_edge_id.size()<< std::endl; 
 	*/
 }
 
@@ -1571,7 +1571,7 @@ void dbdet_sel_base::form_curvelets_from_contours(bool clear_existing)
       if (centered_ && !bidir_) //form regular curvelets 
       {
         //use a symmetric set around the ref of the desired size
-        vcl_deque<dbdet_edgel*> cvlet_chain;
+        std::deque<dbdet_edgel*> cvlet_chain;
 
         //backward direction
         for (unsigned j=1; j<2*nrad_; j++)
@@ -1600,7 +1600,7 @@ void dbdet_sel_base::form_curvelets_from_contours(bool clear_existing)
         }
 
         if (!rel_dir) 
-          vcl_reverse(cvlet_chain.begin(), cvlet_chain.end());
+          std::reverse(cvlet_chain.begin(), cvlet_chain.end());
 
         //now form a curvelet from this subchain
         dbdet_curvelet* cvlet = 0;
@@ -1615,7 +1615,7 @@ void dbdet_sel_base::form_curvelets_from_contours(bool clear_existing)
       if (!centered_ && !bidir_) //ENO style curvelets 
       {
         //2 curvelets around the ref edgel
-        vcl_deque<dbdet_edgel*> cvlet_chainb, cvlet_chaina;
+        std::deque<dbdet_edgel*> cvlet_chainb, cvlet_chaina;
 
         //backward direction
         for (unsigned j=0; j<2*nrad_; j++)
@@ -1630,7 +1630,7 @@ void dbdet_sel_base::form_curvelets_from_contours(bool clear_existing)
         }
 
         if (!rel_dir) 
-          vcl_reverse(cvlet_chainb.begin(), cvlet_chainb.end());
+          std::reverse(cvlet_chainb.begin(), cvlet_chainb.end());
 
         //now form a curvelet from this subchain
         dbdet_curvelet* cvletb = 0;
@@ -1652,7 +1652,7 @@ void dbdet_sel_base::form_curvelets_from_contours(bool clear_existing)
         }
 
         if (!rel_dir) 
-          vcl_reverse(cvlet_chaina.begin(), cvlet_chaina.end());
+          std::reverse(cvlet_chaina.begin(), cvlet_chaina.end());
 
         //now form a curvelet from this subchain
         dbdet_curvelet* cvleta = 0;
@@ -1673,7 +1673,7 @@ void dbdet_sel_base::form_curvelets_from_contours(unsigned max_size_to_group)
   //form a new curvelet map
   curvelet_map_.resize(edgemap_->num_edgels());
 
-  unsigned half_size = (unsigned) vcl_floor((max_size_to_group-1)/2.0);
+  unsigned half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
 
   dbdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
@@ -1698,7 +1698,7 @@ void dbdet_sel_base::form_curvelets_from_contours(unsigned max_size_to_group)
       {
         //first in the forward direction
         //use a symmetric set around the ref of the desired size
-        vcl_deque<dbdet_edgel*> cvlet_chain;
+        std::deque<dbdet_edgel*> cvlet_chain;
         for (int j=(int)i-(int)half_size; j<(int)(i+half_size+1); j++){
           if (j>=0 && j<(int)chain->edgels.size())
             cvlet_chain.push_back(chain->edgels[j]);
@@ -1718,7 +1718,7 @@ void dbdet_sel_base::form_curvelets_from_contours(unsigned max_size_to_group)
         //form it as two separate one sided ones ones
 
         //forward half
-        vcl_deque<dbdet_edgel*> cvlet_chain;
+        std::deque<dbdet_edgel*> cvlet_chain;
         for (unsigned j=0; j<i+half_size+1; j++){
           if (j<chain->edgels.size())
             cvlet_chain.push_back(chain->edgels[j]);
@@ -1729,7 +1729,7 @@ void dbdet_sel_base::form_curvelets_from_contours(unsigned max_size_to_group)
         
         if (bidir_)//other half in the other direction
         { 
-          vcl_deque<dbdet_edgel*> cvlet_chain;
+          std::deque<dbdet_edgel*> cvlet_chain;
           for (int j=i-half_size; j<1; j++){
             if (j>=0 && j<(int)chain->edgels.size())
               cvlet_chain.push_back(chain->edgels[j]);
@@ -1739,7 +1739,7 @@ void dbdet_sel_base::form_curvelets_from_contours(unsigned max_size_to_group)
             curvelet_map_.add_curvelet(cvlet);
         }
         else { //other half in the same direction (ENO style)
-          vcl_deque<dbdet_edgel*> cvlet_chain;
+          std::deque<dbdet_edgel*> cvlet_chain;
           for (int j=i-half_size; j<1; j++){
             if (j>=0 && j<(int)chain->edgels.size())
               cvlet_chain.push_back(chain->edgels[j]);
@@ -1758,17 +1758,17 @@ void dbdet_sel_base::post_process_to_break_contours()
 {
   //Assume that curvelets have been computed already and the link graph reflects all the links from the curvelets
 
-  vcl_cout << "Breaking contours....";
+  std::cout << "Breaking contours....";
 
   //container for all fragments to be deleted
-  vcl_vector<dbdet_edgel_chain*> frags_to_del;
+  std::vector<dbdet_edgel_chain*> frags_to_del;
 
   //container for all the new sub fragments
-  vcl_vector<dbdet_edgel_chain*> new_frags;
+  std::vector<dbdet_edgel_chain*> new_frags;
 
   //size of segment to ignore at the beginning and end of a contour
   unsigned max_size_to_group=7; //temp (should be passed in to this function)
-  unsigned half_size = (unsigned) vcl_floor((max_size_to_group-1)/2.0);
+  unsigned half_size = (unsigned) std::floor((max_size_to_group-1)/2.0);
 
   dbdet_edgel_chain_list_iter f_it = curve_frag_graph_.frags.begin();
   for (; f_it != curve_frag_graph_.frags.end(); f_it++)
@@ -1855,7 +1855,7 @@ void dbdet_sel_base::post_process_to_break_contours()
       curve_frag_graph_.insert_fragment(new_frags[j]); 
   }
 
-  vcl_cout << "done." << vcl_endl;
+  std::cout << "done." << std::endl;
 }
 
 //: evauate the qualities of curvelets using various functions
@@ -1943,9 +1943,9 @@ void dbdet_sel_base::determine_accuracy_of_measurements()
       k_est(cvlet_cnt)     = estimates[1];
       gamma_est(cvlet_cnt) = estimates[2];
 
-      theta_error(cvlet_cnt) = vcl_min(vcl_abs(estimates[0]-min_estimates[0]), vcl_abs(estimates[0]-max_estimates[0]));
-      k_error(cvlet_cnt)     = vcl_min(vcl_abs(estimates[1]-min_estimates[1]), vcl_abs(estimates[1]-max_estimates[1]));
-      gamma_error(cvlet_cnt) = vcl_min(vcl_abs(estimates[2]-min_estimates[2]), vcl_abs(estimates[2]-max_estimates[2]));
+      theta_error(cvlet_cnt) = std::min(std::abs(estimates[0]-min_estimates[0]), std::abs(estimates[0]-max_estimates[0]));
+      k_error(cvlet_cnt)     = std::min(std::abs(estimates[1]-min_estimates[1]), std::abs(estimates[1]-max_estimates[1]));
+      gamma_error(cvlet_cnt) = std::min(std::abs(estimates[2]-min_estimates[2]), std::abs(estimates[2]-max_estimates[2]));
 
       cvlet_cnt++;
     }
@@ -1965,29 +1965,29 @@ void dbdet_sel_base::determine_accuracy_of_measurements()
   pdf1d_calc_mean_var(k_error_mean, k_error_std, k_error);
   pdf1d_calc_mean_var(gamma_error_mean, gamma_error_std, gamma_error);
 
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "Derivative estimate accuracy Report"    << vcl_endl;
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "theta estimate (mean, std): (" << theta_mean << ", " << vcl_sqrt(theta_std) << ")" << vcl_endl;
-  vcl_cout << "  k   estimate (mean, std): (" << k_mean << ", " << vcl_sqrt(k_std) << ")" << vcl_endl;
-  vcl_cout << "gamma estimate (mean, std): (" << gamma_mean << ", " << vcl_sqrt(gamma_std) << ")" << vcl_endl;
+  std::cout << "======================================" << std::endl;
+  std::cout << "Derivative estimate accuracy Report"    << std::endl;
+  std::cout << "======================================" << std::endl;
+  std::cout << "theta estimate (mean, std): (" << theta_mean << ", " << std::sqrt(theta_std) << ")" << std::endl;
+  std::cout << "  k   estimate (mean, std): (" << k_mean << ", " << std::sqrt(k_std) << ")" << std::endl;
+  std::cout << "gamma estimate (mean, std): (" << gamma_mean << ", " << std::sqrt(gamma_std) << ")" << std::endl;
 
-  vcl_cout << "spread of theta estimate (mean, std): (" << theta_error_mean << ", " << vcl_sqrt(theta_error_std) << ")" << vcl_endl;
-  vcl_cout << "spread of  k   estimate (mean, std): (" << k_error_mean << ", " << vcl_sqrt(k_error_std) << ")" << vcl_endl;
-  vcl_cout << "spread of gamma estimate (mean, std): (" << gamma_error_mean << ", " << vcl_sqrt(gamma_error_std) << ")" << vcl_endl;
+  std::cout << "spread of theta estimate (mean, std): (" << theta_error_mean << ", " << std::sqrt(theta_error_std) << ")" << std::endl;
+  std::cout << "spread of  k   estimate (mean, std): (" << k_error_mean << ", " << std::sqrt(k_error_std) << ")" << std::endl;
+  std::cout << "spread of gamma estimate (mean, std): (" << gamma_error_mean << ", " << std::sqrt(gamma_error_std) << ")" << std::endl;
 
 }
 
 
 void dbdet_sel_base::report_stats()
 {
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "Edge Linking Summary\n";
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "# of edgels:   " << edgemap_->edgels.size() << vcl_endl;
-  vcl_cout << "Parameters: ";
-  vcl_cout << "dx = " << dpos_ << ", dt = " << dtheta_ << vcl_endl;
-  vcl_cout << "neighborhood radius = " << rad_ << ", maxN = " << maxN_ << vcl_endl;
+  std::cout << "======================================" << std::endl;
+  std::cout << "Edge Linking Summary\n";
+  std::cout << "======================================" << std::endl;
+  std::cout << "# of edgels:   " << edgemap_->edgels.size() << std::endl;
+  std::cout << "Parameters: ";
+  std::cout << "dx = " << dpos_ << ", dt = " << dtheta_ << std::endl;
+  std::cout << "neighborhood radius = " << rad_ << ", maxN = " << maxN_ << std::endl;
 
   unsigned max_size = 0;
   //find maximum size of curvelet
@@ -2002,30 +2002,30 @@ void dbdet_sel_base::report_stats()
   }
 
   //count the raw number of edgel groupings by size
-  vcl_vector<int> cvlet_cnt(max_size+1, 0); 
+  std::vector<int> cvlet_cnt(max_size+1, 0); 
 
   //count the # of edgels that have a particular sized grouping
-  vcl_vector<int> cvlet_edgel_cnt(max_size+1, 0); 
+  std::vector<int> cvlet_edgel_cnt(max_size+1, 0); 
 
   //count the # of edgels that have a curvelets of a certain size or lower
-  vcl_vector<int> min_cvlet_edgel_cnt(max_size+1, 0);
+  std::vector<int> min_cvlet_edgel_cnt(max_size+1, 0);
 
   //count the # of curvelets that are consistent with their neighbors (criteria 1)
-  vcl_vector<int> consistent_cvlet_cnt(max_size+1, 0);
+  std::vector<int> consistent_cvlet_cnt(max_size+1, 0);
 
   //count the # of edgels that have consistent curvelets of a particular size
-  vcl_vector<int> consistent_cvlet_edgel_cnt(max_size+1, 0);
+  std::vector<int> consistent_cvlet_edgel_cnt(max_size+1, 0);
 
   //count the # of edgels that have consistent curvelets of a particular size or lower
-  vcl_vector<int> min_consistent_cvlet_edgel_cnt(max_size+1, 0);
+  std::vector<int> min_consistent_cvlet_edgel_cnt(max_size+1, 0);
 
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
   {
     dbdet_edgel* eA = edgemap_->edgels[i];
 
     //keep track of the various sized curvelets formed by this edgel
-    vcl_vector<bool> size_exists(max_size+1, false); 
-    vcl_vector<bool> consistent_size_exists(max_size+1, false);
+    std::vector<bool> size_exists(max_size+1, false); 
+    std::vector<bool> consistent_size_exists(max_size+1, false);
 
     //for each edgel go over all the curvelets it forms
     curvelet_list_iter it = curvelet_map_.curvelets(eA->id).begin();
@@ -2087,16 +2087,16 @@ void dbdet_sel_base::report_stats()
   }
 
   //report 
-  vcl_cout << "==========================================================================================================" << vcl_endl;
-  vcl_cout << "| cvlet size | raw # cvlet | % of edgels | % of edgels with no other larger curvelets | # of consistent cvlets | % of edgels with consistent curvelets |" << vcl_endl;
+  std::cout << "==========================================================================================================" << std::endl;
+  std::cout << "| cvlet size | raw # cvlet | % of edgels | % of edgels with no other larger curvelets | # of consistent cvlets | % of edgels with consistent curvelets |" << std::endl;
   for (unsigned i=3; i<=max_size; i++){
-    vcl_cout << i << " " << cvlet_cnt[i] << " " << cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " << min_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " ;
-    vcl_cout <<  consistent_cvlet_cnt[i] << " " << consistent_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " << min_consistent_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << vcl_endl;
+    std::cout << i << " " << cvlet_cnt[i] << " " << cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " << min_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " ;
+    std::cout <<  consistent_cvlet_cnt[i] << " " << consistent_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << " " << min_consistent_cvlet_edgel_cnt[i]*100.0/edgemap_->edgels.size() << std::endl;
   }
 
-  vcl_cout << vcl_endl;
-  vcl_cout << "# of image curves: " << curve_frag_graph_.frags.size() << vcl_endl;
-  vcl_cout << "======================================" << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "# of image curves: " << curve_frag_graph_.frags.size() << std::endl;
+  std::cout << "======================================" << std::endl;
 
 
 
@@ -2108,7 +2108,7 @@ void dbdet_sel_base::report_stats()
   int num_center_invalid = 0;
   int num_larger_dist = 0;
 
-  vcl_list<dbdet_curvelet* >::iterator t_it = trips.begin();
+  std::list<dbdet_curvelet* >::iterator t_it = trips.begin();
   for (; t_it != trips.end(); t_it++)
   {
     dbdet_curvelet* t1 = (*t_it);
@@ -2131,13 +2131,13 @@ void dbdet_sel_base::report_stats()
           num_center_invalid++;
 
           //output the triplet
-          vcl_cout.precision(8);
-          vcl_cout << "C Missing: (" << eA->id  << " " << eB->id << " " << eC->id << ")\n";
+          std::cout.precision(8);
+          std::cout << "C Missing: (" << eA->id  << " " << eB->id << " " << eC->id << ")\n";
     
-          vcl_cout << "pts = [" << eA->pt.x() << ", " << eA->pt.y() << ";\n";
-          vcl_cout << "       " << eB->pt.x() << ", " << eB->pt.y() << ";\n";
-          vcl_cout << "       " << eC->pt.x() << ", " << eC->pt.y() << "];\n";
-          vcl_cout << "ths = [" << eA->tangent << ";" << eB->tangent << ";" << eC->tangent << "];\n";
+          std::cout << "pts = [" << eA->pt.x() << ", " << eA->pt.y() << ";\n";
+          std::cout << "       " << eB->pt.x() << ", " << eB->pt.y() << ";\n";
+          std::cout << "       " << eC->pt.x() << ", " << eC->pt.y() << "];\n";
+          std::cout << "ths = [" << eA->tangent << ";" << eB->tangent << ";" << eC->tangent << "];\n";
 
           if (vgl_distance(eB->pt, eC->pt)>1.5 || 
               vgl_distance(eA->pt, eB->pt)>1.5)
@@ -2147,23 +2147,23 @@ void dbdet_sel_base::report_stats()
     }
   }
 
-  vcl_cout << "# of trips for which not all bundles exist: " << num_not_all_bundles_exist << vcl_endl;
-  vcl_cout << "# of trips for which some pairs are missing: " << num_pairs_missing << vcl_endl;
-  vcl_cout << "# of trips for which curve bundles did not intersect: " << num_not_all_bundles_exist-num_pairs_missing << vcl_endl;
-  vcl_cout << "# of trips for which central bundles did not intersect: " << num_center_invalid << vcl_endl;
-  vcl_cout << "# of trips for which distance from central edge was larger than 1.5: " << num_larger_dist << vcl_endl;
+  std::cout << "# of trips for which not all bundles exist: " << num_not_all_bundles_exist << std::endl;
+  std::cout << "# of trips for which some pairs are missing: " << num_pairs_missing << std::endl;
+  std::cout << "# of trips for which curve bundles did not intersect: " << num_not_all_bundles_exist-num_pairs_missing << std::endl;
+  std::cout << "# of trips for which central bundles did not intersect: " << num_center_invalid << std::endl;
+  std::cout << "# of trips for which distance from central edge was larger than 1.5: " << num_larger_dist << std::endl;
 
   // quad related questions:
   // when does ABC+BCD not produce a quad ABCD?
-  vcl_cout << "\n";
-  vcl_cout << "# of ABC + BCD combinations: " << num_ABC_BCD << vcl_endl;
-  vcl_cout << "# of ABC + BCD combinations that did not have required curve bundles: " << num_ABC_BCD-num_ABC_BCD_bundles_ok << vcl_endl;
-  vcl_cout << "# of ABC + BCD combinations that did not pass intersection test: " << num_ABC_BCD_intersection_invalid << vcl_endl;
+  std::cout << "\n";
+  std::cout << "# of ABC + BCD combinations: " << num_ABC_BCD << std::endl;
+  std::cout << "# of ABC + BCD combinations that did not have required curve bundles: " << num_ABC_BCD-num_ABC_BCD_bundles_ok << std::endl;
+  std::cout << "# of ABC + BCD combinations that did not pass intersection test: " << num_ABC_BCD_intersection_invalid << std::endl;
 
   //Q2: If a quad ABCD exists, do all the component triplets also exist?
   int num_triplets_missing = 0;
 
-  vcl_list<dbdet_curvelet* >::iterator q_it = quads.begin();
+  std::list<dbdet_curvelet* >::iterator q_it = quads.begin();
   for (; q_it != quads.end(); q_it++)
   {
     dbdet_curvelet* q1 = (*q_it);
@@ -2177,7 +2177,7 @@ void dbdet_sel_base::report_stats()
       num_triplets_missing++;
 
   }
-  vcl_cout << "# of quads for which all triplets do not exist: " << num_triplets_missing << vcl_endl;
+  std::cout << "# of quads for which all triplets do not exist: " << num_triplets_missing << std::endl;
 */
 }
 

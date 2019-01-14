@@ -70,7 +70,7 @@ f(int i, int j, int orient_channel)
 // -----------------------------------------------------------------------------
 //: cost of an oriented point, represented by its index
 float dbsks_gray_ocm::
-f(vcl_vector<int >& x, vcl_vector<int >& y, vcl_vector<int >& orient_channel)
+f(std::vector<int >& x, std::vector<int >& y, std::vector<int >& orient_channel)
 {
   if (x.empty())
     return 1.0f;
@@ -121,7 +121,7 @@ compute_gradient()
   //compute the gradient magnitude
   for(unsigned long i=0; i< this->grad_mag_.size(); i++)
   {
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
   }
   return;
 }
@@ -148,7 +148,7 @@ compute_gray_ocm_brute_force()
     for (int j = -radius; j <= radius; ++j)
     {
       dist_map(i+radius, j+radius) = 
-        vnl_math_max(0.0f, vcl_sqrt(float(i*i + j*j))-this->tol_near_zero_);
+        vnl_math_max(0.0f, std::sqrt(float(i*i + j*j))-this->tol_near_zero_);
     }
   }
 
@@ -200,7 +200,7 @@ compute_gray_ocm_brute_force()
             //// f(t) = sqrt(a+1) t / sqrt(1 + a*t*t), a = sigmoid_param_a_;
             //float a = 5;
             //float t = edge_strength;
-            //edge_strength = vcl_sqrt(a+1)*t / vcl_sqrt(1 + a*t*t);
+            //edge_strength = std::sqrt(a+1)*t / std::sqrt(1 + a*t*t);
 
             // option 2: make it binary
             float edge_strength = 1.0f;
@@ -216,10 +216,10 @@ compute_gray_ocm_brute_force()
             // we compute edge direction as orthogonal to gradient direction
             float grad_x = this->grad_x_(wx, wy);
             float grad_y = this->grad_y_(wx, wy);
-            double edge_dir = vcl_atan2(grad_x, -grad_y);
+            double edge_dir = std::atan2(grad_x, -grad_y);
 
             // modulo the angle difference to [0, pi]
-            double angle_diff = vcl_fmod(angle - edge_dir, vnl_math::pi);
+            double angle_diff = std::fmod(angle - edge_dir, vnl_math::pi);
             if (angle_diff < 0)
               angle_diff += vnl_math::pi;
 
@@ -271,7 +271,7 @@ compute_gray_ocm_brute_force_closest_edge()
     for (int j = -radius; j <= radius; ++j)
     {
       dist_map(i+radius, j+radius) = 
-        vnl_math_max(0.0f, vcl_sqrt(float(i*i + j*j))-this->tol_near_zero_);
+        vnl_math_max(0.0f, std::sqrt(float(i*i + j*j))-this->tol_near_zero_);
     }
   }
 
@@ -335,7 +335,7 @@ compute_gray_ocm_brute_force_closest_edge()
           //// f(t) = sqrt(a+1) t / sqrt(1 + a*t*t), a = sigmoid_param_a_;
           //float a = 5;
           //float t = edge_strength;
-          //edge_strength = vcl_sqrt(a+1)*t / vcl_sqrt(1 + a*t*t);
+          //edge_strength = std::sqrt(a+1)*t / std::sqrt(1 + a*t*t);
           
           // option 2: make it binary
           float edge_strength = 1.0f;
@@ -355,19 +355,19 @@ compute_gray_ocm_brute_force_closest_edge()
           //// we compute edge direction as orthogonal to gradient direction
           //float grad_x = this->grad_x_(closest_edge_wx, closest_edge_wy);
           //float grad_y = this->grad_y_(closest_edge_wx, closest_edge_wy);
-          //double edge_dir = vcl_atan2(grad_x, -grad_y);
+          //double edge_dir = std::atan2(grad_x, -grad_y);
 
           //// copied from shotton_ocm for testing purpose only //////////////////////
           // option 2: get orientation from gradient map of DT of edges
           // tangent on the edges == direction of iso-contour on distance map
           float grad_x = this->dt_grad_x_(i, j);
           float grad_y = this->dt_grad_y_(i, j);
-          double edge_dir = vcl_atan2(grad_x, -grad_y);
+          double edge_dir = std::atan2(grad_x, -grad_y);
 
           ///////////////////////////////////////////////////////////////////////////
 
           // modulo the angle difference to [0, pi]
-          double angle_diff = vcl_fmod(angle - edge_dir, vnl_math::pi);
+          double angle_diff = std::fmod(angle - edge_dir, vnl_math::pi);
           if (angle_diff < 0)
             angle_diff += vnl_math::pi;
 
@@ -456,7 +456,7 @@ compute_gradient(vil_image_view<float >& dt,
   //compute the gradient magnitude
   for(unsigned long i=0; i<dt_grad_mag.size(); i++)
   {
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
   }
   return;
 }

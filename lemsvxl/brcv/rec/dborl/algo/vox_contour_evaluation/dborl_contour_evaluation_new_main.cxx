@@ -1,5 +1,5 @@
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -36,14 +36,14 @@ int main(int argc, char *argv[]) {
         new dborl_contour_evaluation_params("dborl_contour_evaluation");*/
 //****************************** Load the cem file **************************************
 
-    vcl_cout<<"************ Load CEM file ************"<<vcl_endl;
-    vcl_string cem_file_1, cem_file_2,file_append;
+    std::cout<<"************ Load CEM file ************"<<std::endl;
+    std::string cem_file_1, cem_file_2,file_append;
     
     //params->output_image_extension_() == ".bmp";
     cem_file_1 = argv[1];
 
     bpro1_filepath cem_path_1(cem_file_1, ".cem");
-    vcl_vector<bpro1_storage_sptr> load_cem_results_1;
+    std::vector<bpro1_storage_sptr> load_cem_results_1;
     dbdet_load_cem_process load_cem_pro_1;
     load_cem_pro_1.parameters()->set_value("-cem_filename",cem_path_1);
     // Before we start the process lets clean input output
@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
 
     if ( !load_cem_status_1 )
     {
-        vcl_cerr << "Problems in loading GT cem file" 
-                 << cem_file_1 << vcl_endl;
+        std::cerr << "Problems in loading GT cem file" 
+                 << cem_file_1 << std::endl;
         return 1;
 
     }
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     cem_file_2 = argv[2];
     file_append = argv[3];
     bpro1_filepath cem_path_2(cem_file_2, ".cem");
-    vcl_vector<bpro1_storage_sptr> load_cem_results_2;
+    std::vector<bpro1_storage_sptr> load_cem_results_2;
     dbdet_load_cem_process load_cem_pro_2;
     load_cem_pro_2.parameters()->set_value("-cem_filename",cem_path_2);
     // Before we start the process lets clean input output
@@ -95,13 +95,13 @@ int main(int argc, char *argv[]) {
 
     if ( !load_cem_status_2 )
     {
-        vcl_cerr << "Problems in loading computed cem file" 
-                 << cem_file_2 << vcl_endl;
+        std::cerr << "Problems in loading computed cem file" 
+                 << cem_file_2 << std::endl;
         return 1;
 
     }
 
-    vcl_cout << "Start evaluation" << vcl_endl;
+    std::cout << "Start evaluation" << std::endl;
         dbdet_evaluation_process ev_pro;
         ev_pro.call_in_gui = 0;
 	ev_pro.get_parameters();
@@ -125,13 +125,13 @@ int main(int argc, char *argv[]) {
 //	if(argc >=6)
 //	{
 	    //load the input image
-		vcl_string input_img = argv[3];
+		std::string input_img = argv[3];
 
-		vcl_cout << input_img << vcl_endl;
+		std::cout << input_img << std::endl;
 
 		if (!vul_file::exists(input_img)) 
 		{
-		    vcl_cerr << "Cannot find image: " << input_img << vcl_endl;
+		    std::cerr << "Cannot find image: " << input_img << std::endl;
 		    return 1;
 		}
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 		vil_image_resource_sptr img_sptr = vil_load_image_resource(input_img.c_str());
 		if (!img_sptr) 
 		{
-		    vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
+		    std::cerr << "Cannot load image: " << input_img << std::endl;
 		    return 1;
 		}
 
@@ -157,8 +157,8 @@ int main(int argc, char *argv[]) {
 
 
 	// use logistic regressionn to prune contour fragments
-    vcl_vector<bpro1_storage_sptr> pc_results;
-    vcl_cout<<"************ Prune Contours Logistic Regression  ************"<<vcl_endl;
+    std::vector<bpro1_storage_sptr> pc_results;
+    std::cout<<"************ Prune Contours Logistic Regression  ************"<<std::endl;
 
     dbdet_prune_fragments_Logistic_Regression pc_pro;
 	pc_pro.call_in_gui = 0;
@@ -188,8 +188,8 @@ int main(int argc, char *argv[]) {
 
     if (pc_results.size() != 1) 
     {
-        vcl_cerr << "Process output does not contain a \
-                     set of remaining contours after pruning"<<vcl_endl;
+        std::cerr << "Process output does not contain a \
+                     set of remaining contours after pruning"<<std::endl;
         return 1;
     }
 	
@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
 	// Use input from load cems
 	ev_pro.add_input(load_cem_results_1[1]);
 	ev_pro.add_input(pc_results[0]);
-	vcl_cout << "finish input cem files"<<vcl_endl;
+	std::cout << "finish input cem files"<<std::endl;
 	bool ev_status = ev_pro.execute();
         //double Precision = ev_pro.Precision;
 	//double Recall = ev_pro.Recall;
@@ -218,35 +218,35 @@ int main(int argc, char *argv[]) {
 	double Precision = TP_cp_l/cp_length;
 	double Recall = TP_gt_l/gt_length;
 	double F_measure = 2*Precision*Recall/(Precision+Recall);
-	vcl_cout<<"Precision: " <<Precision <<" Recall: " << Recall <<" F Measure: "<< F_measure << vcl_endl;
+	std::cout<<"Precision: " <<Precision <<" Recall: " << Recall <<" F Measure: "<< F_measure << std::endl;
 
-	vcl_ofstream filestr;
+	std::ofstream filestr;
         size_t found = cem_file_1.find_last_of("/");
-	vcl_string name_1 = cem_file_1.substr(cem_file_1.size()-6,2);
-	vcl_string name_2 = cem_file_2.substr(cem_file_2.size()-6,2);
+	std::string name_1 = cem_file_1.substr(cem_file_1.size()-6,2);
+	std::string name_2 = cem_file_2.substr(cem_file_2.size()-6,2);
 
-	vcl_string output_file;
+	std::string output_file;
         //output_file=file_append+"_PR_stats.txt";
-     if(cem_file_2.find("GEN")!=vcl_string::npos)
+     if(cem_file_2.find("GEN")!=std::string::npos)
          	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_GEN_PR_result.txt";
-     else if(cem_file_2.find("SEL_prune")!=vcl_string::npos)
+     else if(cem_file_2.find("SEL_prune")!=std::string::npos)
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_SEL_prune_PR_result.txt";
-     else if(cem_file_2.find("SEL")!=vcl_string::npos)
+     else if(cem_file_2.find("SEL")!=std::string::npos)
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_SEL_PR_result.txt";
-     else if(cem_file_2.find("Kovesi")!=vcl_string::npos)
+     else if(cem_file_2.find("Kovesi")!=std::string::npos)
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_Kovesi_PR_result.txt";
-     else if(cem_file_2.find("VD")!=vcl_string::npos)
+     else if(cem_file_2.find("VD")!=std::string::npos)
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_VD_PR_result.txt";
-     else if(cem_file_2.find("shi")!=vcl_string::npos)
+     else if(cem_file_2.find("shi")!=std::string::npos)
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_shi_PR_result.txt";
 	 else
 	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_" + name_2 +"_PR_result.txt";
 
-	vcl_cout<<output_file<<vcl_endl;
-	filestr.open (output_file.c_str(), vcl_ofstream::app);
+	std::cout<<output_file<<std::endl;
+	filestr.open (output_file.c_str(), std::ofstream::app);
 
 	// >> i/o operations here <<
-        filestr << TP_gt_l <<" "<< gt_length <<" "<< TP_cp_l <<" " << cp_length << " " << Precision << " "<< Recall << " " << ev_pro.total_edit_dist <<" " << 	F_measure<<vcl_endl;
+        filestr << TP_gt_l <<" "<< gt_length <<" "<< TP_cp_l <<" " << cp_length << " " << Precision << " "<< Recall << " " << ev_pro.total_edit_dist <<" " << 	F_measure<<std::endl;
 
 	filestr.close();
 	

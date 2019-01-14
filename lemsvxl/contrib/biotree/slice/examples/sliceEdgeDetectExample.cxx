@@ -1,23 +1,23 @@
 #include <slice/sliceFileManager.h>
 #include <slice/algo/sliceEdgeDetectProcessor.h>
 #include <slice/sliceEngine.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/io/vil3d_io_image_view.h>
 #include <vil3d/algo/vil3d_grad_1x3.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/vil3d_transform.h>
 #include <basic/dbil3d/algo/dbil3d_gauss_filter.h> 
-#include <vcl_cmath.h>
+#include <cmath>
 
 /*
-void writeToFile(vil3d_image_view<float> im, vcl_string fname)
+void writeToFile(vil3d_image_view<float> im, std::string fname)
 {
         int ni = im.ni();
         int nj = im.nj();
         int nk = im.nk();
 
-        vcl_ofstream out(fname.c_str(), vcl_ios_binary | vcl_ios_app );
+        std::ofstream out(fname.c_str(), std::ios::binary | std::ios::app );
         out.write((char*)&ni, sizeof(int));
         out.write((char*)&nj, sizeof(int));
         out.write((char*)&nk, sizeof(int));
@@ -29,11 +29,11 @@ int main(int argc, char* argv[])
 {        
 
         if(argc < 2){
-                vcl_cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
+                std::cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
                 return 1;
         }
         else if(argc < 4){
-                vcl_cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
+                std::cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
                 return 1;
         }
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         int w;
         int h;
         int d;
-        vcl_string gx_file,gy_file,gz_file;
+        std::string gx_file,gy_file,gz_file;
         if(argc == 2)
         {
           vil3d_image_view<float> volume;
@@ -94,14 +94,14 @@ int main(int argc, char* argv[])
 
 
 /*
-        vcl_vector<float*> outputs;
+        std::vector<float*> outputs;
         outputs.push_back(xoff.origin_ptr());
         outputs.push_back(yoff.origin_ptr());
         outputs.push_back(zoff.origin_ptr());
         outputs.push_back(strength.origin_ptr());
         engine.setSaveToMemory(outputs);
         */
-        vcl_vector<vcl_string> outputs;
+        std::vector<std::string> outputs;
         outputs.push_back("xoffset.out");
         outputs.push_back("yoffset.out");
         outputs.push_back("zoffset.out");
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
 
         {
         vil3d_image_view<float> strength = sliceFileManager<float>::read("strength.out");
-        vcl_cerr << " Writing out to strength.float ... \n";
+        std::cerr << " Writing out to strength.float ... \n";
         vsl_b_ofstream bfs_out("strength.float");
         vsl_b_write(bfs_out, strength);
         bfs_out.close();

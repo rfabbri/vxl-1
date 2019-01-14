@@ -21,10 +21,10 @@
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_boundary_sptr.h>
 #include <dbskfg/dbskfg_utilities.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <map>
+#include <vector>
+#include <string>
+#include <utility>
 #include <vgl/vgl_line_segment_2d.h>
 
 class dbsk2d_ishock_node;
@@ -84,10 +84,10 @@ private:
     bool adjacency_flag_;
 
     // Keep an original map of boundary elements to new contour links
-    vcl_map<int,dbskfg_composite_link_sptr> boundary_link_mapping_;
+    std::map<int,dbskfg_composite_link_sptr> boundary_link_mapping_;
 
     // Keep an original map of boundary elements to new contour nodes
-    vcl_map<int,dbskfg_composite_node_sptr> boundary_node_mapping_;
+    std::map<int,dbskfg_composite_node_sptr> boundary_node_mapping_;
 
     // Make copy ctor private
     dbskfg_compute_composite_graph_streamlined

@@ -22,7 +22,7 @@
 #include <dbsks/dbsks_subpix_ccm.h>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
-#include <vcl_map.h>
+#include <map>
 
 
 // ============================================================================
@@ -79,7 +79,7 @@ public:
   // Inherited functions -------------------------------------------------------
 
   //: Return platform-independent name of the class
-  virtual vcl_string is_a() const { return "dbsks_xshock_ccm_likelihood"; }
+  virtual std::string is_a() const { return "dbsks_xshock_ccm_likelihood"; }
   
   //: Likelihood of an xshock fragment
   virtual double loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const;
@@ -95,8 +95,8 @@ public:
 
   //: Likelihood of a xshock fragment, also return the samples that are used
   double loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, 
-    vcl_vector<int >& left_x_vec, vcl_vector<int >& left_y_vec, vcl_vector<int >& left_angle_vec, 
-    vcl_vector<int >& right_x_vec, vcl_vector<int >& right_y_vec, vcl_vector<int >& right_angle_vec) const;
+    std::vector<int >& left_x_vec, std::vector<int >& left_y_vec, std::vector<int >& left_angle_vec, 
+    std::vector<int >& right_x_vec, std::vector<int >& right_y_vec, std::vector<int >& right_angle_vec) const;
   
 
   // Utilities -----------------------------------------------------------------
@@ -139,8 +139,8 @@ protected:
   dbsks_subpix_ccm* ccm_subpix_;
 
   //: Map to store lower bound and upper bound of likelihood functions of each edge
-  vcl_map<unsigned, double > map_eid_to_lowerbound_;
-  vcl_map<unsigned, double > map_eid_to_upperbound_;
+  std::map<unsigned, double > map_eid_to_lowerbound_;
+  std::map<unsigned, double > map_eid_to_upperbound_;
 
 
   // Cache values

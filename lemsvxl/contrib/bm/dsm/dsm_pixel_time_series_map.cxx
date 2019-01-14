@@ -90,20 +90,20 @@ void dsm_pixel_time_series_map::b_read(vsl_b_istream& is)
         break;
     default:
         {
-            vcl_cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
+            std::cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
 				     << "	 UNKNOWN VERSION NUMBER " << v << "\n";
-			is.is().clear(vcl_ios::badbit); //set an unrecoverable IO error on stream
+			is.is().clear(std::ios::badbit); //set an unrecoverable IO error on stream
 			return;
         }//end default
     }//end switch
 }
 
-bool dsm_pixel_time_series_map::write_txt( vcl_string const& filename ) const
+bool dsm_pixel_time_series_map::write_txt( std::string const& filename ) const
 {
 	
 	if( !vul_file::is_directory(filename) )
 	{
-		vcl_cerr << "ERROR ---- dsm_pixel_time_series_map::write_txt ----\n"
+		std::cerr << "ERROR ---- dsm_pixel_time_series_map::write_txt ----\n"
 			     << "\t MUST PROVIDE A VALID DIRECTORY.";
 		return false;
 	}
@@ -112,7 +112,7 @@ bool dsm_pixel_time_series_map::write_txt( vcl_string const& filename ) const
 	
 	for( itr = this->pixel_time_series_map.begin(); itr != map_end; ++itr )
 	{
-		vcl_stringstream ss;
+		std::stringstream ss;
 		ss << filename << "/" << itr->first.x() << "_" << itr->first.y() << "_" << this->feature_dimension <<  ".txt";
 
 		itr->second->write_txt(ss.str());
@@ -145,12 +145,12 @@ bool dsm_pixel_time_series_map::reduce_dims( unsigned const& ndims2keep )
 	unsigned npixels = this->pixel_time_series_map.size();
 	for( pts_itr = this->pixel_time_series_map.begin(); pts_itr != pts_end; ++pts_itr )
 	{
-		vcl_cout << "Reducing Time Series Dimension " << npixels - vcl_distance(pts_itr,pts_end) + 1 << " of " << npixels << vcl_endl;
+		std::cout << "Reducing Time Series Dimension " << npixels - std::distance(pts_itr,pts_end) + 1 << " of " << npixels << std::endl;
 
 		if( pts_itr->second->ndims() <= ndims2keep )
 		{
-			vcl_cerr << "----Error: dsm_pixel_time_series_map::reduce_dims----\n"
-				<< "\t ndims2keep (" << ndims2keep << " ) less than or equal to ndims (" << pts_itr->second->ndims() << ")\n" << vcl_flush;
+			std::cerr << "----Error: dsm_pixel_time_series_map::reduce_dims----\n"
+				<< "\t ndims2keep (" << ndims2keep << " ) less than or equal to ndims (" << pts_itr->second->ndims() << ")\n" << std::flush;
 			return false;
 		}
 

@@ -15,11 +15,11 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <utility>
 
 #include <dbdet/sel/dbdet_sel_utils.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -44,7 +44,7 @@ public:
   unsigned ncols() { return ncols_; }
 
   //: return a reference to the edgel buckets
-  vbl_array_2d<vcl_vector<dbdet_edgel*> > & cells() { return edgemap_->edge_cells; }
+  vbl_array_2d<std::vector<dbdet_edgel*> > & cells() { return edgemap_->edge_cells; }
 
   //: return the curve fragment graph
   dbdet_curve_fragment_graph & get_curve_fragment_graph() { return curve_frag_graph_; }

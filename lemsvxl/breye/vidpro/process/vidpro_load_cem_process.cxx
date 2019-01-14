@@ -1,10 +1,10 @@
 // This is vidpro/process/vidpro_load_cem_process.h
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vidpro/process/vidpro_load_cem_process.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -17,7 +17,7 @@ vidpro_load_cem_process::vidpro_load_cem_process() : bpro_process(), num_frames_
 {
   if( !parameters()->add( "Input file <filename...>" , "-ceminput" , bpro_filepath("Choose a file or a directory","*.cem") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -30,17 +30,17 @@ vidpro_load_cem_process::clone() const
 }
 
 
-vcl_vector< vcl_string > vidpro_load_cem_process::get_input_type()
+std::vector< std::string > vidpro_load_cem_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_load_cem_process::get_output_type()
+std::vector< std::string > vidpro_load_cem_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // output type
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -50,7 +50,7 @@ bool vidpro_load_cem_process::execute()
 {
   bpro_filepath input;
   parameters()->get_value( "-ceminput" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
 
   int num_of_files = 0;
 
@@ -59,7 +59,7 @@ bool vidpro_load_cem_process::execute()
   // make sure that input_file_path is sane
   if (input_file_path == "") { return false; }
 
-  //vcl_cout << vul_file::dirname(input_file_path);
+  //std::cout << vul_file::dirname(input_file_path);
 
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
@@ -67,10 +67,10 @@ bool vidpro_load_cem_process::execute()
     vul_file_iterator fn=input_file_path+"/*.cem";
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
+      std::string input_file = fn();
   
       vidpro_vsol2D_storage_sptr new_cem = loadCEM(input_file);
-      output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,new_cem));
+      output_data_.push_back(std::vector< bpro_storage_sptr > (1,new_cem));
       num_of_files++;
     }
 
@@ -78,20 +78,20 @@ bool vidpro_load_cem_process::execute()
     num_frames_ = num_of_files;
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
 
     vidpro_vsol2D_storage_sptr new_cem = loadCEM(input_file);
-    output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,new_cem));
+    output_data_.push_back(std::vector< bpro_storage_sptr > (1,new_cem));
     num_frames_ = 1;
   }
 
   //reverse the order of the objects so that they come out in the right order
-  vcl_reverse(output_data_.begin(),output_data_.end());
+  std::reverse(output_data_.begin(),output_data_.end());
 
   return true;
 }
 
-vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (vcl_string filename)
+vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (std::string filename)
 {
   double x, y;
   char lineBuffer[1024];
@@ -100,13 +100,13 @@ vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (vcl_string filename
   double idir, iconf, dir, conf;
 
   // new vector to store the contours
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
   //1)If file open fails, return.
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -120,14 +120,14 @@ vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (vcl_string filename
     //read the line with the contour count info
     if (!strncmp(lineBuffer, "CONTOUR_COUNT=", sizeof("CONTOUR_COUNT=")-1)){
       sscanf(lineBuffer,"CONTOUR_COUNT=%d",&(numContours));
-      //vcl_cout << numContours << vcl_endl;
+      //std::cout << numContours << std::endl;
       continue;
     }
 
     //read the line with the edge count info
     if (!strncmp(lineBuffer, "TOTAL_EDGE_COUNT=", sizeof("TOTAL_EDGE_COUNT=")-1)){
       sscanf(lineBuffer,"TOTAL_EDGE_COUNT=%d",&(numTotalEdges));
-      //vcl_cout << numTotalEdges << vcl_endl;
+      //std::cout << numTotalEdges << std::endl;
       continue;
     }
 
@@ -135,11 +135,11 @@ vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (vcl_string filename
     if (!strncmp(lineBuffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1)){
 
       //discarding other information for now...should really be outputting edgels
-      vcl_vector< vsol_point_2d_sptr > points;
+      std::vector< vsol_point_2d_sptr > points;
 
       infp.getline(lineBuffer,1024);
       sscanf(lineBuffer,"EDGE_COUNT=%d",&(numEdges));
-      //vcl_cout << numEdges << vcl_endl;
+      //std::cout << numEdges << std::endl;
 
       for (int j=0; j< numEdges; j++){
         //the rest should have data that goes into the current contour
@@ -175,7 +175,7 @@ vidpro_vsol2D_storage_sptr vidpro_load_cem_process::loadCEM (vcl_string filename
   vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
   output_vsol->add_objects(contours, filename);
 
-  vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+  std::cout << "Loaded: " << filename.c_str() << ".\n";
 
   return output_vsol;
 }

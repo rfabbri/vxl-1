@@ -5,7 +5,7 @@
 #include <mvl/TriTensor.h>
 #include <brct/brct_algos.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <bgld/algo/bgld_intersect.h>
 #include <vpgl/algo/vpgl_ray_intersect.h>
 
@@ -35,7 +35,7 @@ reconstruct_multiview()
 
   for (unsigned v=0; v < nviews_; ++v) {
     if (!selected_crv_[v]) {
-      vcl_cout << "Error: You must select a curve in views 2 & 3 by clicking.\n";
+      std::cout << "Error: You must select a curve in views 2 & 3 by clicking.\n";
       return;
     }
   }
@@ -51,46 +51,46 @@ reconstruct_multiview()
     end_idx = p0_idx_;
   }
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d_2v, 
     fcrv_3d_3v, 
     fcrv_3d_linear, 
     fcrv_3d, 
     fcrv_2d;
 
-  vcl_string prefix("dat/reconstr-tracer-multi"); 
-  vcl_string prefix2("dat/curve2d-view0-tracer-multi");
-  vcl_string ext(".dat");
+  std::string prefix("dat/reconstr-tracer-multi"); 
+  std::string prefix2("dat/curve2d-view0-tracer-multi");
+  std::string ext(".dat");
 
-  vcl_string cmd;
-  cmd = vcl_string("rm -f ") + prefix + vcl_string("*dat  ") + prefix2 + vcl_string("*dat");
+  std::string cmd;
+  cmd = std::string("rm -f ") + prefix + std::string("*dat  ") + prefix2 + std::string("*dat");
 
   if (system(cmd.c_str()) == -1)
-    vcl_cout << "Error removing old reconstructions\n";
+    std::cout << "Error removing old reconstructions\n";
 
-  vcl_string // notice string to distinguish this and the files from 'r' option
+  std::string // notice string to distinguish this and the files from 'r' option
     fname=prefix + ext;
 
-  fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-2v") + ext;
-  fcrv_3d_2v.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-2v") + ext;
+  fcrv_3d_2v.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-3v") + ext;
-  fcrv_3d_3v.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-3v") + ext;
+  fcrv_3d_3v.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-linear") + ext;
-  fcrv_3d_linear.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-linear") + ext;
+  fcrv_3d_linear.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
   fname = prefix2 + ext;
 
   // write corresp curve in view 2
-  fcrv_2d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 2d curve of 2nd view: " << fname << vcl_endl;
+  fcrv_2d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 2d curve of 2nd view: " << fname << std::endl;
 
   for (unsigned k=0; k < selected_crv_[1] ->size(); ++k) {
     const vsol_point_2d_sptr pt = selected_crv_[1]->vertex(k);
@@ -109,9 +109,9 @@ reconstruct_multiview()
     bmcsd_vector_3d pt_3D, pt_3D_linear;
 
     { // reconstruct from all views
-      vcl_cout << "reconstruct from all views\n";
+      std::cout << "reconstruct from all views\n";
 
-      vcl_vector<unsigned> views; // views we want to use
+      std::vector<unsigned> views; // views we want to use
       views.reserve(nviews_-1); 
 
       for (unsigned v=1; v < nviews_; ++v)
@@ -123,8 +123,8 @@ reconstruct_multiview()
     fcrv_3d.write((char *)(pt_3D.data_block()),3*sizeof(double));
 
     { // for comparison, reconstruct from 2 views: first + last
-      vcl_cout << "reconstruct from 2 views\n";
-      vcl_vector<unsigned> views; // views we want to use
+      std::cout << "reconstruct from 2 views\n";
+      std::vector<unsigned> views; // views we want to use
       views.push_back(nviews_-1);
 
       get_reconstructions(views, ini_idx, di0, &pt_3D, &pt_3D_linear);
@@ -132,8 +132,8 @@ reconstruct_multiview()
     fcrv_3d_2v.write((char *)(pt_3D.data_block()),3*sizeof(double));
 
     { // for comparison, reconstruct from 3 views: first + last + mid
-      vcl_cout << "reconstruct from 3 views\n";
-      vcl_vector<unsigned> views; // views we want to use
+      std::cout << "reconstruct from 3 views\n";
+      std::vector<unsigned> views; // views we want to use
       views.push_back((nviews_-1)/2);
       views.push_back(nviews_-1);
 
@@ -158,12 +158,12 @@ show_reprojections(unsigned jnz)
 
   mw_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
-  vcl_vector<vsol_point_2d_sptr> reproj; 
-  vcl_vector<unsigned> crv1_idx, crv2_idx;
+  std::vector<vsol_point_2d_sptr> reproj; 
+  std::vector<unsigned> crv1_idx, crv2_idx;
 
 
   for (unsigned v=2; v < nviews_; ++v) {
-    vcl_vector<bmcsd_vector_3d> crv3d; 
+    std::vector<bmcsd_vector_3d> crv3d; 
     reconstruct_and_reproject(jnz, v /*view*/, reproj, crv3d,crv1_idx, crv2_idx, rig);
     vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[0]);
 
@@ -199,7 +199,7 @@ show_reprojections(unsigned jnz)
       }
 
       // II: Soviews
-      vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+      std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
       for (itr = ep_soviews_2n_[v].begin(); itr != ep_soviews_2n_[v].end(); ++itr)
         tab_[v+2]->remove(*itr);
       ep_soviews_2n_[v].clear();
@@ -232,11 +232,11 @@ void mw_curve_tracing_tool::
 reconstruct_and_reproject(
     unsigned jnz, 
     unsigned view, 
-    vcl_vector<vsol_point_2d_sptr> &reproj, 
+    std::vector<vsol_point_2d_sptr> &reproj, 
 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    vcl_vector<unsigned> &crv1_idx,
-    vcl_vector<unsigned> &crv2_idx,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<unsigned> &crv1_idx,
+    std::vector<unsigned> &crv2_idx,
     mw_rig &rig) const
 {
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
@@ -247,8 +247,8 @@ reconstruct_and_reproject(
 void mw_curve_tracing_tool::
 project(
     unsigned view, 
-    vcl_vector<vsol_point_2d_sptr> &proj, 
-    const vcl_vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<vsol_point_2d_sptr> &proj, 
+    const std::vector<bmcsd_vector_3d> &crv3d, 
     mw_rig &/*rig*/) const
 {
   assert (view < nviews_);
@@ -276,8 +276,8 @@ project(
 void mw_curve_tracing_tool::
 define_match_for_reconstruction(
     unsigned jnz,
-    vcl_vector<unsigned> &crv1_idx,
-    vcl_vector<unsigned> &crv2_idx,
+    std::vector<unsigned> &crv1_idx,
+    std::vector<unsigned> &crv2_idx,
     mw_rig &/*rig*/
     ) const
 {
@@ -299,7 +299,7 @@ define_match_for_reconstruction(
   j = crv_candidates_idx_[jnz];
 
   // traverse L_[j] 
-  vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
+  std::list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
   for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
     unsigned k = ptr->ep_number;
@@ -309,7 +309,7 @@ define_match_for_reconstruction(
     unsigned lmin=0;
 
     { // determine point of this iset minimizing epipolar distance (assume accurate calib)
-      double cost_min = vcl_numeric_limits<double>::infinity(); 
+      double cost_min = std::numeric_limits<double>::infinity(); 
       double cost;
 
       assert(ptr->index.size() > 0);
@@ -354,9 +354,9 @@ define_match_for_reconstruction(
 void mw_curve_tracing_tool::
 reconstruct_one_candidate(
     unsigned jnz, 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    const vcl_vector<unsigned> &crv1_idx,
-    const vcl_vector<unsigned> &crv2_idx,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    const std::vector<unsigned> &crv1_idx,
+    const std::vector<unsigned> &crv2_idx,
     mw_rig &rig) const
 {
 
@@ -405,7 +405,7 @@ get_corresponding_point_v0_to_vn(unsigned v,unsigned di0, vsol_point_2d_sptr &pt
 
   { // determine point of this iset minimizing epipolar distance (assume accurate calib)
     // this is just to get the segment with which to intersect.
-    double cost_min = vcl_numeric_limits<double>::infinity(); 
+    double cost_min = std::numeric_limits<double>::infinity(); 
     double cost;
 
     for (unsigned l=0; l< selected_crv_[v]->size(); ++l) {
@@ -450,16 +450,16 @@ get_corresponding_point_v0_to_vn(unsigned v,unsigned di0, vsol_point_2d_sptr &pt
 // \param[in] views: views[i] specify from which view does pt_img[i] come from
 void mw_curve_tracing_tool::
 linearly_reconstruct_pts(
-    const vcl_vector<vsol_point_2d_sptr> &pt_img,
-    const vcl_vector<unsigned> &views,
+    const std::vector<vsol_point_2d_sptr> &pt_img,
+    const std::vector<unsigned> &views,
     vgl_point_3d<double> *pt_3D
     ) const 
 {
-  vcl_cout << "  Reconstructing linearly.\n";
+  std::cout << "  Reconstructing linearly.\n";
   assert(pt_img.size() > 1);
   assert(views.size() > 0);
-  vcl_vector<vnl_double_2> pts;
-  vcl_vector<vnl_double_3x4> projs;
+  std::vector<vnl_double_2> pts;
+  std::vector<vnl_double_3x4> projs;
 
   pts.push_back(vnl_double_2(pt_img[0]->x(), pt_img[0]->y()) );
   projs.push_back(cam_[0].Pr_.get_matrix());
@@ -474,19 +474,19 @@ linearly_reconstruct_pts(
 // \param[in] views: views[i] specify from which view does pt_img[i] come from
 void mw_curve_tracing_tool::
 nonlinearly_optimize_reconstruction(
-    const vcl_vector<vsol_point_2d_sptr> &pt_img,
-    const vcl_vector<unsigned> &views,
+    const std::vector<vsol_point_2d_sptr> &pt_img,
+    const std::vector<unsigned> &views,
     const vgl_point_3d<double> &pt_3D_initial,
     vgl_point_3d<double> *pt_3D
     ) const
 {
-  vcl_cout << "  Reconstructing optimized.\n";
+  std::cout << "  Reconstructing optimized.\n";
   assert(pt_img.size() > 1);
   assert(views.size() > 0);
   vpgl_ray_intersect isect(views.size()+1);
 
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vpgl_camera<double> * > projs;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vpgl_camera<double> * > projs;
 
   pts.push_back(pt_img[0]->get_p());
   projs.push_back(new vpgl_perspective_camera <double> (cam_[0].Pr_) );
@@ -508,7 +508,7 @@ nonlinearly_optimize_reconstruction(
 //
 void mw_curve_tracing_tool::
 get_reconstructions(
-    const vcl_vector<unsigned> &views, 
+    const std::vector<unsigned> &views, 
     unsigned ini_idx, 
     unsigned di0, 
     bmcsd_vector_3d *pt_3D, 
@@ -516,7 +516,7 @@ get_reconstructions(
 {
 
   // Corresponding points
-  vcl_vector<vsol_point_2d_sptr> pt_img(views.size() + 1);
+  std::vector<vsol_point_2d_sptr> pt_img(views.size() + 1);
   pt_img[0] = selected_crv_[0]->vertex(ini_idx + di0); 
   for (unsigned v=0; v < views.size(); ++v)
     get_corresponding_point_v0_to_vn(views[v],di0, pt_img[v+1]);
@@ -525,7 +525,7 @@ get_reconstructions(
 
   vgl_point_3d<double> pt_3D_vgl, pt_3D_linear_vgl;
 
-  vcl_cout << "Nu-Newly coded\n";
+  std::cout << "Nu-Newly coded\n";
   linearly_reconstruct_pts(pt_img, views, &pt_3D_linear_vgl);
   *pt_3D_linear = bmcsd_util::vgl_to_vnl(pt_3D_linear_vgl);
 

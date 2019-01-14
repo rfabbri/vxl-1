@@ -4,9 +4,9 @@
 #include <vgl/vgl_point_3d.h>
 #include <hsds/hsds_fd_tree_node_index.h>
 
-//: A comparison functor for vgl_point_3d's. Needed to create a vcl_set of vgl_point_3d<int>'s.
+//: A comparison functor for vgl_point_3d's. Needed to create a std::set of vgl_point_3d<int>'s.
 template <class T>
-class vgl_point_3d_cmp : public vcl_binary_function<vgl_point_3d<T>, vgl_point_3d<T>, bool>
+class vgl_point_3d_cmp : public std::binary_function<vgl_point_3d<T>, vgl_point_3d<T>, bool>
 {
 public:
   vgl_point_3d_cmp(){}

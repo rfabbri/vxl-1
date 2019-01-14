@@ -24,7 +24,7 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 #include <bsol/bsol_algs.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 //: Constructor
 dbskfg_shock_link::dbskfg_shock_link(dbskfg_composite_node_sptr source,
@@ -92,22 +92,22 @@ void dbskfg_shock_link::set_polygon(vgl_polygon<double> poly)
 
     polygon_boundary_ = poly;
 
-    double G = vcl_pow(2.0,-25.0);
+    double G = std::pow(2.0,-25.0);
 
     for (unsigned int s = 0; s < polygon_boundary_.num_sheets(); ++s)
     {
         for (unsigned int p = 0; p < polygon_boundary_[s].size(); ++p)
         { 
             polygon_boundary_[s][p].x()=
-                (vcl_floor((polygon_boundary_[s][p].x()/G)+0.5))*G;
+                (std::floor((polygon_boundary_[s][p].x()/G)+0.5))*G;
             polygon_boundary_[s][p].y()=
-                (vcl_floor((polygon_boundary_[s][p].y()/G)+0.5))*G;
+                (std::floor((polygon_boundary_[s][p].y()/G)+0.5))*G;
         }
     }
 }
 
 //: Grab splice cost of this shock link
-void dbskfg_shock_link::splice_cost(vcl_vector<double>& costs)
+void dbskfg_shock_link::splice_cost(std::vector<double>& costs)
 {
     dbsk2d_ishock_graph_sptr ishock_graph;
     dbsk2d_shock_graph_sptr shock_graph;
@@ -125,7 +125,7 @@ bool dbskfg_shock_link::contour_spawned_shock(
 {
 
 
-    vcl_vector<dbskfg_composite_link_sptr>::iterator it;
+    std::vector<dbskfg_composite_link_sptr>::iterator it;
 
     for ( it = left_contour_links_.begin() ; it != left_contour_links_.end()
               ; ++it)
@@ -158,10 +158,10 @@ bool dbskfg_shock_link::contour_spawned_shock(
 
 }
 //: Get contour pair
-vcl_set<unsigned int> dbskfg_shock_link::get_contour_pair()
+std::set<unsigned int> dbskfg_shock_link::get_contour_pair()
 {
 
-    vcl_set<unsigned int> contour_pair;
+    std::set<unsigned int> contour_pair;
 
     //Find out type of shock link
     if ( this->shock_compute_type() == dbskfg_utilities::LL )
@@ -978,9 +978,9 @@ void dbskfg_shock_link::form_degenerate_fragment()
     }
     
   
-    vcl_vector<vgl_point_2d<double> > right_points;
-    vcl_vector<unsigned int> right_ids;
-    vcl_vector<unsigned int> left_ids;
+    std::vector<vgl_point_2d<double> > right_points;
+    std::vector<unsigned int> right_ids;
+    std::vector<unsigned int> left_ids;
 
     // push back first two points to consider
     unsigned int right_target_id;
@@ -1033,7 +1033,7 @@ void dbskfg_shock_link::form_degenerate_fragment()
     }
   
 
-    vcl_vector<vgl_point_2d<double> > left_points;
+    std::vector<vgl_point_2d<double> > left_points;
 
     // In left case dont push back both ids
     unsigned int left_target_id;
@@ -1078,11 +1078,11 @@ void dbskfg_shock_link::form_degenerate_fragment()
         left_ids.push_back(left_target_id);
     }
     
-    vcl_vector<vgl_point_2d<double> >::reverse_iterator rit;
-    vcl_vector<vgl_point_2d<double> >::iterator lit;
+    std::vector<vgl_point_2d<double> >::reverse_iterator rit;
+    std::vector<vgl_point_2d<double> >::iterator lit;
 
     // Keep list of points
-    vcl_vector<vgl_point_2d<double> > polygon_points;
+    std::vector<vgl_point_2d<double> > polygon_points;
    
     for ( rit = right_points.rbegin(); rit != right_points.rend(); ++rit)
     {
@@ -1107,7 +1107,7 @@ void dbskfg_shock_link::form_degenerate_fragment()
     left_ids.push_back(shared_node->id());
 
     left_boundary_.contour_ids_ = left_ids;
-    vcl_reverse(right_ids.begin(),
+    std::reverse(right_ids.begin(),
                 right_ids.end());
     right_boundary_.contour_ids_ = right_ids;
 
@@ -1122,7 +1122,7 @@ void dbskfg_shock_link::form_regular_fragment()
 {
     
     // Keep list of points
-    vcl_vector<vgl_point_2d<double> > polygon_points;
+    std::vector<vgl_point_2d<double> > polygon_points;
     
     // Lets check left
     vgl_point_2d<double> startpt = this->source()->pt();
@@ -1140,7 +1140,7 @@ void dbskfg_shock_link::form_regular_fragment()
 
         unsigned int left_target_id(1);
 
-        vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair=
+        std::pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair=
             find_start_pair_of_polygon(clink,
                                        left_target_id,
                                        dbskfg_utilities::LEFT);
@@ -1212,7 +1212,7 @@ void dbskfg_shock_link::form_regular_fragment()
 
         unsigned int right_target_id(1);
 
-        vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair=
+        std::pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair=
             find_start_pair_of_polygon(clink,
                                        right_target_id,
                                        dbskfg_utilities::RIGHT);
@@ -1235,7 +1235,7 @@ void dbskfg_shock_link::form_regular_fragment()
         right_boundary_.contour_ids_.push_back(
             right_target_id);
 
-        vcl_vector<dbskfg_composite_link_sptr>::reverse_iterator rit
+        std::vector<dbskfg_composite_link_sptr>::reverse_iterator rit
             = right_contour_links_.rbegin();
         rit++;
         for ( ; rit != right_contour_links_.rend(); ++rit)
@@ -1294,12 +1294,12 @@ void dbskfg_shock_link::form_regular_fragment()
 
 
 
-vcl_pair< vgl_point_2d<double>, vgl_point_2d<double> > 
+std::pair< vgl_point_2d<double>, vgl_point_2d<double> > 
 dbskfg_shock_link::find_start_pair_of_polygon(dbskfg_composite_link_sptr clink,
                                               unsigned int& target_id,
                                               dbskfg_utilities::Orientation dir)
 {
-    vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair;
+    std::pair< vgl_point_2d<double>,vgl_point_2d<double> > start_pair;
    
     dbskfg_composite_node_sptr source_node = clink->source();
     dbskfg_composite_node_sptr target_node = clink->target();
@@ -1355,14 +1355,14 @@ dbskfg_shock_link::find_start_pair_of_polygon(dbskfg_composite_link_sptr clink,
     return start_pair;
 }
 
-void dbskfg_shock_link::print(vcl_ostream& os)
+void dbskfg_shock_link::print(std::ostream& os)
 {
     this->dbskfg_composite_link::print(os);
     os<<"Source Id: "
             << this->source()->id() 
             << " Target id: "
             << this->target()->id()
-            << vcl_endl;
+            << std::endl;
     
     os<<"Left Contour ids: ";
 
@@ -1375,18 +1375,18 @@ void dbskfg_shock_link::print(vcl_ostream& os)
             os<<clink->id()<<" ";
      
         }
-        os<<vcl_endl;
+        os<<std::endl;
     }
     else
     {
         if ( left_point_ )
         {
-            os<<left_point_->id()<<vcl_endl;
+            os<<left_point_->id()<<std::endl;
         }
         else
         {
 
-            os<<" NULL "<<vcl_endl;
+            os<<" NULL "<<std::endl;
         }
     }
 
@@ -1400,7 +1400,7 @@ void dbskfg_shock_link::print(vcl_ostream& os)
             os<<clink->id()<<" ";
      
         }
-        os<<vcl_endl;
+        os<<std::endl;
         
 
     }
@@ -1408,28 +1408,28 @@ void dbskfg_shock_link::print(vcl_ostream& os)
     {
         if ( right_point_ )
         {
-            os<<right_point_->id()<<vcl_endl;
+            os<<right_point_->id()<<std::endl;
         }
         else
         {
-            os<<" NULL "<<vcl_endl;
+            os<<" NULL "<<std::endl;
         }
     }
 
     // if ( rag_node_ )
     // {
-    //     vcl_cout<<"------------ Shock Rag Node Info --------------"<<vcl_endl;
+    //     std::cout<<"------------ Shock Rag Node Info --------------"<<std::endl;
     //     rag_node_->print(os);
     // }
-    os<<vcl_endl;
+    os<<std::endl;
 
     polygon_boundary_.print(os);
-    os<<vcl_endl;
+    os<<std::endl;
 
     elm_->getInfo(os);
     if ( rag_node_ )
     {
-        vcl_cout<<"rag node id: "<< rag_node_->id()<<vcl_endl;
+        std::cout<<"rag node id: "<< rag_node_->id()<<std::endl;
     }
     left_boundary_.print();
     right_boundary_.print();

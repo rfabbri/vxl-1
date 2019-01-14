@@ -10,7 +10,7 @@
 
 //: Constructor
 vox_average_n_xgraphs_params::
-vox_average_n_xgraphs_params(vcl_string algo_name) : 
+vox_average_n_xgraphs_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
   //: Name of input model

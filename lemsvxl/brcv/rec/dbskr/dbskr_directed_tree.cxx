@@ -6,7 +6,7 @@
 
 #include "dbskr_directed_tree.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -25,7 +25,7 @@ dbskr_directed_tree(const dbskr_directed_tree& other)
   *this = other;
 
   // clear cache data
-  vcl_vector<int > empty_vector;
+  std::vector<int > empty_vector;
   empty_vector.clear();
   this->dart_paths_.fill(empty_vector);
 }
@@ -40,21 +40,21 @@ dbskr_directed_tree(const dbskr_directed_tree& other)
 // Each member of the inner vector corresponds to an edge incident at the node,
 // arranged counter-clockwise
 bool dbskr_directed_tree::
-acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes) 
+acquire(std::vector< std::vector<std::pair<int, dbskr_edge_info> > >& nodes) 
 {
   if (nodes.size() == 0) 
   {
-    vcl_cout << "Not able to recover nodes from shock graph, returning\n";
+    std::cout << "Not able to recover nodes from shock graph, returning\n";
     return false;
   }
 
 #if 0
-  vcl_cout << "number of nodes: " << nodes.size() << " ";
+  std::cout << "number of nodes: " << nodes.size() << " ";
   for (unsigned int i = 0; i<nodes.size(); i++) {
     for (unsigned int j = 0; j<nodes[i].size(); j++) {
-      vcl_cout << nodes[i][j].first << " " << nodes[i][j].second.first << " " << nodes[i][j].second.second << "\n";
+      std::cout << nodes[i][j].first << " " << nodes[i][j].second.first << " " << nodes[i][j].second.second << "\n";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 #endif
 
@@ -62,17 +62,17 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
   node_cnt_ = nodes.size();
 
   //: initialize the arrays
-  vcl_vector<int> tmp(dart_cnt_, -1);
+  std::vector<int> tmp(dart_cnt_, -1);
   mate_ = tmp;
   tail_ = tmp;
   head_ = tmp;
   //TODO: check this -1 initialization is not causing problems
   surrogate_ = tmp;
-  vcl_vector<bool> tmp2(dart_cnt_, false);
+  std::vector<bool> tmp2(dart_cnt_, false);
   up_ = tmp2;
   leaf_ = tmp2;
-  vcl_pair<float, float> p(-1,-1);
-  vcl_vector<dbskr_edge_info> tmp3(dart_cnt_, p);
+  std::pair<float, float> p(-1,-1);
+  std::vector<dbskr_edge_info> tmp3(dart_cnt_, p);
   info_ = tmp3;
 
   // find the first leaf node
@@ -111,14 +111,14 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
   } while (head != int(first));
 
   if (current_dart != dart_cnt_) {
-    vcl_cout << "traversal give more darts!\n";
+    std::cout << "traversal give more darts!\n";
     return false;
   }
 
 #if 0
   for (unsigned int i = 0; i<dart_cnt_; i++) {
-    vcl_cout << "head[" << i << "]: " << head_[i] << vcl_endl;
-    vcl_cout << "info[" << i << "]: " << info_[i].first << " " << info_[i].second << vcl_endl;
+    std::cout << "head[" << i << "]: " << head_[i] << std::endl;
+    std::cout << "info[" << i << "]: " << info_[i].first << " " << info_[i].second << std::endl;
   }
 #endif
 
@@ -136,13 +136,13 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
 
 #if 0
   for (unsigned int i = 0; i<dart_cnt_; i++) {
-    vcl_cout << "mate[" << i << "]: " << mate_[i] << vcl_endl;
+    std::cout << "mate[" << i << "]: " << mate_[i] << std::endl;
   }
 #endif
 
   //: initialize children array
   for (unsigned int i = 0; i<dart_cnt_; i++) {
-    vcl_vector<int> tmp;
+    std::vector<int> tmp;
     children_.push_back(tmp);
   }
 
@@ -152,7 +152,7 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
   for (unsigned int i = 0; i<dart_cnt_; i++) {
     if (leaf_[i]) continue;
     
-    vcl_vector<int> tmp2;
+    std::vector<int> tmp2;
     int next_dart = next(i);
     
     while (next_dart != mate_[i]) {
@@ -168,10 +168,10 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
 
 #if 0
   for (unsigned int i = 0; i<dart_cnt_; i++) {
-    vcl_cout << "children[" << i << "]: ";
+    std::cout << "children[" << i << "]: ";
     for (unsigned int j = 0; j<children_[i].size(); j++)
-      vcl_cout << children_[i][j] << " ";
-    vcl_cout << vcl_endl;
+      std::cout << children_[i][j] << " ";
+    std::cout << std::endl;
   }
 #endif
 
@@ -186,14 +186,14 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
 
 #if 0
   for (unsigned int i = 0; i<node_cnt_; i++) {
-    vcl_cout << "out_darts[" << i << "]: ";
+    std::cout << "out_darts[" << i << "]: ";
     for (unsigned int j = 0; j<out_darts_[i].size(); j++)
-      vcl_cout << out_darts_[i][j] << " ";
-    vcl_cout << vcl_endl;
+      std::cout << out_darts_[i][j] << " ";
+    std::cout << std::endl;
   }
 #endif
   
-  vcl_vector<int> tmp4;
+  std::vector<int> tmp4;
   dart_paths_.resize(dart_cnt_, dart_cnt_);
   dart_paths_.fill(tmp4);
 
@@ -202,7 +202,7 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
   for (unsigned int i = 0; i<dart_cnt_; i++)
     for (unsigned int j = 0; j<dart_cnt_; j++)
       if (dart_paths_[i][j].size() != 0) 
-        vcl_cout << "PROBLEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+        std::cout << "PROBLEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
 #endif
 
   return true;
@@ -221,9 +221,9 @@ acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes)
 int dbskr_directed_tree::centroid() {
   // the number of nodes in the tree is half the number of darts
   int size = dart_cnt_/2;
-  vcl_vector<float> costs;
+  std::vector<float> costs;
   for (int i = 0; i<size; i++) {
-    vcl_vector<int> outs = out_darts(i);
+    std::vector<int> outs = out_darts(i);
     if (outs.size() > 2) {
 
       float min_cost = subtree_delete_cost(outs[0]);
@@ -261,10 +261,10 @@ int dbskr_directed_tree::centroid() {
 //: given a list of darts pointing down, set up flags for these darts and their mates, 
 //  and the subtrees they point to
 void dbskr_directed_tree::
-set_up(vcl_vector<int>& down_darts) 
+set_up(std::vector<int>& down_darts) 
 {
   //: traverse the tree down and collect the children 
-  vcl_vector<int> stack(down_darts);
+  std::vector<int> stack(down_darts);
   while (!stack.empty()) 
   {
     int dart = stack.back();
@@ -289,16 +289,16 @@ set_up(vcl_vector<int>& down_darts)
 //: given two darts d1 and d2, find the unique path in the rooted tree from d1 to d2
 //  return nodes in this path
 //  (if d2 is not a descendent of d1, return empty list)
-vcl_vector<int> dbskr_directed_tree::
+std::vector<int> dbskr_directed_tree::
 find_node_path(int d1, int d2) 
 {
-  vcl_vector<int> node_list;
+  std::vector<int> node_list;
   
   //: first find the darts 
-  vcl_vector<int> dart_list;
+  std::vector<int> dart_list;
   dart_list.push_back(d1);
 
-  vcl_vector<int> stack = children(d1);
+  std::vector<int> stack = children(d1);
   while (!stack.empty()) {
     int dart = stack.back();
     stack.pop_back();
@@ -317,7 +317,7 @@ find_node_path(int d1, int d2)
       break;
     }
 
-    vcl_vector<int> tmp = children(dart);
+    std::vector<int> tmp = children(dart);
     if (tmp.empty()) {
       dart_list.pop_back();
     } else {  // push its mate onto the stack as a sign to remove it if coming back
@@ -344,10 +344,10 @@ find_node_path(int d1, int d2)
 //------------------------------------------------------------------------------
 //: order the subproblems of a rooted tree (up flags are assumed to be set wrt the root)
 //  (this method is called for T1 in the algorithm)
-vcl_vector<int> dbskr_directed_tree::
+std::vector<int> dbskr_directed_tree::
 order_subproblems() 
 {  
-  vcl_vector<int> list;
+  std::vector<int> list;
   for (unsigned int i = 0; i<dart_cnt_; i++) 
     if (IS_EARLY(i))
       list.push_back(i);
@@ -364,10 +364,10 @@ order_subproblems()
 //------------------------------------------------------------------------------
 //: find a special order of subproblems of a tree with a fixed root 
 //  (this method is called for T2 in the algorithm)
-vcl_vector<int> dbskr_directed_tree::
-find_special_darts(vcl_vector<int>& root_ch) 
+std::vector<int> dbskr_directed_tree::
+find_special_darts(std::vector<int>& root_ch) 
 {
-  vcl_vector<int> list;
+  std::vector<int> list;
   helper(root_ch, list);
   return list;
 }
@@ -380,7 +380,7 @@ find_special_darts(vcl_vector<int>& root_ch)
 //------------------------------------------------------------------------------
 //:
 void dbskr_directed_tree::
-helper(const vcl_vector<int>& child_list, vcl_vector<int>& sofar) 
+helper(const std::vector<int>& child_list, std::vector<int>& sofar) 
 {  
   if (child_list.empty())
     return;
@@ -388,7 +388,7 @@ helper(const vcl_vector<int>& child_list, vcl_vector<int>& sofar)
   int start = mate_[first];
   surrogate_[start] = start;
   
-  vcl_vector<int> rest;
+  std::vector<int> rest;
   for (unsigned int i = 1; i<child_list.size(); i++)
     rest.push_back(child_list[i]);
 
@@ -403,15 +403,15 @@ helper(const vcl_vector<int>& child_list, vcl_vector<int>& sofar)
 //------------------------------------------------------------------------------
 //:
 void dbskr_directed_tree::
-left_path(int start, const vcl_vector<int> &current_list, 
-          vcl_vector<int>& sofar) 
+left_path(int start, const std::vector<int> &current_list, 
+          std::vector<int>& sofar) 
 {
   if (current_list.empty())
     return;
   int first = current_list[0];
   surrogate_[mate_[first]] = start;
 
-  vcl_vector<int> rest;
+  std::vector<int> rest;
   for (unsigned int i = 1; i<current_list.size(); i++)
     rest.push_back(current_list[i]);
 
@@ -425,14 +425,14 @@ left_path(int start, const vcl_vector<int> &current_list,
 //------------------------------------------------------------------------------
 //:
 void dbskr_directed_tree::
-siblings(const vcl_vector<int> &current_list, 
-         vcl_vector<int>& sofar) 
+siblings(const std::vector<int> &current_list, 
+         std::vector<int>& sofar) 
 {
   if (current_list.empty())
     return;
   int first = current_list[0];
 
-  vcl_vector<int> rest;
+  std::vector<int> rest;
   for (unsigned int i = 1; i<current_list.size(); i++)
     rest.push_back(current_list[i]);
 
@@ -452,13 +452,13 @@ siblings(const vcl_vector<int> &current_list,
 float dbskr_directed_tree::
 get_splice_cost_for_merge(int td, int d) 
 {
-  vcl_vector<int>& dart_path = get_dart_path(td, d);
+  std::vector<int>& dart_path = get_dart_path(td, d);
   float cost = 0;
   for (unsigned int i = 0; i<dart_path.size()-1; i++) 
   {
     int dart = dart_path[i];
     int next = dart_path[i+1];
-    vcl_vector<int>& ch = children_[dart];
+    std::vector<int>& ch = children_[dart];
     for (unsigned int j = 0; j<ch.size(); j++) 
     {
       if (ch[j] == next) continue;
@@ -474,9 +474,9 @@ get_splice_cost_for_merge(int td, int d)
 //------------------------------------------------------------------------------
 //: find the total splice cost of branches if this path's nodes are merged
 float dbskr_directed_tree::
-get_splice_cost_for_merge(int td, int d, vcl_vector<bool>& used_darts) 
+get_splice_cost_for_merge(int td, int d, std::vector<bool>& used_darts) 
 {
-  vcl_vector<int>& dart_path = get_dart_path(td, d);
+  std::vector<int>& dart_path = get_dart_path(td, d);
   for (unsigned int i = 0; i<dart_path.size(); i++) {
     used_darts[dart_path[i]] = true;
   }
@@ -484,18 +484,18 @@ get_splice_cost_for_merge(int td, int d, vcl_vector<bool>& used_darts)
   for (unsigned int i = 0; i<dart_path.size()-1; i++) {
     int dart = dart_path[i];
     int next = dart_path[i+1];
-    vcl_vector<int>& ch = children_[dart];
+    std::vector<int>& ch = children_[dart];
     for (unsigned int j = 0; j<ch.size(); j++) {
       if (ch[j] == next) continue;
       cost += subtree_delete_table_[ch[j]];
       used_darts[ch[j]] = true;
       //: push the darts in the subtree as well to the used darts
-      vcl_vector<int> expand_list = children(ch[j]);
+      std::vector<int> expand_list = children(ch[j]);
       while (expand_list.size() > 0) {
         int current = expand_list.back(); //expand_list.size()-1];
         used_darts[current] = true;
         expand_list.pop_back();
-        vcl_vector<int>& tmp = children(current);
+        std::vector<int>& tmp = children(current);
         for (unsigned int k = 0; k<tmp.size(); k++)
           expand_list.push_back(tmp[k]);
       }
@@ -508,7 +508,7 @@ get_splice_cost_for_merge(int td, int d, vcl_vector<bool>& used_darts)
 //------------------------------------------------------------------------------
 //: find the total splice cost of branches if this path's nodes are merged
 float dbskr_directed_tree::
-get_contract_cost(vcl_vector<bool>& used_darts) 
+get_contract_cost(std::vector<bool>& used_darts) 
 {
   float cost = 0;
   for (unsigned i = 0; i <dart_cnt_; i++) {
@@ -542,7 +542,7 @@ get_contract_cost(vcl_vector<bool>& used_darts)
 //  return darts in this path
 //  (if d2 is not a descendant of d1, return empty list)
 //  if path is cached return directly
-vcl_vector<int>& dbskr_directed_tree::
+std::vector<int>& dbskr_directed_tree::
 get_dart_path(int d1, int d2) 
 {  
   if (dart_paths_[d1][d2].size() > 0) 
@@ -551,10 +551,10 @@ get_dart_path(int d1, int d2)
   }
 
   //: find the darts 
-  vcl_vector<int> dart_list;
+  std::vector<int> dart_list;
   dart_list.push_back(d1);
 
-  vcl_vector<int> stack = children(d1);
+  std::vector<int> stack = children(d1);
   while (!stack.empty()) 
   {
     int dart = stack.back();
@@ -576,7 +576,7 @@ get_dart_path(int d1, int d2)
       break;
     }
 
-    vcl_vector<int> tmp = children(dart);
+    std::vector<int> tmp = children(dart);
     if (tmp.empty()) 
     {
       dart_list.pop_back();
@@ -608,11 +608,11 @@ get_dart_path(int d1, int d2)
 
 //------------------------------------------------------------------------------
 //: get dart path from end nodes  (only used in table writing part for debugging!)
-vcl_vector<int>& dbskr_directed_tree::
+std::vector<int>& dbskr_directed_tree::
 get_dart_path_from_nodes(int node1, int node2) 
 {
-  vcl_vector<int>& out_darts1 = out_darts(node1);
-  vcl_vector<int> in_darts2;
+  std::vector<int>& out_darts1 = out_darts(node1);
+  std::vector<int> in_darts2;
   for (unsigned int i = 0; i<dart_cnt_; i++) 
   {
     if (head_[i] == node2)
@@ -623,7 +623,7 @@ get_dart_path_from_nodes(int node1, int node2)
   {
     for (unsigned int j = 0; j<in_darts2.size(); j++) 
     {
-      vcl_vector<int>& tmp_path = get_dart_path(out_darts1[i], in_darts2[j]);
+      std::vector<int>& tmp_path = get_dart_path(out_darts1[i], in_darts2[j]);
       if (tmp_path.size() > 0) 
       {
         return tmp_path;
@@ -641,7 +641,7 @@ get_dart_path_from_nodes(int node1, int node2)
 
 //------------------------------------------------------------------------------
 //: given a NODE return its out darts, i.e. the darts whose tail is this node
-vcl_vector<int> dbskr_directed_tree::
+std::vector<int> dbskr_directed_tree::
 find_out_darts(int node) 
 {
   // find the first dart whose tail is node
@@ -652,7 +652,7 @@ find_out_darts(int node)
       break;
     }
 
-  vcl_vector<int> tmp;
+  std::vector<int> tmp;
   tmp.push_back(first);
   int prev_dart = mate_[prev(first)];
     
@@ -681,12 +681,12 @@ find_subtree_delete_costs()
   //  this is the splice cost of the branch starting with the given dart
   for (unsigned int i = 0; i<dart_cnt_; i++) {
     float cost = delete_cost(i);
-    vcl_vector<int> expand_list = children(i);
+    std::vector<int> expand_list = children(i);
     while (expand_list.size() > 0) {
       int current = expand_list.back(); //expand_list.size()-1];
       cost += delete_cost(current);
       expand_list.pop_back();
-      vcl_vector<int>& tmp = children(current);
+      std::vector<int>& tmp = children(current);
       for (unsigned int j = 0; j<tmp.size(); j++)
         expand_list.push_back(tmp[j]);
     }
@@ -708,9 +708,9 @@ find_subtree_delete_costs()
 
 #if 0
   for (unsigned int i = 0; i<dart_cnt_; i++) {
-    vcl_cout << "subtreedeletecost[" << i << "]: " << subtree_delete_table_[i] << vcl_endl;
+    std::cout << "subtreedeletecost[" << i << "]: " << subtree_delete_table_[i] << std::endl;
   }
-  vcl_cout << "total_splice_cost: " << total_splice_cost_ << " from dart_id: " << dart_id << " mate: " << mate_[dart_id] << vcl_endl;
+  std::cout << "total_splice_cost: " << total_splice_cost_ << " from dart_id: " << dart_id << " mate: " << mate_[dart_id] << std::endl;
 #endif
 }
 

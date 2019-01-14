@@ -19,7 +19,7 @@ static void test_params(int argc, char* argv[])
 
   root->append_data(elem);
   root->append_text("\n");
-  bxml_write(vcl_string("test-doc.xml"), doc);
+  bxml_write(std::string("test-doc.xml"), doc);
 
 
   bxml_document param_doc = bxml_read("test-doc.xml");

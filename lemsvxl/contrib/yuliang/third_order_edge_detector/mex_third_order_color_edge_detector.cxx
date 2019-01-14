@@ -7,9 +7,9 @@
  *      function edg = mex_third_order_color_edge_detector(imgRGB, use_lab, sigma, grad_thresh, N, w, h)
  */
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <string>
+#include <cstdlib>
 #include <dbdet/algo/dbdet_third_order_color_detector.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -162,7 +162,7 @@ void mexFunction(int nlhs, mxArray *plhs[ ], int nrhs, const mxArray *prhs[ ])
     dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(col_image.ni(),
                                                   col_image.nj());
 
-    vcl_vector<dbdet_edgel*> padded_edges=edgemap->edgels;
+    std::vector<dbdet_edgel*> padded_edges=edgemap->edgels;
     for ( unsigned int i=0; i < padded_edges.size() ; ++i)
     {
         vgl_point_2d<double> new_location;
@@ -190,7 +190,7 @@ void mexFunction(int nlhs, mxArray *plhs[ ], int nrhs, const mxArray *prhs[ ])
     int num_edges = padded_edge_map->num_edgels();
 	plhs[0] = mxCreateDoubleMatrix(num_edges, 4, mxREAL);
 	double* out_ptr = mxGetPr(plhs[0]);
-    vcl_vector<dbdet_edgel*> edges = padded_edge_map->edgels;
+    std::vector<dbdet_edgel*> edges = padded_edge_map->edgels;
 	for(int i = 0; i < num_edges; i++)
 	{
 		out_ptr[i] = edges[i]->pt.x()+1;

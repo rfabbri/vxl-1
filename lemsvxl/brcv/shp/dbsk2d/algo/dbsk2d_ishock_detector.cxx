@@ -132,17 +132,17 @@ void dbsk2d_ishock_detector::propagate_shocks ()
             neigh_col < _boundary->num_cols())
         {
           #ifdef DEBUG_SHOCK_VERBOSE
-            vcl_cout << "\n=========================================================\n";
-            vcl_cout << "Merging Cells: (" << 
+            std::cout << "\n=========================================================\n";
+            std::cout << "Merging Cells: (" << 
               _cur_cell_row << ", " << _cur_cell_col << ")-(" << 
-              neigh_row << ", " << neigh_col << ") " << vcl_endl;
+              neigh_row << ", " << neigh_col << ") " << std::endl;
           #endif
 
           //now merge the cells
           merge_cells(_cur_cell_row, _cur_cell_col, neigh_row, neigh_col);
 
           #ifdef DEBUG_SHOCK_VERBOSE
-            vcl_cout << "\n=========================================================\n";
+            std::cout << "\n=========================================================\n";
           #endif
 
           //3) propagate all activated and newly formed shocks
@@ -178,32 +178,32 @@ find_interacting_wavefronts_at_bnd(dbsk2d_lagrangian_cell_bnd_sptr bnd1,
                                    wf_pairs_list& interacting_wf_list)
 {
   #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Interacting wavefronts.....\n\n";
+    std::cout << "Interacting wavefronts.....\n\n";
 
-    vcl_cout << "Bnd1: \n";
-    vcl_cout << "==================================\n";
+    std::cout << "Bnd1: \n";
+    std::cout << "==================================\n";
     if (bnd1->swf()) 
-      vcl_cout << "SWF: {" << bnd1->swf()->id() << "}\n";
+      std::cout << "SWF: {" << bnd1->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
+      std::cout << "SWF: {}\n";
     for (ordered_shock_list_iter s_it = bnd1->active_shocks_list().begin();
        s_it != bnd1->active_shocks_list().end(); ++s_it)
-      vcl_cout << s_it->first.first << " : " << s_it->second->id() << 
+      std::cout << s_it->first.first << " : " << s_it->second->id() << 
         " [" << s_it->second->rBElement()->id() << ", " << 
-        s_it->second->lBElement()->id() << "]" << vcl_endl;
-    vcl_cout << "==================================\n";
-    vcl_cout << "Bnd2: \n";
-    vcl_cout << "==================================\n";
+        s_it->second->lBElement()->id() << "]" << std::endl;
+    std::cout << "==================================\n";
+    std::cout << "Bnd2: \n";
+    std::cout << "==================================\n";
     if (bnd2->swf()) 
-      vcl_cout << "SWF: {" << bnd2->swf()->id() << "}\n";
+      std::cout << "SWF: {" << bnd2->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
+      std::cout << "SWF: {}\n";
     for (ordered_shock_list_iter s_it = bnd2->active_shocks_list().begin();
        s_it != bnd2->active_shocks_list().end(); ++s_it)
-      vcl_cout << s_it->first.first << " : " << s_it->second->id() << 
+      std::cout << s_it->first.first << " : " << s_it->second->id() << 
         " [" << s_it->second->rBElement()->id() << ", " << 
-        s_it->second->lBElement()->id() << "]" << vcl_endl;
-    vcl_cout << "==================================\n";
+        s_it->second->lBElement()->id() << "]" << std::endl;
+    std::cout << "==================================\n";
 
   #endif
 
@@ -367,7 +367,7 @@ remove_virtual_endpoints(dbsk2d_lagrangian_ishock_detector& cur_cell,
                          dbsk2d_lagrangian_cell_bnd_sptr bnd1, 
                          dbsk2d_lagrangian_cell_bnd_sptr bnd2)
 {
-  vcl_set<dbsk2d_ishock_belm*> virtual_endpoints;
+  std::set<dbsk2d_ishock_belm*> virtual_endpoints;
 
   for (ordered_shock_list_iter s_it1 = bnd1->active_shocks_list().begin();
        s_it1 != bnd1->active_shocks_list().end(); s_it1++)
@@ -475,7 +475,7 @@ remove_virtual_endpoints(dbsk2d_lagrangian_ishock_detector& cur_cell,
   }
 
   //now delete all the virtual endpoints
-  for (vcl_set<dbsk2d_ishock_belm*>::iterator v_it = virtual_endpoints.begin();
+  for (std::set<dbsk2d_ishock_belm*>::iterator v_it = virtual_endpoints.begin();
        v_it != virtual_endpoints.end(); v_it++)
   {
     cur_cell.delete_a_belm(*v_it);
@@ -526,7 +526,7 @@ interact_wavefronts(dbsk2d_lagrangian_ishock_detector& cur_cell,
     cur_cell.init_cand_src_between(wf_it->first, wf_it->second);
     
     #ifdef DEBUG_SHOCK_VERBOSE
-      vcl_cout << "Interaction between: " << wf_it->first->id() << " " << wf_it->second->id() << vcl_endl;
+      std::cout << "Interaction between: " << wf_it->first->id() << " " << wf_it->second->id() << std::endl;
     #endif
   }
 }
@@ -663,17 +663,17 @@ void dbsk2d_ishock_detector::merge_next_scheduled_cells()
           _cells(neigh_row, neigh_col).propagate_shocks();
 
         #ifdef DEBUG_SHOCK_VERBOSE
-          vcl_cout << "\n=========================================================\n";
-          vcl_cout << "Merging Cells: (" << 
+          std::cout << "\n=========================================================\n";
+          std::cout << "Merging Cells: (" << 
             _cur_cell_row << ", " << _cur_cell_col << ")-(" << 
-            neigh_row << ", " << neigh_col << ") " << vcl_endl;
+            neigh_row << ", " << neigh_col << ") " << std::endl;
         #endif
 
         //now merge the cells
         merge_cells(_cur_cell_row, _cur_cell_col, neigh_row, neigh_col);
 
         #ifdef DEBUG_SHOCK_VERBOSE
-          vcl_cout << "\n=========================================================\n";
+          std::cout << "\n=========================================================\n";
         #endif
       }
       else {
@@ -710,7 +710,7 @@ void dbsk2d_ishock_detector::merge_next_scheduled_cells()
   }
   else {
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Only one cell left!" << vcl_endl;
+    std::cout << "Only one cell left!" << std::endl;
     #endif
   }
 
@@ -733,7 +733,7 @@ bool dbsk2d_ishock_detector::validate_shocks()
     if (!sedge->lShock() || !sedge->rShock()){
       shocks_valid = false;
       #ifdef DEBUG_SHOCK_VERBOSE
-        vcl_cout << "S:" << sedge->id() << " wavefronts invalid. \n";
+        std::cout << "S:" << sedge->id() << " wavefronts invalid. \n";
       #endif
       break;
     }
@@ -743,22 +743,22 @@ bool dbsk2d_ishock_detector::validate_shocks()
     if (!(sedge->cSNode() || sedge->cell_bnd())){
       shocks_valid = false;
       #ifdef DEBUG_SHOCK_VERBOSE
-        vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
+        std::cout << "S:" << sedge->id() << "did not intersect. \n";
       #endif
     }
   }
 
   #ifdef DEBUG_SHOCK_VERBOSE
     if (shocks_valid)
-      vcl_cout << "shocks validated!" << vcl_endl;
+      std::cout << "shocks validated!" << std::endl;
     else
-      vcl_cout << "shocks invalid!" << vcl_endl;
+      std::cout << "shocks invalid!" << std::endl;
   #endif
 
   dbsk2d_assert(shocks_valid);
 
   if (!shocks_valid){
-    vcl_cout << "Shocks computation produced invalid shocks." <<vcl_endl;
+    std::cout << "Shocks computation produced invalid shocks." <<std::endl;
     clear();
   }
 

@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 
 //TEMP
 #include <vil/vil_image_view.h>
@@ -13,7 +13,7 @@
 int main( int argc, char* argv[] )
 {
   if( argc != 4 ) {
-    vcl_cout<< "Usage : vam_threshold input_image output_image thresh\n";
+    std::cout<< "Usage : vam_threshold input_image output_image thresh\n";
     return -1;
   }
 

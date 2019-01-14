@@ -5,8 +5,8 @@
 
 
 #include "dbmsh3d_pt_set_correspondence.h"
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 #include <vsol/vsol_point_3d.h>
 #include <bsol/bsol_point_index_3d.h>
@@ -43,7 +43,7 @@ match()
 
   // >> convert the point set of reference mesh into a vector of vsol points
   dbmsh3d_mesh* ref_mesh = this->reference_mesh();
-  vcl_vector<vsol_point_3d_sptr > ref_points;
+  std::vector<vsol_point_3d_sptr > ref_points;
   ref_points.reserve(ref_mesh->num_vertices());
 
   ref_mesh->reset_vertex_traversal();
@@ -68,7 +68,7 @@ match()
 
 
   int num_cells = ref_points.size() / num_pts_per_cell;
-  int num_rows = (int)vcl_pow(num_cells, 1.0/3);
+  int num_rows = (int)std::pow(num_cells, 1.0/3);
   int num_cols = num_rows;
   int num_slabs = num_rows;
 
@@ -89,7 +89,7 @@ match()
     ++counter;
     if (counter > ten_percent_points)
     {
-      vcl_cout << "+10% done.\n";
+      std::cout << "+10% done.\n";
       counter = 0;
     }
 
@@ -105,9 +105,9 @@ match()
     if (closest_pt)
     {
 
-      this->correspondence_map_.insert(vcl_make_pair(query->get_id(), closest_pt->get_id()));
+      this->correspondence_map_.insert(std::make_pair(query->get_id(), closest_pt->get_id()));
       this->distance_map_.insert(
-        vcl_make_pair(query->get_id(), query->distance(closest_pt)));
+        std::make_pair(query->get_id(), query->distance(closest_pt)));
     }
   }
 }

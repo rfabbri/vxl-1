@@ -17,7 +17,7 @@
 
 //: Constructor
 mpi_compute_ishock_params::
-mpi_compute_ishock_params(vcl_string algo_name):
+mpi_compute_ishock_params(std::string algo_name):
   dborl_algo_params(algo_name)
 {
   // file list
@@ -45,7 +45,7 @@ mpi_compute_ishock_params(vcl_string algo_name):
   // Parameters of the processes
   // Edge detection
   dbdet_third_order_color_edge_detector_process pro1;
-  vcl_vector<bpro1_param*> params1 = pro1.parameters()->get_param_list();
+  std::vector<bpro1_param*> params1 = pro1.parameters()->get_param_list();
   for (unsigned i = 0; i < params1.size(); i++) 
   {
     dborl_parameter_base* p = 
@@ -56,7 +56,7 @@ mpi_compute_ishock_params(vcl_string algo_name):
 
   // Boundary linking
   dbdet_generic_linker_process pro2;
-  vcl_vector<bpro1_param*> params2 = pro2.parameters()->get_param_list();
+  std::vector<bpro1_param*> params2 = pro2.parameters()->get_param_list();
   for (unsigned i = 0; i < params2.size(); i++) 
   {
     dborl_parameter_base* p = 
@@ -67,7 +67,7 @@ mpi_compute_ishock_params(vcl_string algo_name):
 
   // Intrinsic shock detection
   dbsk2d_compute_ishock_process pro3;
-  vcl_vector<bpro1_param*> params3 = pro3.parameters()->get_param_list();
+  std::vector<bpro1_param*> params3 = pro3.parameters()->get_param_list();
   for (unsigned i = 0; i < params3.size(); i++) 
   {
     dborl_parameter_base* p = 
@@ -122,7 +122,7 @@ create_document_data()
 // -----------------------------------------------------------------------------
 //: Return pointer to a parameter with a given name and group
 dborl_parameter_base* mpi_compute_ishock_params::
-get_param(const vcl_string& group, const vcl_string& name)
+get_param(const std::string& group, const std::string& name)
 {
   for (unsigned i =0; i < this->param_list_.size(); ++i)
   {

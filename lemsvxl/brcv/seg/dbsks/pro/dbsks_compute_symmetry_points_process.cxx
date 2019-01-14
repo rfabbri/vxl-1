@@ -24,7 +24,7 @@ dbsks_compute_symmetry_points_process()
     !parameters()->add("Threshold: " , "-threshold", 0.01f)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -44,27 +44,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_compute_symmetry_points_process::
+std::string dbsks_compute_symmetry_points_process::
 name()
 { 
   return "Compute Symmetry Points"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_compute_symmetry_points_process::
+std::vector< std::string > dbsks_compute_symmetry_points_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_compute_symmetry_points_process::
+std::vector< std::string > dbsks_compute_symmetry_points_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("image");
   
   return to_return;
@@ -90,8 +90,8 @@ bool dbsks_compute_symmetry_points_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_compute_symmetry_points_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_compute_symmetry_points_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -118,21 +118,21 @@ execute()
   detector.analyze();
 
   // write output table to files
-  vcl_string sscore_file = "d:/vision/data/symmetry_score/sscore_dist.txt";
+  std::string sscore_file = "d:/vision/data/symmetry_score/sscore_dist.txt";
   detector.write_sym_score_distribution_to_file(sscore_file);
   
   //// turn the medial points with symmetry score < 0.01 to vsol points
-  //vcl_vector<vsol_spatial_object_2d_sptr > medial_pts;
+  //std::vector<vsol_spatial_object_2d_sptr > medial_pts;
   //for (unsigned i=0; i<detector.medial_pts_.size(); ++i)
   //{
   //  vgl_point_2d<double > pt = detector.medial_pts_[i].pt_;
   //  double psi = detector.medial_pts_[i].psi_;
-  //  vgl_vector_2d<double > dir(3 * vcl_cos(psi), 2 * vcl_sin(psi));
+  //  vgl_vector_2d<double > dir(3 * std::cos(psi), 2 * std::sin(psi));
   //  vsol_line_2d_sptr line = new vsol_line_2d(dir, pt);
   //  medial_pts.push_back(line->cast_to_spatial_object());
   //}
 
-  //vcl_cout << "Number of medial points = " << medial_pts.size() << vcl_endl;
+  //std::cout << "Number of medial points = " << medial_pts.size() << std::endl;
 
    //// create the output storage class
   //vidpro1_vsol2D_storage_sptr vsol_storage = vidpro1_vsol2D_storage_new();
@@ -159,7 +159,7 @@ execute()
     ++count;
   }
 
-  //vcl_cout << "Number of medial points = " << medial_pts.size() << vcl_endl;
+  //std::cout << "Number of medial points = " << medial_pts.size() << std::endl;
 
 
   // create the output storage class

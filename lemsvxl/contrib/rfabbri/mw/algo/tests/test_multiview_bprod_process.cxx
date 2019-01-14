@@ -5,10 +5,10 @@
 //
 #include <testlib/testlib_test.h>
 #include <bprod/bprod_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bprod/bprod_observer.h>
 #include <bprod/tests/bprod_sample_processes.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
@@ -58,13 +58,13 @@ class views_aggregator : public bprod_sink
 
       //: Curve frags
       assert(input_type_id(i*sources_per_view +CRVS_ID) 
-          == typeid(vcl_vector< vsol_polyline_2d_sptr >));
-      curves_.push_back(input<vcl_vector< vsol_polyline_2d_sptr > >(CRVS_ID));
+          == typeid(std::vector< vsol_polyline_2d_sptr >));
+      curves_.push_back(input<std::vector< vsol_polyline_2d_sptr > >(CRVS_ID));
 
       //: Tangents of curve frags
       assert(input_type_id(i*sources_per_view +TGTS_ID) 
-          == typeid(vcl_vector< vcl_vector<double> >));
-      tgts_.push_back(input<vcl_vector< vcl_vector <double> > >(TGTS_ID));
+          == typeid(std::vector< std::vector<double> >));
+      tgts_.push_back(input<std::vector< std::vector <double> > >(TGTS_ID));
     }
 
     return BPROD_VALID;
@@ -90,12 +90,12 @@ class views_aggregator : public bprod_sink
   }
 
   unsigned nviews_;
-  vcl_vector<vpgl_perspective_camera<double> > cam_;
-  vcl_vector<vil_image_view<vxl_uint_32> > dt_;
-  vcl_vector<vil_image_view<unsigned> > label_;
-  vcl_vector<sdet_edgemap_sptr > em_;
-  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves_;
-  vcl_vector<vcl_vector< vcl_vector<double> > > tgts_;
+  std::vector<vpgl_perspective_camera<double> > cam_;
+  std::vector<vil_image_view<vxl_uint_32> > dt_;
+  std::vector<vil_image_view<unsigned> > label_;
+  std::vector<sdet_edgemap_sptr > em_;
+  std::vector<std::vector< vsol_polyline_2d_sptr > > curves_;
+  std::vector<std::vector< std::vector<double> > > tgts_;
 };
 
 #define PARALLEL_RUN 1
@@ -111,11 +111,11 @@ MAIN( test_multiview_bprod_process )
   bmcsd_curve_stereo_data_path dpath;
   bmcsd_data::get_capitol_building_subset(&dpath);
 
-  unsigned nviews =  vcl_min(dpath.nviews(), max_num_active_frames);
+  unsigned nviews =  std::min(dpath.nviews(), max_num_active_frames);
 
   assert(nviews != 0);
 
-  vcl_vector<bprod_process_sptr> process_pool;
+  std::vector<bprod_process_sptr> process_pool;
   process_pool.reserve(nviews*5);
   
   views_aggregator *out_ptr = new views_aggregator(nviews);
@@ -168,16 +168,16 @@ MAIN( test_multiview_bprod_process )
       out_ptr->curves_.size(), out_ptr->tgts_.size());
 
   for (unsigned v=0; v < nviews; ++v) {
-    vcl_cout << "======== view[" << v << "]\nResulting Camera:\n\n";
-    vcl_cout << out_ptr->cam_[v] << "\n";
-    vcl_cout << vcl_endl;
+    std::cout << "======== view[" << v << "]\nResulting Camera:\n\n";
+    std::cout << out_ptr->cam_[v] << "\n";
+    std::cout << std::endl;
 
-    vcl_cout << "Resulting edgemap output:\n";
-    vcl_cout << "Edgemap size: " <<  out_ptr->em_[v]->num_edgels() << "\n\n\n";
+    std::cout << "Resulting edgemap output:\n";
+    std::cout << "Edgemap size: " <<  out_ptr->em_[v]->num_edgels() << "\n\n\n";
 
-    vcl_cout << "Resulting distance transforms:\n";
-    vcl_cout << "DT : " <<  out_ptr->dt_[v] << "\n\n\n";
-    vcl_cout << "Label : " <<  out_ptr->label_[v] << "\n\n\n";
+    std::cout << "Resulting distance transforms:\n";
+    std::cout << "DT : " <<  out_ptr->dt_[v] << "\n\n\n";
+    std::cout << "Label : " <<  out_ptr->label_[v] << "\n\n\n";
 
     bool write_image = false;
     if (write_image) {
@@ -190,14 +190,14 @@ MAIN( test_multiview_bprod_process )
       vil_save(label_byte,"test-label.pbm");
     }
 
-    vcl_cout << "Resulting curves:\n";
-    vcl_cout << "Curve frags size: " <<  out_ptr->curves_[v].size() << "\n\n\n";
+    std::cout << "Resulting curves:\n";
+    std::cout << "Curve frags size: " <<  out_ptr->curves_[v].size() << "\n\n\n";
 
     TEST("Tangents size matches curves", 
         out_ptr->curves_[v].size(), out_ptr->tgts_[v].size());
 
-    vcl_cout << "Resulting tangents:\n";
-    vcl_cout << "Tangents size: " <<  out_ptr->tgts_[v].size() << "\n\n\n";
+    std::cout << "Resulting tangents:\n";
+    std::cout << "Tangents size: " <<  out_ptr->tgts_[v].size() << "\n\n\n";
   }
 
   SUMMARY();

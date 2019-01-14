@@ -2,7 +2,7 @@
 #define boxm_cell_vis_graph_node_h_
 //:
 // \file
-#include <vcl_vector.h>
+#include <vector>
 
 template <class T>
 class boxm_cell_vis_graph_node
@@ -18,9 +18,9 @@ class boxm_cell_vis_graph_node
   int in_count;
 
   //: graph links to the outgoing blocks
-  vcl_vector<T*> out_links_;
+  std::vector<T*> out_links_;
 
-  vcl_vector<T*>  neighbors_;
+  std::vector<T*>  neighbors_;
 };
 
 #define BOXM_CELL_VIS_GRAPH_NODE_INSTANTIATE(T) \

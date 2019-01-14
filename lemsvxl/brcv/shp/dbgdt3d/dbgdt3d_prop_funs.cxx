@@ -51,9 +51,9 @@ gdt_interval* gdt_manager_i_based::create_rf_I (const dbmsh3d_halfedge* cur_he,
   const double c = cur_edge->length();
   const double a = vgl_distance (psrc->pt(), cur_edge->eV()->pt());
   const double b = vgl_distance (psrc->pt(), cur_edge->sV()->pt());
-  const double alpha0 = vcl_acos ((b*b + c*c - a*a) / (2*b*c));
-  const double nH = b * vcl_sin (alpha0);
-  const double nL = b * vcl_cos (alpha0);
+  const double alpha0 = std::acos ((b*b + c*c - a*a) / (2*b*c));
+  const double nH = b * std::sin (alpha0);
+  const double nL = b * std::cos (alpha0);
   return new gdt_interval (ITYPE_PSRC, stau, etau, cur_he, psrc, nL, nH, NULL);
 }
 
@@ -68,8 +68,8 @@ gdt_interval* gdt_manager_i_based::create_rf_I_to_L (const dbmsh3d_gdt_edge* cur
   assert (stau < etau);
 
   dbmsh3d_gdt_edge* left_edge = (dbmsh3d_gdt_edge*) left_he->edge();
-  double nH = cur_edge->len() * vcl_sin (angle_cl);
-  double nL = cur_edge->len() * vcl_cos (angle_cl);
+  double nH = cur_edge->len() * std::sin (angle_cl);
+  double nL = cur_edge->len() * std::cos (angle_cl);
 
   if (cur_edge->sV() != left_edge->sV())
     nL = left_edge->len() - nL;
@@ -89,8 +89,8 @@ gdt_interval* gdt_manager_i_based::create_rf_I_to_R (const dbmsh3d_gdt_edge* cur
   assert (stau < etau);
 
   dbmsh3d_gdt_edge* right_edge = (dbmsh3d_gdt_edge*) right_he->edge();
-  double nH = cur_edge->len() * vcl_sin (angle_cr);
-  double nL = cur_edge->len() * vcl_cos (angle_cr);
+  double nH = cur_edge->len() * std::sin (angle_cr);
+  double nL = cur_edge->len() * std::cos (angle_cr);
 
   if (cur_edge->eV() == right_edge->eV())
     nL = right_edge->len() - nL;

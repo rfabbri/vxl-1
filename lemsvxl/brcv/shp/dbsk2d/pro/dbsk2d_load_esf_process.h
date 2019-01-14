@@ -29,12 +29,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Load .ESF File";
   }
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -48,7 +48,7 @@ public:
     return true;
   }
 
-  dbsk2d_shock_storage_sptr load_extrinsic_shock_graph (vcl_string filename);
+  dbsk2d_shock_storage_sptr load_extrinsic_shock_graph (std::string filename);
 
 protected:
   int num_frames_;

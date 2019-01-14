@@ -80,7 +80,7 @@ set_storage (const bpro1_storage_sptr& storage_sptr)
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsks_xshock_cost_tool::
+std::string dbsks_xshock_cost_tool::
 name() const 
 {
   return "XShock cost";
@@ -222,7 +222,7 @@ handle_display_info()
       dbsksp_soview_xshock_chord* chord = 
         static_cast<dbsksp_soview_xshock_chord* >(so);
       dbsksp_xshock_edge_sptr xedge = chord->xedge();
-      xedge->print(vcl_cout);
+      xedge->print(std::cout);
       this->set_selected_xedge(xedge);
       
       // reset the selected xnode to neighbor the newly selected xedge
@@ -249,7 +249,7 @@ handle_display_info()
         static_cast<dbsksp_soview_xshock_node* >(so);
       dbsksp_xshock_node_sptr xnode = so_xnode->xnode();
 
-      xnode->print(vcl_cout);
+      xnode->print(std::cout);
       this->set_selected_xnode(xnode);
 
       // set the selected_edge to neighbor the newly selected node
@@ -281,13 +281,13 @@ execute()
   // preliminary check
   if (!xe) 
   {
-    vcl_cerr << "ERROR: No active edge found." << vcl_endl;
+    std::cerr << "ERROR: No active edge found." << std::endl;
     return;
   }
 
   if (xe->is_terminal_edge())
   {
-    vcl_cerr << "ERROR: Selected edge should be non-terminal." << vcl_endl;
+    std::cerr << "ERROR: Selected edge should be non-terminal." << std::endl;
     return;
   }
 

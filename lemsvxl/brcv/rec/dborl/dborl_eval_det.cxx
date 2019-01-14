@@ -12,33 +12,33 @@
 
 #include <bsol/bsol_algs.h>
 #include <vsol/vsol_box_2d.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 
 
 // -----------------------------------------------------------------------------
 //: Detect an object, represented as a shock graph, in an image
 bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc, 
-                        const vcl_string& model_category,
+                        const std::string& model_category,
                         double min_required_overlap,
-                        const vcl_vector<dborl_det_desc_sptr >& list_det,
-                        vcl_vector<double >& confidence,
-                        vcl_vector<int >& FP,
-                        vcl_vector<int >& TP,
+                        const std::vector<dborl_det_desc_sptr >& list_det,
+                        std::vector<double >& confidence,
+                        std::vector<int >& FP,
+                        std::vector<int >& TP,
                         int& num_positives)
 {
   // get a set of ground truth bounding boxes from the image description
-  vcl_vector<vsol_box_2d_sptr > gt_boxes;
+  std::vector<vsol_box_2d_sptr > gt_boxes;
   borld_get_boxes(gt_boxes, image_desc, model_category);
   num_positives = gt_boxes.size();
 
   // keep track of whether the ground truth objects have been counted (detected) by one of the detection solutions
   // = true if already counted
-  vcl_vector<bool > gt_detected(gt_boxes.size(), false); 
+  std::vector<bool > gt_detected(gt_boxes.size(), false); 
 
   // sort the detection
-  vcl_vector<dborl_det_desc_sptr > sorted_det = list_det;
-  vcl_sort(sorted_det.begin(), sorted_det.end(), dborl_decreasing_confidence);
+  std::vector<dborl_det_desc_sptr > sorted_det = list_det;
+  std::sort(sorted_det.begin(), sorted_det.end(), dborl_decreasing_confidence);
 
 
   // compare each of the detection bounding boxes with the ground truth
@@ -84,7 +84,7 @@ bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc,
     {
       if (max_overlap_idx < 0) // should never happens
       {
-        vcl_cout << "ERROR: max_overlap_dex < 0!!!!!!!!" << vcl_endl;
+        std::cout << "ERROR: max_overlap_dex < 0!!!!!!!!" << std::endl;
         FP[i] = 1;
       }
       else if (gt_detected[max_overlap_idx]) // this object has been counted toward some other detection bbox
@@ -114,17 +114,17 @@ bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc,
 
 
 //: Print evaluation results of object detections to a file
-bool dborl_VOC2008_print_eval_results(const vcl_string& eval_file,
+bool dborl_VOC2008_print_eval_results(const std::string& eval_file,
                                       int num_pos, // total number of positives
-                                      const vcl_string& object_name, // name of input image
-                                      const vcl_string& model_category, // detection category
-                                      const vcl_vector<double >& confidence_vec, // confidence of each detection
-                                      const vcl_vector<int >& TP_vec, // Is detection a true positive?
-                                      const vcl_vector<int >& FP_vec // Is detection a false positive?
+                                      const std::string& object_name, // name of input image
+                                      const std::string& model_category, // detection category
+                                      const std::vector<double >& confidence_vec, // confidence of each detection
+                                      const std::vector<int >& TP_vec, // Is detection a true positive?
+                                      const std::vector<int >& FP_vec // Is detection a false positive?
                                       )
 {
   // Open file for writing
-  vcl_ofstream ofs(eval_file.c_str(), vcl_ios::out);
+  std::ofstream ofs(eval_file.c_str(), std::ios::out);
   if (!ofs)
   {
     return false;

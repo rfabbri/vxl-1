@@ -21,7 +21,7 @@ bool dbmsh3d_face_bucket::
 add_face(dbmsh3d_face* face)
 {
   if (!face) return false;
-  this->face_list_.insert(vcl_make_pair(face->id(), face)); 
+  this->face_list_.insert(std::make_pair(face->id(), face)); 
   return true;
 }
 

@@ -5,7 +5,7 @@
 
 #include "dbsks_dp_match_utils.h"
 #include <dbsksp/dbsksp_shock_graph.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsksp/algo/dbsksp_interp_two_xnodes.h>
 #include <dbsksp/dbsksp_shock_fragment.h>
@@ -14,14 +14,14 @@
 //: Construct a graph from a list of states for each of its edges
 dbsksp_shock_graph_sptr dbsks_construct_graph(
   dbsks_dp_match_sptr dp_engine,
-  vcl_map<unsigned int, vgl_point_2d<int > >& graph_i_state_map)
+  std::map<unsigned int, vgl_point_2d<int > >& graph_i_state_map)
 {
   dbsksp_shock_graph_sptr model_graph = dp_engine->graph();
   
 
   // First construct the shapelets corresponding to the states of the graph
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
-  for (vcl_map<unsigned int, vgl_point_2d<int > >::const_iterator it =
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
+  for (std::map<unsigned int, vgl_point_2d<int > >::const_iterator it =
     graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = model_graph->edge_from_id(it->first);
@@ -31,12 +31,12 @@ dbsksp_shock_graph_sptr dbsks_construct_graph(
 
     // compute the shapelet associated with this state
     dbsksp_shapelet_sptr s_e = grid.shapelet(i_xy, i_plane);
-    shapelet_map.insert(vcl_make_pair(e, s_e));
+    shapelet_map.insert(std::make_pair(e, s_e));
   }
 
 
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr > twoshapelet_map;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
+  std::map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr > twoshapelet_map;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
     shapelet_map.begin(); it != shapelet_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -72,7 +72,7 @@ dbsksp_shock_graph_sptr dbsks_construct_graph(
         ss_e = interpolator.optimize();
         dbsksp_shapelet_sptr s0_e = ss_e->shapelet_start();
         dbsksp_shapelet_sptr s1_e = ss_e->shapelet_end();
-        twoshapelet_map.insert(vcl_make_pair(e, ss_e));
+        twoshapelet_map.insert(std::make_pair(e, ss_e));
       }
       else
       {
@@ -99,13 +99,13 @@ dbsksp_shock_graph_sptr dbsks_construct_graph(
 
         dbsksp_shapelet_sptr s0_e = ss_e->shapelet_start();
         dbsksp_shapelet_sptr s1_e = ss_e->shapelet_end();
-        twoshapelet_map.insert(vcl_make_pair(e, ss_e));
+        twoshapelet_map.insert(std::make_pair(e, ss_e));
       
       }
     }
     else
     {
-      vcl_cout << "ERROR: in function dbsks_construct_graph :"
+      std::cout << "ERROR: in function dbsks_construct_graph :"
         << " current codes cannot handle shock graph with degree-3 nodes."
         << " quit function now.\n";
       return 0;
@@ -209,15 +209,15 @@ dbsksp_shock_graph_sptr dbsks_construct_graph(
 //: 
 dbsksp_shock_graph_sptr 
 dbsks_construct_graph(dbsks_dp_match_sptr dp_engine, 
-                      vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map)
+                      std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map)
 {
-  vcl_map<unsigned int, vgl_point_2d<int > > state_map;
-  for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it = 
+  std::map<unsigned int, vgl_point_2d<int > > state_map;
+  for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it = 
     graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   {
     unsigned int id = it->first->id();
     vgl_point_2d<int > state = it->second;
-    state_map.insert(vcl_make_pair(id, state));
+    state_map.insert(std::make_pair(id, state));
   }
 
   return dbsks_construct_graph(dp_engine, state_map);

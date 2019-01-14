@@ -1,6 +1,6 @@
 #include <expatpp/expatpplib.h>
 #include "track.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 #include <vil/vil_crop.h>
@@ -30,60 +30,60 @@ int main(int argc, char** argv)
 {
   // --- Program Arguments ---
 
-  vul_arg<vcl_string> video_file("-video-path", "input video file");
-  vul_arg<vcl_string> xml_file("-xml-path", "input xml file");
+  vul_arg<std::string> video_file("-video-path", "input video file");
+  vul_arg<std::string> xml_file("-xml-path", "input xml file");
   vul_arg<int> frame_index("-frame-index", "starting frame");
   vul_arg<int> num_frames("-numframes", "number of frames");
-  vul_arg<vcl_string> image_dir("-image-dir", "output image directory");
+  vul_arg<std::string> image_dir("-image-dir", "output image directory");
   vul_arg_parse(argc, argv);
 
-  vcl_FILE *xmlFile;
-  vcl_vector<vil_image_resource_sptr> lImages; 
-  vcl_string format="jpeg";
+  std::FILE *xmlFile;
+  std::vector<vil_image_resource_sptr> lImages; 
+  std::string format="jpeg";
 
   track_info info;
   track_parser parser(&info);
 
-   vcl_cout << " Parsing..\n";
+   std::cout << " Parsing..\n";
 
   if (  xml_file()!= "" ){
-      xmlFile = vcl_fopen(xml_file().c_str(), "r");
+      xmlFile = std::fopen(xml_file().c_str(), "r");
       if (xmlFile){
          if (!parser.parseFile(xmlFile)) {
-             vcl_cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
+             std::cerr << "Error: "  <<  XML_ErrorString(parser.XML_GetErrorCode()) 
           << " at line "
-          << parser.XML_GetCurrentLineNumber()                     << vcl_endl;
+          << parser.XML_GetCurrentLineNumber()                     << std::endl;
           return 1;
           }
       }
       else{
-        vcl_cerr <<  xml_file().c_str()  << " error on opening.  \n"   << vcl_endl; 
+        std::cerr <<  xml_file().c_str()  << " error on opening.  \n"   << std::endl; 
         return(1);
       }
     
 }
 else{
-       vcl_cout << " XML File not specified\n";
+       std::cout << " XML File not specified\n";
 
 }
-   vcl_cout << " Parsing Done.\n";
+   std::cout << " Parsing Done.\n";
   
   bool bHasTrack = false;
-  vcl_string height ="";
-  vcl_string width ="";
+  std::string height ="";
+  std::string width ="";
   if (info.get_count() > 0) 
      bHasTrack = true;
   if (bHasTrack){
       width = info.getWidth();
       height = info.getHeight();
-  //    vcl_cout << "Crop Width:"  << width << " height: " << height << "\n" ;
+  //    std::cout << "Crop Width:"  << width << " height: " << height << "\n" ;
 
 
-     for (vcl_vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
+     for (std::vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
         arg_it != info.coordinates.end(); ++arg_it){
-          vcl_string x = arg_it->x;
-         vcl_string y = arg_it->y;
-  //        vcl_cout << "Crop"  << x.c_str() << " y: " << y.c_str() << "\n" ;
+          std::string x = arg_it->x;
+         std::string y = arg_it->y;
+  //        std::cout << "Crop"  << x.c_str() << " y: " << y.c_str() << "\n" ;
       }
 
   } //if
@@ -100,14 +100,14 @@ else{
 
   if (!my_movie)
     {
-      vcl_cout << "Failed to load movie \n";
+      std::cout << "Failed to load movie \n";
       return -1;
     }
-  vcl_cout << "Movie has " << my_movie->length() << " frames \n";
+  std::cout << "Movie has " << my_movie->length() << " frames \n";
 
   if(frame_index()<0||frame_index()>=my_movie->length())
     {
-      vcl_cout << "Frame index out of range \n";
+      std::cout << "Frame index out of range \n";
       return -2;
     }
   int start;
@@ -123,8 +123,8 @@ else{
    if (end ==0 || end > (int)my_movie->length()-1)
      end = (int)my_movie->length()-1;
 
-//    vcl_cout << "Creating new movie with frames " << start << " to " << end <<"\n";
- //   vcl_cout << " in dir " << image_dir().c_str() <<" \n";
+//    std::cout << "Creating new movie with frames " << start << " to " << end <<"\n";
+ //   std::cout << " in dir " << image_dir().c_str() <<" \n";
 
         long lastY=1;
         long lastX=1;
@@ -134,20 +134,20 @@ else{
       {
 
         int i = pframe->get_real_frame_index();
- //       vcl_cout << ","<< i ;
+ //       std::cout << ","<< i ;
         if ( i < start) continue;
         if ( i > end) continue;
-  //      vcl_cout << "*";
+  //      std::cout << "*";
    //    vil_image_resource_sptr vi = pframe->get_resource();
   //     vil_image_view_base_sptr image = pframe->get_view();
         if (bHasTrack){
            int j = start;
-           vcl_string x = "0";
-           vcl_string y ="0";
-           vcl_string x_margin="0";
-           vcl_string y_margin="0";
+           std::string x = "0";
+           std::string y ="0";
+           std::string x_margin="0";
+           std::string y_margin="0";
 
-           for (vcl_vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
+           for (std::vector<track_coord_info>::iterator arg_it = info.coordinates.begin();
             arg_it != info.coordinates.end(); ++arg_it){
               if (j++ == i){
                 x = arg_it->x;
@@ -158,7 +158,7 @@ else{
               }
            }
           char * pEnd;
-  //        vcl_cout << "Crop "  << i <<"," << --j << " x: " << strtoul(x.c_str(),&pEnd,0) << " y: " <<strtoul(y.c_str(),&pEnd,0) << "\n" ;
+  //        std::cout << "Crop "  << i <<"," << --j << " x: " << strtoul(x.c_str(),&pEnd,0) << " y: " <<strtoul(y.c_str(),&pEnd,0) << "\n" ;
 
            //     vil_image_resource_sptr crop= vil_crop( pframe->get_resource(), 100, 100, 200, 200 );
    //crop with x,y is the upper left corner
@@ -172,14 +172,14 @@ else{
           int maxX = pframe->get_resource()->ni();
           if (iX + iWidth > maxX){
               iX = maxX - iWidth -1;
-              vcl_cout << "Crop x"  << iX <<" reduced to fit";
+              std::cout << "Crop x"  << iX <<" reduced to fit";
               if (iX <0) continue;   // Make sure width is small enough for image. 
 
           }
           int maxY = pframe->get_resource()->nj();
           if (iY + iHeight > maxY){
                iY = maxY - iHeight -1;
-               vcl_cout << "Crop y"  << iY <<" reduced to fit";
+               std::cout << "Crop y"  << iY <<" reduced to fit";
                if (iY<0) continue;   // Make sure height is small enough for image. 
 
           }
@@ -187,11 +187,11 @@ else{
        // Make sure cropping does not try to go off the beginning of the frame
           if (iX  < 0) {
               iX = 0;
-              vcl_cout << "Crop x"  << iX <<" changed to fit";
+              std::cout << "Crop x"  << iX <<" changed to fit";
           }
           if (iY  < 0 ){
                iY = 0;
-               vcl_cout << "Crop y"  << iY <<" changed to fit";
+               std::cout << "Crop y"  << iY <<" changed to fit";
           }
         
 
@@ -205,7 +205,7 @@ else{
           lastY = iY;
 
               
-   //       vcl_cout << "Crop "  << i <<"," << --j << " x: " << iX << " y: " << iY << "\n" ;
+   //       std::cout << "Crop "  << i <<"," << --j << " x: " << iX << " y: " << iY << "\n" ;
 
  
           vil_image_resource_sptr crop= vil_crop( pframe->get_resource(), iX ,strtoul(width.c_str(),&pEnd,0),iY ,strtoul(height.c_str(),&pEnd,0) );
@@ -218,7 +218,7 @@ else{
         else
           lImages.push_back( pframe->get_resource());
       }//for
-      vcl_cout << "\nBuilding new movie in memory and saving to file..\n";
+      std::cout << "\nBuilding new movie in memory and saving to file..\n";
       vidl1_movie_sptr movie = new vidl1_movie(new vidl1_clip(lImages));
 
       int currentframenumber=0;
@@ -287,7 +287,7 @@ else{
                 }
               }
           // Create a name for the current image to be saved
-             vcl_string currentname = vul_sprintf("%s%05d.%s", image_dir().c_str(),
+             std::string currentname = vul_sprintf("%s%05d.%s", image_dir().c_str(),
                                          currentframenumber++,"jpeg");
 
              vil_save(save_image,currentname.c_str());

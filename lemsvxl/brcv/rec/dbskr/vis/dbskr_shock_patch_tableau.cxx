@@ -4,10 +4,10 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <cstdlib>
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
 #include <vgui/vgui_menu.h>
@@ -77,7 +77,7 @@ dbskr_shock_patch_tableau::dbskr_shock_patch_tableau()
   //fill in the randomized color table
   for (int i=0; i<100; i++){
     for (int j=0; j<3;j++)
-      rnd_color[i][j] = (vcl_rand() % 256)/256.0;
+      rnd_color[i][j] = (std::rand() % 256)/256.0;
   }
   
 }
@@ -90,7 +90,7 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
   if (gesture_select_point_(e)) {
 
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix_, iy_);
-    //vcl_cout << "ix: " << ix_ << " iy: " << iy_ << " ";
+    //std::cout << "ix: " << ix_ << " iy: " << iy_ << " ";
     mouse_pt_ = vgl_point_2d<double>(ix_, iy_);
     display_all_ = false;
 
@@ -104,7 +104,7 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
       }
     }
     if (!found_it)
-      vcl_cout << "Current mouse position is not covered by any of the shock patches!\n";
+      std::cout << "Current mouse position is not covered by any of the shock patches!\n";
 
     if (current_patch_) {
       if (!current_patch_->get_traced_boundary())
@@ -147,7 +147,7 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
       }
     }
     if (!found_it)
-      vcl_cout << "No next!\n";
+      std::cout << "No next!\n";
 
     if (current_patch_) {
       if (!current_patch_->get_traced_boundary())
@@ -165,7 +165,7 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
   if (create_storage_(e) && current_patch_) {
      vidpro1_repository_sptr res = bvis1_manager::instance()->repository();
       if(!res) {
-        vcl_cout << "Could not access repository!\n";
+        std::cout << "Could not access repository!\n";
         return false;
       }
 
@@ -180,22 +180,22 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
       if (current_patch_->get_traced_boundary() && current_patch_->shock_graph()) {
       
         vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-        vcl_set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
-        vcl_string name_initial = "patch_vsol";
+        std::set<bpro1_storage_sptr> st_set = res->get_all_storage_classes(res->current_frame());
+        std::string name_initial = "patch_vsol";
         int len = name_initial.length();
         int max = 0;
-        for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+        for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
           iter != st_set.end(); iter++) {
             if ((*iter)->type() == output_vsol->type() && 
-                (*iter)->name().find(name_initial) != vcl_string::npos) {
-              vcl_string name = (*iter)->name();
-              vcl_string numbr = name.substr(len, 3);
-              int n = vcl_atoi(numbr.c_str());
+                (*iter)->name().find(name_initial) != std::string::npos) {
+              std::string name = (*iter)->name();
+              std::string numbr = name.substr(len, 3);
+              int n = std::atoi(numbr.c_str());
               if (n > max)
                 max = n;
             }
         }
-        vcl_ostringstream oss;
+        std::ostringstream oss;
         oss.width(3);
         oss.fill('0');
         oss << name_initial << max+1;
@@ -210,18 +210,18 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
         name_initial = "patch_shock";
         len = name_initial.length();
         max = 0;
-        for (vcl_set<bpro1_storage_sptr>::iterator iter = st_set.begin();
+        for (std::set<bpro1_storage_sptr>::iterator iter = st_set.begin();
           iter != st_set.end(); iter++) {
             if ((*iter)->type() == output_shock->type() && 
-                (*iter)->name().find(name_initial) != vcl_string::npos) {
-              vcl_string name = (*iter)->name();
-              vcl_string numbr = name.substr(len, 3);
-              int n = vcl_atoi(numbr.c_str());
+                (*iter)->name().find(name_initial) != std::string::npos) {
+              std::string name = (*iter)->name();
+              std::string numbr = name.substr(len, 3);
+              int n = std::atoi(numbr.c_str());
               if (n > max)
                 max = n;
             }
         }
-        vcl_ostringstream oss2;
+        std::ostringstream oss2;
         oss2.width(3);
         oss2.fill('0');
         oss2 << name_initial << max+1;
@@ -243,7 +243,7 @@ bool dbskr_shock_patch_tableau::handle( const vgui_event & e )
         bvis1_manager::instance()->add_to_display(output_shock);
         bvis1_manager::instance()->display_current_frame();
       } else {
-        vcl_cout << "Problems in tracing or shock extraction!\n";
+        std::cout << "Problems in tracing or shock extraction!\n";
         return false;
       }
   }
@@ -287,7 +287,7 @@ draw_patch(dbskr_shock_patch_sptr shock_patch)
   }
 
   if (display_real_boundaries_) {
-    vcl_vector<vsol_polyline_2d_sptr>& rbs = shock_patch->get_real_boundaries();
+    std::vector<vsol_polyline_2d_sptr>& rbs = shock_patch->get_real_boundaries();
     int color = 0;
     for (unsigned i = 0; i < rbs.size(); i++) {
       vsol_polyline_2d_sptr poly = rbs[i];
@@ -327,7 +327,7 @@ void
 dbskr_shock_patch_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_all_)?on:off)+"Display all patches", 
                new dbskr_sp_tableau_toggle_command(this, &display_all_));

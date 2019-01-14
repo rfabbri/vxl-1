@@ -3,15 +3,15 @@
 // \author Dongjin Han
 
 
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_string.h>
-#include <vcl_ostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h> //vcl_sprintf//
+#include <cstdlib> // for std::exit()
+#include <string>
+#include <ostream>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+#include <cmath>
+#include <iostream>
+#include <cstdio> //std::sprintf//
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_dialog.h>
@@ -133,7 +133,7 @@ void rc3d_windows_frame::init()
 
          
          wheel_count_=4;wheel_detector_=false;slope_detector_=false;  well_detector_on_=false;
- //vcl_cout<<"hello"<<vcl_endl;
+ //std::cout<<"hello"<<std::endl;
    epi_flag=false;
    centered_flag_=false;
    init_3_cam_flag_=false;
@@ -218,7 +218,7 @@ bool rc3d_windows_frame::handle(const vgui_event &e)
 void rc3d_windows_frame::quit()
 {
    //clean_up();
-   vcl_exit(1);
+   std::exit(1);
 }
 
 void rc3d_windows_frame::clean_up()
@@ -238,7 +238,7 @@ void rc3d_windows_frame::clean_up()
    this->post_redraw();
 }*/
 
-void rc3d_windows_frame::add_curve3d(vcl_vector<vgl_point_3d<double> >& pts)
+void rc3d_windows_frame::add_curve3d(std::vector<vgl_point_3d<double> >& pts)
 {
    int size = pts.size();
    if(size > 1){
@@ -292,7 +292,7 @@ void rc3d_windows_frame::remove_curve3d()
 /*
 void rc3d_windows_frame::init_kalman()
 {
-   vcl_vector<vgl_point_2d<double> > c2d;
+   std::vector<vgl_point_2d<double> > c2d;
    
    if (!e_)
    {
@@ -301,7 +301,7 @@ void rc3d_windows_frame::init_kalman()
    }
    
    if (kalman_ == 0)
-      vcl_cout<<"rc3d_windows_frame::kalman_ not created yet\n";
+      std::cout<<"rc3d_windows_frame::kalman_ not created yet\n";
    else
       kalman_->init();
    
@@ -310,7 +310,7 @@ void rc3d_windows_frame::init_kalman()
    ////add_curve2d(c2d);
    
    //update the display.
-   vcl_vector<vgl_point_3d<double> > c3d = kalman_->get_local_pts();
+   std::vector<vgl_point_3d<double> > c3d = kalman_->get_local_pts();
    add_curve3d(c3d);
    
    // add the curve in the second view
@@ -326,11 +326,11 @@ remove_curve3d();
 kalman_->inc();
 
   // add current data
-  vcl_vector<vgl_point_2d<double> > c2d = kalman_->get_cur_observes();
+  std::vector<vgl_point_2d<double> > c2d = kalman_->get_cur_observes();
   //// add_curve2d(c2d);
   
    //add 3D resoult
-   vcl_vector<vgl_point_3d<double> > c3d = kalman_->get_local_pts();
+   std::vector<vgl_point_3d<double> > c3d = kalman_->get_local_pts();
    add_curve3d(c3d);
    
      show_epipole();
@@ -342,7 +342,7 @@ kalman_->inc();
 {
 vnl_matrix<double> pts = kalman_->get_predicted_curve();
 int num_points = pts.columns();
-vcl_vector<vgl_point_2d<double> > curve(num_points);
+std::vector<vgl_point_2d<double> > curve(num_points);
 
   for (int i=0; i<num_points; i++)
   curve[i]= vgl_point_2d<double>(pts[0][i], pts[1][i]);
@@ -359,9 +359,9 @@ void rc3d_windows_frame::load_image()
 {
         static bool greyscale = true;
         vgui_dialog load_image_dlg("Load Image");
-        static vcl_string image_filename = "";
-         static vcl_string con_filename = "";
-   static vcl_string ext = "*.*";
+        static std::string image_filename = "";
+         static std::string con_filename = "";
+   static std::string ext = "*.*";
          static bool con_flag=false;
    load_image_dlg.file("Image Filename:", ext, image_filename);
    load_image_dlg.checkbox("greyscale ", greyscale);
@@ -387,21 +387,21 @@ void rc3d_windows_frame::load_image()
                          if (btab)
                          {
                                  vgui_image_tableau_sptr itab = btab->get_image_tableau();
-                                 vcl_cout<<"\n";
+                                 std::cout<<"\n";
                                  itab->set_image(img_);
                                  
                                  itab->post_redraw();
                                  return;
                          }
-                         vcl_cout << "In load_image() - null tableau\n";
+                         std::cout << "In load_image() - null tableau\n";
                          
                          return;
                  }
                  /*
                  bool greyscale = false;
                  vgui_dialog load_image_dlg("Load Image");
-                 static vcl_string image_filename = "";
-                 static vcl_string ext = "*.*";
+                 static std::string image_filename = "";
+                 static std::string ext = "*.*";
                  load_image_dlg.file("Image Filename:", ext, image_filename);
                  load_image_dlg.checkbox("greyscale ", greyscale);
    if (!load_image_dlg.ask())
@@ -415,20 +415,20 @@ void rc3d_windows_frame::load_image()
     status_info_ += "\n";
    }
    else
-    vcl_cout << "In rc3d_windows_frame::load_image() - null tableau\n";
+    std::cout << "In rc3d_windows_frame::load_image() - null tableau\n";
    */
                 int index=100;
                 bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
                 curve_2d->readCONFromFile(con_filename.c_str() );
-                vcl_cout<<curve_2d->size()<<vcl_endl;
-                vcl_cout<<curve_2d->x(index)<<" "<<curve_2d->y(index)<<vcl_endl;
+                std::cout<<curve_2d->size()<<std::endl;
+                std::cout<<curve_2d->x(index)<<" "<<curve_2d->y(index)<<std::endl;
 
 }
-void rc3d_windows_frame::load_image_file(vcl_string image_filename, bool greyscale, unsigned col, unsigned row)
+void rc3d_windows_frame::load_image_file(std::string image_filename, bool greyscale, unsigned col, unsigned row)
 {
   vil1_image temp= vil1_load(image_filename.c_str());
   if (!temp) {
-    vcl_cout<<"file reading eeror"<<vcl_endl;
+    std::cout<<"file reading eeror"<<std::endl;
     return;
   }
   bgui_vtol2D_tableau_sptr btab = this->get_vtol2D_tableau_at(col, row);
@@ -463,7 +463,7 @@ void rc3d_windows_frame::load_image_file(vcl_string image_filename, bool greysca
     itab->set_image(img_);
     return;
   }
-  vcl_cout << "In bmvv_multiview_manager::load_image_file() - null tableau\n";
+  std::cout << "In bmvv_multiview_manager::load_image_file() - null tableau\n";
 }
 
 /////////// 7-19-2005
@@ -504,27 +504,27 @@ return;
 
 void rc3d_windows_frame::save_images() 
 {
-        vcl_string filename;
+        std::string filename;
         filename=batch_cam_filename_;
         //static vil1_memory_image_of<vil1_rgb<unsigned char> >
         //    convert_to_rgb(vil1_memory_image_of<float> const & image);
         char f11[10];
-        vcl_sprintf(f11,"%03d",batch_frame_1_);
-        vcl_string outname1=filename+"_"+f11+".png";
+        std::sprintf(f11,"%03d",batch_frame_1_);
+        std::string outname1=filename+"_"+f11+".png";
                 
         //vil1_memory_image_of<vil1_rgb<unsigned char> > image_rgb=
         //    brip_vil1_float_ops::convert_to_rgb((fore_ground_[i]));
                 
         vil1_save(fore_ground_rgb_[0],outname1.c_str());
                 
-        vcl_sprintf(f11,"%03d",batch_frame_2_);
-        vcl_string outname2=filename+"_"+f11+".png";
+        std::sprintf(f11,"%03d",batch_frame_2_);
+        std::string outname2=filename+"_"+f11+".png";
                 
                 
         vil1_save(fore_ground_rgb_[1],outname2.c_str());
                 
-        vcl_sprintf(f11,"%03d",batch_frame_3_);
-        vcl_string outname3=filename+"_"+f11+".png";
+        std::sprintf(f11,"%03d",batch_frame_3_);
+        std::string outname3=filename+"_"+f11+".png";
                 
                 
         vil1_save(fore_ground_rgb_[2],outname3.c_str());
@@ -543,7 +543,7 @@ void rc3d_windows_frame::save_images()
 
 
 //8-3-2004 For Vorl
-void rc3d_windows_frame::load_image_file(vcl_string image_filename, bool greyscale,  unsigned col)
+void rc3d_windows_frame::load_image_file(std::string image_filename, bool greyscale,  unsigned col)
 {
   vil1_image temp= vil1_load(image_filename.c_str());
    if (greyscale)
@@ -564,7 +564,7 @@ void rc3d_windows_frame::show_epipole()
 instance_->easy_2d_->set_foreground(1, 0, 0);
 //vgl_point_2d<double> e = kalman_->get_cur_epipole();
 
-  vcl_cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
+  std::cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
   instance_->easy_2d_->add_point(e.x(), e.y());
 }*/
 
@@ -578,14 +578,14 @@ e_ = new vgl_point_2d<double>;
   assert(lines_.size() >= 2);
   vgl_homg_point_2d<double> epipole = vgl_homg_operators_2d<double>::lines_to_point(lines_);
   
-   vcl_cout<<"epipole = ("<<epipole.x()<<' ' << epipole.y() << ' '<< epipole.w()<<")\n";
+   std::cout<<"epipole = ("<<epipole.x()<<' ' << epipole.y() << ' '<< epipole.w()<<")\n";
    
      vgl_point_2d<double> pt(epipole);
      e_ -> set(pt.x(), pt.y());
      
       kalman_->init_epipole(pt.x(), pt.y());
       
-        vcl_stringstream ss;
+        std::stringstream ss;
         ss<<pt.x()<<' '<<pt.y();
         status_info_ += ss.str();
         }
@@ -604,20 +604,20 @@ void rc3d_windows_frame::show_epipolar_line()
   bgui_picker_tableau_sptr pkt = this->get_selected_picker_tableau();
   if (!pkt)
   {
-    vcl_cout << "In rc3d_multiview_manager::show_epipolar_line() - null tableau\n";
+    std::cout << "In rc3d_multiview_manager::show_epipolar_line() - null tableau\n";
     return;
   }
   float x = 0, y=0;
   pkt->pick_point(&x, &y);
   vgui::out << "p(" << x << ' ' << y << ")\n";
-  vcl_cout << "p(" << x << ' ' << y << ")\n";
+  std::cout << "p(" << x << ' ' << y << ")\n";
 
   //col = 1;//right image
   
   
   //temporary test for FMatrix
   if (!epi_flag) {
-     vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+     std::cout<<"epipole needed!\n"<<std::endl;;
      return;
   }
   vnl_double_3x3 F;
@@ -643,7 +643,7 @@ void rc3d_windows_frame::show_epipolar_line()
 void rc3d_windows_frame::creat_line()
 {
    float x1=0, y1=0, x2=0, y2=0;
-   vcl_cout<<"pick a line\n";
+   std::cout<<"pick a line\n";
    tab_picker_->pick_line(&x1, &y1, &x2, &y2);
    vgl_homg_point_2d<double> p1(x1, y1, 1), p2(x2, y2, 1);
    vgl_homg_line_2d<double> l(p1, p2);
@@ -656,15 +656,15 @@ void rc3d_windows_frame::creat_line()
 void rc3d_windows_frame::save_status()
 {
    vgui_dialog save_file_dlg("save status");
-   static vcl_string filename = "";
-   static vcl_string ext = "*.*";
+   static std::string filename = "";
+   static std::string ext = "*.*";
    save_file_dlg.file("file name", ext, filename);
    if (!save_file_dlg.ask())
       return;
    
    if (filename != "")
    {
-      vcl_ofstream of(filename.c_str());
+      std::ofstream of(filename.c_str());
       //of << status_info_;
       of<<epi_;
    }
@@ -673,15 +673,15 @@ void rc3d_windows_frame::save_status()
 void rc3d_windows_frame::load_status()
 {
    vgui_dialog load_file_dlg("load status");
-   static vcl_string filename = "C:/E3D/REAL/ICPR2004/Probe_Depot/epi_1new_for_debug_van.txt";
-   static vcl_string ext = "*.*";
+   static std::string filename = "C:/E3D/REAL/ICPR2004/Probe_Depot/epi_1new_for_debug_van.txt";
+   static std::string ext = "*.*";
    load_file_dlg.file("file name", ext, filename);
    if (!load_file_dlg.ask())
       return;
    
    if (filename != "")
    {
-      vcl_ifstream in(filename.c_str());
+      std::ifstream in(filename.c_str());
       
    //// epi ..........   
       double x, y,z;
@@ -689,7 +689,7 @@ void rc3d_windows_frame::load_status()
       epi_[0]=x;
       epi_[1]=y;
       epi_[2]=z;
-      vcl_cout<<"ur epipole is..:"<<epi_<<vcl_endl;
+      std::cout<<"ur epipole is..:"<<epi_<<std::endl;
       instance_->vtol_tabs_[0]->add_point(epi_[0]/epi_[2], epi_[1]/epi_[2]);
       epi_flag=true;
       /*if (!e_)
@@ -697,7 +697,7 @@ void rc3d_windows_frame::load_status()
       e_ -> set(x, y);*/
       
       /*kalman_->init_epipole(x, y);
-      vcl_stringstream ss;
+      std::stringstream ss;
       ss << x <<' '<<y;
       status_info_ += ss.str();*/
    }
@@ -735,12 +735,12 @@ void rc3d_windows_frame::vd_edges()
    }
    else
    {
-      vcl_cout << "In rc3d_WINDOWS_FRAME::vd_edges() - null tableau\n";
+      std::cout << "In rc3d_WINDOWS_FRAME::vd_edges() - null tableau\n";
       return;
    }
    det.SetImage(img_);
    det.DoContour();
-   vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
    
    //display the edges
    if (btab&&edges)
@@ -752,7 +752,7 @@ void rc3d_windows_frame::vd_edges()
    }
    else
    {
-      vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+      std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
       return;
    }
 }
@@ -809,7 +809,7 @@ void rc3d_windows_frame::vd_subtract(){
    }
    else
    {
-      vcl_cout << "In rc3d_WINDOWS_FRAME::vd_edges() - null tableau\n";
+      std::cout << "In rc3d_WINDOWS_FRAME::vd_edges() - null tableau\n";
       return;
    }
    bgui_vtol2D_tableau_sptr btab_sub=this->get_vtol2D_tableau_at(sub_image,0);
@@ -820,7 +820,7 @@ void rc3d_windows_frame::vd_subtract(){
    }
    else
    {
-      vcl_cout << "In rc3d_WINDOWS_FRAME::vd_edges_sub() - null tableau\n";
+      std::cout << "In rc3d_WINDOWS_FRAME::vd_edges_sub() - null tableau\n";
       return;
    }
 
@@ -842,7 +842,7 @@ void rc3d_windows_frame::vd_subtract(){
    vil1_memory_image_of<float> img_subtracted;
    if (use_back_ground_image) {
       if ( !back_ground_) {
-         vcl_cout<<"null back_ground_"<<vcl_endl;
+         std::cout<<"null back_ground_"<<std::endl;
          return;
       }
       img_subtracted=
@@ -864,12 +864,12 @@ void rc3d_windows_frame::vd_subtract(){
       {
          //vil1_rgb<float> rgb = image(x,y);
          if (img_subtracted(x,y)<0) img_subtracted(x,y)=-img_subtracted(x,y);
-         //img_subtracted(x,y)=vcl_fabs(img_subtracted(x,y));
-         //vcl_cout<<x<<" "<<y<<" "<<img_subtracted(x,y)<<vcl_endl;
+         //img_subtracted(x,y)=std::fabs(img_subtracted(x,y));
+         //std::cout<<x<<" "<<y<<" "<<img_subtracted(x,y)<<std::endl;
          if (img_subtracted(x,y)>subtraction_threshold)
             img_subtracted(x,y)=200;
          else img_subtracted(x,y)=0.0;
-         //vcl_cout<<x<<" "<<y<<" "<<img_subtracted(x,y)<<vcl_endl;
+         //std::cout<<x<<" "<<y<<" "<<img_subtracted(x,y)<<std::endl;
          //output(x,y) = (float)rgb.grey();
       }
 
@@ -889,15 +889,15 @@ void rc3d_windows_frame::vd_subtract(){
                }
             }
 
-            if (sum>200*(vcl_pow(2*neighborhood_size+1,2.0)-1)*.6) img_subtracted(x,y)=200.0;
-            if (sum<200*(vcl_pow(2*neighborhood_size+1,2.0)-1)*.4) img_subtracted(x,y)=0.0;
+            if (sum>200*(std::pow(2*neighborhood_size+1,2.0)-1)*.6) img_subtracted(x,y)=200.0;
+            if (sum<200*(std::pow(2*neighborhood_size+1,2.0)-1)*.4) img_subtracted(x,y)=0.0;
          }
    }
 
 
    det.SetImage(img_subtracted);
    det.DoContour();
-   vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
    
    //display the edges
    if (btab&&btab_sub&&edges)
@@ -909,7 +909,7 @@ void rc3d_windows_frame::vd_subtract(){
    }
    else
    {
-      vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+      std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
       return;
    }
 }
@@ -941,12 +941,12 @@ void rc3d_windows_frame::auto_vd_edges(unsigned col, unsigned row)
    }
    else
    {
-      vcl_cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
+      std::cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
       return;
    }
    det.SetImage(img_);
    det.DoContour();
-   vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
    
    //display the edges
    if (btab&&edges)
@@ -958,7 +958,7 @@ void rc3d_windows_frame::auto_vd_edges(unsigned col, unsigned row)
    }
    else
    {
-      vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+      std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
       return;
    }
 }
@@ -981,12 +981,12 @@ void rc3d_windows_frame::auto_vd_edges()
    }
    else
    {
-      vcl_cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
+      std::cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
       return;
    }
    det.SetImage(img_);
    det.DoContour();
-   vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
    
    //display the edges
    if (btab&&edges)
@@ -998,7 +998,7 @@ void rc3d_windows_frame::auto_vd_edges()
    }
    else
    {
-      vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+      std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
       return;
    }
 }
@@ -1051,13 +1051,13 @@ void rc3d_windows_frame::vd_edges_map()
    }
    else
    {
-      vcl_cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
+      std::cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
       return;
    }
    det.SetImage(img_);
    det.DoContour();
-   vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
-   vcl_vector<vgui_soview*> sovs_all;
+   std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+   std::vector<vgui_soview*> sovs_all;
    //display the edges
    if (btab&&edges)
    {
@@ -1069,7 +1069,7 @@ void rc3d_windows_frame::vd_edges_map()
    }
    else
    {
-      vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+      std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
       return;
    }
 
@@ -1201,7 +1201,7 @@ void rc3d_windows_frame::vd_edges_map_all_in()
          else
                  dp.aggressive_junction_closure=0;
                  
-                 //vcl_cout<<dp<<vcl_endl;
+                 //std::cout<<dp<<std::endl;
    //grid_->get_last_selected_position(&col, &row);
    //bgui_vtol2D_tableau_sptr btab = this->get_selected_vtol2D_tableau();
    vgui_image_tableau_sptr itab;
@@ -1216,16 +1216,16 @@ void rc3d_windows_frame::vd_edges_map_all_in()
       }
       else
       {
-         vcl_cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
+         std::cout << "In bmvv_multiview_manager::vd_edges() - null tableau\n";
          return;
       }
       //if (it==0) vil1_save(img_,"brrc.png");
       sdet_detector det(dp);
       det.SetImage(img_);
       det.DoContour();
-      vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
-      vcl_vector<vgui_soview*> sovs_all;
-//      vcl_cout<<edges->size()<<vcl_endl;
+      std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+      std::vector<vgui_soview*> sovs_all;
+//      std::cout<<edges->size()<<std::endl;
 
       //display the edges
       if (btab&&edges)
@@ -1241,13 +1241,13 @@ void rc3d_windows_frame::vd_edges_map_all_in()
                                  //btab->set_edgel_curve_style( style);
          btab->post_redraw();
          sovs_all= (btab)->get_all();
-         vcl_cout<<sovs_all.size()<<vcl_endl;
-       vcl_cout<<edges->size()<<vcl_endl;
+         std::cout<<sovs_all.size()<<std::endl;
+       std::cout<<edges->size()<<std::endl;
 
       }
       else
       {
-         vcl_cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
+         std::cout << "In rc3d_windows_frame::vd_edges() - null edges or null tableau\n";
          return;
       }
       
@@ -1390,7 +1390,7 @@ void rc3d_windows_frame::vd_edges_map_all_in_Vorl()
       sdet_detector det(dp);
       det.SetImage(fore_ground_[col]);
       det.DoContour();
-      vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+      std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
       
       
       
@@ -1402,7 +1402,7 @@ void rc3d_windows_frame::vd_edges_map_all_in_Vorl()
       vdgl_digital_curve_sptr dc;
       vdgl_interpolator_sptr interp;
       vdgl_edgel_chain_sptr  ec;
-      vcl_vector<vtol_edge_2d_sptr> ecl;
+      std::vector<vtol_edge_2d_sptr> ecl;
       ecl.clear();
       
       for (unsigned int i=0; i<edges->size(); i++)
@@ -1494,13 +1494,13 @@ bool rc3d_windows_frame::map_check(double ix,double iy,double iz)
 // 7-9-2004 Back ground modeling
 void rc3d_windows_frame::back_ground() {
    vgui_dialog dlg("Read backgound file's");
-   static vcl_string filename = "C:/CVPR2004/carback.txt";
-   static vcl_string ext = "*.*";
-   vcl_string str1,str_filename;
+   static std::string filename = "C:/CVPR2004/carback.txt";
+   static std::string ext = "*.*";
+   std::string str1,str_filename;
     dlg.file("read file name", ext, filename);
    
    if (!dlg.ask()) { 
-      vcl_cout<<"Background FIle Read Fail!" <<vcl_endl;
+      std::cout<<"Background FIle Read Fail!" <<std::endl;
       return;
    }
    
@@ -1508,13 +1508,13 @@ void rc3d_windows_frame::back_ground() {
    //double x,y,z,t;
    double temp=0;
    vnl_double_3x4 Camera(0.0);
-   vcl_vector<vnl_double_3x4 > Cam_List;
+   std::vector<vnl_double_3x4 > Cam_List;
    int total_camera_number=-1;
    int start_number=0,end_number=0;
    if (filename != "")
       {
-         vcl_ifstream in(filename.c_str());
-         vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
+         std::ifstream in(filename.c_str());
+         std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
          in>> total_camera_number;
          for (unsigned j=0;j<10;j++) {
             in>>str1;
@@ -1522,12 +1522,12 @@ void rc3d_windows_frame::back_ground() {
                str_filename=str1;
             }
             if (j==4) {
-               start_number =vcl_atoi(str1.c_str());   
+               start_number =std::atoi(str1.c_str());   
             }
             if (j==6) {
-               end_number=vcl_atoi(str1.c_str());
+               end_number=std::atoi(str1.c_str());
             }
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
          }
          //read R-T matrix...
          for (unsigned i=0;i<4;i++) {
@@ -1536,12 +1536,12 @@ void rc3d_windows_frame::back_ground() {
 //               RT[i][j]=temp;
             }
          }
-//         vcl_cout<<RT<<vcl_endl;
+//         std::cout<<RT<<std::endl;
          //BB_RT_matt_=RT;
          for (unsigned i=0;i<total_camera_number;i++) {
             Camera.fill(0.0);
             in>>str1>>str1;
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
             for (unsigned j=0;j<3; j++) {
                for (unsigned k=0;k<4;k++) {
                   in >> temp;
@@ -1549,24 +1549,24 @@ void rc3d_windows_frame::back_ground() {
                }
             }
             //Cam_List.push_back(Camera);
-            vcl_cout<<Camera<<vcl_endl;
+            std::cout<<Camera<<std::endl;
          }
       }
-   vcl_string f1,f2,f3;
+   std::string f1,f2,f3;
    
    char tf[10], f11[10]; 
    
    bool greyscale=true;
    int w,h;
    
-   vcl_vector <vil1_memory_image_of<unsigned char> > image_list;
+   std::vector <vil1_memory_image_of<unsigned char> > image_list;
    for (unsigned i=0;i<total_camera_number;i++) {
       int fram1 = start_number + i ;
 
-      vcl_sprintf(f11,"%03d",fram1);
+      std::sprintf(f11,"%03d",fram1);
 
       f1=str_filename + "/00" + f11+".png";
-      vcl_cout<<f1<<vcl_endl;
+      std::cout<<f1<<std::endl;
       //load_image_file("C:/E3D/REAL/Aq2_1_left_brown_U_white_van/00016.tiff", true, 2,0);
       //load_image_file(f1, true, 0,0);
       vil1_image temp = vil1_load(f1.c_str());
@@ -1581,9 +1581,9 @@ void rc3d_windows_frame::back_ground() {
    }
    (back_ground_).set(image_list[0]);
    back_ground_.fill(0);
-   vcl_vector <float> v;
+   std::vector <float> v;
    for (unsigned x=0;x<w;x++) {
-      //vcl_cout<<x<<" ";
+      //std::cout<<x<<" ";
       for (unsigned y=0;y<h;y++) {
          for (unsigned i=0;i<total_camera_number;i++) {
             
@@ -1606,7 +1606,7 @@ void rc3d_windows_frame::back_ground() {
    }
    else
    {
-      vcl_cout << "In rc3d_WINDOWS_FRAME::back_ground() - null tableau\n";
+      std::cout << "In rc3d_WINDOWS_FRAME::back_ground() - null tableau\n";
       return;
    }
 
@@ -1615,28 +1615,28 @@ void rc3d_windows_frame::back_ground() {
 
 
 }
-#include <vcl_algorithm.h>
+#include <algorithm>
 struct smalla
 {
    bool operator() (float  x, float y)
    { return x > y; }
 };
 
-float rc3d_windows_frame::back_ground_clustering(vcl_vector <float> v)
+float rc3d_windows_frame::back_ground_clustering(std::vector <float> v)
 {
 
    float v0,v1;
 
-   vcl_sort(v.begin(),v.end(),smalla());
+   std::sort(v.begin(),v.end(),smalla());
 //   for (unsigned i=0;i<v.size();i++)
-//      vcl_cout<<i<<": "<<v[i]<<vcl_endl;
+//      std::cout<<i<<": "<<v[i]<<std::endl;
       
    float threshold=5.0;
    v0=v[0]; //init
    float count0=0;
    for (unsigned i=1;i<v.size();i++) {
       
-      if (vcl_abs(v[i]-v0)<threshold)
+      if (std::abs(v[i]-v0)<threshold)
       {   count0++;
          v0=(v[i]+(count0)*v0)/(count0+1);
       }
@@ -1646,7 +1646,7 @@ float rc3d_windows_frame::back_ground_clustering(vcl_vector <float> v)
    float count1=0;
    for (unsigned i=v.size();i>-1;i--) {
       
-      if (vcl_abs(v[i]-v1)<threshold)
+      if (std::abs(v[i]-v1)<threshold)
       {   count1++;
          v1=(v[i]+(count1)*v1)/(count1+1);
       }
@@ -1672,19 +1672,19 @@ void rc3d_windows_frame::fit_line()
    }
    else
    {
-      vcl_cout << "In rc3d_manager::fit_line() - null tableau\n";
+      std::cout << "In rc3d_manager::fit_line() - null tableau\n";
       return;
    }
-   //vcl_vector<vdgl_edgel_chain_sptr> ec_in_BOX
+   //std::vector<vdgl_edgel_chain_sptr> ec_in_BOX
 //      =find_sovs_in_BOX(bit,s_x,s_y, R_+range);
-   //vcl_vector<vdgl_edgel_chain_sptr> ec_inR;
+   //std::vector<vdgl_edgel_chain_sptr> ec_inR;
    vdgl_edgel_chain_sptr  ec;
    
    vdgl_digital_curve_sptr dc;
    //vgui_soview* sov_selected;
-   //vcl_vector<vgui_soview*> sovs_all= (bit)->get_all();
+   //std::vector<vgui_soview*> sovs_all= (bit)->get_all();
     //vgui_soview sov_selected=(btab)->get_selected_soviews();
-    vcl_vector<vgui_soview*> sovs = (btab)->get_selected_soviews();
+    std::vector<vgui_soview*> sovs = (btab)->get_selected_soviews();
     vgui_soview* sov = sovs[0];
    int id=sov->get_id();
    vtol_edge_2d_sptr e = (btab)->get_mapped_edge(id);
@@ -1695,7 +1695,7 @@ void rc3d_windows_frame::fit_line()
    vdgl_interpolator_sptr interp = dc->get_interpolator();
    ec = interp->get_edgel_chain();
    osl_edgel_chain oc =osl_edgel_chain(ec->size());
-//   vcl_list<osl_edge *> *osedges=new osl_edge();
+//   std::list<osl_edge *> *osedges=new osl_edge();
 
 
    for (unsigned j=0;j<ec->size();j++) {
@@ -1709,7 +1709,7 @@ void rc3d_windows_frame::fit_line()
       oc.SetY(y1,j);
 
    }
-   vcl_list<osl_edge *> oslist;
+   std::list<osl_edge *> oslist;
    for (unsigned j=0;j<ec->size()-1;j++) {
       //double x1=(*ec)[j].get_x();
       //double y1=(*ec)[j].get_y();
@@ -1738,7 +1738,7 @@ double x11=(*ec)[0].get_x();
 
    oslist.push_back(os);
 
-   vcl_list<osl_edge *> out;
+   std::list<osl_edge *> out;
    osl_fit_lines_params para;
    osl_fit_lines *line=new osl_fit_lines(para);
    //osl_fit_lines::simple_fit_to_list(oslist,out);
@@ -1746,14 +1746,14 @@ double x11=(*ec)[0].get_x();
    //line->simple_fit_to_list(&oslist,&out);
    line->incremental_fit_to_list(&oslist,&out);
    
-   ////vcl_list<osl_edge *>::iterator itb = out.begin();
+   ////std::list<osl_edge *>::iterator itb = out.begin();
    ////osl_edge * tempb = (*itb);
    osl_edge * tempb = out.front();
    float x0= tempb->GetStartX();
    float y0= tempb->GetStartY();
 //   
 
-//   vcl_list<osl_edge *>::iterator ite = out.back();
+//   std::list<osl_edge *>::iterator ite = out.back();
 
    osl_edge * tempe = out.back();
    float x1= tempe->GetStartX();
@@ -1764,7 +1764,7 @@ double x11=(*ec)[0].get_x();
    //btab->post_redraw();
 
    btab->set_foreground(0,0,1);
-   for (vcl_list<osl_edge *>::iterator it = out.begin(); it != out.end( ); it++ ) {
+   for (std::list<osl_edge *>::iterator it = out.begin(); it != out.end( ); it++ ) {
       osl_edge * temp = (*it);
       x0=temp->GetStartX();
       y0=temp->GetStartY();
@@ -1773,7 +1773,7 @@ double x11=(*ec)[0].get_x();
       btab->add_line(x0,y0,x1,y1);
    }
    btab->post_redraw();
-   //vcl_cout<<out<<vcl_endl;
+   //std::cout<<out<<std::endl;
    
    return;
 
@@ -1800,7 +1800,7 @@ double x11=(*ec)[0].get_x();
          (y1-(*ec)[x0_index].get_y())*(y1-(*ec)[x0_index].get_y());
       
       
-      if (vcl_sqrt(a)<BOX) { 
+      if (std::sqrt(a)<BOX) { 
          ec_inR.push_back(ec);
       }
    }
@@ -1839,38 +1839,38 @@ void rc3d_windows_frame::select_curve_corres()
    unsigned int row=0, col=0;
    
     grid_->get_last_selected_position(&col, &row);
-   vcl_cout<<col<<row<<vcl_endl;
+   std::cout<<col<<row<<std::endl;
 
-   //for (vcl_vector<bgui_vtol2D_tableau_sptr>::iterator bit = vtol_tabs_.begin();
+   //for (std::vector<bgui_vtol2D_tableau_sptr>::iterator bit = vtol_tabs_.begin();
    //bit != vtol_tabs_.end(); bit++)
    //   if (*bit)
       bgui_vtol2D_tableau_sptr bit=vtol_tabs_[col];
       {
-         vcl_vector<vgui_soview*> sovs = (bit)->get_selected_soviews();
-         //vcl_ofstream w_out=vcl_ofstream("cv.txt");
+         std::vector<vgui_soview*> sovs = (bit)->get_selected_soviews();
+         //std::ofstream w_out=std::ofstream("cv.txt");
          for (unsigned int i = 0; i<sovs.size(); i++)
          {
             vgui_soview* sov = sovs[i];
             int id = sov->get_id();
-            vcl_cout << "id = " << id << "\n";
+            std::cout << "id = " << id << "\n";
             
             vtol_edge_2d_sptr e = (bit)->get_mapped_edge(id);
-            //vcl_cout<<(*bit)->get_mapped_edge(id)<<vcl_endl;
+            //std::cout<<(*bit)->get_mapped_edge(id)<<std::endl;
             vsol_curve_2d_sptr c = e->curve();
             
             
             dc = c->cast_to_vdgl_digital_curve();
 
             ///dcs[col]=c->cast_to_vdgl_digital_curve();
-            //vcl_cout<<   dc->size()<<dc->get_x(i)<<vcl_endl;
+            //std::cout<<   dc->size()<<dc->get_x(i)<<std::endl;
             // pilou's code
             
             vdgl_interpolator_sptr interp = dc->get_interpolator();
             ec = interp->get_edgel_chain();
             //ecs[col]=interp->get_edgel_chain();
-            static vcl_string id_num="a";
+            static std::string id_num="a";
             
-            ////vcl_ofstream w_out=vcl_ofstream("cv.txt");
+            ////std::ofstream w_out=std::ofstream("cv.txt");
             
             int nn=ec->size();
             ///w_out<< "id = " << id << "\n";
@@ -1893,13 +1893,13 @@ void rc3d_windows_frame::select_curve_corres()
          
          float x1=0, y1=0, x2=0, y2=0;
          
-         vcl_cout<<"pick a start point\n";
+         std::cout<<"pick a start point\n";
          ptab->pick_point(&x1, &y1);
-         vcl_cout<<x1<<" "<<y1<<vcl_endl;
+         std::cout<<x1<<" "<<y1<<std::endl;
          
-         vcl_cout<<"pick a end point\n";
+         std::cout<<"pick a end point\n";
          ptab->pick_point(&x2, &y2);
-         vcl_cout<<x2<<" "<<y2<<vcl_endl;
+         std::cout<<x2<<" "<<y2<<std::endl;
          
          int n=ec->size();
          int split_index1=0;
@@ -1920,7 +1920,7 @@ void rc3d_windows_frame::select_curve_corres()
             float e = vgl_distance2_to_linesegment(x_1,y_1,x_2,y_2,x2,y2);
             if (e < d) { d=e; split_index2 = i+1;}
          }
-         vcl_cout<<"col:" <<col<<" "<<vcl_endl;
+         std::cout<<"col:" <<col<<" "<<std::endl;
          
          //copy needed..
          //esc[col].
@@ -1943,11 +1943,11 @@ void rc3d_windows_frame::select_curve_corres()
             dcs[col]=new vdgl_digital_curve(new vdgl_interpolator_linear(ecs[col]));
 
          }//
-         else  { vcl_cerr<<"??\n";return;}
+         else  { std::cerr<<"??\n";return;}
          
-         vcl_cout<<ecs[col]->size()<<vcl_endl;
+         std::cout<<ecs[col]->size()<<std::endl;
          for (unsigned t=0;t<ecs[col]->size();t++)
-            vcl_cout<<(ecs[col])->edgel(t).x()<<vcl_endl;
+            std::cout<<(ecs[col])->edgel(t).x()<<std::endl;
       }
       // clean selected for next selection job..
       this->clear_selected();
@@ -1957,7 +1957,7 @@ void rc3d_windows_frame::select_curve_corres()
 
 void rc3d_windows_frame::clear_selected()
 {
-   for (vcl_vector<bgui_vtol2D_tableau_sptr>::iterator bit = vtol_tabs_.begin();
+   for (std::vector<bgui_vtol2D_tableau_sptr>::iterator bit = vtol_tabs_.begin();
    bit != vtol_tabs_.end(); bit++)
       if (*bit)
          (*bit)->deselect_all();
@@ -1978,7 +1978,7 @@ rc3d_windows_frame::get_picker_tableau_at(unsigned col, unsigned row)
     {
       bgui_picker_tableau_sptr tt;
       tt.vertical_cast(vgui_find_below_by_type_name(top_tab,
-         vcl_string("bgui_picker_tableau")));
+         std::string("bgui_picker_tableau")));
       if (tt)
          return tt;
     }
@@ -1994,15 +1994,15 @@ void rc3d_windows_frame::find_epipole()
    float x1=0, y1=0, x2=0, y2=0;
    vgl_homg_point_2d<double> mp_left,mp_right;
    //l_;
-   vcl_vector<vgl_homg_line_2d<double> > lines;
+   std::vector<vgl_homg_line_2d<double> > lines;
    for (int i=0;i<5;i++) {
-      vcl_cout<<"# "<<i<<" :";
-        vcl_cout<<"Left Point :";
+      std::cout<<"# "<<i<<" :";
+        std::cout<<"Left Point :";
       tabs_picker_[0]->pick_point(&x1, &y1);
-      vcl_cout<<x1<<" "<<y1;
-      vcl_cout<<"  -Right Point :";
+      std::cout<<x1<<" "<<y1;
+      std::cout<<"  -Right Point :";
       tabs_picker_[1]->pick_point(&x2, &y2);
-      vcl_cout<<x2<<" "<<y2<<vcl_endl;
+      std::cout<<x2<<" "<<y2<<std::endl;
       
       
       mp_left.set(x1,y1,1.0);
@@ -2014,8 +2014,8 @@ void rc3d_windows_frame::find_epipole()
    vgl_homg_point_2d<double> epipole = vgl_homg_operators_2d<double>::lines_to_point(lines);
    vnl_double_3 e; e[0] = epipole.x(); e[1] = epipole.y(); e[2] = epipole.w();
    epi_=e;
-   vcl_cout<<"your epipole is(homo): "<<e<<vcl_endl;
-         vcl_cout<<"your epipole is: "<<e[0]/e[2]<<" "<<e[1]/e[2]<<vcl_endl;
+   std::cout<<"your epipole is(homo): "<<e<<std::endl;
+         std::cout<<"your epipole is: "<<e[0]/e[2]<<" "<<e[1]/e[2]<<std::endl;
 
    instance_->vtol_tabs_[0]->add_point(e[0]/e[2], e[1]/e[2]);
    epi_flag=true;
@@ -2031,7 +2031,7 @@ void rc3d_windows_frame::clear_display()
    if (btab)
       btab->clear();
    else
-      vcl_cout << "In rc3d_windows_frame::clear_display() - null tableau\n";
+      std::cout << "In rc3d_windows_frame::clear_display() - null tableau\n";
 }
 
 void rc3d_windows_frame::clear_display3()
@@ -2057,7 +2057,7 @@ void rc3d_windows_frame::manual_reconstruction_number()
    bool flag=false;
    
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
       return ;
    }
 
@@ -2068,8 +2068,8 @@ void rc3d_windows_frame::manual_reconstruction_number()
    static char ch;
 
    static double x,y,z;
-   vcl_string ext="*.*";
-   static vcl_string filename;
+   std::string ext="*.*";
+   static std::string filename;
    vgui_dialog dlg("vgl point 3d");
    dlg.file("file name", ext, filename);
    dlg.field("x",x);
@@ -2083,19 +2083,19 @@ void rc3d_windows_frame::manual_reconstruction_number()
 
    int point_number;
 
-   vcl_ifstream in(filename.c_str());
-   vcl_cout<<"reading point file "<< filename.c_str()<<vcl_endl;
+   std::ifstream in(filename.c_str());
+   std::cout<<"reading point file "<< filename.c_str()<<std::endl;
 
    in >>point_number;
    for (unsigned i1=0;i1<point_number;i1++) {
      in>> x>>y>>z;
-     vcl_cout<<x<<" "<<y<<" "<<z<<vcl_endl;
+     std::cout<<x<<" "<<y<<" "<<z<<std::endl;
      //vgl_point_3d<double> point_3d(x,z,y);
      vgl_point_3d<double> point_3d(x,y,z);
 
      // now we have 3d point
      
-     vcl_cout<<point_3d<<vcl_endl;
+     std::cout<<point_3d<<std::endl;
 
      vgui_style_sptr style = vgui_style::new_style(1, 0, 0, 6, 1);
      for (unsigned i=0;i<3;i++) {
@@ -2120,18 +2120,18 @@ vgl_point_3d<double> rc3d_windows_frame::manual_reconstruction()
    bool flag=false;
    vgl_point_3d<double> null;
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
       return null;
    }
    char ch;
    for (col=0;col<3;col++) {
-      vcl_cout<<" click on points"<<col<<vcl_endl;
+      std::cout<<" click on points"<<col<<std::endl;
       tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-      vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+      std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
     }
-   vcl_cout<<"choice 12 13 23==> 0 1 2"<<vcl_endl;
-   vcl_cin>>ch;
-   vcl_cout<<" "<<ch<<vcl_endl;
+   std::cout<<"choice 12 13 23==> 0 1 2"<<std::endl;
+   std::cin>>ch;
+   std::cout<<" "<<ch<<std::endl;
    
     //initialize_camera_3();
    vnl_double_3x4 P_l,P_r;
@@ -2149,14 +2149,14 @@ vgl_point_3d<double> rc3d_windows_frame::manual_reconstruction()
 
    vgl_point_2d<double> x_l(l_c[0],l_c[1]);
    vgl_point_2d<double> x_r(r_c[0],r_c[1]);
-   vcl_cout<<x_l<<x_r<<P_l<<P_r<<vcl_endl;
+   std::cout<<x_l<<x_r<<P_l<<P_r<<std::endl;
    vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
    // now we have 3d point
    double x_center_3d=point_3d.x();
    double y_center_3d=point_3d.y();
    double z_center_3d=point_3d.z();
    
-   vcl_cout<<point_3d<<vcl_endl;
+   std::cout<<point_3d<<std::endl;
    d3_one_pt_[0]=point_3d.x();
    d3_one_pt_[1]=point_3d.y();
    d3_one_pt_[2]=point_3d.z();
@@ -2184,19 +2184,19 @@ void rc3d_windows_frame::manual_recon_rec_test()
    bool flag=false;
    vgl_point_3d<double> null;
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
       return ;
    }
    static int ch=0;
    static int probe_number=0;
    for (col=0;col<3;col++) {
-      vcl_cout<<" click on points"<<col<<vcl_endl;
+      std::cout<<" click on points"<<col<<std::endl;
       tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-      vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+      std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
     }
-   //vcl_cout<<"choice 12 13 23==> 0 1 2"<<vcl_endl;
-   //vcl_cin>>ch;
-   //vcl_cout<<" "<<ch<<vcl_endl;
+   //std::cout<<"choice 12 13 23==> 0 1 2"<<std::endl;
+   //std::cin>>ch;
+   //std::cout<<" "<<ch<<std::endl;
    vgui_dialog dlg("recognizer test");
    
    dlg.field("choice ? 12 13 23",ch);
@@ -2227,13 +2227,13 @@ void rc3d_windows_frame::manual_recon_rec_test()
    double y_center_3d=point_3d.y();
    double z_center_3d=point_3d.z();
    
-   vcl_cout<<point_3d<<vcl_endl;
+   std::cout<<point_3d<<std::endl;
    d3_one_pt_[0]=point_3d.x();
    d3_one_pt_[1]=point_3d.y();
    d3_one_pt_[2]=point_3d.z();
    //return point_3d;
    p_list_set p_set;
-   vcl_vector <vnl_matrix <float>  >p_list;
+   std::vector <vnl_matrix <float>  >p_list;
    vnl_matrix<float> sel(10,1,0.0);
    //sel(1,0)=x_1;sel(2,0)=y_1;sel(3,0)=x_3;sel(4,0)=y_3;
    //            sel(5,0)=x_2;sel(6,0)=y_2;
@@ -2262,20 +2262,20 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
 
 
    vnl_double_4x4 RT(BB_RT_matt_);
-   vcl_cout<<RT<<vcl_endl;
+   std::cout<<RT<<std::endl;
 
    vnl_vector_fixed <double,4 > unit_y(0,1,0,1);
    vnl_vector_fixed <double,4> unit_yz(0,1,1,1);
    vnl_vector <double> center_3d(.5*RT*(unit_y+unit_yz));
 
-   vcl_cout<<"center point: "<<center_3d<<vcl_endl;
+   std::cout<<"center point: "<<center_3d<<std::endl;
 
    ///// trying to use... center of BB... 9-17-2004
    vnl_vector_fixed <double,4 > unit_xy(1,1,0,1);
    vnl_vector_fixed <double,4> unit_xyz(1,1,1,1);
  
 
-   vcl_cout<<"center point: "<<center_3d<<vcl_endl;
+   std::cout<<"center point: "<<center_3d<<std::endl;
     
 
          //1-13-2005 new world cam BB 
@@ -2286,7 +2286,7 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
 
 
 
-   vcl_cout<<"center point: "<<center_3d<<vcl_endl;
+   std::cout<<"center point: "<<center_3d<<std::endl;
 
 
    vnl_double_3x3 R(0.0);
@@ -2309,7 +2309,7 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
 
    rotate_bb(R, R_out,theta_x*vnl_math::pi/180.0,
      theta_y*vnl_math::pi/180.0,theta_z*vnl_math::pi/180.0);
-   vcl_cout<<R_out<<vcl_endl;
+   std::cout<<R_out<<std::endl;
    R=R_out;
    float Rx_new=-Rx,Ry_new=-Rz,Rz_new=-Ry;
    Rx=Rx_new;Ry=Ry_new;Rz=Rz_new;
@@ -2317,33 +2317,33 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
 
    // normalize R along columns..
    
-    Rx=vcl_sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
-    Ry=vcl_sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
-    Rz=vcl_sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
+    Rx=std::sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
+    Ry=std::sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
+    Rz=std::sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
 
    
-   //Scale=Rz/vcl_abs(-28.0527 -18.6547);
-   vcl_cout<<"suggested scale"<<Rx/(vcl_abs( 198.7+130.053)/2.0)<<vcl_endl;
-  // vcl_cout<<"Scale: "<<Scale<<" "<<Rz<<" "<<Rx<<" "<<Ry<<vcl_endl;
+   //Scale=Rz/std::abs(-28.0527 -18.6547);
+   std::cout<<"suggested scale"<<Rx/(std::abs( 198.7+130.053)/2.0)<<std::endl;
+  // std::cout<<"Scale: "<<Scale<<" "<<Rz<<" "<<Rx<<" "<<Ry<<std::endl;
 
    //model dimension.. 9-17-04
-   double Mx=vcl_abs( 198.7+130.053)/2.0;
-   double My=vcl_abs(20.6846+37.5776);
-   double Mz=vcl_abs(32.2621+24.6169);
-   vcl_cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-   vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
-    Mx=vcl_abs( 198.7);
-    My=vcl_abs(20.6846)*2.0;
-    Mz=vcl_abs(32.2621)*2.0;
-   vcl_cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-   vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
+   double Mx=std::abs( 198.7+130.053)/2.0;
+   double My=std::abs(20.6846+37.5776);
+   double Mz=std::abs(32.2621+24.6169);
+   std::cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+   std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
+    Mx=std::abs( 198.7);
+    My=std::abs(20.6846)*2.0;
+    Mz=std::abs(32.2621)*2.0;
+   std::cout<<"model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+   std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
    //return;
    // model dimension ends..
    R.normalize_columns();
 
-   vcl_cout<<R<<vcl_endl;
+   std::cout<<R<<std::endl;
    //R.normalize_rows();
-   //vcl_cout<<"after normalization\n"<<R<<vcl_endl;
+   //std::cout<<"after normalization\n"<<R<<std::endl;
    //shift_x=RT[0][3];shift_y=RT[1][3];shift_z=RT[2][3];
    float shift_x=center_3d(0);
    float shift_y=center_3d(1);
@@ -2363,7 +2363,7 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
    bool flag=false;
    vgl_point_3d<double> null;
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
       return ;
    }
    static int ch=0;
@@ -2373,8 +2373,8 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
    vgui_dialog dlg("recognizer test");
    //vgui_dialog dlg_save_selected("probe save..");
    
-   static vcl_string save_selected_filename = "c:/live/vorl/initfiles/junk.txt";
-   vcl_string save_selected_ext="*.*";
+   static std::string save_selected_filename = "c:/live/vorl/initfiles/junk.txt";
+   std::string save_selected_ext="*.*";
    
    dlg.file("file name", save_selected_ext, save_selected_filename);
    dlg.field("choice ? 12 13 23",ch);
@@ -2384,7 +2384,7 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
      return;
    }
    
-   vcl_ofstream out(save_selected_filename.c_str());
+   std::ofstream out(save_selected_filename.c_str());
    if (save_selected_filename != "")
    {
      
@@ -2403,12 +2403,12 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
    
    
    for (int probe_number=0;probe_number<10;probe_number++) {
-     vcl_cout<<"## Probe number: "<<probe_number<<"\n"<<"----------------------"<<vcl_endl;
+     std::cout<<"## Probe number: "<<probe_number<<"\n"<<"----------------------"<<std::endl;
 
      for (col=0;col<3;col++) {
-       vcl_cout<<" click on points"<<col<<vcl_endl;
+       std::cout<<" click on points"<<col<<std::endl;
        tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-       vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+       std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
      }
      
      switch(ch)
@@ -2428,13 +2428,13 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
      double y_center_3d=point_3d.y();
      double z_center_3d=point_3d.z();
      
-     vcl_cout<<point_3d<<vcl_endl;
+     std::cout<<point_3d<<std::endl;
      d3_one_pt_[0]=point_3d.x();
      d3_one_pt_[1]=point_3d.y();
      d3_one_pt_[2]=point_3d.z();
      //return point_3d;
      p_list_set p_set;
-     vcl_vector <vnl_matrix <float>  >p_list;
+     std::vector <vnl_matrix <float>  >p_list;
      vnl_matrix<float> sel(10,1,0.0);
      //sel(1,0)=x_1;sel(2,0)=y_1;sel(3,0)=x_3;sel(4,0)=y_3;
      //            sel(5,0)=x_2;sel(6,0)=y_2;
@@ -2451,7 +2451,7 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
      
      p_set.probe_number=probe_number;
      p_set.p_list=p_list;
-     vcl_cout<<point_3d<<" "<<sel<<vcl_endl;
+     std::cout<<point_3d<<" "<<sel<<std::endl;
      
      //p_list_set_[probe_number].p_list.clear();
      p_list_set_.push_back(p_set);
@@ -2474,11 +2474,11 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
    // for scale finding this whilw loop is needed..   
      
      if (p_list_set_[0].p_list.size()>0&&p_list_set_[7].p_list.size()>0)
-       vcl_cout<<scale2*d3_point_distance(p_list_set_[0].p_list[0],
-       p_list_set_[7].p_list[0])<<vcl_endl;
+       std::cout<<scale2*d3_point_distance(p_list_set_[0].p_list[0],
+       p_list_set_[7].p_list[0])<<std::endl;
      if (p_list_set_[5].p_list.size()>0&&p_list_set_[8].p_list.size()>0)
-       vcl_cout<<scale2*d3_point_distance(p_list_set_[5].p_list[0],
-       p_list_set_[8].p_list[0])<<vcl_endl;
+       std::cout<<scale2*d3_point_distance(p_list_set_[5].p_list[0],
+       p_list_set_[8].p_list[0])<<std::endl;
      
      
      if (!sat.ask()){
@@ -2490,24 +2490,24 @@ void rc3d_windows_frame::manual_recon_tripplet_optimization()
 
    out<<p_list_set_.size()<<"\n";
    for (unsigned i=0;i<p_list_set_.size();i++) {
-     out<<i<<" "<<p_list_set_[i].p_list.size()<<vcl_endl;
+     out<<i<<" "<<p_list_set_[i].p_list.size()<<std::endl;
      for( unsigned j=0;j<p_list_set_[i].p_list.size();j++){
-       out<<(p_list_set_[i].p_list[j])*scale2 << vcl_endl ;
-                         if (j>6) vcl_cout<<(p_list_set_[i].p_list[j])*scale2 << vcl_endl ;
+       out<<(p_list_set_[i].p_list[j])*scale2 << std::endl ;
+                         if (j>6) std::cout<<(p_list_set_[i].p_list[j])*scale2 << std::endl ;
      }
    }
    out<<"Scale1:"<<Scale<< "scale2"<<scale2<<" Box_Add: "<<Box_Add<<"\n "
      <<" cube_inc: "<<cube_inc_<<" d_tube_: "<<d_tube_<<"\n"
-     <<" d3_rho_"<<d3_rho_<<" s_thresh_1"<<s_thresh_1<<vcl_endl;
+     <<" d3_rho_"<<d3_rho_<<" s_thresh_1"<<s_thresh_1<<std::endl;
    for (unsigned i=0;i<fore_name.size();i++) {
-     out<<fore_name[i]<<vcl_endl;
+     out<<fore_name[i]<<std::endl;
    }
 }
 
 
 
 // 5-03-2004 Dongjin Han Map selected 2d point in image onto epi line
-vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_epiline()
+std::vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_epiline()
 
 {
   float xm[3],ym[3];
@@ -2516,27 +2516,27 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
    vnl_double_2 l_c,r_c;
    
    bool flag=false;
-   //vcl_vector <vgl_point_3d<double> >null;
+   //std::vector <vgl_point_3d<double> >null;
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
       //:return ;
    }
    char ch;
    /*for (col=0;col<3;col++) {
-      vcl_cout<<" click on points"<<col<<vcl_endl;
+      std::cout<<" click on points"<<col<<std::endl;
       tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-      vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+      std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
     }*/
    mouse_point_selection_3_frame(xm,ym);
 
-   vcl_cout<<"choice 12 13 23==> 0 1 2"<<vcl_endl;
-   vcl_cin>>ch;
-   vcl_cout<<" "<<ch<<vcl_endl;
+   std::cout<<"choice 12 13 23==> 0 1 2"<<std::endl;
+   std::cin>>ch;
+   std::cout<<" "<<ch<<std::endl;
    
     //initialize_camera_3();
    vnl_double_3x4 P_l,P_r;
    vnl_double_3x4 P1 = M_in_*E1, P2 = M_in_*E2, P3 = M_in_*E3;
-   vcl_vector <vnl_double_3x4> PL;
+   std::vector <vnl_double_3x4> PL;
    PL.push_back(P1);PL.push_back(P2);PL.push_back(P3);
    switch(ch)
    {
@@ -2550,7 +2550,7 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
 
     //temporary test for FMatrix
   if (!epi_flag) {
-     vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+     std::cout<<"epipole needed!\n"<<std::endl;;
     // return NULL;
   }
   vnl_double_3x3 F;
@@ -2583,7 +2583,7 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
   vgl_point_2d<double> x_l(l_c[0],l_c[1]);
   //vgl_point_2d<double> x_r(r_c[0],r_c[1]);
   vgl_point_2d<double> x_r(xp,yp);
-  vcl_cout<<xp<<" "<<yp<<vcl_endl;
+  std::cout<<xp<<" "<<yp<<std::endl;
 
   vgl_point_3d<double> point_3d_1 = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
   // now we have 3d point
@@ -2591,17 +2591,17 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
   //double y_center_3d=point_3d_1.y();
   //double z_center_3d=point_3d_1.z();
   
-  vcl_cout<<point_3d_1<<vcl_endl;
+  std::cout<<point_3d_1<<std::endl;
   //d3_one_pt_[0]=point_3d_1.x();
   //d3_one_pt_[1]=point_3d_1.y();
   //d3_one_pt_[2]=point_3d_1.z();
   
   /// another bottom
-  vcl_cout<<"other bootom point\n"<<vcl_endl;
+  std::cout<<"other bootom point\n"<<std::endl;
   
   mouse_point_selection_3_frame(xm,ym);
 
-  vcl_cout<<"thanks!\n"<<vcl_endl;
+  std::cout<<"thanks!\n"<<std::endl;
 
   
   switch(ch)
@@ -2630,17 +2630,17 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
   vgl_point_3d<double> point_3d_2 = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
   
   
-  vcl_cout<<point_3d_2<<vcl_endl;
+  std::cout<<point_3d_2<<std::endl;
   
   
   
-  vcl_vector <vgl_point_3d <double> > t;
+  std::vector <vgl_point_3d <double> > t;
   t.push_back(point_3d_1); t.push_back(point_3d_2);
   BB_bottom_.erase(BB_bottom_.begin(), BB_bottom_.end());
-  vcl_cout<< BB_bottom_.size()<<vcl_endl;
+  std::cout<< BB_bottom_.size()<<std::endl;
   BB_bottom_.push_back(point_3d_1);
   BB_bottom_.push_back(point_3d_2);
-  vcl_cout<< BB_bottom_.size()<<vcl_endl;
+  std::cout<< BB_bottom_.size()<<std::endl;
   draw_point(PL,point_3d_1);
   draw_point(PL,point_3d_2);
   
@@ -2688,7 +2688,7 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
   vgl_point_3d<double> point_3d_front_1 = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
   
   
-  vcl_cout<<point_3d_front_1<<vcl_endl;
+  std::cout<<point_3d_front_1<<std::endl;
 
   // farther point
 
@@ -2735,11 +2735,11 @@ vcl_vector <vgl_point_3d<double> > rc3d_windows_frame::manual_reconstruction_on_
   vgl_point_3d<double> point_3d_front_2 = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
   
   
-  vcl_cout<<point_3d_front_2<<vcl_endl;
+  std::cout<<point_3d_front_2<<std::endl;
 
   BB_bottom_.push_back(point_3d_front_1);
   BB_bottom_.push_back(point_3d_front_2);
-  vcl_cout<< BB_bottom_.size()<<vcl_endl;
+  std::cout<< BB_bottom_.size()<<std::endl;
   draw_point(PL,point_3d_front_1);
   draw_point(PL,point_3d_front_2);
 
@@ -2798,26 +2798,26 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
    vgl_point_3d<double> X(-999,-999,-999);
                 
    if (!init_3_cam_flag_) {
-      vcl_cout<< "cam 3 initialization first\n"<<vcl_endl;
+      std::cout<< "cam 3 initialization first\n"<<std::endl;
         return X;
    }
    char ch;
    //for (col=0;col<3;col++) {
-   //   vcl_cout<<" click on points"<<col<<vcl_endl;
+   //   std::cout<<" click on points"<<col<<std::endl;
    //   tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-   //   vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+   //   std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
    // }
    
          /*mouse_point_selection_3_frame(xm,ym);
 
-   vcl_cout<<"choice 12 13 23==> 0 1 2"<<vcl_endl;
-   vcl_cin>>ch;
-   vcl_cout<<" "<<ch<<vcl_endl;
+   std::cout<<"choice 12 13 23==> 0 1 2"<<std::endl;
+   std::cin>>ch;
+   std::cout<<" "<<ch<<std::endl;
    
     //initialize_camera_3();
    vnl_double_3x4 P_l,P_r;
    vnl_double_3x4 P1 = M_in_*E1, P2 = M_in_*E2, P3 = M_in_*E3;
-   vcl_vector <vnl_double_3x4> PL;
+   std::vector <vnl_double_3x4> PL;
    PL.push_back(P1);PL.push_back(P2);PL.push_back(P3);
    switch(ch)
    {
@@ -2831,7 +2831,7 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
 
     //temporary test for FMatrix
   if (!epi_flag) {
-     vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+     std::cout<<"epipole needed!\n"<<std::endl;;
      return NULL;
   }*/
 
@@ -2854,7 +2854,7 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
   epi_[0]=P02_diff[0][3]/P02_diff[2][3];
         epi_[1]=P02_diff[1][3]/P02_diff[2][3];
         epi_[2]=1.0;
-        vcl_cout<<"epipole:"<<epi_<<vcl_endl;
+        std::cout<<"epipole:"<<epi_<<std::endl;
         
         vnl_double_3x3 F;
   F[0][0] = 0;     F[0][1] = -epi_[2];  F[0][2] = epi_[1];
@@ -2889,7 +2889,7 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
   vgl_point_2d<double> x_l(l_c[0],l_c[1]);
   //vgl_point_2d<double> x_r(r_c[0],r_c[1]);
   vgl_point_2d<double> x_r(xp,yp);
-  vcl_cout<<xp<<" "<<yp<<vcl_endl;
+  std::cout<<xp<<" "<<yp<<std::endl;
 
   //vgl_point_3d<double> point_3d_1 = brct_algos::triangulate_3d_point(x_l, P_l, x_r, P_r);
         vgl_point_3d<double> point_3d_1 = brct_algos::triangulate_3d_point(x_l, PL_[0], x_r, PL_[2]);
@@ -2898,7 +2898,7 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
   //double y_center_3d=point_3d_1.y();
   //double z_center_3d=point_3d_1.z();
   
-  vcl_cout<<point_3d_1<<vcl_endl;
+  std::cout<<point_3d_1<<std::endl;
     
   draw_point(PL_,point_3d_1);
   
@@ -2912,9 +2912,9 @@ vgl_point_3d<double>  rc3d_windows_frame::manual_reconstruction_on_epiline_BB_Fr
 void rc3d_windows_frame::mouse_point_selection_3_frame(float *xm,float *ym)
 {
    for (unsigned col=0;col<3;col++) {
-      vcl_cout<<" click on points"<<col<<vcl_endl;
+      std::cout<<" click on points"<<col<<std::endl;
       tabs_picker_[col]->pick_point(&xm[col], &ym[col]);
-      vcl_cout<<xm[col]<<" "<<ym[col]<<vcl_endl;
+      std::cout<<xm[col]<<" "<<ym[col]<<std::endl;
     }
 
 }
@@ -2924,8 +2924,8 @@ void rc3d_windows_frame::mouse_point_selection_N_frame()
         
         float xm,ym;
         int N=Cam_List_.size();
-        vcl_string filename;
-        vcl_string ext="*.*";
+        std::string filename;
+        std::string ext="*.*";
         static int point_number=10;
         static bool manual_selection=true;
   vgui_dialog dlg("camera back projection test");
@@ -2938,13 +2938,13 @@ void rc3d_windows_frame::mouse_point_selection_N_frame()
                 return;
         }
         
-        vcl_vector<vnl_double_2> pts;
+        std::vector<vnl_double_2> pts;
 
          if (manual_selection) {
                  for (unsigned col=0;col<N;col++) {
-                         vcl_cout<<" click on points"<<col<<vcl_endl;
+                         std::cout<<" click on points"<<col<<std::endl;
                          tabs_picker_[col]->pick_point(&xm ,&ym);
-                         vcl_cout<<xm<<" "<<ym<<vcl_endl;
+                         std::cout<<xm<<" "<<ym<<std::endl;
                          vnl_double_2 pt(xm,ym);
                          pts.push_back(pt);
                          
@@ -2952,7 +2952,7 @@ void rc3d_windows_frame::mouse_point_selection_N_frame()
 
                  vgl_point_3d<double> X=brct_algos::bundle_reconstruct_3d_point(pts, Cam_List_);
                  vgui_style_sptr style = vgui_style::new_style(1, 1, 0, 6, 1);
-                 vcl_cout<<X<<vcl_endl;
+                 std::cout<<X<<std::endl;
                  for (unsigned col=0;col<N;col++) {
                          vgl_point_2d<double> pd = brct_algos::projection_3d_point(X, Cam_List_[col]);
                          vtol_vertex_2d_sptr v=new vtol_vertex_2d(pd.x(),pd.y());
@@ -2960,16 +2960,16 @@ void rc3d_windows_frame::mouse_point_selection_N_frame()
                  }
          }
          else {
-                         vcl_ifstream in(filename.c_str());
-                         vcl_cout<<"reading point file "<< filename.c_str()<<vcl_endl;
+                         std::ifstream in(filename.c_str());
+                         std::cout<<"reading point file "<< filename.c_str()<<std::endl;
                          
                          //in>> total__number;
                          vgui_style_sptr style = vgui_style::new_style(1, 1, 0, 6, 1);
                          float x,y,z;
-                         vcl_string dummy;
+                         std::string dummy;
                          for (unsigned i=0;i<point_number;i++) {
                                  in>>dummy>> x>>y>>z;
-                                 vcl_cout<<x<<" "<<y<<" "<<z<<vcl_endl;
+                                 std::cout<<x<<" "<<y<<" "<<z<<std::endl;
                                  vgl_point_3d<double> point(x,z,y);
                                  
                                  for (unsigned col=0;col<N;col++) {
@@ -3003,8 +3003,8 @@ void rc3d_windows_frame::cad_back_N_frame()
 
         float xm,ym;
         int N=Cam_List_.size();
-        static vcl_string filename;
-        vcl_string ext="*.*";
+        static std::string filename;
+        std::string ext="*.*";
         static int point_number=10;
         static bool manual_selection=false;
   
@@ -3042,7 +3042,7 @@ void rc3d_windows_frame::cad_back_N_frame()
    // 6-30-2004 given stuff(BB and Camera)
 
    vnl_double_4x4 RT(BB_RT_matt_);
-   vcl_cout<<RT<<vcl_endl;
+   std::cout<<RT<<std::endl;
 
    vnl_vector_fixed <double,4 > unit_y(0,1,0,1);
    vnl_vector_fixed <double,4> unit_yz(0,1,1,1);
@@ -3056,20 +3056,20 @@ void rc3d_windows_frame::cad_back_N_frame()
 
 
 
-   vcl_cout<<"center point: "<<center_3d<<vcl_endl;
+   std::cout<<"center point: "<<center_3d<<std::endl;
 
    ///// trying to use... center of BB... 9-17-2004
    vnl_vector_fixed <double,4 > unit_xy(1,1,0,1);
    vnl_vector_fixed <double,4> unit_xyz(1,1,1,1);
   // vnl_vector <double> center_3d_back(.5*RT*(unit_xy+unit_xyz));
 
-  // vcl_cout<<"center point_rear: "<<center_3d_back<<vcl_endl;
+  // std::cout<<"center point_rear: "<<center_3d_back<<std::endl;
   // center_3d=.5*(center_3d+center_3d_back);
    //////////
 
 
-   vcl_cout<<"center point: "<<center_3d<<vcl_endl;
-   //vcl_cout<<center_3d/center_3d(3)<<vcl_endl;
+   std::cout<<"center point: "<<center_3d<<std::endl;
+   //std::cout<<center_3d/center_3d(3)<<std::endl;
 
    
    vnl_double_3x3 R(0.0);
@@ -3088,7 +3088,7 @@ void rc3d_windows_frame::cad_back_N_frame()
 
    rotate_bb(R, R_out,theta_x*vnl_math::pi/180.0,
      theta_y*vnl_math::pi/180.0,theta_z*vnl_math::pi/180.0);
-   vcl_cout<<R_out<<vcl_endl;
+   std::cout<<R_out<<std::endl;
    R=R_out;
    float Rx_new=-Rx,Ry_new=-Rz,Rz_new=-Ry;
    Rx=Rx_new;Ry=Ry_new;Rz=Rz_new;
@@ -3099,24 +3099,24 @@ void rc3d_windows_frame::cad_back_N_frame()
          
          // normalize R along columns..
    
-    Rx=vcl_sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
-    Ry=vcl_sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
-    Rz=vcl_sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
+    Rx=std::sqrt(R[0][0]*R[0][0]+R[1][0]*R[1][0]+R[2][0]*R[2][0]);
+    Ry=std::sqrt(R[0][1]*R[0][1]+R[1][1]*R[1][1]+R[2][1]*R[2][1]);
+    Rz=std::sqrt(R[0][2]*R[0][2]+R[1][2]*R[1][2]+R[2][2]*R[2][2]);
 
    
    //model dimension.. 9-17-04
-   double Mx=vcl_abs( 198.7+130.053)/2.0;
-   double My=vcl_abs(20.6846+37.5776);
-   double Mz=vcl_abs(32.2621+24.6169);
-   vcl_cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<vcl_endl;
-   vcl_cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<vcl_endl;
-    Mx=vcl_abs( 198.7);
-    My=vcl_abs(20.6846)*2.0;
-    Mz=vcl_abs(32.2621)*2.0;
+   double Mx=std::abs( 198.7+130.053)/2.0;
+   double My=std::abs(20.6846+37.5776);
+   double Mz=std::abs(32.2621+24.6169);
+   std::cout<<"mean(?) model_dimension(Mx,My,Mz) is "<<Mx<<" "<<My<<" "<<Mz<<std::endl;
+   std::cout<<"and  "<<Rx/Mx<<" "<<Ry/My<<" "<<Rz/Mz<<std::endl;
+    Mx=std::abs( 198.7);
+    My=std::abs(20.6846)*2.0;
+    Mz=std::abs(32.2621)*2.0;
   
    R.normalize_columns();
 
-   vcl_cout<<R<<vcl_endl;
+   std::cout<<R<<std::endl;
          shift_x=center_3d(0)+shift_x_arg/12.0;shift_y=center_3d(1)+shift_y_arg/12.0;shift_z=center_3d(2)+shift_z_arg/12.0;
 
 
@@ -3130,23 +3130,23 @@ void rc3d_windows_frame::cad_back_N_frame()
 
 
 
-        vcl_ifstream in(filename.c_str());
-        vcl_cout<<"reading point file "<< filename.c_str()<<vcl_endl;
+        std::ifstream in(filename.c_str());
+        std::cout<<"reading point file "<< filename.c_str()<<std::endl;
         
         //in>> total__number;
         vgui_style_sptr style = vgui_style::new_style(1, 1, 0, 2, 1);
         float x,y,z;
-        vcl_string dummy;
+        std::string dummy;
         float x_max=-100000.0;
         float x_min=100000.0;
         float y_max=-100000.0;
         float y_min=100000.0;
         float z_max=-100000.0;
         float z_min=100000.0;
-        vcl_vector <vgl_point_3d<double> > points;
+        std::vector <vgl_point_3d<double> > points;
         for (unsigned i=0;i<point_number;i++) {
                 in>>dummy>> x>>y>>z;
-                vcl_cout<<x<<" "<<y<<" "<<z<<vcl_endl;
+                std::cout<<x<<" "<<y<<" "<<z<<std::endl;
                 if (x_max<x) x_max=x;
                 if (x_min>x) x_min=x;
                 if (y_max<y) y_max=y;
@@ -3173,7 +3173,7 @@ void rc3d_windows_frame::cad_back_N_frame()
             t[1][0]=-points[i].z()/12.0;
             t[2][0]=-points[i].y()/12.0;
             vnl_matrix<double> tt4=(R*t);
-            //vcl_cout<<t<<vcl_endl;
+            //std::cout<<t<<std::endl;
             X.set(tt4[0][0]+shift_x,tt4[1][0]+shift_y,tt4[2][0]+shift_z);
                         vgl_point_2d<double> pd = brct_algos::projection_3d_point(X, Cam_List_[col]);
                         
@@ -3186,7 +3186,7 @@ void rc3d_windows_frame::cad_back_N_frame()
                  
 }
 
-void rc3d_windows_frame::draw_point(vcl_vector <vnl_double_3x4> PL,vgl_point_3d<double> X)
+void rc3d_windows_frame::draw_point(std::vector <vnl_double_3x4> PL,vgl_point_3d<double> X)
 {
 
    double vpi=vnl_math::pi;
@@ -3208,7 +3208,7 @@ void rc3d_windows_frame::draw_point(vcl_vector <vnl_double_3x4> PL,vgl_point_3d<
    
    
 }
-void rc3d_windows_frame::draw_point(vcl_vector <vnl_double_3x4> PL,vgl_point_3d<double> X,
+void rc3d_windows_frame::draw_point(std::vector <vnl_double_3x4> PL,vgl_point_3d<double> X,
                            float r, float g, float b, float size)
 {
 
@@ -3247,7 +3247,7 @@ void rc3d_windows_frame::draw_point()
          vgui_style_sptr style_2nd = vgui_style::new_style(1, 0, 0, size, 1);
    double vpi=vnl_math::pi;
     
-   vcl_cout<<p_list_set_.size()<<vcl_endl;
+   std::cout<<p_list_set_.size()<<std::endl;
          
    for (unsigned i=0;i<10;i++) {
                  for (unsigned j=0;j<p_list_set_[i].p_list.size();j++) {
@@ -3265,8 +3265,8 @@ void rc3d_windows_frame::draw_point()
                                          p_list_set_[i].p_list[j][6][0]);
                                  vtol_tabs_[1]->add_vertex(v3,style);
                          //}
-                         //vcl_cout<<j<<": "<<vcl_endl;
-                         //vcl_cout<<p_list_set_[i].p_list[j][1][0]<<vcl_endl;
+                         //std::cout<<j<<": "<<std::endl;
+                         //std::cout<<p_list_set_[i].p_list[j][1][0]<<std::endl;
                  }
          }
    grid_->post_redraw();
@@ -3286,12 +3286,12 @@ void rc3d_windows_frame::reconstruct3d()
    int size0 = ecs[0]->size();
    int size1 = ecs[1]->size();
 
-   vcl_cout<<"0 size:"<<size0<<" 1 size: "<<size1<<vcl_endl;
+   std::cout<<"0 size:"<<size0<<" 1 size: "<<size1<<std::endl;
    int npts = 2* ((size0 < size1) ? size0 : size1); // interpolate 2 times more
    if (size0*size1==0) return;
-   vcl_vector<vgl_point_3d<double> > pts_3d;
-   vcl_vector<vgl_point_2d<double> > c0; // matched point for the first view
-   vcl_vector<vgl_point_2d<double> > c1;
+   std::vector<vgl_point_3d<double> > pts_3d;
+   std::vector<vgl_point_2d<double> > c0; // matched point for the first view
+   std::vector<vgl_point_2d<double> > c1;
    
    // construct fundamental matrix between the first and second views.
    vnl_double_3x3 F;
@@ -3317,13 +3317,13 @@ void rc3d_windows_frame::reconstruct3d()
       
       // get rid of any point whose gradient is perpendicule to the epipole line
       double nx = lr.a(), ny = lr.b();
-      nx = nx / vcl_sqrt(nx*nx + ny*ny);
-      ny = ny / vcl_sqrt(nx*nx + ny*ny);
-      if (vcl_fabs( nx*vcl_cos(angle0*vnl_math::pi/180) + ny*vcl_sin(angle0*vnl_math::pi/180) )< 0.95)
+      nx = nx / std::sqrt(nx*nx + ny*ny);
+      ny = ny / std::sqrt(nx*nx + ny*ny);
+      if (std::fabs( nx*std::cos(angle0*vnl_math::pi/180) + ny*std::sin(angle0*vnl_math::pi/180) )< 0.95)
       {
          // getting the intersection point
          vgl_point_2d<double> p2;
-         vcl_vector<vgl_point_2d<double> > pts;
+         std::vector<vgl_point_2d<double> > pts;
          bdgl_curve_algs::intersect_line(dcs[1], lr, pts);
          
          // find the correspoinding point
@@ -3337,8 +3337,8 @@ void rc3d_windows_frame::reconstruct3d()
             double angle1 = (*(ecs[1]))[x1_index].get_theta();
             
             double dist_p1p2 = vgl_homg_operators_2d<double>::distance_squared(p1, temp);
-            if (vcl_fabs(angle1-angle0)<90 && dist > dist_p1p2 &&
-               vcl_fabs(nx*vcl_cos(angle1*vnl_math::pi/180) + ny*vcl_sin(angle1*vnl_math::pi/180))<0.95 )
+            if (std::fabs(angle1-angle0)<90 && dist > dist_p1p2 &&
+               std::fabs(nx*std::cos(angle1*vnl_math::pi/180) + ny*std::sin(angle1*vnl_math::pi/180))<0.95 )
             { // make sure it filters out lines parallel to epipole lines.
                p2 = temp;
                flag = true;
@@ -3352,7 +3352,7 @@ void rc3d_windows_frame::reconstruct3d()
             vgl_point_2d<double> x2(p2);
             vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x1, P1, x2, P2);
             pts_3d.push_back(point_3d);
-            vcl_cout<<point_3d<<vcl_endl;
+            std::cout<<point_3d<<std::endl;
             c0.push_back(x1);
             c1.push_back(x2);
          }
@@ -3361,7 +3361,7 @@ void rc3d_windows_frame::reconstruct3d()
    
    
    int  num_points_ = pts_3d.size();
-   vcl_cout<<"num_points_: "<<num_points_<<vcl_endl;
+   std::cout<<"num_points_: "<<num_points_<<std::endl;
    // save the motion
    //  motions_[0] = P1;
    // motions_[1] = P2;
@@ -3401,7 +3401,7 @@ void rc3d_windows_frame::reconstruct3d()
          temp_y=pts_3d[i].y()-   yc_;
          temp_z=pts_3d[i].z()-   zc_;
          pts_3d[i].set(temp_x,temp_y,temp_z);
-         vcl_cout<<temp_x<<" "<<temp_y<<" "<<temp_z<<vcl_endl;
+         std::cout<<temp_x<<" "<<temp_y<<" "<<temp_z<<std::endl;
       }
    
    //  Xl_.resize(num_points_);
@@ -3429,7 +3429,7 @@ void rc3d_windows_frame::reconstruct3d()
    
    
    //add 3D resoult
-   //vcl_vector<vgl_point_3d<double> > c3d = this->get_local_pts();
+   //std::vector<vgl_point_3d<double> > c3d = this->get_local_pts();
    add_curve3d(pts_3d);
    
    // show_epipole();
@@ -3440,13 +3440,13 @@ void rc3d_windows_frame::reconstruct3d()
   {
   instance_->easy_2d_->set_foreground(1, 0, 0);
   vgl_point_2d<double> e = kalman_->get_cur_epipole();
-  vcl_cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
+  std::cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
   instance_->easy_2d_->add_point(e.x(), e.y());
 }*/
 
 void rc3d_windows_frame::initialize_camera()
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;          M_in_[2][2] = 1;
@@ -3454,11 +3454,11 @@ void rc3d_windows_frame::initialize_camera()
    // get translation
     trans_dist = 125.0; // 105mm
    if (!epi_flag) {
-      vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+      std::cout<<"epipole needed!\n"<<std::endl;;
       return;
    }
    T = vnl_inverse(M_in_) * epi_;
-   T /= vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+   T /= std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
    T *= trans_dist;
    
    E1[0][0] = 1;       E1[0][1] = 0;        E1[0][2] = 0;          E1[0][3] = 0;
@@ -3469,13 +3469,13 @@ void rc3d_windows_frame::initialize_camera()
    E2[1][0] = 0;       E2[1][1] = 1;        E2[1][2] = 0;          E2[1][3] = T[1];
    E2[2][0] = 0;       E2[2][1] = 0;        E2[2][2] = 1;          E2[2][3] = T[2];
 
-   vcl_cout<< "initializing camera.......\n"<<vcl_endl;
+   std::cout<< "initializing camera.......\n"<<std::endl;
 }
 
 /////////////////////////////////////////////////////
 void rc3d_windows_frame::initialize_camera_3()
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -3483,7 +3483,7 @@ void rc3d_windows_frame::initialize_camera_3()
    // get translation
     trans_dist = 125.0; // 105mm
    if (!epi_flag) {
-      vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+      std::cout<<"epipole needed!\n"<<std::endl;;
       return;
    }
    
@@ -3502,36 +3502,36 @@ void rc3d_windows_frame::initialize_camera_3()
       //tabs_picker_[1]->pick_point(&x21,&y21);
       //tabs_picker_[2]->pick_point(&x22,&y22);
 
-      vcl_cout<<x0<<" "<<y0<<" "<<x1<<" "<<y1<<" "<<x2<<" "<<y2<<vcl_endl;
-      //vcl_cout<<"satisfied?[y]";
+      std::cout<<x0<<" "<<y0<<" "<<x1<<" "<<y1<<" "<<x2<<" "<<y2<<std::endl;
+      //std::cout<<"satisfied?[y]";
       flag=true;
-      //vcl_cin>>ch;
+      //std::cin>>ch;
       //if (ch=='y') flag=true;
       //else flag=false;
       
    }
    T = vnl_inverse(M_in_) * epi_;
-   double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+   double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
    T /= T_normal;
    T *= trans_dist;
    
-   float c=vcl_sqrt(vcl_pow(double(x2-xe),2)+vcl_pow(y2-ye,2));
-   float b=vcl_sqrt(vcl_pow(double(x1-xe),2)+vcl_pow(y1-ye,2));
-   float a=vcl_sqrt(vcl_pow(double(x0-xe),2)+vcl_pow(y0-ye,2));
+   float c=std::sqrt(std::pow(double(x2-xe),2)+std::pow(y2-ye,2));
+   float b=std::sqrt(std::pow(double(x1-xe),2)+std::pow(y1-ye,2));
+   float a=std::sqrt(std::pow(double(x0-xe),2)+std::pow(y0-ye,2));
 
-   float cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-   float bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-   float ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
-   //float ratio=vcl_sqrt(vcl_pow(double(x1-xe),2.0)+vcl_pow(y1-ye,2.0))/vcl_sqrt(vcl_pow(double(x2-xe),2.0)+vcl_pow(y2-ye,2.0));
+   float cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+   float bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+   float ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
+   //float ratio=std::sqrt(std::pow(double(x1-xe),2.0)+std::pow(y1-ye,2.0))/std::sqrt(std::pow(double(x2-xe),2.0)+std::pow(y2-ye,2.0));
    float ratio=(b-a)/(c-a)*c/b;
 
-   vcl_cout<<" camera ratio is: "<<ratio<<vcl_endl;
-   //vcl_cout<<"ratio: "<<ratio<<vcl_endl;
-   //vcl_cout<<ax<<" "<<ay<<" "<<bx<<" "<<by<<" "<<cx<<" "<<cy<<vcl_endl;
-   //vcl_cout<<a/c<<" "<<b/c<<vcl_endl;
+   std::cout<<" camera ratio is: "<<ratio<<std::endl;
+   //std::cout<<"ratio: "<<ratio<<std::endl;
+   //std::cout<<ax<<" "<<ay<<" "<<bx<<" "<<by<<" "<<cx<<" "<<cy<<std::endl;
+   //std::cout<<a/c<<" "<<b/c<<std::endl;
    
    //T_intpl = vnl_inverse(M_in_) * epi_;
-   //T_intpl /= vcl_sqrt(T_intpl[0]*T_intpl[0] + T_intpl[1]*T_intpl[1] + T_intpl[2]*T_intpl[2]);
+   //T_intpl /= std::sqrt(T_intpl[0]*T_intpl[0] + T_intpl[1]*T_intpl[1] + T_intpl[2]*T_intpl[2]);
    //T_intpl *= trans_dist;
 
    
@@ -3558,21 +3558,21 @@ void rc3d_windows_frame::initialize_camera_3()
    //vnl_double_3 t(x1,y1,1.0);
 
 
-   //vcl_cout<<t<<vcl_endl;
+   //std::cout<<t<<std::endl;
 
    /*T_intpl =vnl_inverse(M_in_) *t;
 
    
-   vcl_cout<<T_intpl<<vcl_endl;
+   std::cout<<T_intpl<<std::endl;
 
    T_intpl[0] -=x_3d;
    T_intpl[1] -=y_3d;
    T_intpl[2] -=z_3d;
-   vcl_cout<<T_intpl<<vcl_endl;
+   std::cout<<T_intpl<<std::endl;
    double scale=T_intpl[0]*T[0]+T_intpl[1]*T[1]+T_intpl[2]*T[2];
-   vcl_cout<<"scale: "<<scale<<vcl_endl;
+   std::cout<<"scale: "<<scale<<std::endl;
    scale /=(T_normal*T_normal);
-   vcl_cout<<"scale: "<<scale<<vcl_endl;
+   std::cout<<"scale: "<<scale<<std::endl;
    //E2[0][0] = 1;       E2[0][1] = 0;        E2[0][2] = 0;          E2[0][3] =T_intpl[0];
    //E2[1][0] = 0;       E2[1][1] = 1;        E2[1][2] = 0;          E2[1][3] =T_intpl[1];
    //E2[2][0] = 0;       E2[2][1] = 0;        E2[2][2] = 1;          E2[2][3] =T_intpl[2];
@@ -3593,7 +3593,7 @@ scale=b/c;
    vgl_point_2d<double> x3_2d(x2,y2);
    
    vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x1_2d, P1, x3_2d, P3);
-   vcl_cout<<"1 vs 3: "<<point_3d<<vcl_endl;
+   std::cout<<"1 vs 3: "<<point_3d<<std::endl;
 
 
 
@@ -3616,7 +3616,7 @@ scale=b/c;
    PL_.erase(PL_.begin(), PL_.end());
    PL_.push_back(P1);PL_.push_back(P2);PL_.push_back(P3);
    init_3_cam_flag_=true;
-   vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+   std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
 }
 
 
@@ -3624,7 +3624,7 @@ scale=b/c;
 /////////////////////////////////////////////////////
 void rc3d_windows_frame::initialize_camera_3_matt()
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -3634,10 +3634,10 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    E3.fill(0.0); E3.fill_diagonal(1.0);
 
    vgui_dialog dlg("Read Matt's");
-   //static vcl_string filename = "C:/CVPR2004/truck_bbox.txt";
-   static vcl_string filename = "C:/CVPR2004/carbbox.txt";
+   //static std::string filename = "C:/CVPR2004/truck_bbox.txt";
+   static std::string filename = "C:/CVPR2004/carbbox.txt";
    
-   static vcl_string ext = "*.*";
+   static std::string ext = "*.*";
    static int frame_1=3;
    static int frame_2=5;
    static int frame_3=7;
@@ -3650,12 +3650,12 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    //static bool show_list=false;
 
 //   double x1[3];
-   vcl_string str1,str_filename;
+   std::string str1,str_filename;
 //char str1[100];
     dlg.file("read file name", ext, filename);
    
    if (!dlg.ask()) { 
-      vcl_cout<<"Camera FIle Read Fail!" <<vcl_endl;
+      std::cout<<"Camera FIle Read Fail!" <<std::endl;
       return;
    }
    
@@ -3663,19 +3663,19 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    //double x,y,z,t;
    double temp=0;
    vnl_double_3x4 Camera(0.0);
-   vcl_vector<vnl_double_3x4 > Cam_List;
+   std::vector<vnl_double_3x4 > Cam_List;
    int total_camera_number=-1;
    int start_number=0,end_number=0;
    
 
    if (filename != "")
       {
-         vcl_ifstream in(filename.c_str());
-         vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
+         std::ifstream in(filename.c_str());
+         std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
          
          in>> total_camera_number;
          if (total_camera_number<0||total_camera_number>100) {
-            vcl_cout<<"file read or format error"<<vcl_endl;
+            std::cout<<"file read or format error"<<std::endl;
             return;
          }
          for (unsigned j=0;j<10;j++) {
@@ -3684,12 +3684,12 @@ void rc3d_windows_frame::initialize_camera_3_matt()
                str_filename=str1;
             }
             if (j==4) {
-               start_number =vcl_atoi(str1.c_str());   
+               start_number =std::atoi(str1.c_str());   
             }
             if (j==6) {
-               end_number=vcl_atoi(str1.c_str());
+               end_number=std::atoi(str1.c_str());
             }
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
          }
       
          //read R-T matrix...
@@ -3700,14 +3700,14 @@ void rc3d_windows_frame::initialize_camera_3_matt()
                RT[i][j]=temp;
             }
          }
-         vcl_cout<<RT<<vcl_endl;
+         std::cout<<RT<<std::endl;
          BB_RT_matt_=RT;
 
 
          for (unsigned i=0;i<total_camera_number;i++) {
             Camera.fill(0.0);
             in>>str1>>str1;
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
             for (unsigned j=0;j<3; j++) {
                for (unsigned k=0;k<4;k++) {
                   in >> temp;
@@ -3715,7 +3715,7 @@ void rc3d_windows_frame::initialize_camera_3_matt()
                }
             }
             Cam_List.push_back(Camera);
-            vcl_cout<<Camera<<vcl_endl;
+            std::cout<<Camera<<std::endl;
          }
          
          
@@ -3725,23 +3725,23 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    E2=Cam_List[frame_2];
    E3=Cam_List[frame_3];
 
-   vcl_cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+   std::cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
    
 
    //vnl_double_3x4 P1 = M_in_*E1,P2 =M_in_*E2, P3=M_in_*E3;
    vnl_double_3x4 P1 = E1,P2 =E2, P3=E3;
 
-   vcl_cout<<E1<<E2<<E3<<vcl_endl;
+   std::cout<<E1<<E2<<E3<<std::endl;
 
    PL_.erase(PL_.begin(), PL_.end());
    PL_.push_back(E1);PL_.push_back(E2);PL_.push_back(E3);
    
    init_3_cam_flag_=true;
-   vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+   std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
    epi_flag=true;
 
    // load image here..
-   vcl_string f1,f2,f3;
+   std::string f1,f2,f3;
 
    int fram1 = start_number + frame_1 ;
    int fram2 = start_number + frame_2 ;
@@ -3752,18 +3752,18 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    fore_name.clear();
    //itoa(fram1,tf,10);
   // sprintf(f11,"%03s",tf);
-   vcl_sprintf(f11,"%03d",fram1);
+   std::sprintf(f11,"%03d",fram1);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
 
    fore_name.push_back(f1);
    //load_image_file("C:/E3D/REAL/Aq2_1_left_brown_U_white_van/00016.tiff", true, 2,0);
    load_image_file(f1, true, 0,0);
    
    //itoa(fram2,tf,10);
-   vcl_sprintf(f11,"%03d",fram2);
+   std::sprintf(f11,"%03d",fram2);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
    load_image_file(f1, true, 1,0);
 
    fore_name.push_back(f1);
@@ -3771,14 +3771,14 @@ void rc3d_windows_frame::initialize_camera_3_matt()
 
    //itoa(fram3,tf,10);
    //sprintf(f11,"%03s",tf);
-   vcl_sprintf(f11,"%03d",fram3);
+   std::sprintf(f11,"%03d",fram3);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
    load_image_file(f1, true, 2,0);
 
    fore_name.push_back(f1);
 
-   vcl_cout<< fore_name.size()<<vcl_endl;
+   std::cout<< fore_name.size()<<std::endl;
    grid_->post_redraw();
 
    // hmmm 7-7-2004
@@ -3798,7 +3798,7 @@ void rc3d_windows_frame::initialize_camera_3_matt()
 /////////////////////////////////////////////////////
 /*void rc3d_windows_frame::initialize_camera_3_string_scan()
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -3808,10 +3808,10 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    E3.fill(0.0); E3.fill_diagonal(1.0);
 
    vgui_dialog dlg("Read Matt's");
-   //static vcl_string filename = "C:/CVPR2004/truck_bbox.txt";
-   static vcl_string filename = "C:/CVPR2004/carbbox.txt";
+   //static std::string filename = "C:/CVPR2004/truck_bbox.txt";
+   static std::string filename = "C:/CVPR2004/carbbox.txt";
    
-   static vcl_string ext = "*.*";
+   static std::string ext = "*.*";
    static int frame_1=3;
    static int frame_2=5;
    static int frame_3=7;
@@ -3824,12 +3824,12 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    //static bool show_list=false;
 
 //   double x1[3];
-   vcl_string str1,str_filename;
+   std::string str1,str_filename;
 //char str1[100];
     dlg.file("read file name", ext, filename);
    
    if (!dlg.ask()) { 
-      vcl_cout<<"Camera FIle Read Fail!" <<vcl_endl;
+      std::cout<<"Camera FIle Read Fail!" <<std::endl;
       return;
    }
    
@@ -3837,19 +3837,19 @@ void rc3d_windows_frame::initialize_camera_3_matt()
    //double x,y,z,t;
    double temp=0;
    vnl_double_3x4 Camera(0.0);
-   vcl_vector<vnl_double_3x4 > Cam_List;
+   std::vector<vnl_double_3x4 > Cam_List;
    int total_camera_number=-1;
    int start_number=0,end_number=0;
    
    
    if (filename != "")
    {
-     vcl_ifstream in(filename.c_str());
-     vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
-     vcl_string hhh="";
+     std::ifstream in(filename.c_str());
+     std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
+     std::string hhh="";
      while (hhh!="Transform") {
        in>> hhh;
-      // vcl_cout<< hhh <<vcl_endl;
+      // std::cout<< hhh <<std::endl;
      }
      
      for (unsigned i=0;i<4;i++) {
@@ -3858,7 +3858,7 @@ void rc3d_windows_frame::initialize_camera_3_matt()
          RT[i][j]=temp;
        }
      }
-     vcl_cout<<RT<<vcl_endl;
+     std::cout<<RT<<std::endl;
      BB_RT_matt_=RT;
      in>>hhh;
 
@@ -3866,7 +3866,7 @@ void rc3d_windows_frame::initialize_camera_3_matt()
        
        Camera.fill(0.0);
        in>>hhh;
-       vcl_cout<<hhh<<vcl_endl;
+       std::cout<<hhh<<std::endl;
        for (unsigned j=0;j<3; j++) {
          for (unsigned k=0;k<4;k++) {
            in >> temp;
@@ -3874,7 +3874,7 @@ void rc3d_windows_frame::initialize_camera_3_matt()
          }
        }
        Cam_List.push_back(Camera);
-       vcl_cout<<Camera<<vcl_endl;
+       std::cout<<Camera<<std::endl;
        in>>hhh;
      }
      
@@ -3884,23 +3884,23 @@ void rc3d_windows_frame::initialize_camera_3_matt()
      E2=Cam_List[frame_2];
      E3=Cam_List[frame_3];
      
-     vcl_cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+     std::cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
      
      
      //vnl_double_3x4 P1 = M_in_*E1,P2 =M_in_*E2, P3=M_in_*E3;
      vnl_double_3x4 P1 = E1,P2 =E2, P3=E3;
      
-     vcl_cout<<E1<<E2<<E3<<vcl_endl;
+     std::cout<<E1<<E2<<E3<<std::endl;
      
      PL_.erase(PL_.begin(), PL_.end());
      PL_.push_back(E1);PL_.push_back(E2);PL_.push_back(E3);
      
      init_3_cam_flag_=true;
-     vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+     std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
      epi_flag=true;
      
      // load image here..
-     vcl_string f1,f2,f3;
+     std::string f1,f2,f3;
      
      start_number=-(Cam_List[0])[2][3];
      
@@ -3913,18 +3913,18 @@ void rc3d_windows_frame::initialize_camera_3_matt()
      fore_name.clear();
      //itoa(fram1,tf,10);
      // sprintf(f11,"%03s",tf);
-     vcl_sprintf(f11,"%03d",fram1);
+     std::sprintf(f11,"%03d",fram1);
      f1=str_filename + "/00" + f11+".png";
-     vcl_cout<<f1<<vcl_endl;
+     std::cout<<f1<<std::endl;
      
      fore_name.push_back(f1);
      //load_image_file("C:/E3D/REAL/Aq2_1_left_brown_U_white_van/00016.tiff", true, 2,0);
      load_image_file(f1, true, 0,0);
      
      //itoa(fram2,tf,10);
-     vcl_sprintf(f11,"%03d",fram2);
+     std::sprintf(f11,"%03d",fram2);
      f1=str_filename + "/00" + f11+".png";
-     vcl_cout<<f1<<vcl_endl;
+     std::cout<<f1<<std::endl;
      load_image_file(f1, true, 1,0);
      
      fore_name.push_back(f1);
@@ -3932,14 +3932,14 @@ void rc3d_windows_frame::initialize_camera_3_matt()
      
      //itoa(fram3,tf,10);
      //sprintf(f11,"%03s",tf);
-     vcl_sprintf(f11,"%03d",fram3);
+     std::sprintf(f11,"%03d",fram3);
      f1=str_filename + "/00" + f11+".png";
-     vcl_cout<<f1<<vcl_endl;
+     std::cout<<f1<<std::endl;
      load_image_file(f1, true, 2,0);
      
      fore_name.push_back(f1);
      
-     vcl_cout<< fore_name.size()<<vcl_endl;
+     std::cout<< fore_name.size()<<std::endl;
      grid_->post_redraw();
      
      // hmmm 7-7-2004
@@ -3958,7 +3958,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
   static int auto_cam=4,int first_cam_offset,int auto_offset;
   
   
-  //  vcl_cout<<"in scan: "<<frame_1_<<" "<<frame_2_<<" "<<frame_3_<<vcl_endl;
+  //  std::cout<<"in scan: "<<frame_1_<<" "<<frame_2_<<" "<<frame_3_<<std::endl;
   
   
   
@@ -3966,7 +3966,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
   double Scale=1;
   
   
-  //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+  //std::cout<<"camera initializiing...."<<std::endl;   
   M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
   M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
   M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -3976,15 +3976,15 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
   E3.fill(0.0); E3.fill_diagonal(1.0);
   
   vgui_dialog dlg("Read Matt's");
-  //static vcl_string filename = "C:/CVPR2004/truck_bbox.txt";
-  static vcl_string filename = "C:/CVPR2004/carbbox.txt";
+  //static std::string filename = "C:/CVPR2004/truck_bbox.txt";
+  static std::string filename = "C:/CVPR2004/carbbox.txt";
   
-  static vcl_string ext = "*.*";
+  static std::string ext = "*.*";
   static int frame_1=3;
   static int frame_2=5;
   static int frame_3=7;
 
-        static vcl_string con_filename = "";
+        static std::string con_filename = "";
    
         static bool con_flag=true;
         static bool flip=false;
@@ -4022,7 +4022,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
         else {
                 if (!dlg.ask()) 
                 { 
-                        vcl_cout<<"Camera FIle Read Fail!" <<vcl_endl;
+                        std::cout<<"Camera FIle Read Fail!" <<std::endl;
                         return;
                 }
         }
@@ -4032,27 +4032,27 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
   con_flag_=con_flag;
 
 
-  vcl_string str1,str_filename;
+  std::string str1,str_filename;
   vnl_double_4x4 RT(0.0);
   //double x,y,z,t;
   double temp=0;
   vnl_double_3x4 Camera(0.0);
   vnl_double_3x4 Camera_Null(-1.0);
-  vcl_vector<vnl_double_3x4 > Cam_List;
+  std::vector<vnl_double_3x4 > Cam_List;
   int total_camera_number=-1;
   int start_number=0,end_number=0;
  
 
-        vcl_string con_file;
+        std::string con_file;
   
   if (filename != "")
   {
-    vcl_ifstream in(filename.c_str());
-    vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
-    vcl_string hhh="";
+    std::ifstream in(filename.c_str());
+    std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
+    std::string hhh="";
     while (hhh!="Transform") {
       in>> hhh;
-      // vcl_cout<< hhh <<vcl_endl;
+      // std::cout<< hhh <<std::endl;
     }
     
     for (unsigned i=0;i<4;i++) {
@@ -4061,7 +4061,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
         RT[i][j]=temp;
       }
     }
-    vcl_cout<<RT<<vcl_endl;
+    std::cout<<RT<<std::endl;
     BB_RT_matt_=RT;
     in>>hhh;
     
@@ -4080,14 +4080,14 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
       
       if (count==0) {                 // for BRMF 2.7
         char a[10];                   // for BRMF 2.7
-        //vcl_sprintf(a,"%s",hhh);    // for BRMF 2.7
+        //std::sprintf(a,"%s",hhh);    // for BRMF 2.7
         
         empty_camera_number= atoi(hhh.c_str());// for BRMF 2.7
       }                               // for BRMF 2.7
       count++;                        // for BRMF 2.7
       
       
-      vcl_cout<<hhh<<vcl_endl;
+      std::cout<<hhh<<std::endl;
       
       
       for (unsigned j=0;j<3; j++) {
@@ -4111,14 +4111,14 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
 
 
       Cam_List.push_back(Camera);
-      vcl_cout<<Camera<<vcl_endl;
+      std::cout<<Camera<<std::endl;
       in>>hhh;
     }
     
     
     double p7x,p7y,p7z,p0x,p0y,p0z;
 
-    /*vcl_cout<<hhh<<vcl_endl;
+    /*std::cout<<hhh<<std::endl;
     if (hhh=="") {
       p7_[0]=0;p7_[1]=0;p7_[2]=0;
       p0_=p7_;
@@ -4129,12 +4129,12 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
       in>>p0_[0];in>>p0_[1];in>>p0_[2];
 
     //}
-    vcl_cout<<p7_<<" "<<p0_<<vcl_endl;
+    std::cout<<p7_<<" "<<p0_<<std::endl;
  
 
     // int empty_camera_number=-(int)(Cam_List[0])[2][3];// for BRMF 2.7
     
-    vcl_cout<<"empty cam:" <<empty_camera_number<<vcl_endl;
+    std::cout<<"empty cam:" <<empty_camera_number<<std::endl;
     
     
     for (unsigned i=0;i<empty_camera_number;i++) {
@@ -4150,16 +4150,16 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
       
       if (auto_cam==1) {
         frame_1=2; 
-        frame_2=vcl_floor((double)last_camera/2);
+        frame_2=std::floor((double)last_camera/2);
         frame_3=last_camera-2;
       }
       else if (auto_cam==4) {
 
 
 
-        vcl_cout<<vul_file::dirname(filename);
+        std::cout<<vul_file::dirname(filename);
         // test if fname is a directory
-        vcl_vector<vcl_string> flist;
+        std::vector<std::string> flist;
 
 
 
@@ -4167,17 +4167,17 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
         //vul_file_iterator fn=input_file_path+"/*.con";
         for ( ; fn; ++fn) 
         {
-          vcl_string input_con_file = fn();//
+          std::string input_con_file = fn();//
           flist.push_back(input_con_file);
         }
 
         //vul_file::basename(flist[0]
 
 
-        frame_1=vcl_atoi(vul_file::basename(flist[1]).c_str());
-        int middle=vcl_floor( flist.size()/2.0 );
-        frame_2=vcl_atoi(vul_file::basename( flist[middle]).c_str() );
-        frame_3=vcl_atoi(vul_file::basename(flist[flist.size()-1]).c_str());
+        frame_1=std::atoi(vul_file::basename(flist[1]).c_str());
+        int middle=std::floor( flist.size()/2.0 );
+        frame_2=std::atoi(vul_file::basename( flist[middle]).c_str() );
+        frame_3=std::atoi(vul_file::basename(flist[flist.size()-1]).c_str());
 
         frame_1-=empty_camera_number;
         frame_2-=empty_camera_number;
@@ -4194,7 +4194,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
       // frame_2_=empty_camera_number+frame_2;
       // frame_3_=empty_camera_number+frame_3;
       
-      vcl_cout<<"auto_cam on! "<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+      std::cout<<"auto_cam on! "<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
       
     }    
     
@@ -4203,21 +4203,21 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
     E2=Cam_List[frame_2];
     E3=Cam_List[frame_3];
     
-    vcl_cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+    std::cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
     //vnl_double_3x4 P1 = M_in_*E1,P2 =M_in_*E2, P3=M_in_*E3;
     vnl_double_3x4 P1 = E1,P2 =E2, P3=E3;
     
-    vcl_cout<<E1<<E2<<E3<<vcl_endl;
+    std::cout<<E1<<E2<<E3<<std::endl;
     
     PL_.erase(PL_.begin(), PL_.end());
     PL_.push_back(E1);PL_.push_back(E2);PL_.push_back(E3);
     
     init_3_cam_flag_=true;
-    vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+    std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
     epi_flag=true;
     
     // load image here..
-    vcl_string f1,f2,f3,c1,c2,c3;
+    std::string f1,f2,f3,c1,c2,c3;
     
     start_number=-(Cam_List[0])[2][3];
 
@@ -4226,17 +4226,17 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
                 int fram1 = start_number + frame_1 ;
     int fram2 = start_number + frame_2 ;
     int fram3 = start_number + frame_3 ;
-    //  vcl_vector <bsol_intrinsic_curve_2d_sptr> curve_2dl;
+    //  std::vector <bsol_intrinsic_curve_2d_sptr> curve_2dl;
     curve_2dl_.clear();
     char tf[10];char f11[10]; 
     fore_name.clear();
     //itoa(fram1,tf,10);
     // sprintf(f11,"%03s",tf);
-    vcl_sprintf(f11,"%03d",fram1);
+    std::sprintf(f11,"%03d",fram1);
                 
                 if (BATCH_) f1=batch_dir_ + "./00" + f11+".png";
     else f1=str_filename + "./00" + f11+".png";
-    vcl_cout<<f1<<vcl_endl;
+    std::cout<<f1<<std::endl;
 
                 
     fore_name.push_back(f1);
@@ -4249,7 +4249,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
                 
         //c1=con_file + "./pgm/blobfinal_0" + f11+".con";
       c1=con_file + "00" + f11+".con";
-        vcl_cout<<c1<<vcl_endl;   
+        std::cout<<c1<<std::endl;   
                                 bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
                     curve_2d->readCONFromFile(c1.c_str() );
                                 curve_2dl_.push_back(curve_2d);
@@ -4270,11 +4270,11 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
                 }
     
     //itoa(fram2,tf,10);
-    vcl_sprintf(f11,"%03d",fram2);
+    std::sprintf(f11,"%03d",fram2);
 
                 if (BATCH_) f1=batch_dir_ + "./00" + f11+".png";
     else f1=str_filename + "./00" + f11+".png";
-    vcl_cout<<f1<<vcl_endl;
+    std::cout<<f1<<std::endl;
                 load_image_file(f1, true, 1,0);
     
     fore_name.push_back(f1);
@@ -4283,7 +4283,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
 
     if (con_flag) {
         c1=con_file + "00" + f11+".con";
-        vcl_cout<<c1<<vcl_endl;   
+        std::cout<<c1<<std::endl;   
                                 bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
                     curve_2d->readCONFromFile(c1.c_str() );
                                 curve_2dl_.push_back(curve_2d);
@@ -4306,12 +4306,12 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
     
     //itoa(fram3,tf,10);
     //sprintf(f11,"%03s",tf);
-    vcl_sprintf(f11,"%03d",fram3);
+    std::sprintf(f11,"%03d",fram3);
 
         if (BATCH_) f1=batch_dir_ + "./00" + f11+".png";
     else f1=str_filename + "./00" + f11+".png";
     
-                vcl_cout<<f1<<vcl_endl;
+                std::cout<<f1<<std::endl;
                 load_image_file(f1, true, 2,0);
     
     fore_name.push_back(f1);
@@ -4319,7 +4319,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
 
                 if (con_flag) {
         c1=con_file + "00" + f11+".con";
-        vcl_cout<<c1<<vcl_endl;   
+        std::cout<<c1<<std::endl;   
                                 bsol_intrinsic_curve_2d_sptr curve_2d = new bsol_intrinsic_curve_2d;
                     curve_2d->readCONFromFile(c1.c_str() );
                                 curve_2dl_.push_back(curve_2d);
@@ -4341,7 +4341,7 @@ void rc3d_windows_frame::initialize_camera_3_string_scan()
 
 
 
-    vcl_cout<< fore_name.size()<<vcl_endl;
+    std::cout<< fore_name.size()<<std::endl;
                 grid_->post_redraw();
     
     // hmmm 7-7-2004
@@ -4384,7 +4384,7 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
   int auto_cam=1,int first_cam_offset,int auto_offset;
   
   
-  //  vcl_cout<<"in scan: "<<frame_1_<<" "<<frame_2_<<" "<<frame_3_<<vcl_endl;
+  //  std::cout<<"in scan: "<<frame_1_<<" "<<frame_2_<<" "<<frame_3_<<std::endl;
   
   
   
@@ -4392,7 +4392,7 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
   double Scale=1;
   
   
-  //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+  //std::cout<<"camera initializiing...."<<std::endl;   
   M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
   M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
   M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -4402,10 +4402,10 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
   E3.fill(0.0); E3.fill_diagonal(1.0);
   
   vgui_dialog dlg("Read Matt's");
-  //static vcl_string filename = "C:/CVPR2004/truck_bbox.txt";
-  static vcl_string filename = "C:/CVPR2004/carbbox.txt";
+  //static std::string filename = "C:/CVPR2004/truck_bbox.txt";
+  static std::string filename = "C:/CVPR2004/carbbox.txt";
   
-  static vcl_string ext = "*.*";
+  static std::string ext = "*.*";
   static int frame_1=3;
   static int frame_2=5;
   static int frame_3=7;
@@ -4423,29 +4423,29 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
   dlg.file("read file name", ext, filename);
   
   if (!dlg.ask()) { 
-    vcl_cout<<"Camera FIle Read Fail!" <<vcl_endl;
+    std::cout<<"Camera FIle Read Fail!" <<std::endl;
     return;
   }
   
-  vcl_string str1,str_filename;
+  std::string str1,str_filename;
   vnl_double_4x4 RT(0.0);
   //double x,y,z,t;
   double temp=0;
   vnl_double_3x4 Camera(0.0);
   vnl_double_3x4 Camera_Null(-1.0);
-  vcl_vector<vnl_double_3x4 > Cam_List;
+  std::vector<vnl_double_3x4 > Cam_List;
   int total_camera_number=-1;
   int start_number=0,end_number=0;
   
   Cam_List_.clear();
   if (filename != "")
   {
-    vcl_ifstream in(filename.c_str());
-    vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
-    vcl_string hhh="";
+    std::ifstream in(filename.c_str());
+    std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
+    std::string hhh="";
     while (hhh!="Transform") {
       in>> hhh;
-      // vcl_cout<< hhh <<vcl_endl;
+      // std::cout<< hhh <<std::endl;
     }
     
     for (unsigned i=0;i<4;i++) {
@@ -4454,7 +4454,7 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
         RT[i][j]=temp;
       }
     }
-    vcl_cout<<RT<<vcl_endl;
+    std::cout<<RT<<std::endl;
     BB_RT_matt_=RT;
     in>>hhh;
     
@@ -4473,14 +4473,14 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
       
       if (count==0) {                 // for BRMF 2.7
         char a[10];                   // for BRMF 2.7
-        //vcl_sprintf(a,"%s",hhh);    // for BRMF 2.7
+        //std::sprintf(a,"%s",hhh);    // for BRMF 2.7
         
         empty_camera_number= atoi(hhh.c_str());// for BRMF 2.7
       }                               // for BRMF 2.7
       count++;                        // for BRMF 2.7
       
       
-      vcl_cout<<hhh<<vcl_endl;
+      std::cout<<hhh<<std::endl;
       
       
       for (unsigned j=0;j<3; j++) {
@@ -4491,14 +4491,14 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
       }
       
       Cam_List_.push_back(Camera);
-      vcl_cout<<Camera<<vcl_endl;
+      std::cout<<Camera<<std::endl;
       in>>hhh;
     }
     
     
     // int empty_camera_number=-(int)(Cam_List[0])[2][3];// for BRMF 2.7
     
-    vcl_cout<<"empty cam:" <<empty_camera_number<<vcl_endl;
+    std::cout<<"empty cam:" <<empty_camera_number<<std::endl;
     
     
     for (unsigned i=0;i<Cam_List_.size();i++) {
@@ -4531,10 +4531,10 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
                         // sprintf(f11,"%03s",tf);
                         
                         int fram1 = empty_camera_number + i ;
-                        vcl_sprintf(f11,"%03d",fram1);
+                        std::sprintf(f11,"%03d",fram1);
                         
-                        vcl_string f1=str_filename+"./00" + f11+".png";
-                        vcl_cout<<i<<" "<<f1<<vcl_endl;
+                        std::string f1=str_filename+"./00" + f11+".png";
+                        std::cout<<i<<" "<<f1<<std::endl;
                         load_image_file(f1, true, i,0);
    
     }
@@ -4549,7 +4549,7 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
       
       if (auto_cam==1) {
         frame_1=2; 
-        frame_2=vcl_floor((double)last_camera/2);
+        frame_2=std::floor((double)last_camera/2);
         frame_3=last_camera-2;
       }
       else {
@@ -4562,7 +4562,7 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
       // frame_2_=empty_camera_number+frame_2;
       // frame_3_=empty_camera_number+frame_3;
       
-      vcl_cout<<"auto_cam on! "<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+      std::cout<<"auto_cam on! "<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
       
     }    
     
@@ -4571,21 +4571,21 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
     E2=Cam_List[frame_2];
     E3=Cam_List[frame_3];
     
-    vcl_cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<vcl_endl;
+    std::cout<<frame_1<<" "<<frame_2<<" "<<frame_3<<std::endl;
     //vnl_double_3x4 P1 = M_in_*E1,P2 =M_in_*E2, P3=M_in_*E3;
     vnl_double_3x4 P1 = E1,P2 =E2, P3=E3;
     
-    vcl_cout<<E1<<E2<<E3<<vcl_endl;
+    std::cout<<E1<<E2<<E3<<std::endl;
     
     PL_.erase(PL_.begin(), PL_.end());
     PL_.push_back(E1);PL_.push_back(E2);PL_.push_back(E3);
     
     init_3_cam_flag_=true;
-    vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+    std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
     epi_flag=true;
     
     // load image here..
-    vcl_string f1,f2,f3;
+    std::string f1,f2,f3;
     
     start_number=-(Cam_List[0])[2][3];
 
@@ -4600,18 +4600,18 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
     fore_name.clear();
     //itoa(fram1,tf,10);
     // sprintf(f11,"%03s",tf);
-    vcl_sprintf(f11,"%03d",fram1);
+    std::sprintf(f11,"%03d",fram1);
     f1=str_filename + "./00" + f11+".png";
-    vcl_cout<<f1<<vcl_endl;
+    std::cout<<f1<<std::endl;
     
     fore_name.push_back(f1);
     //load_image_file("C:/E3D/REAL/Aq2_1_left_brown_U_white_van/00016.tiff", true, 2,0);
        load_image_file(f1, true, 0,0);
     
     //itoa(fram2,tf,10);
-    vcl_sprintf(f11,"%03d",fram2);
+    std::sprintf(f11,"%03d",fram2);
     f1=str_filename + "./00" + f11+".png";
-    vcl_cout<<f1<<vcl_endl;
+    std::cout<<f1<<std::endl;
         load_image_file(f1, true, 1,0);
     
     fore_name.push_back(f1);
@@ -4619,14 +4619,14 @@ void rc3d_windows_frame::initialize_camera_N_string_scan()
     
     //itoa(fram3,tf,10);
     //sprintf(f11,"%03s",tf);
-    vcl_sprintf(f11,"%03d",fram3);
+    std::sprintf(f11,"%03d",fram3);
     f1=str_filename + "./00" + f11+".png";
-    vcl_cout<<f1<<vcl_endl;
+    std::cout<<f1<<std::endl;
        load_image_file(f1, true, 2,0);
     
     fore_name.push_back(f1);
     
-    vcl_cout<< fore_name.size()<<vcl_endl;
+    std::cout<< fore_name.size()<<std::endl;
        grid_->post_redraw();
     
     // hmmm 7-7-2004
@@ -4645,9 +4645,9 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
                                                        int frame_2,
                                                        int frame_3,
                                                        double Scale,
-                                                       vcl_string filename)
+                                                       std::string filename)
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -4658,25 +4658,25 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
 
    vgui_dialog dlg("Read Matt's");
    
-   vcl_string str1,str_filename;
+   std::string str1,str_filename;
 
    vnl_double_4x4 RT(0.0);
 
    double temp=0;
    vnl_double_3x4 Camera(0.0);
-   vcl_vector<vnl_double_3x4 > Cam_List;
+   std::vector<vnl_double_3x4 > Cam_List;
    int total_camera_number=-1;
    int start_number=0,end_number=0;
    
 
    if (filename != "")
       {
-         vcl_ifstream in(filename.c_str());
-         vcl_cout<<"reading camera file "<< filename.c_str()<<vcl_endl;
+         std::ifstream in(filename.c_str());
+         std::cout<<"reading camera file "<< filename.c_str()<<std::endl;
          
          in>> total_camera_number;
          if (total_camera_number<0||total_camera_number>100) {
-            vcl_cout<<"file read or format error"<<vcl_endl;
+            std::cout<<"file read or format error"<<std::endl;
             return;
          }
          for (unsigned j=0;j<10;j++) {
@@ -4685,12 +4685,12 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
                str_filename=str1;
             }
             if (j==4) {
-               start_number =vcl_atoi(str1.c_str());   
+               start_number =std::atoi(str1.c_str());   
             }
             if (j==6) {
-               end_number=vcl_atoi(str1.c_str());
+               end_number=std::atoi(str1.c_str());
             }
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
          }
       
          //read R-T matrix...
@@ -4701,14 +4701,14 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
                RT[i][j]=temp;
             }
          }
-         vcl_cout<<RT<<vcl_endl;
+         std::cout<<RT<<std::endl;
          BB_RT_matt_=RT;
 
 
          for (unsigned i=0;i<total_camera_number;i++) {
             Camera.fill(0.0);
             in>>str1>>str1;
-            vcl_cout<<str1<<vcl_endl;
+            std::cout<<str1<<std::endl;
             for (unsigned j=0;j<3; j++) {
                for (unsigned k=0;k<4;k++) {
                   in >> temp;
@@ -4716,7 +4716,7 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
                }
             }
             Cam_List.push_back(Camera);
-            vcl_cout<<Camera<<vcl_endl;
+            std::cout<<Camera<<std::endl;
          }
          
          
@@ -4726,23 +4726,23 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
    E2=Cam_List[frame_2];
    E3=Cam_List[frame_3];
 
-   vcl_cout<<E3<<vcl_endl;
+   std::cout<<E3<<std::endl;
    
 
    //vnl_double_3x4 P1 = M_in_*E1,P2 =M_in_*E2, P3=M_in_*E3;
    vnl_double_3x4 P1 = E1,P2 =E2, P3=E3;
 
-   vcl_cout<<E1<<E2<<E3<<vcl_endl;
+   std::cout<<E1<<E2<<E3<<std::endl;
 
    PL_.erase(PL_.begin(), PL_.end());
    PL_.push_back(E1);PL_.push_back(E2);PL_.push_back(E3);
    
    init_3_cam_flag_=true;
-   vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+   std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
    epi_flag=true;
 
    // load image here..
-   vcl_string f1,f2,f3;
+   std::string f1,f2,f3;
 
    int fram1 = start_number + frame_1 ;
    int fram2 = start_number + frame_2 ;
@@ -4753,23 +4753,23 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
    
    //itoa(fram1,tf,10);
   // sprintf(f11,"%03s",tf);
-   vcl_sprintf(f11,"%03d",fram1);
+   std::sprintf(f11,"%03d",fram1);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
    //load_image_file("C:/E3D/REAL/Aq2_1_left_brown_U_white_van/00016.tiff", true, 2,0);
    load_image_file(f1, true, 0);
    
    //itoa(fram2,tf,10);
-   vcl_sprintf(f11,"%03d",fram2);
+   std::sprintf(f11,"%03d",fram2);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
    load_image_file(f1, true, 1);
 
    //itoa(fram3,tf,10);
    //sprintf(f11,"%03s",tf);
-   vcl_sprintf(f11,"%03d",fram3);
+   std::sprintf(f11,"%03d",fram3);
    f1=str_filename + "/00" + f11+".png";
-   vcl_cout<<f1<<vcl_endl;
+   std::cout<<f1<<std::endl;
    load_image_file(f1, true, 2);
 
   // grid_->post_redraw();
@@ -4790,7 +4790,7 @@ void rc3d_windows_frame::initialize_camera_3_matt_Vorl(int frame_1,
 ///6-17-2004 debug temp 
 void rc3d_windows_frame::initialize_camera_3_debug_temp()
 {
-   //vcl_cout<<"camera initializiing...."<<vcl_endl;   
+   //std::cout<<"camera initializiing...."<<std::endl;   
    M_in_[0][0] = 2000.0; M_in_[0][1] = 0;        M_in_[0][2] = 512.0;
    M_in_[1][0] = 0;        M_in_[1][1] = 2000.0; M_in_[1][2] = 384.0;
    M_in_[2][0] = 0;        M_in_[2][1] = 0;      M_in_[2][2] = 1;
@@ -4798,7 +4798,7 @@ void rc3d_windows_frame::initialize_camera_3_debug_temp()
    // get translation
     trans_dist = 125.0; // 105mm
    if (!epi_flag) {
-      vcl_cout<<"epipole needed!\n"<<vcl_endl;;
+      std::cout<<"epipole needed!\n"<<std::endl;;
       return;
    }
    
@@ -4813,27 +4813,27 @@ void rc3d_windows_frame::initialize_camera_3_debug_temp()
    x0=   99.4444,y0= 193,x1= 341.781,y1=  181.136,x2=  616.778,y2= 164.556;
    //x0=99 192 341180616 163;
    T = vnl_inverse(M_in_) * epi_;
-   double T_normal=vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+   double T_normal=std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
    T /= T_normal;
    T *= trans_dist;
    
-   float c=vcl_sqrt(vcl_pow((double)(x2-xe),2.0)+vcl_pow(double(y2-ye),2.0));
-   float b=vcl_sqrt(pow(double(x1-xe),2.0)+pow(double(y1-ye),2.0));
-   float a=vcl_sqrt(pow(double(x0-xe),2.0)+pow(double(y0-ye),2.0));
+   float c=std::sqrt(std::pow((double)(x2-xe),2.0)+std::pow(double(y2-ye),2.0));
+   float b=std::sqrt(pow(double(x1-xe),2.0)+pow(double(y1-ye),2.0));
+   float a=std::sqrt(pow(double(x0-xe),2.0)+pow(double(y0-ye),2.0));
 
-   float cx=vcl_fabs(x2-xe),cy=vcl_fabs(y2-ye);
-   float bx=vcl_fabs(x1-xe),by=vcl_fabs(y1-ye);
-   float ax=vcl_fabs(x0-xe),ay=vcl_fabs(y0-ye);
-   //float ratio=vcl_sqrt(pow(double(x1-xe),2.0)+pow(y1-ye,2.0))/vcl_sqrt(pow(double(x2-xe),2.0)+pow(y2-ye,2.0));
+   float cx=std::fabs(x2-xe),cy=std::fabs(y2-ye);
+   float bx=std::fabs(x1-xe),by=std::fabs(y1-ye);
+   float ax=std::fabs(x0-xe),ay=std::fabs(y0-ye);
+   //float ratio=std::sqrt(pow(double(x1-xe),2.0)+pow(y1-ye,2.0))/std::sqrt(pow(double(x2-xe),2.0)+pow(y2-ye,2.0));
    float ratio=(b-a)/(c-a)*c/b;
 
-   vcl_cout<<" camera ratio is: "<<ratio<<vcl_endl;
-   //vcl_cout<<"ratio: "<<ratio<<vcl_endl;
-   //vcl_cout<<ax<<" "<<ay<<" "<<bx<<" "<<by<<" "<<cx<<" "<<cy<<vcl_endl;
-   //vcl_cout<<a/c<<" "<<b/c<<vcl_endl;
+   std::cout<<" camera ratio is: "<<ratio<<std::endl;
+   //std::cout<<"ratio: "<<ratio<<std::endl;
+   //std::cout<<ax<<" "<<ay<<" "<<bx<<" "<<by<<" "<<cx<<" "<<cy<<std::endl;
+   //std::cout<<a/c<<" "<<b/c<<std::endl;
    
    //T_intpl = vnl_inverse(M_in_) * epi_;
-   //T_intpl /= vcl_sqrt(T_intpl[0]*T_intpl[0] + T_intpl[1]*T_intpl[1] + T_intpl[2]*T_intpl[2]);
+   //T_intpl /= std::sqrt(T_intpl[0]*T_intpl[0] + T_intpl[1]*T_intpl[1] + T_intpl[2]*T_intpl[2]);
    //T_intpl *= trans_dist;
 
    //vnl_double_3 L(M_in_*T_intpl); 
@@ -4865,21 +4865,21 @@ void rc3d_windows_frame::initialize_camera_3_debug_temp()
    //vnl_double_3 t(x1,y1,1.0);
 
 
-   //vcl_cout<<t<<vcl_endl;
+   //std::cout<<t<<std::endl;
 
    /*T_intpl =vnl_inverse(M_in_) *t;
 
    
-   vcl_cout<<T_intpl<<vcl_endl;
+   std::cout<<T_intpl<<std::endl;
 
    T_intpl[0] -=x_3d;
    T_intpl[1] -=y_3d;
    T_intpl[2] -=z_3d;
-   vcl_cout<<T_intpl<<vcl_endl;
+   std::cout<<T_intpl<<std::endl;
    double scale=T_intpl[0]*T[0]+T_intpl[1]*T[1]+T_intpl[2]*T[2];
-   vcl_cout<<"scale: "<<scale<<vcl_endl;
+   std::cout<<"scale: "<<scale<<std::endl;
    scale /=(T_normal*T_normal);
-   vcl_cout<<"scale: "<<scale<<vcl_endl;
+   std::cout<<"scale: "<<scale<<std::endl;
    //E2[0][0] = 1;       E2[0][1] = 0;        E2[0][2] = 0;          E2[0][3] =T_intpl[0];
    //E2[1][0] = 0;       E2[1][1] = 1;        E2[1][2] = 0;          E2[1][3] =T_intpl[1];
    //E2[2][0] = 0;       E2[2][1] = 0;        E2[2][2] = 1;          E2[2][3] =T_intpl[2];
@@ -4900,7 +4900,7 @@ scale=b/c;
    vgl_point_2d<double> x3_2d(x2,y2);
    
    vgl_point_3d<double> point_3d = brct_algos::triangulate_3d_point(x1_2d, P1, x3_2d, P3);
-   vcl_cout<<"1 vs 3: "<<point_3d<<vcl_endl;
+   std::cout<<"1 vs 3: "<<point_3d<<std::endl;
 
 
 
@@ -4920,12 +4920,12 @@ scale=b/c;
    }
 
 
-   vcl_cout<<E1<<E2<<E3<<vcl_endl;
+   std::cout<<E1<<E2<<E3<<std::endl;
 
    PL_.erase(PL_.begin(), PL_.end());
    PL_.push_back(P1);PL_.push_back(P2);PL_.push_back(P3);
    init_3_cam_flag_=true;
-   vcl_cout<<"3 camera initialization finished.....!!\n"<<vcl_endl;
+   std::cout<<"3 camera initialization finished.....!!\n"<<std::endl;
 }
 
 

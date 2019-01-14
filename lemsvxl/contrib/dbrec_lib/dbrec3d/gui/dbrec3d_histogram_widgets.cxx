@@ -149,9 +149,9 @@ void dbrec3d_histogram_widget::init_hist_vals()
 {
  
   if(hist_.counts(0) < 1.0 - 1e-9)
-    min_log_y_, max_log_y_ =vcl_log(1);
+    min_log_y_, max_log_y_ =std::log(1);
   else 
-    min_log_y_, max_log_y_ = vcl_log(hist_.counts(0)); 
+    min_log_y_, max_log_y_ = std::log(hist_.counts(0)); 
   
   min_y_, max_y_ = hist_.counts(0);
   for ( unsigned i = 0; i < hist_.nbins(); i++ )
@@ -164,9 +164,9 @@ void dbrec3d_histogram_widget::init_hist_vals()
     float this_log_val;
     
     if(this_val <  1.0 - 1e-9)
-      this_log_val = vcl_log(1.0);
+      this_log_val = std::log(1.0);
     else 
-      this_log_val = vcl_log(this_val);
+      this_log_val = std::log(this_val);
     
     hist_values_.push_back(this_val);
     hist_log_values_.push_back(this_log_val);
@@ -364,7 +364,7 @@ void dbrec3d_scene_info_widget::init_slider(QSlider *slider, QLabel *label , int
   label->setNum(init_val);
 }
 
-QWidget* dbrec3d_scene_info_widget::assemble_slider_widget(QSlider *slider, QLabel *value, vcl_string name)
+QWidget* dbrec3d_scene_info_widget::assemble_slider_widget(QSlider *slider, QLabel *value, std::string name)
 {
   QHBoxLayout *label_layout = new QHBoxLayout();
   label_layout->setSpacing(0);
@@ -430,9 +430,9 @@ void dbrec3d_scene_info_widget::init_hist_vals()
   //  hist_log_values_.reserve(hist_.nbins());
   
   if(hist_.counts(0) < 1.0 - 1e-9)
-    min_log_y_, max_log_y_ =vcl_log(1);
+    min_log_y_, max_log_y_ =std::log(1);
   else 
-    min_log_y_, max_log_y_ = vcl_log(hist_.counts(0)); 
+    min_log_y_, max_log_y_ = std::log(hist_.counts(0)); 
   
   min_y_, max_y_ = hist_.counts(0);
   for ( unsigned i = 0; i < hist_.nbins(); i++ )
@@ -445,9 +445,9 @@ void dbrec3d_scene_info_widget::init_hist_vals()
     float this_log_val;
     
     if(this_val <  1.0 - 1e-9)
-      this_log_val = vcl_log(1.0);
+      this_log_val = std::log(1.0);
     else 
-      this_log_val = vcl_log(this_val);
+      this_log_val = std::log(this_val);
     
     hist_values_.push_back(this_val);
     hist_log_values_.push_back(this_log_val);
@@ -579,7 +579,7 @@ void dbrec3d_id_scene_info_widget::init_slider(QSlider *slider, QLabel *label , 
   label->setNum(init_val);
 }
 
-QWidget* dbrec3d_id_scene_info_widget::assemble_slider_widget(QSlider *slider, QLabel *value, vcl_string name)
+QWidget* dbrec3d_id_scene_info_widget::assemble_slider_widget(QSlider *slider, QLabel *value, std::string name)
 {
   QHBoxLayout *label_layout = new QHBoxLayout();
   label_layout->setSpacing(0);
@@ -645,9 +645,9 @@ void dbrec3d_id_scene_info_widget::init_hist_vals()
   //  hist_log_values_.reserve(hist_.nbins());
   
   if(hist_.counts(0) < 1.0 - 1e-9)
-    min_log_y_, max_log_y_ =vcl_log(1);
+    min_log_y_, max_log_y_ =std::log(1);
   else 
-    min_log_y_, max_log_y_ = vcl_log(hist_.counts(0)); 
+    min_log_y_, max_log_y_ = std::log(hist_.counts(0)); 
   
   min_y_, max_y_ = hist_.counts(0);
   for ( unsigned i = 0; i < hist_.nbins(); i++ )
@@ -660,9 +660,9 @@ void dbrec3d_id_scene_info_widget::init_hist_vals()
     float this_log_val;
     
     if(this_val <  1.0 - 1e-9)
-      this_log_val = vcl_log(1.0);
+      this_log_val = std::log(1.0);
     else 
-      this_log_val = vcl_log(this_val);
+      this_log_val = std::log(this_val);
     
     hist_values_.push_back(this_val);
     hist_log_values_.push_back(this_log_val);

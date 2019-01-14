@@ -6,12 +6,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -28,13 +28,13 @@
 #include <Inventor/nodes/SoCylinder.h>
 #include <biov/biov_examiner_tableau.h>
 
-vnl_matrix<vcl_complex<double> > matrix_exp_SU2 (double t,vnl_matrix<vcl_complex<double> > g)
+vnl_matrix<std::complex<double> > matrix_exp_SU2 (double t,vnl_matrix<std::complex<double> > g)
     {
-vnl_matrix<vcl_complex<double> >I(2,2,0.0);
+vnl_matrix<std::complex<double> >I(2,2,0.0);
 I.put(0,0,1);
 I.put(1,1,1);
 
-vnl_matrix<vcl_complex<double> >resultant(2,2,0.0);
+vnl_matrix<std::complex<double> >resultant(2,2,0.0);
 
 if (t == 0)
     {
@@ -47,9 +47,9 @@ double x1 = t*g.get(0,0).imag();
 double x2 = t*g.get(0,1).imag();
 double x3 = t*(-g.get(0,1).real());
 
-double phi = vcl_sqrt(vcl_pow(x1,2) + vcl_pow(x2,2) + vcl_pow(x3,2));
+double phi = std::sqrt(std::pow(x1,2) + std::pow(x2,2) + std::pow(x3,2));
 
-resultant = I*vcl_cos(phi) + g*vcl_sin(phi)*t/phi;
+resultant = I*std::cos(phi) + g*std::sin(phi)*t/phi;
     }
 return resultant;
     }
@@ -87,8 +87,8 @@ return resultant;
 
 int main(int argc,char **argv)
     {
-vcl_string projected_points = argv[1];
-vcl_string vol3d = argv[2];
+std::string projected_points = argv[1];
+std::string vol3d = argv[2];
 
 
 int my_argc = 1;
@@ -99,8 +99,8 @@ int my_argc = 1;
     vgui::init(my_argc,my_argv);
     delete []my_argv;
 
-    vcl_ofstream ofstr(projected_points.c_str());
-    vcl_ofstream fstream(vol3d.c_str());
+    std::ofstream ofstr(projected_points.c_str());
+    std::ofstream fstream(vol3d.c_str());
 
     // generate a set of elements along a geodesic on the manifold by finding 
     // exp(A*t) where A is a Lie algebra element and t is a continuous valued
@@ -134,54 +134,54 @@ int my_argc = 1;
 
        
 // g1,g2 and g3 represent the generators of the su(2) Lie algebra
-        vnl_matrix<vcl_complex<double> > g1 = 
+        vnl_matrix<std::complex<double> > g1 = 
   vnl_complexify(r1,i1);
 
- //       vcl_cout << g1 << vcl_endl;
+ //       std::cout << g1 << std::endl;
 
-        vnl_matrix<vcl_complex<double> > g2 = 
+        vnl_matrix<std::complex<double> > g2 = 
   vnl_complexify(r2,i2);
 
- //       vcl_cout << g2 << vcl_endl;
+ //       std::cout << g2 << std::endl;
 
-        vnl_matrix<vcl_complex<double> > g3 = 
+        vnl_matrix<std::complex<double> > g3 = 
   vnl_complexify(r3,i3);
 
- //       vcl_cout << g3 << vcl_endl;
+ //       std::cout << g3 << std::endl;
 
 
-// vnl_matrix<vcl_complex<double> > g = g1*1 + g2*(0) + g3*(0);
+// vnl_matrix<std::complex<double> > g = g1*1 + g2*(0) + g3*(0);
 
          double q0,q1,q2,q3,x,y,z,min_x = 1e10,max_x = 1e-10,min_y = 1e10,max_y = 1e-10,min_z = 1e10,max_z = 1e-10;
-  vcl_vector<vgl_point_3d<double> >coordinates;
+  std::vector<vgl_point_3d<double> >coordinates;
 
         for (unsigned int k = 0;k<=10;k = k + 1)
             {
-        vnl_matrix<vcl_complex<double> > g = g1  + g2*k ;
+        vnl_matrix<std::complex<double> > g = g1  + g2*k ;
         double step_size = 0.01,count = 0;
 
  for (double t = 0;t<=4*vnl_math::pi ;t += step_size)
         {
   count++;
 
-vnl_matrix<vcl_complex<double> >G = matrix_exp_SU2(t,g);
+vnl_matrix<std::complex<double> >G = matrix_exp_SU2(t,g);
 
-//ofstr << count << vcl_endl;
-//ofstr << G << vcl_endl;
+//ofstr << count << std::endl;
+//ofstr << G << std::endl;
 
 q0 = G.get(0,0).real();
 q1 = G.get(0,0).imag();
 q2 = G.get(0,1).real();
 q3 = G.get(0,1).imag();
-//q0 = vcl_cos(t/2);
+//q0 = std::cos(t/2);
 //q1 = 0;
 //q2 = 0;
-//q3 = vcl_sin(t/2);
+//q3 = std::sin(t/2);
 
-//ofstr << q0 << vcl_endl;
-//ofstr << q1 << vcl_endl;
-//ofstr << q2 << vcl_endl;
-//ofstr << q3 << vcl_endl;
+//ofstr << q0 << std::endl;
+//ofstr << q1 << std::endl;
+//ofstr << q2 << std::endl;
+//ofstr << q3 << std::endl;
 
 #if 0
 if (q0 != 0)
@@ -222,10 +222,10 @@ max_z = z;
 if(z <= min_z)
 min_z = z;
 
-// ofstr << "(x=" <<x <<"," <<"y=" << y <<","<<"z="<<z<<")" << vcl_endl;
-ofstr << x << vcl_endl;
-ofstr << y << vcl_endl;
-ofstr << z << vcl_endl;
+// ofstr << "(x=" <<x <<"," <<"y=" << y <<","<<"z="<<z<<")" << std::endl;
+ofstr << x << std::endl;
+ofstr << y << std::endl;
+ofstr << z << std::endl;
     }
         }
             }
@@ -237,22 +237,22 @@ int z_dim = (unsigned int)(max_z - min_z);
   vbl_array_3d<unsigned char>vol(2*x_dim,2*y_dim,2*z_dim,0.0);
 // vbl_array_3d<unsigned char>vol(100,100,100,0.0);
     
-vcl_cout << "co-ordinates size" << coordinates.size() << vcl_endl;
+std::cout << "co-ordinates size" << coordinates.size() << std::endl;
 
-for (vcl_vector<vgl_point_3d<double> >::iterator iter = coordinates.begin();
+for (std::vector<vgl_point_3d<double> >::iterator iter = coordinates.begin();
      iter != coordinates.end();iter++)
     {
     int x1 = iter->x() - min_x;
     int y1 = iter->y() - min_y;
     int z1 = iter->z() - min_z;
     vol[x1][y1][z1] = (unsigned char)255;
-   // fstream << "loc : " << "(" << x1 << "," << y1 << "," << z1 << ")" << "value: " << vol[x1][y1][z1] << vcl_endl;
-    fstream << x1 << vcl_endl;
-    fstream << y1 << vcl_endl;
-    fstream << z1 << vcl_endl; 
+   // fstream << "loc : " << "(" << x1 << "," << y1 << "," << z1 << ")" << "value: " << vol[x1][y1][z1] << std::endl;
+    fstream << x1 << std::endl;
+    fstream << y1 << std::endl;
+    fstream << z1 << std::endl; 
     }
 
-vcl_vector<unsigned char>vol_vec;
+std::vector<unsigned char>vol_vec;
 
 for (unsigned int k = 0;k<vol.get_row3_count();k++)
     {

@@ -3,7 +3,7 @@
 // \file
 
 #include "dbru_facedb_tools.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -45,14 +45,14 @@ public:
   dbru_add_subjects_command(dbru_facedb_add_subjects_tool* tool) : tool_(tool) {}
   void execute()
   {
-    static vcl_string subjects_dir ="/home/dec/subjects";
-    static vcl_string ext = "";
+    static std::string subjects_dir ="/home/dec/subjects";
+    static std::string ext = "";
     vgui_dialog param_dlg("Add Subjects");
     param_dlg.file("Subjects Dir", ext, subjects_dir);
     if(!param_dlg.ask())
       return;
     if(!tool_->add_subjects(subjects_dir))
-      vcl_cout << "subjects not successfully added\n";
+      std::cout << "subjects not successfully added\n";
   }
   dbru_facedb_add_subjects_tool* tool_;
 };
@@ -92,7 +92,7 @@ static vil_image_resource_sptr get_image()
   bpro1_storage_sptr sto = res->get_data("image");
   if(!sto)
     return (vil_image_resource*)0;
-  vcl_cout << "Image Storage Name " << sto->name() << '\n';
+  std::cout << "Image Storage Name " << sto->name() << '\n';
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(sto);
   if(!image_storage)
@@ -100,23 +100,23 @@ static vil_image_resource_sptr get_image()
   return image_storage->get_image();
 }
 
-static bool get_current_database(vcl_vector<vcl_pair<unsigned, unsigned> >* db, vgui_grid_tableau_sptr tableau)
+static bool get_current_database(std::vector<std::pair<unsigned, unsigned> >* db, vgui_grid_tableau_sptr tableau)
 {
   if (!tableau) {
-    vcl_cout << " get_current_database() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
+    std::cout << " get_current_database() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
     return false;
   }
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau->get_selected_positions(col_pos, row_pos, times);
 
   for (unsigned i = 0; i<col_pos->size(); i++) {
     if ((*col_pos)[i] < 0 || (*row_pos)[i] < 0)
       continue;
     
-    vcl_pair<unsigned, unsigned> p;
+    std::pair<unsigned, unsigned> p;
     p.first = unsigned((*row_pos)[i]);
     p.second = unsigned((*col_pos)[i]);
     db->push_back(p);
@@ -147,7 +147,7 @@ dbru_facedb_add_subjects_tool::~dbru_facedb_add_subjects_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_facedb_add_subjects_tool::name() const
+std::string dbru_facedb_add_subjects_tool::name() const
 {
   return "Add subjects to facedb";
 }
@@ -189,28 +189,28 @@ void dbru_facedb_add_subjects_tool::activate()
 }
 //------------------  facedb edit tool methods ---------------------------
 
-bool dbru_facedb_add_subjects_tool::add_subjects(vcl_string const& subjects_root_dir)
+bool dbru_facedb_add_subjects_tool::add_subjects(std::string const& subjects_root_dir)
 {
   //need a facedb to add the prototype
   if(!facedb_) {
-    vcl_cout << "dbru_facedb_add_subjects_tool::add_subjects() - facedb problems, load an facedb or create a new facedb, subjects are not added!\n";
+    std::cout << "dbru_facedb_add_subjects_tool::add_subjects() - facedb problems, load an facedb or create a new facedb, subjects are not added!\n";
     return false;
   }
 
-  vcl_string s(subjects_root_dir);
+  std::string s(subjects_root_dir);
   s += "/*.*";
-  vcl_cout << "s: " << s << vcl_endl;
+  std::cout << "s: " << s << std::endl;
   for (vul_file_iterator fit = s;fit; ++fit) {
     // check to see if file is a directory.
     // all the images of a subject are assumed to be in a separate directory under root
     if (vul_file::is_directory(fit())) {
-      vcl_vector<vcl_string> subjimages;
+      std::vector<std::string> subjimages;
       for (vul_file_iterator sub_fit = fit(); sub_fit; ++sub_fit) {
         if (vul_file::is_directory(sub_fit()))
           continue;
         subjimages.push_back(sub_fit());
       }
-      vcl_vector<vil_image_resource_sptr> subj;
+      std::vector<vil_image_resource_sptr> subj;
       for (unsigned k = 0; k < subjimages.size(); k++) {
         vil_image_resource_sptr img = vil_load_image_resource(subjimages[k].c_str());
         subj.push_back(img);
@@ -240,8 +240,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    //static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    //static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float dx = 1.0f;
     static float dr = 0.2f;
     static float ds = 0.1f;
@@ -272,28 +272,28 @@ public:
       return;
     if(!use_int&&!use_grad)
       {
-        vcl_cout << "must use at least one information channel\n";
+        std::cout << "must use at least one information channel\n";
         return;
       }
-    //vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    //std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     //if(tool_->load_query(image_file, expand, coef))
     if(tool_->query_set())  
       if(!tool_->match_query(dx, dr, ds, da, ratio, thresh, Nobs,
                              use_int, use_grad, forward_and_reverse,
                              match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     unsigned i = 0;
-    vcl_cout << "--- Scores ---\n";
-    //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    std::cout << "--- Scores ---\n";
+    //for(std::vector<std::string>::iterator cit = classes.begin();
     //    cit != classes.end(); ++cit, ++i)
     for ( i = 0; i<match_scores.size(); i++)
-      vcl_cout << "(" << i << " = " << match_scores[i] << ") " << vcl_flush;
-    vcl_cout << "\n";
+      std::cout << "(" << i << " = " << match_scores[i] << ") " << std::flush;
+    std::cout << "\n";
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -330,8 +330,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    //static vcl_string image_file ="c:/images/*";
-    //static vcl_string ext = "*.*";
+    //static std::string image_file ="c:/images/*";
+    //static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -366,9 +366,9 @@ public:
     param_dlg.checkbox("Forward and Reverse ", forward_and_reverse);
     if(!param_dlg.ask())
       return;
-    //vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    //std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     //if(tool_->load_query(image_file, expand, coef))
     if(tool_->query_set()) {
       if(!tool_->match_query_interval(xmin, xmax, ymin, ymax,
@@ -379,20 +379,20 @@ public:
                                       forward_and_reverse,
                                       match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     } else {
-      vcl_cout << "query observation is not picked, press p on the query prototype to select it.\n";
+      std::cout << "query observation is not picked, press p on the query prototype to select it.\n";
     }
     unsigned i = 0;
-    //vcl_cout << "---Class Scores ---\n";
-    //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    //std::cout << "---Class Scores ---\n";
+    //for(std::vector<std::string>::iterator cit = classes.begin();
     //    cit != classes.end(); ++cit, ++i)
-    //  vcl_cout << *cit << " = " << match_scores[i] << '\n'<< vcl_flush;
+    //  std::cout << *cit << " = " << match_scores[i] << '\n'<< std::flush;
     for ( ; i < match_scores.size(); i++)
-      vcl_cout << "(" << i << " = " << match_scores[i] << ") " << vcl_flush;
-    vcl_cout << "\n";
+      std::cout << "(" << i << " = " << match_scores[i] << ") " << std::flush;
+    std::cout << "\n";
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -438,7 +438,7 @@ dbru_facedb_match_tool::~dbru_facedb_match_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_facedb_match_tool::name() const
+std::string dbru_facedb_match_tool::name() const
 {
   return "Match dbru_facedb";
 }
@@ -473,15 +473,15 @@ dbru_facedb_match_tool::handle( const vgui_event & e,
 {
   if (gesture_set_query_(e)) {
     if (!tableau_) {
-      vcl_cout << "tableau_ is not set in dbru_facedb_match_tool\n";
+      std::cout << "tableau_ is not set in dbru_facedb_match_tool\n";
       return false;
     }
-    vcl_pair<unsigned, unsigned> query_obs_ids_;
+    std::pair<unsigned, unsigned> query_obs_ids_;
     unsigned int col_pos, row_pos;
     tableau_->get_active_position(&col_pos, &row_pos);
     query_obs_ids_.first = row_pos;
     query_obs_ids_.second = col_pos;
-    vcl_cout << "query is set with col_pos: " << col_pos << " row_pos: " << row_pos << vcl_endl;
+    std::cout << "query is set with col_pos: " << col_pos << " row_pos: " << row_pos << std::endl;
     query_set_ = true;
     return false;
   }
@@ -494,7 +494,7 @@ dbru_facedb_match_tool::handle( const vgui_event & e,
         dbru_object_sptr obj = facedb_->get_object(row_pos);
         if (col_pos < obj->n_polygons()) {
           dbru_label_sptr lbl = facedb_->get_label(row_pos, col_pos);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
         }
       }
     }
@@ -509,10 +509,10 @@ void dbru_facedb_match_tool::activate()
   if(facedb_storage_)
     facedb_ = facedb_storage_->facedb();
   else
-    vcl_cout << "Failed to activate facedb_tools\n";
+    std::cout << "Failed to activate facedb_tools\n";
 }
 //------------------  facedb match tool methods ---------------------------
-/*bool dbru_facedb_match_tool::load_query(vcl_string const& path,
+/*bool dbru_facedb_match_tool::load_query(std::string const& path,
                                        const bool expand,
                                        const float coef)
 {
@@ -535,9 +535,9 @@ bool dbru_facedb_match_tool::match_query(const float dx, const float dr,
                                         const unsigned Nob, 
                                         bool use_int, bool use_grad, 
                                         bool forward_and_reverse,
-                                        //vcl_vector<vcl_string>& classes,
-                                        vcl_vector<float>& match_scores,
-                                        vcl_vector<vil_image_resource_sptr>& match_images){
+                                        //std::vector<std::string>& classes,
+                                        std::vector<float>& match_scores,
+                                        std::vector<vil_image_resource_sptr>& match_images){
   //need a facedb to add the prototype
   if(!facedb_)
     return false;
@@ -546,23 +546,23 @@ bool dbru_facedb_match_tool::match_query(const float dx, const float dr,
   dbinfo_observation_sptr obsq = facedb_->get_prototype(query_obs_ids_.first, query_obs_ids_.second);
 
   if (!obsq) {
-    vcl_cout << "Query observation is not appropriately set!\n";
+    std::cout << "Query observation is not appropriately set!\n";
     return false;
   }
 
   //for now use only the first prototype in each class (FIXME)
   //classes = facedb_->classes();
-  //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  //for(std::vector<std::string>::iterator cit = classes.begin();
   //    cit != classes.end(); ++cit)
   //  {
   //    dbinfo_observation_sptr obsdb = facedb_->prototype(*cit, 0);
-  vcl_vector<vcl_pair<unsigned, unsigned> > *db = new vcl_vector<vcl_pair<unsigned, unsigned> >();
+  std::vector<std::pair<unsigned, unsigned> > *db = new std::vector<std::pair<unsigned, unsigned> >();
   if (!get_current_database(db, tableau_)) {
-    vcl_cout << "Problems in getting db!\n";
+    std::cout << "Problems in getting db!\n";
     return false;
   }
 
-  vcl_pair<unsigned, unsigned> p;
+  std::pair<unsigned, unsigned> p;
   for (unsigned i = 0; i<db->size(); i++) 
   {
     p = (*db)[i];
@@ -616,9 +616,9 @@ bool dbru_facedb_match_tool::match_query_interval(const float xmin, const float 
                                                  const unsigned n_intervals,
                                                  const float valid_thresh,
                                                  bool forward_and_reverse,
-                                                 //vcl_vector<vcl_string>& classes,
-                                                 vcl_vector<float>& match_scores,
-                                                 vcl_vector<vil_image_resource_sptr>& match_images)
+                                                 //std::vector<std::string>& classes,
+                                                 std::vector<float>& match_scores,
+                                                 std::vector<vil_image_resource_sptr>& match_images)
 {
   //need a facedb to add the prototype
   if(!facedb_)
@@ -628,22 +628,22 @@ bool dbru_facedb_match_tool::match_query_interval(const float xmin, const float 
   dbinfo_observation_sptr obsq = facedb_->get_prototype(query_obs_ids_.first, query_obs_ids_.second);
 
   if (!obsq) {
-    vcl_cout << "Query observation is not appropriately set!\n";
+    std::cout << "Query observation is not appropriately set!\n";
     return false;
   }
 
   //for now use only the first prototype in each class (FIXME)
   //classes = facedb_->classes();
-  //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  //for(std::vector<std::string>::iterator cit = classes.begin();
    //   cit != classes.end(); ++cit)
    // {
-  vcl_vector<vcl_pair<unsigned, unsigned> > *db = new vcl_vector<vcl_pair<unsigned, unsigned> >();
+  std::vector<std::pair<unsigned, unsigned> > *db = new std::vector<std::pair<unsigned, unsigned> >();
   if (!get_current_database(db, tableau_)) {
-    vcl_cout << "Problems in getting db!\n";
+    std::cout << "Problems in getting db!\n";
     return false;
   }
 
-  vcl_pair<unsigned, unsigned> p;
+  std::pair<unsigned, unsigned> p;
   for (unsigned i = 0; i<db->size(); i++) 
   {
       p = (*db)[i];
@@ -709,7 +709,7 @@ dbru_facedb_delete_observations_tool::~dbru_facedb_delete_observations_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_facedb_delete_observations_tool::name() const
+std::string dbru_facedb_delete_observations_tool::name() const
 {
   return "Delete Selected Observations from facedb";
 }
@@ -738,7 +738,7 @@ dbru_facedb_delete_observations_tool::handle( const vgui_event & e,
         dbru_object_sptr obj = facedb_->get_object(row_pos);
         if (col_pos < obj->n_polygons()) {
           dbru_label_sptr lbl = facedb_->get_label(row_pos, col_pos);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
         }
       }
     }
@@ -753,21 +753,21 @@ void dbru_facedb_delete_observations_tool::activate()
   if(facedb_storage_)
     facedb_ = facedb_storage_->facedb();
   else {
-    vcl_cout << "Failed to activate facedb_tools\n";
+    std::cout << "Failed to activate facedb_tools\n";
     return;
   }
 
-  vcl_cout << "delete_observations tool active\n";
-  vcl_cout << "USAGE: Selected observations will be deleted, if all observations of an object are deleted then its removed completely\n";
+  std::cout << "delete_observations tool active\n";
+  std::cout << "USAGE: Selected observations will be deleted, if all observations of an object are deleted then its removed completely\n";
 
   if (!tableau_) {
-    vcl_cout << " dbru_facedb_delete_observations_tool::activate() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
+    std::cout << " dbru_facedb_delete_observations_tool::activate() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
     return;
   }
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau_->get_selected_positions(col_pos, row_pos, times);
 
   for (unsigned i = 0; i<col_pos->size(); i++) {
@@ -788,7 +788,7 @@ void dbru_facedb_delete_observations_tool::activate()
       }
     if (remove)
       if (!facedb_->remove_object(i))
-        vcl_cout << "problems in removing object in row: " << i << vcl_endl;
+        std::cout << "problems in removing object in row: " << i << std::endl;
   }
 
   col_pos->clear();
@@ -821,7 +821,7 @@ dbru_facedb_save_db_file_tool::~dbru_facedb_save_db_file_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_facedb_save_db_file_tool::name() const
+std::string dbru_facedb_save_db_file_tool::name() const
 {
   return "Save current selected database into a TXT file";
 }
@@ -850,7 +850,7 @@ dbru_facedb_save_db_file_tool::handle( const vgui_event & e,
         dbru_object_sptr obj = facedb_->get_object(row_pos);
         if (col_pos < obj->n_polygons()) {
           dbru_label_sptr lbl = facedb_->get_label(row_pos, col_pos);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
         }
       }
     }
@@ -865,36 +865,36 @@ void dbru_facedb_save_db_file_tool::activate()
   if(facedb_storage_)
     facedb_ = facedb_storage_->facedb();
   else {
-    vcl_cout << "Failed to activate facedb_tools\n";
+    std::cout << "Failed to activate facedb_tools\n";
     return;
   }
 
-  vcl_cout << "save_db_file tool active\n";
+  std::cout << "save_db_file tool active\n";
 
   if (!tableau_) {
-    vcl_cout << " dbru_facedb_delete_observations_tool::activate() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
+    std::cout << " dbru_facedb_delete_observations_tool::activate() - tableau_ is not set in dbru_facedb_add_objects_tool\n";
     return;
   }
 
-  static vcl_string db_file ="/home/dec/";
-  static vcl_string ext = "*.txt";
+  static std::string db_file ="/home/dec/";
+  static std::string ext = "*.txt";
   vgui_dialog param_dlg("Save Database File");
   param_dlg.file("Database File", ext, db_file);
   if(!param_dlg.ask())
     return;
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau_->get_selected_positions(col_pos, row_pos, times);
 
-  vcl_ofstream of(db_file.c_str());
+  std::ofstream of(db_file.c_str());
   if (!of) {
-    vcl_cout << "dbru_facedb_delete_observations_tool::activate() - file not opened\n";
+    std::cout << "dbru_facedb_delete_observations_tool::activate() - file not opened\n";
     return;
   }
 
-  vcl_vector<unsigned> temp1, temp2;
+  std::vector<unsigned> temp1, temp2;
   
   for (unsigned i = 0; i<col_pos->size(); i++) {
     unsigned osi = (*col_pos)[i];
@@ -910,13 +910,13 @@ void dbru_facedb_save_db_file_tool::activate()
     }
   }
 
-  of << temp1.size() << vcl_endl;
+  of << temp1.size() << std::endl;
   for (unsigned i = 0; i < temp1.size(); i++) {
     of << temp1[i] << " " << temp2[i] << "\n";
   }
   of.close();
   
-  vcl_cout << "selected observations are saved to: " << db_file << "\n";
+  std::cout << "selected observations are saved to: " << db_file << "\n";
   col_pos->clear();
   row_pos->clear();
   times->clear();
@@ -940,8 +940,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static bool query = true;
     static bool expand = false;
     static float coef=0.6f;
@@ -953,7 +953,7 @@ public:
     if (!param_dlg.ask())
       return;
     if(!tool_->load(image_file, query, expand, coef))
-      vcl_cout << "Image not sucessfully loaded\n";
+      std::cout << "Image not sucessfully loaded\n";
   }
   dbru_facedb_transform_tool* tool_;
 };
@@ -965,8 +965,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -1004,7 +1004,7 @@ public:
                                max_info,
                                match_image))
       {
-        vcl_cout << "query not successfully transformed\n";
+        std::cout << "query not successfully transformed\n";
         return;
       }
 
@@ -1039,7 +1039,7 @@ dbru_facedb_transform_tool::~dbru_facedb_transform_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_facedb_transform_tool::name() const
+std::string dbru_facedb_transform_tool::name() const
 {
   return "Transform facedb";
 }
@@ -1076,10 +1076,10 @@ dbru_facedb_transform_tool::handle( const vgui_event & e,
 
 void dbru_facedb_transform_tool::activate()
 {
-  vcl_cout << "Transform tool active\n";
+  std::cout << "Transform tool active\n";
 }
 //------------------  facedb transform tool methods ---------------------------
-bool dbru_facedb_transform_tool::load(vcl_string const& path,
+bool dbru_facedb_transform_tool::load(std::string const& path,
                                      const bool query,
                                      const bool expand,
                                      const float coef)
@@ -1113,7 +1113,7 @@ transform_query(const float xmin, const float xmax,
 {
   if(!query_||!proto_)
     {
-      vcl_cout << "Missing image data \n";
+      std::cout << "Missing image data \n";
       return false;
     }
   // create a query observation from the image

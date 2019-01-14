@@ -60,14 +60,14 @@ int main(int argc, char** argv)
 
 
 #if defined(VCL_WIN32)
-vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
 _setmaxstdio(2048);
 #endif
   
   mview2_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 600, h = 512;
-  vcl_string title = "mview2 GUI";
+  std::string title = "mview2 GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
 
   win->get_adaptor()->set_tableau( bvis_mview_manager::instance() );

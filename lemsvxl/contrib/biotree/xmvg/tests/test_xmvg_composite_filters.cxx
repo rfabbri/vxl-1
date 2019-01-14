@@ -7,7 +7,7 @@
 // \date   2005-02-08
 // 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <xmvg/xmvg_no_noise_filter_descriptor.h>
 #include <xmvg/xmvg_no_noise_filter_3d.h>
 #include <xmvg/xmvg_composite_filter_3d.h>
@@ -15,8 +15,8 @@
 
 static void test_xmvg_composite_filters()
 {
-  vcl_cout << "-----------------testing composite filter 3d------------------\n";
-  vcl_cout << "---constructor---\n";
+  std::cout << "-----------------testing composite filter 3d------------------\n";
+  std::cout << "---constructor---\n";
   // construct the filter descriptors
   double f_radius = 0.02;
   double f_length = 0.08;
@@ -32,8 +32,8 @@ static void test_xmvg_composite_filters()
   xmvg_no_noise_filter_3d fy(fdy);
   xmvg_no_noise_filter_3d fz(fdz);
 
-//  vcl_vector<xmvg_atomic_filter_3d<double> > filters;
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+//  std::vector<xmvg_atomic_filter_3d<double> > filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   filters.push_back(fx);
   filters.push_back(fy);
   filters.push_back(fz);
@@ -46,7 +46,7 @@ static void test_xmvg_composite_filters()
   TEST("orientation test-2", filters[1].descriptor().orientation(), vgl_vector_3d<double>(0.0,1.0,0.0));
   TEST("orientation test-3", filters[2].descriptor().orientation(), vgl_vector_3d<double>(0.0,0.0,1.0));
 
-  vcl_cout << "---splat---" << vcl_endl;
+  std::cout << "---splat---" << std::endl;
   // construct the initial camera
   xmvg_source source;
   vnl_double_3x3 m(0.0);
@@ -86,8 +86,8 @@ static void test_xmvg_composite_filters()
   for(i=0; i<sx; i++)
     for(j=0; j<sy; j++)
       sum += comp2d.atomic_filter(0).weights().get(i,j);
-  vcl_cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(0).weights_sum() << vcl_endl;
-  vcl_cout << "Weights sum after eliminating residue: " << sum << vcl_endl;
+  std::cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(0).weights_sum() << std::endl;
+  std::cout << "Weights sum after eliminating residue: " << sum << std::endl;
   TEST_NEAR("eliminating splat residue test for filter 0", sum, 0, 1e-09);
 
   sum = 0;
@@ -96,8 +96,8 @@ static void test_xmvg_composite_filters()
   for(i=0; i<sx; i++)
     for(j=0; j<sy; j++)
       sum += comp2d.atomic_filter(1).weights().get(i,j);
-  vcl_cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(1).weights_sum() << vcl_endl;
-  vcl_cout << "Weights sum after eliminating residue: " << sum << vcl_endl;
+  std::cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(1).weights_sum() << std::endl;
+  std::cout << "Weights sum after eliminating residue: " << sum << std::endl;
   TEST_NEAR("eliminating splat residue test for filter 0", sum, 0, 1e-09);
 
   sum = 0;
@@ -106,8 +106,8 @@ static void test_xmvg_composite_filters()
   for(i=0; i<sx; i++)
     for(j=0; j<sy; j++)
       sum += comp2d.atomic_filter(2).weights().get(i,j);
-  vcl_cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(2).weights_sum() << vcl_endl;
-  vcl_cout << "Weights sum after eliminating residue: " << sum << vcl_endl;
+  std::cout << "Weights sum before eliminating residue: " << comp2d.atomic_filter(2).weights_sum() << std::endl;
+  std::cout << "Weights sum after eliminating residue: " << sum << std::endl;
   TEST_NEAR("eliminating splat residue test for filter 0", sum, 0, 1e-09);
 }
 

@@ -2,24 +2,24 @@
 
 #include"ncn_builder.h"
 
-bool ncn_builder::build_neighborhood( vcl_map<unsigned,vil_image_view<float> > const& image_sequence, vcl_vector<vgl_point_2d<unsigned> > const& roi,
-                                    vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& pivot_pixel_candidates,
-                                    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > >& neighborhood,
+bool ncn_builder::build_neighborhood( std::map<unsigned,vil_image_view<float> > const& image_sequence, std::vector<vgl_point_2d<unsigned> > const& roi,
+                                    std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& pivot_pixel_candidates,
+                                    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > >& neighborhood,
                                     unsigned const& n_bins, unsigned const& n_neighbors)
 {
     unsigned nbins = 16;
-    vcl_map<double,vgl_point_2d<unsigned> > mi_point_map;
+    std::map<double,vgl_point_2d<unsigned> > mi_point_map;
     bsta_joint_histogram<double> joint_histogram(255,nbins);
 
     
-    vcl_vector<vgl_point_2d<unsigned>>::const_iterator roi_itr;
-    vcl_vector<vgl_point_2d<unsigned>>::const_iterator roi_end = roi.end();
+    std::vector<vgl_point_2d<unsigned>>::const_iterator roi_itr;
+    std::vector<vgl_point_2d<unsigned>>::const_iterator roi_end = roi.end();
 
-    vcl_set<vgl_point_2d<unsigned>, vgl_point_2d_less_than>::const_iterator pivot_pixel_candidates_itr;
-    vcl_set<vgl_point_2d<unsigned>, vgl_point_2d_less_than>::const_iterator pivot_pixel_candidates_end = pivot_pixel_candidates.end();
+    std::set<vgl_point_2d<unsigned>, vgl_point_2d_less_than>::const_iterator pivot_pixel_candidates_itr;
+    std::set<vgl_point_2d<unsigned>, vgl_point_2d_less_than>::const_iterator pivot_pixel_candidates_end = pivot_pixel_candidates.end();
 
-    vcl_map<unsigned, vil_image_view<float> >::const_iterator image_sequence_itr;
-    vcl_map<unsigned, vil_image_view<float> >::const_iterator image_sequence_end = image_sequence.end();
+    std::map<unsigned, vil_image_view<float> >::const_iterator image_sequence_itr;
+    std::map<unsigned, vil_image_view<float> >::const_iterator image_sequence_end = image_sequence.end();
     //form neighborhoods for every point in the roi
     unsigned counts = 0;
     unsigned n_targets = roi.size();
@@ -45,9 +45,9 @@ bool ncn_builder::build_neighborhood( vcl_map<unsigned,vil_image_view<float> > c
                     double pivot_intensity = image_sequence_itr->second(pivot_pixel_candidates_itr->x(),pivot_pixel_candidates_itr->y());
                     joint_histogram.upcount(target_intensity,1,pivot_intensity,1);
                 }
-                //joint_histogram.print(vcl_cout);
+                //joint_histogram.print(std::cout);
                 double mi = joint_histogram.mutual_information();
-                //vcl_cout << "mi = " << mi << vcl_endl;
+                //std::cout << "mi = " << mi << std::endl;
                 mi_point_map[joint_histogram.mutual_information()] = *pivot_pixel_candidates_itr;
                 ++check_count2;
             }
@@ -55,30 +55,30 @@ bool ncn_builder::build_neighborhood( vcl_map<unsigned,vil_image_view<float> > c
         }
         //create the neighborhood vector
 		unsigned i = 0;
-		vcl_map<double,vgl_point_2d<unsigned> >::const_iterator mi_point_map_itr = mi_point_map.end();
+		std::map<double,vgl_point_2d<unsigned> >::const_iterator mi_point_map_itr = mi_point_map.end();
 		--mi_point_map_itr;
-		vcl_vector<vgl_point_2d<unsigned> > nbrhd;
+		std::vector<vgl_point_2d<unsigned> > nbrhd;
 		for(;i<n_neighbors;--mi_point_map_itr,++i)
 			nbrhd.push_back(mi_point_map_itr->second);
 
 		//associate the point and the neighborhood
-		vcl_pair<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > > pr(roi_itr,nbrhd);
+		std::pair<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > > pr(roi_itr,nbrhd);
 		neighborhood.insert(pr);
-		vcl_cout << counts << " out of " << n_targets << " neighborhoods built." << vcl_endl;
+		std::cout << counts << " out of " << n_targets << " neighborhoods built." << std::endl;
 		++counts;
 	}
     
     return true;
 }//end build_neighborhood
 
-bool ncn_builder::neighborhood2dat(vcl_ostream& os,
-                    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > > const& non_compact_neighborhood)
+bool ncn_builder::neighborhood2dat(std::ostream& os,
+                    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > > const& non_compact_neighborhood)
 {
-    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > >::const_iterator map_itr;
-    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > >::const_iterator map_end = non_compact_neighborhood.end();
+    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > >::const_iterator map_itr;
+    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > >::const_iterator map_end = non_compact_neighborhood.end();
 
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_itr;
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_end;
+    std::vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_itr;
+    std::vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_end;
 
     for(map_itr = non_compact_neighborhood.begin(); map_itr != map_end; ++map_itr)
     {
@@ -98,15 +98,15 @@ bool ncn_builder::neighborhood2dat(vcl_ostream& os,
 
 }//end neighborhood2dat
 
-bool ncn_builder::write_neighborhood_mfile(vcl_ostream& os,
-                    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > > const& non_compact_neighborhood)
+bool ncn_builder::write_neighborhood_mfile(std::ostream& os,
+                    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > > const& non_compact_neighborhood)
 {
 
-    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > >::const_iterator map_itr;
-    vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_vector<vgl_point_2d<unsigned> > >::const_iterator map_end = non_compact_neighborhood.end();
+    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > >::const_iterator map_itr;
+    std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::vector<vgl_point_2d<unsigned> > >::const_iterator map_end = non_compact_neighborhood.end();
 
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_itr;
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_end;
+    std::vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_itr;
+    std::vector<vgl_point_2d<unsigned> >::const_iterator nbrhd_end;
 
     unsigned n_neighborhoods = non_compact_neighborhood.size();
     

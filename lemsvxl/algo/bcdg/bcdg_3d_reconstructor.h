@@ -10,7 +10,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_map.h>
+#include <map>
 #include <vnl/vnl_double_3x3.h>
 #include <vnl/vnl_double_3x4.h>
 #include <vgl/vgl_point_3d.h>
@@ -45,7 +45,7 @@ protected:
   vnl_double_3x3 K_;
 
   //: Map from frame numbers to cameras
-  vcl_map<int,vnl_double_3x4> C_;
+  std::map<int,vnl_double_3x4> C_;
 };
 
 typedef vbl_smart_ptr< bcdg_3d_reconstructor > bcdg_reconstructor_sptr;

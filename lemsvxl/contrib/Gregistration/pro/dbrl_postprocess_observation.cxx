@@ -54,7 +54,7 @@ dbrl_postprocess_observation::dbrl_postprocess_observation(void): bpro1_process(
       !parameters()->add( "Output image contours as vsol"   , "-output_vsol" , false ) ||
       !parameters()->add( "Minimum length of curves to keep" , "-min_size_to_keep", 3 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 
 }
@@ -67,7 +67,7 @@ dbrl_postprocess_observation::~dbrl_postprocess_observation()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_postprocess_observation::name()
 {
   return "Postprocess Observations";
@@ -91,9 +91,9 @@ dbrl_postprocess_observation::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_postprocess_observation::get_input_type()
+std::vector< std::string > dbrl_postprocess_observation::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbinfo_track_storage" );
   to_return.push_back( "image" );
   return to_return;
@@ -101,9 +101,9 @@ vcl_vector< vcl_string > dbrl_postprocess_observation::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_postprocess_observation::get_output_type()
+std::vector< std::string > dbrl_postprocess_observation::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //output the sel storage class
     //bool output_vsol;
     //parameters()->get_value( "-output_vsol", output_vsol );
@@ -127,7 +127,7 @@ bool
 dbrl_postprocess_observation::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbrl_postprocess_observation::execute() - "
+    std::cout << "In dbrl_postprocess_observation::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -139,13 +139,13 @@ dbrl_postprocess_observation::execute()
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(input_data_[0][1]);
 
-  vcl_vector<dbinfo_observation_sptr> obs_per_frame;
+  std::vector<dbinfo_observation_sptr> obs_per_frame;
   vil_image_resource_sptr image_sptr = image_storage->get_image();
 
-  vcl_vector<dbinfo_track_sptr> tracks=track_storage->tracks();
+  std::vector<dbinfo_track_sptr> tracks=track_storage->tracks();
   unsigned  frame_no=image_storage->frame();
 
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
       trit != tracks.end(); trit++)
   {
       dbinfo_observation_sptr ref_obs=(*trit)->observ(frame_no);
@@ -189,7 +189,7 @@ void dbrl_postprocess_observation::compute_clips_from_observ(dbinfo_observation_
 
 
 
-bool dbrl_postprocess_observation::compute_curvelets_from_observation(vcl_vector<dbinfo_observation_sptr> obs)
+bool dbrl_postprocess_observation::compute_curvelets_from_observation(std::vector<dbinfo_observation_sptr> obs)
 {
     
     
@@ -207,19 +207,19 @@ bool dbrl_postprocess_observation::compute_curvelets_from_observation(vcl_vector
         parameters()->get_value( "-ncols", ncols);
     } 
     else {
-        vcl_cout << "Using image size for the grid\n";
+        std::cout << "Using image size for the grid\n";
         // get image from the storage class
         vidpro1_image_storage_sptr frame_image;
         frame_image.vertical_cast(get_input(0)[1]);
         if (!frame_image) {
-            vcl_cout << "Error: no image in input storages\n";
+            std::cout << "Error: no image in input storages\n";
             return  false;
         }
         vil_image_resource_sptr image_sptr = frame_image->get_image();
         ncols = image_sptr->ni();
         nrows = image_sptr->nj();
-        vcl_cout << "Nrows: " << nrows;
-        vcl_cout << "  Ncols: " << ncols << vcl_endl;
+        std::cout << "Nrows: " << nrows;
+        std::cout << "  Ncols: " << ncols << std::endl;
     }
 
     //parameters()->get_value( "-nrad", nrad);
@@ -227,7 +227,7 @@ bool dbrl_postprocess_observation::compute_curvelets_from_observation(vcl_vector
     //parameters()->get_value( "-dt", dt);
     //parameters()->get_value( "-output_vsol", output_vsol );
     //parameters()->get_value( "-min_size_to_keep", min_size_to_keep );
-    vcl_vector<dbdet_edgel* > all_edgels;
+    std::vector<dbdet_edgel* > all_edgels;
     for(unsigned i=0;i<obs.size();i++)    
     {
         dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();   
@@ -247,7 +247,7 @@ bool dbrl_postprocess_observation::compute_curvelets_from_observation(vcl_vector
         brip_roi_sptr exroi=obs[i]->ex_roi();
 
         //convert from vsol2D to edgels
-        vcl_vector<vsol_line_2d_sptr> lines=edet.get_lines();
+        std::vector<vsol_line_2d_sptr> lines=edet.get_lines();
         for (unsigned int b = 0 ; b < lines.size() ; b++ ) {
             if( lines[b]->cast_to_curve()){
                 //LINE
@@ -277,12 +277,12 @@ bool dbrl_postprocess_observation::compute_curvelets_from_observation(vcl_vector
     //output_data_[0].push_back(output_sel);
 
     //if (output_vsol){
-    //    vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+    //    std::vector< vsol_spatial_object_2d_sptr > image_curves;
 
     //    for (unsigned i=0; i<edge_linker->edgel_chains().size(); i++){
     //        //only keep the longer contours
     //        if (edge_linker->edgel_chains()[i]->edgels.size()>=min_size_to_keep){
-    //            vcl_vector<vsol_point_2d_sptr> pts;
+    //            std::vector<vsol_point_2d_sptr> pts;
     //            for (unsigned j=0; j<edge_linker->edgel_chains()[i]->edgels.size(); j++)
     //                pts.push_back(new vsol_point_2d(edge_linker->edgel_chains()[i]->edgels[j]->pt));
     //            vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);

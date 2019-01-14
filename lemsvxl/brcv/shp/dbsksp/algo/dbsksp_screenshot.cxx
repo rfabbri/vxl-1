@@ -212,7 +212,7 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
 bool dbsksp_screenshot_binary(const dbsksp_xshock_graph_sptr& xgraph,
                        vil_image_view<vxl_byte >& screenshot,
                        int contour_radius,
-                       vcl_vector<vgl_point_2d<int > >& points)
+                       std::vector<vgl_point_2d<int > >& points)
 {
   if (!xgraph) return false;
   if (screenshot.size() == 0) return false;

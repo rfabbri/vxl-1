@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -29,7 +29,7 @@ Lie_contour_geodesic_process::Lie_contour_geodesic_process()
         !parameters()->add("Mean contour file <filename...>" , "-mean_contour_file", bpro1_filepath("","*"))||
         !parameters()->add( "Output contour file <filename...>" , "-output_transformations_file", bpro1_filepath("","*")))
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_contour_geodesic_process::Lie_contour_geodesic_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_contour_geodesic_process::Lie_contour_geodesic_process()" << std::endl;
         }
 
     }
@@ -42,7 +42,7 @@ Lie_contour_geodesic_process::clone() const
     }
 
 
-double Lie_contour_geodesic_process::compute_lie_cost(vcl_vector<vsol_point_2d_sptr> curve1_samples,vcl_vector<vsol_point_2d_sptr> curve2_samples )
+double Lie_contour_geodesic_process::compute_lie_cost(std::vector<vsol_point_2d_sptr> curve1_samples,std::vector<vsol_point_2d_sptr> curve2_samples )
     {
     double lie_cost = 0,length_1,length_2,angle_1,angle_2,scale_comp,angle_comp;
 
@@ -51,32 +51,32 @@ double Lie_contour_geodesic_process::compute_lie_cost(vcl_vector<vsol_point_2d_s
         length_1 = curve1_samples[i]->distance(curve1_samples[i+1]);
         length_2 = curve2_samples[i]->distance(curve2_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
-        angle_2 = vcl_atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
+        angle_1 = std::atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
+        angle_2 = std::atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
 
-        scale_comp = vcl_log(length_2/length_1);
+        scale_comp = std::log(length_2/length_1);
         angle_comp = angle_2 - angle_1;
         lie_cost = lie_cost +  (scale_comp*scale_comp) + (angle_comp*angle_comp);
         }
-    lie_cost = vcl_sqrt(lie_cost);
+    lie_cost = std::sqrt(lie_cost);
 
     return lie_cost;
     }
 
-void Lie_contour_geodesic_process::angles_scales(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2,
-                                             vcl_vector<double> &angles,vcl_vector<double> &scales)
+void Lie_contour_geodesic_process::angles_scales(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2,
+                                             std::vector<double> &angles,std::vector<double> &scales)
     {
     double length_1,length_2,angle_1,angle_2,Lie_cost,min_lie_cost = 1e100;
     unsigned int min_lie_index;
-    vcl_vector <double> Lie_cost_vec;
+    std::vector <double> Lie_cost_vec;
 
-    vcl_vector<vsol_point_2d_sptr> curve2_augmented;
+    std::vector<vsol_point_2d_sptr> curve2_augmented;
 
     for (unsigned int j = 0;j<2;j++)
         for (unsigned int i = 0;i<curve2.size();i++)
             curve2_augmented.push_back(curve2[i]);
 
-    vcl_vector<vsol_point_2d_sptr> curve2_open_samples;
+    std::vector<vsol_point_2d_sptr> curve2_open_samples;
 
     for (unsigned int k = 0;k<curve2.size();k++)
         {
@@ -113,12 +113,12 @@ void Lie_contour_geodesic_process::angles_scales(vcl_vector<vsol_point_2d_sptr> 
         length_1 = curve1[i]->distance(curve1[i+1]);
         length_2 = curve2_open_samples[i]->distance(curve2_open_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
-        angle_2 = vcl_atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
+        angle_1 = std::atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
+        angle_2 = std::atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
 
 
 
-        scales.push_back(vcl_log(length_2/length_1));
+        scales.push_back(std::log(length_2/length_1));
         angles.push_back( angle_2 - angle_1 );
         }
     }
@@ -136,7 +136,7 @@ bool Lie_contour_geodesic_process::execute()
     clear_output();
 
     bpro1_filepath input_file,output_file,mean_file;
-    vcl_string file_path,inp1,out,mean_file_path;
+    std::string file_path,inp1,out,mean_file_path;
     int num_samples_c1,num_samples_c2;
 
     parameters()->get_value( "-contour_file_list" , input_file );
@@ -149,21 +149,21 @@ bool Lie_contour_geodesic_process::execute()
     mean_file_path = mean_file.path;
     out = output_file.path;
 
-    vcl_ifstream infp(file_path.c_str());
-    vcl_ofstream outfp(out.c_str());
+    std::ifstream infp(file_path.c_str());
+    std::ofstream outfp(out.c_str());
 
    
 
     // construct the first curve
-    vcl_vector<vsol_point_2d_sptr> mean_samples;
+    std::vector<vsol_point_2d_sptr> mean_samples;
     loadCON(mean_file_path, mean_samples);
 
-    vcl_vector<vcl_vector<double> > angles_vec,scales_vec;
-    vcl_vector<vsol_point_2d_sptr> curve_samples;
+    std::vector<std::vector<double> > angles_vec,scales_vec;
+    std::vector<vsol_point_2d_sptr> curve_samples;
 
     while (1)
         {
-        vcl_string inp2;
+        std::string inp2;
         infp >> inp2;
 
         if(inp2.size() == 0)
@@ -171,11 +171,11 @@ bool Lie_contour_geodesic_process::execute()
 
         curve_samples.clear();
 
-        vcl_cout << inp1 << vcl_endl;
-        vcl_cout << inp2 << vcl_endl;
+        std::cout << inp1 << std::endl;
+        std::cout << inp2 << std::endl;
 
         // construct the second curve
-        vcl_vector<vsol_point_2d_sptr> points;
+        std::vector<vsol_point_2d_sptr> points;
         loadCON(inp2, points);
         dbsol_interp_curve_2d curve;
         vnl_vector<double> samples;
@@ -192,7 +192,7 @@ bool Lie_contour_geodesic_process::execute()
             curve_samples.push_back(sample);
             }
 
-        vcl_vector<double> angles,scales;
+        std::vector<double> angles,scales;
         angles_scales(mean_samples,curve_samples,angles,scales);
 
         angles_vec.push_back(angles);
@@ -200,28 +200,28 @@ bool Lie_contour_geodesic_process::execute()
 
         }
 
-    vcl_vector<double>mean_scales,mean_angles;
+    std::vector<double>mean_scales,mean_angles;
     double angle,scale,sum_ang;
 
     
     for (unsigned int i = 0;i<angles_vec.size();i++)
         {
         for (unsigned int j = 0;j<angles_vec[i].size();j++)
-            outfp << angles_vec[i][j] << vcl_endl;
+            outfp << angles_vec[i][j] << std::endl;
 
-        outfp << "end of shape angles: " << i << vcl_endl;
+        outfp << "end of shape angles: " << i << std::endl;
         }
 
     for (unsigned int i = 0;i<scales_vec.size();i++)
         {
         for (unsigned int j = 0;j<scales_vec[i].size();j++)
-            outfp << scales_vec[i][j] << vcl_endl;
+            outfp << scales_vec[i][j] << std::endl;
 
-        outfp << "end of shape scales: " << i << vcl_endl;
+        outfp << "end of shape scales: " << i << std::endl;
         }
 
 
-    vcl_vector< vsol_spatial_object_2d_sptr > contour;
+    std::vector< vsol_spatial_object_2d_sptr > contour;
     vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (mean_samples);
     contour.push_back(newpolyline->cast_to_spatial_object());
 

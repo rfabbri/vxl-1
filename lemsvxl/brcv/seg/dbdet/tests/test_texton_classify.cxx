@@ -7,9 +7,9 @@
 #include <dbdet/filter/dbdet_texton_classifier.h>
 #include <dbtest_root_dir.h>
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <vector>
+#include <iostream>
+#include <string>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_file_matrix.h>
 #include <vil/vil_load.h>
@@ -25,8 +25,8 @@ MAIN( test_texton_classify )
   //*******************************************************
   START ("Texton classifier test");
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/tests/test_data";
+  std::string root = dbtest_root_dir();
+  std::string base_path = root + "/brcv/seg/dbdet/tests/test_data";
 
   //vxl has no instance of vnl_file_matrix<int/unsigned>
   vnl_matrix<unsigned> reference = vnl_matrix<unsigned>(1,1); 
@@ -41,14 +41,14 @@ MAIN( test_texton_classify )
   if(status && fb.numFilters() > 0 && tex.numClasses() > 0)
   {
 
-	  vcl_cout << "IN image size: " << in.ni() << " " << in.nj() << vcl_endl;
-	  vcl_cout << "REFERENCE matrix size: " << reference.rows() << " " << reference.cols() << vcl_endl;
-	  vcl_cout << "Filter Bank size: " << fb.numFilters() << vcl_endl;
-	  vcl_cout << "Texture classes: " << tex.numClasses() << vcl_endl;
+	  std::cout << "IN image size: " << in.ni() << " " << in.nj() << std::endl;
+	  std::cout << "REFERENCE matrix size: " << reference.rows() << " " << reference.cols() << std::endl;
+	  std::cout << "Filter Bank size: " << fb.numFilters() << std::endl;
+	  std::cout << "Texture classes: " << tex.numClasses() << std::endl;
 
 	  
 
-	  vcl_vector<vil_image_view<double> > decomposed = fb.decompose(in);
+	  std::vector<vil_image_view<double> > decomposed = fb.decompose(in);
 	  vnl_matrix<unsigned> classified = tex.classify(decomposed);
 int counter = 0;
 double dist2 = 0;
@@ -65,7 +65,7 @@ for(int i = 0; i < classified.rows(); ++i)
         sum1 += (tex.classes(k, reference(i,j)) - decomposed[k](i,j)) * (tex.classes(k, reference(i,j)) - decomposed[k](i,j));
         sum2 += (tex.classes(k, classified(i,j)) - decomposed[k](i,j)) * (tex.classes(k, classified(i,j)) - decomposed[k](i,j));
       }
-      dist2 += (vcl_sqrt(sum1) - vcl_sqrt(sum2)) * (vcl_sqrt(sum1) - vcl_sqrt(sum2));
+      dist2 += (std::sqrt(sum1) - std::sqrt(sum2)) * (std::sqrt(sum1) - std::sqrt(sum2));
     }
   }
 }
@@ -85,10 +85,10 @@ for(int i = 0; i < tex.classes.cols(); ++i)
 }
 
 dist2 /= (classified.rows()*classified.cols());
-dist2 = 10.0 * vcl_log10(maxd2*maxd2 / dist2);
+dist2 = 10.0 * std::log10(maxd2*maxd2 / dist2);
 
     TEST("Test Classification", counter, 0);
-    vcl_cout << "Difference(diff pixels / total pixels): " << (double)counter/(classified.rows()*classified.cols()) * 100 << "%\t" << "PSNR: " << dist2 << "dB" << vcl_endl;
+    std::cout << "Difference(diff pixels / total pixels): " << (double)counter/(classified.rows()*classified.cols()) * 100 << "%\t" << "PSNR: " << dist2 << "dB" << std::endl;
   }
   else
   {

@@ -15,7 +15,7 @@
 #include "dborl_categorization_simple.h"
 #include "dborl_categorization_simple_params.h"
 #include <dborl/algo/mpi/dborl_cluster.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
 
@@ -24,17 +24,17 @@ int main(int argc, char *argv[]) {
   dborl_categorization_simple_params_sptr params = new dborl_categorization_simple_params("dborl_categorization_simple");
   dborl_categorization_simple e(params);  // just pass with the defaults to the constructor
   
-  dborl_cluster<vcl_string, dborl_categorization_simple, float> cluster(&e);
+  dborl_cluster<std::string, dborl_categorization_simple, float> cluster(&e);
 
   try
   {
     //: must call this to initialize the MPI interface
     if (!cluster.mpi_initialize(argc, argv)) { // --> calls e.parse_commandline() and e.parse() 
-      vcl_cout << "problems in cluster.mpi_initialize(), parameter parsing and broadcasting\n";
+      std::cout << "problems in cluster.mpi_initialize(), parameter parsing and broadcasting\n";
       throw dborl_cluster_exception (dborl_cluster_exception::MPIError, "MPI initialization failed", 0, 0);
     }
 
-    vcl_vector<vcl_string> things; 
+    std::vector<std::string> things; 
     if (!e.initialize(things)) {  // current_node_ is zero or there are problems in initialization, this method returns false
       throw dborl_cluster_exception (dborl_cluster_exception::MPIError, "algorithm initialization failed", 0, 0);
     }
@@ -52,10 +52,10 @@ int main(int argc, char *argv[]) {
         // Error thrown by dborl_cluster class
         if (e.get_error() != e.Incomplete)
         {
-            vcl_cout << "dborl_cluster_exception: " << e.get_message()
+            std::cout << "dborl_cluster_exception: " << e.get_message()
             << " err: " << e.get_error() << " mpi: " 
             << e.get_MPI_error() << " sys: " 
-            << e.get_syserror() << vcl_endl;
+            << e.get_syserror() << std::endl;
 
             return_status = e.get_error();
         }

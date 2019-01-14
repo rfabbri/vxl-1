@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vidpro/process/vidpro_edgeprune_process.h>
 
 #include <vsol/vsol_polyline_2d.h>
@@ -18,7 +18,7 @@ vidpro_edgeprune_process::vidpro_edgeprune_process() : bpro_process()
      !parameters()->add( "by length? (otherwise by number of points)" , "-prunel" , true ) ||
      !parameters()->add( "Prune threshold" ,                            "-thres" ,  (int)40 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -31,17 +31,17 @@ vidpro_edgeprune_process::clone() const
 }
 
 
-vcl_vector< vcl_string > vidpro_edgeprune_process::get_input_type()
+std::vector< std::string > vidpro_edgeprune_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vtol" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_edgeprune_process::get_output_type()
+std::vector< std::string > vidpro_edgeprune_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   //is this input or output
   to_return.push_back( "vsol2D" );
@@ -62,9 +62,9 @@ bool vidpro_edgeprune_process::execute()
   input_vtol.vertical_cast(input_data_[0][0]);
 
   // new vvector to store the points
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
-  for ( vcl_set<vtol_topology_object_sptr>::const_iterator itr = input_vtol->begin();
+  for ( std::set<vtol_topology_object_sptr>::const_iterator itr = input_vtol->begin();
         itr != input_vtol->end();  ++itr ) {
 
     //: Adding only curves from the vtol objects
@@ -83,7 +83,7 @@ bool vidpro_edgeprune_process::execute()
                    (prunel && dc->get_interpolator()->get_length() > thres)
                   )
                  ) || !prune) {
-              vcl_vector< vsol_point_2d_sptr > points; 
+              std::vector< vsol_point_2d_sptr > points; 
               for (unsigned int i = 0; i<chain->size(); i++) {
                 vsol_point_2d_sptr newPt = new vsol_point_2d (chain->edgel(i).x(),chain->edgel(i).y());
                 points.push_back(newPt);
@@ -93,13 +93,13 @@ bool vidpro_edgeprune_process::execute()
             }
 
           }
-        } else vcl_cout << "failed curve_2d" << vcl_endl;
-      } else vcl_cout << "failed edge_2d" << vcl_endl;
-    } else vcl_cout << "failed edge" << vcl_endl;
+        } else std::cout << "failed curve_2d" << std::endl;
+      } else std::cout << "failed edge_2d" << std::endl;
+    } else std::cout << "failed edge" << std::endl;
         
   }
 
-  vcl_cout << "Pruned " << input_vtol->size()-contours.size() << " edges out of " << input_vtol->size() << " edges\n"; 
+  std::cout << "Pruned " << input_vtol->size()-contours.size() << " edges out of " << input_vtol->size() << " edges\n"; 
   // create the output storage class
   vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
   output_vsol->add_objects(contours, "pruned");

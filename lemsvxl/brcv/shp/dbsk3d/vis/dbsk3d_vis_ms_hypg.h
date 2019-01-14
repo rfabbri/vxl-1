@@ -15,7 +15,7 @@ class SbColor;
 class SoSeparator;
 
 void generate_shock_color_table (unsigned long seed, unsigned int size, 
-                                 vcl_vector<SbColor>& color_table);
+                                 std::vector<SbColor>& color_table);
 
 SoSeparator* draw_ms_graph (dbmsh3d_graph* ms_graph,
                             const SbColor& A1A3_color, const SbColor& A14_color,
@@ -45,19 +45,19 @@ SoSeparator* draw_ms_graph_flow (dbmsh3d_graph* ms_graph,
                             const bool user_defined_class = true);
 
 SoSeparator* draw_ms_vertices_ctable (dbmsh3d_graph* ms_graph, 
-                                      const vcl_vector<SbColor>& ctable, 
+                                      const std::vector<SbColor>& ctable, 
                                       const float size,
                                       const bool user_defined_class_ = true);
 
 SoSeparator* draw_ms_curves_ctable (dbmsh3d_graph* ms_graph, 
-                                    const vcl_vector<SbColor>& ctable, 
+                                    const std::vector<SbColor>& ctable, 
                                     const float curve_width,
                                     const bool idv = false, const bool show_id = false,
                                     const bool skip_non_match_vc = true,
                                     const bool user_defined_class = true);
 
 SoSeparator* draw_ms_sheets_ctable (dbsk3d_ms_hypg* ms_hypg, 
-                                    const vcl_vector<SbColor>& ctable, 
+                                    const std::vector<SbColor>& ctable, 
                                     const float transp = 0.0f,
                                     const bool idv = false, const bool show_id = false,
                                     const bool user_defined_class = true);
@@ -68,7 +68,7 @@ SoSeparator* draw_ms_sheets (dbsk3d_ms_hypg* ms_hypg,
                              const bool user_defined_class);
 
 SoSeparator* draw_ms_sheets_bnd_mesh_ctable (dbsk3d_ms_hypg* ms_hypg, const int option,
-                                             const vcl_vector<SbColor>& ctable, 
+                                             const std::vector<SbColor>& ctable, 
                                              const float transp = 0.0f,
                                              const bool user_defined_class_ = true);
 
@@ -77,7 +77,7 @@ SoSeparator* draw_ms_sheets_cost (dbsk3d_ms_hypg* ms_hypg, const int option,
                                   const bool show_id = false,
                                   const bool user_defined_class = true);
 
-SoSeparator* draw_ms_sheets_gdt (vcl_map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map,
+SoSeparator* draw_ms_sheets_gdt (std::map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map,
                                  const float transp = 0.0f);
 
 //: Visualization of sectional triangles along A3 ribs.

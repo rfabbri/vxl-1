@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbgdt3d/dbgdt3d_manager.h>
 
@@ -36,14 +36,14 @@ void gdt_ws_manager::gdt_init ()
   Qs_.clear();
 
   if (n_verbose_>1)
-    vul_printf (vcl_cout, "Initialization for %d sources:\n", (int) source_vertices_.size());
+    vul_printf (std::cout, "Initialization for %d sources:\n", (int) source_vertices_.size());
 
   //: For each point source (vertex of the mesh) s_i of S, initialize a wavefront circle.
   for (unsigned int i=0; i<source_vertices_.size(); i++) {
     dbmsh3d_gdt_vertex_3d* src_vertex = source_vertices_[i];
     src_vertex->set_dist (0);
 
-    vcl_vector<dbmsh3d_halfedge*> src_ordered_halfedges;
+    std::vector<dbmsh3d_halfedge*> src_ordered_halfedges;
     src_ordered_halfedges.clear();
 
     dbmsh3d_halfedge* last_he = src_vertex->m2_get_ordered_HEs (src_ordered_halfedges);
@@ -58,7 +58,7 @@ void gdt_ws_manager::gdt_init ()
       
 #if GDT_DEBUG_MSG
       if (n_verbose_>1)
-        vul_printf (vcl_cout, "    dege_I on edge %d initialized.\n", edge_d->id());
+        vul_printf (std::cout, "    dege_I on edge %d initialized.\n", edge_d->id());
 #endif
     }
 
@@ -82,9 +82,9 @@ void gdt_ws_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
       if (n_verbose_>1) {
-        vul_printf (vcl_cout, "    psrc_I on edge %d initialized.\n", edge_j->id());
-        vul_printf (vcl_cout, "    dege_I on edge %d initialized.\n", edge_d->id());
-        vul_printf (vcl_cout, "  wavefront arc on face %d initialized.\n\n", face_j->id());
+        vul_printf (std::cout, "    psrc_I on edge %d initialized.\n", edge_j->id());
+        vul_printf (std::cout, "    dege_I on edge %d initialized.\n", edge_d->id());
+        vul_printf (std::cout, "  wavefront arc on face %d initialized.\n\n", face_j->id());
       }
 #endif
     }

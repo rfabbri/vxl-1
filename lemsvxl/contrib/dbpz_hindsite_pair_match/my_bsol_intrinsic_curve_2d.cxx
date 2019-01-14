@@ -5,14 +5,14 @@ void my_bsol_intrinsic_curve_2d::changeStart( int newStart ){
 
     int size = storage_->size();
 
-    vcl_cout << "CHANGE START TO: " << newStart << vcl_endl;
-    vcl_cout << "size b4: " << storage_->size() << vcl_endl << "first point before: (" << (*storage_)[1]->x() << "," << (*storage_)[1]->y() << ")" <<vcl_endl;
+    std::cout << "CHANGE START TO: " << newStart << std::endl;
+    std::cout << "size b4: " << storage_->size() << std::endl << "first point before: (" << (*storage_)[1]->x() << "," << (*storage_)[1]->y() << ")" <<std::endl;
 
-    vcl_vector<vsol_point_2d_sptr> tempPoints( *storage_ );
+    std::vector<vsol_point_2d_sptr> tempPoints( *storage_ );
 
     storage_->clear();
     delete storage_;
-    storage_ = new vcl_vector<vsol_point_2d_sptr>();
+    storage_ = new std::vector<vsol_point_2d_sptr>();
     
     for( int i = newStart+1; i != newStart; i++){
         if( i == size ) i = 0;
@@ -21,14 +21,14 @@ void my_bsol_intrinsic_curve_2d::changeStart( int newStart ){
     }
     storage_->push_back( tempPoints[newStart] );
 
-    vcl_cout << "size after: " << storage_->size() << vcl_endl  << "first point after: (" << (*storage_)[1]->x() << "," << (*storage_)[1]->y() << ")" <<vcl_endl;
+    std::cout << "size after: " << storage_->size() << std::endl  << "first point after: (" << (*storage_)[1]->x() << "," << (*storage_)[1]->y() << ")" <<std::endl;
 
 }
 
 void my_bsol_intrinsic_curve_2d::reverse(){
     
     int size = storage_->size();
-    vcl_vector< vsol_point_2d_sptr > temppoints;
+    std::vector< vsol_point_2d_sptr > temppoints;
 
     for( int i = size-1; i >= 0; i-- ){
         temppoints.push_back( (*storage_)[i] );
@@ -41,13 +41,13 @@ void my_bsol_intrinsic_curve_2d::reverse(){
 }
 
 void my_bsol_intrinsic_curve_2d::coarseResample( int skipRate ){
-    vcl_vector< vsol_point_2d_sptr > temppoints;
+    std::vector< vsol_point_2d_sptr > temppoints;
 
     for( int i = 0; i < storage_->size(); i += skipRate ){
         temppoints.push_back( (*storage_)[i] );
     }
     storage_->clear();
 
-    storage_ = new vcl_vector< vsol_point_2d_sptr >( temppoints );
+    storage_ = new std::vector< vsol_point_2d_sptr >( temppoints );
     
 }

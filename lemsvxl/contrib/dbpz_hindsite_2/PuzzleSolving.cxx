@@ -1,9 +1,9 @@
 // NEW PUZZLE SOLVING
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <cstdio>
 #include "PuzzleSolving.h"
 #include <time.h>
 
@@ -11,8 +11,8 @@
 //All pairs featuring the i'th piece will be listed in order of increasing cost
 //in the _pairMatchesByPiece[i] element.
 //moved this next one into puzzleSolving.h
-//vcl_vector<vcl_vector<int> > _pairMatchesByPiece;
-//vcl_vector<vcl_vector<vcl_vector<int> > > _matchesByPair;
+//std::vector<std::vector<int> > _pairMatchesByPiece;
+//std::vector<std::vector<std::vector<int> > > _matchesByPair;
 
 int _totalIterateSearchTicks=0;
 int _totalSearchTicks=0;
@@ -23,13 +23,13 @@ int _totalLocalRegTicks=0;
 int _totalFineScaleMatchTicks =0;
 
 // DEBUGGING STUFF FOR CAN
-void write_map(intMap &map, vcl_string fname, double cost)
+void write_map(intMap &map, std::string fname, double cost)
 {
-  vcl_ofstream fstream(fname.c_str());
-  fstream << "Cost: " << cost << vcl_endl;
-  fstream << "Size: " << map.size() << vcl_endl;
+  std::ofstream fstream(fname.c_str());
+  fstream << "Cost: " << cost << std::endl;
+  fstream << "Size: " << map.size() << std::endl;
   for(unsigned i=0; i < map.size(); i++)
-    fstream << map[i].first << " " << map[i].second << vcl_endl;
+    fstream << map[i].first << " " << map[i].second << std::endl;
   fstream.close();
 }
 
@@ -40,10 +40,10 @@ double point_dist(vsol_point_2d p1, vsol_point_2d p2)
 
 double point_dist(double x1, double y1, double x2, double y2)
 {
-  return vcl_sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+  return std::sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 }
 
-void PuzzleSolving::setContours(const vcl_vector<bfrag_curve> &contoursIN )
+void PuzzleSolving::setContours(const std::vector<bfrag_curve> &contoursIN )
 { 
   //this will envoke the copy constructor and we will get a local copy
   _Contours = contoursIN;
@@ -52,23 +52,23 @@ void PuzzleSolving::setContours(const vcl_vector<bfrag_curve> &contoursIN )
 
 void PuzzleSolving::preProcessCurves()
 {
-  vcl_cout << "Preprocessing curves..." << vcl_endl;
+  std::cout << "Preprocessing curves..." << std::endl;
   for(int i = 0; i < _nPieces; i++)
   {
-    vcl_cout << "  preprocessing contour [" << i << "]." << vcl_endl;
+    std::cout << "  preprocessing contour [" << i << "]." << std::endl;
     _Contours[i].smooth_by_discrete_curvature_algo(float(PSI), NUM_TIMES);
     _Contours[i].resample(FINE_RESAMPLE_DS);
     _Contours[i].resample_coarsely(COARSE_RESAMPLE_DS);
   }
-  vcl_cout << "Preprocessing complete." << vcl_endl;
+  std::cout << "Preprocessing complete." << std::endl;
 }
 
 searchState PuzzleSolving::pairMatch()
 {
   int i,j,k;
   searchState init = searchState(_Contours);
-  vcl_vector<map_with_cost> this_pair;
-  vcl_string exname1,exname2;
+  std::vector<map_with_cost> this_pair;
+  std::string exname1,exname2;
 
   _cList.clear();
   unsigned size = _Contours.size();
@@ -81,12 +81,12 @@ searchState PuzzleSolving::pairMatch()
     {
       for(j=i+1;j<_nPieces;j++)
       {
-        vcl_cout << "matching piece [" << i << "] to piece [" << j << "]." << vcl_endl;
+        std::cout << "matching piece [" << i << "] to piece [" << j << "]." << std::endl;
         clock_t start, end;
         start = clock();
         this_pair = testDP(_Contours[j],_Contours[i]);
         end = clock();
-        vcl_cout << (double(end)-start) / CLOCKS_PER_SEC << vcl_endl;
+        std::cout << (double(end)-start) / CLOCKS_PER_SEC << std::endl;
         if(this_pair.size()>0)
         {
           int this_pair_size_int = static_cast<int>(this_pair.size());
@@ -115,7 +115,7 @@ searchState PuzzleSolving::pairMatch()
   return init;
 }
 
-vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states)
+std::vector<searchState> PuzzleSolving::search(std::vector<searchState> all_states)
 { 
   /*
   // added by CAN
@@ -135,13 +135,13 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
     if(all_states[0].nProcess == _nPieces)
       return all_states;
 
-    vcl_cout << "Working..." << vcl_endl;
+    std::cout << "Working..." << std::endl;
 
-    vcl_vector<searchState> all_states2;
+    std::vector<searchState> all_states2;
     indexedMeasures tCosts;
 
     // CAN ADDED
-    vcl_sort(all_states.begin(), all_states.end(), search_state_sort());
+    std::sort(all_states.begin(), all_states.end(), search_state_sort());
     unsigned num_states_to_process = NUM_TOP_STATES_PROCESSED;
     if(all_states.size() < NUM_TOP_STATES_PROCESSED)
       num_states_to_process = all_states.size();
@@ -149,20 +149,20 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
 //    for( unsigned i = 0; i < all_states.size(); i++) 
     for(unsigned i=0; i < num_states_to_process; i++)
     {
-      vcl_cout << "Processing State " << i << vcl_endl;
+      std::cout << "Processing State " << i << std::endl;
       if( all_states[i].active )
       {
-        vcl_vector<searchState> top_state = iterateSearch(all_states[i],0);
+        std::vector<searchState> top_state = iterateSearch(all_states[i],0);
         //Drawing states found with their costs
         for (unsigned a=0; a <top_state.size(); a++)
-          vcl_cout << a << ": tCost: " << top_state[a].tCost << vcl_endl;
+          std::cout << a << ": tCost: " << top_state[a].tCost << std::endl;
 
         double min_cost=0.0;
         double sc;
         for(unsigned k=0;k<top_state.size();k++)
         {
           sc=top_state[k].sCost;
-          tCosts.push_back(vcl_pair<double,int>(top_state[k].tCost,all_states2.size()));
+          tCosts.push_back(std::pair<double,int>(top_state[k].tCost,all_states2.size()));
           all_states2.push_back( top_state[k] );
           if( sc < min_cost )
             min_cost = sc;
@@ -173,7 +173,7 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
     if( all_states2.size() == 0 )
       return all_states;
 
-    vcl_sort(tCosts.begin(),tCosts.end(),cost_ind_less());
+    std::sort(tCosts.begin(),tCosts.end(),cost_ind_less());
     all_states.clear();
 
     int add;
@@ -221,10 +221,10 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
       {
         if(APPLY_COMBO_MATCH == true)
           all_states[z].structure();
-        vcl_cout <<"tCost: "<< all_states[z].tCost << vcl_endl;
-        vcl_cout <<"sCost: "<< all_states[z].sCost << vcl_endl;
+        std::cout <<"tCost: "<< all_states[z].tCost << std::endl;
+        std::cout <<"sCost: "<< all_states[z].sCost << std::endl;
       }
-      vcl_cout << "Completed Phase " << all_states[0].nProcess << vcl_endl;
+      std::cout << "Completed Phase " << all_states[0].nProcess << std::endl;
     }
   }
   else 
@@ -232,22 +232,22 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
     if( all_states[0].nProcess == _nPieces )
       return all_states;
 
-    vcl_cout << "Working..." << vcl_endl;
+    std::cout << "Working..." << std::endl;
 
-    vcl_vector<searchState> all_states2;
+    std::vector<searchState> all_states2;
     indexedMeasures tCosts;
 
     for(unsigned i = 0; i < all_states.size(); i++ )
     {
       if( all_states[i].active )
       {
-        vcl_vector<searchState> top_state = iterateSearch(all_states[i],0);
+        std::vector<searchState> top_state = iterateSearch(all_states[i],0);
         double min_cost=0.0;
         double sc;
         for(unsigned k = 0; k < top_state.size(); k++ )
         {
           sc=top_state[k].sCost;
-          tCosts.push_back(vcl_pair<double,int>(top_state[k].tCost,all_states2.size()));
+          tCosts.push_back(std::pair<double,int>(top_state[k].tCost,all_states2.size()));
           all_states2.push_back(top_state[k]);
           if( sc < min_cost )
             min_cost=sc;
@@ -257,7 +257,7 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
     if( all_states2.size() == 0 ) 
       return all_states;
 
-    vcl_sort(tCosts.begin(),tCosts.end(),cost_ind_less());
+    std::sort(tCosts.begin(),tCosts.end(),cost_ind_less());
     all_states.clear();
 
     int add;
@@ -302,15 +302,15 @@ vcl_vector<searchState> PuzzleSolving::search(vcl_vector<searchState> all_states
       {
         if(APPLY_COMBO_MATCH == true)
           all_states[i].structure();
-        vcl_cout << "tCost: "<< all_states[i].tCost << " sCost: " <<  all_states[i].sCost << vcl_endl;
+        std::cout << "tCost: "<< all_states[i].tCost << " sCost: " <<  all_states[i].sCost << std::endl;
       }
-      vcl_cout << "Completed Phase " << all_states[0].nProcess << vcl_endl;
+      std::cout << "Completed Phase " << all_states[0].nProcess << std::endl;
     }
   }
   return all_states;
 }
 
-vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int f)
+std::vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int f)
 {  
   // load cLists and update them
   this_state.load_state_curves_list();
@@ -326,8 +326,8 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
     APPLY_COMBO_MATCH = false;
 
   searchState temp_state;
-  vcl_vector<bfrag_curve> temp_cList;
-  vcl_vector<searchState> states;
+  std::vector<bfrag_curve> temp_cList;
+  std::vector<searchState> states;
   //In the current configuration, flag is never 1.
   if(APPLY_COMBO_MATCH)   this_state.comboMatch();
   //Sort the pairwise matchces
@@ -386,18 +386,18 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
       vgl_point_2d<double> j2((pt3.x()+pt4.x())/2.0,(pt3.y()+pt4.y())/2.0);
 
       //Add the junction points to the list of junction points
-      vcl_vector<int> jj;
+      std::vector<int> jj;
       jj.push_back(p1);
       jj.push_back(p2);
-      this_state.open_junc.push_back(vcl_pair<vcl_vector<int>, vgl_point_2d<double> >(jj,j1));
-      this_state.open_junc.push_back(vcl_pair<vcl_vector<int>, vgl_point_2d<double> >(jj,j2));
+      this_state.open_junc.push_back(std::pair<std::vector<int>, vgl_point_2d<double> >(jj,j1));
+      this_state.open_junc.push_back(std::pair<std::vector<int>, vgl_point_2d<double> >(jj,j2));
 
       //Update the tCost and sCost
       this_state.tCost+=DIST_COEF*d1+LENGTH_COEF*sqrt(d2)+DIAG_COEF*sqrt(d3)-costReduction;
       this_state.sCost=DIST_COEF*d1+LENGTH_COEF*sqrt(d2)+DIAG_COEF*sqrt(d3)-costReduction;
 
       //Categorize this match as a new edge.
-      this_state.new_edge=vcl_pair<int,int>(p1,p2);
+      this_state.new_edge=std::pair<int,int>(p1,p2);
       //CAN ADDED FOR BETTER DEBUGGING
       this_state.matches_ez_list_[i].second = DP_VERY_LARGE_COST;
 //      this_state._matches[i].cost = DP_VERY_LARGE_COST;
@@ -414,7 +414,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
           // update rotation angles list, too
           double cos_val = _cList[iii].transform_(0,0);
           double sin_val = _cList[iii].transform_(1,0);
-          double angle = vcl_atan2(sin_val, cos_val);
+          double angle = std::atan2(sin_val, cos_val);
           this_state.rot_ang_list_[iii] += angle;
         }
         // ADDED BY CAN
@@ -453,13 +453,13 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
         int can = 1;
       int chk1=1;
       int chk2=1;
-      vcl_vector<int> proc = this_state.process;
+      std::vector<int> proc = this_state.process;
 
       //Make sure that the pieces that we are dealing with have not
       //yet been added to the puzzle.
-      if(vcl_find(proc.begin(),proc.end(),p1)==proc.end())
+      if(std::find(proc.begin(),proc.end(),p1)==proc.end())
         chk1=0;
-      if(vcl_find(proc.begin(),proc.end(),p2)==proc.end())
+      if(std::find(proc.begin(),proc.end(),p2)==proc.end())
         chk2=0;
       if(p2>=_nPieces)
         chk2=1;
@@ -507,7 +507,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
           //Swap the order of the matches to make the indices from p2 be the first
           //and from p1 to be the second.
           for(unsigned cnt=0;cnt<fmap.size();cnt++)
-            fmap[cnt]=vcl_pair<int,int>(fmap[cnt].second,fmap[cnt].first);
+            fmap[cnt]=std::pair<int,int>(fmap[cnt].second,fmap[cnt].first);
         }
 
         c2=this_state.piece(ext);
@@ -563,7 +563,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
 
             intMap refined_map = localReg(c1, this_state.merged(), &dist_meas, &leng_meas, &diag_meas, LOCAL_REG_ITER_PUZ);
 
-            vcl_vector<vcl_pair<int,vgl_point_2d<double> > > newj;
+            std::vector<std::pair<int,vgl_point_2d<double> > > newj;
 
             //Add the new edge to the list.
             this_state.old_edges.push_back(this_state.new_edge);
@@ -573,7 +573,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
               this_state.old_edges.push_back(this_state.new_edges[cnt]);
 
             this_state.new_edges.clear();
-            this_state.new_edge=vcl_pair<int,int>(p1,p2);
+            this_state.new_edge=std::pair<int,int>(p1,p2);
 
             for(int pc=0;pc<this_state.nProcess;pc++) 
             {
@@ -589,7 +589,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
               if(d2/d1>5.0) 
               {
                 if(pp!=p1 && pp!=p2)
-                  this_state.new_edges.push_back(vcl_pair<int,int>(pp,add));
+                  this_state.new_edges.push_back(std::pair<int,int>(pp,add));
 
                 int l=tmap.size();
 
@@ -600,8 +600,8 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
                 vsol_point_2d pt4=c2a->point(tmap[l-1].second);
                 vgl_point_2d<double> j1((pt1.x()+pt2.x())/2.0,(pt1.y()+pt2.y())/2.0);
                 vgl_point_2d<double> j2((pt3.x()+pt4.x())/2.0,(pt3.y()+pt4.y())/2.0);
-                newj.push_back(vcl_pair<int,vgl_point_2d<double> >(pp,j1));
-                newj.push_back(vcl_pair<int,vgl_point_2d<double> >(pp,j2));
+                newj.push_back(std::pair<int,vgl_point_2d<double> >(pp,j1));
+                newj.push_back(std::pair<int,vgl_point_2d<double> >(pp,j2));
               }
             }
 
@@ -615,11 +615,11 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
                 vsol_point_2d po = this_state.open_junc[oj].second;
                 if(point_dist(po,pn)<40.0) {
                   addj=0;
-                  vcl_vector<int> other = this_state.open_junc[oj].first;
+                  std::vector<int> other = this_state.open_junc[oj].first;
                   int l=other.size();
                   vgl_point_2d<double> pa((po.x()*(double)(l-1)+pn.x())/(double)l,
                     (po.y()*(double)(l-1)+pn.y())/(double)l);
-                  if(vcl_find(other.begin(),other.end(),add)==other.end()) 
+                  if(std::find(other.begin(),other.end(),add)==other.end()) 
                   {
                     this_state.open_junc[oj].first.push_back(add);
                     this_state.open_junc[oj].second=pa;
@@ -628,7 +628,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
                   {
                     this_state.open_junc[oj].second=pa;
                     this_state.closed_junc.push_back(this_state.open_junc[oj]);
-                    vcl_vector<vcl_pair<vcl_vector<int>,vgl_point_2d<double> > > temp_junc;
+                    std::vector<std::pair<std::vector<int>,vgl_point_2d<double> > > temp_junc;
                     for(unsigned pop=0;pop<oj;pop++)
                       temp_junc.push_back(this_state.open_junc[pop]);
                     for(unsigned pop2=oj+1;pop2<this_state.open_junc.size();pop2++)
@@ -642,19 +642,19 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
               }
               if(addj) 
               {
-                vcl_vector<int> jj;
+                std::vector<int> jj;
                 jj.push_back(newj[nj].first);
                 jj.push_back(add);
-                this_state.open_junc.push_back(vcl_pair<vcl_vector<int>,vgl_point_2d<double> >(jj,newj[nj].second));
+                this_state.open_junc.push_back(std::pair<std::vector<int>,vgl_point_2d<double> >(jj,newj[nj].second));
               }
             }
 
             triple_cond = triple_cond || (this_state.nProcess>2);
 
-            vcl_cout << "------------------------------"<< vcl_endl;
-            vcl_cout << vcl_endl;
-            vcl_cout << vcl_endl;
-            vcl_cout << "Piece "<< p1 << " matching with Piece " << p2 << vcl_endl;
+            std::cout << "------------------------------"<< std::endl;
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Piece "<< p1 << " matching with Piece " << p2 << std::endl;
 
             this_state.tCost += DIST_COEF*dist_meas+LENGTH_COEF*sqrt(leng_meas)+DIAG_COEF*sqrt(diag_meas)-costReduction2;
             this_state.sCost  = DIST_COEF*dist_meas+LENGTH_COEF*sqrt(leng_meas)+DIAG_COEF*sqrt(diag_meas)-costReduction2;
@@ -662,7 +662,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
             this_state.process.push_back(add);
             this_state.nProcess++;
 
-            vcl_cout << "sCost: " << this_state.sCost << vcl_endl;
+            std::cout << "sCost: " << this_state.sCost << std::endl;
 
             if(leng_meas>LENGTH_THRESH_HIGH && triple_cond && 
               ((diag_meas>DIAG_THRESH_LOW && dist_meas<DIST_THRESH_LOW) || 
@@ -685,7 +685,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
                 // update rotation angles list, too
                 double cos_val = _cList[iii].transform_(0,0);
                 double sin_val = _cList[iii].transform_(1,0);
-                double angle = vcl_atan2(sin_val, cos_val);
+                double angle = std::atan2(sin_val, cos_val);
                 this_state.rot_ang_list_[iii] += angle;
               }
               // ADDED BY CAN
@@ -705,7 +705,7 @@ vcl_vector<searchState> PuzzleSolving::iterateSearch(searchState this_state, int
   return states;
 }
 
-searchState::searchState(vcl_vector<bfrag_curve> contours)
+searchState::searchState(std::vector<bfrag_curve> contours)
 {
   state_id_ = -1;
   active = 1;
@@ -732,13 +732,13 @@ bool searchState::operator==(searchState state2)
   if(nProcess != state2.nProcess)
     return 0;
   
-  vcl_vector<int> proc1 = process;
-  vcl_vector<int> proc2 = state2.process;
+  std::vector<int> proc1 = process;
+  std::vector<int> proc2 = state2.process;
   
   assert(proc1.size()==proc2.size());
 
-  vcl_sort(proc1.begin(),proc1.end());
-  vcl_sort(proc2.begin(),proc2.end()); 
+  std::sort(proc1.begin(),proc1.end());
+  std::sort(proc2.begin(),proc2.end()); 
   for(unsigned i=0;i<proc1.size();i++) 
   {
     if(proc1[i] != proc2[i])
@@ -755,7 +755,7 @@ bool searchState::operator==(searchState state2)
     int num=piece(proc1[i])->num_coarse_points();
     for(int j=0;j<num;j++) 
     {
-      map.push_back(vcl_pair<int,int>(pts,pts));
+      map.push_back(std::pair<int,int>(pts,pts));
       c1.append(piece(proc1[i])->Cpoint(j));
       c2.append(state2.piece(proc1[i])->Cpoint(j));
       pts++;
@@ -775,13 +775,13 @@ bool searchState::operator==(searchState state2)
   if(nProcess != state2.nProcess)
     return 0;
   
-  vcl_vector<int> proc1 = process;
-  vcl_vector<int> proc2 = state2.process;
+  std::vector<int> proc1 = process;
+  std::vector<int> proc2 = state2.process;
   
   assert(proc1.size()==proc2.size());
 
-  vcl_sort(proc1.begin(),proc1.end());
-  vcl_sort(proc2.begin(),proc2.end()); 
+  std::sort(proc1.begin(),proc1.end());
+  std::sort(proc2.begin(),proc2.end()); 
   for(unsigned i=0;i<proc1.size();i++) 
   {
     if(proc1[i] != proc2[i])
@@ -801,7 +801,7 @@ bool searchState::operator==(searchState state2)
     unsigned size = add_curve.num_coarse_points();
     for(unsigned i=0; i<size; i++)
     {
-      map.push_back(vcl_pair<int,int>(pts,pts));
+      map.push_back(std::pair<int,int>(pts,pts));
       double x = add_curve.level2_[i].x();
       double y = add_curve.level2_[i].y();
       
@@ -833,7 +833,7 @@ void searchState::merge(bfrag_curve *cv, intMap &map)
     return;
   }
  
-  vcl_pair<double,int> dist;
+  std::pair<double,int> dist;
   bfrag_curve new_merge;
   for(unsigned i=0;i<cv->num_fine_points();i++) 
   {
@@ -861,8 +861,8 @@ void searchState::merge(bfrag_curve *cv, intMap &map)
   else
   {
     // TIME EFFICIENT
-    vcl_vector<bool> common_points_cv(cv->num_fine_points(), true);
-    vcl_vector<bool> common_points_merged(_merged.num_fine_points(), true);
+    std::vector<bool> common_points_cv(cv->num_fine_points(), true);
+    std::vector<bool> common_points_merged(_merged.num_fine_points(), true);
     for(unsigned i=0; i < map.size(); i++)
     {
       common_points_cv[map[i].first] = false;
@@ -887,7 +887,7 @@ void searchState::structure()
   _constr.clear();
 
   bfrag_curve temp;
-  vcl_vector<bfrag_curve> frags;
+  std::vector<bfrag_curve> frags;
   
   temp.append(_merged.point(0));
   for(unsigned i=1;i<_merged.num_fine_points();i++) 
@@ -903,7 +903,7 @@ void searchState::structure()
     frags.push_back(temp);
 
   temp.empty();
-  vcl_vector<int> used;  
+  std::vector<int> used;  
   for(unsigned i=0;i<frags.size();i++)
     used.push_back(0);
   
@@ -954,13 +954,13 @@ void searchState::structure()
 //Runs testDP on all the possible combinations?
 void searchState::comboMatch() 
 {
-  vcl_vector<map_with_cost> this_pair;
-  vcl_vector<int> proc = process;
+  std::vector<map_with_cost> this_pair;
+  std::vector<int> proc = process;
   int num=_cList.size();
 
   if(_num_new>0) 
   {
-    vcl_cout << "Warning! New Matches Not Purged!" << vcl_endl;
+    std::cout << "Warning! New Matches Not Purged!" << std::endl;
     return;
   }
 
@@ -973,10 +973,10 @@ void searchState::comboMatch()
   {
     for(int j=0;j<num;j++)
     {
-      if(vcl_find(proc.begin(),proc.end(),j)==proc.end())
+      if(std::find(proc.begin(),proc.end(),j)==proc.end())
       {
         this_pair = testDP(_cList[j], _constr[i]);
-        vcl_cout << "Matching: " << j+1 << " to " << i+num+1 << vcl_endl;
+        std::cout << "Matching: " << j+1 << " to " << i+num+1 << std::endl;
         if(this_pair.size()>0)
           for(unsigned k=0;k<this_pair.size();k++) 
           {
@@ -1001,11 +1001,11 @@ void searchState::addMatch(intMap map, double cst, int c1, int c2)
   newMatch.cost = cst;
   newMatch.myIndex = _numMatch;
   newMatch.pointMap = intMap(map);
-  newMatch.whichCurves = vcl_pair<int,int>(c1,c2);
+  newMatch.whichCurves = std::pair<int,int>(c1,c2);
   newMatch.xForm = XForm3x3( theXform );
   _matches.push_back(newMatch);
 
-  vcl_pair<int,double> temp;
+  std::pair<int,double> temp;
   temp.first = newMatch.myIndex;
   temp.second = newMatch.cost;
   matches_ez_list_.push_back(temp);
@@ -1016,8 +1016,8 @@ void searchState::addMatch(intMap map, double cst, int c1, int c2)
 //non pointer style
 void searchState::sortPairwiseMatches()
 {
-  vcl_sort( matches_ez_list_.begin(), matches_ez_list_.end(), pairwiseMatchSort() );
-//  vcl_sort( _matches.begin(), _matches.end(), pairwiseMatchSort() );
+  std::sort( matches_ez_list_.begin(), matches_ez_list_.end(), pairwiseMatchSort() );
+//  std::sort( _matches.begin(), _matches.end(), pairwiseMatchSort() );
 }
 
 void searchState::purge() 
@@ -1060,7 +1060,7 @@ void searchState::updateCost()
 - Sort and pick the top NUM_FINE_OUT at most
 */
 
-vcl_vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2)
+std::vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2)
 {
   unsigned s1,i,j;
   int k,ji,ki;
@@ -1087,9 +1087,9 @@ vcl_vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2)
   int num_corners2=c2_cs.num_corners(); // number of extrema(probably corners) points on curve2
 
   // set up handling of matches
-  vcl_vector<map_with_cost > allMaps;  // vector of (map, cost) pairs used for holding the coarse-scale maps
-  vcl_vector<map_with_cost > allMaps2; // vector of (map, cost) pairs used for holding the fine-scale maps
-  vcl_vector<map_with_cost> maps_out;  // vector of (map, cost) pairs used for outputting the best maps
+  std::vector<map_with_cost > allMaps;  // vector of (map, cost) pairs used for holding the coarse-scale maps
+  std::vector<map_with_cost > allMaps2; // vector of (map, cost) pairs used for holding the fine-scale maps
+  std::vector<map_with_cost> maps_out;  // vector of (map, cost) pairs used for outputting the best maps
   map_with_cost map_and_cost; // used for outputting the map and its cost together
   double cost;
   intMap fmap; // a map used for getting final map after matching
@@ -1183,11 +1183,11 @@ vcl_vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2)
   if(no_match_found==0)
   { 
     // Matches found!
-    vcl_vector<bfrag_curve> group;
+    std::vector<bfrag_curve> group;
     int add,cnt;
 
     // sort the coarse maps according to their costs
-    vcl_sort(allMaps.begin(),allMaps.end(),map_cost_less());
+    std::sort(allMaps.begin(),allMaps.end(),map_cost_less());
 
     //Make sure the overlap of each match is not too high
     //and that it has not already been added.
@@ -1237,7 +1237,7 @@ vcl_vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2)
       num_fine=NUM_FINE_OUT;
 
     // Sort the fine scale maps according to their costs
-    vcl_sort(allMaps2.begin(),allMaps2.end(),map_cost_less());
+    std::sort(allMaps2.begin(),allMaps2.end(),map_cost_less());
 
     for (j=0;j<num_fine;j++)
     { 
@@ -1284,7 +1284,7 @@ map_with_cost fineScaleMatch(bfrag_curve c1i, bfrag_curve c2, intMap fmap)
   type=st1+st2+en1+en2-2;
   if(type<0) 
   {
-    vcl_cout << vcl_endl << "warning - invalid match" << vcl_endl;
+    std::cout << std::endl << "warning - invalid match" << std::endl;
     map_and_cost.first = DP_VERY_LARGE_COST;
     map_and_cost.second = fmap;
     return map_and_cost;
@@ -1469,7 +1469,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
   double dif=DP_VERY_LARGE_COST;
   indexedMeasures d_list;
   //A list of the distance of each point of cv from mg
-  vcl_pair<double,int> dist;
+  std::pair<double,int> dist;
   bfrag_curve last;
   double t_dist=0;
   double length,diag;
@@ -1541,8 +1541,8 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
           if(start==-1) 
             start=st; 
           for(i=st;i<end;i++)
-            //d_list.push_back(vcl_pair<double,int>(100.0,0));
-            d_list[d_list_index++] = vcl_pair<double,int>(100.0,0);
+            //d_list.push_back(std::pair<double,int>(100.0,0));
+            d_list[d_list_index++] = std::pair<double,int>(100.0,0);
         }
       }
       // CAN added for taking care of small pieces
@@ -1570,7 +1570,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
       for(i=0;i<num;i++) 
       {
         assert(index>=0 && index<num);
-        map.push_back(vcl_pair<int,int>(i,d_list[i].second));
+        map.push_back(std::pair<int,int>(i,d_list[i].second));
         t_dist+=d_list[index].first;
       }
     }
@@ -1608,7 +1608,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
 
         if(flag==2) 
         {
-          map.push_back(vcl_pair<int,int>(index,d_list[index].second));
+          map.push_back(std::pair<int,int>(index,d_list[index].second));
           t_dist+=d_list[index].first;
           sec++;
           if(d_list[index].first>T)
@@ -1623,7 +1623,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
           unsigned interval=sec;
           for(j=0;j < interval;j++) 
           {
-            //vcl_cout << i2 << " ";
+            //std::cout << i2 << " ";
             assert(i2>=0 && i2<num);
             cave=(d_list[(i2-1+num)%num].first +
               d_list[i2].first +
@@ -1678,7 +1678,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
 
   double l;
   length=0.0;
-  vcl_pair<int,int> endPts;
+  std::pair<int,int> endPts;
   for(i=0;i<ave.num_fine_points()-1;i++)
     for(j=i+1;j<ave.num_fine_points();j++)
     {
@@ -1698,8 +1698,8 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
   dummy.append(vgl_point_2d<double>(0.0,0.0));
   dummy.append(vgl_point_2d<double>(length,0.0));  
   
-  dmap.push_back(vcl_pair<int,int>(endPts.first,0));
-  dmap.push_back(vcl_pair<int,int>(endPts.second,1)); 
+  dmap.push_back(std::pair<int,int>(endPts.first,0));
+  dmap.push_back(std::pair<int,int>(endPts.second,1)); 
 
   // Update for state curve transformation lists not necessary here
   regContour(&ave,&dummy,dmap);
@@ -1720,7 +1720,7 @@ intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, doubl
 // If not available, the fine-level-curves are used
 double detectOverlap(bfrag_curve *c1, bfrag_curve *c2) 
 {
-  vcl_pair<double,int> dist;
+  std::pair<double,int> dist;
   double m_dist=0.0;
   int num1 = int(c1->num_coarse_points());
   int num2 = int(c2->num_coarse_points());
@@ -1827,10 +1827,10 @@ bool inPolygon(double x, double y, bfrag_curve *c)
 // Given a point p(x,y) and a curve c, this function finds the closest
 // point on the curve to the point, and returns the distance with the 
 // closest point's index of the curve
-vcl_pair<double,int> ptDist(double x, double y, bfrag_curve *c)
+std::pair<double,int> ptDist(double x, double y, bfrag_curve *c)
 {
   double d;
-  vcl_pair<double,int> dist;
+  std::pair<double,int> dist;
   unsigned i;
   unsigned num = c->num_coarse_points();
   unsigned num_fine = c->num_fine_points();
@@ -1897,10 +1897,10 @@ vcl_pair<double,int> ptDist(double x, double y, bfrag_curve *c)
 // Given a point p(x,y) and a curve c, this function finds the closest
 // point on the curve to the point, and returns the distance with the 
 // closest point's index of the curve
-vcl_pair<double,int> new_ptDist(double x, double y, bfrag_curve *c, unsigned index)
+std::pair<double,int> new_ptDist(double x, double y, bfrag_curve *c, unsigned index)
 {
   double d;
-  vcl_pair<double,int> dist;
+  std::pair<double,int> dist;
   unsigned i;
   unsigned num_fine = c->num_fine_points();
 
@@ -1935,11 +1935,11 @@ XForm3x3 regContour(bfrag_curve *c1, bfrag_curve *c2, intMap map, bool flip, XFo
     c1=c2;
     c2=ct;
     for(unsigned cnt=0;cnt<map.size();cnt++)
-        map[cnt]=vcl_pair<int,int>(map[cnt].second,map[cnt].first);
+        map[cnt]=std::pair<int,int>(map[cnt].second,map[cnt].first);
   }
 
-  vcl_vector<vsol_point_2d > p1;
-  vcl_vector<vsol_point_2d > p2;  
+  std::vector<vsol_point_2d > p1;
+  std::vector<vsol_point_2d > p2;  
   double c1x=0, c1y=0, c2x=0, c2y=0; 
   double h1=0, h2=0, h3=0, h4=0;
   double a, b, theta, Tx, Ty;
@@ -2051,7 +2051,7 @@ double flat(bfrag_curve *c)
   return Err;
 }
 
-vcl_pair<double,double> center(bfrag_curve *c) 
+std::pair<double,double> center(bfrag_curve *c) 
 {
   double mx=0;
   double my=0;
@@ -2066,7 +2066,7 @@ vcl_pair<double,double> center(bfrag_curve *c)
   mx/=N;
   my/=N;
 
-  return vcl_pair<double,double>(mx,my);
+  return std::pair<double,double>(mx,my);
 }
 
 

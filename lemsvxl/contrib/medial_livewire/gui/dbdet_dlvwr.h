@@ -12,7 +12,7 @@
 
 
 #include "dbdet_dlvwr_params.h"
-#include <vcl_set.h>
+#include <set>
 
 #include <vil/vil_image_view.h>
 #include <osl/osl_canny_ox_params.h>
@@ -61,7 +61,7 @@ struct dbdet_dlvwr_pixel_less_than
 };
 
 //: set of pixels equipped with a comparison operator
-typedef vcl_set<dbdet_dlvwr_pixel, dbdet_dlvwr_pixel_less_than > dbdet_dlvwr_pixel_set;
+typedef std::set<dbdet_dlvwr_pixel, dbdet_dlvwr_pixel_less_than > dbdet_dlvwr_pixel_set;
 
 
 //: A dbdet_dlvwr object stores the internal buffers
@@ -165,7 +165,7 @@ public:
   
   //: Return the optimum path from the free point to the seed point
   bool get_path(int free_x, int free_y,
-          vcl_vector<vgl_point_2d<int > >& path);
+          std::vector<vgl_point_2d<int > >& path);
 
   //: Return accumulated cost of path from seed point to each pixel
   float accum_cost(int x, int y){ return this->accum_cost_(x, y); }
@@ -191,7 +191,7 @@ public:
 
   //: Force static cost (gradient magnitude and Laplacian of Gaussian) to some
   // const value at selected points
-  void force_static_cost(vcl_vector<vgl_point_2d<int > >& pts, float val = 0);
+  void force_static_cost(std::vector<vgl_point_2d<int > >& pts, float val = 0);
 
   ////: Compute `cursor_snap_' image, which specifies the closest edge point to each pixel in a neighborhood of the pixel
   //void compute_cursor_snap();
@@ -247,10 +247,10 @@ protected:
   // length of path from seed point
   //vil_image_view<float >path_length_;
 //  //bool get_path(int free_x, int free_y,
-//  //        vcl_vector<vdgl_edgel> edgels);
+//  //        std::vector<vdgl_edgel> edgels);
 //  float get_global_cost(int x, int y);
 //
-//  void compute_costs_from_edges(vcl_list<osl_edge*> canny_edges);
+//  void compute_costs_from_edges(std::list<osl_edge*> canny_edges);
 
 };
 #endif // dbdet_dlvwr_h

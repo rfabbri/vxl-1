@@ -8,8 +8,8 @@
 
 #include "modrec_pca_vehicle_projector.h"
 
-#include <vcl_limits.h>
-#include <vcl_map.h>
+#include <limits>
+#include <map>
 #include <vil/vil_bilin_interp.h>
 #include <vgl/vgl_line_3d_2_points.h>
 #include <vgl/vgl_triangle_test.h>
@@ -24,7 +24,7 @@ modrec_pca_vehicle_projector::
 modrec_pca_vehicle_projector(unsigned int w, unsigned int h)
   : depth_img_(w,h)
 {
-  depth_img_.fill(vcl_numeric_limits<double>::infinity());
+  depth_img_.fill(std::numeric_limits<double>::infinity());
 }
 
 //: resize the depth map image and clear it
@@ -32,15 +32,15 @@ void modrec_pca_vehicle_projector::
 resize(unsigned int w, unsigned int h)
 {
   depth_img_.set_size(w,h);
-  depth_img_.fill(vcl_numeric_limits<double>::infinity());
+  depth_img_.fill(std::numeric_limits<double>::infinity());
 }
 
 
 //: Compute the minimum projected depth
 double modrec_pca_vehicle_projector::min_depth() const
 {
-  double min_depth = vcl_numeric_limits<double>::infinity();
-  for(vcl_vector<double>::const_iterator i=depths_.begin();
+  double min_depth = std::numeric_limits<double>::infinity();
+  for(std::vector<double>::const_iterator i=depths_.begin();
       i!=depths_.end(); ++i)
   {
     if(*i < min_depth) min_depth = *i;
@@ -52,8 +52,8 @@ double modrec_pca_vehicle_projector::min_depth() const
 //: Compute the maximum projected depth
 double modrec_pca_vehicle_projector::max_depth() const
 {
-  double max_depth = -vcl_numeric_limits<double>::infinity();
-  for(vcl_vector<double>::const_iterator i=depths_.begin();
+  double max_depth = -std::numeric_limits<double>::infinity();
+  for(std::vector<double>::const_iterator i=depths_.begin();
       i!=depths_.end(); ++i)
   {
     if(*i > max_depth) max_depth = *i;
@@ -106,7 +106,7 @@ project(const vpgl_perspective_camera<double>& camera,
         const vgl_rotation_3d<double>& R,
         const vgl_vector_3d<double>& t,
         const vgl_vector_3d<double>& sun,
-        const vcl_vector<bool>& options, 
+        const std::vector<bool>& options, 
         unsigned int num_pc)
 {
   // if there are no parts assume this is the dodecahedral model and we want
@@ -157,7 +157,7 @@ reproject(const vpgl_perspective_camera<double>& camera,
           const vgl_rotation_3d<double>& R,
           const vgl_vector_3d<double>& t,
           const vgl_vector_3d<double>& sun,
-          const vcl_vector<bool>& options, 
+          const std::vector<bool>& options, 
           unsigned int num_pc)
 {
   assert(options.size() == 7);
@@ -192,7 +192,7 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
                   const vgl_rotation_3d<double>& R,
                   const vgl_vector_3d<double>& t,
                   const vgl_vector_3d<double>& sun,
-                  const vcl_vector<bool>& options, 
+                  const std::vector<bool>& options, 
                   unsigned int num_pc)
 {
   assert(options.size() == 7);
@@ -213,7 +213,7 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
   
   build_depth_image(rel_cam,vehicle);
   
-  vcl_vector<vcl_vector<unsigned int> > edge_loops;
+  std::vector<std::vector<unsigned int> > edge_loops;
   vgl_polygon<double> sil;
   
   assert(vehicle.has_half_edges());
@@ -226,12 +226,12 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
     const vgl_point_2d<double>& v1 = verts2d_[vi1];
     const vgl_point_2d<double>& v2 = verts2d_[vi2];
     
-    vcl_vector<vgl_point_2d<double> > contour(2);
+    std::vector<vgl_point_2d<double> > contour(2);
     contour[0] = v1;
     contour[1] = v2;
     sil.push_back(contour);
     
-    edge_loops.push_back(vcl_vector<unsigned int>(2));
+    edge_loops.push_back(std::vector<unsigned int>(2));
     edge_loops.back()[0] = 2*i;
     edge_loops.back()[1] = 2*i+1;
 
@@ -240,7 +240,7 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
        depth_test((v1.x()+v2.x())/2, (v1.y()+v2.y())/2, (depths_[vi1]+depths_[vi2])/2))
     {
       contours_.push_back(contour);
-      vcl_vector<unsigned int> contour_vidx(2);
+      std::vector<unsigned int> contour_vidx(2);
       contour_vidx[0] = vi1;
       contour_vidx[1] = vi2;
       contours_vidx_.push_back(contour_vidx);
@@ -257,8 +257,8 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
   }
   
   // trace the part of the contour that makes up the silhouette
-  vcl_vector<vcl_pair<unsigned, unsigned> > sil_idx;
-  vcl_vector<vcl_pair<double,double> > sil_range;
+  std::vector<std::pair<unsigned, unsigned> > sil_idx;
+  std::vector<std::pair<double,double> > sil_range;
   if(trace_silhouette(sil, sil_idx, sil_range)){
     // map the silhouette polygon indices back to mesh vertex indices
     map_silhouette(vehicle, edge_loops, sil, sil_idx, sil_range, num_vehicle_loops);
@@ -299,13 +299,13 @@ back_project_fast(const vpgl_perspective_camera<double>& camera,
   vgl_vector_3d<double> dir = ray.direction();
   normalize(dir);
   
-  double depth = vcl_numeric_limits<double>::infinity();
+  double depth = std::numeric_limits<double>::infinity();
   if(depth_img_)
   {
     int ni = depth_img_.ni();
     int nj = depth_img_.nj();
-    int i = static_cast<int>(vcl_floor(pt.x()));
-    int j = static_cast<int>(vcl_floor(pt.y()));
+    int i = static_cast<int>(std::floor(pt.x()));
+    int j = static_cast<int>(std::floor(pt.y()));
     if(i>=0 && i+1 < ni && j>=0 && j+1 < nj){
       depth = vil_bilin_interp(depth_img_,pt.x(),pt.y());
       // if infinitelook for a nearby pixel that is finite
@@ -329,7 +329,7 @@ back_project_fast(const vpgl_perspective_camera<double>& camera,
 
 
 //: Project all mesh edges
-vcl_vector<vcl_vector<vgl_point_2d<double> > >
+std::vector<std::vector<vgl_point_2d<double> > >
 modrec_pca_vehicle_projector::
 project_all_edges(const vpgl_perspective_camera<double>& camera,
                   const imesh_mesh& vehicle,
@@ -347,7 +347,7 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
   else
     build_depth_image(rel_cam,vehicle);
 
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > contours;
+  std::vector<std::vector<vgl_point_2d<double> > > contours;
   assert(vehicle.has_half_edges());
   const imesh_half_edge_set& he = vehicle.half_edges();
   const unsigned int num_edges = vehicle.num_edges();
@@ -361,7 +361,7 @@ project_all_edges(const vpgl_perspective_camera<double>& camera,
     if(depth_test(v1.x(), v1.y(), depths_[vi1]) &&
        depth_test(v2.x(), v2.y(), depths_[vi2]) )
     {
-      vcl_vector<vgl_point_2d<double> > contour(2);
+      std::vector<vgl_point_2d<double> > contour(2);
       contour[0] = verts2d_[vi1];
       contour[1] = verts2d_[vi2];
       contours.push_back(contour);
@@ -390,13 +390,13 @@ project_shadow(const vpgl_perspective_camera<double>& camera,
   shadow_.clear();
   for(unsigned int i=0; i<shadow_edge_loops_.size(); ++i)
   {
-    const vcl_vector<unsigned int>& loop = shadow_edge_loops_[i];
+    const std::vector<unsigned int>& loop = shadow_edge_loops_[i];
     // convert edge indices to vertex indices
     const unsigned num_pts = loop.size();
-    vcl_vector<vgl_point_3d<double> > pts3d(num_pts);
+    std::vector<vgl_point_3d<double> > pts3d(num_pts);
     for(unsigned int j=0; j<num_pts; ++j)
       pts3d[j] = verts3d[vehicle.half_edges()[loop[j]].vert_index()];
-    vcl_vector<vgl_point_2d<double> > pts2d;
+    std::vector<vgl_point_2d<double> > pts2d;
     imesh_project_verts(pts3d,shadow_cam,pts2d);
     shadow_.push_back(pts2d);
   }
@@ -410,7 +410,7 @@ build_depth_image(const vpgl_perspective_camera<double>& camera,
                   const imesh_mesh& vehicle)
 {
   // clear the depth map
-  depth_img_.fill(vcl_numeric_limits<double>::infinity());
+  depth_img_.fill(std::numeric_limits<double>::infinity());
 
   // project the depth image
   //imesh_project_depth(vehicle,camera,depth_img_);
@@ -424,13 +424,13 @@ build_depth_image(const vpgl_perspective_camera<double>& camera,
 bool modrec_pca_vehicle_projector::
 depth_test(double x, double y, double depth) const
 {
-  int x1 = static_cast<int>(vcl_floor(x));
+  int x1 = static_cast<int>(std::floor(x));
   if(x1 < 0) return false;
-  int x2 = static_cast<int>(vcl_ceil(x));
+  int x2 = static_cast<int>(std::ceil(x));
   if(x2 >= depth_img_.ni()) return false;
-  int y1 = static_cast<int>(vcl_floor(y));
+  int y1 = static_cast<int>(std::floor(y));
   if(y1 < 0) return false;
-  int y2 = static_cast<int>(vcl_ceil(y));
+  int y2 = static_cast<int>(std::ceil(y));
   if(y2 >= depth_img_.nj()) return false;
 
   if(depth < depth_img_(x1,y1) ||
@@ -450,27 +450,27 @@ project_parts(const vpgl_perspective_camera<double>& camera,
 {
   parts_.clear();
   parts_idx_.clear();
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d = vehicle.parts_3d();
+  const std::vector<std::vector<vgl_point_3d<double> > >& parts3d = vehicle.parts_3d();
   for(unsigned int i=0; i<parts3d.size(); ++i)
   {
-    const vcl_vector<vgl_point_3d<double> >& part3d = parts3d[i];
-    vcl_vector<vgl_point_2d<double> > verts2d;
-    vcl_vector<double> depths;
+    const std::vector<vgl_point_3d<double> >& part3d = parts3d[i];
+    std::vector<vgl_point_2d<double> > verts2d;
+    std::vector<double> depths;
     imesh_project_verts(part3d,camera,verts2d,depths);
 
-    vcl_vector<bool> visible(part3d.size(),false);
+    std::vector<bool> visible(part3d.size(),false);
     for(unsigned int j=0; j<part3d.size(); ++j)
     {
       visible[j] = depth_test(verts2d[j].x(), verts2d[j].y(), depths[j]);
     }
 
-    vcl_vector<vgl_point_2d<double> > part;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > part_idx;
+    std::vector<vgl_point_2d<double> > part;
+    std::vector<std::pair<unsigned int,unsigned int> > part_idx;
     for(unsigned int j1=visible.size()-1, j2=0; j1<visible.size(); j1 = j2++)
     {
       if(visible[j1]){
         part.push_back(verts2d[j1]);
-        part_idx.push_back(vcl_pair<unsigned int,unsigned int>(i,j1));
+        part_idx.push_back(std::pair<unsigned int,unsigned int>(i,j1));
       }
       else
       {
@@ -506,12 +506,12 @@ project_parts(const vpgl_perspective_camera<double>& camera,
   
   parts_bounds_.clear();
   typedef modrec_pca_vehicle::uv_point uv_point;
-  const vcl_vector<vcl_vector<uv_point> >& parts_uv = vehicle.parts_bary();
+  const std::vector<std::vector<uv_point> >& parts_uv = vehicle.parts_bary();
   for(unsigned int i=0; i<parts_idx_.size(); ++i)
   {
-    const vcl_vector<vcl_pair<unsigned int,unsigned int> >& part_idx = parts_idx_[i];
+    const std::vector<std::pair<unsigned int,unsigned int> >& part_idx = parts_idx_[i];
     unsigned int pi = part_idx[0].first;
-    const vcl_vector<uv_point>& part_uv = parts_uv[pi];
+    const std::vector<uv_point>& part_uv = parts_uv[pi];
     unsigned int si = part_idx[0].second;
     unsigned int ei = part_idx[part_idx.size()-1].second;
     if(si == ei && part_idx.size() > 1)
@@ -538,7 +538,7 @@ project_contours(const vpgl_perspective_camera<double>& camera,
                  const modrec_pca_vehicle& vehicle)
 {
   // detect the contour generator
-  vcl_vector<vcl_vector<unsigned int> > edge_loops =
+  std::vector<std::vector<unsigned int> > edge_loops =
       imesh_detect_contour_generator(vehicle, camera.camera_center());
 
   contours_.clear();
@@ -547,15 +547,15 @@ project_contours(const vpgl_perspective_camera<double>& camera,
   for(unsigned int i=0; i<edge_loops.size(); ++i)
   {
     sil.new_sheet();
-    const vcl_vector<unsigned int>& loop = edge_loops[i];
+    const std::vector<unsigned int>& loop = edge_loops[i];
     // convert edge indices to vertex indices
     const unsigned num_pts = loop.size();
-    vcl_vector<unsigned int> vidx(num_pts);
+    std::vector<unsigned int> vidx(num_pts);
     for(unsigned int j=0; j<num_pts; ++j)
       vidx[j] = vehicle.half_edges()[loop[j]].vert_index();
 
     // find visible vertices
-    vcl_vector<bool> visible(num_pts,false);
+    std::vector<bool> visible(num_pts,false);
     for(unsigned int j=0; j<num_pts; ++j)
     {
       unsigned int vi = vidx[j];
@@ -564,8 +564,8 @@ project_contours(const vpgl_perspective_camera<double>& camera,
       visible[j] = depth_test(v.x(), v.y(), depths_[vi]);
     }
 
-    vcl_vector<vgl_point_2d<double> > contour;
-    vcl_vector<unsigned int> contour_vidx;
+    std::vector<vgl_point_2d<double> > contour;
+    std::vector<unsigned int> contour_vidx;
     for(unsigned int j1=num_pts-1, j2=0; j1<num_pts; j1 = j2++)
     {
       if(visible[j1]){
@@ -598,8 +598,8 @@ project_contours(const vpgl_perspective_camera<double>& camera,
   }
   
   // trace the part of the contour that makes up the silhouette
-  vcl_vector<vcl_pair<unsigned, unsigned> > sil_idx;
-  vcl_vector<vcl_pair<double,double> > sil_range;
+  std::vector<std::pair<unsigned, unsigned> > sil_idx;
+  std::vector<std::pair<double,double> > sil_range;
   if(trace_silhouette(sil, sil_idx, sil_range)){
     // map the silhouette polygon indices back to mesh vertex indices
     map_silhouette(vehicle, edge_loops, sil, sil_idx, sil_range, num_vehicle_loops);
@@ -615,22 +615,22 @@ project_contours(const vpgl_perspective_camera<double>& camera,
 //: map the silhouette contours back to vehicle mesh vertices
 void modrec_pca_vehicle_projector:: 
 map_silhouette(const modrec_pca_vehicle& vehicle,
-               const vcl_vector<vcl_vector<unsigned int> >& edge_loops,
+               const std::vector<std::vector<unsigned int> >& edge_loops,
                const vgl_polygon<double>& sil,
-               const vcl_vector<vcl_pair<unsigned, unsigned> >& sil_idx,
-               const vcl_vector<vcl_pair<double,double> >& sil_range,
+               const std::vector<std::pair<unsigned, unsigned> >& sil_idx,
+               const std::vector<std::pair<double,double> >& sil_range,
                unsigned int num_vehicle_loops)
 {
   silhouette_vidx_.clear();
   silhouette_range_.clear();
   silhouette_shadow_.clear();
   silhouette_.clear();
-  const vcl_vector<vgl_point_2d<double> >& sil_pts = sil[0];
-  vcl_vector<unsigned int> vidx;
-  vcl_vector<vgl_point_2d<double> > pts;
+  const std::vector<vgl_point_2d<double> >& sil_pts = sil[0];
+  std::vector<unsigned int> vidx;
+  std::vector<vgl_point_2d<double> > pts;
   unsigned int k=0;
   unsigned last_idx = vehicle.num_verts();
-  silhouette_range_.push_back(vcl_pair<double,double>(sil_range[0].first,1));
+  silhouette_range_.push_back(std::pair<double,double>(sil_range[0].first,1));
   silhouette_shadow_.push_back(sil_idx[0].first >= num_vehicle_loops);
   for(unsigned int i=0; i<sil_idx.size(); ++i)
   {
@@ -653,7 +653,7 @@ map_silhouette(const modrec_pca_vehicle& vehicle,
       pts.clear();
       silhouette_range_.back().second = sil_range[i].second;
       if(i+1<sil_idx.size()){
-        silhouette_range_.push_back(vcl_pair<double,double>(sil_range[i+1].first,1));
+        silhouette_range_.push_back(std::pair<double,double>(sil_range[i+1].first,1));
         silhouette_shadow_.push_back(sil_idx[i+1].first >= num_vehicle_loops);
       }
       last_idx = vehicle.num_verts();
@@ -692,23 +692,23 @@ map_silhouette(const modrec_pca_vehicle& vehicle,
 // there must be a way to make this more elegant
 bool modrec_pca_vehicle_projector::
 trace_silhouette(vgl_polygon<double>& p,
-                 vcl_vector<vcl_pair<unsigned, unsigned> >& sil_idx,
-                 vcl_vector<vcl_pair<double,double> >& sil_frac)
+                 std::vector<std::pair<unsigned, unsigned> >& sil_idx,
+                 std::vector<std::pair<double,double> >& sil_frac)
 {
-  typedef vcl_pair<unsigned,unsigned> upair;
-  typedef vcl_pair<double,double> dpair;
-  const double ftol = vcl_sqrt(vgl_tolerance<double>::position);
-  vcl_vector<upair> e1, e2;
-  vcl_vector<vgl_point_2d<double> > ip;
+  typedef std::pair<unsigned,unsigned> upair;
+  typedef std::pair<double,double> dpair;
+  const double ftol = std::sqrt(vgl_tolerance<double>::position);
+  std::vector<upair> e1, e2;
+  std::vector<vgl_point_2d<double> > ip;
   vgl_selfintersections(p,e1,e2,ip);
 
   
   // create fast lookup of intersections
-  vcl_multimap<upair, unsigned> isect_map;
-  typedef vcl_multimap<upair, unsigned>::iterator map_itr;
+  std::multimap<upair, unsigned> isect_map;
+  typedef std::multimap<upair, unsigned>::iterator map_itr;
   for(unsigned int i=0; i<e1.size(); ++i){
-    isect_map.insert(vcl_pair<upair,unsigned>(e1[i],i));
-    isect_map.insert(vcl_pair<upair,unsigned>(e2[i],i));
+    isect_map.insert(std::pair<upair,unsigned>(e1[i],i));
+    isect_map.insert(std::pair<upair,unsigned>(e2[i],i));
   }
   
   // the minimum x value should be on the silhouette
@@ -717,13 +717,13 @@ trace_silhouette(vgl_polygon<double>& p,
   upair min_pt;
   double max_angle = 0;
   unsigned max_num_pts = ip.size() + 1;
-  double min_val = vcl_numeric_limits<double>::infinity();
+  double min_val = std::numeric_limits<double>::infinity();
   for(unsigned s=0; s<p.num_sheets(); ++s){
     for(unsigned i=0; i<p[s].size(); ++i){
       if(p[s][i].x() < min_val){
         unsigned n = (i+1)%p[s].size();
         vgl_vector_2d<double> edge = p[s][n]-p[s][i];
-        double angle = vcl_atan2(edge.y(),edge.x());
+        double angle = std::atan2(edge.y(),edge.x());
         if(vnl_math_isfinite(min_val) &&
            (p[min_pt.first][min_pt.second]-p[s][i]).sqr_length() < ftol &&
            angle < max_angle){
@@ -738,7 +738,7 @@ trace_silhouette(vgl_polygon<double>& p,
   }
   
   int dir = 1;
-  vcl_vector<vgl_point_2d<double> > sil;
+  std::vector<vgl_point_2d<double> > sil;
   upair curr = min_pt;
   double curr_frac = ftol;
   vgl_point_2d<double> curr_pt = p[curr.first][curr.second];
@@ -751,7 +751,7 @@ trace_silhouette(vgl_polygon<double>& p,
     next.second += p[next.first].size()+dir;
     next.second %= p[next.first].size();
     // find the collection of intersections
-    vcl_pair<map_itr, map_itr> range;
+    std::pair<map_itr, map_itr> range;
     if(dir < 0) // edges are indexed by the previous vertex
       range = isect_map.equal_range(next);
     else
@@ -793,7 +793,7 @@ trace_silhouette(vgl_polygon<double>& p,
 
           // make sure the other edge goes in the same direction
           if(frac1 > frac2){
-            vcl_swap(frac1,frac2);
+            std::swap(frac1,frac2);
           }
           if(frac2-etol > 1.0 && frac1+etol <= curr_frac){
             // another parallel edge is longer, so switch to that one
@@ -817,8 +817,8 @@ trace_silhouette(vgl_polygon<double>& p,
         curr_pt = p[curr.first][curr.second];
       }
       else{
-        bool isect_at_start = vcl_abs(min_frac) < etol;
-        bool isect_at_end = vcl_abs(1.0-min_frac) < etol;
+        bool isect_at_start = std::abs(min_frac) < etol;
+        bool isect_at_end = std::abs(1.0-min_frac) < etol;
         if(isect_at_end)
           sil_frac.push_back(dpair(curr_frac,1.0));
         // special case of intersection at start vertex
@@ -834,20 +834,20 @@ trace_silhouette(vgl_polygon<double>& p,
         }
         // special case of intersection at end vertex
         if(isect_at_end){
-          double base_angle = -vcl_atan2(-edge.y(),-edge.x());
+          double base_angle = -std::atan2(-edge.y(),-edge.x());
           // find all possible output edges (might be more than two)
           upair n_next = next;
           n_next.second += p[n_next.first].size()+dir;
           n_next.second %= p[n_next.first].size();
           vgl_vector_2d<double> edge2 = p[n_next.first][n_next.second]
                                        -p[next.first][next.second];
-          double min_angle = -vcl_atan2(edge2.y(),edge2.x())-base_angle;
+          double min_angle = -std::atan2(edge2.y(),edge2.x())-base_angle;
           if(min_angle < ftol) min_angle += 2*vnl_math::pi;
           upair best_pair = next;
           int best_dir = dir;
           for(map_itr itr=range.first; itr!=range.second; ++itr){
             //double frac = dot_product(edge,ip[itr->second] - p[curr.first][curr.second]);
-            //if(vcl_abs(1.0-min_frac) < ftol){
+            //if(std::abs(1.0-min_frac) < ftol){
             unsigned k = itr->second;
             if((ip[k]-p[next.first][next.second]).sqr_length() 
                < ftol){
@@ -860,7 +860,7 @@ trace_silhouette(vgl_polygon<double>& p,
               vgl_vector_2d<double> edge2 = p[o_next.first][o_next.second]
                                            -p[other.first][other.second];
               // try one direction if it extends beyond the point
-              double angle = -vcl_atan2(edge2.y(),edge2.x())-base_angle;
+              double angle = -std::atan2(edge2.y(),edge2.x())-base_angle;
               if(angle < 0) angle += 2*vnl_math::pi;
               if(angle < min_angle && angle > ftol &&
                  (p[o_next.first][o_next.second]-p[next.first][next.second]).sqr_length() 
@@ -870,7 +870,7 @@ trace_silhouette(vgl_polygon<double>& p,
                 best_dir = 1;
               }
               // try the other direction if it extends beyond the point
-              angle = -vcl_atan2(-edge2.y(),-edge2.x())-base_angle;
+              angle = -std::atan2(-edge2.y(),-edge2.x())-base_angle;
               if(angle < 0) angle += 2*vnl_math::pi;
               if(angle < min_angle && angle > ftol &&
                  (p[other.first][other.second]-p[next.first][next.second]).sqr_length() 
@@ -929,10 +929,10 @@ trace_silhouette(vgl_polygon<double>& p,
             double frac1 = dot_product(edge,v3-v1);
             double frac2 = dot_product(edge,v4-v1);
             if(frac1>frac2){
-              vcl_swap(frac1,frac2);
+              std::swap(frac1,frac2);
               dir = -1;
-              vcl_swap(curr,next);
-              vcl_swap(v3,v4);
+              std::swap(curr,next);
+              std::swap(v3,v4);
               edge2 *= -1;
             }
             double old_frac = dot_product(edge,curr_pt-v1);
@@ -955,9 +955,9 @@ trace_silhouette(vgl_polygon<double>& p,
                                                           v4.x(),v4.y());
             if(ftol<disc1){
               dir = -1;
-              vcl_swap(curr,next);
-              vcl_swap(disc1,disc2);
-              vcl_swap(v3,v4);
+              std::swap(curr,next);
+              std::swap(disc1,disc2);
+              std::swap(v3,v4);
             }
             
             edge = p[next.first][next.second]-p[curr.first][curr.second];
@@ -965,9 +965,9 @@ trace_silhouette(vgl_polygon<double>& p,
             
             // test for intersection at endpoint
             bool valid_isect = true;
-            if(vcl_abs(disc2) < ftol) // intersects at the end
+            if(std::abs(disc2) < ftol) // intersects at the end
               valid_isect = false;
-            else if(vcl_abs(disc1) < ftol) // intersects at the start
+            else if(std::abs(disc1) < ftol) // intersects at the start
             {
               // it might not be safe to take this path if it intersects at an 
               // endpoint, check the angles to be sure 
@@ -976,7 +976,7 @@ trace_silhouette(vgl_polygon<double>& p,
               // rotation relative to edge1
               double a = edge1.x()*edge.x() + edge1.y()*edge.y();
               double b = -edge1.y()*edge.x() + edge1.x()*edge.y();
-              double angle = vcl_atan2(b,a);
+              double angle = std::atan2(b,a);
               if(angle <= 0){
                 valid_isect = false;
               }
@@ -1006,7 +1006,7 @@ trace_silhouette(vgl_polygon<double>& p,
   }
   
   if(count==max_num_pts){
-    vcl_cout << "infinite loop in silhouette trace"<<vcl_endl;
+    std::cout << "infinite loop in silhouette trace"<<std::endl;
     return false;
   }
   p.clear();
@@ -1022,22 +1022,22 @@ reproject_parts(const vpgl_perspective_camera<double>& camera,
 {
   parts_.clear();
   parts_idx_.clear();
-  vcl_vector<vgl_point_2d<double> > verts2d;
-  vcl_vector<double> depths;
+  std::vector<vgl_point_2d<double> > verts2d;
+  std::vector<double> depths;
   typedef modrec_pca_vehicle::uv_point uv_point;
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d = vehicle.parts_3d();
-  const vcl_vector<vcl_vector<uv_point> >& parts_uv = vehicle.parts_bary();
+  const std::vector<std::vector<vgl_point_3d<double> > >& parts3d = vehicle.parts_3d();
+  const std::vector<std::vector<uv_point> >& parts_uv = vehicle.parts_bary();
   for(unsigned int b=0; b<parts_bounds_.size(); ++b)
   {
     const part_bounds& pb = parts_bounds_[b];
     unsigned int i = pb.part_idx;
-    const vcl_vector<vgl_point_3d<double> >& part3d = parts3d[i];
-    const vcl_vector<uv_point>& part_uv = parts_uv[i];
+    const std::vector<vgl_point_3d<double> >& part3d = parts3d[i];
+    const std::vector<uv_point>& part_uv = parts_uv[i];
     if(b==0 || i != parts_bounds_[b-1].part_idx)
       imesh_project_verts(part3d,camera,verts2d,depths);
     
-    vcl_vector<vgl_point_2d<double> > part;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > part_idx;
+    std::vector<vgl_point_2d<double> > part;
+    std::vector<std::pair<unsigned int,unsigned int> > part_idx;
     
     // add the whole part
     if(pb.start_idx == pb.end_idx && pb.s_t == 0.0 && pb.e_t == 1.0)
@@ -1045,7 +1045,7 @@ reproject_parts(const vpgl_perspective_camera<double>& camera,
       for(unsigned int j1=verts2d.size()-1, j2=0; j1<verts2d.size(); j1 = j2++)
       {
         part.push_back(verts2d[j1]);
-        part_idx.push_back(vcl_pair<unsigned int,unsigned int>(i,j1));
+        part_idx.push_back(std::pair<unsigned int,unsigned int>(i,j1));
       }
       parts_.push_back(part);
       parts_idx_.push_back(part_idx);
@@ -1087,11 +1087,11 @@ reproject_parts(const vpgl_perspective_camera<double>& camera,
       for(unsigned int j=start_j; j!=end_j; j = (j+1)%p_uv_size)
       {
         part.push_back(verts2d[j]);
-        part_idx.push_back(vcl_pair<unsigned int,unsigned int>(i,j));
+        part_idx.push_back(std::pair<unsigned int,unsigned int>(i,j));
       }
     }
     else
-      vcl_cerr << "bad part detected"<<vcl_endl;
+      std::cerr << "bad part detected"<<std::endl;
     parts_.push_back(part);
     parts_idx_.push_back(part_idx);
   }
@@ -1111,7 +1111,7 @@ reproject_contours(const vpgl_perspective_camera<double>& camera,
   for(unsigned int i=0; i<contours_vidx_.size(); ++i)
   {
     const unsigned int num_pts = contours_vidx_[i].size();
-    vcl_vector<vgl_point_3d<double> > points3d_vis(num_pts);
+    std::vector<vgl_point_3d<double> > points3d_vis(num_pts);
     for(unsigned int j=0; j<num_pts; ++j)
     {
       points3d_vis[j] = verts3d[contours_vidx_[i][j]];
@@ -1133,8 +1133,8 @@ reproject_silhouette(const vpgl_perspective_camera<double>& camera,
   for(unsigned int i=0; i<silhouette_vidx_.size(); ++i)
   {
     const unsigned int num_pts = silhouette_vidx_[i].size();
-    vcl_vector<vgl_point_3d<double> > points3d_sil(num_pts);
-    vcl_vector<vgl_point_2d<double> > points2d_sil(num_pts);
+    std::vector<vgl_point_3d<double> > points3d_sil(num_pts);
+    std::vector<vgl_point_2d<double> > points2d_sil(num_pts);
     for(unsigned int j=0; j<num_pts; ++j)
     {
       points3d_sil[j] = verts3d[silhouette_vidx_[i][j]];
@@ -1208,24 +1208,24 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   // so share the computation of the Jacobians at those points
   // these vectors mirror the *_vidx_ arrays, 
   // but map to a common pool of Jacobians
-  vcl_vector<vcl_vector<unsigned int> > contours_jidx(num_contours);
-  vcl_vector<vcl_vector<unsigned int> > silhouette_jidx(num_sil_sections);
+  std::vector<std::vector<unsigned int> > contours_jidx(num_contours);
+  std::vector<std::vector<unsigned int> > silhouette_jidx(num_sil_sections);
   // map mesh vertex indices to Jacobian pool indices
-  vcl_map<unsigned,unsigned> vidx_to_jidx;
+  std::map<unsigned,unsigned> vidx_to_jidx;
   // the common vertex pool
-  vcl_vector<vgl_point_3d<double> > pts;
-  vcl_vector<unsigned> pts_vidx;
+  std::vector<vgl_point_3d<double> > pts;
+  std::vector<unsigned> pts_vidx;
 
   // Add all the visible 3D contour points to a vector
   for(unsigned int i=0; i<num_contours; ++i)
   {
-    const vcl_vector<unsigned int>& vidx = contours_vidx_[i];
-    vcl_vector<unsigned int>& jidx = contours_jidx[i];
+    const std::vector<unsigned int>& vidx = contours_vidx_[i];
+    std::vector<unsigned int>& jidx = contours_jidx[i];
     jidx.resize(vidx.size());
     for(unsigned int j=0; j<vidx.size(); ++j)
     {
       const unsigned& vi = vidx[j];
-      vcl_map<unsigned,unsigned>::iterator f = vidx_to_jidx.find(vi);
+      std::map<unsigned,unsigned>::iterator f = vidx_to_jidx.find(vi);
       if(f==vidx_to_jidx.end())
       {
         vidx_to_jidx[vi] = pts.size();
@@ -1242,20 +1242,20 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   
   
   // points coming from shadow must be computed separately in their own pool
-  vcl_vector<vgl_point_3d<double> > shadow_pts;
-  vcl_vector<unsigned> shadow_pts_vidx;
+  std::vector<vgl_point_3d<double> > shadow_pts;
+  std::vector<unsigned> shadow_pts_vidx;
   
   // Add all the silhouette points not previously added
   for(unsigned int i=0; i<num_sil_sections; ++i)
   {
-    const vcl_vector<unsigned int>& vidx = silhouette_vidx_[i];
-    vcl_vector<unsigned int>& jidx = silhouette_jidx[i];
+    const std::vector<unsigned int>& vidx = silhouette_vidx_[i];
+    std::vector<unsigned int>& jidx = silhouette_jidx[i];
     jidx.resize(vidx.size());
     for(unsigned int j=0; j<vidx.size(); ++j)
     {
       const unsigned& vi = vidx[j];
       if(!silhouette_shadow_[i]){ // not a shadow point
-        vcl_map<unsigned,unsigned>::iterator f = vidx_to_jidx.find(vi);
+        std::map<unsigned,unsigned>::iterator f = vidx_to_jidx.find(vi);
         if(f==vidx_to_jidx.end())
         {
           vidx_to_jidx[vi] = pts.size();
@@ -1277,28 +1277,28 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   }
   const unsigned int num_contour_pts = pts.size();
 
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >& pt3d = vehicle.parts_3d();
+  const std::vector<std::vector<vgl_point_3d<double> > >& pt3d = vehicle.parts_3d();
 
   // Add all the visible 3D part boundary points
   const unsigned int num_parts = parts_idx_.size();
   for(unsigned int i=0; i<num_parts; ++i)
   {
-    const vcl_vector<vcl_pair<unsigned int,unsigned int> >& idx = parts_idx_[i];
+    const std::vector<std::pair<unsigned int,unsigned int> >& idx = parts_idx_[i];
     for(unsigned int j=0; j<idx.size(); ++j)
       pts.push_back(pt3d[idx[j].first][idx[j].second]);
   }
   const unsigned int num_vehicle_pts = pts.size();
 
   // compute the image Jacobians at each point
-  vcl_vector<vnl_matrix_fixed<double,2,3> > J = image_jacobians(camera,pts);
+  std::vector<vnl_matrix_fixed<double,2,3> > J = image_jacobians(camera,pts);
   // compute the shadow image Jacobians at each shadow point
-  vcl_vector<vnl_matrix_fixed<double,2,3> > Js = image_jacobians(shadow_cam,shadow_pts);
+  std::vector<vnl_matrix_fixed<double,2,3> > Js = image_jacobians(shadow_cam,shadow_pts);
   // append Js to J and shadow_pts to pts
   J.insert(J.end(),Js.begin(),Js.end());
   pts.insert(pts.end(),shadow_pts.begin(),shadow_pts.end());
 
   // compute the Jacobians for extrinincs at each point
-  vcl_vector<vnl_matrix<double> > extrinsics(pts.size());
+  std::vector<vnl_matrix<double> > extrinsics(pts.size());
   for(unsigned int i=0; i<pts.size(); ++i)
   {
     const vgl_point_3d<double>& p = pts[i];
@@ -1312,18 +1312,18 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   for(unsigned int i=0; i<num_contours; ++i)
   {
     const unsigned int num = contours_vidx_[i].size();
-    contours_jac_.push_back(vcl_vector<vnl_matrix<double> >(num,
+    contours_jac_.push_back(std::vector<vnl_matrix<double> >(num,
                                                             vnl_matrix<double>(2,c+num_pc_)));
-    const vcl_vector<unsigned>& jidx = contours_jidx[i];
+    const std::vector<unsigned>& jidx = contours_jidx[i];
     for(unsigned int j=0; j<num; ++j)
       contours_jac_.back()[j].update(extrinsics[jidx[j]],0,num_pc_);
   }
   for(unsigned int i=0; i<num_sil_sections; ++i)
   {
     const unsigned int num = silhouette_vidx_[i].size();
-    silhouette_jac_.push_back(vcl_vector<vnl_matrix<double> >(num,
+    silhouette_jac_.push_back(std::vector<vnl_matrix<double> >(num,
                                                             vnl_matrix<double>(2,c+num_pc_)));
-    vcl_vector<unsigned>& jidx = silhouette_jidx[i];
+    std::vector<unsigned>& jidx = silhouette_jidx[i];
     int offset=0;
     if(silhouette_shadow_[i])
       offset = num_vehicle_pts;
@@ -1335,7 +1335,7 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   for(unsigned int i=0; i<num_parts; ++i)
   {
     const unsigned int num = parts_idx_[i].size();
-    parts_jac_.push_back(vcl_vector<vnl_matrix<double> >(num,
+    parts_jac_.push_back(std::vector<vnl_matrix<double> >(num,
                                                          vnl_matrix<double>(2,c+num_pc_)));
     for(unsigned int j=0; j<num; ++j)
       parts_jac_.back()[j].update(extrinsics[k++],0,num_pc_);
@@ -1347,7 +1347,7 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
   if(options_[0] && num_pc_ > 0){
     
     // precompute PCA Jacobians at each common point
-    vcl_vector<vnl_matrix<double> > contour_sil_J(num_contour_pts);
+    std::vector<vnl_matrix<double> > contour_sil_J(num_contour_pts);
     const vnl_matrix<double>& pc = vehicle.principal_comps();
     const vnl_vector<double>& std = vehicle.std_devs();
     for(unsigned int i=0; i<num_contour_pts; ++i)
@@ -1365,7 +1365,7 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
     for(unsigned int i=0; i<num_contours; ++i)
     {
       const unsigned int num = contours_vidx_[i].size();
-      const vcl_vector<unsigned>& jidx = contours_jidx[i];
+      const std::vector<unsigned>& jidx = contours_jidx[i];
       for(unsigned int j=0; j<num; ++j)
         contours_jac_[i][j].update(contour_sil_J[jidx[j]]);
     }
@@ -1373,7 +1373,7 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
     for(unsigned int i=0; i<num_sil_sections; ++i)
     {
       const unsigned int num = silhouette_vidx_[i].size();
-      const vcl_vector<unsigned>& jidx = silhouette_jidx[i];
+      const std::vector<unsigned>& jidx = silhouette_jidx[i];
       if(silhouette_shadow_[i]){
         for(unsigned int j=0; j<num; ++j){
           vnl_matrix<double> dir_3d(num_pc_,3);
@@ -1403,7 +1403,7 @@ compute_jacobians(const vpgl_perspective_camera<double>& camera,
 //: compute the PCA image Jacobians for contour points given the world-to-image Jacobians
 void modrec_pca_vehicle_projector::
 compute_contour_pca_jacobians(const modrec_pca_vehicle& vehicle,
-                              vcl_vector<vnl_matrix_fixed<double,2,3> >::iterator J)
+                              std::vector<vnl_matrix_fixed<double,2,3> >::iterator J)
 {
   const vnl_matrix<double>& pc = vehicle.principal_comps();
   const vnl_vector<double>& std = vehicle.std_devs();
@@ -1412,7 +1412,7 @@ compute_contour_pca_jacobians(const modrec_pca_vehicle& vehicle,
   // start with the contour points
   for(unsigned int i=0; i<num_contours; ++i)
   {
-    const vcl_vector<unsigned int>& vidx = contours_vidx_[i];
+    const std::vector<unsigned int>& vidx = contours_vidx_[i];
     for(unsigned int j=0; j<vidx.size(); ++j)
     {
       vnl_matrix<double> dir_3d(num_pc_,3);
@@ -1432,7 +1432,7 @@ compute_contour_pca_jacobians(const modrec_pca_vehicle& vehicle,
 //: compute the PCA image Jacobians for part boundaries given the world-to-image Jacobians
 void modrec_pca_vehicle_projector::
 compute_parts_pca_jacobians(const modrec_pca_vehicle& vehicle,
-                            vcl_vector<vnl_matrix_fixed<double,2,3> >::iterator J)
+                            std::vector<vnl_matrix_fixed<double,2,3> >::iterator J)
 {
   // now do the parts points
   assert(vehicle.faces().regularity() == 3);
@@ -1457,11 +1457,11 @@ compute_parts_pca_jacobians(const modrec_pca_vehicle& vehicle,
   vnl_matrix<double> M(3,2);
   
   typedef modrec_pca_vehicle::uv_point uv_point;
-  const vcl_vector<vcl_vector<uv_point> >& parts_uv = vehicle.parts_bary();
+  const std::vector<std::vector<uv_point> >& parts_uv = vehicle.parts_bary();
   for(unsigned int i=0; i<num_parts; ++i)
   {
-    parts_tex_jac_.push_back(vcl_vector<vnl_matrix<double> >());
-    const vcl_vector<vcl_pair<unsigned int,unsigned int> >& idx = parts_idx_[i];
+    parts_tex_jac_.push_back(std::vector<vnl_matrix<double> >());
+    const std::vector<std::pair<unsigned int,unsigned int> >& idx = parts_idx_[i];
     for(unsigned int j=0; j<idx.size(); ++j)
     {
       unsigned int i1 = idx[j].first, i2 = idx[j].second;
@@ -1511,10 +1511,10 @@ compute_parts_pca_jacobians(const modrec_pca_vehicle& vehicle,
 
 
 //: Save the projected contours as SVG
-bool modrec_write_svg_curves(const vcl_string& filename,
+bool modrec_write_svg_curves(const std::string& filename,
                              const modrec_pca_vehicle_projector& projector)
 {
-  vcl_ofstream ofs(filename.c_str());
+  std::ofstream ofs(filename.c_str());
   if(!ofs.is_open())
     return false;
   
@@ -1535,7 +1535,7 @@ bool modrec_write_svg_curves(const vcl_string& filename,
   // Draw the parts in red
   for(unsigned int i=0; i<projector.parts().size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = projector.parts()[i];
+    const std::vector<vgl_point_2d<double> >& curve = projector.parts()[i];
     ofs << "  <polyline fill=\"none\" stroke=\"red\" stroke-width=\"2\"\n"
     << "           points=\"";
     for(unsigned int j=0; j<curve.size(); ++j)
@@ -1548,7 +1548,7 @@ bool modrec_write_svg_curves(const vcl_string& filename,
   // Draw the occluding contours in green
   for(unsigned int i=0; i<projector.contours().size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = projector.contours()[i];
+    const std::vector<vgl_point_2d<double> >& curve = projector.contours()[i];
     if(curve.empty())
       continue;
     ofs << "  <polyline fill=\"none\" stroke=\"green\" stroke-width=\"2\"\n"
@@ -1563,7 +1563,7 @@ bool modrec_write_svg_curves(const vcl_string& filename,
   // Draw the silhouette contours in blue
   for(unsigned int i=0; i<projector.silhouette().size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = projector.silhouette()[i];
+    const std::vector<vgl_point_2d<double> >& curve = projector.silhouette()[i];
     if(curve.empty())
       continue;
     ofs << "  <polyline fill=\"none\" stroke=\"blue\" stroke-width=\"2\"\n"

@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../bvaml_ray.h"
 #include "../bvaml_params.h"
@@ -34,8 +34,8 @@ static void test_ray()
     else
       r2.update( rand()/(float)RAND_MAX, light );
     for( int v = 0; v < 10; v++ )
-      vcl_cerr << (*r1.voxels[v]->occupancy_prob) << ' ';
-    vcl_cerr << '\n';
+      std::cerr << (*r1.voxels[v]->occupancy_prob) << ' ';
+    std::cerr << '\n';
   }
 
 }

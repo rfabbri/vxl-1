@@ -49,9 +49,9 @@ void vsl_b_read(vsl_b_istream &is, image_ &p)
 
    default:
 	image_* tmp=0;
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vbl_array_2d<T>&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, vbl_array_2d<T>&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 } 

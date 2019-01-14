@@ -1,7 +1,7 @@
 #ifndef psm_raytrace_function_h_
 #define psm_raytrace_function_h_
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <hsds/hsds_fd_tree_node_index.h>
 #include <hsds/hsds_fd_tree.h>
@@ -53,20 +53,20 @@ public:
 
     psm_aux_scene<AUX_T> *aux_scene = dynamic_cast<psm_aux_scene<AUX_T>*>(aux_scene_ptr_.ptr());
     if (!aux_scene) {
-      vcl_cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << vcl_endl;
+      std::cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << std::endl;
       return false;
     }
 
     while(block_vis_it.next())
     {
-      vcl_vector<vgl_point_3d<int> > vis_blocks;
+      std::vector<vgl_point_3d<int> > vis_blocks;
       block_vis_it.current_blocks(vis_blocks);
       // traverse each visible block one at a time
-      vcl_vector<vgl_point_3d<int> >::const_iterator block_it = vis_blocks.begin();
+      std::vector<vgl_point_3d<int> >::const_iterator block_it = vis_blocks.begin();
       for (; block_it != vis_blocks.end(); ++block_it) {
         const vgl_point_3d<int> block_idx = *block_it;
 
-        if (debug_lvl_ > 0) vcl_cout << "processing block at index (" << block_idx.x() << ", " << block_idx.y() << ", " << block_idx.z() << ")" << vcl_endl;
+        if (debug_lvl_ > 0) std::cout << "processing block at index (" << block_idx.x() << ", " << block_idx.y() << ", " << block_idx.z() << ")" << std::endl;
         // make sure block projects to inside of image
         vbl_bounding_box<double,3> block_bb = scene_.block_bounding_box(block_idx);
         if (!cube_visible(block_bb, cam_, (unsigned int)i, (unsigned int)j, 1, 1, false)) {
@@ -87,7 +87,7 @@ public:
         vgl_point_3d<double> ray_origin;
         vgl_vector_3d<double> direction;
         vgl_point_3d<double> enter_pt(0.0,0.0,0.0);
-        vcl_vector<vgl_point_3d<double> > plane_intersections(6);
+        std::vector<vgl_point_3d<double> > plane_intersections(6);
         generate_ray(i,j,block_bb, ray_origin, direction);
 
         // compute intersection of each plane with ray
@@ -162,10 +162,10 @@ public:
           bool step_positive = false;
           bool found_exit = cube_exit_point(cell_bb, enter_pt, direction, exit_pt, step_dim, step_positive);
           if (!found_exit) {
-            vcl_cerr << "error: could not find cell exit point" << vcl_endl;
-            vcl_cerr << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]" << vcl_endl;
-            vcl_cerr << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "] " << vcl_endl;
-            vcl_cerr << "   cell_bb = [" << cell_bb.xmin() <<", " << cell_bb.xmax() << "]  [" << cell_bb.ymin() << ", " << cell_bb.ymax() << "]  [" << cell_bb.zmin() << ", " << cell_bb.zmax() <<"] " << vcl_endl;
+            std::cerr << "error: could not find cell exit point" << std::endl;
+            std::cerr << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]" << std::endl;
+            std::cerr << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "] " << std::endl;
+            std::cerr << "   cell_bb = [" << cell_bb.xmin() <<", " << cell_bb.xmax() << "]  [" << cell_bb.ymin() << ", " << cell_bb.ymax() << "]  [" << cell_bb.zmin() << ", " << cell_bb.zmax() <<"] " << std::endl;
             assert(found_exit);
             break;
           }
@@ -202,19 +202,19 @@ public:
 
     psm_aux_scene<AUX_T> *aux_scene = dynamic_cast<psm_aux_scene<AUX_T>*>(aux_scene_ptr_.ptr());
     if (!aux_scene) {
-      vcl_cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << vcl_endl;
+      std::cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << std::endl;
       return false;
     }
 
     while(block_vis_it.next())
     {
-      vcl_vector<vgl_point_3d<int> > vis_blocks;
+      std::vector<vgl_point_3d<int> > vis_blocks;
       block_vis_it.current_blocks(vis_blocks);
       // traverse each visible block one at a time
-      vcl_vector<vgl_point_3d<int> >::iterator block_it = vis_blocks.begin();
+      std::vector<vgl_point_3d<int> >::iterator block_it = vis_blocks.begin();
       for (; block_it != vis_blocks.end(); ++block_it) {
         const vgl_point_3d<int> block_idx = *block_it;
-        if (debug_lvl_ > 0) vcl_cout << "processing block at index (" << block_idx.x() << ", " << block_idx.y() << ", " << block_idx.z() << ")" << vcl_endl;
+        if (debug_lvl_ > 0) std::cout << "processing block at index (" << block_idx.x() << ", " << block_idx.y() << ", " << block_idx.z() << ")" << std::endl;
         // make sure block projects to inside of image
         vbl_bounding_box<double,3> block_bb = scene_.block_bounding_box(block_idx);
         if (!cube_visible(block_bb, cam_, img_i0_, img_j0_, img_ni_, img_nj_, false)) {
@@ -235,7 +235,7 @@ public:
         for (unsigned int i=img_bb.xmin(); i < img_bb.xmax(); ++i) {
           if (debug_lvl_ > 1) {
             if (!(i % 10))
-              vcl_cout << ".";
+              std::cout << ".";
           }
           for (unsigned int j=img_bb.ymin(); j < img_bb.ymax(); ++j) {
             if (!continue_trace(i - img_i0_ , j - img_j0_)) {
@@ -245,7 +245,7 @@ public:
             vgl_point_3d<double> ray_origin;
             vgl_vector_3d<double> direction;
             vgl_point_3d<double> enter_pt(0.0,0.0,0.0);
-            vcl_vector<vgl_point_3d<double> > plane_intersections(6);
+            std::vector<vgl_point_3d<double> > plane_intersections(6);
 
             // add 0.5 to get center of pixel
             generate_ray(i + 0.5f, j + 0.5f, block_bb, ray_origin, direction);
@@ -322,10 +322,10 @@ public:
               bool step_positive = false;
               bool found_exit = cube_exit_point(cell_bb, enter_pt, direction, exit_pt, step_dim, step_positive);
               if (!found_exit) {
-                vcl_cerr << "error: could not find cell exit point" << vcl_endl;
-                vcl_cerr << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]" << vcl_endl;
-                vcl_cerr << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "] " << vcl_endl;
-                vcl_cerr << "   cell_bb = [" << cell_bb.xmin() <<", " << cell_bb.xmax() << "]  [" << cell_bb.ymin() << ", " << cell_bb.ymax() << "]  [" << cell_bb.zmin() << ", " << cell_bb.zmax() <<"] " << vcl_endl;
+                std::cerr << "error: could not find cell exit point" << std::endl;
+                std::cerr << "   enter_pt = [" << enter_pt.x() << ", " << enter_pt.y() << ", " << enter_pt.z() << "]" << std::endl;
+                std::cerr << "   direction = [" << direction.x() << ", " << direction.y() << ", " << direction.z() << "] " << std::endl;
+                std::cerr << "   cell_bb = [" << cell_bb.xmin() <<", " << cell_bb.xmax() << "]  [" << cell_bb.ymin() << ", " << cell_bb.ymax() << "]  [" << cell_bb.zmin() << ", " << cell_bb.zmax() <<"] " << std::endl;
                 assert(found_exit);
                 break;
               }
@@ -385,11 +385,11 @@ protected:
       return false;
     }
     else {
-      unsigned int xmin = (unsigned int)vcl_max(img_bounds.xmin(), block_projection.xmin());
-      unsigned int ymin = (unsigned int)vcl_max(img_bounds.ymin(), block_projection.ymin());
+      unsigned int xmin = (unsigned int)std::max(img_bounds.xmin(), block_projection.xmin());
+      unsigned int ymin = (unsigned int)std::max(img_bounds.ymin(), block_projection.ymin());
       img_bb.update(xmin,ymin);
-      unsigned int xmax = (unsigned int)vcl_min(img_bounds.xmax(), block_projection.xmax()) + 1;
-      unsigned int ymax = (unsigned int)vcl_min(img_bounds.ymax(), block_projection.ymax()) + 1;
+      unsigned int xmax = (unsigned int)std::min(img_bounds.xmax(), block_projection.xmax()) + 1;
+      unsigned int ymax = (unsigned int)std::min(img_bounds.ymax(), block_projection.ymax()) + 1;
       img_bb.update(xmax,ymax);
     }
     if (vpgl_perspective_camera<double> const* pcam = dynamic_cast<vpgl_perspective_camera<double> const*>(cam_)) {
@@ -399,9 +399,9 @@ protected:
       cam_is_rational_ = true;
 
       // assume that the ray intersects the two z faces, and is a above the scene 
-      vcl_vector<vgl_homg_point_2d<double> > corners_img;
-      vcl_vector<vgl_homg_point_2d<double> > corners_top;
-      vcl_vector<vgl_homg_point_2d<double> > corners_bot;
+      std::vector<vgl_homg_point_2d<double> > corners_img;
+      std::vector<vgl_homg_point_2d<double> > corners_top;
+      std::vector<vgl_homg_point_2d<double> > corners_bot;
 
       // create vectors containing four corners of grid, and their projections into the image
 
@@ -444,16 +444,16 @@ protected:
 
       vgl_h_matrix_2d_compute_linear comp_4pt;
       if (!comp_4pt.compute(corners_img,corners_top, H_img_to_top_)) {
-        vcl_cerr << "ERROR computing homography from image to zmax plane.\n";
+        std::cerr << "ERROR computing homography from image to zmax plane.\n";
         return false;
       }
       if (!comp_4pt.compute(corners_img,corners_bot, H_img_to_bot_)) {
-        vcl_cerr << "ERROR computing homography from voxel slice to zmin plane.\n";
+        std::cerr << "ERROR computing homography from voxel slice to zmin plane.\n";
         return false;
       }
     }
     else {
-      vcl_cerr << "Error: Unsupported Camera type! " << vcl_endl;
+      std::cerr << "Error: Unsupported Camera type! " << std::endl;
       return false;
     }
     return true;

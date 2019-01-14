@@ -2,8 +2,8 @@
 //  MingChing Chang
 //  Oct 20, 2004.
 
-#include <vcl_set.h>
-#include <vcl_iostream.h>
+#include <set>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_ms_hypg.h>
@@ -23,7 +23,7 @@ void dbsk3d_ms_hypg::add_virtual_curve (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV,
 }
 
 void dbsk3d_ms_hypg::add_virtual_curve (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV,
-                                        vcl_vector<dbmsh3d_curve*>& sup_curves)
+                                        std::vector<dbmsh3d_curve*>& sup_curves)
 {
   dbsk3d_ms_curve* MCV = (dbsk3d_ms_curve*) _new_edge (sV, eV);
   MCV->set_c_type (C_TYPE_VIRTUAL);
@@ -41,21 +41,21 @@ const unsigned int dbsk3d_ms_hypg::i_traverse_flag() const
 void dbsk3d_ms_hypg::select_salient_ms_curves (const int min_elms, const int n_curves, const int verbose)
 {
   if (verbose)
-    vul_printf (vcl_cout, "select_salient_ms_curves():\n");
+    vul_printf (std::cout, "select_salient_ms_curves():\n");
 
   //Go through each curve and compute length, add to a map.
   //All ms_curves should be sorted in MCmap in order of -len.
-  vcl_map<float, dbsk3d_ms_curve*> MCmap;
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<float, dbsk3d_ms_curve*> MCmap;
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     float len = MC->get_length();
-    MCmap.insert (vcl_pair<float, dbsk3d_ms_curve*>(-len, MC));
+    MCmap.insert (std::pair<float, dbsk3d_ms_curve*>(-len, MC));
   }
 
   //Go through MCmap and select ms_curves in order of decreasing length.
   n_selected_ms_curves_ = 0;
-  vcl_map<float, dbsk3d_ms_curve*>::iterator MCit = MCmap.begin();
+  std::map<float, dbsk3d_ms_curve*>::iterator MCit = MCmap.begin();
   for (; MCit != MCmap.end(); MCit++) {
     dbsk3d_ms_curve* MC = (*MCit).second;
     const unsigned int sz = MC->E_vec().size();
@@ -71,7 +71,7 @@ void dbsk3d_ms_hypg::select_salient_ms_curves (const int min_elms, const int n_c
   }
 
   n_selected_ms_nodes_ = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     if (MN->selected())
@@ -79,16 +79,16 @@ void dbsk3d_ms_hypg::select_salient_ms_curves (const int min_elms, const int n_c
   }
 
   if (verbose) {
-    vul_printf (vcl_cout, "  totally %d ms_curves, %d selected.\n",
+    vul_printf (std::cout, "  totally %d ms_curves, %d selected.\n",
                 edgemap_.size(), n_selected_ms_curves_);
-    vul_printf (vcl_cout, "  totally %d ms_nodes, %d selected.\n",
+    vul_printf (std::cout, "  totally %d ms_nodes, %d selected.\n",
                 vertexmap_.size(), n_selected_ms_nodes_);
   }
 }
 
 void dbsk3d_ms_hypg::select_all ()
 {
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     MC->set_selected (true);
@@ -102,7 +102,7 @@ void dbsk3d_ms_hypg::select_all ()
 //Replicate dbmsh3d_hypg::check_integrity() with a proper shock element type.
 bool dbsk3d_ms_hypg::check_integrity ()
 {  
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     if (MN->id() != (*vit).first) {
@@ -116,8 +116,8 @@ bool dbsk3d_ms_hypg::check_integrity ()
   }
   
   //Prepare a multi-set of all E's in the ms_hypg.
-  vcl_multiset<dbmsh3d_edge*> Emset;
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::multiset<dbmsh3d_edge*> Emset;
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     if (MC->c_type() != C_TYPE_VIRTUAL) {
@@ -139,12 +139,12 @@ bool dbsk3d_ms_hypg::check_integrity ()
   unsigned int Emset_size = Emset.size();
   
   //Prepare a set of all F's in the ms_hypg.
-  vcl_set<dbmsh3d_face*> Fmset;
-  vcl_map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
+  std::set<dbmsh3d_face*> Fmset;
+  std::map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
   for (; sit != sheetmap_.end(); sit++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*sit).second;
 
-    vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
       Fmset.insert (F);
@@ -202,7 +202,7 @@ bool dbsk3d_ms_hypg::check_integrity ()
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*sit).second;
 
     //Remove MS.Fmap from Fmset.
-    vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
       Fmset.erase (Fmset.find(F));
@@ -244,7 +244,7 @@ dbsk3d_ms_hypg* dbsk3d_ms_hypg::clone (dbsk3d_fs_mesh* FS2)
   dbsk3d_ms_hypg* MHG2 = new dbsk3d_ms_hypg (FS2);
 
   //deep-copy all medial nodes.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     dbsk3d_ms_node* MN2 = (dbsk3d_ms_node*) MN->clone (FS2);
@@ -254,7 +254,7 @@ dbsk3d_ms_hypg* dbsk3d_ms_hypg::clone (dbsk3d_fs_mesh* FS2)
   assert (MHG2->vertexmap().size() == vertexmap_.size());
 
   //deep-copy all medial curves.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*eit).second;
     dbsk3d_ms_curve* MC2 = (dbsk3d_ms_curve*) MC->clone (MHG2, FS2);
@@ -264,7 +264,7 @@ dbsk3d_ms_hypg* dbsk3d_ms_hypg::clone (dbsk3d_fs_mesh* FS2)
   assert (MHG2->edgemap().size() == edgemap_.size());
 
   //deep-copy all medial sheets.
-  vcl_map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
+  std::map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
   for (; sit != sheetmap_.end(); sit++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*sit).second;
     dbsk3d_ms_sheet* MS2 = (dbsk3d_ms_sheet*) MS->clone (MHG2, FS2);
@@ -286,7 +286,7 @@ dbmsh3d_pt_set* dbsk3d_ms_hypg::clone ()
 
 void dbsk3d_ms_hypg::print_MS_info ()
 {
-  vul_printf (vcl_cout, "\nprint_MS_info() on %d MS nodes.\n", vertexmap_.size());
+  vul_printf (std::cout, "\nprint_MS_info() on %d MS nodes.\n", vertexmap_.size());
   int n_A1A3 = 0, n_A1A3_d = 0;
   int n_A14 = 0, n_A14_d = 0;
   int n_A1A3_2 = 0, n_A1A3_2_d = 0;
@@ -295,17 +295,17 @@ void dbsk3d_ms_hypg::print_MS_info ()
   int n_A15 = 0, n_A15_d = 0;
   int n_A1A5 = 0, n_A1A5_d = 0;
 
-  vcl_set<vcl_pair<int, int> > A1nA3_set; //n>=2, storing <n_rib, n_axial>.
-  vcl_set<vcl_pair<int, int> > A1nA3_d_set; 
-  vcl_set<int> A1n_set; //n>=5, storing n_axial.
-  vcl_set<int> A1n_d_set;
+  std::set<std::pair<int, int> > A1nA3_set; //n>=2, storing <n_rib, n_axial>.
+  std::set<std::pair<int, int> > A1nA3_d_set; 
+  std::set<int> A1n_set; //n>=5, storing n_axial.
+  std::set<int> A1n_d_set;
   
   int n_LoopNode = 0;
   int n_LoopNode_2 = 0;
   int nN_degeA_2p = 0; //# nodes with 2 or more dege. axials.
   int exception1 = 0, exception2 = 0, exception3 = 0;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     int nRib, nAxial, nDegeAxial, nVirtual;
@@ -332,7 +332,7 @@ void dbsk3d_ms_hypg::print_MS_info ()
       else {
         if (nAxial != 0) {
           if (nRib != 0) //A1nA3, n>=2
-            A1nA3_set.insert (vcl_pair<int, int> (nRib, nAxial));
+            A1nA3_set.insert (std::pair<int, int> (nRib, nAxial));
           else
             A1n_set.insert (nAxial);      
         }
@@ -341,7 +341,7 @@ void dbsk3d_ms_hypg::print_MS_info ()
             n_LoopNode_2++;
           }
           else {
-            vul_printf (vcl_cout, "exception1!(%d) ", MN->id());
+            vul_printf (std::cout, "exception1!(%d) ", MN->id());
             exception1++;
             assert (0);
           }
@@ -364,7 +364,7 @@ void dbsk3d_ms_hypg::print_MS_info ()
       else {
         if (nAxial + nDegeAxial != 0) {
           if (nRib != 0) //A1nA3, n>=2
-            A1nA3_d_set.insert (vcl_pair<int, int> (nRib, nAxial + nDegeAxial));
+            A1nA3_d_set.insert (std::pair<int, int> (nRib, nAxial + nDegeAxial));
           else
             A1n_d_set.insert (nAxial + nDegeAxial);      
         }
@@ -373,7 +373,7 @@ void dbsk3d_ms_hypg::print_MS_info ()
             n_LoopNode_2++;
           }
           else {
-            vul_printf (vcl_cout, "exception2!(%d) ", MN->id());
+            vul_printf (std::cout, "exception2!(%d) ", MN->id());
             exception2++;
             assert (0);
           }
@@ -382,60 +382,60 @@ void dbsk3d_ms_hypg::print_MS_info ()
     }
     else {
       nN_degeA_2p++; 
-      vul_printf (vcl_cout, "exception3!(%d) ", MN->id());
+      vul_printf (std::cout, "exception3!(%d) ", MN->id());
       exception3++;
     }
   }
   
   //Print statistics of node types:  
-  vul_printf (vcl_cout, "\n");
-  vul_printf (vcl_cout, "  n_A1A3      = %d, n_A1A3_d    = %d.\n", n_A1A3, n_A1A3_d);
-  vul_printf (vcl_cout, "  n_A14       = %d, n_A14_d     = %d.\n", n_A14, n_A14_d);
-  vul_printf (vcl_cout, "  n_A1A3_2    = %d, n_A1A3_2_d  = %d.\n", n_A1A3_2, n_A1A3_2_d);
-  vul_printf (vcl_cout, "  n_A12A3     = %d, n_A12A3_d   = %d.\n", n_A12A3, n_A12A3_d);
-  vul_printf (vcl_cout, "  n_A15       = %d, n_A15_d     = %d.\n", n_A15, n_A15_d);
-  vul_printf (vcl_cout, "  n_A1A5      = %d, n_A1A5_d    = %d.\n", n_A1A5, n_A1A5_d);
+  vul_printf (std::cout, "\n");
+  vul_printf (std::cout, "  n_A1A3      = %d, n_A1A3_d    = %d.\n", n_A1A3, n_A1A3_d);
+  vul_printf (std::cout, "  n_A14       = %d, n_A14_d     = %d.\n", n_A14, n_A14_d);
+  vul_printf (std::cout, "  n_A1A3_2    = %d, n_A1A3_2_d  = %d.\n", n_A1A3_2, n_A1A3_2_d);
+  vul_printf (std::cout, "  n_A12A3     = %d, n_A12A3_d   = %d.\n", n_A12A3, n_A12A3_d);
+  vul_printf (std::cout, "  n_A15       = %d, n_A15_d     = %d.\n", n_A15, n_A15_d);
+  vul_printf (std::cout, "  n_A1A5      = %d, n_A1A5_d    = %d.\n", n_A1A5, n_A1A5_d);
   
-  vul_printf (vcl_cout, "  n_LoopNode  = %d, n_LoopNode2 = %d.\n", n_LoopNode, n_LoopNode_2);
-  vul_printf (vcl_cout, "  nN_degeA_2p = %d.\n", nN_degeA_2p);
+  vul_printf (std::cout, "  n_LoopNode  = %d, n_LoopNode2 = %d.\n", n_LoopNode, n_LoopNode_2);
+  vul_printf (std::cout, "  nN_degeA_2p = %d.\n", nN_degeA_2p);
 
-  vul_printf (vcl_cout, "  A1nA3_set   = %d.", A1nA3_set.size());
+  vul_printf (std::cout, "  A1nA3_set   = %d.", A1nA3_set.size());
   if (A1nA3_set.size())
-    vul_printf (vcl_cout, " (n_rib, n_axial): ");
-  vcl_set<vcl_pair<int, int> >::iterator iit = A1nA3_set.begin();
+    vul_printf (std::cout, " (n_rib, n_axial): ");
+  std::set<std::pair<int, int> >::iterator iit = A1nA3_set.begin();
   for (; iit != A1nA3_set.end(); iit++) {
-    vul_printf (vcl_cout, "(%d, %d), ", (*iit).first, (*iit).second);
+    vul_printf (std::cout, "(%d, %d), ", (*iit).first, (*iit).second);
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "  A1nA3_d_set = %d.", A1nA3_d_set.size());
+  vul_printf (std::cout, "  A1nA3_d_set = %d.", A1nA3_d_set.size());
   if (A1nA3_d_set.size())
-    vul_printf (vcl_cout, " (n_rib, n_axial, n_dege): ");
+    vul_printf (std::cout, " (n_rib, n_axial, n_dege): ");
   iit = A1nA3_d_set.begin();
   for (; iit != A1nA3_d_set.end(); iit++) {
-    vul_printf (vcl_cout, "(%d, %d, 1), ", (*iit).first, (*iit).second-1);
+    vul_printf (std::cout, "(%d, %d, 1), ", (*iit).first, (*iit).second-1);
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "  A1n_set     = %d.", A1n_set.size());
+  vul_printf (std::cout, "  A1n_set     = %d.", A1n_set.size());
   if (A1n_set.size())
-    vul_printf (vcl_cout, " (n_axial): ");   
-  vcl_set<int>::iterator it = A1n_set.begin();
+    vul_printf (std::cout, " (n_axial): ");   
+  std::set<int>::iterator it = A1n_set.begin();
   for (; it != A1n_set.end(); it++) {
-    vul_printf (vcl_cout, "(%d), ", (*it));
+    vul_printf (std::cout, "(%d), ", (*it));
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "  A1n_d_set   = %d.", A1n_d_set.size());
+  vul_printf (std::cout, "  A1n_d_set   = %d.", A1n_d_set.size());
   if (A1n_d_set.size())
-    vul_printf (vcl_cout, " (b_rib, n_axial, n_dege): ");
+    vul_printf (std::cout, " (b_rib, n_axial, n_dege): ");
   it = A1n_d_set.begin();
   for (; it != A1n_d_set.end(); it++) {
-    vul_printf (vcl_cout, "(0, %d, 1), ", (*it)-1);
+    vul_printf (std::cout, "(0, %d, 1), ", (*it)-1);
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "  exception1  = %d, exception2  = %d, exception3  = %d.\n", 
+  vul_printf (std::cout, "  exception1  = %d, exception2  = %d, exception3  = %d.\n", 
               exception1, exception2, exception3);
 }
 

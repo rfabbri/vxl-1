@@ -5,7 +5,7 @@
 // \author Matt Leotta
 // \brief  See dbvrl_region_tableau.h for a description of this file.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_gl.h>
 #include <vnl/vnl_identity_3x3.h>
@@ -25,7 +25,7 @@ dbvrl_region_tableau::~dbvrl_region_tableau()
 }
 
 
-vcl_string dbvrl_region_tableau::type_name() const
+std::string dbvrl_region_tableau::type_name() const
 {
   return "dbvrl_region_tableau";
 }
@@ -49,7 +49,7 @@ dbvrl_region_tableau::set_region(const dbvrl_region_sptr& region)
 
 //: draw the grid for the given transformation
 void 
-dbvrl_region_tableau::draw_grid(const vcl_vector<vgl_point_2d<double> >& verts, 
+dbvrl_region_tableau::draw_grid(const std::vector<vgl_point_2d<double> >& verts, 
                               unsigned int nx, unsigned int ny)
 {
   if(verts.size() != 4 )
@@ -96,7 +96,7 @@ dbvrl_region_tableau::draw_grid(const vcl_vector<vgl_point_2d<double> >& verts,
 bool dbvrl_region_tableau::handle(vgui_event const& e)
 {
   if( e.type == vgui_DRAW && region_){
-    vcl_vector<vgl_point_2d<double> > pts = region_->corners();
+    std::vector<vgl_point_2d<double> > pts = region_->corners();
     for(int i=0; i<4; ++i)
       pts[i] = (*xform_)(pts[i]);
     this->draw_grid(pts, 10, 10);

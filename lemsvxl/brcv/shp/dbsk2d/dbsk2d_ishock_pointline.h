@@ -143,7 +143,7 @@ public:
 
   virtual void compute_extrinsic_locus();
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 }; 
 
 #endif // dbsk2d_ishock_pointline_h_

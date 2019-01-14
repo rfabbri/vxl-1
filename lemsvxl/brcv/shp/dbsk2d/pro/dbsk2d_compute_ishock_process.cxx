@@ -39,7 +39,7 @@
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vgl/vgl_line_2d.h>
 #include <vnl/vnl_random.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 #include <vgl/algo/vgl_fit_lines_2d.h>
 
@@ -84,7 +84,7 @@ dbsk2d_compute_ishock_process()
       !parameters()->add( "Max y: " , "-bbox_maxy" , (double)0.0 ) )
 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -102,25 +102,25 @@ clone() const
 }
 
 
-vcl_string dbsk2d_compute_ishock_process::
+std::string dbsk2d_compute_ishock_process::
 name()
 {
   return "Compute Shocks";
 }
 
-vcl_vector< vcl_string > dbsk2d_compute_ishock_process::
+std::vector< std::string > dbsk2d_compute_ishock_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbsk2d_compute_ishock_process::
+std::vector< std::string > dbsk2d_compute_ishock_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
@@ -154,7 +154,7 @@ execute()
 
   //3) VSOL -> dbsk2d_boundary
   //   parse through all the vsol classes and add to the boundary
-  //vcl_cout << "\nPutting VSOL objects into boundary ... ";
+  //std::cout << "\nPutting VSOL objects into boundary ... ";
   bool bsmooth_contour=false;
   parameters()->get_value( "-b_smooth" , bsmooth_contour );
 
@@ -187,9 +187,9 @@ execute()
   // start timer
   timer1.mark();
 
-  vcl_vector<int> ids_sos;
+  std::vector<int> ids_sos;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
   {
       ids_sos.push_back(vsol_list[b]->get_id());
@@ -258,11 +258,11 @@ execute()
   }
 
   //unused double vsol2boundary = (float)(timer1.real())/1000;
-  //vcl_cout << "done. Time taken= " << vsol2boundary << "seconds\n";
+  //std::cout << "done. Time taken= " << vsol2boundary << "seconds\n";
   
   
   //4) Partition the boundary elements into cells
-  //vcl_cout << "Partitioning boundary into cells...";
+  //std::cout << "Partitioning boundary into cells...";
 
   float xmin=0, ymin=0, cell_width=1000.0f, cell_height=1000.0f;
   int num_rows=1, num_cols=1;
@@ -319,7 +319,7 @@ execute()
 
   //unused double partition_time = (float)(timer1.real())/1000;
 
-  //vcl_cout << "done. Time taken= " << partition_time << "seconds\n";
+  //std::cout << "done. Time taken= " << partition_time << "seconds\n";
   
 
   //5) Preprocess the boundary to build topology
@@ -333,27 +333,27 @@ execute()
   dbsk2d_bnd_preprocess bnd_preprocessor;
   if (preprocess_boundary){
 
-    //vcl_cout << "Preprocessing boundary ... ";
+    //std::cout << "Preprocessing boundary ... ";
   
     timer1.mark();
     bnd_preprocessor.preprocess(boundary, talkative);
 
     preprocess_time = (float)(timer1.real())/1000;
-    vcl_cout << "done. Time taken= " << preprocess_time << "seconds\n";
+    std::cout << "done. Time taken= " << preprocess_time << "seconds\n";
   
 
 
 
   // validate boundary preprocessing 
-    vcl_cout << "Verifying boundary preprocessing .. " ;
+    std::cout << "Verifying boundary preprocessing .. " ;
     timer1.mark();
     bool need_preprocess = bnd_preprocessor.need_preprocessing(boundary);
 
     //verify_time = (float)(timer1.real())/1000;
-    //vcl_cout << "done. Time taken= " << verify_time << "seconds\n";
+    //std::cout << "done. Time taken= " << verify_time << "seconds\n";
 
-    vcl_string result = (need_preprocess) ? "Yes" : "No";
-    vcl_cout <<"Boundary needs preprocessing " << result << vcl_endl;
+    std::string result = (need_preprocess) ? "Yes" : "No";
+    std::cout <<"Boundary needs preprocessing " << result << std::endl;
 
     
     if (need_preprocess) 
@@ -371,32 +371,32 @@ execute()
     timer1.mark();
     boundary->break_long_line_edges(dbsk2d_bnd_preprocess::distance_tol);
     time_to_break_long_lines = (float)(timer1.real())/1000;
-    //vcl_cout << "done. Time taken= " << time_to_break_long_lines
+    //std::cout << "done. Time taken= " << time_to_break_long_lines
     //  << "seconds\n";
     boundary->break_long_arc_edges(dbsk2d_bnd_preprocess::distance_tol);
   }
 
   //after everything is converted, compile the belm_list
   boundary->update_belm_list();
-  //vcl_cout << "Number of edges = " << boundary->all_edges().size() << vcl_endl;
-  //vcl_cout << "Number of belms = " << boundary->num_belms() << vcl_endl;
-  //boundary->print_belm_list(vcl_cout);
+  //std::cout << "Number of edges = " << boundary->all_edges().size() << std::endl;
+  //std::cout << "Number of belms = " << boundary->num_belms() << std::endl;
+  //boundary->print_belm_list(std::cout);
 
 
   // Redo ids if flag is up
   if ( flag)
   {
 
-      vcl_list<dbsk2d_bnd_edge_sptr > edges = boundary->all_edges();
-      vcl_map<int,vcl_vector<vtol_topology_object*> > superior_map;
+      std::list<dbsk2d_bnd_edge_sptr > edges = boundary->all_edges();
+      std::map<int,std::vector<vtol_topology_object*> > superior_map;
 
-      vcl_list<dbsk2d_bnd_edge_sptr>::iterator it;
+      std::list<dbsk2d_bnd_edge_sptr>::iterator it;
       for ( it = edges.begin() ; it != edges.end() ; ++it )
       {
-          const vcl_list<vtol_topology_object*>* contour_list= 
+          const std::list<vtol_topology_object*>* contour_list= 
               (*it)->superiors_list();
 
-          vcl_list<vtol_topology_object*>::const_iterator it2;
+          std::list<vtol_topology_object*>::const_iterator it2;
           for ( it2 = contour_list->begin() ; it2 != contour_list->end();
                 ++it2 )
           {
@@ -405,18 +405,18 @@ execute()
    
       }
 
-      // vcl_cout<<"Map length, equivalent to numb contours: "
+      // std::cout<<"Map length, equivalent to numb contours: "
       //         <<superior_map.size()<<" cons "<<ids_sos.size()
-      //         <<vcl_endl;
+      //         <<std::endl;
 
-      vcl_map<int,vcl_vector<vtol_topology_object*> >::iterator mit;
+      std::map<int,std::vector<vtol_topology_object*> >::iterator mit;
 
       for ( mit = superior_map.begin() ; mit != superior_map.end() ; ++mit)
       {
 
-          vcl_vector<vtol_topology_object*> segs = (*mit).second;
+          std::vector<vtol_topology_object*> segs = (*mit).second;
 
-          //   vcl_cout<<"Length of superiors: "<<segs.size()<<vcl_endl;
+          //   std::cout<<"Length of superiors: "<<segs.size()<<std::endl;
           for ( unsigned int i=0 ; i <segs.size() ; ++i)
           {
               segs[i]->set_id(ids_sos.front());
@@ -429,24 +429,24 @@ execute()
   }
 
 /*
-  vcl_cout << "summary: \n";
-  vcl_cout << "\nPut VSOL objects into boundary ......... " << vsol2boundary << " seconds.\n";
-  vcl_cout << "Partition boundary into cells........... " << partition_time << " seconds.\n";
-  vcl_cout << "Preprocess boundary ....................  "<< preprocess_time << " seconds.\n";
-  vcl_cout << "Break long lines .......................  " << 
+  std::cout << "summary: \n";
+  std::cout << "\nPut VSOL objects into boundary ......... " << vsol2boundary << " seconds.\n";
+  std::cout << "Partition boundary into cells........... " << partition_time << " seconds.\n";
+  std::cout << "Preprocess boundary ....................  "<< preprocess_time << " seconds.\n";
+  std::cout << "Break long lines .......................  " << 
     time_to_break_long_lines << " seconds.\n";
 
-  vcl_cout << "Verify boundary preprocessing ........... ";
+  std::cout << "Verify boundary preprocessing ........... ";
 
   if (verify_time < 0) 
   {
-    vcl_cout << "(not run)";
+    std::cout << "(not run)";
   }
   else
   {
-    vcl_cout << verify_time ;
+    std::cout << verify_time ;
   }
-  vcl_cout << "seconds\n";
+  std::cout << "seconds\n";
 */
 
   //7) Instantiate the shock detector according to the selected algorithm
@@ -479,7 +479,7 @@ execute()
   
   //output a summary information of the shocks
   #ifdef DEBUG_SHOCK_VERBOSE
-  sh_det->ishock_graph()->print_summary(vcl_cout);
+  sh_det->ishock_graph()->print_summary(std::cout);
   #endif
 
   //9) Prune the shock graph
@@ -528,7 +528,7 @@ dbsk2d_compute_ishock_process::finish()
 vsol_polygon_2d_sptr dbsk2d_compute_ishock_process::
 smooth_closed_contour(vsol_polygon_2d_sptr polygon)
 {
-  vcl_vector<vgl_point_2d<float> > c;
+  std::vector<vgl_point_2d<float> > c;
   for (unsigned i=0; i<polygon->size(); i++)
     c.push_back(vgl_point_2d<float>((float)polygon->vertex(i)->x(), 
                                     (float)polygon->vertex(i)->y()));
@@ -537,7 +537,7 @@ smooth_closed_contour(vsol_polygon_2d_sptr polygon)
   double nsteps = 10;
   int n = c.size();
   
-  vcl_vector<vgl_point_2d<float> > cs;
+  std::vector<vgl_point_2d<float> > cs;
   cs.resize(n);
 
   // fix endpts 
@@ -549,8 +549,8 @@ smooth_closed_contour(vsol_polygon_2d_sptr polygon)
       vgl_vector_2d<float> v1 = c[i-1] - c[i];
       vgl_vector_2d<float> v2 = c[i+1] - c[i];
 
-      double nv1 = vcl_sqrt(v1.x()*v1.x() + v1.y()*v1.y());
-      double nv2 = vcl_sqrt(v2.x()*v2.x() + v2.y()*v2.y());
+      double nv1 = std::sqrt(v1.x()*v1.x() + v1.y()*v1.y());
+      double nv2 = std::sqrt(v2.x()*v2.x() + v2.y()*v2.y());
 
       vgl_vector_2d<float> v1n = v1/nv1;
       vgl_vector_2d<float> v2n = v2/nv2;
@@ -566,7 +566,7 @@ smooth_closed_contour(vsol_polygon_2d_sptr polygon)
     }
   }
 
-  vcl_vector<vsol_point_2d_sptr > smoothed_pts;
+  std::vector<vsol_point_2d_sptr > smoothed_pts;
   for (int i=0; i<n; i++)
     smoothed_pts.push_back(new vsol_point_2d(cs[i].x(), cs[i].y()));
 
@@ -576,7 +576,7 @@ smooth_closed_contour(vsol_polygon_2d_sptr polygon)
 vsol_polygon_2d_sptr dbsk2d_compute_ishock_process::
 add_noise_to_contour(vsol_polygon_2d_sptr polygon, double noise_radius)
 {
-  vcl_vector<vsol_point_2d_sptr > noisy_pts;
+  std::vector<vsol_point_2d_sptr > noisy_pts;
   vnl_random mz_random;
   mz_random.reseed((unsigned long)time(NULL));
   for (unsigned i=0; i<polygon->size(); i++) {
@@ -595,7 +595,7 @@ add_noise_to_contour(vsol_polygon_2d_sptr polygon, double noise_radius)
 vsol_polyline_2d_sptr dbsk2d_compute_ishock_process::
 add_noise_to_contour(vsol_polyline_2d_sptr poly, double noise_radius)
 {
-  vcl_vector<vsol_point_2d_sptr > noisy_pts;
+  std::vector<vsol_point_2d_sptr > noisy_pts;
   vnl_random mz_random;
   mz_random.reseed((unsigned long)time(NULL));
   for (unsigned i=0; i<poly->size(); i++) {
@@ -617,21 +617,21 @@ fit_lines_to_contour(vsol_polyline_2d_sptr poly, double rms) {
     vgl_fit_lines_2d<double> fitter; 
     fitter.set_min_fit_length(min_fit_length);
     fitter.set_rms_error_tol(rms);
-    vcl_cout << "original polyline size: " << poly->size() << " ";
+    std::cout << "original polyline size: " << poly->size() << " ";
     for (unsigned int i = 0; i<poly->size(); i++) {
       vgl_point_2d<double> p = poly->vertex(i)->get_p();
       fitter.add_point(p);
     }
     fitter.fit();
-    vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+    std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
 
-    vcl_vector<vsol_point_2d_sptr > new_pts;
+    std::vector<vsol_point_2d_sptr > new_pts;
     new_pts.push_back(new vsol_point_2d(segs[0].point1().x(),segs[0].point1().y()));
     new_pts.push_back(new vsol_point_2d(segs[0].point2().x(),segs[0].point2().y()));
     for (unsigned int i = 1; i<segs.size(); i++) {
       new_pts.push_back(new vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
     }
-    vcl_cout << "fitted polyline size: " << new_pts.size() << vcl_endl;
+    std::cout << "fitted polyline size: " << new_pts.size() << std::endl;
     return new vsol_polyline_2d(new_pts);
  } else
    return 0;
@@ -643,21 +643,21 @@ fit_lines_to_contour(vsol_polygon_2d_sptr poly, double rms) {
     vgl_fit_lines_2d<double> fitter; 
     fitter.set_min_fit_length(min_fit_length);
     fitter.set_rms_error_tol(rms);
-    vcl_cout << "original polygon size: " << poly->size() << " ";
+    std::cout << "original polygon size: " << poly->size() << " ";
     for (unsigned int i = 0; i<poly->size(); i++) {
       vgl_point_2d<double> p = poly->vertex(i)->get_p();
       fitter.add_point(p);
     }
     fitter.fit();
-    vcl_vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
+    std::vector<vgl_line_segment_2d<double> >& segs = fitter.get_line_segs();
 
-    vcl_vector<vsol_point_2d_sptr > new_pts;
+    std::vector<vsol_point_2d_sptr > new_pts;
     new_pts.push_back(new vsol_point_2d(segs[0].point1().x(),segs[0].point1().y()));
     new_pts.push_back(new vsol_point_2d(segs[0].point2().x(),segs[0].point2().y()));
     for (unsigned int i = 1; i<segs.size(); i++) {
       new_pts.push_back(new vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
     }
-    vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+    std::cout << "fitted polygon size: " << new_pts.size() << std::endl;
     return new vsol_polygon_2d(new_pts);
  } else
    return 0;

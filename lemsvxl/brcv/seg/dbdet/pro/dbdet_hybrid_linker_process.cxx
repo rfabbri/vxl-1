@@ -18,15 +18,15 @@
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/sel/dbdet_curve_model.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vil/vil_image_resource.h>
 
 //: Constructor
 dbdet_hybrid_linker_process::dbdet_hybrid_linker_process()
 {
-  vcl_vector<vcl_string> curve_model_choices;
+  std::vector<std::string> curve_model_choices;
   curve_model_choices.push_back("Simple Linear model");                   //0
   curve_model_choices.push_back("Linear model");                          //1
   curve_model_choices.push_back("Circular Arc model w/o perturbations");  //2
@@ -37,18 +37,18 @@ dbdet_hybrid_linker_process::dbdet_hybrid_linker_process()
   curve_model_choices.push_back("Euler Spiral model with perturbations"); //7
 
   //Curvelet type choices
-  vcl_vector<vcl_string> curvelet_type_choices;
+  std::vector<std::string> curvelet_type_choices;
   curvelet_type_choices.push_back("Anchor Centered");                      //0
   curvelet_type_choices.push_back("Anchor Centered/Bidirectional");        //1
   curvelet_type_choices.push_back("Anchor Leading/Bidirectional");         //2
   curvelet_type_choices.push_back("ENO Style around Anchor");              //3
 
-  vcl_vector<vcl_string> cvlet_formation_choices;
+  std::vector<std::string> cvlet_formation_choices;
   cvlet_formation_choices.push_back("From existing contour Only");        //0
   cvlet_formation_choices.push_back("Between existing contours Only");    //1
   cvlet_formation_choices.push_back("Both");                              //2
 
-  vcl_vector<vcl_string> post_processing_choices;
+  std::vector<std::string> post_processing_choices;
   post_processing_choices.push_back("Do Not Link");                       //0
   post_processing_choices.push_back("Using the Link graph");              //1
   post_processing_choices.push_back("Breaking contours where curve bundles do not form"); //2
@@ -76,7 +76,7 @@ dbdet_hybrid_linker_process::dbdet_hybrid_linker_process()
       //post processing options
       !parameters()->add( "Filter Contours by :"   , "-post_process" , post_processing_choices, 1))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -96,7 +96,7 @@ dbdet_hybrid_linker_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_hybrid_linker_process::name()
 {
   return "Hybrid Edge Linker";
@@ -120,9 +120,9 @@ dbdet_hybrid_linker_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_hybrid_linker_process::get_input_type()
+std::vector< std::string > dbdet_hybrid_linker_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel" );
 
   return to_return;
@@ -130,9 +130,9 @@ vcl_vector< vcl_string > dbdet_hybrid_linker_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_hybrid_linker_process::get_output_type()
+std::vector< std::string > dbdet_hybrid_linker_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -141,7 +141,7 @@ vcl_vector< vcl_string > dbdet_hybrid_linker_process::get_output_type()
 bool dbdet_hybrid_linker_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_hybrid_linker_process::execute() - not exactly one input \n";
+    std::cout << "In dbdet_hybrid_linker_process::execute() - not exactly one input \n";
     return false;
   }
   clear_output();
@@ -225,7 +225,7 @@ bool dbdet_hybrid_linker_process::execute()
   //This process assumes that contours have already been computed by the generic linker
 
   //filter contours using curvelets
-  vcl_cout << "Forming curvelets from contours..." << vcl_endl;
+  std::cout << "Forming curvelets from contours..." << std::endl;
   
   edge_linker->set_appearance_usage(0);//do not use appearance
 
@@ -262,7 +262,7 @@ bool dbdet_hybrid_linker_process::execute()
   }
 
   double link_time = t.real() / 1000.0;
-  vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+  std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
 
   //report stats
   //edge_linker->report_stats();

@@ -6,8 +6,8 @@
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoBaseColor.h>
 
-SoSeparator* draw_points_cor (vcl_vector<vgl_point_3d<double> >& cor_PS1, 
-                              vcl_vector<vgl_point_3d<double> >& cor_PS2,
+SoSeparator* draw_points_cor (std::vector<vgl_point_3d<double> >& cor_PS1, 
+                              std::vector<vgl_point_3d<double> >& cor_PS2,
                               const SbColor& col1, const SbColor& col2, const SbColor& colm)
 {
   SoSeparator* root = new SoSeparator;

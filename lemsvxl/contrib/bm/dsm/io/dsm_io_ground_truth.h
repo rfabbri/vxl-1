@@ -14,7 +14,7 @@
 //   <none yet>
 // \endverbatim
 #include<vsl/vsl_binary_io.h>
-#include<vcl_iostream.h>
+#include<iostream>
 #include"../dsm_ground_truth.h"
 
 //: Binary save parameters to stream.
@@ -22,7 +22,7 @@ void vsl_b_read(vsl_b_istream &is, dsm_ground_truth &ground_truth);
 void vsl_b_write(vsl_b_ostream &os, dsm_ground_truth const& ground_truth);
 void vsl_b_read(vsl_b_istream &is, dsm_ground_truth* &p);
 void vsl_b_write(vsl_b_ostream &os, const dsm_ground_truth* p);
-void vsl_print_summary(vcl_ostream& os, const dsm_ground_truth *p);
+void vsl_print_summary(std::ostream& os, const dsm_ground_truth *p);
 
 
 #endif //DSM_IO_GROUND_TRUTH_H_

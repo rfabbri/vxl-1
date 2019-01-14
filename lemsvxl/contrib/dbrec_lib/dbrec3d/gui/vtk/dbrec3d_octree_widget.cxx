@@ -82,9 +82,9 @@ void dbrec3d_octree_widget::init_volume_data(boxm_scene<boct_tree<short, float> 
 //  }
 //  else{    //subdivide and recurre 
 //    vtk_octree->SubdivideLeaf(cursor);
-//    vcl_vector<boct_tree_cell<T_loc,T_data>*> children = boxm_cell->children();
+//    std::vector<boct_tree_cell<T_loc,T_data>*> children = boxm_cell->children();
 //    if(cursor->GetNumberOfChildren()!=8){
-//      vcl_cerr << "Error: wrong number of children" << vcl_end;
+//      std::cerr << "Error: wrong number of children" << vcl_end;
 //      return
 //    };
 //    for (unsigned i=0; i<8; i++) {

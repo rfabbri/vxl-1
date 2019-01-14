@@ -19,8 +19,8 @@
 
 #include "vox_match_shock_graphs_params_sptr.h"
 #include <dborl/dborl_index_sptr.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 class vox_match_shock_graphs_one_to_many
 {
@@ -58,17 +58,17 @@ private:
 
     // Holds unormalized costs or normalized costs depending on the type
     // of matching
-    vcl_vector<float> final_costs_;
+    std::vector<float> final_costs_;
     
     // Data structure that holds everthing in index file
     dborl_index_sptr ind_;
 
     // The output file path
-    vcl_string output_file_;
+    std::string output_file_;
 
     // The query shock file that constitutes the one in the one to many
     // matching
-    vcl_string query_shock_;
+    std::string query_shock_;
 
     // Good practice make copy ctor and assign operator private
 

@@ -11,7 +11,7 @@
 
 
 #include "dbvrl_region_tableau_sptr.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vgui/vgui_tableau.h>
 #include <vgl/vgl_point_2d.h>
 #include <dbvrl/dbvrl_region_sptr.h>
@@ -26,10 +26,10 @@ class dbvrl_region_tableau : public vgui_tableau
   dbvrl_region_tableau();
 
   //: Returns the type of tableau ('dbvrl_region_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: draw the grid for the given transformation
-  void draw_grid( const vcl_vector<vgl_point_2d<double> >& verts, 
+  void draw_grid( const std::vector<vgl_point_2d<double> >& verts, 
                   unsigned int nx, unsigned int ny );
 
   //: Handle all events sent to this tableau.

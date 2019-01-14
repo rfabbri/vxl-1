@@ -27,7 +27,7 @@ vidpro1_kltrack_process::vidpro1_kltrack_process(void): bpro1_process(),kl_param
           !parameters()->add( "No. of frames" , "-framenum", (int) 2 )
           ) 
      {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_kl_process::vidpro1_kl_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_kl_process::vidpro1_kl_process()" << std::endl;
      }
     else
     {
@@ -43,7 +43,7 @@ vidpro1_kltrack_process::~vidpro1_kltrack_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_kltrack_process::name()
 {
   return "Kanade-Lucas Tracking";
@@ -70,9 +70,9 @@ vidpro1_kltrack_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_kltrack_process::get_input_type()
+std::vector< std::string > vidpro1_kltrack_process::get_input_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
  
   return to_return;
@@ -80,9 +80,9 @@ vcl_vector< vcl_string > vidpro1_kltrack_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_kltrack_process::get_output_type()
+std::vector< std::string > vidpro1_kltrack_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
 
   return to_return;
@@ -96,7 +96,7 @@ vidpro1_kltrack_process::execute()
  int num_of_frames;
   parameters()->get_value("-framenum", num_of_frames);
   if ( input_data_.size() !=  num_of_frames ){
-    vcl_cout << "In vidpro1_kltrack_process::execute() - "
+    std::cout << "In vidpro1_kltrack_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -104,9 +104,9 @@ vidpro1_kltrack_process::execute()
  
 
   // get image from the storage class
-  vcl_vector<vidpro1_image_storage_sptr> frame_image(num_of_frames);
-  vcl_vector<vil_image_resource_sptr> images(num_of_frames);
-  vcl_vector<vidpro1_image_storage_sptr>::const_iterator frame_iter= frame_image.begin();
+  std::vector<vidpro1_image_storage_sptr> frame_image(num_of_frames);
+  std::vector<vil_image_resource_sptr> images(num_of_frames);
+  std::vector<vidpro1_image_storage_sptr>::const_iterator frame_iter= frame_image.begin();
   for ( int i = 0; (i<num_of_frames)&&(frame_iter!=frame_image.end() ); i++)
      {
      (frame_image[i]).vertical_cast(input_data_[i][0]);
@@ -125,24 +125,24 @@ vidpro1_kltrack_process::execute()
   matched_points = new vgel_multi_view_data<vtol_vertex_2d_sptr>(num_of_frames);
   kl_points->match_sequence(images,matched_points);
   
-  vcl_vector<vsol_spatial_object_2d_sptr> points_stor;
-  vcl_vector<vtol_vertex_2d_sptr> points_prev;
-  vcl_vector<vtol_vertex_2d_sptr> points_last;
-  vcl_vector<vtol_vertex_2d_sptr> points;
+  std::vector<vsol_spatial_object_2d_sptr> points_stor;
+  std::vector<vtol_vertex_2d_sptr> points_prev;
+  std::vector<vtol_vertex_2d_sptr> points_last;
+  std::vector<vtol_vertex_2d_sptr> points;
 
    // create the output storage class
-  vcl_vector<vidpro1_vsol2D_storage_sptr> output_vsol(num_of_frames);
+  std::vector<vidpro1_vsol2D_storage_sptr> output_vsol(num_of_frames);
   for ( int i = 0; i<num_of_frames; i++)
    output_vsol[i] = vidpro1_vsol2D_storage_new();
 
   matched_points->get(0,num_of_frames-1, points_prev, points_last);
   assert( points_prev.size()>0 );
    assert( points_last.size()>0 );
-  vcl_vector<vcl_vector<vsol_spatial_object_2d_sptr > > first_pass;
+  std::vector<std::vector<vsol_spatial_object_2d_sptr > > first_pass;
   vtol_vertex_2d_sptr point_matchee;
  
 
-  vcl_vector< vsol_spatial_object_2d_sptr > klt_points;
+  std::vector< vsol_spatial_object_2d_sptr > klt_points;
   for( int i = 0 ; i < points_last.size() ; i++ ) 
   {
   point_matchee = points_last[i];
@@ -173,7 +173,7 @@ vidpro1_kltrack_process::execute()
   assert(first_pass.size()!=0);
   for (int i = 0; i<first_pass.size(); i++)
   {
-  vcl_vector <vsol_spatial_object_2d_sptr> temp = first_pass[i];
+  std::vector <vsol_spatial_object_2d_sptr> temp = first_pass[i];
   assert(temp.size()==num_of_frames);
   for (int j = 0; j<temp.size(); j++)
    output_vsol[temp.size()-j-1]->add_object(temp[j],"KL feature  point");

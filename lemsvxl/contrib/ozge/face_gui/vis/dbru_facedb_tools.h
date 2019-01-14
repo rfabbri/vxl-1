@@ -17,7 +17,7 @@
 #include <vgui/vgui_grid_tableau.h>
 #include <ozge/face_gui/dbru_facedb_sptr.h>
 #include <ozge/face_gui/pro/dbru_facedb_storage_sptr.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <vidl1/vidl1_movie_sptr.h>
 
 //: A tool for adding subjects in a recursive manner from a root directory
@@ -32,7 +32,7 @@ public:
   virtual ~dbru_facedb_add_subjects_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -48,7 +48,7 @@ public:
 
   virtual void activate();
   //:Tool utilities
-  bool add_subjects(vcl_string const& subjects_root_dir);
+  bool add_subjects(std::string const& subjects_root_dir);
   
 protected:
   vgui_event_condition gesture_disp_;
@@ -75,7 +75,7 @@ public:
   virtual ~dbru_facedb_delete_observations_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -115,7 +115,7 @@ public:
   virtual ~dbru_facedb_save_db_file_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -160,7 +160,7 @@ public:
   virtual ~dbru_facedb_match_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -177,7 +177,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the facedb
-  //bool load_query(vcl_string const& path, const bool expand = false,
+  //bool load_query(std::string const& path, const bool expand = false,
   //                const float coef = 0.6f);
   
   //: match the query against the current database
@@ -186,9 +186,9 @@ public:
                    const float ratio, const float valid_thresh,
                    const unsigned Nob, bool use_int, bool use_grad,
                    bool forward_and_reverse,
-  //                 vcl_vector<vcl_string>& classes,
-                   vcl_vector<float>& match_scores,
-                   vcl_vector<vil_image_resource_sptr>& match_images);
+  //                 std::vector<std::string>& classes,
+                   std::vector<float>& match_scores,
+                   std::vector<vil_image_resource_sptr>& match_images);
 
   //: match the query against the current datbase in transform intervals
   bool match_query_interval(const float xmin, const float xmax,
@@ -199,9 +199,9 @@ public:
                             const unsigned n_intervals,
                             const float valid_thresh,
                             bool forward_and_reverse,
-    //                        vcl_vector<vcl_string>& classes,
-                            vcl_vector<float>& match_scores,
-                            vcl_vector<vil_image_resource_sptr>& match_images);
+    //                        std::vector<std::string>& classes,
+                            std::vector<float>& match_scores,
+                            std::vector<vil_image_resource_sptr>& match_images);
 
   bool query_set(void) { return query_set_; }
 
@@ -214,7 +214,7 @@ protected:
   //: query image
   //vil_image_resource_sptr image_;
   
-  vcl_pair<unsigned, unsigned> query_obs_ids_;
+  std::pair<unsigned, unsigned> query_obs_ids_;
   bool query_set_;
 private:
   bool active_;
@@ -236,7 +236,7 @@ public:
   virtual ~dbru_facedb_transform_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -253,7 +253,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the facedb
-  bool load(vcl_string const& path,
+  bool load(std::string const& path,
             const bool query = true,
             const bool expand = false,
             const float coef = 0.6f);

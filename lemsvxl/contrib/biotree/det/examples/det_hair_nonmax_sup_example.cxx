@@ -4,9 +4,9 @@
 // \author    Kongbin Kang (kk at lems.brown.edu)
 // \date        2005-10-07
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 
 #include <xmvg/xmvg_composite_filter_descriptor.h>
 #include <det/det_cylinder_map.h>
@@ -28,7 +28,7 @@
 int main(int argc, char *argv[])
 {
   if(argc < 3){
-    vcl_cout << "Usage: "<< argv[0] << " fname sigma\n";
+    std::cout << "Usage: "<< argv[0] << " fname sigma\n";
     return 1;
   }
 
@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
 
   double intensity;
   
-  vcl_ifstream file(argv[1]);
+  std::ifstream file(argv[1]);
 
   if(!file){
-    vcl_cout << "failed on opening file to read\n";
+    std::cout << "failed on opening file to read\n";
     return 2;
   }
   
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
   int dimy = result_cm.ny();
   int dimz = result_cm.nz();
 
-  vcl_vector<double> field;
+  std::vector<double> field;
   for(int k=0;k<dimz;k++)
   {
     for(int j=0;j<dimy;j++)
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
        
         intensity = result_cm[i][j][k].strength_;
         if(intensity > 1000)
-          vcl_cout <<"[ " << result_cm[i][j][k].location_.x() + i << ", " << result_cm[i][j][k].location_.y() + j << ", " << result_cm[i][j][k].location_.z() + k << "]";
+          std::cout <<"[ " << result_cm[i][j][k].location_.x() + i << ", " << result_cm[i][j][k].location_.y() + j << ", " << result_cm[i][j][k].location_.z() + k << "]";
 
    
           field.push_back(intensity);
@@ -84,12 +84,12 @@ int main(int argc, char *argv[])
      }
 
     }
-       vcl_cout << "\n";
+       std::cout << "\n";
 
   }
 
 
-  vcl_cout << result_cm;
+  std::cout << result_cm;
 
   const size_t blocksize = field.size();
   uint8_t * voxels = new uint8_t[blocksize];

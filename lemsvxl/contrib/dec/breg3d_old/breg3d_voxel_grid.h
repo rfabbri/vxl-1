@@ -22,11 +22,11 @@ public:
   //: Load a slice of voxel probability data from disk.
   inline void load_prob_slice(vil_image_view<float> &data_prob, unsigned k);
   //: Load a slice of mixture of gaussian appearance model data from disk.
-  inline void load_mg_slice(vcl_vector<vil_image_view<float> > &data_mg, unsigned k);
+  inline void load_mg_slice(std::vector<vil_image_view<float> > &data_mg, unsigned k);
   //: Save a slice of voxel probability data to disk.
   inline bool save_prob_slice(vil_image_view<float> &data_prob, unsigned k);
   //: Save a slice of voxel mixture of gaussian appearance model data to disk.
-  inline bool save_mg_slice(vcl_vector<vil_image_view<float> > &data_mg, unsigned k);
+  inline bool save_mg_slice(std::vector<vil_image_view<float> > &data_mg, unsigned k);
 
     
   //: Given an image and a corresponding (correct) camera, update the voxel grid
@@ -49,9 +49,9 @@ private:
   breg3d_voxel_grid():std_init_value_(0.1f),min_vox_prob_(1e-5f),max_vox_prob_(1 - 1e-5f){};
 
   // store data as images on disk
-  vcl_vector<vcl_string> prob_image_fnames_;
+  std::vector<std::string> prob_image_fnames_;
   // one set of images for each mode in the mixture of gaussians
-  vcl_vector<vcl_vector<vcl_string> > mg_image_fnames_;
+  std::vector<std::vector<std::string> > mg_image_fnames_;
   
 
   unsigned nx_;
@@ -59,7 +59,7 @@ private:
   unsigned nz_;
 
   static const unsigned n_mg_modes_ = 3;
-  const vcl_string image_format_;
+  const std::string image_format_;
   
   // 3D location of the corner corresponding to data_prob_[0][0][0]
   vgl_point_3d<double> corner_;
@@ -68,14 +68,14 @@ private:
   vgl_vector_3d<double> j_step_;
   vgl_vector_3d<double> k_step_;
 
-  vcl_vector<vcl_string> temporary_file_filenames(unsigned temp_idx, unsigned nfiles);
+  std::vector<std::string> temporary_file_filenames(unsigned temp_idx, unsigned nfiles);
 
-  vil_image_view<float> pixel_probabilities(vil_image_view<float> const& backproj_frame, vcl_vector<vil_image_view<float> > const& mg_modes);
+  vil_image_view<float> pixel_probabilities(vil_image_view<float> const& backproj_frame, std::vector<vil_image_view<float> > const& mg_modes);
   // returns an actual probability value (0 - 1) that voxels produce an intensity in the range (I-delta, I+delta)
-  vil_image_view<float> pixel_probabilities_range(vil_image_view<float> const& backproj_frame, vcl_vector<vil_image_view<float> > const& mg_modes, float delta = 0.01);
+  vil_image_view<float> pixel_probabilities_range(vil_image_view<float> const& backproj_frame, std::vector<vil_image_view<float> > const& mg_modes, float delta = 0.01);
 
   // returns an expected image
-  vil_image_view<float> expected_intensities(vcl_vector<vil_image_view<float> > const& mg_modes);
+  vil_image_view<float> expected_intensities(std::vector<vil_image_view<float> > const& mg_modes);
 
   // methods for transforming from image to plane coordinates
   void compute_plane_image_H(vpgl_camera<double> const* cam, unsigned grid_zval, vgl_h_matrix_2d<double> &H_plane_to_image, vgl_h_matrix_2d<double> &H_image_to_plane);
@@ -87,10 +87,10 @@ private:
                                           vil_image_view<float> const& visX, vil_image_view<float> const& preX, vil_image_view<float> const& postX,
                                           vil_image_view<float> const& pixel_probabillities);
 
-  void update_mg_models(vcl_vector<vil_image_view<float> > & slice_mg, vil_image_view<float> const& slice_prob, vil_image_view<float> const& backproj_frame);
+  void update_mg_models(std::vector<vil_image_view<float> > & slice_mg, vil_image_view<float> const& slice_prob, vil_image_view<float> const& backproj_frame);
 
 
-  vcl_string base_dirname_;
+  std::string base_dirname_;
 
   // initialization values
   const float std_init_value_;

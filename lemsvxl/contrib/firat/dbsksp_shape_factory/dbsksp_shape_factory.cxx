@@ -14,21 +14,21 @@
 #include <dbsksp/algo/dbsksp_xgraph_boundary_algos.h>
 #include <dbsks/dbsks_xfrag_geom_model.h>
 
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 
 #include <dbul/dbul_parse_simple_file.h>
 
 
 void dbsksp_shape_factory::generate_xgraph_(dbsksp_xshock_graph_sptr xgraph, dbsksp_xshock_node_sptr root_node, int parent_edge, double graph_size)
 {
-    vcl_list<dbsksp_xshock_edge_sptr>::const_iterator edgelist_iterator = root_node->edge_list().begin();
+    std::list<dbsksp_xshock_edge_sptr>::const_iterator edgelist_iterator = root_node->edge_list().begin();
 
 
     for(;edgelist_iterator != root_node->edge_list().end(); ++edgelist_iterator)
     {
         dbsksp_xshock_edge_sptr edge = *edgelist_iterator;
-        vcl_cout << "node " << root_node->id() << " / edge " << edge->id() << vcl_endl;
+        std::cout << "node " << root_node->id() << " / edge " << edge->id() << std::endl;
         if(edge->id() == parent_edge)
             continue;
 
@@ -48,10 +48,10 @@ void dbsksp_shape_factory::generate_xgraph_(dbsksp_xshock_graph_sptr xgraph, dbs
         double new_psi;
         if(child_node->degree() > 1)
         {
-            vcl_map<unsigned, dbsks_xfrag_geom_model_sptr > map_edge2geom = this->xgeom_->map_edge2geom();
+            std::map<unsigned, dbsks_xfrag_geom_model_sptr > map_edge2geom = this->xgeom_->map_edge2geom();
             dbsks_xfrag_geom_model_sptr frag_model = map_edge2geom[edge->id()];
 
-            vcl_vector<dbsksp_xshock_node_descriptor> sampled_node_descriptors;
+            std::vector<dbsksp_xshock_node_descriptor> sampled_node_descriptors;
 
             frag_model->sample_legal_end_given_start_using_model_minmax_range(*root_node->descriptor(edge), graph_size, 1000, sampled_node_descriptors);
 
@@ -89,24 +89,24 @@ void dbsksp_shape_factory::generate_xgraph_(dbsksp_xshock_graph_sptr xgraph, dbs
 
 
 
-dbsksp_shape_factory::dbsksp_shape_factory(const vcl_string& xgraph_geom_filename, const vcl_string& prototype_xgraph_filename)
+dbsksp_shape_factory::dbsksp_shape_factory(const std::string& xgraph_geom_filename, const std::string& prototype_xgraph_filename)
 {
     if(!x_read(xgraph_geom_filename, this->xgeom_))
     {
-        vcl_cout << "Reading geometric model file failed!";
+        std::cout << "Reading geometric model file failed!";
         this->active_ = false;
         return;
     }
     dbsksp_xshock_graph_sptr xg;
     if(!x_read(prototype_xgraph_filename, xg))
     {
-        vcl_cout << "Reading prototype file failed!";
+        std::cout << "Reading prototype file failed!";
         this->active_ = false;
         return;
     }
     this->prototype_xgraphs_.push_back(xg);
     this->active_ = true;
-    this->random_engine_ = vnl_random(vcl_time(NULL));
+    this->random_engine_ = vnl_random(std::time(NULL));
 }
 
 dbsksp_xshock_graph_sptr dbsksp_shape_factory::generate_random_shape(int xgraph_id)
@@ -121,32 +121,32 @@ dbsksp_xshock_graph_sptr dbsksp_shape_factory::generate_random_shape(int xgraph_
         dbsksp_xshock_node_sptr root_node = xgraph->node_from_id(this->xgeom_->root_vid());
         do
         {
-            this->generate_xgraph_(xgraph, root_node, -1, vcl_sqrt(xgraph->area()));
+            this->generate_xgraph_(xgraph, root_node, -1, std::sqrt(xgraph->area()));
         }
         while(dbsksp_test_boundary_self_intersection(xgraph, 10));
-        xgraph->similarity_transform(root_node->pt(), 0, 0, 0, 100 / vcl_sqrt(xgraph->area()));
+        xgraph->similarity_transform(root_node->pt(), 0, 0, 0, 100 / std::sqrt(xgraph->area()));
         return xgraph;
     }
     return NULL;
 }
 
-dbsksp_shape_factory::dbsksp_shape_factory(const vcl_string& xgraph_geom_filename, const vcl_string& prototype_xgraph_folder, const vcl_string& prototype_xgraph_list_file)
+dbsksp_shape_factory::dbsksp_shape_factory(const std::string& xgraph_geom_filename, const std::string& prototype_xgraph_folder, const std::string& prototype_xgraph_list_file)
 {
     if(!x_read(xgraph_geom_filename, this->xgeom_))
     {
-        vcl_cout << "Reading geometric model file failed!";
+        std::cout << "Reading geometric model file failed!";
         this->active_ = false;
         return;
     }
-    vcl_vector<vcl_string > xml_filenames;
+    std::vector<std::string > xml_filenames;
     dbul_parse_string_list(prototype_xgraph_list_file, xml_filenames);
     for(int i = 0; i < xml_filenames.size(); i++)
     {
-        vcl_string xml_file = prototype_xgraph_folder + "/" + xml_filenames[i];
+        std::string xml_file = prototype_xgraph_folder + "/" + xml_filenames[i];
         dbsksp_xshock_graph_sptr xg;
         if(!x_read(xml_file, xg))
         {
-            vcl_cout << "Reading prototype file failed!";
+            std::cout << "Reading prototype file failed!";
             continue;
         }
         this->prototype_xgraphs_.push_back(xg);
@@ -154,7 +154,7 @@ dbsksp_shape_factory::dbsksp_shape_factory(const vcl_string& xgraph_geom_filenam
     if(this->prototype_xgraphs_.size() > 0)
     {
         this->active_ = true;
-        this->random_engine_ = vnl_random(vcl_time(NULL));
+        this->random_engine_ = vnl_random(std::time(NULL));
     }
     else
     {
@@ -162,9 +162,9 @@ dbsksp_shape_factory::dbsksp_shape_factory(const vcl_string& xgraph_geom_filenam
     }
 }
 
-vcl_vector<dbsksp_xshock_graph_sptr> dbsksp_shape_factory::generate_random_shapes(int num, int xgraph_id)
+std::vector<dbsksp_xshock_graph_sptr> dbsksp_shape_factory::generate_random_shapes(int num, int xgraph_id)
 {
-    vcl_vector<dbsksp_xshock_graph_sptr> shapes;
+    std::vector<dbsksp_xshock_graph_sptr> shapes;
     for(int i = 0; i < num; i++)
     {
         shapes.push_back(this->generate_random_shape(xgraph_id));
@@ -172,7 +172,7 @@ vcl_vector<dbsksp_xshock_graph_sptr> dbsksp_shape_factory::generate_random_shape
     return shapes;
 }
 
-vcl_vector<dbsksp_xshock_graph_sptr> dbsksp_shape_factory::generate_all_shapes()
+std::vector<dbsksp_xshock_graph_sptr> dbsksp_shape_factory::generate_all_shapes()
 {
 
 }

@@ -13,8 +13,8 @@ class geom_index_structure {
   double resolution_;//spacing of the grid
   biob_grid_worldpt_roster grid_;
   biob_worldpt_roster_sptr roster_;
-  typedef vcl_list<biob_worldpt_index> voxel_inhabitants_t;
-  typedef vcl_vector<voxel_inhabitants_t> voxel_to_inhabitants_t;
+  typedef std::list<biob_worldpt_index> voxel_inhabitants_t;
+  typedef std::vector<voxel_inhabitants_t> voxel_to_inhabitants_t;
   voxel_to_inhabitants_t voxel_to_inhabitants_;
   class enumerator : public biob_enumerator<biob_worldpt_index> {
   private:

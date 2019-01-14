@@ -14,15 +14,15 @@
 
 //: Get the initial triangles that is completely inside the stitching sausage.
 //  No need to check the soboxin, because such triangles should not exist in stitchM.
-void get_sausage_init_faces (const vcl_vector<vgl_point_3d<double> >& input_pts, 
+void get_sausage_init_faces (const std::vector<vgl_point_3d<double> >& input_pts, 
                              dbmsh3d_mesh* stitchM, 
                              const vgl_box_3d<double>& sboxin, 
                              const vgl_box_3d<double>& sboxout, 
-                             vcl_vector<vcl_vector<int> >& S_initM_faces)
+                             std::vector<std::vector<int> >& S_initM_faces)
 {
   //Loop through each face in stitchM and put all that inside 
   //the box sboxout to S_initM_faces.  
-  vcl_map<int, dbmsh3d_face*>::iterator fit = stitchM->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = stitchM->facemap().begin();
   for (; fit != stitchM->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
 
@@ -31,7 +31,7 @@ void get_sausage_init_faces (const vcl_vector<vgl_point_3d<double> >& input_pts,
     if (F->is_inside_box(sboxout) == false)
       continue;
 
-    vcl_vector<int> vids;
+    std::vector<int> vids;
     F->get_bnd_V_ids (vids);
     S_initM_faces.push_back (vids);
   }
@@ -43,7 +43,7 @@ void get_sausage_init_faces (const vcl_vector<vgl_point_3d<double> >& input_pts,
 //  i.e. points outside the reduced-size (by a given ratio) bucket.
 //
 void get_stitch_surface_pts (dbmsh3d_pt_bktstr* BktStruct, 
-                             vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& stitchS_idpts, 
+                             std::vector<std::pair<int, vgl_point_3d<double> > >& stitchS_idpts, 
                              const float bkt_box_ratio)
 {
   vgl_box_3d<double> box;
@@ -67,7 +67,7 @@ void get_stitch_surface_pts (dbmsh3d_pt_bktstr* BktStruct,
         vgl_box_3d<double> reduced_box = bgld_reduce_box (box, reduce);
 
         //Get the points outside reduced box
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > > idpts;
+        std::vector<std::pair<int, vgl_point_3d<double> > > idpts;
         idpts.clear();
         B->get_pts_outside_reduced_box (reduced_box, idpts);
 
@@ -79,9 +79,9 @@ void get_stitch_surface_pts (dbmsh3d_pt_bktstr* BktStruct,
 }
 
 void get_pts_local_bucket_meshing (const dbmsh3d_pt_bucket* B, 
-                                   const vcl_vector<vcl_vector<int> >& B_initM_faces, 
-                                   const vcl_vector<vgl_point_3d<double> >& all_pts, 
-                                   vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& B_meshing_idpts)
+                                   const std::vector<std::vector<int> >& B_initM_faces, 
+                                   const std::vector<vgl_point_3d<double> >& all_pts, 
+                                   std::vector<std::pair<int, vgl_point_3d<double> > >& B_meshing_idpts)
 {
   //Add all points in bucket B
   B_meshing_idpts.insert (B_meshing_idpts.end(), B->idpt_list().begin(), B->idpt_list().end());
@@ -90,7 +90,7 @@ void get_pts_local_bucket_meshing (const dbmsh3d_pt_bucket* B,
   for (unsigned int i=0; i<B_initM_faces.size(); i++) {
     for (unsigned int j=0; j<B_initM_faces[i].size(); j++) {
       int id = B_initM_faces[i][j];
-      B_meshing_idpts.push_back (vcl_pair<int, vgl_point_3d<double> > (id, all_pts[id]));
+      B_meshing_idpts.push_back (std::pair<int, vgl_point_3d<double> > (id, all_pts[id]));
     }
   }
 
@@ -98,24 +98,24 @@ void get_pts_local_bucket_meshing (const dbmsh3d_pt_bucket* B,
 }
 
 
-int merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts, 
-                  vcl_vector<vcl_vector<int> >& finalM_faces, 
+int merge_meshes (const std::vector<vgl_point_3d<double> >& finalM_pts, 
+                  std::vector<std::vector<int> >& finalM_faces, 
                   dbmsh3d_mesh* M)
 {
   //Directly add all mesh M's faces into finalM_faces.
-  vcl_vector<vcl_vector<int> > B_faces;
+  std::vector<std::vector<int> > B_faces;
   add_mesh_faces_IFS (M, B_faces);
   finalM_faces.insert (finalM_faces.end(), B_faces.begin(), B_faces.end());
   return B_faces.size();
 }
 
-int check_merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts, 
-                        vcl_vector<vcl_vector<int> >& finalM_faces, 
+int check_merge_meshes (const std::vector<vgl_point_3d<double> >& finalM_pts, 
+                        std::vector<std::vector<int> >& finalM_faces, 
                         dbmsh3d_mesh* M)
 {
   if (finalM_faces.size() == 0) {
     //Directly add all mesh M's faces into finalM_faces.
-    vcl_vector<vcl_vector<int> > B_faces;
+    std::vector<std::vector<int> > B_faces;
     add_mesh_faces_IFS (M, B_faces);
     finalM_faces.insert (finalM_faces.end(), B_faces.begin(), B_faces.end());
     return B_faces.size();
@@ -141,7 +141,7 @@ int check_merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts,
 
   //Go through each face of M
   M->build_IFS_mesh ();
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     if (F->is_outside_box (finalM_box) == false) { 
@@ -188,7 +188,7 @@ int check_merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts,
     }
 
     //add F to finalM
-    vcl_vector<int> fids;
+    std::vector<int> fids;
     for (unsigned int i=0; i<F->vertices().size(); i++)
       fids.push_back (F->vertices(i)->id());
     assert (fids.size() != 0);
@@ -200,12 +200,12 @@ int check_merge_meshes (const vcl_vector<vgl_point_3d<double> >& finalM_pts,
   return count;
 }
 
-dbmsh3d_mesh* create_intersect_mesh (const vcl_vector<vgl_point_3d<double> >& pts, 
-                                     vcl_vector<vcl_vector<int> >& faces,
+dbmsh3d_mesh* create_intersect_mesh (const std::vector<vgl_point_3d<double> >& pts, 
+                                     std::vector<std::vector<int> >& faces,
                                      const vgl_box_3d<double>& M_box)
 {
   //Compute the set of intersecting faces
-  vcl_vector<vcl_vector<int> > ifaces;
+  std::vector<std::vector<int> > ifaces;
 
   for (unsigned int i=0; i<faces.size(); i++) {
     for (unsigned int j=0; j<faces[i].size(); j++) {
@@ -219,7 +219,7 @@ dbmsh3d_mesh* create_intersect_mesh (const vcl_vector<vgl_point_3d<double> >& pt
   }
 
   //Compute the set of all points (ids) of the ifaces.
-  vcl_set<int> ipts;
+  std::set<int> ipts;
   for (unsigned int i=0; i<ifaces.size(); i++) {
     for (unsigned int j=0; j<ifaces[i].size(); j++)
       ipts.insert (ifaces[i][j]);
@@ -229,7 +229,7 @@ dbmsh3d_mesh* create_intersect_mesh (const vcl_vector<vgl_point_3d<double> >& pt
   dbmsh3d_mesh* M = new dbmsh3d_mesh;
 
   //Create all vertices of M
-  vcl_set<int>::iterator it = ipts.begin();
+  std::set<int>::iterator it = ipts.begin();
   for (; it != ipts.end(); it++) {
     int id = (*it);
     dbmsh3d_vertex* V = M->_new_vertex (id);

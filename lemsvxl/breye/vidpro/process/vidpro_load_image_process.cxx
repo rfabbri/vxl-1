@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_load_image_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_image_storage.h>
@@ -19,7 +19,7 @@ vidpro_load_image_process::vidpro_load_image_process() : bpro_process()
 {
   if( !parameters()->add( "Image file <filename...>" , "-image_filename" , bpro_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,16 +39,16 @@ vidpro_load_image_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_load_image_process::name()
+std::string vidpro_load_image_process::name()
 {
   return "Load Image";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_load_image_process::get_input_type()
+std::vector< std::string > vidpro_load_image_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -58,9 +58,9 @@ vcl_vector< vcl_string > vidpro_load_image_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_load_image_process::get_output_type()
+std::vector< std::string > vidpro_load_image_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "image" );
@@ -75,14 +75,14 @@ vidpro_load_image_process::execute()
 {
   bpro_filepath image_path;
   parameters()->get_value( "-image_filename" , image_path );
-  vcl_string image_filename = image_path.path;
+  std::string image_filename = image_path.path;
 
   //no input storage class for this process
   clear_output();
 
   vil_image_resource_sptr loaded_image = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
 

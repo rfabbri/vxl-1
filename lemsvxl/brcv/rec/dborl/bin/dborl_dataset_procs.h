@@ -14,28 +14,28 @@
 #if !defined(_DBORL_CMD_LINE_DATASET_PROCS_H)
 #define _DBORL_CMD_LINE_DATASET_PROCS_H
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <ctime>
+#include <algorithm>
+#include <iostream>
+#include <string>
 #include <dborl/dborl_dataset_sptr.h>
 
-bool write_def_params(vcl_string bnd_param_file, vcl_string shock_param_file);
+bool write_def_params(std::string bnd_param_file, std::string shock_param_file);
 
-bool prepare_ethz_boundaries(vcl_string index_file, 
-                             vcl_string image_ext, vcl_string bnd_param_xml, vcl_string sh_param_xml, bool check_existence);
+bool prepare_ethz_boundaries(std::string index_file, 
+                             std::string image_ext, std::string bnd_param_xml, std::string sh_param_xml, bool check_existence);
 
-bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file, 
-                        vcl_string query_image_file, vcl_string query_st_file, 
-                        vcl_string match_file, vcl_string detection_param_xml, vcl_string out_name, vcl_string width_str);
+bool prepare_match_html(std::string model_image_file, std::string model_st_file, 
+                        std::string query_image_file, std::string query_st_file, 
+                        std::string match_file, std::string detection_param_xml, std::string out_name, std::string width_str);
 
-bool batch_convert(vcl_string input_dir);
+bool batch_convert(std::string input_dir);
 
-bool detect_instance(vcl_string model_image_file, vcl_string model_st_file, 
-                        vcl_string query_image_file, vcl_string query_st_file, 
-                        vcl_string match_file, vcl_string detection_param_xml, vcl_string out_name, vcl_string width_str);
+bool detect_instance(std::string model_image_file, std::string model_st_file, 
+                        std::string query_image_file, std::string query_st_file, 
+                        std::string match_file, std::string detection_param_xml, std::string out_name, std::string width_str);
 
-bool save_patch_images(vcl_string image_file, vcl_string st_file, vcl_string out_name);
+bool save_patch_images(std::string image_file, std::string st_file, std::string out_name);
 
 
 #endif  //_DBORL_CMD_LINE_DATASET_PROCS_H

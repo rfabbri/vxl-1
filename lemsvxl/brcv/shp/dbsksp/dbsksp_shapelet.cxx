@@ -34,12 +34,12 @@ set_from(const vgl_point_2d<double >& pt0, double r0,
     double phi1)
 {
   // compute the angle between the chord and tangent
-  double sin_alpha0 = m0 * vcl_sin(phi0);
-  if (vnl_math::abs(sin_alpha0) > 1 || vnl_math::abs(m0*vcl_sin(phi1)) > 1)
+  double sin_alpha0 = m0 * std::sin(phi0);
+  if (vnl_math::abs(sin_alpha0) > 1 || vnl_math::abs(m0*std::sin(phi1)) > 1)
     return false;
 
-  vgl_vector_2d<double> v0 = rotated(tangent0, -vcl_asin(sin_alpha0));
-  this->set(pt0.x(), pt0.y(), vcl_atan2(v0.y(), v0.x()), r0, phi0, phi1, m0, len);
+  vgl_vector_2d<double> v0 = rotated(tangent0, -std::asin(sin_alpha0));
+  this->set(pt0.x(), pt0.y(), std::atan2(v0.y(), v0.x()), r0, phi0, phi1, m0, len);
   return true;
 }
 
@@ -80,7 +80,7 @@ normalized_radius_increment() const
 {
   double a0 = this->alpha_start() + this->phi_start();
   double a2 = this->alpha_end() + this->phi_end();
-  return - vcl_cos((a0+a2)/2) / vcl_cos((a0-a2)/2);
+  return - std::cos((a0+a2)/2) / std::cos((a0-a2)/2);
 }
 
 // ----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ shock_geom() const
   double kbar_right = right_bnd.k() / ( 1 - this->radius_start()*right_bnd.k());
   double kbar_left = -left_bnd.k() / (1 - this->radius_start()*(-left_bnd.k()));
 
-  double shock_start_k = (-kbar_left + kbar_right) * vcl_sin(this->phi_start()) /2;
+  double shock_start_k = (-kbar_left + kbar_right) * std::sin(this->phi_start()) /2;
 
   bgld_conic_arc conic;
   conic.set_from(this->start(), this->chord_dir(), this->chord_length(), 
@@ -211,7 +211,7 @@ area_left() const
   double r2 = this->radius_end();
   double s = arc.length();
   double a = arc.k() * s; 
-  double area_quad = ( (r1+r2)*s* bnld_sinc(a) + r1*r2*vcl_sin(a) ) / 2;
+  double area_quad = ( (r1+r2)*s* bnld_sinc(a) + r1*r2*std::sin(a) ) / 2;
 
   double area_arc_segment = arc.area();
   return area_quad - vnl_math::sgn(arc.k()) * area_arc_segment;
@@ -234,7 +234,7 @@ area_right() const
   double r2 = this->radius_end();
   double s = arc.length();
   double a = arc.k() * s; 
-  double area_quad = ( (r1+r2)*s* bnld_sinc(a) - r1*r2*vcl_sin(a) ) / 2;
+  double area_quad = ( (r1+r2)*s* bnld_sinc(a) - r1*r2*std::sin(a) ) / 2;
   double area_arc_segment = arc.area();
   
   return area_quad + vnl_math::sgn(arc.k()) * area_arc_segment;
@@ -257,7 +257,7 @@ area_front_arc() const
 
   // the triangle area is negative when the sector is bigger than pi, so we
   // this formula still aplies for sectors > pi
-  double triangle_area = radius * radius * vcl_sin(sector_angle) / 2;
+  double triangle_area = radius * radius * std::sin(sector_angle) / 2;
   return sector_area - triangle_area;
 }
 
@@ -273,7 +273,7 @@ area_rear_arc() const
 
   // the triangle area is negative when the sector is bigger than pi, so we
   // this formula still aplies for sectors > pi
-  double triangle_area = radius * radius * vcl_sin(sector_angle) / 2;
+  double triangle_area = radius * radius * std::sin(sector_angle) / 2;
   return (sector_area - triangle_area);
 
 }
@@ -354,7 +354,7 @@ radius_at(double t) const
 vsol_polygon_2d_sptr dbsksp_shapelet::
 bounding_quad() const
 {
-  vcl_vector<vsol_point_2d_sptr > pts;
+  std::vector<vsol_point_2d_sptr > pts;
   pts.push_back(new vsol_point_2d(this->bnd_start(0)));
   pts.push_back(new vsol_point_2d(this->bnd_start(1)));
   pts.push_back(new vsol_point_2d(this->bnd_end(1)));
@@ -373,8 +373,8 @@ bounding_quad() const
 //: Compute extrinsic shock samples given a list of parameter t, t \in [0, 1]
 // Return false if computation fails, e.g. t < 0 or t > 1
 bool dbsksp_shapelet::
-compute_xshock_samples(const vcl_vector<double >& ts,
-                       vcl_vector<dbsksp_xshock_node_descriptor >& list_xdesc)
+compute_xshock_samples(const std::vector<double >& ts,
+                       std::vector<dbsksp_xshock_node_descriptor >& list_xdesc)
 {
   list_xdesc.clear();
   list_xdesc.reserve(ts.size());
@@ -434,7 +434,7 @@ compute_xshock_samples(const vcl_vector<double >& ts,
       double phi = signed_angle(shock_tangent, n);
 
       dbsksp_xshock_node_descriptor sample(shock_pt.x(), shock_pt.y(),
-        vcl_atan2(shock_tangent.y(), shock_tangent.x()), phi, radius);
+        std::atan2(shock_tangent.y(), shock_tangent.x()), phi, radius);
 
       list_xdesc.push_back(sample);
     }
@@ -445,10 +445,10 @@ compute_xshock_samples(const vcl_vector<double >& ts,
 
 
 ////: Compute point samples of the shapelet, given sampling rate "ds"
-//vcl_vector<vgl_point_2d<double > > dbsksp_shapelet::
+//std::vector<vgl_point_2d<double > > dbsksp_shapelet::
 //compute_samples(double ds) const
 //{
-//  vcl_vector<vgl_point_2d<double > > pts;
+//  std::vector<vgl_point_2d<double > > pts;
 //  for (int i=0; i<2; ++i)
 //  {
 //    bgld_circ_arc arc = this->bnd_arc(i);
@@ -473,7 +473,7 @@ reversed_dir() const
 {
   double x0 = this->end().x();
   double y0 = this->end().y();
-  double theta0 = vcl_atan2(-vcl_sin(this->theta0()), -vcl_cos(this->theta0()) );
+  double theta0 = std::atan2(-std::sin(this->theta0()), -std::cos(this->theta0()) );
   double r0 = this->radius_end();
   double phi0 = vnl_math::pi - this->phi_end();
   double phi1 = vnl_math::pi - this->phi_start();
@@ -511,7 +511,7 @@ terminal_shapelet_front() const
   double x0 = this->start().x();
   double y0 = this->start().y();
   vgl_vector_2d<double > t0 = -this->tangent_start();
-  double theta0 = vcl_atan2(t0.y(), t0.x());
+  double theta0 = std::atan2(t0.y(), t0.x());
 
   double r0 = this->radius_start();
   double phi0 = vnl_math::pi - this->phi_start();
@@ -528,7 +528,7 @@ terminal_shapelet_rear() const
   double x0 = this->end().x();
   double y0 = this->end().y();
   vgl_vector_2d<double > t0 = this->tangent_end();
-  double theta0 = vcl_atan2(t0.y(), t0.x());
+  double theta0 = std::atan2(t0.y(), t0.x());
 
   double r0 = this->radius_end();
   double phi0 = this->phi_end();
@@ -560,8 +560,8 @@ is_legal() const
   legal = legal && (this->chord_length() >= 0);
 
   // |m*sin(phi) <= 1|
-  legal = legal && (vnl_math::abs( vcl_sin(this->phi_start()) * this->m_start() ) <= 1); 
-  legal = legal && (vnl_math::abs( vcl_sin(this->phi_end()) * this->m_end() ) <= 1);
+  legal = legal && (vnl_math::abs( std::sin(this->phi_start()) * this->m_start() ) <= 1); 
+  legal = legal && (vnl_math::abs( std::sin(this->phi_end()) * this->m_end() ) <= 1);
 
   // max_radius condition
   //  when R is too big, self-intersecting happens
@@ -571,15 +571,15 @@ is_legal() const
   double theta_start_left = this->phi_start() + this->alpha_start();
   double theta_end_left = vnl_math::pi - (this->phi_end() + this->alpha_end());
   legal = legal && 
-    (this->radius_start()*vcl_sin(theta_start_left+theta_end_left) <= 
-    this->chord_length()*vcl_sin(theta_end_left));
+    (this->radius_start()*std::sin(theta_start_left+theta_end_left) <= 
+    this->chord_length()*std::sin(theta_end_left));
 
   // right side check
   double theta_start_right = this->phi_start() - this->alpha_start();
   double theta_end_right = vnl_math::pi - this->phi_end() + this->alpha_end();
   legal = legal &&
-    (this->radius_start()*vcl_sin(theta_start_right+theta_end_right) <=
-    this->chord_length()* vcl_sin(theta_end_right));
+    (this->radius_start()*std::sin(theta_start_right+theta_end_right) <=
+    this->chord_length()* std::sin(theta_end_right));
 
   // min radius condition
   // left and right boundary do not intersect
@@ -589,8 +589,8 @@ is_legal() const
   bgld_circ_arc left_arc = this->bnd_arc(0);
   bgld_circ_arc right_arc = this->bnd_arc(1);
 
-  vcl_vector<double > left_ratios;
-  vcl_vector<double > right_ratios;
+  std::vector<double > left_ratios;
+  std::vector<double > right_ratios;
 
   legal = legal &&
     ( bgld_closest_point::circular_arc_to_circular_arc(
@@ -622,14 +622,14 @@ legality_measure() const
   // left side check
   double theta_start_left = this->phi_start() + this->alpha_start();
   double theta_end_left = vnl_math::pi - (this->phi_end() + this->alpha_end());
-  a(3) = - this->radius_start()*vcl_sin(theta_start_left+theta_end_left) +
-    this->chord_length()*vcl_sin(theta_end_left);
+  a(3) = - this->radius_start()*std::sin(theta_start_left+theta_end_left) +
+    this->chord_length()*std::sin(theta_end_left);
 
   // right side check 
   double theta_start_right = this->phi_start() - this->alpha_start();
   double theta_end_right = vnl_math::pi - this->phi_end() + this->alpha_end();
-  a(4) = -this->radius_start()*vcl_sin(theta_start_right+theta_end_right) +
-    this->chord_length()* vcl_sin(theta_end_right);
+  a(4) = -this->radius_start()*std::sin(theta_start_right+theta_end_right) +
+    this->chord_length()* std::sin(theta_end_right);
 
   return a;
 }
@@ -646,7 +646,7 @@ legality_measure() const
 // ------------------------------------------------------------------
 //: write info of the dbskbranch to an output stream
 void dbsksp_shapelet::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "<< dbsksp_shapelet \n"
     << "x0 [ " << this->x0() << " ]\n"
@@ -706,12 +706,12 @@ dbsksp_twoshapelet(const dbsksp_shapelet_sptr& s, double t)
   // thet0
   vgl_vector_2d<double > chord_dir0 = (len0 < dbsksp_shapelet_epsilon) ? 
     conic.tangent_at(0) : normalized(pt1-pt0);
-  theta0 = vcl_atan2(chord_dir0.y(), chord_dir0.x());
+  theta0 = std::atan2(chord_dir0.y(), chord_dir0.x());
 
   // m0
   vgl_vector_2d<double > shock_dir0 = conic.tangent_at(0);
   double sin_alpha0 = cross_product(chord_dir0, shock_dir0);
-  m0 = sin_alpha0 / vcl_sin(phi0);
+  m0 = sin_alpha0 / std::sin(phi0);
 
   // len1
   vgl_point_2d<double > pt2 = s->end();
@@ -722,7 +722,7 @@ dbsksp_twoshapelet(const dbsksp_shapelet_sptr& s, double t)
     conic.tangent_at(1) : normalized(pt2-pt1);
   vgl_vector_2d<double > shock_dir1 = conic.tangent_at(1);
   double sin_alpha2 = cross_product(chord_dir1, shock_dir1);
-  m1 = -sin_alpha2 / vcl_sin(phi2);
+  m1 = -sin_alpha2 / std::sin(phi2);
 
   // set params of ``this'' twoshapelet
   this->set(x0, y0, theta0, r0, phi0, m0, len0, phi1, m1, len1, phi2);
@@ -761,10 +761,10 @@ shapelet_end() const
   double x1 = shapelet_start->end().x();
   double y1 = shapelet_start->end().y();
 
-  double alpha12 = vcl_asin(this->m1()*vcl_sin(this->phi1()));
+  double alpha12 = std::asin(this->m1()*std::sin(this->phi1()));
   vgl_vector_2d<double > chord_dir_1 = 
     rotated(shapelet_start->shock_geom().tangent_at(1), -alpha12);
-  double theta1 = vcl_atan2(chord_dir_1.y(), chord_dir_1.x());
+  double theta1 = std::atan2(chord_dir_1.y(), chord_dir_1.x());
   
   double r1 = shapelet_start->radius_end();
 
@@ -819,7 +819,7 @@ reversed_dir() const
 // ----------------------------------------------------------------------------
 //: write info of the dbskbranch to an output stream
 void dbsksp_twoshapelet::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "<< dbsksp_twoshapelet \n"
     << "x0 [ " << this->x0() << " ]\n"
@@ -900,7 +900,7 @@ legality_measure() const
 
 //: write info of the dbskbranch to an output stream
 void dbsksp_terminal_shapelet::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   return;
 }

@@ -24,7 +24,7 @@
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vidpro/storage/vidpro_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process loads a .CON file into a vidpro_vsol_storage class
 class vidpro_load_con_process : public bpro_process
@@ -36,12 +36,12 @@ public:
   //: Clone the process
   virtual bpro_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Load .CON File";
   }
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -55,7 +55,7 @@ public:
     return true;
   }
 
-  void loadCON (vcl_string filename, float scale, float rot, float trans, vidpro_vsol2D_storage_sptr output_vsol);
+  void loadCON (std::string filename, float scale, float rot, float trans, vidpro_vsol2D_storage_sptr output_vsol);
 
 protected:
   int num_frames_;

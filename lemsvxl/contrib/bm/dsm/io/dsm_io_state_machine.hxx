@@ -39,7 +39,7 @@
 //	}
 //}
 //
-//void vsl_print_summary(vcl_ostream& os, const dsm_state_machine_base *p)
+//void vsl_print_summary(std::ostream& os, const dsm_state_machine_base *p)
 //{
 //	os << "dsm_io_manager -- vsl_print_summary not implemented.\n";
 //}
@@ -86,9 +86,9 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_state_machine<T>* p)
 }//end vsl_b_write
 
 template<int T>
-void vsl_print_summary(vcl_ostream& os, const dsm_state_machine<T>* p)
+void vsl_print_summary(std::ostream& os, const dsm_state_machine<T>* p)
 {
-    os << "vsl_print_summary(vcl_ostream& os, const dsm_state_machine<T>* p -- not yet implemented.\n";
+    os << "vsl_print_summary(std::ostream& os, const dsm_state_machine<T>* p -- not yet implemented.\n";
 }//end vsl_print_summary
 
 #define DSM_IO_STATE_MACHINE_INSTANTIATE(T)\
@@ -96,6 +96,6 @@ template void vsl_b_read(vsl_b_istream &is, dsm_state_machine<T>& state_machine)
 template void vsl_b_write(vsl_b_ostream &os, dsm_state_machine<T> const& state_machine);\
 template void vsl_b_read(vsl_b_istream &is, dsm_state_machine<T>* &p);\
 template void vsl_b_write(vsl_b_ostream &os, const dsm_state_machine<T>* p);\
-template void vsl_print_summary(vcl_ostream& os, const dsm_state_machine<T>* p)
+template void vsl_print_summary(std::ostream& os, const dsm_state_machine<T>* p)
 
 #endif //DSM_IO_STATE_MACHINE_TXX_

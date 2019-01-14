@@ -15,7 +15,7 @@
 
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <xscan/xscan_dummy_scan.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_2.h>
@@ -63,10 +63,10 @@ public:
   double interpolate_subvoxel_value(vgl_point_3d<double> subvox);
 
   void adjust_data_range(double adjust_val);
-  void write_data_3d(vcl_string fname);
-  void write_data_2d_views(vcl_string fnamebase);
-  void write_scan(vcl_string scanfile);
-  void write_box(vcl_string boxfile);
+  void write_data_3d(std::string fname);
+  void write_data_2d_views(std::string fnamebase);
+  void write_scan(std::string scanfile);
+  void write_box(std::string boxfile);
   void write_view(vbl_array_2d<double> view);
 
   //: getters
@@ -155,7 +155,7 @@ protected:
 
   vgl_box_3d<double> box_;
   xscan_dummy_scan scan_;
-  vcl_vector <xmvg_perspective_camera<double> > cameras_;
+  std::vector <xmvg_perspective_camera<double> > cameras_;
   //: maximum recommended sensor dimensions are 512x512 with 512 view images
   //  each view image is about 2MB.
   vbl_array_3d<double> proj_data_;

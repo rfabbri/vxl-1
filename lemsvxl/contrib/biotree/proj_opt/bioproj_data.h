@@ -10,7 +10,7 @@
 // \date    2006-07-12
 // 
 
-#include <vcl_string.h>
+#include <string>
 #include <vil3d/vil3d_image_view.h>
 #include <vbl/vbl_array_3d.h>
 
@@ -19,7 +19,7 @@ public:
   //: constructor
   //: read view slices one-by-one and extract the necessary (xi,theta) planes given by
   //  min_plane and max_plane parameters
-  bioproj_data(vcl_string file_path, int min_plane, int max_plane, 
+  bioproj_data(std::string file_path, int min_plane, int max_plane, 
     int nviews, int sensor_width, int sensor_height,
     int grid_w, int grid_h, int grid_d);
 

@@ -4,18 +4,18 @@
 #include <mw/pro/bmcsd_stereo_driver.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; exit(1); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 int
 main(int argc, char **argv)
 {
-  vcl_string prefix_default(".");
+  std::string prefix_default(".");
 
-  vul_arg<vcl_string> a_prefix("-prefix", 
+  vul_arg<std::string> a_prefix("-prefix", 
       "path to directory of files",prefix_default.c_str());
-  vul_arg<vcl_string> a_cam_type("-cam_type",
+  vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
-  vul_arg<vcl_string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
+  vul_arg<std::string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
   vul_arg<double> a_distance_threshold("-dist", 
       "(in pixels) threshold for an edgel to be an inlier to the reprojected curve in each view", 10.0);
   vul_arg<double> a_dtheta_threshold("-dtheta", 
@@ -54,7 +54,7 @@ main(int argc, char **argv)
       "(EXPERIMENTAL) the minimum number of inlier edgels a curvelet must have in order to be inlier curvelet. Works only if -use_curvelets is set.", 3);
 
   vul_arg_parse(argc,argv);
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   bmcsd_util::camera_file_type cam_type;
 
@@ -64,7 +64,7 @@ main(int argc, char **argv)
     if (a_cam_type() == "projcamera")
       cam_type = bmcsd_util::MW_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
     }
   }
@@ -73,25 +73,25 @@ main(int argc, char **argv)
   bool retval = 
     mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
 
   bmcsd_stereo_instance_views frames_to_match;
 
   retval = bmcsd_view_set::read_txt(
-      a_prefix() + vcl_string("/mcs_stereo_instances.txt"), 
+      a_prefix() + std::string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
   MW_ASSERT("frames to match from file", retval, true);
-  vcl_cout << "Instances:\n" << frames_to_match << vcl_endl;
+  std::cout << "Instances:\n" << frames_to_match << std::endl;
 
   if (a_use_curvelets() && !dpath.has_curvelets()) {
-    vcl_cerr << "Error: curvelets requested, but no file names found.\n";
+    std::cerr << "Error: curvelets requested, but no file names found.\n";
   }
 
   //Anil: First stereo instance is used to compute the total number of 
   //confirmation views used for the elongation iterations
   unsigned numConf = frames_to_match.instance(0)->num_confirmation_views();
 
-  vcl_vector<vcl_vector<unsigned> > emptyCurveIDs(2);
+  std::vector<std::vector<unsigned> > emptyCurveIDs(2);
 
   //STEP #1: Run 2-view stereo with confirmation views
 
@@ -132,20 +132,20 @@ main(int argc, char **argv)
   //STEP #2: Process the 3D curves to remove the segments that did not gather sufficient edge support
   //A segment is removed only if its size is 3 samples or more
   //A curve segment is created only if its size is 8 samples or more
-  vcl_vector<bdifd_1st_order_curve_3d> allCurves = csk.curves_3d();
+  std::vector<bdifd_1st_order_curve_3d> allCurves = csk.curves_3d();
  
-  vcl_vector<bdifd_1st_order_curve_3d> supportedSegments;
-  vcl_vector<bmcsd_curve_3d_attributes> supportedAttr;
+  std::vector<bdifd_1st_order_curve_3d> supportedSegments;
+  std::vector<bmcsd_curve_3d_attributes> supportedAttr;
 
   //Anil: Attributes contain mate curve information, get it from the curve sketch data structure 
-  const vcl_vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
+  const std::vector<bmcsd_curve_3d_attributes> attrVec = csk.attributes();
 
   unsigned seedCurveSize = attrVec.front().origCurveSize_;
 
   //Anil: Data structure for stitching 3D curves together at their corresponding samples
   //1st index is the image curve ID, 2nd index is for different 3D curves and 3rd index is for sample IDs 
-  vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
-  vcl_vector<vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
+  std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > cumulativeCurve(2000);
+  std::vector<std::vector<std::vector<bdifd_1st_order_point_3d> > > dmy_cumulativeCurve(2000);
 
   unsigned numCurves = attrVec.size();
   bmcsd_curve_3d_attributes seedAttr = attrVec.front();
@@ -154,7 +154,7 @@ main(int argc, char **argv)
   bmcsd_stereo_views_sptr seedViews = seedAttr.v_;
 
   //Anil: Data structure to store the marked portions of each image curve in each view
-  vcl_vector<vcl_vector<vcl_vector<bool> > > usedCurvesAll(numConf+2);
+  std::vector<std::vector<std::vector<bool> > > usedCurvesAll(numConf+2);
 
   for(unsigned v=0; v<numConf+2; ++v)
     usedCurvesAll[v].resize(2000);
@@ -163,15 +163,15 @@ main(int argc, char **argv)
   {
     bdifd_1st_order_curve_3d curCurve = allCurves[c];
     bmcsd_curve_3d_attributes curAttr = attrVec[c];
-    vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+    std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
     unsigned offset = curAttr.imageCurveOffset_;
     unsigned offset_v1 = curAttr.imageCurveOffset_v1_;
     unsigned origID = curAttr.orig_id_v0_;
     unsigned origID_v1 = curAttr.orig_id_v1_;
     unsigned origCurveSize = curAttr.origCurveSize_;
     unsigned origCurveSize_v1 = curAttr.origCurveSize_v1_;
-    vcl_vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
-    vcl_vector<bool> certaintyFlags = curAttr.certaintyFlags_;
+    std::vector<unsigned> usedSamples_v1 = curAttr.used_samples_v1_;
+    std::vector<bool> certaintyFlags = curAttr.certaintyFlags_;
     unsigned v0_seed = seedViews->stereo0();
     unsigned v1_seed = seedViews->stereo1();
     
@@ -277,7 +277,7 @@ main(int argc, char **argv)
 
   //Anil: Container for all the mate curves
   //First index is views and second index is the image curves in v0()
-  vcl_vector<vcl_vector<vcl_set<int> > > cumulativeMates;
+  std::vector<std::vector<std::set<int> > > cumulativeMates;
   cumulativeMates.resize(numConf);
 
   //STEP #3: Loop over all the confirmation views to gather all mate curves together
@@ -289,9 +289,9 @@ main(int argc, char **argv)
     for(unsigned c=0; c<numCurves; ++c){
       bmcsd_curve_3d_attributes curAttr = attrVec[c];
       unsigned origID = curAttr.orig_id_v0_;
-      vcl_set<int> curMates = curAttr.mate_curves_[v];
+      std::set<int> curMates = curAttr.mate_curves_[v];
 
-      for(vcl_set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+      for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	cumulativeMates[v][origID].insert(*mit);
     }
   }
@@ -301,7 +301,7 @@ main(int argc, char **argv)
   {
     bmcsd_curve_3d_sketch csk_elong;
     unsigned curView = seedViews->confirmation_view(v);
-    vcl_cout << "LOOKING FOR CUES IN VIEW: " << curView << vcl_endl;
+    std::cout << "LOOKING FOR CUES IN VIEW: " << curView << std::endl;
     bmcsd_stereo_instance_views curFrames;
     bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
     curInstance->set_stereo0(seedViews->stereo0());
@@ -352,26 +352,26 @@ main(int argc, char **argv)
     //Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
     //A segment is removed only if its size is 3 samples or more
     //A curve segment is created only if its size is 8 samples or more
-    vcl_vector<bdifd_1st_order_curve_3d> cur_allCurves = csk_elong.curves_3d();
+    std::vector<bdifd_1st_order_curve_3d> cur_allCurves = csk_elong.curves_3d();
  
-    vcl_vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
-    vcl_vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
+    std::vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
+    std::vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
 
-    const vcl_vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_elong.attributes();
+    const std::vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_elong.attributes();
 
     for(unsigned c=0; c<cur_allCurves.size(); ++c)
       {
 	bdifd_1st_order_curve_3d curCurve = cur_allCurves[c];
 	bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
-	vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	unsigned cur_offset = curAttr.imageCurveOffset_;
 	unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	unsigned cur_origID = curAttr.orig_id_v0_;
 	unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	unsigned cur_v0_seed = seedViews->stereo0();
 	unsigned cur_v1_seed = curView;
 
@@ -478,7 +478,7 @@ main(int argc, char **argv)
 
     bmcsd_curve_3d_sketch csk_iterate;
     unsigned curView = seedViews->confirmation_view(vi);
-    vcl_cout << "SWITCHING SECOND ANCHOR TO VIEW: " << curView << vcl_endl;
+    std::cout << "SWITCHING SECOND ANCHOR TO VIEW: " << curView << std::endl;
     bmcsd_stereo_instance_views curFrames;
     bmcsd_stereo_views_sptr curInstance = new bmcsd_stereo_views();
     curInstance->set_stereo0(seedViews->stereo0());
@@ -492,7 +492,7 @@ main(int argc, char **argv)
     curInstance->add_confirmation_view(seedViews->stereo1());
     curFrames.add_instance(curInstance);
 
-    vcl_vector<vcl_vector<unsigned> > usedCurveIDs(2);
+    std::vector<std::vector<unsigned> > usedCurveIDs(2);
     /*for(unsigned imc=0; imc<usedCurvesAll[seedViews->stereo0()].size(); ++imc){
       unsigned numUsed = 0;
       for(unsigned s=0; s<usedCurvesAll[seedViews->stereo0()][imc].size(); ++s)
@@ -554,29 +554,29 @@ main(int argc, char **argv)
     //Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
     //A segment is removed only if its size is 3 samples or more
     //A curve segment is created only if its size is 8 samples or more
-    vcl_vector<bdifd_1st_order_curve_3d> cur_allCurves = csk_iterate.curves_3d();
+    std::vector<bdifd_1st_order_curve_3d> cur_allCurves = csk_iterate.curves_3d();
     unsigned cur_numCurves = cur_allCurves.size();
  
-    vcl_vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
-    vcl_vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
+    std::vector<bdifd_1st_order_curve_3d> cur_supportedSegments;
+    std::vector<bmcsd_curve_3d_attributes> cur_supportedAttr;
 
-    const vcl_vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_iterate.attributes();
-    vcl_cout << "Got the attributes" << vcl_endl;
+    const std::vector<bmcsd_curve_3d_attributes> cur_attrVec = csk_iterate.attributes();
+    std::cout << "Got the attributes" << std::endl;
 
     for(unsigned c=0; c<cur_allCurves.size(); ++c)
       {
-	vcl_cout << "Curve #" << c << vcl_endl;
+	std::cout << "Curve #" << c << std::endl;
 	bdifd_1st_order_curve_3d curCurve = cur_allCurves[c];
 	bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
-	vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	unsigned cur_offset = curAttr.imageCurveOffset_;
 	unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	unsigned cur_origID = curAttr.orig_id_v0_;
 	unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	unsigned cur_v0_seed = seedViews->stereo0();
 	unsigned cur_v1_seed = curView;
 
@@ -682,7 +682,7 @@ main(int argc, char **argv)
     
     //Anil: Container for all the mate curves
     //First index is views and second index is the image curves in v0()
-    vcl_vector<vcl_vector<vcl_set<int> > > cur_cumulativeMates;
+    std::vector<std::vector<std::set<int> > > cur_cumulativeMates;
     cur_cumulativeMates.resize(numConf);
 
     //Loop over all the confirmation views to gather all mate curves together
@@ -694,9 +694,9 @@ main(int argc, char **argv)
 	for(unsigned c=0; c<cur_numCurves; ++c){
 	  bmcsd_curve_3d_attributes curAttr = cur_attrVec[c];
 	  unsigned origID = curAttr.orig_id_v0_;
-	  vcl_set<int> curMates = curAttr.mate_curves_[v];
+	  std::set<int> curMates = curAttr.mate_curves_[v];
 
-	  for(vcl_set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
+	  for(std::set<int>::iterator mit=curMates.begin(); mit!=curMates.end(); ++mit)
 	    cur_cumulativeMates[v][origID].insert(*mit);
 	}
       } 
@@ -706,27 +706,27 @@ main(int argc, char **argv)
       {
 	bmcsd_curve_3d_sketch csk_iter_elong;
 	unsigned iterView = curInstance->confirmation_view(v);
-	vcl_cout << "LOOKING FOR CUES IN VIEW: " << iterView << vcl_endl;
+	std::cout << "LOOKING FOR CUES IN VIEW: " << iterView << std::endl;
 	bmcsd_stereo_instance_views iterFrames;
 	bmcsd_stereo_views_sptr iterInstance = new bmcsd_stereo_views();
 	iterInstance->set_stereo0(curInstance->stereo0());
 	iterInstance->set_stereo1(iterView);
-	vcl_cout << curInstance->stereo0() << " " << iterView << vcl_endl;
+	std::cout << curInstance->stereo0() << " " << iterView << std::endl;
 	iterInstance->reserve_num_confirmation_views(numConf);
 
 	for(unsigned cv=0; cv<numConf; ++cv)
 	  if(cv != v){
 	    iterInstance->add_confirmation_view(curInstance->confirmation_view(cv));
-	    vcl_cout << curInstance->confirmation_view(cv) << " ";
+	    std::cout << curInstance->confirmation_view(cv) << " ";
 	  }
 	
 	iterInstance->add_confirmation_view(curInstance->stereo1());
-	vcl_cout << curInstance->stereo1() << vcl_endl;
+	std::cout << curInstance->stereo1() << std::endl;
 	iterFrames.add_instance(iterInstance);
 
 	bmcsd_concurrent_stereo_driver iter_s(dpath, iterFrames);
 
-	vcl_vector<vcl_vector<unsigned> > iter_usedCurveIDs(2);
+	std::vector<std::vector<unsigned> > iter_usedCurveIDs(2);
 	for(unsigned imc=0; imc<usedCurvesAll[curInstance->stereo0()].size(); ++imc){
 	  unsigned numUsed = 0;
 	  for(unsigned s=0; s<usedCurvesAll[curInstance->stereo0()][imc].size(); ++s)
@@ -787,26 +787,26 @@ main(int argc, char **argv)
 	//Anil: Same as before - Process the 3D curves to remove the segments that did not gather sufficient edge support
 	//A segment is removed only if its size is 3 samples or more
 	//A curve segment is created only if its size is 8 samples or more
-	vcl_vector<bdifd_1st_order_curve_3d> iter_allCurves = csk_iter_elong.curves_3d();
+	std::vector<bdifd_1st_order_curve_3d> iter_allCurves = csk_iter_elong.curves_3d();
  
-	vcl_vector<bdifd_1st_order_curve_3d> iter_supportedSegments;
-	vcl_vector<bmcsd_curve_3d_attributes> iter_supportedAttr;
+	std::vector<bdifd_1st_order_curve_3d> iter_supportedSegments;
+	std::vector<bmcsd_curve_3d_attributes> iter_supportedAttr;
 
-	const vcl_vector<bmcsd_curve_3d_attributes> iter_attrVec = csk_iter_elong.attributes();
+	const std::vector<bmcsd_curve_3d_attributes> iter_attrVec = csk_iter_elong.attributes();
 
 	for(unsigned c=0; c<iter_allCurves.size(); ++c)
 	  {
 	    bdifd_1st_order_curve_3d curCurve = iter_allCurves[c];
 	    bmcsd_curve_3d_attributes curAttr = iter_attrVec[c];
-	    vcl_vector<unsigned> curSupp = curAttr.edgeSupportCount_;
+	    std::vector<unsigned> curSupp = curAttr.edgeSupportCount_;
 	    unsigned cur_offset = curAttr.imageCurveOffset_;
 	    unsigned cur_offset_v1 = curAttr.imageCurveOffset_v1_;
 	    unsigned cur_origID = curAttr.orig_id_v0_;
 	    unsigned cur_origID_v1 = curAttr.orig_id_v1_;
 	    unsigned cur_origCurveSize = curAttr.origCurveSize_;
 	    unsigned cur_origCurveSize_v1 = curAttr.origCurveSize_v1_;
-	    vcl_vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
-	    vcl_vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
+	    std::vector<unsigned> cur_usedSamples_v1 = curAttr.used_samples_v1_;
+	    std::vector<bool> cur_certaintyFlags = curAttr.certaintyFlags_;
 	    unsigned cur_v0_seed = curInstance->stereo0();
 	    unsigned cur_v1_seed = iterView;
 
@@ -911,11 +911,11 @@ main(int argc, char **argv)
 
   }
 
-  vcl_cout << "FINISHED GATHERING!!!!" << vcl_endl;
+  std::cout << "FINISHED GATHERING!!!!" << std::endl;
 
   bmcsd_curve_3d_sketch csk_supported(supportedSegments,supportedAttr);
   //: Write 3D curves and attributes to file.
-  retval = csk_supported.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk_supported.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);
 
 
@@ -924,12 +924,12 @@ main(int argc, char **argv)
   //process 1 image curve at a time
     
   //Anil: Containers for the reduced 3d curves
-  vcl_vector<bdifd_1st_order_curve_3d> reducedCurves;
-  vcl_vector<bmcsd_curve_3d_attributes> reducedAttr;
+  std::vector<bdifd_1st_order_curve_3d> reducedCurves;
+  std::vector<bmcsd_curve_3d_attributes> reducedAttr;
 
   for(unsigned i=0; i<2000; ++i)
   {
-    vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
+    std::vector<std::vector<bdifd_1st_order_point_3d> > cur_cumulativeCurve = cumulativeCurve[i];
     bdifd_1st_order_curve_3d averageCurve;
     if(!cur_cumulativeCurve.empty())
       {
@@ -989,7 +989,7 @@ main(int argc, char **argv)
 		    double y=cur_cumulativeCurve[s][p].Gama[1];
 		    double z=cur_cumulativeCurve[s][p].Gama[2];
 
-		    double distSq = vcl_pow(x-avGama[0],2) + vcl_pow(y-avGama[1],2) + vcl_pow(z-avGama[2],2);
+		    double distSq = std::pow(x-avGama[0],2) + std::pow(y-avGama[1],2) + std::pow(z-avGama[2],2);
 		    if(distSq<0.05)
 		    //if(true)
 		      {
@@ -1035,50 +1035,50 @@ main(int argc, char **argv)
   }
   
 
-  vcl_cout << "NUMBER OF REDUCED CURVES: " << reducedCurves.size() << vcl_endl;
+  std::cout << "NUMBER OF REDUCED CURVES: " << reducedCurves.size() << std::endl;
   bmcsd_curve_3d_sketch csk_reduced(reducedCurves,reducedAttr);
   //: Write 3D curves and attributes to file.
-  vul_file::make_directory(a_prefix() + vcl_string("/") + a_out_dir());
-  vul_file::make_directory(a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/10"));
-  vcl_cout << a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/10") << vcl_endl;
+  vul_file::make_directory(a_prefix() + std::string("/") + a_out_dir());
+  vul_file::make_directory(a_prefix() + std::string("/") + a_out_dir() + std::string("/10"));
+  std::cout << a_prefix() + std::string("/") + a_out_dir() + std::string("/10") << std::endl;
 
-  retval = csk_reduced.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/10"));
+  retval = csk_reduced.write_dir_format(a_prefix() + std::string("/") + a_out_dir() + std::string("/10"));
 
   /*//: Write 3D curves and attributes to file.
-  retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*//: Write 3D curves and attributes to file.
-  retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*//: Write 3D curves and attributes to file.
-  retval = supportedCurves.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = supportedCurves.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);*/
 
   /*if (a_write_corresp()) {
     for (unsigned i=0; i < s.num_corresp(); ++i) {
-      vcl_ostringstream ns;
+      std::ostringstream ns;
       ns << i;
-      vcl_string fname
-        = a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/corresp.vsl") + ns.str();
+      std::string fname
+        = a_prefix() + std::string("/") + a_out_dir() + std::string("/corresp.vsl") + ns.str();
       vsl_b_ofstream corr_ofs(fname);
       vsl_b_write(corr_ofs, s.corresp(i));
     }
   }
 
   //Anil: Write the edge support to different txt files
-  if(!write_edge_support(a_prefix() + vcl_string("/") + a_out_dir(), csk.attributes()))
-  vcl_cout << "Error writing edge support files!" << vcl_endl;*/
+  if(!write_edge_support(a_prefix() + std::string("/") + a_out_dir(), csk.attributes()))
+  std::cout << "Error writing edge support files!" << std::endl;*/
 
   /*for(unsigned u=0; u<numConf+2; ++u)
   {
-    vcl_stringstream used_stream;
+    std::stringstream used_stream;
     used_stream << "used_samples_";
     used_stream << u;
     used_stream << ".txt";
-    vcl_string used_fname = used_stream.str();
-    vcl_ofstream used_file(used_fname.c_str());
+    std::string used_fname = used_stream.str();
+    std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
@@ -1087,7 +1087,7 @@ main(int argc, char **argv)
 	  numImageCurvesProcessed++;
       }
 
-    used_file << numImageCurvesProcessed << vcl_endl;
+    used_file << numImageCurvesProcessed << std::endl;
 
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
@@ -1097,7 +1097,7 @@ main(int argc, char **argv)
 	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
 	      used_file << usedCurvesAll[u][imc][s] << " ";
       
-	    used_file << vcl_endl;
+	    used_file << std::endl;
 	  }
       }
 
@@ -1111,7 +1111,7 @@ main(int argc, char **argv)
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  /*vcl_vector<vcl_vector<unsigned> > usedCurveIDs(2);
+  /*std::vector<std::vector<unsigned> > usedCurveIDs(2);
 
   for(unsigned imc=0; imc<usedCurvesAll[12].size(); ++imc){
     unsigned numUsed = 0;
@@ -1184,17 +1184,17 @@ main(int argc, char **argv)
 
   s2.get_curve_sketch(&csk_second_round);
   //: Write 3D curves and attributes to file.
-  retval = csk_second_round.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk_second_round.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);//*/
 
   //Write out the used curve samples in a text file
   for(unsigned u=0; u<numConf+2; ++u) {
-    vcl_stringstream used_stream;
+    std::stringstream used_stream;
     used_stream << "used_samples_";
     used_stream << u;
     used_stream << ".txt";
-    vcl_string used_fname = used_stream.str();
-    vcl_ofstream used_file(used_fname.c_str());
+    std::string used_fname = used_stream.str();
+    std::ofstream used_file(used_fname.c_str());
 
     unsigned numImageCurvesProcessed = 0;
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
@@ -1203,7 +1203,7 @@ main(int argc, char **argv)
 	  numImageCurvesProcessed++;
       }
 
-    used_file << numImageCurvesProcessed << vcl_endl;
+    used_file << numImageCurvesProcessed << std::endl;
 
     for(unsigned imc=0; imc<usedCurvesAll[u].size(); ++imc)
       {
@@ -1213,7 +1213,7 @@ main(int argc, char **argv)
 	    for(unsigned s=0; s<usedCurvesAll[u][imc].size(); ++s)
 	      used_file << usedCurvesAll[u][imc][s] << " ";
       
-	    used_file << vcl_endl;
+	    used_file << std::endl;
 	  }
       }
 

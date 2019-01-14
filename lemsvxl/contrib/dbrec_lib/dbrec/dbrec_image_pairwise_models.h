@@ -80,7 +80,7 @@ public:
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data) { return 0; }
 
   //: visualize the model 
-  virtual void visualize(vcl_string& doc_name) const = 0;
+  virtual void visualize(std::string& doc_name) const = 0;
 
   virtual dbrec_model_factory_sptr get_a_factory() const = 0;
 
@@ -121,7 +121,7 @@ public:
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
   //: visualize the model 
-  virtual void visualize(vcl_string& doc_name) const {};
+  virtual void visualize(std::string& doc_name) const {};
 
   virtual dbrec_model_factory_sptr get_a_factory() const { return new dbrec_pairwise_indep_gaussian_model_factory(min_stad_dev_dist_, min_stad_dev_angle_); }
 
@@ -158,7 +158,7 @@ public:
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
   //: visualize the model 
-  virtual void visualize(vcl_string& doc_name) const {};
+  virtual void visualize(std::string& doc_name) const {};
 
   //: factory not implemented for this type
   virtual dbrec_model_factory_sptr get_a_factory() const { throw 0; }
@@ -192,7 +192,7 @@ public:
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
   //: visualize the model 
-  virtual void visualize(vcl_string& doc_name) const {};
+  virtual void visualize(std::string& doc_name) const {};
 
   //: factory not implemented for this type
   virtual dbrec_model_factory_sptr get_a_factory() const { throw 0; }
@@ -236,7 +236,7 @@ public:
   void update_models(const vnl_vector_fixed<float, 2>& central_part_direction_vector,  
     const vnl_vector_fixed<float,2>& central_part_loc, const vnl_vector_fixed<float,2>& second_part_loc, float central_part_mag = 1.0f, float second_part_mag = 1.0f);
 
-  void print_hist_to_vrml(vcl_ostream& os) { hist_.print_to_vrml(os); }
+  void print_hist_to_vrml(std::ostream& os) { hist_.print_to_vrml(os); }
 
   //: return self as a bxml_data_sptr
   virtual bxml_data_sptr xml_element() const;
@@ -244,15 +244,15 @@ public:
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
   //: visualize the model 
-  virtual void visualize(vcl_string& doc_name) const;
+  virtual void visualize(std::string& doc_name) const;
 
   virtual dbrec_model_factory_sptr get_a_factory() const { return new dbrec_pairwise_discrete_model_factory(hist_.nbins_a(), hist_.min_b(), hist_.max_b(), hist_.nbins_b()); }
 
   //: create new instances of self by sampling from the histogram
-  bool sample_new_instances(unsigned n, vcl_vector<dbrec_pairwise_model_sptr>& new_ins);
+  bool sample_new_instances(unsigned n, std::vector<dbrec_pairwise_model_sptr>& new_ins);
 
   //: create new instances of indep gaussian models by sampling from the histogram
-  bool sample_new_indep_gaussian_instances(unsigned n, vcl_vector<dbrec_pairwise_model_sptr>& new_ins);
+  bool sample_new_indep_gaussian_instances(unsigned n, std::vector<dbrec_pairwise_model_sptr>& new_ins);
 
 protected:
   //: a joint histogram for angle and distance to be used, convention: first dimension (a) is angle, and second (b) is distance
@@ -308,7 +308,7 @@ public:
   virtual bxml_data_sptr xml_element() const;
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
-  virtual void visualize(vcl_string& doc_name) const { throw 0; }
+  virtual void visualize(std::string& doc_name) const { throw 0; }
 
   virtual dbrec_model_factory_sptr get_a_factory() const { throw 0; }
 
@@ -370,7 +370,7 @@ public:
   virtual bxml_data_sptr xml_element() const;
   static dbrec_pairwise_model_sptr xml_parse_element(bxml_data_sptr data);
 
-  virtual void visualize(vcl_string& doc_name) const;
+  virtual void visualize(std::string& doc_name) const;
   virtual dbrec_model_factory_sptr get_a_factory() const { throw 0; }
 
   bool rho_defined() const { return rho_defined_; }

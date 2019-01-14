@@ -15,7 +15,7 @@ bool dsm_create_feature_sptr_process_cons(bprb_func_process& pro)
 {
 	//set input/output types
 	using namespace dsm_create_feature_sptr_process_globals;
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 	output_types_[0]="dsm_feature_sptr";
 
 	if(!pro.set_output_types(output_types_))

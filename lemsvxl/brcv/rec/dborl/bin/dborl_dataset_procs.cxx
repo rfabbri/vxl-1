@@ -77,7 +77,7 @@
 #include <dbskr/algo/io/dbskr_extract_shock_params.h>
 #include <dbskr/pro/dbskr_shock_patch_selector.h>
 
-bool write_def_params(vcl_string bnd_param_file, vcl_string shock_param_file)
+bool write_def_params(std::string bnd_param_file, std::string shock_param_file)
 {
   if (bnd_param_file.compare("") == 0)
     return false;
@@ -100,7 +100,7 @@ bool write_def_params(vcl_string bnd_param_file, vcl_string shock_param_file)
   return true;
 }
 
-bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_string bnd_param_xml, vcl_string sh_param_xml, bool check_existence)
+bool prepare_ethz_boundaries(std::string index_file, std::string image_ext, std::string bnd_param_xml, std::string sh_param_xml, bool check_existence)
 {
   /*
   if (index_file.compare("") == 0)
@@ -120,7 +120,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
   if (!param_doc.root_element())
     return false;
   if (param_doc.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << bnd_param_xml << " root is not ELEMENT\n";
+    std::cout << bnd_param_xml << " root is not ELEMENT\n";
     return false;
   }
   bnd_params.parse_from_data(param_doc.root_element());
@@ -130,7 +130,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
   if (!param_doc2.root_element())
     return false;
   if (param_doc2.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << sh_param_xml << " root is not ELEMENT\n";
+    std::cout << sh_param_xml << " root is not ELEMENT\n";
     return false;
   }
   sh_params.parse_from_data(param_doc2.root_element());
@@ -145,15 +145,15 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
 
   for (unsigned int i = 0; i<root->names().size(); i++) {
     //: load the edge image
-    vcl_string im_name = root->paths()[i] + root->names()[i] + image_ext;
-    vcl_cout << im_name << vcl_endl;
+    std::string im_name = root->paths()[i] + root->names()[i] + image_ext;
+    std::cout << im_name << std::endl;
     vil_image_resource_sptr img = vil_load_image_resource(im_name.c_str());
     vil_image_view<vxl_byte> I = img->get_view(0, img->ni(), 0, img->nj() );
     vil_image_view<float> L, A, B;
 
-    vcl_string out_shock_name = root->paths()[i] + root->names()[i];
+    std::string out_shock_name = root->paths()[i] + root->names()[i];
     if (check_existence && vul_file::exists(out_shock_name+".esf")) {
-      vcl_cout << out_shock_name + ".esf exists, skipping!!!!!!\n";
+      std::cout << out_shock_name + ".esf exists, skipping!!!!!!\n";
       continue;
     }
 
@@ -163,14 +163,14 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     vul_timer t;
     t.mark();
 
-    vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
-    vcl_vector< vsol_spatial_object_2d_sptr > image_curves_all;
-    vcl_vector< vsol_spatial_object_2d_sptr > image_curves_avg_mag_pruned;
-    vcl_vector< vsol_spatial_object_2d_sptr > image_curves_length_pruned;
+    std::vector< vsol_spatial_object_2d_sptr > image_curves;
+    std::vector< vsol_spatial_object_2d_sptr > image_curves_all;
+    std::vector< vsol_spatial_object_2d_sptr > image_curves_avg_mag_pruned;
+    std::vector< vsol_spatial_object_2d_sptr > image_curves_length_pruned;
 
     if (bnd_params.run_contour_tracing_) { // need to binarize the image..  assumes that the figure is black and the background is white
 
-      vcl_cout << " contour tracing...\n";
+      std::cout << " contour tracing...\n";
       float sigma=1.0f, beta=0.3f;
       int nsteps=1;
       vil_image_view<bool> binary_img;
@@ -211,7 +211,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       ctracer.trace(binary_img);
       
       //get the interesting contours
-      vcl_vector< vsol_spatial_object_2d_sptr > contours;
+      std::vector< vsol_spatial_object_2d_sptr > contours;
       
       //vsol_box_2d_sptr bbox = new vsol_box_2d();
       for (unsigned i=0; i<ctracer.contours().size(); i++)
@@ -224,13 +224,13 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
 
           if (bnd_params.smooth_bnds_) {
             
-            vcl_vector<vgl_point_2d<double> > pts;
+            std::vector<vgl_point_2d<double> > pts;
             pts.reserve(newContour->size());
             for (unsigned j=0; j<newContour->size(); j++)
               pts.push_back(newContour->vertex(j)->get_p());
             //smooth this contour
             bgld_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
-            vcl_vector<vsol_point_2d_sptr> vsol_pts;
+            std::vector<vsol_point_2d_sptr> vsol_pts;
             vsol_pts.reserve(pts.size());
             for (unsigned i=0; i<pts.size(); ++i)
               vsol_pts.push_back(new vsol_point_2d(pts[i]));
@@ -277,7 +277,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
         }
       }
 
-      vcl_cout << " there are " << edge_map->num_edgels << " in the edge map\n";
+      std::cout << " there are " << edge_map->num_edgels << " in the edge map\n";
 
       //construct the linker
       edge_linker = new dbdet_sel<dbdet_CC_curve_model>(edge_map, bnd_params.nrad_, bnd_params.dt_*vnl_math::pi/180, bnd_params.dx_, bnd_params.max_k_);
@@ -309,10 +309,10 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       int N = 1;
   
       
-      vcl_cout << "edges... ";
+      std::cout << "edges... ";
     
       if (I.nplanes() != 3){
-        vcl_cout << "In edge_detector - GREY image!!! \n";
+        std::cout << "In edge_detector - GREY image!!! \n";
         edge_map = dbdet_detect_third_order_edges(I, bnd_params.edge_detection_sigma_, bnd_params.edge_detection_thresh_, N, parabola_fit, grad_op, false);  // reduce_tokens is false
       } else {
         color_image = true;
@@ -321,7 +321,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       }
 
       //-------------------------------------------------------------------------------------------------------------------
-      vcl_cout << t.real()/1000.0f << " secs. linking... ";
+      std::cout << t.real()/1000.0f << " secs. linking... ";
       // link the edges ---------------------------------------------------------------------------------------------------
       //double nrad = 2.0f, dx = 0.2f, dt = 15.0f;
       //unsigned bnd_params.max_size_to_group_ = 7, bnd_params.min_size_to_link_ = 3;
@@ -346,10 +346,10 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     }
 
     double link_time = t.real() / 1000.0;
-    vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+    std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
 
     //construct vsol objects from the linked contours
-    vcl_cout << " after linking there are " << edge_linker->get_curve_fragment_graph().frags.size() << " fragments \n";
+    std::cout << " after linking there are " << edge_linker->get_curve_fragment_graph().frags.size() << " fragments \n";
 
      vsol_box_2d_sptr bbox = new vsol_box_2d();
 
@@ -374,7 +374,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       avg_contrast /= chain->edgels.size();
 
       //create a polyline out of the edgel chain
-      vcl_vector<vgl_point_2d<double> > pts;
+      std::vector<vgl_point_2d<double> > pts;
       pts.reserve(chain->edgels.size());
       for (unsigned j=0; j<chain->edgels.size(); j++)
         pts.push_back(chain->edgels[j]->pt);
@@ -384,7 +384,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
         bgld_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
       }
 
-      vcl_vector<vsol_point_2d_sptr> vsol_pts;
+      std::vector<vsol_point_2d_sptr> vsol_pts;
       vsol_pts.reserve(pts.size());
       for (unsigned i=0; i<pts.size(); ++i)
         vsol_pts.push_back(new vsol_point_2d(pts[i]));
@@ -436,8 +436,8 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       vsol_pts.clear();
     }
 
-   vcl_cout << "mean color dist of all curves: " << mean_color_dist_all/cnt_all << " of selected: " << mean_color_dist_selected/cnt_sel << " threshold was: " << bnd_params.pruning_color_threshold_ << vcl_endl;
-   vcl_cout << "bbox (minx, miny) (width, height): " << "(" << bbox->get_min_x() << ", " << bbox->get_min_y() << ") (" << bbox->width() << ", " << bbox->height() << ")\n";
+   std::cout << "mean color dist of all curves: " << mean_color_dist_all/cnt_all << " of selected: " << mean_color_dist_selected/cnt_sel << " threshold was: " << bnd_params.pruning_color_threshold_ << std::endl;
+   std::cout << "bbox (minx, miny) (width, height): " << "(" << bbox->get_min_x() << ", " << bbox->get_min_y() << ") (" << bbox->width() << ", " << bbox->height() << ")\n";
  
     int offset = 3;
     bbox->add_point(bbox->get_min_x()-offset, bbox->get_min_y()-offset);
@@ -450,30 +450,30 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     bsold_save_cem(image_curves_length_pruned, root->paths()[i] + root->names()[i]+"_after_length_pruned_boundary.cem");    
     }
 
-    vcl_string bnd_name = root->paths()[i] + root->names()[i] + "_boundary.bnd";
-    vcl_cout << bnd_name << vcl_endl;
+    std::string bnd_name = root->paths()[i] + root->names()[i] + "_boundary.bnd";
+    std::cout << bnd_name << std::endl;
     // save the boundary curves
     dbsk2d_file_io::save_bnd_v3_0(bnd_name, image_curves);
     bsold_save_cem(image_curves, root->paths()[i] + root->names()[i]+"_boundary.cem");
-    vcl_cout << "saved " << image_curves.size() << " polylines\n";
+    std::cout << "saved " << image_curves.size() << " polylines\n";
 
     //: save the bnd extraction params
     bxml_document doc;
     bxml_element * root_doc = bnd_params.create_document_data();
     doc.set_root_element(root_doc);
-    vcl_string bnd_param_file = root->paths()[i] + root->names()[i] + "_boundary_params.xml";
+    std::string bnd_param_file = root->paths()[i] + root->names()[i] + "_boundary_params.xml";
     bxml_write(bnd_param_file, doc);
 
 
     //: find the shock graph
     //-------------------------------------------------------------------------------------------------------------------
-    vcl_cout << t.real()/1000.0f << " secs. computing shocks... ";
+    std::cout << t.real()/1000.0f << " secs. computing shocks... ";
     // compute shocks ---------------------------------------------------------------------------------------------------
     float xmin=0, ymin=0, cell_width=1000.0f, cell_height=1000.0f; int num_rows=1, num_cols=1;
     dbsk2d_boundary_sptr boundary = dbsk2d_create_boundary(image_curves, false, xmin, ymin, num_rows, num_cols, cell_width, cell_height, true, true);
     dbsk2d_ishock_graph_sptr isg = dbsk2d_compute_ishocks(boundary);
     if (!isg) {
-      vcl_cout << "Problem in intrinsic shock computation! Exiting!\n";
+      std::cout << "Problem in intrinsic shock computation! Exiting!\n";
       return false;
     }
     dbsk2d_shock_graph_sptr sg = new dbsk2d_shock_graph();
@@ -481,7 +481,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     ishock_pruner.prune(sh_params.prune_threshold_);  // prune threshold is 1.0f
     ishock_pruner.compile_coarse_shock_graph();
     if (!sg->number_of_vertices() || !sg->number_of_edges()) {
-      vcl_cout << "Problem in coarse shock computation!\n";
+      std::cout << "Problem in coarse shock computation!\n";
       return false;
     }
 
@@ -496,15 +496,15 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       
 
     // -------------------------------------------------------------------------------------------------------------------
-    vcl_cout << (t.real()/1000.0f)/60.0 << " mins. " << " gap transforms... ";
+    std::cout << (t.real()/1000.0f)/60.0 << " mins. " << " gap transforms... ";
     // gap transforms ----------------------------------------------------------------------------------------------------
 
     if (sh_params.perform_gap_transforms_) {
       writer_t.save_xshock_graph(sampled_sg_t, out_shock_name+"_before_gaps.esf");
 
     //: need the color image for this
-    vcl_string im_c_name = root->paths()[i] + root->names()[i] + ".jpg";
-    vcl_cout << im_c_name << vcl_endl;
+    std::string im_c_name = root->paths()[i] + root->names()[i] + ".jpg";
+    std::cout << im_c_name << std::endl;
     vil_image_resource_sptr img_sptr = vil_load_image_resource(im_c_name.c_str());
 
     //float low_cont_t = 0.1f, high_cont_t = 0.5f, low_app_t = 0.1f, high_app_t = 0.5f;
@@ -512,14 +512,14 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     dbsk2d_shock_transforms transformer(isg, sg);
     transformer.set_image(img_sptr);
     transformer.set_curve_length_gamma(sh_params.curve_length_gamma_);
-    vcl_cout << "cont_t: " << sh_params.cont_thres_ << " app_t: " << sh_params.app_thres_ << " performing gap transforms\n";
+    std::cout << "cont_t: " << sh_params.cont_thres_ << " app_t: " << sh_params.app_thres_ << " performing gap transforms\n";
     transformer.perform_all_gap_transforms(sh_params.cont_thres_, sh_params.app_thres_, sh_params.alpha_cont_, sh_params.alpha_app_, true);
-    vcl_vector< vsol_spatial_object_2d_sptr > euler_sps;
+    std::vector< vsol_spatial_object_2d_sptr > euler_sps;
     transformer.get_eulerspirals(euler_sps);
     transformer.clear_eulerspirals();  // is this cleaning the spirals pointed by normal pointers??? TODO: check!!
 
     if (!sg->number_of_vertices() || !sg->number_of_edges()) {
-      vcl_cout << "Problem in gap transforms!\n";
+      std::cout << "Problem in gap transforms!\n";
       return 0;
     }
 
@@ -531,7 +531,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     //if (write_output) {
       //write_contours_to_ps(image_curves, euler_sps, out_shock_name+"_curves");
       dbsk2d_xshock_graph_fileio writer;
-      //vcl_string out_shock_name = root->paths()[i] + root->names()[i];
+      //std::string out_shock_name = root->paths()[i] + root->names()[i];
       writer.save_xshock_graph(sampled_sg, out_shock_name+".esf");
       //use the generic linker in SEL instead
       
@@ -542,13 +542,13 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       bxml_document doc2;
       bxml_element * root2 = sh_params.create_document_data();
       doc2.set_root_element(root2);
-      bxml_write(vcl_string(out_shock_name + "_esf_params.xml"), doc2);
+      bxml_write(std::string(out_shock_name + "_esf_params.xml"), doc2);
     //}
     } else {
       writer_t.save_xshock_graph(sampled_sg_t, out_shock_name+".esf");
     }
     
-    vcl_cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
+    std::cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
 
     for (unsigned jj = 0; jj < image_curves.size(); jj++)
       image_curves[jj] = 0;
@@ -573,14 +573,14 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
   
 }
 
-bool create_image(vil_image_resource_sptr img, vcl_string filename, vcl_vector<vsol_polygon_2d_sptr>& polys,
+bool create_image(vil_image_resource_sptr img, std::string filename, std::vector<vsol_polygon_2d_sptr>& polys,
                   vil_rgb<int>& outer, vil_rgb<int>& model, vil_rgb<int>& others)
 {
   //1)If file open fails, return.
   vul_psfile psfile1((filename+".ps").c_str(), false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -591,7 +591,7 @@ bool create_image(vil_image_resource_sptr img, vcl_string filename, vcl_vector<v
 
   unsigned char *buf = new unsigned char[sizex*sizey*3];
   if (planes == 3) {
-    vcl_cout << "processing color image\n";
+    std::cout << "processing color image\n";
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
         buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -601,7 +601,7 @@ bool create_image(vil_image_resource_sptr img, vcl_string filename, vcl_vector<v
     
     
   } else if (planes == 1) {
-    vcl_cout << "processing grey image\n";
+    std::cout << "processing grey image\n";
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
         buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -655,19 +655,19 @@ bool create_image(vil_image_resource_sptr img, vcl_string filename, vcl_vector<v
   return true;
 }
 
-bool create_image2(vil_image_resource_sptr img, vcl_string filename, vcl_vector<vsol_polygon_2d_sptr>& polys,
-                  vcl_vector<vil_rgb<int> >& colors)
+bool create_image2(vil_image_resource_sptr img, std::string filename, std::vector<vsol_polygon_2d_sptr>& polys,
+                  std::vector<vil_rgb<int> >& colors)
 {
   //1)If file open fails, return.
   vul_psfile psfile1((filename+".ps").c_str(), false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   if (!(polys.size() == colors.size())) {
-    vcl_cout << "poly vector is not the same size as color vector!!!\n";
+    std::cout << "poly vector is not the same size as color vector!!!\n";
     return false;
   }
 
@@ -678,7 +678,7 @@ bool create_image2(vil_image_resource_sptr img, vcl_string filename, vcl_vector<
 
   unsigned char *buf = new unsigned char[sizex*sizey*3];
   if (planes == 3) {
-    vcl_cout << "processing color image\n";
+    std::cout << "processing color image\n";
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
         buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -688,7 +688,7 @@ bool create_image2(vil_image_resource_sptr img, vcl_string filename, vcl_vector<
     
     
   } else if (planes == 1) {
-    vcl_cout << "processing grey image\n";
+    std::cout << "processing grey image\n";
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
         buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -741,7 +741,7 @@ bool create_image2(vil_image_resource_sptr img, vcl_string filename, vcl_vector<
   return true;
 }
 
-bool save_patch_images(vcl_string image_file, vcl_string st_file, vcl_string out_name)
+bool save_patch_images(std::string image_file, std::string st_file, std::string out_name)
 {
   if (image_file.compare("") == 0)
     return false;
@@ -768,19 +768,19 @@ bool save_patch_images(vcl_string image_file, vcl_string st_file, vcl_string out
   st->b_read(ifs);
   ifs.close();
 
-  vcl_cout << "loaded: " << st->size() << " patches in the storage\n";
+  std::cout << "loaded: " << st->size() << " patches in the storage\n";
 
   //: load the shock graphs --> assumes each shock graph for each patch is saved in the same folder
-  //vcl_cout << model_st->size() << " patches in model storage, reading shocks..\n";
+  //std::cout << model_st->size() << " patches in model storage, reading shocks..\n";
   dbsk2d_xshock_graph_fileio loader;
   //: load esfs for each patch
  
-  vcl_string storage_end = "patch_strg.bin";
-  vcl_vector<vsol_polygon_2d_sptr> polys;
+  std::string storage_end = "patch_strg.bin";
+  std::vector<vsol_polygon_2d_sptr> polys;
   for (unsigned iii = 0; iii < st->size(); iii++) {
     dbskr_shock_patch_sptr sp = st->get_patch(iii);
-    vcl_string patch_esf_name = st_file.substr(0, st_file.length()-storage_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = st_file.substr(0, st_file.length()-storage_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
@@ -804,9 +804,9 @@ bool save_patch_images(vcl_string image_file, vcl_string st_file, vcl_string out
   return true;
 }
 
-bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file, 
-                        vcl_string query_image_file, vcl_string query_st_file, 
-                        vcl_string match_file, vcl_string detection_param_xml, vcl_string out_name, vcl_string width_str)
+bool prepare_match_html(std::string model_image_file, std::string model_st_file, 
+                        std::string query_image_file, std::string query_st_file, 
+                        std::string match_file, std::string detection_param_xml, std::string out_name, std::string width_str)
 {
   if (model_image_file.compare("") == 0 || model_st_file.compare("") == 0 || query_image_file.compare("") == 0 || 
       query_st_file.compare("") == 0 || match_file.compare("") == 0 || detection_param_xml.compare("") == 0 || out_name.compare("") == 0 ||
@@ -830,7 +830,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     return false;
   
   if (param_doc.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return false;
   }
 
@@ -847,27 +847,27 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   model_st->b_read(ifs);
   ifs.close();
 
-  vcl_cout << "loaded: " << model_st->size() << " patches in the model\n";
+  std::cout << "loaded: " << model_st->size() << " patches in the model\n";
 
   dbskr_shock_patch_storage_sptr query_st = dbskr_shock_patch_storage_new();
   vsl_b_ifstream ifsq(query_st_file.c_str());
   query_st->b_read(ifsq);
   ifsq.close();
 
-  vcl_cout << "loaded: " << query_st->size() << " patches in the query\n";
+  std::cout << "loaded: " << query_st->size() << " patches in the query\n";
   
   //: load the shock graphs --> assumes each shock graph for each patch is saved in the same folder
-  //vcl_cout << model_st->size() << " patches in model storage, reading shocks..\n";
+  //std::cout << model_st->size() << " patches in model storage, reading shocks..\n";
   dbsk2d_xshock_graph_fileio loader;
   //: load esfs for each patch
-  vcl_string storage_end = "patch_strg.bin";
+  std::string storage_end = "patch_strg.bin";
   vsol_polygon_2d_sptr model_poly;
   if (model_st->size() > 0)
     model_poly = model_st->get_patch(0)->get_outer_boundary();
   for (unsigned iii = 0; iii < model_st->size(); iii++) {
     dbskr_shock_patch_sptr sp = model_st->get_patch(iii);
-    vcl_string patch_esf_name = model_st_file.substr(0, model_st_file.length()-storage_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = model_st_file.substr(0, model_st_file.length()-storage_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
@@ -883,8 +883,8 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
   for (unsigned iii = 0; iii < query_st->size(); iii++) {
     dbskr_shock_patch_sptr sp = query_st->get_patch(iii);
-    vcl_string patch_esf_name = query_st_file.substr(0, query_st_file.length()-storage_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = query_st_file.substr(0, query_st_file.length()-storage_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
@@ -903,15 +903,15 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   match->b_read(ifsm);
   ifsm.close();
 
-  vcl_cout << "loaded the match file\n";
+  std::cout << "loaded the match file\n";
 
   //: prepare id maps for this match
-  vcl_map<int, dbskr_shock_patch_sptr> model_map;
+  std::map<int, dbskr_shock_patch_sptr> model_map;
   for (unsigned ii = 0; ii < model_st->size(); ii++) 
     model_map[model_st->get_patch(ii)->id()] = model_st->get_patch(ii);
   match->set_id_map1(model_map);
 
-  vcl_map<int, dbskr_shock_patch_sptr> query_map;
+  std::map<int, dbskr_shock_patch_sptr> query_map;
   for (unsigned ii = 0; ii < query_st->size(); ii++) 
     query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);
   match->set_id_map2(query_map);
@@ -925,23 +925,23 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
         return false;
   }
 
-  vcl_cout << " loading took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " loading took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 
   //: create all the similariy transformations
   match->compute_similarity_transformations();
 
-  vcl_cout << " similarity computations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " similarity computations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
   
-  vcl_string out_images = out_name + "/";
+  std::string out_images = out_name + "/";
   vul_file::make_directory(out_images);
 
-  vcl_cout << "patches are sorted wrt parameters in the detection param file\n";
-  vcl_ofstream tf((out_name + ".html").c_str(), vcl_ios::app);
+  std::cout << "patches are sorted wrt parameters in the detection param file\n";
+  std::ofstream tf((out_name + ".html").c_str(), std::ios::app);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " << out_name << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " << out_name << " for write " << std::endl;
     return false;
   }
   int visualization_n = 50;
@@ -952,8 +952,8 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
   patch_cor_map_iterator iter;
   patch_cor_map_type& map = match->get_map();
-  vcl_map<int, dbskr_shock_patch_sptr>& id_map_test = match->get_id_map2();
-  vcl_map<int, dbskr_shock_patch_sptr>& id_map_model = match->get_id_map1();  // first one is model
+  std::map<int, dbskr_shock_patch_sptr>& id_map_test = match->get_id_map2();
+  std::map<int, dbskr_shock_patch_sptr>& id_map_model = match->get_id_map1();  // first one is model
   vsol_point_2d_sptr center = new vsol_point_2d(0, 0);
 
 #if 0     // don't create the similarity matrix
@@ -967,17 +967,17 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
   for (iter = map.begin(); iter != map.end(); iter++) {
     dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
    
-    vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_";
-    vcl_vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
+    std::string patch_image_file = out_images + "model_" + oss1.str() + "_";
+    std::vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
     if (!create_image(model_img, patch_image_file, dummy, outer, model, others))
       return false;
 
     tf << "<TR> <TD> <img src=\"" << patch_image_file << "001.png\" width = \"" << width_str << "\"" << "\"> ";
     tf << msp->id() << " " << msp->depth() << " </TD> "; 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
     for (unsigned nn = 0; int(nn) < visualization_n; nn++) {
       if (nn >= match_vec->size()) {
         tf << "<TD> <img src=\"unknown\"> </TD> ";
@@ -990,13 +990,13 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
         vgl_h_matrix_2d<double> H; 
         if (sm->get_similarity_trans(H)) {  //, true, 5, false, true)) {  // similarity that maps model onto test image
-          vcl_vector<vsol_polygon_2d_sptr> polys;
+          std::vector<vsol_polygon_2d_sptr> polys;
           polys.push_back(tsp->get_traced_boundary());
 
-          vcl_ostringstream oss11;      
+          std::ostringstream oss11;      
           oss11 << tsp->id();
 
-          vcl_string out_img1 = out_images + "query_patch_" + oss11.str() + "_";
+          std::string out_img1 = out_images + "query_patch_" + oss11.str() + "_";
           if (!create_image(query_img, out_img1, polys, outer, model, others))
             return false;
 
@@ -1004,7 +1004,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
           vsol_polygon_2d_sptr trans_model_poly = bsol_algs::transform_about_point(model_poly, center, H);
           polys.push_back(trans_model_poly);
 
-          vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
+          std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
 
           if (!create_image(query_img, out_img, polys, outer, model, others))
             return false;
@@ -1015,7 +1015,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
           tf << " <img src=\"" << out_img1 << "001.png\" width = \"" << width_str << "\"" << "\"> ";
           tf << "model: " << msp->id() << " test patch: " << tsp->id() << " sim: " << sm->final_norm_cost() << " </TD> ";
         } else {
-          vcl_cout << " similarity transformation not computed!!\n";
+          std::cout << " similarity transformation not computed!!\n";
           tf << "<TD> <img src=\"unknown\"> sim trans not computed!! </TD> ";
         } 
       }
@@ -1024,7 +1024,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   }
   tf << "</TABLE>\n";
 
-  vcl_cout << " image creations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " image creations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 #endif
 #if 0
@@ -1043,13 +1043,13 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   for (iter = map.begin(); iter != map.end(); iter++) {
     int model_id = iter->first;
     dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_col1_";
-    vcl_string patch_image_file2 = out_images + "model_" + oss1.str() + "_col2_";
-     vcl_vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
+    std::string patch_image_file = out_images + "model_" + oss1.str() + "_col1_";
+    std::string patch_image_file2 = out_images + "model_" + oss1.str() + "_col2_";
+     std::vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
     if (!create_image(model_img, patch_image_file, dummy, model_p1, dummy_color, dummy_color))
       return false;
 
@@ -1070,14 +1070,14 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     // get the first match of this model patch
     int query_id = (*match_vec)[0].first;
     dbskr_shock_patch_sptr query_sp = id_map_test[query_id];
-    vcl_ostringstream oss11;
+    std::ostringstream oss11;
     oss11 << query_id;
-    vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_col1_";
-    vcl_string out_img2 = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_col2_";
+    std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_col1_";
+    std::string out_img2 = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_col2_";
     tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
     tf << model_id << " mapped with test patch: " << query_id << " </TD> ";
 
-    vcl_vector<vsol_polygon_2d_sptr> polys;
+    std::vector<vsol_polygon_2d_sptr> polys;
     polys.push_back(query_sp->get_traced_boundary());
 
     vgl_h_matrix_2d<double> H; 
@@ -1095,7 +1095,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     if (!create_image(query_img, out_img2, polys, query_p2, whole_model, model_p2))
         return false;
 
-    vcl_vector<vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double>* > > > out_vec;
+    std::vector<std::pair< std::pair<int, int>, std::pair<double, vnl_matrix<double>* > > > out_vec;
     if (match->rank_order_other_patch_pairs_wrt_sim_trans(model_id, query_id, out_vec, params_.max_thres_)) {
       //: put all the match pairs in this row
       for (unsigned kkk = 0; kkk < out_vec.size(); kkk++) {
@@ -1107,18 +1107,18 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
         double dist = out_vec[kkk].second.first;
         vnl_matrix<double> * pair_trans = out_vec[kkk].second.second;  // T
 
-        vcl_ostringstream oss_mod, oss_q;
+        std::ostringstream oss_mod, oss_q;
         oss_mod << mod_id;
         oss_q << q_id;
 
-        vcl_string patch_image_file = out_images + "model_" + oss_mod.str() + "_col1_";
+        std::string patch_image_file = out_images + "model_" + oss_mod.str() + "_col1_";
         
         tf << "<TD> <img src=\"" << patch_image_file << "001.png\" width = \"" << width_str << "\"" << "\"> ";
         tf << mod_id << " </TD> "; 
 
         vsol_polygon_2d_sptr trans_mod_patch = bsol_algs::transform_about_point(mod_msp->get_traced_boundary(), center, H);
        
-        vcl_string out_img = out_images + "query_m1_" + oss1.str() + "_m2_" + oss_mod.str() + "_q1_" + oss11.str() + "_q2_" + oss_q.str() + "_col1_green_col2_mag_";
+        std::string out_img = out_images + "query_m1_" + oss1.str() + "_m2_" + oss_mod.str() + "_q1_" + oss11.str() + "_q2_" + oss_q.str() + "_col1_green_col2_mag_";
         //: transform m1 wrt T
 
         tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
@@ -1139,7 +1139,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   vil_rgb<int> query_p2(1, 1, 0);  // yellow  
   vil_rgb<int> dummy_color(0, 0, 0);  // yellow  
 
-  vcl_vector<int> query_patches, model_patches;
+  std::vector<int> query_patches, model_patches;
   //query_patches.push_back(6116109);
   
   query_patches.push_back(6152206);
@@ -1159,21 +1159,21 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   //for (iter = map.begin(); iter != map.end(); iter++) {
     //int model_id = iter->first;
     //dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    //vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    //std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
   for (unsigned mm = 0; mm < model_patches.size(); mm++) {
     int model_id = model_patches[mm];
     dbskr_shock_patch_sptr msp = id_map_model[model_id];
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = map[model_id];
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = map[model_id];
     
     //if (msp->id() != 229001)
     //  continue;
 
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_col1_";
-    vcl_string patch_image_file2 = out_images + "model_" + oss1.str() + "_col2_";
-     vcl_vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
+    std::string patch_image_file = out_images + "model_" + oss1.str() + "_col1_";
+    std::string patch_image_file2 = out_images + "model_" + oss1.str() + "_col2_";
+     std::vector<vsol_polygon_2d_sptr> dummy(1, msp->get_traced_boundary());
     if (!create_image(model_img, patch_image_file, dummy, model_p1, dummy_color, dummy_color))
       return false;
 
@@ -1200,7 +1200,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
         continue;
 
       dbskr_shock_patch_sptr query_sp = id_map_test[query_id];
-      vcl_ostringstream oss11;
+      std::ostringstream oss11;
       oss11 << query_id;
 
       vgl_h_matrix_2d<double> H; 
@@ -1218,18 +1218,18 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
         vsol_polygon_2d_sptr trans_m2_patch = bsol_algs::transform_about_point(msp2->get_traced_boundary(), center, H);
 
-        vcl_ostringstream oss_m2;
+        std::ostringstream oss_m2;
         oss_m2 << model_id2;
 
         for (unsigned qq = 0; qq < query_patches.size(); qq++) {
           int other_query_id = query_patches[qq];
           dbskr_shock_patch_sptr other_qp = id_map_test[other_query_id];
-          vcl_ostringstream oss_other_q;
+          std::ostringstream oss_other_q;
           oss_other_q << other_query_id;
 
-          vcl_string out_img = out_images + "im_m1_" + oss1.str() + "_green_mapped_with_test_patch_" + oss11.str() + "_blue_other_test_patch_" + oss_other_q.str() + "_yellow_m2_" + oss_m2.str() + "_magenta_";
+          std::string out_img = out_images + "im_m1_" + oss1.str() + "_green_mapped_with_test_patch_" + oss11.str() + "_blue_other_test_patch_" + oss_other_q.str() + "_yellow_m2_" + oss_m2.str() + "_magenta_";
         
-          vcl_vector<vsol_polygon_2d_sptr> polys;
+          std::vector<vsol_polygon_2d_sptr> polys;
           polys.push_back(query_sp->get_traced_boundary());
           polys.push_back(other_qp->get_traced_boundary());
 
@@ -1238,7 +1238,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
           
           polys.push_back(trans_m2_patch);
 
-          vcl_vector<vil_rgb<int> > colors;
+          std::vector<vil_rgb<int> > colors;
           colors.push_back(query_p1);
           colors.push_back(query_p2);
 
@@ -1250,7 +1250,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
           if (!create_image2(query_img, out_img, polys, colors))
             return false;
 
-          vcl_string out_img2 = out_images + "im_m1_" + oss1.str() + "_green_mapped_with_test_patch_" + oss11.str() + "_yellow_other_test_patch_" + oss_other_q.str() + "_blue_m2_" + oss_m2.str() + "_green_";
+          std::string out_img2 = out_images + "im_m1_" + oss1.str() + "_green_mapped_with_test_patch_" + oss11.str() + "_yellow_other_test_patch_" + oss_other_q.str() + "_blue_m2_" + oss_m2.str() + "_green_";
           colors.clear();
           colors.push_back(query_p2);
           colors.push_back(query_p1);
@@ -1270,17 +1270,17 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     
     
 
-  vcl_cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 #if 0
   for (iter = map.begin(); iter != map.end(); iter++) {
     int model_id = iter->first;
     dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_";
+    std::string patch_image_file = out_images + "model_" + oss1.str() + "_";
 
     if (match_vec->size() <=1 )
       continue;
@@ -1295,14 +1295,14 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     
     // get the first match of this model patch
     int query_id = (*match_vec)[1].first;
-    vcl_ostringstream oss11;
+    std::ostringstream oss11;
     oss11 << query_id;
-    vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
+    std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
     tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
     tf << model_id << " mapped with test patch: " << query_id << " </TD> ";
 
 
-    vcl_vector<vcl_pair< vcl_pair<int, int>, double > > out_vec;
+    std::vector<std::pair< std::pair<int, int>, double > > out_vec;
     if (match->rank_order_other_patch_pairs_wrt_sim_trans(model_id, query_id, out_vec, params_.max_thres_)) {
       //: put all the match pairs in this row
       for (unsigned kkk = 0; kkk < out_vec.size(); kkk++) {
@@ -1310,15 +1310,15 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
         int q_id = out_vec[kkk].first.second;
         double dist = out_vec[kkk].second;
 
-        vcl_ostringstream oss1, oss11;
+        std::ostringstream oss1, oss11;
         oss1 << mod_id;
         oss11 << q_id;
 
-        vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_";
+        std::string patch_image_file = out_images + "model_" + oss1.str() + "_";
         tf << "<TD> <img src=\"" << patch_image_file << "001.png\" width = \"" << width_str << "\"" << "\"> ";
         tf << mod_id << " </TD> "; 
 
-        vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
+        std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
         tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
         tf << " query: " << q_id << " pair dist: " << dist << " </TD> ";
       }
@@ -1328,17 +1328,17 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     tf << "</TR>\n";
   }
 
-  vcl_cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 
   for (iter = map.begin(); iter != map.end(); iter++) {
     int model_id = iter->first;
     dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_";
+    std::string patch_image_file = out_images + "model_" + oss1.str() + "_";
 
     if (match_vec->size() <=2 )
       continue;
@@ -1353,14 +1353,14 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
     
     // get the first match of this model patch
     int query_id = (*match_vec)[2].first;
-    vcl_ostringstream oss11;
+    std::ostringstream oss11;
     oss11 << query_id;
-    vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
+    std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
     tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
     tf << model_id << " mapped with test patch: " << query_id << " </TD> ";
 
 
-    vcl_vector<vcl_pair< vcl_pair<int, int>, double > > out_vec;
+    std::vector<std::pair< std::pair<int, int>, double > > out_vec;
     if (match->rank_order_other_patch_pairs_wrt_sim_trans(model_id, query_id, out_vec, params_.max_thres_)) {
       //: put all the match pairs in this row
       for (unsigned kkk = 0; kkk < out_vec.size(); kkk++) {
@@ -1368,15 +1368,15 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
         int q_id = out_vec[kkk].first.second;
         double dist = out_vec[kkk].second;
 
-        vcl_ostringstream oss1, oss11;
+        std::ostringstream oss1, oss11;
         oss1 << mod_id;
         oss11 << q_id;
 
-        vcl_string patch_image_file = out_images + "model_" + oss1.str() + "_";
+        std::string patch_image_file = out_images + "model_" + oss1.str() + "_";
         tf << "<TD> <img src=\"" << patch_image_file << "001.png\" width = \"" << width_str << "\"" << "\"> ";
         tf << mod_id << " </TD> "; 
 
-        vcl_string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
+        std::string out_img = out_images + "query_" + oss1.str() + "_mapped_with_test_patch_" + oss11.str() + "_";
         tf << "<TD> <img src=\"" << out_img << "001.png\" width = \"" << width_str << "\"" << "\"> ";
         tf << " query: " << q_id << " pair dist: " << dist << " </TD> ";
       }
@@ -1387,7 +1387,7 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
   }
 #endif
 
-  vcl_cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " ranking took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 
   tf << "</TABLE>\n";
@@ -1397,31 +1397,31 @@ bool prepare_match_html(vcl_string model_image_file, vcl_string model_st_file,
 
 }
 
-bool batch_convert(vcl_string input_dir)
+bool batch_convert(std::string input_dir)
 {
 
-  vcl_string file_set = input_dir + "*.ps";
-  vcl_cout << "iterating over the files: " << file_set << vcl_endl;
+  std::string file_set = input_dir + "*.ps";
+  std::cout << "iterating over the files: " << file_set << std::endl;
   for (vul_file_iterator fi(file_set); fi; ++fi)
   {
-    vcl_cout << fi() << vcl_endl;
+    std::cout << fi() << std::endl;
     if (!vul_file::exists(fi()))
       continue;
     
     // find the object name
-    vcl_string command = "pstopnm -portrait -xborder 0 -yborder 0 -ppm -verbose ";
-    command = command + vcl_string(fi());
-    vcl_cout << "\tcommand: " << command << vcl_endl;
+    std::string command = "pstopnm -portrait -xborder 0 -yborder 0 -ppm -verbose ";
+    command = command + std::string(fi());
+    std::cout << "\tcommand: " << command << std::endl;
     system(command.c_str());
   }
 
-  vcl_cout << " done!\n";
+  std::cout << " done!\n";
   return true;
 }
 
-bool detect_instance(vcl_string model_image_file, vcl_string model_st_file, 
-                        vcl_string query_image_file, vcl_string query_st_file, 
-                        vcl_string match_file, vcl_string detection_param_xml, vcl_string out_name, vcl_string width_str)
+bool detect_instance(std::string model_image_file, std::string model_st_file, 
+                        std::string query_image_file, std::string query_st_file, 
+                        std::string match_file, std::string detection_param_xml, std::string out_name, std::string width_str)
 {
   if (model_image_file.compare("") == 0 || model_st_file.compare("") == 0 || query_image_file.compare("") == 0 || 
       query_st_file.compare("") == 0 || match_file.compare("") == 0 || detection_param_xml.compare("") == 0 || out_name.compare("") == 0 ||
@@ -1445,7 +1445,7 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
     return false;
   
   if (param_doc.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return false;
   }
 
@@ -1462,27 +1462,27 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
   model_st->b_read(ifs);
   ifs.close();
 
-  vcl_cout << "loaded: " << model_st->size() << " patches in the model\n";
+  std::cout << "loaded: " << model_st->size() << " patches in the model\n";
 
   dbskr_shock_patch_storage_sptr query_st = dbskr_shock_patch_storage_new();
   vsl_b_ifstream ifsq(query_st_file.c_str());
   query_st->b_read(ifsq);
   ifsq.close();
 
-  vcl_cout << "loaded: " << query_st->size() << " patches in the query\n";
+  std::cout << "loaded: " << query_st->size() << " patches in the query\n";
   
   //: load the shock graphs --> assumes each shock graph for each patch is saved in the same folder
-  //vcl_cout << model_st->size() << " patches in model storage, reading shocks..\n";
+  //std::cout << model_st->size() << " patches in model storage, reading shocks..\n";
   dbsk2d_xshock_graph_fileio loader;
   //: load esfs for each patch
-  vcl_string storage_end = "patch_strg.bin";
+  std::string storage_end = "patch_strg.bin";
   vsol_polygon_2d_sptr model_poly;
   if (model_st->size() > 0)
     model_poly = model_st->get_patch(0)->get_outer_boundary();
   for (unsigned iii = 0; iii < model_st->size(); iii++) {
     dbskr_shock_patch_sptr sp = model_st->get_patch(iii);
-    vcl_string patch_esf_name = model_st_file.substr(0, model_st_file.length()-storage_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = model_st_file.substr(0, model_st_file.length()-storage_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
@@ -1498,8 +1498,8 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
 
   for (unsigned iii = 0; iii < query_st->size(); iii++) {
     dbskr_shock_patch_sptr sp = query_st->get_patch(iii);
-    vcl_string patch_esf_name = query_st_file.substr(0, query_st_file.length()-storage_end.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = query_st_file.substr(0, query_st_file.length()-storage_end.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
@@ -1518,15 +1518,15 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
   match->b_read(ifsm);
   ifsm.close();
 
-  vcl_cout << "loaded the match file\n";
+  std::cout << "loaded the match file\n";
 
   //: prepare id maps for this match
-  vcl_map<int, dbskr_shock_patch_sptr> model_map;
+  std::map<int, dbskr_shock_patch_sptr> model_map;
   for (unsigned ii = 0; ii < model_st->size(); ii++) 
     model_map[model_st->get_patch(ii)->id()] = model_st->get_patch(ii);
   match->set_id_map1(model_map);
 
-  vcl_map<int, dbskr_shock_patch_sptr> query_map;
+  std::map<int, dbskr_shock_patch_sptr> query_map;
   for (unsigned ii = 0; ii < query_st->size(); ii++) 
     query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);
   match->set_id_map2(query_map);
@@ -1540,23 +1540,23 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
         return false;
   }
 
-  vcl_cout << " loading took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " loading took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 
   //: create all the similariy transformations
   match->compute_similarity_transformations();
 
-  vcl_cout << " similarity computations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " similarity computations took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
   
-  vcl_string out_images = out_name + "/";
+  std::string out_images = out_name + "/";
   vul_file::make_directory(out_images);
 
-  vcl_cout << "patches are sorted wrt parameters in the detection param file\n";
-  vcl_ofstream tf((out_name + ".html").c_str(), vcl_ios::app);
+  std::cout << "patches are sorted wrt parameters in the detection param file\n";
+  std::ofstream tf((out_name + ".html").c_str(), std::ios::app);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " << out_name << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " << out_name << " for write " << std::endl;
     return false;
   }
   int visualization_n = 10;
@@ -1567,13 +1567,13 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
   // write top n to the first row
   tf << "</TH> </TR>\n";
 
-   //vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > 
+   //std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > 
   vsol_point_2d_sptr center = new vsol_point_2d(0, 0);
 
-  vcl_vector<vsol_box_2d_sptr> detection_boxes;
+  std::vector<vsol_box_2d_sptr> detection_boxes;
   match->detect_instance_wrt_trans(detection_boxes, params_.det_params_.k_, params_.min_thres_);
   
-  vcl_vector<vsol_polygon_2d_sptr> polys;
+  std::vector<vsol_polygon_2d_sptr> polys;
   for (unsigned i = 0; i < detection_boxes.size(); i++) {
     vsol_polygon_2d_sptr poly = bsol_algs::poly_from_box(detection_boxes[i]);
     polys.push_back(poly);
@@ -1583,7 +1583,7 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
   vil_rgb<int> model(1, 1, 0);
   vil_rgb<int> others(1, 1, 0);
 
-  vcl_string out_img = out_images + "query_detection_";
+  std::string out_img = out_images + "query_detection_";
   if (!create_image(query_img, out_img, polys, outer, model, others))
     return false;
 
@@ -1591,7 +1591,7 @@ bool detect_instance(vcl_string model_image_file, vcl_string model_st_file,
   tf << "detection boxes at " << params_.min_thres_ << " in yellow </TD> "; 
   tf << "</TR>\n";
   
-  vcl_cout << " detection took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " detection took " << t.real() / 1000.0f << " seconds " << t.real() / (60*1000.0f) << " mins.\n";
   t.mark();
 
   tf << "</TABLE>\n";

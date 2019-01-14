@@ -5,10 +5,10 @@
 // \date May 11, 2011
 
 #include <dbil/algo/dbil_exact_distance_transform.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
-#include <vcl_string.h>
+#include <string>
 
 void print(vil_image_view<vxl_uint_32>& image)
 {
@@ -19,11 +19,11 @@ void print(vil_image_view<vxl_uint_32>& image)
 			for(int j = 0; j < image.nj(); j++)
 			{
 
-				vcl_cout << image(i,j,k) << " ";
+				std::cout << image(i,j,k) << " ";
 			}
-			vcl_cout << vcl_endl;
+			std::cout << std::endl;
 		}
-		vcl_cout << vcl_endl << vcl_endl;
+		std::cout << std::endl << std::endl;
 	}
 
 
@@ -77,11 +77,11 @@ int main(int argn, char* args[])
 	bool status = dbil_exact_distance_transform_saito_3D(image);
 	if(status)
 	{
-		vcl_cout << "calisti" << vcl_endl;
+		std::cout << "calisti" << std::endl;
 	}
 	else
 	{
-		vcl_cout << "calismadi" << vcl_endl;
+		std::cout << "calismadi" << std::endl;
 	}
 	print(image);
 	return 0;

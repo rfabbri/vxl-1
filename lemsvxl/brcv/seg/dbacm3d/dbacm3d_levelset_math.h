@@ -38,7 +38,7 @@ inline void dbacm3d_levelset_math_compute_curvature(vil3d_image_view<T >& curvat
 {
 
   unsigned ni = dxc.ni(),nj = dxc.nj(),nk = dxc.nk(),np = dxc.nplanes();
-  vcl_ptrdiff_t istep=dxc.istep(),jstep=dxc.jstep(),kstep=dxc.kstep(),pstep = dxc.planestep();
+  std::ptrdiff_t istep=dxc.istep(),jstep=dxc.jstep(),kstep=dxc.kstep(),pstep = dxc.planestep();
 
   curvature.set_size(ni,nj,nk,np);
   T    xc, yc, zc, xx, yy, zz, xy, xz, yz;
@@ -137,7 +137,7 @@ inline void dbacm3d_levelset_math_compute_curvature(vil3d_image_view<T >& curvat
                                             + yy*(xc_2 + zc_2) 
                                             + zz*(xc_2 + yc_2)
                                             - 2*(xc*yc*xy + yc*zc*yz + xc*zc*xz))
-                                            /(2*vcl_sqrt(grad_square*grad_square*grad_square));
+                                            /(2*std::sqrt(grad_square*grad_square*grad_square));
 
 
                                         G =((xc_2)*(yy*zz - yz*yz) +            
@@ -152,10 +152,10 @@ inline void dbacm3d_levelset_math_compute_curvature(vil3d_image_view<T >& curvat
                                                 *pixel = 0;
                                         }
                                         else{
-                                          *pixel =  SIGN(H)*vcl_sqrt(G);
+                                          *pixel =  SIGN(H)*std::sqrt(G);
                                           /*
                                           if(G > 0){
-                                            vcl_cerr << "G > 0  ";
+                                            std::cerr << "G > 0  ";
                                           }
                                           else{
                                           int ct = 0;
@@ -168,11 +168,11 @@ inline void dbacm3d_levelset_math_compute_curvature(vil3d_image_view<T >& curvat
                                             if(xy > 0){ ct++; }
                                             if(yz > 0){ ct++; }
                                             if(xz > 0){ ct++; }
-                                            vcl_cerr << ct << " ";
+                                            std::cerr << ct << " ";
                                           }
 
                                           if(*pixel > 0){
-                                            vcl_cerr << "curvature pixel > 0  ";
+                                            std::cerr << "curvature pixel > 0  ";
                                           }
                                           */
                                         }
@@ -201,7 +201,7 @@ inline void dbacm3d_levelset_math_compute_hj_flux(vil3d_image_view<T >& hj_flux,
     const vil3d_image_view<T>& dzm )
 {
   unsigned ni = dxp.ni(),nj = dxp.nj(),nk = dxp.nk(),np = dxp.nplanes();
-  vcl_ptrdiff_t istep=dxp.istep(),jstep=dxp.jstep(),kstep=dxp.kstep(),pstep = dxp.planestep();
+  std::ptrdiff_t istep=dxp.istep(),jstep=dxp.jstep(),kstep=dxp.kstep(),pstep = dxp.planestep();
 
   hj_flux.set_size(ni,nj,nk,np);
 
@@ -268,7 +268,7 @@ inline void dbacm3d_levelset_math_compute_hj_flux(vil3d_image_view<T >& hj_flux,
           zp = direction*(*dzp_pixel) > 0 ? 0 : *dzp_pixel;
           zm = direction*(*dzm_pixel) < 0 ? 0 : *dzm_pixel;
 
-          *pixel = vcl_sqrt(  xp*xp 
+          *pixel = std::sqrt(  xp*xp 
                             + xm*xm 
                             + yp*yp 
                             + ym*ym

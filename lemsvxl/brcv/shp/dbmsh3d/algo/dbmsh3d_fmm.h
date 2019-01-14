@@ -7,7 +7,7 @@
 #ifndef _dbmsh3d_fmm_h_
 #define _dbmsh3d_fmm_h_
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 
@@ -80,13 +80,13 @@ public:
       rDist1_ = dist;
     }
     else if( pFront1_== front )
-      rDist1_ = vcl_min( dist, rDist1_ );
+      rDist1_ = std::min( dist, rDist1_ );
     else if( pFront2_== front )
-      rDist2_ = vcl_min( dist, rDist2_ );
+      rDist2_ = std::min( dist, rDist2_ );
     else
     {
       pFront2_ = front;
-      rDist2_ = vcl_min( dist, rDist2_ );
+      rDist2_ = std::min( dist, rDist2_ );
     }
   }
 };
@@ -128,12 +128,12 @@ class dbmsh3d_fmm_mesh : public dbmsh3d_mesh
 {
 protected:
   //: the list of all source vertices
-  vcl_vector<dbmsh3d_vertex*> source_vertices_;
+  std::vector<dbmsh3d_vertex*> source_vertices_;
 
   //: the active_vertex heap for FMM
   //  should be filled with the starting point of the marching
   //  in the initialization stage.
-  vcl_vector<dbmsh3d_fmm_vertex_3d*> active_vertex_heap_;
+  std::vector<dbmsh3d_fmm_vertex_3d*> active_vertex_heap_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -141,7 +141,7 @@ public:
   }
 
   //: ====== Data access functions ======
-  vcl_vector<dbmsh3d_vertex*>& source_vertices() {
+  std::vector<dbmsh3d_vertex*>& source_vertices() {
     return source_vertices_;
   }
   dbmsh3d_vertex* source_vertices (const int i) {
@@ -245,7 +245,7 @@ protected:
   dbmsh3d_fmm_face* track_cur_face_;
   dbmsh3d_fmm_face* track_prev_face_;
 
-  vcl_vector<dbmsh3d_fmm_geodesic_point*> geodesic_path_;
+  std::vector<dbmsh3d_fmm_geodesic_point*> geodesic_path_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -261,7 +261,7 @@ public:
     void add_vertex_compute_next_face (dbmsh3d_vertex* vertex);
     int add_new_geodesic_point ();
 
-  void get_geodesic_polyline (vcl_vector<vgl_point_3d<double> >& geodesic_points);
+  void get_geodesic_polyline (std::vector<vgl_point_3d<double> >& geodesic_points);
 };
 
 dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh);

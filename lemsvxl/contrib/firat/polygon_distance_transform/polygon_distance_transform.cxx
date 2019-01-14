@@ -7,9 +7,9 @@
 #include "polygon_distance_transform.h"
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_polygon_test.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
-bool compute_polygon_signed_distance_transform(vcl_vector<double* >& xv, vcl_vector<double* >& yv, vcl_vector<int> num_points, vnl_matrix<double>& phi, int height, int width, double hx, double hy)
+bool compute_polygon_signed_distance_transform(std::vector<double* >& xv, std::vector<double* >& yv, std::vector<int> num_points, vnl_matrix<double>& phi, int height, int width, double hx, double hy)
 {
 	int real_height = (height-1)/hy + 1;
 	int real_width = (width-1)/hx + 1;
@@ -44,10 +44,10 @@ bool compute_polygon_signed_distance_transform(vcl_vector<double* >& xv, vcl_vec
 	return true;
 }
 
-bool read_polygon_file(const vcl_string& polygon_file, vcl_vector<double* >& xv, vcl_vector<double* >& yv, vcl_vector<int>& num_points)
+bool read_polygon_file(const std::string& polygon_file, std::vector<double* >& xv, std::vector<double* >& yv, std::vector<int>& num_points)
 {
 	vnl_matrix<double> polygons;
-	vcl_ifstream ifs(polygon_file.c_str());
+	std::ifstream ifs(polygon_file.c_str());
 	polygons.read_ascii(ifs);
 	ifs.close();
 	int i = 0;
@@ -67,6 +67,6 @@ bool read_polygon_file(const vcl_string& polygon_file, vcl_vector<double* >& xv,
 		num_points.push_back(l);
 		i = i + l + 1;
 	}
-	vcl_cout << "Number of polygons: " << num_points.size() << vcl_endl;
+	std::cout << "Number of polygons: " << num_points.size() << std::endl;
 	return true;
 }

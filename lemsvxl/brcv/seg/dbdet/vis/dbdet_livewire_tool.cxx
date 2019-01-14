@@ -15,7 +15,7 @@
 #include <vil/vil_new.h>
 
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -51,7 +51,7 @@ void dbdet_livewire_tool::activate() {
   style = vgui_style::new_style(1.0f, 0.0f, 0.0f, 3.0f, 3.0f);
   style->apply_all();
 
-  vcl_cout << "The tool is activated!!!\n";
+  std::cout << "The tool is activated!!!\n";
 
 }
 
@@ -64,7 +64,7 @@ dbdet_livewire_tool::set_tableau ( const vgui_tableau_sptr& tableau )
     return true;
   }
 
-  vcl_cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
+  std::cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
   tableau_ = NULL;
   return false;
 }
@@ -88,7 +88,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
     vil_image_resource_sptr image_sptr = frame->get_image();
 
     if (!(mouse_x >= 0 && mouse_x < (int)image_sptr->ni() && mouse_y >= 0 && mouse_y < (int)image_sptr->nj())) {
-      vcl_cout << "Not a valid seed point on image!!\nSelect a new seed point inside the image!!\n"; 
+      std::cout << "Not a valid seed point on image!!\nSelect a new seed point inside the image!!\n"; 
       return false;
     }
 
@@ -97,7 +97,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
     seed_y = mouse_y;
     seed = new vgui_soview2D_point(seed_x, seed_y);
     seed->set_style(style);
-    vcl_cout << *seed;
+    std::cout << *seed;
     top = new vgui_soview2D_lineseg(seed_x-intsciss.params_.window_w/2,
                     seed_y-intsciss.params_.window_h/2,
                     seed_x+intsciss.params_.window_w/2,
@@ -125,7 +125,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
     }
     img = vil1_from_vil_image_view(float_image);
     intsciss.compute(img, seed_x, seed_y);
-    vcl_cout << "Paths are computed..., seed_x: " << seed_x << " seed_y: " << seed_y <<"\n";
+    std::cout << "Paths are computed..., seed_x: " << seed_x << " seed_y: " << seed_y <<"\n";
 
     bvis1_manager::instance()->post_overlay_redraw();
     return false;
@@ -145,7 +145,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       seed_y = mouse_y;
 
       if (cor.size() != 0) {
-        vcl_vector<vcl_pair<int, int> >::reverse_iterator p;
+        std::vector<std::pair<int, int> >::reverse_iterator p;
         int i = contour.size();
         for (p = cor.rbegin(); p != cor.rend(); p++) {
           contour.push_back(new vgui_soview2D_point(p->second, p->first));
@@ -211,7 +211,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
           cost1 = cost2;
         }
 
-        if ( vcl_abs(float(last_x - seed_x)) > 2 || vcl_abs(float(last_y - seed_y)) > 2) {
+        if ( std::abs(float(last_x - seed_x)) > 2 || std::abs(float(last_y - seed_y)) > 2) {
           seed_x = last_x;
           seed_y = last_y;
         } else {
@@ -222,7 +222,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
         intsciss.get_path(seed_x, seed_y, cor);
 
         if (cor.size() != 0) {
-          vcl_vector<vcl_pair<int, int> >::reverse_iterator p;
+          std::vector<std::pair<int, int> >::reverse_iterator p;
           int i = contour.size();
           for (p = cor.rbegin(); p != cor.rend(); p++) {
             contour.push_back(new vgui_soview2D_point(p->second, p->first));
@@ -250,18 +250,18 @@ dbdet_livewire_tool::handle( const vgui_event & e,
     temp.clear();
 
     if (contour.size() > 10) {
-      vcl_vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
+      std::vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
       for (unsigned i = 0; i<10; i++) {
         contour.erase(p);
         p = contour.end()-1;
       }
     } else if (contour.size() > 0) {
-        vcl_vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
+        std::vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
         contour.erase(p);
     }
 
     if (contour.size() > 0) {
-      vcl_vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
+      std::vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
 
       seed_x = int(0.5 + ((vgui_soview2D_point*)(*p))->x);
       seed_y = int(0.5 + ((vgui_soview2D_point*)(*p))->y);
@@ -291,8 +291,8 @@ dbdet_livewire_tool::handle( const vgui_event & e,
 
   // smooth the current contour
   if (seed_picked && !edit && gesture_smooth(e)) {
-    vcl_cout << "in gesture smooth\n";
-    vcl_vector<vgl_point_2d<double> > curve;
+    std::cout << "in gesture smooth\n";
+    std::vector<vgl_point_2d<double> > curve;
     curve.clear();
     
     for (unsigned i = 0; i<contour.size(); i++) {
@@ -319,7 +319,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
           delete temp[i];
     temp.clear();
         
-    vcl_vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
+    std::vector<vgui_soview2D_point*>::iterator p = contour.end()-1;
     seed_x = int(0.5 + ((vgui_soview2D_point*)(*p))->x);
     seed_y = int(0.5 + ((vgui_soview2D_point*)(*p))->y);
     seed->x = seed_x;
@@ -334,29 +334,29 @@ dbdet_livewire_tool::handle( const vgui_event & e,
     // save the current contour into a .cem file
   if (seed_picked && !edit && e.type == vgui_MOUSE_PRESS && e.button == vgui_RIGHT) {
 
-    vcl_string image_filename = "";
+    std::string image_filename = "";
     
     image_filename.append(".cem");
 
-    static vcl_string regexp = "*.*";
+    static std::string regexp = "*.*";
 
     vgui_dialog save_dl("Save contour");
     save_dl.inline_file("Filename: ", regexp, image_filename);
 
     if (save_dl.ask()) {
-      if (image_filename.find(".cem") == (vcl_string::size_type) -1)
+      if (image_filename.find(".cem") == (std::string::size_type) -1)
          image_filename.append(".cem");
 
-      vcl_ofstream fs(image_filename.c_str());
-      vcl_string image_filename2(image_filename.c_str());
-      vcl_string s2 = ".con";
+      std::ofstream fs(image_filename.c_str());
+      std::string image_filename2(image_filename.c_str());
+      std::string s2 = ".con";
 
       image_filename2.replace(image_filename.find(".cem") , s2.length(), s2 );
       
-      vcl_ofstream fs2(image_filename2.c_str());
+      std::ofstream fs2(image_filename2.c_str());
       
       if (!fs || !fs2)
-        vcl_cout << "Problems in opening file: " << image_filename << "\n";
+        std::cout << "Problems in opening file: " << image_filename << "\n";
       else {
         fs << "CONTOUR_COUNT=1\nTOTAL_EDGE_COUNT=" << contour.size() << "\n";
         fs << "[BEGIN CONTOUR]\nEDGE_COUNT=" << contour.size() << "\n";
@@ -371,7 +371,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
         fs << "[END CONTOUR]\n";
         fs.close();
         fs2.close();
-        vcl_cout << "Contour written to the specified files!\n";
+        std::cout << "Contour written to the specified files!\n";
 
         seed_picked = false;
         contour.clear();
@@ -394,14 +394,14 @@ dbdet_livewire_tool::handle( const vgui_event & e,
   if (seed_picked && !edit && gesture_edit(e)) {
     edit = true;
     bvis1_manager::instance()->post_overlay_redraw();
-    vcl_cout << "In Edit Mode!\nPress SHIFT+e again to go out of this mode.\n";
+    std::cout << "In Edit Mode!\nPress SHIFT+e again to go out of this mode.\n";
     return false;
   }
 
   if (seed_picked && edit && gesture_seed(e)) {
     if (!edit1_picked) {
 
-      vcl_vector< vsol_point_2d_sptr > point_list;
+      std::vector< vsol_point_2d_sptr > point_list;
       for (unsigned i = 0; i<contour.size(); i++) {
         point_list.push_back( vsol_point_2d_sptr( new vsol_point_2d( ((vgui_soview2D_point*)contour[i])->x , 
                                                                    ((vgui_soview2D_point*)contour[i])->y ) ) );
@@ -409,15 +409,15 @@ dbdet_livewire_tool::handle( const vgui_event & e,
 
       dc = new vsol_digital_curve_2d(point_list);
       if (!dc) {
-        vcl_cout << "Problems in contour!!!\nSelect a point again!!\n";
+        std::cout << "Problems in contour!!!\nSelect a point again!!\n";
         return false;
       } //else
-        //vcl_cout << "dc created with size: " << dc->size() << " contour size was: " << contour.size() << "\n";
+        //std::cout << "dc created with size: " << dc->size() << " contour size was: " << contour.size() << "\n";
 
       double ind = closest_index(vgl_point_2d<double>(mouse_x, mouse_y), dc);
       start_ind = (int)floor(ind);
       if (start_ind - 3 < 0 || start_ind + 3 > (int)contour.size())
-        vcl_cout << "!!!! Point too close to the ends of boundary!!!!\nSelect a new start edit point!!!!\n";
+        std::cout << "!!!! Point too close to the ends of boundary!!!!\nSelect a new start edit point!!!!\n";
       else 
         edit1_picked = true;
 
@@ -426,7 +426,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       end_ind = (int)floor(ind);
       
       if (end_ind - 3 < 0 || end_ind + 3 > (int)contour.size()) {
-        vcl_cout << "!!!! Point too close to the ends of boundary!!!!\nSelect a new end edit point!!!!\n";
+        std::cout << "!!!! Point too close to the ends of boundary!!!!\nSelect a new end edit point!!!!\n";
         return false;
       }
       
@@ -439,8 +439,8 @@ dbdet_livewire_tool::handle( const vgui_event & e,
         end_ind = temp;
       }
 
-      vcl_vector<vgui_soview2D_point*> contour1;
-      vcl_vector<vgui_soview2D_point*> contour2;
+      std::vector<vgui_soview2D_point*> contour1;
+      std::vector<vgui_soview2D_point*> contour2;
 
       contour1.clear();
       contour2.clear();
@@ -456,7 +456,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       for (i = 0; i<(int)contour1.size(); i++) 
         contour.push_back(contour1[i]);
       
-      //vcl_cout << "Cut out " << end_ind - start_ind << " number of points from contour\n";
+      //std::cout << "Cut out " << end_ind - start_ind << " number of points from contour\n";
 
       bgld_eulerspiral es_curve;
 
@@ -518,9 +518,9 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       // set euler spiral properties
       es_curve = bgld_eulerspiral(point1, start_angle, point2, end_angle);
 
-      vcl_vector<vgl_point_2d<double> > point_samples;
+      std::vector<vgl_point_2d<double> > point_samples;
       es_curve.compute_spiral(point_samples, 1.0);
-      //vcl_cout << "Number of points in ES curve " << i << " = " << point_samples.size() << vcl_endl;
+      //std::cout << "Number of points in ES curve " << i << " = " << point_samples.size() << std::endl;
 
       for (unsigned int i = 0; i<point_samples.size(); i++)
         contour.push_back(new vgui_soview2D_point(point_samples[i].x(), point_samples[i].y()));
@@ -566,7 +566,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
   return false;
 }
 
-vcl_string
+std::string
 dbdet_livewire_tool::name() const
 {
   return "Livewire";

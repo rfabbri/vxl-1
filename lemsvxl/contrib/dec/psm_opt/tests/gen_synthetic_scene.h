@@ -6,7 +6,7 @@
 #include <psm/psm_apm_traits.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
-void gen_synthetic_scene(psm_scene_base_sptr &scene, vcl_vector<vpgl_perspective_camera<double> > &cameras, vcl_vector<vil_image_view<float> > &images);
+void gen_synthetic_scene(psm_scene_base_sptr &scene, std::vector<vpgl_perspective_camera<double> > &cameras, std::vector<vil_image_view<float> > &images);
 
 
 #endif

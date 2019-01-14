@@ -20,9 +20,9 @@ public:
 
     ~dvrml_cylinder(){}
 
-    virtual void draw( vcl_ostream& os );
+    virtual void draw( std::ostream& os );
 
-    virtual vcl_string shape(){ return "cylinder"; }
+    virtual std::string shape(){ return "cylinder"; }
 
     double radius;
     double height;

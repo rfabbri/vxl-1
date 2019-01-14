@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <dbskr/dbskr_shock_patch.h>
 #include <dbskr/dbskr_utilities.h>
 
@@ -82,10 +82,10 @@ bool dbskr_shock_patch::boundary_on_the_box(vsol_box_2d_sptr bbox)
     if (real_boundaries_[i]->size()) {
       for (unsigned k = 0; k < real_boundaries_[i]->size(); k++) {
         vsol_point_2d_sptr p = real_boundaries_[i]->vertex(k);
-        if (vcl_abs(p->x() - minx) < NEGLIGIBLE || 
-            vcl_abs(p->x() - maxx) < NEGLIGIBLE || 
-            vcl_abs(p->y() - miny) < NEGLIGIBLE || 
-            vcl_abs(p->y() - maxy) < NEGLIGIBLE )
+        if (std::abs(p->x() - minx) < NEGLIGIBLE || 
+            std::abs(p->x() - maxx) < NEGLIGIBLE || 
+            std::abs(p->y() - miny) < NEGLIGIBLE || 
+            std::abs(p->y() - maxy) < NEGLIGIBLE )
           return true;
       }
     }
@@ -105,10 +105,10 @@ void dbskr_shock_patch::clean_real_boundaries(vsol_box_2d_sptr bbox)
     if (real_boundaries_[i]->size()) {
       for (unsigned k = 0; k < real_boundaries_[i]->size(); k++) {
         vsol_point_2d_sptr p = real_boundaries_[i]->vertex(k);
-        if (vcl_abs(p->x() - minx) < NEGLIGIBLE || 
-            vcl_abs(p->x() - maxx) < NEGLIGIBLE || 
-            vcl_abs(p->y() - miny) < NEGLIGIBLE || 
-            vcl_abs(p->y() - maxy) < NEGLIGIBLE ) {
+        if (std::abs(p->x() - minx) < NEGLIGIBLE || 
+            std::abs(p->x() - maxx) < NEGLIGIBLE || 
+            std::abs(p->y() - miny) < NEGLIGIBLE || 
+            std::abs(p->y() - maxy) < NEGLIGIBLE ) {
             real_boundaries_[i] = 0;
             break;
         }
@@ -116,7 +116,7 @@ void dbskr_shock_patch::clean_real_boundaries(vsol_box_2d_sptr bbox)
     }
   }
 
-  vcl_vector<vsol_polyline_2d_sptr> kept;
+  std::vector<vsol_polyline_2d_sptr> kept;
   for (unsigned i = 0; i < real_boundaries_.size(); i++) {
     if (real_boundaries_[i])
       kept.push_back(real_boundaries_[i]);
@@ -135,13 +135,13 @@ bool dbskr_shock_patch::trace_outer_boundary()
     return false;
 
   //: create an image 4 times bigger to trace a more accurate boundary
-  //int ni = int(vcl_floor(bounding_box_->width()+20.5));
-  //int nj = int(vcl_ceil(bounding_box_->height()+20.5));
+  //int ni = int(std::floor(bounding_box_->width()+20.5));
+  //int nj = int(std::ceil(bounding_box_->height()+20.5));
   //float off_x = float(bounding_box_->get_min_x()-10);
   //float off_y = float(bounding_box_->get_min_y()-10);
 
-  int ni = int(vcl_floor(bounding_box_->width()*4+20.5));
-  int nj = int(vcl_ceil(bounding_box_->height()*4+20.5));
+  int ni = int(std::floor(bounding_box_->width()*4+20.5));
+  int nj = int(std::ceil(bounding_box_->height()*4+20.5));
   float off_x = float(bounding_box_->get_min_x()*4-10);
   float off_y = float(bounding_box_->get_min_y()*4-10);
 
@@ -172,8 +172,8 @@ bool dbskr_shock_patch::trace_outer_boundary()
       float yy = y - off_y;
       if (xx < 0 || yy < 0)
         continue;
-      int xxx = static_cast<int>(vcl_floor(xx+0.5f));
-      int yyy = static_cast<int>(vcl_floor(yy+0.5f));
+      int xxx = static_cast<int>(std::floor(xx+0.5f));
+      int yyy = static_cast<int>(std::floor(yy+0.5f));
       if (xxx >= ni || yyy >= nj) 
         continue;
       temp(xxx,yyy) = true;
@@ -191,7 +191,7 @@ bool dbskr_shock_patch::trace_outer_boundary()
               temp1(i,j)=0;
           }
   
-   vcl_ostringstream oss, oss2;
+   std::ostringstream oss, oss2;
    oss << id_;
    oss2 << depth_;
    vil_save(temp1,("d:\\projects\\temp\\temp-"+oss.str()+"-"+oss2.str()+".tiff").c_str());
@@ -250,7 +250,7 @@ bool dbskr_shock_patch::extract_shock_from_outer_boundary()
   if (!poly_)  // if there is a poly_, there is a p_
     return false;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > conts;
+  std::vector< vsol_spatial_object_2d_sptr > conts;
   conts.push_back(poly_->cast_to_spatial_object());
   
   // compute shocks ---------------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ bool dbskr_shock_patch::extract_simple_shock()
   if (!traced_poly_) 
     return false;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > conts;
+  std::vector< vsol_spatial_object_2d_sptr > conts;
 
   //fit lines to the traced poly!!
   //vsol_polygon_2d_sptr new_poly = fit_lines_to_contour(traced_poly_, 0.05f);
@@ -413,20 +413,20 @@ float dbskr_shock_patch::contour_ratio(void)
 
 void dbskr_shock_patch::output_info()
 {
-  vcl_cout << "----------------------------- patch " << id() << " info -----------------------\n";
-  vcl_cout << "outer boundary length: " << outer_boundary_length() << " area: " << poly_->area() << vcl_endl;
-  vcl_cout << "real boundaries length: " << real_boundary_length() << " real/outer length ratio: " << contour_ratio() << vcl_endl;
+  std::cout << "----------------------------- patch " << id() << " info -----------------------\n";
+  std::cout << "outer boundary length: " << outer_boundary_length() << " area: " << poly_->area() << std::endl;
+  std::cout << "real boundaries length: " << real_boundary_length() << " real/outer length ratio: " << contour_ratio() << std::endl;
   
   if (traced_poly_) {
-    vcl_cout << "traced boundary length: " << traced_boundary_length() << " area: " << traced_poly_->area() << vcl_endl;
+    std::cout << "traced boundary length: " << traced_boundary_length() << " area: " << traced_poly_->area() << std::endl;
   }
 
   if (color_contrast_ > 0)
-    vcl_cout << "color contrast around the traced boundary: " << color_contrast_ << vcl_endl;
+    std::cout << "color contrast around the traced boundary: " << color_contrast_ << std::endl;
   if (grey_contrast_ > 0)
-    vcl_cout << "appearance contrast around the traced boundary: " << grey_contrast_ << vcl_endl;
+    std::cout << "appearance contrast around the traced boundary: " << grey_contrast_ << std::endl;
   
-  vcl_cout << "----------------------------------------------------------------\n";
+  std::cout << "----------------------------------------------------------------\n";
 }
 
 //: finding color contrast around "real boundaries" of this shock patch
@@ -482,27 +482,27 @@ vil_image_resource_sptr dbskr_shock_patch::mapped_image(vil_image_resource_sptr 
   if (recompute_obs || !obs_)
     extract_observation(img_source, true, false, false);
 
-  vcl_cout << "homography:\n " << H << vcl_endl; 
+  std::cout << "homography:\n " << H << std::endl; 
 /*
   dbinfo_observation_sptr new_obs = dbinfo_observation_generator::generate(obs_, H, 0.0);  // even if no points are sufficient return it
 
   dbinfo_feature_base_sptr feat = (new_obs->features())[0];  
   if(feat->format()!=DBINFO_INTENSITY_FEATURE) {
-    vcl_cout << "not found the intensity feature!!\n";
+    std::cout << "not found the intensity feature!!\n";
     return 0;
   }
-  vcl_vector<vgl_point_2d<float> > points = new_obs->geometry()->points();
-  vcl_vector<bool> valid = new_obs->geometry()->masks();
-  vcl_vector<bool> valid_all(points.size(), true);
+  std::vector<vgl_point_2d<float> > points = new_obs->geometry()->points();
+  std::vector<bool> valid = new_obs->geometry()->masks();
+  std::vector<bool> valid_all(points.size(), true);
   vil_image_resource_sptr out_img_r = feat->image(points, valid_all, img_target->ni(), img_target->nj(), 0, 0, false);
 */
 
-  vcl_vector<vgl_point_2d<float> > points = obs_->geometry()->points();
-  vcl_cout << "# of points in patch: " << points.size() << vcl_endl;
-  vcl_vector<bool> valid(points.size(), false);
+  std::vector<vgl_point_2d<float> > points = obs_->geometry()->points();
+  std::cout << "# of points in patch: " << points.size() << std::endl;
+  std::vector<bool> valid(points.size(), false);
 
   int i = 0;
-  for(vcl_vector<vgl_point_2d<float> >::iterator pit = points.begin();
+  for(std::vector<vgl_point_2d<float> >::iterator pit = points.begin();
       pit != points.end(); ++pit, ++i)
   {
     vgl_homg_point_2d<double> hp((*pit).x(), (*pit).y()), thp;
@@ -519,7 +519,7 @@ vil_image_resource_sptr dbskr_shock_patch::mapped_image(vil_image_resource_sptr 
 
   dbinfo_feature_base_sptr feat = (obs_->features())[0];  
   if(feat->format()!=DBINFO_INTENSITY_FEATURE) {
-    vcl_cout << "not found the intensity feature!!\n";
+    std::cout << "not found the intensity feature!!\n";
     return 0;
   }
   vil_image_resource_sptr out_img_r = feat->image(points, valid, img_target->ni(), img_target->nj(), 0, 0, false);
@@ -756,7 +756,7 @@ float dbskr_v_edge::length()
 
   length_ = 0;
   //traverse through the path, interpolating where necessary
-  for (vcl_vector<dbsk2d_shock_edge_sptr>::iterator e_it = edges_.begin();
+  for (std::vector<dbsk2d_shock_edge_sptr>::iterator e_it = edges_.begin();
        e_it != edges_.end(); e_it++)
   {
     dbsk2d_xshock_edge* cur_edge = dynamic_cast<dbsk2d_xshock_edge*>(e_it->ptr());
@@ -827,25 +827,25 @@ bool dbskr_v_graph::same_vertex_and_edges(dbskr_v_graph& other)
   if (number_of_edges() != other.number_of_edges())
     return false;
 
-  vcl_map<int, bool> check;
+  std::map<int, bool> check;
   for (vertex_iterator v_itr = vertices_begin(); v_itr != vertices_end(); v_itr++)
   { 
     check[(*v_itr)->id_] = true;
   }
 
   for (vertex_iterator v_itr2 = other.vertices_begin(); v_itr2 != other.vertices_end(); v_itr2++) {
-    vcl_map<int, bool>::iterator it = check.find((*v_itr2)->id_);
+    std::map<int, bool>::iterator it = check.find((*v_itr2)->id_);
     if (it == check.end())
       return false;
   }
-  vcl_map<vcl_pair<int, int>, bool> check2;
+  std::map<std::pair<int, int>, bool> check2;
   for (edge_iterator e_itr = edges_begin(); e_itr != edges_end(); e_itr++) {
-    vcl_pair<int, int> p((*e_itr)->source()->id_, (*e_itr)->target()->id_);
+    std::pair<int, int> p((*e_itr)->source()->id_, (*e_itr)->target()->id_);
     check2[p] = true;
   }
   for (edge_iterator e_itr = other.edges_begin(); e_itr != other.edges_end(); e_itr++) {
-    vcl_pair<int, int> p((*e_itr)->source()->id_, (*e_itr)->target()->id_);
-    vcl_map<vcl_pair<int, int>, bool>::iterator it = check2.find(p);
+    std::pair<int, int> p((*e_itr)->source()->id_, (*e_itr)->target()->id_);
+    std::map<std::pair<int, int>, bool>::iterator it = check2.find(p);
     if (it == check2.end())
       return false;
   }
@@ -877,10 +877,10 @@ bool dbskr_shock_patch::same_real_boundaries(dbskr_shock_patch_sptr sp)
   vsol_box_2d_sptr bbox = bounding_box_real();
   vsol_box_2d_sptr bbox2 = sp->bounding_box_real();
 
-  if (vcl_abs(bbox->get_min_x()-bbox2->get_min_x()) < NEGLIGIBLE && 
-      vcl_abs(bbox->get_min_y()-bbox2->get_min_y()) < NEGLIGIBLE && 
-      vcl_abs(bbox->get_max_x()-bbox2->get_max_x()) < NEGLIGIBLE && 
-      vcl_abs(bbox->get_max_y()-bbox2->get_max_y()) < NEGLIGIBLE)
+  if (std::abs(bbox->get_min_x()-bbox2->get_min_x()) < NEGLIGIBLE && 
+      std::abs(bbox->get_min_y()-bbox2->get_min_y()) < NEGLIGIBLE && 
+      std::abs(bbox->get_max_x()-bbox2->get_max_x()) < NEGLIGIBLE && 
+      std::abs(bbox->get_max_y()-bbox2->get_max_y()) < NEGLIGIBLE)
       return true;
 
   return false;

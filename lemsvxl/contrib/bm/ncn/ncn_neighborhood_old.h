@@ -13,13 +13,13 @@
 #include<bsta/bsta_histogram.h>
 #include<bsta/bsta_joint_histogram.h>
 
-#include<vcl_iomanip.h>
-#include<vcl_iostream.h>
+#include<iomanip>
+#include<iostream>
 
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
-#include<vcl_string.h>
+#include<map>
+#include<set>
+#include<utility>
+#include<string>
 
 #include<vgl/vgl_distance.h>
 #include<vgl/vgl_point_2d.h>
@@ -48,9 +48,9 @@ private:
 };
 
 namespace ncn_typedefs{
-    typedef vcl_vector<vgl_point_2d<unsigned> > target_pixel_type;
-    typedef vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_lessThan> pivot_pixel_candidate_type;
-    typedef vcl_map<vcl_vector<vgl_point_2d<unsigned> >::const_iterator,vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_lessThan>::const_iterator> neighborhood_type;
+    typedef std::vector<vgl_point_2d<unsigned> > target_pixel_type;
+    typedef std::set<vgl_point_2d<unsigned>,vgl_point_2d_lessThan> pivot_pixel_candidate_type;
+    typedef std::map<std::vector<vgl_point_2d<unsigned> >::const_iterator,std::set<vgl_point_2d<unsigned>,vgl_point_2d_lessThan>::const_iterator> neighborhood_type;
 }
 
 using namespace ncn_typedefs;
@@ -62,7 +62,7 @@ public:
 
     ~ncn_neighborhood();
 
-    bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, vcl_vector<vgl_point_2d<unsigned> >&roi);
+    bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, std::vector<vgl_point_2d<unsigned> >&roi);
 
 
 private:

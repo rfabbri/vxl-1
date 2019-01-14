@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_octave_kovesi_edge_linker_params::vox_octave_kovesi_edge_linker_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_octave_kovesi_edge_linker_params::vox_octave_kovesi_edge_linker_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
 
     //: Name of input object
@@ -76,7 +76,7 @@ vox_octave_kovesi_edge_linker_params::vox_octave_kovesi_edge_linker_params(vcl_s
             true, true);
 
     dbdet_kovesi_edge_linker_process pro1;
-    vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+    std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
     for (unsigned i = 0; i < pars.size(); i++)
     {
         param_list_.push_back(

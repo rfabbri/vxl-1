@@ -54,7 +54,7 @@ void my_bfrag_Menu::displayNContours()
 {
   vgui_dialog which_dl("Display N Contours");
   int chosen, whereToStart = 1;
-  vcl_vector<vcl_string> numPairs;
+  std::vector<std::string> numPairs;
   numPairs.push_back("1");
   numPairs.push_back("4");
   numPairs.push_back("9");
@@ -110,7 +110,7 @@ void my_bfrag_Menu::displayNPairs()
 {
   vgui_dialog which_dl("Display N Pairs");
   int chosen, whereToStart = 1;
-  vcl_vector<vcl_string> numPairs;
+  std::vector<std::string> numPairs;
   numPairs.push_back("1");
   numPairs.push_back("4");
   numPairs.push_back("9");
@@ -200,8 +200,8 @@ void my_bfrag_Menu::about()
 void my_bfrag_Menu::save()
 {
   vgui_dialog params("Save...");
-  vcl_string ext = "*.xml";
-  vcl_string filename;
+  std::string ext = "*.xml";
+  std::string filename;
   params.file("Specify XML file to save files", ext, filename);
     
   if (!params.ask())
@@ -224,9 +224,9 @@ void my_bfrag_Menu::displayAssembly()
 void my_bfrag_Menu::load()
 {
   vgui_dialog params("Load...");
-  vcl_string ext = "*.xml";
-  vcl_string filename;
-  vcl_string filename_images;
+  std::string ext = "*.xml";
+  std::string filename;
+  std::string filename_images;
   int chosen;
   params.file("Specify XML file to load files", ext, filename);
   params.choice("Show", "Only contours", "Only images", "Both contours and images", chosen);
@@ -248,7 +248,7 @@ void my_bfrag_Menu::quit()
     bfrag_Manager::instance()->quit();
   else
   {
-    vcl_cout << "Quit operation cancelled by user!" << vcl_endl;
+    std::cout << "Quit operation cancelled by user!" << std::endl;
     return;
   }
 }

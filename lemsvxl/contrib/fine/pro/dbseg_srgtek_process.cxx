@@ -26,7 +26,7 @@ dbseg_srgtek_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_srgtek_process::name()
+std::string dbseg_srgtek_process::name()
 {
   return "SRGtek Segmentation";
 }
@@ -41,10 +41,10 @@ dbseg_srgtek_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_srgtek_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -54,10 +54,10 @@ dbseg_srgtek_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_srgtek_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
   
@@ -86,7 +86,7 @@ bool
 dbseg_srgtek_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_srgtek_process::execute() - "
+    std::cout << "In dbseg_srgtek_process::execute() - "
              << "not exactly one input image\n";
     return false;
   }
@@ -218,7 +218,7 @@ dbseg_srgtek_process::execute()
     vil_image_resource_sptr resource = vil_new_image_resource_of_view(*segmented_view);
     vidpro1_image_storage_sptr segmented_storage = vidpro1_image_storage_new();
     segmented_storage->set_image(resource);
-    vcl_cout << "SRGtek segmentation completed. " << regionCount << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << vcl_endl; 
+    std::cout << "SRGtek segmentation completed. " << regionCount << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << std::endl; 
     output_data_[0].push_back(segmented_storage);
 
     delete image_representation;

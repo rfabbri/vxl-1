@@ -4,7 +4,7 @@
 // \file
 
 #include "dbinfo_track_tools.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vil/vil_image_resource.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -48,7 +48,7 @@ public:
     dbinfo_track_sptr track = tool_->selected_track();
     if(!track)
       {
-        vcl_cout <<"No track selected - can't delete\n";
+        std::cout <<"No track selected - can't delete\n";
         return;
       }
     dbinfo_track_storage_sptr track_store = tool_->track_storage();
@@ -118,7 +118,7 @@ static vil_image_resource_sptr get_image()
   bpro1_storage_sptr sto = res->get_data("image");
   if(!sto)
     return (vil_image_resource*)0;
-  vcl_cout << "Image Storage Name " << sto->name() << '\n';
+  std::cout << "Image Storage Name " << sto->name() << '\n';
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(sto);
   if(!image_storage)
@@ -160,7 +160,7 @@ dbinfo_track_describe_tool::~dbinfo_track_describe_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbinfo_track_describe_tool::name() const
 {
   return "Describe Track";
@@ -194,11 +194,11 @@ dbinfo_track_describe_tool::handle( const vgui_event & e,
         select_track(tableau_, track_storage_, object_);
       if(track)
         {
-          vcl_cout << *track << '\n';
+          std::cout << *track << '\n';
           return true;
         }
       else
-        vcl_cout << "No track selected \n";
+        std::cout << "No track selected \n";
     }
   return false;
 }
@@ -218,7 +218,7 @@ dbinfo_track_edit_tool::~dbinfo_track_edit_tool()
 
 
 //: Return the name of this tool
-vcl_string dbinfo_track_edit_tool::name() const
+std::string dbinfo_track_edit_tool::name() const
 {
   return "Edit Track";
 }
@@ -255,11 +255,11 @@ dbinfo_track_edit_tool::handle( const vgui_event & e,
       selected_track_ = select_track(tableau_, track_storage_,object_);
       if(selected_track_)
         {
-          vcl_cout << *selected_track_ << '\n';
+          std::cout << *selected_track_ << '\n';
           return true;
         }
       else
-        vcl_cout << "No track selected \n";
+        std::cout << "No track selected \n";
     }
   return false;
 }
@@ -305,7 +305,7 @@ dbinfo_region_minfo_tool::~dbinfo_region_minfo_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbinfo_region_minfo_tool::name() const
 {
   return "Measure Mutual Info";
@@ -330,33 +330,33 @@ void dbinfo_region_minfo_tool::print_minfo(vgui_displaylist2D_tableau_sptr const
   poly_ = get_polygon(tab, object);
   if(!imgr||!poly_)
     {
-      vcl_cout << "print_minfo - No image or no region selected\n";
+      std::cout << "print_minfo - No image or no region selected\n";
       return;
     }
-  vcl_cout << "Polygon at Readout\n";
-  poly_->describe(vcl_cout);
+  std::cout << "Polygon at Readout\n";
+  poly_->describe(std::cout);
   float minfo = dbinfo_observation_matcher::minfo(obs_, imgr, poly_);
-  vcl_cout << "Mutual Information = " << minfo << '\n';
+  std::cout << "Mutual Information = " << minfo << '\n';
 }
 void dbinfo_region_minfo_tool::set_observation()
 {
   vil_image_resource_sptr imgr = get_image();
   if(!imgr||!picked_poly_)
     {
-      vcl_cout << "set_observation - No image or no region selected\n";
+      std::cout << "set_observation - No image or no region selected\n";
       return;
     }
   poly0_ = new vsol_polygon_2d(*picked_poly_);
-  vcl_cout << "Initial Polygon\n";
-  poly0_->describe(vcl_cout);
+  std::cout << "Initial Polygon\n";
+  poly0_->describe(std::cout);
   unsigned frame =
     static_cast<unsigned>(bvis1_manager::instance()->current_frame());
  
   obs_ = new dbinfo_observation(frame, imgr, poly0_,
                                 intensity_info_, gradient_info_,
                                 color_info_);
-  vcl_cout << "Set Observation\n";
-  vcl_cout << *obs_ << '\n';
+  std::cout << "Set Observation\n";
+  std::cout << *obs_ << '\n';
 }
 //: Render the region mutual information display
 void dbinfo_region_minfo_tool::render()
@@ -377,15 +377,15 @@ bool dbinfo_region_minfo_tool::scan_region()
   vil_image_resource_sptr imgr = get_image();
   if(!imgr||!picked_poly_||!obs_)
     {
-      vcl_cout << "scan_region - No image or no region selected"
+      std::cout << "scan_region - No image or no region selected"
                <<" or no observation\n";
       return false;
     }
 
   //The region to be scanned
   vsol_polygon_2d_sptr scan_region = new vsol_polygon_2d(*picked_poly_);
-  vcl_cout << "scan_iterator debug vertices\n";
-  scan_region->describe(vcl_cout);
+  std::cout << "scan_iterator debug vertices\n";
+  scan_region->describe(std::cout);
   unsigned cols = imgr->ni(), rows = imgr->nj();
   vsol_point_2d_sptr poly_cog = scan_region->centroid();
   //get the cog of the currently set observation
@@ -400,8 +400,8 @@ bool dbinfo_region_minfo_tool::scan_region()
   H.set_identity();
 
   //Scan the region using each region point as the cog of the new observation
-  vcl_vector<vsol_spatial_object_2d_sptr> sos;
-  vcl_vector<double> attrs;
+  std::vector<vsol_spatial_object_2d_sptr> sos;
+  std::vector<double> attrs;
   mina_ = vnl_numeric_traits<double>::maxval;
   maxa_ = -mina_;
   unsigned npts = rg->size();
@@ -409,7 +409,7 @@ bool dbinfo_region_minfo_tool::scan_region()
     {
       vgl_point_2d<float> p = rg->point(i);
       //Debug for scan iterator
-      vcl_cout << p.x() << ' ' << p.y() << '\n';
+      std::cout << p.x() << ' ' << p.y() << '\n';
       float tx = p.x()-obs_x, ty = p.y()-obs_y;
       H.set_translation(tx, ty);
       dbinfo_observation_sptr new_obs = 
@@ -425,9 +425,9 @@ bool dbinfo_region_minfo_tool::scan_region()
         maxa_= minfo;
     }
   vidpro1_vsol2D_storage_sptr v2Ds = new vidpro1_vsol2D_storage;
-  vcl_stringstream sstr;
+  std::stringstream sstr;
   sstr << poly_cog->x() << '_'<< poly_cog->y();
-  vcl_string name = "attribute_points:";
+  std::string name = "attribute_points:";
   name += sstr.str();
   v2Ds->set_name(name);
   v2Ds->add_objects(sos, attrs);
@@ -446,17 +446,17 @@ bool dbinfo_region_minfo_tool::explore()
   vil_image_resource_sptr imgr = get_image();
   if(!obs_||!imgr)
     {
-      vcl_cout << "Must have a set observation and valid image to explore\n";
+      std::cout << "Must have a set observation and valid image to explore\n";
       return false;
     }
   unsigned steps = static_cast<unsigned>(2.0f*radius_/step_);
   double minfo =0;
-  vcl_cout << "Mathmatica Array\n";
-  vcl_cout << "{";
+  std::cout << "Mathmatica Array\n";
+  std::cout << "{";
   unsigned yi=0;
   for(float y=-radius_ ; yi<steps; y+=step_,++yi)
     {
-      vcl_cout << "{";
+      std::cout << "{";
       unsigned xi = 0;
       for(float x=-radius_; xi<steps; x+=step_, ++xi)
         {
@@ -467,22 +467,22 @@ bool dbinfo_region_minfo_tool::explore()
             dbinfo_observation_generator::generate(obs_, H);
           if(!obs||!obs->scan(0, imgr))
             {
-              vcl_cout << "scan failed in explore\n";
+              std::cout << "scan failed in explore\n";
               return false;
             }
           minfo = dbinfo_observation_matcher::minfo(obs_, obs);
           if(xi != steps-1)
-            vcl_cout << minfo << ',';
+            std::cout << minfo << ',';
           else
-            vcl_cout << minfo ;
+            std::cout << minfo ;
         }
       if(yi != steps-1)
-        vcl_cout << "},";
+        std::cout << "},";
       else
-        vcl_cout << minfo << '}';
+        std::cout << minfo << '}';
     }
-  vcl_cout << "}\n";
-  vcl_cout << "end array\n";
+  std::cout << "}\n";
+  std::cout << "end array\n";
   return true;
 }
 // =====================HANDLER========================
@@ -560,7 +560,7 @@ public:
   {
     if(!tool_->picked_poly())
       {
-        vcl_cout << "dbinfo_set_observation_command(.) No polygon selected\n";
+        std::cout << "dbinfo_set_observation_command(.) No polygon selected\n";
         return;
       }
     tool_->set_observation();
@@ -579,7 +579,7 @@ public:
   {
     if(!tool_->picked_poly())
       {
-        vcl_cout << "dbinfo_scan_region_command(.) No region selected\n";
+        std::cout << "dbinfo_scan_region_command(.) No region selected\n";
         return;
       }
     tool_->scan_region();

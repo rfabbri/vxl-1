@@ -1,6 +1,6 @@
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -44,33 +44,33 @@ int main(int argc, char *argv[]) {
     vul_timer t;
 
 	int num = 41;
-	vcl_cout<<"************ Load in txt file containing processing edge map file names ************" <<vcl_endl;
+	std::cout<<"************ Load in txt file containing processing edge map file names ************" <<std::endl;
 
-	vcl_string txt_file = argv[1];
-	vcl_string output_path = argv[2];
+	std::string txt_file = argv[1];
+	std::string output_path = argv[2];
 
-	vcl_vector<vcl_string> filenames; // save all the edge maps for the whole sequence
+	std::vector<std::string> filenames; // save all the edge maps for the whole sequence
 
-	vcl_ifstream myfile (txt_file.c_str());
-	vcl_string line;
+	std::ifstream myfile (txt_file.c_str());
+	std::string line;
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
 		{
 			filenames.push_back(line);
-			//vcl_cout << filenames.back() << vcl_endl;
+			//std::cout << filenames.back() << std::endl;
 		}
 		myfile.close();
 		myfile.close();
 	}
-  	else vcl_cout << "Unable to open file" <<vcl_endl;	
+  	else std::cout << "Unable to open file" <<std::endl;	
 
 
-	vcl_cout<<"************ load in the first set of working on edge files **************** " << vcl_endl;
+	std::cout<<"************ load in the first set of working on edge files **************** " << std::endl;
 
 
 	// construct the bg model for the center frame
-	vcl_vector<bpro1_storage_sptr> bg_results;
+	std::vector<bpro1_storage_sptr> bg_results;
 	brld_edge_point_tangent_bg_model_process_2 bg_pro;
 	bg_pro.clear_input();
 	bg_pro.clear_output();
@@ -78,14 +78,14 @@ int main(int argc, char *argv[]) {
 
 
 
-	vcl_deque<vidpro1_image_storage_sptr> edge_images_working_on; // maybe just construct the edge image version
+	std::deque<vidpro1_image_storage_sptr> edge_images_working_on; // maybe just construct the edge image version
 	for (int i=0; i< num; i++)
 	{
-		vcl_vector<bpro1_storage_sptr> edge_det_results;
+		std::vector<bpro1_storage_sptr> edge_det_results;
 		dbdet_load_edg_process load_edg_pro;
 
         //load the input image
-        vcl_string input_edg = filenames[i];
+        std::string input_edg = filenames[i];
 
         bpro1_filepath input(input_edg,".edg");
         load_edg_pro.parameters()->set_value("-edginput",input);
@@ -112,15 +112,15 @@ int main(int argc, char *argv[]) {
 		//dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
 
 		// convert the edge map to edge image which is used in build BG model as well as FG detection
-		vcl_cout<<"convert edge map to edge image"<<vcl_endl;
-		vcl_vector<bpro1_storage_sptr> edge_map2img_results;
+		std::cout<<"convert edge map to edge image"<<std::endl;
+		std::vector<bpro1_storage_sptr> edge_map2img_results;
 		brld_oriented_edgemap_to_edge_image_process edge_map2img_pro;
 
 		edge_map2img_pro.clear_input();
 		edge_map2img_pro.clear_output();
 		edge_map2img_pro.add_input(edge_det_results[0]);
 
-		//vcl_cout<<"6"<<vcl_endl;
+		//std::cout<<"6"<<std::endl;
 		bool edge_map2img_status = edge_map2img_pro.execute();
 		edge_map2img_pro.finish();
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 		bg_pro.add_input(edge_map2img_results[0]);
 
 	}
-	vcl_cout<<"construct BG model"<<vcl_endl;	
+	std::cout<<"construct BG model"<<std::endl;	
 	bool bg_status = bg_pro.execute();
 	bg_pro.finish();
 
@@ -152,9 +152,9 @@ int main(int argc, char *argv[]) {
 	bg_pro.clear_input();
 	bg_pro.clear_output();
 
-	vcl_cout<<"refine FG edges"<<vcl_endl;
+	std::cout<<"refine FG edges"<<std::endl;
 	//detect the foreground edges
-	vcl_vector<bpro1_storage_sptr> fg_results;
+	std::vector<bpro1_storage_sptr> fg_results;
     brld_edge_point_tangent_fg_detect_process fg_pro;
 	fg_pro.clear_input();
 	fg_pro.clear_output();
@@ -162,10 +162,10 @@ int main(int argc, char *argv[]) {
 	fg_pro.add_input(edge_images_working_on[20]);
 	fg_pro.add_input(bg_results[0]);
 
-	//vcl_cout<<"7"<<vcl_endl;
+	//std::cout<<"7"<<std::endl;
 	bool fg_status = fg_pro.execute();
 	fg_pro.finish();
-	//vcl_cout<<"8"<<vcl_endl;
+	//std::cout<<"8"<<std::endl;
 
 	if(fg_status)
 		fg_results = fg_pro.get_output();
@@ -174,15 +174,15 @@ int main(int argc, char *argv[]) {
 	fg_pro.clear_output();
 
 	//convert edge image back to edge map
-	vcl_cout<<"convert edge image to edge map"<<vcl_endl;
-	vcl_vector<bpro1_storage_sptr> edge_img2map_results;
+	std::cout<<"convert edge image to edge map"<<std::endl;
+	std::vector<bpro1_storage_sptr> edge_img2map_results;
 	brld_edge_image_to_oriented_edgemap_process edge_img2map_pro;
 
 	edge_img2map_pro.clear_input();
 	edge_img2map_pro.clear_output();
 	edge_img2map_pro.add_input(fg_results[0]);
 
-	//vcl_cout<<"6"<<vcl_endl;
+	//std::cout<<"6"<<std::endl;
 	bool edge_img2map_status = edge_img2map_pro.execute();
 	edge_img2map_pro.finish();
 
@@ -196,13 +196,13 @@ int main(int argc, char *argv[]) {
 	edge_img2map_pro.clear_input();
 	edge_img2map_pro.clear_output();
 
-	vcl_cout<<"************ Save FG Edges    ************"<<vcl_endl;
+	std::cout<<"************ Save FG Edges    ************"<<std::endl;
 
-	vcl_string out_name = filenames[20].substr(filenames[20].size()-8, 8);
-	vcl_cout << out_name << vcl_endl;
+	std::string out_name = filenames[20].substr(filenames[20].size()-8, 8);
+	std::cout << out_name << std::endl;
     dbdet_save_edg_process save_edg_pro;
-	//vcl_string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
-	vcl_string output_file = output_path + out_name;
+	//std::string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
+	std::string output_file = output_path + out_name;
     bpro1_filepath output(output_file,".edg");
 
     save_edg_pro.parameters()->set_value("-edgoutput",output);
@@ -220,15 +220,15 @@ int main(int argc, char *argv[]) {
     save_edg_pro.clear_output();
 
 
-	vcl_cout << "******************** Shift the Center Frame *************************" << vcl_endl;
+	std::cout << "******************** Shift the Center Frame *************************" << std::endl;
 	for (int i = 21; i<filenames.size()-20; i++)
 	{
-		vcl_vector<bpro1_storage_sptr> edge_det_results;
+		std::vector<bpro1_storage_sptr> edge_det_results;
 		dbdet_load_edg_process load_edg_pro;
 
 		// load in the last coming in edge map and remove the first one in the working on edge image set
         //load the input image
-        vcl_string input_edg = filenames[i+20];
+        std::string input_edg = filenames[i+20];
 
         bpro1_filepath input(input_edg,".edg");
         load_edg_pro.parameters()->set_value("-edginput",input);
@@ -254,15 +254,15 @@ int main(int argc, char *argv[]) {
 		//dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
 
 		// convert the edge map to edge image which is used in build BG model as well as FG detection
-		vcl_cout<<"convert edge map to edge image"<<vcl_endl;
-		vcl_vector<bpro1_storage_sptr> edge_map2img_results;
+		std::cout<<"convert edge map to edge image"<<std::endl;
+		std::vector<bpro1_storage_sptr> edge_map2img_results;
 		brld_oriented_edgemap_to_edge_image_process edge_map2img_pro;
 
 		edge_map2img_pro.clear_input();
 		edge_map2img_pro.clear_output();
 		edge_map2img_pro.add_input(edge_det_results[0]);
 
-		//vcl_cout<<"6"<<vcl_endl;
+		//std::cout<<"6"<<std::endl;
 		bool edge_map2img_status = edge_map2img_pro.execute();
 		edge_map2img_pro.finish();
 
@@ -279,14 +279,14 @@ int main(int argc, char *argv[]) {
 		vidpro1_image_storage_sptr edge_image;
 		edge_image.vertical_cast(edge_map2img_results[0]);
 
-		vcl_cout<<"adjust the working on edge images set"<<vcl_endl;
+		std::cout<<"adjust the working on edge images set"<<std::endl;
 		edge_images_working_on.pop_front();
 		edge_images_working_on.push_back(edge_image); // where is pisical address of EM?
 	
 
-		vcl_cout<<"construct BG model"<<vcl_endl;
+		std::cout<<"construct BG model"<<std::endl;
 		// construct the bg model for the center frame
-		vcl_vector<bpro1_storage_sptr> bg_results;
+		std::vector<bpro1_storage_sptr> bg_results;
 		brld_edge_point_tangent_bg_model_process_2 bg_pro;
 		bg_pro.clear_input();
 		bg_pro.clear_output();
@@ -304,9 +304,9 @@ int main(int argc, char *argv[]) {
 		bg_pro.clear_input();
 		bg_pro.clear_output();
 
-		vcl_cout<<"refine FG edges"<<vcl_endl;
+		std::cout<<"refine FG edges"<<std::endl;
 		//detect the foreground edges
-		vcl_vector<bpro1_storage_sptr> fg_results;
+		std::vector<bpro1_storage_sptr> fg_results;
 		brld_edge_point_tangent_fg_detect_process fg_pro;
 		fg_pro.clear_input();
 		fg_pro.clear_output();
@@ -314,10 +314,10 @@ int main(int argc, char *argv[]) {
 		fg_pro.add_input(edge_images_working_on[20]); // always push in the center of the working set
 		fg_pro.add_input(bg_results[0]);
 
-		//vcl_cout<<"7"<<vcl_endl;
+		//std::cout<<"7"<<std::endl;
 		bool fg_status = fg_pro.execute();
 		fg_pro.finish();
-		//vcl_cout<<"8"<<vcl_endl;
+		//std::cout<<"8"<<std::endl;
 
 		if(fg_status)
 			fg_results = fg_pro.get_output();
@@ -326,15 +326,15 @@ int main(int argc, char *argv[]) {
 		fg_pro.clear_output();
 
 		//convert edge image back to edge map
-		vcl_cout<<"convert edge image to edge map"<<vcl_endl;
-		vcl_vector<bpro1_storage_sptr> edge_img2map_results;
+		std::cout<<"convert edge image to edge map"<<std::endl;
+		std::vector<bpro1_storage_sptr> edge_img2map_results;
 		brld_edge_image_to_oriented_edgemap_process edge_img2map_pro;
 
 		edge_img2map_pro.clear_input();
 		edge_img2map_pro.clear_output();
 		edge_img2map_pro.add_input(fg_results[0]);
 
-		//vcl_cout<<"6"<<vcl_endl;
+		//std::cout<<"6"<<std::endl;
 		bool edge_img2map_status = edge_img2map_pro.execute();
 		edge_img2map_pro.finish();
 
@@ -348,13 +348,13 @@ int main(int argc, char *argv[]) {
 		edge_img2map_pro.clear_input();
 		edge_img2map_pro.clear_output();
 
-		vcl_cout<<"************ Save FG Edges    ************"<<vcl_endl;
+		std::cout<<"************ Save FG Edges    ************"<<std::endl;
 
-		vcl_string out_name = filenames[i].substr(filenames[i].size()-8, 8);
-		vcl_cout << out_name << vcl_endl;
+		std::string out_name = filenames[i].substr(filenames[i].size()-8, 8);
+		std::cout << out_name << std::endl;
 		dbdet_save_edg_process save_edg_pro;
-		//vcl_string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
-		vcl_string output_file = output_path + out_name;
+		//std::string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
+		std::string output_file = output_path + out_name;
 		bpro1_filepath output(output_file,".edg");
 
 		save_edg_pro.parameters()->set_value("-edgoutput",output);

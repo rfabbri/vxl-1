@@ -1,9 +1,9 @@
 // compare pairs of observations
 
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <cstdlib>
+#include <algorithm>
+#include <iostream>
 
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
@@ -43,17 +43,17 @@
 
 #include <vgl/vgl_distance.h>
 
-vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
+vsol_polygon_2d_sptr read_con_from_file(std::string fname) {
   double x, y;
   char buffer[2000];
   int nPoints;
 
-  vcl_vector<vsol_point_2d_sptr> inp;
+  std::vector<vsol_point_2d_sptr> inp;
   inp.clear();
 
-  vcl_ifstream fp(fname.c_str());
+  std::ifstream fp(fname.c_str());
   if (!fp) {
-    vcl_cout<<" Unable to Open "<< fname <<vcl_endl;
+    std::cout<<" Unable to Open "<< fname <<std::endl;
     return 0;
   }
   //2)Read in file header.
@@ -61,7 +61,7 @@ vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
   fp.getline(buffer,2000); //OPEN/CLOSE flag (not important, we assume close)
   fp >> nPoints;
 #if 0
-  vcl_cout << "Number of Points from Contour: " << nPoints << vcl_endl;
+  std::cout << "Number of Points from Contour: " << nPoints << std::endl;
 #endif     
   for (int i=0;i<nPoints;i++) {
     fp >> x >> y;
@@ -73,7 +73,7 @@ vsol_polygon_2d_sptr read_con_from_file(vcl_string fname) {
   return poly;
 }
 
-void read_file(const char *filename, vcl_vector< vcl_vector<dbrl_multiple_instance_object_sptr> >& frames)
+void read_file(const char *filename, std::vector< std::vector<dbrl_multiple_instance_object_sptr> >& frames)
 {
  //   filename="D:\\Lockheed_Deliveries\\Nov_03_06\\280-203-303-0-20multi.dat";
     vsl_b_ifstream ifile(filename);
@@ -81,14 +81,14 @@ void read_file(const char *filename, vcl_vector< vcl_vector<dbrl_multiple_instan
     vsl_b_read(ifile,numframes);
     for(unsigned i=0;i<numframes;i++)
     {
-        vcl_vector<dbrl_multiple_instance_object_sptr> temp;
+        std::vector<dbrl_multiple_instance_object_sptr> temp;
         vsl_b_read(ifile,temp);
-        vcl_cout << "frame: " << i << " size: " << temp.size() << vcl_endl;
+        std::cout << "frame: " << i << " size: " << temp.size() << std::endl;
         frames.push_back(temp);
     }
 }
 
-void write_file(const char *filename, vcl_vector< vcl_vector<dbrl_multiple_instance_object_sptr> >& frames)
+void write_file(const char *filename, std::vector< std::vector<dbrl_multiple_instance_object_sptr> >& frames)
 {
     vsl_b_ofstream ofile(filename);
     unsigned numframes=frames.size();
@@ -98,52 +98,52 @@ void write_file(const char *filename, vcl_vector< vcl_vector<dbrl_multiple_insta
 }
 
 int main(int argc, char *argv[]) {
-  vcl_cout << "Comparing Edgel Sets of video to syntethic database edgel sets!\n";
+  std::cout << "Comparing Edgel Sets of video to syntethic database edgel sets!\n";
 
   //: out file contains the wrong mathces if any
-  vcl_string query_vfile, database_vfiles, out_file, output_dir, output_video_file;
+  std::string query_vfile, database_vfiles, out_file, output_dir, output_video_file;
 
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   if (argc != 11) {
-    vcl_cout << "Usage: <program name> <selfradius> <sigma_square> <matching_threhsold> <query video file name> <database video files> <motion bin> <every_k> <out file> <output_video_file> <output_dir>\n";
-    vcl_cout << "selfradius is the distance between edgels to be considered as self similar, typical value: 0.5\n";
-    vcl_cout << "sigma square is used current-matching norm, which is used to find correspondences among edgels\n";
-    vcl_cout << "matching threshold is used to eliminate low similarity edgel matchings, typical 0.2\n";
-    vcl_cout << "take every_k frames from the database, if every_k = 1, uses all frames in the database\n";
+    std::cout << "Usage: <program name> <selfradius> <sigma_square> <matching_threhsold> <query video file name> <database video files> <motion bin> <every_k> <out file> <output_video_file> <output_dir>\n";
+    std::cout << "selfradius is the distance between edgels to be considered as self similar, typical value: 0.5\n";
+    std::cout << "sigma square is used current-matching norm, which is used to find correspondences among edgels\n";
+    std::cout << "matching threshold is used to eliminate low similarity edgel matchings, typical 0.2\n";
+    std::cout << "take every_k frames from the database, if every_k = 1, uses all frames in the database\n";
     return -1;
   }
 
   double selfradius = atof(argv[1]);
   double sigma_square = atof(argv[2]);
   double matching_threshold = atof(argv[3]);
-  query_vfile = vcl_string(argv[4]);
-  database_vfiles = vcl_string(argv[5]);
+  query_vfile = std::string(argv[4]);
+  database_vfiles = std::string(argv[5]);
   int motion_bin = atoi(argv[6]);
   unsigned every_k = unsigned(atoi(argv[7]));
   
-  out_file = vcl_string(argv[8])+"_"+vcl_string(argv[1])+"_"+vcl_string(argv[2])+"_"+vcl_string(argv[5])+".out";
+  out_file = std::string(argv[8])+"_"+std::string(argv[1])+"_"+std::string(argv[2])+"_"+std::string(argv[5])+".out";
   output_video_file = argv[9];
   output_dir = argv[10];
 
-  vcl_vector< vcl_vector<dbrl_multiple_instance_object_sptr> > q_orig, q_frames, db_frames, db_orig, classified_q_frames;
+  std::vector< std::vector<dbrl_multiple_instance_object_sptr> > q_orig, q_frames, db_frames, db_orig, classified_q_frames;
   
   read_file(query_vfile.c_str(), q_orig);
-  vcl_cout << "number of query frames: " << q_orig.size() << vcl_endl;
+  std::cout << "number of query frames: " << q_orig.size() << std::endl;
 
-  vcl_vector<vcl_string> database; 
-  vcl_ifstream fpd((database_vfiles).c_str());
+  std::vector<std::string> database; 
+  std::ifstream fpd((database_vfiles).c_str());
   if (!fpd.is_open()) {
-    vcl_cout << "Unable to open database file!\n";
+    std::cout << "Unable to open database file!\n";
     return -1;
   }
 
   char buffer[1000];
   while (!fpd.eof()) {
-    vcl_string temp;
+    std::string temp;
     fpd.getline(buffer, 1000);
     temp = buffer;
     if (temp.size() > 1) {
-      vcl_cout << "temp: " << temp << vcl_endl;
+      std::cout << "temp: " << temp << std::endl;
       database.push_back(temp);
     }
   }
@@ -152,13 +152,13 @@ int main(int argc, char *argv[]) {
   for (unsigned i = 0; i<database.size(); i++) {
     read_file(database[i].c_str(), db_orig);
   }
-  vcl_cout << "number of database frames: " << db_orig.size() << vcl_endl;
+  std::cout << "number of database frames: " << db_orig.size() << std::endl;
   
-  vcl_cout << "translating edgels....";
+  std::cout << "translating edgels....";
   dbru_label_sptr null_label = new dbru_label();
   // translate edgels to chipped image coordinates before matching
   for (unsigned k = 0; k<q_orig.size(); k++) {
-    vcl_vector<dbrl_multiple_instance_object_sptr> qq;
+    std::vector<dbrl_multiple_instance_object_sptr> qq;
     for (unsigned m = 0; m<q_orig[k].size(); m++) {
       if (!q_orig[k][m]->get_label())
         q_orig[k][m]->set_label(null_label);
@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
       double y_min = ibox->get_min_y();
       vgl_vector_2d<double> trans(-x_min, -y_min);
 
-      vcl_vector<vsol_line_2d_sptr> edgels = o->get_edges();
+      std::vector<vsol_line_2d_sptr> edgels = o->get_edges();
       for (unsigned i = 0; i<edgels.size(); i++) {
         vsol_line_2d_sptr ll = edgels[i];
         ll->p0()->add_vector(trans);
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
       }
 
       //eliminate extra edgels within 1 pixel
-      vcl_vector<bool> eliminate(edgels.size(), false);
+      std::vector<bool> eliminate(edgels.size(), false);
       for (unsigned i = 0; i<edgels.size(); i++) {
         if (eliminate[i]) continue;
         vsol_point_2d_sptr mi = edgels[i]->middle();
@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
         }
       }
       int cnt = 0; 
-      vcl_vector<vsol_line_2d_sptr> newedgels;
+      std::vector<vsol_line_2d_sptr> newedgels;
       for (unsigned i = 0; i<edgels.size(); i++) {
         if (eliminate[i]) {
           cnt++;
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
         }
         newedgels.push_back(edgels[i]);
       }
-      vcl_cout << "eliminated: " << cnt << " out of " << edgels.size() << " due to self_similarity\n";
+      std::cout << "eliminated: " << cnt << " out of " << edgels.size() << " due to self_similarity\n";
           
       vsol_polygon_2d_sptr poly = o->get_poly();
       for (unsigned i = 0; i<poly->size(); i++) {
@@ -219,7 +219,7 @@ int main(int argc, char *argv[]) {
 
   // translate edgels to chipped image coordinates before matching
   for (unsigned k = 0; k<db_orig.size(); k++) {
-    vcl_vector<dbrl_multiple_instance_object_sptr> qq;
+    std::vector<dbrl_multiple_instance_object_sptr> qq;
     for (unsigned m = 0; m<db_orig[k].size(); m++) {
       if (!db_orig[k][m]->get_label())
         db_orig[k][m]->set_label(null_label);
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]) {
       double y_min = ibox->get_min_y();
       vgl_vector_2d<double> trans(-x_min, -y_min);
 
-      vcl_vector<vsol_line_2d_sptr> edgels = o->get_edges();
+      std::vector<vsol_line_2d_sptr> edgels = o->get_edges();
       for (unsigned i = 0; i<edgels.size(); i++) {
         vsol_line_2d_sptr ll = edgels[i];
         ll->p0()->add_vector(trans);
@@ -239,7 +239,7 @@ int main(int argc, char *argv[]) {
       }
 
       //eliminate extra edgels within 1 pixel
-      vcl_vector<bool> eliminate(edgels.size(), false);
+      std::vector<bool> eliminate(edgels.size(), false);
       for (unsigned i = 0; i<edgels.size(); i++) {
         if (eliminate[i]) continue;
         vsol_point_2d_sptr mi = edgels[i]->middle();
@@ -251,7 +251,7 @@ int main(int argc, char *argv[]) {
         }
       }
       int cnt = 0; 
-      vcl_vector<vsol_line_2d_sptr> newedgels;
+      std::vector<vsol_line_2d_sptr> newedgels;
       for (unsigned i = 0; i<edgels.size(); i++) {
         if (eliminate[i]) {
           cnt++;
@@ -259,7 +259,7 @@ int main(int argc, char *argv[]) {
         }
         newedgels.push_back(edgels[i]);
       }
-      vcl_cout << "eliminated: " << cnt << " out of " << edgels.size() << " due to self_similarity\n";
+      std::cout << "eliminated: " << cnt << " out of " << edgels.size() << " due to self_similarity\n";
           
       
       vsol_polygon_2d_sptr poly = o->get_poly();
@@ -278,14 +278,14 @@ int main(int argc, char *argv[]) {
     }
     db_frames.push_back(qq);
   }
-  vcl_cout << "done!!\n";
+  std::cout << "done!!\n";
 
   //: recognize each instance in each frame
   vul_timer t;
   int cnt = 0, cnt_correct = 0;
-  vcl_string null("null");
+  std::string null("null");
   for (unsigned k = 0; k<q_frames.size(); k++) {
-    vcl_vector<dbrl_multiple_instance_object_sptr> classified_instances;
+    std::vector<dbrl_multiple_instance_object_sptr> classified_instances;
     
     for (unsigned m = 1; m<q_frames[k].size() ; m++) {
       dbrl_multiple_instance_object_sptr o = q_frames[k][m];
@@ -293,8 +293,8 @@ int main(int argc, char *argv[]) {
       dbru_label_sptr q_label = o->get_label();
       if (q_label->category() == null) continue;
 
-      vcl_cout << "frame: " << k << " instance: " << m << " # of edgels: " << o->get_edges().size() << vcl_endl;
-      vcl_vector<vsol_line_2d_sptr> edgels = o->get_edges();
+      std::cout << "frame: " << k << " instance: " << m << " # of edgels: " << o->get_edges().size() << std::endl;
+      std::vector<vsol_line_2d_sptr> edgels = o->get_edges();
       vsol_polygon_2d_sptr poly = o->get_poly();
 
       char frame_k[1000];
@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
       itoa(k, frame_k, 10);
       itoa(m, instance_m, 10);
 
-      vcl_vector<dbinfo_observation_sptr> o_obs;
+      std::vector<dbinfo_observation_sptr> o_obs;
       for (unsigned i = 0; i<o->imgs_size(); i++) {
         vil_image_view<vxl_byte> img = o->get_image_i(i);
         vil_image_resource_sptr img_r = vil_new_image_resource_of_view(img);
@@ -331,7 +331,7 @@ int main(int argc, char *argv[]) {
           if (db_label->category() == null) continue;
           if (db_label->motion_orientation_bin_ != q_label->motion_orientation_bin_) continue;
 
-          vcl_cout << "\tdb frame: " << dk << " instance: " << dm << " # of edgels: " << db_o->get_edges().size() << "\n";
+          std::cout << "\tdb frame: " << dk << " instance: " << dm << " # of edgels: " << db_o->get_edges().size() << "\n";
           
           vsol_polygon_2d_sptr db_poly = o->get_poly();
           matcher.set_lines2(db_o->get_edges());
@@ -346,7 +346,7 @@ int main(int argc, char *argv[]) {
           itoa(dk, frame_dk, 10);
           itoa(dm, instance_dm, 10);
 
-          vcl_vector<dbinfo_observation_sptr> db_o_obs;
+          std::vector<dbinfo_observation_sptr> db_o_obs;
           for (unsigned i = 0; i<db_o->imgs_size(); i++) {
             vil_image_view<vxl_byte> img = db_o->get_image_i(i);
             vil_image_resource_sptr img_r = vil_new_image_resource_of_view(img);
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
             
           vil_image_resource_sptr correspondence_im = matcher.get_correspondence_image();        
           vil_save_image_resource(correspondence_im, (output_dir+"q_"+frame_k+"_"+instance_m+"_db_"+frame_dk+"_"+instance_dm+".png").c_str()); 
-          vcl_cout << "\t----------------- overall mutual info: " << mi << " time: " << t.real()/1000.0f << vcl_endl;
+          std::cout << "\t----------------- overall mutual info: " << mi << " time: " << t.real()/1000.0f << std::endl;
           
           if (mi > max_info) {
             max_info = mi; max_dk = dk; max_dm = dm;
@@ -376,7 +376,7 @@ int main(int argc, char *argv[]) {
       dbrl_multiple_instance_object_sptr db_best_o = db_frames[max_dk][max_dm];
       if (db_best_o->get_label()->category() == q_label->category()) {
         cnt_correct++;
-        vcl_cout << "------- compared to " << cnt_compared << " db items, classification CORRECT\n";
+        std::cout << "------- compared to " << cnt_compared << " db items, classification CORRECT\n";
       }
 
       q_orig[k][m]->set_label(db_best_o->get_label());
@@ -388,11 +388,11 @@ int main(int argc, char *argv[]) {
     classified_q_frames.push_back(classified_instances);
   }
 
-  vcl_ofstream of((out_file).c_str());
-  of << "total query items: " << cnt << " number of corrects: " << cnt_correct << " recognition rate: " << (cnt_correct/cnt)*100 << vcl_endl; 
+  std::ofstream of((out_file).c_str());
+  of << "total query items: " << cnt << " number of corrects: " << cnt_correct << " recognition rate: " << (cnt_correct/cnt)*100 << std::endl; 
   of.close();
 
-  vcl_cout << "total query items: " << cnt << " number of corrects: " << cnt_correct << " recognition rate: " << (cnt_correct/cnt)*100 << vcl_endl; 
+  std::cout << "total query items: " << cnt << " number of corrects: " << cnt_correct << " recognition rate: " << (cnt_correct/cnt)*100 << std::endl; 
   write_file(output_video_file.c_str(), classified_q_frames);
   return 0;
 }
@@ -404,8 +404,8 @@ int main(int argc, char *argv[]) {
         //: ratio is 0.01, so try to alignm cog of database within 0.01*radius of query observation
         //  dr: 15 so try random rotations between -15 and +15 degrees
         //  ds: 0
-        vcl_cout << "query diameter: " << o_obs[0]->geometry()->diameter() << vcl_endl;
-        vcl_cout << "database diameter: " << database_obs[i]->geometry()->diameter() << vcl_endl;
+        std::cout << "query diameter: " << o_obs[0]->geometry()->diameter() << std::endl;
+        std::cout << "database diameter: " << database_obs[i]->geometry()->diameter() << std::endl;
         float forced_scale = o_obs[0]->geometry()->diameter()/database_obs[i]->geometry()->diameter();
         vgl_h_matrix_2d<float> best_trans;
         double mi = dbinfo_object_matcher::minfo_rigid_alignment_rand(o_obs[0], database_obs[i], best_trans,
@@ -420,22 +420,22 @@ int main(int argc, char *argv[]) {
 
 /*
   int cat_id[] = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}; 
-  //vcl_vector<int> cat_id(cat_id_f);
-  vcl_vector<vcl_string> cats;
+  //std::vector<int> cat_id(cat_id_f);
+  std::vector<std::string> cats;
   cats.push_back("car");
   cats.push_back("minivan");
   cats.push_back("pickup");
-  vcl_vector<vcl_string> cat;
+  std::vector<std::string> cat;
   for (unsigned i = 0; i<21; i++) {
     cat.push_back(cats[cat_id[i]]);
   }
   for (unsigned k = 0; k<frames_infos.size(); k++) {
-    vcl_vector< vcl_vector<double> >& instances_infos = frames_infos[k];
+    std::vector< std::vector<double> >& instances_infos = frames_infos[k];
     for (unsigned m = 0; m<instances_infos.size() ; m++) {
       //find best db item
       double max_mi = 0;
       unsigned max_i = 0;
-      vcl_vector<double>& infos = instances_infos[m];
+      std::vector<double>& infos = instances_infos[m];
       for (unsigned i = 0; i<database.size(); i++)
         if (infos[i] > max_mi) {
           max_mi = infos[i];

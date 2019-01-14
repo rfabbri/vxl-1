@@ -17,7 +17,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_box_3d.h>
@@ -58,7 +58,7 @@ class dbmsh3d_face : public vispt_elm
 {
 protected:
   //: Pointer to the IFS vertices of this face.
-  vcl_vector<dbmsh3d_vertex*> vertices_;
+  std::vector<dbmsh3d_vertex*> vertices_;
 
   dbmsh3d_halfedge* halfedge_;
 
@@ -121,10 +121,10 @@ public:
   dbmsh3d_vertex* vertices (const unsigned int i) {
     return vertices_[i];
   }
-  const vcl_vector<dbmsh3d_vertex*>& vertices() const {
+  const std::vector<dbmsh3d_vertex*>& vertices() const {
     return vertices_;
   }
-  vcl_vector<dbmsh3d_vertex*>& vertices() {
+  std::vector<dbmsh3d_vertex*>& vertices() {
     return vertices_;
   }
 
@@ -195,10 +195,10 @@ public:
   }
 
   //###### Connectivity Query via Halfedges ######  
-  void get_bnd_HEs (vcl_vector<dbmsh3d_halfedge*>& bnd_HEs) const;
-  void get_bnd_Es (vcl_vector<dbmsh3d_edge*>& bnd_Es) const;  
-  bool get_bnd_E_chains (vcl_vector<vcl_vector<dbmsh3d_edge*> >& bnd_E_chains) const;
-  void get_bnd_Es (vcl_set<dbmsh3d_edge*>& bnd_Es) const;
+  void get_bnd_HEs (std::vector<dbmsh3d_halfedge*>& bnd_HEs) const;
+  void get_bnd_Es (std::vector<dbmsh3d_edge*>& bnd_Es) const;  
+  bool get_bnd_E_chains (std::vector<std::vector<dbmsh3d_edge*> >& bnd_E_chains) const;
+  void get_bnd_Es (std::set<dbmsh3d_edge*>& bnd_Es) const;
 
   const unsigned int n_bnd_Es () const;
   bool is_bnd_E (const dbmsh3d_edge* inputE) const;
@@ -221,18 +221,18 @@ public:
 
   double angle_at_bnd_V (const dbmsh3d_vertex* inputV) const;
 
-  int n_bnd_Vs_in_set (vcl_set<dbmsh3d_vertex*>& vertices) const;
-  bool all_bnd_Vs_incident (vcl_vector<dbmsh3d_vertex*>& vertices) const;
+  int n_bnd_Vs_in_set (std::set<dbmsh3d_vertex*>& vertices) const;
+  bool all_bnd_Vs_incident (std::vector<dbmsh3d_vertex*>& vertices) const;
 
-  void get_bnd_Vs (vcl_vector<dbmsh3d_vertex*>& vertices) const;
-    void _get_bnd_Vs_MHE (vcl_vector<dbmsh3d_vertex*>& vertices) const;
-    void _get_bnd_Vs_IFS (vcl_vector<dbmsh3d_vertex*>& vertices) const;
+  void get_bnd_Vs (std::vector<dbmsh3d_vertex*>& vertices) const;
+    void _get_bnd_Vs_MHE (std::vector<dbmsh3d_vertex*>& vertices) const;
+    void _get_bnd_Vs_IFS (std::vector<dbmsh3d_vertex*>& vertices) const;
   
-  void get_bnd_V_ids (vcl_vector<int>& vids) const;
-    void _get_bnd_V_ids_MHE (vcl_vector<int>& vids) const;
-    void _get_bnd_V_ids_IFS (vcl_vector<int>& vids) const;
+  void get_bnd_V_ids (std::vector<int>& vids) const;
+    void _get_bnd_V_ids_MHE (std::vector<int>& vids) const;
+    void _get_bnd_V_ids_IFS (std::vector<int>& vids) const;
 
-  void get_bnd_Vs (vcl_set<dbmsh3d_vertex*>& bnd_Vs) const;
+  void get_bnd_Vs (std::set<dbmsh3d_vertex*>& bnd_Vs) const;
 
   bool is_bnd_V (const dbmsh3d_vertex* inputV) const;
   dbmsh3d_vertex* next_bnd_V (const dbmsh3d_vertex* inputV) const;
@@ -286,7 +286,7 @@ public:
   bool is_inside_box (const vgl_box_3d<double>& box) const;
   bool is_outside_box (const vgl_box_3d<double>& box) const;
   vgl_point_3d<double> compute_center_pt () const;
-  vgl_point_3d<double> compute_center_pt (const vcl_vector<dbmsh3d_vertex*>& vertices) const;
+  vgl_point_3d<double> compute_center_pt (const std::vector<dbmsh3d_vertex*>& vertices) const;
   vgl_vector_3d<double> compute_normal ();
 
   //###### Connectivity Modification Functions ######
@@ -332,11 +332,11 @@ public:
   void _clone_F_E_conn (dbmsh3d_face* F2, dbmsh3d_mesh* M2) const;
   virtual dbmsh3d_face* clone (dbmsh3d_mesh* M2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
   //###### For triangular face only ######
   TRIFACE_TYPE tri_get_topo_type () const;
-  vcl_string   tri_get_topo_string() const;
+  std::string   tri_get_topo_string() const;
 
   //###### For the face of a 2-manifold triangular mesh only ######
   //  these functions start with tag m2t (manifold-2-triangle)
@@ -361,13 +361,13 @@ dbmsh3d_halfedge* find_E_in_next_chain (const dbmsh3d_halfedge* headHE,
                                         const dbmsh3d_edge* E);
 
 dbmsh3d_halfedge* chain_contains_E_in_set (const dbmsh3d_halfedge* headHE,
-                                           vcl_set<dbmsh3d_edge*>& E_set);
+                                           std::set<dbmsh3d_edge*>& E_set);
 
 void get_chain_Es (const dbmsh3d_halfedge* headHE,
-                   vcl_set<dbmsh3d_edge*>& incident_Es);
+                   std::set<dbmsh3d_edge*>& incident_Es);
 
 void get_chain_Vs (const dbmsh3d_halfedge* headHE,
-                   vcl_set<dbmsh3d_vertex*>& incident_Vs);
+                   std::set<dbmsh3d_vertex*>& incident_Vs);
 
 //: disconnect all associated halfedges from their edges from the given he_head.
 void _delete_HE_chain (dbmsh3d_halfedge* & he_head);
@@ -375,7 +375,7 @@ void _delete_HE_chain (dbmsh3d_halfedge* & he_head);
 //  Return: the set of incident edges that get disconnected.
 //  Also set the he_head to be NULL after calling it.
 void _delete_HE_chain (dbmsh3d_halfedge* & he_head,
-                       vcl_vector<dbmsh3d_edge*>& incident_edge_list);
+                       std::vector<dbmsh3d_edge*>& incident_edge_list);
 
 dbmsh3d_edge* _find_next_E_chain (const dbmsh3d_halfedge* headHE,
                                   const dbmsh3d_vertex* inputV, 
@@ -384,22 +384,22 @@ dbmsh3d_edge* _find_next_E_chain (const dbmsh3d_halfedge* headHE,
 bool _disconnect_E_chain (dbmsh3d_halfedge*& headHE, dbmsh3d_edge* E);
 
 //: Assume the mesh face is planar and compute a 2D planar coordinate for it.
-void get_2d_coord (const vcl_vector<dbmsh3d_vertex*>& vertices,
+void get_2d_coord (const std::vector<dbmsh3d_vertex*>& vertices,
                    vgl_vector_3d<double>& N, vgl_vector_3d<double>& AX,
                    vgl_vector_3d<double>& AY);
 
 //: Return ordered set of vertices in 2D (x,y) coord.
-void get_2d_polygon (const vcl_vector<dbmsh3d_vertex*>& vertices,
-                     vcl_vector<double>& xs, vcl_vector<double>& ys);
+void get_2d_polygon (const std::vector<dbmsh3d_vertex*>& vertices,
+                     std::vector<double>& xs, std::vector<double>& ys);
 
 //: Return the projected point in the local 2D (x,y) coord.
 vgl_point_2d<double> get_2d_proj_pt (vgl_point_3d<double> P, const vgl_point_3d<double>& A,
                                      const vgl_vector_3d<double>& AX, 
                                      const vgl_vector_3d<double>& AY);
 
-vgl_point_3d<double> compute_cen (const vcl_vector<dbmsh3d_vertex*>& vertices);
+vgl_point_3d<double> compute_cen (const std::vector<dbmsh3d_vertex*>& vertices);
 
-vgl_vector_3d<double> compute_normal_ifs (const vcl_vector<dbmsh3d_vertex*>& vertices);
+vgl_vector_3d<double> compute_normal_ifs (const std::vector<dbmsh3d_vertex*>& vertices);
 
 //: Compute face normal using the given edge and starting node.
 vgl_vector_3d<double> compute_normal (const vgl_point_3d<double>& C,
@@ -407,7 +407,7 @@ vgl_vector_3d<double> compute_normal (const vgl_point_3d<double>& C,
                                       const dbmsh3d_vertex* Es);
 
 //: Return true if vertices is a polygon or obtuse triangle.
-bool is_tri_non_acute (const vcl_vector<dbmsh3d_vertex*>& vertices);
+bool is_tri_non_acute (const std::vector<dbmsh3d_vertex*>& vertices);
 
 bool is_F_extraneous (dbmsh3d_face* F);
 
@@ -418,35 +418,35 @@ dbmsh3d_face* get_F_sharing_Es (dbmsh3d_edge* E1, dbmsh3d_edge* E2);
 inline void m2t_compute_tri_angles (const double& c, const double& l, const double& r,
                                     double& angle_cl, double& angle_cr, double& angle_lr)
 {
-  angle_cl = vcl_acos ( (c*c + l*l - r*r)/(c*l*2) );
-  angle_cr = vcl_acos ( (c*c + r*r - l*l)/(c*r*2) );
-  angle_lr = vcl_acos ( (l*l + r*r - c*c)/(l*r*2) );
+  angle_cl = std::acos ( (c*c + l*l - r*r)/(c*l*2) );
+  angle_cr = std::acos ( (c*c + r*r - l*l)/(c*r*2) );
+  angle_lr = std::acos ( (l*l + r*r - c*c)/(l*r*2) );
 }
 
 inline void m2t_compute_angles_cl_cr (const double& c, const double& l, const double& r,
                                       double& angle_cl, double& angle_cr)
 {
-  angle_cl = vcl_acos ( (c*c + l*l - r*r)/(c*l*2) );
-  angle_cr = vcl_acos ( (c*c + r*r - l*l)/(c*r*2) );
+  angle_cl = std::acos ( (c*c + l*l - r*r)/(c*l*2) );
+  angle_cr = std::acos ( (c*c + r*r - l*l)/(c*r*2) );
 }
 
 inline double m2t_compute_angle_cl (const double& c, const double& l, const double& r)
 {
-  return vcl_acos ( (c*c + l*l - r*r)/(c*l*2) );
+  return std::acos ( (c*c + l*l - r*r)/(c*l*2) );
 }
 
 inline double m2t_compute_angle_cr (const double& c, const double& l, const double& r)
 {
-  return vcl_acos ( (c*c + r*r - l*l)/(c*r*2) );
+  return std::acos ( (c*c + r*r - l*l)/(c*r*2) );
 }
 
 inline double m2t_compute_angle_lr (const double& c, const double& l, const double& r)
 {
-  return vcl_acos ( (l*l + r*r - c*c)/(l*r*2) );
+  return std::acos ( (l*l + r*r - c*c)/(l*r*2) );
 }
 
 void _get_Vs_in_chain (const dbmsh3d_halfedge* headHE, 
-                       vcl_vector<dbmsh3d_vertex*>& vertices);
+                       std::vector<dbmsh3d_vertex*>& vertices);
 
 bool _contain_V_in_chain (const dbmsh3d_halfedge* headHE, const dbmsh3d_vertex* inputV);
 

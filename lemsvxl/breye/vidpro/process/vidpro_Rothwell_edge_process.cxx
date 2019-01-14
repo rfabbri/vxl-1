@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_Rothwell_edge_process.h>
-#include <vcl_list.h>
+#include <list>
 #include <vnl/vnl_math.h>
 
 #include <bpro/bpro_parameters.h>
@@ -42,7 +42,7 @@ vidpro_Rothwell_edge_process::vidpro_Rothwell_edge_process()
       !parameters()->add( "Range" ,           "-range" ,       (float)dp.range ) ||
       !parameters()->add( "Verbose" ,         "-verbose" ,     (bool)dp.verbose ) ||
       !parameters()->add( "Show edgels?"   ,  "-show_lines",   (bool)true )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -62,7 +62,7 @@ vidpro_Rothwell_edge_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_Rothwell_edge_process::name()
 {
   return "Rothwell EdgeDetector";
@@ -86,20 +86,20 @@ vidpro_Rothwell_edge_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_Rothwell_edge_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_Rothwell_edge_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -110,8 +110,8 @@ bool
 vidpro_Rothwell_edge_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_Rothwell_Edge_process::execute() - not exactly one"
-             << " input image" << vcl_endl;
+    std::cout << "In vidpro_Rothwell_Edge_process::execute() - not exactly one"
+             << " input image" << std::endl;
     return false;
   }
   clear_output();
@@ -125,7 +125,7 @@ vidpro_Rothwell_edge_process::execute()
     vil_convert_to_grey_using_rgb_weighting(image_sptr->get_view()) );
       
   if(grey_view.nplanes() != 1) {
-    vcl_cerr << "Returning false. nplanes(): " << grey_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << grey_view.nplanes() << std::endl;
     return false;
   }
 
@@ -141,32 +141,32 @@ vidpro_Rothwell_edge_process::execute()
   parameters()->get_value( "-show_lines" ,  show_lines );
 
   //Rothwell detector
-  vcl_list<osl_edge*> edges_osl;
+  std::list<osl_edge*> edges_osl;
 
   //initialize the detector
   osl_canny_rothwell detector(dp);
   detector.detect_edges(img, &edges_osl);
 
   //process edges (osl_edgel_chain->vsol)
-  vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+  std::vector< vsol_spatial_object_2d_sptr > edgels;
   
   //get the edgels
   if (show_lines){
-    vcl_list<osl_edge*>::iterator e_it = edges_osl.begin();
+    std::list<osl_edge*>::iterator e_it = edges_osl.begin();
     for (; e_it != edges_osl.end(); e_it++){
       osl_edge* edgel = (*e_it);
       for (unsigned i=0; i<edgel->size(); i++)
       {
         vgl_point_2d<double> middle(edgel->GetY(i), edgel->GetX(i));
         double theta = edgel->GetTheta(i)*vnl_math::pi/180.0;
-        vgl_vector_2d<double> dir(vcl_cos(theta), vcl_sin(theta));
+        vgl_vector_2d<double> dir(std::cos(theta), std::sin(theta));
         vsol_line_2d_sptr edge_line = new vsol_line_2d(dir, middle); 
         edgels.push_back(edge_line->cast_to_spatial_object());
       }
     }
   }
   else {
-    vcl_list<osl_edge*>::iterator e_it = edges_osl.begin();
+    std::list<osl_edge*>::iterator e_it = edges_osl.begin();
     for (; e_it != edges_osl.end(); e_it++){
       osl_edge* edgel = (*e_it);
       vsol_polyline_2d_sptr poly_line = new vsol_polyline_2d();
@@ -177,7 +177,7 @@ vidpro_Rothwell_edge_process::execute()
   }
 
   //housecleaning
-  vcl_list<osl_edge*>::iterator e_it = edges_osl.begin();
+  std::list<osl_edge*>::iterator e_it = edges_osl.begin();
   for (; e_it != edges_osl.end(); e_it++)
     delete (*e_it);
   edges_osl.clear();

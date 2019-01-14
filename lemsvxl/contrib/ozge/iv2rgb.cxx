@@ -4,7 +4,7 @@
 #include <bgui3d/bgui3d.h>
 #include <bgui3d/bgui3d_tableau.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <stdio.h>
 #include <math.h>

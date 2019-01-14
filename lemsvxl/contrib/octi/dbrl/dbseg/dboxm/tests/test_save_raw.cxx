@@ -26,7 +26,7 @@ MAIN( test_save_raw )
   scene.set_appearence_model(BOXM_APM_MOG_GREY);
   scene.set_paths("./boxm_scene1", "block");
   vul_file::make_directory("./boxm_scene1");
-  vcl_ofstream os("scene1.xml");
+  std::ofstream os("scene1.xml");
   x_write(os, scene, "scene");
   os.close();
 
@@ -97,15 +97,15 @@ MAIN( test_save_raw )
   world.add(origin);
   world.add(vgl_point_3d<double>(origin.x()+world_dim.x(), origin.y()+world_dim.y(), origin.z()+world_dim.z()));
 
-  vcl_vector<vcl_string> fnames;
+  std::vector<std::string> fnames;
   boxm_block_iterator<tree_type> it(&scene);
   it.begin();
   while (!it.end()) {
-    vcl_stringstream strm;
+    std::stringstream strm;
     vgl_point_3d<int> index = it.index();
     strm << index.x() << '_' << index.y() << '_' << index.z();
-    vcl_string str(strm.str());
-    vcl_string s = "raw_" + str + ".raw";
+    std::string str(strm.str());
+    std::string s = "raw_" + str + ".raw";
     fnames.push_back(s);
     boxm_save_block_raw<short,boxm_sample<BOXM_APM_MOG_GREY> >(scene, it.index(), s, 0);
     it++;

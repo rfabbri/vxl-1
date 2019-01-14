@@ -3,11 +3,11 @@
 // \file
 
 #include "bvis_command.h"
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <vector>
+#include <set>
+#include <string>
+#include <iostream>
+#include <cstdio>
 #include <vgui/vgui_dialog.h>
 #include <bvis/bvis_tool_manager.h>
 #include <bvis/bvis_video_manager.h>
@@ -48,11 +48,11 @@ static int dummy;
 
 static void 
 generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
-                     vcl_map<vcl_string, vcl_vector<vcl_string> > &inputs_list,
-                     vcl_map<vcl_string, vcl_vector<vcl_string> > &outputs_list,
-                     vcl_vector< vcl_string > const& output_suggested_names,
-                     vcl_vector< vcl_string >& input_names,
-                     vcl_vector< vcl_string >& output_names,
+                     std::map<std::string, std::vector<std::string> > &inputs_list,
+                     std::map<std::string, std::vector<std::string> > &outputs_list,
+                     std::vector< std::string > const& output_suggested_names,
+                     std::vector< std::string >& input_names,
+                     std::vector< std::string >& output_names,
                      bool &has_ostream
                      )
 {
@@ -65,17 +65,17 @@ generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
         io_dialog.message("Select Input(s) From Available ones:");
 
     //store the choices
-    vcl_vector<int> input_choices(inputs_list.size());
+    std::vector<int> input_choices(inputs_list.size());
 
     //set of existing storage classes
-    vcl_vector< vcl_vector <vcl_string> > available_storage_classes(inputs_list.size());
+    std::vector< std::vector <std::string> > available_storage_classes(inputs_list.size());
     //resize the resulting set of names
     input_names.resize(inputs_list.size());
-    vcl_vector <vcl_string> input_type_list(inputs_list.size());
+    std::vector <std::string> input_type_list(inputs_list.size());
 
 
     unsigned i= 0;
-    for( vcl_map<vcl_string, vcl_vector<vcl_string> >::iterator mip = inputs_list.begin();
+    for( std::map<std::string, std::vector<std::string> >::iterator mip = inputs_list.begin();
         mip!=inputs_list.end(); mip++,i++)
     {
         //for this input type allow user to select from available storage classes in the repository
@@ -94,7 +94,7 @@ generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
         io_dialog.message("Select Output(s) From Available ones:");
 
     //get the type of storages
-    vcl_vector <vcl_string> output_type_list(outputs_list.size());
+    std::vector <std::string> output_type_list(outputs_list.size());
 
     //store the choices
     output_names.resize(output_type_list.size());
@@ -103,31 +103,31 @@ generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
     //make sure that these names are assigned to the storage classes after the process is executed
     //first build up a collection of all existing names
 
-    vcl_map<vcl_string, vcl_vector<vcl_string> > existing_names;
+    std::map<std::string, std::vector<std::string> > existing_names;
 
 
     i=0;
-    for( vcl_map<vcl_string, vcl_vector<vcl_string> >::iterator mip = outputs_list.begin();
+    for( std::map<std::string, std::vector<std::string> >::iterator mip = outputs_list.begin();
         mip!=outputs_list.end(); mip++,i++)
     {
         //generate a default name that can be changed if desired
-        vcl_string suggested_name = mip->first;
-        vcl_string output_type = mip->first;
+        std::string suggested_name = mip->first;
+        std::string output_type = mip->first;
         if(i < output_suggested_names.size())
             suggested_name = output_suggested_names[i];
-        vcl_string name_str;
+        std::string name_str;
         int c = 0;
 
-        vcl_stringstream name_stream;
+        std::stringstream name_stream;
         name_stream << suggested_name << c++;
         name_str = name_stream.str();
-        for( vcl_vector<vcl_string>::iterator vit = (mip->second).begin();
+        for( std::vector<std::string>::iterator vit = (mip->second).begin();
             vit!=(mip->second).end(); vit++)
         {          
             if(!((*vit)==name_str))
                 continue;
 
-            vcl_stringstream name_istream;
+            std::stringstream name_istream;
             name_istream << suggested_name << c++;
             name_str = name_istream.str();
         }
@@ -162,10 +162,10 @@ generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
 
     //update output_list
     i=0;
-    for( vcl_map<vcl_string, vcl_vector<vcl_string> >::iterator mip = outputs_list.begin();
+    for( std::map<std::string, std::vector<std::string> >::iterator mip = outputs_list.begin();
         mip!=outputs_list.end(); mip++,i++)
       {
-        vcl_vector<vcl_string> names;
+        std::vector<std::string> names;
         names.push_back(output_names[i]);
         outputs_list[mip->first]=names;
       }
@@ -173,11 +173,11 @@ generate_choice_menu(vidpro_repository_sptr const& repository_sptr,
 
 
 static void 
-select_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
-                          vcl_vector< vcl_string > const& output_type_list,
-                          vcl_vector< vcl_string > const& output_suggested_names,
-                          vcl_vector< vcl_string >& input_names,
-                          vcl_vector< vcl_string >& output_names)
+select_inputs_and_outputs(std::vector< std::string > const& input_type_list,
+                          std::vector< std::string > const& output_type_list,
+                          std::vector< std::string > const& output_suggested_names,
+                          std::vector< std::string >& input_names,
+                          std::vector< std::string >& output_names)
 {
     //Prompt the user to select input/output variable
     vgui_dialog io_dialog("Select Inputs and outputs" );
@@ -187,9 +187,9 @@ select_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
         io_dialog.message("Select Input(s) From Available ones:");
 
     //store the choices
-    vcl_vector<int> input_choices(input_type_list.size());
+    std::vector<int> input_choices(input_type_list.size());
     //set of existing storage classes
-    vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
+    std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
     //resize the resulting set of names
     input_names.resize(input_type_list.size());
 
@@ -215,19 +215,19 @@ select_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
     output_names.resize(output_type_list.size());
 
     //store the choices
-    vcl_vector<int> output_choices(output_type_list.size());
-    vcl_vector< vcl_vector <vcl_string> > available_output_storage_classes(output_type_list.size());
+    std::vector<int> output_choices(output_type_list.size());
+    std::vector< std::vector <std::string> > available_output_storage_classes(output_type_list.size());
     //since output storage classes don't exist yet we can only assign names
     //make sure that these names are assigned to the storage classes after the process is executed
     //first build up a collection of all existing names
-    vcl_map<vcl_string, vcl_set<vcl_string> > existing_names;
+    std::map<std::string, std::set<std::string> > existing_names;
     for( unsigned int i = 0 ;
         i < output_type_list.size();
         i++ )
     {
         if(existing_names.find(output_type_list[i]) == existing_names.end())
         {
-            vcl_vector<vcl_string> names = 
+            std::vector<std::string> names = 
                 bpro_mview_dbutils::get_all_storage_class_names(output_type_list[i],0);//JLM KLUDGE
             for( unsigned int j=0; j<names.size(); ++j )
                 existing_names[output_type_list[i]].insert(names[j]);
@@ -238,20 +238,20 @@ select_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
         i++ )
     {
         //generate a default name that can be changed if desired
-        vcl_string suggested_name = output_type_list[i];
+        std::string suggested_name = output_type_list[i];
         if(i < output_suggested_names.size())
             suggested_name = output_suggested_names[i];
-        vcl_string name_str;
+        std::string name_str;
         int c = 0;
         do{
-            vcl_stringstream name_stream;
+            std::stringstream name_stream;
             name_stream << suggested_name << c++;
             name_str = name_stream.str();
         }while(existing_names[output_type_list[i]].count(name_str) != 0);
         existing_names[output_type_list[i]].insert(name_str);
     }
     for( unsigned int i = 0 ; i < output_type_list.size(); i++ )
-        for(vcl_set<vcl_string>::iterator sit = 
+        for(std::set<std::string>::iterator sit = 
             existing_names[output_type_list[i]].begin(); 
             sit !=existing_names[output_type_list[i]].end(); sit++)
             available_output_storage_classes[i].push_back(*sit);
@@ -285,12 +285,12 @@ select_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
 
 }
 static void 
-new_inputs_and_outputs(vcl_vector< vcl_string > const& input_type_list,
-                       vcl_vector< vcl_string > const& output_type_list,
-                       vcl_vector< vcl_string > const& output_suggested_names,
-                       vcl_vector< vcl_string >& input_names,
-                       vcl_vector< unsigned >& output_view_ids,
-                       vcl_vector< vcl_string >& output_names)
+new_inputs_and_outputs(std::vector< std::string > const& input_type_list,
+                       std::vector< std::string > const& output_type_list,
+                       std::vector< std::string > const& output_suggested_names,
+                       std::vector< std::string >& input_names,
+                       std::vector< unsigned >& output_view_ids,
+                       std::vector< std::string >& output_names)
 {
   bvis_mview_io_dialog::input_dialog(input_type_list,
                                       input_names);
@@ -312,11 +312,11 @@ void bvis_tool_command<T>::execute()
 template <class T>
 void bvis_user_io_tool_command<T>::execute()
 {
-    vcl_vector< vcl_string > input_type_list =  tool_->get_input_type();
-    vcl_vector< vcl_string > output_type_list = tool_->get_output_type();
+    std::vector< std::string > input_type_list =  tool_->get_input_type();
+    std::vector< std::string > output_type_list = tool_->get_output_type();
     //user is defining the outputs so suggested names is empty
-    vcl_vector< vcl_string > output_suggested_names;
-    vcl_vector< vcl_string > input_names, output_names;
+    std::vector< std::string > output_suggested_names;
+    std::vector< std::string > input_names, output_names;
 
     select_inputs_and_outputs(input_type_list,
         output_type_list,
@@ -342,13 +342,13 @@ void bvis_process_command<T>::execute_video_process()
     }
 
     //check stream names
-    vcl_vector<vcl_string> ostream_names;
+    std::vector<std::string> ostream_names;
     ostream_names.clear();
 
-    vcl_vector< vcl_string > output_suggested_names = process_->suggest_output_names();
-    vcl_vector<vcl_string> input_names,output_names;
-    vcl_map<vcl_string, vcl_vector<vcl_string> > input_list;
-    vcl_map<vcl_string, vcl_vector<vcl_string> > output_list;
+    std::vector< std::string > output_suggested_names = process_->suggest_output_names();
+    std::vector<std::string> input_names,output_names;
+    std::map<std::string, std::vector<std::string> > input_list;
+    std::map<std::string, std::vector<std::string> > output_list;
     bvis_video_manager::instance()->process_manager()->get_process_input_names(input_list, process_);
     bvis_video_manager::instance()->process_manager()->get_process_output_names(output_list, process_);
 
@@ -384,7 +384,7 @@ void bvis_process_command<T>::execute_video_process()
             add_process_to_queue(process_to_run);
     }
 
-    vcl_set<bpro_storage_sptr> modified;
+    std::set<bpro_storage_sptr> modified;
     //now run the process
     bvis_video_manager::instance()->process_manager()->run_process_on_current_frame(process_to_run, &modified);
 
@@ -394,10 +394,10 @@ void bvis_process_command<T>::execute_video_process()
     if(process_to_run->name() == "Open Video Istream")
     {
         bpro_process_sptr load_image_pro( new vidpro_frame_from_istream_process() );
-        vcl_map<vcl_string, vcl_vector<vcl_string> >::iterator vis_it=
+        std::map<std::string, std::vector<std::string> >::iterator vis_it=
             output_list.find("istream");
-        vcl_string vis_name;
-        vcl_vector<vcl_string> names;
+        std::string vis_name;
+        std::vector<std::string> names;
         if (vis_it != output_list.end()){
             if((vis_it->second).size()==1)
             {
@@ -407,14 +407,14 @@ void bvis_process_command<T>::execute_video_process()
 
         }
         else
-            vcl_cerr<<"error at loading frame from stream"<<vcl_endl;
+            std::cerr<<"error at loading frame from stream"<<std::endl;
 
         bpro_storage_sptr sto = repository_sptr->get_data_by_name(vis_name);
-        vcl_vector<bpro_storage_sptr> stos;
+        std::vector<bpro_storage_sptr> stos;
         stos.push_back(sto);
         load_image_pro->set_input(stos);
         load_image_pro->set_input_names(names);
-        vcl_vector<vcl_string> out; out.push_back("image_from_" +vis_name);
+        std::vector<std::string> out; out.push_back("image_from_" +vis_name);
         load_image_pro->set_output_names(out);
         process_to_run=load_image_pro;
         bvis_video_manager::instance()->process_manager()->run_process_on_current_frame(process_to_run, &modified);
@@ -424,7 +424,7 @@ void bvis_process_command<T>::execute_video_process()
    
 
     // update the display for any modified storage objects
-    for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+    for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
         itr != modified.end(); ++itr ) {
             bvis_video_manager::instance()->add_to_display(*itr);
     }
@@ -435,12 +435,12 @@ void bvis_process_command<T>::execute_video_process()
 template <class T>
 void bvis_process_command<T>::execute_mview_process()
 {
-    vcl_vector<vcl_string> input_names,output_names;
-    vcl_vector< vcl_string > input_type_list =  process_->get_input_type();
-    vcl_vector< vcl_string > output_type_list = process_->get_output_type();
+    std::vector<std::string> input_names,output_names;
+    std::vector< std::string > input_type_list =  process_->get_input_type();
+    std::vector< std::string > output_type_list = process_->get_output_type();
     //user is defining the outputs so suggested names is empty
-    vcl_vector< vcl_string > output_suggested_names;
-    vcl_vector< unsigned > output_view_ids;
+    std::vector< std::string > output_suggested_names;
+    std::vector< unsigned > output_view_ids;
 #if 0
     select_inputs_and_outputs(input_type_list,
         output_type_list,
@@ -474,13 +474,13 @@ void bvis_process_command<T>::execute_mview_process()
           add_process_to_queue(process_to_run);
     }
 
-    vcl_set<bpro_storage_sptr> modified;
+    std::set<bpro_storage_sptr> modified;
     //now run the process
     bpro_mview_process_manager::instance()->
       run_process(process_to_run, &modified);
 
     // update the display for any modified storage objects
-    for ( vcl_set<bpro_storage_sptr>::iterator itr = modified.begin();
+    for ( std::set<bpro_storage_sptr>::iterator itr = modified.begin();
         itr != modified.end(); ++itr ) {
       bvis_mview_manager::instance()->add_to_display(*itr);
     }
@@ -494,7 +494,7 @@ void bvis_process_command<T>::execute()
 {
 
     if(!process_.ptr()){
-        vcl_cerr << "Warning: not able to execute a Null process" << vcl_endl;
+        std::cerr << "Warning: not able to execute a Null process" << std::endl;
         return;
     }
     vgui_dialog param_dialog( process_->name().c_str() );
@@ -504,7 +504,7 @@ void bvis_process_command<T>::execute()
 
     bpro_parameters_sptr param_sptr = process_->parameters();
 
-    vcl_vector< bpro_param* > param_vector = param_sptr->get_param_list();
+    std::vector< bpro_param* > param_vector = param_sptr->get_param_list();
     
     //Isa modification: this line should not return
     //If a process has no parameters its execute still needs to be called
@@ -513,7 +513,7 @@ void bvis_process_command<T>::execute()
     if (!param_vector.empty()){
       if (param_dialog.ask()) {
 
-        for( vcl_vector< bpro_param* >::iterator it = param_vector.begin();
+        for( std::vector< bpro_param* >::iterator it = param_vector.begin();
           it != param_vector.end();
           ++it )
         {

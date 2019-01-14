@@ -18,11 +18,11 @@
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 #include <vgl/vgl_polygon.h>
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_stack.h>
-#include <vcl_string.h>
-#include <vcl_set.h>
+#include <map>
+#include <vector>
+#include <stack>
+#include <string>
+#include <set>
 
 class dbsk2d_ishock_node;
 class dbsk2d_ishock_bpoint;
@@ -50,10 +50,10 @@ public:
     void construct_graph();
 
     //: write graph
-    void write_graph(vcl_string filename);
+    void write_graph(std::string filename);
 
     //: write stats
-    void write_stats(vcl_ofstream& ofstream);
+    void write_stats(std::ofstream& ofstream);
 
     void set_cluster_centers(unsigned int cluster_centers)
     {cluster_centers_=cluster_centers;}
@@ -64,23 +64,23 @@ private:
     dbsk2d_ishock_graph_sptr ishock_graph_;
 
     // Store all nodes in a map by depth
-    vcl_map<unsigned int,vcl_vector<dbsk2d_containment_node_sptr> > 
+    std::map<unsigned int,std::vector<dbsk2d_containment_node_sptr> > 
         cgraph_nodes_;
 
     // store a stack for traversal
-    vcl_stack<dbsk2d_containment_node_sptr> stack_;
+    std::stack<dbsk2d_containment_node_sptr> stack_;
 
     // Keep track of regions
-    vcl_map<vcl_set<int>, vcl_vector<dbsk2d_ishock_belm*> > all_region_belms_;
+    std::map<std::set<int>, std::vector<dbsk2d_ishock_belm*> > all_region_belms_;
 
     // Keep track of polygons
-    vcl_map<vcl_set<int>, vgl_polygon<double> > all_region_polys_;
+    std::map<std::set<int>, vgl_polygon<double> > all_region_polys_;
 
     // Keep track of polygons
-    vcl_map<vcl_set<int>, vcl_vector<dbsk2d_ishock_belm*> > closed_regions_;
+    std::map<std::set<int>, std::vector<dbsk2d_ishock_belm*> > closed_regions_;
 
     // Keep track of stats on regions
-    vcl_map<vcl_set<int>, vcl_vector<double> > region_stats_;
+    std::map<std::set<int>, std::vector<double> > region_stats_;
 
     // store path threshold
     double path_threshold_;
@@ -132,23 +132,23 @@ private:
     // expand root node
     void expand_node(
         dbsk2d_containment_node_sptr& node,
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >
         & outer_shock_nodes,
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
         & degree_three_nodes,
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
         & degree_three_links);
 
     // find node at this depth in graph
     bool find_node_in_cgraph(unsigned int current_depth,
                              dbsk2d_containment_node_sptr& node,
-                             vcl_set<int>& belms_key);
+                             std::set<int>& belms_key);
 
     // Return a set of endpoints
-    void determine_endpoints( vcl_map<unsigned int,
-                              vcl_vector<dbsk2d_ishock_node*> >& 
+    void determine_endpoints( std::map<unsigned int,
+                              std::vector<dbsk2d_ishock_node*> >& 
                               outer_shock_nodes,
-                              vcl_vector<dbsk2d_ishock_bpoint*>& endpoints);
+                              std::vector<dbsk2d_ishock_bpoint*>& endpoints);
 
     // cluster patches and keep mediods
     void cluster_fragments();

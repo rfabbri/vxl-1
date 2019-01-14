@@ -1,7 +1,7 @@
 #include "imgr_skyscan_reconlog.h"
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include <vnl/vnl_quaternion.h>
 #include <xscan/xscan_uniform_orbit.h>
 #include <xscan/xscan_orbit_base_sptr.h>
@@ -12,22 +12,22 @@
 #if 0
 imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 {
-  vcl_ifstream fs(fname);
+  std::ifstream fs(fname);
   if(!fs)
   {
-    vcl_cerr << "file open failed for reading skyscan reconstructed image header\n";
+    std::cerr << "file open failed for reading skyscan reconstructed image header\n";
     exit(1);
   }
 
   is_valid_ = false;
 
-  vcl_string tmp;
+  std::string tmp;
   //unused variable
   //char junk[256];
 
   // read magic words from line 5
-  vcl_string check;
-  vcl_string sub_check;
+  std::string check;
+  std::string sub_check;
   for(int i=0; i<5; i++)
     getline(fs, check);
   sub_check = check.substr(0,31);
@@ -40,7 +40,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
   {
     is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
     // get camera pixel size
     for(int i=0; i<4; i++)
@@ -153,7 +153,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
       {
       is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
     // get camera pixel size
     for(int i=0; i<4; i++)
@@ -255,35 +255,35 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 
 
     if(!is_valid_){
-            vcl_cerr << "Unable to find valid rule for parsing software version\n";
-            vcl_cerr << sub_check <<  "\n";
+            std::cerr << "Unable to find valid rule for parsing software version\n";
+            std::cerr << sub_check <<  "\n";
     }
 
 }
 #endif
 imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 {
-  vcl_ifstream fs(fname);
+  std::ifstream fs(fname);
   if(!fs)
   {
-    vcl_cerr << "file open failed for reading skyscan reconstructed image header\n";
+    std::cerr << "file open failed for reading skyscan reconstructed image header\n";
     exit(1);
   }
 
   is_valid_ = false;
 
-  vcl_string tmp;
+  std::string tmp;
   //char junk[256];
 
   // read magic words from line 5
-  vcl_string check;
+  std::string check;
 
   for(int i=0; i<5; i++)
     getline(fs, check);
 
   // in order to work for both windows & Linux
-  vcl_string sub_check = check.substr(0,31);
-  vcl_cerr << sub_check << "\n";
+  std::string sub_check = check.substr(0,31);
+  std::cerr << sub_check << "\n";
 
   //if( check == "Software=Version 2. 5 (build 9)\r" 
   //    || check == "Software=Version 1. 3 (build 2)\r"
@@ -296,7 +296,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
   {
     is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
 //first reading all the values from the log file 
 
@@ -304,7 +304,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     for(int i=0; i<4; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
     iss.str(tmp);
@@ -312,18 +312,18 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     iss >> camera_pixel_size_u_;
    
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
+    std::cout << " camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
     #endif
 
     fs.ignore(256, '=');
     double u_div_v ;
     fs >> u_div_v;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " u_div_v = " <<u_div_v << "\n"; 
+    std::cout << " u_div_v = " <<u_div_v << "\n"; 
     #endif
     camera_pixel_size_v_ = camera_pixel_size_u_ / u_div_v;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
+    std::cout << " camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
     #endif
 
     // get number of rows in the image from the dataset
@@ -331,19 +331,19 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     for(int i=0; i<8; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
     fs.ignore(256, '=');
     fs >> sv_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " sv_ = " << sv_ << "\n"; 
+    std::cout << " sv_ = " << sv_ << "\n"; 
     #endif
     for(int i=0; i<3; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -352,14 +352,14 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     fs.ignore(256, '=');
     fs >> src_rot_dist_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " src_rot_dist_ = " << src_rot_dist_ << "\n"; 
+    std::cout << " src_rot_dist_ = " << src_rot_dist_ << "\n"; 
     #endif
     // get source sensor distance
     
     fs.ignore(265, '=');
     fs >> src_snsr_dist_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " src_snsr_dist_ = " << src_snsr_dist_ << "\n"; 
+    std::cout << " src_snsr_dist_ = " << src_snsr_dist_ << "\n"; 
     #endif
     
     // get principle point
@@ -367,13 +367,13 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     fs.ignore(256, '=');
     fs >> v0_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " v0_ = " <<v0_ << "\n"; 
+    std::cout << " v0_ = " <<v0_ << "\n"; 
     #endif
     // get starting position in z axis
     for(int i=0; i<26; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -384,7 +384,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 
     fs >> start_slice_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " start_slice_ = " <<start_slice_ << "\n"; 
+    std::cout << " start_slice_ = " <<start_slice_ << "\n"; 
     #endif
 
     // get end slice number
@@ -392,7 +392,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     fs.ignore(256, '=');
     fs >> end_slice_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "end_slice_ = " <<end_slice_ << "\n"; 
+    std::cout << "end_slice_ = " <<end_slice_ << "\n"; 
     #endif
 
     // get slice step
@@ -403,15 +403,15 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     {
       getline(fs, tmp); //skip reconstruction time
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
       getline(fs, tmp); // skip post alignment
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
       getline(fs,tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -421,7 +421,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     fs.ignore(256, '=');
     fs >> slice_step_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "slice_step_ = " <<slice_step_ << "\n"; 
+    std::cout << "slice_step_ = " <<slice_step_ << "\n"; 
     #endif
 
 
@@ -429,21 +429,21 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     for(int i=0; i<4; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
    
     fs.ignore(256, '=');
     fs >> size_x_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "size_x_ = " <<size_x_ << "\n"; 
+    std::cout << "size_x_ = " <<size_x_ << "\n"; 
     #endif
 
     
     fs.ignore(256, '=');
     fs >> size_y_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "size_y_ = " <<size_y_ << "\n"; 
+    std::cout << "size_y_ = " <<size_y_ << "\n"; 
     #endif
 
     // going to voxel size
@@ -451,7 +451,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
    fs.ignore(256, '=');
     fs >> voxel_size_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "voxel_size_ = " << voxel_size_ << "\n"; 
+    std::cout << "voxel_size_ = " << voxel_size_ << "\n"; 
     #endif
 
     //correcting the effect of merging sensor pixels
@@ -466,43 +466,43 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
     camera_pixel_size_v_ *= multiplier;
 
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "multiplier-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
+    std::cout << "multiplier-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
     #endif
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "multiplier-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
+    std::cout << "multiplier-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
     #endif
   }
 
     if(!is_valid_){
-            vcl_cerr << "Unable to find valid rule for parsing software version\n";
-            vcl_cerr << sub_check <<  "\n";
+            std::cerr << "Unable to find valid rule for parsing software version\n";
+            std::cerr << sub_check <<  "\n";
     }
 
 }
 
 imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan)
 {
-  vcl_ifstream fs(fname);
+  std::ifstream fs(fname);
   if(!fs)
   {
-    vcl_cerr << "file open failed for reading skyscan reconstructed image header\n";
+    std::cerr << "file open failed for reading skyscan reconstructed image header\n";
     exit(1);
   }
 
   is_valid_ = false;
 
-  vcl_string tmp;
+  std::string tmp;
   //char junk[256];
 
   // read magic words from line 5
-  vcl_string check;
+  std::string check;
 
   for(int i=0; i<5; i++)
     getline(fs, check);
 
   // in order to work for both windows & Linux
-  vcl_string sub_check = check.substr(0,31);
-  vcl_cerr << sub_check << "\n";
+  std::string sub_check = check.substr(0,31);
+  std::cerr << sub_check << "\n";
 
   //if( check == "Software=Version 2. 5 (build 9)\r" 
   //    || check == "Software=Version 1. 3 (build 2)\r"
@@ -515,7 +515,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
   {
     is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
 //first reading all the values from the log file 
 
@@ -523,7 +523,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     for(int i=0; i<4; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
     iss.str(tmp);
@@ -531,18 +531,18 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     iss >> camera_pixel_size_u_;
    
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
+    std::cout << " camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
     #endif
 
     fs.ignore(256, '=');
     double u_div_v ;
     fs >> u_div_v;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " u_div_v = " <<u_div_v << "\n"; 
+    std::cout << " u_div_v = " <<u_div_v << "\n"; 
     #endif
     camera_pixel_size_v_ = camera_pixel_size_u_ / u_div_v;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
+    std::cout << " camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
     #endif
 
     // get number of rows in the image from the dataset
@@ -550,19 +550,19 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     for(int i=0; i<8; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
     fs.ignore(256, '=');
     fs >> sv_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " sv_ = " << sv_ << "\n"; 
+    std::cout << " sv_ = " << sv_ << "\n"; 
     #endif
     for(int i=0; i<3; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -571,14 +571,14 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     fs.ignore(256, '=');
     fs >> src_rot_dist_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " src_rot_dist_ = " << src_rot_dist_ << "\n"; 
+    std::cout << " src_rot_dist_ = " << src_rot_dist_ << "\n"; 
     #endif
     // get source sensor distance
     
     fs.ignore(265, '=');
     fs >> src_snsr_dist_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " src_snsr_dist_ = " << src_snsr_dist_ << "\n"; 
+    std::cout << " src_snsr_dist_ = " << src_snsr_dist_ << "\n"; 
     #endif
     
     // get principle point
@@ -586,13 +586,13 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     fs.ignore(256, '=');
     fs >> v0_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " v0_ = " <<v0_ << "\n"; 
+    std::cout << " v0_ = " <<v0_ << "\n"; 
     #endif
     // get starting position in z axis
     for(int i=0; i<26; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -603,7 +603,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
 
     fs >> start_slice_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << " start_slice_ = " <<start_slice_ << "\n"; 
+    std::cout << " start_slice_ = " <<start_slice_ << "\n"; 
     #endif
 
     // get end slice number
@@ -611,7 +611,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     fs.ignore(256, '=');
     fs >> end_slice_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "end_slice_ = " <<end_slice_ << "\n"; 
+    std::cout << "end_slice_ = " <<end_slice_ << "\n"; 
     #endif
 
     // get slice step
@@ -622,15 +622,15 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     {
       getline(fs, tmp); //skip reconstruction time
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
       getline(fs, tmp); // skip post alignment
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
       getline(fs,tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
 
@@ -640,7 +640,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     fs.ignore(256, '=');
     fs >> slice_step_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "slice_step_ = " <<slice_step_ << "\n"; 
+    std::cout << "slice_step_ = " <<slice_step_ << "\n"; 
     #endif
 
 
@@ -648,21 +648,21 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     for(int i=0; i<4; i++){
       getline(fs, tmp);
       #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "\t" << tmp << "\n"; 
+    std::cout << "\t" << tmp << "\n"; 
     #endif
     }
    
     fs.ignore(256, '=');
     fs >> size_x_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "size_x_ = " <<size_x_ << "\n"; 
+    std::cout << "size_x_ = " <<size_x_ << "\n"; 
     #endif
 
     
     fs.ignore(256, '=');
     fs >> size_y_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "size_y_ = " <<size_y_ << "\n"; 
+    std::cout << "size_y_ = " <<size_y_ << "\n"; 
     #endif
 
     // going to voxel size
@@ -670,7 +670,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
    fs.ignore(256, '=');
     fs >> voxel_size_;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "voxel_size_ = " << voxel_size_ << "\n"; 
+    std::cout << "voxel_size_ = " << voxel_size_ << "\n"; 
     #endif
 
     //correcting the effect of merging sensor pixels
@@ -685,10 +685,10 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
     camera_pixel_size_v_ *= multiplier;
 
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "multiplier-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
+    std::cout << "multiplier-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
     #endif
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "multiplier-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
+    std::cout << "multiplier-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
     #endif
     // changing some of the values based on the scan file values
 
@@ -701,23 +701,23 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
    vnl_quaternion<double>turn_table_tr(orbit.t0());
   src_rot_dist_ = turn_table_tr.z();
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "scan-adjusted src_rot_dist_ = " << src_rot_dist_ << "\n"; 
+    std::cout << "scan-adjusted src_rot_dist_ = " << src_rot_dist_ << "\n"; 
     #endif
 
  vgl_point_2d<double> princp_pt(kk.principal_point());
  v0_ = princp_pt.y();
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "scan-adjusted v0_ = " << v0_ << "\n"; 
+    std::cout << "scan-adjusted v0_ = " << v0_ << "\n"; 
     #endif
 
  camera_pixel_size_u_ =  (src_snsr_dist_/kk.x_scale())*1e3;
 
  camera_pixel_size_v_ =  (src_snsr_dist_/kk.y_scale())*1e3;
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "scan-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
+    std::cout << "scan-adjusted  camera_pixel_size_u_ = " << camera_pixel_size_u_ << "\n"; 
     #endif
     #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-    vcl_cout << "scan-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
+    std::cout << "scan-adjusted camera_pixel_size_v_ = " << camera_pixel_size_v_ << "\n"; 
     #endif
 
 
@@ -734,7 +734,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
       {
       is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
     // get camera pixel size
     for(int i=0; i<4; i++)
@@ -835,8 +835,8 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
 }
 
     if(!is_valid_){
-            vcl_cerr << "Unable to find valid rule for parsing software version\n";
-            vcl_cerr << sub_check <<  "\n";
+            std::cerr << "Unable to find valid rule for parsing software version\n";
+            std::cerr << sub_check <<  "\n";
     }
 
 }
@@ -853,28 +853,28 @@ vgl_point_3d<double> imgr_skyscan_reconlog::fbpc_to_bsc(vgl_point_3d<double> con
 vgl_point_3d<double> imgr_skyscan_reconlog::bsc_to_fbpc(vgl_point_3d<double> const& pt)
 {
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "voxel_size_ " << voxel_size_ << "\n"; 
+        std::cout << "voxel_size_ " << voxel_size_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "size_x_ " << size_x_ << "\n"; 
+        std::cout << "size_x_ " << size_x_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "size_y_ " << size_y_ << "\n"; 
+        std::cout << "size_y_ " << size_y_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "src_snsr_dist_ " << src_snsr_dist_ << "\n"; 
+        std::cout << "src_snsr_dist_ " << src_snsr_dist_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "src_rot_dist_ " << src_rot_dist_ << "\n"; 
+        std::cout << "src_rot_dist_ " << src_rot_dist_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "camera_pixel_size_v_ " << camera_pixel_size_v_ << "\n"; 
+        std::cout << "camera_pixel_size_v_ " << camera_pixel_size_v_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "sv_ " << sv_ << "\n"; 
+        std::cout << "sv_ " << sv_ << "\n"; 
      #endif
      #if IMGR_SKYSCAN_RECONLOG_DEBUG 
-        vcl_cout << "v0_ " << v0_ << "\n"; 
+        std::cout << "v0_ " << v0_ << "\n"; 
      #endif
   double x = pt.x()*1000./voxel_size_ +  size_x_ / 2.;
   double y = pt.y()*1000./voxel_size_ +  size_y_ / 2.;
@@ -887,21 +887,21 @@ vgl_point_3d<double> imgr_skyscan_reconlog::bsc_to_fbpc(vgl_point_3d<double> con
 
 imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 {
-  vcl_ifstream fs(fname);
+  std::ifstream fs(fname);
   if(!fs)
   {
-    vcl_cerr << "file open failed for reading skyscan reconstructed image header\n";
+    std::cerr << "file open failed for reading skyscan reconstructed image header\n";
     exit(1);
   }
 
   is_valid_ = false;
 
-  vcl_string tmp;
+  std::string tmp;
   char junk[256];
 
   // read magic words from line 5
-  vcl_string check;
-  vcl_string sub_check;
+  std::string check;
+  std::string sub_check;
   for(int i=0; i<5; i++)
     getline(fs, check);
   sub_check = check.substr(0,31);
@@ -912,7 +912,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
   {
     is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
     // get camera pixel size
     for(int i=0; i<4; i++)
@@ -1024,26 +1024,26 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname)
 
 imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan)
 {
-  vcl_ifstream fs(fname);
+  std::ifstream fs(fname);
   if(!fs)
   {
-    vcl_cerr << "file open failed for reading skyscan reconstructed image header\n";
+    std::cerr << "file open failed for reading skyscan reconstructed image header\n";
     exit(1);
   }
 
   is_valid_ = false;
 
-  vcl_string tmp;
+  std::string tmp;
   char junk[256];
 
   // read magic words from line 5
-  vcl_string check;
+  std::string check;
 
   for(int i=0; i<5; i++)
     getline(fs, check);
 
   // in order to work for both windows & Linux
-  vcl_string sub_check = check.substr(0,31);
+  std::string sub_check = check.substr(0,31);
 
   //if( check == "Software=Version 2. 5 (build 9)\r" 
   //    || check == "Software=Version 1. 3 (build 2)\r"
@@ -1054,7 +1054,7 @@ imgr_skyscan_reconlog::imgr_skyscan_reconlog(char const* fname,xscan_scan & scan
   {
     is_valid_ = true;
 
-    vcl_istringstream iss;
+    std::istringstream iss;
 
 //first reading all the values from the log file 
 

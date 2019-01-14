@@ -13,7 +13,7 @@
 #include <curvematch/curve_dpmatch_2d_sptr.h>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_utils.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis/bvis_tool_sptr.h>
 #include <bvis/bvis_tool.h>
 #include <vgl/vgl_distance.h>

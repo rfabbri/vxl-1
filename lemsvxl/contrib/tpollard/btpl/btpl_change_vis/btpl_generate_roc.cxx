@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 
 //TEMP
 #include <vil/vil_image_view.h>
@@ -13,41 +13,41 @@
 int main( int argc, char* argv[] )
 {
   if( argc != 4 ) {
-    vcl_cout<< "Usage : vam_generate_roc truechange_dir change_dir roc_file\n";
+    std::cout<< "Usage : vam_generate_roc truechange_dir change_dir roc_file\n";
     return -1;
   }
 
-  vcl_ofstream roc_stream( argv[3] );
+  std::ofstream roc_stream( argv[3] );
 
   // Get the image names.
-  vcl_vector< vcl_string > truechange_names, change_names;
-  vcl_string s1(argv[1]);
+  std::vector< std::string > truechange_names, change_names;
+  std::string s1(argv[1]);
   s1 += "/*.*";
-  vcl_cerr << "reading images from " << argv[1] << '\n';
+  std::cerr << "reading images from " << argv[1] << '\n';
   for( vul_file_iterator fit = s1; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
-      vcl_cerr << " cannot read image " << image_name << '\n';
+      std::cerr << " cannot read image " << image_name << '\n';
       continue;
     }
     truechange_names.push_back( image_name );
   }
 
-  vcl_string s2(argv[2]);
+  std::string s2(argv[2]);
   s2 += "/*.*";
-  vcl_cerr << "reading images from " << argv[2] << '\n';
+  std::cerr << "reading images from " << argv[2] << '\n';
   for( vul_file_iterator fit = s2; fit; ++fit ){
     if (vul_file::is_directory(fit()))
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
-      vcl_cerr << " cannot read image " << image_name << '\n';
+      std::cerr << " cannot read image " << image_name << '\n';
       continue;
     }
     change_names.push_back( image_name );
@@ -56,13 +56,13 @@ int main( int argc, char* argv[] )
   // Calculate the errors for each roc point.
   int num_roc_points = 20;
   for( int r = 0; r < num_roc_points; r++ ){
-    vcl_cerr << "processing roc point " << r << ", image ";
+    std::cerr << "processing roc point " << r << ", image ";
     int change_marked_change = 0, change_marked_nonchange = 0,
       nonchange_marked_nonchange = 0, nonchange_marked_change = 0;
     double this_roc_thresh = (r+1)/(double)num_roc_points;
 
     for( int img = 0; img < change_names.size(); img++ ){
-      vcl_cerr << img << ' ';
+      std::cerr << img << ' ';
 
       // Load the true change and detected change images.
       vil_image_view<double> true_change = vil_convert_to_grey_using_average( 
@@ -106,7 +106,7 @@ int main( int argc, char* argv[] )
       (double)(nonchange_marked_change+nonchange_marked_nonchange);
     roc_stream << percent_change_marked_change << "\t" <<
       percent_nonchange_marked_change << '\n';
-    vcl_cerr << '\n';
+    std::cerr << '\n';
 
   } // r
 

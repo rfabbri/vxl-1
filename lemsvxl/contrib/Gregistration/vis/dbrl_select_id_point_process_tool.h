@@ -45,7 +45,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   //: handle events
 
   bool handle( const vgui_event & e, 
@@ -59,8 +59,8 @@ protected:
   bgui_vsol2D_tableau_sptr tableau_;
   dbrl_id_point_2d_storage_sptr storage_;
 
-  vcl_vector<dbrl_id_point_2d_sptr> pt1_;
-  vcl_vector<dbrl_id_point_2d_sptr> pt2_;
+  std::vector<dbrl_id_point_2d_sptr> pt1_;
+  std::vector<dbrl_id_point_2d_sptr> pt2_;
 
   
 

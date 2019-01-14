@@ -4,7 +4,7 @@
 
 #include "dbctrk_displayer.h"
 #include <dbctrk/pro/dbctrk_storage.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <vgui/vgui_style.h>
 #include "dbctrk_soview2d.h"
@@ -22,11 +22,11 @@ dbctrk_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbctrk_storage_sptr dbctrk_storage;
   dbctrk_storage.vertical_cast(storage);
 
-  vcl_vector< dbctrk_tracker_curve_sptr > tracked_curves;
+  std::vector< dbctrk_tracker_curve_sptr > tracked_curves;
   dbctrk_storage->get_tracked_curves(tracked_curves);
   bgui_vsol2D_tableau_sptr btab= bgui_vsol2D_tableau_new();
 
-  vcl_vector< dbctrk_tracker_curve_sptr >::iterator itr;
+  std::vector< dbctrk_tracker_curve_sptr >::iterator itr;
   for(itr=tracked_curves.begin();itr!=tracked_curves.end();itr++)
   {
 

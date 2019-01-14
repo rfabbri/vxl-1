@@ -23,7 +23,7 @@ public:
   xmvg_composite_filter_2d(){}
     
 
-  xmvg_composite_filter_2d( const vcl_vector< xmvg_atomic_filter_2d<T> >& filters) 
+  xmvg_composite_filter_2d( const std::vector< xmvg_atomic_filter_2d<T> >& filters) 
     : filters_(filters) {}
 
   //: access filter
@@ -38,7 +38,7 @@ public:
   bool operator==(const xmvg_composite_filter_2d<T> & other) const{
       return filters_ == other.filters_;
   }
-  void set_filters(const vcl_vector< xmvg_atomic_filter_2d<T> >& filters)
+  void set_filters(const std::vector< xmvg_atomic_filter_2d<T> >& filters)
     {filters_=filters;}
 
   //: make residues zero
@@ -49,14 +49,14 @@ public:
   }
 
   //: convolve each row of the filter by the given kernel
-  void convolve_rows_with_kernel(vcl_vector<T> kernel)
+  void convolve_rows_with_kernel(std::vector<T> kernel)
   {
     int num_filters = filters_.size();
     for(int num=0; num < num_filters; num++)
       filters_[num].convolve_rows_with_kernel(kernel);
   }
 
-  vcl_vector< xmvg_atomic_filter_2d<T> > filters_;
+  std::vector< xmvg_atomic_filter_2d<T> > filters_;
 };
 
 

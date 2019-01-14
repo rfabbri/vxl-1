@@ -2,13 +2,13 @@
 
 #include <extrautils/msgout.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 //using namespace std;
-#include <vcl_string.h>
-#include <vcl_cmath.h>
-#include <vcl_map.h>
+#include <string>
+#include <cmath>
+#include <map>
 
 //#include <stdio.h>
 #include <time.h>
@@ -192,7 +192,7 @@ bool IShock::PropagateShocks ()
    PROPAGATION_TYPE ret=NO_PROPAGATION;
 
   //if (MessageOption==MSG_VERBOSE){
-  //  vcl_cout<< "\n===== Start Propagating Shocks =====" <<vcl_endl;
+  //  std::cout<< "\n===== Start Propagating Shocks =====" <<std::endl;
   //}
 
    //MAIN LOOP OF PROPAGATION...
@@ -200,7 +200,7 @@ bool IShock::PropagateShocks ()
        ret!=PROPAGATION_ERROR_DETECTED) { //INVALID_JUNCT_REMOVED
     ret = PropagateNextShock();
     //if (!ValidateShockList()) {
-    //  vcl_cout<< "ValidateShockList() error! " <<vcl_endl;
+    //  std::cout<< "ValidateShockList() error! " <<std::endl;
     //}
   }
 
@@ -218,7 +218,7 @@ void IShock::PropagateShockJump ()
   do {
     ret = PropagateNextShock();
     //if (!ValidateShockList()) {
-    //  vcl_cout<< "ValidateShockList() error!"<<vcl_endl;
+    //  std::cout<< "ValidateShockList() error!"<<std::endl;
     //}
   }
    while ((dCurrentTime ==0 && ret!=PROPAGATION_DONE) ||
@@ -239,7 +239,7 @@ PROPAGATION_TYPE IShock::PropagateNextShock ()
   //1)If there are no shocks to propagate, return
   if (nSElement()==0){
   //  if (MessageOption==MSG_VERBOSE)
-  //    vcl_cout<< "No shocks exist to propagate!" <<vcl_endl;
+  //    std::cout<< "No shocks exist to propagate!" <<std::endl;
     return PROPAGATION_DONE;
   }
 
@@ -263,7 +263,7 @@ PROPAGATION_TYPE IShock::PropagateNextShock ()
 
   //5)only propagate those within maximum radius
    if (currentShock->simTime() > MAX_RADIUS){
-      //vcl_cout<< "*** PROPAGATION_DONE ***" <<vcl_endl;
+      //std::cout<< "*** PROPAGATION_DONE ***" <<std::endl;
     DebugPrintOnePropagation (currentShock->id(), PROPAGATION_DONE);
       return PROPAGATION_DONE;
    }
@@ -355,14 +355,14 @@ PROPAGATION_TYPE IShock::PropagateNextShock ()
          return REGULAR_JUNCT;
 
     case BOGUS_JUNCTION_TYPE:
-      vcl_cout<< vcl_endl<<"SHOCK PROPAGATION ERROR DETECTED!!" <<vcl_endl;
+      std::cout<< std::endl<<"SHOCK PROPAGATION ERROR DETECTED!!" <<std::endl;
       DebugPrintOnePropagation (currentShockLink->id(), REGULAR_JUNCT);
       return PROPAGATION_ERROR_DETECTED;
 
     default:
       //10)No intersections with any other shock So move it to infinity
       //if (currentShockLink->label() != SIElement::CONTACT)
-      //  vcl_cout<< vcl_endl<<"ERROR: SHOCK PROPAGATED BUT NO JUNCTION FORMED !!" <<vcl_endl;
+      //  std::cout<< std::endl<<"ERROR: SHOCK PROPAGATED BUT NO JUNCTION FORMED !!" <<std::endl;
       //assert (0);
       moveASILinkToInfinity (currentShockLink);
       DebugPrintOnePropagation (currentShockLink->id(), PROPAGATION_TO_INFINITY);
@@ -1166,7 +1166,7 @@ void IShock::InitializeAJunction(SILink* current)
     //The junction will form later!
     if (!cur->isPropagated()) {
       _nextShockToPropagate = cur;
-      ///vcl_cout<< "_nextShockToPropagate id= "<<_nextShockToPropagate->id()<<vcl_endl;
+      ///std::cout<< "_nextShockToPropagate id= "<<_nextShockToPropagate->id()<<std::endl;
       return;
     }
 
@@ -1236,7 +1236,7 @@ bool IShock::InitializeShockFromASIJunct(SIJunct* current)
   //!!!!!Dynamic Error Recovery during Shock Propagation!!!!!
   if (!newShock->isValid()){
     //1)this shock should not have formed!!!
-    vcl_cout <<"Numerical Recovery: Junction Removed! Jid: "<< current->id() << vcl_endl;
+    std::cout <<"Numerical Recovery: Junction Removed! Jid: "<< current->id() << std::endl;
     //it is not yet in the shock list so we can just delete it
     delete newShock;
 
@@ -1430,7 +1430,7 @@ void IShock::updateShockDrawing (SIElement* sielm)
 void IShock::UpdateShocks()
 {
   //go through the update_list and draw each element
-  vcl_map<int, SIElement*>::iterator elmPtr = update_list.begin();
+  std::map<int, SIElement*>::iterator elmPtr = update_list.begin();
   for (; elmPtr != update_list.end(); elmPtr++){
     SIElement* curShock = elmPtr->second;
     curShock->compute_extrinsic_locus();
@@ -1562,28 +1562,28 @@ void IShock::DebugPrintOnePropagation (int id, PROPAGATION_TYPE action)
   if (MessageOption==MSG_NONE || MessageOption==MSG_TERSE)
     return;
 
-  vcl_cout<< "---> Shock "<< id;
+  std::cout<< "---> Shock "<< id;
   switch (action) {
   case BOGUS_PROPAGATION_TYPE: assert (0); break;
-  case NO_PROPAGATION: vcl_cout<< " NO_PROPAGATION"; break;
-  case PROPAGATION_DONE: vcl_cout<< " PROPAGATION_DONE"; break;
-  case PROPAGATION_TO_INFINITY: vcl_cout<< " PROPAGATION_TO_INFINITY"; break;
-  case INVALID_CANDIDATE_SOURCE: vcl_cout<< " INVALID_CANDIDATE_SOURCE"; break;
-  case A3_FORMATION: vcl_cout<< " A3_FORMATION"; break;
-  case REGULAR_JUNCT: vcl_cout<< " REGULAR_JUNCT"; break;
-  case DEGENERATE_JUNCT: vcl_cout<< " DEGENERATE_JUNCT"; break;
-  case SINK_FORMATION: vcl_cout<< " SINK_FORMATION"; break;
-  case NEW_SHOCK_FROM_A3: vcl_cout<< " NEW_SHOCK_FROM_A3"; break;
-  case NEW_BRANCHES_FROM_SOURCE: vcl_cout<< " NEW_BRANCHES_FROM_SOURCE"; break;
-  case NEW_SHOCK_FROM_JUNCT: vcl_cout<< " NEW_SHOCK_FROM_JUNCT"; break;
-  case INVALID_JUNCT_REMOVED: vcl_cout<< "INVALID JUNCTION, JUNCTION REMOVED"; break;
-  case LEFT_INTERSECTION: vcl_cout<< " LEFT_INTERSECTION"; break;
-  case RIGHT_INTERSECTION: vcl_cout<< " RIGHT_INTERSECTION"; break;
-  case BOTH_INTERSECTION: vcl_cout<< " BOTH_INTERSECTION"; break;
-  case THIRD_ORDER_FORMATION: vcl_cout<< " THIRD_ORDER_FORMATION"; break;
-  case ARC_THIRD_ORDER_FORMATION: vcl_cout<< " ARC_THIRD_ORDER_FORMATION"; break;  
+  case NO_PROPAGATION: std::cout<< " NO_PROPAGATION"; break;
+  case PROPAGATION_DONE: std::cout<< " PROPAGATION_DONE"; break;
+  case PROPAGATION_TO_INFINITY: std::cout<< " PROPAGATION_TO_INFINITY"; break;
+  case INVALID_CANDIDATE_SOURCE: std::cout<< " INVALID_CANDIDATE_SOURCE"; break;
+  case A3_FORMATION: std::cout<< " A3_FORMATION"; break;
+  case REGULAR_JUNCT: std::cout<< " REGULAR_JUNCT"; break;
+  case DEGENERATE_JUNCT: std::cout<< " DEGENERATE_JUNCT"; break;
+  case SINK_FORMATION: std::cout<< " SINK_FORMATION"; break;
+  case NEW_SHOCK_FROM_A3: std::cout<< " NEW_SHOCK_FROM_A3"; break;
+  case NEW_BRANCHES_FROM_SOURCE: std::cout<< " NEW_BRANCHES_FROM_SOURCE"; break;
+  case NEW_SHOCK_FROM_JUNCT: std::cout<< " NEW_SHOCK_FROM_JUNCT"; break;
+  case INVALID_JUNCT_REMOVED: std::cout<< "INVALID JUNCTION, JUNCTION REMOVED"; break;
+  case LEFT_INTERSECTION: std::cout<< " LEFT_INTERSECTION"; break;
+  case RIGHT_INTERSECTION: std::cout<< " RIGHT_INTERSECTION"; break;
+  case BOTH_INTERSECTION: std::cout<< " BOTH_INTERSECTION"; break;
+  case THIRD_ORDER_FORMATION: std::cout<< " THIRD_ORDER_FORMATION"; break;
+  case ARC_THIRD_ORDER_FORMATION: std::cout<< " ARC_THIRD_ORDER_FORMATION"; break;  
   }
-  vcl_cout<< vcl_endl;
+  std::cout<< std::endl;
 
   if (MessageOption==MSG_VERBOSE)
     DebugPrintShockList (true);
@@ -1595,82 +1595,82 @@ void IShock::DebugPrintShockList (bool bPrintAll)
   if (bPrintAll!=true)
     return;
 
-  vcl_cout<< "ShockList: " <<vcl_endl;
+  std::cout<< "ShockList: " <<std::endl;
   SIElmListIterator elmPtr = SIElmList.begin();
   for (; elmPtr != SIElmList.end(); elmPtr++) {
     SIElement* current = elmPtr->second;
 
     switch (current->type()) {
-    case SIElement::A3SOURCE:      vcl_cout<< "A3Source"; break;
-    case SIElement::SOURCE:        vcl_cout<< "Source"; break;
-    case SIElement::SINK:        vcl_cout<< "Sink"; break;
-    case SIElement::JUNCT:        vcl_cout<< "Junct"; break;
-    case SIElement::POINTPOINT:    vcl_cout<< "P-P"; break;
-    case SIElement::POINTLINE:      vcl_cout<< "P-L"; break;
-    case SIElement::POINTARC:      vcl_cout<< "P-A"; break;
-    case SIElement::LINELINE:      vcl_cout<< "L-L"; break;
-    case SIElement::LINEARC:      vcl_cout<< "L-A"; break;
-    case SIElement::ARCARC:        vcl_cout<< "A-A"; break;
-    case SIElement::POINTLINECONTACT:vcl_cout<< "PLC"; break;
-    case SIElement::POINTARCCONTACT:  vcl_cout<< "PAC"; break;
-    case SIElement::THIRDORDER:    vcl_cout<< "TO"; break;
-    case SIElement::ARCTHIRDORDER:  vcl_cout<< "ATO"; break;
+    case SIElement::A3SOURCE:      std::cout<< "A3Source"; break;
+    case SIElement::SOURCE:        std::cout<< "Source"; break;
+    case SIElement::SINK:        std::cout<< "Sink"; break;
+    case SIElement::JUNCT:        std::cout<< "Junct"; break;
+    case SIElement::POINTPOINT:    std::cout<< "P-P"; break;
+    case SIElement::POINTLINE:      std::cout<< "P-L"; break;
+    case SIElement::POINTARC:      std::cout<< "P-A"; break;
+    case SIElement::LINELINE:      std::cout<< "L-L"; break;
+    case SIElement::LINEARC:      std::cout<< "L-A"; break;
+    case SIElement::ARCARC:        std::cout<< "A-A"; break;
+    case SIElement::POINTLINECONTACT:std::cout<< "PLC"; break;
+    case SIElement::POINTARCCONTACT:  std::cout<< "PAC"; break;
+    case SIElement::THIRDORDER:    std::cout<< "TO"; break;
+    case SIElement::ARCTHIRDORDER:  std::cout<< "ATO"; break;
     }
-    vcl_cout<< ", Sid: "<< current->id();
-    vcl_cout<< ", simTime: "<< current->simTime();
+    std::cout<< ", Sid: "<< current->id();
+    std::cout<< ", simTime: "<< current->simTime();
     if (current->isActive()) {
       if (current->simTime() < MAX_RADIUS)
-        vcl_cout<< ", Active.";
+        std::cout<< ", Active.";
       else
-        vcl_cout<< ", OutOfRange.";
+        std::cout<< ", OutOfRange.";
     }
     else
-      vcl_cout<< ", Dead.";
+      std::cout<< ", Dead.";
     if (current->graph_type() == SIElement::LINK)
       if (current->isPropagated()) 
-        vcl_cout<< " Propagated.";
+        std::cout<< " Propagated.";
       else
-        vcl_cout<< " Unpropagated.";
+        std::cout<< " Unpropagated.";
 
-    vcl_cout<< vcl_endl;
+    std::cout<< std::endl;
   }
 
-  vcl_cout<< "------------------" <<vcl_endl;
+  std::cout<< "------------------" <<std::endl;
 }
 
 void IShock::DebugPrintGDList()
 {
-  vcl_cout<< "Shocks Saliency List: " <<vcl_endl;
+  std::cout<< "Shocks Saliency List: " <<std::endl;
 
-  vcl_cout.precision(8);
+  std::cout.precision(8);
 
   GDListIterator elmPtr = GDList.begin();
   for (; elmPtr != GDList.end(); elmPtr++) {
     SIElement* current = elmPtr->second;
 
     switch (current->type()) {
-    case SIElement::A3SOURCE:      vcl_cout<< "A3Source"; break;
-    case SIElement::SOURCE:        vcl_cout<< "Source"; break;
-    case SIElement::SINK:        vcl_cout<< "Sink"; break;
-    case SIElement::JUNCT:        vcl_cout<< "Junct"; break;
-    case SIElement::POINTPOINT:    vcl_cout<< "P-P"; break;
-    case SIElement::POINTLINE:      vcl_cout<< "P-L"; break;
-    case SIElement::POINTARC:      vcl_cout<< "P-A"; break;
-    case SIElement::LINELINE:      vcl_cout<< "L-L"; break;
-    case SIElement::LINEARC:      vcl_cout<< "L-A"; break;
-    case SIElement::ARCARC:        vcl_cout<< "A-A"; break;
-    case SIElement::POINTLINECONTACT:vcl_cout<< "PLC"; break;
-    case SIElement::POINTARCCONTACT:  vcl_cout<< "PAC"; break;
-    case SIElement::THIRDORDER:    vcl_cout<< "TO"; break;
-    case SIElement::ARCTHIRDORDER:  vcl_cout<< "ATO"; break;
+    case SIElement::A3SOURCE:      std::cout<< "A3Source"; break;
+    case SIElement::SOURCE:        std::cout<< "Source"; break;
+    case SIElement::SINK:        std::cout<< "Sink"; break;
+    case SIElement::JUNCT:        std::cout<< "Junct"; break;
+    case SIElement::POINTPOINT:    std::cout<< "P-P"; break;
+    case SIElement::POINTLINE:      std::cout<< "P-L"; break;
+    case SIElement::POINTARC:      std::cout<< "P-A"; break;
+    case SIElement::LINELINE:      std::cout<< "L-L"; break;
+    case SIElement::LINEARC:      std::cout<< "L-A"; break;
+    case SIElement::ARCARC:        std::cout<< "A-A"; break;
+    case SIElement::POINTLINECONTACT:std::cout<< "PLC"; break;
+    case SIElement::POINTARCCONTACT:  std::cout<< "PAC"; break;
+    case SIElement::THIRDORDER:    std::cout<< "TO"; break;
+    case SIElement::ARCTHIRDORDER:  std::cout<< "ATO"; break;
     }
-    vcl_cout<< ", Sid: "<< current->id();
-    vcl_cout<< ", saliency: "<< current->dPnCost() <<vcl_endl;
+    std::cout<< ", Sid: "<< current->id();
+    std::cout<< ", saliency: "<< current->dPnCost() <<std::endl;
   }
 
-  vcl_cout<< "------------------" <<vcl_endl;
+  std::cout<< "------------------" <<std::endl;
   if (GDList.begin()!=GDList.end())
-    vcl_cout<< "Least salient shock: "<< GDList.begin()->second->id() << vcl_endl;
+    std::cout<< "Least salient shock: "<< GDList.begin()->second->id() << std::endl;
 
 }
 
@@ -1719,36 +1719,36 @@ void IShock::MessageOutDetectionResults (int wndid)
   assert (nTotalShocks == nTotalSNodes + nTotalSLinks + nTotalContacts);
 
   
-   vcl_cout<< "\n===== Shock Detection Results ====="<<vcl_endl;
+   std::cout<< "\n===== Shock Detection Results ====="<<std::endl;
    if (_ShockAlgoType==LAGRANGIAN)
-      vcl_cout<<"ShockAlgorithm: Lagrangian: "<<vcl_endl;
+      std::cout<<"ShockAlgorithm: Lagrangian: "<<std::endl;
    else if (_ShockAlgoType==DYN_VAL)
-      vcl_cout<<"ShockAlgorithm: Dynamic Validation: "<<vcl_endl;
+      std::cout<<"ShockAlgorithm: Dynamic Validation: "<<std::endl;
 
-   vcl_cout<<"Bnd Elements: "<< boundary()->nBElement()<<vcl_endl;
-   vcl_cout<<"Total Shock Elements: "<< nTotalShocks <<vcl_endl<<vcl_endl;
+   std::cout<<"Bnd Elements: "<< boundary()->nBElement()<<std::endl;
+   std::cout<<"Total Shock Elements: "<< nTotalShocks <<std::endl<<std::endl;
 
   /*if (MessageOption == MSG_VERBOSE) {
-    vcl_cout <<"SNodes: "<< nTotalSNodes <<vcl_endl; 
-    vcl_cout <<"SLinks: "<< nTotalSLinks <<vcl_endl;
-    vcl_cout <<"Contacts: "<< nTotalContacts <<vcl_endl;
-    vcl_cout <<"A3s: "<< nA3  <<vcl_endl;
-    vcl_cout <<"SO Source: "<< nSO <<vcl_endl;
-    vcl_cout <<"Junctions: "<< nSJunct <<vcl_endl;
-    vcl_cout <<"Sinks: " << nSink <<vcl_endl;
-    vcl_cout <<"Point-Point: "<< nPP  <<vcl_endl;
-    vcl_cout <<"Point-Line: "<< nPL <<vcl_endl;
-    vcl_cout <<"Point-Arc: "<< nPA <<vcl_endl;
-    vcl_cout <<"Line-Line: "<< nLL  <<vcl_endl;
-    vcl_cout <<"Line-Arc: "<< nLA <<vcl_endl;
-    vcl_cout <<"Arc-Arc: "<< nAA <<vcl_endl;
-    vcl_cout <<"PointLineContact: "<< nPLC <<vcl_endl;
-    vcl_cout <<"PointArcContact: "<< nPAC<<vcl_endl;
-    vcl_cout <<"LLC: "<< nLLC <<vcl_endl;
-    vcl_cout <<"LAC: "<< nLAC <<vcl_endl;
-    vcl_cout <<"AAC: "<< nAAC <<vcl_endl;
-    vcl_cout <<"ThirdOrder: "<< nTO  <<vcl_endl;
-    vcl_cout <<"ArcThirdOrder: "<< nATO <<vcl_endl;
+    std::cout <<"SNodes: "<< nTotalSNodes <<std::endl; 
+    std::cout <<"SLinks: "<< nTotalSLinks <<std::endl;
+    std::cout <<"Contacts: "<< nTotalContacts <<std::endl;
+    std::cout <<"A3s: "<< nA3  <<std::endl;
+    std::cout <<"SO Source: "<< nSO <<std::endl;
+    std::cout <<"Junctions: "<< nSJunct <<std::endl;
+    std::cout <<"Sinks: " << nSink <<std::endl;
+    std::cout <<"Point-Point: "<< nPP  <<std::endl;
+    std::cout <<"Point-Line: "<< nPL <<std::endl;
+    std::cout <<"Point-Arc: "<< nPA <<std::endl;
+    std::cout <<"Line-Line: "<< nLL  <<std::endl;
+    std::cout <<"Line-Arc: "<< nLA <<std::endl;
+    std::cout <<"Arc-Arc: "<< nAA <<std::endl;
+    std::cout <<"PointLineContact: "<< nPLC <<std::endl;
+    std::cout <<"PointArcContact: "<< nPAC<<std::endl;
+    std::cout <<"LLC: "<< nLLC <<std::endl;
+    std::cout <<"LAC: "<< nLAC <<std::endl;
+    std::cout <<"AAC: "<< nAAC <<std::endl;
+    std::cout <<"ThirdOrder: "<< nTO  <<std::endl;
+    std::cout <<"ArcThirdOrder: "<< nATO <<std::endl;
   }*/
 
 }
@@ -1775,10 +1775,10 @@ bool IShock::ValidateBoundaryShockStructure (void)
     bValid = false;
 
   if (!bValid)
-    vcl_cout<< "ValidateBoundaryShockStructure() Fails!!\n";
+    std::cout<< "ValidateBoundaryShockStructure() Fails!!\n";
   else 
-    //vcl_cout<< "ValidateBoundaryShockStructure() Successfully Completed !!\n";
-    vcl_cout<< ".";
+    //std::cout<< "ValidateBoundaryShockStructure() Successfully Completed !!\n";
+    std::cout<< ".";
 
   return bValid;
 }
@@ -1791,15 +1791,15 @@ bool IShock::ValidateShockInitilization (void)
 
   bool bValid = true;
 
-  vcl_cout<< vcl_endl << "===== Shock Source Validation =====" <<vcl_endl;
-  vcl_cout<< "InitAlgorithm: ";
+  std::cout<< std::endl << "===== Shock Source Validation =====" <<std::endl;
+  std::cout<< "InitAlgorithm: ";
   switch (_ShockInitType) {
-  case BUCKETING_INIT: vcl_cout<<"Bucketing"; break;
-  case LAGRANGIAN_INIT: vcl_cout<<"Brute Force"; break;
-  case DT_INIT_POINTS: vcl_cout<<"D.T. Points"; break;
+  case BUCKETING_INIT: std::cout<<"Bucketing"; break;
+  case LAGRANGIAN_INIT: std::cout<<"Brute Force"; break;
+  case DT_INIT_POINTS: std::cout<<"D.T. Points"; break;
   }
-  vcl_cout<<vcl_endl;
-  //vcl_cout<< "# of sources: "<< nSourceElement() <<vcl_endl;
+  std::cout<<std::endl;
+  //std::cout<< "# of sources: "<< nSourceElement() <<std::endl;
 
   //1)Validate Each Shock Element
   SIElmListIterator curS = SIElmList.begin();
@@ -1818,9 +1818,9 @@ bool IShock::ValidateShockInitilization (void)
     bValid = false;
 
   if (!bValid)
-    vcl_cout<< "ValidateShockInitilization() Fail!!\n\n";
+    std::cout<< "ValidateShockInitilization() Fail!!\n\n";
   else 
-    vcl_cout<< "ValidateShockInitilization() Successfully Completed !!\n\n";
+    std::cout<< "ValidateShockInitilization() Successfully Completed !!\n\n";
   return bValid;
 }
 
@@ -1851,7 +1851,7 @@ bool IShock::ValidateShockList (void)
     if (currentShock->simTime() < MAX_RADIUS &&
       RisG(prevShock->simTime(),currentShock->simTime()) &&
       (prevShock->isActive() == currentShock->isActive())) {
-      vcl_cout<< "ValidateShockList(): Order time list Failed!! sid=" << currentShock->id() <<vcl_endl;
+      std::cout<< "ValidateShockList(): Order time list Failed!! sid=" << currentShock->id() <<std::endl;
       return false;
     }
 
@@ -1918,7 +1918,7 @@ bool IShock::validateSElement (SIElement* selm, bool bPropagationCompleted)
   break;
 
   default:
-    vcl_cout<< "No validation function. sid= "<< selm->id() <<"!!\n";
+    std::cout<< "No validation function. sid= "<< selm->id() <<"!!\n";
   break;
   }
 
@@ -1935,7 +1935,7 @@ bool IShock::validateSElement (int id)
   return true;
 }
 
-//vcl_cout: basePluginWnd->Message
+//std::cout: basePluginWnd->Message
 void IShock::DebugPrintShockInfoFromID(int id)
 {
   SIElmListIterator elmPtr = SIElmList.begin();
@@ -1944,9 +1944,9 @@ void IShock::DebugPrintShockInfoFromID(int id)
 
     if (current->id() == id){
       //display info
-      current->getInfo(vcl_cout);
+      current->getInfo(std::cout);
       return;
     }      
   }
-  vcl_cout <<"INVALID SHOCK ID: "<<id<<vcl_endl;
+  std::cout <<"INVALID SHOCK ID: "<<id<<std::endl;
 }

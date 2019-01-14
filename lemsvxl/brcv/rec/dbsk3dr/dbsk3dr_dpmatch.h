@@ -17,7 +17,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_utility.h>
+#include <utility>
 #include <dbsk3dr/dbsk3dr_ms_curve.h>
 
 #define DP_VERY_LARGE_COST 1E10
@@ -30,24 +30,24 @@ protected:
   dbsk3dr_ms_curve*   _curve2;
 
   //: DPMap of cost: n*m array of double
-  vcl_vector< vcl_vector<double> >                _DPCost;          
+  std::vector< std::vector<double> >                _DPCost;          
 
-  //: DPMap of prev point vcl_map: n*m array of vcl_pair of index
-  vcl_vector< vcl_vector< vcl_pair <int,int> > >  _DPMap;          
+  //: DPMap of prev point std::map: n*m array of std::pair of index
+  std::vector< std::vector< std::pair <int,int> > >  _DPMap;          
 
   //: alignment curve
-  vcl_vector< vcl_pair<int,int> >                 _finalMap;        
+  std::vector< std::pair<int,int> >                 _finalMap;        
 
   //: cost on alignment curve
-  vcl_vector<double>                              _finalMapCost;      
+  std::vector<double>                              _finalMapCost;      
 
   //: final cost
   double          _finalCost;        
 
   bool            _normalized_stretch_cost;
   int             _template_size;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 
 public:
 
@@ -75,16 +75,16 @@ public:
     use_radius_DP_ = use_radius;
   }
   //Result of matching:
-  vcl_vector< vcl_vector<double> >* DPCost() { 
+  std::vector< std::vector<double> >* DPCost() { 
     return &_DPCost; 
   }
-  vcl_vector< vcl_vector< vcl_pair <int,int> > >* DPMap() { 
+  std::vector< std::vector< std::pair <int,int> > >* DPMap() { 
     return &_DPMap; 
   }
-  vcl_vector< vcl_pair<int,int> >* finalMap() { 
+  std::vector< std::pair<int,int> >* finalMap() { 
     return &_finalMap; 
   }
-  vcl_vector<double>* finalMapCost() { 
+  std::vector<double>* finalMapCost() { 
     return &_finalMapCost; 
   }
   double finalCost() { 
@@ -137,8 +137,8 @@ public:
   void ListAlignCurve (void);
   void ListAlignCurve_full (void);
 
-  void SaveDPTable (vcl_string& _fileName1, vcl_string& _fileName2);
-  void SaveAlignCurve (vcl_string& _fileName1, vcl_string& _fileName2);
+  void SaveDPTable (std::string& _fileName1, std::string& _fileName2);
+  void SaveAlignCurve (std::string& _fileName1, std::string& _fileName2);
 };
 
 

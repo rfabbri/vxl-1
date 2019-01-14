@@ -29,15 +29,15 @@ class vox_convert_esf_to_xgraph_params : public dborl_algo_params
 public:
 
   //: Constructor
-  vox_convert_esf_to_xgraph_params(vcl_string algo_name);
+  vox_convert_esf_to_xgraph_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
   //: Name of model to compare against
-  dborl_parameter<vcl_string> object_name_;
+  dborl_parameter<std::string> object_name_;
   
   //: Passes the folder of the model shock graph
-  dborl_parameter<vcl_string> object_dir_;    
+  dborl_parameter<std::string> object_dir_;    
 
 
   //: Save result to the object folder?
@@ -46,11 +46,11 @@ public:
   // if written to this folder as opposed to object folder then the 
   // shock matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_folder_;  
+  dborl_parameter<std::string> output_folder_;  
 
 
   //: Extension of xgraph file
-  dborl_parameter<vcl_string > xgraph_extension_;
+  dborl_parameter<std::string > xgraph_extension_;
 
   // Process parameters
 

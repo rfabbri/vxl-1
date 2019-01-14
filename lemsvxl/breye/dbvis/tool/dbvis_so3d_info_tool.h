@@ -30,7 +30,7 @@ public:
   virtual ~dbvis_so3d_info_tool ();
 
   //: Return the name of the tool
-  virtual vcl_string name() const { return "Get Info on 3D SO";}
+  virtual std::string name() const { return "Get Info on 3D SO";}
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -39,7 +39,7 @@ public:
   
 protected:
   vgui_event_condition gesture_pick_;
-  vcl_vector<vsol_point_3d_sptr>  picked_pts;
+  std::vector<vsol_point_3d_sptr>  picked_pts;
  
 };
 

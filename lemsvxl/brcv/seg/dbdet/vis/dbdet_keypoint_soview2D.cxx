@@ -4,8 +4,8 @@
 // \file
 #include "dbdet_keypoint_soview2D.h"
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_soview2D.h>
@@ -34,14 +34,14 @@ dbdet_keypoint_soview2D::draw() const
   //style->apply_all();
   glBegin(GL_LINES);
     glVertex2f(x,y);
-    glVertex2f(x+scale*vcl_cos(orient), y+scale*vcl_sin(orient));
+    glVertex2f(x+scale*std::cos(orient), y+scale*std::sin(orient));
   glEnd();
 
   if( draw_box_ ) {
     glBegin(GL_LINE_LOOP);
     for( int i=0; i<4; ++i ){
-      glVertex2f(x+scale*(1.41421f)*vcl_cos(orient+(i*0.5+0.25)*3.14159f),
-                 y+scale*(1.41421f)*vcl_sin(orient+(i*0.5+0.25)*3.14159f) );
+      glVertex2f(x+scale*(1.41421f)*std::cos(orient+(i*0.5+0.25)*3.14159f),
+                 y+scale*(1.41421f)*std::sin(orient+(i*0.5+0.25)*3.14159f) );
     }
     glEnd();
   }
@@ -53,7 +53,7 @@ dbdet_keypoint_soview2D::draw() const
 }
 
 
-vcl_ostream& dbdet_keypoint_soview2D::print(vcl_ostream& s) const
+std::ostream& dbdet_keypoint_soview2D::print(std::ostream& s) const
 {
   s << "[dbdet_keypoint_soview2D (" << sptr->x() << ','
                                     << sptr->y() << ") ";

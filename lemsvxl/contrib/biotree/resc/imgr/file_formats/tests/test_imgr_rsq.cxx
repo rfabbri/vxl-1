@@ -5,8 +5,8 @@
 // \date     2005-28-08
 
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <testlib/testlib_test.h>
 #include <vil/vil_stream_fstream.h>
 #if VXL_WIN32 
@@ -36,7 +36,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("creation_date_[0] : " , rsq_header.creation_date_[0], -348659845);
     TEST_EQUAL("creation_date_[1] : " , rsq_header.creation_date_[1], 10752599);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("dimx_p_ : "    , rsq_header.dimx_p_    ,1024);
     TEST_EQUAL("dimy_p_ : "    , rsq_header.dimy_p_    ,3);
@@ -45,19 +45,19 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("dimy_mdeg_ : " , rsq_header.dimy_mdeg_ ,360000);
     TEST_EQUAL("dimz_um_ : "   , rsq_header.dimz_um_   ,540);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("slice_thickness_um_ : " , rsq_header.slice_thickness_um_ ,10);
     TEST_EQUAL("slice_increment_um_ : " , rsq_header.slice_increment_um_ ,10);
     TEST_EQUAL("slice_1_pos_um_ : "     , rsq_header.slice_1_pos_um_     ,64967);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("scanner_type_ : "   , rsq_header.scanner_type_   ,10);
     TEST_EQUAL("min_data_value_ : " , rsq_header.min_data_value_ ,4772);
     TEST_EQUAL("max_data_value_ : " , rsq_header.max_data_value_ ,9608);
     
-    vcl_cout << "---raw area type structure members start here---" << vcl_endl;
+    std::cout << "---raw area type structure members start here---" << std::endl;
     
     TEST_EQUAL("nr_of_det_x_ : "                  , rsq_header.u_.area_.nr_of_det_x_                 ,1024);
     TEST_EQUAL("nr_of_det_y_ : "                  , rsq_header.u_.area_.nr_of_det_y_                 ,56);
@@ -72,7 +72,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("detector_angle_z_mdeg_ : "        , rsq_header.u_.area_.detector_angle_z_mdeg_       ,-2);
     TEST_EQUAL("slice_angle_increment_mdeg_ : "   , rsq_header.u_.area_.slice_angle_increment_mdeg_  ,0);
 
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
 
     TEST_EQUAL("i0_pixel_l_x_ : "   , rsq_header.u_.area_.i0_pixel_l_x_   ,0);
     TEST_EQUAL("i0_pixel_r_x_ : "   , rsq_header.u_.area_.i0_pixel_r_x_   ,0);
@@ -90,7 +90,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("dark_index_ : "     , rsq_header.u_.area_.dark_index_     ,0);
     TEST_EQUAL("data_index_ : "     , rsq_header.u_.area_.data_index_     ,2);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("index_measurement_ : "   , rsq_header.u_.area_.index_measurement_   ,977);
     TEST_EQUAL("integration_time_us_ : " , rsq_header.u_.area_.integration_time_us_ ,300000);
@@ -99,7 +99,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("intensity_ : "           , rsq_header.u_.area_.intensity_           ,90);
     TEST_EQUAL("scanning_mode_ : "       , rsq_header.u_.area_.scanning_mode_       ,4);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("no_frames_per_stack_ : "      , rsq_header.u_.area_.no_frames_per_stack_     ,2000);
     TEST_EQUAL("no_I0_per_stack_ : "          , rsq_header.u_.area_.no_I0_per_stack_          ,0);
@@ -109,7 +109,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("z_inc_per_frame_nm_ : "       , rsq_header.u_.area_.z_inc_per_frame_nm_       ,0);
     TEST_EQUAL("z_inc_per_stack_um_ : "       , rsq_header.u_.area_.z_inc_per_stack_um_       ,470);
     
-    vcl_cout << "---" << vcl_endl;
+    std::cout << "---" << std::endl;
     
     TEST_EQUAL("vt_ : "        , rsq_header.u_.area_.vt_        ,60);
     TEST_EQUAL("ht_ : "        , rsq_header.u_.area_.ht_        ,1024);
@@ -121,7 +121,7 @@ imgr_rsq_header rsq_header(is);
     TEST_EQUAL("hbinu_ : "     , rsq_header.u_.area_.hbinu_     ,1024);
     TEST_EQUAL("hbind_ : "     , rsq_header.u_.area_.hbind_     ,1024);
     
-    vcl_cout << "---raw area type structure members end here---" << vcl_endl;
+    std::cout << "---raw area type structure members end here---" << std::endl;
 
 for (int f=0;f<36;f++)
     TEST_EQUAL("fill_ : "                , rsq_header.fill_[f]             ,0);
@@ -139,7 +139,7 @@ for (int f=0;f<36;f++)
 
     imgr_rsq rsq(is);
     
-    vcl_cout << "---scan parameters begin here---" << vcl_endl;
+    std::cout << "---scan parameters begin here---" << std::endl;
     
     xscan_scan scan = rsq.get_scan();
     xscan_orbit_base_sptr orbitbase = scan.orbit();

@@ -20,8 +20,8 @@
 #include <vbl/vbl_array_3d.h>
 #include <vpgl/bgeo/bgeo_lvcs.h>
 #include <boct/boct_tree.h>
-#include <vcl_string.h>
-#include <vcl_iosfwd.h>
+#include <string>
+#include <iosfwd>
 
 
 class boxm_scene_parser;
@@ -91,11 +91,11 @@ class boxm_scene :public boxm_scene_base
     return vgl_vector_3d<unsigned>(x,y,z);
   }
 
-  vcl_string path() const { return scene_path_; }
+  std::string path() const { return scene_path_; }
 
-  vcl_string block_prefix() const { return block_pref_; }
+  std::string block_prefix() const { return block_pref_; }
 
-  void set_path(vcl_string path, vcl_string block_prefix) { scene_path_=path; block_pref_= block_prefix; }
+  void set_path(std::string path, std::string block_prefix) { scene_path_=path; block_pref_= block_prefix; }
 
   void b_read(vsl_b_istream & s);
 
@@ -113,9 +113,9 @@ class boxm_scene :public boxm_scene_base
   void set_block(vgl_point_3d<int> const& idx, boxm_block<T>* block)
   { blocks_(idx.x(),idx.y(),idx.z()) = block; active_block_=idx; }
 
-  void write_scene(vcl_string filename = "/scene.xml");
+  void write_scene(std::string filename = "/scene.xml");
 
-  void load_scene(vcl_string filename);
+  void load_scene(std::string filename);
 
   void load_scene(boxm_scene_parser& parser);
 
@@ -130,7 +130,7 @@ class boxm_scene :public boxm_scene_base
   vgl_box_3d<double> get_block_bbox(int x, int y, int z);
 
   //: generates a name for the block binary file based on the 3D vector index
-  vcl_string gen_block_path(int x, int y, int z);
+  std::string gen_block_path(int x, int y, int z);
  
   void clean_scene();
 
@@ -165,7 +165,7 @@ class boxm_scene :public boxm_scene_base
   void create_blocks(const vgl_vector_3d<double>& block_dim, const vgl_vector_3d<unsigned>& world_dim);
   bool parse_config(boxm_scene_parser& parser);
 
-  bool parse_xml_string(vcl_string xml, boxm_scene_parser& parser);
+  bool parse_xml_string(std::string xml, boxm_scene_parser& parser);
 };
 
 template <class T>
@@ -208,7 +208,7 @@ class boxm_block_iterator
 
 //: generates an XML file from the member variables
 template <class T>
-void x_write(vcl_ostream &os, boxm_scene<T>& scene, vcl_string name="boxm_scene");
+void x_write(std::ostream &os, boxm_scene<T>& scene, std::string name="boxm_scene");
 
 template <class T>
 void vsl_b_write(vsl_b_ostream & os, boxm_scene<T> const &scene);

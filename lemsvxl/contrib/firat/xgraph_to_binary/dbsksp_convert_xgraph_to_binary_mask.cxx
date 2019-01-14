@@ -6,7 +6,7 @@
 // \date Jul 1, 2010
 //
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vil/vil_save.h>
@@ -16,20 +16,20 @@
 
 int main(int argn, char* args[])
 {
-    vcl_cout << "Number of input arguments: " << argn <<vcl_endl;
+    std::cout << "Number of input arguments: " << argn <<std::endl;
     if(argn != 5)
     {
-        vcl_cout << "Not enough inputs!" <<vcl_endl;
+        std::cout << "Not enough inputs!" <<std::endl;
         return 0;
     }
 
-    vcl_string xgraph_file = args[1];
-    vcl_string out_image_file = args[2];
+    std::string xgraph_file = args[1];
+    std::string out_image_file = args[2];
     int width = atoi(args[3]);
     int height = atoi(args[4]);
 
-    vcl_cout << "Xgraph file path: " << xgraph_file << vcl_endl;
-    vcl_cout << "[W, H] = [" << width << " ," << height << "]" << vcl_endl;
+    std::cout << "Xgraph file path: " << xgraph_file << std::endl;
+    std::cout << "[W, H] = [" << width << " ," << height << "]" << std::endl;
 
     vil_image_resource_sptr image_resource = vil_new_image_resource(width, height, 1,  VIL_PIXEL_FORMAT_BYTE);
     vil_image_view<vxl_byte > bg_image = *vil_convert_cast(vxl_byte(), image_resource->get_view());

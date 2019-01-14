@@ -12,10 +12,10 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -50,13 +50,13 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
                                       double rms, unsigned smoothing_nsteps,
                                       double cont_t = 0.5, double app_t = 0.5,
                                       bool write_output = false,
-                                      vcl_string out_shock_name = "", double edge_detection_sigma = 1.0); 
+                                      std::string out_shock_name = "", double edge_detection_sigma = 1.0); 
 
 //vsol_polyline_2d_sptr fit_lines_to_contour(vsol_polyline_2d_sptr poly, double rms);
 //vsol_polygon_2d_sptr fit_lines_to_contour(vsol_polygon_2d_sptr poly, double rms);
 
 dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sptr, 
-                                                bool write_output, vcl_string out_shock_name, int n_steps, double rms);
+                                                bool write_output, std::string out_shock_name, int n_steps, double rms);
 
 
 dbsk2d_shock_graph_sptr compute_shock (vsol_polygon_2d_sptr poly, float pruning_threshold);

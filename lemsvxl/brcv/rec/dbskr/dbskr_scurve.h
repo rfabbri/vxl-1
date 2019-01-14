@@ -38,14 +38,14 @@
 #ifndef _dbskr_scurve_h
 #define _dbskr_scurve_h
 
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include "dbskr_scurve_sptr.h"
-#include <vcl_utility.h>
+#include <utility>
 
 #include <vnl/vnl_double_2.h>
 
@@ -66,10 +66,10 @@ public:
 
   //: contructor with data
   dbskr_scurve(int num_points,
-               vcl_vector<vgl_point_2d<double> > &sh_pt, 
-               vcl_vector<double> &time,
-               vcl_vector<double> &theta,
-               vcl_vector<double> &phi, 
+               std::vector<vgl_point_2d<double> > &sh_pt, 
+               std::vector<double> &time,
+               std::vector<double> &theta,
+               std::vector<double> &phi, 
                bool binterpolate=true, double interpolate_ds=1.0, 
                bool bsub_sample=true, double subsample_ds=1.0,
                bool leaf_edge=false,
@@ -78,7 +78,7 @@ public:
   //: Interpolate/copy constructor
   //  Constructs and interpolated copy of an scurve
   dbskr_scurve(dbskr_scurve& old, 
-               vcl_vector<int> &lmap,
+               std::vector<int> &lmap,
                double interpolate_ds=1.0);
 
   //: Destructor
@@ -96,10 +96,10 @@ public:
   unsigned int get_branch_points(){return branch_points_;}
 
   // set curve id
-  void set_curve_id(vcl_pair<unsigned int,unsigned int>& pair)
+  void set_curve_id(std::pair<unsigned int,unsigned int>& pair)
   {curve_id_=pair;}
 
-  vcl_pair<int,int> get_curve_id(){return curve_id_;}
+  std::pair<int,int> get_curve_id(){return curve_id_;}
 
   // get whether leaf edge
   bool is_leaf_edge(){return leaf_edge_;}
@@ -108,30 +108,30 @@ public:
   double get_scale_ratio(){return scale_ratio_;}
 
   // set outside shock radius
-  void set_bdry_plus_outside_shock_radius(vcl_vector<double>& radius)
+  void set_bdry_plus_outside_shock_radius(std::vector<double>& radius)
   {
       bdry_plus_outer_shock_radius_=radius; ///< outer shock radius
   }
 
   // set outside shock radius
-  void set_bdry_minus_outside_shock_radius(vcl_vector<double>& radius)
+  void set_bdry_minus_outside_shock_radius(std::vector<double>& radius)
   {
       bdry_minus_outer_shock_radius_=radius; ///< outer shock radius
   }
 
   // get outside shock radius
-  vcl_vector<double> get_bdry_plus_outside_shock_radius()
+  std::vector<double> get_bdry_plus_outside_shock_radius()
   {
       return bdry_plus_outer_shock_radius_;
   }
 
   // get outside shock radius
-  vcl_vector<double>  get_bdry_minus_outside_shock_radius()
+  std::vector<double>  get_bdry_minus_outside_shock_radius()
   {
       return bdry_minus_outer_shock_radius_;
   }
 
-  void write_polygon(vcl_string title,double width=0.0);
+  void write_polygon(std::string title,double width=0.0);
   void get_polygon(vgl_polygon<double>& poly,double width=0.0);
   void get_polygon(int start_index,
                    int stop_index,
@@ -141,11 +141,11 @@ public:
 protected:
   //: This function takes a sampled shock curve and interpolates it.
   void interpolate( int num_points,
-                    vcl_vector<vgl_point_2d<double> > &sh_pt, 
-                    vcl_vector<double> &time,
-                    vcl_vector<double> &theta,
-                    vcl_vector<double> &phi,
-                    vcl_vector<int> &lmap);
+                    std::vector<vgl_point_2d<double> > &sh_pt, 
+                    std::vector<double> &time,
+                    std::vector<double> &theta,
+                    std::vector<double> &phi,
+                    std::vector<int> &lmap);
 
   //: This function subsamples the shock curve to evenly distribute them
   // and also to speed up shock curve matching.
@@ -168,8 +168,8 @@ public:
   vgl_point_2d<double> bdry_plus_pt(int index) { return bdry_plus_[index]; }
   vgl_point_2d<double> bdry_minus_pt(int index) { return bdry_minus_[index]; }
 
-  vcl_vector< vgl_point_2d<double> >& bdry_plus() { return bdry_plus_; }
-  vcl_vector< vgl_point_2d<double> >& bdry_minus() { return bdry_minus_; }
+  std::vector< vgl_point_2d<double> >& bdry_plus() { return bdry_plus_; }
+  std::vector< vgl_point_2d<double> >& bdry_minus() { return bdry_minus_; }
 
   double sh_pt_x(int index) { return sh_pt_[index].x(); };
   double sh_pt_y(int index) { return sh_pt_[index].y(); };
@@ -190,7 +190,7 @@ public:
   double boundary_minus_length() {return bdry_minus_length_; };
 
   //Debug functions
-  void writeData(vcl_string fname);
+  void writeData(std::string fname);
 
   //: return an extrinsic point corresponding to the intrinsic 
   //  fragment coordinates(s(i),t) { i.e., (s(i),t)->(x,y) }
@@ -204,10 +204,10 @@ public:
 
   //: return a continuous index and radius, of where you are
   //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
-  void draw_grid(vcl_vector<
-                 vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > >&
+  void draw_grid(std::vector<
+                 std::pair< vgl_point_2d<double>,vgl_point_2d<double> > >&
                  lines,
-                 vcl_vector<bool>& shock_lines);
+                 std::vector<bool>& shock_lines);
 
   //: return the radius at an interpolated point
   double interp_radius(int i1, int i2, int N, int n);
@@ -234,13 +234,13 @@ public:
   // Functions to compute costs for dpmatch
   //----------------------------------------
 
-  void stretch_cost(int i, int ip, vcl_vector<double> &a);
-  void bend_cost(int i, int ip, vcl_vector<double> &a);
+  void stretch_cost(int i, int ip, std::vector<double> &a);
+  void bend_cost(int i, int ip, std::vector<double> &a);
   void area_cost(int i, int ip, double& dA);
-  void outer_shock_cost(int i,int ip,vcl_vector<double> &a);
+  void outer_shock_cost(int i,int ip,std::vector<double> &a);
 
-  void stretch_cost_combined(int i, int ip, vcl_vector<double> &a);
-  void bend_cost_combined(int i, int ip, vcl_vector<double> &a);
+  void stretch_cost_combined(int i, int ip, std::vector<double> &a);
+  void bend_cost_combined(int i, int ip, std::vector<double> &a);
 
   //: ozge put these functions here 
   //  if this shock curve ever becomes a "link" (not a branch) in the tree structure built on top
@@ -256,7 +256,7 @@ public:
   void set_euler_spiral_completion_length();
 
   //: for visualization purposes
-  void get_polys(vcl_vector<vsol_polygon_2d_sptr>& polys);
+  void get_polys(std::vector<vsol_polygon_2d_sptr>& polys);
 
   //: return index of midpoint
   unsigned int midpoint_index(){return midpoint_index_;}
@@ -273,28 +273,28 @@ protected:
   int num_points_;                          ///< number of data points along the shock curve
   
   // Data along the shock branch.
-  vcl_vector<vgl_point_2d<double> > sh_pt_; ///< point along the shock edge
-  vcl_vector<double> arclength_;            ///< arclength along shock branch
-  vcl_vector<double> time_;                 ///< radius of the maximal circle
-  vcl_vector<double> theta_;                ///< tangent vector to the shock curve
-  vcl_vector<double> phi_;                  ///< Angle between the tangent to the shock and the 
+  std::vector<vgl_point_2d<double> > sh_pt_; ///< point along the shock edge
+  std::vector<double> arclength_;            ///< arclength along shock branch
+  std::vector<double> time_;                 ///< radius of the maximal circle
+  std::vector<double> theta_;                ///< tangent vector to the shock curve
+  std::vector<double> phi_;                  ///< Angle between the tangent to the shock and the 
                                             //   vector from shock to the bndry point.
   // Data for boundaries
   // +
-  vcl_vector< vgl_point_2d<double> > bdry_plus_; ///< corresponding bndry pt on the + side 
+  std::vector< vgl_point_2d<double> > bdry_plus_; ///< corresponding bndry pt on the + side 
   double bdry_plus_length_;                      ///< total length of the + bndry curve
-  vcl_vector<double> bdry_plus_arclength_;       ///< arclength along the + bndry curve
-  vcl_vector<double> bdry_plus_angle_;           ///< tangent to the + bndry curve
-  vcl_vector<double> bdry_plus_outer_shock_radius_; ///< outer shock radius
+  std::vector<double> bdry_plus_arclength_;       ///< arclength along the + bndry curve
+  std::vector<double> bdry_plus_angle_;           ///< tangent to the + bndry curve
+  std::vector<double> bdry_plus_outer_shock_radius_; ///< outer shock radius
 
   // -
-  vcl_vector< vgl_point_2d<double> > bdry_minus_; ///< corresponding bndry pt on the - side 
+  std::vector< vgl_point_2d<double> > bdry_minus_; ///< corresponding bndry pt on the - side 
   double bdry_minus_length_;                      ///< total length of the - bndry curve
-  vcl_vector<double> bdry_minus_arclength_;       ///< arclength along the - bndry curve
-  vcl_vector<double> bdry_minus_angle_;           ///< tangent to the - bndry curve
-  vcl_vector<double> bdry_minus_outer_shock_radius_; ///< outer shock radius
+  std::vector<double> bdry_minus_arclength_;       ///< arclength along the - bndry curve
+  std::vector<double> bdry_minus_angle_;           ///< tangent to the - bndry curve
+  std::vector<double> bdry_minus_outer_shock_radius_; ///< outer shock radius
 
-  vcl_vector<double> area_; // area of intervals as a function of length
+  std::vector<double> area_; // area of intervals as a function of length
   double total_area_; // total area of this scurve shock branch
 
   double virtual_length_; // If set use this
@@ -305,13 +305,13 @@ protected:
 
   double scale_ratio_;
 
-  vcl_pair<unsigned int,unsigned int> curve_id_;
+  std::pair<unsigned int,unsigned int> curve_id_;
 
   unsigned int branch_points_;
 
   unsigned int midpoint_index_;
 
-  vcl_vector<vgl_point_2d<double> > st_points_;
+  std::vector<vgl_point_2d<double> > st_points_;
 
 };
 

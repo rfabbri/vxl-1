@@ -1,6 +1,6 @@
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
 
 #include "opt.h"
 
@@ -38,7 +38,7 @@ opt_parse_args(int argc, char *argv[], OPTTABLE *table)
   }
       }
       if(!found) {
-  vcl_fprintf(stderr, "Unknown flag \"%s\"\n", argv[ap]);
+  std::fprintf(stderr, "Unknown flag \"%s\"\n", argv[ap]);
   opt_usage (-1, argc, argv, table);
       }
       else if(val_addr != 0) {
@@ -112,7 +112,7 @@ opt_usage(int argnum, int argc, char *argv[], OPTTABLE *tbl)
   else
     short_pname++;
 
-  vcl_fprintf(stderr, "%s%s ", tstring, short_pname);
+  std::fprintf(stderr, "%s%s ", tstring, short_pname);
   col = offset;
   for(op=tbl; op->flag_string != 0; op++) {
     char buf[111];
@@ -127,15 +127,15 @@ opt_usage(int argnum, int argc, char *argv[], OPTTABLE *tbl)
       maxblen = blen;
     if(col+blen >= LINELENGTH) {
       int i;
-      vcl_fprintf (stderr, "\n");
+      std::fprintf (stderr, "\n");
       for (i=0; i<INDENT; i++)
-  vcl_fprintf (stderr, " ");
+  std::fprintf (stderr, " ");
       col = INDENT;
     }
-    vcl_fprintf (stderr, buf);
+    std::fprintf (stderr, buf);
     col += blen;
   }
-  vcl_fprintf(stderr, "\n  where:\n");
+  std::fprintf(stderr, "\n  where:\n");
   for(op=tbl; op->flag_string != 0; op++) {
     char buf[111];
     int i;
@@ -147,11 +147,11 @@ opt_usage(int argnum, int argc, char *argv[], OPTTABLE *tbl)
       sprintf (buf, "-%s  ", op->flag_string);
     blen = strlen (buf);
   
-    vcl_fprintf(stderr, "    %s", buf);
+    std::fprintf(stderr, "    %s", buf);
     for (i=blen; i<maxblen; i++)
-      vcl_fprintf (stderr, " ");
+      std::fprintf (stderr, " ");
     if (op->comment)
-      vcl_fprintf (stderr, " -- %s\n", op->comment);
+      std::fprintf (stderr, " -- %s\n", op->comment);
   }
   exit(1);
   return(1);

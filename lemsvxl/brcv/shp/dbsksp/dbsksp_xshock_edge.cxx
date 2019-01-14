@@ -68,8 +68,8 @@ child_node() const
 
 
 //: write info of the dbskbranch to an output stream
-vcl_ostream& dbsksp_xshock_edge::
-print(vcl_ostream& os)
+std::ostream& dbsksp_xshock_edge::
+print(std::ostream& os)
 {
   dbsksp_xshock_node_descriptor* xd_source = this->source()->descriptor(this);
   dbsksp_xshock_node_descriptor* xd_target = this->target()->descriptor(this);

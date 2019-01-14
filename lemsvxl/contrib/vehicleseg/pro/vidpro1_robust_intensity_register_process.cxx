@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "vidpro1_robust_intensity_register_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -53,7 +53,7 @@ vidpro1_robust_intensity_register_process::vidpro1_robust_intensity_register_pro
         !parameters()->add( "Radius for Dilation" ,          "-rdilate" ,  (float)7.0) 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_robust_intensity_register_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_robust_intensity_register_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
     else
     {
@@ -71,7 +71,7 @@ vidpro1_robust_intensity_register_process::~vidpro1_robust_intensity_register_pr
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_robust_intensity_register_process::name()
 {
     return "Robust Registration";
@@ -95,18 +95,18 @@ vidpro1_robust_intensity_register_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_robust_intensity_register_process::get_input_type()
+std::vector< std::string > vidpro1_robust_intensity_register_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_robust_intensity_register_process::get_output_type()
+std::vector< std::string > vidpro1_robust_intensity_register_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "image" );
     //to_return.push_back( "image" );
@@ -120,7 +120,7 @@ bool
 vidpro1_robust_intensity_register_process::execute()
 {
     if ( input_data_.size() != 2 ){
-        vcl_cout << "In vidpro1_robust_intensity_register_process::execute() - "
+        std::cout << "In vidpro1_robust_intensity_register_process::execute() - "
             << "not exactly two input images \n";
         return false;
     }
@@ -154,7 +154,7 @@ vidpro1_robust_intensity_register_process::execute()
         output_data_[0].push_back(output_image_storage1);
         output_image_storage1->set_name("RegImg");
 
-        //vcl_cout<<output_data_[0][output_data_[0].size()-1]->name();
+        //std::cout<<output_data_[0][output_data_[0].size()-1]->name();
 
         float mean;
         vil_math_mean_and_variance<float,float>( mean,sigma_first_image_,float_curr_view,0);
@@ -245,13 +245,13 @@ vidpro1_robust_intensity_register_process::clone() const
 bool
 vidpro1_robust_intensity_register_process::finish()
 {
-    vcl_cout<<box_;
+    std::cout<<box_;
 
-    int bimg_ni=(int)vcl_ceil(box_.max()[0]-box_.min()[0]);
-    int bimg_nj=(int)vcl_ceil(box_.max()[1]-box_.min()[1]);
+    int bimg_ni=(int)std::ceil(box_.max()[0]-box_.min()[0]);
+    int bimg_nj=(int)std::ceil(box_.max()[1]-box_.min()[1]);
 
-    int offset_i=(int)vcl_ceil(0-box_.min()[0]);
-    int offset_j=(int)vcl_ceil(0-box_.min()[1]);
+    int offset_i=(int)std::ceil(0-box_.min()[0]);
+    int offset_j=(int)std::ceil(0-box_.min()[1]);
 
 
     for(int i=first_frame_no;i<=last_frame_no;i++)
@@ -283,7 +283,7 @@ vidpro1_robust_intensity_register_process::finish()
             vimt_resample_bilin(curr_img,sample_im,p,
                 u,v,bimg_ni,bimg_nj);
 
-            vcl_cout<<sample_im.image().ni()<<" "<<sample_im.image().nj()<<"\n";
+            std::cout<<sample_im.image().ni()<<" "<<sample_im.image().nj()<<"\n";
 
             vidpro1_image_storage_sptr mosaic=vidpro1_image_storage_new();
             mosaic->set_image(vil_new_image_resource_of_view(brip_vil_float_ops::convert_to_byte(sample_im.image())));
@@ -337,7 +337,7 @@ vimt_transform_2d vidpro1_robust_intensity_register_process::register_image_with
     parameters()->get_value("-hrange",hrange_);
     parameters()->get_value("-numbins",no_of_bins);
     //: using otsu thresholding method to select the threshold for motion
-    vcl_vector<double> hist;
+    std::vector<double> hist;
     vil_histogram<float>(vsum,hist,lrange_,hrange_,no_of_bins);
     bsta_otsu_threshold<double> ot(hist,lrange_,hrange_);
     double motionthresh=ot.threshold();

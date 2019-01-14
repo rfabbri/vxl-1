@@ -9,8 +9,8 @@
 #include <vil/algo/vil_sobel_1x3.h>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
+#include <string>
+#include <cstring>
 
 
 void sliceRidgeDetectProcessor::hessian_decompose_oneslice(
@@ -95,8 +95,8 @@ void sliceRidgeDetectProcessor::pickLargerEigenvalues(const vil_image_view<float
 
         for(int j =0; j < nj; j++) {
         for(int i =0; i < ni; i++) {
-                if(vcl_fabs(l1(i,j)) < vcl_fabs(l2(i,j))){
-                        if(vcl_fabs(l2(i,j)) < vcl_fabs(l3(i,j))){
+                if(std::fabs(l1(i,j)) < std::fabs(l2(i,j))){
+                        if(std::fabs(l2(i,j)) < std::fabs(l3(i,j))){
                                 largest_eigen_x(i,j) = e3(i,j,0);
                                 largest_eigen_y(i,j) = e3(i,j,1);
                                 largest_eigen_z(i,j) = e3(i,j,2);
@@ -117,7 +117,7 @@ void sliceRidgeDetectProcessor::pickLargerEigenvalues(const vil_image_view<float
                                 largest_eigen_z(i,j) = e2(i,j,2);
                                 largest_lambda(i,j) = l2(i,j);
 
-                                if(vcl_fabs(l1(i,j)) < vcl_fabs(l3(i,j))){
+                                if(std::fabs(l1(i,j)) < std::fabs(l3(i,j))){
                                         second_largest_eigen_x(i,j) = e3(i,j,0);
                                         second_largest_eigen_y(i,j) = e3(i,j,1);
                                         second_largest_eigen_z(i,j) = e3(i,j,2);
@@ -141,7 +141,7 @@ void sliceRidgeDetectProcessor::pickLargerEigenvalues(const vil_image_view<float
                         }
                 }
                 else{
-                        if(vcl_fabs(l1(i,j)) < vcl_fabs(l3(i,j))){
+                        if(std::fabs(l1(i,j)) < std::fabs(l3(i,j))){
                                 largest_eigen_x(i,j) = e3(i,j,0);
                                 largest_eigen_y(i,j) = e3(i,j,1);
                                 largest_eigen_z(i,j) = e3(i,j,2);
@@ -162,7 +162,7 @@ void sliceRidgeDetectProcessor::pickLargerEigenvalues(const vil_image_view<float
                                 largest_eigen_z(i,j) = e1(i,j,2);
                                 largest_lambda(i,j) = l1(i,j);
 
-                                if(vcl_fabs(l2(i,j)) < vcl_fabs(l3(i,j))){
+                                if(std::fabs(l2(i,j)) < std::fabs(l3(i,j))){
                                         second_largest_eigen_x(i,j) = e3(i,j,0);
                                         second_largest_eigen_y(i,j) = e3(i,j,1);
                                         second_largest_eigen_z(i,j) = e3(i,j,2);
@@ -215,15 +215,15 @@ void sliceRidgeDetectProcessor::computeRho3d(
         const float* ydata = gradient_y.origin_ptr();
         const float* zdata = gradient_z.origin_ptr();
 
-        vcl_ptrdiff_t x_istep = gradient_x.istep();
-        vcl_ptrdiff_t x_jstep = gradient_x.jstep();
-        vcl_ptrdiff_t x_kstep = gradient_x.kstep();
-        vcl_ptrdiff_t y_istep = gradient_y.istep();
-        vcl_ptrdiff_t y_jstep = gradient_y.jstep();
-        vcl_ptrdiff_t y_kstep = gradient_y.kstep();
-        vcl_ptrdiff_t z_istep = gradient_z.istep();
-        vcl_ptrdiff_t z_jstep = gradient_z.jstep();
-        vcl_ptrdiff_t z_kstep = gradient_z.kstep();
+        std::ptrdiff_t x_istep = gradient_x.istep();
+        std::ptrdiff_t x_jstep = gradient_x.jstep();
+        std::ptrdiff_t x_kstep = gradient_x.kstep();
+        std::ptrdiff_t y_istep = gradient_y.istep();
+        std::ptrdiff_t y_jstep = gradient_y.jstep();
+        std::ptrdiff_t y_kstep = gradient_y.kstep();
+        std::ptrdiff_t z_istep = gradient_z.istep();
+        std::ptrdiff_t z_jstep = gradient_z.jstep();
+        std::ptrdiff_t z_kstep = gradient_z.kstep();
 
 
         int z =  static_cast<int>(nk/2.);
@@ -288,14 +288,14 @@ void sliceRidgeDetectProcessor::computeRho3d(
 #define SIGN(X) (X < 0? -1 : (X==0 ? 0 : 1))
         for(int j =0; j < nj; j++) {
         for(int i =0; i < ni; i++) {
-        rho(i,j) = (int)(-0.5*SIGN(lambda(i,j))*vcl_abs(SIGN(gI_dot_nu_plus_e(i,j)) - SIGN(gI_dot_nu_minus_e(i,j))));
+        rho(i,j) = (int)(-0.5*SIGN(lambda(i,j))*std::abs(SIGN(gI_dot_nu_plus_e(i,j)) - SIGN(gI_dot_nu_minus_e(i,j))));
         }
         }
 
 #undef SIGN
 }
 
-vcl_vector<float*> sliceRidgeDetectProcessor::process(const vcl_vector< vcl_vector<float*> >& slice_sets, 
+std::vector<float*> sliceRidgeDetectProcessor::process(const std::vector< std::vector<float*> >& slice_sets, 
 int w, int h, int z)
 {
         int ni = w;
@@ -308,7 +308,7 @@ int w, int h, int z)
         vil_image_view<float> second_largest_eigen_y(ni,nj);
         vil_image_view<float> second_largest_eigen_z(ni,nj);
 
-        vcl_vector<float*> toreturn;
+        std::vector<float*> toreturn;
         toreturn.push_back( new float[w*h]);
         toreturn.push_back( new float[w*h]);
         toreturn.push_back( new float[w*h]);
@@ -339,9 +339,9 @@ int w, int h, int z)
 
 
         for(int i = 0; i < this->nslices(); i++){
-                vcl_memcpy(local_gx.origin_ptr() + i*local_gx.kstep(),slice_sets[0][i],w*h*sizeof(float));
-                vcl_memcpy(local_gy.origin_ptr() + i*local_gy.kstep(),slice_sets[1][i],w*h*sizeof(float));
-                vcl_memcpy(local_gz.origin_ptr() + i*local_gz.kstep(),slice_sets[2][i],w*h*sizeof(float));
+                std::memcpy(local_gx.origin_ptr() + i*local_gx.kstep(),slice_sets[0][i],w*h*sizeof(float));
+                std::memcpy(local_gy.origin_ptr() + i*local_gy.kstep(),slice_sets[1][i],w*h*sizeof(float));
+                std::memcpy(local_gz.origin_ptr() + i*local_gz.kstep(),slice_sets[2][i],w*h*sizeof(float));
 
         }
 
@@ -364,43 +364,43 @@ int w, int h, int z)
         Im_xz = vil3d_slice_ij(gxz,(int)(this->nslices()/2.));
         Im_yz = vil3d_slice_ij(gyz,(int)(this->nslices()/2.));
 
-        vcl_cout << " Hessian Decompose ...";
+        std::cout << " Hessian Decompose ...";
         this->hessian_decompose_oneslice( 
                         Im_xx, Im_yy, Im_zz, 
                         Im_xy, Im_xz, Im_yz,
                         e1, e2, e3,
                         l1, l2, l3);
 
-        vcl_cout << "done\n";
+        std::cout << "done\n";
 
-        vcl_cout << " Pick Larger Eigenvalues ...";
+        std::cout << " Pick Larger Eigenvalues ...";
         this->pickLargerEigenvalues(e1, e2, e3, l1, l2, l3,
                               largest_eigen_x, largest_eigen_y, largest_eigen_z, 
                               lambda1, 
                               second_largest_eigen_x, second_largest_eigen_y, second_largest_eigen_z, 
                               lambda2,
                               eigenv3);
-        vcl_cout << "done\n";
+        std::cout << "done\n";
         }
         vil_image_view<int> rho_largest(ni,nj,1);
         vil_image_view<int> rho_second_largest(ni,nj,1);
 
-        vcl_cout << " Compute Rho3d (largest) ...";
+        std::cout << " Compute Rho3d (largest) ...";
      this->computeRho3d(local_gx,local_gy,local_gz, largest_eigen_x, largest_eigen_y, largest_eigen_z, 
                   lambda1, z,
                   rho_largest);
-     vcl_cout << "done\n";
+     std::cout << "done\n";
 
-     vcl_cout << " Compute Rho3d (2nd largest) ...";
+     std::cout << " Compute Rho3d (2nd largest) ...";
      computeRho3d( local_gx,local_gy,local_gz, second_largest_eigen_x, second_largest_eigen_y, second_largest_eigen_z, 
                   lambda2,z,
                   rho_second_largest);
-     vcl_cout << "done\n";
+     std::cout << "done\n";
 
-     vcl_cout << " Combine results ...";
+     std::cout << " Combine results ...";
      vil_math_image_sum(rho_largest,rho_second_largest,rho);
      vil_math_scale_values(rho, 0.5);
-     vcl_cout << "done\n";
+     std::cout << "done\n";
 
      return toreturn;
 }

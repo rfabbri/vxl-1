@@ -1,10 +1,10 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_edge_map.h>
 #include <det/edge_det_nonmaximum_suppression.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_erf.h>
@@ -12,9 +12,9 @@
 void create_3d_circle_data_analytically(int radius, int theta, int phi, det_edge_map &cm)
 {
   double sigma = 1.0;
-  double a = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_cos(double(phi*vnl_math::pi/180));
-  double b = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_sin(double(phi*vnl_math::pi/180));
-  double c = vcl_cos(double(theta*vnl_math::pi/180));
+  double a = std::sin(double(theta*vnl_math::pi/180)) * std::cos(double(phi*vnl_math::pi/180));
+  double b = std::sin(double(theta*vnl_math::pi/180)) * std::sin(double(phi*vnl_math::pi/180));
+  double c = std::cos(double(theta*vnl_math::pi/180));
   double r = radius;
   vgl_point_3d<double> centre(10,10,10);
   vgl_vector_3d<double> n(a,b,c);
@@ -34,16 +34,16 @@ void create_3d_circle_data_analytically(int radius, int theta, int phi, det_edge
         vgl_vector_3d<double> v1(v-v0);
         double dist = v1.length() - r;
         directions[x][y][z] = v1;
-        img[x][y][z] = vcl_exp(-vcl_pow(dist,2.0)/(2*vcl_pow(sigma,2.0)));
+        img[x][y][z] = std::exp(-std::pow(dist,2.0)/(2*std::pow(sigma,2.0)));
       }
     }
   }
   //write super resolution image to file
-/*  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
+/*  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
   char buffer[10];
   fname = fname + "radius=" + itoa(radius, buffer, 10) + ",center=" + itoa(theta, buffer, 10) + 
                                                          ",phi=" + itoa(phi, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   
   for(int z=0; z<dim; z++)
   {
@@ -51,13 +51,13 @@ void create_3d_circle_data_analytically(int radius, int theta, int phi, det_edge
     {
       for(int x=0; x<dim; x++)
       {
-        vcl_fprintf(fp, "%f ", img[x][y][z]);
+        std::fprintf(fp, "%f ", img[x][y][z]);
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 
   // fill the edge map
   for(int z=0; z<dim; z++)
@@ -76,9 +76,9 @@ void create_3d_circle_data_analytically(int radius, int theta, int phi, det_edge
 
 void create_3d_circle_data_analytically_v2(int radius, int theta, int phi, det_edge_map &cm)
 {
-  double a = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_cos(double(phi*vnl_math::pi/180));
-  double b = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_sin(double(phi*vnl_math::pi/180));
-  double c = vcl_cos(double(theta*vnl_math::pi/180));
+  double a = std::sin(double(theta*vnl_math::pi/180)) * std::cos(double(phi*vnl_math::pi/180));
+  double b = std::sin(double(theta*vnl_math::pi/180)) * std::sin(double(phi*vnl_math::pi/180));
+  double c = std::cos(double(theta*vnl_math::pi/180));
   double r = radius;
   vgl_point_3d<double> centre(10,10,10);
   vgl_vector_3d<double> n(a,b,c);
@@ -101,7 +101,7 @@ void create_3d_circle_data_analytically_v2(int radius, int theta, int phi, det_e
         vgl_vector_3d<double> v0(dot_product(v,n) * n);
         vgl_vector_3d<double> v1(v-v0);
         double dist = v1.length() - r;
-        img[x][y][z] = vnl_erf(dist / (vcl_sqrt(2.0)*erf_sigma));
+        img[x][y][z] = vnl_erf(dist / (std::sqrt(2.0)*erf_sigma));
       }
     }
   }
@@ -118,15 +118,15 @@ void create_3d_circle_data_analytically_v2(int radius, int theta, int phi, det_e
     {
       for(int z = -offset; z <= offset; z++)
       {
-        gauss_x[x+offset][y+offset][z+offset] = (x/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_y[x+offset][y+offset][z+offset] = (y/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_z[x+offset][y+offset][z+offset] = (z/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_x[x+offset][y+offset][z+offset] = (x/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_y[x+offset][y+offset][z+offset] = (y/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_z[x+offset][y+offset][z+offset] = (z/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
       }
     }
   }

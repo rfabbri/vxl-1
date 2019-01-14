@@ -6,7 +6,7 @@
 // \date   Aug 2005
 
 #include "dbrl_feature_point_tangent_curvature.h"
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vnl/vnl_vector.h>
 
 //: Represent a point in space.
@@ -19,16 +19,16 @@ class dbrl_feature_point_tangent_curvature_groupings: public dbrl_feature_point_
  public:
 
   //:
-  dbrl_feature_point_tangent_curvature_groupings( vnl_vector<double> const loc,double const dir,vcl_vector<unsigned> ns);
-  dbrl_feature_point_tangent_curvature_groupings( double x,double y,double dir,vcl_vector<unsigned> ns);
+  dbrl_feature_point_tangent_curvature_groupings( vnl_vector<double> const loc,double const dir,std::vector<unsigned> ns);
+  dbrl_feature_point_tangent_curvature_groupings( double x,double y,double dir,std::vector<unsigned> ns);
   dbrl_feature_point_tangent_curvature_groupings();
   ~dbrl_feature_point_tangent_curvature_groupings();
 
 
-       vcl_vector<unsigned> feature_neighbor_map_;
+       std::vector<unsigned> feature_neighbor_map_;
   void set_location(vnl_vector<double> loc){location_=loc;}
 
-  virtual void print_feature(vcl_ostream &os);
+  virtual void print_feature(std::ostream &os);
 
   // ==== Binary IO methods ======
 
@@ -42,10 +42,10 @@ class dbrl_feature_point_tangent_curvature_groupings: public dbrl_feature_point_
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_feature_point_tangent_curvature_groupings";}
+  virtual std::string is_a() const {return "dbrl_feature_point_tangent_curvature_groupings";}
 
   virtual dbrl_feature * clone() const;
 

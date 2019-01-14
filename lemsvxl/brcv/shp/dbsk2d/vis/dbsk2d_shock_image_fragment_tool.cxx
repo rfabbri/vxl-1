@@ -41,7 +41,7 @@ dbsk2d_shock_image_fragment_tool::form_image_fragment(vil_image_resource_sptr im
   //Note: currently this method only works for xshock edge fragments
   
   int width = (int)fragment->shock_edge()->psi_max() + 1;
-  int max_r = (int)vcl_floor(fragment->shock_edge()->r(width-1));
+  int max_r = (int)std::floor(fragment->shock_edge()->r(width-1));
   int height = 2*max_r;
 
   //resize the image to the dimension of its intrinsic domain
@@ -54,7 +54,7 @@ dbsk2d_shock_image_fragment_tool::form_image_fragment(vil_image_resource_sptr im
 
   for (unsigned p=0;p<img.nplanes();++p){
     for (int x=0; x<width ; x++){ //psi
-      int t_max = (int)vcl_floor(fragment->shock_edge()->r(x));
+      int t_max = (int)std::floor(fragment->shock_edge()->r(x));
       for (int t=1; t<=t_max; t++){ //t
         vgl_point_2d<double> ex_pt1 = fragment->shock_edge()->get_ex_coords(x, t-0.5); //+ side
         vgl_point_2d<double> ex_pt2 = fragment->shock_edge()->get_ex_coords(x, -t+0.5);//- side
@@ -86,7 +86,7 @@ dbsk2d_shock_image_fragment_tool::form_image_fragment2(vil_image_resource_sptr i
   //Note: currently this method only works for xshock edge fragments
 
   int width = (int)fragment->shock_edge()->psi_max() + 1;
-  int max_r = (int)vcl_floor(fragment->shock_edge()->r(width-1));
+  int max_r = (int)std::floor(fragment->shock_edge()->r(width-1));
   int height = 2*max_r;
 
   //resize the image to the dimension of its intrinsic domain
@@ -99,7 +99,7 @@ dbsk2d_shock_image_fragment_tool::form_image_fragment2(vil_image_resource_sptr i
 
   for (unsigned p=0;p<img.nplanes();++p){
     for (int x=0; x<width ; x++){ //psi
-      int t_max = (int)vcl_floor(fragment->shock_edge()->r(x));
+      int t_max = (int)std::floor(fragment->shock_edge()->r(x));
       for (int t=1; t<=t_max; t++){ //t
         vgl_point_2d<double> ex_pt1 = fragment->shock_edge()->get_ex_coords(x, t-0.5); //+ side
         vgl_point_2d<double> ex_pt2 = fragment->shock_edge()->get_ex_coords(x, -t+0.5);//- side
@@ -149,7 +149,7 @@ dbsk2d_shock_image_fragment_tool::handle( const vgui_event & e,
         //display an error message only 
         mydialog.message("No image associated with this geometry!");
       }
-      vcl_string button_txt("Close Dialog");
+      std::string button_txt("Close Dialog");
       mydialog.set_ok_button(button_txt.c_str());
       mydialog.set_cancel_button(0);
       mydialog.ask();
@@ -161,7 +161,7 @@ dbsk2d_shock_image_fragment_tool::handle( const vgui_event & e,
   return dbsk2d_rich_map_query_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_shock_image_fragment_tool::name() const
 {
   return "Inspect Visual Image Fragment";

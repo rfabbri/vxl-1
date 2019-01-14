@@ -1,10 +1,10 @@
 #if !defined(SPLR_MAP_H_)
 #define SPLR_MAP_H_
 
-#include <vcl_map.h>
-#include <vcl_cassert.h>
+#include <map>
+#include <cassert>
 
-/*: \brief wrapper around some kind of map (currently a vcl_map)
+/*: \brief wrapper around some kind of map (currently a std::map)
     \author P. N. Klein
 */
 
@@ -13,7 +13,7 @@ template <class K, class V>
 class splr_map {
 
  public: //should be private--this is for io, which should be friend
-    typedef typename vcl_map<K, V> underlying_map;
+    typedef typename std::map<K, V> underlying_map;
     underlying_map map_;
   public:
     splr_map() {}    

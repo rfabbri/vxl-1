@@ -2,7 +2,7 @@
 // Ian Scott, Feb 2004.
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 #include "tube.h"
 #include <vnl/vnl_math.h>
@@ -14,7 +14,7 @@
 vnl_double_3x3 R(0.0);
 
 /////////////////////////////////////////////////////////////////////
-vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
+vnl_vector <int> min_max(std::vector <vgl_point_3d<double> > pts) {
 
   int max_z_index,min_z_index,max_x_index,min_x_index;
   double max_z=-10000.0,min_z=10000.0,max_x=-100000.0,min_x=100000.0;
@@ -35,7 +35,7 @@ vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
 }
 
 /////////////////////////////////////////////////////////////////////
-int find_near_point(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
+int find_near_point(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
                              int start_i,int end_i,bool y_flag=true)
 {
 
@@ -64,16 +64,16 @@ int find_near_point(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double>
 struct p_list_set 
 {
    int probe_number;
-   vcl_vector <vnl_matrix <float>  >p_list;
+   std::vector <vnl_matrix <float>  >p_list;
    int class_id;
    float scale;
 };
 
 /////////////////////////////////////////////////////////////////////
-void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_set_)
+void save_points(std::string save_filename,std::vector <struct p_list_set> p_list_set_)
 {
   
-  vcl_ofstream out(save_filename.c_str());
+  std::ofstream out(save_filename.c_str());
 
   if(!out.is_open()){
     std::cerr<<"Cannot open the write selected probes file.\n";
@@ -83,45 +83,45 @@ void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_
 
   out<<p_list_set_.size()<<"\n";
   for (unsigned i=0;i<p_list_set_.size();i++) {
-    out<<i<<" "<<p_list_set_[i].p_list.size()<<vcl_endl;
+    out<<i<<" "<<p_list_set_[i].p_list.size()<<std::endl;
     for( unsigned j=0;j<p_list_set_[i].p_list.size();j++){
-      out<<p_list_set_[i].p_list[j]<< vcl_endl ;
+      out<<p_list_set_[i].p_list[j]<< std::endl ;
     }
   }
-  out<<"from 3d detection"<<vcl_endl;
+  out<<"from 3d detection"<<std::endl;
   out.close();
   /*
   out<<"Scale:"<<Scale<<" Box_Add: "<<Box_Add<<"\n "
     <<" cube_inc: "<<cube_inc_<<" d_tube_: "<<d_tube_<<"\n"
-    <<" d3_rho_: "<<d3_rho_<<" s_thresh_1: "<<s_thresh_1<<vcl_endl;
-  out<<"shift:"<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<vcl_endl;
-  out<<"theta:"<<theta_x<<" "<<theta_y<<" "<<theta_z<<vcl_endl;
-  out<<"cut:"<<cut<<" p0 absoulut?: "<<p0_abs_flag<<vcl_endl;
-  out<<"epsilon_small_:"<<epsilon_small_<<" distorsion: "<<right_back_shift<<" right up: "<<right_up<<vcl_endl;
+    <<" d3_rho_: "<<d3_rho_<<" s_thresh_1: "<<s_thresh_1<<std::endl;
+  out<<"shift:"<<shift_x_arg<<" "<<shift_y_arg<<" "<<shift_z_arg<<std::endl;
+  out<<"theta:"<<theta_x<<" "<<theta_y<<" "<<theta_z<<std::endl;
+  out<<"cut:"<<cut<<" p0 absoulut?: "<<p0_abs_flag<<std::endl;
+  out<<"epsilon_small_:"<<epsilon_small_<<" distorsion: "<<right_back_shift<<" right up: "<<right_up<<std::endl;
 
   out<<"\n"<<"right spread: "<<right_spread<<" left spread: "<<left_spread<<
-    " up_spread: "<<up_spread<<" back_spread: "<<back_spread<<vcl_endl;
+    " up_spread: "<<up_spread<<" back_spread: "<<back_spread<<std::endl;
   for (unsigned i=0;i<fore_name.size();i++) {
-    out<<fore_name[i]<<vcl_endl;
+    out<<fore_name[i]<<std::endl;
   }
 */
 
 }
 
 ////////////////////////////////////////////////////////////////////
-read_wrl_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
-  vcl_ifstream in(argv);
+read_wrl_file(std::vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
+  std::ifstream in(argv);
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     exit(-4);
     return -1;
   }
   
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
   while (!in.eof()) {
 
     in>>hhh;
@@ -129,43 +129,43 @@ read_wrl_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=
       in>>x>>y>>z;
       vgl_point_3d<double> p3d(x,y,z);
       ptl.push_back(p3d);
-      //vcl_cout<<p3d<<vcl_endl;
+      //std::cout<<p3d<<std::endl;
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
 
   if (!rotation) return 1;
 
-  vcl_vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_z;
   for (unsigned i=0;i<ptl.size();i++) {
     vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
     pts_z.push_back(R*p);
-   // vcl_cout<<R*p<<vcl_endl;
+   // std::cout<<R*p<<std::endl;
   }
 
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   ptl.clear();
 
   for (unsigned i=0;i<pts_z.size();i++) {
     vgl_point_3d <double> p(pts_z[i](0),pts_z[i](1),pts_z[i](2));
 
     ptl.push_back(p);
-    //vcl_cout<<p<<vcl_endl;
+    //std::cout<<p<<std::endl;
   }
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   in.close();
 
 return 1;
 }
 
 /////////////////////////////////////////////////////////////////////
-pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
-                     vcl_vector <vgl_point_3d<double> > &pts_r,
-                     vcl_vector <vgl_point_3d<double> > const &pts,
+pts_f_and_r_from_pts(std::vector <vgl_point_3d<double> > &pts_f,
+                     std::vector <vgl_point_3d<double> > &pts_r,
+                     std::vector <vgl_point_3d<double> > const &pts,
                      char choice)
 {
-  vcl_cout<<choice<<vcl_endl;
+  std::cout<<choice<<std::endl;
   //exit(1);
   float max_y=-100000,min_y=100000;
   float max_x=-100000,min_x=100000;
@@ -204,40 +204,40 @@ pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
       flag_r=false; flag_f=true;
     }
     else {
-      vcl_cout<<"pts dividing error\n"<<vcl_endl;
+      std::cout<<"pts dividing error\n"<<std::endl;
       exit (-2);
     }
     if (pre_flag_r!=flag_r) 
-    {vcl_cout<<"***** switched"<<vcl_endl;
-    vcl_cerr<<"***** switched"<<vcl_endl;}
+    {std::cout<<"***** switched"<<std::endl;
+    std::cerr<<"***** switched"<<std::endl;}
 
     pre_flag_r=flag_r;
-    //vcl_cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<vcl_endl;
+    //std::cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<std::endl;
   }
 
 
-  vcl_cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<vcl_endl;
+  std::cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<std::endl;
   //exit(1);
 }
 
 /////////////////////////////////////////////////////////////////////
-read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
-  vcl_ifstream in(argv);
+read_bb_box_file(std::vector <vgl_point_3d<double> > & ptl,char* argv){
+  std::ifstream in(argv);
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     return -1;
   }
 
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
   double dummy;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
 
   for (unsigned j=0;j<3;j++) {
     in >>hhh;
-    vcl_cout<<hhh<<vcl_endl;
+    std::cout<<hhh<<std::endl;
   }
 
   double temp;
@@ -256,7 +256,7 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
   R[2][0]=RT[2][0];R[2][1]=RT[2][1];R[2][2]=RT[2][2];
 
   R.normalize_columns();
-  vcl_cout<<R<<vcl_endl;
+  std::cout<<R<<std::endl;
 
   while (!in.eof()) {
 
@@ -271,11 +271,11 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
       in>>y>>z;
       vgl_point_3d<double> p3d(x,y,z);
       ptl.push_back(p3d);
-      vcl_cout<<p3d<<vcl_endl; 
+      std::cout<<p3d<<std::endl; 
       //exit(1);
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
   in.close();
   //exit(0);
   return 1;
@@ -290,9 +290,9 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
 int recognizer(vnl_matrix <double> P,double HoC,char* argv)
 {
   vnl_vector <double> v(3,0);
-  vcl_vector <vnl_vector <double> > C0,C1,C2;
+  std::vector <vnl_vector <double> > C0,C1,C2;
 
-  vcl_vector <vcl_vector <vnl_vector <double> > >C;
+  std::vector <std::vector <vnl_vector <double> > >C;
   double x,y,z;
 
   x=-179.21471; y= -25.48460;  z= 28.59190;  v(0)=x; v(1)=y; v(2)=z; C0.push_back(v);//cube_x=12.97000;  cube_y= 6.39340;  cube_z= 7.46310;             break;
@@ -330,116 +330,116 @@ int recognizer(vnl_matrix <double> P,double HoC,char* argv)
 
   C.push_back(C0);C.push_back(C1);C.push_back(C2);
  
-  /*vcl_cout<<"x01 distance :" ;
+  /*std::cout<<"x01 distance :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    vcl_cout<<C[i][1][0]-C[i][0][0]<<" ";
+    std::cout<<i<<":" ;
+    std::cout<<C[i][1][0]-C[i][0][0]<<" ";
   }*/
 
   double R_HoC=0.0;
-  vcl_cout<<"HoC :" ;
+  std::cout<<"HoC :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    vcl_cout<<C[i][1][2]/12.0<<" ";
+    std::cout<<i<<":" ;
+    std::cout<<C[i][1][2]/12.0<<" ";
   }
 
-  vcl_cout<<vcl_endl;
-  vcl_cout<<"LEN :" ;
+  std::cout<<std::endl;
+  std::cout<<"LEN :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    vcl_cout<<vcl_fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
+    std::cout<<i<<":" ;
+    std::cout<<std::fabs(C[i][0][0]-C[i][7][0])/12.0<<" ";
   }
 
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
   double CR_x01_07[3];
-  vcl_cout<<"x01/x07 ratio  :" ;
+  std::cout<<"x01/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
+    std::cout<<i<<":" ;
     CR_x01_07[i]=(C[i][1][0]-C[i][0][0])/(C[i][7][0]-C[i][0][0]);
-    vcl_cout<<CR_x01_07[i]<<" ";
+    std::cout<<CR_x01_07[i]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
   double CR_x19_07[3];
-  vcl_cout<<"x19/x07 ratio  :" ;
+  std::cout<<"x19/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
+    std::cout<<i<<":" ;
     CR_x19_07[i]=(C[i][9][0]-C[i][1][0])/(C[i][7][0]-C[i][0][0]);
-    vcl_cout<<CR_x19_07[i]<<" ";
+    std::cout<<CR_x19_07[i]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
   double CR_x79_07[3];
-  vcl_cout<<"x79/x07 ratio  :" ;
+  std::cout<<"x79/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    CR_x79_07[i]=vcl_abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
-    vcl_cout<<CR_x79_07[i]<<" ";
+    std::cout<<i<<":" ;
+    CR_x79_07[i]=std::abs(C[i][9][0]-C[i][7][0])/(C[i][7][0]-C[i][0][0]);
+    std::cout<<CR_x79_07[i]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
 
   double CR_z37_39[3];
-  vcl_cout<<"z37/z39 ratio  :" ;
+  std::cout<<"z37/z39 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    CR_z37_39[i]=vcl_abs(C[i][7][2])/(C[i][9][2]);
-    vcl_cout<<CR_z37_39[i]<<" ";
+    std::cout<<i<<":" ;
+    CR_z37_39[i]=std::abs(C[i][7][2])/(C[i][9][2]);
+    std::cout<<CR_z37_39[i]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
   double CR_x07_z39[3];
-  vcl_cout<<"z39/x07 ratio  :" ;
+  std::cout<<"z39/x07 ratio  :" ;
   for (unsigned i=0;i<3;i++) 
   {
 
-    vcl_cout<<i<<":" ;
-    CR_x07_z39[i]=vcl_abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
-    vcl_cout<<CR_x07_z39[i]<<" ";
+    std::cout<<i<<":" ;
+    CR_x07_z39[i]=std::abs((C[i][9][2])/((C[i][7][0]-C[i][0][0])));
+    std::cout<<CR_x07_z39[i]<<" ";
   }
-  vcl_cout<<vcl_endl;
+  std::cout<<std::endl;
 
 
-  vcl_cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<vcl_endl;
-  double x01=vcl_fabs(P(1,0)-P(0,0));
-  double x07=vcl_fabs(P(7,0)-P(0,0));
-  double x79=vcl_fabs(P(7,0)-P(9,0));
-  double real_length=vcl_fabs(P(0,0)-P(7,0));
-  vcl_cout<<"HoC:"<<HoC-0.9<<vcl_endl;
-  vcl_cout<<"length: "<<real_length<<vcl_endl;
+  std::cout<<"-------------\n"<<"input:"<<" "<<" \n--------------"<<std::endl;
+  double x01=std::fabs(P(1,0)-P(0,0));
+  double x07=std::fabs(P(7,0)-P(0,0));
+  double x79=std::fabs(P(7,0)-P(9,0));
+  double real_length=std::fabs(P(0,0)-P(7,0));
+  std::cout<<"HoC:"<<HoC-0.9<<std::endl;
+  std::cout<<"length: "<<real_length<<std::endl;
 
-  vcl_cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  vcl_cout<<"x19/x07 ratio  : "<<vcl_fabs(P(1,0)-P(9,0))/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
-  vcl_cout<<"x79/x07 ratio  : "<<x79/x07<<vcl_endl ;
-  vcl_cout<<"z3             : "<<P(3,2)<<vcl_endl;
-  /////////bug///vcl_cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<vcl_endl;
-  vcl_cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<vcl_endl;
-
-
-  vcl_cout<<"z9/x07  ratio  : "<<(HoC-.9)/vcl_fabs(P(0,0)-P(7,0))<<vcl_endl;
+  std::cout<<"x01/x07 ratio  : "<<x01<<"  ratio "<<x01/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  std::cout<<"x19/x07 ratio  : "<<std::fabs(P(1,0)-P(9,0))/std::fabs(P(0,0)-P(7,0))<<std::endl;
+  std::cout<<"x79/x07 ratio  : "<<x79/x07<<std::endl ;
+  std::cout<<"z3             : "<<P(3,2)<<std::endl;
+  /////////bug///std::cout<<"z7/z9   ratio  : "<<P(3,2)/HoC<<std::endl;
+  std::cout<<"z7/z9   ratio  : "<<P(7,2)/HoC<<std::endl;
 
 
+  std::cout<<"z9/x07  ratio  : "<<(HoC-.9)/std::fabs(P(0,0)-P(7,0))<<std::endl;
 
 
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) return 00;
-  if (x01/vcl_fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) return 01; // big offset 0 and 1
+
+
+  if (x01/std::fabs(P(0,0)-P(7,0))>.20 && HoC-.9 < 4.5) return 00;
+  if (x01/std::fabs(P(0,0)-P(7,0))>.16 && HoC-.9 < 3.5) return 01; // big offset 0 and 1
   if (HoC-.9 < 3.0) return 02;                                    // small height
-  if ((HoC-.9)/vcl_fabs(P(0,0)-P(7,0)) < .2) return 03;           //height/length
+  if ((HoC-.9)/std::fabs(P(0,0)-P(7,0)) < .2) return 03;           //height/length
   //if (real_length<12) return 02;
 
   if (HoC-.9>5.5) return 23;  // if too high, van..
@@ -452,7 +452,7 @@ int recognizer(vnl_matrix <double> P,double HoC,char* argv)
   if (P(3,2)<2.0&&P(2,2)<2.5) return 21;
 
 
-  //if (x01/vcl_fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) return 05;
+  //if (x01/std::fabs(P(0,0)-P(7,0))>.3 && HoC-.9 < 4.5) return 05;
  // if ((P(7,0)-.9)/(HoC-.9)>.5) return 19;
  // if ((P(7,0)-.9)/(HoC-.9)<.4) return 29;
   if (P(7,2)/HoC>.5) return 19;
@@ -473,13 +473,13 @@ int recognizer(vnl_matrix <double> P,double HoC,char* argv)
 ///////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
-  vcl_cout << "Test dtube\n";
+  std::cout << "Test dtube\n";
 
   vgl_point_3d <double> pts0(1,0,0);
 
-  vcl_cout << "Inputs\n";
+  std::cout << "Inputs\n";
   // Simple triangle
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
   pts.push_back( vgl_point_3d<double>(0.0, 0, 0.0) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .74) );
   pts.push_back( vgl_point_3d<double>(3.0, 0, .75) );
@@ -488,8 +488,8 @@ int main(int argc, char* argv[])
   pts.push_back( vgl_point_3d<double>(0.0, 0, 5.0) );
 
   //for (unsigned i=0; i < pts.size(); ++i)
-  //  vcl_cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
- // vcl_cout << vcl_endl;
+  //  std::cout << '(' << pts[i].x() <<','<<pts[i].z()<<") ";
+ // std::cout << std::endl;
 
   vgl_point_3d <double> e12(1,0,3);
   vgl_point_3d <double> e22(4,0,3);
@@ -509,9 +509,9 @@ int main(int argc, char* argv[])
 
  // aT.ranger(pts);
   /*vgl_polygon<double> poly=vgl_convex_hull(pts);
-  vcl_cout << "Outputs\n";
-  poly.print(vcl_cout);
-  vcl_cout << vcl_endl;
+  std::cout << "Outputs\n";
+  poly.print(std::cout);
+  std::cout << std::endl;
 
   TEST("inside", poly.contains( pts[0] ), true );
   TEST("inside", poly.contains( pts[1] ), true );
@@ -521,8 +521,8 @@ int main(int argc, char* argv[])
 
   
   if(argc!=4){
-    //vcl_cout << "Usage: "<< argv[0] << " <wrl_file>"<< vcl_endl;
-   // vcl_cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< vcl_endl;
+    //std::cout << "Usage: "<< argv[0] << " <wrl_file>"<< std::endl;
+   // std::cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< std::endl;
     //exit(0);
   }
 
@@ -530,13 +530,13 @@ int main(int argc, char* argv[])
 
   /////////////////////////////////////////
   /////////////////////////////////////////
-  vcl_vector<vgl_point_3d<double> >ptl;
-  vcl_vector<vgl_point_3d<double> >pts_f;
-  vcl_vector<vgl_point_3d<double> >pts_r;
+  std::vector<vgl_point_3d<double> >ptl;
+  std::vector<vgl_point_3d<double> >pts_f;
+  std::vector<vgl_point_3d<double> >pts_r;
   //read_wrl_file(ptl,"C:/CBB/A4000-4099/4073/sel/del.wrl");
   //read_wrl_file(pts_f,"C:/CBB/A4000-4099/4073/sel/delf.wrl");
   //read_wrl_file(pts_r,"C:/CBB/A4000-4099/4073/sel/delr.wrl");
-  vcl_vector <vgl_point_3d<double> >  pt07;
+  std::vector <vgl_point_3d<double> >  pt07;
   read_bb_box_file(pt07,"bbox_cam_my.txt");
   
   read_wrl_file(ptl,"del.wrl",true);
@@ -589,7 +589,7 @@ int main(int argc, char* argv[])
     
     vnl_vector <int> ans=p0.search(pts_r,s0);
     
-    vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point0.set(s0.x(),s0.y(),s0.z());
@@ -598,7 +598,7 @@ int main(int argc, char* argv[])
   }
   
   int p0_index= find_near_point( pts_r,max_point0,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  vcl_cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  std::cout<<"p0:->from bbox"<<P(0,0)<<" "<<P(0,1)<<" "<<P(0,2)<<" "<<pts_r[p0_index]<<std::endl<<"-------------------------------"<<std::endl;
   if (argc!=1) {
   P(0,0)=pts_r[p0_index].x();
   P(0,1)=pts_r[p0_index].y();
@@ -628,7 +628,7 @@ int main(int argc, char* argv[])
     
     vnl_vector <int> ans=p1.search(pts_r,s0);
     
-    vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -637,7 +637,7 @@ int main(int argc, char* argv[])
   }
   
   int p1_index= find_near_point( pts_r,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  vcl_cout<<"p1:"<<pts_r[p1_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  std::cout<<"p1:"<<pts_r[p1_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(1,0)=pts_r[p1_index].x();
   P(1,1)=pts_r[p1_index].y();
   P(1,2)=pts_r[p1_index].z();
@@ -651,7 +651,7 @@ int main(int argc, char* argv[])
     //p1.ranger(pts_r);
     //p1.search(pts_r,pts_r[i]);
     vnl_vector <int> ans=p1.search(pts_r,pts_r[i]);
-    vcl_cout<<pts_r[i]<<ans<<vcl_endl;
+    std::cout<<pts_r[i]<<ans<<std::endl;
   }*/
 
   //exit(1);
@@ -679,7 +679,7 @@ int main(int argc, char* argv[])
     
     vnl_vector <int> ans=p3.search(pts_r,s0);
     
-    vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point_p3.set(s0.x(),s0.y(),s0.z());
@@ -688,7 +688,7 @@ int main(int argc, char* argv[])
   }
   
   int p3_index= find_near_point( pts_r,max_point_p3,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-  vcl_cout<<"p3:"<<pts_r[p3_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  std::cout<<"p3:"<<pts_r[p3_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(3,0)=pts_r[p3_index].x();
   P(3,1)=pts_r[p3_index].y();
   P(3,2)=pts_r[p3_index].z();
@@ -716,7 +716,7 @@ int main(int argc, char* argv[])
     
     vnl_vector <int> ans=p9.search(pts_f,s0);
     
-    vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -726,7 +726,7 @@ int main(int argc, char* argv[])
   }
   
   int p9_index= find_near_point( pts_f,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가?
-  vcl_cout<<"p9:"<<pts_f[p9_index]<<vcl_endl<<"-------------------------------"<<vcl_endl;
+  std::cout<<"p9:"<<pts_f[p9_index]<<std::endl<<"-------------------------------"<<std::endl;
   P(9,0)=pts_f[p9_index].x();
   P(9,1)=pts_f[p9_index].y();
   P(9,2)=pts_f[p9_index].z();
@@ -752,19 +752,19 @@ int main(int argc, char* argv[])
 
       vnl_vector <int> ans=p2_nose.search(pts_f,s0);
 
-      vcl_cout<<ans<<" "<<s0<<vcl_endl;
+      std::cout<<ans<<" "<<s0<<std::endl;
       if (ans[4]>max) {
        max=ans[4];
      //if (2*ans[0]+ans[1]>max) {
      //   max=2*ans[0]+ans[1];
         max_point_p2_nose.set(s0.x(),s0.y(),s0.z());
-       // vcl_cout<<max<<s0<<vcl_endl;
+       // std::cout<<max<<s0<<std::endl;
       }
 
     }
 
     int p2_nose_index= find_near_point( pts_f,max_point_p2_nose,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가? no
-    vcl_cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<vcl_endl;
+    std::cout<<"p2_nose:"<<pts_f[p2_nose_index]<<"\n======================="<<std::endl;
     P(2,0)=pts_f[p2_nose_index].x();
     P(2,1)=pts_f[p2_nose_index].y();
     P(2,2)=pts_f[p2_nose_index].z();
@@ -782,9 +782,9 @@ int main(int argc, char* argv[])
     if (max_r_z.z()>height_of_car) height_of_car=max_r_z.z();
 
     int result=recognizer(P,height_of_car,argv[0]);
-    vcl_cout<<"************************************\n"<<result<<"        "<<vul_file::get_cwd()<<
-      "\n************************************"<<vcl_endl;
-    vcl_cout<<P<<vcl_endl;
+    std::cout<<"************************************\n"<<result<<"        "<<vul_file::get_cwd()<<
+      "\n************************************"<<std::endl;
+    std::cout<<P<<std::endl;
     /*
     t1.set(1,0,-1);
     t2.set(0,0,-1);
@@ -792,7 +792,7 @@ int main(int argc, char* argv[])
     for (unsigned i=0;i<20;i++) // search just 10 points..
     {
     //for (double t1z=0;t1z<1;t1z+=.1) {
-    if (vcl_fabs(pts_r[i].z()-pts_r[0].z()) <.5)
+    if (std::fabs(pts_r[i].z()-pts_r[0].z()) <.5)
     {
 
 
@@ -804,7 +804,7 @@ int main(int argc, char* argv[])
     p1.set_length(3.0,4.0,4.0, 4.0);
 
     vnl_vector <int> ans=p1.search(pts_r,pts_r[i]);
-    vcl_cout<<ans<<vcl_endl;
+    std::cout<<ans<<std::endl;
     }
 
     }
@@ -859,7 +859,7 @@ int main(int argc, char* argv[])
     
     vnl_vector <int> ans=p9_angle.search(pts_f,s0);
     
-    vcl_cout<<ans<<" "<<s0<<vcl_endl;
+    std::cout<<ans<<" "<<s0<<std::endl;
     if (ans[4]>max) {
       max=ans[4];
       max_point.set(s0.x(),s0.y(),s0.z());
@@ -868,27 +868,27 @@ int main(int argc, char* argv[])
   }
   
   int p9_angle_index= find_near_point( pts_f,max_point,-1,-1,false);//  한평면에서 최소거리의 점은 그 평면이 아니어도 유지되는가?
-  vcl_cout<<"p9 angle:"<<pts_f[p9_angle_index]<<vcl_endl;
+  std::cout<<"p9 angle:"<<pts_f[p9_angle_index]<<std::endl;
 
   vgl_vector_3d <double>a1=ep7-pts_f[p9_angle_index];
   vgl_vector_3d <double>a2=ep9-pts_f[p9_angle_index];
 
   double dp=dot_product(a1,a2);
-  vcl_cout<<"dot_product(a1,a2)  "<<a1.length()<<" "<<a2.length()<<" "<<acos(dp/(a1.length()*a2.length()))*180/vnl_math::pi<<vcl_endl;
-  vcl_cout <<"a1(hood)" <<a1<<vcl_endl;
+  std::cout<<"dot_product(a1,a2)  "<<a1.length()<<" "<<a2.length()<<" "<<acos(dp/(a1.length()*a2.length()))*180/vnl_math::pi<<std::endl;
+  std::cout <<"a1(hood)" <<a1<<std::endl;
 
-  //vcl_cout<<"angle :" <<
+  //std::cout<<"angle :" <<
   //P(9,0)=pts_f[p9_index].x();
   //P(9,1)=pts_f[p9_index].y();
   //P(9,2)=pts_f[p9_index].z();
 
-   //vcl_cerr<<" vcl_cerr_test"<<vcl_endl;
+   //std::cerr<<" vcl_cerr_test"<<std::endl;
 
-   //vcl_cerr<<vul_file::dirname(argv[0]);
-  vcl_cerr<<vul_file::get_cwd()<<"----------------   "<<result<<vcl_endl;
-   //vcl_string input_file_path=".";
-  // vcl_string aaa=vul_file::strip_directory(input_file);
-   //   vcl_string nums1=vul_file::strip_extension(aaa);
+   //std::cerr<<vul_file::dirname(argv[0]);
+  std::cerr<<vul_file::get_cwd()<<"----------------   "<<result<<std::endl;
+   //std::string input_file_path=".";
+  // std::string aaa=vul_file::strip_directory(input_file);
+   //   std::string nums1=vul_file::strip_extension(aaa);
 
   exit(1);
   ///////////////////////////////
@@ -917,7 +917,7 @@ int main(int argc, char* argv[])
 
   vgl_point_3d <double> p7(P(7,0),P(7,1),P(7,2));
   unsigned int p7_index=find_near_point(pts_f,p7,1,pts_f.size());
-  vcl_cout<<p7_index<<vcl_endl;
+  std::cout<<p7_index<<std::endl;
   for (unsigned i=0;i<2;i++) // search just 10 points..
   {
 
@@ -925,7 +925,7 @@ int main(int argc, char* argv[])
     for (unsigned j=p7_index;j<p7_index+1 ;j++) { // near tha p9fC points..
       for (unsigned k=i+1;k<j;k++) {
 
-       // vcl_cout<<pts_f[i]<<pts_f[k]<<pts_f[j]<<vcl_endl;
+       // std::cout<<pts_f[i]<<pts_f[k]<<pts_f[j]<<std::endl;
         t1.set(pts_f[i].x()-pts_f[k].x(),pts_f[i].y()-pts_f[k].y(),pts_f[i].z()-pts_f[k].z());
         t2.set(pts_f[j].x()-pts_f[k].x(),pts_f[j].y()-pts_f[k].y(),pts_f[j].z()-pts_f[k].z());
 
@@ -933,7 +933,7 @@ int main(int argc, char* argv[])
         tube p789(pts_f[k],t1,t2,t3,t4,.1,-1,1,1,0,0);
         
         vnl_vector <int> ans=p789.search(pts_f,pts_f[k]);
-        vcl_cout<<ans<<vcl_endl;
+        std::cout<<ans<<std::endl;
         if (ans[4]>max_linear[4]) {
           max_linear=ans;
           max_lin_index=k;
@@ -952,8 +952,8 @@ int main(int argc, char* argv[])
     }
 
   }
-  vcl_cout<<"max_lin "<<max_linear<<" "<<max_lin_point<<vcl_endl;
-  vcl_cout<<"max_sqr "<<max_square<<" "<<max_square_point<<vcl_endl;
+  std::cout<<"max_lin "<<max_linear<<" "<<max_lin_point<<std::endl;
+  std::cout<<"max_sqr "<<max_square<<" "<<max_square_point<<std::endl;
 
 
 

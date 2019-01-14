@@ -112,9 +112,9 @@ void bwm_lidar_manager::quit()
 void bwm_lidar_manager::save_images()
 {
   vgui_dialog save_image_dlg("Save LIDAR Images");
-  static vcl_string image1_filename = "first_return.tiff";
-  static vcl_string image2_filename = "last_return.tiff";
-  static vcl_string ext = "*.*";
+  static std::string image1_filename = "first_return.tiff";
+  static std::string image2_filename = "last_return.tiff";
+  static std::string ext = "*.*";
   static bool save_float = false;
   
   save_image_dlg.file("First Returns:", ext, image1_filename);
@@ -148,8 +148,8 @@ void bwm_lidar_manager::save_images()
 void bwm_lidar_manager::save_mesh()
 {
   vgui_dialog save_image_dlg("Save Mesh");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.obj";
+  static std::string filename = "";
+  static std::string ext = "*.obj";
   
   save_image_dlg.file("Mesh File:", ext, filename);
   if (!save_image_dlg.ask())
@@ -166,9 +166,9 @@ void bwm_lidar_manager::save_mesh()
 void bwm_lidar_manager::load_images()
 {
   vgui_dialog load_image_dlg("Load LIDAR Images");
-  static vcl_string image1_filename = "";
-  static vcl_string image2_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image1_filename = "";
+  static std::string image2_filename = "";
+  static std::string ext = "*.*";
   static bool crop = false;
   static int min_x=0;
   static int min_y=0;
@@ -202,13 +202,13 @@ void bwm_lidar_manager::load_images()
   }
   classifier_.set_lidar_data(fr,lr);
   double ground = classifier_.estimate_bare_earth();
-  vcl_cout << "ground estimated at "<<ground <<vcl_endl;
+  std::cout << "ground estimated at "<<ground <<std::endl;
   
 
   double minv = classifier_.last_min();
   double maxv = classifier_.first_max();
 
-  vcl_cout << "range "<<minv<<" to "<<maxv<<vcl_endl;
+  std::cout << "range "<<minv<<" to "<<maxv<<std::endl;
 
   first_return_tab_->set_image_view(classifier_.first_return(), 
                                     new vgui_range_map_params(minv,maxv));
@@ -225,8 +225,8 @@ void bwm_lidar_manager::load_images()
 void bwm_lidar_manager::load_flimap()
 {
   vgui_dialog load_dlg("Load FLIMAP Data");
-  static vcl_string glob = "";
-  static vcl_string ext = "*";
+  static std::string glob = "";
+  static std::string ext = "*";
   static double min_x=594025.0, max_x=594450.0, min_y=3343770.0, max_y=3344020.0;
 
   load_dlg.file("File Glob:", ext, glob);
@@ -250,7 +250,7 @@ void bwm_lidar_manager::load_flimap()
   double minv = classifier_.last_min();
   double maxv = classifier_.first_max();
 
-  vcl_cout << "range "<<minv<<" to "<<maxv<<vcl_endl;
+  std::cout << "range "<<minv<<" to "<<maxv<<std::endl;
 
   first_return_tab_->set_image_view(classifier_.first_return(), 
                                     new vgui_range_map_params(minv,maxv));
@@ -320,7 +320,7 @@ void bwm_lidar_manager::refine_buildings()
 //=========================================================================
 void bwm_lidar_manager::construct_mesh()
 {
-  vcl_vector<vgl_polygon<double> > boundaries = bmdl_mesh::trace_boundaries(classifier_.labels());
+  std::vector<vgl_polygon<double> > boundaries = bmdl_mesh::trace_boundaries(classifier_.labels());
   bmdl_mesh::simplify_boundaries(boundaries);
   
   bmdl_mesh::mesh_lidar(boundaries, classifier_.labels(), 

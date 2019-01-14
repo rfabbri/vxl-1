@@ -48,10 +48,10 @@ dbrec3d_scene_model::dbrec3d_scene_model(boxm_scene_base_sptr scene_base):scene_
     hist_ = magnitude_hist;
     hist_.print_log();
     
-    vcl_cout << "Values with area above: \n";
+    std::cout << "Values with area above: \n";
     
     for (int i = 0 ; i <=20; i++) {
-      vcl_cout << float(i)/20.0  << " : " << hist_.value_with_area_above(float(i)/20.0) << "bin: " << hist_.bin_at_val(hist_.value_with_area_above(float(i)/20.0)) << vcl_endl;
+      std::cout << float(i)/20.0  << " : " << hist_.value_with_area_above(float(i)/20.0) << "bin: " << hist_.bin_at_val(hist_.value_with_area_above(float(i)/20.0)) << std::endl;
     }
     
 
@@ -71,8 +71,8 @@ dbrec3d_scene_model::dbrec3d_scene_model(boxm_scene_base_sptr scene_base):scene_
 QImage dbrec3d_scene_model::histogram_image()
 {
   
-  vcl_cout << " Creating Histogram Image: \n Number of bins: " << hist_.nbins() 
-  << " \n Hist : " << hist_ << vcl_endl;
+  std::cout << " Creating Histogram Image: \n Number of bins: " << hist_.nbins() 
+  << " \n Hist : " << hist_ << std::endl;
   QImage hist_image(hist_.nbins(), hist_.nbins(), QImage::Format_Indexed8);
   hist_image.fill(255);
   

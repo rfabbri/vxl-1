@@ -14,7 +14,7 @@
 //         combined to generate 1 raw file for the whole scene
 // \endverbatim
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_save_block_raw.h>
@@ -36,9 +36,9 @@ bool boxm_save_occupancy_raw_process_cons(bprb_func_process& pro)
   //input[1]: output file (raw) path
   //input[2]: the resolution level wanted.. 0 is the most detailed (lowest possible level)
   //input[3]: 0 for writing blocks individually, 1 for writing the scene into one file
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "boxm_scene_base_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "unsigned";
   if (!pro.set_input_types(input_types_))
@@ -53,14 +53,14 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
   using namespace boxm_save_occupancy_raw_process_globals;
 
   if ( pro.n_inputs() < n_inputs_ ){
-    vcl_cout << pro.name() << ": The input number should be " << n_inputs_<< vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << n_inputs_<< std::endl;
     return false;
   }
 
   //get the inputs
   unsigned i = 0;
   boxm_scene_base_sptr scene_ptr = pro.get_input<boxm_scene_base_sptr>(i++);
-  vcl_string filepath = pro.get_input<vcl_string>(i++);
+  std::string filepath = pro.get_input<std::string>(i++);
   unsigned resolution =  pro.get_input<unsigned>(i++);
   unsigned whole = pro.get_input<unsigned>(i++);
 
@@ -75,11 +75,11 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
         boxm_block_iterator<type> it(scene);
         it.begin();
         while (!it.end()) {
-          vcl_stringstream strm;
+          std::stringstream strm;
           vgl_point_3d<int> index = it.index();
           strm << index.x() << '_' << index.y() << '_' << index.z();
-          vcl_string str(strm.str());
-          vcl_string s = filepath + str + ".raw";
+          std::string str(strm.str());
+          std::string s = filepath + str + ".raw";
           boxm_save_block_raw<short, boxm_sample_multi_bin<BOXM_APM_MOG_GREY> >(*scene, it.index(), s, resolution);
           it++;
         }
@@ -96,11 +96,11 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
         boxm_block_iterator<type> it(scene);
         it.begin();
         while (!it.end()) {
-          vcl_stringstream strm;
+          std::stringstream strm;
           vgl_point_3d<int> index = it.index();
           strm << index.x() << '_' << index.y() << '_' << index.z();
-          vcl_string str(strm.str());
-          vcl_string s = filepath + str + ".raw";
+          std::string str(strm.str());
+          std::string s = filepath + str + ".raw";
           boxm_save_block_raw<short,boxm_sample<BOXM_APM_MOG_GREY> >(*scene, it.index(), s, resolution);
           it++;
         }
@@ -115,11 +115,11 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
         boxm_block_iterator<type> it(scene);
         it.begin();
         while (!it.end()) {
-          vcl_stringstream strm;
+          std::stringstream strm;
           vgl_point_3d<int> index = it.index();
           strm << index.x() << '_' << index.y() << '_' << index.z();
-          vcl_string str(strm.str());
-          vcl_string s = filepath + str + ".raw";
+          std::string str(strm.str());
+          std::string s = filepath + str + ".raw";
           boxm_save_block_raw<short,boxm_sample<BOXM_APM_SIMPLE_GREY> >(*scene, it.index(), s, resolution);
           it++;
         }
@@ -134,11 +134,11 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
         boxm_block_iterator<type> it(scene);
         it.begin();
         while (!it.end()) {
-          vcl_stringstream strm;
+          std::stringstream strm;
           vgl_point_3d<int> index = it.index();
           strm << index.x() << '_' << index.y() << '_' << index.z();
-          vcl_string str(strm.str());
-          vcl_string s = filepath + str + ".raw";
+          std::string str(strm.str());
+          std::string s = filepath + str + ".raw";
           boxm_save_block_raw<short,boxm_sample<BOXM_APM_MOB_GREY> >(*scene, it.index(), s, resolution);
           it++;
         }
@@ -147,7 +147,7 @@ bool boxm_save_occupancy_raw_process(bprb_func_process& pro)
       }
   }
   else {
-    vcl_cout << "boxm_save_occupancy_raw_process: undefined APM type" << vcl_endl;
+    std::cout << "boxm_save_occupancy_raw_process: undefined APM type" << std::endl;
     return false;
   }
   return true;

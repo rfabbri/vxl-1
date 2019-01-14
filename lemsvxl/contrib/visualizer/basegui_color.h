@@ -1,11 +1,11 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+#include <map>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cassert>
 
 
 
@@ -92,7 +92,7 @@ enum StandardColor
 class ColorList
   {
 private:
-        vcl_map<StandardColor, vcl_string>  _colorList;
+        std::map<StandardColor, std::string>  _colorList;
 
     public:
         ColorList()
@@ -184,7 +184,7 @@ class ColorAllocator
   {
     private:
         int _count;
-        vcl_vector <StandardColor > _blockColors;
+        std::vector <StandardColor > _blockColors;
 
     public:
         ColorAllocator()
@@ -199,7 +199,7 @@ class ColorAllocator
           {
             if (col!=MAX_COLORS)
               {
-                if(vcl_find(_blockColors.begin(), _blockColors.end(),col)==_blockColors.end())
+                if(std::find(_blockColors.begin(), _blockColors.end(),col)==_blockColors.end())
                   {
                     _blockColors.push_back(col);
                    }
@@ -209,9 +209,9 @@ class ColorAllocator
 
         bool unBlock(StandardColor col)
           {
-            vcl_vector<StandardColor>::iterator it;
+            std::vector<StandardColor>::iterator it;
             
-            it =vcl_find(_blockColors.begin(), _blockColors.end(),col);
+            it =std::find(_blockColors.begin(), _blockColors.end(),col);
             if (it==_blockColors.end())
                 return false;
             
@@ -257,7 +257,7 @@ class ColorLuminizer
             _maxColors= 9;
            }
         
-        vcl_vector<double> operator()(double val) 
+        std::vector<double> operator()(double val) 
           {
             switch(_count)
               {
@@ -315,7 +315,7 @@ class ColorLuminizer
 
             //Should not get here.
             assert(false);
-            vcl_vector<double> dummy;
+            std::vector<double> dummy;
             dummy.push_back(0);
             dummy.push_back(0);
             dummy.push_back(0);
@@ -329,9 +329,9 @@ class ColorLuminizer
             _count %=_maxColors;
            }
 
-        vcl_vector<double> getNewColors(double pixel_val, double delta_r, double g_by_b_ratio)
+        std::vector<double> getNewColors(double pixel_val, double delta_r, double g_by_b_ratio)
           {
-            vcl_vector<double> final_vals;
+            std::vector<double> final_vals;
 
             double new_r=0, new_g=0, new_b=0;
 

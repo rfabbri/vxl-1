@@ -15,11 +15,11 @@
 // \endverbatim 
 
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_set.h>
+#include <string>
+#include <map>
+#include <utility>
+#include <vector>
+#include <set>
 #include <vnl/vnl_matrix.h>
 
 #include <dbskfg/algo/dbskfg_cgraph_directed_tree_sptr.h>
@@ -33,7 +33,7 @@
 #include <vl/gmm.h>
 
 #include <dbskr/dbskr_scurve.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <dbskr/dbskr_edit_distance_base.h>
 
 #include <dbskfg/algo/dbskfg_sift_data.h>
@@ -86,9 +86,9 @@ public:
 
     //: Constructor
     dbskfg_match_bag_of_fragments
-        ( vcl_string model_file,
-          vcl_string query_file,
-          vcl_string output_file,
+        ( std::string model_file,
+          std::string query_file,
+          std::string output_file,
           bool elastic_splice_cost    = false, 
           float scurve_sample_ds      = 0.0f, 
           float scurve_interpolate_ds = 1.0f, 
@@ -112,7 +112,7 @@ public:
           RawColorSpace   raw_color_space = LAB,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
-          vcl_string model_image_path="");
+          std::string model_image_path="");
 
     //: Destructor
     ~dbskfg_match_bag_of_fragments();
@@ -148,16 +148,16 @@ public:
     bool train_gmm_raw_color(int keywords);
  
     //: upload training
-    void set_bow_train(vcl_string& file_path);
+    void set_bow_train(std::string& file_path);
 
     //: upload training
-    void set_gmm_train(vcl_string& file_path);
+    void set_gmm_train(std::string& file_path);
 
     //: upload training
-    void set_gmm_color_train(vcl_string& file_path);
+    void set_gmm_color_train(std::string& file_path);
 
     //: upload training
-    void set_part_file(vcl_string& file_path);
+    void set_part_file(std::string& file_path);
 
     //: binary scale to mean shape 
     bool binary_scale_mean_shape();
@@ -168,103 +168,103 @@ public:
 private:
 
     // Keep track of model trees
-    vcl_map<unsigned int,vcl_pair<vcl_string,
+    std::map<unsigned int,std::pair<std::string,
         dbskfg_cgraph_directed_tree_sptr> > 
         model_trees_;
 
     // Keep track of query trees
-    vcl_map<unsigned int,vcl_pair<vcl_string,
+    std::map<unsigned int,std::pair<std::string,
         dbskfg_cgraph_directed_tree_sptr> > 
         query_trees_;
      
     // Keep a map of all model patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> > 
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> > 
         model_fragments_;
 
     // Keep a map of all query patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> > 
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> > 
         query_fragments_;
 
     // Keep a map of all model patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+    std::map<unsigned int,std::pair<std::string,double> > 
         model_fragments_area_;
 
     // Keep a map of all model patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+    std::map<unsigned int,std::pair<std::string,double> > 
         model_fragments_length_;
 
     // Keep a map of all model patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+    std::map<unsigned int,std::pair<std::string,vgl_polygon<double> > > 
         model_fragments_polys_;
 
     // Keep a map of all query patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+    std::map<unsigned int,std::pair<std::string,double> > 
         query_fragments_area_;
 
     // Keep a map of all query patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+    std::map<unsigned int,std::pair<std::string,double> > 
         query_fragments_length_;
 
     // Keep a map of all query patches
-    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+    std::map<unsigned int,std::pair<std::string,vgl_polygon<double> > > 
         query_fragments_polys_;
 
     // Keep a map of all model contours
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > >
         model_contours_;
 
     // Keep a map of all model contours
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > >
         query_contours_;
     
     // Keep track of model contour ids
-    vcl_map<unsigned int,vcl_set<unsigned int> > model_con_ids_;
+    std::map<unsigned int,std::set<unsigned int> > model_con_ids_;
 
     // Keep track of query contour ids
-    vcl_map<unsigned int,vcl_set<unsigned int> > query_con_ids_;
+    std::map<unsigned int,std::set<unsigned int> > query_con_ids_;
 
     // Keep track of model image size
-    vcl_pair<unsigned int,unsigned int> model_image_size_;
+    std::pair<unsigned int,unsigned int> model_image_size_;
     
     // Keep track of query image size
-    vcl_pair<unsigned int,unsigned int> query_image_size_;
+    std::pair<unsigned int,unsigned int> query_image_size_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,VlSiftFilt*> model_images_sift_filter_;
+    std::map<std::string,VlSiftFilt*> model_images_sift_filter_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_;
+    std::map<std::string,vl_sift_pix*> model_images_grad_data_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_red_;
+    std::map<std::string,vl_sift_pix*> model_images_grad_data_red_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_blue_;
+    std::map<std::string,vl_sift_pix*> model_images_grad_data_blue_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_green_;
+    std::map<std::string,vl_sift_pix*> model_images_grad_data_green_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_fliplr_images_grad_data_;
+    std::map<std::string,vl_sift_pix*> model_fliplr_images_grad_data_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_fliplr_images_grad_data_red_;
+    std::map<std::string,vl_sift_pix*> model_fliplr_images_grad_data_red_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_fliplr_images_grad_data_blue_;
+    std::map<std::string,vl_sift_pix*> model_fliplr_images_grad_data_blue_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vl_sift_pix*> model_fliplr_images_grad_data_green_;
+    std::map<std::string,vl_sift_pix*> model_fliplr_images_grad_data_green_;
 
     // Model channel lab data
-    vcl_map<vcl_string,vil_image_view<double> > model_images_chan1_data_;
-    vcl_map<vcl_string,vil_image_view<double> > model_images_chan2_data_;
-    vcl_map<vcl_string,vil_image_view<double> > model_images_chan3_data_;
+    std::map<std::string,vil_image_view<double> > model_images_chan1_data_;
+    std::map<std::string,vil_image_view<double> > model_images_chan2_data_;
+    std::map<std::string,vil_image_view<double> > model_images_chan3_data_;
 
     // Query channel lab data
-    vcl_map<vcl_string,vil_image_view<double> > query_images_chan1_data_;
-    vcl_map<vcl_string,vil_image_view<double> > query_images_chan2_data_;
-    vcl_map<vcl_string,vil_image_view<double> > query_images_chan3_data_;
+    std::map<std::string,vil_image_view<double> > query_images_chan1_data_;
+    std::map<std::string,vil_image_view<double> > query_images_chan2_data_;
+    std::map<std::string,vil_image_view<double> > query_images_chan3_data_;
 
 
     // Keep track of gradient image data
@@ -344,13 +344,13 @@ private:
     vil_image_resource_sptr query_image_;
 
     // Keep track of model parts
-    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > > model_parts_;
+    std::map<unsigned int,std::vector<vgl_point_2d<double> > > model_parts_;
 
     // Keep track of query parts
-    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > > query_parts_;
+    std::map<unsigned int,std::vector<vgl_point_2d<double> > > query_parts_;
 
     // Create a map of all cost
-    vcl_vector<vcl_map<double,vcl_pair<unsigned int,unsigned int> > > 
+    std::vector<std::map<double,std::pair<unsigned int,unsigned int> > > 
         sim_matrix_;
 
     // Holds shape data
@@ -369,30 +369,30 @@ private:
     vnl_matrix<double> binary_app_rgb_sim_matrix_;
 
     // Holds dart matrix
-    vcl_map<unsigned int,vcl_vector< vcl_pair<vcl_pair<unsigned int,
+    std::map<unsigned int,std::vector< std::pair<std::pair<unsigned int,
         unsigned int>,double> > > 
         model_dart_distances_;
     
-    vcl_map<unsigned int,
-        vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+    std::map<unsigned int,
+        std::vector< std::pair<std::pair<unsigned int,unsigned int>,
         dbskr_scurve_sptr > > >
         model_dart_curves_;
         
-    vcl_map<vcl_pair<unsigned ,unsigned int>,
-        vcl_vector<vgl_point_2d<double> > > 
+    std::map<std::pair<unsigned ,unsigned int>,
+        std::vector<vgl_point_2d<double> > > 
         query_dart_curves_;
 
-    vcl_map<int,vcl_vector<double> > part_distances_;
+    std::map<int,std::vector<double> > part_distances_;
 
     // Keep output file
-    vcl_string output_match_file_;
-    vcl_string output_html_file_;
-    vcl_string output_binary_file_;
-    vcl_string output_binary_h_file_;
-    vcl_string output_removed_regions_;
-    vcl_string output_parts_file_;
-    vcl_string output_dist_file_;
-    vcl_string output_dist_to_category_file_;
+    std::string output_match_file_;
+    std::string output_html_file_;
+    std::string output_binary_file_;
+    std::string output_binary_h_file_;
+    std::string output_removed_regions_;
+    std::string output_parts_file_;
+    std::string output_dist_file_;
+    std::string output_dist_to_category_file_;
 
     // Amirs elastic splice cost 
     bool elastic_splice_cost_;
@@ -473,9 +473,9 @@ private:
     float* covariances_color_;
     float* priors_color_;
 
-    vcl_map<unsigned int,vnl_matrix<double> > dist_maps_;
+    std::map<unsigned int,vnl_matrix<double> > dist_maps_;
 
-    vcl_map<vcl_pair<int,int>, double> local_dist_map_;
+    std::map<std::pair<int,int>, double> local_dist_map_;
 
     int keywords_;
 
@@ -492,37 +492,37 @@ private:
 
     int skipped_index_;
 
-    void load_model(vcl_string model_dir);
-    void load_query(vcl_string query_dir);
+    void load_model(std::string model_dir);
+    void load_query(std::string query_dir);
 
-    void load_binary_model(vcl_string model_dir);
-    void load_binary_query(vcl_string query_dir);
+    void load_binary_model(std::string model_dir);
+    void load_binary_query(std::string query_dir);
 
     void create_html_match_file();
     void write_out_sim_matrix();
 
     void compute_transformation(vgl_h_matrix_2d<double>& H,
-                                vcl_vector<dbskr_scurve_sptr>& curve_list1,
-                                vcl_vector<dbskr_scurve_sptr>& curve_list2,
-                                vcl_vector< vcl_vector 
-                                < vcl_pair <int,int> > >& map_list,
-                                vcl_vector< pathtable_key >& path_map,
+                                std::vector<dbskr_scurve_sptr>& curve_list1,
+                                std::vector<dbskr_scurve_sptr>& curve_list2,
+                                std::vector< std::vector 
+                                < std::pair <int,int> > >& map_list,
+                                std::vector< pathtable_key >& path_map,
                                 unsigned int sampling_interval,
                                 bool flag);
 
     void compute_similarity(vgl_h_matrix_2d<double>& H,
-                            vcl_vector<dbskr_scurve_sptr>& curve_list1,
-                            vcl_vector<dbskr_scurve_sptr>& curve_list2,
-                            vcl_vector< vcl_vector 
-                            < vcl_pair <int,int> > >& map_list,
-                            vcl_vector< pathtable_key >& path_map,
+                            std::vector<dbskr_scurve_sptr>& curve_list1,
+                            std::vector<dbskr_scurve_sptr>& curve_list2,
+                            std::vector< std::vector 
+                            < std::pair <int,int> > >& map_list,
+                            std::vector< pathtable_key >& path_map,
                             unsigned int sampling_interval,
                             bool flag,
                             double model_scale_ratio=1.0,
                             double query_scale_ratio=1.0,
                             double width=0.0);
 
-    vcl_pair<double,double> compute_transformed_polygon(
+    std::pair<double,double> compute_transformed_polygon(
         vgl_h_matrix_2d<double>& H,
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree);
@@ -532,7 +532,7 @@ private:
         dbskfg_cgraph_directed_tree_sptr& query_tree);
 
     // Load a composite graph
-    dbskfg_composite_graph_sptr load_composite_graph(vcl_string filename);
+    dbskfg_composite_graph_sptr load_composite_graph(std::string filename);
 
     //Match two graphs
     double match_two_graphs(dbskfg_composite_graph_sptr& model,
@@ -558,7 +558,7 @@ private:
         double& norm_app_cost,
         double& rgb_avg_cost,
         double& frob_norm,
-        vcl_string match_file_prefix="",
+        std::string match_file_prefix="",
         bool mirror=false,
         double orig_edit_distance=1e6);
 
@@ -570,11 +570,11 @@ private:
                                 double& app_diff,
                                 double& norm_app_cost,
                                 double& rgb_avg_cost,
-                                vcl_string prefix);
+                                std::string prefix);
     
-    void write_binary_fragments(vcl_ofstream& binary_sim_file,
-                                vcl_map<unsigned int,
-                                vcl_pair<vcl_string,
+    void write_binary_fragments(std::ofstream& binary_sim_file,
+                                std::map<unsigned int,
+                                std::pair<std::string,
                                 dbskfg_composite_graph_sptr> >& fragments );
 
     void compute_grad_maps(vil_image_resource_sptr& input_image,
@@ -602,11 +602,11 @@ private:
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree);
                           
-    vcl_pair<double,double> compute_sift_cost(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
+    std::pair<double,double> compute_sift_cost(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_grad_data=0,
@@ -616,12 +616,12 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
-    vcl_pair<double,double> compute_rgb_sift_cost(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_rgb_sift_cost(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -634,14 +634,14 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0,
-        vcl_string prefix="");
+        std::string prefix="");
 
-    vcl_pair<double,double> compute_app_alignment_cost(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_app_alignment_cost(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -656,12 +656,12 @@ private:
         double query_scale_ratio=1.0,
         double model_sift_scale=1.0,
         double query_sift_scale=1.0,
-        vcl_string prefix="");
+        std::string prefix="");
 
     void compute_app_alignment(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         vil_image_view<double>& model_channel_1,
         vil_image_view<double>& query_channel_1,
         bool flag=false,
@@ -673,12 +673,12 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
-    vcl_pair<double,double> compute_dense_rgb_sift_cost(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_dense_rgb_sift_cost(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         vil_image_view<double>& model_channel_1,
         vil_image_view<double>& model_channel_2,
         vil_image_view<double>& model_channel_3,
@@ -699,13 +699,13 @@ private:
         double query_scale_ratio=1.0,
         double model_sift_scale=1.0,
         double query_sift_scale=1.0,
-        vcl_string prefix="");
+        std::string prefix="");
 
     vgl_point_2d<double> find_part_correspondences(
         vgl_point_2d<double> query_pt,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         vgl_point_2d<double>& rt_model,
         vgl_point_2d<double>& rt_query,
         int& curve_list_id,
@@ -716,9 +716,9 @@ private:
 
     vgl_point_2d<double> find_part_correspondences_qm(
         vgl_point_2d<double> query_pt,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         vgl_point_2d<double>& rt_model,
         vgl_point_2d<double>& rt_query,
         int& curve_list_id,
@@ -729,91 +729,91 @@ private:
 
 
     void draw_part_correspondence(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0,
-        vcl_string prefix="");
+        std::string prefix="");
 
     void warp_image(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0);
 
 
-    vcl_pair<double,double> compute_common_frame_distance(
+    std::pair<double,double> compute_common_frame_distance(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0);
 
-    vcl_pair<double,double> compute_common_frame_distance_qm(
+    std::pair<double,double> compute_common_frame_distance_qm(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         bool debug=false);
 
-    vcl_pair<double,double> compute_common_frame_distance_bbox_qm(
+    std::pair<double,double> compute_common_frame_distance_bbox_qm(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         double& extra_cost,
         bool flag=false,
         double width=0.0,
         bool debug=false);
 
-    vcl_pair<double,double> compute_implicit_distance_bbox_qm(
+    std::pair<double,double> compute_implicit_distance_bbox_qm(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         bool debug=false);
 
-    vcl_pair<double,double> compute_common_frame_distance_bbox_mq(
+    std::pair<double,double> compute_common_frame_distance_bbox_mq(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         bool debug=false);
 
-    vcl_pair<double,double> compute_common_frame_distance_dsift_qm(
+    std::pair<double,double> compute_common_frame_distance_dsift_qm(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         bool debug=false);
 
-    vcl_pair<double,double> compute_common_frame_distance_part_qm(
+    std::pair<double,double> compute_common_frame_distance_part_qm(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag=false,
         double width=0.0,
         bool debug=false);
@@ -822,8 +822,8 @@ private:
     void compute_dsift_image(
         vil_image_resource_sptr& input_image,
         vgl_box_2d<double>& box,
-        vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
-        vcl_vector<vcl_pair<int,int> >& keypoints,
+        std::vector<vnl_vector<vl_sift_pix> >& descrs,
+        std::vector<std::pair<int,int> >& keypoints,
         int step=3,
         int binSize=8);
 
@@ -832,8 +832,8 @@ private:
         vil_image_view<double>& channel_2,
         vil_image_view<double>& channel_3,
         vgl_box_2d<double>& box,
-        vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
-        vcl_vector<vcl_pair<int,int> >& keypoints,
+        std::vector<vnl_vector<vl_sift_pix> >& descrs,
+        std::vector<std::pair<int,int> >& keypoints,
         int step=3,
         int binSize=8);
 
@@ -842,12 +842,12 @@ private:
                                           vl_sift_pix* blue_sift,
                                           int nbp);
 
-    vcl_pair<double,double> compute_o2p_dense(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_o2p_dense(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -861,12 +861,12 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
-    vcl_pair<double,double> compute_mi(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_mi(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         vil_image_view<double>& model_channel_1,
         vil_image_view<double>& model_channel_2,
         vil_image_view<double>& model_channel_3,
@@ -887,12 +887,12 @@ private:
         double query_scale_ratio=1.0);
 
 
-    vcl_pair<double,double> compute_bow(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_bow(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         vil_image_view<double>& model_channel_1,
         vil_image_view<double>& model_channel_2,
         vil_image_view<double>& model_channel_3,
@@ -912,12 +912,12 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
-    vcl_pair<double,double> compute_3d_hist_color(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_3d_hist_color(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         vil_image_view<double>& model_channel_1,
         vil_image_view<double>& model_channel_2,
         vil_image_view<double>& model_channel_3,
@@ -929,12 +929,12 @@ private:
         bool flag=false,
         double width=0.0);
 
-    vcl_pair<double,double> compute_body_centric_sift(
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        vcl_vector< pathtable_key >& path_map,
-        vcl_vector<double>& dart_distances,
+    std::pair<double,double> compute_body_centric_sift(
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
+        std::vector< pathtable_key >& path_map,
+        std::vector<double>& dart_distances,
         vl_sift_pix* model_red_grad_data,
         vl_sift_pix* query_red_grad_data,
         vl_sift_pix* model_green_grad_data,
@@ -949,7 +949,7 @@ private:
         double width=0.0);
     
     vnl_vector<double> compute_second_order_pooling(
-        vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
+        std::map<int,std::vector<dbskfg_sift_data> >& fragments,
         vl_sift_pix* grad_data,
         VlSiftFilt* filter,
         vsol_box_2d_sptr& bbox);
@@ -1063,27 +1063,27 @@ private:
         double x, double y,
         double sigma,
         double angle0,
-        vcl_set<vcl_pair<double,double> >& samples);
+        std::set<std::pair<double,double> >& samples);
 
     void compute_grad_region_hist(
-        vcl_set<vcl_pair<double,double> >& samples,
+        std::set<std::pair<double,double> >& samples,
         vil_image_view<double>& o1_grad_map,
         vil_image_view<double>& o1_angle_map,
         vil_image_view<double>& o2_grad_map,
         vil_image_view<double>& o2_angle_map,
         vil_image_view<double>& o3_grad_map,
         vil_image_view<double>& o3_angle_map,
-        vcl_vector<double>& descr,
-        vcl_string tile="");
+        std::vector<double>& descr,
+        std::string tile="");
                            
     void compute_color_region_hist(
-        vcl_set<vcl_pair<double,double> >& samples,
+        std::set<std::pair<double,double> >& samples,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
-        vcl_vector<double>& descr,
+        std::vector<double>& descr,
         LabBinType bin_type,
-        vcl_string title="");
+        std::string title="");
 
     void compute_mean_std_color_descr(
         vgl_point_2d<double>& center,
@@ -1091,20 +1091,20 @@ private:
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
-        vcl_vector<double>& descr);
+        std::vector<double>& descr);
 
     void compute_color_region_hist_fv(
-        vcl_set<vcl_pair<double,double> >& samples,
+        std::set<std::pair<double,double> >& samples,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
-        vcl_vector<vl_sift_pix>& descr,
+        std::vector<vl_sift_pix>& descr,
         LabBinType bin_type,
-        vcl_string title="");
+        std::string title="");
 
     void encode_color_triplet(
-        vcl_vector<vl_sift_pix>& triplet,
-        vcl_vector<vl_sift_pix>& fv_descriptor)
+        std::vector<vl_sift_pix>& triplet,
+        std::vector<vl_sift_pix>& fv_descriptor)
     {
         int dimension=3;
 

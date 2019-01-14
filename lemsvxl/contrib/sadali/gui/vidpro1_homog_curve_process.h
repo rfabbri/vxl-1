@@ -19,7 +19,7 @@
 #include <bpro1/bpro1_process.h>
 #include <vnl/vnl_double_4.h>
 #include <vnl/vnl_double_4x4.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 //: Description of this process
@@ -35,7 +35,7 @@ public:
     virtual bpro1_process* clone() const;
 
     //: The name of this process
-    vcl_string name();
+    std::string name();
 
     //: Returns the number of input frames to this process
     int input_frames();
@@ -43,9 +43,9 @@ public:
     int output_frames();
 
     //: Returns a vector of strings describing the input types to this process
-    vcl_vector< vcl_string > get_input_type();
+    std::vector< std::string > get_input_type();
     //: Returns a vector of strings describing the output types of this process
-    vcl_vector< vcl_string > get_output_type();
+    std::vector< std::string > get_output_type();
 
     //: Execute the process
     bool execute();
@@ -54,7 +54,7 @@ public:
 
 protected:
 
-    void compute_plane_params(const vcl_vector<vnl_double_4> &corners, vnl_double_4 &Normal);
+    void compute_plane_params(const std::vector<vnl_double_4> &corners, vnl_double_4 &Normal);
 
     vnl_double_4x4 BBMatrix;
 

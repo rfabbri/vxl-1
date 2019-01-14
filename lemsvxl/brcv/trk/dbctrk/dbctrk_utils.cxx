@@ -1,7 +1,7 @@
 #include <dbctrk/dbctrk_utils.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #define ARCLENSAMPLE 0.1
 #define SMALL_VALUE 1E-5
@@ -10,17 +10,17 @@
 
 bool utils::almostEqual(double a, double b, double eps)
 {
-  return vcl_fabs(a-b)<eps;
+  return std::fabs(a-b)<eps;
 }
 
 bool utils::almostEqual(double a, double b)
 {
-  return vcl_fabs(a-b)<SMALL_VALUE;
+  return std::fabs(a-b)<SMALL_VALUE;
 }
 
 double utils::fixAngleMPiPi(double a)
 {
-  a = vcl_fmod(a,2*vnl_math::pi);
+  a = std::fmod(a,2*vnl_math::pi);
   if (a < -vnl_math::pi)
     return a+2*vnl_math::pi;
   else if (a >= vnl_math::pi)
@@ -30,7 +30,7 @@ double utils::fixAngleMPiPi(double a)
 }
 double utils::fixAngleMPiPibytwo(double a)
 {
-  a = vcl_fmod(a,2*vnl_math::pi);
+  a = std::fmod(a,2*vnl_math::pi);
   if (a < 0)
     a=a+vnl_math::pi;
 
@@ -38,7 +38,7 @@ double utils::fixAngleMPiPibytwo(double a)
 }
 double utils::fixAngleZTPi(double a)
 {
-  a = vcl_fmod(a,2*vnl_math::pi);
+  a = std::fmod(a,2*vnl_math::pi);
   if (a < 0)
     return a+2*vnl_math::pi;
   else
@@ -46,12 +46,12 @@ double utils::fixAngleZTPi(double a)
 }
 
 #if 0 // unused function
-vcl_vector<double> utils::smoothVector(vcl_vector<double> a, vcl_vector<double> kernel)
+std::vector<double> utils::smoothVector(std::vector<double> a, std::vector<double> kernel)
 {
   int N=kernel.size();
   int M=a.size();
   int mid=(N-1)/2;
-  vcl_vector<double> sa(M);
+  std::vector<double> sa(M);
 
   for (int i=0;i<M;i++)
   {
@@ -183,17 +183,17 @@ void utils::set_rank_colors(int num,float &r,float &g, float &b)
 
 }
 //: fucntion to parse a line from file for numbers;
-vcl_vector<vcl_string> utils::parseLineForNumbers(vcl_string s)
+std::vector<std::string> utils::parseLineForNumbers(std::string s)
 {
-  vcl_vector <vcl_string> vec;
+  std::vector <std::string> vec;
 
   if (s.size() > 0){
 
-    vcl_string numerics("0123456789.-+e");
-    vcl_string::size_type pos1=0,pos2=0;
+    std::string numerics("0123456789.-+e");
+    std::string::size_type pos1=0,pos2=0;
     
     //cout << s << endl;
-    while((pos1=s.find_first_of(numerics,pos1)) != vcl_string::npos) {
+    while((pos1=s.find_first_of(numerics,pos1)) != std::string::npos) {
       pos2=s.find_first_not_of(numerics,pos1);
       vec.push_back(s.substr(pos1,pos2-pos1));
       pos1=pos2;
@@ -210,15 +210,15 @@ int utils::rgb2lab(double r,double g,double b, double &L , double &a, double &lb
 
 
     if ( var_R > 0.04045 ) 
-        var_R = vcl_pow(( ( var_R + 0.055 ) / 1.055 ),2.4);
+        var_R = std::pow(( ( var_R + 0.055 ) / 1.055 ),2.4);
     else                   
         var_R = var_R / 12.92;
     if ( var_G > 0.04045 ) 
-        var_G = vcl_pow(( ( var_G + 0.055 ) / 1.055 ),2.4);
+        var_G = std::pow(( ( var_G + 0.055 ) / 1.055 ),2.4);
     else                   
         var_G = var_G / 12.92;
     if ( var_B > 0.04045 ) 
-        var_B = vcl_pow(( ( var_B + 0.055 ) / 1.055 ),2.4);
+        var_B = std::pow(( ( var_B + 0.055 ) / 1.055 ),2.4);
     else                   
         var_B = var_B / 12.92;
 
@@ -236,15 +236,15 @@ int utils::rgb2lab(double r,double g,double b, double &L , double &a, double &lb
     double var_Z = Z / 108.883   ;
 
     if ( var_X > 0.008856 ) 
-        var_X = vcl_pow(var_X ,( (double)1/3 ));
+        var_X = std::pow(var_X ,( (double)1/3 ));
     else                    
         var_X = ( 7.787 * var_X ) + ( 16 / 116 );
     if ( var_Y > 0.008856 ) 
-        var_Y = vcl_pow(var_Y ,( (double)1/3 ));
+        var_Y = std::pow(var_Y ,( (double)1/3 ));
     else                    
         var_Y = ( 7.787 * var_Y ) + ( 16 / 116 );
     if ( var_Z > 0.008856 ) 
-        var_Z = vcl_pow(var_Z ,( (double)1/3 ));
+        var_Z = std::pow(var_Z ,( (double)1/3 ));
     else                    
         var_Z = ( 7.787 * var_Z ) + ( 16 / 116 );
 
@@ -263,7 +263,7 @@ int utils::IHS2lab(double I,double H,double S, double &L , double &a, double &lb
       if (sat>255)
         sat = 255.f;
       double ang = (vnl_math::pi/180)*hue;
-      double cs = vcl_cos(ang), si = vcl_fabs(vcl_sin(ang));
+      double cs = std::cos(ang), si = std::fabs(std::sin(ang));
       double r,g,b;
       g = si*sat;
       if (cs>=0)
@@ -282,16 +282,16 @@ int utils::IHS2lab(double I,double H,double S, double &L , double &a, double &lb
     double var_B = ( b / 255 )     ;   //B = From 0 to 255
 
     if ( var_R > 0.04045 ) 
-        var_R = vcl_pow(( ( var_R + 0.055 ) / 1.055 ),2.4);
+        var_R = std::pow(( ( var_R + 0.055 ) / 1.055 ),2.4);
     else                   
 
         var_R = var_R / 12.92;
     if ( var_G > 0.04045 ) 
-        var_G = vcl_pow(( ( var_G + 0.055 ) / 1.055 ),2.4);
+        var_G = std::pow(( ( var_G + 0.055 ) / 1.055 ),2.4);
     else                   
         var_G = var_G / 12.92;
     if ( var_B > 0.04045 ) 
-        var_B = vcl_pow(( ( var_B + 0.055 ) / 1.055 ),2.4);
+        var_B = std::pow(( ( var_B + 0.055 ) / 1.055 ),2.4);
     else                   
         var_B = var_B / 12.92;
 
@@ -309,15 +309,15 @@ int utils::IHS2lab(double I,double H,double S, double &L , double &a, double &lb
     double var_Z = Z / 108.883   ;
 
     if ( var_X > 0.008856 ) 
-        var_X = vcl_pow(var_X ,0.3333);
+        var_X = std::pow(var_X ,0.3333);
     else                    
         var_X = ( 7.787 * var_X ) + ( 16 / 116 );
     if ( var_Y > 0.008856 ) 
-        var_Y = vcl_pow(var_Y ,0.3333);
+        var_Y = std::pow(var_Y ,0.3333);
     else                    
         var_Y = ( 7.787 * var_Y ) + ( 16 / 116 );
     if ( var_Z > 0.008856 ) 
-        var_Z = vcl_pow(var_Z ,0.3333);
+        var_Z = std::pow(var_Z ,0.3333);
     else                    
         var_Z = ( 7.787 * var_Z ) + ( 16 / 116 );
 
@@ -401,7 +401,7 @@ void utils::gauss2d(float sigma,vbl_array_2d<float>  & kernel)
       for(int i=0;i<kernel.rows();i++)
           for(int j=0;j<kernel.cols();j++)
           {
-              kernel(i,j)=vcl_exp(-((i-center)*(i-center)+(j-center)*(j-center))/2*sigma*sigma)/vcl_sqrt(2*vnl_math::pi*sigma);
+              kernel(i,j)=std::exp(-((i-center)*(i-center)+(j-center)*(j-center))/2*sigma*sigma)/std::sqrt(2*vnl_math::pi*sigma);
               sum+=kernel(i,j);
           }
     
@@ -411,7 +411,7 @@ void utils::gauss2d(float sigma,vbl_array_2d<float>  & kernel)
     
 
   }
-double utils::mean(vcl_vector<double> t)
+double utils::mean(std::vector<double> t)
 {
   double sum=0;
   for (unsigned int i=0;i<t.size();++i)
@@ -423,20 +423,20 @@ double utils::mean(vcl_vector<double> t)
 }
 
 
-double utils::std(vcl_vector<double> t)
+double utils::std(std::vector<double> t)
 {
   double sum=mean(t);
   double var=0;
   for (unsigned int i=0;i<t.size();++i)
     var+=(t[i]-sum)*(t[i]-sum);
   if(t.size()>0)
-    return vcl_sqrt(var/t.size());
+    return std::sqrt(var/t.size());
   else
     return 0.0;
   
 }
 
-bool utils::norm3dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1)
+bool utils::norm3dpolar(std::vector<double> & dim1,std::vector<double> & dim2,std::vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1)
 {
     polarhist.fill(0.0);
     if(dim1.size()!=dim2.size() && dim1.size()!=dim3.size() && dim1.size()>0)
@@ -459,9 +459,9 @@ bool utils::norm3dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_
   s=(float)dim3[i];
 
 
-      int thetaindex=(int)vcl_floor((h*360/255)/(360/thetabins));
-      int satindex=(int)vcl_floor(vcl_pow((s/255)/r1,2));
-      int valindex=(int)vcl_floor(vcl_pow((v/255)/v1,3));
+      int thetaindex=(int)std::floor((h*360/255)/(360/thetabins));
+      int satindex=(int)std::floor(std::pow((s/255)/r1,2));
+      int valindex=(int)std::floor(std::pow((v/255)/v1,3));
       if(thetaindex>=thetabins)
   thetaindex=thetabins-1;
       if(satindex>=rbins)
@@ -493,11 +493,11 @@ double utils::dist3pdf_bhat(vbl_array_3d<double> hist1,vbl_array_3d<double> hist
       for(int j=0;j<ybins;j++)
         for(int k=0;k<zbins;k++)
             {
-                dist+=vcl_sqrt(hist1(i,j,k)*hist2(i,j,k));
+                dist+=std::sqrt(hist1(i,j,k)*hist2(i,j,k));
              }
   
   if(dist!=0.0)
-    return (-vcl_log(dist));
+    return (-std::log(dist));
   else
     return 1e6;
 }

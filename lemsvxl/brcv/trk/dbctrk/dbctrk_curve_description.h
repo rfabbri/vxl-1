@@ -15,7 +15,7 @@
 // \endverbatim
 //
 //-----------------------------------------------------------------------------
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vdgl/vdgl_edgel_chain.h>
 #include <vdgl/vdgl_edgel_chain_sptr.h>
 #include <vgl/vgl_point_2d.h>
@@ -38,39 +38,39 @@ class dbctrk_curve_description
 
   int maskradius;
 
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > maskpos;
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > maskneg;
+  std::vector<std::vector<vsol_point_2d_sptr> > maskpos;
+  std::vector<std::vector<vsol_point_2d_sptr> > maskneg;
 
   //: stores the valid mask entries starts from top left 
-  vcl_vector<vcl_vector<bool> > isvalidmaskpos;
-  vcl_vector<vcl_vector<bool> > isvalidmaskneg;
+  std::vector<std::vector<bool> > isvalidmaskpos;
+  std::vector<std::vector<bool> > isvalidmaskneg;
   
 
   Curve * curve_;
   Curve * coarser_curve_;
 
-  vcl_vector<double> angles_;
-  vcl_vector<double> grad_;
-  vcl_vector<vgl_point_2d<double> > cms_; // center of masses
+  std::vector<double> angles_;
+  std::vector<double> grad_;
+  std::vector<vgl_point_2d<double> > cms_; // center of masses
   vsol_box_2d_sptr   cbox_;
   double         splice_cost_;
 
-  vcl_vector<double> Prcolor,Nrcolor;
-  vcl_vector<double> Pgcolor,Ngcolor;
-  vcl_vector<double> Pbcolor,Nbcolor;
+  std::vector<double> Prcolor,Nrcolor;
+  std::vector<double> Pgcolor,Ngcolor;
+  std::vector<double> Pbcolor,Nbcolor;
 
-  vcl_vector<vsol_point_2d_sptr> pospoints;
-  vcl_vector<vsol_point_2d_sptr> negpoints;
+  std::vector<vsol_point_2d_sptr> pospoints;
+  std::vector<vsol_point_2d_sptr> negpoints;
 
-  vcl_vector<vil_image_view<float> > tpmask;
-  vcl_vector<vil_image_view<float> > tnmask;
+  std::vector<vil_image_view<float> > tpmask;
+  std::vector<vil_image_view<float> > tnmask;
   int spacing_on_curve;
   bool isIHS;
-  vcl_vector<double> meanp;
-  vcl_vector<double> meann;
+  std::vector<double> meanp;
+  std::vector<double> meann;
 
-  vcl_vector<double> stdp;
-  vcl_vector<double> stdn;
+  std::vector<double> stdp;
+  std::vector<double> stdn;
 
   //:3d polar or euclidean histogram 
   vbl_array_3d<double> chistp,chistn;
@@ -116,13 +116,13 @@ class dbctrk_curve_description
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(vcl_string const&) const;
+  bool is_class(std::string const&) const;
 
 };
 

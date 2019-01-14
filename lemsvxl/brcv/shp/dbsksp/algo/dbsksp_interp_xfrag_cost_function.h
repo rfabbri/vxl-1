@@ -32,8 +32,8 @@ class dbsksp_compute_shapelet_chord_cost_function: public vnl_cost_function
 public:
   dbsksp_compute_shapelet_chord_cost_function(double start_psi, double start_phi,
     double end_psi, double end_phi): vnl_cost_function(1),
-    start_psi_(start_psi), sin_start_phi_(vcl_sin(start_phi)), 
-    end_psi_(end_psi), sin_end_phi_(vcl_sin(end_phi))
+    start_psi_(start_psi), sin_start_phi_(std::sin(start_phi)), 
+    end_psi_(end_psi), sin_end_phi_(std::sin(end_phi))
     {}
 
   //: Main function - evaluate the cost

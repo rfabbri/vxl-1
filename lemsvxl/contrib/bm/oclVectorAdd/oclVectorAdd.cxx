@@ -1,15 +1,15 @@
 //this is /contrib/bm/oclVectorAdd.cxx
 
 #include"oclVectorAddManager.h"
-#include<vcl_iostream.h>
-#include<vcl_cstdlib.h> //FOR RAND
-#include<vcl_ctime.h> //FOR TIME
+#include<iostream>
+#include<cstdlib> //FOR RAND
+#include<ctime> //FOR TIME
 
 
 void randomInit( float* vect, unsigned const& size )
 {
 	for(unsigned i = 0; i < size; ++i)
-		vect[i] = vcl_rand() % 10 + 1 ;
+		vect[i] = std::rand() % 10 + 1 ;
 }//end randomInit
 
 float* hostVectorAdd( float const* vectA, float const* vectB, unsigned const& size )
@@ -36,7 +36,7 @@ bool checkEqual(float const* vectA, float const* vectB, unsigned const& size)
 
 int main()
 {
-	vcl_cout << "oclVectorAddManager.exe" << vcl_endl;
+	std::cout << "oclVectorAddManager.exe" << std::endl;
 	oclVectorAddManager* addManager = oclVectorAddManager::instance();
 
 	unsigned size = 12345678;
@@ -45,39 +45,39 @@ int main()
 	float* gpu_result = new float[size];
 	float* cpu_result = new float[size];
 
-	vcl_time_t cpu_start,cpu_end;
+	std::time_t cpu_start,cpu_end;
 
 	randomInit(a,size);
 	randomInit(b,size);
 
-	vcl_time(&cpu_start);
+	std::time(&cpu_start);
 	cpu_result = hostVectorAdd(a,b,size);
-	vcl_time(&cpu_end);
+	std::time(&cpu_end);
 
-	double cpu_performance_seconds = vcl_difftime(cpu_end,cpu_start);
+	double cpu_performance_seconds = std::difftime(cpu_end,cpu_start);
 
-	vcl_cout << "-------------------------------------------------------" << vcl_endl;
-	vcl_cout << "CPU finished in " << cpu_performance_seconds << " seconds." << vcl_endl << vcl_endl;
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "CPU finished in " << cpu_performance_seconds << " seconds." << std::endl << std::endl;
 
 
-	vcl_time_t gpu_start, gpu_end;
+	std::time_t gpu_start, gpu_end;
 
-	vcl_time(&gpu_start);
+	std::time(&gpu_start);
 	gpu_result = addManager->oclAdd(a,b,size);
-	vcl_time(&gpu_end);
+	std::time(&gpu_end);
 
-	double gpu_performance_seconds = vcl_difftime(gpu_end,gpu_start);
+	double gpu_performance_seconds = std::difftime(gpu_end,gpu_start);
 
-	vcl_cout << "GPU finished in " << gpu_performance_seconds << " seconds." << vcl_endl << vcl_endl;
+	std::cout << "GPU finished in " << gpu_performance_seconds << " seconds." << std::endl << std::endl;
 
 	bool cpu_equal_gpu = checkEqual(cpu_result,gpu_result,size);
 	if(cpu_equal_gpu)
-		vcl_cout << "Results are equal." << vcl_endl;
+		std::cout << "Results are equal." << std::endl;
 	else
-		vcl_cout << "RESULTS ARE UNEQUAL: BUG SOMEWHERE!" << vcl_endl;
+		std::cout << "RESULTS ARE UNEQUAL: BUG SOMEWHERE!" << std::endl;
 	
 
-	//vcl_cout << "GPU is " << (cpu_performance_seconds/gpu_performance_seconds) * 100 << " times faster than the cpu." << vcl_endl;
+	//std::cout << "GPU is " << (cpu_performance_seconds/gpu_performance_seconds) * 100 << " times faster than the cpu." << std::endl;
 
 	return 0;
 }

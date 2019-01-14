@@ -39,7 +39,7 @@ public:
   virtual ~dbknee_coord_base(){};
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
 protected:
   
@@ -129,7 +129,7 @@ public:
   void compute_z_of_band_centroids();
 
   //: write info of the coordinate system to an output stream
-  virtual void print(vcl_ostream & os);
+  virtual void print(std::ostream & os);
 
   //: read from a cylinder-based coordinate system file
   // Example cs file:
@@ -148,7 +148,7 @@ public:
   // cylinder_radius 17.0202
   // cylinder_length 66.2678
   // fitting_error 2.21707
-  bool load_from_cs_file(const vcl_string& cs_file);
+  bool load_from_cs_file(const std::string& cs_file);
 
   //: convert from local coordinate to world coordinate
   vgl_point_3d<double > local_to_wcs(const vgl_point_3d<double >& pt) const;
@@ -251,7 +251,7 @@ class dbknee_cylinder_based_coord_params
 {
 public:
   dbknee_cylinder_based_coord_params(const vgl_box_3d<double >& bounding_box,
-    const vcl_map<vcl_string, double >& param_list);
+    const std::map<std::string, double >& param_list);
   ~dbknee_cylinder_based_coord_params(){};
 
   // variables:
@@ -264,22 +264,22 @@ public:
 };
 
 //: Read a cropping parameter from a parameter file
-void dbknee_read_coord_param_file(const vcl_string& param_file,
-                                  vcl_map<vcl_string, double >& param_list
+void dbknee_read_coord_param_file(const std::string& param_file,
+                                  std::map<std::string, double >& param_list
                                   );
 
 //: Read a coordinate system file and overwrite parameters in a coordinate system
-void dbknee_read_cs_file(const vcl_string& cs_file, dbknee_cylinder_based_coord& cs);
+void dbknee_read_cs_file(const std::string& cs_file, dbknee_cylinder_based_coord& cs);
 
 //: Write the local coordinates of a point set to file
 void dbknee_compute_write_local_coords_to_file(const dbknee_cylinder_based_coord& cs,
                                                dbmsh3d_mesh* pt_set,
-                                               const vcl_string& outfile);
+                                               const std::string& outfile);
 
 //: Extract the regions of interest on the knee cartilage
 void dbknee_compute_cartilage_regions(const dbknee_cylinder_based_coord& cs,
-           vcl_vector<vcl_vector<vgl_point_3d<double > > >& top_regions,
-           vcl_vector<vcl_vector<vgl_point_3d<double > > >& bot_regions);
+           std::vector<std::vector<vgl_point_3d<double > > >& top_regions,
+           std::vector<std::vector<vgl_point_3d<double > > >& bot_regions);
 
 //: Separate the cartilage mesh into two separate top and bottom surfaces.
 // given the axis of a cylinder

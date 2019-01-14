@@ -43,7 +43,7 @@ dbacm_geodesic_active_contour_process::dbacm_geodesic_active_contour_process()
     !parameters()->add("Return a new image (otherwise overwrite init image)?", "-new_image", false)
   ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -67,7 +67,7 @@ clone() const
 
 // ------------------------------------------------------------------
 //: Return the name of this process
-vcl_string dbacm_geodesic_active_contour_process::
+std::string dbacm_geodesic_active_contour_process::
 name()
 {
   return "Geodesic Active Contour";
@@ -95,9 +95,9 @@ output_frames()
 
 // ------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbacm_geodesic_active_contour_process::get_input_type()
+std::vector< std::string > dbacm_geodesic_active_contour_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   bool orig_image = true; 
   bool init_image = true;
   bool hard_constraint_image = true;
@@ -116,9 +116,9 @@ vcl_vector< vcl_string > dbacm_geodesic_active_contour_process::get_input_type()
 
 // ------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbacm_geodesic_active_contour_process::get_output_type()
+std::vector< std::string > dbacm_geodesic_active_contour_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   bool new_image = false;
   this->parameters()->get_value("-new_image", new_image);
 
@@ -135,7 +135,7 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cout << "In dbacm_geodesic_active_contour_process::execute() - not exactly one"
+    std::cout << "In dbacm_geodesic_active_contour_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -151,8 +151,8 @@ execute()
 
   if (!init_image)
   {
-    vcl_cerr << "Automatic initialization has not been implemented." <<
-    "Process stops now. No change was done." << vcl_endl;
+    std::cerr << "Automatic initialization has not been implemented." <<
+    "Process stops now. No change was done." << std::endl;
     return false;
   }
   

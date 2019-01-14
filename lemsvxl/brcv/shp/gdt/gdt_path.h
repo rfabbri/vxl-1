@@ -4,8 +4,8 @@
 #ifndef gdt_path_h_
 #define gdt_path_h_
 
-#include <vcl_utility.h>
-#include <vcl_vector.h>
+#include <utility>
+#include <vector>
 
 #include <gdt/gdt_interval.h>
 #include <gdt/gdt_mesh.h>
@@ -15,7 +15,7 @@ class gdt_path
 {
 protected:
   //: the <interval, tau> pair as a sample point of back-tracking of the geodesic path.
-  vcl_vector<vcl_pair<gdt_interval*, double> > I_tau_pairs_;
+  std::vector<std::pair<gdt_interval*, double> > I_tau_pairs_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -26,7 +26,7 @@ public:
   }
 
   //: ====== Data access functions ======
-  vcl_vector<vcl_pair<gdt_interval*, double> >* I_tau_pairs() {
+  std::vector<std::pair<gdt_interval*, double> >* I_tau_pairs() {
     return &I_tau_pairs_;
   }
 
@@ -38,11 +38,11 @@ public:
     else if (_eqT(tau, I->edge()->len()))
       tau = I->edge()->len();
 
-    vcl_pair<gdt_interval*, double> I_tau (I, tau);
+    std::pair<gdt_interval*, double> I_tau (I, tau);
 
     //assert the I_tau is unique
     if (I_tau_pairs_.size() !=0) {
-      //vcl_pair<gdt_interval*, double> prev = I_tau_pairs_[I_tau_pairs_.size()-1];
+      //std::pair<gdt_interval*, double> prev = I_tau_pairs_[I_tau_pairs_.size()-1];
       //assert (I != prev.first || !_eqT(tau, prev.second) );
       vgl_point_3d<double> prev_pt = get_point (I_tau_pairs_.size()-1);
       vgl_point_3d<double> cur_pt = I->_point_from_tau (tau);
@@ -57,7 +57,7 @@ public:
   //: return path length via the first interval
   double get_length () {
     assert (I_tau_pairs_.size() != 0);
-    vcl_vector<vcl_pair<gdt_interval*, double> >::iterator it = I_tau_pairs_.begin();
+    std::vector<std::pair<gdt_interval*, double> >::iterator it = I_tau_pairs_.begin();
     gdt_interval* I = (*it).first;
     double tau = (*it).second;
     return I->get_dist_at_tau (tau);
@@ -66,7 +66,7 @@ public:
   //: the closest source is the vertex at the last interval.
   dbmsh3d_gdt_vertex_3d* get_closest_source () {
     assert (I_tau_pairs_.size() != 0);
-    vcl_vector<vcl_pair<gdt_interval*, double> >::iterator it = I_tau_pairs_.end();
+    std::vector<std::pair<gdt_interval*, double> >::iterator it = I_tau_pairs_.end();
     it--;
     gdt_interval* I = (*it).first;
     double tau = (*it).second;

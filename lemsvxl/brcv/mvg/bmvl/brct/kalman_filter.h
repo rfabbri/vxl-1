@@ -12,7 +12,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_3x3.h>
@@ -32,22 +32,22 @@ class kalman_filter
 
   //: get backprojection for debugging
   vgl_point_2d<double> get_cur_epipole() const;
-  vcl_vector<vnl_matrix<double> > get_back_projection() const;
+  std::vector<vnl_matrix<double> > get_back_projection() const;
 
   //: predict next curve.
   vnl_matrix<double> get_predicted_curve();
   vnl_double_3 get_next_motion(vnl_double_3 v);
-  vcl_vector<vgl_point_2d<double> > get_pre_observes();
-  vcl_vector<vgl_point_2d<double> > get_cur_observes();
-  vcl_vector<vgl_point_2d<double> > get_next_observes();
-  vcl_vector<vgl_point_3d<double> > get_local_pts(); // will be superseded
+  std::vector<vgl_point_2d<double> > get_pre_observes();
+  std::vector<vgl_point_2d<double> > get_cur_observes();
+  std::vector<vgl_point_2d<double> > get_next_observes();
+  std::vector<vgl_point_3d<double> > get_local_pts(); // will be superseded
   bugl_curve_3d get_curve_3d();
 
   //: read all the data including time stamps, trackers.
   void read_data(const char* fname);
 
   //: read visual tracker result out of a file
-  vcl_vector<vdgl_digital_curve_sptr> read_tracker_file(char* fname);
+  std::vector<vdgl_digital_curve_sptr> read_tracker_file(char* fname);
 
   //: initialize the kalman filter states
   void init();
@@ -63,7 +63,7 @@ class kalman_filter
 
  protected:
   //: read time stamp
-  vcl_vector<double> read_timestamp_file(char* fname);
+  std::vector<double> read_timestamp_file(char* fname);
 
   //: if zero probability returned, the matched point is an outlier
   double matched_point_prob(vnl_double_2& z, vnl_double_2& z_pred);
@@ -93,17 +93,17 @@ class kalman_filter
   //: position and confidence of feature samples
   bugl_curve_3d curve_3d_;
 
-  vcl_vector<double> prob_;
+  std::vector<double> prob_;
 
   //: used for matching point
-  vcl_vector<vcl_vector<bugl_gaussian_point_2d<double> > > observes_;
+  std::vector<std::vector<bugl_gaussian_point_2d<double> > > observes_;
 
   //: each element represents shooting times for this frame.
-  vcl_vector<double> time_tick_;
+  std::vector<double> time_tick_;
   //: each element of the vector represents a projection of the same 3D curves.
-  vcl_vector<vcl_vector<vdgl_digital_curve_sptr> > trackers_;
+  std::vector<std::vector<vdgl_digital_curve_sptr> > trackers_;
 
-  vcl_vector<vnl_double_3> motions_;
+  std::vector<vnl_double_3> motions_;
   //: current frame position in history pool
   int cur_pos_;
   int queue_size_;

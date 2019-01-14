@@ -21,8 +21,8 @@ class dbsk2d_ishock_lineline : public  dbsk2d_ishock_edge
 {
 private:
  
-  VECTOR_TYPE _ul;  ///< angle of unit vcl_vector along left line
-  VECTOR_TYPE _ur;  ///< angle of unit vcl_vector along right line
+  VECTOR_TYPE _ul;  ///< angle of unit std::vector along left line
+  VECTOR_TYPE _ur;  ///< angle of unit std::vector along right line
   double _sigma;    ///< ul dot ur
 
   double _thetaL;   ///< angle between ur and nl
@@ -163,7 +163,7 @@ public:
 
   virtual void compute_extrinsic_locus();
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif // dbsk2d_ishock_lineline_h_

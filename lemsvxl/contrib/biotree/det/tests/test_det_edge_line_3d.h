@@ -1,10 +1,10 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_edge_map.h>
 #include <det/edge_det_nonmaximum_suppression.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_erf.h>
@@ -12,9 +12,9 @@
 void create_3d_line_data_analytically(int theta, int phi, int intd, det_edge_map &cm)
 {
   double sigma = 1.0;
-  double a = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_cos(double(phi*vnl_math::pi/180));
-  double b = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_sin(double(phi*vnl_math::pi/180));
-  double c = vcl_cos(double(theta*vnl_math::pi/180));
+  double a = std::sin(double(theta*vnl_math::pi/180)) * std::cos(double(phi*vnl_math::pi/180));
+  double b = std::sin(double(theta*vnl_math::pi/180)) * std::sin(double(phi*vnl_math::pi/180));
+  double c = std::cos(double(theta*vnl_math::pi/180));
   double d = intd / 10.0;
   // create the edge map
   const int dim = 10;
@@ -25,8 +25,8 @@ void create_3d_line_data_analytically(int theta, int phi, int intd, det_edge_map
     {
       for(int x=0; x<dim; x++)
       {
-        double dist = vcl_fabs(a*x+b*y+c*z+d);
-        img[x][y][z] = vcl_exp(-vcl_pow(dist,2.0)/(2*vcl_pow(sigma,2.0)));
+        double dist = std::fabs(a*x+b*y+c*z+d);
+        img[x][y][z] = std::exp(-std::pow(dist,2.0)/(2*std::pow(sigma,2.0)));
       }
     }
   }
@@ -47,12 +47,12 @@ void create_3d_line_data_analytically(int theta, int phi, int intd, det_edge_map
   }
 
   //write edge map to file
-/*  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\vol_";
+/*  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\vol_";
   char buffer[10];
   fname = fname + "theta=" + itoa(theta, buffer, 10) +
                         ",phi=" + itoa(phi, buffer, 10) +
                         ",d=" + itoa(intd, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   
   for(int z=0; z<dim; z++)
   {
@@ -60,20 +60,20 @@ void create_3d_line_data_analytically(int theta, int phi, int intd, det_edge_map
     {
       for(int x=0; x<dim; x++)
       {
-        vcl_fprintf(fp, "%f ", img[x][y][z]);
+        std::fprintf(fp, "%f ", img[x][y][z]);
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);*/
+  std::fclose(fp);*/
 }
 
 void create_3d_line_data_analytically_v2(int theta, int phi, int intd, det_edge_map &cm)
 {
-  double a = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_cos(double(phi*vnl_math::pi/180));
-  double b = vcl_sin(double(theta*vnl_math::pi/180)) * vcl_sin(double(phi*vnl_math::pi/180));
-  double c = vcl_cos(double(theta*vnl_math::pi/180));
+  double a = std::sin(double(theta*vnl_math::pi/180)) * std::cos(double(phi*vnl_math::pi/180));
+  double b = std::sin(double(theta*vnl_math::pi/180)) * std::sin(double(phi*vnl_math::pi/180));
+  double c = std::cos(double(theta*vnl_math::pi/180));
   double d = intd / 10.0;
   // create the image
   const int dim = 26;
@@ -90,7 +90,7 @@ void create_3d_line_data_analytically_v2(int theta, int phi, int intd, det_edge_
       for(int x=0; x<dim; x++)
       {
         double dist = a*x+b*y+c*z+d;
-        img[x][y][z] = vnl_erf(dist / (vcl_sqrt(2.0)*erf_sigma));
+        img[x][y][z] = vnl_erf(dist / (std::sqrt(2.0)*erf_sigma));
       }
     }
   }
@@ -107,15 +107,15 @@ void create_3d_line_data_analytically_v2(int theta, int phi, int intd, det_edge_
     {
       for(int z = -offset; z <= offset; z++)
       {
-        gauss_x[x+offset][y+offset][z+offset] = (x/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_y[x+offset][y+offset][z+offset] = (y/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
-        gauss_z[x+offset][y+offset][z+offset] = (z/(vcl_pow(sigma,2.0)))
-          *vcl_exp(-(vcl_pow(x,2.0)+vcl_pow(y,2.0)+vcl_pow(z,2.0))/(2*vcl_pow(sigma,2.0)))
-          /(vcl_pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_x[x+offset][y+offset][z+offset] = (x/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_y[x+offset][y+offset][z+offset] = (y/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
+        gauss_z[x+offset][y+offset][z+offset] = (z/(std::pow(sigma,2.0)))
+          *std::exp(-(std::pow(x,2.0)+std::pow(y,2.0)+std::pow(z,2.0))/(2*std::pow(sigma,2.0)))
+          /(std::pow(sqrt(2*vnl_math::pi)*sigma,3.0));
       }
     }
   }
@@ -167,12 +167,12 @@ void create_3d_line_data_analytically_v2(int theta, int phi, int intd, det_edge_
   }
 
   //write image to file
-  //vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
+  //std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\img_";
   //char buffer[10];
   //fname = fname + "theta=" + itoa(theta, buffer, 10) +
   //                ",phi=" + itoa(phi, buffer, 10) +
   //                ",d=" + itoa(intd, buffer, 10) + ".txt";
-  //FILE *fp = vcl_fopen(fname.data(),"w");
+  //FILE *fp = std::fopen(fname.data(),"w");
   //
   //for(int z=0; z<dim; z++)
   //{
@@ -180,11 +180,11 @@ void create_3d_line_data_analytically_v2(int theta, int phi, int intd, det_edge_
   //  {
   //    for(int x=0; x<dim; x++)
   //    {
-  //      vcl_fprintf(fp, "%f ", cm[x][y][z].strength_);
+  //      std::fprintf(fp, "%f ", cm[x][y][z].strength_);
   //    }
-  //    vcl_fprintf(fp, "\n");
+  //    std::fprintf(fp, "\n");
   //  }
-  //  vcl_fprintf(fp, "\n");
+  //  std::fprintf(fp, "\n");
   //}
-  //vcl_fclose(fp);
+  //std::fclose(fp);
 }

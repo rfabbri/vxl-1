@@ -13,8 +13,8 @@
 //   J.L. Mundy November 26, 2004    Initial version.
 // \endverbatim
 //---------------------------------------------------------------------------
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <fstream>
+#include <string>
 #include <vgl/vgl_point_2d.h>
 #include <vtol/vtol_face_2d_sptr.h>
 #include <vpro/vpro_video_process.h>
@@ -30,19 +30,19 @@ class dbinfo_feature_capture_process : public vpro_video_process
   //: track to next frame
   virtual bool execute();
   virtual bool finish();
-  bool set_input_file(vcl_string const& file_name);
-  bool set_output_file(vcl_string const& file_name);
+  bool set_input_file(std::string const& file_name);
+  bool set_output_file(std::string const& file_name);
  private:
   //members
   bool failure_;
   bool first_frame_;
   unsigned int face_index_;
   unsigned int start_frame_;
-  vcl_string track_file_;
-  vcl_string hist_file_;
+  std::string track_file_;
+  std::string hist_file_;
   dbinfo_info_tracker tracker_;
-  vcl_vector<vtol_face_2d_sptr> tracked_faces_;
-  vcl_vector<vcl_vector<float> > tracked_hist_;
+  std::vector<vtol_face_2d_sptr> tracked_faces_;
+  std::vector<std::vector<float> > tracked_hist_;
 };
 
 

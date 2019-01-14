@@ -20,7 +20,7 @@ class dbcl_classifier_io : public exatpp
 public:
     dbcl_classifier_io(void);
     ~dbcl_classifier_io(void){}
-    bool open(vcl_string const& xml_path);
+    bool open(std::string const& xml_path);
 };
 
 

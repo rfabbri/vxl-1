@@ -37,7 +37,7 @@ public:
   dbdet_image_seg_dlvwr_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const {return "image seg dlvwr"; }
+  virtual std::string name() const {return "image seg dlvwr"; }
 
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -63,7 +63,7 @@ public:
   dbdet_dlvwr& intsciss(){ return this->intsciss_; };
 
   //: Return traced contour
-  const vcl_vector<vgl_point_2d<double > >& contour() const {return this->contour_; }
+  const std::vector<vgl_point_2d<double > >& contour() const {return this->contour_; }
 
   //: Return status of the tool
   dbdet_image_seg_state current_state() const {return this->current_state_; }
@@ -176,13 +176,13 @@ protected:
   dbdet_dlvwr intsciss_; 
 
   //: stores the curve points delineating the cartilage boundaries
-  vcl_vector< vgl_point_2d<double > > contour_;
+  std::vector< vgl_point_2d<double > > contour_;
 
   //: stores temporary path returned by livewire
-  vcl_vector< vgl_point_2d<int > > path_;
+  std::vector< vgl_point_2d<int > > path_;
 
   //: stores edge points manually selected by users
-  vcl_vector<vgl_point_2d<int > > manual_points_;
+  std::vector<vgl_point_2d<int > > manual_points_;
 
   // drawing styles
   vgui_style_sptr contour_style_;

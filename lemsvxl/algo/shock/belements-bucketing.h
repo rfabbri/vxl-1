@@ -6,16 +6,16 @@
 //#############################################################
 
 #include "belements.h"
-#include <vcl_set.h>
+#include <set>
 
 class Bucket;
 #ifndef _BUCKET_H
-typedef vcl_set<Bucket* > BucketList;
+typedef std::set<Bucket* > BucketList;
 #endif
 
 
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <cstdio>
 
 class BPoint_Bucketing;
 class BLine_Bucketing;
@@ -67,8 +67,8 @@ public:
   APVisCon () {}
 };
 
-typedef vcl_vector <PPVisCon*> PPVisConType;
-typedef vcl_vector <EPVisCon*> EPVisConType;
+typedef std::vector <PPVisCon*> PPVisConType;
+typedef std::vector <EPVisCon*> EPVisConType;
 
 class BArc_Bucketing;
 
@@ -109,7 +109,7 @@ public:
                 COORD_TYPE R, COORD_TYPE B);
   bool PisBArcVisible (BArc_Bucketing* barc);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 
@@ -151,7 +151,7 @@ public:
 
   virtual void reconnect (BPoint* oldPt, BPoint* newPt);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 
@@ -161,7 +161,7 @@ public:
 
   Bucket** __BucketArray;
   //If the arc is inside one bucket, index it using[_bucAX][_bucAY]
-  //Else, use vcl_set _arcInBuckets, in this case, _bucAX=_bucAY=-1.
+  //Else, use std::set _arcInBuckets, in this case, _bucAX=_bucAY=-1.
   int _bucAX, _bucAY;
 
   //Put the BArc into curBucket, and put a record of curBucket to the BArc
@@ -197,7 +197,7 @@ public:
 
   virtual void reconnect (BPoint* oldPt, BPoint* newPt);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 

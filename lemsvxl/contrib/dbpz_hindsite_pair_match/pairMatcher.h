@@ -6,7 +6,7 @@
 
 #include <vgui/vgui_dialog.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "my_bsol_intrinsic_curve_2d.h"
 
@@ -49,8 +49,8 @@ private:
     my_bsol_intrinsic_curve_2d *curveA, *curveB;
     vsol_polygon_2d_sptr curveApoly, curveBpoly;
 
-    int loadCon( vcl_string fn, my_bsol_intrinsic_curve_2d* &storage, vsol_polygon_2d_sptr &storagePoly, int start = 0, int end = -1, bool reverse = false ); //end = -1 means all the way
-    void fatalError( vcl_string msg );
+    int loadCon( std::string fn, my_bsol_intrinsic_curve_2d* &storage, vsol_polygon_2d_sptr &storagePoly, int start = 0, int end = -1, bool reverse = false ); //end = -1 means all the way
+    void fatalError( std::string msg );
 
     curve_dpmatch_2d *curveMatcher;
 

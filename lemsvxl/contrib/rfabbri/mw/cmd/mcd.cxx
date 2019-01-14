@@ -4,18 +4,18 @@
 #include <mw/pro/bmcsd_stereo_driver.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; exit(1); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) << std::endl; exit(1); }
 
 int
 main(int argc, char **argv)
 {
-  vcl_string prefix_default(".");
+  std::string prefix_default(".");
 
-  vul_arg<vcl_string> a_prefix("-prefix", 
+  vul_arg<std::string> a_prefix("-prefix", 
       "path to directory of files",prefix_default.c_str());
-  vul_arg<vcl_string> a_cam_type("-cam_type",
+  vul_arg<std::string> a_cam_type("-cam_type",
       "camera type: intrinsic_extrinsic or projcamera","intrinsic_extrinsic");
-  vul_arg<vcl_string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
+  vul_arg<std::string> a_out_dir("-outdir", "output directory relative to -prefix", "out/");
   vul_arg<double> a_distance_threshold("-dist", 
       "(in pixels) threshold for an edgel to be an inlier to the reprojected curve in each view", 10.0);
   vul_arg<double> a_dtheta_threshold("-dtheta", 
@@ -54,7 +54,7 @@ main(int argc, char **argv)
       "(EXPERIMENTAL) the minimum number of inlier edgels a curvelet must have in order to be inlier curvelet. Works only if -use_curvelets is set.", 3);
 
   vul_arg_parse(argc,argv);
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   bmcsd_util::camera_file_type cam_type;
 
@@ -64,7 +64,7 @@ main(int argc, char **argv)
     if (a_cam_type() == "projcamera")
       cam_type = bmcsd_util::MW_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << a_cam_type() << std::endl;
       return 1;
     }
   }
@@ -73,18 +73,18 @@ main(int argc, char **argv)
   bool retval = 
     mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
 
   bmcsd_stereo_instance_views frames_to_match;
 
   retval = bmcsd_view_set::read_txt(
-      a_prefix() + vcl_string("/mcs_stereo_instances.txt"), 
+      a_prefix() + std::string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
   MW_ASSERT("frames to match from file", retval, true);
-  vcl_cout << "Instances:\n" << frames_to_match << vcl_endl;
+  std::cout << "Instances:\n" << frames_to_match << std::endl;
 
   if (a_use_curvelets() && !dpath.has_curvelets()) {
-    vcl_cerr << "Error: curvelets requested, but no file names found.\n";
+    std::cerr << "Error: curvelets requested, but no file names found.\n";
   }
 
   // Run 2-view stereo with confirmation views
@@ -122,23 +122,23 @@ main(int argc, char **argv)
   bmcsd_curve_3d_sketch csk;
   s.get_curve_sketch(&csk);
 
-  retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());
+  retval = csk.write_dir_format(a_prefix() + std::string("/") + a_out_dir());
   MW_ASSERT("Error while trying to write file.\n", retval, true);
 
   if (a_write_corresp()) {
     for (unsigned i=0; i < s.num_corresp(); ++i) {
-      vcl_ostringstream ns;
+      std::ostringstream ns;
       ns << i;
-      vcl_string fname
-        = a_prefix() + vcl_string("/") + a_out_dir() + vcl_string("/corresp.vsl") + ns.str();
+      std::string fname
+        = a_prefix() + std::string("/") + a_out_dir() + std::string("/corresp.vsl") + ns.str();
       vsl_b_ofstream corr_ofs(fname);
       vsl_b_write(corr_ofs, s.corresp(i));
     }
   }
 
   //Anil: Write the edge support to different txt files
-  if(!write_edge_support(a_prefix() + vcl_string("/") + a_out_dir(), csk.attributes()))
-      vcl_cout << "Error writing edge support files!" << vcl_endl;
+  if(!write_edge_support(a_prefix() + std::string("/") + a_out_dir(), csk.attributes()))
+      std::cout << "Error writing edge support files!" << std::endl;
 
   return 0;
 }

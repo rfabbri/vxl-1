@@ -18,7 +18,7 @@
 
 
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process is for matching extrinsic shock graphs
 class dbskr_extract_subgraph_and_find_shock_patches_process : public bpro1_process
@@ -27,15 +27,15 @@ public:
   dbskr_extract_subgraph_and_find_shock_patches_process();
   virtual ~dbskr_extract_subgraph_and_find_shock_patches_process() {}
   
-  virtual vcl_string name() {
+  virtual std::string name() {
     return "Extract Subgraph and Find Shock Patches";
   }
 
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  virtual vcl_vector< vcl_string > get_input_type();
-  virtual vcl_vector< vcl_string > get_output_type();
+  virtual std::vector< std::string > get_input_type();
+  virtual std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

@@ -13,9 +13,9 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <map>
+#include <iostream>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_2d.h>
 #include <bgrld/bgrld_vertex.h>
@@ -46,7 +46,7 @@ public:
   void set_id(unsigned int id){this->id_ = id; }
 
   //: A platform-indenpendent name of the class
-  vcl_string is_a() const {return "dbsksp_xshock_node"; }
+  std::string is_a() const {return "dbsksp_xshock_node"; }
 
   //: Return descriptor associated with an edge
   dbsksp_xshock_node_descriptor* descriptor(const E_sptr& e);
@@ -67,11 +67,11 @@ public:
 
 protected:
   //: Return the list of node descriptors
-  vcl_map<E_sptr, dbsksp_xshock_node_descriptor >& descriptor_map()
+  std::map<E_sptr, dbsksp_xshock_node_descriptor >& descriptor_map()
   { return this->descriptor_map_;}
 
   //: Return the list of node descriptors
-  const vcl_map<E_sptr, dbsksp_xshock_node_descriptor >& descriptor_map() const
+  const std::map<E_sptr, dbsksp_xshock_node_descriptor >& descriptor_map() const
   { return this->descriptor_map_;}
 
 public:
@@ -109,17 +109,17 @@ public:
   void order_edge_list_by_shock_tangent();
 
   //: print info of the dbskpoint to an output stream
-  vcl_ostream& print(vcl_ostream & os);
+  std::ostream& print(std::ostream & os);
 
   //////////////////////////////////////////////////////////////////////////////
   // These functions should be moved to the graph vertex class
   //////////////////////////////////////////////////////////////////////////////
 
   //: list of edges
-  const vcl_list<E_sptr >& edge_list() const
+  const std::list<E_sptr >& edge_list() const
   { return this->in_edges_; }
 
-  vcl_list<E_sptr >& edge_list()
+  std::list<E_sptr >& edge_list()
   { return this->in_edges_; }
 
 
@@ -144,7 +144,7 @@ protected:
   double radius_;
 
   // parameters associated with each edge it is associated with
-  vcl_map<E_sptr, dbsksp_xshock_node_descriptor > descriptor_map_;
+  std::map<E_sptr, dbsksp_xshock_node_descriptor > descriptor_map_;
 
   //: depth // shock graph is a tree
   int depth_;

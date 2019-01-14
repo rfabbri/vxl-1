@@ -16,11 +16,11 @@
 //\endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <utility>
 
 #include <vnl/vnl_math.h>
 
@@ -37,8 +37,8 @@
 //forward declaration
 class dbdet_curvelet;
 
-typedef vcl_list<dbdet_curvelet*> cvlet_list;
-typedef vcl_list<dbdet_curvelet*>::iterator cvlet_list_iter;
+typedef std::list<dbdet_curvelet*> cvlet_list;
+typedef std::list<dbdet_curvelet*>::iterator cvlet_list_iter;
 
 //: The curvelet class: stores the ordered list of edgels defining the curvelet
 //  and also the curve model defined by the grouping
@@ -48,7 +48,7 @@ class dbdet_curvelet
 public:
   dbdet_edgel* ref_edgel;                        ///< ref edgel (the edgel to which it is anchored)
 
-  vcl_vector<dbdet_edgel*> edgel_chain;          ///< the ordered list of edgels 
+  std::vector<dbdet_edgel*> edgel_chain;          ///< the ordered list of edgels 
   dbdet_curve_model* curve_model;                ///< associated curve model
 
   bool forward;                                  ///< is this a forward cvlet or a reverse cvlet
@@ -71,11 +71,11 @@ public:
     ref_edgel(e), edgel_chain(0), curve_model(cm), forward(dir), length(0.0), quality(0.0), used(false){}
 
   //: constructor 3
-  dbdet_curvelet(dbdet_edgel* e, dbdet_curve_model* cm, vcl_vector<dbdet_edgel*> &echain, bool dir=true) : 
+  dbdet_curvelet(dbdet_edgel* e, dbdet_curve_model* cm, std::vector<dbdet_edgel*> &echain, bool dir=true) : 
     ref_edgel(e), edgel_chain(echain), curve_model(cm), forward(dir), length(0.0), quality(0.0), used(false){}
 
   //: constructor 4
-  dbdet_curvelet(dbdet_edgel* e, dbdet_curve_model* cm, vcl_deque<dbdet_edgel*> &echain, bool dir=true) : 
+  dbdet_curvelet(dbdet_edgel* e, dbdet_curve_model* cm, std::deque<dbdet_edgel*> &echain, bool dir=true) : 
     ref_edgel(e), curve_model(cm), forward(dir), length(0.0), quality(0.0), used(false)
   {
     edgel_chain.insert(edgel_chain.end(), echain.begin(), echain.end());
@@ -103,7 +103,7 @@ public:
   void replace_curve_model(dbdet_curve_model* cm) 
   { 
     if (!cm){ 
-      vcl_cout << "attempting to replace CB with NULL!" << vcl_endl; 
+      std::cout << "attempting to replace CB with NULL!" << std::endl; 
       return; 
     }
 
@@ -115,10 +115,10 @@ public:
   }
 
   //: returns the forward(child) edgel_chain 
-  vcl_list<dbdet_edgel*> child_chain();
+  std::list<dbdet_edgel*> child_chain();
 
   //: returns the backward(child) edgel_chain 
-  vcl_list<dbdet_edgel*> parent_chain();
+  std::list<dbdet_edgel*> parent_chain();
 
   ////: add a larger grouping
   //void add_larger_curvelet(dbdet_curvelet* cv) { larger_curvelets.push_back(cv); }
@@ -130,10 +130,10 @@ public:
   void compute_properties(double R, double token_len);
 
   //: print info to file
-  void print(vcl_ostream&);
+  void print(std::ostream&);
 
   //: read info from file
-  void read(vcl_istream&);
+  void read(std::istream&);
 
 };
 

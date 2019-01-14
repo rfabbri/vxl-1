@@ -1,4 +1,4 @@
-#include <vcl_vector.h>
+#include <vector>
 #include <dbinfo/dbinfo_track_geometry.h>
 #include <vsol/vsol_polyline_2d.h>
 
@@ -36,7 +36,7 @@ vsol_polyline_2d_sptr
 dbinfo_track_geometry::incremental_track(const unsigned initial_frame,
                                          const unsigned end_frame)
 {
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   unsigned endf = end_frame;
   if(end_frame>end_frame_)
     endf = end_frame_;

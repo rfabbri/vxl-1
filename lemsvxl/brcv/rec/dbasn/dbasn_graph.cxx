@@ -14,12 +14,12 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
-#include <vcl_cfloat.h>
-#include <vcl_stack.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <cassert>
+#include <cfloat>
+#include <stack>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
@@ -80,26 +80,26 @@ void dbasn_graph::normalize_node_cost (const double max, const double min, const
   if (max == 0)
     return;
 
-  ///const double log_min = vcl_log (min);
+  ///const double log_min = std::log (min);
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_node_cost(): max %.3lf, min = %.3lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_node_cost(): max %.3lf, min = %.3lf.\n", 
                 b_1st_graph_ ? "G" : "g", max, min);
 
   if (verbose > 1) {
-    vcl_cout << "  ----- before normalization -----\n";
+    std::cout << "  ----- before normalization -----\n";
     print_node_cost ();
   }
 
   for (unsigned int i=0; i<nodes_.size(); i++) {
-    ///double log_cost = vcl_log (nodes_[i]->cost() / max); //should be negative.
-    double updated_cost = vcl_sqrt (nodes_[i]->cost() / max);
+    ///double log_cost = std::log (nodes_[i]->cost() / max); //should be negative.
+    double updated_cost = std::sqrt (nodes_[i]->cost() / max);
     ///assert (vnl_math_isnan(log_cost) == false);
     nodes_[i]->set_cost (updated_cost); ///(log_min + log_cost) / log_min); //now cost is between 0 and 1
   }
 
   if (verbose > 1) {    
-    vcl_cout << "  ----- after normalization -----\n";
+    std::cout << "  ----- after normalization -----\n";
     print_node_cost ();
   }
 }
@@ -110,58 +110,58 @@ void dbasn_graph::normalize_link_cost (const double max, const double min, const
   if (max == 0)
     return;
   
-  ///const double log_min = vcl_log (min);
+  ///const double log_min = std::log (min);
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_link_cost(): max %.3lf, min = %.3lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_link_cost(): max %.3lf, min = %.3lf.\n", 
                 b_1st_graph_ ? "G" : "g", max, min);
 
   if (verbose > 1) {
-    vcl_cout << "  ----- before normalization -----\n";
+    std::cout << "  ----- before normalization -----\n";
     print_link_cost ();
   }
 
   const unsigned int nN = nodes_.size();
   for (unsigned int i=0; i<nN; i++) {
     for (unsigned int j=0; j<nN; j++) {
-      ///double log_cost = vcl_log (links_[i][j] / max); //should be negative. normalize_node_cost
+      ///double log_cost = std::log (links_[i][j] / max); //should be negative. normalize_node_cost
       ///assert (vnl_math_isnan(log_cost) == false);
       ///(log_min + log_cost) / log_min; //now link[][] is between 0 and 1
-      double updated_cost = vcl_sqrt (links_[i][j] / max);      
+      double updated_cost = std::sqrt (links_[i][j] / max);      
       links_[i][j] = updated_cost;       
     }
   }
 
   if (verbose > 1) {    
-    vcl_cout << "  ----- after normalization -----\n";
+    std::cout << "  ----- after normalization -----\n";
     print_link_cost ();
   }
 }
 
 void dbasn_graph::print_node_cost (void)
 {
-  vul_printf (vcl_cout, "\n  %s->print_node_cost():\n",
+  vul_printf (std::cout, "\n  %s->print_node_cost():\n",
         b_1st_graph_ ? "G" : "g");
-  vul_printf (vcl_cout, "    # of nodes: %u\n", (unsigned int)nodes_.size());
+  vul_printf (std::cout, "    # of nodes: %u\n", (unsigned int)nodes_.size());
   for (int i = 0; i<(int)nodes_.size(); i++) {
     assert (i == nodes_[i]->nid());
-    vul_printf (vcl_cout, "    node %d cost %1.3f\n", i, nodes_[i]->cost());
+    vul_printf (std::cout, "    node %d cost %1.3f\n", i, nodes_[i]->cost());
   }
 }
 
 void dbasn_graph::print_link_cost ()
 {
-  vul_printf (vcl_cout, "\n  %s->print_link_cost():\n", b_1st_graph_ ? "G" : "g");
+  vul_printf (std::cout, "\n  %s->print_link_cost():\n", b_1st_graph_ ? "G" : "g");
   int count = 0;
   const unsigned int nN = nodes_.size();
   for (unsigned int i=0; i<nN; i++)
     for (unsigned int j=0; j<nN; j++) {
         if (links_[i][j] != 0) {
-          vul_printf (vcl_cout, "    links[%d][%d]=%1.3f \n", i, j, links_[i][j]);
+          vul_printf (std::cout, "    links[%d][%d]=%1.3f \n", i, j, links_[i][j]);
           count++;
         }
       }
-  vul_printf (vcl_cout, "    # of links: %d.\n", count);
+  vul_printf (std::cout, "    # of links: %d.\n", count);
 }
 
 

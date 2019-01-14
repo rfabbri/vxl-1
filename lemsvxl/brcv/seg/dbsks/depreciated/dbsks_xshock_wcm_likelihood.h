@@ -53,7 +53,7 @@ public:
   // Utilities -----------------------------------------------------------------
 
   //: Return platform-independent name of the class
-  vcl_string is_a() const { return "dbsks_xshock_wcm_likelihood"; }
+  std::string is_a() const { return "dbsks_xshock_wcm_likelihood"; }
 
   //: Likelihood of an xshock fragment
   virtual double loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const;
@@ -67,7 +67,7 @@ public:
   
   //: Likelihood of a xshock graph using whole contour matching
   double f_whole_contour(const dbsksp_xshock_graph_sptr& xgraph, 
-    const vcl_vector<unsigned >& ignored_edges, bool verbose);
+    const std::vector<unsigned >& ignored_edges, bool verbose);
 
 protected:
   //: A model for CCM cost of the graph

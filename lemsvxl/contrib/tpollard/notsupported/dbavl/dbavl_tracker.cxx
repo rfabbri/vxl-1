@@ -23,12 +23,12 @@ dbavl_tracker::dbavl_tracker()
 void 
 dbavl_tracker::track_frame(
   const vil_image_view<vxl_byte>& new_frame,
-  const vcl_vector< vgl_point_2d<int> >& new_tracks )
+  const std::vector< vgl_point_2d<int> >& new_tracks )
 {
   bool debugging = false;
 
   // Compute MI in regions around the current live tracks.
-  vcl_vector< vnl_matrix<float> > region_mi;
+  std::vector< vnl_matrix<float> > region_mi;
   int num_live_tracks = 0;
   for( int t = 0; t < tracks_.size(); t++ ){
     int tr1 = tracks_[t].x(); int tr2 = tracks_[t].y();
@@ -73,8 +73,8 @@ dbavl_tracker::track_frame(
   // Search a 3-dim subspace of fundamental matrices for a best match.
   vnl_matrix<float> best_fm;
   float best_total = 0;
-  vcl_vector< vgl_point_2d<int> > best_tracks;
-  vcl_vector<float> best_vals;
+  std::vector< vgl_point_2d<int> > best_tracks;
+  std::vector<float> best_vals;
   int total_fms = 0, usable_fms = 0;
   for( int ts = 0; ts < params.num_fm_trans_searches; ts++ ){
     float tx = cos(3.14159*ts/(params.num_fm_trans_searches-1.0));
@@ -105,8 +105,8 @@ dbavl_tracker::track_frame(
         // For each FM, find the best match for each live track in the next
         // image that agrees with the FM.
         float this_total = 0;
-        vcl_vector< vgl_point_2d<int> > these_tracks;
-        vcl_vector<float> these_vals;
+        std::vector< vgl_point_2d<int> > these_tracks;
+        std::vector<float> these_vals;
         for( int t = 0; t < tracks_.size(); t++ ){
 
           if( track_masks_[t] == false ){

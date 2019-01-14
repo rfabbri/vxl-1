@@ -16,23 +16,23 @@
 #include <bmcsd/pro/bmcsd_stereo_driver.h>
 
 
-#define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) \
-  << " -- Fail:" << (a) << " != " << (b) << vcl_endl; exit(1); }
+#define MW_ASSERT(msg, a, b) if ((a) != (b)) { std::cerr << (msg) \
+  << " -- Fail:" << (a) << " != " << (b) << std::endl; exit(1); }
 
 /*
-static bool write_stats(const vcl_string &dataset_name, 
-    const vcl_vector<buld_exp_stat> &stats_at_threshold,
-    vcl_string fname
+static bool write_stats(const std::string &dataset_name, 
+    const std::vector<buld_exp_stat> &stats_at_threshold,
+    std::string fname
     );
     */
 
 static bool 
 write_stats_with_params(
-    const vcl_string &dataset_name, 
-    const vcl_vector<buld_exp_stat> &stats_at_threshold,
-    vcl_vector<vcl_vector<vcl_string> >eval_params_names,
-    vcl_vector<vcl_vector<vcl_string> >eval_params_values,
-    vcl_string fname
+    const std::string &dataset_name, 
+    const std::vector<buld_exp_stat> &stats_at_threshold,
+    std::vector<std::vector<std::string> >eval_params_names,
+    std::vector<std::vector<std::string> >eval_params_values,
+    std::string fname
     );
 
 int 
@@ -50,8 +50,8 @@ main(int argc, char *argv[])
   // always print the params file if an executable to work with ORL web 
   // interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cerr << "problems in writing params file to: " 
-             << params->print_params_file() << vcl_endl;
+    std::cerr << "problems in writing params file to: " 
+             << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -113,28 +113,28 @@ main(int argc, char *argv[])
   MW_ASSERT("Stereo driver init return value", retval, true);
 
   if (e.use_curvelets_) {
-    vcl_cout << "Using curvelets.\n";
+    std::cout << "Using curvelets.\n";
     if (e.min_num_inlier_edgels_per_curvelet_list_.size() > 1)
-      vcl_cout << "Warning: currently setting only one value of curvelet inlier threshold\n";
+      std::cout << "Warning: currently setting only one value of curvelet inlier threshold\n";
 
     if (!e.min_num_inlier_edgels_per_curvelet_list_.empty())
       s.set_min_num_inlier_edgels_per_curvelet(e.min_num_inlier_edgels_per_curvelet_list_[0]);
   } else {
-    vcl_cout << "Not using curvelets.\n";
+    std::cout << "Not using curvelets.\n";
   }
 
-  vcl_cout << "Start experiments: " << vcl_endl;
+  std::cout << "Start experiments: " << std::endl;
   unsigned i=0;
   for (unsigned i1 = 0; i1 < e.distance_threshold_list_.size(); ++i1)
   for (unsigned i2 = 0; i2 < e.dtheta_threshold_list_.size(); ++i2)
   for (unsigned i3 = 0; i3 < e.min_samples_per_curve_frag_list_.size(); ++i3)
   for (unsigned i4 = 0; i4 < e.min_inliers_per_view_list_.size(); ++i4, ++i) {
-    vcl_cout << "iteration[" << i << "]:" 
-      << i1 << "," << i2 << "," << i3 << "," << i4 << "," << vcl_endl;
+    std::cout << "iteration[" << i << "]:" 
+      << i1 << "," << i2 << "," << i3 << "," << i4 << "," << std::endl;
     s.set_distance_threshold(e.distance_threshold_list_[i1]);
     s.set_dtheta_threshold(e.dtheta_threshold_list_[i2]);
     if (e.prune_by_length_) {
-      vcl_cout << "Prune by length: " << e.min_samples_per_curve_frag_list_[i3] << " pixels" << vcl_endl;
+      std::cout << "Prune by length: " << e.min_samples_per_curve_frag_list_[i3] << " pixels" << std::endl;
       s.set_min_length_per_curve_frag(e.min_samples_per_curve_frag_list_[i3]);
     } else { // min samples interpreted as length
       s.set_min_samples_per_curve_frag(
@@ -157,19 +157,19 @@ main(int argc, char *argv[])
     bmcsd_discrete_corresp corr (s.corresp(s.num_corresp()-1));
 
     if (corr.checksum() != e.gt_.checksum())
-      vcl_cout << "Computed and g-truth checksum for corresp don't match\n"
-        << corr << vcl_endl << e.gt_ << vcl_endl;
+      std::cout << "Computed and g-truth checksum for corresp don't match\n"
+        << corr << std::endl << e.gt_ << std::endl;
 
     // Prune at different thresholds and measure the stats.
 
     // TODO assert gt is compatible with the read-in curves.
-    vcl_vector<buld_exp_stat> stats;
+    std::vector<buld_exp_stat> stats;
     const unsigned num_its = e.min_total_inliers_list_.size();
     stats.reserve(num_its);
 
     // parameter values at each evaluation step.
-    vcl_vector<vcl_vector<vcl_string> >eval_params_names(num_its);
-    vcl_vector<vcl_vector<vcl_string> >eval_params_values(num_its);
+    std::vector<std::vector<std::string> >eval_params_names(num_its);
+    std::vector<std::vector<std::string> >eval_params_values(num_its);
 
     // TODO Reconstruct from ground truth and write this out.
 
@@ -188,36 +188,36 @@ main(int argc, char *argv[])
         eval_params_values[i5].resize(1);
 
         {
-        vcl_ostringstream strm;
+        std::ostringstream strm;
         strm << e.min_total_inliers_list_[i5];
         eval_params_values[i5][0] = strm.str();
         }
       }
     }
 
-    vcl_string param_stamp;
+    std::string param_stamp;
 
-    param_stamp += vcl_string("-distance_");
+    param_stamp += std::string("-distance_");
     {
-    vcl_ostringstream strm;
+    std::ostringstream strm;
     strm << e.distance_threshold_list_[i1];
     param_stamp += strm.str();
     }
-    param_stamp += vcl_string("-dtheta_");
+    param_stamp += std::string("-dtheta_");
     {
-    vcl_ostringstream strm;
+    std::ostringstream strm;
     strm << e.dtheta_threshold_list_[i2];
     param_stamp += strm.str();
     }
-    param_stamp += vcl_string("-");
+    param_stamp += std::string("-");
     {
-    vcl_ostringstream strm;
+    std::ostringstream strm;
     strm << e.min_samples_per_curve_frag_list_[i3];
-    param_stamp += strm.str() + vcl_string("_length");
+    param_stamp += strm.str() + std::string("_length");
     }
-    param_stamp += vcl_string("-min_inliers_per_view_");
+    param_stamp += std::string("-min_inliers_per_view_");
     {
-    vcl_ostringstream strm;
+    std::ostringstream strm;
     strm << e.min_inliers_per_view_list_[i4];
     param_stamp += strm.str();
     }
@@ -227,13 +227,13 @@ main(int argc, char *argv[])
         stats, 
         eval_params_names,
         eval_params_values,
-        params->output_mcs_eval_folder_() + vcl_string("stats") + param_stamp 
+        params->output_mcs_eval_folder_() + std::string("stats") + param_stamp 
         + params->output_mcs_eval_extension_());
 
     if (params->dump_corresps_()) {
       vsl_b_ofstream corr_ofs((
-           params->output_mcs_eval_folder_() + vcl_string("corresp") + param_stamp
-          + vcl_string(".vsl")).c_str() );
+           params->output_mcs_eval_folder_() + std::string("corresp") + param_stamp
+          + std::string(".vsl")).c_str() );
       vsl_b_write(corr_ofs, s.corresp(s.num_corresp()-1));
     }
   }
@@ -253,15 +253,15 @@ main(int argc, char *argv[])
 // TODO: move to dborl/algo/dborl_utilities
 bool 
 write_stats(
-    const vcl_string &dataset_name, 
-    const vcl_vector<buld_exp_stat> &stats_at_threshold,
-    vcl_string fname
+    const std::string &dataset_name, 
+    const std::vector<buld_exp_stat> &stats_at_threshold,
+    std::string fname
     )
 {
-  vcl_cout<<"Writing evaluation results to " << fname << vcl_endl;
+  std::cout<<"Writing evaluation results to " << fname << std::endl;
 
   if (stats_at_threshold.empty()) {
-    vcl_cerr << "Error: no stats.\n";
+    std::cerr << "Error: no stats.\n";
     return false;
   }
 
@@ -313,7 +313,7 @@ write_stats(
     bxml_element* tn_elm=dbxml_algos::cast_to_element(tn,"TN");
     bxml_element* fn_elm=dbxml_algos::cast_to_element(fn,"FN");
    
-    vcl_stringstream tpvalue,fpvalue,tnvalue,fnvalue;
+    std::stringstream tpvalue,fpvalue,tnvalue,fnvalue;
     
     tpvalue<<stats_at_threshold[i].TP_;
     fpvalue<<stats_at_threshold[i].FP_;
@@ -354,7 +354,7 @@ read_cams()
     if (params_->cam_type_() == "projcamera")
       cam_type_ = bmcsd_util::BMCS_3X4;
     else  {
-      vcl_cerr << "Error: invalid camera type " << params_->cam_type_() << vcl_endl;
+      std::cerr << "Error: invalid camera type " << params_->cam_type_() << std::endl;
       exit(1);
     }
   }
@@ -369,28 +369,28 @@ read_frame_data()
         cam_type_);
   if (!retval)
     exit(1);
-  vcl_cout << "Dpath:\n" << dpath_ << vcl_endl;
+  std::cout << "Dpath:\n" << dpath_ << std::endl;
 }
 
 //: Read the ground truth.
 void vox_mcs_eval::
 read_gt()
 {
-  vcl_string fname = params_->gt_object_dir_() + params_->gt_object_name_();
+  std::string fname = params_->gt_object_dir_() + params_->gt_object_name_();
   vsl_b_ifstream bfs_in(fname);
   if (!bfs_in) {
-    vcl_cout << "Error: unable to open file " << fname << vcl_endl;
+    std::cout << "Error: unable to open file " << fname << std::endl;
     exit(1);
   }
   vsl_b_read(bfs_in, gt_);
-  // vcl_cout << gt_;
+  // std::cout << gt_;
 }
 
 void vox_mcs_eval::
 read_one_mcs_instance()
 {
   bool retval = bmcsd_view_set::read_txt(
-      params_->input_folder_() + vcl_string("/mcs_stereo_instances.txt"), 
+      params_->input_folder_() + std::string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   MW_ASSERT("frames to match from file", retval, true);
 
@@ -399,8 +399,8 @@ read_one_mcs_instance()
 
   one_instance_.add_instance(all_instances_.instance(params_->instance_id_()));
 
-  vcl_cout << "Running on instance[" <<  params_->instance_id_() << "]: " 
-    << one_instance_ << vcl_endl;
+  std::cout << "Running on instance[" <<  params_->instance_id_() << "]: " 
+    << one_instance_ << std::endl;
 }
 
 void vox_mcs_eval::
@@ -412,7 +412,7 @@ read_param_lists()
   prune_by_length_ = params_->prune_by_length_();
   bmcsd_util::parse_num_list(params_->min_inliers_per_view_list_(), &min_inliers_per_view_list_);
   bmcsd_util::parse_num_list(params_->min_total_inliers_list_(), &min_total_inliers_list_);
-  vcl_sort(min_total_inliers_list_.begin(), min_total_inliers_list_.end());
+  std::sort(min_total_inliers_list_.begin(), min_total_inliers_list_.end());
   bmcsd_util::parse_num_list(params_->min_first_to_second_best_ratio_list_(), &min_first_to_second_best_ratio_list_);
   bmcsd_util::parse_num_list(params_->lonely_threshold_list_(), &lonely_threshold_list_);
   bmcsd_util::parse_num_list(params_->min_epipolar_overlap_list_(), &min_epipolar_overlap_list_);
@@ -424,17 +424,17 @@ read_param_lists()
 
 bool 
 write_stats_with_params(
-    const vcl_string &dataset_name, 
-    const vcl_vector<buld_exp_stat> &stats_at_threshold,
-    vcl_vector<vcl_vector<vcl_string> >eval_params_names,
-    vcl_vector<vcl_vector<vcl_string> >eval_params_values,
-    vcl_string fname
+    const std::string &dataset_name, 
+    const std::vector<buld_exp_stat> &stats_at_threshold,
+    std::vector<std::vector<std::string> >eval_params_names,
+    std::vector<std::vector<std::string> >eval_params_values,
+    std::string fname
     )
 {
-  vcl_cout<<"Writing evaluation results to " << fname << vcl_endl;
+  std::cout<<"Writing evaluation results to " << fname << std::endl;
 
   if (stats_at_threshold.empty()) {
-    vcl_cerr << "Error: no stats.\n";
+    std::cerr << "Error: no stats.\n";
     return false;
   }
 
@@ -495,7 +495,7 @@ write_stats_with_params(
     bxml_element* tn_elm=dbxml_algos::cast_to_element(tn,"TN");
     bxml_element* fn_elm=dbxml_algos::cast_to_element(fn,"FN");
    
-    vcl_stringstream tpvalue,fpvalue,tnvalue,fnvalue;
+    std::stringstream tpvalue,fpvalue,tnvalue,fnvalue;
     
     tpvalue<<stats_at_threshold[i].TP_;
     fpvalue<<stats_at_threshold[i].FP_;

@@ -31,22 +31,22 @@ public:
 #include <dborl/dborl_index_edge.h>
 #include <dborl/dborl_index_node_sptr.h>
 #include <dborl/dborl_index_node_base_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class dborl_index : public bgrld_graph<dborl_index_node_base , dborl_index_edge>
 {
 public:
   int type_;
-  vcl_string name_;
+  std::string name_;
   dborl_index_node_base_sptr root_;
 
   dborl_index() : name_(""), root_(0) {}
-  dborl_index(vcl_string name) : name_(name), root_(0) {}
+  dborl_index(std::string name) : name_(name), root_(0) {}
 
   void set_type(int t) { type_ = t; }
   int get_type() { return type_; }
-  vcl_string get_type_string();
-  int set_type_from_string(vcl_string type_str);
+  std::string get_type_string();
+  int set_type_from_string(std::string type_str);
   bool is_type(int type) { return type == type_; }
 
   //: assumes the index is currently empty, if not returns false
@@ -59,15 +59,15 @@ public:
   bool add_child(dborl_index_node_base_sptr parent, dborl_index_node_base_sptr child);
   
   //: does not check whether parent exists before accessing the outgoing edges to get children, use node_exists() if need to be sure
-  bool get_children(dborl_index_node_base_sptr parent, vcl_vector<dborl_index_node_base_sptr>& cs);
+  bool get_children(dborl_index_node_base_sptr parent, std::vector<dborl_index_node_base_sptr>& cs);
   
   //: does not check whether child exists before accessing the incoming edge to get the parent, assumes only one incoming edge
   dborl_index_node_base_sptr get_parent(dborl_index_node_base_sptr child);
   
   void b_read();
   void b_write();
-  void write_xml(vcl_ostream& os);
-  void write_node_xml(dborl_index_node_sptr n, vcl_ostream& os);
+  void write_xml(std::ostream& os);
+  void write_node_xml(dborl_index_node_sptr n, std::ostream& os);
   
 };
 

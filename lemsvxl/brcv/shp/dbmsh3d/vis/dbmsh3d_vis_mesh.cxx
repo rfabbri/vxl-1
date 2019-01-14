@@ -2,8 +2,8 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/pro/dbmsh3d_cmdpara.h>
@@ -33,7 +33,7 @@
 #include <Inventor/engines/SoTimeCounter.h>
 #include <Inventor/engines/SoCalculator.h>
 
-int _count_faces_indices (const vcl_vector<vcl_vector<int> >& faces)
+int _count_faces_indices (const std::vector<std::vector<int> >& faces)
 {
   unsigned int total = 0;
   for (unsigned int i=0; i<faces.size(); i++)
@@ -42,8 +42,8 @@ int _count_faces_indices (const vcl_vector<vcl_vector<int> >& faces)
 }
 
 void draw_ifs_geom (SoGroup* root, 
-                    const vcl_vector<vgl_point_3d<double> >& pts,
-                    const vcl_vector<vcl_vector<int> >& faces)
+                    const std::vector<vgl_point_3d<double> >& pts,
+                    const std::vector<std::vector<int> >& faces)
 {
   //Assign vertices
   int nVertices = pts.size();
@@ -79,23 +79,23 @@ void draw_ifs_geom (SoGroup* root,
   root->addChild (indexedFaceSet);
 }
 
-void draw_ifs_geom (SoGroup* root, vcl_set<dbmsh3d_vertex*>& V_set,
-                    vcl_set<dbmsh3d_face*>& F_set)
+void draw_ifs_geom (SoGroup* root, std::set<dbmsh3d_vertex*>& V_set,
+                    std::set<dbmsh3d_face*>& F_set)
 {
-  //convert to vcl_vector and draw.
-  vcl_vector<vgl_point_3d<double> > pts_vector (V_set.size());
-  vcl_vector<vcl_vector<int> > faces_vector (F_set.size());
+  //convert to std::vector and draw.
+  std::vector<vgl_point_3d<double> > pts_vector (V_set.size());
+  std::vector<std::vector<int> > faces_vector (F_set.size());
 
-  vcl_set<dbmsh3d_vertex*>::iterator vit = V_set.begin();
+  std::set<dbmsh3d_vertex*>::iterator vit = V_set.begin();
   for (unsigned int i=0; vit != V_set.end(); vit++, i++) {
     (*vit)->set_vid (i);
     pts_vector[i] = (*vit)->pt();
   }
 
-  vcl_set<dbmsh3d_face*>::iterator fit = F_set.begin();
+  std::set<dbmsh3d_face*>::iterator fit = F_set.begin();
   for (unsigned int i=0 ; fit != F_set.end(); fit++, i++) {
     dbmsh3d_face* F = *fit;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
 
     faces_vector[i].resize (vertices.size());
@@ -109,24 +109,24 @@ void draw_ifs_geom (SoGroup* root, vcl_set<dbmsh3d_vertex*>& V_set,
   draw_ifs_geom (root, pts_vector, faces_vector);
 }
 
-void draw_faces_geom (SoGroup* root, vcl_map<int, dbmsh3d_vertex*>& V_map,
-                      vcl_map<int, dbmsh3d_face*>& F_map)
+void draw_faces_geom (SoGroup* root, std::map<int, dbmsh3d_vertex*>& V_map,
+                      std::map<int, dbmsh3d_face*>& F_map)
 {
-  //convert to vcl_vector and draw.
-  vcl_vector<vgl_point_3d<double> > pts_vector (V_map.size());
-  vcl_vector<vcl_vector<int> > faces_vector (F_map.size());
+  //convert to std::vector and draw.
+  std::vector<vgl_point_3d<double> > pts_vector (V_map.size());
+  std::vector<std::vector<int> > faces_vector (F_map.size());
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = V_map.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = V_map.begin();
   for (unsigned int i=0; vit != V_map.end(); vit++, i++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_vid (i);
     pts_vector[i] = V->pt();
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = F_map.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = F_map.begin();
   for (unsigned int i=0 ; fit != F_map.end(); fit++, i++) {
     dbmsh3d_face* F = (*fit).second;
-    vcl_vector<dbmsh3d_vertex*> vertices; 
+    std::vector<dbmsh3d_vertex*> vertices; 
     F->get_bnd_Vs (vertices);
     faces_vector[i].resize (vertices.size());
 
@@ -140,8 +140,8 @@ void draw_faces_geom (SoGroup* root, vcl_map<int, dbmsh3d_vertex*>& V_map,
   draw_ifs_geom (root, pts_vector, faces_vector);
 }
 
-SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces,
+SoSeparator* draw_ifs (const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces,
                        const int colorcode,
                        const bool b_shape_hints, const float transp)
 {  
@@ -189,8 +189,8 @@ SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
   return root;
 }
 
-SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces,
+SoSeparator* draw_ifs (const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces,
                        const SbColor& color,
                        const bool b_shape_hints, const float transp)
 {  
@@ -223,7 +223,7 @@ SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
   return root;
 }
 
-SoSeparator* draw_ifs (vcl_set<dbmsh3d_vertex*>& pts, vcl_set<dbmsh3d_face*>& faces,
+SoSeparator* draw_ifs (std::set<dbmsh3d_vertex*>& pts, std::set<dbmsh3d_face*>& faces,
                        const int colorcode, const bool b_shape_hints, const float transp)
 {
   SoSeparator* root = new SoSeparator;
@@ -270,7 +270,7 @@ SoSeparator* draw_ifs (vcl_set<dbmsh3d_vertex*>& pts, vcl_set<dbmsh3d_face*>& fa
   return root;
 }
 
-SoSeparator* draw_ifs (vcl_set<dbmsh3d_vertex*>& pts, vcl_set<dbmsh3d_face*>& faces,
+SoSeparator* draw_ifs (std::set<dbmsh3d_vertex*>& pts, std::set<dbmsh3d_face*>& faces,
                             const SbColor& color, const bool b_shape_hints, const float transp)
 {
   SoSeparator* root = new SoSeparator;
@@ -314,7 +314,7 @@ void _draw_M_ifs_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int n_ind, int* in
   float (*xyz)[3] = new float[nVertices][3];
 
   //Assign vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (int i=0; it != M->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
 
@@ -327,7 +327,7 @@ void _draw_M_ifs_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int n_ind, int* in
   //Assign faces
   unsigned int k = 0;
   
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     assert (F->vertices().size() > 2);
@@ -355,7 +355,7 @@ void _draw_M_mhe_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int n_ind, int* in
   float (*xyz)[3] = new float[nVertices][3];
 
   //Assign vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (int i=0; it != M->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
 
@@ -368,10 +368,10 @@ void _draw_M_mhe_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int n_ind, int* in
   //Assign faces
   unsigned int k = 0;
   
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
     assert (vertices.size() > 2);
 
@@ -486,7 +486,7 @@ void _draw_M_visited_ifs_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int* ind)
   unsigned int n_ind = M->_count_visited_faces_indices_ifs();
 
   //Assign vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (int i=0; it != M->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* V = (*it).second;
 
@@ -499,12 +499,12 @@ void _draw_M_visited_ifs_geom (dbmsh3d_mesh* M, SoVertexProperty* vp, int* ind)
   //Assign faces
   unsigned int k = 0;
   
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     if (F->b_visited() == false)
       continue; //skip the unmarked F.
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
     assert (vertices.size() > 2);
 
@@ -599,12 +599,12 @@ SoSeparator* draw_M_ifs_visited (dbmsh3d_mesh* M, const int colorcode,
 SoSeparator* draw_M_topo_vertices (dbmsh3d_mesh* M, const int option,
                                    const float size, const bool user_defined_class)
 {
-  vul_printf (vcl_cout, "draw_M_topo_vertices(): ");
+  vul_printf (std::cout, "draw_M_topo_vertices(): ");
   unsigned int n_non_m_1ring_v = 0;
   unsigned int n_non_1ring_v = 0;
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     VTOPO_TYPE type = V->detect_vtopo_type ();   
@@ -623,8 +623,8 @@ SoSeparator* draw_M_topo_vertices (dbmsh3d_mesh* M, const int option,
         root->addChild (draw_vertex_SoCube (V, NON_1RING_COLOR, size));
     }
   }
-  vul_printf (vcl_cout, "%u non-manifold 1-ring vertices.\n", n_non_m_1ring_v);
-  vul_printf (vcl_cout, "%u non-1-ring vertices.\n", n_non_1ring_v);
+  vul_printf (std::cout, "%u non-manifold 1-ring vertices.\n", n_non_m_1ring_v);
+  vul_printf (std::cout, "%u non-1-ring vertices.\n", n_non_1ring_v);
 
   return root;
 }
@@ -649,14 +649,14 @@ SoSeparator* draw_M_edges_idv (dbmsh3d_mesh* M, const SbColor& color,
   root->addChild(ds);
 
   if (user_defined_class) {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = M->edgemap().begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = M->edgemap().begin();
     for (; it != M->edgemap().end(); it++) {
       dbmsh3d_edge* E = (*it).second;
       draw_edge_geom (root, E, true);
     }
   }
   else {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = M->edgemap().begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = M->edgemap().begin();
     for (; it != M->edgemap().end(); it++) {
       dbmsh3d_edge* E = (*it).second;
       draw_edge_geom (root, E, false);
@@ -701,7 +701,7 @@ void draw_M_mhe_edges_geom (SoSeparator* root, dbmsh3d_mesh* M)
   int* ind = new int [nLinesIndices];
 
   //Assign vertices and lines
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = M->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = M->edgemap().begin();
   for (unsigned int i=0; eit != M->edgemap().end(); eit++, i++) {
     dbmsh3d_edge* E = (*eit).second;
     vgl_point_3d<double> Ps = E->sV()->pt();
@@ -740,7 +740,7 @@ void draw_M_ifs_edges_geom (SoSeparator* root, dbmsh3d_mesh* M)
 
   //Assign vertices and lines
   unsigned int i=0;
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     //Go through each implicit incident E and draw it.
@@ -794,11 +794,11 @@ SoSeparator* draw_M_bndcurve (dbmsh3d_mesh* M, const int colorcode, const float 
   bnd_chain_set->detect_bnd_chains ();
 
   //Draw each bnd_chain in polyline
-  vcl_vector<dbmsh3d_bnd_chain*>::iterator bit = bnd_chain_set->chainset().begin();
+  std::vector<dbmsh3d_bnd_chain*>::iterator bit = bnd_chain_set->chainset().begin();
   for (; bit != bnd_chain_set->chainset().end(); bit++) {
     dbmsh3d_bnd_chain* BC = (*bit);
 
-    vcl_vector<vgl_point_3d<double> > polyline_vertices;
+    std::vector<vgl_point_3d<double> > polyline_vertices;
     //Trace each bnd_chain to a vector of points.
     BC->trace_polyline (polyline_vertices);
     draw_polyline_geom (root, polyline_vertices);
@@ -836,14 +836,14 @@ SoSeparator* draw_M_faces_idv (dbmsh3d_mesh* M,
   root->addChild (ds);
 
   if (user_defined_class) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
     for (; it != M->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
       draw_F_geom_vispt (root, F);
     }
   }
   else {
-    vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
     for (; it != M->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
       draw_F_geom (root, F);
@@ -855,7 +855,7 @@ SoSeparator* draw_M_faces_idv (dbmsh3d_mesh* M,
 
 SoSeparator* draw_M_color (dbmsh3d_mesh* M, 
                            const bool b_shape_hints, const float trans,
-                           const vcl_vector<SbColor>& color_set,
+                           const std::vector<SbColor>& color_set,
                            const bool user_defined_class)
 {
   SoSeparator* root = new SoSeparator;
@@ -870,7 +870,7 @@ SoSeparator* draw_M_color (dbmsh3d_mesh* M,
     root->addChild (hints);
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     root->addChild (draw_F (F, color_set[F->id()], trans, user_defined_class));
@@ -883,7 +883,7 @@ SoSeparator* draw_mesh_vertices (dbmsh3d_mesh* M, const float size)
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     root->addChild (draw_vertex_geom_vispt_SoCube (V, size));
@@ -898,7 +898,7 @@ SoSeparator* draw_M_textured (dbmsh3d_textured_mesh_mc* M)
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_textured_face_mc* F = (dbmsh3d_textured_face_mc*) (*it).second;
     root->addChild (draw_F_textured (F));
@@ -915,7 +915,7 @@ SoSeparator* draw_M_textured (dbmsh3d_textured_mesh_mc* M)
 SoSeparator* draw_M_bnd_faces_cost_col (dbmsh3d_mesh* M, const bool draw_idv,
                                         const bool showid, const float transp)
 {
-  vul_printf (vcl_cout, "draw_M_bnd_faces_cost_col()\n");
+  vul_printf (std::cout, "draw_M_bnd_faces_cost_col()\n");
 
   SoSeparator* root = new SoSeparator;
 
@@ -941,10 +941,10 @@ SoSeparator* draw_M_bnd_faces_cost_col (dbmsh3d_mesh* M, const bool draw_idv,
 
   if (showid == false) {
     //draw all obtuse triangles in a batch.
-    vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
     for (; it != M->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
-      vcl_vector<dbmsh3d_vertex*> vertices;
+      std::vector<dbmsh3d_vertex*> vertices;
       F->get_bnd_Vs (vertices);
       if (is_tri_non_acute(vertices)) {
         n_obtuse++;
@@ -959,7 +959,7 @@ SoSeparator* draw_M_bnd_faces_cost_col (dbmsh3d_mesh* M, const bool draw_idv,
     it = M->facemap().begin();
     for (; it != M->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
-      vcl_vector<dbmsh3d_vertex*> vertices;
+      std::vector<dbmsh3d_vertex*> vertices;
       F->get_bnd_Vs (vertices);
       if (is_tri_non_acute(vertices) == false) {
         n_acute++;
@@ -975,10 +975,10 @@ SoSeparator* draw_M_bnd_faces_cost_col (dbmsh3d_mesh* M, const bool draw_idv,
     ///SoBaseColor* idbasecolor = new SoBaseColor;
     ///idbasecolor->rgb = FACE_ID_COLOR;
 
-    vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
     for (; it != M->facemap().end(); it++) {
       dbmsh3d_face* F = (*it).second;
-      vcl_vector<dbmsh3d_vertex*> vertices;
+      std::vector<dbmsh3d_vertex*> vertices;
       F->get_bnd_Vs (vertices);
       //Determine color according to its cost type.
       if (is_tri_non_acute(vertices)) {
@@ -991,7 +991,7 @@ SoSeparator* draw_M_bnd_faces_cost_col (dbmsh3d_mesh* M, const bool draw_idv,
       }
     }
   }
-  vul_printf (vcl_cout, "\t%u acute, %u obtuse faces drawn (totally %u).\n", 
+  vul_printf (std::cout, "\t%u acute, %u obtuse faces drawn (totally %u).\n", 
                n_acute, n_obtuse, M->facemap().size());
   return root;
 }
@@ -1000,7 +1000,7 @@ SoSeparator* draw_M_bnd_faces_topo_col (dbmsh3d_mesh* M, const bool draw_idv,
                                         const bool showid, const float transp,
                                         const bool user_defined_class)
 {
-  vul_printf (vcl_cout, "draw_M_bnd_faces_topo_col()\n");
+  vul_printf (std::cout, "draw_M_bnd_faces_topo_col()\n");
   SoSeparator* root = new SoSeparator;
 
   SoDrawStyle* ds = new SoDrawStyle;
@@ -1019,7 +1019,7 @@ SoSeparator* draw_M_bnd_faces_topo_col (dbmsh3d_mesh* M, const bool draw_idv,
   VIS_COLOR_CODE colorcode;
   SbColor color;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     TRIFACE_TYPE type = F->tri_get_topo_type();
@@ -1086,19 +1086,19 @@ SoSeparator* draw_M_bnd_faces_topo_col (dbmsh3d_mesh* M, const bool draw_idv,
     root->addChild (draw_M_ifs_visited (M, colorcode, false, transp));
   }
 
-  vul_printf (vcl_cout, "\tAmong %u mesh faces:\n", M->facemap().size());
-  vul_printf (vcl_cout, "\t%u 2-manifold faces: %u (222) interior DARKGRAY,\n", n_222+n_112+n_122, n_222);
-  vul_printf (vcl_cout, "\t  + boundary: %u (112) DARKGREEN + %u (122) DARKBLUE.\n", n_112, n_122);
+  vul_printf (std::cout, "\tAmong %u mesh faces:\n", M->facemap().size());
+  vul_printf (std::cout, "\t%u 2-manifold faces: %u (222) interior DARKGRAY,\n", n_222+n_112+n_122, n_222);
+  vul_printf (std::cout, "\t  + boundary: %u (112) DARKGREEN + %u (122) DARKBLUE.\n", n_112, n_122);
 
-  vul_printf (vcl_cout, "\t%u extraneous:\n", n_113+n_133+n_333);
-  vul_printf (vcl_cout, "\t  %u (113) PINK + %u (133) RED + %u (333) DARKRED.\n", n_133, n_133, n_333);
+  vul_printf (std::cout, "\t%u extraneous:\n", n_113+n_133+n_333);
+  vul_printf (std::cout, "\t  %u (113) PINK + %u (133) RED + %u (333) DARKRED.\n", n_133, n_133, n_333);
 
-  vul_printf (vcl_cout, "\t%u near ridge faces:\n", n_123+n_223+n_233);
-  vul_printf (vcl_cout, "\t  %u (123) CYAN + %u (223) BLUE + %u (233) GREEN.\n", n_123, n_223, n_233);  
+  vul_printf (std::cout, "\t%u near ridge faces:\n", n_123+n_223+n_233);
+  vul_printf (std::cout, "\t  %u (123) CYAN + %u (223) BLUE + %u (233) GREEN.\n", n_123, n_223, n_233);  
 
-  vul_printf (vcl_cout, "\t%u isolated (111) YELLOW.\n", n_111);
-  vul_printf (vcl_cout, "\t%u degenerate polygon (e4+) GRAY.\n", n_e4p);
-  vul_printf (vcl_cout, "\t%u error in GOLD.\n", n_error);
+  vul_printf (std::cout, "\t%u isolated (111) YELLOW.\n", n_111);
+  vul_printf (std::cout, "\t%u degenerate polygon (e4+) GRAY.\n", n_e4p);
+  vul_printf (std::cout, "\t%u error in GOLD.\n", n_error);
 
   return root;
 }
@@ -1181,7 +1181,7 @@ static void timerCallback (void *data, SoSensor* sensor)
 
 SoSeparator* draw_M_bnd_faces_anim (dbmsh3d_mesh* M, const int nF_batch)
 {  
-  vul_printf (vcl_cout, "  draw_M_bnd_faces_anim().\n", nF_batch);
+  vul_printf (std::cout, "  draw_M_bnd_faces_anim().\n", nF_batch);
   SoSeparator* root = new SoSeparator;
 
   SoDrawStyle* ds = new SoDrawStyle;
@@ -1196,8 +1196,8 @@ SoSeparator* draw_M_bnd_faces_anim (dbmsh3d_mesh* M, const int nF_batch)
   root->addChild (animRoot);
     
   unsigned int frame = 0;
-  vcl_vector<dbmsh3d_face*> faces;
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::vector<dbmsh3d_face*> faces;
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (unsigned int i=0; it != M->facemap().end(); it++, i++) {
     dbmsh3d_face* F = (*it).second;
     faces.push_back (F);    
@@ -1212,7 +1212,7 @@ SoSeparator* draw_M_bnd_faces_anim (dbmsh3d_mesh* M, const int nF_batch)
   draw_faces_in_switch (animRoot, faces);
   faces.clear();
   frame++;
-  vul_printf (vcl_cout, "    total animation frames: %u.\n", frame);
+  vul_printf (std::cout, "    total animation frames: %u.\n", frame);
 
   SoTimerSensor* timer = new SoTimerSensor (timerCallback, animRoot);
   timer->setInterval (0.01f);
@@ -1221,25 +1221,25 @@ SoSeparator* draw_M_bnd_faces_anim (dbmsh3d_mesh* M, const int nF_batch)
   return root;
 }
 
-void draw_faces_in_switch (SoSeparator* root, const vcl_vector<dbmsh3d_face*>& faces)
+void draw_faces_in_switch (SoSeparator* root, const std::vector<dbmsh3d_face*>& faces)
 {
   SoSwitch* sw = new SoSwitch;
   sw->whichChild = SO_SWITCH_NONE;  
   root->addChild (sw);
 
   //Prepare the set of all vertices for the input faces.
-  vcl_set<dbmsh3d_vertex*> vertex_set;
+  std::set<dbmsh3d_vertex*> vertex_set;
   for (unsigned int i=0; i<faces.size(); i++) {
     dbmsh3d_face* F = faces[i];
-    vcl_vector<dbmsh3d_vertex*> vs;
+    std::vector<dbmsh3d_vertex*> vs;
     F->get_bnd_Vs (vs);
     for (unsigned int j=0; j<vs.size(); j++)
       vertex_set.insert (vs[j]);
   }
 
   //Put all points into a vector.  
-  vcl_vector<vgl_point_3d<double> > ifs_pts;
-  vcl_set<dbmsh3d_vertex*>::iterator vit = vertex_set.begin();
+  std::vector<vgl_point_3d<double> > ifs_pts;
+  std::set<dbmsh3d_vertex*>::iterator vit = vertex_set.begin();
   for (unsigned int i=0; vit != vertex_set.end(); vit++, i++) {
     dbmsh3d_vertex* V = (*vit);
     V->set_vid (i);
@@ -1248,12 +1248,12 @@ void draw_faces_in_switch (SoSeparator* root, const vcl_vector<dbmsh3d_face*>& f
   vertex_set.clear();
 
   //Put all faces into the IFS.
-  vcl_vector<vcl_vector<int> > ifs_faces;
+  std::vector<std::vector<int> > ifs_faces;
   for (unsigned int i=0; i<faces.size(); i++) {
     dbmsh3d_face* F = faces[i];  
-    vcl_vector<dbmsh3d_vertex*> vs;
+    std::vector<dbmsh3d_vertex*> vs;
     F->get_bnd_Vs (vs);
-    vcl_vector<int> face_vids;
+    std::vector<int> face_vids;
     for (unsigned int j=0; j<vs.size(); j++)
       face_vids.push_back (vs[j]->vid());
     ifs_faces.push_back (face_vids);

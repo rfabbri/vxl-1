@@ -1,7 +1,7 @@
 #include "skyscan_vis_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_matlab_read.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
@@ -61,7 +61,7 @@ void skyscan_vis_manager::init()
 
 void skyscan_vis_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void skyscan_vis_manager::cine_mode()
@@ -94,14 +94,14 @@ void skyscan_vis_manager::load_view_3d()
   load_view_3d_dlg.set_ok_button("LOAD");
   load_view_3d_dlg.set_cancel_button("CANCEL");
   
-  static vcl_string log_fname = "D:/BioTree_Data/CastFragmentHair/negatives/CastFragmentHair.log";
+  static std::string log_fname = "D:/BioTree_Data/CastFragmentHair/negatives/CastFragmentHair.log";
 
   start_x_ = 600;
   start_y_ = 300;
   size_x_ = 700;
   size_y_ = 200;
   
-  static vcl_string ext = "*.*";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Log Filename:", ext, log_fname);
   load_view_3d_dlg.field("cropping from x0", start_x_);
   load_view_3d_dlg.field("cropping from y0", start_y_);
@@ -112,45 +112,45 @@ void skyscan_vis_manager::load_view_3d()
     return;
 
   // first, read the log file and create the xscan_scan object
-  vcl_FILE *fp = vcl_fopen(log_fname.data(), "r");
+  std::FILE *fp = std::fopen(log_fname.data(), "r");
   imgr_skyscan_log_header skyscan_log_header(fp);
   imgr_skyscan_log skyscan_log(log_fname);
   scan_ = skyscan_log.get_scan();
 
   // second, read the images
-  vcl_vector<vil_image_resource_sptr> img_res_sptrs;
+  std::vector<vil_image_resource_sptr> img_res_sptrs;
   img_res_sptrs = skyscan_log.get_images();
 
   unsigned nk = img_res_sptrs.size();
-  vcl_cout << nk << vcl_endl;
+  std::cout << nk << std::endl;
   img_tabs_.clear();
 
   for(unsigned k = 0; k<nk; ++k)
   { 
-    vcl_cout <<"enter the " << k <<"th resource "<< vcl_flush;
+    std::cout <<"enter the " << k <<"th resource "<< std::flush;
     vil_image_view<unsigned short> v(img_res_sptrs[k]->get_copy_view(start_x_, size_x_, start_y_, size_y_));
-    vcl_cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
+    std::cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
     vgui_image_tableau_sptr itab = vgui_image_tableau_new(v, range_params_ );
     img_tabs_.push_back(itab);
     dtab_->add(itab);
   }
-  vcl_cout << scan_.kk().get_matrix() << vcl_endl;
-  vcl_cout << scan_.n_views() << vcl_endl;
+  std::cout << scan_.kk().get_matrix() << std::endl;
+  std::cout << scan_.n_views() << std::endl;
 }
 
 
 void skyscan_vis_manager::save_scan()
 {
   vgui_dialog save_scan_dlg("save scan file");
-  static vcl_string filename = "scan.scn";
-  static vcl_string ext = "*.scn";
+  static std::string filename = "scan.scn";
+  static std::string ext = "*.scn";
   save_scan_dlg.file("Scan Filename:", ext, filename);
 
   if ( ! save_scan_dlg.ask())
     return;
 
-  vcl_cout << filename << "\n";
-  vcl_ofstream fout(filename.c_str() );
+  std::cout << filename << "\n";
+  std::ofstream fout(filename.c_str() );
 
   fout << scan_;
 }
@@ -183,16 +183,16 @@ void skyscan_vis_manager::set_range_params()
   }
 }
 
-vcl_vector<vgl_homg_point_3d<double> > 
-skyscan_vis_manager::read_points(vcl_string filename, 
+std::vector<vgl_homg_point_3d<double> > 
+skyscan_vis_manager::read_points(std::string filename, 
                                  vgl_box_3d<double> box, 
                                  double resolution) 
 {
   vsol_cylinder cylinder;
-  vcl_vector<vgl_homg_point_3d<double> > points;
+  std::vector<vgl_homg_point_3d<double> > points;
   int ver, num;
   double strength;
-  //vcl_string file_name = "C:\\test_images\\filters\\aug8_straight_and_angled_hairs\\hair_negatives\\cylinders.bin";
+  //std::string file_name = "C:\\test_images\\filters\\aug8_straight_and_angled_hairs\\hair_negatives\\cylinders.bin";
   vsl_b_ifstream istream(filename.c_str());
   vsl_b_read(istream, ver);
   vsl_b_read(istream, num);
@@ -206,12 +206,12 @@ skyscan_vis_manager::read_points(vcl_string filename,
       max_strength = strength;
 
     double minx=box.min_x(), miny=box.min_y(), minz=box.min_z();
-    vcl_cout << strength << " min=" << min_strength << " max=" << max_strength << vcl_endl;
+    std::cout << strength << " min=" << min_strength << " max=" << max_strength << std::endl;
     cylinder.b_read(istream);
     vgl_homg_point_3d<double> point(minx + (cylinder.center().x()*resolution), 
       miny+(cylinder.center().y()*resolution), minz+(cylinder.center().z()*resolution) );
     points.push_back(point);
-    vcl_cout << cylinder << vcl_endl;
+    std::cout << cylinder << std::endl;
   }
 
   return points;
@@ -220,16 +220,16 @@ skyscan_vis_manager::read_points(vcl_string filename,
 void skyscan_vis_manager::box_projection()
 {
   if(img_tabs_.size() == 0)
-    vcl_cout << "No images loaded yet!" << vcl_endl;
+    std::cout << "No images loaded yet!" << std::endl;
   else
   {
     vgui_dialog projection_dlg("Load Scan and Box Files");
-    static vcl_string scan_filename = "*.scn";
-    static vcl_string box_filename = "*.bx3";
-    static vcl_string filter_box_filename = "*.bx3";
-    static vcl_string points_filename = "*.bin";
+    static std::string scan_filename = "*.scn";
+    static std::string box_filename = "*.bx3";
+    static std::string filter_box_filename = "*.bx3";
+    static std::string points_filename = "*.bin";
 
-    static vcl_string ext = "*.*";
+    static std::string ext = "*.*";
     static double res=0.01;
     static double scale_x=0.5;
     static double scale_y=0.5;
@@ -250,26 +250,26 @@ void skyscan_vis_manager::box_projection()
     if(scan_filename[size-1] != 'n' || scan_filename[size-2] != 'c' ||
       scan_filename[size-3] != 's' || scan_filename[size-4] != '.')
     {
-      vcl_cerr << "Scan file does not have a valid extension. Aborting process..." << vcl_endl;
+      std::cerr << "Scan file does not have a valid extension. Aborting process..." << std::endl;
       return;
     }
     size = box_filename.size();
     if(box_filename[size-1] != '3' || box_filename[size-2] != 'x' ||
       box_filename[size-3] != 'b' || box_filename[size-4] != '.')
     {
-      vcl_cerr << "Processing box file does not have a valid extension. Aborting process..." << vcl_endl;
+      std::cerr << "Processing box file does not have a valid extension. Aborting process..." << std::endl;
       return;
     }
     size = filter_box_filename.size();
     if(filter_box_filename[size-1] != '3' || filter_box_filename[size-2] != 'x' ||
       filter_box_filename[size-3] != 'b' || filter_box_filename[size-4] != '.')
     {
-      vcl_cerr << "Filter box file does not have a valid extension. Aborting process..." << vcl_endl;
+      std::cerr << "Filter box file does not have a valid extension. Aborting process..." << std::endl;
       return;
     }
     if(scale_x <= 0.0 || scale_y <= 0.0 || scale_z <= 0.0 || scale_x > 1.0 || scale_y > 1.0 || scale_z > 1.0)
     {
-      vcl_cerr << "Scale parameters should be in (0,1) range. Aborting process..." << vcl_endl;
+      std::cerr << "Scale parameters should be in (0,1) range. Aborting process..." << std::endl;
       return;
     }
     if (points_filename.size() > 0) {
@@ -277,47 +277,47 @@ void skyscan_vis_manager::box_projection()
       if(points_filename[size-1] != 'n' || points_filename[size-2] != 'i' ||
         points_filename[size-3] != 'b' || points_filename[size-4] != '.')
       {
-        vcl_cerr << "points file does not have a valid extension. Aborting process..." << vcl_endl;
+        std::cerr << "points file does not have a valid extension. Aborting process..." << std::endl;
         return;
       }
     }
 
     // get the processing box
-    vcl_ifstream box_file(box_filename.c_str());
+    std::ifstream box_file(box_filename.c_str());
     vgl_box_3d<double> box3;
     box3.read(box_file);
     box_file.close();
-    vcl_cout << box3 << vcl_endl;
+    std::cout << box3 << std::endl;
     // get the xscan
-    vcl_ifstream scan_file(scan_filename.c_str());
+    std::ifstream scan_file(scan_filename.c_str());
     xscan_scan scan;
     scan_file >> scan;
     scan_file.close();
-    vcl_cout << scan << vcl_endl;
+    std::cout << scan << std::endl;
     // compute the active box
     vgl_box_3d<double> active_box3(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    vcl_cout << box3.centroid() << vcl_endl;
+    std::cout << box3.centroid() << std::endl;
     active_box3.set_centroid(box3.centroid());
     active_box3.set_width(box3.width()*scale_x);
     active_box3.set_height(box3.height()*scale_y);
     active_box3.set_depth(box3.depth()*scale_z);
     // check if the file for the filter box exists
     bool filter_box_valid = 0;
-    FILE *fp = vcl_fopen(filter_box_filename.c_str(),"r");
+    FILE *fp = std::fopen(filter_box_filename.c_str(),"r");
     vgl_box_3d<double> filter_box3;
     if(fp != NULL)
     {
-      vcl_fclose(fp);
+      std::fclose(fp);
       filter_box_valid = 1;
-      vcl_ifstream filter_box_file(filter_box_filename.c_str());
+      std::ifstream filter_box_file(filter_box_filename.c_str());
       filter_box3.read(filter_box_file);
       filter_box_file.close();
-      vcl_cout << filter_box3 << vcl_endl;
+      std::cout << filter_box3 << std::endl;
     }
 
     // read the 3D points, which is the center of the points
-    vcl_vector<vgl_homg_point_3d<double> > homg_points = read_points(points_filename, box3, res);
-    vcl_vector<vcl_vector<vgl_point_2d<double> > > point_list;
+    std::vector<vgl_homg_point_3d<double> > homg_points = read_points(points_filename, box3, res);
+    std::vector<std::vector<vgl_point_2d<double> > > point_list;
 
     vgl_homg_point_3d<double> centroid_3d(box3.centroid());
     // compute the projection of the points, box and centroid onto each image
@@ -341,13 +341,13 @@ void skyscan_vis_manager::box_projection()
       img_active_box_.push_back(active_box2);
       centroids_2d_.push_back(c2);
       // project the hair points
-      vcl_vector<vgl_point_2d<double> > points(homg_points.size());
+      std::vector<vgl_point_2d<double> > points(homg_points.size());
       for (unsigned int i=0; i<points.size(); i++) {
         vgl_point_2d<double> point_2d = cam.project(homg_points[i]);
         points[i]=point_2d;
       }
       point_list.push_back(points);
-//      vcl_cout << box2 << vcl_endl;
+//      std::cout << box2 << std::endl;
     }
 
     for(unsigned k = 0; k<num_views; ++k)
@@ -429,21 +429,21 @@ void skyscan_vis_manager::get_pixel_info(const int x, const int y,vgui_event con
     {
       vil_image_view<unsigned short> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
     }
     else if(pix_type == VIL_PIXEL_FORMAT_DOUBLE)
     {
       vil_image_view<double> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
     }
   }
   else
-    vcl_sprintf(msg, "No images loaded...");
+    std::sprintf(msg, "No images loaded...");
 
   return;
 }
@@ -465,13 +465,13 @@ bool skyscan_vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   else if(e.type == vgui_KEY_UP)
   {
@@ -479,13 +479,13 @@ bool skyscan_vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(wx_, wy_, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   return base::handle(e);
 }

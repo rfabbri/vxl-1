@@ -13,22 +13,22 @@
 //
 void mw_geometry_estimation::
 sel_quad(
-    vcl_vector<vsol_line_2d_sptr> &lines,
+    std::vector<vsol_line_2d_sptr> &lines,
     unsigned  nrows,
     unsigned  ncols,
     unsigned  nrad,
     double    dtheta,
     double    dpos,
-    vcl_vector<vcl_vector<double> > &k, 
-    vcl_vector<vcl_vector<double> > &kdot,
-    vcl_vector<vcl_vector<double> > &k_stdv, 
-    vcl_vector<vcl_vector<double> > &kdot_stdv,
+    std::vector<std::vector<double> > &k, 
+    std::vector<std::vector<double> > &kdot,
+    std::vector<std::vector<double> > &k_stdv, 
+    std::vector<std::vector<double> > &kdot_stdv,
     dbdet_sel_sptr &sel
     )
 {
   //: compute SEL
   
-  vcl_vector<dbdet_edgel *> all_edgels(lines.size());
+  std::vector<dbdet_edgel *> all_edgels(lines.size());
 
 
   for (unsigned j=0; j < lines.size(); ++j) { 
@@ -55,10 +55,10 @@ sel_quad(
 void  mw_geometry_estimation::
 sel_quad(
     const dbdet_sel_sptr &sel,
-    vcl_vector<vcl_vector<double> > &k, 
-    vcl_vector<vcl_vector<double> > &kdot,
-    vcl_vector<vcl_vector<double> > &k_stdv, 
-    vcl_vector<vcl_vector<double> > &kdot_stdv
+    std::vector<std::vector<double> > &k, 
+    std::vector<std::vector<double> > &kdot,
+    std::vector<std::vector<double> > &k_stdv, 
+    std::vector<std::vector<double> > &kdot_stdv
     )
 {
   k.resize(sel->get_edgels().size());
@@ -70,14 +70,14 @@ sel_quad(
   for (unsigned  i=0; i < sel->get_edgels().size(); ++i) {
     bool stat = differential_geometry_at(sel->get_edgels()[i], k[i], kdot[i]);
     if (! stat)
-      vcl_cout <<"Warning: edgel " << i << " has no valid quads\n";
+      std::cout <<"Warning: edgel " << i << " has no valid quads\n";
   }
 }
 
 //: \return true if there were any valid measures for k, kdot at given edgel,
 // based on quads
 bool mw_geometry_estimation::
-differential_geometry_at(dbdet_edgel *e1, vcl_vector<double> &k, vcl_vector<double> &kdot)
+differential_geometry_at(dbdet_edgel *e1, std::vector<double> &k, std::vector<double> &kdot)
 {
   const int cl=2; //:< curve level = quad
   
@@ -95,7 +95,7 @@ differential_geometry_at(dbdet_edgel *e1, vcl_vector<double> &k, vcl_vector<doub
 
           dbdet_ES_curve_model *crv_model = dynamic_cast<dbdet_ES_curve_model *> ((*it)->curve_model);
           if (!crv_model) {
-            vcl_cerr << "Curve model must be Eulerspiral\n";
+            std::cerr << "Curve model must be Eulerspiral\n";
             abort();
           }
 

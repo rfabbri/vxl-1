@@ -17,7 +17,7 @@
 
 #include"dncn_target_list_2d_sptr.h"
 
-#include"vcl_cmath.h"
+#include"cmath"
 
 
 
@@ -25,7 +25,7 @@ class dbcl_state_machine_image_classifier
 {
 public:
 
-	typedef vcl_map<unsigned, dbcl_state_machine_classifier_sptr > classifier_map_type;
+	typedef std::map<unsigned, dbcl_state_machine_classifier_sptr > classifier_map_type;
 
 	dbcl_state_machine_image_classifier( dncn_target_list_2d_sptr target_list_sptr,
 										 unsigned const& t_forget = 30,

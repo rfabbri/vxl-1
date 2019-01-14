@@ -7,7 +7,7 @@
 
 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class dbvxm_create_multiscale_voxel_world_process : public bprb_process
@@ -24,7 +24,7 @@ class dbvxm_create_multiscale_voxel_world_process : public bprb_process
   //: Clone the process
   virtual dbvxm_create_multiscale_voxel_world_process* clone() const {return new dbvxm_create_multiscale_voxel_world_process(*this);}
 
-  vcl_string name(){return "dbvxmCreateVoxelWorldProcess";}
+  std::string name(){return "dbvxmCreateVoxelWorldProcess";}
 
   bool init() { return true; }
   bool execute();

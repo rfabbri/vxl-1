@@ -30,7 +30,7 @@ public:
   ~dbdet_sel_edge_linking_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -41,7 +41,7 @@ public:
 
   virtual void get_popup( const vgui_popup_params& params, vgui_menu &menu );
 
-  dbdet_edgel_chain* form_edgel_chain_from_trace(vcl_vector<vgl_point_2d<double> > &pts);
+  dbdet_edgel_chain* form_edgel_chain_from_trace(std::vector<vgl_point_2d<double> > &pts);
   dbdet_edgel* get_nearest_edgel(vgl_point_2d<double> pt);
 
 protected:
@@ -54,7 +54,7 @@ protected:
   vgui_event_condition gesture2;
 
   bool active;
-  vcl_vector<vgl_point_2d<double> > point_list;
+  std::vector<vgl_point_2d<double> > point_list;
   float last_x;
   float last_y;
 

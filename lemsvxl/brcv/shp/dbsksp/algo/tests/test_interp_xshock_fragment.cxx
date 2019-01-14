@@ -13,13 +13,13 @@
 //: Check whether an interpolation of an xfrag using shapelets is valid
 bool dbsksp_is_valid_xfrag_interp(const dbsksp_xshock_node_descriptor& start,
                              const dbsksp_xshock_node_descriptor& end,
-                             const vcl_vector<dbsksp_shapelet_sptr >& list_shapelet,
+                             const std::vector<dbsksp_shapelet_sptr >& list_shapelet,
                              double tol)
 {
   // criteria: continuity on the boundary
   // we form two list of xnode descriptors which are supposed to match against others
-  vcl_vector<dbsksp_xshock_node_descriptor > list_front;
-  vcl_vector<dbsksp_xshock_node_descriptor > list_back;
+  std::vector<dbsksp_xshock_node_descriptor > list_front;
+  std::vector<dbsksp_xshock_node_descriptor > list_back;
   list_front.push_back(start);
   for (unsigned i =0; i < list_shapelet.size(); ++i)
   {
@@ -94,7 +94,7 @@ void test_interp_xshock_fragment()
 
     dbsksp_xshock_node_descriptor xdesc1(pt1.x(), pt1.y(), psi1, phi1, radius1);
     dbsksp_xshock_node_descriptor xdesc2(pt2.x(), pt2.y(), psi2, phi2, radius2);
-    vcl_vector<dbsksp_shapelet_sptr > list_shapelet;
+    std::vector<dbsksp_shapelet_sptr > list_shapelet;
     dbsksp_interp_xfrag_with_max_three_shapelets(xdesc1, xdesc2, list_shapelet);
     bool pass = dbsksp_is_valid_xfrag_interp(xdesc1, xdesc2, list_shapelet, 1e-6);
     TEST("Interpolate xshock fragment - case 1", pass, true);
@@ -116,7 +116,7 @@ void test_interp_xshock_fragment()
 
     dbsksp_xshock_node_descriptor xdesc1(pt1.x(), pt1.y(), psi1, phi1, radius1);
     dbsksp_xshock_node_descriptor xdesc2(pt2.x(), pt2.y(), psi2, phi2, radius2);
-    vcl_vector<dbsksp_shapelet_sptr > list_shapelet;
+    std::vector<dbsksp_shapelet_sptr > list_shapelet;
     dbsksp_interp_xfrag_with_max_three_shapelets(xdesc1, xdesc2, list_shapelet);
     bool pass = dbsksp_is_valid_xfrag_interp(xdesc1, xdesc2, list_shapelet, 1e-6);
     TEST("Interpolate xshock fragment - case 3", pass, true);
@@ -138,7 +138,7 @@ void test_interp_xshock_fragment()
 
     dbsksp_xshock_node_descriptor xdesc1(pt1.x(), pt1.y(), psi1, phi1, radius1);
     dbsksp_xshock_node_descriptor xdesc2(pt2.x(), pt2.y(), psi2, phi2, radius2);
-    vcl_vector<dbsksp_shapelet_sptr > list_shapelet;
+    std::vector<dbsksp_shapelet_sptr > list_shapelet;
     dbsksp_interp_xfrag_with_max_three_shapelets(xdesc1, xdesc2, list_shapelet);
     bool pass = dbsksp_is_valid_xfrag_interp(xdesc1, xdesc2, list_shapelet, 1e-6);
     TEST("Interpolate xshock fragment - case 3", pass, true);

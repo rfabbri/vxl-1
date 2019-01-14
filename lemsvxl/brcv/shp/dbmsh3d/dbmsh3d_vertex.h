@@ -17,8 +17,8 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <set>
+#include <string>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 
@@ -147,7 +147,7 @@ public:
   void set_F_list (dbmsh3d_ptr_node* F_list) {
     F_list_ = F_list;
   }
-  unsigned int get_Fs (vcl_set<void*>& ptrs) {
+  unsigned int get_Fs (std::set<void*>& ptrs) {
     return get_all_ptrs (F_list_, ptrs);
   }
   unsigned int clear_F_list () {
@@ -239,11 +239,11 @@ public:
   }
 
   //: Return a platform-independent name of the class
-  virtual vcl_string is_a() const
+  virtual std::string is_a() const
   {return "dbmsh3d_vertex"; }
 
   //###### Handle the incident edges ######   
-  unsigned int get_incident_Es (vcl_set<void*>& incident_Es) const {
+  unsigned int get_incident_Es (std::set<void*>& incident_Es) const {
     return get_all_ptrs (E_list_, incident_Es);
   }
   unsigned int n_incident_Es() const {
@@ -283,10 +283,10 @@ public:
   unsigned int n_E_incidence () const;
 
   //: return false if any incident_E is found not in E_set.
-  bool all_incident_Es_in_set (vcl_set<dbmsh3d_edge*>& E_set) const;
+  bool all_incident_Es_in_set (std::set<dbmsh3d_edge*>& E_set) const;
 
   //: function to return all incident faces of this vertex
-  int get_incident_Fs (vcl_set<dbmsh3d_face*>& face_set) const;
+  int get_incident_Fs (std::set<dbmsh3d_face*>& face_set) const;
 
   //: return the vertex topology type
   VTOPO_TYPE detect_vtopo_type () const;
@@ -298,10 +298,10 @@ public:
   const V_TYPE compute_v_type ();
   
   void n_incE_types (int& nManifold, int& nRib, int& nAxial, int& nDege) const;
-  void get_FEs_types (vcl_set<dbmsh3d_edge*>& manifold_FE_set,
-                      vcl_set<dbmsh3d_edge*>& rib_FE_set,
-                      vcl_set<dbmsh3d_edge*>& axial_FE_set,                                      
-                      vcl_set<dbmsh3d_edge*>& dege_FE_set) const;
+  void get_FEs_types (std::set<dbmsh3d_edge*>& manifold_FE_set,
+                      std::set<dbmsh3d_edge*>& rib_FE_set,
+                      std::set<dbmsh3d_edge*>& axial_FE_set,                                      
+                      std::set<dbmsh3d_edge*>& dege_FE_set) const;
 
   dbmsh3d_edge* other_rib_E (const dbmsh3d_edge* FE) const;
   dbmsh3d_edge* other_rib_E_conn (const dbmsh3d_edge* FE) const;
@@ -312,11 +312,11 @@ public:
   virtual bool check_integrity () const;
   virtual dbmsh3d_vertex* clone () const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm) const;
+  virtual void getInfo (std::ostringstream& ostrm) const;
 
   //###### For the face of a 2-manifold mesh only ######
   //  these functions start with a tag m2 (manifold-2)
-  dbmsh3d_halfedge* m2_get_ordered_HEs (vcl_vector<dbmsh3d_halfedge*>& ordered_halfedges) const;
+  dbmsh3d_halfedge* m2_get_ordered_HEs (std::vector<dbmsh3d_halfedge*>& ordered_halfedges) const;
 
   dbmsh3d_halfedge* m2_get_next_bnd_HE (const dbmsh3d_halfedge* inputHE) const;
 
@@ -332,7 +332,7 @@ public:
 dbmsh3d_edge* E_sharing_2V (const dbmsh3d_vertex* V1, const dbmsh3d_vertex* V2);
 
 //: Find the mesh face sharing the given vertices.
-dbmsh3d_face* find_F_sharing_Vs (vcl_vector<dbmsh3d_vertex*>& vertices);
+dbmsh3d_face* find_F_sharing_Vs (std::vector<dbmsh3d_vertex*>& vertices);
 
 dbmsh3d_face* get_non_manifold_1ring_extra_Fs (dbmsh3d_vertex* V);
 
@@ -340,7 +340,7 @@ bool is_F_V_incidence (dbmsh3d_vertex* V, const dbmsh3d_vertex* V1, const dbmsh3
 
 dbmsh3d_edge* V_find_other_E (const dbmsh3d_vertex* V, const dbmsh3d_edge* inputE);
 
-int n_E_V_incidence (vcl_set<void*>& incident_Es, const dbmsh3d_vertex* V);
+int n_E_V_incidence (std::set<void*>& incident_Es, const dbmsh3d_vertex* V);
 
 #endif
 

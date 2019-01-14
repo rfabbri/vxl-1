@@ -2,8 +2,8 @@
 //:
 // \file
 #include <iostream>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h> // for exp()
+#include <fstream>
+#include <cmath> // for exp()
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_4point.h>
@@ -45,34 +45,34 @@ void brct_plane_calibrator::init_corrs()
   for (int i = 0; i<=Z_FRONT; i++)
   {
     int n_pts = pts_3d_[i].size();
-    vcl_vector<brct_plane_corr_sptr> corrs(n_pts);
+    std::vector<brct_plane_corr_sptr> corrs(n_pts);
     for (int j =0; j<n_pts; j++)
       corrs[j] = new brct_plane_corr(n_cams, i, j);
     corrs_[i]=corrs;
   }
 }
 
-void brct_plane_calibrator::read_data(vcl_string const& point3d_file)
+void brct_plane_calibrator::read_data(std::string const& point3d_file)
 {
-  vcl_ifstream instr(point3d_file.c_str());
+  std::ifstream instr(point3d_file.c_str());
 
   if (!instr)
   {
-    vcl_cout<<"cannot open the file - "<< point3d_file <<'\n';
+    std::cout<<"cannot open the file - "<< point3d_file <<'\n';
     return;
   }
-  vcl_string label;
+  std::string label;
   instr >> label;
   if (!(label=="Z_BACK:"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   instr >> z_back_;
   instr >> label;
   if (!(label=="NPOINTS:"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   int npts=0;
@@ -80,7 +80,7 @@ void brct_plane_calibrator::read_data(vcl_string const& point3d_file)
   instr >> label;
   if (!(label=="INDEX|X|Y|"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   pts_3d_[Z_BACK].resize(npts);
@@ -95,21 +95,21 @@ void brct_plane_calibrator::read_data(vcl_string const& point3d_file)
   instr >> label;
   if (!(label=="Z_FRONT:"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   instr >> z_front_;
   instr >> label;
   if (!(label=="NPOINTS:"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   instr >> npts;
   instr >> label;
   if (!(label=="INDEX|X|Y|"))
   {
-    vcl_cout << "Bad file format\n";
+    std::cout << "Bad file format\n";
     return;
   }
   pts_3d_[Z_FRONT].resize(npts);
@@ -140,7 +140,7 @@ bool brct_plane_calibrator::set_image_size(const int cam,
 }
 
 static bool four_image_corners(const int width, const int height,
-                               vcl_vector<vgl_homg_point_2d<double> >& corners)
+                               std::vector<vgl_homg_point_2d<double> >& corners)
 {
   if (!width || !height)
     return false;
@@ -154,7 +154,7 @@ static bool four_image_corners(const int width, const int height,
 
 static vgl_homg_point_2d<double>
 closest_point(double x0, double y0,
-              vcl_vector<vgl_homg_point_2d<double> >& pts_3d)
+              std::vector<vgl_homg_point_2d<double> >& pts_3d)
 {
   double d_min = vnl_numeric_traits<double>::maxval;
   vgl_homg_point_2d<double> closest;
@@ -162,7 +162,7 @@ closest_point(double x0, double y0,
   for (unsigned int i = 0; i<pts_3d.size(); ++i)
   {
     double x=pts_3d[i].x()/pts_3d[i].w(), y=pts_3d[i].y()/pts_3d[i].w();
-    double d = vcl_sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0));
+    double d = std::sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0));
     if (d<d_min)
     {
       i_min = i;
@@ -177,15 +177,15 @@ closest_point(double x0, double y0,
 }
 
 //keep in mind that the image y axis is flipped
-static bool four_3d_corners(vcl_vector<vgl_homg_point_2d<double> > const& pts_3d,
-                            vcl_vector<vgl_homg_point_2d<double> >& corners)
+static bool four_3d_corners(std::vector<vgl_homg_point_2d<double> > const& pts_3d,
+                            std::vector<vgl_homg_point_2d<double> >& corners)
 {
   int n = pts_3d.size();
   if (n<4)
     return false;
   corners.clear();
   // make a copy, since we will be removing found points
-  vcl_vector<vgl_homg_point_2d<double> > temp = pts_3d;
+  std::vector<vgl_homg_point_2d<double> > temp = pts_3d;
  //find the bounding box of 3-d points
   double x_min=vnl_numeric_traits<double>::maxval, x_max=-x_min;
   double y_min=x_min, y_max=x_max;
@@ -213,8 +213,8 @@ static bool four_3d_corners(vcl_vector<vgl_homg_point_2d<double> > const& pts_3d
 }
 
 static bool
-four_point_homography(vcl_vector<vgl_homg_point_2d<double> > const& points_3d,
-                      vcl_vector<vgl_homg_point_2d<double> > const& image_pts,
+four_point_homography(std::vector<vgl_homg_point_2d<double> > const& points_3d,
+                      std::vector<vgl_homg_point_2d<double> > const& image_pts,
                       vgl_h_matrix_2d<double>& H)
 {
   vgl_h_matrix_2d_compute_4point mapper;
@@ -225,7 +225,7 @@ four_point_homography(vcl_vector<vgl_homg_point_2d<double> > const& points_3d,
 
 bool brct_plane_calibrator::compute_initial_homographies()
 {
-  vcl_vector<vgl_homg_point_2d<double> > image_corners, corner_3d_points;
+  std::vector<vgl_homg_point_2d<double> > image_corners, corner_3d_points;
   vgl_h_matrix_2d<double> H;
 
   for (int plane =0; plane<=Z_FRONT; plane++)
@@ -242,12 +242,12 @@ bool brct_plane_calibrator::compute_initial_homographies()
   return true;
 }
 
-bool brct_plane_calibrator::write_corrs(vcl_string const& corrs_file)
+bool brct_plane_calibrator::write_corrs(std::string const& corrs_file)
 {
-  vcl_ofstream os(corrs_file.c_str());
+  std::ofstream os(corrs_file.c_str());
   if (!os)
   {
-    vcl_cout << "In brct_plane_calibrator::write_corrs -"
+    std::cout << "In brct_plane_calibrator::write_corrs -"
              << " could not open file " << corrs_file << '\n';
     return false;
   }
@@ -265,19 +265,19 @@ bool brct_plane_calibrator::write_corrs(vcl_string const& corrs_file)
   return true;
 }
 
-bool brct_plane_calibrator::read_corrs(vcl_string const& corrs_file)
+bool brct_plane_calibrator::read_corrs(std::string const& corrs_file)
 {
-  vcl_ifstream is(corrs_file.c_str());
+  std::ifstream is(corrs_file.c_str());
   if (!is)
   {
-    vcl_cout << "In brct_plane_calibrator::read_corrs -"
+    std::cout << "In brct_plane_calibrator::read_corrs -"
              << " could not open file " << corrs_file << '\n';
     return false;
   }
-  vcl_vector<vcl_vector<brct_plane_corr_sptr> > corrs(Z_FRONT+1);
+  std::vector<std::vector<brct_plane_corr_sptr> > corrs(Z_FRONT+1);
   for (int p = 0; p<=Z_FRONT; p++)
   {
-  vcl_string s;
+  std::string s;
   is >> s;
   if (!(s=="PLANE:"))
     return false;
@@ -332,10 +332,10 @@ bool brct_plane_calibrator::compute_homographies()
     for (int cam = 0; cam<=RIGHT; cam++)
     {
       //get the corrs
-      vcl_vector<brct_plane_corr_sptr>& corrs = corrs_[plane];
+      std::vector<brct_plane_corr_sptr>& corrs = corrs_[plane];
       //collect the corresponding points
-      vcl_vector<vgl_homg_point_2d<double> > image_pts, pts_3d;
-      for (vcl_vector<brct_plane_corr_sptr>::iterator cit = corrs.begin();
+      std::vector<vgl_homg_point_2d<double> > image_pts, pts_3d;
+      for (std::vector<brct_plane_corr_sptr>::iterator cit = corrs.begin();
            cit != corrs.end(); cit++)
         if ((*cit)->valid(cam))
         {
@@ -345,7 +345,7 @@ bool brct_plane_calibrator::compute_homographies()
       int n_3d = pts_3d.size(), n_img = image_pts.size();
       if (n_3d < 4 || n_img < 4)
       {
-        vcl_cout << "In brct_plane_calibrator::compute_homographies()-"
+        std::cout << "In brct_plane_calibrator::compute_homographies()-"
                  << " not enough correspondences\n";
         return false;
       }
@@ -353,7 +353,7 @@ bool brct_plane_calibrator::compute_homographies()
       vgl_h_matrix_2d<double> H;
       if (!hcl.compute(pts_3d, image_pts, H))
       {
-        vcl_cout << "In brct_plane_calibrator::compute_homographies()-"
+        std::cout << "In brct_plane_calibrator::compute_homographies()-"
                  << " homography computation failed\n";
         return false;
       }
@@ -363,12 +363,12 @@ bool brct_plane_calibrator::compute_homographies()
 }
 
 bool
-brct_plane_calibrator::write_homographies(vcl_string const& homography_file)
+brct_plane_calibrator::write_homographies(std::string const& homography_file)
 {
-  vcl_ofstream os(homography_file.c_str());
+  std::ofstream os(homography_file.c_str());
   if (!os)
   {
-    vcl_cout << "In brct_plane_calibrator::write_homographies -"
+    std::cout << "In brct_plane_calibrator::write_homographies -"
              << " could not open file " << homography_file << '\n';
     return false;
   }
@@ -388,11 +388,11 @@ brct_plane_calibrator::write_homographies(vcl_string const& homography_file)
   return true;
 }
 
-vcl_vector<vgl_point_2d<double> >
+std::vector<vgl_point_2d<double> >
 brct_plane_calibrator::projected_3d_points_initial(const int plane,
                                                    const int cam)
 {
-  vcl_vector<vgl_point_2d<double> > temp;
+  std::vector<vgl_point_2d<double> > temp;
   if (plane>Z_FRONT)
     return temp;
   if (cam>RIGHT)
@@ -407,10 +407,10 @@ brct_plane_calibrator::projected_3d_points_initial(const int plane,
   return temp;
 }
 
-vcl_vector<vgl_point_2d<double> >
+std::vector<vgl_point_2d<double> >
 brct_plane_calibrator::projected_3d_points(const int plane, const int cam)
 {
-  vcl_vector<vgl_point_2d<double> > temp;
+  std::vector<vgl_point_2d<double> > temp;
   if (plane>Z_FRONT)
     return temp;
   if (cam>RIGHT)

@@ -27,10 +27,10 @@ class dbsksp_soview : public vgui_soview2D
   virtual ~dbsksp_soview() {}
 
   //: Print details about this vsol object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream&) const;
+  virtual std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const=0;
+  virtual std::string type_name() const=0;
 
   //: Render this 2D digital_curve on the display.
   virtual void draw() const=0;

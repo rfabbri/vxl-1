@@ -4,9 +4,9 @@
 #include<vidl/vidl_image_list_istream.h>
 #include<vidl/vidl_convert.h>
 
-#include<vcl_iomanip.h>
-#include<vcl_string.h>
-#include<vcl_sstream.h>
+#include<iomanip>
+#include<string>
+#include<sstream>
 
 #include<vil/vil_image_view.h>
 #include<vil/vil_load.h>
@@ -24,11 +24,11 @@ bool dsm_utility_bvxm_binary_to_byte_process_cons( bprb_func_process& pro )
 {
 	using namespace dsm_utility_bvxm_binary_to_byte_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 	
 	unsigned i = 0;
-	input_types_[i++] = "vcl_string";//bvxm float images
-	input_types_[i++] = "vcl_string";//byte output directory
+	input_types_[i++] = vcl_string";//bvxm float images
+	input_types_[i++] = vcl_string";//byte output directory
 	
 	if(!pro.set_input_types(input_types_))
 		return false;
@@ -42,14 +42,14 @@ bool dsm_utility_bvxm_binary_to_byte_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cerr << pro.name() << " dsm_utility_bvxm_binary_to_byte_process: The input number should be " << n_inputs_ << vcl_flush;
+		std::cerr << pro.name() << " dsm_utility_bvxm_binary_to_byte_process: The input number should be " << n_inputs_ << std::flush;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string bvxm_file_glob = pro.get_input<vcl_string>(i++);
-	vcl_string byte_file_dir = pro.get_input<vcl_string>(i++);
+	std::string bvxm_file_glob = pro.get_input<std::string>(i++);
+	std::string byte_file_dir = pro.get_input<std::string>(i++);
 
 	if(!vul_file::is_directory(byte_file_dir))
 		vul_file::make_directory(byte_file_dir);
@@ -58,8 +58,8 @@ bool dsm_utility_bvxm_binary_to_byte_process( bprb_func_process& pro )
 
 	if(!bvxm_video_stream.open(bvxm_file_glob))
 	{
-		vcl_cerr << "----ERROR---- dsm_utility_bvxm_binary_to_byte_process_globals"
-			     << "\tbvxm float video stream failed to open.\n" << vcl_flush;
+		std::cerr << "----ERROR---- dsm_utility_bvxm_binary_to_byte_process_globals"
+			     << "\tbvxm float video stream failed to open.\n" << std::flush;
 		return false;
 	}
 
@@ -69,7 +69,7 @@ bool dsm_utility_bvxm_binary_to_byte_process( bprb_func_process& pro )
 
 	for( unsigned frame = 0; frame < nframes; ++frame )
 	{
-		vcl_cout << "\tConverting frame " << frame << " out of " << nframes << vcl_endl;
+		std::cout << "\tConverting frame " << frame << " out of " << nframes << std::endl;
 		bvxm_video_stream.seek_frame(frame);
 
 		vil_image_view<bool> bvxm_view;
@@ -81,9 +81,9 @@ bool dsm_utility_bvxm_binary_to_byte_process( bprb_func_process& pro )
 			for(unsigned j = 0; j < nj; ++j)
 				byte_view(i,j,0) = vxl_byte(255)*bvxm_view(i,j,0);
 
-		vcl_stringstream filename;
+		std::stringstream filename;
 
-		filename << byte_file_dir << vcl_setfill('0') << vcl_setw(8) << "/byte_change_" <<  frame << ".tiff";
+		filename << byte_file_dir << std::setfill('0') << std::setw(8) << "/byte_change_" <<  frame << ".tiff";
 
 		vil_save(byte_view,filename.str().c_str());
 	}

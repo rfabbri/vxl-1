@@ -1,7 +1,7 @@
 
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <set>
+#include <map>
+#include <vector>
 #include <bvis1/bvis1_tool.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_style_sptr.h>
@@ -22,7 +22,7 @@ public:
   virtual ~bvis1_correspond_line_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -38,11 +38,11 @@ public:
   //  - corresponding points are in the same order in each vector
   //  - one vector is returned for each tableau in \p tabs in the same order
   //  - NULL points are returned for missing correspondences
-  vcl_vector<vcl_vector<vsol_line_2d_sptr> >
-    correspondences(const vcl_vector<vgui_displaylist2D_tableau_sptr>& tabs) const;
+  std::vector<std::vector<vsol_line_2d_sptr> >
+    correspondences(const std::vector<vgui_displaylist2D_tableau_sptr>& tabs) const;
 
   //: Return the set of tableaux with correspondences
-  vcl_set<vgui_displaylist2D_tableau_sptr> tableaux() const { return tab_set_; }
+  std::set<vgui_displaylist2D_tableau_sptr> tableaux() const { return tab_set_; }
 
 protected:
   vgui_event_condition gesture_select_;
@@ -63,18 +63,18 @@ protected:
 
   //: A correspondence is a mapping from tableau to the point in that view
   // \note a typedef should be used, but MSVC++ 6.0 has trouble with long names
-  class corr_map : public vcl_map<vgui_displaylist2D_tableau_sptr, bgui_vsol_soview2D_line_seg*>
+  class corr_map : public std::map<vgui_displaylist2D_tableau_sptr, bgui_vsol_soview2D_line_seg*>
   {
    public:
-    corr_map() : vcl_map<vgui_displaylist2D_tableau_sptr, bgui_vsol_soview2D_line_seg*>() {}
+    corr_map() : std::map<vgui_displaylist2D_tableau_sptr, bgui_vsol_soview2D_line_seg*>() {}
   };
   //: The set of all correspondences
-  vcl_set<corr_map> correspondences_;
+  std::set<corr_map> correspondences_;
   //: An iterator to the current correspondence
-  vcl_set<corr_map>::iterator curr_corr_;
+  std::set<corr_map>::iterator curr_corr_;
 
   //: The set of all tableau containing correspondences
-  vcl_set<vgui_displaylist2D_tableau_sptr> tab_set_;
+  std::set<vgui_displaylist2D_tableau_sptr> tab_set_;
 
   int cnt;
 };

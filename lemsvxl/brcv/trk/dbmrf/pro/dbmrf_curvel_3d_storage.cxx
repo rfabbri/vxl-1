@@ -20,7 +20,7 @@ dbmrf_curvel_3d_storage::dbmrf_curvel_3d_storage()
 
 //: Constructor
 dbmrf_curvel_3d_storage::dbmrf_curvel_3d_storage( 
-                            const vcl_set<bmrf_curve_3d_sptr>& curves,
+                            const std::set<bmrf_curve_3d_sptr>& curves,
                             const vnl_double_3x4& camera,
                             const vgl_vector_3d<double>& dir,
                             const vnl_double_4x4& xform )
@@ -43,14 +43,14 @@ dbmrf_curvel_3d_storage::clone() const
 
 //: Set the curvel_3d storage set
 void
-dbmrf_curvel_3d_storage::set_curvel_3d( const vcl_set<bmrf_curve_3d_sptr>& curves)
+dbmrf_curvel_3d_storage::set_curvel_3d( const std::set<bmrf_curve_3d_sptr>& curves)
 {
   curvel_3d_ = curves;
 }
 
 //: Retrieve the curvel_3d storage set
 void
-dbmrf_curvel_3d_storage::get_curvel_3d( vcl_set<bmrf_curve_3d_sptr>& curves ) const
+dbmrf_curvel_3d_storage::get_curvel_3d( std::set<bmrf_curve_3d_sptr>& curves ) const
 {
   curves = curvel_3d_;
 }
@@ -138,7 +138,7 @@ dbmrf_curvel_3d_storage::b_read(vsl_b_istream &is)
   case 1:
     {
       int frame;
-      vcl_string name;
+      std::string name;
       vsl_b_read(is, frame);
       vsl_b_read(is, name);
       break;
@@ -153,9 +153,9 @@ dbmrf_curvel_3d_storage::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbmrf_curvel_3d_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbmrf_curvel_3d_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

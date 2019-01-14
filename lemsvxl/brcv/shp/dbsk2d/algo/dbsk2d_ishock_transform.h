@@ -19,10 +19,10 @@
 #include <dbsk2d/algo/dbsk2d_lagrangian_ishock_detector.h>
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_iterator.h>
-#include <vcl_algorithm.h>
+#include <map>
+#include <string>
+#include <iterator>
+#include <algorithm>
 
 class dbsk2d_lagrangian_ishock_detector;
 class dbsk2d_ishock_belm;
@@ -63,32 +63,32 @@ public:
     void recompute_full_shock_graph();
 
     //: Get boundary elements removed or added
-    virtual void get_belms(vcl_set<int>& set)
-    {vcl_cerr<<"Error: In base class"<<vcl_endl;}
+    virtual void get_belms(std::set<int>& set)
+    {std::cerr<<"Error: In base class"<<std::endl;}
 
     // Get transform type
     TransformType get_transform_type(){return transform_type_;}
 
     //: write boundary
-    void write_boundary(vcl_string filename);
+    void write_boundary(std::string filename);
 
     //: write boundary
-    void write_shock_boundary(vcl_string filename);
+    void write_shock_boundary(std::string filename);
 
     //: write boundary
-    void write_shock_classification(vcl_string filename);
+    void write_shock_classification(std::string filename);
 
     //: write boundary
-    void write_fragments(vcl_string prefix,
-                         vcl_vector<vgl_polygon<double> >& polys);
+    void write_fragments(std::string prefix,
+                         std::vector<vgl_polygon<double> >& polys);
     
     //: write polygons
-    void write_polygons(vcl_string prefix,
-                        vcl_vector<vgl_polygon<double> >& polys);
+    void write_polygons(std::string prefix,
+                        std::vector<vgl_polygon<double> >& polys);
 
     //: write state
-    void write_state(vcl_string filename, 
-                     vcl_vector<vgl_polygon<double> >& polys,
+    void write_state(std::string filename, 
+                     std::vector<vgl_polygon<double> >& polys,
 		     bool show_shock=true);
 
     //: get shock graph
@@ -101,19 +101,19 @@ public:
     virtual double likelihood(){return 0.0;}
 
     //: get contour points defining gap or loop
-    virtual vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
-        get_contour_pair(){vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
+    virtual std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
+        get_contour_pair(){std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
             pair(0,0);
         return pair;}
 
-    bool region_affected(vcl_set<int>& region_belms)
+    bool region_affected(std::set<int>& region_belms)
     {
-        vcl_set<int> intersection;
-        vcl_insert_iterator<vcl_set<int> > 
+        std::set<int> intersection;
+        std::insert_iterator<std::set<int> > 
             inserter(intersection,intersection.begin());
         
-        vcl_set<int>::iterator out_iterator;
-        vcl_set_intersection(minimal_interacting_elements_.begin(),
+        std::set<int>::iterator out_iterator;
+        std::set_intersection(minimal_interacting_elements_.begin(),
                              minimal_interacting_elements_.end(),
                              region_belms.begin(),
                              region_belms.end(),
@@ -148,9 +148,9 @@ public:
         return flag;
     }
 
-    bool region_in_min_local_context(vcl_set<int>& ids)
+    bool region_in_min_local_context(std::set<int>& ids)
     {
-        vcl_set<int>::iterator it;
+        std::set<int>::iterator it;
         for ( it = ids.begin() ; it != ids.end() ; ++it)
         {
             if ( min_local_context_.count(*it))
@@ -165,7 +165,7 @@ public:
 
     dbsk2d_ishock_bpoint* endpoint_in_elms(int contour_id)
     {
-        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+        std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
         for ( it = interacting_bnd_elements_.begin() ; 
               it != interacting_bnd_elements_.end(); 
               ++it)
@@ -237,27 +237,27 @@ protected:
                  ishock_detector_.clear_deleted_elements();}
 
     // Keep track of all interacting boundary elements
-    vcl_map<unsigned int,dbsk2d_ishock_belm*> interacting_bnd_elements_;
+    std::map<unsigned int,dbsk2d_ishock_belm*> interacting_bnd_elements_;
 
     // Keep track of contour elements to remove
-    vcl_map<unsigned int,dbsk2d_ishock_belm*> removal_bnd_elements_;
+    std::map<unsigned int,dbsk2d_ishock_belm*> removal_bnd_elements_;
 
     // Keep track of outer wavefront of local context
-    vcl_map<unsigned int,dbsk2d_ishock_node*> outer_wavefront_;
+    std::map<unsigned int,dbsk2d_ishock_node*> outer_wavefront_;
   
     // Keep track of all shocks that have been removed
-    vcl_map<unsigned int,vcl_string> shocks_removed_;
+    std::map<unsigned int,std::string> shocks_removed_;
 
     // Keep track of minimal local context contour id
-    vcl_set<int> minimal_interacting_elements_;
+    std::set<int> minimal_interacting_elements_;
 
     // Keep track of minimal local context interacting belm ids
-    vcl_map<unsigned int, dbsk2d_ishock_belm*> min_local_context_;
+    std::map<unsigned int, dbsk2d_ishock_belm*> min_local_context_;
 
 private: 
 
     // Measure distance from euler spiral
-    double distance_from_ess(vcl_vector<dbsk2d_ishock_belm*>& belm_list,
+    double distance_from_ess(std::vector<dbsk2d_ishock_belm*>& belm_list,
                              vgl_point_2d<double> test_point);
 
     // Make copy ctor private

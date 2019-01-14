@@ -4,7 +4,7 @@
 //:
 // \file
 #include "bsta_truth_updater.h"
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 //: The main function

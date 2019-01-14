@@ -19,10 +19,10 @@
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbsks/dbsks_xnode_geom_sptr.h>
 #include <dbsks/dbsks_xgraph_geom_model_sptr.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <string>
+#include <iostream>
+#include <map>
+#include <vector>
 
 
 
@@ -30,13 +30,13 @@
 //: List of parameters needed to train a geometric model
 struct dbsks_train_geom_model_params
 {
-  vcl_string xshock_folder;
-  vcl_string xshock_list_file;
+  std::string xshock_folder;
+  std::string xshock_list_file;
   int root_vid;
   int pseudo_parent_eid;
   double normalized_xgraph_size;
   bool b_normalize;
-  vcl_string output_file;
+  std::string output_file;
 
 };
 
@@ -81,8 +81,8 @@ public:
   dbsks_train_geom_model_params params_;
   
   // place holder for attributes of all edges and nodes, after normalization
-  vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > > map_edge2frags;
-  vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > > map_node2geom;
+  std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > > map_edge2frags;
+  std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > > map_node2geom;
   dbsksp_xshock_graph_sptr prototype_xgraph;
   dbsks_xgraph_geom_model_sptr xgraph_geom;
 

@@ -21,7 +21,7 @@ dbbgm_hmm_learn_trans_process::dbbgm_hmm_learn_trans_process()
 {
   if( !parameters()->add( "image width" ,     "-width" ,   (unsigned int)352 )  ||
       !parameters()->add( "image height" ,    "-height" ,  (unsigned int)240 )){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -41,7 +41,7 @@ dbbgm_hmm_learn_trans_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_hmm_learn_trans_process::name()
 {
   return "HMM Learn Transitions";
@@ -65,9 +65,9 @@ dbbgm_hmm_learn_trans_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_hmm_learn_trans_process::get_input_type()
+std::vector< std::string > dbbgm_hmm_learn_trans_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   return to_return;
@@ -75,9 +75,9 @@ vcl_vector< vcl_string > dbbgm_hmm_learn_trans_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_hmm_learn_trans_process::get_output_type()
+std::vector< std::string > dbbgm_hmm_learn_trans_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -87,7 +87,7 @@ bool
 dbbgm_hmm_learn_trans_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_hmm_learn_trans_process::execute() - "
+    std::cout << "In dbbgm_hmm_learn_trans_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }

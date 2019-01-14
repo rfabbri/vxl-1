@@ -21,7 +21,7 @@ dbsksp_convert_shock_graph_to_xshock_graph_process()
     //!parameters()->add("Build type: " , "-build_type" , this->build_type_descriptions_, 0)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_convert_shock_graph_to_xshock_graph_process::
+std::string dbsksp_convert_shock_graph_to_xshock_graph_process::
 name()
 { 
   return "Convert shock graph to xshock graph"; 
@@ -55,10 +55,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_convert_shock_graph_to_xshock_graph_process::
+std::vector< std::string > dbsksp_convert_shock_graph_to_xshock_graph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_shock");
   return to_return;
 }
@@ -67,10 +67,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_convert_shock_graph_to_xshock_graph_process::
+std::vector< std::string > dbsksp_convert_shock_graph_to_xshock_graph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
 }
@@ -113,12 +113,12 @@ execute()
   if (xshock_graph)
   {
     output_shock->set_xgraph(xshock_graph);
-    vcl_cout << "\nConverting dbsksp_shock_graph to dbsksp_xshock_graph ... [ OK ]\n";
+    std::cout << "\nConverting dbsksp_shock_graph to dbsksp_xshock_graph ... [ OK ]\n";
     return true;
   }
   else
   {
-    vcl_cout << "\nConverting dbsksp_shock_graph to dbsksp_xshock_graph ... [ Failed ]\n";
+    std::cout << "\nConverting dbsksp_shock_graph to dbsksp_xshock_graph ... [ Failed ]\n";
     return false;
   }
 }

@@ -19,9 +19,9 @@ public:
 
     ~dvrml_cone(){}
 
-    virtual void draw( vcl_ostream& os );
+    virtual void draw( std::ostream& os );
 
-    virtual vcl_string shape(){ return "cone"; }
+    virtual std::string shape(){ return "cone"; }
 
     double bottom_radius;
     double height;

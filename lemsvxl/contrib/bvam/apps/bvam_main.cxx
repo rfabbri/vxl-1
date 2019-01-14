@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv)
 {
-  vcl_string XML_path = argv[1];
+  std::string XML_path = argv[1];
   bvam_process_mgr::instance()->init(XML_path);
   bvam_process_mgr::instance()->run();
 }

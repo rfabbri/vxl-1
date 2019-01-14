@@ -90,14 +90,14 @@ new_arc_between(const dbsk2d_bnd_vertex_sptr& v1,
     new dbsk2d_ishock_barc(v1->bpoint(), v2->bpoint(),
     (boundary)? boundary->nextAvailableID() : -1, (curvature>0) ? false : true, //GUIElm is always the one on the outside, i.e., CW
     center, 
-    vcl_abs(1/curvature), 
+    std::abs(1/curvature), 
     (curvature>0) ? ARC_NUD_CCW : ARC_NUD_CW);
 
   dbsk2d_ishock_barc* right = 
     new dbsk2d_ishock_barc(v2->bpoint(), v1->bpoint(),
     (boundary)? boundary->nextAvailableID() : -1, (curvature>0) ? true : false, //GUIElm is always the one on the outside, i.e., CW
     center, 
-    vcl_abs(1/curvature), 
+    std::abs(1/curvature), 
     (curvature>0) ? ARC_NUD_CW : ARC_NUD_CCW );
 
   left->set_twinArc(right);
@@ -115,7 +115,7 @@ new_arc_between(const dbsk2d_bnd_vertex_sptr& v1,
 
 //: Connect the points with line segments
 dbsk2d_bnd_contour_sptr dbsk2d_bnd_utils::
-new_polyline_contour(const vcl_vector<vgl_point_2d<double > > &vertices,
+new_polyline_contour(const std::vector<vgl_point_2d<double > > &vertices,
                      bool closed, 
                      const dbsk2d_boundary_sptr& boundary)
 {   
@@ -123,7 +123,7 @@ new_polyline_contour(const vcl_vector<vgl_point_2d<double > > &vertices,
   if (closed && vertices.size() < 3) return 0;
 
   // convert the pts into bnd_vertex and put into a list
-  vcl_vector<dbsk2d_bnd_vertex_sptr > bv_list;
+  std::vector<dbsk2d_bnd_vertex_sptr > bv_list;
   bv_list.reserve(vertices.size());
   for (unsigned int i = 0; i < vertices.size(); ++i)
   {
@@ -135,13 +135,13 @@ new_polyline_contour(const vcl_vector<vgl_point_2d<double > > &vertices,
     bv_list.push_back(bv_list[0]);
 
   // now link all these vertices into a chain and save as a contour
-  vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges;
+  std::vector<dbsk2d_bnd_edge_sptr > bnd_edges;
   for (unsigned int i=0; i<bv_list.size()-1; ++i)
   {
     bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(bv_list[i], 
       bv_list[i+1], boundary));
   }
-  vcl_vector<signed char > directions(bnd_edges.size(), 1);
+  std::vector<signed char > directions(bnd_edges.size(), 1);
 
   
   // form a new contour
@@ -161,8 +161,8 @@ new_polyline_contour(const vcl_vector<vgl_point_2d<double > > &vertices,
 //: Determine directions of the `edges' (such that they are connected)
 // Return false if the edges are not connected in a chain
 bool dbsk2d_bnd_utils::
-determine_edge_directions(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges,
-                             vcl_vector<signed char >& directions)
+determine_edge_directions(const std::vector<dbsk2d_bnd_edge_sptr >& edges,
+                             std::vector<signed char >& directions)
 {
   // no connectedness check when there is only one edge
   directions.clear();
@@ -223,8 +223,8 @@ determine_edge_directions(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges,
 //--------------------------------------------------------------------------
 //: Extract edge list from a list of contours
 void dbsk2d_bnd_utils::
-extract_edge_list(const vcl_list<dbsk2d_bnd_contour_sptr >& contours,
-                              vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+extract_edge_list(const std::list<dbsk2d_bnd_contour_sptr >& contours,
+                              std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   edges.clear();
   for (bnd_contour_list::const_iterator cit = contours.begin();
@@ -250,7 +250,7 @@ extract_edge_list(const vcl_list<dbsk2d_bnd_contour_sptr >& contours,
 //: Extract edge list from a boundary
 void dbsk2d_bnd_utils::
 extract_edge_list(const dbsk2d_boundary_sptr& boundary,
-    vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+    std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   // goal: avoid using all_contours(...) because it involves list copying
   // and avoid calling tagged_union(...) multiple times
@@ -308,8 +308,8 @@ extract_edge_list(const dbsk2d_boundary_sptr& boundary,
 //-----------------------------------------------------------------------------
 //: Extract edges that have `vertices' as their endpoints
 void dbsk2d_bnd_utils::
-extract_edge_list(const vcl_list<dbsk2d_bnd_vertex_sptr >& vertices,
-                  vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+extract_edge_list(const std::list<dbsk2d_bnd_vertex_sptr >& vertices,
+                  std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   edges.clear();
   for (bnd_vertex_list::const_iterator vit = 
@@ -344,8 +344,8 @@ extract_edge_list(const vcl_list<dbsk2d_bnd_vertex_sptr >& vertices,
 //--------------------------------------------------------------------------
 //: Extract edge list from a list of contours
 void dbsk2d_bnd_utils::
-extract_vertex_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges, 
-  vcl_list<dbsk2d_bnd_vertex_sptr >& vertices)
+extract_vertex_list(const std::list<dbsk2d_bnd_edge_sptr >& edges, 
+  std::list<dbsk2d_bnd_vertex_sptr >& vertices)
 {
   vertices.clear();
   for (bnd_edge_list::const_iterator eit = 
@@ -368,16 +368,16 @@ extract_vertex_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
 // -----------------------------------------------------------------------
 //: Extract list of belms from a list of edges
 void dbsk2d_bnd_utils::
-extract_belm_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges, 
-                  vcl_vector<dbsk2d_ishock_belm* >& ret_belms)
+extract_belm_list(const std::list<dbsk2d_bnd_edge_sptr >& edges, 
+                  std::vector<dbsk2d_ishock_belm* >& ret_belms)
 {
   // clear old stuffs
   ret_belms.clear();
 
   // collect all bcurves and bpoints from the edges
   // there might be duplicated bpoints, so we need to handle them separately
-  vcl_list<dbsk2d_ishock_bpoint* > all_bpoints;
-  for (vcl_list<dbsk2d_bnd_edge_sptr >::const_iterator eit = 
+  std::list<dbsk2d_ishock_bpoint* > all_bpoints;
+  for (std::list<dbsk2d_bnd_edge_sptr >::const_iterator eit = 
     edges.begin(); eit != edges.end(); ++eit)
   {
     dbsk2d_bnd_edge_sptr e = *eit;
@@ -402,7 +402,7 @@ extract_belm_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges,
   
   
   // add the bpoints to the `belms' list
-  for (vcl_list<dbsk2d_ishock_bpoint* >::iterator bit = all_bpoints.begin();
+  for (std::list<dbsk2d_ishock_bpoint* >::iterator bit = all_bpoints.begin();
     bit != all_bpoints.end(); ++bit)
   {
     ret_belms.push_back(*bit);

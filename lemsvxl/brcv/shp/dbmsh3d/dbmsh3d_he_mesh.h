@@ -16,10 +16,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_halfedge.h>
 #include <dbmsh3d/dbmsh3d_face.h>

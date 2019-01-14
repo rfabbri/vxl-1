@@ -39,7 +39,7 @@ class dbsksp_soview_xshock_node : public vgui_soview2D
   virtual ~dbsksp_soview_xshock_node() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xshock_node"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xshock_node"; }
 
   //: Render this object on the display.
   virtual void draw() const;
@@ -54,7 +54,7 @@ class dbsksp_soview_xshock_node : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_node_sptr xnode() const {return this->xnode_; }
@@ -88,7 +88,7 @@ class dbsksp_soview_xshock_chord : public vgui_soview2D
   virtual ~dbsksp_soview_xshock_chord() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xshock_chord"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xshock_chord"; }
 
   //: Render this object on the display.
   virtual void draw() const;
@@ -103,7 +103,7 @@ class dbsksp_soview_xshock_chord : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_edge_sptr xedge() const {return this->xedge_; }
@@ -137,7 +137,7 @@ class dbsksp_soview_xshock_curve : public vgui_soview2D
   virtual ~dbsksp_soview_xshock_curve() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xshock_curve"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xshock_curve"; }
 
   //: Render this object on the display.
   virtual void draw() const;
@@ -152,7 +152,7 @@ class dbsksp_soview_xshock_curve : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_edge_sptr xedge() const {return this->xedge_; }
@@ -165,7 +165,7 @@ protected:
   dbsksp_xshock_edge_sptr xedge_;  
 
   // cache the geometry of the curve
-  vcl_vector<vgl_point_2d<float > > pts_;
+  std::vector<vgl_point_2d<float > > pts_;
 
   // location of centroid
   float centroid_x_;
@@ -189,7 +189,7 @@ class dbsksp_soview_xshock_contact : public vgui_soview2D
   virtual ~dbsksp_soview_xshock_contact() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xshock_contact"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xshock_contact"; }
 
   //: Render this object on the display.
   virtual void draw() const;
@@ -204,7 +204,7 @@ class dbsksp_soview_xshock_contact : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_node_sptr xnode() const {return this->xnode_; }
@@ -218,7 +218,7 @@ protected:
 
   // cache the geometry of the contact shocks
   vgl_point_2d<float > center_;
-  vcl_vector<vgl_point_2d<float > > bnd_pts_;
+  std::vector<vgl_point_2d<float > > bnd_pts_;
 };
 
 
@@ -237,7 +237,7 @@ class dbsksp_soview_xshock_bnd : public vgui_soview2D
   virtual ~dbsksp_soview_xshock_bnd() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xshock_bnd"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xshock_bnd"; }
 
   //: Render this object on the display.
   virtual void draw() const;
@@ -252,7 +252,7 @@ class dbsksp_soview_xshock_bnd : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_edge_sptr xedge() const {return this->xedge_; }
@@ -268,7 +268,7 @@ protected:
   bool is_left_bnd_;
 
   // cache the geometry of the contact shocks
-  vcl_vector<vgl_point_2d<float > > bnd_pts_;
+  std::vector<vgl_point_2d<float > > bnd_pts_;
 };
 
 
@@ -287,7 +287,7 @@ class dbsksp_soview_xfrag : public vgui_soview2D
   virtual ~dbsksp_soview_xfrag() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xfrag"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xfrag"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -302,7 +302,7 @@ class dbsksp_soview_xfrag : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_xshock_fragment_sptr xfrag() const {return this->xfrag_; }
@@ -342,7 +342,7 @@ class dbsksp_soview_xsample : public vgui_soview2D
   virtual ~dbsksp_soview_xsample() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_xsample"; }
+  virtual std::string type_name() const {return "dbsksp_soview_xsample"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -357,7 +357,7 @@ class dbsksp_soview_xsample : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Compute geometry (center + boundary points)
   void compute_geometry();

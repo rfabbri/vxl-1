@@ -50,7 +50,7 @@ void poly_cam_observer::proj_point(vgl_point_3d<double> world_pt, vgl_point_2d<d
 void poly_cam_observer::proj_poly(vsol_polygon_3d_sptr poly3d, 
                                vsol_polygon_2d_sptr& poly2d)
 {
-  vcl_vector<vsol_point_2d_sptr> vertices;
+  std::vector<vsol_point_2d_sptr> vertices;
 if(!poly3d)
   return;
   for (unsigned i=0; i<poly3d->size(); i++) {
@@ -58,7 +58,7 @@ if(!poly3d)
     //vgl_homg_point_2d<double> hp = camera_->project(vgl_homg_point_3d<double> (poly3d->vertex(i)->x(), poly3d->vertex(i)->y(), poly3d->vertex(i)->z()));
     //vsol_point_2d_sptr p = new vsol_point_2d(hp.x()/hp.w(), hp.y()/hp.w());
     double u = 0,v = 0;
-    //vcl_cout << "point " << *(poly3d->vertex(i)) << vcl_endl;
+    //std::cout << "point " << *(poly3d->vertex(i)) << std::endl;
     camera_->project(poly3d->vertex(i)->x(), poly3d->vertex(i)->y(), poly3d->vertex(i)->z(),u,v); 
     vsol_point_2d_sptr p = new vsol_point_2d(u,v);
     vertices.push_back(p);
@@ -67,7 +67,7 @@ if(!poly3d)
   poly2d = new vsol_polygon_2d (vertices);
 }
 
-void poly_cam_observer::proj_poly(vcl_vector<dbmsh3d_vertex*> verts, vcl_vector<vgl_point_2d<double> > &projections)
+void poly_cam_observer::proj_poly(std::vector<dbmsh3d_vertex*> verts, std::vector<vgl_point_2d<double> > &projections)
 {
   for (unsigned v=0; v<verts.size(); v++) {
     dbmsh3d_vertex* vert = (dbmsh3d_vertex*)verts[v];
@@ -101,9 +101,9 @@ bool poly_cam_observer::find_intersection_points(vgl_homg_point_2d<double> const
   intersect_ray_and_plane(img_point2, poly_plane, p2);
 
   if (is_ideal(p1))
-    vcl_cout << "p1 is ideal" << vcl_endl;
+    std::cout << "p1 is ideal" << std::endl;
   if (is_ideal(p2))
-    vcl_cout << "p2 is ideal" << vcl_endl;
+    std::cout << "p2 is ideal" << std::endl;
 
   vgl_point_3d<double> non_homg_p1(p1);
   vgl_point_3d<double> non_homg_p2(p2);
@@ -117,7 +117,7 @@ bool poly_cam_observer::find_intersection_points(vgl_homg_point_2d<double> const
   double dist2 = vgl_distance_to_closed_polygon (x_list, y_list, z_list, poly3d->size(), 
     non_homg_p2.x(), non_homg_p2.y(), non_homg_p2.z());
  
-  //vcl_cout << "dist1=" << dist1 << "   dist2=" << dist2 << vcl_endl;
+  //std::cout << "dist1=" << dist1 << "   dist2=" << dist2 << std::endl;
 
   // if it is close enough, find the intersection
   if ((dist1 < 2.0) && (dist2 < 2.0)) {
@@ -133,7 +133,7 @@ bool poly_cam_observer::find_intersection_points(vgl_homg_point_2d<double> const
       non_homg_p2.x(), non_homg_p2.y(), non_homg_p2.z());
 
     if (edge_index1 == edge_index2) {
-      vcl_cerr << "poly_cam_observer::find_intersection_points() -- Both points are on the same edge!!!" << vcl_endl;
+      std::cerr << "poly_cam_observer::find_intersection_points() -- Both points are on the same edge!!!" << std::endl;
       return false;
     }
 
@@ -181,8 +181,8 @@ bool poly_cam_observer::intersect(obj_observable* obj, unsigned face_id,
 /// ASK DAN, how about the case of rational camera
 bool poly_cam_observer::intersect(float x1, float y1, float x2, float y2)
 {
-  vcl_map<obj_observable *, vcl_vector<vgui_soview2D_polygon* > >::iterator itr = objects.begin();
-  vcl_vector<obj_observable*> intersecting_obs;
+  std::map<obj_observable *, std::vector<vgui_soview2D_polygon* > >::iterator itr = objects.begin();
+  std::vector<obj_observable*> intersecting_obs;
   vgl_homg_point_2d<double> image_point1(x1, y1);
   vgl_homg_point_2d<double> image_point2(x2, y2);
  
@@ -216,7 +216,7 @@ bool poly_cam_observer::intersect(float x1, float y1, float x2, float y2)
    }
    else {
      //unsupported camera type
-     vcl_cerr << "poly_cam_observer::intersect(): unsupported camera type!\n";
+     std::cerr << "poly_cam_observer::intersect(): unsupported camera type!\n";
      return false;
    }
     // choose the polygon amongst the selected objects
@@ -227,15 +227,15 @@ bool poly_cam_observer::intersect(float x1, float y1, float x2, float y2)
     bool found=false;
     for (unsigned i=0; i<intersecting_obs.size(); i++) {
       obj_observable* obs = intersecting_obs[i];
-      vcl_map<int, vsol_polygon_3d_sptr> faces = obs->extract_faces();
-      vcl_map<int, vsol_polygon_3d_sptr>::iterator iter = faces.begin();
+      std::map<int, vsol_polygon_3d_sptr> faces = obs->extract_faces();
+      std::map<int, vsol_polygon_3d_sptr>::iterator iter = faces.begin();
    
       while (iter != faces.end()) {
         vgl_point_3d<double> l1, l2, l3, l4;
         vgl_point_3d<double> point1, point2;
         vsol_polygon_3d_sptr face = iter->second;
         if (this->find_intersection_points(image_point1, image_point2, face, point1, l1, l2, point2, l3, l4)) {
-          vcl_cout << "found intersecting line:" << vcl_endl;
+          std::cout << "found intersecting line:" << std::endl;
           found = true;
           double dist1 = vgl_distance(cam_center, vgl_homg_point_3d<double> (point1));
           double dist2 = vgl_distance(cam_center, vgl_homg_point_3d<double> (point2));
@@ -287,7 +287,7 @@ bool poly_cam_observer::find_intersection_point(vgl_homg_point_2d<double> img_po
   intersect_ray_and_plane(img_point,poly_plane,p3d_homg);
 
   if (is_ideal(p3d_homg)) {
-    vcl_cout << "intersection point is ideal!" <<vcl_endl;
+    std::cout << "intersection point is ideal!" <<std::endl;
   }
   vgl_point_3d<double> p3d(p3d_homg);
 
@@ -296,7 +296,7 @@ bool poly_cam_observer::find_intersection_point(vgl_homg_point_2d<double> img_po
   
   double dist = vgl_distance_to_closed_polygon(x_list,y_list,z_list,poly3d->size(),p3d.x(),p3d.y(),p3d.z());
 
-  //vcl_cout << "dist = "<<dist<<vcl_endl;
+  //std::cout << "dist = "<<dist<<std::endl;
   if (dist)
     return false;
   
@@ -328,7 +328,7 @@ void poly_cam_observer::backproj_point(vsol_point_2d_sptr p2d, vsol_point_3d_spt
   vgl_homg_point_3d<double> world_point;
 
   vgl_homg_point_2d<double> image_point(p2d->x(), p2d->y());
-  //vcl_cout << " Before projection---> x=" << p->x() << "  y=" << p->y() << vcl_endl;
+  //std::cout << " Before projection---> x=" << p->x() << "  y=" << p->y() << std::endl;
 
   intersect_ray_and_plane(image_point,proj_plane_,world_point);
   double x = world_point.x()/world_point.w();
@@ -364,20 +364,20 @@ void poly_cam_observer::backproj_poly(vsol_polygon_2d_sptr poly2d,
                               vgl_homg_plane_3d<double> proj_plane)
 {
 
-  vcl_vector<vsol_point_3d_sptr> projected_list;
+  std::vector<vsol_point_3d_sptr> projected_list;
   vgl_homg_point_3d<double> world_point;
 
   for(unsigned i=0; i<poly2d->size(); i++) {
     vsol_point_2d_sptr p = poly2d->vertex(i);
     vgl_homg_point_2d<double> image_point(p->x(), p->y());
-    //vcl_cout << " Before projection---> x=" << p->x() << "  y=" << p->y() << vcl_endl;
+    //std::cout << " Before projection---> x=" << p->x() << "  y=" << p->y() << std::endl;
 
     intersect_ray_and_plane(image_point,proj_plane,world_point);
     double x = world_point.x()/world_point.w();
     double y = world_point.y()/world_point.w();
     double z = world_point.z()/world_point.w();
-      //vcl_cout << i << "            After  x=" << x << " y=" << y << 
-     //   " z=" << z << vcl_endl;
+      //std::cout << i << "            After  x=" << x << " y=" << y << 
+     //   " z=" << z << std::endl;
 
     projected_list.push_back(new vsol_point_3d (x, y, z));
   }
@@ -391,8 +391,8 @@ void poly_cam_observer::backproj_poly(vsol_polygon_2d_sptr poly2d,
       x = proj_p.x()/proj_p.w();
       y = proj_p.y()/proj_p.w();
       z = proj_p.z()/proj_p.w();
-      vcl_cout << i << "            After  x=" << x << " y=" << y << 
-        " z=" << z << vcl_endl;
+      std::cout << i << "            After  x=" << x << " y=" << y << 
+        " z=" << z << std::endl;
 
       projected_list.push_back(new vsol_point_3d (x, y, z));
     }
@@ -407,14 +407,14 @@ void poly_cam_observer::backproj_poly(vsol_polygon_2d_sptr poly2d,
     vgl_point_3d<double> p;
 
       if (!vpgl_backproject::bproj_plane(*rat_cam, p2d, plane_nonhomg, guess, p)) {
-        vcl_cout << "vpgl_backproject::broj_plane() failed." << vcl_endl;
+        std::cout << "vpgl_backproject::broj_plane() failed." << std::endl;
         return false;
       }
       world_point.set(p.x(),p.y(),p.z());
   }
   // other camera type
   else {
-    vcl_cout << "error: unsupported camera type!" << vcl_endl;
+    std::cout << "error: unsupported camera type!" << std::endl;
   }
   */
   poly3d = new vsol_polygon_3d(projected_list);
@@ -425,7 +425,7 @@ bool poly_cam_observer::intersect_ray_and_box(vgl_box_3d<double> box,
                                            vgl_point_3d <double> &point)
 {
   // test the intersection of the line with 6 planes of the box
-  vcl_vector<vgl_homg_plane_3d<double> > planes;
+  std::vector<vgl_homg_plane_3d<double> > planes;
 
   // make the box a thad bigger so that we accept closeby points
   box.expand_about_centroid (2);
@@ -447,7 +447,7 @@ bool poly_cam_observer::intersect_ray_and_box(vgl_box_3d<double> box,
   planes.push_back(plane5);
   planes.push_back(plane6);
 
-  vcl_vector< vgl_point_3d <double> > intersection_points;
+  std::vector< vgl_point_3d <double> > intersection_points;
 
   for (unsigned i=0; i<planes.size(); i++) {
     vgl_homg_point_3d<double> p;
@@ -460,7 +460,7 @@ bool poly_cam_observer::intersect_ray_and_box(vgl_box_3d<double> box,
   if (intersection_points.size() > 0) 
     return true;
   else {
-    vcl_cout << "Rays do not intersect the box" << vcl_endl;
+    std::cout << "Rays do not intersect the box" << std::endl;
     return false;
   }
 }
@@ -489,7 +489,7 @@ bool poly_cam_observer::intersect_ray_and_plane(vgl_homg_point_2d<double> img_po
     vgl_point_3d<double> p;
 
       if (!vpgl_backproject::bproj_plane(*rat_cam, p2d, plane_nonhomg, guess, p)) {
-        vcl_cout << "vpgl_backproject::broj_plane() failed." << vcl_endl;
+        std::cout << "vpgl_backproject::broj_plane() failed." << std::endl;
         return false;
       }
       world_point.set(p.x(),p.y(),p.z());
@@ -497,7 +497,7 @@ bool poly_cam_observer::intersect_ray_and_plane(vgl_homg_point_2d<double> img_po
 
   // other camera type
   else {
-    vcl_cout << "error: unsupported camera type!" << vcl_endl;
+    std::cout << "error: unsupported camera type!" << std::endl;
   }
   
   return true;
@@ -516,12 +516,12 @@ vgl_vector_3d<double> poly_cam_observer::camera_direction(vgl_point_3d<double> o
     return direction;
   }
   else if (vpgl_rational_camera<double> *rat_cam = dynamic_cast<vpgl_rational_camera<double>*>(camera_)) {
-    vcl_cerr << "Error: you probably want to use camera_direction_rational()!\n";
+    std::cerr << "Error: you probably want to use camera_direction_rational()!\n";
     
    }
    else {
      //unsupported camera type
-     vcl_cerr << "Error: poly_observer::intersect(): unsupported camera type!\n";
+     std::cerr << "Error: poly_observer::intersect(): unsupported camera type!\n";
    }
    return direction;
 }
@@ -536,14 +536,14 @@ bool poly_cam_observer::shift_rational_camera(double dx, double dy)
 
   }
   else {
-    vcl_cerr << "Error: camera is not rational\n";
+    std::cerr << "Error: camera is not rational\n";
     return false;
   }
-  vcl_map<obj_observable *, vcl_vector<vgui_soview2D_polygon* > >::iterator objit;
+  std::map<obj_observable *, std::vector<vgui_soview2D_polygon* > >::iterator objit;
   for (objit = objects.begin(); objit != objects.end(); objit++) {
     vgui_message msg;
     msg.from = objit->first;
-    msg.data = new vcl_string("update");
+    msg.data = new std::string("update");
     update(msg);
   }
 
@@ -556,7 +556,7 @@ vgl_vector_3d<double> poly_cam_observer::camera_direction_rational(bgeo_lvcs& lv
   vgl_vector_3d<double> direction(0,0,0);
 
   if (vpgl_proj_camera<double> *pro_cam = dynamic_cast<vpgl_proj_camera<double>*>(camera_)) {
-    vcl_cerr << "Error: Use camera_direction() instead of camera_direction_rational() with a projective camera.\n";
+    std::cerr << "Error: Use camera_direction() instead of camera_direction_rational() with a projective camera.\n";
     
     return direction;
   }
@@ -589,10 +589,10 @@ vgl_vector_3d<double> poly_cam_observer::camera_direction_rational(bgeo_lvcs& lv
 
     vgl_point_3d<double> p1,p2;
     if (!vpgl_backproject::bproj_plane(*rat_cam, img_pt, plane1, plane_point1, p1)) {
-      vcl_cerr << "Error: vpgl_backproject::broj_plane() failed." << vcl_endl;
+      std::cerr << "Error: vpgl_backproject::broj_plane() failed." << std::endl;
     }
     if (!vpgl_backproject::bproj_plane(*rat_cam, img_pt, plane2, plane_point2, p2)) {
-      vcl_cerr << "Error: vpgl_backproject::broj_plane() failed." << vcl_endl;
+      std::cerr << "Error: vpgl_backproject::broj_plane() failed." << std::endl;
     }
     // convert p1 and p2 to lvcs
     double x,y,z;
@@ -609,7 +609,7 @@ vgl_vector_3d<double> poly_cam_observer::camera_direction_rational(bgeo_lvcs& lv
    }
    else {
      //unsupported camera type
-     vcl_cerr << "Error: poly_observer::intersect(): unsupported camera type!\n";
+     std::cerr << "Error: poly_observer::intersect(): unsupported camera type!\n";
    }
    return direction;
 }

@@ -18,7 +18,7 @@
 
 #include <vbl/vbl_array_1d.h>
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 //------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ dbskr_tree_edit(const dbskr_tree_sptr& tree1,
   if (tree1->size() == 2 && tree2->size() != 2) 
   {
     switched_ = true;
-    //vcl_cout << "SPECIAL CASE: Switching trees since the first tree is a leaf\n";
+    //std::cout << "SPECIAL CASE: Switching trees since the first tree is a leaf\n";
     this->set_tree2(tree1);
     this->set_tree1(tree2);
   } 
@@ -78,7 +78,7 @@ dbskr_tree_edit(const dbskr_directed_tree_sptr& tree1,
     if (tree1->size() == 2 && tree2->size() != 2) 
     {
         switched_ = true;
-        //vcl_cout << "SPECIAL CASE: Switching trees since the first tree is a leaf\n";
+        //std::cout << "SPECIAL CASE: Switching trees since the first tree is a leaf\n";
         tree2_ = tree1.ptr();//this->set_tree2(tree1);
         tree1_ = tree2.ptr();//this->set_tree1(tree2);
     } 
@@ -151,33 +151,33 @@ tree2() const
 //------------------------------------------------------------------------------
 //: Read path
 bool dbskr_tree_edit::
-read_data(vcl_string treefile1, vcl_string treefile2, vcl_string pathtable_file, 
+read_data(std::string treefile1, std::string treefile2, std::string pathtable_file, 
           bool elastic_splice_cost) 
 {
   if (!this->tree1()->acquire(treefile1)) // dpmatch_combined = false
   {  
-    vcl_cout << "Problems in reading tree1 from file " << treefile1 << "\n";
+    std::cout << "Problems in reading tree1 from file " << treefile1 << "\n";
     return false;
   }
 
   if (!this->tree2()->acquire(treefile2)) 
   {
-    vcl_cout << "Problems in reading tree2 from file " << treefile2 << "\n";
+    std::cout << "Problems in reading tree2 from file " << treefile2 << "\n";
     return false;
   }
 
   //: read path table
-  vcl_ifstream tf(pathtable_file.c_str());
+  std::ifstream tf(pathtable_file.c_str());
   
   if (!tf) 
   {
-    vcl_cout << "Unable to open path table file " << pathtable_file << vcl_endl;
+    std::cout << "Unable to open path table file " << pathtable_file << std::endl;
     return false;
   }
 
   int cnt;
   tf >> cnt;
-  //vcl_cout << "we have " << cnt << " lines\n";
+  //std::cout << "we have " << cnt << " lines\n";
 
   for (int i = 0; i<cnt; i++) 
   {
@@ -229,7 +229,7 @@ get_cost(int td1, int d1, int td2, int d2)
     key2.second.second = key.second.first;
 
     float match_cost;
-    vcl_map<pathtable_key, float>::iterator iter;
+    std::map<pathtable_key, float>::iterator iter;
     iter = pathtable_.find(key);   // searching for either key or key2 is enough
     if (iter == pathtable_.end()) 
     {
@@ -269,7 +269,7 @@ get_cost(int td1, int d1, int td2, int d2)
                 float init_alp = d.init_phi();
                 match_cost = float(d.finalCost() + init_dr + init_alp);
 
-                vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());    
+                std::vector<std::pair<int,int> > fmap=*(d.finalMap());    
 
                 if (localize_match_ && fmap.size()>3) 
                 {
@@ -320,28 +320,28 @@ get_cost(int td1, int d1, int td2, int d2)
 //------------------------------------------------------------------------------
 //: compare costs 
 bool dbskr_tree_edit::
-compare_cost(vcl_string shgm_filename) 
+compare_cost(std::string shgm_filename) 
 {
-  vcl_ifstream tf(shgm_filename.c_str());
+  std::ifstream tf(shgm_filename.c_str());
   
   if (!tf) 
   {
-    vcl_cout << "Unable to open shgm file " << shgm_filename << vcl_endl;
+    std::cout << "Unable to open shgm file " << shgm_filename << std::endl;
     return false;
   }
 
   char buffer[1000];
   tf.getline(buffer, 1000);  // version
   tf.getline(buffer, 1000);  // name 1
-  vcl_string line = buffer;
+  std::string line = buffer;
   tf.getline(buffer, 1000);  // name 2
   line = buffer;
 
   float cost;
   tf >> cost;
-  if (vcl_abs(final_cost_ - cost) > 0.001) 
+  if (std::abs(final_cost_ - cost) > 0.001) 
   {
-    vcl_cout << "!!!!!!! cost in the file: " << cost << " final_cost: " << final_cost_ << "\n";
+    std::cout << "!!!!!!! cost in the file: " << cost << " final_cost: " << final_cost_ << "\n";
     tf.close();
     return false;
   }
@@ -359,19 +359,19 @@ compare_cost(vcl_string shgm_filename)
 //------------------------------------------------------------------------------
 //: write shgm output file
 bool dbskr_tree_edit::
-write_shgm(vcl_string shgm_filename) 
+write_shgm(std::string shgm_filename) 
 {  
   if (!return_path_) 
   {
-    vcl_cout << "Paths are not computed, set flag to true using save_path() before edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, set flag to true using save_path() before edit()!" << std::endl;
     return false;
   }
 
-  vcl_ofstream tf(shgm_filename.c_str());
+  std::ofstream tf(shgm_filename.c_str());
   
   if (!tf) 
   {
-    vcl_cout << "Unable to open shgm file " << shgm_filename << " for write " << vcl_endl;
+    std::cout << "Unable to open shgm file " << shgm_filename << " for write " << std::endl;
     return false;
   }
 
@@ -380,38 +380,38 @@ write_shgm(vcl_string shgm_filename)
   // to comply with the format of the shgm file
   tf << "name1.shg\n";
   tf << "name2.shg\n";
-  tf << final_cost_ << vcl_endl;
+  tf << final_cost_ << std::endl;
 
   for (int i = CP_[final_a1_].size()-1; i>=0; i--) 
   {
     pathtable_key key = CP_[final_a1_][i];
     //: find node paths
-    vcl_vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
-    vcl_vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
+    std::vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
+    std::vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
 
     if (switched_) 
     {
       for (unsigned int j = 0; j<nodes2.size(); j++) 
         tf << nodes2[j] << " ";
-      tf << vcl_endl;
+      tf << std::endl;
 
       for (unsigned int j = 0; j<nodes1.size(); j++) 
       {
         tf << nodes1[j] << " ";
       }
-      tf << vcl_endl;
-      tf << vcl_endl;
+      tf << std::endl;
+      tf << std::endl;
     } 
     else 
     {
       for (unsigned int j = 0; j<nodes1.size(); j++) 
         tf << nodes1[j] << " ";
-      tf << vcl_endl;
+      tf << std::endl;
 
       for (unsigned int j = 0; j<nodes2.size(); j++) 
         tf << nodes2[j] << " ";
-      tf << vcl_endl;
-      tf << vcl_endl;    
+      tf << std::endl;
+      tf << std::endl;    
     }
   }
 
@@ -428,40 +428,40 @@ write_shgm(vcl_string shgm_filename)
 //------------------------------------------------------------------------------
 //: compare path 
 bool dbskr_tree_edit::
-compare_path(vcl_string shgm_filename, double precision) 
+compare_path(std::string shgm_filename, double precision) 
 {
   if (!return_path_) 
   {
-    vcl_cout << "Paths are not computed, set flag to true using save_path() before edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, set flag to true using save_path() before edit()!" << std::endl;
     return false;
   }
 
-  vcl_ifstream tf(shgm_filename.c_str());
+  std::ifstream tf(shgm_filename.c_str());
   
   if (!tf) 
   {
-    vcl_cout << "Unable to open shgm file " << shgm_filename << vcl_endl;
+    std::cout << "Unable to open shgm file " << shgm_filename << std::endl;
     return false;
   }
 
   char buffer[1000];
   tf.getline(buffer, 1000);  // version
   tf.getline(buffer, 1000);  // name 1
-  vcl_string line = buffer;
+  std::string line = buffer;
   tf.getline(buffer, 1000);  // name 2
   line = buffer;
 
   float cost;
   tf >> cost;
   bool tag = true;
-  if (vcl_abs(final_cost_ - cost) > precision) 
+  if (std::abs(final_cost_ - cost) > precision) 
   {
-    vcl_cout << "!!!!!!! cost in the file: " << cost << " final_cost: " << final_cost_ << "\n";
+    std::cout << "!!!!!!! cost in the file: " << cost << " final_cost: " << final_cost_ << "\n";
     tag = false;
   }
 
-  vcl_map<vcl_string, vcl_string> paths;
-  vcl_string line2;
+  std::map<std::string, std::string> paths;
+  std::string line2;
   while (!tf.eof()) {
     tf.getline(buffer, 1000);
     line = buffer;
@@ -471,52 +471,52 @@ compare_path(vcl_string shgm_filename, double precision)
     tf.getline(buffer, 1000);
     line2 = buffer;
     if (line2.length() < 2) {  // something is wrong with this file
-      vcl_cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
+      std::cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
       return false;
     }
 
     paths[line] = line2;
   }
 
-  vcl_map<vcl_string, vcl_string>::iterator iter;
+  std::map<std::string, std::string>::iterator iter;
 #if 0
-  vcl_cout << "\nPRINTING RESULTS in SHGM FILE\n";
+  std::cout << "\nPRINTING RESULTS in SHGM FILE\n";
   for (iter = paths.begin(); iter!=paths.end(); iter++) {
-    vcl_cout << "T1's path: " << iter->first << " corresponding path in T2: " << iter->second << "\n";
+    std::cout << "T1's path: " << iter->first << " corresponding path in T2: " << iter->second << "\n";
   }
 #endif
 
   //: order in CP_ is NOT the same with the order in file!!!
   for (int i = CP_[final_a1_].size()-1; i>=0; i--) {
     pathtable_key key = CP_[final_a1_][i];
-    //vcl_cout << "(" << key.first.first << ", " << key.first.second << "), ";
-    //vcl_cout << "(" << key.second.first << ", " << key.second.second << ") " << vcl_endl;
+    //std::cout << "(" << key.first.first << ", " << key.first.second << "), ";
+    //std::cout << "(" << key.second.first << ", " << key.second.second << ") " << std::endl;
     //: find node paths
-    vcl_vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
-    vcl_vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
+    std::vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
+    std::vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
 
 #if 0
-    vcl_cout << "\nPRINTING ALGORITHM RESULTS\n";
+    std::cout << "\nPRINTING ALGORITHM RESULTS\n";
     for (unsigned int j = 0; j<nodes1.size(); j++) 
-      vcl_cout << nodes1[j] << " ";
-    vcl_cout << vcl_endl;
+      std::cout << nodes1[j] << " ";
+    std::cout << std::endl;
     for (unsigned int j = 0; j<nodes2.size(); j++) 
-      vcl_cout << nodes2[j] << " ";
-    vcl_cout << vcl_endl;
-    vcl_cout << vcl_endl;
+      std::cout << nodes2[j] << " ";
+    std::cout << std::endl;
+    std::cout << std::endl;
 #endif
 
     //: makes this into strings and search in paths
     char buffer[1000];
     line = "";
     for (unsigned int j = 0; j<nodes1.size(); j++) {
-      vcl_sprintf(buffer, "%d", nodes1[j]);
+      std::sprintf(buffer, "%d", nodes1[j]);
       line = line + buffer + " ";
     }
 
     line2 = "";
     for (unsigned int j = 0; j<nodes2.size(); j++) {
-      vcl_sprintf(buffer, "%d", nodes2[j]);
+      std::sprintf(buffer, "%d", nodes2[j]);
       line2 = line2 + buffer + " ";
     }
     
@@ -525,33 +525,33 @@ compare_path(vcl_string shgm_filename, double precision)
       // search for the path in the reverse order as well
       line = "";
       for (int j = nodes1.size()-1; j>=0; j--) {
-        vcl_sprintf(buffer, "%d", nodes1[j]);
+        std::sprintf(buffer, "%d", nodes1[j]);
         line = line + buffer + " ";
       }
 
       line2 = "";
       for (int j = nodes2.size()-1; j >= 0; j--) {
-        vcl_sprintf(buffer, "%d", nodes2[j]);
+        std::sprintf(buffer, "%d", nodes2[j]);
         line2 = line2 + buffer + " ";
       }
 
       iter = paths.find(line);
       if (iter == paths.end()) {
-        vcl_cout << "could not find " << line << " nor its reverse in the .shgm file\n";
+        std::cout << "could not find " << line << " nor its reverse in the .shgm file\n";
         tag = false;
       }
 
     }
     
     if (iter != paths.end() && line2 != iter->second) {
-      vcl_cout << "T1's path " << line << " corresponds to " << iter->second << " in the .shgm file,  ";
-      vcl_cout << "however, algorithm returned " << line2 << "\n";
+      std::cout << "T1's path " << line << " corresponds to " << iter->second << " in the .shgm file,  ";
+      std::cout << "however, algorithm returned " << line2 << "\n";
       tag = false;
     }
 
   }
 
-  //vcl_cout << "At this point paths are identical!\n";
+  //std::cout << "At this point paths are identical!\n";
   tf.close();
   return tag;
 }
@@ -564,12 +564,12 @@ compare_path(vcl_string shgm_filename, double precision)
 //------------------------------------------------------------------------------
 //: return the corresponding shock curves and their maps
 bool dbskr_tree_edit::
-get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                                   vcl_vector< pathtable_key >& path_map)
+get_correspondence_just_map_helper(std::vector< std::vector < std::pair <int,int> > >& map_list,
+                                   std::vector< pathtable_key >& path_map)
 {
   if (final_a1_ < 0) 
   {
-    vcl_cout << "Paths are not computed, call edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, call edit()!" << std::endl;
     return false;
   }
 
@@ -589,7 +589,7 @@ get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> >
       dbskr_dpmatch d(sc2, sc1);
       d.set_R(curve_matching_R_);
       d.Match();
-      vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+      std::vector<std::pair<int,int> > fmap=*(d.finalMap());
       map_list.push_back(fmap);
 
       pathtable_key k;
@@ -603,15 +603,15 @@ get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> >
     else 
     {
       path_map.push_back(key);
-      vcl_map<pathtable_key, vcl_vector < vcl_pair <int,int> > >::iterator iter;
+      std::map<pathtable_key, std::vector < std::pair <int,int> > >::iterator iter;
       //: shock_curve_map_ also uses darts as key (NOT NODES as in pathtable_)
       iter = shock_curve_map_.find(key);   // searching for either key or key2 is enough
       if (iter == shock_curve_map_.end()) {  // redo the matching, its not saved!!
-        //vcl_cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
+        //std::cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
         dbskr_dpmatch d(sc1, sc2);
         d.set_R(curve_matching_R_);
         d.Match();
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
         map_list.push_back(fmap);
 
       } 
@@ -630,14 +630,14 @@ get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> >
 //------------------------------------------------------------------------------
 //: return the corresponding shock curves and their maps
 bool dbskr_tree_edit::
-get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                   vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                   vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                   vcl_vector< pathtable_key >& path_map) 
+get_correspondence(std::vector<dbskr_scurve_sptr>& curve_list1, 
+                   std::vector<dbskr_scurve_sptr>& curve_list2, 
+                   std::vector< std::vector < std::pair <int,int> > >& map_list,
+                   std::vector< pathtable_key >& path_map) 
 {
   if (final_a1_ < 0) 
   {
-    vcl_cout << "Paths are not computed, call edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, call edit()!" << std::endl;
     return false;
   }
 
@@ -661,7 +661,7 @@ get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1,
       dbskr_dpmatch d(sc2, sc1);
       d.set_R(curve_matching_R_);
       d.Match();
-      vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+      std::vector<std::pair<int,int> > fmap=*(d.finalMap());
       map_list.push_back(fmap);
 
       pathtable_key k;
@@ -679,15 +679,15 @@ get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1,
 
       path_map.push_back(key);
 
-      vcl_map<pathtable_key, vcl_vector < vcl_pair <int,int> > >::iterator iter;
+      std::map<pathtable_key, std::vector < std::pair <int,int> > >::iterator iter;
       //: shock_curve_map_ also uses darts as key (NOT NODES as in pathtable_)
       iter = shock_curve_map_.find(key);   // searching for either key or key2 is enough
       if (iter == shock_curve_map_.end()) {  // redo the matching, its not saved!!
-        //vcl_cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
+        //std::cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
         dbskr_dpmatch d(sc1, sc2);
         d.set_R(curve_matching_R_);
         d.Match();
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
         map_list.push_back(fmap);
 
       } 
@@ -722,10 +722,10 @@ get_correspondence(bool save_pathtable)
     cor = new dbskr_sm_cor(tree1(), tree2());
   }
 
-  vcl_vector<dbskr_scurve_sptr>& curve_list1 = cor->get_curve_list1();
-  vcl_vector<dbskr_scurve_sptr>& curve_list2 = cor->get_curve_list2();
-  vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list = cor->get_map_list();
-  vcl_vector< pathtable_key >& path_map = cor->get_map();
+  std::vector<dbskr_scurve_sptr>& curve_list1 = cor->get_curve_list1();
+  std::vector<dbskr_scurve_sptr>& curve_list2 = cor->get_curve_list2();
+  std::vector< std::vector < std::pair <int,int> > >& map_list = cor->get_map_list();
+  std::vector< pathtable_key >& path_map = cor->get_map();
 
 
   if (!get_correspondence(curve_list1, curve_list2, map_list, path_map))
@@ -756,8 +756,8 @@ get_correspondence_just_map()
 {
   dbskr_sm_cor_sptr cor = new dbskr_sm_cor();
   
-  vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list = cor->get_map_list();
-  vcl_vector< pathtable_key >& path_map = cor->get_map();
+  std::vector< std::vector < std::pair <int,int> > >& map_list = cor->get_map_list();
+  std::vector< pathtable_key >& path_map = cor->get_map();
   if (!get_correspondence_just_map_helper(map_list, path_map))
     return 0;
 
@@ -772,22 +772,22 @@ get_correspondence_just_map()
 //------------------------------------------------------------------------------
 //: create and write table file in advance (for debugging purposes!!)
 bool dbskr_tree_edit::
-populate_table(vcl_string fname) 
+populate_table(std::string fname) 
 {
   if (!tree1_ || !tree2_) 
   {
-    vcl_cout << "No trees available!\n";
+    std::cout << "No trees available!\n";
     return false;
   }
 
   int n1=tree1_->node_size();
   int n2=tree2_->node_size();
 
-  vcl_vector<int> n11Array;
-  vcl_vector<int> n12Array;
-  vcl_vector<int> n21Array;
-  vcl_vector<int> n22Array;
-  vcl_vector<float> costArray;
+  std::vector<int> n11Array;
+  std::vector<int> n12Array;
+  std::vector<int> n21Array;
+  std::vector<int> n22Array;
+  std::vector<float> costArray;
 
   float finalCost;
 
@@ -803,7 +803,7 @@ populate_table(vcl_string fname)
       if(n11 == n12)
         continue;
 
-      vcl_vector<int>& p1 = tree1()->get_dart_path_from_nodes(n11,n12);
+      std::vector<int>& p1 = tree1()->get_dart_path_from_nodes(n11,n12);
       int td1 = p1[0];
       int d1 = p1[p1.size()-1];
       float cost1=tree1_->get_splice_cost_for_merge(td1, d1);
@@ -814,7 +814,7 @@ populate_table(vcl_string fname)
         {
           for (n22=n21+1;n22<n2;n22++) 
           {
-            vcl_vector<int>& p2=tree2()->get_dart_path_from_nodes(n21,n22);
+            std::vector<int>& p2=tree2()->get_dart_path_from_nodes(n21,n22);
             int td2 = p2[0];
             int d2 = p2[p2.size()-1];
             float cost2=tree2_->get_splice_cost_for_merge(td2, d2);
@@ -838,17 +838,17 @@ populate_table(vcl_string fname)
   }//end of loop over the first tree
  
   
-  vcl_FILE *tfp=vcl_fopen(fname.c_str(),"w");
-    vcl_cout << costArray.size() << " " << n11Array.size() << " "
+  std::FILE *tfp=std::fopen(fname.c_str(),"w");
+    std::cout << costArray.size() << " " << n11Array.size() << " "
    <<  n12Array.size() << " " << n21Array.size() << " "
-   <<  n22Array.size() << vcl_endl;
+   <<  n22Array.size() << std::endl;
   int csize=costArray.size();
-  vcl_fprintf(tfp,"%d\n",csize);
+  std::fprintf(tfp,"%d\n",csize);
   for (unsigned int i=0;i<costArray.size();i++)
-    vcl_fprintf(tfp,"%2d %2d %2d %2d %6.2f\n",n11Array[i],n12Array[i],
+    std::fprintf(tfp,"%2d %2d %2d %2d %6.2f\n",n11Array[i],n12Array[i],
       n21Array[i],n22Array[i],costArray[i]);
-  vcl_fprintf(tfp,"\n");
-  vcl_fclose(tfp);
+  std::fprintf(tfp,"\n");
+  std::fclose(tfp);
 
   return true;
 }

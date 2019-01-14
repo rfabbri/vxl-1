@@ -9,7 +9,7 @@
 // \author  Kongbin Kang and H. Can Aras
 // \date    2005-02-08
 // 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_box_3d.h> 
 #include <vgl/vgl_point_3d.h> 
 #include <vnl/vnl_double_3.h>
@@ -22,7 +22,7 @@ class xmvg_filter_descriptor{
   public:
     //: constructor
     xmvg_filter_descriptor(const vgl_box_3d<double> & box, 
-                           const vcl_string& name)
+                           const std::string& name)
       : box_(box), name_(name){ }  
 
     //: empty constructor
@@ -32,7 +32,7 @@ class xmvg_filter_descriptor{
     virtual ~xmvg_filter_descriptor() {}
 
     //: get name string
-    vcl_string name() { return name_; }
+    std::string name() { return name_; }
 
     //: get the box containing the filter
     vgl_box_3d<double> box() { return box_; }
@@ -60,7 +60,7 @@ class xmvg_filter_descriptor{
 
   protected:
     vgl_box_3d<double> box_;
-    vcl_string name_;
+    std::string name_;
 
     vgl_point_3d<double> centre_;
     vgl_vector_3d<double> orientation_;
@@ -77,6 +77,6 @@ private:
     virtual void calculate_bounding_box(void) {}
 };
 
-void x_write(vcl_ostream & os, xmvg_filter_descriptor f);
+void x_write(std::ostream & os, xmvg_filter_descriptor f);
 
 #endif

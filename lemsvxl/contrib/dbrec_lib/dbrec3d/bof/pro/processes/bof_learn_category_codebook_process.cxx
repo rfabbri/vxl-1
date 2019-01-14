@@ -26,7 +26,7 @@ bool bof_learn_category_codebook_process_cons(bprb_func_process& pro)
 {
   using namespace bof_learn_category_codebook_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
   input_types_[i++] = "bof_scene_categories_sptr"; //categories
   input_types_[i++] = "unsigned"; //class_id
@@ -34,10 +34,10 @@ bool bof_learn_category_codebook_process_cons(bprb_func_process& pro)
   input_types_[i++] = "double"; //fraction of samples to use during initialization refinement
   input_types_[i++] = "unsigned"; //number of iterations to use during initialization refinement
   input_types_[i++] = "unsigned"; //max number of iterations during k-means
-  input_types_[i++] = "vcl_string"; //means path
+  input_types_[i++] = vcl_string"; //means path
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
    
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -56,17 +56,17 @@ bool bof_learn_category_codebook_process(bprb_func_process& pro)
   double fraction = pro.get_input<double>(i++);
   unsigned J = pro.get_input<unsigned>(i++);
   unsigned max_it = pro.get_input<unsigned>(i++);
-  vcl_string means_path = pro.get_input<vcl_string>(i++);
+  std::string means_path = pro.get_input<std::string>(i++);
   
   bof_class_codebook_util<10> cc_util(categories);
-  vcl_vector<vnl_vector_fixed<double,10> > means;
-  vcl_vector<dbcll_euclidean_cluster_light<10> > all_clusters;
+  std::vector<vnl_vector_fixed<double,10> > means;
+  std::vector<dbcll_euclidean_cluster_light<10> > all_clusters;
   cc_util.learn_codebook(class_id, K, fraction, J, max_it, means,all_clusters);
   
   dbcll_xml_write(all_clusters, means_path + "/lowest_sse_means_info.xml");
   
   //write new means to file
-  vcl_ofstream means_ofs((means_path + "/lowest_sse_means.txt").c_str());
+  std::ofstream means_ofs((means_path + "/lowest_sse_means.txt").c_str());
   means_ofs.precision(15);
   means_ofs << means.size() << "\n";
   if(means_ofs.is_open())
@@ -75,7 +75,7 @@ bool bof_learn_category_codebook_process(bprb_func_process& pro)
     }
   
   else
-    vcl_cerr << "Could not open file: " << (means_path + "/lowest_sse_means.txt") << "\n";
+    std::cerr << "Could not open file: " << (means_path + "/lowest_sse_means.txt") << "\n";
   
   means_ofs.close();
   

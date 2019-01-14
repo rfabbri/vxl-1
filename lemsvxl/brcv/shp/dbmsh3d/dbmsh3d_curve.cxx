@@ -15,9 +15,9 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
-#include <vcl_iterator.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <iterator>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -39,7 +39,7 @@ bool dbmsh3d_curve::contain_E (const dbmsh3d_edge* inputE) const
   return false;
 }
 
-void dbmsh3d_curve::get_Evec (vcl_vector<dbmsh3d_edge*>& Evec) const
+void dbmsh3d_curve::get_Evec (std::vector<dbmsh3d_edge*>& Evec) const
 {
   assert (data_type_ == C_DATA_TYPE_EDGE);
   for (unsigned int i=0; i<E_vec_.size(); i++) {
@@ -48,7 +48,7 @@ void dbmsh3d_curve::get_Evec (vcl_vector<dbmsh3d_edge*>& Evec) const
   }
 }
 
-void dbmsh3d_curve::get_Eset (vcl_set<dbmsh3d_edge*>& Eset) const
+void dbmsh3d_curve::get_Eset (std::set<dbmsh3d_edge*>& Eset) const
 {
   assert (data_type_ == C_DATA_TYPE_EDGE);
   for (unsigned int i=0; i<E_vec_.size(); i++) {
@@ -57,9 +57,9 @@ void dbmsh3d_curve::get_Eset (vcl_set<dbmsh3d_edge*>& Eset) const
   }
 }
 
-bool dbmsh3d_curve::all_Es_in_vec (const vcl_vector<dbmsh3d_edge*>& Evec) const
+bool dbmsh3d_curve::all_Es_in_vec (const std::vector<dbmsh3d_edge*>& Evec) const
 {
-  vcl_set<dbmsh3d_edge*> Eset;
+  std::set<dbmsh3d_edge*> Eset;
   get_Eset (Eset);
   for (unsigned int i=0; i<Evec.size(); i++) {
     Eset.erase (Evec[i]);
@@ -80,9 +80,9 @@ dbmsh3d_edge* dbmsh3d_curve::get_E_incident_N (const dbmsh3d_node* N) const
   }
 }
 
-dbmsh3d_edge* _remove_E_inc_V_from_set (vcl_set<dbmsh3d_edge*>& Eset, const dbmsh3d_vertex* V)
+dbmsh3d_edge* _remove_E_inc_V_from_set (std::set<dbmsh3d_edge*>& Eset, const dbmsh3d_vertex* V)
 {
-  vcl_set<dbmsh3d_edge*>::iterator it = Eset.begin();
+  std::set<dbmsh3d_edge*>::iterator it = Eset.begin();
   for (; it != Eset.end(); it++) {
     dbmsh3d_edge* E = (*it);
     if (E->is_V_incident (V)) {
@@ -95,12 +95,12 @@ dbmsh3d_edge* _remove_E_inc_V_from_set (vcl_set<dbmsh3d_edge*>& Eset, const dbms
 }
 
 void dbmsh3d_curve::get_Evec_incident_F (const dbmsh3d_face* F, const dbmsh3d_node* N,
-                                         vcl_vector<dbmsh3d_edge*>& Evec) const
+                                         std::vector<dbmsh3d_edge*>& Evec) const
 {
-  vcl_set<dbmsh3d_edge*> Eset;
+  std::set<dbmsh3d_edge*> Eset;
   get_Eset (Eset);
 
-  vcl_set<dbmsh3d_edge*> Eset_incF;
+  std::set<dbmsh3d_edge*> Eset_incF;
   //Loop through F.he chain and put all E's in Eset to Evec.
   dbmsh3d_halfedge* HE = F->halfedge();
   do {
@@ -121,7 +121,7 @@ void dbmsh3d_curve::get_Evec_incident_F (const dbmsh3d_face* F, const dbmsh3d_no
 }
 
 void dbmsh3d_curve::get_Eset_S_M (const dbmsh3d_vertex* M, 
-                                  vcl_set<dbmsh3d_edge*>& Eset) const
+                                  std::set<dbmsh3d_edge*>& Eset) const
 {
   for (unsigned int i=0; i<E_vec_.size(); i++) {
     dbmsh3d_edge* E = E_vec_[i];
@@ -135,7 +135,7 @@ void dbmsh3d_curve::get_Eset_S_M (const dbmsh3d_vertex* M,
 }
 
 void dbmsh3d_curve::get_Eset_M_E (const dbmsh3d_vertex* M, 
-                                  vcl_set<dbmsh3d_edge*>& Eset) const
+                                  std::set<dbmsh3d_edge*>& Eset) const
 {
   for (int i=int(E_vec_.size())-1; i>=0; i--) {
     dbmsh3d_edge* E = E_vec_[i];
@@ -173,7 +173,7 @@ dbmsh3d_edge* dbmsh3d_curve::get_1st_non_shared_E () const
 //  Fine-scale fs_edges (E_vec) Modification Functions 
 //###############################################################
 
-void dbmsh3d_curve::add_E_vec_to_front (const vcl_vector<dbmsh3d_edge*>& E_vec)
+void dbmsh3d_curve::add_E_vec_to_front (const std::vector<dbmsh3d_edge*>& E_vec)
 {
   if (E_vec.size() == 0)
     return;
@@ -182,7 +182,7 @@ void dbmsh3d_curve::add_E_vec_to_front (const vcl_vector<dbmsh3d_edge*>& E_vec)
   E_vec_.insert (E_vec_.begin(), E_vec.begin(), E_vec.end());
 }
 
-void dbmsh3d_curve::check_add_E_vec_to_front (vcl_vector<dbmsh3d_edge*>& E_vec)
+void dbmsh3d_curve::check_add_E_vec_to_front (std::vector<dbmsh3d_edge*>& E_vec)
 {
   //Fix identical entries at the end of E_vec and and the front of E_vec_.
   while (E_vec_.size() && E_vec.size() && E_vec_[0] == E_vec.back()) {
@@ -193,7 +193,7 @@ void dbmsh3d_curve::check_add_E_vec_to_front (vcl_vector<dbmsh3d_edge*>& E_vec)
   add_E_vec_to_front (E_vec);
 }
 
-void dbmsh3d_curve::add_E_vec_to_back (const vcl_vector<dbmsh3d_edge*>& E_vec)
+void dbmsh3d_curve::add_E_vec_to_back (const std::vector<dbmsh3d_edge*>& E_vec)
 {
   if (E_vec.size() == 0)
     return;
@@ -202,7 +202,7 @@ void dbmsh3d_curve::add_E_vec_to_back (const vcl_vector<dbmsh3d_edge*>& E_vec)
   E_vec_.insert (E_vec_.end(), E_vec.begin(), E_vec.end());
 }
 
-void dbmsh3d_curve::check_add_E_vec_to_back (vcl_vector<dbmsh3d_edge*>& E_vec)
+void dbmsh3d_curve::check_add_E_vec_to_back (std::vector<dbmsh3d_edge*>& E_vec)
 {
   //Fix identical entries at the end of E_vec_ and the front of E_vec.
   while (E_vec_.size() && E_vec.size() && E_vec[0] == E_vec_.back()) {
@@ -217,7 +217,7 @@ void dbmsh3d_curve::check_add_E_vec_to_back (vcl_vector<dbmsh3d_edge*>& E_vec)
 //  Fine-scale fs_vertices (V_vec) Query Functions 
 //##########################################################
 
-void dbmsh3d_curve::get_V_vec (vcl_vector<dbmsh3d_vertex*>& Vvec) const
+void dbmsh3d_curve::get_V_vec (std::vector<dbmsh3d_vertex*>& Vvec) const
 {
   assert (Vvec.size() == 0);
 
@@ -263,7 +263,7 @@ void dbmsh3d_curve::get_V_vec (vcl_vector<dbmsh3d_vertex*>& Vvec) const
   }
 }
 
-void dbmsh3d_curve::get_V_set (vcl_set<dbmsh3d_vertex*>& Vset) const
+void dbmsh3d_curve::get_V_set (std::set<dbmsh3d_vertex*>& Vset) const
 {
   if (data_type_ == C_DATA_TYPE_EDGE) {
     assert (E_vec_.size() != 0);
@@ -320,7 +320,7 @@ bool dbmsh3d_curve::is_V_on_C (const dbmsh3d_vertex* inputV) const
 }
 
 void dbmsh3d_curve::get_V_set_S_M (const dbmsh3d_vertex* M, 
-                                  vcl_set<dbmsh3d_vertex*>& Vset) const
+                                  std::set<dbmsh3d_vertex*>& Vset) const
 {  
   dbmsh3d_vertex* V = s_N()->V();  
   if (V == M) {
@@ -339,7 +339,7 @@ void dbmsh3d_curve::get_V_set_S_M (const dbmsh3d_vertex* M,
 }
 
 void dbmsh3d_curve::get_V_set_M_E (const dbmsh3d_vertex* M, 
-                                  vcl_set<dbmsh3d_vertex*>& Vset) const
+                                  std::set<dbmsh3d_vertex*>& Vset) const
 {
   dbmsh3d_vertex* V = e_N()->V();
   if (V == M) {
@@ -428,7 +428,7 @@ double dbmsh3d_curve::compute_length_Vs () const
 void dbmsh3d_curve::_reverse_V_vec()
 {
   assert (data_type_ == C_DATA_TYPE_VERTEX);
-  vcl_reverse (V_vec_.begin(), V_vec_.end());
+  std::reverse (V_vec_.begin(), V_vec_.end());
 }
 
 //: insert the curve C's vertices to the current dbmsh3d_curve
@@ -438,7 +438,7 @@ void dbmsh3d_curve::insert_Vs_of_C (dbmsh3d_curve* C, dbmsh3d_node* N)
   assert (data_type_ == C_DATA_TYPE_EDGE);
   assert (C->sV()->id() == N->id() || C->eV()->id() == N->id());
 
-  vcl_vector<dbmsh3d_vertex*> Vvec;
+  std::vector<dbmsh3d_vertex*> Vvec;
   C->get_V_vec (Vvec);
 
   const dbmsh3d_vertex* C_s_N = Vvec[0];
@@ -504,13 +504,13 @@ bool dbmsh3d_curve::shared_E_incident_to_V (const dbmsh3d_vertex* V) const
 }
 
   //: Return true if all shared_E[] are with one of the given set of C's.
-bool dbmsh3d_curve::shared_E_with_Cset (vcl_set<dbmsh3d_curve*>& shared_E_Cset) const
+bool dbmsh3d_curve::shared_E_with_Cset (std::set<dbmsh3d_curve*>& shared_E_Cset) const
 {
   //Loop through each shared_E of MC and try to remove isolated entry from other curves.
   for (dbmsh3d_ptr_node* cur = shared_E_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
     bool E_in_Cset = false;
-    vcl_set<dbmsh3d_curve*>::iterator it = shared_E_Cset.begin();
+    std::set<dbmsh3d_curve*>::iterator it = shared_E_Cset.begin();
     for (; it != shared_E_Cset.end(); it++) {
       dbmsh3d_curve* C = (*it);
       if (C->is_E_shared (E))
@@ -628,7 +628,7 @@ bool dbmsh3d_curve::check_integrity ()
   }
 
   //Check integrity of all shared and special edges.
-  vcl_set<dbmsh3d_edge*> shared_Eset;
+  std::set<dbmsh3d_edge*> shared_Eset;
   for (dbmsh3d_ptr_node* cur = shared_E_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
     shared_Eset.insert (E);
@@ -698,7 +698,7 @@ dbmsh3d_curve* dbmsh3d_curve::clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2) const
   return C2;
 }
 
-void dbmsh3d_curve::getInfo (vcl_ostringstream& ostrm)
+void dbmsh3d_curve::getInfo (std::ostringstream& ostrm)
 {
   //not yet implemented.
   assert (0);
@@ -719,13 +719,13 @@ double dbmsh3d_curve::compute_length () const
 
 bool Cs_sharing_E (const dbmsh3d_curve* C1, const dbmsh3d_curve* C2)
 {
-  vcl_set<void*> C1_shared_Es, C2_shared_Es;
+  std::set<void*> C1_shared_Es, C2_shared_Es;
   C1->get_shared_Es (C1_shared_Es);
   C2->get_shared_Es (C2_shared_Es);
-  vcl_set<void*> result;
-  vcl_set_intersection (C1_shared_Es.begin(), C1_shared_Es.end(),
+  std::set<void*> result;
+  std::set_intersection (C1_shared_Es.begin(), C1_shared_Es.end(),
                         C2_shared_Es.begin(), C2_shared_Es.end(),
-                        vcl_inserter(result, result.end()));
+                        std::inserter(result, result.end()));
   return result.size() != 0;
 }
 
@@ -765,7 +765,7 @@ bool C_get_non_dup_S (dbmsh3d_curve* C, dbmsh3d_sheet* & tabS, dbmsh3d_sheet* & 
 {
   tabS = NULL;
   baseS = NULL;
-  vcl_vector<dbmsh3d_face*> S_vec;
+  std::vector<dbmsh3d_face*> S_vec;
   C->get_incident_Fs (S_vec);
   if (S_vec.size() != 3)
     return false;

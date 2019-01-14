@@ -1,6 +1,6 @@
 #include <vul/vul_timer.h>
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <imgr/imgr_bounded_image_view_3d.h>
@@ -10,7 +10,7 @@
 
 static void test_scan_resource(int argc, char* argv[])
 {
-  vcl_cout << "===========Testing scan resource ========\n";
+  std::cout << "===========Testing scan resource ========\n";
   //the dummy scan
   imgr_dummy_scan scan;
   //read in the resources using the file path provided by scan
@@ -36,7 +36,7 @@ static void test_scan_resource(int argc, char* argv[])
   //actually read the data
   vul_timer t;
   imgr_image_view_3d_base_sptr v3d_ptr = resc->get_bounded_view(box);
-  vcl_cout << "Create a "<< resc->ni() << " x " << resc->nj() 
+  std::cout << "Create a "<< resc->ni() << " x " << resc->nj() 
            << " x " << resc->nk() << " 3-d view "<< t.real()/1000.0 << " secs.\n";
 
   //Cast to the desired type
@@ -44,7 +44,7 @@ static void test_scan_resource(int argc, char* argv[])
   //Get a 2-d view out of the 3-d view
   dbil_bounded_image_view<unsigned short> dv = v3d.view_2d(0);
   //Check its bonifides
-  vcl_cout << "(ni, nj, nib, njb, ib0, jb0)=(" 
+  std::cout << "(ni, nj, nib, njb, ib0, jb0)=(" 
            << dv.ni() << ' ' << dv.nj() << ' ' << dv.nib() 
            << ' ' << dv.njb() << ' ' << dv.ib0() << ' '
            << dv.jb0() << ")\n";

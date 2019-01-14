@@ -6,8 +6,8 @@
 // 
 #include <testlib/testlib_test.h>
 #include <proj/bioproj_nu_g_filter.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <fstream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <proj/error_functions.h>
 
@@ -25,7 +25,7 @@ public:
 
   double f_(double zeta)
   {
-    return vcl_exp(-(vcl_pow(xi_,2.0) - vcl_pow(zeta,2.0)) / (2*vcl_pow(sigma_,2.0)));
+    return std::exp(-(std::pow(xi_,2.0) - std::pow(zeta,2.0)) / (2*std::pow(sigma_,2.0)));
   }
 protected:
   double sigma_;
@@ -65,10 +65,10 @@ void test_simpson_integral()
       vnl_adaptsimpson_integral simpson_integral;
       integral_val = simpson_integral.integral(&f, 0.0, double(xi), 1e-6);
     }
-    double term1 = 1 / (vnl_math::pi * (vcl_pow(sigma,2.0)));
-    double term2 = xi / (vcl_pow(sigma,2.0));
+    double term1 = 1 / (vnl_math::pi * (std::pow(sigma,2.0)));
+    double term2 = xi / (std::pow(sigma,2.0));
     double val = term1 * (1 - term2 * integral_val);
-    vcl_cout << val << vcl_endl;
+    std::cout << val << std::endl;
   }
 #endif
 }

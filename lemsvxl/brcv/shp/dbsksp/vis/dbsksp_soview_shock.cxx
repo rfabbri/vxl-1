@@ -50,8 +50,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbsksp_soview_shock_node::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_shock_node::
+print(std::ostream& os) const
 {
   this->node()->print(os);
   return os;
@@ -123,8 +123,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbsksp_soview_shock_edge_chord::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_shock_edge_chord::
+print(std::ostream& os) const
 {
   this->edge()->print(os);
   return os;
@@ -196,8 +196,8 @@ get_centroid(float* x, float* y) const
 
 // ----------------------------------------------------------------------------
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbsksp_soview_shock_geom::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_shock_geom::
+print(std::ostream& os) const
 {
   this->edge()->print(os);
   return os;
@@ -263,8 +263,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbsksp_soview_contact_shock::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_contact_shock::
+print(std::ostream& os) const
 {
   this->node()->print(os);
   return os;
@@ -279,7 +279,7 @@ print(vcl_ostream& os) const
 
 // draw a polyline with a whilte stripe around it
 void draw_polyline_w_white_boundary(const vgui_soview* so, 
-                                      const vcl_vector<vgl_point_2d<double > >& pts)
+                                      const std::vector<vgl_point_2d<double > >& pts)
 {
   vgui_style::new_style(1.0f, 1.0f, 1.0f, 5, 5)->apply_all();
 
@@ -315,7 +315,7 @@ draw() const
   num_segments = vnl_math::min(num_segments, 100);
 
   // list of points of the polyline to draw
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   pts.reserve(num_segments + 1);
   for (int i=0; i<=num_segments; ++i)
   {
@@ -361,8 +361,8 @@ get_centroid(float* x, float* y) const
 }
 
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_bnd_arc::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_bnd_arc::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -495,8 +495,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbsksp_soview_shapelet::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_shapelet::
+print(std::ostream& os) const
 {
     return os;
 }

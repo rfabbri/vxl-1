@@ -8,15 +8,15 @@
 #include <testlib/testlib_test.h>
 #include <xmvg/xmvg_gaussian_edge_detector_descriptor.h>
 #include <xmvg/xmvg_gaussian_edge_detector_x_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 static void test_xmvg_gaussian_edge_detector()
 {
-  vcl_cout << "---test gaussian edge detector descriptor---" << vcl_endl;
+  std::cout << "---test gaussian edge detector descriptor---" << std::endl;
   double sigma = 0.1;
   vgl_point_3d<double> centre(0.0, 0.0, 0.0);
   xmvg_gaussian_edge_detector_descriptor gedd(sigma, centre);
@@ -28,7 +28,7 @@ static void test_xmvg_gaussian_edge_detector()
   TEST("box test centroid test", gedd.box().centroid(), vgl_point_3d<double>(0.0,0.0,0.0));
 
   
-  vcl_cout << "---test filter 3d splat---" << vcl_endl;
+  std::cout << "---test filter 3d splat---" << std::endl;
   // construct the initial camera
   xmvg_source source;
   vnl_double_3x3 m(0.0);
@@ -59,18 +59,18 @@ static void test_xmvg_gaussian_edge_detector()
   tr.set_rotation_about_axis(axis, -theta);
   
   xmvg_perspective_camera<double> cam_rot = xmvg_perspective_camera<double>::postmultiply(cam, tr);
-  vcl_cout << cam_rot.camera_center() << vcl_endl;
+  std::cout << cam_rot.camera_center() << std::endl;
   //construct the edge detector
   xmvg_gaussian_edge_detector_x_3d ged(gedd);
 
   clock_t t1,t2;
-  t1 = vcl_clock();
+  t1 = std::clock();
   xmvg_atomic_filter_2d<double> res(ged.splat(vgl_point_3d<double> (0.0, 0.0, 0.0), cam_rot));
-  t2 = vcl_clock();
+  t2 = std::clock();
   double tt = (double)(t2-t1) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is: " << tt << vcl_endl;
-  vcl_cout << "Splat location is: " << res.location() << vcl_endl;
-  vcl_cout << "Splat size is: " << res.size() << vcl_endl;
+  std::cout << "Elapsed time is: " << tt << std::endl;
+  std::cout << "Splat location is: " << res.location() << std::endl;
+  std::cout << "Splat size is: " << res.size() << std::endl;
   //unused variables
   /*int sx = res.size().get(0);
   int sy = res.size().get(1);*/
@@ -79,21 +79,21 @@ static void test_xmvg_gaussian_edge_detector()
 #if 0
   //write as ppm to view
   FILE *fp;
-  fp = vcl_fopen("D:\\MyDocs\\Temp\\file.ppm", "w");
-  vcl_fprintf(fp,"P3\n%d %d\n5000\n", sx, sy);
+  fp = std::fopen("D:\\MyDocs\\Temp\\file.ppm", "w");
+  std::fprintf(fp,"P3\n%d %d\n5000\n", sx, sy);
   for(int j=0; j<sy; j++)
   {
-    vcl_cout << j << vcl_endl;
+    std::cout << j << std::endl;
     for(int i=0; i<sx; i++)
     {
       if(res.weights().get(i,j) < 0)
-        vcl_fprintf(fp, "%d %d %d ", 0, 0, int(-10000*res.weights().get(i,j)));
+        std::fprintf(fp, "%d %d %d ", 0, 0, int(-10000*res.weights().get(i,j)));
       else
-        vcl_fprintf(fp, "%d %d %d ", int(10000*res.weights().get(i,j)), 0, 0);
+        std::fprintf(fp, "%d %d %d ", int(10000*res.weights().get(i,j)), 0, 0);
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   } 
-  vcl_fclose(fp);
+  std::fclose(fp);
 #endif
 }
 

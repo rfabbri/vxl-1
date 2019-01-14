@@ -12,8 +12,8 @@
 #include <vul/vul_file.h>
 #include <vul/vul_temp_filename.h>
 
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 //#include <vnl/vnl_math.h>
 
@@ -27,7 +27,7 @@ dbknee_surface_mesh_process()
     "-output_ply_file", bpro1_filepath("",".ply"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -49,19 +49,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_surface_mesh_process::
+std::vector< std::string > dbknee_surface_mesh_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_surface_mesh_process::
+std::vector< std::string > dbknee_surface_mesh_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -108,42 +108,42 @@ finish()
 
 
 void dbknee_surface_mesh_process::
-surface_mesh(const vcl_string& input_p3d_file,
-             const vcl_string& output_ply_file)
+surface_mesh(const std::string& input_p3d_file,
+             const std::string& output_ply_file)
 {
   // system call to process the data
 
   // Change directory
-  vcl_string input_folder = vul_file::dirname(input_p3d_file);
+  std::string input_folder = vul_file::dirname(input_p3d_file);
   vul_file::change_directory(input_folder);
 
   
 
   // Run surface reconstruction using shock
-  vcl_stringstream str1;
-  vcl_string p3d_name = vul_file::strip_directory(input_p3d_file);
+  std::stringstream str1;
+  std::string p3d_name = vul_file::strip_directory(input_p3d_file);
   str1 << "dbsk3dappw -seg 1"
     << " -f " << vul_file::strip_extension(p3d_name);
     // "SP1133R_TESTRETEST7_smooth_outer"
-  vcl_system(str1.str().c_str());
+  std::system(str1.str().c_str());
 
   // Convert the output to a readable format
-  vcl_stringstream str2;
-  vcl_string output_folder = vul_file::dirname(output_ply_file);
-  vcl_string default_surface_file = vul_file::strip_extension(p3d_name) + "-surface.ply";
+  std::stringstream str2;
+  std::string output_folder = vul_file::dirname(output_ply_file);
+  std::string default_surface_file = vul_file::strip_extension(p3d_name) + "-surface.ply";
   
   str2 << "mesh2ply" 
     << " " << default_surface_file 
     << " " << output_ply_file;
-  vcl_system(str2.str().c_str());
+  std::system(str2.str().c_str());
 
   // Delete intermediate file
   
-  vcl_string f0 = input_folder + "/" + default_surface_file;
+  std::string f0 = input_folder + "/" + default_surface_file;
   if (vul_file::dirname(f0) != vul_file::dirname(output_ply_file) ||
     vul_file::strip_directory(f0) != vul_file::strip_directory(output_ply_file))
   {
-    vcl_remove(f0.c_str());
+    std::remove(f0.c_str());
   }
 
   

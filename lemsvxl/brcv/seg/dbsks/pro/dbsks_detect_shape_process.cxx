@@ -31,7 +31,7 @@
 dbsks_detect_shape_process::
 dbsks_detect_shape_process()
 {
-  vcl_vector<vcl_string > opt_mode;
+  std::vector<std::string > opt_mode;
   opt_mode.push_back("Complete one pass with model_height"); // 0
   opt_mode.push_back("do nothing - for now"); // 1
   opt_mode.push_back("Initialize only"); // 2
@@ -74,16 +74,16 @@ dbsks_detect_shape_process()
     !parameters()->add("shapelet_grid half_num_rA: " , "half_num_rA", int(1) ) ||
 
     !parameters()->add("Shock graph statistics file: ", "stats_file", 
-    vcl_string("D:/vision/data/symseg/ETHZShapeClasses/giraffes_stats.xml") ) || 
+    std::string("D:/vision/data/symseg/ETHZShapeClasses/giraffes_stats.xml") ) || 
     
     !parameters()->add("Prefix of record-keeping files: ", "tmp_prefix", 
-    vcl_string("D:/vision/data/symseg/temp/tmp") ) || 
+    std::string("D:/vision/data/symseg/temp/tmp") ) || 
 
     !parameters()->add("Temporary data folder: ", "temp_data_folder", 
-    vcl_string("D:/vision/data/symseg/temp/") )
+    std::string("D:/vision/data/symseg/temp/") )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -103,17 +103,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_detect_shape_process::
+std::string dbsks_detect_shape_process::
 name()
 { 
   return "Detect Shape"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_detect_shape_process::
+std::vector< std::string > dbsks_detect_shape_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsks_shapematch" );
   to_return.push_back( "dbsksp_shock" );
   to_return.push_back( "image" );
@@ -122,10 +122,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_detect_shape_process::
+std::vector< std::string > dbsks_detect_shape_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("dbsksp_shock");
   to_return.push_back("vsol2D");
 
@@ -152,8 +152,8 @@ bool dbsks_detect_shape_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_detect_shape_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_detect_shape_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -226,15 +226,15 @@ execute()
   assert(sigma_deform >0);
 
   // Prefix of record-keeping files
-  vcl_string stats_file;
+  std::string stats_file;
   parameters()->get_value("stats_file", stats_file);
 
   // Prefix of record-keeping files
-  vcl_string tmp_prefix;
+  std::string tmp_prefix;
   parameters()->get_value("tmp_prefix", tmp_prefix);
 
   // folder to save temporary files
-  vcl_string temp_data_folder;
+  std::string temp_data_folder;
   parameters()->get_value("temp_data_folder", temp_data_folder);
   
 
@@ -321,16 +321,16 @@ execute()
     dbsks_shock_graph_stats stats;
     if (!x_read(stats_file, sksp_storage->shock_graph(), stats))
     {
-      vcl_cout << "ERROR: could not read shock graph statistics file.\n";
+      std::cout << "ERROR: could not read shock graph statistics file.\n";
       //return false;
     }
 
-    vcl_cout << "Set shock graph statistics.\n";
+    std::cout << "Set shock graph statistics.\n";
     dp_engine->set_shock_graph_stats(stats);
     
 
 
-    vcl_cout << "Now run DP on the selected image. \n";
+    std::cout << "Now run DP on the selected image. \n";
 
 
     // set tolerance near zero for the edges (1/2 grid step);
@@ -349,23 +349,23 @@ execute()
     //double current_cost = 
     //  dp_engine->compute_graph_cost(sksp_storage->shock_graph(), true, true);
 
-    //vcl_cout << "Cost of current graph = " << current_cost << "\n";
+    //std::cout << "Cost of current graph = " << current_cost << "\n";
     ///////////////////////////////////////////////////////////////////////////////
 
-    vcl_cout << "Done.\n";
+    std::cout << "Done.\n";
 
     //// display real cost of the fragments
-    //dp_engine->display_real_cost(dp_engine->graph_opt_i_state_, vcl_cout);
+    //dp_engine->display_real_cost(dp_engine->graph_opt_i_state_, std::cout);
 
 
-    vcl_cout << "Create new output shock storage.\n";
+    std::cout << "Create new output shock storage.\n";
 
     // create the output storage class
     dbsksp_shock_storage_sptr out_sksp_storage = dbsksp_shock_storage_new();
     output_data_[0].push_back(out_sksp_storage);
 
     // Result shock graph
-    vcl_cout << "Create new shock graph.\n";
+    std::cout << "Create new shock graph.\n";
     dbsksp_shock_graph_sptr new_shock_graph = 
       new dbsksp_shock_graph(*dp_engine->graph());
     new_shock_graph->compute_all_dependent_params();
@@ -373,7 +373,7 @@ execute()
     // Save to storage class
     out_sksp_storage->set_shock_graph(new_shock_graph);
     
-    vcl_cout << "Export optimal shapelets to new shock storage class.\n";
+    std::cout << "Export optimal shapelets to new shock storage class.\n";
     if (!dp_engine->shapelet_list.empty())
     {
       for (unsigned i =0; i<dp_engine->shapelet_list.size(); ++i)
@@ -383,7 +383,7 @@ execute()
     }
 
 
-    vcl_cout << "Export boundary of sub-optimal solutions to a vsol2D storage.\n";
+    std::cout << "Export boundary of sub-optimal solutions to a vsol2D storage.\n";
     
     // create the output storage class
     vidpro1_vsol2D_storage_sptr vsol2D_storage = vidpro1_vsol2D_storage_new();
@@ -391,11 +391,11 @@ execute()
 
     for (unsigned i =0; i < dp_engine->list_graph_opt_i_state_.size(); ++i)
     {
-      vcl_vector<vsol_spatial_object_2d_sptr > vsol_list = 
+      std::vector<vsol_spatial_object_2d_sptr > vsol_list = 
         dp_engine->trace_graph_boundary(dp_engine->list_graph_opt_i_state_[i]);
       vsol2D_storage->add_objects(vsol_list);
     }
-    vcl_cout << "All done.\n";
+    std::cout << "All done.\n";
 
   }
   else if (opt_mode == 1) // Refine and run once

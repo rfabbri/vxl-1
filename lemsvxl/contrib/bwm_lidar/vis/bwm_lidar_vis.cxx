@@ -3,13 +3,13 @@
 //  MingChing Chang
 //  Dec 13, 2007.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
 
-#include <vcl_string.h>
-#include <vcl_iomanip.h>
+#include <string>
+#include <iomanip>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
@@ -135,7 +135,7 @@ SoSeparator* vis_lidar_pixel_color (vil_image_view<int>& labels,
         continue; //skip all ground pixels.
       lidar_pixel p (l, height(i,j), float(colors(i,j,0))/255, float(colors(i,j,1))/255, float(colors(i,j,2))/255);
       //skip flat cube
-      if (vcl_fabs (height(i,j) - ground_height) < 0.1)
+      if (std::fabs (height(i,j) - ground_height) < 0.1)
         continue;
       root->addChild (draw_range_pixel_cube (&p, shift_x + i, shift_y + j, shift_z, ground_height));
     }
@@ -148,10 +148,10 @@ SoSeparator* vis_lidar_pixel_color (vil_image_view<int>& labels,
 
 //: This function takes the 32 views and camera positions and a building mesh
 //  and produce textured mapping buildings as a VRML file.
-void generate_texture_bld (vcl_vector<vil_image_view<vxl_byte> >& views, 
-                           vcl_vector<vnl_matrix_fixed<double,3,4> >& camera_matrices,
-                           vcl_vector<vnl_vector_fixed<double,3> >& camera_center,
-                           vcl_vector<vnl_vector_fixed<double,3> >& camera_view_direction,
+void generate_texture_bld (std::vector<vil_image_view<vxl_byte> >& views, 
+                           std::vector<vnl_matrix_fixed<double,3,4> >& camera_matrices,
+                           std::vector<vnl_vector_fixed<double,3> >& camera_center,
+                           std::vector<vnl_vector_fixed<double,3> >& camera_view_direction,
                            dbmsh3d_textured_mesh_mc* M,
                            const char* out_file)
 {
@@ -167,7 +167,7 @@ void generate_texture_bld (vcl_vector<vil_image_view<vxl_byte> >& views,
 
 #include <dbsol/dbsol_file_io.h>
 
-bool save_bw_image (vil_image_view<bool>& img, vcl_string filename)
+bool save_bw_image (vil_image_view<bool>& img, std::string filename)
 {
   vil_image_view<vxl_byte> tmp (img.ni(), img.nj(), 1);
   for (unsigned int j=0; j<img.nj(); j++)
@@ -180,7 +180,7 @@ bool save_bw_image (vil_image_view<bool>& img, vcl_string filename)
 }
 
 
-SoSeparator* draw_filled_polygon (vcl_vector<vsol_point_2d_sptr>& poly_points, const float height,
+SoSeparator* draw_filled_polygon (std::vector<vsol_point_2d_sptr>& poly_points, const float height,
                                   const SbColor& color, const float fTransparency)
 {
   SoSeparator* root = new SoSeparator;
@@ -216,7 +216,7 @@ double estimate_ground_height (vil_image_view<vxl_byte>& img_view_label,
                                vil_image_view<vxl_byte>& img_view_max)
 {  
   //Estimate the ground height and draw the ground plane.
-  vcl_vector<double> gnd_height;
+  std::vector<double> gnd_height;
   for (unsigned int j=0; j<img_view_label.nj(); j++)
     for (unsigned int i=0; i<img_view_label.ni(); i++)
       if (img_view_label(i,j,0) == 0) {
@@ -226,7 +226,7 @@ double estimate_ground_height (vil_image_view<vxl_byte>& img_view_label,
 
   //Estimate the median ground height.
   assert (gnd_height.size() != 0);
-  vcl_nth_element (gnd_height.begin(),
+  std::nth_element (gnd_height.begin(),
                    gnd_height.begin() + int(gnd_height.size()/2), 
                    gnd_height.end());
   double ground_height = *(gnd_height.begin() + int(gnd_height.size()/2));
@@ -243,7 +243,7 @@ SoSeparator* draw_buildings (vil_image_view<vxl_byte>& img_view_label,
   //Also put all labels to a set.
   vil_image_view<int> bld_label_img (img_view_label.ni(), img_view_label.nj());
   bld_label_img.fill (0);
-  vcl_set<int> bld_label_set;
+  std::set<int> bld_label_set;
 
   //Go through the labeled image and generate a building labeling image.
   for (unsigned int j=0; j<img_view_label.nj(); j++)
@@ -256,21 +256,21 @@ SoSeparator* draw_buildings (vil_image_view<vxl_byte>& img_view_label,
           bld_label_set.insert (label);
       }
     }    
-  vul_printf (vcl_cout, "  building labeling image generated.\n");
+  vul_printf (std::cout, "  building labeling image generated.\n");
 
   //Go through each building label and generate a binary image for contour tracing.
-  vcl_set<int>::iterator it = bld_label_set.begin(); 
+  std::set<int>::iterator it = bld_label_set.begin(); 
   int count = 0;
-  vul_printf (vcl_cout, "    drawing building: ");
+  vul_printf (std::cout, "    drawing building: ");
   for (; it != bld_label_set.end(); it++, count++) {
-    vul_printf (vcl_cout, "%d ", count);
+    vul_printf (std::cout, "%d ", count);
     int label = *it;
     vil_image_view<bool> bld_bin (bld_label_img.ni(), bld_label_img.nj());
     bld_bin.fill (false);
 
     //Create building binary image.
     //Also estimate the average building height from lidar_image_max.
-    vcl_vector<double> bld_height;
+    std::vector<double> bld_height;
 
     //get building color from the first non-zero pixel.
     SbColor color (0, 0, 0);
@@ -306,14 +306,14 @@ SoSeparator* draw_buildings (vil_image_view<vxl_byte>& img_view_label,
     ctracer.trace(bld_bin);
 
     //Get the largest contour points.
-    ///vcl_vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
+    ///std::vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
 
     //Go through all contours which is not too small.
     for (unsigned int c=0; c<ctracer.contours().size(); c++) {
-      vcl_vector<vsol_point_2d_sptr> poly_points_0 = ctracer.contours()[c];
+      std::vector<vsol_point_2d_sptr> poly_points_0 = ctracer.contours()[c];
 
       //line fitting.
-      vcl_vector<vsol_point_2d_sptr> poly_points; 
+      std::vector<vsol_point_2d_sptr> poly_points; 
       fit_lines_to_contour (poly_points_0, 0.05, poly_points);
 
       if (poly_points.size() < 3) //10
@@ -335,7 +335,7 @@ SoSeparator* draw_buildings (vil_image_view<vxl_byte>& img_view_label,
       
       //Estimate the median building height.
       assert (bld_height.size() != 0);
-      vcl_nth_element (bld_height.begin(),
+      std::nth_element (bld_height.begin(),
                        bld_height.begin() + int(bld_height.size()/2), 
                        bld_height.end());
       double median_height = *(bld_height.begin() + int(bld_height.size()/2));
@@ -359,7 +359,7 @@ SoSeparator* draw_buildings (vil_image_view<vxl_byte>& img_view_label,
     }
     bld_height.clear();
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   return root;
 }
@@ -374,7 +374,7 @@ SoSeparator* draw_vegetation (vil_image_view<vxl_byte>& img_view_label,
   //Also put all labels to a set.
   vil_image_view<int> veg_label_img (img_view_label.ni(), img_view_label.nj());
   veg_label_img.fill (0);
-  vcl_set<int> veg_label_set;
+  std::set<int> veg_label_set;
 
   //Go through the labeled image and generate a building labeling image.
   for (unsigned int j=0; j<img_view_label.nj(); j++)
@@ -389,21 +389,21 @@ SoSeparator* draw_vegetation (vil_image_view<vxl_byte>& img_view_label,
           veg_label_set.insert (label);
       }
     }
-  vul_printf (vcl_cout, "  vegetation labeling image generated.\n");
+  vul_printf (std::cout, "  vegetation labeling image generated.\n");
 
   //Go through each vegetation label and generate a binary image for contour tracing.
-  vcl_set<int>::iterator it = veg_label_set.begin(); 
+  std::set<int>::iterator it = veg_label_set.begin(); 
   int count = 0;
-  vul_printf (vcl_cout, "    drawing vegetation: ");
+  vul_printf (std::cout, "    drawing vegetation: ");
   for (; it != veg_label_set.end(); it++, count++) {
-    vul_printf (vcl_cout, "%d ", count);
+    vul_printf (std::cout, "%d ", count);
     int label = *it;
     vil_image_view<bool> veg_bin (veg_label_img.ni(), veg_label_img.nj());
     veg_bin.fill (false);
 
     //Create vegetation binary image.
     //Also estimate the average vegetation height from lidar_image_max.
-    vcl_vector<double> veg_height;
+    std::vector<double> veg_height;
 
     //get vegetation color from the first non-zero pixel.
     SbColor color (0, 0, 0);
@@ -436,11 +436,11 @@ SoSeparator* draw_vegetation (vil_image_view<vxl_byte>& img_view_label,
     ctracer.trace(veg_bin);
 
     //Get the largest contour's polygon points.
-    ///vcl_vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
+    ///std::vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
 
     //Go through all contours which is not too small.
     for (unsigned int c=0; c<ctracer.contours().size(); c++) {
-      vcl_vector<vsol_point_2d_sptr> poly_points = ctracer.contours()[c];
+      std::vector<vsol_point_2d_sptr> poly_points = ctracer.contours()[c];
       if (poly_points.size() < 10)
         continue;
 
@@ -462,7 +462,7 @@ SoSeparator* draw_vegetation (vil_image_view<vxl_byte>& img_view_label,
       
       //Estimate the median building height.
       assert (veg_height.size() != 0);
-      vcl_nth_element (veg_height.begin(),
+      std::nth_element (veg_height.begin(),
                        veg_height.begin() + int(veg_height.size()/2), 
                        veg_height.end());
       double median_height = *(veg_height.begin() + int(veg_height.size()/2));
@@ -486,12 +486,12 @@ SoSeparator* draw_vegetation (vil_image_view<vxl_byte>& img_view_label,
     }
     veg_height.clear();
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   return root;
 }
 
-void _check_add_v (const double v, vcl_vector<double>& value)
+void _check_add_v (const double v, std::vector<double>& value)
 {
   if (v)
     value.push_back (v);
@@ -500,7 +500,7 @@ void _check_add_v (const double v, vcl_vector<double>& value)
 int median_3x3 (vil_image_view<vxl_byte>& img_view_max, 
                 const int i, const int j, const int plane)
 {
-  vcl_vector<double> value;
+  std::vector<double> value;
   double v;
   if (i>0) {
     if (j>0)
@@ -526,7 +526,7 @@ int median_3x3 (vil_image_view<vxl_byte>& img_view_max,
 
   //Estimate the median ground height.
   assert (value.size() != 0);
-  vcl_nth_element (value.begin(),
+  std::nth_element (value.begin(),
                    value.begin() + int(value.size()/2), 
                    value.end());
   int median = *(value.begin() + int(value.size()/2));
@@ -567,7 +567,7 @@ SoSeparator* vis_lidar_labeled_image (vil_image_resource_sptr lidar_image_max,
                                       vil_image_resource_sptr lidar_image_min, 
                                       vil_image_resource_sptr lidar_image_labeled)
 {
-  vul_printf (vcl_cout, "vis_lidar_labeled_image(): image size %dx%d.\n",
+  vul_printf (std::cout, "vis_lidar_labeled_image(): image size %dx%d.\n",
               lidar_image_labeled->get_view()->ni(), lidar_image_labeled->get_view()->nj());
   SoSeparator* root = new SoSeparator;
 
@@ -624,9 +624,9 @@ SoSeparator* vis_lidar_labeled_data (vil_image_view<int>& labels,
                                      vnl_matrix<double>& height,
                                      vnl_matrix<int>& occupied,
                                      const double& ground_height,
-                                     vcl_vector<dbmsh3d_textured_mesh_mc*>& M_vec)
+                                     std::vector<dbmsh3d_textured_mesh_mc*>& M_vec)
 {
-  vul_printf (vcl_cout, "vis_lidar_labeled_data(): image size %dx%d.\n",
+  vul_printf (std::cout, "vis_lidar_labeled_data(): image size %dx%d.\n",
               labels.ni(), labels.nj());
   SoSeparator* root = new SoSeparator;
 
@@ -658,7 +658,7 @@ double estimate_ground_height (vil_image_view<int>& labels,
                                vnl_matrix<double>& height)
 {  
   //Estimate the ground height and draw the ground plane.
-  vcl_vector<double> gnd_height;
+  std::vector<double> gnd_height;
   for (unsigned int j=0; j<labels.nj(); j++)
     for (unsigned int i=0; i<labels.ni(); i++)
       if (labels(i,j) == 0) {
@@ -668,7 +668,7 @@ double estimate_ground_height (vil_image_view<int>& labels,
 
   //Estimate the median ground height.
   assert (gnd_height.size() != 0);
-  vcl_nth_element (gnd_height.begin(),
+  std::nth_element (gnd_height.begin(),
                    gnd_height.begin() + int(gnd_height.size()/2), 
                    gnd_height.end());
   double ground_height = *(gnd_height.begin() + int(gnd_height.size()/2));
@@ -684,7 +684,7 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
                              vil_image_view<unsigned char>& colors,
                              const bool use_labels_colored,
                              const double ground_height,
-                             vcl_vector<dbmsh3d_textured_mesh_mc*>& M_vec)
+                             std::vector<dbmsh3d_textured_mesh_mc*>& M_vec)
 {
   SoSeparator* root = new SoSeparator;
 
@@ -692,7 +692,7 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
   //Also put all labels to a set.
   vil_image_view<int> bld_label_img (labels.ni(), labels.nj());
   bld_label_img.fill (0);
-  vcl_set<int> bld_label_set;
+  std::set<int> bld_label_set;
 
   //Go through the labeled image and generate a building labeling image.
   for (unsigned int j=0; j<labels.nj(); j++)
@@ -705,24 +705,24 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
           bld_label_set.insert (l);
       }
     }    
-  vul_printf (vcl_cout, "  building labeling image generated.\n");
+  vul_printf (std::cout, "  building labeling image generated.\n");
 
   vil_structuring_element disk;
   disk.set_to_disk(1.5);
 
   //Go through each building label and generate a binary image for contour tracing.
-  vcl_set<int>::iterator it = bld_label_set.begin(); 
+  std::set<int>::iterator it = bld_label_set.begin(); 
   int count = 0;
-  vul_printf (vcl_cout, "    drawing building: ");
+  vul_printf (std::cout, "    drawing building: ");
   for (; it != bld_label_set.end(); it++, count++) {
-    vul_printf (vcl_cout, "%d ", count);
+    vul_printf (std::cout, "%d ", count);
     int label = *it;
     vil_image_view<bool> bld_bin (labels.ni(), labels.nj());
     bld_bin.fill (false);
 
     //Create building binary image.
     //Also estimate the average building height from lidar_image_max.
-    vcl_vector<double> bld_height;
+    std::vector<double> bld_height;
 
     //get building color from the first non-zero pixel.
     SbColor color (0, 0, 0);
@@ -783,17 +783,17 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
     ctracer.trace(bld_bin_closing); //bld_bin
 
     //Get the largest contour points.
-    ///vcl_vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
+    ///std::vector<vsol_point_2d_sptr> poly_points = ctracer.largest_contour();
 
     //Go through all contours which is not too small.
     for (unsigned int c=0; c<ctracer.contours().size(); c++) {
-      vcl_vector<vsol_point_2d_sptr> poly_points_0 = ctracer.contours()[c];
+      std::vector<vsol_point_2d_sptr> poly_points_0 = ctracer.contours()[c];
 
       if (poly_points_0.size() < 10)
         continue;
 
       //line fitting.
-      vcl_vector<vsol_point_2d_sptr> poly_points; 
+      std::vector<vsol_point_2d_sptr> poly_points; 
       fit_lines_to_contour (poly_points_0, 0.05, poly_points);
 
       if (poly_points.size() < 3) //10)
@@ -815,7 +815,7 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
       
       //Estimate the median building height.
       assert (bld_height.size() != 0);
-      vcl_nth_element (bld_height.begin(),
+      std::nth_element (bld_height.begin(),
                        bld_height.begin() + int(bld_height.size()/2), 
                        bld_height.end());
       double median_height = *(bld_height.begin() + int(bld_height.size()/2));
@@ -845,7 +845,7 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
     }
     bld_height.clear();
   }
-  vul_printf (vcl_cout, "\n %d building meshes created.\n", M_vec.size());
+  vul_printf (std::cout, "\n %d building meshes created.\n", M_vec.size());
 
   return root;
 }
@@ -853,7 +853,7 @@ SoSeparator* draw_buildings (vil_image_view<int>& labels,
 
 double median_3x3 (vnl_matrix<double>& height, const int ni, const int nj, const int i, const int j)
 {
-  vcl_vector<double> value;
+  std::vector<double> value;
   double v;
   if (i>0) {
     if (j>0)
@@ -880,7 +880,7 @@ double median_3x3 (vnl_matrix<double>& height, const int ni, const int nj, const
   //Estimate the median ground height.
   if (value.size() == 0)
     return -1;
-  vcl_nth_element (value.begin(),
+  std::nth_element (value.begin(),
                    value.begin() + int(value.size()/2), 
                    value.end());
   double median = *(value.begin() + int(value.size()/2));
@@ -889,7 +889,7 @@ double median_3x3 (vnl_matrix<double>& height, const int ni, const int nj, const
 
 //Add vertices of this building into M.
 void add_building_faces (dbmsh3d_textured_mesh_mc* M,
-                         const vcl_vector<vsol_point_2d_sptr>& poly_points, 
+                         const std::vector<vsol_point_2d_sptr>& poly_points, 
                          const double median_height, const double ground_height)
 {
   //add the top face.
@@ -973,31 +973,31 @@ SoSeparator* draw_vegetation_pixel (vil_image_view<int>& labels,
 }
 
 
-bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector<vil_image_view<vxl_byte> > const& images, vcl_vector<vpgl_proj_camera<double> > const& cameras, vcl_string texture_image_dir)
+bool texturemap_meshes(std::vector<dbmsh3d_textured_mesh_mc*>& meshes, std::vector<vil_image_view<vxl_byte> > const& images, std::vector<vpgl_proj_camera<double> > const& cameras, std::string texture_image_dir)
 {
-  // based on world_model/texture_map_generator::generate_texture_map(obj_observable* obj, vcl_string texture_filename, bgeo_lvcs lvcs)
+  // based on world_model/texture_map_generator::generate_texture_map(obj_observable* obj, std::string texture_filename, bgeo_lvcs lvcs)
 
 
   for(unsigned mesh_idx = 0; mesh_idx < meshes.size(); mesh_idx++) {
     // each mesh gets its own texture file
-    vcl_stringstream texture_filename_stream;
-    texture_filename_stream << texture_image_dir << "/texmap_" << vcl_setw(5) << vcl_setfill('0') << mesh_idx << ".jpg";
-    vcl_string texture_filename = texture_filename_stream.str();
+    std::stringstream texture_filename_stream;
+    texture_filename_stream << texture_image_dir << "/texmap_" << std::setw(5) << std::setfill('0') << mesh_idx << ".jpg";
+    std::string texture_filename = texture_filename_stream.str();
 
     if (images.size() == 0) {
-      vcl_cerr << "Error: Cannot create texture map, zero observers!\n";
+      std::cerr << "Error: Cannot create texture map, zero observers!\n";
       return false;
     }
     if (images.size() != cameras.size()) {
-      vcl_cerr << "Error: image and camera vectors have different sizes.\n";
+      std::cerr << "Error: image and camera vectors have different sizes.\n";
       return false;
     }
 
 
 
     // initialize the bounding boxes and the image sizes
-    vcl_vector<vgl_point_2d<int> > img_sizes;
-    vcl_vector<vsol_box_2d> bounding_box;
+    std::vector<vgl_point_2d<int> > img_sizes;
+    std::vector<vsol_box_2d> bounding_box;
 
     for (unsigned cam_idx = 0; cam_idx < cameras.size(); cam_idx++) {
       vgl_point_2d<int> img_size(images[cam_idx].ni(),images[cam_idx].nj());
@@ -1014,7 +1014,7 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
     ///mesh->IFS_to_MHE();
     mesh->orient_face_normals();
 
-    vcl_string file = vul_sprintf("bld_.ply2");
+    std::string file = vul_sprintf("bld_.ply2");
     dbmsh3d_save_ply2 (mesh, ("fixed1_" + file).c_str());
 
     mesh->build_IFS_mesh();
@@ -1023,16 +1023,16 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
     dbmsh3d_save_ply2 (mesh, ("fixed2_" + file).c_str());
 
     // find best camera for each mesh face
-    vcl_map<int, int> best_face_observer_idx;
+    std::map<int, int> best_face_observer_idx;
 
     // project all mesh vertices with each camera
-    vcl_map<int, dbmsh3d_vertex*> mesh_verts = mesh->vertexmap();
-    vcl_vector<vcl_map<int, vgl_point_2d<double> > > vert_projections;
+    std::map<int, dbmsh3d_vertex*> mesh_verts = mesh->vertexmap();
+    std::vector<std::map<int, vgl_point_2d<double> > > vert_projections;
 
     for (unsigned cam_idx = 0; cam_idx < cameras.size(); cam_idx++) {
-      vcl_map<int, vgl_point_2d<double> > camera_vert_projections;
+      std::map<int, vgl_point_2d<double> > camera_vert_projections;
 
-      vcl_map<int, dbmsh3d_vertex*>::iterator vit;
+      std::map<int, dbmsh3d_vertex*>::iterator vit;
       for (vit = mesh_verts.begin(); vit!=mesh_verts.end(); vit++) {
         dbmsh3d_vertex* vert = (dbmsh3d_vertex*)vit->second;
         vgl_point_3d<double> world_pt = vert->pt();
@@ -1045,12 +1045,12 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
     }// for each observer
 
     // find best observer for each face
-    vcl_map<int, dbmsh3d_face*>::iterator fit;
+    std::map<int, dbmsh3d_face*>::iterator fit;
     for (fit = mesh->facemap().begin(); fit != mesh->facemap().end(); fit++) {
       dbmsh3d_textured_face_mc* tex_face = (dbmsh3d_textured_face_mc*)fit->second;
       tex_face->set_tex_map_uri(texture_filename);
 
-      vcl_vector<dbmsh3d_vertex*> face_vertices; ///tex_face->vertices();
+      std::vector<dbmsh3d_vertex*> face_vertices; ///tex_face->vertices();
       tex_face->_get_bnd_Vs_MHE (face_vertices);
 
       int best_observer_idx = -1;
@@ -1079,26 +1079,26 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
           vgl_vector_3d<double> face_normal = compute_normal_ifs(face_vertices);
           //vgl_vector_3d<double> face_normal_phe = tex_face->compute_normal();
 
-          //vcl_cout << "face normal     = " << face_normal << vcl_endl;
-          //vcl_cout << "face normal phe = " << face_normal_phe << vcl_endl;
+          //std::cout << "face normal     = " << face_normal << std::endl;
+          //std::cout << "face normal phe = " << face_normal_phe << std::endl;
 
           face_normal = face_normal / face_normal.length(); // not gauranteed to be normalized
           //vgl_vector_3d<double> camera_direction = observers_[obs_idx]->camera_direction_rational(lvcs);
           vgl_homg_point_3d<double> cam_center_homg = cameras[cam_idx].camera_center();
 
           vgl_point_3d<double> cam_center(cam_center_homg);
-          //vul_printf (vcl_cout, "cam %d center: (%lf, %lf, %lf).\n", 
+          //vul_printf (std::cout, "cam %d center: (%lf, %lf, %lf).\n", 
                       //cam_idx, cam_center.x(), cam_center.y(), cam_center.z());
 
           vgl_point_3d<double> c = tex_face->compute_center_pt();
-            //vul_printf (vcl_cout, "face %d center: (%lf, %lf, %lf).\n", 
+            //vul_printf (std::cout, "face %d center: (%lf, %lf, %lf).\n", 
                       //tex_face->id(), c.x(), c.y(), c.z());
 
           vgl_vector_3d<double> camera_direction = (cam_center - c);
           
           // normalize
           camera_direction = camera_direction / camera_direction.length();
-          //vul_printf (vcl_cout, "cam %d dir: (%lf, %lf, %lf).\n", 
+          //vul_printf (std::cout, "cam %d dir: (%lf, %lf, %lf).\n", 
                       //cam_idx, camera_direction.x(), camera_direction.y(), camera_direction.z());
 
           // just use angle for now, maybe incorporate distance to camera later?
@@ -1112,7 +1112,7 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
       }
 
       if (best_observer_score > 0) {
-        vcl_cout << " Face " << tex_face->id() << "  visible. " << vcl_endl;
+        std::cout << " Face " << tex_face->id() << "  visible. " << std::endl;
         for (unsigned j=0; j < face_vertices.size(); j++){
           dbmsh3d_vertex* face_vert = (dbmsh3d_vertex*)face_vertices[j];
           vgl_point_2d<double> vert_proj = vert_projections[best_observer_idx][face_vert->id()];
@@ -1123,28 +1123,28 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
       }
       else {
         // use -1 to indicate face not visible from any observer
-        vcl_cout << "Face " << tex_face->id() << " not visible from any observer!" << vcl_endl;
+        std::cout << "Face " << tex_face->id() << " not visible from any observer!" << std::endl;
         best_face_observer_idx[tex_face->id()] = -1;
       }
 
     } // for each face
 
     // determine crop region for each observers image
-    vcl_vector<vgl_point_2d<int> > crop_points;
-    vcl_vector<vgl_point_2d<int> > crop_sizes;
+    std::vector<vgl_point_2d<int> > crop_points;
+    std::vector<vgl_point_2d<int> > crop_sizes;
 
     // cropped images will be stacked horizontally, so
     // calculate max height for image and x offsets for each region
     int tex_width = 0, tex_height = 0;
-    vcl_vector<int> x_offsets;
+    std::vector<int> x_offsets;
     x_offsets.push_back(0); // for beginning of first image
 
     for (unsigned cam_idx = 0; cam_idx < cameras.size(); cam_idx++) {
       if (!bounding_box[cam_idx].empty()) {
-        int min_x = vcl_floor(bounding_box[cam_idx].get_min_x());
-        int max_x = vcl_ceil(bounding_box[cam_idx].get_max_x());
-        int min_y = vcl_floor(bounding_box[cam_idx].get_min_y());
-        int max_y = vcl_ceil(bounding_box[cam_idx].get_max_y());
+        int min_x = std::floor(bounding_box[cam_idx].get_min_x());
+        int max_x = std::ceil(bounding_box[cam_idx].get_max_x());
+        int min_y = std::floor(bounding_box[cam_idx].get_min_y());
+        int max_y = std::ceil(bounding_box[cam_idx].get_max_y());
         vgl_point_2d<int> crop_point(min_x,min_y);
         vgl_point_2d<int> crop_size(max_x - min_x, max_y - min_y);
 
@@ -1170,7 +1170,7 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
     for (fit = mesh->facemap().begin(); fit != mesh->facemap().end(); fit++) {
 
       dbmsh3d_textured_face_mc* tex_face = (dbmsh3d_textured_face_mc*)fit->second;
-      vcl_vector<dbmsh3d_vertex*> face_vertices = tex_face->vertices();
+      std::vector<dbmsh3d_vertex*> face_vertices = tex_face->vertices();
       int best_obs = best_face_observer_idx[tex_face->id()];
 
       if (best_obs >= 0) {
@@ -1210,7 +1210,7 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
         //vil_image_resource_sptr img_orig_res = img_tab->get_image_resource();
 
         //if (img_orig_res->pixel_format() != VIL_PIXEL_FORMAT_BYTE) {
-        //  vcl_cerr << "texture_map generator: unsupported image type "<<img_orig_res->pixel_format()<<vcl_endl;
+        //  std::cerr << "texture_map generator: unsupported image type "<<img_orig_res->pixel_format()<<std::endl;
         //  continue;
         // }
         vil_image_view<vxl_byte> cropped_view = vil_crop(images[cam_idx],crop_points[cam_idx].x(),crop_sizes[cam_idx].x(),
@@ -1221,8 +1221,8 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
 
 
         //vil_image_view<vxl_byte> cropped_view = img_orig_cropped->get_view();
-        vcl_cout << "cropped_view nplanes = "<<cropped_view.nplanes()<<vcl_endl;
-        vcl_cout << "tex_map_view nplanes = "<<tex_map_view.nplanes()<<vcl_endl;
+        std::cout << "cropped_view nplanes = "<<cropped_view.nplanes()<<std::endl;
+        std::cout << "tex_map_view nplanes = "<<tex_map_view.nplanes()<<std::endl;
         vil_copy_to_window(cropped_view,tex_map_view,x_offsets[cam_idx],0);
       }
     }
@@ -1234,22 +1234,22 @@ bool texturemap_meshes(vcl_vector<dbmsh3d_textured_mesh_mc*>& meshes, vcl_vector
 
 
 
-bool save_mesh_vrml(vcl_string filename, vcl_vector<dbmsh3d_textured_mesh_mc*> &meshes, vgl_point_3d<double> virtual_camera_center)
+bool save_mesh_vrml(std::string filename, std::vector<dbmsh3d_textured_mesh_mc*> &meshes, vgl_point_3d<double> virtual_camera_center)
 {
 
   FILE* fp;
-  if ((fp = vcl_fopen(filename.c_str(), "w")) == NULL) {
-    vcl_fprintf (stderr, "Can't open vrml file %s to write.\n", filename.c_str());
+  if ((fp = std::fopen(filename.c_str(), "w")) == NULL) {
+    std::fprintf (stderr, "Can't open vrml file %s to write.\n", filename.c_str());
     return false; 
   }
 
-  vcl_fprintf(fp, "#VRML V2.0 utf8\n");
-  //vcl_fprintf(fp, "PROFILE Immersive\n\n");
+  std::fprintf(fp, "#VRML V2.0 utf8\n");
+  //std::fprintf(fp, "PROFILE Immersive\n\n");
 
-  vcl_fprintf(fp,"NavigationInfo {\n Headlight TRUE \n} \n");
-  vcl_fprintf(fp,"Transform {\n  translation %f %f %f \n children [\n",-virtual_camera_center.x(),-virtual_camera_center.y(),-virtual_camera_center.z());
+  std::fprintf(fp,"NavigationInfo {\n Headlight TRUE \n} \n");
+  std::fprintf(fp,"Transform {\n  translation %f %f %f \n children [\n",-virtual_camera_center.x(),-virtual_camera_center.y(),-virtual_camera_center.z());
 
-  vcl_vector<dbmsh3d_textured_mesh_mc*>::iterator it;
+  std::vector<dbmsh3d_textured_mesh_mc*>::iterator it;
   int obj_count = 0;
   for (it = meshes.begin(); it != meshes.end(); it++, obj_count++) {
 
@@ -1260,86 +1260,86 @@ bool save_mesh_vrml(vcl_string filename, vcl_vector<dbmsh3d_textured_mesh_mc*> &
     // assume that it is the same for every face of the mesh here.
     dbmsh3d_textured_face_mc* first_face = (dbmsh3d_textured_face_mc*)mesh->facemap().begin()->second;
     // just want filename, not full path
-    vcl_string texmap_url = vul_file::strip_directory(first_face->tex_map_uri());
+    std::string texmap_url = vul_file::strip_directory(first_face->tex_map_uri());
   
-    vcl_fprintf(fp, "Transform {\n");
-    vcl_fprintf(fp, "  children\n");
-    vcl_fprintf(fp, "  Shape {\n");
-    vcl_fprintf(fp, "    appearance Appearance {\n");
-    vcl_fprintf(fp, "      material Material{}\n");
-    vcl_fprintf(fp, "      texture ImageTexture {\n");
-    vcl_fprintf(fp, "        url \"%s\"\n",texmap_url.c_str());
-    vcl_fprintf(fp, "      }\n");
-    vcl_fprintf(fp, "    }\n");
-    vcl_fprintf(fp, "    geometry IndexedFaceSet {\n");
-    vcl_fprintf(fp, "      coord Coordinate {\n");
-    vcl_fprintf(fp, "        point [\n");
+    std::fprintf(fp, "Transform {\n");
+    std::fprintf(fp, "  children\n");
+    std::fprintf(fp, "  Shape {\n");
+    std::fprintf(fp, "    appearance Appearance {\n");
+    std::fprintf(fp, "      material Material{}\n");
+    std::fprintf(fp, "      texture ImageTexture {\n");
+    std::fprintf(fp, "        url \"%s\"\n",texmap_url.c_str());
+    std::fprintf(fp, "      }\n");
+    std::fprintf(fp, "    }\n");
+    std::fprintf(fp, "    geometry IndexedFaceSet {\n");
+    std::fprintf(fp, "      coord Coordinate {\n");
+    std::fprintf(fp, "        point [\n");
 
     // map vertex ID's to indices.
-    vcl_map<int,int> vert_indices;
+    std::map<int,int> vert_indices;
 
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit;
+    std::map<int, dbmsh3d_vertex*>::iterator vit;
     int idx = 0;
     for (vit = mesh->vertexmap().begin(); vit != mesh->vertexmap().end(); vit++, idx++) {
       dbmsh3d_vertex* v = (dbmsh3d_vertex*)vit->second;
       vert_indices[v->id()] = idx;
       vgl_point_3d<double> vert_pt = v->pt();
       //lvcs_->global_to_local(v->pt().x(),v->pt().y(),v->pt().z(),bgeo_lvcs::wgs84,x,y,z,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
-      vcl_fprintf(fp,"       %0.8f %0.8f %0.8f,\n",vert_pt.x(), vert_pt.y(), vert_pt.z());
+      std::fprintf(fp,"       %0.8f %0.8f %0.8f,\n",vert_pt.x(), vert_pt.y(), vert_pt.z());
     }
-    vcl_fprintf(fp, "        ]\n");
-    vcl_fprintf(fp, "      }\n");
-    vcl_fprintf(fp, "      coordIndex[\n");
+    std::fprintf(fp, "        ]\n");
+    std::fprintf(fp, "      }\n");
+    std::fprintf(fp, "      coordIndex[\n");
     
-    vcl_map<int, dbmsh3d_face*>::iterator fit;
+    std::map<int, dbmsh3d_face*>::iterator fit;
     for (fit = mesh->facemap().begin(); fit!= mesh->facemap().end(); fit++) {
       dbmsh3d_textured_face_mc* face = (dbmsh3d_textured_face_mc*)fit->second;
-      vcl_fprintf(fp, "             ");
+      std::fprintf(fp, "             ");
       face->_ifs_track_ordered_vertices ();
       for (unsigned j=0; j<face->vertices().size(); j++) {
         dbmsh3d_vertex* v = (dbmsh3d_vertex*) face->vertices(j);
-        vcl_fprintf( fp, "%d ",vert_indices[v->id()]);
+        std::fprintf( fp, "%d ",vert_indices[v->id()]);
       }
-      vcl_fprintf(fp, "-1,\n");
+      std::fprintf(fp, "-1,\n");
     }
-    vcl_fprintf(fp, "      ]\n\n");
+    std::fprintf(fp, "      ]\n\n");
 
-    vcl_fprintf(fp, "      texCoord TextureCoordinate {\n");
-    vcl_fprintf(fp, "        point [\n");
+    std::fprintf(fp, "      texCoord TextureCoordinate {\n");
+    std::fprintf(fp, "        point [\n");
 
     for (fit = mesh->facemap().begin(); fit!= mesh->facemap().end(); fit++) {
       dbmsh3d_textured_face_mc* face = (dbmsh3d_textured_face_mc*)fit->second;
       for (unsigned j=0; j<face->vertices().size(); j++) {
         dbmsh3d_vertex* v = (dbmsh3d_vertex*) face->vertices(j);
         vgl_point_2d<double> pt = face->tex_coords(v->id());
-        vcl_fprintf(fp, "           %0.8f %0.8f,\n",pt.x(),pt.y());
+        std::fprintf(fp, "           %0.8f %0.8f,\n",pt.x(),pt.y());
       }
     }
-    vcl_fprintf(fp, "        ]\n");
-    vcl_fprintf(fp, "      }\n\n");  
+    std::fprintf(fp, "        ]\n");
+    std::fprintf(fp, "      }\n\n");  
 
-    vcl_fprintf(fp, "      texCoordIndex[\n");
+    std::fprintf(fp, "      texCoordIndex[\n");
     int tex_coord_idx = 0;
     for (fit = mesh->facemap().begin(); fit!= mesh->facemap().end(); fit++) {
       dbmsh3d_textured_face_mc* face = (dbmsh3d_textured_face_mc*)fit->second;
-      vcl_fprintf(fp, "                ");    
+      std::fprintf(fp, "                ");    
       for (unsigned j=0; j < face->vertices().size(); j++) {
-        vcl_fprintf(fp, "%d ",tex_coord_idx++);
+        std::fprintf(fp, "%d ",tex_coord_idx++);
       }
-      vcl_fprintf(fp, "-1,\n");
+      std::fprintf(fp, "-1,\n");
     }
-    vcl_fprintf(fp, "      ]\n\n");
-    vcl_fprintf(fp, "      solid TRUE\n");
-    vcl_fprintf(fp, "      convex FALSE\n");
-    vcl_fprintf(fp, "      creaseAngle 0\n");
-    vcl_fprintf(fp, "    }\n");
-    vcl_fprintf(fp, "  }\n");
-    vcl_fprintf(fp, "}\n\n\n");
+    std::fprintf(fp, "      ]\n\n");
+    std::fprintf(fp, "      solid TRUE\n");
+    std::fprintf(fp, "      convex FALSE\n");
+    std::fprintf(fp, "      creaseAngle 0\n");
+    std::fprintf(fp, "    }\n");
+    std::fprintf(fp, "  }\n");
+    std::fprintf(fp, "}\n\n\n");
   }
 
-  vcl_fprintf(fp,"\n]}\n");
+  std::fprintf(fp,"\n]}\n");
 
-  vcl_fclose(fp);
+  std::fclose(fp);
   return true;
 
 

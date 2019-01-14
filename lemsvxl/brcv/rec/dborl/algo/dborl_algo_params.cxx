@@ -7,7 +7,7 @@
 //
 
 #include "dborl_algo_params.h"
-#include <vcl_fstream.h>
+#include <fstream>
 
 //: makes no check as to whether the same parameter is being added or not
 void 
@@ -24,9 +24,9 @@ void
 dborl_algo_params::set_params(dborl_algo_params_base& other)
 {
   //: make one pass and find all the group names 
-  vcl_map<vcl_string, int> groups;
+  std::map<std::string, int> groups;
   for (unsigned i = 0; i < param_list_.size(); i++) {
-    vcl_map<vcl_string, int>::iterator iter = groups.find(param_list_[i]->param_group());
+    std::map<std::string, int>::iterator iter = groups.find(param_list_[i]->param_group());
     if (iter == groups.end()) {  // not added yet
       groups[param_list_[i]->param_group()] = 1;
     } else {
@@ -35,9 +35,9 @@ dborl_algo_params::set_params(dborl_algo_params_base& other)
   }
 
   //: now set the params
-  for (vcl_map<vcl_string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
+  for (std::map<std::string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
     
-    vcl_string group_name = iter->first;
+    std::string group_name = iter->first;
     
     //: go over the param list to get each param from this group
     for (unsigned i = 0; i < param_list_.size(); i++) {
@@ -57,7 +57,7 @@ dborl_algo_params::set_params(dborl_algo_params_base& other)
 }
   
 
-dborl_algo_params::dborl_algo_params(vcl_string algo_name) : dborl_algo_params_base(algo_name) {
+dborl_algo_params::dborl_algo_params(std::string algo_name) : dborl_algo_params_base(algo_name) {
   
   input_param_filename_ = "";  
   
@@ -92,22 +92,22 @@ dborl_algo_params::dborl_algo_params(vcl_string algo_name) : dborl_algo_params_b
   exit_with_no_processing.set_values("internal_use", "exit_with_no_processing", "the flag to signal exit after parsing command line args", false, false);
 } 
 
-void dborl_algo_params::print_params_open_root(vcl_ostream& of)
+void dborl_algo_params::print_params_open_root(std::ostream& of)
 {
   of << "<parameter_root>\n";
   of << "\t<params app=\"" << algo_name_ << "\" >\n";
 }
-void dborl_algo_params::print_params_close_root(vcl_ostream& of)
+void dborl_algo_params::print_params_close_root(std::ostream& of)
 {
   of << "\t</params>\n";
   of << "</parameter_root>\n";
 } 
 
-bool dborl_algo_params::print_params_xml(vcl_string filename)
+bool dborl_algo_params::print_params_xml(std::string filename)
 {
-  vcl_ofstream of(filename.c_str());
+  std::ofstream of(filename.c_str());
   if (!of){
-    vcl_cout<<"In dborl_algo_params::print_params_xml : Unable to Open " << filename << vcl_endl;
+    std::cout<<"In dborl_algo_params::print_params_xml : Unable to Open " << filename << std::endl;
     return false;
   }
 
@@ -126,23 +126,23 @@ bool dborl_algo_params::print_params_xml(vcl_string filename)
   return true;
 }
 
-void dborl_algo_params::print_status_open(vcl_ostream& of) {
+void dborl_algo_params::print_status_open(std::ostream& of) {
   of << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   of << "<status>\n";
 }
-void dborl_algo_params::print_status_basic(vcl_ostream& of) {
+void dborl_algo_params::print_status_basic(std::ostream& of) {
   of << "\t<basic>\n";
   of << "\t\t<info name = \"percent_completed\" value=\"" << percent_completed() << "\" type=\"float\"/>\n";
   of << "\t\t<info name = \"exit_code\" value=\"" << exit_code() << "\" type=\"integer\"/>\n";
   of << "\t\t<info name = \"exit_message\" value=\"" << exit_message() << "\" type=\"string\"/>\n";
   of << "\t</basic>\n";
 }
-void dborl_algo_params::print_status_close(vcl_ostream& of) {
+void dborl_algo_params::print_status_close(std::ostream& of) {
   of << "</status>\n";
 }
   
 //: if any additional params are defined to be written to optional tag of the status.xml file
-void dborl_algo_params::print_status_optionals(vcl_ostream& of) {
+void dborl_algo_params::print_status_optionals(std::ostream& of) {
   of << "\t<optionals>\n";
 
   for (unsigned i = 0; i < param_list_.size(); i++) {
@@ -154,9 +154,9 @@ void dborl_algo_params::print_status_optionals(vcl_ostream& of) {
 }
   
 bool dborl_algo_params::print_status_xml() {
-  vcl_ofstream of(status_file().c_str());
+  std::ofstream of(status_file().c_str());
   if (!of){
-    vcl_cout<<"In dborl_algo_params::print_status_xml : Unable to Open " << status_file() << vcl_endl;
+    std::cout<<"In dborl_algo_params::print_status_xml : Unable to Open " << status_file() << std::endl;
     return false;
   }
 
@@ -175,14 +175,14 @@ bool dborl_algo_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr algo_root = bxml_find_by_name(root, algo_query);
   
   if (!algo_root) {
-    vcl_cout << "dborl_detect_shape_params::parse_from_data() - could not find the main algo node with name: " << algo_name_ << "\n";
+    std::cout << "dborl_detect_shape_params::parse_from_data() - could not find the main algo node with name: " << algo_name_ << "\n";
     return false;
   }
 
   //: make one pass and find all the group names to be parsed
-  vcl_map<vcl_string, int> groups;
+  std::map<std::string, int> groups;
   for (unsigned i = 0; i < param_list_.size(); i++) {
-    vcl_map<vcl_string, int>::iterator iter = groups.find(param_list_[i]->param_group());
+    std::map<std::string, int>::iterator iter = groups.find(param_list_[i]->param_group());
     if (iter == groups.end()) {  // not added yet
       groups[param_list_[i]->param_group()] = 1;
     } else {
@@ -191,8 +191,8 @@ bool dborl_algo_params::parse_from_data(bxml_data_sptr root)
   }
 
   //: now parse each group
-  vcl_map<vcl_string, int> parsed_groups;
-  for (vcl_map<vcl_string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
+  std::map<std::string, int> parsed_groups;
+  for (std::map<std::string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
     
     //: skip the status group since they have nothing to do with input.xml
     if (iter->first.compare("status") == 0)
@@ -212,14 +212,14 @@ bool dborl_algo_params::parse_from_data(bxml_data_sptr root)
       return false;
 
     //: go over the param list to parse each param from this group
-    vcl_string val;
+    std::string val;
     for (unsigned i = 0; i < param_list_.size(); i++) {
       if (param_list_[i]->param_group().compare(iter->first) != 0)
         continue;
       data->get_attribute(param_list_[i]->param_name(), val);
       param_list_[i]->parse_value_from_str(val);
 
-      vcl_map<vcl_string, int>::iterator piter = parsed_groups.find(param_list_[i]->param_group());
+      std::map<std::string, int>::iterator piter = parsed_groups.find(param_list_[i]->param_group());
       if (piter == parsed_groups.end())
         parsed_groups[iter->first] = 1;
       else
@@ -229,18 +229,18 @@ bool dborl_algo_params::parse_from_data(bxml_data_sptr root)
 
   //: check if all the params from all the groups are found, if not return false
   bool all_found = true;
-  for (vcl_map<vcl_string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
+  for (std::map<std::string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
     if (iter->first.compare("status") == 0)
       continue;
 
-    vcl_map<vcl_string, int>::iterator piter = parsed_groups.find(iter->first);
+    std::map<std::string, int>::iterator piter = parsed_groups.find(iter->first);
     
     if (piter == parsed_groups.end()) {
-      vcl_cout << "dborl_algo_params::parse_from_data() - could not find the node " << iter->first << "\n";
+      std::cout << "dborl_algo_params::parse_from_data() - could not find the node " << iter->first << "\n";
       all_found = false;
     }
     if (piter->second != iter->second) {
-      vcl_cout << "dborl_algo_params::parse_from_data() - could not find all params from the node " << iter->first << "\n";
+      std::cout << "dborl_algo_params::parse_from_data() - could not find all params from the node " << iter->first << "\n";
       all_found = false;
     }
   }
@@ -255,9 +255,9 @@ bxml_element *dborl_algo_params::create_default_document_data()
   
   //: find each group name to search under the root
   //  make one pass and find all the group names to be parsed
-  vcl_map<vcl_string, int> groups;
+  std::map<std::string, int> groups;
   for (unsigned i = 0; i < param_list_.size(); i++) {
-    vcl_map<vcl_string, int>::iterator iter = groups.find(param_list_[i]->param_group());
+    std::map<std::string, int>::iterator iter = groups.find(param_list_[i]->param_group());
     if (iter == groups.end()) {  // not added yet
       groups[param_list_[i]->param_group()] = 1;
     } else {
@@ -266,7 +266,7 @@ bxml_element *dborl_algo_params::create_default_document_data()
   }
 
   //: add each group (except status) and their parameters with default values
-  for (vcl_map<vcl_string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
+  for (std::map<std::string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
     
     //: skip the status group since they have nothing to do with input.xml
     if (iter->first.compare("status") == 0)
@@ -276,7 +276,7 @@ bxml_element *dborl_algo_params::create_default_document_data()
     root->append_data(data);
     root->append_text("\n");
     //: go over the param list to add each param from this group
-    vcl_string val;
+    std::string val;
     for (unsigned i = 0; i < param_list_.size(); i++) {
       if (param_list_[i]->param_group().compare(iter->first) != 0)
         continue;
@@ -294,9 +294,9 @@ bxml_element *dborl_algo_params::create_document_data()
   
   //: find each group name to search under the root
   //  make one pass and find all the group names to be parsed
-  vcl_map<vcl_string, int> groups;
+  std::map<std::string, int> groups;
   for (unsigned i = 0; i < param_list_.size(); i++) {
-    vcl_map<vcl_string, int>::iterator iter = groups.find(param_list_[i]->param_group());
+    std::map<std::string, int>::iterator iter = groups.find(param_list_[i]->param_group());
     if (iter == groups.end()) {  // not added yet
       groups[param_list_[i]->param_group()] = 1;
     } else {
@@ -305,7 +305,7 @@ bxml_element *dborl_algo_params::create_document_data()
   }
 
   //: add each group (except status) and their parameters with their current values
-  for (vcl_map<vcl_string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
+  for (std::map<std::string, int>::const_iterator iter = groups.begin(); iter != groups.end(); iter++) {
     
     //: skip the status group since they have nothing to do with input.xml
     if (iter->first.compare("status") == 0)
@@ -315,7 +315,7 @@ bxml_element *dborl_algo_params::create_document_data()
     root->append_data(data);
     root->append_text("\n");
     //: go over the param list to add each param from this group
-    vcl_string val;
+    std::string val;
     for (unsigned i = 0; i < param_list_.size(); i++) {
       if (param_list_[i]->param_group().compare(iter->first) != 0)
         continue;
@@ -332,7 +332,7 @@ bxml_element *dborl_algo_params::create_document_data()
 bool dborl_algo_params::parse_input_xml()
 {
   if (input_param_filename_.compare("") == 0) {
-    vcl_cout << "dborl_algo_params::parse_input_xml() -- input_param_filename_ has not been set!\n";
+    std::cout << "dborl_algo_params::parse_input_xml() -- input_param_filename_ has not been set!\n";
     return false;
   }
 
@@ -341,7 +341,7 @@ bool dborl_algo_params::parse_input_xml()
     return false;
   
   if (param_doc.root_element()->type() != bxml_data::ELEMENT) {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return false;
   }
 
@@ -349,7 +349,7 @@ bool dborl_algo_params::parse_input_xml()
 }
 
 //: print a parameter file with the current values of the parameters
-void dborl_algo_params::print_input_xml(vcl_string param_file)
+void dborl_algo_params::print_input_xml(std::string param_file)
 {
   bxml_document doc;
   bxml_element * root = create_document_data();
@@ -358,7 +358,7 @@ void dborl_algo_params::print_input_xml(vcl_string param_file)
 }
 
 //: print a parameter file with the default values of the parameters
-void dborl_algo_params::print_default_input_xml(vcl_string param_file)
+void dborl_algo_params::print_default_input_xml(std::string param_file)
 {
   bxml_document doc;
   bxml_element * root = create_default_document_data();
@@ -372,40 +372,40 @@ void dborl_algo_params::print_default_input_xml(vcl_string param_file)
 //  also supports printing an input parameter file with the default values, 
 bool dborl_algo_params::parse_command_line_args(int argc, char* argv[])
 {
-  vcl_vector<vcl_string> args;
+  std::vector<std::string> args;
   for (int i = 0; i < argc; i++) {
-    vcl_string argument = argv[i];
+    std::string argument = argv[i];
     args.push_back(argument);
   }
   return parse_command_line_args(args);
 }
 //: for algos using dborl_cluster for parallel processing, when command line parameters are broadcasted to all processes
-bool dborl_algo_params::parse_command_line_args(vcl_vector<vcl_string>& argv)
+bool dborl_algo_params::parse_command_line_args(std::vector<std::string>& argv)
 {
   if (!argv.size() || argv.size() == 1) {
-    vcl_cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
+    std::cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
     exit_with_no_processing = true;
     return false;
   } else
-    vcl_cout << " argv size: " << argv.size() << vcl_endl;
+    std::cout << " argv size: " << argv.size() << std::endl;
   
   for (unsigned i = 0; i < argv.size(); i++) {
-    vcl_string arg = argv[i];
+    std::string arg = argv[i];
     if (arg.compare("-x") == 0) {
       input_param_filename_ = argv[++i];
     } else if (arg.compare("-usage") == 0 || arg.compare("-help") == 0 || arg.compare("-?") == 0) {
-      vcl_cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
+      std::cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
       exit_with_no_processing = true;
       return true;
     } else if (arg.compare("-print-def-xml") == 0) {
-      print_default_input_xml(vcl_string("input_defaults.xml"));
+      print_default_input_xml(std::string("input_defaults.xml"));
       exit_with_no_processing = true;
       return true;
     }
   }
 
   if (input_param_filename_.compare("") == 0) {
-    vcl_cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
+    std::cout << "usage: <algo exe name> [-x input.xml] [-print-def-xml] [-usage] [-help] [-?]\n";
     return false;
   }
 
@@ -413,9 +413,9 @@ bool dborl_algo_params::parse_command_line_args(vcl_vector<vcl_string>& argv)
 }
 
 //: return false if an entry with key "name" does not exist
-bool dborl_algo_params::perf_map_update(vcl_string name, double x, double y) 
+bool dborl_algo_params::perf_map_update(std::string name, double x, double y) 
 {  
-  vcl_map<vcl_string, vgl_point_2d<double> >::iterator iter = perf_param_map_.find(name);
+  std::map<std::string, vgl_point_2d<double> >::iterator iter = perf_param_map_.find(name);
   if (iter == perf_param_map_.end()) // could not find name
     return false;                                                             
   else                               // found name
@@ -423,9 +423,9 @@ bool dborl_algo_params::perf_map_update(vcl_string name, double x, double y)
   return true; 
 }
 //: return false if an entry with key "name" already exists
-bool dborl_algo_params::perf_map_insert(vcl_string name, double x, double y) 
+bool dborl_algo_params::perf_map_insert(std::string name, double x, double y) 
 { 
-  vcl_map<vcl_string, vgl_point_2d<double> >::iterator iter = perf_param_map_.find(name);
+  std::map<std::string, vgl_point_2d<double> >::iterator iter = perf_param_map_.find(name);
   if (iter != perf_param_map_.end()) // found name
     return false;    
   else                               // could not find name
@@ -435,18 +435,18 @@ bool dborl_algo_params::perf_map_insert(vcl_string name, double x, double y)
 
 //: print perf.xml with the current values in the perf_param_map
 //  not interested in parsing these files so just treat as a text file (i.e. not using bxml classes)
-void dborl_algo_params::print_perf_xml(vcl_string description)
+void dborl_algo_params::print_perf_xml(std::string description)
 {
-  vcl_ofstream of(perf_file().c_str());
+  std::ofstream of(perf_file().c_str());
   if (!of) {
-    vcl_cout << "dborl_algo_params::print_perf_xml() could not open the file: " << perf_file() << "\n";
+    std::cout << "dborl_algo_params::print_perf_xml() could not open the file: " << perf_file() << "\n";
     return;
   }
   
   of << "<type name = \"performance\">\n";
   of << "<plot type = \"" << borld_evaluation_plot_type::get_plot_type_str(plot_type_) << "\" description = \"" << description << "\"></plot>\n";
   
-  for (vcl_map<vcl_string, vgl_point_2d<double> >::iterator iter = perf_param_map_.begin(); iter != perf_param_map_.end(); iter++) {
+  for (std::map<std::string, vgl_point_2d<double> >::iterator iter = perf_param_map_.begin(); iter != perf_param_map_.end(); iter++) {
     of << "<point legend =\"" << iter->first << "\" y = \"" << (iter->second).y() << "\" x = \"" << (iter->second).x() << "\"></point>\n"; 
   }
   of << "</type>\n";
@@ -455,18 +455,18 @@ void dborl_algo_params::print_perf_xml(vcl_string description)
 }
 
 //: print evaluation.xml with the statistics passed
-void dborl_algo_params::print_evaluation_xml(vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, bool print_FN)
+void dborl_algo_params::print_evaluation_xml(std::map<std::string, buld_exp_stat_sptr>& category_statistics, bool print_FN)
 {
-  vcl_ofstream of(evaluation_file().c_str());
+  std::ofstream of(evaluation_file().c_str());
   if (!of) {
-    vcl_cout << "dborl_algo_params::print_evaluation_xml() could not open the file: " << evaluation_file() << "\n";
+    std::cout << "dborl_algo_params::print_evaluation_xml() could not open the file: " << evaluation_file() << "\n";
     return;
   }
 
   of << "<type name = \"evaluation\">\n";
   of << "<algorithm name=\"" << algo_name_ << "\"></algorithm>\n";
   
-  for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++)
+  for (std::map<std::string, buld_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++)
     itt->second->print_stats(itt->first, of, print_FN);
   
   of << "</type>\n";

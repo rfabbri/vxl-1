@@ -1,7 +1,7 @@
 #include "det_edge_nonmaximum_suppression.h"
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/algo/vnl_qr.h>
 #include <vbl/vbl_array_2d.h>
@@ -177,12 +177,12 @@ vnl_double_2 det_edge_nonmaximum_suppression::find_angles(vgl_vector_3d<double> 
   double n2 = direction.y();
   double n3 = direction.z();
   // theta is in the range of [0, pi]
-  double theta = vcl_acos(n3);
+  double theta = std::acos(n3);
   double phi;
   if(n1 == 0)
     phi = vnl_math::pi_over_2;
   else
-    phi = vcl_atan(n2/n1);
+    phi = std::atan(n2/n1);
   
   if(n1>0 && n2>0) //1st quadrant
     1;
@@ -435,7 +435,7 @@ double det_edge_nonmaximum_suppression::find_s_parameter(int face_index, vgl_vec
     return -1/n3;
   else
   {
-    vcl_cout << "Something is wrong with find_s_parameter function\n";
+    std::cout << "Something is wrong with find_s_parameter function\n";
     exit(-1);
   }
 }
@@ -461,21 +461,21 @@ double det_edge_nonmaximum_suppression::interpolate_value_on_face_intersection_p
   
   if(strcmp(coord_plane, "+x") == 0 || strcmp(coord_plane, "-x") == 0)
   {
-    double tempval1 = vcl_fabs(point.y() - vox1_indices[1]) * val2 + vcl_fabs(point.y() - vox2_indices[1]) * val1;
-    double tempval2 = vcl_fabs(point.y() - vox3_indices[1]) * val4 + vcl_fabs(point.y() - vox4_indices[1]) * val3;
-    return vcl_fabs(point.z() - vox1_indices[2]) * tempval2 + vcl_fabs(point.z() - vox3_indices[2]) * tempval1;
+    double tempval1 = std::fabs(point.y() - vox1_indices[1]) * val2 + std::fabs(point.y() - vox2_indices[1]) * val1;
+    double tempval2 = std::fabs(point.y() - vox3_indices[1]) * val4 + std::fabs(point.y() - vox4_indices[1]) * val3;
+    return std::fabs(point.z() - vox1_indices[2]) * tempval2 + std::fabs(point.z() - vox3_indices[2]) * tempval1;
   }
   else if(strcmp(coord_plane, "+y") == 0 || strcmp(coord_plane, "-y") == 0)
   {
-    double tempval1 = vcl_fabs(point.x() - vox1_indices[0]) * val2 + vcl_fabs(point.x() - vox2_indices[0]) * val1;
-    double tempval2 = vcl_fabs(point.x() - vox3_indices[0]) * val4 + vcl_fabs(point.x() - vox4_indices[0]) * val3;
-    return vcl_fabs(point.z() - vox1_indices[2]) * tempval2 + vcl_fabs(point.z() - vox3_indices[2]) * tempval1;
+    double tempval1 = std::fabs(point.x() - vox1_indices[0]) * val2 + std::fabs(point.x() - vox2_indices[0]) * val1;
+    double tempval2 = std::fabs(point.x() - vox3_indices[0]) * val4 + std::fabs(point.x() - vox4_indices[0]) * val3;
+    return std::fabs(point.z() - vox1_indices[2]) * tempval2 + std::fabs(point.z() - vox3_indices[2]) * tempval1;
   }
   else if(strcmp(coord_plane, "+z") == 0 || strcmp(coord_plane, "-z") == 0)
   {
-    double tempval1 = vcl_fabs(point.x() - vox1_indices[0]) * val2 + vcl_fabs(point.x() - vox2_indices[0]) * val1;
-    double tempval2 = vcl_fabs(point.x() - vox3_indices[0]) * val4 + vcl_fabs(point.x() - vox4_indices[0]) * val3;
-    return vcl_fabs(point.y() - vox1_indices[1]) * tempval2 + vcl_fabs(point.y() - vox3_indices[1]) * tempval1;
+    double tempval1 = std::fabs(point.x() - vox1_indices[0]) * val2 + std::fabs(point.x() - vox2_indices[0]) * val1;
+    double tempval2 = std::fabs(point.x() - vox3_indices[0]) * val4 + std::fabs(point.x() - vox4_indices[0]) * val3;
+    return std::fabs(point.y() - vox1_indices[1]) * tempval2 + std::fabs(point.y() - vox3_indices[1]) * tempval1;
   }
   return -1;
 }

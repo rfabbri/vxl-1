@@ -91,7 +91,7 @@ dbetrk_edge_inspector_tools::handle( const vgui_event & e, const bvis1_view_tabl
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbetrk_edge_inspector_tools::name() const
 {
 

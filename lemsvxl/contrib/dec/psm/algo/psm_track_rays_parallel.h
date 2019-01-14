@@ -2,7 +2,7 @@
 #define psm_track_rays_parallel_h_
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <psm/psm_scene.h>
 #include <psm/psm_sample.h>
 #include <psm/psm_apm_traits.h>
@@ -20,11 +20,11 @@
 
 
 template <psm_apm_type APM>
-void psm_track_rays_parallel(psm_scene<APM> &scene, vpgl_perspective_camera<double> const& cam, unsigned int ni, unsigned int nj, vcl_string fname)
+void psm_track_rays_parallel(psm_scene<APM> &scene, vpgl_perspective_camera<double> const& cam, unsigned int ni, unsigned int nj, std::string fname)
 {
-  vcl_ofstream os(fname.c_str());
+  std::ofstream os(fname.c_str());
   if (!os.good()) {
-    vcl_cerr << "error opening " << fname << " for write! " << vcl_endl;
+    std::cerr << "error opening " << fname << " for write! " << std::endl;
   }
   
   psm_parallel_raytrace_function<psm_track_rays_parallel_functor<psm_sample<APM> >, APM > raytrace_fn(scene, cam, ni, nj);
@@ -44,24 +44,24 @@ class psm_track_rays_parallel_functor
 public:
 
   //: default constructor
-  psm_track_rays_parallel_functor(vcl_ofstream &os) : os_(os) {}
+  psm_track_rays_parallel_functor(std::ofstream &os) : os_(os) {}
 
   //: accumulate 
-  inline bool step_cells(hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
-    vcl_cout << ".";
-    os_ << cells.size() << vcl_endl;
+    std::cout << ".";
+    os_ << cells.size() << std::endl;
     for (unsigned i=0; i < cells.size(); ++i) {
       os_ << cells[i].idx << " ";
     }
-    os_ << vcl_endl;
+    os_ << std::endl;
    
     return true;
   }
 
 
 private:
-  vcl_ofstream& os_;
+  std::ofstream& os_;
 
 };
 

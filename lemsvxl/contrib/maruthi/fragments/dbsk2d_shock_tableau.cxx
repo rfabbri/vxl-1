@@ -4,8 +4,8 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
 #include <dbsk2d/dbsk2d_shock_grouped_ishock_edge.h>
 #include <dbsk2d/dbsk2d_shock_grouped_ishock_edge_sptr.h>
@@ -126,11 +126,11 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
   int num_hits = vgui_utils::leave_pick_mode();
 
   // get all hits
-  vcl_vector<vcl_vector<unsigned> > hits;
+  std::vector<std::vector<unsigned> > hits;
   vgui_utils::process_hits(num_hits, ptr, hits);
 
   // for each hit get the name of the soview if it is
-  // being managed by this vcl_list
+  // being managed by this std::list
   //
   // Each hit from a display list has two entries. The first is the id
   // of the display list, and the second is the id of the soview. See
@@ -138,17 +138,17 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
   // belongs to this display list iff the first hit number is this
   // list's id.
 
-  vcl_vector<GLuint> my_hits;
+  std::vector<GLuint> my_hits;
 
-  for (vcl_vector<vcl_vector<unsigned> >::iterator i=hits.begin();
+  for (std::vector<std::vector<unsigned> >::iterator i=hits.begin();
     i != hits.end(); ++i)
   {
-    vcl_vector<unsigned> const& names = *i;
+    std::vector<unsigned> const& names = *i;
     dbsk2d_assert( names.size() == 1 );
     my_hits.push_back( names[0] );
   }
 
-  //vcl_cout << "my_hits.size() = " << my_hits.size() << vcl_endl; 
+  //std::cout << "my_hits.size() = " << my_hits.size() << std::endl; 
 
   if( my_hits.size() == 1 ) 
   {
@@ -164,7 +164,7 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
     // is equivalent to 2 pixels on the screen
     pi.window_to_image_coordinates(0, 2, dx,dy);
 
-    // vcl_cout << "getting closest" << vcl_endl; 
+    // std::cout << "getting closest" << std::endl; 
 
     float smallest = FLT_MAX;
     unsigned int smallest_i = 0;
@@ -223,11 +223,11 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
 
       }
       else {
-        //vcl_cout << "Error" << vcl_endl;
+        //std::cout << "Error" << std::endl;
       }
 
     }
-    //vcl_cout<< "smallest_i: " << smallest_i << vcl_endl; 
+    //std::cout<< "smallest_i: " << smallest_i << std::endl; 
     return (dbsk2d_base_gui_geometry *) (long) my_hits[ smallest_i ];
   }
   return NULL;
@@ -516,10 +516,10 @@ void dbsk2d_shock_tableau::draw_shock_render()
         glLineWidth (1.0);
         glBegin( GL_LINE_STRIP );
         vgl_point_2d<double> ex_pt1 = _translatePoint(xsample->pt, 
-                                        xsample->theta+vcl_acos(-1/xsample->speed), 
+                                        xsample->theta+std::acos(-1/xsample->speed), 
                                         xsample->radius);
         vgl_point_2d<double> ex_pt2 = _translatePoint(xsample->pt, 
-                                        xsample->theta-vcl_acos(-1/xsample->speed), 
+                                        xsample->theta-std::acos(-1/xsample->speed), 
                                         xsample->radius);
 
         glVertex2f(ex_pt1.x(), ex_pt1.y());
@@ -594,7 +594,7 @@ void dbsk2d_shock_tableau::draw_shock_render()
   }
 }
 
-vcl_pair<int,int>
+std::pair<int,int>
 dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode)
 {
 
@@ -613,7 +613,7 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
   
   // if ( childNonSourceEdge==0 && childSourceEdge==0)
   //   {
-  //     vcl_cout<<"Very Very bad"<<vcl_endl;
+  //     std::cout<<"Very Very bad"<<std::endl;
 
   //   } 
   // Initialize ids 
@@ -636,7 +636,7 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
       {
 
     dbsk2d_ishock_bline *line = static_cast<dbsk2d_ishock_bline*>(left_belem);
-    const vcl_list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
     leftid=contour_list->front()->get_id();
 
       }
@@ -650,13 +650,13 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
     dbsk2d_bnd_vertex* vertex   = point->bnd_vertex();
 
     // Grab vertex superior
-    const vcl_list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
+    const std::list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
     
     // Grab zero chain superior
-    const vcl_list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
 
     // Grab edge superior list
-    const vcl_list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
 
     // Grab id from edge superior, should be contour
     leftid = contour_sup_list->front()->get_id();
@@ -672,7 +672,7 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
       if ( right_belem->is_a_line())
       {
     dbsk2d_ishock_bline *line = static_cast<dbsk2d_ishock_bline*>(right_belem);
-    const vcl_list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
     rightid=contour_list->front()->get_id();
       }
       // If not a line assume it is a point
@@ -685,13 +685,13 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
     dbsk2d_bnd_vertex* vertex   = point->bnd_vertex();
 
     // Grab vertex superior
-    const vcl_list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
+    const std::list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
     
     // Grab zero chain superior
-    const vcl_list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
 
     // Grab edge superior list
-    const vcl_list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
 
     // Grab id from edge superior, should be contour
     rightid = contour_sup_list->front()->get_id();
@@ -700,12 +700,12 @@ dbsk2d_shock_tableau::getContourIdFromShockNode(dbsk2d_shock_node_sptr shockNode
     }
   }
   
-  vcl_pair<int,int> key = vcl_make_pair(leftid,rightid);
+  std::pair<int,int> key = std::make_pair(leftid,rightid);
   return key;
 
 
 }
-vcl_pair<int,int>
+std::pair<int,int>
 dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge)
 {
 
@@ -713,14 +713,14 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
   dbsk2d_shock_grouped_ishock_edge *elly = dynamic_cast<dbsk2d_shock_grouped_ishock_edge*>(&(*shockEdge));
   
   // Grab a list of edges
-  vcl_list<dbsk2d_ishock_edge*>& edgeList = elly->edges();
+  std::list<dbsk2d_ishock_edge*>& edgeList = elly->edges();
 
   // Initialize ids 
   int leftid(0);
   int rightid(0);
 
   // Iterator
-  vcl_list<dbsk2d_ishock_edge*>::iterator i;  
+  std::list<dbsk2d_ishock_edge*>::iterator i;  
 
   // Loop over edges and find their parents
   for(i=edgeList.begin(); i != edgeList.end(); ++i) 
@@ -746,7 +746,7 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
       {
 
     dbsk2d_ishock_bline *line = static_cast<dbsk2d_ishock_bline*>(left_belem);
-    const vcl_list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
     leftid=contour_list->front()->get_id();
 
       }
@@ -760,13 +760,13 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
     dbsk2d_bnd_vertex* vertex   = point->bnd_vertex();
 
     // Grab vertex superior
-    const vcl_list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
+    const std::list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
     
     // Grab zero chain superior
-    const vcl_list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
 
     // Grab edge superior list
-    const vcl_list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
 
     // Grab id from edge superior, should be contour
     leftid = contour_sup_list->front()->get_id();
@@ -782,7 +782,7 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
       if ( right_belem->is_a_line())
       {
     dbsk2d_ishock_bline *line = static_cast<dbsk2d_ishock_bline*>(right_belem);
-    const vcl_list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_list= line->bnd_edge()->superiors_list();
     rightid=contour_list->front()->get_id();
       }
       // If not a line assume it is a point
@@ -795,13 +795,13 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
     dbsk2d_bnd_vertex* vertex   = point->bnd_vertex();
 
     // Grab vertex superior
-    const vcl_list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
+    const std::list<vtol_topology_object*>* zero_chain_sup_list = vertex->superiors_list();
     
     // Grab zero chain superior
-    const vcl_list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* edge_chain_sup_list = zero_chain_sup_list->front()->superiors_list();
 
     // Grab edge superior list
-    const vcl_list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
+    const std::list<vtol_topology_object*>* contour_sup_list    = edge_chain_sup_list->front()->superiors_list();
 
     // Grab id from edge superior, should be contour
     rightid = contour_sup_list->front()->get_id();
@@ -813,7 +813,7 @@ dbsk2d_shock_tableau::getContourIdFromShockEdge(dbsk2d_shock_edge_sptr shockEdge
     }
 
     // Create a vector of vcl_pairs
-    vcl_pair<int,int> key = vcl_make_pair(leftid,rightid);
+    std::pair<int,int> key = std::make_pair(leftid,rightid);
 
     return key;
 
@@ -826,7 +826,7 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
 
   // Loop over all edge and determine contour pairs
   // Use contour pairs to index to color table
-  vcl_map<vcl_pair<int, int>,vcl_vector<float> > visualFragColorMap;
+  std::map<std::pair<int, int>,std::vector<float> > visualFragColorMap;
   int index(0);
 
   for ( dbsk2d_shock_graph::edge_iterator curE = shock_graph_->edges_begin();
@@ -841,11 +841,11 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
       continue;
 
     //Create a key to hold contour id
-    vcl_pair<int,int> key1=getContourIdFromShockEdge(selm);
-    vcl_pair<int,int> key2=vcl_make_pair(key1.second,key1.first);
+    std::pair<int,int> key1=getContourIdFromShockEdge(selm);
+    std::pair<int,int> key2=std::make_pair(key1.second,key1.first);
 
     //create a vector to hold all three colors
-    vcl_vector<float> colors;
+    std::vector<float> colors;
     colors.push_back((rand() % 256)/256.0);
     colors.push_back((rand() % 256)/256.0);
     colors.push_back((rand() % 256)/256.0);
@@ -869,10 +869,10 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
       continue;
   
     //Create a key to hold contour id
-    vcl_pair<int,int> key=getContourIdFromShockEdge(selm);
+    std::pair<int,int> key=getContourIdFromShockEdge(selm);
 
     //create a vector to hold all three colors
-    vcl_vector<float> colors=visualFragColorMap[key];
+    std::vector<float> colors=visualFragColorMap[key];
 
     //draw the fragment with a random color assigned wrt its id
     // int col = selm->id() % 100;
@@ -899,7 +899,7 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
 
     //traverse the descriptor list and draw the shock fragments for the 
     //degenerate descriptors
-    vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
+    std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
     for (; p_itr != snode->descriptor_list().end(); ++ p_itr){
       dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
  
@@ -907,10 +907,10 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
         continue;
 
       // //Create a key to hold contour id
-      // vcl_pair<int,int> key=getContourIdFromShockNode(snode);
+      // std::pair<int,int> key=getContourIdFromShockNode(snode);
 
       // //create a vector to hold all three colors
-      // vcl_vector<float> colors=visualFragColorMap[key];
+      // std::vector<float> colors=visualFragColorMap[key];
      
       // //draw the fragment with a random color assigned wrt its id
       // // int col = selm->id() % 100;
@@ -978,7 +978,7 @@ void
 dbsk2d_shock_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_boundary_)?on:off)+"Draw Boundary", 
                new dbsk2d_shock_tableau_toggle_command(this, &display_boundary_));

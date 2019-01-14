@@ -3,8 +3,8 @@
  void vsl_b_write(vsl_b_ostream & os, const biob_worldpt_index & pti){
   vsl_b_write(os, pti.index());
   }
- void vsl_print_summary(vcl_ostream & os, const biob_worldpt_index & pti){
-  os << "worldpt " << pti.index() << vcl_endl;
+ void vsl_print_summary(std::ostream & os, const biob_worldpt_index & pti){
+  os << "worldpt " << pti.index() << std::endl;
   }
 
  void vsl_b_read(vsl_b_istream & is, biob_worldpt_index& pti){

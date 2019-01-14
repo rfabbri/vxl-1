@@ -15,10 +15,10 @@ bool dsm_read_pixel_time_series_map_bin_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_read_pixel_time_series_map_bin_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
-	input_types_[0] = "vcl_string";//the filename
+	input_types_[0] = vcl_string";//the filename
 	output_types_[0] = "dsm_pixel_time_series_map_sptr";//the output sptr
 
 	if(!pro.set_input_types(input_types_))
@@ -36,15 +36,15 @@ bool dsm_read_pixel_time_series_map_bin_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_write_pixel_time_series_map_bin_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_write_pixel_time_series_map_bin_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get input
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 
-	vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+	vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 
 	dsm_pixel_time_series_map_sptr p = new dsm_pixel_time_series_map();
 

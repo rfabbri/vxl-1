@@ -16,7 +16,7 @@ dbsk2d_sample_ishock_process::dbsk2d_sample_ishock_process()
       !parameters()->add( "inside?" , "-inside" , (bool) true ) ||
       !parameters()->add( "both sides" , "-both" , (bool) false ) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -32,24 +32,24 @@ dbsk2d_sample_ishock_process::clone() const
   return new dbsk2d_sample_ishock_process(*this);
 }
 
-vcl_string
+std::string
 dbsk2d_sample_ishock_process::name()
 {
   return "Sample Shocks";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbsk2d_sample_ishock_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbsk2d_sample_ishock_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }

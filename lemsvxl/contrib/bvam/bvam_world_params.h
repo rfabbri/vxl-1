@@ -7,8 +7,8 @@
 // \author Thomas Pollard
 // \date 1/12/08
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vbl/vbl_smart_ptr.h>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_3d.h>
@@ -30,7 +30,7 @@ public:
   enum appearance_model_type {apm_unknown, mog_grey, mog_rgb};
 
   void set_params(
-    const vcl_string& model_dir,
+    const std::string& model_dir,
     const vgl_point_3d<float>& corner,
     const vgl_vector_3d<unsigned int>& num_voxels,
     float voxel_length,
@@ -38,7 +38,7 @@ public:
     float min_ocp_prob = 0.001,
     float max_ocp_prob = 0.999);
 
-  inline vcl_string model_dir(){ return model_dir_; }
+  inline std::string model_dir(){ return model_dir_; }
   inline vgl_point_3d<float> corner(){ return corner_; }
   inline vgl_vector_3d<unsigned int> num_voxels(){ return num_voxels_; }
   inline float voxel_length(){ return voxel_length_; }
@@ -54,7 +54,7 @@ public:
 
 protected:
 
-  vcl_string model_dir_;
+  std::string model_dir_;
   vgl_point_3d<float> corner_;
   vgl_vector_3d<unsigned int> num_voxels_;
   float voxel_length_;
@@ -64,14 +64,14 @@ protected:
 
 private:
 
-  friend vcl_ostream&  operator << (vcl_ostream& os, bvam_world_params const& params);
-  friend vcl_istream& operator >> (vcl_istream& is, bvam_world_params &params);
+  friend std::ostream&  operator << (std::ostream& os, bvam_world_params const& params);
+  friend std::istream& operator >> (std::istream& is, bvam_world_params &params);
 
 };
 
 
-vcl_ostream&  operator << (vcl_ostream& os, bvam_world_params const& params);
-vcl_istream& operator >> (vcl_istream& is, bvam_world_params &params);
+std::ostream&  operator << (std::ostream& os, bvam_world_params const& params);
+std::istream& operator >> (std::istream& is, bvam_world_params &params);
 
 typedef vbl_smart_ptr<bvam_world_params> bvam_world_params_sptr;
 

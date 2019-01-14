@@ -52,7 +52,7 @@ spatemp_display_edge_maps_process::~spatemp_display_edge_maps_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 spatemp_display_edge_maps_process::name()
     {
     return "Display Edge Maps";
@@ -85,18 +85,18 @@ spatemp_display_edge_maps_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > spatemp_display_edge_maps_process::get_input_type()
+std::vector< std::string > spatemp_display_edge_maps_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > spatemp_display_edge_maps_process::get_output_type()
+std::vector< std::string > spatemp_display_edge_maps_process::get_output_type()
     {  
-        vcl_vector<vcl_string > to_return;
+        std::vector<std::string > to_return;
         //to_return.push_back( "vsol2D" );
         return to_return;
     }
@@ -114,7 +114,7 @@ spatemp_display_edge_maps_process::execute()
             // get vsol from the storage class
             dbdet_edgemap_storage_sptr input_edgemap;
             input_edgemap.vertical_cast(input_data_[i][0]);
-            //vcl_cout<<"\n #of Edges in prev frame is "<<input_edgemap->get_edgemap()->num_edgels;
+            //std::cout<<"\n #of Edges in prev frame is "<<input_edgemap->get_edgemap()->num_edgels;
         }
         return true;  
 }

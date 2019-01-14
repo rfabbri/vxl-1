@@ -1,24 +1,24 @@
 #ifndef btpl_imd_parser_cxx_
 #define btpl_imd_parser_cxx_
 
-#include <vcl_cstdio.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <iostream>
 #include <vul/vul_awk.h>
 #include <vnl/vnl_vector.h>
 
 #include "btpl_imd_parser.h"
 
 
-imd_parser::imd_parser( vcl_string file_name )
+imd_parser::imd_parser( std::string file_name )
 {
   vgl_point_2d<double> new_UL(0.0,0.0), new_UR(0.0,0.0), new_LR(0.0,0.0), 
     new_LL(0.0,0.0), new_sun_azel(0.0,0.0), new_cam_azel(0.0,0.0);
         
-  vcl_ifstream ifs( file_name.c_str() ); vul_awk awk( ifs );
+  std::ifstream ifs( file_name.c_str() ); vul_awk awk( ifs );
   while( awk ){
     if( awk.NF() == 0 ) continue;
-    vcl_string this_field = awk[0];
-    vcl_string this_val; if( awk.NF() >= 3 ) this_val = awk[2];
+    std::string this_field = awk[0];
+    std::string this_val; if( awk.NF() >= 3 ) this_val = awk[2];
     if( this_field == "ULLon" )
       new_UL.x() = atof( this_val.c_str() );
     else if( this_field == "ULLat" )

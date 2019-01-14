@@ -3,8 +3,8 @@
 
 #include "mw_project_polyline_process.h"
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -43,7 +43,7 @@ mw_project_polyline_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 mw_project_polyline_process::name()
 {
   return "Project Polyline";
@@ -67,18 +67,18 @@ mw_project_polyline_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > mw_project_polyline_process::get_input_type()
+std::vector< std::string > mw_project_polyline_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vpgl camera" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > mw_project_polyline_process::get_output_type()
+std::vector< std::string > mw_project_polyline_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -99,18 +99,18 @@ mw_project_polyline_process::execute()
   const vpgl_perspective_camera<double> *pcam = 
     vpgld_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
-    vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
+    std::cerr << "Error: process requires a perspective camera" << std::endl;
     return false;
   }
 
-  vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-  vcl_cout << "Camera: \n" << pcam->get_matrix();
+  std::cout << "NAME: " << cam_storage->name() << std::endl;
+  std::cout << "Camera: \n" << pcam->get_matrix();
 
   const vpgl_perspective_camera<double> &cam = *pcam;
 
   // Read the file from matlab
 
-  vcl_vector<vgl_point_3d<double> > pts3d;
+  std::vector<vgl_point_3d<double> > pts3d;
 
   // Documentation: 
   //
@@ -178,15 +178,15 @@ mw_project_polyline_process::execute()
   bool retval= myreadv("my3dcurve.dat", pts3d);
   if (!retval)
   {
-    vcl_cerr << "Problem: couldn't find file my3dcurve.dat in the current directory\n";
+    std::cerr << "Problem: couldn't find file my3dcurve.dat in the current directory\n";
     return false;
   }
 
-  vcl_vector<vsol_point_2d_sptr> pts(pts3d.size());
+  std::vector<vsol_point_2d_sptr> pts(pts3d.size());
   for (unsigned i=0; i < pts3d.size(); ++i)
     pts[i] = new vsol_point_2d(vgl_point_2d<double>( cam.project(pts3d[i]) ));
 
-  vcl_vector<vsol_spatial_object_2d_sptr> poly;
+  std::vector<vsol_spatial_object_2d_sptr> poly;
   poly.push_back(new vsol_polyline_2d (pts));
 
   // create the output storage class

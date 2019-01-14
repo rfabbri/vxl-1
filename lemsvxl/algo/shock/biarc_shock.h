@@ -167,12 +167,12 @@ class BiArcShockParams{
         double compute_angle_diff()
           {
             
-            if ((vcl_fabs(K1)<EPSILON)||(vcl_fabs(K2)<EPSILON))
+            if ((std::fabs(K1)<EPSILON)||(std::fabs(K2)<EPSILON))
               {
                double temp_theta1=0, temp_theta2=0; 
                //TODO
                
-               if (vcl_fabs(K1)<EPSILON)
+               if (std::fabs(K1)<EPSILON)
                  {
                    if (Length1==INF)
                        temp_theta1 = 2*M_PI;
@@ -192,7 +192,7 @@ class BiArcShockParams{
                    temp_theta1 = K1*Length1;
                   }
 
-               if (vcl_fabs(K2)<EPSILON)
+               if (std::fabs(K2)<EPSILON)
                  {
                    if (Length2==INF)
                        temp_theta2 = 2*M_PI;
@@ -269,7 +269,7 @@ class BiArcShock{
             _start_pt    = start_pt;
             _start_angle = start_angle;
 
-            _start_angle =  vcl_fmod (_start_angle,2*M_PI);
+            _start_angle =  std::fmod (_start_angle,2*M_PI);
             
             if (_start_angle<0)
                 _start_angle +=2*M_PI;
@@ -282,7 +282,7 @@ class BiArcShock{
             _end_pt    = end_pt;
             _end_angle = end_angle;
            
-            _end_angle =  vcl_fmod (_end_angle, 2*M_PI);
+            _end_angle =  std::fmod (_end_angle, 2*M_PI);
             if (_end_angle<0)
                 _end_angle +=2*M_PI;
             

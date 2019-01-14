@@ -16,7 +16,7 @@ SoSeparator* gdt_draw_shocks (gdt_ws_manager* ws_manager, const float lineWidth)
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, gdt_shock*>::iterator it = ws_manager->shockmap().begin();
+  std::map<int, gdt_shock*>::iterator it = ws_manager->shockmap().begin();
   for (; it != ws_manager->shockmap().end(); it++) {
     gdt_shock* S = (*it).second;
 
@@ -36,7 +36,7 @@ SoSeparator* draw_shock (gdt_shock* S, SbColor color, const float lineWidth)
   SoSeparator* vis = new SoSeparator;
 
   //Backtrack the shock segment path.
-  vcl_vector<vgl_point_3d<double> > path_vertices;
+  std::vector<vgl_point_3d<double> > path_vertices;
   
   //Only put in the S->ENode if its id < 0, so S-V vertex is not drawn twice.
   if (S->Enode() && S->Enode()->id() < 0)
@@ -74,7 +74,7 @@ SoSeparator* draw_shock (gdt_shock* S, SbColor color, const float lineWidth)
 }
 
 void gdt_draw_shock_geometry_vispt (SoSeparator* vis, const gdt_shock* S, 
-                                    const vcl_vector<vgl_point_3d<double> >& path_vertices)
+                                    const std::vector<vgl_point_3d<double> >& path_vertices)
 {
   //Put all polyline points into coords.
   SoCoordinate3* coords = new SoCoordinate3;

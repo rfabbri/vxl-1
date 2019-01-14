@@ -19,9 +19,9 @@
 //#include <dbsksp/dbsksp_xshock_node_descriptor.h>
 //#include <bgld/algo/bgld_biarc.h>
 
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_vector.h>
-#include <vcl_vector.h>
+#include <vector>
 
 // =============================================================================
 // dbsks_xfrag_bhog_model
@@ -52,17 +52,17 @@ public:
   bool compute_score(const vnl_vector<double >& x, double& score);
 
   //: Compute the score (probablity) of a list of BHOG feature vector
-  bool compute_score(const vcl_vector<vnl_vector<double > >& feat_list, 
-    vcl_vector<double >& score_list);
+  bool compute_score(const std::vector<vnl_vector<double > >& feat_list, 
+    std::vector<double >& score_list);
 
   
   // I/O =======================================================================
 
   //: Load SVM model from file
-  bool load_from_file(const vcl_string& libsvm_model_file);
+  bool load_from_file(const std::string& libsvm_model_file);
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
 
 protected:

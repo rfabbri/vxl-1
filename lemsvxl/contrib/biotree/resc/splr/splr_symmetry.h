@@ -23,7 +23,7 @@ struct splr_symmetry_struct {
 class splr_symmetry {
   public:
   virtual ~splr_symmetry();
-    virtual vcl_string class_id() = 0;
+    virtual std::string class_id() = 0;
     virtual unsigned int size() = 0;
     virtual splr_symmetry_struct apply(orbit_index t, unsigned int coset) const = 0;
 

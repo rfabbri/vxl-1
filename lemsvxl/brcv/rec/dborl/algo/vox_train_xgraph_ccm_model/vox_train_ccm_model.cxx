@@ -71,7 +71,7 @@ vox_train_ccm_model_params vox_train_ccm_model_default_params()
 bool vox_train_ccm_model::
 set_training_data_info(const vox_train_ccm_model_params& p)
 {
-    vcl_cout << "DEBUG START: set_training_data_info" << vcl_endl;
+    std::cout << "DEBUG START: set_training_data_info" << std::endl;
     this->params = p;
 
     dborl_index_query index_query;
@@ -79,7 +79,7 @@ set_training_data_info(const vox_train_ccm_model_params& p)
     //> Parse the list of positive images
     if (!buld_parse_string_list(this->params.list_pos_objs, index_query.get_object_names()))
     {
-        vcl_cout << "\nERROR: couldn't load list of positive images:" << this->params.list_pos_objs << vcl_endl;
+        std::cout << "\nERROR: couldn't load list of positive images:" << this->params.list_pos_objs << std::endl;
         return false;
     }
 
@@ -90,13 +90,13 @@ set_training_data_info(const vox_train_ccm_model_params& p)
     //> Parse the list of negative images
     if (!buld_parse_string_list(this->params.list_neg_objs, index_query2.get_object_names()))
     {
-        vcl_cout << "\nERROR: couldn't load list of negative images:" << this->params.list_neg_objs << vcl_endl;
+        std::cout << "\nERROR: couldn't load list of negative images:" << this->params.list_neg_objs << std::endl;
         return false;
     }
 
     neg_image_fnames = dborl_get_object_full_paths(this->params.index_file_name, index_query2, this->params.image_ext);
 
-    vcl_cout << "DEBUG END: set_training_data_info" << vcl_endl;
+    std::cout << "DEBUG END: set_training_data_info" << std::endl;
     return true;
 }
 
@@ -105,10 +105,10 @@ set_training_data_info(const vox_train_ccm_model_params& p)
 //------------------------------------------------------------------------------
 //: Form a list of boundary fragment labels from the prototype graph
 bool vox_train_ccm_model::
-form_prototype_bnd_frag_labels(vcl_vector<vcl_string >& prototype_bnd_frag_labels,
-        vcl_vector<unsigned >& list_prototype_eid)
+form_prototype_bnd_frag_labels(std::vector<std::string >& prototype_bnd_frag_labels,
+        std::vector<unsigned >& list_prototype_eid)
 {
-    vcl_cout << "DEBUG START: form_prototype_bnd_frag_labels" << vcl_endl;
+    std::cout << "DEBUG START: form_prototype_bnd_frag_labels" << std::endl;
     prototype_bnd_frag_labels.clear();
     list_prototype_eid.clear();
 
@@ -119,22 +119,22 @@ form_prototype_bnd_frag_labels(vcl_vector<vcl_string >& prototype_bnd_frag_label
     index_query.add_object_name(this->params.prototype_xgraph_file_obj);
     index_query.add_assoc_file_label(this->params.gt_xgraph_vox_label);
     index_query.add_assoc_file_type("groundtruth_xgraph_directory");
-    vcl_vector<vcl_string> query_result = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
+    std::vector<std::string> query_result = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
 
     if(query_result.size() == 1)
     {
         vul_file_iterator fit(query_result[0] + "/*.xml");
-        vcl_string prototype_xgraph_file = query_result[0] + "/" + fit.filename();
-        vcl_cout << "LOAD XGRAPH form_prototype: " << prototype_xgraph_file << vcl_endl;
+        std::string prototype_xgraph_file = query_result[0] + "/" + fit.filename();
+        std::cout << "LOAD XGRAPH form_prototype: " << prototype_xgraph_file << std::endl;
         if (!dbsks_load_xgraph(prototype_xgraph_file, prototype_xgraph))
         {
-            vcl_cout << "\nERROR: Could not load prototype xgraph. Quit now.\n";
+            std::cout << "\nERROR: Could not load prototype xgraph. Quit now.\n";
             return false;
         }
     }
     else
     {
-        vcl_cout << "\nERROR: Could not load prototype xgraph. Quit now. Query result size = " << query_result.size() << "\n";
+        std::cout << "\nERROR: Could not load prototype xgraph. Quit now. Query result size = " << query_result.size() << "\n";
         return false;
     }
 
@@ -152,7 +152,7 @@ form_prototype_bnd_frag_labels(vcl_vector<vcl_string >& prototype_bnd_frag_label
         prototype_bnd_frag_labels.push_back(vul_sprintf("%d-R", eid));
         list_prototype_eid.push_back(eid);
     }
-    vcl_cout << "DEBUG END: form_prototype_bnd_frag_labels" << vcl_endl;
+    std::cout << "DEBUG END: form_prototype_bnd_frag_labels" << std::endl;
     return true;
 }
 
@@ -168,12 +168,12 @@ collect_positive_data()
     //--------------------------------------------------------------------------//
 
     //> Get a list of boundary fragment labels;
-    vcl_vector<vcl_string > prototype_bnd_frag_labels;
-    vcl_vector<unsigned > list_prototype_eid;
+    std::vector<std::string > prototype_bnd_frag_labels;
+    std::vector<unsigned > list_prototype_eid;
     this->form_prototype_bnd_frag_labels(prototype_bnd_frag_labels, list_prototype_eid);
 
     //> Group the xgraph filenames by the names of the original images
-    vcl_map<vcl_string, vcl_vector<vcl_string > > map_image_name_to_xgraph_fname;
+    std::map<std::string, std::vector<std::string > > map_image_name_to_xgraph_fname;
     this->build_grouping_of_gt_xgraph_fnames(map_image_name_to_xgraph_fname);
 
 
@@ -183,7 +183,7 @@ collect_positive_data()
 
 
     //> Write header to output file
-    vcl_ofstream os_pos(this->params.pos_output_file.c_str(), vcl_ios::out);
+    std::ofstream os_pos(this->params.pos_output_file.c_str(), std::ios::out);
 
     os_pos << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
     os_pos << "<xgraph_ccm_cost version=\"1.0\" cost_type=\"positive\">\n";
@@ -200,15 +200,15 @@ collect_positive_data()
     for (unsigned i_pos =0; i_pos < pos_image_fnames.size(); ++i_pos)
     {
         // name of image and the groundtruth xgraph in it
-        vcl_string image_name = vul_file::strip_directory(vul_file::strip_extension(pos_image_fnames[i_pos]));
-        vcl_cout << "POS DATA IMAGE NAME: " << image_name << vcl_endl;
-        vcl_vector<vcl_string > xgraph_fnames = map_image_name_to_xgraph_fname[image_name];
+        std::string image_name = vul_file::strip_directory(vul_file::strip_extension(pos_image_fnames[i_pos]));
+        std::cout << "POS DATA IMAGE NAME: " << image_name << std::endl;
+        std::vector<std::string > xgraph_fnames = map_image_name_to_xgraph_fname[image_name];
         // load the image to get the original size
-        vcl_string image_file = pos_image_fnames[i_pos];
+        std::string image_file = pos_image_fnames[i_pos];
         vil_image_resource_sptr image_rsc = vil_load_image_resource(image_file.c_str(), true);
         if (!image_rsc)
         {
-            vcl_cout << "\nERROR: could not load image file: " << image_file << vcl_endl;
+            std::cout << "\nERROR: could not load image file: " << image_file << std::endl;
             continue;
         }
         int image_width = image_rsc->ni();
@@ -216,8 +216,8 @@ collect_positive_data()
 
         // keep track of the edgemap name by their width
         // \todo need a better way
-        vcl_vector<vcl_string > list_edgemap_names;
-        vcl_vector<vgl_box_2d<int > > list_edgemap_bboxes;
+        std::vector<std::string > list_edgemap_names;
+        std::vector<vgl_box_2d<int > > list_edgemap_bboxes;
         this->gather_edgemap_pyramid_info(image_name, list_edgemap_names, list_edgemap_bboxes);
 
         // compute the scale of for each edgemap level
@@ -233,20 +233,20 @@ collect_positive_data()
         for (unsigned i_xgraph =0; i_xgraph < xgraph_fnames.size(); ++i_xgraph)
         {
             // path to the xgraph file
-            vcl_string xgraph_fname = xgraph_fnames[i_xgraph];
-            vcl_string xgraph_file = xgraph_fname;
+            std::string xgraph_fname = xgraph_fnames[i_xgraph];
+            std::string xgraph_file = xgraph_fname;
 
             // load the xgraph
             dbsksp_xshock_graph_sptr xgraph = 0;
-            vcl_cout << "LOAD XGRAPH pos: " << xgraph_file << vcl_endl;
+            std::cout << "LOAD XGRAPH pos: " << xgraph_file << std::endl;
             if (!dbsks_load_xgraph(xgraph_file, xgraph))
             {
-                vcl_cout << "\nERROR: could not load xgraph file: " << xgraph_fname << vcl_endl;
+                std::cout << "\nERROR: could not load xgraph file: " << xgraph_fname << std::endl;
                 continue;
             }
 
             // Compute scale of the xgraph
-            double cur_xgraph_scale = vcl_sqrt(xgraph->area());
+            double cur_xgraph_scale = std::sqrt(xgraph->area());
 
             //> Find the edgemap in the pyramid so that we can keep the xgraph scale at
             // the base level while keeping the ratio intact
@@ -259,12 +259,12 @@ collect_positive_data()
             vnl_vector<double > scale_diff(list_edgemap_scales.size(), vnl_numeric_traits<double >::maxval);
             for (unsigned i =0; i < scale_diff.size(); ++i)
             {
-                scale_diff[i] = vnl_math::abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
+                scale_diff[i] = vnl_math::abs(std::log(list_edgemap_scales[i] / target_edgemap_scale));
             }
             unsigned min_idx = scale_diff.arg_min();
             double actual_edgemap_scale = list_edgemap_scales[min_idx];
             vgl_box_2d<int > edgemap_bbox = list_edgemap_bboxes[min_idx];
-            vcl_string edgemap_name = list_edgemap_names[min_idx];
+            std::string edgemap_name = list_edgemap_names[min_idx];
 
             //> Adjust the xgraph to cope with the actual scale of the pyramid edgemap
             xgraph->scale_up(0, 0, actual_edgemap_scale);
@@ -296,7 +296,7 @@ collect_positive_data()
 
 
             //> Form a list of labels for the contour segments
-            vcl_vector<vcl_string > cfrag_labels;
+            std::vector<std::string > cfrag_labels;
             for (dbsksp_xshock_graph::edge_iterator eit = xgraph1->edges_begin(); eit !=
                     xgraph1->edges_end(); ++eit)
             {
@@ -313,8 +313,8 @@ collect_positive_data()
             vnl_random randomizer(timer.system());
             for (int i_trial =0; i_trial < this->params.num_samples_per_xgraph; ++i_trial)
             {
-                vcl_cout << " " << i_trial;
-                vcl_cout.flush();
+                std::cout << " " << i_trial;
+                std::cout.flush();
 
                 //> perturbe each node indenpendently
                 for (dbsksp_xshock_graph::vertex_iterator vit = xgraph1->vertices_begin();
@@ -356,7 +356,7 @@ collect_positive_data()
                 }
                 xgraph1->update_all_degree_1_nodes();
             } // trial
-            vcl_cout << vcl_endl;
+            std::cout << std::endl;
 
             // save result to xml file
             for (unsigned r =0; r < ccm_cost.rows(); ++r)
@@ -384,46 +384,46 @@ collect_positive_data()
 //------------------------------------------------------------------------------
 //: Gather list of groundtruth xgraph file names
 bool vox_train_ccm_model::
-build_grouping_of_gt_xgraph_fnames(vcl_map<vcl_string, vcl_vector<vcl_string > >& 
+build_grouping_of_gt_xgraph_fnames(std::map<std::string, std::vector<std::string > >& 
         map_image_name_to_xgraph_fname)
 {
-    vcl_cout << "DEBUG START: build_grouping_of_gt_xgraph_fnames" << vcl_endl;
+    std::cout << "DEBUG START: build_grouping_of_gt_xgraph_fnames" << std::endl;
     dborl_index_query index_query;
 
     //> parse input file containing list of xshock graphs
 
     if (!buld_parse_string_list(this->params.list_gt_xgraph_objs, index_query.get_object_names()))
     {
-        vcl_cout << "ERROR: couldn't load xgraph list file:" << this->params.list_gt_xgraph_objs << vcl_endl;
+        std::cout << "ERROR: couldn't load xgraph list file:" << this->params.list_gt_xgraph_objs << std::endl;
         return false;
     }
 
     index_query.add_assoc_file_label(this->params.gt_xgraph_vox_label);
     index_query.add_assoc_file_type("groundtruth_xgraph_directory");
 
-    vcl_vector<vcl_string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
+    std::vector<std::string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
 
     // group the xgraph filenames by the names of the original images
     for (unsigned i =0; i < query_results.size(); ++i)
     {
-        vcl_cout << "BUILD GROUPING QUERY: " << query_results[i] + "/*.xml" << vcl_endl;
+        std::cout << "BUILD GROUPING QUERY: " << query_results[i] + "/*.xml" << std::endl;
         vul_file_iterator fit(query_results[i] + "/*.xml");
-        vcl_string xgraph_filename = query_results[i] + "/" + fit.filename();
-        vcl_cout << "BUILD GROUPING FILE NAME: " << xgraph_filename << vcl_endl;
+        std::string xgraph_filename = query_results[i] + "/" + fit.filename();
+        std::cout << "BUILD GROUPING FILE NAME: " << xgraph_filename << std::endl;
         // get the image name associated with this xgraph
-        vcl_string xgraph_filename2 = vul_file::strip_directory(xgraph_filename); //applelogos_another.xgraph.0.prototype1.xml
+        std::string xgraph_filename2 = vul_file::strip_directory(xgraph_filename); //applelogos_another.xgraph.0.prototype1.xml
 
         // keep removing the "extension" till only one component is left
-        vcl_string image_name = xgraph_filename2;
+        std::string image_name = xgraph_filename2;
         while (!vul_file::extension(image_name).empty())
         {
             image_name = vul_file::strip_extension(image_name);
         }
-        vcl_cout << "BUILD GROUPING IMAGE NAME:" << image_name << vcl_endl;
+        std::cout << "BUILD GROUPING IMAGE NAME:" << image_name << std::endl;
         map_image_name_to_xgraph_fname[image_name].push_back(xgraph_filename);
     }
 
-    vcl_cout << "DEBUG END: build_grouping_of_gt_xgraph_fnames" << vcl_endl;
+    std::cout << "DEBUG END: build_grouping_of_gt_xgraph_fnames" << std::endl;
     return true;
 }
 
@@ -437,7 +437,7 @@ build_biarc_sampler(dbsks_biarc_sampler& biarc_sampler)
     biarc_sampler.clear();
 
     //> Construct a biarc sampler ................................................
-    vcl_cout << "\nConstructing a biarc sampler ...";
+    std::cout << "\nConstructing a biarc sampler ...";
 
     // Set parameters of biarc sampler
     dbsks_biarc_sampler_params bsp;
@@ -470,11 +470,11 @@ build_biarc_sampler(dbsks_biarc_sampler& biarc_sampler)
 
 //------------------------------------------------------------------------------
 //: Print header info in XML format
-vcl_ostream& vox_train_ccm_model::
-print_xml_header(vcl_ostream& os)
+std::ostream& vox_train_ccm_model::
+print_xml_header(std::ostream& os)
 {
-    vcl_vector<vcl_string > prototype_bnd_frag_labels;
-    vcl_vector<unsigned > list_prototype_eid;
+    std::vector<std::string > prototype_bnd_frag_labels;
+    std::vector<unsigned > list_prototype_eid;
     this->form_prototype_bnd_frag_labels(prototype_bnd_frag_labels, list_prototype_eid);
     os << "<header>\n";
 
@@ -534,11 +534,11 @@ print_xml_header(vcl_ostream& os)
 //------------------------------------------------------------------------------
 //: Collect info about an edgemap pyramid (name and width)
 bool vox_train_ccm_model::
-gather_edgemap_pyramid_info(const vcl_string& image_name, 
-        vcl_vector<vcl_string >& list_edgemap_names,
-        vcl_vector<vgl_box_2d<int > >& list_edgemap_bboxes)
+gather_edgemap_pyramid_info(const std::string& image_name, 
+        std::vector<std::string >& list_edgemap_names,
+        std::vector<vgl_box_2d<int > >& list_edgemap_bboxes)
 {
-    vcl_cout << "DEBUG START: gather_edgemap_pyramid_info" << vcl_endl;
+    std::cout << "DEBUG START: gather_edgemap_pyramid_info" << std::endl;
 
     // clean up;
     list_edgemap_names.clear();
@@ -552,13 +552,13 @@ gather_edgemap_pyramid_info(const vcl_string& image_name,
     index_query.add_assoc_file_label(this->params.edgemap_orient_vox_label);
     index_query.add_assoc_file_type("edge_map_image_and_oriention_directory");
 
-    vcl_vector<vcl_string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
+    std::vector<std::string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
 
-    vcl_string edgemap_regexp = query_results[0] + "/*" + this->params.edgemap_ext;
-    vcl_cout << "EDGEMAP QUERY: " << edgemap_regexp << vcl_endl;
+    std::string edgemap_regexp = query_results[0] + "/*" + this->params.edgemap_ext;
+    std::cout << "EDGEMAP QUERY: " << edgemap_regexp << std::endl;
     // sort the edgemap by their area, in decreasing order
-    vcl_map<int, vcl_string > map_area2name;
-    vcl_map<int, vgl_box_2d<int > > map_area2bbox;
+    std::map<int, std::string > map_area2name;
+    std::map<int, vgl_box_2d<int > > map_area2bbox;
     for (vul_file_iterator fn = edgemap_regexp; fn; ++fn)
     {
         vil_image_resource_sptr img = vil_load_image_resource(fn());
@@ -566,32 +566,32 @@ gather_edgemap_pyramid_info(const vcl_string& image_name,
         {
             continue;
         }
-        vcl_string fname = vul_file::strip_directory(fn());
+        std::string fname = vul_file::strip_directory(fn());
         fname = fname.substr(0, fname.size()-this->params.edgemap_ext.size());
-        vcl_cout << "MANUAL STRIP OUTPUT: " << fname << vcl_endl;
+        std::cout << "MANUAL STRIP OUTPUT: " << fname << std::endl;
         vgl_point_2d<int > min_point(0, 0);
         vgl_point_2d<int > max_point(img->ni()-1, img->nj()-1);
         vgl_box_2d<int > bbox(min_point, max_point);
         int area = bbox.volume();
 
         // insert to the sorted map
-        map_area2name.insert(vcl_make_pair(-area, fname));
-        map_area2bbox.insert(vcl_make_pair(-area, bbox));
+        map_area2name.insert(std::make_pair(-area, fname));
+        map_area2bbox.insert(std::make_pair(-area, bbox));
     }
 
     // Save the sorted list of names and bbox'es to vectors
-    for (vcl_map<int, vcl_string >::iterator iter = map_area2name.begin(); iter !=
+    for (std::map<int, std::string >::iterator iter = map_area2name.begin(); iter !=
             map_area2name.end(); ++iter)
     {
         list_edgemap_names.push_back(iter->second);
     }
 
-    for (vcl_map<int, vgl_box_2d<int > >::iterator iter = map_area2bbox.begin();
+    for (std::map<int, vgl_box_2d<int > >::iterator iter = map_area2bbox.begin();
             iter != map_area2bbox.end(); ++iter)
     {
         list_edgemap_bboxes.push_back(iter->second);
     }
-    vcl_cout << "DEBUG END: gather_edgemap_pyramid_info" << vcl_endl;
+    std::cout << "DEBUG END: gather_edgemap_pyramid_info" << std::endl;
     return true;
 }
 
@@ -606,23 +606,23 @@ gather_edgemap_pyramid_info(const vcl_string& image_name,
 //: Construct a CCM cost calculator for a given edgemap
 // if "Region of Interest" roi = 0, the whole edge map is computed
 bool vox_train_ccm_model::
-build_subpix_ccm(const vcl_string& image_name, const vcl_string& edgemap_name,
+build_subpix_ccm(const std::string& image_name, const std::string& edgemap_name,
         dbsks_subpix_ccm& ccm, const vgl_box_2d<int >* roi)
 {
-    vcl_cout << "DEBUG START: build_subpix_ccm" << vcl_endl;
+    std::cout << "DEBUG START: build_subpix_ccm" << std::endl;
     dborl_index_query index_query;
     index_query.add_object_name(image_name);
     index_query.add_assoc_file_label(this->params.edgemap_orient_vox_label);
     index_query.add_assoc_file_type("edge_map_image_and_oriention_directory");
 
-    vcl_vector<vcl_string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
+    std::vector<std::string> query_results = dborl_get_assoc_file_paths(this->params.index_file_name, index_query);
     //> Load the edgemap and edge orient files to construct an edgemap
-    vcl_string edgemap_file = query_results[0] + "/" + edgemap_name + this->params.edgemap_ext;
+    std::string edgemap_file = query_results[0] + "/" + edgemap_name + this->params.edgemap_ext;
 
-    vcl_string edgeorient_file = query_results[0] + "/" + edgemap_name + this->params.edgeorient_ext;
+    std::string edgeorient_file = query_results[0] + "/" + edgemap_name + this->params.edgeorient_ext;
 
-    vcl_cout << "EDGEMAP_FILE: " << edgemap_file << vcl_endl;
-    vcl_cout << "EDGEORIENT_FILE: " << edgeorient_file << vcl_endl;
+    std::cout << "EDGEMAP_FILE: " << edgemap_file << std::endl;
+    std::cout << "EDGEORIENT_FILE: " << edgeorient_file << std::endl;
 
     dbdet_edgemap_sptr edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
 
@@ -655,7 +655,7 @@ build_subpix_ccm(const vcl_string& image_name, const vcl_string& edgemap_name,
 
     // pre-compute the ccm cost
     ccm.compute(ccm_roi);
-    vcl_cout << "DEBUG END: build_subpix_ccm" << vcl_endl;
+    std::cout << "DEBUG END: build_subpix_ccm" << std::endl;
     return true;
 }
 
@@ -667,13 +667,13 @@ bool vox_train_ccm_model::
 compute_xgraph_ccm_cost(const dbsks_subpix_ccm& ccm, 
         const dbsks_biarc_sampler& biarc_sampler,
         const dbsksp_xshock_graph_sptr& xgraph1,
-        const vcl_vector<unsigned >& list_prototype_eid,
+        const std::vector<unsigned >& list_prototype_eid,
         vnl_vector<float >& bnd_frag_ccm_cost)
 {
     bnd_frag_ccm_cost.set_size(xgraph1->number_of_edges()*2);
 
     // Container for samples computed by biarc_sampler
-    static vcl_vector<int > x_vec, y_vec, angle_vec;
+    static std::vector<int > x_vec, y_vec, angle_vec;
     double angle_step;
 
     int col_count = 0;
@@ -727,12 +727,12 @@ collect_negative_data()
     //--------------------------------------------------------------------------//
 
     //> Get a list of boundary fragment labels;
-    vcl_vector<vcl_string > prototype_bnd_frag_labels;
-    vcl_vector<unsigned > list_prototype_eid;
+    std::vector<std::string > prototype_bnd_frag_labels;
+    std::vector<unsigned > list_prototype_eid;
     this->form_prototype_bnd_frag_labels(prototype_bnd_frag_labels, list_prototype_eid);
 
     //> Group the xgraph filenames by the names of the original images
-    vcl_map<vcl_string, vcl_vector<vcl_string > > map_image_name_to_xgraph_fname;
+    std::map<std::string, std::vector<std::string > > map_image_name_to_xgraph_fname;
     this->build_grouping_of_gt_xgraph_fnames(map_image_name_to_xgraph_fname);
 
 
@@ -742,7 +742,7 @@ collect_negative_data()
 
 
     //> Write header to output file
-    vcl_ofstream os(this->params.neg_output_file.c_str(), vcl_ios::out);
+    std::ofstream os(this->params.neg_output_file.c_str(), std::ios::out);
 
     os << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
     os << "<xgraph_ccm_cost version=\"1.0\" cost_type=\"negative\">\n";
@@ -759,17 +759,17 @@ collect_negative_data()
     for (unsigned i_pos =0; i_pos < pos_image_fnames.size(); ++i_pos)
     {
         // name of image and the groundtruth xgraph in it
-        vcl_string image_name = vul_file::strip_directory(vul_file::strip_extension(pos_image_fnames[i_pos]));
-        vcl_cout << "NEG DATA IMAGE NAME: " << image_name << vcl_endl;
-        vcl_vector<vcl_string > xgraph_fnames = map_image_name_to_xgraph_fname[image_name];
-        vcl_cout << "XGRAPH FILENAMES SIZE: " << xgraph_fnames.size() << vcl_endl;
+        std::string image_name = vul_file::strip_directory(vul_file::strip_extension(pos_image_fnames[i_pos]));
+        std::cout << "NEG DATA IMAGE NAME: " << image_name << std::endl;
+        std::vector<std::string > xgraph_fnames = map_image_name_to_xgraph_fname[image_name];
+        std::cout << "XGRAPH FILENAMES SIZE: " << xgraph_fnames.size() << std::endl;
 
         // load the image to get the original size
-        vcl_string image_file = pos_image_fnames[i_pos];
+        std::string image_file = pos_image_fnames[i_pos];
         vil_image_resource_sptr image_rsc = vil_load_image_resource(image_file.c_str(), true);
         if (!image_rsc)
         {
-            vcl_cout << "\nERROR: could not load image file: " << image_file << vcl_endl;
+            std::cout << "\nERROR: could not load image file: " << image_file << std::endl;
             continue;
         }
         int image_width = image_rsc->ni();
@@ -777,8 +777,8 @@ collect_negative_data()
 
         // keep track of the edgemap name by their width
         // \todo need a better way
-        vcl_vector<vcl_string > list_edgemap_names;
-        vcl_vector<vgl_box_2d<int > > list_edgemap_bboxes;
+        std::vector<std::string > list_edgemap_names;
+        std::vector<vgl_box_2d<int > > list_edgemap_bboxes;
         this->gather_edgemap_pyramid_info(image_name, list_edgemap_names, list_edgemap_bboxes);
 
         // compute the scale of for each edgemap level
@@ -796,20 +796,20 @@ collect_negative_data()
         for (unsigned i_xgraph =0; i_xgraph < xgraph_fnames.size(); ++i_xgraph)
         {
             // path to the xgraph file
-            vcl_string xgraph_fname = xgraph_fnames[i_xgraph];
-            vcl_string xgraph_file = xgraph_fname;
+            std::string xgraph_fname = xgraph_fnames[i_xgraph];
+            std::string xgraph_file = xgraph_fname;
 
             // load the xgraph
             dbsksp_xshock_graph_sptr xgraph = 0;
-            vcl_cout << "LOAD XGRAPH neg: " << xgraph_file << vcl_endl;
+            std::cout << "LOAD XGRAPH neg: " << xgraph_file << std::endl;
             if (!dbsks_load_xgraph(xgraph_file, xgraph))
             {
-                vcl_cout << "\nERROR: could not load xgraph file: " << xgraph_fname << vcl_endl;
+                std::cout << "\nERROR: could not load xgraph file: " << xgraph_fname << std::endl;
                 continue;
             }
 
             // Compute scale of the xgraph
-            double cur_xgraph_size = vcl_sqrt(xgraph->area());
+            double cur_xgraph_size = std::sqrt(xgraph->area());
 
             //> Find the edgemap in the pyramid so that we can keep the xgraph scale at
             // the base level while keeping the ratio intact
@@ -822,12 +822,12 @@ collect_negative_data()
             vnl_vector<double > scale_diff(list_edgemap_scales.size(), vnl_numeric_traits<double >::maxval);
             for (unsigned i =0; i < scale_diff.size(); ++i)
             {
-                scale_diff[i] = vnl_math::abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
+                scale_diff[i] = vnl_math::abs(std::log(list_edgemap_scales[i] / target_edgemap_scale));
             }
             unsigned min_idx = scale_diff.arg_min();
             double actual_edgemap_scale = list_edgemap_scales[min_idx];
             vgl_box_2d<int > edgemap_bbox = list_edgemap_bboxes[min_idx];
-            vcl_string edgemap_name = list_edgemap_names[min_idx];
+            std::string edgemap_name = list_edgemap_names[min_idx];
 
             //> Adjust the xgraph so that it is roughly twice as small as the ground truth xgraph to generate negative data
             xgraph->scale_up(0, 0, target_edgemap_scale/2); //> note /2
@@ -869,7 +869,7 @@ collect_negative_data()
 
 
             ////> Form a list of labels for the contour segments
-            //vcl_vector<vcl_string > cfrag_labels;
+            //std::vector<std::string > cfrag_labels;
             //for (dbsksp_xshock_graph::edge_iterator eit = xgraph1->edges_begin(); eit !=
             //  xgraph1->edges_end(); ++eit)
             //{
@@ -886,8 +886,8 @@ collect_negative_data()
             vnl_random randomizer(timer.system());
             for (int i_trial =0; i_trial < this->params.num_samples_per_xgraph; ++i_trial)
             {
-                vcl_cout << " " << i_trial;
-                vcl_cout.flush();
+                std::cout << " " << i_trial;
+                std::cout.flush();
 
                 double dx = randomizer.drand32(min_dx, max_dx);
                 double dy = randomizer.drand32(min_dy, max_dy);
@@ -903,7 +903,7 @@ collect_negative_data()
                 // translate back
                 xgraph1->translate(-dx, -dy);
             } // trial
-            vcl_cout << vcl_endl;
+            std::cout << std::endl;
 
             // save result to xml file
             for (unsigned r =0; r < ccm_cost.rows(); ++r)

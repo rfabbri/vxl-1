@@ -17,7 +17,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>

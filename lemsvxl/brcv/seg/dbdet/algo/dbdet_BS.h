@@ -20,8 +20,8 @@
 //  Modifications
 //\endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 #define MAXCLUSTERS 30
 #define CDIM 3

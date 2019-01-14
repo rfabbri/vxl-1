@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_new.h>
 #include <imgr/file_formats/imgr_ff_algos.h>
 
@@ -17,12 +17,12 @@ static void test_imgr_ff_algos()
   view_tmp->fill(10);
   vil_image_resource_sptr v = vil_new_image_resource_of_view(*view_tmp);
 
-  vcl_cout << v;
+  std::cout << v;
   
   vil_image_view<unsigned short> *dark_tmp = new vil_image_view<unsigned short>(ni, nj);
   dark_tmp->fill(5);
   vil_image_resource_sptr dark = vil_new_image_resource_of_view(*dark_tmp);
-  vcl_cout << dark;
+  std::cout << dark;
 
   vil_image_view<unsigned short> *bright_tmp = new vil_image_view<unsigned short>(ni, nj);
   bright_tmp->fill(100);
@@ -34,7 +34,7 @@ static void test_imgr_ff_algos()
   dbil_bounded_image_view<double>* bv = 
     imgr_ff_algos:: calibrate_image(v, dark, bright, box);
  
-  TEST_NEAR("test imgr_ff_algos ",  bv->operator()(0,0), -vcl_log(5.0/95), 1e-6);
+  TEST_NEAR("test imgr_ff_algos ",  bv->operator()(0,0), -std::log(5.0/95), 1e-6);
   
 }
 TESTMAIN(test_imgr_ff_algos);

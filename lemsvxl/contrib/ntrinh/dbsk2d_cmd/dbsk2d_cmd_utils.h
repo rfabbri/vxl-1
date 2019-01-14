@@ -17,13 +17,13 @@
 
 
 #include <vgl/vgl_point_2d.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
 
 
 //: A point on a circle
-bool dbsk2d_cmd_generate_random_bnd(const vcl_string& bnd_file,
+bool dbsk2d_cmd_generate_random_bnd(const std::string& bnd_file,
                                     int num_lines,
                                     int num_arcs,
                                     int image_width = 512,

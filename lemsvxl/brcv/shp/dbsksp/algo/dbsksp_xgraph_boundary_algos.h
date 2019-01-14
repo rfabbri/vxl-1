@@ -10,7 +10,7 @@
 #define DBSKSP_XGRAPH_BOUNDARY_ALGOS_H_
 
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 
@@ -18,6 +18,6 @@
 bool dbsksp_test_boundary_self_intersection(dbsksp_xshock_graph_sptr xgraph, int num_points);
 
 //Get the list of points lying on the boundary
-vcl_vector<vsol_point_2d_sptr> dbsksp_get_boundary_point_list(dbsksp_xshock_graph_sptr xgraph, int num_points);
+std::vector<vsol_point_2d_sptr> dbsksp_get_boundary_point_list(dbsksp_xshock_graph_sptr xgraph, int num_points);
 
 #endif /* DBSKSP_XGRAPH_BOUNDARY_ALGOS_H_ */

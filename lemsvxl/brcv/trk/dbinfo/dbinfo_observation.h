@@ -15,10 +15,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_pixel_format.h>
 #include <dbinfo/dbinfo_feature_data_base_sptr.h>
@@ -39,33 +39,33 @@ class dbinfo_observation : public vbl_ref_count
   //: default not sensible
   dbinfo_observation():
     margin_(0), current_frame_(0), geom_(0), image_cached_(0), image_crp_cached_(0),
-    features_(vcl_vector<dbinfo_feature_base_sptr>()){};
+    features_(std::vector<dbinfo_feature_base_sptr>()){};
 
   //: Constructors/destructor
   //: no current chached data in the features, just prior observations
   dbinfo_observation(dbinfo_region_geometry_sptr const& geom,
-                     vcl_vector<dbinfo_feature_base_sptr> const& features);
+                     std::vector<dbinfo_feature_base_sptr> const& features);
 
 
   //: constructor from polygons
   //: features cache data from the current frame, represented by "image"
   dbinfo_observation(const unsigned frame,
                      vil_image_resource_sptr const& image,
-                     vcl_vector<vsol_polygon_2d_sptr> const& polys,
-                     vcl_vector<dbinfo_feature_base_sptr> const& features);
+                     std::vector<vsol_polygon_2d_sptr> const& polys,
+                     std::vector<dbinfo_feature_base_sptr> const& features);
 
   //: constructor from a single polygon
   //: features cache data from the current frame, represented by "image"
   dbinfo_observation(const unsigned frame,
                      vil_image_resource_sptr const& image, 
                      vsol_polygon_2d_sptr const& poly,
-                     vcl_vector<dbinfo_feature_base_sptr> const& features);
+                     std::vector<dbinfo_feature_base_sptr> const& features);
 
   //: constructors without features initially specified
   //: constructor from multiple polygons
   dbinfo_observation(const unsigned frame,
                      vil_image_resource_sptr const& image,
-                     vcl_vector<vsol_polygon_2d_sptr> const& polys);
+                     std::vector<vsol_polygon_2d_sptr> const& polys);
 
   //: constructor from a single polygon
   dbinfo_observation(const unsigned frame,
@@ -76,7 +76,7 @@ class dbinfo_observation : public vbl_ref_count
   //: constructor from multiple polygons
   dbinfo_observation(const unsigned frame,
                      vil_image_resource_sptr const& image,
-                     vcl_vector<vsol_polygon_2d_sptr> const& polys,
+                     std::vector<vsol_polygon_2d_sptr> const& polys,
                      bool intensity_info,
                      bool gradient_info,
                      bool color_info);
@@ -100,7 +100,7 @@ class dbinfo_observation : public vbl_ref_count
     {geom_ = geom;}
 
   //:set the data for the feature
-  inline void set_features(vcl_vector<dbinfo_feature_base_sptr> const& features)
+  inline void set_features(std::vector<dbinfo_feature_base_sptr> const& features)
     {
       features_ = features;
       this->set_margin();
@@ -117,7 +117,7 @@ class dbinfo_observation : public vbl_ref_count
   dbinfo_region_geometry_sptr geometry(){return geom_;}
 
   //:get the features for the observation
-  vcl_vector<dbinfo_feature_base_sptr> features(){return features_;}
+  std::vector<dbinfo_feature_base_sptr> features(){return features_;}
 
 
   //:the frame for which cached data was obtained
@@ -131,7 +131,7 @@ class dbinfo_observation : public vbl_ref_count
 
   //:clear the store of each feature
   inline void clear_data()
-    {for(vcl_vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
+    {for(std::vector<dbinfo_feature_base_sptr>::iterator fit = features_.begin();
          fit != features_.end(); ++fit) (*fit)->clear_data();}
 
   //:the rating of this observation according to some context, e.g. track compatibility
@@ -148,9 +148,9 @@ class dbinfo_observation : public vbl_ref_count
   float score() {return score_;}
 
   //:Documentation concerning the observation
-  void set_doc(vcl_string const& doc){doc_ = doc;}
+  void set_doc(std::string const& doc){doc_ = doc;}
 
-  vcl_string doc(){return doc_;}
+  std::string doc(){return doc_;}
 
   //:Is intensity information channel used?
   bool intensity_info();
@@ -162,7 +162,7 @@ class dbinfo_observation : public vbl_ref_count
   bool color_info();
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const;
+  virtual void print(std::ostream& os = std::cout) const;
 
   //:Construct an image of the observation
   vil_image_resource_sptr image(bool background_noise = true);
@@ -178,11 +178,11 @@ class dbinfo_observation : public vbl_ref_count
 
   void set_obs_snippet(vil_image_resource_sptr & os){observation_snippet=os;}
 
-  void set_edge_points(vcl_vector<vgl_point_2d<double> > edgeps);
-  void set_edge_dirs(vcl_vector<double> edgeds);
+  void set_edge_points(std::vector<vgl_point_2d<double> > edgeps);
+  void set_edge_dirs(std::vector<double> edgeds);
   
-  vcl_vector<vgl_point_2d<double> >  get_edge_points(){return edgepoints;}
-  vcl_vector<double> get_edge_dirs(){return edgedirs;}
+  std::vector<vgl_point_2d<double> >  get_edge_points(){return edgepoints;}
+  std::vector<double> get_edge_dirs(){return edgedirs;}
 
   //-----------------------
 
@@ -193,10 +193,10 @@ class dbinfo_observation : public vbl_ref_count
   virtual unsigned version() const {return 2;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbinfo_observation";}
+  virtual std::string is_a() const {return "dbinfo_observation";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
     { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -216,8 +216,8 @@ class dbinfo_observation : public vbl_ref_count
   //===== utility functions =====
 
   //:points referenced to chip coordinates rather than global coordinates
-  void image_to_roi(vcl_vector<vgl_point_2d<unsigned> >& points,
-                    vcl_vector<bool>& valid);
+  void image_to_roi(std::vector<vgl_point_2d<unsigned> >& points,
+                    std::vector<bool>& valid);
   //:image processing margin
   void set_margin();
 
@@ -234,7 +234,7 @@ class dbinfo_observation : public vbl_ref_count
   float score_;
 
   //: A documentation string to describe the observation
-  vcl_string doc_;
+  std::string doc_;
 
   //: the margin around the extracted ROI to support processing kernels
   unsigned margin_;
@@ -245,15 +245,15 @@ class dbinfo_observation : public vbl_ref_count
   //:The region geometry 
   dbinfo_region_geometry_sptr geom_;
   //:The set of features used by the observation
-  vcl_vector<dbinfo_feature_base_sptr> features_;
+  std::vector<dbinfo_feature_base_sptr> features_;
   
   //: cache images for fast access
   vil_image_resource_sptr image_cached_;
   vil_image_resource_sptr image_crp_cached_;
   vil_image_resource_sptr observation_snippet;
 
-  vcl_vector<vgl_point_2d<double> > edgepoints;
-  vcl_vector<double > edgedirs;
+  std::vector<vgl_point_2d<double> > edgepoints;
+  std::vector<double > edgedirs;
 };
 //: helper function
 //: given the original image it crops the snippet and stores it.
@@ -282,13 +282,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_observation* &ob)
   vsl_b_read(is, *ob);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_observation const& ob)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_observation const& ob)
 {
   ob.print(os);
   return os;
 }
 #if 0
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_observation const* ob)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_observation const* ob)
 {
   if (ob)
     os << *ob;
@@ -297,7 +297,7 @@ inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_observation const* ob)
   return os;
 }
 #endif
-inline void vsl_print_summary(vcl_ostream& os, dbinfo_observation const*  ob)
+inline void vsl_print_summary(std::ostream& os, dbinfo_observation const*  ob)
 {os << ob;}
 
 #include <dbinfo/dbinfo_observation_sptr.h>

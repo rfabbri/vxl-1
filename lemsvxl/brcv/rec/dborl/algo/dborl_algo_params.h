@@ -9,8 +9,8 @@
 //        so they come automatically as long as the algorithm has a parameter class deriving from this base
 //
 //        This class is intended to support parameter pass via xml formatted parameter files 
-//        only "primitive" parameter types are supported like integer, short, unsigned, float, double, vcl_string, bool (whose type string is "flag"), etc.
-//        other types like vcl_vector<int> are not supported by the dborl_parameter class since they cannot be listed in the parameter files.
+//        only "primitive" parameter types are supported like integer, short, unsigned, float, double, std::string, bool (whose type string is "flag"), etc.
+//        other types like std::vector<int> are not supported by the dborl_parameter class since they cannot be listed in the parameter files.
 //        if one needs to pass a vector of a primitive type to an algorithm then one needs to write those parameter values to another file
 //        and pass the name of that file as a parameter and read from that file in the algorithm
 //        [see the example algorithm in dborl/algo/examples which needs a list of image names which is passed via an intermediate file].
@@ -79,23 +79,23 @@ class dborl_algo_params : public dborl_algo_params_base
 public:
 
   //: parameters in the web_directive group, used in creation of params.xml file
-  dborl_parameter<vcl_string> print_params_file; // name of the params file, passed in the input.xml in the web_directive group
+  dborl_parameter<std::string> print_params_file; // name of the params file, passed in the input.xml in the web_directive group
   dborl_parameter<bool> print_params_only; // ("web_directive", "print_params_only", "print the xml parameter file only", false, false);
-  dborl_parameter<vcl_string> status_file; // ("web_directive", "status_block", "Status file path", "", "", dborl_parameter::STATUS_BLOCK, "");
-  dborl_parameter<vcl_string> perf_file; // ("web_directive", "perf_block", "Performance file path", "", "", dborl_parameter::PERFORMANCE_OUTPUT, "");
-  dborl_parameter<vcl_string> evaluation_file; //  in "web_directive" group
-  dborl_parameter<vcl_string> categorization_file; //  in "web_directive" group
+  dborl_parameter<std::string> status_file; // ("web_directive", "status_block", "Status file path", "", "", dborl_parameter::STATUS_BLOCK, "");
+  dborl_parameter<std::string> perf_file; // ("web_directive", "perf_block", "Performance file path", "", "", dborl_parameter::PERFORMANCE_OUTPUT, "");
+  dborl_parameter<std::string> evaluation_file; //  in "web_directive" group
+  dborl_parameter<std::string> categorization_file; //  in "web_directive" group
 
   //: parameters in the basic group of the status block, used in creation of status.xml file
   dborl_parameter<float> percent_completed;  
   dborl_parameter<int> exit_code;
-  dborl_parameter<vcl_string> exit_message;
+  dborl_parameter<std::string> exit_message;
 
   //: parameters for command line processing, not included in the parameter list
   dborl_parameter<bool> exit_with_no_processing;
 
   //: constructor
-  dborl_algo_params(vcl_string algo_name);
+  dborl_algo_params(std::string algo_name);
 
   virtual ~dborl_algo_params() { perf_param_map_.clear(); }
 
@@ -105,7 +105,7 @@ public:
   //: set the parameters with the same group names and names in the other's list with the values of the parameters in this list
   void set_params(dborl_algo_params_base& other);
     
-  bool print_params_xml(vcl_string filename);
+  bool print_params_xml(std::string filename);
   bool print_status_xml();
   
   bool parse_from_data(bxml_data_sptr root);
@@ -117,9 +117,9 @@ public:
   //  parse_command_line_args() sets input_param_filename_ if called prior to this method
   bool parse_input_xml();
   //: print a parameter file with the current values of the parameters
-  void print_input_xml(vcl_string param_file);
+  void print_input_xml(std::string param_file);
   //: print a parameter file with the default values of the parameters
-  void print_default_input_xml(vcl_string param_file);
+  void print_default_input_xml(std::string param_file);
 
   //: the command line args can be passed directly to the params class 
   //  the following method extracts the name of the parameter file if passed properly with -x option
@@ -127,40 +127,40 @@ public:
   //  also supports printing an input parameter file with the default values, 
   bool parse_command_line_args(int argc, char* argv[]);
   //: for algos using dborl_cluster for parallel processing, when command line parameters are broadcasted to all processes
-  bool parse_command_line_args(vcl_vector<vcl_string>& argv);  
+  bool parse_command_line_args(std::vector<std::string>& argv);  
 
-  vcl_map<vcl_string, vgl_point_2d<double> >& get_perf_param_map() { return perf_param_map_; }
+  std::map<std::string, vgl_point_2d<double> >& get_perf_param_map() { return perf_param_map_; }
   
   //: return false if an entry with key "name" does not exist
-  bool perf_map_update(vcl_string name, double x, double y);
+  bool perf_map_update(std::string name, double x, double y);
   //: return false if an entry with key "name" already exists
-  bool perf_map_insert(vcl_string name, double x, double y);
+  bool perf_map_insert(std::string name, double x, double y);
   void perf_plot_set_type(short type) { plot_type_ = type; }
   short perf_plot_get_type() { return plot_type_; }
 
   //: print perf.xml with the current values in the perf_param_map
-  void print_perf_xml(vcl_string description);
+  void print_perf_xml(std::string description);
 
   //: print evaluation.xml with the statistics passed
-  void print_evaluation_xml(vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, bool print_FN);
+  void print_evaluation_xml(std::map<std::string, buld_exp_stat_sptr>& category_statistics, bool print_FN);
 
   //: the name of the algo is used as root node in input.xml 
-  vcl_string input_param_filename_;
+  std::string input_param_filename_;
 protected:
   
  
   //: this is a special map that is used to keep track of performance parameters that will be outputted to perf.xml file
   //  the string part is the legend attribute and vgl_point is the x, y attributes of a point tag in perf.xml
-  vcl_map<vcl_string, vgl_point_2d<double> > perf_param_map_;
+  std::map<std::string, vgl_point_2d<double> > perf_param_map_;
   short plot_type_;  
 
-  void print_params_open_root(vcl_ostream& of);
-  void print_params_close_root(vcl_ostream& of);
+  void print_params_open_root(std::ostream& of);
+  void print_params_close_root(std::ostream& of);
 
-  void print_status_open(vcl_ostream& of);
-  void print_status_basic(vcl_ostream& of);
-  void print_status_close(vcl_ostream& of);
-  void print_status_optionals(vcl_ostream& of);
+  void print_status_open(std::ostream& of);
+  void print_status_basic(std::ostream& of);
+  void print_status_close(std::ostream& of);
+  void print_status_optionals(std::ostream& of);
   
 };
 

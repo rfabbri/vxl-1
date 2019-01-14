@@ -86,7 +86,7 @@ dbvis1_shockshape_tool::set_storage ( const bpro1_storage_sptr& storage_sptr)
 }
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbvis1_shockshape_tool::name() const
 {
   return "A3 shock branch";
@@ -128,19 +128,19 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   // redraw if there is a change in parameters
   if (change_shock_parameters(e)){
     if (sb->is_legal_a3branch())
-      vcl_cout << "Shock branch is legal" << vcl_endl;
+      std::cout << "Shock branch is legal" << std::endl;
     else
-      vcl_cout << "Shock branch is illegal" << vcl_endl;
+      std::cout << "Shock branch is illegal" << std::endl;
 
     sb->update_shock_geom();
     tableau()->clear();
     
     // compute the polyline along the shock
-    vcl_vector< vsol_point_2d_sptr > shock_points;
+    std::vector< vsol_point_2d_sptr > shock_points;
     
     // compute the two polylines along the boundary
-    vcl_vector< vsol_point_2d_sptr > bnd_left_pts;
-    vcl_vector< vsol_point_2d_sptr > bnd_right_pts;
+    std::vector< vsol_point_2d_sptr > bnd_left_pts;
+    std::vector< vsol_point_2d_sptr > bnd_right_pts;
     
     int num_steps = 50;
     double step = sb->length() / num_steps;
@@ -153,7 +153,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
       bnd_left_pts.push_back(new vsol_point_2d(left));
       bnd_right_pts.push_back(new vsol_point_2d(right));
       shock_points.push_back(new vsol_point_2d(center));
-      vcl_vector<vsol_point_2d_sptr > triple;
+      std::vector<vsol_point_2d_sptr > triple;
       triple.push_back(bnd_left_pts.back());
       triple.push_back(shock_points.back());
       triple.push_back(bnd_right_pts.back());
@@ -180,129 +180,129 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
 
 bool dbvis1_shockshape_tool::change_shock_parameters(const vgui_event& e){
   if( r0_inc(e) ) {
-    vcl_cout << vcl_endl << "Command: increase r0" << vcl_endl;
+    std::cout << std::endl << "Command: increase r0" << std::endl;
     double r0 = sb->r0();
     if (r0+delta < 100.0) r0 += delta;
     sb->set_r0(r0);
-    vcl_cout << "New r0 = " << r0 << vcl_endl;
+    std::cout << "New r0 = " << r0 << std::endl;
     return true;
   }
 
   if (r0_dec(e) ){
-    vcl_cout << "Command: decrease r0" << vcl_endl;
+    std::cout << "Command: decrease r0" << std::endl;
     double r0 = sb->r0();
     if (r0 - delta > 0.0) r0 -= delta;
     sb->set_r0(r0);
-    vcl_cout << "New r0 = " << r0 << vcl_endl;
+    std::cout << "New r0 = " << r0 << std::endl;
     return true;
   }
   
   if (length_inc(e) ){
-    vcl_cout << "Command: increase shock length" << vcl_endl;
+    std::cout << "Command: increase shock length" << std::endl;
     double length = sb->length();
     if (length+delta < 10) length += delta;
     sb->set_length(length);
-    vcl_cout << "New length = " << length << vcl_endl;
+    std::cout << "New length = " << length << std::endl;
     return true;
   }
 
   if (length_dec(e) ){
-    vcl_cout << "Command: decrease shock length" << vcl_endl;
+    std::cout << "Command: decrease shock length" << std::endl;
     double length = sb->length();
     if (length-delta > 0.001) length -= delta;
     sb->set_length(length);
-    vcl_cout << "New length = " << length << vcl_endl;
+    std::cout << "New length = " << length << std::endl;
     return true;
   }
 
   if (k0_inc(e) ){
-    vcl_cout << "Command: increase k0" << vcl_endl;
+    std::cout << "Command: increase k0" << std::endl;
     //increase k0
     //(*(sb->k()))[1] += delta;
     sb->set_k0(sb->k0() + delta);
-    vcl_cout << "New k0 = " << sb->k0() << vcl_endl;
+    std::cout << "New k0 = " << sb->k0() << std::endl;
     return true;
   }
 
   if (k0_dec(e) ){
-    vcl_cout << "Command: decrease k0" << vcl_endl;
+    std::cout << "Command: decrease k0" << std::endl;
     //decrease k0
     //(*(sb->k()))[0] -= delta;
     sb->set_k0(sb->k0() - delta);
-    vcl_cout << "New k0 = " << sb->k0() << vcl_endl;
+    std::cout << "New k0 = " << sb->k0() << std::endl;
     return true;
   }
 
   if (k1_inc(e) ){
-    vcl_cout << "Command: increase k1" << vcl_endl;
+    std::cout << "Command: increase k1" << std::endl;
     //increase k1
     // (*(sb->k()))[1] += delta;
     sb->set_k1(sb->k1() + delta);
-    vcl_cout << "New k1 = " << sb->k1() << vcl_endl;
+    std::cout << "New k1 = " << sb->k1() << std::endl;
     return true;
   }
 
   if (k1_dec(e) ){
-    vcl_cout << "Command: decrease k1" << vcl_endl;
+    std::cout << "Command: decrease k1" << std::endl;
     //decrease k0
     //(*(sb->k()))[1] -= delta;
     sb->set_k1(sb->k1() - delta);
-    vcl_cout << "New k1 = " << sb->k1() << vcl_endl;
+    std::cout << "New k1 = " << sb->k1() << std::endl;
     return true;
   }
 
   if (nu0_inc(e) ){
-    vcl_cout << "Command: increase nu0" << vcl_endl;
+    std::cout << "Command: increase nu0" << std::endl;
     //increase nu0
     //(*(sb->nu()))[0] += delta;
     sb->set_nu0(sb->nu0() + delta);
-    vcl_cout << "New nu0 = " << sb->nu0() << vcl_endl;
+    std::cout << "New nu0 = " << sb->nu0() << std::endl;
     return true;
   }
 
   if (nu0_dec(e) ){
-    vcl_cout << "Command: decrease nu0" << vcl_endl;
+    std::cout << "Command: decrease nu0" << std::endl;
     //decrease nu0
     //(*(sb->nu()))[0] -= delta;
     sb->set_nu0(sb->nu0() - delta);
-    vcl_cout << "New nu0 = " << sb->nu0() << vcl_endl;
+    std::cout << "New nu0 = " << sb->nu0() << std::endl;
     return true;
   }
 
   if (nu1_inc(e) ){
-    vcl_cout << "Command: increase nu1" << vcl_endl;
+    std::cout << "Command: increase nu1" << std::endl;
     //increase nu1
     // (*(sb->nu()))[1] += delta;
     sb->set_nu1(sb->nu1() + delta);
-    vcl_cout << "New nu1 = " << sb->nu1() << vcl_endl;
+    std::cout << "New nu1 = " << sb->nu1() << std::endl;
     return true;
   }
 
   if (nu1_dec(e) ){
-    vcl_cout << "Command: decrease nu1" << vcl_endl;
+    std::cout << "Command: decrease nu1" << std::endl;
     //decrease nu0
     //(*(sb->nu()))[1] -= delta;
     sb->set_nu1(sb->nu1() - delta);
-    vcl_cout << "New nu1 = " << sb->nu1() << vcl_endl;
+    std::cout << "New nu1 = " << sb->nu1() << std::endl;
     return true;
   }
 
   if (delta_inc(e) ){
-    vcl_cout << "Command: increase delta" << vcl_endl;
+    std::cout << "Command: increase delta" << std::endl;
     delta = delta * 10.0;
-    vcl_cout << "New delta = " << delta << vcl_endl;
+    std::cout << "New delta = " << delta << std::endl;
     return true;
   }
 
   if (delta_dec(e) ){
-    vcl_cout << "Command: decrease delta" << vcl_endl;
+    std::cout << "Command: decrease delta" << std::endl;
     delta = delta / 10.0;
-    vcl_cout << "New delta = " << delta << vcl_endl;
+    std::cout << "New delta = " << delta << std::endl;
     return true;
   }
 
   if (reset(e) ){
-    vcl_cout << "Command: Reset all parameters" << vcl_endl;
+    std::cout << "Command: Reset all parameters" << std::endl;
     sb->reset_all_params(A3_BRANCH);
     sb->set_psi0(vnl_math::pi_over_2);
     return true;

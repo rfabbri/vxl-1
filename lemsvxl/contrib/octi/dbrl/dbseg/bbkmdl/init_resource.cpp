@@ -2,8 +2,8 @@
 #include <bprb/bprb_macros.h>
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_func_process.h>
-#include <vcl_iostream.h>
-#include <vcl_cstddef.h>
+#include <iostream>
+#include <cstddef>
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_measure.h>
 #include <bbgm/bbgm_update.h>
@@ -19,21 +19,21 @@
 #include <vil/vil_convert.h>
 #include <vidl/vidl_frame.h>
 #include <vidl/vidl_convert.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/io/vbl_io_smart_ptr.h>
 
 using namespace std;
 bool init_resource::create_videostream()
 {
 	string s(this->_path);
-	//vidl_image_list_stream tmp(static_cast<vcl_string>(s));
-	this->_vidstream=new vidl_image_list_istream(static_cast<vcl_string>(s));
+	//vidl_image_list_stream tmp(static_cast<std::string>(s));
+	this->_vidstream=new vidl_image_list_istream(static_cast<std::string>(s));
 	//this->_vidstream=tmp;
 	//this->_vidstream=static_cast<vidl_istream*>(tmp);
 	if(this->_vidstream)
 		return true;
 	else{
-		vcl_cerr << "could not open files !";
+		std::cerr << "could not open files !";
 		return false;
 	}
 }
@@ -81,7 +81,7 @@ bool init_resource::set_inputs()
 	}
 	else
 	{
-		vcl_cerr<<"process has not been created yet."<<endl;
+		std::cerr<<"process has not been created yet."<<endl;
 		return false;
 	}
 }
@@ -103,7 +103,7 @@ bool init_resource::init()
   
   vidl_istream_sptr istr = _vidstream;
   if (!(istr && istr->is_open())){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::init() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::init() -"
              << " invalid input stream\n";
     return false;
   }
@@ -111,13 +111,13 @@ bool init_resource::init()
     istr->seek_frame(0);
   vidl_frame_sptr f = istr->current_frame();
   if (!f){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::init() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::init() -"
              << " invalid initial frame\n";
     return false;
   }
   ni = f->ni(); nj = f->nj();
-  vcl_cout << " initialized, stream frame size: " << ni << ", " << nj << ", stream at frame # " << istr->frame_number() << vcl_endl;
-  vcl_cout.flush();
+  std::cout << " initialized, stream frame size: " << ni << ", " << nj << ", stream at frame # " << istr->frame_number() << std::endl;
+  std::cout.flush();
 
  // pro.set_input(0, new brdb_value_t<bbgm_image_sptr>(0));
 
@@ -127,7 +127,7 @@ bool init_resource::init()
 bool init_resource::exec()
 {
 	if (!_vidstream){
-    vcl_cerr << "In bbgm_update_dist_image_stream_process::execute() -"
+    std::cerr << "In bbgm_update_dist_image_stream_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -157,7 +157,7 @@ bool init_resource::exec()
   //Retrieve end frame number
   int end_frame = this->_end_frame;
 
-  vcl_cout << " will start at frame # " << start_frame << " will end at frame # " << end_frame << vcl_endl;
+  std::cout << " will start at frame # " << start_frame << " will end at frame # " << end_frame << std::endl;
 
   typedef bsta_gauss_if3 bsta_gauss_t;
   typedef bsta_gauss_t::vector_type vector_;
@@ -169,8 +169,8 @@ bool init_resource::exec()
   bbgm_image_sptr model_sptr;
   if (!bgm) {
     model_sptr = new bbgm_image_of<obs_mix_gauss_type>(ni, nj, obs_mix_gauss_type());
-    vcl_cout << " Initialized the bbgm image\n";
-    vcl_cout.flush();
+    std::cout << " Initialized the bbgm image\n";
+    std::cout.flush();
 
   }
   else model_sptr = bgm;
@@ -202,10 +202,10 @@ bool init_resource::exec()
         vil_math_scale_values(frame,1.0/255.0);
 
       update(*model,frame,updater);
-      vcl_cout << "updated frame # "<< istr->frame_number()
+      std::cout << "updated frame # "<< istr->frame_number()
                << " format " << fb->pixel_format() << " nplanes "
                << fb->nplanes()<< '\n';
-      vcl_cout.flush();
+      std::cout.flush();
     }
   }
 
@@ -218,16 +218,16 @@ bool init_resource::exec()
 bool init_resource::save()
 {
 	 if (!_output) {
-    vcl_cerr << "In bbgm_save_image_of_process::execute - invalid inputs\n";
+    std::cerr << "In bbgm_save_image_of_process::execute - invalid inputs\n";
     return false;
   }
 
-	 vcl_string binary_filename = this->_save_path;
+	 std::string binary_filename = this->_save_path;
 
   vsl_b_ofstream ostr(binary_filename);
   if (!ostr) {
-    vcl_cerr << "Failed to load background image from "
-             << binary_filename << vcl_endl;
+    std::cerr << "Failed to load background image from "
+             << binary_filename << std::endl;
     return false;
   }
 
@@ -235,7 +235,7 @@ bool init_resource::save()
 
   bbgm_image_sptr bgm=_output;
   if (!bgm) {
-    vcl_cerr << "Null background image\n";
+    std::cerr << "Null background image\n";
     return false;
   }
 
@@ -253,17 +253,17 @@ bool init_resource::measure_prob(vil_image_view_base_sptr img_ptr,string name)
 
   bbgm_image_sptr bgm =_output;
   if (!bgm) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null distribution image\n";
     return false;
   }
-  vcl_string image_type = bgm->is_a();
+  std::string image_type = bgm->is_a();
   //for now just check for parzen_sphere in the string
-  vcl_size_t str_indx = image_type.find("parzen_sphere");
-  bool parzen = str_indx != vcl_string::npos;
+  std::size_t str_indx = image_type.find("parzen_sphere");
+  bool parzen = str_indx != std::string::npos;
 
   if (!img_ptr) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
@@ -274,7 +274,7 @@ bool init_resource::measure_prob(vil_image_view_base_sptr img_ptr,string name)
   unsigned np = image.nplanes();
 
   //Retrieve attribute to measure, e.g. probability
-  vcl_string attr = "probability";
+  std::string attr = "probability";
 
   //Retrieve measure tolerance
   float tolerance = 0.005;
@@ -299,7 +299,7 @@ bool init_resource::measure_prob(vil_image_view_base_sptr img_ptr,string name)
     }
 #endif // MEASURE_BKGROUND
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;
     }
@@ -334,7 +334,7 @@ bool init_resource::measure_prob(vil_image_view_base_sptr img_ptr,string name)
     }
 #endif // MEASURE_BKGROUND
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;
     }

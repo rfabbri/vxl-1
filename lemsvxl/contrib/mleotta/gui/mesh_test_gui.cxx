@@ -3,8 +3,8 @@
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_image_tableau.h>
 #include <vgui/vgui_composite_tableau.h>
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <fstream>
 
 #include <bgui3d/bgui3d.h>
 #include <bgui3d/bgui3d_project2d_tableau.h>
@@ -109,12 +109,12 @@ SoNode* build_SoNode(const imesh_mesh& mesh)
 int main(int argc, char** argv)
 {
   if(argc <4){
-    vcl_cout << "Please specify the camera, image, and mesh" << vcl_endl;
+    std::cout << "Please specify the camera, image, and mesh" << std::endl;
     return -1;
   }
-  vcl_string camera_file(argv[1]);
-  vcl_string image_file(argv[2]);
-  vcl_string mesh_file(argv[3]);
+  std::string camera_file(argv[1]);
+  std::string image_file(argv[2]);
+  std::string mesh_file(argv[3]);
   
   // initialize vgui
   vgui::init(argc, argv);
@@ -130,29 +130,29 @@ int main(int argc, char** argv)
   if(!imesh_read_ply2(mesh_file,v_mesh))
     return -1;
 
-  vcl_cout << "loaded " << mesh_file << vcl_endl;
+  std::cout << "loaded " << mesh_file << std::endl;
 
   SoNode* obj = build_SoNode(v_mesh);
   root->addChild(obj);
   obj->unref();
 
   vnl_double_3x4 camera;
-  vcl_fstream fh(camera_file.c_str());
+  std::fstream fh(camera_file.c_str());
   fh >> camera;
   fh.close();
 
 //#if 0
   vpgl_perspective_camera<double> P;
   vpgl_perspective_decomposition(camera, P);
-  vcl_cout << "K = \n"<<P.get_calibration().get_matrix() << vcl_endl;
-  vcl_cout << "R = \n" << P.get_rotation().as_matrix() << vcl_endl;
-  vcl_cout << "c = \n" << P.get_camera_center() << vcl_endl;
+  std::cout << "K = \n"<<P.get_calibration().get_matrix() << std::endl;
+  std::cout << "R = \n" << P.get_rotation().as_matrix() << std::endl;
+  std::cout << "c = \n" << P.get_camera_center() << std::endl;
 //#endif
   
   vil_image_resource_sptr image = vil_load_image_resource(image_file.c_str());
 
   
-  vcl_cout << camera << vcl_endl;
+  std::cout << camera << std::endl;
 
   bgui3d_project2d_tableau_sptr proj_tab = bgui3d_project2d_tableau_new(camera,root);
   bgui3d_examiner_tableau_sptr exam_tab = bgui3d_examiner_tableau_new(root);

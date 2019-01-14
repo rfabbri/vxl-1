@@ -7,9 +7,9 @@
 #include "Flip_spoke_process.h"
 #include <manifold_extraction/Lie_spoke_utilities.h>
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <algorithm>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 
 
@@ -25,7 +25,7 @@ Flip_spoke_process::Flip_spoke_process()
 {  
  if (!parameters()->add( "Save contour file <filename...>" , "-filename", bpro1_filepath("","*")))
          {
-    vcl_cerr << "ERROR: Adding parameters in Flip_spoke_process::Flip_spoke_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in Flip_spoke_process::Flip_spoke_process()" << std::endl;
 }
 }
 
@@ -52,7 +52,7 @@ bool Flip_spoke_process::execute()
   bpro1_filepath file_dir;
 
    parameters()->get_value( "-filename" ,file_dir);
-    vcl_string fpath = file_dir.path;
+    std::string fpath = file_dir.path;
 
   ////----------------------------------
   //// get input vsol (two polygons)
@@ -63,19 +63,19 @@ bool Flip_spoke_process::execute()
   //// The contour needs to be a polygon
   //vsol_polyline_2d_sptr poly1;
   //{
-  //  const vcl_vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
+  //  const std::vector< vsol_spatial_object_2d_sptr >& vsol_list = input_vsol1->all_data();
   //  poly1 = vsol_list[0]->cast_to_curve()->cast_to_polyline();
  
   //}
-      vcl_vector<vcl_string> file_names = get_all_files(fpath);
-      vcl_vector<vsol_point_2d_sptr> vertex_set,vertex_set_rev;
+      std::vector<std::string> file_names = get_all_files(fpath);
+      std::vector<vsol_point_2d_sptr> vertex_set,vertex_set_rev;
 
       for (unsigned int file_num = 0;file_num < file_names.size();file_num++)
           {
           vertex_set.clear();
           vertex_set_rev.clear();
           
-          vcl_string fname = file_names[file_num];
+          std::string fname = file_names[file_num];
 
            loadCON(fname,vertex_set);
 
@@ -93,7 +93,7 @@ bool Flip_spoke_process::execute()
                }
 
         fname.erase(fname.size()-4,fname.size());
-        vcl_string ext = "_flipped.con";
+        std::string ext = "_flipped.con";
         fname.append(ext);
         writeCON(fname,vertex_set_rev);
 
@@ -101,7 +101,7 @@ bool Flip_spoke_process::execute()
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > flipped_contour;
+  std::vector< vsol_spatial_object_2d_sptr > flipped_contour;
   vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (vertex_set_rev);
   flipped_contour.push_back(newpolyline->cast_to_spatial_object());
  

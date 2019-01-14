@@ -28,8 +28,8 @@ public:
   void remove();
 
 private:
-  vcl_set<dbmsh_link*> _links;
-  vcl_set<dbmsh_node*> _nodes;
+  std::set<dbmsh_link*> _links;
+  std::set<dbmsh_node*> _nodes;
 
 
 };

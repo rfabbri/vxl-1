@@ -19,7 +19,7 @@ void LineGeom::draw(SceneGraphVisitor *v) {
   v->end();
 }
 
-int LineGeom::getPoints_(vcl_vector<Point2D<double> >& pts_){
+int LineGeom::getPoints_(std::vector<Point2D<double> >& pts_){
   pts_.push_back(p0);
   pts_.push_back(p1);
   return 2;
@@ -39,13 +39,13 @@ bool LineGeom::setPoint_(int id_, const Point2D<double> pt_){
   
 void PolylineGeom::draw(SceneGraphVisitor *v) {
   v->beginPolyline();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->vertex(i->getX(), i->getY());
   v->end();
 }
 
-int PolylineGeom::getPoints_(vcl_vector<Point2D<double> >& pts_){
+int PolylineGeom::getPoints_(std::vector<Point2D<double> >& pts_){
   pts_ = _points;
   return _points.size();
 }
@@ -61,7 +61,7 @@ bool PolylineGeom::setPoint_(int id_, const Point2D<double> pt_){
   
 void UnfilledPolygonGeom::draw(SceneGraphVisitor *v) {
   v->beginUnfilledPolygon();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->vertex(i->getX(), i->getY());
   v->end();
@@ -69,7 +69,7 @@ void UnfilledPolygonGeom::draw(SceneGraphVisitor *v) {
 
 void ConvexPolygonGeom::draw(SceneGraphVisitor *v) {
   v->beginFilledPolygon();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->vertex(i->getX(), i->getY());
   v->end();
@@ -77,7 +77,7 @@ void ConvexPolygonGeom::draw(SceneGraphVisitor *v) {
 
 void ScaleInvariantConvexPolygonGeom::draw(SceneGraphVisitor *v) {
   v->beginFilledPolygon();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->vertex(i->getX(), i->getY());
   v->end();
@@ -110,7 +110,7 @@ void EllipseOutlineGeom::draw(SceneGraphVisitor *v) {
   v->end();
 }
 
-int EllipseOutlineGeom::getPoints_(vcl_vector<Point2D<double> >& pts_){
+int EllipseOutlineGeom::getPoints_(std::vector<Point2D<double> >& pts_){
   pts_.push_back(Point2D<double>(x,y));
   return 1;
 }
@@ -139,7 +139,7 @@ ArcGeom::ArcGeom (double sx, double sy, double ex, double ey,
    t1 = atan2 (ey-cy, ex-cx);
 
   if (nud==1){
-    vcl_swap(t0, t1);
+    std::swap(t0, t1);
   }
 
   if(t0 > t1) t1 += 2*M_PI;      
@@ -159,7 +159,7 @@ ArcGeom::ArcGeom(double start_angle, double end_angle, double cx, double cy,
    t1 = end_angle;
 
   if (nud==1){
-    vcl_swap(t0, t1);
+    std::swap(t0, t1);
   }
 
   if(t0 > t1) t1 += 2*M_PI;
@@ -181,7 +181,7 @@ void ArcGeom::setParameters (double sx, double sy, double ex, double ey,
   if(t0 > t1) t1 += 2*M_PI; 
 
   if (nud==1){
-    vcl_swap(t0, t1);
+    std::swap(t0, t1);
   }
 
   set(cx, cy, R, R, t0, t1);
@@ -224,7 +224,7 @@ void ScaleInvariantPolylineGeom::draw(SceneGraphVisitor *v) {
 
 void FilledPolygonGeom::draw(SceneGraphVisitor *v) {
   v->beginConcaveFilledPolygon();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->concaveVertex(i->getX(), i->getY());
   v->endConcaveFilledPolygon();
@@ -232,7 +232,7 @@ void FilledPolygonGeom::draw(SceneGraphVisitor *v) {
 
 void ScaleInvariantFilledPolygonGeom::draw(SceneGraphVisitor *v) {
   v->beginConcaveFilledPolygon();
-  for(vcl_vector<Point2D<double> >::const_iterator
+  for(std::vector<Point2D<double> >::const_iterator
       i = _points.begin(); i != _points.end(); ++i)
     v->concaveVertex(i->getX(), i->getY());
   v->endConcaveFilledPolygon();
@@ -260,7 +260,7 @@ ImageGeom::ImageGeom(Image *ii, double xx1, double yy1, double w, double h, bool
         height = -height;
    }
 
-ImageGeom::ImageGeom(vcl_string file_name,  double xx1, double yy1, double w, bool flip)
+ImageGeom::ImageGeom(std::string file_name,  double xx1, double yy1, double w, bool flip)
   {
     //NOTE RGBImage is being used.
     img  = new RGBImage(file_name.c_str());
@@ -272,7 +272,7 @@ ImageGeom::ImageGeom(vcl_string file_name,  double xx1, double yy1, double w, bo
         height = -height;
    }
 
-ImageGeom::ImageGeom(vcl_string file_name, double xx1, double yy1, double w, double h, bool flip) 
+ImageGeom::ImageGeom(std::string file_name, double xx1, double yy1, double w, double h, bool flip) 
   {
     //NOTE RGBImage is being used.
     img  = new RGBImage(file_name.c_str());
@@ -285,7 +285,7 @@ ImageGeom::ImageGeom(vcl_string file_name, double xx1, double yy1, double w, dou
    }
 
 
-ImageGeom::ImageGeom(vcl_string file_name, double xx1, double yy1, bool flip) 
+ImageGeom::ImageGeom(std::string file_name, double xx1, double yy1, bool flip) 
   {
     //NOTE RGBImage is being used.
     img    = new RGBImage(file_name.c_str());
@@ -298,10 +298,10 @@ ImageGeom::ImageGeom(vcl_string file_name, double xx1, double yy1, bool flip)
    }
 
 
-int ImageGeom::getInformation(vcl_string &info, Point2D<double> pos)
+int ImageGeom::getInformation(std::string &info, Point2D<double> pos)
   {
-    vcl_ostringstream ostrm;
-            ostrm<<" Image Coords = ["<<x1<<", "<<y1<<", "<<width<<", "<<height<<"] "<<vcl_endl;
+    std::ostringstream ostrm;
+            ostrm<<" Image Coords = ["<<x1<<", "<<y1<<", "<<width<<", "<<height<<"] "<<std::endl;
     
     int x0=(int)pos.getX();
     int y0=(int)pos.getY();
@@ -310,7 +310,7 @@ int ImageGeom::getInformation(vcl_string &info, Point2D<double> pos)
         RGBImage *rgb = dynamic_cast<RGBImage *> (img);
         if (rgb)
           {
-            ostrm<<" Pixel [RGB]   = ["<<(int)rgb->r(x0,y0)<<", "<<(int)rgb->g(x0,y0)<<", "<<(int)rgb->b(x0, y0)<<"] "<<vcl_endl;
+            ostrm<<" Pixel [RGB]   = ["<<(int)rgb->r(x0,y0)<<", "<<(int)rgb->g(x0,y0)<<", "<<(int)rgb->b(x0, y0)<<"] "<<std::endl;
            }
        }
     
@@ -328,12 +328,12 @@ void TextGeom::draw(SceneGraphVisitor *v) {
   v->text(x, y, txt.c_str());
 }
 
-AffineTextGeom::AffineTextGeom(float xx, float yy, vcl_string tt, bool flip) : x(xx), y(yy), txt(tt) {
+AffineTextGeom::AffineTextGeom(float xx, float yy, std::string tt, bool flip) : x(xx), y(yy), txt(tt) {
   if(flip)
     pushXForm(XForm::reflect_y_axis());
 }
 
-AffineTextGeom::AffineTextGeom(Point2D<double> pos, vcl_string tt, bool flip) : x(pos.getX()), y(pos.getY()), txt(tt) 
+AffineTextGeom::AffineTextGeom(Point2D<double> pos, std::string tt, bool flip) : x(pos.getX()), y(pos.getY()), txt(tt) 
   {
     if(flip)
         pushXForm(XForm::reflect_y_axis());

@@ -46,8 +46,8 @@ dbskfg_transformer::dbskfg_transformer
     {
         orig_contour_links_[transform_->contours_affected_[i]->id()]=
             transform_->contours_affected_[i];
-        vcl_stringstream source_stream;
-        vcl_stringstream target_stream;
+        std::stringstream source_stream;
+        std::stringstream target_stream;
         source_stream<<
             transform_->contours_affected_[i]->source()->pt();
 
@@ -55,7 +55,7 @@ dbskfg_transformer::dbskfg_transformer
             dynamic_cast<dbskfg_contour_node*>
             (&(*transform_->contours_affected_[i]->source()));
      
-        vcl_vector<dbskfg_shock_link*> shocks = 
+        std::vector<dbskfg_shock_link*> shocks = 
             source_cnode->shocks_affected();
         
         if ( shocks.size() == 0 )
@@ -135,7 +135,7 @@ dbskfg_transformer::dbskfg_transformer
             dynamic_cast<dbskfg_contour_node*>
             (&(*transform_->contours_affected_[i]->target()));
        
-        vcl_vector<dbskfg_shock_link*> tshocks = 
+        std::vector<dbskfg_shock_link*> tshocks = 
             target_cnode->shocks_affected();
 
         if ( tshocks.size() == 0 )
@@ -212,7 +212,7 @@ dbskfg_transformer::dbskfg_transformer
     for ( unsigned int j=0 ;j < transform_->contours_nodes_affected_.size(); 
           ++j)
     {
-        vcl_stringstream stream;
+        std::stringstream stream;
         stream<<transform_->contours_nodes_affected_[j]->pt();
         all_nodes_[stream.str()]=transform_->contours_nodes_affected_[j];
     }
@@ -223,7 +223,7 @@ dbskfg_transformer::dbskfg_transformer
     {
         if ( transform_->contours_to_remove_[k]->degree() > 2 )
         {
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<transform_->contours_to_remove_[k]->pt();
             all_nodes_[stream.str()]=transform_->contours_to_remove_[k];
         }
@@ -233,7 +233,7 @@ dbskfg_transformer::dbskfg_transformer
     // Populate wavefront with outer shock nodes
     for ( unsigned b=0; b < transform_->outer_shock_nodes_.size() ; ++b)
     {
-        wavefront_[transform_->outer_shock_nodes_[b]->id()]=vcl_make_pair
+        wavefront_[transform_->outer_shock_nodes_[b]->id()]=std::make_pair
             (transform_->outer_shock_nodes_[b],false);
 
 
@@ -279,20 +279,20 @@ dbskfg_transformer::dbskfg_transformer
         // 7) Add the rag nodes
         add_rag_nodes();
 
-        vcl_cout<<vcl_endl;
-        vcl_cout<<"After everything"<<vcl_endl;
+        std::cout<<std::endl;
+        std::cout<<"After everything"<<std::endl;
 
-        vcl_cout<<"Printing out vertices: "<<
-            original_graph_->number_of_vertices()<<vcl_endl;
+        std::cout<<"Printing out vertices: "<<
+            original_graph_->number_of_vertices()<<std::endl;
 
-        vcl_cout<<"Printing out edges: "<<original_graph_->number_of_edges()
-                <<vcl_endl;
-        vcl_cout<<vcl_endl;
+        std::cout<<"Printing out edges: "<<original_graph_->number_of_edges()
+                <<std::endl;
+        std::cout<<std::endl;
     }
     else
     {
 
-        vcl_cout<<"Error performing transorm "<<transform_->id_<<vcl_endl;
+        std::cout<<"Error performing transorm "<<transform_->id_<<std::endl;
     }
     
  
@@ -333,8 +333,8 @@ dbskfg_transformer::~dbskfg_transformer()
 void dbskfg_transformer::remove_segs_original_graph()
 {
     
-    vcl_map<unsigned int,vcl_string> rag_map;
-    vcl_vector<dbskfg_rag_node_sptr> rag_to_delete;
+    std::map<unsigned int,std::string> rag_map;
+    std::vector<dbskfg_rag_node_sptr> rag_to_delete;
 
     unsigned int orig_size = transform_->shock_links_affected_.size();
 
@@ -342,7 +342,7 @@ void dbskfg_transformer::remove_segs_original_graph()
     //remove_extra_shocks();
 
     // Remove shock links
-    vcl_vector<dbskfg_composite_link_sptr> slinks
+    std::vector<dbskfg_composite_link_sptr> slinks
         = transform_->shock_links_affected_;
 
     // Test if shock ray lies in vertex
@@ -367,12 +367,12 @@ void dbskfg_transformer::remove_segs_original_graph()
     for ( unsigned int k=0 ; k < rag_to_delete.size() ; ++k)
     {
 
-        vcl_map<unsigned int,dbskfg_shock_link*> slinks = rag_to_delete[k]->
+        std::map<unsigned int,dbskfg_shock_link*> slinks = rag_to_delete[k]->
             get_shock_links();
         
         if ( slinks.size() )
         {
-            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            std::map<unsigned int,dbskfg_shock_link*>::iterator it;
             for ( it=slinks.begin(); it != slinks.end() ; ++it)
             {
                 new_shock_links_[(*it).second->id()]=(*it).second;
@@ -416,7 +416,7 @@ void dbskfg_transformer::remove_segs_original_graph()
 
         for ( unsigned int k=0; k < transform_->all_gaps_.size() ; ++k)
         {
-            vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
+            std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
                 tgap = transform_->all_gaps_[k];
 
             // For gap remove all nodes
@@ -430,7 +430,7 @@ void dbskfg_transformer::remove_segs_original_graph()
     }
 
     // Remove internal shock nodes
-    vcl_vector<dbskfg_composite_node_sptr> snodes
+    std::vector<dbskfg_composite_node_sptr> snodes
         = transform_->shock_nodes_affected_;
    
     for ( unsigned int j=0; j < snodes.size() ; ++j )
@@ -447,7 +447,7 @@ void dbskfg_transformer::remove_segs_original_graph()
 
     }
 
-    vcl_vector<unsigned int> index_to_remove;
+    std::vector<unsigned int> index_to_remove;
 
     for ( unsigned int j=0; j < transform_->contours_to_remove_.size();
           ++j)
@@ -461,7 +461,7 @@ void dbskfg_transformer::remove_segs_original_graph()
             
             dbskfg_composite_node::edge_iterator eit;
             
-            vcl_map<unsigned int,vcl_string> other_cids;
+            std::map<unsigned int,std::string> other_cids;
 
             bool flag_delete=true;
             unsigned int num_nodes_to_remove=0;
@@ -571,8 +571,8 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
 {
 
     // First check if edge is viable
-    vcl_stringstream source_stream;
-    vcl_stringstream target_stream;
+    std::stringstream source_stream;
+    std::stringstream target_stream;
 
     dbskfg_composite_node_sptr target(0);
     dbskfg_composite_node_sptr source(0);
@@ -633,17 +633,17 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         
     }
 
-    vcl_map<double,vcl_pair<unsigned int,
-        vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> >
+    std::map<double,std::pair<unsigned int,
+        std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr> >
         > distance_map;
-    vcl_map<double,bool> case_to_consider;
+    std::map<double,bool> case_to_consider;
 
     if ( source_outer || target_outer || 
          ((all_nodes_.count(source_stream.str()) == 1 ) != 
           (all_nodes_.count(target_stream.str()) == 1 ) ))
     {
 
-        vcl_map<unsigned int,vcl_pair<dbskfg_composite_node_sptr,bool> >
+        std::map<unsigned int,std::pair<dbskfg_composite_node_sptr,bool> >
             ::iterator it;
 
         for ( it = wavefront_.begin() ; it != wavefront_.end() ; ++it )
@@ -655,10 +655,10 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
                 dbskfg_shock_node* shock_node = dynamic_cast<dbskfg_shock_node*>
                     (&(*(*it).second.first));
 
-                vcl_stringstream temp;
+                std::stringstream temp;
                 vgl_point_2d<double> point;
 
-                vcl_pair<dbskfg_composite_node_sptr,
+                std::pair<dbskfg_composite_node_sptr,
                     dbskfg_composite_node_sptr> local_pair;
                 local_pair.first=0;
                 local_pair.second=0;
@@ -754,7 +754,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
                     case_flag=true;
                 }
 
-                vcl_stringstream outer_shock;
+                std::stringstream outer_shock;
                 outer_shock<<shock_node->pt();
                 
                 if ( !local_pair.first && !local_pair.second )
@@ -766,10 +766,10 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
                      point == shock_node->pt() ||
                      vgl_distance(shock_node->pt(),point) < 0.02)
                 {
-                    vcl_pair<unsigned int,
-                        vcl_pair<dbskfg_composite_node_sptr,
+                    std::pair<unsigned int,
+                        std::pair<dbskfg_composite_node_sptr,
                         dbskfg_composite_node_sptr> > pair 
-                        = vcl_make_pair(shock_node->id(),local_pair);
+                        = std::make_pair(shock_node->id(),local_pair);
 
                     distance_map[vgl_distance(shock_node->pt(),point)]
                         = pair;
@@ -822,7 +822,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
                 vgl_point_2d<double> right_point = 
                     reinterpret_cast<dbsk2d_ishock_bpoint*>(
                         edge->rBElement())->pt();
-                vcl_stringstream righty; righty<<right_point; 
+                std::stringstream righty; righty<<right_point; 
         
                 if ( !all_nodes_.count(righty.str()) )
                 {
@@ -837,7 +837,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
                 vgl_point_2d<double> left_point = 
                     reinterpret_cast<dbsk2d_ishock_bpoint*>(
                         edge->lBElement())->pt();
-                vcl_stringstream lefty; lefty<<left_point; 
+                std::stringstream lefty; lefty<<left_point; 
         
                 if ( !all_nodes_.count(lefty.str()) )
                 {
@@ -873,7 +873,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         dynamic_cast<dbskfg_shock_link*>(&(*shock_edge));
 
     // Grab original contour ids
-    vcl_pair<int,int> ids = dbskfg_utilities::get_contour_id_from_shock_edge
+    std::pair<int,int> ids = dbskfg_utilities::get_contour_id_from_shock_edge
         (edge);
  
     //Line/Line
@@ -892,7 +892,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         {
             vgl_point_2d<double> source_node=edge->lBElement()->s_pt()->pt();
             vgl_point_2d<double> target_node=edge->lBElement()->e_pt()->pt();
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<source_node<<target_node;
             
             if (new_contour_links_points_.count(stream.str()))
@@ -921,7 +921,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         {
             vgl_point_2d<double> source_node=edge->rBElement()->s_pt()->pt();
             vgl_point_2d<double> target_node=edge->rBElement()->e_pt()->pt();
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<source_node<<target_node;
             
             if (new_contour_links_points_.count(stream.str()))
@@ -961,7 +961,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         // Right Point
         vgl_point_2d<double> right_point = 
             reinterpret_cast<dbsk2d_ishock_bpoint*>(edge->rBElement())->pt();
-        vcl_stringstream righty; righty<<right_point; 
+        std::stringstream righty; righty<<right_point; 
         right_boundary.point_ = right_point;
         dbskfg_contour_node* cnode_right = dynamic_cast<dbskfg_contour_node*>
             (&(*all_nodes_[righty.str()]));
@@ -982,7 +982,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         {
             vgl_point_2d<double> source_node=edge->lBElement()->s_pt()->pt();
             vgl_point_2d<double> target_node=edge->lBElement()->e_pt()->pt();
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<source_node<<target_node;
             
             if (new_contour_links_points_.count(stream.str()))
@@ -1019,7 +1019,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         // Left Point
         vgl_point_2d<double> left_point = 
             reinterpret_cast<dbsk2d_ishock_bpoint*>(edge->lBElement())->pt();
-        vcl_stringstream lefty; lefty<<left_point; 
+        std::stringstream lefty; lefty<<left_point; 
         left_boundary.point_  = left_point;
         dbskfg_contour_node* cnode_left = dynamic_cast<dbskfg_contour_node*>
             (&(*all_nodes_[lefty.str()]));
@@ -1040,7 +1040,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         {
             vgl_point_2d<double> source_node=edge->rBElement()->s_pt()->pt();
             vgl_point_2d<double> target_node=edge->rBElement()->e_pt()->pt();
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<source_node<<target_node;
             
             if (new_contour_links_points_.count(stream.str()))
@@ -1079,7 +1079,7 @@ void dbskfg_transformer::wavefront_complete(dbsk2d_ishock_edge* edge)
         left_boundary.point_  = left_point;
         right_boundary.point_ = right_point;
 
-        vcl_stringstream lefty,righty;
+        std::stringstream lefty,righty;
         lefty<<left_point; righty<<right_point;
 
         dbskfg_contour_node* cnode_left = dynamic_cast<dbskfg_contour_node*>
@@ -1134,8 +1134,8 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
     {
         edge = *eit;
 
-        vcl_stringstream source_stream;
-        vcl_stringstream target_stream;
+        std::stringstream source_stream;
+        std::stringstream target_stream;
 
         // Grab source node
         if ( edge->pSNode() != 0)
@@ -1175,7 +1175,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
             }
 
 
-            vcl_stringstream temp;
+            std::stringstream temp;
 
             // One of these exist inside lets find out which
             if ( all_nodes_.count(source_stream.str()))
@@ -1207,7 +1207,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
                 temp<<edge->ex_pts().front();
             }
                     
-            vcl_stringstream outer_shock;
+            std::stringstream outer_shock;
             outer_shock<<shock_node->pt();
 
             if ( temp.str() == outer_shock.str() ||
@@ -1247,7 +1247,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
         dynamic_cast<dbskfg_shock_link*>(&(*shock_edge));
 
     // Grab original contour ids
-    vcl_pair<int,int> ids = dbskfg_utilities::get_contour_id_from_shock_edge
+    std::pair<int,int> ids = dbskfg_utilities::get_contour_id_from_shock_edge
         (edge);
  
     //Line/Line
@@ -1299,7 +1299,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
         // Right Point
         vgl_point_2d<double> right_point = 
             reinterpret_cast<dbsk2d_ishock_bpoint*>(edge->rBElement())->pt();
-        vcl_stringstream righty; righty<<right_point; 
+        std::stringstream righty; righty<<right_point; 
         right_boundary.point_ = right_point;
         dbskfg_contour_node* cnode_right = dynamic_cast<dbskfg_contour_node*>
             (&(*all_nodes_[righty.str()]));
@@ -1338,7 +1338,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
         // Left Point
         vgl_point_2d<double> left_point = 
             reinterpret_cast<dbsk2d_ishock_bpoint*>(edge->lBElement())->pt();
-        vcl_stringstream lefty; lefty<<left_point; 
+        std::stringstream lefty; lefty<<left_point; 
         left_boundary.point_  = left_point;
         dbskfg_contour_node* cnode_left = dynamic_cast<dbskfg_contour_node*>
             (&(*all_nodes_[lefty.str()]));
@@ -1381,7 +1381,7 @@ void dbskfg_transformer::wavefront_complete(dbskfg_composite_node_sptr& node)
         left_boundary.point_  = left_point;
         right_boundary.point_ = right_point;
 
-        vcl_stringstream lefty,righty;
+        std::stringstream lefty,righty;
         lefty<<left_point; righty<<right_point;
 
         dbskfg_contour_node* cnode_left = dynamic_cast<dbskfg_contour_node*>
@@ -1424,11 +1424,11 @@ void dbskfg_transformer::add_new_contours()
 
     for ( unsigned int k=0; k < transform_->all_gaps_.size() ; ++k)
     {
-        vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
+        std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
             tgap = transform_->all_gaps_[k];
 
-        vcl_stringstream leftpt_stream;
-        vcl_stringstream rightpt_stream;
+        std::stringstream leftpt_stream;
+        std::stringstream rightpt_stream;
         leftpt_stream<<tgap.first->pt();
         rightpt_stream<<tgap.second->pt();
         dbskfg_contour_node* gap1=dynamic_cast<dbskfg_contour_node*>
@@ -1461,7 +1461,7 @@ void dbskfg_transformer::add_new_contours()
             {
                 // Lets add in contour nodes
                 // Must make sure it is not gap nodes
-                vcl_stringstream sourcestr,targetstr;
+                std::stringstream sourcestr,targetstr;
                 sourcestr<<link->source()->pt();
                 targetstr<<link->target()->pt();
                 
@@ -1524,7 +1524,7 @@ void dbskfg_transformer::add_new_contours()
                 new_contour_links_[link->id()]=clink;
 
                 // Also store contour links by start end end point
-                vcl_stringstream stream1,stream2;
+                std::stringstream stream1,stream2;
                 stream1<<source_node->pt()<<target_node->pt();
                 stream2<<target_node->pt()<<source_node->pt();
                 new_contour_links_points_[stream1.str()]=clink;
@@ -1583,7 +1583,7 @@ bool dbskfg_transformer::compute_local_graph()
     //assert(status_flag == true);
 
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
 
     shock_results = shock_pro.get_output();
 
@@ -1611,7 +1611,7 @@ bool dbskfg_transformer::compute_local_graph()
 
     cg_pro.finish();
 
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     cg_results = cg_pro.get_output();
 
     cg_pro.clear_input();
@@ -1684,7 +1684,7 @@ void dbskfg_transformer::shock_link_add(dbskfg_composite_link_sptr link,
     // Did the source come from a contour node?
     // Does it exist inside the polygon?
 
-    vcl_stringstream targetstream,sourcestream;
+    std::stringstream targetstream,sourcestream;
     targetstream<<(*link).target()->pt();
     sourcestream<<(*link).source()->pt();
     
@@ -1847,7 +1847,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
     if ( shock_link->shock_compute_type() == 
          dbskfg_utilities::RLLP )
     {
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             clinks = shock_link->right_contour_links();
                         
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -1877,7 +1877,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
         }                                
 
         // add left point
-        vcl_stringstream temp_stream;
+        std::stringstream temp_stream;
         temp_stream<<shock_link->get_left_point()->pt();
 
         dbskfg_contour_node* cnode = 
@@ -1893,7 +1893,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
          dbskfg_utilities::LLRP )
     {
         
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             clinks = shock_link->left_contour_links();
          
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -1925,7 +1925,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
         }                                
                         
         // add right point
-        vcl_stringstream temp_stream;
+        std::stringstream temp_stream;
         temp_stream<<shock_link->get_right_point()->pt();
         dbskfg_contour_node* cnode = dynamic_cast<dbskfg_contour_node*>(
                 &(*all_nodes_[temp_stream.str()]));
@@ -1939,7 +1939,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
     {
 
         // Left Line
-        vcl_vector<dbskfg_composite_link_sptr> clinks = 
+        std::vector<dbskfg_composite_link_sptr> clinks = 
             shock_link->left_contour_links();
                         
         for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -1970,7 +1970,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
         }                                
         
         // Right line
-        vcl_vector<dbskfg_composite_link_sptr>
+        std::vector<dbskfg_composite_link_sptr>
             rclinks = shock_link->right_contour_links();
                      
         for ( unsigned int i=0; i<rclinks.size() ; ++i)
@@ -2009,7 +2009,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
     {
         
         // add left point
-        vcl_stringstream temp_stream;
+        std::stringstream temp_stream;
         temp_stream<<shock_link->get_left_point()->pt();
         dbskfg_contour_node* cnode = 
             dynamic_cast<dbskfg_contour_node*>(
@@ -2018,7 +2018,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
         cnode->shock_links_affected(slink);
 
         // add right point
-        vcl_stringstream tempr_stream;
+        std::stringstream tempr_stream;
         tempr_stream<<shock_link->get_right_point()->pt();
         dbskfg_contour_node* rcnode = 
             dynamic_cast<dbskfg_contour_node*>(
@@ -2039,7 +2039,7 @@ void dbskfg_transformer::create_shock_link(dbskfg_composite_node_sptr source,
 
 void dbskfg_transformer::classify_nodes()
 {
-    vcl_map<vcl_string,dbskfg_composite_node_sptr>::iterator vit;
+    std::map<std::string,dbskfg_composite_node_sptr>::iterator vit;
     for ( vit = all_nodes_.begin() ; vit != all_nodes_.end() ; ++vit)
     {
         if ( (*vit).second->node_type() == dbskfg_composite_node::SHOCK_NODE )
@@ -2088,7 +2088,7 @@ void dbskfg_transformer::classify_nodes()
         }
     }
 
-    vcl_vector<dbskfg_composite_node_sptr>::iterator nit;
+    std::vector<dbskfg_composite_node_sptr>::iterator nit;
     for ( nit = transform_->outer_shock_nodes_.begin() ; 
           nit != transform_->outer_shock_nodes_.end() ; ++nit )
     {
@@ -2148,10 +2148,10 @@ void dbskfg_transformer::verify_surgery()
 {
 
     // Keep two pairs
-    vcl_map<unsigned int,dbskfg_shock_link*> shocks_to_delete;
-    vcl_map<unsigned int,dbskfg_composite_node_sptr> nodes_to_delete;
+    std::map<unsigned int,dbskfg_shock_link*> shocks_to_delete;
+    std::map<unsigned int,dbskfg_composite_node_sptr> nodes_to_delete;
 
-    vcl_map<vcl_string,dbskfg_composite_node_sptr>::iterator vit;
+    std::map<std::string,dbskfg_composite_node_sptr>::iterator vit;
     for ( vit = all_nodes_.begin() ; vit != all_nodes_.end() ; ++vit)
     {
 
@@ -2209,7 +2209,7 @@ void dbskfg_transformer::verify_surgery()
         
     }
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator sit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator sit;
     // Loop over all degree one nodes and delete
     for ( sit = shocks_to_delete.begin() ; sit != shocks_to_delete.end() ; 
         ++sit)
@@ -2218,7 +2218,7 @@ void dbskfg_transformer::verify_surgery()
 
         if ( slink->left_contour_links().size() )
         {
-             vcl_vector<dbskfg_composite_link_sptr> left_links=
+             std::vector<dbskfg_composite_link_sptr> left_links=
                  slink->left_contour_links();
 
              for ( unsigned int i=0; i < left_links.size() ; ++i)
@@ -2231,7 +2231,7 @@ void dbskfg_transformer::verify_surgery()
 
         if ( slink->right_contour_links().size() )
         {
-             vcl_vector<dbskfg_composite_link_sptr> right_links=
+             std::vector<dbskfg_composite_link_sptr> right_links=
                  slink->right_contour_links();
 
              for ( unsigned int i=0; i < right_links.size(); ++i)
@@ -2256,7 +2256,7 @@ void dbskfg_transformer::verify_surgery()
         
     }
 
-    vcl_map<unsigned int,dbskfg_composite_node_sptr>::iterator nit;
+    std::map<unsigned int,dbskfg_composite_node_sptr>::iterator nit;
 
     // Loop over all degree one nodes and delete
     for ( nit = nodes_to_delete.begin() ; nit != nodes_to_delete.end() ; 
@@ -2270,7 +2270,7 @@ void dbskfg_transformer::verify_surgery()
 
 void dbskfg_transformer::add_rag_nodes()
 {
-    vcl_map<unsigned int,dbskfg_composite_link_sptr>::iterator it;
+    std::map<unsigned int,dbskfg_composite_link_sptr>::iterator it;
     for ( it = new_shock_links_.begin(); it != new_shock_links_.end() ; ++it)
     {
         dbskfg_shock_link* slink = dynamic_cast<dbskfg_shock_link*>
@@ -2298,7 +2298,7 @@ void dbskfg_transformer::undo_transform()
 {
 
     // ********************** Delete Shock info ***************************
-    vcl_map<unsigned int,dbskfg_composite_link_sptr>::iterator it;
+    std::map<unsigned int,dbskfg_composite_link_sptr>::iterator it;
     for ( it = new_shock_links_.begin(); it != new_shock_links_.end() ; ++it)
     {
         for ( unsigned int c=0; c < transform_->contours_affected_.size(); ++c)
@@ -2360,11 +2360,11 @@ void dbskfg_transformer::undo_transform()
     }
 
     // *************** Remove rag vertices **********************************
-    vcl_vector<dbskfg_rag_node_sptr> rag_to_delete;
-    vcl_map<unsigned int, vcl_pair<bool,dbskfg_rag_node_sptr> > rag_nodes;
+    std::vector<dbskfg_rag_node_sptr> rag_to_delete;
+    std::map<unsigned int, std::pair<bool,dbskfg_rag_node_sptr> > rag_nodes;
 
     // Keep track of all shock links
-    vcl_vector<vcl_map<unsigned int, dbskfg_shock_link*> > shock_to_rag;
+    std::vector<std::map<unsigned int, dbskfg_shock_link*> > shock_to_rag;
 
     // Test if shock ray lies in vertex
     for (dbskfg_rag_graph::vertex_iterator vit = 
@@ -2384,7 +2384,7 @@ void dbskfg_transformer::undo_transform()
         
         if ( flag )
         {
-            vcl_map<unsigned int, dbskfg_shock_link*>
+            std::map<unsigned int, dbskfg_shock_link*>
                 old_shock_links = (*vit)->get_shock_links();
             rag_to_delete.push_back(*vit);
             shock_to_rag.push_back(old_shock_links);
@@ -2407,7 +2407,7 @@ void dbskfg_transformer::undo_transform()
 
     }
 
-    vcl_map<unsigned int,dbskfg_composite_link_sptr>::iterator cit;
+    std::map<unsigned int,dbskfg_composite_link_sptr>::iterator cit;
     for ( cit = contours_removed_.begin() ; cit != contours_removed_.end() ;
           ++cit)
     {
@@ -2420,7 +2420,7 @@ void dbskfg_transformer::undo_transform()
    
  
     // ****************** Add back shock nodes/links **************************
-    vcl_vector<dbskfg_composite_node_sptr> snodes
+    std::vector<dbskfg_composite_node_sptr> snodes
         = transform_->shock_nodes_affected_;
 
     for ( unsigned int j=0; j < snodes.size() ; ++j )
@@ -2429,7 +2429,7 @@ void dbskfg_transformer::undo_transform()
         bool flag =original_graph_->add_vertex(snodes[j]);
     }
 
-    vcl_vector<dbskfg_composite_link_sptr> slinks
+    std::vector<dbskfg_composite_link_sptr> slinks
         = transform_->shock_links_affected_;
 
     for ( unsigned int j=0; j < slinks.size() ; ++j )
@@ -2442,7 +2442,7 @@ void dbskfg_transformer::undo_transform()
         dbskfg_shock_link* shock_link = dynamic_cast<dbskfg_shock_link*>
         (&(*slinks[j]));
 
-        vcl_vector<dbskfg_composite_link_sptr> left_contour_links
+        std::vector<dbskfg_composite_link_sptr> left_contour_links
             = shock_link->left_contour_links();
         
         for ( unsigned int l=0; l < left_contour_links.size() ; ++l)
@@ -2454,7 +2454,7 @@ void dbskfg_transformer::undo_transform()
             contour_link->shock_links_affected(shock_link);
         }
        
-        vcl_vector<dbskfg_composite_link_sptr> right_contour_links
+        std::vector<dbskfg_composite_link_sptr> right_contour_links
             = shock_link->right_contour_links();
         
         for ( unsigned int r=0; r < right_contour_links.size() ; ++r)
@@ -2485,7 +2485,7 @@ void dbskfg_transformer::undo_transform()
         else
         {
             rag_nodes[shock_link->get_rag_node()->id()]
-                = vcl_make_pair(true,shock_link->get_rag_node());
+                = std::make_pair(true,shock_link->get_rag_node());
             rag_nodes[shock_link->get_rag_node()->id()].second
                 ->add_shock_link(shock_link);
 
@@ -2495,7 +2495,7 @@ void dbskfg_transformer::undo_transform()
 
     }
 
-    vcl_map<unsigned int, vcl_pair<bool,dbskfg_rag_node_sptr> >::iterator rit;
+    std::map<unsigned int, std::pair<bool,dbskfg_rag_node_sptr> >::iterator rit;
     for ( rit = rag_nodes.begin() ; rit != rag_nodes.end(); ++rit)
     {
         if ( (*rit).second.first )
@@ -2506,8 +2506,8 @@ void dbskfg_transformer::undo_transform()
 
     for ( unsigned int i=0; i < shock_to_rag.size() ; ++i)
     {
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator sit;
-        vcl_map<unsigned int,dbskfg_shock_link*> shock_to_rag_map =
+        std::map<unsigned int,dbskfg_shock_link*>::iterator sit;
+        std::map<unsigned int,dbskfg_shock_link*> shock_to_rag_map =
             shock_to_rag[i];
         for ( sit = shock_to_rag_map.begin() ; sit != shock_to_rag_map.end() ; 
               ++sit)
@@ -2532,7 +2532,7 @@ void dbskfg_transformer::undo_transform()
 
 void dbskfg_transformer::remove_extra_shocks()
 {
-    vcl_vector<dbskfg_composite_node_sptr> queue;
+    std::vector<dbskfg_composite_node_sptr> queue;
 
     for ( unsigned int k=0; k < transform_->outer_shock_nodes_.size() ; 
           ++k)

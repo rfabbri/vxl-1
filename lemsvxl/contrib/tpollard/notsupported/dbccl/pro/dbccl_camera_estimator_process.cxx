@@ -11,7 +11,7 @@ dbccl_camera_estimator_process::dbccl_camera_estimator_process() : bpro1_process
 {
   if( !parameters()->add( 
     "Search Radius" , "-dbcclsr" , 0 ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   } 
   //parameters()->get_value( "-dbcclsr" , tracker.params.search_rad );
 }
@@ -32,7 +32,7 @@ dbccl_camera_estimator_process::clone() const
 
 
 //------------------------------------------
-vcl_string
+std::string
 dbccl_camera_estimator_process::name()
 {
   return "Aerial Camera Estimator";
@@ -40,20 +40,20 @@ dbccl_camera_estimator_process::name()
 
 
 //-----------------------------------------------
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbccl_camera_estimator_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //----------------------------------------------------
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 dbccl_camera_estimator_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }

@@ -35,7 +35,7 @@ public:
   //: This is called when the tool is activated
   virtual void activate();
 
-  vcl_string name() const;
+  std::string name() const;
 
   virtual void get_popup( const vgui_popup_params& params, vgui_menu &menu );
 
@@ -61,12 +61,12 @@ protected:
   int selected_dart_; unsigned dart_cnt_;
   //: keep a sorted map of all darts based on splice costs to determine which get pruned 
   //  and which stay
-  vcl_map< vcl_pair<double, unsigned>, bool> dart_splice_map_;
+  std::map< std::pair<double, unsigned>, bool> dart_splice_map_;
   bool add_splice_;
   double threshold_;
   void update_dart_splice_map();
 
-  vcl_vector<dbsk2d_shock_edge_sptr> selected_edges;
+  std::vector<dbsk2d_shock_edge_sptr> selected_edges;
   dbsk2d_shock_node_sptr start_node;
 
   dbskr_scurve_sptr cur_scurve; ///< this is the scurve formed from the selected edges

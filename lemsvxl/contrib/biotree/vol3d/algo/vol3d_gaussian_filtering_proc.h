@@ -6,7 +6,7 @@
 // \author    Gamze Tunali
 // \date      2006-05-1
 //
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_smart_ptr.h>
 #include <vil3d/vil3d_image_resource.h>
 #include <vil3d/vil3d_image_view.h>
@@ -24,7 +24,7 @@ class  vol3d_gaussian_filtering_proc{
   public:
 
     vol3d_gaussian_filtering_proc(vil3d_image_resource_sptr img_res_sptr,
-                                  vcl_vector<vol3d_gaussian_kernel_3d> &kernels);
+                                  std::vector<vol3d_gaussian_kernel_3d> &kernels);
 
     ~vol3d_gaussian_filtering_proc() {};
   
@@ -37,7 +37,7 @@ class  vol3d_gaussian_filtering_proc{
       return *field_;
     }
 
-    vcl_vector<vol3d_gaussian_kernel_3d> kernels() {return kernels_; }
+    std::vector<vol3d_gaussian_kernel_3d> kernels() {return kernels_; }
 
   private:
 
@@ -54,7 +54,7 @@ class  vol3d_gaussian_filtering_proc{
 
     vil3d_image_resource_sptr img_res_sptr_;
 
-    vcl_vector<vol3d_gaussian_kernel_3d> kernels_;
+    std::vector<vol3d_gaussian_kernel_3d> kernels_;
 
     vil3d_image_view_base_sptr view_3d_;
 
@@ -64,6 +64,6 @@ class  vol3d_gaussian_filtering_proc{
 };
 
 template <class T>
-void x_write(vcl_ostream& os, vol3d_gaussian_filtering_proc<T> &proc);
+void x_write(std::ostream& os, vol3d_gaussian_filtering_proc<T> &proc);
 
 #endif

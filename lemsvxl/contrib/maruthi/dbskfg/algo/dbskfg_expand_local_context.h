@@ -54,7 +54,7 @@ private:
     dbskfg_transform_descriptor_sptr transform_;
 
     // Keep track of degree one objects
-    vcl_map<unsigned int,dbskfg_contour_node*> degree_ones_;
+    std::map<unsigned int,dbskfg_contour_node*> degree_ones_;
 
     // Make copy ctor private
     dbskfg_expand_local_context(const dbskfg_expand_local_context&);

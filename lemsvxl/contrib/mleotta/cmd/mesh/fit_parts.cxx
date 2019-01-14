@@ -1,8 +1,8 @@
 // This is mleotta/cmd/mesh/fit_parts.cxx
 
 
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 #include <vul/vul_arg.h>
 #include <modrec/modrec_vehicle_parts.h>
 #include <vgl/vgl_closest_point.h>
@@ -24,7 +24,7 @@ vgl_line_2d<double> snap_to_edge(const vgl_polygon<double>& target,
   vgl_point_2d<double> np(c+n);
   vgl_line_2d<double> rayline(c,np);
 
-  double dist = vcl_numeric_limits<double>::infinity();
+  double dist = std::numeric_limits<double>::infinity();
   vgl_line_2d<double> cline;
   for(unsigned int s=0; s < target.num_sheets(); ++s){ 
     for(unsigned int i=0, j=target[s].size()-1; i<target[s].size(); j = i++)
@@ -56,9 +56,9 @@ vgl_line_2d<double> snap_to_edge(const vgl_polygon<double>& target,
 
 
 void project_edges(const vgl_polygon<double>& target,
-                   vcl_vector<vgl_point_2d<double> >& points)
+                   std::vector<vgl_point_2d<double> >& points)
 {
-  vcl_vector<vgl_line_2d<double> > lines(points.size());
+  std::vector<vgl_line_2d<double> > lines(points.size());
   for(unsigned int i=0, j=points.size()-1; i<points.size(); j = i++)
   {
     lines[j] = snap_to_edge(target, points[j], points[i]);
@@ -66,7 +66,7 @@ void project_edges(const vgl_polygon<double>& target,
                             points[i].x()-points[j].x());
     normalize(n);
     if(dot_product(n,lines[j].normal()) < 0.7){
-      vcl_cout << "use existing line"<<vcl_endl;
+      std::cout << "use existing line"<<std::endl;
       lines[j] = vgl_line_2d<double>(points[j], points[i]);
     }
   }
@@ -78,7 +78,7 @@ void project_edges(const vgl_polygon<double>& target,
   }
 }
 
-void subdivide(vcl_vector<vgl_point_2d<double> >& points)
+void subdivide(std::vector<vgl_point_2d<double> >& points)
 {
   for(unsigned int i=0, j=points.size()-1; i<points.size(); j = i++)
   {
@@ -91,18 +91,18 @@ void subdivide(vcl_vector<vgl_point_2d<double> >& points)
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_in_file("-i", "input parts file", "");
-  vul_arg<vcl_string>  a_model_file("-m", "model parts file", "");
-  vul_arg<vcl_string>  a_out_file("-o", "output parts file", "");
+  vul_arg<std::string>  a_in_file("-i", "input parts file", "");
+  vul_arg<std::string>  a_model_file("-m", "model parts file", "");
+  vul_arg<std::string>  a_out_file("-o", "output parts file", "");
   //vul_arg<int>         a_num_subdiv("-subdiv", "number of subdivisions", 0);
   vul_arg_parse(argc, argv);
 
   if(!a_out_file.set()){
-    vcl_cerr << "output file required" << vcl_endl;
+    std::cerr << "output file required" << std::endl;
     return -1;
   }
 
-  typedef vcl_map<vcl_string, vgl_polygon<double> > pmap;
+  typedef std::map<std::string, vgl_polygon<double> > pmap;
 
   pmap iparts = modrec_read_vehicle_parts(a_in_file());
   pmap mparts = modrec_read_vehicle_parts(a_model_file());
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
 
     vgl_polygon<double>& part = parts[itr->first] = ipart;
 
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     for(unsigned int s=0; s<mpart.num_sheets(); ++s)
       pts.insert(pts.end(), mpart[s].begin(), mpart[s].end());
 
@@ -134,10 +134,10 @@ int main(int argc, char** argv)
     //continue;
 
 
-    vcl_cout << "fitting part: "<< itr->first << vcl_endl;
+    std::cout << "fitting part: "<< itr->first << std::endl;
 
     if(vgl_area_signed(part)<=0.0)
-      vcl_cerr << "part_reversed ---------------------"<<vcl_endl;
+      std::cerr << "part_reversed ---------------------"<<std::endl;
 
     vgl_point_2d<double> mc = vgl_centroid(convex_mpart);
     vgl_point_2d<double> c = vgl_centroid(part);
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     }
 
     if(vgl_area_signed(part)<=0.0)
-      vcl_cerr << "collapsed part! ---------------------"<<vcl_endl;
+      std::cerr << "collapsed part! ---------------------"<<std::endl;
 
     if(itr->first == "front_plate" || itr->first == "rear_plate")
       continue;
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
     }
     
     if(vgl_area_signed(part)<=0.0)
-      vcl_cerr << "collapsed part! ---------------------"<<vcl_endl;
+      std::cerr << "collapsed part! ---------------------"<<std::endl;
 
   }
 

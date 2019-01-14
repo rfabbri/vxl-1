@@ -4,7 +4,7 @@
 // \file
 
 #include <biotree/biolung/pro/biolung_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -22,7 +22,7 @@ biolung_process::biolung_process() : bpro1_process()
   if( !parameters()->add( "Output Volumedata file <filename...>" , "-volume_filename", bpro1_filepath("","*")) ||
       !parameters()->add( "zdim" , "-zdim" , (int)525 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,7 +40,7 @@ biolung_process::clone() const
 }
 
 //: Return the name of the process
-vcl_string biolung_process::name()
+std::string biolung_process::name()
 {
   return "3DLungModel";
 }
@@ -55,10 +55,10 @@ biolung_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 biolung_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   
@@ -67,10 +67,10 @@ biolung_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 biolung_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   
@@ -105,14 +105,14 @@ biolung_process::execute()
   parameters()->get_value( "-zdim" , zdim );
 
   //compute the tree model and construct the volume data 
-  vcl_cout << "Computing 3D Lung model...";
+  std::cout << "Computing 3D Lung model...";
   biolung_lungmodel LungModel(zdim);
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   //write the volume data into file
-  vcl_cout << "Saving volume data: " << volume_filename.path.c_str() << "...";
+  std::cout << "Saving volume data: " << volume_filename.path.c_str() << "...";
   LungModel.saveVolumeInFile(volume_filename.path);
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   output_data_.clear();
   return true;

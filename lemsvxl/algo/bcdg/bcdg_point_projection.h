@@ -8,7 +8,7 @@
 // \date    7/9/04
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbecl/dbecl_epipole.h>
 #include <dbecl/dbecl_epipole_sptr.h>
 #include <vgl/vgl_point_2d.h>

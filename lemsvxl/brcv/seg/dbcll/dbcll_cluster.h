@@ -13,9 +13,9 @@
 // \endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_iterator.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <iterator>
+#include <algorithm>
 
 
 //: A Cluster (base class)
@@ -27,7 +27,7 @@ class dbcll_cluster: public vbl_ref_count
   //: Constructor - single index
   dbcll_cluster(unsigned idx) : members_(1,idx) {}
   //: Constructor - multiple indices
-  dbcll_cluster(const vcl_vector<unsigned>& idxs) : members_(idxs) {}
+  dbcll_cluster(const std::vector<unsigned>& idxs) : members_(idxs) {}
   //: Destructor
   virtual ~dbcll_cluster() {}
 
@@ -38,10 +38,10 @@ class dbcll_cluster: public vbl_ref_count
   // subclasses should call this base class function to merge indices
   virtual void merge(const dbcll_cluster& other)
   {
-    vcl_vector<unsigned> tmp;
-    vcl_merge(this->members_.begin(), this->members_.end(),
+    std::vector<unsigned> tmp;
+    std::merge(this->members_.begin(), this->members_.end(),
               other.members_.begin(), other.members_.end(),
-              vcl_back_inserter(tmp));
+              std::back_inserter(tmp));
 
     this->members_.swap(tmp);
   }
@@ -56,13 +56,13 @@ class dbcll_cluster: public vbl_ref_count
   unsigned key_index() const { return members_.front(); }
 
   //: Access the set of member indices
-  vcl_vector<unsigned> members() const { return members_; }
+  std::vector<unsigned> members() const { return members_; }
 
   //: The size of a cluster is the number of members it has
   unsigned size() const { return members_.size(); }
 
  protected:
-  vcl_vector<unsigned> members_;
+  std::vector<unsigned> members_;
 
 };
 

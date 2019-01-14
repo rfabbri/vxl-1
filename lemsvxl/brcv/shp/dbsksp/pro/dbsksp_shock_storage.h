@@ -75,7 +75,7 @@ public:
 
 
   // list of shapelet
-  vcl_vector<dbsksp_shapelet_sptr > shapelet_list() const 
+  std::vector<dbsksp_shapelet_sptr > shapelet_list() const 
   { return shapelet_list_; }
 
   void add_shapelet(const dbsksp_shapelet_sptr& s)
@@ -112,7 +112,7 @@ public:
 
 
   //: return reference to the vsol list
-  vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list()
+  std::vector<vsol_spatial_object_2d_sptr >& vsol_list()
   { return this->vsol_list_; }
 
   //: add vsol object
@@ -126,7 +126,7 @@ public:
 
   // ------  Binary IO ----------------------
   //: Returns the type string "dbsksp_skgraph"
-  virtual vcl_string type() const { return "dbsksp_shock"; }
+  virtual std::string type() const { return "dbsksp_shock"; }
 
   //: Return IO version number;
   short version() const;
@@ -140,7 +140,7 @@ public:
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbsksp_shock_storage"; }
+  virtual std::string is_a() const { return "dbsksp_shock_storage"; }
 
   
   
@@ -155,7 +155,7 @@ protected:
 
   // active shapelet
   dbsksp_shapelet_sptr active_shapelet_;
-  vcl_vector<dbsksp_shapelet_sptr > shapelet_list_;
+  std::vector<dbsksp_shapelet_sptr > shapelet_list_;
 
   vsol_point_2d_sptr target_point_;
 
@@ -164,7 +164,7 @@ protected:
   dbsksp_xshock_edge_sptr active_xedge_;
   dbsksp_xshock_node_sptr active_xnode_;
 
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list_;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list_;
 };
 
 

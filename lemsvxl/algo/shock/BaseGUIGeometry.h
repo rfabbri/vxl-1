@@ -2,7 +2,7 @@
 #define _BASE_GUI_GEOMETRY_H_
 
 #include <extrautils/points.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //==============================================
 //THIS IS THE ONLY GUI WE HAVE TO INCLUDE
@@ -11,7 +11,7 @@ class BaseGUIGeometry  //common base for elements
 {
 public :
   GraphicsNode *GUIItem;
-  vcl_vector<Point2D<double> > ExPts;  //extrinsic points for drawing purposes
+  std::vector<Point2D<double> > ExPts;  //extrinsic points for drawing purposes
 
       BaseGUIGeometry() { 
           GUIItem = 0; 

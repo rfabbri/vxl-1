@@ -37,7 +37,7 @@ dbbgm_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_process::name()
 {
   return "BG model";
@@ -61,9 +61,9 @@ dbbgm_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_process::get_input_type()
+std::vector< std::string > dbbgm_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
 
   return to_return;
@@ -71,9 +71,9 @@ vcl_vector< vcl_string > dbbgm_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_process::get_output_type()
+std::vector< std::string > dbbgm_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -89,7 +89,7 @@ bool
 dbbgm_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_process::execute() - "
+    std::cout << "In dbbgm_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -111,7 +111,7 @@ dbbgm_process::execute()
   else if ( image1.nplanes() == 1 ) {
     grey_img1 = image1;
   } else {
-    vcl_cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << vcl_endl;
+    std::cerr << "Returning false. image1.nplanes(): " << image1.nplanes() << std::endl;
     return false;
   }
 

@@ -18,13 +18,13 @@
 //: Compute the shock graph parameter statistics from a set of shock graphs
 // with exactly the same topology
 bool dbsks_shapelet_stats::
-compute_stats(const vcl_vector<dbsksp_shapelet_sptr >& shapelet_list)
+compute_stats(const std::vector<dbsksp_shapelet_sptr >& shapelet_list)
 {
   // Assume Gaussian distribution for each intrinsic parameters
   unsigned num_params = 5;
 
   // Collect data from training shapelets
-  vcl_vector<vnl_vector<double > > data;
+  std::vector<vnl_vector<double > > data;
   data.reserve(shapelet_list.size());
 
   for (unsigned i =0; i < shapelet_list.size(); ++i)
@@ -32,11 +32,11 @@ compute_stats(const vcl_vector<dbsksp_shapelet_sptr >& shapelet_list)
     dbsksp_shapelet_sptr s = shapelet_list[i];
     vnl_vector<double > p(5, 0);
     // log2 for length-related parameters
-    p(0) = vcl_log(s->radius_start()) / vnl_math::ln2;
+    p(0) = std::log(s->radius_start()) / vnl_math::ln2;
     p(1) = s->phi_start();
     p(2) = s->phi_end();
     p(3) = s->m_start();
-    p(4) = vcl_log(s->len()) / vnl_math::ln2;
+    p(4) = std::log(s->len()) / vnl_math::ln2;
     data.push_back(p);
   }
   

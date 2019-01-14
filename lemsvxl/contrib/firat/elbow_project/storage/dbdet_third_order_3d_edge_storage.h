@@ -42,23 +42,23 @@ public:
   virtual bpro1_storage* clone() const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const
+  virtual std::string is_a() const
   { return "dbdet_third_order_3d_edge_storage"; }
 
 
   // Data access----------------------------------------------------------------
   //: Get image
-  vcl_vector<dbdet_3d_edge_sptr>& edgemap()
+  std::vector<dbdet_3d_edge_sptr>& edgemap()
   {return this->edgemap_; }
 
   //: Set image
-  void set_edgemap(vcl_vector<dbdet_3d_edge_sptr>& edg)
+  void set_edgemap(std::vector<dbdet_3d_edge_sptr>& edg)
   { this->edgemap_ = edg;}
 
   // Binary IO -----------------------------------------------------------------
 
   //: Returns the type string
-  virtual vcl_string type() const { return "3d_edges"; }
+  virtual std::string type() const { return "3d_edges"; }
 
   //: Return IO version number;
   short version() const;
@@ -73,7 +73,7 @@ public:
 
 protected:
   //: 3d Image
-  vcl_vector<dbdet_3d_edge_sptr> edgemap_;
+  std::vector<dbdet_3d_edge_sptr> edgemap_;
 
 };
 

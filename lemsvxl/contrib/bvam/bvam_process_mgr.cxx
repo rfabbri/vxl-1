@@ -1,9 +1,9 @@
 #include "bvam_process_mgr.h"
 #include "bvam_world_params.h"
 
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <iostream>
+#include <cstdio>
 
 bvam_process_mgr* bvam_process_mgr::instance_ = 0;
 
@@ -20,12 +20,12 @@ bvam_process_mgr::~bvam_process_mgr()
   delete parser_;
 }
 
-bool bvam_process_mgr:: init(vcl_string config_XML)
+bool bvam_process_mgr:: init(std::string config_XML)
 {
   bvam_io_config_parser* parser = 0;
   parser = parse_config(config_XML);
   if (parser == 0) {
-    vcl_cerr << "Configuration File is not a valid XML!\n";
+    std::cerr << "Configuration File is not a valid XML!\n";
     return false;
   }
 
@@ -40,7 +40,7 @@ bool bvam_process_mgr:: init(vcl_string config_XML)
 bool bvam_process_mgr:: run()
 {
   // get the process list from the parser and run them
-  vcl_vector<bvam_io_process*> processes = parser_->processes();
+  std::vector<bvam_io_process*> processes = parser_->processes();
   bvam_processor* processor_ = new bvam_processor();
   for (unsigned i=0; i<processes.size(); i++) {
     bvam_io_process* p = processes[i];
@@ -87,27 +87,27 @@ bool bvam_process_mgr:: run()
   return true;
 }
 
-bvam_io_config_parser* bvam_process_mgr::parse_config(vcl_string fname)
+bvam_io_config_parser* bvam_process_mgr::parse_config(std::string fname)
 {
  
   if (fname.size() == 0)
     return 0;
 
   bvam_io_config_parser* parser = new bvam_io_config_parser();
-  vcl_FILE* xmlFile = vcl_fopen(fname.c_str(), "r");
+  std::FILE* xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile){
-    vcl_cerr << fname.c_str() << " error on opening\n";
+    std::cerr << fname.c_str() << " error on opening\n";
     delete parser;
     return 0;
   }
   if (!parser->parseFile(xmlFile)) {
-    vcl_cerr << XML_ErrorString(parser->XML_GetErrorCode()) << " at line "
-             << parser->XML_GetCurrentLineNumber() << vcl_endl;
+    std::cerr << XML_ErrorString(parser->XML_GetErrorCode()) << " at line "
+             << parser->XML_GetCurrentLineNumber() << std::endl;
 
     delete parser;
     return 0;
   }
-  vcl_cout << "finished parsing sucessfuly!" << vcl_endl;
+  std::cout << "finished parsing sucessfuly!" << std::endl;
   return parser;
 }
 

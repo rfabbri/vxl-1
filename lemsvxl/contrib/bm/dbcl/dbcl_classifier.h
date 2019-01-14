@@ -19,21 +19,21 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_iostream.h>
-#include<vcl_map.h>
-#include<vcl_string.h>
-#include<vcl_utility.h>
+#include<iostream>
+#include<map>
+#include<string>
+#include<utility>
 
 class dbcl_classifier : public vbl_ref_count
 {
 public:
 
     //maps frame number and a feature smart pointer
-    typedef vcl_map<unsigned, dbcl_temporal_feature_sptr> feature_map_type;
+    typedef std::map<unsigned, dbcl_temporal_feature_sptr> feature_map_type;
 
     virtual void classify() = 0;
 
-    vcl_string type(){ return type_; }
+    std::string type(){ return type_; }
 
     ~dbcl_classifier(){}
 
@@ -75,7 +75,7 @@ public:
     unsigned feature_dim() { return this->test_data_.begin()->second->feature_dim(); }
 
 protected:
-    vcl_string type_;
+    std::string type_;
 
     //setters
     void add_feature( dbcl_temporal_feature_sptr tf, feature_map_type& fm );

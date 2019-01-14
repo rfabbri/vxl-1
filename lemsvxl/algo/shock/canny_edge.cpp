@@ -6,7 +6,7 @@
 *
 *   1) Convolve the image with a separable gaussian filter.
 *   2) Take the dx and dy the first derivatives using[-1,0,1] and [1,0,-1]'.
-*   3) Compute the magnitude: vcl_sqrt(dx*dx+dy*dy).
+*   3) Compute the magnitude: std::sqrt(dx*dx+dy*dy).
 *   4) Perform non-maximal suppression.
 *   5) Perform hysteresis.
 *
@@ -35,7 +35,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <extrautils/defines.h>
 #include "canny_edge.h"
 /*
@@ -298,12 +298,12 @@ double angle_radians(double x, double y)
 {
    double xu, yu, ang;
 
-   xu = vcl_fabs(x);
-   yu = vcl_fabs(y);
+   xu = std::fabs(x);
+   yu = std::fabs(y);
 
    if((xu == 0) && (yu == 0)) return(0);
 
-   ang = vcl_atan(yu/xu);
+   ang = std::atan(yu/xu);
 
    if(x >= 0){
       if(y >= 0) return(ang);
@@ -340,7 +340,7 @@ void magnitude_x_y(short int *delta_x, short int *delta_y, int rows, int cols,
       for(c=0;c<cols;c++,pos++){
          sq1 = (int)delta_x[pos] * (int)delta_x[pos];
          sq2 = (int)delta_y[pos] * (int)delta_y[pos];
-         (*magnitude)[pos] = (short)(0.5 + vcl_sqrt((float)sq1 + (float)sq2));
+         (*magnitude)[pos] = (short)(0.5 + std::sqrt((float)sq1 + (float)sq2));
       }
    }
 }
@@ -494,7 +494,7 @@ void make_gaussian_kernel(float sigma, float **kernel, int *windowsize)
    int i, center;
    float x, fx, sum=0.0;
 
-   *windowsize = (int)( 1 + 2 *  vcl_ceil (2.5 * sigma));
+   *windowsize = (int)( 1 + 2 *  std::ceil (2.5 * sigma));
    center = (*windowsize) / 2;
 
    if(VERBOSE) printf("      The kernel has %d elements.\n", *windowsize);
@@ -505,7 +505,7 @@ void make_gaussian_kernel(float sigma, float **kernel, int *windowsize)
 
    for(i=0;i<(*windowsize);i++){
       x = (float)(i - center);
-      fx = (float) pow(2.71828f, (float) -0.5*x*x/(sigma*sigma)) / (sigma * vcl_sqrt(6.2831853f));
+      fx = (float) pow(2.71828f, (float) -0.5*x*x/(sigma*sigma)) / (sigma * std::sqrt(6.2831853f));
       (*kernel)[i] = fx;
       sum += fx;
    }
@@ -892,7 +892,7 @@ void non_max_supp(short *mag, short *gradx, short *grady, int nrows, int ncols,
 
 //#include <stdio.h>
 #include <stdlib.h>
-#include <vcl_string.h>
+#include <string>
 
 /******************************************************************************
 * Function: read_pgm_image

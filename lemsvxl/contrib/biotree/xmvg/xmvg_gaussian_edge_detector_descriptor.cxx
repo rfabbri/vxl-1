@@ -12,7 +12,7 @@ sigma_(sigma), centre_(centre)
 {
   assert(sigma_ > 0);
 
-  name_ = vcl_string("gaussian_edge_detector");
+  name_ = std::string("gaussian_edge_detector");
 
   calculate_bounding_box();
 }
@@ -32,7 +32,7 @@ void xmvg_gaussian_edge_detector_descriptor::calculate_bounding_box(void)
   box_.set_depth(8*sigma_);
 }
 
-void x_write(vcl_ostream& os, xmvg_gaussian_edge_detector_descriptor d, vcl_string name)
+void x_write(std::ostream& os, xmvg_gaussian_edge_detector_descriptor d, std::string name)
 {
   vsl_basic_xml_element element(name);
 

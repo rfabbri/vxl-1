@@ -2,8 +2,8 @@
 
 #include "smw/smw_world.h"
 
-#include<vcl_iostream.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<string>
 
 #include<vil/vil_convert.h>
 #include<vil/vil_load.h>
@@ -14,7 +14,7 @@
 #include<vul/vul_file.h>
 #include<vul/vul_file_iterator.h>
 
-#include<vcl_fstream.h>
+#include<fstream>
 
 void highlight_region(vil_image_view<vil_rgb<vxl_byte> > const& src,
                       vil_image_view<vil_rgb<vxl_byte> >& dest,
@@ -24,27 +24,27 @@ void highlight_region(vil_image_view<vil_rgb<vxl_byte> > const& src,
 
 int main()
 {
-    vcl_cout << "----------------------------------------\n"
+    std::cout << "----------------------------------------\n"
              << "      Westing Car Around Block\n"
              << "----------------------------------------\n";
 
-    vcl_string root_dir =
+    std::string root_dir =
         "/media/DATAPART1/BrandonDataFolder/smw_data/car_around_block/";
-    vcl_string img_dir = root_dir + "img_dir/";
-    vcl_string change_dir = root_dir + "change_dir/";
-    vcl_string graph_dir = root_dir + "graph_dir/";
-    vcl_string highlight_dir = root_dir + "highlight_dir/";
-    vcl_string prob_dir = root_dir +"prob_dir/";
+    std::string img_dir = root_dir + "img_dir/";
+    std::string change_dir = root_dir + "change_dir/";
+    std::string graph_dir = root_dir + "graph_dir/";
+    std::string highlight_dir = root_dir + "highlight_dir/";
+    std::string prob_dir = root_dir +"prob_dir/";
 
     vil_image_view<float> curr_img;
     vil_image_view< vil_rgb<vxl_byte> > orig_img;
     vil_image_view< vil_rgb<vxl_byte> > highlight_img;
     vil_image_view<vxl_byte> change_map;
-    vcl_string curr_filename;
-    vcl_string curr_change_name;
-    vcl_string curr_graph_name;
-    vcl_string curr_prob_name;
-    vcl_string curr_highlight_name;
+    std::string curr_filename;
+    std::string curr_change_name;
+    std::string curr_graph_name;
+    std::string curr_prob_name;
+    std::string curr_highlight_name;
 
     unsigned x1 = 145, y1 = 300, x2 = 635, y2 = 650;
     //the point where we want to visualize the graph
@@ -58,23 +58,23 @@ int main()
     vul_file::delete_file_glob(highlight_dir + "/*.png");
 
     //sort filenames
-    vcl_vector<vcl_string> filenames;
+    std::vector<std::string> filenames;
     for(vul_file_iterator file_itr = img_dir + "/*.jpg"; file_itr; ++file_itr)
         filenames.push_back(vul_file::strip_extension(file_itr.filename()));
 
-    vcl_vector<vcl_string>::iterator filename_itr = filenames.begin();
-    vcl_vector<vcl_string>::iterator filename_end = filenames.end();
-    vcl_sort(filename_itr,filename_end);
+    std::vector<std::string>::iterator filename_itr = filenames.begin();
+    std::vector<std::string>::iterator filename_end = filenames.end();
+    std::sort(filename_itr,filename_end);
 
     curr_filename = img_dir + *filename_itr + ".jpg";
 
-    vcl_cout << "-----Creating World-----" << vcl_endl;
-    vcl_cout << "Loading Image: " << *filename_itr << vcl_endl;
+    std::cout << "-----Creating World-----" << std::endl;
+    std::cout << "Loading Image: " << *filename_itr << std::endl;
     vil_convert_planes_to_grey<vxl_byte,float>
         (vil_load(curr_filename.c_str()),curr_img);
     orig_img = vil_load(curr_filename.c_str());
 
-    vcl_cout << "Highlighting ROI" << vcl_endl;
+    std::cout << "Highlighting ROI" << std::endl;
     curr_highlight_name = highlight_dir + *filename_itr + ".png";
     highlight_region(orig_img,highlight_img,x1,y1,x2,y2,gx,gy);
     vil_save(highlight_img,curr_highlight_name.c_str());
@@ -84,8 +84,8 @@ int main()
     
 
     curr_graph_name = graph_dir + *filename_itr + ".dot";
-    vcl_cout << "Writing Graph File" << vcl_endl;
-    vcl_ofstream outfile(curr_graph_name.c_str());
+    std::cout << "Writing Graph File" << std::endl;
+    std::ofstream outfile(curr_graph_name.c_str());
     world.write_dot_file(outfile,gx,gy);
     outfile.close();
 
@@ -95,29 +95,29 @@ int main()
     for(;filename_itr!=filename_end;++filename_itr)
     {
         curr_filename = img_dir + *filename_itr + ".jpg";
-        vcl_cout << "-----Updating World-----" << vcl_endl;
+        std::cout << "-----Updating World-----" << std::endl;
         
-        vcl_cout << "Loading Image: " << *filename_itr << vcl_endl;
+        std::cout << "Loading Image: " << *filename_itr << std::endl;
         vil_convert_planes_to_grey<vxl_byte,float>
             ( vil_load(curr_filename.c_str()), curr_img );
 
-        vcl_cout << "Saving Highlighted Region" << vcl_endl;
+        std::cout << "Saving Highlighted Region" << std::endl;
         orig_img = vil_load(curr_filename.c_str());
         curr_highlight_name = highlight_dir + *filename_itr + ".png";
         highlight_region(orig_img,highlight_img,x1,y1,x2,y2,gx,gy);
         vil_save(highlight_img,curr_highlight_name.c_str());
 
-        vcl_cout << "Calling World Update Function" << vcl_endl;
+        std::cout << "Calling World Update Function" << std::endl;
         world.update(curr_img);
 
-        vcl_cout << "Creating Change Map" << vcl_endl;
+        std::cout << "Creating Change Map" << std::endl;
         change_map = world.change_map();
         
-        vcl_cout << "Saving Change Map" << vcl_endl;
+        std::cout << "Saving Change Map" << std::endl;
         curr_change_name = change_dir + *filename_itr + ".bmp";
         vil_save(change_map,curr_change_name.c_str());
 
-        vcl_cout << "Writing Graph Dot File" << vcl_endl;
+        std::cout << "Writing Graph Dot File" << std::endl;
         curr_graph_name = graph_dir + *filename_itr + ".dot";
         outfile.open(curr_graph_name.c_str());
         world.write_dot_file(outfile,gx,gy);

@@ -48,7 +48,7 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
   
   //: Return the name of this tool
-  virtual vcl_string name() const {return "Interpolate xnodes"; }
+  virtual std::string name() const {return "Interpolate xnodes"; }
 
   //: Allow the tool to add to the popup menu as a tableau would
   virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -114,13 +114,13 @@ protected:
   // demo_type specific parameters
 
   // construct a two shapelet from two end extrinsic nodes and a phi
-  vcl_map<vcl_string, double > param_list_;
-  vcl_string active_param_name_;
+  std::map<std::string, double > param_list_;
+  std::string active_param_name_;
   double increment_;
 
   // interpolation modes
-  vcl_vector<vcl_string > interp_mode_list_;
-  vcl_string active_interp_mode_;
+  std::vector<std::string > interp_mode_list_;
+  std::string active_interp_mode_;
 
   
 };

@@ -1,7 +1,7 @@
 // This is mleotta/cmd/mesh/mesh_make_vehicle.cxx
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <imesh/imesh_mesh.h>
@@ -16,18 +16,18 @@ const double pi = 3.14159265358979;
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_in_file("-i", "input params file", "");
-  vul_arg<vcl_string>  a_out_file("-o", "output mesh file", "");
+  vul_arg<std::string>  a_in_file("-i", "input params file", "");
+  vul_arg<std::string>  a_out_file("-o", "output mesh file", "");
   vul_arg<bool>  a_dodec("-d", "use dodecahedral model", false);
   vul_arg<bool>  a_ferryman("-f", "use ferryman model", false);
   vul_arg_parse(argc, argv);
 
   if(!a_out_file.set()){
-    vcl_cerr << "output file required" << vcl_endl;
+    std::cerr << "output file required" << std::endl;
     return -1;
   }
 
-  vcl_map<vcl_string,double> params;
+  std::map<std::string,double> params;
   modrec_read_vehicle_params(a_in_file(),params);
 
   imesh_mesh mesh;

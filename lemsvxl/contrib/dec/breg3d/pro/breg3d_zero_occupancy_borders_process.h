@@ -12,7 +12,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 
@@ -32,7 +32,7 @@ class breg3d_zero_occupancy_borders_process : public bprb_process
   //: Clone the process
   virtual breg3d_zero_occupancy_borders_process* clone() const {return new breg3d_zero_occupancy_borders_process(*this);}
 
-  vcl_string name(){return "breg3dZeroOccupancyBorders";}
+  std::string name(){return "breg3dZeroOccupancyBorders";}
 
   bool init() { return true; }
   bool execute();

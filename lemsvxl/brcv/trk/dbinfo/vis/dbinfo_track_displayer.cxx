@@ -14,7 +14,7 @@ dbinfo_track_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Return a NULL tableau if the types don't match
   if( storage->type() != this->type() )
     {
-      vcl_cout << "In dbinfo_track_displayer::make_tableau -"
+      std::cout << "In dbinfo_track_displayer::make_tableau -"
                << " types don't match\n";
       return NULL;
     }
@@ -23,7 +23,7 @@ dbinfo_track_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbinfo_storage.vertical_cast(storage);
  
   // Extract the tracks
-  vcl_vector<dbinfo_track_sptr> tracks = dbinfo_storage->tracks();
+  std::vector<dbinfo_track_sptr> tracks = dbinfo_storage->tracks();
 
   if(tracks.empty())
     return bgui_vsol2D_tableau_new();   //empty tableau
@@ -33,7 +33,7 @@ dbinfo_track_displayer::make_tableau( bpro1_storage_sptr storage) const
        static_cast<unsigned>(bvis1_manager::instance()->current_frame());
 
   
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
       trit != tracks.end(); ++trit)
     {
       dbinfo_track_geometry_sptr tg = (*trit)->track_geometry();

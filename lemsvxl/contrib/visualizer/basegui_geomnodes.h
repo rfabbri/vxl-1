@@ -1,9 +1,9 @@
 #ifndef GEOMNODES_H_INCLUDED
 #define GEOMNODES_H_INCLUDED
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <vector>
+#include <sstream>
 
 #include "basegui_nodes.h"
 #include "basegui_rgbimage.h"
@@ -26,12 +26,12 @@ public:
   void setEnd(const Point2D<double> &b) { p1 = b; }
   virtual void draw(SceneGraphVisitor *);
 
-  int getPoints_(vcl_vector<Point2D<double> >& pts_);
+  int getPoints_(std::vector<Point2D<double> >& pts_);
   bool setPoint_(int id_, const Point2D<double> pt_);
 
-  virtual int getInformation(vcl_string &info) {
-    vcl_ostringstream ostrm;
-    ostrm<<"LineGeom: ("<<p0.x()<<", "<<p0.y()<<")-("<<p1.x()<<", "<<p1.y()<<")"<<vcl_endl;
+  virtual int getInformation(std::string &info) {
+    std::ostringstream ostrm;
+    ostrm<<"LineGeom: ("<<p0.x()<<", "<<p0.y()<<")-("<<p1.x()<<", "<<p1.y()<<")"<<std::endl;
     info=ostrm.str();
     return 0;
   }
@@ -90,7 +90,7 @@ public:
   double getT0 () { return t0; }
   double getT1 () { return t1; }
 
-  int getPoints_(vcl_vector<Point2D<double> >& pts_);
+  int getPoints_(std::vector<Point2D<double> >& pts_);
   bool setPoint_(int id_, const Point2D<double> pt_);
 };
 
@@ -115,10 +115,10 @@ public:
   Point2D<double> center () { return Center; }
   double R () { return r; }
   int nuD () { return nud; }
-  virtual int getInformation(vcl_string &info) {
-    vcl_ostringstream ostrm;
+  virtual int getInformation(std::string &info) {
+    std::ostringstream ostrm;
     ostrm<<"ArcGeom: ("<<Start.x()<<", "<<Start.y()<<")-("<<End.x()<<", "<<End.y()<<")";
-    ostrm<<" center: ("<<Center.x()<<", "<<Center.y()<<"), R: "<<r<<", nud: "<<nud<<vcl_endl;
+    ostrm<<" center: ("<<Center.x()<<", "<<Center.y()<<"), R: "<<r<<", nud: "<<nud<<std::endl;
     info=ostrm.str();
     return 0;
   }
@@ -134,9 +134,9 @@ public:
   void setPoint(const Point2D<double> &a) { x = a.getX(); y = a.getY(); }
   Point2D<double> point() const { return Point2D<double>(x,y); }
   virtual void draw(SceneGraphVisitor *);
-  virtual int getInformation(vcl_string &info) {
-    vcl_ostringstream ostrm;
-    ostrm<<"PointGeom: ("<<x<<", "<<y<<")"<<vcl_endl;
+  virtual int getInformation(std::string &info) {
+    std::ostringstream ostrm;
+    ostrm<<"PointGeom: ("<<x<<", "<<y<<")"<<std::endl;
     info=ostrm.str();
     return 0;
   }
@@ -145,11 +145,11 @@ public:
 // non-closed sequence of lines
 class PolylineGeom : public AffineNode {
 protected:
-  vcl_vector<Point2D<double> > _points;
+  std::vector<Point2D<double> > _points;
 
 public:
   PolylineGeom() : AffineNode() {}
-    PolylineGeom(const vcl_vector<Point2D<double> > &pts)
+    PolylineGeom(const std::vector<Point2D<double> > &pts)
       {
        for (unsigned i=0;i<pts.size();i++)
          {
@@ -172,7 +172,7 @@ public:
   }
   virtual void draw(SceneGraphVisitor *);
 
-  int getPoints_(vcl_vector<Point2D<double> >& pts_);
+  int getPoints_(std::vector<Point2D<double> >& pts_);
   bool setPoint_(int id_, const Point2D<double> pt_);
 };
 
@@ -202,7 +202,7 @@ public:
     : PolylineGeom()
     {}
 
-    FilledPolygonGeom (const vcl_vector<Point2D<double> > points): 
+    FilledPolygonGeom (const std::vector<Point2D<double> > points): 
     PolylineGeom(){ _points = points;}
 
   virtual void draw(SceneGraphVisitor *);
@@ -210,26 +210,26 @@ public:
 
 class TextGeom: public GeometryNode {
   float x, y;
-  vcl_string txt;
+  std::string txt;
 public:
-  TextGeom(float xx, float yy, vcl_string tt) : x(xx), y(yy), txt(tt) {}
+  TextGeom(float xx, float yy, std::string tt) : x(xx), y(yy), txt(tt) {}
   void setPoint(const Point2D<double> &a) { x = a.getX(); y = a.getY(); }
   Point2D<double> point() const { return Point2D<double>(x, y); }
-  void setText(const vcl_string a) { txt = a; }
-  vcl_string text() const { return txt; }
+  void setText(const std::string a) { txt = a; }
+  std::string text() const { return txt; }
   virtual void draw(SceneGraphVisitor *);
 };
 
 class AffineTextGeom: public AffineNode {
   float x, y;
-  vcl_string txt;
+  std::string txt;
 public:
-  AffineTextGeom(Point2D<double> pos, vcl_string tt, bool flip = false);
-  AffineTextGeom(float xx, float yy, vcl_string tt, bool flip = false);
+  AffineTextGeom(Point2D<double> pos, std::string tt, bool flip = false);
+  AffineTextGeom(float xx, float yy, std::string tt, bool flip = false);
   void setPoint(const Point2D<double> &a) { x = a.getX(); y = a.getY(); }
   Point2D<double> point() const { return Point2D<double>(x, y); }
-  void setText(const vcl_string a) { txt = a; }
-  vcl_string text() const { return txt; }
+  void setText(const std::string a) { txt = a; }
+  std::string text() const { return txt; }
   virtual void draw(SceneGraphVisitor *);
 };
 
@@ -246,13 +246,13 @@ class ImageGeom: public AffineNode
     
     ImageGeom(Image *ii, double x1, double y1, double w,                  bool flip = false);
     ImageGeom(Image *ii, double x1, double y1, double w, double h,        bool flip = false);
-    ImageGeom(vcl_string file_name, double x1, double y1,                     bool flip = false);
-    ImageGeom(vcl_string file_name, double x1, double y1, double w,           bool flip = false);
-    ImageGeom(vcl_string file_name, double x1, double y1, double w, double h, bool flip = false);
+    ImageGeom(std::string file_name, double x1, double y1,                     bool flip = false);
+    ImageGeom(std::string file_name, double x1, double y1, double w,           bool flip = false);
+    ImageGeom(std::string file_name, double x1, double y1, double w, double h, bool flip = false);
     
     virtual void draw(SceneGraphVisitor *);
    
-    virtual int getInformation(vcl_string &info, Point2D<double> pos);
+    virtual int getInformation(std::string &info, Point2D<double> pos);
  };
 
 // scale invariant nodes
@@ -304,7 +304,7 @@ public:
 // non-closed sequence of lines
 class ScaleInvariantPolylineGeom : public ScaleInvariantNode {
 public:
-  typedef vcl_vector<Point2D<double> > points_t;
+  typedef std::vector<Point2D<double> > points_t;
 protected:
   points_t _points;
 
@@ -485,8 +485,8 @@ class ArrowGeom : public AffineNode
 class EulerSpiralSplineGeom :public PolylineGeom 
   {
     private:
-        vcl_vector<vcl_pair<Point2D<double>, double> > _pointTangents;
-        vcl_vector<EulerSpiralParams> _params;
+        std::vector<std::pair<Point2D<double>, double> > _pointTangents;
+        std::vector<EulerSpiralParams> _params;
     public:
         EulerSpiralSplineGeom(){};
 
@@ -536,10 +536,10 @@ class EulerSpiralSplineGeom :public PolylineGeom
          {
            Point2D<double> pos  = arrow->getStart(); 
            double         theta = arrow->getDirection();
-           _pointTangents.push_back(vcl_pair<Point2D<double>, double>(pos, theta));
+           _pointTangents.push_back(std::pair<Point2D<double>, double>(pos, theta));
           }
 
-      void push_back(vcl_pair<Point2D<double>, double>pt_tangent)
+      void push_back(std::pair<Point2D<double>, double>pt_tangent)
          {
            _pointTangents.push_back(pt_tangent);
           }
@@ -669,9 +669,9 @@ class EllipseInfo
 class BiArcSplineGeom :public AffineNode 
   {
     private:
-        vcl_vector<vcl_pair<Point2D<double>, double> > _pointTangents;
-        vcl_vector<BiArcParams> _params;
-        vcl_vector<EllipseInfo> _biarcs;
+        std::vector<std::pair<Point2D<double>, double> > _pointTangents;
+        std::vector<BiArcParams> _params;
+        std::vector<EllipseInfo> _biarcs;
     public:
         BiArcSplineGeom(){};
 
@@ -708,10 +708,10 @@ class BiArcSplineGeom :public AffineNode
          {
            Point2D<double> pos  = arrow->getStart(); 
            double         theta = arrow->getDirection();
-           _pointTangents.push_back(vcl_pair<Point2D<double>, double>(pos, theta));
+           _pointTangents.push_back(std::pair<Point2D<double>, double>(pos, theta));
           }
 
-        void push_back(vcl_pair<Point2D<double>, double>pt_tangent)
+        void push_back(std::pair<Point2D<double>, double>pt_tangent)
          {
            _pointTangents.push_back(pt_tangent);
           }

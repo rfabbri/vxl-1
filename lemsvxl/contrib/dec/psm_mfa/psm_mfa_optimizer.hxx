@@ -10,9 +10,9 @@
 #include <vil/vil_convert.h>
 #include <vpgl/vpgl_camera.h>
 
-#include <vcl_vector.h>
-#include <vcl_queue.h>
-#include <vcl_set.h>
+#include <vector>
+#include <queue>
+#include <set>
 
 #include "psm_mfa_compute_factor_properties.h"
 #include "psm_mfa_optimizer.h"
@@ -21,15 +21,15 @@
 
 
 template<psm_apm_type APM>
-psm_mfa_optimizer<APM>::psm_mfa_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_string> const& image_filenames, vcl_vector<vcl_string> const& camera_filenames, bool black_background)
+psm_mfa_optimizer<APM>::psm_mfa_optimizer(psm_scene<APM> &scene, std::vector<std::string> const& image_filenames, std::vector<std::string> const& camera_filenames, bool black_background)
 : scene_(scene), black_background_(black_background)
 {
   // read images and cameras
-  vcl_vector<vcl_string>::const_iterator img_fname_it = image_filenames.begin();
-  vcl_vector<vcl_string>::const_iterator cam_fname_it = camera_filenames.begin();
+  std::vector<std::string>::const_iterator img_fname_it = image_filenames.begin();
+  std::vector<std::string>::const_iterator cam_fname_it = camera_filenames.begin();
   for (; img_fname_it != image_filenames.end(); ++img_fname_it, ++cam_fname_it) {
     // load image
-    vcl_cout << "loading image " << *img_fname_it << vcl_endl;
+    std::cout << "loading image " << *img_fname_it << std::endl;
     vil_image_view_base_sptr img_base = vil_load(img_fname_it->c_str());
     vil_image_view_base_sptr img_base_conv = vil_convert_stretch_range(psm_apm_traits<PSM_APM_SIMPLE_GREY>::obs_mathtype(),img_base);
 
@@ -38,10 +38,10 @@ psm_mfa_optimizer<APM>::psm_mfa_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_
     //vil_image_view<psm_apm_traits<APM>::obs_datatype> *img = dynamic_cast<vil_image_view<psm_apm_traits<APM>::obs_datatype>*>(img_base.as_pointer());
     images_.push_back(*img);
     // load corresponding camera
-    vcl_cout << "reading camera " << *cam_fname_it << vcl_endl;
-    vcl_ifstream ifs(cam_fname_it->c_str());
+    std::cout << "reading camera " << *cam_fname_it << std::endl;
+    std::ifstream ifs(cam_fname_it->c_str());
     if (!ifs.is_open()) {
-      vcl_cerr << "Failed to open file " << *cam_fname_it << vcl_endl;
+      std::cerr << "Failed to open file " << *cam_fname_it << std::endl;
       return;
     }
     vpgl_perspective_camera<double> cam;
@@ -55,8 +55,8 @@ psm_mfa_optimizer<APM>::psm_mfa_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_
 template<psm_apm_type APM>
 void psm_mfa_optimizer<APM>::optimize()
 {
-  vcl_set<psm_cell_id> to_process_set;
-  vcl_queue<psm_cell_id> to_process_queue;
+  std::set<psm_cell_id> to_process_set;
+  std::queue<psm_cell_id> to_process_queue;
 
   // add each cell to list initially
   typename psm_scene<APM>::block_index_iterator bit = scene_.block_index_begin();
@@ -75,13 +75,13 @@ void psm_mfa_optimizer<APM>::optimize()
   const unsigned int debug_out = 32*32;
   while(!to_process_queue.empty()) {
     ++it_counter;
-    vcl_cout << "i:" << it_counter << " s:" << to_process_queue.size() << "    ";
+    std::cout << "i:" << it_counter << " s:" << to_process_queue.size() << "    ";
     if (!(it_counter % debug_out)) {
-      vcl_cout << vcl_endl << "writing debug files" << vcl_endl;
+      std::cout << std::endl << "writing debug files" << std::endl;
       // debug write scene
       char raw_fname_str[64];
       sprintf(raw_fname_str,"c:/research/psm/output/mfa_out_%03d.raw", it_counter / debug_out);
-      scene_.save_alpha_raw(vcl_string(raw_fname_str), vgl_point_3d<int>(0,0,0), 6);
+      scene_.save_alpha_raw(std::string(raw_fname_str), vgl_point_3d<int>(0,0,0), 6);
 
       char img_fname_str[64];
       sprintf(img_fname_str,"c:/research/psm/output/mfa_expected_%03d.tif", it_counter / debug_out);
@@ -98,24 +98,24 @@ void psm_mfa_optimizer<APM>::optimize()
     // retrive next cell for processesing
     psm_cell_id cell_id = to_process_queue.front();
     to_process_queue.pop();
-    vcl_set<psm_cell_id>::iterator set_it = to_process_set.find(cell_id);
+    std::set<psm_cell_id>::iterator set_it = to_process_set.find(cell_id);
     if  (set_it == to_process_set.end()) {
-      vcl_cerr << "error: cell_id at front of queue is not in set" << vcl_endl;
+      std::cerr << "error: cell_id at front of queue is not in set" << std::endl;
       break;
     }
     to_process_set.erase(set_it);
 
     // for each image
-    vcl_vector<vil_image_view<psm_apm_traits<APM>::obs_datatype> >::const_iterator img_it = images_.begin();
-    vcl_vector<vpgl_perspective_camera<double> >::const_iterator cam_it = cameras_.begin();
+    std::vector<vil_image_view<psm_apm_traits<APM>::obs_datatype> >::const_iterator img_it = images_.begin();
+    std::vector<vpgl_perspective_camera<double> >::const_iterator cam_it = cameras_.begin();
 
-    vcl_vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
-    vcl_vector<float> vis_vector;
-    vcl_vector<float> mfa_pre_vector;
-    vcl_vector<float> mfa_post_vector;
-    vcl_vector<float> seg_len_vector;
+    std::vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
+    std::vector<float> vis_vector;
+    std::vector<float> mfa_pre_vector;
+    std::vector<float> mfa_post_vector;
+    std::vector<float> seg_len_vector;
 
-    vcl_set<psm_cell_id> markov_blanket;
+    std::set<psm_cell_id> markov_blanket;
 
     unsigned int n_valid_projections = 0;
 
@@ -131,7 +131,7 @@ void psm_mfa_optimizer<APM>::optimize()
     bool converged = update_cell(cell_id, obs_vector, vis_vector, mfa_pre_vector, mfa_post_vector, seg_len_vector, n_valid_projections);
     if (!converged) {
       // add all members of markov blanket into queue for further processing
-      vcl_set<psm_cell_id>::const_iterator add_it = markov_blanket.begin();
+      std::set<psm_cell_id>::const_iterator add_it = markov_blanket.begin();
       for (; add_it != markov_blanket.end(); ++add_it) {
         // make sure cell is not already in queue
         if (to_process_set.find(*add_it) == to_process_set.end()) {
@@ -145,7 +145,7 @@ void psm_mfa_optimizer<APM>::optimize()
 
 //: compute 
 template<psm_apm_type APM>
-bool psm_mfa_optimizer<APM>::update_cell(psm_cell_id const& cell_id, vcl_vector<typename psm_apm_traits<APM>::obs_datatype> const& obs_vector, vcl_vector<float> const& vis_vector, vcl_vector<float> const& mfa_pre_vector, vcl_vector<float> const& mfa_post_vector, vcl_vector<float> const& seg_len_vector, unsigned int n_valid_projections)
+bool psm_mfa_optimizer<APM>::update_cell(psm_cell_id const& cell_id, std::vector<typename psm_apm_traits<APM>::obs_datatype> const& obs_vector, std::vector<float> const& vis_vector, std::vector<float> const& mfa_pre_vector, std::vector<float> const& mfa_post_vector, std::vector<float> const& seg_len_vector, unsigned int n_valid_projections)
 {
   psm_sample<APM> &cell_value = scene_.get_cell(cell_id);
 
@@ -155,40 +155,40 @@ bool psm_mfa_optimizer<APM>::update_cell(psm_cell_id const& cell_id, vcl_vector<
   }
 
   // observation weights for appearance computation
-  vcl_vector<float> obs_weight_vector;
+  std::vector<float> obs_weight_vector;
 
   // compute factor value assuming all rays pass through cell
   double A_empty = 0, A_full = 0;
   double mean_seg_len = 0;
-  vcl_vector<typename psm_apm_traits<APM>::obs_datatype>::const_iterator obs_it = obs_vector.begin();
-  vcl_vector<float>::const_iterator vis_it = vis_vector.begin();
-  vcl_vector<float>::const_iterator pre_it = mfa_pre_vector.begin();
-  vcl_vector<float>::const_iterator post_it = mfa_post_vector.begin();
-  vcl_vector<float>::const_iterator seg_len_it = seg_len_vector.begin();
+  std::vector<typename psm_apm_traits<APM>::obs_datatype>::const_iterator obs_it = obs_vector.begin();
+  std::vector<float>::const_iterator vis_it = vis_vector.begin();
+  std::vector<float>::const_iterator pre_it = mfa_pre_vector.begin();
+  std::vector<float>::const_iterator post_it = mfa_post_vector.begin();
+  std::vector<float>::const_iterator seg_len_it = seg_len_vector.begin();
   for (; obs_it != obs_vector.end(); ++obs_it, ++vis_it, ++pre_it, ++post_it, ++seg_len_it) {
     float PI = psm_apm_traits<APM>::apm_processor::prob_density(cell_value.appearance, *obs_it);
-    double mfa_PI = vcl_log(PI + 0.001);
+    double mfa_PI = std::log(PI + 0.001);
     A_empty += *pre_it + *vis_it * *post_it;
     A_full += *pre_it + *vis_it * mfa_PI;
-    obs_weight_vector.push_back(*vis_it * (1.0f - (float)vcl_exp(-cell_value.alpha * *seg_len_it)));
+    obs_weight_vector.push_back(*vis_it * (1.0f - (float)std::exp(-cell_value.alpha * *seg_len_it)));
     mean_seg_len += *seg_len_it;
   }
   mean_seg_len /= obs_vector.size();
 
-  double Q_empty = vcl_exp(A_empty);
-  double Q_full = vcl_exp(A_full);
+  double Q_empty = std::exp(A_empty);
+  double Q_full = std::exp(A_full);
 
   double Q_new = Q_full / (Q_empty + Q_full);
 
-  float alpha_new = (float)(-vcl_log(1.0 - Q_new)/mean_seg_len);
+  float alpha_new = (float)(-std::log(1.0 - Q_new)/mean_seg_len);
   // sanity check on new alpha value
   const float max_alpha = 1e6;
   if (!(alpha_new < max_alpha) ) {
-    vcl_cout << vcl_endl << "1)Q_full = " << Q_full << " Q_empty = " << Q_empty << " alpha_new = " << alpha_new << vcl_endl;
+    std::cout << std::endl << "1)Q_full = " << Q_full << " Q_empty = " << Q_empty << " alpha_new = " << alpha_new << std::endl;
     alpha_new = max_alpha;
   }
   if (!(alpha_new > 0)){
-    vcl_cout << vcl_endl << "2)Q_full = " << Q_full << " Q_empty = " << Q_empty << " alpha_new = " << alpha_new << vcl_endl;
+    std::cout << std::endl << "2)Q_full = " << Q_full << " Q_empty = " << Q_empty << " alpha_new = " << alpha_new << std::endl;
     alpha_new = 0;
   }
 
@@ -197,13 +197,13 @@ bool psm_mfa_optimizer<APM>::update_cell(psm_cell_id const& cell_id, vcl_vector<
   //psm_apm_traits<APM>::apm_processor::compute_appearance(obs_vector, obs_weight_vector, cell_value.appearance, min_sigma);
 
   // check for convergence
-  double Q_old = 1.0 - vcl_exp(-cell_value.alpha * mean_seg_len);
+  double Q_old = 1.0 - std::exp(-cell_value.alpha * mean_seg_len);
 
   // update to new alpha value
   cell_value.alpha = alpha_new;
 
   const double tol = 1e-3;
-  if (vcl_abs(Q_new - Q_old) <= tol) {
+  if (std::abs(Q_new - Q_old) <= tol) {
     // value has not changed
     return true;
   }

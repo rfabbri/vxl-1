@@ -24,13 +24,13 @@ bool bof_learn_categories_process_cons(bprb_func_process& pro)
 {
   using namespace bof_learn_categories_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "bof_codebook_sptr" ;  //class containing the means
   input_types_[1] = "int";  //id of scene to process. if scene is not label for training. it won't be processed
-  input_types_[2] = "vcl_string"; // bof_path, where bof_info.xml and bof_category_info.xml are
-  input_types_[3] = "vcl_string"; //path to save the results for this scene
+  input_types_[2] = vcl_string"; // bof_path, where bof_info.xml and bof_category_info.xml are
+  input_types_[3] = vcl_string"; //path to save the results for this scene
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -44,8 +44,8 @@ bool bof_learn_categories_process(bprb_func_process& pro)
   //get inputs
   bof_codebook_sptr codebook = pro.get_input<bof_codebook_sptr>(0);
   int scene_id = pro.get_input<int>(1);
-  vcl_string bof_dir = pro.get_input<vcl_string>(2);
-  vcl_string path_out = pro.get_input<vcl_string>(3);
+  std::string bof_dir = pro.get_input<std::string>(2);
+  std::string path_out = pro.get_input<std::string>(3);
 
   bof_scene_categories categories(bof_dir);
   

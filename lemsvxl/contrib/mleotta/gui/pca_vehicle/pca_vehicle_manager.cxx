@@ -11,8 +11,8 @@
 #include "pca_vehicle_frame.h"
 
 
-#include <vcl_limits.h>
-#include <vcl_sstream.h>
+#include <limits>
+#include <sstream>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_dialog.h>
@@ -75,7 +75,7 @@
 class clear_vis_edgels_observer: public dbpro_observer
 {
 public:
-  clear_vis_edgels_observer(vcl_vector<vcl_pair<double,vnl_double_4> >& vis_edgels)
+  clear_vis_edgels_observer(std::vector<std::pair<double,vnl_double_4> >& vis_edgels)
   : vis_edgels_(vis_edgels) {}
   
   //: Called by the process when the data is ready
@@ -84,7 +84,7 @@ public:
     vis_edgels_.clear();
     return true;
   }
-  vcl_vector<vcl_pair<double,vnl_double_4> >& vis_edgels_;
+  std::vector<std::pair<double,vnl_double_4> >& vis_edgels_;
 };
 
 
@@ -100,9 +100,9 @@ public:
   {
     assert(data);
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<modrec_vehicle_state>));
-      const vcl_vector<modrec_vehicle_state>& states = 
-          data->data<vcl_vector<modrec_vehicle_state> >();
+      assert(data->type_id() == typeid(std::vector<modrec_vehicle_state>));
+      const std::vector<modrec_vehicle_state>& states = 
+          data->data<std::vector<modrec_vehicle_state> >();
       
       for(unsigned int i=0; i<states.size(); ++i){
         manager_.draw_hypothesis(states[i]);
@@ -126,9 +126,9 @@ public:
   {
     assert(data);
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<modrec_vehicle_state>));
-      const vcl_vector<modrec_vehicle_state>& states = 
-          data->data<vcl_vector<modrec_vehicle_state> >();
+      assert(data->type_id() == typeid(std::vector<modrec_vehicle_state>));
+      const std::vector<modrec_vehicle_state>& states = 
+          data->data<std::vector<modrec_vehicle_state> >();
       
       manager_.set_tracking_states(states);
     }
@@ -151,13 +151,13 @@ public:
     assert(easy2D_tab_);
     assert(data);
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<vgl_polygon<double> >));
-      const vcl_vector<vgl_polygon<double> >& polys = 
-      data->data<vcl_vector<vgl_polygon<double> > >();
+      assert(data->type_id() == typeid(std::vector<vgl_polygon<double> >));
+      const std::vector<vgl_polygon<double> >& polys = 
+      data->data<std::vector<vgl_polygon<double> > >();
       //easy2D_tab_->clear();
       easy2D_tab_->set_foreground(1.0f,0.0,0.0); //red 
       for(unsigned int i=0; i<polys.size(); ++i){
-        const vcl_vector<vgl_point_2d<double> >& pts = polys[i][0];
+        const std::vector<vgl_point_2d<double> >& pts = polys[i][0];
         float* px = new float[pts.size()];
         float* py = new float[pts.size()];
         for(unsigned int j=0; j<pts.size(); ++j){
@@ -188,9 +188,9 @@ public:
     assert(easy2D_tab_);
     assert(data);
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<vgl_point_2d<double> >));
-      const vcl_vector<vgl_point_2d<double> >& pts = 
-         data->data<vcl_vector<vgl_point_2d<double> > >();
+      assert(data->type_id() == typeid(std::vector<vgl_point_2d<double> >));
+      const std::vector<vgl_point_2d<double> >& pts = 
+         data->data<std::vector<vgl_point_2d<double> > >();
       //easy2D_tab_->clear();
       easy2D_tab_->set_foreground(0.0f,0.0,1.0); 
       easy2D_tab_->set_point_radius(2.0);
@@ -216,10 +216,10 @@ public:
   {
     assert(easy2D_tab_);
     assert(data);
-    typedef vcl_pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
+    typedef std::pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<pv_pair>));
-      const vcl_vector<pv_pair>& flow = data->data<vcl_vector<pv_pair> >();
+      assert(data->type_id() == typeid(std::vector<pv_pair>));
+      const std::vector<pv_pair>& flow = data->data<std::vector<pv_pair> >();
       //easy2D_tab_->clear();
       easy2D_tab_->set_foreground(1.0f,0.0f,1.0); 
       for(unsigned int i=0; i<flow.size(); ++i){
@@ -530,18 +530,18 @@ void pca_vehicle_manager::init_mesh_tex(modrec_pca_vehicle& mesh)
   if(mesh.has_tex_coords())
   {
     // remove hidden faces from the texture map
-    vcl_set<unsigned int> no_tex, tmp;
+    std::set<unsigned int> no_tex, tmp;
     no_tex = mesh.faces().group_face_set("undercarriage");
     tmp = mesh.faces().group_face_set("wheel_back");
     no_tex.insert(tmp.begin(),tmp.end());
-    vcl_vector<bool> valid_tex(mesh.num_faces(),true);
-    for(vcl_set<unsigned int>::const_iterator itr=no_tex.begin();
+    std::vector<bool> valid_tex(mesh.num_faces(),true);
+    for(std::set<unsigned int>::const_iterator itr=no_tex.begin();
         itr!=no_tex.end(); ++itr)
       valid_tex[*itr] = false;
     mesh.set_valid_tex_faces(valid_tex);
   }
   else{
-    vcl_cerr << "No texture coordinates"<<vcl_endl;
+    std::cerr << "No texture coordinates"<<std::endl;
   }
 }
 
@@ -621,7 +621,7 @@ void pca_vehicle_manager::set_vehicle_model(vehicle_model vm)
 
 
 //: load an image 
-bool pca_vehicle_manager::load_image(const vcl_string& filename)
+bool pca_vehicle_manager::load_image(const std::string& filename)
 {
   // don't load a single frame in video mode
   if(is_fit_mode_video())
@@ -647,7 +647,7 @@ bool pca_vehicle_manager::load_image(const vcl_string& filename)
       K.set_principal_point(pp);
       camera.set_calibration(K);
       this->set_camera(camera);
-      vcl_cout << K.get_matrix() << vcl_endl;
+      std::cout << K.get_matrix() << std::endl;
     }
   }
 
@@ -666,21 +666,21 @@ bool pca_vehicle_manager::load_image(const vcl_string& filename)
 
 
 //: load a camera matrix
-bool pca_vehicle_manager::load_camera(const vcl_string& filename)
+bool pca_vehicle_manager::load_camera(const std::string& filename)
 {
   vnl_double_3x4 M;
   norm_cam_ = false;
-  vcl_ifstream ifs(filename.c_str());
+  std::ifstream ifs(filename.c_str());
   ifs >> M;
   
-  vcl_string type;
+  std::string type;
   ifs >> type;
   if(ifs.good() && type == "normalized")
     norm_cam_ = true;
   
   // read enviroment data
-  vcl_map<vcl_string,double> env_data;
-  vcl_string name;
+  std::map<std::string,double> env_data;
+  std::string name;
   double val;
   ifs >> name >> val;
   while(ifs.good()){
@@ -715,7 +715,7 @@ bool pca_vehicle_manager::load_camera(const vcl_string& filename)
       pp.y() *= nj;
       K.set_principal_point(pp);
       camera.set_calibration(K);
-      vcl_cout << K.get_matrix() << vcl_endl;
+      std::cout << K.get_matrix() << std::endl;
     }
   }
   
@@ -728,13 +728,13 @@ bool pca_vehicle_manager::load_camera(const vcl_string& filename)
     solar_day_ = 0;
     solar_utc_ = 17;
     solar_atn_ = 0;
-    vcl_map<vcl_string,double>::const_iterator e;
+    std::map<std::string,double>::const_iterator e;
     if((e = env_data.find("lat")) != env_data.end())
       solar_lat_ = e->second;  
     if((e = env_data.find("lon")) != env_data.end())
       solar_lon_ = e->second; 
     if((e = env_data.find("day")) != env_data.end())
-      solar_day_ = static_cast<int>(vcl_floor(e->second)); 
+      solar_day_ = static_cast<int>(std::floor(e->second)); 
     if((e = env_data.find("utc")) != env_data.end())
       solar_utc_ = e->second; 
     if((e = env_data.find("atn")) != env_data.end())
@@ -749,9 +749,9 @@ bool pca_vehicle_manager::load_camera(const vcl_string& filename)
 
 
 //: Save the camera to a file
-bool pca_vehicle_manager::save_camera(const vcl_string& filename, bool normalize) const
+bool pca_vehicle_manager::save_camera(const std::string& filename, bool normalize) const
 {
-  vcl_ofstream ofs(filename.c_str());
+  std::ofstream ofs(filename.c_str());
   if(!ofs.is_open())
     return false;
   if(normalize)
@@ -792,13 +792,13 @@ bool pca_vehicle_manager::save_camera(const vcl_string& filename, bool normalize
 
 
 //: Save a file with the current 3d coordinates of parts
-bool pca_vehicle_manager::save_3d_parts(const vcl_string& filename) const
+bool pca_vehicle_manager::save_3d_parts(const std::string& filename) const
 {
-  vcl_ofstream ofs(filename.c_str());
+  std::ofstream ofs(filename.c_str());
   if(!ofs.is_open())
     return false;
-  typedef vcl_map<vcl_string, vgl_polygon<double> > part_map;
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts_3d = mesh_->parts_3d();
+  typedef std::map<std::string, vgl_polygon<double> > part_map;
+  const std::vector<std::vector<vgl_point_3d<double> > >& parts_3d = mesh_->parts_3d();
   const part_map& parts = mesh_->parts();
   
   unsigned int i=0;
@@ -818,14 +818,14 @@ bool pca_vehicle_manager::save_3d_parts(const vcl_string& filename) const
 
 
 //: Save the projected contours as SVG
-bool pca_vehicle_manager::save_svg(const vcl_string& filename) const
+bool pca_vehicle_manager::save_svg(const std::string& filename) const
 {
   return modrec_write_svg_curves(filename, mesh_projector_);
 }
 
 
 //: Save an image of the detected edges
-bool pca_vehicle_manager::save_edge_image(const vcl_string& filename) const
+bool pca_vehicle_manager::save_edge_image(const std::string& filename) const
 {
   const vil_image_view<float>& edge_map = is_fit_mode_video() ?
                                           video_optimizer_.edge_map() : 
@@ -850,7 +850,7 @@ bool pca_vehicle_manager::save_edge_image(const vcl_string& filename) const
 }
 
 //: Save an image of the current video frame
-bool pca_vehicle_manager::save_video_frame(const vcl_string& filename) const
+bool pca_vehicle_manager::save_video_frame(const std::string& filename) const
 {
   if(!istream_)
     return false;
@@ -895,15 +895,15 @@ void pca_vehicle_manager::compute_sun_direction()
       if(frame_rate <= 0.0)
         frame_rate = 30.0;
       rel_time = istream_->frame_number()/frame_rate/3600;
-      vcl_cout << "rel time = "<<rel_time<<vcl_endl;
+      std::cout << "rel time = "<<rel_time<<std::endl;
     }
 
     double alt,az;
     dbul_solar_position(solar_day_, solar_utc_+rel_time, solar_lat_, solar_lon_, alt, az);
     double sag = solar_atn_ - az;
-    sun_dir_ = vgl_vector_3d<double>(-vcl_cos(sag)*vcl_cos(alt),
-                                     -vcl_sin(sag)*vcl_cos(alt),
-                                     -vcl_sin(alt));
+    sun_dir_ = vgl_vector_3d<double>(-std::cos(sag)*std::cos(alt),
+                                     -std::sin(sag)*std::cos(alt),
+                                     -std::sin(alt));
   }
   if(is_fit_mode_video())
     video_optimizer_.set_sun_direction(sun_dir_);
@@ -911,8 +911,8 @@ void pca_vehicle_manager::compute_sun_direction()
 
 
 //: load a mesh
-bool pca_vehicle_manager::load_mesh(const vcl_string& meshfile,
-                                    const vcl_string& partsfile)
+bool pca_vehicle_manager::load_mesh(const std::string& meshfile,
+                                    const std::string& partsfile)
 {
   imesh_mesh new_mesh;
   if(!imesh_read(meshfile,new_mesh)){
@@ -922,7 +922,7 @@ bool pca_vehicle_manager::load_mesh(const vcl_string& meshfile,
   if(mesh_->num_verts() != new_mesh.num_verts())
     return false;
   
-  vcl_auto_ptr<imesh_vertex_array_base> new_verts(new_mesh.vertices().clone());
+  std::auto_ptr<imesh_vertex_array_base> new_verts(new_mesh.vertices().clone());
   mesh_->set_vertices(new_verts);
 
   mesh_->compute_face_normals();
@@ -933,7 +933,7 @@ bool pca_vehicle_manager::load_mesh(const vcl_string& meshfile,
     draw_texmap();
   }
   else{
-    vcl_cerr << "No texture coordinates"<<vcl_endl;
+    std::cerr << "No texture coordinates"<<std::endl;
   }
 
   if(!mesh_->params().empty())
@@ -953,7 +953,7 @@ bool pca_vehicle_manager::load_mesh(const vcl_string& meshfile,
 
 
 //: Load the ground truth mesh file
-bool pca_vehicle_manager::load_truth_mesh(const vcl_string& filename)
+bool pca_vehicle_manager::load_truth_mesh(const std::string& filename)
 {
   if(!imesh_read(filename,truth_mesh_)){
     return false;
@@ -966,7 +966,7 @@ bool pca_vehicle_manager::load_truth_mesh(const vcl_string& filename)
 
 
 //: Vehicle surface parts
-bool pca_vehicle_manager::load_parts(const vcl_string& filename)
+bool pca_vehicle_manager::load_parts(const std::string& filename)
 {
   mesh_->set_parts(modrec_read_vehicle_parts(filename));
   video_optimizer_.set_vehicle_model(*mesh_);
@@ -977,7 +977,7 @@ bool pca_vehicle_manager::load_parts(const vcl_string& filename)
 
 
 //: Vehicle PCA File
-bool pca_vehicle_manager::load_pca(const vcl_string& filename)
+bool pca_vehicle_manager::load_pca(const std::string& filename)
 {
   vnl_vector<double> mean;
   vnl_vector<double> std_devs;
@@ -1049,7 +1049,7 @@ void pca_vehicle_manager::attach(vgui_observer *o)
   if(gnd_cal_tab_)
     gnd_cal_tab_->attach(o);
   else
-    vcl_cout << "ground cal not initialized"<<vcl_endl;
+    std::cout << "ground cal not initialized"<<std::endl;
 }
 
 
@@ -1227,7 +1227,7 @@ void pca_vehicle_manager::compute_error()
   }
   error /= verts.size();
   
-  vcl_cout << "RMS error = " << vcl_sqrt(error) << vcl_endl;
+  std::cout << "RMS error = " << std::sqrt(error) << std::endl;
 }
 
 
@@ -1235,7 +1235,7 @@ void pca_vehicle_manager::compute_error()
 void pca_vehicle_manager::draw_texmap()
 {
   tex_tab_->clear();
-  const vcl_vector<vgl_point_2d<double> >& tc = mesh_->tex_coords();
+  const std::vector<vgl_point_2d<double> >& tc = mesh_->tex_coords();
   if(mesh_->has_tex_coords() == imesh_mesh::TEX_COORD_ON_VERT)
   {
     tex_tab_->set_line_width(1.0);
@@ -1258,7 +1258,7 @@ void pca_vehicle_manager::draw_texmap()
     tex_tab_->post_redraw();
   }
   else if(mesh_->has_tex_coords() == imesh_mesh::TEX_COORD_ON_CORNER){
-    vcl_cerr << "Texutre coordinates per corner not supported"<<vcl_endl;
+    std::cerr << "Texutre coordinates per corner not supported"<<std::endl;
   }
 }
 
@@ -1306,7 +1306,7 @@ void pca_vehicle_manager::update_mesh_node()
   SoCoordinate3 * coords = dynamic_cast<SoCoordinate3 *>(mesh_node_->getChild(0));
 
   if(!coords){
-    vcl_cerr << "First child is not a 3D coordinate node"<<vcl_endl;
+    std::cerr << "First child is not a 3D coordinate node"<<std::endl;
     return;
   }
 
@@ -1331,10 +1331,10 @@ void pca_vehicle_manager::draw_texmap_parts()
   tex_parts_tab_->set_line_width(2.0);
   tex_parts_tab_->set_foreground(1.0f,0.0f,0.0f);
   const part_map& parts = mesh_->parts();
-  vcl_vector<vgl_point_2d<double> > all_points;
+  std::vector<vgl_point_2d<double> > all_points;
   for(part_map::const_iterator itr=parts.begin(); itr!=parts.end(); ++itr)
   {
-    const vcl_vector<vgl_point_2d<double> >& poly = itr->second[0];
+    const std::vector<vgl_point_2d<double> >& poly = itr->second[0];
     float x[poly.size()], y[poly.size()];
     for(unsigned int i=0; i<poly.size(); ++i)
     {
@@ -1348,7 +1348,7 @@ void pca_vehicle_manager::draw_texmap_parts()
   tex_parts_tab_->set_foreground(0.0f,1.0f,0.0f);
   
   typedef modrec_pca_vehicle::uv_point uv_point;
-  const vcl_vector<vcl_vector<uv_point> >& parts_uv = mesh_->parts_bary();
+  const std::vector<std::vector<uv_point> >& parts_uv = mesh_->parts_bary();
   for(unsigned int i=0; i<parts_uv.size(); ++i)
   {
     for(unsigned int j=0; j<parts_uv[i].size(); ++j)
@@ -1391,7 +1391,7 @@ void pca_vehicle_manager::draw_parts()
   proj_tab_->set_line_width(2.0);
   
 #if 0
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > shadow_pts;
+  std::vector<std::vector<vgl_point_2d<double> > > shadow_pts;
   const vgl_polygon<double>& shadow = mesh_projector_.shadow();
   for(unsigned int i=0; i<shadow.num_sheets(); ++i){
     shadow_pts.push_back(shadow[i]);
@@ -1450,11 +1450,11 @@ void pca_vehicle_manager::draw_hypothesis(const modrec_vehicle_state& state)
 //: draw the current vehicle tracking states
 void pca_vehicle_manager::draw_current_states()
 {
-  typedef vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> >::const_iterator map_itr;
+  typedef std::map<unsigned int,std::vector<modrec_vehicle_state> >::const_iterator map_itr;
   map_itr fitr = state_map_.find(current_frame());
   if(fitr == state_map_.end() || fitr->second.empty())
     return;
-  const vcl_vector<modrec_vehicle_state>& states = fitr->second;
+  const std::vector<modrec_vehicle_state>& states = fitr->second;
   
   proj_tab_->clear();
   proj_tab_->set_line_width(2.0);
@@ -1486,7 +1486,7 @@ void pca_vehicle_manager::draw_current_states()
 
 
 //: set the vehicle tracking states
-void pca_vehicle_manager::set_tracking_states(const vcl_vector<modrec_vehicle_state>& states)
+void pca_vehicle_manager::set_tracking_states(const std::vector<modrec_vehicle_state>& states)
 {
   if(states.empty())
     return;
@@ -1496,7 +1496,7 @@ void pca_vehicle_manager::set_tracking_states(const vcl_vector<modrec_vehicle_st
 
 
 //: set the history of vehicle tracking states indexed over frame number
-void pca_vehicle_manager::set_state_map(const vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> >& state_map)
+void pca_vehicle_manager::set_state_map(const std::map<unsigned int,std::vector<modrec_vehicle_state> >& state_map)
 {
   state_map_ = state_map;
 }
@@ -1510,9 +1510,9 @@ void pca_vehicle_manager::build_parts_node()
   parts_node_->removeAllChildren();
   
   typedef modrec_pca_vehicle::uv_point uv_point;
-  const vcl_vector<vcl_vector<uv_point> >& parts_uv = mesh_->parts_bary();
-  const vcl_vector<vcl_vector<vgl_point_3d<double> > >& parts3d = mesh_->parts_3d();
-  const vcl_vector<vgl_vector_3d<double> >& normals = mesh_->faces().normals();
+  const std::vector<std::vector<uv_point> >& parts_uv = mesh_->parts_bary();
+  const std::vector<std::vector<vgl_point_3d<double> > >& parts3d = mesh_->parts_3d();
+  const std::vector<vgl_vector_3d<double> >& normals = mesh_->faces().normals();
   const imesh_half_edge_set& he = mesh_->half_edges();
 
   // material
@@ -1536,7 +1536,7 @@ void pca_vehicle_manager::build_parts_node()
   for(unsigned int i=0; i<parts3d.size(); ++i)
   {
     unsigned int fidx = cidx;
-    const vcl_vector<vgl_point_3d<double> >& part = parts3d[i];
+    const std::vector<vgl_point_3d<double> >& part = parts3d[i];
     for(unsigned int j=0; j<part.size(); ++j)
     {
       // offset slightly in the normal direction to prevent clipping
@@ -1599,11 +1599,11 @@ void pca_vehicle_manager::set_camera_relative()
 //: draw curves in the image view
 void pca_vehicle_manager::
 draw_curves(vgui_easy2D_tableau_sptr tab,
-            const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves)
+            const std::vector<std::vector<vgl_point_2d<double> > >& curves)
 {
   for(unsigned int i=0; i<curves.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
+    const std::vector<vgl_point_2d<double> >& curve = curves[i];
     float x[curve.size()], y[curve.size()];
     for(unsigned int j=0; j<curve.size(); ++j)
     {
@@ -1617,7 +1617,7 @@ draw_curves(vgui_easy2D_tableau_sptr tab,
 
 
 //: update all of the mesh parameters at once
-void pca_vehicle_manager::change_mesh_params(const vcl_vector<double>& params)
+void pca_vehicle_manager::change_mesh_params(const std::vector<double>& params)
 {
   vnl_vector<double> p = mesh_->params();
   for(unsigned int i=0; i<params.size() && i<p.size(); ++i)
@@ -1715,12 +1715,12 @@ void pca_vehicle_manager::capture_view(int view_id, bool start)
 
 
 //: read and play an animation script from a file
-void pca_vehicle_manager::run_animation(const vcl_string& script)
+void pca_vehicle_manager::run_animation(const std::string& script)
 {
   char command;
   unsigned int num_steps;
   vnl_vector<double> next_p=mesh_->params(), curr_p=mesh_->params();
-  vcl_ifstream ifs(script.c_str());
+  std::ifstream ifs(script.c_str());
   double angle = 0.0, next_angle = 0.0;
   const double pi = 3.141592653589793;
   while(ifs >> command)
@@ -1731,7 +1731,7 @@ void pca_vehicle_manager::run_animation(const vcl_string& script)
       {
         char data[4096];
         ifs.getline(data,4096);
-        vcl_stringstream sdata(data);
+        std::stringstream sdata(data);
         next_p.clear();
         sdata >> next_p;
         break;
@@ -1751,7 +1751,7 @@ void pca_vehicle_manager::run_animation(const vcl_string& script)
       case 'a':
       {
         ifs >> num_steps;
-        vcl_vector<double> p(curr_p.size(),0.0);
+        std::vector<double> p(curr_p.size(),0.0);
         for(unsigned int i=0; i<=num_steps; ++i){
           double t = double(i)/num_steps;
           unsigned int j=0;
@@ -1782,10 +1782,10 @@ void pca_vehicle_manager::run_animation(const vcl_string& script)
 
 
 //: read and play a tracking sequence from a file
-void pca_vehicle_manager::run_track_results(const vcl_string& filename)
+void pca_vehicle_manager::run_track_results(const std::string& filename)
 {
-  vcl_ifstream ifs(filename.c_str());
-  vcl_string input;
+  std::ifstream ifs(filename.c_str());
+  std::string input;
   // load model type
   ifs >> input;
   if(input == "Dodecahedral")
@@ -1799,7 +1799,7 @@ void pca_vehicle_manager::run_track_results(const vcl_string& filename)
   else if(input == "Detailed3")
     set_vehicle_model(DETAILED3);
   else{
-    vcl_cerr << "unknown model type: "<<input<<vcl_endl;
+    std::cerr << "unknown model type: "<<input<<std::endl;
     return;
   }
   
@@ -1810,14 +1810,14 @@ void pca_vehicle_manager::run_track_results(const vcl_string& filename)
   // load video file
   ifs >> input;
   if(!open_istream(new vidl_ffmpeg_istream(input))){
-    vcl_cerr<< "could not open video file: "<<input<<vcl_endl;
+    std::cerr<< "could not open video file: "<<input<<std::endl;
     return;
   }
      
   // load video file
   ifs >> input;
   if(!load_camera(input)){
-    vcl_cerr<< "could not open camera: "<<input<<vcl_endl;
+    std::cerr<< "could not open camera: "<<input<<std::endl;
     return;
   }
   
@@ -1832,7 +1832,7 @@ void pca_vehicle_manager::run_track_results(const vcl_string& filename)
     {
       if(!istream_->advance())
         break;
-      vcl_cout << "frame "<<istream_->frame_number()<<vcl_endl;
+      std::cout << "frame "<<istream_->frame_number()<<std::endl;
       
       vidl_frame_sptr frame = istream_->current_frame();
       if (frame) {
@@ -1858,7 +1858,7 @@ void pca_vehicle_manager::run_track_results(const vcl_string& filename)
     
     char data[4096];
     ifs.getline(data,4096);
-    vcl_stringstream sdata(data);
+    std::stringstream sdata(data);
     
     vnl_vector_fixed<double,3> r;
     double tv,av;
@@ -1935,16 +1935,16 @@ void pca_vehicle_manager::compute_vis_edgels()
     return;
   
   vis_edgels_.clear();
-  vcl_vector<modrec_edgel> medgels = modrec_find_all_edgels(edge_map);
+  std::vector<modrec_edgel> medgels = modrec_find_all_edgels(edge_map);
   
-  vcl_sort(medgels.begin(), medgels.end(), modrec_edgel_strength_less);
+  std::sort(medgels.begin(), medgels.end(), modrec_edgel_strength_less);
 
   for(unsigned int i=0; i<medgels.size(); ++i)
   {
     const modrec_edgel& m = medgels[i];
-    double gx = vcl_cos(m.angle());
-    double gy = vcl_sin(m.angle());
-    vis_edgels_.push_back(vcl_pair<double,vnl_double_4>(m.strength(),
+    double gx = std::cos(m.angle());
+    double gy = std::sin(m.angle());
+    vis_edgels_.push_back(std::pair<double,vnl_double_4>(m.strength(),
                                                         vnl_double_4(m.x(),m.y(),gx,gy)));
   }
   
@@ -1967,7 +1967,7 @@ bool pca_vehicle_manager::is_current_frame_active() const
 //  - [1,2,3] is Tx,Ty,Tz respectively
 //  - [4,5,6] is Rx,Ry,Rz respectively
 void pca_vehicle_manager::
-set_fit_options(const vcl_vector<bool>& options, 
+set_fit_options(const std::vector<bool>& options, 
                 unsigned int num_pc, 
                 double lambda, 
                 double edge_scale)
@@ -1992,23 +1992,23 @@ void pca_vehicle_manager::fit_model(unsigned int num_itr)
   double edge_scale = optimizer_->estimate_initial_scale(*mesh_,translation_,rotation_,optimizer_->init_uncert())/4;
   if(edge_scale < 1.0) // lower bound at 1
     edge_scale = 1.0;
-  vcl_cout << "initial scale = "<<edge_scale<<vcl_endl;
+  std::cout << "initial scale = "<<edge_scale<<std::endl;
   optimizer_->set_mest_scale(edge_scale);
   
-  double last_residual = vcl_numeric_limits<double>::infinity();
+  double last_residual = std::numeric_limits<double>::infinity();
   vnl_vector<double> soln(optimizer_->num_params(),0.0);
   modrec_write_svg_curves("curves_init.svg",mesh_projector_);
   
   for(unsigned int k=0; k<num_itr; ++k){
     
     bool success = optimizer_->fit_model_once(*mesh_, translation_, rotation_, soln, last_residual, k==0);
-    vcl_cout << "soln mag: "<<soln.magnitude() <<vcl_endl;
+    std::cout << "soln mag: "<<soln.magnitude() <<std::endl;
     if(!success){
       --k;
       if(edge_scale <= 1)
         break;
-      last_residual = vcl_numeric_limits<double>::infinity();
-      edge_scale /= vcl_sqrt(2);
+      last_residual = std::numeric_limits<double>::infinity();
+      edge_scale /= std::sqrt(2);
       if(edge_scale < 1)
         edge_scale = 1.0;
       optimizer_->set_mest_scale(edge_scale);
@@ -2016,8 +2016,8 @@ void pca_vehicle_manager::fit_model(unsigned int num_itr)
     else{
       update_all_displays();
       vgui::run_till_idle();
-      vcl_stringstream svg_file;
-      vcl_cout << "itr "<<k+1<<" scale "<<edge_scale<<vcl_endl;
+      std::stringstream svg_file;
+      std::cout << "itr "<<k+1<<" scale "<<edge_scale<<std::endl;
       svg_file << "curves_"<<k<<".svg";
       modrec_write_svg_curves(svg_file.str(),mesh_projector_);
     }
@@ -2028,16 +2028,16 @@ void pca_vehicle_manager::fit_model(unsigned int num_itr)
 //: Draw the edgel match vectors for the current frame
 void pca_vehicle_manager::draw_matches()
 {
-  vcl_vector<vgl_point_2d<double> > edgel_snaps;
-  vcl_vector<vgl_point_2d<double> > edgels;
-  vcl_vector<double> weights;
+  std::vector<vgl_point_2d<double> > edgel_snaps;
+  std::vector<vgl_point_2d<double> > edgels;
+  std::vector<double> weights;
   const vil_image_view<float>& edge_map = is_fit_mode_video() ?
                                           video_optimizer_.edge_map() :
                                           mv_optimizer_.edge_map(frame_number_);
   optimizer_->last_edgel_matches(mesh_projector_, edge_map, 
                                 edgel_snaps, edgels, weights);
   
-  double minw = vcl_numeric_limits<double>::infinity();
+  double minw = std::numeric_limits<double>::infinity();
   double maxw = -minw;
   for(unsigned int i=0; i<weights.size(); ++i)
   {
@@ -2065,11 +2065,11 @@ void pca_vehicle_manager::draw_silhouette_matches()
   if(video_optimizer_.silhouette().num_sheets() == 0)
     return;
   
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vgl_vector_2d<double> > norms;
+  const std::vector<std::vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_vector_2d<double> > norms;
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     vgl_vector_2d<double> n1(0,0), n2(0,0);
@@ -2085,7 +2085,7 @@ void pca_vehicle_manager::draw_silhouette_matches()
   }
   
   
-  vcl_vector<double> errors;
+  std::vector<double> errors;
   video_optimizer_.compute_silhouette_errors(pts,norms,
                                              video_optimizer_.silhouette(),
                                              errors);
@@ -2110,8 +2110,8 @@ void pca_vehicle_manager::draw_jacobians()
 {
   unsigned int dim = 0;
   double scale = 0.1;
-  vcl_vector<vcl_string> ptypes(7);
-  vcl_vector<int> choice_idx(7,-1);
+  std::vector<std::string> ptypes(7);
+  std::vector<int> choice_idx(7,-1);
   unsigned int num_pc = mesh_projector_.num_pc();
   ptypes[0] = "PC";
   ptypes[1] = "Tx"; ptypes[2] = "Ty"; ptypes[3] = "Tz";
@@ -2136,32 +2136,32 @@ void pca_vehicle_manager::draw_jacobians()
   int pidx = choice_idx[pchoice];
   if(pchoice == 0){
     if(!mesh_projector_.options()[0] || mesh_projector_.num_pc() <= dim){
-      vcl_vector<bool> options = vcl_vector<bool>(7,false);
+      std::vector<bool> options = std::vector<bool>(7,false);
       options[0] = true;
       mesh_projector_.project(camera(), *mesh_, rotation_, translation_, sun_dir_, options, dim+1);
       pidx = dim;
     }
   }
   else if(pidx < 0){
-    vcl_vector<bool> options = vcl_vector<bool>(7,false);
+    std::vector<bool> options = std::vector<bool>(7,false);
     options[pchoice] = true;
     mesh_projector_.project(camera(), *mesh_, rotation_, translation_, sun_dir_, options, 0);
     pidx = 0;
   }
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = mesh_projector_.contours();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = mesh_projector_.parts();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& silhouette = mesh_projector_.silhouette();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jc = mesh_projector_.contours_jacobians();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jp = mesh_projector_.parts_jacobians();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jtp = mesh_projector_.parts_texture_jacobians();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Js = mesh_projector_.silhouette_jacobians();
+  const std::vector<std::vector<vgl_point_2d<double> > >& contours = mesh_projector_.contours();
+  const std::vector<std::vector<vgl_point_2d<double> > >& parts = mesh_projector_.parts();
+  const std::vector<std::vector<vgl_point_2d<double> > >& silhouette = mesh_projector_.silhouette();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jc = mesh_projector_.contours_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jp = mesh_projector_.parts_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jtp = mesh_projector_.parts_texture_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Js = mesh_projector_.silhouette_jacobians();
 
   
   proj_tab_->set_foreground(1.0f,0.0f,0.0f);
   for(unsigned int i=0; i<contours.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& contour = contours[i];
-    const vcl_vector<vnl_matrix<double> >& Ji = Jc[i];
+    const std::vector<vgl_point_2d<double> >& contour = contours[i];
+    const std::vector<vnl_matrix<double> >& Ji = Jc[i];
     for(unsigned int j=0; j<contour.size(); ++j)
     {
       const vgl_point_2d<double>& p = contour[j];
@@ -2174,8 +2174,8 @@ void pca_vehicle_manager::draw_jacobians()
   proj_tab_->set_foreground(0.0f,1.0f,0.0f);
   for(unsigned int i=0; i<parts.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& part = parts[i];
-    const vcl_vector<vnl_matrix<double> >& Ji = Jp[i];
+    const std::vector<vgl_point_2d<double> >& part = parts[i];
+    const std::vector<vnl_matrix<double> >& Ji = Jp[i];
     for(unsigned int j=0; j<part.size(); ++j)
     {
       const vgl_point_2d<double>& p = part[j];
@@ -2188,8 +2188,8 @@ void pca_vehicle_manager::draw_jacobians()
   proj_tab_->set_foreground(0.0f,1.0f,1.0f);
   for(unsigned int i=0; i<silhouette.size(); ++i)
   {
-    const vcl_vector<vgl_point_2d<double> >& sil = silhouette[i];
-    const vcl_vector<vnl_matrix<double> >& Ji = Js[i];
+    const std::vector<vgl_point_2d<double> >& sil = silhouette[i];
+    const std::vector<vnl_matrix<double> >& Ji = Js[i];
     for(unsigned int j=0; j<sil.size(); ++j)
     {
       const vgl_point_2d<double>& p = sil[j];
@@ -2202,10 +2202,10 @@ void pca_vehicle_manager::draw_jacobians()
   proj_tab_->post_redraw();
   
   const part_map& partsm = mesh_->parts();
-  vcl_vector<vgl_point_2d<double> > all_points;
+  std::vector<vgl_point_2d<double> > all_points;
   for(part_map::const_iterator itr=partsm.begin(); itr!=partsm.end(); ++itr)
   {
-    const vcl_vector<vgl_point_2d<double> >& poly = itr->second[0];
+    const std::vector<vgl_point_2d<double> >& poly = itr->second[0];
     for(unsigned int i=0; i<poly.size(); ++i)
     {
       all_points.push_back(poly[i]);
@@ -2213,13 +2213,13 @@ void pca_vehicle_manager::draw_jacobians()
   }
   if(!Jtp.empty())
   {
-    const vcl_vector<vcl_vector<vcl_pair<unsigned int,unsigned int> > >&
+    const std::vector<std::vector<std::pair<unsigned int,unsigned int> > >&
     parts_idx = mesh_projector_.parts_indices();
     typedef modrec_pca_vehicle::uv_point uv_point;
-    const vcl_vector<vcl_vector<uv_point> >& parts_uv = mesh_->parts_bary();
+    const std::vector<std::vector<uv_point> >& parts_uv = mesh_->parts_bary();
     for(unsigned int i=0; i<parts_idx.size(); ++i)
     {
-      const vcl_vector<vnl_matrix<double> >& Ji = Jtp[i];
+      const std::vector<vnl_matrix<double> >& Ji = Jtp[i];
       for(unsigned int j=0; j<parts_idx[i].size(); ++j)
       {
         unsigned int i1 = parts_idx[i][j].first, i2 = parts_idx[i][j].second;

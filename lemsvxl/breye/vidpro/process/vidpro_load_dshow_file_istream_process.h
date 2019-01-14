@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro/bpro_process.h>
 #include <brdb/brdb_database_manager.h>
 #include <vidpro/vidpro_process_manager.h>
@@ -31,10 +31,10 @@ class vidpro_load_dshow_file_istream_process : public bpro_process
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();

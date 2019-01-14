@@ -1,11 +1,11 @@
 #ifndef MESSAGE_PRINTER_H
 #define MESSAGE_PRINTER_H
 
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <vector>
+#include <string>
+#include <fstream>
 
 #define    NO_PRINT                       0
 #define    TTY_PRINT                      1
@@ -16,8 +16,8 @@ class MessagePrinter
     private:
         static int       _state;
         static int       _priorityThreshold;
-        static vcl_string    _outputFileName;
-        static vcl_ofstream   _fp;
+        static std::string    _outputFileName;
+        static std::ofstream   _fp;
         static int       _count;
         
 
@@ -40,7 +40,7 @@ class MessagePrinter
            }
 
 
-        static int PrintMessage(vcl_string mesg_, int priority_, vcl_string functionName_, vcl_string fileName_, int lineNumber_)
+        static int PrintMessage(std::string mesg_, int priority_, std::string functionName_, std::string fileName_, int lineNumber_)
           {
             if (priority_>_priorityThreshold)
               {
@@ -55,15 +55,15 @@ class MessagePrinter
                          {
                            return 0;
                           }
-                       vcl_cout<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<vcl_endl;
-                       vcl_cout<<mesg_<<vcl_endl;
+                       std::cout<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<std::endl;
+                       std::cout<<mesg_<<std::endl;
                        return 0;
                       };
 
                case(TTY_PRINT):
                      {
-                       vcl_cout<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<vcl_endl;
-                       vcl_cout<<mesg_<<vcl_endl;
+                       std::cout<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<std::endl;
+                       std::cout<<mesg_<<std::endl;
                        return 0;
                       }
 
@@ -71,22 +71,22 @@ class MessagePrinter
                      {
                        if (_outputFileName.length()==0)
                          {
-                           vcl_cout<<"{"<<__FILE__<<" : "<<__LINE__<<"} Output file name not set:"<<vcl_endl;
+                           std::cout<<"{"<<__FILE__<<" : "<<__LINE__<<"} Output file name not set:"<<std::endl;
                            return 0;
                           }
                       
                        if (!_fp.is_open())
                          {
-                           _fp.open(_outputFileName.c_str(), vcl_ios::out);
+                           _fp.open(_outputFileName.c_str(), std::ios::out);
                            if (!_fp.is_open())
                              {
-                               vcl_cout<<"{"<<__FILE__<<" : "<<__LINE__<<"} Unable to Open output file :"<<_outputFileName<<vcl_endl;
+                               std::cout<<"{"<<__FILE__<<" : "<<__LINE__<<"} Unable to Open output file :"<<_outputFileName<<std::endl;
                                return -1;
                               }
                           }
            
-                       _fp<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<vcl_endl;
-                       _fp<<mesg_<<vcl_endl;
+                       _fp<<"{"<<fileName_<<" : "<<lineNumber_<<"} <"<<functionName_<<"> "<<std::endl;
+                       _fp<<mesg_<<std::endl;
 
                       }
               
@@ -104,7 +104,7 @@ class MessagePrinter
             return 0;
            }
        
-        static void setOutputFileName(vcl_string fileName)
+        static void setOutputFileName(std::string fileName)
           {
             _outputFileName=fileName; 
             if (_fp.is_open())

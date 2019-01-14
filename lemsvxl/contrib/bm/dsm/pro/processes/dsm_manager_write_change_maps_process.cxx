@@ -4,8 +4,8 @@
 
 #include<dsm/dsm_manager_base_sptr.h>
 
-#include<vcl_iomanip.h>
-#include<vcl_sstream.h>
+#include<iomanip>
+#include<sstream>
 
 #include<vil/vil_image_view_base.h>
 #include<vil/vil_convert.h>
@@ -27,12 +27,12 @@ bool dsm_manager_write_change_maps_process_cons( bprb_func_process& pro )
 {
 	using namespace dsm_manager_write_change_maps_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_manager_base_sptr";
-	input_types_[i++] = "vcl_string";//the original image glob
-	input_types_[i++] = "vcl_string";//output directory
+	input_types_[i++] = vcl_string";//the original image glob
+	input_types_[i++] = vcl_string";//output directory
 
 	if(!pro.set_input_types(input_types_))
 		return false;
@@ -46,24 +46,24 @@ bool dsm_manager_write_change_maps_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_manager_write_change_maps_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_manager_write_change_maps_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
 	dsm_manager_base_sptr manager_sptr = pro.get_input<dsm_manager_base_sptr>(i++);
-	vcl_string image_glob = pro.get_input<vcl_string>(i++);
-	vcl_string result_directory = pro.get_input<vcl_string>(i++);
+	std::string image_glob = pro.get_input<std::string>(i++);
+	std::string result_directory = pro.get_input<std::string>(i++);
 
 	vidl_image_list_istream video_stream(image_glob);
 
 	unsigned nframes = video_stream.num_frames();
 
-	vcl_map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+	std::map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 		tsm_itr, tsm_end = manager_sptr->target_stateMachine_map_.end();
 
-	vcl_stringstream map_directory;
+	std::stringstream map_directory;
 
 	map_directory<< result_directory;
 
@@ -72,15 +72,15 @@ bool dsm_manager_write_change_maps_process( bprb_func_process& pro )
 
 	for( unsigned frame = 0; frame < nframes; ++frame )
 	{
-		vcl_cout << "Writing Change Map: " << frame << " of " << nframes << vcl_endl;
+		std::cout << "Writing Change Map: " << frame << " of " << nframes << std::endl;
 
 		video_stream.seek_frame(frame);
 		vil_image_view<vxl_byte> curr_img;
 		vidl_convert_to_view(*video_stream.current_frame(), curr_img);
 		
-		vcl_stringstream map_filename;
+		std::stringstream map_filename;
 		
-		map_filename << map_directory.str() << "/change_map_" << vcl_setfill('0') << vcl_setw(4) << frame << ".png";
+		map_filename << map_directory.str() << "/change_map_" << std::setfill('0') << std::setw(4) << frame << ".png";
 		
 
 			

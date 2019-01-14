@@ -1,7 +1,7 @@
 #ifndef psm_opt_generate_opt_rt_samples_h_
 #define psm_opt_generate_opt_rt_samples_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <hsds/hsds_fd_tree_node_index.h>
@@ -72,7 +72,7 @@ public:
     // update alpha integral
     alpha_integral_(i,j) += cell_value.alpha * seg_len;
     // compute new visibility probability with updated alpha_integral
-    const float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    const float vis_prob_end = std::exp(-alpha_integral_(i,j));
     // compute weight for this cell
     const float Omega = vis_img_(i,j) - vis_prob_end;
     // and update pre 
@@ -114,7 +114,7 @@ public:
     // update alpha integral
     alpha_integral_(i,j) += cell_value.alpha * seg_len;
     // compute new visibility probability with updated alpha_integral
-    const float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    const float vis_prob_end = std::exp(-alpha_integral_(i,j));
     // grab this cell's pre and vis value
     const float pre = pre_img_(i,j);
     const float vis = vis_img_(i,j);
@@ -131,8 +131,8 @@ public:
     aux_value.vis_ += vis * seg_len;
     //float post_prob = Beta_denom_(i,j) - pre - PI*Omega;
     //if (post_prob < -1e-5) {
-    //  vcl_cerr << "error: post_prob = " << post_prob << "  setting to 0." << vcl_endl;
-    //  vcl_cerr << "Beta_denom = " << Beta_denom_(i,j) << ", pre = " << pre << ", PI = " << PI << " Omega = " << Omega << vcl_endl;
+    //  std::cerr << "error: post_prob = " << post_prob << "  setting to 0." << std::endl;
+    //  std::cerr << "Beta_denom = " << Beta_denom_(i,j) << ", pre = " << pre << ", PI = " << PI << " Omega = " << Omega << std::endl;
     //}
     //if (post_prob < 0) {
     //  post_prob = 0;
@@ -151,11 +151,11 @@ public:
     }
     if (Beta < 0) {
       if (Beta < -1e-5) {
-        vcl_cerr << " error: beta = " << Beta << "  setting to 0. " << vcl_endl;
+        std::cerr << " error: beta = " << Beta << "  setting to 0. " << std::endl;
       }
       Beta = 0;
     }
-    const float old_PQ = (1.0f - (float)vcl_exp(-seg_len * cell_value.alpha));
+    const float old_PQ = (1.0f - (float)std::exp(-seg_len * cell_value.alpha));
     float new_PQ = Beta * old_PQ;
 
     const double obs_prob = 1.0;//vis;
@@ -163,17 +163,17 @@ public:
     if (pass_prob < 1e-5)
       pass_prob = 1e-5; // to avoid taking log of 0
 
-    aux_value.updated_alpha_sum_ += (float)(vcl_log(pass_prob)*obs_prob);
+    aux_value.updated_alpha_sum_ += (float)(std::log(pass_prob)*obs_prob);
     aux_value.weighted_seg_len_ += (float)(seg_len * obs_prob);
 
 #define PSM_DEBUG
 #ifdef PSM_DEBUG
     const psm_cell_id debug_cell(vgl_point_3d<int>(-1,-1,0),hsds_fd_tree_node_index<3>(3911065088,8));
-    const vcl_string debug_fname("c:/research/psm/output/psm_debug.txt");
+    const std::string debug_fname("c:/research/psm/output/psm_debug.txt");
     if (cell_id == debug_cell) {
       // open debug file in append mode
-      vcl_ofstream ofs(debug_fname.c_str(),vcl_ios::app);
-      ofs << aux_value.obs_ << " " << seg_len << " " << pre << " " << vis << " " << PI << " " << Beta_denom_(i,j) << " " << old_PQ << " " << new_PQ << vcl_endl;
+      std::ofstream ofs(debug_fname.c_str(),std::ios::app);
+      ofs << aux_value.obs_ << " " << seg_len << " " << pre << " " << vis << " " << PI << " " << Beta_denom_(i,j) << " " << old_PQ << " " << new_PQ << std::endl;
     }
 #endif
 
@@ -195,7 +195,7 @@ private:
 
 
 template <psm_apm_type APM, psm_aux_type AUX>
-void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> const* cam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, vcl_string image_id, bool black_background = false)
+void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> const* cam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, std::string image_id, bool black_background = false)
 {
   // create a temporary aux_scene
   // assuming greyscale image and scene here.  Need a map from appearance model -> aux_type to make this general.
@@ -203,7 +203,7 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
   psm_aux_scene_base_sptr aux_scene_ptr = scene.template get_aux_scene<AUX>(image_id);
 
 #if 0
-  vcl_cout << "computing mean cell projections.. " << vcl_endl;
+  std::cout << "computing mean cell projections.. " << std::endl;
   // First, compute and store mean observation and PI value for each cell.
   psm_aux_scene<AUX> *aux_scene = static_cast<psm_aux_scene<AUX>*>(aux_scene_ptr.ptr());
   typename psm_aux_scene<AUX>::block_index_iterator block_index_it = scene.block_index_begin();
@@ -226,8 +226,8 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
           for (unsigned int i=0; i<2; ++i) {
             double u,v;
             cam->project(xverts_3d[i],yverts_3d[j],zverts_3d[k],u,v);
-            const unsigned int u_int = vcl_min((unsigned int)(vcl_max(u,0.0)),img.ni()-1);
-            const unsigned int v_int = vcl_min((unsigned int)(vcl_max(v,0.0)),img.nj()-1);
+            const unsigned int u_int = std::min((unsigned int)(std::max(u,0.0)),img.ni()-1);
+            const unsigned int v_int = std::min((unsigned int)(std::max(v,0.0)),img.nj()-1);
             projection.update(u_int,v_int);
           }
         }
@@ -238,7 +238,7 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
       vil_image_view<typename psm_apm_traits<APM>::obs_datatype> cell_view = vil_crop(img,projection.xmin(),xdim,projection.ymin(),ydim);
       typename psm_apm_traits<APM>::obs_datatype mean_obs;
       vil_math_mean(mean_obs,cell_view,0);
-      //vcl_cout << "mean = " << mean_obs << "  xdim = " << xdim << "  ydim = " << ydim << vcl_endl;
+      //std::cout << "mean = " << mean_obs << "  xdim = " << xdim << "  ydim = " << ydim << std::endl;
       // update aux cell
       aux_block_it->second.obs_ = mean_obs;
 
@@ -246,12 +246,12 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
   }
 #endif
   // 0th pass: traverse and compute mean cell observations.
-  vcl_cout << "compute mean cell observations.." << vcl_endl;
+  std::cout << "compute mean cell observations.." << std::endl;
   psm_raytrace_function<psm_opt_generate_opt_rt_samples_pass0_functor<APM,AUX>, APM, AUX> raytrace_fn0(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
   psm_opt_generate_opt_rt_samples_pass0_functor<APM,AUX> pass0_functor(img);
   raytrace_fn0.run(pass0_functor);
 
-  vcl_cout << "normalizing.." << vcl_endl;
+  std::cout << "normalizing.." << std::endl;
   // normalize appearance values
   psm_aux_scene<AUX> *aux_scene = static_cast<psm_aux_scene<AUX>*>(aux_scene_ptr.ptr());
   typename psm_aux_scene<AUX>::block_index_iterator block_index_it = scene.block_index_begin();
@@ -272,7 +272,7 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
   }
 
   // first pass: traverse in forward direction, accumulating vis_inf and pre_inf
-  vcl_cout << "first pass.." << vcl_endl;
+  std::cout << "first pass.." << std::endl;
   vil_image_view<float> vis_inf(img.ni(), img.nj());
   vil_image_view<float> pre_inf(img.ni(), img.nj());
   psm_raytrace_function<psm_opt_generate_opt_rt_samples_pass1_functor<APM,AUX>, APM, AUX> raytrace_fn1(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
@@ -281,7 +281,7 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
 
   vil_image_view<float> PI_inf(img.ni(), img.nj());
   if (black_background) {
-    vcl_cout << "using black background" << vcl_endl;
+    std::cout << "using black background" << std::endl;
     psm_apm_traits<APM>::obs_datatype black(0.0f);
     float background_std_dev = 8.0f/255;
     typename psm_apm_traits<APM>::apm_datatype background_apm;
@@ -301,17 +301,17 @@ void psm_opt_generate_opt_rt_samples(psm_scene<APM> &scene, vpgl_camera<double> 
   vil_image_view<float> Beta_denom_img(img.ni(), img.nj());
   vil_math_image_sum(pre_inf,inf_term,Beta_denom_img);
 
-  vcl_cout << "saving debug images.." << vcl_endl;
+  std::cout << "saving debug images.." << std::endl;
   vil_save(vis_inf,"c:/research/psm/output/vis_inf.tiff");
   vil_save(pre_inf,"c:/research/psm/output/pre_inf.tiff");
   vil_save(Beta_denom_img,"c:/research/psm/output/beta_denom_img.tiff");
 
-  vcl_cout << "second pass.." << vcl_endl;
+  std::cout << "second pass.." << std::endl;
   psm_raytrace_function<psm_opt_generate_opt_rt_samples_pass2_functor<APM,AUX>, APM, AUX> raytrace_fn2(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
   psm_opt_generate_opt_rt_samples_pass2_functor<APM,AUX> pass2_functor(img, Beta_denom_img);
   raytrace_fn2.run(pass2_functor);
 
-  vcl_cout << "done." << vcl_endl;
+  std::cout << "done." << std::endl;
 
   return;
 }

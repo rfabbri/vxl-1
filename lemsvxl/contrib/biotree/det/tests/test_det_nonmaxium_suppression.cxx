@@ -6,15 +6,15 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_cylinder_map.h>
 #include <det/det_nonmaxium_suppression.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 
 static void test_det_nonmaxium_suppression()
 {
-  vcl_cout << "---test nonmaxium_suppression ---" << vcl_endl;
+  std::cout << "---test nonmaxium_suppression ---" << std::endl;
   const unsigned dim = 5;
   int center = dim/2;
     

@@ -103,8 +103,8 @@ void dbsk3dapp_action::action_unclick (SoPath* path)
 
 void dbsk3dapp_action::action_interrogation (SoPath* path)
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
-  vcl_ostringstream ostrm;
+  std::string name = path->getTail()->getTypeId().getName().getString();
+  std::ostringstream ostrm;
 
   if(!strcmp("fs_vertex_SoCube", name.c_str())) {
     fs_vertex_SoCube* guielement = (fs_vertex_SoCube*) path->getTail();
@@ -149,15 +149,15 @@ void dbsk3dapp_action::action_interrogation (SoPath* path)
   }
   else if (!strcmp("PointSet", name.c_str())) {
     //: works if all generators are drawn as a point cloud
-    vcl_cout<<"Point Cloud";
+    std::cout<<"Point Cloud";
   }
 
-  vcl_cout<< ostrm.str();
+  std::cout<< ostrm.str();
 }
 
 void dbsk3dapp_action::action_selection (SoPath* path)
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   
   //: Assume only one parent of the path->getTail().
   SoGroup* parent = get_parent_group (path->getTail());
@@ -195,7 +195,7 @@ void dbsk3dapp_action::action_selection (SoPath* path)
 
 void dbsk3dapp_action::action_alteration (SoPath* path)
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   
   SoGroup* parent = get_parent_group (path->getTail());
 
@@ -220,18 +220,18 @@ static void dragger_moved (void * data, SoDragger * drag)
   point.set (v[0], v[1], v[2]);
   
   dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) node->element();
-  vcl_set<dbsk3d_fs_edge*> links;
-  vcl_set<dbsk3d_fs_face*> patches;
+  std::set<dbsk3d_fs_edge*> links;
+  std::set<dbsk3d_fs_face*> patches;
   FV->get_incident_elms (links, patches);
 
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = links.begin();
+  std::set<dbsk3d_fs_edge*>::iterator lit = links.begin();
   for (; lit != links.end(); lit++) {
     fs_edge_SoLineSet* line = (fs_edge_SoLineSet*)(*lit)->vis_pointer();
     if (line)
       line->update();
   }
 
-  vcl_set<dbsk3d_fs_face*>::iterator pit = patches.begin();
+  std::set<dbsk3d_fs_face*>::iterator pit = patches.begin();
   for (; pit != patches.end(); pit++) {
     fs_face_SoFaceSet* patch = (fs_face_SoFaceSet*)(*pit)->vis_pointer();
     if (patch)
@@ -241,7 +241,7 @@ static void dragger_moved (void * data, SoDragger * drag)
 
 void dbsk3dapp_action::alteration_node (fs_vertex_SoCube* node)
 {
-  vcl_cout<< "alteration\n";
+  std::cout<< "alteration\n";
 
   SoSeparator* dragGroup = new SoSeparator;
 

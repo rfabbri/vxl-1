@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Nov. 11, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -23,7 +23,7 @@ bool MS_valid_for_A14_contract_xform (dbsk3d_ms_sheet* MS)
   
   //Determine the two ms_curves MCp and MCq of MS.
   dbsk3d_ms_curve *MCp = NULL, *MCq = NULL;
-  vcl_set<dbsk3d_ms_node*> MNset;
+  std::set<dbsk3d_ms_node*> MNset;
   int n_bnd = MS->n_bnd_Es();
   if (n_bnd != 2)
     return false;

@@ -2,8 +2,8 @@
 //  
 
 #include <assert.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <gdt/gdt_solve_intersect.h>
@@ -17,7 +17,7 @@
 //
 void gdt_interval_section::clear_I_map ()
 {
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   while (it != I_map_.end()) {
     gdt_ibase* I = (*it).second;
     
@@ -40,7 +40,7 @@ void gdt_interval_section::clear_I_map ()
 //: Brute-forcely go through each interval and check for possible overlap.
 bool gdt_interval_section::_is_I_overlap (const gdt_ibase* input_I)
 {
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   for (; it != I_map_.end(); it++) {
     gdt_ibase* I = (*it).second;
     if (_is_I_overlapping (I, input_I))
@@ -54,7 +54,7 @@ bool gdt_interval_section::_is_I_overlap (const gdt_ibase* input_I)
 //  Ignore input_I itself.
 bool gdt_interval_section::_is_I_overlap2 (const gdt_ibase* input_I)
 {
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   for (; it != I_map_.end(); it++) {
     gdt_ibase* I = (*it).second;
     if (I == input_I)
@@ -72,26 +72,26 @@ bool gdt_interval_section::is_a_coverage ()
     return false;
 
   //:1) the first interval
-  vcl_map<double, gdt_ibase*>::iterator fit = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator fit = I_map_.begin();
   gdt_ibase* I_1st = (*fit).second;
   if (I_1st->stau() != 0)
     return false;
 
   //:2) the last I
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
   gdt_ibase* I_last = (*rit).second;
   if (I_last->etau() != len_)
     return false;
 
   //:3) if size > 1
   if (I_map()->size() > 1) {
-    vcl_map<double, gdt_ibase*>::iterator fitn = fit;
+    std::map<double, gdt_ibase*>::iterator fitn = fit;
     fitn++;
     gdt_ibase* I_2nd = (*fitn).second;
     if (I_1st->etau() != I_2nd->stau())
       return false;
 
-    vcl_map<double, gdt_ibase*>::reverse_iterator ritn = rit;
+    std::map<double, gdt_ibase*>::reverse_iterator ritn = rit;
     ritn++;
     gdt_ibase* I_r2nd = (*ritn).second;
     if (I_last->stau() != I_r2nd->etau())
@@ -100,10 +100,10 @@ bool gdt_interval_section::is_a_coverage ()
 
   //:3) all the others
   if (I_map_.size() > 2) {
-    vcl_map<double, gdt_ibase*>::iterator pit = I_map_.begin();
-    vcl_map<double, gdt_ibase*>::iterator it = pit;
+    std::map<double, gdt_ibase*>::iterator pit = I_map_.begin();
+    std::map<double, gdt_ibase*>::iterator it = pit;
     it++;
-    vcl_map<double, gdt_ibase*>::iterator nit = it;
+    std::map<double, gdt_ibase*>::iterator nit = it;
     nit++;
   
     for (; nit != I_map_.end(); pit++, it++, nit++) {
@@ -128,23 +128,23 @@ bool gdt_interval_section::assert_coverage_no_gap_overlap ()
     return true;
 
   //:1) the first I
-  vcl_map<double, gdt_ibase*>::iterator fit = I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator fit = I_map()->begin();
   gdt_ibase* I_1st = (*fit).second;
   assert (I_1st->stau() == 0);
 
   //:2) the last I
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map()->rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map()->rbegin();
   gdt_ibase* I_last = (*rit).second;
   assert (I_last->etau() == len_);
 
   //:3) if size > 1
   if (I_map()->size() > 1) {
-    vcl_map<double, gdt_ibase*>::iterator fitn = fit;
+    std::map<double, gdt_ibase*>::iterator fitn = fit;
     fitn++;
     gdt_ibase* I_2nd = (*fitn).second;
     assert (I_1st->etau() == I_2nd->stau());
 
-    vcl_map<double, gdt_ibase*>::reverse_iterator ritn = rit;
+    std::map<double, gdt_ibase*>::reverse_iterator ritn = rit;
     ritn++;
     gdt_ibase* I_r2nd = (*ritn).second;
     assert (I_last->stau() == I_r2nd->etau());
@@ -152,10 +152,10 @@ bool gdt_interval_section::assert_coverage_no_gap_overlap ()
 
   //:3) all the others
   if (I_map()->size() > 2) {
-    vcl_map<double, gdt_ibase*>::iterator pit = I_map()->begin();
-    vcl_map<double, gdt_ibase*>::iterator it = pit;
+    std::map<double, gdt_ibase*>::iterator pit = I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = pit;
     it++;
-    vcl_map<double, gdt_ibase*>::iterator nit = it;
+    std::map<double, gdt_ibase*>::iterator nit = it;
     nit++;
   
     for (; nit != I_map()->end(); pit++, it++, nit++) {
@@ -172,16 +172,16 @@ bool gdt_interval_section::assert_coverage_no_gap_overlap ()
 
 void gdt_interval_section::debug_print ()
 {
-  vul_printf (vcl_cerr, "\n IntervalSection: \n");
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  vul_printf (std::cerr, "\n IntervalSection: \n");
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   for (int i=0; it != I_map_.end(); i++, it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
-    vul_printf (vcl_cerr, "    I %d: (%.16f - %.16f) vs: %d", 
+    vul_printf (std::cerr, "    I %d: (%.16f - %.16f) vs: %d", 
                 i, I->stau(), I->etau(), I->psrc()->id());
     if (I->is_dege())
-      vul_printf (vcl_cerr, " dege");
-    vul_printf (vcl_cerr, "\n");
+      vul_printf (std::cerr, " dege");
+    vul_printf (std::cerr, "\n");
   }
 }
 
@@ -194,7 +194,7 @@ void gdt_interval_section::delete_tau_less_than (double input_tau)
 {
   //: delete each interval I if I(stau, etau) < input_tau
   gdt_interval* I=NULL;
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   while (it != I_map_.end()) {
     I = (gdt_interval*) (*it).second;
 
@@ -216,7 +216,7 @@ void gdt_interval_section::delete_tau_less_than (double input_tau)
     }
     else {
       //the I is too small to trim, should delete I and modify the next_I
-      vcl_map<double, gdt_ibase*>::iterator nit = it;
+      std::map<double, gdt_ibase*>::iterator nit = it;
       nit++;
       I_map_.erase (it);
       gdt_interval* next_I = (gdt_interval*) (*nit).second;
@@ -234,7 +234,7 @@ void gdt_interval_section::delete_tau_greater_than (double input_tau)
 {
   //: delete all I > input_tau
   gdt_interval* I=NULL;
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
   while (rit != I_map_.rend()) {
     I = (gdt_interval*) (*rit).second;
 
@@ -254,7 +254,7 @@ void gdt_interval_section::delete_tau_greater_than (double input_tau)
     }
     else {
       // the I is too small to trim, should delete I and modify the next_I
-      vcl_map<double, gdt_ibase*>::reverse_iterator rnit = rit;
+      std::map<double, gdt_ibase*>::reverse_iterator rnit = rit;
       rnit++;
       I_map_.erase (I->stau());
       gdt_interval* next_I = (gdt_interval*) (*rnit).second;
@@ -268,7 +268,7 @@ void gdt_interval_section::delete_tau_greater_than (double input_tau)
 void gdt_interval_section::add_interval_numfix (gdt_ibase* input_I)
 {
   //: if any existing I's etau == input_I's stau, fix it
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   for (; it != I_map_.end(); it++) {
     gdt_ibase* I = (*it).second;
     //: if I->stau() greater than input_I's stau, enough
@@ -283,7 +283,7 @@ void gdt_interval_section::add_interval_numfix (gdt_ibase* input_I)
   }
 
   //: if any existing I's stau == input_I's etau, fix it
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
   for (; rit != I_map_.rend(); rit++) {
     gdt_ibase* I = (*rit).second;
     //: if I->stau() greater than input_I's stau, enough
@@ -298,7 +298,7 @@ void gdt_interval_section::add_interval_numfix (gdt_ibase* input_I)
   assert (!_eqT (input_I->stau(), input_I->etau()));
 
   //assert (I_map->_find_interval(input_I->stau()) == NULL);
-  I_map_.insert (vcl_pair<double, gdt_ibase*>(input_I->stau(), input_I));
+  I_map_.insert (std::pair<double, gdt_ibase*>(input_I->stau(), input_I));
 }
 
 // #################  Intersection Functions  #################
@@ -310,21 +310,21 @@ void gdt_interval_section::fill_dummy_intervals ()
   if (I_map_.size() == 0) {
     //: create one full dummy interval.
     gdt_ibase* dum = new gdt_ibase (ITYPE_DUMMY, 0, len_);
-    I_map_.insert (vcl_pair<double, gdt_ibase*>(dum->stau(), dum));
+    I_map_.insert (std::pair<double, gdt_ibase*>(dum->stau(), dum));
     return;
   }
 
   //:2) fill the middle gaps
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   for (int i=0; i < (int) I_map_.size()-1; i++, it++) {
-    vcl_map<double, gdt_ibase*>::iterator nit = it;
+    std::map<double, gdt_ibase*>::iterator nit = it;
     nit++;
     gdt_ibase* cur_I = (*it).second;
     gdt_ibase* next_I = (*nit).second;
 
     if (cur_I->etau() < next_I->stau()) {
       gdt_ibase* dum = new gdt_ibase (ITYPE_DUMMY, cur_I->etau(), next_I->stau());
-      I_map_.insert (vcl_pair<double, gdt_ibase*>(dum->stau(), dum));
+      I_map_.insert (std::pair<double, gdt_ibase*>(dum->stau(), dum));
     }
   }
 
@@ -333,15 +333,15 @@ void gdt_interval_section::fill_dummy_intervals ()
   gdt_ibase* I = (*it).second;
   if (I->stau() != 0) {
     gdt_ibase* dum = new gdt_ibase (ITYPE_DUMMY, 0, I->stau());
-    I_map_.insert (vcl_pair<double, gdt_ibase*>(dum->stau(), dum));
+    I_map_.insert (std::pair<double, gdt_ibase*>(dum->stau(), dum));
   }
 
   //: fill the last gap: (last etau - len_)
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
   I = (*rit).second;
   if (I->etau() != len_) {
     gdt_ibase* dum = new gdt_ibase (ITYPE_DUMMY, I->etau(), len_);
-    I_map_.insert (vcl_pair<double, gdt_ibase*>(dum->stau(), dum));
+    I_map_.insert (std::pair<double, gdt_ibase*>(dum->stau(), dum));
   }
 }
 
@@ -693,8 +693,8 @@ void gdt_interval_section::merge_same_intervals ()
   if (I_map_.size() < 2)
     return; //no need to merge
 
-  vcl_map<double, gdt_ibase*>::iterator cit = I_map_.begin();
-  vcl_map<double, gdt_ibase*>::iterator nit = cit;
+  std::map<double, gdt_ibase*>::iterator cit = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator nit = cit;
   nit++;
 
   gdt_interval* cur_I = (gdt_interval*) (*cit).second;
@@ -723,7 +723,7 @@ void gdt_interval_section::merge_same_intervals ()
     next_I = (gdt_interval*) (*nit).second;
 
     //: fix numerical gap, here the epsilon should be 2* GDT_TAU_EPSILON
-    if (vcl_fabs (cur_I->etau()-next_I->stau()) < GDT_TAU_EPSILON*2) {
+    if (std::fabs (cur_I->etau()-next_I->stau()) < GDT_TAU_EPSILON*2) {
       cur_I->_set_etau (next_I->stau());
     }
 
@@ -733,7 +733,7 @@ void gdt_interval_section::merge_same_intervals ()
       assert (cur_I->etau() < next_I->etau());
       cur_I->_set_etau (next_I->etau());
       delete next_I;
-      vcl_map<double, gdt_ibase*>::iterator temp = nit;
+      std::map<double, gdt_ibase*>::iterator temp = nit;
       temp--;
       I_map_.erase (nit);
       temp++;
@@ -750,7 +750,7 @@ void gdt_interval_section::merge_same_intervals ()
 
       //: delete next_I
       delete next_I;
-      vcl_map<double, gdt_ibase*>::iterator temp = nit;
+      std::map<double, gdt_ibase*>::iterator temp = nit;
       temp--;
       I_map_.erase (nit);
       temp++;
@@ -769,13 +769,13 @@ void gdt_interval_section::fix_boundary_intervals (gdt_interval_section* IS1,
                                                    gdt_interval_section* IS2)
 {
   //:1) fix the beginning tau
-  vcl_map<double, gdt_ibase*>::iterator it1 = IS1->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it1 = IS1->I_map()->begin();
   gdt_ibase* I1 = (*it1).second;
-  vcl_map<double, gdt_ibase*>::iterator it2 = IS2->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it2 = IS2->I_map()->begin();
   gdt_ibase* I2 = (*it1).second;
-  double tau_min = vcl_min (I1->stau(), I2->stau());
+  double tau_min = std::min (I1->stau(), I2->stau());
 
-  vcl_map<double, gdt_ibase*>::iterator it = I_map_.begin();
+  std::map<double, gdt_ibase*>::iterator it = I_map_.begin();
   gdt_ibase* result_I = (*it).second;
   if (result_I->stau() != tau_min && _eqT(result_I->stau(), tau_min)) {
     //stick stau to tau_min
@@ -785,13 +785,13 @@ void gdt_interval_section::fix_boundary_intervals (gdt_interval_section* IS1,
   }
 
   //:2) fix the ending tau
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit1 = IS1->I_map()->rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit1 = IS1->I_map()->rbegin();
   I1 = (*rit1).second;
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit2 = IS2->I_map()->rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit2 = IS2->I_map()->rbegin();
   I2 = (*rit2).second;
-  double tau_max = vcl_max (I1->etau(), I2->etau());
+  double tau_max = std::max (I1->etau(), I2->etau());
 
-  vcl_map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
+  std::map<double, gdt_ibase*>::reverse_iterator rit = I_map_.rbegin();
   result_I = (*rit).second;
   if (result_I->etau() != tau_max && _eqT(result_I->etau(), tau_max)) {
     //stick etau to tau_max
@@ -812,8 +812,8 @@ int _intersection_tau (gdt_ibase* I1, gdt_ibase* I2,
                        double& itau_min, double& itau_max)
 {
   //: check overlap first
-  itau_min = vcl_max (I1->stau(), I2->stau());
-  itau_max = vcl_min (I1->etau(), I2->etau());
+  itau_min = std::max (I1->stau(), I2->stau());
+  itau_max = std::min (I1->etau(), I2->etau());
 
   //: if the overlap is too small, ignore it.
   //  the epsilon here has to be smaller
@@ -857,11 +857,11 @@ INTERSECT_RESULT _intersect_IS (gdt_interval_section* IS1,
   //    focus on the intersection of wss_i and wss_j,
   //    find the minimal of d(wss_i) and d(wss_j)
   //    the result may be at most 3 I's.
-  vcl_map<double, gdt_ibase*>::iterator it1 = IS1->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it1 = IS1->I_map()->begin();
   for (; it1 != IS1->I_map()->end(); it1++) {
     gdt_ibase* I1 = (*it1).second;
 
-    vcl_map<double, gdt_ibase*>::iterator it2 = IS2->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it2 = IS2->I_map()->begin();
     for (; it2 != IS2->I_map()->end(); it2++) {
       gdt_ibase* I2 = (*it2).second;
       
@@ -952,7 +952,7 @@ INTERSECT_RESULT _intersect_I_IS (gdt_interval* input_I,
   #endif
 
   gdt_interval* prev_I = NULL;
-  vcl_map<double, gdt_ibase*>::iterator it = input_IS2->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = input_IS2->I_map()->begin();
   for (; it != input_IS2->I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
     if (prev_I && _eqT(prev_I->etau(), I->stau()))
@@ -1007,7 +1007,7 @@ INTERSECT_RESULT intersect_interval_sections (gdt_interval_section* input_IS1,
   //: debug
   assert (input_IS2 != result_IS);
   gdt_interval* prev_I = NULL;
-  vcl_map<double, gdt_ibase*>::iterator it = input_IS1->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = input_IS1->I_map()->begin();
   for (; it != input_IS1->I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
     if (prev_I && _eqT(prev_I->etau(), I->stau()))

@@ -10,10 +10,10 @@
 #include <dbskr/dbskr_sm_cor.h>
 
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 #include <vul/vul_timer.h>
 
 #include <dbskr/dbskr_tree_edit.h>
@@ -56,7 +56,7 @@ dbskr_shock_match_process::dbskr_shock_match_process() : bpro1_process()
 
        )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -67,17 +67,17 @@ dbskr_shock_match_process::clone() const
   return new dbskr_shock_match_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_shock_match_process::get_input_type()
+std::vector< std::string > dbskr_shock_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_shock_match_process::get_output_type()
+std::vector< std::string > dbskr_shock_match_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock_match");
   return to_return;
 }
@@ -90,11 +90,11 @@ bool dbskr_shock_match_process::execute()
     parameters()->get_value( "-load2" , load2);
     bpro1_filepath input_path;
     parameters()->get_value( "-esf1" , input_path);
-    vcl_string esf_file1 = input_path.path;
+    std::string esf_file1 = input_path.path;
     parameters()->get_value( "-esf2" , input_path);
-    vcl_string esf_file2 = input_path.path;  
+    std::string esf_file2 = input_path.path;  
     parameters()->get_value( "-shgm" , input_path);
-    vcl_string shgm_file = input_path.path;
+    std::string shgm_file = input_path.path;
 
     bool perform_mirror_matching;
     parameters()->get_value( "-mirror_match", perform_mirror_matching);
@@ -121,7 +121,7 @@ bool dbskr_shock_match_process::execute()
   
     if (!sg1 || !sg2)
     {
-        vcl_cerr << "Problems in getting shock graphs!\n";
+        std::cerr << "Problems in getting shock graphs!\n";
         return false;
     }
 
@@ -220,15 +220,15 @@ bool dbskr_shock_match_process::execute()
     } 
     else  // do the matching
     { 
-        vcl_cout << "matching shock graphs...\n";
+        std::cout << "matching shock graphs...\n";
         vul_timer t;
         t.mark();
 
         dbskr_sm_cor_sptr sm_cor; float val, norm_val = 0; float val_flip, norm_val_flip = 0;
 
         if (!coarse_edit && !combined_edit) {
-            vcl_cout << "matching shock graphs using Sebastian's "
-                     << "original edit distance"<<vcl_endl;
+            std::cout << "matching shock graphs using Sebastian's "
+                     << "original edit distance"<<std::endl;
 
             //instantiate the edit distance algorithms
             dbskr_tree_edit edit(tree1, tree2, circular_ends, localized_edit);
@@ -238,7 +238,7 @@ bool dbskr_shock_match_process::execute()
             edit.set_use_approx(use_approx);
 
             if (!edit.edit()) {
-                vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                std::cerr << "Problems in editing trees"<<std::endl;
                 return false;
             }
 
@@ -265,8 +265,8 @@ bool dbskr_shock_match_process::execute()
 
                 if(!dbsk2d_hor_flip_shock_graph(sg2))
                 {
-                    vcl_cout << "Flip operation is not successful" << vcl_endl;
-                    vcl_cout << "The results are not reliable" << vcl_endl;
+                    std::cout << "Flip operation is not successful" << std::endl;
+                    std::cout << "The results are not reliable" << std::endl;
                 }
 
                 if (prune_tree)
@@ -288,7 +288,7 @@ bool dbskr_shock_match_process::execute()
 
 
                 if (!edit_flip.edit()) {
-                    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                    std::cerr << "Problems in editing trees"<<std::endl;
                     return false;
                 }
 
@@ -316,20 +316,20 @@ bool dbskr_shock_match_process::execute()
 
                     if ( !norm_reconst )
                     {
-                        vcl_cout << "final cost: " << val << " final norm cost: " 
+                        std::cout << "final cost: " << val << " final norm cost: " 
                                  << norm_val << "( tree1 tot splice: " 
                                  << tree1->total_splice_cost() << ", tree2: " 
-                                 << tree2_flip->total_splice_cost() << ")" << vcl_endl;
+                                 << tree2_flip->total_splice_cost() << ")" << std::endl;
                     }
                     else
                     {
 
-                        vcl_cout << "final cost: " << val << " final norm cost: " 
+                        std::cout << "final cost: " << val << " final norm cost: " 
                                  << norm_val << "( tree1 tot length: " 
                                  << tree1->total_reconstructed_boundary_length() 
                                  << ", tree2: " 
                                  << tree2_flip->total_reconstructed_boundary_length() << ")" 
-                                 << vcl_endl;
+                                 << std::endl;
 
                     }
 
@@ -343,19 +343,19 @@ bool dbskr_shock_match_process::execute()
 
                     if ( !norm_reconst )
                     {
-                        vcl_cout << "final cost: " << val << " final norm cost: " 
+                        std::cout << "final cost: " << val << " final norm cost: " 
                                  << norm_val << "( tree1 tot splice: " 
                                  << tree1->total_splice_cost() << ", tree2: " 
-                                 << tree2->total_splice_cost() << ")" << vcl_endl;
+                                 << tree2->total_splice_cost() << ")" << std::endl;
                     }
                     else
                     {
-                        vcl_cout << "final cost: " << val << " final norm cost: " 
+                        std::cout << "final cost: " << val << " final norm cost: " 
                                  << norm_val << "( tree1 tot length: " 
                                  << tree1->total_reconstructed_boundary_length() 
                                  << ", tree2: " 
                                  << tree2->total_reconstructed_boundary_length() << ")" 
-                                 << vcl_endl;
+                                 << std::endl;
 
                     }
 
@@ -369,19 +369,19 @@ bool dbskr_shock_match_process::execute()
 
                 if ( !norm_reconst )
                 {
-                    vcl_cout << "final cost: " << val << " final norm cost: " 
+                    std::cout << "final cost: " << val << " final norm cost: " 
                              << norm_val << "( tree1 tot splice: " 
                              << tree1->total_splice_cost() << ", tree2: " 
-                             << tree2->total_splice_cost() << ")" << vcl_endl;
+                             << tree2->total_splice_cost() << ")" << std::endl;
                 }
                 else
                 {
-                    vcl_cout << "final cost: " << val << " final norm cost: " 
+                    std::cout << "final cost: " << val << " final norm cost: " 
                              << norm_val << "( tree1 tot length: " 
                              << tree1->total_reconstructed_boundary_length() 
                              << ", tree2: " 
                              << tree2->total_reconstructed_boundary_length() << ")" 
-                             << vcl_endl;
+                             << std::endl;
 
                 }
             }
@@ -398,7 +398,7 @@ bool dbskr_shock_match_process::execute()
 
         } else if (combined_edit) {
 
-            vcl_cout << "matching shock graphs using combined edit"<<vcl_endl;
+            std::cout << "matching shock graphs using combined edit"<<std::endl;
 
             //instantiate the edit distance algorithm
             dbskr_tree_edit_combined edit(tree1, tree2, circular_ends);
@@ -406,7 +406,7 @@ bool dbskr_shock_match_process::execute()
             edit.save_path(true);
             edit.set_curvematching_R(scurve_matching_R);
             if (!edit.edit()) {
-                vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                std::cerr << "Problems in editing trees"<<std::endl;
                 return false;
             }
             val = edit.final_cost();
@@ -425,8 +425,8 @@ bool dbskr_shock_match_process::execute()
 
             sm_cor->set_final_cost(val);
             sm_cor->set_final_norm_cost(norm_val);
-            vcl_cout << "final cost: " << val 
-                     << " final norm cost: " << norm_val << vcl_endl;
+            std::cout << "final cost: " << val 
+                     << " final norm cost: " << norm_val << std::endl;
             sm_cor->clear_map_list();
             // fills in the cost vectors for debugging
             // sm_cor->recover_dart_ids_and_scurves(); 
@@ -436,14 +436,14 @@ bool dbskr_shock_match_process::execute()
                 edit.write_shgm(shgm_file);
             }
         } else { // coarse_edit
-            vcl_cout << "matching shock graphs using coarse edit\n";
+            std::cout << "matching shock graphs using coarse edit\n";
             dbskr_tree_edit_coarse edit(tree1, tree2, circular_ends);
             //edit.set_circular_ends(circular_ends);  
             // if false no circular completions at the end scurves
             edit.save_path(true);
             edit.set_curvematching_R(scurve_matching_R);
             if (!edit.edit()) {
-                vcl_cerr << "Problems in editing trees\n";
+                std::cerr << "Problems in editing trees\n";
                 return false;
             }
             val = edit.final_cost();
@@ -465,14 +465,14 @@ bool dbskr_shock_match_process::execute()
             sm_cor->set_tree2(tree2);
         }
 
-        vcl_cout << " cost: " << val << " norm cost: " << norm_val << " time: "
+        std::cout << " cost: " << val << " norm cost: " << norm_val << " time: "
                  << (t.real()/1000.0f) << " secs.\n";
     
         output_match->set_sm_cor(sm_cor);
     }
 
     output_data_.clear();
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_match));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_match));
 
     return true;
 }

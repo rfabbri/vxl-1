@@ -4,8 +4,8 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -38,7 +38,7 @@ class dbru_rcor_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbru_rcor_tableau_set_display_params_command(dbru_rcor_tableau* tab, 
-    const vcl_string& name, const void* intref) : rcor_tableau(tab), iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : rcor_tableau(tab), iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -54,7 +54,7 @@ class dbru_rcor_tableau_set_display_params_command : public vgui_command
 
   dbru_rcor_tableau *rcor_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 //: Constructor
@@ -206,7 +206,7 @@ void
 dbru_rcor_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_grid_map_)?on:off)+"Draw Grid Mapping", 
                new dbru_rcor_tableau_toggle_command(this, &display_grid_map_));

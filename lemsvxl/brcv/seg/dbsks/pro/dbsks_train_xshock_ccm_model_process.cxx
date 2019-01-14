@@ -35,11 +35,11 @@ dbsks_train_xshock_ccm_model_process()
 
     // edge folder
     !parameters()->add("Edge map folder", "-edgemap_folder", bpro1_filepath("V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/reorganized-data/all_pb_edges_pyramid-clean_using_kovesi-I_15-len_4")) ||
-    !parameters()->add("edgemap extension (to add to image name):", "-edgemap_ext", vcl_string("_pb_edges.png")) ||
-    !parameters()->add("edgeorient extension (to add to image name):", "-edgeorient_ext", vcl_string("_pb_orient.txt")) ||
+    !parameters()->add("edgemap extension (to add to image name):", "-edgemap_ext", std::string("_pb_edges.png")) ||
+    !parameters()->add("edgeorient extension (to add to image name):", "-edgeorient_ext", std::string("_pb_orient.txt")) ||
 
     // Category-specific info
-    //!parameters()->add("Object category:", "-category", vcl_string("applelogos")) ||
+    //!parameters()->add("Object category:", "-category", std::string("applelogos")) ||
     !parameters()->add("File containing list of training positive images", "-list_pos_images", bpro1_filepath("V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/list_applelogos_prototype1_pos_images.txt")) ||
     !parameters()->add("File containing list of training negative images", "-list_neg_images", bpro1_filepath("V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/list_applelogos_prototype1_neg_images.txt")) ||
     !parameters()->add("Folder containing groundtruth xgraphs:", "-xgraph_folder", bpro1_filepath("V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/applelogos-xgraph")) ||
@@ -52,7 +52,7 @@ dbsks_train_xshock_ccm_model_process()
   //
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -72,27 +72,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_train_xshock_ccm_model_process::
+std::string dbsks_train_xshock_ccm_model_process::
 name()
 { 
   return "Train xshock ccm model"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_train_xshock_ccm_model_process::
+std::vector< std::string > dbsks_train_xshock_ccm_model_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_train_xshock_ccm_model_process::
+std::vector< std::string > dbsks_train_xshock_ccm_model_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -126,26 +126,26 @@ execute()
 
   // parameter file
   this->parameters()->get_value("-train-xshock-ccm-file", temp_path);
-  vcl_string params_file = temp_path.path;
+  std::string params_file = temp_path.path;
 
-  vcl_map<vcl_string, vcl_map<vcl_string, vcl_string > > section_params;
+  std::map<std::string, std::map<std::string, std::string > > section_params;
   buld_parse_ini_file(params_file, section_params);
 
-  vcl_map<vcl_string, vcl_string > ccm_params = section_params["ccm"];
-  vcl_map<vcl_string, vcl_string > data_params = section_params["data"];
+  std::map<std::string, std::string > ccm_params = section_params["ccm"];
+  std::map<std::string, std::string > data_params = section_params["data"];
 
   // print out ccm parameters
-  for (vcl_map<vcl_string, vcl_string >::iterator iter = ccm_params.begin(); 
+  for (std::map<std::string, std::string >::iterator iter = ccm_params.begin(); 
     iter != ccm_params.end(); ++iter)
   {
-    vcl_cout << iter->first << " " << iter->second << "\n";
+    std::cout << iter->first << " " << iter->second << "\n";
   }
 
   // print out data parameters
-  for (vcl_map<vcl_string, vcl_string >::iterator iter = data_params.begin(); 
+  for (std::map<std::string, std::string >::iterator iter = data_params.begin(); 
     iter != data_params.end(); ++iter)
   {
-    vcl_cout << iter->first << " " << iter->second << "\n";
+    std::cout << iter->first << " " << iter->second << "\n";
   }
 
   // Parse these parameters and save to to the trainer

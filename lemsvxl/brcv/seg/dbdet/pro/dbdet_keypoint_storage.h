@@ -15,7 +15,7 @@
 
 #include <bpro1/bpro1_storage.h>
 #include "dbdet_keypoint_storage_sptr.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <dbdet/dbdet_keypoint_sptr.h>
 
 //: Storage class for bapl keypoints
@@ -26,12 +26,12 @@ public:
   //: Constructor
   dbdet_keypoint_storage(){}
   //: Constructor
-  dbdet_keypoint_storage( const vcl_vector< dbdet_keypoint_sptr >& keypoints, int ni, int nj);
+  dbdet_keypoint_storage( const std::vector< dbdet_keypoint_sptr >& keypoints, int ni, int nj);
   //: Destructor
   virtual ~dbdet_keypoint_storage(){}
 
   //: Returns the type string "keypoint"
-  virtual vcl_string type() const { return "keypoints"; }
+  virtual std::string type() const { return "keypoints"; }
 
     //: Register vsol_spatial_object_2d types for I/O
   virtual void register_binary_io() const;
@@ -50,13 +50,13 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_keypoint_storage"; }
+  virtual std::string is_a() const { return "dbdet_keypoint_storage"; }
 
   //: Set the keypoint storage vector
-  void set_keypoints( const vcl_vector< dbdet_keypoint_sptr >& keypoints);
+  void set_keypoints( const std::vector< dbdet_keypoint_sptr >& keypoints);
 
   //: Retrieve the keypoint storage vector
-  const vcl_vector< dbdet_keypoint_sptr >& keypoints() const { return keypoints_; }
+  const std::vector< dbdet_keypoint_sptr >& keypoints() const { return keypoints_; }
 
   //: Return the width
   int ni() const { return ni_; }
@@ -66,7 +66,7 @@ public:
    
 private:
   //: The vector of lowe keypoint smart pointers
-  vcl_vector< dbdet_keypoint_sptr > keypoints_;
+  std::vector< dbdet_keypoint_sptr > keypoints_;
 
   //: The width of the image that contains the keypoints
   int ni_;
@@ -87,7 +87,7 @@ struct dbdet_keypoint_storage_new : public dbdet_keypoint_storage_sptr
   dbdet_keypoint_storage_new() : base(new dbdet_keypoint_storage()) { }
 
   //: Constructor - creates a dbdet_keypoint_storage_sptr with keypoints.
-  dbdet_keypoint_storage_new(const vcl_vector< dbdet_keypoint_sptr >& keypoints, int ni, int nj)
+  dbdet_keypoint_storage_new(const std::vector< dbdet_keypoint_sptr >& keypoints, int ni, int nj)
    : base(new dbdet_keypoint_storage( keypoints, ni, nj )) { }
 };
 

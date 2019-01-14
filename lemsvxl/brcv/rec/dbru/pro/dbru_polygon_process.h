@@ -40,18 +40,18 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Livewire Polygons";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
   }
 
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }
@@ -70,13 +70,13 @@ public:
 
 protected:
   int n_;  // n frames before and n frames after
-  vcl_vector<vcl_vector<vsol_polygon_2d_sptr> > polygons_;
-  vcl_vector< vsol_spatial_object_2d_sptr > contours_;
+  std::vector<std::vector<vsol_polygon_2d_sptr> > polygons_;
+  std::vector< vsol_spatial_object_2d_sptr > contours_;
 
   osl_canny_ox_params canny_params_;
   dbdet_lvwr_params iparams_;
   int video_id_;
-  vcl_string poly_filename_;
+  std::string poly_filename_;
 private:
   
 

@@ -1,7 +1,7 @@
 #include "xmvg_source.h"
 #include <vsl/vsl_basic_xml_element.h>
 
-void x_write(vcl_ostream& os, xmvg_source source)
+void x_write(std::ostream& os, xmvg_source source)
 {
   vsl_basic_xml_element element("xmvg_source");
   element.add_attribute("spot_radius", source.spot_radius());

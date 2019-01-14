@@ -1,5 +1,5 @@
 // This is brl/bseg/dbinfo/dbinfo_region_geometry.cxx
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vsl/vsl_vector_io.h>
@@ -13,7 +13,7 @@
 dbinfo_region_geometry::
 dbinfo_region_geometry(const unsigned image_cols,
                        const unsigned image_rows,
-                       vcl_vector<vsol_polygon_2d_sptr> const& track_boundary,
+                       std::vector<vsol_polygon_2d_sptr> const& track_boundary,
                        const float thresh):
   fraction_inside_thresh_(thresh), image_cols_(image_cols),
   image_rows_(image_rows), boundaries_(track_boundary)
@@ -38,7 +38,7 @@ dbinfo_region_geometry(const unsigned image_cols, const unsigned image_rows,
 vsol_point_2d_sptr dbinfo_region_geometry::centroid() {
   double xc=0, yc=0;
   double tarea = 0;
-  for(vcl_vector<vsol_polygon_2d_sptr>::const_iterator pit = 
+  for(std::vector<vsol_polygon_2d_sptr>::const_iterator pit = 
         boundaries_.begin(); pit != boundaries_.end(); pit++)
     {
       vsol_point_2d_sptr cent = (*pit)->centroid();
@@ -75,7 +75,7 @@ dbinfo_region_geometry::dbinfo_region_geometry(const dbinfo_region_geometry & rh
   double xc=0, yc=0;
   //Get the overall centroid
   double tarea = 0;
-  for(vcl_vector<vsol_polygon_2d_sptr>::const_iterator pit = 
+  for(std::vector<vsol_polygon_2d_sptr>::const_iterator pit = 
         rhs.boundaries_.begin(); pit != rhs.boundaries_.end(); pit++)
     {
       vsol_point_2d_sptr cent = (*pit)->centroid();
@@ -89,7 +89,7 @@ dbinfo_region_geometry::dbinfo_region_geometry(const dbinfo_region_geometry & rh
 
   vsol_point_2d_sptr gc = new vsol_point_2d(xc, yc);
 
-  for(vcl_vector<vsol_polygon_2d_sptr>::const_iterator pit = 
+  for(std::vector<vsol_polygon_2d_sptr>::const_iterator pit = 
         rhs.boundaries_.begin(); pit != rhs.boundaries_.end(); pit++)
     {
       vsol_polygon_2d_sptr Hpoly = 
@@ -100,7 +100,7 @@ dbinfo_region_geometry::dbinfo_region_geometry(const dbinfo_region_geometry & rh
   if(points_valid_)
     {
       int i = 0;
-      for(vcl_vector<vgl_point_2d<float> >::iterator pit = points_.begin();
+      for(std::vector<vgl_point_2d<float> >::iterator pit = points_.begin();
           pit != points_.end(); ++pit, ++i)
         {
           vgl_homg_point_2d<double> hp((*pit).x()-xc, (*pit).y()-yc), thp;
@@ -142,7 +142,7 @@ dbinfo_region_geometry::dbinfo_region_geometry(const dbinfo_region_geometry & rh
 brip_roi_sptr dbinfo_region_geometry::roi() const
 {
   brip_roi* roi = new brip_roi(image_cols_, image_rows_);
-  for(vcl_vector<vsol_polygon_2d_sptr>::const_iterator pit = boundaries_.begin();
+  for(std::vector<vsol_polygon_2d_sptr>::const_iterator pit = boundaries_.begin();
       pit != boundaries_.end(); ++pit)
     {
       vsol_box_2d_sptr box = (*pit)->get_bounding_box();
@@ -157,7 +157,7 @@ void dbinfo_region_geometry::compute_sufficient()
   if(!points_valid_)
     {sufficient_points_ = false; return;}
   float count = 0;
-  for(vcl_vector<bool>::iterator mit = point_masks_.begin();
+  for(std::vector<bool>::iterator mit = point_masks_.begin();
       mit != point_masks_.end(); ++mit)
     if((*mit)) count++;
   float ratio = count/(float)points_.size();
@@ -171,7 +171,7 @@ void dbinfo_region_geometry::compute_points()
 {
   points_.clear();
   point_masks_.clear();
-  for(vcl_vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
+  for(std::vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
       pit != boundaries_.end(); ++pit)
     {
       //convert the bounding vsol polygons to a vgl_polygon
@@ -199,7 +199,7 @@ void dbinfo_region_geometry::adjust_image_bounds()
 {
   bool mutated = false;
   vsol_box_2d_sptr updated_bounds = new vsol_box_2d();   
-  for(vcl_vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
+  for(std::vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
       pit != boundaries_.end(); ++pit)
     {
       vsol_box_2d_sptr bb = (*pit)->get_bounding_box();
@@ -224,9 +224,9 @@ bool dbinfo_region_geometry::transform(vgl_h_matrix_2d<float> const& trans)
     for(unsigned c = 0; c<3; ++c)
       md[r][c]=mf[r][c];
   vgl_h_matrix_2d<double> Htemp(md);
-  vcl_vector<vsol_polygon_2d_sptr> btemp;
+  std::vector<vsol_polygon_2d_sptr> btemp;
   //transform the boundary polygons
-  for(vcl_vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
+  for(std::vector<vsol_polygon_2d_sptr>::iterator pit = boundaries_.begin();
       pit != boundaries_.end(); ++pit)
     {
       vsol_polygon_2d_sptr Hpoly;
@@ -245,7 +245,7 @@ vsol_point_2d_sptr dbinfo_region_geometry::cog()
   if(!points_valid_)
     this->compute_points();
   float sumx = 0, sumy = 0;
-  for(vcl_vector<vgl_point_2d<float> >::const_iterator pit = points_.begin();
+  for(std::vector<vgl_point_2d<float> >::const_iterator pit = points_.begin();
       pit != points_.end(); ++pit)
     {
       sumx += (*pit).x();
@@ -282,7 +282,7 @@ double dbinfo_region_geometry::diameter()
   return vgl_distance(pmin, pmax);
 }
 
-void dbinfo_region_geometry::print(vcl_ostream &strm)
+void dbinfo_region_geometry::print(std::ostream &strm)
 {
   vsol_point_2d_sptr cog = this->cog();
   brip_roi_sptr roi = this->roi();
@@ -335,6 +335,6 @@ void dbinfo_region_geometry::b_read(vsl_b_istream &is)
         break;
       }
     default:
-      vcl_cerr << "dbinfo_region_geometry: unknown I/O version " << ver << '\n';
+      std::cerr << "dbinfo_region_geometry: unknown I/O version " << ver << '\n';
     }
 }

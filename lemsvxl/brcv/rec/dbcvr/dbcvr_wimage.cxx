@@ -12,8 +12,8 @@
 //#pragma hdrstop
 
 #include "dbcvr_wsearch.h"
-#include <vcl_iostream.h>
-#include <vcl_cstring.h>
+#include <iostream>
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////
 // IMAGE.CPP
@@ -26,7 +26,7 @@ dbcvr_image::dbcvr_image (int w, int h)
    imagesize = w*h;
    balloc = true;
    imagedata = malloc (imagesize); //(-1)NOTICE!!
-   if (imagedata==NULL) { vcl_cout << "Memory not enough !"; exit(1); }
+   if (imagedata==NULL) { std::cout << "Memory not enough !"; exit(1); }
    memset (imagedata, 0, imagesize); //clear
 }
 
@@ -46,7 +46,7 @@ dbcvr_image::dbcvr_image (int w, int h, void* imd, bool bcopy)
    imagesize = w*h;
   balloc = true;
    imagedata = (unsigned char*) malloc (imagesize); //(-1)NOTICE!!
-   if (imagedata==NULL) { vcl_cout << "Memory not enough !"; exit(1); }
+   if (imagedata==NULL) { std::cout << "Memory not enough !"; exit(1); }
    memcpy (imagedata, imd, imagesize); //copy the source image
 }
 
@@ -60,7 +60,7 @@ dbcvr_image::dbcvr_image (int w, int h, void* imd, int sx, int sy)
    imagesize = w*h;
    balloc = true;
    imagedata = malloc (imagesize); //(-1)NOTICE!!
-   if (imagedata==NULL) { vcl_cout << "Memory not enough !"; exit(1); }
+   if (imagedata==NULL) { std::cout << "Memory not enough !"; exit(1); }
 
    unsigned char *s, *d;
    d = (unsigned char*) imagedata;

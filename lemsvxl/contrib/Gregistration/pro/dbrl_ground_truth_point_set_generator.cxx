@@ -7,8 +7,8 @@
 #include<vnl/vnl_vector_fixed.h>
 #include "dbrl_id_point_2d_storage.h"
 #include "dbrl_id_point_2d_storage_sptr.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <cmath>
+#include <cstdlib> // for rand()
 #include <vnl/vnl_sample.h>
 
 //: Constructor
@@ -28,7 +28,7 @@ dbrl_ground_truth_point_set_generator::dbrl_ground_truth_point_set_generator(voi
         !parameters()->add( "Y(max)" , "-ymax" , (float) 100 )  
         ) 
      {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_ground_truth_point_set_generator::dbrl_ground_truth_point_set_generator()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_ground_truth_point_set_generator::dbrl_ground_truth_point_set_generator()" << std::endl;
      }
     
  
@@ -42,7 +42,7 @@ dbrl_ground_truth_point_set_generator::~dbrl_ground_truth_point_set_generator()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_ground_truth_point_set_generator::name()
 {
   return "Point Generator";
@@ -66,18 +66,18 @@ dbrl_ground_truth_point_set_generator::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_ground_truth_point_set_generator::get_input_type()
+std::vector< std::string > dbrl_ground_truth_point_set_generator::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbrl_id_point_2d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_ground_truth_point_set_generator::get_output_type()
+std::vector< std::string > dbrl_ground_truth_point_set_generator::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbrl_id_point_2d" );
   return to_return;
 }
@@ -88,7 +88,7 @@ bool
 dbrl_ground_truth_point_set_generator::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbrl_ground_truth_point_set_generator::execute() - "
+    std::cout << "In dbrl_ground_truth_point_set_generator::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -118,11 +118,11 @@ dbrl_ground_truth_point_set_generator::execute()
   parameters()->get_value("-nsigma",sigma);
 
 
-  tx += ((vcl_rand() / (double) RAND_MAX)*(txmax-txmin)+txmin);
-  ty += ((vcl_rand() / (double) RAND_MAX)*(tymax-tymin)+tymin);
+  tx += ((std::rand() / (double) RAND_MAX)*(txmax-txmin)+txmin);
+  ty += ((std::rand() / (double) RAND_MAX)*(tymax-tymin)+tymin);
 
-  vcl_vector<dbrl_id_point_2d_sptr> idpoints;
-  vcl_vector<dbrl_id_point_2d_sptr> origpoints=frame_pts->points();
+  std::vector<dbrl_id_point_2d_sptr> idpoints;
+  std::vector<dbrl_id_point_2d_sptr> origpoints=frame_pts->points();
 
   float xmin=0.0,xmax=0.0,ymin=0.0,ymax=0.0;
   parameters()->get_value("-xmax",xmax);
@@ -145,16 +145,16 @@ dbrl_ground_truth_point_set_generator::execute()
 
   //: dropping some of the points
   int numofpointsremoved=(origpoints.size()*ppoints)/100;
-  vcl_vector<dbrl_id_point_2d_sptr>::iterator iter;
+  std::vector<dbrl_id_point_2d_sptr>::iterator iter;
   for(int i=0;i<numofpointsremoved;i++)
       { 
-        int pos=vcl_rand()%idpoints.size();
+        int pos=std::rand()%idpoints.size();
         iter=idpoints.begin();
         iter+=pos;
         if(iter!=idpoints.end())
             idpoints.erase(iter);
       }
-  vcl_vector<dbrl_id_point_2d_sptr> noisypointids;
+  std::vector<dbrl_id_point_2d_sptr> noisypointids;
   //: adding noise to the existing points 
   for(int i=0;i<static_cast<int>(idpoints.size());i++)
       {
@@ -167,8 +167,8 @@ dbrl_ground_truth_point_set_generator::execute()
   //: adding outliers
   for(int i=0;i<numoutlier;i++)
       {
-       double xoutlier=((vcl_rand() / (double) RAND_MAX)*(xmax-xmin)+xmin);//+tx;
-       double youtlier=((vcl_rand() / (double) RAND_MAX)*(ymax-ymin)+ymin);//+ty;
+       double xoutlier=((std::rand() / (double) RAND_MAX)*(xmax-xmin)+xmin);//+tx;
+       double youtlier=((std::rand() / (double) RAND_MAX)*(ymax-ymin)+ymin);//+ty;
        dbrl_id_point_2d_sptr p=new dbrl_id_point_2d(xoutlier,youtlier,-1);
        noisypointids.push_back(p);
       }

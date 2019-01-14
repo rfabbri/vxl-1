@@ -2,8 +2,8 @@
 //:
 // \file
 
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
+#include <utility>
+#include <cmath>
 #include <dbecl/dbecl_episeg.h>
 #include <dbecl/dbecl_episeg_point.h>
 #include <vsol/vsol_digital_curve_2d.h>
@@ -31,15 +31,15 @@ bcdg_finger_sptr bcdg_finger::next_finger(double angle,
 
 
 //: Get the nearby local options
-vcl_vector<bcdg_local_option_sptr> bcdg_finger::local_options(bcdg_algo_params p)  const {
-  vcl_vector<bcdg_local_option_sptr> to_return;
+std::vector<bcdg_local_option_sptr> bcdg_finger::local_options(bcdg_algo_params p)  const {
+  std::vector<bcdg_local_option_sptr> to_return;
 
   // Get nearby neighbors
   if(_curve != NULL && _curve->curve() != NULL) {
-    vcl_vector< dbecl_episeg_point > nearby_points = 
+    std::vector< dbecl_episeg_point > nearby_points = 
       p->neighbors(_curve->curve()->interp(_index), _frame); 
   
-    vcl_cerr << "Supposedly, there are " << nearby_points.size() << " neighbors!\n";
+    std::cerr << "Supposedly, there are " << nearby_points.size() << " neighbors!\n";
     
     for(int i = 0; i < nearby_points.size(); i++) {
       dbecl_episeg_point thisVal = nearby_points[i];
@@ -51,8 +51,8 @@ vcl_vector<bcdg_local_option_sptr> bcdg_finger::local_options(bcdg_algo_params p
   }
 
   if(_curve != NULL) {
-    int nextIndex = (_direction == UP) ?  (int) vcl_floor(_index + 1) : 
-                                          (int) vcl_ceil (_index - 1) ;
+    int nextIndex = (_direction == UP) ?  (int) std::floor(_index + 1) : 
+                                          (int) std::ceil (_index - 1) ;
     to_return.push_back(bcdg_local_option_sptr(
         new bcdg_local_option(_curve, nextIndex, _direction)));
   }  

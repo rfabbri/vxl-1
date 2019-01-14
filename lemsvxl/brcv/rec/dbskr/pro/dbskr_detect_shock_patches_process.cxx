@@ -19,7 +19,7 @@ dbskr_detect_shock_patches_process::dbskr_detect_shock_patches_process()
 {
 
     //Create string for really long description
-    vcl_string descrip = "constraint that at least k model patches ";
+    std::string descrip = "constraint that at least k model patches ";
     descrip += "have top matches less than threshold";
 
     if ( !parameters()->add( "Query Bin file:" , 
@@ -43,7 +43,7 @@ dbskr_detect_shock_patches_process::dbskr_detect_shock_patches_process()
         )
     {
         
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 
     }
 
@@ -56,16 +56,16 @@ dbskr_detect_shock_patches_process::clone() const
   return new dbskr_detect_shock_patches_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_detect_shock_patches_process::get_input_type()
+std::vector< std::string > dbskr_detect_shock_patches_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_detect_shock_patches_process::get_output_type()
+std::vector< std::string > dbskr_detect_shock_patches_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // ouptut the storage class
     to_return.push_back( "vsol2D" );
     return to_return;
@@ -84,12 +84,12 @@ bool dbskr_detect_shock_patches_process::execute()
 
     bpro1_filepath model_filepath;
     parameters()->get_value("-match_sim_filepath", model_filepath);
-    vcl_string match_file = model_filepath.path;
+    std::string match_file = model_filepath.path;
 
     // ------------------ Load the query patches ------------------------------
     bpro1_filepath query_filepath;
     parameters()->get_value( "-query_filepath" , query_filepath);
-    vcl_string query_file = query_filepath.path;
+    std::string query_file = query_filepath.path;
 
     // Read in binary files
     dbskr_shock_patch_storage_sptr query_st = dbskr_shock_patch_storage_new();
@@ -100,7 +100,7 @@ bool dbskr_detect_shock_patches_process::execute()
     // Throw an error for zero patches
     if (!query_st->size()) 
     {
-        vcl_cerr << "zero patches in query st!!!: " << query_file << vcl_endl;
+        std::cerr << "zero patches in query st!!!: " << query_file << std::endl;
         return false;
     }
 
@@ -108,14 +108,14 @@ bool dbskr_detect_shock_patches_process::execute()
     if (!query_st->load_patch_shocks(query_file, "patch_strg.bin"))
     {
      
-        vcl_cerr<<"Error loading query shock patches"<<vcl_endl;
+        std::cerr<<"Error loading query shock patches"<<std::endl;
         return false;
 
     }
         
     // ------------------ Perform Detection ------------------------------
-    vcl_cout<<"Running Detection on " << vul_file::strip_directory(match_file)
-            << " at a threshold of " << threshold<<" "<<vcl_endl;
+    std::cout<<"Running Detection on " << vul_file::strip_directory(match_file)
+            << " at a threshold of " << threshold<<" "<<std::endl;
 
     //: create match structure by reading in existing match
     dbskr_shock_patch_match_sptr match = new dbskr_shock_patch_match();
@@ -123,7 +123,7 @@ bool dbskr_detect_shock_patches_process::execute()
     match->b_read(ifsm);
     ifsm.close();
 
-    vcl_map<int, dbskr_shock_patch_sptr> query_map;
+    std::map<int, dbskr_shock_patch_sptr> query_map;
     for (unsigned ii = 0; ii < query_st->size(); ii++)
     { 
         query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);
@@ -133,7 +133,7 @@ bool dbskr_detect_shock_patches_process::execute()
     vsol_box_2d_sptr box;
     if (!match->detect_instance(box,top_N,con_k,threshold)) 
     {
-        vcl_cerr << "Detection Error in procssing" << "!!!!\n";
+        std::cerr << "Detection Error in procssing" << "!!!!\n";
         return false;
     }
 
@@ -146,15 +146,15 @@ bool dbskr_detect_shock_patches_process::execute()
         vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
         output_vsol->add_object(box_poly->cast_to_spatial_object());
         output_data_[0].push_back(output_vsol);
-        vcl_cout<<"Bounding box detected at this threshold"<<vcl_endl;
+        std::cout<<"Bounding box detected at this threshold"<<std::endl;
     }
     else
     {
 
-        vcl_cout<<"No bounding box detected at this threshold"<<vcl_endl;
+        std::cout<<"No bounding box detected at this threshold"<<std::endl;
 
     }
 
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
     return true;
 }

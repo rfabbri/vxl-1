@@ -3,10 +3,10 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -40,7 +40,7 @@ class dbdet_edgemap_tableau_set_int_params_command : public vgui_command
 {
  public:
   dbdet_edgemap_tableau_set_int_params_command(dbdet_edgemap_tableau* tab, 
-    const vcl_string& name, const void* intref) : edge_tableau(tab),  iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : edge_tableau(tab),  iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -56,14 +56,14 @@ class dbdet_edgemap_tableau_set_int_params_command : public vgui_command
 
   dbdet_edgemap_tableau *edge_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class dbdet_edgemap_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbdet_edgemap_tableau_set_display_params_command(dbdet_edgemap_tableau* tab, 
-    const vcl_string& name, const void* floatref) : edge_tableau(tab),  floatref_((float*)floatref), name_(name) {}
+    const std::string& name, const void* floatref) : edge_tableau(tab),  floatref_((float*)floatref), name_(name) {}
 
   void execute() 
   { 
@@ -79,7 +79,7 @@ class dbdet_edgemap_tableau_set_display_params_command : public vgui_command
 
   dbdet_edgemap_tableau *edge_tableau;
   float* floatref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class dbdet_edgemap_tableau_set_current_color_command : public vgui_command
@@ -91,10 +91,10 @@ class dbdet_edgemap_tableau_set_current_color_command : public vgui_command
   { 
     vgui_dialog style_dlg("Change Style");
     char color[50];
-    vcl_sprintf (color, "%.3f %.3f %.3f", edge_tableau->curr_color(0), 
+    std::sprintf (color, "%.3f %.3f %.3f", edge_tableau->curr_color(0), 
                                           edge_tableau->curr_color(1), 
                                           edge_tableau->curr_color(2));
-    vcl_string col(color);
+    std::string col(color);
 
     float point_size = edge_tableau->point_size();
     float line_width = edge_tableau->line_width();
@@ -107,7 +107,7 @@ class dbdet_edgemap_tableau_set_current_color_command : public vgui_command
     if(!style_dlg.ask())
       return;
 
-    vcl_istringstream color_strm(col);
+    std::istringstream color_strm(col);
     color_strm >> color_[0] >> color_[1] >> color_[2];
 
     edge_tableau->set_style(color_, point_size, line_width, line_length);
@@ -197,14 +197,14 @@ public:
       if (ix>xmin && ix<xmax && iy>ymin1 && iy<ymax1){
         double newth1 = 30*(ix - xmin)/(xmax-xmin);
         edge_tab->set_threshold(newth1);
-        vcl_cout <<"thresh = " << newth1 << vcl_endl;
+        std::cout <<"thresh = " << newth1 << std::endl;
         edge_tab->post_redraw();
       }
 
       if (ix>xmin && ix<xmax && iy>ymin2 && iy<ymax2){
         double newth2 = 10*(ix - xmin)/(xmax-xmin);
         edge_tab->set_d2f_threshold(newth2);
-        vcl_cout <<"d2d thresh = " << newth2 << vcl_endl;
+        std::cout <<"d2d thresh = " << newth2 << std::endl;
         edge_tab->post_redraw();
       }
     }
@@ -260,7 +260,7 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
     // Display on status bar:
-    vgui::out << "(" << ix << ", " << iy << ")" << vcl_endl;
+    vgui::out << "(" << ix << ", " << iy << ")" << std::endl;
   }
 
   //handle queries
@@ -274,13 +274,13 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
     int xx = dbdet_round(ix);
     int yy = dbdet_round(iy);
 
-    //vcl_cout << "ix,iy: " << ix << "," << iy << vcl_endl;
+    //std::cout << "ix,iy: " << ix << "," << iy << std::endl;
 
     //reset cur_edgel
     cur_edgel = 0;
 
     // b) find the closest edgel in the neighboring cells
-    double dmin = vcl_numeric_limits<double>::infinity();
+    double dmin = std::numeric_limits<double>::infinity();
     for (int xcell = xx-2; xcell <= xx+2; xcell++){
       for (int ycell = yy-2; ycell <= yy+2; ycell++){
         if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap_->width() || ycell >= (int)edgemap_->height()) 
@@ -301,11 +301,11 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
     }
     //output edgel info
     if (cur_edgel){
-      vcl_cout << "Edgel " << cur_edgel->id << " : (x, y, theta, strength) = (";
-      vcl_cout << cur_edgel->pt.x() << ", " << cur_edgel->pt.y() << ", " ;
-      vcl_cout << cur_edgel->tangent << ", " << cur_edgel->strength << ")" << vcl_endl; 
-      vcl_cout << "L Attr: " << cur_edgel->left_app->print_info() << vcl_endl;
-      vcl_cout << "R Attr: " << cur_edgel->right_app->print_info() << vcl_endl;
+      std::cout << "Edgel " << cur_edgel->id << " : (x, y, theta, strength) = (";
+      std::cout << cur_edgel->pt.x() << ", " << cur_edgel->pt.y() << ", " ;
+      std::cout << cur_edgel->tangent << ", " << cur_edgel->strength << ")" << std::endl; 
+      std::cout << "L Attr: " << cur_edgel->left_app->print_info() << std::endl;
+      std::cout << "R Attr: " << cur_edgel->right_app->print_info() << std::endl;
     }
 
     // hightlight the selected edgel
@@ -321,16 +321,16 @@ bool dbdet_edgemap_tableau::handle( const vgui_event & e )
     if (cur_edgel)
     {
       if (cur_edgel->strength>=threshold_ &&
-          vcl_fabs(cur_edgel->deriv) >= d2f_thresh_)
+          std::fabs(cur_edgel->deriv) >= d2f_thresh_)
       {
         glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1], 1.0-curr_color_[2] );
         glLineWidth (line_width_);
         glBegin( GL_LINE_STRIP );
-        glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*vcl_cos(cur_edgel->tangent),
-                   cur_edgel->pt.y() - 0.5*line_length_*vcl_sin(cur_edgel->tangent));
+        glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*std::cos(cur_edgel->tangent),
+                   cur_edgel->pt.y() - 0.5*line_length_*std::sin(cur_edgel->tangent));
         
-        glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*vcl_cos(cur_edgel->tangent),
-                   cur_edgel->pt.y() + 0.5*line_length_*vcl_sin(cur_edgel->tangent));
+        glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*std::cos(cur_edgel->tangent),
+                   cur_edgel->pt.y() + 0.5*line_length_*std::sin(cur_edgel->tangent));
         glEnd();
       }
     }
@@ -370,8 +370,8 @@ void dbdet_edgemap_tableau::draw_edgels()
       dbdet_edgel* e = (*it)[j];
 
       //apply the selected thresholds
-      if (( use_mix_thresh_ && e->strength*vcl_fabs(e->deriv) > mix_thresh_) || 
-          (!use_mix_thresh_ && e->strength>=threshold_&& vcl_fabs(e->deriv) >= d2f_thresh_))
+      if (( use_mix_thresh_ && e->strength*std::fabs(e->deriv) > mix_thresh_) || 
+          (!use_mix_thresh_ && e->strength>=threshold_&& std::fabs(e->deriv) >= d2f_thresh_))
       {
         if (display_points_) {
           glBegin(GL_POINTS);
@@ -386,11 +386,11 @@ void dbdet_edgemap_tableau::draw_edgels()
 
           glColor3f( curr_color_[0], curr_color_[1], curr_color_[2] );
           glBegin( GL_LINE_STRIP );
-          glVertex2d(e->pt.x() - 0.5*line_length_*vcl_cos(e->tangent),
-                     e->pt.y() - 0.5*line_length_*vcl_sin(e->tangent));
+          glVertex2d(e->pt.x() - 0.5*line_length_*std::cos(e->tangent),
+                     e->pt.y() - 0.5*line_length_*std::sin(e->tangent));
           
-          glVertex2d(e->pt.x() + 0.5*line_length_*vcl_cos(e->tangent),
-                     e->pt.y() + 0.5*line_length_*vcl_sin(e->tangent));
+          glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
+                     e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
           glEnd();
 
           
@@ -403,8 +403,8 @@ void dbdet_edgemap_tableau::draw_edgels()
           glBegin( GL_LINE_STRIP );
           for (int th=0; th<=20; th++){
             double theta = th*2*vnl_math::pi/20.0;
-            glVertex2f(e->pt.x() + e->uncertainty*vcl_cos(theta), 
-                       e->pt.y() + e->uncertainty*vcl_sin(theta));
+            glVertex2f(e->pt.x() + e->uncertainty*std::cos(theta), 
+                       e->pt.y() + e->uncertainty*std::sin(theta));
           }
           glEnd();
         }
@@ -489,7 +489,7 @@ void
 dbdet_edgemap_tableau::get_popup(const vgui_popup_params& /*params*/, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( "Set edge threshold", new dbdet_edgemap_tableau_set_display_params_command(this, "Edge strength", &threshold_));
 

@@ -40,7 +40,7 @@ dbdet_edgemap_sptr dbdet_detect_generic_edges(vil_image_view<vxl_byte> image, do
   vil_image_view<double> grad_x, grad_y, grad_mag;
 
   //Gaussian  
-  int scale = (int) vcl_pow(2.0, N);
+  int scale = (int) std::pow(2.0, N);
 
   //compute gradients
   dbdet_subpix_convolve_2d(greyscale_view, grad_x, dbdet_Gx_kernel(sigma), double(), N);
@@ -56,11 +56,11 @@ dbdet_edgemap_sptr dbdet_detect_generic_edges(vil_image_view<vxl_byte> image, do
 
   //compute the gradient magnitude
   for(unsigned long i=0; i<grad_mag.size(); i++)
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
   //Now call the nms code to get the subpixel edge tokens
-  vcl_vector<vgl_point_2d<double> > loc;
-  vcl_vector<double> orientation, mag;
+  std::vector<vgl_point_2d<double> > loc;
+  std::vector<double> orientation, mag;
 
   dbdet_nms NMS(dbdet_nms_params(threshold, dbdet_nms_params::PFIT_3_POINTS), grad_x, grad_y, grad_mag);
   NMS.apply(true, loc, orientation, mag);

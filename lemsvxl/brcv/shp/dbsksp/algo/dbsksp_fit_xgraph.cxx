@@ -58,7 +58,7 @@ fit_to(const dbsk2d_shock_graph_sptr& graph)
   // original samples
 
   // Iterate thru the edges and figure out the additional middle A12 xnodes to add
-  vcl_map<dbsksp_xshock_edge_sptr, vcl_vector<dbsksp_xshock_node_descriptor > > map_edge_to_list_middle_xdesc;
+  std::map<dbsksp_xshock_edge_sptr, std::vector<dbsksp_xshock_node_descriptor > > map_edge_to_list_middle_xdesc;
 
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
@@ -74,10 +74,10 @@ fit_to(const dbsk2d_shock_graph_sptr& graph)
     assert(! xe->is_terminal_edge());
 
     // List of edges in the original dbsk2d_shock_graph corresponding this edge
-    vcl_vector<dbsk2d_xshock_edge_sptr > orig_edges = iter->second;
+    std::vector<dbsk2d_xshock_edge_sptr > orig_edges = iter->second;
 
     // Collect shock samples from the list of shock edges
-    vcl_vector<dbsksp_xshock_node_descriptor > xsamples;
+    std::vector<dbsksp_xshock_node_descriptor > xsamples;
     
     // allocate space
     unsigned total_samples = 0;
@@ -121,7 +121,7 @@ fit_to(const dbsk2d_shock_graph_sptr& graph)
     //Here comes the main task: determine intermediate A12 shock points
     dbsksp_xshock_node_descriptor start_xdesc = *(xe->source()->descriptor(xe));
     dbsksp_xshock_node_descriptor end_xdesc = xe->target()->descriptor(xe)->opposite_xnode();
-    vcl_vector<dbsksp_xshock_node_descriptor > list_middle_xdesc;
+    std::vector<dbsksp_xshock_node_descriptor > list_middle_xdesc;
     {
       ////
       //dbsksp_fit_one_shock_branch_with_power_of_2_intervals(start_xdesc, end_xdesc, 
@@ -143,17 +143,17 @@ fit_to(const dbsk2d_shock_graph_sptr& graph)
 
     if (!list_middle_xdesc.empty())
     {
-      map_edge_to_list_middle_xdesc.insert(vcl_make_pair(xe, list_middle_xdesc));
+      map_edge_to_list_middle_xdesc.insert(std::make_pair(xe, list_middle_xdesc));
     }
   }
 
   // Insert the additional A12 xnodes
-  for (vcl_map<dbsksp_xshock_edge_sptr, vcl_vector<dbsksp_xshock_node_descriptor > >::iterator iter =
+  for (std::map<dbsksp_xshock_edge_sptr, std::vector<dbsksp_xshock_node_descriptor > >::iterator iter =
     map_edge_to_list_middle_xdesc.begin(); iter != map_edge_to_list_middle_xdesc.end(); ++iter)
   {
     dbsksp_xshock_edge_sptr xe = iter->first;
     dbsksp_xshock_node_sptr target = xe->target();
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc = iter->second;
+    std::vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc = iter->second;
 
     // Insert new node to the edge xe, one by one, in the order from source to target
     for (unsigned i =0; i < list_middle_xdesc.size(); ++i)
@@ -193,7 +193,7 @@ fit_to(const dbsk2d_shock_graph_sptr& graph)
 void dbsksp_fit_xgraph::
 fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
        dbsksp_xshock_graph_sptr& new_xgraph,
-       vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& map_new_node_to_old_node,
+       std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& map_new_node_to_old_node,
        double sample_ds)
 {
   // rinse old data
@@ -205,14 +205,14 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
   dbsksp_xshock_graph_sptr xgraph = new dbsksp_xshock_graph(*old_xgraph);
 
   // Compute the list of shock branches
-  vcl_vector<type_branch_key > list_branch_key;
-  vcl_vector<type_branch_edges > list_branch_edges;
+  std::vector<type_branch_key > list_branch_key;
+  std::vector<type_branch_edges > list_branch_edges;
   this->compute_shock_branches(xgraph, list_branch_key, list_branch_edges);
 
   // Now sample and fit each shock branch with
   for (unsigned k =0; k < list_branch_edges.size(); ++k)
   {
-    vcl_vector<dbsksp_xshock_edge_sptr > list_edge = list_branch_edges[k];
+    std::vector<dbsksp_xshock_edge_sptr > list_edge = list_branch_edges[k];
     type_branch_key key = list_branch_key[k];
     dbsksp_xshock_node_sptr start_node = key.first;
     dbsksp_xshock_node_sptr end_node = key.second;
@@ -235,7 +235,7 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
       start_node = first_edge->opposite(start_node);
 
       // delete from the branch
-      vcl_vector<dbsksp_xshock_edge_sptr > temp = list_edge;
+      std::vector<dbsksp_xshock_edge_sptr > temp = list_edge;
       
       list_edge.clear();
       for (unsigned i =1; i <temp.size(); ++i)
@@ -245,7 +245,7 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
     }
 
     // Sample the shock branch
-    vcl_vector<dbsksp_xshock_node_descriptor > list_xsample;
+    std::vector<dbsksp_xshock_node_descriptor > list_xsample;
     dbsksp_xgraph_algos::compute_xsamples(start_node, list_edge, sample_ds, list_xsample);
 
     if (list_xsample.empty())
@@ -257,7 +257,7 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
     // Fit the samples with the minimum number of fragments
     dbsksp_xshock_node_descriptor start_xdesc = list_xsample.front();
     dbsksp_xshock_node_descriptor end_xdesc = list_xsample.back();
-    vcl_vector<dbsksp_xshock_node_descriptor > list_middle_xdesc;
+    std::vector<dbsksp_xshock_node_descriptor > list_middle_xdesc;
     {
       //// Use equally-spaced samples
       //dbsksp_fit_one_shock_branch_with_power_of_2_intervals(start_xdesc, end_xdesc, 
@@ -273,7 +273,7 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
 
       if (!out_path)
       {
-        vcl_cout << "\nCould not fit a path.\n";
+        std::cout << "\nCould not fit a path.\n";
       }
 
       list_middle_xdesc.clear();
@@ -306,7 +306,7 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
     if (list_middle_xdesc.empty())
     {
       // Collect the nodes to remove
-      vcl_vector<dbsksp_xshock_node_sptr > nodes_to_remove;
+      std::vector<dbsksp_xshock_node_sptr > nodes_to_remove;
       while (list_edge.size() > 1) // 
       {
         last_node = list_edge.back()->opposite(last_node);
@@ -358,8 +358,8 @@ fit_to(const dbsksp_xshock_graph_sptr& old_xgraph,
       dbsksp_xshock_node_sptr old_start_node = old_xgraph->node_from_id(start_node->id());
       dbsksp_xshock_node_sptr old_end_node = old_xgraph->node_from_id(end_node->id());
 
-      map_new_node_to_old_node.insert(vcl_make_pair(start_node, old_start_node));
-      map_new_node_to_old_node.insert(vcl_make_pair(end_node, old_end_node));
+      map_new_node_to_old_node.insert(std::make_pair(start_node, old_start_node));
+      map_new_node_to_old_node.insert(std::make_pair(end_node, old_end_node));
     }    
   }
 
@@ -385,17 +385,17 @@ convert_coarse_xgraph(const dbsk2d_shock_graph_sptr& graph,
   //>> Graph data structure
   
   //a) create the extrinsic nodes
-  vcl_map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr > node_map;
+  std::map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr > node_map;
   for (dbsk2d_shock_graph::vertex_iterator vit = graph->vertices_begin(); vit != 
     graph->vertices_end(); ++vit)
   {
     dbsk2d_shock_node_sptr v = *vit; 
     dbsksp_xshock_node_sptr xv = new dbsksp_xshock_node(xgraph->next_available_id());
-    node_map.insert(vcl_make_pair(v, xv));
+    node_map.insert(std::make_pair(v, xv));
   }
 
   // create the extrinsic edges
-  vcl_map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map;
+  std::map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map;
   for (dbsk2d_shock_graph::edge_iterator eit = graph->edges_begin(); eit != 
     graph->edges_end(); ++eit)
   {
@@ -409,24 +409,24 @@ convert_coarse_xgraph(const dbsk2d_shock_graph_sptr& graph,
     dbsksp_xshock_edge_sptr xe = new dbsksp_xshock_edge(xsource, xtarget, 
       xgraph->next_available_id());
 
-    edge_map.insert(vcl_make_pair(e, xe));
+    edge_map.insert(std::make_pair(e, xe));
   }
   
   // add the nodes and edges to the graph
-  for (vcl_map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator it = 
+  for (std::map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator it = 
     node_map.begin(); it != node_map.end(); ++it)
   {
     xgraph->add_vertex(it->second);
   }
 
-  for (vcl_map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr >::iterator it = 
+  for (std::map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr >::iterator it = 
     edge_map.begin(); it != edge_map.end(); ++it)
   {
     xgraph->add_edge(it->second);
   }
 
   // add node-edge connectivity and properties for the new graph
-  for (vcl_map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator it = 
+  for (std::map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator it = 
     node_map.begin(); it != node_map.end(); ++it)
   {
     dbsk2d_shock_node_sptr v = it->first;
@@ -435,7 +435,7 @@ convert_coarse_xgraph(const dbsk2d_shock_graph_sptr& graph,
     // a) iterate thru the existing edges and copy their graph and geometric properties
     dbsk2d_shock_edge_sptr e_begin = graph->first_adj_edge(v);
     dbsk2d_shock_edge_sptr e = e_begin;
-    vcl_vector<dbsksp_xshock_node_descriptor > list_xnode_descriptor;
+    std::vector<dbsksp_xshock_node_descriptor > list_xnode_descriptor;
     do
     {
       // add corresponding adjacency to xgraph
@@ -544,7 +544,7 @@ convert_coarse_xgraph(const dbsk2d_shock_graph_sptr& graph,
       }
       else if (angle_gap < -0.01) // big trouble !! // \todo take of this
       {
-        vcl_cout << "\nERROR: overlap between samples at xnode_id = " << xv->id() << vcl_endl;
+        std::cout << "\nERROR: overlap between samples at xnode_id = " << xv->id() << std::endl;
       }
     }
     xv->set_pt(xv_pt);
@@ -594,14 +594,14 @@ convert_coarse_xgraph(const dbsk2d_shock_graph_sptr& graph,
 
   // Build an inverse map from edges of new xgraph to the shock edge(s) of the original shock graph
   // For now, just inverse the original edgemap
-  for (vcl_map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr >::iterator eit =
+  for (std::map<dbsk2d_shock_edge_sptr, dbsksp_xshock_edge_sptr >::iterator eit =
     edge_map.begin(); eit != edge_map.end(); ++eit)
   {
     dbsk2d_xshock_edge_sptr sk2d_xe = static_cast<dbsk2d_xshock_edge* >(eit->first.ptr());
     map_xe_to_orig_edges[eit->second].push_back(sk2d_xe);
   }
 
-  for (vcl_map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator vit =
+  for (std::map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr >::iterator vit =
     node_map.begin(); vit != node_map.end(); ++vit)
   {
     map_sksp_node_to_sk2d_node[vit->second] = vit->first;
@@ -640,7 +640,7 @@ convert_coarse_xgraph_using_euler_tour(const dbsk2d_shock_graph_sptr& graph,
   
   //a) The vertex set
   // This is affected by the option "keep_degree_2_nodes"
-  typedef vcl_map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr > type_map_v_to_xv;
+  typedef std::map<dbsk2d_shock_node_sptr, dbsksp_xshock_node_sptr > type_map_v_to_xv;
   type_map_v_to_xv map_v_to_xv;
 
   for (dbsk2d_shock_graph::vertex_iterator vit = graph->vertices_begin(); vit !=
@@ -673,7 +673,7 @@ convert_coarse_xgraph_using_euler_tour(const dbsk2d_shock_graph_sptr& graph,
 
   // running node and edges for sksp shock graph
   dbsksp_xshock_node_sptr prev_xv = 0;
-  vcl_vector<dbsk2d_xshock_edge_sptr > shock_links_of_cur_branch;
+  std::vector<dbsk2d_xshock_edge_sptr > shock_links_of_cur_branch;
 
   // do the Euler tour
   do
@@ -787,7 +787,7 @@ convert_coarse_xgraph_using_euler_tour(const dbsk2d_shock_graph_sptr& graph,
     iter != map_xe_to_orig_edges.end(); ++iter)
   {
     dbsksp_xshock_edge_sptr xe = iter->first;
-    vcl_vector<dbsk2d_xshock_edge_sptr >& list_shock_links = iter->second;
+    std::vector<dbsk2d_xshock_edge_sptr >& list_shock_links = iter->second;
 
     assert(!list_shock_links.empty());
 
@@ -954,7 +954,7 @@ make_consistent_node_tangent_and_phi(const dbsksp_xshock_graph_sptr& xgraph,
                                      double min_angle_gap_to_add_Ainfty_branch)
 {
   // Collect the list of nodes in the graph
-  vcl_vector<dbsksp_xshock_node_sptr > list_xnode;
+  std::vector<dbsksp_xshock_node_sptr > list_xnode;
   list_xnode.reserve(xgraph->number_of_vertices());
   for (dbsksp_xshock_graph::vertex_iterator vit = xgraph->vertices_begin();
     vit != xgraph->vertices_end(); ++vit)
@@ -1007,7 +1007,7 @@ make_consistent_node_tangent_and_phi(const dbsksp_xshock_graph_sptr& xgraph,
       }
       else if (angle_gap <= -min_angle_gap_to_add_Ainfty_branch) // big trouble !! // \todo take of this
       {
-        vcl_cout << "\nERROR: overlap between samples at xnode_id = " << xv->id() << vcl_endl;
+        std::cout << "\nERROR: overlap between samples at xnode_id = " << xv->id() << std::endl;
       }
     }
   }
@@ -1080,8 +1080,8 @@ operator ()(dbsksp_fit_xgraph::type_branch_key key1, dbsksp_fit_xgraph::type_bra
   unsigned key2_lower_id = vnl_math::min(key2.first->id(), key2.second->id());
   unsigned key2_upper_id = vnl_math::max(key2.first->id(), key2.second->id());
 
-  vcl_pair<unsigned, unsigned > pair1(key1_lower_id, key1_upper_id);
-  vcl_pair<unsigned, unsigned > pair2(key2_lower_id, key2_upper_id);
+  std::pair<unsigned, unsigned > pair1(key1_lower_id, key1_upper_id);
+  std::pair<unsigned, unsigned > pair2(key2_lower_id, key2_upper_id);
   return pair1 < pair2;
 }
 
@@ -1092,8 +1092,8 @@ operator ()(dbsksp_fit_xgraph::type_branch_key key1, dbsksp_fit_xgraph::type_bra
 // Each branch key is a pair of (start-end) nodes.
 void dbsksp_fit_xgraph::
 compute_shock_branches(const dbsksp_xshock_graph_sptr& xgraph,
-                       vcl_vector<type_branch_key >& list_branch_key,
-                       vcl_vector<type_branch_edges >& list_branch_edges)
+                       std::vector<type_branch_key >& list_branch_key,
+                       std::vector<type_branch_edges >& list_branch_edges)
 {
   list_branch_key.clear();
   list_branch_edges.clear();
@@ -1103,7 +1103,7 @@ compute_shock_branches(const dbsksp_xshock_graph_sptr& xgraph,
 
 
   //a) The vertex set of the coarse graph
-  vcl_set<dbsksp_xshock_node_sptr > list_coarse_node;
+  std::set<dbsksp_xshock_node_sptr > list_coarse_node;
 
   // Iterate thru the vertices, only leaf (degree-1) and junction nodes (degree-3)
   for (dbsksp_xshock_graph::vertex_iterator vit = xgraph->vertices_begin(); vit !=
@@ -1133,14 +1133,14 @@ compute_shock_branches(const dbsksp_xshock_graph_sptr& xgraph,
   dbsksp_xshock_node_sptr cur_branch_start_xv = 0;
 
   // use a customized comparator to prevent duplication of shock branches
-  typedef vcl_map<type_branch_key, type_branch_edges, dbsksp_fit_xgraph::compare_unordered_node_pair> type_map_branch_key_to_edges;
+  typedef std::map<type_branch_key, type_branch_edges, dbsksp_fit_xgraph::compare_unordered_node_pair> type_map_branch_key_to_edges;
   type_map_branch_key_to_edges map_branch_key_to_edges;
 
   // do the Euler tour
   do
   {
     // Start a new branch when we encounter a node in the coarse shock graph
-    vcl_set<dbsksp_xshock_node_sptr >::iterator iter = list_coarse_node.find(cur_xv);
+    std::set<dbsksp_xshock_node_sptr >::iterator iter = list_coarse_node.find(cur_xv);
     if (iter != list_coarse_node.end()) // hit a coarse-graph-node, start a new branch
     {
       // save info about previous branch
@@ -1148,7 +1148,7 @@ compute_shock_branches(const dbsksp_xshock_graph_sptr& xgraph,
       {
         // save the list of links corresponding to the new edge
         type_branch_key key(cur_branch_start_xv, cur_xv);
-        map_branch_key_to_edges.insert(vcl_make_pair(key, cur_branch_edges));
+        map_branch_key_to_edges.insert(std::make_pair(key, cur_branch_edges));
       }
 
       // edge list for the new branch

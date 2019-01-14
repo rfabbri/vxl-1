@@ -4,7 +4,7 @@
 //   Author  Ming-Ching Chang
 // \brief 
 
-#include <vcl_queue.h>
+#include <queue>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
@@ -138,24 +138,24 @@ bool merge_sheets_sharing_E (dbmsh3d_hypg* H, dbmsh3d_edge* E,
 //  It is an acyclic tree, otherwise the sheet is divided by icurve_pairs into two regions (a condraction)!
 //
 void get_S_icurve_vec_otherN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_edge* startC, 
-                              vcl_vector<dbmsh3d_edge*>& icurve_otherN_N,
+                              std::vector<dbmsh3d_edge*>& icurve_otherN_N,
                               dbmsh3d_vertex*& otherN)
 {
   otherN = NULL;
 
   //Get the set of i-curves of this sheet.
-  vcl_set<dbmsh3d_edge*> icurve_pairs;
+  std::set<dbmsh3d_edge*> icurve_pairs;
   S->get_icurve_pairs (icurve_pairs);
 
   //Get the set of bnd/icurve-loop nodes incident to i-curves as condidate target nodes.
-  vcl_set<dbmsh3d_vertex*> otherN_set;
+  std::set<dbmsh3d_vertex*> otherN_set;
   S->get_bnd_iloop_N_icurve (otherN_set);
   otherN_set.erase (startN);
 
   //Initialization of the BFS searching.
   // - set all icurve_pairs's nodes to be unvisited.
   // - initialize each vertex.F_list_ as the prev_E pointer.
-  vcl_set<dbmsh3d_edge*>::iterator it = icurve_pairs.begin();
+  std::set<dbmsh3d_edge*>::iterator it = icurve_pairs.begin();
   for (; it != icurve_pairs.end(); it++) {
     dbmsh3d_edge* E = (*it);
     E->sV()->set_visited (false);
@@ -165,7 +165,7 @@ void get_S_icurve_vec_otherN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_
   }
 
   //Put the startN into the queue Q.
-  vcl_queue<dbmsh3d_vertex*> Q;
+  std::queue<dbmsh3d_vertex*> Q;
   Q.push (startN);
   startN->set_prev_E (NULL);
 
@@ -218,22 +218,22 @@ void get_S_icurve_vec_otherN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_
 //: Given a starting N and icurve C, find the breaking i-curves till the end.
 //  Return false if the found bndN has more than 2 icurve or bnd_chain incident to it!
 bool get_S_icurve_vec_bndN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_edge* startC,
-                            vcl_vector<vcl_vector<dbmsh3d_edge*> >& IC_pairs_bndN_N,
-                            vcl_vector<dbmsh3d_edge*>& IC_loop_E_heads,
+                            std::vector<std::vector<dbmsh3d_edge*> >& IC_pairs_bndN_N,
+                            std::vector<dbmsh3d_edge*>& IC_loop_E_heads,
                             dbmsh3d_vertex*& bndN)
 {
   bndN = NULL;
 
   //Get the set of i-curve pairs and loops of this sheet.
-  vcl_set<dbmsh3d_edge*> icurve_pairs;
+  std::set<dbmsh3d_edge*> icurve_pairs;
   S->get_icurve_pairs (icurve_pairs);
-  vcl_set<dbmsh3d_edge*> icurves;
+  std::set<dbmsh3d_edge*> icurves;
   S->get_icurves (icurves);
 
   //Get the set of bnd nodes on the bnd_curve loop of bndMC.
   //bndN can be at the end of (i) an i-curve pair or (ii) an i-curve loop.
   ///assert (S->halfedge()->edge() == bndMC);
-  vcl_set<dbmsh3d_vertex*> bndN_set;
+  std::set<dbmsh3d_vertex*> bndN_set;
   //Get the set of boundary nodes incident to any i-curves chain (pairs or loops).
   S->get_bnd_Ns_inc_ICchain (bndN_set);
   bndN_set.erase (startN);
@@ -241,7 +241,7 @@ bool get_S_icurve_vec_bndN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_ed
   //Initialization of the BFS searching.
   // - set all icurves's nodes to be unvisited.
   // - initialize each vertex.F_list_ as the prev_E pointer.
-  vcl_set<dbmsh3d_edge*>::iterator it = icurves.begin();
+  std::set<dbmsh3d_edge*>::iterator it = icurves.begin();
   for (; it != icurves.end(); it++) {
     dbmsh3d_edge* E = (*it);
     E->sV()->set_visited (false);
@@ -251,7 +251,7 @@ bool get_S_icurve_vec_bndN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_ed
   }
 
   //Put the startN into the queue Q.
-  vcl_queue<dbmsh3d_vertex*> Q;
+  std::queue<dbmsh3d_vertex*> Q;
   Q.push (startN);
   startN->set_prev_E (NULL);
 
@@ -303,7 +303,7 @@ bool get_S_icurve_vec_bndN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_ed
     dbmsh3d_edge* ic_pair_prevE = NULL;
     dbmsh3d_edge* ic_loop_prevE = NULL;
 
-    vcl_vector<dbmsh3d_edge*> icurve_tmp;
+    std::vector<dbmsh3d_edge*> icurve_tmp;
 
     while (N->prev_E() != NULL) {
       dbmsh3d_edge* E = N->prev_E();

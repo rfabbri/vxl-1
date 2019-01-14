@@ -20,8 +20,8 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 
 //==============================================================================
@@ -91,33 +91,33 @@ public:
 
   ////: Update the state of the shock graph with another shock graph with exact topology (required)
   //void set_xgraph_state(const dbsksp_xshock_graph_sptr& other, 
-  //  vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > map_node_model_to_other,
-  //  vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > map_edge_model_to_other);
+  //  std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > map_node_model_to_other,
+  //  std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > map_edge_model_to_other);
 
   //: Get intrinsic parameters for a given set of nodes and edges
   // The parameters will be packed in 'x' using the order in 'active_nodes' followed
   // by 'active_edges'
-  void get_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-    const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+  void get_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+    const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
     vnl_vector<double >& x);
 
 
   //: Get pointers for direct access to intrinsic parameters of a set of nodes and edges
   // The parameters will be packed using the order of 'active_nodes' followed by 'active_edges'
-  void get_intrinsic_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-    const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
-    vcl_vector<double* >& x_ptr);
+  void get_intrinsic_params_ptr(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+    const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
+    std::vector<double* >& x_ptr);
 
   //: Set intrinsic parameters for a given set of nodes and edges
   // The parameters will be retrieved from 'x' using the order in 'active_nodes' followed
   // by 'active_edges'
-  void set_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-    const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+  void set_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+    const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
     vnl_vector<double >& x);
 
   //: Count number of free parameters corresponding to a list of nodes and edges
-  unsigned get_num_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-    const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges);
+  unsigned get_num_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+    const std::vector<dbsksp_xshock_edge_sptr >& active_edges);
 
   //: Update the parameter map from the shock graph
   void update_param_maps_from_xgraph();
@@ -152,8 +152,8 @@ protected:
   dbsksp_xshock_edge_sptr pseudo_parent_edge_;
 
   unsigned dim_; // dimension of the state vector
-  vcl_map<dbsksp_xshock_edge_sptr, edge_params > map_xe_to_params_;
-  vcl_map<dbsksp_xshock_node_sptr, node_params > map_xv_to_params_;
+  std::map<dbsksp_xshock_edge_sptr, edge_params > map_xe_to_params_;
+  std::map<dbsksp_xshock_node_sptr, node_params > map_xv_to_params_;
 };
 
 
@@ -185,27 +185,27 @@ public:
   ////: Get intrinsic parameters for a given set of nodes and edges
   //// The parameters will be packed in 'x' using the order in 'active_nodes' followed
   //// by 'active_edges'
-  //void get_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-  //  const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+  //void get_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+  //  const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
   //  vnl_vector<double >& x);
 
 
   ////: Get pointers for direct access to intrinsic parameters of a set of nodes and edges
   //// The parameters will be packed using the order of 'active_nodes' followed by 'active_edges'
-  //void get_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-  //  const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
-  //  vcl_vector<double* >& x_ptr);
+  //void get_params_ptr(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+  //  const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
+  //  std::vector<double* >& x_ptr);
 
   ////: Set intrinsic parameters for a given set of nodes and edges
   //// The parameters will be retrieved from 'x' using the order in 'active_nodes' followed
   //// by 'active_edges'
-  //void set_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-  //  const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+  //void set_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+  //  const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
   //  vnl_vector<double >& x);
 
   ////: Count number of free parameters corresponding to a list of nodes and edges
-  //unsigned get_num_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-  //  const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges);
+  //unsigned get_num_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+  //  const std::vector<dbsksp_xshock_edge_sptr >& active_edges);
 
 
 
@@ -239,8 +239,8 @@ protected:
   dbsksp_xshock_edge_sptr pseudo_parent_edge_;
 
   unsigned dim_; // dimension of the state vector
-  vcl_map<dbsksp_xshock_node_sptr, node_params > map_xv_to_params_;
-  //vcl_map<dbsksp_xshock_edge_sptr, edge_params > map_xe_to_params_;
+  std::map<dbsksp_xshock_node_sptr, node_params > map_xv_to_params_;
+  //std::map<dbsksp_xshock_edge_sptr, edge_params > map_xe_to_params_;
 };
 
 

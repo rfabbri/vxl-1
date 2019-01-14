@@ -2,12 +2,12 @@
 //: My own IV file pharser to read in IV and output G3D
 //: Do interpolation if needed.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbmsh3d/dbmsh3d_utils.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
-#include <vcl_cstring.h>
+#include <cstring>
 
 /* --------------------- Structures ------------------------*/
 
@@ -240,10 +240,10 @@ bool IVToG3DPoints (const char* pcFileNameInIV, const char* pcFileName, bool iFl
   float R;
   int num;
 
-  vcl_strcpy (inputFName, pcFileNameInIV);
+  std::strcpy (inputFName, pcFileNameInIV);
   //strcat (inputFName, ".iv");
   if ((fp1 = fopen(inputFName, "r")) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): Can't open input IV file %s\n",
+    vul_printf (std::cout, "ERROR(%s): Can't open input IV file %s\n",
           pcFName, inputFName);
     return false; 
   }
@@ -261,20 +261,20 @@ bool IVToG3DPoints (const char* pcFileNameInIV, const char* pcFileName, bool iFl
   iFace1 = 0;
   while (1) {
     //1-1)search for first "vertex" or "point"
-    while (vcl_strcmp (buffer, "vertex")!=0 && vcl_strcmp (buffer, "point")!=0) {
-      end_of_file = vcl_fscanf (fp1, "%s", buffer);
+    while (std::strcmp (buffer, "vertex")!=0 && std::strcmp (buffer, "point")!=0) {
+      end_of_file = std::fscanf (fp1, "%s", buffer);
       if (end_of_file==EOF)
         goto READ_IV_DONE;
     }
 
     //search for "["
-    vcl_fscanf (fp1, "%s", buffer);
-    assert (vcl_strcmp (buffer, "[")==0);
+    std::fscanf (fp1, "%s", buffer);
+    assert (std::strcmp (buffer, "[")==0);
 
     //read in (x, y, z) coordinates of vertices
     this_round_done = false;
     while (!this_round_done) {
-      vcl_fscanf (fp1, "%lf %lf %lf%s", &fPosX, &fPosY, &fPosZ, buffer);
+      std::fscanf (fp1, "%lf %lf %lf%s", &fPosX, &fPosY, &fPosZ, buffer);
       if (fPosX<minX) minX = fPosX;
       if (fPosY<minY) minY = fPosY;
       if (fPosZ<minZ) minZ = fPosZ;
@@ -282,35 +282,35 @@ bool IVToG3DPoints (const char* pcFileNameInIV, const char* pcFileName, bool iFl
       if (fPosY>maxY) maxY = fPosY;
       if (fPosZ>maxZ) maxZ = fPosZ;
     
-      ////vul_printf (vcl_cout, "x: %lf, y: %lf, z: %lf, \n", fPosX, fPosY, fPosZ);
+      ////vul_printf (std::cout, "x: %lf, y: %lf, z: %lf, \n", fPosX, fPosY, fPosZ);
       iNumPoints++;
 
-      if (vcl_strcmp (buffer, "]")==0)
+      if (std::strcmp (buffer, "]")==0)
         this_round_done = true;
     }
 
     //1-2)search for first "coordIndex"
-    while (vcl_strcmp (buffer, "coordIndex")!=0) {
-      end_of_file = vcl_fscanf (fp1, "%s", buffer);
+    while (std::strcmp (buffer, "coordIndex")!=0) {
+      end_of_file = std::fscanf (fp1, "%s", buffer);
       if (end_of_file==EOF)
         goto READ_IV_DONE;
     }
     //search for "["
-    vcl_fscanf (fp1, "%s", buffer);
-    assert (vcl_strcmp (buffer, "[")==0);
+    std::fscanf (fp1, "%s", buffer);
+    assert (std::strcmp (buffer, "[")==0);
 
     //read in [?, ?, ?, -1, ?, ?, ?, ?, -1] indices of faces
     //note that a face can have either 3, 4, 5, or more vertices.
     this_round_done = false;
     iVerticesPerFace = 0;
     while (!this_round_done) {
-      vcl_fscanf (fp1, "%s", buffer);
+      std::fscanf (fp1, "%s", buffer);
       iTmp = atoi (buffer);
       if (iTmp == -1) {
         iFace1++;
         //assert (iVerticesPerFace<=MAX_VERTICES_SIZE);
         if (iVerticesPerFace>MAX_VERTICES_SIZE)
-          vul_printf (vcl_cout, "ERROR(%s): iVerticesPerFace (%d) > MAX_VERTICES_SIZE (%d).\n",
+          vul_printf (std::cout, "ERROR(%s): iVerticesPerFace (%d) > MAX_VERTICES_SIZE (%d).\n",
                 pcFName, iVerticesPerFace, MAX_VERTICES_SIZE);
         iVerticesPerFace = 0;
       }
@@ -318,7 +318,7 @@ bool IVToG3DPoints (const char* pcFileNameInIV, const char* pcFileName, bool iFl
         iVerticesPerFace++;
       }
 
-      if (vcl_strcmp (buffer, "]")==0)
+      if (std::strcmp (buffer, "]")==0)
         this_round_done = true;
     }
 
@@ -334,19 +334,19 @@ READ_IV_DONE:
   iSizeNumMorePoints = iNumFaces*100; //*10000    *7
 
   if ((pPoints = (Pt3dCoord*) calloc(iNumPoints, sizeof(Pt3dCoord))) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): CALLOC fails on pPoints[%d].\n",
+    vul_printf (std::cout, "ERROR(%s): CALLOC fails on pPoints[%d].\n",
           pcFName, iNumPoints);
     exit(-4); 
   }
   if ((pFaces = (Face3dVertices*) calloc(iNumFaces, sizeof(Face3dVertices))) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): CALLOC fails on pFaces[%d].\n",
+    vul_printf (std::cout, "ERROR(%s): CALLOC fails on pFaces[%d].\n",
           pcFName, iNumFaces);
     exit(-4); 
   }
 
   //   Alloc memory for pMorePoints
   if ((pMorePoints = (Pt3dCoord*) calloc(iSizeNumMorePoints, sizeof(Pt3dCoord))) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): CALLOC fails on pMorePoints[%d].\n",
+    vul_printf (std::cout, "ERROR(%s): CALLOC fails on pMorePoints[%d].\n",
           pcFName, iNumMorePoints);
     exit(-4); 
   }
@@ -369,7 +369,7 @@ READ_IV_DONE:
   num = 0;
   dAvgEdgeLength = 0;
   if ((fp1 = fopen(inputFName, "r")) == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): Can't open input IV file %s\n",
+    vul_printf (std::cout, "ERROR(%s): Can't open input IV file %s\n",
           pcFName, inputFName);
     return false; 
   }
@@ -378,46 +378,46 @@ READ_IV_DONE:
   iFace2 = 0;
   while (1) {
     //1-1) search for first "vertex"
-    while (vcl_strcmp (buffer, "vertex")!=0 && vcl_strcmp (buffer, "point")!=0) {
-      end_of_file = vcl_fscanf (fp1, "%s", buffer);
+    while (std::strcmp (buffer, "vertex")!=0 && std::strcmp (buffer, "point")!=0) {
+      end_of_file = std::fscanf (fp1, "%s", buffer);
       if (end_of_file==EOF)
         goto READ_IV_DONE2;
     }
 
     //search for "["
-    vcl_fscanf (fp1, "%s", buffer);
-    assert (vcl_strcmp (buffer, "[")==0);
+    std::fscanf (fp1, "%s", buffer);
+    assert (std::strcmp (buffer, "[")==0);
 
     //read in (x, y, z) coordinates of vertices
     this_round_done = false;
     while (!this_round_done) {
-      vcl_fscanf (fp1, "%f %f %f%s", &fPosX, &fPosY, &fPosZ, buffer);
+      std::fscanf (fp1, "%f %f %f%s", &fPosX, &fPosY, &fPosZ, buffer);
     
       pPoints[num].fPosX = fPosX*R;
       pPoints[num].fPosY = fPosY*R;
       pPoints[num].fPosZ = fPosZ*R;
-      //vcl_fprintf (fp2, "%f %f %f %f %f %f\n", fPosX*R, fPosY*R, fPosZ*R, 1.0, 1.0, 1.0);
+      //std::fprintf (fp2, "%f %f %f %f %f %f\n", fPosX*R, fPosY*R, fPosZ*R, 1.0, 1.0, 1.0);
       num++;
-      if (vcl_strcmp (buffer, "]")==0)
+      if (std::strcmp (buffer, "]")==0)
         this_round_done = true;
     }
 
     //1-2)search for first "coordIndex"
-    while (vcl_strcmp (buffer, "coordIndex")!=0) {
-      end_of_file = vcl_fscanf (fp1, "%s", buffer);
+    while (std::strcmp (buffer, "coordIndex")!=0) {
+      end_of_file = std::fscanf (fp1, "%s", buffer);
       if (end_of_file==EOF)
         goto READ_IV_DONE2; //READ_IV_DONE
     }
     //search for "["
-    vcl_fscanf (fp1, "%s", buffer);
-    assert (vcl_strcmp (buffer, "[")==0);
+    std::fscanf (fp1, "%s", buffer);
+    assert (std::strcmp (buffer, "[")==0);
 
     //read in [?, ?, ?, -1, ?, ?, ?, ?, -1] indices of faces
     //note that a face can have either 3, 4, 5, or more vertices.
     this_round_done = false;
     iVerticesPerFace = 0;
     while (!this_round_done) {
-      vcl_fscanf (fp1, "%s", buffer);
+      std::fscanf (fp1, "%s", buffer);
       iTmp = atoi (buffer);
       if (iTmp == -1) {
         iFace2++;
@@ -443,7 +443,7 @@ READ_IV_DONE:
         pFaces[iFace2].iSize = iVerticesPerFace;
       }
 
-      if (vcl_strcmp (buffer, "]")==0)
+      if (std::strcmp (buffer, "]")==0)
         this_round_done = true;
     }
 
@@ -456,9 +456,9 @@ READ_IV_DONE2:
   //===== End Open *.iv again to output (xyz)s =====
 
   dAvgEdgeLength /= iNumPoints;
-  vul_printf (vcl_cout, "\nMinimum dist between vertices: %lf.\n",
+  vul_printf (std::cout, "\nMinimum dist between vertices: %lf.\n",
         dMinEdgeLength);
-  vul_printf (vcl_cout, "\nAverage dist between vertices: %lf.\n",
+  vul_printf (std::cout, "\nAverage dist between vertices: %lf.\n",
         dAvgEdgeLength);
 
   dMinEdgeThreshold = fIVRecursiveThreshold * dAvgEdgeLength;
@@ -470,7 +470,7 @@ READ_IV_DONE2:
     //dMaxPerturb = (float) dMinEdgeLength * 13; //iIVPerturb=13 by default.
     dMaxPerturb = dAvgEdgeLength * fMaxPerturb;
 
-    vul_printf (vcl_cout, "\nMaximum perturbation for each point: %lf.\n",
+    vul_printf (std::cout, "\nMaximum perturbation for each point: %lf.\n",
           dMaxPerturb);
 
     seed = 67890123;
@@ -532,41 +532,41 @@ READ_IV_DONE2:
         ////assert (0);
       }
     }
-    vul_printf (vcl_cout, "\n# of Faces of 3 Vertices: %d.\n",
+    vul_printf (std::cout, "\n# of Faces of 3 Vertices: %d.\n",
           iNum3VerticesFace);
-    vul_printf (vcl_cout, "\n# of Faces of 4 Vertices: %d.\n",
+    vul_printf (std::cout, "\n# of Faces of 4 Vertices: %d.\n",
           iNum4VerticesFace);
-    vul_printf (vcl_cout, "\n# of Faces of 5 Vertices: %d.\n",
+    vul_printf (std::cout, "\n# of Faces of 5 Vertices: %d.\n",
           iNum5VerticesFace);
     assert (iNumMorePoints <= iSizeNumMorePoints);
   }
 
   //######################################################
   //5) Output .g3d file
-  vcl_strcpy (outputFName, pcFileName);
+  std::strcpy (outputFName, pcFileName);
   strcat (outputFName, ".g3d");
   fp2 = fopen (outputFName, "w");
   if (fp2 == NULL) {
-    vul_printf (vcl_cout, "ERROR(%s): Can't open file %s.\n", pcFName, outputFName);
+    vul_printf (std::cout, "ERROR(%s): Can't open file %s.\n", pcFName, outputFName);
     exit (-6); 
   }
 
-  vul_printf (vcl_cout, "MESG(%s):\n\tSaving data in %s.\n", pcFName, outputFName);
+  vul_printf (std::cout, "MESG(%s):\n\tSaving data in %s.\n", pcFName, outputFName);
   /* -- First: Save Initial Source Data -- */
-  vcl_fprintf (fp2, "%d %d\n", 2, iNumPoints+iNumMorePoints);
+  std::fprintf (fp2, "%d %d\n", 2, iNumPoints+iNumMorePoints);
 
   for (i=0; i<iNumPoints; i++) {
-    vcl_fprintf (fp2, "%f %f %f %f %f %f\n", pPoints[i].fPosX, pPoints[i].fPosY, pPoints[i].fPosZ, 1.0, 1.0, 1.0);
+    std::fprintf (fp2, "%f %f %f %f %f %f\n", pPoints[i].fPosX, pPoints[i].fPosY, pPoints[i].fPosZ, 1.0, 1.0, 1.0);
   }
 
   for (i=0; i<iNumMorePoints; i++) {
-    vcl_fprintf (fp2, "%f %f %f %f %f %f\n", pMorePoints[i].fPosX, pMorePoints[i].fPosY, pMorePoints[i].fPosZ, 1.0, 1.0, 1.0);
+    std::fprintf (fp2, "%f %f %f %f %f %f\n", pMorePoints[i].fPosX, pMorePoints[i].fPosY, pMorePoints[i].fPosZ, 1.0, 1.0, 1.0);
   }
 
-  vul_printf (vcl_cout, "\n# of Original Vertices: %d.\n",
+  vul_printf (std::cout, "\n# of Original Vertices: %d.\n",
           iNumPoints);
 
-  vul_printf (vcl_cout, "\n# of Vertices added: %d.\n",
+  vul_printf (std::cout, "\n# of Vertices added: %d.\n",
           iNumMorePoints);
 
   fclose (fp2);

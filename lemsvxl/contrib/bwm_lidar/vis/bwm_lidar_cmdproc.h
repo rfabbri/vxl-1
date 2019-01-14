@@ -7,7 +7,7 @@
 ///#include <Inventor/nodes/SoSeparator.h>
 ///class SoSeparator;
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbmsh3d/dbmsh3d_mesh_mc.h>
 #include <dbmsh3d/dbmsh3d_textured_mesh_mc.h>
 #include <vil/vil_image_view.h>

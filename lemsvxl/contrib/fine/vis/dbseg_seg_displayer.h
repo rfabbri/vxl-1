@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 #include <bvis1/bvis1_mapper.h>
 
@@ -31,7 +31,7 @@ public:
   dbseg_seg_displayer(){}
 
   //: Return type string "seg"
-  virtual vcl_string type() const { return "seg"; }
+  virtual std::string type() const { return "seg"; }
 
   //: Create a tableau if the storage object is of type seg
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

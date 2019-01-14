@@ -1,9 +1,9 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include<vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
+#include<cstdio>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_polygon.h>
@@ -13,7 +13,7 @@
 #include <vpgl/algo/vpgl_optimize_camera.h>
 #include <vul/vul_awk.h>
 
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 //-------------------------------------------
 // CAMERA CALIBRATION
@@ -68,11 +68,11 @@
 //
 int main( int argc, char* argv[] )
 {  
-  vcl_string world_points_file( "world_pts.txt" );
-  vcl_string image_points_file( "image_pts.txt" );
-  vcl_string camera_file( "cameras.txt" );
-  vcl_string camera_center_direction_file( "cameras-center-direction.txt" );
-  vcl_string refined_world_points_file( "world_pts_refined.txt" );
+  std::string world_points_file( "world_pts.txt" );
+  std::string image_points_file( "image_pts.txt" );
+  std::string camera_file( "cameras.txt" );
+  std::string camera_center_direction_file( "cameras-center-direction.txt" );
+  std::string refined_world_points_file( "world_pts_refined.txt" );
   const bool bundle_adjust = true;
   const bool use_normalization = true;
   int num_cameras = 1;
@@ -82,10 +82,10 @@ int main( int argc, char* argv[] )
 
 
   // Read the world points.
-  vcl_vector<vgl_point_3d<double> > world_points;
-  vcl_ifstream wpsifs( world_points_file.c_str() );
+  std::vector<vgl_point_3d<double> > world_points;
+  std::ifstream wpsifs( world_points_file.c_str() );
   if (!wpsifs) {
-    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    std::cerr << " Error opening file  " << world_points_file << std::endl;
     return false;
   }
 
@@ -108,9 +108,9 @@ int main( int argc, char* argv[] )
       mean_wp += ( world_points[p] - vgl_point_3d<double>(0,0,0) )/num_world_points;
       for( int p = 0; p < num_world_points; p++ ){
         vgl_point_3d<double> this_dist = world_points[p]-mean_wp;
-        if( vcl_fabs(this_dist.x()) > wp_scale ) wp_scale = vcl_fabs(this_dist.x());
-        if( vcl_fabs(this_dist.y()) > wp_scale ) wp_scale = vcl_fabs(this_dist.y());
-        if( vcl_fabs(this_dist.z()) > wp_scale ) wp_scale = vcl_fabs(this_dist.z());
+        if( std::fabs(this_dist.x()) > wp_scale ) wp_scale = std::fabs(this_dist.x());
+        if( std::fabs(this_dist.y()) > wp_scale ) wp_scale = std::fabs(this_dist.y());
+        if( std::fabs(this_dist.z()) > wp_scale ) wp_scale = std::fabs(this_dist.z());
       }
 
     for( int p = 0; p < num_world_points; p++ ){
@@ -120,17 +120,17 @@ int main( int argc, char* argv[] )
     }
   }
 
-  vcl_vector< vgl_homg_point_3d<double> > world_points_h;
+  std::vector< vgl_homg_point_3d<double> > world_points_h;
   for( unsigned p =0; p < world_points.size(); p++ )
     world_points_h.push_back( vgl_homg_point_3d<double>(world_points[p] ) );
 
 
   // Read the image_points
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_vector<vcl_vector<bool> > mask( num_cameras, vcl_vector<bool>(num_world_points,true) );
-  vcl_ifstream ipsifs( image_points_file.c_str() );
+  std::vector<vgl_point_2d<double> > image_points;
+  std::vector<std::vector<bool> > mask( num_cameras, std::vector<bool>(num_world_points,true) );
+  std::ifstream ipsifs( image_points_file.c_str() );
   if (!ipsifs) {
-    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    std::cerr << " Error opening file  " << world_points_file << std::endl;
     return false;
   }
 
@@ -147,18 +147,18 @@ int main( int argc, char* argv[] )
   }
 
   // Compute cameras linearly.
-  vcl_vector<vpgl_proj_camera<double> > cameras;
+  std::vector<vpgl_proj_camera<double> > cameras;
   cameras.reserve(num_cameras);
 
-  // this block outputs in the cameras vcl_vector
+  // this block outputs in the cameras std::vector
   {
-    vcl_vector<vpgl_perspective_camera<double> > cameras_persp;
+    std::vector<vpgl_perspective_camera<double> > cameras_persp;
     cameras_persp.reserve(cameras.size());
     for( int c = 0; c < num_cameras; c++ ){
 
       vpgl_proj_camera<double> this_cam;
-      vcl_vector<vgl_point_2d<double> > these_image_points;
-      vcl_vector<vgl_point_3d<double> > these_world_points;
+      std::vector<vgl_point_2d<double> > these_image_points;
+      std::vector<vgl_point_3d<double> > these_world_points;
       for( int dp = 0; dp < num_world_points; dp++ ){
         if( mask[c][dp] == false ) 
           continue;
@@ -172,7 +172,7 @@ int main( int argc, char* argv[] )
       vpgl_perspective_camera<double> p_camera;
       unsigned val = vpgl_perspective_decomposition(cameras[c].get_matrix(), p_camera);
       if (!val) {
-        vcl_cerr << "ERROR: CANNOT DECOMPOSE" << vcl_endl;
+        std::cerr << "ERROR: CANNOT DECOMPOSE" << std::endl;
         abort();
       }
       
@@ -188,7 +188,7 @@ int main( int argc, char* argv[] )
     
     // Optimize the cameras and world points if needed.
     if( bundle_adjust ){
-      vcl_vector< vgl_point_2d<double> > exp_img_points;
+      std::vector< vgl_point_2d<double> > exp_img_points;
       for( int c = 0; c < num_cameras; c++ ){
         for( int dp = 0; dp < num_world_points; dp++ ){
           if( mask[c][dp] == false ) 
@@ -232,15 +232,15 @@ int main( int argc, char* argv[] )
 
       vgl_point_2d<double> proj_wp( proj_wp_h.x()/proj_wp_h.w(), proj_wp_h.y()/proj_wp_h.w() );
       float this_error = vgl_distance( proj_wp, image_points[num_world_points*c+wp] );
-      vcl_cerr << proj_wp << ' ' << this_error << '\n';
+      std::cerr << proj_wp << ' ' << this_error << '\n';
     }
-    vcl_cerr << "\n\n";
+    std::cerr << "\n\n";
   }
 
 
   // Write to file.
-  vcl_ofstream cofs( camera_file.c_str() );
-  cofs << vcl_setprecision(20);
+  std::ofstream cofs( camera_file.c_str() );
+  cofs << std::setprecision(20);
   for( int c = 0; c < num_cameras; c++ )
     cofs << 
 //      "FRAME " << c << '\n' << 
@@ -248,13 +248,13 @@ int main( int argc, char* argv[] )
 
 
 
-  vcl_ofstream c_cd_ofs( camera_center_direction_file.c_str() );
-  c_cd_ofs << vcl_setprecision(20);
+  std::ofstream c_cd_ofs( camera_center_direction_file.c_str() );
+  c_cd_ofs << std::setprecision(20);
   for( int c = 0; c < num_cameras; c++ ) {
     vpgl_perspective_camera<double> p_camera;
     unsigned val = vpgl_perspective_decomposition(cameras[c].get_matrix(), p_camera);
     if (!val) {
-      vcl_cerr << "ERROR: CANNOT DECOMPOSE" << vcl_endl;
+      std::cerr << "ERROR: CANNOT DECOMPOSE" << std::endl;
       abort();
     }
 
@@ -266,7 +266,7 @@ int main( int argc, char* argv[] )
   }
 
   if( bundle_adjust ){
-    vcl_ofstream wpofs( refined_world_points_file.c_str() );
+    std::ofstream wpofs( refined_world_points_file.c_str() );
     for( int wp = 0; wp < num_world_points; wp++ )
       wpofs << world_points[wp].x() << ' ' << world_points[wp].y() << ' ' << world_points[wp].z() << '\n';
   }

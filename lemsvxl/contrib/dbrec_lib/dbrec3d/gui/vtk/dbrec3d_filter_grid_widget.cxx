@@ -83,7 +83,7 @@ dbrec3d_filter_grid_widget::dbrec3d_filter_grid_widget(vnl_vector_fixed<float,5>
 
 dbrec3d_filter_grid_widget::dbrec3d_filter_grid_widget(vgl_box_3d<double> const &bbox,
                                                        double cell_length,
-                                                       vcl_vector<boct_cell_data<short, float> > const &cell_data,
+                                                       std::vector<boct_cell_data<short, float> > const &cell_data,
                                                        float min_val, float max_val, unsigned resolution_level)
 {
   slider_widget_ = new dbrec3d_double_slider(min_val,max_val, "TF");

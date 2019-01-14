@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -76,13 +76,13 @@ int main(int argc, char *argv[])
     //Determine which input object we are going to use
     //Either from the input_object_dir or the associated file
     //The associated file always takes precendence
-    vcl_string input_vsol_fn;
+    std::string input_vsol_fn;
 
     // Use associated file
     if ( vul_file::exists(params->input_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params->input_assoc_dir_()+"/*");
@@ -108,14 +108,14 @@ int main(int argc, char *argv[])
 
     if (!vul_file::exists(input_vsol_fn)) 
     {
-        vcl_cerr << "Cannot find contour file: " << input_vsol_fn << vcl_endl;
+        std::cerr << "Cannot find contour file: " << input_vsol_fn << std::endl;
         return 1;
     }
 
-    vcl_string input_contour_extension = vul_file::extension(input_vsol_fn);
+    std::string input_contour_extension = vul_file::extension(input_vsol_fn);
 
     // Create output storage
-    vcl_vector<bpro1_storage_sptr> vsol_contour;
+    std::vector<bpro1_storage_sptr> vsol_contour;
 
     //Call appropriate process to load file
     if ( input_contour_extension == ".cem" ||
@@ -180,8 +180,8 @@ int main(int argc, char *argv[])
     else
     {
 
-        vcl_cerr << "Unknown input type: " << 
-            input_contour_extension << " Quit now" <<vcl_endl;
+        std::cerr << "Unknown input type: " << 
+            input_contour_extension << " Quit now" <<std::endl;
         return 1;
 
     }
@@ -189,8 +189,8 @@ int main(int argc, char *argv[])
 
     if ( vsol_contour.size() != 1)
     {
-        vcl_cerr<<"Problem loading file, "<<input_vsol_fn<<
-            "Could not get vsol data structure"<<vcl_endl;
+        std::cerr<<"Problem loading file, "<<input_vsol_fn<<
+            "Could not get vsol data structure"<<std::endl;
         
         return 1;
     }
@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 
     if ( params->add_bbox_())
     {
-        vcl_cout<<"************  Compute  Bbox  *************"<<vcl_endl;
+        std::cout<<"************  Compute  Bbox  *************"<<std::endl;
 
         // Grab the underlying contours
         vidpro1_vsol2D_storage_sptr vsol_contour_storage;
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
         vsol_box_2d_sptr bbox = new vsol_box_2d();
 
         // Determine largest bounding box 
-        vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+        std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
             vsol_contour_storage->all_data();
     
         for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
@@ -235,12 +235,12 @@ int main(int argc, char *argv[])
         bbox->add_point(xmin_scaled,ymin_scaled);
         bbox->add_point(xmax_scaled,ymax_scaled);
 
-        vcl_cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
+        std::cout << "bbox (minx, miny) (maxx, maxy) (width, height): " 
                  << "("   << bbox->get_min_x() << ", " << bbox->get_min_y() 
                  << ") (" << bbox->get_max_x() << ", " << bbox->get_max_y() 
                  << ") (" 
                  << bbox->width() << ", " 
-                 << bbox->height() << ")"<<vcl_endl;
+                 << bbox->height() << ")"<<std::endl;
  
         // Add to vidpro storage this new bounding box
         vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
 
     
     //******************** IShock Computation *******************************
-    vcl_cout<<"************ Computing Shock *************"<<vcl_endl;
+    std::cout<<"************ Computing Shock *************"<<std::endl;
 
     dbsk2d_compute_ishock_process shock_pro;
     set_process_parameters_of_bpro1(*params, 
@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
     shock_pro.finish();
 
     // Grab output from symbolic edge linking
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
 
     // If ishock status is bad we will keep iterating with noise till we get 
     // a valid shock computation otherwise call it quits
@@ -289,9 +289,9 @@ int main(int argc, char *argv[])
 
         for ( ; i < num_iterations; ++i)
         {
-            vcl_cout<<vcl_endl;
-            vcl_cout<<"************ Retry Compute Shock,iter: "
-                    <<i+1<<" *************"<<vcl_endl;
+            std::cout<<std::endl;
+            std::cout<<"************ Retry Compute Shock,iter: "
+                    <<i+1<<" *************"<<std::endl;
           
             // Add inputs
             shock_pro.add_input(image_storage);
@@ -328,21 +328,21 @@ int main(int argc, char *argv[])
    
     if (shock_results.size() != 1) 
     {
-        vcl_cerr << "Shock computation failed after "<<params->num_iter_()
+        std::cerr << "Shock computation failed after "<<params->num_iter_()
                  <<" iterations"
-                 << vcl_endl;
+                 << std::endl;
         return 1;
     }
 
     //********************   Gap Transform    *******************************
 
     // Perform Gap Transform on Intrinsinc Shock Graph
-    vcl_vector<bpro1_storage_sptr> shock_gt_results;
+    std::vector<bpro1_storage_sptr> shock_gt_results;
 
     if ( params->gap_transform_())
     {
 
-        vcl_cout<<"************  Gap Transform  *************"<<vcl_endl;
+        std::cout<<"************  Gap Transform  *************"<<std::endl;
 
         dbsk2d_gap_transform_process gt_pro;
         set_process_parameters_of_bpro1(*params, 
@@ -361,13 +361,13 @@ int main(int argc, char *argv[])
         // Open up image for gap transform
  
         //load the input image
-        vcl_string input_img = params->input_object_dir_() + "/" 
+        std::string input_img = params->input_object_dir_() + "/" 
             + params->input_object_name_() + params->input_image_extension_();
 
         if (!vul_file::exists(input_img)) 
         {
-            vcl_cerr << "Cannot find image for gap transform: " 
-                     << input_img << vcl_endl;
+            std::cerr << "Cannot find image for gap transform: " 
+                     << input_img << std::endl;
             return 1;
         }
 
@@ -377,8 +377,8 @@ int main(int argc, char *argv[])
         
         if (!img_sptr) 
         {
-            vcl_cerr << "Cannot load image for gap transform: " << 
-                input_img << vcl_endl;
+            std::cerr << "Cannot load image for gap transform: " << 
+                input_img << std::endl;
             return 1;
         }
         
@@ -402,15 +402,15 @@ int main(int argc, char *argv[])
         // It has two outputs
         if (shock_gt_results.size() != 2) 
         {
-            vcl_cerr << "Shock after gap transform is Invalid!"
-                     << vcl_endl;
+            std::cerr << "Shock after gap transform is Invalid!"
+                     << std::endl;
             return 1;
         }
 
     }
 
     //******************** Sample Shocks  ********************************
-    vcl_cout<<"************  Sampling Shock *************"<<vcl_endl;
+    std::cout<<"************  Sampling Shock *************"<<std::endl;
     
     dbsk2d_sample_ishock_process sample_sg_pro;
     set_process_parameters_of_bpro1(*params, 
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
     sample_sg_pro.finish();
 
     // Grab output from sampling
-    vcl_vector<bpro1_storage_sptr> sample_shock_results;
+    std::vector<bpro1_storage_sptr> sample_shock_results;
     if ( sample_status )
     {
         sample_shock_results   = sample_sg_pro.get_output();
@@ -449,18 +449,18 @@ int main(int argc, char *argv[])
 
     if (sample_shock_results.size() != 1) 
     {
-        vcl_cerr << "Sampling of Intrinsinc Shock Computation Failed"
-                 << vcl_endl;
+        std::cerr << "Sampling of Intrinsinc Shock Computation Failed"
+                 << std::endl;
         return 1;
     }
 
     
     //******************** Save Shocks   ********************************
-    vcl_cout<<"************   Saving  Shock *************"<<vcl_endl;    
+    std::cout<<"************   Saving  Shock *************"<<std::endl;    
 
     dbsk2d_save_esf_process save_sg_pro;
     
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_())
     { 
         output_file = params->output_shock_folder_() + "/";
@@ -497,16 +497,16 @@ int main(int argc, char *argv[])
 
     if ( !status )
     {
-        vcl_cerr << "Problems in saving extrinsinc shock file: " 
-                 << output_file << vcl_endl;
+        std::cerr << "Problems in saving extrinsinc shock file: " 
+                 << output_file << std::endl;
         return 1;
 
     }
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     return 0;
 }

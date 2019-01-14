@@ -1,19 +1,19 @@
 #include "bsta_gauss.h"
 //:
 // \file
-#include <vcl_cmath.h> // for exp()
+#include <cmath> // for exp()
 
 double bsta_gauss::bsta_gaussian(const double x, const double sigma)
 {
   double x_on_sigma = x / sigma;
-  return (double)vcl_exp(- x_on_sigma * x_on_sigma / 2);
+  return (double)std::exp(- x_on_sigma * x_on_sigma / 2);
 }
 
 //: generate a 1-d Gaussian kernel  fuzz=0.02 is a good value
 void bsta_gauss::bsta_1d_gaussian_kernel(const double sigma,
                                     const double fuzz,
                                     int& radius,
-                                    vcl_vector<double>& kernel)
+                                    std::vector<double>& kernel)
 {
   for (radius = 0; bsta_gaussian(double(radius), sigma) > fuzz; radius++)
   {;}                                         // find radius
@@ -38,8 +38,8 @@ void bsta_gauss::bsta_1d_gaussian_kernel(const double sigma,
 // to obtain unit norm, i.e, normalize by the sum of the weights.
 //
 void bsta_gauss::bsta_1d_gaussian(const double sigma,
-                                  vcl_vector<double> const& in_buf,
-                                  vcl_vector<double>& out_buf)
+                                  std::vector<double> const& in_buf,
+                                  std::vector<double>& out_buf)
 {
   int n = in_buf.size(), r = 0;
   if (!n)
@@ -51,7 +51,7 @@ void bsta_gauss::bsta_1d_gaussian(const double sigma,
     return;
   }
   //the general case
-  vcl_vector<double> ker;
+  std::vector<double> ker;
   bsta_1d_gaussian_kernel(sigma, 0.02, r, ker);
   for (int i = 0; i<n; i++)
   {
@@ -95,7 +95,7 @@ void bsta_gauss::bsta_2d_gaussian(const double sigma,
   //convolve columns
   for (int row = 0; row<m; row++)
   {
-    vcl_vector<double> row_buf(n), temp;
+    std::vector<double> row_buf(n), temp;
     for (int col = 0; col<n; col++)
       row_buf[col]=in_buf[row][col];
     bsta_1d_gaussian(sigma, row_buf, temp);
@@ -105,7 +105,7 @@ void bsta_gauss::bsta_2d_gaussian(const double sigma,
   //convolve rows
   for (int col = 0; col<n; col++)
   {
-    vcl_vector<double> col_buf(m), temp;
+    std::vector<double> col_buf(m), temp;
     for (int row = 0; row<m; row++)
       col_buf[row]=out_buf[row][col];
     bsta_1d_gaussian(sigma, col_buf, temp);

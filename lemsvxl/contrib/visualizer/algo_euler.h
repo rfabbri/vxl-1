@@ -1,9 +1,9 @@
 #ifndef EULER_H
 #define EULER_H
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <iostream>
+#include <vector>
+#include <utility>
 
 #include "basegui_xpmath.h"
 
@@ -102,9 +102,9 @@ class EulerSpiralParams
          * The functions assumes that the starting and ending tangents 
          * belong to [0, 2Pi).
          * */
-        vcl_pair<double, double> getTableAngles() const
+        std::pair<double, double> getTableAngles() const
           {
-            vcl_pair<double, double> angles;
+            std::pair<double, double> angles;
 
             double start_tangent = _startTangent;
             double end_tangent   = _endTangent;
@@ -113,7 +113,7 @@ class EulerSpiralParams
               {
                 if (end_tangent<M_PI)
                   {
-                    vcl_swap(start_tangent, end_tangent);
+                    std::swap(start_tangent, end_tangent);
                    }
                 else
                   {
@@ -160,8 +160,8 @@ class EulerSpiralParams
 
                }
 
-            vcl_cout<<" <EulerSpiralParams::getTableAngles> : Weird! Angles = {"<<_startTangent*(180/M_PI)<<", "<<_endTangent*(180/M_PI)<<"} "<<vcl_endl;
-            return vcl_pair<double, double>(0,0);
+            std::cout<<" <EulerSpiralParams::getTableAngles> : Weird! Angles = {"<<_startTangent*(180/M_PI)<<", "<<_endTangent*(180/M_PI)<<"} "<<std::endl;
+            return std::pair<double, double>(0,0);
            }
 
         /*
@@ -348,10 +348,10 @@ class EulerSpiral
         double          _normalized_start_angle;
         double          _normalized_end_angle;
 
-        vcl_vector<EulerSpiralParams>  _lookup_table;
+        std::vector<EulerSpiralParams>  _lookup_table;
         
-        vcl_vector<EulerSpiralParams> _es_params;
-        vcl_vector< Point2D<double> > _euler_spiral;
+        std::vector<EulerSpiralParams> _es_params;
+        std::vector< Point2D<double> > _euler_spiral;
 
         BiArc          _intial_bi_arc_estimates;
 
@@ -393,7 +393,7 @@ class EulerSpiral
             return 0;
            }
         
-        vcl_vector<EulerSpiralParams> & get_es_params(void)
+        std::vector<EulerSpiralParams> & get_es_params(void)
           {
             return _es_params;
            }
@@ -407,9 +407,9 @@ class EulerSpiral
             find_es_parameters();
             if (_es_params.size()<=0)
               {
-                vcl_cout<<" Warning : No ES present!"<<vcl_endl;
-                vcl_cout<<" Input Params = Start Pt ="<<_start_pt<<" Angle = "<<_start_angle*(180/M_PI)<<vcl_endl;
-                vcl_cout<<"                End   Pt ="<<_end_pt  <<" Angle = "<<_end_angle*(180/M_PI)<<vcl_endl; 
+                std::cout<<" Warning : No ES present!"<<std::endl;
+                std::cout<<" Input Params = Start Pt ="<<_start_pt<<" Angle = "<<_start_angle*(180/M_PI)<<std::endl;
+                std::cout<<"                End   Pt ="<<_end_pt  <<" Angle = "<<_end_angle*(180/M_PI)<<std::endl; 
                 return -1;
                }
             else
@@ -419,7 +419,7 @@ class EulerSpiral
             return 0;
            }
 
-        int getDoubleParams(vcl_vector <EulerSpiralParams> &params);
+        int getDoubleParams(std::vector <EulerSpiralParams> &params);
         
         Point2D<double> compute_es_point(Point2D<double> start_pt, double start_tangent, double K0, double TotalLength, double K2, double arclength)
           {
@@ -447,7 +447,7 @@ class EulerSpiral
             _normalized_start_angle = fmod(_normalized_start_angle, 2*M_PI);
             _normalized_end_angle   = fmod(_normalized_end_angle, 2*M_PI);
 
-//            vcl_cout<<" Start Angle = "<<_start_angle<<" Normalized = "<<_normalized_start_angle<<" End = "<<_end_angle<<" NOrmailized = "<<_normalized_end_angle<<vcl_endl;
+//            std::cout<<" Start Angle = "<<_start_angle<<" Normalized = "<<_normalized_start_angle<<" End = "<<_end_angle<<" NOrmailized = "<<_normalized_end_angle<<std::endl;
             if (_normalized_start_angle <0)
                 _normalized_start_angle +=2*M_PI;
 
@@ -501,11 +501,11 @@ class EulerSpiral
         inline double          compute_error             (Point2D<double> start, Point2D<double> end, double K, double L, double angle_diff, double &K2);
 
 
-        int  computeSpiral(vcl_vector<Point2D<double> > &spiral_, double step_size_, int count_, bool useInternal_);
+        int  computeSpiral(std::vector<Point2D<double> > &spiral_, double step_size_, int count_, bool useInternal_);
         int  find_es_parameters  (void);
         int  compute_euler_spiral(void);
         int  find_bi_arc_params  (void);
-        inline double   minimum  (const vcl_vector<double> &array,int& index);
+        inline double   minimum  (const std::vector<double> &array,int& index);
        
 
         int get_bi_arc_info(int count, BiArcParams &bi_arc);
@@ -515,13 +515,13 @@ class EulerSpiral
         
    };
 
-inline vcl_ostream& operator<<(vcl_ostream &os, const EulerSpiralParams &params)
+inline std::ostream& operator<<(std::ostream &os, const EulerSpiralParams &params)
   {
-    os<<" Start Point   ="<<params.getStartPt()<<" End Point   ="<<params.getEndPt()<<vcl_endl;
-    os<<" Start Tangent ="<<params.getStartTangent()*(180/M_PI)<<" End Tangent ="<<params.getEndTangent()*(180/M_PI)<<vcl_endl;
-    os<<" K0 ="<<params.getK0()<<" K2 ="<<params.getK2()<<vcl_endl;
-    os<<" Length ="<<params.getLength()<<vcl_endl;
-    os<<" Turning Angle ="<<params.getTurningAngle()*(180/M_PI)<<vcl_endl;
+    os<<" Start Point   ="<<params.getStartPt()<<" End Point   ="<<params.getEndPt()<<std::endl;
+    os<<" Start Tangent ="<<params.getStartTangent()*(180/M_PI)<<" End Tangent ="<<params.getEndTangent()*(180/M_PI)<<std::endl;
+    os<<" K0 ="<<params.getK0()<<" K2 ="<<params.getK2()<<std::endl;
+    os<<" Length ="<<params.getLength()<<std::endl;
+    os<<" Turning Angle ="<<params.getTurningAngle()*(180/M_PI)<<std::endl;
     
     return os;
    }

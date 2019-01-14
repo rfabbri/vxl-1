@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_math.h>
@@ -25,8 +25,8 @@ btpl_hdr::btpl_hdr() :
 //----------------------------------------------------
 void
 btpl_hdr::estimate_g(
-  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-  const vcl_vector<float>& shutter_speeds )
+  const std::vector< vil_image_view<vxl_byte> >& imgs,
+  const std::vector<float>& shutter_speeds )
 {    
   // Parameters to be set.
   int sub_window_size = 25;
@@ -51,7 +51,7 @@ btpl_hdr::estimate_g(
   
 
   // Get a bunch of sample pixels locations.
-  vcl_vector< vgl_point_2d<int> > sample_pixels;
+  std::vector< vgl_point_2d<int> > sample_pixels;
   int num_pixels = 0;
   for( unsigned int i = 0; i < img_ni-sub_window_size; i+= sub_window_size ){
     for( unsigned int j = 0; j < img_nj-sub_window_size; j+= sub_window_size ){
@@ -128,7 +128,7 @@ btpl_hdr::estimate_g(
 
   // Output the function g and samples.
   if( inspection_file != "NONE" ){
-    vcl_ofstream ofs( inspection_file.c_str() );
+    std::ofstream ofs( inspection_file.c_str() );
     for( int img = 0; img < num_imgs; img++ )
       for( int p = 0; p < num_pixels; p++ )
         ofs << x(256+p) + S(img) << ' ' << Z(p,img) << '\n';
@@ -139,9 +139,9 @@ btpl_hdr::estimate_g(
 //----------------------------------------------------
 void 
 btpl_hdr::load_g( 
-  vcl_string file_name )
+  std::string file_name )
 {
-  vcl_ifstream fs( file_name.c_str() );
+  std::ifstream fs( file_name.c_str() );
   fs >> z_min_; fs >> z_max_;
   for( int z = 0; z < 256; z++ )
     fs >> g_(z);
@@ -151,9 +151,9 @@ btpl_hdr::load_g(
 //----------------------------------------------------
 void 
 btpl_hdr::save_g(
-  vcl_string file_name )
+  std::string file_name )
 {
-  vcl_ofstream fs( file_name.c_str() );
+  std::ofstream fs( file_name.c_str() );
   fs << z_min_ +4 << '\n' << z_max_ - 4<< '\n';
   for( int z = 0; z < 256; z++ )
     fs << g_(z) << '\n';
@@ -163,8 +163,8 @@ btpl_hdr::save_g(
 //----------------------------------------------------
 void
 btpl_hdr::compute_hdr(
-  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-  const vcl_vector<float>& shutter_speeds,
+  const std::vector< vil_image_view<vxl_byte> >& imgs,
+  const std::vector<float>& shutter_speeds,
   vil_image_view<float>& hdr_img)
 {
   int img_ni = imgs[0].ni(), img_nj = imgs[0].nj();
@@ -187,7 +187,7 @@ btpl_hdr::compute_hdr(
       }
 
       if (over_exposed)
-        vcl_cerr<< "over exposed pixel!!! \n";
+        std::cerr<< "over exposed pixel!!! \n";
       if (w_sum == 0)
       {
         lnE = g_(z_min_) - log( shutter_speeds[num_imgs - 1]);
@@ -208,8 +208,8 @@ btpl_hdr::compute_hdr(
 //----------------------------------------------------
 void
 btpl_hdr::compute_variance_image(
-  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-  const vcl_vector<float>& shutter_speeds,
+  const std::vector< vil_image_view<vxl_byte> >& imgs,
+  const std::vector<float>& shutter_speeds,
   vil_image_view<float>& var_img,
   float &avg_var)
 {
@@ -247,8 +247,8 @@ btpl_hdr::compute_variance_image(
 
 void
 btpl_hdr::compute_variance(
-  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-  const vcl_vector<float>& shutter_speeds,
+  const std::vector< vil_image_view<vxl_byte> >& imgs,
+  const std::vector<float>& shutter_speeds,
   float &avg_var)
 {
   avg_var = 0.0;
@@ -284,8 +284,8 @@ btpl_hdr::compute_variance(
 //----------------------------------------------------
 //void
 //btpl_hdr::compute_variance1(
-//  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-//  const vcl_vector<float>& shutter_speeds,
+//  const std::vector< vil_image_view<vxl_byte> >& imgs,
+//  const std::vector<float>& shutter_speeds,
 //  vil_image_view<float>& var_img,
 //  float &avg_var)
 //{
@@ -322,8 +322,8 @@ btpl_hdr::compute_variance(
 
 void
 btpl_hdr::compute_variance1(
-  const vcl_vector< vil_image_view<vxl_byte> >& imgs,
-  const vcl_vector<float>& shutter_speeds,
+  const std::vector< vil_image_view<vxl_byte> >& imgs,
+  const std::vector<float>& shutter_speeds,
   vil_image_view<float>& var_img,
   float &avg_var)
 {

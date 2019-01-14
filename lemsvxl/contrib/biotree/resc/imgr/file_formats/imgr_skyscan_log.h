@@ -23,27 +23,27 @@ class imgr_skyscan_log : public imgr_scan_images_resource
 {
 public:
   //: Constructor
-  imgr_skyscan_log(vcl_string log_fname);
+  imgr_skyscan_log(std::string log_fname);
   //: Destructor
   virtual ~imgr_skyscan_log();
 
   virtual xscan_scan get_scan() const;
   virtual void set_scan(xscan_scan scan);
-  virtual vcl_vector<vil_image_resource_sptr> get_images() const;
-  virtual vcl_vector<vcl_string> get_imagenames();
+  virtual std::vector<vil_image_resource_sptr> get_images() const;
+  virtual std::vector<std::string> get_imagenames();
 
   void compute_scan();
   
   imgr_skyscan_log_header header() { return header_; }
-  vcl_string images_fname() { return images_fname_; }
+  std::string images_fname() { return images_fname_; }
 protected:
   imgr_skyscan_log_header header_;
-  vcl_string images_fname_;
-  mutable vcl_vector<vcl_string> filenames_;
+  std::string images_fname_;
+  mutable std::vector<std::string> filenames_;
 };
 
 // XML write
-void x_write(vcl_ostream& os, imgr_skyscan_log log);
+void x_write(std::ostream& os, imgr_skyscan_log log);
 
 #endif
 

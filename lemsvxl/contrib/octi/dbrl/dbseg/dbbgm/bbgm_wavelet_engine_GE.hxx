@@ -89,7 +89,7 @@ dbbgm_wavelet_engine_GE<image_>::bbgmWaveletTransform(image_& array,const int* d
   image_* buffer=bbgm_wavelet_image_traits<image_>::init(maxn,1);              // working buffers for
   image_* wksp=bbgm_wavelet_image_traits<image_>::init(maxn,1);                // 1d wavelet transformation
   {for (int l = 0; l < nlevels; l++) {
-    vcl_cout<<"Started level "<<l+1<<vcl_endl;
+    std::cout<<"Started level "<<l+1<<std::endl;
 	int* sub_dims = level_dims[l];
     int n = sub_dims[ndim];
 
@@ -109,7 +109,7 @@ dbbgm_wavelet_engine_GE<image_>::bbgmWaveletTransform(image_& array,const int* d
     bbgmCopyNdRecursive(*sub_array ,n, sub_dims,
                     array, ntot, dims,
                     ndim,true,0,0);
-	vcl_cout<<"Done level "<<l+1<<vcl_endl;
+	std::cout<<"Done level "<<l+1<<std::endl;
   }}
   delete sub_array;                          // free workspace>  
   for (int l = 0; l < nlevels; l++)
@@ -117,8 +117,8 @@ dbbgm_wavelet_engine_GE<image_>::bbgmWaveletTransform(image_& array,const int* d
   delete[] level_dims;
   delete buffer;
   delete wksp;
-  vcl_cout << " Transformed image in " << double(t.real())/1000 << " seconds\n"
-             << vcl_flush;
+  std::cout << " Transformed image in " << double(t.real())/1000 << " seconds\n"
+             << std::flush;
   return true;
 }
 
@@ -162,12 +162,12 @@ dbbgm_wavelet_engine_GE<image_>::bbgmWaveletTransformStep(image_& array, const i
 				}
 #ifdef VERBOSE
 				if (nprev!=1)
-				vcl_cout<<"wrote wavelet domain column "<<(i1)<<vcl_endl;
+				std::cout<<"wrote wavelet domain column "<<(i1)<<std::endl;
 #endif
 			
 			}
 #ifdef VERBOSE			
-		vcl_cout<<"wrote wavelet domain line "<<(i2/nnew)<<vcl_endl;
+		std::cout<<"wrote wavelet domain line "<<(i2/nnew)<<std::endl;
 #endif
 		}
 	}
@@ -213,7 +213,7 @@ static bool bbgmFindWavelet(const int waveletno,float*& lo_filter, float*& hi_fi
    default:
     ncof = 0;
     lo_filter = hi_filter = NULL;
-    vcl_cerr << "Unknown wavelet: " << waveletno << vcl_endl;
+    std::cerr << "Unknown wavelet: " << waveletno << std::endl;
     return false;
   }
   // find hi-filter wavelet, dual of the lo-filter wavelet
@@ -234,7 +234,7 @@ static bool bbgmFindWavelet(const int waveletno,float*& lo_filter, float*& hi_fi
         hi_filter[ctr-k] = sign * lo_filter[ctr+k];
         sign = - sign;
       }
-      vcl_cerr << "Scale factor need to be fixed up too!!!\n";
+      std::cerr << "Scale factor need to be fixed up too!!!\n";
     }
     // find area of lo_filter and hi_filter
     float lo_area = 0;
@@ -247,13 +247,13 @@ static bool bbgmFindWavelet(const int waveletno,float*& lo_filter, float*& hi_fi
     hi_filter[ncof] = hi_area;
   }
 #ifdef DEBUG
-  vcl_cout << "lo-filter wavelet " << waveletno << ':'; // print wavelets
+  std::cout << "lo-filter wavelet " << waveletno << ':'; // print wavelets
   for (int i = 0; i < ncof; i++)
-    vcl_cout << ' ' << lo_filter[i];
-  vcl_cout << "\nhi-filter wavelet " << waveletno << ':';
+    std::cout << ' ' << lo_filter[i];
+  std::cout << "\nhi-filter wavelet " << waveletno << ':';
   for (int i = 0; i < ncof; i++)
-    vcl_cout << ' ' << hi_filter[i];
-  vcl_cout << vcl_endl;
+    std::cout << ' ' << hi_filter[i];
+  std::cout << std::endl;
 #endif
   return true;
 }
@@ -263,7 +263,7 @@ template <class image_>
 void dbbgm_wavelet_engine_GE<image_>::bbgmCopyNdRecursive(const image_& from,const int from_size, const int* from_dims,image_& to,const int to_size, const int* to_dims,const int ndim,const bool fullp,int offsetTo,int offsetFrom)
 {
     if (ndim == 1) {                              // end of recursion
-    int size = vcl_min(from_size, to_size);
+    int size = std::min(from_size, to_size);
     
    
 	for (int i = 0; i < size;i++)              // copy 1d array for
@@ -273,7 +273,7 @@ void dbbgm_wavelet_engine_GE<image_>::bbgmCopyNdRecursive(const image_& from,con
     int from_n = from_dims[0], to_n = to_dims[0];
     int from_nsize = from_size / from_n;
     int to_nsize = to_size / to_n;
-    int n = vcl_min(from_n, to_n);
+    int n = std::min(from_n, to_n);
   	for (int i = 0; i < n; i++) {               // copy n common subarrays
       bbgmCopyNdRecursive(from, from_nsize, from_dims+1,
                       to,to_nsize, to_dims+1,
@@ -284,7 +284,7 @@ void dbbgm_wavelet_engine_GE<image_>::bbgmCopyNdRecursive(const image_& from,con
          offsetTo+=to_nsize;
 		 offsetFrom+=from_nsize;
 		} else {
-		int block_size = vcl_max(from_nsize, to_nsize);
+		int block_size = std::max(from_nsize, to_nsize);
 		
 		offsetTo+=block_size;
 		offsetFrom+=block_size; 
@@ -327,7 +327,7 @@ void
 					array(j,0)*hi_filter[k];
 
 			}
-			float scale = vcl_max(lo_filter[ncof], hi_filter[ncof]);
+			float scale = std::max(lo_filter[ncof], hi_filter[ncof]);
 
 			image_iterator wkspIt=wksp.begin();
 			for (int j = 0; j < nmod;++wkspIt, j++)             // normalize results.
@@ -342,7 +342,7 @@ void
 								// when n is power of 2
 			}
 		}
-		float scale = vcl_max(lo_filter[ncof], hi_filter[ncof]);
+		float scale = std::max(lo_filter[ncof], hi_filter[ncof]);
 		image_iterator wkspIt=wksp.begin();
 
 		for (int j = 0; j < nmod; j++,++wkspIt)              // unnormalize results.
@@ -402,7 +402,7 @@ bool dbbgm_wavelet_engine_GE<image_>::decompressLocation(unsigned int x,unsigned
 		(*copy_buffer)(h_size-i-1,size-1-j)=waveletDomain(x_lo,y_hi);   //LH component
 		(*copy_buffer)(size-i-1,h_size-j-1)=waveletDomain(x_hi,y_lo);   // HL component
 		(*copy_buffer)(size-i-1 ,size-1-j)=waveletDomain(x_hi,y_hi); //HH component
-		// vcl_cout<<i<<" , "<<j<<" low part is "<<(*copy_buffer)(i,j)<<" and high part is "<<(*copy_buffer)(i+sz_x,j+sz_y)<<vcl_endl;
+		// std::cout<<i<<" , "<<j<<" low part is "<<(*copy_buffer)(i,j)<<" and high part is "<<(*copy_buffer)(i+sz_x,j+sz_y)<<std::endl;
 	}
 
   }
@@ -553,6 +553,6 @@ void
 			
 		}
 	}
-   float scale = vcl_max(lo_filter[ncof], hi_filter[ncof]);
+   float scale = std::max(lo_filter[ncof], hi_filter[ncof]);
    for (int i=0;i<size;wksp(i,0)=wksp(i,0)*scale,i++); //copy back scaled results
 }

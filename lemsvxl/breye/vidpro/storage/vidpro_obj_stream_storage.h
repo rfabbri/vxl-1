@@ -28,7 +28,7 @@ public:
 
   vidpro_obj_stream_storage();
   virtual ~vidpro_obj_stream_storage();
-  virtual vcl_string type() const { return "object stream"; }
+  virtual std::string type() const { return "object stream"; }
 
   //: Return IO version number;
   short version() const;
@@ -44,17 +44,17 @@ public:
   virtual bpro_storage* clone() const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro_obj_stream_storage"; }
+  virtual std::string is_a() const { return "vidpro_obj_stream_storage"; }
 
   void set_stream( vidpro_object_stream_sptr const &stream );
 
   vidpro_object_stream_sptr get_stream();
 
   //: Get the istream directory and filename path
-  vcl_string get_path() const;
+  std::string get_path() const;
 
   //: Set the istream path
-  void set_path(const vcl_string& path);
+  void set_path(const std::string& path);
 
 protected:
 
@@ -62,7 +62,7 @@ private:
 
   vidpro_object_stream_sptr stream_;
 
-  vcl_string path_;
+  std::string path_;
 
 };
 

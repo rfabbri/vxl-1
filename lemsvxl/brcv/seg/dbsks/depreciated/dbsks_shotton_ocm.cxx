@@ -103,7 +103,7 @@ f(int i, int j, int orient_channel)
 // -----------------------------------------------------------------------------
 //: cost of an oriented point, represented by its index
 float dbsks_shotton_ocm::
-f(vcl_vector<int >& x, vcl_vector<int >& y, vcl_vector<int >& orient_channel)
+f(std::vector<int >& x, std::vector<int >& y, std::vector<int >& orient_channel)
 {
   if (x.empty())
     return 1.0f;
@@ -169,7 +169,7 @@ compute_gradient(vil_image_view<float >& dt,
   //compute the gradient magnitude
   for(unsigned long i=0; i<dt_grad_mag.size(); i++)
   {
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
   }
   return;
 }
@@ -232,8 +232,8 @@ compute_orientation_cost()
   this->channel_angle_.set_size(nchannel);
   for (unsigned i =0; i < nchannel; ++i)
   {
-    this->channel_cos_[i] = vcl_cos(i*radians_per_channel);
-    this->channel_sin_[i] = vcl_sin(i*radians_per_channel);
+    this->channel_cos_[i] = std::cos(i*radians_per_channel);
+    this->channel_sin_[i] = std::sin(i*radians_per_channel);
     this->channel_angle_[i] = i*radians_per_channel;
   }
   this->step_angle_ = radians_per_channel;
@@ -262,14 +262,14 @@ compute_orientation_cost()
         float grad_y = this->dt_grad_y_(i, j);
         
         // edge direction is orthogonal to gradient direction
-        double edge_dir = vcl_atan2(grad_x, -grad_y);
+        double edge_dir = std::atan2(grad_x, -grad_y);
 
         for (unsigned channel =0; channel < nchannel; ++channel)
         {
           double angle = channel * radians_per_channel;
 
           // modulo the angle difference to [0, pi]
-          double angle_diff = vcl_fmod(angle - edge_dir, vnl_math::pi);
+          double angle_diff = std::fmod(angle - edge_dir, vnl_math::pi);
           if (angle_diff < 0)
             angle_diff += vnl_math::pi;
 

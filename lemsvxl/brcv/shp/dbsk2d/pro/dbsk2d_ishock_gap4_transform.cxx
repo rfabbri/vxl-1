@@ -14,7 +14,7 @@
 //: compute the salency of this shock element (edge/node)
 dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
     dbsk2d_ishock_bpoint* anchor_pt,
     int euler_spiral_id)
     :dbsk2d_ishock_transform(intrinsic_shock_graph,
@@ -30,7 +30,7 @@ dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     double d2=vgl_distance(bp1->pt(),bl1->e_pt()->pt());
     
     // convert the pts into bnd_vertex and put into a list
-    vcl_vector<vgl_point_2d<double> > bv_list;
+    std::vector<vgl_point_2d<double> > bv_list;
 
     anchor_pt_visible_=anchor_pt_->is_visible();
     
@@ -43,7 +43,7 @@ double dbsk2d_ishock_gap4_transform::likelihood()
  
     dbsk2d_ishock_bpoint* bp1=gap_line_pair_.first;
 
-    vcl_vector<vgl_point_2d<double> > bv_list;
+    std::vector<vgl_point_2d<double> > bv_list;
     bv_list.push_back(bp1->pt());
     bv_list.push_back(anchor_pt_->pt());
 
@@ -140,11 +140,11 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         while ( true )
         {
             // Grab all elements of active shocks
-            vcl_vector<dbsk2d_ishock_edge*> invalid_shocks;
+            std::vector<dbsk2d_ishock_edge*> invalid_shocks;
             ishock_graph_->invalid_shocks(invalid_shocks);
             
             // Grab elements of delete shocks
-            vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
+            std::map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements
                 = ishock_detector_.get_deleted_bnd_elements();
 
             if ( invalid_shocks.size() == 0 )
@@ -156,7 +156,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
 
             if ( iteration == 5 )
             {
-                vcl_cerr<<"Error: Disconnecting Euler Spiral"<<vcl_endl;
+                std::cerr<<"Error: Disconnecting Euler Spiral"<<std::endl;
                 dbsk2d_ishock_belm* left_line=local_belm_list_[0];
                 dbsk2d_ishock_belm* right_line=local_belm_list_[1];
 
@@ -189,7 +189,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
                 return false;
             }
 
-            vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+            std::map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
                   it != deleted_bnd_elements.end();
                   ++it)
@@ -280,7 +280,7 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         (dbsk2d_ishock_bline*)e_pt->getElmToTheLeftOf(bl1);
 
     // convert the pts into bnd_vertex and put into a list
-    vcl_vector<dbsk2d_bnd_vertex_sptr > bv_list;
+    std::vector<dbsk2d_bnd_vertex_sptr > bv_list;
 
     dbsk2d_ishock_bpoint* bp2(0);
 
@@ -331,7 +331,7 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         // return;
     }
 
-    vcl_vector<dbsk2d_ishock_edge*> shocks_to_delete;
+    std::vector<dbsk2d_ishock_edge*> shocks_to_delete;
 
     bnd_ishock_map_iter curS = bl1->shock_map().begin();
     for ( ; curS != bl1->shock_map().end() ; ++curS)
@@ -416,13 +416,13 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     delete_shock_vertices();
 
-    vcl_vector<dbsk2d_bnd_edge_sptr> bnd_edges;
+    std::vector<dbsk2d_bnd_edge_sptr> bnd_edges;
     bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(
                             bv_list[0], 
                             bv_list[1], 
                             boundary_));
 
-    vcl_vector<signed char > directions(bnd_edges.size(), 1);
+    std::vector<signed char > directions(bnd_edges.size(), 1);
     contour_ = new dbsk2d_bnd_contour(
         bnd_edges, 
         directions, 
@@ -430,7 +430,7 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     boundary_->update_belm_list(contour_,local_belm_list_);
 
-    vcl_vector<vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> > 
+    std::vector<std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> > 
         contact_shock_pairs;
 
     belm_list belm_list=bp1->LinkedBElmList;    

@@ -15,7 +15,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <vgl/vgl_distance.h>
 
@@ -100,7 +100,7 @@ bool dbmsh3d_edge::is_F_incident (const dbmsh3d_face* F) const
   return false;
 }
 
-bool dbmsh3d_edge::is_Fset_incident (vcl_set<dbmsh3d_face*>& Fset) const
+bool dbmsh3d_edge::is_Fset_incident (std::set<dbmsh3d_face*>& Fset) const
 {
   if (halfedge_ == NULL)
     return false;
@@ -135,7 +135,7 @@ dbmsh3d_halfedge* dbmsh3d_edge::get_HE_of_F (const dbmsh3d_face* F,
 
 //: For a geometric hypergraph, there can be multiple of HE_set of a single F.
 void dbmsh3d_edge::get_HEset_of_F (const dbmsh3d_face* F, 
-                                   vcl_set<dbmsh3d_halfedge*>& HEset) const
+                                   std::set<dbmsh3d_halfedge*>& HEset) const
 {
   assert (HEset.empty());
 
@@ -158,8 +158,8 @@ void dbmsh3d_edge::get_HEset_of_F (const dbmsh3d_face* F,
   }
 }
 
-bool dbmsh3d_edge::only_incident_to_Fset_in_Fmap (vcl_set<dbmsh3d_face*>& F_set, 
-                                                  vcl_map<int, dbmsh3d_face*>& F_map) const
+bool dbmsh3d_edge::only_incident_to_Fset_in_Fmap (std::set<dbmsh3d_face*>& F_set, 
+                                                  std::map<int, dbmsh3d_face*>& F_map) const
 {
   if (halfedge_ == NULL)
     return true;
@@ -212,7 +212,7 @@ bool dbmsh3d_edge::_find_HE_prev_pair (const dbmsh3d_halfedge* inputHE,
   return false;
 }
 
-void dbmsh3d_edge::get_incident_Fs (vcl_vector<dbmsh3d_face*>& incident_faces) const
+void dbmsh3d_edge::get_incident_Fs (std::vector<dbmsh3d_face*>& incident_faces) const
 {
   //If there's no associated halfedge 
   if (halfedge_ == NULL) {
@@ -236,7 +236,7 @@ void dbmsh3d_edge::get_incident_Fs (vcl_vector<dbmsh3d_face*>& incident_faces) c
 }
 
 //: Check if all incident fs_faces are in the given set.
-const bool dbmsh3d_edge::all_incident_Fs_in_set (vcl_set<dbmsh3d_face*>& Fset) const
+const bool dbmsh3d_edge::all_incident_Fs_in_set (std::set<dbmsh3d_face*>& Fset) const
 {
   if (halfedge_ == NULL)
     return 0;
@@ -328,7 +328,7 @@ dbmsh3d_face* dbmsh3d_edge::incident_F_given_V (dbmsh3d_vertex* incident_V) cons
 //  Else, return NULL.
 dbmsh3d_face* dbmsh3d_edge::is_n_incident_to_one_S (const unsigned int n) const
 {
-  vcl_vector<dbmsh3d_face*> incident_faces;
+  std::vector<dbmsh3d_face*> incident_faces;
   get_incident_Fs (incident_faces);
   assert (n != 0);
 
@@ -477,7 +477,7 @@ dbmsh3d_face* dbmsh3d_edge::get_1st_valid_F () const
   return NULL;
 }
 
-void dbmsh3d_edge::get_valid_Fs (vcl_set<dbmsh3d_face*>& valid_F_set) const
+void dbmsh3d_edge::get_valid_Fs (std::set<dbmsh3d_face*>& valid_F_set) const
 {
   dbmsh3d_halfedge* HE = halfedge_;
   do {
@@ -606,12 +606,12 @@ bool dbmsh3d_edge::_disconnect_HE (dbmsh3d_halfedge* inputHE)
 //: disconnect all incident faces and return the vector of all such faces.
 void dbmsh3d_edge::_disconnect_all_Fs ()
 {
-  vcl_set<dbmsh3d_face*> disconn_faces;
+  std::set<dbmsh3d_face*> disconn_faces;
   _disconnect_all_Fs (disconn_faces);
 }
 
 //: disconnect all incident faces and return the vector of all such faces.
-void dbmsh3d_edge::_disconnect_all_Fs (vcl_set<dbmsh3d_face*>& disconn_faces)
+void dbmsh3d_edge::_disconnect_all_Fs (std::set<dbmsh3d_face*>& disconn_faces)
 {
   //Repeatly disconnect all incident faces until finish.
   dbmsh3d_halfedge* HE = halfedge_;
@@ -688,7 +688,7 @@ bool dbmsh3d_edge::check_integrity () const
       return true;
   }
   dbmsh3d_halfedge* HE = halfedge_;
-  vcl_set<dbmsh3d_halfedge*> HE_set;
+  std::set<dbmsh3d_halfedge*> HE_set;
   do {
     if (halfedge_->edge() != this) {
       assert (0);
@@ -732,54 +732,54 @@ dbmsh3d_edge* dbmsh3d_edge::clone (dbmsh3d_pt_set* PS2) const
   return E2;
 }
 
-void dbmsh3d_edge::getInfo (vcl_ostringstream& ostrm) const
+void dbmsh3d_edge::getInfo (std::ostringstream& ostrm) const
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbmsh3d_edge id: %d (vertices [%d] - [%d])     ", id_,
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbmsh3d_edge id: %d (vertices [%d] - [%d])     ", id_,
                vertices_[0]->id(), vertices_[1]->id()); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
   //: the incident faces via halfedges
   int n_halfedges = n_incident_Fs ();
-  vcl_sprintf (s, " %d HEs: ", n_halfedges); ostrm<<s;
+  std::sprintf (s, " %d HEs: ", n_halfedges); ostrm<<s;
   
   if (halfedge_ == NULL) {
-    vcl_sprintf (s, "NONE "); ostrm<<s;
+    std::sprintf (s, "NONE "); ostrm<<s;
   }
   else if (halfedge_->pair() == NULL) {
-    vcl_sprintf (s, "%d ", halfedge_->face()->id()); ostrm<<s;
+    std::sprintf (s, "%d ", halfedge_->face()->id()); ostrm<<s;
   }
   else {
     //The last case, the associated halfedges form a circular list
     dbmsh3d_halfedge* HE = halfedge_;
     do {
-      vcl_sprintf (s, "%d ", HE->face()->id()); ostrm<<s;
+      std::sprintf (s, "%d ", HE->face()->id()); ostrm<<s;
       HE = HE->pair();
     }
     while (HE != halfedge_);
   }
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //###############################################################
 
 bool same_incident_Fs (const dbmsh3d_edge* E1, const dbmsh3d_edge* E2)
 {  
-  vcl_vector<dbmsh3d_face*> E1_incident_Fs;
-  vcl_vector<dbmsh3d_face*> E2_incident_Fs;
+  std::vector<dbmsh3d_face*> E1_incident_Fs;
+  std::vector<dbmsh3d_face*> E2_incident_Fs;
   E1->get_incident_Fs (E1_incident_Fs);
   E2->get_incident_Fs (E2_incident_Fs);
   if (E1_incident_Fs.size() != E2_incident_Fs.size())
     return false;
 
   //: Build multi_sets for comparison.
-  vcl_multiset<dbmsh3d_face*> E1_F_set;
+  std::multiset<dbmsh3d_face*> E1_F_set;
   E1_F_set.insert (E1_incident_Fs.begin(), E1_incident_Fs.end());
-  vcl_multiset<dbmsh3d_face*> E2_F_set;
+  std::multiset<dbmsh3d_face*> E2_F_set;
   E2_F_set.insert (E2_incident_Fs.begin(), E2_incident_Fs.end());
 
   return E1_F_set == E2_F_set;
@@ -821,8 +821,8 @@ dbmsh3d_face* get_F_from_E1_E2 (const dbmsh3d_edge* E1, const dbmsh3d_edge* E2)
   return NULL;
 }
 
-bool get_digi_curve_E_chain (const vcl_vector<dbmsh3d_edge*>& E_chain, 
-                             vcl_vector<vgl_point_3d<double> >& curve)
+bool get_digi_curve_E_chain (const std::vector<dbmsh3d_edge*>& E_chain, 
+                             std::vector<vgl_point_3d<double> >& curve)
 {
   if (E_chain.size() == 0)
     return false;
@@ -860,8 +860,8 @@ bool get_digi_curve_E_chain (const vcl_vector<dbmsh3d_edge*>& E_chain,
   return true;
 }
 
-void update_digi_curve_E_chain (const vcl_vector<dbmsh3d_edge*>& E_chain, 
-                                const vcl_vector<vgl_point_3d<double> >& curve)
+void update_digi_curve_E_chain (const std::vector<dbmsh3d_edge*>& E_chain, 
+                                const std::vector<vgl_point_3d<double> >& curve)
 {
   assert (E_chain.size() + 1 == curve.size());
   if (E_chain.size() == 1) {

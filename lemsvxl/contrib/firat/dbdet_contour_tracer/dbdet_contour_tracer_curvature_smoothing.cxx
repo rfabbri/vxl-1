@@ -1,7 +1,7 @@
 // This is seg/dbdet/tracer/curvatur_smoothing.cxx
 
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h> // for vcl_calloc() and vcl_free()
+#include <cmath>
+#include <cstdlib> // for std::calloc() and std::free()
 
 #include "dbdet_contour_tracer.h"
 
@@ -21,7 +21,7 @@ curvature_smoothing(double *image_array, double beta, int steps, int scale,
   double flux;
   delta_t = 1.0;
 
-  flux_array = (double *) vcl_calloc(height*width,sizeof(double));
+  flux_array = (double *) std::calloc(height*width,sizeof(double));
 
   if (scale) {
     max =-99999.0; min = 999999.0; 
@@ -48,7 +48,7 @@ curvature_smoothing(double *image_array, double beta, int steps, int scale,
           pos = y*width+x;
           diffusion_flux_value = flux_array[pos];
 #ifdef TEST
-          if (vcl_fabs(diffusion_flux_value) > 1.0) 
+          if (std::fabs(diffusion_flux_value) > 1.0) 
             diffusion_flux_value = diffusion_flux_value/5.0;
 #endif 
           flux = delta_t*beta*diffusion_flux_value;
@@ -78,7 +78,7 @@ curvature_smoothing(double *image_array, double beta, int steps, int scale,
     }
   }
   
-  vcl_free(flux_array);
+  std::free(flux_array);
 
 }
 

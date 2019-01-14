@@ -35,8 +35,8 @@ graph::iterator smw_graph_gaussian_frames::add_node()
 
     
     //Insert the new node into the graph.
-    vcl_pair<graph::iterator,bool> ret;
-    ret = graph_.insert(vcl_make_pair(new_node.id_,new_node));
+    std::pair<graph::iterator,bool> ret;
+    ret = graph_.insert(std::make_pair(new_node.id_,new_node));
 
     return ret.first;
 }//end smw_graph_gaussian_frames::add_node()
@@ -45,8 +45,8 @@ bool smw_graph_gaussian_frames::remove_node(node_id_type const& node_id)
 {
     if( !graph_.erase(node_id) )
     {
-        vcl_cout << "Can not remove node: " << node_id << vcl_endl;
-        vcl_cout << "Node not found in graph." << vcl_endl;
+        std::cout << "Can not remove node: " << node_id << std::endl;
+        std::cout << "Node not found in graph." << std::endl;
         return false;
     }
 

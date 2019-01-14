@@ -10,10 +10,10 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h> // for rand()
+#include <iostream>
+#include <ctime>
+#include <cstdio>
+#include <cstdlib> // for rand()
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -74,7 +74,7 @@ static vil_image_resource_sptr get_image(int frame_no)
   bpro1_storage_sptr sto = res->get_data("image");
   if(!sto)
     return (vil_image_resource*)0;
-  //vcl_cout << "Image Storage Name " << sto->name() << '\n';
+  //std::cout << "Image Storage Name " << sto->name() << '\n';
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(sto);
   if(!image_storage)
@@ -109,7 +109,7 @@ dbru_labeling_tool::dbru_labeling_tool()
   gesture_delete_object2 = vgui_event_condition(vgui_key('K'), vgui_MODIFIER_NULL, true);
 }
 
-vcl_string
+std::string
 dbru_labeling_tool::name() const
 {
   return "Vehicle Labeling Tool";
@@ -121,12 +121,12 @@ bool dbru_labeling_tool::overlap(vsol_polygon_2d_sptr poly, vgui_soview2D_polygo
   vsol_point_2d_sptr p = poly->centroid();
   float x = 0, y = 0;
   poly2->get_centroid(&x, &y);
-  if (vcl_sqrt(vcl_pow(x-p->x(), 2)+vcl_pow(y-p->y(), 2)) < 2)  // almost identical
+  if (std::sqrt(std::pow(x-p->x(), 2)+std::pow(y-p->y(), 2)) < 2)  // almost identical
     return true;
   else 
     return false;
   /*
-  vcl_vector<vgl_point_2d<float> > points;
+  std::vector<vgl_point_2d<float> > points;
   for (unsigned int i = 0; i<poly->size(); i++) {
     vgl_point_2d<float> f( (float)poly->vertex(i)->x(),
                            (float)poly->vertex(i)->y());
@@ -177,10 +177,10 @@ void dbru_labeling_tool::activate() {
   latest_label_ = new dbru_label();
 
   vgui_dialog open_dl("Open file");
-  vcl_string poly_filename = "";
-  vcl_string object_filename = ".xml";  // may not be supplied if it does not exist
+  std::string poly_filename = "";
+  std::string object_filename = ".xml";  // may not be supplied if it does not exist
   poly_filename.append(".txt");
-  static vcl_string regexp = "*.*";
+  static std::string regexp = "*.*";
   open_dl.file("Video Object Polynoms Filename: ", regexp, poly_filename);
   //open_dl.file("Objects Filename (if exists for this video): ", regexp, object_filename);
   //open_dl.checkbox("set objects from this file", set_objects_);
@@ -190,21 +190,21 @@ void dbru_labeling_tool::activate() {
   open_dl.field("End frame number in original video stream", end_frame_);
   offset_ = 0;
   open_dl.field("Offset to start using polygons loaded from poly.txt file", offset_);
-  vcl_string category_names_file = "*.txt";
+  std::string category_names_file = "*.txt";
   open_dl.file("Use categories from this file (if needed): ", regexp, category_names_file);
  
   open_dl.ask();
-  vcl_ifstream fs(poly_filename.c_str());
+  std::ifstream fs(poly_filename.c_str());
   
   if (!fs) {
-    vcl_cout << "Problems in opening file: " << poly_filename << "\n";
+    std::cout << "Problems in opening file: " << poly_filename << "\n";
     activation_ok_ = false;
   } else {
-    vcl_string dummy;
+    std::string dummy;
 
     fs >> dummy; // VIDEOID:
     if (dummy != "VIDEOID:" && dummy != "FILEID:" && dummy != "VIDEOFILEID:") {
-      vcl_cout << "No video id specified in input file!\n";
+      std::cout << "No video id specified in input file!\n";
       video_id_ = 0;
       return;
     } else {
@@ -215,20 +215,20 @@ void dbru_labeling_tool::activate() {
     int frame_cnt; 
     fs >> frame_cnt;
     if (frame_cnt != static_cast<int>(end_frame_) - static_cast<int>(start_frame_) + 1) {
-      vcl_cout << "Caution: Inconsistency with the number of frames in the polygon file and start and end frames of the video!!!\n";
+      std::cout << "Caution: Inconsistency with the number of frames in the polygon file and start and end frames of the video!!!\n";
     }
 
     //: initialize polygon label vector
     for (int i = 0; i<frame_cnt-offset_; i++) {
-      vcl_vector<dbru_label_sptr> tmp;
+      std::vector<dbru_label_sptr> tmp;
       polygon_labels_.push_back(tmp);
     }
 
     //: initialize polygon vector
     for (int i = 0; i<frame_cnt-offset_; i++) {
-      vcl_vector<vgui_soview2D_polygon*> tmp;
+      std::vector<vgui_soview2D_polygon*> tmp;
       polygons_.push_back(tmp);
-      //vcl_vector<vgui_soview2D_polygon*> tmp2;
+      //std::vector<vgui_soview2D_polygon*> tmp2;
       //lvwr_polygons_.push_back(tmp2);
     }
 
@@ -238,7 +238,7 @@ void dbru_labeling_tool::activate() {
 
     //: initialize object style vector
     for (int i = 0; i<frame_cnt-offset_; i++) {
-      vcl_vector<vgui_style_sptr> tmp;
+      std::vector<vgui_style_sptr> tmp;
       object_polygon_styles_.push_back(tmp);
     }
 
@@ -257,7 +257,7 @@ void dbru_labeling_tool::activate() {
         fs >> dummy; // NVERTS: 
         int vertex_cnt;
         fs >> vertex_cnt;
-        vcl_vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
+        std::vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
         
         fs >> dummy; // X: 
         for (int k = 0; k<vertex_cnt; k++) 
@@ -269,13 +269,13 @@ void dbru_labeling_tool::activate() {
 
         vgui_soview2D_polygon *poly = new vgui_soview2D_polygon(vertex_cnt, &x_corners[0], &y_corners[0],true);
 #if 0
-        vcl_cout << "frame: " << i << " polygon:\nX:";
+        std::cout << "frame: " << i << " polygon:\nX:";
         for (int k = 0; k<vertex_cnt; k++) 
-          vcl_cout << x_corners[k] << " ";
-        vcl_cout << "\nY: ";
+          std::cout << x_corners[k] << " ";
+        std::cout << "\nY: ";
         for (int k = 0; k<vertex_cnt; k++) 
-          vcl_cout << y_corners[k] << " ";
-        vcl_cout << "\n";
+          std::cout << y_corners[k] << " ";
+        std::cout << "\n";
 #endif
         if (offset == 0) {
           polygons_[i-offset_].push_back(poly);
@@ -293,10 +293,10 @@ void dbru_labeling_tool::activate() {
   
   fs.close();
 #if 0
-  vcl_ifstream os(object_filename.c_str());
+  std::ifstream os(object_filename.c_str());
   
   if (os) {
-    vcl_cout << "Objects file opened, labels will be loaded if polygons overlap sufficiently\n";
+    std::cout << "Objects file opened, labels will be loaded if polygons overlap sufficiently\n";
 
     char buffer[1000];
     os.getline(buffer, 1000); //<? xml version = "1.0" encoding = "UTF-8" ?>
@@ -312,9 +312,9 @@ void dbru_labeling_tool::activate() {
       if (set_objects_) {
         objects_.push_back(temp);
         //: create a random style for this object
-        float r = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
-        float g = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
-        float b = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
+        float r = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
+        float g = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
+        float b = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
         style = vgui_style::new_style(r, g, b, 3.0f, 3.0f);
         object_styles_.push_back(style);   
       }
@@ -339,22 +339,22 @@ void dbru_labeling_tool::activate() {
     } while (flag);
 
   } else {
-    vcl_cout << "No objects file, please create labels as well\n";
+    std::cout << "No objects file, please create labels as well\n";
   }
 
   print_object_status();
   os.close();
 #endif
 
-  vcl_ifstream fss(category_names_file.c_str());
+  std::ifstream fss(category_names_file.c_str());
   
   if (!fss) {
-    vcl_cout << "No category name file is specified, existing categories are:\n" ;
+    std::cout << "No category name file is specified, existing categories are:\n" ;
     for (unsigned kk = 0; kk < choices_.size(); kk++)
-      vcl_cout << "\t" << choices_[kk] << "\n";
+      std::cout << "\t" << choices_[kk] << "\n";
   } else {
-    vcl_cout << "reading category names from the file...\n";
-    vcl_string dummy;
+    std::cout << "reading category names from the file...\n";
+    std::string dummy;
     fss >> dummy; 
     do {  
       bool exists = false;
@@ -368,20 +368,20 @@ void dbru_labeling_tool::activate() {
       fss >> dummy; 
     } while (!fss.eof() && dummy.size() > 0);
     fss.close();
-    vcl_cout << "Category names are: \n";
+    std::cout << "Category names are: \n";
     for (unsigned kk = 0; kk < choices_.size(); kk++)
-      vcl_cout << "\t" << choices_[kk] << "\n";
+      std::cout << "\t" << choices_[kk] << "\n";
   }
 
-  vcl_cout << "The tool is activated!!!\n";
+  std::cout << "The tool is activated!!!\n";
   frame_no_ = bvis1_manager::instance()->current_frame()-start_frame_;//JLM
   active_polygon_no_ = 0;
   active_object_no_ = -1;
   
-  vcl_srand(time(NULL));
+  std::srand(time(NULL));
 
   if (!get_osl())
-    vcl_cout << "WARNING: No osl_storage, load an OSL or create an empty OSL\n";
+    std::cout << "WARNING: No osl_storage, load an OSL or create an empty OSL\n";
 
   bvis1_manager::instance()->post_overlay_redraw();
   return;
@@ -395,7 +395,7 @@ dbru_labeling_tool::set_tableau ( const vgui_tableau_sptr& tableau )
     return true;
   }
 
-  vcl_cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
+  std::cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
   return false;
 }
 
@@ -424,10 +424,10 @@ dbru_labeling_tool::handle( const vgui_event & e,
     }
 
     if (temp != active_polygon_no_) {
-      vcl_cout << "\n------- frame: " << frame_no_ << " ---- poly: " << active_polygon_no_ << "----\n";
+      std::cout << "\n------- frame: " << frame_no_ << " ---- poly: " << active_polygon_no_ << "----\n";
       dbru_label_sptr lbl = polygon_labels_[frame_no_][active_polygon_no_];
-      vcl_cout << *lbl;
-      vcl_cout << "-----------------------------------------------\n";
+      std::cout << *lbl;
+      std::cout << "-----------------------------------------------\n";
     }
 
     bvis1_manager::instance()->post_overlay_redraw();
@@ -442,11 +442,11 @@ dbru_labeling_tool::handle( const vgui_event & e,
   //: make the current active polygons object active if there is an object containing it
   if (gesture_tab(e)) {   
     int no = -1;
-    for (vcl_map<unsigned, vcl_map<unsigned, unsigned>* >::iterator iterpm = object_polygon_map_.begin();
+    for (std::map<unsigned, std::map<unsigned, unsigned>* >::iterator iterpm = object_polygon_map_.begin();
       iterpm != object_polygon_map_.end(); iterpm++) {
-        vcl_map<unsigned, unsigned> *map = iterpm->second;
+        std::map<unsigned, unsigned> *map = iterpm->second;
         bool done = false;
-        for (vcl_map<unsigned, unsigned>::iterator iter = map->begin(); iter != map->end(); iter++) {
+        for (std::map<unsigned, unsigned>::iterator iter = map->begin(); iter != map->end(); iter++) {
           if (frame_no_ == iter->first && active_polygon_no_ == iter->second) { // found the object
             no = iterpm->first;
             done = true;
@@ -458,10 +458,10 @@ dbru_labeling_tool::handle( const vgui_event & e,
     }
     
     if (no < 0 || no >= int(objects_.size()))
-      vcl_cout << "Inconsistencies!!! Active object could not be changed!\n";
+      std::cout << "Inconsistencies!!! Active object could not be changed!\n";
     else {
       active_object_no_ = no;
-      vcl_cout << "changed active object to: " << no << vcl_endl;
+      std::cout << "changed active object to: " << no << std::endl;
     }
     print_object_status();
     return false;
@@ -493,10 +493,10 @@ dbru_labeling_tool::handle( const vgui_event & e,
     get_labeling_info(latest_label_);
     //*(polygon_labels_[frame_no_][active_polygon_no_]) = *(latest_label_);
 
-    vcl_cout << "current label: \n";
-    vcl_cout << *latest_label_;
-    //vcl_cout << "assigned polygon label: ";
-    //vcl_cout << *(polygon_labels_[frame_no_][active_polygon_no_]);
+    std::cout << "current label: \n";
+    std::cout << *latest_label_;
+    //std::cout << "assigned polygon label: ";
+    //std::cout << *(polygon_labels_[frame_no_][active_polygon_no_]);
 
     return false;
   }
@@ -506,20 +506,20 @@ dbru_labeling_tool::handle( const vgui_event & e,
     dbru_object_sptr obj = objects_[active_object_no_];
     int n_removed = obj->remove_last_polygon();
     if (n_removed <= 0)
-      vcl_cout << "Active object had no polygons so none removed!!\n";
+      std::cout << "Active object had no polygons so none removed!!\n";
     else {
-      vcl_cout << "Removed last element from active object\n";
+      std::cout << "Removed last element from active object\n";
       //objects_[active_object_no_]->set_end_frame(objects_[active_object_no_]->end_frame_-1);
       objects_[active_object_no_]->set_end_frame(objects_[active_object_no_]->end_frame_-n_removed);
       
-      vcl_map<unsigned, unsigned> *map = object_polygon_map_[active_object_no_];
-      vcl_map<unsigned, unsigned>::iterator iter = map->find(frame_no_);
+      std::map<unsigned, unsigned> *map = object_polygon_map_[active_object_no_];
+      std::map<unsigned, unsigned>::iterator iter = map->find(frame_no_);
       if (iter != map->end()) {
         unsigned poly_no = (*map)[frame_no_];
         if (object_polygon_styles_[frame_no_][poly_no] == object_styles_[active_object_no_]) {
           object_polygon_styles_[frame_no_][poly_no] = normal_style_;
           polygon_labels_[frame_no_][poly_no] = new dbru_label();
-          vcl_cout << "changed the style to normal!\n";
+          std::cout << "changed the style to normal!\n";
         }
         map->erase(iter);
       } 
@@ -537,37 +537,37 @@ dbru_labeling_tool::handle( const vgui_event & e,
       return false;
     dbru_object_sptr obj = objects_[active_object_no_];
     
-    vcl_map<unsigned, vcl_map<unsigned, unsigned>* >::iterator iterpm = object_polygon_map_.find(active_object_no_);
+    std::map<unsigned, std::map<unsigned, unsigned>* >::iterator iterpm = object_polygon_map_.find(active_object_no_);
     
     if (iterpm != object_polygon_map_.end()) {
-      vcl_map<unsigned, unsigned> *map = iterpm->second;
-      for (vcl_map<unsigned, unsigned>::iterator iter = map->begin(); iter != map->end(); iter++) { 
+      std::map<unsigned, unsigned> *map = iterpm->second;
+      for (std::map<unsigned, unsigned>::iterator iter = map->begin(); iter != map->end(); iter++) { 
         unsigned frame_no = iter->first;
         unsigned poly_no = iter->second;
         if (object_polygon_styles_[frame_no][poly_no] == object_styles_[active_object_no_]) {
             object_polygon_styles_[frame_no][poly_no] = normal_style_;
             polygon_labels_[frame_no][poly_no] = new dbru_label();
-            vcl_cout << "changed the style to normal!\n";
+            std::cout << "changed the style to normal!\n";
         }
       }
       map->clear();
       // decrease the object no in the rest of the map
-      vcl_vector<vcl_map<unsigned, unsigned> > temp;
-      vcl_map<unsigned, vcl_map<unsigned, unsigned>* >::iterator iterpm_saved = iterpm;
+      std::vector<std::map<unsigned, unsigned> > temp;
+      std::map<unsigned, std::map<unsigned, unsigned>* >::iterator iterpm_saved = iterpm;
       for (iterpm++ ; iterpm  != object_polygon_map_.end(); iterpm++) { 
-        vcl_map<unsigned, unsigned> tmpmap = *(iterpm->second);
-        //vcl_cout << "saving: " << tmpmap << vcl_endl;
+        std::map<unsigned, unsigned> tmpmap = *(iterpm->second);
+        //std::cout << "saving: " << tmpmap << std::endl;
         temp.push_back(tmpmap);
       }
 
       object_polygon_map_.erase(iterpm_saved, object_polygon_map_.end());
       for (unsigned i = 0, j = active_object_no_; i<temp.size() && j < objects_.size()-1; j++, i++) {
-        //vcl_cout << "readding: " << temp[i] << vcl_endl;
-        object_polygon_map_[j] = new vcl_map<unsigned, unsigned>(temp[i]);
+        //std::cout << "readding: " << temp[i] << std::endl;
+        object_polygon_map_[j] = new std::map<unsigned, unsigned>(temp[i]);
       }
 
     } else {
-      vcl_cout << "should not happen\n";
+      std::cout << "should not happen\n";
     }
     
     objects_.erase(objects_.begin()+active_object_no_);
@@ -587,9 +587,9 @@ dbru_labeling_tool::handle( const vgui_event & e,
     active_object_no_ = objects_.size()-1;
 
     //: create a random style for this object
-    float r = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
-    float g = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
-    float b = (   (float)vcl_rand() / ((float)(RAND_MAX)+1.0f) );
+    float r = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
+    float g = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
+    float b = (   (float)std::rand() / ((float)(RAND_MAX)+1.0f) );
     vgui_style_sptr style = vgui_style::new_style(r, g, b, 3.0f, 3.0f);
     object_styles_.push_back(style);   
 
@@ -603,12 +603,12 @@ dbru_labeling_tool::handle( const vgui_event & e,
     if (frame_no_ < 0 || active_polygon_no_ < 0) return false;
 
     if (objects_.size() == 0 || active_object_no_ < 0) {
-      vcl_cout << "First create an object pressing middle button or k key\n";
+      std::cout << "First create an object pressing middle button or k key\n";
       return false;
     }
 
     if (polygons_[frame_no_].size() == 0) {
-      vcl_cout << "No polygons in this frame to set!!\n";
+      std::cout << "No polygons in this frame to set!!\n";
       return false;
     }
 
@@ -618,12 +618,12 @@ dbru_labeling_tool::handle( const vgui_event & e,
     if (objects_[active_object_no_]->start_frame_ < 0) {   // if first time
       objects_[active_object_no_]->set_start_frame(orig_frame_no);
       objects_[active_object_no_]->set_end_frame(orig_frame_no);
-      vcl_map<unsigned, unsigned>* map = new vcl_map<unsigned, unsigned>();
+      std::map<unsigned, unsigned>* map = new std::map<unsigned, unsigned>();
       (*map)[frame_no_] = active_polygon_no_;
       object_polygon_map_[active_object_no_] = map;
     } else {   // if not first time, check if any other polygons have been set for this object, in that case overwrite it
-      vcl_map<unsigned, unsigned>* map = object_polygon_map_[active_object_no_];
-      vcl_map<unsigned, unsigned>::iterator iter = map->find(frame_no_);
+      std::map<unsigned, unsigned>* map = object_polygon_map_[active_object_no_];
+      std::map<unsigned, unsigned>::iterator iter = map->find(frame_no_);
       if (iter != map->end()) {
         unsigned poly_no = iter->second;
         object_polygon_styles_[frame_no_][poly_no] = normal_style_;
@@ -632,7 +632,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
       (*map)[frame_no_] = active_polygon_no_;
 
       if (objects_[active_object_no_]->end_frame_ > orig_frame_no) {
-        vcl_cout << "!!!CAUTION: You cannot add a polygon previous than the last added polygon to this object!!\nCANNOT GO BACK!\n";
+        std::cout << "!!!CAUTION: You cannot add a polygon previous than the last added polygon to this object!!\nCANNOT GO BACK!\n";
         print_object_status();
         return false;
       }
@@ -642,9 +642,9 @@ dbru_labeling_tool::handle( const vgui_event & e,
     vgui_soview2D_polygon *poly_view = polygons_[frame_no_][active_polygon_no_];
 
     if ((polygon_labels_[frame_no_][active_polygon_no_])->category_name_ == "null")
-      vcl_cout << "assigned polygon label: " << *(polygon_labels_[frame_no_][active_polygon_no_]);
+      std::cout << "assigned polygon label: " << *(polygon_labels_[frame_no_][active_polygon_no_]);
     else {
-      vcl_cout << "This polygon have been labeled before, change the active object to this one and remove this polygon, then add again with the correct label\n";
+      std::cout << "This polygon have been labeled before, change the active object to this one and remove this polygon, then add again with the correct label\n";
       return false;
     }
 
@@ -654,7 +654,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
     float *y = (*poly_view).y;
     int n = (*poly_view).n;
 
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     for (int i = 0; i<n; i++) 
       vertices.push_back(new vsol_point_2d(x[i], y[i]));
 
@@ -678,7 +678,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
   if (gesture_set_empty(e)) {
 
     if (objects_.size() == 0) {
-      vcl_cout << "First create an object pressing middle button or c key\n";
+      std::cout << "First create an object pressing middle button or c key\n";
       return false;
     }
 
@@ -694,7 +694,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
     }
 
     if (objects_[active_object_no_]->end_frame_ > orig_frame_no) {
-      vcl_cout << "You cannot add a polygon previous than the last added polygon to this object!!\nCANNOT GO BACK!\n";
+      std::cout << "You cannot add a polygon previous than the last added polygon to this object!!\nCANNOT GO BACK!\n";
       print_object_status();
       return false;
     }
@@ -713,19 +713,19 @@ dbru_labeling_tool::handle( const vgui_event & e,
   // save the output
   if (gesture_output(e)) {
 
-    vcl_string filename = ".xml";
+    std::string filename = ".xml";
 
-    static vcl_string regexp = "*.*";
+    static std::string regexp = "*.*";
 
     vgui_dialog save_dl("Save file");
     save_dl.inline_file("Filename: ", regexp, filename);
     
     if (save_dl.ask()) {
 
-      vcl_ofstream df(filename.c_str());
+      std::ofstream df(filename.c_str());
       
       if (!df)
-        vcl_cout << "Problems in opening files: " << filename << "\n";
+        std::cout << "Problems in opening files: " << filename << "\n";
       else {
 
         df << "<?xml version = \"1.0\" encoding = \"UTF-8\" ?>\n";
@@ -735,7 +735,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
           objects_[i]->write_xml(df);
         df << "\t</contour_segmentation>\n";
         df.close();
-        vcl_cout << "Label info written to the specified files!\n";
+        std::cout << "Label info written to the specified files!\n";
       }
       
     }
@@ -746,11 +746,11 @@ dbru_labeling_tool::handle( const vgui_event & e,
 
   if (gesture_output_bin(e)) {
 
-    vcl_string binext = ".bin";
-        vcl_string xmlext = ".xml";
-        vcl_string txtext = ".txt";
+    std::string binext = ".bin";
+        std::string xmlext = ".xml";
+        std::string txtext = ".txt";
 
-    static vcl_string regexp = "*.*";
+    static std::string regexp = "*.*";
     vgui_dialog save_dl("Save Binary file");
     save_dl.inline_file("Input Filename (XML): ", regexp, xmlext);
         save_dl.inline_file("Video List filename: ", regexp, txtext);
@@ -765,7 +765,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
   }
 
     if (gesture_push_to_osl(e)) {
-      vcl_cout << "Pushing active obj into OSL, extracting observations: ";
+      std::cout << "Pushing active obj into OSL, extracting observations: ";
       dbru_object_sptr active_obj = objects_[active_object_no_];
       if (active_obj->n_observations() != active_obj->n_polygons()) {
         // clear all the observations and reextract
@@ -776,9 +776,9 @@ dbru_labeling_tool::handle( const vgui_event & e,
           unsigned i = active_obj->start_frame()+j;
           vil_image_resource_sptr img = get_image(i);
           if (!img || int(i) > active_obj->end_frame())
-            vcl_cout << j << " Frame image problems!! Observation cannot be extracted!\n";
+            std::cout << j << " Frame image problems!! Observation cannot be extracted!\n";
           else {
-            vcl_cout << j << " ";
+            std::cout << j << " ";
             vsol_polygon_2d_sptr poly = active_obj->get_polygon(j);
             dbinfo_observation_sptr obs = new dbinfo_observation(0, img, poly, true, true, false);
             obs->scan(0, img);
@@ -788,10 +788,10 @@ dbru_labeling_tool::handle( const vgui_event & e,
       }
       dbru_osl_sptr osl = get_osl();
       if (!osl)
-        vcl_cout << "WARNING: No osl_storage, load an OSL or create an empty OSL, Active Object is not pushed!\n";
+        std::cout << "WARNING: No osl_storage, load an OSL or create an empty OSL, Active Object is not pushed!\n";
       else {
         osl->add_object(active_obj);
-        vcl_cout << " done!\n";
+        std::cout << " done!\n";
       } 
     }
   
@@ -818,7 +818,7 @@ dbru_labeling_tool::handle( const vgui_event & e,
         }
       }*/
     } else {
-      vcl_cout << "Current frame number is not valid!\n";
+      std::cout << "Current frame number is not valid!\n";
     }
      
     return false;
@@ -836,7 +836,7 @@ bool dbru_labeling_tool::get_labeling_info(dbru_label_sptr label)
   
   bool new_category = false;
   dlg->checkbox("Use new category?", new_category);
-  vcl_string user_category = "";
+  std::string user_category = "";
   dlg->field("Name of new category: ", user_category);
   dlg->choice("Choose an existing category:", choices_, choice_);
   dlg->field("motion orientation bin:", label->motion_orientation_bin_);
@@ -857,38 +857,38 @@ bool dbru_labeling_tool::get_labeling_info(dbru_label_sptr label)
 
 void dbru_labeling_tool::print_object_status() 
 {
-  vcl_cout << "frame_no: " << frame_no_ << " active_polygon_no: " << active_polygon_no_ << vcl_endl;
+  std::cout << "frame_no: " << frame_no_ << " active_polygon_no: " << active_polygon_no_ << std::endl;
 
   if (active_object_no_ < 0) {
-    vcl_cout << "No objetcs set yet!!\n";
+    std::cout << "No objetcs set yet!!\n";
   } else {
-    vcl_cout << "active object: " << active_object_no_ << " category: " << objects_[active_object_no_]->category_;
-    vcl_cout << " start_frame: " << objects_[active_object_no_]->start_frame_;
-    vcl_cout << " end_frame: " << objects_[active_object_no_]->end_frame_;
-    vcl_cout << vcl_endl;
+    std::cout << "active object: " << active_object_no_ << " category: " << objects_[active_object_no_]->category_;
+    std::cout << " start_frame: " << objects_[active_object_no_]->start_frame_;
+    std::cout << " end_frame: " << objects_[active_object_no_]->end_frame_;
+    std::cout << std::endl;
   }
 }
 
 int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_list_file_name, char *osl_file_name) 
 { 
-  vcl_ofstream ofile("log.txt");
-  vcl_ifstream fp(video_list_file_name);
+  std::ofstream ofile("log.txt");
+  std::ifstream fp(video_list_file_name);
   if (!fp) {
     ofile << "Problems in opening video directory list file!\n";
     return 1;
   }
 
-  vcl_map<int, vidl1_movie_sptr> video_directories;
+  std::map<int, vidl1_movie_sptr> video_directories;
   int id = -1;
   fp >> id;
   while (!fp.eof()) {
-    vcl_string dir;
+    std::string dir;
     fp >> dir;
     vidl1_movie_sptr my_movie = vidl1_io::load_movie(dir.c_str());
     
     if (!my_movie) {
-      vcl_cout << "problems in loading video ";
-      vcl_cout << " with video file name: " << dir << vcl_endl;
+      std::cout << "problems in loading video ";
+      std::cout << " with video file name: " << dir << std::endl;
       return 2;
     }
     video_directories[id] = my_movie;
@@ -902,7 +902,7 @@ int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_lis
   vbl_array_1d<dbru_object_sptr> *database_objects = new vbl_array_1d<dbru_object_sptr>();
   database_objects->clear();
 
-  vcl_ifstream dbfp(db_object_list_filename);
+  std::ifstream dbfp(db_object_list_filename);
   if (!dbfp) {
     ofile << "Problems in opening db object list file!\n";
     return 3;
@@ -912,7 +912,7 @@ int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_lis
   
   char buffer[1000]; 
   dbfp.getline(buffer, 1000);  // comment 
-  vcl_string dummy;
+  std::string dummy;
   dbfp >> dummy;   // <contour_segmentation   
   dbfp >> dummy; // object_cnt="23">
   unsigned int size;
@@ -922,14 +922,14 @@ int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_lis
     ofile << "reading database object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp)) { 
-      ofile << "problems in reading database object number: " << i << vcl_endl;
+      ofile << "problems in reading database object number: " << i << std::endl;
       return 4;
     }
 
     //: get video file for this database object
     vidl1_movie_sptr my_movie = video_directories[obj->video_id_];
     
-    ofile << "read: " << obj << " extracting observations assuming 1 polygon per frame" << vcl_endl;
+    ofile << "read: " << obj << " extracting observations assuming 1 polygon per frame" << std::endl;
     
     for (int j = obj->start_frame_; j<=obj->end_frame_; j++) {
       vidl1_frame_sptr frame = my_movie->get_frame(j);
@@ -940,19 +940,19 @@ int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_lis
 
         // get convex hull and use that
         ofile << "!!!creating convex hulled observations\n";
-        vcl_vector<vgl_point_2d<double> > ps;
+        std::vector<vgl_point_2d<double> > ps;
         for(unsigned int pj=0;pj<poly->size();pj++)
         {
           vgl_point_2d<double> p(poly->vertex(pj)->x(),poly->vertex(pj)->y());
           ps.push_back(p);
         }
-        vcl_vector<vsol_point_2d_sptr> cps;
+        std::vector<vsol_point_2d_sptr> cps;
         vgl_convex_hull_2d<double> hullp(ps);
         vgl_polygon<double> psg=hullp.hull();
         for(unsigned int k=0;k<psg[0].size();k++)
           cps.push_back(new vsol_point_2d(psg[0][k].x(),psg[0][k].y()));
         vsol_polygon_2d_sptr c_poly = new vsol_polygon_2d(cps);
-        ofile << "size before hull: " << s << " size after hull: " << c_poly->size() << vcl_endl;
+        ofile << "size before hull: " << s << " size after hull: " << c_poly->size() << std::endl;
         //dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly, true, true, false);
         dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, c_poly, true, true, false);
         obs->scan(0, imgr);
@@ -960,16 +960,16 @@ int dbru_labeling_tool::createosl(char *db_object_list_filename, char *video_lis
         // output the images
         ofile << " try to save output image into ./v<videoid>_objimages directory\n";
         char buffer[1000];
-        vcl_sprintf(buffer, "./v%d_objimages/image_obj%d-poly%d.png",obj->video_id_, i, j-obj->start_frame_);
-        vcl_string filename = buffer;
+        std::sprintf(buffer, "./v%d_objimages/image_obj%d-poly%d.png",obj->video_id_, i, j-obj->start_frame_);
+        std::string filename = buffer;
 
-        vcl_ofstream dummy_f(filename.c_str());
+        std::ofstream dummy_f(filename.c_str());
         bool create = false;
         if (dummy_f.is_open()) {
           dummy_f.close();
           create = true;
         } else {
-          ofile << " cannot create the image file: " << filename << " (directory does not exist) " <<vcl_endl;
+          ofile << " cannot create the image file: " << filename << " (directory does not exist) " <<std::endl;
         }
 
         if (create) {

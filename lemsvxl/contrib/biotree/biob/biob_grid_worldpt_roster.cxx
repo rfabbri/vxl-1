@@ -82,8 +82,8 @@ bool biob_grid_worldpt_roster::conditional_index_3d_2_1d(long i, long j, long k,
 }
 
 
-vcl_list<biob_worldpt_index> biob_grid_worldpt_roster::neighboring_voxels(biob_worldpt_index pti) const{
-  vcl_list<biob_worldpt_index> neighbors;
+std::list<biob_worldpt_index> biob_grid_worldpt_roster::neighboring_voxels(biob_worldpt_index pti) const{
+  std::list<biob_worldpt_index> neighbors;
   long int i = pti.index();
   long int iz = i / num_points_per_z_;
   long int iy = (i - iz* num_points_per_z_)/ num_points_per_y_;
@@ -102,7 +102,7 @@ vcl_list<biob_worldpt_index> biob_grid_worldpt_roster::neighboring_voxels(biob_w
   return neighbors;
 }
 
-void biob_grid_worldpt_roster::x_write_this(vcl_ostream& os)
+void biob_grid_worldpt_roster::x_write_this(std::ostream& os)
 {
   vsl_basic_xml_element element("biob_grid_worldpt_roster");
 
@@ -113,7 +113,7 @@ void biob_grid_worldpt_roster::x_write_this(vcl_ostream& os)
   element.add_attribute("num_points_y",  (int)ny());
   element.add_attribute("num_points_z",  (int) nz());
   element.x_write_open(os);
-  vcl_string str("roster_bounding_box");
+  std::string str("roster_bounding_box");
   x_write(os, bounding_box(), str);
   element.x_write_close(os);
 }

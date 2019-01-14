@@ -25,9 +25,9 @@
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
 
-#include <vcl_sstream.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <sstream>
+#include <set>
+#include <algorithm>
 
 #include <bbas/bsol/bsol_algs.h>
 
@@ -36,8 +36,8 @@
 
 //: Constructor
 dbskr_align_shapes::dbskr_align_shapes(
-    vcl_string model_filename,
-    vcl_string query_filename,
+    std::string model_filename,
+    std::string query_filename,
     bool elastic_splice_cost, 
     float scurve_sample_ds,     
     float scurve_interpolate_ds,
@@ -66,13 +66,13 @@ dbskr_align_shapes::dbskr_align_shapes(
   shape_matrix_file_(),
   dc_file_()
 {
-    vcl_cout<<"Loading Model ESF Files"<<vcl_endl;
+    std::cout<<"Loading Model ESF Files"<<std::endl;
     load_esf(model_filename,true);
-    vcl_cout<<"Loading Query ESF Files"<<vcl_endl;
+    std::cout<<"Loading Query ESF Files"<<std::endl;
     load_esf(query_filename,false);
 
-    vcl_string model_basename=vul_file::basename(model_filename);
-    vcl_string query_basename=vul_file::basename(query_filename);
+    std::string model_basename=vul_file::basename(model_filename);
+    std::string query_basename=vul_file::basename(query_filename);
 
     model_basename=vul_file::strip_extension(model_basename);
     query_basename=vul_file::strip_extension(query_basename);
@@ -83,11 +83,11 @@ dbskr_align_shapes::dbskr_align_shapes(
     dc_file_ = model_basename + "_vs_" + query_basename + 
         "_shape_align.bin";
     
-    vcl_cout<<"Writing out shape matrix to "<<shape_matrix_file_<<vcl_endl;
+    std::cout<<"Writing out shape matrix to "<<shape_matrix_file_<<std::endl;
 
     if ( save_dc_ )
     {
-        vcl_cout<<"Writing out shape alignment to "<<dc_file_<<vcl_endl;
+        std::cout<<"Writing out shape alignment to "<<dc_file_<<std::endl;
         set_up_dc_file();
     }
 }
@@ -107,10 +107,10 @@ dbskr_align_shapes::~dbskr_align_shapes()
 void dbskr_align_shapes::set_up_dc_file()
 {
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(dc_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::binary);
     
     float m = model_trees_.size();
     float q = query_trees_.size();
@@ -129,7 +129,7 @@ void dbskr_align_shapes::set_up_dc_file()
         vgl_polygon<double> poly=query_polygons_[p];
 
         // save off points
-        vcl_vector<vcl_pair<int,int> > points;
+        std::vector<std::pair<int,int> > points;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -138,7 +138,7 @@ void dbskr_align_shapes::set_up_dc_file()
             int y = psi.scany();
             for (int x = psi.startx(); x <= psi.endx(); ++x) 
             {
-                vcl_pair<int,int> coords(x,y);
+                std::pair<int,int> coords(x,y);
                 points.push_back(coords);
             }
         }
@@ -171,15 +171,15 @@ void dbskr_align_shapes::match()
 {
     // Match
     
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
 
     if ( save_dc_ )
     {
 
         output_binary_file.open(dc_file_.c_str(),
-                                vcl_ios::out |
-                                vcl_ios::app |
-                                vcl_ios::binary);
+                                std::ios::out |
+                                std::ios::app |
+                                std::ios::binary);
     }
 
     // Lets keep output in a matrix
@@ -187,8 +187,8 @@ void dbskr_align_shapes::match()
                                  query_trees_.size(),
                                  0.0);
 
-    vcl_cout<<"Matching "<<model_trees_.size()<<" vs "<<
-            query_trees_.size()<<vcl_endl;
+    std::cout<<"Matching "<<model_trees_.size()<<" vs "<<
+            query_trees_.size()<<std::endl;
 
     unsigned int m=0;
     while (model_trees_.size())
@@ -200,15 +200,15 @@ void dbskr_align_shapes::match()
 
         for ( unsigned int q=0; q < query_trees_.size() ; ++q)
         {
-            vcl_cout<<"Matching "<<m<<" to "<<q<<vcl_endl;
+            std::cout<<"Matching "<<m<<" to "<<q<<std::endl;
 
             // To clear out for next query to compare to
             model_tree->clear_scurve_cache();
             model_mirror_tree->clear_scurve_cache();
 
-            vcl_vector<dbskr_scurve_sptr> curve_list1;
-            vcl_vector<dbskr_scurve_sptr> curve_list2;
-            vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
+            std::vector<dbskr_scurve_sptr> curve_list1;
+            std::vector<dbskr_scurve_sptr> curve_list2;
+            std::vector< std::vector < std::pair <int,int> > > map_list;
 
             dbskr_tree_sptr query_tree=query_trees_[q].first;
             dbskr_tree_sptr query_mirror_tree=query_trees_[q].second;
@@ -232,14 +232,14 @@ void dbskr_align_shapes::match()
                 query_mirror_tree->clear_scurve_cache();
 
                 test_R=scurve_matching_R_*
-                    vcl_sqrt(mean_area/lambda_area_);
-                model_scale_ratio = vcl_sqrt(mean_area/model_area);
-                query_scale_ratio = vcl_sqrt(mean_area/query_area);
+                    std::sqrt(mean_area/lambda_area_);
+                model_scale_ratio = std::sqrt(mean_area/model_area);
+                query_scale_ratio = std::sqrt(mean_area/query_area);
 
             
-                model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+                model_sample_ds=scurve_sample_ds_*std::sqrt(model_area
                                                            /lambda_area_);
-                query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+                query_sample_ds=scurve_sample_ds_*std::sqrt(query_area
                                                          /lambda_area_);
                 
             }
@@ -277,7 +277,7 @@ void dbskr_align_shapes::match()
             query_mirror_tree->compute_delete_and_contract_costs(
                 elastic_splice_cost_,circular_ends_,combined_edit_);
 
-            vcl_set<double> dists;
+            std::set<double> dists;
 
             dists.insert(1.0e6);
 
@@ -403,8 +403,8 @@ void dbskr_align_shapes::match()
             // Memory usage GB
             // struct rusage r_usage;
             // getrusage(RUSAGE_SELF,&r_usage);
-            // vcl_cout<<"Memory Usage in GB: "<<r_usage.ru_maxrss*1.0e-9
-            //         <<vcl_endl;
+            // std::cout<<"Memory Usage in GB: "<<r_usage.ru_maxrss*1.0e-9
+            //         <<std::endl;
 
         }
 
@@ -421,24 +421,24 @@ void dbskr_align_shapes::match()
     }
 
     // Write out shape matrix
-    vcl_ofstream file(shape_matrix_file_.c_str());
+    std::ofstream file(shape_matrix_file_.c_str());
     ed_matrix.print(file);
     file.close();
     
 
 }
 
-void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
+void dbskr_align_shapes::load_esf(std::string& filename,bool flag)
 {
 
 
 
 
-    vcl_ifstream esf_file(filename.c_str());
+    std::ifstream esf_file(filename.c_str());
 
     if ( !esf_file.is_open() )
     {
-        vcl_cerr<<"Error opening "<<filename<<vcl_endl;
+        std::cerr<<"Error opening "<<filename<<std::endl;
         return;
     }
 
@@ -446,8 +446,8 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
 
     unsigned int line_number=0;
 
-    vcl_string line;
-    while ( vcl_getline (esf_file,line) )
+    std::string line;
+    while ( std::getline (esf_file,line) )
     {
 
         // Load in two of the same one for mirroring one for not
@@ -470,7 +470,7 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
 
         if ( lambda_scaling_ )
         {
-            lambda_ds=scurve_sample_ds_*vcl_sqrt(area
+            lambda_ds=scurve_sample_ds_*std::sqrt(area
                                                  /lambda_area_);
         }
 
@@ -492,7 +492,7 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         tree_mirror->set_area(area);
 
         // store away tree
-        vcl_pair<dbskr_tree_sptr,dbskr_tree_sptr> pair(tree,tree_mirror);
+        std::pair<dbskr_tree_sptr,dbskr_tree_sptr> pair(tree,tree_mirror);
 
         if ( flag )
         {
@@ -520,7 +520,7 @@ vgl_polygon<double> dbskr_align_shapes::compute_boundary(
         sg,
         true,
         true,
-        vcl_min((float)scurve_sample_ds_, scurve_interpolate_ds_),
+        std::min((float)scurve_sample_ds_, scurve_interpolate_ds_),
         scurve_sample_ds_,
         0);
 
@@ -533,9 +533,9 @@ double dbskr_align_shapes::edit_distance(
     dbskr_tree_sptr& tree1,
     dbskr_tree_sptr& tree2,
     float test_curve_matching_R,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool switched,
     double prev_distance)
 {
@@ -548,7 +548,7 @@ double dbskr_align_shapes::edit_distance(
     
     if (!edit.edit()) 
     {
-        vcl_cerr << "Problems in editing trees"<<vcl_endl;
+        std::cerr << "Problems in editing trees"<<std::endl;
         return false;
     }
     
@@ -557,10 +557,10 @@ double dbskr_align_shapes::edit_distance(
     double norm_val = val/(tree1->total_splice_cost()+
                            tree2->total_splice_cost());
     
-    // vcl_cout << "final cost: " << val << " final norm cost: " 
+    // std::cout << "final cost: " << val << " final norm cost: " 
     //          << norm_val << "( tree1 tot splice: " 
     //          << tree1->total_splice_cost() << ", tree2: " 
-    //          << tree2->total_splice_cost() << ")" << vcl_endl;
+    //          << tree2->total_splice_cost() << ")" << std::endl;
 
     if ( norm_val < prev_distance)
     {
@@ -568,7 +568,7 @@ double dbskr_align_shapes::edit_distance(
         
 
         //: Get path key
-        vcl_vector< pathtable_key > path_map;
+        std::vector< pathtable_key > path_map;
 
         curve_list1.clear();
         curve_list2.clear();
@@ -594,10 +594,10 @@ void dbskr_align_shapes::shape_alignment(
     vgl_polygon<double>& poly,
     dbskr_tree_sptr& model_tree,
     dbskr_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_ofstream& output_binary_file)
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::ofstream& output_binary_file)
 {
 
     // write out results to binary file
@@ -659,14 +659,14 @@ void dbskr_align_shapes::shape_alignment_tps(
     vgl_polygon<double>& poly,
     dbskr_tree_sptr& model_tree,
     dbskr_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_ofstream& output_binary_file)
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::ofstream& output_binary_file)
 {
 
-    vcl_vector< vgl_point_2d<double> > model_pts;
-    vcl_vector< vgl_point_2d<double> > query_pts;
+    std::vector< vgl_point_2d<double> > model_pts;
+    std::vector< vgl_point_2d<double> > query_pts;
     for (unsigned i = 0; i < map_list.size(); i++)
     {
         
@@ -675,7 +675,7 @@ void dbskr_align_shapes::shape_alignment_tps(
         
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
 
             // Shock Point 1 from Model 1
             vgl_point_2d<double> ps1  = sc1->sh_pt(cor.first);
@@ -757,9 +757,9 @@ void dbskr_align_shapes::shape_alignment_tps(
 vgl_point_2d<double> dbskr_align_shapes::
 find_part_correspondences_qm(
     vgl_point_2d<double> query_pt,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     double model_scale_ratio,
@@ -818,7 +818,7 @@ find_part_correspondences_qm(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 
@@ -930,7 +930,7 @@ find_part_correspondences_qm(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 

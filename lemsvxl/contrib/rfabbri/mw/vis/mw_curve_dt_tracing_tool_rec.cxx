@@ -4,7 +4,7 @@
 #include <mvl/PMatrix.h>
 #include <mvl/TriTensor.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 
 struct my_lst_elt {
@@ -30,12 +30,12 @@ show_reprojections(unsigned jnz)
 
   bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
-  vcl_vector<vsol_point_2d_sptr> reproj; 
-  vcl_vector<unsigned> crv1_idx, crv2_idx;
+  std::vector<vsol_point_2d_sptr> reproj; 
+  std::vector<unsigned> crv1_idx, crv2_idx;
 
 
   for (unsigned v=2; v < nviews_; ++v) {
-    vcl_vector<bmcsd_vector_3d> crv3d; 
+    std::vector<bmcsd_vector_3d> crv3d; 
     reconstruct_and_reproject(jnz, v, reproj, crv3d,crv1_idx, crv2_idx, rig);
     vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[0]);
 
@@ -71,7 +71,7 @@ show_reprojections(unsigned jnz)
       }
 
       // II: Soviews
-      vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+      std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
       for (itr = ep_soviews_2n_[v].begin(); itr != ep_soviews_2n_[v].end(); ++itr)
         tab_[v+2]->remove(*itr);
       ep_soviews_2n_[v].clear();

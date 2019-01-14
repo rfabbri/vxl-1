@@ -78,7 +78,7 @@ void SIPointPoint::computeSalience (void)
     _dNC = R*thetaE;
   }
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;
@@ -103,7 +103,7 @@ void SIPointLine::computeSalience ()
 
   _dNC = R*thetaE;
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;
@@ -118,9 +118,9 @@ void SIPointArc::computeSalience ()
   ANGLE_TYPE thetaE=0;
 
   if (_nu==1)
-    _dOC = Rr()*vcl_fabs(_ReTau - _RsTau);
+    _dOC = Rr()*std::fabs(_ReTau - _RsTau);
   else 
-    _dOC = Rl()*vcl_fabs(_LeTau - _LsTau);
+    _dOC = Rl()*std::fabs(_LeTau - _LsTau);
 
   if (R > MAX_RADIUS) {
     Point start  = getLFootPt(_LeTau);
@@ -136,7 +136,7 @@ void SIPointArc::computeSalience ()
     _dNC = R*thetaE;
   }
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;
@@ -156,7 +156,7 @@ void SILineLine::computeSalience (void)
   ANGLE_TYPE thetaE = CCW (_ul, _ur);
   _dNC = R*thetaE;
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;
@@ -170,9 +170,9 @@ void SILineArc::computeSalience ()
   ANGLE_TYPE thetaE=0;
 
   if (_nu==1)
-    _dOC = _R*vcl_fabs(_LeTau - _LsTau) + (_ReTau - _RsTau);
+    _dOC = _R*std::fabs(_LeTau - _LsTau) + (_ReTau - _RsTau);
   else 
-    _dOC = _R*vcl_fabs(_ReTau - _RsTau) + (_LeTau - _LsTau);
+    _dOC = _R*std::fabs(_ReTau - _RsTau) + (_LeTau - _LsTau);
 
   Point start, end;
   if (R > MAX_RADIUS) {
@@ -210,7 +210,7 @@ void SILineArc::computeSalience ()
     _dNC = R*thetaE;
   }
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;
@@ -223,7 +223,7 @@ void SIArcArc::computeSalience ()
   RADIUS_TYPE R  = _endTime;
   ANGLE_TYPE  thetaE=0;
 
-  _dOC = Rr()*vcl_fabs(_ReTau - _RsTau) + Rl()*vcl_fabs(_LeTau - _LsTau);
+  _dOC = Rr()*std::fabs(_ReTau - _RsTau) + Rl()*std::fabs(_LeTau - _LsTau);
 
   if (R > MAX_RADIUS) {
     Point start  = getLFootPt(_LeTau);
@@ -238,7 +238,7 @@ void SIArcArc::computeSalience ()
     _dNC = R*thetaE;
   }
 
-  _dPnCost = vcl_fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
+  _dPnCost = std::fabs(_dOC + _pSNode->dNC() - _dNC) + _pSNode->dPnCost();
 
   //some fudging to remove zero length hassels
   //if (RisEq(_dPnCost,0)) _dPnCost = ISHOCK_DIST_HUGE;

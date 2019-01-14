@@ -15,7 +15,7 @@
 
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
-#include <vcl_set.h>
+#include <set>
 
 
 
@@ -31,8 +31,8 @@ dbsksp_weighted_average_two_xgraphs_cost_base(
   const dbsksp_xshock_directed_tree_sptr& tree1,      // original tree1
   const dbsksp_xshock_directed_tree_sptr& tree2,      // original tree2
   const dbsksp_xshock_directed_tree_sptr& model_tree, // model tree, to be optimized
-  const vcl_vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
-  const vcl_vector<pathtable_key >& correspondence2,  // correspondence between model tree and tree2
+  const std::vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
+  const std::vector<pathtable_key >& correspondence2,  // correspondence between model tree and tree2
   float scurve_matching_R,                            // parameter R in shock matching
   dbsksp_xgraph_model_using_L_alpha_phi_radius* const xgraph_model // a model to modify the xgraph inside model_tree
   )
@@ -108,7 +108,7 @@ dbsksp_weighted_average_two_xgraphs_cost_base(
 //  //  p.kdiff_max = vnl_math::max(kdiff1, kdiff2);
 //  //  p.kdiff_min = vnl_math::min(kdiff1, kdiff2);
 //
-//  //  this->map_model_xfrag_properties_.insert(vcl_make_pair(model_xe->id(), p));
+//  //  this->map_model_xfrag_properties_.insert(std::make_pair(model_xe->id(), p));
 //  //}
 //  return;
 //}
@@ -136,8 +136,8 @@ compute_kdiff_cost(unsigned eid, const dbsksp_xshock_fragment& xfrag)
   double max_kdiff = p.kdiff_max;
 
   double kdiff_cost = 0;
-  kdiff_cost = (kdiff < min_kdiff) ? (vcl_exp((min_kdiff - kdiff))-1) : kdiff_cost;
-  kdiff_cost = (kdiff > max_kdiff) ? (vcl_exp((kdiff - max_kdiff))-1) : kdiff_cost;
+  kdiff_cost = (kdiff < min_kdiff) ? (std::exp((min_kdiff - kdiff))-1) : kdiff_cost;
+  kdiff_cost = (kdiff > max_kdiff) ? (std::exp((kdiff - max_kdiff))-1) : kdiff_cost;
 
   return kdiff_cost;
 }

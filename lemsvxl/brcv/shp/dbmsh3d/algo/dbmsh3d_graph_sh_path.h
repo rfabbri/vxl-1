@@ -13,27 +13,27 @@
 //    - a map of PrevV[vid, prevV] for backtracking from each vertex.
 //
 bool find_sh_path_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
-                        vcl_map<int, float>& Dist,
-                        vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                        std::map<int, float>& Dist,
+                        std::map<int, dbmsh3d_vertex*>& PrevV,
                         const dbmsh3d_vertex* Dest = NULL);
 
 bool find_shortest_Es_on_M (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src, const dbmsh3d_vertex* Dest,
-                            vcl_vector<dbmsh3d_edge*>& Evec_path);
+                            std::vector<dbmsh3d_edge*>& Evec_path);
 
 //###################################################################
 //: Find the shortest path avoiding a given set of mesh edges/vertices.
 
 bool find_sh_path_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src,
-                                  vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                  vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                                  vcl_map<int, float>& Dist,
-                                  vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                                  std::set<dbmsh3d_edge*>& avoid_Eset,
+                                  std::set<dbmsh3d_vertex*>& avoid_Vset,
+                                  std::map<int, float>& Dist,
+                                  std::map<int, dbmsh3d_vertex*>& PrevV,
                                   const dbmsh3d_vertex* Dest = NULL);
 
 bool find_shortest_Es_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Src, const dbmsh3d_vertex* Dest,
-                                       vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                       vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                                       vcl_vector<dbmsh3d_edge*>& Evec_path);
+                                       std::set<dbmsh3d_edge*>& avoid_Eset,
+                                       std::set<dbmsh3d_vertex*>& avoid_Vset,
+                                       std::vector<dbmsh3d_edge*>& Evec_path);
 
 //###################################################################
 //: Find the shortest path with restrains:
@@ -43,20 +43,20 @@ bool find_shortest_Es_on_M_restrained (dbmsh3d_mesh* M, const dbmsh3d_vertex* Sr
 //
 
 bool find_sh_path_on_M_restrained_targets (dbmsh3d_mesh* M, 
-                                           vcl_set<dbmsh3d_vertex*>& src_set,
-                                           vcl_set<dbmsh3d_vertex*>& dest_set,
-                                           vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                           vcl_set<dbmsh3d_vertex*>& avoid_Vset,
-                                           vcl_map<int, float>& Dist,
-                                           vcl_map<int, dbmsh3d_vertex*>& PrevV,
+                                           std::set<dbmsh3d_vertex*>& src_set,
+                                           std::set<dbmsh3d_vertex*>& dest_set,
+                                           std::set<dbmsh3d_edge*>& avoid_Eset,
+                                           std::set<dbmsh3d_vertex*>& avoid_Vset,
+                                           std::map<int, float>& Dist,
+                                           std::map<int, dbmsh3d_vertex*>& PrevV,
                                            dbmsh3d_vertex*& destV);
 
 bool find_shortest_Es_on_M_restrained_targets (dbmsh3d_mesh* M, 
-                                               vcl_set<dbmsh3d_vertex*>& src_set, 
-                                               vcl_set<dbmsh3d_vertex*>& dest_set,
-                                               vcl_set<dbmsh3d_edge*>& avoid_Eset, 
-                                               vcl_set<dbmsh3d_vertex*>& avoid_Vset, 
-                                               vcl_vector<dbmsh3d_edge*>& Evec_path, 
+                                               std::set<dbmsh3d_vertex*>& src_set, 
+                                               std::set<dbmsh3d_vertex*>& dest_set,
+                                               std::set<dbmsh3d_edge*>& avoid_Eset, 
+                                               std::set<dbmsh3d_vertex*>& avoid_Vset, 
+                                               std::vector<dbmsh3d_edge*>& Evec_path, 
                                                dbmsh3d_vertex*& srcV, dbmsh3d_vertex*& destV);
 
 #endif //dbmsh3d_graph_sh_path_h_

@@ -11,7 +11,7 @@
 // 03/20/05 Kongbin Kang: Change it to use xscan_scan
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <xmvg/xmvg_perspective_camera.h>
 #include <xscan/xscan_scan.h>
 #include <bio_defs.h>

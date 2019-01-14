@@ -24,7 +24,7 @@
 #include <vil/vil_image_view.h>
 #include <bvis1/bvis1_tool.h>
 #include <vgl/vgl_polygon.h>
-#include <vcl_list.h>
+#include <list>
 #include <vsol/vsol_point_2d_sptr.h>
 
 
@@ -37,7 +37,7 @@ public:
   dbdet_manual_seg_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const {return "Manual Segmentation"; }
+  virtual std::string name() const {return "Manual Segmentation"; }
   
   //: This is called when the tool is activated
   virtual void activate();
@@ -111,13 +111,13 @@ protected:
   float last_x;
   float last_y;
   int brush_size_;
-  vcl_vector< int> i_list;
-  vcl_vector<int > j_list;
-  vcl_vector<vsol_point_2d_sptr> polygon_list_;
-  vcl_vector<vsol_point_2d_sptr> polyline_list_;
-  vcl_vector<unsigned> ri; 
-  vcl_vector<unsigned> rj;
-  vcl_list<vil_image_resource_sptr> image_list;
+  std::vector< int> i_list;
+  std::vector<int > j_list;
+  std::vector<vsol_point_2d_sptr> polygon_list_;
+  std::vector<vsol_point_2d_sptr> polyline_list_;
+  std::vector<unsigned> ri; 
+  std::vector<unsigned> rj;
+  std::list<vil_image_resource_sptr> image_list;
  
   vil_image_view<vxl_byte> original_view_;
   vil_image_view<vxl_byte> input_view_;

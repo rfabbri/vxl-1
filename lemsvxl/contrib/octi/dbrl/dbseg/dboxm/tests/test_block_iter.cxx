@@ -26,7 +26,7 @@ MAIN( test_block_iter )
   int num_blocks=0;
   for (; !iter.end(); ++iter) {
     boxm_block<tree_type> *block = *iter;
-    vcl_cout << block->bounding_box() << vcl_endl;
+    std::cout << block->bounding_box() << std::endl;
     ++num_blocks;
   }
   int x,y,z;

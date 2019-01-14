@@ -29,14 +29,14 @@ class dborl_patch_extract_params : public dborl_algo_params
 public:
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> db_index_;
-  dborl_parameter<vcl_string> patch_folder_;
+  dborl_parameter<std::string> db_index_;
+  dborl_parameter<std::string> patch_folder_;
 
   dborl_parameter<bool> use_object_shock_;  // if false use assoc shocks
-  dborl_parameter<vcl_string> assoc_shock_folder_;
+  dborl_parameter<std::string> assoc_shock_folder_;
 
   dbskr_extract_patch_params2 extract_patch_;
-  dborl_parameter<vcl_string> image_extention_; // if images are used during patch extraction
+  dborl_parameter<std::string> image_extention_; // if images are used during patch extraction
 
   dborl_patch_extract_params() : dborl_algo_params("patch_ext") { 
 

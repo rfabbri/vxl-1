@@ -79,7 +79,7 @@ vidpro_istream_storage::b_read(vsl_b_istream &is)
       {
         vidl_image_list_istream* vis = new vidl_image_list_istream(path_);
         if (!vis || !vis->is_open()) {
-          vcl_cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
+          std::cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
             <<"        Failed to open the input stream.\nList \""<<path_<<"\" not found\n";
           delete vis;
           return;
@@ -91,7 +91,7 @@ vidpro_istream_storage::b_read(vsl_b_istream &is)
       {
         vidl_dshow_file_istream* vis = new vidl_dshow_file_istream(path_);
         if (!vis || !vis->is_open()) {
-          vcl_cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
+          std::cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
             <<"        Failed to open the input stream.\nList \""<<path_<<"\" not found\n";
           delete vis;
           return;
@@ -105,7 +105,7 @@ vidpro_istream_storage::b_read(vsl_b_istream &is)
       {
         vidl_ffmpeg_istream* vis = new vidl_ffmpeg_istream(path_);
         if (!vis || !vis->is_open()) {
-          vcl_cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
+          std::cerr <<"\nI/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream &is)\n"
             <<"        Failed to open the input stream.\nList \""<<path_<<"\" not found\n";
           delete vis;
           return;
@@ -115,16 +115,16 @@ vidpro_istream_storage::b_read(vsl_b_istream &is)
 #endif
       else
       {
-        vcl_cerr << "I/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream&)\n"
           << "           Unknown version istream type "<< ver << '\n';
       }
       break;
     }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro_istream_storage::b_read(vsl_b_istream&)\n"
       << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -147,7 +147,7 @@ vidpro_istream_storage::set_istream(const vidl_istream_sptr  &istream )
 }
 
 //: Get the istream directory and filename path
-vcl_string 
+std::string 
 vidpro_istream_storage::get_path() const
 {
   return path_;
@@ -155,14 +155,14 @@ vidpro_istream_storage::get_path() const
 
 //: Set the istream path
 void
-vidpro_istream_storage::set_path(const vcl_string& path)
+vidpro_istream_storage::set_path(const std::string& path)
 {
   path_ = path;
 }
 
 //: Set the istream type
 void 
-vidpro_istream_storage::set_type(const vcl_string& type)
+vidpro_istream_storage::set_type(const std::string& type)
 {
   type_ = type;
 }

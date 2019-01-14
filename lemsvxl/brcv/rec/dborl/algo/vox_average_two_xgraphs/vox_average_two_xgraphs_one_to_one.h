@@ -19,8 +19,8 @@
 #include "vox_average_two_xgraphs_params_sptr.h"
 
 #include <dborl/dborl_index_sptr.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 #include <dbsksp/pro/dbsksp_xgraph_storage_sptr.h>
@@ -56,7 +56,7 @@ protected:
   bool write_out();
 
   //: Load esf file
-  bool load_esf(const vcl_string& esf_file, dbsk2d_shock_storage_sptr& shock_storage);
+  bool load_esf(const std::string& esf_file, dbsk2d_shock_storage_sptr& shock_storage);
 
   //: Convert sk2d graph to sksp graph
   bool convert_sk2d_to_sksp(const dbsk2d_shock_storage_sptr& sk2d_storage,
@@ -68,7 +68,7 @@ protected:
     dbsksp_average_xgraph_storage_sptr& average_xgraph);
 
   //: save a screenshot of an to a file
-  bool save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_png_filename);
+  bool save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const std::string& out_png_filename);
 
 
 
@@ -78,16 +78,16 @@ protected:
   vox_average_two_xgraphs_params_sptr params_;
 
   // to make member variables
-  vcl_string esf_file_[2];
+  std::string esf_file_[2];
 
   // Storage for average shock graph
   dbsksp_average_xgraph_storage_sptr average_xgraph_storage_;
 
   // Output folder
-  vcl_string output_folder_;
+  std::string output_folder_;
 
   // basename to save everything
-  vcl_string base_name_;
+  std::string base_name_;
   
 };
 

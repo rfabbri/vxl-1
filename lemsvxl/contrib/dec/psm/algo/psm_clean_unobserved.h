@@ -34,13 +34,13 @@ bool psm_clean_unobserved(psm_scene<APM> &scene, unsigned int min_obs, float min
 
   psm_aux_scene<PSM_AUX_VIS_IMPLICIT> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_VIS_IMPLICIT>*>(aux_scene_base.ptr());
   if (!aux_scene) {
-    vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+    std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
     return false;
   }
-  vcl_cout << "cleaning scene.. min obs = " << min_obs << ", min_maxvis = " << min_maxvis << vcl_endl;
+  std::cout << "cleaning scene.. min obs = " << min_obs << ", min_maxvis = " << min_maxvis << std::endl;
 
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
   for (; vbit != valid_blocks.end(); ++vbit) {
 
     hsds_fd_tree<psm_vis_implicit_sample,3> &aux_block = aux_scene->get_block(*vbit);

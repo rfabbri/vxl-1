@@ -1,7 +1,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "dbvrl_compute_homography_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -43,7 +43,7 @@
 dbvrl_compute_homography_process::dbvrl_compute_homography_process(void): bpro1_process(),total_xform()
 {
 
-  if(!parameters()->add( "Homography Type" , "-transform_type", vcl_string("Affine")) ||
+  if(!parameters()->add( "Homography Type" , "-transform_type", std::string("Affine")) ||
      !parameters()->add( "Use Motion" , "-use_motion" , (bool)true)||
      !parameters()->add( "Amount of Motion in Pixels" , "-lmotion" , (float)5.0)||
      !parameters()->add( "Border Size (pixels)" , "-border" , (int)10 ) ||
@@ -60,7 +60,7 @@ dbvrl_compute_homography_process::dbvrl_compute_homography_process(void): bpro1_
      !parameters()->add( "Output file < filename ..>" ,          "-fout" ,  bpro1_filepath("","*.*")) 
      )
     {
-      vcl_cerr << "ERROR: Adding parameters in dbvrl_compute_homography_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbvrl_compute_homography_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
   else
     {
@@ -79,7 +79,7 @@ dbvrl_compute_homography_process::~dbvrl_compute_homography_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbvrl_compute_homography_process::name()
 {
   return "Compute Homography";
@@ -103,18 +103,18 @@ dbvrl_compute_homography_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbvrl_compute_homography_process::get_input_type()
+std::vector< std::string > dbvrl_compute_homography_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbvrl_compute_homography_process::get_output_type()
+std::vector< std::string > dbvrl_compute_homography_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -124,22 +124,22 @@ bool
 dbvrl_compute_homography_process::execute()
 {
   if ( input_data_.size() != 2 ){
-    vcl_cout << "In dbvrl_compute_homography_process::execute() - "
+    std::cout << "In dbvrl_compute_homography_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
-  vcl_cout<<"\n Compuuting Homography for frame no "<<last_frame_no << '\n';
+  std::cout<<"\n Compuuting Homography for frame no "<<last_frame_no << '\n';
   clear_output();
   parameters()->get_value( "-rerode" , eroderadius );
   parameters()->get_value( "-rdilate" , dilateradius );
   bpro1_filepath filename;
   parameters()->get_value("-fout",filename);
-  vcl_string fname=filename.path;
+  std::string fname=filename.path;
 
-  vcl_ofstream ofp(fname.c_str(),vcl_ios::out|vcl_ios::app);
+  std::ofstream ofp(fname.c_str(),std::ios::out|std::ios::app);
   if(!ofp)
     {
-      vcl_cout<<"\n Could not open file "<<fname;
+      std::cout<<"\n Could not open file "<<fname;
       return false;
     }
   parameters()->get_value( "-first" , first_frame_ );
@@ -254,11 +254,11 @@ register_image_with_mask(vil_image_view<float> & curr_view,
 {
   //: do registration
   vimt_transform_2d init_xform;
-  vcl_string transform_type;
+  std::string transform_type;
   parameters()->get_value( "-transform_type" , transform_type );
   if(transform_type  ==  "Identity")
     {
-      vcl_cout << "In dbvrl_compute_homograpy_process:: an identity "
+      std::cout << "In dbvrl_compute_homograpy_process:: an identity "
                << "transform doesn't make sense \n";
       assert (false);
     }
@@ -306,7 +306,7 @@ register_image_with_mask(vil_image_view<float> & curr_view,
       init_xform.set_reflection(m1, m2);
     }
   else {
-    vcl_cout << "Unrecoverable error in dbvrl_compute_homography_process"
+    std::cout << "Unrecoverable error in dbvrl_compute_homography_process"
              << " Unkown vimt transform type \n";
     assert(false);
   }
@@ -356,7 +356,7 @@ register_image_with_optical_flow(vil_image_view<float> & curr_view,
   parameters()->get_value("-numbins",no_of_bins);
 
   //: using otsu thresholding method to select the threshold for motion
-  vcl_vector<double> hist;
+  std::vector<double> hist;
   vil_histogram<float>(vsum,hist,lrange_,hrange_,no_of_bins);
   bsta_otsu_threshold<double> ot(hist,lrange_,hrange_);
   double motionthresh=ot.threshold();

@@ -3,7 +3,7 @@
 
 #include "psm_scene_block_storage.h"
 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_point_3d.h>
 #include <hsds/hsds_fd_tree.h>
 

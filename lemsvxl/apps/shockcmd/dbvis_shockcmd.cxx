@@ -28,22 +28,22 @@ int main(int argc, char** argv)
   //1)Read in data file (*.bnd) and set parameters.
   opt_parse_args(argc, argv, optab);        
   if (pcFileIn == NULL) {
-    vcl_fprintf (stderr, "ERROR: Missing input (prefix) filename: %s\n", pcFileIn);
-    vcl_fprintf (stderr, "\n\t use -h for more help.\n");
+    std::fprintf (stderr, "ERROR: Missing input (prefix) filename: %s\n", pcFileIn);
+    std::fprintf (stderr, "\n\t use -h for more help.\n");
     exit(-1);
   }
   if (fPruningThreshold < 0.0f || fPruningThreshold > 100000) {
-    vcl_fprintf (stderr, "ERROR(%s): Incorrect Pruning Threshold = %f .\n", fPruningThreshold);
+    std::fprintf (stderr, "ERROR(%s): Incorrect Pruning Threshold = %f .\n", fPruningThreshold);
     exit(-1);
   }
   if (fSamplingArcLength < 0.0f || fSamplingArcLength > 100000) {
-    vcl_fprintf (stderr, "ERROR(%s): Incorrect Sampling Arc Length = %f .\n", fSamplingArcLength);
+    std::fprintf (stderr, "ERROR(%s): Incorrect Sampling Arc Length = %f .\n", fSamplingArcLength);
     exit(-1);
   }
-  vcl_printf ("Input boundary file= %s\n", pcFileIn);
-  vcl_printf ("Output ESF shock file= %s\n", pcFileOut);
-  vcl_printf ("Pruning Threshold= %f\n", fPruningThreshold);
-  vcl_printf ("Sampling Arc Length= %f\n", fSamplingArcLength);
+  std::printf ("Input boundary file= %s\n", pcFileIn);
+  std::printf ("Output ESF shock file= %s\n", pcFileOut);
+  std::printf ("Pruning Threshold= %f\n", fPruningThreshold);
+  std::printf ("Sampling Arc Length= %f\n", fSamplingArcLength);
 
   Boundary* _boundary = new Boundary_Bucketing ();
   _boundary->LoadFile (pcFileIn);

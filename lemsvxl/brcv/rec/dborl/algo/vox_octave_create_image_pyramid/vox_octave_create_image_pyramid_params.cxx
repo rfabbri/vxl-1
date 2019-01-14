@@ -14,7 +14,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_octave_create_image_pyramid_params::vox_octave_create_image_pyramid_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_octave_create_image_pyramid_params::vox_octave_create_image_pyramid_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
 
     //: Name of input object

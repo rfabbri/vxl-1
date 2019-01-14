@@ -1,4 +1,4 @@
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 #include <vil/vil_image_resource.h>
 #include <vil/vil_pixel_format.h>
@@ -45,14 +45,14 @@ breg3d_voxel_grid::breg3d_voxel_grid(const char* base_dir, unsigned nx, unsigned
 
   // create one set of images for each z value.
   for (unsigned z=0; z<nz; z++) {
-    vcl_stringstream prob_fname;
+    std::stringstream prob_fname;
 
-    prob_fname << base_dir << "/prob_" << vcl_setw(5) << vcl_setfill('0') << z << "." << image_format_;
+    prob_fname << base_dir << "/prob_" << std::setw(5) << std::setfill('0') << z << "." << image_format_;
     prob_image_fnames_.push_back(prob_fname.str());
 
     for (unsigned m=0; m < n_mg_modes_; m++) {
-      vcl_stringstream mg_fname;   
-      mg_fname << base_dir << "/mg_mode" <<vcl_setw(2) << vcl_setfill('0') << m << "_" << vcl_setw(5) << vcl_setfill('0') << z << "." << image_format_;
+      std::stringstream mg_fname;   
+      mg_fname << base_dir << "/mg_mode" <<std::setw(2) << std::setfill('0') << m << "_" << std::setw(5) << std::setfill('0') << z << "." << image_format_;
       mg_image_fnames_[m].push_back(mg_fname.str());
     }
   }
@@ -102,7 +102,7 @@ inline void breg3d_voxel_grid::load_prob_slice(vil_image_view<float> &data_prob,
   return;
 }
 
-inline void breg3d_voxel_grid::load_mg_slice(vcl_vector<vil_image_view<float> > &data_mg, unsigned k)
+inline void breg3d_voxel_grid::load_mg_slice(std::vector<vil_image_view<float> > &data_mg, unsigned k)
 {
   data_mg.clear();
   for (unsigned m=0; m < n_mg_modes_; m++) {
@@ -116,7 +116,7 @@ inline bool breg3d_voxel_grid::save_prob_slice(vil_image_view<float> &data_prob,
   return (vil_save(data_prob, prob_image_fnames_[k].c_str(),image_format_.c_str()));
 }
 
-inline bool breg3d_voxel_grid::save_mg_slice(vcl_vector<vil_image_view<float> > &data_mg, unsigned k)
+inline bool breg3d_voxel_grid::save_mg_slice(std::vector<vil_image_view<float> > &data_mg, unsigned k)
 {
   bool result = true;
   for (unsigned m=0; m<n_mg_modes_; m++) {
@@ -136,10 +136,10 @@ inline bool breg3d_voxel_grid::save_mg_slice(vcl_vector<vil_image_view<float> > 
 bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_camera<double>* cam)
 {
   // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
-  vcl_vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
-  vcl_vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
 
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p, Hup, Hdown;
@@ -164,8 +164,8 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
   // compute update in two passes.
   // First, traverse layers top down and compute
 #ifdef USE_DISK_STORAGE
-  vcl_vector<vcl_string> preX_fname = temporary_file_filenames(0,nz_);
-  vcl_vector<vcl_string> PIvisX_fname = temporary_file_filenames(1,nz_);
+  std::vector<std::string> preX_fname = temporary_file_filenames(0,nz_);
+  std::vector<std::string> PIvisX_fname = temporary_file_filenames(1,nz_);
 
   vil_image_view<float> preX(nx_,ny_,1,1);
   vil_image_view<float> PIvisX(nx_,ny_,1);
@@ -188,14 +188,14 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
   preX_accum.fill(0.0f);
   visX_accum.fill(1.0f);
  
-  vcl_cout << "Pass 1: z = " << vcl_endl;
+  std::cout << "Pass 1: z = " << std::endl;
 
   vil_image_view<float> frame_backproj(nx_,ny_,1);
 
 
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << z << " ";
+    std::cout << z << " ";
 
 #ifndef USE_DISK_STORAGE
     preX = vil_plane(preX_vol,z);
@@ -203,7 +203,7 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
 #endif
 
     vil_image_view<float> slice_prob;
-    vcl_vector<vil_image_view<float> > slice_mgs;
+    std::vector<vil_image_view<float> > slice_mgs;
     
     this->load_prob_slice(slice_prob,z);
     this->load_mg_slice(slice_mgs,z);
@@ -274,9 +274,9 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
   vil_image_view<float> preX_accum_vox(nx_,ny_,1);
   vil_image_view<float> visX_accum_vox(nx_,ny_,1);
 
-  vcl_cout << vcl_endl << "Pass 2. z = ";
+  std::cout << std::endl << "Pass 2. z = ";
   for (unsigned z = 0; z < nz_; z++) {
-    vcl_cout << z << " ";
+    std::cout << z << " ";
 
     // load current layers probability computed in pass #1
 #ifdef USE_DISK_STORAGE
@@ -316,7 +316,7 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
         float multiplier = (*PIvisX_it + *preX_it) / *preX_sum_it;
         float ray_norm = 1 - *visX_sum_it; //normalize based on probability that a surface voxel is located along the ray. This was not part of the original Pollard + Mundy algorithm.
         //if (*PX_it * multiplier > 1.0)
-          //vcl_cout << "uh oh.\n";
+          //std::cout << "uh oh.\n";
         *PX_it *= multiplier * ray_norm;
       }
       if (*PX_it < min_vox_prob_)
@@ -329,17 +329,17 @@ bool breg3d_voxel_grid::update_voxels(vil_image_view<float> const& frame, vpgl_c
     this->save_prob_slice(slice_prob,z);
 
   }
-  vcl_cout << vcl_endl << "done." << vcl_endl;
+  std::cout << std::endl << "done." << std::endl;
   return true;
 }
 
 vil_image_view<float> breg3d_voxel_grid::camera_cost(vil_image_view<float> const& frame, vpgl_camera<double>* cam)
 {
   // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
-  vcl_vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
-  vcl_vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
 
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p, Hup, Hdown;
@@ -371,17 +371,17 @@ vil_image_view<float> breg3d_voxel_grid::camera_cost(vil_image_view<float> const
   vil_image_view<float> cost_accum(frame.ni(), frame.nj(),1);
 
   vil_image_view<float> img_scratch(frame.ni(),frame.nj(),1);
-  vcl_vector<vil_image_view<float> > slice_mgs;
+  std::vector<vil_image_view<float> > slice_mgs;
 
   //preX_accum.fill(0.0f);
   cost_accum.fill(1.0f);
   visX_accum.fill(1.0f);
  
-  vcl_cout << "Computing camera cost: ";
+  std::cout << "Computing camera cost: ";
 
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
   
     this->load_prob_slice(slice_prob,z);
     this->load_mg_slice(slice_mgs,z);
@@ -398,7 +398,7 @@ vil_image_view<float> breg3d_voxel_grid::camera_cost(vil_image_view<float> const
     vil_image_view<float> PIPX = this->pixel_probabilities_range(frame_backproj,slice_mgs);
    // float maxprob,minprob;
    // vil_math_value_range(PIPX,minprob,maxprob);
-    //vcl_cout << "min PI = " << minprob << "   max PI = " << maxprob << vcl_endl;
+    //std::cout << "min PI = " << minprob << "   max PI = " << maxprob << std::endl;
 
     // and multiply by PX
     vil_math_image_product(slice_prob,PIPX,PIPX);
@@ -420,7 +420,7 @@ vil_image_view<float> breg3d_voxel_grid::camera_cost(vil_image_view<float> const
       *visX_it *= (1 - *PX_it);
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   return cost_accum;
 }
@@ -430,10 +430,10 @@ vil_image_view<float> breg3d_voxel_grid::camera_score(vil_image_view<float> cons
 {
 
  // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
-  vcl_vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
-  vcl_vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_up; // homography to layer above, along camera rays
+  std::vector<vgl_h_matrix_2d<double> > H_down; // homography to layer below, along camera rays
 
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p, Hup, Hdown;
@@ -465,18 +465,18 @@ vil_image_view<float> breg3d_voxel_grid::camera_score(vil_image_view<float> cons
   //vil_image_view<float> score_accum(frame.ni(), frame.nj(),1);
 
   vil_image_view<float> img_scratch(frame.ni(),frame.nj(),1);
-  vcl_vector<vil_image_view<float> > slice_mgs;
+  std::vector<vil_image_view<float> > slice_mgs;
 
   preX_accum.fill(0.0f);
   //score_accum.fill(1.0f);
   visX_accum.fill(1.0f);
  
-  vcl_cout << "Computing camera score: z = " << vcl_endl;
+  std::cout << "Computing camera score: z = " << std::endl;
 
 
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
   
     this->load_prob_slice(slice_prob,z);
     this->load_mg_slice(slice_mgs,z);
@@ -551,11 +551,11 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
                     vil_image_view<float> virtual_frame, vil_image_view<float> vis)
 {
   // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
 
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_virtual_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_virtual_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_virtual_img;
+  std::vector<vgl_h_matrix_2d<double> > H_virtual_img_to_plane;
 
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
@@ -581,7 +581,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
   vil_image_view<float> slice_prob;
   vil_image_view<float> slice_prob_img(frame.ni(), frame.nj(), 1);
 
-  vcl_cout << "Generating virtual frame, pass 1:";
+  std::cout << "Generating virtual frame, pass 1:";
 
   // first, fill voxel grid with color from frame and calcuate visibilty 
   vil_image_view<float> visX_accum(frame.ni(),frame.nj(),1);
@@ -589,7 +589,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
 
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
   
     vil_image_view<float> visX = vil_plane(visX_vol,z);
     transform_plane(visX_accum, H_plane_to_img[z], visX);
@@ -611,7 +611,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
     //vil_save(visX_accum,"d:/dec/matlab/reg3d/results/visX_debug.tiff");
 
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // now project color of most likely voxel into virtual image
 
@@ -633,10 +633,10 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
   visX_accum.set_size(virtual_frame.ni(),virtual_frame.nj(),1);
   visX_accum.fill(1.0f);
 
-  vcl_cout << "Generating virtual frame, pass 2:";
+  std::cout << "Generating virtual frame, pass 2:";
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
 
     // project current slice into image
     vil_image_view<float> slice = vil_plane(color_vol,z);
@@ -670,7 +670,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
     }
 
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   vil_save(depth_img,"d:/dec/matlab/reg3d/results/seq2/depth_img.tiff");
 
@@ -685,12 +685,12 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
                     vil_image_view<float> &virtual_frame, vil_image_view<float> &vis, vil_image_view<unsigned char> &height_map)
 {
   // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
 
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_virtual_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_virtual_img_to_plane;
-  vcl_vector<vgl_h_matrix_2d<double> > H_virtual_img_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_virtual_img;
+  std::vector<vgl_h_matrix_2d<double> > H_virtual_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_virtual_img_to_img;
 
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
@@ -722,10 +722,10 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
   vil_image_view<float> max_prob_image(virtual_frame.ni(),virtual_frame.nj(),1);
   max_prob_image.fill(0.0f);
  
-  vcl_cout << "Pass1: generating height map from virtual camera:";
+  std::cout << "Pass1: generating height map from virtual camera:";
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
 
     // load slice probability
     this->load_prob_slice(slice_prob,z);
@@ -746,20 +746,20 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
       *visX_it *= (1 - *PX_it);
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   
   // now clean up height_map
   unsigned n_smooth_iterations = 10;
   float conf_thresh = 0.05f;
 
-  vcl_cout << "smoothing height map:";
+  std::cout << "smoothing height map:";
   vil_image_view<bool> conf_mask(virtual_frame.ni(),virtual_frame.nj(),1);
   vil_threshold_above(max_prob_image,conf_mask,conf_thresh);
   vil_image_view<float> filtered_height;
 
   filtered_height = brip_vil_float_ops::convert_to_float(height_map_rough);
   for (unsigned i=0; i < n_smooth_iterations; i++) {
-    vcl_cout << ".";
+    std::cout << ".";
     // smooth heightmap
     filtered_height = brip_vil_float_ops::gaussian(filtered_height,1.0);
     // reset values we are confident enough in
@@ -772,7 +772,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
     }
   }
   height_map = brip_vil_float_ops::convert_to_byte(filtered_height);
-  vcl_cout << "done." << vcl_endl;
+  std::cout << "done." << std::endl;
     
   // create virtual image based on smoothed height_map
   vil_image_view<float> frame_backproj(nx_,ny_,1);
@@ -785,7 +785,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
   vil_image_view<float> PX_accum_virtualproj(virtual_frame.ni(),virtual_frame.nj(),1);
   PX_accum.fill(0.0f);
 
-  vcl_cout << "Pass2: generating virtual image:";
+  std::cout << "Pass2: generating virtual image:";
 
   virtual_frame.fill(0.0f);
   vis.fill(0.0f);
@@ -793,7 +793,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     //int z = nz_ - zcount - 1;
     int z = zcount;
-    vcl_cout << "." ;
+    std::cout << "." ;
 
     // project image to virtual image
     transform_plane(frame,H_virtual_img_to_img[z],frame_virtualproj);
@@ -823,12 +823,12 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // normalize vis
-  vcl_cout << " Normalizing vis:";
+  std::cout << " Normalizing vis:";
   for (unsigned z=0; z < nz_; z++) {
-    vcl_cout << ".";
+    std::cout << ".";
 
     // project PX_accum from image to virtual image
     transform_plane(PX_accum,H_virtual_img_to_img[z],PX_accum_virtualproj);
@@ -841,7 +841,7 @@ void breg3d_voxel_grid::virtual_view(vil_image_view<float> const& frame, vpgl_ca
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
 
   vil_save(height_map_rough,"c:/project/registration/results/seq2/height_img.tiff");
@@ -857,8 +857,8 @@ void breg3d_voxel_grid::expected_image(const vpgl_camera<double> *cam, vil_image
 {
 
   // compute homographies from voxel planes to image cooridnates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
     for (unsigned z=0; z < nz_; z++)
@@ -876,16 +876,16 @@ void breg3d_voxel_grid::expected_image(const vpgl_camera<double> *cam, vil_image
   vil_image_view<float> PXvisX_accum(expected_image.ni(),expected_image.nj(),1);
   vil_image_view<float> visX_accum(expected_image.ni(), expected_image.nj(),1);
 
-  vcl_vector<vil_image_view<float> > slice_mgs;
+  std::vector<vil_image_view<float> > slice_mgs;
 
   PXvisX_accum.fill(0.0f);
   visX_accum.fill(1.0f);
   expected_image.fill(0.0f);
  
-  vcl_cout << "Generating Expected Image:" << vcl_endl;
+  std::cout << "Generating Expected Image:" << std::endl;
   for (unsigned zcount=0; zcount < nz_; zcount++) {
     int z = nz_ - zcount - 1;
-    vcl_cout << "." ;
+    std::cout << "." ;
   
     this->load_prob_slice(slice_prob,z);
     this->load_mg_slice(slice_mgs,z);
@@ -909,7 +909,7 @@ void breg3d_voxel_grid::expected_image(const vpgl_camera<double> *cam, vil_image
       *visX_it *= (1.0f - *PX_it);
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // normalize expected image by weight sum
   vil_math_image_ratio(expected_image,PXvisX_accum,expected_image);
@@ -920,7 +920,7 @@ void breg3d_voxel_grid::expected_image(const vpgl_camera<double> *cam, vil_image
   return;
 }
 
-vil_image_view<float> breg3d_voxel_grid::pixel_probabilities(const vil_image_view<float> &backproj_frame, const vcl_vector<vil_image_view<float> > &mg_modes)
+vil_image_view<float> breg3d_voxel_grid::pixel_probabilities(const vil_image_view<float> &backproj_frame, const std::vector<vil_image_view<float> > &mg_modes)
 {
 
   const double one_over_sqrt2pi = 1/sqrt(2*vnl_math::pi);
@@ -953,7 +953,7 @@ vil_image_view<float> breg3d_voxel_grid::pixel_probabilities(const vil_image_vie
       float mg_std = *mg_it++;
       float mg_weight = *mg_it++;
       if (mg_weight > 0.0)
-        *prob_it += (float)((mg_weight * one_over_sqrt2pi) / (mg_std * *W_it)) * vcl_exp(-vnl_math_sqr((*img_it - mg_mean)/(vnl_math::sqrt2 * mg_std)));
+        *prob_it += (float)((mg_weight * one_over_sqrt2pi) / (mg_std * *W_it)) * std::exp(-vnl_math_sqr((*img_it - mg_mean)/(vnl_math::sqrt2 * mg_std)));
       else if (*W_it == 0)
         *prob_it = 1.0;
     }
@@ -962,7 +962,7 @@ vil_image_view<float> breg3d_voxel_grid::pixel_probabilities(const vil_image_vie
 }
 
 
-vil_image_view<float> breg3d_voxel_grid::pixel_probabilities_range(const vil_image_view<float> &backproj_frame, const vcl_vector<vil_image_view<float> > &mg_modes, float delta)
+vil_image_view<float> breg3d_voxel_grid::pixel_probabilities_range(const vil_image_view<float> &backproj_frame, const std::vector<vil_image_view<float> > &mg_modes, float delta)
 {
 
   const double one_over_sqrt2pi = 1/sqrt(2*vnl_math::pi);
@@ -1006,7 +1006,7 @@ vil_image_view<float> breg3d_voxel_grid::pixel_probabilities_range(const vil_ima
   return pix_probs;
 }
 
-vil_image_view<float> breg3d_voxel_grid::expected_intensities(vcl_vector<vil_image_view<float> > const& mg_modes)
+vil_image_view<float> breg3d_voxel_grid::expected_intensities(std::vector<vil_image_view<float> > const& mg_modes)
 {
   
   vil_image_view<float> expected(nx_,ny_,1);
@@ -1039,20 +1039,20 @@ vil_image_view<float> breg3d_voxel_grid::expected_intensities(vcl_vector<vil_ima
 }
 
 
-vcl_vector<vcl_string> breg3d_voxel_grid::temporary_file_filenames(unsigned temp_idx, unsigned nfiles)
+std::vector<std::string> breg3d_voxel_grid::temporary_file_filenames(unsigned temp_idx, unsigned nfiles)
 {
-  vcl_vector<vcl_string> fnames;
-  vcl_stringstream temp_dir_ss;
+  std::vector<std::string> fnames;
+  std::stringstream temp_dir_ss;
   temp_dir_ss << base_dirname_ << "/temp";
-  vcl_string temp_dir = temp_dir_ss.str();
+  std::string temp_dir = temp_dir_ss.str();
 
   if (!vul_file::is_directory(temp_dir)) {
     vul_file::make_directory(temp_dir);
   }
 
   for (unsigned i=0; i < nfiles; i++) {
-    vcl_stringstream fname;
-    fname << temp_dir << "/temp" << temp_idx << "_" << vcl_setw(5) << vcl_setfill('0') << i << "." << image_format_;
+    std::stringstream fname;
+    fname << temp_dir << "/temp" << temp_idx << "_" << std::setw(5) << std::setfill('0') << i << "." << image_format_;
     fnames.push_back(fname.str());
   }
 
@@ -1063,8 +1063,8 @@ vcl_vector<vcl_string> breg3d_voxel_grid::temporary_file_filenames(unsigned temp
 
 void breg3d_voxel_grid::compute_plane_image_H(vpgl_camera<double> const* cam, unsigned grid_zval, vgl_h_matrix_2d<double> &H_plane_to_image, vgl_h_matrix_2d<double> &H_image_to_plane)
 {
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_img;
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_vox;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_img;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_vox;
 
     // create vectors containing four corners of grid, and their projections into the image
     double u=0, v=0;
@@ -1093,10 +1093,10 @@ void breg3d_voxel_grid::compute_plane_image_H(vpgl_camera<double> const* cam, un
 
     vgl_h_matrix_2d_compute_linear comp_4pt;
     if (!comp_4pt.compute(voxel_corners_img,voxel_corners_vox, H_image_to_plane)) {
-      vcl_cerr << "ERROR computing homography from image to voxel slice. " << vcl_endl;
+      std::cerr << "ERROR computing homography from image to voxel slice. " << std::endl;
     }
     if (!comp_4pt.compute(voxel_corners_vox,voxel_corners_img, H_plane_to_image)) {
-      vcl_cerr << "ERROR computing homography from voxel slice to image. " << vcl_endl;
+      std::cerr << "ERROR computing homography from voxel slice to image. " << std::endl;
     }
     return;
 }
@@ -1115,10 +1115,10 @@ void breg3d_voxel_grid::transform_plane(vil_image_view<float> const& input, vgl_
   return;
 }
 
-void breg3d_voxel_grid::update_mg_models(vcl_vector<vil_image_view<float> >& slice_mg, vil_image_view<float> const& slice_prob, vil_image_view<float> const& backproj_frame)
+void breg3d_voxel_grid::update_mg_models(std::vector<vil_image_view<float> >& slice_mg, vil_image_view<float> const& slice_prob, vil_image_view<float> const& backproj_frame)
 {
 
-  vcl_vector<vil_image_view<float>::iterator> mg_it;
+  std::vector<vil_image_view<float>::iterator> mg_it;
   for (unsigned m=0; m<slice_mg.size(); m++) 
     mg_it.push_back(slice_mg[m].begin());
 
@@ -1135,7 +1135,7 @@ void breg3d_voxel_grid::update_mg_models(vcl_vector<vil_image_view<float> >& sli
       float mode_score = (mode_w > 0)? mode_w / mode_std : -1.0f ;
       // is pixel value within 2.5 std deviations of mode mean?
       float diff = c - mode_mean;
-      if ((vcl_fabs(diff) <= 2.5*mode_std) && (mode_w > 0)){
+      if ((std::fabs(diff) <= 2.5*mode_std) && (mode_w > 0)){
         if (mode_score >= best_score) {
           best_score = mode_score;
           best_mode = m;
@@ -1153,7 +1153,7 @@ void breg3d_voxel_grid::update_mg_models(vcl_vector<vil_image_view<float> >& sli
       *(mg_it[m]) +=  weight_ratio * diff;
       // update std
       float std = *(mg_it[m]+1);
-      *(mg_it[m]+1) = vcl_sqrt(std*std + weight_ratio *(diff*diff - std*std));
+      *(mg_it[m]+1) = std::sqrt(std*std + weight_ratio *(diff*diff - std*std));
       // update weight
       *(mg_it[m]+2) += dw;
     }

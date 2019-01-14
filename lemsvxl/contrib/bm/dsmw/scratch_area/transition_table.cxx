@@ -1,11 +1,11 @@
 //This is transition_table.cxx
 
-#include <vcl_map.h>
-#include <vcl_iostream.h>
+#include <map>
+#include <iostream>
 
 int main()
 {
-    typedef vcl_map<unsigned, vcl_map<unsigned,vcl_map<unsigned,unsigned> > > 
+    typedef std::map<unsigned, std::map<unsigned,std::map<unsigned,unsigned> > > 
         transition_array;
     transition_array transition_array_;
     transition_array_[1][1][0] = 1;
@@ -13,8 +13,8 @@ int main()
     transition_array_[1][1][2] = 1;
     transition_array_[1][2][3] = 1;
 
-    vcl_cout << "transition_array_[1].count() = "
-             << transition_array_[1].count(3) << vcl_endl;
+    std::cout << "transition_array_[1].count() = "
+             << transition_array_[1].count(3) << std::endl;
 
     return 0;
 }  

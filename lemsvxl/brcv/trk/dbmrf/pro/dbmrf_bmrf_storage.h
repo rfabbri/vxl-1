@@ -29,14 +29,14 @@ public:
   virtual ~dbmrf_bmrf_storage(){}
 
   //: Returns the type string "bmrf"
-  virtual vcl_string type() const { return "bmrf"; }
+  virtual std::string type() const { return "bmrf"; }
   
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbmrf_bmrf_storage"; }
+  virtual std::string is_a() const { return "dbmrf_bmrf_storage"; }
     
   //: Return IO version number;
   short version() const;

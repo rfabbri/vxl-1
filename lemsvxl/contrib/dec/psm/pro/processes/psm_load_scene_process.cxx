@@ -19,9 +19,9 @@
 #include <bprb/bprb_parameters.h>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -38,14 +38,14 @@ namespace psm_load_scene_process_globals
   //this process takes no inputs
   const unsigned n_outputs_ = 1; 
   //Define parameters here
-  const vcl_string param_storage_directory_ =  "storage_directory";
-  const vcl_string param_appearance_model_type_ = "appearance_model_type";
-  const vcl_string param_origin_x_ = "origin_x";
-  const vcl_string param_origin_y_ = "origin_y";
-  const vcl_string param_origin_z_ = "origin_z";
-  const vcl_string param_block_length_ = "block_length";
-  const vcl_string param_max_levels_ = "max_levels";
-  const vcl_string param_lvcs_path_ = "lvcs_path";
+  const std::string param_storage_directory_ =  "storage_directory";
+  const std::string param_appearance_model_type_ = "appearance_model_type";
+  const std::string param_origin_x_ = "origin_x";
+  const std::string param_origin_y_ = "origin_y";
+  const std::string param_origin_z_ = "origin_z";
+  const std::string param_block_length_ = "block_length";
+  const std::string param_max_levels_ = "max_levels";
+  const std::string param_lvcs_path_ = "lvcs_path";
 }
 
 
@@ -54,7 +54,7 @@ bool psm_load_scene_process_cons(bprb_func_process &pro)
 {
   using namespace psm_load_scene_process_globals;
   // set output types
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "psm_scene_base_sptr";
   if(!pro.set_output_types(output_types_)) 
     return false;
@@ -68,17 +68,17 @@ bool psm_load_scene_process(bprb_func_process& pro)
 {
   using namespace psm_load_scene_process_globals;
   // define and read in the parameters
-  vcl_string storage_dir;
+  std::string storage_dir;
   pro.parameters()->get_value(param_storage_directory_, storage_dir);
 
   if (!vul_file::is_directory(storage_dir) || !vul_file::exists(storage_dir)) {
-    vcl_cerr << "In psm_load_scene_process::execute() -- input directory is not valid!\n";
+    std::cerr << "In psm_load_scene_process::execute() -- input directory is not valid!\n";
     return false;
   }
 
-  vcl_cout << "In psm_load_scene_process -- storage directory is: " << storage_dir << vcl_endl;
+  std::cout << "In psm_load_scene_process -- storage directory is: " << storage_dir << std::endl;
 
-  vcl_string appearance_model_type;
+  std::string appearance_model_type;
   pro.parameters()->get_value(param_appearance_model_type_, appearance_model_type);
 
   float origin_x, origin_y, origin_z;
@@ -95,19 +95,19 @@ bool psm_load_scene_process(bprb_func_process& pro)
   unsigned int max_levels;
   pro.parameters()->get_value(param_max_levels_, max_levels);
 
-  vcl_cout << "origin = " << origin_x << ", " << origin_y << ", " << origin_z << vcl_endl;
-  vcl_cout << "block length = " << block_len << vcl_endl;
-  vcl_cout << "max levels = " << max_levels << vcl_endl;
+  std::cout << "origin = " << origin_x << ", " << origin_y << ", " << origin_z << std::endl;
+  std::cout << "block length = " << block_len << std::endl;
+  std::cout << "max levels = " << max_levels << std::endl;
 
-  vcl_string lvcs_path;
+  std::string lvcs_path;
   pro.parameters()->get_value(param_lvcs_path_, lvcs_path);
 
   bgeo_lvcs_sptr lvcs = new bgeo_lvcs();
   if (lvcs_path != "") {
-    vcl_ifstream is(lvcs_path.c_str());
+    std::ifstream is(lvcs_path.c_str());
     if (!is)
     {
-      vcl_cerr << " Error opening file  " << lvcs_path << vcl_endl;
+      std::cerr << " Error opening file  " << lvcs_path << std::endl;
       return false;
     }
     lvcs->read(is);
@@ -128,7 +128,7 @@ bool psm_load_scene_process(bprb_func_process& pro)
     scene_base = new psm_scene<PSM_APM_SIMPLE_RGB>(origin, block_len, storage_dir, lvcs, max_levels);
   }
   else {
-    vcl_cerr << "error! psm_load_scene_process: unknown appearance model type " << appearance_model_type << vcl_endl;
+    std::cerr << "error! psm_load_scene_process: unknown appearance model type " << appearance_model_type << std::endl;
     return false;
   }
 

@@ -29,18 +29,18 @@
 //: Constructor
 dbdet_image_gradient_process::dbdet_image_gradient_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Sobel (1x3)");    //0
   gradient_operator_choices.push_back("Sobel (3x3)");    //1
   gradient_operator_choices.push_back("Gaussian");       //2
   gradient_operator_choices.push_back("h0");             //3
   gradient_operator_choices.push_back("h1");             //4
 
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> output_choices;
+  std::vector<std::string> output_choices;
   output_choices.push_back("|grad I|");            //0
   output_choices.push_back("Ix only");             //1
   output_choices.push_back("Iy only");             //2
@@ -61,7 +61,7 @@ dbdet_image_gradient_process::dbdet_image_gradient_process()
       !parameters()->add( "Interpolation factor=2^N, N="  , "-int_factor" , 0 ) ||
       !parameters()->add( "Output these:"                 , "-output_type" , output_choices, 0)) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -81,7 +81,7 @@ dbdet_image_gradient_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbdet_image_gradient_process::name()
 {
   return "Compute Gradients";
@@ -89,21 +89,21 @@ dbdet_image_gradient_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbdet_image_gradient_process::get_input_type()
+std::vector< std::string > dbdet_image_gradient_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbdet_image_gradient_process::get_output_type()
+std::vector< std::string > dbdet_image_gradient_process::get_output_type()
 {
   unsigned out_type=0;
   parameters()->get_value( "-output_type" , out_type );
 
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("image");
   if (out_type>=10)
     to_return.push_back("image");//another one
@@ -143,7 +143,7 @@ dbdet_image_gradient_process::execute()
 {
   if ( input_data_.size() != 1 )
   {
-      vcl_cout << "In dbdet_image_gradient_process::execute() - not exactly one"
+      std::cout << "In dbdet_image_gradient_process::execute() - not exactly one"
                << " input image \n";
       return false;
   }
@@ -195,7 +195,7 @@ dbdet_image_gradient_process::execute()
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -213,7 +213,7 @@ dbdet_image_gradient_process::execute()
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -253,7 +253,7 @@ dbdet_image_gradient_process::execute()
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -293,7 +293,7 @@ dbdet_image_gradient_process::execute()
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -333,7 +333,7 @@ dbdet_image_gradient_process::execute()
 
       //compute the gradient magnitude
       for(unsigned long i=0; i<grad_mag.size(); i++)
-        g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+        g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
       break;
     }
@@ -379,7 +379,7 @@ dbdet_image_gradient_process::execute()
     //    double h = vnl_math::max(0.0, (Ix2*Iy2 - IxIy*IxIy)/((Ix2+Iy2)*(Ix2+Iy2))); //remove negative values
     //    H(x,y) = norm_fac*h;
 
-    //    //H(x,y) = norm_fac*vcl_pow(h, 0.25); //normalize
+    //    //H(x,y) = norm_fac*std::pow(h, 0.25); //normalize
     //  }
     //}
 
@@ -420,7 +420,7 @@ dbdet_image_gradient_process::execute()
 
     norm_fac = sqrt(sigma)/25.0;
     for(unsigned long i=0; i<Ix.size(); i++)
-      h[i] = norm_fac*vcl_pow(vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
+      h[i] = norm_fac*std::pow(vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
 
   }
 

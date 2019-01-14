@@ -16,10 +16,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/dbmsh3d_face_mc.h>
@@ -43,10 +43,10 @@ public:
 
   void add_inner_block(dbmsh3d_face_mc* face) { set_face_[id_counter_++]=face; } 
   
-  vcl_map<int, dbmsh3d_face_mc*> get_inner_blocks() { return set_face_; }
+  std::map<int, dbmsh3d_face_mc*> get_inner_blocks() { return set_face_; }
 
 private:
-  vcl_map<int, dbmsh3d_face_mc*> set_face_;
+  std::map<int, dbmsh3d_face_mc*> set_face_;
   int id_counter_;
 };
 
@@ -60,7 +60,7 @@ void mesh_break_face (dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F,
 //: merges two meshes M1 amd M2 into M1. M1 and and M2 do not 
 // have any intersection
 void merge_mesh (dbmsh3d_mesh_mc* M1, dbmsh3d_mesh_mc* M2);
-dbmsh3d_face* copy_inner_face(vcl_vector<dbmsh3d_edge*> incident_edges,
+dbmsh3d_face* copy_inner_face(std::vector<dbmsh3d_edge*> incident_edges,
                           dbmsh3d_mesh_mc* mesh);
 #endif
 

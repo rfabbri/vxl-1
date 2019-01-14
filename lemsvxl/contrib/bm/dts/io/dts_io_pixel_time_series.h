@@ -23,7 +23,7 @@ void vsl_b_write(vsl_b_ostream &os,
     const dts_pixel_time_series<pixelType, timeType, elementType, n> * p);
 
 template<class pixelType, class timeType, class elementType, unsigned n >
-void vsl_print_summary(vcl_ostream& os, 
+void vsl_print_summary(std::ostream& os, 
     const dts_pixel_time_series<pixelType, timeType, elementType, n> *p);
 
 #endif //DTS_IO_PIXEL_TIME_SERIES_H_

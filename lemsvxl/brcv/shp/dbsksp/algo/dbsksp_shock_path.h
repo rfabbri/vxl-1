@@ -15,7 +15,7 @@
 
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //==============================================================================
 // dbsksp_shock_path
@@ -26,7 +26,7 @@ class dbsksp_shock_path: public vbl_ref_count
 {
 public:
   //: Constructor
-  dbsksp_shock_path(const vcl_vector<dbsksp_xshock_node_descriptor >& xdesc)
+  dbsksp_shock_path(const std::vector<dbsksp_xshock_node_descriptor >& xdesc)
   {
     this->xdesc_ = xdesc;
     this->num_points_ = xdesc.size();
@@ -52,7 +52,7 @@ public:
 
 
   //: Get list of all xsamples
-  void get_all_xdesc(vcl_vector<dbsksp_xshock_node_descriptor >& list_xdesc)
+  void get_all_xdesc(std::vector<dbsksp_xshock_node_descriptor >& list_xdesc)
   {
     list_xdesc = this->xdesc_;
   }
@@ -64,13 +64,13 @@ public:
   }
   
   //: Get list of points on the mid line (mid-points of boundary chords)
-  void get_mid_line(vcl_vector<vgl_point_2d<double > >& mid_line) const
+  void get_mid_line(std::vector<vgl_point_2d<double > >& mid_line) const
   {
     mid_line = this->mid_line_;
   }
 
   //: Get length along mid-line of the shock points
-  void get_mid_line_lengths(vcl_vector<double >& mid_line_lengths) const
+  void get_mid_line_lengths(std::vector<double >& mid_line_lengths) const
   {
     mid_line_lengths = this->mid_line_lengths_;
   }
@@ -89,7 +89,7 @@ protected:
   // User-input
 
   //: List of node descriptors along the branch, including the end points
-  vcl_vector<dbsksp_xshock_node_descriptor > xdesc_;
+  std::vector<dbsksp_xshock_node_descriptor > xdesc_;
 
   //: Number of points in the branch (should match with the size of xdesc_)
   unsigned num_points_;
@@ -97,10 +97,10 @@ protected:
   // Cache data
 
   //: Mid-line (connecting mid-points of boundary chords)
-  vcl_vector<vgl_point_2d<double > > mid_line_;
+  std::vector<vgl_point_2d<double > > mid_line_;
 
   //: Length along the mid-line
-  vcl_vector<double > mid_line_lengths_;
+  std::vector<double > mid_line_lengths_;
 
 
 };

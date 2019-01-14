@@ -1,6 +1,6 @@
 #include "dbcvr_open_2d_cvmatch_even_grid_cost.h"
 
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vnl/vnl_math.h>
 
 dbcvr_open_2d_cvmatch_even_grid_cost::
@@ -55,18 +55,18 @@ compute_interval_cost(int i, int ip, int j, int jp)
   // compute stretch cost
   double sc1 = curve1_lengths_[i] - curve1_lengths_[ip];
   double sc2 = curve2_lengths_[j] - curve2_lengths_[jp];
-  stretch_cost = vcl_fabs(sc1 - sc2);
+  stretch_cost = std::fabs(sc1 - sc2);
   // compute bend cost
   double bc1 = curve1_thetas_[i] - curve1_thetas_[ip];
   double bc2 = curve2_thetas_[j] - curve2_thetas_[jp];
-  bend_cost = vcl_fabs(bc1 - bc2);
+  bend_cost = std::fabs(bc1 - bc2);
 
   double cost = stretch_cost + R1_ * bend_cost;
 
   return cost;
 }
 
-void dbcvr_open_2d_cvmatch_even_grid_cost::continuous_angles(vcl_vector<double> &angles)
+void dbcvr_open_2d_cvmatch_even_grid_cost::continuous_angles(std::vector<double> &angles)
 {
   int size = angles.size();
   for(int i=1; i<size; i++)

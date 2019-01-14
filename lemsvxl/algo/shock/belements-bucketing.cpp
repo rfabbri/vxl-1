@@ -248,27 +248,27 @@ bool BPoint_Bucketing::PisBArcVisible (BArc_Bucketing* barc)
 }
 
 extern Bucket** __BucketArray;
-void BPoint_Bucketing::getInfo (vcl_ostream& ostrm)
+void BPoint_Bucketing::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   BPoint::getInfo (ostrm);
 
-  vcl_sprintf(s, "BUCKETING:\n"); 
+  std::sprintf(s, "BUCKETING:\n"); 
     ostrm<<s;
   if (__BucketArray != NULL)
-    vcl_sprintf (s, "BPoint in Bucket[%d][%d], BucketId: %d\n\n", 
+    std::sprintf (s, "BPoint in Bucket[%d][%d], BucketId: %d\n\n", 
           _bucX, _bucY, __BucketArray[_bucX][_bucY].id());
   else
-    vcl_sprintf (s, "Bucket not initialized yet.\n\n");
+    std::sprintf (s, "Bucket not initialized yet.\n\n");
   ostrm<<s;
 
-  vcl_sprintf (s, "%d PPVisCon Vector(s):", _PPVisCon.size()); ostrm<<s;
+  std::sprintf (s, "%d PPVisCon Vector(s):", _PPVisCon.size()); ostrm<<s;
   PPVisConType::iterator curV = _PPVisCon.begin();
   for(; curV!=_PPVisCon.end(); ++curV) {
-     vcl_sprintf (s, "(%f, %f), ", (*curV)->_vectorx, (*curV)->_vectory); ostrm<<s;
+     std::sprintf (s, "(%f, %f), ", (*curV)->_vectorx, (*curV)->_vectory); ostrm<<s;
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 }
 
 //#############################################################
@@ -433,60 +433,60 @@ bool BLine_Bucketing::LisArcVisible (BArc_Bucketing* barc, double& t)
   return LisRectVisible (L, T, R, B);
 }
 
-void BLine_Bucketing::getInfo (vcl_ostream& ostrm)
+void BLine_Bucketing::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   BLine::getInfo (ostrm);
 
   //BUCKETING
-  vcl_sprintf (s, "BUCKETING:\n"); ostrm<<s;
+  std::sprintf (s, "BUCKETING:\n"); ostrm<<s;
 
   if (__BucketArray == NULL)
-    vcl_sprintf (s, "Bucket not initialized yet.\n\n");
+    std::sprintf (s, "Bucket not initialized yet.\n\n");
   else {
     if (_bucLX<0) { //print the list of buckets in the list
-      vcl_sprintf (s, "BLine in Buckets: "); ostrm<<s;
+      std::sprintf (s, "BLine in Buckets: "); ostrm<<s;
       BucketList::iterator bit = _lineInBuckets.begin();
       for (; bit != _lineInBuckets.end(); bit++) {
-        vcl_sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
+        std::sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
       }
-      vcl_sprintf (s, "\n"); ostrm<<s;
+      std::sprintf (s, "\n"); ostrm<<s;
   
       //twinLine:
-      vcl_sprintf (s, "twinLine in Buckets: "); ostrm<<s;
+      std::sprintf (s, "twinLine in Buckets: "); ostrm<<s;
       bit = twinLine()->_lineInBuckets.begin();
       for (; bit != twinLine()->_lineInBuckets.end(); bit++) {
-        vcl_sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
+        std::sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
       }
-      vcl_sprintf (s, "\n"); ostrm<<s;
+      std::sprintf (s, "\n"); ostrm<<s;
     }
     else {
-      vcl_sprintf (s, "BLine in Bucket[%d][%d], BucketId: %d\n", 
+      std::sprintf (s, "BLine in Bucket[%d][%d], BucketId: %d\n", 
             _bucLX, _bucLY, 
             __BucketArray[_bucLX][_bucLY].id()); ostrm<<s;
-      vcl_sprintf (s, "twin BLine in Bucket[%d][%d], BucketId: %d\n", 
+      std::sprintf (s, "twin BLine in Bucket[%d][%d], BucketId: %d\n", 
             twinLine()->_bucLX, twinLine()->_bucLY, 
             __BucketArray[twinLine()->_bucLX][twinLine()->_bucLY].id()); ostrm<<s;
     }
-    vcl_sprintf (s, "s_pt() in Bucket[%d][%d], BucketId: %d\n", 
+    std::sprintf (s, "s_pt() in Bucket[%d][%d], BucketId: %d\n", 
           s_pt()->_bucX, s_pt()->_bucY, 
           __BucketArray[s_pt()->_bucX][s_pt()->_bucY].id()); ostrm<<s;
-    vcl_sprintf (s, "e_pt() in Bucket[%d][%d], BucketId: %d\n\n", 
+    std::sprintf (s, "e_pt() in Bucket[%d][%d], BucketId: %d\n\n", 
           e_pt()->_bucX, e_pt()->_bucY, 
           __BucketArray[e_pt()->_bucX][e_pt()->_bucY].id()); ostrm<<s;
   }
   //Line-Point Visibility Constraint
   if (_LPVisCon) {
-    vcl_sprintf (s, "2 LPVisCon Vectors:\n"); ostrm<<s;
-    vcl_sprintf (s, "vStartP: (%f, %f), vEndP (%f, %f)\n\n",
+    std::sprintf (s, "2 LPVisCon Vectors:\n"); ostrm<<s;
+    std::sprintf (s, "vStartP: (%f, %f), vEndP (%f, %f)\n\n",
           _LPVisCon->_sp._vectorx, _LPVisCon->_sp._vectory,
           _LPVisCon->_ep._vectorx, _LPVisCon->_ep._vectory); ostrm<<s;
   }
   else {
-    vcl_sprintf (s, "No LPVisCon Vector.\n\n"); ostrm<<s;
+    std::sprintf (s, "No LPVisCon Vector.\n\n"); ostrm<<s;
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 }
 
 //#############################################################
@@ -520,9 +520,9 @@ void BArc_Bucketing::reconnect (BPoint* oldPt, BPoint* newPt)
   //3)If BArc is a GUIArc, add this BArc to newPt's _EPVisCon
   if (_bGUIElm) {
     if (newPt==startPt)
-      ((BPoint_Bucketing*)newPt)->addEPVisCon (vcl_cos(_InTangent), vcl_sin(_InTangent), _id);
+      ((BPoint_Bucketing*)newPt)->addEPVisCon (std::cos(_InTangent), std::sin(_InTangent), _id);
     else
-      ((BPoint_Bucketing*)newPt)->addEPVisCon (vcl_cos(_OutTangent+M_PI), vcl_sin(_OutTangent+M_PI), _id);
+      ((BPoint_Bucketing*)newPt)->addEPVisCon (std::cos(_OutTangent+M_PI), std::sin(_OutTangent+M_PI), _id);
   }
 }
 
@@ -559,7 +559,7 @@ bool BArc_Bucketing::isLineIntersecting (COORD_TYPE lsx, COORD_TYPE lsy, COORD_T
       double b = (lex*lsy-ley*lsx + _center.x*(ley-lsy) - _center.y*(lex-lsx))/(lex-lsx);
       double delta = _R*_R*(1+a*a)-b*b;
       assert (delta>=0);
-      double sqdelta = vcl_sqrt (delta);
+      double sqdelta = std::sqrt (delta);
 
       double x1 = (-a*b + sqdelta)/(1+a*a);
       double x2 = (-a*b - sqdelta)/(1+a*a);
@@ -587,7 +587,7 @@ bool BArc_Bucketing::isLineIntersecting (COORD_TYPE lsx, COORD_TYPE lsy, COORD_T
 bool BArc_Bucketing::isHLineIntersecting (COORD_TYPE lsx, COORD_TYPE lex, COORD_TYPE ly)
 {
   //Compute the length of Arc center to footPt.
-  double CF = vcl_fabs (ly-_center.y);
+  double CF = std::fabs (ly-_center.y);
   if (CF>=_R) //1)CF>r, line outside circle
     return false;
   else {
@@ -606,7 +606,7 @@ bool BArc_Bucketing::isHLineIntersecting (COORD_TYPE lsx, COORD_TYPE lex, COORD_
       double b = ly - _center.y;
       double delta = _R*_R-b*b;
       assert (delta>0);
-      double sqdelta = vcl_sqrt (delta);
+      double sqdelta = std::sqrt (delta);
 
       double x1 = sqdelta + _center.x;
       double x2 = -sqdelta + _center.x;
@@ -634,7 +634,7 @@ bool BArc_Bucketing::isHLineIntersecting (COORD_TYPE lsx, COORD_TYPE lex, COORD_
 bool BArc_Bucketing::isVLineIntersecting (COORD_TYPE lsy, COORD_TYPE ley, COORD_TYPE lx)
 {
   //Compute the length of Arc center to footPt.
-  double CF = vcl_fabs (lx-_center.x);
+  double CF = std::fabs (lx-_center.x);
   if (CF>=_R) //1)CF>r, line outside circle
     return false;
   else {
@@ -653,7 +653,7 @@ bool BArc_Bucketing::isVLineIntersecting (COORD_TYPE lsy, COORD_TYPE ley, COORD_
       double c = lx-_center.x;
       double delta = _R*_R-CF*CF;
       assert (delta>0);
-      double sqdelta = vcl_sqrt (delta);
+      double sqdelta = std::sqrt (delta);
 
       double y1 = sqdelta + _center.y;
       double y2 = -sqdelta + _center.y;
@@ -856,7 +856,7 @@ bool BArc_Bucketing::_getLeftTangentPoint (Point pt, Point& LeftTangentPoint)
 {
   VECTOR_TYPE vCP = _vPointPoint (_center, pt);
   DIST_TYPE CP  = _distPointPoint (_center, pt);
-  VECTOR_TYPE vCTl = angle02Pi (vCP + vcl_acos(_R/CP));
+  VECTOR_TYPE vCTl = angle02Pi (vCP + std::acos(_R/CP));
   if (isVectorValid(vCTl)) {
     LeftTangentPoint = _vectorPoint (_center, vCTl, _R);
     return true;
@@ -871,7 +871,7 @@ bool BArc_Bucketing::_getRightTangentPoint (Point pt, Point& RightTangentPoint)
 {
   VECTOR_TYPE vCP = _vPointPoint (_center, pt);
   DIST_TYPE CP  = _distPointPoint (_center, pt);
-  VECTOR_TYPE vCTr = angle02Pi (vCP - vcl_acos(_R/CP));
+  VECTOR_TYPE vCTr = angle02Pi (vCP - std::acos(_R/CP));
   if (isVectorValid(vCTr)) {
     RightTangentPoint = _vectorPoint (_center, vCTr, _R);
     return true;
@@ -1018,60 +1018,60 @@ bool BArc_Bucketing::AisRectVisible (COORD_TYPE L, COORD_TYPE T, COORD_TYPE R, C
   return true;
 }
 
-void BArc_Bucketing::getInfo (vcl_ostream& ostrm)
+void BArc_Bucketing::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   BArc::getInfo (ostrm);
 
-  vcl_sprintf (s, "BUCKETING:\n"); ostrm<<s;
+  std::sprintf (s, "BUCKETING:\n"); ostrm<<s;
   if (__BucketArray == NULL)
-    vcl_sprintf (s, "Bucket not initialized yet.\n\n");
+    std::sprintf (s, "Bucket not initialized yet.\n\n");
   else {
     if (_bucAX<0) { //print the list of buckets in the list
-      vcl_sprintf (s, "BArc in Buckets: "); ostrm<<s;
+      std::sprintf (s, "BArc in Buckets: "); ostrm<<s;
       BucketList::iterator bit = _arcInBuckets.begin();
       for (; bit != _arcInBuckets.end(); bit++) {
-        vcl_sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
+        std::sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
       }
-      vcl_sprintf (s, "\n"); ostrm<<s;
+      std::sprintf (s, "\n"); ostrm<<s;
   
       //twinArc:
-      vcl_sprintf (s, "twinArc in Buckets: "); ostrm<<s;
+      std::sprintf (s, "twinArc in Buckets: "); ostrm<<s;
       bit = twinArc()->_arcInBuckets.begin();
       for (; bit != twinArc()->_arcInBuckets.end(); bit++) {
-        vcl_sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
+        std::sprintf (s, "[%d][%d], ", (*bit)->index().h, (*bit)->index().v); ostrm<<s;
       }
-      vcl_sprintf (s, "\n"); ostrm<<s;
+      std::sprintf (s, "\n"); ostrm<<s;
     }
     else {
-      vcl_sprintf (s, "BArc in Bucket[%d][%d], BucketId: %d\n", 
+      std::sprintf (s, "BArc in Bucket[%d][%d], BucketId: %d\n", 
             _bucAX, _bucAY, 
             __BucketArray[_bucAX][_bucAY].id()); ostrm<<s;
-      vcl_sprintf (s, "twin BArc in Bucket[%d][%d], BucketId: %d\n", 
+      std::sprintf (s, "twin BArc in Bucket[%d][%d], BucketId: %d\n", 
             twinArc()->_bucAX, twinArc()->_bucAY, 
             __BucketArray[twinArc()->_bucAX][twinArc()->_bucAY].id()); ostrm<<s;
     }
-    vcl_sprintf (s, "s_pt() in Bucket[%d][%d], BucketId: %d\n", 
+    std::sprintf (s, "s_pt() in Bucket[%d][%d], BucketId: %d\n", 
           s_pt()->_bucX, s_pt()->_bucY, 
           __BucketArray[s_pt()->_bucX][s_pt()->_bucY].id()); ostrm<<s;
-    vcl_sprintf (s, "e_pt() in Bucket[%d][%d], BucketId: %d\n\n", 
+    std::sprintf (s, "e_pt() in Bucket[%d][%d], BucketId: %d\n\n", 
           e_pt()->_bucX, e_pt()->_bucY, 
           __BucketArray[e_pt()->_bucX][e_pt()->_bucY].id()); ostrm<<s;
   }
 
   //Arc-Point Visibility Constraint
   if (_APVisCon) {
-    vcl_sprintf (s, "2 APVisCon Vectors:\n"); ostrm<<s;
-    vcl_sprintf (s, "sPoint: (%f, %f), vStartP: (%f, %f), \n",
+    std::sprintf (s, "2 APVisCon Vectors:\n"); ostrm<<s;
+    std::sprintf (s, "sPoint: (%f, %f), vStartP: (%f, %f), \n",
           _APVisCon->_sPoint.x, _APVisCon->_sPoint.y, 
           _APVisCon->_sp._vectorx, _APVisCon->_sp._vectory); ostrm<<s;
-    vcl_sprintf (s, "ePoint: (%f, %f), vEndP (%f, %f). \n\n",
+    std::sprintf (s, "ePoint: (%f, %f), vEndP (%f, %f). \n\n",
           _APVisCon->_ePoint.x, _APVisCon->_ePoint.y, 
           _APVisCon->_ep._vectorx, _APVisCon->_ep._vectory); ostrm<<s;
   }
   else {
-    vcl_sprintf (s, "No APVisCon Vector.\n\n"); ostrm<<s;
+    std::sprintf (s, "No APVisCon Vector.\n\n"); ostrm<<s;
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 }

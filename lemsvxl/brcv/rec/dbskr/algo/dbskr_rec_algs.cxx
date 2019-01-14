@@ -1,5 +1,5 @@
 // This is brcv/rec/dbskr/algo/dbskr_rec_algs.cxx
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include "dbskr_rec_algs.h"
 #include <dbsk2d/dbsk2d_shock_graph.h>
@@ -40,9 +40,9 @@
 //  visited_node_depth_map is used to visit each node once
 //  node_edges_map keeps starting node of a vector of shock edges (degree twos are merged)
 void visit_and_keep_edges(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node, 
-                             vcl_map<dbsk2d_shock_node_sptr, int>& visited_node_depth_map,
-                             vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
-                             vcl_vector<vcl_pair<dbsk2d_shock_node_sptr, int> >& to_visit,
+                             std::map<dbsk2d_shock_node_sptr, int>& visited_node_depth_map,
+                             std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
+                             std::vector<std::pair<dbsk2d_shock_node_sptr, int> >& to_visit,
                              int depth)
 {
   if (depth == 0) {
@@ -55,7 +55,7 @@ void visit_and_keep_edges(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr sta
   do {
     
     // collect all the edges till the next degree three or degree 1 node on this branch
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
     dbsk2d_shock_node_sptr current_node = start_node;
     dbsk2d_shock_edge_sptr current_edge = current_edge_outer;  // first edge on the path is current_edge_outer
     dbsk2d_shock_node_sptr next_node = current_edge->opposite(current_node);
@@ -73,12 +73,12 @@ void visit_and_keep_edges(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr sta
       //if (next_node->degree() >= 3 && next_node->degree() == 1)
       edges.push_back(current_edge);
 
-      vcl_map<dbsk2d_shock_node_sptr, int>::iterator iter = visited_node_depth_map.find(next_node);
+      std::map<dbsk2d_shock_node_sptr, int>::iterator iter = visited_node_depth_map.find(next_node);
       if (iter == visited_node_depth_map.end()) { // not visited before
-        vcl_pair< dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> p(start_node, next_node);
+        std::pair< dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> p(start_node, next_node);
         node_edges_map[p] = edges;
         //if (depth-1 != 0) {
-          vcl_pair<dbsk2d_shock_node_sptr, int> pp(next_node, depth-1);
+          std::pair<dbsk2d_shock_node_sptr, int> pp(next_node, depth-1);
           to_visit.push_back(pp);
         //} else
         //  visited_node_depth_map[next_node] = 0;
@@ -93,43 +93,43 @@ void visit_and_keep_edges(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr sta
 }
 
 void get_scurves(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node,  
-                 vcl_vector<dbskr_scurve_sptr>& cur_scurves, 
-                 vcl_vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds)
+                 std::vector<dbskr_scurve_sptr>& cur_scurves, 
+                 std::vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds)
 {
 
-  vcl_vector<vcl_pair<dbsk2d_shock_node_sptr, int> > to_visit;
-  to_visit.push_back(vcl_pair<dbsk2d_shock_node_sptr, int> (start_node, depth));
+  std::vector<std::pair<dbsk2d_shock_node_sptr, int> > to_visit;
+  to_visit.push_back(std::pair<dbsk2d_shock_node_sptr, int> (start_node, depth));
 
-  vcl_map<dbsk2d_shock_node_sptr, int> visited_node_depth_map;
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> > node_edges_map;
+  std::map<dbsk2d_shock_node_sptr, int> visited_node_depth_map;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> > node_edges_map;
 
   while (to_visit.size() != 0) {
-    vcl_pair<dbsk2d_shock_node_sptr, int> p = to_visit[0];
+    std::pair<dbsk2d_shock_node_sptr, int> p = to_visit[0];
     dbsk2d_shock_node_sptr node = p.first;
     to_visit.erase(to_visit.begin());
     visit_and_keep_edges(sg, node, visited_node_depth_map, node_edges_map, to_visit, p.second);
   }
 
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >::iterator iter;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >::iterator iter;
   iter = node_edges_map.begin();
   for ( ; iter != node_edges_map.end(); iter++) {
-    vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair = iter->first;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges = iter->second;
+    std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair = iter->first;
+    std::vector<dbsk2d_shock_edge_sptr> edges = iter->second;
       
     dbskr_scurve_sptr scurve = dbskr_compute_scurve(node_pair.first, edges, false, 
                                                       binterpolate, subsample, 
                                                       interpolate_ds, subsample_ds);
     cur_scurves.push_back(scurve);
     // check if the end_node was visited at depth 0
-    vcl_map<dbsk2d_shock_node_sptr, int>::iterator visited_iter = visited_node_depth_map.find(node_pair.second);
+    std::map<dbsk2d_shock_node_sptr, int>::iterator visited_iter = visited_node_depth_map.find(node_pair.second);
     if (node_pair.second->degree() == 1)
       end_scurve.push_back(true);
     else {  // there should not be any other edge that starts with this node for it to be an end-node
-      vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >::iterator i;
+      std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >::iterator i;
       i = node_edges_map.begin();
       bool no_other = true;
       for ( ; i != node_edges_map.end(); i++) {
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = i->first;
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = i->first;
         if (np.first == node_pair.second) {
           no_other = false;
           break;
@@ -140,19 +140,19 @@ void get_scurves(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node,
   }
 
   //print for debuggin
-  vcl_cout << "----------------visited nodes:--------------\n";
-  for (vcl_map<dbsk2d_shock_node_sptr, int>::iterator vi = visited_node_depth_map.begin(); vi != visited_node_depth_map.end(); vi++) {
-    vcl_cout << "id: " << vi->first->id() << " depth: " << vi->second << vcl_endl;
+  std::cout << "----------------visited nodes:--------------\n";
+  for (std::map<dbsk2d_shock_node_sptr, int>::iterator vi = visited_node_depth_map.begin(); vi != visited_node_depth_map.end(); vi++) {
+    std::cout << "id: " << vi->first->id() << " depth: " << vi->second << std::endl;
   }
 
   return;
 }
 
-dbsk2d_shock_edge_sptr get_first_edge(vcl_map<dbskr_scurve_sptr, vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> >& scurve_nodes_map,
-                                      vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
+dbsk2d_shock_edge_sptr get_first_edge(std::map<dbskr_scurve_sptr, std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> >& scurve_nodes_map,
+                                      std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
                                       dbskr_scurve_sptr scurve)
 {
-  vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = scurve_nodes_map[scurve];
+  std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = scurve_nodes_map[scurve];
   return (node_edges_map[np])[0];
 }
 
@@ -162,7 +162,7 @@ dbsk2d_shock_edge_sptr get_first_edge(vcl_map<dbskr_scurve_sptr, vcl_pair<dbsk2d
 #define START_FROM_BEGINNING true
 #define START_FROM_END       false
 
-void add_points(vcl_vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr scurve, bool side, bool dir)
+void add_points(std::vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr scurve, bool side, bool dir)
 {
   int size = scurve->num_points();
 
@@ -188,7 +188,7 @@ void add_points(vcl_vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr scurve, b
   } 
 }
 
-void add_points_no_shock(vcl_vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr scurve, bool side, bool dir)
+void add_points_no_shock(std::vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr scurve, bool side, bool dir)
 {
   int size = scurve->num_points();
 
@@ -212,12 +212,12 @@ void add_points_no_shock(vcl_vector<vsol_point_2d_sptr>& pts, dbskr_scurve_sptr 
 
 // find the next scurve with respect to this scurve_node_pair starting with next_edge
 dbskr_scurve_sptr get_next_scurve(dbsk2d_shock_edge_sptr next_edge, dbsk2d_shock_node_sptr start_node,
-                                  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
-                                  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr >& nodes_scurve_map)
+                                  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
+                                  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr >& nodes_scurve_map)
 {
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >::iterator iter2;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >::iterator iter2;
   iter2 = node_edges_map.begin();
-  vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np2;
+  std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np2;
   bool found_it = false;
   for ( ; iter2 != node_edges_map.end(); iter2++) {
     np2 = iter2->first;
@@ -236,17 +236,17 @@ dbskr_scurve_sptr get_next_scurve(dbsk2d_shock_edge_sptr next_edge, dbsk2d_shock
     return 0;
 }
 
-bool an_end_scurve(dbskr_scurve_sptr next_scurve, vcl_vector<dbskr_scurve_sptr>& cur_scurves, vcl_vector<bool>& end_scurve,
-                   vcl_map<dbskr_scurve_sptr, vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>> & scurve_nodes_map,
-                   vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr > & nodes_scurve_map
+bool an_end_scurve(dbskr_scurve_sptr next_scurve, std::vector<dbskr_scurve_sptr>& cur_scurves, std::vector<bool>& end_scurve,
+                   std::map<dbskr_scurve_sptr, std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>> & scurve_nodes_map,
+                   std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr > & nodes_scurve_map
                    ) {
   for (unsigned i = 0; i < cur_scurves.size(); i++)
     if (cur_scurves[i] == next_scurve)
       return end_scurve[i];
   
   // check its reverse as well
-  vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = scurve_nodes_map[next_scurve];
-  vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np_rev;
+  std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = scurve_nodes_map[next_scurve];
+  std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np_rev;
   np_rev.first = np.second;
   np_rev.second = np.first;
   dbskr_scurve_sptr new_scurve = nodes_scurve_map[np_rev];
@@ -262,32 +262,32 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
                                                   int depth, 
                                                   bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds)
 {
-  vcl_vector<dbskr_scurve_sptr> cur_scurves;
-  vcl_vector<bool> end_scurve;
+  std::vector<dbskr_scurve_sptr> cur_scurves;
+  std::vector<bool> end_scurve;
 
 // same as  get_scurves
 ///////////////////////////////////////
-  vcl_vector<vcl_pair<dbsk2d_shock_node_sptr, int> > to_visit;
-  to_visit.push_back(vcl_pair<dbsk2d_shock_node_sptr, int> (start_node, depth));
+  std::vector<std::pair<dbsk2d_shock_node_sptr, int> > to_visit;
+  to_visit.push_back(std::pair<dbsk2d_shock_node_sptr, int> (start_node, depth));
 
-  vcl_map<dbsk2d_shock_node_sptr, int> visited_node_depth_map;
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> > node_edges_map;
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr > nodes_scurve_map;
-  vcl_map<dbskr_scurve_sptr, vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>> scurve_nodes_map;
+  std::map<dbsk2d_shock_node_sptr, int> visited_node_depth_map;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> > node_edges_map;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, dbskr_scurve_sptr > nodes_scurve_map;
+  std::map<dbskr_scurve_sptr, std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>> scurve_nodes_map;
 
   while (to_visit.size() != 0) {
-    vcl_pair<dbsk2d_shock_node_sptr, int> p = to_visit[0];
+    std::pair<dbsk2d_shock_node_sptr, int> p = to_visit[0];
     dbsk2d_shock_node_sptr node = p.first;
     to_visit.erase(to_visit.begin());
     visit_and_keep_edges(sg, node, visited_node_depth_map, node_edges_map, to_visit, p.second);
   }
 
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >::iterator iter;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >::iterator iter;
   iter = node_edges_map.begin();
-  vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> > rev_nodes_edges_map;
+  std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> > rev_nodes_edges_map;
   for ( ; iter != node_edges_map.end(); iter++) {
-    vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair = iter->first;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges = iter->second;
+    std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair = iter->first;
+    std::vector<dbsk2d_shock_edge_sptr> edges = iter->second;
       
     dbskr_scurve_sptr scurve = dbskr_compute_scurve(node_pair.first, edges, false, 
                                                       binterpolate, subsample, 
@@ -297,8 +297,8 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
     scurve_nodes_map[scurve] = node_pair;
 
     // at reverse sides as well for quick access later
-    vcl_vector<dbsk2d_shock_edge_sptr> rev_edges(edges.rbegin(), edges.rend());
-    vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair_rev;
+    std::vector<dbsk2d_shock_edge_sptr> rev_edges(edges.rbegin(), edges.rend());
+    std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> node_pair_rev;
     node_pair_rev.first = node_pair.second;
     node_pair_rev.second = node_pair.first;
 
@@ -310,15 +310,15 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
     rev_nodes_edges_map[node_pair_rev] = rev_edges;
 
     // check if the end_node was visited at depth 0
-    vcl_map<dbsk2d_shock_node_sptr, int>::iterator visited_iter = visited_node_depth_map.find(node_pair.second);
+    std::map<dbsk2d_shock_node_sptr, int>::iterator visited_iter = visited_node_depth_map.find(node_pair.second);
     if (node_pair.second->degree() == 1)
       end_scurve.push_back(true);
     else {  // there should not be any other edge that starts with this node for it to be an end-node
-      vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >::iterator i;
+      std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >::iterator i;
       i = node_edges_map.begin();
       bool no_other = true;
       for ( ; i != node_edges_map.end(); i++) {
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = i->first;
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> np = i->first;
         if (np.first == node_pair.second) {
           no_other = false;
           break;
@@ -329,16 +329,16 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
   }
   
   //print for debuggin
-  vcl_cout << "----------------visited nodes:--------------\n";
-  for (vcl_map<dbsk2d_shock_node_sptr, int>::iterator vi = visited_node_depth_map.begin(); vi != visited_node_depth_map.end(); vi++) {
-    vcl_cout << "id: " << vi->first->id() << " depth: " << vi->second << vcl_endl;
+  std::cout << "----------------visited nodes:--------------\n";
+  for (std::map<dbsk2d_shock_node_sptr, int>::iterator vi = visited_node_depth_map.begin(); vi != visited_node_depth_map.end(); vi++) {
+    std::cout << "id: " << vi->first->id() << " depth: " << vi->second << std::endl;
   }
 
 ////////////////////////////////////  
   //now trace the boundary
 
   // points of the final boundary
-  vcl_vector<vsol_point_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> pts;
 
   // start from an end point // any of them is fine!!
   unsigned i;
@@ -360,7 +360,7 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
     dbskr_scurve_sptr next_scurve;
     do {
       // get the next edge group using start node 
-      vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> scurve_node_pair = scurve_nodes_map[current_scurve];
+      std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> scurve_node_pair = scurve_nodes_map[current_scurve];
       dbsk2d_shock_edge_sptr next_edge = sg->cyclic_adj_succ(edge0, scurve_node_pair.first);
       
       // find the next scurve with respect to this scurve_node_pair starting with next_edge
@@ -370,16 +370,16 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
         if (!rev_next_scurve)
           return 0; // for now
         add_points_no_shock(pts, rev_next_scurve, current_dir, START_FROM_BEGINNING);
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[rev_next_scurve];
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[rev_next_scurve];
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
         snp.first = rev_snp.second;
         snp.second = rev_snp.first;
         next_scurve = nodes_scurve_map[snp];
         edge0 = get_first_edge(scurve_nodes_map, node_edges_map, next_scurve);
       } else {
         add_points_no_shock(pts, next_scurve, current_dir, START_FROM_BEGINNING);
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[next_scurve];
-        vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[next_scurve];
+        std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
         snp.first = rev_snp.second;
         snp.second = rev_snp.first;
         next_scurve = nodes_scurve_map[snp];
@@ -395,8 +395,8 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
     //add_points(pts, next_scurve, current_dir, START_FROM_BEGINNING);
     
     // reverse current again cause we're going back now!! (recovering from an end scurve)
-    vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[next_scurve];
-    vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
+    std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> rev_snp = scurve_nodes_map[next_scurve];
+    std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr> snp;
     snp.first = rev_snp.second;
     snp.second = rev_snp.first;
     current_scurve = nodes_scurve_map[snp];
@@ -422,16 +422,16 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
 dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr node, int depth)
 {
   // use shock node ids 
-  vcl_map<dbsk2d_shock_node_sptr, vcl_pair<dbskr_v_node_sptr, int> > visited_nodes;
-  vcl_map<dbsk2d_shock_node_sptr, vcl_pair<dbskr_v_node_sptr, int> >::iterator vi, vi2;
+  std::map<dbsk2d_shock_node_sptr, std::pair<dbskr_v_node_sptr, int> > visited_nodes;
+  std::map<dbsk2d_shock_node_sptr, std::pair<dbskr_v_node_sptr, int> >::iterator vi, vi2;
   // visit this node at this node coming from this parent edge and the created v_node
-  vcl_vector<vcl_pair< vcl_pair<dbsk2d_shock_node_sptr, int>, vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > > to_visit;
-  typedef vcl_pair< vcl_pair<dbsk2d_shock_node_sptr, int>, vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > to_visit_type;
-  vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr> graph_nodes;
-  //vcl_map< vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, dbskr_v_edge_sptr > edges_to_be_added;
-  vcl_multimap< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_to_be_added;
-  typedef vcl_multimap< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_type;
-  typedef vcl_pair< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_insertion_type;
+  std::vector<std::pair< std::pair<dbsk2d_shock_node_sptr, int>, std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > > to_visit;
+  typedef std::pair< std::pair<dbsk2d_shock_node_sptr, int>, std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > to_visit_type;
+  std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr> graph_nodes;
+  //std::map< std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, dbskr_v_edge_sptr > edges_to_be_added;
+  std::multimap< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_to_be_added;
+  typedef std::multimap< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_type;
+  typedef std::pair< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_insertion_type;
 
   dbskr_v_graph_sptr v_g = new dbskr_v_graph;
   dbskr_v_node_sptr root = new dbskr_v_node(node);
@@ -439,8 +439,8 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
   graph_nodes[node] = root;
   
   to_visit_type vp;
-  vp.first = vcl_pair<dbsk2d_shock_node_sptr, int> (node, depth);
-  vp.second = vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), root);  // first node has no parent edge
+  vp.first = std::pair<dbsk2d_shock_node_sptr, int> (node, depth);
+  vp.second = std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), root);  // first node has no parent edge
   to_visit.push_back(vp);
 
   while (to_visit.size() > 0) {
@@ -451,19 +451,19 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
     dbskr_v_node_sptr current_vn = to_visit[0].second.second;
     to_visit.erase(to_visit.begin());
 #if 0
-    vcl_cout << "--------- visiting: " << current_node->id() << " edges_to_be_added are:\n";
+    std::cout << "--------- visiting: " << current_node->id() << " edges_to_be_added are:\n";
     for (edges_multiset_type::iterator it = edges_to_be_added.begin(); it != edges_to_be_added.end(); it++) {
-      vcl_cout << it->first->id_ << " <" << it->second.first->id_ << ", (";
+      std::cout << it->first->id_ << " <" << it->second.first->id_ << ", (";
       for (unsigned k = 0; k < it->second.second->edges_.size(); k++)
-        vcl_cout << (it->second.second->edges_)[k]->id() << ", ";
-      vcl_cout << ") >\n";
+        std::cout << (it->second.second->edges_)[k]->id() << ", ";
+      std::cout << ") >\n";
     }
 #endif
 
     vi = visited_nodes.find(current_node);
     
     if (vi == visited_nodes.end()) { // not in visited nodes add to the graph with edges to children
-      vcl_pair<dbskr_v_node_sptr, int> p(current_vn, current_depth);
+      std::pair<dbskr_v_node_sptr, int> p(current_vn, current_depth);
       visited_nodes[current_node] = p;
 
       dbsk2d_shock_edge_sptr first_edge_outer, last_edge_outer;
@@ -476,7 +476,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
       dbsk2d_shock_edge_sptr current_edge_outer = first_edge_outer;
       do {
 
-        vcl_vector<dbsk2d_shock_edge_sptr> edges;
+        std::vector<dbsk2d_shock_edge_sptr> edges;
         dbsk2d_shock_node_sptr other_node = sg->get_other_end_merging_degree_twos(current_node, current_edge_outer, edges);
         
         vi2 = visited_nodes.find(other_node);
@@ -485,7 +485,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
           if (current_depth > 0) {
             // although it has not been visited, it might have been added to the graph already 
             dbskr_v_node_sptr vn_sptr;
-            vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator it = graph_nodes.find(other_node);
+            std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator it = graph_nodes.find(other_node);
             if (it == graph_nodes.end()) {
               vn_sptr = new dbskr_v_node(other_node);
               v_g->add_vertex(vn_sptr);
@@ -499,24 +499,24 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
             
             current_vn->add_incoming_edge(ve_sptr);  // always add as incoming edge to make undirected graphs
             
-            vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> vnep(current_vn, ve_sptr);
+            std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> vnep(current_vn, ve_sptr);
             edges_to_be_added.insert(edges_multiset_insertion_type (vn_sptr, vnep));   
             
             to_visit_type vp;
-            vp.first = vcl_pair<dbsk2d_shock_node_sptr, int> (other_node, current_depth-1);
-            vp.second = vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> (edges[edges.size()-1], vn_sptr);  // parent of other node is the last edge on the path to it
+            vp.first = std::pair<dbsk2d_shock_node_sptr, int> (other_node, current_depth-1);
+            vp.second = std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> (edges[edges.size()-1], vn_sptr);  // parent of other node is the last edge on the path to it
             to_visit.push_back(vp);       
           }
 
         } else {
           dbskr_v_node_sptr vn_sptr = graph_nodes[other_node];
 
-          vcl_pair<edges_multiset_type::iterator, edges_multiset_type::iterator> itp = edges_to_be_added.equal_range(current_vn);
+          std::pair<edges_multiset_type::iterator, edges_multiset_type::iterator> itp = edges_to_be_added.equal_range(current_vn);
           if (itp.first != edges_to_be_added.end()) {
             edges_multiset_type::iterator i;
             bool found = false;
             for (i = itp.first; i != itp.second; i++) {
-              vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> p = i->second;
+              std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> p = i->second;
               if (p.first == vn_sptr && p.second->edges_[0] == edges[edges.size()-1]) {
                 current_vn->add_incoming_edge(p.second);
                 found = true;
@@ -543,16 +543,16 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
 dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr node)
 {
   // use shock node ids 
-  vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr > visited_nodes;
-  vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr >::iterator vi, vi2;
+  std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr > visited_nodes;
+  std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr >::iterator vi, vi2;
   // visit this node at this node coming from this parent edge and the created v_node
-  vcl_vector<vcl_pair< dbsk2d_shock_node_sptr, vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > > to_visit;
-  typedef vcl_pair< dbsk2d_shock_node_sptr, vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > to_visit_type;
-  vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr> graph_nodes;
-  //vcl_map< vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, dbskr_v_edge_sptr > edges_to_be_added;
-  vcl_multimap< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_to_be_added;
-  typedef vcl_multimap< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_type;
-  typedef vcl_pair< dbskr_v_node_sptr, vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_insertion_type;
+  std::vector<std::pair< dbsk2d_shock_node_sptr, std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > > to_visit;
+  typedef std::pair< dbsk2d_shock_node_sptr, std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> > to_visit_type;
+  std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr> graph_nodes;
+  //std::map< std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, dbskr_v_edge_sptr > edges_to_be_added;
+  std::multimap< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_to_be_added;
+  typedef std::multimap< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_type;
+  typedef std::pair< dbskr_v_node_sptr, std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> > edges_multiset_insertion_type;
 
   dbskr_v_graph_sptr v_g = new dbskr_v_graph;
   dbskr_v_node_sptr root = new dbskr_v_node(node);
@@ -561,7 +561,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
   
   to_visit_type vp;
   vp.first = node;
-  vp.second = vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), root);  // first node has no parent edge
+  vp.second = std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), root);  // first node has no parent edge
   to_visit.push_back(vp);
 
   //: make sure all the shock graph is covered, there may be disconnected components in the shock graph
@@ -590,7 +590,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
       dbsk2d_shock_edge_sptr current_edge_outer = first_edge_outer;
       do {
 
-        vcl_vector<dbsk2d_shock_edge_sptr> edges;
+        std::vector<dbsk2d_shock_edge_sptr> edges;
         dbsk2d_shock_node_sptr other_node = sg->get_other_end_merging_degree_twos(current_node, current_edge_outer, edges);
         
         vi2 = visited_nodes.find(other_node);
@@ -599,7 +599,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
           //if (current_depth > 0) {
             // although it has not been visited, it might have been added to the graph already 
             dbskr_v_node_sptr vn_sptr;
-            vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator it = graph_nodes.find(other_node);
+            std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator it = graph_nodes.find(other_node);
             if (it == graph_nodes.end()) {
               vn_sptr = new dbskr_v_node(other_node);
               v_g->add_vertex(vn_sptr); 
@@ -613,24 +613,24 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
             
             current_vn->add_incoming_edge(ve_sptr);  // always add as incoming edge to make undirected graphs
             
-            vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> vnep(current_vn, ve_sptr);
+            std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> vnep(current_vn, ve_sptr);
             edges_to_be_added.insert(edges_multiset_insertion_type (vn_sptr, vnep));   
             
             to_visit_type vp;
             vp.first = other_node;
-            vp.second = vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> (edges[edges.size()-1], vn_sptr);  // parent of other node is the last edge on the path to it
+            vp.second = std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> (edges[edges.size()-1], vn_sptr);  // parent of other node is the last edge on the path to it
             to_visit.push_back(vp);       
           //}
 
         } else {
           dbskr_v_node_sptr vn_sptr = graph_nodes[other_node];
 
-          vcl_pair<edges_multiset_type::iterator, edges_multiset_type::iterator> itp = edges_to_be_added.equal_range(current_vn);
+          std::pair<edges_multiset_type::iterator, edges_multiset_type::iterator> itp = edges_to_be_added.equal_range(current_vn);
           if (itp.first != edges_to_be_added.end()) {
             edges_multiset_type::iterator i;
             bool found = false;
             for (i = itp.first; i != itp.second; i++) {
-              vcl_pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> p = i->second;
+              std::pair<dbskr_v_node_sptr, dbskr_v_edge_sptr> p = i->second;
               if (p.first == vn_sptr && p.second->edges_[0] == edges[edges.size()-1]) {
                 current_vn->add_incoming_edge(p.second);
                 found = true;
@@ -656,7 +656,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
     if ((*it)->degree() != 1)
       continue;
     dbsk2d_shock_node_sptr node = (*it);
-    vcl_map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator m_itr = graph_nodes.find(node);
+    std::map<dbsk2d_shock_node_sptr, dbskr_v_node_sptr>::iterator m_itr = graph_nodes.find(node);
     if (m_itr == graph_nodes.end()) {  // not covered
       dbskr_v_node_sptr new_root = new dbskr_v_node(node);
       v_g->add_vertex(new_root);
@@ -664,7 +664,7 @@ dbskr_v_graph_sptr construct_v_graph(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_no
   
       to_visit_type vp;
       vp.first = node;
-      vp.second = vcl_pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), new_root);  // first node has no parent edge
+      vp.second = std::pair<dbsk2d_shock_edge_sptr, dbskr_v_node_sptr> ((dbsk2d_shock_edge*)(0), new_root);  // first node has no parent edge
       to_visit.push_back(vp);
 
       all_covered = false;
@@ -721,34 +721,34 @@ int find_min_full_depth(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr& fina
 //: for debugging
 void print_v_graph(dbskr_v_graph_sptr v_g)
 {
-  vcl_cout << "---------------------------------\nvertices: ";
+  std::cout << "---------------------------------\nvertices: ";
   dbskr_v_graph::vertex_iterator v = v_g->vertices_begin();
   for ( ; v != v_g->vertices_end(); v++) {
-    vcl_cout << (*v)->id_ << " " << (*v)->degree() << " ";
+    std::cout << (*v)->id_ << " " << (*v)->degree() << " ";
   }
-  vcl_cout << "\nedges: ";
+  std::cout << "\nedges: ";
   dbskr_v_graph::edge_iterator e = v_g->edges_begin();
   for ( ; e != v_g->edges_end(); e++) {
-    vcl_cout << "(" << (*e)->start_node_id_ << ", " << (*e)->end_node_id_ << ") "; 
+    std::cout << "(" << (*e)->start_node_id_ << ", " << (*e)->end_node_id_ << ") "; 
   }
-  vcl_cout << "\n-------------------------------\n";
+  std::cout << "\n-------------------------------\n";
   
 }
 
 //: for debugging
 void print_shock_graph(dbsk2d_shock_graph_sptr v_g)
 {
-  vcl_cout << "---------------------------------\nvertices: ";
+  std::cout << "---------------------------------\nvertices: ";
   dbsk2d_shock_graph::vertex_iterator v = v_g->vertices_begin();
   for ( ; v != v_g->vertices_end(); v++) {
-    vcl_cout << (*v)->id() << " " << (*v)->degree() << " ";
+    std::cout << (*v)->id() << " " << (*v)->degree() << " ";
   }
-  vcl_cout << "\nedges: ";
+  std::cout << "\nedges: ";
   dbsk2d_shock_graph::edge_iterator e = v_g->edges_begin();
   for ( ; e != v_g->edges_end(); e++) {
-    vcl_cout << (*e)->id() << ": (" << (*e)->source()->id() << ", " << (*e)->target()->id() << ") "; 
+    std::cout << (*e)->id() << ": (" << (*e)->source()->id() << ", " << (*e)->target()->id() << ") "; 
   }
-  vcl_cout << "\n-------------------------------\n";
+  std::cout << "\n-------------------------------\n";
   
 }
 
@@ -764,7 +764,7 @@ dbsk2d_shock_node_sptr& get_node_sptr(dbsk2d_shock_graph_sptr g, int id)
   return *(g->vertices_begin());
 }
 
-void get_node_map(vcl_map<int, dbsk2d_shock_node_sptr>& map, dbsk2d_shock_graph_sptr g)
+void get_node_map(std::map<int, dbsk2d_shock_node_sptr>& map, dbsk2d_shock_graph_sptr g)
 {
   dbsk2d_shock_graph::vertex_iterator v = g->vertices_begin();
   for ( ; v != g->vertices_end(); v++) {
@@ -784,7 +784,7 @@ dbskr_v_node_sptr& get_node_sptr(dbskr_v_graph_sptr g, int id)
   return *(g->vertices_begin());
 }
 
-void get_node_map(vcl_map<int, dbskr_v_node_sptr>& map, dbskr_v_graph_sptr g)
+void get_node_map(std::map<int, dbskr_v_node_sptr>& map, dbskr_v_graph_sptr g)
 {
   dbskr_v_graph::vertex_iterator v = g->vertices_begin();
   for ( ; v != g->vertices_end(); v++) {
@@ -794,8 +794,8 @@ void get_node_map(vcl_map<int, dbskr_v_node_sptr>& map, dbskr_v_graph_sptr g)
 
 
 void get_scurves(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node, 
-                 vcl_vector<dbskr_scurve_sptr>& cur_scurves, 
-                 vcl_vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds)
+                 std::vector<dbskr_scurve_sptr>& cur_scurves, 
+                 std::vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds)
 {
   dbskr_v_graph_sptr vg = construct_v_graph(sg, start_node, depth);
   //print_v_graph(vg);
@@ -842,19 +842,19 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
       return 0;
 
     int start_node_id = start_edge->source()->id_;
-    vcl_vector<dbskr_v_edge_sptr> edges;
+    std::vector<dbskr_v_edge_sptr> edges;
     edges.push_back(start_edge);  // I want this edge to be repeated at the beginning
     euler_tour(vg, start_edge, start_edge->source(), edges);
 
     if (!edges.size())
       return 0;
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
 
     dbskr_v_edge_sptr e, e_next;
     int current_node_id = start_node_id;
     for (unsigned i = 0; i < edges.size(); i++) {
-      //vcl_cout << "(" << edges[i]->start_node_id_ << ", " << edges[i]->end_node_id_ << ")\n";
+      //std::cout << "(" << edges[i]->start_node_id_ << ", " << edges[i]->end_node_id_ << ")\n";
       
       // if e and e_next are the same then this is an end scurve
       e = edges[i];
@@ -863,7 +863,7 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
       bool end_scurve = (e == e_next);
 
       dbsk2d_shock_node_sptr start_node, end_node;
-      vcl_vector<dbsk2d_shock_edge_sptr> scurve_edges;
+      std::vector<dbsk2d_shock_edge_sptr> scurve_edges;
       start_node = (e->source()->original_shock_node_->id() == current_node_id) ? e->source()->original_shock_node_ : e->target()->original_shock_node_;
       end_node = (e->source()->original_shock_node_->id() == current_node_id) ? e->target()->original_shock_node_ : e->source()->original_shock_node_;
       if (e->start_node_id_ == current_node_id) {
@@ -902,7 +902,7 @@ vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg,
 
     poly = new vsol_polygon_2d(pts);
     double area = poly->area();
-    //vcl_cout << "area is " << area << vcl_endl;
+    //std::cout << "area is " << area << std::endl;
     if (area > poly_area_threshold)
       break;
     else 
@@ -929,14 +929,14 @@ vsol_polygon_2d_sptr trace_boundary_from_graph(dbsk2d_shock_graph_sptr sg,
   
   dbsk2d_shock_edge_sptr start_edge = 0;  // start with zero for the root to find depth
   // if (sg->has_cycle()) {
-  //   vcl_cout << "This graph contains a loop!! Cannot save the image\n";
+  //   std::cout << "This graph contains a loop!! Cannot save the image\n";
   //   return 0;
   // }
 
-  //vcl_cout << "finding depth of the following graph: " << vcl_endl;
+  //std::cout << "finding depth of the following graph: " << std::endl;
   //print_shock_graph(sg);
   int depth = depth_no_loop(sg, start_edge, start_node);
-  // //vcl_cout << "depth found to be: " << depth << vcl_endl;
+  // //std::cout << "depth found to be: " << depth << std::endl;
 
   // if (depth <= 0)
   //   return 0;
@@ -980,7 +980,7 @@ dbskr_shock_patch_sptr extract_patch_from_subgraph(dbsk2d_shock_graph_sptr sg,
   return patch;
 }
 
-void get_edges_on_outer_face(dbskr_v_graph_sptr vg, vcl_vector<dbskr_v_edge_sptr> &edges) {
+void get_edges_on_outer_face(dbskr_v_graph_sptr vg, std::vector<dbskr_v_edge_sptr> &edges) {
   
   dbskr_v_graph::edge_iterator eit = vg->edges_begin();
   for ( ; eit != vg->edges_end(); eit++) {
@@ -1015,27 +1015,27 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
       return 0;
 
     int start_node_id = start_edge->source()->id_;
-    vcl_vector<dbskr_v_edge_sptr> edges;
+    std::vector<dbskr_v_edge_sptr> edges;
     edges.push_back(start_edge);  // I want this edge to be repeated at the beginning
     euler_tour(vg, start_edge, start_edge->source(), edges);
 
-    //vcl_cout << "edges on outer face of patch: " << vcl_endl;
+    //std::cout << "edges on outer face of patch: " << std::endl;
     //for (unsigned i = 0; i < edges.size(); i++) {
-    //  vcl_cout << "i: " << i << " s: " << edges[i]->source()->id_ << " t: " << edges[i]->target()->id_ << vcl_endl;
+    //  std::cout << "i: " << i << " s: " << edges[i]->source()->id_ << " t: " << edges[i]->target()->id_ << std::endl;
     //}
-    //vcl_cout << "-----------------\n";
+    //std::cout << "-----------------\n";
 
     if (!edges.size())
       return 0;
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
     
 
     dbskr_v_edge_sptr e, e_next;
     int current_node_id = start_node_id;
     //vsol_polyline_2d_sptr current_real_boundary = new vsol_polyline_2d();
     for (unsigned i = 0; i < edges.size(); i++) {
-      //vcl_cout << "(" << edges[i]->start_node_id_ << ", " << edges[i]->end_node_id_ << ")\n";
+      //std::cout << "(" << edges[i]->start_node_id_ << ", " << edges[i]->end_node_id_ << ")\n";
       e = edges[i];
 
       if (e->source()->id_ < 0 || e->target()->id_ < 0)
@@ -1047,7 +1047,7 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
       bool end_scurve = (e == e_next);
 
       dbsk2d_shock_node_sptr start_node, end_node;
-      vcl_vector<dbsk2d_shock_edge_sptr> scurve_edges;
+      std::vector<dbsk2d_shock_edge_sptr> scurve_edges;
       start_node = (e->source()->original_shock_node_->id() == current_node_id) ? e->source()->original_shock_node_ : e->target()->original_shock_node_;
       end_node = (e->source()->original_shock_node_->id() == current_node_id) ? e->target()->original_shock_node_ : e->source()->original_shock_node_;
       if (e->start_node_id_ == current_node_id) {
@@ -1066,7 +1066,7 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
           scurve = dbskr_compute_scurve(start_node, scurve_edges, false, binterpolate, subsample, interpolate_ds, subsample_ds);
 
         vsol_polyline_2d_sptr plm = new vsol_polyline_2d();
-        vcl_vector<vgl_point_2d<double> >& vm = scurve->bdry_minus();
+        std::vector<vgl_point_2d<double> >& vm = scurve->bdry_minus();
         for (unsigned j = 0; j < vm.size(); j++) {
           vsol_point_2d_sptr dum_pt = new vsol_point_2d(vm[j]);
           plm->add_vertex(dum_pt);
@@ -1078,7 +1078,7 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
         //current_real_boundary = new vsol_polyline_2d();
 
         vsol_polyline_2d_sptr plp = new vsol_polyline_2d();
-        vcl_vector<vgl_point_2d<double> >& vp = scurve->bdry_plus();
+        std::vector<vgl_point_2d<double> >& vp = scurve->bdry_plus();
         for (int j = int(vp.size()-1); j >=0 ; j--) {
           vsol_point_2d_sptr dum_pt = new vsol_point_2d(vp[j]);
           plp->add_vertex(dum_pt);
@@ -1127,7 +1127,7 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
         }
 
         vsol_polyline_2d_sptr plm = new vsol_polyline_2d();
-        vcl_vector<vgl_point_2d<double> >& vm = scurve->bdry_minus();
+        std::vector<vgl_point_2d<double> >& vm = scurve->bdry_minus();
         for (unsigned j = 0; j < vm.size(); j++) {
           vsol_point_2d_sptr dum_pt = new vsol_point_2d(vm[j]);
           plm->add_vertex(dum_pt);
@@ -1146,7 +1146,7 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
       pts[kkk] = 0;
     pts.clear();
     double area = poly->area();
-    //vcl_cout << "area is " << area << vcl_endl;
+    //std::cout << "area is " << area << std::endl;
     if (area > poly_area_threshold)
       break;
     else { 
@@ -1163,15 +1163,15 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
   //: at this point, all the real boundaries are scurves coming from different shock branches
   //  when two shock branches are the neighbors of each other then their scurves are end to end
   //  merge the real boundaries, when they are end to end 
-  vcl_vector<vsol_polyline_2d_sptr>& rbs = patch->get_real_boundaries();
+  std::vector<vsol_polyline_2d_sptr>& rbs = patch->get_real_boundaries();
   if (rbs.size() > 0) {
-    vcl_vector<vcl_vector<vsol_polyline_2d_sptr> > new_rbs;
+    std::vector<std::vector<vsol_polyline_2d_sptr> > new_rbs;
     
-    vcl_vector<vsol_polyline_2d_sptr> remaining(rbs);
+    std::vector<vsol_polyline_2d_sptr> remaining(rbs);
     
     while (!remaining.empty()) {
 
-      vcl_vector<vsol_polyline_2d_sptr> current_set;
+      std::vector<vsol_polyline_2d_sptr> current_set;
       current_set.push_back(remaining[0]);
 
       //: now add all the other curves which are ending or starting at the current sets ending or starting points
@@ -1211,10 +1211,10 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
     rbs.clear();
 
     // now make longer polylines
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > rbs_points;
+    std::vector<std::vector<vsol_point_2d_sptr> > rbs_points;
     for (unsigned i = 0; i < new_rbs.size(); i++) {
       //vsol_polyline_2d_sptr poly = new vsol_polyline_2d();
-      vcl_vector<vsol_point_2d_sptr> points;
+      std::vector<vsol_point_2d_sptr> points;
       for (unsigned j = 0; j < new_rbs[i].size(); j++) {
         //: not including the first points in the polylines, cause they are causing self crossings at the minuscule level
         for (unsigned k = 0; k < new_rbs[i][j]->size(); k++)
@@ -1264,8 +1264,8 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr vg, int id,
 
 //: For sorting pairs by their second elements cost
 inline bool
-final_cost_less( const vcl_pair<int, dbskr_sm_cor_sptr>& left,
-                 const vcl_pair<int, dbskr_sm_cor_sptr>& right )
+final_cost_less( const std::pair<int, dbskr_sm_cor_sptr>& left,
+                 const std::pair<int, dbskr_sm_cor_sptr>& right )
 {
   return (left.second)->final_cost() < (right.second)->final_cost();
 }
@@ -1275,27 +1275,27 @@ final_cost_less( const vcl_pair<int, dbskr_sm_cor_sptr>& left,
 //           MAKE SURE: tree computation parameters in dbskr_shock_patch and the ones in edit_params are exactly the same
 bool
 find_patch_correspondences(dbskr_shock_patch_sptr s1, 
-                           vcl_vector<dbskr_shock_patch_sptr>& s2, 
+                           std::vector<dbskr_shock_patch_sptr>& s2, 
                            patch_cor_map_type& match_map, dbskr_tree_edit_params& edit_params)
 { 
   dbskr_tree_sptr tree1 = s1->tree();  // forces computation if tree is not available
   if (!tree1) {
-    vcl_cout << "Tree is not available for patch: " << s1->id() << " skipping\n" << vcl_endl;
+    std::cout << "Tree is not available for patch: " << s1->id() << " skipping\n" << std::endl;
     return false;
   }
 
-  //vcl_cout << s1->id() << " ";
+  //std::cout << s1->id() << " ";
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> > * patch_v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> > * patch_v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
   for (unsigned j = 0; j < s2.size(); j++) {
     dbsk2d_shock_graph_sptr sg2;
 
     dbskr_tree_sptr tree2 = s2[j]->tree();  // forces computation if tree is not available
     if (!tree2) {
-      vcl_cout << "Tree 2 is not available for patch: " << s2[j]->id() << " skipping\n" << vcl_endl;
+      std::cout << "Tree 2 is not available for patch: " << s2[j]->id() << " skipping\n" << std::endl;
       continue;
     }
-    //vcl_cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " ";
+    //std::cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " ";
 
     vul_timer t;
     t.mark();
@@ -1309,17 +1309,17 @@ find_patch_correspondences(dbskr_shock_patch_sptr s1,
 
     edit->save_path(true);
     if (!edit->edit()) {
-      vcl_cout << "Problems in editing trees\n";
+      std::cout << "Problems in editing trees\n";
       continue;
     }
     float val = edit->final_cost();
     float norm_val = val/(tree1->total_splice_cost()+tree2->total_splice_cost());
-    //vcl_cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
+    //std::cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
     dbskr_sm_cor_sptr sm_cor = edit->get_correspondence_just_map();  // sets the parameters
     sm_cor->set_final_cost(val);
     sm_cor->set_final_norm_cost(norm_val);
     
-    vcl_pair<int, dbskr_sm_cor_sptr> pp;
+    std::pair<int, dbskr_sm_cor_sptr> pp;
     pp.first = s2[j]->id();
     pp.second = sm_cor;
     patch_v->push_back(pp);
@@ -1330,7 +1330,7 @@ find_patch_correspondences(dbskr_shock_patch_sptr s1,
   }
   s1->kill_tree();
   
-  vcl_sort(patch_v->begin(), patch_v->end(), final_cost_less );
+  std::sort(patch_v->begin(), patch_v->end(), final_cost_less );
   match_map[s1->id()] = patch_v;
   return true;
 }
@@ -1339,8 +1339,8 @@ find_patch_correspondences(dbskr_shock_patch_sptr s1,
 //           only sets the tree_edit parameters from edit_params argument
 //           MAKE SURE: tree computation parameters in dbskr_shock_patch and the ones in edit_params are exactly the same
 dbskr_shock_patch_match_sptr 
-find_all_patch_correspondences(vcl_vector<dbskr_shock_patch_sptr>& s1, 
-                               vcl_vector<dbskr_shock_patch_sptr>& s2, dbskr_tree_edit_params& edit_params)
+find_all_patch_correspondences(std::vector<dbskr_shock_patch_sptr>& s1, 
+                               std::vector<dbskr_shock_patch_sptr>& s2, dbskr_tree_edit_params& edit_params)
 { 
   dbskr_shock_patch_match_sptr match = new dbskr_shock_patch_match();
   match->edit_params_ = edit_params;
@@ -1359,25 +1359,25 @@ find_all_patch_correspondences(vcl_vector<dbskr_shock_patch_sptr>& s1,
 //           combined_edit should be false in edit_params since coarse editing 
 //           (interval cost functions in Sebastian et al. PAMI06 will be used and splice cost function will use original dpmatch)
 bool find_patch_correspondences_coarse_edit(dbskr_shock_patch_sptr s1, 
-                                vcl_vector<dbskr_shock_patch_sptr>& s2, 
+                                std::vector<dbskr_shock_patch_sptr>& s2, 
                                 patch_cor_map_type& match_map, dbskr_tree_edit_params& edit_params)
 {
   dbskr_tree_sptr tree1 = s1->tree();  // forces computation of tree if its not available
                                                                       // dpmatch_combined = false since coarse editing (interval cost functions in Sebastian et al. PAMI06 will be used and splice cost function will use original dpmatch)
   if (!tree1) { 
-    vcl_cout << "Tree is not available for patch: " << s1->id() << " skipping\n" << vcl_endl;
+    std::cout << "Tree is not available for patch: " << s1->id() << " skipping\n" << std::endl;
     return false;
   }
-  //vcl_cout << "patch: " << s1->id() << " d: " << s1->depth() << "\n";
+  //std::cout << "patch: " << s1->id() << " d: " << s1->depth() << "\n";
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> > * patch_v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> > * patch_v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
   for (unsigned j = 0; j < s2.size(); j++) {
     dbskr_tree_sptr tree2 = s2[j]->tree();  // forces computation of tree if its not available                                            
     if (!tree2) {
-      vcl_cout << "Tree 2 is not available for patch: " << s2[j]->id() << " skipping\n" << vcl_endl;
+      std::cout << "Tree 2 is not available for patch: " << s2[j]->id() << " skipping\n" << std::endl;
       continue;
     }
-    //vcl_cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " ";
+    //std::cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " ";
 
     vul_timer t;
     t.mark();
@@ -1386,31 +1386,31 @@ bool find_patch_correspondences_coarse_edit(dbskr_shock_patch_sptr s1,
     dbskr_tree_edit_coarse edit(tree1, tree2, edit_params.circular_ends_);  // WARNING: using s1's flag to match both s1 and s2[j]!!!!
     edit.save_path(true);
     if (!edit.edit()) {
-      vcl_cout << "Problems in editing trees\n";
+      std::cout << "Problems in editing trees\n";
       continue;
     }
     float val = edit.final_cost();
     float norm_val = val/(tree1->total_splice_cost()+tree2->total_splice_cost());
-    //vcl_cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
+    //std::cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
     dbskr_sm_cor_sptr sm_cor = edit.get_correspondence_just_map();
     sm_cor->set_final_cost(val);
     sm_cor->set_final_norm_cost(norm_val);
-    vcl_pair<int, dbskr_sm_cor_sptr> pp;
+    std::pair<int, dbskr_sm_cor_sptr> pp;
     pp.first = s2[j]->id();
     pp.second = sm_cor;
     patch_v->push_back(pp);
   }
 
-  vcl_sort(patch_v->begin(), patch_v->end(), final_cost_less );
+  std::sort(patch_v->begin(), patch_v->end(), final_cost_less );
   match_map[s1->id()] = patch_v;
   return true;
 }
 
 //: given an image (patch set) find its best match among a set of matches
-bool best_match_norm(vcl_vector<dbskr_shock_patch_sptr>& pv, 
-                vcl_vector<dbskr_shock_patch_match_sptr>& mv, int& best_id)
+bool best_match_norm(std::vector<dbskr_shock_patch_sptr>& pv, 
+                std::vector<dbskr_shock_patch_match_sptr>& mv, int& best_id)
 {
-  vcl_vector<float> mv_counts(mv.size(), 0);
+  std::vector<float> mv_counts(mv.size(), 0);
 
   for (unsigned i = 0; i < pv.size(); i++) {
     dbskr_shock_patch_sptr sp = pv[i];
@@ -1420,14 +1420,14 @@ bool best_match_norm(vcl_vector<dbskr_shock_patch_sptr>& pv,
     for (unsigned j = 0; j < mv.size(); j++) {
       
       if (!mv[j]) {  // the match does not exist for this pair
-        vcl_cout << "match is not complete!\n";
+        std::cout << "match is not complete!\n";
         return false;
       }
 
       //: get the best match of the patch with this id
-      vcl_pair<int, dbskr_sm_cor_sptr>& bp = mv[j]->get_best_match(sp->id());  // there might be run time errors if it cannot find this instance in the map of match
+      std::pair<int, dbskr_sm_cor_sptr>& bp = mv[j]->get_best_match(sp->id());  // there might be run time errors if it cannot find this instance in the map of match
                                                                                // make sure the patch storages are the ones used to create this match instance
-      //vcl_cout << "best match of " << sp->id() << " is: " << bp.first << " cost: " << bp.second->final_norm_cost() << "\n"; 
+      //std::cout << "best match of " << sp->id() << " is: " << bp.first << " cost: " << bp.second->final_norm_cost() << "\n"; 
       if (bp.second) {
         float norm_val = bp.second->final_norm_cost();
         if (norm_val < best_norm_val) {
@@ -1437,7 +1437,7 @@ bool best_match_norm(vcl_vector<dbskr_shock_patch_sptr>& pv,
       }
     }
     if (best_j < 0) {
-      vcl_cout << "match is not complete!\n";
+      std::cout << "match is not complete!\n";
       return false; // size of the match vector is zero  
     }
 
@@ -1461,10 +1461,10 @@ bool best_match_norm(vcl_vector<dbskr_shock_patch_sptr>& pv,
 
 //: given an image (patch set) find its best match among a set of matches
 //  use top n best patch matches between the patch set matches of two images
-bool best_match_norm_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, 
-                vcl_vector<dbskr_shock_patch_match_sptr>& mv, int n, int& best_id)
+bool best_match_norm_top_n(std::vector<dbskr_shock_patch_sptr>& pv, 
+                std::vector<dbskr_shock_patch_match_sptr>& mv, int n, int& best_id)
 {
-  vcl_vector<float> mv_counts(mv.size(), 0);
+  std::vector<float> mv_counts(mv.size(), 0);
 
   
   for (unsigned i = 0; i < pv.size(); i++) {
@@ -1475,17 +1475,17 @@ bool best_match_norm_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
     for (unsigned j = 0; j < mv.size(); j++) {
       
       if (!mv[j]) {  // the match does not exist for this pair
-        vcl_cout << "match is not complete!\n";
+        std::cout << "match is not complete!\n";
         return false;
       }
 
-      vcl_map<int, dbskr_shock_patch_sptr>& map1 = mv[j]->get_id_map1();
-      vcl_map<int, dbskr_shock_patch_sptr>& map2 = mv[j]->get_id_map2();
+      std::map<int, dbskr_shock_patch_sptr>& map1 = mv[j]->get_id_map1();
+      std::map<int, dbskr_shock_patch_sptr>& map2 = mv[j]->get_id_map2();
 
       //: get the best match of the patch with this id
-      vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* bpv = mv[j]->get_best_n_match(sp->id(), n);  // there might be run time errors if it cannot find this instance in the map of match
+      std::vector< std::pair<int, dbskr_sm_cor_sptr> >* bpv = mv[j]->get_best_n_match(sp->id(), n);  // there might be run time errors if it cannot find this instance in the map of match
                                                                                // make sure the patch storages are the ones used to create this match instance
-      //vcl_cout << "best match of " << sp->id() << " is: " << bp.first << " cost: " << bp.second->final_norm_cost() << "\n"; 
+      //std::cout << "best match of " << sp->id() << " is: " << bp.first << " cost: " << bp.second->final_norm_cost() << "\n"; 
       float norm_val = 0;
       for (unsigned k = 0; k < bpv->size(); k++) {
         /*//: find the areas of the patches and signify the match depending on the size of the patch
@@ -1504,7 +1504,7 @@ bool best_match_norm_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
       }
     }
     if (best_j < 0) {
-      vcl_cout << "match is not complete!\n";
+      std::cout << "match is not complete!\n";
       return false; // size of the match vector is zero  
     }
 
@@ -1527,7 +1527,7 @@ bool best_match_norm_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
 
 //: given an image (patch set), for each patch find its best patch and vote for the category of the best match
 //  if use_info then use the mutual information scores for sorting
-bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vector<vcl_vector<dbskr_shock_patch_match_sptr> >& mv, int& best_cat_id, bool use_info)
+bool match_strat1_simple_voting(std::vector<dbskr_shock_patch_sptr>& pv, std::vector<std::vector<dbskr_shock_patch_match_sptr> >& mv, int& best_cat_id, bool use_info)
 {
   // weight the votes wrt to the areas of the patches
   float largest_area = float(pv[0]->get_traced_boundary()->area());
@@ -1536,7 +1536,7 @@ bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vect
     if (a > largest_area)
       largest_area = a;
   }
-  vcl_vector<float> category_votes(mv.size(), 0.0f);
+  std::vector<float> category_votes(mv.size(), 0.0f);
   for (unsigned i = 0; i < pv.size(); i++) {
     //: try each category patches
     float val;
@@ -1552,7 +1552,7 @@ bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vect
         if (!m)
           return false;
         if (use_info) {
-          vcl_pair<int, float> p = m->get_best_match_info(pv[i]->id());
+          std::pair<int, float> p = m->get_best_match_info(pv[i]->id());
           if (p.first > 0) {
             if (p.second > val) {  // find the patch with max mutual info
               val = p.second;
@@ -1560,7 +1560,7 @@ bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vect
             }
           }
         } else {
-          vcl_pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
+          std::pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
           if (p.second) {
             if (p.second->final_norm_cost() < val) {
               val = p.second->final_norm_cost();
@@ -1578,10 +1578,10 @@ bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vect
 
   best_cat_id = 0;
   float vote_cnt = category_votes[0];
-  vcl_cout << "total patch (vote) cnt: " << pv.size() << "\n";
-  vcl_cout << "0: " << category_votes[0] << vcl_endl;
+  std::cout << "total patch (vote) cnt: " << pv.size() << "\n";
+  std::cout << "0: " << category_votes[0] << std::endl;
   for (unsigned i = 1; i < category_votes.size(); i++) {
-    vcl_cout << i << ": " << category_votes[i] << vcl_endl;
+    std::cout << i << ": " << category_votes[i] << std::endl;
     if (category_votes[i] > vote_cnt) {
       best_cat_id = i;
       vote_cnt = category_votes[i];
@@ -1593,10 +1593,10 @@ bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vect
 
 //: given an image (patch set), for each patch find its best n patch and vote for the category of the best n matches
 //  if use_info then use the mutual information scores for sorting
-bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, 
-                                      vcl_vector<vcl_vector<dbskr_shock_patch_match_sptr> >& mv, 
+bool match_strat1_simple_voting_top_n(std::vector<dbskr_shock_patch_sptr>& pv, 
+                                      std::vector<std::vector<dbskr_shock_patch_match_sptr> >& mv, 
                                       int& best_cat_id, int n,
-                                      int visualization_n, vcl_vector<vcl_vector<vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > > >& best_category_instance_ids)
+                                      int visualization_n, std::vector<std::vector<std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > > >& best_category_instance_ids)
 {
   // weight the votes wrt to the areas of the patches
   /*float largest_area = float(pv[0]->get_traced_boundary()->area());
@@ -1606,7 +1606,7 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
       largest_area = a;
   }*/
   double max_width = 0;
-  vcl_vector<double> widths;
+  std::vector<double> widths;
   for (unsigned i = 0; i < pv.size(); i++) {
     if (pv[i]->shock_graph()) {
       double a = dbsk2d_compute_total_width(pv[i]->shock_graph());
@@ -1617,19 +1617,19 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
   }
 
   if (!max_width) {
-    vcl_cout << "max width could not be computed!!!!!!!!!!!!!!!!!!!!!\n";
+    std::cout << "max width could not be computed!!!!!!!!!!!!!!!!!!!!!\n";
     return false;
   }
 
   int nnn = visualization_n > n ? visualization_n : n;
 
-  vcl_vector<float> category_votes(mv.size(), 0.0f);
+  std::vector<float> category_votes(mv.size(), 0.0f);
   for (unsigned i = 0; i < pv.size(); i++) {
     //: try each category patches
-    vcl_vector<float> vals(nnn, 100000.0f); // minimize edit distance
-    vcl_vector<int> best_cat_ids(nnn, -1);
+    std::vector<float> vals(nnn, 100000.0f); // minimize edit distance
+    std::vector<int> best_cat_ids(nnn, -1);
     
-    vcl_vector<vcl_pair<vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > > best_cat_ins_ids;
+    std::vector<std::pair<std::pair<std::pair<int, int>, std::pair<int, int> >, float > > best_cat_ins_ids;
     
       //: find top n best matches
     for (unsigned nn = 0; int(nn) < nnn; nn++) {
@@ -1641,7 +1641,7 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
           dbskr_shock_patch_match_sptr m = mv[c][j];
           if (!m)
             return false;
-          vcl_pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
+          std::pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
           if (p.second) {
             if (p.second->final_norm_cost() < vals[nn]) {
               vals[nn] = p.second->final_norm_cost();
@@ -1654,20 +1654,20 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
       if (best_ins_id < 0)
         continue;
 
-      vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > pppp;
+      std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > pppp;
 
       dbskr_shock_patch_match_sptr m = mv[best_cat_ids[nn]][best_ins_id];
-      vcl_pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
+      std::pair<int, dbskr_sm_cor_sptr> p = m->get_best_match(pv[i]->id());
 
       pppp.second = p.second->final_norm_cost();
 
       p.second->set_final_norm_cost(10000.0f);
       m->resort_wrt_norm_cost();
       
-      vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> > ppp;
-      vcl_pair<int, int> pp(best_cat_ids[nn], best_ins_id);
+      std::pair<std::pair<int, int>, std::pair<int, int> > ppp;
+      std::pair<int, int> pp(best_cat_ids[nn], best_ins_id);
       dbskr_shock_patch_sptr best_sp = m->get_id_map2()[p.first];
-      vcl_pair<int, int> pp2(best_sp->id(), best_sp->depth());
+      std::pair<int, int> pp2(best_sp->id(), best_sp->depth());
       ppp.first = pp;
       ppp.second = pp2;
 
@@ -1688,10 +1688,10 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
 
   best_cat_id = 0;
   float vote_cnt = category_votes[0];
-  vcl_cout << "total patch (vote) cnt: " << pv.size() << "\n";
-  vcl_cout << "0: " << category_votes[0] << vcl_endl;
+  std::cout << "total patch (vote) cnt: " << pv.size() << "\n";
+  std::cout << "0: " << category_votes[0] << std::endl;
   for (unsigned i = 1; i < category_votes.size(); i++) {
-    vcl_cout << i << ": " << category_votes[i] << vcl_endl;
+    std::cout << i << ": " << category_votes[i] << std::endl;
     if (category_votes[i] > vote_cnt) {
       best_cat_id = i;
       vote_cnt = category_votes[i];
@@ -1702,16 +1702,16 @@ bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv,
 }
 
 //: given an image (patch set), for each patch find its best n patch and create an html file that displays images of top n
-bool create_html_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_string pv_patch_images_dir, 
-                       vcl_vector<vcl_vector<vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > > >& best_category_instance_ids,
-                       vcl_vector<vcl_vector<vcl_string> > ins_names, 
-                       int visualization_n, vcl_string file_name, vcl_string table_caption, vcl_vector<vcl_vector<vcl_string> > patch_image_dirs)
+bool create_html_top_n(std::vector<dbskr_shock_patch_sptr>& pv, std::string pv_patch_images_dir, 
+                       std::vector<std::vector<std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > > >& best_category_instance_ids,
+                       std::vector<std::vector<std::string> > ins_names, 
+                       int visualization_n, std::string file_name, std::string table_caption, std::vector<std::vector<std::string> > patch_image_dirs)
 {
  
-  vcl_ofstream tf(file_name.c_str(), vcl_ios::app);
+  std::ofstream tf(file_name.c_str(), std::ios::app);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " << file_name << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " << file_name << " for write " << std::endl;
     return false;
   }
 
@@ -1724,19 +1724,19 @@ bool create_html_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_string pv_pat
   tf << "</TH> </TR>\n";
   
   for (unsigned i = 0; i < pv.size(); i++) {
-    vcl_ostringstream oss1, oss2;
+    std::ostringstream oss1, oss2;
     oss1 << pv[i]->id();
     oss2 << pv[i]->depth();
-    vcl_string patch_image_file = pv_patch_images_dir + oss1.str() + "_" + oss2.str() + ".png";
+    std::string patch_image_file = pv_patch_images_dir + oss1.str() + "_" + oss2.str() + ".png";
     tf << "<TR> <TD> <img src=\"" << patch_image_file << "\"> ";
     tf << pv[i]->id() << " " << pv[i]->depth() << " </TD> "; 
     for (unsigned nn = 0; int(nn) < visualization_n; nn++) {
-      vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > pppp = best_category_instance_ids[i][nn];
-      vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> > pp = pppp.first;
-      vcl_ostringstream oss11, oss22;      
+      std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > pppp = best_category_instance_ids[i][nn];
+      std::pair<std::pair<int, int>, std::pair<int, int> > pp = pppp.first;
+      std::ostringstream oss11, oss22;      
       oss11 << pp.second.first;
       oss22 << pp.second.second;
-      vcl_string patch_image_file2 = patch_image_dirs[pp.first.first][pp.first.second] + oss11.str() + "_" + oss22.str() + ".png";
+      std::string patch_image_file2 = patch_image_dirs[pp.first.first][pp.first.second] + oss11.str() + "_" + oss22.str() + ".png";
       tf << "<TD> <img src=\"" << patch_image_file2 << "\"> ";
       tf << ins_names[pp.first.first][pp.first.second] << " " << pp.second.first << " " << pp.second.second << " " << pppp.second << " </TD> ";
     }
@@ -1752,13 +1752,13 @@ bool create_html_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_string pv_pat
 bool create_html_top_n_placements(dbskr_shock_patch_match_sptr new_match, 
                                   vil_image_resource_sptr img_test, 
                                   vil_image_resource_sptr img_model, 
-                                  vcl_string model_patch_images_dir,
-                                  int visualization_n, vcl_string out_html_images_dir, vcl_string out_html, vcl_string table_caption)
+                                  std::string model_patch_images_dir,
+                                  int visualization_n, std::string out_html_images_dir, std::string out_html, std::string table_caption)
 {
-  vcl_ofstream tf(out_html.c_str(), vcl_ios::app);
+  std::ofstream tf(out_html.c_str(), std::ios::app);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " << out_html << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " << out_html << " for write " << std::endl;
     return false;
   }
 
@@ -1770,20 +1770,20 @@ bool create_html_top_n_placements(dbskr_shock_patch_match_sptr new_match,
     tf << "<TH> Match " << i+1 << " ";
   tf << "</TH> </TR>\n";
   
-  //vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > 
+  //std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > 
   patch_cor_map_type& map = new_match->get_map();
-  vcl_map<int, dbskr_shock_patch_sptr>& id_map_test = new_match->get_id_map2();
-  vcl_map<int, dbskr_shock_patch_sptr>& id_map_model = new_match->get_id_map1();  // first one is model
+  std::map<int, dbskr_shock_patch_sptr>& id_map_test = new_match->get_id_map2();
+  std::map<int, dbskr_shock_patch_sptr>& id_map_model = new_match->get_id_map1();  // first one is model
   patch_cor_map_iterator iter;
   for (iter = map.begin(); iter != map.end(); iter++) {
     dbskr_shock_patch_sptr msp = id_map_model[iter->first];
-    vcl_ostringstream oss1, oss2;
+    std::ostringstream oss1, oss2;
     oss1 << msp->id();
     oss2 << msp->depth();
-    vcl_string patch_image_file = model_patch_images_dir + oss1.str() + "_" + oss2.str() + ".png";
+    std::string patch_image_file = model_patch_images_dir + oss1.str() + "_" + oss2.str() + ".png";
     tf << "<TR> <TD> <img src=\"" << patch_image_file << "\"> ";
     tf << msp->id() << " " << msp->depth() << " </TD> "; 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
     for (unsigned nn = 0; int(nn) < visualization_n; nn++) {
       if (nn >= match_vec->size()) {
         tf << "<TD> <img src=\"unknown\"> </TD> ";
@@ -1795,22 +1795,22 @@ bool create_html_top_n_placements(dbskr_shock_patch_match_sptr new_match,
         sm->set_tree2(tsp->tree()); // assuming tree parameters are already set properly  // all the maps are recomputed based on dart correspondence
 
         vgl_h_matrix_2d<double> H; 
-        vcl_cout << "computing homography.. ";
+        std::cout << "computing homography.. ";
         if (sm->compute_homography(H, true, 5, false, false)) {  // homography that maps model onto test image
-          vcl_cout << " done.\n";
+          std::cout << " done.\n";
           vil_image_resource_sptr new_img = msp->mapped_image(img_model, img_test, H, true); // no need to recompute observation if already exists
 
-          vcl_ostringstream oss11, oss22;      
+          std::ostringstream oss11, oss22;      
           oss11 << tsp->id();
           oss22 << tsp->depth();
-          vcl_string out_img = out_html_images_dir + oss1.str() + "_" + oss2.str() + "_mapped_with_test_patch_" + oss11.str() + "_" + oss22.str() + ".png";
+          std::string out_img = out_html_images_dir + oss1.str() + "_" + oss2.str() + "_mapped_with_test_patch_" + oss11.str() + "_" + oss22.str() + ".png";
 
           vil_save_image_resource(new_img, out_img.c_str());
 
           tf << "<TD> <img src=\"" << out_img << "\"> ";
           tf << msp->id() << " mapped with test patch: " << tsp->id() << " " << tsp->depth() << " </TD> ";
         } else {
-          vcl_cout << " homography not computed!!\n";
+          std::cout << " homography not computed!!\n";
           tf << "<TD> <img src=\"unknown\"> homography not computed!! </TD> ";
         } 
       }
@@ -1839,25 +1839,25 @@ length_more(const vsol_polyline_2d_sptr& l1,
 
 //: find the corresondences using elastic curve matching between sets of real contours of patches
 bool find_patch_correspondences_curve(dbskr_shock_patch_sptr s1, 
-                                vcl_vector<dbskr_shock_patch_sptr>& s2, 
-                                vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >& match_map, int n)
+                                std::vector<dbskr_shock_patch_sptr>& s2, 
+                                std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >& match_map, int n)
 {
-  vcl_vector<vsol_polyline_2d_sptr> &real_set1 = s1->get_real_boundaries();
-  vcl_cout << "patch: " << s1->id() << " d: " << s1->depth() << " size: " << real_set1.size() << "\n";
+  std::vector<vsol_polyline_2d_sptr> &real_set1 = s1->get_real_boundaries();
+  std::cout << "patch: " << s1->id() << " d: " << s1->depth() << " size: " << real_set1.size() << "\n";
 
-  vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > > * patch_v = new vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >();
+  std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > > * patch_v = new std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >();
   for (unsigned j = 0; j < s2.size(); j++) {
-    vcl_vector<vsol_polyline_2d_sptr> &real_set2 = s2[j]->get_real_boundaries();
-    vcl_cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " size: " << real_set2.size() << "\n";
+    std::vector<vsol_polyline_2d_sptr> &real_set2 = s2[j]->get_real_boundaries();
+    std::cout << "\t\tpatch: " << s2[j]->id() << " d: " << s2[j]->depth() << " size: " << real_set2.size() << "\n";
 
     vul_timer t;
     t.mark();
 
     //: find the distances between longest top n contours of real_set1 and real_set2
-    vcl_sort(real_set1.begin(), real_set1.end(), length_more);
+    std::sort(real_set1.begin(), real_set1.end(), length_more);
     int max_size = int(real_set1.size()) < n ? real_set1.size() : n;
 
-    vcl_vector<dbcvr_cv_cor_sptr> cors;
+    std::vector<dbcvr_cv_cor_sptr> cors;
     for (int ri = 0; ri < max_size; ri++) {
       if (!real_set1[ri]->size())
         continue;
@@ -1888,7 +1888,7 @@ bool find_patch_correspondences_curve(dbskr_shock_patch_sptr s1,
 
         double cost = curveMatch->finalCost();
         double norm_cost = cost/(curve1->length()+curve2->length());
-        vcl_cout<< " curve_2d matching cost: " << cost << " norm cost: " << norm_cost << vcl_endl;
+        std::cout<< " curve_2d matching cost: " << cost << " norm cost: " << norm_cost << std::endl;
         dbcvr_cv_cor_sptr cor = curveMatch->get_cv_cor();
         cor->set_final_cost(cost);
         cor->set_final_norm_cost(norm_cost);
@@ -1897,11 +1897,11 @@ bool find_patch_correspondences_curve(dbskr_shock_patch_sptr s1,
       }
     }
     if (cors.size() > 0) {
-      vcl_sort(cors.begin(), cors.end(), norm_curve_cost_less);
+      std::sort(cors.begin(), cors.end(), norm_curve_cost_less);
       cors.erase(cors.begin()+n, cors.end());
     }
 
-    vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > pp;
+    std::pair<int, std::vector<dbcvr_cv_cor_sptr> > pp;
     pp.first = s2[j]->id();
     pp.second = cors;
     patch_v->push_back(pp);
@@ -1913,8 +1913,8 @@ bool find_patch_correspondences_curve(dbskr_shock_patch_sptr s1,
 
 void draw_shock_graph_into_ps(dbsk2d_shock_graph_sptr sg, 
                               vul_psfile& psfile1, 
-                              vcl_map<int, int>& edge_color_map, 
-                              vcl_vector<vcl_vector<float> >& rnd_colormap, int offsetx, int offsety, bool line, float size, bool draw_shock_nodes, float point_size) 
+                              std::map<int, int>& edge_color_map, 
+                              std::vector<std::vector<float> >& rnd_colormap, int offsetx, int offsety, bool line, float size, bool draw_shock_nodes, float point_size) 
 {
   int color;
  // draw shock graph edges
@@ -1925,7 +1925,7 @@ void draw_shock_graph_into_ps(dbsk2d_shock_graph_sptr sg,
     dbsk2d_shock_edge_sptr selm = (*curE);
 
     //use the correspondence color scheme
-    vcl_map<int, int>::iterator iter = edge_color_map.find(selm->id());
+    std::map<int, int>::iterator iter = edge_color_map.find(selm->id());
     if (iter == edge_color_map.end()) 
       color = rnd_colormap.size()-1;                  // if no correspondence assign black
     else 
@@ -1962,20 +1962,20 @@ void draw_shock_graph_into_ps(dbsk2d_shock_graph_sptr sg,
 }
 
 //: create a white ps image, draw the base shocks as black, draw main shock graphs with branches colored wrt a given dbskr_sm_cor
-bool create_ps_shock(vcl_string ps_file_name, 
+bool create_ps_shock(std::string ps_file_name, 
                     dbsk2d_shock_graph_sptr base_sg1)
 {
   //1)If file open fails, return.
     vul_psfile psfile1(ps_file_name.c_str(), false);
 
     if (!psfile1) {
-      vcl_cout << " Error opening file  " << ps_file_name.c_str() << vcl_endl;
+      std::cout << " Error opening file  " << ps_file_name.c_str() << std::endl;
       return false;
     }
 
     //: create a white background image
     if (!dbsk2d_compute_bounding_box(base_sg1)) {
-      vcl_cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << vcl_endl;
+      std::cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << std::endl;
       return false;
     }
     
@@ -1985,8 +1985,8 @@ bool create_ps_shock(vcl_string ps_file_name,
     double h1 = b1->height() + b1->height()/5;
 
     int offset = 10;  // offset for the second tree 
-    int sizex = (int)vcl_floor(w1 + 0.5) + 2*offset;   //off + w1 + off + off + w2 + off
-    int sizey = (int)vcl_floor(h1 + 0.5) + 2*offset;
+    int sizex = (int)std::floor(w1 + 0.5) + 2*offset;   //off + w1 + off + off + w2 + off
+    int sizey = (int)std::floor(h1 + 0.5) + 2*offset;
     unsigned char *buf = new unsigned char[sizex*sizey*3];
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
@@ -2002,10 +2002,10 @@ bool create_ps_shock(vcl_string ps_file_name,
     psfile1.set_scale_x(50);
     psfile1.set_scale_y(50);
     
-    vcl_vector<float> tmp(3, 0);
-    vcl_vector<vcl_vector<float> > rnd_colormap(1, tmp);
+    std::vector<float> tmp(3, 0);
+    std::vector<std::vector<float> > rnd_colormap(1, tmp);
 
-    vcl_map<int, int> edge_color_map1;
+    std::map<int, int> edge_color_map1;
     for ( dbsk2d_shock_graph::edge_iterator curE = base_sg1->edges_begin(); curE != base_sg1->edges_end(); curE++ ) 
     {
       dbsk2d_shock_edge_sptr selm = (*curE);
@@ -2021,7 +2021,7 @@ bool create_ps_shock(vcl_string ps_file_name,
 }
 
 //: create a white ps image, draw the base shocks as black, draw main shock graphs with branches colored wrt a given dbskr_sm_cor
-bool create_ps_shock_matching(vcl_string ps_file_name, 
+bool create_ps_shock_matching(std::string ps_file_name, 
                               dbsk2d_shock_graph_sptr base_sg1, 
                               dbskr_tree_sptr tree1, 
                               dbsk2d_shock_graph_sptr base_sg2, 
@@ -2032,17 +2032,17 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
     vul_psfile psfile1(ps_file_name.c_str(), false);
 
     if (!psfile1) {
-      vcl_cout << " Error opening file  " << ps_file_name.c_str() << vcl_endl;
+      std::cout << " Error opening file  " << ps_file_name.c_str() << std::endl;
       return false;
     }
 
     //: create a white background image
     if (!dbsk2d_compute_bounding_box(base_sg1)) {
-      vcl_cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << vcl_endl;
+      std::cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << std::endl;
       return false;
     }
     if (!dbsk2d_compute_bounding_box(base_sg2)) {
-      vcl_cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << vcl_endl;
+      std::cout << "In create_ps_shock_matching() -- cannot compute bounding box of base_sg1 in: " << ps_file_name << std::endl;
       return false;
     }
     vsol_box_2d_sptr b1 = base_sg1->get_bounding_box();
@@ -2054,8 +2054,8 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
     double h2 = b2->height() + b2->height()/5;
 
     int offset = 10;  // offset for the second tree 
-    int sizex = (int)vcl_floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
-    int sizey = (int)vcl_floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
+    int sizex = (int)std::floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
+    int sizey = (int)std::floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
     unsigned char *buf = new unsigned char[sizex*sizey*3];
     for (int x=0; x<sizex; ++x) 
       for (int y=0; y<sizey; ++y) {
@@ -2071,8 +2071,8 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
     psfile1.set_scale_x(50);
     psfile1.set_scale_y(50);
     
-    vcl_vector<float> tmp(3, 0);
-    vcl_vector<vcl_vector<float> > rnd_colormap(101, tmp);
+    std::vector<float> tmp(3, 0);
+    std::vector<std::vector<float> > rnd_colormap(101, tmp);
 
     //fill in the randomized color table
     for (int i=0; i<100; i++) {
@@ -2080,7 +2080,7 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
         rnd_colormap[i][j] = (float)(rand()/double(RAND_MAX));
     }
 
-    vcl_map<int, int> edge_color_map1, edge_color_map2;
+    std::map<int, int> edge_color_map1, edge_color_map2;
     for ( dbsk2d_shock_graph::edge_iterator curE = base_sg1->edges_begin(); curE != base_sg1->edges_end(); curE++ ) 
     {
       dbsk2d_shock_edge_sptr selm = (*curE);
@@ -2096,16 +2096,16 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
       edge_color_map2[selm->id()] = 100;        // draw the base shock graph as completely black
     }
 
-    draw_shock_graph_into_ps(base_sg2, psfile1, edge_color_map2, rnd_colormap, (int)vcl_floor(w1+0.5) + 3*offset, 0, true, 0.5f, true, 0.8f);
+    draw_shock_graph_into_ps(base_sg2, psfile1, edge_color_map2, rnd_colormap, (int)std::floor(w1+0.5) + 3*offset, 0, true, 0.5f, true, 0.8f);
     edge_color_map2.clear();
 
     //get dart path mapping from the shock correspondence 
-    vcl_vector<pathtable_key>& dart_path_map = sm->get_map();
+    std::vector<pathtable_key>& dart_path_map = sm->get_map();
 
     //temp data structures
     dbsk2d_shock_node_sptr start_node;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
-    vcl_vector<int> dart_list;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<int> dart_list;
 
     // go over all the corresponding paths and draw the corresponding 
     // boundary curves visual fragments and intrinsic fragement coordinates
@@ -2148,7 +2148,7 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
     }
     
     draw_shock_graph_into_ps(tree1->get_shock_graph(), psfile1, edge_color_map1, rnd_colormap, offset, 0, false, 1.0f, false, 1.0f);
-    draw_shock_graph_into_ps(tree2->get_shock_graph(), psfile1, edge_color_map2, rnd_colormap, (int)vcl_floor(w1+0.5) + 3*offset, 0, false, 1.0f, false, 1.0f);
+    draw_shock_graph_into_ps(tree2->get_shock_graph(), psfile1, edge_color_map2, rnd_colormap, (int)std::floor(w1+0.5) + 3*offset, 0, false, 1.0f, false, 1.0f);
 
     //close file
     psfile1.close();
@@ -2157,11 +2157,11 @@ bool create_ps_shock_matching(vcl_string ps_file_name,
 }
 
 //: create image with traced boundaries
-bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_sptr>& patches, vcl_vector<vil_rgb<int> >& colors,
+bool create_ps_patches(std::string ps_file_name, std::vector<dbskr_shock_patch_sptr>& patches, std::vector<vil_rgb<int> >& colors,
                        vil_image_resource_sptr background_img)
 {
   if (patches.size() != colors.size()) {
-    vcl_cout << "colors array is not same size as pathces array, image not written\n";
+    std::cout << "colors array is not same size as pathces array, image not written\n";
     return false;
   }
 
@@ -2169,14 +2169,14 @@ bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_spt
   vul_psfile psfile1(ps_file_name.c_str(), false);
 
   if (!psfile1) {
-    vcl_cout << " Error opening file  " << ps_file_name.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << ps_file_name.c_str() << std::endl;
     return false;
   }
 
   //: put the background
   //: determine size
-  int sizex, sizey; // (int)vcl_floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
-                    //int sizey = (int)vcl_floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
+  int sizex, sizey; // (int)std::floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
+                    //int sizey = (int)std::floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
 
   if (background_img == 0) {
     vsol_box_2d_sptr box = new vsol_box_2d();
@@ -2185,8 +2185,8 @@ bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_spt
       poly->compute_bounding_box();
       box->grow_minmax_bounds(poly->get_bounding_box());
     }
-    sizex = (int)vcl_ceil(box->get_max_x()-box->get_min_x())+10;
-    sizey = (int)vcl_ceil(box->get_min_x()-box->get_min_y())+10;
+    sizex = (int)std::ceil(box->get_max_x()-box->get_min_x())+10;
+    sizey = (int)std::ceil(box->get_min_x()-box->get_min_y())+10;
   } else {
     sizex = background_img->ni();
     sizey = background_img->nj();
@@ -2207,7 +2207,7 @@ bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_spt
     int planes = image.nplanes();
 
     if (planes == 3) {
-      vcl_cout << "processing color image\n";
+      std::cout << "processing color image\n";
       for (int x=0; x<sizex; x++) {
         for (int y=0; y<sizey; y++) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -2216,7 +2216,7 @@ bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_spt
         }
       }
     } else if (planes == 1) {
-      vcl_cout << "processing grey image\n";
+      std::cout << "processing grey image\n";
       for (int x=0; x<sizex; x++) {
         for (int y=0; y<sizey; y++) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -2264,16 +2264,16 @@ bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_spt
 }
 
 //: create image with traced boundaries
-bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_sptr>& patches, vcl_vector<vil_rgb<int> >& colors,
-                       dbskr_scurve_sptr& curve, vcl_vector<vil_rgb<int> >& curve_colors,
+bool create_ps_patches_with_scurve(std::string ps_file_name, std::vector<dbskr_shock_patch_sptr>& patches, std::vector<vil_rgb<int> >& colors,
+                       dbskr_scurve_sptr& curve, std::vector<vil_rgb<int> >& curve_colors,
                        vil_image_resource_sptr background_img)
 {
   if (patches.size() != colors.size()) {
-    vcl_cout << "colors array is not same size as pathces array, image not written\n";
+    std::cout << "colors array is not same size as pathces array, image not written\n";
     return false;
   }
   if (curve_colors.size() != 3) {
-    vcl_cout << "curve colors array is not of size 3, image not written\n";
+    std::cout << "curve colors array is not of size 3, image not written\n";
     return false;
   }
 
@@ -2281,14 +2281,14 @@ bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_sho
   vul_psfile psfile1(ps_file_name.c_str(), false);
 
   if (!psfile1) {
-    vcl_cout << " Error opening file  " << ps_file_name.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << ps_file_name.c_str() << std::endl;
     return false;
   }
 
   //: put the background
   //: determine size
-  int sizex, sizey; // (int)vcl_floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
-                    //int sizey = (int)vcl_floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
+  int sizex, sizey; // (int)std::floor(w1 + w2 + 0.5) + 4*offset;   //off + w1 + off + off + w2 + off
+                    //int sizey = (int)std::floor((h1 > h2 ? h1 : h2) + 0.5) + 4*offset;
 
   if (background_img == 0) {
     vsol_box_2d_sptr box = new vsol_box_2d();
@@ -2297,8 +2297,8 @@ bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_sho
       poly->compute_bounding_box();
       box->grow_minmax_bounds(poly->get_bounding_box());
     }
-    sizex = (int)vcl_ceil(box->get_max_x()-box->get_min_x())+10;
-    sizey = (int)vcl_ceil(box->get_min_x()-box->get_min_y())+10;
+    sizex = (int)std::ceil(box->get_max_x()-box->get_min_x())+10;
+    sizey = (int)std::ceil(box->get_min_x()-box->get_min_y())+10;
   } else {
     sizex = background_img->ni();
     sizey = background_img->nj();
@@ -2319,7 +2319,7 @@ bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_sho
     int planes = image.nplanes();
 
     if (planes == 3) {
-      vcl_cout << "processing color image\n";
+      std::cout << "processing color image\n";
       for (int x=0; x<sizex; x++) {
         for (int y=0; y<sizey; y++) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -2328,7 +2328,7 @@ bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_sho
         }
       }
     } else if (planes == 1) {
-      vcl_cout << "processing grey image\n";
+      std::cout << "processing grey image\n";
       for (int x=0; x<sizex; x++) {
         for (int y=0; y<sizey; y++) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -2370,7 +2370,7 @@ bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_sho
     }
   }
 
-  vcl_vector<vsol_polygon_2d_sptr> polys;
+  std::vector<vsol_polygon_2d_sptr> polys;
   curve->get_polys(polys);
   for (unsigned kk = 0; kk < polys.size(); kk++) {
     vsol_polygon_2d_sptr poly = fit_lines_to_contour(polys[kk], 0.05f);
@@ -2414,7 +2414,7 @@ bool test_shock_graph_for_rec(dbsk2d_shock_graph_sptr sg)
   {
     dbsk2d_shock_edge_sptr selm = (*curE);
     dbsk2d_shock_node_sptr n = selm->source();
-    vcl_vector<dbsk2d_shock_edge_sptr> edges(1, selm);
+    std::vector<dbsk2d_shock_edge_sptr> edges(1, selm);
     dbskr_scurve_sptr sc = dbskr_compute_scurve(n, edges, true, true, true, 1.0f, 1.0f);
     if (!sc)
       return false;

@@ -10,11 +10,11 @@
 //
 
 #include <testlib/testlib_test.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
-#include <vcl_fstream.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
+#include <fstream>
 
 #include <dbasn/dbasn_gradasgn.h>
 #include <dbsk3d/dbsk3d_ms_node.h>
@@ -24,7 +24,7 @@
 
 MAIN_ARGS(dbsk3dr_test_shock_match)
 {
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32
@@ -39,29 +39,29 @@ MAIN_ARGS(dbsk3dr_test_shock_match)
   dbsk3dr_ms_gradasn_graph* SG0 = new dbsk3dr_ms_gradasn_graph;
   dbsk3dr_ms_gradasn_graph* SG1 = new dbsk3dr_ms_gradasn_graph;
   
-  vcl_string file1 = dir_base + "davidhead_20k-ht-gt-sm5.sg";
+  std::string file1 = dir_base + "davidhead_20k-ht-gt-sm5.sg";
   SG0->setup_from_sg (file1.c_str());
   TEST("Load first graph ", SG0->n_nodes(), 71);
 
   //The modified version of bones1.sm5.sg by
   //removing 12 curves and 12 vertices of 6 A1A3_I tabs.
-  vcl_string file2 = dir_base + "davidhead_10k-ht-gt-sm5.sg";
+  std::string file2 = dir_base + "davidhead_10k-ht-gt-sm5.sg";
   SG1->setup_from_sg (file2.c_str());
   TEST("Load second graph ", SG1->n_nodes(), 71);
 
   //Prepare shock matching
   dbsk3dr_match SM;
   dbasn_params params_shock;
-  vcl_cout<< params_shock;
+  std::cout<< params_shock;
   ///SM.setup_GA_params (SG0, SG1, params_shock);
   SM.set_G (SG0);
   SM.set_g (SG1);
   SM.set_params (params_shock);
   SM._reset_mem ();
 
-  vcl_cout <<"\n=================\n";
-  vcl_cout <<"Graph SG0 with nodes: "<< SG0->n_nodes() << ", links: "<< -1 << vcl_endl;
-  vcl_cout <<"Graph SG1 with nodes: "<< SG1->n_nodes() << ", links: "<< -1 << vcl_endl;
+  std::cout <<"\n=================\n";
+  std::cout <<"Graph SG0 with nodes: "<< SG0->n_nodes() << ", links: "<< -1 << std::endl;
+  std::cout <<"Graph SG1 with nodes: "<< SG1->n_nodes() << ", links: "<< -1 << std::endl;
 
   //Normalize all nodes, links, corner costs to be within [0 ~ 1].
   SM.normalize_costs (false);
@@ -94,7 +94,7 @@ MAIN_ARGS(dbsk3dr_test_shock_match)
       double radius2 = v2->time();
       TEST("Compare each matching node radius ", radius1, radius2);*/
 
-      vcl_fprintf (stderr, "%d(%d) <-> %d(%d)\n", SGid, a, Sgid, i);
+      std::fprintf (stderr, "%d(%d) <-> %d(%d)\n", SGid, a, Sgid, i);
     }
   }
   

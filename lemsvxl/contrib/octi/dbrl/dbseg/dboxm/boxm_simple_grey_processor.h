@@ -42,20 +42,20 @@ class  boxm_simple_grey_processor
 
   static boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_mathtype most_probable_color(boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype const& appear);
 
-  static void compute_appearance(vcl_vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void compute_appearance(std::vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void update_appearance(vcl_vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
+  static void update_appearance(std::vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model, float min_sigma = 0.01f);
 
-  static void finalize_appearance(vcl_vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model);
+  static void finalize_appearance(std::vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::apm_datatype &model);
 
  private:
-  static void compute_gaussian_params(vcl_vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> obs, vcl_vector<float> weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma);
+  static void compute_gaussian_params(std::vector<boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype> obs, std::vector<float> weights, boxm_apm_traits<BOXM_APM_SIMPLE_GREY>::obs_datatype &mean, float &sigma);
 
   static float sigma_norm_factor(unsigned int nobs);
 
   static float sigma_norm_factor(float nobs);
 };
 
-//vcl_ostream& operator<<(vcl_ostream &os, boxm_simple_grey const& apm);
+//std::ostream& operator<<(std::ostream &os, boxm_simple_grey const& apm);
 
 #endif // boxm_simple_grey_processor_h_

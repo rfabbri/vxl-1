@@ -4,8 +4,8 @@
 #ifndef gdt_numerical_h_
 #define gdt_numerical_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <utility>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
@@ -58,7 +58,7 @@
 //: the very fine equality test, use absolute test.
 inline bool _eqF (const double a, const double b)
 {
-  return vcl_fabs (a-b) < GDT_FINE_EPSILON;
+  return std::fabs (a-b) < GDT_FINE_EPSILON;
 }
 
 inline bool _leqF (const double a, const double b)
@@ -70,7 +70,7 @@ inline bool _leqF (const double a, const double b)
 //: the mid-epsilon equality test, use absolute test.
 inline bool _eqM (const double a, const double b)
 {
-  return vcl_fabs (a-b) < GDT_MID_EPSILON;
+  return std::fabs (a-b) < GDT_MID_EPSILON;
 }
 
 inline bool _leqM (const double a, const double b)
@@ -88,7 +88,7 @@ inline bool _lessM (const double a, const double b)
 //  the arc length parameter to describe intervals on edges.
 inline bool _eqT (const double a, const double b)
 {
-  return vcl_fabs (a-b) < GDT_TAU_EPSILON;
+  return std::fabs (a-b) < GDT_TAU_EPSILON;
 }
 
 inline bool _leqT (const double a, const double b)
@@ -107,7 +107,7 @@ inline bool _eqD (const double a, const double b)
 {
   //For distance, use relative epsilon.
   const double er = (a+b)* GDT_DIST_EPSILON;
-  return vcl_fabs (a-b) <= er;
+  return std::fabs (a-b) <= er;
 }
 
 inline bool _leqD (const double a, const double b)
@@ -119,7 +119,7 @@ inline bool _leqD (const double a, const double b)
 inline bool _eqD (const double a, const double b, const double e)
 {
   const double er = (a+b)* e;
-  return vcl_fabs (a-b) <= er;
+  return std::fabs (a-b) <= er;
 }
 
 inline bool _lessD (const double a, const double b)

@@ -1,11 +1,11 @@
 #include "rc3d_windows_frame.h"
 #include "probe.h"
 
-vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_matrix <float> >p_list) //{,
-                                                                                                                                                //vcl_vector <bsol_intrinsic_curve_2d_sptr> curve_2d)
+std::vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(std::vector <vnl_matrix <float> >p_list) //{,
+                                                                                                                                                //std::vector <bsol_intrinsic_curve_2d_sptr> curve_2d)
 {
 
-        vcl_vector <vnl_matrix <float> > p_new_list;
+        std::vector <vnl_matrix <float> > p_new_list;
         float x,y,z;
         double cube_inc=1.0;
         
@@ -24,7 +24,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
                 t[1][0]=(p_list[i])[8][0];
                 t[2][0]=(p_list[i])[9][0];
                 vnl_matrix<double> tt4=(R*t);
-                //vcl_cout<<t<<vcl_endl;
+                //std::cout<<t<<std::endl;
                 X.set(tt4[0][0]+shift_x,tt4[1][0]+shift_y,tt4[2][0]+shift_z);
                 x=X.x();
                 y=X.y();
@@ -34,7 +34,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
                 y=(p_list[i])[8][0];
                 z=(p_list[i])[9][0];
                 
-                vcl_cout<<p_list[i]<<vcl_endl;
+                std::cout<<p_list[i]<<std::endl;
     vnl_matrix<double> c_all(3,1,0.0);
                 vnl_matrix<double> c(3,3,0.0);
 
@@ -42,7 +42,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
                         vnl_matrix<double> temp=back_project_direct(i_frame,x,y,z);
                         probe_adjust(temp);
                         //***************
-                        //vcl_cout<<temp<<vcl_endl;
+                        //std::cout<<temp<<std::endl;
                         //***************
                         /*      rec_prob_ret 
                         =recursive_probe_ret_map(d3_robe_[1],d3_robe_[2],d3_robe_[3],
@@ -67,11 +67,11 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
                                 c[i_frame][2]+=c_temp[2][0];
                         }
                 
-                        //vcl_cout<<c<<vcl_endl;
+                        //std::cout<<c<<std::endl;
                         //c_all+=c;
                 }
                 //////////////////
-                vcl_cout<<c<<vcl_endl;
+                std::cout<<c<<std::endl;
                 //////////////////
 
                 // drop no boundary probe ...
@@ -115,7 +115,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
                         if ( (c(0,0)!=0 && c(1,0)!=0 && c(2,0)!=0) )
       {p_new_list.push_back(p_list[i]);
 
-      vcl_cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<"============================\n"<<vcl_endl;
+      std::cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<"============================\n"<<std::endl;
       }
 
                 }
@@ -125,7 +125,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
       {
           p_new_list.push_back(p_list[i]);
 
-          vcl_cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<vcl_endl;
+          std::cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<std::endl;
         }
                 }
                 else if (Current_P_==4) 
@@ -140,7 +140,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
             (c(0,2)!=0 && c(1,2)!=0 && c(2,2)!=0)) {
           p_new_list.push_back(p_list[i]);
 
-          vcl_cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<vcl_endl;
+          std::cout<<"^^^^^^^^^^^con approved:"<<p_list[i]<<std::endl;
         }
 
                 }
@@ -151,7 +151,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
             (c(0,2)!=0 && c(1,2)!=0 && c(2,2)!=0)) {
           p_new_list.push_back(p_list[i]);
 
-          vcl_cout<<"^^^^^^^^^con approved:"<<p_list[i]<<vcl_endl;
+          std::cout<<"^^^^^^^^^con approved:"<<p_list[i]<<std::endl;
         }
 
                 }
@@ -163,7 +163,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
       {
           p_new_list.push_back(p_list[i]);
 
-          vcl_cout<<"^^^^^^^con approved:"<<p_list[i]<<vcl_endl;
+          std::cout<<"^^^^^^^con approved:"<<p_list[i]<<std::endl;
         }
                 }
                 else if (count>4) p_new_list.push_back(p_list[i]);
@@ -172,7 +172,7 @@ vcl_vector <vnl_matrix <float> > rc3d_windows_frame::p_con_test(vcl_vector <vnl_
 
                 
         }
-        vcl_cout<<"p_new_list.size()"<<p_new_list.size()<<vcl_endl;
+        std::cout<<"p_new_list.size()"<<p_new_list.size()<<std::endl;
   for (unsigned ia=0;ia<p_new_list.size();ia++) {
     vgl_point_3d <double> pnew(p_new_list[ia][7][0],p_new_list[ia][8][0],p_new_list[ia][9][0]);
     draw_point(PL_,pnew,1,1,0.3,12);
@@ -197,7 +197,7 @@ vnl_matrix<double> rc3d_windows_frame::probe_con_prob(double x,double y,
    //double dist=2.0;
    double vpi=vnl_math::pi;
     
-    double r=vcl_sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0));
+    double r=std::sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0));
    
    //too close to center or outside probe box -> return(0);
 
@@ -213,7 +213,7 @@ vnl_matrix<double> rc3d_windows_frame::probe_con_prob(double x,double y,
 
    // note y axis is reversed..
     float del_x=x-x0,del_y=-(y-y0);
-    float del_sum=vcl_sqrt(del_x*del_x+del_y*del_y);
+    float del_sum=std::sqrt(del_x*del_x+del_y*del_y);
    del_x/=del_sum;del_y/=del_sum;
 
 
@@ -227,16 +227,16 @@ vnl_matrix<double> rc3d_windows_frame::probe_con_prob(double x,double y,
    if (udm_) udm_flag=1.0;//uniform distance measure...
    /*
    if (del_x*(th1_x_)+del_y*(th1_y_)>0.8) {
-      if (vcl_sqrt(t_x1*t_x1+t_y1*t_y1)<d_*r&&vcl_fabs(tt1)>AT_)
+      if (std::sqrt(t_x1*t_x1+t_y1*t_y1)<d_*r&&std::fabs(tt1)>AT_)
          c1++;
    }
    if (del_x*(th2_x_)+del_y*(th2_y_)>0.8) {
-      if (vcl_sqrt(t_x2*t_x2+t_y2*t_y2)<d_*r&&vcl_fabs(tt2)>AT_) 
+      if (std::sqrt(t_x2*t_x2+t_y2*t_y2)<d_*r&&std::fabs(tt2)>AT_) 
          c2++;
    }
    if (del_x*(th3_x_)+del_y*(th3_y_)>0.8) {
-      //vcl_cout<<theta<<" ";
-      if (vcl_sqrt(t_x3*t_x3+t_y3*t_y3)<d_*r&&vcl_fabs(tt3)>AT_) 
+      //std::cout<<theta<<" ";
+      if (std::sqrt(t_x3*t_x3+t_y3*t_y3)<d_*r&&std::fabs(tt3)>AT_) 
          c3++;
    }*/
 
@@ -244,20 +244,20 @@ vnl_matrix<double> rc3d_windows_frame::probe_con_prob(double x,double y,
    double dist1=t_x1+t_y1;
          
    
-         if (vcl_fabs(dist1)<d_*udm_flag&&r<R1_)
+         if (std::fabs(dist1)<d_*udm_flag&&r<R1_)
                  c1++;
          
          
    double dist2=t_x2+t_y2;
          
-         if (vcl_fabs(dist2)<d_*udm_flag&&r<R2_) 
+         if (std::fabs(dist2)<d_*udm_flag&&r<R2_) 
                  c2++;
          
          
    double dist3=t_x3+t_y3;
          
-         //vcl_cout<<theta<<" ";
-         if (vcl_fabs(dist3)<d_*udm_flag&&r<R3_) 
+         //std::cout<<theta<<" ";
+         if (std::fabs(dist3)<d_*udm_flag&&r<R3_) 
                  c3++;
 
    

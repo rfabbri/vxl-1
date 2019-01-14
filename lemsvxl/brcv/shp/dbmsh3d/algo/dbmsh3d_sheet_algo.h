@@ -33,14 +33,14 @@ bool merge_sheets_sharing_E (dbmsh3d_hypg* H, dbmsh3d_edge* E,
 
 //: Given a starting N and icurve C, find the breaking i-curves till the end.
 void get_S_icurve_vec_otherN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_edge* startC, 
-                              vcl_vector<dbmsh3d_edge*>& icurve_otherN_N,
+                              std::vector<dbmsh3d_edge*>& icurve_otherN_N,
                               dbmsh3d_vertex*& otherN);
 
 //: Given a starting N and icurve C, find the breaking i-curves till the end.
 //  Return false if the found bndN has more than 2 icurve or bnd_chain incident to it!
 bool get_S_icurve_vec_bndN (dbmsh3d_sheet* S, dbmsh3d_vertex* startN, dbmsh3d_edge* startC,
-                            vcl_vector<vcl_vector<dbmsh3d_edge*> >& icurve_bndN_N,
-                            vcl_vector<dbmsh3d_edge*>& icurve_loop_E_heads,
+                            std::vector<std::vector<dbmsh3d_edge*> >& icurve_bndN_N,
+                            std::vector<dbmsh3d_edge*>& icurve_loop_E_heads,
                             dbmsh3d_vertex*& bndN);
 
 

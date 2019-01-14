@@ -4,8 +4,8 @@
 #include <dbctrk/dbctrk_tracker_curve_sptr.h>
 #include <dbctrk/dbctrk_tracker_curve.h>
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_soview2D.h>
@@ -21,7 +21,7 @@ dbctrk_soview2D::dbctrk_soview2D( dbctrk_tracker_curve_sptr const & c)
 void
 dbctrk_soview2D::draw() const
 {
-  //vcl_cout<<"\n drawing curve num : "<<dbctrk_sptr_->get_id();
+  //std::cout<<"\n drawing curve num : "<<dbctrk_sptr_->get_id();
   glBegin(GL_LINE_STRIP);
   for(int i=0;i<dbctrk_sptr_->desc->curve_->numPoints();i++)
     {
@@ -32,8 +32,8 @@ dbctrk_soview2D::draw() const
 
 
 //: Print details about this dbctrk_tracker_curve to the given stream.
-vcl_ostream&
-dbctrk_soview2D::print(vcl_ostream&s) const
+std::ostream&
+dbctrk_soview2D::print(std::ostream&s) const
 {
   return s << "[ a _dbctrk_ ]";
 }

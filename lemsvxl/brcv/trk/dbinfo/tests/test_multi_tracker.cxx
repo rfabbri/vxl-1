@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_multi_tracker.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vbl/vbl_array_1d.h>
@@ -49,12 +49,12 @@ static void test_multi_tracker(int argc, char* argv[])
   vsol_point_2d_sptr p1 = new vsol_point_2d(20,10);
   vsol_point_2d_sptr p2 = new vsol_point_2d(20,20);
   vsol_point_2d_sptr p3 = new vsol_point_2d(10,20);
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   verts.push_back(p3); 
   vsol_polygon_2d_sptr poly = new vsol_polygon_2d(verts);
 
-  vcl_vector<vsol_polygon_2d_sptr> polys;
+  std::vector<vsol_polygon_2d_sptr> polys;
   polys.push_back(poly);
 
   dbinfo_multi_tracker_params mtp;
@@ -78,7 +78,7 @@ static void test_multi_tracker(int argc, char* argv[])
   vsl_b_read(bp_in, trk_in);
   bp_in.close();
   if(trk_in)
-    vcl_cout << "recovered track " << *trk_in << '\n';
+    std::cout << "recovered track " << *trk_in << '\n';
   vpl_unlink ("test_track_io.tmp");
 TEST("Track Binary I/O ", trk_in->size(), 2);
 }

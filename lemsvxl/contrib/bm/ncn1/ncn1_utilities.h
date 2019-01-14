@@ -8,11 +8,11 @@
 class ncn1_utilities
 {
 public:
-    static void save_pivot_pixel_candidate_matlab( vcl_string const& filename, pivot_pixel_list_type& pivot_pixel_candidates );
+    static void save_pivot_pixel_candidate_matlab( std::string const& filename, pivot_pixel_list_type& pivot_pixel_candidates );
 
-    static void save_neighborhood_dat( vcl_string const& filename, ncn1_neighborhood_sptr neighborhood_sptr );
+    static void save_neighborhood_dat( std::string const& filename, ncn1_neighborhood_sptr neighborhood_sptr );
 
-    //static void save_feature_dat( vcl_string const& filename, ncn1_neighborhood_sptr neighborhood_sptr );
+    //static void save_feature_dat( std::string const& filename, ncn1_neighborhood_sptr neighborhood_sptr );
 
 
 };

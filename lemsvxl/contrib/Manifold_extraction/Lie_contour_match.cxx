@@ -1,7 +1,7 @@
 #include "Lie_contour_match.h"
 #include "Lie_contour_match_sptr.h"
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 
 #include <dbsol/dbsol_interp_curve_2d.h>
@@ -96,15 +96,15 @@ Lie_contour_match::Lie_contour_match(const dbsol_interp_curve_2d_sptr c1,
   //  _curve1->add_vertex(c1->x(n), c1->y(n));
 
   for (int n=0;n<2*_n1;n++){    // 2*n1*_delta_s1 = 2*L1
-    vcl_vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
     
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_n2,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_n2,tmp3);
     _map.push_back(tmp2);
     
-    vcl_pair <int,int> tmp4(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp5(_n1+_n2,tmp4);
+    std::pair <int,int> tmp4(0,0);
+    std::vector< std::pair <int,int> > tmp5(_n1+_n2,tmp4);
     _finalMap.push_back(tmp5);
   }
   
@@ -178,36 +178,36 @@ void Lie_contour_match::setTemplateSize (int temp_size) {
 
 void Lie_contour_match::printCost(){
   int i,j;
-  vcl_cout << "Cost Matrix" << vcl_endl;
+  std::cout << "Cost Matrix" << std::endl;
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
-      vcl_printf("%6.3f ",_cost[i][j]);
+      std::printf("%6.3f ",_cost[i][j]);
     }
-    vcl_printf("\n");
+    std::printf("\n");
   }
 }
 
-void Lie_contour_match::writeCost(vcl_string fname){
-  vcl_FILE *fp=vcl_fopen(fname.c_str(),"w");
+void Lie_contour_match::writeCost(std::string fname){
+  std::FILE *fp=std::fopen(fname.c_str(),"w");
   int i,j;
   double c;
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
       c=_cost[i][j];
-      vcl_fwrite(&c,sizeof(double),1,fp);
+      std::fwrite(&c,sizeof(double),1,fp);
     }
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 }
 
 void Lie_contour_match::printMap(){
   int i,j;
-  vcl_printf("Map Matrix\n");
+  std::printf("Map Matrix\n");
   for (i = 0; i<_n1; i++){
     for (j = 0; j<_n2; j++){
-      vcl_printf("(%2d,%2d) ", _map[i][j].first, _map[i][j].second);
+      std::printf("(%2d,%2d) ", _map[i][j].first, _map[i][j].second);
     }
-    vcl_printf("\n");
+    std::printf("\n");
   }
 } 
 
@@ -247,11 +247,11 @@ void Lie_contour_match::initializeDPMask2(int s1, int s2) {
   n1=_n1;
   n2=_n2;
 
-  vcl_pair <int,int> tmp3(0,0);
-  vcl_vector< vcl_pair <int,int> > Pi(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > Pj(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > PiR(n1+n2,tmp3);
-  vcl_vector< vcl_pair <int,int> > PjR(n1+n2,tmp3);
+  std::pair <int,int> tmp3(0,0);
+  std::vector< std::pair <int,int> > Pi(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > Pj(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > PiR(n1+n2,tmp3);
+  std::vector< std::pair <int,int> > PjR(n1+n2,tmp3);
   
   count=0;
   for (ii=0;ii<Ni-1;ii++){
@@ -343,7 +343,7 @@ void Lie_contour_match::computeDPCosts(int startPoint){
     start=(startPoint>_leftMask[j] ? startPoint : _leftMask[j]);
     end=(_rightMask[j]<startPoint+_n1-1 ? _rightMask[j] : startPoint+_n1-1);
 
-    // vcl_cout << "end: " << end << vcl_flush;
+    // std::cout << "end: " << end << std::flush;
     for (i=start;i<=end;i++){
       for (k=0;k<_template_size;k++){
               ip=i+XOFFSET[k];
@@ -366,8 +366,8 @@ void Lie_contour_match::findDPCorrespondence(int startPoint){
   int i,j,ip,jp;
   int count;
 
-  vcl_pair <int,int> tmp3(0,0);
-  vcl_vector< vcl_pair <int,int> > tmpMap(_n1+_n2+1,tmp3);
+  std::pair <int,int> tmp3(0,0);
+  std::vector< std::pair <int,int> > tmpMap(_n1+_n2+1,tmp3);
   //tmpMap=(intPair*)calloc(d->n1+d->n2+1,sizeof(intPair));
 
   _finalCost[startPoint]=_cost[_n1+startPoint-1][_n2-1];
@@ -392,7 +392,7 @@ void Lie_contour_match::findDPCorrespondence(int startPoint){
     j=jp;
   }
   _finalMap[startPoint].clear();
-  vcl_pair <int,int> p;
+  std::pair <int,int> p;
   //_finalMapSize[startPoint]=count;
   for (i=0;i<count;i++){
     p.first = tmpMap[count-1-i].first;
@@ -436,7 +436,7 @@ void Lie_contour_match::Match(){
   
   //Copy the starting point match (0) to the match from _n
   int N0=_finalMap[0].size();
-  vcl_pair <int,int> p;
+  std::pair <int,int> p;
   _finalMap[_n1].clear();
   _finalCost[_n1]=_finalCost[0];
   for (int i=0;i<N0;i++){
@@ -444,7 +444,7 @@ void Lie_contour_match::Match(){
     p.second=_finalMap[0][i].second;
     _finalMap[_n1].push_back(p);
   }
-  //vcl_cout <<  "In Match: Done copying  start point"<< vcl_endl;
+  //std::cout <<  "In Match: Done copying  start point"<< std::endl;
   computeMiddlePaths(0,_n1);
 
 }
@@ -457,7 +457,7 @@ void Lie_contour_match::computeCurveProperties() {
     
   for (int i = 0; i<2*_n1; i++) {
     double s1 = _lengths_curve1[i];
-    s1 = vcl_fmod(s1, L1);
+    s1 = std::fmod(s1, L1);
     s1 = (s1 == 0 ? L1 : s1);
     _tangents_curve1.push_back(_curve1->tangent_angle_at(s1));
   }
@@ -483,33 +483,33 @@ double Lie_contour_match::computeLieIntervalCost(int i, int ip, int j, int jp){
   double s2_p = _lengths_curve2[jp];
   
   //Here the cost is based on lengths of the segments.
-  double ds1 = vcl_fabs(s1-s1_p);
-  double ds2 = vcl_fabs(s2-s2_p);
+  double ds1 = std::fabs(s1-s1_p);
+  double ds2 = std::fabs(s2-s2_p);
   
   double dF;
   
     if ((ds1 > 1E-10) && (ds2 > 1E-10))
-        dF = ((ds2 > ds1)? vcl_log(ds2/ds1) : vcl_log(ds1/ds2));
+        dF = ((ds2 > ds1)? std::log(ds2/ds1) : std::log(ds1/ds2));
       
     else if (ds1 < 1E-10)
-        dF = vcl_log(ds2);
+        dF = std::log(ds2);
     else if (ds2 < 1E-10)
-        dF = vcl_log(ds1);
+        dF = std::log(ds1);
     else
         dF = 0;
 
    
     
-    s1 = vcl_fmod(s1, _curve1->length());
+    s1 = std::fmod(s1, _curve1->length());
     s1 = (s1 == 0 ? _curve1->length() : s1);
 
-    s1_p = vcl_fmod(s1_p, _curve1->length());
+    s1_p = std::fmod(s1_p, _curve1->length());
     s1_p = (s1_p == 0 ? _curve1->length() : s1_p);
 
-    s2 = vcl_fmod(s2, _curve1->length());
+    s2 = std::fmod(s2, _curve1->length());
     s2 = (s2 == 0 ? _curve1->length() : s2);
 
-    s2_p = vcl_fmod(s2_p, _curve1->length());
+    s2_p = std::fmod(s2_p, _curve1->length());
     s2_p = (s2_p == 0 ? _curve1->length() : s2_p);
 
   
@@ -523,11 +523,11 @@ double Lie_contour_match::computeLieIntervalCost(int i, int ip, int j, int jp){
 double angle_1,angle_2;
 double m_C1 = 0,x_diff_C1 = SP_C1->x() - EP_C1->x(),y_diff_C1 = SP_C1->y() - EP_C1->y();
 
-if (vcl_fabs(x_diff_C1) > 1E-5)
+if (std::fabs(x_diff_C1) > 1E-5)
     {
-  angle_1 = vcl_atan2(y_diff_C1,x_diff_C1);
+  angle_1 = std::atan2(y_diff_C1,x_diff_C1);
     }
-else if ((vcl_fabs(x_diff_C1) < 1E-5) && (vcl_fabs(y_diff_C1) > 1E-5))
+else if ((std::fabs(x_diff_C1) < 1E-5) && (std::fabs(y_diff_C1) > 1E-5))
     {
     if (x_diff_C1 < 0)
     angle_1 = -0.5*(vnl_math::pi);
@@ -541,11 +541,11 @@ else
 
 double m_C2 = 0,x_diff_C2 = SP_C2->x() - EP_C2->x(),y_diff_C2 = SP_C2->y() - EP_C2->y();
 
-if (vcl_fabs(x_diff_C2) > 1E-5)
+if (std::fabs(x_diff_C2) > 1E-5)
     {
-  angle_2 = vcl_atan2(y_diff_C2,x_diff_C2);
+  angle_2 = std::atan2(y_diff_C2,x_diff_C2);
     }
-else if ((vcl_fabs(x_diff_C2) < 1E-5) && (vcl_fabs(y_diff_C2) > 1E-5))
+else if ((std::fabs(x_diff_C2) < 1E-5) && (std::fabs(y_diff_C2) > 1E-5))
     {
     if (x_diff_C2 < 0 )
     angle_2 = -0.5*(vnl_math::pi);
@@ -560,12 +560,12 @@ else
 double dL1,dL2;
 
 if (ds1 > 1E-10)
-dL1 = vcl_log(ds1);
+dL1 = std::log(ds1);
 else
 dL1 = 0;
 
 if (ds2 > 1E-10)
-dL2 = vcl_log(ds2);
+dL2 = std::log(ds2);
 else
 dL2 = 0;
 
@@ -580,23 +580,23 @@ t2 = (angle_1*angle_2 + dL1*dL2)/(angle_1*angle_1 + dL1*dL1);
 double dK = angle_1 - angle_2;
 double cost1 = 0,cost2 = 0;
 
-cost = vcl_sqrt((angle_2 - angle_1)*(angle_2 - angle_1) + (dL2 - dL1)*(dL2 - dL1));
-//cost1 = vcl_sqrt((t1*angle_2 - angle_1)*(t1*angle_2 - angle_1) + (t1*dL2 - dL1)*(t1*dL2 - dL1));
-//cost2 = vcl_sqrt((t2*angle_1 - angle_2)*(t2*angle_1 - angle_2) + (t2*dL1 - dL2)*(t2*dL1 - dL2));
+cost = std::sqrt((angle_2 - angle_1)*(angle_2 - angle_1) + (dL2 - dL1)*(dL2 - dL1));
+//cost1 = std::sqrt((t1*angle_2 - angle_1)*(t1*angle_2 - angle_1) + (t1*dL2 - dL1)*(t1*dL2 - dL1));
+//cost2 = std::sqrt((t2*angle_1 - angle_2)*(t2*angle_1 - angle_2) + (t2*dL1 - dL2)*(t2*dL1 - dL2));
 //
 //cost = (cost1 > cost2 ? cost2 : cost1);
 //
 //if (cost == 0)
-//cost = vcl_sqrt(dF*dF + dK*dK);
+//cost = std::sqrt(dF*dF + dK*dK);
 
 return cost;
 
  // double dt1 = Lie_curve_angleDiff (_tangents_curve1[i], _tangents_curve1[ip]);
  // double dt2 = Lie_curve_angleDiff (_tangents_curve2[j], _tangents_curve2[jp]);
- // // double dK = vcl_fabs(dt1-dt2);
+ // // double dK = std::fabs(dt1-dt2);
 
  //double dK = angle_1 - angle_2;
 
- // return vcl_sqrt(dF*dF + dK*dK);
+ // return std::sqrt(dF*dF + dK*dK);
 }
 

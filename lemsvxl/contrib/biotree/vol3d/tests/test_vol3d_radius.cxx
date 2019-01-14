@@ -4,7 +4,7 @@
 // \author    Kongbin Kang
 // \date        2005-05-29
 // 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_array_3d.h>
 #include <testlib/testlib_test.h>
 #include <vol3d/vol3d_radius_filter.h>
@@ -41,18 +41,18 @@ static void test_vol3d_radius()
 
   vol3d_radius_filter rf(10);
 
-  vcl_valarray<double> dens = rf.densities(vol, 40, 40, 50);
+  std::valarray<double> dens = rf.densities(vol, 40, 40, 50);
 
 
   for(int i = 0; i < dens.size(); i++)
-    vcl_cout << dens[i] << '\t';
-  vcl_cout << '\n';
+    std::cout << dens[i] << '\t';
+  std::cout << '\n';
 
   double density = rf.density(vol, 40, 40, 50, 8);
-  vcl_cout << "density within radius 4 = " << density << '\t';
-  vcl_cout << '\n';
+  std::cout << "density within radius 4 = " << density << '\t';
+  std::cout << '\n';
 
-  vcl_valarray<int> rp(5);
+  std::valarray<int> rp(5);
 
   rp[0] = 2;
   rp[1] = 3;
@@ -60,23 +60,23 @@ static void test_vol3d_radius()
   rp[3] = 6;
   rp[4] = 8;
 
-  vcl_valarray<double> dens_rp = rf.densities(vol, rp, 40, 40, 17);
+  std::valarray<double> dens_rp = rf.densities(vol, rp, 40, 40, 17);
  
   for(int i = 0; i < dens_rp.size(); i++)
-    vcl_cout << dens_rp[i] << '\t';
-  vcl_cout << '\n';
+    std::cout << dens_rp[i] << '\t';
+  std::cout << '\n';
 
   TEST_NEAR("density on radius 3 shell ", dens_rp[1], 3.777, 0.001);
 
   dens_rp = rf.densities(vol, rp, 40, 40, 50);
 
-  vcl_cout << "\ndensities at (40, 40, 50) are ";
+  std::cout << "\ndensities at (40, 40, 50) are ";
   for(int i = 0; i < dens_rp.size(); i++)
-    vcl_cout << dens_rp[i] << '\t';
-  vcl_cout << '\n';
+    std::cout << dens_rp[i] << '\t';
+  std::cout << '\n';
 
 /*  --------------------------------------------------------------------*/
-  vcl_valarray<int> rp1(4);
+  std::valarray<int> rp1(4);
 
   rp1[0] = 3;
   rp1[1] = 4;
@@ -85,10 +85,10 @@ static void test_vol3d_radius()
 
   dens_rp = rf.densities(vol, rp1, 40, 40, 58);
   
-  vcl_cout << "\ndensities at (40, 40, 58) are ";
+  std::cout << "\ndensities at (40, 40, 58) are ";
   for(int i = 0; i < dens_rp.size(); i++)
-    vcl_cout << dens_rp[i] << '\t';
-  vcl_cout << '\n';
+    std::cout << dens_rp[i] << '\t';
+  std::cout << '\n';
 
 }
 

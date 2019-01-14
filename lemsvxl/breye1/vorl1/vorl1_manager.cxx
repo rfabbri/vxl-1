@@ -5,12 +5,12 @@
 
 
 #include "vorl1_manager.h"
-#include <vcl_cassert.h>
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_vector.h>
+#include <cassert>
+#include <cstdlib> // for std::exit()
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -170,11 +170,11 @@ vorl1_manager::parse_params(int argc, char** argv)
   //vul_arg_include(process_args_);
   vul_arg_parse(argc, argv);
 
-  vcl_cout << "Writing params file" << vcl_endl;
+  std::cout << "Writing params file" << std::endl;
   this->write_params();
 
   if (params_only_()){
-    vcl_exit(0);
+    std::exit(0);
   }
   
   update_process_params();
@@ -187,11 +187,11 @@ vorl1_manager::load_video()
   bpro1_process_sptr load_video_proc = new vidpro1_load_video_process;
 
   process_manager_.register_process(load_video_proc);
-  load_video_proc->set_output_names(vcl_vector<vcl_string>(1,"video"));
+  load_video_proc->set_output_names(std::vector<std::string>(1,"video"));
 
   if(!video_file_.set()){
-    vcl_cerr << "Error: The video file was not specified" << vcl_endl;
-    vcl_exit(-1);
+    std::cerr << "Error: The video file was not specified" << std::endl;
+    std::exit(-1);
   }
 
   load_video_proc->parameters()->set_value("-video_filename",bpro1_filepath(video_file_()));
@@ -216,11 +216,11 @@ vorl1_manager::load_video_clip()
   bpro1_process_sptr load_video_proc = new vidpro1_load_video_process;
 
   process_manager_.register_process(load_video_proc);
-  load_video_proc->set_output_names(vcl_vector<vcl_string>(1,"video"));
+  load_video_proc->set_output_names(std::vector<std::string>(1,"video"));
 
   if(!video_file_.set()){
-    vcl_cerr << "Error: The video file was not specified" << vcl_endl;
-    vcl_exit(-1);
+    std::cerr << "Error: The video file was not specified" << std::endl;
+    std::exit(-1);
   }
 
   //: now its loading just (end_frame-start_frame+1) frames
@@ -245,7 +245,7 @@ vorl1_manager::load_video_clip()
 //                 modified by the process are added to the set
 bool 
 vorl1_manager::run_process_on_current_frame( const bpro1_process_sptr& process,
-                                            vcl_set<bpro1_storage_sptr>* modified )
+                                            std::set<bpro1_storage_sptr>* modified )
 {
   return process_manager_.run_process_on_current_frame( process, modified );
 }
@@ -255,7 +255,7 @@ vorl1_manager::run_process_on_current_frame( const bpro1_process_sptr& process,
 // \param modified is an optional parameter.  If specified, all storage objects
 //                 modified by the process are added to the set
 bool 
-vorl1_manager::run_process_queue_on_current_frame ( vcl_set<bpro1_storage_sptr>* modified )
+vorl1_manager::run_process_queue_on_current_frame ( std::set<bpro1_storage_sptr>* modified )
 {
   return process_manager_.run_process_queue_on_current_frame( modified );
 }
@@ -265,7 +265,7 @@ vorl1_manager::run_process_queue_on_current_frame ( vcl_set<bpro1_storage_sptr>*
 // \param modified is an optional parameter.  If specified, all storage objects
 //                 modified by the process are added to the set
 bool 
-vorl1_manager::finish_process_queue( vcl_set<bpro1_storage_sptr>* modified )
+vorl1_manager::finish_process_queue( std::set<bpro1_storage_sptr>* modified )
 {
   return process_manager_.finish_process_queue( first_frame_, last_frame_,
                                                 modified );
@@ -277,7 +277,7 @@ vorl1_manager::finish_process_queue( vcl_set<bpro1_storage_sptr>* modified )
 //                 modified by the process are added to the set
 bool 
 vorl1_manager::finish_process_queue( int first, int last,
-                                    vcl_set<bpro1_storage_sptr>* modified )
+                                    std::set<bpro1_storage_sptr>* modified )
 {
   return process_manager_.finish_process_queue( first,last,modified );
 }
@@ -287,12 +287,12 @@ vorl1_manager::finish_process_queue( int first, int last,
 void
 vorl1_manager::update_process_params()
 {
-  for ( vcl_vector<vul_arg_base*>::iterator a_itr = process_args_.args_.begin();
+  for ( std::vector<vul_arg_base*>::iterator a_itr = process_args_.args_.begin();
         a_itr != process_args_.args_.end(); ++a_itr )
   {
-    vcl_string option((*a_itr)->option());
+    std::string option((*a_itr)->option());
     bpro1_parameters_sptr params = NULL;
-    typedef vcl_vector<bpro1_process_sptr>::iterator proc_iterator;
+    typedef std::vector<bpro1_process_sptr>::iterator proc_iterator;
     for ( proc_iterator p_itr = processes_.begin(); 
           p_itr != processes_.end(); ++p_itr )  
     {
@@ -304,7 +304,7 @@ vorl1_manager::update_process_params()
     }
 
     if(!params){
-      vcl_cerr << "Warning: couldn't find process for " << option << vcl_endl;
+      std::cerr << "Warning: couldn't find process for " << option << std::endl;
       continue;
     }
 
@@ -329,9 +329,9 @@ vorl1_manager::update_process_params()
       continue;
     }
 
-    vul_arg<vcl_string>* arg_string = dynamic_cast<vul_arg<vcl_string>*>(*a_itr);
+    vul_arg<std::string>* arg_string = dynamic_cast<vul_arg<std::string>*>(*a_itr);
     if (arg_string){
-      if(params->valid_parameter_type(option, vcl_string())){
+      if(params->valid_parameter_type(option, std::string())){
         params->set_value(arg_string->option(), (*arg_string)() );
         continue;
       }
@@ -345,7 +345,7 @@ vorl1_manager::update_process_params()
       }  
     }
 
-    vcl_cerr << "Warning: could not determine parameter type for "<< (*a_itr)->option() << vcl_endl;
+    std::cerr << "Warning: could not determine parameter type for "<< (*a_itr)->option() << std::endl;
   }
 }
 
@@ -354,7 +354,7 @@ vorl1_manager::update_process_params()
 void
 vorl1_manager::init_args(const bpro1_parameters_sptr& param)
 {
-  typedef vcl_vector< bpro1_param* > param_vector;
+  typedef std::vector< bpro1_param* > param_vector;
   param_vector params = param->get_param_list();
   for(param_vector::iterator p_itr = params.begin(); p_itr != params.end(); ++p_itr){
 
@@ -378,8 +378,8 @@ vorl1_manager::init_args(const bpro1_parameters_sptr& param)
                         param->description().c_str(),
                         param->value() ));
     }
-    else if( bpro1_param_type<vcl_string> * param = dynamic_cast<bpro1_param_type<vcl_string> *>(*p_itr) ) {
-      process_args_.add(new vul_arg<vcl_string>( param->name().c_str(),
+    else if( bpro1_param_type<std::string> * param = dynamic_cast<bpro1_param_type<std::string> *>(*p_itr) ) {
+      process_args_.add(new vul_arg<std::string>( param->name().c_str(),
                                                  param->description().c_str(),
                                                  param->value() ));
     }
@@ -389,12 +389,12 @@ vorl1_manager::init_args(const bpro1_parameters_sptr& param)
                                            param->value() ));
     }
     else if( bpro1_param_type<bpro1_filepath> * param = dynamic_cast<bpro1_param_type<bpro1_filepath> *>(*p_itr) ) {
-      process_args_.add(new vul_arg<vcl_string>( param->name().c_str(),
+      process_args_.add(new vul_arg<std::string>( param->name().c_str(),
                                                  param->description().c_str(),
                                                  param->value().path ));
     }
     else{
-      vcl_cerr << "No valid argument type for parameter: " << (*p_itr)->name() << vcl_endl;
+      std::cerr << "No valid argument type for parameter: " << (*p_itr)->name() << std::endl;
     }
   }
 }
@@ -405,76 +405,76 @@ void
 vorl1_manager::set_performance(double true_pos, double true_neg)
 {
   if ((true_neg == -1)){
-    vcl_cerr << " Error: invalid performance true_neg score of -1, reset to 0" << vcl_endl;
+    std::cerr << " Error: invalid performance true_neg score of -1, reset to 0" << std::endl;
     true_neg=0;
   }
     if ((true_pos == -1 )){
-    vcl_cerr << " Error: invalid performance true_pos score of -1, reset to 0" << vcl_endl;
+    std::cerr << " Error: invalid performance true_pos score of -1, reset to 0" << std::endl;
     true_pos=0;
 
   }
 
   double false_pos = 1 - true_pos;
   double false_neg = 1 - true_neg;
- performance_scores_.push_back(vcl_pair<double,double>(false_pos,false_neg));
+ performance_scores_.push_back(std::pair<double,double>(false_pos,false_neg));
 }
 
 //: Get the output directory.
-vcl_string
+std::string
 vorl1_manager::get_output_dir()
 {
   if (!output_dir_.set()){
-    vcl_cerr << "Error: The output directory was not specified" << vcl_endl;
+    std::cerr << "Error: The output directory was not specified" << std::endl;
     return "";
   }
     return(output_dir_());
 }
 //: Get the output ps directory.
-vcl_string
+std::string
 vorl1_manager::get_output_ps_dir()
 {
   if (!out_ps_dir_.set()){
-    vcl_cerr << "Error: The output ps  directory was not specified" << vcl_endl;
+    std::cerr << "Error: The output ps  directory was not specified" << std::endl;
     return "";
   }
     return(out_ps_dir_());
 }
 //: Get the output vrml directory.
-vcl_string
+std::string
 vorl1_manager::get_output_vrml_dir()
 {
   if (!out_vrml_dir_.set()){
-    vcl_cerr << "Error: The output vrml directory was not specified" << vcl_endl;
+    std::cerr << "Error: The output vrml directory was not specified" << std::endl;
     return "";
   }
     return(out_vrml_dir_());
 }
-vcl_string
+std::string
 vorl1_manager::get_output_svg_dir()
 {
   if (!out_svg_dir_.set()){
-    vcl_cerr << "Error: The output svg directory was not specified" << vcl_endl;
+    std::cerr << "Error: The output svg directory was not specified" << std::endl;
     return "";
   }
     return(out_svg_dir_());
 }
 
 //: Get the output video directory.
-vcl_string
+std::string
 vorl1_manager::get_output_video_dir()
 {
   if (!out_video_dir_.set()){
-    vcl_cerr << "Error: The output video directory was not specified" << vcl_endl;
+    std::cerr << "Error: The output video directory was not specified" << std::endl;
     return "";
   }
     return(out_video_dir_());
 }
 //: Get the input assoc video directory.
-vcl_string
+std::string
 vorl1_manager::get_video_assoc_dir()
 {
   if (!video_assoc_dir_.set()){
-    vcl_cerr << "Error: The assoc video dir was not specified" << vcl_endl;
+    std::cerr << "Error: The assoc video dir was not specified" << std::endl;
     return "";
   }
     return(video_assoc_dir_());
@@ -483,7 +483,7 @@ vorl1_manager::get_video_assoc_dir()
 //: return the video id which is the parent video of the input object (or input video itself)
 int vorl1_manager::get_video_id() {
   if (!video_id_.set()){
-    vcl_cerr << "Error: The video id was not specified" << vcl_endl;
+    std::cerr << "Error: The video id was not specified" << std::endl;
     return 0;
   }
     return(video_id_());
@@ -492,7 +492,7 @@ int vorl1_manager::get_video_id() {
 //: return the video file id (which is the necessary one to reach path)
 int vorl1_manager::get_video_fileid() {
   if (!video_fileid_.set()){
-    vcl_cerr << "Error: The video file id was not specified" << vcl_endl;
+    std::cerr << "Error: The video file id was not specified" << std::endl;
     return 0;
   }
     return(video_fileid_());
@@ -501,7 +501,7 @@ int vorl1_manager::get_video_fileid() {
 //: return the id of input object
 int vorl1_manager::get_object_id() {
   if (!object_id_.set()){
-    vcl_cerr << "Error: The object id was not specified" << vcl_endl;
+    std::cerr << "Error: The object id was not specified" << std::endl;
     return 0;
   }
     return(object_id_());
@@ -515,7 +515,7 @@ int vorl1_manager::get_no_skip_frames() {
 //: Return start frame parameter that is passed to the job
 int vorl1_manager::start_frame() {
   if (!start_frame_.set()){
-    vcl_cerr << "Error: The start frame was not specified" << vcl_endl;
+    std::cerr << "Error: The start frame was not specified" << std::endl;
     return 0;
   }
     return(start_frame_());
@@ -524,7 +524,7 @@ int vorl1_manager::start_frame() {
 //: Return end frame parameter that is passed to the job
 int vorl1_manager::end_frame() {
   if (!end_frame_.set()){
-    vcl_cerr << "Error: The end frame was not specified" << vcl_endl;
+    std::cerr << "Error: The end frame was not specified" << std::endl;
     return 0;
   }
     return(end_frame_());
@@ -550,9 +550,9 @@ vorl1_manager::write_status(float status) const
   if (!status_file_.set())
     return false;
 
-  vcl_ofstream outstream(status_file_().c_str());
+  std::ofstream outstream(status_file_().c_str());
   if (!outstream){
-    vcl_cerr << "error: could not create performance output file ["<<status_file_()<<"]\n";
+    std::cerr << "error: could not create performance output file ["<<status_file_()<<"]\n";
     return false;
   }
 
@@ -580,16 +580,16 @@ vorl1_manager::write_status(float status) const
 
 //: Write the performance file
 bool
-vorl1_manager::write_performance(vcl_string category) const
+vorl1_manager::write_performance(std::string category) const
 {
   if (!perf_file_.set()){
-    vcl_cerr << "Error: The performance file was not specified" << vcl_endl;
+    std::cerr << "Error: The performance file was not specified" << std::endl;
     return false;
   }
-  vcl_ofstream outstream(perf_file_().c_str());   
+  std::ofstream outstream(perf_file_().c_str());   
   if (!outstream)
   {
-    vcl_cerr << "Error: could not create the performance file ["<<perf_file_()<<"]" << vcl_endl;
+    std::cerr << "Error: could not create the performance file ["<<perf_file_()<<"]" << std::endl;
     return false;
   }
 
@@ -609,7 +609,7 @@ vorl1_manager::write_performance(vcl_string category) const
   outstream << "      </category>\n"
             << "    </video>\n"
             << "  </frames>\n"
-            << "</performance>" <<vcl_endl;
+            << "</performance>" <<std::endl;
 
   return true;
 }
@@ -620,13 +620,13 @@ bool
 vorl1_manager::write_params() 
 {
   if (!param_file_.set()){
-    vcl_cerr << "Error: The parameter file was not specified" << vcl_endl;
+    std::cerr << "Error: The parameter file was not specified" << std::endl;
     return false;
   }
-  vcl_ofstream outstream(param_file_().c_str());
+  std::ofstream outstream(param_file_().c_str());
   if (!outstream)
   {
-    vcl_cerr << "Error: could not create param output file ["<<param_file_()<<"]" << vcl_endl;
+    std::cerr << "Error: could not create param output file ["<<param_file_()<<"]" << std::endl;
     return false;
   }
 
@@ -640,19 +640,19 @@ vorl1_manager::write_params()
   all_args.include(vorl1_args_);
   all_args.include(process_args_);
   // Write the arguments
-  for (vcl_vector<vul_arg_base*>::iterator arg_it = all_args.args_.begin();
+  for (std::vector<vul_arg_base*>::iterator arg_it = all_args.args_.begin();
        arg_it != all_args.args_.end(); ++arg_it)
   {
-    vcl_string command = (*arg_it)->option();
-    vcl_string description = (*arg_it)->help();
-    vcl_string type = (*arg_it)->type_;
+    std::string command = (*arg_it)->option();
+    std::string description = (*arg_it)->help();
+    std::string type = (*arg_it)->type_;
     if (type == "bool")
       type = "flag";
 
     // The complicated check is needed to determine if a "string" is
     // really a "file" (i.e. path to a file)
     if (type == "string"){
-      typedef vcl_vector<bpro1_process_sptr>::iterator proc_iterator;
+      typedef std::vector<bpro1_process_sptr>::iterator proc_iterator;
       for ( proc_iterator p_itr = processes_.begin(); 
             p_itr != processes_.end(); ++p_itr )  
       {
@@ -702,10 +702,10 @@ vorl1_manager::write_params()
       outstream << " System_info=\"PARAM_BLOCK\"";
     outstream << " value=\"";
     // if arg is a string, we have to get rid of ' ' around value
-    vcl_ostringstream value_stream;
+    std::ostringstream value_stream;
     (*arg_it)->print_value(value_stream);
     if (type == "string" || type == "file"|| type == "assocfile"){
-      vcl_string value_string = value_stream.str();
+      std::string value_string = value_stream.str();
 
       value_string = value_stream.str();
 
@@ -716,7 +716,7 @@ vorl1_manager::write_params()
     }
     else if (type == "flag")
     {
-      vcl_string value_string = value_stream.str();
+      std::string value_string = value_stream.str();
       if ((value_string == "not set") || (command == "-print_params_only"))
         value_string = "off";
       else if (value_string == "set")
@@ -738,8 +738,8 @@ vorl1_manager::write_params()
   return true;
 }
 
-bool vorl1_manager::save_repository( const vcl_string& filename, 
-                                    const vcl_set<vcl_string>& names )
+bool vorl1_manager::save_repository( const std::string& filename, 
+                                    const std::set<std::string>& names )
 {
     vsl_b_ofstream bfs(filename);
     vidpro1_repository_sptr save_rep;

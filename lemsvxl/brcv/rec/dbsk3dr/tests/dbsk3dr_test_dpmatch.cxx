@@ -1,13 +1,13 @@
 #include <testlib/testlib_test.h>
 #include <dbsk3dr/dbsk3dr_dpmatch.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //To trace in VC++, put in argument (use your own dir):
 // dbsk3dr_test_dpmatch D:\Projects\BrownEyes\lemsvxlsrc\brcv\rec\dbsk3dr\tests\data
 
 MAIN_ARGS(dbsk3dr_test_dpmatch)
 {
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -21,7 +21,7 @@ MAIN_ARGS(dbsk3dr_test_dpmatch)
   //=======================================
   testlib_test_start ("Test matching identical curves");
 
-  vcl_string data_file = "con_3d_1.con3";
+  std::string data_file = "con_3d_1.con3";
   // Test generic file loads
   dbsk3dr_ms_curve* c1 = new dbsk3dr_ms_curve;
   c1->read_con3_file ((dir_base+data_file).c_str());
@@ -37,7 +37,7 @@ MAIN_ARGS(dbsk3dr_test_dpmatch)
 
   dpm->Match ();
 
-  vcl_cout << "Final cost is: " << dpm->finalCost() << vcl_endl;
+  std::cout << "Final cost is: " << dpm->finalCost() << std::endl;
   TEST("matching curve1 with itself ", dpm->finalCost(), 0.0);
 
   dpm->ListDPTable ();
@@ -49,7 +49,7 @@ MAIN_ARGS(dbsk3dr_test_dpmatch)
   delete dpm;
 
   c2 = new dbsk3dr_ms_curve;
-  vcl_string data_file2 = "con_3d_2.con3";
+  std::string data_file2 = "con_3d_2.con3";
   c2->read_con3_file ((dir_base+data_file2).c_str());
   TEST("load con_3d_2.con3 ", c2->size(), 12);
 
@@ -59,7 +59,7 @@ MAIN_ARGS(dbsk3dr_test_dpmatch)
 
   dpm->Match ();
 
-  vcl_cout << "Final cost is: " << dpm->finalCost() << vcl_endl;
+  std::cout << "Final cost is: " << dpm->finalCost() << std::endl;
   
   TEST_NEAR ("matching curve1 with itself ", dpm->finalCost(), 10.2256, 0.001);
 

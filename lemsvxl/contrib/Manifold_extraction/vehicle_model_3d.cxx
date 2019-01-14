@@ -1,7 +1,7 @@
 #include "vehicle_model_3d.h"
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgl/vgl_homg_point_2d.h>
 
 //helper function to transform the model
@@ -12,7 +12,7 @@ void transform_component(vnl_matrix<double>const & m,vgl_box_3d<double>& box)
     vnl_matrix<double> points(4,2,1.0),tr_points(4,2,1.0);
     double min_x,min_y,min_z,max_x,max_y ,max_z;
 
-   // vcl_cout << " box: " << box << vcl_endl;
+   // std::cout << " box: " << box << std::endl;
 
     min_x = box.min_x();
     min_y = box.min_y();
@@ -40,7 +40,7 @@ void transform_component(vnl_matrix<double>const & m,vgl_box_3d<double>& box)
     box.set_max_z(tr_points.get(2,1));
     }
 
-//void vehicle_model_3d::print_vrml(vcl_ofstream &ofstr)
+//void vehicle_model_3d::print_vrml(std::ofstream &ofstr)
 //    {
 //       ofstr <<      "#VRML V2.0 utf8\n";
 //        ofstr <<      "Background { \n";

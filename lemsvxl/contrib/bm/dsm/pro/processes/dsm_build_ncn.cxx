@@ -16,9 +16,9 @@
 
 #include<dsm/dsm_ncn_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //: global variables
 namespace dsm_build_ncn_globals
@@ -31,7 +31,7 @@ bool dsm_build_ncn_process_cons( bprb_func_process& pro )
 {
 	//set input/output types
 	using namespace dsm_build_ncn_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 
 	input_types_[0] = "dsm_ncn_sptr";
 

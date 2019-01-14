@@ -19,8 +19,8 @@ bool dbvis1_image_intensity_inspector::handle(const vgui_event & e,const bvis1_v
       float ix, iy;
       vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
       vil_image_view<vxl_byte> image=tableau_->get_image_resource()->get_view();
-      ix=vcl_floor(ix+0.5);
-      iy=vcl_floor(iy+0.5);
+      ix=std::floor(ix+0.5);
+      iy=std::floor(iy+0.5);
       vgui::out<<"("<<(int)ix<<","<<(int)iy<<")";
       
       if((int)ix>=0 && (int)ix<image.ni() && (int)iy>=0 && (int)iy<image.nj())
@@ -103,7 +103,7 @@ void
 dbvis1_image_intensity_inspector::get_popup( const vgui_popup_params& params, 
                                             vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((rgb_)?on:off)+"RGB ", 
             bvis1_tool_toggle, (void*)(&rgb_) );
   menu.add( ((ihs_)?on:off)+"IHS", 

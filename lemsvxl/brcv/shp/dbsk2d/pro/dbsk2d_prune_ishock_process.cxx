@@ -13,7 +13,7 @@ dbsk2d_prune_ishock_process::dbsk2d_prune_ishock_process()
 {
   if (!parameters()->add( "Prune Threshold" , "-threshold" , (float)1.0 ) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -29,21 +29,21 @@ bpro1_process* dbsk2d_prune_ishock_process::clone() const
 }
 
 
-vcl_string dbsk2d_prune_ishock_process::name()
+std::string dbsk2d_prune_ishock_process::name()
 {
   return "Prune Shocks";
 }
 
-vcl_vector< vcl_string > dbsk2d_prune_ishock_process::get_input_type()
+std::vector< std::string > dbsk2d_prune_ishock_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbsk2d_prune_ishock_process::get_output_type()
+std::vector< std::string > dbsk2d_prune_ishock_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 

@@ -23,9 +23,9 @@
 // since they do the same thing
 bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_node_descriptor& start_desc, 
                             const dbsksp_xshock_node_descriptor& end_desc, 
-                            const vcl_vector<dbsksp_xshock_node_descriptor >& xsamples, 
+                            const std::vector<dbsksp_xshock_node_descriptor >& xsamples, 
                             double error_threshold,
-                            vcl_vector<dbsksp_xshock_node_descriptor >& list_intermediate_xdesc);
+                            std::vector<dbsksp_xshock_node_descriptor >& list_intermediate_xdesc);
 
 
 

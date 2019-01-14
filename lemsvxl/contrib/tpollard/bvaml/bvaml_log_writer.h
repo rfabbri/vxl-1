@@ -12,8 +12,8 @@
 // printed inside that function.  Nested functions with different
 // bvaml_log_writers will have the msgs indented appropriately.
 
-#include <vcl_string.h>
-#include <vcl_cmath.h>
+#include <string>
+#include <cmath>
 
 
 class bvaml_log_writer {
@@ -26,36 +26,36 @@ public:
   // to cerr if write_cerr == true and to write_file if it is not "NONE".
   bvaml_log_writer(
     bool write_cerr,
-    vcl_string write_file );
+    std::string write_file );
 
   // Create a new writer for a calling function.
   bvaml_log_writer(
-    vcl_string calling_function );
+    std::string calling_function );
 
   ~bvaml_log_writer();
 
   // Print a msgs and errors.
   void print_msg( 
-    const vcl_string& msg );
+    const std::string& msg );
   void print_error(
-    const vcl_string& msg );
+    const std::string& msg );
 
   // Print a large block of text in its own space.
   void print_block(
-    const vcl_string& block_title,
-    const vcl_string& msg );
+    const std::string& block_title,
+    const std::string& msg );
 
   // Print the status of a process.  Calling start_progress_msg will
   // start the msg and following calls of progress update on numbers
   // between 0 and 1 will give incremental updates on progress.
   void start_progress_msg(
-    const vcl_string& msg );
+    const std::string& msg );
   void progress_update(
     double progress );
 
 protected:
 
-  vcl_string calling_function_;
+  std::string calling_function_;
 
   int current_progress_;
 
@@ -68,14 +68,14 @@ protected:
 
     bvaml_log(
       bool write_cerr,
-      vcl_string write_file ) :
+      std::string write_file ) :
         write_cerr_( write_cerr ),
         write_file_( write_file ),
         level( 0 ){}
 
     // Print this text to output sources, using proper indentation.
     void write(
-      vcl_string text,
+      std::string text,
       bool new_line = true );
 
     // The current indentation level.
@@ -84,7 +84,7 @@ protected:
   protected:
 
     bool write_cerr_;
-    vcl_string write_file_; // NOT IMPLEMENTED
+    std::string write_file_; // NOT IMPLEMENTED
   };
 
   static bvaml_log* log_;

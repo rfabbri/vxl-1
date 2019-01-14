@@ -14,6 +14,6 @@ void vsl_b_read(vsl_b_istream &is, dsm2_node_base* &p);
 
 void vsl_b_write(vsl_b_ostream &os, const dsm2_node_base* p);
 
-void vsl_print_summary(vcl_ostream& os, const dsm2_node_base *p);
+void vsl_print_summary(std::ostream& os, const dsm2_node_base *p);
 
 #endif //DSM2_IO_NODE_BASE_H_

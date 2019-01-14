@@ -7,7 +7,7 @@
 
 #include "dbsk2d_bnd_preprocess.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_distance.h>
@@ -27,9 +27,9 @@
 // `tainted_lines' contains all lines affected by intersection and will need
 // further processing
 void dbsk2d_bnd_preprocess::
-intersect_bnd_lines(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_lines,
-                    vcl_list<dbsk2d_bnd_edge_sptr >* lineset1, 
-                    vcl_list<dbsk2d_bnd_edge_sptr >* lineset2)
+intersect_bnd_lines(std::list<dbsk2d_bnd_edge_sptr >* tainted_lines,
+                    std::list<dbsk2d_bnd_edge_sptr >* lineset1, 
+                    std::list<dbsk2d_bnd_edge_sptr >* lineset2)
 {
   // clear old stuffs
   tainted_lines->clear();
@@ -150,7 +150,7 @@ intersect_bnd_lines(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_lines,
 //----------------------------------------------------------------
 //: Remove (exact) duplicate lines - lines with same end vertices
 void dbsk2d_bnd_preprocess::
-remove_duplicate_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
+remove_duplicate_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_lines)
 {
   for (bnd_edge_list::iterator eit1 = bnd_lines.begin();
     eit1 != bnd_lines.end(); ++eit1)

@@ -5,13 +5,13 @@
 
 
 #include "vidreg_matcher.h"
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
-#include <vcl_iterator.h>
-#include <vcl_deque.h>
+#include <cassert>
+#include <utility>
+#include <algorithm>
+#include <iterator>
+#include <deque>
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vul/vul_file.h>
 
 #include <rrel/rrel_tukey_obj.h>
@@ -57,7 +57,7 @@ class command_iteration_update: public rgrl_command
           dynamic_cast<const vidreg_registration*>(caller);
       rgrl_transformation_sptr trans = reg_engine->current_view()->xform_estimate();
       rgrl_trans_similarity* xform = rgrl_cast<rgrl_trans_similarity*>(trans);
-      vcl_cout<<"Xform A= "<<xform->A()<<"\nt= "<<xform->t()<<vcl_endl;
+      std::cout<<"Xform A= "<<xform->A()<<"\nt= "<<xform->t()<<std::endl;
     }
 };
 
@@ -74,7 +74,7 @@ vidreg_matcher::~vidreg_matcher()
 }
 
 
-bool vidreg_matcher::assisted_match(const vcl_vector<rgrl_transformation_sptr>& xforms,
+bool vidreg_matcher::assisted_match(const std::vector<rgrl_transformation_sptr>& xforms,
                                     const vidreg_feature_group& last_features,
                                     const vidreg_feature_group& new_features)
 {
@@ -89,10 +89,10 @@ bool vidreg_matcher::assisted_match(const vcl_vector<rgrl_transformation_sptr>& 
   rgrl_mask_sptr to_roi = new rgrl_mask_box(fixed_edgel_set->bounding_box());
   rgrl_estimator_sptr      estimator      = new rgrl_est_similarity2d();
 
-  vcl_vector<rgrl_match_set_sptr> matches;
+  std::vector<rgrl_match_set_sptr> matches;
   matches.push_back(new rgrl_match_set( fixed_edgel_set->type(), fixed_edgel_set->type()));
   matches.push_back(new rgrl_match_set( fixed_corner_set->type(), fixed_corner_set->type()));
-  vcl_vector<rgrl_scale_sptr> scales;
+  std::vector<rgrl_scale_sptr> scales;
   rgrl_converge_status_sptr status = NULL;
   for(unsigned int i=0; i< xforms.size(); ++i){
     rgrl_view_sptr view = new rgrl_view(  from_roi,
@@ -114,7 +114,7 @@ bool vidreg_matcher::assisted_match(const vcl_vector<rgrl_transformation_sptr>& 
 }
 
 
-bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
+bool vidreg_matcher::match(const std::vector<vidreg_salient_group_sptr>& groups,
                            const vidreg_feature_group& last_features,
                            const vidreg_feature_group& new_features)
 {
@@ -149,7 +149,7 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
       rgrl_trans_similarity* old_xform = rgrl_cast<rgrl_trans_similarity*>(salient_groups_[j]->view()->xform_estimate());
       double d = xform_distance(*old_xform, *new_xform);
       if( d < 16.0 ){
-        vcl_cout << "found duplicate" << vcl_endl;
+        std::cout << "found duplicate" << std::endl;
         salient_groups_.erase(salient_groups_.begin()+i);
         --i;
         break;
@@ -195,7 +195,7 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
       if(group){
         salient_groups_[idx] = group;
         reg_queue[idx] = NULL;
-        vcl_cout << "found group " << idx << vcl_endl;
+        std::cout << "found group " << idx << std::endl;
         break;
       }
     }
@@ -222,7 +222,7 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
 
       group = reg.salient_group();
       if(group){
-        vcl_cout << "making a new group" <<vcl_endl;
+        std::cout << "making a new group" <<std::endl;
         salient_groups_.push_back(group);
         vidreg_initializer* init_ptr = dynamic_cast<vidreg_initializer*>(initializer.ptr());
         assert(init_ptr);
@@ -264,7 +264,7 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
         rgrl_trans_similarity* old_xform = rgrl_cast<rgrl_trans_similarity*>(salient_groups_[i]->view()->xform_estimate());
         double d = xform_distance(*old_xform, *new_xform);
         if( d < 16.0 ){
-          vcl_cout << "found duplicate" << vcl_endl;
+          std::cout << "found duplicate" << std::endl;
           duplicate = true;
           break;
         }
@@ -286,12 +286,12 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
 
 
   for(unsigned i=0; i<salient_groups_.size(); ++i){
-    vcl_cout<< "------------------------------\nGroup #"<<i<<vcl_endl;
-    vcl_cout<<"Final xform:"<<vcl_endl;
+    std::cout<< "------------------------------\nGroup #"<<i<<std::endl;
+    std::cout<<"Final xform:"<<std::endl;
     rgrl_transformation_sptr trans = salient_groups_[i]->view()->xform_estimate();
     rgrl_trans_similarity* xform = rgrl_cast<rgrl_trans_similarity*>(trans);
-    vcl_cout<<"A = "<< xform->A()<<"t = "<<xform->t()
-        <<"\nFinal alignment error = "<<salient_groups_[i]->status()->error()<<vcl_endl;
+    std::cout<<"A = "<< xform->A()<<"t = "<<xform->t()
+        <<"\nFinal alignment error = "<<salient_groups_[i]->status()->error()<<std::endl;
   }
 
   rgrl_feature_set_sptr to_set = new rgrl_feature_set_location<2>(last_features.edgels);
@@ -310,11 +310,11 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
   const unsigned num_last = groups.size();
   const unsigned num_curr = salient_groups_.size();
   vnl_matrix<double> match_matrix(num_curr,num_last,0.0);
-  vcl_vector<vcl_pair<double,vidreg_salient_group_sptr> > weight_pairs;
+  std::vector<std::pair<double,vidreg_salient_group_sptr> > weight_pairs;
 
   for(unsigned i=0; i<num_curr; ++i){
     const rgrl_match_set& match_set = *salient_groups_[i]->matches()[0];
-    weight_pairs.push_back(vcl_pair<double,vidreg_salient_group_sptr>(0.0,salient_groups_[i]));
+    weight_pairs.push_back(std::pair<double,vidreg_salient_group_sptr>(0.0,salient_groups_[i]));
     for ( FIter fi = match_set.from_begin(); fi != match_set.from_end(); ++fi ) {
       double from_weight = salient_groups_[i]->weight(fi.from_feature());
       weight_pairs[i].first += from_weight;
@@ -329,9 +329,9 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
 
   if(num_last == 0){
     // sort salient groups by total weight
-    vcl_sort(weight_pairs.begin(), weight_pairs.end(),
-             vcl_greater<vcl_pair<double,vidreg_salient_group_sptr> >() );
-    vcl_vector<vidreg_salient_group_sptr> new_order;
+    std::sort(weight_pairs.begin(), weight_pairs.end(),
+             std::greater<std::pair<double,vidreg_salient_group_sptr> >() );
+    std::vector<vidreg_salient_group_sptr> new_order;
     for(unsigned i=0; i<num_curr; ++i)
       new_order.push_back(weight_pairs[i].second);
     salient_groups_ = new_order;
@@ -357,7 +357,7 @@ bool vidreg_matcher::match(const vcl_vector<vidreg_salient_group_sptr>& groups,
 
       //FIXME previous group recording disabled
       //g->set_previous_group(groups[max_j]);
-      vcl_cout << " matched "<<max_i<< " to "<< max_j<<vcl_endl;
+      std::cout << " matched "<<max_i<< " to "<< max_j<<std::endl;
       if(max_i != max_j && max_j < num_curr){
         // swap position in the current groups to match old groups
         salient_groups_[max_i] = salient_groups_[max_j];
@@ -414,11 +414,11 @@ vidreg_matcher::setup(const vidreg_feature_group& fixed,
   unsigned int k = 1;
   rgrl_matcher_sptr cp_matcher = new rgrl_matcher_k_nearest( k , 2.0);
 
-  vcl_auto_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  std::auto_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
   rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(m_est_obj, true, true);
 
 
-  vcl_auto_ptr<rrel_objective> muset_obj( new rrel_muset_obj(0, false) );
+  std::auto_ptr<rrel_objective> muset_obj( new rrel_muset_obj(0, false) );
 
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est =
       new rgrl_scale_est_closest( muset_obj );
@@ -463,13 +463,13 @@ rgrl_data_manager_sptr
 vidreg_matcher::remove_covered_features(const vidreg_salient_group_sptr& group,
                                         const rgrl_data_manager_sptr& data)
 {
-  vcl_vector<rgrl_feature_set_sptr>             from_sets;
-  vcl_vector<rgrl_feature_set_sptr>             to_sets;
-  vcl_vector<rgrl_matcher_sptr>                 matchers;
-  vcl_vector<rgrl_scale_estimator_unwgted_sptr> unwgted_scale_ests;
-  vcl_vector<rgrl_scale_estimator_wgted_sptr>   wgted_scale_ests;
-  vcl_vector<rgrl_weighter_sptr>                weighters;
-  vcl_vector<rgrl_estimator_sptr>               xform_estimators;
+  std::vector<rgrl_feature_set_sptr>             from_sets;
+  std::vector<rgrl_feature_set_sptr>             to_sets;
+  std::vector<rgrl_matcher_sptr>                 matchers;
+  std::vector<rgrl_scale_estimator_unwgted_sptr> unwgted_scale_ests;
+  std::vector<rgrl_scale_estimator_wgted_sptr>   wgted_scale_ests;
+  std::vector<rgrl_weighter_sptr>                weighters;
+  std::vector<rgrl_estimator_sptr>               xform_estimators;
 
   data->get_data( from_sets, to_sets, matchers,
                   weighters, unwgted_scale_ests,
@@ -477,11 +477,11 @@ vidreg_matcher::remove_covered_features(const vidreg_salient_group_sptr& group,
 
   typedef rgrl_match_set::from_iterator from_iter;
   typedef from_iter::to_iterator        to_iter;
-  typedef vcl_vector<rgrl_feature_sptr> feat_vector;
+  typedef std::vector<rgrl_feature_sptr> feat_vector;
 
   const unsigned data_count = from_sets.size();
 
-  vcl_set<rgrl_feature_sptr> from_covered, to_covered;
+  std::set<rgrl_feature_sptr> from_covered, to_covered;
   rgrl_data_manager_sptr new_data = new rgrl_data_manager();
 
   for(unsigned fs=0; fs<data_count; ++fs)
@@ -490,10 +490,10 @@ vidreg_matcher::remove_covered_features(const vidreg_salient_group_sptr& group,
     rgrl_mask_sptr from_region = group->view()->from_image_roi();
     feat_vector from_vec, to_vec;
     from_sets[fs]->features_in_region(from_vec, from_region->bounding_box() );
-    vcl_sort(from_vec.begin(), from_vec.end());
+    std::sort(from_vec.begin(), from_vec.end());
     rgrl_mask_sptr to_region = group->view()->to_image_roi();
     to_sets[fs]->features_in_region(to_vec, to_region->bounding_box() );
-    vcl_sort(to_vec.begin(), to_vec.end());
+    std::sort(to_vec.begin(), to_vec.end());
 
     for ( from_iter fitr = group->matches()[fs]->from_begin();
           fitr != group->matches()[fs]->from_end(); ++fitr )
@@ -514,23 +514,23 @@ vidreg_matcher::remove_covered_features(const vidreg_salient_group_sptr& group,
         }
       }
     }
-    vcl_vector<rgrl_feature_sptr> remaining_from;
-    vcl_back_insert_iterator<vcl_vector<rgrl_feature_sptr> > rf_ii(remaining_from);
-    vcl_set_difference(from_vec.begin(),from_vec.end(),
+    std::vector<rgrl_feature_sptr> remaining_from;
+    std::back_insert_iterator<std::vector<rgrl_feature_sptr> > rf_ii(remaining_from);
+    std::set_difference(from_vec.begin(),from_vec.end(),
                       from_covered.begin(),from_covered.end(), rf_ii);
     rgrl_feature_set_sptr from_set = new rgrl_feature_set_location<2>(remaining_from);
 
-    //vcl_cout << "from covered size: "<< from_covered.size() <<vcl_endl;
-    //vcl_cout << "original size from: "<< from_vec.size() << " new size from: "<< remaining_from.size() << vcl_endl;
+    //std::cout << "from covered size: "<< from_covered.size() <<std::endl;
+    //std::cout << "original size from: "<< from_vec.size() << " new size from: "<< remaining_from.size() << std::endl;
 
-    vcl_vector<rgrl_feature_sptr> remaining_to;
-    vcl_back_insert_iterator<vcl_vector<rgrl_feature_sptr> > rt_ii(remaining_to);
-    vcl_set_difference(to_vec.begin(),to_vec.end(),
+    std::vector<rgrl_feature_sptr> remaining_to;
+    std::back_insert_iterator<std::vector<rgrl_feature_sptr> > rt_ii(remaining_to);
+    std::set_difference(to_vec.begin(),to_vec.end(),
                       to_covered.begin(),to_covered.end(), rt_ii);
     rgrl_feature_set_sptr to_set = new rgrl_feature_set_location<2>(remaining_to);
 
-    //vcl_cout << "to covered size: "<< to_covered.size() <<vcl_endl;
-    //vcl_cout << "original size to: "<< to_vec.size() << " new size to: "<< remaining_to.size() << vcl_endl;
+    //std::cout << "to covered size: "<< to_covered.size() <<std::endl;
+    //std::cout << "original size to: "<< to_vec.size() << " new size to: "<< remaining_to.size() << std::endl;
 
     new_data->add_data( from_set,                // data from moving image
                         to_set,                  // data from fixed image
@@ -545,31 +545,31 @@ vidreg_matcher::remove_covered_features(const vidreg_salient_group_sptr& group,
 
 
 //: assign the features to only one the the resulting salient groups
-void vidreg_matcher::assign_features(const vcl_vector<rgrl_feature_sptr>& from_features,
+void vidreg_matcher::assign_features(const std::vector<rgrl_feature_sptr>& from_features,
                                      const rgrl_feature_set& to_set,
                                      unsigned f_idx)
 {
 
   const unsigned group_count = salient_groups_.size();
 
-  typedef vcl_vector<rgrl_feature_sptr> feat_vector;
+  typedef std::vector<rgrl_feature_sptr> feat_vector;
   typedef feat_vector::const_iterator feat_iter;
 
   
-  vcl_vector<unsigned > num_duplicates(group_count,0);
-  vcl_vector<vcl_pair<unsigned,unsigned> > num_matches;
+  std::vector<unsigned > num_duplicates(group_count,0);
+  std::vector<std::pair<unsigned,unsigned> > num_matches;
 
-  vcl_auto_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  std::auto_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
   double geometric_scale = 0.25;
 
-  vcl_vector<rgrl_transformation_sptr> xforms(group_count,NULL);
+  std::vector<rgrl_transformation_sptr> xforms(group_count,NULL);
   for(unsigned gs=0; gs<group_count; ++gs)
   {
     xforms[gs] = salient_groups_[gs]->view()->xform_estimate();
-    num_matches.push_back(vcl_pair<unsigned,unsigned>(0,gs));
+    num_matches.push_back(std::pair<unsigned,unsigned>(0,gs));
   }
 
-  vcl_vector<rgrl_match_set_sptr> matches(group_count,NULL);
+  std::vector<rgrl_match_set_sptr> matches(group_count,NULL);
 
   for(unsigned gs=0; gs<group_count; ++gs){
     rgrl_match_set_sptr old_matches = salient_groups_[gs]->matches()[f_idx];
@@ -581,7 +581,7 @@ void vidreg_matcher::assign_features(const vcl_vector<rgrl_feature_sptr>& from_f
   //  generate the matches for each feature of this feature type in the current region
   for ( feat_iter fitr = from_features.begin(); fitr != from_features.end(); ++fitr )
   {
-    vcl_vector<double> weights(group_count,0.0);
+    std::vector<double> weights(group_count,0.0);
     double weight_sum = 0.0;
     for(unsigned gs=0; gs<group_count; ++gs)
     {
@@ -632,15 +632,15 @@ double vidreg_matcher::xform_distance(const rgrl_trans_similarity& xform1,
 
 namespace {
 
-void robust_bounds(vcl_vector<double>& data,
+void robust_bounds(std::vector<double>& data,
                    double& min, double& max)
 {
-  typedef vcl_vector<double>::iterator Ditr;
+  typedef std::vector<double>::iterator Ditr;
   long median_idx = data.size()/2;
-  vcl_vector<double>::iterator median = data.begin() + median_idx;
-  vcl_nth_element(data.begin(), median, data.end());
+  std::vector<double>::iterator median = data.begin() + median_idx;
+  std::nth_element(data.begin(), median, data.end());
 
-  vcl_vector<double> dev_left, dev_right;
+  std::vector<double> dev_left, dev_right;
   dev_left.reserve(median_idx);
   dev_right.reserve(median_idx);
   for(Ditr i=data.begin(); i!=median; ++i)
@@ -648,17 +648,17 @@ void robust_bounds(vcl_vector<double>& data,
   for(Ditr i=median+1; i!=data.end(); ++i)
     dev_right.push_back(*i - *median);
 
-  vcl_sort(dev_left.begin(), dev_left.end());
-  vcl_sort(dev_right.begin(), dev_right.end());
+  std::sort(dev_left.begin(), dev_left.end());
+  std::sort(dev_right.begin(), dev_right.end());
 
-  vcl_stringstream fname;
+  std::stringstream fname;
   unsigned num = 0;
   fname << "left"<<num<<".txt";
   while(vul_file::exists(fname.str())){
     fname.str("");
     fname << "left"<<++num<<".txt";
   }
-  vcl_ofstream file(fname.str().c_str());
+  std::ofstream file(fname.str().c_str());
   for(Ditr i=dev_left.begin(); i!=dev_left.end(); ++i)
     file << *i << "\n";
 
@@ -683,8 +683,8 @@ void robust_bounds(vcl_vector<double>& data,
 double bounding_box_sum(const rsdl_bins_2d<double,double>& bins,
                         vnl_double_2& x0, vnl_double_2& x1)
 {
-  vcl_vector<double> weights;
-  vcl_vector<vnl_vector_fixed<double,2> > points;
+  std::vector<double> weights;
+  std::vector<vnl_vector_fixed<double,2> > points;
   bins.points_in_bounding_box(x0,x1,points,weights);
   vnl_double_2 center = (x0+x1)*0.5;
   vnl_vector_fixed<double,2> new_x0(center), new_x1(center);
@@ -708,7 +708,7 @@ double bounding_box_sum(const rsdl_bins_2d<double,double>& bins,
 void
 vidreg_matcher::robust_crop(vidreg_salient_group& group) const
 {
-  typedef vcl_map<rgrl_feature_sptr, double> Wmap;
+  typedef std::map<rgrl_feature_sptr, double> Wmap;
   typedef Wmap::const_iterator Wmap_citr;
 
   const Wmap& weight_map = group.weight_map();
@@ -729,7 +729,7 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
 
   double sum = bounding_box_sum(bins,x0,x1);
 
-  vcl_cout << "total weight = "<<sum << vcl_endl;
+  std::cout << "total weight = "<<sum << std::endl;
   center = (x0+x1)*0.5;
 
   // test left
@@ -737,7 +737,7 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
     vnl_double_2 p0(x0[0]-(center[0]-x0[0]),x0[1]);
     vnl_double_2 p1(x0[0],x1[1]);
     double new_sum = bounding_box_sum(bins,p0,p1);
-    vcl_cout << "left sum = "<<new_sum<<vcl_endl;
+    std::cout << "left sum = "<<new_sum<<std::endl;
   }
 
   // test right
@@ -745,7 +745,7 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
     vnl_double_2 p0(x1[0],x0[1]);
     vnl_double_2 p1(x1[0]+(center[0]-x0[0]),x1[1]);
     double new_sum = bounding_box_sum(bins,p0,p1);
-    vcl_cout << "right sum = "<<new_sum<<vcl_endl;
+    std::cout << "right sum = "<<new_sum<<std::endl;
   }
 
   // test up
@@ -753,7 +753,7 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
     vnl_double_2 p0(x0[0],x0[1]-(center[1]-x0[1]));
     vnl_double_2 p1(x1[0],x0[1]);
     double new_sum = bounding_box_sum(bins,p0,p1);
-    vcl_cout << "up sum = "<<new_sum<<vcl_endl;
+    std::cout << "up sum = "<<new_sum<<std::endl;
   }
 
   // test down
@@ -761,14 +761,14 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
     vnl_double_2 p0(x0[0],x1[1]);
     vnl_double_2 p1(x1[0],x1[1]+(center[1]-x0[1]));
     double new_sum = bounding_box_sum(bins,p0,p1);
-    vcl_cout << "down sum = "<<new_sum<<vcl_endl;
+    std::cout << "down sum = "<<new_sum<<std::endl;
   }
 
 #if 0
-  vcl_cout << "old center: "<<center<<vcl_endl;
+  std::cout << "old center: "<<center<<std::endl;
   for(unsigned c = 0; c<30; ++c){
-    vcl_vector<double> weights;
-    vcl_vector<vnl_vector_fixed<double,2> > points;
+    std::vector<double> weights;
+    std::vector<vnl_vector_fixed<double,2> > points;
     bins.points_in_bounding_box(x0,x1,points,weights);
   
     vnl_double_2 sum(0.0,0.0), sum2(0.0,0.0);
@@ -781,15 +781,15 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
     assert(weight_sum > 0);
     vnl_double_2 mean(sum/weight_sum);
     vnl_double_2 stdev(sum2 - element_product(sum,sum)/weight_sum);
-    stdev[0] = vcl_sqrt(stdev[0]/weight_sum);
-    stdev[1] = vcl_sqrt(stdev[1]/weight_sum);
+    stdev[0] = std::sqrt(stdev[0]/weight_sum);
+    stdev[1] = std::sqrt(stdev[1]/weight_sum);
 
-    //vcl_cout << "mean: "<<mean<< "  stdev*3: "<<stdev3<<vcl_endl;
+    //std::cout << "mean: "<<mean<< "  stdev*3: "<<stdev3<<std::endl;
 
     x0 = mean - stdev*2.5;
     x1 = mean + stdev*2.5;
   }
-  vcl_cout << "---------------------------------------"<<vcl_endl;
+  std::cout << "---------------------------------------"<<std::endl;
 #endif
   group.view()->set_region(rgrl_mask_box(x0,x1));
 
@@ -798,18 +798,18 @@ vidreg_matcher::robust_crop(vidreg_salient_group& group) const
 
 //: use edge connectivity to resolve match conflicts
 void
-vidreg_matcher::group_edges(const vcl_vector<vidreg_edge>& edges)
+vidreg_matcher::group_edges(const std::vector<vidreg_edge>& edges)
 {
-  vcl_vector<vidreg_edge> sorted_edges(edges);
-  vcl_sort(sorted_edges.begin(), sorted_edges.end(), vidreg_edge::dec_size_order);
+  std::vector<vidreg_edge> sorted_edges(edges);
+  std::sort(sorted_edges.begin(), sorted_edges.end(), vidreg_edge::dec_size_order);
 
-  typedef vcl_vector<vidreg_edge>::const_iterator Eitr;
+  typedef std::vector<vidreg_edge>::const_iterator Eitr;
   const unsigned group_count = salient_groups_.size();
 
   for(Eitr e=sorted_edges.begin(); e!=sorted_edges.end(); ++e){
     vidreg_feature_edgel* edgel = e->head();
     unsigned total = 0, matched = 0;
-    vcl_vector<unsigned> votes(group_count,0);
+    std::vector<unsigned> votes(group_count,0);
     for(; edgel && edgel->next() != e->head(); edgel = edgel->next()){
       bool is_matched = false;
       for(unsigned gs=0; gs<group_count; ++gs){
@@ -855,7 +855,7 @@ vidreg_matcher::group_edges(const vcl_vector<vidreg_edge>& edges)
     vidreg_feature_edgel* edgel = *e;
     unsigned count = 0, label_count = 0;
     int label = -1, last_label = -1, global_label = -1;
-    vcl_vector<unsigned> votes(group_count,0);
+    std::vector<unsigned> votes(group_count,0);
     for(; edgel && edgel->next() != *e; edgel = edgel->next()){
       label = -1;
       for(unsigned gs=0; gs<group_count; ++gs){
@@ -899,10 +899,10 @@ vidreg_matcher::group_edges(const vcl_vector<vidreg_edge>& edges)
     }
 
     else{
-      vcl_cout << "label: "<<global_label<< " size: "<< count;
+      std::cout << "label: "<<global_label<< " size: "<< count;
       for(unsigned gs=0; gs<group_count; ++gs)
-        vcl_cout <<" v["<<gs<<"]="<< votes[gs];
-      vcl_cout << vcl_endl;
+        std::cout <<" v["<<gs<<"]="<< votes[gs];
+      std::cout << std::endl;
     }
   }
 #endif

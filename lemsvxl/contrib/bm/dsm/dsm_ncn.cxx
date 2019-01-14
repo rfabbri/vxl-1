@@ -2,7 +2,7 @@
 
 #include"dsm_ncn.h"
 
-dsm_ncn::dsm_ncn( vcl_string const& video_glob, vcl_vector<vgl_point_2d<unsigned> > const& targets,
+dsm_ncn::dsm_ncn( std::string const& video_glob, std::vector<vgl_point_2d<unsigned> > const& targets,
 						unsigned const& num_neighbors, unsigned const& num_pivot_pixels, unsigned const& num_particles):
 video_valid_(true), video_glob_(video_glob), targets_valid_(true), neighborhood_valid_(false), entropy_valid_(false), candidate_pivot_valid_(false), 
 	num_neighbors_(num_neighbors), num_pivot_pixels_(num_pivot_pixels), num_particles_(num_particles)
@@ -21,16 +21,16 @@ video_valid_(true), video_glob_(video_glob), targets_valid_(true), neighborhood_
 
 	(npixels > num_particles) ? this->num_particles_ = num_particles : this->num_particles_ = npixels;
 
-	vcl_vector<vgl_point_2d<unsigned> >::const_iterator target_itr, target_end = targets.end();
+	std::vector<vgl_point_2d<unsigned> >::const_iterator target_itr, target_end = targets.end();
 
-	vcl_vector<vgl_point_2d<unsigned> > empty_vector;
+	std::vector<vgl_point_2d<unsigned> > empty_vector;
 	
 	for( target_itr = targets.begin(); target_itr != target_end; ++target_itr )
 		this->neighborhood_[*target_itr] = empty_vector;
 
 }//end dsm_ncn::dsm_nc
 
-dsm_ncn::dsm_ncn( vcl_string const& video_glob, vcl_string const& targets_xml_path,
+dsm_ncn::dsm_ncn( std::string const& video_glob, std::string const& targets_xml_path,
 					unsigned const& num_neighbors, unsigned const& num_pivot_pixels, unsigned const& num_particles):
 targets_xml_path_(targets_xml_path), video_valid_(true), video_glob_(video_glob), targets_valid_(true), neighborhood_valid_(false), 
 	entropy_valid_(false), candidate_pivot_valid_(false), num_neighbors_(num_neighbors), num_pivot_pixels_(num_pivot_pixels), 
@@ -54,7 +54,7 @@ targets_xml_path_(targets_xml_path), video_valid_(true), video_glob_(video_glob)
 	
 }//end dsm_ncn::dsm_ncn
 
-vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned>  > dsm_ncn::neighborhood()
+std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned>  > dsm_ncn::neighborhood()
 {
 	if( !this->neighborhood_valid_ )
 		this->build_ncn();
@@ -71,27 +71,27 @@ bool dsm_ncn::build_ncn()
 		if( !this->candidate_pivot_valid_ )
 			this->sample_pivot_pixels();
 
-		vcl_cout << "Extracting Neighborhoods..." << vcl_endl;
+		std::cout << "Extracting Neighborhoods..." << std::endl;
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned> >::iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned> >::iterator
 			t_itr, t_end = this->neighborhood_.end();
 
-		vcl_map<unsigned, vil_image_resource_sptr> img_seq;
+		std::map<unsigned, vil_image_resource_sptr> img_seq;
 		this->build_frame_map_(this->video_stream_,img_seq);
-		vcl_map<unsigned,vil_image_resource_sptr>::const_iterator img_seq_itr, img_seq_end = img_seq.end();
-		vcl_set<vgl_point_2d<unsigned>,dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pivot_itr, pivot_end = this->pivot_pixel_candidates_.end();
+		std::map<unsigned,vil_image_resource_sptr>::const_iterator img_seq_itr, img_seq_end = img_seq.end();
+		std::set<vgl_point_2d<unsigned>,dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pivot_itr, pivot_end = this->pivot_pixel_candidates_.end();
 		vil_image_view<vxl_byte> img_view;
 
-		vcl_map<double, vgl_point_2d<unsigned> > mi_point_map;
+		std::map<double, vgl_point_2d<unsigned> > mi_point_map;
 
 		for( t_itr = this->neighborhood_.begin(); t_itr != t_end; ++t_itr )
 		{
 			vgl_point_2d<unsigned> curr_target = t_itr->first;
-			vcl_cout << "\t Extracting Neighborhood for target: " << curr_target << vcl_endl;
+			std::cout << "\t Extracting Neighborhood for target: " << curr_target << std::endl;
 
 			//1.(a) rank each pivot pixel candidate by joint entropy with the target.
 			//      we do this by calculating the joint entropy at each target with each pivot pixel candidate
-			//      then we associate the pivot pixel point with the mi value with a vcl_map.
+			//      then we associate the pivot pixel point with the mi value with a std::map.
 			//      because vcl_maps internally store keys in ascention, we may pick off the top ranking
 			//      candidates from the back of the map. The key will be the mi which will ensure ties are ignored 
 			//      and also frees us from using a customized ordering predicate.
@@ -117,11 +117,11 @@ bool dsm_ncn::build_ncn()
 			}//end pivot pixel candidate iteration
 
 			//2. Build the neighborhood by creating and filling in the appropriate data structures.
-			vcl_map<double, vgl_point_2d<unsigned> >::const_iterator mi_point_itr = mi_point_map.end();
+			std::map<double, vgl_point_2d<unsigned> >::const_iterator mi_point_itr = mi_point_map.end();
 			// end() is one pas the last element so go to last element
 			--mi_point_itr;
 
-			vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+			std::vector<vgl_point_2d<unsigned> > neighborhood;
 			for( unsigned i = 0; i < this->num_neighbors_; ++i, --mi_point_itr )
 				neighborhood.push_back(mi_point_itr->second);
 
@@ -130,15 +130,15 @@ bool dsm_ncn::build_ncn()
 
 		this->neighborhood_valid_ = true;
 
-		vcl_cout << "\t Done Extracting Neighborhoods..." << vcl_endl;
+		std::cout << "\t Done Extracting Neighborhoods..." << std::endl;
 		return true;
 	}//end if( this->video_valid_ && this->targets_valid_ )
 	else
 	{
 		if(!this->video_valid_)
-			vcl_cerr << "ERROR: dsm_ncn::build_ncn() : video_valid_ = false" << vcl_flush;
+			std::cerr << "ERROR: dsm_ncn::build_ncn() : video_valid_ = false" << std::flush;
 		if(!this->targets_valid_)
-			vcl_cerr << "ERROR: dsm_ncn::build_ncn() : targets_valid = false" << vcl_flush;
+			std::cerr << "ERROR: dsm_ncn::build_ncn() : targets_valid = false" << std::flush;
 		return false;
 	}
 	
@@ -148,7 +148,7 @@ bool dsm_ncn::calculate_temporal_entropy(unsigned const& nbins)
 {
 	if( this->video_valid_ )
 	{
-		vcl_cout << "Calculating Temporal Entropy..." << vcl_endl;
+		std::cout << "Calculating Temporal Entropy..." << std::endl;
 
 		this->temporal_entropy_.clear();
 
@@ -157,7 +157,7 @@ bool dsm_ncn::calculate_temporal_entropy(unsigned const& nbins)
 		unsigned ni = this->video_stream_.width();
 		unsigned nj = this->video_stream_.height();
 
-		vcl_map<unsigned, vil_image_resource_sptr> img_seq;
+		std::map<unsigned, vil_image_resource_sptr> img_seq;
 		this->build_frame_map_(this->video_stream_, img_seq);
 		vil_image_view<vxl_byte> img_view;
 
@@ -177,12 +177,12 @@ bool dsm_ncn::calculate_temporal_entropy(unsigned const& nbins)
 				}
 				this->temporal_entropy_(i,j,0) = histogram.entropy();
 				entropy_sum+=this->temporal_entropy_(i,j,0);
-				vcl_cout << '\t' << (float(nj*i + j)/float(ni*nj))*float(100) << "% complete " << vcl_endl;
+				std::cout << '\t' << (float(nj*i + j)/float(ni*nj))*float(100) << "% complete " << std::endl;
 			}
 		}//end pixel iteration
 
 		//normalize
-		vcl_cout << "Normalizing Temporal Entropy..." << vcl_endl;
+		std::cout << "Normalizing Temporal Entropy..." << std::endl;
 		for( unsigned i = 0; i < ni; ++i )
 			for( unsigned  j = 0; j < nj; ++j )
 				this->temporal_entropy_(i,j,0)/=entropy_sum;
@@ -191,7 +191,7 @@ bool dsm_ncn::calculate_temporal_entropy(unsigned const& nbins)
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_ncn::calculate_temporal_entropy no video provided." << vcl_flush;
+		std::cerr << "ERROR: dsm_ncn::calculate_temporal_entropy no video provided." << std::flush;
 		this->entropy_valid_ = false;
 	}
 
@@ -202,13 +202,13 @@ bool dsm_ncn::sample_pivot_pixels()
 {
 	if( this->entropy_valid_ == true ) //the temporal entropy must be calcualted prior to this step
 	{
-		vcl_cout << "Sampling Pivot Pixels..." << vcl_endl;
+		std::cout << "Sampling Pivot Pixels..." << std::endl;
 
 		this->pivot_pixel_candidates_.clear();
 
 		vnl_random rand;
 
-		vcl_map<vgl_point_2d<unsigned>, double, dsm_vgl_point_2d_coord_compare<unsigned> > particle_map;
+		std::map<vgl_point_2d<unsigned>, double, dsm_vgl_point_2d_coord_compare<unsigned> > particle_map;
 		vgl_point_2d<unsigned> point;
 
 		//1. sample the temporal entropy to create a reduced particle map.
@@ -225,7 +225,7 @@ bool dsm_ncn::sample_pivot_pixels()
 				point.set(rand_indx/nrows, rand_indx%nrows);
 				particle_map[point] = this->temporal_entropy_(point.x(),point.y());
 				wsum+=this->temporal_entropy_(point.x(),point.y());
-				vcl_cout << particle_map.size() << " out of " << this->num_particles_ << " chosen." << vcl_endl;
+				std::cout << particle_map.size() << " out of " << this->num_particles_ << " chosen." << std::endl;
 			}
 		}
 		else //the particle set is the whole image and no need for stochastic particle selection
@@ -237,13 +237,13 @@ bool dsm_ncn::sample_pivot_pixels()
 		}
 
 		//2. reweight each sample and simultaneously construct the cdf
-		vcl_map<vgl_point_2d<unsigned>,double,dsm_vgl_point_2d_coord_compare<unsigned>  >::iterator pmit, pmend = particle_map.end();
+		std::map<vgl_point_2d<unsigned>,double,dsm_vgl_point_2d_coord_compare<unsigned>  >::iterator pmit, pmend = particle_map.end();
 
 		//use the stl container so that we can use stl search.
 		//the find predicate should be > so we can find the position of the first element of the cdf which is less than
 		//the target.
-		vcl_vector<double> cdf;
-		vcl_vector<vgl_point_2d<unsigned> > cdf_index;
+		std::vector<double> cdf;
+		std::vector<vgl_point_2d<unsigned> > cdf_index;
 
 		double cdf_tot = double(0.0);
 
@@ -259,14 +259,14 @@ bool dsm_ncn::sample_pivot_pixels()
 		//the binary search predicate will find the first element that is larget than the target
 
 		//3. Sample a unique set of size num_piv_pixels via inverse cdf method
-		vcl_pair<vcl_set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator,bool> ret;
+		std::pair<std::set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator,bool> ret;
 
 		//ADD ELEMENTS VIA INVERSE CDF METHOD
 		while( this->pivot_pixel_candidates_.size() < this->num_pivot_pixels_ )
 		{
 			double u = rand.drand64();
-			vcl_vector<double> target(1,u);
-			vcl_vector<double>::iterator search_itr = vcl_search(cdf.begin(),cdf.end(),target.begin(), target.end(),&dsm_ncn::binary_search_predicate_);
+			std::vector<double> target(1,u);
+			std::vector<double>::iterator search_itr = std::search(cdf.begin(),cdf.end(),target.begin(), target.end(),&dsm_ncn::binary_search_predicate_);
 			unsigned bin;
 			if( search_itr != cdf.end() )
 			{
@@ -279,7 +279,7 @@ bool dsm_ncn::sample_pivot_pixels()
 			}
 			else
 			{
-				vcl_cerr << "ERROR: dsm_ncn::sample_pivot_pixels bin not found in inverse cdf method." << vcl_flush;
+				std::cerr << "ERROR: dsm_ncn::sample_pivot_pixels bin not found in inverse cdf method." << std::flush;
 				return false;
 			}
 
@@ -287,9 +287,9 @@ bool dsm_ncn::sample_pivot_pixels()
 			point.set(cdf_index[bin].x(), cdf_index[bin].y());
 			ret = this->pivot_pixel_candidates_.insert(point);
 			if( ret.second == true )
-				vcl_cout << vcl_setprecision(2) << vcl_fixed
+				std::cout << std::setprecision(2) << std::fixed
 				<< (float(this->pivot_pixel_candidates_.size())/float(this->num_pivot_pixels_)) * 100 
-				<< "% pivot pixels sampled." << vcl_endl; 
+				<< "% pivot pixels sampled." << std::endl; 
 		}//end while pivot pixel iteration
 
 		this->candidate_pivot_valid_ = true;
@@ -298,12 +298,12 @@ bool dsm_ncn::sample_pivot_pixels()
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_ncn::sample_pivot_pixels() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dsm_ncn::sample_pivot_pixels() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dsm_ncn::sample_pivot_pixels
 
-void dsm_ncn::build_frame_map_( vidl_image_list_istream const& video_stream, vcl_map<unsigned, vil_image_resource_sptr> & img_seq )
+void dsm_ncn::build_frame_map_( vidl_image_list_istream const& video_stream, std::map<unsigned, vil_image_resource_sptr> & img_seq )
 {
 	img_seq.clear();
 	
@@ -328,7 +328,7 @@ void dsm_ncn::build_frame_map_( vidl_image_list_istream const& video_stream, vcl
 
 }//end dsm_ncn::build_frame_map_
 
-void dsm_ncn::load_entropy_bin( vcl_string const& filename )
+void dsm_ncn::load_entropy_bin( std::string const& filename )
 {
 	vsl_b_ifstream bis( filename.c_str() );
 	vsl_b_read( bis, this->temporal_entropy_ );
@@ -336,11 +336,11 @@ void dsm_ncn::load_entropy_bin( vcl_string const& filename )
 	this->entropy_valid_ = true;
 }//end dsm_ncn::load_entropy_bin
 
-bool dsm_ncn::save_entropy_dat( vcl_string const& filename )
+bool dsm_ncn::save_entropy_dat( std::string const& filename )
 {
 	if( this->entropy_valid_ == true )
 	{
-		vcl_ofstream os( filename.c_str(), vcl_ios::out );
+		std::ofstream os( filename.c_str(), std::ios::out );
 
 		unsigned ni = this->temporal_entropy_.ni();
 		unsigned nj = this->temporal_entropy_.nj();
@@ -356,12 +356,12 @@ bool dsm_ncn::save_entropy_dat( vcl_string const& filename )
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_ncn::save_entropy_dat() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dsm_ncn::save_entropy_dat() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dsm_ncn::save_entropy_dat
 
-bool dsm_ncn::save_entropy_bin( vcl_string const& filename )
+bool dsm_ncn::save_entropy_bin( std::string const& filename )
 {
 	if( this->entropy_valid_ == true )
 	{
@@ -372,23 +372,23 @@ bool dsm_ncn::save_entropy_bin( vcl_string const& filename )
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_ncn::save_entropy_bin() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dsm_ncn::save_entropy_bin() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dsm_ncn::save_entropy_bin
 
-bool dsm_ncn::write_neighborhood_mfile( vcl_string const& filename )
+bool dsm_ncn::write_neighborhood_mfile( std::string const& filename )
 {
 	if( this->neighborhood_valid_ == true )
 	{
-		vcl_ofstream os( filename.c_str(), vcl_ios::out );
+		std::ofstream os( filename.c_str(), std::ios::out );
 
 		os << "neighborhoods = cell(" << this->neighborhood_.size() << ", 2);\n";
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator 
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >,dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator 
 								t_itr, t_end = this->neighborhood_.end();
 		
-		vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
+		std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
 
 		//MATLAB INDEXING STARTS AT 1!
 		unsigned cell_indx;
@@ -409,12 +409,12 @@ bool dsm_ncn::write_neighborhood_mfile( vcl_string const& filename )
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_ncn::write_neighborhood_mfile() : neighborhood_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dsm_ncn::write_neighborhood_mfile() : neighborhood_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dsm_ncn::write_neighborhood_mfile
 
-void dsm_ncn::load_video( vcl_string const& filename )
+void dsm_ncn::load_video( std::string const& filename )
 {
 	if( this->video_stream_.is_open() )
 		this->video_stream_.close();
@@ -439,7 +439,7 @@ void dsm_ncn::b_write(vsl_b_ostream &os) const
 	
 	if( this->video_valid_ )
 	{
-		vcl_string video_glob = this->video_stream_.current_path();
+		std::string video_glob = this->video_stream_.current_path();
 
 		vsl_b_write(os, video_glob);
 	}
@@ -449,7 +449,7 @@ void dsm_ncn::b_write(vsl_b_ostream &os) const
 		unsigned num_targets = this->neighborhood_.size();
 		vsl_b_write(os, num_targets);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator t_itr, t_end;
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator t_itr, t_end;
 		t_end = this->neighborhood_.end();
 
 		for( t_itr = this->neighborhood_.begin(); t_itr != t_end; ++t_itr )
@@ -457,7 +457,7 @@ void dsm_ncn::b_write(vsl_b_ostream &os) const
 			vsl_b_write(os, t_itr->first);
 			if(this->neighborhood_valid_)
 			{
-				vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
+				std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
 				n_end = t_itr->second.end();
 				for( n_itr = t_itr->second.begin(); n_itr != n_end; ++n_itr )
 					vsl_b_write(os, *n_itr);
@@ -471,7 +471,7 @@ void dsm_ncn::b_write(vsl_b_ostream &os) const
 
 	if( this->candidate_pivot_valid_ )
 	{
-		vcl_set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pc_itr, pc_end = this->pivot_pixel_candidates_.end();
+		std::set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pc_itr, pc_end = this->pivot_pixel_candidates_.end();
 
 		for( pc_itr = this->pivot_pixel_candidates_.begin(); pc_itr != pc_end; ++pc_itr )
 			vsl_b_write(os, *pc_itr);
@@ -502,7 +502,7 @@ void dsm_ncn::b_read(vsl_b_istream &is)
 
 		if( this->video_valid_ )
 		{
-			vcl_string video_glob;
+			std::string video_glob;
 			vsl_b_read(is, video_glob);
 			this->load_video(video_glob);
 		}//end if( this->video_valid_ )
@@ -517,7 +517,7 @@ void dsm_ncn::b_read(vsl_b_istream &is)
 				vgl_point_2d<unsigned> curr_target;
 				vsl_b_read(is,curr_target);
 				
-				vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+				std::vector<vgl_point_2d<unsigned> > neighborhood;
 				for( unsigned j = 0; j < this->num_neighbors_; ++j )
 				{
 					vgl_point_2d<unsigned> neighbor;
@@ -547,9 +547,9 @@ void dsm_ncn::b_read(vsl_b_istream &is)
 	}
 	default:
 	{
-		vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_ncn ncn)\n"
+		std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_ncn ncn)\n"
                      << "           Unknown version number "<< v << '\n';
-		is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+		is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
 		return;
 	}
 	}
@@ -558,9 +558,9 @@ void dsm_ncn::b_read(vsl_b_istream &is)
 }//end dsm_ncn::b_read
 
 
-bool dsm_ncn::write_neighborhood_xml( vcl_string const& filename )
+bool dsm_ncn::write_neighborhood_xml( std::string const& filename )
 {
-	vcl_ofstream os(filename.c_str(),vcl_ios::out);
+	std::ofstream os(filename.c_str(),std::ios::out);
 	bxml_document doc;
 	bxml_element* root = new bxml_element("dsmNeighborhood");
 	doc.set_root_element(root);
@@ -569,10 +569,10 @@ bool dsm_ncn::write_neighborhood_xml( vcl_string const& filename )
 	root->set_attribute("num_neighbors", this->num_neighbors_);
 	root->set_attribute("video_glob", this->video_glob_);
 	
-	vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator 
+	std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator 
 			target_itr, target_end = this->neighborhood_.end();
 
-	vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
+	std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end;
 
 	for( target_itr = this->neighborhood_.begin(); target_itr != target_end; ++target_itr )
 	{
@@ -607,12 +607,12 @@ bool dsm_ncn::write_neighborhood_xml( vcl_string const& filename )
 
 }//end dsm_ncn::write_neighborhood_xml
 
-bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
+bool dsm_ncn::parse_target_xml( std::string const& targets_xml_path )
 {
 	//Open the XML document
 	if( targets_xml_path.size() == 0 )
 	{
-		vcl_cerr << "dsm_ncn::parse_target_xml -- xml file path is not set" << vcl_flush;
+		std::cerr << "dsm_ncn::parse_target_xml -- xml file path is not set" << std::flush;
 		this->targets_valid_ = false;
 		return false;
 	}
@@ -621,7 +621,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 	bxml_document xml_doc = bxml_read(targets_xml_path);
 	if( !xml_doc.root_element() )
 	{
-		vcl_cerr << "dsm_ncn::parse_target_xml -- xml root not found" << vcl_flush;
+		std::cerr << "dsm_ncn::parse_target_xml -- xml root not found" << std::flush;
 		this->targets_valid_ = false;
 		return false;
 	}
@@ -629,7 +629,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 	//Check the root is an element
 	if( xml_doc.root_element()->type() != bxml_data::ELEMENT )
 	{
-		vcl_cerr << "dsm_ncn::parse_target_xml -- params root is not an ELEMENT" << vcl_flush;
+		std::cerr << "dsm_ncn::parse_target_xml -- params root is not an ELEMENT" << std::flush;
 		this->targets_valid_ = false;
 		return false;
 	}
@@ -637,7 +637,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 	bxml_data_sptr root = xml_doc.root_element();
 	if(!root)
 	{
-		vcl_cerr << "dsm_ncn::parse_target_xml -- root tag not found!" << vcl_flush;
+		std::cerr << "dsm_ncn::parse_target_xml -- root tag not found!" << std::flush;
 		this->targets_valid_ = false;
 		return false;
 	}
@@ -651,7 +651,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 			bxml_element* target = static_cast<bxml_element*>(elm.as_pointer());
 			if( target )
 			{
-				vcl_string type;
+				std::string type;
 				target->get_attribute("type", type);
 				if( !type.compare("unsigned_2d") )
 				{
@@ -660,7 +660,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 					target->get_attribute("y",y);
 					vgl_point_2d<unsigned> target(x,y);
 					//create an empty neighborhood
-					vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+					std::vector<vgl_point_2d<unsigned> > neighborhood;
 					this->neighborhood_[target] = neighborhood;
 				}//end if(!type.compare("unsigned_2d")
 
@@ -673,7 +673,7 @@ bool dsm_ncn::parse_target_xml( vcl_string const& targets_xml_path )
 
 }//end dsm_ncn::parse_target_xml
 
-void dsm_ncn::set_video_glob( vcl_string const& video_glob )
+void dsm_ncn::set_video_glob( std::string const& video_glob )
 {
 	if( this->video_stream_.is_open() )
 		this->video_stream_.close();
@@ -695,7 +695,7 @@ void dsm_ncn::set_video_glob( vcl_string const& video_glob )
 
 void dsm_ncn::add_target( vgl_point_2d<unsigned> const& target )
 {
-	vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+	std::vector<vgl_point_2d<unsigned> > neighborhood;
 	this->neighborhood_[target] = neighborhood;
 	if(!this->targets_valid_){this->targets_valid_=true;}
 }//end add_target
@@ -710,10 +710,10 @@ bool dsm_ncn::set_num_particles(unsigned const& np)
 
 		if(npixels < np)
 		{
-			vcl_cout << "dsm_ncn::set_num_particles ---- WARNING ----\n"
+			std::cout << "dsm_ncn::set_num_particles ---- WARNING ----\n"
 					 << "number of pixels per frame: " << npixels << "\n"
 					 << "exceeds requested number of particles: " << np << "\n"
-					 << "USING MAXIMUM NUMBER OF PIXELS, NOT RESETTING THE NUMBER OF PARTICLES." << vcl_endl;
+					 << "USING MAXIMUM NUMBER OF PIXELS, NOT RESETTING THE NUMBER OF PARTICLES." << std::endl;
 			this->num_particles_ = npixels;
 			return false;
 		}
@@ -739,10 +739,10 @@ bool dsm_ncn::set_num_pivot_pixels(unsigned const& npp)
 
 		if(npixels < npp)
 		{
-			vcl_cout << "dsm_ncn::set_num_pivot_pixels ---- WARNING ----\n"
+			std::cout << "dsm_ncn::set_num_pivot_pixels ---- WARNING ----\n"
 					 << "number of pixels per frame: " << npixels << "\n"
 					 << "exceeds requested number of pivot pixels: " << npp << "\n"
-					 << "USING MAXIMUM NUMBER OF PIXELS NOT REQUESTED NUMBER OF PIVOT PIXELS." << vcl_endl;
+					 << "USING MAXIMUM NUMBER OF PIXELS NOT REQUESTED NUMBER OF PIVOT PIXELS." << std::endl;
 			this->num_pivot_pixels_ = npixels;
 			return false;
 		}
@@ -757,21 +757,21 @@ bool dsm_ncn::set_num_pivot_pixels(unsigned const& npp)
 	return true;
 }//end set_num_pivot_pixels
 
-bool dsm_ncn::write_neighborhood_txt( vcl_string const& filename )
+bool dsm_ncn::write_neighborhood_txt( std::string const& filename )
 {
 	if(this->neighborhood_valid_)
 	{
 
-		vcl_ofstream of( filename.c_str(), vcl_ios::out );
+		std::ofstream of( filename.c_str(), std::ios::out );
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator
 			nitr, nend = this->neighborhood_.end();
 
 		for( nitr = this->neighborhood_.begin(); nitr != nend; ++nitr )
 		{
 			of << nitr->first.x() << '\t';
 			
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator vitr, vend = nitr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator vitr, vend = nitr->second.end();
 
 			for( vitr = nitr->second.begin(); vitr != vend; ++vitr )
 			{
@@ -794,18 +794,18 @@ bool dsm_ncn::write_neighborhood_txt( vcl_string const& filename )
 		return true;
 	}
 	
-	vcl_cerr << "COULD NOT WRITE NEIGHBORHOOD TXT FILE, THE NEIGHBORHOOD IS NOT VALID." << vcl_flush;
+	std::cerr << "COULD NOT WRITE NEIGHBORHOOD TXT FILE, THE NEIGHBORHOOD IS NOT VALID." << std::flush;
 	return false;
 }//end dsm_ncn::write_neighborhood_txt
 
 
-bool dsm_ncn::write_pivot_pixel_candidates_txt( vcl_string const& filename )
+bool dsm_ncn::write_pivot_pixel_candidates_txt( std::string const& filename )
 {
 	if( this->candidate_pivot_valid_ )
 	{
-		vcl_ofstream of( filename.c_str(), vcl_ios::out );
+		std::ofstream of( filename.c_str(), std::ios::out );
 
-		vcl_set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pitr, pend = this->pivot_pixel_candidates_.end();
+		std::set<vgl_point_2d<unsigned>, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator pitr, pend = this->pivot_pixel_candidates_.end();
 
 		for( pitr = this->pivot_pixel_candidates_.begin(); pitr != pend; ++pitr )
 		{
@@ -817,9 +817,9 @@ bool dsm_ncn::write_pivot_pixel_candidates_txt( vcl_string const& filename )
 	}
 	else
 	{
-		vcl_cerr << "---------------- WARNING ----------------" <<'\n'
-				 << "dsm_ncn::write_pivot_pixel_candidates_txt( vcl_string const& " << filename << " )\n"
-				 << "\t pivot pixel candidates not valid. Could not write txt file.\n" << vcl_flush;
+		std::cerr << "---------------- WARNING ----------------" <<'\n'
+				 << "dsm_ncn::write_pivot_pixel_candidates_txt( std::string const& " << filename << " )\n"
+				 << "\t pivot pixel candidates not valid. Could not write txt file.\n" << std::flush;
 		return false;
 	}
 }

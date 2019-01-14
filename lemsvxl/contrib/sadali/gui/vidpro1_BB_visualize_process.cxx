@@ -15,7 +15,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 
 // other includes needed
-#include <vcl_cmath.h>
+#include <cmath>
 
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
@@ -45,7 +45,7 @@ vidpro1_BB_visualize_process::vidpro1_BB_visualize_process()
   // Set up the parameters for this process
 
   if (
-      (!parameters()->add( "BB Filename" , "-bb_fname" , (vcl_string)"c://taxi/bbox_cam.txt" ) )
+      (!parameters()->add( "BB Filename" , "-bb_fname" , (std::string)"c://taxi/bbox_cam.txt" ) )
       ||
       (!parameters()->add( "Get BB from file" , "-use_BBfile" , (bool)true ) )
       ||
@@ -119,7 +119,7 @@ vidpro1_BB_visualize_process::vidpro1_BB_visualize_process()
       )
           
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_BB_visualize_process::vidpro1_BB_visualize_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_BB_visualize_process::vidpro1_BB_visualize_process()" << std::endl;
   }
 
 }
@@ -133,7 +133,7 @@ vidpro1_BB_visualize_process::~vidpro1_BB_visualize_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_BB_visualize_process::name()
 {
   return "BB 2D Projection";
@@ -165,13 +165,13 @@ return 1;
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_BB_visualize_process::get_input_type()
 {
   // this process looks for  vsol2D storage classes
   // at each input frame
  
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
 
   return to_return;
@@ -179,12 +179,12 @@ vidpro1_BB_visualize_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro1_BB_visualize_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
         
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
@@ -199,8 +199,8 @@ vidpro1_BB_visualize_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro1_BB_visualize_process::execute() - not exactly one"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro1_BB_visualize_process::execute() - not exactly one"
+             << " input frames" << std::endl;
     return false;
   }
  
@@ -299,10 +299,10 @@ sampley = sampleyf;
 
    bool use_bbfile;
    parameters()->get_value("-use_BBfile",use_bbfile);
-   vcl_string BB_fname;
+   std::string BB_fname;
    parameters()->get_value("-bb_fname",BB_fname);
-   vcl_ifstream BB_file(BB_fname.c_str(), vcl_ios::in);
-   vcl_string str("");
+   std::ifstream BB_file(BB_fname.c_str(), std::ios::in);
+   std::string str("");
    while (str!="Transform")
    {BB_file>>str;
    }
@@ -330,11 +330,11 @@ sampley = sampleyf;
    BB_file>>str;
    }
   //InitializeParams(BBMatrix, t, alpha);
-  vcl_vector<vnl_double_4> WorldPoints;
+  std::vector<vnl_double_4> WorldPoints;
  
  //computeWorldPoints(WorldPoints,  samplex, sampley,BBMatrix, 1) ;
-  vcl_cout<<CurProjMatL<<"\n"<<CurProjMatR<<"\n";
-  vcl_cout<<"BB Matr:  "<<BBMatrix;
+  std::cout<<CurProjMatL<<"\n"<<CurProjMatR<<"\n";
+  std::cout<<"BB Matr:  "<<BBMatrix;
    
 
   //Compute errors
@@ -342,10 +342,10 @@ sampley = sampleyf;
   vil_image_view<vxl_byte> greyvalimg2(col, row );
   greyvalimg1.fill(vxl_byte(0));
   greyvalimg2.fill(vxl_byte(0));
-  vcl_vector<vsol_spatial_object_2d_sptr> project_L,project_R;
-  vcl_vector<vsol_spatial_object_2d_sptr> secproject_L,secproject_R;
-  vcl_vector<vsol_spatial_object_2d_sptr> thirdproject_L , thirdproject_R;
-  vcl_vector<vsol_spatial_object_2d_sptr> fourthproject_L , fourthproject_R;
+  std::vector<vsol_spatial_object_2d_sptr> project_L,project_R;
+  std::vector<vsol_spatial_object_2d_sptr> secproject_L,secproject_R;
+  std::vector<vsol_spatial_object_2d_sptr> thirdproject_L , thirdproject_R;
+  std::vector<vsol_spatial_object_2d_sptr> fourthproject_L , fourthproject_R;
   
 computeWorldPoints(WorldPoints,  samplex, sampley,BBMatrix, 1) ;
  Compute_proj(project_L,project_R,CurProjMatL, CurProjMatR, WorldPoints);
@@ -403,8 +403,8 @@ vidpro1_BB_visualize_process::finish()
 }
 
 double
-vidpro1_BB_visualize_process::Compute_proj(vcl_vector<vsol_spatial_object_2d_sptr> &left_image_project, vcl_vector<vsol_spatial_object_2d_sptr>  &right_image_project,
-                                      const vnl_double_3x4 &LeftProjMat , const vnl_double_3x4 &RightProjMat ,const  vcl_vector<vnl_double_4> &WorldPoints)
+vidpro1_BB_visualize_process::Compute_proj(std::vector<vsol_spatial_object_2d_sptr> &left_image_project, std::vector<vsol_spatial_object_2d_sptr>  &right_image_project,
+                                      const vnl_double_3x4 &LeftProjMat , const vnl_double_3x4 &RightProjMat ,const  std::vector<vnl_double_4> &WorldPoints)
 {
     double error = 0.0;
  for (int i = 0; i<WorldPoints.size(); i++)
@@ -440,7 +440,7 @@ vidpro1_BB_visualize_process::Compute_proj(vcl_vector<vsol_spatial_object_2d_spt
   //   RSt[1][0] = UpdatedBBMatrix[1][3];
    //  RSt[2][0] = UpdatedBBMatrix[2][3];
      // vnl_double_3x3  inverse = vnl_matrix_inverse<double>(RS);
-//      vcl_cout<<" the inverse of Rs is"<<inverse;
+//      std::cout<<" the inverse of Rs is"<<inverse;
       
     // temp= RSt; //inverse *RSt;
      trans_vec[0]=UpdatedBBMatrix[0][3];
@@ -448,7 +448,7 @@ vidpro1_BB_visualize_process::Compute_proj(vcl_vector<vsol_spatial_object_2d_spt
      trans_vec[2]= UpdatedBBMatrix[2][3];
      trans_vec[3] = 0.0;
      d = trans_vec.two_norm();
-     vcl_cout<<"d is  "<<d<<"\n";
+     std::cout<<"d is  "<<d<<"\n";
      aleph = 0.0;
 
     
@@ -457,10 +457,10 @@ vidpro1_BB_visualize_process::Compute_proj(vcl_vector<vsol_spatial_object_2d_spt
  }
 #endif
  void
-     vidpro1_BB_visualize_process::computeWorldPoints(vcl_vector<vnl_double_4>  &WP, const double sampx,const double sampy,const vnl_double_4x4 &BBMat, int plane_index)
+     vidpro1_BB_visualize_process::computeWorldPoints(std::vector<vnl_double_4>  &WP, const double sampx,const double sampy,const vnl_double_4x4 &BBMat, int plane_index)
  {
-     int  numx = (int)vcl_floor(1.0/sampx);
-     int  numy = (int)vcl_floor(1.0/sampy);
+     int  numx = (int)std::floor(1.0/sampx);
+     int  numy = (int)std::floor(1.0/sampy);
      for (int i= 0; i<numx; i++ )
          for (int j=0 ; j<numy; j++)
          {
@@ -502,7 +502,7 @@ vidpro1_BB_visualize_process::Compute_proj(vcl_vector<vsol_spatial_object_2d_spt
 
          }
 
-    //vcl_cout<<" Number of sample points on front plane  "<<WP.size();
+    //std::cout<<" Number of sample points on front plane  "<<WP.size();
 
 
  }

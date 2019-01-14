@@ -23,7 +23,7 @@ dbdet_lowe_keypoint_process::dbdet_lowe_keypoint_process()
       !parameters()->add( "Contrast Threshold"    , "-contrast_thresh" , 0.03f ) ||
       !parameters()->add( "Orientation Bins"      , "-orient_bins"     , 36    ) ||
       !parameters()->add( "Orientation Spread"    , "-orient_sigma"    , 1.5f  )) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ dbdet_lowe_keypoint_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_lowe_keypoint_process::name()
 {
   return "Lowe Keypoints";
@@ -67,18 +67,18 @@ dbdet_lowe_keypoint_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_lowe_keypoint_process::get_input_type()
+std::vector< std::string > dbdet_lowe_keypoint_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_lowe_keypoint_process::get_output_type()
+std::vector< std::string > dbdet_lowe_keypoint_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints" );
   return to_return;
 }
@@ -89,7 +89,7 @@ bool
 dbdet_lowe_keypoint_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_lowe_keypoint_process::execute() - not exactly one"
+    std::cout << "In dbdet_lowe_keypoint_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -130,16 +130,16 @@ dbdet_lowe_keypoint_process::execute()
   gauss.compute_gradients(g_dir, g_mag);
 
   // detect peaks in the scale space
-  vcl_vector<vgl_point_3d<float> > peak_pts;
+  std::vector<vgl_point_3d<float> > peak_pts;
   dbdet_scale_space_peaks(dog, peak_pts, max_curve_ratio, contrast_thresh);
 
   // compute orientations and descriptors at each scale peak to make a Lowe keypoint
-  vcl_vector< dbdet_keypoint_sptr > keypoints;
+  std::vector< dbdet_keypoint_sptr > keypoints;
   dbdet_ssp_orientation_params o_params(g_dir, g_mag, orient_bins, orient_sigma);//, float thresh=0.8f);
   for(unsigned int i=0; i<peak_pts.size(); ++i)
   {
     vgl_point_3d<float>& pt = peak_pts[i];
-    vcl_vector<float> orientations = dbdet_ssp_orientations(pt, o_params);
+    std::vector<float> orientations = dbdet_ssp_orientations(pt, o_params);
     for(unsigned int j=0; j<orientations.size(); ++j)
     {
       dbdet_lowe_keypoint* kp = new dbdet_lowe_keypoint(pt.x(), pt.y(), pt.z(),

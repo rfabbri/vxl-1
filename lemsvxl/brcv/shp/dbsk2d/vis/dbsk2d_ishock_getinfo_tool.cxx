@@ -24,7 +24,7 @@ dbsk2d_ishock_getinfo_tool::handle( const vgui_event & e,
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     vgui::out << "[" << intx << " " << inty << "] : (" << pointx << " " << pointy << ") \n";
   }
 
@@ -39,7 +39,7 @@ dbsk2d_ishock_getinfo_tool::handle( const vgui_event & e,
   return dbsk2d_ishock_highlight_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_ishock_getinfo_tool::name() const
 {
   return "GetInfo";

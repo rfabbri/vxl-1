@@ -13,8 +13,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -33,7 +33,7 @@ public:
   dbmrf_bmrf_displayer();
 
   //: Return type string "bmrf"
-  virtual vcl_string type() const { return "bmrf"; }
+  virtual std::string type() const { return "bmrf"; }
 
   //: Create a tableau if the storage object is of type bmrf
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

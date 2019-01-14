@@ -5,9 +5,9 @@
 
 // Assumes pts_vxl_ptr already has the right length.
 void 
-matlab_to_vgl(const double *pts, vcl_vector<vgl_point_2d<double> > *pts_vxl_ptr)
+matlab_to_vgl(const double *pts, std::vector<vgl_point_2d<double> > *pts_vxl_ptr)
 {
-  vcl_vector<vgl_point_2d<double> > &pts_vxl = *pts_vxl_ptr;
+  std::vector<vgl_point_2d<double> > &pts_vxl = *pts_vxl_ptr;
 
   unsigned n = pts_vxl.size();
   for (unsigned i=0; i < n; ++i)
@@ -15,7 +15,7 @@ matlab_to_vgl(const double *pts, vcl_vector<vgl_point_2d<double> > *pts_vxl_ptr)
 }
 
 mxArray *
-vgl_to_matlab(const vcl_vector<vgl_point_2d<double> > &pts_vxl)
+vgl_to_matlab(const std::vector<vgl_point_2d<double> > &pts_vxl)
 {
   unsigned n = pts_vxl.size();
 
@@ -31,13 +31,13 @@ vgl_to_matlab(const vcl_vector<vgl_point_2d<double> > &pts_vxl)
   return mx_pts;
 }
 
-// Given a vcl_vector of conic segments, outputs into a matlab nc x 6 arrays
+// Given a std::vector of conic segments, outputs into a matlab nc x 6 arrays
 // with the coefficients of the conics for each segment.
 //
 // The order of the coefficients is: $X^2$, $XY$, $Y^2$, $XW$, $YW$, $W^2$,
 // where $W$ is the homogeneous coordinate (sometimes denoted by $Z$).
 mxArray *
-vgl_to_matlab(const vcl_vector<vgl_conic_segment_2d<double> > &pts_vxl)
+vgl_to_matlab(const std::vector<vgl_conic_segment_2d<double> > &pts_vxl)
 {
   unsigned n = pts_vxl.size();
 
@@ -58,13 +58,13 @@ vgl_to_matlab(const vcl_vector<vgl_conic_segment_2d<double> > &pts_vxl)
   return mx_pts;
 }
 
-// Given a vcl_vector of circular arc segments, outputs into a matlab nc x 6
+// Given a std::vector of circular arc segments, outputs into a matlab nc x 6
 // arrays with the coefficients of the arcs as conics, for each segment.
 //
 // The order of the coefficients is: $X^2$, $XY$, $Y^2$, $XW$, $YW$, $W^2$,
 // where $W$ is the homogeneous coordinate (sometimes denoted by $Z$).
 mxArray *
-vgl_to_matlab(const vcl_vector<bgld_circ_arc> &pts_vxl)
+vgl_to_matlab(const std::vector<bgld_circ_arc> &pts_vxl)
 {
   unsigned n = pts_vxl.size();
 

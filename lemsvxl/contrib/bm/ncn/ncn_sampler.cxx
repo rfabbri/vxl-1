@@ -4,12 +4,12 @@
 
 
 bool ncn_sampler::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix, unsigned const& num_pivot_pixels,
-                                vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than >& pivot_pixel_candidates, unsigned const& nparticles)
+                                std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than >& pivot_pixel_candidates, unsigned const& nparticles)
 {
     vnl_random rand;
     unsigned npix = entropy_matrix.size();
     unsigned nrows = entropy_matrix.rows();
-    vcl_map<vgl_point_2d<unsigned>, double,vgl_point_2d_less_than > particle_map;
+    std::map<vgl_point_2d<unsigned>, double,vgl_point_2d_less_than > particle_map;
     vgl_point_2d<unsigned> point;
 
     //1. Select a random subset of unique pixels and associate with the corresponding probability.
@@ -25,11 +25,11 @@ bool ncn_sampler::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix, u
     }
 
     //2. Reweight each sample and simultaneously construct the cdf
-    vcl_map<vgl_point_2d<unsigned>, double, vgl_point_2d_less_than >::iterator pmit;
-    vcl_map<vgl_point_2d<unsigned>, double, vgl_point_2d_less_than >::iterator pmend = particle_map.end();
+    std::map<vgl_point_2d<unsigned>, double, vgl_point_2d_less_than >::iterator pmit;
+    std::map<vgl_point_2d<unsigned>, double, vgl_point_2d_less_than >::iterator pmend = particle_map.end();
     vbl_array_1d<double> cdf;
 
-    vcl_vector<vgl_point_2d<unsigned> > particle_vector;//to ease indexing
+    std::vector<vgl_point_2d<unsigned> > particle_vector;//to ease indexing
     double cdf_tot = 0.0;
     for(pmit = particle_map.begin(); pmit != pmend; ++pmit)
     {
@@ -41,7 +41,7 @@ bool ncn_sampler::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix, u
     //cdf.push_back(1.0);
 
     //3. Sample a unique set of size num_piv_pix via inverse cdf method.
-    vcl_pair<vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::iterator,bool> ret;
+    std::pair<std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::iterator,bool> ret;
 
     pmit = particle_map.begin();
     while(pivot_pixel_candidates.size() < num_pivot_pixels)
@@ -51,9 +51,9 @@ bool ncn_sampler::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix, u
         point.set(particle_vector[bin].x(),particle_vector[bin].y());
         ret = pivot_pixel_candidates.insert(point);
         if(ret.second == true)
-            vcl_cout << vcl_setprecision(2) << vcl_fixed 
+            std::cout << std::setprecision(2) << std::fixed 
                      << (float(pivot_pixel_candidates.size())/float(num_pivot_pixels)) * 100 
-                     << "% pivot pixels sampled." << vcl_endl;
+                     << "% pivot pixels sampled." << std::endl;
         
     }//end sample loop
 
@@ -95,16 +95,16 @@ unsigned ncn_sampler::find_bin(vbl_array_1d<double> const& cdf, double const& ta
     }
 
     if( !bin_found )
-        vcl_cerr << "Error: ncn_sampler::find_bin, bin was not found." << vcl_flush;
+        std::cerr << "Error: ncn_sampler::find_bin, bin was not found." << std::flush;
 
     return mid;
 
 }//end find_bin
 
-bool ncn_sampler::vgl_point_2d_set_to_dat(vcl_ofstream& os, vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& point_set)
+bool ncn_sampler::vgl_point_2d_set_to_dat(std::ofstream& os, std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than> const& point_set)
 {
-    vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::const_iterator psit;
-    vcl_set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::const_iterator psend = point_set.end();
+    std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::const_iterator psit;
+    std::set<vgl_point_2d<unsigned>,vgl_point_2d_less_than>::const_iterator psend = point_set.end();
 
     for(psit = point_set.begin(); psit != psend; ++ psit)
         os << psit->x() << '\t' << psit->y() << '\n';

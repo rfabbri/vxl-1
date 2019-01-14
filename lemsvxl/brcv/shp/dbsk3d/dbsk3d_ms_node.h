@@ -5,7 +5,7 @@
 #ifndef dbsk3d_ms_node_h_
 #define dbsk3d_ms_node_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 #include <dbmsh3d/dbmsh3d_node.h>
@@ -89,7 +89,7 @@ public:
   virtual dbmsh3d_vertex* clone () const;
   virtual dbsk3d_ms_node* clone (dbmsh3d_mesh* M2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
   
   //###### Handle Incident Virtual Curves ######
   bool A14_get_other_2_MCs_nv (const dbsk3d_ms_curve* MC1, const dbsk3d_ms_curve* MC2,
@@ -99,7 +99,7 @@ public:
 
 
 //###############################################################
-//       dbsk3d_ms_node vcl_FILE READING CLASS
+//       dbsk3d_ms_node std::FILE READING CLASS
 //###############################################################
 
 class ms_node_file_read
@@ -107,7 +107,7 @@ class ms_node_file_read
 public:
   int                   id_;
   //: Ids for the incident shock scaffold curves
-  vcl_vector<int>       SCids_;
+  std::vector<int>       SCids_;
 };
 
 //###############################################################
@@ -115,15 +115,15 @@ public:
 //###############################################################
 
 //: File I/O for FS/SHG
-void mn_save_text_file (vcl_FILE* fp, dbsk3d_ms_node* MN);
-void mn_load_text_file (vcl_FILE* fp, dbsk3d_ms_node* MN, 
+void mn_save_text_file (std::FILE* fp, dbsk3d_ms_node* MN);
+void mn_load_text_file (std::FILE* fp, dbsk3d_ms_node* MN, 
                         ms_node_file_read* mn_fileread, dbsk3d_fs_mesh* fs_mesh);
 void mn_recover_pointers (dbsk3d_ms_node* MN, ms_node_file_read* mn_fileread,
                           dbsk3d_ms_hypg* shg);
 
 //: File I/O for stand alone SG
-void mn_save_text_file_sg (vcl_FILE* fp, dbsk3d_ms_node* MN);
-void mn_load_text_file_sg (vcl_FILE* fp, dbsk3d_ms_node* MN, ms_node_file_read* mn_fileread,
+void mn_save_text_file_sg (std::FILE* fp, dbsk3d_ms_node* MN);
+void mn_load_text_file_sg (std::FILE* fp, dbsk3d_ms_node* MN, ms_node_file_read* mn_fileread,
                            dbsk3d_sg_sa* sg_sa);
 
 void mn_load_text_file_sg_old (FILE* fp, dbsk3d_ms_node* MN, 

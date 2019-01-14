@@ -22,7 +22,7 @@ dbetl_tracker_process::dbetl_tracker_process()
   if( !parameters()->add( "Min Angle",         "-min_a", 0.0f) ||
       !parameters()->add( "Max Angle",         "-max_a", 0.0f) ||
       !parameters()->add( "Number of Samples", "-num",   10) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -51,7 +51,7 @@ dbetl_tracker_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbetl_tracker_process::name()
 {
   return "Track Epi-Points";
@@ -59,9 +59,9 @@ dbetl_tracker_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbetl_tracker_process::get_input_type()
+std::vector< std::string > dbetl_tracker_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "episeg" );
   to_return.push_back( "image" );
   return to_return;
@@ -69,9 +69,9 @@ vcl_vector< vcl_string > dbetl_tracker_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbetl_tracker_process::get_output_type()
+std::vector< std::string > dbetl_tracker_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbetl" );
   return to_return;
 }
@@ -98,7 +98,7 @@ bool
 dbetl_tracker_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -114,13 +114,13 @@ dbetl_tracker_process::execute()
 
   becld_episeg_storage_sptr frame_episegs;
   frame_episegs.vertical_cast(input_data_[0][0]);
-  vcl_vector<becld_episeg_sptr> episegs = frame_episegs->episegs();
+  std::vector<becld_episeg_sptr> episegs = frame_episegs->episegs();
 
   vidpro1_image_storage_sptr frame_image;
   frame_image.vertical_cast(input_data_[0][1]);
 
   vgl_point_2d<double> ep = episegs.front()->epipole()->location();
-  double mag = 1.0;//vcl_sqrt(ep.x()*ep.x() + ep.y()*ep.y() + 1);
+  double mag = 1.0;//std::sqrt(ep.x()*ep.x() + ep.y()*ep.y() + 1);
   double t = -frame_episegs->frame()/mag;
 
   vnl_double_3x4 C;
@@ -129,16 +129,16 @@ dbetl_tracker_process::execute()
   C[2][0] = 0;     C[2][1] = 0;     C[2][2] = 1;    C[2][3] = t;
   dbetl_camera_sptr bcam = new dbetl_camera(C);
 
-  vcl_cout << "frame: " << t << vcl_endl;
-  vcl_cout << "Camera = \n" << C << vcl_endl; 
+  std::cout << "frame: " << t << std::endl;
+  std::cout << "Camera = \n" << C << std::endl; 
 
   tracker_->set_camera(bcam);
   tracker_->set_image(frame_image->get_image());
   tracker_->set_episegs(episegs);
   tracker_->track();
 
-  vcl_cout << "num tracks = " << tracker_->tracks()[0].size() << vcl_endl;
-  vcl_cout << "best prob = " << tracker_->tracks()[0].front()->error() << vcl_endl;
+  std::cout << "num tracks = " << tracker_->tracks()[0].size() << std::endl;
+  std::cout << "best prob = " << tracker_->tracks()[0].front()->error() << std::endl;
 
   // create the output storage class
   dbetl_track_storage_sptr output_dbetl = dbetl_track_storage_new();

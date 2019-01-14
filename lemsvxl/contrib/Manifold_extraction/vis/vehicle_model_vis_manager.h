@@ -4,7 +4,7 @@
 // \file
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgui/vgui_range_map_params_sptr.h>
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vil/vil_image_resource.h>
@@ -12,7 +12,7 @@
 #include <vgui/vgui_image_tableau_sptr.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vehicle_model.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_rectangle_2d_sptr.h>

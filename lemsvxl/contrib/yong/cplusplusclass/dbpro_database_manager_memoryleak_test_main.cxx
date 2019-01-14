@@ -1,8 +1,8 @@
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <map>
+#include <vector>
 #include <vgui/vgui.h>
 #include <vnl/vnl_math.h>
 #include <vgui/vgui_image_tableau.h>
@@ -24,7 +24,7 @@
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_macro.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <vil/vil_image_view.h>
 #include <vil/vil_print.h>
 #include <vil/algo/vil_sobel_3x3.h>
@@ -69,7 +69,7 @@
 #define OUTPUT_F            false
 
 int frame_number; 
-vcl_vector<vcl_string> filenames(100);
+std::vector<std::string> filenames(100);
 
 
 // get intput frame from database, if not exist, load from file
@@ -79,9 +79,9 @@ vil_image_resource_sptr get_frame(int frame_n, bool in_out)
   dbpro_db_query_sptr q1 = dbpro_db_query_new("Image", "Frame Number" , EQ, frame_n);
   dbpro_db_query_sptr q2;
   if(in_out == OUTPUT_F)
-    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, vcl_string("OUTPUT"));
+    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, std::string("OUTPUT"));
   else
-    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, vcl_string("INPUT"));
+    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, std::string("INPUT"));
 
   dbpro_db_selection_sptr s1;
   dbpro_db_selection_sptr s2;
@@ -109,13 +109,13 @@ vil_image_resource_sptr get_frame(int frame_n, bool in_out)
     vidpro_image_storage_sptr image_storage = vidpro_image_storage_new();
     image_storage->set_image(image_resource);
     bpro_storage_sptr convert_storage_sptr = image_storage;
-    dbpro_db_tuple_sptr image_tup = dbpro_db_tuple_new(frame_n, vcl_string("INPUT"), convert_storage_sptr);
-    dbpro_database_manager::instance()->add_tuple(vcl_string("Image"), image_tup);
+    dbpro_db_tuple_sptr image_tup = dbpro_db_tuple_new(frame_n, std::string("INPUT"), convert_storage_sptr);
+    dbpro_database_manager::instance()->add_tuple(std::string("Image"), image_tup);
     return image_resource;
   }
   else
   {
-    vcl_cout << "more than one frame is found in database!" << vcl_endl;
+    std::cout << "more than one frame is found in database!" << std::endl;
     exit(-1);
   }
 }
@@ -129,10 +129,10 @@ void put_frame(int frame_n, bool in_out, vil_image_resource_sptr output)
     bpro_storage_sptr convert_storage_sptr = image_storage;
     dbpro_db_tuple_sptr image_tup;
     if(in_out == OUTPUT_F)
-      image_tup = dbpro_db_tuple_new(frame_n, vcl_string("OUTPUT"), convert_storage_sptr);
+      image_tup = dbpro_db_tuple_new(frame_n, std::string("OUTPUT"), convert_storage_sptr);
     else
-      image_tup = dbpro_db_tuple_new(frame_n, vcl_string("INPUT"), convert_storage_sptr);
-    dbpro_database_manager::instance()->add_tuple(vcl_string("Image"), image_tup);
+      image_tup = dbpro_db_tuple_new(frame_n, std::string("INPUT"), convert_storage_sptr);
+    dbpro_database_manager::instance()->add_tuple(std::string("Image"), image_tup);
 }
 
 // check whether certain frame is in database
@@ -141,9 +141,9 @@ bool frame_exist(int frame_n, bool in_out)
   dbpro_db_query_sptr q1 = dbpro_db_query_new("Image", "Frame Number" , EQ, frame_n);
   dbpro_db_query_sptr q2;
   if(in_out == OUTPUT_F)
-    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, vcl_string("OUTPUT"));
+    q2 = dbpro_db_query_new("Image", "Image Name" , EQ, std::string("OUTPUT"));
   else
-    q2 = dbpro_db_query_new("Image", "Image Name", EQ, vcl_string("INPUT"));
+    q2 = dbpro_db_query_new("Image", "Image Name", EQ, std::string("INPUT"));
 
   dbpro_db_selection_sptr s1;
   dbpro_db_selection_sptr s2;
@@ -194,7 +194,7 @@ struct example_tableau : public vgui_image_tableau
       else if(e.key == vgui_CURSOR_LEFT)
         --frame_number;
 
-      vcl_cout << "Processing frame number: " << frame_number << vcl_endl;
+      std::cout << "Processing frame number: " << frame_number << std::endl;
 
       if(!frame_exist(frame_number, OUTPUT_F))
       {
@@ -223,13 +223,13 @@ struct example_tableau : public vgui_image_tableau
     if(e.type == vgui_KEY_DOWN && e.key == 's')
     {
       dbpro_database_manager::instance()->save_database("image_diff.vsl");
-      vcl_cout << "Save database to binary IO file " << "image_diff.vsl" << vcl_endl;
+      std::cout << "Save database to binary IO file " << "image_diff.vsl" << std::endl;
     }
 
     if(e.type == vgui_KEY_DOWN && e.key == 'l')
     {
       dbpro_database_manager::instance()->load_database("image_diff.vsl");
-      vcl_cout << "Load database from binary IO file " << "image_diff.vsl" << vcl_endl;
+      std::cout << "Load database from binary IO file " << "image_diff.vsl" << std::endl;
       vil_image_resource_sptr diff_resource = get_frame(frame_number, OUTPUT_F);
       dbpro_database_manager::instance()->print_database();
       this->set_image_resource(diff_resource);
@@ -241,9 +241,9 @@ struct example_tableau : public vgui_image_tableau
     return vgui_image_tableau::handle(e);
   }
 
-  vcl_string type_name() const
+  std::string type_name() const
   {
-    return vcl_string("example_tableau");      
+    return std::string("example_tableau");      
   }
 
 
@@ -269,11 +269,11 @@ int main(int argc,char **argv)
   // initialize filename
   for(unsigned int i=0; i<100; i++)
   {
-    vcl_stringstream SS;
+    std::stringstream SS;
     SS.clear();
     SS << ".\\CIT\\CIT_004_";
-      SS << vcl_setw (5);
-      SS << vcl_setfill('0');
+      SS << std::setw (5);
+      SS << std::setfill('0');
       SS << i;
       SS << ".bmp";
     filenames[i].clear();
@@ -281,20 +281,20 @@ int main(int argc,char **argv)
   }
 
   // initialize the basebase;
-  vcl_vector<vcl_string> r1_names(3);
-  vcl_vector<vcl_string> r1_types(3);
+  std::vector<std::string> r1_names(3);
+  std::vector<std::string> r1_types(3);
   r1_names[0] = "Frame Number";
   r1_names[1] = "Image Name";
   r1_names[2] = "Image Storage";
   r1_types[0] = dbpro_db_value_t<int>::type();
-  r1_types[1] = dbpro_db_value_t<vcl_string>::type();
+  r1_types[1] = dbpro_db_value_t<std::string>::type();
   r1_types[2] = dbpro_db_value_t<bpro_storage_sptr>::type();
   dbpro_db_relation_sptr init_r = dbpro_db_relation_new(r1_names, r1_types);
   dbpro_database_sptr init_db = dbpro_database_new();
   init_db->add_new_relation("Image", init_r);
   dbpro_database_manager::instance();
   dbpro_database_manager::instance()->set_database(init_db);
-  vcl_cout << "After database initialization: " << vcl_endl;
+  std::cout << "After database initialization: " << std::endl;
   dbpro_database_manager::instance()->print_database();
   vsl_add_to_binary_loader(vidpro_image_storage());
 

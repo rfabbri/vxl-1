@@ -4,9 +4,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <brdb/brdb_value.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vbl/vbl_array_2d.h>
@@ -42,7 +42,7 @@ dbvxm_prob_map_threshold_process::execute()
 {
   // Sanity check
   if (!this->verify_inputs()){
-    vcl_cerr << "In dbvxm_prob_map_threshold_process::execute() -"
+    std::cerr << "In dbvxm_prob_map_threshold_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -86,10 +86,10 @@ dbvxm_prob_map_threshold_process::execute()
         }
       }
 
-  vcl_cout << "----------------------------------\n";
-  vcl_cout << "\tthres: " << thres << "\n";
-  vcl_cout << "\tnumber of CHANGE PIXELS: " << count << " out of " << ni*nj << " pixels: %" << ((float)count/(ni*nj))*100.0f << vcl_endl;
-  vcl_cout << "----------------------------------\n";
+  std::cout << "----------------------------------\n";
+  std::cout << "\tthres: " << thres << "\n";
+  std::cout << "\tnumber of CHANGE PIXELS: " << count << " out of " << ni*nj << " pixels: %" << ((float)count/(ni*nj))*100.0f << std::endl;
+  std::cout << "----------------------------------\n";
   brdb_value_sptr output0 =
     new brdb_value_t<vil_image_view_base_sptr>(new vil_image_view<vxl_byte>(out));
   output_data_[0] = output0;

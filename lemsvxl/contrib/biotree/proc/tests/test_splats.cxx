@@ -10,9 +10,9 @@
 #include <xscan/xscan_dummy_scan.h>
 #include <proc/bioproc_splr_filtering_proc.h>
 #include <proc/bioproc_filtering_proc.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 void test_splats(){
   // scan
@@ -41,11 +41,11 @@ void test_splats(){
       xmvg_atomic_filter_2d<double> rep_splat = fz.splat(rep_pt, scan(i));      
       //xmvg_composite_filter_2d<double> rep_splat = proc.splr()->splat(i, rep_pt);
       transformed_pt = transformation(transformed_pt);
-      vcl_cout << "transformed point: " << transformed_pt << "\n";
-      vcl_cout << .05*sin(i*rot_angle) << " " << .05*cos(i*rot_angle) << " " << -.05 << "\n";
+      std::cout << "transformed point: " << transformed_pt << "\n";
+      std::cout << .05*sin(i*rot_angle) << " " << .05*cos(i*rot_angle) << " " << -.05 << "\n";
       xmvg_atomic_filter_2d<double> transformed_pt_splat = fz.splat(transformed_pt, scan(0));      
     //  xmvg_composite_filter_2d<double> transformed_pt_splat = proc.splr()->splat(0, transformed_pt);
-      vcl_cout << "rotation: " << i << " rep_splat size: " << rep_splat.size() << " transformed_pt_splat size: " << transformed_pt_splat.size() << "\n";
+      std::cout << "rotation: " << i << " rep_splat size: " << rep_splat.size() << " transformed_pt_splat size: " << transformed_pt_splat.size() << "\n";
   }
 }
 

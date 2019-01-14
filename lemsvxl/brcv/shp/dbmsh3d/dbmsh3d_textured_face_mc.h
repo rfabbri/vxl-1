@@ -18,7 +18,7 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_map.h>
+#include <map>
 
 #include <dbmsh3d/dbmsh3d_face_mc.h>
 #include <vgl/vgl_point_2d.h>
@@ -27,20 +27,20 @@ class dbmsh3d_textured_face_mc : public dbmsh3d_face_mc
 {
 protected:
   //: URI of texture map file
-  vcl_string tex_map_uri_; 
+  std::string tex_map_uri_; 
 
   //: Should be one tex_coord per face vertex, corresponding to the ifs_face vertices.
-  vcl_map<int, vgl_point_2d<double> > tex_coords_;
+  std::map<int, vgl_point_2d<double> > tex_coords_;
 
 public:
   //: ====== Constructor/Destructor ======
   dbmsh3d_textured_face_mc (const int id): dbmsh3d_face_mc(id){}
 
   //: converts an untextured face to a textured face
-  dbmsh3d_textured_face_mc (const dbmsh3d_face* face, vcl_string tex_map_uri);
+  dbmsh3d_textured_face_mc (const dbmsh3d_face* face, std::string tex_map_uri);
 
-  vcl_string tex_map_uri(){return tex_map_uri_;}
-  void set_tex_map_uri(vcl_string uri){tex_map_uri_ = uri;}
+  std::string tex_map_uri(){return tex_map_uri_;}
+  void set_tex_map_uri(std::string uri){tex_map_uri_ = uri;}
 
   //: copy constructor
   //dbmsh3d_textured_face_mc (const dbmsh3d_textured_face_mc& face);
@@ -53,7 +53,7 @@ public:
     return tex_coords_[i];
   }
 
-  vcl_map<int, vgl_point_2d<double> >&  tex_coords() {
+  std::map<int, vgl_point_2d<double> >&  tex_coords() {
     return tex_coords_;
   }
 

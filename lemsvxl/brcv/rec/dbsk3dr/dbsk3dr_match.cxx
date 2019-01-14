@@ -2,10 +2,10 @@
 // Graduated Assignment Shock Matching
 // MingChing Chang
 
-#include <vcl_ctime.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
@@ -25,10 +25,10 @@ void dbsk3dr_match::alloc_ga_hypg_G (const int verbose)
 {
   assert (ms_hypg_G_);
   if (verbose>1) {
-    vul_printf (vcl_cout, "alloc_ga_hypg_G():\n");
-    vul_printf (vcl_cout, "  allocating %d out of %u nodes.\n", 
+    vul_printf (std::cout, "alloc_ga_hypg_G():\n");
+    vul_printf (std::cout, "  allocating %d out of %u nodes.\n", 
                 ms_hypg_G_->n_selected_ms_nodes(), ms_hypg_G_->vertexmap().size());
-    vul_printf (vcl_cout, "  MN_sid (GA_nid): ");
+    vul_printf (std::cout, "  MN_sid (GA_nid): ");
   }
 
   dbasnh_hypg_aug* G = new dbasnh_hypg_aug ();
@@ -37,7 +37,7 @@ void dbsk3dr_match::alloc_ga_hypg_G (const int verbose)
   //Add each ms_hypg_G nodes into ga_hypg_G.
   //Also compute hypg node attributes for compatibility match here.
   unsigned int id_counter = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = ms_hypg_G_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = ms_hypg_G_->vertexmap().begin();
   for (; vit != ms_hypg_G_->vertexmap().end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     if (MN->selected() == false)
@@ -56,7 +56,7 @@ void dbsk3dr_match::alloc_ga_hypg_G (const int verbose)
                                              grad_r_max, grad_r_min, corner_a_max, corner_a_min);
     G_add_ga_node (NA, MN->id());
     if (verbose>1)
-      vul_printf (vcl_cout, "%d(%d) ", MN->id(), NA->nid());
+      vul_printf (std::cout, "%d(%d) ", MN->id(), NA->nid());
   }
 
   ///assert (ms_hypg_G_->vertexmap().size() == ga_hypg_G()->n_nodes());
@@ -64,7 +64,7 @@ void dbsk3dr_match::alloc_ga_hypg_G (const int verbose)
 
   //Allocate link[][] space and the corner[][][] table
   if (verbose>1)
-    vul_printf (vcl_cout, "\n  allocate links[][] and corners[][][], nN=%d.\n", 
+    vul_printf (std::cout, "\n  allocate links[][] and corners[][][], nN=%d.\n", 
                 ga_hypg_G()->n_nodes());
 
   ga_hypg_G()->alloc_links ();
@@ -80,10 +80,10 @@ void dbsk3dr_match::alloc_ga_hypg_g (const int verbose)
 {
   assert (ms_hypg_g_);
   if (verbose>1) {
-    vul_printf (vcl_cout, "alloc_ga_hypg_g():\n");
-    vul_printf (vcl_cout, "  allocating %d out of %u nodes.\n", 
+    vul_printf (std::cout, "alloc_ga_hypg_g():\n");
+    vul_printf (std::cout, "  allocating %d out of %u nodes.\n", 
                 ms_hypg_g_->n_selected_ms_nodes(), ms_hypg_g_->vertexmap().size());
-    vul_printf (vcl_cout, "  MN_sid (GA_nid): ");
+    vul_printf (std::cout, "  MN_sid (GA_nid): ");
   }
 
   dbasnh_hypg_aug* g = new dbasnh_hypg_aug ();
@@ -91,7 +91,7 @@ void dbsk3dr_match::alloc_ga_hypg_g (const int verbose)
 
   //Add each ms_hypg_g nodes into ga_hypg_g.
   unsigned int id_counter = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = ms_hypg_g_->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = ms_hypg_g_->vertexmap().begin();
   for (; vit != ms_hypg_g_->vertexmap().end(); vit++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*vit).second;
     if (MN->selected() == false)
@@ -110,14 +110,14 @@ void dbsk3dr_match::alloc_ga_hypg_g (const int verbose)
                                              grad_r_max, grad_r_min, corner_a_max, corner_a_min);
     g_add_ga_node (NA, MN->id());
     if (verbose>1)
-      vul_printf (vcl_cout, "%d(%d) ", MN->id(), NA->nid());
+      vul_printf (std::cout, "%d(%d) ", MN->id(), NA->nid());
   }
   ///assert (ms_hypg_g_->vertexmap().size() == ga_hypg_g()->n_nodes());
   assert (ms_hypg_g_->n_selected_ms_nodes() == ga_hypg_g()->n_nodes());
 
   //Allocate link[][] space and the corner[][][] table
   if (verbose>1)
-    vul_printf (vcl_cout, "\n  allocate links[][] and corners[][][], nN=%d.\n", 
+    vul_printf (std::cout, "\n  allocate links[][] and corners[][][], nN=%d.\n", 
                 ms_hypg_g_->vertexmap().size());
 
   ga_hypg_g()->alloc_links ();
@@ -130,7 +130,7 @@ void dbsk3dr_match::alloc_ga_hypg_g (const int verbose)
 void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose)
 {
   if (verbose)
-    vul_printf (vcl_cout, "setup_G_g_dp_curve_dist(): ");
+    vul_printf (std::cout, "setup_G_g_dp_curve_dist(): ");
   int i, j;
   double ed_cost, Eu_cost;
   ///int Gne = (int) ms_hypg_G_->edgemap().size();
@@ -138,7 +138,7 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
   ///int gne = (int) ms_hypg_g_->edgemap().size();
   const int gne = ms_hypg_g_->n_selected_ms_curves();
 
-  vcl_map<int, dbmsh3d_edge*>::iterator Geit, geit;
+  std::map<int, dbmsh3d_edge*>::iterator Geit, geit;
   dbsk3d_ms_curve *GMC, *gMC;
 
   ga_match_->clear ();
@@ -203,11 +203,11 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
         ga_match_->Gg_Eu_dist(cnt).push_back (DP_DIST_HUGE);
 
         #if DBMSH3D_DEBUG > 2
-        vul_printf (vcl_cout, "  Gg_ed_dist_[%d][%d]: HUGE (diff c_type), Ge %d (%d,%d), ge %d (%d,%d).\n", 
+        vul_printf (std::cout, "  Gg_ed_dist_[%d][%d]: HUGE (diff c_type), Ge %d (%d,%d), ge %d (%d,%d).\n", 
                     i, j, GMC->id(), GMC->s_MN()->id(), GMC->e_MN()->id(), gMC->id(), gMC->s_MN()->id(), gMC->e_MN()->id());
-        vul_printf (vcl_cout, "  Gg_Eu_dist_[%d][%d]: HUGE (diff c_type).\n", i, j);
+        vul_printf (std::cout, "  Gg_Eu_dist_[%d][%d]: HUGE (diff c_type).\n", i, j);
         #else
-        ///vcl_cout << ".";
+        ///std::cout << ".";
         #endif
       }
       else {
@@ -224,19 +224,19 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
         ed_cost = dpm.finalCost();
 
         //Euclidean distance: match G <-> g curves            
-        vcl_vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
+        std::vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
         Eu_cost = get_curve_align_avg_Eu_dist (GMC, gMC, *(dpm.finalMap()), cor_PS1, cor_PS2);  
 
         ga_match_->Gg_ed_dist(cnt).push_back (ed_cost);    
         ga_match_->Gg_Eu_dist(cnt).push_back (Eu_cost);
 
         #if DBMSH3D_DEBUG > 2
-        vul_printf (vcl_cout, "  Gg_ed_dist_[%d][%d]: %f, Ge %d (%d,%d), ge %d (%d,%d).\n", 
+        vul_printf (std::cout, "  Gg_ed_dist_[%d][%d]: %f, Ge %d (%d,%d), ge %d (%d,%d).\n", 
                     i, j, ed_cost, GMC->id(), GMC->s_MN()->id(), GMC->e_MN()->id(), gMC->id(), gMC->s_MN()->id(), gMC->e_MN()->id());
-        vul_printf (vcl_cout, "  Gg_Eu_dist_[%d][%d]: %f.\n", i, j, Eu_cost);
+        vul_printf (std::cout, "  Gg_Eu_dist_[%d][%d]: %f.\n", i, j, Eu_cost);
         #else
         //if (verbose)
-          //vcl_cout << ".";
+          //std::cout << ".";
         #endif
         
         delete RgMC;
@@ -250,10 +250,10 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
         ga_match_->Gg_Eu_dist_f(cnt).push_back (DP_DIST_HUGE);
 
         #if DBMSH3D_DEBUG > 2
-        vul_printf (vcl_cout, "  Gg_ed_dist_f_[%d][%d]: HUGE (diff c_type).\n", i, j);
-        vul_printf (vcl_cout, "  Gg_Eu_dist_f_[%d][%d]: HUGE (diff c_type).\n", i, j);
+        vul_printf (std::cout, "  Gg_ed_dist_f_[%d][%d]: HUGE (diff c_type).\n", i, j);
+        vul_printf (std::cout, "  Gg_Eu_dist_f_[%d][%d]: HUGE (diff c_type).\n", i, j);
         #else
-        ///vcl_cout << ".";
+        ///std::cout << ".";
         #endif
       }
       else {
@@ -269,18 +269,18 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
         ed_cost = dpm.finalCost();
         
         //Euclidean distance: match G <-> g curves flip        
-        vcl_vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
+        std::vector<vgl_point_3d<double> > cor_PS1, cor_PS2;
         Eu_cost = get_curve_align_avg_Eu_dist (GMC, gMC, *(dpm.finalMap()), cor_PS1, cor_PS2); 
         
         ga_match_->Gg_ed_dist_f(cnt).push_back (ed_cost);
         ga_match_->Gg_Eu_dist_f(cnt).push_back (Eu_cost);
 
         #if DBMSH3D_DEBUG > 2
-        vul_printf (vcl_cout, "  Gg_ed_dist_f_[%d][%d]: %f.\n", i, j, ed_cost);          
-        vul_printf (vcl_cout, "  Gg_Eu_dist_f_[%d][%d]: %f.\n", i, j, Eu_cost);
+        vul_printf (std::cout, "  Gg_ed_dist_f_[%d][%d]: %f.\n", i, j, ed_cost);          
+        vul_printf (std::cout, "  Gg_Eu_dist_f_[%d][%d]: %f.\n", i, j, Eu_cost);
         #else
         //if (verbose)
-          //vcl_cout << ".";
+          //std::cout << ".";
         #endif
 
         delete RgMCf;
@@ -288,71 +288,71 @@ void dbsk3dr_match::setup_G_g_dp_curve_dist (const int option, const int verbose
     }
 
     if (verbose)
-      vul_printf (vcl_cout, "%d", cnt);
+      vul_printf (std::cout, "%d", cnt);
 
     delete RGMC;
   }
 
   if (verbose) {
-    vul_printf (vcl_cout, "\n\n");
+    vul_printf (std::cout, "\n\n");
 
     //Todo: move these functions into ga_match_ class.
     //Print table:
     assert (ga_match_->Gg_ed_dist().size() == Gne);
-    vul_printf (vcl_cout, "Gg_ed_dist[%d][%d]:\n", Gne, gne);
+    vul_printf (std::cout, "Gg_ed_dist[%d][%d]:\n", Gne, gne);
     for (i=0; i<Gne; i++) {
       assert (ga_match_->Gg_ed_dist(i).size() == gne);
       for (j=0; j<gne; j++) {
         if (ga_match_->Gg_ed_dist(i,j) == DP_DIST_HUGE)
-          vul_printf (vcl_cout, "HUG ");
+          vul_printf (std::cout, "HUG ");
         else
-          vul_printf (vcl_cout, "%3.0f ", ga_match_->Gg_ed_dist(i,j));
+          vul_printf (std::cout, "%3.0f ", ga_match_->Gg_ed_dist(i,j));
       }  
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
 
     assert (ga_match_->Gg_Eu_dist().size() == Gne);
-    vul_printf (vcl_cout, "Gg_Eu_dist[%d][%d] * 100:\n", Gne, gne);
+    vul_printf (std::cout, "Gg_Eu_dist[%d][%d] * 100:\n", Gne, gne);
     for (i=0; i<Gne; i++) {
       assert (ga_match_->Gg_Eu_dist(i).size() == gne);
       for (j=0; j<gne; j++) {
         if (ga_match_->Gg_Eu_dist(i,j) == DP_DIST_HUGE)
-          vul_printf (vcl_cout, "HUG ");
+          vul_printf (std::cout, "HUG ");
         else
-          vul_printf (vcl_cout, "%3.0f ", ga_match_->Gg_Eu_dist(i,j)*100);
+          vul_printf (std::cout, "%3.0f ", ga_match_->Gg_Eu_dist(i,j)*100);
       }  
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
 
     assert (ga_match_->Gg_ed_dist_f().size() == Gne);
-    vul_printf (vcl_cout, "Gg_ed_dist_f[%d][%d]:\n", Gne, gne);
+    vul_printf (std::cout, "Gg_ed_dist_f[%d][%d]:\n", Gne, gne);
     for (i=0; i<Gne; i++) {
       assert (ga_match_->Gg_ed_dist_f(i).size() == gne);
       for (j=0; j<gne; j++) {
         if (ga_match_->Gg_ed_dist_f(i,j) == DP_DIST_HUGE)
-          vul_printf (vcl_cout, "HUG ");
+          vul_printf (std::cout, "HUG ");
         else
-          vul_printf (vcl_cout, "%3.0f ", ga_match_->Gg_ed_dist_f(i,j));
+          vul_printf (std::cout, "%3.0f ", ga_match_->Gg_ed_dist_f(i,j));
       }  
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
 
     assert (ga_match_->Gg_Eu_dist_f().size() == Gne);
-    vul_printf (vcl_cout, "Gg_Eu_dist_f[%d][%d] * 100:\n", Gne, gne);
+    vul_printf (std::cout, "Gg_Eu_dist_f[%d][%d] * 100:\n", Gne, gne);
     for (i=0; i<Gne; i++) {
       assert (ga_match_->Gg_Eu_dist_f(i).size() == gne);
       for (j=0; j<gne; j++) {
         if (ga_match_->Gg_Eu_dist_f(i,j) == DP_DIST_HUGE)
-          vul_printf (vcl_cout, "HUG ");
+          vul_printf (std::cout, "HUG ");
         else
-          vul_printf (vcl_cout, "%3.0f ", ga_match_->Gg_Eu_dist_f(i,j)*100);
+          vul_printf (std::cout, "%3.0f ", ga_match_->Gg_Eu_dist_f(i,j)*100);
       }  
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
 }
@@ -370,7 +370,7 @@ void dbsk3dr_match::setup_G_g_curve_similarity (const int option, const int verb
 
   //G: Setup the links[][] and links_type[][] table.
   //The loop curve is considered as regular curves (with diff. end nodes).
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
   idx=-1;
   for (; eit != ms_hypg_G_->edgemap().end(); eit++) {
     MC = (dbsk3d_ms_curve*) (*eit).second;
@@ -429,9 +429,9 @@ void dbsk3dr_match::setup_G_g_curve_similarity (const int option, const int verb
     ga_hypg_G()->get_link_cost_max_min (G_l_max, G_l_min);
     float g_l_max, g_l_min;
     ga_hypg_g()->get_link_cost_max_min (g_l_max, g_l_min);
-    vul_printf (vcl_cout, "\n  G: link_count = %d, max = %f, min = %f.\n",
+    vul_printf (std::cout, "\n  G: link_count = %d, max = %f, min = %f.\n",
                 ga_hypg_G()->n_links(), G_l_max, G_l_min);
-    vul_printf (vcl_cout, "  g: link_count = %d, max = %f, min = %f.\n",
+    vul_printf (std::cout, "  g: link_count = %d, max = %f, min = %f.\n",
                 ga_hypg_g()->n_links(), g_l_max, g_l_min);
   }
 }
@@ -442,7 +442,7 @@ void dbsk3dr_match::setup_G_g_corner_similarity (const int verbose)
   dbsk3d_ms_node *NA, *NB;
   //G: Setup the corners[][][] table.
   //Note that the corner[][][] is oriented.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
   for (; eit != ms_hypg_G_->edgemap().end(); eit++) {
     MC = (dbsk3d_ms_curve*) (*eit).second;
     if (MC->selected() == false)
@@ -487,7 +487,7 @@ void dbsk3dr_match::setup_G_g_corner_similarity (const int verbose)
   }
 
   if (verbose>1)
-    vul_printf (vcl_cout, "\n  G: corner_count = %d, g: corner_count = %d.\n",
+    vul_printf (std::cout, "\n  G: corner_count = %d, g: corner_count = %d.\n",
                 ga_hypg_G()->n_corners(), ga_hypg_g()->n_corners());
 }
 
@@ -496,7 +496,7 @@ void dbsk3dr_match::setup_G_g_corner_vl (const int verbose)
   dbsk3d_ms_curve* MC;
   dbsk3d_ms_node *NA, *NB;
   //G: Setup the corners[][][] table for the virtual curves.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = ms_hypg_G_->edgemap().begin();
   for (; eit != ms_hypg_G_->edgemap().end(); eit++) {
     MC = (dbsk3d_ms_curve*) (*eit).second;
     if (MC->selected() == false)
@@ -540,7 +540,7 @@ void dbsk3dr_match::setup_G_g_corner_vl (const int verbose)
   }
 
   if (verbose>1)
-    vul_printf (vcl_cout, "\n  G: corner_count (with vlinks) = %d, g: corner_count (with vlinks) = %d.\n",
+    vul_printf (std::cout, "\n  G: corner_count (with vlinks) = %d, g: corner_count (with vlinks) = %d.\n",
                 ga_hypg_G()->n_corners(), ga_hypg_g()->n_corners());
 }
 
@@ -548,7 +548,7 @@ double angle_bwn_vector (const vgl_vector_3d<double>& V1, const vgl_vector_3d<do
 {
   double dot = dot_product (V1, V2);
   double cos_theta = dot / length (V1) / length (V2);
-  double theta = vcl_acos (cos_theta);
+  double theta = std::acos (cos_theta);
   assert (vnl_math_isnan(theta) == false);
   return theta;
 }
@@ -560,7 +560,7 @@ void dbsk3dr_match::update_corner_N (dbasnh_hypg_aug* H, dbsk3d_ms_node* NA, dbs
   assert (H->links (nidA, nidB) != 0);
   assert (H->links (nidB, nidA) != 0);
 
-  vcl_vector<dbmsh3d_face*> inc_MS;
+  std::vector<dbmsh3d_face*> inc_MS;
   inputMC->get_incident_Fs (inc_MS);
 
   //find the edge FE incident to this node.
@@ -640,7 +640,7 @@ void dbsk3dr_match::update_corner_N (dbasnh_hypg_aug* H, dbsk3d_ms_node* NA, dbs
         double a = vgl_distance (v1->pt(), v2->pt());
         double b = FE->length();
         double c = FE2->length();
-        double angle = vcl_acos ( (b*b + c*c - a*a)/(b*c*2) );
+        double angle = std::acos ( (b*b + c*c - a*a)/(b*c*2) );
 
         //In case angle is zero if FE == FE2, make it epsilon.
         if (angle == 0)
@@ -652,7 +652,7 @@ void dbsk3dr_match::update_corner_N (dbasnh_hypg_aug* H, dbsk3d_ms_node* NA, dbs
         //2) cost: sum r_i for each face element.
         //old: cost = MS->facemap().size(); //cost: # face elements in MS.
         double cost = 0;
-        vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+        std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
         for (; it != MS->facemap().end(); it++) {
           dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
           double r = FF->compute_center_pt_time ();
@@ -666,12 +666,12 @@ void dbsk3dr_match::update_corner_N (dbasnh_hypg_aug* H, dbsk3d_ms_node* NA, dbs
         const dbmsh3d_vertex* G = FE->_get_one_G_via_FF ();
         double dr = vgl_distance (G->pt(), FE->s_FV()->pt()) - vgl_distance (G->pt(), FE->e_FV()->pt());
         double ds = vgl_distance (FE->s_FV()->pt(), FE->e_FV()->pt());
-        double grad_r1 = vcl_fabs (dr / ds);
+        double grad_r1 = std::fabs (dr / ds);
         
         G = FE2->_get_one_G_via_FF ();
         dr = vgl_distance (G->pt(), FE2->s_FV()->pt()) - vgl_distance (G->pt(), FE2->e_FV()->pt());
         ds = vgl_distance (FE2->s_FV()->pt(), FE2->e_FV()->pt());
-        double grad_r2 = vcl_fabs (dr / ds);
+        double grad_r2 = std::fabs (dr / ds);
 
         cost = (grad_r1 + grad_r2)/2;
         H->add_corner_grad_r (nidB, nidA, nidC, float(cost));
@@ -766,13 +766,13 @@ void dbsk3dr_match::print_C_ai_table ()
   ///assert (ms_hypg_g()->vertexmap().size() == ga_hypg_g()->nodes().size());
   assert (ms_hypg_g()->n_selected_ms_nodes() == ga_hypg_g()->nodes().size());
 
-  vul_printf (vcl_cout, "  print_C_ai_table(): %d * %d (*100).\n", 
+  vul_printf (std::cout, "  print_C_ai_table(): %d * %d (*100).\n", 
               ms_hypg_G()->vertexmap().size(), ms_hypg_g()->vertexmap().size());
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator Nit;
-  vcl_map<int, dbmsh3d_vertex*>::iterator nit;
+  std::map<int, dbmsh3d_vertex*>::iterator Nit;
+  std::map<int, dbmsh3d_vertex*>::iterator nit;
 
-  vul_printf (vcl_cout, "        ");
+  vul_printf (std::cout, "        ");
 
   nit = ms_hypg_g()->vertexmap().begin();
   for (; nit != ms_hypg_g()->vertexmap().end(); nit++) {
@@ -780,9 +780,9 @@ void dbsk3dr_match::print_C_ai_table ()
     if (n->selected() == false)
       continue;
     int i = g_nid (n->id());
-    vul_printf (vcl_cout, "n%02d ", n->id());
+    vul_printf (std::cout, "n%02d ", n->id());
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   Nit = ms_hypg_G()->vertexmap().begin();
   for (; Nit != ms_hypg_G()->vertexmap().end(); Nit++) {
@@ -790,7 +790,7 @@ void dbsk3dr_match::print_C_ai_table ()
     if (N->selected() == false)
       continue;
     int a = G_nid (N->id());
-    vul_printf (vcl_cout, "N%02d(%02d) ", N->id(), a);
+    vul_printf (std::cout, "N%02d(%02d) ", N->id(), a);
 
     nit = ms_hypg_g()->vertexmap().begin();
     for (; nit != ms_hypg_g()->vertexmap().end(); nit++) {
@@ -798,21 +798,21 @@ void dbsk3dr_match::print_C_ai_table ()
       if (n->selected() == false)
         continue;
       int i = g_nid (n->id());
-      vul_printf (vcl_cout, "%3.0f ", ga_match_->C_ai (a, i) * 100);
+      vul_printf (std::cout, "%3.0f ", ga_match_->C_ai (a, i) * 100);
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   nit = ms_hypg_g()->vertexmap().begin();
   for (; nit != ms_hypg_g()->vertexmap().end(); nit++) {
     dbsk3d_ms_node* n = (dbsk3d_ms_node*) (*nit).second;
     if (n->selected() == false)
       continue;
     int i = g_nid (n->id());
-    vul_printf (vcl_cout, "n%02d(%02d) ", n->id(), i);
+    vul_printf (std::cout, "n%02d(%02d) ", n->id(), i);
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   
 }
 
@@ -823,14 +823,14 @@ void dbsk3dr_match::print_C_aibj_table ()
   ///assert (ms_hypg_g()->edgemap().size() == ga_hypg_g()->n_links());
   assert (ms_hypg_g()->n_selected_ms_curves() == ga_hypg_g()->n_links());
 
-  vul_printf (vcl_cout, "\n  print_C_aibj_table(): %d * %d (*100).\n", 
+  vul_printf (std::cout, "\n  print_C_aibj_table(): %d * %d (*100).\n", 
               ms_hypg_G()->edgemap().size(), ms_hypg_g()->edgemap().size());
   
   int a, b, i, j;
-  vcl_map<int, dbmsh3d_edge*>::iterator Cit;
-  vcl_map<int, dbmsh3d_edge*>::iterator cit;
+  std::map<int, dbmsh3d_edge*>::iterator Cit;
+  std::map<int, dbmsh3d_edge*>::iterator cit;
 
-  vul_printf (vcl_cout, "           ");
+  vul_printf (std::cout, "           ");
 
   cit = ms_hypg_g()->edgemap().begin();
   for (; cit != ms_hypg_g()->edgemap().end(); cit++) {
@@ -839,9 +839,9 @@ void dbsk3dr_match::print_C_aibj_table ()
       continue;
     i = g_nid (c->s_N()->id());
     j = g_nid (c->e_N()->id());
-    vul_printf (vcl_cout, "c%02d ", c->id());
+    vul_printf (std::cout, "c%02d ", c->id());
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   //2) Main loop to output the matrix
   Cit = ms_hypg_G()->edgemap().begin();
@@ -851,7 +851,7 @@ void dbsk3dr_match::print_C_aibj_table ()
       continue;
     a = G_nid (C->s_N()->id());
     b = G_nid (C->e_N()->id());
-    vul_printf (vcl_cout, "C%02d[%02d-%02d]", C->id(), C->s_N()->id(), C->e_N()->id());
+    vul_printf (std::cout, "C%02d[%02d-%02d]", C->id(), C->s_N()->id(), C->e_N()->id());
 
     cit = ms_hypg_g()->edgemap().begin();
     for (; cit != ms_hypg_g()->edgemap().end(); cit++) {
@@ -862,14 +862,14 @@ void dbsk3dr_match::print_C_aibj_table ()
       j = g_nid (c->e_N()->id());
       double comp = ga_match_->C_aibj (a, b, i, j);
       if (comp > 0)
-        vul_printf (vcl_cout, " %3.0f", comp * 100);
+        vul_printf (std::cout, " %3.0f", comp * 100);
       else
-        vul_printf (vcl_cout, "%4.0f", comp * 100);
+        vul_printf (std::cout, "%4.0f", comp * 100);
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   cit = ms_hypg_g()->edgemap().begin();
   for (; cit != ms_hypg_g()->edgemap().end(); cit++) {
     dbsk3d_ms_curve* c = (dbsk3d_ms_curve*) (*cit).second;
@@ -877,13 +877,13 @@ void dbsk3dr_match::print_C_aibj_table ()
       continue;
     i = g_nid (c->s_N()->id());
     j = g_nid (c->e_N()->id());
-    vul_printf (vcl_cout, "c%02d[%02d-%02d] ", c->id(), c->s_N()->id(), c->e_N()->id());
+    vul_printf (std::cout, "c%02d[%02d-%02d] ", c->id(), c->s_N()->id(), c->e_N()->id());
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "\n  print_C_ajbi_table (flip): %d * %d (*100).\n", 
+  vul_printf (std::cout, "\n  print_C_ajbi_table (flip): %d * %d (*100).\n", 
               ms_hypg_G()->edgemap().size(), ms_hypg_g()->edgemap().size());  
-  vul_printf (vcl_cout, "           ");
+  vul_printf (std::cout, "           ");
 
   cit = ms_hypg_g()->edgemap().begin();
   for (; cit != ms_hypg_g()->edgemap().end(); cit++) {
@@ -892,9 +892,9 @@ void dbsk3dr_match::print_C_aibj_table ()
       continue;
     i = g_nid (c->s_N()->id());
     j = g_nid (c->e_N()->id());
-    vul_printf (vcl_cout, "f%02d ", c->id());
+    vul_printf (std::cout, "f%02d ", c->id());
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   //3) Main loop to output the flipped matrix
   Cit = ms_hypg_G()->edgemap().begin();
@@ -904,7 +904,7 @@ void dbsk3dr_match::print_C_aibj_table ()
       continue;
     a = G_nid (C->s_N()->id());
     b = G_nid (C->e_N()->id());
-    vul_printf (vcl_cout, "C%02d[%02d-%02d]", C->id(), C->s_N()->id(), C->e_N()->id());
+    vul_printf (std::cout, "C%02d[%02d-%02d]", C->id(), C->s_N()->id(), C->e_N()->id());
 
     cit = ms_hypg_g()->edgemap().begin();
     for (; cit != ms_hypg_g()->edgemap().end(); cit++) {
@@ -915,18 +915,18 @@ void dbsk3dr_match::print_C_aibj_table ()
       j = g_nid (c->e_N()->id());
       double comp = ga_match_->C_aibj (a, b, j, i);
       if (comp > 0)
-        vul_printf (vcl_cout, " %3.0f", comp * 100);
+        vul_printf (std::cout, " %3.0f", comp * 100);
       else
-        vul_printf (vcl_cout, "%4.0f", comp * 100);
+        vul_printf (std::cout, "%4.0f", comp * 100);
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 }
 
 //: Debug print the final compatibility in tables.
 void dbsk3dr_match::print_C_aibjck_table ()
 {
-  vul_printf (vcl_cout, "\n  print_C_aibjck_table(): %d * %d (*100).\n", 
+  vul_printf (std::cout, "\n  print_C_aibjck_table(): %d * %d (*100).\n", 
               ga_match_->hypg_G()->n_corners(), ga_match_->hypg_g()->n_corners());
 
   int a, b, c, i, j, k;
@@ -934,7 +934,7 @@ void dbsk3dr_match::print_C_aibjck_table ()
   const int GnN = (int) ga_match_->hypg_G()->nodes().size();
   const int gnN = (int) ga_match_->hypg_g()->nodes().size();
 
-  vul_printf (vcl_cout, "            ");       
+  vul_printf (std::cout, "            ");       
   for (int i=0; i<gnN-1; i++) {
     for (int j=0; j<gnN; j++) {
       for (int k=i+1; k<gnN; k++) {
@@ -942,11 +942,11 @@ void dbsk3dr_match::print_C_aibjck_table ()
         if (ga_match_->hypg_g()->corners (i, j, k) == 0)
           continue;
 
-        vul_printf (vcl_cout, "c%02d ", sj);
+        vul_printf (std::cout, "c%02d ", sj);
       }
     }
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 
   //2) Main loop to output the matrix
   //   The corner table is symmetric at <a to c> and <i to k>.
@@ -961,7 +961,7 @@ void dbsk3dr_match::print_C_aibjck_table ()
         sa = G_sid (a);
         sb = G_sid (b);
         sc = G_sid (c);
-        vul_printf (vcl_cout, "C[%02d-%02d-%02d]", sa, sb, sc);
+        vul_printf (std::cout, "C[%02d-%02d-%02d]", sa, sb, sc);
 
         //for all corners (i, j, k) in g.      
         for (i=0; i<gnN-1; i++) {
@@ -971,17 +971,17 @@ void dbsk3dr_match::print_C_aibjck_table ()
                 continue;
 
               double cost = ga_match_->C_aibjck (a, b, c, i, j, k);
-              vul_printf (vcl_cout, " %3.0f", cost * 100);
+              vul_printf (std::cout, " %3.0f", cost * 100);
             }
           }
         } //end all corners (i, j, k) in g.
 
-        vul_printf (vcl_cout, "\n");
+        vul_printf (std::cout, "\n");
       }
     }
   }
        
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   for (i=0; i<gnN-1; i++) {
     for (j=0; j<gnN; j++) {
       for (k=i+1; k<gnN; k++) {
@@ -991,22 +991,22 @@ void dbsk3dr_match::print_C_aibjck_table ()
         if (ga_match_->hypg_g()->corners (i, j, k) == 0)
           continue;
 
-        vul_printf (vcl_cout, "c%02d[%02d-%02d] ", sj, si, sk);
+        vul_printf (std::cout, "c%02d[%02d-%02d] ", sj, si, sk);
       }
     }
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 }
 
 
 bool dbsk3dr_match::compute_matching (const int verbose)
 {
   if (verbose) {
-    vcl_cout<< "\n  Running Graduate Assignment Shock Hypergraph Matching.\n\t";
-    vcl_cout<< "G: "<< ga_hypg_G()->n_nodes() <<" nodes, "<<
+    std::cout<< "\n  Running Graduate Assignment Shock Hypergraph Matching.\n\t";
+    std::cout<< "G: "<< ga_hypg_G()->n_nodes() <<" nodes, "<<
                "g: "<< ga_hypg_g()->n_nodes() <<" nodes.\n\n";
     if (ga_hypg_g()->n_nodes() > ga_hypg_G()->n_nodes()) {
-      vul_printf (vcl_cout, "\n\t Graduated Assignment warning (g %d is bigger than G %d)!\n\n",
+      vul_printf (std::cout, "\n\t Graduated Assignment warning (g %d is bigger than G %d)!\n\n",
                   ga_hypg_g()->n_nodes(), ga_hypg_G()->n_nodes());
     }
   }
@@ -1026,24 +1026,24 @@ bool dbsk3dr_match::compute_matching (const int verbose)
 void dbsk3dr_match::print_match_results ()
 {
   if (ga_match_->num_stable())
-    vul_printf (vcl_cout, "\n  Shock hypergraph matching successful:\n");
+    vul_printf (std::cout, "\n  Shock hypergraph matching successful:\n");
   else
-    vul_printf (vcl_cout, "\n  Shock hypergraph matching WITH EXPONENTIAL EXPLOSION:\n");
+    vul_printf (std::cout, "\n  Shock hypergraph matching WITH EXPONENTIAL EXPLOSION:\n");
 
-  vul_printf (vcl_cout, "    ms_hypg_G : %d nodes, %d curves, %d sheets.\n",
+  vul_printf (std::cout, "    ms_hypg_G : %d nodes, %d curves, %d sheets.\n",
               ms_hypg_G_->vertexmap().size(),
               ms_hypg_G_->edgemap().size(),            
               ms_hypg_G_->sheetmap().size());
-  vul_printf (vcl_cout, "    ga_hypg_G : %d nodes, %d links, %d corners.\n",
+  vul_printf (std::cout, "    ga_hypg_G : %d nodes, %d links, %d corners.\n",
               ga_hypg_G()->n_nodes(),
               ga_hypg_G()->n_links(),            
               ga_hypg_G()->n_corners());
 
-  vul_printf (vcl_cout, "    ms_hypg_g : %d nodes, %d curves, %d sheets.\n",
+  vul_printf (std::cout, "    ms_hypg_g : %d nodes, %d curves, %d sheets.\n",
               ms_hypg_g_->vertexmap().size(),
               ms_hypg_g_->edgemap().size(),            
               ms_hypg_g_->sheetmap().size());
-  vul_printf (vcl_cout, "    ga_hypg_g : %d nodes, %d links, %d corners.\n",
+  vul_printf (std::cout, "    ga_hypg_g : %d nodes, %d links, %d corners.\n",
               ga_hypg_g()->n_nodes(),
               ga_hypg_g()->n_links(),            
               ga_hypg_g()->n_corners());
@@ -1053,16 +1053,16 @@ void dbsk3dr_match::print_match_results ()
   ///assert (ms_hypg_g_->vertexmap().size() == ga_hypg_g()->n_nodes());
   assert (ms_hypg_g_->n_selected_ms_nodes() == ga_hypg_g()->n_nodes());
 
-  vul_printf (vcl_cout, "  Gsid(nid) <-> gsid(nid):\n");
+  vul_printf (std::cout, "  Gsid(nid) <-> gsid(nid):\n");
 
   for (int a=0; a<ga_match_->M_row()-1; a++) {
     int i = ga_match_->labelGg (a);
     int Gsid = G_sid (a);
     if (i == -1) //slack!
-      vul_printf (vcl_cout, "    %d(%d) <-> no match\n", Gsid, a);
+      vul_printf (std::cout, "    %d(%d) <-> no match\n", Gsid, a);
     else {
       int gsid = g_sid (i);
-      vul_printf (vcl_cout, "    %d(%d) <-> %d(%d)\n", Gsid, a, gsid, i);
+      vul_printf (std::cout, "    %d(%d) <-> %d(%d)\n", Gsid, a, gsid, i);
     }
   }
 }
@@ -1123,17 +1123,17 @@ dbsk3d_ms_curve* dbsk3dr_match::matched_g_curve (dbsk3d_ms_curve* G_curve, bool&
 // ######################################################################
 
 void dbsk3dr_match::test_mc_dp_match (const int option, const int cid1, const int cid2, const bool flip,
-                                      vcl_vector< vcl_pair<int,int> >& alignment)
+                                      std::vector< std::pair<int,int> >& alignment)
 {
   dbsk3d_ms_curve* MC1 = (dbsk3d_ms_curve*) ms_hypg_G_->edgemap (cid1);
   dbsk3d_ms_curve* MC2 = (dbsk3d_ms_curve*) ms_hypg_g_->edgemap (cid2);
 
   if (flip == false)
-    vul_printf (vcl_cout, "\nMatching G_C %d (N%d-N%d, e:%d) to g_C %d (N%d-N%d, e:%d).\n",
+    vul_printf (std::cout, "\nMatching G_C %d (N%d-N%d, e:%d) to g_C %d (N%d-N%d, e:%d).\n",
                 MC1->id(), MC1->s_MN()->id(), MC1->e_MN()->id(), MC1->E_vec().size(), 
                 MC2->id(), MC2->s_MN()->id(), MC2->e_MN()->id(), MC2->E_vec().size());
   else
-    vul_printf (vcl_cout, "\nMatching G_C %d (N%d-N%d, e:%d) to g_C %d flip (N%d-N%d, e:%d).\n",
+    vul_printf (std::cout, "\nMatching G_C %d (N%d-N%d, e:%d) to g_C %d flip (N%d-N%d, e:%d).\n",
                 MC1->id(), MC1->s_MN()->id(), MC1->e_MN()->id(), MC1->E_vec().size(), 
                 MC2->id(), MC2->e_MN()->id(), MC2->s_MN()->id(), MC2->E_vec().size());
   
@@ -1150,14 +1150,14 @@ void dbsk3dr_match::test_mc_dp_match (const int option, const int cid1, const in
 
   dpm->Match ();
 
-  vul_printf (vcl_cout, "\tFinal cost (edit distance): %f %s\n", 
+  vul_printf (std::cout, "\tFinal cost (edit distance): %f %s\n", 
               dpm->finalCost(), flip ? "(flip)" : "");
   //dpm->ListDPTable ();
   dpm->ListAlignCurve ();
 
   alignment.clear();
   for (unsigned int i=0; i<dpm->finalMap()->size(); i++) {
-    vcl_pair<int,int> pair = (*(dpm->finalMap()))[i];
+    std::pair<int,int> pair = (*(dpm->finalMap()))[i];
     alignment.push_back (pair);
   }
 
@@ -1172,11 +1172,11 @@ void dbsk3dr_match::test_mc_dp_match (const int option, const int cid1, const in
 void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int verbose)
 {
   if (verbose)
-    vcl_cout<< "\n  get_rigid_xform_matrices()\n";
+    std::cout<< "\n  get_rigid_xform_matrices()\n";
 
   //1)Put all nodes in ms_G into the point set cor_movPS.
   //  and all nodes in ms_g into the point set cor_fixPS.
-  vcl_vector<vgl_point_3d<double> > cor_movPS, cor_fixPS;
+  std::vector<vgl_point_3d<double> > cor_movPS, cor_fixPS;
 
   for (int a=0; a<ga_match_->M_row()-1; a++) {
     int i = ga_match_->labelGg (a);
@@ -1198,7 +1198,7 @@ void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int v
 
   if (node_only == false) {
     //2) linearly assign each matched curve and put in each node_elm of curves as correspondence.
-    vcl_map<int, dbmsh3d_edge*>::iterator SC_it = ms_hypg_G()->edgemap().begin();
+    std::map<int, dbmsh3d_edge*>::iterator SC_it = ms_hypg_G()->edgemap().begin();
     for (; SC_it != ms_hypg_G()->edgemap().end(); SC_it++) {
       dbsk3d_ms_curve* G_MC = (dbsk3d_ms_curve*) (*SC_it).second;
       if (G_MC->selected() == false)
@@ -1210,8 +1210,8 @@ void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int v
       assert (g_MC->selected());
 
       //if there is a match, put corresponding node elements of this ms_curve into sets.
-      vcl_vector<dbmsh3d_vertex*> G_MC_V_vec;
-      vcl_vector<dbmsh3d_vertex*> g_MC_V_vec;
+      std::vector<dbmsh3d_vertex*> G_MC_V_vec;
+      std::vector<dbmsh3d_vertex*> g_MC_V_vec;
       G_MC->get_V_vec (G_MC_V_vec);
       g_MC->get_V_vec (g_MC_V_vec);
       int fi, ii;
@@ -1221,7 +1221,7 @@ void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int v
         Va = G_MC_V_vec[i];
         cor_movPS.push_back (Va->pt());
         //round (a) = floor (a + 0.5).
-        ii = vcl_floor (double(i)*g_MC_V_vec.size()/G_MC_V_vec.size() + 0.5);
+        ii = std::floor (double(i)*g_MC_V_vec.size()/G_MC_V_vec.size() + 0.5);
         fi = flip ? g_MC_V_vec.size()-ii : ii;
 
         if (fi >= int(g_MC_V_vec.size()))
@@ -1241,19 +1241,19 @@ void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int v
 }
 
 double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_curve* C2, 
-                                                   vcl_vector< vcl_pair<int,int> >& alignment,
-                                                   vcl_vector<vgl_point_3d<double> >& cor_PS1, 
-                                                   vcl_vector<vgl_point_3d<double> >& cor_PS2)
+                                                   std::vector< std::pair<int,int> >& alignment,
+                                                   std::vector<vgl_point_3d<double> >& cor_PS1, 
+                                                   std::vector<vgl_point_3d<double> >& cor_PS2)
 {
   unsigned int i;
   //Put all nodes in C1 into the point set cor_movPS.
   //and all nodes in C2 into the point set cor_fixPS.
   //in the order specified in the alignment[].
-  vcl_vector<dbmsh3d_vertex*> C1_V_vec, C2_V_vec;
+  std::vector<dbmsh3d_vertex*> C1_V_vec, C2_V_vec;
   C1->get_V_vec (C1_V_vec);
   C2->get_V_vec (C2_V_vec);
 
-  vcl_vector<vgl_point_3d<double> > cor_movPS, cor_fixPS;
+  std::vector<vgl_point_3d<double> > cor_movPS, cor_fixPS;
   for (i=0; i<alignment.size(); i++) {
     int id1 = alignment[i].first;
     int id2 = alignment[i].second;
@@ -1284,17 +1284,17 @@ double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_cu
     avg_align_dist += d;
   }
   avg_align_dist /= cor_PS1.size();
-  //vul_printf (vcl_cout, "avg_align_dist: %f, ", avg_align_dist);
+  //vul_printf (std::cout, "avg_align_dist: %f, ", avg_align_dist);
 
   //Compute the final average Euclidean distance between closest sample points (from PS1 to PS2).
-  /*vcl_vector<double> min_dists;
-  vcl_vector<int> min_ids;  
+  /*std::vector<double> min_dists;
+  std::vector<int> min_ids;  
   compute_pp_min_dist (cor_PS1, cor_PS2, min_dists, min_ids);
   double avg_min_dist = 0;
   for (i=0; i<min_dists.size(); i++)
     avg_min_dist += min_dists[i];
   avg_min_dist /= min_dists.size();
-  vul_printf (vcl_cout, "avg_min_dist: %f, ", avg_min_dist);*/
+  vul_printf (std::cout, "avg_min_dist: %f, ", avg_min_dist);*/
 
   //Register C1 to C2 using ICP from the current position.
   /*int nMaxIter = 20;
@@ -1309,7 +1309,7 @@ double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_cu
   for (i=0; i<min_dists.size(); i++)
     avg_min_dist_ICP += min_dists[i];
   avg_min_dist_ICP /= min_dists.size();
-  vul_printf (vcl_cout, "avg_min_dist_ICP: %f.\n", avg_min_dist_ICP);*/
+  vul_printf (std::cout, "avg_min_dist_ICP: %f.\n", avg_min_dist_ICP);*/
 
   //The analysis shows the avg_align_dist is the best in terms of matching results.
   return avg_align_dist;
@@ -1318,8 +1318,8 @@ double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_cu
 void dbsk3dr_match::transform_scaffold_graph_1_to_2 ()
 {
   //3-1)Go through all FVs of SG and transform (move) it.  
-  ///vcl_map<int, dbsk3d_fs_vertex*>::iterator it = ms_hypg_G_->FV_map().begin();
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = ms_hypg_G_->fs_mesh()->vertexmap().begin();
+  ///std::map<int, dbsk3d_fs_vertex*>::iterator it = ms_hypg_G_->FV_map().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = ms_hypg_G_->fs_mesh()->vertexmap().begin();
   for (; it != ms_hypg_G_->fs_mesh()->vertexmap().end(); it++) {
     dbsk3d_fs_vertex* V = (dbsk3d_fs_vertex*) (*it).second;
     transform_point_3d (R_, Cf_, Cm_, V->get_pt());
@@ -1328,7 +1328,7 @@ void dbsk3dr_match::transform_scaffold_graph_1_to_2 ()
 
 void dbsk3dr_match::transform_point_G_1_to_2 (dbmsh3d_mesh* M)
 {
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (int i=0; it != M->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
     transform_point_3d (R_, Cf_, Cm_, v->get_pt());
@@ -1339,28 +1339,28 @@ void dbsk3dr_match::transform_point_G_1_to_2 (dbmsh3d_mesh* M)
 {
   FILE* fp;
 
-  vcl_cout<< "\nWriting Shock Matching File... "<< matchFile <<vcl_endl;
+  std::cout<< "\nWriting Shock Matching File... "<< matchFile <<std::endl;
   if ((fp = fopen(matchFile, "w")) == NULL) {
-    vul_printf (vcl_cout, "ERROR: Can't open output matchFile %s.\n", matchFile);
+    vul_printf (std::cout, "ERROR: Can't open output matchFile %s.\n", matchFile);
     return;
   }
 
-  vcl_fprintf (fp, "ms_G: %s (%d nodes, %d links, %d corners)\n", 
+  std::fprintf (fp, "ms_G: %s (%d nodes, %d links, %d corners)\n", 
         ShockGraph1_->n_nodes(), 
         -1, 
         ShockGraph1_->nCorners());
-  vcl_fprintf (fp, "ms_g: %s (%d nodes, %d links, %d corners)\n", 
+  std::fprintf (fp, "ms_g: %s (%d nodes, %d links, %d corners)\n", 
         ShockGraph2_->n_nodes(), 
         -1, 
         ShockGraph2_->nCorners());
 
   assert (ShockGraph1_->n_nodes() == M_row_-1);
-  vcl_fprintf (fp, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
+  std::fprintf (fp, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
   for (int a=0; a<M_row_-1; a++) {
     int i = labelGg_[a];
     int GSid = shockIdGg_[a][0];
     int gSid = shockIdGg_[a][1];
-    vcl_fprintf (fp, "%d(%d) <-> %d(%d)\n", GSid, a, gSid, i);
+    std::fprintf (fp, "%d(%d) <-> %d(%d)\n", GSid, a, gSid, i);
   }
 
   fclose (fp);
@@ -1374,24 +1374,24 @@ void dbsk3dr_match::transform_point_G_1_to_2 (dbmsh3d_mesh* M)
   int nNodes2, nLinks2, nCorners2;
 
   if ((fp = fopen(matchFile, "r")) == NULL) {
-    vul_printf (vcl_cout, "ERROR: Can't open matchFile %s\n",
+    vul_printf (std::cout, "ERROR: Can't open matchFile %s\n",
           matchFile);
     return false; 
   }
-  vul_printf (vcl_cout, "\nMESG(LoadMatchFile): in MatchFile: %s\n", matchFile);
-  matchFile_ = vcl_string (matchFile);
+  vul_printf (std::cout, "\nMESG(LoadMatchFile): in MatchFile: %s\n", matchFile);
+  matchFile_ = std::string (matchFile);
 
-  vcl_fscanf (fp, "ms_G: %s (%d nodes, %d links, %d corners)\n", SCFile, 
+  std::fscanf (fp, "ms_G: %s (%d nodes, %d links, %d corners)\n", SCFile, 
         &nNodes1, &nLinks1, &nCorners1);
-  fileName1_ = vcl_string (SCFile);
-  vul_printf (vcl_cout, "ms_G: %s (%d nodes)\n", SCFile, 
+  fileName1_ = std::string (SCFile);
+  vul_printf (std::cout, "ms_G: %s (%d nodes)\n", SCFile, 
         nNodes1);
   ShockGraph1_->load_sg (SCFile);
 
-  vcl_fscanf (fp, "ms_g: %s (%d nodes, %d links, %d corners)\n", SCFile, 
+  std::fscanf (fp, "ms_g: %s (%d nodes, %d links, %d corners)\n", SCFile, 
         &nNodes2, &nLinks2, &nCorners2);
-  fileName2_ = vcl_string (SCFile);
-  vul_printf (vcl_cout, "ms_g: %s (%d nodes)\n", SCFile, 
+  fileName2_ = std::string (SCFile);
+  vul_printf (std::cout, "ms_g: %s (%d nodes)\n", SCFile, 
         nNodes2);
   ShockGraph2_->load_sg (SCFile);
 
@@ -1402,19 +1402,19 @@ void dbsk3dr_match::transform_point_G_1_to_2 (dbmsh3d_mesh* M)
   for (int i=0; i<M_row_-1; i++)
     shockIdGg_[i] = new int[2];
   
-  vcl_fscanf (fp, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
-  vul_printf (vcl_cout, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
+  std::fscanf (fp, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
+  vul_printf (std::cout, "dbsk3dr_ms_gradasn_graph Assignment GSid(Gnid) <-> gSid(gnid):\n");
   for (int a=0; a<M_row_-1; a++) {
     int GSid, Gid, gSid, gid;
     //char s[1024];
-    //vcl_fscanf (fp, "%s", s);
-    vcl_fscanf (fp, "%d(%d) <-> %d(%d)\n", &GSid, &Gid, &gSid, &gid);
+    //std::fscanf (fp, "%s", s);
+    std::fscanf (fp, "%d(%d) <-> %d(%d)\n", &GSid, &Gid, &gSid, &gid);
     assert (a == Gid);
     labelGg_[a] = gid;
     shockIdGg_[a][0] = GSid;
     shockIdGg_[a][1] = gSid;
 
-    vul_printf (vcl_cout, "%d(%d) <-> %d(%d)\n", GSid, Gid, gSid, gid);
+    vul_printf (std::cout, "%d(%d) <-> %d(%d)\n", GSid, Gid, gSid, gid);
   }
 
   fclose (fp);

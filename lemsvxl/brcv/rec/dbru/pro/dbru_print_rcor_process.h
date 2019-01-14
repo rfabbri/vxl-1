@@ -35,19 +35,19 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Print Region Correspondence";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "region_cor" );    // 0
     to_return.push_back( "shock_match" );    // 1
     return to_return;
   }
 
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "vsol2D" );
     return to_return;
@@ -70,7 +70,7 @@ protected:
   bool rcor_storage;
   bool shock_match_storage;
   float increment; 
-  vcl_string out_file;
+  std::string out_file;
 };
 
 #endif //dbru_print_rcor_process_h_

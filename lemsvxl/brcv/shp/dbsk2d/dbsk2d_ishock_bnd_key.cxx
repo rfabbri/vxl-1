@@ -43,7 +43,7 @@ bool dbsk2d_ishock_bnd_key::operator < (const dbsk2d_ishock_bnd_key& other) cons
 }
 
 //: return a string describing the shock type
-vcl_string dbsk2d_ishock_bnd_key::type_string() const
+std::string dbsk2d_ishock_bnd_key::type_string() const
 {
   switch(type)
   {

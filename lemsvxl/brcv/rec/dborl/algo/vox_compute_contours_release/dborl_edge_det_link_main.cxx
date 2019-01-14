@@ -16,13 +16,13 @@
 //
 //
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <vcl_set.h>
+#include <set>
 
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
     // Start timer
     vul_timer t;
 
-	vcl_vector<bpro1_storage_sptr> edge_det_results;
-    vcl_cout<<"************* load in Edges *********"<<vcl_endl;
+	std::vector<bpro1_storage_sptr> edge_det_results;
+    std::cout<<"************* load in Edges *********"<<std::endl;
     dbdet_load_edg_process load_edg_pro;
 
     //load the input image
-    vcl_string input_edg = argv[1];
+    std::string input_edg = argv[1];
 
     bpro1_filepath input(input_edg,".edg");
     load_edg_pro.parameters()->set_value("-edginput",input);
@@ -89,8 +89,8 @@ int main(int argc, char *argv[]) {
     // Perform sel linking if we are not doing contour tracing
 
     // Set up storage for sel results
-    vcl_vector<bpro1_storage_sptr> el_results;
-	vcl_cout<<"************ Symbolic Edge Linking     ************"<<vcl_endl;
+    std::vector<bpro1_storage_sptr> el_results;
+	std::cout<<"************ Symbolic Edge Linking     ************"<<std::endl;
 	dbdet_sel_process sel_pro;
 //	set_process_parameters_of_bpro1(*params, sel_pro, params->tag_edge_linking_);
 	                                  
@@ -116,21 +116,21 @@ int main(int argc, char *argv[]) {
 
 	if (el_results.size() != 1) 
 	{
-	    vcl_cerr << "Process output does not contain a sel data structure"
-	             << vcl_endl;
+	    std::cerr << "Process output does not contain a sel data structure"
+	             << std::endl;
 	    return 1;
 	}
 
     //******************** Save Contours  *********************************
     // Change to the dbdet version by Yuliang
-    vcl_cout<<"************ Saving Contours  ************"<<vcl_endl;
+    std::cout<<"************ Saving Contours  ************"<<std::endl;
 
-    vcl_string output_file;
+    std::string output_file;
 
     output_file = argv[2];
 
     bool write_status(false);
-    vcl_cout << "output: " << output_file << vcl_endl;
+    std::cout << "output: " << output_file << std::endl;
     
     bpro1_filepath output(output_file, ".cem");
 
@@ -154,12 +154,12 @@ int main(int argc, char *argv[]) {
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

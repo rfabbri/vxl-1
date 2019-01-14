@@ -1,26 +1,26 @@
 #include "sliceEdgeDetectProcessor.h"
 #include <det/det_edge_map.h>
 #include <det/det_edge_nonmaximum_suppression.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
+#include <string>
+#include <cstring>
 
 
 
-vcl_vector<float*> sliceEdgeDetectProcessor::process(const vcl_vector< vcl_vector<float*> >& slice_sets, 
+std::vector<float*> sliceEdgeDetectProcessor::process(const std::vector< std::vector<float*> >& slice_sets, 
 int w, int h, int z)
 {
 
-        vcl_vector<float*> gx_slices = slice_sets[0];
-        vcl_vector<float*> gy_slices = slice_sets[1];
-        vcl_vector<float*> gz_slices = slice_sets[2];
+        std::vector<float*> gx_slices = slice_sets[0];
+        std::vector<float*> gy_slices = slice_sets[1];
+        std::vector<float*> gz_slices = slice_sets[2];
 
         float* gx = new float[w*h*this->nslices()];
         float* gy = new float[w*h*this->nslices()];
         float* gz = new float[w*h*this->nslices()];
         for(int i =0 ; i < this->nslices(); i++){
-                vcl_memcpy(gx + i*w*h,gx_slices[i],w*h*sizeof(float));
-                vcl_memcpy(gy + i*w*h,gy_slices[i],w*h*sizeof(float));
-                vcl_memcpy(gz + i*w*h,gz_slices[i],w*h*sizeof(float));
+                std::memcpy(gx + i*w*h,gx_slices[i],w*h*sizeof(float));
+                std::memcpy(gy + i*w*h,gy_slices[i],w*h*sizeof(float));
+                std::memcpy(gz + i*w*h,gz_slices[i],w*h*sizeof(float));
         }
 
 
@@ -32,7 +32,7 @@ int w, int h, int z)
         delete [] gz;
 
 
-        vcl_vector<float*> toreturn;
+        std::vector<float*> toreturn;
         toreturn.push_back(new float[w*h]);
         toreturn.push_back(new float[w*h]);
         toreturn.push_back(new float[w*h]);

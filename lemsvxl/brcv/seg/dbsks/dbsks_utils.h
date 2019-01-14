@@ -19,10 +19,10 @@
 //#include <vnl/vnl_vector.h>
 //#include <vgl/vgl_point_2d.h>
 //#include <vgl/vgl_vector_3d.h>
-//#include <vcl_string.h>
+//#include <string>
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <bgld/algo/bgld_circ_arc.h>
@@ -35,18 +35,18 @@
 
 
 //: Rotate a set of point-tangents 
-bool dbsks_rotate_point_set(const vcl_vector<vgl_point_2d<double > >& source_pts,                                      
-                            const vcl_vector<vgl_vector_2d<double > >& source_tangents,
+bool dbsks_rotate_point_set(const std::vector<vgl_point_2d<double > >& source_pts,                                      
+                            const std::vector<vgl_vector_2d<double > >& source_tangents,
                             const vgl_point_2d<double >& origin, double angle,
-                            vcl_vector<vgl_point_2d<double > >& target_pts,
-                            vcl_vector<vgl_vector_2d<double > >& target_tangents);
+                            std::vector<vgl_point_2d<double > >& target_pts,
+                            std::vector<vgl_vector_2d<double > >& target_tangents);
 
 //: Translate a set of point-tangents
-bool dbsks_translate_point_set(const vcl_vector<vgl_point_2d<double > >& source_pts,
-                               const vcl_vector<vgl_vector_2d<double > >& source_tangents,
+bool dbsks_translate_point_set(const std::vector<vgl_point_2d<double > >& source_pts,
+                               const std::vector<vgl_vector_2d<double > >& source_tangents,
                                const vgl_vector_2d<double >& v,
-                               vcl_vector<vgl_point_2d<double > >& target_pts,
-                               vcl_vector<vgl_vector_2d<double > >& target_tangents);
+                               std::vector<vgl_point_2d<double > >& target_pts,
+                               std::vector<vgl_vector_2d<double > >& target_tangents);
 
 
 
@@ -54,16 +54,16 @@ bool dbsks_translate_point_set(const vcl_vector<vgl_point_2d<double > >& source_
 
 //: Compute bounding box of a set of shapelets
 vsol_box_2d_sptr dbsks_compute_bounding_box(
-  const vcl_vector<dbsksp_shapelet_sptr >& shapelet_list);
+  const std::vector<dbsksp_shapelet_sptr >& shapelet_list);
 
 //: Compute bounding box of a set of xnodes
 vsol_box_2d_sptr dbsks_compute_bounding_box(const
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 
 //: Collect the the vertices of same depths and put them into bins
 void dbsks_collect_shock_nodes_by_depth(const dbsksp_shock_graph_sptr& graph,
-    vcl_vector<vcl_vector<dbsksp_shock_node_sptr > >& vertex_bins);
+    std::vector<std::vector<dbsksp_shock_node_sptr > >& vertex_bins);
 
 
 //: compute deformation cost between two shape fragments
@@ -101,17 +101,17 @@ float dbsks_deform_cost(const dbsksp_shapelet_sptr& s_ref,
   float sigma_deform);
 
 //: Trace out the boundary of a one-branch graph with its extrinsic nodes
-vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
+std::vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 //: Trace boundary of a one-branch graph
-vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
+std::vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 
 //: Trace contact shocks
-vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_contact_shocks(const dbsksp_shock_graph_sptr& graph,
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
+std::vector<vsol_spatial_object_2d_sptr > dbsks_trace_contact_shocks(const dbsksp_shock_graph_sptr& graph,
+  const std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 
 //: Determine whether two xnodes correspond to a LEGAL shape fragment
@@ -122,7 +122,7 @@ bool dbsks_is_legal_xfrag(const dbsksp_xshock_node_descriptor& xnode_parent,
 
 
 //: Append a file to an out stream
-vcl_ostream& dbsks_append_text_file(vcl_ostream& os, const vcl_string& filename);
+std::ostream& dbsks_append_text_file(std::ostream& os, const std::string& filename);
 
 //: Helper function to avoid the assertion failure reported by the 'set' method of 'pdf1d_flat' class due to equality of min and max values
 void dbsks_regularize_min_max_values(double& min_val, double& max_val);

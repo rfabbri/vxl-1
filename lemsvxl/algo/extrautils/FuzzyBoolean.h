@@ -1,7 +1,7 @@
 #ifndef _FUZZY_BOOLEAN_H
 #define _FUZZY_BOOLEAN_H
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include "defines.h"
 
 // This file contains Boolean functions that are defined
@@ -32,11 +32,11 @@ inline double _epsilon (double a, double b, double relativeEpsilon)
 inline bool _isEq (double a, double b, double relativeEpsilon)
 {
   double epsilon = _epsilon (a, b, relativeEpsilon);
-  bool result = (vcl_fabs((a)-(b))<=epsilon?1:0);
+  bool result = (std::fabs((a)-(b))<=epsilon?1:0);
 
   //if (MessageOption >= MSG_NORMAL)
   //if (result != (a==b)) {
-  //  COUT<< "FUZZY '=' Epsilon="<<epsilon<< ", Error="<< vcl_fabs((a)-(b))<<endl;
+  //  COUT<< "FUZZY '=' Epsilon="<<epsilon<< ", Error="<< std::fabs((a)-(b))<<endl;
   //  MSGOUT(2);
   //}
   return result;
@@ -89,7 +89,7 @@ inline bool _isG (double a, double b, double relativeEpsilon)
 inline void _round (float& value, double epsilon)
 {
   double ep = 1/epsilon;
-  value = (float) ( vcl_floor((double)value*ep+0.5)/ep);
+  value = (float) ( std::floor((double)value*ep+0.5)/ep);
 
   //int i;
   //ftol(value/epsilon,&i); return((double)i);
@@ -99,7 +99,7 @@ inline void _round (float& value, double epsilon)
 inline void _round (double& value, double epsilon)
 {
   double ep = 1/epsilon;
-  value = ( vcl_floor (value*ep+0.5))/ep;
+  value = ( std::floor (value*ep+0.5))/ep;
 
   //int i;
   //ftol(value/epsilon,&i); return((double)i);
@@ -118,7 +118,7 @@ inline bool _isEqAngle (double a, double b, double relativeEpsilon)
     b = b-M_PI*2;
 
   double epsilon = _epsilon (a, b, relativeEpsilon);
-  bool result = (vcl_fabs((a)-(b))<=epsilon?1:0);
+  bool result = (std::fabs((a)-(b))<=epsilon?1:0);
 
   return result;
 }

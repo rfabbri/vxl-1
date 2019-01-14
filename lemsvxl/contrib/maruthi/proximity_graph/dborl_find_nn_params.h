@@ -29,7 +29,7 @@ class dborl_find_nn_params : public dborl_algo_params
 public:
 
   //: Constructor
-  dborl_find_nn_params(vcl_string algo_name);
+  dborl_find_nn_params(std::string algo_name);
 
   // MEMBER VARIABLES
  
@@ -40,11 +40,11 @@ public:
   dborl_parameter<bool> verbose_;
 
   //: Name of file that holds a list of strings that represent queries
-  dborl_parameter<vcl_string> query_label_file_;
+  dborl_parameter<std::string> query_label_file_;
 
   //: Name of seeds file that takes in separate seeds
   //: for all the various types of graphs
-  dborl_parameter<vcl_string> batch_seeds_file_;
+  dborl_parameter<std::string> batch_seeds_file_;
 
   //: Name of search type
   dborl_parameter<unsigned int> search_type_;
@@ -54,24 +54,24 @@ public:
 
   //: Passes a file that holds the names of all the graph files
   //: Assumed to be in dataset directory
-  dborl_parameter<vcl_string> batch_files_graphs_list_;    
+  dborl_parameter<std::string> batch_files_graphs_list_;    
 
   //: Passes the folder that holds the names of all the batch processing files
   //: Assumed to be in dataset directory hold matrices
   //: Could be query data matrix of exemplar data matrix
-  dborl_parameter<vcl_string> batch_files_matrices_list_;    
+  dborl_parameter<std::string> batch_files_matrices_list_;    
 
   //: Passes the folder of the dataset directory
   //: will write straight to the dataset folder
-  dborl_parameter<vcl_string> dataset_dir_;    
+  dborl_parameter<std::string> dataset_dir_;    
 
   //: Passes the folder of the seed directory
   //: will write straight to the dataset folder
-  dborl_parameter<vcl_string> seeds_dir_;    
+  dborl_parameter<std::string> seeds_dir_;    
 
   //: Passes the folder of the output directory
   //: of where results should go
-  dborl_parameter<vcl_string> output_dir_;    
+  dborl_parameter<std::string> output_dir_;    
 
 };
 

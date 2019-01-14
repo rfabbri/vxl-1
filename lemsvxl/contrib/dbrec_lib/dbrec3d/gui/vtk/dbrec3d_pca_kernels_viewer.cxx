@@ -63,9 +63,9 @@ void dbrec3d_pca_kernels_viewer::next_volume()
   hist_widget_->update_histogram_data(pc);
   weights_widget_->set_active_datapoint(curr_pc_);
   
-  vcl_cout << "Principal Component: " << curr_pc_ << ":\n"
+  std::cout << "Principal Component: " << curr_pc_ << ":\n"
   << "Magnitude: " << pc.two_norm() << ", Mean: " << pc.mean() << ", Min: " << pc.min_value() << ", Max: " << pc.max_value() << "\n"
-  << pc << vcl_endl;
+  << pc << std::endl;
   
 }
 
@@ -82,7 +82,7 @@ void dbrec3d_pca_kernels_viewer::prev_volume()
   hist_widget_->update_histogram_data(pc);
   weights_widget_->set_active_datapoint(curr_pc_);
 
-  vcl_cout << "Principal Component: " << curr_pc_ << ":\n"
+  std::cout << "Principal Component: " << curr_pc_ << ":\n"
   << "Magnitude: " << pc.two_norm() << ", Mean: " << pc.mean() << ", Min: " << pc.min_value() << ", Max: " << pc.max_value() << "\n"
-  << pc << vcl_endl;
+  << pc << std::endl;
 }

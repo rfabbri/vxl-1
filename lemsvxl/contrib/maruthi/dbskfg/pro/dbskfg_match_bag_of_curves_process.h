@@ -31,10 +31,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -44,7 +44,7 @@ public:
 
 private:
 
-  void load_contours(vcl_vector<bpro1_storage_sptr>& vsol_contour,
+  void load_contours(std::vector<bpro1_storage_sptr>& vsol_contour,
                      bpro1_filepath& input);
 
 };

@@ -6,10 +6,10 @@ extern "C"
 #include"vl/dsift.h"
 }
 
-#include<vcl_cassert.h>
-#include<vcl_map.h>
-#include<vcl_vector.h>
-#include<vcl_utility.h>
+#include<cassert>
+#include<map>
+#include<vector>
+#include<utility>
 
 
 #include<vil/vil_image_view.h>
@@ -39,16 +39,16 @@ class vlfeat
 {
 public:
 
-	static vcl_map<vgl_point_2d<float>, 
-		   vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > dsift( vil_image_view<float> &img,
+	static std::map<vgl_point_2d<float>, 
+		   std::vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > dsift( vil_image_view<float> &img,
 																		unsigned const& step = 1,
 																		unsigned const& size = 4,
 																		bool const& flat_window = false );
 	
-	static vcl_vector<float> dsift(vil_image_view<float> &img, vgl_point_2d<unsigned> const& pt, 
+	static std::vector<float> dsift(vil_image_view<float> &img, vgl_point_2d<unsigned> const& pt, 
 									unsigned const& size = 4, bool const& flat_window = false );
 
-	static vcl_vector<float> dsift(vil_image_view<float> &img, unsigned const& i, unsigned const& j, 
+	static std::vector<float> dsift(vil_image_view<float> &img, unsigned const& i, unsigned const& j, 
 								   unsigned const& size = 4, bool const& flat_window = false );
 private:
 	vlfeat(){}

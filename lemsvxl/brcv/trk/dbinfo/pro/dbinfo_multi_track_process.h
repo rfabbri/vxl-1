@@ -13,8 +13,8 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 #include <dbinfo/dbinfo_multi_tracker.h>
@@ -32,23 +32,23 @@ public:
   virtual bpro1_process* clone() const; 
   
   //: The name of the video process
-  virtual vcl_string name() {return "dbinfo_multi_track_process";}
+  virtual std::string name() {return "dbinfo_multi_track_process";}
 
   int input_frames();
   int output_frames();
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
   
-  void set_track_storage_name(vcl_string const& name){name_ = name;}
+  void set_track_storage_name(std::string const& name){name_ = name;}
 private:
   //: set the parameters from menu assigned values
   void set_tracker_parameters();
   //First frame processed 
-  vcl_string name_;
+  std::string name_;
   bool first_frame_;
   dbinfo_multi_tracker tracker_;
   bpro1_filepath track_storage_filepath_;

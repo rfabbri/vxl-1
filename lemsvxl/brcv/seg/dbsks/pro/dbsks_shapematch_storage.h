@@ -44,7 +44,7 @@ public:
 
   // ------  Binary IO ----------------------
   //: Returns the type string
-  virtual vcl_string type() const { return "dbsks_shapematch"; }
+  virtual std::string type() const { return "dbsks_shapematch"; }
 
   //: Return IO version number;
   short version() const;
@@ -58,7 +58,7 @@ public:
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbsks_shapematch_storage"; }
+  virtual std::string is_a() const { return "dbsks_shapematch_storage"; }
 
 protected:
   dbsks_dp_match_sptr dp_engine_;

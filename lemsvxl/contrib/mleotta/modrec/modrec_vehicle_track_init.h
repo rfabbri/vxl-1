@@ -24,7 +24,7 @@
 class modrec_vehicle_track_init
 {
 public:
-  typedef vcl_pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
+  typedef std::pair<vgl_point_2d<double>,vgl_vector_2d<double> > pv_pair;
   
   enum vehicle_model { DODECAHEDRAL, FERRYMAN, DETAILED1, DETAILED2, DETAILED3 };
   
@@ -42,7 +42,7 @@ public:
   void set_estimate_shape(bool val) { estimate_shape_ = val; }
   
   //: estimate the Z rotation angle from optical flow vectors
-  double estimate_angle(const vcl_vector<pv_pair>& flow);
+  double estimate_angle(const std::vector<pv_pair>& flow);
   
   //: estimate the 3-d translation to align the silhouette centroid to \a c. 
   vgl_vector_3d<double> align_centroids(const vgl_point_2d<double>& c,
@@ -57,8 +57,8 @@ public:
                       vgl_vector_3d<double>& t);
   
   //: compute the errors in silhouette alignment
-  vcl_vector<double> silhouette_error(const vgl_polygon<double>& silhouette,
-                                      vcl_vector<vgl_vector_2d<double> >& norms);
+  std::vector<double> silhouette_error(const vgl_polygon<double>& silhouette,
+                                      std::vector<vgl_vector_2d<double> >& norms);
   
   //: compute the tranlation and mesh params to align the silhouettes
   double fit_to_silhouette(const vgl_polygon<double>& silhouette,
@@ -67,17 +67,17 @@ public:
   
   //: match observed silhouettes and flow vectors to existing states
   //  return a vector of unmatched silhouettes
-  vcl_vector<vgl_polygon<double> >
-  match_silhouettes(const vcl_vector<vgl_polygon<double> >& silhouettes,
-                    const vcl_vector<pv_pair>& flow,
-                          vcl_vector<modrec_vehicle_state>& states);
+  std::vector<vgl_polygon<double> >
+  match_silhouettes(const std::vector<vgl_polygon<double> >& silhouettes,
+                    const std::vector<pv_pair>& flow,
+                          std::vector<modrec_vehicle_state>& states);
   
   
   //: Process the silhouettes and flow and estimate initial states.
   //  Also merge in states predicted from the previous frame
-  void find_states(const vcl_vector<vgl_polygon<double> >& silhouettes,
-                   const vcl_vector<pv_pair>& flow,
-                         vcl_vector<modrec_vehicle_state>& states);
+  void find_states(const std::vector<vgl_polygon<double> >& silhouettes,
+                   const std::vector<pv_pair>& flow,
+                         std::vector<modrec_vehicle_state>& states);
 
 private:
   //: The active camera
@@ -92,7 +92,7 @@ private:
   modrec_pca_vehicle_projector mesh_projector_;
   
   //: parameters used for initialization of shape
-  vcl_vector<vcl_vector<vnl_vector<double> > > init_params_;
+  std::vector<std::vector<vnl_vector<double> > > init_params_;
   
   //: flag to enable shape estimation in addition to pose
   bool estimate_shape_;

@@ -17,7 +17,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsk2d/dbsk2d_shock_node.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_sample_sptr.h>
@@ -35,7 +35,7 @@ public:
   dbsk2d_xshock_node(const dbsk2d_xshock_node& other);
 
   //: Constructor 2
-  dbsk2d_xshock_node(int id, vcl_vector<dbsk2d_xshock_sample_sptr > samples, bool bIO=true);
+  dbsk2d_xshock_node(int id, std::vector<dbsk2d_xshock_sample_sptr > samples, bool bIO=true);
 
   //: Destructor
   virtual ~dbsk2d_xshock_node();
@@ -66,7 +66,7 @@ protected:
   bool bIO_;   //inside=true, outside=false
 
   //: ordered list of samples on the shock node
-  vcl_vector<dbsk2d_xshock_sample_sptr > samples_;
+  std::vector<dbsk2d_xshock_sample_sptr > samples_;
 
 };
 

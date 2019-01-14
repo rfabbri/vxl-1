@@ -27,21 +27,21 @@ class georegister_cmd_params: public dborl_algo_params
 {
 public:
   //: Constructor
-  georegister_cmd_params(vcl_string algo_name);
+  georegister_cmd_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
   //: passes the folder of the input object
-  dborl_parameter<vcl_string> input_object_dir_;  
+  dborl_parameter<std::string> input_object_dir_;  
 
   //: tag for third order color edge detector
-  vcl_string tag_third_order_color_;
+  std::string tag_third_order_color_;
 
   //: tag for background modeling
-  vcl_string tag_bg_modeling_;
+  std::string tag_bg_modeling_;
 
   //: tag for foreground extraction
-  vcl_string tag_fg_extraction_;
+  std::string tag_fg_extraction_;
   
 };
 

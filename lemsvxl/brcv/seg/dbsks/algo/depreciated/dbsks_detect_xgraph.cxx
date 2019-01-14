@@ -46,7 +46,7 @@
 #include <vnl/vnl_matlab_read.h>
 #include <vnl/vnl_file_matrix.h>
 #include <vul/vul_timer.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 
@@ -61,14 +61,14 @@
 
 // -----------------------------------------------------------------------------
 //: Detect an object, represented as a shock graph, in an image
-bool dbsks_detect_xgraph(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
+bool dbsks_detect_xgraph(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
                          float ocm_edge_threshold,
-                         //const vcl_string& cfg_file,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_vector<double >& xgraph_scales,
+                         //const std::string& cfg_file,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::vector<double >& xgraph_scales,
                          int root_vid,
                          int major_child_eid,
                          float ocm_lambda,
@@ -76,20 +76,20 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
                          float ocm_tol_near_zero,
                          float ocm_distance_threshold,
                          vil_image_resource_sptr& image_resource, 
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& list_det)
+                         std::vector<dbsks_det_desc_xgraph_sptr >& list_det)
 {
   // load the image
-  vcl_cout << "Loading image: " << image_file << " ... ";
+  std::cout << "Loading image: " << image_file << " ... ";
   vil_image_view<float > image_src = *vil_convert_cast(float(), vil_load(image_file.c_str()));
   
   if (!image_src) 
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else 
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
   // \TODO we probably won't need this later /////////////////////////////
@@ -97,16 +97,16 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   /////////////////////////////////////////////////////////////////////////
 
   //>>> load the edge map
-  vcl_cout << "Loading edgemap: " << edgemap_file << " ... ";
+  std::cout << "Loading edgemap: " << edgemap_file << " ... ";
   vil_image_view<float > edgemap = *vil_convert_cast(float(), vil_load(edgemap_file.c_str()));
   if (!edgemap) 
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else 
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
   //>>> Load edge orientation file
@@ -117,13 +117,13 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
 
   if (!loaded_edgeorient)
   {
-    vcl_cout << "\nERROR: couldn't load edge orientation file: " << edgeorient_file << vcl_endl;
+    std::cout << "\nERROR: couldn't load edge orientation file: " << edgeorient_file << std::endl;
     return false;
   }
 
   if (edgemap.nj() != theta.rows() || edgemap.ni() != theta.cols())
   {
-    vcl_cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << vcl_endl;
+    std::cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << std::endl;
     return false;
   }
 
@@ -145,30 +145,30 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   ///////////////////////////////////////////////////////////////////////////
 
   //// load the CFG file
-  //vcl_cout << "\nLoading curve fragment graph (.cem): " << cfg_file << "...";
+  //std::cout << "\nLoading curve fragment graph (.cem): " << cfg_file << "...";
   //dbdet_curve_fragment_graph CFG;
   //dbdet_edgemap_sptr EM = dbdet_load_cem(cfg_file, CFG);
   //if (!EM) 
   //{
-  //  vcl_cout << "Failed.\n";
+  //  std::cout << "Failed.\n";
   //  return false;
   //}
   //else
   //{
-  //  vcl_cout << "Done.\n";
+  //  std::cout << "Done.\n";
   //}
 
   // Load the shock graph
   dbsksp_xshock_graph_sptr xgraph = 0;
 
-  vcl_cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
+  std::cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
   if ( x_read(xgraph_file, xgraph) )
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
   else
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   } 
 
@@ -177,7 +177,7 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   dbsks_xgraph_geom_model_sptr xgraph_geom = 0;
   if (!x_read(xgraph_geom_file, xgraph_geom))
   {
-    vcl_cout << "ERROR: Couldn't load xgraph geometric model from file " << xgraph_geom_file << vcl_endl;
+    std::cout << "ERROR: Couldn't load xgraph geometric model from file " << xgraph_geom_file << std::endl;
     return false;
   }
 
@@ -187,7 +187,7 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
   {
-    vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = 
+    std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = 
       xgraph_geom->map_edge2geom().find((*eit)->id());
     if (mit == xgraph_geom->map_edge2geom().end())
     {
@@ -200,7 +200,7 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
 
   if (!compatible)
   {
-    vcl_cout << "\nERROR !!! xfrag models are not compatible with the xgraph." << vcl_endl;
+    std::cout << "\nERROR !!! xfrag models are not compatible with the xgraph." << std::endl;
     return false;
   
   }
@@ -208,10 +208,10 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Detect xgraphs
   list_det.clear();
-  double def_scale = vcl_sqrt(xgraph->area());
+  double def_scale = std::sqrt(xgraph->area());
   if (xgraph_scales.empty())
   {
-    vcl_cout << "\n>>>>> Processing default xgraph scale = " << def_scale << vcl_endl;
+    std::cout << "\n>>>>> Processing default xgraph scale = " << def_scale << std::endl;
     dbsks_detect_xgraph(image_src, edgemap, edge_angle, 
       ocm_edge_threshold,
       //&CFG, 
@@ -224,9 +224,9 @@ bool dbsks_detect_xgraph(const vcl_string& image_file,
   {
     for (unsigned i =0; i < xgraph_scales.size(); ++i)
     {
-      vcl_cout << "\n>>>>> Processing xgraph scale = " << xgraph_scales[i] << vcl_endl;
+      std::cout << "\n>>>>> Processing xgraph scale = " << xgraph_scales[i] << std::endl;
 
-      vcl_vector<dbsks_det_desc_xgraph_sptr > dets;
+      std::vector<dbsks_det_desc_xgraph_sptr > dets;
       dbsks_detect_xgraph(image_src, edgemap, edge_angle, 
         ocm_edge_threshold,
         //&CFG, 
@@ -263,7 +263,7 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
                          float ocm_tol_near_zero,
                          float ocm_distance_threshold,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& det_list)
+                         std::vector<dbsks_det_desc_xgraph_sptr >& det_list)
 {
   // ///////////////////////////////////////////////////////////////////////////
   // confidence threshold to reject a detection
@@ -293,7 +293,7 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   // ///////////////////////////////////////////////////////////////////////////
 
   // >> Shotton-OCM cost function
-  vcl_cout << "\nConstructing Shotton-OCM cost function ...";
+  std::cout << "\nConstructing Shotton-OCM cost function ...";
   vul_timer timer;
   timer.mark();
 
@@ -306,13 +306,13 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
 
   // IMPORTANT: uncomment this to use shotton_ocm in image cost
   //shotton_ocm.compute(); 
-  vcl_cout << "done" << vcl_endl;;
-  vcl_cout << "    Time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;;
+  std::cout << "    Time spent = ";
+  timer.print(std::cout);
 
   //////////////////////////////////////////////////////////////////////////////
   // >> Gray-value OCM cost function
-  vcl_cout << "\nConstructing gray-OCM cost function ...";
+  std::cout << "\nConstructing gray-OCM cost function ...";
   timer.mark();
 
   dbsks_gray_ocm gray_ocm;
@@ -323,14 +323,14 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   
   // pre-compute chamfer cost and orientation cost at every pixel and orientation
   //gray_ocm.compute();
-  vcl_cout << "done" << vcl_endl;;
-  vcl_cout << "    Time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;;
+  std::cout << "    Time spent = ";
+  timer.print(std::cout);
 
 
   //////////////////////////////////////////////////////////////////////////////
   //>> Contour OCM cost function
-  vcl_cout << "\nConstructing contour-OCM cost function ...";
+  std::cout << "\nConstructing contour-OCM cost function ...";
   timer.mark();
 
   dbsks_ccm ccm;
@@ -339,15 +339,15 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   ccm.set_edge_orient(edge_angle);
   ccm.compute();
 
-  vcl_cout << "done" << vcl_endl;;
-  vcl_cout << "    Time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;;
+  std::cout << "    Time spent = ";
+  timer.print(std::cout);
 
 
 
   ////////////////////////////////////////////////////////////////////////////////
   //// >> CFG OCM cost function
-  //vcl_cout << "\nConstructing CFG OCM";
+  //std::cout << "\nConstructing CFG OCM";
   //timer.mark();
 
   //dbsks_cfg_ocm cfg_ocm;
@@ -356,7 +356,7 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   ////////////////////////////////////////////////////////////////////////////////
 
   //>>> Biarc sampler
-  vcl_cout << "\nConstructing a biarc sampler ...";
+  std::cout << "\nConstructing a biarc sampler ...";
   timer.mark();
 
   // Set parameters of biarc sampler
@@ -389,12 +389,12 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   biarc_sampler.set_sampling_params(num_bins, ds);
   biarc_sampler.compute_cache_sample_points();
 
-  vcl_cout << " done" << vcl_endl;
-  vcl_cout << "    Total time spent = ";
-  timer.print(vcl_cout);
+  std::cout << " done" << std::endl;
+  std::cout << "    Total time spent = ";
+  timer.print(std::cout);
 
   // scaled version of the xgraph
-  double cur_scale = vcl_sqrt(xgraph->area());
+  double cur_scale = std::sqrt(xgraph->area());
   dbsksp_xshock_graph_sptr scaled_xgraph = new dbsksp_xshock_graph(*xgraph);
   scaled_xgraph->similarity_transform( (*scaled_xgraph->vertices_begin())->pt(), 0, 0, 0, xgraph_scale / cur_scale);
   scaled_xgraph->update_all_degree_1_nodes();
@@ -403,9 +403,9 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   // Use sliding window techniques for large images
 
   // >> Compute location of windows to detect objects in
-  vcl_cout << "\n>>> Compute location of windows to detect objects in." << vcl_endl;
+  std::cout << "\n>>> Compute location of windows to detect objects in." << std::endl;
 
-  vcl_vector<vgl_box_2d<int > > windows;
+  std::vector<vgl_box_2d<int > > windows;
   int ni = image_src.ni();
   int nj = image_src.nj();
   int max_width = 512;
@@ -432,28 +432,28 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   }
   while (cur_xmin < (ni-8-max_width/2)); // padding in front
 
-  vcl_cout << "\nTotal number of windows to run on = " << windows.size() << "\n";
+  std::cout << "\nTotal number of windows to run on = " << windows.size() << "\n";
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "  window " << iw << ": xmin=" << window.min_x() 
+    std::cout << "  window " << iw << ": xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
       << " ymax=" << window.max_y() << "\n";
   }
-  vcl_cout.flush();
+  std::cout.flush();
 
   // >> Detect objects within each window
 
-  vcl_cout << "\n>>>Object detection on each of the windows" << vcl_endl;
+  std::cout << "\n>>>Object detection on each of the windows" << std::endl;
   det_list.clear();
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "\nWindow index = " << iw << " xmin=" << window.min_x() 
+    std::cout << "\nWindow index = " << iw << " xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
-      << " ymax=" << window.max_y() << vcl_endl;
+      << " ymax=" << window.max_y() << std::endl;
 
     // >> xshock detection engine
     dbsks_xshock_detector engine;
@@ -480,8 +480,8 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
       // \Debug //////////////////////////////////////////////
       if (vnl_math_abs(real_confidence - confidence) > 0.001)
       {
-        vcl_cout << "\nWarning: inconsistency. sol_idx=" << i << " confidence=" << confidence 
-          << " --real_confidence=" << real_confidence << vcl_endl;
+        std::cout << "\nWarning: inconsistency. sol_idx=" << i << " confidence=" << confidence 
+          << " --real_confidence=" << real_confidence << std::endl;
       }
 
       if (confidence > confidence_lower_threshold)
@@ -492,22 +492,22 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
       }
       else
       {
-        vcl_cout << "\n Detection result rejected. Confidence = " << confidence << vcl_endl;
+        std::cout << "\n Detection result rejected. Confidence = " << confidence << std::endl;
       }
     } // solution
   } // iw
-  vcl_cout << "\nNumber of detection before non-max suppression based on bounding box: " 
-    << det_list.size() << vcl_endl;
+  std::cout << "\nNumber of detection before non-max suppression based on bounding box: " 
+    << det_list.size() << std::endl;
 
 
   //////////////////////////////////////////////////////////////////////////////
   // Non-max supression on the bounding box
 
-  vcl_cout << "\nNon-max suppression based on bounding box: \n"
-    << det_list.size() << vcl_endl;
+  std::cout << "\nNon-max suppression based on bounding box: \n"
+    << det_list.size() << std::endl;
 
   // first sort the detections by their confidence level
-  vcl_vector<dborl_det_desc_sptr > temp_det_list;
+  std::vector<dborl_det_desc_sptr > temp_det_list;
   temp_det_list.reserve(det_list.size());
   for (unsigned i =0; i < det_list.size(); ++i)
   {
@@ -515,11 +515,11 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
   }
 
   // a vector of non-max indicators for the detection (= true if non-max)
-  vcl_vector<bool > to_remove(temp_det_list.size(), false);
+  std::vector<bool > to_remove(temp_det_list.size(), false);
   if (temp_det_list.size() > 1)
   {
     // first sort the detection result based on their score
-    vcl_sort(temp_det_list.begin(), temp_det_list.end(), dborl_decreasing_confidence);
+    std::sort(temp_det_list.begin(), temp_det_list.end(), dborl_decreasing_confidence);
 
     // starting from the detection with lowest confidence and move up. If it overlaps 
     // significantly with another detection with higher confidence then ignore this detection
@@ -558,8 +558,8 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
     }
   }
   
-  vcl_cout << "\nNumber of detection after non-max suppression based on bounding box= " 
-    << det_list.size() << vcl_endl; 
+  std::cout << "\nNumber of detection after non-max suppression based on bounding box= " 
+    << det_list.size() << std::endl; 
   
   return true;
 }
@@ -576,59 +576,59 @@ bool dbsks_detect_xgraph(const vil_image_view<float >& image_src,
 
 // -----------------------------------------------------------------------------
 //: Detect an object using both geometric model and contour chamfer matching cost model
-bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_string& xgraph_ccm_file,
-                         const vcl_vector<double >& xgraph_scales,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
+bool dbsks_detect_xgraph_using_ccm(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::string& xgraph_ccm_file,
+                         const std::vector<double >& xgraph_scales,
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
 {
   //>>> load the image
-  vcl_cout << "\n>>Loading image: " << image_file << " ... ";
+  std::cout << "\n>>Loading image: " << image_file << " ... ";
   vil_image_view<float > image_src = *vil_convert_cast(float(), vil_load(image_file.c_str()));
   
   if (!image_src) 
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else 
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
   //>>> load the edge map
-  vcl_cout << "\n>>Loading edgemap: " << edgemap_file << " ... ";
+  std::cout << "\n>>Loading edgemap: " << edgemap_file << " ... ";
   vil_image_view<float > edgemap = *vil_convert_cast(float(), vil_load(edgemap_file.c_str()));
   if (!edgemap) 
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else 
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
   //>>> Load edge orientation file
-  vcl_cout << "\n>>Loading edge orientation file: " << edgeorient_file << " ... ";
+  std::cout << "\n>>Loading edge orientation file: " << edgeorient_file << " ... ";
   vnl_file_matrix<double > theta(edgeorient_file.c_str());
   bool loaded_edgeorient = !theta.empty();
   if (!loaded_edgeorient)
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
   if (edgemap.nj() != theta.rows() || edgemap.ni() != theta.cols())
   {
-    vcl_cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << vcl_endl;
+    std::cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << std::endl;
     return false;
   }
 
@@ -644,41 +644,41 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
   }
 
   //>>> Load the shock graph
-  vcl_cout << "\n>>Loading xshock_graph XML file: " << xgraph_file << "...";
+  std::cout << "\n>>Loading xshock_graph XML file: " << xgraph_file << "...";
   dbsksp_xshock_graph_sptr xgraph = 0;
   if (!x_read(xgraph_file, xgraph) )
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   } 
 
 
   //>>> Load the xgraph geometric model
-  vcl_cout << "\n>>Loading xgraph geometric model file (.xml):" << xgraph_geom_file << "...";
+  std::cout << "\n>>Loading xgraph geometric model file (.xml):" << xgraph_geom_file << "...";
   dbsks_xgraph_geom_model_sptr xgraph_geom = 0;
   if (!x_read(xgraph_geom_file, xgraph_geom))
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
 
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
   // \todo More thorough checks
-  vcl_cout << "\n>>Checking compatibility between geometric model and xgraph...";
+  std::cout << "\n>>Checking compatibility between geometric model and xgraph...";
   bool geom_compatible = true;
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
   {
-    vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = 
+    std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = 
       xgraph_geom->map_edge2geom().find((*eit)->id());
     if (mit == xgraph_geom->map_edge2geom().end())
     {
@@ -689,12 +689,12 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
 
   if (!geom_compatible)
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
 
@@ -702,26 +702,26 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
 
 
   //>>> Load the xgraph geometric model
-  vcl_cout << ">>Loading xgraph Contour Chamfer Matching (ccm) model file (.xml):" << xgraph_ccm_file << "...";
+  std::cout << ">>Loading xgraph Contour Chamfer Matching (ccm) model file (.xml):" << xgraph_ccm_file << "...";
   dbsks_xgraph_ccm_model_sptr xgraph_ccm = 0;
   if (!x_read(xgraph_ccm_file, xgraph_ccm))
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
     return false;
   }
   else
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
 
 
   //>>> Check compatibility between Contour Chamfer Matching model and xgraph (are all edges covered)
-  vcl_cout << ">>Checking compatibility between CCM model and xgraph...";
+  std::cout << ">>Checking compatibility between CCM model and xgraph...";
   bool ccm_compatible = true;
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
   {
-    vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
+    std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
       xgraph_ccm->map_edge2ccm().find((*eit)->id());
     if (mit == xgraph_ccm->map_edge2ccm().end())
     {
@@ -732,19 +732,19 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
 
   if (!ccm_compatible)
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
 
   // \hack
   // Manually override the distribution of some contour fragments which have low distribution fit
   // Manually override some of the distribution
-  vcl_vector<vcl_string > cfrag_desc_list;
+  std::vector<std::string > cfrag_desc_list;
   cfrag_desc_list.push_back("27-L");
   cfrag_desc_list.push_back("27-R");
   cfrag_desc_list.push_back("16-L");
@@ -757,19 +757,19 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //>>> Detect xgraphs
-  vcl_cout << ">>Detecting xgraph in image at multiple scales...";
-  vcl_vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
-  double def_scale = vcl_sqrt(xgraph->area());
+  std::cout << ">>Detecting xgraph in image at multiple scales...";
+  std::vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
+  double def_scale = std::sqrt(xgraph->area());
   if (xgraph_scales.empty())
   {
-    vcl_cout << "\n----ERROR: no scale was specified. Nothing was run.\n";
+    std::cout << "\n----ERROR: no scale was specified. Nothing was run.\n";
   }
   else
   {
     for (unsigned i =0; i < xgraph_scales.size(); ++i)
     {
-      vcl_cout << "\n>>>>Processing xgraph scale = " << xgraph_scales[i] << vcl_endl;
-      vcl_vector<dbsks_det_desc_xgraph_sptr > dets;
+      std::cout << "\n>>>>Processing xgraph scale = " << xgraph_scales[i] << std::endl;
+      std::vector<dbsks_det_desc_xgraph_sptr > dets;
       dbsks_detect_xgraph_using_ccm(image_src, edgemap, edge_angle, 
         xgraph, xgraph_geom, xgraph_ccm, xgraph_scales[i], dets);
       raw_det_list.insert(raw_det_list.end(), dets.begin(), dets.end());
@@ -777,8 +777,8 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
   }
 
   //--------------------------------------------------------------
-  vcl_cout << "\n----Number of detection before non-max suppression: " 
-    << raw_det_list.size() << vcl_endl; 
+  std::cout << "\n----Number of detection before non-max suppression: " 
+    << raw_det_list.size() << std::endl; 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //>>> Non-max suppression across detection results form different scales
@@ -793,8 +793,8 @@ bool dbsks_detect_xgraph_using_ccm(const vcl_string& image_file,
     output_det_list = raw_det_list;
   }
 
-  vcl_cout << "\n----Number of detection after non-max suppression: " 
-    << output_det_list.size() << vcl_endl; 
+  std::cout << "\n----Number of detection after non-max suppression: " 
+    << output_det_list.size() << std::endl; 
 
 
   return true;
@@ -814,7 +814,7 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
                          const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
                          double xgraph_scale,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
 {
   // ///////////////////////////////////////////////////////////////////////////
   // confidence threshold to reject a detection
@@ -829,7 +829,7 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
 
   //////////////////////////////////////////////////////////////////////////////
   //>> Contour OCM cost function
-  vcl_cout << "\n>>Constructing contour-OCM cost function ...";
+  std::cout << "\n>>Constructing contour-OCM cost function ...";
 
   float ccm_distance_threshold = 0;
   float ccm_tol_near_zero = 0;
@@ -845,9 +845,9 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
   ccm.set_edge_orient(edge_angle);
   ccm.compute();
 
-  vcl_cout << "done" << vcl_endl;;
-  vcl_cout << "    Time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;;
+  std::cout << "    Time spent = ";
+  timer.print(std::cout);
   
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -855,7 +855,7 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
 
 
   //>>> Biarc sampler
-  vcl_cout << "\n>>Constructing a biarc sampler ...";
+  std::cout << "\n>>Constructing a biarc sampler ...";
   timer.mark();
 
   // Set parameters of biarc sampler
@@ -873,29 +873,29 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
   biarc_sampler.set_sampling_params(nbins_0topi * 2, ds);
   biarc_sampler.compute_cache_sample_points();
 
-  vcl_cout << "done" << vcl_endl;
-  vcl_cout << "    Total time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;
+  std::cout << "    Total time spent = ";
+  timer.print(std::cout);
 
   
   //>> Scale the shock graph to desired scale
-  vcl_cout << "\n>>Scaling the xgraph to specified scale ...";
-  double cur_scale = vcl_sqrt(xgraph->area());
+  std::cout << "\n>>Scaling the xgraph to specified scale ...";
+  double cur_scale = std::sqrt(xgraph->area());
   dbsksp_xshock_graph_sptr scaled_xgraph = new dbsksp_xshock_graph(*xgraph);
   scaled_xgraph->similarity_transform( (*scaled_xgraph->vertices_begin())->pt(), 0, 0, 0, xgraph_scale / cur_scale);
   scaled_xgraph->update_all_degree_1_nodes();
-  vcl_cout << "done\n";
+  std::cout << "done\n";
 
 
   //>> Compute all windows (rectangular boxes) necessary to cover the whole image
-  vcl_cout << "\n>>Computing sliding (rectangular) windows to cover the whole image ...";
+  std::cout << "\n>>Computing sliding (rectangular) windows to cover the whole image ...";
   
   // hard-coded maximum window size
   int max_width = 512; 
   int max_height = 512;
 
   // list of windows to run detection on
-  vcl_vector<vgl_box_2d<int > > windows;
+  std::vector<vgl_box_2d<int > > windows;
 
   int ni = image_src.ni();
   int nj = image_src.nj();
@@ -922,29 +922,29 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
   while (cur_xmin < (ni-8-max_width/2)); // padding in front
 
   // Print out list of windows
-  vcl_cout << "\n  Total number of windows to run on = " << windows.size() << "\n";
+  std::cout << "\n  Total number of windows to run on = " << windows.size() << "\n";
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "  -window " << iw << ": xmin=" << window.min_x() 
+    std::cout << "  -window " << iw << ": xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
       << " ymax=" << window.max_y() << "\n";
   }
-  vcl_cout.flush();
+  std::cout.flush();
 
   //>> Detect objects within each window
-  vcl_cout << "\n>>Detecting objects in all computed windows ...";
-  vcl_vector<dbsks_det_desc_xgraph_sptr > det_list;
+  std::cout << "\n>>Detecting objects in all computed windows ...";
+  std::vector<dbsks_det_desc_xgraph_sptr > det_list;
   det_list.clear();
 
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "\n--Window index = " << iw << " xmin=" << window.min_x() 
+    std::cout << "\n--Window index = " << iw << " xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
-      << " ymax=" << window.max_y() << vcl_endl;
+      << " ymax=" << window.max_y() << std::endl;
 
     // xshock detection engine
     dbsks_xshock_detector engine;
@@ -964,17 +964,17 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
     {
       dbsksp_xshock_graph_sptr xgraph = engine.list_solutions_[i];
       
-      //double confidence = vcl_exp(-engine.list_solution_costs_[i]);
-      //double real_confidence = vcl_exp(-engine.list_solution_real_costs_[i]);
+      //double confidence = std::exp(-engine.list_solution_costs_[i]);
+      //double real_confidence = std::exp(-engine.list_solution_real_costs_[i]);
 
       double confidence = -engine.list_solution_costs_[i];
       double real_confidence = -engine.list_solution_real_costs_[i];
       
       // \Debug //////////////////////////////////////////////
-      if (vnl_math_abs(vcl_log(real_confidence) - vcl_log(confidence)) > 0.001)
+      if (vnl_math_abs(std::log(real_confidence) - std::log(confidence)) > 0.001)
       {
-        vcl_cout << "\nWarning: inconsistency. sol_idx=" << i << " confidence=" << confidence 
-          << " --real_confidence=" << real_confidence << vcl_endl;
+        std::cout << "\nWarning: inconsistency. sol_idx=" << i << " confidence=" << confidence 
+          << " --real_confidence=" << real_confidence << std::endl;
       }
 
       // only consider detetion with at least minimal confidence level
@@ -987,15 +987,15 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
       /////////////////////////////////////////////////////
     } // solution
   } // iw
-  vcl_cout << "\n----Number of detection before non-max suppression: " 
-    << det_list.size() << vcl_endl;
+  std::cout << "\n----Number of detection before non-max suppression: " 
+    << det_list.size() << std::endl;
 
   //>>>> Non-max supression on the boundary polygon
-  vcl_cout << "\n----Non-max suppression based on boundary polygon box: ...";
+  std::cout << "\n----Non-max suppression based on boundary polygon box: ...";
   dbsks_det_nms_using_polygon(det_list, output_det_list, min_overlap_ratio_for_rejection);
   
-  vcl_cout << "\n----Number of detection after non-max suppression: " 
-    << output_det_list.size() << vcl_endl; 
+  std::cout << "\n----Number of detection after non-max suppression: " 
+    << output_det_list.size() << std::endl; 
   return true;
 }
 
@@ -1008,27 +1008,27 @@ bool dbsks_detect_xgraph_using_ccm(const vil_image_view<float >& image_src,
 
 // -----------------------------------------------------------------------------
 //: Detect an object using both geometric model and Whole-Contour-Matching cost model
-bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
-                         const vcl_string& edgemap_file,
-                         const vcl_string& edgeorient_file,
-                         const vcl_string& cemv_file,
-                         const vcl_string& xgraph_file,
-                         const vcl_string& xgraph_geom_file,
-                         const vcl_string& xgraph_ccm_file,
-                         const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+bool dbsks_detect_xgraph_using_wcm(const std::string& image_file,
+                         const std::string& edgemap_file,
+                         const std::string& edgeorient_file,
+                         const std::string& cemv_file,
+                         const std::string& xgraph_file,
+                         const std::string& xgraph_geom_file,
+                         const std::string& xgraph_ccm_file,
+                         const std::vector<std::string >& cfrag_list_to_ignore,
                          float wcm_weight_unmatched,
-                         const vcl_vector<double >& xgraph_scales,
+                         const std::vector<double >& xgraph_scales,
                          int det_window_width,
                          int det_window_height,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
 {
-  vcl_cout << "\n>>>>Xgraph detection using Whole-Contour-Matching.<<<<<\n\n";
+  std::cout << "\n>>>>Xgraph detection using Whole-Contour-Matching.<<<<<\n\n";
 
   //>>> Preliminary checks
   output_det_list.clear();
   if (xgraph_scales.empty())
   {
-    vcl_cout << "\nERROR: no scale was specified. Nothing was run.\n";
+    std::cout << "\nERROR: no scale was specified. Nothing was run.\n";
     return false;
   }
 
@@ -1036,7 +1036,7 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
   // Load data from the files
   vil_image_view<float > edgemap;
   vil_image_view<float > edge_angle;
-  vcl_vector<vsol_polyline_2d_sptr > polyline_list;
+  std::vector<vsol_polyline_2d_sptr > polyline_list;
   dbsksp_xshock_graph_sptr xgraph;
   dbsks_xgraph_geom_model_sptr xgraph_geom;
   dbsks_xgraph_ccm_model_sptr xgraph_ccm;
@@ -1046,23 +1046,23 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
     xgraph_file, xgraph_geom_file, xgraph_ccm_file, cfrag_list_to_ignore,
     edgemap, edge_angle, polyline_list, xgraph, xgraph_geom, xgraph_ccm))
   {
-    vcl_cout << "\nERROR: Could not load all data.\n";
+    std::cout << "\nERROR: Could not load all data.\n";
     return false;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //>>> Detect xgraphs
-  vcl_cout << ">> Detecting xgraph in image at multiple scales...";
-  vcl_vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
-  double def_scale = vcl_sqrt(xgraph->area());
+  std::cout << ">> Detecting xgraph in image at multiple scales...";
+  std::vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
+  double def_scale = std::sqrt(xgraph->area());
   
   for (unsigned i =0; i < xgraph_scales.size(); ++i)
   {
-    vcl_cout << "\n>>>> Processing xgraph scale = " << xgraph_scales[i] << vcl_endl;
+    std::cout << "\n>>>> Processing xgraph scale = " << xgraph_scales[i] << std::endl;
 
     double xgraph_scale = xgraph_scales[i];
     vil_image_view<float > new_edgemap;
-    vcl_vector<vsol_polyline_2d_sptr > new_polyline_list;
+    std::vector<vsol_polyline_2d_sptr > new_polyline_list;
     vil_image_view<float > new_edge_angle;
 
     //////////////////////////////////////////////////////////////////////////////
@@ -1073,10 +1073,10 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
       edgemap, polyline_list, edge_angle,
       scaled_up_factor, new_edgemap, new_polyline_list, new_edge_angle);
 
-    vcl_cout << "\n     Scaling up = " << scaled_up_factor << vcl_endl;
-    vcl_cout << "\n     new_ni = " << new_edgemap.ni() << "  new_nj = " << new_edgemap.nj() << vcl_endl;
+    std::cout << "\n     Scaling up = " << scaled_up_factor << std::endl;
+    std::cout << "\n     new_ni = " << new_edgemap.ni() << "  new_nj = " << new_edgemap.nj() << std::endl;
 
-    vcl_vector<dbsks_det_desc_xgraph_sptr > dets;
+    std::vector<dbsks_det_desc_xgraph_sptr > dets;
     dbsks_detect_xgraph_using_wcm(new_edgemap, new_edge_angle, new_polyline_list,
       xgraph, xgraph_geom, xgraph_ccm, 
       wcm_weight_unmatched,
@@ -1094,8 +1094,8 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
 
     raw_det_list.insert(raw_det_list.end(), dets.begin(), dets.end());
   }
-  vcl_cout << "\n    Number of detection before non-max suppression: " 
-    << raw_det_list.size() << vcl_endl;
+  std::cout << "\n    Number of detection before non-max suppression: " 
+    << raw_det_list.size() << std::endl;
 
   // \debug temporary
   //>>> Non-max suppression across detection results form different scales
@@ -1103,8 +1103,8 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
   dbsks_det_nms_using_polygon(raw_det_list, output_det_list, min_overlap_ratio_for_rejection);
   
 
-  vcl_cout << "\n----Number of detection after non-max suppression: " 
-    << output_det_list.size() << vcl_endl; 
+  std::cout << "\n----Number of detection after non-max suppression: " 
+    << output_det_list.size() << std::endl; 
 
 
   return true;
@@ -1119,7 +1119,7 @@ bool dbsks_detect_xgraph_using_wcm(const vcl_string& image_file,
 //: Detect an object using both geometric model and contour chamfer matching cost model
 bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
                          const vil_image_view<float >& edge_angle,
-                         const vcl_vector<vsol_polyline_2d_sptr >& polyline_list,
+                         const std::vector<vsol_polyline_2d_sptr >& polyline_list,
                          const dbsksp_xshock_graph_sptr& xgraph,
                          const dbsks_xgraph_geom_model_sptr& xgraph_geom,
                          const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
@@ -1127,7 +1127,7 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
                          double xgraph_scale,
                          int det_window_width,
                          int det_window_height,
-                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
+                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
 {
   // ///////////////////////////////////////////////////////////////////////////
   // confidence threshold to reject a detection
@@ -1142,7 +1142,7 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
 
   //////////////////////////////////////////////////////////////////////////////
   //>> Whole-Contour-Matching
-  vcl_cout << "\n>>Constructing Whole-Contour-Matching cost function ...";
+  std::cout << "\n>>Constructing Whole-Contour-Matching cost function ...";
 
   dbsks_wcm wcm;
   dbsks_prepare_ccm(&wcm, xgraph_ccm, edgemap, edge_angle);
@@ -1152,9 +1152,9 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
   wcm.set_weight_unmatched(wcm_weight_unmatched);
   
 
-  vcl_cout << "done" << vcl_endl;;
-  vcl_cout << "    Time spent = ";
-  timer.print(vcl_cout);
+  std::cout << "done" << std::endl;;
+  std::cout << "    Time spent = ";
+  timer.print(std::cout);
   
   ////////////////////////////////////////////////////////////////////////////////
   //>>> Biarc sampler
@@ -1168,51 +1168,51 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
 
   
   //>> Scale the shock graph to desired scale
-  vcl_cout << "\n>>Scaling the xgraph to specified scale ...";
-  double cur_scale = vcl_sqrt(xgraph->area());
+  std::cout << "\n>>Scaling the xgraph to specified scale ...";
+  double cur_scale = std::sqrt(xgraph->area());
   dbsksp_xshock_graph_sptr scaled_xgraph = new dbsksp_xshock_graph(*xgraph);
   scaled_xgraph->similarity_transform( (*scaled_xgraph->vertices_begin())->pt(), 0, 0, 0, xgraph_scale / cur_scale);
   scaled_xgraph->update_all_degree_1_nodes();
-  vcl_cout << "done\n";
+  std::cout << "done\n";
 
 
   //>> Compute all windows (rectangular boxes) necessary to cover the whole image
-  vcl_cout << "\n>>Computing sliding (rectangular) windows to cover the whole image ...";
+  std::cout << "\n>>Computing sliding (rectangular) windows to cover the whole image ...";
   
   // maximum size for a detection window
   int max_width = det_window_width; //512; 
   int max_height = det_window_height; //512;
 
   // list of windows to run detection on
-  vcl_vector<vgl_box_2d<int > > windows;
+  std::vector<vgl_box_2d<int > > windows;
   dbsks_algos::compute_detection_windows(max_width, max_height, edgemap.ni(), edgemap.nj(), windows);
 
 
   // Print out list of windows
-  vcl_cout << "\n  Total number of windows to run on = " << windows.size() << "\n";
+  std::cout << "\n  Total number of windows to run on = " << windows.size() << "\n";
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "  window " << iw << ": xmin=" << window.min_x() 
+    std::cout << "  window " << iw << ": xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
       << " ymax=" << window.max_y() << "\n";
   }
-  vcl_cout.flush();
+  std::cout.flush();
 
   //>> Detect objects within each window
-  vcl_cout << "\n>> Detecting objects in all computed windows ...";
-  vcl_vector<dbsks_det_desc_xgraph_sptr > det_list;
+  std::cout << "\n>> Detecting objects in all computed windows ...";
+  std::vector<dbsks_det_desc_xgraph_sptr > det_list;
   det_list.clear();
 
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout << "\n>>>> Window index = " << iw 
+    std::cout << "\n>>>> Window index = " << iw 
       << " xmin=" << window.min_x() 
       << " ymin=" << window.min_y() 
       << " xmax=" << window.max_x()
-      << " ymax=" << window.max_y() << vcl_endl;
+      << " ymax=" << window.max_y() << std::endl;
     
     // Compute wcm for a region of interest only, intead of the whole image
     wcm.compute(window, dbsks_ccm::USE_CLOSEST_ORIENTED_EDGE);
@@ -1246,21 +1246,21 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
       /////////////////////////////////////////////////////
     } // solution
   } // iw
-  vcl_cout << "\n    Number of detection before non-max suppression: " << det_list.size() << vcl_endl;
+  std::cout << "\n    Number of detection before non-max suppression: " << det_list.size() << std::endl;
 
   //>> Non-max supression on the boundary polygon
-  vcl_cout << "\n    Non-max suppression based on boundary polygon box: ...";
+  std::cout << "\n    Non-max suppression based on boundary polygon box: ...";
   dbsks_det_nms_using_polygon(det_list, output_det_list, min_overlap_ratio_for_rejection);
 
   // print out cost for each final detection
   for (unsigned i =0; i < output_det_list.size(); ++i)
   {
-    double wcm_cost = wcm_like.f_whole_contour(output_det_list[i]->xgraph(), vcl_vector<unsigned >(), true);
-    vcl_cout << "\nSolution i = " << i << " WCM cost = " << wcm_cost << vcl_endl;
+    double wcm_cost = wcm_like.f_whole_contour(output_det_list[i]->xgraph(), std::vector<unsigned >(), true);
+    std::cout << "\nSolution i = " << i << " WCM cost = " << wcm_cost << std::endl;
   }
   
-  vcl_cout << "\n    Number of detection after non-max suppression: " 
-    << output_det_list.size() << vcl_endl; 
+  std::cout << "\n    Number of detection after non-max suppression: " 
+    << output_det_list.size() << std::endl; 
   return true;
 }
 
@@ -1270,17 +1270,17 @@ bool dbsks_detect_xgraph_using_wcm(const vil_image_view<float >& edgemap,
 
 //------------------------------------------------------------------------------
 //: Load data from a list of file names
-bool dbsks_load_data(const vcl_string& image_file,
-                     const vcl_string& edgemap_file,
-                     const vcl_string& edgeorient_file,
-                     const vcl_string& cemv_file,
-                     const vcl_string& xgraph_file,
-                     const vcl_string& xgraph_geom_file,
-                     const vcl_string& xgraph_ccm_file,
-                     const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+bool dbsks_load_data(const std::string& image_file,
+                     const std::string& edgemap_file,
+                     const std::string& edgeorient_file,
+                     const std::string& cemv_file,
+                     const std::string& xgraph_file,
+                     const std::string& xgraph_geom_file,
+                     const std::string& xgraph_ccm_file,
+                     const std::vector<std::string >& cfrag_list_to_ignore,
                      vil_image_view<float >& edgemap,
                      vil_image_view<float >& edge_angle,
-                     vcl_vector<vsol_polyline_2d_sptr >& polyline_list,
+                     std::vector<vsol_polyline_2d_sptr >& polyline_list,
                      dbsksp_xshock_graph_sptr& xgraph,
                      dbsks_xgraph_geom_model_sptr& xgraph_geom,
                      dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
@@ -1304,7 +1304,7 @@ bool dbsks_load_data(const vcl_string& image_file,
   // check size
   if (edgemap.nj() != edge_angle.nj() || edgemap.ni() != edge_angle.ni())
   {
-    vcl_cout << "\n  ERROR: edgemap and edge orientation map do not have the same dimension." << vcl_endl;
+    std::cout << "\n  ERROR: edgemap and edge orientation map do not have the same dimension." << std::endl;
     return false;
   }
 
@@ -1324,41 +1324,41 @@ bool dbsks_load_data(const vcl_string& image_file,
   }
 
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
-  vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
+  std::cout << "\n>> Checking compatibility between geometric model and xgraph...";
   if (!xgraph_geom->is_compatible(xgraph))
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
   dbsks_load_xgraph_ccm_model(xgraph_ccm_file, xgraph_ccm);
 
   //>>> Check compatibility between Contour Chamfer Matching model and xgraph (are all edges covered)
-  vcl_cout << ">> Checking compatibility between CCM model and xgraph...";
+  std::cout << ">> Checking compatibility between CCM model and xgraph...";
   if (!xgraph_ccm->is_compatible(xgraph))
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
   // Set distributions of user-selected boundary fragments to constant
-  vcl_cout << ">> Overriding 'ignored' edges with constant distribution...";
+  std::cout << ">> Overriding 'ignored' edges with constant distribution...";
   if (!xgraph_ccm->override_cfrag_with_constant_distribution(cfrag_list_to_ignore))
   {
-    vcl_cout << "[ Failed ]\n\n";
+    std::cout << "[ Failed ]\n\n";
     return false;
   }
   else
   {
-    vcl_cout << "[   OK   ]\n\n";
+    std::cout << "[   OK   ]\n\n";
   }
 
   return true;
@@ -1404,22 +1404,22 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 
 //// -----------------------------------------------------------------------------
 ////: Detect an object using both geometric model and contour chamfer matching cost model
-//bool dbsks_detect_xgraph_using_ccm_subpix(const vcl_string& edgemap_folder,
-//                                          const vcl_string& object_name,
-//                                          const vcl_string& edgemap_ext,
-//                                          const vcl_string& edge_angle_ext,
-//                         const vcl_string& xgraph_file,
-//                         const vcl_string& xgraph_geom_file,
-//                         const vcl_string& xgraph_ccm_file,
-//                         const vcl_vector<vcl_string >& cfrag_list_to_ignore,
+//bool dbsks_detect_xgraph_using_ccm_subpix(const std::string& edgemap_folder,
+//                                          const std::string& object_name,
+//                                          const std::string& edgemap_ext,
+//                                          const std::string& edge_angle_ext,
+//                         const std::string& xgraph_file,
+//                         const std::string& xgraph_geom_file,
+//                         const std::string& xgraph_ccm_file,
+//                         const std::vector<std::string >& cfrag_list_to_ignore,
 //                         double min_xgraph_scale,
 //                         double log2_scale_step,
 //                         double max_xgraph_scale,
 //                         int det_window_width,
 //                         int det_window_height,
-//                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
+//                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list)
 //{
-//  vcl_cout << "\n========================================================"
+//  std::cout << "\n========================================================"
 //           << "\n   Xgraph detection using Contour-Chamfer-Matching      "
 //           << "\n========================================================\n\n";
 //
@@ -1428,7 +1428,7 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //
 //  if (log2_scale_step <= 0 || max_xgraph_scale < min_xgraph_scale) // improper scale params
 //  {
-//    vcl_cout << "\nERROR: Improper scale params. Nothing was run.\n";
+//    std::cout << "\nERROR: Improper scale params. Nothing was run.\n";
 //    return false;
 //  }
 //
@@ -1439,8 +1439,8 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  dbsks_xgraph_ccm_model_sptr xgraph_ccm;
 //
 //  //// edgemap
-//  //vcl_string edgemap_filename = object_name + edgemap_ext;
-//  //vcl_string edgemap_file = object_folder + "/" + edgemap_filename;
+//  //std::string edgemap_filename = object_name + edgemap_ext;
+//  //std::string edgemap_file = object_folder + "/" + edgemap_filename;
 //  //vil_image_view<float > edgemap;
 //  //if (!dbsks_load_edgemap(edgemap_file, edgemap))
 //  //{
@@ -1448,8 +1448,8 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  //}
 //
 //  //// edge_angle
-//  //vcl_string edge_angle_filename = object_name + edge_angle_ext;
-//  //vcl_string edge_angle_file = object_folder + edge_angle_filename;
+//  //std::string edge_angle_filename = object_name + edge_angle_ext;
+//  //std::string edge_angle_file = object_folder + edge_angle_filename;
 //  //vil_image_view<float > edge_angle;
 //  //if (!dbsks_load_edge_angle(edge_angle_file, edge_angle))
 //  //{
@@ -1459,7 +1459,7 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  //// check size
 //  //if (edgemap.nj() != edge_angle.nj() || edgemap.ni() != edge_angle.ni())
 //  //{
-//  //  vcl_cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << vcl_endl;
+//  //  std::cout << "\nERROR: edgemap and edge orientation map do not have the same dimension." << std::endl;
 //  //  return false;
 //  //}
 //
@@ -1476,55 +1476,55 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  }
 //
 //  // Check compatibility between the geometric model and the shock graph (are all edges covered?)
-//  vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
+//  std::cout << "\n>> Checking compatibility between geometric model and xgraph...";
 //  if (!xgraph_geom->is_compatible(xgraph))
 //  {
-//    vcl_cout << "Failed\n." << vcl_endl;
+//    std::cout << "Failed\n." << std::endl;
 //    return false;
 //  }
 //  else
 //  {
-//    vcl_cout << "Passed\n." << vcl_endl;
+//    std::cout << "Passed\n." << std::endl;
 //  }
 //
 //  dbsks_load_xgraph_ccm_model(xgraph_ccm_file, xgraph_ccm);
 //
 //  //>>> Check compatibility between Contour Chamfer Matching model and xgraph (are all edges covered)
-//  vcl_cout << ">> Checking compatibility between CCM model and xgraph...";
+//  std::cout << ">> Checking compatibility between CCM model and xgraph...";
 //  if (!xgraph_ccm->is_compatible(xgraph))
 //  {
-//    vcl_cout << "Failed\n." << vcl_endl;
+//    std::cout << "Failed\n." << std::endl;
 //    return false;
 //  }
 //  else
 //  {
-//    vcl_cout << "Passed\n." << vcl_endl;
+//    std::cout << "Passed\n." << std::endl;
 //  }
 //
 //  // Set distributions of user-selected boundary fragments to constant
-//  vcl_cout << ">> Overriding 'ignored' edges with constant distribution...";
+//  std::cout << ">> Overriding 'ignored' edges with constant distribution...";
 //  if (!xgraph_ccm->override_cfrag_with_constant_distribution(cfrag_list_to_ignore))
 //  {
-//    vcl_cout << "[ Failed ]\n\n";
+//    std::cout << "[ Failed ]\n\n";
 //    return false;
 //  }
 //  else
 //  {
-//    vcl_cout << "[ OK ]\n\n";
+//    std::cout << "[ OK ]\n\n";
 //  }
 //
 //  //>> Load the edgemap to get the image size
-//  vcl_string edgemap00_filename = object_name + "_00" + edgemap_ext;
-//  vcl_string edgemap00_file = edgemap_folder + "/" + edgemap00_filename;
+//  std::string edgemap00_filename = object_name + "_00" + edgemap_ext;
+//  std::string edgemap00_file = edgemap_folder + "/" + edgemap00_filename;
 //  vil_image_resource_sptr edgemap00_resource = vil_load_image_resource(edgemap00_file.c_str(), true);
 //  double image_width = edgemap00_resource->ni();
 //  double image_height = edgemap00_resource->nj();
-//  double image_scale = vcl_sqrt(image_width * image_height);
+//  double image_scale = std::sqrt(image_width * image_height);
 //
 //  // Maximum xgraph scale is bounded above by image size
 //  max_xgraph_scale = vnl_math_min(image_scale, max_xgraph_scale);
-//  vcl_vector<double > xgraph_scales;
-//  for (double s = min_xgraph_scale; s <= max_xgraph_scale; s *= vcl_pow(2, log2_scale_step))
+//  std::vector<double > xgraph_scales;
+//  for (double s = min_xgraph_scale; s <= max_xgraph_scale; s *= std::pow(2, log2_scale_step))
 //  {
 //    xgraph_scales.push_back(s);
 //  }
@@ -1532,32 +1532,32 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  
 //  //////////////////////////////////////////////////////////////////////////////
 //  //>> Detect xgraphs ..........................................................
-//  vcl_cout << "\n>> Computing the xgraph scales to run.\n";
-//  vcl_cout << "   -> Image size (W x H) = " << image_width << " x " << image_height 
-//    << "\n   -> Image scale (sqrt of area) = " << vcl_sqrt(image_width * image_height)
+//  std::cout << "\n>> Computing the xgraph scales to run.\n";
+//  std::cout << "   -> Image size (W x H) = " << image_width << " x " << image_height 
+//    << "\n   -> Image scale (sqrt of area) = " << std::sqrt(image_width * image_height)
 //    << "\n   -> Min xgraph scale = " << min_xgraph_scale 
 //    << "\n   -> Log2 of scale step = " << log2_scale_step
 //    << "\n   -> Max xgraph scale = " << max_xgraph_scale
 //    << "\n   -> List of scales = [ ";
 //  for (unsigned i =0; i < xgraph_scales.size(); ++i)
 //  {
-//    vcl_cout << xgraph_scales[i] << ", ";
+//    std::cout << xgraph_scales[i] << ", ";
 //  }
-//  vcl_cout << "]\n";
+//  std::cout << "]\n";
 //
-//  vcl_cout << "\n>> Detecting xgraph in image at multiple scales ...\n";
-//  vcl_vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
-//  double def_scale = vcl_sqrt(xgraph->area());
+//  std::cout << "\n>> Detecting xgraph in image at multiple scales ...\n";
+//  std::vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
+//  double def_scale = std::sqrt(xgraph->area());
 //  
 //  for (unsigned i =0; i < xgraph_scales.size(); ++i)
 //  {
-//    vcl_cout << "\n   -> Processing xgraph scale = " << xgraph_scales[i] << "\n";
+//    std::cout << "\n   -> Processing xgraph scale = " << xgraph_scales[i] << "\n";
 //
 //    double xgraph_scale = xgraph_scales[i];
 ////    vil_image_view<float > new_edgemap = edgemap;
 ////    vil_image_view<float > new_edge_angle = edge_angle;
 ////
-////    vcl_vector<dbsks_det_desc_xgraph_sptr > dets;
+////    std::vector<dbsks_det_desc_xgraph_sptr > dets;
 ////    dbsks_detect_xgraph_using_ccm_subpix(new_edgemap, new_edge_angle, 
 ////      xgraph, xgraph_geom, xgraph_ccm, 
 ////      xgraph_scale, 
@@ -1573,16 +1573,16 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 ////    raw_det_list.insert(raw_det_list.end(), dets.begin(), dets.end());
 ////  }
 ////
-////  vcl_cout << "\n    Number of detection before non-max suppression: " 
-////    << raw_det_list.size() << vcl_endl;
+////  std::cout << "\n    Number of detection before non-max suppression: " 
+////    << raw_det_list.size() << std::endl;
 ////
 ////  //>>> Non-max suppression across detection results form different scales
 ////  double min_overlap_ratio_for_rejection = 0.3;
 ////  dbsks_det_nms_using_polygon(raw_det_list, output_det_list, min_overlap_ratio_for_rejection);
 ////  
 ////
-////  vcl_cout << "\n----Number of detection after non-max suppression: " 
-////    << output_det_list.size() << vcl_endl; 
+////  std::cout << "\n----Number of detection after non-max suppression: " 
+////    << output_det_list.size() << std::endl; 
 //
 //  return true;
 //}
@@ -1606,7 +1606,7 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //                         const dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
 //                         int det_window_width,
 //                         int det_window_height,
-//                         vcl_vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
+//                         std::vector<dbsks_det_desc_xgraph_sptr >& output_det_list,
 //                         double confidence_lower_threshold,
 //                         bool run_nms_based_on_overlap,
 //                         double min_overlap_ratio_for_rejection
@@ -1625,56 +1625,56 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //  timer.mark();
 //
 //  //> Contour-Chamfer-Matching cost function...................................
-//  vcl_cout << "\n> Constructing a likelihood function based on CCM cost ...";
+//  std::cout << "\n> Constructing a likelihood function based on CCM cost ...";
 //
 //  dbsks_xshock_ccm_likelihood ccm_like;
 //  ccm_like.set_edgemap(edgemap);
 //  ccm_like.set_biarc_sampler(&dbsks_biarc_sampler::default_instance());
 //  ccm_like.set_ccm_model(xgraph_ccm);
-//  vcl_cout << " [ OK ]\n";
+//  std::cout << " [ OK ]\n";
 //
 //  ////> Scale the shock graph to desired scale...................................
-//  //vcl_cout << "\n> Scaling the xgraph to specified scale ...";
-//  //double cur_scale = vcl_sqrt(xgraph->area());
+//  //std::cout << "\n> Scaling the xgraph to specified scale ...";
+//  //double cur_scale = std::sqrt(xgraph->area());
 //  //dbsksp_xshock_graph_sptr scaled_xgraph = new dbsksp_xshock_graph(*xgraph);
 //  //scaled_xgraph->scale_up(0, 0, xgraph_scale / cur_scale);
-//  //vcl_cout << "done\n";
+//  //std::cout << "done\n";
 //
 //
 //  //> Compute all windows (rectangular boxes) necessary to cover the whole image
-//  vcl_cout << "\n> Computing sliding (rectangular) windows to cover the whole image ...";
+//  std::cout << "\n> Computing sliding (rectangular) windows to cover the whole image ...";
 //  
-//  vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
+//  std::vector<vgl_box_2d<int > > windows; // list of detection windows
 //  dbsks_compute_detection_windows(det_window_width, det_window_height, 
 //    edgemap->ncols(), edgemap->nrows(), windows);
 //
 //  // Print out list of windows
-//  vcl_cout << "\n  >> Total #windows = " << windows.size() << "\n";
-//  vcl_cout << "\n  >> List of windows: \n";
+//  std::cout << "\n  >> Total #windows = " << windows.size() << "\n";
+//  std::cout << "\n  >> List of windows: \n";
 //  for (unsigned iw =0; iw < windows.size(); ++iw)
 //  {
 //    vgl_box_2d<int > window = windows[iw];
-//    vcl_cout << "     window " << iw << ": xmin=" << window.min_x() 
+//    std::cout << "     window " << iw << ": xmin=" << window.min_x() 
 //      << " ymin=" << window.min_y() 
 //      << " xmax=" << window.max_x()
 //      << " ymax=" << window.max_y() << "\n";
 //  }
-//  vcl_cout << " [ OK ]\n";
-//  vcl_cout.flush();
+//  std::cout << " [ OK ]\n";
+//  std::cout.flush();
 //
 //  //>> Detect objects within each window
-//  vcl_cout << "\n> Detecting objects in all computed windows ...";
-//  vcl_vector<dbsks_det_desc_xgraph_sptr > det_list;
+//  std::cout << "\n> Detecting objects in all computed windows ...";
+//  std::vector<dbsks_det_desc_xgraph_sptr > det_list;
 //  det_list.clear();
 //
 //  for (unsigned iw =0; iw < windows.size(); ++iw)
 //  {
 //    vgl_box_2d<int > window = windows[iw];
-//    vcl_cout << "\n  >> Window index = " << iw 
+//    std::cout << "\n  >> Window index = " << iw 
 //      << " xmin=" << window.min_x() 
 //      << " ymin=" << window.min_y() 
 //      << " xmax=" << window.max_x()
-//      << " ymax=" << window.max_y() << vcl_endl;
+//      << " ymax=" << window.max_y() << std::endl;
 //    
 //    // Compute ccm for a region of interest only
 //    ccm_like.compute_internal_data(window);
@@ -1708,16 +1708,16 @@ bool dbsks_prepare_ccm(dbsks_ccm* ccm,
 //      /////////////////////////////////////////////////////
 //    } // solution
 //  } // iw
-//  vcl_cout << "\n    Number of raw detections: " << det_list.size() << vcl_endl;
+//  std::cout << "\n    Number of raw detections: " << det_list.size() << std::endl;
 //
 //  if (run_nms_based_on_overlap)
 //  {
 //    //>> Non-max supression on the boundary polygon
-//    vcl_cout << "\n    Non-max suppression based on boundary polygon box: ...";
+//    std::cout << "\n    Non-max suppression based on boundary polygon box: ...";
 //    dbsks_det_nms_using_polygon(det_list, output_det_list, min_overlap_ratio_for_rejection);
 //
-//    vcl_cout << "\n    Number of detection after non-max suppression: " 
-//      << output_det_list.size() << vcl_endl; 
+//    std::cout << "\n    Number of detection after non-max suppression: " 
+//      << output_det_list.size() << std::endl; 
 //  }
 //  else
 //  {

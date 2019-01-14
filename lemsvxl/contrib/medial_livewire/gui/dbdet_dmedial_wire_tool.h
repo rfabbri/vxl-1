@@ -33,7 +33,7 @@ public:
   //virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const {return "dMedial wire"; }
+  virtual std::string name() const {return "dMedial wire"; }
 
   ////: Allow the tool to add to the popup menu as a tableau would
   // virtual void get_popup(const vgui_popup_params& params, vgui_menu &menu);
@@ -110,9 +110,9 @@ public:
   bool init_livewires();
 
   ////: this method is used to find a new seed point if user has dragged mouse outside of window
-  //void find_cost(const vcl_vector<vcl_pair<int,int> >& coor, 
+  //void find_cost(const std::vector<std::pair<int,int> >& coor, 
   //  dbdet_lvwr& intsciss, 
-  //  vcl_vector<vgl_point_2d<double > >& contour, 
+  //  std::vector<vgl_point_2d<double > >& contour, 
   //  int& seedx, 
   //  int& seedy);
   //
@@ -185,22 +185,22 @@ protected:
   //
 
   //: stores temporary path returned by livewire
-  vcl_vector< vgl_point_2d<int > > path_[2];
+  std::vector< vgl_point_2d<int > > path_[2];
 
   //: mouse point
   vgl_point_2d<double > mouse_pt_;
 
   //: stores edge points manually selected by users
-  vcl_vector<vgl_point_2d<int > > manual_points_;
+  std::vector<vgl_point_2d<int > > manual_points_;
 
 
 
 
   //: stores the curve points delineating the cartilage boundaries
-  vcl_vector< vgl_point_2d<double > > contour_[2];
+  std::vector< vgl_point_2d<double > > contour_[2];
 
   //: stores the medial axis points (user input)         
-  vcl_vector< vgl_point_2d<double > > mouse_curve_;
+  std::vector< vgl_point_2d<double > > mouse_curve_;
   
   // drawing styles
   vgui_style_sptr medial_style_, contour_style_;
@@ -210,7 +210,7 @@ protected:
   vgui_style_sptr path_style_;
 
   // preloaded medial contour
-  vcl_vector<vgl_point_2d<double > > preloaded_curve_;
+  std::vector<vgl_point_2d<double > > preloaded_curve_;
 
 private:
 };

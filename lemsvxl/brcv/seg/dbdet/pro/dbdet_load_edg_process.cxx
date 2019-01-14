@@ -1,10 +1,10 @@
 //This is brcv/seg/dbdet/pro/dbdet_load_edg_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -39,24 +39,24 @@ dbdet_load_edg_process::dbdet_load_edg_process() : bpro1_process(), num_frames_(
       !parameters()->add( "Order by filename"        , "-orderbf", false)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
-vcl_string dbdet_load_edg_process::name() 
+std::string dbdet_load_edg_process::name() 
 {
   return "Load .EDG File";
 }
 
-vcl_vector< vcl_string > dbdet_load_edg_process::get_input_type() 
+std::vector< std::string > dbdet_load_edg_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_load_edg_process::get_output_type() 
+std::vector< std::string > dbdet_load_edg_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   bool bvsol;
   parameters()->get_value( "-bvsol" , bvsol );
 
@@ -80,7 +80,7 @@ bool dbdet_load_edg_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-edginput" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
 
   int num_of_files = 0;
 
@@ -89,12 +89,12 @@ bool dbdet_load_edg_process::execute()
   // make sure that input_file_path is sane
   if (input_file_path == "") { return false; }
 
-  //vcl_cout << vul_file::dirname(input_file_path);
+  //std::cout << vul_file::dirname(input_file_path);
 
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
   {
-    vcl_vector<vcl_string> input_files;
+    std::vector<std::string> input_files;
     for(vul_file_iterator fn = input_file_path + "/*.edg*"; fn; ++fn)
       input_files.push_back(fn());
 
@@ -103,11 +103,11 @@ bool dbdet_load_edg_process::execute()
     bool orderbf;
     parameters()->get_value( "-orderbf" , orderbf );
     if(orderbf) 
-      vcl_sort(input_files.begin(), input_files.end());
+      std::sort(input_files.begin(), input_files.end());
 
     while (!input_files.empty())
     {
-      vcl_string input_file = input_files.back();
+      std::string input_file = input_files.back();
       loadEDG(input_file);
       num_of_files++;
       input_files.pop_back();
@@ -117,7 +117,7 @@ bool dbdet_load_edg_process::execute()
     num_frames_ = num_of_files;
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
     bool successful = loadEDG(input_file);
     num_frames_ = 1;
 
@@ -126,12 +126,12 @@ bool dbdet_load_edg_process::execute()
   }
 
   //reverse the order of the objects so that they come out in the right order
-  // vcl_reverse(output_data_.begin(),output_data_.end());
+  // std::reverse(output_data_.begin(),output_data_.end());
 
   return true;
 }
 
-bool dbdet_load_edg_process::loadEDG(vcl_string input_file)
+bool dbdet_load_edg_process::loadEDG(std::string input_file)
 {
   bool bSubPixel=false, blines=false, bvsol=false;
   double scale;
@@ -143,17 +143,17 @@ bool dbdet_load_edg_process::loadEDG(vcl_string input_file)
 
   if (bvsol){
     // edgels (vsol)
-    vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+    std::vector< vsol_spatial_object_2d_sptr > edgels;
 
     bool retval = dbdet_load_edg(input_file, bSubPixel, blines, scale, edgels);
     if (!retval)
       return false;
 
-    vcl_cout << "N edgels: " << edgels.size() << vcl_endl;
+    std::cout << "N edgels: " << edgels.size() << std::endl;
     // create the output storage class
     vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
     output_vsol->add_objects(edgels, input_file);
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_vsol));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_vsol));
   }
   else {
     // edge_map 
@@ -163,14 +163,14 @@ bool dbdet_load_edg_process::loadEDG(vcl_string input_file)
     if (!retval)
       return false;
 
-    vcl_cout << "N edgels: " << edge_map->num_edgels() << vcl_endl;
+    std::cout << "N edgels: " << edge_map->num_edgels() << std::endl;
     // create the output storage class
     dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
     output_edgemap->set_edgemap(edge_map);
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_edgemap));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_edgemap));
   }
  
-  vcl_cout << "Loaded: " << input_file.c_str() << ".\n";
+  std::cout << "Loaded: " << input_file.c_str() << ".\n";
 
   return true;
 }

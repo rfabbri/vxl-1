@@ -7,12 +7,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -24,14 +24,14 @@
 #include <bgui3d/bgui3d_examiner_tableau.h>
 #include <bgui3d/bgui3d.h>
 
-vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_models)
+std::vector<vehicle_model> read_models(std::string vehicle_model_info,int num_models)
     {
     int i,j,k;
     double x,y;
     char ch;
-    vcl_ifstream ifst(vehicle_model_info.c_str());
-    vcl_vector<vehicle_model> model_vec;
-    vcl_vector<vsol_rectangle_2d> box1,box2,box3;
+    std::ifstream ifst(vehicle_model_info.c_str());
+    std::vector<vehicle_model> model_vec;
+    std::vector<vsol_rectangle_2d> box1,box2,box3;
 
     vsol_point_2d p0,p1,p2,p3;
 
@@ -99,10 +99,10 @@ vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_mode
 
 int main(int argc,char **argv)
     {
-    vcl_string ref_model = argv[1];
-    vcl_string generator_info = argv[2];
-    vcl_string vrml_file = argv[3];
-    vcl_string text_file = argv[4];
+    std::string ref_model = argv[1];
+    std::string generator_info = argv[2];
+    std::string vrml_file = argv[3];
+    std::string text_file = argv[4];
 
     //usage: 
 
@@ -114,15 +114,15 @@ int main(int argc,char **argv)
     //vrml_file is the output vrml file which has the three box models generated 
     //along the geodesic
 
-    vcl_ifstream generator_info_read(generator_info.c_str());
-    vcl_ofstream out (vrml_file.c_str());
-    vcl_ofstream txt_file_out (text_file.c_str());
+    std::ifstream generator_info_read(generator_info.c_str());
+    std::ofstream out (vrml_file.c_str());
+    std::ofstream txt_file_out (text_file.c_str());
 
-    vcl_vector<vehicle_model>vehic_model_vec = read_models(ref_model,1);
+    std::vector<vehicle_model>vehic_model_vec = read_models(ref_model,1);
 
     vehicle_model geodesic_mod;
 
-    vcl_vector<double>geodesics;
+    std::vector<double>geodesics;
     int i,num_coeffs = 6,count;
     // some hard-coded values ...
     double t,x,k1 = 97.87 ,k2 = 208.54;
@@ -171,12 +171,12 @@ int main(int argc,char **argv)
 
     for (t = -1;t<=1;t = t+0.01)
         {
-        sxh = vcl_exp(t*geodesics[0]);
-        syh = vcl_exp(t*geodesics[1]);
-        sxc = vcl_exp(t*geodesics[2]);
-        syc = vcl_exp(t*geodesics[3]);
-        sxb = vcl_exp(t*geodesics[4]);
-        syb = vcl_exp(t*geodesics[5]);
+        sxh = std::exp(t*geodesics[0]);
+        syh = std::exp(t*geodesics[1]);
+        sxc = std::exp(t*geodesics[2]);
+        syc = std::exp(t*geodesics[3]);
+        sxb = std::exp(t*geodesics[4]);
+        syb = std::exp(t*geodesics[5]);
 
         m1.put(0,0,sxh);
         m1.put(1,1,syh);
@@ -196,7 +196,7 @@ int main(int argc,char **argv)
 
         geodesic_mod.transform_model(m1,m2,m3);
 
-        // out << m1.get(0,2) << " " <<  m1.get(0,2) << " " <<  m1.get(0,2) << "," << vcl_endl;
+        // out << m1.get(0,2) << " " <<  m1.get(0,2) << " " <<  m1.get(0,2) << "," << std::endl;
        
 txt_file_out << geodesic_mod;
         }

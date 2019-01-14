@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 #include <dbskr/algo/dbskr_shock_patch_curve_match.h>
 #include <dbskr/dbskr_shock_patch.h>
 #include <dbcvr/dbcvr_cv_cor.h>
@@ -29,9 +29,9 @@
 
 void dbskr_shock_patch_curve_match::clear()
 {
-   for (vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
+   for (std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
     iter != patch_curve_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* v_ptr = iter->second;
+      std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* v_ptr = iter->second;
       delete v_ptr;
    }
    patch_curve_cor_map_.clear();
@@ -43,8 +43,8 @@ void dbskr_shock_patch_curve_match::clear()
    return;
 }
 inline 
-bool norm_cost_less(const vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> >& p1,
-                    const vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> >& p2) {
+bool norm_cost_less(const std::pair<int, std::vector<dbcvr_cv_cor_sptr> >& p1,
+                    const std::pair<int, std::vector<dbcvr_cv_cor_sptr> >& p2) {
   
   //: take the sum for now
   double cost1 = 0;
@@ -69,18 +69,18 @@ bool norm_cost_less(const vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> >& p1,
 //: sort again wrt norm costs
 void dbskr_shock_patch_curve_match::resort_wrt_costs()
 {
-  for (vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
     iter != patch_curve_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* v_ptr = iter->second;
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* v_ptr = iter->second;
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
    }
 
 }
 /*
   //: get the top n best match of the patch with this id
-vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* dbskr_shock_patch_curve_match::get_best_n_match(int patch_id, int n)
+std::vector< std::pair<int, dbskr_sm_cor_sptr> >* dbskr_shock_patch_curve_match::get_best_n_match(int patch_id, int n)
 {
-  vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* temp = new vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >();
+  std::vector< std::pair<int, dbskr_sm_cor_sptr> >* temp = new std::vector< std::pair<int, dbskr_sm_cor_sptr> >();
   temp->insert(temp->begin(), (*patch_curve_cor_map_[patch_id]).begin(), (*patch_curve_cor_map_[patch_id]).begin()+n);
   return temp;
 }
@@ -92,20 +92,20 @@ dbskr_shock_patch_curve_match_sptr dbskr_shock_patch_curve_match::construct_curv
   dbskr_shock_patch_curve_match_sptr new_match = new dbskr_shock_patch_curve_match();
   patch_curve_cor_map_type& new_map = new_match->get_map();
   patch_curve_cor_map_iterator it;
-  for (vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
     iter != patch_curve_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* v = (iter->second);
+      std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* v = (iter->second);
       for (unsigned i = 0; i < v->size(); i++) {
         it = new_map.find((*v)[i].first);
         if (it == new_map.end()) { // insert it
-          vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* new_v = new vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >();
-          vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > p;
+          std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* new_v = new std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >();
+          std::pair<int, std::vector<dbcvr_cv_cor_sptr> > p;
           p.first = iter->first;
           p.second = (*v)[i].second;  // the scurve correspondence is totally wrong but the cost is fine
           new_v->push_back(p);
           new_map[(*v)[i].first] = new_v;
         } else {
-          vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > p;
+          std::pair<int, std::vector<dbcvr_cv_cor_sptr> > p;
           p.first = iter->first;
           p.second = (*v)[i].second;  // the scurve correspondence is totally wrong but the cost is find
           (it->second)->push_back(p);
@@ -124,10 +124,10 @@ void dbskr_shock_patch_curve_match::b_write(vsl_b_ostream &os) const
 
   vsl_b_write(os, n_);
   vsl_b_write(os, patch_curve_cor_map_.size());
-  for (vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >::const_iterator iter = patch_curve_cor_map_.begin(); 
     iter != patch_curve_cor_map_.end(); iter++) {
     vsl_b_write(os, iter->first);
-    vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* v = (iter->second);
+    std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* v = (iter->second);
     vsl_b_write(os, v->size());
     for (unsigned i = 0; i < v->size(); i++) {
       vsl_b_write(os, (*v)[i].first);
@@ -155,13 +155,13 @@ void dbskr_shock_patch_curve_match::b_read(vsl_b_istream &is)
         for (unsigned i = 0; i < cnt; i++) {
           int id1;
           vsl_b_read(is, id1);
-          vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > > *v = new vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >();
+          std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > > *v = new std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >();
           unsigned v_cnt;
           vsl_b_read(is, v_cnt);
           for (unsigned j = 0; j < v_cnt; j++) {
-            vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > pp;
+            std::pair<int, std::vector<dbcvr_cv_cor_sptr> > pp;
             vsl_b_read(is, pp.first);
-            vcl_vector<dbcvr_cv_cor_sptr> m_vec;
+            std::vector<dbcvr_cv_cor_sptr> m_vec;
             unsigned m_cnt;
             vsl_b_read(is, m_cnt);
             for (unsigned k = 0; k < m_cnt; k++) {

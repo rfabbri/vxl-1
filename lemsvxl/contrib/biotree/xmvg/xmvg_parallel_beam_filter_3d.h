@@ -29,6 +29,6 @@ vnl_double_3 find_ray_start(vnl_double_3 start0, vnl_double_2 projection0,
 };
 
 template <class filter_3d, class T>
-void x_write(vcl_ostream& os, xmvg_parallel_beam_filter_3d<filter_3d, T> f);
+void x_write(std::ostream& os, xmvg_parallel_beam_filter_3d<filter_3d, T> f);
 
 #endif

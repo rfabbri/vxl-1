@@ -41,8 +41,8 @@ public:
                                      int template_size = 3);
   virtual ~dbcvr_open_space_cvmatch_even_grid() {};
 
-  // typedef vcl_vector< vcl_pair<int,int> > FinalMapType; (from dbdp_engine.h)
-  vcl_pair<double, FinalMapType*> match();
+  // typedef std::vector< std::pair<int,int> > FinalMapType; (from dbdp_engine.h)
+  std::pair<double, FinalMapType*> match();
 protected:
 
   //variables

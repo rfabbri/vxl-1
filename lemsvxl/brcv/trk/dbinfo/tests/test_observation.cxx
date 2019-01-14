@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_tracking_face_2d.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_array_1d.h>
@@ -42,16 +42,16 @@ static void test_observation(int argc, char* argv[])
   vsol_point_2d_sptr p1 = new vsol_point_2d(20,10);
   vsol_point_2d_sptr p2 = new vsol_point_2d(20,20);
   vsol_point_2d_sptr p3 = new vsol_point_2d(10,20);
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   verts.push_back(p3); 
   vsol_polygon_2d_sptr poly2 = new vsol_polygon_2d(verts);
   //Construct the observation
   /*dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly2);
-  vcl_cout << "obs geometry " << *(obs->geometry()) << '\n';
+  std::cout << "obs geometry " << *(obs->geometry()) << '\n';
   dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
   dbinfo_feature_base_sptr gradf = new dbinfo_gradient_feature();
-  vcl_vector<dbinfo_feature_base_sptr> features;
+  std::vector<dbinfo_feature_base_sptr> features;
   features.push_back(intf);   features.push_back(gradf);
   obs->set_features(features);
   obs->scan(0, imgr);
@@ -68,7 +68,7 @@ static void test_observation(int argc, char* argv[])
   vsl_b_read(bp_in2, obs_in);
   bp_in2.close();
   if(obs_in)
-    vcl_cout << "recovered observation " << *obs_in << '\n';
+    std::cout << "recovered observation " << *obs_in << '\n';
   vpl_unlink ("test_observation_io.tmp");
   if(!obs_in)
     {

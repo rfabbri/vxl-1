@@ -19,7 +19,7 @@
 //                               Needs a little more housecleaning still
 // \endverbatim
 
-#include <vcl_list.h>
+#include <list>
 #include <dbsk2d/dbsk2d_base_gui_geometry.h>
 #include <dbsk2d/dbsk2d_utils.h>
 
@@ -27,7 +27,7 @@
 class dbsk2d_ishock_elm;
 
 //some useful type definitions
-typedef vcl_list<dbsk2d_ishock_elm* >     ishock_elm_list;
+typedef std::list<dbsk2d_ishock_elm* >     ishock_elm_list;
 typedef ishock_elm_list::iterator         ishock_elm_list_iter;
 typedef ishock_elm_list::reverse_iterator ishock_elm_list_riter;
 

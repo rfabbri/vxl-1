@@ -27,8 +27,8 @@
 #include <vgl/vgl_box_2d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_view.h>
-#include <vcl_iostream.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <map>
 
 // ============================================================================
 // dbsks_xshock_detector
@@ -81,19 +81,19 @@ protected:
 public:
 
   //: Reconstruct an xshock graph from a graph configuration
-  dbsksp_xshock_graph_sptr reconstruct_xgraph(const vcl_map<unsigned, int >& xgraph_state);
+  dbsksp_xshock_graph_sptr reconstruct_xgraph(const std::map<unsigned, int >& xgraph_state);
 
   
 
   // I/O functions -------------------------------------------------------------
 
   //: Print Optimization results to a stream
-  vcl_ostream& print_summary(vcl_ostream& str) const;
+  std::ostream& print_summary(std::ostream& str) const;
 
   // Intermediate data ---------------------------------------------------------
 
   //: Map of id of a vertex to its grid of states
-  vcl_map<unsigned int, dbsks_xnode_grid > map_xnode_grid_;
+  std::map<unsigned int, dbsks_xnode_grid > map_xnode_grid_;
 
   //: Image
   //vil_image_view<float > image_src_;
@@ -127,9 +127,9 @@ public:
 
 
   //: Solutions
-  vcl_vector<dbsksp_xshock_graph_sptr > list_solutions_;
-  vcl_vector<float > list_solution_costs_;
-  vcl_vector<float > list_solution_real_costs_;
+  std::vector<dbsksp_xshock_graph_sptr > list_solutions_;
+  std::vector<float > list_solution_costs_;
+  std::vector<float > list_solution_real_costs_;
 
 
   // Graph-tree info

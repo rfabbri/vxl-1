@@ -67,39 +67,39 @@ public:
 
   //: Connect the points with line segments
   static dbsk2d_bnd_contour_sptr new_polyline_contour(
-    const vcl_vector<vgl_point_2d<double > > &vertices, bool closed,
+    const std::vector<vgl_point_2d<double > > &vertices, bool closed,
     const dbsk2d_boundary_sptr& boundary=0);
   
 
 
   //: Determine directions of the `edges' (such that they are connected)
   // Return false if the edges are not connected in a chain
-  static bool determine_edge_directions(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges,
-                             vcl_vector<signed char >& directions);
+  static bool determine_edge_directions(const std::vector<dbsk2d_bnd_edge_sptr >& edges,
+                             std::vector<signed char >& directions);
 
 
 
   // ============= COLLECTING ELEMENTS FROM A LIST ==========
   //: Extract edge list from a list of contours
-  static void extract_edge_list(const vcl_list<dbsk2d_bnd_contour_sptr >& contours, 
-    vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  static void extract_edge_list(const std::list<dbsk2d_bnd_contour_sptr >& contours, 
+    std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   //: Extract edge list from a boundary
   static void extract_edge_list(const dbsk2d_boundary_sptr& boundary,
-    vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+    std::list<dbsk2d_bnd_edge_sptr >& edges);
 
   //: Extract edges that have `vertices' as their endpoints
-  static void extract_edge_list(const vcl_list<dbsk2d_bnd_vertex_sptr >& vertices,
-    vcl_list<dbsk2d_bnd_edge_sptr >& edges);
+  static void extract_edge_list(const std::list<dbsk2d_bnd_vertex_sptr >& vertices,
+    std::list<dbsk2d_bnd_edge_sptr >& edges);
 
 
   //: Extract edge list from a list of contours
-  static void extract_vertex_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges, 
-    vcl_list<dbsk2d_bnd_vertex_sptr >& vertices);
+  static void extract_vertex_list(const std::list<dbsk2d_bnd_edge_sptr >& edges, 
+    std::list<dbsk2d_bnd_vertex_sptr >& vertices);
 
   //: Extract list of belms from a list of edges
-  static void extract_belm_list(const vcl_list<dbsk2d_bnd_edge_sptr >& edges, 
-    vcl_vector<dbsk2d_ishock_belm* >& ret_belms);
+  static void extract_belm_list(const std::list<dbsk2d_bnd_edge_sptr >& edges, 
+    std::vector<dbsk2d_ishock_belm* >& ret_belms);
 
 
 
@@ -114,7 +114,7 @@ public:
   ////: Construct a new polyline contour from a list of vertices
   //// Return smart pointer to the new contour
   //static dbsk2d_bnd_contour_sptr new_polyline_contour(
-  //  const vcl_vector<dbsk2d_bnd_vertex_sptr >& vertices,
+  //  const std::vector<dbsk2d_bnd_vertex_sptr >& vertices,
   //  const dbsk2d_boundary_sptr boundary );
   
 

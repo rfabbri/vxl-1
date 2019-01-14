@@ -291,7 +291,7 @@ int Triangulate(int nv, XYZ pxyz[], ITRIANGLE v[], int &ntri){
 
 
 
-dbdet_delaunay_map::dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges)
+dbdet_delaunay_map::dbdet_delaunay_map(std::vector<dbdet_edgel*> edges)
 {
     edges_=edges;
 
@@ -301,7 +301,7 @@ dbdet_delaunay_map::dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges)
 
 
 }
-dbdet_delaunay_map::dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges,vcl_vector<bool> is_included)
+dbdet_delaunay_map::dbdet_delaunay_map(std::vector<dbdet_edgel*> edges,std::vector<bool> is_included)
 {
     edges_=edges;
 
@@ -310,10 +310,10 @@ dbdet_delaunay_map::dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges,vcl_vector
 
 }
 
-void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_vector<bool> ons)
+void dbdet_delaunay_map::compute_delaunay(std::vector<dbdet_edgel*> edges, std::vector<bool> ons)
 {
     neighbor_map_.clear();
-    neighbor_map_.resize(edges.size(),vcl_vector<int>());
+    neighbor_map_.resize(edges.size(),std::vector<int>());
     delaunay_edges_.clear();
 
     int n=0;
@@ -345,7 +345,7 @@ void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_ve
 
     Triangulate(n, points, v, ntri);
 
-    triangle_map_.resize(edges.size(),vcl_vector<int>());
+    triangle_map_.resize(edges.size(),std::vector<int>());
 
     //: fill in the edges of the triangle ....
     for(int i=0;i<ntri;i++)
@@ -370,8 +370,8 @@ void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_ve
 
         //dbdet_delaunay_edge e1(points[v[i].p1].id,points[v[i].p2].id);
         //
-        //vcl_vector<dbdet_delaunay_edge>::iterator iter=
-        //    vcl_find(delaunay_edges_.begin(),delaunay_edges_.end(),e1);
+        //std::vector<dbdet_delaunay_edge>::iterator iter=
+        //    std::find(delaunay_edges_.begin(),delaunay_edges_.end(),e1);
         //if(iter==delaunay_edges_.end())
         //{
         //    e1.edge_id_=delaunay_edges_.size();
@@ -382,7 +382,7 @@ void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_ve
         //}
 
         //dbdet_delaunay_edge e2(points[v[i].p2].id,points[v[i].p3].id);
-        //iter=vcl_find(delaunay_edges_.begin(),delaunay_edges_.end(),e2);
+        //iter=std::find(delaunay_edges_.begin(),delaunay_edges_.end(),e2);
         //if(iter==delaunay_edges_.end())
         //{
         //    e2.edge_id_=delaunay_edges_.size();
@@ -393,7 +393,7 @@ void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_ve
         //}
         //dbdet_delaunay_edge e3(points[v[i].p3].id,points[v[i].p1].id);
 
-        //iter=vcl_find(delaunay_edges_.begin(),delaunay_edges_.end(),e3);
+        //iter=std::find(delaunay_edges_.begin(),delaunay_edges_.end(),e3);
         //if(iter==delaunay_edges_.end())
         //{
         //    e3.edge_id_=delaunay_edges_.size();
@@ -410,17 +410,17 @@ void dbdet_delaunay_map::compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_ve
 
 void dbdet_delaunay_map::threshold_delaunay_edges(double t)
 {
-    vcl_vector<dbdet_delaunay_edge>::iterator edge_iter;
+    std::vector<dbdet_delaunay_edge>::iterator edge_iter;
     for(edge_iter=delaunay_edges_.begin();edge_iter!=delaunay_edges_.end();)
     {
         if(edge_iter->weight_<t)
         {
             int id1=edge_iter->node1_id_;
             int id2=edge_iter->node2_id_;    
-            vcl_vector<int>::iterator iter=vcl_find(neighbor_map_[id1].begin(),neighbor_map_[id1].end(),id2);
+            std::vector<int>::iterator iter=std::find(neighbor_map_[id1].begin(),neighbor_map_[id1].end(),id2);
             if(iter!=neighbor_map_[id1].end())
                 neighbor_map_[id1].erase(iter);
-            iter=vcl_find(neighbor_map_[id2].begin(),neighbor_map_[id2].end(),id1);
+            iter=std::find(neighbor_map_[id2].begin(),neighbor_map_[id2].end(),id1);
             if(iter!=neighbor_map_[id2].end())
                 neighbor_map_[id2].erase(iter);
             edge_iter=delaunay_edges_.erase(edge_iter); 

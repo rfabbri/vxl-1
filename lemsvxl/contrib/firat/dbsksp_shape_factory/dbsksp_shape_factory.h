@@ -9,8 +9,8 @@
 #ifndef DBSKSP_SHAPE_FACTORY_H_
 #define DBSKSP_SHAPE_FACTORY_H_
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbsks/dbsks_xgraph_geom_model_sptr.h>
 #include <dbsksp/dbsksp_xshock_node_sptr.h>
@@ -19,13 +19,13 @@
 class dbsksp_shape_factory
 {
     public:
-        dbsksp_shape_factory(const vcl_string& xgraph_geom_filename, const vcl_string& prototype_xgraph_filename);
-        dbsksp_shape_factory(const vcl_string& xgraph_geom_filename, const vcl_string& prototype_xgraph_folder, const vcl_string& prototype_xgraph_list_file);
+        dbsksp_shape_factory(const std::string& xgraph_geom_filename, const std::string& prototype_xgraph_filename);
+        dbsksp_shape_factory(const std::string& xgraph_geom_filename, const std::string& prototype_xgraph_folder, const std::string& prototype_xgraph_list_file);
         dbsksp_xshock_graph_sptr generate_random_shape(int xgraph_id = -1);
-        vcl_vector<dbsksp_xshock_graph_sptr> generate_random_shapes(int num, int xgraph_id = -1);
-        vcl_vector<dbsksp_xshock_graph_sptr> generate_all_shapes();
+        std::vector<dbsksp_xshock_graph_sptr> generate_random_shapes(int num, int xgraph_id = -1);
+        std::vector<dbsksp_xshock_graph_sptr> generate_all_shapes();
     private:
-        vcl_vector<dbsksp_xshock_graph_sptr> prototype_xgraphs_;
+        std::vector<dbsksp_xshock_graph_sptr> prototype_xgraphs_;
         dbsks_xgraph_geom_model_sptr xgeom_;
         bool active_;
         vnl_random random_engine_;

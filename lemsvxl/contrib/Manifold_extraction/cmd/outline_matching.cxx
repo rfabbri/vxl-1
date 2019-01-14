@@ -2,10 +2,10 @@
 // \file    outline_matching.cxx
 // \brief   an example for matching the outlines of two shapes based on Lie distance notion
 // 
-#include <vcl_cstdio.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <cstdio>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include <vsol/vsol_point_2d.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
@@ -15,29 +15,29 @@
 
 
 
-void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
+void loadCON(std::string fileName, std::vector<vsol_point_2d_sptr> &points)
     {
-    vcl_ifstream infp(fileName.c_str());
+    std::ifstream infp(fileName.c_str());
     char magicNum[200];
 
     infp.getline(magicNum,200);
     if (strncmp(magicNum,"CONTOUR",7))
         {
-        vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-        vcl_cerr << "Should be CONTOUR " << magicNum << vcl_endl;
+        std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+        std::cerr << "Should be CONTOUR " << magicNum << std::endl;
         exit(1);
         }
 
     char openFlag[200];
     infp.getline(openFlag,200);
     if (!strncmp(openFlag,"OPEN",4))
-        vcl_cout << "Open Curve\n" << vcl_endl;
+        std::cout << "Open Curve\n" << std::endl;
     else if (!strncmp(openFlag,"CLOSE",5))
-        vcl_cout << "Closed Curve\n" << vcl_endl;
+        std::cout << "Closed Curve\n" << std::endl;
     else
         {
-        vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-        vcl_cerr << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+        std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+        std::cerr << "Should be OPEN/CLOSE " << openFlag << std::endl;
         exit(1);
         }
 
@@ -48,24 +48,24 @@ void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
     for (i=0;i<numOfPoints;i++)
         {
         infp >> x >> y;
-        vcl_cout << "x: " << x << "y: " << y << vcl_endl;
+        std::cout << "x: " << x << "y: " << y << std::endl;
         points.push_back(new vsol_point_2d(x, y));
         }
     infp.close();
     }
 
-void writeCON(vcl_string fileName, dbsol_interp_curve_2d_sptr c, int numpoints)
+void writeCON(std::string fileName, dbsol_interp_curve_2d_sptr c, int numpoints)
     {
-    vcl_ofstream outfp(fileName.c_str());
+    std::ofstream outfp(fileName.c_str());
     assert(outfp != NULL);
-    outfp << "CONTOUR" << vcl_endl;
-    outfp << "CLOSE" << vcl_endl;
-    outfp << numpoints << vcl_endl;
+    outfp << "CONTOUR" << std::endl;
+    outfp << "CLOSE" << std::endl;
+    outfp << numpoints << std::endl;
     double ds = c->length()/(numpoints-1);
     for(int i=0; i<numpoints; i++)
         {
         vsol_point_2d_sptr p = c->point_at(i*ds);
-        outfp << p->x() << " " << p->y() << " " << vcl_endl;
+        outfp << p->x() << " " << p->y() << " " << std::endl;
         }
     outfp.close();
     }
@@ -81,27 +81,27 @@ void writeCON(vcl_string fileName, dbsol_interp_curve_2d_sptr c, int numpoints)
 
 int main(int argc, char** argv)
     {
-    vcl_cout << "3D CURVE MATCHING EXAMPLE" << vcl_endl;
-    vcl_string batch_fname = argv[1];
-    vcl_ifstream infp(batch_fname.c_str());
+    std::cout << "3D CURVE MATCHING EXAMPLE" << std::endl;
+    std::string batch_fname = argv[1];
+    std::ifstream infp(batch_fname.c_str());
  
-        vcl_string inp1, inp2, out;
+        std::string inp1, inp2, out;
         infp >> inp1;
         infp >> inp2;
         infp >> out;
         
-        vcl_cout << inp1 << vcl_endl;
-        vcl_cout << inp2 << vcl_endl;
-        vcl_cout << out << vcl_endl;
+        std::cout << inp1 << std::endl;
+        std::cout << inp2 << std::endl;
+        std::cout << out << std::endl;
 
         // construct the first curve
-        vcl_vector<vsol_point_2d_sptr> points1;
+        std::vector<vsol_point_2d_sptr> points1;
         loadCON(inp1, points1);
         dbsol_interp_curve_2d curve1;
         vnl_vector<double> samples1;
         
         // construct the second curve
-        vcl_vector<vsol_point_2d_sptr> points2;
+        std::vector<vsol_point_2d_sptr> points2;
         loadCON(inp2, points2);
         dbsol_interp_curve_2d curve2;
         vnl_vector<double> samples2;
@@ -132,14 +132,14 @@ int main(int argc, char** argv)
 
         matching.Match();
 
-        vcl_vector<double> cost_vec = matching.finalCost();
+        std::vector<double> cost_vec = matching.finalCost();
 
         double min_cost = 1e20;
         int min_idx = -1; // infinity
 
         for (unsigned int i = 0;i<cost_vec.size();i++)
             {
-            vcl_cout << "cost vector: " << i << " " << cost_vec[i] << vcl_endl;
+            std::cout << "cost vector: " << i << " " << cost_vec[i] << std::endl;
             if (min_cost > cost_vec[i])
                 {
                 min_idx = i;
@@ -147,13 +147,13 @@ int main(int argc, char** argv)
                 }
             }
 
-        vcl_cout << "minimum index: " << min_idx << vcl_endl;
+        std::cout << "minimum index: " << min_idx << std::endl;
 
         FinalMapType fmap = matching.finalMap(min_idx);
 
-        vcl_string curve_out_1 = out;
-        vcl_string curve_out_2 = out;
-        vcl_string match_out = out;
+        std::string curve_out_1 = out;
+        std::string curve_out_2 = out;
+        std::string match_out = out;
         curve_out_1 += "curve1.con";
         curve_out_2 += "curve2.con";
         match_out += "match.txt";
@@ -162,11 +162,11 @@ int main(int argc, char** argv)
         /*writeCON(curve_out_1, curve1_sptr, curve1.size()+1);
         writeCON(curve_out_2, curve2_sptr, curve2.size()+1);*/
 
-        vcl_ofstream outfp(match_out.c_str());
-        outfp << "Final Cost = " << matching.finalCost(min_idx) << vcl_endl;
-        outfp << fmap.size() << vcl_endl;
+        std::ofstream outfp(match_out.c_str());
+        outfp << "Final Cost = " << matching.finalCost(min_idx) << std::endl;
+        outfp << fmap.size() << std::endl;
         for(unsigned i = 0; i < fmap.size(); i++)
-            outfp << (fmap)[i].first << " " << (fmap)[i].second << vcl_endl;
+            outfp << (fmap)[i].first << " " << (fmap)[i].second << std::endl;
 
     return 0;
     }

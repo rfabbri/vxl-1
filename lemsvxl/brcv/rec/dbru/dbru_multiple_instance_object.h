@@ -12,8 +12,8 @@
 #ifndef _dbru_multiple_instance_object_
 #define _dbru_multiple_instance_object_
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_image_view.h>
@@ -38,8 +38,8 @@ class dbru_multiple_instance_object:public vbl_ref_count
         //: destructor
         ~dbru_multiple_instance_object(){};
         //: initialize the images
-        void set_images(vcl_vector<vil_image_view<vxl_byte> > images){imgs_=images;}
-        void set_edges(vcl_vector<vsol_line_2d_sptr>  edges){edges_=edges;}
+        void set_images(std::vector<vil_image_view<vxl_byte> > images){imgs_=images;}
+        void set_edges(std::vector<vsol_line_2d_sptr>  edges){edges_=edges;}
         void set_poly(vsol_polygon_2d_sptr poly){poly_=poly;}
         void set_bbox(vsol_box_2d_sptr bbox){bbox_=bbox;}
         void set_bigbox(vsol_box_2d_sptr bbox){bigbox_=bbox;}
@@ -49,8 +49,8 @@ class dbru_multiple_instance_object:public vbl_ref_count
         unsigned edgels_size() { return edges_.size(); }
 
         vil_image_view<vxl_byte> get_image_i(int i);
-        vcl_vector<vil_image_view<vxl_byte> >& get_images() { return imgs_; }
-        vcl_vector<vsol_line_2d_sptr> get_edges();
+        std::vector<vil_image_view<vxl_byte> >& get_images() { return imgs_; }
+        std::vector<vsol_line_2d_sptr> get_edges();
         vsol_polygon_2d_sptr get_poly();
         vsol_box_2d_sptr get_box() { return bbox_; }
         vsol_box_2d_sptr get_img_box() { return bigbox_; }
@@ -68,8 +68,8 @@ class dbru_multiple_instance_object:public vbl_ref_count
         virtual dbru_multiple_instance_object * clone() const;
 
     private:
-        vcl_vector<vil_image_view<vxl_byte> > imgs_;
-        vcl_vector<vsol_line_2d_sptr>  edges_;
+        std::vector<vil_image_view<vxl_byte> > imgs_;
+        std::vector<vsol_line_2d_sptr>  edges_;
         vsol_polygon_2d_sptr poly_;
         vsol_box_2d_sptr bbox_;
         // image box, outer one

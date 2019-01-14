@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Nov 30, 2006        Creation
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbsk3d/dbsk3d_fs_sheet_set.h>
 
@@ -10,7 +10,7 @@
 
 void dbsk3d_fs_sheet_set::build_fs_sheet_set ()
 {
-  vul_printf (vcl_cout, "\nbuild_fs_sheet_set(): totally %u fs_faces.\n", 
+  vul_printf (std::cout, "\nbuild_fs_sheet_set(): totally %u fs_faces.\n", 
                fs_mesh_->facemap().size());
   fs_sheet_id_counter_ = 0;
   assert (sheetmap_.size() == 0);
@@ -19,7 +19,7 @@ void dbsk3d_fs_sheet_set::build_fs_sheet_set ()
   fs_mesh_->detect_valid_FE_type ();
 
   //Go through all shock-patch-elms and reset i_value_ flag to -1.
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     if (FF->b_valid())
@@ -43,7 +43,7 @@ void dbsk3d_fs_sheet_set::build_fs_sheet_set ()
     }
   }
 
-  vul_printf (vcl_cout, "  Totally %d sheet-components built.\n", fs_sheet_id_counter_);
+  vul_printf (std::cout, "  Totally %d sheet-components built.\n", fs_sheet_id_counter_);
 }
 
 //: Propagate the labelling of sheet component from the inputFF.
@@ -55,7 +55,7 @@ void dbsk3d_fs_sheet_set::propagate_label_S (dbsk3d_fs_sheet* S, dbsk3d_fs_face*
   unsigned int nP = S->n_FFs (); 
   assert (nP == 1);
   assert (inputFF->sid() > FF_UNVISITED_SID);
-  vcl_queue<dbsk3d_fs_face*> FF_queue;  
+  std::queue<dbsk3d_fs_face*> FF_queue;  
 
   //Put all valid neighboring unvisited patch-elms of inputFF to the FF_queue.
   put_neighbor_FF_to_Q (S, inputFF, FF_queue);
@@ -86,7 +86,7 @@ void dbsk3d_fs_sheet_set::propagate_label_S (dbsk3d_fs_sheet* S, dbsk3d_fs_face*
   assert (nP == S->n_FFs());
 
   #if DBMSH3D_DEBUG>2
-  vul_printf (vcl_cout, "S %d type %s has %d patch-elms.\n", 
+  vul_printf (std::cout, "S %d type %s has %d patch-elms.\n", 
                S->id(), S->type_string().c_str(), nP);
   #endif
 }
@@ -95,7 +95,7 @@ void dbsk3d_fs_sheet_set::propagate_label_S (dbsk3d_fs_sheet* S, dbsk3d_fs_face*
 //  Also, if any shock rib is found during the exploration, set S's type to FS_TYPE_TAB.
 //
 void dbsk3d_fs_sheet_set::put_neighbor_FF_to_Q (dbsk3d_fs_sheet* S, dbsk3d_fs_face* FF, 
-                                                vcl_queue<dbsk3d_fs_face*>& FF_queue)
+                                                std::queue<dbsk3d_fs_face*>& FF_queue)
 {
   assert (FF->b_valid() && FF->sid() >= 0);
   //Go through each adjacent shock link elements.  
@@ -155,7 +155,7 @@ void dbsk3d_fs_sheet_set::merge_fs_sheets (dbsk3d_fs_sheet* S1, dbsk3d_fs_sheet*
 unsigned int dbsk3d_fs_sheet_set::remove_empty_sheets ()
 {
   unsigned int n_empty_sheets_removed = 0;
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.begin();
   while (it != sheetmap_.end()) {
     dbsk3d_fs_sheet* S = (*it).second;
 
@@ -170,7 +170,7 @@ unsigned int dbsk3d_fs_sheet_set::remove_empty_sheets ()
         it = sheetmap_.begin();
       }
       else {
-        vcl_map<int, dbsk3d_fs_sheet*>::iterator prev = it;
+        std::map<int, dbsk3d_fs_sheet*>::iterator prev = it;
         prev--;
         sheetmap_.erase (it);
         delete S;
@@ -183,11 +183,11 @@ unsigned int dbsk3d_fs_sheet_set::remove_empty_sheets ()
 
 void dbsk3d_fs_sheet_set::remove_invalid_FF ()
 {
-  vul_printf (vcl_cout, "  remove_invalid_FF(): %u sheets,", sheetmap_.size());
+  vul_printf (std::cout, "  remove_invalid_FF(): %u sheets,", sheetmap_.size());
   if (sheetmap_.size() == 0)
     return;
 
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator sit = sheetmap_.begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator sit = sheetmap_.begin();
   while (sit != sheetmap_.end()) {
     dbsk3d_fs_sheet* S = (*sit).second;
 
@@ -224,12 +224,12 @@ void dbsk3d_fs_sheet_set::remove_invalid_FF ()
       sit++;
   }
 
-  vul_printf (vcl_cout, " remaining %u sheets.\n", sheetmap_.size());
+  vul_printf (std::cout, " remaining %u sheets.\n", sheetmap_.size());
 }
 
 bool dbsk3d_fs_sheet_set::check_integrity ()
 {
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator sit = sheetmap_.begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator sit = sheetmap_.begin();
   for (; sit != sheetmap_.end(); sit++) {
     dbsk3d_fs_sheet* S = (*sit).second;
 

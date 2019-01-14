@@ -1,4 +1,4 @@
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 #include <imgr/file_formats/imgr_skyscan_log.h>
@@ -7,15 +7,15 @@
 #include <cali/cali_calibrator.h>
 #include <xscan/xscan_uniform_orbit.h>
 
-void set_tolerances(   vcl_vector<double>& x_coord_tol,
-    vcl_vector<double>& y_coord_tol,
-    vcl_vector<double>& z_coord_tol,
-    vcl_vector<double>& rad_tol);
+void set_tolerances(   std::vector<double>& x_coord_tol,
+    std::vector<double>& y_coord_tol,
+    std::vector<double>& z_coord_tol,
+    std::vector<double>& rad_tol);
 
 int main(int argc, char* argv[]) 
 {
   if(argc < 2){
-    vcl_cerr << "usage: " << argv[0] << " <parameter file>\n";
+    std::cerr << "usage: " << argv[0] << " <parameter file>\n";
     exit(1);
   }
 
@@ -40,14 +40,14 @@ int main(int argc, char* argv[])
   vgl_point_3d<double>  artf_tr(-0.0869239,0.173656, -7.46849);
   */
 
-  vcl_cout << artf_rot << "\n";
-  vcl_cout << "rotation axis: " << artf_rot.axis() << "\n";
-  vcl_cout << "rotation angle: " << artf_rot.angle()*180./M_PI << "\n";
+  std::cout << artf_rot << "\n";
+  std::cout << "rotation axis: " << artf_rot.axis() << "\n";
+  std::cout << "rotation angle: " << artf_rot.angle()*180./M_PI << "\n";
 
-  vcl_vector<double>x_coord_tol;
-  vcl_vector<double>y_coord_tol;
-  vcl_vector<double>z_coord_tol;
-  vcl_vector<double>rad_tol;
+  std::vector<double>x_coord_tol;
+  std::vector<double>y_coord_tol;
+  std::vector<double>z_coord_tol;
+  std::vector<double>rad_tol;
 
   set_tolerances(x_coord_tol, y_coord_tol, z_coord_tol, rad_tol);
 
@@ -63,10 +63,10 @@ int main(int argc, char* argv[])
 
 }
 
-void set_tolerances(   vcl_vector<double>& x_coord_tol,
-    vcl_vector<double>& y_coord_tol,
-    vcl_vector<double>& z_coord_tol,
-    vcl_vector<double>& rad_tol)
+void set_tolerances(   std::vector<double>& x_coord_tol,
+    std::vector<double>& y_coord_tol,
+    std::vector<double>& z_coord_tol,
+    std::vector<double>& rad_tol)
 {
 
   x_coord_tol.push_back(0);

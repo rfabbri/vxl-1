@@ -17,8 +17,8 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_cost_function.h>
@@ -138,7 +138,7 @@ class dbinfo_match_optimizer : public vbl_ref_count
   //:the main function
   bool optimize();
   //: The current set of parameters (un-normalized)
-  vcl_vector<double> current_params();  
+  std::vector<double> current_params();  
   //: the current transform corresponding to the parameters
   vgl_h_matrix_2d<double> current_transform();
   //: The optimization cost value

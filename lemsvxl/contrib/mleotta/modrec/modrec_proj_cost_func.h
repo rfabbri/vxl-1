@@ -45,7 +45,7 @@ protected:
   vnl_double_3x4 camera_;
   vpgl_poly_radial_distortion<double,4> lens_;
   imesh_mesh model_;
-  vcl_vector<vgl_vector_3d<double> > normals_;
+  std::vector<vgl_vector_3d<double> > normals_;
   double xs_, ys_;
   vil_image_view<bool> mask_, shadow_mask_;
 
@@ -59,7 +59,7 @@ class modrec_motion_cost_func : public vnl_cost_function
 {
 public:
   //: Constructor
-  modrec_motion_cost_func( const vcl_vector<vil_image_view<float> >& errors,
+  modrec_motion_cost_func( const std::vector<vil_image_view<float> >& errors,
                            const vnl_double_3x4& camera,
                            const vpgl_poly_radial_distortion<double,4>& lens,
                            const imesh_mesh& model,
@@ -75,7 +75,7 @@ protected:
   modrec_proj_cost_func frame_cost_;
 
   //: The error measures for each frame in the sequence
-  vcl_vector<vil_image_view<float> > seq_errors_;
+  std::vector<vil_image_view<float> > seq_errors_;
 
 };
 

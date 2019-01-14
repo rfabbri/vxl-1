@@ -1,6 +1,6 @@
 #include "mw_sel_geometry_tool.h"
 
-#include <vcl_limits.h>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -22,7 +22,7 @@ mw_sel_geometry_tool()
 }
 
 
-vcl_string mw_sel_geometry_tool::
+std::string mw_sel_geometry_tool::
 name() const
 {
   return "SEL Geometry";
@@ -39,16 +39,16 @@ activate ()
 
   gt_.vertical_cast(p);
   if(!gt_) {
-    vcl_cerr << "Error: tool requires a 3rdOrderGeometry storage" << vcl_endl;
+    std::cerr << "Error: tool requires a 3rdOrderGeometry storage" << std::endl;
     return;
   }
-  vcl_cout << "Geom Size: " << gt_->c().size() << vcl_endl;
+  std::cout << "Geom Size: " << gt_->c().size() << std::endl;
 }
 
 void mw_sel_geometry_tool::
 deactivate ()
 {
-  vcl_cout << "mw_sel_geometry_tool OFF\n";
+  std::cout << "mw_sel_geometry_tool OFF\n";
   dbdet_sel_explorer_tool::deactivate();
 }
 
@@ -65,7 +65,7 @@ handle( const vgui_event & e,
         return true;
         break;
       default:
-        vcl_cout << "Unassigned key: " << e.key << " pressed.\n";
+        std::cout << "Unassigned key: " << e.key << " pressed.\n";
         break;
     }
   }
@@ -77,14 +77,14 @@ void mw_sel_geometry_tool::
 print_ground_truth_info_at_edgel()
 {
   if (!cur_edgel) {
-    vcl_cout << "No selected edgel\n";
+    std::cout << "No selected edgel\n";
     return;
   }
 
   unsigned  i = cur_edgel->id -1;
-  vcl_cout << 
+  std::cout << 
     "Ground truth at id #" << i+1 <<
     "  k: " << gt_->c()[i].k <<
     "  kdot: " << gt_->c()[i].kdot << 
-    vcl_endl;
+    std::endl;
 }

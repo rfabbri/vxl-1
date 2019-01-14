@@ -24,8 +24,8 @@
 #define _dbskr_shock_patch_match_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -41,11 +41,11 @@
 #include "dbskr_shock_patch_match_sptr.h"
 #include <dbskr/algo/dbskr_shock_path_finder.h>
 
-typedef vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > patch_cor_map_type;
-typedef vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator patch_cor_map_iterator;
+typedef std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > patch_cor_map_type;
+typedef std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator patch_cor_map_iterator;
 
-typedef vcl_map<int, vcl_vector<vcl_pair<int, float> >* > patch_cor_info_map_type;
-typedef vcl_map<int, vcl_vector<vcl_pair<int, float> >* >::iterator patch_cor_info_map_iterator;
+typedef std::map<int, std::vector<std::pair<int, float> >* > patch_cor_info_map_type;
+typedef std::map<int, std::vector<std::pair<int, float> >* >::iterator patch_cor_info_map_iterator;
 
 //: Shock Curve class
 class dbskr_shock_patch_match : public vbl_ref_count 
@@ -70,13 +70,13 @@ public:
   void clear_sm_map_lists();
 
   patch_cor_map_type& get_map() { return patch_cor_map_; }
-  vcl_map<int, dbskr_shock_patch_sptr>& get_id_map1() { return map1_; } 
-  vcl_map<int, dbskr_shock_patch_sptr>& get_id_map2() { return map2_; } 
-  void set_id_map1(vcl_map<int, dbskr_shock_patch_sptr>& map) { map1_ = map; } 
-  void set_id_map2(vcl_map<int, dbskr_shock_patch_sptr>& map) { map2_ = map; } 
+  std::map<int, dbskr_shock_patch_sptr>& get_id_map1() { return map1_; } 
+  std::map<int, dbskr_shock_patch_sptr>& get_id_map2() { return map2_; } 
+  void set_id_map1(std::map<int, dbskr_shock_patch_sptr>& map) { map1_ = map; } 
+  void set_id_map2(std::map<int, dbskr_shock_patch_sptr>& map) { map2_ = map; } 
 
-  void set_patch_set2(vcl_vector<dbskr_shock_patch_sptr>& patch_set) { patch_set2_ = patch_set; }
-  vcl_vector<dbskr_shock_patch_sptr>& get_patch_set2(void) { return patch_set2_; }
+  void set_patch_set2(std::vector<dbskr_shock_patch_sptr>& patch_set) { patch_set2_ = patch_set; }
+  std::vector<dbskr_shock_patch_sptr>& get_patch_set2(void) { return patch_set2_; }
 
   //: sort again wrt norm costs
   void resort_wrt_norm_cost();
@@ -100,10 +100,10 @@ public:
   bool compute_just_norm_fine_costs_of_cors();
 
   //: get the best match of the patch with this id
-  vcl_pair<int, dbskr_sm_cor_sptr>& get_best_match(int patch_id);
+  std::pair<int, dbskr_sm_cor_sptr>& get_best_match(int patch_id);
 
   //: get the top n best match of the patch with this id
-  vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* get_best_n_match(int patch_id, int n); 
+  std::vector< std::pair<int, dbskr_sm_cor_sptr> >* get_best_n_match(int patch_id, int n); 
 
   //: change the norm costs in sm_cor's so that the value reflects the relative significance of this
   //  similarity value when the total area of the matching patches are concerned
@@ -135,7 +135,7 @@ public:
     dbskr_shock_path_finder& f2, 
     float threshold, float upper_threshold, float interpolate_ds, float sample_ds, dbskr_tree_edit_params& edit_params, 
     bool normalize, float alpha,
-    vil_image_resource_sptr img1 = 0, vil_image_resource_sptr img2 = 0, vcl_string out_img = "");
+    vil_image_resource_sptr img1 = 0, vil_image_resource_sptr img2 = 0, std::string out_img = "");
 
   //: detect an instance of the category of the first storage in the second storage's image, 
   //  implied by this match and the given input shock graphs
@@ -151,11 +151,11 @@ public:
     dbskr_shock_path_finder& f2, 
     float threshold, float upper_threshold, float interpolate_ds, float sample_ds, dbskr_tree_edit_params& edit_params, 
     bool normalize, bool use_approx_cost, bool impose_geom_consistency, float Lie_dist_threshold, float alpha,
-    vil_image_resource_sptr img1 = 0, vil_image_resource_sptr img2 = 0, vcl_string out_img = "");
+    vil_image_resource_sptr img1 = 0, vil_image_resource_sptr img2 = 0, std::string out_img = "");
 
-  void find_valid_pairs(float upper_threshold, vcl_vector<vcl_vector<float> >& valid, unsigned int& valid_cnt);
-  bool find_geom_consistent_quads(vcl_vector<vcl_vector<float> >& valid, 
-    vcl_map<vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> >, bool>& cons_quads, 
+  void find_valid_pairs(float upper_threshold, std::vector<std::vector<float> >& valid, unsigned int& valid_cnt);
+  bool find_geom_consistent_quads(std::vector<std::vector<float> >& valid, 
+    std::map<std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> >, bool>& cons_quads, 
     float upper_threshold, float Lie_dist_threshold);
   bool compute_similarity_transformations(int sampling_interval = 5);
   bool get_rotation_angle(vnl_matrix<double>& G, double& theta);
@@ -170,20 +170,20 @@ public:
   //  their similarity transformation's similarity to the given pairs transformation
   //  the distance between the transformations is computed via Lie Algebra and the Lie Distance
   //  (similarity transformations form a Lie Group, hence we can find distances between them in the Lie Space)
-  //  vcl_vector<vcl_pair< vcl_pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
+  //  std::vector<std::pair< std::pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
   //bool rank_order_other_patch_pairs_wrt_sim_trans_lie(int model_id, int query_id, 
-  //              vcl_vector<vcl_pair< vcl_pair<int, int>, double > >& out_vec, float sim_threshold);
+  //              std::vector<std::pair< std::pair<int, int>, double > >& out_vec, float sim_threshold);
 
   //bool rank_order_other_patch_pairs_wrt_sim_trans(int model_id, int query_id, 
-  //              vcl_vector<vcl_pair< vcl_pair<int, int>, double > >& out_vec, float sim_threshold);
+  //              std::vector<std::pair< std::pair<int, int>, double > >& out_vec, float sim_threshold);
 
   bool rank_order_other_patch_pairs_wrt_sim_trans(int model_id, int query_id, 
-                vcl_vector<vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double> > > >& out_vec, float sim_threshold);
+                std::vector<std::pair< std::pair<int, int>, std::pair<double, vnl_matrix<double> > > >& out_vec, float sim_threshold);
 
   //: detect an instance of the category of the first storage in the second storage's image, implied by this match
   //  use the consistency similarity transformation's of patch pairs
   //  algorithm explained in Kimia's NSF december proposal 2007
-  bool detect_instance_wrt_trans(vcl_vector<vsol_box_2d_sptr>& detection_box, int k, float trans_threshold);
+  bool detect_instance_wrt_trans(std::vector<vsol_box_2d_sptr>& detection_box, int k, float trans_threshold);
 
   //: mutual info methods
   //bool compute_mutual_infos();
@@ -192,19 +192,19 @@ public:
   void resort_wrt_info();
 
   //: get the best match of the patch with this id
-  vcl_pair<int, float>& get_best_match_info(int patch_id);
+  std::pair<int, float>& get_best_match_info(int patch_id);
 
   patch_cor_info_map_type& get_info_map() { return patch_cor_info_map_; }
 
-  bool create_match_ps_images(vcl_string image_dir, vcl_string name1, dbsk2d_shock_graph_sptr base_sg1, vcl_string name2, dbsk2d_shock_graph_sptr base_sg2);
-  bool create_html_table(vcl_string image_dir, vcl_string name1, vcl_string name2, vcl_string out_html, vcl_string table_caption, vcl_string image_ext, int image_width, bool put_match_images);
+  bool create_match_ps_images(std::string image_dir, std::string name1, dbsk2d_shock_graph_sptr base_sg1, std::string name2, dbsk2d_shock_graph_sptr base_sg2);
+  bool create_html_table(std::string image_dir, std::string name1, std::string name2, std::string out_html, std::string table_caption, std::string image_ext, int image_width, bool put_match_images);
 
-  bool create_html_rank_order_table(vcl_string image_dir, 
-                                    vcl_string name1, 
-                                    vcl_string name2, 
-                                    vcl_string out_html, 
-                                    vcl_string table_caption, 
-                                    vcl_string image_ext, 
+  bool create_html_rank_order_table(std::string image_dir, 
+                                    std::string name1, 
+                                    std::string name2, 
+                                    std::string out_html, 
+                                    std::string table_caption, 
+                                    std::string image_ext, 
                                     bool put_match_images);
 
 
@@ -216,10 +216,10 @@ public:
   virtual unsigned version() const {return 2;}  // version 2: added dbskr_tree_edit_params
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbskr_shock_patch_match";}
+  virtual std::string is_a() const {return "dbskr_shock_patch_match";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -238,15 +238,15 @@ public:
   patch_cor_map_type patch_cor_map_;
 
   //: keep the id to sptr map if available
-  vcl_map<int, dbskr_shock_patch_sptr> map1_;
-  vcl_map<int, dbskr_shock_patch_sptr> map2_;
+  std::map<int, dbskr_shock_patch_sptr> map1_;
+  std::map<int, dbskr_shock_patch_sptr> map2_;
 
-  vcl_vector<dbskr_shock_patch_sptr> patch_set2_;
+  std::vector<dbskr_shock_patch_sptr> patch_set2_;
 
   //: required for visualization
   dbskr_shock_patch_sptr left_, right_;
   dbskr_sm_cor_sptr cor_;
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* left_v_;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* left_v_;
   int current_left_v_id_;
 
   float shock_pruning_threshold_;

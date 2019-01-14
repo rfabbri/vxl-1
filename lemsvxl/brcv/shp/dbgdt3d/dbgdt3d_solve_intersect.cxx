@@ -2,7 +2,7 @@
 //  
 
 #include <assert.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbgdt3d/dbgdt3d_numerical.h>
 #include <dbgdt3d/dbgdt3d_solve_intersect.h>
@@ -21,7 +21,7 @@ bool _proj_tau_to_L (const double& L, const double& H,
   if (new_theta <= 0 || new_theta >= vnl_math::pi)
     return false;
 
-  proj_tau = nL_nofix - nH/vcl_tan(new_theta);
+  proj_tau = nL_nofix - nH/std::tan(new_theta);
 
   //: numerical error
   if (proj_tau < 0)
@@ -48,7 +48,7 @@ bool _proj_tau_to_R (const double& L, const double& H,
     return false;
 
   const double lenR = right_edge->len();
-  proj_tau = nL_nofix - nH/vcl_tan(new_theta);
+  proj_tau = nL_nofix - nH/std::tan(new_theta);
 
   //: numerical error
   if (proj_tau > lenR)

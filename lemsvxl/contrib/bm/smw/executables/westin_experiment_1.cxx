@@ -2,8 +2,8 @@
 
 #include "smw/smw_world.h"
 
-#include<vcl_iostream.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<string>
 
 #include<vil/vil_convert.h>
 #include<vil/vil_load.h>
@@ -15,33 +15,33 @@
 int main()
 {
 
-    vcl_cout << "----------------------------------------\n"
+    std::cout << "----------------------------------------\n"
              << "          WESTIN EXPERIMENT 1 \n"
              << "----------------------------------------\n";
 
-    vcl_string img_dir = "/media/DATAPART1/BrandonDataFolder/smw_data/westin/10fps_input";
+    std::string img_dir = "/media/DATAPART1/BrandonDataFolder/smw_data/westin/10fps_input";
 
-    vcl_string out_dir = "/media/DATAPART1/BrandonDataFolder/smw_data/westin/10fps_change_map";
+    std::string out_dir = "/media/DATAPART1/BrandonDataFolder/smw_data/westin/10fps_change_map";
 
     //to sort filenames and load them in the correct order.
-    vcl_vector<vcl_string> filenames;
+    std::vector<std::string> filenames;
     for(vul_file_iterator file_itr = img_dir + "/*.jpg";file_itr;++file_itr)
         filenames.push_back(vul_file::strip_extension(file_itr.filename()));
 
-    vcl_vector<vcl_string>::iterator filename_itr = filenames.begin();
-    vcl_vector<vcl_string>::iterator filename_end = filenames.end();
-    vcl_sort(filename_itr,filename_end);
+    std::vector<std::string>::iterator filename_itr = filenames.begin();
+    std::vector<std::string>::iterator filename_end = filenames.end();
+    std::sort(filename_itr,filename_end);
 
     vil_image_view<float> curr_img;
     vil_image_view<vxl_byte> change_map;
 
-    vcl_string curr_filename = img_dir + "/" + *filename_itr + ".jpg";
-    vcl_string curr_output_name;
+    std::string curr_filename = img_dir + "/" + *filename_itr + ".jpg";
+    std::string curr_output_name;
 
-    vcl_cout <<"***********Creatinging World************\n"
-                 <<"Current Image: " << curr_filename << vcl_endl;
+    std::cout <<"***********Creatinging World************\n"
+                 <<"Current Image: " << curr_filename << std::endl;
 
-    vcl_cout << "Loading Image... " << vcl_endl;
+    std::cout << "Loading Image... " << std::endl;
     vil_convert_planes_to_grey<vxl_byte,float>
         ( vil_load(curr_filename.c_str()),curr_img );
 
@@ -54,20 +54,20 @@ int main()
     for(;filename_itr!=filename_end;++filename_itr)
     {
         curr_filename = img_dir + "/" + *filename_itr + ".jpg";
-        vcl_cout <<"************Updating World************\n"
-                 <<"Current Image: " << curr_filename << vcl_endl;
+        std::cout <<"************Updating World************\n"
+                 <<"Current Image: " << curr_filename << std::endl;
         
-        vcl_cout << "Loading Image..." << vcl_endl;
+        std::cout << "Loading Image..." << std::endl;
         vil_convert_planes_to_grey<vxl_byte,float>
             ( vil_load(curr_filename.c_str()), curr_img);
 
-        vcl_cout << "Calling Update Function..." << vcl_endl;
+        std::cout << "Calling Update Function..." << std::endl;
         world.update(curr_img);  
          
-        vcl_cout << "Creating Change Map..." << vcl_endl;
+        std::cout << "Creating Change Map..." << std::endl;
         change_map = world.change_map();
 
-        vcl_cout << "Saving Change Map..." << vcl_endl;
+        std::cout << "Saving Change Map..." << std::endl;
         curr_output_name = out_dir + "/" + *filename_itr + "_change_map.jpg"; 
         vil_save(change_map,curr_output_name.c_str());       
     }

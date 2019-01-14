@@ -4,8 +4,8 @@
 // \file
 
 #include "correlate_edge_maps_process.h"
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
@@ -23,7 +23,7 @@ correlate_edge_maps_process::correlate_edge_maps_process()
 {
   if( !parameters()->add( "Radius of Sloppiness", "-radius",  3.0 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -42,7 +42,7 @@ correlate_edge_maps_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 correlate_edge_maps_process::name()
 {
   return "Correlate Edgemaps";
@@ -65,9 +65,9 @@ correlate_edge_maps_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > correlate_edge_maps_process::get_input_type()
+std::vector< std::string > correlate_edge_maps_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map" );
   to_return.push_back( "edge_map" );
   return to_return;
@@ -75,9 +75,9 @@ vcl_vector< vcl_string > correlate_edge_maps_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > correlate_edge_maps_process::get_output_type()
+std::vector< std::string > correlate_edge_maps_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map_corr" );
   return to_return;
 }
@@ -88,7 +88,7 @@ bool
 correlate_edge_maps_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In correlate_edge_maps_process::execute() - not exactly one"
+    std::cout << "In correlate_edge_maps_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -116,7 +116,7 @@ correlate_edge_maps_process::execute()
   
   static const double maxDistDefault = 0.0075;
   static const double outlierCostDefault = 100;
-  double idiag = vcl_sqrt( (double) edge_map1->height()*edge_map1->height() +
+  double idiag = std::sqrt( (double) edge_map1->height()*edge_map1->height() +
                           edge_map1->width()*edge_map1->width());
 
   

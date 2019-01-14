@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbgdt3d/dbgdt3d_manager.h>
@@ -18,7 +18,7 @@ void gdt_ws_manager::Create_propagation_of_interior_vertex (dbmsh3d_gdt_vertex_3
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>3)
-    vul_printf (vcl_cout, "  interior V %d: Wa e %d (%.3f, %.3f), Wb e %d (%.3f, %.3f).\n", 
+    vul_printf (std::cout, "  interior V %d: Wa e %d (%.3f, %.3f), Wb e %d (%.3f, %.3f).\n", 
                  v->id(), Wa->edge()->id(), Wa->stau(), Wa->etau(), 
                  Wb->edge()->id(), Wb->stau(), Wb->etau());
 #endif
@@ -39,7 +39,7 @@ void gdt_ws_manager::Create_propagation_of_interior_vertex (dbmsh3d_gdt_vertex_3
     v->set_propagated (true);
 
     #if GDT_DEBUG_MSG
-      vul_printf (vcl_cout, "  Skip the sink V %d: Wa %d (%.3f, %.3f), Wb %d (%.3f, %.3f).\n", 
+      vul_printf (std::cout, "  Skip the sink V %d: Wa %d (%.3f, %.3f), Wb %d (%.3f, %.3f).\n", 
                    v->id(), Wa->edge()->id(), Wa->stau(), Wa->etau(), 
                    Wb->edge()->id(), Wb->stau(), Wb->etau());
     #endif
@@ -130,15 +130,15 @@ void gdt_ws_manager::Create_propagation_of_interior_vertex (dbmsh3d_gdt_vertex_3
       if (n_verbose_>3) {        
         char astring[64], bstring[64];
         if (Sa)
-          vcl_sprintf (astring, "%d (%.3f)", Sa->id(), Sa->tauE());
+          std::sprintf (astring, "%d (%.3f)", Sa->id(), Sa->tauE());
         else
-          vcl_sprintf (astring, "NULL");
+          std::sprintf (astring, "NULL");
         if (Sb)
-          vcl_sprintf (bstring, "%d (%.3f)", Sb->id(), Sb->tauE());
+          std::sprintf (bstring, "%d (%.3f)", Sb->id(), Sb->tauE());
         else
-          vcl_sprintf (bstring, "NULL");
+          std::sprintf (bstring, "NULL");
 
-          vul_printf (vcl_cout, "    New contactS %s and %s created from v %d.\n", 
+          vul_printf (std::cout, "    New contactS %s and %s created from v %d.\n", 
                        astring, bstring, v->id());
       }
       #endif
@@ -178,14 +178,14 @@ void gdt_ws_manager::Create_propagation_of_interior_vertex (dbmsh3d_gdt_vertex_3
       if (n_verbose_>3) {
         char str[64];
         if (S->prjE())
-          vcl_sprintf (str, "%d (%.3f)", S->prjE()->id(), S->tauE());
+          std::sprintf (str, "%d (%.3f)", S->prjE()->id(), S->tauE());
         else
-          vcl_sprintf (str, "NULL");
+          std::sprintf (str, "NULL");
         if (_eqD (Wa->mu(), Wb->mu()))
-          vul_printf (vcl_cout, "    New lineS %d (prjE %s) created from v %d.\n", 
+          vul_printf (std::cout, "    New lineS %d (prjE %s) created from v %d.\n", 
                        S->id(), str, v->id());
         else
-          vul_printf (vcl_cout, "    New hypbS %d (prjE %s) created from v %d.\n", 
+          vul_printf (std::cout, "    New hypbS %d (prjE %s) created from v %d.\n", 
                        S->id(), str, v->id());
       }
       #endif
@@ -278,7 +278,7 @@ void gdt_ws_manager::create_rarefaction_shocks_on_face (dbmsh3d_gdt_vertex_3d* v
 
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cout, "    New contactS %d (tauE %.3f, prjE %d) created from v %d.\n", 
+      vul_printf (std::cout, "    New contactS %d (tauE %.3f, prjE %d) created from v %d.\n", 
                    S->id(), S->tauE(), S->prjE()->id(), v->id());
     #endif
   }
@@ -338,15 +338,15 @@ void gdt_ws_manager::create_rarefaction_shocks_on_face (dbmsh3d_gdt_vertex_3d* v
     if (n_verbose_>3) {        
       char astring[64], bstring[64];
       if (Sa)
-        vcl_sprintf (astring, "%d (e %d, %.3f)", Sa->id(), Sa->prjE()->id(), Sa->tauE());
+        std::sprintf (astring, "%d (e %d, %.3f)", Sa->id(), Sa->prjE()->id(), Sa->tauE());
       else
-        vcl_sprintf (astring, "NULL");
+        std::sprintf (astring, "NULL");
       if (Sb)
-        vcl_sprintf (bstring, "%d (e %d, %.3f)", Sb->id(), Sb->prjE()->id(), Sb->tauE());
+        std::sprintf (bstring, "%d (e %d, %.3f)", Sb->id(), Sb->prjE()->id(), Sb->tauE());
       else
-        vcl_sprintf (bstring, "NULL");
+        std::sprintf (bstring, "NULL");
 
-      vul_printf (vcl_cout, "    New contactS %s and %s created at v %d.\n", 
+      vul_printf (std::cout, "    New contactS %s and %s created at v %d.\n", 
                    astring, bstring, v->id());
     }
     #endif

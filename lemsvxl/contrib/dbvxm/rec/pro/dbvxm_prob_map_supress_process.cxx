@@ -61,7 +61,7 @@ bool dbvxm_prob_map_supress_process::execute()
 
   float min, max;
   vil_math_value_range(input_map, min, max);
-  vcl_cout << "\t input map float value range, min: " << min << " max: " << max << vcl_endl;
+  std::cout << "\t input map float value range, min: " << min << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(input_map, dummy_byte, 0.0f, max);
   vil_save(dummy_byte, "./input_map.png");
 
@@ -80,7 +80,7 @@ bool dbvxm_prob_map_supress_process::execute()
   vil_image_view<float> output_map(ni, nj);
   vil_math_image_product(dummy2, dummy4, output_map);
   vil_math_value_range(output_map, min, max);
-  vcl_cout << "\t output map float value range after multiplication, min: " << min << " max: " << max << vcl_endl;
+  std::cout << "\t output map float value range after multiplication, min: " << min << " max: " << max << std::endl;
   
   vil_convert_stretch_range_limited(output_map, dummy_byte, 0.0f, max);
   vil_save(dummy_byte, "./output_map_mult.png");

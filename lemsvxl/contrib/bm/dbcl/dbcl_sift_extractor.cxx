@@ -1,13 +1,13 @@
 //this is /contrib/bm/dbcl/dbcl_sift_extractor.cxx
 #include"dbcl_sift_extractor.h"
 
-void dbcl_sift_extractor::extract_sift_features(vcl_map<unsigned, vil_image_resource_sptr> const& img_seq, 
+void dbcl_sift_extractor::extract_sift_features(std::map<unsigned, vil_image_resource_sptr> const& img_seq, 
 													target_ncn_map_type& target_ncn_map,
 														frame_target_kp_type& frame_target_kp_map,
 															unsigned const& octave_size, unsigned const& num_octaves)
 {
 	//image iterators
-	vcl_map<unsigned, vil_image_resource_sptr>::const_iterator img_itr, img_end = img_seq.end();
+	std::map<unsigned, vil_image_resource_sptr>::const_iterator img_itr, img_end = img_seq.end();
 
 	//target iterators
 	target_ncn_map_type::const_iterator target_itr, target_end = target_ncn_map.end();
@@ -18,14 +18,14 @@ void dbcl_sift_extractor::extract_sift_features(vcl_map<unsigned, vil_image_reso
 	{
 		dense_sift_sptr->create_pyramid(img_itr->second,octave_size,num_octaves);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<bapl_lowe_keypoint_sptr>,dbcl_vgl_point_2d_dist_compare > target_kp_map;
+		std::map<vgl_point_2d<unsigned>, std::vector<bapl_lowe_keypoint_sptr>,dbcl_vgl_point_2d_dist_compare > target_kp_map;
 
 		for( target_itr = target_ncn_map.begin(); target_itr != target_end; ++target_itr )
 		{
 			bapl_lowe_keypoint_sptr kp_sptr = new bapl_lowe_keypoint();
 			dense_sift_sptr->make_keypoint(kp_sptr,target_itr->first.x(),target_itr->first.y());
 
-			vcl_vector<bapl_lowe_keypoint_sptr> kp_vector;
+			std::vector<bapl_lowe_keypoint_sptr> kp_vector;
 
 			dense_sift_sptr->make_keypoints(kp_vector, target_itr->second);
 
@@ -38,14 +38,14 @@ void dbcl_sift_extractor::extract_sift_features(vcl_map<unsigned, vil_image_reso
 	}//end image iteration
 }//end dbcl_sift_extractor::extract_sift_features
 
-void dbcl_sift_extractor::extract_sift_features(vcl_map<unsigned, vil_image_resource_sptr> const& img_seq, 
+void dbcl_sift_extractor::extract_sift_features(std::map<unsigned, vil_image_resource_sptr> const& img_seq, 
 										target_ncn_map_type& target_ncn_map,
 											frame_target_matrix_type& frame_target_matrix_map,
 												unsigned const& octave_size, unsigned const& num_octaves )
 {
 
 	//image iterators
-	vcl_map<unsigned, vil_image_resource_sptr>::const_iterator img_itr, img_end = img_seq.end();
+	std::map<unsigned, vil_image_resource_sptr>::const_iterator img_itr, img_end = img_seq.end();
 
 	//target iterators
 	target_ncn_map_type::const_iterator target_itr, target_end = target_ncn_map.end();
@@ -57,11 +57,11 @@ void dbcl_sift_extractor::extract_sift_features(vcl_map<unsigned, vil_image_reso
 	{
 		dense_sift_sptr->create_pyramid(img_itr->second, octave_size, num_octaves);
 
-		vcl_map<vgl_point_2d<unsigned>, vnl_matrix<double>, dbcl_vgl_point_2d_dist_compare> target_matrix_map;
+		std::map<vgl_point_2d<unsigned>, vnl_matrix<double>, dbcl_vgl_point_2d_dist_compare> target_matrix_map;
 
 		for( target_itr = target_ncn_map.begin(); target_itr != target_end; ++target_itr )
 		{
-			vcl_vector<bapl_lowe_keypoint_sptr> kp_vector;
+			std::vector<bapl_lowe_keypoint_sptr> kp_vector;
 			bapl_lowe_keypoint_sptr kp;
 
 			dense_sift_sptr->make_keypoint(kp, target_itr->first.x(), target_itr->first.y());

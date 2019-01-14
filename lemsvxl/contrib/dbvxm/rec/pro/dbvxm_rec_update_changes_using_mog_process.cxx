@@ -31,7 +31,7 @@ dbvxm_rec_update_changes_using_mog_process::dbvxm_rec_update_changes_using_mog_p
   //input_types_[0] = "vil_image_view_base_sptr";
   input_types_[0] = "bvxm_voxel_world_sptr";   // world
   input_types_[1] = "vpgl_camera_double_sptr";
-  input_types_[2] = "vcl_string";
+  input_types_[2] = vcl_string";
   input_types_[3] = "unsigned";
   input_types_[4] = "unsigned";  // scale
   input_types_[5] = "vil_image_view_base_sptr";      // input change map
@@ -60,9 +60,9 @@ bool dbvxm_rec_update_changes_using_mog_process::execute()
     static_cast<brdb_value_t<vpgl_camera_double_sptr>* >(input_data_[1].ptr());
   vpgl_camera_double_sptr camera = input1->value();
 
-   brdb_value_t<vcl_string>* input2 =
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[2].ptr());
-  vcl_string voxel_type = input2->value();
+   brdb_value_t<std::string>* input2 =
+    static_cast<brdb_value_t<std::string>* >(input_data_[2].ptr());
+  std::string voxel_type = input2->value();
 
   brdb_value_t<unsigned>* input3 =
     static_cast<brdb_value_t<unsigned>* >(input_data_[3].ptr());
@@ -119,10 +119,10 @@ bool dbvxm_rec_update_changes_using_mog_process::execute()
   //: create the background pair model
   dbvxm_bg_pair_density bgd(main_world, camera, voxel_type, 0, 0, ni, nj);
   //if (!bgd.generate_mixture_image()) {
-  //  vcl_cout << "Unable to create background mixture image with appearance type: " << voxel_type << "\n";
+  //  std::cout << "Unable to create background mixture image with appearance type: " << voxel_type << "\n";
   //  return false;
   //}
-  //vcl_cout << "background mixture model created\n";
+  //std::cout << "background mixture model created\n";
   vil_image_view<vxl_byte> orig_img(orig_view);
 
 #if 0
@@ -132,33 +132,33 @@ bool dbvxm_rec_update_changes_using_mog_process::execute()
   vil_image_view<float> out_map = bgd.prob_density(orig_img_f);
   //vil_image_view_base_sptr out_map_sptr = new vil_image_view<float>(out_map);
   vil_math_value_range(out_map, min, max);
-  vcl_cout << "saving out_map bg prob density for pair min: " << min  << " max: " << max << vcl_endl;
+  std::cout << "saving out_map bg prob density for pair min: " << min  << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(out_map, img_b, 0.0f, max);
   vil_save(img_b, "./out_map_bg_prob_density.png");
 
   vil_math_mean(mean, out_map, 0);
-  vcl_cout << "saving out_map bg prob density mean: " << mean  << vcl_endl;
+  std::cout << "saving out_map bg prob density mean: " << mean  << std::endl;
   vil_convert_stretch_range_limited(out_map, img_b, 0.0f, mean);
   vil_save(img_b, "./out_map_bg_prob_density_wrt_mean.png");
 
   vil_image_view<float> out_map2 = bgd.prob_density_non_pair(orig_img_f);
   vil_math_value_range(out_map2, min, max);
-  vcl_cout << "saving out_map2 _bg_prob_density non pair min: " << min  << " max: " << max << vcl_endl;
+  std::cout << "saving out_map2 _bg_prob_density non pair min: " << min  << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(out_map2, img_b, 0.0f, max);
   vil_save(img_b, "./out_map2_bg_prob_density_non_pair.png");
   
   vil_math_mean(mean, out_map2, 0);
-  vcl_cout << "saving out_map2 _bg_prob_density non pair mean: " << mean  << vcl_endl;
+  std::cout << "saving out_map2 _bg_prob_density non pair mean: " << mean  << std::endl;
   vil_convert_stretch_range_limited(out_map2, img_b, 0.0f, mean);
   vil_save(img_b, "./out_map2_bg_prob_density_non_pair_wrt_mean.png");
 
   vil_image_view<float> out_map3 = bgd.prob_density_from_likelihood_map(orig_img);
   vil_math_value_range(out_map3, min, max);
-  vcl_cout << "saving out_map3 prob density from likelihood min: " << min  << " max: " << max << vcl_endl;
+  std::cout << "saving out_map3 prob density from likelihood min: " << min  << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(out_map3, img_b, 0.0f, max);
   vil_save(img_b, "./out_map3_prob_density_from_likelihood.png");
   vil_math_mean(mean, out_map3, 0);
-  vcl_cout << "saving out_map3 prob density from likelihood mean: " << mean  << vcl_endl;
+  std::cout << "saving out_map3 prob density from likelihood mean: " << mean  << std::endl;
   vil_convert_stretch_range_limited(out_map3, img_b, 0.0f, mean);
   vil_save(img_b, "./out_map3_prob_density_from_likelihood_wrt_mean.png");
 #endif
@@ -176,7 +176,7 @@ bool dbvxm_rec_update_changes_using_mog_process::execute()
   brdb_value_sptr output = new brdb_value_t<vil_image_view_base_sptr>(out_map_sptr);
   output_data_[0] = output;
 
-  vcl_cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
 
   return true;
 }

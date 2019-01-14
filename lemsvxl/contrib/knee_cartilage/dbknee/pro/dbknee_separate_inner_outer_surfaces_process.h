@@ -15,8 +15,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_separate_inner_outer_surfaces_process : public bpro1_process 
@@ -33,10 +33,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Separate inner outer surfaces"; }
+  std::string name() {  return "Separate inner outer surfaces"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -48,10 +48,10 @@ public:
   
   //: Take in the data (mesh file, cs_file) and execute
   static bool separate_inner_outer_surface_using_cylinder_cs(
-    const vcl_string& data_file,
-    const vcl_string& cs_file,
-    const vcl_string& inner_mesh_file,
-    const vcl_string& outer_mesh_file,
+    const std::string& data_file,
+    const std::string& cs_file,
+    const std::string& inner_mesh_file,
+    const std::string& outer_mesh_file,
     bool show_gui);
 
 };

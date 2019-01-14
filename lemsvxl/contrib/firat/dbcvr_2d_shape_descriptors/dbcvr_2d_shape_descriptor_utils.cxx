@@ -8,9 +8,9 @@
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_digital_curve_2d.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <iostream>
+#include <vector>
 
 bool linear_interpolation(double x[], double y[], int orig_size, double xi[], double yi[], int new_size)
 {
@@ -45,7 +45,7 @@ vsol_digital_curve_2d_sptr dbcvr_uniform_sampling_open(vsol_digital_curve_2d_spt
 		y[i-1] = p0->y();
 		double dx = x[i-1] - p1->x();
 		double dy = y[i-1] - p1->y();
-		double d = vcl_sqrt(dx*dx + dy*dy);
+		double d = std::sqrt(dx*dx + dy*dy);
 		cum_seg_lengths[i] = cum_seg_lengths[i-1] + d;
 	}
 	x[curve_size-1] = p1->x();
@@ -60,7 +60,7 @@ vsol_digital_curve_2d_sptr dbcvr_uniform_sampling_open(vsol_digital_curve_2d_spt
 	}
 	linear_interpolation(cum_seg_lengths, x, curve_size, s, x_interpolated, num_points);
 	linear_interpolation(cum_seg_lengths, y, curve_size, s, y_interpolated, num_points);
-	vcl_vector<vsol_point_2d_sptr> samples;
+	std::vector<vsol_point_2d_sptr> samples;
 	for(int i = 0; i < num_points; i++)
 	{
 		samples.push_back(new vsol_point_2d(x_interpolated[i], y_interpolated[i]));
@@ -105,7 +105,7 @@ vsol_digital_curve_2d_sptr dbcvr_uniform_sampling_closed(vsol_digital_curve_2d_s
 		}
 		double dx = x[i-1] - p1->x();
 		double dy = y[i-1] - p1->y();
-		double d = vcl_sqrt(dx*dx + dy*dy);
+		double d = std::sqrt(dx*dx + dy*dy);
 		cum_seg_lengths[i] = cum_seg_lengths[i-1] + d;
 	}
 	x[curve_size] = p1->x();
@@ -120,7 +120,7 @@ vsol_digital_curve_2d_sptr dbcvr_uniform_sampling_closed(vsol_digital_curve_2d_s
 	}
 	linear_interpolation(cum_seg_lengths, x, curve_size+1, s, x_interpolated, num_points);
 	linear_interpolation(cum_seg_lengths, y, curve_size+1, s, y_interpolated, num_points);
-	vcl_vector<vsol_point_2d_sptr> samples;
+	std::vector<vsol_point_2d_sptr> samples;
 	for(int i = 0; i < num_points; i++)
 	{
 		samples.push_back(new vsol_point_2d(x_interpolated[i], y_interpolated[i]));
@@ -144,7 +144,7 @@ vsol_digital_curve_2d_sptr dbcvr_uniform_sampling_closed(vsol_digital_curve_2d_s
 
 vsol_digital_curve_2d_sptr dbcvr_get_reversed_curve(vsol_digital_curve_2d_sptr curve)
 {
-	vcl_vector<vsol_point_2d_sptr> samples;
+	std::vector<vsol_point_2d_sptr> samples;
 	for(int i = curve->size()-1; i >= 0; i--)
 	{
 		samples.push_back(new vsol_point_2d(*curve->point(i)));

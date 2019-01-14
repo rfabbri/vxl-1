@@ -17,16 +17,16 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vbl/vbl_bounding_box.h>
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_resource.h>
-vcl_vector<vnl_matrix<double> > 
-read_homographies(vcl_string filename)
+std::vector<vnl_matrix<double> > 
+read_homographies(std::string filename)
 {
-    vcl_ifstream ifile(filename.c_str(),vcl_ios::in);
-    vcl_vector<vnl_matrix<double> > homographies;
+    std::ifstream ifile(filename.c_str(),std::ios::in);
+    std::vector<vnl_matrix<double> > homographies;
     if(!ifile)
         return homographies;
     char buffer[100];
@@ -41,13 +41,13 @@ read_homographies(vcl_string filename)
     return homographies;
 }
 
-void write_transformed_polygons(vcl_string homgfile, vcl_vector<vcl_vector<vsol_polygon_2d_sptr> > polygons,vcl_ofstream &ofile, int ni,int nj )
+void write_transformed_polygons(std::string homgfile, std::vector<std::vector<vsol_polygon_2d_sptr> > polygons,std::ofstream &ofile, int ni,int nj )
 {
-    //vcl_ofstream ofile(filename.c_str());
+    //std::ofstream ofile(filename.c_str());
     ofile<<"NFRAMES: "<<polygons.size()<<"\n";
 
     vbl_bounding_box<double,2> box;
-    vcl_vector<vnl_matrix<double> > homgs=read_homographies(homgfile);
+    std::vector<vnl_matrix<double> > homgs=read_homographies(homgfile);
     for(unsigned i=0;i<homgs.size();i++)
     {
         vimt_transform_2d p;
@@ -60,8 +60,8 @@ void write_transformed_polygons(vcl_string homgfile, vcl_vector<vcl_vector<vsol_
     }
 
     
-    int offset_i=(int)vcl_ceil(0-box.min()[0]);
-    int offset_j=(int)vcl_ceil(0-box.min()[1]);
+    int offset_i=(int)std::ceil(0-box.min()[0]);
+    int offset_j=(int)std::ceil(0-box.min()[1]);
     // iterating over frames
     for(unsigned int i=0;i<polygons.size();i++)
     {   
@@ -113,28 +113,28 @@ int main(int argc, char** argv)
 
 
   bpro_process_sptr regimg(new dbvrl_register_images_process()); 
-  regimg->set_input_names(vcl_vector<vcl_string>(1,"video"));
-  regimg->set_output_names(vcl_vector<vcl_string>(1,"RegImg"));
+  regimg->set_input_names(std::vector<std::string>(1,"video"));
+  regimg->set_output_names(std::vector<std::string>(1,"RegImg"));
   vorl_manager::instance()->add_process_to_args(regimg); 
 
   bpro_process_sptr bgbuilder(new dbbgm_aerial_bg_model_process()); 
-  bgbuilder->set_input_names(vcl_vector<vcl_string>(1,"RegImg"));
-  bgbuilder->set_output_names(vcl_vector<vcl_string>(1,"bgmodel"));
+  bgbuilder->set_input_names(std::vector<std::string>(1,"RegImg"));
+  bgbuilder->set_output_names(std::vector<std::string>(1,"bgmodel"));
   vorl_manager::instance()->add_process_to_args(bgbuilder);
 
   bpro_process_sptr fgdetector(new dbbgm_aerial_fg_uncertainity_detect_process());
 
-  vcl_vector<vcl_string> inputnames;
+  std::vector<std::string> inputnames;
   inputnames.push_back("RegImg");
   inputnames.push_back("bgmodel");
 
   fgdetector->set_input_names(inputnames);
-  fgdetector->set_output_names(vcl_vector<vcl_string>(1,"ForegroundDetected"));
+  fgdetector->set_output_names(std::vector<std::string>(1,"ForegroundDetected"));
   vorl_manager::instance()->add_process_to_args(fgdetector);
 
   bpro_process_sptr  blobfinder(new dbdet_blob_finder_process());
-  blobfinder->set_input_names(vcl_vector<vcl_string>(1,"ForegroundDetected"));
-  blobfinder->set_output_names(vcl_vector<vcl_string>(1,"blobs"));
+  blobfinder->set_input_names(std::vector<std::string>(1,"ForegroundDetected"));
+  blobfinder->set_output_names(std::vector<std::string>(1,"blobs"));
   vorl_manager::instance()->add_process_to_args(blobfinder);
 
   vorl_manager::instance()->parse_params(argc, argv); 
@@ -144,8 +144,8 @@ int main(int argc, char** argv)
   vorl_manager::instance()->add_process_to_queue(regimg);
   vorl_manager::instance()->add_process_to_queue(bgbuilder);
 
-  vcl_cout<<"\n building background model";
-  vcl_cout.flush();
+  std::cout<<"\n building background model";
+  std::cout.flush();
 
  do {
     float status = vorl_manager::instance()->status()/2.0;
@@ -154,8 +154,8 @@ int main(int argc, char** argv)
     }  while(vorl_manager::instance()->next_frame());
  vorl_manager::instance()->finish_process_queue();
  
-  vcl_cout<<"\n detecting polygons";
-  vcl_cout.flush();
+  std::cout<<"\n detecting polygons";
+  std::cout.flush();
   // detecting foreground and finding polygons
   vorl_manager::instance()->rewind();
   vorl_manager::instance()->clear_process_queue();
@@ -185,29 +185,29 @@ int main(int argc, char** argv)
   vorl_manager::instance()->rewind();
   vorl_manager::instance()->clear_process_queue();
   //:retreiveing the polygons
-  vcl_vector<vcl_vector<vsol_polygon_2d_sptr> > all_polygons;
+  std::vector<std::vector<vsol_polygon_2d_sptr> > all_polygons;
   do {
       
       vidpro_vsol2D_storage_sptr polygons_storage;
       bpro_storage_sptr result= rep->get_data_by_name("blobs");
       polygons_storage.vertical_cast(result);
-      vcl_vector<vsol_spatial_object_2d_sptr> temp=polygons_storage->all_data();
-      vcl_vector<vsol_polygon_2d_sptr>  temp_polygons;
+      std::vector<vsol_spatial_object_2d_sptr> temp=polygons_storage->all_data();
+      std::vector<vsol_polygon_2d_sptr>  temp_polygons;
       for(unsigned int i=0;i<temp.size();i++)
         temp_polygons.push_back(temp[i]->cast_to_region()->cast_to_polygon());
       all_polygons.push_back(temp_polygons);
   } while(vorl_manager::instance()->next_frame());
 
-  vcl_string fname;
+  std::string fname;
   bpro_filepath filepath;
   //blobfinder->parameters()->get_value("-polyfile",filepath);*/
-  vcl_string dirname=vorl_manager::instance()->get_output_dir();
-  vcl_string inputfile=dirname+"//poly.txt";
+  std::string dirname=vorl_manager::instance()->get_output_dir();
+  std::string inputfile=dirname+"//poly.txt";
 
    
   regimg->parameters()->get_value("-fhmg",filepath);
   
-  vcl_ofstream ofile(inputfile.c_str());
+  std::ofstream ofile(inputfile.c_str());
   ofile<<"FILEID: "<<vorl_manager::instance()->get_video_fileid()<<"\n";
   write_transformed_polygons(filepath.path,all_polygons,ofile,ni,nj);
   

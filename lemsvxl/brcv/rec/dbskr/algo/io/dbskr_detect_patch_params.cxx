@@ -16,12 +16,12 @@
 
 bool dbskr_detect_instance_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "parsing dbskr_detect_instance_params\n";
+  //std::cout << "parsing dbskr_detect_instance_params\n";
   bxml_element query("dbskr_detect_instance_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_detect_instance_params::parse_from_data() - could not find the node dbskr_detect_instance_params\n";
+    std::cout << "dbskr_detect_instance_params::parse_from_data() - could not find the node dbskr_detect_instance_params\n";
     return false;
   }
 
@@ -29,7 +29,7 @@ bool dbskr_detect_instance_params::parse_from_data(bxml_data_sptr root)
   if (!data1)
     return false;
 
-  vcl_string top_N_str, k_str;
+  std::string top_N_str, k_str;
   data1->get_attribute("top_N", top_N_);
   data1->get_attribute("top_N", top_N_str);
   data1->get_attribute("k", k_);
@@ -38,7 +38,7 @@ bool dbskr_detect_instance_params::parse_from_data(bxml_data_sptr root)
   output_file_postfix_ = "";
 
   output_file_postfix_ = output_file_postfix_ + "-topN-" + top_N_str + "-k-" + k_str;
-  //vcl_cout << "output_file_postfix: " << output_file_postfix_ << vcl_endl;
+  //std::cout << "output_file_postfix: " << output_file_postfix_ << std::endl;
 
   return true;
 }
@@ -66,12 +66,12 @@ bxml_element *dbskr_detect_instance_params::create_document_data()
 
 bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
 {
-  vcl_cout << "parsing dbskr_detect_patch_params\n";
+  std::cout << "parsing dbskr_detect_patch_params\n";
   bxml_element query("dbskr_detect_patch_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node dbskr_detect_patch_params\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node dbskr_detect_patch_params\n";
     return false;
   }
 
@@ -79,7 +79,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node detect_patch_data\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node detect_patch_data\n";
     return false;
   }
    
@@ -87,7 +87,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   if (!data0)
     return false;
 
-  vcl_string min_thres_str, thres_inc_str, max_thres_str, box_overlap_ratio_threshold_str;
+  std::string min_thres_str, thres_inc_str, max_thres_str, box_overlap_ratio_threshold_str;
   data0->get_attribute("min_thres", min_thres_);
   data0->get_attribute("min_thres", min_thres_str);
   data0->get_attribute("thres_increment", thres_inc_);
@@ -97,7 +97,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   data0->get_attribute("box_overlap_ratio_threshold", box_overlap_ratio_threshold_);  
   data0->get_attribute("box_overlap_ratio_threshold", box_overlap_ratio_threshold_str);  
   
-  vcl_string val;
+  std::string val;
   data0->get_attribute("use_normalized_costs", val); 
   use_normalized_costs_ = val.compare("off") == 0 ? false: true; 
   
@@ -108,7 +108,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   use_total_splice_cost_ = val.compare("off") == 0 ? false: true; 
 
   if (use_reconst_boundary_length_ == use_total_splice_cost_) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - Error in input file: either both use_reconst_boundary_length and use_total_splice_cost ON or both are OFF\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - Error in input file: either both use_reconst_boundary_length and use_total_splice_cost ON or both are OFF\n";
     return false;
   }
 
@@ -122,7 +122,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result3 = bxml_find_by_name(result, query3);
 
   if (!result3) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node detect_patch_dirs\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node detect_patch_dirs\n";
     return false;
   }
 
@@ -142,7 +142,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result4 = bxml_find_by_name(result, query4);
 
   if (!result4) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node shock_match_params\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node shock_match_params\n";
     return false;
   }
    
@@ -154,7 +154,7 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result5 = bxml_find_by_name(result, query5);
 
   if (!result5) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node query_patches_params\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node query_patches_params\n";
     return false;
   }
 
@@ -164,13 +164,13 @@ bool dbskr_detect_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result6 = bxml_find_by_name(result, query6);
 
   if (!result6) {
-    vcl_cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node model_patches_params\n";
+    std::cout << "dbskr_detect_patch_params::parse_from_data() - could not find the node model_patches_params\n";
     return false;
   }
 
   model_patch_params_.parse_from_data(result6);
   
-  vcl_cout << "output_file_postfix: " << output_file_postfix_ << vcl_endl;
+  std::cout << "output_file_postfix: " << output_file_postfix_ << std::endl;
   return true;
 }
 

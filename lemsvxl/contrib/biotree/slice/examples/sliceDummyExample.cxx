@@ -1,6 +1,6 @@
 #include <slice/sliceProcessor.h>
 #include <slice/sliceEngine.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 
 int main(int argc, char* argv[])
@@ -18,10 +18,10 @@ int main(int argc, char* argv[])
         }
 
         for(int slice = 0; slice < d; slice++){
-          vcl_cerr << "slice " << slice << " val " << slices[slice*w*h + 1] << "\n";
+          std::cerr << "slice " << slice << " val " << slices[slice*w*h + 1] << "\n";
         }
 
-        vcl_ofstream binaryout("test.slices", vcl_ios_binary);
+        std::ofstream binaryout("test.slices", std::ios::binary);
         binaryout.write((char*)&w,sizeof(int));
         binaryout.write((char*)&h,sizeof(int));
         binaryout.write((char*)&d,sizeof(int));
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         //using the engine to save the output to a memory location
         sliceEngine<float> engine;
         engine.addStream("test.slices");
-        vcl_vector<float*> outputs;
+        std::vector<float*> outputs;
         outputs.push_back( new float[w*h*d]);
         engine.setSaveToMemory(outputs);
 
@@ -42,10 +42,10 @@ int main(int argc, char* argv[])
 
         slices = outputs[0];
         for(int slice = 0; slice < d; slice++){
-          vcl_cerr << "slice " << slice << " val " << slices[slice*w*h + 1] ;
-          vcl_cerr << " check: " << ((slice==0?0:slice-1) + slice + (slice==d-1?0:slice+1))/3.;
-          vcl_cerr << " diff: " << slices[slice*w*h + 1] - ((slice==0?0:slice-1) + slice + (slice==d-1?0:slice+1))/3.;
-          vcl_cerr << "\n";
+          std::cerr << "slice " << slice << " val " << slices[slice*w*h + 1] ;
+          std::cerr << " check: " << ((slice==0?0:slice-1) + slice + (slice==d-1?0:slice+1))/3.;
+          std::cerr << " diff: " << slices[slice*w*h + 1] - ((slice==0?0:slice-1) + slice + (slice==d-1?0:slice+1))/3.;
+          std::cerr << "\n";
         }
 
         delete slices;
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
         engine.clearStreams();
         engine.addStream("test.slices");
-        vcl_vector<vcl_string> outfilename; outfilename.push_back("my.out");
+        std::vector<std::string> outfilename; outfilename.push_back("my.out");
         engine.setSaveToDisk(outfilename);
         engine.processWith(&proc);
         

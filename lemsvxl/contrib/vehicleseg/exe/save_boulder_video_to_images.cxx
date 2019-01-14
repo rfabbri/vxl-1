@@ -12,9 +12,9 @@ int main(int argc,char * argv[])
 {
     
 
-        vul_arg<vcl_string> fname("-input", "File Name", "");
-        vul_arg<vcl_string> outname("-outdir", "OutputDir", "");
-        vul_arg<vcl_string> prefix("-prefix", "Prefix", "");
+        vul_arg<std::string> fname("-input", "File Name", "");
+        vul_arg<std::string> outname("-outdir", "OutputDir", "");
+        vul_arg<std::string> prefix("-prefix", "Prefix", "");
         vul_arg<bool> bit16("-bit", "Is 16 bit", false);
         vul_arg<unsigned> inc("-inc", "Increment", 1);
 
@@ -26,10 +26,10 @@ int main(int argc,char * argv[])
         dbvidl_boulder_video_codec_sptr cdc = new dbvidl_boulder_video_codec();
         vidl1_clip_sptr clip = new vidl1_clip( cdc->load(fname(),'r'));
         vidl1_movie_sptr my_movie=new vidl1_movie(clip);
-        vcl_cout<<"\n saving images";
+        std::cout<<"\n saving images";
 
         for (int i=0;i<my_movie->length();){
-            vcl_string filename = vul_sprintf("%s\\%s%05d.%s", outname().c_str(),prefix().c_str(),i,"tif");
+            std::string filename = vul_sprintf("%s\\%s%05d.%s", outname().c_str(),prefix().c_str(),i,"tif");
 
             if(bit16())
                 {               

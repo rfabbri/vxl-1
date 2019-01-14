@@ -1,10 +1,10 @@
 #include "bioproj_proc.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vgl/vgl_box_2d.h>
 #include <vpgl/algo/vpgl_project.h>
 #include <vnl/vnl_math.h>
 #include <vil/algo/vil_convolve_1d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 bioproj_proc::bioproj_proc(bioproj_io *proj_io)
 :proj_io_(proj_io)
@@ -12,7 +12,7 @@ bioproj_proc::bioproj_proc(bioproj_io *proj_io)
   structures_created = false;
 }
 
-void bioproj_proc::execute(int view_filter, int spatial_filter, vcl_string outfile)
+void bioproj_proc::execute(int view_filter, int spatial_filter, std::string outfile)
 {
   view_filter_type_ = view_filter;
   spatial_filter_type_ = spatial_filter;
@@ -34,18 +34,18 @@ void bioproj_proc::execute(int view_filter, int spatial_filter, vcl_string outfi
   
     vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(first_cam, proj_io_->box_);
     // find the range of (xi,theta)-planes needed for the process
-    min_plane_index_ = int(vcl_floor(box_2d.min_y())) - proj_io_->num_comp_planes_;
-    max_plane_index_ = int(vcl_ceil(box_2d.max_y())) + proj_io_->num_comp_planes_;
+    min_plane_index_ = int(std::floor(box_2d.min_y())) - proj_io_->num_comp_planes_;
+    max_plane_index_ = int(std::ceil(box_2d.max_y())) + proj_io_->num_comp_planes_;
 
     if(min_plane_index_ < 0 || max_plane_index_ >= proj_io_->sensor_dim_.get(1))
       print_error_message(1);
-    if(int(vcl_floor(box_2d.min_x())) < 0 || int(vcl_ceil(box_2d.max_x())) >= proj_io_->sensor_dim_.get(0))
+    if(int(std::floor(box_2d.min_x())) < 0 || int(std::ceil(box_2d.max_x())) >= proj_io_->sensor_dim_.get(0))
       print_error_message(2);
 
     // calculate the number of grid points
-    grid_w_ = int(vcl_ceil(1000*proj_io_->box_.width() / proj_io_->resolution_));
-    grid_h_ = int(vcl_ceil(1000*proj_io_->box_.height() / proj_io_->resolution_));
-    grid_d_ = int(vcl_ceil(1000*proj_io_->box_.depth() / proj_io_->resolution_));
+    grid_w_ = int(std::ceil(1000*proj_io_->box_.width() / proj_io_->resolution_));
+    grid_h_ = int(std::ceil(1000*proj_io_->box_.height() / proj_io_->resolution_));
+    grid_d_ = int(std::ceil(1000*proj_io_->box_.depth() / proj_io_->resolution_));
 
     coord_x_.resize(grid_w_, grid_h_, grid_d_);
     coord_y_.resize(grid_w_, grid_h_, grid_d_);
@@ -87,7 +87,7 @@ void bioproj_proc::execute(int view_filter, int spatial_filter, vcl_string outfi
         double coord_x = coord_x_(i,j,k);
         double coord_y = coord_y_(i,j,k);
         double coord_z = coord_z_(i,j,k);
-//        vcl_cout << coord_x << " " << coord_y << " " << coord_z << vcl_endl;
+//        std::cout << coord_x << " " << coord_y << " " << coord_z << std::endl;
         double resp = response_at_point(vgl_point_3d<double>(coord_x, coord_y, coord_z));
         proj_data_->grid_(i,j,k) = resp;
       }
@@ -124,7 +124,7 @@ void bioproj_proc::view_space_ops_with_fixed_magnification()
   // loop over views
   for(unsigned viewno = 0; viewno < proj_io_->nviews_; viewno++)
   {
-    vcl_cout << viewno << " of " << proj_io_->nviews_-1 << vcl_endl;
+    std::cout << viewno << " of " << proj_io_->nviews_-1 << std::endl;
 
     double *filter_;
     int kernel_center;
@@ -134,45 +134,45 @@ void bioproj_proc::view_space_ops_with_fixed_magnification()
       bioproj_nu_g_filter filter(sigma, extent, 1);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else if(view_filter_type_ == 1)
     {
       bioproj_nu_gx_filter filter(sigma, theta, extent, 1);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else if(view_filter_type_ == 2)
     {
       bioproj_nu_gy_filter filter(sigma, theta, extent, 1);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else if(view_filter_type_ == 3)
     {
       bioproj_nu_gxx_filter filter(sigma, theta, extent);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else if(view_filter_type_ == 4)
     {
       bioproj_nu_gxy_filter filter(sigma, theta, extent);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else if(view_filter_type_ == 5)
     {
       bioproj_nu_gyy_filter filter(sigma, theta, extent);
       kernel_center = filter.half_kernel_size_;
       filter_ = new double[2*kernel_center+1];
-      vcl_memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
+      std::memcpy(filter_, filter.filter_, sizeof(double)*filter.full_kernel_size_);
     }
     else
-      vcl_cout << "FILTER NOT DEFINED!!!" << vcl_endl;
+      std::cout << "FILTER NOT DEFINED!!!" << std::endl;
 
     // loop over view data rows
     for(int k = 0; k < proj_data_->planes_depth_; k++)
@@ -198,7 +198,7 @@ void bioproj_proc::view_space_ops_with_fixed_magnification()
 
 double bioproj_proc::response_at_point(vgl_point_3d<double> p)
 {
-//  FILE *fp = vcl_fopen("D:\\MyDocs\\Temp\\points.txt", "w");
+//  FILE *fp = std::fopen("D:\\MyDocs\\Temp\\points.txt", "w");
   vgl_homg_point_3d<double> hp(p);
   double x0 = p.x(); double y0 = p.y(); double z0 = p.z();
   double theta = 0;
@@ -209,16 +209,16 @@ double bioproj_proc::response_at_point(vgl_point_3d<double> p)
   {
     xmvg_perspective_camera<double> cam = cameras_[viewno];
     vgl_point_2d<double> pp(cam.project(hp));
-//    vcl_fprintf(fp, "%f\n",pp.x());
-    double xi = x0 * vcl_cos(theta) + y0 * vcl_sin(theta);
-//    vcl_fprintf(fp, "%f\n", xi);
+//    std::fprintf(fp, "%f\n",pp.x());
+    double xi = x0 * std::cos(theta) + y0 * std::sin(theta);
+//    std::fprintf(fp, "%f\n", xi);
     resp += interpolate_convolved_data_at_point(vgl_point_2d<double>(pp.x(), pp.y()-min_plane_index_), viewno);
 //    resp += interpolate_convolved_data_at_point(vgl_point_2d<double>(xi*1000/proj_io_->sensor_pix_size_+99, 
 //                                                                     pp.y()-min_plane_index_), 
 //                                                                     viewno);
     theta += theta_step;
   }
-//  vcl_fclose(fp);
+//  std::fclose(fp);
   return resp;
 }
 
@@ -226,8 +226,8 @@ double bioproj_proc::interpolate_convolved_data_at_point(vgl_point_2d<double> p,
 {
   // linear interpolation in (theta, xi, z) coordinate system
   double xi = p.x(); double z = p.y();
-  int floor_xi = int(vcl_floor(xi)); int ceil_xi = int(vcl_ceil(xi));
-  int floor_z = int(vcl_floor(z)); int ceil_z = int(vcl_ceil(z));
+  int floor_xi = int(std::floor(xi)); int ceil_xi = int(std::ceil(xi));
+  int floor_z = int(std::floor(z)); int ceil_z = int(std::ceil(z));
 
   double d1 = xi - floor_xi;
   double d2 = z - floor_z;
@@ -259,25 +259,25 @@ void bioproj_proc::apply_z_filtering()
     bioproj_g_filter z_filter(proj_io_->sigma_z_/proj_io_->resolution_, extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else if(spatial_filter_type_ == 1)
   {
     bioproj_gz_filter z_filter(proj_io_->sigma_z_/proj_io_->resolution_, extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else if(spatial_filter_type_ == 2)
   {
     bioproj_gzz_filter z_filter(proj_io_->sigma_z_/proj_io_->resolution_, extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else
   {
-    vcl_cout << "NOT DEFINED!!!" << vcl_endl;
+    std::cout << "NOT DEFINED!!!" << std::endl;
   }
 
   double *z_line;
@@ -302,7 +302,7 @@ void bioproj_proc::apply_z_filtering()
       for(int k = 0; k < proj_data_->grid_d_; k++)
         proj_data_->grid_(i, j, k) = z_line_convolved[k];
 
-      vcl_cout << index++ / double(num_grid_points) * 100.0 << "% of z convolution finished" << vcl_endl;
+      std::cout << index++ / double(num_grid_points) * 100.0 << "% of z convolution finished" << std::endl;
     }
   }
   delete [] z_line;
@@ -310,37 +310,37 @@ void bioproj_proc::apply_z_filtering()
   delete [] filter_;
 }
 
-void bioproj_proc::write_result(vcl_string outfile)
+void bioproj_proc::write_result(std::string outfile)
 {
   int grid_w = proj_data_->grid_w_;
   int grid_h = proj_data_->grid_h_;
   int grid_d = proj_data_->grid_d_;
 
-  int num_z_cut = int(vcl_ceil(proj_io_->sigma_z_extent_ * proj_io_->sigma_z_ / proj_io_->resolution_));
+  int num_z_cut = int(std::ceil(proj_io_->sigma_z_extent_ * proj_io_->sigma_z_ / proj_io_->resolution_));
 
-  FILE *fp = vcl_fopen(outfile.c_str(), "w");
-  vcl_fprintf(fp, "%d %d %d\n", grid_w, grid_h, grid_d - 2*num_z_cut);
+  FILE *fp = std::fopen(outfile.c_str(), "w");
+  std::fprintf(fp, "%d %d %d\n", grid_w, grid_h, grid_d - 2*num_z_cut);
   for(int k = num_z_cut; k < grid_d-num_z_cut; k++)
   {
     for(int j = 0; j < grid_h; j++)
     {
       for(int i = 0; i < grid_w; i++)
       {
-        vcl_fprintf(fp, "%f ", proj_data_->grid_(i,j,k));
-//        vcl_cout << coord_x_(i,j,k) << vcl_endl;
-//        vcl_cout << coord_y_(i,j,k) << vcl_endl;
-//        vcl_cout << coord_z_(i,j,k) << vcl_endl;
+        std::fprintf(fp, "%f ", proj_data_->grid_(i,j,k));
+//        std::cout << coord_x_(i,j,k) << std::endl;
+//        std::cout << coord_y_(i,j,k) << std::endl;
+//        std::cout << coord_z_(i,j,k) << std::endl;
       }
-      vcl_fprintf(fp, "\n");
+      std::fprintf(fp, "\n");
     }
-    vcl_fprintf(fp, "\n");
+    std::fprintf(fp, "\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 }
 
 void bioproj_proc::print_error_message(int error_code)
 {
-  vcl_string error;
+  std::string error;
   if(error_code == 1)
   {
     error = error + "The specified 3D box is extended in the world z-direction. ";
@@ -359,7 +359,7 @@ void bioproj_proc::print_error_message(int error_code)
   else
     error = error + "Unrecognized error code, please notify the author.\n";
 
-  vcl_cout << error << vcl_endl;
+  std::cout << error << std::endl;
 
   exit(-1);
 }

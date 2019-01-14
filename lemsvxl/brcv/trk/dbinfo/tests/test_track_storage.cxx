@@ -1,8 +1,8 @@
 // This is brl/bseg/dbinfo/tests/test_track_storage.cxx
 //#include <crtdbg.h>
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_array_1d.h>
@@ -34,8 +34,8 @@
 #include <dbinfo/dbinfo_observation_generator.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vidpro1/vidpro1_repository.h>
-static void track_points(dbinfo_track_sptr const& trk, vcl_vector<float> &x,
-                         vcl_vector<float> &y, vcl_vector<unsigned> &frame)
+static void track_points(dbinfo_track_sptr const& trk, std::vector<float> &x,
+                         std::vector<float> &y, std::vector<unsigned> &frame)
 {
   if(!trk)
     return;
@@ -70,20 +70,20 @@ static void test_track_storage(int argc, char* argv[])
   vsol_point_2d_sptr p1 = new vsol_point_2d(66,35);
   vsol_point_2d_sptr p2 = new vsol_point_2d(66,66);
   vsol_point_2d_sptr p3 = new vsol_point_2d(35,66);
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   verts.push_back(p3); 
   vsol_polygon_2d_sptr poly2 = new vsol_polygon_2d(verts);
   //Construct the observation
   dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly2);
-  vcl_cout << "obs geometry " << *(obs->geometry()) << '\n';
+  std::cout << "obs geometry " << *(obs->geometry()) << '\n';
   dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
   dbinfo_feature_base_sptr gradf = new dbinfo_gradient_feature();
-  vcl_vector<dbinfo_feature_base_sptr> features;
+  std::vector<dbinfo_feature_base_sptr> features;
   features.push_back(intf);   features.push_back(gradf);
   obs->set_features(features);
   obs->scan(0, imgr);
-  vcl_cout << "Number of observation points " << obs->geometry()->size() << '\n';
+  std::cout << "Number of observation points " << obs->geometry()->size() << '\n';
   //Create a track from observations
   dbinfo_track_sptr track = new dbinfo_track();
   track->set_id(0);
@@ -102,7 +102,7 @@ static void test_track_storage(int argc, char* argv[])
     }
   dbinfo_track_storage_sptr track_sto = dbinfo_track_storage_new();
   track_sto->set_name("junk");
-  vcl_vector<dbinfo_track_sptr> tracks;
+  std::vector<dbinfo_track_sptr> tracks;
   tracks.push_back(track);
   track_sto->set_tracks(tracks);
   vsl_b_ofstream sto_out("test_track_storage.tmp");
@@ -118,7 +118,7 @@ static void test_track_storage(int argc, char* argv[])
     good = false;
   unsigned s = vul_file::size("test_track_storage.tmp");
   TEST("Read track storage", good, true);
-  vcl_cout << "The track storage size for " << nobs+1 << " observations is "
+  std::cout << "The track storage size for " << nobs+1 << " observations is "
            << s/1000 << " KBytes\n"
            << " or " << s/(1000*(nobs+1))
            << " KBytes/observation\n";
@@ -130,19 +130,19 @@ static void test_track_storage(int argc, char* argv[])
   dbinfo_track_storage_sptr track_store_80 = dbinfo_track_storage_new();
   track_store_80->b_read(sto_80);
   sto_80.close();
-  vcl_vector<dbinfo_track_sptr> tracks_80 = track_store_80->tracks();
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks_80.begin();
+  std::vector<dbinfo_track_sptr> tracks_80 = track_store_80->tracks();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks_80.begin();
       trit != tracks_80.end(); ++trit)
     {
-      vcl_vector<unsigned> frame;
-      vcl_vector<float> x, y;
+      std::vector<unsigned> frame;
+      std::vector<float> x, y;
       track_points(*trit, x, y, frame);      
       float x0 = x[0], y0 = y[0];
-      vcl_cout << "Track(" << x0 << ' ' << y0 << ")\n";
-      vcl_vector<unsigned>::iterator fit=frame.begin();
-      for(vcl_vector<float>::iterator xit = x.begin(), yit = y.begin();
+      std::cout << "Track(" << x0 << ' ' << y0 << ")\n";
+      std::vector<unsigned>::iterator fit=frame.begin();
+      for(std::vector<float>::iterator xit = x.begin(), yit = y.begin();
           xit != x.end(); ++xit, ++yit, ++fit)
-        vcl_cout << *fit << ' ' << x0-(*xit) << '\t' << y0-(*yit)<< '\n'; 
+        std::cout << *fit << ' ' << x0-(*xit) << '\t' << y0-(*yit)<< '\n'; 
     }
 }
 TESTMAIN_ARGS(test_track_storage);

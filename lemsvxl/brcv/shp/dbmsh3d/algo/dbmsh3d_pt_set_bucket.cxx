@@ -2,9 +2,9 @@
 //:
 // \file
 
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <cstdlib>
+#include <iostream>
+#include <algorithm>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
 
@@ -22,7 +22,7 @@
 // ###########################################################################
 
 void dbmsh3d_pt_bucket::get_pts_outside_reduced_box (const vgl_box_3d<double>& reduce_box, 
-          vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
+          std::vector<std::pair<int, vgl_point_3d<double> > >& idpts)
 {
   //Check all points of B and add the ones inside the extbox.
   for (unsigned int i=0; i<idpt_list_.size(); i++) {
@@ -33,8 +33,8 @@ void dbmsh3d_pt_bucket::get_pts_outside_reduced_box (const vgl_box_3d<double>& r
 }
 
 //Generate bucket list (for generating run files and list files).
-void dbmsh3d_pt_bktstr::gen_bucket_list (const vcl_string prefix, 
-                                         vcl_vector<vcl_string>& bucket_list) 
+void dbmsh3d_pt_bktstr::gen_bucket_list (const std::string prefix, 
+                                         std::vector<std::string>& bucket_list) 
 {
   //Loop through the slices, rows, and buckets.
   for (unsigned int s=0; s<slice_list_.size(); s++) {
@@ -46,7 +46,7 @@ void dbmsh3d_pt_bktstr::gen_bucket_list (const vcl_string prefix,
 
         //Save each bucket B to file prefix_zz_yy_xx.p3d
         char buf[128];
-        vcl_string fileprefix = prefix;
+        std::string fileprefix = prefix;
         fileprefix += "_";
         sprintf (buf, "%02d", s);
         fileprefix += buf;
@@ -64,7 +64,7 @@ void dbmsh3d_pt_bktstr::gen_bucket_list (const vcl_string prefix,
   }
 }
 
-void dbmsh3d_pt_bktstr::save_bucket_p3d (const vcl_string prefix)
+void dbmsh3d_pt_bktstr::save_bucket_p3d (const std::string prefix)
 {
   //Loop through the slices, rows, and buckets.
   for (unsigned int s=0; s<slice_list_.size(); s++) {
@@ -76,7 +76,7 @@ void dbmsh3d_pt_bktstr::save_bucket_p3d (const vcl_string prefix)
 
         //Save each bucket B to file prefix_zz_yy_xx.p3d
         char buf[128];
-        vcl_string filename = prefix;
+        std::string filename = prefix;
         filename += "_";
         sprintf (buf, "%02d", s);
         filename += buf;
@@ -94,7 +94,7 @@ void dbmsh3d_pt_bktstr::save_bucket_p3d (const vcl_string prefix)
   }
 }
 
-void dbmsh3d_pt_bktstr::save_extend_bkt_p3d (const vcl_string prefix, const float extr)
+void dbmsh3d_pt_bktstr::save_extend_bkt_p3d (const std::string prefix, const float extr)
 {
   vgl_box_3d<double> box;
 
@@ -116,13 +116,13 @@ void dbmsh3d_pt_bktstr::save_extend_bkt_p3d (const vcl_string prefix, const floa
         double ext = extr * bnld_max3 (box.width(), box.height(), box.depth());
         vgl_box_3d<double> extbox = bgld_extend_box (box, ext);
 
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > > idpts;
+        std::vector<std::pair<int, vgl_point_3d<double> > > idpts;
         idpts.clear();
         get_ext_bucket_idpts (int(s), int(r), int(b), extbox, idpts);
 
         //Save each extended bucket to file prefix_zz_yy_xx.p3d
         char buf[128];
-        vcl_string filename = prefix;
+        std::string filename = prefix;
         filename += "_";
         sprintf (buf, "%02d", s);
         filename += buf;
@@ -142,7 +142,7 @@ void dbmsh3d_pt_bktstr::save_extend_bkt_p3d (const vcl_string prefix, const floa
 
 void dbmsh3d_pt_bktstr::get_ext_bucket_idpts (const int s, const int r, const int b, 
                                               const vgl_box_3d<double>& extbox, 
-                                              vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
+                                              std::vector<std::pair<int, vgl_point_3d<double> > >& idpts)
 {
   //Go through all buckets in the s-1, s, s+1 slices.
   for (int ss=s-1; ss<=s+1; ss++) {
@@ -184,7 +184,7 @@ void dbmsh3d_pt_bktstr::get_ext_bucket_idpts (const int s, const int r, const in
 void dbmsh3d_pt_bktstr::get_sausage_idpts (const int s, const int r, const int b, 
                                            const vgl_box_3d<double>& sboxin, 
                                            const vgl_box_3d<double>& sboxout, 
-                                           vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
+                                           std::vector<std::pair<int, vgl_point_3d<double> > >& idpts)
 {
   //Check all surrounding buckets and put all points inside 
   //the stitching sausage into S_idpts.
@@ -228,15 +228,15 @@ void dbmsh3d_pt_bktstr::get_sausage_idpts (const int s, const int r, const int b
 //     Functions for 3D Space-Division Bucketing
 // ###########################################################################
 
-void run_adpt_bucketing (vcl_vector<vgl_point_3d<double> >& pts,
-                         const int npbkt, const vcl_string prefix,
+void run_adpt_bucketing (std::vector<vgl_point_3d<double> >& pts,
+                         const int npbkt, const std::string prefix,
                          const bool b_check_dup)
 {
   //The bucketing structure
   dbmsh3d_pt_bktstr* BktStruct = adpt_bucketing_pts (pts, npbkt, b_check_dup);
 
   //Generate bucket list (for generating run files and list files).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   BktStruct->gen_bucket_list (prefix, bucket_list);
   
   //Save points in each bucket to a P3D file.
@@ -252,7 +252,7 @@ void run_adpt_bucketing (vcl_vector<vgl_point_3d<double> >& pts,
   delete BktStruct;
 }
 
-void run_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
+void run_cell_bucketing (dbmsh3d_pt_set* pts, const std::string prefix,
                          const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ,
                          const float msr)
 {
@@ -260,7 +260,7 @@ void run_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
   cell_bucketing (pts, prefix, BUCKET_NX, BUCKET_NY, BUCKET_NZ);
   
   //Generate the bucket list file of .P3D files (one for each bucket).
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
   gen_bktlst_txt (prefix, bucket_list);
 
   //Generate the run file to view bucketing results.
@@ -283,20 +283,20 @@ bool vgl_pt_z_less (const vgl_point_3d<double>& P1, const vgl_point_3d<double>& 
   return P1.z() < P2.z();
 }
 
-bool points_z_less (const vcl_pair<int, vgl_point_3d<double> > & P1, 
-                    const vcl_pair<int, vgl_point_3d<double> > & P2)
+bool points_z_less (const std::pair<int, vgl_point_3d<double> > & P1, 
+                    const std::pair<int, vgl_point_3d<double> > & P2)
 {
   return P1.second.z() < P2.second.z();
 }
 
-bool points_y_less (const vcl_pair<int, vgl_point_3d<double> > & P1, 
-                    const vcl_pair<int, vgl_point_3d<double> > & P2)
+bool points_y_less (const std::pair<int, vgl_point_3d<double> > & P1, 
+                    const std::pair<int, vgl_point_3d<double> > & P2)
 {
   return P1.second.y() < P2.second.y();
 }
 
-bool points_x_less (const vcl_pair<int, vgl_point_3d<double> > & P1, 
-                    const vcl_pair<int, vgl_point_3d<double> > & P2)
+bool points_x_less (const std::pair<int, vgl_point_3d<double> > & P1, 
+                    const std::pair<int, vgl_point_3d<double> > & P2)
 {
   return P1.second.x() < P2.second.x();
 }
@@ -305,16 +305,16 @@ bool points_x_less (const vcl_pair<int, vgl_point_3d<double> > & P1,
 //: Performing the adpative bucketing
 //  return the bucketing structure.
 //    input M: # points per bucket.
-dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& all_pts,
+dbmsh3d_pt_bktstr* adpt_bucketing_idpts (std::vector<std::pair<int, vgl_point_3d<double> > >& all_pts,
                                          const int M, const bool b_check_dup)
 {
   unsigned int x, idx, s, r, b;
   double border;
 
-  vul_printf (vcl_cout, "adpt_bucketing(): %u points.\n", all_pts.size());
+  vul_printf (std::cout, "adpt_bucketing(): %u points.\n", all_pts.size());
   const unsigned int N = all_pts.size();
-  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
-  vul_printf (vcl_cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
+  const unsigned int U = (int) std::ceil (bnld_cbrt ((double)N/M));
+  vul_printf (std::cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
   const unsigned int npt_slice = U*U*M;
   const unsigned int npt_row = U*M;
   unsigned int total_num_pts = 0;
@@ -322,14 +322,14 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
   dbmsh3d_pt_bktstr* BktStruct = new dbmsh3d_pt_bktstr ();  
 
   //1) put points into slices.
-  vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Slices;
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > S;
+  std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Slices;
+  std::vector<std::pair<int, vgl_point_3d<double> > > S;
   
   //sort all points by z-coord
-  vcl_sort (all_pts.begin(), all_pts.end(), points_z_less);  
+  std::sort (all_pts.begin(), all_pts.end(), points_z_less);  
 
   //determine at most U+1 slice border values.
-  vcl_vector<double> Sborder;
+  std::vector<double> Sborder;
   Sborder.push_back (all_pts[0].second.z());
   for (s=1; s<U; s++) {
     idx = npt_slice*s;
@@ -357,7 +357,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
     }
 
     //add current point to slice S.
-    S.push_back (vcl_pair<int, vgl_point_3d<double> > (all_pts[x].first, all_pts[x].second));
+    S.push_back (std::pair<int, vgl_point_3d<double> > (all_pts[x].first, all_pts[x].second));
   }
   //add the final slice S
   Slices.push_back (S);
@@ -372,15 +372,15 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
     BktStruct->insert_slice (BktSlice);
 
     //sort the points in slice S by y-coord and put them into U rows in order.
-    vcl_sort (S.begin(), S.end(), points_y_less);  
+    std::sort (S.begin(), S.end(), points_y_less);  
 
-    vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Rows;
+    std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Rows;
     Rows.clear();
-    vcl_vector<vcl_pair<int, vgl_point_3d<double> > > R;
+    std::vector<std::pair<int, vgl_point_3d<double> > > R;
     R.clear();
 
     //determine at most U row border values.
-    vcl_vector<double> Rborder;
+    std::vector<double> Rborder;
     Rborder.push_back (S[0].second.y());
     for (r=1; r<U; r++) {
       idx = npt_row*r;
@@ -408,7 +408,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
       }
 
       //add current point to row R.
-      R.push_back (vcl_pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
+      R.push_back (std::pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
     }
     //add the final row R
     Rows.push_back (R);
@@ -423,18 +423,18 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
       BktSlice->insert_row (BktRow);
 
       //sort the points in row R of slice S by x-coord and put them into U buckets in order.
-      vcl_sort (R.begin(), R.end(), points_x_less);  
+      std::sort (R.begin(), R.end(), points_x_less);  
 
       //uniformly distribute points into buckets.
-      int Ml = (int) vcl_ceil ((double) R.size() / U);
+      int Ml = (int) std::ceil ((double) R.size() / U);
 
-      vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Buckets;
+      std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Buckets;
       Buckets.clear();
-      vcl_vector<vcl_pair<int, vgl_point_3d<double> > > B;
+      std::vector<std::pair<int, vgl_point_3d<double> > > B;
       B.clear();
 
       //determine at most U bucket border values.
-      vcl_vector<double> Bborder;
+      std::vector<double> Bborder;
       Bborder.push_back (R[0].second.x());
       for (b=1; b<U; b++) {
         idx = Ml*b;
@@ -462,7 +462,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
         }
 
         //add current point to bucket B.
-        B.push_back (vcl_pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
+        B.push_back (std::pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
       }
       //add the final bucket B
       Buckets.push_back (B);
@@ -489,23 +489,23 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
   }
 
   assert (total_num_pts == N);
-  vul_printf (vcl_cout, "\tTotally %u buckets created.\n", BktStruct->n_buckets());
+  vul_printf (std::cout, "\tTotally %u buckets created.\n", BktStruct->n_buckets());
   return BktStruct;
 }
 
 //: Performing the adpative bucketing
 //  return the bucketing structure.
 //    input M: # points per bucket.
-dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_pts,
+dbmsh3d_pt_bktstr* adpt_bucketing_pts (std::vector<vgl_point_3d<double> >& input_pts,
                                        const int M, const bool b_check_dup)
 {
   unsigned int x, idx, s, r, b;
   double border;
 
-  vul_printf (vcl_cout, "adpt_bucketing(): %u points.\n", input_pts.size());
+  vul_printf (std::cout, "adpt_bucketing(): %u points.\n", input_pts.size());
   const unsigned int N = input_pts.size();
-  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
-  vul_printf (vcl_cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
+  const unsigned int U = (int) std::ceil (bnld_cbrt ((double)N/M));
+  vul_printf (std::cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
   const unsigned int npt_slice = U*U*M;
   const unsigned int npt_row = U*M;
   unsigned int total_num_pts = 0;
@@ -513,14 +513,14 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
   dbmsh3d_pt_bktstr* BktStruct = new dbmsh3d_pt_bktstr ();  
 
   //1) put points into slices.
-  vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Slices;
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > S;
+  std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Slices;
+  std::vector<std::pair<int, vgl_point_3d<double> > > S;
 
   //sort all points by z-coord
-  vcl_sort (input_pts.begin(), input_pts.end(), vgl_pt_z_less);  
+  std::sort (input_pts.begin(), input_pts.end(), vgl_pt_z_less);  
 
   //determine at most U+1 slice border values.
-  vcl_vector<double> Sborder;
+  std::vector<double> Sborder;
   Sborder.push_back (input_pts[0].z());
   for (s=1; s<U; s++) {
     idx = npt_slice*s;
@@ -548,7 +548,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
     }
 
     //add current point to slice S.
-    S.push_back (vcl_pair<int, vgl_point_3d<double> > (x, input_pts[x]));
+    S.push_back (std::pair<int, vgl_point_3d<double> > (x, input_pts[x]));
   }
   //add the final slice S
   Slices.push_back (S);
@@ -563,15 +563,15 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
     BktStruct->insert_slice (BktSlice);
 
     //sort the points in slice S by y-coord and put them into U rows in order.
-    vcl_sort (S.begin(), S.end(), points_y_less);  
+    std::sort (S.begin(), S.end(), points_y_less);  
 
-    vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Rows;
+    std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Rows;
     Rows.clear();
-    vcl_vector<vcl_pair<int, vgl_point_3d<double> > > R;
+    std::vector<std::pair<int, vgl_point_3d<double> > > R;
     R.clear();
 
     //determine at most U row border values.
-    vcl_vector<double> Rborder;
+    std::vector<double> Rborder;
     Rborder.push_back (S[0].second.y());
     for (r=1; r<U; r++) {
       idx = npt_row*r;
@@ -599,7 +599,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
       }
 
       //add current point to row R.
-      R.push_back (vcl_pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
+      R.push_back (std::pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
     }
     //add the final row R
     Rows.push_back (R);
@@ -614,18 +614,18 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
       BktSlice->insert_row (BktRow);
 
       //sort the points in row R of slice S by x-coord and put them into U buckets in order.
-      vcl_sort (R.begin(), R.end(), points_x_less);  
+      std::sort (R.begin(), R.end(), points_x_less);  
 
       //uniformly distribute points into buckets.
-      int Ml = (int) vcl_ceil ((double) R.size() / U);
+      int Ml = (int) std::ceil ((double) R.size() / U);
 
-      vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Buckets;
+      std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Buckets;
       Buckets.clear();
-      vcl_vector<vcl_pair<int, vgl_point_3d<double> > > B;
+      std::vector<std::pair<int, vgl_point_3d<double> > > B;
       B.clear();
 
       //determine at most U bucket border values.
-      vcl_vector<double> Bborder;
+      std::vector<double> Bborder;
       Bborder.push_back (R[0].second.x());
       for (b=1; b<U; b++) {
         idx = Ml*b;
@@ -653,7 +653,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
         }
 
         //add current point to bucket B.
-        B.push_back (vcl_pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
+        B.push_back (std::pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
       }
       //add the final bucket B
       Buckets.push_back (B);
@@ -680,7 +680,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
   }
 
   assert (total_num_pts == N);
-  vul_printf (vcl_cout, "\tTotally %u buckets created.\n", BktStruct->n_buckets());
+  vul_printf (std::cout, "\tTotally %u buckets created.\n", BktStruct->n_buckets());
   return BktStruct;
 }
 
@@ -688,31 +688,31 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
 
 //: M: # points per bucket.
 //  return # duplicate point removed.
-int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts,
+int check_dup_adpt_bucketing (std::vector<std::pair<int, vgl_point_3d<double> > >& idpts,
                               const int M, const double epsilon)
 {
   unsigned int x, idx, s, r, b;
   double border;
 
-  vul_printf (vcl_cout, "  check_dup_adpt_bucketing(): %u points.\n", idpts.size());
+  vul_printf (std::cout, "  check_dup_adpt_bucketing(): %u points.\n", idpts.size());
   const unsigned int N = idpts.size();
-  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
-  vul_printf (vcl_cout, "    %u points per bucket, %u buckets in one dimension.\n", M, U);
-  vul_printf (vcl_cout, "    duplicate points: ");
+  const unsigned int U = (int) std::ceil (bnld_cbrt ((double)N/M));
+  vul_printf (std::cout, "    %u points per bucket, %u buckets in one dimension.\n", M, U);
+  vul_printf (std::cout, "    duplicate points: ");
   const unsigned int npt_slice = U*U*M;
   const unsigned int npt_row = U*M;
   unsigned int total_num_pts = 0;
   unsigned int dup_count = 0;
 
   //1) put points into U slices.
-  vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Slices;
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > > S;
+  std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Slices;
+  std::vector<std::pair<int, vgl_point_3d<double> > > S;
 
   //sort all points by z-coord
-  vcl_sort (idpts.begin(), idpts.end(), points_z_less);  
+  std::sort (idpts.begin(), idpts.end(), points_z_less);  
 
   //determine at most U-1 slice border value.
-  vcl_vector<double> Sborder;
+  std::vector<double> Sborder;
   Sborder.push_back (idpts[0].second.z());
   for (s=1; s<U; s++) {
     idx = npt_slice*s;
@@ -740,7 +740,7 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
     }
 
     //add current point to slice S.
-    S.push_back (vcl_pair<int, vgl_point_3d<double> > (idpts[x].first, idpts[x].second));
+    S.push_back (std::pair<int, vgl_point_3d<double> > (idpts[x].first, idpts[x].second));
   }
   //add the final slice S
   Slices.push_back (S);
@@ -751,15 +751,15 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
     S = Slices[s];
 
     //sort the points in slice S by y-coord and put them into U rows in order.
-    vcl_sort (S.begin(), S.end(), points_y_less);  
+    std::sort (S.begin(), S.end(), points_y_less);  
 
-    vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Rows;
+    std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Rows;
     Rows.clear();
-    vcl_vector<vcl_pair<int, vgl_point_3d<double> > > R;
+    std::vector<std::pair<int, vgl_point_3d<double> > > R;
     R.clear();
 
     //determine at most U row border values.
-    vcl_vector<double> Rborder;
+    std::vector<double> Rborder;
     Rborder.push_back (S[0].second.y());
     for (r=1; r<U; r++) {
       idx = npt_row*r;
@@ -787,7 +787,7 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
       }
 
       //add current point to row R.
-      R.push_back (vcl_pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
+      R.push_back (std::pair<int, vgl_point_3d<double> > (S[x].first, S[x].second));
     }
     //add the final row R
     Rows.push_back (R);
@@ -799,18 +799,18 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
       R = Rows[r];
 
       //sort the points in row R of slice S by x-coord and put them into U buckets in order.
-      vcl_sort (R.begin(), R.end(), points_x_less);  
+      std::sort (R.begin(), R.end(), points_x_less);  
 
       //uniformly distribute points into buckets.
-      int Ml = (int) vcl_ceil ((double) R.size() / U);
+      int Ml = (int) std::ceil ((double) R.size() / U);
 
-      vcl_vector<vcl_vector<vcl_pair<int, vgl_point_3d<double> > > > Buckets;
+      std::vector<std::vector<std::pair<int, vgl_point_3d<double> > > > Buckets;
       Buckets.clear();
-      vcl_vector<vcl_pair<int, vgl_point_3d<double> > > B;
+      std::vector<std::pair<int, vgl_point_3d<double> > > B;
       B.clear();
 
       //determine at most U bucket border values.
-      vcl_vector<double> Bborder;
+      std::vector<double> Bborder;
       Bborder.push_back (R[0].second.x());
       for (b=1; b<U; b++) {
         idx = Ml*b;
@@ -838,7 +838,7 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
         }
 
         //add current point to bucket B.
-        B.push_back (vcl_pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
+        B.push_back (std::pair<int, vgl_point_3d<double> > (R[x].first, R[x].second));
       }
       //add the final bucket B
       Buckets.push_back (B);
@@ -866,30 +866,30 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
 
   assert (total_num_pts == N);
   assert (dup_count + idpts.size() == N);
-  vul_printf (vcl_cout, "\n  total duplicate points found: %d\n", dup_count);
+  vul_printf (std::cout, "\n  total duplicate points found: %d\n", dup_count);
 
   return dup_count;
 }
 
-int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
+int check_dup_pts (std::vector<std::pair<int, vgl_point_3d<double> > >& idpts)
 {
   unsigned int dup = 0;
 
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator it1 = idpts.begin(); 
+  std::vector<std::pair<int, vgl_point_3d<double> > >::iterator it1 = idpts.begin(); 
   for (; it1 != idpts.end(); ++it1) {
     int id1 = (*it1).first;
     vgl_point_3d<double> v1 = (*it1).second;
     
-    vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator it2 = it1;
+    std::vector<std::pair<int, vgl_point_3d<double> > >::iterator it2 = it1;
     it2++;
     while (it2 != idpts.end()) {
       vgl_point_3d<double> v2 = (*it2).second;
 
       if (v1.x() == v2.x() && v1.y() == v2.y() && v1.z() == v2.z()) {
         //found, delete it2.
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator tmp = it2;
+        std::vector<std::pair<int, vgl_point_3d<double> > >::iterator tmp = it2;
         tmp--;
-        /////vcl_cout<< (*it2).first << " ";
+        /////std::cout<< (*it2).first << " ";
         idpts.erase (it2);
         dup++;
         //can't break the loop if multiple duplication is possible.
@@ -905,17 +905,17 @@ int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
   return dup;
 }
 
-int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts,
+int check_dup_pts (std::vector<std::pair<int, vgl_point_3d<double> > >& idpts,
                    const double epsilon)
 {
   unsigned int dup = 0;
 
-  vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator it1 = idpts.begin(); 
+  std::vector<std::pair<int, vgl_point_3d<double> > >::iterator it1 = idpts.begin(); 
   for (; it1 != idpts.end(); ++it1) {
     int id1 = (*it1).first;
     vgl_point_3d<double> v1 = (*it1).second;
     
-    vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator it2 = it1;
+    std::vector<std::pair<int, vgl_point_3d<double> > >::iterator it2 = it1;
     it2++;
     while (it2 != idpts.end()) {
       vgl_point_3d<double> v2 = (*it2).second;
@@ -924,9 +924,9 @@ int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts,
           bgld_eq (v1.y(), v2.y(), epsilon) && 
           bgld_eq (v1.z(), v2.z(), epsilon)) {
         //found, delete it2.
-        vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator tmp = it2;
+        std::vector<std::pair<int, vgl_point_3d<double> > >::iterator tmp = it2;
         tmp--;
-        /////vcl_cout<< (*it2).first << " ";
+        /////std::cout<< (*it2).first << " ";
         idpts.erase (it2);
         dup++;
         //can't break the loop if multiple duplication is possible.
@@ -945,19 +945,19 @@ int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts,
 // #####################################################################################
 
 //: Bucketing to partition point set into buckets.
-bool cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
+bool cell_bucketing (dbmsh3d_pt_set* pt_set, const std::string prefix,
                      const int BUCKET_NX, const int BUCKET_NY, const int BUCKET_NZ)
 {
   char buf[64];
   int x, y, z;
-  vul_printf (vcl_cout, "run_cell_bucketing(): %u points.\n", pt_set->vertexmap().size());
+  vul_printf (std::cout, "run_cell_bucketing(): %u points.\n", pt_set->vertexmap().size());
 
   vgl_box_3d<double> bbox;
   detect_bounding_box (pt_set, bbox);
-  vul_printf (vcl_cout, "\n Bounding Box: \n");
-  vul_printf (vcl_cout, "     (minx, maxx) = (%lf, %lf)\n", bbox.min_x(), bbox.max_x());
-  vul_printf (vcl_cout, "     (miny, maxy) = (%lf, %lf)\n", bbox.min_y(), bbox.max_y());
-  vul_printf (vcl_cout, "     (minz, maxz) = (%lf, %lf)\n", bbox.min_z(), bbox.max_z());
+  vul_printf (std::cout, "\n Bounding Box: \n");
+  vul_printf (std::cout, "     (minx, maxx) = (%lf, %lf)\n", bbox.min_x(), bbox.max_x());
+  vul_printf (std::cout, "     (miny, maxy) = (%lf, %lf)\n", bbox.min_y(), bbox.max_y());
+  vul_printf (std::cout, "     (minz, maxz) = (%lf, %lf)\n", bbox.min_z(), bbox.max_z());
   double BOX_X = bbox.max_x() - bbox.min_x();
   double BOX_Y = bbox.max_y() - bbox.min_y();
   double BOX_Z = bbox.max_z() - bbox.min_z();
@@ -966,7 +966,7 @@ bool cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
   double BUCKET_LZ = BOX_Z / BUCKET_NZ;
     
   //Prepare bucket number list for generating run files and list files.
-  vcl_vector<vcl_string> bucket_list;
+  std::vector<std::string> bucket_list;
 
   //Go through each bucket
   unsigned int count = 0;
@@ -1002,7 +1002,7 @@ bool cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
         }
         else {
           //Save PS into a .p3d file.
-          vcl_string fileprefix = prefix;
+          std::string fileprefix = prefix;
           sprintf (buf, "%02d", x);
           fileprefix += "_";
           fileprefix += buf;
@@ -1030,8 +1030,8 @@ bool cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
   }
   assert (total_num == pt_set->vertexmap().size());
 
-  vul_printf (vcl_cout, "cell_bucketing(): %d point cloud files (*.P3D) saved.\n", count);
-  vul_printf (vcl_cout, "\tmax_points_bucket: %d.\n\n", max_points_bucket);
+  vul_printf (std::cout, "cell_bucketing(): %d point cloud files (*.P3D) saved.\n", count);
+  vul_printf (std::cout, "\tmax_points_bucket: %d.\n\n", max_points_bucket);
 
   return true;
 }
@@ -1046,7 +1046,7 @@ int put_pts_into_bucket (dbmsh3d_pt_set* pt_set,
   assert (PS->vertexmap().size() == 0);
 
   //Clone all points of pt_set inside bucket and add to PS
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
   for (; it != pt_set->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     if (V->pt().x() >= minx && V->pt().x() < maxx &&
@@ -1065,35 +1065,35 @@ int put_pts_into_bucket (dbmsh3d_pt_set* pt_set,
 //#####################################################
 
 //Generate the bucketing list file.
-void gen_bktlst_txt (const vcl_string& prefix,
-                     const vcl_vector<vcl_string>& bucket_list)
+void gen_bktlst_txt (const std::string& prefix,
+                     const std::vector<std::string>& bucket_list)
 {  
-  vcl_string listfile = prefix;
+  std::string listfile = prefix;
   listfile += "_bktlst.txt";
-  vcl_FILE* fp;
-  if ((fp = vcl_fopen (listfile.c_str(), "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open output txt file %s\n", listfile.c_str());
+  std::FILE* fp;
+  if ((fp = std::fopen (listfile.c_str(), "w")) == NULL) {
+    vul_printf (std::cout, "Can't open output txt file %s\n", listfile.c_str());
     return;
   }
   for (int x=0; x<int(bucket_list.size()); x++) {
-    vcl_string fileprefix = bucket_list[x];
+    std::string fileprefix = bucket_list[x];
     fileprefix += ".p3d";
-    vcl_fprintf (fp, "%s\n", fileprefix.c_str());
+    std::fprintf (fp, "%s\n", fileprefix.c_str());
   }
-  vcl_fclose (fp);
-  vul_printf (vcl_cout, "  Generate list file for points in buckets: %s.\n", listfile.c_str());
+  std::fclose (fp);
+  vul_printf (std::cout, "  Generate list file for points in buckets: %s.\n", listfile.c_str());
 }
 
-void gen_bktinfo_txt (const vcl_string& prefix,
-                      const vcl_vector<vcl_string>& bucket_list,
+void gen_bktinfo_txt (const std::string& prefix,
+                      const std::vector<std::string>& bucket_list,
                       dbmsh3d_pt_bktstr* BktStruct)
 {
   vgl_box_3d<double> box;
-  vcl_string listfile = prefix;
+  std::string listfile = prefix;
   listfile += "_bktinfo.txt";
-  vcl_FILE* fp;
-  if ((fp = vcl_fopen (listfile.c_str(), "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open output txt file %s\n", listfile.c_str());
+  std::FILE* fp;
+  if ((fp = std::fopen (listfile.c_str(), "w")) == NULL) {
+    vul_printf (std::cout, "Can't open output txt file %s\n", listfile.c_str());
     return;
   }
   unsigned int i=0;    
@@ -1110,34 +1110,34 @@ void gen_bktinfo_txt (const vcl_string& prefix,
         box.set_min_x (B->min_x());
         box.set_max_x (B->max_x());
 
-        vcl_string fileprefix = bucket_list[i];
-        vcl_fprintf (fp, "%s", fileprefix.c_str());
-        vcl_fprintf (fp, " (%lf, %lf, %lf) - (%lf, %lf, %lf)\n", 
+        std::string fileprefix = bucket_list[i];
+        std::fprintf (fp, "%s", fileprefix.c_str());
+        std::fprintf (fp, " (%lf, %lf, %lf) - (%lf, %lf, %lf)\n", 
                      box.min_x(), box.min_y(), box.min_z(), 
                      box.max_x(), box.max_y(), box.max_z());
         i++;
       }
     }
   }
-  vcl_fclose (fp);
-  vul_printf (vcl_cout, "  Generate bucket info file: %s.\n", listfile.c_str());
+  std::fclose (fp);
+  vul_printf (std::cout, "  Generate bucket info file: %s.\n", listfile.c_str());
 }
 
 //Generate the run file to view bucketing results.
-void gen_bktlst_view_bat (const vcl_string& prefix)
+void gen_bktlst_view_bat (const std::string& prefix)
 {
-  vcl_string runfile = prefix + "_bktlst_view.bat";
-  vcl_FILE* fp;
-  if ((fp = vcl_fopen (runfile.c_str(), "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open output txt file %s\n", runfile.c_str());
+  std::string runfile = prefix + "_bktlst_view.bat";
+  std::FILE* fp;
+  if ((fp = std::fopen (runfile.c_str(), "w")) == NULL) {
+    vul_printf (std::cout, "Can't open output txt file %s\n", runfile.c_str());
     return;
   }
 
-  vcl_string run_cmd = "dbsk3dappw -list ";
+  std::string run_cmd = "dbsk3dappw -list ";
   run_cmd += prefix;
   run_cmd += "_bktlst";
 
-  vcl_fprintf (fp, "%s\n", run_cmd.c_str());
-  vcl_fclose (fp);
-  vul_printf (vcl_cout, "  Generate run file to view bucketing results: %s.\n", runfile.c_str());
+  std::fprintf (fp, "%s\n", run_cmd.c_str());
+  std::fclose (fp);
+  vul_printf (std::cout, "  Generate run file to view bucketing results: %s.\n", runfile.c_str());
 }

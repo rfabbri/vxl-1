@@ -29,10 +29,10 @@ class dborl_shock_retrieval_params : public dborl_algo_params
 public:
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> db_index_;
-  dborl_parameter<vcl_string> output_folder_;
+  dborl_parameter<std::string> db_index_;
+  dborl_parameter<std::string> output_folder_;
   //: will be concatanated at the end of the object names to find esf files e.g. 0.5-0.1.esf
-  dborl_parameter<vcl_string> input_ext_;
+  dborl_parameter<std::string> input_ext_;
 
   dborl_parameter<bool> normalize_;
   dborl_parameter<bool> norm_reconst_bound_;  // only one of these should be true
@@ -43,9 +43,9 @@ public:
   dborl_parameter<float> rho_;
   dborl_parameter<int> k_;   // if use_rho is false pick top k_ neighbors
 
-  dborl_parameter<vcl_string> sim_matrix_folder_;
+  dborl_parameter<std::string> sim_matrix_folder_;
   dborl_parameter<bool> use_associated_sim_file_;
-  dborl_parameter<vcl_string> sim_matrix_folder_to_create_;
+  dborl_parameter<std::string> sim_matrix_folder_to_create_;
   
   dbskr_tree_edit_params2 edit_params_;
 

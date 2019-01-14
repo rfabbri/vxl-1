@@ -10,8 +10,8 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -47,13 +47,13 @@ bool psm_opt_bayesian_update_process_cons(bprb_func_process& pro)
   //input[1]: The damping value
   //input[2]: The filename of the text file containing list of image names
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
   input_types_[1] = "float";
-  input_types_[2] = "vcl_string";
+  input_types_[2] = vcl_string";
 
   // process has 0 outputs:
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -73,7 +73,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -86,19 +86,19 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
 
   float damping_factor = pro.get_input<float>(1);
 
-  vcl_string image_list_fname = pro.get_input<vcl_string>(2);
+  std::string image_list_fname = pro.get_input<std::string>(2);
 
   // extract list of image_ids from file
-  vcl_ifstream ifs(image_list_fname.c_str());
+  std::ifstream ifs(image_list_fname.c_str());
   if (!ifs.good()) {
-    vcl_cerr << "error opening file " << image_list_fname << vcl_endl;
+    std::cerr << "error opening file " << image_list_fname << std::endl;
     return false;
   }
-  vcl_vector<vcl_string> image_ids;
+  std::vector<std::string> image_ids;
   unsigned int n_images = 0;
   ifs >> n_images;
   for (unsigned int i=0; i<n_images; ++i) {
-    vcl_string img_id;
+    std::string img_id;
     ifs >> img_id;
     image_ids.push_back(img_id);
   }
@@ -109,7 +109,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_rt_bayesian_optimizer<PSM_APM_SIMPLE_GREY, PSM_AUX_OPT_RT_GREY> optimizer(*scene, image_ids);
@@ -121,7 +121,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_rt_bayesian_optimizer<PSM_APM_MOG_GREY, PSM_AUX_OPT_RT_GREY> optimizer(*scene, image_ids);
@@ -133,7 +133,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
       {     
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_rt_bayesian_optimizer<PSM_APM_SIMPLE_RGB, PSM_AUX_OPT_RT_RGB> optimizer(*scene, image_ids);
@@ -145,7 +145,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
       {     
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_opt_rt_bayesian_optimizer<PSM_APM_MOG_RGB, PSM_AUX_OPT_RT_RGB> optimizer(*scene, image_ids);
@@ -154,7 +154,7 @@ bool psm_opt_bayesian_update_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_opt_bayesian_update_process: unsupported appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_opt_bayesian_update_process: unsupported appearance model type " << apm_type << std::endl;
       return false;
   }
 

@@ -44,14 +44,14 @@ public:
     bfrag2DManager();
     virtual ~bfrag2DManager();
 
-    int loadPuzzle( vcl_string );
-    void generatePuzzle( vcl_string fcon, vcl_string bcon, vcl_string fimage, vcl_string bimage );
-    int addPuzzle( vcl_string );
-    int addPiece( vcl_string topConFn, vcl_string botConFn, 
-                  vcl_string topImageFn, vcl_string botImageFn, vcl_string name );
-    int savePZ2as( vcl_string fn );
+    int loadPuzzle( std::string );
+    void generatePuzzle( std::string fcon, std::string bcon, std::string fimage, std::string bimage );
+    int addPuzzle( std::string );
+    int addPiece( std::string topConFn, std::string botConFn, 
+                  std::string topImageFn, std::string botImageFn, std::string name );
+    int savePZ2as( std::string fn );
     int removeBfrag( int where );
-    void addToNote( vcl_string s ){ _noteStrings.push_back(vcl_string(s)); };
+    void addToNote( std::string s ){ _noteStrings.push_back(std::string(s)); };
 
     void clear_display(){ thebfrag2DTableau->clear(); theViews.clear(); redrawTableaux(); };
 
@@ -62,16 +62,16 @@ public:
     void newGrid( int w, int h, int numPairs, int numPuzzles = -1 );
 
     //returns which grid spots are selected
-    int getSelected( vcl_vector<int> &cols, vcl_vector<int> &rows );
+    int getSelected( std::vector<int> &cols, std::vector<int> &rows );
     
     void addCurveAt(bfrag_curve *theCurve, int gridIndex, int offset_x=0, int offset_y=0, const vgui_style_sptr& style=NULL);
     void addPointAt(float x, float y, int gridIndex, const vgui_style_sptr& style = NULL );
 
     //void display(int which); //depreated
-    void displayAssembly( vcl_vector< bool > whichFrags );
+    void displayAssembly( std::vector< bool > whichFrags );
     void displayBfragAt( int which, int where, XForm3x3 *theXform = &XForm3x3() );
     void post_redraw(){ thebfrag2DTableau->post_redraw(); };
-    void getBfragNameList( vcl_vector<vcl_string> &outList );
+    void getBfragNameList( std::vector<std::string> &outList );
 
     void displayCurve( bfrag_curve *theCurve );
 
@@ -85,8 +85,8 @@ public:
     void center_image(vgl_box_2d<double> &box, int index);
     void show_image(vil_image_view<vxl_byte> &image, int index);
 
-    //return a vcl_vector<Curve<double,double> > of all the top curves for use in puzzleSolving
-    vcl_vector<bfrag_curve> getTopContoursForPuzzleSolving();
+    //return a std::vector<Curve<double,double> > of all the top curves for use in puzzleSolving
+    std::vector<bfrag_curve> getTopContoursForPuzzleSolving();
 
 //private:
 
@@ -96,25 +96,25 @@ public:
 
     //extracts contents within " " or the next token if " is not found
     //return -1 upon unmatched " ", 0 on otherwise
-    int extractFileName( vcl_ifstream &input, char* outFn );
+    int extractFileName( std::ifstream &input, char* outFn );
 
     //to delete all the new'ed bfrags in theFrags vector
     void clearTheFrags();
     void clearAssemblies();
     void clearTheViews();
-    int parseFail( vcl_string errmsg );
+    int parseFail( std::string errmsg );
 
     //these all get deleted
-    vcl_vector < bfrag2D* > theFrags;
-    vcl_vector < vgui_soview2D_bfrag2D* > theViews;
-    vcl_vector < bfrag2D_assembly* > theAssemblies;
+    std::vector < bfrag2D* > theFrags;
+    std::vector < vgui_soview2D_bfrag2D* > theViews;
+    std::vector < bfrag2D_assembly* > theAssemblies;
 
-    vcl_vector < vgui_bfrag2D_tableau_sptr > gridBfrag2DTableaux;
-    vcl_vector< vgui_viewer2D_tableau_sptr > viewerTableaux;
+    std::vector < vgui_bfrag2D_tableau_sptr > gridBfrag2DTableaux;
+    std::vector< vgui_viewer2D_tableau_sptr > viewerTableaux;
 
     int numPieces;
 
-    vcl_vector< vcl_string > _noteStrings;
+    std::vector< std::string > _noteStrings;
 
 
 };

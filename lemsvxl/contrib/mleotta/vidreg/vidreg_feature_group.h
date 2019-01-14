@@ -13,7 +13,7 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <rgrl/rgrl_feature_sptr.h>
 
 #include <vbl/vbl_ref_count.h>
@@ -29,16 +29,16 @@ class vidreg_feature_group : public vbl_ref_count
   public:
     vidreg_feature_group() {}
 
-    vidreg_feature_group(const vcl_vector<rgrl_feature_sptr>& e,
-                         const vcl_vector<rgrl_feature_sptr>& c)
+    vidreg_feature_group(const std::vector<rgrl_feature_sptr>& e,
+                         const std::vector<rgrl_feature_sptr>& c)
   : edgels(e), corners(c) {}
 
-    vcl_vector<rgrl_feature_sptr>     edgels;
-    vcl_vector<vidreg_edge>           edges;
-    vcl_vector<double>                edgel_weights;
+    std::vector<rgrl_feature_sptr>     edgels;
+    std::vector<vidreg_edge>           edges;
+    std::vector<double>                edgel_weights;
 
-    vcl_vector<rgrl_feature_sptr> corners;
-    vcl_vector<double>            corner_weights;
+    std::vector<rgrl_feature_sptr> corners;
+    std::vector<double>            corner_weights;
 };
 
 typedef vbl_smart_ptr<vidreg_feature_group> vidreg_feature_group_sptr;

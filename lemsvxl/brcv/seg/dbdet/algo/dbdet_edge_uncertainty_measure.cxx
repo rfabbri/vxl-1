@@ -4,8 +4,8 @@
 // \file
 
 #include "dbdet_edge_uncertainty_measure.h"
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>   // for vcl_abs(int) and vcl_sqrt()
+#include <cstdio>
+#include <cstdlib>   // for std::abs(int) and std::sqrt()
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_matrix_inverse.h>
@@ -58,7 +58,7 @@ dbdet_edge_uncertainty_measure(const vil_image_view<double>& grad_x, const vil_i
   //    double h = vnl_math::max(0.0, (Ix2*Iy2 - IxIy*IxIy)/((Ix2+Iy2)*(Ix2+Iy2))); //remove negative values
   //    H_(x,y) = norm_fac*h;
 
-  //    //H_(x,y) = norm_fac*vcl_pow(h, 0.25); //normalize
+  //    //H_(x,y) = norm_fac*std::pow(h, 0.25); //normalize
   //  }
   //}
 
@@ -96,29 +96,29 @@ dbdet_edge_uncertainty_measure(const vil_image_view<double>& grad_x, const vil_i
   //then compute the h measure from it
   double norm_fac = sqrt(sigma)/25.0;
   for(unsigned long i=0; i<grad_x.size(); i++)
-    h[i] = norm_fac*vcl_pow(vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
+    h[i] = norm_fac*std::pow(vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
 
 }
 
   
 //: get the uncertainty measures at the edgel locations
 void dbdet_edge_uncertainty_measure::
-get_edgel_uncertainties(vcl_vector<vgl_point_2d<double> >& edge_locs, vcl_vector<double>& edge_uncertainties)
+get_edgel_uncertainties(std::vector<vgl_point_2d<double> >& edge_locs, std::vector<double>& edge_uncertainties)
 {
   //interpolate the uncertainty measure at the edgel locations and return them in the vector of uncertainties
   for (unsigned i=0; i<edge_locs.size(); i++)
   {
     ////Note: for now just round off and read the value from the grid points without interpolating
-    //unsigned xx = (unsigned) vcl_floor(edge_locs[i].x()+0.5);
-    //unsigned yy = (unsigned) vcl_floor(edge_locs[i].y()+0.5);
+    //unsigned xx = (unsigned) std::floor(edge_locs[i].x()+0.5);
+    //unsigned yy = (unsigned) std::floor(edge_locs[i].y()+0.5);
     //edge_uncertainties[i] = H_(xx,yy);
     
     //Inteprolate the values
-    unsigned x0 = (unsigned) vcl_floor(edge_locs[i].x());
-    unsigned y0 = (unsigned) vcl_floor(edge_locs[i].y());
+    unsigned x0 = (unsigned) std::floor(edge_locs[i].x());
+    unsigned y0 = (unsigned) std::floor(edge_locs[i].y());
 
-    unsigned x1 = (unsigned) vcl_ceil(edge_locs[i].x());
-    unsigned y1 = (unsigned) vcl_ceil(edge_locs[i].y());
+    unsigned x1 = (unsigned) std::ceil(edge_locs[i].x());
+    unsigned y1 = (unsigned) std::ceil(edge_locs[i].y());
 
     double x = edge_locs[i].x()-x0;
     double y = edge_locs[i].y()-y0;

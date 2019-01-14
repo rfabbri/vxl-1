@@ -5,10 +5,10 @@
 #include "belements.h"
 #include "sielements.h"
 
-#include <vcl_vector.h>
-#include <vcl_queue.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <vector>
+#include <queue>
+#include <map>
+#include <string>
 
 class Bucket;
 class Bucketing;
@@ -55,19 +55,19 @@ public:
   BucketIndex (int newh, int newv) { h=newh; v=newv; }
 };
 
-typedef vcl_set<Bucket* > BucketList;
-typedef vcl_queue<Bucket* > BucketQueue;
+typedef std::set<Bucket* > BucketList;
+typedef std::queue<Bucket* > BucketQueue;
 
-typedef vcl_vector <ValidSource* > ValidSourceType;
-typedef vcl_vector <ValidContactShock* > ValidContactShockType;
+typedef std::vector <ValidSource* > ValidSourceType;
+typedef std::vector <ValidContactShock* > ValidContactShockType;
 
 #ifndef _BOUNDARY_H
-typedef vcl_vector<BElement* > BElmVectorType;
-typedef vcl_map<int, BElement* > BElmListType;
-typedef vcl_pair<int, BElement*> ID_BElm_pair;
+typedef std::vector<BElement* > BElmVectorType;
+typedef std::map<int, BElement* > BElmListType;
+typedef std::pair<int, BElement*> ID_BElm_pair;
 #endif
 
-typedef vcl_set<SISource* > SIElmSetType;
+typedef std::set<SISource* > SIElmSetType;
 
 class Bucket : public BaseGUIGeometry
 {
@@ -79,7 +79,7 @@ protected:
 
   BucketList  _neighborList;
   BElmVectorType    _BElmList;    //list of all BElements in this Bucket
-  SIElmSetType    _SIElmList;    //vcl_set of all SISources in this Bucket
+  SIElmSetType    _SIElmList;    //std::set of all SISources in this Bucket
                         //will be update in IShock_Bucketing::InitializeShocks()
 public:
   bool  _bNonEmpty;
@@ -133,7 +133,7 @@ public:
 
   bool isBElmIn (BElement* belm)
   {
-    BElmVectorType::iterator i = vcl_find(_BElmList.begin(), _BElmList.end(), belm);
+    BElmVectorType::iterator i = std::find(_BElmList.begin(), _BElmList.end(), belm);
     if (i != _BElmList.end())
       return true;
     else
@@ -174,7 +174,7 @@ public:
   }
   bool isNeighboringBucket (Bucket* bc);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //Given a value, test if it is within the Y range of the bucket Top and Bottom
   //Note that the last bucket BucketArray[i][_nBucketsPerSlotMem-1] includes the closed bottom boundary
@@ -343,14 +343,14 @@ protected:
   Bucket** _BucketArray;
   IShock*    ishock;
 
-  typedef vcl_pair<Point, BElement*> Pt_BElm_pair;
-  typedef vcl_vector<Pt_BElm_pair> HorizElmType;
-  typedef vcl_vector<Pt_BElm_pair>::iterator HorizElmTypeIterator;
+  typedef std::pair<Point, BElement*> Pt_BElm_pair;
+  typedef std::vector<Pt_BElm_pair> HorizElmType;
+  typedef std::vector<Pt_BElm_pair>::iterator HorizElmTypeIterator;
   HorizElmType horizMap;
 
-  typedef vcl_pair<COORD_TYPE, BElement*> Y_BElm_pair;
-  typedef vcl_vector<Y_BElm_pair> VerticalElmType;
-  typedef vcl_vector<Y_BElm_pair>::iterator VerticalElmTypeIterator;
+  typedef std::pair<COORD_TYPE, BElement*> Y_BElm_pair;
+  typedef std::vector<Y_BElm_pair> VerticalElmType;
+  typedef std::vector<Y_BElm_pair>::iterator VerticalElmTypeIterator;
   VerticalElmType* vertMap;
 
   int* hFence;  //array of hFence[]

@@ -63,7 +63,7 @@
 #include <vidpro1/process/vidpro1_smoothcem_process.h>
 #include <vidpro1/process/vidpro1_kl_process.h>
 #include <dbbgm/pro/dbbgm_process.h>
-#include<vcl_cstdio.h>
+#include<cstdio>
 
 
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 
 #if defined(VCL_WIN32)
 
-    vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+    std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
 
     _setmaxstdio(2048);
 
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     vehicleseg_gui_menu menubar;
     vgui_menu menu_holder = menubar.setup_menu(); 
     unsigned w = 512, h = 512;
-    vcl_string title = "VEHICLE SEGMENTATION";
+    std::string title = "VEHICLE SEGMENTATION";
     vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
     win->get_adaptor()->set_tableau( bvis1_manager::instance() );
 

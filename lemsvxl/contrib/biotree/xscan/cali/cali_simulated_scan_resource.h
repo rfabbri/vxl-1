@@ -8,7 +8,7 @@
 #include <imgr/imgr_image_view_3d_base_sptr.h>
 #include <imgr/imgr_bounded_image_view_3d.h>
 #include <xscan/xscan_scan.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class cali_simulated_scan_resource :public imgr_scan_resource
 {
@@ -25,37 +25,37 @@ public:
        delete projector_;
      }
 cali_simulated_scan_resource(xscan_scan const& scan, 
-        vcl_vector<vil_image_resource_sptr> const& resources);
+        std::vector<vil_image_resource_sptr> const& resources);
 cali_simulated_scan_resource(xscan_scan const& scan, 
-        vcl_vector<vil_image_resource_sptr> const& resources,cali_param par);
+        std::vector<vil_image_resource_sptr> const& resources,cali_param par);
 cali_simulated_scan_resource(xscan_scan const& scan, 
-        vcl_vector<vil_image_resource_sptr> const& resources,vnl_quaternion<double>const & rot,vgl_point_3d<double> trans);
+        std::vector<vil_image_resource_sptr> const& resources,vnl_quaternion<double>const & rot,vgl_point_3d<double> trans);
 cali_simulated_scan_resource(xscan_scan const& scan, 
-        vcl_vector<vil_image_resource_sptr> const& resources,cali_param par,vcl_vector<double> x_coord_tol,vcl_vector<double> y_coord_tol,
-        vcl_vector<double> z_coord_tol,vcl_vector<double> rad_tol);
+        std::vector<vil_image_resource_sptr> const& resources,cali_param par,std::vector<double> x_coord_tol,std::vector<double> y_coord_tol,
+        std::vector<double> z_coord_tol,std::vector<double> rad_tol);
         
-    vcl_vector<vil_image_resource_sptr>  simulate_scan(char* folder_name, char* file_name,
+    std::vector<vil_image_resource_sptr>  simulate_scan(char* folder_name, char* file_name,
       vnl_quaternion<double> artf_rot, 
       vgl_point_3d<double> artf_trans,
       int interval);
 
-     vcl_vector<vil_image_resource_sptr> gen_artifact_views(imgr_bounded_image_view_3d<unsigned char> views, 
+     std::vector<vil_image_resource_sptr> gen_artifact_views(imgr_bounded_image_view_3d<unsigned char> views, 
                                                     vgl_box_3d<double> const& bounds,
                                                     char* folder_name, char* file_name,
                                                     int interval);
-      vcl_vector<vil_image_resource_sptr> gen_artifact_center_views(imgr_bounded_image_view_3d<unsigned char> views, 
+      std::vector<vil_image_resource_sptr> gen_artifact_center_views(imgr_bounded_image_view_3d<unsigned char> views, 
                                                     vgl_box_3d<double> const& bounds,
                                                     char* folder_name, char* file_name,
                                                     int interval);
   
-     vcl_vector<vcl_vector<vsol_conic_2d> > gen_ball_projections(vnl_quaternion<double> artf_rot, 
+     std::vector<std::vector<vsol_conic_2d> > gen_ball_projections(vnl_quaternion<double> artf_rot, 
                                                     vgl_point_3d<double> artf_trans,
                                                     int interval);
 
      
 
 
-  static vcl_string gen_file_name(char* folder, char *file, int num);
+  static std::string gen_file_name(char* folder, char *file, int num);
 private:
 
 };

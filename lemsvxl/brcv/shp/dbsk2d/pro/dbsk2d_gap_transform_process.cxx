@@ -21,7 +21,7 @@ dbsk2d_gap_transform_process::dbsk2d_gap_transform_process()
       !parameters()->add( "alpha contour" , "-alpha_cont" , (float)1.0f ) ||
       !parameters()->add( "alpha appearance" , "-alpha_app" , (float)1.0f ) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,21 +37,21 @@ bpro1_process* dbsk2d_gap_transform_process::clone() const
 }
 
 
-vcl_string dbsk2d_gap_transform_process::name()
+std::string dbsk2d_gap_transform_process::name()
 {
   return "Perform Gap Transforms";
 }
 
-vcl_vector< vcl_string > dbsk2d_gap_transform_process::get_input_type()
+std::vector< std::string > dbsk2d_gap_transform_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbsk2d_gap_transform_process::get_output_type()
+std::vector< std::string > dbsk2d_gap_transform_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -94,7 +94,7 @@ dbsk2d_gap_transform_process::execute()
   transformer.set_image(shock->get_image());
 
   
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
   transformer.perform_all_gap_transforms(cont_t, app_t, alpha_cont, alpha_app, true);
   transformer.get_eulerspirals(contours);
   transformer.clear_eulerspirals();

@@ -5,8 +5,8 @@
 #ifndef dbsk3d_fs_sheet_set_h_
 #define dbsk3d_fs_sheet_set_h_
 
-#include <vcl_map.h>
-#include <vcl_queue.h>
+#include <map>
+#include <queue>
 
 #include <dbsk3d/dbsk3d_fs_sheet.h>
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -15,7 +15,7 @@ class dbsk3d_fs_sheet_set
 {
 protected:
   //: The set of shock sheets (components) stored in a map.
-  vcl_map<int, dbsk3d_fs_sheet*>  sheetmap_;
+  std::map<int, dbsk3d_fs_sheet*>  sheetmap_;
   dbsk3d_fs_mesh*   fs_mesh_;
   int               fs_sheet_id_counter_;
 
@@ -27,7 +27,7 @@ public:
   }
 
   void clear() {
-    vcl_map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.begin();
+    std::map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.begin();
     for (; it != sheetmap_.end(); it++) {
       delete (*it).second;
     }  
@@ -41,12 +41,12 @@ public:
 
   //####### Data Access #######  
   dbsk3d_fs_sheet* sheetmap (const int i) {
-    vcl_map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.find (i);
+    std::map<int, dbsk3d_fs_sheet*>::iterator it = sheetmap_.find (i);
     if (it == sheetmap_.end())
       return NULL;
     return (*it).second;
   }
-  vcl_map<int, dbsk3d_fs_sheet*>& sheetmap() {
+  std::map<int, dbsk3d_fs_sheet*>& sheetmap() {
     return sheetmap_;
   }
   dbsk3d_fs_mesh* fs_mesh () const {
@@ -60,7 +60,7 @@ public:
   }
 
   void add_fs_sheet (dbsk3d_fs_sheet* S) {
-    sheetmap_.insert (vcl_pair<int, dbsk3d_fs_sheet*> (S->id(), S));
+    sheetmap_.insert (std::pair<int, dbsk3d_fs_sheet*> (S->id(), S));
   }
   void remove_fs_sheet (dbsk3d_fs_sheet* S) {
     sheetmap_.erase (S->id());
@@ -70,7 +70,7 @@ public:
   void build_fs_sheet_set ();
     void propagate_label_S (dbsk3d_fs_sheet* S, dbsk3d_fs_face* inputP);
     void put_neighbor_FF_to_Q (dbsk3d_fs_sheet* S, dbsk3d_fs_face* FF, 
-                               vcl_queue<dbsk3d_fs_face*>& FF_queue);
+                               std::queue<dbsk3d_fs_face*>& FF_queue);
 
   //####### Sheet Component Operations #######
 

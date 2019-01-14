@@ -17,10 +17,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 #include <testlib/testlib_test.h>
@@ -118,7 +118,7 @@ void test_ga_aug_hypg_types ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("hypg_types identical Ns and Es: %d bad matches.", bad);
@@ -140,7 +140,7 @@ void test_ga_aug_hypg_types ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;

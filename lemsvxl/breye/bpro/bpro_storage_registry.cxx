@@ -3,8 +3,8 @@
 
 
 //Declare initial value for static member
-vcl_map<vcl_string, bpro_storage_sptr> 
-bpro_storage_registry::registered_types_= vcl_map<vcl_string, bpro_storage_sptr>();
+std::map<std::string, bpro_storage_sptr> 
+bpro_storage_registry::registered_types_= std::map<std::string, bpro_storage_sptr>();
 
 
 
@@ -27,11 +27,11 @@ bpro_storage_registry::register_type(const bpro_storage_sptr& dummy_storage)
 
 
 //: Returns the set of strings representing all registered types
-vcl_set< vcl_string > 
+std::set< std::string > 
 bpro_storage_registry::types()
 {
-  vcl_set<vcl_string> types;
-  for(vcl_map<vcl_string, bpro_storage_sptr>::iterator sit = registered_types_.begin(); sit!= registered_types_.end(); ++sit)
+  std::set<std::string> types;
+  for(std::map<std::string, bpro_storage_sptr>::iterator sit = registered_types_.begin(); sit!= registered_types_.end(); ++sit)
     types.insert((*sit).first);
   return types;
 }
@@ -39,10 +39,10 @@ bpro_storage_registry::types()
 
 //: Remove data from the storage_registry except those with the given names
 void bpro_storage_registry::
-remove_all_except(const vcl_set<vcl_string>& retain)
+remove_all_except(const std::set<std::string>& retain)
 {
-  vcl_set<vcl_string> types = bpro_storage_registry::types();
-  for(vcl_set<vcl_string>::iterator sit = types.begin(); 
+  std::set<std::string> types = bpro_storage_registry::types();
+  for(std::set<std::string>::iterator sit = types.begin(); 
       sit != types.end(); ++sit)
     if(retain.count(*sit)>0)
       continue;
@@ -55,11 +55,11 @@ remove_all_except(const vcl_set<vcl_string>& retain)
 void 
 bpro_storage_registry::print_summary()
 {
-  vcl_set<vcl_string> types = bpro_storage_registry::types();
-  vcl_cout << "Registered Types: \n";
-  for(vcl_set<vcl_string>::iterator sit = types.begin();
+  std::set<std::string> types = bpro_storage_registry::types();
+  std::cout << "Registered Types: \n";
+  for(std::set<std::string>::iterator sit = types.begin();
       sit != types.end(); ++sit)
-    vcl_cout << *sit << '\n';
+    std::cout << *sit << '\n';
 }
 
 

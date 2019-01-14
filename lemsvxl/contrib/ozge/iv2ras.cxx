@@ -13,7 +13,7 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
@@ -125,7 +125,7 @@ makePlane()
       k = k+4;
     }
 
-  vcl_cout << "k is " << k << " should be " << NUM << "\n";
+  std::cout << "k is " << k << " should be " << NUM << "\n";
 
   SoSeparator *plane = new SoSeparator();
   plane->ref();
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 //  SoGetBoundingBoxAction bbox(myViewport);
 //  bbox.apply(scene);
 //  SbVec3f center = bbox.getCenter();
-//  vcl_cout << center[0] << " " << center[1] << " " << center[2] << vcl_endl;
+//  std::cout << center[0] << " " << center[1] << " " << center[2] << std::endl;
   //myTransform->translation.setValue(-center[0],-center[1],-center[2]);
   //myTransform->center = bbox.getCenter();
 

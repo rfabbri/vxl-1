@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <ctime>
+#include <cstdio>
 
 #include "Curve.h"
 #include "DPMatch.h"
@@ -11,7 +11,7 @@ static void test_crvmtch3D()
 {
   double R1 = 1.0; //curvature coefficient
   double R2 = 0.1; //torsion coefficient
-  vcl_vector<double> lambda;
+  std::vector<double> lambda;
   lambda.push_back(1.0);
 
   long int ticks;
@@ -32,20 +32,20 @@ static void test_crvmtch3D()
   c1.readDataFromFile(fname1);
   c2.readDataFromFile(fname2);
 
-//  FILE *fid = vcl_fopen("D:/MyDocs/courses/en256/project/code-and-data/helix/test.txt", "w");
+//  FILE *fid = std::fopen("D:/MyDocs/courses/en256/project/code-and-data/helix/test.txt", "w");
 
   //compute curvature, torsion
   c1.computeProperties();
 
-  vcl_cout << "Printing curvature" << vcl_endl;
+  std::cout << "Printing curvature" << std::endl;
   for(int i=0; i<c1.numPoints(); i++)
-    vcl_cout << c1.curvature(i) << vcl_endl;
+    std::cout << c1.curvature(i) << std::endl;
 
-  vcl_cout << "Printing torsion" << vcl_endl;
+  std::cout << "Printing torsion" << std::endl;
   for(int i=0; i<c1.numPoints(); i++)
-    vcl_cout << c1.torsion(i) << vcl_endl;
+    std::cout << c1.torsion(i) << std::endl;
 
-//  vcl_fclose(fid);
+//  std::fclose(fid);
 
   cout <<endl;
 

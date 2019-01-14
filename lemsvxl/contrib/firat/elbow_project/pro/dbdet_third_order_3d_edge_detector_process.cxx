@@ -29,7 +29,7 @@ dbdet_third_order_3d_edge_detector_process()
 			|| !parameters()->add( "Maximum block size (in pixels)", "-bs", int(100))
 	)
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -50,27 +50,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbdet_third_order_3d_edge_detector_process::
+std::string dbdet_third_order_3d_edge_detector_process::
 name()
 {
 	return "Run 3D edge detector";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_third_order_3d_edge_detector_process::
+std::vector< std::string > dbdet_third_order_3d_edge_detector_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_dataset");
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_third_order_3d_edge_detector_process::
+std::vector< std::string > dbdet_third_order_3d_edge_detector_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("3d_edges");
 	return to_return;
 }
@@ -112,15 +112,15 @@ execute()
 	data_storage.vertical_cast(input_data_[0][0]);
 	vil3d_image_view<double>& image = data_storage->image();
 
-	vcl_vector<vcl_vector<int> > rois;
+	std::vector<std::vector<int> > rois;
 	dbdet_compute_rois(image, rois, block_size);
-	vcl_vector<dbdet_3d_edge_sptr> edgemap;
-	vcl_cout << "Number of blocks = " << rois.size() << vcl_endl;
+	std::vector<dbdet_3d_edge_sptr> edgemap;
+	std::cout << "Number of blocks = " << rois.size() << std::endl;
 	for(int i = 0; i < rois.size(); i++)
 	{
-		vcl_cout << "Block " << i+1 << " : " << rois[i][0] << " " << rois[i][1] << " " <<
-				rois[i][2] << " " << rois[i][3] << " " << rois[i][4] << " " << rois[i][5] << vcl_endl;
-		vcl_vector<dbdet_3d_edge_sptr> edg;
+		std::cout << "Block " << i+1 << " : " << rois[i][0] << " " << rois[i][1] << " " <<
+				rois[i][2] << " " << rois[i][3] << " " << rois[i][4] << " " << rois[i][5] << std::endl;
+		std::vector<dbdet_3d_edge_sptr> edg;
 		dbdet_third_order_3d_edge_detector_roi(image, edg, str, sigma, h,
 				rois[i][0], rois[i][1], rois[i][2], rois[i][3], rois[i][4], rois[i][5]);
 		for(int j = 0; j <  edg.size(); j++)
@@ -131,14 +131,14 @@ execute()
 		}
 		edgemap.insert(edgemap.end(), edg.begin(), edg.end());
 	}
-	vcl_cout << "Number of edges = " << edgemap.size() << vcl_endl;
+	std::cout << "Number of edges = " << edgemap.size() << std::endl;
 	dbdet_third_order_3d_edge_storage_sptr edge_storage = dbdet_third_order_3d_edge_storage_new();
 	edge_storage->set_edgemap(edgemap);
 	this->output_data_[0].push_back(edge_storage);
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

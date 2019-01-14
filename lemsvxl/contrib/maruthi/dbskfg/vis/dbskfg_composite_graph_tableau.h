@@ -72,7 +72,7 @@ public:
     { transforms_ = new_transforms; }
 
     //: Returns the type of tableau ('dbskfg_composite_graph_tableau').
-    vcl_string type_name() const { return "dbskfg_composite_graph_tableau"; }
+    std::string type_name() const { return "dbskfg_composite_graph_tableau"; }
 
 
     // GUI----------------------------------------------------------------------
@@ -101,39 +101,39 @@ public:
     dbskfg_soview_composite_node* add_composite_node(
         const dbskfg_composite_node_sptr& xv,
         const vgui_style_sptr& style,
-        vcl_string grouping);
+        std::string grouping);
 
     //: Display for composite contour links
     dbskfg_soview_contour_link* add_contour_link(
         dbskfg_contour_link* link,
         const vgui_style_sptr& style,
-        vcl_string grouping);
+        std::string grouping);
 
     //: Display for composite shock links
     dbskfg_soview_shock_link* add_shock_link(
         dbskfg_shock_link* link,
         const vgui_style_sptr& style,
-        vcl_string grouping);
+        std::string grouping);
 
 
     //: Display for composite shock rays
     dbskfg_soview_shock_ray* add_shock_ray(
         dbskfg_shock_link* link,
         const vgui_style_sptr& style,
-        vcl_string grouping);
+        std::string grouping);
 
 
     //: Display for Rag Nodes
     dbskfg_soview_rag_node* add_rag_node(
         const dbskfg_rag_node_sptr& xv,
         const vgui_style_sptr& style,
-        vcl_string grouping);
+        std::string grouping);
 
     //: Display for Transforms
     dbskfg_soview_transform* add_transform(
         const dbskfg_transform_descriptor_sptr& xv,
         const vgui_style_sptr style,
-        vcl_string grouping);
+        std::string grouping);
 
     // Member variables
 

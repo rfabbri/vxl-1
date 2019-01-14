@@ -17,7 +17,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_utils.h>
 #include <dbmsh3d/dbmsh3d_vertex.h>
@@ -208,10 +208,10 @@ dbmsh3d_halfedge* _find_prevHE_in_chain (const dbmsh3d_halfedge* headHE,
 
 unsigned int count_HEs_in_next_loop (const dbmsh3d_halfedge* headHE);
 
-void get_HEvec_next_chain (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_halfedge*>& HEvec);
-void get_HEset_next_chain (const dbmsh3d_halfedge* headHE, vcl_set<dbmsh3d_halfedge*>& HEset);
+void get_HEvec_next_chain (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_halfedge*>& HEvec);
+void get_HEset_next_chain (const dbmsh3d_halfedge* headHE, std::set<dbmsh3d_halfedge*>& HEset);
 
-void get_HEvec_pair_chain (const dbmsh3d_halfedge* headHE, vcl_vector<dbmsh3d_halfedge*>& HEvec);
+void get_HEvec_pair_chain (const dbmsh3d_halfedge* headHE, std::vector<dbmsh3d_halfedge*>& HEvec);
 
 void add_HE_chain_end (dbmsh3d_halfedge* headHE, dbmsh3d_halfedge* inputHE);
 

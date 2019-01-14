@@ -23,7 +23,7 @@ static void test_primitive_factory()
   dbrec_primitive_factory_sptr gpfs = gpf;
   dbrec_hierarchy_sptr h = gpfs->construct_random_classifier(2);
   TEST("test random classifier construction", h->class_cnt(), 2);
-  h->print(vcl_cout);
+  h->print(std::cout);
 }
 
 TESTMAIN( test_primitive_factory );

@@ -3,8 +3,8 @@
 
 #include "mw_project_cube_process.h"
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -35,7 +35,7 @@ mw_project_cube_process::mw_project_cube_process()
       !parameters()->add( "     z min" , "-zmin"     , 30.0 ) ||
       !parameters()->add( "     z max" , "-zmax"     , 50.0 )
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ mw_project_cube_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 mw_project_cube_process::name()
 {
   return "Project Cube";
@@ -79,18 +79,18 @@ mw_project_cube_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > mw_project_cube_process::get_input_type()
+std::vector< std::string > mw_project_cube_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vpgl camera" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > mw_project_cube_process::get_output_type()
+std::vector< std::string > mw_project_cube_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -110,14 +110,14 @@ mw_project_cube_process::execute()
   cam_storage.vertical_cast(input_data_[0][0]);
 
   if(cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
-    vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
+    std::cerr << "Error: process requires a perspective camera" << std::endl;
     return false;
   }
   const vpgl_perspective_camera<double> *pcam = 
     static_cast<const vpgl_perspective_camera<double> *>(cam_storage->get_camera());
 
-  vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-  vcl_cout << "Camera: \n" << pcam->get_matrix();
+  std::cout << "NAME: " << cam_storage->name() << std::endl;
+  std::cout << "Camera: \n" << pcam->get_matrix();
 
   const vpgl_perspective_camera<double> &cam = *pcam;
 
@@ -131,7 +131,7 @@ mw_project_cube_process::execute()
   parameters()->get_value( "-zmin", zmin);
   parameters()->get_value( "-zmax", zmax);
 
-  vcl_vector<vsol_point_3d_sptr> vertices3d(8);
+  std::vector<vsol_point_3d_sptr> vertices3d(8);
   vertices3d[0] = new vsol_point_3d(xmax, ymax, zmin);
   vertices3d[1] = new vsol_point_3d(xmin, ymax, zmax);
   vertices3d[2] = new vsol_point_3d(xmax, ymax, zmax);
@@ -141,11 +141,11 @@ mw_project_cube_process::execute()
   vertices3d[6] = new vsol_point_3d(xmin, ymin, zmin);
   vertices3d[7] = new vsol_point_3d(xmax, ymin, zmin);
 
-  vcl_vector<vsol_point_2d_sptr> pts(8);
+  std::vector<vsol_point_2d_sptr> pts(8);
   for (unsigned i=0; i < 8; ++i)
     pts[i] = new vsol_point_2d(vgl_point_2d<double>( cam.project(vertices3d[i]->get_p()) ));
 
-  vcl_vector<vsol_line_2d_sptr> lines(12);
+  std::vector<vsol_line_2d_sptr> lines(12);
   lines[0]  = new vsol_line_2d(pts[1], pts[2]);
   lines[1]  = new vsol_line_2d(pts[2], pts[4]);
   lines[2]  = new vsol_line_2d(pts[4], pts[3]);
@@ -161,7 +161,7 @@ mw_project_cube_process::execute()
   lines[10] = new vsol_line_2d(pts[1], pts[5]);
   lines[11] = new vsol_line_2d(pts[3], pts[6]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > segments;
+  std::vector< vsol_spatial_object_2d_sptr > segments;
 
   for (unsigned i=0; i<lines.size(); i++) {
     segments.push_back(lines[i]->cast_to_spatial_object());

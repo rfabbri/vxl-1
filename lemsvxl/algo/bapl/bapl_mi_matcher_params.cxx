@@ -52,16 +52,16 @@ bapl_mi_matcher_params::correct_range()
 
 
 //: Output stream operator for printing the parameter values
-vcl_ostream& operator<<(vcl_ostream& os, const bapl_mi_matcher_params& params)
+std::ostream& operator<<(std::ostream& os, const bapl_mi_matcher_params& params)
 {
-  os << "bapl_mi_matcher_params:" << vcl_endl << "[---" << vcl_endl;
-  os << "max scale x  " << params.max_sx_ << vcl_endl;
-  os << "max scale y  " << params.max_sy_ << vcl_endl;
-  os << "max trans x  " << params.max_tx_ << vcl_endl;
-  os << "max trans y  " << params.max_ty_ << vcl_endl;
-  os << "max rotation " << params.max_rotation_ang_ << vcl_endl;
-  os << "max shear    " << params.max_shear_ang_ << vcl_endl;
-  os << "---]" << vcl_endl;
+  os << "bapl_mi_matcher_params:" << std::endl << "[---" << std::endl;
+  os << "max scale x  " << params.max_sx_ << std::endl;
+  os << "max scale y  " << params.max_sy_ << std::endl;
+  os << "max trans x  " << params.max_tx_ << std::endl;
+  os << "max trans y  " << params.max_ty_ << std::endl;
+  os << "max rotation " << params.max_rotation_ang_ << std::endl;
+  os << "max shear    " << params.max_shear_ang_ << std::endl;
+  os << "---]" << std::endl;
   return os;
 }
 

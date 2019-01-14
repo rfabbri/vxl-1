@@ -63,12 +63,12 @@ bool dbvxm_rec_structure_process::execute()
     case 0: { h = dbvxm_part_hierarchy_builder::construct_vehicle_detector_roi1_0(); } break;
     case 1: { h = dbvxm_part_hierarchy_builder::construct_vehicle_detector_roi1_1(); } break;
     case 2: { h = dbvxm_part_hierarchy_builder::construct_vehicle_detector_roi1_2(); } break;
-    default: { vcl_cout << "In dbvxm_rec_structure_process::execute() -- Unrecognized detector type!!\n"; return false; }
+    default: { std::cout << "In dbvxm_rec_structure_process::execute() -- Unrecognized detector type!!\n"; return false; }
   }
   
   //: now extract instances of primitive part types in h
-  vcl_vector<dbvxm_part_instance_sptr> parts_0;
-  vcl_vector<dbvxm_part_instance_sptr>& d_ins = h->get_dummy_primitive_instances();
+  std::vector<dbvxm_part_instance_sptr> parts_0;
+  std::vector<dbvxm_part_instance_sptr>& d_ins = h->get_dummy_primitive_instances();
   unsigned prev_size = parts_0.size();
   for (unsigned i = 0; i < d_ins.size(); i++) {
     if (d_ins[i]->kind_ != dbvxm_part_instance_kind::GAUSSIAN) 
@@ -81,16 +81,16 @@ bool dbvxm_rec_structure_process::execute()
     if (!extract_gaussian_primitives(img, gp->lambda0_, gp->lambda1_, gp->theta_, gp->bright_, 0.1f, gp->type_, parts_0))
       return false;
 
-    vcl_cout << "extracted " << parts_0.size()-prev_size << " primitive parts of type: " << d_ins[i]->type_ << vcl_endl;
+    std::cout << "extracted " << parts_0.size()-prev_size << " primitive parts of type: " << d_ins[i]->type_ << std::endl;
     prev_size = parts_0.size();
   }
 
   unsigned highest = h->highest_layer_id();
-  vcl_vector<dbvxm_part_instance_sptr> parts_upper_most(parts_0);
+  std::vector<dbvxm_part_instance_sptr> parts_upper_most(parts_0);
   for (unsigned l = 1; l <= highest; l++) {
-    vcl_vector<dbvxm_part_instance_sptr> parts_current;
+    std::vector<dbvxm_part_instance_sptr> parts_current;
     h->extract_upper_layer(parts_upper_most, ni, nj, 0.1f, parts_current);
-    vcl_cout << "extracted " << parts_current.size() << " parts of layer " << l << "\n";
+    std::cout << "extracted " << parts_current.size() << " parts of layer " << l << "\n";
     parts_upper_most.clear();
     parts_upper_most = parts_current;
   }
@@ -109,7 +109,7 @@ bool dbvxm_rec_structure_process::execute()
   brdb_value_sptr output1 = new brdb_value_t<vil_image_view_base_sptr>(out_map_sptr1);
   output_data_[1] = output1;
 
-  vcl_cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
 
   return true;
 }

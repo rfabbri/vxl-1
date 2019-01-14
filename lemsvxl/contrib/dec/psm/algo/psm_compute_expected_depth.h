@@ -1,7 +1,7 @@
 #ifndef psm_compute_expected_depth_h_
 #define psm_compute_expected_depth_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <psm/psm_scene.h>
 #include <psm/psm_sample.h>
 #include <psm/psm_apm_traits.h>
@@ -47,13 +47,13 @@ public:
 
     const float cell_len = s1 - s0;
 
-    const float pass_prob = vcl_exp(-alpha*cell_len);
+    const float pass_prob = std::exp(-alpha*cell_len);
 
     expected_depth_(i,j) +=  vis_prob_(i,j) / alpha * (1 + alpha*s0 - pass_prob*(alpha*s1 + 1));
 
     // update visibility probabilty
     alpha_integral_(i,j) += alpha * cell_len;
-    vis_prob_(i,j) = vcl_exp(-alpha_integral_(i,j));
+    vis_prob_(i,j) = std::exp(-alpha_integral_(i,j));
 
     return (vis_prob_(i,j) > 1e-5);
   }
@@ -99,7 +99,7 @@ void psm_compute_expected_depth(psm_scene<APM> &scene, const vpgl_camera<double>
     raytrace_fn.run(functor);
   }
   else {
-    vcl_cerr << "ERROR: only perspective cameras supported at this time!" << vcl_endl;
+    std::cerr << "ERROR: only perspective cameras supported at this time!" << std::endl;
   }
 
   // normalize the depth values

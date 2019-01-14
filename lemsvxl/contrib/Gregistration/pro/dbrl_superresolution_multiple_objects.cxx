@@ -105,7 +105,7 @@ dbrl_superresolution_multiple_objects::dbrl_superresolution_multiple_objects(voi
         !parameters()->add( "Distance Theshold"                     ,  "-dist"              ,  2.5f        ) ||
         !parameters()->add( "Minimum Weight Threshold"              ,  "-minweightthresh"   ,  0.5f        )||
         !parameters()->add( "Radius of uncertainity"                ,  "-rad"               ,  (int)1        )||
-        !parameters()->add( "Euclidean or Projected "               ,  "-disttype"          ,  (vcl_string)"Projected"     )||
+        !parameters()->add( "Euclidean or Projected "               ,  "-disttype"          ,  (std::string)"Projected"     )||
         !parameters()->add( "Edge Background Model "                ,  "-edgemodel"         ,  bpro1_filepath("","*")      )||
         !parameters()->add( "Output polyfiles "                     ,  "-outpoly"           ,   bpro1_filepath("","*")      )||
         !parameters()->add( "Edge Detector Sigma"                ,  "-esigma"           , (float) 1.0        ) ||
@@ -121,7 +121,7 @@ dbrl_superresolution_multiple_objects::dbrl_superresolution_multiple_objects(voi
 )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_superresolution_multiple_objects::dbrl_superresolution_multiple_objects()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_superresolution_multiple_objects::dbrl_superresolution_multiple_objects()" << std::endl;
     }
 
 }
@@ -134,7 +134,7 @@ dbrl_superresolution_multiple_objects::~dbrl_superresolution_multiple_objects()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_superresolution_multiple_objects::name()
 {
     return "SuperResolution Multiple Objects";
@@ -158,9 +158,9 @@ dbrl_superresolution_multiple_objects::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_superresolution_multiple_objects::get_input_type()
+std::vector< std::string > dbrl_superresolution_multiple_objects::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbinfo_track_storage" );
     to_return.push_back( "image" );
     return to_return;
@@ -168,9 +168,9 @@ vcl_vector< vcl_string > dbrl_superresolution_multiple_objects::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_superresolution_multiple_objects::get_output_type()
+std::vector< std::string > dbrl_superresolution_multiple_objects::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
 
     static bool onlyfgedges=false;
     parameters()->get_value("-onlyfgedges",onlyfgedges);
@@ -207,7 +207,7 @@ bool
 dbrl_superresolution_multiple_objects::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_superresolution_multiple_objects::execute() - "
+        std::cout << "In dbrl_superresolution_multiple_objects::execute() - "
             << "not exactly two input images \n";
         return false;
     }
@@ -230,7 +230,7 @@ dbrl_superresolution_multiple_objects::execute()
     static float thresh=0.0;
     static bool onlyfgedges=0.0;
 
-    static vcl_string disttype="Eculidean";
+    static std::string disttype="Eculidean";
 
     parameters()->get_value("-initT",Tinit);
     parameters()->get_value("-finalT",Tfinal);
@@ -250,13 +250,13 @@ dbrl_superresolution_multiple_objects::execute()
     parameters()->get_value("-onlyfgedges",onlyfgedges);
     parameters()->get_value("-edgemodel" , file_path );
 
-    vcl_string path = file_path.path;
+    std::string path = file_path.path;
 
 
     //if(!model_storage_)
     //{
     //    model_storage_ =  dbbgm_distribution_image_storage_new();
-    //    vcl_cout<<"Loading Edge Bg Model \n";
+    //    std::cout<<"Loading Edge Bg Model \n";
     //    vsl_b_ifstream is(path);
     //    model_storage_->b_read(is);
     //    model_storage_->set_frame(-2);
@@ -267,7 +267,7 @@ dbrl_superresolution_multiple_objects::execute()
     //    // frame index of -2 should indicate global storage
     //    if(!res->store_data_at(model_storage_, -2))
     //    {
-    //        vcl_cout << "In dbrl_superresolution_multiple_objects "
+    //        std::cout << "In dbrl_superresolution_multiple_objects "
     //            << "store to repository failed\n";
     //        return false;
     //    }
@@ -276,7 +276,7 @@ dbrl_superresolution_multiple_objects::execute()
     if(!model_storage_)
     {
         model_storage_ =  dbbgm_image_storage_new();
-        vcl_cout<<"Loading Edge Bg Model \n";
+        std::cout<<"Loading Edge Bg Model \n";
         vsl_b_ifstream is(path);
         model_storage_->b_read(is);
         model_storage_->set_frame(-2);
@@ -287,7 +287,7 @@ dbrl_superresolution_multiple_objects::execute()
         //// frame index of -2 should indicate global storage
         //if(!res->store_data_at(model_storage_, -2))
         //{
-        //    vcl_cout << "In dbrl_superresolution_multiple_objects "
+        //    std::cout << "In dbrl_superresolution_multiple_objects "
         //        << "store to repository failed\n";
         //    return false;
         //}
@@ -297,7 +297,7 @@ dbrl_superresolution_multiple_objects::execute()
     //{
     //bpro1_filepath out_file_path;
     //parameters()->get_value("-outpoly" , out_file_path );
-    //vcl_string outfile = out_file_path.path;
+    //std::string outfile = out_file_path.path;
     //ofile=new vsl_b_ofstream(outfile.c_str());
     //open_file=true;
     //}
@@ -319,7 +319,7 @@ dbrl_superresolution_multiple_objects::execute()
         tracks_=track_storage->tracks();
     int  frame_no=image_storage->frame();
 
-    vcl_cout<<"Frame no: "<<frame_no<<"\n";
+    std::cout<<"Frame no: "<<frame_no<<"\n";
     vidpro1_vsol2D_storage_sptr output_vsol_subpixel = vidpro1_vsol2D_storage_new();
     //output_data_[0].push_back(output_vsol_subpixel);
 
@@ -331,24 +331,24 @@ dbrl_superresolution_multiple_objects::execute()
     vidpro1_vsol2D_storage_sptr griddisp= vidpro1_vsol2D_storage_new();
     vidpro1_vsol2D_storage_sptr imphulls= vidpro1_vsol2D_storage_new();
     //vidpro1_image_storage_sptr images= vidpro1_image_storage_new();
-    //vcl_vector<dbrl_id_point_2d_sptr> reliable_idpoints;
-    vcl_vector<dbru_multiple_instance_object_sptr> multiple_objects;
+    //std::vector<dbrl_id_point_2d_sptr> reliable_idpoints;
+    std::vector<dbru_multiple_instance_object_sptr> multiple_objects;
     int cnt=0;
-    for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks_.begin();
+    for(std::vector<dbinfo_track_sptr>::iterator trit = tracks_.begin();
         trit != tracks_.end(); trit++)
     {
-        vcl_vector<vil_image_view<float> > superimgs;
+        std::vector<vil_image_view<float> > superimgs;
         if(frame_no>=(*trit)->start_frame() && frame_no<=(*trit)->end_frame())
         {
-            vcl_vector<vcl_vector<dbrl_id_point_2d_sptr> > xformed_all_pivot_pointedges;
-            vcl_vector<dbrl_id_point_2d_sptr> all_pivot_pointedges;
+            std::vector<std::vector<dbrl_id_point_2d_sptr> > xformed_all_pivot_pointedges;
+            std::vector<dbrl_id_point_2d_sptr> all_pivot_pointedges;
             dbinfo_observation_sptr ref_obs=(*trit)->observ(frame_no); //: observation in the current frame
-            vcl_vector<dbrl_id_point_2d_sptr>  pivot_pointedges=get_foreground_edges_from_observ(ref_obs,model_storage_);
+            std::vector<dbrl_id_point_2d_sptr>  pivot_pointedges=get_foreground_edges_from_observ(ref_obs,model_storage_);
             dbru_multiple_instance_object_sptr  objects=new dbru_multiple_instance_object();
-            vcl_vector<vil_image_view<vxl_byte> > xformedimgs;
+            std::vector<vil_image_view<vxl_byte> > xformedimgs;
             if(ref_obs.ptr())
             {
-                vcl_map<dbrl_feature_sptr,unsigned char> superres_samples;
+                std::map<dbrl_feature_sptr,unsigned char> superres_samples;
                 vnl_matrix<double> globalintensities(ref_obs->obs_snippet()->ni()*2,ref_obs->obs_snippet()->nj()*2);
                 globalintensities.fill(0.0);
                 vnl_matrix<int> globalfreq(ref_obs->obs_snippet()->ni()*2,ref_obs->obs_snippet()->nj()*2);
@@ -358,8 +358,8 @@ dbrl_superresolution_multiple_objects::execute()
                 vsol_polygon_2d_sptr polytest=ref_obs->geometry()->poly(0);
                 vsol_polygon_2d_sptr newpolytest=dilate_poly(polytest,3.0);
 
-                vcl_vector<dbrl_feature_sptr> f1;
-                vcl_vector<vsol_spatial_object_2d_sptr> f1pts;
+                std::vector<dbrl_feature_sptr> f1;
+                std::vector<vsol_spatial_object_2d_sptr> f1pts;
                 double xrefc=0,yrefc=0;
                 for(int k=0;k<pivot_pointedges.size();k++)
                 {
@@ -367,8 +367,8 @@ dbrl_superresolution_multiple_objects::execute()
                     yrefc+=pivot_pointedges[k]->y();
 
                     vsol_point_2d_sptr p=new vsol_point_2d(pivot_pointedges[k]->x(),pivot_pointedges[k]->y());
-                    vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pivot_pointedges[k]->tangent()),p->y()+0.2*vcl_sin(pivot_pointedges[k]->tangent()));
-                    vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pivot_pointedges[k]->tangent()),p->y()-0.2*vcl_sin(pivot_pointedges[k]->tangent()));
+                    vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pivot_pointedges[k]->tangent()),p->y()+0.2*std::sin(pivot_pointedges[k]->tangent()));
+                    vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pivot_pointedges[k]->tangent()),p->y()-0.2*std::sin(pivot_pointedges[k]->tangent()));
                     vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                     f1pts.push_back(l->cast_to_spatial_object());
 
@@ -376,17 +376,17 @@ dbrl_superresolution_multiple_objects::execute()
                 xrefc/=pivot_pointedges.size();
                 yrefc/=pivot_pointedges.size();
 
-                vcl_vector<dbrl_feature_sptr> ptk_features=get_features(pivot_pointedges,disttype);
+                std::vector<dbrl_feature_sptr> ptk_features=get_features(pivot_pointedges,disttype);
                 //: converting points into features
-                //vcl_vector<dbrl_id_point_2d_sptr> orig_pivot_pointedges;
-                //vcl_vector<dbdet_edgel* > all_edgels;
+                //std::vector<dbrl_id_point_2d_sptr> orig_pivot_pointedges;
+                //std::vector<dbdet_edgel* > all_edgels;
                 //for(int k=0;k<pivot_pointedges.size();k++)
                 //    all_edgels.push_back(new dbdet_edgel(vgl_point_2d<double>(pivot_pointedges[k]->x(),pivot_pointedges[k]->y()), pivot_pointedges[k]->tangent()));
                 //
-                ////vcl_vector<dbrl_feature_sptr> ptk_features=get_curvature_edges(all_edgels);
-                //vcl_vector<dbrl_feature_sptr> ptk_features=get_neighbor_edges(all_edgels);
+                ////std::vector<dbrl_feature_sptr> ptk_features=get_curvature_edges(all_edgels);
+                //std::vector<dbrl_feature_sptr> ptk_features=get_neighbor_edges(all_edgels);
                 
-                vcl_vector<vgl_point_2d<double> > orgpts;
+                std::vector<vgl_point_2d<double> > orgpts;
                 for(unsigned k=0;k<ptk_features.size();k++)
                 {
                     if(dbrl_feature_point_tangent_curvature_groupings * pt
@@ -439,17 +439,17 @@ dbrl_superresolution_multiple_objects::execute()
                 //    fpt->setid(pivot_pointedges[k]->id());
                 //    f1.push_back(fpt);
                 //    vsol_point_2d_sptr p=new vsol_point_2d(pivot_pointedges[k]->x(),pivot_pointedges[k]->y());
-                //    vsol_point_2d_sptr p0=new vsol_point_2d(p->x()-0.2*vcl_sin(fpt->dir()),p->y()+0.2*vcl_cos(fpt->dir()));
-                //    vsol_point_2d_sptr p1=new vsol_point_2d(p->x()+0.2*vcl_sin(fpt->dir()),p->y()-0.2*vcl_cos(fpt->dir()));
+                //    vsol_point_2d_sptr p0=new vsol_point_2d(p->x()-0.2*std::sin(fpt->dir()),p->y()+0.2*std::cos(fpt->dir()));
+                //    vsol_point_2d_sptr p1=new vsol_point_2d(p->x()+0.2*std::sin(fpt->dir()),p->y()-0.2*std::cos(fpt->dir()));
 
                 //    vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                 //    f1pts.push_back(l->cast_to_spatial_object());
 
                 //    f1pts.push_back(p->cast_to_spatial_object());
-                //    double tan = vcl_atan2 (p1->y() - p0->y(), p1->x() - p0->x());
+                //    double tan = std::atan2 (p1->y() - p0->y(), p1->x() - p0->x());
                 //    orig_pivot_pointedges.push_back(new dbrl_id_point_2d(p->x(),p->y(),tan,k));
                 //}
-                //vcl_vector<vgl_point_2d<double> > orgpts;
+                //std::vector<vgl_point_2d<double> > orgpts;
                 //for(unsigned i=0;i<pivot_pointedges.size();i++)
                 //    orgpts.push_back(vgl_point_2d<double>(pivot_pointedges[i]->x(),pivot_pointedges[i]->y()));
                 if(f1.size()>2)
@@ -457,7 +457,7 @@ dbrl_superresolution_multiple_objects::execute()
                     //: computing the convex hull of the original set of edges
                     vgl_convex_hull_2d<double> orghull(orgpts);
                     vgl_polygon<double> orgp=orghull.hull();
-                    vcl_vector<vsol_point_2d_sptr> orgcontour;
+                    std::vector<vsol_point_2d_sptr> orgcontour;
                     for(int k=0;k<orgp[0].size();k++)
                     {
                         vsol_point_2d_sptr p =new vsol_point_2d(orgp[0][k].x(),orgp[0][k].y());
@@ -466,13 +466,13 @@ dbrl_superresolution_multiple_objects::execute()
                     vsol_polygon_2d_sptr neworgContour = new vsol_polygon_2d (orgcontour);//ctracer.largest_contour()
                     //orgconvhull->add_object(neworgContour->cast_to_spatial_object());
                     //: superimposing neighboring frames      
-                    vcl_vector<vcl_vector< vsol_spatial_object_2d_sptr > > xpoints;  
+                    std::vector<std::vector< vsol_spatial_object_2d_sptr > > xpoints;  
 
                     if(!onlyfgedges)
                     {
                     for(int i=frame_no-winsize;i<=frame_no+winsize;i++)
                     {
-                        vcl_cout<<"Match frame no: "<<i<<"\n";
+                        std::cout<<"Match frame no: "<<i<<"\n";
                         if(i>=(*trit)->start_frame() && i<=(*trit)->end_frame() && i!=frame_no)
                         {
                             dbinfo_observation_sptr temp_obs=(*trit)->observ(i);
@@ -483,16 +483,16 @@ dbrl_superresolution_multiple_objects::execute()
                                     vil_image_view<unsigned char> img_view=temp_obs->obs_snippet()->get_view();
                                     //vil_save(img_view,"d:/temp.tif");
                                     brip_roi_sptr exroi=temp_obs->ex_roi();
-                                    vcl_vector<dbrl_id_point_2d_sptr>  curr_pointedges=
+                                    std::vector<dbrl_id_point_2d_sptr>  curr_pointedges=
                                         get_foreground_edges_from_observ(temp_obs,model_storage_);
-                                   // vcl_vector<dbdet_edgel* > curr_edgels;
+                                   // std::vector<dbdet_edgel* > curr_edgels;
                                    // for(int k=0;k<curr_pointedges.size();k++)
                                    //     curr_edgels.push_back(new dbdet_edgel(vgl_point_2d<double>(curr_pointedges[k]->x(),curr_pointedges[k]->y()), curr_pointedges[k]->tangent()));
 
-                                   //vcl_vector<dbrl_feature_sptr> f2=get_neighbor_edges(curr_edgels);
-                                    vcl_vector<dbrl_feature_sptr> f2=get_features(curr_pointedges,disttype);
+                                   //std::vector<dbrl_feature_sptr> f2=get_neighbor_edges(curr_edgels);
+                                    std::vector<dbrl_feature_sptr> f2=get_features(curr_pointedges,disttype);
                                     
-                                    //vcl_vector<dbrl_feature_sptr> f2;
+                                    //std::vector<dbrl_feature_sptr> f2;
                                     double xcurc=0,ycurc=0;
                                     for(int k=0;k<curr_pointedges.size();k++)
                                     {
@@ -501,7 +501,7 @@ dbrl_superresolution_multiple_objects::execute()
                                     }
                                     xcurc/=curr_pointedges.size();
                                     ycurc/=curr_pointedges.size();
-                                    vcl_vector<vsol_spatial_object_2d_sptr> f2pts;
+                                    std::vector<vsol_spatial_object_2d_sptr> f2pts;
                                     for(unsigned k=0;k<curr_pointedges.size();k++)
                                     {
                                         if(dbrl_feature_point_tangent_curvature_groupings * pt
@@ -534,7 +534,7 @@ dbrl_superresolution_multiple_objects::execute()
                                     }
 
                                     //: applying translation 
-                                    lambdainit=vcl_max(f1.size(),f2.size());
+                                    lambdainit=std::max(f1.size(),f2.size());
                                     dbrl_rpm_affine_params affineparams(lambdainit,mconvg,Tinit,Tfinal,moutlier,annealrate);
 
                                     //: applying affine 
@@ -546,16 +546,16 @@ dbrl_superresolution_multiple_objects::execute()
                                     M.setinitialoutlier(affineparams.outlier());
                                     dbrl_estimator_point_affine* final_affine_est= new dbrl_estimator_point_affine();
                                     final_affine_est->set_lambda(0.0);
-                                    vcl_vector<dbrl_feature_sptr> affinef1xform=f1;
+                                    std::vector<dbrl_feature_sptr> affinef1xform=f1;
                                     //match_set->normalize_point_set(M.M(),affinef1xform );
                                     dbrl_transformation_sptr final_affine_tform=match_set->get_transformation();//final_affine_est->estimate(f1,f2,M);
                                     dbrl_affine_transformation * final_affine_form
                                         =dynamic_cast<dbrl_affine_transformation *> (final_affine_tform.ptr());
                                     final_affine_form->set_from_features(f2);
                                     final_affine_form->transform();
-                                    //vcl_vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
-                                    vcl_vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
-                                    final_affine_form->print_summary(vcl_cout);
+                                    //std::vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
+                                    std::vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
+                                    final_affine_form->print_summary(std::cout);
                                     //: in order to solve multiple correspondences.
                                     //M.binarize(0.51);
                                     ////: retreiving final transform using TPS
@@ -563,43 +563,43 @@ dbrl_superresolution_multiple_objects::execute()
                                     tps_est->set_lambda1(0.001);
                                     tps_est->set_lambda2(0.0);
 
-                                    vcl_vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
+                                    std::vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
                                     match_set->normalize_point_set(M.M(),f1xform );
                                     dbrl_transformation_sptr tform=tps_est->estimate(f1xform,affinef2xformed,M);
                                     dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
                                     tpstform->set_from_features(affinef2xformed);
                                     tpstform->transform();
-                                    vcl_vector<dbrl_feature_sptr> f2xformed=tpstform->get_to_features();
+                                    std::vector<dbrl_feature_sptr> f2xformed=tpstform->get_to_features();
 
                                     //dbrl_estimator_cubic_patch* cubic_est= new dbrl_estimator_cubic_patch();
-                                    //vcl_vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
+                                    //std::vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
                                     //////dbrl_transformation_sptr tform=cubic_est->estimate(f1xform,match_set->get_feature_set2(),M);
                                     //dbrl_transformation_sptr tform=cubic_est->estimate(f1xform,affinef2xformed,M);
                                     //dbrl_cubic_transformation * cubictform=dynamic_cast<dbrl_cubic_transformation *> (tform.ptr());
                                     //cubictform->set_from_features(affinef2xformed);
                                     //cubictform->transform();
-                                    //vcl_vector<dbrl_feature_sptr> f2xformed=cubictform->get_to_features();
+                                    //std::vector<dbrl_feature_sptr> f2xformed=cubictform->get_to_features();
 
                                     //: grid points for super res
-                                    vcl_vector<dbrl_feature_sptr> frame_gridpoints=get_grid_points(f2,1.0);
+                                    std::vector<dbrl_feature_sptr> frame_gridpoints=get_grid_points(f2,1.0);
                                     final_affine_form->set_from_features(frame_gridpoints);
                                     final_affine_form->transform();
-                                    vcl_vector<dbrl_feature_sptr> affine_frame_gridpoints=final_affine_form->get_to_features();
+                                    std::vector<dbrl_feature_sptr> affine_frame_gridpoints=final_affine_form->get_to_features();
                                     //cubictform->set_from_features(affine_frame_gridpoints);
                                     //cubictform->transform();
-                                    //vcl_vector<dbrl_feature_sptr> cubic_frame_gridpoints=cubictform->get_to_features();
+                                    //std::vector<dbrl_feature_sptr> cubic_frame_gridpoints=cubictform->get_to_features();
 
                                     tpstform->set_from_features(affine_frame_gridpoints);
                                     tpstform->transform();
-                                    vcl_vector<dbrl_feature_sptr> tps_frame_gridpoints=tpstform->get_to_features();
+                                    std::vector<dbrl_feature_sptr> tps_frame_gridpoints=tpstform->get_to_features();
 
                                     for(unsigned m=0;m<tps_frame_gridpoints.size();m++)
                                     {
                                         if(dbrl_feature_point* pt
                                             =dynamic_cast<dbrl_feature_point*>(frame_gridpoints[m].ptr()))
                                         {
-                                           int xs=vcl_floor(pt->location()[0]+xcurc)-exroi->cmin(0);
-                                            int ys=vcl_floor(pt->location()[1]+ycurc)-exroi->rmin(0);
+                                           int xs=std::floor(pt->location()[0]+xcurc)-exroi->cmin(0);
+                                            int ys=std::floor(pt->location()[1]+ycurc)-exroi->rmin(0);
                                             if(xs<img_view.ni() && ys<img_view.nj() && xs>=0 && ys>=0)
                                             {
                                                 if(dbrl_feature_point* pt1=dynamic_cast<dbrl_feature_point*>(tps_frame_gridpoints[m].ptr()))
@@ -616,17 +616,17 @@ dbrl_superresolution_multiple_objects::execute()
                                     }
 
                                     //: xform grid points
-                                    vcl_vector<dbrl_feature_sptr> gridpoints=get_grid_points(f2,gridspace);
+                                    std::vector<dbrl_feature_sptr> gridpoints=get_grid_points(f2,gridspace);
                                     final_affine_form->set_from_features(gridpoints);
                                     final_affine_form->transform();
-                                    vcl_vector<dbrl_feature_sptr> affinexfomredgridpoints=final_affine_form->get_to_features();
+                                    std::vector<dbrl_feature_sptr> affinexfomredgridpoints=final_affine_form->get_to_features();
                                     tpstform->set_from_features(affinexfomredgridpoints);
                                     tpstform->transform();
-                                    vcl_vector<dbrl_feature_sptr> xfomredgridpoints=tpstform->get_to_features();
-                                    //vcl_vector<dbrl_feature_sptr> xfomredgridpoints=final_affine_form->get_to_features();
+                                    std::vector<dbrl_feature_sptr> xfomredgridpoints=tpstform->get_to_features();
+                                    //std::vector<dbrl_feature_sptr> xfomredgridpoints=final_affine_form->get_to_features();
 
-                                    vcl_vector<vsol_spatial_object_2d_sptr> gridpts;
-                                    vcl_vector<vsol_spatial_object_2d_sptr> xgridpts;
+                                    std::vector<vsol_spatial_object_2d_sptr> gridpts;
+                                    std::vector<vsol_spatial_object_2d_sptr> xgridpts;
 
                                     vnl_matrix<float> intensities(image_sptr->ni(),image_sptr->nj());
                                     intensities.fill(0.0);
@@ -644,21 +644,21 @@ dbrl_superresolution_multiple_objects::execute()
                                         if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(xfomredgridpoints[m].ptr()))
                                         {
                                             vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0]*scale+xrefc,pt->location()[1]*scale+yrefc);
-                                            if(vcl_floor(p->x())<intensities.rows() && vcl_floor(p->x())>=0 &&
-                                                vcl_floor(p->y())<intensities.cols() && vcl_floor(p->y())>=0)
+                                            if(std::floor(p->x())<intensities.rows() && std::floor(p->x())>=0 &&
+                                                std::floor(p->y())<intensities.cols() && std::floor(p->y())>=0)
                                             {
-                                                intensities(vcl_floor(p->x()),vcl_floor(p->y()))+=img_view(vcl_floor(p1->x())-exroi->cmin(0),vcl_floor(p1->y())-exroi->rmin(0));
-                                                freq(vcl_floor(p->x()),vcl_floor(p->y()))++;
+                                                intensities(std::floor(p->x()),std::floor(p->y()))+=img_view(std::floor(p1->x())-exroi->cmin(0),std::floor(p1->y())-exroi->rmin(0));
+                                                freq(std::floor(p->x()),std::floor(p->y()))++;
                                             }
                                             else
                                             {
-                                                vcl_cout<<"\n Error";
+                                                std::cout<<"\n Error";
                                             }
-                                            //if(vcl_floor(2*(p->x()-globalcmin))<globalintensities.rows() && vcl_floor(2*(p->x()-globalcmin))>=0 &&
-                                            //    vcl_floor(2*(p->y()-globalrmin))<globalintensities.cols() &&vcl_floor(2*(p->y()-globalrmin))>=0)
+                                            //if(std::floor(2*(p->x()-globalcmin))<globalintensities.rows() && std::floor(2*(p->x()-globalcmin))>=0 &&
+                                            //    std::floor(2*(p->y()-globalrmin))<globalintensities.cols() &&std::floor(2*(p->y()-globalrmin))>=0)
                                             //{
-                                            //    globalintensities(vcl_floor(2*(p->x()-globalcmin)),vcl_floor(2*(p->y()-globalrmin)))+=img_view(vcl_floor(p1->x())-exroi->cmin(0),vcl_floor(p1->y())-exroi->rmin(0));
-                                            //    globalfreq(vcl_floor(2*(p->x()-globalcmin)),vcl_floor(2*(p->y()-globalrmin)))++;
+                                            //    globalintensities(std::floor(2*(p->x()-globalcmin)),std::floor(2*(p->y()-globalrmin)))+=img_view(std::floor(p1->x())-exroi->cmin(0),std::floor(p1->y())-exroi->rmin(0));
+                                            //    globalfreq(std::floor(2*(p->x()-globalcmin)),std::floor(2*(p->y()-globalrmin)))++;
                                             //}
                                         }
                                     }
@@ -676,8 +676,8 @@ dbrl_superresolution_multiple_objects::execute()
                                         }
                                         superimgs.push_back(img_result);
                                       //  vil_save(brip_vil_float_ops::convert_to_byte(img_result),"d:/temp.tiff");
-                                    //vcl_string namegrid=vul_sprintf("grid%d",i);
-                                    vcl_vector<dbrl_id_point_2d_sptr> f2xid;
+                                    //std::string namegrid=vul_sprintf("grid%d",i);
+                                    std::vector<dbrl_id_point_2d_sptr> f2xid;
                                     f2pts.clear();
 
                                     for(unsigned m=0;m<f2xformed.size();m++)
@@ -691,31 +691,31 @@ dbrl_superresolution_multiple_objects::execute()
                                         else if(dbrl_feature_point_tangent* pt=dynamic_cast<dbrl_feature_point_tangent*>(f2xformed[m].ptr()))
                                         {
                                             vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0]*scale+xrefc,pt->location()[1]*scale+yrefc);
-                                            vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                                            vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                                            vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                                            vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                                             vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                                             f2pts.push_back(p->cast_to_spatial_object());
                                             f2pts.push_back(l->cast_to_spatial_object());
 
-                                            double tan = vcl_atan2 (p1->y() - p0->y(), p1->x() - p0->x());
+                                            double tan = std::atan2 (p1->y() - p0->y(), p1->x() - p0->x());
                                             f2xid.push_back(new dbrl_id_point_2d(p->x(),p->y(),tan,m));
                                         }
                                          else if(dbrl_feature_point_tangent_curvature* pt=dynamic_cast<dbrl_feature_point_tangent_curvature*>(f2xformed[m].ptr()))
                                         {
                                             vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0]*scale+xrefc,pt->location()[1]*scale+yrefc);
-                                            vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                                            vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                                            vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                                            vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                                             vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                                             f2pts.push_back(p->cast_to_spatial_object());
                                             f2pts.push_back(l->cast_to_spatial_object());
 
-                                            double tan = vcl_atan2 (p1->y() - p0->y(), p1->x() - p0->x());
+                                            double tan = std::atan2 (p1->y() - p0->y(), p1->x() - p0->x());
                                             f2xid.push_back(new dbrl_id_point_2d(p->x(),p->y(),tan,m));
                                         }
                                     }
-                                    vcl_string namepoints=vul_sprintf("points%d",i);
+                                    std::string namepoints=vul_sprintf("points%d",i);
                                     output_vsol_superimposed->add_objects(f2pts,namepoints);
                                     xformed_all_pivot_pointedges.push_back(f2xid);
                                 }
@@ -723,7 +723,7 @@ dbrl_superresolution_multiple_objects::execute()
                         }
                         else if(i==frame_no)
                         {
-                            vcl_string namepoints=vul_sprintf("points%d",i);
+                            std::string namepoints=vul_sprintf("points%d",i);
                             //output_vsol_superimposed->add_objects(f1pts,namepoints);
                             //output_curr_edges->add_objects(f1pts);
                             xformed_all_pivot_pointedges.push_back(pivot_pointedges);
@@ -743,8 +743,8 @@ dbrl_superresolution_multiple_objects::execute()
                     //}
                     //
                     //vil_save(superimg,"d:/tempsuper.tiff");
-                    vcl_vector<vsol_line_2d_sptr> supportedges=compute_spatial_support(std,thresh,xformed_all_pivot_pointedges);
-                    //vcl_vector<vsol_line_2d_sptr> supportedges=compute_curve_model_support(xformed_all_pivot_pointedges,image_sptr->ni(),image_sptr->nj());
+                    std::vector<vsol_line_2d_sptr> supportedges=compute_spatial_support(std,thresh,xformed_all_pivot_pointedges);
+                    //std::vector<vsol_line_2d_sptr> supportedges=compute_curve_model_support(xformed_all_pivot_pointedges,image_sptr->ni(),image_sptr->nj());
                     for(unsigned i=0;i<supportedges.size();i++)
                     {
                         imphulls->add_object(supportedges[i]->cast_to_spatial_object());
@@ -779,7 +779,7 @@ dbrl_superresolution_multiple_objects::execute()
                     }
                 }
                 output_curr_edges->add_objects(f1pts);
-                vcl_string superimgname=vul_sprintf("d:/img%d-%d",frame_no,(*trit)->id());
+                std::string superimgname=vul_sprintf("d:/img%d-%d",frame_no,(*trit)->id());
                 //super_resolute(superres_samples,ref_obs,superimgname);
 
             }
@@ -808,7 +808,7 @@ dbrl_superresolution_multiple_objects::finish()
 {
     bpro1_filepath file_path;
     parameters()->get_value("-outpoly" , file_path );
-    vcl_string path = file_path.path;
+    std::string path = file_path.path;
     vsl_b_ofstream ofile(path.c_str());
     vsl_b_write(ofile,multiobs.size());
     for(unsigned i=0;i<multiobs.size();i++)
@@ -818,10 +818,10 @@ dbrl_superresolution_multiple_objects::finish()
     return true;
 }
 
-vcl_vector<vsol_line_2d_sptr>
-dbrl_superresolution_multiple_objects::compute_curve_model_support(vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > > pts, int ncols,int nrows)
+std::vector<vsol_line_2d_sptr>
+dbrl_superresolution_multiple_objects::compute_curve_model_support(std::vector< std::vector< dbrl_id_point_2d_sptr > > pts, int ncols,int nrows)
 {
-    vcl_vector<dbdet_edgel*> all_edgels;
+    std::vector<dbdet_edgel*> all_edgels;
     for(unsigned j=0;j<pts.size();j++)
         for(unsigned i=0;i<pts[j].size();i++)
             all_edgels.push_back(new dbdet_edgel(vgl_point_2d<double>(pts[j][i]->x(),pts[j][i]->y()),pts[j][i]->tangent()));
@@ -847,8 +847,8 @@ dbrl_superresolution_multiple_objects::compute_curve_model_support(vcl_vector< v
     dbdet_sel_sptr edge_linker= new dbdet_sel_CC(edgemap, nrad, dt*vnl_math::pi/180, dx);
     edge_linker->build_curvelets_greedy(max_size_to_group);
 
-    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
-    vcl_vector<dbdet_edgel*> sedgels;
+    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    std::vector<dbdet_edgel*> sedgels;
     for(unsigned i=0;i<edgels.size();i++)
     {
             curvelet_list_iter cv_it = edgels[i]->curvelets.begin();
@@ -862,13 +862,13 @@ dbrl_superresolution_multiple_objects::compute_curve_model_support(vcl_vector< v
             }
         
     }
-    vcl_vector<vsol_line_2d_sptr> supportedges;
+    std::vector<vsol_line_2d_sptr> supportedges;
 
     for(unsigned j=0;j<sedgels.size();j++)
     {
             vsol_point_2d_sptr p=new vsol_point_2d(sedgels[j]->pt);
-            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*vcl_cos(sedgels[j]->tangent),p->y()+0.2*vcl_sin(sedgels[j]->tangent));
-            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*vcl_cos(sedgels[j]->tangent),p->y()-0.2*vcl_sin(sedgels[j]->tangent));
+            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*std::cos(sedgels[j]->tangent),p->y()+0.2*std::sin(sedgels[j]->tangent));
+            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*std::cos(sedgels[j]->tangent),p->y()-0.2*std::sin(sedgels[j]->tangent));
             vsol_line_2d_sptr l=new vsol_line_2d(ps,pe);
             supportedges.push_back(l);
     }
@@ -877,10 +877,10 @@ dbrl_superresolution_multiple_objects::compute_curve_model_support(vcl_vector< v
 
 
 }
-vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_features(vcl_vector<dbrl_id_point_2d_sptr> points,
-                                                                                  vcl_string type)
+std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_features(std::vector<dbrl_id_point_2d_sptr> points,
+                                                                                  std::string type)
 {
-    vcl_vector<dbrl_feature_sptr> fs;
+    std::vector<dbrl_feature_sptr> fs;
 
     if(type=="Euclidean")
     {
@@ -904,7 +904,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_feature
     }
     else if(type=="Circular")
     {
-        vcl_vector<dbdet_edgel* > all_edgels;
+        std::vector<dbdet_edgel* > all_edgels;
         for(int k=0;k<points.size();k++)
             all_edgels.push_back(new dbdet_edgel(vgl_point_2d<double>(points[k]->x(),points[k]->y()), points[k]->tangent()));
 
@@ -913,7 +913,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_feature
     }
     else if(type=="NeighborEuclidean")
     {
-        vcl_vector<dbdet_edgel* > all_edgels;
+        std::vector<dbdet_edgel* > all_edgels;
         for(int k=0;k<points.size();k++)
             all_edgels.push_back(new dbdet_edgel(vgl_point_2d<double>(points[k]->x(),points[k]->y()), points[k]->tangent()));
         fs=get_neighbor_edges(all_edgels);
@@ -925,10 +925,10 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_feature
 
 
 
-vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_foreground_edges_from_observ(dbinfo_observation_sptr obs,
+std::vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_foreground_edges_from_observ(dbinfo_observation_sptr obs,
                                                                                                           dbbgm_image_storage_sptr  inpmodel)
 {
-    vcl_vector<dbrl_id_point_2d_sptr> fgidpoints;
+    std::vector<dbrl_id_point_2d_sptr> fgidpoints;
     if(!obs.ptr())
         return fgidpoints;
     vil_image_resource_sptr clip_im=obs->obs_snippet();
@@ -938,7 +938,7 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
 
     if(!clip_im.ptr())
         return fgidpoints;
-    vcl_vector<dbdet_edgel*> edges=edge_detector(brip_vil_float_ops::convert_to_byte(clip_im));
+    std::vector<dbdet_edgel*> edges=edge_detector(brip_vil_float_ops::convert_to_byte(clip_im));
     brip_roi_sptr exroi=obs->ex_roi();
     vgl_vector_2d<double> offset(exroi->cmin(0),exroi->rmin(0));
     for(unsigned i=0;i<edges.size();i++)
@@ -946,7 +946,7 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
         edges[i]->pt=edges[i]->pt+offset;
     }
 
-    vcl_vector<dbdet_edgel*> fgedges=fg_detect(edges,inpmodel->dist_image().ptr());
+    std::vector<dbdet_edgel*> fgedges=fg_detect(edges,inpmodel->dist_image().ptr());
     for(unsigned i=0;i<fgedges.size();i++)
     {
         fgidpoints.push_back(new dbrl_id_point_2d(fgedges[i]->pt.x(),fgedges[i]->pt.y(),fgedges[i]->tangent,i));
@@ -958,16 +958,16 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
 
 
 
-vcl_vector<vsol_line_2d_sptr>
+std::vector<vsol_line_2d_sptr>
 dbrl_superresolution_multiple_objects::compute_spatial_support(double sigma_d,double thresh,
-                                                               vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > > pts)
+                                                               std::vector< std::vector< dbrl_id_point_2d_sptr > > pts)
 {
     unsigned totsize=0;
 
     if(pts.size()<=0)
-        return vcl_vector<vsol_line_2d_sptr>();
+        return std::vector<vsol_line_2d_sptr>();
 
-    vcl_vector< dbrl_id_point_2d_sptr > allpts;
+    std::vector< dbrl_id_point_2d_sptr > allpts;
     for(unsigned i=0;i<pts.size();i++)
     {
         totsize+=pts[i].size();
@@ -991,7 +991,7 @@ dbrl_superresolution_multiple_objects::compute_spatial_support(double sigma_d,do
                     double xi=pts[i][k]->x();
                     double yi=pts[i][k]->y();
                     double ti=pts[i][k]->tangent();
-                    st+=compute_support(xj,yj,tj,xi,yi,ti,sigma_d);//vcl_exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
+                    st+=compute_support(xj,yj,tj,xi,yi,ti,sigma_d);//std::exp(-((xi-xj)*(xi-xj)+(yi-yj)*(yi-yj))/(sigma_d*sigma_d) -(tj-ti)*(tj-ti)/(sigma_a*sigma_a));
                 }
                 if(weightst[cnt]<st)
                     weightst[cnt]=st;
@@ -1001,15 +1001,15 @@ dbrl_superresolution_multiple_objects::compute_spatial_support(double sigma_d,do
         }
     }
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_out;
-    vcl_vector<vsol_line_2d_sptr> supportedges;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_out;
+    std::vector<vsol_line_2d_sptr> supportedges;
     for(unsigned j=0;j<totsize;j++)
     {
         if(weightst[j] >thresh)
         {
             vsol_point_2d_sptr p=new vsol_point_2d(allpts[j]->x(),allpts[j]->y());
-            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*vcl_cos(allpts[j]->tangent()),p->y()+0.2*vcl_sin(allpts[j]->tangent()));
-            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*vcl_cos(allpts[j]->tangent()),p->y()-0.2*vcl_sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr ps=new vsol_point_2d(p->x()+0.2*std::cos(allpts[j]->tangent()),p->y()+0.2*std::sin(allpts[j]->tangent()));
+            vsol_point_2d_sptr pe=new vsol_point_2d(p->x()-0.2*std::cos(allpts[j]->tangent()),p->y()-0.2*std::sin(allpts[j]->tangent()));
             vsol_line_2d_sptr l=new vsol_line_2d(ps,pe);
             supportedges.push_back(l);
             //vsol_out.push_back(p->cast_to_spatial_object());
@@ -1031,7 +1031,7 @@ dbrl_superresolution_multiple_objects::compute_spatial_support(double sigma_d,do
     //    return new vsol_polygon_2d();
     //}
 
-    //vcl_vector<vsol_point_2d_sptr> newpts;
+    //std::vector<vsol_point_2d_sptr> newpts;
     //for(int k=0;k<static_cast<int>(psg[0].size());k++)
     //{
     //    newpts.push_back(new vsol_point_2d(psg[0][k].x(),psg[0][k].y()));
@@ -1047,11 +1047,11 @@ dbrl_superresolution_multiple_objects::compute_spatial_support(double sigma_d,do
 }
 
 vsol_polygon_2d_sptr 
-dbrl_superresolution_multiple_objects::compute_convex_hull( vcl_vector<vsol_line_2d_sptr > edges)
+dbrl_superresolution_multiple_objects::compute_convex_hull( std::vector<vsol_line_2d_sptr > edges)
 {
     if(edges.size()<=0)
         return new vsol_polygon_2d();
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > points;
     for(unsigned i=0;i<edges.size();i++)
     {
         vsol_point_2d_sptr p= edges[i]->middle();
@@ -1064,7 +1064,7 @@ dbrl_superresolution_multiple_objects::compute_convex_hull( vcl_vector<vsol_line
     if(static_cast<int>(psg[0].size())<3)
         return new vsol_polygon_2d();
 
-    vcl_vector<vsol_point_2d_sptr> newpts;
+    std::vector<vsol_point_2d_sptr> newpts;
     for(int k=0;k<static_cast<int>(psg[0].size());k++)
         newpts.push_back(new vsol_point_2d(psg[0][k].x(),psg[0][k].y()));
     return new vsol_polygon_2d(newpts);
@@ -1072,7 +1072,7 @@ dbrl_superresolution_multiple_objects::compute_convex_hull( vcl_vector<vsol_line
 vsol_polygon_2d_sptr dbrl_superresolution_multiple_objects::dilate_poly(vsol_polygon_2d_sptr poly, double rad)
 {
 
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     for(unsigned i=0;i<poly->size();i++)
         pts.push_back(vgl_point_2d<double>(poly->vertex(i)->x(),poly->vertex(i)->y()));
 
@@ -1084,7 +1084,7 @@ vsol_polygon_2d_sptr dbrl_superresolution_multiple_objects::dilate_poly(vsol_pol
         return new vsol_polygon_2d();
     }
 
-    vcl_vector<vsol_point_2d_sptr> newpts;
+    std::vector<vsol_point_2d_sptr> newpts;
     for(int k=0;k<static_cast<int>(psg[0].size())-1;k++)
     {
         vgl_point_2d<double> p0=psg[0][k];
@@ -1106,10 +1106,10 @@ vsol_polygon_2d_sptr dbrl_superresolution_multiple_objects::dilate_poly(vsol_pol
 
 
 
-vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(vcl_vector<dbrl_feature_sptr> f2,
+std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(std::vector<dbrl_feature_sptr> f2,
                                                                                      double spacing)
 {
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
 
     vgl_box_2d<double> box;
 
@@ -1124,12 +1124,12 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_po
 
     }
 
-    double xmin=vcl_floor(box.min_x());
-    double ymin=vcl_floor(box.min_y());
-    double xmax=vcl_ceil(box.max_x());
-    double ymax=vcl_ceil(box.max_y());
+    double xmin=std::floor(box.min_x());
+    double ymin=std::floor(box.min_y());
+    double xmax=std::ceil(box.max_x());
+    double ymax=std::ceil(box.max_y());
 
-    vcl_vector<dbrl_feature_sptr> fs;
+    std::vector<dbrl_feature_sptr> fs;
     for(double x=xmin;x<=xmax;)
     {   
         for(double y=ymin;y<=ymax;)
@@ -1149,11 +1149,11 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_po
 
 
 
-vcl_vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::estimate_support(vcl_vector<dbrl_id_point_2d_sptr> points_list,
-                                                                                                vcl_vector<dbrl_id_point_2d_sptr> & supportpoints,
+std::vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::estimate_support(std::vector<dbrl_id_point_2d_sptr> points_list,
+                                                                                                std::vector<dbrl_id_point_2d_sptr> & supportpoints,
                                                                                                 float rad, float std, float numiter, float thresh)
 {
-    vcl_vector<double>  newweights(points_list.size(),0.0);
+    std::vector<double>  newweights(points_list.size(),0.0);
     supportpoints.clear();
     bool iscocirc=true;
 
@@ -1179,7 +1179,7 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::e
                     double x1=points_list[k]->x();
                     double y1=points_list[k]->y();
                     double theta1=points_list[k]->tangent();
-                    if(vcl_fabs(x0-x1)<rad && vcl_fabs(y0-y1)<rad  )
+                    if(std::fabs(x0-x1)<rad && std::fabs(y0-y1)<rad  )
                     {   
                         weightik+=points_list[k]->weight()*compute_support(x0,y0,theta0,x1,y1,theta1,std);
                     }
@@ -1193,11 +1193,11 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::e
 
         for(int i=0;i<points_list.size();i++)
         {
-            //vcl_cout<<    newweights[i]/maxweight<<"\t";
+            //std::cout<<    newweights[i]/maxweight<<"\t";
             points_list[i]->set_weight(newweights[i]/maxweight);
         }
     }
-    vcl_vector<vsol_spatial_object_2d_sptr> pointssubppixel;
+    std::vector<vsol_spatial_object_2d_sptr> pointssubppixel;
 
     for(int i=0;i<static_cast<int>(points_list.size());i++)
     {
@@ -1208,8 +1208,8 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::e
             vsol_point_2d_sptr pt=new vsol_point_2d(points_list[i]->x(),points_list[i]->y());
             double angle=points_list[i]->tangent()*vnl_math::pi/180;
 
-            vgl_point_2d<double> p0(pt->x()+0.5*vcl_cos(angle)*w,pt->y()-0.5*vcl_sin(angle)*w);
-            vgl_point_2d<double> p1(pt->x()-0.5*vcl_cos(angle)*w,pt->y()+0.5*vcl_sin(angle)*w);
+            vgl_point_2d<double> p0(pt->x()+0.5*std::cos(angle)*w,pt->y()-0.5*std::sin(angle)*w);
+            vgl_point_2d<double> p1(pt->x()-0.5*std::cos(angle)*w,pt->y()+0.5*std::sin(angle)*w);
             vgl_line_segment_2d<double> line(p0,p1);
             vsol_line_2d_sptr linevsol=new vsol_line_2d(line);
             pointssubppixel.push_back(pt->cast_to_spatial_object());
@@ -1225,19 +1225,19 @@ vcl_vector<vsol_spatial_object_2d_sptr> dbrl_superresolution_multiple_objects::e
 
 
 
-vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_edges_from_observ(dbinfo_observation_sptr obs)
+std::vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_edges_from_observ(dbinfo_observation_sptr obs)
 {
 
 
-    vcl_vector<dbrl_id_point_2d_sptr> pointedges;
+    std::vector<dbrl_id_point_2d_sptr> pointedges;
     return pointedges;
 }
 
-vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_foreground_edges_from_observ(dbinfo_observation_sptr obs,
+std::vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_foreground_edges_from_observ(dbinfo_observation_sptr obs,
                                                                                                           dbbgm_distribution_image<float> * model)
 {
-    vcl_vector<dbrl_id_point_2d_sptr> fgedges;
-    vcl_vector<dbrl_id_point_2d_sptr> pointedges;
+    std::vector<dbrl_id_point_2d_sptr> fgedges;
+    std::vector<dbrl_id_point_2d_sptr> pointedges;
     if(!obs.ptr())
         return fgedges;
 
@@ -1256,8 +1256,8 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
     sdet_nonmax_suppression edet(nonmax_params,gradx,grady);
     edet.apply();
 
-    vcl_vector<vsol_point_2d_sptr> points=edet.get_points();
-    vcl_vector< vgl_vector_2d<double> >tangents=edet.get_directions();
+    std::vector<vsol_point_2d_sptr> points=edet.get_points();
+    std::vector< vgl_vector_2d<double> >tangents=edet.get_directions();
 
     brip_roi_sptr exroi=obs->ex_roi();
 
@@ -1277,7 +1277,7 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
     //    osl_edgel_chain * ec=(osl_edgel_chain *)edges.front();
     //    for(unsigned i=0;i<ec->size();i++)
     //        {
-    //        masked(exroi->cmin(0)+(unsigned int)vcl_floor(ec->GetY(i)),exroi->rmin(0)+(unsigned int)vcl_floor(ec->GetX(i)))=ec->GetTheta(i)+180;
+    //        masked(exroi->cmin(0)+(unsigned int)std::floor(ec->GetY(i)),exroi->rmin(0)+(unsigned int)std::floor(ec->GetX(i)))=ec->GetTheta(i)+180;
     //        dbrl_id_point_2d_sptr point=new dbrl_id_point_2d(exroi->cmin(0)+ec->GetY(i),exroi->rmin(0)+ec->GetX(i),ec->GetTheta(i)+180,pointedges.size()+1);
     //        if(vgp.contains(point->x(),point->y()))
     //            pointedges.push_back(point);
@@ -1288,8 +1288,8 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
 
     for(unsigned i=0;i<points.size();i++)
     {
-        double dir=vcl_atan2(tangents[i].y(),tangents[i].x());//*vnl_math::pi/180+180;
-        masked(exroi->cmin(0)+(unsigned int)vcl_floor(points[i]->x()),exroi->rmin(0)+(unsigned int)vcl_floor(points[i]->y()))=dir;
+        double dir=std::atan2(tangents[i].y(),tangents[i].x());//*vnl_math::pi/180+180;
+        masked(exroi->cmin(0)+(unsigned int)std::floor(points[i]->x()),exroi->rmin(0)+(unsigned int)std::floor(points[i]->y()))=dir;
         dbrl_id_point_2d_sptr point=new dbrl_id_point_2d(exroi->cmin(0)+points[i]->x(),exroi->rmin(0)+points[i]->y(),dir,pointedges.size()+1);
         if(vgp.contains(point->x(),point->y()))
             pointedges.push_back(point);
@@ -1310,7 +1310,7 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
     //: retaining the edges which are foreground
     for(int i=0;i<pointedges.size();i++)
     {
-        if(fg(vcl_floor(pointedges[i]->x()),vcl_floor(pointedges[i]->y())))
+        if(fg(std::floor(pointedges[i]->x()),std::floor(pointedges[i]->y())))
             fgedges.push_back(pointedges[i]);
     }
 
@@ -1324,7 +1324,7 @@ vcl_vector<dbrl_id_point_2d_sptr> dbrl_superresolution_multiple_objects::get_for
 
 
 
-vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbor_edges(vcl_vector<dbdet_edgel* > all_edgels)
+std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbor_edges(std::vector<dbdet_edgel* > all_edgels)
 {
     
     double xmax=0.0;
@@ -1347,7 +1347,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbo
             ymin=all_edgels[i]->pt.y();
 
     }
-    //vcl_vector<dbdet_edgel* > centered_edgels;
+    //std::vector<dbdet_edgel* > centered_edgels;
     //for(unsigned i=0;i<all_edgels.size();i++)
     //{
     //    vgl_point_2d<double> temp=all_edgels[i]->pt;
@@ -1356,7 +1356,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbo
     //    dbdet_edgel * e=new dbdet_edgel(temp,all_edgels[i]->tangent);
     //    centered_edgels.push_back(e);
     //}
-    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(vcl_ceil(ymax), vcl_ceil(xmax),all_edgels);
+    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(std::ceil(ymax), std::ceil(xmax),all_edgels);
     typedef dbdet_sel<dbdet_ES_curve_model> dbdet_sel_ES;
     dbdet_sel_sptr edge_linker=new dbdet_sel_ES(edgemap, nrad, dt*vnl_math::pi/180, dx);
 
@@ -1368,12 +1368,12 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbo
     unsigned max_size_to_group=7;
     edge_linker->build_curvelets_greedy(max_size_to_group);
 
-    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
-    vcl_vector<dbrl_feature_sptr> edges;
+    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    std::vector<dbrl_feature_sptr> edges;
     for(unsigned i=0;i<edgels.size();i++)
     {
         dbrl_feature_point_tangent_curvature_groupings * pt;
-        vcl_vector<unsigned> neighbors_id_vec;
+        std::vector<unsigned> neighbors_id_vec;
         for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
         {
             for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -1401,7 +1401,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_neighbo
     return edges;
 }
 
-vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvature_edges(vcl_vector<dbdet_edgel* > all_edgels)
+std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvature_edges(std::vector<dbdet_edgel* > all_edgels)
 {
     
     double xmax=0.0;
@@ -1424,7 +1424,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvatu
             ymin=all_edgels[i]->pt.y();
 
     }
-    vcl_vector<dbdet_edgel* > centered_edgels;
+    std::vector<dbdet_edgel* > centered_edgels;
     for(unsigned i=0;i<all_edgels.size();i++)
     {
         vgl_point_2d<double> temp=all_edgels[i]->pt;
@@ -1434,7 +1434,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvatu
         centered_edgels.push_back(e);
     }
 
-    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(vcl_ceil(ymax-ymin), vcl_ceil(xmax-xmin),centered_edgels);
+    dbdet_edgemap_sptr edgemap=new dbdet_edgemap(std::ceil(ymax-ymin), std::ceil(xmax-xmin),centered_edgels);
 
     typedef dbdet_sel<dbdet_ES_curve_model> dbdet_sel_ES;
     dbdet_sel_sptr edge_linker=new dbdet_sel_ES(edgemap, nrad, dt*vnl_math::pi/180, dx);
@@ -1445,8 +1445,8 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvatu
     edge_linker->build_curvelets_greedy(max_size_to_group);
     //dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
-    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
-    vcl_vector<dbrl_feature_sptr> edges;
+    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    std::vector<dbrl_feature_sptr> edges;
     for(unsigned i=0;i<edgels.size();i++)
     {
         dbrl_feature_point_tangent_curvature * pt;
@@ -1480,7 +1480,7 @@ vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_curvatu
 
 
 
-vcl_vector<dbdet_edgel*> dbrl_superresolution_multiple_objects::fg_detect(vcl_vector<dbdet_edgel*> edges, dbbgm_image_base * model)
+std::vector<dbdet_edgel*> dbrl_superresolution_multiple_objects::fg_detect(std::vector<dbdet_edgel*> edges, dbbgm_image_base * model)
 {
     float minweightthresh = 0.2f, gdist = 0.0f;
     static int rad=2;
@@ -1499,7 +1499,7 @@ vcl_vector<dbdet_edgel*> dbrl_superresolution_multiple_objects::fg_detect(vcl_ve
     dbsta2_g_mdist_detector<dbsta2_gauss_f1> det(gdist);
     dbsta2_top_weight_detector<mix_gauss_type,detector_type> detector_top(det, minweightthresh);
     
-    vcl_vector<dbdet_edgel*> fgedges;
+    std::vector<dbdet_edgel*> fgedges;
 
     int ni=emodel->ni();
     int nj=emodel->nj();
@@ -1513,8 +1513,8 @@ vcl_vector<dbdet_edgel*> dbrl_superresolution_multiple_objects::fg_detect(vcl_ve
         {
             for(int n=-rad;n<=rad;n++)
             {
-                int m_index=vcl_floor(pt.x())+m;
-                int n_index=vcl_floor(pt.y())+n;
+                int m_index=std::floor(pt.x())+m;
+                int n_index=std::floor(pt.y())+n;
 
                 if(m_index>=0 && n_index>=0 && m_index<ni && n_index<nj)
                 {
@@ -1535,7 +1535,7 @@ vcl_vector<dbdet_edgel*> dbrl_superresolution_multiple_objects::fg_detect(vcl_ve
     return fgedges;
 }
 
-vcl_vector<dbdet_edgel*> 
+std::vector<dbdet_edgel*> 
 dbrl_superresolution_multiple_objects::edge_detector(vil_image_view<unsigned char> imgview)
 {
     float sigma=1.0f;
@@ -1545,7 +1545,7 @@ dbrl_superresolution_multiple_objects::edge_detector(vil_image_view<unsigned cha
     parameters()->get_value( "-ethresh" ,   thresh);
     parameters()->get_value( "-etype" ,   type);
 
-    vcl_vector<dbdet_edgel*> edges;
+    std::vector<dbdet_edgel*> edges;
 
     if(type==0)
     {
@@ -1559,10 +1559,10 @@ dbrl_superresolution_multiple_objects::edge_detector(vil_image_view<unsigned cha
         double *gy  =  grady.top_left_ptr();
         //compute the gradient magnitude
         for(unsigned long i=0; i<grad_mag.size(); i++)
-            g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+            g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
 
-        vcl_vector<vgl_point_2d<double> > loc;
-        vcl_vector<double> orientation, mag;
+        std::vector<vgl_point_2d<double> > loc;
+        std::vector<double> orientation, mag;
 
         dbdet_nms NMS(dbdet_nms_params(thresh, (dbdet_nms_params::PFIT_TYPE)0), gradx, grady, grad_mag);
         NMS.apply(true, loc, orientation, mag);
@@ -1592,8 +1592,8 @@ dbrl_superresolution_multiple_objects::edge_detector(vil_image_view<unsigned cha
 
 
 void
-dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,unsigned char> fmap,
-                                                      dbinfo_observation_sptr obs,vcl_string superimgname)
+dbrl_superresolution_multiple_objects::super_resolute(std::map<dbrl_feature_sptr,unsigned char> fmap,
+                                                      dbinfo_observation_sptr obs,std::string superimgname)
 {
     vil_image_resource_sptr img=obs->obs_snippet();
     //vil_image_view<double> superimg(img->ni(),img->nj(),1);
@@ -1603,8 +1603,8 @@ dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,
     int miny=obs->ex_roi()->rmin(0);
     int maxy=obs->ex_roi()->rmax(0);
 
-    vcl_map<dbrl_feature_sptr,unsigned char>::iterator iter;
-    vcl_map<dbrl_feature_sptr,unsigned char> filtered_samples;
+    std::map<dbrl_feature_sptr,unsigned char>::iterator iter;
+    std::map<dbrl_feature_sptr,unsigned char> filtered_samples;
     for(iter=fmap.begin();iter!=fmap.end();iter++)
     {
         if( dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(iter->first.ptr()))
@@ -1630,7 +1630,7 @@ dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,
         }
     }
     dbrl_estimator_cubic_patch * cpatch=new dbrl_estimator_cubic_patch();
-    vcl_vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
+    std::vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
 
     vil_image_view<unsigned char> superimg(img->ni()*4,img->nj()*4);
 
@@ -1644,8 +1644,8 @@ dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,
                 if(patches[i].intriangle(p))
                 {
                     double newz=patches[i].interpolate(p);
-                    unsigned char intensity=(unsigned char)vcl_floor(newz+0.5);
-                    superimg(vcl_floor((is-minx)*4),vcl_floor((js-miny)*4))=intensity;
+                    unsigned char intensity=(unsigned char)std::floor(newz+0.5);
+                    superimg(std::floor((is-minx)*4),std::floor((js-miny)*4))=intensity;
                     continue;
                 }
             }

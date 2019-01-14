@@ -38,7 +38,7 @@ dbsksp_deformable_shock_process()
   this->deform_type_descriptions_.push_back(
     "Insert two edges at terminal node and deform");
 
-  vcl_vector<vcl_string > energy_type_choices;
+  std::vector<std::string > energy_type_choices;
   energy_type_choices.push_back("Distance Transform");
   energy_type_choices.push_back("Negative Normalized Gradient");
 
@@ -58,7 +58,7 @@ dbsksp_deformable_shock_process()
     !parameters()->add( "Internal-external energy ration: " , "-lambda" , 1.0f )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -78,17 +78,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_deformable_shock_process::
+std::string dbsksp_deformable_shock_process::
 name()
 { 
   return "Deformable Shock"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_deformable_shock_process::
+std::vector< std::string > dbsksp_deformable_shock_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsksp_shock" );
   to_return.push_back( "image" );
   return to_return;
@@ -96,10 +96,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_deformable_shock_process::
+std::vector< std::string > dbsksp_deformable_shock_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("vsol2D");
   return to_return;
 }
@@ -124,8 +124,8 @@ bool dbsksp_deformable_shock_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsksp_deformable_shock_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsksp_deformable_shock_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -245,7 +245,7 @@ execute()
   // >> Deform the shock graph
   if (this->deform_type_descriptions_[deform_type] == "Two active edges")
   {
-    vcl_cout << "Snake on two shapelet";
+    std::cout << "Snake on two shapelet";
    
     dbsksp_shock_snake snake;
     snake.set_shock_graph(sksp_storage->shock_graph());
@@ -258,7 +258,7 @@ execute()
 
     if (error_code == 0)
     {
-      vcl_cerr << "ERROR running the process.\n";
+      std::cerr << "ERROR running the process.\n";
       return false;
     }
     shock_graph->compute_all_dependent_params();
@@ -275,21 +275,21 @@ execute()
     // Parameter check-up
     if (!sksp_storage->active_edge()->is_terminal_edge())
     {
-      vcl_cerr << "ERROR: the active edge needs to be a terminal edge "
+      std::cerr << "ERROR: the active edge needs to be a terminal edge "
         << "to run this process.\n";
       return false;
     }
 
     if (chord0 <=0 || chord1 <= 0)
     {
-      vcl_cerr << "ERROR: the chord lengths need to be strictly positive"
+      std::cerr << "ERROR: the chord lengths need to be strictly positive"
         << "to run this process.\n";
       return false;
     }
 
     if (num_times <= 0)
     {
-      vcl_cerr << "ERROR: num_times needs to be strictly positive"
+      std::cerr << "ERROR: num_times needs to be strictly positive"
         << "to run this process.\n";
       return false;
     }
@@ -318,7 +318,7 @@ execute()
 
     if (error_code <= 0)
     {
-      vcl_cerr << "ERROR running the process.\n";
+      std::cerr << "ERROR running the process.\n";
       return false;
     }
     shock_graph->compute_all_dependent_params();
@@ -331,7 +331,7 @@ execute()
   }
   else
   {
-    vcl_cout << "Unknown option";
+    std::cout << "Unknown option";
     return false;
   }
 

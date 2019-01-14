@@ -1,5 +1,5 @@
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -16,16 +16,16 @@
 #include <vimt/vimt_resample_bilin.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <bpgl/algo/bpgl_list.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 // Given cameras of a registered scene, use this app to get the cameras of the original
 // scene, assuming it was registered with dbirl or dbvrl.
 
 
 //---------------------------------------------
-static void filenames_from_directory(vcl_string const& dirname,
-                                     vcl_vector<vcl_string>& filenames)
-{  vcl_string s(dirname);
+static void filenames_from_directory(std::string const& dirname,
+                                     std::vector<std::string>& filenames)
+{  std::string s(dirname);
   s += "/*.*";
   for (vul_file_iterator fit = s;fit; ++fit) {
     // check to see if file is a directory.
@@ -40,19 +40,19 @@ static void filenames_from_directory(vcl_string const& dirname,
 int main( int argc, char* argv[] )
 {
   if( argc!=7 ) {
-    vcl_cout<<"Usage : dbrcl_unregister_app input_cameras input_homogs unregistered_images output_cameras homog_spacing homog_start\n";
+    std::cout<<"Usage : dbrcl_unregister_app input_cameras input_homogs unregistered_images output_cameras homog_spacing homog_start\n";
     return -1;
   }
 
-  vcl_string input_cameras( argv[1] );
-  vcl_string input_homogs( argv[2] );
-  vcl_string unregistered_images( argv[3] );
-  vcl_string output_cameras( argv[4] );
-  int spacing = vcl_atoi( argv[5] );
-  int offset = vcl_atoi( argv[6] );
+  std::string input_cameras( argv[1] );
+  std::string input_homogs( argv[2] );
+  std::string unregistered_images( argv[3] );
+  std::string output_cameras( argv[4] );
+  int spacing = std::atoi( argv[5] );
+  int offset = std::atoi( argv[6] );
 
-  vcl_vector< vpgl_proj_camera<double> > camera_list, output_camera_list;
-  vcl_vector< vgl_h_matrix_2d<double> > homog_list;
+  std::vector< vpgl_proj_camera<double> > camera_list, output_camera_list;
+  std::vector< vgl_h_matrix_2d<double> > homog_list;
   if( !bpgl_read_list( camera_list, input_cameras ) )
     return -1;
   if( !bpgl_read_list( homog_list, input_homogs ) )
@@ -60,7 +60,7 @@ int main( int argc, char* argv[] )
 
   
   // Find the offset of the original images.
-  vcl_vector<vcl_string> in_filenames;
+  std::vector<std::string> in_filenames;
   filenames_from_directory( unregistered_images, in_filenames );
   unsigned n_infiles = in_filenames.size();
   unsigned infile_counter = 0;
@@ -78,7 +78,7 @@ int main( int argc, char* argv[] )
       unsigned ni =  imgr->ni(), nj =  imgr->nj(); 
       infile_counter = 0;//return to first frame
 
-  vcl_vector<vimt_transform_2d > xforms;  
+  std::vector<vimt_transform_2d > xforms;  
   vbl_bounding_box<double,2> box;
 
   for(unsigned i=0;i<homog_list.size();i++)
@@ -92,11 +92,11 @@ int main( int argc, char* argv[] )
       box.update(p(ni,nj).x(),p(ni,nj).y());
     }
   
-  int offset_i=(int)vcl_ceil(0-box.min()[0]);
-  int offset_j=(int)vcl_ceil(0-box.min()[1]);
+  int offset_i=(int)std::ceil(0-box.min()[0]);
+  int offset_j=(int)std::ceil(0-box.min()[1]);
 
-  //unused int bimg_ni=(int)vcl_ceil(box.max()[0]-box.min()[0]);
-  //unused int bimg_nj=(int)vcl_ceil(box.max()[1]-box.min()[1]);
+  //unused int bimg_ni=(int)std::ceil(box.max()[0]-box.min()[0]);
+  //unused int bimg_nj=(int)std::ceil(box.max()[1]-box.min()[1]);
 
   vgl_h_matrix_2d<double> shift_homog;
   shift_homog.set_identity();

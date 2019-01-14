@@ -24,7 +24,7 @@ dbskfg_detect_transforms_process::dbskfg_detect_transforms_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -41,25 +41,25 @@ dbskfg_detect_transforms_process::clone() const
     return new dbskfg_detect_transforms_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_detect_transforms_process::name()
 {
     return "Detect Composite Transforms";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_detect_transforms_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "composite_graph" );
     return to_return;
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_detect_transforms_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     //to_return.push_back("vsol2D");
     return to_return;
 }
@@ -124,15 +124,15 @@ bool dbskfg_detect_transforms_process::execute()
     // vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
 
     // //Grab the results
-    // vcl_vector<dbskfg_transform_descriptor_sptr> results=transformer->objects();
+    // std::vector<dbskfg_transform_descriptor_sptr> results=transformer->objects();
 
-    // vcl_cout<<"Number of Transforms found: "<<results.size()<<vcl_endl;
+    // std::cout<<"Number of Transforms found: "<<results.size()<<std::endl;
     // for ( unsigned int i(0) ; i < results.size()  ; ++i)
     // {
     //     // For each transform lets compute polygon
     //     output_vsol->add_objects(results[i]->contours_spatial_objects_);
     //     output_vsol->add_objects(results[i]->new_contours_spatial_objects_);
-    //     results[i]->print(vcl_cout);
+    //     results[i]->print(std::cout);
     // }
 
   

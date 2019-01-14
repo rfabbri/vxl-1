@@ -15,7 +15,7 @@
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/io/vgl_io_point_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 
 class dbrec3d_part_instance
@@ -112,7 +112,7 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_part_instance &part);
 
 void vsl_b_read(vsl_b_istream & is, dbrec3d_part_instance *&part);
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_part_instance &part);
+std::ostream& operator << (std::ostream& os, const dbrec3d_part_instance &part);
 
 void vsl_b_write(vsl_b_ostream & os, dbrec3d_pair_composite_instance const &part);
 
@@ -122,7 +122,7 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_pair_composite_instance &part);
 
 void vsl_b_read(vsl_b_istream & is, dbrec3d_pair_composite_instance *&part);
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_pair_composite_instance &part);
+std::ostream& operator << (std::ostream& os, const dbrec3d_pair_composite_instance &part);
 
 
 #endif

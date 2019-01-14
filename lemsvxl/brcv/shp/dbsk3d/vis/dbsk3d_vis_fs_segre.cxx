@@ -1,7 +1,7 @@
 // MingChing Chang 040226
 // VISUALIZATION OF THE fine-scale shocks
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 #include <dbmsh3d/vis/dbmsh3d_vis_utils.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_mesh.h>
@@ -31,7 +31,7 @@ SoSeparator* draw_segre_Q1_L_F (dbsk3d_fs_segre* fs_segre,
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild(hints);
   
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_1st_queue().begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_1st_queue().begin();
   for (unsigned int i=0; it != fs_segre->L_1st_queue().end(); it++, i++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;
     assert (FE->b_inf() == false);
@@ -55,7 +55,7 @@ SoSeparator* draw_segre_Q1_L_F (dbsk3d_fs_segre* fs_segre,
     root->addChild (draw_fs_edge (FE, color, user_defined_class, false));
 
     //surface interpolant
-    vcl_vector<dbmsh3d_vertex*> bnd_pts;
+    std::vector<dbmsh3d_vertex*> bnd_pts;
     bool result = FE->get_ordered_Gs_via_FF (bnd_pts);
     assert (result);
 
@@ -78,20 +78,20 @@ SoSeparator* draw_segre_Q1_batch (dbsk3d_fs_segre* fs_segre,
   SoSeparator* root = new SoSeparator;
 
   //Put all points into a vector.
-  vcl_vector<vgl_point_3d<double> > ifs_pts;
-  vcl_vector<vcl_vector<int> > ifs_faces;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > links;
+  std::vector<vgl_point_3d<double> > ifs_pts;
+  std::vector<std::vector<int> > ifs_faces;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > links;
   SbColor color = SbColor (1,0,0); ///SbColor (0.5f, 0.5f, 0.5f);
   
   //Go through all generators and assign vid to be [0 to n-1].  
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fs_segre->bnd_mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fs_segre->bnd_mesh()->vertexmap().begin();
   for (unsigned int i=0; vit != fs_segre->bnd_mesh()->vertexmap().end(); vit++, i++) {
     dbmsh3d_vertex* G = (*vit).second;
     G->set_vid (i);
     ifs_pts.push_back (G->pt());
   }
 
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_1st_queue().begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_1st_queue().begin();
   for (unsigned int i=0; it != fs_segre->L_1st_queue().end(); it++, i++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;
     assert (FE->b_inf() == false);
@@ -111,13 +111,13 @@ SoSeparator* draw_segre_Q1_batch (dbsk3d_fs_segre* fs_segre,
     ev /= ev.length ();
     vgl_point_3d<double> s_FV = C + sv * len;
     vgl_point_3d<double> e_FV = C + ev * len;
-    links.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (s_FV, e_FV));
+    links.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (s_FV, e_FV));
 
     //Shock link FE's dual Delaunay triangles.
-    vcl_vector<dbmsh3d_vertex*> genes;
+    std::vector<dbmsh3d_vertex*> genes;
     bool result = FE->get_ordered_Gs_via_FF (genes);
     assert (result);
-    vcl_vector<int> face_vids;
+    std::vector<int> face_vids;
     for (unsigned int i=0; i<genes.size(); i++)
       face_vids.push_back (genes[i]->vid());    
     ifs_faces.push_back (face_vids); //add to IFS faces.
@@ -143,7 +143,7 @@ SoSeparator* draw_segre_Q2_L_F (dbsk3d_fs_segre* fs_segre,
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild(hints);
 
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_2nd_queue().begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = fs_segre->L_2nd_queue().begin();
   for (unsigned int i=0; it != fs_segre->L_2nd_queue().end(); it++, i++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;
     assert (FE->b_inf() == false);
@@ -167,7 +167,7 @@ SoSeparator* draw_segre_Q2_L_F (dbsk3d_fs_segre* fs_segre,
     root->addChild (draw_fs_edge (FE, color, false, user_defined_class));
 
     //surface interpolant
-    vcl_vector<dbmsh3d_vertex*> bnd_pts;
+    std::vector<dbmsh3d_vertex*> bnd_pts;
     bool result = FE->get_ordered_Gs_via_FF (bnd_pts);      
     assert (result);
 
@@ -189,7 +189,7 @@ SoSeparator* draw_segre_oversize_L_F (dbsk3d_fs_mesh* fs_mesh,
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
   for (; lit != fs_mesh->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
     if (FE->b_inf())
@@ -213,7 +213,7 @@ SoSeparator* draw_segre_oversize_L_F (dbsk3d_fs_mesh* fs_mesh,
     root->addChild (draw_fs_edge (FE, color, false, user_defined_class));
 
     //surface interpolant
-    vcl_vector<dbmsh3d_vertex*> bnd_pts;
+    std::vector<dbmsh3d_vertex*> bnd_pts;
     result = FE->get_ordered_Gs_via_FF (bnd_pts);      
     assert (result);
 

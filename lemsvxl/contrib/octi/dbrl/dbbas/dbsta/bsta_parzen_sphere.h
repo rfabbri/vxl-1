@@ -17,8 +17,8 @@
 //
 
 #include "bsta_parzen.h"
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 
 //: forward declare vnl_matrix_fixed and vnl_vector_fixed
 template<class T, unsigned n, unsigned m> class vnl_matrix_fixed;

@@ -16,7 +16,7 @@
 #include <bpro1/bpro1_storage.h>
 #include <dbetrk/pro/dbetrk_storage_sptr.h>
 #include <dbetrk/dbetrk_edge_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: Storage class for ctrk 
 class dbetrk_storage : public bpro1_storage {
@@ -25,20 +25,20 @@ public:
   //: Constructor
   dbetrk_storage(){}
   //: Constructor
-  dbetrk_storage( const vcl_vector<dbetrk_edge_sptr>& dbetrk_edges);
+  dbetrk_storage( const std::vector<dbetrk_edge_sptr>& dbetrk_edges);
   //: Destructor
   virtual ~dbetrk_storage(){}
 
   //: Returns the type string "edgetrk"
-  virtual vcl_string type() const { return "edgetrk"; }
+  virtual std::string type() const { return "edgetrk"; }
 
   //: Set the ctrk storage vector
-  void set_dbetrk_edges(const vcl_vector<dbetrk_edge_sptr>& dbetrk_edges);
+  void set_dbetrk_edges(const std::vector<dbetrk_edge_sptr>& dbetrk_edges);
 
   //: Retrieve the edgetrk storage vector
-  void get_dbetrk_edges(vcl_vector<dbetrk_edge_sptr>& dbetrk_edges) const;
+  void get_dbetrk_edges(std::vector<dbetrk_edge_sptr>& dbetrk_edges) const;
 
-  virtual vcl_string is_a() const {return "dbetrk_storage";}
+  virtual std::string is_a() const {return "dbetrk_storage";}
 
   virtual bpro1_storage* clone() const;
 
@@ -52,7 +52,7 @@ public:
   void b_read(vsl_b_istream &is);
  private:
   //: The vector of  edgetrk smart pointers
-  vcl_vector< dbetrk_edge_sptr > dbetrk_edges_;  
+  std::vector< dbetrk_edge_sptr > dbetrk_edges_;  
 };
 
 
@@ -65,7 +65,7 @@ struct dbetrk_storage_new : public dbetrk_storage_sptr
   dbetrk_storage_new() : base(new dbetrk_storage()) { }
 
   //: Constructor - creates a vidpro1_ctrk_storage_sptr with ctrks.
-  dbetrk_storage_new(const vcl_vector<dbetrk_edge_sptr>& dbetrk_edges)
+  dbetrk_storage_new(const std::vector<dbetrk_edge_sptr>& dbetrk_edges)
    : base(new dbetrk_storage(dbetrk_edges )) { }
 };
 

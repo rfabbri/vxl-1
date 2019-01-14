@@ -6,9 +6,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<map>
+#include<set>
+#include<utility>
 
 #include<vnl/vnl_vector.h>
 
@@ -27,7 +27,7 @@ public:
 
 	unsigned nobs() const { return nobs_; }
 
-	vcl_map<unsigned, vcl_map<unsigned, unsigned> > transition_table(){ return this->transition_table_; }
+	std::map<unsigned, std::map<unsigned, unsigned> > transition_table(){ return this->transition_table_; }
 
 	bool inc_trans_freq( unsigned const& node_id, unsigned const& relative_time );
 
@@ -60,10 +60,10 @@ protected:
 	unsigned nobs_;
 
 	//maps node ids to a time, frequency map.
-	vcl_map<unsigned, vcl_map<unsigned, unsigned> > transition_table_;
+	std::map<unsigned, std::map<unsigned, unsigned> > transition_table_;
 
 	//a set of time stamps
-	vcl_set<unsigned> relative_time_set_;
+	std::set<unsigned> relative_time_set_;
 
 	//the last time this node was the current node
 	unsigned last_time_curr_;

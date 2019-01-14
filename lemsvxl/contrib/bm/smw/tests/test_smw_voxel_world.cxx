@@ -25,7 +25,7 @@ static void test_smw_voxel_world()
     START("test_smw_voxel_world");
 
     //create a directory with the name "test_world_dir"
-    vcl_string model_dir("test_world_dir");
+    std::string model_dir("test_world_dir");
     if (vul_file::is_directory(model_dir))
         vul_file::delete_file_glob(model_dir+"/*");
     else

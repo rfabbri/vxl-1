@@ -1,12 +1,12 @@
 #include "dbdet_sel_base.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <map>
+#include <set>
+#include <algorithm>
 
 //********************************************************************//
 // Functions for fitting C^1 polyarcs to edgel chains
@@ -62,13 +62,13 @@ void dbdet_sel_base::fit_polyarc_to_chain(dbdet_edgel_chain* chain)
 
   unsigned N = chain->edgels.size();
 
-  vcl_vector<bool> bKnots (N, false);
-  vcl_vector<bool> cand_knots(N, false);
-  vcl_vector<vcl_list<int> > knot_labels(N);
-  vcl_vector<dbdet_sel_knot > knots(N);
+  std::vector<bool> bKnots (N, false);
+  std::vector<bool> cand_knots(N, false);
+  std::vector<std::list<int> > knot_labels(N);
+  std::vector<dbdet_sel_knot > knots(N);
 
-  vcl_vector<dbdet_CC_curve_model_3d* > CBsb(N), CBsa(N);
-  vcl_vector<int> Db(N, 0), Da(N, 0); //domain extents 
+  std::vector<dbdet_CC_curve_model_3d* > CBsb(N), CBsa(N);
+  std::vector<int> Db(N, 0), Da(N, 0); //domain extents 
 
   // PrP)initialize the before and after curve bundles from the current curvelets
   for (unsigned i=0; i<N; i++)
@@ -126,7 +126,7 @@ void dbdet_sel_base::fit_polyarc_to_chain(dbdet_edgel_chain* chain)
   // 2b) Check for conflict between candidate knot points
   for (int i=0; i<N; i++)
   {
-    vcl_vector<unsigned> conflict;
+    std::vector<unsigned> conflict;
     if (cand_knots[i]){ //if this is a candidate check its domains for other candidates
       for (int j=-Db[i]+1; j<Da[i]-1; j++) {
         if (i+j>=0 && i+j<N && j!=0 && cand_knots[i+j])

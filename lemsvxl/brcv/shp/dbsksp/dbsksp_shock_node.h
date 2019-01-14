@@ -12,8 +12,8 @@
 // \endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
@@ -43,7 +43,7 @@ public:
 
 
   //: A platform-indenpendent name of the class
-  vcl_string is_a() const {return "dbsksp_shock_node"; }
+  std::string is_a() const {return "dbsksp_shock_node"; }
 
   //: Return descriptor associated with an edge
   dbsksp_shock_node_descriptor_sptr descriptor(const dbsksp_shock_edge_sptr& e);
@@ -60,7 +60,7 @@ public:
   void set_radius(double radius){ this->radius_ = radius; }
   
   //: Return the list of node descriptors
-  const vcl_list<dbsksp_shock_node_descriptor_sptr >& descriptor_list()
+  const std::list<dbsksp_shock_node_descriptor_sptr >& descriptor_list()
   {return this->descriptor_list_;}
 
 
@@ -89,7 +89,7 @@ public:
     this->i_visited_ = traverse_value;
   }
 
-  const vcl_list<dbsksp_shock_edge_sptr >& edge_list() const
+  const std::list<dbsksp_shock_edge_sptr >& edge_list() const
   {return this->in_edges_; }
   edge_iterator edges_begin(){ return this->in_edges_begin();}
   edge_iterator edges_end(){ return this->in_edges_end(); }
@@ -97,7 +97,7 @@ public:
   // =========== UTILITY ====================================
 
   //: print info of the dbskpoint to an output stream
-  void print(vcl_ostream & os);
+  void print(std::ostream & os);
 
   // These functions should be moved to the graph vertex class
   
@@ -137,7 +137,7 @@ protected:
   // ------------ graph parameters ------------------------
 
   // parameters associated with each edge it is associated with
-  vcl_list< dbsksp_shock_node_descriptor_sptr > descriptor_list_;
+  std::list< dbsksp_shock_node_descriptor_sptr > descriptor_list_;
   
   //: coordinates of the node
   vgl_point_2d< double > pt_;

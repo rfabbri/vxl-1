@@ -15,7 +15,7 @@
 #include <bsta/bsta_gauss_f1.h>
 #include <bsta/bsta_attributes.h>
 #include <bsta/bsta_mixture_fixed.h>
-#include <vcl_utility.h>
+#include <utility>
 class bseg3d_gauss_multiplier
 {
 
@@ -28,7 +28,7 @@ public:
   //:Returns a pair containing normalization constant and a normalized gaussian
   // This is necessary because the product of gaussian pdfs is an unormalized gaussian pdf
 
-   vcl_pair<double, gauss_type> multiply(vcl_vector<bsta_num_obs<bsta_gauss_f1> > const &gauss_vec);
+   std::pair<double, gauss_type> multiply(std::vector<bsta_num_obs<bsta_gauss_f1> > const &gauss_vec);
 };
 
 #endif

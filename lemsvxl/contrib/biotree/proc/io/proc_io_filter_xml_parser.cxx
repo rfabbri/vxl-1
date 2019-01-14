@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <cassert>
+#include <iostream>
 
 #include <xmvg/xmvg_gaussian_filter_descriptor.h>
 #include <xmvg/xmvg_no_noise_filter_descriptor.h>
@@ -20,7 +20,7 @@
 template <typename T>
 void convert(const char* t, T& d)
 {
-  vcl_stringstream strm(t);
+  std::stringstream strm(t);
 
   strm >> d;
 
@@ -59,19 +59,19 @@ void
 proc_io_filter_xml_parser::handleAtts(const XML_Char** atts)
 {
 //   for (int i=0; atts[i]; i++) {
-//     vcl_cout << "Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//     std::cout << "Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
 //    }
 
 }
 
 void 
-proc_io_filter_xml_parser ::cdataHandler(vcl_string name, vcl_string data)
+proc_io_filter_xml_parser ::cdataHandler(std::string name, std::string data)
 {
   // create a vector of tokens out of cdata and convert them later
-  vcl_vector<vcl_string> tokens;
+  std::vector<std::string> tokens;
   int length = data.size();
   const char * str = data.c_str();
-  vcl_string token = "";
+  std::string token = "";
   for (int i=0; i<length; i++) {
     if ((str[i] == ' ') || (str[i] == '\n')) {
       if (token.size() > 0) {
@@ -124,13 +124,13 @@ proc_io_filter_xml_parser ::cdataHandler(vcl_string name, vcl_string data)
 void 
 proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
 {
-//  vcl_cout<< "element=" << name << vcl_endl; 
+//  std::cout<< "element=" << name << std::endl; 
 
   //: will deprecate, proc_version 1 element
   if(strcmp(name,"responses")== 0){
      //handleAtts(atts);
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "filter_num") == 0)
         convert(atts[i+1], filter_num_);
       else if (strcmp(atts[i], "dimx") == 0)
@@ -143,7 +143,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   //: will deprecate, proc_version 1 element
   } else if (strcmp(name,"response") == 0 ) {
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "ID") == 0)
           convert(atts[i+1], filter_id_);
     }
@@ -151,7 +151,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
     cdata_ = "";
   } else if (strcmp(name,"xmvg_filter_response") == 0 ) {
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "size") == 0)
           convert(atts[i+1], filter_num_);
       biob_field_type = "response";
@@ -159,7 +159,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   } else if (strcmp(name, "active_box") == 0) {
     double min_x, min_y, min_z, max_x, max_y, max_z;
     for (int i=0; atts[i]; i+=2) {
-      //vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+      //std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "min_x") == 0)
           convert(atts[i+1], min_x);
       else if (strcmp(atts[i], "min_y") == 0)
@@ -176,7 +176,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
     active_box_ = vgl_box_3d<double> (min_x, min_y, min_z, max_x, max_y, max_z);
   } else if (strcmp(name,"biob_grid_worldpt_roster") == 0 ) {
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "num_points_x") == 0)
           convert(atts[i+1], response_dimx_);
       else if (strcmp(atts[i], "num_points_y") == 0)
@@ -187,7 +187,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   } else if (strcmp(name,"orientation") == 0 ) {
     double x, y, z;
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "x") == 0)
         convert(atts[i+1], x);
       else if (strcmp(atts[i], "y") == 0)        
@@ -204,7 +204,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   } else if (strcmp(name, "box") == 0) {
       double min_x, min_y, min_z, max_x, max_y, max_z;
       for (int i=0; atts[i]; i+=2) {
-//        vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//        std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
         if (strcmp(atts[i], "min_x") == 0)
           convert(atts[i+1], min_x);
         else if (strcmp(atts[i], "min_y") == 0)
@@ -222,7 +222,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   } else if (strcmp(name, "centre") == 0 ) { 
       double x, y, z;
       for (int i=0; atts[i]; i+=2) {
-//        vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//        std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
         if (strcmp(atts[i], "x") == 0)
           convert(atts[i+1], x);
         else if (strcmp(atts[i], "y") == 0)
@@ -234,7 +234,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   }  else if (strcmp(name, "biob_worldpt_roster_point") == 0) {
       double x, y, z;
       for (int i=0; atts[i]; i+=2) {
- //       vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+ //       std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
         if (strcmp(atts[i], "x") == 0)
           convert(atts[i+1], x);
         else if (strcmp(atts[i], "y") == 0)
@@ -246,7 +246,7 @@ proc_io_filter_xml_parser::startElement(const char* name, const char** atts)
   } else if (strcmp(name, "camera0_to_camera1") == 0) {
       double x, y, z, r;
       for (int i=0; atts[i]; i+=2) {
-//        vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//        std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
         if (strcmp(atts[i], "x") == 0)
           convert(atts[i+1], x);
         else if (strcmp(atts[i], "y") == 0)
@@ -341,18 +341,18 @@ void proc_io_filter_xml_parser::charData(const XML_Char* s, int len)
   cdata_.append(s, len);
 }
 
-bool parse(vcl_string fname, proc_io_filter_xml_parser& parser) 
+bool parse(std::string fname, proc_io_filter_xml_parser& parser) 
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
 
   if (fname.size() == 0){
-    vcl_cout << "File not specified" << vcl_endl;
+    std::cout << "File not specified" << std::endl;
     return false;
   }
 
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile){
-    vcl_cout << fname << "-- error on opening" << vcl_endl;
+    std::cout << fname << "-- error on opening" << std::endl;
     return false;
   }
   if (!parser.parseFile(xmlFile)) {
@@ -361,11 +361,11 @@ bool parse(vcl_string fname, proc_io_filter_xml_parser& parser)
       XML_ErrorString(parser.XML_GetErrorCode()),
       parser.XML_GetCurrentLineNumber()
       );*/
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return false;
    }
-   vcl_cout << "finished parsing!" << vcl_endl;
+   std::cout << "finished parsing!" << std::endl;
 
   return true;
 }

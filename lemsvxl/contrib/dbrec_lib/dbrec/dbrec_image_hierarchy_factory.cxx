@@ -9,15 +9,15 @@
 #include "dbrec_image_compositor.h"
 #include "dbrec_image_pairwise_models.h"
 
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 
 #include <vil/vil_image_resource.h>
 
 //: for recognition of vehicles on Steeple Street Data
 dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0()
 {
-  vcl_cout << "In dbrec_image_hierarchy_factory::construct_detector_steeple0() -- creating hierarchy to recognize vehicles in Steeple St Data\n";
+  std::cout << "In dbrec_image_hierarchy_factory::construct_detector_steeple0() -- creating hierarchy to recognize vehicles in Steeple St Data\n";
     
   dbrec_type_id_factory* ins = dbrec_type_id_factory::instance();
   float prim_radius = 5.0f;
@@ -36,7 +36,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   
   // LAYER 1: two layer 1 parts
   //: create the children vector of the first part
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_0);  // two children of type 0_0
 
   //: create the composition model 
@@ -61,13 +61,13 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   pigm->update_models(dir_v_0_0, e4c, e4p2c);
   //pigm->update_models(dir_v_0_0, e5c, e5p2c);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; models.push_back(pm);
+  std::vector<dbrec_pairwise_model_sptr> models; models.push_back(pm);
   dbrec_central_compositor* cc_1_0 = new dbrec_central_compositor(models);
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
   // LAYER 1: second part
   //: create the children vector of the second part
-  vcl_vector<dbrec_part_sptr> ch_1_1;
+  std::vector<dbrec_part_sptr> ch_1_1;
   ch_1_1.push_back(p_0_0); ch_1_1.push_back(p_0_1);  // two children
 
   //: create the composition model
@@ -92,7 +92,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
 
   // LAYER 2: one part
   //: create the children vector
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); ch_2_0.push_back(p_1_1);
 
   // train the composition
@@ -127,7 +127,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   pg_0_4->get_direction_vector(dir_v_0_4);
   
   // LAYER 1: two layer 1 parts
-  vcl_vector<dbrec_part_sptr> ch_1_2;
+  std::vector<dbrec_part_sptr> ch_1_2;
   ch_1_2.push_back(p_0_2); ch_1_2.push_back(p_0_3);
 
   // train the composition
@@ -157,7 +157,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   dbrec_part_sptr p_1_2 = new dbrec_composition(ins->new_type(), ch_1_2, cc_1_2, 1*prim_radius);
   
   // LAYER 1: second part
-  vcl_vector<dbrec_part_sptr> ch_1_3;
+  std::vector<dbrec_part_sptr> ch_1_3;
   ch_1_3.push_back(p_0_3); ch_1_3.push_back(p_0_4);
   
   //: part2 of the previous edge is the center for this edge
@@ -182,7 +182,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   dbrec_part_sptr p_1_3 = new dbrec_composition(ins->new_type(), ch_1_3, cc_1_3, 1*prim_radius);
   
   // LAYER 2: one part
-  vcl_vector<dbrec_part_sptr> ch_2_1;
+  std::vector<dbrec_part_sptr> ch_2_1;
   ch_2_1.push_back(p_1_2); ch_2_1.push_back(p_1_3);
   
   dbrec_pairwise_indep_gaussian_model* pigm_2_1 = new dbrec_pairwise_indep_gaussian_model(2.0f, 15.0f);
@@ -198,7 +198,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_steeple0(
   dbrec_part_sptr p_2_1 = new dbrec_composition(ins->new_type(), ch_2_1, cc_2_1, 2*prim_radius);
 
   //: now p_2_0 and p_2_1 are the OR'd nodes under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_3_0;
+  std::vector<dbrec_part_sptr> ch_3_0;
   ch_3_0.push_back(p_2_0); ch_3_0.push_back(p_2_1);
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -231,7 +231,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0()
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: only one layer 1 part
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); ch_1_0.push_back(p_0_1);
 
   vnl_vector_fixed<float,2> c1(500.0f,500.0f); // center measured from the image
@@ -248,7 +248,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0()
   pigm_1_0_0->update_models(dir_v_0_0, c1, p1c1);
   pigm_1_0_0->update_models(dir_v_0_0, c2, p1c2);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_pairwise_indep_gaussian_model* pigm_1_0_1 = new dbrec_pairwise_indep_gaussian_model(1.0f, 10.0f);
@@ -262,7 +262,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0()
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
   //: now p_1_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -293,7 +293,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_pr
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   //: now prims are OR'd under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -324,7 +324,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_1(
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: two layer 1 parts with two prims each
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   vnl_vector_fixed<float,2> c1(500.0f,500.0f); // center measured from the image
@@ -338,13 +338,13 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_1(
   pigm_1_0_0->update_models(dir_v_0_0, c1, p1c1);
   pigm_1_0_0->update_models(dir_v_0_0, c2, p1c2);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_compositor_sptr cc_1_0 = new dbrec_central_compositor(models);
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
-  vcl_vector<dbrec_part_sptr> ch_1_1;
+  std::vector<dbrec_part_sptr> ch_1_1;
   ch_1_1.push_back(p_0_0); ch_1_1.push_back(p_0_1);
 
   vnl_vector_fixed<float,2> p2c1(498.0f,499.0f); //
@@ -362,7 +362,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_1(
   dbrec_part_sptr p_1_1 = new dbrec_composition(ins->new_type(), ch_1_1, cc_1_1, 1*prim_radius);
 
   //: now create p_2_0 which has a central compositor
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); ch_2_0.push_back(p_1_1);
 
   dbrec_pairwise_indep_gaussian_model* pigm_2_0 = new dbrec_pairwise_indep_gaussian_model(1.0f, 10.0f);
@@ -378,7 +378,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_1(
   //
 
   //: now p_2_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_3_0;
+  std::vector<dbrec_part_sptr> ch_3_0;
   ch_3_0.push_back(p_2_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -409,18 +409,18 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_1_
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: one layer 1 part with two prims, and the model is discrete 
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   dbrec_pairwise_model_sptr pm_1_0_0 = new dbrec_pairwise_discrete_model(8, 1.0f, 6.0f, 5);   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_compositor_sptr cc_1_0 = new dbrec_central_compositor(models);
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
   //: now p_2_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -451,7 +451,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_do
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: only one layer 1 part
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); ch_1_0.push_back(p_0_1);
 
   vnl_vector_fixed<float,2> c1(500.0f,500.0f); // center measured from the image
@@ -468,7 +468,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_do
   pigm_1_0_0->update_models(dir_v_0_0, c1, p1c1);
   pigm_1_0_0->update_models(dir_v_0_0, c2, p1c2);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_pairwise_indep_gaussian_model* pigm_1_0_1 = new dbrec_pairwise_indep_gaussian_model(1.0f, 10.0f);
@@ -482,7 +482,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_roi1_0_do
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
   //: now p_1_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -516,7 +516,7 @@ dbrec_image_hierarchy_factory::construct_detector_roi1_1()
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: only one layer 1 part
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); ch_1_0.push_back(p_0_1);
 
   vnl_vector_fixed<float,2> c1(557.0f,662.0f); // center measured from the image
@@ -541,7 +541,7 @@ dbrec_image_hierarchy_factory::construct_detector_roi1_1()
   pigm_1_0_0->update_models(dir_v_0_0, c3, p1c3);
   pigm_1_0_0->update_models(dir_v_0_0, c4, p1c4);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_pairwise_indep_gaussian_model* pigm_1_0_1 = new dbrec_pairwise_indep_gaussian_model(1.0f, 10.0f);
@@ -557,7 +557,7 @@ dbrec_image_hierarchy_factory::construct_detector_roi1_1()
   dbrec_part_sptr p_1_0 = new dbrec_composition(ins->new_type(), ch_1_0, cc_1_0, 1*prim_radius);
 
   //: now p_1_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -577,7 +577,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_1
   dbrec_gaussian* gg1 = new dbrec_gaussian(1, 2.0f, 1.0f, 0.0f, true);
   dbrec_gaussian* gg2 = new dbrec_gaussian(2, 2.0f, 2.0f, 0.0f, true);
 
-  vcl_vector<dbrec_part_sptr> ch; int d_min, d_max, alpha_min, alpha_max, alpha_range, rho_min, rho_max, rho_range;
+  std::vector<dbrec_part_sptr> ch; int d_min, d_max, alpha_min, alpha_max, alpha_range, rho_min, rho_max, rho_range;
   
   //: prepare three compositions with (gg1, gg1), (gg2, gg2), (gg1, gg2)
   int nbins_d = 5, nbins_rho = 9;
@@ -632,7 +632,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_1
   dbrec_gaussian* gg1 = new dbrec_gaussian(1, 2.0f, 1.0f, 0.0f, true);
   dbrec_gaussian* gg2 = new dbrec_gaussian(2, 2.0f, 2.0f, 0.0f, true);
 
-  vcl_vector<dbrec_part_sptr> ch;
+  std::vector<dbrec_part_sptr> ch;
   ch.push_back(gg1); ch.push_back(gg2);
   
   //: simply prepare an OR node to have the primitives as children
@@ -658,7 +658,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_0_1 = pg_0_1;
   
   // LAYER 1: one layer 1 part with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   int d_min, d_max, gamma_min, gamma_max, gamma_range, rho_min, rho_max, rho_range;
@@ -674,7 +674,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_1_0 = comp;
 
   //: now p_2_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_3_0;
+  std::vector<dbrec_part_sptr> ch_3_0;
   ch_3_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -699,7 +699,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_0_1 = pg_0_1;
   
   // LAYER 1: one layer 1 part with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   int d_min, d_max, gamma_min, gamma_max, gamma_range, rho_min, rho_max, rho_range;
@@ -722,7 +722,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_1_0 = comp;
 
   //: LAYER 2: one layer 2 part with two child 
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); ch_2_0.push_back(p_1_0); 
 
   nbins_d = 6;
@@ -738,7 +738,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_2_0 = comp2;
 
   //: now p_3_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_3_0;
+  std::vector<dbrec_part_sptr> ch_3_0;
   ch_3_0.push_back(p_2_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -764,7 +764,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_0_1 = pg_0_1;
   
   // LAYER 1: one layer 1 OR node with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -789,7 +789,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_h
   dbrec_part_sptr p_0_1 = pg_0_1;
   
   // LAYER 1: one layer 1 OR node with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -814,7 +814,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_h
   dbrec_part_sptr p_0_1 = pg_0_1;
   
   // LAYER 1: one layer 1 OR node with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -844,7 +844,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_0_2 = pg_0_2;
   
   // LAYER 1: two layer 1 parts with two prims
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); 
 
   int d_min, d_max, gamma_min, gamma_max, gamma_range, rho_min, rho_max, rho_range;
@@ -859,7 +859,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   comp->set_class_prior(0.1f);
   dbrec_part_sptr p_1_0 = comp;
 
-  vcl_vector<dbrec_part_sptr> ch_1_1;
+  std::vector<dbrec_part_sptr> ch_1_1;
   ch_1_1.push_back(p_0_0); ch_1_1.push_back(p_0_2); 
 
   gamma_min = -1; gamma_max = -1;  gamma_range = 0;  // gamma not defined
@@ -873,7 +873,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
 
 
   //: LAYER 2: one layer 2 part with two child 
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); ch_2_0.push_back(p_1_1); 
 
   nbins_d = 6;
@@ -889,7 +889,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_rot_inv_r
   dbrec_part_sptr p_2_0 = comp2;
 
   //: now p_3_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_3_0;
+  std::vector<dbrec_part_sptr> ch_3_0;
   ch_3_0.push_back(p_2_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();
@@ -921,7 +921,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_haifa(flo
   pg_0_1->get_direction_vector(dir_v_0_1);
 
   // LAYER 1: only one layer 1 part
-  vcl_vector<dbrec_part_sptr> ch_1_0;
+  std::vector<dbrec_part_sptr> ch_1_0;
   ch_1_0.push_back(p_0_0); ch_1_0.push_back(p_0_1); ch_1_0.push_back(p_0_1);
 
   //: the following samples are with respect to the direction vector of primitives with orientation angle -45 degree
@@ -941,7 +941,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_haifa(flo
   pigm_1_0_0->update_models(dir_v_0_0, c1, p1c1);
   pigm_1_0_0->update_models(dir_v_0_0, c2, p1c2);
   
-  vcl_vector<dbrec_pairwise_model_sptr> models; 
+  std::vector<dbrec_pairwise_model_sptr> models; 
   models.push_back(pm_1_0_0);
 
   dbrec_pairwise_indep_gaussian_model* pigm_1_0_1 = new dbrec_pairwise_indep_gaussian_model(1.0f, 10.0f);
@@ -955,7 +955,7 @@ dbrec_hierarchy_sptr dbrec_image_hierarchy_factory::construct_detector_haifa(flo
   dbrec_part_sptr p_1_0 = new dbrec_composition(3, ch_1_0, cc_1_0, 1*prim_radius);
 
   //: now p_1_0 is the OR'd node under the class vehicle
-  vcl_vector<dbrec_part_sptr> ch_2_0;
+  std::vector<dbrec_part_sptr> ch_2_0;
   ch_2_0.push_back(p_1_0); 
   
   dbrec_compositor_sptr cc_or = new dbrec_or_compositor();

@@ -43,54 +43,54 @@
 //#include <vul/vul_file.h>
 //#include <vgl/vgl_point_2d.h>
 
-bool parse_database_file(vcl_istream &dataf, 
-                         vcl_vector<vcl_string> &filenames, 
-                         vcl_vector<vcl_string> &paths, 
-                         vcl_vector<vcl_string> &filedirs,
-                         vcl_vector<int> &object_ids) 
+bool parse_database_file(std::istream &dataf, 
+                         std::vector<std::string> &filenames, 
+                         std::vector<std::string> &paths, 
+                         std::vector<std::string> &filedirs,
+                         std::vector<int> &object_ids) 
 {
   char buffer[1000];
   dataf.getline(buffer, 1000);
-  vcl_string line(buffer);
+  std::string line(buffer);
   //: scan all lines before the table
-  while(line.find("<table", 0) == vcl_string::npos)  { // not found, continue
+  while(line.find("<table", 0) == std::string::npos)  { // not found, continue
     dataf.getline(buffer, 1000);
-    line = vcl_string(buffer);
+    line = std::string(buffer);
   }
 
-  vcl_string::size_type pos1, pos2;
-  while(line.find("</table", 0) == vcl_string::npos)  { // not found, continue
-    if (line.find("<filename", 0) != vcl_string::npos) { // found
+  std::string::size_type pos1, pos2;
+  while(line.find("</table", 0) == std::string::npos)  { // not found, continue
+    if (line.find("<filename", 0) != std::string::npos) { // found
       pos1 = line.find("![CDATA[",0);
       pos2 = line.find("]", pos1+1);
-      vcl_string dummy = line.substr(pos1+8, pos2-pos1-8);
-      //vcl_cout << "filename: " << dummy<< vcl_endl;
+      std::string dummy = line.substr(pos1+8, pos2-pos1-8);
+      //std::cout << "filename: " << dummy<< std::endl;
       filenames.push_back(dummy);
-    } else if (line.find("<path", 0) != vcl_string::npos) { // found
+    } else if (line.find("<path", 0) != std::string::npos) { // found
       pos1 = line.find("![CDATA[",0);
       pos2 = line.find("]", pos1+1);
-      vcl_string dummy = line.substr(pos1+8, pos2-pos1-8);
-      //vcl_cout << "path: " << dummy<< vcl_endl;
+      std::string dummy = line.substr(pos1+8, pos2-pos1-8);
+      //std::cout << "path: " << dummy<< std::endl;
       paths.push_back(dummy);
-    } else if (line.find("<filedir", 0) != vcl_string::npos) { // found
+    } else if (line.find("<filedir", 0) != std::string::npos) { // found
       pos1 = line.find("![CDATA[",0);
       pos2 = line.find("]", pos1+1);
-      vcl_string dummy = line.substr(pos1+8, pos2-pos1-8);
-      //vcl_cout << "filedir: " << dummy << vcl_endl;
+      std::string dummy = line.substr(pos1+8, pos2-pos1-8);
+      //std::cout << "filedir: " << dummy << std::endl;
       filedirs.push_back(dummy);
-    } else if (line.find("<objectid", 0) != vcl_string::npos) { // found
+    } else if (line.find("<objectid", 0) != std::string::npos) { // found
       pos1 = line.find(">",0);
       pos2 = line.find("<", pos1+1);
-      vcl_string dummy = line.substr(pos1+1, pos2-pos1-1);
+      std::string dummy = line.substr(pos1+1, pos2-pos1-1);
       int id;
       sscanf(dummy.c_str(), "%d", &id);
-      //vcl_cout << "id: " << id;
+      //std::cout << "id: " << id;
       object_ids.push_back(id);
     } 
 
     dataf.getline(buffer, 1000);
-    line = vcl_string(buffer);
-    //vcl_cout << line << vcl_endl;
+    line = std::string(buffer);
+    //std::cout << line << std::endl;
   }
 
   if (filenames.size() != paths.size() || 
@@ -127,21 +127,21 @@ int main(int argc, char** argv)
   // Make each process and add it to the list of program args
   bpro1_process_sptr my_process(new dbru_mutual_info_process()); 
   
-  vcl_vector<vcl_string> input_names;
+  std::vector<std::string> input_names;
   input_names.push_back("vsol2D0");
   input_names.push_back("video");
   input_names.push_back("vsol2D1");
   input_names.push_back("video1");
 
   my_process->set_input_names(input_names);
-  my_process->set_output_names(vcl_vector<vcl_string>(1,"image"));
+  my_process->set_output_names(std::vector<std::string>(1,"image"));
   my_process->parameters()->add( "Associated segmented contour file:" , "-segcorfile" , bpro1_filepath("","*") ); 
   my_process->parameters()->add( "Associated database file:" , "-databasefile" , bpro1_filepath("","*") ); 
   
   vorl1_manager::instance()->add_process_to_args(my_process); 
   vorl1_manager::instance()->parse_params(argc, argv); 
-  vcl_string output_dir = vorl1_manager::instance()->get_output_dir(); 
-  //vcl_cout << output_dir << vcl_endl;
+  std::string output_dir = vorl1_manager::instance()->get_output_dir(); 
+  //std::cout << output_dir << std::endl;
   
   vorl1_manager::instance()->load_video_clip();
   vidpro1_repository_sptr rep = vorl1_manager::instance()->repository();
@@ -150,37 +150,37 @@ int main(int argc, char** argv)
   my_process->parameters()->get_value("-databasefile", databasefile);
   my_process->parameters()->get_value("-segcorfile", segcorfile);
 
-  //vcl_cout << "database file: " << databasefile << vcl_endl;
-  //vcl_cout << "object segmentation file: " << segcorfile << vcl_endl;
+  //std::cout << "database file: " << databasefile << std::endl;
+  //std::cout << "object segmentation file: " << segcorfile << std::endl;
 
-  vcl_ifstream dataf(databasefile.path.c_str());
+  std::ifstream dataf(databasefile.path.c_str());
   if (!dataf) {
-    vcl_cout << "Problems in opening associated database file of the algorithm!\n";
+    std::cout << "Problems in opening associated database file of the algorithm!\n";
     return 0;
   }
 
-  vcl_ifstream fp(segcorfile.path.c_str());
+  std::ifstream fp(segcorfile.path.c_str());
   if (!fp) {
-    vcl_cout << "Problems in opening associated file of input object!\n";
+    std::cout << "Problems in opening associated file of input object!\n";
     return 0;
   }
 
   //-----------------------------------
   //: database file is opened, parse it
-  vcl_vector<vcl_string> filenames;
-  vcl_vector<vcl_string> paths;
-  vcl_vector<vcl_string> filedirs;
-  vcl_vector<int> object_ids;
+  std::vector<std::string> filenames;
+  std::vector<std::string> paths;
+  std::vector<std::string> filedirs;
+  std::vector<int> object_ids;
 
   if (!parse_database_file(dataf, filenames, paths, filedirs, object_ids)) {
-    vcl_cout << "Problems in parsing database file!\n";
+    std::cout << "Problems in parsing database file!\n";
     return 0;
   }
   dataf.close();
   
   dbru_object_sptr input_object = new dbru_object();
   if (!input_object->read_xml(fp)) {
-    vcl_cout << "Problems in parsing input object!!\n";
+    std::cout << "Problems in parsing input object!!\n";
     return 0;
   }
   fp.close();
@@ -190,40 +190,40 @@ int main(int argc, char** argv)
   if (input_object->polygon_cnt_ == 0 || input_object->start_frame_ > start_frame ||
                                          input_object->end_frame_ < end_frame) 
   {
-    vcl_cout << "No polygons or Input object start and end frames do not match with loaded frames\n";
+    std::cout << "No polygons or Input object start and end frames do not match with loaded frames\n";
     return 0;
   }
 
-  //vcl_cout << "input object: \n" << *input_object << vcl_endl;
+  //std::cout << "input object: \n" << *input_object << std::endl;
  
   int input_object_id = vorl1_manager::instance()->get_object_id();
   
-  //vcl_string home("/projects/vorl1/");
-  vcl_string home("d:/lockheed_videos/");
-  vcl_vector<dbru_object_sptr> database_objects;  
-  //vcl_vector<vidl1_movie_sptr> database_movies;  
+  //std::string home("/projects/vorl1/");
+  std::string home("d:/lockheed_videos/");
+  std::vector<dbru_object_sptr> database_objects;  
+  //std::vector<vidl1_movie_sptr> database_movies;  
   
-  vcl_cout << "reading database objects...\n";
+  std::cout << "reading database objects...\n";
   //: read the objects from their associated files, eliminate the ones with wrong labels, also eliminate 
   //  input object from the database if its also there
   
-  vcl_map<int, vidl1_movie_sptr> video_map;
-  vcl_vector<int> database_ids;
+  std::map<int, vidl1_movie_sptr> video_map;
+  std::vector<int> database_ids;
   for (unsigned int i = 0; i<filenames.size(); i++) {
-    //vcl_cout << "reading database object: " << i << "...\n";
+    //std::cout << "reading database object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
-    vcl_string dummy = home+filedirs[i];
-    //vcl_cout << "database object id: " << object_ids[i] << " assocfile: " << dummy << vcl_endl;
-    vcl_ifstream ifp(dummy.c_str());
+    std::string dummy = home+filedirs[i];
+    //std::cout << "database object id: " << object_ids[i] << " assocfile: " << dummy << std::endl;
+    std::ifstream ifp(dummy.c_str());
     
     if (!ifp) {
-      vcl_cout << "Could not open file with path: " << dummy << vcl_endl;
+      std::cout << "Could not open file with path: " << dummy << std::endl;
       return 0;
     }
 
     if (!obj->read_xml(ifp)) {
-      vcl_cout << "problems in parsing segmented contours of database object number: " << i;
-      vcl_cout << " with path: " << dummy << vcl_endl;
+      std::cout << "problems in parsing segmented contours of database object number: " << i;
+      std::cout << " with path: " << dummy << std::endl;
       return 0;
     }
 
@@ -233,33 +233,33 @@ int main(int argc, char** argv)
     if (input_object_id == object_ids[i]) continue;
 
     //: load video file for this database object if necessary
-    vcl_map<int, vidl1_movie_sptr>::iterator it = video_map.find(obj->video_id_);
+    std::map<int, vidl1_movie_sptr>::iterator it = video_map.find(obj->video_id_);
     if (it == video_map.end()) {  // not loaded yet, load it
 
-      vcl_string video_filename;
+      std::string video_filename;
       if (paths[i].size() == 0 || paths[i] == "null")
         video_filename = home + filenames[i];
       else
         video_filename = home + filenames[i] + "/" + paths[i];
 
-      //vcl_cout << "video filename: " << video_filename << vcl_endl;
+      //std::cout << "video filename: " << video_filename << std::endl;
       vidl1_movie_sptr my_movie = vidl1_io::load_movie(video_filename.c_str());
       if (!my_movie) {
-        vcl_cout << "problems in loading video of database object number: " << i;
-        vcl_cout << " with video file name: " << video_filename << vcl_endl;
+        std::cout << "problems in loading video of database object number: " << i;
+        std::cout << " with video file name: " << video_filename << std::endl;
         return 0;
       }
       video_map[obj->video_id_] = my_movie;
     } 
     
     
-    //vcl_cout << "read: " << *obj << vcl_endl;
+    //std::cout << "read: " << *obj << std::endl;
     database_objects.push_back(obj);
     //database_movies.push_back(my_movie);
     database_ids.push_back(object_ids[i]);
   }
   unsigned int database_size = database_objects.size();
-  vcl_cout << "loaded all objects successfully! database size: " << database_size << " checking input comparability!" << vcl_endl;
+  std::cout << "loaded all objects successfully! database size: " << database_size << " checking input comparability!" << std::endl;
   bool comparable = false;
   
   //: for now assuming all object frames have the same label
@@ -288,10 +288,10 @@ int main(int argc, char** argv)
   //}
 
   if (!comparable) {
-    vcl_cout << "There exists no database object with the same category and label, exiting!\n";
+    std::cout << "There exists no database object with the same category and label, exiting!\n";
     return 0;
   }
-  vcl_cout << "There exists obejcts comparable to input, start testing...!\n";
+  std::cout << "There exists obejcts comparable to input, start testing...!\n";
     
   vorl1_manager::instance()->add_process_to_queue(my_process);
   end_frame = end_frame - start_frame + 1;
@@ -307,7 +307,7 @@ int main(int argc, char** argv)
     
     dbru_label_sptr input_label = input_object->labels_[j];
     
-    vcl_vector< vsol_spatial_object_2d_sptr > contour1;
+    std::vector< vsol_spatial_object_2d_sptr > contour1;
     dbru_label_sptr label = input_object->get_label(j);
       
     contour1.push_back(poly->cast_to_spatial_object());
@@ -315,7 +315,7 @@ int main(int argc, char** argv)
     vsol1->add_objects(contour1, "poly1");
     vsol1->set_name("vsol2D0");
     if (!rep->store_data(vsol1)) {
-      vcl_cout << "Problems in adding input object polygon into repository as vsol2D\n";
+      std::cout << "Problems in adding input object polygon into repository as vsol2D\n";
       return 0;
     }
     
@@ -340,33 +340,33 @@ int main(int argc, char** argv)
         image_storage->set_image( img );
         image_storage->set_name("video1");
         if (!rep->store_data(image_storage)) {
-          vcl_cout << "Problems in adding database object: " << i << " polygon no: " << k << " into repository as image\n";
+          std::cout << "Problems in adding database object: " << i << " polygon no: " << k << " into repository as image\n";
           return 0;
         }
           
         //: add contour
-        vcl_vector< vsol_spatial_object_2d_sptr > contour2;
+        std::vector< vsol_spatial_object_2d_sptr > contour2;
         contour2.push_back(poly2->cast_to_spatial_object());
         vidpro1_vsol2D_storage_sptr vsol2 = vidpro1_vsol2D_storage_new();
         vsol2->add_objects(contour2, "poly2");
         vsol2->set_name("vsol2D1");
         if (!rep->store_data(vsol2)) {
-          vcl_cout << "Problems in adding database object: " << i << " polygon no: " << k << " into repository as vsol2D\n";
+          std::cout << "Problems in adding database object: " << i << " polygon no: " << k << " into repository as vsol2D\n";
           return 0;
         }
 
         dbru_label_sptr object_label = obj->labels_[k];
         if (!check_labels(input_label, object_label)) continue;
 
-        vcl_cout << "input object (" << input_object_id << ")";
-        vcl_cout << " polygon (" << j << ")";
-        vcl_cout << " vs database object (" << database_ids[i] << ")";
-        vcl_cout << " polygon (" << k << ") ";
+        std::cout << "input object (" << input_object_id << ")";
+        std::cout << " polygon (" << j << ")";
+        std::cout << " vs database object (" << database_ids[i] << ")";
+        std::cout << " polygon (" << k << ") ";
 
         vorl1_manager::instance()->run_process_queue_on_current_frame();
         dbru_mutual_info_process* my_process_ptr = dynamic_cast<dbru_mutual_info_process*> (my_process.ptr());
         float total_info = my_process_ptr->get_total_info();
-        //vcl_cout << total_info << vcl_endl;
+        //std::cout << total_info << std::endl;
         if (total_info > best_total_info) {
           best_total_info = total_info;
           best_id = i;
@@ -378,7 +378,7 @@ int main(int argc, char** argv)
         if (!rep->pop_data(image_storage->type()) ||  // output image
             !rep->pop_data(image_storage->type()) ||  // img
             !rep->pop_data(vsol2->type())) {          // vsol
-          vcl_cout << "Problems in removing database object: " << i << " polygon no: " << k << " from repository\n";
+          std::cout << "Problems in removing database object: " << i << " polygon no: " << k << " from repository\n";
           return 0;
         }
         cnt++;
@@ -386,16 +386,16 @@ int main(int argc, char** argv)
     }
   
     if (input_label->category_name_ != database_objects[best_id]->get_label(best_frame)->category_name_) {
-      vcl_cout << "classified WRONGly as: " << database_objects[best_id]->get_label(best_frame)->category_name_;
+      std::cout << "classified WRONGly as: " << database_objects[best_id]->get_label(best_frame)->category_name_;
                                            //(true positive, true negative)  (no negatives in this case)
-      vcl_cout << " compared with: " << cnt << " frames ";
-      vcl_cout << "best total info: " << best_total_info << vcl_endl;
+      std::cout << " compared with: " << cnt << " frames ";
+      std::cout << "best total info: " << best_total_info << std::endl;
       //: set false positive and negative the same
       vorl1_manager::instance()->set_performance(0, 0);
     } else {
-      vcl_cout << "classified CORRECTly as: " << database_objects[best_id]->get_label(best_frame)->category_name_;
-      vcl_cout << " compared with: " << cnt << " frames ";
-      vcl_cout << "best total info: " << best_total_info << vcl_endl;
+      std::cout << "classified CORRECTly as: " << database_objects[best_id]->get_label(best_frame)->category_name_;
+      std::cout << " compared with: " << cnt << " frames ";
+      std::cout << "best total info: " << best_total_info << std::endl;
       vorl1_manager::instance()->set_performance(1, 1);
     }
 

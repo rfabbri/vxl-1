@@ -2,7 +2,7 @@
 //:
 // \file
 #include <bprb/bprb_func_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_update.h>
@@ -28,7 +28,7 @@
 
 bool bbgm_update_dist_image_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(7), out_types(1);
+  std::vector<std::string> in_types(7), out_types(1);
   in_types[0] = "bbgm_image_sptr";// the distribution image being updated
   in_types[1]= "vil_image_view_base_sptr";//the update image data
   in_types[2]= "int"; //max_components
@@ -53,7 +53,7 @@ bool bbgm_update_dist_image_process(bprb_func_process& pro)
 {
   // Sanity check
   if (!pro.verify_inputs()){
-    vcl_cerr << "In bbgm_update_dist_image_process::execute() -"
+    std::cerr << "In bbgm_update_dist_image_process::execute() -"
              << " invalid inputs\n";
     return false;
   }

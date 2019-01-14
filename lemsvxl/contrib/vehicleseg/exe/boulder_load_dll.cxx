@@ -14,7 +14,7 @@
 void load_video_roi(unsigned short * roi,char * inputvid, int frameno,int x0,int y0,int ni,int nj)
 {
     dbvidl_boulder_video_codec_sptr cdc = new dbvidl_boulder_video_codec();
-    vcl_string fname(inputvid);
+    std::string fname(inputvid);
     vidl1_clip_sptr clip = new vidl1_clip( cdc->load(fname,'r'));
     vidl1_movie_sptr my_movie=new vidl1_movie(clip);
     if(frameno<my_movie->length()){

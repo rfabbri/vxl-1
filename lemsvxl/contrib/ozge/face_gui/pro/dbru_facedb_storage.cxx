@@ -30,7 +30,7 @@ unsigned int dbru_facedb_storage::get_facedb_size(void) {
 }
 
 //: get a particular subject
-vcl_vector<vil_image_resource_sptr>& dbru_facedb_storage::get_subject(unsigned i) { 
+std::vector<vil_image_resource_sptr>& dbru_facedb_storage::get_subject(unsigned i) { 
   return facedb_->get_subject(i); 
 }
 
@@ -81,9 +81,9 @@ void dbru_facedb_storage::b_read(vsl_b_istream &is)
     break;
   }
   default:
-    vcl_cerr << "I/O ERROR: dbinfo_facedb_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbinfo_facedb_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
   

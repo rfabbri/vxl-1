@@ -39,10 +39,10 @@ dbmsh_node::~dbmsh_node()
  *************************************************************************/
 void dbmsh_node::remove()
 {
-  vcl_set<dbmsh_face*>::iterator faceIter;
+  std::set<dbmsh_face*>::iterator faceIter;
   for( faceIter = _faces.begin(); faceIter!=_faces.end(); faceIter++ )
     (*faceIter)->removeNode( this );
-  vcl_set<dbmsh_link*>::iterator linkIter;
+  std::set<dbmsh_link*>::iterator linkIter;
   for( linkIter = _links.begin(); linkIter!=_links.end(); linkIter++ )
     (*linkIter)->removeNode( this );
 }
@@ -56,10 +56,10 @@ dbmsh_link* dbmsh_node::commonLink( dbmsh_node* node )
 {
   dbmsh_link* link = NULL;
   
-  vcl_set<dbmsh_link*> links = node->getLinks(); 
+  std::set<dbmsh_link*> links = node->getLinks(); 
   
-  vcl_set<dbmsh_link*>::iterator foundLink;
-  vcl_set<dbmsh_link*>::iterator linkIter;
+  std::set<dbmsh_link*>::iterator foundLink;
+  std::set<dbmsh_link*>::iterator linkIter;
   for( linkIter = _links.begin(); linkIter!=_links.end(); linkIter++ )
   {
     // see if they're the same
@@ -79,14 +79,14 @@ dbmsh_link* dbmsh_node::commonLink( dbmsh_node* node )
  * Parameters:
  * Effects:
  *************************************************************************/
-vcl_vector<dbmsh_face*> dbmsh_node::commonFaces( dbmsh_node *node )
+std::vector<dbmsh_face*> dbmsh_node::commonFaces( dbmsh_node *node )
 {
-  vcl_vector<dbmsh_face*> facesVector;
+  std::vector<dbmsh_face*> facesVector;
   
-  vcl_set<dbmsh_face*> faces = node->getFaces();
+  std::set<dbmsh_face*> faces = node->getFaces();
 
-  vcl_set<dbmsh_face*>::iterator faceIter;
-  vcl_set<dbmsh_face*>::iterator foundFace;
+  std::set<dbmsh_face*>::iterator faceIter;
+  std::set<dbmsh_face*>::iterator foundFace;
   
   for( faceIter = _faces.begin(); faceIter!=_faces.end(); faceIter++ )
   {

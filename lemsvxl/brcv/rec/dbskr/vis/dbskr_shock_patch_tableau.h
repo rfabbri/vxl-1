@@ -37,8 +37,8 @@ private:
   GLenum gl_mode;
 protected:
   
-  vcl_vector<dbskr_shock_patch_sptr> patches_;
-  vcl_map<int, dbskr_shock_patch_sptr> id_sptr_map_;
+  std::vector<dbskr_shock_patch_sptr> patches_;
+  std::map<int, dbskr_shock_patch_sptr> id_sptr_map_;
 
 public:
   
@@ -48,16 +48,16 @@ public:
   virtual bool handle( const vgui_event & );
   
   //: set the patch vector
-  void set_patches(vcl_vector<dbskr_shock_patch_sptr>& patches) { patches_ = patches; } 
+  void set_patches(std::vector<dbskr_shock_patch_sptr>& patches) { patches_ = patches; } 
 
   //: get the patch vector
-  vcl_vector<dbskr_shock_patch_sptr>& get_patches(void) { return patches_; }
+  std::vector<dbskr_shock_patch_sptr>& get_patches(void) { return patches_; }
 
   //: set the patch map
-  void set_map(vcl_map<int, dbskr_shock_patch_sptr>& map) { id_sptr_map_ = map; } 
+  void set_map(std::map<int, dbskr_shock_patch_sptr>& map) { id_sptr_map_ = map; } 
 
   //: get the patch map
-  vcl_map<int, dbskr_shock_patch_sptr>& get_map(void) { return id_sptr_map_; }
+  std::map<int, dbskr_shock_patch_sptr>& get_map(void) { return id_sptr_map_; }
 
   void draw_render();
   void draw_patch(dbskr_shock_patch_sptr shock_patch);
@@ -117,7 +117,7 @@ class dbskr_sp_tableau_set_display_params_command : public vgui_command
 {
  public:
   dbskr_sp_tableau_set_display_params_command(dbskr_shock_patch_tableau* tab, 
-    const vcl_string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : match_tableau(tab), iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -133,7 +133,7 @@ class dbskr_sp_tableau_set_display_params_command : public vgui_command
 
   dbskr_shock_patch_tableau *match_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 #endif //dbskr_shock_patch_tableau_h_

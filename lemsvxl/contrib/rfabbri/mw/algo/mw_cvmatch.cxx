@@ -13,10 +13,10 @@ double mw_cvmatch::computeIntervalCost(int i, int ip, int j, int jp){
   double s2 = j*_delta_s2;
   double s2_p = jp*_delta_s2;
   
-  s1 = vcl_fmod(s1, L1);
+  s1 = std::fmod(s1, L1);
   s1 = (s1 == 0 ? L1 : s1);
 
-  s1_p = vcl_fmod(s1_p, L1);
+  s1_p = std::fmod(s1_p, L1);
   s1_p = (s1_p == 0 ? L1 : s1_p);
 
   s2 = (s2 == 0 ? L2 : s2);
@@ -59,7 +59,7 @@ double mw_cvmatch::computeIntervalCost(int i, int ip, int j, int jp){
 //  
 //  double dT = angle(T_rec,T_rec_p);
 
-//  vcl_cout << "dGama: "
-//  return dGama + _R*dT + vcl_sqrt(error1 + error2);
+//  std::cout << "dGama: "
+//  return dGama + _R*dT + std::sqrt(error1 + error2);
   return dGama;
 }

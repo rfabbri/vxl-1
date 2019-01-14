@@ -16,13 +16,13 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vgl/algo/vgl_convex_hull_2d.h>
 #include <vgl/vgl_point_3d.h>
@@ -160,14 +160,14 @@ class tube
  // bool operator==(tube<double> const& cyl) const;
 
   //: Writes "<tube center=(x0,y0,z0), radius=r, length=l, direction=(x1,y1,z1)>" to stream
-//  vcl_ostream& print(vcl_ostream& s) const;
+//  std::ostream& print(std::ostream& s) const;
 
   bool contains(vgl_point_3d<double>);
-  int  countIN(vcl_vector <vgl_point_3d<double> >);
+  int  countIN(std::vector <vgl_point_3d<double> >);
   void init();
-  vnl_vector <int> search(vcl_vector <vgl_point_3d<double> >, vgl_point_3d <double> );
+  vnl_vector <int> search(std::vector <vgl_point_3d<double> >, vgl_point_3d <double> );
 
-  void ranger(vcl_vector<vgl_point_3d<double> > pts);
+  void ranger(std::vector<vgl_point_3d<double> > pts);
 
 };
 

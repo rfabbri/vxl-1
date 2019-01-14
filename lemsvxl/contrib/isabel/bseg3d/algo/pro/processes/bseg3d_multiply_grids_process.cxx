@@ -10,7 +10,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <bseg3d/algo/bseg3d_explore_mixtures.h>
 #include <bvxm/bvxm_voxel_slab.h>
@@ -28,17 +28,17 @@ bool bseg3d_multiply_grids_process_cons(bprb_func_process& pro)
   // 3. nx (grid size)
   // 4. ny
   // 5. nz
-  vcl_vector<vcl_string> input_types_(6);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
-  input_types_[2] = "vcl_string";
+  std::vector<std::string> input_types_(6);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
+  input_types_[2] = vcl_string";
   input_types_[3] = "unsigned";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";
 
 
   // No outputs to the database. The resulting grid is stored on disk
-  vcl_vector<vcl_string> output_types_(0);
+  std::vector<std::string> output_types_(0);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -56,13 +56,13 @@ bool bseg3d_multiply_grids_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != 6)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << 6 << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << 6 << std::endl;
     return false;
   }
 
-  vcl_string path1 = pro.get_input<vcl_string>(0);
-  vcl_string path2 = pro.get_input<vcl_string>(1);
-  vcl_string output_path = pro.get_input<vcl_string>(2);
+  std::string path1 = pro.get_input<std::string>(0);
+  std::string path2 = pro.get_input<std::string>(1);
+  std::string output_path = pro.get_input<std::string>(2);
   unsigned nx = pro.get_input<unsigned>(3);
   unsigned ny = pro.get_input<unsigned>(4);
   unsigned nz = pro.get_input<unsigned>(5);
@@ -94,8 +94,8 @@ bool bseg3d_multiply_grids_process(bprb_func_process& pro)
 
      for(; slab1_it!=(*grid1_it).end(); ++slab1_it ,++slab2_it, ++slab_out_it)
      {
-       //(*slab_out_it) = (1.0f/(1.0f + vcl_abs(*slab1_it)))* vcl_max((*slab2_it), 0.0f);
-      //(*slab_out_it) = (*slab1_it)+ vcl_log(vcl_max(*slab2_it, 0.0000001f));
+       //(*slab_out_it) = (1.0f/(1.0f + std::abs(*slab1_it)))* std::max((*slab2_it), 0.0f);
+      //(*slab_out_it) = (*slab1_it)+ std::log(std::max(*slab2_it, 0.0000001f));
       (*slab_out_it) =(*slab1_it)*(*slab2_it);
      }
 

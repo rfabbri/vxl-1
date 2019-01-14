@@ -11,9 +11,9 @@
 //  Modifications
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
+#include <vector>
+#include <list>
+#include <set>
 
 #include "dbdet_edgel.h"
 #include "dbdet_curvelet.h"
@@ -24,7 +24,7 @@ class dbdet_EHT_node
 public :
   dbdet_edgel* e;
   dbdet_EHT_node* parent;
-  vcl_list<dbdet_EHT_node*> children;
+  std::list<dbdet_EHT_node*> children;
 
   dbdet_EHT_node(dbdet_edgel* new_e): e(new_e), parent(0), children(0) {}
   ~dbdet_EHT_node()
@@ -134,7 +134,7 @@ public:
           }
 
           //next valid one can be set (find the current child on the parents list and set it to the next)
-          vcl_list<dbdet_EHT_node*>::iterator nit = parent->children.begin();
+          std::list<dbdet_EHT_node*>::iterator nit = parent->children.begin();
           for (; nit != parent->children.end(); nit++){
             if ((*nit)==cur){
               nit++;
@@ -155,11 +155,11 @@ public:
       }
 
       //: return the current path
-      vcl_vector<dbdet_edgel*>& get_cur_path() { return cur_path_; }
+      std::vector<dbdet_edgel*>& get_cur_path() { return cur_path_; }
 
     protected:
       dbdet_EHT_node* ptr_;             //this is the node that the iterator is currently pointing to
-      vcl_vector<dbdet_edgel*> cur_path_; // this is the path from point where the iterator was initialized to the current node
+      std::vector<dbdet_edgel*> cur_path_; // this is the path from point where the iterator was initialized to the current node
   };
 
   //: Return an iterator to the first element

@@ -10,7 +10,7 @@
 
 //: Constructor
 vox_extract_shock_patches_params::
-vox_extract_shock_patches_params(vcl_string algo_name) : 
+vox_extract_shock_patches_params(std::string algo_name) : 
     dborl_algo_params(algo_name),
     tag_extract_shock_patches_("Extract_Shock_Patches")
 { 
@@ -77,7 +77,7 @@ vox_extract_shock_patches_params(vcl_string algo_name) :
 
   // add the parameters of the extract shock patches process
   dbskr_extract_subgraph_and_find_shock_patches_process pro1;
-  vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+  std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
   for (unsigned i = 0; i < pars.size(); i++) 
   {
       this->param_list_.push_back(convert_parameter_from_bpro1

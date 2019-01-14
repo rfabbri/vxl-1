@@ -30,7 +30,7 @@ vidpro1_klt_process::vidpro1_klt_process() : bpro1_process(), kl_params()
 {
   if( !parameters()->add( "Number of feature points" , "-kl_numpoints" , (int)100) ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_klt_process::vidpro1_klt_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_klt_process::vidpro1_klt_process()" << std::endl;
   }
   else
   {    
@@ -45,7 +45,7 @@ vidpro1_klt_process::~vidpro1_klt_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_klt_process::name()
 {
   return "KLT Tracking";
@@ -69,18 +69,18 @@ vidpro1_klt_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_klt_process::get_input_type()
+std::vector< std::string > vidpro1_klt_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_klt_process::get_output_type()
+std::vector< std::string > vidpro1_klt_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -92,7 +92,7 @@ bool
 vidpro1_klt_process::execute()
 {
   if ( this->input_data_.size() != 2 ){
-    vcl_cout << "In vidpro1_klt_process::execute() - not exactly two"
+    std::cout << "In vidpro1_klt_process::execute() - not exactly two"
              << " input frames \n";
     return false;
   }
@@ -110,7 +110,7 @@ vidpro1_klt_process::execute()
   vil_image_resource_sptr im1 = image_storage_1->get_image();
 
   // save all images in a vector
-  vcl_vector<vil_image_resource_sptr> images;
+  std::vector<vil_image_resource_sptr> images;
   images.push_back(im0);
   images.push_back(im1);
 
@@ -131,10 +131,10 @@ vidpro1_klt_process::execute()
 
   // output tracked featured points to storage class
   // "in-points" - tracked points from previous frame
-  vcl_vector< vtol_vertex_2d_sptr > pts_in;
+  std::vector< vtol_vertex_2d_sptr > pts_in;
   matched_points->get(0, pts_in);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > klt_points_in;
+  std::vector< vsol_spatial_object_2d_sptr > klt_points_in;
   for (unsigned int i = 0; i< pts_in.size(); i ++)
   {
     vsol_point_2d_sptr pt = new vsol_point_2d(pts_in.at(i)->x(), pts_in.at(i)->y());
@@ -148,10 +148,10 @@ vidpro1_klt_process::execute()
 
 
   // "out-points" - tracked points from current frame
-  vcl_vector< vtol_vertex_2d_sptr > pts_out;
+  std::vector< vtol_vertex_2d_sptr > pts_out;
   matched_points->get(1, pts_out);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > klt_points_out;
+  std::vector< vsol_spatial_object_2d_sptr > klt_points_out;
   for (unsigned int i = 0; i< pts_out.size(); i ++)
   {
     vsol_point_2d_sptr pt = new vsol_point_2d(pts_out.at(i)->x(), pts_out.at(i)->y());

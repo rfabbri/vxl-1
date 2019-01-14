@@ -89,7 +89,7 @@ public:
   void add_virtual_curve (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV,
                           dbmsh3d_curve* sC, dbmsh3d_curve* eC);
   void add_virtual_curve (dbmsh3d_vertex* sV, dbmsh3d_vertex* eV,
-                          vcl_vector<dbmsh3d_curve*>& sup_curves);
+                          std::vector<dbmsh3d_curve*>& sup_curves);
 
   //###### Graph traversing uses dbsk3d_fs_mesh's flag ###### 
   const unsigned int i_traverse_flag () const;

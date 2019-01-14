@@ -1,7 +1,7 @@
 //: This is lemsvxlsrc/brcv/shp/dbsk3d/vis/dbsk3d_cmdproc.h
 //  Creation: Feb 12, 2007   Ming-Ching Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -47,8 +47,8 @@ bool dbsk3d_check_cmdproc (dbsk3d_pro_vis* pv, int argc, char **argv)
     //Assume the first parameter specifies the file to display.
     if (argc>1 && argv[1][0] != '-') {
       //Assume the first parameter specifies the file to display.
-      vcl_string dir_file = buld_get_dir_file (argv[1]);
-      vcl_string suffix = buld_get_suffix (argv[1]);
+      std::string dir_file = buld_get_dir_file (argv[1]);
+      std::string suffix = buld_get_suffix (argv[1]);
       if (suffix == ".fs") {
         pv->b_view_fs_ = true;
         pv->set_dir_file (dir_file);
@@ -71,7 +71,7 @@ bool dbsk3d_check_cmdproc (dbsk3d_pro_vis* pv, int argc, char **argv)
   if (dbsk3d_cmd_all()!=0 || dbsk3d_cmd_ms()!=0 || dbsk3d_cmd_seg()!=0 || dbsk3d_cmd_ifgp()!=0 ||
       dbsk3d_cmd_reg()!=0 || dbsk3d_cmd_isc()!=0) {
     if (!dbmsh3d_cmd_fileprefix()) {
-      vul_printf (vcl_cerr, "ERROR:\tMissing -f PREFIX. Use -h, -hh 1,2,3, for more help.\n");
+      vul_printf (std::cerr, "ERROR:\tMissing -f PREFIX. Use -h, -hh 1,2,3, for more help.\n");
       return false;
     }
   }
@@ -155,7 +155,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   if (pv->b_view_fs_) {
     pv->reset_mesh ();
     if (pv->load_fs (pv->dir_file()) == false) {
-      vul_printf (vcl_cerr, "\nError: can't load %s.fs.\n", pv->dir_file());
+      vul_printf (std::cerr, "\nError: can't load %s.fs.\n", pv->dir_file());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -188,12 +188,12 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
             const double rth = pv->fs_segre()->get_Q1_percent_cost ((float) (dbmsh3d_cmd_percent()/100));
             const double rth2 = pv->fs_segre()->get_Q1_percent_cost ((float) (dbmsh3d_cmd_percent2()/100));
 
-            vul_printf (vcl_cerr, "\t Queue 1 shape cost median = %f, 10%% = %f, 90%% = %f\n", 
+            vul_printf (std::cerr, "\t Queue 1 shape cost median = %f, 10%% = %f, 90%% = %f\n", 
                          pv->fs_segre()->get_Q1_median_cost(), 
                          pv->fs_segre()->get_Q1_percent_cost (0.1f),
                          pv->fs_segre()->get_Q1_percent_cost (0.9f));
 
-            vul_printf (vcl_cerr, "Visualizing %.0f to %.0f percent of A13-2-links in Queue 1.\n", 
+            vul_printf (std::cerr, "Visualizing %.0f to %.0f percent of A13-2-links in Queue 1.\n", 
                          dbmsh3d_cmd_percent(), dbmsh3d_cmd_percent2());
 
             //-n option: -1: color tone, 1: gray, 2: random.
@@ -208,12 +208,12 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
             const double rth = pv->fs_segre()->get_Q2_percent_cost ((float) (dbmsh3d_cmd_percent()/100));
             const double rth2 = pv->fs_segre()->get_Q2_percent_cost ((float) (dbmsh3d_cmd_percent2()/100));
 
-            vul_printf (vcl_cerr, "\t Queue 2 shape cost median = %f, 10%% = %f, 90%% = %f\n", 
+            vul_printf (std::cerr, "\t Queue 2 shape cost median = %f, 10%% = %f, 90%% = %f\n", 
                          pv->fs_segre()->get_Q2_percent_cost (0.5f), 
                          pv->fs_segre()->get_Q2_percent_cost (0.1f),
                          pv->fs_segre()->get_Q2_percent_cost (0.9f));
 
-            vul_printf (vcl_cerr, "Visualizing %.0f to %.0f percent of A13-links in Queue 2.\n", 
+            vul_printf (std::cerr, "Visualizing %.0f to %.0f percent of A13-links in Queue 2.\n", 
                          dbmsh3d_cmd_percent(), dbmsh3d_cmd_percent2());
 
             _root->addChild (draw_segre_Q2_L_F (pv->fs_segre(), rth, rth2, dbmsh3d_cmd_n(), 
@@ -245,7 +245,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
           if (dbsk3d_cmd_shole() == 1) {
             //Load in the surface mesh prefix-surface.
             if (pv->load_faces_files (pv->dir_prefix() + "-surface") == false) {
-              vcl_cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
+              std::cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
               dbmsh3d_cmd_gui() = 0;
               return _root;
             }
@@ -263,7 +263,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
           //-comp : only keeps the specified component (def 0).
           //-n3 0: to skip the component selection.
           if (dbmsh3d_cmd_n3() != 0) {
-            vcl_set<int> ith_comp_list;
+            std::set<int> ith_comp_list;
             ith_comp_list.insert (dbsk3d_cmd_comp());
             //-gsa 1: re-assigne lost genes to shocks.
             bool result = pv->determine_inside_shock_comp (ith_comp_list, dbsk3d_cmd_gsa()!=0);
@@ -279,7 +279,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         }
         else if (dbmsh3d_cmd_v() == 6) { //-v 6: Show remaining shocks around the holes.
           //load boundary mesh from *-surface.ply2 
-          vcl_string surf_file = pv->dir_prefix() + "-surface.ply2";
+          std::string surf_file = pv->dir_prefix() + "-surface.ply2";
           pv->load_faces_files (pv->dir_prefix() + "-surface");
           pv->mesh()->IFS_to_MHE ();
 
@@ -366,17 +366,17 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     pv->load_cms ();
 
     if (pv->ms_hypg()->check_integrity() == false)
-      vul_printf (vcl_cerr, "\n    ms_hypg.check_integrity() fail!\n\n");
+      vul_printf (std::cerr, "\n    ms_hypg.check_integrity() fail!\n\n");
     else
-      vul_printf (vcl_cerr, "\n    ms_hypg.check_integrity() pass.\n\n");
+      vul_printf (std::cerr, "\n    ms_hypg.check_integrity() pass.\n\n");
 
     //-af : read the alignment from file and perform transformation.
     if (dbmsh3d_cmd_align_file()) { 
       pv->load_hmatrix (dbmsh3d_cmd_align_file());
-      vcl_cout << "Transforming mesh ...\n"; // transform the reference mesh
+      std::cout << "Transforming mesh ...\n"; // transform the reference mesh
       dbmsh3d_apply_xform (pv->mesh(), pv->hmatrix());
       dbmsh3d_apply_xform (pv->fs_mesh(), pv->hmatrix());
-      vcl_cout << "done.\n";
+      std::cout << "done.\n";
     }
 
     //-osg: write *.sg file.
@@ -451,7 +451,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         assert (id >= 0);
         dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) pv->ms_hypg()->sheetmap (id);
         char id_buf[64];
-        vcl_sprintf (id_buf, "%d", id);
+        std::sprintf (id_buf, "%d", id);
 
         //show id at the middle of the sheet.
         const dbsk3d_fs_vertex* FV = MS->get_middle_FV ();
@@ -464,7 +464,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         assert (id >= 0);
         dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) pv->ms_hypg()->edgemap (id);
         char id_buf[64];
-        vcl_sprintf (id_buf, "%d", id);
+        std::sprintf (id_buf, "%d", id);
 
         //show id at the middle of the sheet.
         const vgl_point_3d<double> pt = MC->get_middle_N()->pt();
@@ -476,7 +476,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         assert (id >= 0);
         dbsk3d_ms_node* MN = (dbsk3d_ms_node*) pv->ms_hypg()->vertexmap (id);
         char id_buf[64];
-        vcl_sprintf (id_buf, "%d", id);
+        std::sprintf (id_buf, "%d", id);
 
         //show id at the middle of the sheet.
         const vgl_point_3d<double> pt = MN->FV()->pt();
@@ -499,7 +499,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
 
     //Load in the surface mesh prefix-surface.
     if (pv->load_meshes_files (pv->dir_prefix() + "-surface") == false)
-      vcl_cout << "\ndbsk3d_cmdproc_execute (isc): Error loading " << pv->dir_prefix() + "-surface.\n";
+      std::cout << "\ndbsk3d_cmdproc_execute (isc): Error loading " << pv->dir_prefix() + "-surface.\n";
 
     //-osg: 
     if (dbsk3d_cmd_sg_ofile()) {
@@ -555,7 +555,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //-ptb 1: Perturb the point cloud.
   if (dbmsh3d_cmd_ptb() && dbmsh3d_cmd_ssim()==0) {
     if (pv->load_fs (pv->dir_prefix() + "-full.fs", true) == false) {
-      vul_printf (vcl_cerr, "\nError: can't load %s-full.fs.\n", pv->dir_prefix());
+      vul_printf (std::cerr, "\nError: can't load %s-full.fs.\n", pv->dir_prefix());
       dbmsh3d_cmd_gui() = 0;
     }
     else {
@@ -581,7 +581,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         dbmsh3d_pro_contiune = true;
       else {
         dbmsh3d_cmd_gui() = 0;
-        vcl_cout << "\ndbsk3d_cmdproc_execute (bsphr): Error loading " << pv->dir_prefix() + "\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (bsphr): Error loading " << pv->dir_prefix() + "\n";
         return _root;
       }
     }
@@ -602,11 +602,11 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       dbsk3d_cmd_isc()==1 || dbsk3d_cmd_ms()==1 || 
       dbsk3d_cmd_trans()==1 || dbsk3d_cmd_transg()==1 || dbsk3d_cmd_sgsm()==1 || 
       dbsk3d_cmd_all()==1) {
-    vcl_string run_qhull_command_para = "qvoronoi s o Fv < ";
+    std::string run_qhull_command_para = "qvoronoi s o Fv < ";
     run_qhull_command_para += pv->dir_prefix() + "-sphere.p3d";
     run_qhull_command_para += " > ";
     run_qhull_command_para += pv->dir_prefix() + "-sphere.vor";
-    vcl_cout << "\nRun QHull: "<< run_qhull_command_para << vcl_endl;
+    std::cout << "\nRun QHull: "<< run_qhull_command_para << std::endl;
     system (run_qhull_command_para.c_str());
 
     if (dbsk3d_cmd_spd())
@@ -623,7 +623,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_mesh();
 
       if (pv->load_points_files() == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (qhfs): Error loading " << pv->dir_prefix() << "\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (qhfs): Error loading " << pv->dir_prefix() << "\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
@@ -637,9 +637,9 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     
     //-file 0,1,2: remove the temporary Voronoi files.
     if (dbmsh3d_cmd_ofile() < 3) { 
-      vcl_string delete_command_para = "del ";
+      std::string delete_command_para = "del ";
       delete_command_para += pv->dir_prefix() + "-sphere.p3d";
-      vcl_cout << "Delete QHull File: "<< delete_command_para << vcl_endl;
+      std::cout << "Delete QHull File: "<< delete_command_para << std::endl;
       system (delete_command_para.c_str());
 
       delete_command_para = "del ";
@@ -676,7 +676,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_mesh();
       pv->reset_fs_mesh();      
       if (pv->load_fs (pv->dir_prefix() + "-full.fs") == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (seg): Error loading " << pv->dir_prefix() + "-full.fs.\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (seg): Error loading " << pv->dir_prefix() + "-full.fs.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
@@ -687,7 +687,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     //-segop 1: prioritize faces with flag 1.
     pv->set_dir_prefix (pv->dir_prefix());
     if (pv->load_faces_files()) {
-      vul_printf (vcl_cerr, "\n  %d initial mesh faces loaded from %s.\n", 
+      vul_printf (std::cerr, "\n  %d initial mesh faces loaded from %s.\n", 
                   pv->mesh()->facemap().size(), pv->dir_prefix().c_str());
       pv->mesh()->IFS_to_MHE ();
     }
@@ -909,13 +909,13 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_fs_mesh();      
 
       if (pv->load_fs (pv->dir_prefix() + "-seg-pruned.fs") == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (reg): Error loading " << pv->dir_prefix() + "-seg-pruned.fs.\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (reg): Error loading " << pv->dir_prefix() + "-seg-pruned.fs.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
       //Load in the surface mesh prefix-surface.
       if (pv->load_faces_files (pv->dir_prefix() + "-surface") == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (reg): Error loading " << pv->dir_prefix() + "-surface.\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (reg): Error loading " << pv->dir_prefix() + "-surface.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
@@ -1010,13 +1010,13 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_fs_mesh();
 
       if (pv->load_fs (pv->dir_prefix() + "-reg-pruned.fs") == false) {
-        vcl_cout << "\n-isc: Error loading " << pv->dir_prefix() + "-reg-pruned.fs.\n";
+        std::cout << "\n-isc: Error loading " << pv->dir_prefix() + "-reg-pruned.fs.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }      
       //Load in the surface mesh prefix-surface.
       if (pv->load_faces_files (pv->dir_prefix() + "-surface") == false) {
-        vcl_cout << "\n-isc: Error loading " << pv->dir_prefix() + "-surface.\n";
+        std::cout << "\n-isc: Error loading " << pv->dir_prefix() + "-surface.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
@@ -1057,7 +1057,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
 
     //-comp : Extract the largest (i-th) inside shock component (delete all non-component shocks)
     // def: 0, -1: keep all MS compoents.
-    vcl_set<int> ith_comp_list;
+    std::set<int> ith_comp_list;
     ith_comp_list.insert (dbsk3d_cmd_comp());
 
     //For david_sub7
@@ -1096,7 +1096,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       dbsk3d_cmd_transg() = 0;
       dbsk3d_cmd_sgsm() = 0;
       dbsk3d_cmd_all() = 0;
-      vul_printf (vcl_cerr, "\n\n  !!  No remaining shocks to process  !!  \n\n\n");
+      vul_printf (std::cerr, "\n\n  !!  No remaining shocks to process  !!  \n\n\n");
     }
 
     if (dbmsh3d_pro_contiune && dbsk3d_cmd_isc()!=0 && dbmsh3d_cmd_gui()) {
@@ -1172,13 +1172,13 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_fs_mesh();      
 
       if (pv->load_fs (pv->dir_prefix() + "-isc-pruned.fs") == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-isc-pruned.fs.\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-isc-pruned.fs.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }      
       //Load in the surface mesh prefix-surface.
       if (pv->load_faces_files (pv->dir_prefix() + "-surface") == false) {
-        vcl_cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
         dbmsh3d_cmd_gui() = 0;
         return _root;
       }
@@ -1333,7 +1333,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
         dbmsh3d_pro_contiune = true;
       else {
         dbmsh3d_cmd_gui() = 0;
-        vcl_cout << "\ndbsk3d_cmdproc_execute (transv): Error loading " << pv->dir_prefix() + ".\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (transv): Error loading " << pv->dir_prefix() + ".\n";
         return _root;
       }
     }
@@ -1394,7 +1394,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       pv->reset_fs_mesh();
       if (pv->load_cms() == false) {
         dbmsh3d_cmd_gui() = 0;
-        vcl_cout << "\ndbsk3d_cmdproc_execute (transv): Error loading " << pv->dir_prefix() + ".\n";
+        std::cout << "\ndbsk3d_cmdproc_execute (transv): Error loading " << pv->dir_prefix() + ".\n";
         return _root;
       }
     }
@@ -1483,8 +1483,8 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     dbmsh3d_pro_contiune = true;
 
     if (dbmsh3d_cmd_ofile()) {
-      vcl_string sg_file = pv->dir_file() + "-gt.sg";
-      vul_printf (vcl_cerr, "\n  Saving the regularized medial scaffold graph to %s.\n", sg_file.c_str());
+      std::string sg_file = pv->dir_file() + "-gt.sg";
+      vul_printf (std::cerr, "\n  Saving the regularized medial scaffold graph to %s.\n", sg_file.c_str());
       pv->save_sg (sg_file);
     }
     pv->set_dir_file (pv->dir_file() + "-gt");
@@ -1492,9 +1492,9 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     if (dbmsh3d_cmd_valid()) {
       bool r = pv->sg_sa()->check_integrity ();
       if (r)
-        vul_printf (vcl_cerr, "\n\n\n Validation Successfully completed.\n\n\n");
+        vul_printf (std::cerr, "\n\n\n Validation Successfully completed.\n\n\n");
       else
-        vul_printf (vcl_cerr, "\n\n\n Validation Failed!!\n\n\n");
+        vul_printf (std::cerr, "\n\n\n Validation Failed!!\n\n\n");
     }
 
     if (dbmsh3d_pro_contiune==false && dbmsh3d_cmd_gui()) {
@@ -1547,11 +1547,11 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //-bktseg : Run Surface Reconstruction with Bucketing + Stitching
   if (dbsk3d_cmd_bktseg()) {
     //Store input points and reconstrcuted triangles.
-    vcl_vector<vgl_point_3d<double> > input_pts;
-    vcl_vector<vcl_vector<int> > finalM_faces;
+    std::vector<vgl_point_3d<double> > input_pts;
+    std::vector<std::vector<int> > finalM_faces;
 
-    vcl_string xyz_file = pv->dir_prefix() + ".xyz";
-    vcl_string p3d_file = pv->dir_prefix() + ".p3d";
+    std::string xyz_file = pv->dir_prefix() + ".xyz";
+    std::string p3d_file = pv->dir_prefix() + ".p3d";
     if (dbmsh3d_load_xyz (input_pts, xyz_file.c_str()))
       dbmsh3d_pro_contiune = true;
     else if (dbmsh3d_load_p3d (input_pts, p3d_file.c_str()))
@@ -1559,7 +1559,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
 
     if (dbmsh3d_pro_contiune == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cerr, "ERROR:\t File %s Not Found!\n", pv->dir_prefix());
+      vul_printf (std::cerr, "ERROR:\t File %s Not Found!\n", pv->dir_prefix());
     }
     else {      
       if (dbsk3d_cmd_bktseg()==1) {
@@ -1609,7 +1609,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     //Recover the original vertex id into a rich mesh and save.
     if (bkt_recover_vid_richmesh (dbmsh3d_cmd_fileprefix()) == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cerr, "ERROR in recovery vertex id to a rich mesh!\n");
+      vul_printf (std::cerr, "ERROR in recovery vertex id to a rich mesh!\n");
     }
   }
   //-bktpst 2: 
@@ -1620,14 +1620,14 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     //-bktbr: box ratio
     if (bkt_pre_stitch_buckets (dbmsh3d_cmd_fileprefix(), dbmsh3d_cmd_bktbr()) == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cerr, "ERROR in pre sitich buckets!\n");
+      vul_printf (std::cerr, "ERROR in pre sitich buckets!\n");
     }
   }
   //-bktpst 3: Recover the original vertex id of the stitching surface.
   else if (dbsk3d_cmd_bktpst()==3) {
     if (bkt_stitchsurf_recover_vid (dbmsh3d_cmd_fileprefix()) == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cerr, "ERROR in recovery vertex id to a rich mesh!\n");
+      vul_printf (std::cerr, "ERROR in recovery vertex id to a rich mesh!\n");
     }
   }
   //############### Produce the final mesh of bucketing + stitching ###############
@@ -1636,7 +1636,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     pv->reset_mesh ();
     if (bkt_merge_final_surface(dbmsh3d_cmd_fileprefix(), pv->mesh()) == false) {
       dbmsh3d_cmd_gui() = 0;
-      vul_printf (vcl_cerr, "ERROR in merging the final surface mesh!\n");
+      vul_printf (std::cerr, "ERROR in merging the final surface mesh!\n");
     }
 
     pv->mesh()->print_topo_summary ();
@@ -1664,7 +1664,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   if (dbsk3d_cmd_spd()!=0) {
     //Read the ground truth from file prefix-orig.ply2.
     if (pv->load_ply2 (pv->dir_prefix() + "-orig.ply2") == false) {
-      vul_printf (vcl_cerr, "\n!! File %s-orig.ply2 does not exist!\n", pv->dir_prefix().c_str());
+      vul_printf (std::cerr, "\n!! File %s-orig.ply2 does not exist!\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
     else {    
@@ -1674,7 +1674,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
 
     //Read in the full-shock scaffold from file prefix-full.fs.
     if (pv->load_fs (pv->dir_prefix() + "-full.fs", false) == false) {
-      vul_printf (vcl_cerr, "\n!! File %s-full.fs does not exist!\n", pv->dir_prefix().c_str());
+      vul_printf (std::cerr, "\n!! File %s-full.fs does not exist!\n", pv->dir_prefix().c_str());
       dbmsh3d_cmd_gui() = 0;
     }
 
@@ -1849,13 +1849,13 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     pv->reset_mesh ();
     pv->reset_fs_mesh ();
     if (pv->load_fs (pv->dir_file()) == false) {
-      vcl_cout << "\ndbsk3d_cmdproc_execute (seg): Error loading " << pv->dir_file() + ".\n";
+      std::cout << "\ndbsk3d_cmdproc_execute (seg): Error loading " << pv->dir_file() + ".\n";
       dbmsh3d_cmd_gui() = 0;
       return _root;
     }
     //Load in the surface mesh prefix-surface.
     if (pv->load_faces_files (pv->dir_prefix() + "-surface") == false) {
-      vcl_cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
+      std::cout << "\ndbsk3d_cmdproc_execute (ms): Error loading " << pv->dir_prefix() + "-surface.\n";
       ///dbmsh3d_cmd_gui() = 0;
       ///return _root;
     }
@@ -1972,7 +1972,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
       //-l: DCS_psi step size.
       //-thr: th_ratio
       float DCS_psi = dbmsh3d_cmd_len(); //default step size: 1      
-      vul_printf (vcl_cerr, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
+      vul_printf (std::cerr, "\n\tApply DCS smoothing %d times (DCS_psi %f, th_r %f).\n", 
                   nstep, DCS_psi, dbmsh3d_cmd_thr());
 
       //Estimate intra- and inter- scanline sample distance.
@@ -2038,7 +2038,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //###########################################################################
   //-ridge 1: Compute Ridge on Object Surface Using Medial Scaffold.
   if (dbsk3d_cmd_ridge()) {
-    vcl_string dir_file = vcl_string (dbmsh3d_cmd_fileprefix());
+    std::string dir_file = std::string (dbmsh3d_cmd_fileprefix());
     pv->set_dir_file (dir_file);
 
     pv->load_cms ();
@@ -2047,10 +2047,10 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     if (dbmsh3d_cmd_align_file()) { //read the alignment from file and perform transformation.
       pv->load_hmatrix (dbmsh3d_cmd_align_file());
       
-      vcl_cout << "Transforming mesh ...\n"; // transform the reference mesh
+      std::cout << "Transforming mesh ...\n"; // transform the reference mesh
       dbmsh3d_apply_xform (pv->mesh(), pv->hmatrix());
       dbmsh3d_apply_xform (pv->fs_mesh(), pv->hmatrix());
-      vcl_cout << "done.\n";
+      std::cout << "done.\n";
     }
 
     pv->compute_vertex_node_size ();
@@ -2167,47 +2167,47 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
 
   //############### Save Output Files ############### 
   if (pv->mesh()->vertexmap().size()!=0) {
-    vcl_string dirfile;
+    std::string dirfile;
     //-op3d:
     if (dbmsh3d_cmd_p3d_ofile()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_p3d_ofile());
       dirfile += ".p3d";
-      vul_printf (vcl_cerr, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile);
       pv->save_p3d (dirfile);
     }
     //-oply:
     if (dbmsh3d_cmd_ply_ofile()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofile());
       dirfile += ".ply";
-      vul_printf (vcl_cerr, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile);
       pv->save_ply (dirfile, true);
     }
     //-oplyb:
     if (dbmsh3d_cmd_ply_ofileb()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofileb());
       dirfile += ".ply";
-      vul_printf (vcl_cerr, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile);
       pv->save_ply (dirfile, false);
     }
     //-oply2:
     if (dbmsh3d_cmd_ply2_ofile()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_ply2_ofile());
       dirfile += ".ply2";
-      vul_printf (vcl_cerr, "Writing PLY2 mesh file (*.ply2) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing PLY2 mesh file (*.ply2) %s...\n", dirfile);
       pv->save_ply2 (dirfile);
     }
     //-ooff:
     if (dbmsh3d_cmd_off_ofile()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_off_ofile());
       dirfile += ".off";
-      vul_printf (vcl_cerr, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile);
       pv->save_off (dirfile);
     }
     //-oobj:
     if (dbmsh3d_cmd_obj_ofile()) {
       dirfile = buld_get_dir_file (dbmsh3d_cmd_obj_ofile());
       dirfile += ".obj";
-      vul_printf (vcl_cerr, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile);
+      vul_printf (std::cerr, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile);
       pv->save_obj (dirfile);
     }
   }

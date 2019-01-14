@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_pointarc.h>
 
 //: Point-Arc shock constructor
@@ -52,9 +52,9 @@ dbsk2d_ishock_pointarc (int newid, double stime,
     _a = (Rl()-Rr())/2; //Could be negative!
     _c = _H/2;
     _b2 = _c*_c-_a*_a;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
 
-    _LAsymTau = vcl_atan2(_b,_a);
+    _LAsymTau = std::atan2(_b,_a);
     _RAsymTau = _LAsymTau + vnl_math::pi;
 
   }
@@ -62,7 +62,7 @@ dbsk2d_ishock_pointarc (int newid, double stime,
     _a = (Rl()+Rr())/2;
     _c = _H/2;
     _b2 = _a*_a-_c*_c;
-    _b = vcl_sqrt(_b2);
+    _b = std::sqrt(_b2);
 
     _LAsymTau = -666.0; //not applicable
     _RAsymTau = -666.0; //not applicable
@@ -248,7 +248,7 @@ void dbsk2d_ishock_pointarc::set_end_taus_at_init()
 double dbsk2d_ishock_pointarc::RTau (double Ltau)
 {  
   double d = dFromLTau (Ltau);
-  double rtau = vcl_atan2(d*vcl_sin(Ltau), -_H+d*vcl_cos(Ltau)) + vnl_math::pi;
+  double rtau = std::atan2(d*std::sin(Ltau), -_H+d*std::cos(Ltau)) + vnl_math::pi;
 
   //Correct rtau
   if (_s>0) {
@@ -266,7 +266,7 @@ double dbsk2d_ishock_pointarc::RTau (double Ltau)
 double dbsk2d_ishock_pointarc::LTau (double Rtau)
 {  
   double d = dFromRTau (Rtau);
-  double ltau = angle0To2Pi (vcl_atan2(d*vcl_sin(Rtau-vnl_math::pi), _H+d*vcl_cos(Rtau-vnl_math::pi)));
+  double ltau = angle0To2Pi (std::atan2(d*std::sin(Rtau-vnl_math::pi), _H+d*std::cos(Rtau-vnl_math::pi)));
 
   //Correct ltau
   if (_s>0) {
@@ -413,11 +413,11 @@ double dbsk2d_ishock_pointarc::dFromLTau (double Ltau)
   double denom;
 
   if (_s>0)
-    denom = _c*vcl_cos(Ltau)-_a;
+    denom = _c*std::cos(Ltau)-_a;
   else
-    denom = _a-_c*vcl_cos(Ltau);
+    denom = _a-_c*std::cos(Ltau);
 
-  if (vcl_fabs(denom)<1E-13)//(denom==0)
+  if (std::fabs(denom)<1E-13)//(denom==0)
     d = ISHOCK_DIST_HUGE;
   else
     d = _b2/denom;
@@ -432,11 +432,11 @@ double dbsk2d_ishock_pointarc::dFromRTau (double Rtau)
   double denom;
 
   if (_s>0)
-    denom = _a+_c*vcl_cos(Rtau);
+    denom = _a+_c*std::cos(Rtau);
   else
-    denom = _a-_c*vcl_cos(Rtau);
+    denom = _a-_c*std::cos(Rtau);
 
-  if (vcl_fabs(denom)<1E-13)//(denom==0)
+  if (std::fabs(denom)<1E-13)//(denom==0)
     d = ISHOCK_DIST_HUGE;
   else
     d = _b2/denom;
@@ -500,8 +500,8 @@ double dbsk2d_ishock_pointarc::g  (double tau)
 double dbsk2d_ishock_pointarc::tangent (double tau)
 {
   double dx = _a/_c;
-  double dy = ( _c-_a*vcl_cos(tau) ) / (_c*vcl_sin(tau)); //_s*
-  double dir = vcl_atan2 (dy, dx) + _u;
+  double dy = ( _c-_a*std::cos(tau) ) / (_c*std::sin(tau)); //_s*
+  double dir = std::atan2 (dy, dx) + _u;
 
   if (tau==vnl_math::pi) {
     if (_case==3)
@@ -530,7 +530,7 @@ double dbsk2d_ishock_pointarc::v  (double tau)
     case 3: if (tau==vnl_math::pi) return 100000;
     case 4: if (tau==2*vnl_math::pi) return 100000;
   }
-  return vcl_fabs(vcl_sqrt(_a*_a + _c*_c - 2*_a*_c*vcl_cos(tau))/(_c*vcl_sin(tau)));
+  return std::fabs(std::sqrt(_a*_a + _c*_c - 2*_a*_c*std::cos(tau))/(_c*std::sin(tau)));
 }
 
 double dbsk2d_ishock_pointarc::a  (double tau)
@@ -550,11 +550,11 @@ double dbsk2d_ishock_pointarc::getLTauFromTime (double time)
 
   if (_s>0) {
     d = time + Rl();
-    ltau = vcl_acos ( (_a*d+_b2)/d/_c );
+    ltau = std::acos ( (_a*d+_b2)/d/_c );
   }
   else {
     d = Rr() - time;
-    ltau = vcl_acos ( (_a*d-_b2)/d/_c );
+    ltau = std::acos ( (_a*d-_b2)/d/_c );
   }
 
   return ltau;
@@ -579,7 +579,7 @@ vgl_point_2d<double> dbsk2d_ishock_pointarc::getPtFromLTau (double tau)
   dbsk2d_assert (tau>=0);
   double d = dFromLTau (tau);
 
-  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*vcl_cos(tau), d*vcl_sin(tau)), _u);
+  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d*std::cos(tau), d*std::sin(tau)), _u);
 
   return pt;
 }
@@ -645,91 +645,91 @@ void dbsk2d_ishock_pointarc::compute_extrinsic_locus()
   double DELTA_TAU = 2*vnl_math::pi/NUM_SUBDIVISIONS;
 
   //starting Point
-  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(stau)*vcl_cos(stau), d(stau)*vcl_sin(stau)), _u);
+  pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(stau)*std::cos(stau), d(stau)*std::sin(stau)), _u);
   ex_pts_.push_back(pt);
 
   last_pt = pt;
 
   for (double tau=stau; tau<=etau; tau+=DELTA_TAU) {
-    pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(tau)*vcl_cos(tau), d(tau)*vcl_sin(tau)), _u);
+    pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(tau)*std::cos(tau), d(tau)*std::sin(tau)), _u);
 
     ex_pts_.push_back(pt);
     last_pt = pt;
   }
 
-  vgl_point_2d<double> e_pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(etau)*vcl_cos(etau), d(etau)*vcl_sin(etau)), _u);
+  vgl_point_2d<double> e_pt = _origin + _rotateCCW(vgl_vector_2d<double>(d(etau)*std::cos(etau), d(etau)*std::sin(etau)), _u);
   ex_pts_.push_back(e_pt);
 }
 
-void dbsk2d_ishock_pointarc::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_pointarc::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   char endx[32], endy[32], simtime[32], endtime[32];
 
   ostrm << "\n==============================\n";
   ostrm << "P-A: [" << _id << "] " << "{ "  << (_bActive ? "A" : "nA" ) << ", ";
-  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << vcl_endl;
+  ostrm << (_bPropagated ? "Prop" : "nProp" ) << "}" << std::endl;
 
   vgl_point_2d<double> start = getStartPt ();
   vgl_point_2d<double> end = getEndPt ();
 
   if (_endTime==ISHOCK_DIST_HUGE) {
-    vcl_sprintf(endtime, "INF");
-    vcl_sprintf(endx, "INF");
-    vcl_sprintf(endy, "INF");
+    std::sprintf(endtime, "INF");
+    std::sprintf(endx, "INF");
+    std::sprintf(endy, "INF");
   }
   else {
-    vcl_sprintf(endtime, "%.7f", _endTime);
-    vcl_sprintf(endx, "%.3f", end.x());
-    vcl_sprintf(endy, "%.3f", end.y());
+    std::sprintf(endtime, "%.7f", _endTime);
+    std::sprintf(endx, "%.3f", end.x());
+    std::sprintf(endy, "%.3f", end.y());
   }
 
   if (_simTime==ISHOCK_DIST_HUGE) 
-    vcl_sprintf(simtime, "INF");
+    std::sprintf(simtime, "INF");
   else 
-    vcl_sprintf(simtime, "%.7f", _simTime);
+    std::sprintf(simtime, "%.7f", _simTime);
 
-  vcl_sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
-  vcl_sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
-  vcl_sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<vcl_endl;
+  std::sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
+  std::sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
+  std::sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<std::endl;
 
-  ostrm << "lB: " << _lBElement->id(); vcl_sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
-  ostrm << "rB: " << _rBElement->id(); vcl_sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
+  ostrm << "lB: " << _lBElement->id(); std::sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
+  ostrm << "rB: " << _rBElement->id(); std::sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
   ostrm << "[ lS: " << (_lShock?_lShock->id():-1)  << ", rS: " << (_rShock?_rShock->id():-1) << "]\n";
   ostrm << "[ lN: " << (_lNeighbor?_lNeighbor->id():-1)  << ", rN: " << (_rNeighbor?_rNeighbor->id():-1);
-  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << vcl_endl;
+  ostrm << ", pN: " << _pSNode->id() << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << std::endl;
   
-  vcl_sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
-  vcl_sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
+  std::sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
+  std::sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
 
-  vcl_sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
-  vcl_sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
 
-  vcl_sprintf(s, "nu: %d\n", _nu); ostrm << s;
-  vcl_sprintf(s, "sigma: %d\n \n", _s); ostrm << s;
+  std::sprintf(s, "nu: %d\n", _nu); ostrm << s;
+  std::sprintf(s, "sigma: %d\n \n", _s); ostrm << s;
 
-  vcl_sprintf(s, "H: %f\n", _H); ostrm << s;
-  vcl_sprintf(s, "u: %f\n", _u); ostrm << s;
-  vcl_sprintf(s, "LAsymTau: %f\n", _LAsymTau); ostrm << s;
-  vcl_sprintf(s, "RAsymTau: %f\n \n", _RAsymTau); ostrm << s;
+  std::sprintf(s, "H: %f\n", _H); ostrm << s;
+  std::sprintf(s, "u: %f\n", _u); ostrm << s;
+  std::sprintf(s, "LAsymTau: %f\n", _LAsymTau); ostrm << s;
+  std::sprintf(s, "RAsymTau: %f\n \n", _RAsymTau); ostrm << s;
 
-  vcl_sprintf(s, "a: %d\n", _a); ostrm << s;
-  vcl_sprintf(s, "b2: %d\n", _b2); ostrm << s;
-  vcl_sprintf(s, "c: %d\n \n", _c); ostrm << s;
+  std::sprintf(s, "a: %d\n", _a); ostrm << s;
+  std::sprintf(s, "b2: %d\n", _b2); ostrm << s;
+  std::sprintf(s, "c: %d\n \n", _c); ostrm << s;
 
   //boundary intersection
   ostrm << "Termination: ";
   if (_cSNode)
-    ostrm << "at intersection." << vcl_endl;
+    ostrm << "at intersection." << std::endl;
   else {
     if (this->cell_bnd()){
       if (this->cell_bnd()->is_vert())
-        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << std::endl;
       else        
-        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << std::endl;
     }
     else
-      ostrm << "in mid air." << vcl_endl;
+      ostrm << "in mid air." << std::endl;
   }
 
 }

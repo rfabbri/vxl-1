@@ -14,7 +14,7 @@
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vil/vil_load.h>
@@ -63,11 +63,11 @@ bool vox_visualize_patch_matches::initialize()
 {
 
     // Lets grab the parameters
-    vcl_string model_file = params_->model_object_dir_()+"/"+
+    std::string model_file = params_->model_object_dir_()+"/"+
         params_->model_object_name_()+
         "-patch_strg.bin";
 
-    vcl_string query_file =  params_->query_object_dir_()+"/"+
+    std::string query_file =  params_->query_object_dir_()+"/"+
         params_->query_object_name_()+
         params_->input_shock_patch_extension_()+"/"+
         params_->query_object_name_()+
@@ -76,13 +76,13 @@ bool vox_visualize_patch_matches::initialize()
     //Determine which input object we are going to use
     //Either from the input_object_dir or the associated file
     //The associated file always takes precendence
-    vcl_string match_file;
+    std::string match_file;
 
     // Use associated file
     if ( vul_file::exists(params_->query_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params_->query_assoc_dir_()+"/*");
@@ -130,8 +130,8 @@ bool vox_visualize_patch_matches::initialize()
     bool model_status = vul_file::exists(model_file);
     if (!model_status ) 
     {
-        vcl_cerr << "Cannot find model shock storage (.bin) file: " << 
-            model_file << vcl_endl;
+        std::cerr << "Cannot find model shock storage (.bin) file: " << 
+            model_file << std::endl;
 
         return model_status;
     }
@@ -139,8 +139,8 @@ bool vox_visualize_patch_matches::initialize()
     bool query_status = vul_file::exists(query_file);
     if ( !query_status ) 
     {
-        vcl_cerr << "Cannot find query shock storage (.bin) file: " << 
-            query_file << vcl_endl;
+        std::cerr << "Cannot find query shock storage (.bin) file: " << 
+            query_file << std::endl;
 
         return query_status;
     }
@@ -148,8 +148,8 @@ bool vox_visualize_patch_matches::initialize()
     bool match_status = vul_file::exists(match_file);
     if ( !match_status ) 
     {
-        vcl_cerr << "Cannot find match storage (.bin) file: " << 
-            match_file << vcl_endl;
+        std::cerr << "Cannot find match storage (.bin) file: " << 
+            match_file << std::endl;
 
         return match_status;
     }
@@ -164,7 +164,7 @@ bool vox_visualize_patch_matches::initialize()
     // Throw an error for zero patches
     if (!query_st->size()) 
     {
-        vcl_cerr << "zero patches in query st!!!: " << query_file << vcl_endl;
+        std::cerr << "zero patches in query st!!!: " << query_file << std::endl;
         return false;
     }
 
@@ -172,7 +172,7 @@ bool vox_visualize_patch_matches::initialize()
     if (!query_st->load_patch_shocks(query_file, "patch_strg.bin"))
     {
      
-        vcl_cerr<<"Error loading query shock patches"<<vcl_endl;
+        std::cerr<<"Error loading query shock patches"<<std::endl;
         return false;
 
     }
@@ -187,7 +187,7 @@ bool vox_visualize_patch_matches::initialize()
     // Throw an error for zero patches
     if (!model_st->size()) 
     {
-        vcl_cerr << "zero patches in model st!!!: " << model_file << vcl_endl;
+        std::cerr << "zero patches in model st!!!: " << model_file << std::endl;
         return false;
     }
 
@@ -195,7 +195,7 @@ bool vox_visualize_patch_matches::initialize()
     if (!model_st->load_patch_shocks(model_file, "patch_strg.bin"))
     {
      
-        vcl_cerr<<"Error loading model shock patches"<<vcl_endl;
+        std::cerr<<"Error loading model shock patches"<<std::endl;
         return false;
 
     }
@@ -206,7 +206,7 @@ bool vox_visualize_patch_matches::initialize()
     ifs.close();
 
     //: prepare id maps for this match
-    vcl_map<int, dbskr_shock_patch_sptr> model_map;
+    std::map<int, dbskr_shock_patch_sptr> model_map;
     for (unsigned ii = 0; ii < model_st->size(); ii++)
     { 
         model_map[model_st->get_patch(ii)->id()] = model_st->get_patch(ii);
@@ -214,7 +214,7 @@ bool vox_visualize_patch_matches::initialize()
     match_->set_id_map1(model_map);
 
     // Create maps of ids to patches
-    vcl_map<int, dbskr_shock_patch_sptr> query_map;
+    std::map<int, dbskr_shock_patch_sptr> query_map;
     for (unsigned ii = 0; ii < query_st->size(); ii++)
     { 
         query_map[query_st->get_patch(ii)->id()] = query_st->get_patch(ii);
@@ -222,17 +222,17 @@ bool vox_visualize_patch_matches::initialize()
     match_->set_id_map2(query_map);
     
     // Prepare the output folder for processing
-    vcl_string images_dir = params_->image_write_folder_()+"/";
+    std::string images_dir = params_->image_write_folder_()+"/";
     if (!vul_file::exists(images_dir))
     {
         vul_file::make_directory(images_dir);
     }
 
-    vcl_string model_image = params_->model_object_dir_()+"/"+
+    std::string model_image = params_->model_object_dir_()+"/"+
         params_->model_object_name_()+
         params_->input_image_extension_();
 
-    vcl_string query_image = params_->query_object_dir_()+"/"+
+    std::string query_image = params_->query_object_dir_()+"/"+
         params_->query_object_name_()+
         params_->input_image_extension_();
 
@@ -261,9 +261,9 @@ bool vox_visualize_patch_matches::initialize()
     if ( params_->show_html_matches_() )
     {
         //: create the match images
-        vcl_string model_shock = params_->model_object_dir_() + "/" +
+        std::string model_shock = params_->model_object_dir_() + "/" +
             params_->model_object_name_() + ".esf";
-        vcl_string query_shock = params_->query_object_dir_() + "/" +
+        std::string query_shock = params_->query_object_dir_() + "/" +
             params_->query_object_name_() + ".esf";
 
         dbsk2d_xshock_graph_fileio loader;
@@ -288,15 +288,15 @@ bool vox_visualize_patch_matches::visualize()
 {
 
     //******************** Visualize Shock Matches ****************************
-    vcl_cout<<"************  Visualize Shock Matches  *************"<<vcl_endl;
+    std::cout<<"************  Visualize Shock Matches  *************"<<std::endl;
 
 
     //: create the html file with the match matrix between model and 
     //  query patches
-    vcl_string table_title = params_->model_object_name_() + "_" 
+    std::string table_title = params_->model_object_name_() + "_" 
                           + params_->query_object_name_() + "_match_table";
  
-    vcl_string input_dir = "images/";
+    std::string input_dir = "images/";
 
     match_->create_html_rank_order_table(input_dir, 
                                          params_->model_object_name_(), 

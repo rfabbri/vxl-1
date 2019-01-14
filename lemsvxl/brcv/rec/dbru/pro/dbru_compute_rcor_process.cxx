@@ -5,10 +5,10 @@
 
 #include "dbru_compute_rcor_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 #include <vul/vul_timer.h>
 
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -83,7 +83,7 @@ dbru_compute_rcor_process::dbru_compute_rcor_process()
     !parameters()->add( "increment: " , "-increment" , 20.0f) 
     //!parameters()->add( "Camera image pixel range (in bits): " , "-imagebits" , 8) ||
     ) {
-      vcl_cerr << "ERROR: Adding parameters in dbru_compute_rcor_process::dbru_compute_rcor_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbru_compute_rcor_process::dbru_compute_rcor_process()" << std::endl;
     }
 }
 
@@ -157,7 +157,7 @@ bool dbru_compute_rcor_process::execute()
   input_vsol2.vertical_cast(input_data_[0][3]);
 
   // The contour needs to be a polygon
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   vsol_polygon_2d_sptr poly1 = vsol_list[0]->cast_to_region()->cast_to_polygon();
 
   //the second polygon
@@ -165,7 +165,7 @@ bool dbru_compute_rcor_process::execute()
   vsol_polygon_2d_sptr poly2 = vsol_list[0]->cast_to_region()->cast_to_polygon();
 
   if (!poly1 || !poly2) {
-    vcl_cout << "one of the polygons is not valid.\n";
+    std::cout << "one of the polygons is not valid.\n";
     return false;
   }
   
@@ -181,7 +181,7 @@ bool dbru_compute_rcor_process::execute()
   vil_image_resource_sptr image2 = frame_image2->get_image();
 
   if (!image1 || !image2) {
-    vcl_cout << "one of the images is missing.\n";
+    std::cout << "one of the images is missing.\n";
     return false;
   }
 
@@ -211,7 +211,7 @@ bool dbru_compute_rcor_process::execute()
 
     if (!sg1 || !sg2)
     {
-      vcl_cout << "Problems in getting shock graphs!\n";
+      std::cout << "Problems in getting shock graphs!\n";
       return false;
     }
 
@@ -293,7 +293,7 @@ bool dbru_compute_rcor_process::execute()
   }
 
   double info = dbinfo_observation_matcher::minfo(obs1, obs2, output_rcor->get_correspondences(), false);
-  vcl_cout<< " time: "<< (t.real()/1000.0f) << " seconds info: " << info << vcl_endl;
+  std::cout<< " time: "<< (t.real()/1000.0f) << " seconds info: " << info << std::endl;
 
   //----------------------------------
   // create the output storage class

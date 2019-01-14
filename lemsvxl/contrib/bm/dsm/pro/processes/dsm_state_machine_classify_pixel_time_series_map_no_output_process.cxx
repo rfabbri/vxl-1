@@ -17,8 +17,8 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process_cons( bp
 {
 	using namespace dsm_state_machine_classify_pixel_time_series_map_no_output_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_pixel_time_series_map_sptr";
@@ -46,7 +46,7 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_state_machine_classify_pixel_time_series_map_no_output_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_state_machine_classify_pixel_time_series_map_no_output_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -62,7 +62,7 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 
 	if( pixel_time_series_map_sptr->pixel_time_series_map.empty() )
 	{
-		vcl_cerr << "---- ERROR: dsm_state_machine_classify_pixel_time_series_map, the pixel time series map is empty. ----" << vcl_endl;
+		std::cerr << "---- ERROR: dsm_state_machine_classify_pixel_time_series_map, the pixel time series map is empty. ----" << std::endl;
 		return false;
 	}
 
@@ -73,7 +73,7 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 	{
 	case 1:
 		{
-		vcl_cout << "Using a 1d State Machine." << vcl_endl;
+		std::cout << "Using a 1d State Machine." << std::endl;
 			vnl_matrix<double> init_covar = vnl_diag_matrix<double>(ndims, dinit_covar);
 			vnl_matrix<double> min_covar = vnl_diag_matrix<double>(ndims, dmin_covar);
 
@@ -99,7 +99,7 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 					dsm_state_machine_base_sptr state_machine_base_sptr;
 					if(frame == 0)
 					{
-						vcl_cout << "Creating State Machine " << state_machine_id + 1 << " of " << num_targets <<  " for target: (" << t_itr->first.x() << "," << t_itr->first.y() << ")" << vcl_endl;
+						std::cout << "Creating State Machine " << state_machine_id + 1 << " of " << num_targets <<  " for target: (" << t_itr->first.x() << "," << t_itr->first.y() << ")" << std::endl;
 						state_machine_base_sptr = new dsm_state_machine<1>( state_machine_id,
 							t_forget, prob_thresh,
 							mahalan_factor,
@@ -109,8 +109,8 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 					else
 						state_machine_base_sptr = manager_base_sptr->state_machine(t_itr->first);
 
-					vcl_cout << "Classifying Frame: " << frame << " of " << nframes << '\n'
-						     <<"\tState Machine: " << state_machine_id + 1  << " of " << num_targets << vcl_endl;
+					std::cout << "Classifying Frame: " << frame << " of " << nframes << '\n'
+						     <<"\tState Machine: " << state_machine_id + 1  << " of " << num_targets << std::endl;
 					
 					state_machine_base_sptr->classify(t_itr->second->time_series[frame]);
 
@@ -120,11 +120,11 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 				manager_base_sptr->frame_clock_ptr_->increment_time();
 			}//end frame iteration
 			
-			vcl_cout << "Classified " << num_targets << " in " << timer.real() << " milliseconds." << vcl_endl;
+			std::cout << "Classified " << num_targets << " in " << timer.real() << " milliseconds." << std::endl;
 		}//end case 1
 	case 2:
 		{
-			vcl_cout << "Using a 2d State Machine." << vcl_endl;
+			std::cout << "Using a 2d State Machine." << std::endl;
 			vnl_matrix<double> init_covar = vnl_diag_matrix<double>(ndims, dinit_covar);
 			vnl_matrix<double> min_covar = vnl_diag_matrix<double>(ndims, dmin_covar);
 
@@ -150,7 +150,7 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 					dsm_state_machine_base_sptr state_machine_base_sptr;
 					if(frame == 0)
 					{
-						vcl_cout << "Creating State Machine " << state_machine_id + 1 << " of " << num_targets <<  " for target: (" << t_itr->first.x() << "," << t_itr->first.y() << ")" << vcl_endl;
+						std::cout << "Creating State Machine " << state_machine_id + 1 << " of " << num_targets <<  " for target: (" << t_itr->first.x() << "," << t_itr->first.y() << ")" << std::endl;
 						state_machine_base_sptr = new dsm_state_machine<2>( state_machine_id,
 							t_forget, prob_thresh,
 							mahalan_factor,
@@ -160,8 +160,8 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 					else
 						state_machine_base_sptr = manager_base_sptr->state_machine(t_itr->first);
 
-					vcl_cout << "Classifying Frame: " << frame << " of " << nframes << '\n'
-						     <<"\tState Machine: " << state_machine_id + 1  << " of " << num_targets << vcl_endl;
+					std::cout << "Classifying Frame: " << frame << " of " << nframes << '\n'
+						     <<"\tState Machine: " << state_machine_id + 1  << " of " << num_targets << std::endl;
 					
 					state_machine_base_sptr->classify(t_itr->second->time_series[frame]);
 
@@ -171,14 +171,14 @@ bool dsm_state_machine_classify_pixel_time_series_map_no_output_process( bprb_fu
 				manager_base_sptr->frame_clock_ptr_->increment_time();
 			}//end frame iteration
 			
-			vcl_cout << "Classified " << num_targets << " in " << timer.real() << " milliseconds." << vcl_endl;
+			std::cout << "Classified " << num_targets << " in " << timer.real() << " milliseconds." << std::endl;
 
 		}//end case 2
 		break;
 	default:
 		{
-			vcl_cerr << "---- ERROR PROCESS DSM_STATE_MACHINE_CLASSIFY_PIXEL_TIME_SERIES_MAP_NO_OUTPUT_PROCESS:\n"
-				     << "     no implmentation for ndims = " << ndims << '\n' << vcl_flush;
+			std::cerr << "---- ERROR PROCESS DSM_STATE_MACHINE_CLASSIFY_PIXEL_TIME_SERIES_MAP_NO_OUTPUT_PROCESS:\n"
+				     << "     no implmentation for ndims = " << ndims << '\n' << std::flush;
 			return false;
 		}//end default
 	}//end switch

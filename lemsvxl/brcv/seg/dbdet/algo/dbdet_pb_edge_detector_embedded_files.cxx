@@ -2,9 +2,9 @@
 
 #include "dbdet_pb_edge_detector_embedded_files.h"
 #include<buld/buld_handle_files_embedded_in_vxl_source.h>
-#include<vcl_string.h>
+#include<string>
 #include<vul/vul_file.h>
-#include<vcl_ctime.h>
+#include<ctime>
 
 char var_VrTjDGSYv7xue5osdFCSxs3b9eFP[] = {102,117,110,99,116,105,111,110,32,91,102,105,109,93,32,61,32,97,112,112,108,121,70,105,108,116,101,114,40,102,44,105,109,41,13,10,37,32,102,117,110,99,116,105,111,110,32,91,102,105,109,93,32,61,32,97,112,112,108,121,70,105,108,116,101,114,40,102,44,105,109,41,13,10,37,13,10,37,32,65,112,112,108,121,32,97,32,102,105,108,116,101,114,32,116,111,32,97,110,32,105,109,97,103,101,32,119,105,116,104,32,114,101,102,108,101,99,116,101,100,32,98,111,117,110,100,97,114,121,32,99,111,110,100,105,116,105,111,110,115,46,13,10,37,13,10,37,32,83,101,101,32,97,108,115,111,32,102,98,67,114,101,97,116,101,44,32,102,98,82,117,110,46,13,10,37,13,10,37,32,68,97,118,105,100,32,82,46,32,77,97,114,116,105,110,32,60,100,109,97,114,116,105,110,64,101,101,99,115,46,98,101,114,107,101,108,101,121,46,101,100,117,62,13,10,37,32,77,97,114,99,104,32,50,48,48,51,13,10,13,10,102,105,109,32,61,32,102,98,82,117,110,40,123,102,125,44,105,109,41,59,13,10,102,105,109,32,61,32,102,105,109,123,49,125,59,13,10};
 
@@ -70,7 +70,7 @@ char var_gzdXEbJ7cUwF5QPWRbXFGlcqonC3[] = {77,65,84,76,65,66,32,53,46,48,32,77,6
 
 void dbdet_extract_embedded_pb_files(const char* dest_dir)
 {
-   vcl_string expanded_path = vul_file::expand_tilde(dest_dir);
+   std::string expanded_path = vul_file::expand_tilde(dest_dir);
    if(!buld_is_file_extraction_in_progress(dest_dir))
    {
        if(!vul_file_exists(expanded_path))
@@ -113,9 +113,9 @@ void dbdet_extract_embedded_pb_files(const char* dest_dir)
    }
    else while(buld_is_file_extraction_in_progress(dest_dir))
    {
-       vcl_clock_t endwait;
-       endwait = vcl_clock () + 0.02 * CLOCKS_PER_SEC;
-       while (vcl_clock() < endwait);
+       std::clock_t endwait;
+       endwait = std::clock () + 0.02 * CLOCKS_PER_SEC;
+       while (std::clock() < endwait);
    }
 }
 

@@ -54,6 +54,6 @@ log_likelihood_ratio(double x) const
   double prob_bg = this->prob_density(BACKGROUND, x);
   
   // avoid log(0 / 0)
-  return (prob_fg == prob_bg) ? 0 : vcl_log( prob_fg / prob_bg );
+  return (prob_fg == prob_bg) ? 0 : std::log( prob_fg / prob_bg );
 }
 

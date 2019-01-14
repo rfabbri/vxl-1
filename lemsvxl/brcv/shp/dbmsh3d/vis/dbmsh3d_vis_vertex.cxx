@@ -138,7 +138,7 @@ SoSeparator* draw_vertex_vispt_SoCube (const dbmsh3d_vertex* V,
   
   if (show_id) {
     char buf[64];
-    vcl_sprintf (buf, "%d", V->id());
+    std::sprintf (buf, "%d", V->id());
     draw_text2d_geom (root, buf);
   }
 

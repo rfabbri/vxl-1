@@ -7,7 +7,7 @@
 // 7/15/09
 
 #include "dbcfg_curve.h"
-#include <vcl_deque.h>
+#include <deque>
 #include <vgl/vgl_point_2d.h>
 
 // create an unconnected junction
@@ -19,7 +19,7 @@ _y(y) {
 
 // create a junction connected to a vector of curves
 template <class T>
-dbcfg_junction<T>::dbcfg_junction(T x, T y, vcl_vector<dbcfg_curve<T> * > curves) :
+dbcfg_junction<T>::dbcfg_junction(T x, T y, std::vector<dbcfg_curve<T> * > curves) :
 _x(x),
 _y(y),
 _curves(curves) {
@@ -47,15 +47,15 @@ T dbcfg_junction<T>::y() const {
 // returns the curves in the junction
 template <class T>
 inline
-vcl_vector<dbcfg_curve<T> * > dbcfg_junction<T>::get_curves() {
+std::vector<dbcfg_curve<T> * > dbcfg_junction<T>::get_curves() {
   return _curves;
 }
 
 // returns the curves in the junction that exist at the given depth
 template <class T>
-vcl_vector<dbcfg_curve<T> * > dbcfg_junction<T>::get_curves(int depth) {
-  vcl_vector<dbcfg_curve<T> * > curves;
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
+std::vector<dbcfg_curve<T> * > dbcfg_junction<T>::get_curves(int depth) {
+  std::vector<dbcfg_curve<T> * > curves;
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
     if ((*iter)->exists_at(depth)) {
       curves.push_back(*iter);
     }
@@ -67,7 +67,7 @@ vcl_vector<dbcfg_curve<T> * > dbcfg_junction<T>::get_curves(int depth) {
 template <class T>
 bool dbcfg_junction<T>::exists_at(int depth) {
   int count = 0;
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
     if ((*iter)->exists_at(depth)) {
       count++;
     }
@@ -90,7 +90,7 @@ bool dbcfg_junction<T>::connect_curve(dbcfg_curve<T> * curve) {
 // returns true if successful
 template <class T>
 bool dbcfg_junction<T>::disconnect_curve(dbcfg_curve<T> * curve) {
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
     if (curve == *iter) {
       _curves.erase(iter);
       return true;
@@ -102,7 +102,7 @@ bool dbcfg_junction<T>::disconnect_curve(dbcfg_curve<T> * curve) {
 // returns true if the junction contains this curve
 template <class T>
 bool dbcfg_junction<T>::contains_curve(dbcfg_curve<T> * curve) {
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = _curves.begin(); iter < _curves.end(); iter++) {
     if (curve == *iter) {
       return true;
     }
@@ -113,8 +113,8 @@ bool dbcfg_junction<T>::contains_curve(dbcfg_curve<T> * curve) {
 // returns true if the junction lies on the curve
 template <class T>
 bool dbcfg_junction<T>::can_connect(dbcfg_curve<T> * curve) {
-  vcl_deque<dbdet_edgel * >* edgels = &(curve->get_edgel_chain()->edgels);
-  for (vcl_deque<dbdet_edgel * >::iterator iter = edgels->begin(); iter < edgels->end(); iter++) {
+  std::deque<dbdet_edgel * >* edgels = &(curve->get_edgel_chain()->edgels);
+  for (std::deque<dbdet_edgel * >::iterator iter = edgels->begin(); iter < edgels->end(); iter++) {
     vgl_point_2d<double> pt = (*iter)->pt;
     if (pt.x() == _x && pt.y() == _y) {
       return true;

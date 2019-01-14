@@ -29,16 +29,16 @@
 #include <dbskr/algo/io/dbskr_extract_patch_params.h>
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 
 class dborl_extract_patch_processor_input
 { public:
-    dborl_extract_patch_processor_input(dbsk2d_shock_graph_sptr s, vcl_string n, vcl_string p) :
+    dborl_extract_patch_processor_input(dbsk2d_shock_graph_sptr s, std::string n, std::string p) :
                                       sg(s), name(n), path(p) {}
     dbsk2d_shock_graph_sptr sg;
-    vcl_string name;
-    vcl_string path;
+    std::string name;
+    std::string path;
 };
 
 
@@ -51,10 +51,10 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: parse the index file
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
@@ -65,13 +65,13 @@ public:
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_extract_patch_processor_input>& t);
+  virtual bool initialize(std::vector<dborl_extract_patch_processor_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_extract_patch_processor_input i, char& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<char>& results);
+  virtual bool finalize(std::vector<char>& results);
 
   void print_time();
 

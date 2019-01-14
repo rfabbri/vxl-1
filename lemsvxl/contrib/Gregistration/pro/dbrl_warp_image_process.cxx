@@ -52,7 +52,7 @@ dbrl_warp_image_process::~dbrl_warp_image_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_warp_image_process::name()
     {
     return "Warp Image";
@@ -77,9 +77,9 @@ dbrl_warp_image_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_warp_image_process::get_input_type()
+std::vector< std::string > dbrl_warp_image_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "dbrl_match_set" );
     return to_return;
@@ -87,9 +87,9 @@ vcl_vector< vcl_string > dbrl_warp_image_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_warp_image_process::get_output_type()
+std::vector< std::string > dbrl_warp_image_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -101,7 +101,7 @@ bool
 dbrl_warp_image_process::execute()
     {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_warp_image_process::execute() - "
+        std::cout << "In dbrl_warp_image_process::execute() - "
             << "not exactly two input images \n";
         return false;
         }
@@ -154,7 +154,7 @@ dbrl_warp_image_process::finish()
               greyview2 = imview2;
               } 
           else {
-              vcl_cerr << "Returning false. nplanes(): " << imview1.nplanes() << vcl_endl;
+              std::cerr << "Returning false. nplanes(): " << imview1.nplanes() << std::endl;
               return false;
               }
           vil_image_view<float> float_curr_view1= brip_vil_float_ops::convert_to_float(greyview1);
@@ -169,15 +169,15 @@ dbrl_warp_image_process::finish()
       dbrl_estimator_point_thin_plate_spline * esti2to1= new dbrl_estimator_point_thin_plate_spline();
       esti2to1->set_lambda1(0.0);
       esti2to1->set_lambda2(0.0);
-      vcl_vector<dbrl_feature_sptr> f2=msp1to2->get_feature_set2();
-      vcl_vector<dbrl_feature_sptr> f1=msp1to2->get_feature_set1();
+      std::vector<dbrl_feature_sptr> f2=msp1to2->get_feature_set2();
+      std::vector<dbrl_feature_sptr> f1=msp1to2->get_feature_set1();
       dbrl_rpm_tps *tpsrpm=new dbrl_rpm_tps();
       tpsrpm->normalize_point_set(M2to1->M(),f2 );
       dbrl_transformation_sptr tform2to1=esti2to1->estimate(f2,f1,*M2to1);
       dbrl_thin_plate_spline_transformation *tpstform2to1=dynamic_cast<dbrl_thin_plate_spline_transformation *>(tform2to1.ptr());
 
       //: setting grid
-      vcl_vector<dbrl_feature_sptr> pointset;
+      std::vector<dbrl_feature_sptr> pointset;
       int nj=imview2.nj();
       int ni=imview2.ni();
 
@@ -188,13 +188,13 @@ dbrl_warp_image_process::finish()
               pointset.push_back(p);
               }
           //: build K for the grid
-          vcl_vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform2to1,pointset);
+          std::vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform2to1,pointset);
           vil_image_view<unsigned char> warpimg(ni,nj,1);
           for(unsigned i=0;i<ni;i++)
               for(unsigned j=0;j<nj;j++)
                   {
                   if(dbrl_feature_point *p=dynamic_cast<dbrl_feature_point*>(warped_grid_pts[i*nj+j].ptr()))
-                      { warpimg(i,j)=(int)vcl_floor(vil_bilin_interp_safe<unsigned char>(greyview2,p->location()[0]*160,p->location()[1]*160));//,greyview2.top_left_ptr(),ni,nj,nj,1));
+                      { warpimg(i,j)=(int)std::floor(vil_bilin_interp_safe<unsigned char>(greyview2,p->location()[0]*160,p->location()[1]*160));//,greyview2.top_left_ptr(),ni,nj,nj,1));
                         
                       }
                   }
@@ -210,7 +210,7 @@ dbrl_warp_image_process::finish()
      return true;
     }
 
-vcl_vector<dbrl_feature_sptr> dbrl_warp_image_process::warp_grid(dbrl_thin_plate_spline_transformation * tpstform,vcl_vector<dbrl_feature_sptr> &f)
+std::vector<dbrl_feature_sptr> dbrl_warp_image_process::warp_grid(dbrl_thin_plate_spline_transformation * tpstform,std::vector<dbrl_feature_sptr> &f)
     {
     tpstform->build_K(f);
     tpstform->set_from_features(f);

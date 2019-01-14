@@ -1,8 +1,8 @@
 #include "vis_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstring.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
+#include <cstring>
 #include <vnl/vnl_matlab_read.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
@@ -69,7 +69,7 @@ void vis_manager::init()
 
 void vis_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void vis_manager::cine_mode()
@@ -129,7 +129,7 @@ void vis_manager::save_box()
     corners_.push_back(vgl_point_3d<double>(x2_, y2_, index));
 
     int size = corners_.size();
-    vcl_cout << corners_[size-1] << " and " << corners_[size-2] << "\n";
+    std::cout << corners_[size-1] << " and " << corners_[size-2] << "\n";
     p->add_polygon(4, x, y);
 
     if(file_type_ == 3) 
@@ -138,10 +138,10 @@ void vis_manager::save_box()
       bounding_box_.add(pt);
       pt = isq_->world_point(x2_, y2_, index);
       bounding_box_.add(pt);
-      vcl_cout << bounding_box_ << "\n";
+      std::cout << bounding_box_ << "\n";
     }
   }
-  vcl_ofstream file("box.saved");
+  std::ofstream file("box.saved");
   file << bounding_box_;
   dtab_->post_redraw();
 }
@@ -154,8 +154,8 @@ void vis_manager::stop_cine_mode()
 void vis_manager::load_view_3d()
 {
   vgui_dialog load_view_3d_dlg("Load RSQ file");
-  static vcl_string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "/mnt/backup/data/scanco0405/c0000892.rsq";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Scan Filename:", ext, image_filename);
 
   if (!load_view_3d_dlg.ask())
@@ -170,7 +170,7 @@ void vis_manager::load_view_3d()
 
   is->read(check, 16);
 
-  if(vcl_strncmp(check, "CTDATA-HEADER_V1", 16)==0)
+  if(std::strncmp(check, "CTDATA-HEADER_V1", 16)==0)
   {
     vxl_byte bytes[4];
     is->read(bytes, 4);
@@ -181,13 +181,13 @@ void vis_manager::load_view_3d()
     file_type_ =  ((int)bytes[3]) | ((int)bytes[2])<<8 | ((int)bytes[1])<<16 | ((int)bytes[0])<<24;
 #endif
 
-    vcl_cout << image_filename << '\n';
-    vcl_vector<vil_image_resource_sptr> img_res_sptrs;
+    std::cout << image_filename << '\n';
+    std::vector<vil_image_resource_sptr> img_res_sptrs;
     double min, max; 
 
     if(file_type_ == 1)
     { // read rsq file
-      vcl_cout << "we are in rsq\n";
+      std::cout << "we are in rsq\n";
       imgr_rsq rsq_reader(is);
 
       img_res_sptrs = rsq_reader.get_images();
@@ -197,7 +197,7 @@ void vis_manager::load_view_3d()
     }
     else
     {
-      vcl_cout << "we are in isq\n";
+      std::cout << "we are in isq\n";
       isq_ = new imgr_isq_file_format(is);
 
       img_res_sptrs = isq_->get_images();
@@ -212,9 +212,9 @@ void vis_manager::load_view_3d()
 
     for(unsigned k = 0; k<nk; ++k)
     {
-      vcl_cout <<"enter the " << k <<"th resource "<< vcl_flush;
+      std::cout <<"enter the " << k <<"th resource "<< std::flush;
       vil_image_view<unsigned short> v(img_res_sptrs[k]->get_view());
-      vcl_cout << "open view [ " << k <<"] " << img_res_sptrs[k]->ni() << ' ' << v.nj() << '\n';
+      std::cout << "open view [ " << k <<"] " << img_res_sptrs[k]->ni() << ' ' << v.nj() << '\n';
       vgui_image_tableau_sptr itab = vgui_image_tableau_new(v, range_params_);
 #if 0
       vgui_easy2D_tableau_new easy(itab);
@@ -230,7 +230,7 @@ void vis_manager::load_view_3d()
     }
   }
   else
-    vcl_cerr << " not a isq or rsq file \n ";
+    std::cerr << " not a isq or rsq file \n ";
 
   is->unref();
 }
@@ -274,12 +274,12 @@ void vis_manager::get_pixel_info(const int x, const int y,vgui_event const &e, c
     vil_image_view_base_sptr v(itab->get_image_view());
     vil_image_view<unsigned short> vim(*v);
     if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-      vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
+      std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, -1, index);
     else
-      vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, vim(x,y), index);
+      std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", x, y, vim(x,y), index);
   }
   else
-    vcl_sprintf(msg, "No images loaded...");
+    std::sprintf(msg, "No images loaded...");
 
   return;
 }
@@ -301,13 +301,13 @@ bool vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   else if(e.type == vgui_KEY_UP)
   {
@@ -315,13 +315,13 @@ bool vis_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(wx_, wy_, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
   }
   return base::handle(e);
 }

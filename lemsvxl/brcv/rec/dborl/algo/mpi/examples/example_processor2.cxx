@@ -6,12 +6,12 @@
 //
 
 #include "example_processor2.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
 //bool example_processor2::parse_command_line(int argc, char *argv[])
-bool example_processor2::parse_command_line(vcl_vector<vcl_string>& argv)
+bool example_processor2::parse_command_line(std::vector<std::string>& argv)
 {
   param_file_ = "dummy";
   return true; // nothing to parse
@@ -20,24 +20,24 @@ bool example_processor2::parse_command_line(vcl_vector<vcl_string>& argv)
 //: this method is run on each processor
 bool example_processor2::parse(const char* param_file)
 {
-  vcl_cout << "in example_processor2::parse() init var_ to: ";
+  std::cout << "in example_processor2::parse() init var_ to: ";
   var_ = 2.0f;
-  vcl_cout << var_ << vcl_endl;
+  std::cout << var_ << std::endl;
   return true;
 }
 
 //: this method is run on each processor
-bool example_processor2::initialize(vcl_vector<int>& t)
+bool example_processor2::initialize(std::vector<int>& t)
 {
-  vcl_cout << "var_ is inited to: " << var_ << vcl_endl;
+  std::cout << "var_ is inited to: " << var_ << std::endl;
   for (unsigned i = 0; i < 4; i++) {
     t.push_back(int(i + var_));
   }
 
-  vcl_cout << "initialized " << t.size() << " integers as follows\n";
+  std::cout << "initialized " << t.size() << " integers as follows\n";
   for (unsigned i = 0; i < t.size(); i++)
-    vcl_cout << t[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << t[i] << " ";
+  std::cout << std::endl;
 
   return true;
 }
@@ -52,19 +52,19 @@ bool example_processor2::process(int t1, ex_class& f)
 }
 
 //: this method is run on the lead processor once after results are collected from each processor
-bool example_processor2::finalize(vcl_vector<ex_class>& results)
+bool example_processor2::finalize(std::vector<ex_class>& results)
 {
   float sum = 0.0f;
   for (unsigned i = 0; i < results.size(); i++) {
     sum += results[i].c;
   }
-  vcl_cout << "sum of the results: " << sum << " from " << results.size() << " sized vector, string is: ";
+  std::cout << "sum of the results: " << sum << " from " << results.size() << " sized vector, string is: ";
   for (unsigned i = 0; i < results.size(); i++) {
-    vcl_cout << results[i].b;
+    std::cout << results[i].b;
   }
-  vcl_cout << "\n";
-  vcl_cout << "sum of the results should be 22, and the string should be:\n";
-  vcl_cout << "cabc\n";
+  std::cout << "\n";
+  std::cout << "sum of the results should be 22, and the string should be:\n";
+  std::cout << "cabc\n";
   return true;
 }
 

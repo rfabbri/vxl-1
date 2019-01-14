@@ -49,7 +49,7 @@ public:
                         const bool match_subset_of_curves,
                         int max_ms_curves);
 
-  bool save_shock_match_result_file (const vcl_string& filename, const int verbose = 1);
+  bool save_shock_match_result_file (const std::string& filename, const int verbose = 1);
 
   bool run_shock_match_icp (const int max_iter, const float conv_th);
 };

@@ -3,7 +3,7 @@
 
 #include <extrautils/msgout.h>
 
-#include <vcl_cmath.h>
+#include <cmath>
 //#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -49,7 +49,7 @@ bool IVRegion::updateEnd (VECTOR_TYPE v, VECTOR_TYPE newend, bool bCCW)
   for (ivsListIterator i = _ivsList.begin(); i != _ivsList.end(); i++) {
     if ( (AisLEq((*i)->start() , v) && AisLEq(v , (*i)->end())) !=
         (((*i)->start() <= v) && (v <= (*i)->end())) )
-      vcl_cout<< "FUZZY OCCURS (eps="<<A_EPSILON<<") in IVRegion::updateEnd()!!" <<vcl_endl;
+      std::cout<< "FUZZY OCCURS (eps="<<A_EPSILON<<") in IVRegion::updateEnd()!!" <<std::endl;
     if (AisLEq((*i)->start() , v) && AisLEq(v , (*i)->end())) {
       //update IVS (*i)
       if (bCCW)

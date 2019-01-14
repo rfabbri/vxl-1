@@ -20,9 +20,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_sstream.h>
-#include<vcl_utility.h>
+#include<map>
+#include<sstream>
+#include<utility>
 
 #include<vgl/io/vgl_io_point_2d.h>
 
@@ -32,7 +32,7 @@ class dsm_pixel_time_series_map: public vbl_ref_count
 {
 public:
 
-	typedef vcl_map<vgl_point_2d<unsigned>, dsm_time_series_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > pixel_time_series_map_type;
+	typedef std::map<vgl_point_2d<unsigned>, dsm_time_series_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > pixel_time_series_map_type;
 
 	dsm_pixel_time_series_map(unsigned const& feature_dim = 128):feature_dimension(feature_dim){}
 
@@ -56,7 +56,7 @@ public:
 	pixel_time_series_map_type::iterator time_series( unsigned const& x, unsigned const& y);
 
 	//provide a directory write a a single file for every time series associated with a given pixel.
-	bool write_txt( vcl_string const& filename ) const;
+	bool write_txt( std::string const& filename ) const;
 
 	void b_write(vsl_b_ostream& os) const;
 

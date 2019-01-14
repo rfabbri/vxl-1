@@ -5,8 +5,8 @@
 // See brct_volume_processor_params.h
 //
 //-----------------------------------------------------------------------------
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 
 //------------------------------------------------------------------------
 // Constructors
@@ -73,29 +73,29 @@ void brct_volume_processor_params::InitParams(float xmin,
 //:   Checks that parameters are within acceptable bounds
 //    Note that msg << ends seems to restart the string and erase the
 //    previous string. We should only use it as the last call, use
-//    vcl_endl otherwise.
+//    std::endl otherwise.
 bool brct_volume_processor_params::SanityCheck()
 {
-  vcl_stringstream msg;
+  std::stringstream msg;
   bool valid = true;
 
-  msg << vcl_ends;
+  msg << std::ends;
 
   SetErrorMsg(msg.str().c_str());
   return valid;
 }
 
-vcl_ostream& operator<< (vcl_ostream& os, const brct_volume_processor_params& vp)
+std::ostream& operator<< (std::ostream& os, const brct_volume_processor_params& vp)
 {
   return
   os << "brct_volume_processor_params:\n[---\n"
-     << "xmin " << vp.xmin_ << vcl_endl
-     << "xmax " << vp.xmax_ << vcl_endl
-     << "ymin " << vp.ymin_ << vcl_endl
-     << "ymax " << vp.ymax_ << vcl_endl
-     << "zmin " << vp.zmin_ << vcl_endl
-     << "zmax " << vp.zmax_ << vcl_endl
-     << "cube_edge_length " << vp.cube_edge_length_ << vcl_endl
-     << "cell thresh " << vp.cell_thresh_ << vcl_endl
-     << "---]" << vcl_endl;
+     << "xmin " << vp.xmin_ << std::endl
+     << "xmax " << vp.xmax_ << std::endl
+     << "ymin " << vp.ymin_ << std::endl
+     << "ymax " << vp.ymax_ << std::endl
+     << "zmin " << vp.zmin_ << std::endl
+     << "zmax " << vp.zmax_ << std::endl
+     << "cube_edge_length " << vp.cube_edge_length_ << std::endl
+     << "cell thresh " << vp.cell_thresh_ << std::endl
+     << "---]" << std::endl;
 }

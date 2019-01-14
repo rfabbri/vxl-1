@@ -91,10 +91,10 @@ public:
   // Return a list of pathtable_key, which maps a pair of darts in tree1 to a 
   // a pair of darts in tree2. Each pair of darts, in return, represents a path
   // in the trees.
-  void get_final_correspondence(vcl_vector<pathtable_key >& final_correspondence);
+  void get_final_correspondence(std::vector<pathtable_key >& final_correspondence);
 
   //: Compute sum of deformation costs
-  float get_deform_cost(const vcl_vector<pathtable_key >& correspondence);
+  float get_deform_cost(const std::vector<pathtable_key >& correspondence);
 
   //: Compute deformation cost for a path correspondence
   float get_deform_cost(const pathtable_key& key);

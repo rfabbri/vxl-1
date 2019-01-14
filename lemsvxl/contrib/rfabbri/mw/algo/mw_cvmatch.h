@@ -19,7 +19,7 @@
 //-------------------------------------------------------------------------
 
 
-#include <vcl_ctime.h>
+#include <ctime>
 #include <bsold/bsold_interp_curve_2d_sptr.h>
 
 #include <dbcvr/dbcvr_cvmatch.h>

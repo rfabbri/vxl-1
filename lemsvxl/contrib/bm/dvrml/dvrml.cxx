@@ -26,7 +26,7 @@ vnl_vector_fixed<double,3> dvrml::color_map(double const& input)
 }//end vgl_point_3d<double> dvrml::color_map
 
 //
-//#define SETUP if (of_stream_ptr_ == 0) { vcl_cerr << "dvrml -- vcl_ostream not set!\n"; return; } vcl_ofstream& os = *of_stream_ptr_
+//#define SETUP if (of_stream_ptr_ == 0) { std::cerr << "dvrml -- std::ostream not set!\n"; return; } std::ofstream& os = *of_stream_ptr_
 //
 //void dvrml::preamble()
 //{
@@ -195,12 +195,12 @@ vnl_vector_fixed<double,3> dvrml::color_map(double const& input)
 //
 //}//end dvrml::draw_cone
 //
-//void dvrml::draw_points( vcl_vector<vgl_point_3d<double> > const& pts, 
+//void dvrml::draw_points( std::vector<vgl_point_3d<double> > const& pts, 
 //                         dvrml_appearance_sptr appearance_sptr, 
 //                         double const& radius )
 //{
-//    vcl_vector<vgl_point_3d<double> >::const_iterator point_set_itr;
-//    vcl_vector<vgl_point_3d<double> >::const_iterator point_set_end = pts.end();
+//    std::vector<vgl_point_3d<double> >::const_iterator point_set_itr;
+//    std::vector<vgl_point_3d<double> >::const_iterator point_set_end = pts.end();
 //    SETUP;
 //    os << "#indexed point set\n\n"
 //       << "Shape {\n"
@@ -237,7 +237,7 @@ vnl_vector_fixed<double,3> dvrml::color_map(double const& input)
 //}//end dvrml::draw_plane
 //
 //
-//void dvrml::draw_text( vcl_string const& text,
+//void dvrml::draw_text( std::string const& text,
 //                       vgl_point_3d<double> const& center,
 //                       dvrml_appearance_sptr appearance_sptr,
 //                       double const& length,

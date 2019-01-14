@@ -5,10 +5,10 @@
 
 #include "dbru_print_rcor_process.h"
 
-//#include <vcl_ctime.h>
-//#include <vcl_cmath.h>
-//#include <vcl_algorithm.h>
-//#include <vcl_cstdio.h>
+//#include <ctime>
+//#include <cmath>
+//#include <algorithm>
+//#include <cstdio>
 //#include <vul/vul_timer.h>
 
 //#include <vidpro1/storage/vidpro1_image_storage.h>
@@ -60,7 +60,7 @@ dbru_print_rcor_process::dbru_print_rcor_process()
     !parameters()->add( "Output file <filename...>" , "-outfile" ,bpro1_filepath("","*.out") ) ||
     !parameters()->add( "increment: " , "-increment" , 20.0f) 
     ) {
-      vcl_cerr << "ERROR: Adding parameters in dbru_print_rcor_process::dbru_print_rcor_process()" << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in dbru_print_rcor_process::dbru_print_rcor_process()" << std::endl;
     }
 }
 
@@ -110,17 +110,17 @@ bool dbru_print_rcor_process::execute()
     shock_cor = shock_storage->get_sm_cor();
   }
   
-  vcl_vector<vsol_spatial_object_2d_sptr> pts1, pts2, pts1_b, pts2_b;
+  std::vector<vsol_spatial_object_2d_sptr> pts1, pts2, pts1_b, pts2_b;
 
   if (shock_cor) {
     
-    vcl_vector<dbskr_scurve_sptr>& curve_list1 = shock_cor->get_curve_list1();
-    vcl_vector<dbskr_scurve_sptr>& curve_list2 = shock_cor->get_curve_list2();
-    vcl_vector<vcl_vector < vcl_pair <int,int> > >& map_list = shock_cor->get_map_list();
+    std::vector<dbskr_scurve_sptr>& curve_list1 = shock_cor->get_curve_list1();
+    std::vector<dbskr_scurve_sptr>& curve_list2 = shock_cor->get_curve_list2();
+    std::vector<std::vector < std::pair <int,int> > >& map_list = shock_cor->get_map_list();
 
     //: go along shock curves from the lists one by one
     if ((curve_list1.size() != curve_list2.size()) || (curve_list1.size() != map_list.size())) {
-      vcl_cout << "different sizes in shock curve correspondence, not able to find region correspondence!\n";
+      std::cout << "different sizes in shock curve correspondence, not able to find region correspondence!\n";
     } else {  // corresponding shock curves
 
       //double step_size = 1.0;
@@ -128,7 +128,7 @@ bool dbru_print_rcor_process::execute()
       for (unsigned int i = 0; i<curve_list1.size(); i++) {
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
-        vcl_vector< vcl_pair<int, int> > mapl = map_list[i];
+        std::vector< std::pair<int, int> > mapl = map_list[i];
         //inc = (mapl.size()-1)/2;
         for (unsigned int j = 1; j<mapl.size(); j+=inc) {
           int k = mapl[j].first;
@@ -164,11 +164,11 @@ bool dbru_print_rcor_process::execute()
   } else if (rcor_storage && curve_matching) { 
     
     sil_cor = input_rcor->get_sil_cor();
-    vcl_vector<vgl_point_2d<double> > &vgl_pts1 = sil_cor->get_contour_pts1();
-    vcl_vector<vgl_point_2d<double> > &vgl_pts2 = sil_cor->get_contour_pts2();
+    std::vector<vgl_point_2d<double> > &vgl_pts1 = sil_cor->get_contour_pts1();
+    std::vector<vgl_point_2d<double> > &vgl_pts2 = sil_cor->get_contour_pts2();
 
     if (vgl_pts1.size() != vgl_pts2.size()) {
-      vcl_cout << "different sizes in curve correspondence, not able to find region correspondence!\n";
+      std::cout << "different sizes in curve correspondence, not able to find region correspondence!\n";
     } else {
       int inc = int(increment);
       for (unsigned i = 0; i<vgl_pts1.size(); i+=inc) {
@@ -184,34 +184,34 @@ bool dbru_print_rcor_process::execute()
   //----------------------------------
   // print the output correspondences
   //----------------------------------
-  vcl_ofstream outf(out_file.c_str());
+  std::ofstream outf(out_file.c_str());
   if (outf) {
     if (print_boundary)
-      outf << pts1.size()+pts1_b.size() << vcl_endl;
+      outf << pts1.size()+pts1_b.size() << std::endl;
     else
-      outf << pts1.size() << vcl_endl;
+      outf << pts1.size() << std::endl;
    for (unsigned i = 0; i<pts1.size(); i++) {
       vsol_point_2d_sptr p = pts1[i]->cast_to_point();
-      outf << p->x() << " " << p->y() << vcl_endl;
+      outf << p->x() << " " << p->y() << std::endl;
    }
    if (print_boundary)
      for (unsigned i = 0; i<pts1_b.size(); i++) {
       vsol_point_2d_sptr p = pts1_b[i]->cast_to_point();
-      outf << p->x() << " " << p->y() << vcl_endl;
+      outf << p->x() << " " << p->y() << std::endl;
      }
 
    if (print_boundary)
-      outf << pts2.size()+pts2_b.size() << vcl_endl;
+      outf << pts2.size()+pts2_b.size() << std::endl;
    else 
-      outf << pts2.size() << vcl_endl;
+      outf << pts2.size() << std::endl;
    for (unsigned i = 0; i<pts2.size(); i++) {
       vsol_point_2d_sptr p = pts2[i]->cast_to_point();
-      outf << p->x() << " " << p->y() << vcl_endl;
+      outf << p->x() << " " << p->y() << std::endl;
    }
    if (print_boundary)
      for (unsigned i = 0; i<pts2_b.size(); i++) {
       vsol_point_2d_sptr p = pts2_b[i]->cast_to_point();
-      outf << p->x() << " " << p->y() << vcl_endl;
+      outf << p->x() << " " << p->y() << std::endl;
      }
   }
   outf.close();

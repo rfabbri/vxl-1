@@ -4,7 +4,7 @@
 // \file
 
 #include <dbru/pro/dbru_save_osl_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bpro1/bpro1_parameters.h>
 #include <dbru/pro/dbru_osl_storage.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -14,7 +14,7 @@ dbru_save_osl_process::dbru_save_osl_process() : bpro1_process()
 {
   if( !parameters()->add( "Filename" , "-filename", bpro1_filepath("","*") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -34,7 +34,7 @@ dbru_save_osl_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbru_save_osl_process::name()
+std::string dbru_save_osl_process::name()
 {
   return "Save OSL";
 }
@@ -49,20 +49,20 @@ dbru_save_osl_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbru_save_osl_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbru_osl_storage");
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbru_save_osl_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -87,7 +87,7 @@ bool
 dbru_save_osl_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_save_osl_process::execute() - "
+    std::cout << "In dbbgm_save_osl_process::execute() - "
              << "no osl storage to save \n";
     return false;
   }
@@ -95,7 +95,7 @@ dbru_save_osl_process::execute()
   osl_storage.vertical_cast(input_data_[0][0]);
   bpro1_filepath file;
   parameters()->get_value( "-filename" , file );
-  vcl_string path = file.path;
+  std::string path = file.path;
   vsl_b_ofstream os(path);
   osl_storage->b_write(os);
   return true;

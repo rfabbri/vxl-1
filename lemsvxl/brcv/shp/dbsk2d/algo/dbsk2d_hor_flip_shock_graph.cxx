@@ -12,8 +12,8 @@ bool dbsk2d_hor_flip_shock_graph(dbsk2d_shock_graph_sptr sg)
 {
     if(!dbsk2d_compute_bounding_box(sg))
     {
-        vcl_cout << "Could not compute the bounding box for the shock graph" << vcl_endl;
-        vcl_cout << "Flip operation failed" << vcl_endl;
+        std::cout << "Could not compute the bounding box for the shock graph" << std::endl;
+        std::cout << "Flip operation failed" << std::endl;
         return false;
     }
 

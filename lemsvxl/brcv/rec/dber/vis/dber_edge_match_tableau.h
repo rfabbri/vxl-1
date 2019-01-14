@@ -41,9 +41,9 @@ protected:
 
 public:
   
-  dber_edge_match_tableau(vcl_vector<vsol_line_2d_sptr>& l1, 
-                          vcl_vector<vsol_line_2d_sptr>& l2,
-                          vcl_vector<unsigned>& a);
+  dber_edge_match_tableau(std::vector<vsol_line_2d_sptr>& l1, 
+                          std::vector<vsol_line_2d_sptr>& l2,
+                          std::vector<unsigned>& a);
   virtual ~dber_edge_match_tableau() {}
   
   virtual bool handle( const vgui_event & );
@@ -58,9 +58,9 @@ public:
 
 protected:
 
-  vcl_vector<vsol_line_2d_sptr>& lines1_;
-  vcl_vector<vsol_line_2d_sptr>& lines2_;
-  vcl_vector<unsigned>& assign_;
+  std::vector<vsol_line_2d_sptr>& lines1_;
+  std::vector<vsol_line_2d_sptr>& lines2_;
+  std::vector<unsigned>& assign_;
 
   vgl_line_2d<double> dominant_dir1_, dominant_dir2_;
 
@@ -90,9 +90,9 @@ struct dber_edge_match_tableau_new : public dber_edge_match_tableau_sptr
   typedef dber_edge_match_tableau_sptr base;
 
   //: Constructor - creates a pointer to a dber_edge_match_tableau
-  dber_edge_match_tableau_new(vcl_vector<vsol_line_2d_sptr>& l1, 
-                              vcl_vector<vsol_line_2d_sptr>& l2,
-                              vcl_vector<unsigned>& a) : base(new dber_edge_match_tableau(l1, l2, a)) { }
+  dber_edge_match_tableau_new(std::vector<vsol_line_2d_sptr>& l1, 
+                              std::vector<vsol_line_2d_sptr>& l2,
+                              std::vector<unsigned>& a) : base(new dber_edge_match_tableau(l1, l2, a)) { }
 };
 
 #endif //dber_edge_match_tableau_h_

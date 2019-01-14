@@ -30,7 +30,7 @@
 dbsks_local_match_process::
 dbsks_local_match_process()
 {
-  vcl_vector<vcl_string > opt_mode_desc;
+  std::vector<std::string > opt_mode_desc;
   opt_mode_desc.push_back("The whole graph at once"); // 0
   opt_mode_desc.push_back("One node"); // 1
   opt_mode_desc.push_back("All nodes in a sequence"); // 2
@@ -48,7 +48,7 @@ dbsks_local_match_process()
     
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -68,27 +68,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_local_match_process::
+std::string dbsks_local_match_process::
 name()
 { 
   return "Local Match"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_local_match_process::
+std::vector< std::string > dbsks_local_match_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsks_shapematch" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_local_match_process::
+std::vector< std::string > dbsks_local_match_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("dbsksp_shock");
   to_return.push_back("vsol2D");
   return to_return;
@@ -117,8 +117,8 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cerr << "In dbsks_local_match_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_local_match_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -174,7 +174,7 @@ execute()
     // use a suboptimal solution
     else
     {
-      vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map =
+      std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map =
         dp_engine->list_opt_shapelet_map_[sub_optimal_index];
       lm_engine->set_xnode_states(opt_shapelet_map);
     }
@@ -188,7 +188,7 @@ execute()
 
   if (opt_mode == 0)  /// NEED MAJOR FIX-UP
   {
-    vcl_cout << "Currently not implemented.\n";
+    std::cout << "Currently not implemented.\n";
     return false;
     ////
     //dbsks_local_match_sptr lm_engine = new dbsks_local_match();
@@ -221,14 +221,14 @@ execute()
     //out_sksp_storage->set_shock_graph(new_shock_graph);
 
     //// contact shocks
-    //vcl_vector<vsol_spatial_object_2d_sptr > contact_shock_list;
-    //vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+    //std::vector<vsol_spatial_object_2d_sptr > contact_shock_list;
+    //std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
     //lm_engine->get_final_xnodes(xnode_map);
-    //for (vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::iterator
+    //for (std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >::iterator
     //  it = xnode_map.begin(); it != xnode_map.end(); ++it)
     //{
     //  dbsksp_xshock_node_descriptor xnode = it->second;
-    //  vcl_vector<vsol_point_2d_sptr > pts;
+    //  std::vector<vsol_point_2d_sptr > pts;
     //  pts.push_back(new vsol_point_2d(xnode.bnd_pt_left()));
     //  pts.push_back(new vsol_point_2d(xnode.pt_));
     //  pts.push_back(new vsol_point_2d(xnode.bnd_pt_right()));
@@ -239,16 +239,16 @@ execute()
 
 
     //// boundary
-    //vcl_vector<bgld_circ_arc > arc_list;
+    //std::vector<bgld_circ_arc > arc_list;
     //lm_engine->get_bnd_arc_list(arc_list);
 
     //
-    //vcl_vector<vsol_spatial_object_2d_sptr > bnd_list;
+    //std::vector<vsol_spatial_object_2d_sptr > bnd_list;
     //for (unsigned i =0; i < arc_list.size(); ++i)
     //{
     //  bgld_circ_arc arc = arc_list[i];
 
-    //  vcl_vector<vsol_point_2d_sptr > pts;
+    //  std::vector<vsol_point_2d_sptr > pts;
     //  // sample the arc using 10 segments
     //  double ds = arc.length() / 10;
     //  for (unsigned i =0; i < 11; ++i)
@@ -266,7 +266,7 @@ execute()
     {
       if (node_id < 0)
       {
-        vcl_cout << "ERROR: node id must be >= 0.\n";
+        std::cout << "ERROR: node id must be >= 0.\n";
         return false;
       }
 
@@ -295,7 +295,7 @@ execute()
       ///////////////////////////////////////////////
 
       // print out summary of the process
-      lm_engine->print_summary(vcl_cout);
+      lm_engine->print_summary(std::cout);
     }
 
     // create the output storage class
@@ -316,14 +316,14 @@ execute()
     out_sksp_storage->set_shock_graph(new_shock_graph);
 
     // contact shocks
-    vcl_vector<vsol_spatial_object_2d_sptr > contact_shock_list =
+    std::vector<vsol_spatial_object_2d_sptr > contact_shock_list =
       dbsks_trace_contact_shocks(lm_engine->graph(), 
       lm_engine->get_cur_xnode_map());
     
     out_vsol2D_storage->add_objects(contact_shock_list);
 
     // boundary
-    vcl_vector<vsol_spatial_object_2d_sptr > bnd_list = 
+    std::vector<vsol_spatial_object_2d_sptr > bnd_list = 
       dbsks_trace_boundary(lm_engine->graph(), lm_engine->get_cur_xnode_map());
     out_vsol2D_storage->add_objects(bnd_list);
     return true;

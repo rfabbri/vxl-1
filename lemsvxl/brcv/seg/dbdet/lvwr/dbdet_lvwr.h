@@ -17,10 +17,10 @@
 //    Shannon Telesco -- added Compute method not to repeat edge detection 
 //  \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <set>
+#include <utility>
+#include <iostream>
 #include <vil1/vil1_memory_image_of.h>
 
 #include <dbdet/lvwr/dbdet_lvwr_params.h>
@@ -70,7 +70,7 @@ public:
     if (params_.canny) {
       osl_canny_ox cox(canny_params_);
 
-      static vcl_list<osl_edge*>    canny_edges;
+      static std::list<osl_edge*>    canny_edges;
       cox.detect_edges(image, &canny_edges);
       compute_costs_from_edges(canny_edges);
 
@@ -92,7 +92,7 @@ public:
     if (params_.canny) {
       osl_canny_ox cox(canny_params_);
 
-      static vcl_list<osl_edge*>    canny_edges;
+      static std::list<osl_edge*>    canny_edges;
       cox.detect_edges(image, &canny_edges);
       compute_costs_from_edges(canny_edges);
     intsciss2.compute_costs_from_edges(canny_edges);
@@ -127,7 +127,7 @@ public:
 
   bool **expanded;
   float **global_costs;
-  vcl_pair<float, float> **pointed_neighbours;
+  std::pair<float, float> **pointed_neighbours;
   int **path_length;
 
   // region of interest
@@ -142,14 +142,14 @@ public:
 
   // return the optimum path from the free point to the seed point
   bool get_path(int free_x, int free_y,
-          vcl_vector<vcl_pair<int, int> > &cor);
+          std::vector<std::pair<int, int> > &cor);
   bool get_processed_path(int free_x, int free_y,
-          vcl_vector<vcl_pair<int, int> > &cor);
+          std::vector<std::pair<int, int> > &cor);
   //bool get_path(int free_x, int free_y,
-  //        vcl_vector<vdgl_edgel> edgels);
+  //        std::vector<vdgl_edgel> edgels);
   float get_global_cost(int x, int y);
 
-  void compute_costs_from_edges(vcl_list<osl_edge*> canny_edges);
+  void compute_costs_from_edges(std::list<osl_edge*> canny_edges);
   void set_costs_from_image(vil1_image const &image);
   void set_params(dbdet_lvwr_params const & params) {
     params_ = params;
@@ -174,7 +174,7 @@ private:
                       vil1_memory_image_of<float>   *image_fxx_ptr,
                       vil1_memory_image_of<float>   *image_fyy_ptr);
 
-  bool contains(vcl_multiset<my_pixel> *active_pixels, my_pixel p1);
+  bool contains(std::multiset<my_pixel> *active_pixels, my_pixel p1);
   float edge_direction_cost(my_pixel p, my_pixel p1, float *dp);
   float my_get_factor(int i, int j);
 

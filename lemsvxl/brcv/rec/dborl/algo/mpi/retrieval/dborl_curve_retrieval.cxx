@@ -17,9 +17,9 @@
 #include <dbcvr/dbcvr_clsd_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
 #include <bsold/bsold_file_io.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <borld/borld_evaluation.h>
@@ -27,7 +27,7 @@
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-bool dborl_curve_retrieval::parse_command_line(vcl_vector<vcl_string>& argv)
+bool dborl_curve_retrieval::parse_command_line(std::vector<std::string>& argv)
 {
 
   if (!params_.parse_command_line_args(argv))
@@ -35,7 +35,7 @@ bool dborl_curve_retrieval::parse_command_line(vcl_vector<vcl_string>& argv)
 
   //: always print the params file if an executable to work with ORL web interface
   if (!params_.print_params_xml(params_.print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params_.print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params_.print_params_file() << std::endl;
 
   param_file_ = params_.input_param_filename_;
   return true;
@@ -58,24 +58,24 @@ bool dborl_curve_retrieval::parse(const char* param_file)
 //  run the algorithm to generate this file, then modify it  
 void dborl_curve_retrieval::print_default_file(const char* def_file)
 {
-  params_.print_default_input_xml(vcl_string(def_file));
+  params_.print_default_input_xml(std::string(def_file));
 }
 
 //: this method is run on each processor
-bool dborl_curve_retrieval::parse_index(vcl_string index_file)
+bool dborl_curve_retrieval::parse_index(std::string index_file)
 {
   dborl_index_parser parser;
   parser.clear();
 
-  vcl_FILE *xmlFile = vcl_fopen(index_file.c_str(), "r");
+  std::FILE *xmlFile = std::fopen(index_file.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << "dborl_curve_retrieval::parse_index() -- " << index_file << "-- error on opening" << vcl_endl;
+    std::cout << "dborl_curve_retrieval::parse_index() -- " << index_file << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
 
@@ -85,12 +85,12 @@ bool dborl_curve_retrieval::parse_index(vcl_string index_file)
   if (!ind_)
     return false;
 
-  vcl_cout << "parsed the index file with name: " << ind_->name_ << vcl_endl;
+  std::cout << "parsed the index file with name: " << ind_->name_ << std::endl;
   return true;
 }
 
 //: this method is run on each processor
-bool dborl_curve_retrieval::initialize(vcl_vector<dborl_curve_retrieval_input>& t)
+bool dborl_curve_retrieval::initialize(std::vector<dborl_curve_retrieval_input>& t)
 {
   //: parse the index file 
   if (!parse_index(params_.db_index_()))
@@ -101,7 +101,7 @@ bool dborl_curve_retrieval::initialize(vcl_vector<dborl_curve_retrieval_input>& 
     return false;
 
   unsigned D = root->names().size();
-  vcl_cout << "db size: " << D << vcl_endl;
+  std::cout << "db size: " << D << std::endl;
   
   for (unsigned i = 0; i < D; i++)
     database_indices_.push_back(i);
@@ -109,16 +109,16 @@ bool dborl_curve_retrieval::initialize(vcl_vector<dborl_curve_retrieval_input>& 
   //: shuffle the elements of this vector to maximize the speed up with MPI process distribution
   //  some class trees are way larger than other classes and thus when they are passed as chunks to the same processor
   //  it delays the others
-  vcl_random_shuffle(database_indices_.begin(), database_indices_.end());
+  std::random_shuffle(database_indices_.begin(), database_indices_.end());
   
-  vcl_vector<vsol_polygon_2d_sptr> database_cons;
+  std::vector<vsol_polygon_2d_sptr> database_cons;
 
   for (unsigned i = 0; i<D; i++) {
-    vcl_string name = (root->names())[database_indices_[i]];
-    vcl_string path = (root->paths())[database_indices_[i]];
-    vcl_string con_file = path + "/" + name + params_.input_ext_();
+    std::string name = (root->names())[database_indices_[i]];
+    std::string path = (root->paths())[database_indices_[i]];
+    std::string con_file = path + "/" + name + params_.input_ext_();
     if (!vul_file::exists(con_file)) {
-      vcl_cout << "In dborl_curve_retrieval::initialize() -- cannot find con file: " << con_file << vcl_endl;
+      std::cout << "In dborl_curve_retrieval::initialize() -- cannot find con file: " << con_file << std::endl;
       return false;
     }
     
@@ -126,24 +126,24 @@ bool dborl_curve_retrieval::initialize(vcl_vector<dborl_curve_retrieval_input>& 
     vsol_spatial_object_2d_sptr ob = bsold_load_con_file(con_file.c_str());
     vsol_polygon_2d_sptr poly;
     if (!ob) {
-      vcl_cout << "In dborl_curve_retrieval::initialize() -- cannot load con file as a polygon: " << con_file << vcl_endl;
+      std::cout << "In dborl_curve_retrieval::initialize() -- cannot load con file as a polygon: " << con_file << std::endl;
       return false;
     }
 
     if ((ob->cast_to_curve() && ob->cast_to_curve()->cast_to_polyline())) {
-      vcl_vector<vsol_point_2d_sptr> pts;
+      std::vector<vsol_point_2d_sptr> pts;
       for (unsigned ii = 0; ii < ob->cast_to_curve()->cast_to_polyline()->size(); ii++)
         pts.push_back(ob->cast_to_curve()->cast_to_polyline()->vertex(ii));
       poly = new vsol_polygon_2d(pts);
     } else if ((ob->cast_to_region() && ob->cast_to_region()->cast_to_polygon())) {
       poly = ob->cast_to_region()->cast_to_polygon();
     } else {
-      vcl_cout << "In dborl_curve_retrieval::initialize() -- cannot load con file as a polygon: " << con_file << vcl_endl;
+      std::cout << "In dborl_curve_retrieval::initialize() -- cannot load con file as a polygon: " << con_file << std::endl;
       return false;
     }
     
     if (!poly->size()) {
-      vcl_cout << "In dborl_curve_retrieval::initialize() -- polygon has zero vertices: " << con_file << vcl_endl;
+      std::cout << "In dborl_curve_retrieval::initialize() -- polygon has zero vertices: " << con_file << std::endl;
       return false;
     } 
     database_cons.push_back(poly);
@@ -172,7 +172,7 @@ bool dborl_curve_retrieval::process(dborl_curve_retrieval_input i, float& f)
 
   int minIndex;
   double curve_matching_cost = d1->finalBestCost(minIndex, params_.normalize_());
-  //vcl_printf("%9.6f\n",curve_matching_cost);
+  //std::printf("%9.6f\n",curve_matching_cost);
   //sil_cor= d1->get_cv_cor(minIndex);
   
   f = (float)curve_matching_cost;
@@ -182,20 +182,20 @@ bool dborl_curve_retrieval::process(dborl_curve_retrieval_input i, float& f)
 
 void dborl_curve_retrieval::print_time()
 {
-  vcl_cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
-  vcl_cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
+  std::cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
 }
 
 //: For sorting pairs by their second elements cost
 inline bool
-final_cost_less( const vcl_pair<float, borld_image_description_sptr>& left,
-                 const vcl_pair<float, borld_image_description_sptr>& right )
+final_cost_less( const std::pair<float, borld_image_description_sptr>& left,
+                 const std::pair<float, borld_image_description_sptr>& right )
 {
   return left.first < right.first;
 }
 
 //: this method is run on the lead processor once after results are collected from each processor
-bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
+bool dborl_curve_retrieval::finalize(std::vector<float>& results)
 {
   params_.percent_completed = 95.0f;
   params_.print_status_xml();
@@ -205,20 +205,20 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
 
   //: the following 2D sim matrix, will carry for a given i: row, j: col, sim of i and j and the description of j
   //  since when we sort the rows wrt sim, then we want to keep columns' descriptions
-  vcl_vector<vcl_vector<vcl_pair<float, borld_image_description_sptr> >* > sim_matrix;
+  std::vector<std::vector<std::pair<float, borld_image_description_sptr> >* > sim_matrix;
   for (unsigned i = 0; i < database_indices_.size(); i++) {
-    vcl_pair<float, borld_image_description_sptr> p(10000.0f, 0);
-    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* tmp = new vcl_vector<vcl_pair<float, borld_image_description_sptr> >(database_indices_.size(), p);
+    std::pair<float, borld_image_description_sptr> p(10000.0f, 0);
+    std::vector<std::pair<float, borld_image_description_sptr> >* tmp = new std::vector<std::pair<float, borld_image_description_sptr> >(database_indices_.size(), p);
     sim_matrix.push_back(tmp);
   }
     
   //: load ground truth files of the objects
-  vcl_vector<borld_image_description_sptr> ids;
+  std::vector<borld_image_description_sptr> ids;
   for (unsigned i = 0; i < D; i++) {
-    vcl_string name = (root->names())[database_indices_[i]];
-    vcl_string full = (root->paths())[database_indices_[i]] + "/" + (root->names())[database_indices_[i]] + ".xml";
+    std::string name = (root->names())[database_indices_[i]];
+    std::string full = (root->paths())[database_indices_[i]] + "/" + (root->names())[database_indices_[i]] + ".xml";
     if (!vul_file::exists(full)) {
-      vcl_cout << "dborl_curve_retrieval::finalize() -- cannot find the ground truth description: " << full << "\n";
+      std::cout << "dborl_curve_retrieval::finalize() -- cannot find the ground truth description: " << full << "\n";
       return false;
     }
 
@@ -226,7 +226,7 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
     dborl_image_desc_parser parser;
     borld_image_description_sptr id = borld_image_description_parse(full, parser);
     if (!id->has_single_category()) {
-      vcl_cout << "dborl_curve_retrieval::finalize() -- image description has more than one category! this image is not valid for this retrieval\n";
+      std::cout << "dborl_curve_retrieval::finalize() -- image description has more than one category! this image is not valid for this retrieval\n";
       return false;
     }
     ids.push_back(id);
@@ -244,7 +244,7 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
     }
   }
 
-  vcl_ofstream of((params_.output_folder_() + "sim_matrix.out").c_str());
+  std::ofstream of((params_.output_folder_() + "sim_matrix.out").c_str());
 
   of << "# db vs db matrix: \n";
   for(unsigned int i = 0; i<D; i++){
@@ -259,8 +259,8 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
   
   //: sort each row
   for (unsigned i = 0; i < D; i++) {
-    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* v = sim_matrix[i];
-    vcl_sort(v->begin(), v->end(), final_cost_less);
+    std::vector<std::pair<float, borld_image_description_sptr> >* v = sim_matrix[i];
+    std::sort(v->begin(), v->end(), final_cost_less);
   }
 
   of << "# db vs db matrix categories after sorting: \n";
@@ -274,12 +274,12 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
   of << "\n\n";
   of.close();
 
-  vcl_string algo_prefix = "Method II";
-  vcl_map<vcl_string, buld_exp_stat_sptr> stat_map;
+  std::string algo_prefix = "Method II";
+  std::map<std::string, buld_exp_stat_sptr> stat_map;
   for (unsigned i = 0; i < D; i++) {
-    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* v = sim_matrix[i];
-    vcl_string category = ids[i]->get_first_category();
-    vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.find(algo_prefix + category);
+    std::vector<std::pair<float, borld_image_description_sptr> >* v = sim_matrix[i];
+    std::string category = ids[i]->get_first_category();
+    std::map<std::string, buld_exp_stat_sptr>::iterator it = stat_map.find(algo_prefix + category);
     buld_exp_stat_sptr s;
     if (it == stat_map.end()) {
       s = new buld_exp_stat();
@@ -290,7 +290,7 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
     
     //: skip the first one, assuming is itself
     if ((*v)[0].first > 0.1) {
-      vcl_cout << "dborl_curve_retrieval::finalize() -- similarity to itself is larger than 0.1!!\n";
+      std::cout << "dborl_curve_retrieval::finalize() -- similarity to itself is larger than 0.1!!\n";
       return false;
     }
     
@@ -335,7 +335,7 @@ bool dborl_curve_retrieval::finalize(vcl_vector<float>& results)
 
   //: find the cumulative statistics of all categories
   buld_exp_stat_sptr cum = new buld_exp_stat();
-  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
+  std::map<std::string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
   for ( ; it != stat_map.end(); it++) {
     cum->increment_TP_by(it->second->TP_);
     cum->increment_FP_by(it->second->FP_);

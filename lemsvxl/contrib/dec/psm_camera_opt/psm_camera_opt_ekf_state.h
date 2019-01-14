@@ -12,7 +12,7 @@
 // 03/25/08 dec  moved to contrib/dec/breg3d
 // \endverbatim
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_point_3d.h>
@@ -67,12 +67,12 @@ private:
   double t_scale_;
 
   // IO functions
-  friend vcl_ostream&  operator<<(vcl_ostream& s, psm_camera_opt_ekf_state const& ekf_state);
+  friend std::ostream&  operator<<(std::ostream& s, psm_camera_opt_ekf_state const& ekf_state);
 
 };
 
 //: output description of state to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, psm_camera_opt_ekf_state const& ekf_state);
+std::ostream&  operator<<(std::ostream& s, psm_camera_opt_ekf_state const& ekf_state);
 
 
 #endif

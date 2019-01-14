@@ -22,7 +22,7 @@ void lidar_labeler::label_lidar(const vnl_matrix<double>& first_ret,
                                  const lidar_labeling_params params,
                                  const double min_elev,
                                  const double max_elev,
-                                 const vcl_string input_path,
+                                 const std::string input_path,
                                  vil_image_view<int>& labeled)
 {
   int GND_PLANE = 2; //blue
@@ -36,7 +36,7 @@ void lidar_labeler::label_lidar(const vnl_matrix<double>& first_ret,
 
   // Make sure images are same size
   if ( (first_ret.rows() != last_ret.rows()) || (first_ret.cols() != last_ret.cols()) ) {
-    vcl_cerr << "error, first return and last return images should be same size!\n";
+    std::cerr << "error, first return and last return images should be same size!\n";
     return;
   }
 
@@ -222,7 +222,7 @@ void lidar_labeler::join_buildings_and_vegetation(vil_image_view<int>& bld, vil_
   for(unsigned i=0; i<joined.ni(); i++){
     for(unsigned j=0; j<joined.nj(); j++){
       if(bld(i,j)!=0 && veg(i,j)!=0){
-        vcl_cout << "Classification Error: Pixel (" << i << "," << j << ") is assigned to more than one classes\n";
+        std::cout << "Classification Error: Pixel (" << i << "," << j << ") is assigned to more than one classes\n";
         return;
       }
       joined(i,j) = bld(i,j) - veg(i,j);
@@ -232,7 +232,7 @@ void lidar_labeler::join_buildings_and_vegetation(vil_image_view<int>& bld, vil_
 
 //: This function creates an RGB image for classification where ground (blue), building (red) and vegetation (green)
 //    pixels are shown
-void lidar_labeler::save_classification_image(const vcl_string out_path, const vnl_matrix<int>& classification){
+void lidar_labeler::save_classification_image(const std::string out_path, const vnl_matrix<int>& classification){
   vil_image_view<unsigned char> classification_image(classification.rows(),classification.cols(),3);
   classification_image.fill(0);
   for(unsigned i=0; i<classification_image.ni(); i++){

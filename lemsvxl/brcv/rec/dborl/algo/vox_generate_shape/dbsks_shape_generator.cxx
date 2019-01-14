@@ -50,16 +50,16 @@
 #include <vul/vul_timer.h>
 #include <vul/vul_sprintf.h>
 
-//#include <vcl_iostream.h>
-//#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+//#include <iostream>
+//#include <fstream>
+#include <sstream>
 
 //------------------------------------------------------------------------------
 //:
 bool dbsks_shape_generator::
 execute()
 {
-	vcl_cout << "\n|=================================================================|"
+	std::cout << "\n|=================================================================|"
 		   << "\n|   Generate Shapes (xgraphs) based on Learned Geometriy Model    |"
 		   << "\n|=================================================================|\n\n";
 
@@ -73,7 +73,7 @@ execute()
 	//    dbsksp_xshock_graph_sptr actual_xgraph = 0;   //> xgraph to use as prototype
 	//	dbdet_sel_storage_sptr actual_sel = 0; //> cfrags to use in case
 
-	vcl_vector<dbsks_det_desc_xgraph_sptr > shapes;
+	std::vector<dbsks_det_desc_xgraph_sptr > shapes;
 	//> Detect xgraph with the specified scale
 	shapes.clear();
 
@@ -98,7 +98,7 @@ execute()
 
     if(xv_root->degree()>2)
 	{
-		vcl_cout<< "Sampling can not proceed from root with degree > 2 \n";
+		std::cout<< "Sampling can not proceed from root with degree > 2 \n";
 		return false;
     }
 	/*
@@ -117,7 +117,7 @@ execute()
 	{
 		dbsksp_xshock_graph_sptr xgraph = new dbsksp_xshock_graph(*this->xgraph_prototype_);
 		xgraph->compute_vertex_depths(xgraph->root_vertex_id());
-		vcl_cout << "\nConstructed new output xgraph. Num: " <<(n+1) << vcl_endl;
+		std::cout << "\nConstructed new output xgraph. Num: " <<(n+1) << std::endl;
 
 		// assume the root node is degree-2 or degree-1 right now
 		dbsksp_xshock_edge_sptr xe1 = xgraph->edge_from_id(major_child_eid_);
@@ -127,9 +127,9 @@ execute()
 		//psi = 0;
 		dbsksp_xshock_node_descriptor xd_root_new(x, y, psi, phi_list(n), r);
 		// update root node
-        vcl_cout << "resample root node..." << vcl_endl;
+        std::cout << "resample root node..." << std::endl;
 		dbsksp_xgraph_algos::update_degree2_node(xv_root, xe1, xd_root_new);	
-		vcl_cout << "recursively sample nodes from geometric model and update in xgraph" << vcl_endl;
+		std::cout << "recursively sample nodes from geometric model and update in xgraph" << std::endl;
 		if(!this->sample_shapes_from_geom_model(xgraph))
 			continue;
 
@@ -141,10 +141,10 @@ execute()
 
 	if(shapes.size() ==0)
 	{
-		vcl_cout << "---------------------------- Fail in Sampling Any Shape ----------------------------\n";
+		std::cout << "---------------------------- Fail in Sampling Any Shape ----------------------------\n";
 		return false;
 	}
-    vcl_cout << "---------------------------- Sampled "<< shapes.size() <<" Shapes ----------------------------\n";
+    std::cout << "---------------------------- Sampled "<< shapes.size() <<" Shapes ----------------------------\n";
   return true;
 }
 
@@ -170,15 +170,15 @@ load_params_and_models()
   xgraph_geom->compute_attribute_constraints();
 
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
-  vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
+  std::cout << "\n>> Checking compatibility between geometric model and xgraph...";
   if (!xgraph_geom->is_compatible(xgraph_prototype_))
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
 /*
@@ -203,7 +203,7 @@ sample_shapes_from_geom_model( dbsksp_xshock_graph_sptr& xgraph)
   if (!this->xgraph_geom)
     return false;
 
-  vcl_cout << "++++++++++++++++++++++++++ Start Sampling ++++++++++++++++++++++++++++++++\n" ;
+  std::cout << "++++++++++++++++++++++++++ Start Sampling ++++++++++++++++++++++++++++++++\n" ;
 
 
 //  xgraph = this->xgraph_prototype_;
@@ -261,7 +261,7 @@ sample_shapes_from_geom_model( dbsksp_xshock_graph_sptr& xgraph)
 	  if(xv_c2->degree()==2)
 		  succeed &= sample_child_frags_and_nodes (xd_p2, xe2, xv_c2, xgraph, geom_model2);
   	  xgraph->update_all_degree_1_nodes();
-	  vcl_cout << "++++++++++++++++++++++++++ Done Sampling Shape ++++++++++++++++++++++++++++++++\n";
+	  std::cout << "++++++++++++++++++++++++++ Done Sampling Shape ++++++++++++++++++++++++++++++++\n";
   }	
   return succeed;
 }
@@ -275,12 +275,12 @@ sample_child_frags_and_nodes (dbsksp_xshock_node_descriptor xd_p, dbsksp_xshock_
     if(xv_c->degree()==1)
 		return true;
    // given some p_node, no legal child node can be sampled from geom model. Need to skip this shape
-	vcl_cout << "Sample legal end at eid: "<< xe_c->id() << vcl_endl;
-	vcl_vector<dbsksp_xshock_node_descriptor > xdesc_list;
+	std::cout << "Sample legal end at eid: "<< xe_c->id() << std::endl;
+	std::vector<dbsksp_xshock_node_descriptor > xdesc_list;
 
-	if (!geom_model->sample_new_legal_end_given_start_using_model_minmax_range(xd_p, vcl_sqrt(xgraph->area()), 1, xdesc_list))
+	if (!geom_model->sample_new_legal_end_given_start_using_model_minmax_range(xd_p, std::sqrt(xgraph->area()), 1, xdesc_list))
 	{
-		vcl_cout << "fail in sampling legal end given start using model minmax range, at eid: "<< xe_c->id() << vcl_endl;
+		std::cout << "fail in sampling legal end given start using model minmax range, at eid: "<< xe_c->id() << std::endl;
 		return false;
 	}
     // newly sampled descriptor of the child node

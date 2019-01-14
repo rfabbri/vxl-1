@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 #include <vil/vil_save.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -39,22 +39,22 @@
 //: Constructor
 dbdet_third_order_color_edge_detector_process::dbdet_third_order_color_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
   
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> color_conversion_choices;
+  std::vector<std::string> color_conversion_choices;
   color_conversion_choices.push_back("Use RGB");    //0
   color_conversion_choices.push_back("Use IHS");    //1
   color_conversion_choices.push_back("Use Lab");    //2
   color_conversion_choices.push_back("Use Luv");    //3
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -68,7 +68,7 @@ dbdet_third_order_color_edge_detector_process::dbdet_third_order_color_edge_dete
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0) ||
       !parameters()->add( "Reduce edgel tokens "  , "-breduce" , false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -88,7 +88,7 @@ dbdet_third_order_color_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_third_order_color_edge_detector_process::name()
 {
   return "Third Order Color Edge Detector";
@@ -112,9 +112,9 @@ dbdet_third_order_color_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_third_order_color_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_third_order_color_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool bLoadComps;
   parameters()->get_value( "-bLoadComps", bLoadComps);
@@ -132,9 +132,9 @@ vcl_vector< vcl_string > dbdet_third_order_color_edge_detector_process::get_inpu
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_third_order_color_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_third_order_color_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -162,17 +162,17 @@ dbdet_third_order_color_edge_detector_process::execute()
   parameters()->get_value( "-breduce" , reduce_tokens );
 
   if (bLoadComps && input_data_.size() != 3 ){
-    vcl_cout << "In dbdet_third_order_color_edge_detector_process::execute() - 3 images needed! \n";
+    std::cout << "In dbdet_third_order_color_edge_detector_process::execute() - 3 images needed! \n";
     return false;
   }
   else if (input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_third_order_color_edge_detector_process::execute() - only one color image needed!\n";
+    std::cout << "In dbdet_third_order_color_edge_detector_process::execute() - only one color image needed!\n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Third Order color edge detection...";
-  vcl_cout.flush();
+  std::cout << "Third Order color edge detection...";
+  std::cout.flush();
 
   //2) get image(s) from the storage class
   vil_image_resource_sptr col_image_sptr, comp_image1_sptr, comp_image2_sptr, comp_image3_sptr;
@@ -195,7 +195,7 @@ dbdet_third_order_color_edge_detector_process::execute()
 
     //make sure these images are one plane images
     if (comp1.nplanes() != 1 || comp1.nplanes() != 1 || comp1.nplanes() != 1){
-      vcl_cout << "In dbdet_third_order_color_edge_detector_process::execute() - component images must be monochromatic! \n";
+      std::cout << "In dbdet_third_order_color_edge_detector_process::execute() - component images must be monochromatic! \n";
       return false;
     }
   }
@@ -207,7 +207,7 @@ dbdet_third_order_color_edge_detector_process::execute()
 
     //make sure these images are one plane images
     if (col_image.nplanes() != 3){
-      vcl_cout << "In dbdet_third_order_color_edge_detector_process::execute() - image must be trichromatic! \n";
+      std::cout << "In dbdet_third_order_color_edge_detector_process::execute() - image must be trichromatic! \n";
       return false;
     }
   }
@@ -269,7 +269,7 @@ dbdet_third_order_color_edge_detector_process::execute()
   dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(col_image.ni(), 
                                                   col_image.nj());
 
-  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  std::vector<dbdet_edgel*> padded_edges=edge_map->edgels;
   for ( unsigned int i=0; i < padded_edges.size() ; ++i)
   {
 
@@ -296,10 +296,10 @@ dbdet_third_order_color_edge_detector_process::execute()
   edge_map=0;
   //double third_order_time = t.real();
   
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
   
-  //vcl_cout << "time taken for third_order: " << third_order_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << padded_edge_map->num_edgels() << vcl_endl;
+  //std::cout << "time taken for third_order: " << third_order_time << " msec" << std::endl;
+  std::cout << "#edgels = " << padded_edge_map->num_edgels() << std::endl;
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();

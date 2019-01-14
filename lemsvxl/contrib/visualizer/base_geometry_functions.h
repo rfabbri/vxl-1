@@ -1,12 +1,12 @@
 #ifndef GEOMETRY_FUNCTIONS_H
 #define  GEOMETRY_FUNCTIONS_H
 
-#include <vcl_vector.h>
-///#include <vcl_algorithm.h>
+#include <vector>
+///#include <algorithm>
 
 #include <base_points.h>
 
-///#include <vcl_cmath.h>
+///#include <cmath>
 #ifdef M_PI
 #undef M_PI
 #endif
@@ -169,7 +169,7 @@ double EuclideanDistanceSquare(Point2D<point_type1> pt1, Point2D<point_type2> pt
 //
 //ORIGINAL Function
 //    template <typename lineType, typename coord_type2>
-//int PointInPolygon(const vcl_vector<lineType> &polygon , const Point2D<coord_type2> pt)
+//int PointInPolygon(const std::vector<lineType> &polygon , const Point2D<coord_type2> pt)
 //  {
 //    int c = 0;
 //    for (unsigned int i = 0; i<polygon.size(); i++) 
@@ -184,7 +184,7 @@ double EuclideanDistanceSquare(Point2D<point_type1> pt1, Point2D<point_type2> pt
 
 
 //    template <typename coord_type1, typename coord_type2>
-//int PointInPolygon(const vcl_vector<Line2D<coord_type1> > &polygon , const Point2D<coord_type2> pt)
+//int PointInPolygon(const std::vector<Line2D<coord_type1> > &polygon , const Point2D<coord_type2> pt)
 //  {
 //    int c = 0;
 //    for (int i = 0; i<polygon.size(); i++) 
@@ -200,7 +200,7 @@ double EuclideanDistanceSquare(Point2D<point_type1> pt1, Point2D<point_type2> pt
 
 
     template <typename coord_type1, typename coord_type2>
-int PointInPolygon(const vcl_vector<coord_type1> &polygon , const Point2D<coord_type2> pt)
+int PointInPolygon(const std::vector<coord_type1> &polygon , const Point2D<coord_type2> pt)
   {
     int c = 0;
     int size = (int)polygon.size();
@@ -233,7 +233,7 @@ int PointInPolygon(const vcl_vector<coord_type1> &polygon , const Point2D<coord_
 
 #if 0
 
-inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
+inline double  ComputeTangentAverage(std::vector<double> tangentList_)
   {
     unsigned int i;
     assert(tangentList_.size()>=1);
@@ -315,8 +315,8 @@ class ArcFitter
   {
     private:
         double _span;
-        vcl_vector<Point2D<double> > _boundary;
-        vcl_vector<double>           _tangents;
+        std::vector<Point2D<double> > _boundary;
+        std::vector<double>           _tangents;
         double _startAngle;
         double _endAngle;
         double _radius;
@@ -412,12 +412,12 @@ class ArcFitter
             _counterClockwise = cond;
            }
         
-        vcl_vector<double> getTangents()
+        std::vector<double> getTangents()
           {
             return _tangents;
            }
 
-        vcl_vector<Point2D<double> > getBoundary()
+        std::vector<Point2D<double> > getBoundary()
           {
             return _boundary;
            }
@@ -435,14 +435,14 @@ class ArcFitter
 /*
     
     template<typename pointType>
-vcl_vector<double> FitArc(pointType start, pointType end, pointType center, double step, bool counterClockwise, vcl_vector<pointType> &contour)
+std::vector<double> FitArc(pointType start, pointType end, pointType center, double step, bool counterClockwise, std::vector<pointType> &contour)
   {
     assert(step>0);
     double radius = euc_distance(start, center);
     assert(radius>0);
     double angle_step = (step/radius);
     double start_angle, end_angle, span;
-    vcl_vector<double> tangents;
+    std::vector<double> tangents;
     
     start_angle = GetSlope(center, start);
     end_angle   = GetSlope(center, end);

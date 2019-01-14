@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
+#include <iostream>
+#include <streambuf>
 #include <math.h>
 #include <becld/becld_epipole.h>
 #include <becld/becld_epiband.h>

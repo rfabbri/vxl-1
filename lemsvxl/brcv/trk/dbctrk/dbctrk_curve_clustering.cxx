@@ -2,8 +2,8 @@
 
 #include "dbctrk_curve_clustering.h"
 #include <dbctrk/dbctrk_tracker_curve.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 #include <vgl/vgl_point_2d.h>
 #include <mbl/mbl_histogram.h>
 #include <vgl/vgl_distance.h>
@@ -17,12 +17,12 @@ dbctrk_curve_cluster::dbctrk_curve_cluster()
 
 
 void dbctrk_curve_clustering::compute_transformation
-         (vcl_vector<vgl_point_2d<double> > orig_curve,
-          vcl_vector<vgl_point_2d<double> > & transformed_curve,
+         (std::vector<vgl_point_2d<double> > orig_curve,
+          std::vector<vgl_point_2d<double> > & transformed_curve,
           vnl_matrix<double> R,vnl_matrix<double> T,double s)
 {
-  vcl_vector<double> x;
-  vcl_vector<double> y;
+  std::vector<double> x;
+  std::vector<double> y;
   transformed_curve.clear();
 
   for (unsigned int i=0; i<orig_curve.size(); ++i)
@@ -56,10 +56,10 @@ double dbctrk_curve_clustering::compute_euclidean_dist(int i,int j)
   Ti=clusters_[i].get_T();
   double si=clusters_[i].get_scale();
   double cost=0;
-  vcl_map<int,int>::iterator iter;
-  vcl_vector<vgl_point_2d<double> > curve1;
-  vcl_vector<vgl_point_2d<double> > tcurve1;
-  vcl_vector<vgl_point_2d<double> > curve2;
+  std::map<int,int>::iterator iter;
+  std::vector<vgl_point_2d<double> > curve1;
+  std::vector<vgl_point_2d<double> > tcurve1;
+  std::vector<vgl_point_2d<double> > curve2;
 
   for(iter=clusters_[j].prototype->get_best_match_prev()->mapping_.begin();iter!=clusters_[j].prototype->get_best_match_prev()->mapping_.end();iter++)
   {
@@ -90,8 +90,8 @@ double dbctrk_curve_clustering::compute_euclidean_dist(int i,int j)
 
 }
 
-double dbctrk_curve_clustering::compute_hausdorff_distance(vcl_vector<vgl_point_2d<double> > curve1,
-               vcl_vector<vgl_point_2d<double> > curve2)
+double dbctrk_curve_clustering::compute_hausdorff_distance(std::vector<vgl_point_2d<double> > curve1,
+               std::vector<vgl_point_2d<double> > curve2)
 {
   
   double maxdAB=-1;
@@ -100,7 +100,7 @@ double dbctrk_curve_clustering::compute_hausdorff_distance(vcl_vector<vgl_point_
       double mindxB=1e6;
       for(unsigned int j=0;j<curve2.size();j++)
   {
-    double dxB=vcl_sqrt((curve1[i].x()-curve2[j].x())*(curve1[i].x()-curve2[j].x())
+    double dxB=std::sqrt((curve1[i].x()-curve2[j].x())*(curve1[i].x()-curve2[j].x())
             +(curve1[i].y()-curve2[j].y())*(curve1[i].y()-curve2[j].y()));
     if(dxB<mindxB)
       mindxB=dxB;
@@ -115,7 +115,7 @@ double dbctrk_curve_clustering::compute_hausdorff_distance(vcl_vector<vgl_point_
       double mindxA=1e6;
       for(unsigned int j=0;j<curve1.size();j++)
     {
-      double dxA=vcl_sqrt((curve2[i].x()-curve1[j].x())*(curve2[i].x()-curve1[j].x())
+      double dxA=std::sqrt((curve2[i].x()-curve1[j].x())*(curve2[i].x()-curve1[j].x())
             +(curve2[i].y()-curve1[j].y())*(curve2[i].y()-curve1[j].y()));
       if(dxA<mindxA)
         mindxA=dxA;
@@ -133,8 +133,8 @@ double dbctrk_curve_clustering::compute_hausdorff_distance(vcl_vector<vgl_point_
 }
 double dbctrk_curve_clustering::compute_vector_distance(int i,int j)
 {
- vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
- vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
+ std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+ std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
  if(clusters_[i].curve_cluster_.size()==1 && 
   clusters_[j].curve_cluster_.size()==1)
  {
@@ -149,11 +149,11 @@ double dbctrk_curve_clustering::compute_vector_distance(int i,int j)
   double cost= cost1>cost2 ? cost1:cost2;
   return cost;
   }
-vcl_vector<double> min_distances;
+std::vector<double> min_distances;
  for(unsigned int k=0;k<clusters_[i].curve_cluster_.size();k++)
  {
   min_distances.clear();
-  vcl_vector<double> distances;
+  std::vector<double> distances;
   for(unsigned int l=0;l<clusters_[j].curve_cluster_.size();l++)
   {
     distances.clear();
@@ -196,11 +196,11 @@ vcl_vector<double> min_distances;
 
 double dbctrk_curve_clustering::compute_likelihood_distance(int i,int j)
 {
-  vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
-  vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
-  vcl_vector<double> inter;
-  vcl_vector<double> intra;
-  vcl_vector<double> clusteri,clusterj;
+  std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+  std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
+  std::vector<double> inter;
+  std::vector<double> intra;
+  std::vector<double> clusteri,clusterj;
   double mu_i,mu_j,sigma_i,sigma_j;
   inter.clear();
   if(clusters_[i].curve_cluster_.size()==1
@@ -333,10 +333,10 @@ double dbctrk_curve_clustering::compute_cluster_dist(int i,int j)
 {
   // simple clustering method using median of the distances as the
   // distance between two clusters
-  vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
-  vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
-  vcl_vector<double> inter;
-  vcl_vector<double> intra;
+  std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+  std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> pt;
+  std::vector<double> inter;
+  std::vector<double> intra;
   inter.clear();
   
   for (unsigned int k=0; k<clusters_[i].curve_cluster_.size(); ++k)
@@ -370,7 +370,7 @@ double dbctrk_curve_clustering::compute_cluster_dist(int i,int j)
 }
 
 //initialize the clusters
-void dbctrk_curve_clustering::init_clusters(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets)
+void dbctrk_curve_clustering::init_clusters(std::vector<dbctrk_tracker_curve_sptr> * curve_sets)
 {
   for (unsigned int i=0; i<(*curve_sets).size(); ++i)
   {
@@ -378,7 +378,7 @@ void dbctrk_curve_clustering::init_clusters(vcl_vector<dbctrk_tracker_curve_sptr
     if ((*curve_sets)[i]->get_best_match_prev())
     {
       //if ((*curve_sets)[i]->get_best_match_prev()->euc_<5 && (*curve_sets)[i]->isreal_ &&
-      //    vcl_fabs(vcl_asin((*curve_sets)[i]->get_best_match_prev()->R_(0,1)))<0.1)
+      //    std::fabs(std::asin((*curve_sets)[i]->get_best_match_prev()->R_(0,1)))<0.1)
       //{
         (*curve_sets)[i]->group_id_=i;
         temp_cluster.curve_cluster_.push_back((*curve_sets)[i]);
@@ -394,12 +394,12 @@ void dbctrk_curve_clustering::init_clusters(vcl_vector<dbctrk_tracker_curve_sptr
   }
 }
 
-void dbctrk_curve_clustering::write_distance_table(vcl_string filename,vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets)
+void dbctrk_curve_clustering::write_distance_table(std::string filename,std::vector<dbctrk_tracker_curve_sptr> * curve_sets)
 {
-  vcl_ofstream ofile(filename.c_str());
+  std::ofstream ofile(filename.c_str());
   if(!ofile)
     return;
-  vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+  std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
   for (unsigned int i=0; i<(*curve_sets).size(); ++i)
   {
     dbctrk_tracker_curve_sptr c1=(*curve_sets)[i];
@@ -407,7 +407,7 @@ void dbctrk_curve_clustering::write_distance_table(vcl_string filename,vcl_vecto
     if ((*curve_sets)[i]->get_best_match_prev())
     {
      if ((*curve_sets)[i]->get_best_match_prev()->euc_<5 && (*curve_sets)[i]->isreal_ &&
-       vcl_fabs(vcl_asin((*curve_sets)[i]->get_best_match_prev()->R_(0,1)))<0.1)
+       std::fabs(std::asin((*curve_sets)[i]->get_best_match_prev()->R_(0,1)))<0.1)
       {
        ofile<<c1->get_id()<<"\t";
        for (unsigned int j=0; j<(*curve_sets).size(); ++j)
@@ -416,7 +416,7 @@ void dbctrk_curve_clustering::write_distance_table(vcl_string filename,vcl_vecto
        if ((*curve_sets)[j]->get_best_match_prev())
        {
         if ((*curve_sets)[j]->get_best_match_prev()->euc_<5 && (*curve_sets)[j]->isreal_ &&
-        vcl_fabs(vcl_asin((*curve_sets)[j]->get_best_match_prev()->R_(0,1)))<0.1)
+        std::fabs(std::asin((*curve_sets)[j]->get_best_match_prev()->R_(0,1)))<0.1)
         {  
           p.first=c1;
           p.second=c2;
@@ -437,7 +437,7 @@ void dbctrk_curve_clustering::write_distance_table(vcl_string filename,vcl_vecto
     ofile.close();
 
 }
-void dbctrk_curve_clustering::cluster_curves(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets)
+void dbctrk_curve_clustering::cluster_curves(std::vector<dbctrk_tracker_curve_sptr> * curve_sets)
 {
   // initialize the clusters
   init_clusters(curve_sets);
@@ -453,7 +453,7 @@ void dbctrk_curve_clustering::build_table()
     for(unsigned int j=0;j<clusters_.size();j++)
     {
       double cost=compute_euclidean_dist(i,j);
-      vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+      std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
       p.first=clusters_[i].curve_cluster_[0];
       p.second=clusters_[j].curve_cluster_[0];
       distance_table[p]=cost;
@@ -528,7 +528,7 @@ void dbctrk_curve_clustering::clustering()
 
 
 }
-bool dbctrk_curve_clustering::build_network(vcl_vector<dbctrk_tracker_curve_sptr> * curve_sets)
+bool dbctrk_curve_clustering::build_network(std::vector<dbctrk_tracker_curve_sptr> * curve_sets)
 {
   if(distance_table.size()<=0)
     return false;
@@ -543,7 +543,7 @@ bool dbctrk_curve_clustering::build_network(vcl_vector<dbctrk_tracker_curve_sptr
        dbctrk_tracker_curve_sptr c2=(*curve_sets)[j];
        if (c2->get_best_match_prev().ptr())
        {
-          vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
+          std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr> p;
           p.first=c1;
           p.second=c2;
           double cost1=distance_table[p];
@@ -560,34 +560,34 @@ bool dbctrk_curve_clustering::build_network(vcl_vector<dbctrk_tracker_curve_sptr
   }
 return true;
 }
-double dbctrk_curve_clustering::median(vcl_vector<double> vec)
+double dbctrk_curve_clustering::median(std::vector<double> vec)
 {
 
    unsigned int size = vec.size();
    if (size == 0 )
-   { vcl_cout<<"median of an empty vector"; return -1; }
-   vcl_sort(vec.begin(), vec.end());
+   { std::cout<<"median of an empty vector"; return -1; }
+   std::sort(vec.begin(), vec.end());
    unsigned int mid = size/2;
    return size % 2 == 0 ? (vec[mid] + vec[mid-1]) / 2 : vec[mid];
 }
 
-double dbctrk_curve_clustering::min(vcl_vector<double> vec)
+double dbctrk_curve_clustering::min(std::vector<double> vec)
 {
    unsigned int size = vec.size();
    if (size == 0 )
-   { vcl_cout<<"minimum of an empty vector"; return -1; }
-   vcl_sort(vec.begin(), vec.end());
+   { std::cout<<"minimum of an empty vector"; return -1; }
+   std::sort(vec.begin(), vec.end());
    return vec[0];
 }
-double dbctrk_curve_clustering::max(vcl_vector<double> vec)
+double dbctrk_curve_clustering::max(std::vector<double> vec)
 {
    unsigned int size = vec.size();
    if (size == 0 )
-   { vcl_cout<<"minimum of an empty vector"; return -1; }
-   vcl_sort(vec.begin(), vec.end());
+   { std::cout<<"minimum of an empty vector"; return -1; }
+   std::sort(vec.begin(), vec.end());
    return vec[vec.size()-1];
 }
-double dbctrk_curve_clustering::compute_mean(vcl_vector<double> t)
+double dbctrk_curve_clustering::compute_mean(std::vector<double> t)
 {
   double sum=0;
   for (unsigned int i=0; i<t.size(); ++i)
@@ -598,7 +598,7 @@ double dbctrk_curve_clustering::compute_mean(vcl_vector<double> t)
   return sum;
 }
 
-double dbctrk_curve_clustering::compute_std(vcl_vector<double> t)
+double dbctrk_curve_clustering::compute_std(std::vector<double> t)
 {
   double sum=0;
   double std=0;
@@ -611,7 +611,7 @@ double dbctrk_curve_clustering::compute_std(vcl_vector<double> t)
   {
     std+=(t[i]-sum)*(t[i]-sum);
   }
-  std=vcl_sqrt(std/t.size());
+  std=std::sqrt(std/t.size());
   return std;
 }
 
@@ -635,9 +635,9 @@ void dbctrk_curve_clustering::merge_clusters(int i,int j)
 }
 
 //  function to obtain curves on the moving object
-void dbctrk_curve_clustering::get_moving_objects(int frame_no,vcl_vector<vcl_vector<dbctrk_tracker_curve_sptr> > & curves_on_objects)
+void dbctrk_curve_clustering::get_moving_objects(int frame_no,std::vector<std::vector<dbctrk_tracker_curve_sptr> > & curves_on_objects)
 {
-  vcl_vector<dbctrk_tracker_curve_sptr> temp;
+  std::vector<dbctrk_tracker_curve_sptr> temp;
   for(unsigned i=0;i<clusters_.size();i++)
   {
    double sum=0,std=0;
@@ -649,7 +649,7 @@ void dbctrk_curve_clustering::get_moving_objects(int frame_no,vcl_vector<vcl_vec
       double tx=T(0,0);
       double ty=T(1,0);
 
-      sum+=vcl_sqrt(tx*tx+ty*ty);
+      sum+=std::sqrt(tx*tx+ty*ty);
 
     }
     sum/=clusters_[i].curve_cluster_.size();
@@ -660,7 +660,7 @@ void dbctrk_curve_clustering::get_moving_objects(int frame_no,vcl_vector<vcl_vec
       vnl_matrix<double> T=clusters_[i].curve_cluster_[j]->get_best_match_prev()->T_;
       double tx=T(0,0);
       double ty=T(1,0);
-      std+=vcl_sqrt((vcl_sqrt(tx*tx+ty*ty)-sum)*(vcl_sqrt(tx*tx+ty*ty)-sum));
+      std+=std::sqrt((std::sqrt(tx*tx+ty*ty)-sum)*(std::sqrt(tx*tx+ty*ty)-sum));
     }
     std/=clusters_[i].curve_cluster_.size();
       for(unsigned j=0;j<clusters_[i].curve_cluster_.size();j++)

@@ -2,8 +2,8 @@
 
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
-#include <vcl_ios.h>
-#include <vcl_iomanip.h>
+#include <ios>
+#include <iomanip>
 
 
 #include <dbpro/dbpro_executive.h>
@@ -45,9 +45,9 @@
 class dbpro_surf_ifstream_source : public dbpro_ifstream_source_base
 {
   public:
-    dbpro_surf_ifstream_source(const vcl_string& filename) { open(filename.c_str()); }
+    dbpro_surf_ifstream_source(const std::string& filename) { open(filename.c_str()); }
 
-    bool open(const vcl_string& filename)
+    bool open(const std::string& filename)
     {
       ifs.open(filename.c_str());
       return ifs.is_open();
@@ -64,9 +64,9 @@ class dbpro_surf_ifstream_source : public dbpro_ifstream_source_base
       if(ifs.eof()){
         return DBPRO_EOS;
       }
-      vcl_cout << "size: " << n<<vcl_endl;
+      std::cout << "size: " << n<<std::endl;
       assert(d == 64);
-      vcl_vector<dbdet_keypoint_sptr> keypoints;
+      std::vector<dbdet_keypoint_sptr> keypoints;
       for(unsigned i=0; i<n; ++i){
         dbdet_surf_keypoint* s = new dbdet_surf_keypoint;
         ifs >> *s;
@@ -76,7 +76,7 @@ class dbpro_surf_ifstream_source : public dbpro_ifstream_source_base
       return DBPRO_VALID;
     }
 
-    vcl_ifstream ifs;
+    std::ifstream ifs;
 };
 
 
@@ -111,13 +111,13 @@ class build_scale_space_filter : public dbpro_filter
 };
 
 
-vcl_vector<vil_image_view<float> >
+std::vector<vil_image_view<float> >
 extract_patches(const bil_scale_image<float>& simg,
-                const vcl_vector<dbdet_keypoint_sptr>& keypoints)
+                const std::vector<dbdet_keypoint_sptr>& keypoints)
 {
-  vcl_vector<vil_image_view<float> > patches;
+  std::vector<vil_image_view<float> > patches;
 
-  typedef vcl_vector<dbdet_keypoint_sptr>::const_iterator kpt_itr;
+  typedef std::vector<dbdet_keypoint_sptr>::const_iterator kpt_itr;
   for(kpt_itr k=keypoints.begin(); k!=keypoints.end(); ++k)
   {
     double s = (*k)->scale();
@@ -127,7 +127,7 @@ extract_patches(const bil_scale_image<float>& simg,
     unsigned int num_lvl = simg.levels();
     int first_oct = simg.first_octave();
 
-    double log2_scale = vcl_log(s/init_scale)/vcl_log(2.0)-first_oct;
+    double log2_scale = std::log(s/init_scale)/std::log(2.0)-first_oct;
     unsigned int index = (unsigned int)(log2_scale*num_lvl +0.5);
     int oct = index/num_lvl;
     unsigned int lvl = index%num_lvl;
@@ -141,8 +141,8 @@ extract_patches(const bil_scale_image<float>& simg,
     double key_x = (*k)->x()/img_scale;
     double key_y = (*k)->y()/img_scale;
     double orient = (*k)->orientation();
-    double so = vcl_sin(orient);
-    double co = vcl_cos(orient);
+    double so = std::sin(orient);
+    double co = std::cos(orient);
 
     // compute scale relative to the current image size
     float rel_scale = float(s/init_scale)/img_scale;
@@ -156,10 +156,10 @@ extract_patches(const bil_scale_image<float>& simg,
         double y = ( (i-7.5)*so +(j-7.5)*co) * rel_scale;
         double total_w = 0.0;
         for(int c=0; c<4; ++c){
-          int xc = (int)vcl_floor(x+key_x) + c/2;
-          int yc = (int)vcl_floor(y+key_y) + c%2;
-          double interp_x = 1.0 - vcl_fabs( x+key_x - double(xc) );
-          double interp_y = 1.0 - vcl_fabs( y+key_y - double(yc) );
+          int xc = (int)std::floor(x+key_x) + c/2;
+          int yc = (int)std::floor(y+key_y) + c%2;
+          double interp_x = 1.0 - std::fabs( x+key_x - double(xc) );
+          double interp_y = 1.0 - std::fabs( y+key_y - double(yc) );
           float weight = interp_x*interp_y;
           total_w += weight;
           if ( xc>=0 && xc<int(img.ni()) &&
@@ -189,14 +189,14 @@ class extract_patches_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<dbdet_keypoint_sptr>));
-      vcl_vector<dbdet_keypoint_sptr> keypoints = 
-        input<vcl_vector<dbdet_keypoint_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<dbdet_keypoint_sptr>));
+      std::vector<dbdet_keypoint_sptr> keypoints = 
+        input<std::vector<dbdet_keypoint_sptr> >(0);
 
       assert(input_type_id(1) == typeid(bil_scale_image<float>));
       bil_scale_image<float> simg = input<bil_scale_image<float> >(1);
 
-      vcl_vector<vil_image_view<float> > p = extract_patches(simg,keypoints);
+      std::vector<vil_image_view<float> > p = extract_patches(simg,keypoints);
 
 
       output(0, p);
@@ -210,19 +210,19 @@ class extract_patches_filter : public dbpro_filter
 class save_patches_sink : public dbpro_sink
 {
   public:
-    save_patches_sink(const vcl_string& path, const vidl_istream_sptr& is)
+    save_patches_sink(const std::string& path, const vidl_istream_sptr& is)
     : path_(path), count_(0), istream_(is) {}
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<vil_image_view<float> >));
-      vcl_vector<vil_image_view<float> > patches =
-        input<vcl_vector<vil_image_view<float> > >(0);
+      assert(input_type_id(0) == typeid(std::vector<vil_image_view<float> >));
+      std::vector<vil_image_view<float> > patches =
+        input<std::vector<vil_image_view<float> > >(0);
 
-      unsigned sx = static_cast<unsigned>(vcl_ceil(vcl_sqrt(patches.size())));
-      unsigned sy = static_cast<unsigned>(vcl_ceil(double(patches.size())/sx));
+      unsigned sx = static_cast<unsigned>(std::ceil(std::sqrt(patches.size())));
+      unsigned sy = static_cast<unsigned>(std::ceil(double(patches.size())/sx));
       unsigned sb = patches[0].ni();
-      vcl_cout <<"saving "<<sx<<" by "<<sy<<" grid" << vcl_endl;
+      std::cout <<"saving "<<sx<<" by "<<sy<<" grid" << std::endl;
       vil_image_view<vxl_byte> image(sx*sb,sy*sb,patches[0].nplanes());
       image.fill(0);
       for(unsigned i=0; i<patches.size(); ++i){
@@ -234,7 +234,7 @@ class save_patches_sink : public dbpro_sink
 
       const vidl_image_list_istream* ils = dynamic_cast<const vidl_image_list_istream*>(istream_.ptr());
       assert(ils);
-      vcl_string path = ils->current_path();
+      std::string path = ils->current_path();
       path = path_ + '/'+ vul_file::strip_directory(path);
 
       vil_save(image,path.c_str());
@@ -243,7 +243,7 @@ class save_patches_sink : public dbpro_sink
       return DBPRO_VALID;
     }
 
-    vcl_string path_;
+    std::string path_;
     unsigned count_;
     vidl_istream_sptr istream_;
 };
@@ -251,14 +251,14 @@ class save_patches_sink : public dbpro_sink
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_keypoints("-keypoints", "path to keypoints", "");
+  vul_arg<std::string>  a_keypoints("-keypoints", "path to keypoints", "");
   vul_arg<unsigned>    a_dim("-dim", "feature descriptor dimension", 128);
-  vul_arg<vcl_string>  a_images("-images", "path to images", "");
-  vul_arg<vcl_string>  a_patches("-patches", "path to patches output", "");
+  vul_arg<std::string>  a_images("-images", "path to images", "");
+  vul_arg<std::string>  a_patches("-patches", "path to patches output", "");
   vul_arg_parse(argc, argv);
 
 
-  typedef vcl_vector<dbdet_keypoint_sptr> keypoint_vector;
+  typedef std::vector<dbdet_keypoint_sptr> keypoint_vector;
   vsl_add_to_binary_loader(dbdet_keypoint());
   vsl_add_to_binary_loader(dbdet_lowe_keypoint());
 
@@ -279,7 +279,7 @@ int main(int argc, char** argv)
     }
     break;
     default:
-      vcl_cerr << "features with dimension "<<a_dim()<<" not supported" << vcl_endl;
+      std::cerr << "features with dimension "<<a_dim()<<" not supported" << std::endl;
   }
 
   vidl_istream_sptr img_str = new vidl_image_list_istream(a_images());

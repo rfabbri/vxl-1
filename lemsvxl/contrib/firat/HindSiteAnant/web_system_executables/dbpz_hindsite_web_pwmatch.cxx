@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <bxml/bxml_read.h>
 #include <params.h>
 #include <bfrag2D.h>
@@ -7,18 +7,18 @@
 #include <vul/vul_file_iterator.h>
 #include <PuzzleSolving.h>
 
-vcl_vector<vcl_string> FRAG_PATHS;
-vcl_vector<int> FRAG_IDS;
-vcl_string OUT_FNAME;
-vcl_string FRAG_PAIRS_OUT_FNAME;
-vcl_string COMMON_PARAMS_OUT_FNAME;
+std::vector<std::string> FRAG_PATHS;
+std::vector<int> FRAG_IDS;
+std::string OUT_FNAME;
+std::string FRAG_PAIRS_OUT_FNAME;
+std::string COMMON_PARAMS_OUT_FNAME;
 
-vcl_vector<bfrag2D *> the_frags;
+std::vector<bfrag2D *> the_frags;
 
-void get_params(vcl_string input)
+void get_params(std::string input)
 {
   // open input file
-  vcl_ifstream in(input.c_str());
+  std::ifstream in(input.c_str());
   // create xml reader
   dbxml2_stream_read reader;
   dbxml2_data_sptr data;
@@ -27,7 +27,7 @@ void get_params(vcl_string input)
   while(data = reader.next_element(in, depth))
   {
     dbxml2_element* elem = static_cast<dbxml2_element*>(data.ptr());
-    vcl_string att_name;
+    std::string att_name;
     if(elem->name() == "data")
     {
       unsigned id_no = 0;
@@ -38,8 +38,8 @@ void get_params(vcl_string input)
         sprintf(id_name, "id%d", id_no);
         sprintf(path_name, "path%d", id_no);
         id_no++;
-        vcl_string no;
-        vcl_string path;
+        std::string no;
+        std::string path;
         elem->get_attribute(id_name, no);
         if(no != "")
         {
@@ -111,54 +111,54 @@ void get_images_and_contours()
 {
   for(unsigned i=0; i<FRAG_PATHS.size(); i++)
   {
-    vcl_string folder = FRAG_PATHS[i];
+    std::string folder = FRAG_PATHS[i];
     folder.append("/");
     bfrag2D *newfrag = new bfrag2D;
     newfrag->frag_id_ = FRAG_IDS[i];
     // brackets are for putting variables out of scope
     {
-      vcl_string ftype = folder;
+      std::string ftype = folder;
       ftype.append("*_front.jpg");
       vul_file_iterator f(ftype);
       if(f.filename() != NULL) // there is top image
       {
-        vcl_string fname = folder;
+        std::string fname = folder;
         fname.append(f.filename());
         newfrag->loadImage(fname, 1);
       }
     }
 
     {
-      vcl_string ftype = folder;
+      std::string ftype = folder;
       ftype.append("*_back.jpg");
       vul_file_iterator f(ftype);
       if(f.filename() != NULL) // there is back image
       {
-        vcl_string fname = folder;
+        std::string fname = folder;
        fname.append(f.filename());
         newfrag->loadImage(fname, 0);
       }
     }
 
     {
-      vcl_string ftype = folder;
+      std::string ftype = folder;
       ftype.append("*_front.con");
       vul_file_iterator f(ftype);
       if(f.filename() != NULL) // there is front contour
       {
-        vcl_string fname = folder;
+        std::string fname = folder;
         fname.append(f.filename());
         newfrag->loadContour(fname, 1);
       }
     }
 
     {
-      vcl_string ftype = folder;
+      std::string ftype = folder;
       ftype.append("*_back.con");
       vul_file_iterator f(ftype);
       if(f.filename() != NULL) // there is front contour
       {
-        vcl_string fname = folder;
+        std::string fname = folder;
         fname.append(f.filename());
         newfrag->loadContour(fname, 0);
       }
@@ -172,20 +172,20 @@ int main(int argc, char *argv[])
 {
   if(argc != 3)
   {
-    vcl_cout << "Usage: " << argv[0] << "-x [input xml file]" << vcl_endl;
+    std::cout << "Usage: " << argv[0] << "-x [input xml file]" << std::endl;
     exit(-1);
   }
-  vcl_cout << argv[0] << vcl_endl;
-  vcl_cout << argv[1] << vcl_endl;
-  vcl_cout << argv[2] << vcl_endl;
+  std::cout << argv[0] << std::endl;
+  std::cout << argv[1] << std::endl;
+  std::cout << argv[2] << std::endl;
 
-  vcl_string input = argv[2];
+  std::string input = argv[2];
   // get the parameters
   get_params(input);
   // read the images and contours into bfrag2D objects
   get_images_and_contours();
   // create and initialize puzzle solver
-  vcl_vector<bfrag_curve> top_contours;
+  std::vector<bfrag_curve> top_contours;
   for( unsigned i = 0; i < the_frags.size(); i++ )
   {
     bfrag_curve newCurve = the_frags[i]->getTopContourAsCurve();    
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
   }
 
   PuzzleSolving *puzzle_solver = new PuzzleSolving();
-  vcl_vector<searchState> states;
+  std::vector<searchState> states;
   // set the contours
   puzzle_solver->setContours(top_contours);
   // preprocess contours

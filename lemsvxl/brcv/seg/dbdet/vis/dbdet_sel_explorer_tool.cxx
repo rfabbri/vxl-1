@@ -1,6 +1,6 @@
 #include "dbdet_sel_explorer_tool.h"
 
-#include <vcl_limits.h>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -35,7 +35,7 @@ dbdet_sel_explorer_tool::dbdet_sel_explorer_tool() :
 }
 
 
-vcl_string dbdet_sel_explorer_tool::
+std::string dbdet_sel_explorer_tool::
 name() const
 {
   return "SEL explorer";
@@ -52,14 +52,14 @@ void
 dbdet_sel_explorer_tool::
 activate ()
 {
-  vcl_cout << "dbdet_sel_explorer_tool ON\n";
+  std::cout << "dbdet_sel_explorer_tool ON\n";
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   if (views.size() < nviews_) {
-    vgui::out << "Error: need at least " << nviews_ << " views for this tool" << vcl_endl;
-    vcl_cerr << "Error: need at least " << nviews_ << " views for this tool" << vcl_endl;
+    vgui::out << "Error: need at least " << nviews_ << " views for this tool" << std::endl;
+    std::cerr << "Error: need at least " << nviews_ << " views for this tool" << std::endl;
     return;
   }
 
@@ -67,26 +67,26 @@ activate ()
     frame_v_[i] = views[i]->frame();
   }
   
-  vcl_cout << "Working in frames ";
+  std::cout << "Working in frames ";
   for (unsigned i=0; i<nviews_; ++i) {
-    vcl_cout << frame_v_[i] << "  " ;
+    std::cout << frame_v_[i] << "  " ;
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("sel",frame_v_[0]);
 
   sel_storage_.vertical_cast(p);
   if(!sel_storage_) {
-    vcl_cerr << "Error: tool requires a dbdet sel storage" << vcl_endl;
+    std::cerr << "Error: tool requires a dbdet sel storage" << std::endl;
     return;
   }
-  vcl_cout << "success" << vcl_endl;
+  std::cout << "success" << std::endl;
 
   // -------- Add tableaus to draw on
 
-  vcl_string type("vsol2D");
-  vcl_string name("dbdet_sel_explorer_aux");
+  std::string type("vsol2D");
+  std::string name("dbdet_sel_explorer_aux");
 
   for (unsigned i=0 ; i < nviews_; ++i) {
 
@@ -96,7 +96,7 @@ activate ()
     if (n_data) {
        MANAGER->add_to_display(n_data);
     } else {
-       vcl_cerr << "error: unable to register new data\n";
+       std::cerr << "error: unable to register new data\n";
        return ;
     }
 
@@ -109,11 +109,11 @@ activate ()
     if (tab_ptr1) {
       tab_[i].vertical_cast(tab_ptr1);
     } else {
-      vcl_cerr << "error: Could not find child tableaus in selector\n";
+      std::cerr << "error: Could not find child tableaus in selector\n";
       return ;
     }
 
-    vcl_string active;
+    std::string active;
     active = views[i]->selector()->active_name();
 
     views[i]->selector()->set_active(name);
@@ -126,7 +126,7 @@ activate ()
 void dbdet_sel_explorer_tool::
 deactivate ()
 {
-  vcl_cout << "dbdet_sel_explorer_tool OFF\n";
+  std::cout << "dbdet_sel_explorer_tool OFF\n";
 }
 
 
@@ -136,11 +136,11 @@ handle( const vgui_event & e,
 {
 
   if (e.type == vgui_KEY_PRESS) {
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "Frame index: " << view->frame() << std::endl;
 
     switch (e.key) {
       case 'p': { // print info on the storage
-        vcl_cout << "Name: " << sel_storage_->name() << vcl_endl;
+        std::cout << "Name: " << sel_storage_->name() << std::endl;
         print_sel_stats();
 
         return true;
@@ -156,13 +156,13 @@ handle( const vgui_event & e,
       }
 
       default:
-        vcl_cout << "Unassigned key: " << e.key << " pressed.\n";
+        std::cout << "Unassigned key: " << e.key << " pressed.\n";
         break;
     }
   }
 
   if (gesture0_(e)) {
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "Frame index: " << view->frame() << std::endl;
 
     if (p0_) {
       tab_[0]->remove(p0_);
@@ -178,7 +178,7 @@ handle( const vgui_event & e,
     if (cur_edgel)
     {
       vgl_point_2d<double> pt = cur_edgel->pt;
-      vcl_cout << "Closest edgel: " << pt << vcl_endl;
+      std::cout << "Closest edgel: " << pt << std::endl;
 
       // II) Add a point to the vsol tableau
       for (unsigned i=0 ; i < nviews_; ++i) 
@@ -191,7 +191,7 @@ handle( const vgui_event & e,
       tab_[0]->post_overlay_redraw();
       
       // III) Display info about the selected edgel
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
       print_edgel_stats(cur_edgel);
     }
 
@@ -235,7 +235,7 @@ dbdet_edgel* dbdet_sel_explorer_tool::get_nearest_edgel(vgl_point_2d<double> pt)
   dbdet_edgemap_sptr edgemap = sel_storage_->EM();
 
   // b) find the closest edgel in the neighboring cells
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   for (int xcell = xx-2; xcell <= xx+2; xcell++){
     for (int ycell = yy-2; ycell <= yy+2; ycell++){
       if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap->width() || ycell >= (int)edgemap->height()) 
@@ -279,8 +279,8 @@ void dbdet_sel_explorer_tool::draw_grouping(const dbdet_curvelet* cvlet)
         glBegin( GL_LINE_STRIP );
         for (int th=0; th<=20; th++){
           double theta = th*2*vnl_math::pi/20.0;
-          glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*vcl_cos(theta), 
-                     cvlet->edgel_chain[j]->pt.y() + dpos*vcl_sin(theta));
+          glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*std::cos(theta), 
+                     cvlet->edgel_chain[j]->pt.y() + dpos*std::sin(theta));
         }
         glEnd();
       }
@@ -307,8 +307,8 @@ void dbdet_sel_explorer_tool::draw_grouping(const dbdet_curvelet* cvlet)
       glBegin( GL_LINE_STRIP );
       for (int th=0; th<=20; th++){
         double theta = th*2*vnl_math::pi/20.0;
-        glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*vcl_cos(theta), 
-                   cvlet->edgel_chain[j]->pt.y() + dpos*vcl_sin(theta));
+        glVertex2f(cvlet->edgel_chain[j]->pt.x() + dpos*std::cos(theta), 
+                   cvlet->edgel_chain[j]->pt.y() + dpos*std::sin(theta));
       }
       glEnd();
     }
@@ -430,22 +430,22 @@ print_sel_stats() const
         nedgels++;
       }
   
-  vcl_cout << "#edgels: " << nedgels << vcl_endl;
-  vcl_cout << "#quads: " << nquads << vcl_endl;
-  vcl_cout << "max  #quads per edgel: " << max_nquads << vcl_endl;
-  vcl_cout << "min  #quads per edgel: " << min_nquads << vcl_endl;
-  vcl_cout << "mean #quads per edgel: " << (double)nquads/(double)nedgels << vcl_endl;
+  std::cout << "#edgels: " << nedgels << std::endl;
+  std::cout << "#quads: " << nquads << std::endl;
+  std::cout << "max  #quads per edgel: " << max_nquads << std::endl;
+  std::cout << "min  #quads per edgel: " << min_nquads << std::endl;
+  std::cout << "mean #quads per edgel: " << (double)nquads/(double)nedgels << std::endl;
   */
 }
 
 void dbdet_sel_explorer_tool::
 print_complete_edgel_stats(dbdet_edgel * /*e*/) const
 {
-/*  vcl_cout << "========= EDGEL =========\n";
-  vcl_cout << "id: " << e->id << vcl_endl;  
+/*  std::cout << "========= EDGEL =========\n";
+  std::cout << "id: " << e->id << std::endl;  
   for (unsigned j=0; j<e->local_curvelets.size(); j++)
-    vcl_cout << j+2 << ":" << e->local_curvelets[j].size() << ", ";
-  vcl_cout << vcl_endl;  
+    std::cout << j+2 << ":" << e->local_curvelets[j].size() << ", ";
+  std::cout << std::endl;  
 
   //write out all the groupings around this edgel
   for (unsigned j=1; j<e->local_curvelets.size(); j++)
@@ -453,23 +453,23 @@ print_complete_edgel_stats(dbdet_edgel * /*e*/) const
     curvelet_list_iter it = e->local_curvelets[j].begin();
     for (; it != e->local_curvelets[j].end(); ++it) 
     {
-      vcl_cout << "Chain:"; 
+      std::cout << "Chain:"; 
       for (unsigned i=0; i < (*it)->edgel_chain.size(); ++i) {
-        vcl_cout << " " << (*it)->edgel_chain[i]->id;
+        std::cout << " " << (*it)->edgel_chain[i]->id;
       }
 
-      vcl_cout << " : ";
+      std::cout << " : ";
       //for (unsigned i=0; i < (*it)->curve_bundles.size(); ++i) {
       //  if ( (*it)->edgel_chain[i] == e){
       //    if ( (*it)->curve_bundles[i]) {
-      //      vcl_cout << "Bundle: (k,kdot): " << (*it)->curve_bundles[i]->k <<
-      //        ", " <<  (*it)->curve_bundles[i]->gamma << vcl_endl;
+      //      std::cout << "Bundle: (k,kdot): " << (*it)->curve_bundles[i]->k <<
+      //        ", " <<  (*it)->curve_bundles[i]->gamma << std::endl;
       //    } else {
-      //      vcl_cout << "Bundle: NULL" << vcl_endl;
+      //      std::cout << "Bundle: NULL" << std::endl;
       //    }
       //  }
       //}
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
     }
   }
 
@@ -480,23 +480,23 @@ print_complete_edgel_stats(dbdet_edgel * /*e*/) const
   curvelet_list_iter it = e->local_curvelets[2].begin();
   unsigned n=1;
   for (; it != e->local_curvelets[2].end(); ++it, ++n) {
-    vcl_cout << "   ==== Curvelet #" << n << " ====" << vcl_endl;
-    vcl_cout << "Chain:"; 
+    std::cout << "   ==== Curvelet #" << n << " ====" << std::endl;
+    std::cout << "Chain:"; 
     for (unsigned i=0; i < (*it)->edgel_chain.size(); ++i) {
-      vcl_cout << " " << (*it)->edgel_chain[i]->id;
+      std::cout << " " << (*it)->edgel_chain[i]->id;
     }
-    vcl_cout << vcl_endl;
-    vcl_cout << "#bundles: " << (*it)->curve_bundles.size() << vcl_endl;
+    std::cout << std::endl;
+    std::cout << "#bundles: " << (*it)->curve_bundles.size() << std::endl;
     for (unsigned i=0; i < (*it)->curve_bundles.size(); ++i) {
-      vcl_cout << " --- Bundle #" << i << ":  ";
+      std::cout << " --- Bundle #" << i << ":  ";
       if ( (*it)->curve_bundles[i] ) {
-        vcl_cout << "k,kdot: " << (*it)->curve_bundles[i]->k <<
+        std::cout << "k,kdot: " << (*it)->curve_bundles[i]->k <<
           ", " <<  (*it)->curve_bundles[i]->gamma << "    ";
-        vcl_cout << "ref_edgel: " << (*it)->curve_bundles[i]->edgel->id << "    ";
+        std::cout << "ref_edgel: " << (*it)->curve_bundles[i]->edgel->id << "    ";
       } else {
-        vcl_cout << "NULL    ";
+        std::cout << "NULL    ";
       }
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
     }
   }
 */
@@ -505,8 +505,8 @@ print_complete_edgel_stats(dbdet_edgel * /*e*/) const
 void dbdet_sel_explorer_tool::
 print_edgel_stats(dbdet_edgel * e) const
 {
-  vcl_cout << "========= EDGEL =========\n";
-  vcl_cout << "id: " << e->id << vcl_endl;  
+  std::cout << "========= EDGEL =========\n";
+  std::cout << "id: " << e->id << std::endl;  
   
   //write out the largest order groupings
   dbdet_curvelet_map& CM = sel_storage_->CM();
@@ -518,23 +518,23 @@ print_edgel_stats(dbdet_edgel * e) const
 
     if (display_immediate_links_only_)
     {
-      vcl_cout << "Local Chain:"; 
+      std::cout << "Local Chain:"; 
       for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i) {
         if ( cvlet->edgel_chain[i]==e || //current edgel
         (i>0 && cvlet->edgel_chain[i-1]==e) || //edgel after it
         (i<cvlet->edgel_chain.size()-1 && cvlet->edgel_chain[i+1]==e) //edgel before it
         )
-          vcl_cout << " " << cvlet->edgel_chain[i]->id;
+          std::cout << " " << cvlet->edgel_chain[i]->id;
       }
 
     }
     else {
-      vcl_cout << "Chain:"; 
+      std::cout << "Chain:"; 
       for (unsigned i=0; i < cvlet->edgel_chain.size(); ++i) {
-        vcl_cout << " " << cvlet->edgel_chain[i]->id;
+        std::cout << " " << cvlet->edgel_chain[i]->id;
       }
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 
 }
@@ -554,7 +554,7 @@ void bvis1_tool_set_int_param(const void* intref)
 void 
 dbdet_sel_explorer_tool::get_popup( const vgui_popup_params& /*params*/, vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( ((display_ES_)?on:off)+"Display ES fit", 
             bvis1_tool_toggle, (void*)(&display_ES_) );

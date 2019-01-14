@@ -2,7 +2,7 @@
 
 #include"dvrml_cylinder.h"
 
-void dvrml_cylinder::draw( vcl_ostream& os )
+void dvrml_cylinder::draw( std::ostream& os )
 {
     os << '#' << this->shape() << '\n'
        << "Transform{\n"

@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  May 05, 2005
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_math.h>
@@ -42,10 +42,10 @@ void dbsk3d_fs_segre::run_surface_segre (const float max_sample_ratio, const int
   unsigned int n_tri_1st_iteration = first_greedy_iteration (percentage);
 
   if (percentage != 1.0f) {
-    vul_printf (vcl_cout, "\t%u interpolants created in the first greedy iterative process.\n", n_tri_1st_iteration);
-    vul_printf (vcl_cout, "\t%u total surface interpolants created (specified percentage %3.0f%%).\n", 
+    vul_printf (std::cout, "\t%u interpolants created in the first greedy iterative process.\n", n_tri_1st_iteration);
+    vul_printf (std::cout, "\t%u total surface interpolants created (specified percentage %3.0f%%).\n", 
                  n_tri_1st_iteration, percentage*100);
-    vul_printf (vcl_cout, "\t%u total surface interpolants in the facemap.\n", 
+    vul_printf (std::cout, "\t%u total surface interpolants in the facemap.\n", 
                  bnd_mesh()->facemap().size());
   }
   else {
@@ -70,19 +70,19 @@ void dbsk3d_fs_segre::run_surface_segre (const float max_sample_ratio, const int
 
     F_L_vector_.clear ();
 
-    vcl_cerr << "\nTotal surface reconstruction time: " << total_timer.real() << " milliseconds.\n";
+    std::cerr << "\nTotal surface reconstruction time: " << total_timer.real() << " milliseconds.\n";
 
-    vul_printf (vcl_cout, "\nResult of surface segregation:\n");
-    vul_printf (vcl_cout, "\t%u triangles created in the 1st greedy iteration.\n", n_tri_1st_iteration);
-    vul_printf (vcl_cout, "\t%u triangles fixed in the 1st topology fixing.\n", n_tri_1st_fix);
-    vul_printf (vcl_cout, "\t%u triangles created in the 2nd greedy iteration.\n", n_tri_2nd_iteration);
-    vul_printf (vcl_cout, "\t%u triangles fixed in the 2nd topology fixing.\n", n_tri_2nd_fix);
-    vul_printf (vcl_cout, "\t%u oversize triangles filled in holes.\n", n_oversize_fill);
+    vul_printf (std::cout, "\nResult of surface segregation:\n");
+    vul_printf (std::cout, "\t%u triangles created in the 1st greedy iteration.\n", n_tri_1st_iteration);
+    vul_printf (std::cout, "\t%u triangles fixed in the 1st topology fixing.\n", n_tri_1st_fix);
+    vul_printf (std::cout, "\t%u triangles created in the 2nd greedy iteration.\n", n_tri_2nd_iteration);
+    vul_printf (std::cout, "\t%u triangles fixed in the 2nd topology fixing.\n", n_tri_2nd_fix);
+    vul_printf (std::cout, "\t%u oversize triangles filled in holes.\n", n_oversize_fill);
 
     unsigned int n_total_tri = n_tri_1st_iteration + n_tri_1st_fix + n_tri_2nd_iteration + n_tri_2nd_fix + n_oversize_fill;
-    vul_printf (vcl_cout, "\t%u total surface triangles processed (specified percentage %3.0f%%).\n", 
+    vul_printf (std::cout, "\t%u total surface triangles processed (specified percentage %3.0f%%).\n", 
                  n_total_tri, percentage*100);
-    vul_printf (vcl_cout, "\t%u total surface triangles in the facemap.\n", 
+    vul_printf (std::cout, "\t%u total surface triangles in the facemap.\n", 
                  bnd_mesh()->facemap().size());
 
     //6) Fix surface interpolant orientations.
@@ -100,14 +100,14 @@ void dbsk3d_fs_segre::run_surface_segre (const float max_sample_ratio, const int
 
   if (reasgn_lost_genes) {
     //Check the association of all generators.
-    vcl_vector<dbmsh3d_vertex*> unasgn_genes;
+    std::vector<dbmsh3d_vertex*> unasgn_genes;
     bool result = fs_mesh_->check_all_G_asgn (unasgn_genes);
   }
 }
 
 void dbsk3d_fs_segre::seg_init_shock_queue (const float max_sample_ratio)
 {
-  vul_printf (vcl_cout, "\nseg_init_shock_queue(): totally %u fs_edges.\n",
+  vul_printf (std::cout, "\nseg_init_shock_queue(): totally %u fs_edges.\n",
               fs_mesh_->edgemap().size());
   L_1st_queue_.clear();
   L_2nd_queue_.clear();
@@ -121,22 +121,22 @@ void dbsk3d_fs_segre::seg_init_shock_queue (const float max_sample_ratio)
 
   fs_mesh_->compute_median_A122_dist ();
   max_sample_dist_ = fs_mesh_->median_A122_dist() * max_sample_ratio;  
-  vul_printf (vcl_cout, "\td_median %f msr = %.2f * estimated max_sample_dist %f\n", 
+  vul_printf (std::cout, "\td_median %f msr = %.2f * estimated max_sample_dist %f\n", 
               fs_mesh_->median_A122_dist(), max_sample_ratio, max_sample_dist_);
 
   const bool has_already_meshed_F = bnd_mesh()->facemap().size() != 0;
 
   //Go through all shock link elements and insert relevant ones to queue.
-  vul_printf (vcl_cout, "  Inserting shock links to Q: ");
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
+  vul_printf (std::cout, "  Inserting shock links to Q: ");
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
   int prev_per = 0;
   for (int count=0; lit != fs_mesh_->edgemap().end(); lit++, count++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
 
     float percentage = (float) (count * 100.0 / fs_mesh_->edgemap().size());
-    int per = static_cast<int>(vcl_ceil (percentage));
+    int per = static_cast<int>(std::ceil (percentage));
     if (per % 10 ==0 && per != prev_per)
-      vul_printf (vcl_cout, "%2d%% ", per);
+      vul_printf (std::cout, "%2d%% ", per);
     prev_per = per;
 
     FE->set_counter (0); //reset FE's counter
@@ -175,22 +175,22 @@ void dbsk3d_fs_segre::seg_init_shock_queue (const float max_sample_ratio)
     }
   }
 
-  vul_printf (vcl_cout, "\t%u already meshed shock links.\n", n_meshed_links);
-  vul_printf (vcl_cout, "\t%u fs_edges at infinity.\n", n_inf_links);
-  vul_printf (vcl_cout, "\t%u non-A13-2 fs_edges.\n", n_nonA132_links);
-  vul_printf (vcl_cout, "\t%u fs_edges of oversize triangles.\n", n_oversize_links);
-  vul_printf (vcl_cout, "\t%u fs_edges of acute triangles.\n", n_acute_links);
-  vul_printf (vcl_cout, "\t%u fs_edges of obtuse triangles.\n", n_obtuse_links);
-  vul_printf (vcl_cout, "\tFirst fs_edge queue size: %u.\n", L_1st_queue_.size());
+  vul_printf (std::cout, "\t%u already meshed shock links.\n", n_meshed_links);
+  vul_printf (std::cout, "\t%u fs_edges at infinity.\n", n_inf_links);
+  vul_printf (std::cout, "\t%u non-A13-2 fs_edges.\n", n_nonA132_links);
+  vul_printf (std::cout, "\t%u fs_edges of oversize triangles.\n", n_oversize_links);
+  vul_printf (std::cout, "\t%u fs_edges of acute triangles.\n", n_acute_links);
+  vul_printf (std::cout, "\t%u fs_edges of obtuse triangles.\n", n_obtuse_links);
+  vul_printf (std::cout, "\tFirst fs_edge queue size: %u.\n", L_1st_queue_.size());
 
   //Print initiail A13-2 link cost summary.
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
   dbsk3d_fs_edge* minL = (*it).second;
   it = L_1st_queue_.end();
   it--;
   dbsk3d_fs_edge* maxL = (*it).second;
-  vul_printf (vcl_cout, "\t  cost min = %f, max= %f.\n", minL->cost(), maxL->cost());  
-  vul_printf (vcl_cout, "\t  cost median = %f, 10%% = %f, 90%% = %f\n", 
+  vul_printf (std::cout, "\t  cost min = %f, max= %f.\n", minL->cost(), maxL->cost());  
+  vul_printf (std::cout, "\t  cost median = %f, 10%% = %f, 90%% = %f\n", 
                get_Q1_median_cost(), get_Q1_percent_cost (0.1f), get_Q1_percent_cost (0.9f));
 }
 
@@ -200,16 +200,16 @@ void dbsk3d_fs_segre::seg_init_shock_queue (const float max_sample_ratio)
 
 unsigned int dbsk3d_fs_segre::first_greedy_iteration (const float percentage)
 {
-  vul_printf (vcl_cout, "\nfirst_greedy_iteration (%2d%%)\n", (int) (percentage*100));
-  vul_printf (vcl_cout, "\tFirst fs_edge queue size: %d\n", L_1st_queue_.size());
-  vul_printf (vcl_cout, "\tsurface interpolants (triangles) created: ");
+  vul_printf (std::cout, "\nfirst_greedy_iteration (%2d%%)\n", (int) (percentage*100));
+  vul_printf (std::cout, "\tFirst fs_edge queue size: %d\n", L_1st_queue_.size());
+  vul_printf (std::cout, "\tsurface interpolants (triangles) created: ");
 
   unsigned int n_tri_created = 0;  
   unsigned int n_fix_topo = 0;
   stop_rth_ = (float) get_Q1_percent_cost (percentage); //Determine the stopping threshold
 
   //Loop through shock links in the L_1st_queue_ until finish.
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
   while (it != L_1st_queue_.end()) {
     dbsk3d_fs_edge* FE = (*it).second;
     L_1st_queue_.erase (it); //remove FE from queue.
@@ -235,15 +235,15 @@ unsigned int dbsk3d_fs_segre::first_greedy_iteration (const float percentage)
         n_fix_topo++;      
 
       if (n_tri_created % 1000 == 0) //Show processing progress.
-        vul_printf (vcl_cout, "%uk ", n_tri_created/1000);
+        vul_printf (std::cout, "%uk ", n_tri_created/1000);
     }
 
     it = L_1st_queue_.begin(); //the next iteration.
   }
 
-  vul_printf (vcl_cout, "\n\t%u surface triangles created.\n", n_tri_created);
-  vul_printf (vcl_cout, "\t%u vertex 1-ring-nbrhood topology fixed.\n", n_fix_topo);  
-  vul_printf (vcl_cout, "\t%u remaining in the first shock link queue.\n", L_1st_queue_.size());
+  vul_printf (std::cout, "\n\t%u surface triangles created.\n", n_tri_created);
+  vul_printf (std::cout, "\t%u vertex 1-ring-nbrhood topology fixed.\n", n_fix_topo);  
+  vul_printf (std::cout, "\t%u remaining in the first shock link queue.\n", L_1st_queue_.size());
   assert (L_1st_queue_.size() == 0);
   return n_tri_created;
 }
@@ -252,13 +252,13 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
 {
   //Check if insertion of the surface interpolant of the current link 
   //violates the 2-manifold topological assumption.
-  vcl_set<dbsk3d_fs_edge*> undo_L_set;
+  std::set<dbsk3d_fs_edge*> undo_L_set;
   SURF_TOPO_TYPE topo_type = check_L_topology_1 (FE, undo_L_set);
 
   switch (topo_type) {
   case SURF_TOPO_OK:
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\tgap xform on link %d with cost %f.\n", FE->id(), FE->cost());
+    vul_printf (std::cout, "\tgap xform on link %d with cost %f.\n", FE->id(), FE->cost());
     #endif
     L_3d_gap_transform (FE);
     L_modify_nbrs_cost (FE);
@@ -270,7 +270,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
     //Use the link's s_value_ for the counter.
     if (FE->counter() >= V_ONLY_INCIDENCE_MAX_DELAY) {
       #if DBMSH3D_DEBUG>2
-      vul_printf (vcl_cout, "\tafter delaying, gap xform on FE %d with cost %f.\n", FE->id(), FE->cost());
+      vul_printf (std::cout, "\tafter delaying, gap xform on FE %d with cost %f.\n", FE->id(), FE->cost());
       #endif
       L_3d_gap_transform (FE);
       L_modify_nbrs_cost (FE);
@@ -278,7 +278,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
     }
     else {
       #if DBMSH3D_DEBUG>2
-      vul_printf (vcl_cout, "\tdelay link %d for vertex-only-incidence, cost=%f.\n", 
+      vul_printf (std::cout, "\tdelay link %d for vertex-only-incidence, cost=%f.\n", 
                    FE->id(), FE->cost());
       #endif
       //For cost 0, should perform it without delaying.
@@ -292,7 +292,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
   break;
   case SURF_TOPO_NON_2_MANIFOLD:
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\tskip gap xform on link %d for 2-manifold.\n", FE->id());
+    vul_printf (std::cout, "\tskip gap xform on link %d for 2-manifold.\n", FE->id());
     #endif
     //for STO_NON2MANIFOLD, move to 2nd queue
     L_compute_gap_cost (FE, 2);
@@ -300,7 +300,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
   break;
   case SURF_TOPO_V_1_RING_NBR:
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\tskip gap xform on link %d for v-incidence at 1-ring-nbrhood.\n", FE->id());
+    vul_printf (std::cout, "\tskip gap xform on link %d for v-incidence at 1-ring-nbrhood.\n", FE->id());
     #endif
   break;
   default:
@@ -312,7 +312,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
   if (undo_L_set.size() != 0) {
     //If unconfident shock list is non-empty, add FE to 2nd queue.
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\n  Unconfident shock link %d detected and moved to 2nd queue.\n", FE->id());
+    vul_printf (std::cout, "\n  Unconfident shock link %d detected and moved to 2nd queue.\n", FE->id());
     #endif
 
     L_compute_gap_cost (FE, 2);
@@ -320,12 +320,12 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
   }
 
   //Undo the unconfident shock transforms and put them to the 2nd queue.
-  vcl_set<dbsk3d_fs_edge*>::iterator it = undo_L_set.begin();
+  std::set<dbsk3d_fs_edge*>::iterator it = undo_L_set.begin();
   for (; it != undo_L_set.end(); it++) {
     dbsk3d_fs_edge* Lo = (*it);
 
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "  Undo gap xform of link %d and move to 2nd queue.\n", Lo->id());
+    vul_printf (std::cout, "  Undo gap xform of link %d and move to 2nd queue.\n", Lo->id());
     #endif
 
     //Perform an inverse 3D gap transform on Lo
@@ -347,7 +347,7 @@ bool dbsk3d_fs_segre::first_greedy_step (dbsk3d_fs_edge* FE)
 //    - SURF_TOPO_V_1_RING_NBR: violates the vertex-on-one-ring-neighborhood.
 //
 SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_1 (const dbsk3d_fs_edge* FE,
-                                                    vcl_set<dbsk3d_fs_edge*>& undo_L_set)
+                                                    std::set<dbsk3d_fs_edge*>& undo_L_set)
 {
   // Check the mesh edge topology
   //   Loop through each incident patch (bnd_edge) of this link,
@@ -364,11 +364,11 @@ SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_1 (const dbsk3d_fs_edge* FE,
       //For non-2-manifold, compare the costs of candidates and existing shock link cost.
 
       //Find the other existing shock link Lo
-      vcl_set<dbsk3d_fs_edge*> FE_with_bnd_F_set;
+      std::set<dbsk3d_fs_edge*> FE_with_bnd_F_set;
       FF->get_FEs_with_bnd_F (FE_with_bnd_F_set);
 
       //Loop through all Lo's and compare the cost to FE.
-      vcl_set<dbsk3d_fs_edge*>::iterator it = FE_with_bnd_F_set.begin();
+      std::set<dbsk3d_fs_edge*>::iterator it = FE_with_bnd_F_set.begin();
       assert (FE_with_bnd_F_set.size() < 3);
       for (; it != FE_with_bnd_F_set.end(); it++) {
         dbsk3d_fs_edge* Lo = (*it);
@@ -379,7 +379,7 @@ SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_1 (const dbsk3d_fs_edge* FE,
           undo_L_set.insert (Lo);
 
           #if DBMSH3D_DEBUG>3
-          vul_printf (vcl_cout, "FE %d cost %f < Lo %d cost %f\n",
+          vul_printf (std::cout, "FE %d cost %f < Lo %d cost %f\n",
                        FE->id(), FE->cost(), Lo->id(), Lo->cost());
           #endif
         }
@@ -427,7 +427,7 @@ SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_1 (const dbsk3d_fs_edge* FE,
 //  Return true if such situation is detected and fixed.
 bool dbsk3d_fs_segre::first_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
 {
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   bool result = FE->get_ordered_Gs_via_FF (genes);
   assert (result);
 
@@ -453,7 +453,7 @@ bool dbsk3d_fs_segre::first_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
         undo_L_modify_nbrs_cost (Le);    
         
         #if DBMSH3D_DEBUG>2
-        vul_printf (vcl_cout, "  Undo gap_xform of shock_link %d bnd_face %d gene %d.\n", 
+        vul_printf (std::cout, "  Undo gap_xform of shock_link %d bnd_face %d gene %d.\n", 
                      FE->id(), FE->bnd_face()->id(), G->id());
         #endif
 
@@ -467,11 +467,11 @@ bool dbsk3d_fs_segre::first_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
 }
 unsigned int dbsk3d_fs_segre::first_topo_fixing ()
 {
-  vul_printf (vcl_cout, "\nfirst_topo_fixing()\n");
-  vcl_vector<dbsk3d_fs_edge*> undo_Ls;
+  vul_printf (std::cout, "\nfirst_topo_fixing()\n");
+  std::vector<dbsk3d_fs_edge*> undo_Ls;
 
   //Go through all shock links with bnd_face on mesh boundary.  
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
   for (; lit != fs_mesh_->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
     if (FE->b_inf())
@@ -484,8 +484,8 @@ unsigned int dbsk3d_fs_segre::first_topo_fixing ()
         undo_Ls.push_back (FE);
   }
 
-  vul_printf (vcl_cout, "\tUndo %u gap xform, move to 2nd queue of shock links on mesh boundary.\n", undo_Ls.size());
-  vcl_vector<dbsk3d_fs_edge*>::iterator it = undo_Ls.begin();
+  vul_printf (std::cout, "\tUndo %u gap xform, move to 2nd queue of shock links on mesh boundary.\n", undo_Ls.size());
+  std::vector<dbsk3d_fs_edge*>::iterator it = undo_Ls.begin();
   for (; it != undo_Ls.end(); it++) {
     dbsk3d_fs_edge* FE = (*it);
 
@@ -504,7 +504,7 @@ void dbsk3d_fs_segre::add_bnd_links_to_queue ()
 {
   //: loop through all shock sheets FF with one side meshed.
   //  add all other unmeshed FE into 2nd_queue.
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     if (FF->one_side_meshed()) {
@@ -526,15 +526,15 @@ void dbsk3d_fs_segre::add_bnd_links_to_queue ()
 
 unsigned int dbsk3d_fs_segre::second_greedy_iteration ()
 {
-  vul_printf (vcl_cout, "\nsecond_greedy_iteration()\n");
-  vul_printf (vcl_cout, "\tSecond shock link queue size: %d\n", L_2nd_queue_.size());
-  vul_printf (vcl_cout, "\tsurface interpolants created: ");
+  vul_printf (std::cout, "\nsecond_greedy_iteration()\n");
+  vul_printf (std::cout, "\tSecond shock link queue size: %d\n", L_2nd_queue_.size());
+  vul_printf (std::cout, "\tsurface interpolants created: ");
 
   unsigned int n_tri_created = 0;  
   unsigned int n_fix_topo = 0;
 
   //Loop through shock links in the L_2nd_queue_ until finish.
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_2nd_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_2nd_queue_.begin();
   while (it != L_2nd_queue_.end()) {
     dbsk3d_fs_edge* FE = (*it).second;
     L_2nd_queue_.erase (it); //remove FE from queue.
@@ -553,14 +553,14 @@ unsigned int dbsk3d_fs_segre::second_greedy_iteration ()
         n_fix_topo++;      
 
       if (n_tri_created % 1000 == 0) //Show processing progress.
-        vul_printf (vcl_cout, "%uk ", n_tri_created/1000);
+        vul_printf (std::cout, "%uk ", n_tri_created/1000);
     }
 
     it = L_2nd_queue_.begin(); //the next iteration.
   }
 
-  vul_printf (vcl_cout, "\n\t%u surface triangles created.\n", n_tri_created);
-  vul_printf (vcl_cout, "\t%u vertex 1-ring-nbrhood topology fixed.\n", n_fix_topo);  
+  vul_printf (std::cout, "\n\t%u surface triangles created.\n", n_tri_created);
+  vul_printf (std::cout, "\t%u vertex 1-ring-nbrhood topology fixed.\n", n_fix_topo);  
 
   L_2nd_queue_.clear();
   return n_tri_created;
@@ -579,7 +579,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
   while (L_ungap &&
          (topo_type == SURF_TOPO_OK || topo_type == SURF_TOPO_V_ONLY_INCIDENCE)) {
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "  Undo gap xform of link %d.\n", L_ungap->id());
+    vul_printf (std::cout, "  Undo gap xform of link %d.\n", L_ungap->id());
     #endif
 
     //Perform an inverse 3D gap transform on L_ungap
@@ -593,7 +593,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
   switch (topo_type) {
   case SURF_TOPO_OK:
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\tgap xform on link %d with cost %f.\n", FE->id(), FE->cost());
+    vul_printf (std::cout, "\tgap xform on link %d with cost %f.\n", FE->id(), FE->cost());
     #endif
     L_3d_gap_transform (FE);
     L_modify_nbrs_cost (FE);
@@ -605,7 +605,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
     //Use the link's s_value_ for the counter.
     if (FE->counter() >= V_ONLY_INCIDENCE_MAX_DELAY) {
       #if DBMSH3D_DEBUG>2
-      vul_printf (vcl_cout, "\tafter delaying, gap xform on FE %d with cost %f.\n", FE->id(), FE->cost());
+      vul_printf (std::cout, "\tafter delaying, gap xform on FE %d with cost %f.\n", FE->id(), FE->cost());
       #endif
       L_3d_gap_transform (FE);
       L_modify_nbrs_cost (FE);
@@ -613,7 +613,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
     }
     else {
       #if DBMSH3D_DEBUG>2
-      vul_printf (vcl_cout, "\tdelay link %d for vertex-only-incidence, cost=%f.\n", 
+      vul_printf (std::cout, "\tdelay link %d for vertex-only-incidence, cost=%f.\n", 
                    FE->id(), FE->cost());
       #endif
       //For cost 0, should perform it without delaying.
@@ -628,7 +628,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
   case SURF_TOPO_NON_2_MANIFOLD:
     if (topo_option_ == STO_2MANIFOLD) {
       #if DBMSH3D_DEBUG>2
-      vul_printf (vcl_cout, "\tskip gap xform on link %d for 2-manifold.\n", FE->id());
+      vul_printf (std::cout, "\tskip gap xform on link %d for 2-manifold.\n", FE->id());
       #endif
     }
     else if (topo_option_ == STO_NON2MANIFOLD) {
@@ -642,7 +642,7 @@ bool dbsk3d_fs_segre::second_greedy_step (dbsk3d_fs_edge* FE)
   break;
   case SURF_TOPO_V_1_RING_NBR:
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "\tskip gap xform on link %d for v-incidence at 1-ring-nbrhood.\n", FE->id());
+    vul_printf (std::cout, "\tskip gap xform on link %d for v-incidence at 1-ring-nbrhood.\n", FE->id());
     #endif
   break;
   default:
@@ -678,12 +678,12 @@ SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_2 (const dbsk3d_fs_edge* FE,
       //For non-2-manifold, compare the costs of candidates and existing shock link cost.
 
       //Find the other existing shock link Lo
-      vcl_set<dbsk3d_fs_edge*> FE_with_bnd_F_set;
+      std::set<dbsk3d_fs_edge*> FE_with_bnd_F_set;
       FF->get_FEs_with_bnd_F (FE_with_bnd_F_set);
       assert (topo_option_==STO_NON2MANIFOLD || FE_with_bnd_F_set.size() < 3);
 
       //Loop through all Lo's and compare the cost to FE.
-      vcl_set<dbsk3d_fs_edge*>::iterator it = FE_with_bnd_F_set.begin();
+      std::set<dbsk3d_fs_edge*>::iterator it = FE_with_bnd_F_set.begin();
       for (; it != FE_with_bnd_F_set.end(); it++) {
         dbsk3d_fs_edge* Lo = (*it);
         ///assert (Lo != FE);
@@ -696,7 +696,7 @@ SURF_TOPO_TYPE dbsk3d_fs_segre::check_L_topology_2 (const dbsk3d_fs_edge* FE,
             *L_ungap = Lo;
 
           #if DBMSH3D_DEBUG>2
-          vul_printf (vcl_cout, "FE %d cost %f < Lo %d cost %f\n",
+          vul_printf (std::cout, "FE %d cost %f < Lo %d cost %f\n",
                        FE->id(), FE->cost(), Lo->id(), Lo->cost());
           #endif
         }
@@ -776,7 +776,7 @@ bool dbsk3d_fs_segre::check_multi_jun_angles (const dbsk3d_fs_edge* inputL)
 //  Return true if such situation is detected and fixed.
 bool dbsk3d_fs_segre::second_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
 {
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   bool result = FE->get_ordered_Gs_via_FF (genes);
   assert (result);
 
@@ -802,7 +802,7 @@ bool dbsk3d_fs_segre::second_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
         undo_L_modify_nbrs_cost (Le);    
         
         #if DBMSH3D_DEBUG>2
-        vul_printf (vcl_cout, "  Undo gap_xform of shock_link %d bnd_face %d gene %d.\n", 
+        vul_printf (std::cout, "  Undo gap_xform of shock_link %d bnd_face %d gene %d.\n", 
                      FE->id(), FE->bnd_face()->id(), G->id());
         #endif
 
@@ -817,7 +817,7 @@ bool dbsk3d_fs_segre::second_greedy_fix_vtopo (dbsk3d_fs_edge* FE)
 
 unsigned int dbsk3d_fs_segre::second_topo_fixing ()
 {
-  vul_printf (vcl_cout, "\nsecond_topo_fixing()\n");
+  vul_printf (std::cout, "\nsecond_topo_fixing()\n");
   unsigned int n_tri_fixed = 0;
 
   //Initialize the boundary chain list.
@@ -829,7 +829,7 @@ unsigned int dbsk3d_fs_segre::second_topo_fixing ()
     return 0;
 
   //The first order fixing of boundary hole with a few edges.
-  vcl_vector<dbmsh3d_bnd_chain*>::iterator it = mesh_bnd_chains_->chainset().begin();
+  std::vector<dbmsh3d_bnd_chain*>::iterator it = mesh_bnd_chains_->chainset().begin();
   for (; it != mesh_bnd_chains_->chainset().end(); it++) {
     dbsk3d_bnd_chain* BCs = (dbsk3d_bnd_chain*) (*it);
     if (BCs->HE_list().size() <= TOPO_FIX_HOLE_MAX_EDGES) {
@@ -837,7 +837,7 @@ unsigned int dbsk3d_fs_segre::second_topo_fixing ()
     }
   }
 
-  vul_printf (vcl_cout, "\t%u surface interpolant fixed.\n", n_tri_fixed);
+  vul_printf (std::cout, "\t%u surface interpolant fixed.\n", n_tri_fixed);
   return n_tri_fixed;
 }
 
@@ -854,7 +854,7 @@ bool dbsk3d_fs_segre::fix_hole_1st_order (dbsk3d_bnd_chain* BCs)
     //Go through the set of sz-1 opposite edges on the hole,
     //and try to fill the it.
     bool hole_fill_success = true;
-    vcl_vector <dbsk3d_fs_edge*> hole_L_set;
+    std::vector <dbsk3d_fs_edge*> hole_L_set;
     hole_L_set.clear();
 
     for (unsigned int j=1; j<sz; j++) {
@@ -894,13 +894,13 @@ bool dbsk3d_fs_segre::fix_hole_1st_order (dbsk3d_bnd_chain* BCs)
 
 unsigned int dbsk3d_fs_segre::final_oversize_fill ()
 {
-  vul_printf (vcl_cout, "\tfinal_oversize_fill()\n");
+  vul_printf (std::cout, "\tfinal_oversize_fill()\n");
   unsigned int n_oversize_links = 0;
   unsigned int n_tri_filled = 0;
 
   //Go through all remaining valid shock link elements and check 
   //if any of them fits a hole ignoring their size.
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh_->edgemap().begin();
   for (; lit != fs_mesh_->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
 
@@ -914,7 +914,7 @@ unsigned int dbsk3d_fs_segre::final_oversize_fill ()
     }
   }
 
-  vul_printf (vcl_cout, "\t%u holes filled from %u oversize surface interpolant.\n", 
+  vul_printf (std::cout, "\t%u holes filled from %u oversize surface interpolant.\n", 
                n_tri_filled, n_oversize_links);
   return n_tri_filled;
 }
@@ -924,9 +924,9 @@ unsigned int dbsk3d_fs_segre::final_oversize_fill ()
 double dbsk3d_fs_segre::get_Q1_percent_cost (const float percent)
 {
   unsigned int idx = (unsigned int) (L_1st_queue_.size() * percent);
-  idx = vcl_min (idx, static_cast<unsigned int>(L_1st_queue_.size()-1));
+  idx = std::min (idx, static_cast<unsigned int>(L_1st_queue_.size()-1));
 
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
   for (unsigned int i=0; i<idx; i++)
     it++;
 
@@ -946,11 +946,11 @@ void dbsk3d_fs_segre::output_Q1_file ()
   const char* filename = "a13cost.txt";
   FILE  *fp;
   if ((fp = fopen(filename, "w")) == NULL) {
-    vul_printf (vcl_cout, "ERROR: Can't open output file %s.\n", filename);
+    vul_printf (std::cout, "ERROR: Can't open output file %s.\n", filename);
     return; 
   }
 
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
   for (; it != L_1st_queue_.end(); it++) {
     dbsk3d_fs_edge* FE = (*it).second;
 
@@ -963,7 +963,7 @@ void dbsk3d_fs_segre::output_Q1_file ()
     vgl_point_3d<double> C = circum_center_3pts (Gene[0]->pt(), Gene[1]->pt(), Gene[2]->pt());
 
     ///assert ((*it).first == FE->cost());
-    vcl_fprintf (fp, "%.16f\n", vgl_distance (C, Gene[0]->pt()));
+    std::fprintf (fp, "%.16f\n", vgl_distance (C, Gene[0]->pt()));
   }
   fclose (fp);  
 }
@@ -971,13 +971,13 @@ void dbsk3d_fs_segre::output_Q1_file ()
 //: Print the shock link queue for debugging.
 void dbsk3d_fs_segre::print_Q1_file ()
 {
-  vul_printf (vcl_cout, "\n  print_Q1_file(): %u shock links in queue.\n", L_1st_queue_.size());
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
+  vul_printf (std::cout, "\n  print_Q1_file(): %u shock links in queue.\n", L_1st_queue_.size());
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_1st_queue_.begin();
   for (unsigned int i=0; it != L_1st_queue_.end(); it++, i++) {    
     dbsk3d_fs_edge* FE = (*it).second;
-    vul_printf (vcl_cout, "FE %d (%f)  ", FE->id(), FE->cost());
+    vul_printf (std::cout, "FE %d (%f)  ", FE->id(), FE->cost());
     if (i % 3 == 2)
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
 
   }
 }
@@ -985,9 +985,9 @@ void dbsk3d_fs_segre::print_Q1_file ()
 double dbsk3d_fs_segre::get_Q2_percent_cost (const float percent)
 {
   unsigned int idx = (unsigned int) (L_2nd_queue_.size() * percent);
-  idx = vcl_min (idx, static_cast<unsigned int>(L_2nd_queue_.size()-1));
+  idx = std::min (idx, static_cast<unsigned int>(L_2nd_queue_.size()-1));
 
-  vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = L_2nd_queue_.begin();
+  std::multimap<double, dbsk3d_fs_edge*>::iterator it = L_2nd_queue_.begin();
   for (unsigned int i=0; i<idx; i++)
     it++;
 
@@ -1005,17 +1005,17 @@ dbmsh3d_face* dbsk3d_fs_segre::L_find_already_meshed_dual_F (dbsk3d_fs_edge* FE)
 {
   //Go through each G of FE, and check all incident faces of G.
   //If any such face F happens to be the dual of FE, return true.
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   bool result = FE->get_ordered_Gs_via_FF (genes);
   assert (result);
 
   //Go through each G of FE.
   for (unsigned int i=0; i<genes.size(); i++) {
     dbmsh3d_vertex* G = genes[i];
-    vcl_set<dbmsh3d_face*> incident_faces;
+    std::set<dbmsh3d_face*> incident_faces;
     G->get_incident_Fs (incident_faces);
     //Check all incident faces of G.
-    vcl_set<dbmsh3d_face*>::iterator it = incident_faces.begin();
+    std::set<dbmsh3d_face*>::iterator it = incident_faces.begin();
     for (; it != incident_faces.end(); it++) {
       dbmsh3d_face* F = (*it);
       //Check if F is dual to FE by checking if all genes[] incident to F.
@@ -1078,7 +1078,7 @@ void dbsk3d_fs_segre::L_compute_gap_cost (dbsk3d_fs_edge* FE, const int option)
   const double EC = vgl_distance (FE->e_FV()->pt(), C);
   const double SE = vgl_distance (FE->s_FV()->pt(), FE->e_FV()->pt());
 
-  double Rmin = vcl_min (SC, EC);
+  double Rmin = std::min (SC, EC);
 
   if (bgld_leq_m (SC, SE) == false || bgld_leq_m (EC, SE) == false) {    
     //2) For non-A13-2 shock links, put to the 2nd shock queue.
@@ -1185,7 +1185,7 @@ void dbsk3d_fs_segre::add_nbr_cost (const dbsk3d_fs_edge* inputL,
   double theta = compute_bending_angle (inputL, FF, FE);  
 
   //Compute the neighbor continuing cost.
-  double exp_t_1 = vcl_exp (theta) - 1;
+  double exp_t_1 = std::exp (theta) - 1;
   double bending = exp_t_1 * exp_t_1 * NB_BEND_COST_C;
   double nbcont_cost;
 
@@ -1200,7 +1200,7 @@ void dbsk3d_fs_segre::add_nbr_cost (const dbsk3d_fs_edge* inputL,
   }
 
   #if DBMSH3D_DEBUG>2
-  vul_printf (vcl_cout, "\tnb_cont_cost: change cost of link %d (%f) by %f%%.\n", 
+  vul_printf (std::cout, "\tnb_cont_cost: change cost of link %d (%f) by %f%%.\n", 
                FE->id(), FE->cost(), (double)(100.0 * nbcont_cost / FE->cost()));  
   #endif
 
@@ -1288,7 +1288,7 @@ void dbsk3d_fs_segre::undo_nbr_cost (const dbsk3d_fs_edge* inputL,
   double theta = compute_bending_angle (inputL, FF, FE);  
 
   //Compute the neighbor continuing cost.
-  double exp_t_1 = vcl_exp (theta) - 1;
+  double exp_t_1 = std::exp (theta) - 1;
   double bending = exp_t_1 * exp_t_1 * NB_BEND_COST_C;
   double nbcont_cost;
 
@@ -1302,7 +1302,7 @@ void dbsk3d_fs_segre::undo_nbr_cost (const dbsk3d_fs_edge* inputL,
   }
 
   #if DBMSH3D_DEBUG>2
-  vul_printf (vcl_cout, "\tnb_cont_cost: change cost of link %d (%f) by %f%%.\n", 
+  vul_printf (std::cout, "\tnb_cont_cost: change cost of link %d (%f) by %f%%.\n", 
                FE->id(), FE->cost(), (double)(100.0 * nbcont_cost / FE->cost()));  
   #endif
 

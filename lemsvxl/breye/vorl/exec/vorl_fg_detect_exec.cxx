@@ -16,14 +16,14 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vbl/vbl_bounding_box.h>
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_resource.h>
-void write_polygons( vcl_vector<vcl_vector<vsol_polygon_2d_sptr> > polygons,vcl_ofstream &ofile, int ni,int nj )
+void write_polygons( std::vector<std::vector<vsol_polygon_2d_sptr> > polygons,std::ofstream &ofile, int ni,int nj )
 {
-    //vcl_ofstream ofile(filename.c_str());
+    //std::ofstream ofile(filename.c_str());
     ofile<<"NFRAMES: "<<polygons.size()<<"\n";
 
 
@@ -66,22 +66,22 @@ int main(int argc, char** argv)
   
  
   bpro_process_sptr loadbg(new dbbgm_load_bg_model_process1()); 
-  loadbg->set_output_names(vcl_vector<vcl_string>(1,"bgmodel"));
+  loadbg->set_output_names(std::vector<std::string>(1,"bgmodel"));
   vorl_manager::instance()->add_process_to_args(loadbg);
 
   bpro_process_sptr fgdetector(new dbbgm_aerial_fg_uncertainity_detect_process1());
 
-  vcl_vector<vcl_string> inputnames;
+  std::vector<std::string> inputnames;
   inputnames.push_back("video");
   inputnames.push_back("bgmodel");
 
   fgdetector->set_input_names(inputnames);
-  fgdetector->set_output_names(vcl_vector<vcl_string>(1,"ForegroundDetected"));
+  fgdetector->set_output_names(std::vector<std::string>(1,"ForegroundDetected"));
   vorl_manager::instance()->add_process_to_args(fgdetector);
 
   bpro_process_sptr  blobfinder(new dbdet_blob_finder_process());
-  blobfinder->set_input_names(vcl_vector<vcl_string>(1,"ForegroundDetected"));
-  blobfinder->set_output_names(vcl_vector<vcl_string>(1,"blobs"));
+  blobfinder->set_input_names(std::vector<std::string>(1,"ForegroundDetected"));
+  blobfinder->set_output_names(std::vector<std::string>(1,"blobs"));
   vorl_manager::instance()->add_process_to_args(blobfinder);
 
   vorl_manager::instance()->parse_params(argc, argv); 
@@ -91,8 +91,8 @@ int main(int argc, char** argv)
   vorl_manager::instance()->run_process_queue_on_current_frame();
   vorl_manager::instance()->clear_process_queue();
  
-  vcl_cout<<"\n detecting polygons";
-  vcl_cout.flush();
+  std::cout<<"\n detecting polygons";
+  std::cout.flush();
   // detecting foreground and finding polygons
   vorl_manager::instance()->rewind();
   vorl_manager::instance()->clear_process_queue();

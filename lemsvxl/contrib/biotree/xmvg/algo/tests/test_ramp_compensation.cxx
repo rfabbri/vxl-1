@@ -5,7 +5,7 @@
 // \date      May 26, 2006
 // 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_int_2.h>
 #include <vbl/vbl_array_2d.h>
 #include <xmvg/xmvg_atomic_filter_2d.h>
@@ -15,7 +15,7 @@
 static void test_ramp_compensation()
 {
 
-  vcl_cout << "-----------------testing ramp compensation ------------------\n";
+  std::cout << "-----------------testing ramp compensation ------------------\n";
   //Test a filter with even number of columns
   vbl_array_2d<float> edata(18, 15);
   for(unsigned j = 0; j<15; ++j)
@@ -48,10 +48,10 @@ static void test_ramp_compensation()
   filt_even_in.set_weights(edata);
   xmvg_ramp_compensation<float>(filt_even_in, filt_even_out);
 
-  vcl_cout << "Compensated Even Gaussian Splat\n";
+  std::cout << "Compensated Even Gaussian Splat\n";
   for(unsigned i = 0; i<18; ++i)
-    vcl_cout << filt_even_out[i][0] << ' ';
-  vcl_cout << '\n';
+    std::cout << filt_even_out[i][0] << ' ';
+  std::cout << '\n';
   TEST_NEAR("Compensated Even Gaussian Splat", filt_even_out[9][0], 2.45672f, 0.001);
   //Test a filter with odd number of columns
   vbl_array_2d<float> odata(19, 15);
@@ -83,10 +83,10 @@ static void test_ramp_compensation()
   filt_odd_in.set_location(loc);
   filt_odd_in.set_weights(odata);
   xmvg_ramp_compensation<float>(filt_odd_in, filt_odd_out);
-  vcl_cout << "Compensated 0dd Gaussian Splat\n";
+  std::cout << "Compensated 0dd Gaussian Splat\n";
   for(unsigned i = 0; i<19; ++i)
-    vcl_cout << filt_odd_out[i][0] << ' ';
-  vcl_cout << '\n';
+    std::cout << filt_odd_out[i][0] << ' ';
+  std::cout << '\n';
   TEST_NEAR("Compensated Odd Gaussian Splat", filt_odd_out[10][0], 1.87378f , 0.001);
   //Test a filter with odd number of columns but larger no of elements
   // to check out normalization
@@ -118,25 +118,25 @@ static void test_ramp_compensation()
   filt_lodd_in.set_location(loc);
   filt_lodd_in.set_weights(lodata);
   xmvg_ramp_compensation<float>(filt_lodd_in, filt_lodd_out);
-  vcl_cout << "Compensated Large Odd Gaussian Splat\n";
+  std::cout << "Compensated Large Odd Gaussian Splat\n";
   for(unsigned i = 15; i<29; ++i)
-    vcl_cout << filt_lodd_out[i][0] << ' ';
-  vcl_cout << '\n';
+    std::cout << filt_lodd_out[i][0] << ' ';
+  std::cout << '\n';
 
   //Test composite filter compensation
-  vcl_vector<xmvg_atomic_filter_2d<float> > filts;
+  std::vector<xmvg_atomic_filter_2d<float> > filts;
   filts.push_back(filt_odd_in);   filts.push_back(filt_odd_in);
   xmvg_composite_filter_2d<float> cmpfilts(filts), outfilts;
   xmvg_ramp_compensation<float>(cmpfilts, outfilts);
   xmvg_atomic_filter_2d<float> temp = outfilts.atomic_filter(1);
-  vcl_cout << "Composite Compensated Result\n";
+  std::cout << "Composite Compensated Result\n";
   for(unsigned i = 0; i<19; ++i)
-    vcl_cout << temp[i][0] << ' ';
-  vcl_cout << '\n';
+    std::cout << temp[i][0] << ' ';
+  std::cout << '\n';
   TEST_NEAR("test ramp compensated composite", temp[9][0], 2.45778f, 0.001);
   //Test full reconstruction 
   //The variation along z for the Gaussian 2nd derivative filter
-  vcl_vector<float> S(15);
+  std::vector<float> S(15);
   S[0]=0;
   S[1]=0;
   S[2]=0;
@@ -179,27 +179,27 @@ static void test_ramp_compensation()
   gf_in.set_location(loc);
   gf_in.set_weights(M);
   xmvg_ramp_compensation<float>(gf_in, gf_out);
-  vcl_cout <<"Compensated splat values vs x and z\n";
-  vcl_cout << "z = 0\n";
+  std::cout <<"Compensated splat values vs x and z\n";
+  std::cout << "z = 0\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gf_out[i][7] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 1\n";
+    std::cout << gf_out[i][7] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 1\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gf_out[i][8] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 2\n";
+    std::cout << gf_out[i][8] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 2\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gf_out[i][9] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 3\n";
+    std::cout << gf_out[i][9] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 3\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gf_out[i][10] << ' ';
-  vcl_cout << '\n';
+    std::cout << gf_out[i][10] << ' ';
+  std::cout << '\n';
 
   //Now simulate adding up the spats over the orbit
   //Divide 360 degrees into 0.1 degree increments
-  vcl_cout << "Reconstructed Gaussian 2nd derivative response (positive half)\n";
+  std::cout << "Reconstructed Gaussian 2nd derivative response (positive half)\n";
   float xsum = 0.0f;
   for(float x = 0; x<=7.0f; x+=1.0f)
     {
@@ -207,21 +207,21 @@ static void test_ramp_compensation()
       for(float theta = 0.0f; theta<360.0f; theta+=0.1f)
         {
           float theta_rad = 3.14159f*theta/180.0f;
-          float fpos = x*vcl_cos(theta_rad)+7.0f;
+          float fpos = x*std::cos(theta_rad)+7.0f;
           unsigned upos = static_cast<unsigned>(fpos);
           sum += gf_out[upos][7];
         }
       xsum += sum/3600;
-      vcl_cout << "f(" << x << ")=" << sum/3600 << '\n';
+      std::cout << "f(" << x << ")=" << sum/3600 << '\n';
     }
-  vcl_cout << "Impulse at (7,7) " << gf_out[7][7] << '\n';
+  std::cout << "Impulse at (7,7) " << gf_out[7][7] << '\n';
   //The cylinder impulse along the x axis
-  vcl_cout << "Xsum = " << xsum << '\n';
+  std::cout << "Xsum = " << xsum << '\n';
   //The cylinder impulse along the z axis
   float zsum = 0.0f;
   for(unsigned j = 7; j<15; ++j)
     zsum += gf_out[7][j];
-  vcl_cout << "Zsum = " << zsum << '\n';
+  std::cout << "Zsum = " << zsum << '\n';
   // the ratio zsum/xsum should be 2.0 but this is the highest resolution
   // filter possible, 1 sigma per pixel.
   TEST_NEAR("Xsum " , xsum, 3.10264, 0.001);
@@ -240,23 +240,23 @@ static void test_ramp_compensation()
   gfp_in.set_location(locf);
   gfp_in.set_weights(Mf);
   xmvg_ramp_compensation<float>(gfp_in, gfp_out);
-  vcl_cout <<"Prime factor compensated splat values vs x and z\n";
-  vcl_cout << "z = 0\n";
+  std::cout <<"Prime factor compensated splat values vs x and z\n";
+  std::cout << "z = 0\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gfp_out[i+8][15] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 1\n";
+    std::cout << gfp_out[i+8][15] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 1\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gfp_out[i+8][16] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 2\n";
+    std::cout << gfp_out[i+8][16] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 2\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gfp_out[i+8][17] << ' ';
-  vcl_cout << '\n';
-  vcl_cout << "z = 3\n";
+    std::cout << gfp_out[i+8][17] << ' ';
+  std::cout << '\n';
+  std::cout << "z = 3\n";
   for(unsigned i=0; i<15; ++i)
-    vcl_cout << gfp_out[i+8][18] << ' ';
-  vcl_cout << '\n';
+    std::cout << gfp_out[i+8][18] << ' ';
+  std::cout << '\n';
   TEST_NEAR("primefactor size test", gfp_out[15][15], 2.48704, 0.001);
 }
 

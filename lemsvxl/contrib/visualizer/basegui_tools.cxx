@@ -6,7 +6,7 @@
 #include "base_options.h"
 #include "basegui_debugdisplayer.h"
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 extern Options GOptions;
 //StyleSet DrawingTool::_style;
@@ -115,7 +115,7 @@ GTool::Result GetInfoTool::mouseMove(wxMouseEvent &evt)
   if (_window->AutoHighlight())
         _window->HighlightSelected(evt);
 
-  vcl_ostringstream ostrm;
+  std::ostringstream ostrm;
   ostrm.precision (5);
   Point2D<double> mouse_pos (evt.GetX(),evt.GetY());
 
@@ -147,11 +147,11 @@ GTool::Result DeleteTool::leftMouseDown(wxMouseEvent &evt)
   if (state==DELETING){
     Point2D<double> mouse_position(evt.GetX(),evt.GetY());
     
-    vcl_vector<HitRecord> hits;
+    std::vector<HitRecord> hits;
     if(_window->_hitTest(hits,mouse_position)==0)
         return HANDLED;
 
-    vcl_vector<HitRecord>::iterator it = hits.begin();
+    std::vector<HitRecord>::iterator it = hits.begin();
     for ( ;it != hits.end(); ++it) {
       GraphicsNode *hitObj=it->hit_object;
       
@@ -182,11 +182,11 @@ GTool::Result DeleteTool::mouseMove(wxMouseEvent &evt)
   if (state==DELETING){
     Point2D<double> mouse_position(evt.GetX(),evt.GetY());
     
-    vcl_vector<HitRecord> hits;
+    std::vector<HitRecord> hits;
     if(_window->_hitTest(hits,mouse_position)==0)
         return HANDLED;
 
-    vcl_vector<HitRecord>::iterator it = hits.begin();
+    std::vector<HitRecord>::iterator it = hits.begin();
     for ( ;it != hits.end(); ++it) {
       GraphicsNode *hitObj=it->hit_object;
       
@@ -338,7 +338,7 @@ GTool::Result EulerSpiralTool::leftMouseUp(wxMouseEvent &evt)
     } 
   
   //TODO
-  vcl_cout<<"TODO: Something weird happening"<<vcl_endl;
+  std::cout<<"TODO: Something weird happening"<<std::endl;
   
   return res;
 }
@@ -446,7 +446,7 @@ GTool::Result BiArcTool::leftMouseUp(wxMouseEvent &evt)
     } 
   
   //TODO
-  vcl_cout<<"TODO: Something weird happening"<<vcl_endl;
+  std::cout<<"TODO: Something weird happening"<<std::endl;
   return res;
 }
 

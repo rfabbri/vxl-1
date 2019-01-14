@@ -27,7 +27,7 @@
 //: Interpolate an extrinsic fragment using at most 3 shapelets
 void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descriptor& start,
                                         const dbsksp_xshock_node_descriptor& end,
-                                        vcl_vector<dbsksp_shapelet_sptr >& list_shapelet)
+                                        std::vector<dbsksp_shapelet_sptr >& list_shapelet)
 {
   // sanitize output storage
   list_shapelet.clear();
@@ -62,7 +62,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       k1, arc1, arc2);
     if (!success)
     {
-      vcl_cout << "\nERROR: can't enforce max-curvature constraint for right boundary.\n";
+      std::cout << "\nERROR: can't enforce max-curvature constraint for right boundary.\n";
       return;
     }
     right_arc1 = arc1;
@@ -79,7 +79,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       -k2, temp_arc2, temp_arc1);
     if (!success)
     {
-      vcl_cout << "\nERROR: can't enforce max-curvature constraint for right boundary.\n";
+      std::cout << "\nERROR: can't enforce max-curvature constraint for right boundary.\n";
       return;
     }
     else
@@ -100,7 +100,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       k1, arc1, arc2); 
     if (!success)
     {
-      vcl_cout << "\nERROR: can't enforce max-curvature constraint for left boundary.\n";
+      std::cout << "\nERROR: can't enforce max-curvature constraint for left boundary.\n";
       return;
     }
     left_arc1 = arc1;
@@ -121,7 +121,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       vgl_vector_2d<double > v_left = normalized(end.bnd_pt_left() - start.bnd_pt_left());
       vgl_vector_2d<double > v_right = normalized(end.bnd_pt_right() - start.bnd_pt_right());
       vgl_vector_2d<double > v = normalized(end.pt() - start.pt());
-      vcl_cout << "\nERROR: can't enforce max-curvature constraint for left boundary.\n";
+      std::cout << "\nERROR: can't enforce max-curvature constraint for left boundary.\n";
       return;
     }
     else
@@ -138,13 +138,13 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     (-left_arc1.k()) > 1/start.radius() ||
     (-left_arc2.k()) > 1/end.radius() )
   {
-    vcl_cout << "\nIn dbsksp_interp_xfrag_with_max_three_shapelets: "
+    std::cout << "\nIn dbsksp_interp_xfrag_with_max_three_shapelets: "
       << "max-curvature constraint is not satisfied.\n";
     return;
   }
 
 
-  vcl_vector<double > s_along_right_arc1;
+  std::vector<double > s_along_right_arc1;
   bgld_compute_symmetry_point_on_circ_arc(right_arc1, 
     left_arc1.end(), -left_arc1.tangent_at_end(), // mid-point of left boundary
     s_along_right_arc1);
@@ -152,18 +152,18 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
   // something is wrong if the number of solution is not 1
   if (s_along_right_arc1.size() != 1)
   {
-    vcl_cerr << "\nERROR: In dbsksp_interp_xfrag_with_max_three_shapelets: "
+    std::cerr << "\nERROR: In dbsksp_interp_xfrag_with_max_three_shapelets: "
       << "Number of symmetry point is not 1.\n";
     return;
   }
 
-  vcl_vector<dbsksp_xshock_node_descriptor > list_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_xdesc;
   list_xdesc.push_back(start);
 
   double right_s1 = s_along_right_arc1[0];
   //if (right_s1 < 0) // something is wrong
   //{
-  //  vcl_cerr << "\nERROR: In dbsksp_fit_xgraph::fit_shapelets_to_extrinsic_fragment - negative length!.\n";
+  //  std::cerr << "\nERROR: In dbsksp_fit_xgraph::fit_shapelets_to_extrinsic_fragment - negative length!.\n";
   //  return;
   //}
   if (right_s1 >= 0 && right_s1 <= right_arc1.length()) // need to cut right_arc1 into two pieces
@@ -190,7 +190,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       //  double angle_left = signed_angle(-xdesc1.bnd_tangent_left(), left_tangent1);
       //  double angle_right = signed_angle(xdesc1.bnd_tangent_right(), right_tangent1);
 
-      //  vcl_cout << "\nSymmetry measure = " << symmetry_measure << "\n"
+      //  std::cout << "\nSymmetry measure = " << symmetry_measure << "\n"
       //    << "dist_left = " << dist_left << "\n"
       //    << "dist_right = " << dist_right << "\n"
       //    << "angle_left = " << angle_left << "\n"
@@ -211,13 +211,13 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
       // (Imagine) a reverse shock direction, the left becomes right boundary and vice versa
       bgld_circ_arc left_arc2_inverted(left_arc2.end(), left_arc2.start(), -left_arc2.k());
-      vcl_vector<double > temp;
+      std::vector<double > temp;
       bgld_compute_symmetry_point_on_circ_arc(left_arc2_inverted,
         right_pt2, right_tangent2, // junction point of right boundary
         temp);
       if (temp.empty())
       {
-        vcl_cerr << "\nERROR: In dbsksp_interp_xfrag_with_max_three_shapelets: "
+        std::cerr << "\nERROR: In dbsksp_interp_xfrag_with_max_three_shapelets: "
           << "Couldn't find symmetry point on left_arc2.\n";
         return;
       }
@@ -240,7 +240,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       //  double angle_left = signed_angle(-xdesc2.bnd_tangent_left(), left_tangent2);
       //  double angle_right = signed_angle(xdesc2.bnd_tangent_right(), right_tangent2);
 
-      //  vcl_cout << "\nSymmetry measure = " << symmetry_measure << "\n"
+      //  std::cout << "\nSymmetry measure = " << symmetry_measure << "\n"
       //    << "dist_left = " << dist_left << "\n"
       //    << "dist_right = " << dist_right << "\n"
       //    << "angle_left = " << angle_left << "\n"
@@ -260,7 +260,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
     // (Imagine) rotate the fragment 180 degree
     bgld_circ_arc left_arc1_inverted(left_arc1.end(), left_arc1.start(), -left_arc1.k());
-    vcl_vector<double > temp;
+    std::vector<double > temp;
     bgld_compute_symmetry_point_on_circ_arc(left_arc1_inverted, right_pt1, right_tangent1,
       temp);
 
@@ -295,7 +295,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     //  double angle_left = signed_angle(-xdesc1.bnd_tangent_left(), left_tangent1);
     //  double angle_right = signed_angle(xdesc1.bnd_tangent_right(), right_tangent1);
 
-    //  vcl_cout << "\nSymmetry measure = " << symmetry_measure << "\n"
+    //  std::cout << "\nSymmetry measure = " << symmetry_measure << "\n"
     //    << "dist_left = " << dist_left << "\n"
     //    << "dist_right = " << dist_right << "\n"
     //    << "angle_left = " << angle_left << "\n"
@@ -310,7 +310,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
     if (s_along_left_arc1 < 0) // something is wrong
     {
-      vcl_cerr << "\nERROR: In dbsksp_fit_xgraph::fit_shapelets_to_extrinsic_fragment - negative length!.\n";
+      std::cerr << "\nERROR: In dbsksp_fit_xgraph::fit_shapelets_to_extrinsic_fragment - negative length!.\n";
       return;
     }
 
@@ -321,7 +321,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     {
       vgl_point_2d<double > left_pt2 = left_arc1.end();
       vgl_vector_2d<double > left_tangent2 = -left_arc1.tangent_at_end();
-      vcl_vector<double > temp;
+      std::vector<double > temp;
       bgld_compute_symmetry_point_on_circ_arc(right_arc2, left_pt2, left_tangent2, temp);
 
       assert(temp.size() == 1);
@@ -343,7 +343,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
       //  double angle_left = signed_angle(-xdesc2.bnd_tangent_left(), left_tangent2);
       //  double angle_right = signed_angle(xdesc2.bnd_tangent_right(), right_tangent2);
 
-      //  vcl_cout << "\nSymmetry measure = " << symmetry_measure << "\n"
+      //  std::cout << "\nSymmetry measure = " << symmetry_measure << "\n"
       //    << "dist_left = " << dist_left << "\n"
       //    << "dist_right = " << dist_right << "\n"
       //    << "angle_left = " << angle_left << "\n"
@@ -363,7 +363,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
     vgl_vector_2d<double > chord = xd1.pt() - xd0.pt();
     double alpha0 = signed_angle(chord, xd0.shock_tangent());
-    double m0 = vcl_sin(alpha0) / vcl_sin(xd0.phi());
+    double m0 = std::sin(alpha0) / std::sin(xd0.phi());
 
     dbsksp_shapelet_sptr sh = new dbsksp_shapelet();
     sh->set_from(xd0.pt(), xd0.radius(), xd0.shock_tangent(), xd0.phi(), 
@@ -408,7 +408,7 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
   temp_arc.set_from(pt1, t1, k1, temp_s1);
 
   // the biarc-midpoint is the symmetry point of pt2 on temp_arc
-  vcl_vector<double > s_along_temp_arc;
+  std::vector<double > s_along_temp_arc;
   bgld_compute_symmetry_point_on_circ_arc(temp_arc, pt2, t2, s_along_temp_arc);
 
   if (s_along_temp_arc.size() == 1)
@@ -485,7 +485,7 @@ dbsksp_shapelet_sptr dbsksp_interp_xfrag_with_zero_chord_using_one_shapelet(cons
 
   double mdiff = brent.f_at_last_minimum();
 
-  double m0 = vcl_sin(start.shock_tangent_angle() - theta0) / vcl_sin(phi0);
+  double m0 = std::sin(start.shock_tangent_angle() - theta0) / std::sin(phi0);
   // we ignore radius of the end descriptor (assume == start.radius())
   dbsksp_shapelet_sptr sh = new dbsksp_shapelet(x0, y0, theta0, r0, phi0, phi1, m0, len);
   return sh;
@@ -499,7 +499,7 @@ dbsksp_shapelet_sptr dbsksp_interp_xfrag_with_zero_chord_using_one_shapelet(cons
 void dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(int num_intervals,
                                                                const dbsksp_xshock_node_descriptor& start_xdesc,
                                                                const dbsksp_xshock_node_descriptor& end_xdesc,
-                                                               vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                                                               std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 {
   list_xsample.clear();
 
@@ -517,7 +517,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(int num_interva
     // reverse the situation
     dbsksp_xshock_node_descriptor temp_start = end_xdesc.opposite_xnode();
     dbsksp_xshock_node_descriptor temp_end = start_xdesc.opposite_xnode();
-    vcl_vector<dbsksp_xshock_node_descriptor > temp_list_xsample;
+    std::vector<dbsksp_xshock_node_descriptor > temp_list_xsample;
     dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(num_intervals,
       temp_start, temp_end, temp_list_xsample);
 
@@ -544,7 +544,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(int num_interva
 void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals,
                                                                const dbsksp_xshock_node_descriptor& start_xdesc,
                                                                const dbsksp_xshock_node_descriptor& end_xdesc,
-                                                               vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                                                               std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 {
   list_xsample.clear();
 
@@ -587,7 +587,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals
     // compute symmetry point on the right boundary for this left point-tangent pair
 
     // first, check right arc1
-    vcl_vector<double > s_along_right_arc1;
+    std::vector<double > s_along_right_arc1;
     bgld_compute_symmetry_point_on_circ_arc(right_arc1, left_pt, -left_tangent, s_along_right_arc1);
     
     if (s_along_right_arc1.size() != 1)
@@ -607,7 +607,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals
     else // now, check right arc2
     {
       // compute symmetry point on the right arc2 for this left point-tangent pair
-      vcl_vector<double > s_along_right_arc2;
+      std::vector<double > s_along_right_arc2;
       bgld_compute_symmetry_point_on_circ_arc(right_arc2, left_pt, -left_tangent, s_along_right_arc2);
     
       if (s_along_right_arc2.size() != 1)
@@ -648,7 +648,7 @@ bool dbsksp_compute_xfrag_sample_with_min_kdiff(const dbsksp_xshock_fragment& xf
   vnl_levenberg_marquardt lm(kdiff_cost);
   //lm.set_verbose(true);
   lm.minimize(x);
-  lm.diagnose_outcome(vcl_cout);
+  lm.diagnose_outcome(std::cout);
 
   //lm.get_end_error();
 
@@ -668,22 +668,22 @@ bool dbsksp_compute_xfrag_sample_with_min_kdiff(const dbsksp_xshock_fragment& xf
 // require n > 0
 // the return sample list includes start and end-samples
 bool dbsksp_divide_xfrag_into_2_power_n_fragments(const dbsksp_xshock_fragment& xfrag, int n,
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                                                std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 {
   list_xsample.clear();
   if (n < 0)
     return false;
 
   // temporary storage for sample list
-  vcl_vector<dbsksp_xshock_node_descriptor > list_0;
-  vcl_vector<dbsksp_xshock_node_descriptor > list_1;
+  std::vector<dbsksp_xshock_node_descriptor > list_0;
+  std::vector<dbsksp_xshock_node_descriptor > list_1;
   int num_pts = bnld_math_pow(2, n) + 1;
   list_0.reserve(num_pts);
   list_1.reserve(num_pts);
 
-  vcl_vector<dbsksp_xshock_node_descriptor >* prev_list = &list_0;
-  vcl_vector<dbsksp_xshock_node_descriptor >* cur_list = &list_1;
-  vcl_vector<dbsksp_xshock_node_descriptor >* temp;
+  std::vector<dbsksp_xshock_node_descriptor >* prev_list = &list_0;
+  std::vector<dbsksp_xshock_node_descriptor >* cur_list = &list_1;
+  std::vector<dbsksp_xshock_node_descriptor >* temp;
 
   // initialization
   cur_list->clear();

@@ -50,7 +50,7 @@ bool generate_ray_init(vpgl_perspective_camera<double> *cam_,vgl_box_3d<double> 
 }
 
 
-void save_expected_image(vcl_string const& image_path,
+void save_expected_image(std::string const& image_path,
                          unsigned ni, unsigned nj,
                          float* expected_img)
 {
@@ -108,12 +108,12 @@ vil_image_view<float> run_expected_image(boxm_scene<boct_tree<short,boxm_sample<
 
     while (block_vis_iter.next())
     {
-        vcl_vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
+        std::vector<vgl_point_3d<int> > block_indices = block_vis_iter.frontier_indices();
         for (unsigned i=0; i<block_indices.size(); i++) // code for each block
         {
             s->load_block(block_indices[i]);
             boxm_block<tree_type> * curr_block=s->get_active_block();
-            vcl_cout << "processing block at index (" <<block_indices[i] << ')' << vcl_endl;
+            std::cout << "processing block at index (" <<block_indices[i] << ')' << std::endl;
             // make sure block projects to inside of image
             vgl_box_3d<double> block_bb = curr_block->bounding_box();
 
@@ -148,12 +148,12 @@ vil_image_view<float> run_expected_image(boxm_scene<boct_tree<short,boxm_sample<
     return expected_image(250,250,ray_mgr->ray_results());
 }
 
-bool update_world(vcl_string scene_name,vcl_string camname,vcl_string imgname)
+bool update_world(std::string scene_name,std::string camname,std::string imgname)
 {
     boxm_scene<boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY > > > s;
     s.load_scene(scene_name);
     vpgl_perspective_camera<double> *pcam=new vpgl_perspective_camera<double> ();
-    vcl_ifstream ifs(camname.c_str());
+    std::ifstream ifs(camname.c_str());
     if (!ifs)
         return false;
     else
@@ -169,12 +169,12 @@ bool update_world(vcl_string scene_name,vcl_string camname,vcl_string imgname)
     return true;
 }
 
-vil_image_view<float> render_image(vcl_string scene_name,vcl_string camname,unsigned ni,unsigned nj)
+vil_image_view<float> render_image(std::string scene_name,std::string camname,unsigned ni,unsigned nj)
 {
     boxm_scene<boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY > > > s;
     s.load_scene(scene_name);
     vpgl_perspective_camera<double> *pcam=new vpgl_perspective_camera<double> ();
-    vcl_ifstream ifs(camname.c_str());
+    std::ifstream ifs(camname.c_str());
     if (!ifs)
         return vil_image_view<float>();
     else
@@ -189,16 +189,16 @@ vil_image_view<float> render_image(vcl_string scene_name,vcl_string camname,unsi
 
 static void test_expected_image()
 {
-    vcl_string root_dir = testlib_root_dir();
+    std::string root_dir = testlib_root_dir();
     boxm_scene<boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY > > > s;
     s.load_scene(root_dir+"/contrib/brl/bseg/boxm/opt/open_cl/tests/scene.xml");
 
-    vcl_string camname=root_dir+"/contrib/brl/bseg/boxm/opt/open_cl/tests/cam_0.txt";
-    vcl_string imgname=root_dir+"/contrib/brl/bseg/boxm/opt/open_cl/tests/test_img0.tif";
+    std::string camname=root_dir+"/contrib/brl/bseg/boxm/opt/open_cl/tests/cam_0.txt";
+    std::string imgname=root_dir+"/contrib/brl/bseg/boxm/opt/open_cl/tests/test_img0.tif";
 
 
     vpgl_perspective_camera<double> *pcam=new vpgl_perspective_camera<double> ();
-    vcl_ifstream ifs(camname.c_str());
+    std::ifstream ifs(camname.c_str());
     if (!ifs)
         return ;
     else
@@ -212,7 +212,7 @@ static void test_expected_image()
     {
         for (unsigned j=0;j<im_nongpu.nj();j++)
         {
-            dist+=vcl_fabs(im_nongpu(i,j)-im_gpu(i,j));
+            dist+=std::fabs(im_nongpu(i,j)-im_gpu(i,j));
         }
     }
     s.clean_scene();

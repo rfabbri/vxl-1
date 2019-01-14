@@ -19,11 +19,11 @@ typedef enum {
 inline Point2D<double> centerOfArc(const Point2D<double> &point1, 
     const Point2D<double> &point2, double &radius, ARC_NUD &nud, ARC_NUS &nus)
 {
-  double chordVector = vcl_atan2(point2.getY()- point1.getY(), point2.getX()-point1.getX());
+  double chordVector = std::atan2(point2.getY()- point1.getY(), point2.getX()-point1.getX());
   Point2D<double> midChord = (point1+point2)/2;
 
   double chordL = hypot(point2.getY()- point1.getY(), point2.getX()-point1.getX());
-  double d = vcl_sqrt(radius*radius - chordL*chordL/4);
+  double d = std::sqrt(radius*radius - chordL*chordL/4);
 
   double direction = chordVector;
   if (nud == ARC_NUD_CCW)
@@ -57,7 +57,7 @@ inline bool threePointsToArc (const Point2D<double> &p1, const Point2D<double> &
    center.setX ((D*E - B*F) / G);
    center.setY ((A*F - C*E) / G);
 
-   radius = vcl_sqrt( (center.x()-p1.x())*(center.x()-p1.x()) +
+   radius = std::sqrt( (center.x()-p1.x())*(center.x()-p1.x()) +
                   (center.y()-p1.y())*(center.y()-p1.y()) );
 
   if (A*D-B*C > 0)
@@ -81,19 +81,19 @@ inline bool threePointsToArc (const Point2D<double> &p1, const Point2D<double> &
     s2y = (point2.getY()+point3.getY())/2;
 
   double 
-    psi1 = vcl_atan2(point2.getY()-point1.getY(),point2.getX()-point1.getX()) + M_PI/2,
-    psi2 = vcl_atan2(point2.getY()-point3.getY(),point2.getX()-point3.getX()) + M_PI/2;
+    psi1 = std::atan2(point2.getY()-point1.getY(),point2.getX()-point1.getX()) + M_PI/2,
+    psi2 = std::atan2(point2.getY()-point3.getY(),point2.getX()-point3.getX()) + M_PI/2;
 
-  double psihat = vcl_atan2(s2y-s1y, s2x-s1x);
+  double psihat = std::atan2(s2y-s1y, s2x-s1x);
 
-  if (vcl_sin(psi2 - psi1)==0) // collinear
+  if (std::sin(psi2 - psi1)==0) // collinear
     return false;
   else {
-    t = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
+    t = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
     H = hypot(s1y-s2y, s1x-s2x);
 
-    center.setX(s1x + H*t*vcl_cos(psi1));
-    center.setY(s1y + H*t*vcl_sin(psi1));
+    center.setX(s1x + H*t*std::cos(psi1));
+    center.setY(s1y + H*t*std::sin(psi1));
 
     radius = hypot(center.getX()-point1.getX(), 
               center.getY()-point1.getY());
@@ -121,15 +121,15 @@ inline bool threePointsToArc(const Point2D<double> &point1,
   e = (l2*x3 - x2*l3) - (l1*x3-l3*x1) + (l1*x2-x1*l2);
   f = -(y1*(l2*x3 - x2*l3) - y2*(l1*x3-l3*x1) + y3*(l1*x2-x1*l2));
 
-  if(vcl_fabs(a) < 1e-15)
+  if(std::fabs(a) < 1e-15)
    return false; // in a straight line
 
-  double r = vcl_sqrt((d*d+e*e)/(4*a*a) - f/a);
+  double r = std::sqrt((d*d+e*e)/(4*a*a) - f/a);
   double cx = -d/(2*a), cy = -e/(2*a);
 
-  double theta1 = vcl_atan2(y1-cy, x1-cx),
-  theta2 = vcl_atan2(y2-cy, x2-cx),
-  theta3 = vcl_atan2(y3-cy, x3-cx);
+  double theta1 = std::atan2(y1-cy, x1-cx),
+  theta2 = std::atan2(y2-cy, x2-cx),
+  theta3 = std::atan2(y3-cy, x3-cx);
 
   // make sure they're in ascending order
   if(theta3 < theta1) theta3 += 2*M_PI;
@@ -156,11 +156,11 @@ inline void pointTangentPointToArc(const Point2D<double> &point1, double theta,
 {
   double x1 = point1.getX(), y1 = point1.getY(),
   x2 = point2.getX(), y2 = point2.getY();
-  double u = (x2-x1)*vcl_cos(theta) + (y2-y1)*vcl_sin(theta),
-  v = -(x2-x1)*vcl_sin(theta) + (y2-y1)*vcl_cos(theta);
+  double u = (x2-x1)*std::cos(theta) + (y2-y1)*std::sin(theta),
+  v = -(x2-x1)*std::sin(theta) + (y2-y1)*std::cos(theta);
 
   double r = .5*(v*v+u*u)/v;
-  double cx = x1 - r*vcl_sin(theta), cy = y1 + r*vcl_cos(theta);
+  double cx = x1 - r*std::sin(theta), cy = y1 + r*std::cos(theta);
 
   if(r < 0) {
     r = -r;
@@ -178,13 +178,13 @@ inline void pointTangentPointToArc(const Point2D<double> &point1, double theta, 
 {
   double x1 = point1.getX(), y1 = point1.getY(),
   x2 = point2.getX(), y2 = point2.getY();
-  double u = (x2-x1)*vcl_cos(theta) + (y2-y1)*vcl_sin(theta),
-  v = -(x2-x1)*vcl_sin(theta) + (y2-y1)*vcl_cos(theta);
+  double u = (x2-x1)*std::cos(theta) + (y2-y1)*std::sin(theta),
+  v = -(x2-x1)*std::sin(theta) + (y2-y1)*std::cos(theta);
 
   double r = .5*(v*v+u*u)/v;
-  double cx = x1 - r*vcl_sin(theta), cy = y1 + r*vcl_cos(theta);
-  double theta1 = vcl_atan2(y1-cy, x1-cx),
-  theta2 = vcl_atan2(y2-cy, x2-cx);
+  double cx = x1 - r*std::sin(theta), cy = y1 + r*std::cos(theta);
+  double theta1 = std::atan2(y1-cy, x1-cx),
+  theta2 = std::atan2(y2-cy, x2-cx);
 
   if(r < 0) {
     r = -r;
@@ -200,7 +200,7 @@ inline void pointTangentPointToArc(const Point2D<double> &point1, double theta, 
 inline double getTangentOfArc(const Point2D<double> &center,
     const Point2D<double> &start, const Point2D<double> &end, ARC_NUD nud) 
 {
-  double thetai = vcl_atan2(end.getY()-center.getY(), end.getX()-center.getX());
+  double thetai = std::atan2(end.getY()-center.getY(), end.getX()-center.getX());
 
   if (nud==ARC_NUD_CCW)
     thetai -= M_PI/2;
@@ -213,11 +213,11 @@ inline double getTangentOfArc(const Point2D<double> &center,
 inline double getTangentOfArc(const Point2D<double> &center, double radius, double theta_first, double theta_second,
     const Point2D<double> &start, const Point2D<double> &point) {
   Point2D<double> subtangenti = point-center;
-  double thetai = vcl_atan2(subtangenti.getY(), subtangenti.getX());
+  double thetai = std::atan2(subtangenti.getY(), subtangenti.getX());
 
   Point2D<double> start_subtan = start - center;
-  double theta_start = vcl_atan2(start_subtan.getY(), start_subtan.getX());
-  if(vcl_fabs( vcl_fmod (theta_start - theta_first, 2*M_PI)) < 1e-4)
+  double theta_start = std::atan2(start_subtan.getY(), start_subtan.getX());
+  if(std::fabs( std::fmod (theta_start - theta_first, 2*M_PI)) < 1e-4)
     thetai += M_PI/2;
   else
     thetai -= M_PI/2;

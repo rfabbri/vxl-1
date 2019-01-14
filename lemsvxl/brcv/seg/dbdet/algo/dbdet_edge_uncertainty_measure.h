@@ -14,7 +14,7 @@
 //\endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_2d.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -47,7 +47,7 @@ public:
   vil_image_view<double>& H_measure(){ return H_; } 
 
   //: get the uncertainty measures at the edgel locations
-  void get_edgel_uncertainties(vcl_vector<vgl_point_2d<double> > & edge_locs, vcl_vector<double>& edge_uncertainties);
+  void get_edgel_uncertainties(std::vector<vgl_point_2d<double> > & edge_locs, std::vector<double>& edge_uncertainties);
 
 };
 

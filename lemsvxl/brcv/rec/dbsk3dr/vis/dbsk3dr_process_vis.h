@@ -37,19 +37,19 @@ public:
 // Smoothing + Meshing + Fusing of Scans
 
 //: Generate run file for smooth.+meshing+registeration+error estim.
-void gen_smre_run_files (const vcl_string& f1, const vcl_string& f2,
+void gen_smre_run_files (const std::string& f1, const std::string& f2,
                          const int smre, const int smreo);
 
-void gen_view_f1_f2_xyz_bat (const vcl_string& f1, const vcl_string& f2);
-void gen_view_f1_f2_gsm_xyz_bat (const vcl_string& f1, const vcl_string& f2);
-void gen_view_f1_f2_dcs_xyz_bat (const vcl_string& f1, const vcl_string& f2);
-void gen_view_f1_f2_gsm_ply_bat (const vcl_string& f1, const vcl_string& f2);
-void gen_view_f1_f2_dcs_ply_bat (const vcl_string& f1, const vcl_string& f2);
-void gen_view_f1_f2_shift_bat (const vcl_string& f1, const vcl_string& f2,
-                               const vcl_string& key);
+void gen_view_f1_f2_xyz_bat (const std::string& f1, const std::string& f2);
+void gen_view_f1_f2_gsm_xyz_bat (const std::string& f1, const std::string& f2);
+void gen_view_f1_f2_dcs_xyz_bat (const std::string& f1, const std::string& f2);
+void gen_view_f1_f2_gsm_ply_bat (const std::string& f1, const std::string& f2);
+void gen_view_f1_f2_dcs_ply_bat (const std::string& f1, const std::string& f2);
+void gen_view_f1_f2_shift_bat (const std::string& f1, const std::string& f2,
+                               const std::string& key);
 
 //#####################################################################
 
-void gen_smreb_bats (const vcl_string& f1, const vcl_string& f2);
+void gen_smreb_bats (const std::string& f1, const std::string& f2);
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef bvam_voxel_storage_disk_h_
 #define bvam_voxel_storage_disk_h_
 
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <fstream>
 #include <vgl/vgl_vector_3d.h>
 
 #include "bvam_voxel_storage.h"
@@ -31,7 +31,7 @@ template <class T>
 class bvam_voxel_storage_disk : public bvam_voxel_storage<T>
 {
 public:
-  bvam_voxel_storage_disk(vcl_string storage_filename, vgl_vector_3d<unsigned int> grid_size);
+  bvam_voxel_storage_disk(std::string storage_filename, vgl_vector_3d<unsigned int> grid_size);
   virtual ~bvam_voxel_storage_disk(){fio_.close();}
 
   virtual bool initialize_data(T const& value);
@@ -46,11 +46,11 @@ public:
 
 protected:
   
-  vcl_string storage_fname_;
+  std::string storage_fname_;
 
   // input and output file stream
-  vcl_fstream fio_;
-  //vcl_ifstream fin_;
+  std::fstream fio_;
+  //std::ifstream fin_;
 
   // slab-sized buffer
   bvam_memory_chunk_sptr slab_buffer_;

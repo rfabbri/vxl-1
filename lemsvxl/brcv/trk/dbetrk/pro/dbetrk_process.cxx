@@ -19,7 +19,7 @@ dbetrk_process::dbetrk_process() : bpro1_process(),dp()
       !parameters()->add( "Border" ,                    "-sborder" ,             dp.borderp=false )||
       !parameters()->add( "length of curves" ,          "-elenofcurves" ,       (int)10 ) ||
       !parameters()->add( "Motion" ,                    "-emotion" ,            (int)20 ) ||
-      !parameters()->add( "Points filename" ,           "-efile" ,            (vcl_string)"d:\\data\\truck\\truck.tmp" ) ||
+      !parameters()->add( "Points filename" ,           "-efile" ,            (std::string)"d:\\data\\truck\\truck.tmp" ) ||
       !parameters()->add( "All edges" ,                    "-eall" ,            bool(false) ) ||
       !parameters()->add( "motion in x" ,                    "-ex" ,            (float)10 ) ||
       !parameters()->add( "motion in y" ,                    "-ey" ,            (float)10 ) ||
@@ -33,7 +33,7 @@ dbetrk_process::dbetrk_process() : bpro1_process(),dp()
 
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
   else
   {
@@ -60,24 +60,24 @@ dbetrk_process::clone() const
 
 
 
-vcl_string
+std::string
 dbetrk_process::name()
 {
   return "Edge Tracking";
 }
 
 
-vcl_vector< vcl_string > dbetrk_process::get_input_type()
+std::vector< std::string > dbetrk_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
-vcl_vector< vcl_string > dbetrk_process::get_output_type()
+std::vector< std::string > dbetrk_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edgetrk" );
   return to_return;
 }
@@ -102,7 +102,7 @@ bool
 dbetrk_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbetrk_process::execute() - not exactly one"
+    std::cout << "In dbetrk_process::execute() - not exactly one"
              << " input image \n";
     return false;
   }
@@ -126,7 +126,7 @@ dbetrk_process::execute()
    }
   else
     {
-      vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+      std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
            return false;
     }
   
@@ -143,7 +143,7 @@ dbetrk_process::execute()
   
   static int min_length_of_curves=40;
   static int motion=20;
-  static vcl_string filename="";
+  static std::string filename="";
   static bool all=false;
 
   parameters()->get_value( "-elenofcurves" , min_length_of_curves ); 
@@ -156,7 +156,7 @@ dbetrk_process::execute()
   detector.SetImage(img);
   detector.DoContour();
 
-  vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+  std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
   vil_image_view<float> float_image_view= brip_vil_float_ops::convert_to_float(image_view);
 
   //: separating out the three planes of an image
@@ -196,7 +196,7 @@ dbetrk_process::execute()
   vdgl_digital_curve_sptr dc;
   vdgl_interpolator_sptr interp;
   vdgl_edgel_chain_sptr  ec;
-  vcl_vector<vtol_edge_2d_sptr> ecl;
+  std::vector<vtol_edge_2d_sptr> ecl;
   bg->input_curves_.clear();
   
   for (unsigned int i=0; i<edges->size(); i++)
@@ -209,10 +209,10 @@ dbetrk_process::execute()
   
     
 //    bg->input_curves_.push_back(ecl);
-    vcl_cout<<"\n frame no "<<bg->input_curves_.size()-1;
+    std::cout<<"\n frame no "<<bg->input_curves_.size()-1;
     bg->setmotion(motion);
     bg->fill_dbetrk_edges(bg->frame_);
-    vcl_cout<<"\n nodes info computed";
+    std::cout<<"\n nodes info computed";
 
     parameters()->get_value( "-ex" , bg->std_x ); 
     parameters()->get_value( "-ey" , bg->std_y ); 
@@ -227,10 +227,10 @@ dbetrk_process::execute()
         bg->compute_edges(bg->frame_-1,bg->frame_);
     else if(bg->frame_==0)
     {
-        vcl_vector<dbetrk_edge_sptr> nodes;
+        std::vector<dbetrk_edge_sptr> nodes;
         vsl_b_ifstream ifs(filename.c_str());
         if(!ifs)
-        {vcl_cout <<"\n error opening the file ";}
+        {std::cout <<"\n error opening the file ";}
         else
         {
          short ver;vsl_b_read(ifs, ver);
@@ -248,7 +248,7 @@ dbetrk_process::execute()
        
     }
 
-    vcl_cout<<"\n edges info computed";
+    std::cout<<"\n edges info computed";
 
   
     dbetrk_storage_sptr output_edges=dbetrk_storage_new();
@@ -261,7 +261,7 @@ dbetrk_process::execute()
 
     bg->frame_++;
 
-    vcl_cout<<"\n  hi";
+    std::cout<<"\n  hi";
   clear_input();
   return true;
 }

@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_frame_from_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_image_storage.h>
@@ -42,16 +42,16 @@ vidpro_frame_from_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_frame_from_istream_process::name()
+std::string vidpro_frame_from_istream_process::name()
 {
     return "Frame from Istream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_frame_from_istream_process::get_input_type()
+std::vector< std::string > vidpro_frame_from_istream_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     to_return.push_back( "istream" );
 
@@ -60,9 +60,9 @@ vcl_vector< vcl_string > vidpro_frame_from_istream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_frame_from_istream_process::get_output_type()
+std::vector< std::string > vidpro_frame_from_istream_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // output type
     to_return.push_back( "image" );
@@ -103,7 +103,7 @@ vidpro_frame_from_istream_process::execute()
         return false;
 
     if (!istream_->is_open()) {
-        vcl_cout << "Failed to open the input stream\n";
+        std::cout << "Failed to open the input stream\n";
         return false;
     }
 

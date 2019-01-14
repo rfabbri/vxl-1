@@ -29,7 +29,7 @@ dbetl_track_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbetl_storage.vertical_cast(storage);
  
   // Extract the tracks
-  vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks = dbetl_storage->tracks();
+  std::vector<std::vector<dbetl_point_track_sptr> > tracks = dbetl_storage->tracks();
 
   if(tracks.empty())
     return vgui_deck_tableau_new();   
@@ -53,7 +53,7 @@ dbetl_track_displayer::make_tableau( bpro1_storage_sptr storage) const
   SoPointSet* points = new SoPointSet;
   int coord_num = 0;
   for (unsigned int i=0; i<tracks.size(); ++i){
-    for ( vcl_vector<dbetl_point_track_sptr>::const_iterator p_itr = tracks[i].begin();
+    for ( std::vector<dbetl_point_track_sptr>::const_iterator p_itr = tracks[i].begin();
           p_itr != tracks[i].end();  ++p_itr) {
       if((*p_itr)->num_points()<5)
         continue;
@@ -82,13 +82,13 @@ dbetl_track_displayer::make_tableau( bpro1_storage_sptr storage) const
   group->addChild(curve_grp);
 
   for (unsigned int i=0; i<tracks.size(); ++i){
-    for ( vcl_vector<dbetl_point_track_sptr>::const_iterator p_itr = tracks[i].begin();
+    for ( std::vector<dbetl_point_track_sptr>::const_iterator p_itr = tracks[i].begin();
           p_itr != tracks[i].end();  ++p_itr) {
       if((*p_itr)->num_points()<5)
         continue;
 
       SoCoordinate3* curve_coords = new SoCoordinate3;
-      vcl_vector<vgl_point_3d<double> > pts = (*p_itr)->curve_points();
+      std::vector<vgl_point_3d<double> > pts = (*p_itr)->curve_points();
       for( unsigned int j=0; j<pts.size(); ++j)
         curve_coords->point.set1Value(j, pts[j].x(), pts[j].y(), pts[j].z());
   

@@ -4,7 +4,7 @@
 #include <vidl/vidl_istream_sptr.h>
 #include <vidl/vidl_istream.h>
 #include <vul/vul_file.h>
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <string>
 #include <bbgm/bbgm_image_sptr.h>

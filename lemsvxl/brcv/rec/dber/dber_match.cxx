@@ -2,8 +2,8 @@
 #include <dber/dber_edgel_similarity.h>
 #include <dber/dber_utilities.h>
 
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_hungarian_algorithm.h>
@@ -34,7 +34,7 @@ dber_match::dber_match() : sigma_square_(1.0f), scale_factor_(1.0f), radius_(1)
 //: match the current edgel-image pairs, uses mutual information based edgel similaity and hungarian matching
 //  width_radius: the radius of neighborhood for each edgel to eliminate distant edgels as nonsimilar without consideration
 //                should be determined by checking the width of the edgel set and some ratio of it should be used as width_radius
-double dber_match::match(vcl_vector<vil_image_view<vxl_byte> >&set1, vcl_vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma, float width_radius, float radius)
+double dber_match::match(std::vector<vil_image_view<vxl_byte> >&set1, std::vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma, float width_radius, float radius)
 {
   int s1 = lines1_.size();
   int s2 = lines2_.size();
@@ -57,10 +57,10 @@ double dber_match::match(vcl_vector<vil_image_view<vxl_byte> >&set1, vcl_vector<
   t.mark();
   assign_ = vnl_hungarian_algorithm<double>( cost_matrix );
   //if (assign_.size() != size)
-    //vcl_cout << "Problems in hungarian matching! time: " << t.real()/1000 << " seconds\n";
+    //std::cout << "Problems in hungarian matching! time: " << t.real()/1000 << " seconds\n";
   //else
-  vcl_cout << "assign size: " << assign_.size() << vcl_endl;
-    vcl_cout << "Hungarian matching succesfull! time: " << t.real()/1000 << " seconds\n";
+  std::cout << "assign size: " << assign_.size() << std::endl;
+    std::cout << "Hungarian matching succesfull! time: " << t.real()/1000 << " seconds\n";
 
   double total_cost = 0;
   for (unsigned int i = 0; i < assign_.size(); i++) {
@@ -72,18 +72,18 @@ double dber_match::match(vcl_vector<vil_image_view<vxl_byte> >&set1, vcl_vector<
 }
 
 // for sorting
-static bool cost_compare(const vcl_pair<double, vcl_pair<unsigned, unsigned> >& l1,
-                         const vcl_pair<double, vcl_pair<unsigned, unsigned> >& l2)
+static bool cost_compare(const std::pair<double, std::pair<unsigned, unsigned> >& l1,
+                         const std::pair<double, std::pair<unsigned, unsigned> >& l2)
 {
   return l1.first > l2.first;
 }
 
-void dber_match::set_lines1(const vcl_vector<vsol_line_2d_sptr>& l) {
+void dber_match::set_lines1(const std::vector<vsol_line_2d_sptr>& l) {
   for (unsigned i = 0; i< l.size(); i++)
     lines1_.push_back(new vsol_line_2d(*l[i]));
 }
 
-void dber_match::set_lines2(const vcl_vector<vsol_line_2d_sptr>& l) {
+void dber_match::set_lines2(const std::vector<vsol_line_2d_sptr>& l) {
   for (unsigned i = 0; i< l.size(); i++)
     lines2_.push_back(new vsol_line_2d(*l[i]));
 }
@@ -111,7 +111,7 @@ double dber_match::match_greedy(double threshold) {
   // first scale and translate a copy of lines2 and use that
   // get the assignment based on this scaled and translated lines2
   // but then use original points to get the TPS
-  vcl_vector<vsol_line_2d_sptr> lines2;
+  std::vector<vsol_line_2d_sptr> lines2;
   for (unsigned i = 0; i< lines2_.size(); i++)
     lines2.push_back(new vsol_line_2d(*lines2_[i]));
 
@@ -132,7 +132,7 @@ double dber_match::match_greedy(double threshold) {
   
   vul_timer t;
   t.mark();
-  vcl_vector<vcl_pair<double, vcl_pair<unsigned, unsigned> > > cost_matrix; 
+  std::vector<std::pair<double, std::pair<unsigned, unsigned> > > cost_matrix; 
   int eliminated = 0, cnt = 0;
   for (int i = 0; i<s1; i++)
     for (int j = 0; j<s2; j++) {
@@ -146,38 +146,38 @@ double dber_match::match_greedy(double threshold) {
         eliminated++;
         continue;
       }
-      vcl_pair<unsigned, unsigned> p(i,j);
-      vcl_pair<double, vcl_pair<unsigned, unsigned> > pp(mi, p);
+      std::pair<unsigned, unsigned> p(i,j);
+      std::pair<double, std::pair<unsigned, unsigned> > pp(mi, p);
       cost_matrix.push_back(pp);
     }
   // sort the costs
   sort(cost_matrix.begin(), cost_matrix.end(), cost_compare);
 
   // initialize assignments as null
-  assign_ = vcl_vector<unsigned> (s1, s1 + s2);
+  assign_ = std::vector<unsigned> (s1, s1 + s2);
   
-  vcl_vector<bool> j_assigned(s2, false);
-  vcl_vector<double> costs(s1, 10000.0f);
+  std::vector<bool> j_assigned(s2, false);
+  std::vector<double> costs(s1, 10000.0f);
   // read the best assignments from sorted vector for each row
-  vcl_vector<vcl_pair<double, vcl_pair<unsigned, unsigned> > >::iterator iter;
+  std::vector<std::pair<double, std::pair<unsigned, unsigned> > >::iterator iter;
   for (iter = cost_matrix.begin(); iter != cost_matrix.end(); iter++) {
     unsigned i = (iter->second).first;
     unsigned j = (iter->second).second;
-    //vcl_cout << "cost: " << iter->first << " i: " << i << " j: " << j << vcl_endl;
+    //std::cout << "cost: " << iter->first << " i: " << i << " j: " << j << std::endl;
     if (int(assign_[i]) > s2 && !j_assigned[j]) {
       assign_[i] = j;
       j_assigned[j] = true;
       costs[i] = iter->first;
     }
   }
-  vcl_cout << "total pairs: " << cnt << " eliminated: " << eliminated << " of them\n";
+  std::cout << "total pairs: " << cnt << " eliminated: " << eliminated << " of them\n";
   return 0;
 }
 
 //: use the current assignment to generate a dense correspondence
 bool dber_match::find_tps(bool pure_affine) {
 
-  vcl_vector< vgl_homg_point_2d<double> > hpts1, hpts2;
+  std::vector< vgl_homg_point_2d<double> > hpts1, hpts2;
   for (unsigned i = 0; i<assign_.size(); i++) {
     if (assign_[i] > lines2_.size()) 
       continue;
@@ -186,7 +186,7 @@ bool dber_match::find_tps(bool pure_affine) {
     hpts1.push_back(vgl_homg_point_2d<double> (mid1->x(), mid1->y()));
     hpts2.push_back(vgl_homg_point_2d<double> (mid2->x(), mid2->y()));
   }
-  vcl_cout << "# of assignments: " << assign_.size() << " using: " << hpts1.size() << " of them.\n";
+  std::cout << "# of assignments: " << assign_.size() << " using: " << hpts1.size() << " of them.\n";
   if (hpts1.size() == 0)
     return false;
 
@@ -195,7 +195,7 @@ bool dber_match::find_tps(bool pure_affine) {
 
   tps_.set_pure_affine(pure_affine);
 
-  vcl_vector<vgl_point_2d<double> > tpts1, tpts2;
+  std::vector<vgl_point_2d<double> > tpts1, tpts2;
   for (unsigned int i = 0; i<hpts1.size(); i++) {
     vgl_homg_point_2d<double> tpt = trans1_(hpts1[i]);
     tpts1.push_back(vgl_point_2d<double> (tpt.x()/tpt.w(), tpt.y()/tpt.w()));
@@ -206,7 +206,7 @@ bool dber_match::find_tps(bool pure_affine) {
   }
 
   tps_.build(tpts1,tpts2,true);
-  vcl_cout << "energy of TPS X: " << tps_.bendingEnergyX() << " Y: " << tps_.bendingEnergyY() << vcl_endl; 
+  std::cout << "energy of TPS X: " << tps_.bendingEnergyX() << " Y: " << tps_.bendingEnergyY() << std::endl; 
   return true;
 }
 

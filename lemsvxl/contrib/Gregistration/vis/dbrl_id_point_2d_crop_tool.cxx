@@ -118,8 +118,8 @@ dbrl_id_point_2d_crop_tool::handle( const vgui_event & e,
                 }
             dbrl_id_point_2d_storage_sptr id_point_2d;
             id_point_2d.vertical_cast(storage_);
-            vcl_vector<dbrl_id_point_2d_sptr> idpoints;
-            vcl_vector<dbrl_id_point_2d_sptr> idpointscropped;
+            std::vector<dbrl_id_point_2d_sptr> idpoints;
+            std::vector<dbrl_id_point_2d_sptr> idpointscropped;
             idpoints=id_point_2d->points();
             for(int i=0;i<idpoints.size();i++)
                 {
@@ -192,13 +192,13 @@ void
 dbrl_id_point_2d_crop_tool::get_popup( const vgui_popup_params& params, 
                                             vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((draw_polygon_)?on:off)+"Draw Polygon ", 
             bvis1_tool_toggle, (void*)(&draw_polygon_) );
   
 }
 
-vcl_string
+std::string
 dbrl_id_point_2d_crop_tool::name() const
 {
   return "Crop Id Points";

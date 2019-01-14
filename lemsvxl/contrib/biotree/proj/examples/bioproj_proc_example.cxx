@@ -9,21 +9,21 @@
 
 #include <proj/bioproj_io.h>
 #include <proj/bioproj_proc.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
   if(argc != 5)
   {
-    vcl_cout << "Usage: " << argv[0] << " [filename base]" << vcl_endl;
+    std::cout << "Usage: " << argv[0] << " [filename base]" << std::endl;
     exit(-1);
   }
     
-  vcl_string fnamebase = argv[1];
+  std::string fnamebase = argv[1];
 
   clock_t start, end;
   double elapsed;
-  start = vcl_clock();
+  start = std::clock();
 
   double sigma = double(atof(argv[2]));
   int r_extent = atoi(argv[3]);
@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
 
   bioproj_proc proj_proc(&proj_io);
 
-  vcl_string fs = fnamebase + "_s.txt";
-  vcl_string fx = fnamebase + "_x.txt";
-  vcl_string fy = fnamebase + "_y.txt";
-  vcl_string fz = fnamebase + "_z.txt";
+  std::string fs = fnamebase + "_s.txt";
+  std::string fx = fnamebase + "_x.txt";
+  std::string fy = fnamebase + "_y.txt";
+  std::string fz = fnamebase + "_z.txt";
 
   proj_proc.execute(NU_G, G, fs.c_str());       // smoothing
 
@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
   proj_proc.execute(NU_G_Y, G_Z , fyz.c_str()); // second derivative yz
   proj_proc.execute(NU_G  , G_ZZ, fzz.c_str()); // second derivative zz
 */
-  end = vcl_clock();
+  end = std::clock();
   elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is " << elapsed << vcl_endl;
+  std::cout << "Elapsed time is " << elapsed << std::endl;
 
   return 0;
 }

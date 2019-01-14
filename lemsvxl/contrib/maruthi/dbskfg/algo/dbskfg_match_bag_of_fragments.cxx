@@ -21,7 +21,7 @@
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <dbskfg/dbskfg_shock_link.h>
 #include <dbskfg/algo/dbskfg_composite_graph_fileio.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_curve_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
@@ -92,9 +92,9 @@ extern "C" {
 
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
-    vcl_string model_dir,
-    vcl_string query_dir,
-    vcl_string output_file,
+    std::string model_dir,
+    std::string query_dir,
+    std::string output_file,
     bool elastic_splice_cost, 
     float scurve_sample_ds, 
     float scurve_interpolate_ds, 
@@ -118,7 +118,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     RawColorSpace raw_color_space,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
-    vcl_string model_image_path
+    std::string model_image_path
     ):elastic_splice_cost_(elastic_splice_cost),
       scurve_sample_ds_(scurve_sample_ds),
       scurve_interpolate_ds_(scurve_interpolate_ds),
@@ -185,13 +185,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     
     // Read in PCA data
     { 
-        vcl_string mean_file=
+        std::string mean_file=
        "/users/mnarayan/scratch/match_birds/base/pca_lab_color_mean_128.txt";
-        vcl_string M_file=
+        std::string M_file=
        "/users/mnarayan/scratch/match_birds/base/pca_lab_color_M_128.txt";
         
-        vcl_ifstream mean_stream(mean_file.c_str());
-        vcl_ifstream M_stream(M_file.c_str());
+        std::ifstream mean_stream(mean_file.c_str());
+        std::ifstream M_stream(M_file.c_str());
             
         vl_sift_pix mean_data[396];
         vl_sift_pix M[396*128];
@@ -222,40 +222,40 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
        
     if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
     {
-        vcl_cout<<"Computing color histograms over LAB space"<<vcl_endl;
+        std::cout<<"Computing color histograms over LAB space"<<std::endl;
     }
     else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::HSV )
     {
-        vcl_cout<<"Computing color histograms over HSV space"<<vcl_endl;
+        std::cout<<"Computing color histograms over HSV space"<<std::endl;
     }
     else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
     {
-        vcl_cout<<"Computing color histograms over RGB_2 space"<<vcl_endl;
+        std::cout<<"Computing color histograms over RGB_2 space"<<std::endl;
     }
     else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
     {
-        vcl_cout<<"Computing color histograms over OPP_2 space"<<vcl_endl;
+        std::cout<<"Computing color histograms over OPP_2 space"<<std::endl;
     }
     else
     {
-        vcl_cout<<"Computing color histograms over NOPP_2 space"<<vcl_endl;
+        std::cout<<"Computing color histograms over NOPP_2 space"<<std::endl;
     }
 
     if ( grad_color_space_ == dbskfg_match_bag_of_fragments::RGB )
     {
-        vcl_cout<<"Computing color gradients over RGB space"<<vcl_endl;
+        std::cout<<"Computing color gradients over RGB space"<<std::endl;
     }
     else if ( grad_color_space_ == dbskfg_match_bag_of_fragments::OPP )
     {
-        vcl_cout<<"Computing color gradients over OPP space"<<vcl_endl;
+        std::cout<<"Computing color gradients over OPP space"<<std::endl;
     }
     else if ( grad_color_space_ == dbskfg_match_bag_of_fragments::NOPP )
     {
-        vcl_cout<<"Computing color gradients over NOPP space"<<vcl_endl;
+        std::cout<<"Computing color gradients over NOPP space"<<std::endl;
     }
     else
     {
-        vcl_cout<<"Computing color gradients over LAB space"<<vcl_endl;
+        std::cout<<"Computing color gradients over LAB space"<<std::endl;
     }
 
     output_match_file_ = output_match_file_ + "_similarity_matrix.xml";
@@ -310,25 +310,25 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     if ( model_image_path.size())
     {
         unsigned int index=0;
-        vcl_ifstream myfile (model_image_path.c_str());
+        std::ifstream myfile (model_image_path.c_str());
         if (myfile.is_open())
         {
-            vcl_string line;
-            while ( vcl_getline (myfile,line) )
+            std::string line;
+            while ( std::getline (myfile,line) )
             {
                 vil_image_resource_sptr model_img_sptr = 
                     vil_load_image_resource(line.c_str());
-                vcl_stringstream title_stream;
+                std::stringstream title_stream;
                 title_stream<<"model_"<<index;
 
-                vcl_string stripped = vul_file::basename(line.c_str());
-                vcl_string final = vul_file::strip_extension(stripped.c_str());
+                std::string stripped = vul_file::basename(line.c_str());
+                std::string final = vul_file::strip_extension(stripped.c_str());
 
-                vcl_size_t found=output_file.find(final);
+                std::size_t found=output_file.find(final);
 
-                if ( found != vcl_string::npos)
+                if ( found != std::string::npos)
                 {
-                    vcl_cout<<"Matching exact image Index: "<<index<<vcl_endl;
+                    std::cout<<"Matching exact image Index: "<<index<<std::endl;
                     skipped_index_=index;
                 }
 
@@ -626,7 +626,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 
         if ( query_image_ )
         {
-            vcl_cout<<"Computing query image grad data"<<vcl_endl;
+            std::cout<<"Computing query image grad data"<<std::endl;
 
             vgl_polygon<double> mask=query_fragments_polys_[0].second;
 
@@ -998,11 +998,11 @@ dbskfg_match_bag_of_fragments::~dbskfg_match_bag_of_fragments()
     
 }
 
-void dbskfg_match_bag_of_fragments::load_model(vcl_string model_dir)
+void dbskfg_match_bag_of_fragments::load_model(std::string model_dir)
 {
     // Find file with this glob pattern
-    vcl_string glob=model_dir+"/*_fragment_list.txt";
-    vcl_string fragment_list;
+    std::string glob=model_dir+"/*_fragment_list.txt";
+    std::string fragment_list;
 
     for (vul_file_iterator fn=glob; fn; ++fn)
     { 
@@ -1012,37 +1012,37 @@ void dbskfg_match_bag_of_fragments::load_model(vcl_string model_dir)
     
     if ( fragment_list.size() == 0 )
     {
-        vcl_cerr<<"Error Loading Model fragments"<<vcl_endl;
+        std::cerr<<"Error Loading Model fragments"<<std::endl;
         return;
     }
 
-    vcl_cout<<"Loading Model Set of Fragments"<<vcl_endl;
+    std::cout<<"Loading Model Set of Fragments"<<std::endl;
 
     // Open the file
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(fragment_list.c_str());
 
     // Read each exemplar name
-    vcl_string temp;
+    std::string temp;
     unsigned model_id(0);
     while(!file_opener.eof())
     {
         getline(file_opener,temp);
         if ( temp.size() )
         {
-            vcl_cout<<"Loading Model File: "<<temp<<vcl_endl;
-            model_fragments_[model_id]=vcl_make_pair(
+            std::cout<<"Loading Model File: "<<temp<<std::endl;
+            model_fragments_[model_id]=std::make_pair(
                 temp,
                 load_composite_graph(temp));
             model_id++;
         }
     }
     
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
 }
 
-void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
+void dbskfg_match_bag_of_fragments::load_binary_model(std::string model_dir)
 {
     bpro1_filepath filepath(model_dir);
 
@@ -1056,25 +1056,25 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
     bool flag=load_pro.execute();
     load_pro.finish();
 
-    vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
+    std::map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
-    vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
-    vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
-    vcl_map<unsigned int,vgl_polygon<double> > cgraph_polys=
+    std::map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
+    std::map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
+    std::map<unsigned int,vgl_polygon<double> > cgraph_polys=
         load_pro.get_polygons();
-    vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
+    std::map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
     {
-        vcl_stringstream stream;
+        std::stringstream stream;
         stream<<"model_"<<(*it).first;
-        model_fragments_[(*it).first]=vcl_make_pair(stream.str(),(*it).second);
-        model_fragments_area_[(*it).first]=vcl_make_pair(
+        model_fragments_[(*it).first]=std::make_pair(stream.str(),(*it).second);
+        model_fragments_area_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_area[(*it).first]);
-        model_fragments_length_[(*it).first]=vcl_make_pair(
+        model_fragments_length_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_length[(*it).first]);
-        model_fragments_polys_[(*it).first]=vcl_make_pair(
+        model_fragments_polys_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_polys[(*it).first]);
 
@@ -1082,30 +1082,30 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
     }
 
 
-    vcl_vector<unsigned int> regions_removed=load_pro.get_frags_removed();
+    std::vector<unsigned int> regions_removed=load_pro.get_frags_removed();
     if ( regions_removed.size() )
     {
-         vcl_ofstream region_file;
+         std::ofstream region_file;
          region_file.open(output_removed_regions_.c_str(),
-                          vcl_ios::out | 
-                          vcl_ios::app );
+                          std::ios::out | 
+                          std::ios::app );
          for ( unsigned int i=0; i < regions_removed.size() ; ++i)
          {
              region_file<<regions_removed[i]<<" ";
              
          }
-         region_file<<vcl_endl;
+         region_file<<std::endl;
          region_file.close();
 
     }
 
 }
 
-void dbskfg_match_bag_of_fragments::load_query(vcl_string query_dir)
+void dbskfg_match_bag_of_fragments::load_query(std::string query_dir)
 {
     // Find file with this glob pattern
-    vcl_string glob=query_dir+"/*_fragment_list.txt";
-    vcl_string fragment_list;
+    std::string glob=query_dir+"/*_fragment_list.txt";
+    std::string fragment_list;
 
     for (vul_file_iterator fn=glob; fn; ++fn)
     { 
@@ -1115,36 +1115,36 @@ void dbskfg_match_bag_of_fragments::load_query(vcl_string query_dir)
 
     if ( fragment_list.size() == 0 )
     {
-        vcl_cerr<<"Error Loading Query fragments"<<vcl_endl;
+        std::cerr<<"Error Loading Query fragments"<<std::endl;
         return;
     }
 
-    vcl_cout<<"Opening Query Set of Fragments"<<vcl_endl;
+    std::cout<<"Opening Query Set of Fragments"<<std::endl;
     
     // Open the file
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(fragment_list.c_str());
 
     // Read each exemplar name
-    vcl_string temp;
+    std::string temp;
     unsigned query_id(0);
     while(!file_opener.eof())
     {
         getline(file_opener,temp);
         if ( temp.size()) 
         {
-            vcl_cout<<"Loading Query File: "<<temp<<vcl_endl;
-            query_fragments_[query_id]=vcl_make_pair(
+            std::cout<<"Loading Query File: "<<temp<<std::endl;
+            query_fragments_[query_id]=std::make_pair(
                 temp,
                 load_composite_graph(temp));
             query_id++;
         }
     }
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
 }
 
-void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
+void dbskfg_match_bag_of_fragments::load_binary_query(std::string query_dir)
 {
     bpro1_filepath filepath(query_dir);
 
@@ -1158,43 +1158,43 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
     bool flag=load_pro.execute();
     load_pro.finish();
 
-    vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
+    std::map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
-    vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
-    vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
-    vcl_map<unsigned int,vgl_polygon<double> > cgraph_polys=
+    std::map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
+    std::map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
+    std::map<unsigned int,vgl_polygon<double> > cgraph_polys=
         load_pro.get_polygons();
 
-    vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
+    std::map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
     {
-        vcl_stringstream stream;
+        std::stringstream stream;
         stream<<"query_"<<(*it).first;
-        query_fragments_[(*it).first]=vcl_make_pair(stream.str(),(*it).second);
-        query_fragments_area_[(*it).first]=vcl_make_pair(
+        query_fragments_[(*it).first]=std::make_pair(stream.str(),(*it).second);
+        query_fragments_area_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_area[(*it).first]);
-        query_fragments_length_[(*it).first]=vcl_make_pair(
+        query_fragments_length_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_length[(*it).first]);
-        query_fragments_polys_[(*it).first]=vcl_make_pair(
+        query_fragments_polys_[(*it).first]=std::make_pair(
             stream.str(),
             cgraph_polys[(*it).first]);
     }
 
-    vcl_vector<unsigned int> regions_removed=load_pro.get_frags_removed();
+    std::vector<unsigned int> regions_removed=load_pro.get_frags_removed();
     if ( regions_removed.size() )
     {
-        vcl_ofstream region_file;
+        std::ofstream region_file;
         region_file.open(output_removed_regions_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app );
+                         std::ios::out | 
+                         std::ios::app );
         for ( unsigned int i=0; i < regions_removed.size() ; ++i)
         {
             region_file<<regions_removed[i]<<" ";
              
         }
-        region_file<<vcl_endl;
+        region_file<<std::endl;
         region_file.close();
 
     }
@@ -1202,7 +1202,7 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
 }
 
 dbskfg_composite_graph_sptr dbskfg_match_bag_of_fragments::
-load_composite_graph(vcl_string filename)
+load_composite_graph(std::string filename)
 {
     bpro1_filepath filepath(filename);
 
@@ -1215,7 +1215,7 @@ load_composite_graph(vcl_string filename)
     bool flag=load_pro.execute();
     load_pro.finish();
 
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     cg_results = load_pro.get_output();
 
     dbskfg_composite_graph_storage_sptr cg_storage;
@@ -1229,48 +1229,48 @@ bool dbskfg_match_bag_of_fragments::match()
 {
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_cout<<"Matching "
+    std::cout<<"Matching "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments"
-            <<vcl_endl;
+            <<std::endl;
  
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
     {
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
-            vcl_cout<<"Matching "
+            std::cout<<"Matching "
                     <<(*m_iterator).second.first
                     <<" to "
                     <<(*q_iterator).second.first
-                    <<vcl_endl;
+                    <<std::endl;
 
             // Match model to query
             double cost1 = match_two_graphs((*m_iterator).second.second,
                                             (*q_iterator).second.second);
             double cost2 = match_two_graphs((*q_iterator).second.second,
                                             (*m_iterator).second.second);
-            double cost  = vcl_min(cost1,cost2);
+            double cost  = std::min(cost1,cost2);
 
             unsigned int model_id= (*m_iterator).first;
             unsigned int query_id= (*q_iterator).first;
-            model_map[cost]=vcl_make_pair(model_id,query_id);
+            model_map[cost]=std::make_pair(model_id,query_id);
         }
         sim_matrix_.push_back(model_map);
     }
@@ -1291,34 +1291,34 @@ bool dbskfg_match_bag_of_fragments::binary_match()
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     if ( !mirror_)
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
                 <<" query fragments"
-                <<vcl_endl;
+                <<std::endl;
     }
     else
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
                 <<" query fragments with horizontal mirroring of query"
-                <<vcl_endl;
+                <<std::endl;
 
     }
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -1380,14 +1380,14 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             ((*m_iterator).second.second, elastic_splice_cost_, 
              circular_ends_, combined_edit_);
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
 
-            vcl_string key = model_fragments_
+            std::string key = model_fragments_
                 [(*q_iterator).first].first;
 
             vl_sift_pix* query_images_grad_data=
@@ -1551,19 +1551,19 @@ bool dbskfg_match_bag_of_fragments::binary_match()
 
             query_tree=0;
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
         model_tree=0;
     }
 
     // write out data
     // write_out_dart_data();
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -1629,13 +1629,13 @@ bool dbskfg_match_bag_of_fragments::binary_match()
    
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"MatchTime "
+    std::cout<<std::endl;
+    std::cout<<"MatchTime "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments is "
-            <<vox_time<<" sec"<<vcl_endl;
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 }
@@ -1648,34 +1648,34 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     if ( !mirror_)
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
                 <<" query fragments"
-                <<vcl_endl;
+                <<std::endl;
     }
     else
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
                 <<" query fragments with horizontal mirroring of query"
-                <<vcl_endl;
+                <<std::endl;
 
     }
  
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -1694,10 +1694,10 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             ((*m_iterator).second.second, elastic_splice_cost_, 
              circular_ends_, combined_edit_);
 
-        vcl_string model_filename=(*m_iterator).second.first+"_tree.shg";
+        std::string model_filename=(*m_iterator).second.first+"_tree.shg";
         model_tree->create_shg(model_filename.c_str());
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
         for ( q_iterator = query_fragments_.begin() ; 
@@ -1716,7 +1716,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                 ((*q_iterator).second.second, elastic_splice_cost_, 
                  circular_ends_, combined_edit_);
 
-            vcl_string query_filename=(*q_iterator).second.first+"_tree.shg";
+            std::string query_filename=(*q_iterator).second.first+"_tree.shg";
             query_tree->create_shg(query_filename.c_str());
 
             double norm_shape_cost(0.0);
@@ -1726,7 +1726,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             double norm_shape_cost_length(0.0);
             double frob_norm(0.0);
 
-            vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
+            std::string match_prefix =(*m_iterator).second.first + "_vs_" +
                 (*q_iterator).second.first;
 
             // Match model to query
@@ -1742,7 +1742,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
 
             if ( mirror_)
             {
-                vcl_cout<<"Computing Mirror"<<vcl_endl;
+                std::cout<<"Computing Mirror"<<std::endl;
 
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
@@ -1756,7 +1756,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                     ((*q_iterator).second.second, elastic_splice_cost_, 
                      circular_ends_, combined_edit_);
                 
-                vcl_string query_mirror_filename=
+                std::string query_mirror_filename=
                     (*q_iterator).second.first+"_mirror_tree.shg";
                 query_mirror_tree->create_shg(query_mirror_filename.c_str());
 
@@ -1766,7 +1766,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                 double rgb_avg_mirror_cost(0.0);
                 double norm_shape_mirror_cost_length(0.0);
                 
-                vcl_string match_mirror_prefix =
+                std::string match_mirror_prefix =
                     (*m_iterator).second.first + "_vs_mirror_" +
                     (*q_iterator).second.first;
 
@@ -1784,14 +1784,14 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
 
                 if ( norm_shape_cost < norm_shape_mirror_cost )
                 {
-                    vcl_string delete_prefix=match_mirror_prefix+"*";
+                    std::string delete_prefix=match_mirror_prefix+"*";
 
                     vul_file::delete_file_glob(delete_prefix);
                     vul_file::delete_file_glob(query_mirror_filename);
                 }
                 else
                 {
-                    vcl_string delete_prefix=match_prefix+"*";
+                    std::string delete_prefix=match_prefix+"*";
 
                     vul_file::delete_file_glob(delete_prefix);
                     vul_file::delete_file_glob(query_filename);
@@ -1817,18 +1817,18 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             query_tree=0;
             
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
         model_tree=0;
     }
 
     // write out data
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -1894,13 +1894,13 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
    
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"MatchTime "
+    std::cout<<std::endl;
+    std::cout<<"MatchTime "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments is "
-            <<vox_time<<" sec"<<vcl_endl;
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 }
@@ -1913,13 +1913,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     if ( !mirror_)
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
@@ -1927,21 +1927,21 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
         if ( scale_area_ )
         {
-            vcl_cout<<" by area"<<vcl_endl;
+            std::cout<<" by area"<<std::endl;
         }
         else if ( scale_root_ )
         {
-            vcl_cout<<" by radii"<<vcl_endl;
+            std::cout<<" by radii"<<std::endl;
         }
         else
         {
-            vcl_cout<<" by length"<<vcl_endl;
+            std::cout<<" by length"<<std::endl;
         }
 
     }
     else
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
@@ -1950,31 +1950,31 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         
         if ( scale_area_ )
         {
-            vcl_cout<<" by area";
+            std::cout<<" by area";
         }
         else if ( scale_root_ )
         {
-            vcl_cout<<" by radii";
+            std::cout<<" by radii";
         }
         else
         {
-            vcl_cout<<" by length";
+            std::cout<<" by length";
         }
 
-        vcl_cout<<" with shape alg: "<<shape_alg_<<vcl_endl;
+        std::cout<<" with shape alg: "<<shape_alg_<<std::endl;
 
     }
  
     double backup=scurve_matching_R_;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
     
     // Keep all h_matrices
-    vcl_vector<double> h_matrices;
+    std::vector<double> h_matrices;
     
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
@@ -2019,7 +2019,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         double model_length=model_fragments_length_[(*m_iterator).first]
             .second;
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
         for ( q_iterator = query_fragments_.begin() ; 
@@ -2051,9 +2051,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             double model_sample_ds=scurve_sample_ds_;
             double query_sample_ds=scurve_sample_ds_;
             
-            model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+            model_sample_ds=scurve_sample_ds_*std::sqrt(model_area
                                                        /ref_area_);
-            query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+            query_sample_ds=scurve_sample_ds_*std::sqrt(query_area
                                                        /ref_area_);
 
             if ( shape_alg_ == SCALE_TO_REF)
@@ -2061,8 +2061,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 
                 if ( scale_area_ )
                 {
-                    model_scale_ratio = vcl_sqrt(ref_area_/model_area);
-                    query_scale_ratio = vcl_sqrt(ref_area_/query_area);
+                    model_scale_ratio = std::sqrt(ref_area_/model_area);
+                    query_scale_ratio = std::sqrt(ref_area_/query_area);
                 }
                 else if ( scale_length_ )
                 {
@@ -2076,8 +2076,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 if ( scale_area_ )
                 {
                     
-                    model_scale_ratio = vcl_sqrt(mean_area/model_area);
-                    query_scale_ratio = vcl_sqrt(mean_area/query_area);
+                    model_scale_ratio = std::sqrt(mean_area/model_area);
+                    query_scale_ratio = std::sqrt(mean_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
@@ -2087,7 +2087,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(mean_area/ref_area_);
+                    std::sqrt(mean_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MAX )
@@ -2097,8 +2097,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 {
                     
 
-                    model_scale_ratio = vcl_sqrt(max_area/model_area);
-                    query_scale_ratio = vcl_sqrt(max_area/query_area);
+                    model_scale_ratio = std::sqrt(max_area/model_area);
+                    query_scale_ratio = std::sqrt(max_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
@@ -2108,7 +2108,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(max_area/ref_area_);
+                    std::sqrt(max_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MIN )
@@ -2117,8 +2117,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 if ( scale_area_ )
                 {
                     
-                    model_scale_ratio = vcl_sqrt(min_area/model_area);
-                    query_scale_ratio = vcl_sqrt(min_area/query_area);
+                    model_scale_ratio = std::sqrt(min_area/model_area);
+                    query_scale_ratio = std::sqrt(min_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
@@ -2128,12 +2128,12 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(min_area/ref_area_);
+                    std::sqrt(min_area/ref_area_);
 
             }
 
 
-            vcl_string key = model_fragments_
+            std::string key = model_fragments_
                 [(*q_iterator).first].first;
 
             vl_sift_pix* query_images_grad_data=
@@ -2351,7 +2351,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             if ( model_tree->get_id() != skipped_index_ )
             {
             // Determine matrix mat
-            vcl_map<unsigned int,vnl_matrix<double> >::iterator fit;
+            std::map<unsigned int,vnl_matrix<double> >::iterator fit;
             fit=dist_maps_.lower_bound(model_tree->get_id());
             
             if ( !dist_maps_.count(model_tree->get_id()))
@@ -2359,11 +2359,11 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 fit--;
             }
 
-            vcl_map<vcl_pair<int,int>,double>::iterator lit;
+            std::map<std::pair<int,int>,double>::iterator lit;
             for ( lit=local_dist_map_.begin(); lit != local_dist_map_.end(); 
                   ++lit)
             {
-                vcl_pair<int,int> key=(*lit).first;
+                std::pair<int,int> key=(*lit).first;
 
                 double sample_distance = (*lit).second;
                 double mat_value       = ((*fit).second)(key.first,key.second);
@@ -2388,26 +2388,26 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else
             {
-                vcl_cout<<"Skipping indexing with model id: "<<
-                    model_tree->get_id()<<vcl_endl;
+                std::cout<<"Skipping indexing with model id: "<<
+                    model_tree->get_id()<<std::endl;
             }
             local_dist_map_.clear();
 
             query_tree=0;
             model_tree=0;
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
     }
 
     // write out data
     write_out_dart_data();
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -2448,11 +2448,11 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     binary_sim_file.close();
 
 
-    // vcl_ofstream binary_h_file;
+    // std::ofstream binary_h_file;
     // binary_h_file.open(output_binary_h_file_.c_str(),
-    //                    vcl_ios::out | 
-    //                    vcl_ios::app | 
-    //                    vcl_ios::binary);
+    //                    std::ios::out | 
+    //                    std::ios::app | 
+    //                    std::ios::binary);
 
     // matrix_size=h_matrices.size();
     // binary_h_file.write(reinterpret_cast<char *>(&matrix_size),
@@ -2468,23 +2468,23 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     // binary_h_file.close();
 
 
-    vcl_ofstream parts_file;
+    std::ofstream parts_file;
     parts_file.open(output_parts_file_.c_str(),
-                    vcl_ios::out | 
-                    vcl_ios::app ); 
+                    std::ios::out | 
+                    std::ios::app ); 
                     
 
-    parts_file<<query_parts_.size()<<vcl_endl;
+    parts_file<<query_parts_.size()<<std::endl;
 
-    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > >::iterator it;
+    std::map<unsigned int,std::vector<vgl_point_2d<double> > >::iterator it;
 
     for ( it = query_parts_.begin() ; it != query_parts_.end() ; ++it)
     {
-        vcl_vector<vgl_point_2d<double> > pts=(*it).second;
+        std::vector<vgl_point_2d<double> > pts=(*it).second;
 
         for ( unsigned int p=0; p < pts.size() ; ++p)
         {
-            parts_file<<pts[p].x()<<" "<<pts[p].y()<<vcl_endl;
+            parts_file<<pts[p].x()<<" "<<pts[p].y()<<std::endl;
         }
     }
 
@@ -2492,15 +2492,15 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
 
 
-    vcl_ofstream d2c_file;
+    std::ofstream d2c_file;
     d2c_file.open(output_dist_to_category_file_.c_str(),
-                  vcl_ios::out | 
-                  vcl_ios::app ); 
+                  std::ios::out | 
+                  std::ios::app ); 
     
-    vcl_map<unsigned int,vnl_matrix<double> >::iterator mit;
+    std::map<unsigned int,vnl_matrix<double> >::iterator mit;
     for ( mit = dist_maps_.begin() ; mit != dist_maps_.end() ; ++mit)
     {
-        d2c_file<<(*mit).second.absolute_value_sum()<<vcl_endl;
+        d2c_file<<(*mit).second.absolute_value_sum()<<std::endl;
     }
 
     d2c_file.close();
@@ -2533,13 +2533,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"MatchTime "
+    std::cout<<std::endl;
+    std::cout<<"MatchTime "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments is "
-            <<vox_time<<" sec"<<vcl_endl;
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 }
@@ -2553,17 +2553,17 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     // keep track of sift features in vcl vector
-    vcl_vector<vl_sift_pix> descriptors;
+    std::vector<vl_sift_pix> descriptors;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -2635,7 +2635,7 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
     int numData    = descriptors.size()/384;
     int numCenters = keywords;
 
-    vcl_cout<<"Clustering "<<numData<<" opp sift descriptors "<<vcl_endl;
+    std::cout<<"Clustering "<<numData<<" opp sift descriptors "<<std::endl;
 
     // Let time how long this takes
     // Start timer
@@ -2664,40 +2664,40 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Clustering Time: "
-            <<vox_time2<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<std::endl;
 
     
     // Write out centers
-    vcl_ofstream center_stream("bag_of_words_sift.txt");
+    std::ofstream center_stream("bag_of_words_sift.txt");
 
-    center_stream<<numCenters<<vcl_endl;
-    center_stream<<dimension<<vcl_endl;
+    center_stream<<numCenters<<std::endl;
+    center_stream<<dimension<<std::endl;
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<centers[c]<<vcl_endl;
+        center_stream<<centers[c]<<std::endl;
 
     }
 
     center_stream.close();
 
     // Write out raw data 
-    // vcl_ofstream stream("raw_data.txt");
+    // std::ofstream stream("raw_data.txt");
     
     // for ( unsigned int s=0; s < descriptors.size() ; ++s)
     // {
-    //     stream<<descriptors[s]<<vcl_endl;
+    //     stream<<descriptors[s]<<std::endl;
     // }
     
     // stream.close() ;
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"TrainTime: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"TrainTime: "
+            <<vox_time<<" sec"<<std::endl;
     return true;
 
 
@@ -2712,19 +2712,19 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_cout<<"Training gmm computing sift descriptors"<<vcl_endl;
+    std::cout<<"Training gmm computing sift descriptors"<<std::endl;
 
     // keep track of sift features in vcl vector
-    vcl_vector<double> descriptors;
+    std::vector<double> descriptors;
 
-    vcl_vector<unsigned int> class_labels;
+    std::vector<unsigned int> class_labels;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -2769,7 +2769,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         
         vgl_box_2d<double> bbox;
 
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -2780,7 +2780,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
             {
                 vgl_point_2d<double> query_pt(x,y);
                 
-                vcl_pair<int,int> ib(x,y);
+                std::pair<int,int> ib(x,y);
                 in_bounds.insert(ib);
 
                 bbox.add(query_pt);
@@ -2795,7 +2795,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -2821,9 +2821,9 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                 double lab_1(0),lab_2(0),lab_3(0);
                 rgb2lab(rgb_1,rgb_2,rgb_3,lab_1,lab_2,lab_3);
 
-                double opp_1 = (rgb_1-rgb_2)/vcl_sqrt(2);
-                double opp_2 = (rgb_1+rgb_2-2*rgb_3)/vcl_sqrt(6);
-                double opp_3 = (rgb_1+rgb_2+rgb_3)/vcl_sqrt(3);
+                double opp_1 = (rgb_1-rgb_2)/std::sqrt(2);
+                double opp_2 = (rgb_1+rgb_2-2*rgb_3)/std::sqrt(6);
+                double opp_3 = (rgb_1+rgb_2+rgb_3)/std::sqrt(3);
 
                 double hsv_1[1];
                 double hsv_2[1];
@@ -2983,22 +2983,22 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     
     // // For debugging purposes
     // {
-    //     vcl_ofstream out_stream("sift_points.txt");
+    //     std::ofstream out_stream("sift_points.txt");
 
     //     for ( unsigned int ss=0; ss < descriptors.size() ; ++ss)
     //     {
-    //         out_stream<<descriptors[ss]<<vcl_endl;
+    //         out_stream<<descriptors[ss]<<std::endl;
     //     }
 
     //     out_stream.close();
     // }
 
     // {
-    //     vcl_ofstream out_stream("class_labels.txt");
+    //     std::ofstream out_stream("class_labels.txt");
 
     //     for ( unsigned int ss=0; ss < class_labels.size() ; ++ss)
     //     {
-    //         out_stream<<class_labels[ss]<<vcl_endl;
+    //         out_stream<<class_labels[ss]<<std::endl;
     //     }
 
     //     out_stream.close();
@@ -3014,7 +3014,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     double * priors ;
     double * posteriors ;
 
-    vcl_cout<<"GMM "<<numData<<" opp sift descriptors "<<vcl_endl;
+    std::cout<<"GMM "<<numData<<" opp sift descriptors "<<std::endl;
 
     // Let time how long this takes
     // Start timer
@@ -3042,32 +3042,32 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Clustering Time: "
-            <<vox_time2<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<std::endl;
 
     
     // Write out centers
-    vcl_ofstream center_stream("gmm_sift.txt");
+    std::ofstream center_stream("gmm_sift.txt");
 
-    center_stream<<numCenters<<vcl_endl;
-    center_stream<<dimension<<vcl_endl;
+    center_stream<<numCenters<<std::endl;
+    center_stream<<dimension<<std::endl;
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<means[c]<<vcl_endl;
+        center_stream<<means[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<covariances[c]<<vcl_endl;
+        center_stream<<covariances[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters ; ++c)
     {
-        center_stream<<priors[c]<<vcl_endl;
+        center_stream<<priors[c]<<std::endl;
 
     }
 
@@ -3075,9 +3075,9 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"TrainTime: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"TrainTime: "
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 
@@ -3092,19 +3092,19 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_cout<<"Training gmm color descriptors"<<vcl_endl;
+    std::cout<<"Training gmm color descriptors"<<std::endl;
 
     unsigned int hist_size=0;
 
     // keep track of sift features in vcl vector
-    vcl_vector<double> descriptors;
+    std::vector<double> descriptors;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -3129,7 +3129,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
         
         vgl_box_2d<double> bbox;
 
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -3140,7 +3140,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
             {
                 vgl_point_2d<double> query_pt(x,y);
                 
-                vcl_pair<int,int> ib(x,y);
+                std::pair<int,int> ib(x,y);
                 in_bounds.insert(ib);
 
                 bbox.add(query_pt);
@@ -3155,7 +3155,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -3164,7 +3164,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
 
                 vgl_point_2d<double> model_pt(x,y);
 
-                vcl_set<vcl_pair<double,double> > model_sift_samples;
+                std::set<std::pair<double,double> > model_sift_samples;
                         
                 compute_color_over_sift(
                     model_images_sift_filter,
@@ -3176,7 +3176,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
                     fixed_theta,
                     model_sift_samples);
  
-                vcl_vector<double> model_descr;
+                std::vector<double> model_descr;
                 
                 compute_color_region_hist(
                     model_sift_samples,
@@ -3208,11 +3208,11 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
     }
     
     // For debugging purposes
-    // vcl_ofstream out_stream("sift_points.txt");
+    // std::ofstream out_stream("sift_points.txt");
 
     // for ( unsigned int ss=0; ss < descriptors.size() ; ++ss)
     // {
-    //     out_stream<<descriptors[ss]<<vcl_endl;
+    //     out_stream<<descriptors[ss]<<std::endl;
     // }
 
     // out_stream.close();
@@ -3227,8 +3227,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
     double * priors ;
     double * posteriors ;
 
-    vcl_cout<<"GMM "<<numData<<" color 3d histograms of dimension "<<
-        dimension<<vcl_endl;
+    std::cout<<"GMM "<<numData<<" color 3d histograms of dimension "<<
+        dimension<<std::endl;
 
     // Let time how long this takes
     // Start timer
@@ -3256,32 +3256,32 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Clustering Time: "
-            <<vox_time2<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<std::endl;
 
     
     // Write out centers
-    vcl_ofstream center_stream("gmm_color_3d_hists.txt");
+    std::ofstream center_stream("gmm_color_3d_hists.txt");
 
-    center_stream<<numCenters<<vcl_endl;
-    center_stream<<dimension<<vcl_endl;
+    center_stream<<numCenters<<std::endl;
+    center_stream<<dimension<<std::endl;
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<means[c]<<vcl_endl;
+        center_stream<<means[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<covariances[c]<<vcl_endl;
+        center_stream<<covariances[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters ; ++c)
     {
-        center_stream<<priors[c]<<vcl_endl;
+        center_stream<<priors[c]<<std::endl;
 
     }
 
@@ -3289,9 +3289,9 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"TrainTime: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"TrainTime: "
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 
@@ -3306,17 +3306,17 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_cout<<"Training gmm raw_color descriptors"<<vcl_endl;
+    std::cout<<"Training gmm raw_color descriptors"<<std::endl;
 
     // keep track of sift features in vcl vector
-    vcl_vector<double> descriptors;
+    std::vector<double> descriptors;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
 
     int stride=4;
@@ -3343,7 +3343,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
         
         vgl_box_2d<double> bbox;
 
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -3354,7 +3354,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
             {
                 vgl_point_2d<double> query_pt(x,y);
                 
-                vcl_pair<int,int> ib(x,y);
+                std::pair<int,int> ib(x,y);
                 in_bounds.insert(ib);
 
                 bbox.add(query_pt);
@@ -3365,7 +3365,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -3386,11 +3386,11 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
     
     
     // For debugging purposes
-    // vcl_ofstream out_stream("sift_points.txt");
+    // std::ofstream out_stream("sift_points.txt");
 
     // for ( unsigned int ss=0; ss < descriptors.size() ; ++ss)
     // {
-    //     out_stream<<descriptors[ss]<<vcl_endl;
+    //     out_stream<<descriptors[ss]<<std::endl;
     // }
 
     // out_stream.close();
@@ -3405,8 +3405,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
     double * priors ;
     double * posteriors ;
 
-    vcl_cout<<"GMM "<<numData<<" color raw 3d values of dimension "<<
-        dimension<<vcl_endl;
+    std::cout<<"GMM "<<numData<<" color raw 3d values of dimension "<<
+        dimension<<std::endl;
 
     // Let time how long this takes
     // Start timer
@@ -3434,32 +3434,32 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Clustering Time: "
-            <<vox_time2<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<std::endl;
 
     
     // Write out centers
-    vcl_ofstream center_stream("gmm_color_raw_3d_values.txt");
+    std::ofstream center_stream("gmm_color_raw_3d_values.txt");
 
-    center_stream<<numCenters<<vcl_endl;
-    center_stream<<dimension<<vcl_endl;
+    center_stream<<numCenters<<std::endl;
+    center_stream<<dimension<<std::endl;
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<means[c]<<vcl_endl;
+        center_stream<<means[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        center_stream<<covariances[c]<<vcl_endl;
+        center_stream<<covariances[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters ; ++c)
     {
-        center_stream<<priors[c]<<vcl_endl;
+        center_stream<<priors[c]<<std::endl;
 
     }
 
@@ -3467,9 +3467,9 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"TrainTime: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"TrainTime: "
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 
@@ -3477,15 +3477,15 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
 }
 
 
-void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
+void dbskfg_match_bag_of_fragments::set_gmm_train(std::string& file_path)
 {
 
-    vcl_cout<<"Loading gmm bow training file: "<<file_path<<vcl_endl;
+    std::cout<<"Loading gmm bow training file: "<<file_path<<std::endl;
 
     int dimension  = 128;
     int numCenters = 0;
 
-    vcl_ifstream myfile (file_path.c_str());
+    std::ifstream myfile (file_path.c_str());
     if (myfile.is_open())
     {
         myfile>>numCenters;
@@ -3493,8 +3493,8 @@ void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
         
         keywords_=numCenters;
 
-        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
-        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+        std::cout<<"Num Centers: "<<keywords_<<std::endl;
+        std::cout<<"Dimension:   "<<dimension<<std::endl;
 
         means_cg_ = (float*) vl_malloc(
             sizeof(float)*dimension*numCenters);
@@ -3532,15 +3532,15 @@ void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
 
 }
 
-void dbskfg_match_bag_of_fragments::set_gmm_color_train(vcl_string& file_path)
+void dbskfg_match_bag_of_fragments::set_gmm_color_train(std::string& file_path)
 {
 
-    vcl_cout<<"Loading bow training file: "<<file_path<<vcl_endl;
+    std::cout<<"Loading bow training file: "<<file_path<<std::endl;
 
     int dimension  = 384;
     int numCenters = 0;
 
-    vcl_ifstream myfile (file_path.c_str());
+    std::ifstream myfile (file_path.c_str());
     if (myfile.is_open())
     {
         myfile>>numCenters;
@@ -3548,8 +3548,8 @@ void dbskfg_match_bag_of_fragments::set_gmm_color_train(vcl_string& file_path)
         
         keywords_=numCenters;
 
-        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
-        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+        std::cout<<"Num Centers: "<<keywords_<<std::endl;
+        std::cout<<"Dimension:   "<<dimension<<std::endl;
 
         means_color_ = (float*) vl_malloc(
             sizeof(float)*dimension*numCenters);
@@ -3587,10 +3587,10 @@ void dbskfg_match_bag_of_fragments::set_gmm_color_train(vcl_string& file_path)
 
 }
 
-void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
+void dbskfg_match_bag_of_fragments::set_bow_train(std::string& file_path)
 {
 
-    vcl_cout<<"Loading bow training file: "<<file_path<<vcl_endl;
+    std::cout<<"Loading bow training file: "<<file_path<<std::endl;
 
     int dimension  = 384;
     int numCenters = 0;
@@ -3598,7 +3598,7 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
     vl_sift_pix* data(0);
 
 
-    vcl_ifstream myfile (file_path.c_str());
+    std::ifstream myfile (file_path.c_str());
     if (myfile.is_open())
     {
         myfile>>numCenters;
@@ -3606,8 +3606,8 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
         
         keywords_=numCenters;
 
-        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
-        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+        std::cout<<"Num Centers: "<<keywords_<<std::endl;
+        std::cout<<"Dimension:   "<<dimension<<std::endl;
 
         data = (vl_sift_pix*) vl_malloc(
             sizeof(vl_sift_pix)*dimension*numCenters);
@@ -3636,12 +3636,12 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 }
 
 
-void dbskfg_match_bag_of_fragments::set_part_file(vcl_string& file_path)
+void dbskfg_match_bag_of_fragments::set_part_file(std::string& file_path)
 {
 
-    vcl_cout<<"Loading Parts file: "<<file_path<<vcl_endl;
+    std::cout<<"Loading Parts file: "<<file_path<<std::endl;
 
-    vcl_ifstream myfile(file_path.c_str());
+    std::ifstream myfile(file_path.c_str());
 
     unsigned int index=0;
 
@@ -3650,19 +3650,19 @@ void dbskfg_match_bag_of_fragments::set_part_file(vcl_string& file_path)
     {
         while(1)
         {
-            vcl_vector<vgl_point_2d<double> > parts;
+            std::vector<vgl_point_2d<double> > parts;
             for ( unsigned int s=0; s < 15; ++s)
             {
-                vcl_string line;
+                std::string line;
                 
-                if ( !vcl_getline(myfile,line) )
+                if ( !std::getline(myfile,line) )
                 {
                     flag=true;
                     break;
                 }
                 
                 
-                vcl_stringstream stream(line);
+                std::stringstream stream(line);
                 
                 unsigned int id(0),part_id(0);
                 
@@ -3705,34 +3705,34 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     if ( !mirror_)
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
-                <<" query fragments by scaling to mean shape "<<vcl_endl;
+                <<" query fragments by scaling to mean shape "<<std::endl;
 
     }
     else
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
                 <<" query fragments with horizontal mirroring of query"
-                <<" and scaling to mean shape "<<vcl_endl;
+                <<" and scaling to mean shape "<<std::endl;
 
     }
  
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -3740,7 +3740,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
     {
 
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
         for ( q_iterator = query_fragments_.begin() ; 
@@ -3776,8 +3776,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
                 .second;
             double mean_area=(model_area+query_area)/2.0;
 
-            double model_scale_ratio=vcl_sqrt(mean_area/model_area);
-            double query_scale_ratio=vcl_sqrt(mean_area/query_area);
+            double model_scale_ratio=std::sqrt(mean_area/model_area);
+            double query_scale_ratio=std::sqrt(mean_area/query_area);
             
             model_tree->set_scale_ratio(model_scale_ratio);
             query_tree->set_scale_ratio(query_scale_ratio);
@@ -3862,17 +3862,17 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
             model_tree=0;
             query_tree=0;
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
     }
 
     // write out data
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -3938,13 +3938,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
    
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"MatchTime "
+    std::cout<<std::endl;
+    std::cout<<"MatchTime "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments is "
-            <<vox_time<<" sec"<<vcl_endl;
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 }
@@ -3958,13 +3958,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
     if ( !mirror_)
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
@@ -3972,16 +3972,16 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
         if ( scale_area_ )
         {
-            vcl_cout<<" by area"<<vcl_endl;
+            std::cout<<" by area"<<std::endl;
         }
         else
         {
-            vcl_cout<<" by radii"<<vcl_endl;
+            std::cout<<" by radii"<<std::endl;
         }
     }
     else
     {
-        vcl_cout<<"Matching "
+        std::cout<<"Matching "
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
@@ -3991,22 +3991,22 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
         
         if ( scale_area_ )
         {
-            vcl_cout<<" by area"<<vcl_endl;
+            std::cout<<" by area"<<std::endl;
         }
         else
         {
-            vcl_cout<<" by radii"<<vcl_endl;
+            std::cout<<" by radii"<<std::endl;
         }
 
     }
-    vcl_cout<<"Ref area: "<<ref_area_<<vcl_endl;
+    std::cout<<"Ref area: "<<ref_area_<<std::endl;
 
     double backup=scurve_matching_R_;
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
@@ -4018,7 +4018,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
         double model_length=model_fragments_length_[(*m_iterator).first]
             .second;
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
 
 
@@ -4049,18 +4049,18 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double model_sample_ds=scurve_sample_ds_;
             double query_sample_ds=scurve_sample_ds_;
             
-            model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+            model_sample_ds=scurve_sample_ds_*std::sqrt(model_area
                                                        /ref_area_);
-            query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+            query_sample_ds=scurve_sample_ds_*std::sqrt(query_area
                                                        /ref_area_);
 
             if ( shape_alg_ == SCALE_TO_REF)
             {
-                vcl_cout<<"Scaling to ref area "<<ref_area_<<vcl_endl;
+                std::cout<<"Scaling to ref area "<<ref_area_<<std::endl;
                 if ( scale_area_ )
                 {
-                    model_scale_ratio = vcl_sqrt(ref_area_/model_area);
-                    query_scale_ratio = vcl_sqrt(ref_area_/query_area);
+                    model_scale_ratio = std::sqrt(ref_area_/model_area);
+                    query_scale_ratio = std::sqrt(ref_area_/query_area);
                 }
                 else if ( scale_length_ )
                 {
@@ -4071,66 +4071,66 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             }
             else if ( shape_alg_ == SCALE_TO_MEAN )
             {
-                vcl_cout<<"Scaling to Mean using ";
+                std::cout<<"Scaling to Mean using ";
                 if ( scale_area_ )
                 {
-                    vcl_cout<<mean_area<<" area"<<vcl_endl;
-                    model_scale_ratio = vcl_sqrt(mean_area/model_area);
-                    query_scale_ratio = vcl_sqrt(mean_area/query_area);
+                    std::cout<<mean_area<<" area"<<std::endl;
+                    model_scale_ratio = std::sqrt(mean_area/model_area);
+                    query_scale_ratio = std::sqrt(mean_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<mean_length<<" length"<<vcl_endl;
+                    std::cout<<mean_length<<" length"<<std::endl;
                     model_scale_ratio = mean_length/model_length;
                     query_scale_ratio = mean_length/query_length;
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(mean_area/ref_area_);
+                    std::sqrt(mean_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MAX )
             {
-                vcl_cout<<"Scaling to MAX using ";
+                std::cout<<"Scaling to MAX using ";
                 if ( scale_area_ )
                 {
-                    vcl_cout<<max_area<<" area"<<vcl_endl;
+                    std::cout<<max_area<<" area"<<std::endl;
 
-                    model_scale_ratio = vcl_sqrt(max_area/model_area);
-                    query_scale_ratio = vcl_sqrt(max_area/query_area);
+                    model_scale_ratio = std::sqrt(max_area/model_area);
+                    query_scale_ratio = std::sqrt(max_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<max_length<<" length"<<vcl_endl;
+                    std::cout<<max_length<<" length"<<std::endl;
                     model_scale_ratio = max_length/model_length;
                     query_scale_ratio = max_length/query_length;
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(max_area/ref_area_);
+                    std::sqrt(max_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MIN )
             {
-                vcl_cout<<"Scaling to MIN using ";
+                std::cout<<"Scaling to MIN using ";
                 if ( scale_area_ )
                 {
-                    vcl_cout<<min_area<<" area"<<vcl_endl;
-                    model_scale_ratio = vcl_sqrt(min_area/model_area);
-                    query_scale_ratio = vcl_sqrt(min_area/query_area);
+                    std::cout<<min_area<<" area"<<std::endl;
+                    model_scale_ratio = std::sqrt(min_area/model_area);
+                    query_scale_ratio = std::sqrt(min_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<min_length<<" length"<<vcl_endl;
+                    std::cout<<min_length<<" length"<<std::endl;
                     model_scale_ratio = min_length/model_length;
                     query_scale_ratio = min_length/query_length;
                 }
 
                 scurve_matching_R_=scurve_matching_R_*
-                    vcl_sqrt(min_area/ref_area_);
+                    std::sqrt(min_area/ref_area_);
 
             }
-            vcl_cout<<"Scurve Matching R: "<<scurve_matching_R_<<vcl_endl;
+            std::cout<<"Scurve Matching R: "<<scurve_matching_R_<<std::endl;
 
             //: prepare the model tree
             dbskfg_cgraph_directed_tree_sptr model_tree = new 
@@ -4152,8 +4152,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                             area_weight_);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
-            vcl_cout<<"Model Scale Ratio: "<<model_scale_ratio<<vcl_endl;
-            vcl_cout<<"Query Scale Ratio: "<<query_scale_ratio<<vcl_endl;
+            std::cout<<"Model Scale Ratio: "<<model_scale_ratio<<std::endl;
+            std::cout<<"Query Scale Ratio: "<<query_scale_ratio<<std::endl;
             
             model_tree->set_scale_ratio(model_scale_ratio);
 
@@ -4175,13 +4175,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             model_tree->compute_reconstructed_boundary_polygon(model_poly);
             query_tree->compute_reconstructed_boundary_polygon(query_poly);
 
-            vcl_cout<<"Model area: "<<vgl_area(model_poly)<<vcl_endl;
-            vcl_cout<<"Query area: "<<vgl_area(query_poly)<<vcl_endl;
+            std::cout<<"Model area: "<<vgl_area(model_poly)<<std::endl;
+            std::cout<<"Query area: "<<vgl_area(query_poly)<<std::endl;
 
-            vcl_string model_filename=(*m_iterator).second.first+"_tree.shg";
+            std::string model_filename=(*m_iterator).second.first+"_tree.shg";
             model_tree->create_shg(model_filename.c_str());
             
-            vcl_string query_filename=(*q_iterator).second.first+"_tree.shg";
+            std::string query_filename=(*q_iterator).second.first+"_tree.shg";
             query_tree->create_shg(query_filename.c_str());
 
             double norm_shape_cost(0.0);
@@ -4194,13 +4194,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             model_tree->compute_average_ds();
             query_tree->compute_average_ds();
 
-            vcl_vector<double> model_ds=model_tree->get_average_ds();
-            vcl_vector<double> query_ds=query_tree->get_average_ds();
+            std::vector<double> model_ds=model_tree->get_average_ds();
+            std::vector<double> query_ds=query_tree->get_average_ds();
 
-            vcl_cout<<"Model bnd ds: "<<model_ds[0]<<vcl_endl;
-            vcl_cout<<"Query bnd ds: "<<query_ds[0]<<vcl_endl;
+            std::cout<<"Model bnd ds: "<<model_ds[0]<<std::endl;
+            std::cout<<"Query bnd ds: "<<query_ds[0]<<std::endl;
 
-            vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
+            std::string match_prefix =(*m_iterator).second.first + "_vs_" +
                 (*q_iterator).second.first;
 
             // Match model to query
@@ -4216,7 +4216,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
             if ( mirror_)
             {
-                vcl_cout<<"Computing Mirror"<<vcl_endl;
+                std::cout<<"Computing Mirror"<<std::endl;
 
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
@@ -4232,7 +4232,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                     ((*q_iterator).second.second, elastic_splice_cost_, 
                      circular_ends_, combined_edit_);
                 
-                vcl_string query_mirror_filename=
+                std::string query_mirror_filename=
                     (*q_iterator).second.first+"_mirror_tree.shg";
                 query_mirror_tree->create_shg(query_mirror_filename.c_str());
 
@@ -4242,7 +4242,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                 double rgb_avg_mirror_cost(0.0);
                 double norm_shape_mirror_cost_length(0.0);
                        
-                vcl_string match_mirror_prefix =
+                std::string match_mirror_prefix =
                     (*m_iterator).second.first + "_vs_mirror_" +
                     (*q_iterator).second.first;
 
@@ -4260,14 +4260,14 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
                 if ( norm_shape_cost < norm_shape_mirror_cost )
                 {
-                    vcl_string delete_prefix=match_mirror_prefix+"*";
+                    std::string delete_prefix=match_mirror_prefix+"*";
 
                     vul_file::delete_file_glob(delete_prefix);
                     vul_file::delete_file_glob(query_mirror_filename);
                 }
                 else
                 {
-                    vcl_string delete_prefix=match_prefix+"*";
+                    std::string delete_prefix=match_prefix+"*";
 
                     vul_file::delete_file_glob(delete_prefix);
                     vul_file::delete_file_glob(query_filename);
@@ -4293,19 +4293,19 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             query_tree=0;
             model_tree=0;
 
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
     }
 
     // write out data
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -4371,13 +4371,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
    
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"MatchTime "
+    std::cout<<std::endl;
+    std::cout<<"MatchTime "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments is "
-            <<vox_time<<" sec"<<vcl_endl;
+            <<vox_time<<" sec"<<std::endl;
 
     return true;
 }
@@ -4386,23 +4386,23 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
 {
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_cout<<"Matching "
+    std::cout<<"Matching "
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
             <<" query fragments using edit distance app"
-            <<vcl_endl;
+            <<std::endl;
  
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
-    vcl_map<unsigned int,vnl_vector<double> > query_descriptors;
+    std::map<unsigned int,vnl_vector<double> > query_descriptors;
 
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
@@ -4417,7 +4417,7 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
             ((*m_iterator).second.second, elastic_splice_cost_, 
              circular_ends_, combined_edit_);
 
-        vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
+        std::map<int,std::vector<dbskfg_sift_data> > fragments;
         vsol_box_2d_sptr bbox(0);
         model_tree->compute_region_descriptor(fragments,bbox);
         vnl_vector<double>
@@ -4425,7 +4425,7 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
                 fragments,
                 model_grad_data_,model_sift_filter_,bbox);
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+        std::map<double,std::pair<unsigned int,unsigned int> >
             model_map;
         
         for ( q_iterator = query_fragments_.begin() ; 
@@ -4448,7 +4448,7 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
                     ((*q_iterator).second.second, elastic_splice_cost_, 
                      circular_ends_, combined_edit_);
                 
-                vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
+                std::map<int,std::vector<dbskfg_sift_data> > fragments;
                 vsol_box_2d_sptr bbox(0);
                 query_tree->compute_region_descriptor(fragments,bbox);
                 vnl_vector<double>
@@ -4479,18 +4479,18 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
             binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
 
         }
-        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
-                <<vcl_endl;
+        std::cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<std::endl;
         model_tree=0;
     }
 
     // write out data
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
   
     write_binary_fragments(binary_sim_file,model_fragments_);
@@ -4555,24 +4555,24 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
 
 bool dbskfg_match_bag_of_fragments::binary_scale_match()
 {
-    vcl_cout<<"Matching shock graphs with scaling"<<vcl_endl;
+    std::cout<<"Matching shock graphs with scaling"<<std::endl;
 
     if ( model_contours_.size() == 0 || query_contours_.size() == 0 )
     {
-        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        std::cerr<<"Matching fragments sets have one that is zero"<<std::endl;
         return false;
     }
 
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >::
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > >::
         iterator m_iterator;
-    vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >::
+    std::map<unsigned int,std::vector< vsol_spatial_object_2d_sptr > >::
         iterator q_iterator;
 
     for ( m_iterator = model_contours_.begin() ; 
           m_iterator != model_contours_.end() ; ++m_iterator)
     {
         // create model bbox
-        vcl_vector<vsol_spatial_object_2d_sptr> model_contours=
+        std::vector<vsol_spatial_object_2d_sptr> model_contours=
             (*m_iterator).second;
 
         // create new bounding box
@@ -4591,7 +4591,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
               q_iterator != query_contours_.end() ; ++q_iterator)
         {
             // create query bbox
-            vcl_vector<vsol_spatial_object_2d_sptr> query_contours=
+            std::vector<vsol_spatial_object_2d_sptr> query_contours=
                 (*q_iterator).second;
 
             
@@ -4614,10 +4614,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
                 /(query_bbox->get_max_y()-query_bbox->get_min_y());
 
             // Create two new sets of contours
-            vcl_vector<vsol_spatial_object_2d_sptr> 
+            std::vector<vsol_spatial_object_2d_sptr> 
                 model_scaled_to_query_contours;
 
-            vcl_vector<vsol_spatial_object_2d_sptr> 
+            std::vector<vsol_spatial_object_2d_sptr> 
                 query_scaled_to_model_contours;
 
             for ( unsigned int i=0; i < query_contours.size() ; ++i)
@@ -4652,28 +4652,28 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
                 model_scaled_to_query_contours.push_back(scaled_line);
             }
 
-            // vcl_stringstream stream1,stream2,stream3,stream4;
+            // std::stringstream stream1,stream2,stream3,stream4;
 
             // stream1<<"Model_"<<(*m_iterator).first<<"_contours.bnd";
-            // vcl_string model_filename=stream1.str();
+            // std::string model_filename=stream1.str();
             // stream1.str().clear();
 
             // stream2<<"Query_"<<(*q_iterator).first<<"_contours.bnd";
-            // vcl_string query_filename=stream2.str();
+            // std::string query_filename=stream2.str();
             // stream2.str().clear();
 
             // stream3<<"Model_"<<(*m_iterator).first
             //       <<"_scaled_Query_"
             //       <<(*q_iterator).first
             //       <<"_contours.bnd";
-            // vcl_string model_scaled_to_query_filename=stream3.str();
+            // std::string model_scaled_to_query_filename=stream3.str();
             // stream3.str().clear();
 
             // stream4<<"Query_"<<(*q_iterator).first
             //       <<"_scaled_Model_"
             //       <<(*m_iterator).first
             //       <<"_contours.bnd";
-            // vcl_string query_scaled_to_model_filename=stream4.str();
+            // std::string query_scaled_to_model_filename=stream4.str();
             // stream4.str().clear();
             
             // Check model cgraph can be computed
@@ -4725,7 +4725,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
             // dbsk2d_file_io::save_bnd_v3_0(query_scaled_to_model_filename,
             //                               query_scaled_to_model_contours);
 
-            vcl_pair<unsigned int,unsigned int> huge_image(1024,1024);
+            std::pair<unsigned int,unsigned int> huge_image(1024,1024);
             dbskfg_composite_graph_sptr model_scaled_to_query_cg(0);
             {
                 dbskfg_load_binary_composite_graph_process load_pro;
@@ -4762,24 +4762,24 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
             double cost2_2 = match_two_graphs(query_original_scale_cg,
                                               model_scaled_to_query_cg);
 
-            double cost1      = vcl_min(cost1_1,cost1_2);
-            double cost2      = vcl_min(cost2_1,cost2_2);
-            double final_cost = vcl_min(cost1,cost2);
+            double cost1      = std::min(cost1_1,cost1_2);
+            double cost2      = std::min(cost2_1,cost2_2);
+            double final_cost = std::min(cost1,cost2);
 
             unsigned int model_id= (*m_iterator).first;
             unsigned int query_id= (*q_iterator).first;
-            vcl_cout<<model_id<<","<<query_id;
+            std::cout<<model_id<<","<<query_id;
             binary_sim_matrix_[model_id][query_id]=final_cost;
         }
     }
 
     // write out data
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::app | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::app | 
+                         std::ios::binary);
 
     double matrix_size=binary_sim_matrix_.columns()*
         binary_sim_matrix_.rows();
@@ -4802,21 +4802,21 @@ bool dbskfg_match_bag_of_fragments::binary_scale_match()
 }
 
 void dbskfg_match_bag_of_fragments::write_binary_fragments(
-vcl_ofstream& binary_sim_file,
-vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >& 
+std::ofstream& binary_sim_file,
+std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >& 
 local_fragments )
 {
 
 
-    vcl_map<unsigned int,
-        vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > > > 
+    std::map<unsigned int,
+        std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> > > > 
         local_contours;
-    vcl_map<unsigned int,
-        vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > > > 
+    std::map<unsigned int,
+        std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> > > > 
         local_shocks;
 
-    vcl_map<unsigned int,
-        vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >::iterator m_iterator;
+    std::map<unsigned int,
+        std::pair<std::string,dbskfg_composite_graph_sptr> >::iterator m_iterator;
 
     for ( m_iterator = local_fragments.begin() ; 
           m_iterator != local_fragments.end() ; ++m_iterator)
@@ -4828,8 +4828,8 @@ local_fragments )
             
             if ( (*eit)->link_type() == dbskfg_composite_link::CONTOUR_LINK)
             {
-                vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > pair
-                    = vcl_make_pair((*eit)->source()->pt(),
+                std::pair<vgl_point_2d<double>,vgl_point_2d<double> > pair
+                    = std::make_pair((*eit)->source()->pt(),
                                     (*eit)->target()->pt());
                 local_contours[(*m_iterator).first].push_back(pair);
                 
@@ -4838,12 +4838,12 @@ local_fragments )
             {
                 dbskfg_shock_link* slink=dynamic_cast<dbskfg_shock_link*>
                     (&(*(*eit)));
-                vcl_vector<vgl_point_2d<double> > points=slink->ex_pts();
+                std::vector<vgl_point_2d<double> > points=slink->ex_pts();
                 for ( unsigned int i=1; i < points.size() ; ++i)
                 {
                     
-                    vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > pair
-                        = vcl_make_pair(points[i-1],
+                    std::pair<vgl_point_2d<double>,vgl_point_2d<double> > pair
+                        = std::make_pair(points[i-1],
                                         points[i]);
                     local_shocks[(*m_iterator).first].push_back(pair);
                 }
@@ -4860,15 +4860,15 @@ local_fragments )
 
 
 
-    vcl_map<unsigned int,
-        vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > > >
+    std::map<unsigned int,
+        std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> > > >
         ::iterator it;
 
     for ( it = local_contours.begin() ; it != local_contours.end() ; ++it)
     {
-        vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+        std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
             contours=local_contours[(*it).first];
-        vcl_vector<vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+        std::vector<std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
             shocks=local_shocks[(*it).first];
 
         double local_num_contours= contours.size()*4.0;
@@ -4979,9 +4979,9 @@ void dbskfg_match_bag_of_fragments::write_out_sim_matrix()
     costs_elm->append_text("\n      ");
 
     // Loop over model and query
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     unsigned int size=0;
@@ -4993,7 +4993,7 @@ void dbskfg_match_bag_of_fragments::write_out_sim_matrix()
             model_fragment,"model_fragment");
 
         unsigned int id       = (*m_iterator).first;
-        vcl_string model_path = (*m_iterator).second.first;
+        std::string model_path = (*m_iterator).second.first;
 
         model_elm->append_data(model_fragment_elm);
         model_fragment_elm->set_attribute("id",id);
@@ -5019,7 +5019,7 @@ void dbskfg_match_bag_of_fragments::write_out_sim_matrix()
             query_fragment,"query_fragment");
 
         unsigned int id       = (*q_iterator).first;
-        vcl_string query_path = (*q_iterator).second.first;
+        std::string query_path = (*q_iterator).second.first;
 
         query_elm->append_data(query_fragment_elm);
         query_fragment_elm->set_attribute("id",id);
@@ -5077,9 +5077,9 @@ void dbskfg_match_bag_of_fragments::write_out_sim_matrix()
     size=0;
     for ( unsigned int v=0; v < sim_matrix_.size() ; ++v)
     {
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> > model_to_query
+        std::map<double,std::pair<unsigned int,unsigned int> > model_to_query
             = sim_matrix_[v];
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >::iterator it;
+        std::map<double,std::pair<unsigned int,unsigned int> >::iterator it;
 
         
         // Create line set within countour set
@@ -5132,17 +5132,17 @@ void dbskfg_match_bag_of_fragments::write_out_sim_matrix()
 
 void dbskfg_match_bag_of_fragments::create_html_match_file()
 {
-    vcl_ofstream tf(output_html_file_.c_str());
+    std::ofstream tf(output_html_file_.c_str());
 
-    vcl_string table_caption="Similarity Matrix Model vs Query";
+    std::string table_caption="Similarity Matrix Model vs Query";
 
     //------------- Write out header info about table
     tf << "<TABLE BORDER=\"1\">\n";
     tf << "<caption align=\"top\">" << table_caption << "</caption>\n";
-    tf << "  <TR>"<<vcl_endl;
-    tf << "    <TH></TH>"<<vcl_endl;
+    tf << "  <TR>"<<std::endl;
+    tf << "    <TH></TH>"<<std::endl;
     
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+    std::map<unsigned int,std::pair<std::string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
 
     // ------------- Write out first row
@@ -5151,52 +5151,52 @@ void dbskfg_match_bag_of_fragments::create_html_match_file()
           q_iterator != query_fragments_.end() ; ++q_iterator)
     {
         
-        vcl_stringstream stream;
+        std::stringstream stream;
         stream<<match;
-        tf << "    <TH> Match "<<stream.str()<<"</TH>"<<vcl_endl;
+        tf << "    <TH> Match "<<stream.str()<<"</TH>"<<std::endl;
         match++;
     }
-    tf <<"  </TR>"<<vcl_endl;
+    tf <<"  </TR>"<<std::endl;
 
     // Write out each next row
     // write out costs
     for ( unsigned int v=0; v < sim_matrix_.size() ; ++v)
     {
-        tf << "  <TR>"<<vcl_endl;
+        tf << "  <TR>"<<std::endl;
 
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> > model_to_query
+        std::map<double,std::pair<unsigned int,unsigned int> > model_to_query
             = sim_matrix_[v];
-        vcl_map<double,vcl_pair<unsigned int,unsigned int> >::iterator it;
+        std::map<double,std::pair<unsigned int,unsigned int> >::iterator it;
         
         // Grab image string
-        vcl_string model_image = vul_file::strip_extension(
+        std::string model_image = vul_file::strip_extension(
             vul_file::strip_directory(
                 model_fragments_[v].first))+".png";
         
-        vcl_string html_model_string = "<img src=\"images/"+
+        std::string html_model_string = "<img src=\"images/"+
             model_image+"\" />"; 
-        tf << "    <TD>"<<html_model_string<<"</TD>"<<vcl_endl;
+        tf << "    <TD>"<<html_model_string<<"</TD>"<<std::endl;
 
         for ( it = model_to_query.begin() ; it != model_to_query.end() ; ++it)
         {
             // Grab Cost
             double cost = (*it).first;
-            vcl_stringstream cost_stream;
+            std::stringstream cost_stream;
             cost_stream<<cost;
 
             // Get query image
-            vcl_string query_image = vul_file::strip_extension(
+            std::string query_image = vul_file::strip_extension(
                 vul_file::strip_directory(
                     query_fragments_[(*it).second.second].first))+".png";
         
-            vcl_string html_query_string = "<img src=\"images/"+
+            std::string html_query_string = "<img src=\"images/"+
                 query_image+"\" />"+" sim: "+cost_stream.str(); 
-            tf << "    <TD>"<<html_query_string<<" </TD>"<<vcl_endl;
+            tf << "    <TD>"<<html_query_string<<" </TD>"<<std::endl;
     
         }
-        tf <<"  </TR>"<<vcl_endl;
+        tf <<"  </TR>"<<std::endl;
     }   
-    tf<<"</TABLE>"<<vcl_endl;
+    tf<<"</TABLE>"<<std::endl;
     tf.close();
 
 }
@@ -5271,8 +5271,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     shape_timer.mark();
 
     // grab model roots
-    vcl_set<int> model_roots;
-    vcl_set<int> query_roots;
+    std::set<int> model_roots;
+    std::set<int> query_roots;
     
     // Insert largest radius root
     model_roots.insert(0);
@@ -5283,16 +5283,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     query_roots.insert(query_tree->centroid());
 
     //: Curve list 1
-    vcl_vector<dbskr_scurve_sptr> curve_list1;
+    std::vector<dbskr_scurve_sptr> curve_list1;
     
     //: Curve list 2
-    vcl_vector<dbskr_scurve_sptr> curve_list2;
+    std::vector<dbskr_scurve_sptr> curve_list2;
 
     //: Map points from curve list 1 to curve list 2
-    vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
+    std::vector< std::vector < std::pair <int,int> > > map_list;
 
     //: Get path key
-    vcl_vector< pathtable_key > path_map;
+    std::vector< pathtable_key > path_map;
 
     // Keep track where tree1 and tree2 have switch
     bool flag=false;
@@ -5316,10 +5316,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     unsigned int model_final_branches(0);
     unsigned int query_final_branches(0);
 
-    vcl_set<int>::iterator it;
+    std::set<int>::iterator it;
     for ( it = model_roots.begin() ; it != model_roots.end() ; ++it)
     {
-        vcl_set<int>::iterator bit;
+        std::set<int>::iterator bit;
         for ( bit = query_roots.begin() ; bit != query_roots.end() ; ++bit)
         {
             if ( (*it)==0 )
@@ -5343,7 +5343,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
                 if (!edit.edit()) 
                 {
-                    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                    std::cerr << "Problems in editing trees"<<std::endl;
                 }
 
                 double val = edit.final_cost();
@@ -5379,14 +5379,14 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 double norm_val_length = val/
                     (model_tree_arc_length+query_tree_arc_length );
                 
-                // vcl_cout << "final cost: " << val 
+                // std::cout << "final cost: " << val 
                 //          << " final norm cost: " << norm_val 
                 //          << "( tree1 tot splice: " << model_tree_splice_cost
                 //          << ", tree2: " << query_tree_splice_cost
-                //          << ")" << vcl_endl;
+                //          << ")" << std::endl;
 
-                // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
-                //         <<norm_val<<vcl_endl;
+                // std::cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+                //         <<norm_val<<std::endl;
 
                 if ( norm_val < shape_cost_splice )
                 {
@@ -5442,7 +5442,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
                 if (!edit.edit()) 
                 {
-                    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                    std::cerr << "Problems in editing trees"<<std::endl;
                 }
 
                 double val = edit.final_cost();
@@ -5478,16 +5478,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 double norm_val_length = val/
                     (model_tree_arc_length+query_tree_arc_length );
   
-                // vcl_cout << "final cost: " << val 
+                // std::cout << "final cost: " << val 
                 //          << " final norm cost: " << norm_val 
                 //          << "( tree1 tot splice: " << model_tree_splice_cost
                 //          << ", tree2: " << query_tree_splice_cost
-                //          << ")" << vcl_endl;
+                //          << ")" << std::endl;
                 
                 
    
-                // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
-                //         <<norm_val<<vcl_endl;
+                // std::cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+                //         <<norm_val<<std::endl;
 
                 if ( norm_val < shape_cost_splice )
                 {
@@ -5584,19 +5584,19 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     double shape_time = shape_timer.real()/1000.0;
     shape_timer.mark();
 
-    //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
+    //std::cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<std::endl;
     
     if ( app_sift_ )
     {
         vul_timer app_timer;
         app_timer.mark();
-        vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+        std::pair<double,double> app_cost=compute_sift_cost(curve_list1,
                                                            curve_list2,
                                                            map_list,
                                                            path_map,
                                                            flag);
-        vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
+        std::vector<double> dart_distances;
+        std::pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -5608,7 +5608,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
         
-        //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
+        //std::cerr<<"************ App   Time taken: "<<app_time<<" sec"<<std::endl;
         app_diff        = app_cost.first;
         norm_app_cost   = app_cost.second;
         rgb_avg_cost    = sift_rgb_cost.second;
@@ -5618,11 +5618,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     norm_shape_cost = shape_cost_splice;
     norm_shape_cost_length=shape_cost_length;
 
-    // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
-    // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
-    // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
-    // vcl_cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<vcl_endl;
-    // vcl_cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<vcl_endl;
+    // std::cout<<" Norm Shape Cost: "<<norm_shape_cost<<std::endl;
+    // std::cout<<" Norm App   Cost: "<<norm_app_cost<<std::endl;
+    // std::cout<<" App Cost       : "<<app_diff<<std::endl;
+    // std::cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<std::endl;
+    // std::cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<std::endl;
     
     // unsigned int ds=scurve_sample_ds_;
     // vgl_h_matrix_2d<double> H;
@@ -5634,7 +5634,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     //                    ds,
     //                    flag);
     
-    // vcl_pair<double,double> p1=
+    // std::pair<double,double> p1=
     //      compute_transformed_polygon(H,model_tree,query_tree);
 
 }
@@ -5648,7 +5648,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& norm_app_cost,
     double& rgb_avg_cost,
     double& frob_norm,
-    vcl_string match_file_prefix,
+    std::string match_file_prefix,
     bool mirror,
     double orig_edit_distance)
 {
@@ -5657,20 +5657,20 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     shape_timer.mark();
 
     // grab model roots
-    vcl_set<int> model_roots;
-    vcl_set<int> query_roots;
+    std::set<int> model_roots;
+    std::set<int> query_roots;
     
     //: Curve list 1
-    vcl_vector<dbskr_scurve_sptr> curve_list1;
+    std::vector<dbskr_scurve_sptr> curve_list1;
     
     //: Curve list 2
-    vcl_vector<dbskr_scurve_sptr> curve_list2;
+    std::vector<dbskr_scurve_sptr> curve_list2;
 
     //: Map points from curve list 1 to curve list 2
-    vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
+    std::vector< std::vector < std::pair <int,int> > > map_list;
 
     //: Get path key
-    vcl_vector< pathtable_key > path_map;
+    std::vector< pathtable_key > path_map;
 
     // Keep track where tree1 and tree2 have switch
     bool flag=false;
@@ -5694,7 +5694,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     unsigned int model_final_branches(0);
     unsigned int query_final_branches(0);
 
-    vcl_stringstream title;
+    std::stringstream title;
     title<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id();
     
     {
@@ -5712,7 +5712,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         if (!edit.edit()) 
         {
-            vcl_cerr << "Problems in editing trees"<<vcl_endl;
+            std::cerr << "Problems in editing trees"<<std::endl;
         }
         
         double val = edit.final_cost();
@@ -5748,14 +5748,14 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         double norm_val_length = val/
             (model_tree_arc_length+query_tree_arc_length );
         
-        // vcl_cout << "final cost: " << val 
+        // std::cout << "final cost: " << val 
         //          << " final norm cost: " << norm_val 
         //          << "( tree1 tot splice: " << model_tree_splice_cost
         //          << ", tree2: " << query_tree_splice_cost
-        //          << ")" << vcl_endl;
+        //          << ")" << std::endl;
         
-        // vcl_cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()<<" cost: "
-        //         <<norm_val<<vcl_endl;
+        // std::cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()<<" cost: "
+        //         <<norm_val<<std::endl;
         
         if ( norm_val < shape_cost_splice )
         {
@@ -5783,19 +5783,19 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             if ( match_file_prefix.size() )
             {
 
-                vcl_cout << "final cost: " << val 
+                std::cout << "final cost: " << val 
                          << " final norm cost: " << norm_val 
                          << "( tree1 tot splice: " << model_tree_splice_cost
                          << ", tree2: " << query_tree_splice_cost
-                         << ")" << vcl_endl;
+                         << ")" << std::endl;
         
-                vcl_cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()
+                std::cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()
                         <<" cost: "
-                        <<norm_val<<vcl_endl;
+                        <<norm_val<<std::endl;
 
-                vcl_string match_cost_table=match_file_prefix 
+                std::string match_cost_table=match_file_prefix 
                     + "_match_table.shgm";
-                vcl_string match_file=match_file_prefix 
+                std::string match_file=match_file_prefix 
                     + "_match_file.shgm";
                 
                 edit.populate_table(match_cost_table.c_str());
@@ -5832,7 +5832,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         if (!edit.edit()) 
         {
-            vcl_cerr << "Problems in editing trees"<<vcl_endl;
+            std::cerr << "Problems in editing trees"<<std::endl;
         }
         
         double val = edit.final_cost();
@@ -5868,14 +5868,14 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         double norm_val_length = val/
             (model_tree_arc_length+query_tree_arc_length );
         
-        // vcl_cout << "final cost: " << val 
+        // std::cout << "final cost: " << val 
         //          << " final norm cost: " << norm_val 
         //          << "( tree1 tot splice: " << query_tree_splice_cost
         //          << ", tree2: " << model_tree_splice_cost
-        //          << ")" << vcl_endl;
+        //          << ")" << std::endl;
                 
-        // vcl_cout<<"Root1 "<<0<<" Root2 "<<model_tree->centroid()<<" cost: "
-        //         <<norm_val<<vcl_endl;
+        // std::cout<<"Root1 "<<0<<" Root2 "<<model_tree->centroid()<<" cost: "
+        //         <<norm_val<<std::endl;
         
         if ( norm_val < shape_cost_splice )
         {
@@ -5904,19 +5904,19 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             if ( match_file_prefix.size() )
             {
 
-                vcl_cout << "final cost: " << val 
+                std::cout << "final cost: " << val 
                          << " final norm cost: " << norm_val 
                          << "( tree1 tot splice: " << query_tree_splice_cost
                          << ", tree2: " << model_tree_splice_cost
-                         << ")" << vcl_endl;
+                         << ")" << std::endl;
                 
-                vcl_cout<<"Root1 "<<0<<" Root2 "<<
+                std::cout<<"Root1 "<<0<<" Root2 "<<
                     model_tree->centroid()<<" cost: "
-                        <<norm_val<<vcl_endl;
+                        <<norm_val<<std::endl;
 
-                vcl_string match_cost_table=match_file_prefix 
+                std::string match_cost_table=match_file_prefix 
                     + "_match_table.shgm";
-                vcl_string match_file=match_file_prefix 
+                std::string match_file=match_file_prefix 
                     + "_match_file.shgm";
                 
                 edit.populate_table(match_cost_table.c_str());
@@ -5942,7 +5942,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double shape_time = shape_timer.real()/1000.0;
     shape_timer.mark();
 
-    //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
+    //std::cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<std::endl;
     
     double norm=0.0;
     vnl_matrix_fixed<double, 3,3 > M;
@@ -5989,7 +5989,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
   	}
         else
         {
-            if ( !(vcl_fabs(orig_edit_distance-shape_cost_splice) >= 0.05))
+            if ( !(std::fabs(orig_edit_distance-shape_cost_splice) >= 0.05))
             {
                 if ( norm > frob_norm)
                 {
@@ -6024,7 +6024,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //     double width=0.0;
     //     if ( mirror )
     //     {
-    //         vcl_cout<<"Performing mirror find part correpondences"<<vcl_endl;
+    //         std::cout<<"Performing mirror find part correpondences"<<std::endl;
     //         width=query_tree->bbox()->width();
     //     }
 
@@ -6059,7 +6059,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //     //     flag,
     //     //     width);
         
-    //     vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
+    //     std::vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
 
     //     for ( unsigned int id=0; id < model_parts.size() ; ++id)
     //     {
@@ -6095,7 +6095,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         double width=0.0;
         if ( mirror )
         {
-            vcl_cout<<"Performing mirror app matching"<<vcl_endl;
+            std::cout<<"Performing mirror app matching"<<std::endl;
             width=query_tree->bbox()->width();
         }
 
@@ -6124,11 +6124,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
 
 
-        // vcl_stringstream title;
+        // std::stringstream title;
         // title<<"Model_"<<model_tree->get_id()<<"_vs_"
         //      <<"Query_"<<query_tree->get_id();
 
-        // vcl_string pref=title.str();
+        // std::string pref=title.str();
 
         // draw_part_correspondence(
         //     curve_list1,
@@ -6144,7 +6144,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
         vul_timer app_timer;
         app_timer.mark();
-        // vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+        // std::pair<double,double> app_cost=compute_sift_cost(curve_list1,
         //                                                    curve_list2,
         //                                                    map_list,
         //                                                    path_map,
@@ -6159,9 +6159,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //                                                    query_tree
         //                                                    ->get_scale_ratio());
 
-        vcl_vector<double> dart_distances;
-        vcl_pair<double,double> app_cost(0.0,0.0);
-        // vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
+        std::vector<double> dart_distances;
+        std::pair<double,double> app_cost(0.0,0.0);
+        // std::pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6190,7 +6190,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     title.str());
 
 
-        // vcl_pair<double,double> sift_rgb_cost =
+        // std::pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_qm(
         //         model_tree,
         //         query_tree,
@@ -6201,7 +6201,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         width);
 
         double extra_cost(0.0);
-        vcl_pair<double,double> sift_rgb_cost =
+        std::pair<double,double> sift_rgb_cost =
             compute_common_frame_distance_bbox_qm(
                 model_tree,
                 query_tree,
@@ -6212,7 +6212,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 flag,
                 width);
 
-        // vcl_pair<double,double> sift_rgb_cost =
+        // std::pair<double,double> sift_rgb_cost =
         //     compute_implicit_distance_bbox_qm(
         //         model_tree,
         //         query_tree,
@@ -6222,7 +6222,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         flag,
         //         width);
 
-        // vcl_pair<double,double> sift_rgb_cost =
+        // std::pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_bbox_mq(
         //         model_tree,
         //         query_tree,
@@ -6232,7 +6232,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         flag,
         //         width);
 
-        // vcl_pair<double,double> sift_rgb_cost =
+        // std::pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_part_qm(
         //         model_tree,
         //         query_tree,
@@ -6242,7 +6242,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         flag,
         //         width);
 
-        // vcl_pair<double,double> sift_rgb_cost =
+        // std::pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_dsift_qm(
         //         model_tree,
         //         query_tree,
@@ -6252,7 +6252,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         flag,
         //         width);
 
-        // vcl_pair<double,double> sift_rgb_cost=compute_mi(
+        // std::pair<double,double> sift_rgb_cost=compute_mi(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6277,7 +6277,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     model_tree->get_scale_ratio(),
         //     query_tree->get_scale_ratio());
 
-        // vcl_pair<double,double> sift_rgb_cost=compute_bow(
+        // std::pair<double,double> sift_rgb_cost=compute_bow(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6302,7 +6302,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     model_tree->get_scale_ratio(),
         //     query_tree->get_scale_ratio());
         
-        // vcl_pair<double,double> app_cost=compute_body_centric_sift(
+        // std::pair<double,double> app_cost=compute_body_centric_sift(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6321,7 +6321,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     flag,
         //     width);
 
-        // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
+        // std::pair<double,double> sift_rgb_cost=compute_3d_hist_color(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6352,12 +6352,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     for (unsigned m = 0; m < map_list.size(); m++) 
         //     {
         //         dbskr_scurve_sptr mc = curve_list1[m];
-        //         vcl_pair<unsigned int,unsigned int> query_key(
+        //         std::pair<unsigned int,unsigned int> query_key(
         //             curve_list2[m]->get_curve_id().first,
         //             curve_list2[m]->get_curve_id().second);
         //         if ( !query_dart_curves_.count(query_key))
         //         {
-        //             vcl_pair<unsigned int,unsigned int> temp
+        //             std::pair<unsigned int,unsigned int> temp
         //                 = query_key;
         //             query_key.first=temp.second;
         //             query_key.second=temp.first;                        
@@ -6365,8 +6365,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 
         //         double cost=dart_distances[m];
                 
-        //         vcl_pair<vcl_pair<int,int>,double> key1;
-        //         vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+        //         std::pair<std::pair<int,int>,double> key1;
+        //         std::pair<std::pair<int,int>,dbskr_scurve_sptr> key2;
                     
         //         key1.first=query_key;
         //         key1.second=cost;
@@ -6386,12 +6386,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     for (unsigned m = 0; m < map_list.size(); m++) 
         //     {
         //         dbskr_scurve_sptr mc = curve_list2[m];
-        //         vcl_pair<unsigned int,unsigned int> query_key(
+        //         std::pair<unsigned int,unsigned int> query_key(
         //             curve_list1[m]->get_curve_id().first,
         //             curve_list1[m]->get_curve_id().second);
         //         if ( !query_dart_curves_.count(query_key))
         //         {
-        //             vcl_pair<unsigned int,unsigned int> temp
+        //             std::pair<unsigned int,unsigned int> temp
         //                 = query_key;
         //             query_key.first=temp.second;
         //             query_key.second=temp.first;
@@ -6399,8 +6399,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         }
         //         double cost=dart_distances[m];
                 
-        //         vcl_pair<vcl_pair<int,int>,double> key1;
-        //         vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+        //         std::pair<std::pair<int,int>,double> key1;
+        //         std::pair<std::pair<int,int>,dbskr_scurve_sptr> key2;
                 
         //         key1.first=query_key;
         //         key1.second=cost;
@@ -6418,7 +6418,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
         
-        //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
+        //std::cerr<<"************ App   Time taken: "<<app_time<<" sec"<<std::endl;
         app_diff        = extra_cost;
         norm_app_cost   = sift_rgb_cost.first;
         rgb_avg_cost    = sift_rgb_cost.second;
@@ -6442,16 +6442,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             dbskr_scurve_sptr sc1 = curve_list1[i];
             dbskr_scurve_sptr sc2 = curve_list2[i];
 
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<i;
 
-            vcl_string temp=match_file_prefix+"_dart_"+stream.str()
+            std::string temp=match_file_prefix+"_dart_"+stream.str()
                 + "_curve_list.txt";
             
-            vcl_ofstream model_file(temp.c_str());            
+            std::ofstream model_file(temp.c_str());            
             for (unsigned j = 0; j < map_list[i].size(); ++j) 
             {
-                vcl_pair<int, int> cor = map_list[i][j];
+                std::pair<int, int> cor = map_list[i][j];
 
                 vgl_point_2d<double> ps1 = sc1->sh_pt(cor.first);
                 vgl_point_2d<double> ps2 = sc2->sh_pt(cor.second);
@@ -6462,10 +6462,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                               <<" "
                               <<ps1.y()
                               <<" "
-                              <<vcl_fabs(width-(ps2.x()/query_tree
+                              <<std::fabs(width-(ps2.x()/query_tree
                                                 ->get_scale_ratio()))
                               <<" "
-                              <<ps2.y()/query_tree->get_scale_ratio()<<vcl_endl;
+                              <<ps2.y()/query_tree->get_scale_ratio()<<std::endl;
                 }
                 else
                 {
@@ -6474,10 +6474,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                               <<" "
                               <<ps2.y()
                               <<" "
-                              <<vcl_fabs(width-(ps1.x()/query_tree
+                              <<std::fabs(width-(ps1.x()/query_tree
                                                 ->get_scale_ratio()))
                               <<" "
-                              <<ps1.y()/query_tree->get_scale_ratio()<<vcl_endl;
+                              <<ps1.y()/query_tree->get_scale_ratio()<<std::endl;
 
                 }
             }
@@ -6485,11 +6485,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         }
     }
 
-    // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
-    // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
-    // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
-    // vcl_cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<vcl_endl;
-    // vcl_cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<vcl_endl;
+    // std::cout<<" Norm Shape Cost: "<<norm_shape_cost<<std::endl;
+    // std::cout<<" Norm App   Cost: "<<norm_app_cost<<std::endl;
+    // std::cout<<" App Cost       : "<<app_diff<<std::endl;
+    // std::cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<std::endl;
+    // std::cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<std::endl;
     
     // unsigned int ds=scurve_sample_ds_;
     // vgl_h_matrix_2d<double> H;
@@ -6501,7 +6501,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //                    ds,
     //                    flag);
     
-    // vcl_pair<double,double> p1=
+    // std::pair<double,double> p1=
     //     compute_transformed_polygon(H,model_tree,query_tree);
 
 }
@@ -6514,15 +6514,15 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     double& app_diff,
     double& norm_app_cost,
     double& rgb_avg_cost,
-    vcl_string match_file_prefix)
+    std::string match_file_prefix)
 {
 
     vul_timer shape_timer;
     shape_timer.mark();
 
     // grab model roots
-    vcl_set<int> model_roots;
-    vcl_set<int> query_roots;
+    std::set<int> model_roots;
+    std::set<int> query_roots;
     
     // Insert largest radius root
     model_roots.insert(0);
@@ -6533,16 +6533,16 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     query_roots.insert(query_tree->centroid());
 
     //: Curve list 1
-    vcl_vector<dbskr_scurve_sptr> curve_list1;
+    std::vector<dbskr_scurve_sptr> curve_list1;
     
     //: Curve list 2
-    vcl_vector<dbskr_scurve_sptr> curve_list2;
+    std::vector<dbskr_scurve_sptr> curve_list2;
 
     //: Map points from curve list 1 to curve list 2
-    vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
+    std::vector< std::vector < std::pair <int,int> > > map_list;
 
     //: Get path key
-    vcl_vector< pathtable_key > path_map;
+    std::vector< pathtable_key > path_map;
 
     // Keep track where tree1 and tree2 have switch
     bool flag=false;
@@ -6566,10 +6566,10 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     unsigned int model_final_branches(0);
     unsigned int query_final_branches(0);
 
-    vcl_set<int>::iterator it;
+    std::set<int>::iterator it;
     for ( it = model_roots.begin() ; it != model_roots.end() ; ++it)
     {
-        vcl_set<int>::iterator bit;
+        std::set<int>::iterator bit;
         for ( bit = query_roots.begin() ; bit != query_roots.end() ; ++bit)
         {
             if ( (*it)==0 )
@@ -6593,7 +6593,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 
                 if (!edit.edit()) 
                 {
-                    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                    std::cerr << "Problems in editing trees"<<std::endl;
                 }
 
                 double val = edit.final_cost();
@@ -6629,14 +6629,14 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
                 double norm_val_length = val/
                     (model_tree_arc_length+query_tree_arc_length );
                 
-                vcl_cout << "final cost: " << val 
+                std::cout << "final cost: " << val 
                          << " final norm cost: " << norm_val 
                          << "( tree1 tot splice: " << model_tree_splice_cost
                          << ", tree2: " << query_tree_splice_cost
-                         << ")" << vcl_endl;
+                         << ")" << std::endl;
 
-                vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
-                       <<norm_val<<vcl_endl;
+                std::cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+                       <<norm_val<<std::endl;
 
                 if ( norm_val < shape_cost_splice )
                 {
@@ -6661,9 +6661,9 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 
                     flag=false;
 
-                    vcl_string match_cost_table=match_file_prefix 
+                    std::string match_cost_table=match_file_prefix 
                         + "_match_table.shgm";
-                    vcl_string match_file=match_file_prefix 
+                    std::string match_file=match_file_prefix 
                         + "_match_file.shgm";
                 
                     edit.populate_table(match_cost_table.c_str());
@@ -6699,7 +6699,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 
                 if (!edit.edit()) 
                 {
-                    vcl_cerr << "Problems in editing trees"<<vcl_endl;
+                    std::cerr << "Problems in editing trees"<<std::endl;
                 }
 
                 double val = edit.final_cost();
@@ -6735,16 +6735,16 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
                 double norm_val_length = val/
                     (model_tree_arc_length+query_tree_arc_length );
   
-                vcl_cout << "final cost: " << val 
+                std::cout << "final cost: " << val 
                          << " final norm cost: " << norm_val 
                          << "( tree1 tot splice: " << model_tree_splice_cost
                          << ", tree2: " << query_tree_splice_cost
-                         << ")" << vcl_endl;
+                         << ")" << std::endl;
                 
                 
    
-                vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
-                        <<norm_val<<vcl_endl;
+                std::cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+                        <<norm_val<<std::endl;
 
                 if ( norm_val < shape_cost_splice )
                 {
@@ -6770,9 +6770,9 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 
                     flag=true;
 
-                    vcl_string match_cost_table=match_file_prefix 
+                    std::string match_cost_table=match_file_prefix 
                         + "_match_table.shgm";
-                    vcl_string match_file=match_file_prefix 
+                    std::string match_file=match_file_prefix 
                         + "_match_file.shgm";
                 
                     edit.populate_table(match_cost_table.c_str());
@@ -6850,19 +6850,19 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     double shape_time = shape_timer.real()/1000.0;
     shape_timer.mark();
 
-    //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
+    //std::cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<std::endl;
     
     if ( app_sift_ )
     {
         vul_timer app_timer;
         app_timer.mark();
-        vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+        std::pair<double,double> app_cost=compute_sift_cost(curve_list1,
                                                            curve_list2,
                                                            map_list,
                                                            path_map,
                                                            flag);
-        vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
+        std::vector<double> dart_distances;
+        std::pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -6873,7 +6873,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
         
-        //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
+        //std::cerr<<"************ App   Time taken: "<<app_time<<" sec"<<std::endl;
         app_diff        = app_cost.first;
         norm_app_cost   = app_cost.second;
         rgb_avg_cost    = sift_rgb_cost.second;
@@ -6890,16 +6890,16 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
             dbskr_scurve_sptr sc1 = curve_list1[i];
             dbskr_scurve_sptr sc2 = curve_list2[i];
 
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<i;
 
-            vcl_string temp=match_file_prefix+"_dart_"+stream.str()
+            std::string temp=match_file_prefix+"_dart_"+stream.str()
                         + "_curve_list.txt";
             
-            vcl_ofstream model_file(temp.c_str());            
+            std::ofstream model_file(temp.c_str());            
             for (unsigned j = 0; j < map_list[i].size(); ++j) 
             {
-                vcl_pair<int, int> cor = map_list[i][j];
+                std::pair<int, int> cor = map_list[i][j];
 
                 vgl_point_2d<double> ps1 = sc1->sh_pt(cor.first);
                 vgl_point_2d<double> ps2 = sc2->sh_pt(cor.second);
@@ -6912,7 +6912,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
                               <<" "
                               <<ps2.x()
                               <<" "
-                              <<ps2.y()<<vcl_endl;
+                              <<ps2.y()<<std::endl;
                 }
                 else
                 {
@@ -6922,7 +6922,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
                               <<" "
                               <<ps1.x()
                               <<" "
-                              <<ps1.y()<<vcl_endl;
+                              <<ps1.y()<<std::endl;
 
 
 
@@ -6936,11 +6936,11 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     //     match_file_prefix=match_file_prefix+"_switched";
     // }
 
-    // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
-    // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
-    // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
-    // vcl_cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<vcl_endl;
-    // vcl_cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<vcl_endl;
+    // std::cout<<" Norm Shape Cost: "<<norm_shape_cost<<std::endl;
+    // std::cout<<" Norm App   Cost: "<<norm_app_cost<<std::endl;
+    // std::cout<<" App Cost       : "<<app_diff<<std::endl;
+    // std::cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<std::endl;
+    // std::cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<std::endl;
     
     // unsigned int ds=scurve_sample_ds_;
     // vgl_h_matrix_2d<double> H;
@@ -6952,7 +6952,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     //                    ds,
     //                    flag);
     
-    // vcl_pair<double,double> p1=
+    // std::pair<double,double> p1=
     //     compute_transformed_polygon(H,model_tree,query_tree);
 
 }
@@ -7074,7 +7074,7 @@ void dbskfg_match_bag_of_fragments::compute_edge_maps(
     pro_color_edg.finish();
 
     // Create output storage for edge detection
-    vcl_vector<bpro1_storage_sptr> edge_det_results;
+    std::vector<bpro1_storage_sptr> edge_det_results;
 
     // Grab output from color third order edge detection
     // if process did not fail
@@ -7096,7 +7096,7 @@ void dbskfg_match_bag_of_fragments::compute_edge_maps(
     grad_map.fill(0.0);
     orient_map.fill(0.0);
 
-    for (vcl_vector<dbdet_edgel *>::const_iterator 
+    for (std::vector<dbdet_edgel *>::const_iterator 
              e_it = edgemap->edgels.begin(); 
          e_it != edgemap->edgels.end(); ++e_it)
     {
@@ -7140,14 +7140,14 @@ void dbskfg_match_bag_of_fragments::compute_edge_maps(
     }
 
     // For Debugging purposes
-    // vcl_cout<<index<<vcl_endl;
-    // vcl_cout<<width*height*2<<vcl_endl;
-    // vcl_ofstream grad_angle_data("grad_map_data.txt");
-    // vcl_cout<<width<<" "<<height<<vcl_endl;
+    // std::cout<<index<<std::endl;
+    // std::cout<<width*height*2<<std::endl;
+    // std::ofstream grad_angle_data("grad_map_data.txt");
+    // std::cout<<width<<" "<<height<<std::endl;
     // for (unsigned int w=0; w < width*height*2 ; w=w+2)
     // {
-    //     grad_angle_data<<(*grad_data)[w]<<vcl_endl;
-    //     grad_angle_data<<(*grad_data)[w+1]<<vcl_endl;
+    //     grad_angle_data<<(*grad_data)[w]<<std::endl;
+    //     grad_angle_data<<(*grad_data)[w+1]<<std::endl;
 
     // }
     // grad_angle_data.close();
@@ -7220,7 +7220,7 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
     {
         flipped_image.fill(0.0);
 
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -7241,7 +7241,7 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
                     flipped_image(x,y)=orig_image(x,y);
                 }
 
-                in_bounds.insert(vcl_make_pair(x,y));
+                in_bounds.insert(std::make_pair(x,y));
                 
             }
         }
@@ -7251,7 +7251,7 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
         {
             for ( int rows=0; rows < orig_image.ni() ; ++rows)
             {
-                vcl_pair<int,int> key(rows,cols);
+                std::pair<int,int> key(rows,cols);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -7389,11 +7389,11 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 
 }
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
+std::pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
     bool flag,
     double width,
     vl_sift_pix* model_grad_data,
@@ -7423,11 +7423,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
         double local_distance=0.0;
 
-        vcl_vector< vcl_vector<vl_sift_pix> > model_sift;
-        vcl_vector< vcl_vector<vl_sift_pix> > query_sift;
+        std::vector< std::vector<vl_sift_pix> > model_sift;
+        std::vector< std::vector<vl_sift_pix> > query_sift;
         
-        vcl_vector<vgl_point_2d<double> > shock_curve1;
-        vcl_vector<vgl_point_2d<double> > shock_curve2;
+        std::vector<vgl_point_2d<double> > shock_curve1;
+        std::vector<vgl_point_2d<double> > shock_curve2;
 
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
@@ -7463,7 +7463,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
 
             // Compute sift for both images
            
@@ -7485,7 +7485,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             {
                 ps1.set(ps1.x()/model_scale_ratio,
                         ps1.y()/model_scale_ratio);
-                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                         ps2.y()/query_scale_ratio);
 
                 shock_curve1.push_back(ps1);
@@ -7516,7 +7516,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             }
             else
             {
-                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                         ps1.y()/query_scale_ratio);
                 ps2.set(ps2.x()/model_scale_ratio,
                         ps2.y()/model_scale_ratio);
@@ -7549,14 +7549,14 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                 radius_ps2=(radius_ps2/model_scale_ratio);
             }
 
-            vcl_vector<vl_sift_pix> descr_vec1;
+            std::vector<vl_sift_pix> descr_vec1;
             descr_vec1.assign(descr_ps1,descr_ps1+128);
             descr_vec1.push_back(ps1.x());
             descr_vec1.push_back(ps1.y());
             descr_vec1.push_back(radius_ps1);
             descr_vec1.push_back(theta_ps1);
 
-            vcl_vector<vl_sift_pix> descr_vec2;    
+            std::vector<vl_sift_pix> descr_vec2;    
             descr_vec2.assign(descr_ps2,descr_ps2+128);
             descr_vec2.push_back(ps2.x());
             descr_vec2.push_back(ps2.y());
@@ -7598,7 +7598,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
         arclength_shock_curve2=
             local_arclength_shock_curve2+arclength_shock_curve2;
 
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -7607,9 +7607,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
         //         <<","
         //         <<path_map[i].second.second
         //         <<") L2 distance: "
-        //         <<local_distance<<vcl_endl;
+        //         <<local_distance<<std::endl;
        
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -7621,36 +7621,36 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
         //         <<path_map[i].second.second
         //         <<") length: "
         //         <<local_arclength_shock_curve2
-        //         <<vcl_endl;
+        //         <<std::endl;
 
-        // vcl_cout<<vcl_endl;
+        // std::cout<<std::endl;
 
         // {
-        //     vcl_stringstream model_stream;
+        //     std::stringstream model_stream;
         //     model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_stream;
+        //     std::stringstream query_stream;
         //     query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
 
-        //     vcl_ofstream model_file(model_stream.str().c_str());
-        //     model_file<<model_sift.size()<<vcl_endl;
+        //     std::ofstream model_file(model_stream.str().c_str());
+        //     model_file<<model_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < model_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=model_sift[b];
+        //         std::vector<vl_sift_pix> vec=model_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             model_file<<vec[c]<<vcl_endl;
+        //             model_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     model_file.close();
 
-        //     vcl_ofstream query_file(query_stream.str().c_str());
-        //     query_file<<query_sift.size()<<vcl_endl;
+        //     std::ofstream query_file(query_stream.str().c_str());
+        //     query_file<<query_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < query_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=query_sift[b];
+        //         std::vector<vl_sift_pix> vec=query_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             query_file<<vec[c]<<vcl_endl;
+        //             query_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     query_file.close();
@@ -7663,22 +7663,22 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
-    // vcl_cout << "final cost: " << sift_diff 
+    // std::cout << "final cost: " << sift_diff 
     //          << " final norm cost: " << splice_norm 
     //          << "( tree1 total splice: " << splice_cost_shock_curve1
     //          << ", tree2 total splice: " << splice_cost_shock_curve2
-    //          << ")" << vcl_endl;
+    //          << ")" << std::endl;
 
-    vcl_pair<double,double> app_diff(splice_norm,length_norm);
+    std::pair<double,double> app_diff(splice_norm,length_norm);
     return app_diff;
 }
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+std::pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     bool flag,
     double width,
     vl_sift_pix* model_red_grad_data,
@@ -7691,7 +7691,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     VlSiftFilt* query_sift_filter,
     double model_scale_ratio,
     double query_scale_ratio,
-    vcl_string prefix)
+    std::string prefix)
 {
  
 
@@ -7714,11 +7714,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
         double local_distance=0.0;
 
-        vcl_vector< vcl_vector<vl_sift_pix> > model_sift;
-        vcl_vector< vcl_vector<vl_sift_pix> > query_sift;
+        std::vector< std::vector<vl_sift_pix> > model_sift;
+        std::vector< std::vector<vl_sift_pix> > query_sift;
         
-        vcl_vector<vgl_point_2d<double> > shock_curve1;
-        vcl_vector<vgl_point_2d<double> > shock_curve2;
+        std::vector<vgl_point_2d<double> > shock_curve1;
+        std::vector<vgl_point_2d<double> > shock_curve2;
 
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
@@ -7738,8 +7738,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             sc2->is_leaf_edge());
 
         
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -7784,7 +7784,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
             
             // Compute sift for both images
            
@@ -7836,11 +7836,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 ps1_blue.set(ps1_blue.x()/model_scale_ratio,
                              ps1_blue.y()/model_scale_ratio);
 
-                ps2_red.set(vcl_fabs(width-(ps2_red.x()/query_scale_ratio)),
+                ps2_red.set(std::fabs(width-(ps2_red.x()/query_scale_ratio)),
                             ps2_red.y()/query_scale_ratio);
-                ps2_green.set(vcl_fabs(width-(ps2_green.x()/query_scale_ratio)),
+                ps2_green.set(std::fabs(width-(ps2_green.x()/query_scale_ratio)),
                             ps2_green.y()/query_scale_ratio);
-                ps2_blue.set(vcl_fabs(width-(ps2_blue.x()/query_scale_ratio)),
+                ps2_blue.set(std::fabs(width-(ps2_blue.x()/query_scale_ratio)),
                             ps2_blue.y()/query_scale_ratio);
 
                 shock_curve1.push_back(ps1_red);
@@ -7929,11 +7929,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             else
             {
 
-                ps1_red.set(vcl_fabs(width-(ps1_red.x()/query_scale_ratio)),
+                ps1_red.set(std::fabs(width-(ps1_red.x()/query_scale_ratio)),
                         ps1_red.y()/query_scale_ratio);
-                ps1_green.set(vcl_fabs(width-(ps1_green.x()/query_scale_ratio)),
+                ps1_green.set(std::fabs(width-(ps1_green.x()/query_scale_ratio)),
                         ps1_green.y()/query_scale_ratio);
-                ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/query_scale_ratio)),
+                ps1_blue.set(std::fabs(width-(ps1_blue.x()/query_scale_ratio)),
                         ps1_blue.y()/query_scale_ratio);
 
                 ps2_red.set(ps2_red.x()/model_scale_ratio,
@@ -8027,42 +8027,42 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 }
             }
 
-            vcl_vector<vl_sift_pix> descr_vec1_red;
+            std::vector<vl_sift_pix> descr_vec1_red;
             descr_vec1_red.assign(descr_ps1_red,descr_ps1_red+128);
             descr_vec1_red.push_back(ps1_red.x());
             descr_vec1_red.push_back(ps1_red.y());
             descr_vec1_red.push_back(radius_ps1_red);
             descr_vec1_red.push_back(theta_ps1_red);
 
-            vcl_vector<vl_sift_pix> descr_vec1_green;
+            std::vector<vl_sift_pix> descr_vec1_green;
             descr_vec1_green.assign(descr_ps1_green,descr_ps1_green+128);
             descr_vec1_green.push_back(ps1_green.x());
             descr_vec1_green.push_back(ps1_green.y());
             descr_vec1_green.push_back(radius_ps1_green);
             descr_vec1_green.push_back(theta_ps1_green);
 
-            vcl_vector<vl_sift_pix> descr_vec1_blue;
+            std::vector<vl_sift_pix> descr_vec1_blue;
             descr_vec1_blue.assign(descr_ps1_blue,descr_ps1_blue+128);
             descr_vec1_blue.push_back(ps1_blue.x());
             descr_vec1_blue.push_back(ps1_blue.y());
             descr_vec1_blue.push_back(radius_ps1_blue);
             descr_vec1_blue.push_back(theta_ps1_blue);
 
-            vcl_vector<vl_sift_pix> descr_vec2_red;    
+            std::vector<vl_sift_pix> descr_vec2_red;    
             descr_vec2_red.assign(descr_ps2_red,descr_ps2_red+128);
             descr_vec2_red.push_back(ps2_red.x());
             descr_vec2_red.push_back(ps2_red.y());
             descr_vec2_red.push_back(radius_ps2_red);
             descr_vec2_red.push_back(theta_ps2_red);
         
-            vcl_vector<vl_sift_pix> descr_vec2_green;    
+            std::vector<vl_sift_pix> descr_vec2_green;    
             descr_vec2_green.assign(descr_ps2_green,descr_ps2_green+128);
             descr_vec2_green.push_back(ps2_green.x());
             descr_vec2_green.push_back(ps2_green.y());
             descr_vec2_green.push_back(radius_ps2_green);
             descr_vec2_green.push_back(theta_ps2_green);
         
-            vcl_vector<vl_sift_pix> descr_vec2_blue;    
+            std::vector<vl_sift_pix> descr_vec2_blue;    
             descr_vec2_blue.assign(descr_ps2_blue,descr_ps2_blue+128);
             descr_vec2_blue.push_back(ps2_blue.x());
             descr_vec2_blue.push_back(ps2_blue.y());
@@ -8155,7 +8155,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
         dart_distances.push_back(local_distance);
 
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -8164,9 +8164,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         //         <<","
         //         <<path_map[i].second.second
         //         <<") L2 distance: "
-        //         <<local_distance<<vcl_endl;
+        //         <<local_distance<<std::endl;
        
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -8178,44 +8178,44 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         //         <<path_map[i].second.second
         //         <<") length: "
         //         <<local_arclength_shock_curve2
-        //         <<vcl_endl;
+        //         <<std::endl;
 
-        // vcl_cout<<vcl_endl;
+        // std::cout<<std::endl;
 
         // {
-        //     vcl_stringstream model_stream;
+        //     std::stringstream model_stream;
         //     model_stream<<prefix<<"_dart_model_"<<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_stream;
+        //     std::stringstream query_stream;
         //     query_stream<<prefix<<"_dart_query_"<<i<<"_app_correspondence.txt";
 
-        //     vcl_ofstream model_file(model_stream.str().c_str());
-        //     model_file<<model_sift.size()<<vcl_endl;
+        //     std::ofstream model_file(model_stream.str().c_str());
+        //     model_file<<model_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < model_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=model_sift[b];
+        //         std::vector<vl_sift_pix> vec=model_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             model_file<<vec[c]<<vcl_endl;
+        //             model_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     model_file.close();
 
-        //     vcl_ofstream query_file(query_stream.str().c_str());
-        //     query_file<<query_sift.size()<<vcl_endl;
+        //     std::ofstream query_file(query_stream.str().c_str());
+        //     query_file<<query_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < query_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=query_sift[b];
+        //         std::vector<vl_sift_pix> vec=query_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             query_file<<vec[c]<<vcl_endl;
+        //             query_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     query_file.close();
 
-        //     vcl_stringstream model_poly_stream;
+        //     std::stringstream model_poly_stream;
         //     model_poly_stream<<prefix<<"_dart_model_poly_"
         //                      <<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_poly_stream;
+        //     std::stringstream query_poly_stream;
         //     query_poly_stream<<prefix<<"_dart_query_poly_"
         //                      <<i<<"_app_correspondence.txt";
             
@@ -8238,23 +8238,23 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
-    // vcl_cout << "final cost: " << sift_diff 
+    // std::cout << "final cost: " << sift_diff 
     //          << " final norm cost: " << norm_val 
     //          << "( tree1 total length: " << arclength_shock_curve1
     //          << ", tree2 total length: " << arclength_shock_curve2
-    //          << ")" << vcl_endl;
+    //          << ")" << std::endl;
 
-    vcl_pair<double,double> app_diff(length_norm,sift_diff/overall_index);
+    std::pair<double,double> app_diff(length_norm,sift_diff/overall_index);
     return app_diff;
 }
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     bool flag,
     double width,
     vl_sift_pix* model_red_grad_data,
@@ -8269,7 +8269,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
     double query_scale_ratio,
     double model_sift_scale,
     double query_sift_scale,
-    vcl_string prefix)
+    std::string prefix)
 {
     
 
@@ -8281,8 +8281,8 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -8439,27 +8439,27 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         }
 
 
-        total_alignment+=vcl_min(dart_cost1,dart_cost2);
+        total_alignment+=std::min(dart_cost1,dart_cost2);
         
-        dart_distances.push_back(vcl_min(dart_cost1,dart_cost2));
+        dart_distances.push_back(std::min(dart_cost1,dart_cost2));
 
 
         //************ Debug Section ****************************//
-        // vcl_cout<<"Dart: "<<i<<" cost: "<<dart_cost<<vcl_endl;
+        // std::cout<<"Dart: "<<i<<" cost: "<<dart_cost<<std::endl;
         
-        // vcl_stringstream text_stream;
+        // std::stringstream text_stream;
         // text_stream<<"Dart_"<<i<<"_app_correspondence.txt";
-        // vcl_stringstream text2_stream;
+        // std::stringstream text2_stream;
         // text2_stream<<"Sift_sc1_"<<i<<"_app_correspondence.txt";
-        // vcl_stringstream text3_stream;
+        // std::stringstream text3_stream;
         // text3_stream<<"Sift_sc2_"<<i<<"_app_correspondence.txt";
 
-        // vcl_ofstream sift_sc1(text2_stream.str().c_str());
-        // vcl_ofstream sift_sc2(text3_stream.str().c_str());        
-        // vcl_ofstream file_stream(text_stream.str().c_str());
+        // std::ofstream sift_sc1(text2_stream.str().c_str());
+        // std::ofstream sift_sc2(text3_stream.str().c_str());        
+        // std::ofstream file_stream(text_stream.str().c_str());
 
-        // vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());        
-        // vcl_vector<vcl_pair<int,int> >::iterator it;
+        // std::vector<std::pair<int,int> > fmap=*(dpMatch.finalMap());        
+        // std::vector<std::pair<int,int> >::iterator it;
         // for ( it = fmap.begin() ; it != fmap.end() ; ++it)
         // {
         //     vgl_point_2d<double> p1,p2;
@@ -8481,7 +8481,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         //         p1.set(p1.x()/model_scale_ratio,
         //                p1.y()/model_scale_ratio);
                 
-        //         p2.set(vcl_fabs(width-(p2.x()/query_scale_ratio)),
+        //         p2.set(std::fabs(width-(p2.x()/query_scale_ratio)),
         //                p2.y()/query_scale_ratio);
 
         //         theta1=sc1->theta((*it).first);
@@ -8499,7 +8499,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         //         p1.set(p1.x()/model_scale_ratio,
         //                p1.y()/model_scale_ratio);
                 
-        //         p2.set(vcl_fabs(width-(p2.x()/query_scale_ratio)),
+        //         p2.set(std::fabs(width-(p2.x()/query_scale_ratio)),
         //                p2.y()/query_scale_ratio);
 
 
@@ -8518,14 +8518,14 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         //                <<p2.x()<<" "
         //                <<p2.y()<<" "
         //                <<scale2<<" "
-        //                <<theta2<<vcl_endl;
+        //                <<theta2<<std::endl;
 
         //     for ( unsigned int n=0; n < model_sift.size() ; ++n)
         //     {
 
         //         if ( n == (model_sift.size() - 1) )
         //         {
-        //             sift_sc1<<model_sift[n]<<vcl_endl;
+        //             sift_sc1<<model_sift[n]<<std::endl;
         //         }
         //         else
         //         {
@@ -8539,7 +8539,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
         //         if ( n == (query_sift.size() - 1) )
         //         {
-        //             sift_sc2<<query_sift[n]<<vcl_endl;
+        //             sift_sc2<<query_sift[n]<<std::endl;
         //         }
         //         else
         //         {
@@ -8555,7 +8555,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
     }
 
-    vcl_pair<double,double> final_cost(total_alignment,
+    std::pair<double,double> final_cost(total_alignment,
                                        total_alignment/map_list.size());
     
     if ( map_list.size() == 0 )
@@ -8568,18 +8568,18 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 }
 
 void dbskfg_match_bag_of_fragments::draw_part_correspondence(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     double model_scale_ratio,
     double query_scale_ratio,
-    vcl_string prefix)
+    std::string prefix)
 {
     
-    vcl_vector<vgl_polygon<double> > model_polys;
-    vcl_vector<vgl_polygon<double> > query_polys;
+    std::vector<vgl_polygon<double> > model_polys;
+    std::vector<vgl_polygon<double> > query_polys;
     
     // Get matching pairs
     for (unsigned i = 0; i < map_list.size(); i++) 
@@ -8589,15 +8589,15 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
 
         for (unsigned j = 1; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> start_pair = map_list[i][j-1];
-            vcl_pair<int, int> stop_pair = map_list[i][j];
+            std::pair<int, int> start_pair = map_list[i][j-1];
+            std::pair<int, int> stop_pair = map_list[i][j];
             
 
-            unsigned int sc1_start=vcl_min(start_pair.first,stop_pair.first);
-            unsigned int sc1_stop=vcl_max(start_pair.first,stop_pair.first);
+            unsigned int sc1_start=std::min(start_pair.first,stop_pair.first);
+            unsigned int sc1_stop=std::max(start_pair.first,stop_pair.first);
             
-            unsigned int sc2_start=vcl_min(start_pair.second,stop_pair.second);
-            unsigned int sc2_stop=vcl_max(start_pair.second,stop_pair.second);
+            unsigned int sc2_start=std::min(start_pair.second,stop_pair.second);
+            unsigned int sc2_stop=std::max(start_pair.second,stop_pair.second);
             
             vgl_polygon<double> sc1_poly(1);
             vgl_polygon<double> sc2_poly(1);
@@ -8623,12 +8623,12 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
 
     }
 
-    vcl_cout<<"Model poly size: "<<model_polys.size()<<" vs "
-            <<query_polys.size()<<vcl_endl;
+    std::cout<<"Model poly size: "<<model_polys.size()<<" vs "
+            <<query_polys.size()<<std::endl;
 
-    vcl_string title=prefix+"_correspondence.txt";
+    std::string title=prefix+"_correspondence.txt";
 
-    vcl_ofstream stream(title.c_str());
+    std::ofstream stream(title.c_str());
     
     {
     
@@ -8644,7 +8644,7 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
 
                 if ( p == sc1[0].size()-1)
                 {
-                    stream <<vcl_endl;;
+                    stream <<std::endl;;
 
                 }
                 else
@@ -8659,7 +8659,7 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
 
                 if ( p == sc2[0].size()-1)
                 {
-                    stream <<vcl_endl;;
+                    stream <<std::endl;;
 
                 }
                 else
@@ -8680,9 +8680,9 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
 void dbskfg_match_bag_of_fragments::warp_image(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width)
 {
@@ -8745,7 +8745,7 @@ void dbskfg_match_bag_of_fragments::warp_image(
     }
     
 
-    vcl_stringstream name;
+    std::stringstream name;
     name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
         <<"_warp.png";
 
@@ -8756,19 +8756,19 @@ void dbskfg_match_bag_of_fragments::warp_image(
 }   
 
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width)
 {
     
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* model_red_grad_data=model_tree->get_red_grad_data();    
     vl_sift_pix* model_green_grad_data=model_tree->get_green_grad_data();      
@@ -8789,7 +8789,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     vgl_polygon<double> poly=model_fragments_polys_
         [model_tree->get_id()].second;
     
-    vcl_vector<vgl_point_2d<double> > bc_coords;
+    std::vector<vgl_point_2d<double> > bc_coords;
 
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -8908,23 +8908,23 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     query_green_grad_data=0;
     query_blue_grad_data=0;
 
-    // vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+    // std::cout<<app_distance.first<<" "<<app_distance.second<<std::endl;
     return app_distance;
 }   
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     bool debug)
 {
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
     vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
@@ -8955,11 +8955,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
 
-    vcl_set<vcl_pair<int,int> > out_of_bounds;
+    std::set<std::pair<int,int> > out_of_bounds;
     
-    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+    std::map<std::pair<int,int>, int > point_to_curve_mapping;
 
     vil_image_view<double> o1(query_channel1->ni(),
                               query_channel2->nj());
@@ -9036,14 +9036,14 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
                 }
 
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 point_to_curve_mapping[key]=curve_list_id;
             }
             else
             {
-                out_of_bounds.insert(vcl_make_pair(x,y));
+                out_of_bounds.insert(std::make_pair(x,y));
             }
 
         }
@@ -9053,7 +9053,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_warp.png";
 
@@ -9093,7 +9093,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     vnl_vector<double> part_distances(curve_list1.size(),0.0);
 
-    vcl_vector<double> norm_factors(curve_list1.size(),0.0);
+    std::vector<double> norm_factors(curve_list1.size(),0.0);
 
     vnl_matrix<double> dist_map;
 
@@ -9109,12 +9109,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
         int y = psi.scany();
         for (int x = psi.startx(); x <= psi.endx(); x=x+stride) 
         {
-            if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            if ( out_of_bounds.count(std::make_pair(x,y)))
             {
                 continue;
             }
 
-            vcl_pair<int,int> key(x,y);
+            std::pair<int,int> key(x,y);
 
             int curve_list_id=point_to_curve_mapping[key];
 
@@ -9149,7 +9149,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            vcl_set<vcl_pair<double,double> > sift_samples;
+            std::set<std::pair<double,double> > sift_samples;
                         
             compute_color_over_sift(
                 query_sift_filter,
@@ -9161,8 +9161,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 fixed_theta,
                 sift_samples);
 
-            vcl_vector<double> model_descr;
-            vcl_vector<double> query_descr;
+            std::vector<double> model_descr;
+            std::vector<double> query_descr;
                         
             compute_color_region_hist(
                 sift_samples,
@@ -9215,7 +9215,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
         if ( debug )
         {
-            vcl_cout<<"Part "<<i<<" : "<<part_distances[i]<<vcl_endl;
+            std::cout<<"Part "<<i<<" : "<<part_distances[i]<<std::endl;
         }
     }
 
@@ -9225,7 +9225,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     {
         unsigned int g=model_tree->get_id();
 
-        vcl_stringstream name;
+        std::stringstream name;
         name<<output_dist_file_;
         if ( g < 10 )
         {
@@ -9241,7 +9241,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             name<<"_Model_0"<<g<<"_dist_map.txt";
         }
 
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -9262,27 +9262,27 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     if ( debug )
     {
-        vcl_cout<<"Color grad: "<<app_distance.first<<vcl_endl;
-        vcl_cout<<"Color: "<<app_distance.second<<vcl_endl;
+        std::cout<<"Color grad: "<<app_distance.first<<std::endl;
+        std::cout<<"Color: "<<app_distance.second<<std::endl;
     }
 
     return app_distance;
 }   
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     double& extra_cost,
     bool flag,
     double width,
     bool debug)
 {
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
     vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
@@ -9313,12 +9313,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
 
-    vcl_set<vcl_pair<int,int> > out_of_bounds;
-    vcl_set<vcl_pair<int,int> > in_bounds;
+    std::set<std::pair<int,int> > out_of_bounds;
+    std::set<std::pair<int,int> > in_bounds;
     
-    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+    std::map<std::pair<int,int>, int > point_to_curve_mapping;
 
     vil_image_view<double> o1(query_channel1->ni(),
                               query_channel2->nj());
@@ -9358,7 +9358,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             vgl_point_2d<double> query_pt(x,y);
 
             bbox.add(query_pt);
-            vcl_pair<int,int> ib(x,y);
+            std::pair<int,int> ib(x,y);
             in_bounds.insert(ib);
 
             vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
@@ -9396,9 +9396,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 if ( grad_color_space_ == dbskfg_match_bag_of_fragments
                      ::OPP )
                 {
-                    double o1 = (red-green)/vcl_sqrt(2);
-                    double o2 = (red+green-2*blue)/vcl_sqrt(6);
-                    double o3 = (red+green+blue)/vcl_sqrt(3);
+                    double o1 = (red-green)/std::sqrt(2);
+                    double o2 = (red+green-2*blue)/std::sqrt(6);
+                    double o3 = (red+green+blue)/std::sqrt(3);
 
                     red=o1;
                     green=o2;
@@ -9407,9 +9407,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 else if ( grad_color_space_ == dbskfg_match_bag_of_fragments
                           ::NOPP )
                 {
-                    double o1 = (red-green)/vcl_sqrt(2);
-                    double o2 = (red+green-2*blue)/vcl_sqrt(6);
-                    double o3 = (red+green+blue)/vcl_sqrt(3);
+                    double o1 = (red-green)/std::sqrt(2);
+                    double o2 = (red+green-2*blue)/std::sqrt(6);
+                    double o3 = (red+green+blue)/std::sqrt(3);
 
                     if ( o3 > 0.0 )
                     {
@@ -9470,14 +9470,14 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
                 }
 
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 point_to_curve_mapping[key]=curve_list_id;
             }
             else
             {
-                out_of_bounds.insert(vcl_make_pair(x,y));
+                out_of_bounds.insert(std::make_pair(x,y));
             }
 
         }
@@ -9487,7 +9487,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_warp.png";
 
@@ -9546,17 +9546,17 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     {
         for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
         {
-            if ( !in_bounds.count(vcl_make_pair(x,y)))
+            if ( !in_bounds.count(std::make_pair(x,y)))
             {
                 continue;
             }
 
-            // if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            // if ( out_of_bounds.count(std::make_pair(x,y)))
             // {
             //     continue;
             // }
 
-            vcl_pair<int,int> key(x,y);
+            std::pair<int,int> key(x,y);
 
             int curve_list_id=point_to_curve_mapping[key];
 
@@ -9577,11 +9577,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                     model_lab_1,model_lab_2,model_lab_3);
 
             double model_opp_1 = 
-                (model_rgb_1-model_rgb_2)/vcl_sqrt(2);
+                (model_rgb_1-model_rgb_2)/std::sqrt(2);
             double model_opp_2 = 
-                (model_rgb_1+model_rgb_2-2*model_rgb_3)/vcl_sqrt(6);
+                (model_rgb_1+model_rgb_2-2*model_rgb_3)/std::sqrt(6);
             double model_opp_3 = 
-                (model_rgb_1+model_rgb_2+model_rgb_3)/vcl_sqrt(3);
+                (model_rgb_1+model_rgb_2+model_rgb_3)/std::sqrt(3);
 
             double model_hsv_1[1];
             double model_hsv_2[1];
@@ -9598,11 +9598,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                     query_lab_1,query_lab_2,query_lab_3);
 
             double query_opp_1 = 
-                (query_rgb_1-query_rgb_2)/vcl_sqrt(2);
+                (query_rgb_1-query_rgb_2)/std::sqrt(2);
             double query_opp_2 = 
-                (query_rgb_1+query_rgb_2-2*query_rgb_3)/vcl_sqrt(6);
+                (query_rgb_1+query_rgb_2-2*query_rgb_3)/std::sqrt(6);
             double query_opp_3 = 
-                (query_rgb_1+query_rgb_2+query_rgb_3)/vcl_sqrt(3);
+                (query_rgb_1+query_rgb_2+query_rgb_3)/std::sqrt(3);
 
             double query_hsv_1[1];
             double query_hsv_2[1];
@@ -9670,7 +9670,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
             trad_sift_distance += sample_distance;
 
-            // vcl_vector<double> model_color_fv,query_color_fv;
+            // std::vector<double> model_color_fv,query_color_fv;
 
             // double color_scale=64.0;
             // compute_mean_std_color_descr
@@ -9702,8 +9702,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                         
             // local_color_distance += color_distance;
 
-            // vcl_vector<vl_sift_pix> combined_model_descriptor;
-            // vcl_vector<vl_sift_pix> combined_query_descriptor;
+            // std::vector<vl_sift_pix> combined_model_descriptor;
+            // std::vector<vl_sift_pix> combined_query_descriptor;
 
             // for ( unsigned int cgfv = 0; cgfv < model_fv.size() ; ++cgfv)
             // {
@@ -9731,8 +9731,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
            
             // combined_distance += combined_sampled_distance;
             
-            // vcl_set<vcl_pair<double,double> > query_sift_samples;
-            // vcl_set<vcl_pair<double,double> > model_sift_samples;
+            // std::set<std::pair<double,double> > query_sift_samples;
+            // std::set<std::pair<double,double> > model_sift_samples;
                         
             // compute_color_over_sift(
             //     query_sift_filter,
@@ -9750,24 +9750,24 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             // {
                 
             //     model_sift_samples.clear();
-            //     vcl_set<vcl_pair<double,double> >::iterator it;
+            //     std::set<std::pair<double,double> >::iterator it;
             //     for ( it = query_sift_samples.begin() ; it != 
             //               query_sift_samples.end() ; ++it)
             //     {
                     
-            //         vcl_pair<double,double> point=*it;
-            //         vcl_pair<double,double> flipped(ni-1-point.first,
+            //         std::pair<double,double> point=*it;
+            //         std::pair<double,double> flipped(ni-1-point.first,
             //                                         point.second);
             //         model_sift_samples.insert(flipped);
             //     }
                 
             // }
 
-            // vcl_vector<vl_sift_pix> model_color_fv;
-            // vcl_vector<vl_sift_pix> query_color_fv;
+            // std::vector<vl_sift_pix> model_color_fv;
+            // std::vector<vl_sift_pix> query_color_fv;
             
-            // vcl_vector<vl_sift_pix> model_color_hist;
-            // vcl_set<vcl_pair<double,double> >::iterator mit;
+            // std::vector<vl_sift_pix> model_color_hist;
+            // std::set<std::pair<double,double> >::iterator mit;
             // for ( mit=model_sift_samples.begin() ; 
             //       mit != model_sift_samples.end(); ++mit)
             // {
@@ -9784,8 +9784,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             //     model_color_hist.push_back(blue);
             // }
 
-            // vcl_vector<vl_sift_pix> query_color_hist;
-            // vcl_set<vcl_pair<double,double> >::iterator qit;
+            // std::vector<vl_sift_pix> query_color_hist;
+            // std::set<std::pair<double,double> >::iterator qit;
             // for ( qit=query_sift_samples.begin() ; 
             //       qit != query_sift_samples.end(); ++qit)
             // {
@@ -9867,7 +9867,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     {
         unsigned int g=model_tree->get_id();
 
-        vcl_stringstream name;
+        std::stringstream name;
         name<<output_dist_file_;
         if ( g < 10 )
         {
@@ -9883,7 +9883,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             name<<"_Model_0"<<g<<"_dist_map.txt";
         }
 
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -9906,27 +9906,27 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     if ( debug )
     {
-        vcl_cout<<"Color grad: "<<app_distance.first<<vcl_endl;
-        vcl_cout<<"Color: "<<app_distance.second<<vcl_endl;
+        std::cout<<"Color grad: "<<app_distance.first<<std::endl;
+        std::cout<<"Color: "<<app_distance.second<<std::endl;
     }
 
     return app_distance;
 }   
 
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     bool debug)
 {
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
     vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
@@ -9950,13 +9950,13 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
 
-    vcl_set<vcl_pair<int,int> > out_of_bounds;
-    vcl_set<vcl_pair<int,int> > in_bounds;
+    std::set<std::pair<int,int> > out_of_bounds;
+    std::set<std::pair<int,int> > in_bounds;
     
-    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > q_to_m_mapping;
+    std::map<std::pair<int,int>, int > point_to_curve_mapping;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > q_to_m_mapping;
 
     vgl_box_2d<double> bbox;
 
@@ -9970,7 +9970,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
             vgl_point_2d<double> query_pt(x,y);
 
             bbox.add(query_pt);
-            vcl_pair<int,int> ib(x,y);
+            std::pair<int,int> ib(x,y);
             in_bounds.insert(ib);
 
             vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
@@ -9994,7 +9994,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
 
             if ( mapping_pt.x() != -1 )
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 point_to_curve_mapping[key]=curve_list_id;
@@ -10003,7 +10003,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
             }
             else
             {
-                out_of_bounds.insert(vcl_make_pair(x,y));
+                out_of_bounds.insert(std::make_pair(x,y));
             }
 
         }
@@ -10037,17 +10037,17 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
     {
         for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
         {
-            if ( !in_bounds.count(vcl_make_pair(x,y)))
+            if ( !in_bounds.count(std::make_pair(x,y)))
             {
                 continue;
             }
 
-            // if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            // if ( out_of_bounds.count(std::make_pair(x,y)))
             // {
             //     continue;
             // }
 
-            vcl_pair<int,int> key(x,y);
+            std::pair<int,int> key(x,y);
 
             int curve_list_id=point_to_curve_mapping[key];
 
@@ -10068,11 +10068,11 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
                     model_lab_1,model_lab_2,model_lab_3);
 
             double model_opp_1 = 
-                (model_rgb_1-model_rgb_2)/vcl_sqrt(2);
+                (model_rgb_1-model_rgb_2)/std::sqrt(2);
             double model_opp_2 = 
-                (model_rgb_1+model_rgb_2-2*model_rgb_3)/vcl_sqrt(6);
+                (model_rgb_1+model_rgb_2-2*model_rgb_3)/std::sqrt(6);
             double model_opp_3 = 
-                (model_rgb_1+model_rgb_2+model_rgb_3)/vcl_sqrt(3);
+                (model_rgb_1+model_rgb_2+model_rgb_3)/std::sqrt(3);
 
             double model_hsv_1[1];
             double model_hsv_2[1];
@@ -10089,11 +10089,11 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
                     query_lab_1,query_lab_2,query_lab_3);
 
             double query_opp_1 = 
-                (query_rgb_1-query_rgb_2)/vcl_sqrt(2);
+                (query_rgb_1-query_rgb_2)/std::sqrt(2);
             double query_opp_2 = 
-                (query_rgb_1+query_rgb_2-2*query_rgb_3)/vcl_sqrt(6);
+                (query_rgb_1+query_rgb_2-2*query_rgb_3)/std::sqrt(6);
             double query_opp_3 = 
-                (query_rgb_1+query_rgb_2+query_rgb_3)/vcl_sqrt(3);
+                (query_rgb_1+query_rgb_2+query_rgb_3)/std::sqrt(3);
 
             double query_hsv_1[1];
             double query_hsv_2[1];
@@ -10179,7 +10179,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
     {
         unsigned int g=model_tree->get_id();
 
-        vcl_stringstream name;
+        std::stringstream name;
         name<<output_dist_file_;
         if ( g < 10 )
         {
@@ -10195,7 +10195,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
             name<<"_Model_0"<<g<<"_dist_map.txt";
         }
 
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -10208,26 +10208,26 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
 
     if ( debug )
     {
-        vcl_cout<<"Color grad: "<<app_distance.first<<vcl_endl;
-        vcl_cout<<"Color: "<<app_distance.second<<vcl_endl;
+        std::cout<<"Color grad: "<<app_distance.first<<std::endl;
+        std::cout<<"Color: "<<app_distance.second<<std::endl;
     }
 
     return app_distance;
 }   
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     bool debug)
 {
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* model_red_grad_data  =model_tree->get_red_grad_data();    
     vl_sift_pix* model_green_grad_data=model_tree->get_green_grad_data();      
@@ -10258,12 +10258,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
     vgl_polygon<double> poly=model_fragments_polys_
         [model_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
 
-    vcl_set<vcl_pair<int,int> > out_of_bounds;
-    vcl_set<vcl_pair<int,int> > in_bounds;
+    std::set<std::pair<int,int> > out_of_bounds;
+    std::set<std::pair<int,int> > in_bounds;
     
-    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+    std::map<std::pair<int,int>, int > point_to_curve_mapping;
 
     vil_image_view<double> o1(model_channel1->ni(),
                               model_channel2->nj());
@@ -10290,7 +10290,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
             vgl_point_2d<double> query_pt(x,y);
 
             bbox.add(query_pt);
-            vcl_pair<int,int> ib(x,y);
+            std::pair<int,int> ib(x,y);
             in_bounds.insert(ib);
 
             vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
@@ -10330,14 +10330,14 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
                 o2(x,y)=green;
                 o3(x,y)=blue;
                 
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 point_to_curve_mapping[key]=curve_list_id;
             }
             else
             {
-                out_of_bounds.insert(vcl_make_pair(x,y));
+                out_of_bounds.insert(std::make_pair(x,y));
             }
 
         }
@@ -10347,7 +10347,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_warp.png";
 
@@ -10387,7 +10387,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
 
     vnl_vector<double> part_distances(curve_list1.size(),0.0);
 
-    vcl_vector<double> norm_factors(curve_list1.size(),0.0);
+    std::vector<double> norm_factors(curve_list1.size(),0.0);
 
     vnl_matrix<double> dist_map;
 
@@ -10402,17 +10402,17 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
     {
         for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
         {
-            if ( !in_bounds.count(vcl_make_pair(x,y)))
+            if ( !in_bounds.count(std::make_pair(x,y)))
             {
                 continue;
             }
 
-            if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            if ( out_of_bounds.count(std::make_pair(x,y)))
             {
                 continue;
             }
 
-            vcl_pair<int,int> key(x,y);
+            std::pair<int,int> key(x,y);
 
             int curve_list_id=point_to_curve_mapping[key];
 
@@ -10442,7 +10442,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            vcl_set<vcl_pair<double,double> > sift_samples;
+            std::set<std::pair<double,double> > sift_samples;
                         
             compute_color_over_sift(
                 model_sift_filter,
@@ -10454,8 +10454,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
                 fixed_theta,
                 sift_samples);
 
-            vcl_vector<double> model_descr;
-            vcl_vector<double> query_descr;
+            std::vector<double> model_descr;
+            std::vector<double> query_descr;
                         
             compute_color_region_hist(
                 sift_samples,
@@ -10503,7 +10503,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
 
         if ( debug )
         {
-            vcl_cout<<"Part "<<i<<" : "<<part_distances[i]<<vcl_endl;
+            std::cout<<"Part "<<i<<" : "<<part_distances[i]<<std::endl;
         }
     }
 
@@ -10513,7 +10513,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
     {
         unsigned int g=model_tree->get_id();
 
-        vcl_stringstream name;
+        std::stringstream name;
         name<<output_dist_file_;
         if ( g < 10 )
         {
@@ -10529,7 +10529,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
             name<<"_Model_0"<<g<<"_dist_map.txt";
         }
 
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -10550,20 +10550,20 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
 
     if ( debug )
     {
-        vcl_cout<<"Color grad: "<<app_distance.first<<vcl_endl;
-        vcl_cout<<"Color: "<<app_distance.second<<vcl_endl;
+        std::cout<<"Color grad: "<<app_distance.first<<std::endl;
+        std::cout<<"Color: "<<app_distance.second<<std::endl;
     }
 
     return app_distance;
 }   
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     bool debug)
@@ -10574,10 +10574,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         part_distances_[model_tree->get_id()].clear();
     }
 
-    vcl_vector<vgl_polygon<double> > scurve_polys;
+    std::vector<vgl_polygon<double> > scurve_polys;
     query_tree->get_polygon_scurves(scurve_polys);
 
-    vcl_map<double,unsigned int> area_mapping;
+    std::map<double,unsigned int> area_mapping;
 
     for ( unsigned int d=0; d < scurve_polys.size() ; ++d)
     {
@@ -10591,20 +10591,20 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     {
         for ( unsigned int d=0; d < scurve_polys.size() ; ++d)
         {
-            vcl_stringstream streamer;
+            std::stringstream streamer;
             streamer<<"Query_poly_000"<<d<<".txt";
 
             vgl_polygon<double> query_poly=scurve_polys[d];
 
             {
             
-                vcl_ofstream query_file(streamer.str().c_str());
+                std::ofstream query_file(streamer.str().c_str());
                 for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
                 {
                     for (unsigned int p = 0; p < query_poly[s].size(); ++p)
                     {
                         query_file<<query_poly[s][p].x()
-                                  <<","<<query_poly[s][p].y()<<vcl_endl;
+                                  <<","<<query_poly[s][p].y()<<std::endl;
                     }
                 }
                 query_file.close();
@@ -10614,7 +10614,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     }
 
 
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
     vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
     vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
@@ -10645,9 +10645,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
     
-    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+    std::map<std::pair<int,int>, int > point_to_curve_mapping;
 
     vil_image_view<double> o1(query_channel1->ni(),
                               query_channel2->nj());
@@ -10724,7 +10724,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
                 }
 
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 point_to_curve_mapping[key]=curve_list_id;
@@ -10737,7 +10737,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_warp.png";
 
@@ -10772,7 +10772,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     unsigned int stride=3;
 
     vnl_vector<double> middle_part_distances(curve_list1.size(),0.0);
-    vcl_vector<double> middle_norm_factors(curve_list1.size(),0.0);
+    std::vector<double> middle_norm_factors(curve_list1.size(),0.0);
     vnl_vector<double> sg_part_distances(scurve_polys.size(),0.0);
     vnl_vector<double> sg_part_color_distances(scurve_polys.size(),0.0);
 
@@ -10785,7 +10785,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         stride=1;
     }
 
-    vcl_map<double,unsigned int>::iterator ait;
+    std::map<double,unsigned int>::iterator ait;
 
     for ( ait=area_mapping.begin() ; ait != area_mapping.end() ; ++ait)
     {
@@ -10798,7 +10798,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         int norm_index=0;
         double trad_sift_distance=0.0;
 
-        vcl_set< vcl_pair<double,double> > part_samples;
+        std::set< std::pair<double,double> > part_samples;
 
         for (q_psi.reset(); q_psi.next(); ) 
         {
@@ -10813,7 +10813,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
                     model_pt.set(ni-1-x,y);
                 }
 
-                part_samples.insert(vcl_make_pair( (double) x,
+                part_samples.insert(std::make_pair( (double) x,
                                                    (double) y));
 
                 double sample_distance = descr_cost(
@@ -10834,9 +10834,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
                 trad_sift_distance += sample_distance;
 
-                if ( point_to_curve_mapping.count(vcl_make_pair(x,y)))
+                if ( point_to_curve_mapping.count(std::make_pair(x,y)))
                 {
-                    vcl_pair<int,int> key(x,y);
+                    std::pair<int,int> key(x,y);
                     int curve_list_id=point_to_curve_mapping[key];
 
                     middle_part_distances[curve_list_id]=
@@ -10879,8 +10879,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         part_distances_[model_tree->get_id()].push_back(temp_distance);
 
         
-        vcl_vector<double> model_descr;
-        vcl_vector<double> query_descr;
+        std::vector<double> model_descr;
+        std::vector<double> query_descr;
         
         compute_color_region_hist(
             part_samples,
@@ -10916,7 +10916,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
         if ( debug )
         {
-            vcl_set< vcl_pair<double,double> >::iterator it;
+            std::set< std::pair<double,double> >::iterator it;
             for ( it = part_samples.begin() ; it != part_samples.end();
                   ++it)
             {
@@ -10924,12 +10924,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
             }
 
-            vcl_cout<<"SG Part color grad "<<d
+            std::cout<<"SG Part color grad "<<d
                     <<" : "<<sg_part_distances[d]<<" samples: "
-                    <<norm_index<<vcl_endl;
-            vcl_cout<<"SG Part color "<<d
+                    <<norm_index<<std::endl;
+            std::cout<<"SG Part color "<<d
                     <<" : "<<sg_part_color_distances[d]<<" samples: "
-                    <<norm_index<<vcl_endl;
+                    <<norm_index<<std::endl;
 
         }
     }
@@ -10942,7 +10942,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
         if ( debug )
         {
-            vcl_cout<<"MS Part "<<i<<" : "<<middle_part_distances[i]<<vcl_endl;
+            std::cout<<"MS Part "<<i<<" : "<<middle_part_distances[i]<<std::endl;
         }
     }
 
@@ -10950,11 +10950,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_dist_map.txt";
         
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -10974,27 +10974,27 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
     if ( debug )
     {
-        vcl_cout<<"Distance MS Parts: "<<app_distance.first<<vcl_endl;
-        vcl_cout<<"Distance SG Parts: "<<app_distance.second<<vcl_endl;
+        std::cout<<"Distance MS Parts: "<<app_distance.first<<std::endl;
+        std::cout<<"Distance SG Parts: "<<app_distance.second<<std::endl;
     }
 
     return app_distance;
 }   
 
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
     dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     bool flag,
     double width,
     bool debug)
 {
     
-    vcl_pair<double,double> app_distance(0.0,0.0);
+    std::pair<double,double> app_distance(0.0,0.0);
 
 
     vil_image_view<double>* query_channel1=query_tree->get_channel1();
@@ -11015,9 +11015,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+    std::map<std::pair<int,int>, vgl_point_2d<double> > bc_coords;
 
-    vcl_set<vcl_pair<int,int> > in_bounds;
+    std::set<std::pair<int,int> > in_bounds;
 
     vgl_box_2d<double> box;
 
@@ -11068,9 +11068,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
                     temp(x,y)=vil_rgb<float>(red,green,blue);
                 }
 
-                in_bounds.insert(vcl_make_pair(x,y));
+                in_bounds.insert(std::make_pair(x,y));
 
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
                 box.add(vgl_point_2d<double>(x,y));
@@ -11094,8 +11094,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
         stride=1;
     }
 
-    vcl_vector< vnl_vector<vl_sift_pix> > model_descrs;
-    vcl_vector< vcl_pair<int,int> > model_keypoints;
+    std::vector< vnl_vector<vl_sift_pix> > model_descrs;
+    std::vector< std::pair<int,int> > model_keypoints;
    
     compute_dsift_image(
         out_img,
@@ -11106,8 +11106,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
         binSize);
 
 
-    vcl_vector< vnl_vector<vl_sift_pix> > query_descrs;
-    vcl_vector< vcl_pair<int,int> > query_keypoints;
+    std::vector< vnl_vector<vl_sift_pix> > query_descrs;
+    std::vector< std::pair<int,int> > query_keypoints;
    
     compute_dsift_image(
         *query_channel1,
@@ -11126,7 +11126,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
     for ( unsigned int k=0; k < model_keypoints.size() ; ++k)
     {
 
-        vcl_pair<int,int> keypoint=model_keypoints[k];
+        std::pair<int,int> keypoint=model_keypoints[k];
 
         vnl_vector<vl_sift_pix> descr1=model_descrs[k];
         vnl_vector<vl_sift_pix> descr2=query_descrs[k];
@@ -11158,11 +11158,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 
     if ( debug )
     {
-        vcl_stringstream name;
+        std::stringstream name;
         name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
             <<"_dist_map.txt";
         
-        vcl_ofstream streamer(name.str().c_str());
+        std::ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
         
@@ -11174,7 +11174,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 
     if ( debug )
     {
-        vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+        std::cout<<app_distance.first<<" "<<app_distance.second<<std::endl;
     }
     return app_distance;
 }   
@@ -11184,8 +11184,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 void dbskfg_match_bag_of_fragments::compute_dsift_image(
     vil_image_resource_sptr& input_image,
     vgl_box_2d<double>& box,
-    vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
-    vcl_vector<vcl_pair<int,int> >& keypoints,
+    std::vector<vnl_vector<vl_sift_pix> >& descrs,
+    std::vector<std::pair<int,int> >& keypoints,
     int step,
     int binSize)
 {
@@ -11244,7 +11244,7 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
         
         for ( unsigned int i=0; i < numb_descriptors ; ++i)
         {
-            vcl_pair<int,int> key(kps[i].x,kps[i].y);
+            std::pair<int,int> key(kps[i].x,kps[i].y);
             keypoints.push_back(key);
         }
 
@@ -11314,8 +11314,8 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
     vil_image_view<double>& channel_2,
     vil_image_view<double>& channel_3,
     vgl_box_2d<double>& box,
-    vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
-    vcl_vector<vcl_pair<int,int> >& keypoints,
+    std::vector<vnl_vector<vl_sift_pix> >& descrs,
+    std::vector<std::pair<int,int> >& keypoints,
     int step,
     int binSize)
 {
@@ -11368,7 +11368,7 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
         
         for ( unsigned int i=0; i < numb_descriptors ; ++i)
         {
-            vcl_pair<int,int> key(kps[i].x,kps[i].y);
+            std::pair<int,int> key(kps[i].x,kps[i].y);
             keypoints.push_back(key);
         }
 
@@ -11435,9 +11435,9 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
 
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     vgl_point_2d<double>& rt_model,
     vgl_point_2d<double>& rt_query,
     int& curve_list_id,
@@ -11494,7 +11494,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 
@@ -11614,7 +11614,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 
@@ -11696,7 +11696,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     }
 
 
-    mapping_pt.set(vcl_fabs(width-(mapping_pt.x()/query_scale_ratio)),
+    mapping_pt.set(std::fabs(width-(mapping_pt.x()/query_scale_ratio)),
                    mapping_pt.y()/query_scale_ratio);
 
     return mapping_pt;
@@ -11707,9 +11707,9 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::
 find_part_correspondences_qm(
     vgl_point_2d<double> query_pt,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     vgl_point_2d<double>& rt_model,
     vgl_point_2d<double>& rt_query,
     int& curve_list_id,
@@ -11773,7 +11773,7 @@ find_part_correspondences_qm(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 
@@ -11845,10 +11845,10 @@ find_part_correspondences_qm(
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
-        rt_model.set(t_rad_model-vcl_fabs(int_pt.y()),
+        rt_model.set(t_rad_model-std::fabs(int_pt.y()),
                      model_curve->interp_theta(int_pt.x()));
 
-        rt_query.set(t_rad_query-vcl_fabs(t_map),
+        rt_query.set(t_rad_query-std::fabs(t_map),
                      query_curve->interp_theta(s_map));
 
         
@@ -11893,7 +11893,7 @@ find_part_correspondences_qm(
             return mapping_pt;
         }
 
-        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+        std::vector<std::pair<int,int> > curve_map=map_list[c];
 
         double index=int_pt.x();
 
@@ -11965,10 +11965,10 @@ find_part_correspondences_qm(
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
-        rt_model.set(t_rad_model-vcl_fabs(int_pt.y()),
+        rt_model.set(t_rad_model-std::fabs(int_pt.y()),
                      model_curve->interp_theta(int_pt.x()));
 
-        rt_query.set(t_rad_query-vcl_fabs(t_map),
+        rt_query.set(t_rad_query-std::fabs(t_map),
                      query_curve->interp_theta(s_map));
 
 
@@ -11981,13 +11981,13 @@ find_part_correspondences_qm(
     return mapping_pt;
 }
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+std::pair<double,double> dbskfg_match_bag_of_fragments::
 compute_dense_rgb_sift_cost(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     vil_image_view<double>& model_channel_1,
     vil_image_view<double>& model_channel_2,
     vil_image_view<double>& model_channel_3,
@@ -12008,29 +12008,29 @@ compute_dense_rgb_sift_cost(
     double query_scale_ratio,
     double model_sift_scale,
     double query_sift_scale,
-    vcl_string prefix)
+    std::string prefix)
 {
  
     // if ( width > 0 )
     // {
-    //     vcl_ofstream red_stream("query_red_data.txt");
-    //     vcl_ofstream green_stream("query_green_data.txt");
-    //     vcl_ofstream blue_stream("query_blue_data.txt");
+    //     std::ofstream red_stream("query_red_data.txt");
+    //     std::ofstream green_stream("query_green_data.txt");
+    //     std::ofstream blue_stream("query_blue_data.txt");
 
 
     //     for ( unsigned int i=0; i < query_channel_1.ni()*
     //               query_channel_1.nj(); ++i)
     //     {
     //         red_stream<<*query_red_grad_data<<" "<<
-    //             *(query_red_grad_data+1)<<vcl_endl;
+    //             *(query_red_grad_data+1)<<std::endl;
     //         query_red_grad_data+=2;
 
     //         green_stream<<*query_green_grad_data<<" "<<
-    //             *(query_green_grad_data+1)<<vcl_endl;
+    //             *(query_green_grad_data+1)<<std::endl;
     //         query_green_grad_data+=2;
 
     //         blue_stream<<*query_blue_grad_data<<" "<<
-    //             *(query_blue_grad_data+1)<<vcl_endl;
+    //             *(query_blue_grad_data+1)<<std::endl;
     //         query_blue_grad_data+=2;
 
     //     }
@@ -12061,11 +12061,11 @@ compute_dense_rgb_sift_cost(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
-        vcl_vector< vcl_vector<vl_sift_pix> > model_sift;
-        vcl_vector< vcl_vector<vl_sift_pix> > query_sift;
+        std::vector< std::vector<vl_sift_pix> > model_sift;
+        std::vector< std::vector<vl_sift_pix> > query_sift;
         
-        vcl_vector<vgl_point_2d<double> > shock_curve1;
-        vcl_vector<vgl_point_2d<double> > shock_curve2;
+        std::vector<vgl_point_2d<double> > shock_curve1;
+        std::vector<vgl_point_2d<double> > shock_curve2;
 
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
@@ -12087,8 +12087,8 @@ compute_dense_rgb_sift_cost(
         double local_distance=0.0;
         double local_color_distance=0.0;
 
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -12136,7 +12136,7 @@ compute_dense_rgb_sift_cost(
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
             
             // Compute sift for both images
 
@@ -12199,7 +12199,7 @@ compute_dense_rgb_sift_cost(
 
                         ps1.set(ps1.x()/model_scale_ratio,
                                 ps1.y()/model_scale_ratio);
-                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
                     
                         vgl_point_2d<double> ps1_actual=ps1;
@@ -12295,8 +12295,8 @@ compute_dense_rgb_sift_cost(
                         //     query_channel_3);
 
                   
-                        // vcl_set<vcl_pair<double,double> > model_sift_samples;
-                        // vcl_set<vcl_pair<double,double> > query_sift_samples;
+                        // std::set<std::pair<double,double> > model_sift_samples;
+                        // std::set<std::pair<double,double> > query_sift_samples;
                         
                         // compute_color_over_sift(
                         //     model_sift_filter,
@@ -12318,8 +12318,8 @@ compute_dense_rgb_sift_cost(
                         //     theta_ps2,
                         //     query_sift_samples);
 
-                        // vcl_vector<double> model_descr;
-                        // vcl_vector<double> query_descr;
+                        // std::vector<double> model_descr;
+                        // std::vector<double> query_descr;
                         
                         // compute_color_region_hist(
                         //     model_sift_samples,
@@ -12351,13 +12351,13 @@ compute_dense_rgb_sift_cost(
                         // color_hist_diff +=
                         //     chi_squared_distance(vec_model,vec_query);
 
-                        vcl_vector<vl_sift_pix> msift;
+                        std::vector<vl_sift_pix> msift;
                         msift.push_back(ps1_actual.x());
                         msift.push_back(ps1_actual.y());
                         msift.push_back(model_radius*2.0);
                         msift.push_back(theta_ps1);
 
-                        vcl_vector<vl_sift_pix> qsift;
+                        std::vector<vl_sift_pix> qsift;
                         qsift.push_back(ps2_actual.x());
                         qsift.push_back(ps2_actual.y());
                         qsift.push_back(query_radius*2.0);
@@ -12369,7 +12369,7 @@ compute_dense_rgb_sift_cost(
                     }
                     else
                     {
-                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
@@ -12465,8 +12465,8 @@ compute_dense_rgb_sift_cost(
                         //     query_channel_2,
                         //     query_channel_3);
                   
-                        // vcl_set<vcl_pair<double,double> > model_sift_samples;
-                        // vcl_set<vcl_pair<double,double> > query_sift_samples;
+                        // std::set<std::pair<double,double> > model_sift_samples;
+                        // std::set<std::pair<double,double> > query_sift_samples;
                         
                         // compute_color_over_sift(
                         //     model_sift_filter,
@@ -12488,8 +12488,8 @@ compute_dense_rgb_sift_cost(
                         //     theta_ps1,
                         //     query_sift_samples);
 
-                        // vcl_vector<double> model_descr;
-                        // vcl_vector<double> query_descr;
+                        // std::vector<double> model_descr;
+                        // std::vector<double> query_descr;
                         
                         // compute_color_region_hist(
                         //     model_sift_samples,
@@ -12521,13 +12521,13 @@ compute_dense_rgb_sift_cost(
                         // color_hist_diff +=
                         //     chi_squared_distance(vec_model,vec_query);
 
-                        vcl_vector<vl_sift_pix> msift;
+                        std::vector<vl_sift_pix> msift;
                         msift.push_back(ps2_actual.x());
                         msift.push_back(ps2_actual.y());
                         msift.push_back(model_radius*2.0);
                         msift.push_back(theta_ps2);
 
-                        vcl_vector<vl_sift_pix> qsift;
+                        std::vector<vl_sift_pix> qsift;
                         qsift.push_back(ps1_actual.x());
                         qsift.push_back(ps1_actual.y());
                         qsift.push_back(query_radius*2.0);
@@ -12553,7 +12553,7 @@ compute_dense_rgb_sift_cost(
                     
                     ps1.set(ps1.x()/model_scale_ratio,
                             ps1.y()/model_scale_ratio);
-                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                    ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                             ps2.y()/query_scale_ratio);
                     
                     shock_curve1.push_back(ps1);
@@ -12568,7 +12568,7 @@ compute_dense_rgb_sift_cost(
                 }
                 else
                 {
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                    ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                             ps1.y()/query_scale_ratio);
                     ps2.set(ps2.x()/model_scale_ratio,
                             ps2.y()/model_scale_ratio);
@@ -12608,7 +12608,7 @@ compute_dense_rgb_sift_cost(
             local_arclength_shock_curve2+arclength_shock_curve2;
 
         dart_distances.push_back(local_distance/num_steps);
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -12617,9 +12617,9 @@ compute_dense_rgb_sift_cost(
         //         <<","
         //         <<path_map[i].second.second
         //         <<") L2 distance: "
-        //         <<local_distance<<vcl_endl;
+        //         <<local_distance<<std::endl;
        
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -12631,43 +12631,43 @@ compute_dense_rgb_sift_cost(
         //         <<path_map[i].second.second
         //         <<") length: "
         //         <<local_arclength_shock_curve2
-        //         <<vcl_endl;
+        //         <<std::endl;
 
         // {
 
-        //     vcl_stringstream model_stream;
+        //     std::stringstream model_stream;
         //     model_stream<<prefix<<"_dart_model_"<<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_stream;
+        //     std::stringstream query_stream;
         //     query_stream<<prefix<<"_dart_query_"<<i<<"_app_correspondence.txt";
         
-        //     vcl_ofstream model_file(model_stream.str().c_str());
-        //     model_file<<model_sift.size()<<vcl_endl;
+        //     std::ofstream model_file(model_stream.str().c_str());
+        //     model_file<<model_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < model_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=model_sift[b];
+        //         std::vector<vl_sift_pix> vec=model_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             model_file<<vec[c]<<vcl_endl;
+        //             model_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     model_file.close();
 
-        //     vcl_ofstream query_file(query_stream.str().c_str());
-        //     query_file<<query_sift.size()<<vcl_endl;
+        //     std::ofstream query_file(query_stream.str().c_str());
+        //     query_file<<query_sift.size()<<std::endl;
         //     for ( unsigned int b=0; b < query_sift.size() ; ++b)
         //     {
-        //         vcl_vector<vl_sift_pix> vec=query_sift[b];
+        //         std::vector<vl_sift_pix> vec=query_sift[b];
         //         for  ( unsigned int c=0; c < vec.size() ; ++c)
         //         {
-        //             query_file<<vec[c]<<vcl_endl;
+        //             query_file<<vec[c]<<std::endl;
         //         }
         //     }
         //     query_file.close();
 
-        //     vcl_stringstream model_poly_stream;
+        //     std::stringstream model_poly_stream;
         //     model_poly_stream<<prefix<<"_dart_model_poly_"
         //                      <<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_poly_stream;
+        //     std::stringstream query_poly_stream;
         //     query_poly_stream<<prefix<<"_dart_query_poly_"
         //                      <<i<<"_app_correspondence.txt";
             
@@ -12695,12 +12695,12 @@ compute_dense_rgb_sift_cost(
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
-    vcl_pair<double,double> app_diff(color_norm,avg_norm);
+    std::pair<double,double> app_diff(color_norm,avg_norm);
 
-    // vcl_cout<<"Unormalized diff: "<<sift_diff<<vcl_endl;
-    // vcl_cout<<"Average diff: "<<avg_norm<<vcl_endl;
-    // vcl_cout<<"Splice norm:  "<<splice_norm<<vcl_endl;
-    // vcl_cout<<"Length norm:  "<<length_norm<<vcl_endl;
+    // std::cout<<"Unormalized diff: "<<sift_diff<<std::endl;
+    // std::cout<<"Average diff: "<<avg_norm<<std::endl;
+    // std::cout<<"Splice norm:  "<<splice_norm<<std::endl;
+    // std::cout<<"Length norm:  "<<length_norm<<std::endl;
 
     return app_diff;
 }
@@ -12870,12 +12870,12 @@ compress_sift(vl_sift_pix* red_sift,
 }
 
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+std::pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     vil_image_view<double>& model_channel_1,
     vil_image_view<double>& model_channel_2,
     vil_image_view<double>& model_channel_3,
@@ -12917,7 +12917,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
             
             // Shock Point 1 from Model
             double radius_ps1        = sc1->time(cor.first);
@@ -12974,18 +12974,18 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
                 {   
                     ps1.set(ps1.x()/model_scale_ratio,
                             ps1.y()/model_scale_ratio);
-                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                    ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                             ps2.y()/query_scale_ratio);
 
                     ps1_plus.set(ps1_plus.x()/model_scale_ratio,
                                  ps1_plus.y()/model_scale_ratio);
-                    ps2_plus.set(vcl_fabs(width-(ps2_plus.x()/
+                    ps2_plus.set(std::fabs(width-(ps2_plus.x()/
                                                  query_scale_ratio)),
                                  ps2_plus.y()/query_scale_ratio);
                     
                     ps1_minus.set(ps1_minus.x()/model_scale_ratio,
                                   ps1_minus.y()/model_scale_ratio);
-                    ps2_minus.set(vcl_fabs(width-(ps2_minus.x()/
+                    ps2_minus.set(std::fabs(width-(ps2_minus.x()/
                                                   query_scale_ratio)),
                                   ps2_minus.y()/query_scale_ratio);
                                        
@@ -13132,12 +13132,12 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
                 }
                 else
                 {
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                    ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                             ps1.y()/query_scale_ratio);
                     ps2.set(ps2.x()/model_scale_ratio,
                             ps2.y()/model_scale_ratio);
 
-                    ps1_plus.set(vcl_fabs(
+                    ps1_plus.set(std::fabs(
                                      width-(
                                          ps1_plus.x()/query_scale_ratio)),
                                  ps1_plus.y()/query_scale_ratio);
@@ -13297,23 +13297,23 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
 
     double mi=model_entropy+query_entropy-joint_entropy;
     double metric_mi=joint_entropy-mi;
-    // vcl_cout<<"Model entropy: "<<model_entropy<<vcl_endl;
-    // vcl_cout<<"query entropy: "<<query_entropy<<vcl_endl;
-    // vcl_cout<<"Joint entropy: "<<joint_entropy<<vcl_endl;
-    // vcl_cout<<"Mutual Information is: "<<mi<<vcl_endl;
-    // vcl_cout<<"Mutual Information metric: "<<metric_mi<<vcl_endl;
+    // std::cout<<"Model entropy: "<<model_entropy<<std::endl;
+    // std::cout<<"query entropy: "<<query_entropy<<std::endl;
+    // std::cout<<"Joint entropy: "<<joint_entropy<<std::endl;
+    // std::cout<<"Mutual Information is: "<<mi<<std::endl;
+    // std::cout<<"Mutual Information metric: "<<metric_mi<<std::endl;
 
-    vcl_pair<double,double> distance=vcl_make_pair(mi,metric_mi);
+    std::pair<double,double> distance=std::make_pair(mi,metric_mi);
     return distance;
 }
 
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+std::pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     vil_image_view<double>& model_channel_1,
     vil_image_view<double>& model_channel_2,
     vil_image_view<double>& model_channel_3,
@@ -13387,7 +13387,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
             }
             else
             {
-                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                         ps1.y()/query_scale_ratio);
 
                 if ( width > 0 )
@@ -13431,7 +13431,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
 
             if ( !flag )
             {   
-                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                         ps2.y()/query_scale_ratio);
                 
                 if ( width > 0 )
@@ -13479,8 +13479,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
         }
 
 
-        vcl_vector<double> sc1_counts = sc1_hist.count_array();
-        vcl_vector<double> sc2_counts = sc2_hist.count_array();
+        std::vector<double> sc1_counts = sc1_hist.count_array();
+        std::vector<double> sc2_counts = sc2_hist.count_array();
 
         vnl_vector<double> descr1(sc1_counts.data(),sc1_counts.size());
         vnl_vector<double> descr2(sc2_counts.data(),sc2_counts.size());
@@ -13511,8 +13511,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
         
     }
 
-    vcl_vector<double> model_counts = model_hist.count_array();
-    vcl_vector<double> query_counts = query_hist.count_array();
+    std::vector<double> model_counts = model_hist.count_array();
+    std::vector<double> query_counts = query_hist.count_array();
 
 
     vnl_vector<double> descr1(model_counts.data(),model_counts.size());
@@ -13533,7 +13533,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
     
     double overall_dist = (0.5)*result_final[0];
 
-    vcl_pair<double,double> distances(0,0);
+    std::pair<double,double> distances(0,0);
 
     // Lets look at chi squared distance first
     double  average_chi = (hist_distances.sum()+overall_dist)/
@@ -13543,12 +13543,12 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
 
     // Lets look at L2 distance
 
-    double global_l2_distance = vcl_sqrt(vnl_vector_ssd(descr1,descr2));
+    double global_l2_distance = std::sqrt(vnl_vector_ssd(descr1,descr2));
 
     sc1_part_hists.normalize();
     sc2_part_hists.normalize();
 
-    double part_l2_distance = vcl_sqrt(vnl_vector_ssd(sc1_part_hists,
+    double part_l2_distance = std::sqrt(vnl_vector_ssd(sc1_part_hists,
                                                       sc2_part_hists));
 
     distances.second = global_l2_distance+part_l2_distance;
@@ -13559,9 +13559,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
 
 
 void dbskfg_match_bag_of_fragments::compute_app_alignment(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
     vil_image_view<double>& model_channel_1,
     vil_image_view<double>& query_channel_1,
     bool flag,
@@ -13612,7 +13612,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
             }
             else
             {
-                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                         ps1.y()/query_scale_ratio);
 
                 if ( width > 0 )
@@ -13646,7 +13646,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
 
             if ( !flag )
             {   
-                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                         ps2.y()/query_scale_ratio);
                 
                 if ( width > 0 )
@@ -13684,7 +13684,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
         dbskfg_app_curve_match dpMatch(sc1_matrix,sc2_matrix);
         dpMatch.Match();
 
-        vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(dpMatch.finalMap());
         map_list.push_back(fmap);
         
     }
@@ -13694,13 +13694,13 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
 
 }
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+std::pair<double,double> dbskfg_match_bag_of_fragments::
 compute_o2p_dense(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     bool flag,
     double width,
     vl_sift_pix* model_red_grad_data,
@@ -13726,11 +13726,11 @@ compute_o2p_dense(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > model_sift;
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > query_sift;
+        std::map< std::pair<double,double>, std::vector<vl_sift_pix> > model_sift;
+        std::map< std::pair<double,double>, std::vector<vl_sift_pix> > query_sift;
 
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -13761,7 +13761,7 @@ compute_o2p_dense(
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
             
             // Compute sift for both images
 
@@ -13807,15 +13807,15 @@ compute_o2p_dense(
                         
                         ps1.set(ps1.x()/model_scale_ratio,
                                 ps1.y()/model_scale_ratio);
-                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                         if ( !model_sift.count(ps1_key) )
                         {
-                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+                            std::pair<double,double> key(ps1.x(),ps1.y());
 
                             model_sift[key].push_back(ps1.x());
                             model_sift[key].push_back(ps1.y());
@@ -13827,7 +13827,7 @@ compute_o2p_dense(
 
                         if ( !query_sift.count(ps2_key) )
                         {
-                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+                            std::pair<double,double> key(ps2.x(),ps2.y());
 
                             query_sift[key].push_back(ps2.x());
                             query_sift[key].push_back(ps2.y());
@@ -13840,17 +13840,17 @@ compute_o2p_dense(
                     }
                     else
                     {
-                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
                     
                         if ( !model_sift.count(ps1_key))
                         {
-                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+                            std::pair<double,double> key(ps1.x(),ps1.y());
 
                             model_sift[key].push_back(ps1.x());
                             model_sift[key].push_back(ps1.y());
@@ -13861,7 +13861,7 @@ compute_o2p_dense(
                        
                         if ( !query_sift.count(ps2_key))
                         {
-                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+                            std::pair<double,double> key(ps2.x(),ps2.y());
 
                             query_sift[key].push_back(ps2.x());
                             query_sift[key].push_back(ps2.y());
@@ -13890,15 +13890,15 @@ compute_o2p_dense(
                     
                     ps1.set(ps1.x()/model_scale_ratio,
                             ps1.y()/model_scale_ratio);
-                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                    ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                             ps2.y()/query_scale_ratio);
 
-                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                    std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    std::pair<double,double> ps2_key(ps2.x(),ps2.y());
                         
                     if ( !model_sift.count(ps1_key) )
                     {
-                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+                        std::pair<double,double> key(ps1.x(),ps1.y());
 
                         model_sift[key].push_back(ps1.x());
                         model_sift[key].push_back(ps1.y());
@@ -13908,7 +13908,7 @@ compute_o2p_dense(
 
                     if ( !query_sift.count(ps2_key) )
                     {   
-                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+                        std::pair<double,double> key(ps2.x(),ps2.y());
                      
                         query_sift[key].push_back(ps2.x());
                         query_sift[key].push_back(ps2.y());
@@ -13925,17 +13925,17 @@ compute_o2p_dense(
                 }
                 else
                 {
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                    ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                             ps1.y()/query_scale_ratio);
                     ps2.set(ps2.x()/model_scale_ratio,
                             ps2.y()/model_scale_ratio);
                     
-                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                    std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                     if ( !model_sift.count(ps1_key) )
                     {
-                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+                        std::pair<double,double> key(ps1.x(),ps1.y());
           
                         model_sift[key].push_back(ps1.x());
                         model_sift[key].push_back(ps1.y());
@@ -13945,7 +13945,7 @@ compute_o2p_dense(
                   
                     if (!query_sift.count(ps2_key) )
                     {
-                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+                        std::pair<double,double> key(ps2.x(),ps2.y());
 
                         query_sift[key].push_back(ps2.x());
                         query_sift[key].push_back(ps2.y());
@@ -13971,11 +13971,11 @@ compute_o2p_dense(
             vnl_matrix<vl_sift_pix> model_matrix(384,model_sift.size(),0.0);
             unsigned int index(0);
             
-            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >
+            std::map< std::pair<double,double>, std::vector<vl_sift_pix> >
                 ::iterator it;
             for ( it = model_sift.begin() ; it != model_sift.end() ; ++it)
             {
-                vcl_vector<vl_sift_pix> model_vec=(*it).second;
+                std::vector<vl_sift_pix> model_vec=(*it).second;
                 
                 vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
                 double model_radius=model_vec[2]/2.0;
@@ -14025,11 +14025,11 @@ compute_o2p_dense(
             vnl_matrix<vl_sift_pix> query_matrix(384,query_sift.size(),0.0);
             unsigned int index(0);
             
-            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >
+            std::map< std::pair<double,double>, std::vector<vl_sift_pix> >
                 ::iterator it;
             for ( it = query_sift.begin() ; it != query_sift.end() ; ++it)
             {
-                vcl_vector<vl_sift_pix> query_vec=(*it).second;
+                std::vector<vl_sift_pix> query_vec=(*it).second;
                 
                 vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
                 double query_radius=query_vec[2]/2.0;
@@ -14085,7 +14085,7 @@ compute_o2p_dense(
 
         sift_diff+=0.5*local_distance[0];
         dart_distances.push_back(0.5*local_distance[0]);
-        // vcl_cout<<"Tree 1 dart ("
+        // std::cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
         //         <<path_map[i].first.second
@@ -14094,26 +14094,26 @@ compute_o2p_dense(
         //         <<","
         //         <<path_map[i].second.second
         //         <<") L2 distance: "
-        //         <<local_distance[0]<<vcl_endl;
+        //         <<local_distance[0]<<std::endl;
        
     }
 
 
-    vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
+    std::pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
 
-    // vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
-    // vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    // std::cout<<"Unormalized diff: "<<app_diff.first<<std::endl;
+    // std::cout<<"Average diff:     "<<app_diff.second<<std::endl;
     return app_diff;
 }
 
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+std::pair<double,double> dbskfg_match_bag_of_fragments::
 compute_3d_hist_color(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     vil_image_view<double>& model_channel_1,
     vil_image_view<double>& model_channel_2,
     vil_image_view<double>& model_channel_3,
@@ -14141,29 +14141,29 @@ compute_3d_hist_color(
         // Compute three level pyramid histogram
 
         // Level 0
-        vcl_set< vcl_pair<double,double> > model_sift;
-        vcl_set< vcl_pair<double,double> > query_sift;
+        std::set< std::pair<double,double> > model_sift;
+        std::set< std::pair<double,double> > query_sift;
 
         // Level 1
-        vcl_set< vcl_pair<double,double> > model_sift_left;
-        vcl_set< vcl_pair<double,double> > model_sift_right;
-        vcl_set< vcl_pair<double,double> > query_sift_left;
-        vcl_set< vcl_pair<double,double> > query_sift_right;
+        std::set< std::pair<double,double> > model_sift_left;
+        std::set< std::pair<double,double> > model_sift_right;
+        std::set< std::pair<double,double> > query_sift_left;
+        std::set< std::pair<double,double> > query_sift_right;
 
         // Level 2
-        vcl_set< vcl_pair<double,double> > model_sift_left_plus;
-        vcl_set< vcl_pair<double,double> > model_sift_left_minus;
-        vcl_set< vcl_pair<double,double> > model_sift_right_plus;
-        vcl_set< vcl_pair<double,double> > model_sift_right_minus;
+        std::set< std::pair<double,double> > model_sift_left_plus;
+        std::set< std::pair<double,double> > model_sift_left_minus;
+        std::set< std::pair<double,double> > model_sift_right_plus;
+        std::set< std::pair<double,double> > model_sift_right_minus;
 
-        vcl_set< vcl_pair<double,double> > query_sift_left_plus;
-        vcl_set< vcl_pair<double,double> > query_sift_left_minus;
-        vcl_set< vcl_pair<double,double> > query_sift_right_plus;
-        vcl_set< vcl_pair<double,double> > query_sift_right_minus;
+        std::set< std::pair<double,double> > query_sift_left_plus;
+        std::set< std::pair<double,double> > query_sift_left_minus;
+        std::set< std::pair<double,double> > query_sift_right_plus;
+        std::set< std::pair<double,double> > query_sift_right_minus;
 
 
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -14222,7 +14222,7 @@ compute_3d_hist_color(
         
         for (unsigned j = 0; j < map_list[index].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[index][j];
+            std::pair<int, int> cor = map_list[index][j];
 
             // Compute sift for both images
 
@@ -14283,11 +14283,11 @@ compute_3d_hist_color(
                         
                         ps1.set(ps1.x()/model_scale_ratio,
                                 ps1.y()/model_scale_ratio);
-                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                         model_sift.insert(ps1_key);
                         query_sift.insert(ps2_key);
@@ -14328,13 +14328,13 @@ compute_3d_hist_color(
                     }
                     else
                     {
-                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                         model_sift.insert(ps2_key);
                         query_sift.insert(ps1_key);
@@ -14382,20 +14382,20 @@ compute_3d_hist_color(
            
         }
 
-        vcl_vector<double> phoc_model;
-        vcl_vector<double> phoc_query;
+        std::vector<double> phoc_model;
+        std::vector<double> phoc_query;
 
         // Compute Level 0 color distance 
         {
-            vcl_string model_sift_title("");
-            vcl_string query_sift_title("");
+            std::string model_sift_title("");
+            std::string query_sift_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_stream;
+                std::stringstream model_sift_stream;
                 model_sift_stream<<"Model_sift_"<<index;
 
-                vcl_stringstream query_sift_stream;
+                std::stringstream query_sift_stream;
                 query_sift_stream<<"Query_sift_"<<index;
                 
                 model_sift_title=model_sift_stream.str();
@@ -14425,21 +14425,21 @@ compute_3d_hist_color(
             if ( debug )
             {
 
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_0_hist_dart_"+
+                std::string model_string="Model_level_0_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_0_hist_dart_"+
+                std::string query_string="Query_level_0_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phoc_model[ph]<<vcl_endl;
-                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    model_hist<<phoc_model[ph]<<std::endl;
+                    query_hist<<phoc_query[ph]<<std::endl;
                     
                 }
 
@@ -14452,27 +14452,27 @@ compute_3d_hist_color(
 
         // Compute Level 1 distance and descriptors
         {
-            vcl_string model_sift_left_title("");
-            vcl_string query_sift_left_title("");
+            std::string model_sift_left_title("");
+            std::string query_sift_left_title("");
 
-            vcl_string model_sift_right_title("");
-            vcl_string query_sift_right_title("");
+            std::string model_sift_right_title("");
+            std::string query_sift_right_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_left_stream;
+                std::stringstream model_sift_left_stream;
                 model_sift_left_stream<<"Model_sift_left_"<<index;
 
-                vcl_stringstream query_sift_left_stream;
+                std::stringstream query_sift_left_stream;
                 query_sift_left_stream<<"Query_sift_left_"<<index;
                 
                 model_sift_left_title=model_sift_left_stream.str();
                 query_sift_left_title=query_sift_left_stream.str();
 
-                vcl_stringstream model_sift_right_stream;
+                std::stringstream model_sift_right_stream;
                 model_sift_right_stream<<"Model_sift_right_"<<index;
 
-                vcl_stringstream query_sift_right_stream;
+                std::stringstream query_sift_right_stream;
                 query_sift_right_stream<<"Query_sift_right_"<<index;
                 
                 model_sift_right_title=model_sift_right_stream.str();
@@ -14518,21 +14518,21 @@ compute_3d_hist_color(
 
             if ( debug )
             {
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_1_hist_dart_"+
+                std::string model_string="Model_level_1_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_1_hist_dart_"+
+                std::string query_string="Query_level_1_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phoc_model[ph]<<vcl_endl;
-                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    model_hist<<phoc_model[ph]<<std::endl;
+                    query_hist<<phoc_query[ph]<<std::endl;
                     
                 }
 
@@ -14551,27 +14551,27 @@ compute_3d_hist_color(
             vnl_vector<double> model_sift_left_minus_descr;
             vnl_vector<double> model_sift_right_minus_descr;
 
-            vcl_string model_sift_left_plus_title("");
-            vcl_string model_sift_left_minus_title("");
+            std::string model_sift_left_plus_title("");
+            std::string model_sift_left_minus_title("");
 
-            vcl_string model_sift_right_plus_title("");
-            vcl_string model_sift_right_minus_title("");
+            std::string model_sift_right_plus_title("");
+            std::string model_sift_right_minus_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_left_plus_stream;
+                std::stringstream model_sift_left_plus_stream;
                 model_sift_left_plus_stream<<"Model_sift_left_plus_"<<index;
 
-                vcl_stringstream model_sift_left_minus_stream;
+                std::stringstream model_sift_left_minus_stream;
                 model_sift_left_minus_stream<<"Model_sift_left_minus_"<<index;
                 
                 model_sift_left_plus_title=model_sift_left_plus_stream.str();
                 model_sift_left_minus_title=model_sift_left_minus_stream.str();
 
-                vcl_stringstream model_sift_right_plus_stream;
+                std::stringstream model_sift_right_plus_stream;
                 model_sift_right_plus_stream<<"Model_sift_right_plus_"<<index;
 
-                vcl_stringstream model_sift_right_minus_stream;
+                std::stringstream model_sift_right_minus_stream;
                 model_sift_right_minus_stream<<"Model_sift_right_minus_"<<index;
                 
                 model_sift_right_plus_title=model_sift_right_plus_stream.str();
@@ -14614,27 +14614,27 @@ compute_3d_hist_color(
                                       dbskfg_match_bag_of_fragments::DEFAULT,
                                       model_sift_right_minus_title);
 
-            vcl_string query_sift_left_plus_title("");
-            vcl_string query_sift_left_minus_title("");
+            std::string query_sift_left_plus_title("");
+            std::string query_sift_left_minus_title("");
 
-            vcl_string query_sift_right_plus_title("");
-            vcl_string query_sift_right_minus_title("");
+            std::string query_sift_right_plus_title("");
+            std::string query_sift_right_minus_title("");
 
             if ( debug )
             {
-                vcl_stringstream query_sift_left_plus_stream;
+                std::stringstream query_sift_left_plus_stream;
                 query_sift_left_plus_stream<<"Query_sift_left_plus_"<<index;
 
-                vcl_stringstream query_sift_left_minus_stream;
+                std::stringstream query_sift_left_minus_stream;
                 query_sift_left_minus_stream<<"Query_sift_left_minus_"<<index;
                 
                 query_sift_left_plus_title=query_sift_left_plus_stream.str();
                 query_sift_left_minus_title=query_sift_left_minus_stream.str();
 
-                vcl_stringstream query_sift_right_plus_stream;
+                std::stringstream query_sift_right_plus_stream;
                 query_sift_right_plus_stream<<"Query_sift_right_plus_"<<index;
 
-                vcl_stringstream query_sift_right_minus_stream;
+                std::stringstream query_sift_right_minus_stream;
                 query_sift_right_minus_stream<<"Query_sift_right_minus_"<<index;
                 
                 query_sift_right_plus_title=query_sift_right_plus_stream.str();
@@ -14680,21 +14680,21 @@ compute_3d_hist_color(
             if ( debug )
             {
 
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_2_hist_dart_"+
+                std::string model_string="Model_level_2_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_2_hist_dart_"+
+                std::string query_string="Query_level_2_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phoc_model[ph]<<vcl_endl;
-                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    model_hist<<phoc_model[ph]<<std::endl;
+                    query_hist<<phoc_query[ph]<<std::endl;
                     
                 }
 
@@ -14729,7 +14729,7 @@ compute_3d_hist_color(
 
         if ( debug )
         {
-            vcl_cout<<"Tree 1 dart ("
+            std::cout<<"Tree 1 dart ("
                     <<path_map[index].first.first
                     <<","
                     <<path_map[index].first.second
@@ -14738,26 +14738,26 @@ compute_3d_hist_color(
                     <<","
                     <<path_map[index].second.second
                     <<") L2 distance: "
-                    <<dart_distance<<vcl_endl;
+                    <<dart_distance<<std::endl;
         }
 
     }
 
 
-    vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
+    std::pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
 
-    // vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
-    // vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    // std::cout<<"Unormalized diff: "<<app_diff.first<<std::endl;
+    // std::cout<<"Average diff:     "<<app_diff.second<<std::endl;
     return app_diff;
 }
 
-vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+std::pair<double,double> dbskfg_match_bag_of_fragments::
 compute_body_centric_sift(
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
-    vcl_vector<double>& dart_distances,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
+    std::vector<double>& dart_distances,
     vl_sift_pix* model_red_grad_data,
     vl_sift_pix* query_red_grad_data,
     vl_sift_pix* model_green_grad_data,
@@ -14866,29 +14866,29 @@ compute_body_centric_sift(
         // Compute three level pyramid histogram
 
         // Level 0
-        vcl_set< vcl_pair<double,double> > model_sift;
-        vcl_set< vcl_pair<double,double> > query_sift;
+        std::set< std::pair<double,double> > model_sift;
+        std::set< std::pair<double,double> > query_sift;
 
         // Level 1
-        vcl_set< vcl_pair<double,double> > model_sift_left;
-        vcl_set< vcl_pair<double,double> > model_sift_right;
-        vcl_set< vcl_pair<double,double> > query_sift_left;
-        vcl_set< vcl_pair<double,double> > query_sift_right;
+        std::set< std::pair<double,double> > model_sift_left;
+        std::set< std::pair<double,double> > model_sift_right;
+        std::set< std::pair<double,double> > query_sift_left;
+        std::set< std::pair<double,double> > query_sift_right;
 
         // Level 2
-        vcl_set< vcl_pair<double,double> > model_sift_left_plus;
-        vcl_set< vcl_pair<double,double> > model_sift_left_minus;
-        vcl_set< vcl_pair<double,double> > model_sift_right_plus;
-        vcl_set< vcl_pair<double,double> > model_sift_right_minus;
+        std::set< std::pair<double,double> > model_sift_left_plus;
+        std::set< std::pair<double,double> > model_sift_left_minus;
+        std::set< std::pair<double,double> > model_sift_right_plus;
+        std::set< std::pair<double,double> > model_sift_right_minus;
 
-        vcl_set< vcl_pair<double,double> > query_sift_left_plus;
-        vcl_set< vcl_pair<double,double> > query_sift_left_minus;
-        vcl_set< vcl_pair<double,double> > query_sift_right_plus;
-        vcl_set< vcl_pair<double,double> > query_sift_right_minus;
+        std::set< std::pair<double,double> > query_sift_left_plus;
+        std::set< std::pair<double,double> > query_sift_left_minus;
+        std::set< std::pair<double,double> > query_sift_right_plus;
+        std::set< std::pair<double,double> > query_sift_right_minus;
 
 
-        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
-        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        std::pair<unsigned int,unsigned int> query_key1(0,0);
+        std::pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
@@ -14947,7 +14947,7 @@ compute_body_centric_sift(
         
         for (unsigned j = 0; j < map_list[index].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[index][j];
+            std::pair<int, int> cor = map_list[index][j];
 
             // Compute sift for both images
 
@@ -15008,11 +15008,11 @@ compute_body_centric_sift(
                         
                         ps1.set(ps1.x()/model_scale_ratio,
                                 ps1.y()/model_scale_ratio);
-                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                         model_sift.insert(ps1_key);
                         query_sift.insert(ps2_key);
@@ -15053,13 +15053,13 @@ compute_body_centric_sift(
                     }
                     else
                     {
-                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
 
-                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        std::pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        std::pair<double,double> ps2_key(ps2.x(),ps2.y());
 
                         model_sift.insert(ps2_key);
                         query_sift.insert(ps1_key);
@@ -15107,20 +15107,20 @@ compute_body_centric_sift(
                         
         }
 
-        vcl_vector<double> phog_model;
-        vcl_vector<double> phog_query;
+        std::vector<double> phog_model;
+        std::vector<double> phog_query;
 
         // Compute Level 0 distance and descriptors
         {
-            vcl_string model_sift_title("");
-            vcl_string query_sift_title("");
+            std::string model_sift_title("");
+            std::string query_sift_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_stream;
+                std::stringstream model_sift_stream;
                 model_sift_stream<<"Model_sift_"<<index;
 
-                vcl_stringstream query_sift_stream;
+                std::stringstream query_sift_stream;
                 query_sift_stream<<"Query_sift_"<<index;
                 
                 model_sift_title=model_sift_stream.str();
@@ -15154,21 +15154,21 @@ compute_body_centric_sift(
             if ( debug )
             {
 
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_0_hist_dart_"+
+                std::string model_string="Model_level_0_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_0_hist_dart_"+
+                std::string query_string="Query_level_0_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phog_model[ph]<<vcl_endl;
-                    query_hist<<phog_query[ph]<<vcl_endl;
+                    model_hist<<phog_model[ph]<<std::endl;
+                    query_hist<<phog_query[ph]<<std::endl;
                     
                 }
 
@@ -15180,27 +15180,27 @@ compute_body_centric_sift(
 
         // Compute Level 1 distance and descriptors
         {
-            vcl_string model_sift_left_title("");
-            vcl_string query_sift_left_title("");
+            std::string model_sift_left_title("");
+            std::string query_sift_left_title("");
 
-            vcl_string model_sift_right_title("");
-            vcl_string query_sift_right_title("");
+            std::string model_sift_right_title("");
+            std::string query_sift_right_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_left_stream;
+                std::stringstream model_sift_left_stream;
                 model_sift_left_stream<<"Model_sift_left_"<<index;
 
-                vcl_stringstream query_sift_left_stream;
+                std::stringstream query_sift_left_stream;
                 query_sift_left_stream<<"Query_sift_left_"<<index;
                 
                 model_sift_left_title=model_sift_left_stream.str();
                 query_sift_left_title=query_sift_left_stream.str();
 
-                vcl_stringstream model_sift_right_stream;
+                std::stringstream model_sift_right_stream;
                 model_sift_right_stream<<"Model_sift_right_"<<index;
 
-                vcl_stringstream query_sift_right_stream;
+                std::stringstream query_sift_right_stream;
                 query_sift_right_stream<<"Query_sift_right_"<<index;
                 
                 model_sift_right_title=model_sift_right_stream.str();
@@ -15255,21 +15255,21 @@ compute_body_centric_sift(
             if ( debug )
             {
 
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_1_hist_dart_"+
+                std::string model_string="Model_level_1_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_1_hist_dart_"+
+                std::string query_string="Query_level_1_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phog_model[ph]<<vcl_endl;
-                    query_hist<<phog_query[ph]<<vcl_endl;
+                    model_hist<<phog_model[ph]<<std::endl;
+                    query_hist<<phog_query[ph]<<std::endl;
                     
                 }
 
@@ -15282,27 +15282,27 @@ compute_body_centric_sift(
 
         // Compute Level 2 distances and descriptors
         {
-            vcl_string model_sift_left_plus_title("");
-            vcl_string model_sift_left_minus_title("");
+            std::string model_sift_left_plus_title("");
+            std::string model_sift_left_minus_title("");
 
-            vcl_string model_sift_right_plus_title("");
-            vcl_string model_sift_right_minus_title("");
+            std::string model_sift_right_plus_title("");
+            std::string model_sift_right_minus_title("");
 
             if ( debug )
             {
-                vcl_stringstream model_sift_left_plus_stream;
+                std::stringstream model_sift_left_plus_stream;
                 model_sift_left_plus_stream<<"Model_sift_left_plus_"<<index;
 
-                vcl_stringstream model_sift_left_minus_stream;
+                std::stringstream model_sift_left_minus_stream;
                 model_sift_left_minus_stream<<"Model_sift_left_minus_"<<index;
                 
                 model_sift_left_plus_title=model_sift_left_plus_stream.str();
                 model_sift_left_minus_title=model_sift_left_minus_stream.str();
 
-                vcl_stringstream model_sift_right_plus_stream;
+                std::stringstream model_sift_right_plus_stream;
                 model_sift_right_plus_stream<<"Model_sift_right_plus_"<<index;
 
-                vcl_stringstream model_sift_right_minus_stream;
+                std::stringstream model_sift_right_minus_stream;
                 model_sift_right_minus_stream<<"Model_sift_right_minus_"<<index;
                 
                 model_sift_right_plus_title=model_sift_right_plus_stream.str();
@@ -15353,27 +15353,27 @@ compute_body_centric_sift(
                                      phog_model,
                                      model_sift_right_minus_title);
 
-            vcl_string query_sift_left_plus_title("");
-            vcl_string query_sift_left_minus_title("");
+            std::string query_sift_left_plus_title("");
+            std::string query_sift_left_minus_title("");
 
-            vcl_string query_sift_right_plus_title("");
-            vcl_string query_sift_right_minus_title("");
+            std::string query_sift_right_plus_title("");
+            std::string query_sift_right_minus_title("");
 
             if ( debug )
             {
-                vcl_stringstream query_sift_left_plus_stream;
+                std::stringstream query_sift_left_plus_stream;
                 query_sift_left_plus_stream<<"Query_sift_left_plus_"<<index;
 
-                vcl_stringstream query_sift_left_minus_stream;
+                std::stringstream query_sift_left_minus_stream;
                 query_sift_left_minus_stream<<"Query_sift_left_minus_"<<index;
                 
                 query_sift_left_plus_title=query_sift_left_plus_stream.str();
                 query_sift_left_minus_title=query_sift_left_minus_stream.str();
 
-                vcl_stringstream query_sift_right_plus_stream;
+                std::stringstream query_sift_right_plus_stream;
                 query_sift_right_plus_stream<<"Query_sift_right_plus_"<<index;
 
-                vcl_stringstream query_sift_right_minus_stream;
+                std::stringstream query_sift_right_minus_stream;
                 query_sift_right_minus_stream<<"Query_sift_right_minus_"<<index;
                 
                 query_sift_right_plus_title=query_sift_right_plus_stream.str();
@@ -15427,21 +15427,21 @@ compute_body_centric_sift(
             if ( debug )
             {
 
-                vcl_stringstream bstream;
+                std::stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_2_hist_dart_"+
+                std::string model_string="Model_level_2_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_2_hist_dart_"+
+                std::string query_string="Query_level_2_hist_dart_"+
                     bstream.str()+".txt";
 
-                vcl_ofstream model_hist(model_string.c_str());
-                vcl_ofstream query_hist(query_string.c_str());
+                std::ofstream model_hist(model_string.c_str());
+                std::ofstream query_hist(query_string.c_str());
 
                 for ( unsigned int ph=start; ph < stop ; ++ph)
                 {
-                    model_hist<<phog_model[ph]<<vcl_endl;
-                    query_hist<<phog_query[ph]<<vcl_endl;
+                    model_hist<<phog_model[ph]<<std::endl;
+                    query_hist<<phog_query[ph]<<std::endl;
                     
                 }
 
@@ -15476,7 +15476,7 @@ compute_body_centric_sift(
 
         if ( debug )
         {
-            vcl_cout<<"Tree 1 dart ("
+            std::cout<<"Tree 1 dart ("
                     <<path_map[index].first.first
                     <<","
                     <<path_map[index].first.second
@@ -15485,16 +15485,16 @@ compute_body_centric_sift(
                     <<","
                     <<path_map[index].second.second
                     <<") L2 distance: "
-                    <<dart_distance<<vcl_endl;
+                    <<dart_distance<<std::endl;
         }
     }
     
 
 
-    vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
+    std::pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
 
-    // vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
-    // vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    // std::cout<<"Unormalized diff: "<<app_diff.first<<std::endl;
+    // std::cout<<"Average diff:     "<<app_diff.second<<std::endl;
     return app_diff;
 }
 
@@ -15620,25 +15620,25 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     }
 
     // {
-    //     vcl_ofstream model_stream("opp_sift_model.txt");
-    //     vcl_ofstream query_stream("opp_sift_query.txt");
+    //     std::ofstream model_stream("opp_sift_model.txt");
+    //     std::ofstream query_stream("opp_sift_query.txt");
 
     //     for ( unsigned int d=0; d < 128 ; ++d)
     //     {
-    //         model_stream<<descr_ps1_red[d]<<vcl_endl;
-    //         query_stream<<descr_ps2_red[d]<<vcl_endl;
+    //         model_stream<<descr_ps1_red[d]<<std::endl;
+    //         query_stream<<descr_ps2_red[d]<<std::endl;
     //     }
 
     //     for ( unsigned int d=0; d < 128 ; ++d)
     //     {
-    //         model_stream<<descr_ps1_green[d]<<vcl_endl;
-    //         query_stream<<descr_ps2_green[d]<<vcl_endl;
+    //         model_stream<<descr_ps1_green[d]<<std::endl;
+    //         query_stream<<descr_ps2_green[d]<<std::endl;
     //     }
 
     //     for ( unsigned int d=0; d < 128 ; ++d)
     //     {
-    //         model_stream<<descr_ps1_blue[d]<<vcl_endl;
-    //         query_stream<<descr_ps2_blue[d]<<vcl_endl;
+    //         model_stream<<descr_ps1_blue[d]<<std::endl;
+    //         query_stream<<descr_ps2_blue[d]<<std::endl;
     //     }
 
     //     model_stream.close();
@@ -16334,7 +16334,7 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
 }
 
 vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
-    vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
+    std::map<int,std::vector<dbskfg_sift_data> >& fragments,
     vl_sift_pix* grad_data,
     VlSiftFilt* filter,
     vsol_box_2d_sptr& bbox
@@ -16343,7 +16343,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
 
 
     unsigned int total_numb_descriptors=0;
-    vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator kit;
+    std::map<int,std::vector<dbskfg_sift_data> >::iterator kit;
     for ( kit = fragments.begin() ; kit != fragments.end() ; ++kit)
     {
         total_numb_descriptors=(*kit).second.size()+total_numb_descriptors;
@@ -16354,14 +16354,14 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     double width=bbox->width();
     double height=bbox->height();
 
-    vcl_map<unsigned int,vcl_vector<vl_sift_pix> > descriptors;
+    std::map<unsigned int,std::vector<vl_sift_pix> > descriptors;
     vnl_matrix<vl_sift_pix> total_matrix(132,total_numb_descriptors,0.0);
 
     unsigned int index=0;
-    vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator it;
+    std::map<int,std::vector<dbskfg_sift_data> >::iterator it;
     for ( it = fragments.begin() ; it != fragments.end() ; ++it)
     {
-        vcl_vector<dbskfg_sift_data> data=(*it).second;
+        std::vector<dbskfg_sift_data> data=(*it).second;
         for ( unsigned int i=0; i < data.size() ; ++i)
         {
             // Shock Point 2 from Query
@@ -16390,7 +16390,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
 
             for ( unsigned int dv=0; dv < 128; ++dv)
             {
-                descr[dv]=vcl_min(512.0F * descr[dv], 255.0F);
+                descr[dv]=std::min(512.0F * descr[dv], 255.0F);
             }
          
             descr[128]=d1;
@@ -16399,7 +16399,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
             descr[131]=d4;
 
             total_matrix.set_column(index,descr);
-            vcl_vector<vl_sift_pix> descr_vec;
+            std::vector<vl_sift_pix> descr_vec;
             descr_vec.assign(descr,descr+132);
             descriptors[index]=descr_vec;
 
@@ -16423,7 +16423,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     for ( unsigned int e=0; e < eigenvalues.size() ; ++e)
     {
         vl_sift_pix value=eigenvalues.get(e);
-        eigenvalues.put(e,vcl_log(value));
+        eigenvalues.put(e,std::log(value));
     } 
     
     (eigensystem.D).set(eigenvalues);
@@ -16439,22 +16439,22 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
         for ( unsigned int r=0; r < c+1 ; ++r)
         {
             double scaled_value=vnl_math::sgn(log_mapping[r][c])*
-                vcl_pow(vcl_abs(log_mapping[r][c]),0.75);
+                std::pow(std::abs(log_mapping[r][c]),0.75);
             upper_triangle.put(position,scaled_value);
             position++;
         }
     }
     
     // {
-    //     vcl_ofstream model_file("All_sift.txt");
-    //     model_file<<descriptors.size()<<vcl_endl;
-    //     vcl_map<unsigned int,vcl_vector<vl_sift_pix> >::iterator dit;
+    //     std::ofstream model_file("All_sift.txt");
+    //     model_file<<descriptors.size()<<std::endl;
+    //     std::map<unsigned int,std::vector<vl_sift_pix> >::iterator dit;
     //     for ( dit = descriptors.begin() ; dit != descriptors.end() ; ++dit)
     //     {
-    //         vcl_vector<vl_sift_pix> vec=(*dit).second;
+    //         std::vector<vl_sift_pix> vec=(*dit).second;
     //         for  ( unsigned int c=0; c < vec.size() ; ++c)
     //         {
-    //             model_file<<vec[c]<<vcl_endl;
+    //             model_file<<vec[c]<<std::endl;
     //         }
     //     }
     //     model_file.close();
@@ -16463,13 +16463,13 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
 
 
     // {
-    //     vcl_ofstream model_file("sift2.txt");
+    //     std::ofstream model_file("sift2.txt");
         
     //     for ( unsigned int c=0; c < second_order_pool.columns() ; ++c)
     //     {
     //         for ( unsigned int r=0; r < second_order_pool.rows() ; ++r)
     //         {
-    //             model_file<<second_order_pool[r][c]<<vcl_endl;
+    //             model_file<<second_order_pool[r][c]<<std::endl;
     //         }
     //     }
 
@@ -16478,11 +16478,11 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     // }
 
     // {
-    //     vcl_ofstream model_file("final_desc.txt");
+    //     std::ofstream model_file("final_desc.txt");
         
     //     for ( unsigned int c=0; c < upper_triangle.size() ; ++c)
     //     {
-    //         model_file<<upper_triangle(c)<<vcl_endl;
+    //         model_file<<upper_triangle(c)<<std::endl;
     //     }
 
     //     model_file.close();
@@ -16494,15 +16494,15 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
 
 void dbskfg_match_bag_of_fragments::compute_transformation(
     vgl_h_matrix_2d<double>& H,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
     unsigned int sampling_interval,
     bool flag)
 {
 
-    vcl_vector<vgl_homg_point_2d<double> > model_points,query_points;
+    std::vector<vgl_homg_point_2d<double> > model_points,query_points;
 
     // Get matching pairs
     for (unsigned i = 0; i < map_list.size(); i++) 
@@ -16512,7 +16512,7 @@ void dbskfg_match_bag_of_fragments::compute_transformation(
 
         for (unsigned j = 0; j < map_list[i].size(); j+=sampling_interval) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
 
             vgl_homg_point_2d<double> pm1(sc1->bdry_minus_pt(cor.first));
             vgl_homg_point_2d<double> pm2(sc2->bdry_minus_pt(cor.second));
@@ -16545,10 +16545,10 @@ void dbskfg_match_bag_of_fragments::compute_transformation(
 
 void dbskfg_match_bag_of_fragments::compute_similarity(
     vgl_h_matrix_2d<double>& H,
-    vcl_vector<dbskr_scurve_sptr>& curve_list1,
-    vcl_vector<dbskr_scurve_sptr>& curve_list2,
-    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    vcl_vector< pathtable_key >& path_map,
+    std::vector<dbskr_scurve_sptr>& curve_list1,
+    std::vector<dbskr_scurve_sptr>& curve_list2,
+    std::vector< std::vector < std::pair <int,int> > >& map_list,
+    std::vector< pathtable_key >& path_map,
     unsigned int sampling_interval,
     bool flag,
     double model_scale_ratio,
@@ -16556,11 +16556,11 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     double width)
 {
 
-    // vcl_ofstream model_stream("model_points.txt");
-    // vcl_ofstream query_stream("query_points.txt");
+    // std::ofstream model_stream("model_points.txt");
+    // std::ofstream query_stream("query_points.txt");
 
-    vcl_vector< rgrl_feature_sptr > pts1;
-    vcl_vector< rgrl_feature_sptr > pts2;
+    std::vector< rgrl_feature_sptr > pts1;
+    std::vector< rgrl_feature_sptr > pts2;
     for (unsigned i = 0; i < map_list.size(); i++)
     {
         
@@ -16569,7 +16569,7 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
         
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
+            std::pair<int, int> cor = map_list[i][j];
             
             vnl_vector<double> v(2);
 
@@ -16589,7 +16589,7 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                 
                 ps1.set(ps1.x()/model_scale_ratio,
                         ps1.y()/model_scale_ratio);
-                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                ps2.set(std::fabs(width-(ps2.x()/query_scale_ratio)),
                         ps2.y()/query_scale_ratio);
                 
                 radius_ps1 = radius_ps1/model_scale_ratio;
@@ -16621,12 +16621,12 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                 // model_stream<<pt_p_sc1.x()<<" "  
                 //             <<pt_p_sc1.y()<<" "
                 //             <<pt_m_sc1.x()<<" "
-                //             <<pt_m_sc1.y()<<vcl_endl;
+                //             <<pt_m_sc1.y()<<std::endl;
 
                 // query_stream<<pt_p_sc2.x()<<" "  
                 //             <<pt_p_sc2.y()<<" "
                 //             <<pt_m_sc2.x()<<" "
-                //             <<pt_m_sc2.y()<<vcl_endl;
+                //             <<pt_m_sc2.y()<<std::endl;
                 
                 // scurve 1
                 v[0] = pt_m_sc1.x();
@@ -16650,7 +16650,7 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
             else
             {
 
-                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                ps1.set(std::fabs(width-(ps1.x()/query_scale_ratio)),
                         ps1.y()/query_scale_ratio);
                 ps2.set(ps2.x()/model_scale_ratio,
                         ps2.y()/model_scale_ratio);
@@ -16684,12 +16684,12 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                 // query_stream<<pt_p_sc1.x()<<" "  
                 //             <<pt_p_sc1.y()<<" "
                 //             <<pt_m_sc1.x()<<" "
-                //             <<pt_m_sc1.y()<<vcl_endl;
+                //             <<pt_m_sc1.y()<<std::endl;
 
                 // model_stream<<pt_p_sc2.x()<<" "  
                 //             <<pt_p_sc2.y()<<" "
                 //             <<pt_m_sc2.x()<<" "
-                //             <<pt_m_sc2.y()<<vcl_endl;
+                //             <<pt_m_sc2.y()<<std::endl;
 
                 // scurve 1
                 v[0] = pt_m_sc1.x();
@@ -16741,14 +16741,14 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     rgrl_transformation_sptr trans = est->estimate( ms, dummy_trans );
     if (!trans) 
     {
-        vcl_cout << "transformation could not be estimated by rgrl\n";
+        std::cout << "transformation could not be estimated by rgrl\n";
     }
 
     rgrl_trans_similarity* s_trans = 
         dynamic_cast<rgrl_trans_similarity*>(trans.as_pointer());
     if (!s_trans) 
     {
-        vcl_cout << "transformation pointer could not be retrieved\n";
+        std::cout << "transformation pointer could not be retrieved\n";
     }
   
     H.set_identity();
@@ -16767,7 +16767,7 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
 }
 
 
-vcl_pair<double,double> 
+std::pair<double,double> 
 dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     vgl_h_matrix_2d<double>& H,dbskfg_cgraph_directed_tree_sptr& model_tree,
     dbskfg_cgraph_directed_tree_sptr& query_tree)
@@ -16858,61 +16858,61 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
 
     }
    
-    vcl_pair<double,double> result;
+    std::pair<double,double> result;
     result.first=m_m_area_of_intersection;
     result.second=m_q_area_of_intersection;
 
 
-    // vcl_cout<<"Model to model: "<<result.first<<vcl_endl;
-    // vcl_cout<<"Model to query: "<<result.second<<vcl_endl;
+    // std::cout<<"Model to model: "<<result.first<<std::endl;
+    // std::cout<<"Model to query: "<<result.second<<std::endl;
 
     // {
-    //     vcl_ofstream model_file("model_poly.txt");
+    //     std::ofstream model_file("model_poly.txt");
     //     for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
     //     {
     //         for (unsigned int p = 0; p < model_poly[s].size(); ++p)
     //         {
     //             model_file<<model_poly[s][p].x()
-    //                       <<","<<model_poly[s][p].y()<<vcl_endl;
+    //                       <<","<<model_poly[s][p].y()<<std::endl;
     //         }
     //     }
     //     model_file.close();
     // }
 
     // {
-    //     vcl_ofstream model_file("model_transformed_poly.txt");
+    //     std::ofstream model_file("model_transformed_poly.txt");
     //     for (unsigned int s = 0; s < model_transformed_poly.num_sheets(); ++s)
     //     {
     //         for (unsigned int p = 0; p < model_transformed_poly[s].size(); ++p)
     //         {
     //             model_file<<model_transformed_poly[s][p].x()<<","
-    //                       <<model_transformed_poly[s][p].y()<<vcl_endl;
+    //                       <<model_transformed_poly[s][p].y()<<std::endl;
     //         }
     //     }
     //     model_file.close();
     // }
 
     // {
-    //     vcl_ofstream model_file("model_model_poly.txt");
+    //     std::ofstream model_file("model_model_poly.txt");
     //     for (unsigned int s = 0; s < model_model_poly.num_sheets(); ++s)
     //     {
     //         for (unsigned int p = 0; p < model_model_poly[s].size(); ++p)
     //         {
     //             model_file<<model_model_poly[s][p].x()<<","
-    //                       <<model_model_poly[s][p].y()<<vcl_endl;
+    //                       <<model_model_poly[s][p].y()<<std::endl;
     //         }
     //     }
     //     model_file.close();
     // }
 
     // {
-    //     vcl_ofstream query_file("query_poly.txt");
+    //     std::ofstream query_file("query_poly.txt");
     //     for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
     //     {
     //         for (unsigned int p = 0; p < query_poly[s].size(); ++p)
     //         {
     //             query_file<<query_poly[s][p].x()
-    //                       <<","<<query_poly[s][p].y()<<vcl_endl;
+    //                       <<","<<query_poly[s][p].y()<<std::endl;
     //         }
     //     }
     //     query_file.close();
@@ -16970,7 +16970,7 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     double start=((bbox->height()/2)+bbox->get_min_y())-0.5;
     double stop=((bbox->height()/2)+bbox->get_min_y())+0.5;
 
-    vcl_vector<vsol_point_2d_sptr> points;
+    std::vector<vsol_point_2d_sptr> points;
     points.push_back(new vsol_point_2d(bbox->get_min_x(),start));
     points.push_back(new vsol_point_2d(bbox->get_min_x(),bbox->get_min_y()));
     points.push_back(new vsol_point_2d(bbox->get_max_x(),bbox->get_min_y()));
@@ -17046,10 +17046,10 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     // fileio.write_contour_composite_graph(model_cg,"model_cg_outer");
     // fileio.write_contour_composite_graph(query_cg,"query_cg_outer");
 
-    // vcl_vector< vsol_spatial_object_2d_sptr > model_list = 
+    // std::vector< vsol_spatial_object_2d_sptr > model_list = 
     //     model_vsol->all_data();
 
-    // vcl_vector< vsol_spatial_object_2d_sptr > query_list = 
+    // std::vector< vsol_spatial_object_2d_sptr > query_list = 
     //     query_vsol->all_data();
 
     // dbsol_save_cem(query_list,"query_list.cem");
@@ -17162,9 +17162,9 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
                 double red=image(c,r,0);
                 double green=image(c,r,1);
                 double blue=image(c,r,2);
-                o1(c,r) = (red-green)/vcl_sqrt(2);
-                o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
-                o3(c,r) = (red+green+blue)/vcl_sqrt(3);
+                o1(c,r) = (red-green)/std::sqrt(2);
+                o2(c,r) = (red+green-2*blue)/std::sqrt(6);
+                o3(c,r) = (red+green+blue)/std::sqrt(3);
                 if ( color_space == NOPP )
                 {
                     if ( o3(c,r) > 0.0 )
@@ -17183,22 +17183,22 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
 void dbskfg_match_bag_of_fragments::write_out_dart_data()
 {
     
-    vcl_string dart_file=vul_file::strip_extension(output_binary_file_);
+    std::string dart_file=vul_file::strip_extension(output_binary_file_);
     dart_file=dart_file+"_part_distances.txt";
 
-    vcl_ofstream model_file(dart_file.c_str());
+    std::ofstream model_file(dart_file.c_str());
 
-    vcl_map<int,vcl_vector<double> >::iterator it;
+    std::map<int,std::vector<double> >::iterator it;
     for ( it = part_distances_.begin(); it != part_distances_.end() ; ++it)
     {
 
-        vcl_vector<double> dd=(*it).second;
+        std::vector<double> dd=(*it).second;
 
         for ( unsigned int v=0; v < dd.size() ; ++v)
         {
             if ( v == dd.size() -1 )
             {
-                model_file<<dd[v]<<vcl_endl;
+                model_file<<dd[v]<<std::endl;
             }
             else
             {
@@ -17210,21 +17210,21 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
     model_file.close();
 
     // {
-    //     vcl_map<vcl_pair<unsigned int,unsigned int>,
-    //         vcl_vector<vgl_point_2d<double> > >
+    //     std::map<std::pair<unsigned int,unsigned int>,
+    //         std::vector<vgl_point_2d<double> > >
     //         ::iterator it;
         
         
     //     for ( it = query_dart_curves_.begin() ; it != query_dart_curves_.end();
     //           ++it)
     //     {
-    //         vcl_pair<int,int> pair=(*it).first;
-    //         vcl_vector<vgl_point_2d<double> > curve=(*it).second;
-    //         model_file<<pair.first<<","<<pair.second<<vcl_endl;
-    //         model_file<<curve.size()<<vcl_endl;
+    //         std::pair<int,int> pair=(*it).first;
+    //         std::vector<vgl_point_2d<double> > curve=(*it).second;
+    //         model_file<<pair.first<<","<<pair.second<<std::endl;
+    //         model_file<<curve.size()<<std::endl;
     //         for ( unsigned int c=0; c < curve.size() ; ++c)
     //         {
-    //             model_file<<curve[c].x()<<","<<curve[c].y()<<vcl_endl;
+    //             model_file<<curve[c].x()<<","<<curve[c].y()<<std::endl;
     //         }
     //     }
     // }
@@ -17232,47 +17232,47 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
     // // Write out model
     // {
 
-    //     model_file<<model_dart_distances_.size()<<vcl_endl;
-    //     vcl_map<unsigned int,
-    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+    //     model_file<<model_dart_distances_.size()<<std::endl;
+    //     std::map<unsigned int,
+    //         std::vector< std::pair<std::pair<unsigned int,unsigned int>,
     //         double> > >::
     //         iterator it;
     //     for ( it = model_dart_distances_.begin() ; it != model_dart_distances_
     //               .end(); ++it)
     //     {
-    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned 
+    //         std::vector< std::pair<std::pair<unsigned int,unsigned 
     //             int>,double> > vec=
     //             (*it).second;
-    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,
+    //         std::vector< std::pair<std::pair<unsigned int,
     //             unsigned int>, dbskr_scurve_sptr > > p2 =
     //             model_dart_curves_[(*it).first];
 
-    //         model_file<<vec.size()<<vcl_endl;
+    //         model_file<<vec.size()<<std::endl;
     //         for ( unsigned int v=0; v < vec.size() ; ++v)
     //         {
-    //             vcl_pair<vcl_pair<unsigned int,unsigned int>,
+    //             std::pair<std::pair<unsigned int,unsigned int>,
     //                 double> pair=vec[v];
-    //             model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
-    //             model_file<<pair.second<<vcl_endl;
+    //             model_file<<pair.first.first<<","<<pair.first.second<<std::endl;
+    //             model_file<<pair.second<<std::endl;
 
                 
     //             dbskr_scurve_sptr curve=p2[v].second;
     //             vgl_polygon<double> model_polygon(1);
     //             curve->get_polygon(model_polygon);
                 
-    //             model_file<<model_polygon[0].size()+1<<vcl_endl;
+    //             model_file<<model_polygon[0].size()+1<<std::endl;
 
     //             for (unsigned int s = 0; s < model_polygon.num_sheets(); ++s)
     //             {
     //                 for (unsigned int p = 0; p < model_polygon[s].size(); ++p)
     //                 {
     //                     model_file<<model_polygon[s][p].x()<<","
-    //                               <<model_polygon[s][p].y()<<vcl_endl;
+    //                               <<model_polygon[s][p].y()<<std::endl;
     //                 }
     //             }
 
     //             model_file<<model_polygon[0][0].x()<<","
-    //                       <<model_polygon[0][0].y()<<vcl_endl;
+    //                       <<model_polygon[0][0].y()<<std::endl;
                 
     //         }
             
@@ -17298,7 +17298,7 @@ inline void dbskfg_match_bag_of_fragments::compute_color_over_sift
  double x, double y,
  double sigma,
  double angle0,
- vcl_set<vcl_pair<double,double> >& samples)
+ std::set<std::pair<double,double> >& samples)
 {
   double const magnif = f-> magnif ;
 
@@ -17373,7 +17373,7 @@ inline void dbskfg_match_bag_of_fragments::compute_color_over_sift
                           biny + dbiny <    (NBP/2) ) 
                       {
 
-                          vcl_pair<double,double> 
+                          std::pair<double,double> 
                               pair(xi+dxi,yi+dyi);
                           samples.insert(pair);
                       }
@@ -17384,12 +17384,12 @@ inline void dbskfg_match_bag_of_fragments::compute_color_over_sift
   }
 
 
-  // vcl_ofstream stream("sift_samples.txt");
+  // std::ofstream stream("sift_samples.txt");
 
-  // vcl_set<vcl_pair<double,double> >::iterator it;
+  // std::set<std::pair<double,double> >::iterator it;
   // for ( it = samples.begin() ; it != samples.end() ; ++it)
   // {
-  //     stream<<(*it).first<<" "<<(*it).second<<vcl_endl;
+  //     stream<<(*it).first<<" "<<(*it).second<<std::endl;
 
   // }
   // stream.close();
@@ -17413,7 +17413,7 @@ void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
         double radius_ps1        = sift_scale;
         double theta_ps1         = scurve->theta(i);
 
-        ps1.set(vcl_fabs(width-(ps1.x()/scale_ratio)),
+        ps1.set(std::fabs(width-(ps1.x()/scale_ratio)),
                 ps1.y()/scale_ratio);
         radius_ps1 = (radius_ps1/scale_ratio)/2.0;
 
@@ -17441,22 +17441,22 @@ void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
 }
 
 void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
-    vcl_set<vcl_pair<double,double> >& samples,
+    std::set<std::pair<double,double> >& samples,
     vil_image_view<double>& o1_grad_map,
     vil_image_view<double>& o1_angle_map,
     vil_image_view<double>& o2_grad_map,
     vil_image_view<double>& o2_angle_map,
     vil_image_view<double>& o3_grad_map,
     vil_image_view<double>& o3_angle_map,
-    vcl_vector<double>& descr,
-    vcl_string title)
+    std::vector<double>& descr,
+    std::string title)
 {
 
     bsta_histogram<double> o1_hist(2.0*vnl_math::pi,8);
     bsta_histogram<double> o2_hist(2.0*vnl_math::pi,8);
     bsta_histogram<double> o3_hist(2.0*vnl_math::pi,8);
     
-    vcl_set<vcl_pair<double,double> >::iterator pit;
+    std::set<std::pair<double,double> >::iterator pit;
     for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
     {
         double o1_mag = vil_bilin_interp_safe(o1_grad_map,
@@ -17485,9 +17485,9 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
         o3_hist.upcount(o3_angle,o3_mag);
     }
 
-    vcl_vector<double> o1_counts=o1_hist.count_array();
-    vcl_vector<double> o2_counts=o2_hist.count_array();
-    vcl_vector<double> o3_counts=o3_hist.count_array();
+    std::vector<double> o1_counts=o1_hist.count_array();
+    std::vector<double> o2_counts=o2_hist.count_array();
+    std::vector<double> o3_counts=o3_hist.count_array();
 
     for ( unsigned int i=0; i < o1_counts.size() ; ++i)
     {
@@ -17506,11 +17506,11 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
 
     if ( title.size() )
     {
-        vcl_string samp_title=title+"_samples.txt";
-        vcl_ofstream output(samp_title.c_str());
+        std::string samp_title=title+"_samples.txt";
+        std::ofstream output(samp_title.c_str());
         for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
         {
-            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+            output<<(*pit).first<<" "<<(*pit).second<<std::endl;
 
 
         }
@@ -17528,13 +17528,13 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
 
 
 void dbskfg_match_bag_of_fragments::compute_color_region_hist(
-    vcl_set<vcl_pair<double,double> >& samples,
+    std::set<std::pair<double,double> >& samples,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
-    vcl_vector<double>& descr,
+    std::vector<double>& descr,
     LabBinType bintype,
-    vcl_string title)
+    std::string title)
 {
 
     double min_l(0.0),max_l(0.0);
@@ -17599,7 +17599,7 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
     bsta_histogram<double> a_hist(min_a,max_a,bins_a);
     bsta_histogram<double> b_hist(min_b,max_b,bins_b);
 
-    vcl_set<vcl_pair<double,double> >::iterator pit;
+    std::set<std::pair<double,double> >::iterator pit;
     for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
     {
         double L_value = vil_bilin_interp_safe(o1,
@@ -17636,9 +17636,9 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
     }
     else
     {
-        vcl_vector<double> l_counts=l_hist.count_array();
-        vcl_vector<double> a_counts=a_hist.count_array();
-        vcl_vector<double> b_counts=b_hist.count_array();
+        std::vector<double> l_counts=l_hist.count_array();
+        std::vector<double> a_counts=a_hist.count_array();
+        std::vector<double> b_counts=b_hist.count_array();
 
         {
             for ( unsigned int k=0; k < l_counts.size() ; ++k)
@@ -17664,11 +17664,11 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
     }
     if ( title.size() )
     {
-        vcl_string samp_title=title+"_samples.txt";
-        vcl_ofstream output(samp_title.c_str());
+        std::string samp_title=title+"_samples.txt";
+        std::ofstream output(samp_title.c_str());
         for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
         {
-            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+            output<<(*pit).first<<" "<<(*pit).second<<std::endl;
 
 
         }
@@ -17679,13 +17679,13 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
 }
 
 void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
-    vcl_set<vcl_pair<double,double> >& samples,
+    std::set<std::pair<double,double> >& samples,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
-    vcl_vector<vl_sift_pix>& fv_descriptor,
+    std::vector<vl_sift_pix>& fv_descriptor,
     LabBinType bintype,
-    vcl_string title)
+    std::string title)
 {
 
     double min_l(0.0),max_l(0.0);
@@ -17750,7 +17750,7 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
     bsta_histogram<double> a_hist(min_a,max_a,bins_a);
     bsta_histogram<double> b_hist(min_b,max_b,bins_b);
 
-    vcl_set<vcl_pair<double,double> >::iterator pit;
+    std::set<std::pair<double,double> >::iterator pit;
     for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
     {
         double L_value = vil_bilin_interp_safe(o1,
@@ -17771,7 +17771,7 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
 
     }
 
-    vcl_vector<vl_sift_pix> unrolled_hist; 
+    std::vector<vl_sift_pix> unrolled_hist; 
     if ( bintype == dbskfg_match_bag_of_fragments::DEFAULT )
     {
         for (unsigned int l = 0; l<bins_l; l++)
@@ -17788,9 +17788,9 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
     }
     else
     {
-        vcl_vector<double> l_counts=l_hist.count_array();
-        vcl_vector<double> a_counts=a_hist.count_array();
-        vcl_vector<double> b_counts=b_hist.count_array();
+        std::vector<double> l_counts=l_hist.count_array();
+        std::vector<double> a_counts=a_hist.count_array();
+        std::vector<double> b_counts=b_hist.count_array();
 
         {
             for ( unsigned int k=0; k < l_counts.size() ; ++k)
@@ -17816,11 +17816,11 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
     }
     if ( title.size() )
     {
-        vcl_string samp_title=title+"_samples.txt";
-        vcl_ofstream output(samp_title.c_str());
+        std::string samp_title=title+"_samples.txt";
+        std::ofstream output(samp_title.c_str());
         for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
         {
-            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+            output<<(*pit).first<<" "<<(*pit).second<<std::endl;
 
 
         }
@@ -17898,7 +17898,7 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
-    vcl_vector<double>& descr)
+    std::vector<double>& descr)
 {
     double width=4*scale;
 
@@ -17921,7 +17921,7 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
             mini_box.set_centroid_x(new_center.x());
             mini_box.set_centroid_y(new_center.y());
 
-            vcl_vector<double> chan1, chan2,chan3;
+            std::vector<double> chan1, chan2,chan3;
             for ( int yy=mini_box.min_y(); yy <= mini_box.max_y(); ++yy)
             {
                 for ( int xx=mini_box.min_x(); xx <= mini_box.max_x(); ++xx) 
@@ -17960,24 +17960,24 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
             double sum_chan2 = dot_product(stats_chan2,stats_chan2);
             double sum_chan3 = dot_product(stats_chan3,stats_chan3);
 
-            double std_chan1 = vcl_sqrt(sum_chan1/(stats_chan1.size()-1));
-            double std_chan2 = vcl_sqrt(sum_chan2/(stats_chan2.size()-1));
-            double std_chan3 = vcl_sqrt(sum_chan3/(stats_chan3.size()-1));
+            double std_chan1 = std::sqrt(sum_chan1/(stats_chan1.size()-1));
+            double std_chan2 = std::sqrt(sum_chan2/(stats_chan2.size()-1));
+            double std_chan3 = std::sqrt(sum_chan3/(stats_chan3.size()-1));
 
             // // Power law normalization
             // mean_chan1 = vnl_math::sgn(mean_chan1)*
-            //     vcl_sqrt(vcl_abs(mean_chan1));
+            //     std::sqrt(std::abs(mean_chan1));
             // mean_chan2 = vnl_math::sgn(mean_chan2)*
-            //     vcl_sqrt(vcl_abs(mean_chan2));
+            //     std::sqrt(std::abs(mean_chan2));
             // mean_chan3 = vnl_math::sgn(mean_chan3)*
-            //     vcl_sqrt(vcl_abs(mean_chan3));
+            //     std::sqrt(std::abs(mean_chan3));
 
             // std_chan1 = vnl_math::sgn(std_chan1)*
-            //     vcl_sqrt(vcl_abs(std_chan1));
+            //     std::sqrt(std::abs(std_chan1));
             // std_chan2 = vnl_math::sgn(std_chan2)*
-            //     vcl_sqrt(vcl_abs(std_chan2));
+            //     std::sqrt(std::abs(std_chan2));
             // std_chan3 = vnl_math::sgn(std_chan3)*
-            //     vcl_sqrt(vcl_abs(std_chan3));
+            //     std::sqrt(std::abs(std_chan3));
 
             descr.push_back(mean_chan1);
             descr.push_back(std_chan1);
@@ -18000,7 +18000,7 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
         
     }
 
-    // double l2_distance=vcl_sqrt(l2_sum);
+    // double l2_distance=std::sqrt(l2_sum);
 
     // for ( unsigned int i=0; i < descr.size() ; ++i)
     // {

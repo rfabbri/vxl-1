@@ -56,7 +56,7 @@ class dbdet_lowe_keypoint : public dbdet_keypoint
 
   //=============== Binary I/O Methods ========================
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_lowe_keypoint"; }
+  virtual std::string is_a() const { return "dbdet_lowe_keypoint"; }
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -72,7 +72,7 @@ class dbdet_lowe_keypoint : public dbdet_keypoint
   short version() const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
   
  private:
   double scale_;

@@ -86,7 +86,7 @@ dbrl_affine_transformation::map_dir(vnl_vector<double> & dir) const
         return A_*dir;
     }
 
-void dbrl_affine_transformation::print_transformation(vcl_ostream &os)
+void dbrl_affine_transformation::print_transformation(std::ostream &os)
     {
         os<<"Affine MAtrix\n"<<A_;
     }
@@ -111,7 +111,7 @@ void dbrl_affine_transformation::b_read(vsl_b_istream &is)
             vsl_b_read(is, A_);
             break;
         default:
-            vcl_cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -119,7 +119,7 @@ short dbrl_affine_transformation::version() const
     {
     return 1;
     }
-void dbrl_affine_transformation::print_summary(vcl_ostream &os) const
+void dbrl_affine_transformation::print_summary(std::ostream &os) const
 {
     A_.print(os);
 }

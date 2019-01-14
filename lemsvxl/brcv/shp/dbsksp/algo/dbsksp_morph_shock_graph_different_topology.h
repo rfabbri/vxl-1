@@ -14,9 +14,9 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
+#include <map>
+#include <utility>
+#include <vector>
 #include <dbsksp/dbsksp_shock_graph_sptr.h>
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>
@@ -87,10 +87,10 @@ public:
   { this->sm_cor_ = sm_cor; }
 
   //: Get the transition graphs
-  vcl_vector<dbsksp_shock_graph_sptr > transitions_tree1() const
+  std::vector<dbsksp_shock_graph_sptr > transitions_tree1() const
   {return this->transitions_tree1_; }
 
-  vcl_vector<dbsksp_shock_graph_sptr > transitions_tree2() const
+  std::vector<dbsksp_shock_graph_sptr > transitions_tree2() const
   {return this->transitions_tree2_; }
   
   
@@ -112,9 +112,9 @@ public:
   // n is the number of times the graph changes topology
   void generate_intermediate_graphs(const dbskr_tree_sptr& tree,
     int ref_dart,
-    const vcl_vector<bool > used_darts,
-    const vcl_vector<int >& num_segments_to_interpolate,
-    vcl_vector<dbsksp_shock_graph_sptr >& transition_graphs);
+    const std::vector<bool > used_darts,
+    const std::vector<int >& num_segments_to_interpolate,
+    std::vector<dbsksp_shock_graph_sptr >& transition_graphs);
 
 
   //: Generate intermediate trees, given a tree and a survial list
@@ -122,20 +122,20 @@ public:
   // n is the number of times the graph changes topology
   void generate_morph_sequence(const dbskr_tree_sptr& tree,
     int ref_dart,
-    const vcl_vector<bool > used_darts,
-    const vcl_vector<int >& num_segments_to_interpolate,
-    vcl_vector<dbsksp_morph_segment >& morph_sequence);
+    const std::vector<bool > used_darts,
+    const std::vector<int >& num_segments_to_interpolate,
+    std::vector<dbsksp_morph_segment >& morph_sequence);
 
 
   //: Applying editing sequence to the initial graph
   void generate_edited_graph(const dbskr_tree_sptr& tree,
     int ref_dart,
-    const vcl_vector<bool > used_darts,
-    const vcl_vector<int >& num_segments_to_interpolate,
+    const std::vector<bool > used_darts,
+    const std::vector<int >& num_segments_to_interpolate,
     bool real_edge_deletion,
     dbsksp_shock_graph_sptr& start_graph,
     dbsksp_shock_graph_sptr& final_graph,
-    vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& final_to_start_edge_map);
+    std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& final_to_start_edge_map);
 
   //: compute final common graph
   void generate_final_common_graph();
@@ -143,7 +143,7 @@ public:
   //: Propagate data from source to target, given an edge map from source to target
   void propagate_data(const dbsksp_shock_graph_sptr& start,
     const dbsksp_shock_graph_sptr& end,
-    const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& start_to_end
+    const std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& start_to_end
     );
 
 
@@ -162,8 +162,8 @@ public:
 
   //: Compute the lengths of the darts for a tree
   void compute_dart_lengths(const dbskr_tree_sptr& tree,
-    const vcl_vector<int >& query_dart_list,
-    vcl_vector<double >& dart_lengths);
+    const std::vector<int >& query_dart_list,
+    std::vector<double >& dart_lengths);
 
 
   //: Initial graph for each tree
@@ -185,25 +185,25 @@ protected:
   // tree1 survival list, 
   // used_darts_tree1_[i] = true: dart(i) will survive in the editing path
   // false: the dart will be removed in the editing path
-  vcl_vector<bool > used_darts_tree1_;
+  std::vector<bool > used_darts_tree1_;
 
   // tree2 survival list, similar to tree 1 above
-  vcl_vector<bool > used_darts_tree2_;
+  std::vector<bool > used_darts_tree2_;
 
   //: number of segments used to interpolate tree 1
   // num_segments_tree1_[i]: number of segments used to interpolate dart i
   // Each segment will result in two shock edges (due to interpolation method)
-  vcl_vector<int > num_segments_tree1_;
+  std::vector<int > num_segments_tree1_;
 
   //: number of segments used to interpolate tree 1
-  vcl_vector<int > num_segments_tree2_;
+  std::vector<int > num_segments_tree2_;
 
 
   
 
   // transition graphs for tree1
-  vcl_vector<dbsksp_shock_graph_sptr > transitions_tree1_;
-  vcl_vector<dbsksp_shock_graph_sptr > transitions_tree2_;
+  std::vector<dbsksp_shock_graph_sptr > transitions_tree1_;
+  std::vector<dbsksp_shock_graph_sptr > transitions_tree2_;
   
 };
 

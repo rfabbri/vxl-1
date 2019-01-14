@@ -9,8 +9,8 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     August 16, 2009
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <dbsks/dbsks_xgraph_geom_model_sptr.h>
 
 
@@ -21,16 +21,16 @@ class bxml_element;
 // WRITE
 //------------------------------------------------------------------------------
 //: Write xgraph geometry model to a stream
-bool x_write(vcl_ostream& os, const dbsks_xgraph_geom_model_sptr& xgraph_geom);
+bool x_write(std::ostream& os, const dbsks_xgraph_geom_model_sptr& xgraph_geom);
 
 
 //------------------------------------------------------------------------------
 // READ
 //------------------------------------------------------------------------------
 //: load geometric model of a xgraph
-bool x_read(const vcl_string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom);
+bool x_read(const std::string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom);
 
-bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom);
+bool x_read(const std::string& filepath, const std::string& param_filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom);
 
 
 //------------------------------------------------------------------------------

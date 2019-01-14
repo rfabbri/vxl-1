@@ -27,7 +27,7 @@
 //                               relative errors.
 // \endverbatim
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <dbsk2d/dbsk2d_defines.h>
 
@@ -36,7 +36,7 @@
 //----------------------------------------------------------
 inline bool _isEq (double a, double b, double epsilon)
 {
-  return(vcl_fabs(a-b)<=epsilon?1:0);
+  return(std::fabs(a-b)<=epsilon?1:0);
 }
 
 inline bool _isLEq (double a, double b, double epsilon)
@@ -91,7 +91,7 @@ inline double _epsilon (double a, double b, double relativeEpsilon)
 inline bool _isEqRel (double a, double b, double relativeEpsilon)
 {
   double epsilon = _epsilon (a, b, relativeEpsilon);
-  return (vcl_fabs((a)-(b))<=epsilon?1:0);
+  return (std::fabs((a)-(b))<=epsilon?1:0);
 }
 
 inline bool _isLEqRel (double a, double b, double relativeEpsilon)

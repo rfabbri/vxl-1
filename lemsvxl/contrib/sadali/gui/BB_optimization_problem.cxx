@@ -22,9 +22,9 @@
       double param_alpha = x[1];
      
       
-      //vcl_cout<<"i: "<<i<<"  newt:  "<<newt<<"\t";
-      //vcl_cout<<newalpha<<"\n";
-      vcl_vector<vnl_double_4> WorldPoints;
+      //std::cout<<"i: "<<i<<"  newt:  "<<newt<<"\t";
+      //std::cout<<newalpha<<"\n";
+      std::vector<vnl_double_4> WorldPoints;
       fx.fill(0.0);
 
       vnl_double_4x4 UpdatedBBMatrix;
@@ -64,7 +64,7 @@
 
  }
 double
-BB_optimization_problem::compute_err_LM(const vcl_vector<vnl_double_4> &WorldPoints, vnl_vector<double> &residual_vector,
+BB_optimization_problem::compute_err_LM(const std::vector<vnl_double_4> &WorldPoints, vnl_vector<double> &residual_vector,
                                         const vnl_double_4x4 &BB)
 {
 if (WorldPlane_point_samp)
@@ -75,7 +75,7 @@ if (WorldPlane_point_samp)
     int pixels_outside  = 0;
     int WPsize = WorldPoints.size();
   
-    vcl_cout<<WPsize;
+    std::cout<<WPsize;
     mapleft.fill(0.0);
      mapright.fill(0.0);
     for (int i = 0; i<WPsize; i++)
@@ -195,12 +195,12 @@ mapright.fill(0.0);
              param_vec[0] = threeD_point[1]/threeD_point[3];
              param_vec[1] = threeD_point[2]/threeD_point[3];
              param_vec[2] = 1.0;
-             //   vcl_cout<<"Point by projection"<<newpoint->x()<<"\t"<<newpoint->y()<<"\t"<<newpoint->z()<<"\n";
-             //  vcl_cout<<"Point by homography"<<result_point[0]<<"\t"<<result_point[1]<<"\t"<<result_point[2]<<"\n";
+             //   std::cout<<"Point by projection"<<newpoint->x()<<"\t"<<newpoint->y()<<"\t"<<newpoint->z()<<"\n";
+             //  std::cout<<"Point by homography"<<result_point[0]<<"\t"<<result_point[1]<<"\t"<<result_point[2]<<"\n";
              planar_curve_reconst_problem *reconstructor = new  planar_curve_reconst_problem (BB,orig_point,LeftProjMat);
              vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
              LM_instance->minimize_without_gradient(param_vec);
-      //       LM_instance->diagnose_outcome(vcl_cout);
+      //       LM_instance->diagnose_outcome(std::cout);
              vnl_double_4 newpt(test_BB_point[0],  param_vec[0]/param_vec[2], param_vec[1]/param_vec[2],1.0);
              vnl_double_3 proj_point= RightProjMat*newpt;
              vgl_homg_point_2d<double> right_point(proj_point[0]/proj_point[2],proj_point[1]/proj_point[2]);
@@ -273,7 +273,7 @@ mapright.fill(0.0);
                planar_curve_reconst_problem *reconstructor = new  planar_curve_reconst_problem (BB, orig_point, RightProjMat);
                  vnl_levenberg_marquardt  *LM_instance= new vnl_levenberg_marquardt(*((vnl_least_squares_function*)(reconstructor)));
                  LM_instance->minimize_without_gradient(param_vec);
-        //         LM_instance->diagnose_outcome(vcl_cout);
+        //         LM_instance->diagnose_outcome(std::cout);
                  vnl_double_4 newpt(test_BB_point[0], param_vec[0]/param_vec[2], param_vec[1]/param_vec[2],1.0);
                  vnl_double_3 proj_point= LeftProjMat*newpt;
                  vgl_homg_point_2d<double> left_point(proj_point[0]/proj_point[2],proj_point[1]/proj_point[2]);
@@ -326,10 +326,10 @@ mapright.fill(0.0);
 
 
  void
-     BB_optimization_problem::computeWorldPoints_LM(vcl_vector<vnl_double_4>  &WP, vnl_double_4x4 BB)
+     BB_optimization_problem::computeWorldPoints_LM(std::vector<vnl_double_4>  &WP, vnl_double_4x4 BB)
  {
-     int  numx = (int)vcl_floor(1.0/sampx);
-     int  numy = (int)vcl_floor(1.0/sampy);
+     int  numx = (int)std::floor(1.0/sampx);
+     int  numy = (int)std::floor(1.0/sampy);
      vnl_double_4 newpoint_World;
      vnl_double_4 newp;
        //*****Depends on front plane x=0 or x=1******/////
@@ -360,7 +360,7 @@ mapright.fill(0.0);
          
      vnl_double_4 Normal;
 
- //    vcl_cout<<trans_vec;
+ //    std::cout<<trans_vec;
    //  temp= RSt;
 //     vnl_double_4 Normal(-1.0,0.0,0.0,1.0);
      vnl_double_3x1 tempt, Normaltemp;
@@ -377,8 +377,8 @@ mapright.fill(0.0);
    
     
      double coef= coeff;
-     vcl_cout<<"coef:  "<<coef<<"\n";
-     vcl_cout<<"angle: "<<newalpha<<"\n";
+     std::cout<<"coef:  "<<coef<<"\n";
+     std::cout<<"angle: "<<newalpha<<"\n";
      vnl_double_4x4 Temp;
      Temp.set_identity();
 
@@ -406,21 +406,21 @@ else
     cornerpointtwo = InitialBB*cornerpointtwo;
     cornerpointthr = InitialBB*cornerpointthr;
     cornerpointfou = InitialBB*cornerpointfou;
-    vcl_vector<vnl_double_4> corners(4);
+    std::vector<vnl_double_4> corners(4);
     corners[0] = cornerpointone;
     corners[1] = cornerpointtwo;
     corners[2] = cornerpointthr;
     corners[3] = cornerpointfou;
     compute_Normal_LM(corners, Normal);
      double dist = compute_lengthBB_LM(InitialBB);
-    vcl_cout<<"\nNormal2:   "<<Normal<<"\n";
+    std::cout<<"\nNormal2:   "<<Normal<<"\n";
     Temp[0][3] = trans_vec[0]+coef*Normal[0]*dist;
     Temp[1][3] = trans_vec[1]+coef*Normal[1]*dist;
     Temp[2][3] = trans_vec[2]+coef*Normal[2]*dist;
 
 }
 }
-//vcl_cout<<"Temp is  "<<Temp;
+//std::cout<<"Temp is  "<<Temp;
  //*****Depends on front plane x=0 or x=1******/////
 vnl_double_4 pivot(1.0,0.5,0.5, 1.0) ;
 pivot_point = Temp*pivot;
@@ -429,13 +429,13 @@ vnl_double_4 rot_axis(1.0,1.0,0.0, 0.0) ;
 rot_axis = Temp* rot_axis;
  //*****Depends on front plane x=0 or x=1******/////
 vnl_double_4x4 R = rot_mat(pivot_point,rot_axis, newalpha);
-//vcl_cout<<" R is " <<R;
+//std::cout<<" R is " <<R;
 if (opt_rotation)
 
 UpdatedBBMatrix = R*Temp;
 else
 UpdatedBBMatrix = Temp;
-//vcl_cout<<"New Mat:\n"<<UpdatedBBMatrix;
+//std::cout<<"New Mat:\n"<<UpdatedBBMatrix;
 
 
  }
@@ -602,7 +602,7 @@ vnl_double_4x4
 }
 
 void
-BB_optimization_problem::compute_Normal_LM(const vcl_vector<vnl_double_4> & corners, vnl_double_4 &Normal)
+BB_optimization_problem::compute_Normal_LM(const std::vector<vnl_double_4> & corners, vnl_double_4 &Normal)
 {
     assert(corners.size()==4);
 
@@ -642,7 +642,7 @@ BB_optimization_problem::compute_plane_params_LM(const vnl_double_4x4 &BB)
     //// Calculating Homographies
 
     vgl_h_matrix_2d_compute_4point hcl;
-    vcl_vector <vgl_homg_point_2d <double> > point_set1, point_set2;
+    std::vector <vgl_homg_point_2d <double> > point_set1, point_set2;
     vnl_double_3 projcponeL = LeftProjMat*cornerpointone;
     vnl_double_3 projcptwoL = LeftProjMat*cornerpointtwo;
     vnl_double_3 projcpthrL = LeftProjMat*cornerpointthr;
@@ -673,7 +673,7 @@ BB_optimization_problem::compute_plane_params_LM(const vnl_double_4x4 &BB)
     // H represents the homography that
     // transforms points from  plane1 into plane2.
     Hright = hcl.compute(point_set1, point_set2);
-  //  vcl_cout<<Hleft<<"\n"<<Hright<<"\n";
+  //  std::cout<<Hleft<<"\n"<<Hright<<"\n";
     Left2Right = Hleft*Hright.get_inverse();
 
 
@@ -685,7 +685,7 @@ BB_optimization_problem::compute_plane_params_LM(const vnl_double_4x4 &BB)
 
 
 
-    vcl_vector<vnl_double_4> corners(4);
+    std::vector<vnl_double_4> corners(4);
     corners[0] = cornerpointone;
     corners[1] = cornerpointtwo;
     corners[2] = cornerpointthr;

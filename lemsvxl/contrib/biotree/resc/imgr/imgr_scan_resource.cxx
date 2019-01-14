@@ -9,7 +9,7 @@
 #include <vpgl/algo/vpgl_project.h>
 
 imgr_scan_resource::imgr_scan_resource(xscan_scan const& scan,
-                                       vcl_vector<vil_image_resource_sptr> const& resources)
+                                       std::vector<vil_image_resource_sptr> const& resources)
   : resources_(resources),scan_(scan)
 {
   vil_image_resource_sptr r = resources_[0];
@@ -37,8 +37,8 @@ get_bounded_view(vgl_box_3d<double> const& bounds)
   unsigned i0, j0, imax, jmax, bni, bnj;
 
   //containers for the two likely image data types
-  vcl_vector<dbil_bounded_image_view<unsigned char>* > char_views_2d;
-  vcl_vector<dbil_bounded_image_view<unsigned short>* > short_views_2d;
+  std::vector<dbil_bounded_image_view<unsigned char>* > char_views_2d;
+  std::vector<dbil_bounded_image_view<unsigned short>* > short_views_2d;
 
   //Fill the view_3d with image_view_2d(s)
   for(orbit_index i=0; i<nk_; ++i)

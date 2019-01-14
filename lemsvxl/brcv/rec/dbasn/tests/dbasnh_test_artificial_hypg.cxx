@@ -20,10 +20,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
 #include <testlib/testlib_test.h>
@@ -102,7 +102,7 @@ void test_ga_same_n_e_diff_c ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_n_e_diff_c identical hypgs: %d bad matches.", bad);
@@ -128,7 +128,7 @@ void test_ga_same_n_e_diff_c ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -184,7 +184,7 @@ void test_ga_same_n_c_diff_l ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_n_c_diff_l identical hypgs: %d bad matches.", bad);
@@ -210,7 +210,7 @@ void test_ga_same_n_c_diff_l ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -266,7 +266,7 @@ void test_ga_same_l_c_diff_n ()
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_l_c_diff_n identical hypgs: %d bad matches.", bad);
@@ -292,7 +292,7 @@ void test_ga_same_l_c_diff_n ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -353,7 +353,7 @@ void test_ga_same_n_diff_l_c ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_n_diff_l_c rotated hypgs: %d bad matches.", bad);
@@ -379,7 +379,7 @@ void test_ga_same_n_diff_l_c ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -440,7 +440,7 @@ void test_ga_same_l_diff_n_c ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("same_l_diff_n_c rotated hypgs: %d bad matches.", bad);
@@ -466,7 +466,7 @@ void test_ga_same_l_diff_n_c ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -527,7 +527,7 @@ void test_ga_same_c_diff_n_l ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("test_ga_same_c_diff_n_l rotated hypgs: %d bad matches.", bad);
@@ -553,7 +553,7 @@ void test_ga_same_c_diff_n_l ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;
@@ -614,7 +614,7 @@ void test_ga_diff_n_l_c ()
     else
       bad = GA.compare_to_gtruth (labelgG, G_N_NODES);
 
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("test_ga_diff_n_l_c rotated hypgs: %d bad matches.", bad);
@@ -640,7 +640,7 @@ void test_ga_diff_n_l_c ()
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;

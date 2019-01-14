@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   dbinfo_track_displayer(){}
 
   //: Return type string
-  virtual vcl_string type() const { return "dbinfo_track_storage"; }
+  virtual std::string type() const { return "dbinfo_track_storage"; }
 
   //: Create a tableau if the storage object is of type dbinfo
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

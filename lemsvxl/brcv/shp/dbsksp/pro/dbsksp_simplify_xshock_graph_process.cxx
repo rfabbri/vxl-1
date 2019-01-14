@@ -21,7 +21,7 @@ dbsksp_simplify_xshock_graph_process()
     !parameters()->add("Sampling rate [pixels] of the new boundary to compute deviation (sampling_ds)", "-sampling_ds", double (1.0))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_simplify_xshock_graph_process::
+std::string dbsksp_simplify_xshock_graph_process::
 name()
 { 
   return "Simplify xshock graph"; 
@@ -55,10 +55,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_simplify_xshock_graph_process::
+std::vector< std::string > dbsksp_simplify_xshock_graph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_shock");
   return to_return;
 }
@@ -67,10 +67,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_simplify_xshock_graph_process::
+std::vector< std::string > dbsksp_simplify_xshock_graph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   bool simplify_in_place = false;
   this->parameters()->get_value("-simplify_in_place", simplify_in_place);
   if (!simplify_in_place)

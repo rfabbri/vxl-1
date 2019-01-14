@@ -2,8 +2,8 @@
 //:
 // \file
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 
 
 double bseg3d_gmm_l2norm::distance (mix_gauss_type const& g, mix_gauss_type const& f)
@@ -22,15 +22,15 @@ double bseg3d_gmm_l2norm::distance (mix_gauss_type const& g, mix_gauss_type cons
   //terms 1,2,3 
   for(unsigned i = 0; i < g.num_components(); i++)
   {
-    t1 = t1 + vcl_pow(g.weight(i),2 )* k1 * (1/vcl_sqrt(g.distribution(i).var()));
+    t1 = t1 + std::pow(g.weight(i),2 )* k1 * (1/std::sqrt(g.distribution(i).var()));
 
     for(unsigned j = i+1; j < g.num_components(); j++)
     {
       double sum_var = g.distribution(i).var() +  g.distribution(j).var();
       t2 = t2 + g.weight(i)*g.weight(j)
         * vnl_math::one_over_sqrt2pi 
-        * (double(1)/vcl_sqrt(sum_var)) 
-        * vcl_exp(-(double(1.0)/double(2.0)) * vcl_pow((g.distribution(i).mean()- g.distribution(j).mean()),2)
+        * (double(1)/std::sqrt(sum_var)) 
+        * std::exp(-(double(1.0)/double(2.0)) * std::pow((g.distribution(i).mean()- g.distribution(j).mean()),2)
         * (double(1)/sum_var));
     }
 
@@ -39,8 +39,8 @@ double bseg3d_gmm_l2norm::distance (mix_gauss_type const& g, mix_gauss_type cons
       double sum_var = g.distribution(i).var() + f.distribution(j).var();
       t3 = t3 + g.weight(i)*f.weight(j)
         * vnl_math::one_over_sqrt2pi
-        * (double(1)/vcl_sqrt(sum_var))
-        * vcl_exp(-(double(1)/double(2))* vcl_pow((g.distribution(i).mean() - f.distribution(j).mean()), 2)
+        * (double(1)/std::sqrt(sum_var))
+        * std::exp(-(double(1)/double(2))* std::pow((g.distribution(i).mean() - f.distribution(j).mean()), 2)
         * (double(1)/sum_var));
     }
 
@@ -49,7 +49,7 @@ double bseg3d_gmm_l2norm::distance (mix_gauss_type const& g, mix_gauss_type cons
   //terms 4,5
   for(unsigned i = 0; i < f.num_components(); i++)
   {
-    t4 = t4 + vcl_pow(f.weight(i),2)*k1*(1/vcl_sqrt(f.distribution(i).var()));
+    t4 = t4 + std::pow(f.weight(i),2)*k1*(1/std::sqrt(f.distribution(i).var()));
 
     for(unsigned j = i+1; j < f.num_components(); j++)
     {
@@ -57,13 +57,13 @@ double bseg3d_gmm_l2norm::distance (mix_gauss_type const& g, mix_gauss_type cons
 
       t5 = t5 + f.weight(i)*f.weight(j)
         * vnl_math::one_over_sqrt2pi
-        * (double(1)/vcl_sqrt(sum_var))
-        *  vcl_exp(-(double(1)/double(2))*vcl_pow(f.distribution(i).mean() - f.distribution(j).mean(),2) 
+        * (double(1)/std::sqrt(sum_var))
+        *  std::exp(-(double(1)/double(2))*std::pow(f.distribution(i).mean() - f.distribution(j).mean(),2) 
         * (double(1)/sum_var));
     }
   }
 
-  return vcl_sqrt(t1 +2*t2 - 2*t3 + t4 + 2*t5); 
+  return std::sqrt(t1 +2*t2 - 2*t3 + t4 + 2*t5); 
 
 }
 
@@ -84,15 +84,15 @@ float bseg3d_gmm_l2norm::l2_gauss2mix(gauss_type const&g, mix_gauss_undef const&
   //terms 1,2,3 
 
 
-  t1 = k1 * (1/vcl_sqrt(g.var()));
+  t1 = k1 * (1/std::sqrt(g.var()));
 
   for(unsigned j = 0; j < f.num_components(); j++)
   {
     double sum_var = g.var() + f.distribution(j).var();
     t3 = t3 + f.weight(j)
       * vnl_math::one_over_sqrt2pi
-      * (double(1)/vcl_sqrt(sum_var))
-      * vcl_exp(-(double(1)/double(2))* vcl_pow((g.mean() - f.distribution(j).mean()), 2)
+      * (double(1)/std::sqrt(sum_var))
+      * std::exp(-(double(1)/double(2))* std::pow((g.mean() - f.distribution(j).mean()), 2)
       * (double(1)/sum_var));
   }
 
@@ -101,7 +101,7 @@ float bseg3d_gmm_l2norm::l2_gauss2mix(gauss_type const&g, mix_gauss_undef const&
   //terms 4,5
   for(unsigned i = 0; i < f.num_components(); i++)
   {
-    t4 = t4 + vcl_pow(f.weight(i),2)*k1*(1/vcl_sqrt(f.distribution(i).var()));
+    t4 = t4 + std::pow(f.weight(i),2)*k1*(1/std::sqrt(f.distribution(i).var()));
 
     for(unsigned j = i+1; j < f.num_components(); j++)
     {
@@ -109,15 +109,15 @@ float bseg3d_gmm_l2norm::l2_gauss2mix(gauss_type const&g, mix_gauss_undef const&
 
       t5 = t5 + f.weight(i)*f.weight(j)
         * vnl_math::one_over_sqrt2pi
-        * (double(1)/vcl_sqrt(sum_var))
-        *  vcl_exp(-(double(1)/double(2))*vcl_pow(f.distribution(i).mean() - f.distribution(j).mean(),2) 
+        * (double(1)/std::sqrt(sum_var))
+        *  std::exp(-(double(1)/double(2))*std::pow(f.distribution(i).mean() - f.distribution(j).mean(),2) 
         * (double(1)/sum_var));
     }
   }
   if(normalize)
-    return float(vcl_sqrt(t1 - 2*t3 + t4 + 2*t5))/float(vcl_sqrt(t1 + t4 + 2*t5)); 
+    return float(std::sqrt(t1 - 2*t3 + t4 + 2*t5))/float(std::sqrt(t1 + t4 + 2*t5)); 
   else
-    return float(vcl_sqrt(t1 - 2*t3 + t4 + 2*t5));
+    return float(std::sqrt(t1 - 2*t3 + t4 + 2*t5));
 
 
 }
@@ -128,18 +128,18 @@ float bseg3d_gmm_l2norm::l2_gauss(gauss_type const&g1, gauss_type const& g2, boo
   //define some constants so that they are only calculated once
   //srqt(4*pi)
   float k = (1.0f/4.0f) * float(vnl_math::two_over_sqrtpi);
-  float t1 = k*(1.0f/vcl_sqrt(g1.var()));
-  float t2 = k*(1.0f/vcl_sqrt(g2.var()));
+  float t1 = k*(1.0f/std::sqrt(g1.var()));
+  float t2 = k*(1.0f/std::sqrt(g2.var()));
   float t3 = float(vnl_math::one_over_sqrt2pi)
-    * (1.0f/vcl_sqrt(g1.var() + g2.var()))
-    *  vcl_exp(-(1.0f/2.0f)*vcl_pow(g1.mean() - g2.mean(),2) 
+    * (1.0f/std::sqrt(g1.var() + g2.var()))
+    *  std::exp(-(1.0f/2.0f)*std::pow(g1.mean() - g2.mean(),2) 
     * (1.0f/(g1.var() + g2.var())));
 
   if (normalize)
-    return vcl_sqrt(t1 + t2 - 2*t3)/vcl_sqrt(t1 + t2);
+    return std::sqrt(t1 + t2 - 2*t3)/std::sqrt(t1 + t2);
 
   else 
-    return vcl_sqrt(t1 + t2 - 2*t3);
+    return std::sqrt(t1 + t2 - 2*t3);
 
 }
 
@@ -147,11 +147,11 @@ float bseg3d_gmm_l2norm::l2_gauss(gauss_type const&g1, gauss_type const& g2, boo
 //: Calculates KL divergence for two gaussian distributions KL(g1|g2)
 float bseg3d_gmm_l2norm::kl_distance(gauss_type const&g1, gauss_type const& g2)
 {
-  double t1 = (2.0)*vcl_log(vcl_sqrt(double(g2.var())/double(g1.var())));
+  double t1 = (2.0)*std::log(std::sqrt(double(g2.var())/double(g1.var())));
   double t2 = double(g1.var())/double(g2.var());
-  double t3 = vcl_pow((double(g2.mean()) - double(g1.mean())),2);
+  double t3 = std::pow((double(g2.mean()) - double(g1.mean())),2);
   if(t1+t2+t3<1.0)
-    vcl_cout<<"smaller than 0 \n";
+    std::cout<<"smaller than 0 \n";
   return 0.5*(t1+t2+t3 -1.0);
 }
 

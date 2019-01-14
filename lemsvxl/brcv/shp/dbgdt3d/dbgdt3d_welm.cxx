@@ -2,7 +2,7 @@
 //  Definitions for the wavefront element for the wavefront propagation algorithm
 //  for computing the goedesic distance transform.
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <dbgdt3d/dbgdt3d_welm.h>
 #include <dbgdt3d/dbgdt3d_vertex.h>
@@ -298,14 +298,14 @@ void gdt_welm::compute_tEL_tER_tOV ()
   if (successR) { //eR as eO, vO is the other vertex of eR
     double thetaR;
     if (eC->eV() == eR->eV()) { //c.e==r.e
-      thetaR = vcl_atan2 (R_nH, R_nL);
+      thetaR = std::atan2 (R_nH, R_nL);
       //if R_nStau=0 and R_nL < R_nStau, vO is valid.
       if (R_nStau == 0 && R_nL < R_nStau)
         tVO_ = vnl_math::hypot (R_nL, R_nH) + mu();  
     }    
     else { //c.e==r.s
       assert (eC->eV() == eR->sV());
-      thetaR = vcl_atan2 (R_nH, eR->len()-R_nL);
+      thetaR = std::atan2 (R_nH, eR->len()-R_nL);
       //if R_nEtau < R_nL, vO is valid, assert (R_nEtau=eR.len)
       if (R_nEtau == eR->len() && R_nEtau < R_nL)
         tVO_ = vnl_math::hypot (R_nEtau - R_nL, R_nH) + mu();
@@ -318,14 +318,14 @@ void gdt_welm::compute_tEL_tER_tOV ()
   if (successL) { //eL as eO, vO is the other vertex of eL    
     double thetaL;
     if (eC->sV() == eL->sV()) { //c.s==l.s
-      thetaL = vcl_atan2 (L_nH, eL->len()-L_nL);
+      thetaL = std::atan2 (L_nH, eL->len()-L_nL);
       //if L_nEtau < L_nL, vO is valid. assert (L_nEtau=eL.len)
       if (L_nEtau == eL->len() && L_nEtau < L_nL)
         tVO_ = vnl_math::hypot (L_nEtau - L_nL, L_nH) + mu();
     }    
     else { //c.s==l.e
       assert (eC->sV() == eL->eV());
-      thetaL = vcl_atan2 (L_nH, L_nL);
+      thetaL = std::atan2 (L_nH, L_nL);
       //if L_nL < L_nStau, vO is valid. assert (L_nStau=0)
       if (L_nStau == 0 && L_nL < L_nStau)
         tVO_ = vnl_math::hypot (L_nL, L_nH) + mu();
@@ -528,12 +528,12 @@ bool gdt_welm::validate_tEL (const double& alphaCL, const double& alphaCR)
 vgl_point_2d<double> gdt_welm::_compute_FL (const double& alphaCL) const
 {
   // Compute the point FL in the coordinate system of this interval.
-  const double tanA = vcl_tan (alphaCL);
+  const double tanA = std::tan (alphaCL);
   const double HtanA = H_ * tanA;
   const double k = L_ - HtanA;
   const double OK = vnl_math::hypot (HtanA, H_);
   const double KF = HtanA * k / OK;
-  const double OT = (OK + KF)* vcl_sin (alphaCL);
+  const double OT = (OK + KF)* std::sin (alphaCL);
   const double TF = OT / tanA;
   vgl_point_2d<double> FL (L_ - OT, TF - H_);
   return FL;
@@ -590,12 +590,12 @@ bool gdt_welm::validate_tER (const double& alphaCL, const double& alphaCR)
 vgl_point_2d<double> gdt_welm::_compute_FR (const double& alphaCR) const
 {
   // Compute the point FR in the coordinate system of this interval.
-  const double tanA = vcl_tan (alphaCR);
+  const double tanA = std::tan (alphaCR);
   const double HtanA = H_ * tanA;
   const double k = HtanA + L_;
   const double OK = vnl_math::hypot (HtanA, H_);
   const double KF = HtanA * (edge()->len() - k) / OK;
-  const double OT = (OK + KF)* vcl_sin (alphaCR);
+  const double OT = (OK + KF)* std::sin (alphaCR);
   const double TF = OT / tanA;
   vgl_point_2d<double> FR (L_ + OT, TF - H_);
   return FR;
@@ -626,8 +626,8 @@ bool gdt_welm::validate_tVO (const double& lenL, const double& alphaCL,
   if (validate_on_Sl) { //Validate against leftS
     //Compute VO in leftS's coordinate system oriented via this interval.
     //VO ( len(e)-len(eR)*cos(alpha_r), len(eR)*sin(alpha_r) )  
-    vgl_point_2d<double> vOL (edge()->len() - lenR*vcl_cos(alphaCR),
-                              lenR*vcl_sin(alphaCR));
+    vgl_point_2d<double> vOL (edge()->len() - lenR*std::cos(alphaCR),
+                              lenR*std::sin(alphaCR));
 
     timeP = tVO_;
     if (W_validate_P_on_Sl (alphaCL, alphaCR, vOL, timeP) == false)
@@ -637,8 +637,8 @@ bool gdt_welm::validate_tVO (const double& lenL, const double& alphaCL,
   if (validate_on_Sr) { //Validate against rightS
     //Compute VO in rightS's coordinate system oriented via this interval.
     //VO ( len(eL)*cos(alpha_l), len(eL)*sin(alpha_l) )  
-    vgl_point_2d<double> vOR (lenL*vcl_cos(alphaCL),
-                              lenL*vcl_sin(alphaCL));
+    vgl_point_2d<double> vOR (lenL*std::cos(alphaCL),
+                              lenL*std::sin(alphaCL));
     
     timeP = tVO_;
     if (W_validate_P_on_Sr (alphaCL, alphaCR, vOR, timeP) == false)
@@ -772,7 +772,7 @@ vgl_point_3d<double> gdt_welm::_get_eP_from_tau (const double& tau,
   vgl_point_3d<double> eP3;
 
   //Test if eP is on one of the nextI
-  vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+  std::vector<gdt_interval*>::iterator it = nextIs_.begin();
   for (; it != nextIs_.end(); it++) {    
     gdt_interval* nextI = (*it);
     
@@ -934,12 +934,12 @@ double gdt_welm::_compute_tauP_on_I (const double& px, const double& py) const
 
 // ################################################################
 
-void gdt_welm::getInfo (vcl_ostringstream& ostrm)
+void gdt_welm::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
   char tmp[64];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
 
   switch (type_) {
   case ITYPE_PSRC: sprintf (tmp, "PSRC"); break;
@@ -949,10 +949,10 @@ void gdt_welm::getInfo (vcl_ostringstream& ostrm)
   default:
     break;
   }
-  vcl_sprintf (s, "gdt_welm %s %s e %d (%f, %f) on face %d\n", 
+  std::sprintf (s, "gdt_welm %s %s e %d (%f, %f) on face %d\n", 
                _is_RF() ? "RF" : "W",
                tmp, edge()->id(), stau_, etau_, curF()->id()); ostrm<<s;
-  vcl_sprintf (s, " psrc %d, mu: %f, L: %f, H: %f\n", 
+  std::sprintf (s, " psrc %d, mu: %f, L: %f, H: %f\n", 
                psrc()->id(), mu(), L_, H_); ostrm<<s;
 
   switch (next_event_) {
@@ -964,47 +964,47 @@ void gdt_welm::getInfo (vcl_ostringstream& ostrm)
   case WENE_RE_FPT: sprintf (tmp, "WENE_RE_FPT"); break;
   case WENE_OV: sprintf (tmp, "WENE_OV"); break;
   }
-  vcl_sprintf (s, " Next event: %s.", tmp); ostrm<<s;
-  vcl_sprintf (s, " final: %s.\n", final_ ? "true" : "false"); ostrm<<s;
+  std::sprintf (s, " Next event: %s.", tmp); ostrm<<s;
+  std::sprintf (s, " final: %s.\n", final_ ? "true" : "false"); ostrm<<s;
 
   if (Sl_)
-    vcl_sprintf (tmp, "%d", Sl_->id());
+    std::sprintf (tmp, "%d", Sl_->id());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " leftS: %s, ", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " leftS: %s, ", tmp); ostrm<<s;
   
   if (Sr_)
-    vcl_sprintf (tmp, "%d", Sr_->id());
+    std::sprintf (tmp, "%d", Sr_->id());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, "rightS: %s\n", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, "rightS: %s\n", tmp); ostrm<<s;
 
-  vcl_sprintf (s, " tVS: %f, tVE: %f,\n", tVS_, tVE_); ostrm<<s;
-  vcl_sprintf (s, " tEL: %f, tER: %f, tVO: %f\n", tEL_, tER_, tVO_); ostrm<<s;
+  std::sprintf (s, " tVS: %f, tVE: %f,\n", tVS_, tVE_); ostrm<<s;
+  std::sprintf (s, " tEL: %f, tER: %f, tVO: %f\n", tEL_, tER_, tVO_); ostrm<<s;
 
   if (prevI_)
-    vcl_sprintf (tmp, "%d (%.3f, %.3f)", prevI_->edge()->id(), 
+    std::sprintf (tmp, "%d (%.3f, %.3f)", prevI_->edge()->id(), 
                  prevI_->stau(), prevI_->etau());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " prevI: %s, ", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " prevI: %s, ", tmp); ostrm<<s;
 
   //Print nextIs_[]
   if (nextIs_.size() == 0) {
-    vcl_sprintf (s, " nextIs[]: NULL.\n"); ostrm<<s;
+    std::sprintf (s, " nextIs[]: NULL.\n"); ostrm<<s;
   }
   else {
-    vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+    std::vector<gdt_interval*>::iterator it = nextIs_.begin();
     for (unsigned int i=0; it != nextIs_.end(); it++, i++) {
       //unused gdt_interval* nI = (*it);
 
-      vcl_sprintf (tmp, "%d (%.3f, %.3f)", nextIs_[0]->edge()->id(), 
+      std::sprintf (tmp, "%d (%.3f, %.3f)", nextIs_[0]->edge()->id(), 
                    nextIs_[0]->stau(), nextIs_[0]->etau());
-      vcl_sprintf (s, "nI[%d]: %s, ", i, tmp); ostrm<<s;
+      std::sprintf (s, "nI[%d]: %s, ", i, tmp); ostrm<<s;
     }
   }
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 

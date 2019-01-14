@@ -5,7 +5,7 @@
 #include <vnl/vnl_vector.h>
 #include <xmvg/xmvg_atomic_filter_2d.h>
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 template <class T1, class T2>

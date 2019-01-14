@@ -1,7 +1,7 @@
 #ifndef bvam_voxel_grid_h_
 #define bvam_voxel_grid_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_vector_3d.h>
 
 #include "bvam_voxel_grid_base.h"
@@ -22,7 +22,7 @@ public:
   bvam_voxel_grid() : storage_(0), bvam_voxel_grid_base(vgl_vector_3d<unsigned>(0,0,0)) {};
 
   //: Constructor for disk-based voxel grid.
-  bvam_voxel_grid(vcl_string storage_fname, vgl_vector_3d<unsigned int> grid_size) 
+  bvam_voxel_grid(std::string storage_fname, vgl_vector_3d<unsigned int> grid_size) 
     : bvam_voxel_grid_base(grid_size)
   {
     storage_ = new bvam_voxel_storage_disk<T>(storage_fname, grid_size);

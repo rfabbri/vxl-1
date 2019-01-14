@@ -93,11 +93,11 @@ Point getCenterOfArc (COORD_TYPE sx, COORD_TYPE sy, COORD_TYPE ex, COORD_TYPE ey
    Point cen;
    int nu;
 
-   DIST_TYPE d = vcl_sqrt((ey-sy)*(ey-sy) + (ex-sx)*(ex-sx));
+   DIST_TYPE d = std::sqrt((ey-sy)*(ey-sy) + (ex-sx)*(ex-sx));
   double tau;
   if (AisEq(d,2*r)) tau=0;
-   else              tau = vcl_acos(d/(2*r)); 
-   double psi = vcl_atan2(ey-sy, ex-sx) + M_PI_2; 
+   else              tau = std::acos(d/(2*r)); 
+   double psi = std::atan2(ey-sy, ex-sx) + M_PI_2; 
    psi = angle0To2Pi (psi);
 
    if (nud>0 && nus>0) nu=-1;
@@ -105,8 +105,8 @@ Point getCenterOfArc (COORD_TYPE sx, COORD_TYPE sy, COORD_TYPE ex, COORD_TYPE ey
    else if (nud<0 && nus>0) nu=+1;
    else if (nud<0 && nus<0) nu=-1;   
 
-   cen.x = (sx+ex)/2 + (d/2)*vcl_tan(nu*tau)*vcl_cos(psi);
-   cen.y = (sy+ey)/2 + (d/2)*vcl_tan(nu*tau)*vcl_sin(psi);
+   cen.x = (sx+ex)/2 + (d/2)*std::tan(nu*tau)*std::cos(psi);
+   cen.y = (sy+ey)/2 + (d/2)*std::tan(nu*tau)*std::sin(psi);
 
    return cen;
 }
@@ -125,22 +125,22 @@ Point getArcCenterFromThreePoints (COORD_TYPE x1, COORD_TYPE y1,
   double start2x = (x2+x3)/2;
   double start2y = (y2+y3)/2;
 
-  double psi1 = vcl_atan2(y3-y1,x3-x1) + M_PI_2;
-  double psi2 = vcl_atan2(y3-y2,x3-x2) + M_PI_2;
+  double psi1 = std::atan2(y3-y1,x3-x1) + M_PI_2;
+  double psi2 = std::atan2(y3-y2,x3-x2) + M_PI_2;
 
-  double psihat = vcl_atan2(start2y - start1y, start2x - start1x);
+  double psihat = std::atan2(start2y - start1y, start2x - start1x);
 
-  if (vcl_sin(psi2 - psi1)==0){// parallel lines
+  if (std::sin(psi2 - psi1)==0){// parallel lines
     center.x=100000;
     center.y=100000;
   }
   else {
-    double test1 = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
-    double newH = vcl_sqrt( (start1y - start2y)*(start1y - start2y) +
+    double test1 = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
+    double newH = std::sqrt( (start1y - start2y)*(start1y - start2y) +
                   (start1x - start2x)*(start1x - start2x) );
 
-    center.x = start1x + newH*test1*vcl_cos(psi1);
-    center.y = start1y + newH*test1*vcl_sin(psi1);
+    center.x = start1x + newH*test1*std::cos(psi1);
+    center.y = start1y + newH*test1*std::sin(psi1);
   }
 
   return center;
@@ -158,21 +158,21 @@ double getArcRadiusFromThreePoints(COORD_TYPE x1, COORD_TYPE y1,
   double start2x = (x2+x3)/2;
   double start2y = (y2+y3)/2;
 
-  double psi1 = vcl_atan2(y3-y1,x3-x1) + M_PI_2;
-  double psi2 = vcl_atan2(y3-y2,x3-x2) + M_PI_2;
+  double psi1 = std::atan2(y3-y1,x3-x1) + M_PI_2;
+  double psi2 = std::atan2(y3-y2,x3-x2) + M_PI_2;
 
-  double psihat = vcl_atan2(start2y - start1y, start2x - start1x);
+  double psihat = std::atan2(start2y - start1y, start2x - start1x);
 
-  if (vcl_sin(psi2 - psi1)==0){// parallel lines
+  if (std::sin(psi2 - psi1)==0){// parallel lines
     return ISHOCK_DIST_HUGE;
   }
   else {
-    double test1 = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
-    double newH = vcl_sqrt( (start1y - start2y)*(start1y - start2y) +
+    double test1 = std::sin(psi2 - psihat )/std::sin(psi2 - psi1);
+    double newH = std::sqrt( (start1y - start2y)*(start1y - start2y) +
                   (start1x - start2x)*(start1x - start2x) );
 
-    center.x = start1x + newH*test1*vcl_cos(psi1);
-    center.y = start1y + newH*test1*vcl_sin(psi1);
+    center.x = start1x + newH*test1*std::cos(psi1);
+    center.y = start1y + newH*test1*std::sin(psi1);
 
     return _distPointPoint(center, Point(x1,y1));
   }
@@ -194,13 +194,13 @@ double getTangentFromThreePoints (COORD_TYPE x1, COORD_TYPE y1,
                        COORD_TYPE x2, COORD_TYPE y2,
                        COORD_TYPE x3, COORD_TYPE y3)
 {
-  double vcl_tan_chord = angle0To2Pi (vcl_atan2 (y2-y1, x2-x1));
+  double vcl_tan_chord = angle0To2Pi (std::atan2 (y2-y1, x2-x1));
   Point center = getArcCenterFromThreePoints (x1, y1, x2, y2, x3, y3);
   if (center.x==100000)
     return vcl_tan_chord;
 
-  double tangent1 = angle0To2Pi (vcl_atan2 (center.y-y3, center.x-x3) + M_PI_2);
-  double tangent2 = angle0To2Pi (vcl_atan2 (center.y-y3, center.x-x3) - M_PI_2);
+  double tangent1 = angle0To2Pi (std::atan2 (center.y-y3, center.x-x3) + M_PI_2);
+  double tangent2 = angle0To2Pi (std::atan2 (center.y-y3, center.x-x3) - M_PI_2);
   double tangent;
   if (_angle_vector_dot (vcl_tan_chord, tangent1)>0) 
     tangent = tangent1;

@@ -24,7 +24,7 @@ class xmvg_gaussian_integrating_filter_3d {
     descriptor_t descriptor_;
 };
 
-inline void x_write(vcl_ostream &os, xmvg_gaussian_integrating_filter_3d pf)
+inline void x_write(std::ostream &os, xmvg_gaussian_integrating_filter_3d pf)
 {
   xmvg_gaussian_filter_descriptor gfd = pf.descriptor();
   x_write(os, gfd);

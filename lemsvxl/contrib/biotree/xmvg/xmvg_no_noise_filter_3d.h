@@ -22,7 +22,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 class xmvg_no_noise_filter_3d : public xmvg_atomic_filter_3d <double>
 {
@@ -72,5 +72,5 @@ class xmvg_no_noise_filter_3d : public xmvg_atomic_filter_3d <double>
                                       vgl_box_3d<double> const & box);
 };
 
-void x_write(vcl_ostream& os, xmvg_no_noise_filter_3d f);
+void x_write(std::ostream& os, xmvg_no_noise_filter_3d f);
 #endif

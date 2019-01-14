@@ -2,13 +2,13 @@
 
 #include <bsold/bsold_interp_curve_2d.h>
 
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <utility>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_math.h>
 
 dbcvr_cvmatch_even::dbcvr_cvmatch_even()
@@ -52,7 +52,7 @@ dbcvr_cvmatch_even::~dbcvr_cvmatch_even ()
 
 void dbcvr_cvmatch_even::clear() {
   _DPCost.clear();          //DPMap of cost: n*m array of double
-  _DPMap.clear();          //DPMap of prev point vcl_map: n*m array of vcl_pair of index
+  _DPMap.clear();          //DPMap of prev point std::map: n*m array of std::pair of index
   _finalMap.clear();        //alignment curve
   _finalMapCost.clear();      //cost on alignment curve
   
@@ -136,18 +136,18 @@ void dbcvr_cvmatch_even::Match ()
 
 #if 0
 
-  vcl_ofstream fpoo; 
-  fpoo.open("D:\\contours\\Mpeg-7\\temp_even.out", vcl_ios::app);
+  std::ofstream fpoo; 
+  fpoo.open("D:\\contours\\Mpeg-7\\temp_even.out", std::ios::app);
 
   fpoo << _n1 << " " << _n2 << "\n";
   for (int i = 0; i<_n1; i++) {
     for (int j = 0; j<_n2; j++) {   // -1 since (0,0) will go to CD
       fpoo << i*_delta_s1 << " ";
-      fpoo << j*_delta_s2 << vcl_endl;
+      fpoo << j*_delta_s2 << std::endl;
     }
   }
 
-  //vcl_cout << "k_min was: " << k_min << " changhed to 0\n";
+  //std::cout << "k_min was: " << k_min << " changhed to 0\n";
   //k_min = 0;
 
   int N0=_finalMap.size();
@@ -156,7 +156,7 @@ void dbcvr_cvmatch_even::Match ()
     int ii =_finalMap[i].first;
     int jj =_finalMap[i].second;
     fpoo << ii*_delta_s1 << " ";
-    fpoo << jj*_delta_s2 << vcl_endl;    
+    fpoo << jj*_delta_s2 << std::endl;    
   }
 
   fpoo.close();
@@ -176,10 +176,10 @@ void dbcvr_cvmatch_even::initializeDPCosts()
   assert (_n2>0);
 
   for (int i=0;i<_n1;i++) {
-    vcl_vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
     _DPCost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_n2,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_n2,tmp3);
     _DPMap.push_back(tmp2);
   }
 
@@ -222,14 +222,14 @@ double dbcvr_cvmatch_even::computeIntervalCost(int i, int ip, int j, int jp){
   double dF;
   if (_normalized_stretch_cost) {
     if (ds1+ds2 > 1E-5)
-      dF = vcl_pow(ds1-ds2,2)/(ds1+ds2);
+      dF = std::pow(ds1-ds2,2)/(ds1+ds2);
     else dF = 0;
-  } else dF = vcl_fabs(ds1-ds2);
+  } else dF = std::fabs(ds1-ds2);
 
   double dt1 = curve_angleDiff (_tangents_curve1[i], _tangents_curve1[ip]);
   double dt2 = curve_angleDiff (_tangents_curve2[j], _tangents_curve2[jp]);
 
-  double dK = vcl_fabs(dt1-dt2);
+  double dK = std::fabs(dt1-dt2);
   
   return dF + _R*dK;
 }
@@ -278,14 +278,14 @@ void dbcvr_cvmatch_even::findDPCorrespondence (void)
   i = _n1-1;
   j = _n2-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_DPCost[p.first][p.second]);
 
   while (ip > 0 || jp > 0) { //Ming: should be &&
     ip=_DPMap[i][j].first;
     jp=_DPMap[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_DPCost[p.first][p.second]);
   

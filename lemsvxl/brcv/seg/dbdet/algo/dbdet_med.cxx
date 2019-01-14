@@ -1,9 +1,9 @@
 #include "dbdet_med.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <algorithm>
 
 //------------------------------------------------------------------------------
 // Multiscale edge detector object
@@ -23,21 +23,21 @@ dbdet_med::~dbdet_med()
 //: 
 void dbdet_med::build_curvelets()
 {
-  vcl_cout << "Building curvelets ..." ;
-  vcl_cout.flush();
+  std::cout << "Building curvelets ..." ;
+  std::cout.flush();
 
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 
 
 void dbdet_med::report_stats()
 {
-  vcl_cout << "======================================" << vcl_endl;
-  vcl_cout << "Summary\n";
-  vcl_cout << "======================================" << vcl_endl;
+  std::cout << "======================================" << std::endl;
+  std::cout << "Summary\n";
+  std::cout << "======================================" << std::endl;
 
-  vcl_cout << "======================================" << vcl_endl;
+  std::cout << "======================================" << std::endl;
 }
 

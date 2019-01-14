@@ -1,7 +1,7 @@
 #ifndef psm_convert_dcdf_implicit_h_
 #define psm_convert_dcdf_implicit_h_
 
-#include <vcl_string.h>
+#include <string>
 
 #include <psm/psm_apm_traits.h>
 #include <psm/psm_aux_traits.h>
@@ -10,9 +10,9 @@
 
 
 template<psm_aux_type AUX_T>
-bool psm_convert_dcdf_implicit(psm_aux_scene<AUX_T> *aux_scene, unsigned int resolution_level, float scale_factor, vcl_string filename)
+bool psm_convert_dcdf_implicit(psm_aux_scene<AUX_T> *aux_scene, unsigned int resolution_level, float scale_factor, std::string filename)
 {
-  vcl_cout << "converting scene.. resolution level = " << resolution_level << vcl_endl;
+  std::cout << "converting scene.. resolution level = " << resolution_level << std::endl;
 
   hsds_fd_tree<typename psm_aux_traits<AUX_T>::sample_datatype ,3> &aux_block = aux_scene->get_block(vgl_point_3d<int>(0,0,0));
   vbl_bounding_box<double,3> block_bb = aux_block.bounding_box();
@@ -29,9 +29,9 @@ bool psm_convert_dcdf_implicit(psm_aux_scene<AUX_T> *aux_scene, unsigned int res
   // origin should specify center of first cell
   vnl_vector_fixed<double,3> data_og = block_og + (step_len/2.0);
 
-  vcl_ofstream ofs(filename.c_str(),vcl_ios::binary);
+  std::ofstream ofs(filename.c_str(),std::ios::binary);
   if (!ofs.good()) {
-    vcl_cerr << "error opening " << filename << " for write! " << vcl_endl;
+    std::cerr << "error opening " << filename << " for write! " << std::endl;
     return false;
   }
 
@@ -112,7 +112,7 @@ bool psm_convert_dcdf_implicit(psm_aux_scene<AUX_T> *aux_scene, unsigned int res
   unsigned char *byte_data = new unsigned char[ncells*ncells*ncells];
   float* dp = data;
   for (unsigned char* bdp = byte_data; dp < data + ncells*ncells*ncells; ++dp, ++bdp) {
-    *bdp = (unsigned char)(vcl_floor((255.0 * *dp) + 0.5)); // always positive so this is an ok way to round
+    *bdp = (unsigned char)(std::floor((255.0 * *dp) + 0.5)); // always positive so this is an ok way to round
   }
   delete[] data;
 

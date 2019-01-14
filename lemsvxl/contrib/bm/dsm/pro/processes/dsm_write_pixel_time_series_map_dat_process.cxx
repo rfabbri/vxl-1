@@ -16,9 +16,9 @@ bool dsm_write_pixel_time_series_map_dat_process_cons( bprb_func_process& pro )
 {
 	//set input/output types
 	using namespace dsm_write_pixel_time_series_map_dat_process_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 	unsigned i = 0;
-	input_types_[i++] = "vcl_string";//the directory to write to
+	input_types_[i++] = vcl_string";//the directory to write to
 	input_types_[i++] = "dsm_pixel_time_series_map_sptr";//the sptr to write
 
 	if(!pro.set_input_types(input_types_))
@@ -33,13 +33,13 @@ bool dsm_write_pixel_time_series_map_dat_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() != n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_write_time_series_dat_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_write_time_series_dat_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 	dsm_pixel_time_series_map_sptr p = pro.get_input<dsm_pixel_time_series_map_sptr>(i++);
 
 	p->write_txt(filename);

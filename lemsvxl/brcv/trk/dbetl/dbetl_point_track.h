@@ -12,7 +12,7 @@
 #include <dbetl/dbetl_point_2d_sptr.h>
 #include <dbetl/dbetl_image_stats.h>
 #include <dbetl/dbetl_reproject_lsqr_cost.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_3d.h>
 
@@ -34,7 +34,7 @@ public:
   vgl_point_3d<double> mean_3d() const { return mean_3d_; }
 
   //: Return the vector of 3D points making up a local curve fragment
-  vcl_vector<vgl_point_3d<double> > curve_points() const;
+  std::vector<vgl_point_3d<double> > curve_points() const;
 
   //: Return the combined error of the estimated 3D mean with image stats
   double error() const { return error_; }
@@ -43,10 +43,10 @@ public:
   double image_cost() const;
 
   //: The cost associated with the image statistics
-  double image_cost(const vcl_vector<dbetl_point_2d_sptr>& pts) const;
+  double image_cost(const std::vector<dbetl_point_2d_sptr>& pts) const;
 
   //: Return the vector of points
-  vcl_vector<dbetl_point_2d_sptr> points() const { return points_; }
+  std::vector<dbetl_point_2d_sptr> points() const { return points_; }
 
   //: Return a single point
   dbetl_point_2d_sptr point(unsigned int index) { return points_[index]; }
@@ -69,7 +69,7 @@ private:
   //----------- Data -------------
 
   //: The points at each frame
-  vcl_vector<dbetl_point_2d_sptr> points_;
+  std::vector<dbetl_point_2d_sptr> points_;
   //: The number of non-null points in points_
   int num_points_;
 
@@ -82,10 +82,10 @@ private:
   vgl_point_3d<double> mean_3d_;
 
   //: The 3D point above (larger angle)
-  vcl_vector<vgl_point_3d<double> > mean_3d_above_;
+  std::vector<vgl_point_3d<double> > mean_3d_above_;
   
   //: The 3D point below (smaller angle)
-  vcl_vector<vgl_point_3d<double> > mean_3d_below_;
+  std::vector<vgl_point_3d<double> > mean_3d_below_;
 
   //: The error associated with the mean estimation
   double error_;

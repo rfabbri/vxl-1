@@ -15,10 +15,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <map>
+#include <string>
+#include <cassert>
+#include <iostream>
 #include <vsl/vsl_fwd.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -31,9 +31,9 @@ class dbinfo_mi_track;
 
 
 //The map from frame to observation
-typedef vcl_map<unsigned, dbinfo_observation_sptr, vcl_less<unsigned> > obs_map;
+typedef std::map<unsigned, dbinfo_observation_sptr, std::less<unsigned> > obs_map;
 //: The map from frame to transformation
-typedef vcl_map<unsigned, vnl_matrix_fixed<float,3,3>, vcl_less<unsigned> > xform_map;
+typedef std::map<unsigned, vnl_matrix_fixed<float,3,3>, std::less<unsigned> > xform_map;
 
 class dbinfo_track : public vbl_ref_count
 {
@@ -93,7 +93,7 @@ virtual dbinfo_mi_track* cast_to_mi_track() { return 0; }
 virtual dbinfo_mi_track const* cast_to_mi_track() const { return 0; }
 
 //:Print information about self
-virtual void print(vcl_ostream& os = vcl_cout) const;
+virtual void print(std::ostream& os = std::cout) const;
 
 //-----------------------
 //:  BINARY I/O METHODS |
@@ -103,10 +103,10 @@ virtual void print(vcl_ostream& os = vcl_cout) const;
 virtual unsigned version() const {return 2;}
 
 //: Return a platform independent string identifying the class
-virtual vcl_string is_a() const {return "dbinfo_track";}
+virtual std::string is_a() const {return "dbinfo_track";}
 
 //: determine if this is the given class
-virtual bool is_class(vcl_string const& cls) const
+virtual bool is_class(std::string const& cls) const
 { return cls==is_a();}
   
 //: Binary save self to stream.
@@ -168,13 +168,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_track* &trk)
   vsl_b_read(is, *trk);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_track const& trk)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_track const& trk)
 {
   trk.print(os);
   return os;
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_track const* trk)
+inline std::ostream &operator<<(std::ostream &os, dbinfo_track const* trk)
 {
   if (trk)
     os << *trk;
@@ -183,7 +183,7 @@ inline vcl_ostream &operator<<(vcl_ostream &os, dbinfo_track const* trk)
   return os;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, dbinfo_track const*  trk)
+inline void vsl_print_summary(std::ostream& os, dbinfo_track const*  trk)
 {os << trk;}
 
 

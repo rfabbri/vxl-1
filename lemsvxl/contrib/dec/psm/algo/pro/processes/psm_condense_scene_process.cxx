@@ -20,7 +20,7 @@
 #include <bprb/bprb_parameters.h>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_string.h>
+#include <string>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -42,7 +42,7 @@ bool psm_condense_scene_process_cons(bprb_func_process& pro)
   // input[1]: The threshold for occlusion probability for collapsing octree cells.
   // input[2]: The minimum octree level
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
   input_types_[1] = "float";
   input_types_[2] = "unsigned";
@@ -62,7 +62,7 @@ bool psm_condense_scene_process(bprb_func_process &pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -73,14 +73,14 @@ bool psm_condense_scene_process(bprb_func_process &pro)
   float occlusion_prob_thresh = pro.get_input<float>(1);
   unsigned int min_level = pro.get_input<unsigned>(2);
 
-  vcl_cout << "condensing scene : occlusion_prob_thresh = " << occlusion_prob_thresh << " min_level = " << min_level << vcl_endl;
+  std::cout << "condensing scene : occlusion_prob_thresh = " << occlusion_prob_thresh << " min_level = " << min_level << std::endl;
 
   switch (apm_type) {
     case PSM_APM_MOG_GREY:
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_condense_scene(*scene, occlusion_prob_thresh, min_level);
@@ -90,7 +90,7 @@ bool psm_condense_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_condense_scene(*scene, occlusion_prob_thresh, min_level);
@@ -100,7 +100,7 @@ bool psm_condense_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_condense_scene(*scene, occlusion_prob_thresh, min_level);
@@ -110,14 +110,14 @@ bool psm_condense_scene_process(bprb_func_process &pro)
       {
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         psm_condense_scene(*scene, occlusion_prob_thresh, min_level);
         break;
       }
     default:
-      vcl_cerr << "error - psm_condense_scene_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_condense_scene_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
 

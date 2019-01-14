@@ -1,8 +1,8 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cmath>
 
 #ifndef __TBS_CURVE_DEF__
 #define __TBS_CURVE_DEF__
@@ -99,28 +99,28 @@ public:
   //printf("%d %d %f %f\n",i,ip,temp,temp1);
   };*/
 
-  void bendCost3D(int i, int ip, vcl_vector<floatType> &a)
+  void bendCost3D(int i, int ip, std::vector<floatType> &a)
   {
     double dphi = _phi[i] - _phi[ip];
-    double sinphi = vcl_sin(_phi[i]);
+    double sinphi = std::sin(_phi[i]);
     double dtheta = _theta[i] - _theta[ip];
-    double cost = vcl_sqrt(vcl_pow(dphi,2.0) + vcl_pow(sinphi,2.0) * vcl_pow(dtheta,2.0));
+    double cost = std::sqrt(std::pow(dphi,2.0) + std::pow(sinphi,2.0) * std::pow(dtheta,2.0));
     a.push_back(cost);
   }
 
-  void twistCost3D(int i, int ip, vcl_vector<floatType> &a)
+  void twistCost3D(int i, int ip, std::vector<floatType> &a)
   {
-    double cosphi = vcl_cos(_phi[i]);
-    double sinphi = vcl_sin(_phi[i]);
+    double cosphi = std::cos(_phi[i]);
+    double sinphi = std::sin(_phi[i]);
     double dtheta = _theta[i] - _theta[ip];
     double dphi = _phi[i] - _phi[ip];
     double ddphi = _dphi[i] - _dphi[ip];
     double ddtheta = _dtheta[i] - _dtheta[ip];
 
-    double temp1 = 2 * cosphi * dtheta * vcl_pow(dphi,2.0);
+    double temp1 = 2 * cosphi * dtheta * std::pow(dphi,2.0);
     double temp2 = sinphi * dphi * ddtheta;
-    double temp3 = sinphi * dtheta * (-ddphi + sinphi*cosphi*vcl_pow(dtheta,2.0));
-    double temp4 = vcl_pow(dphi,2.0) + vcl_pow(sinphi,2.0) * vcl_pow(dtheta,2.0);
+    double temp3 = sinphi * dtheta * (-ddphi + sinphi*cosphi*std::pow(dtheta,2.0));
+    double temp4 = std::pow(dphi,2.0) + std::pow(sinphi,2.0) * std::pow(dtheta,2.0);
 
     double cost = 0;
     if(temp4 != 0)

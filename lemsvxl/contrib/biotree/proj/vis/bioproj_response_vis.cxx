@@ -57,31 +57,31 @@ int main(int argc, char** argv)
   double intensity;
   double intensity1, intensity2, intensity3;
 
-  vcl_vector<double> field;
+  std::vector<double> field;
   if(strcmp(argv[1], "combined") == 0)
   {
-    vcl_string fnamebase = argv[2];
-    vcl_string fname1 = fnamebase + "_x.txt";
-    vcl_string fname2 = fnamebase + "_y.txt";
-    vcl_string fname3 = fnamebase + "_z.txt";
+    std::string fnamebase = argv[2];
+    std::string fname1 = fnamebase + "_x.txt";
+    std::string fname2 = fnamebase + "_y.txt";
+    std::string fname3 = fnamebase + "_z.txt";
 
-    FILE *fp1 = vcl_fopen(fname1.c_str(),"r");
-    FILE *fp2 = vcl_fopen(fname2.c_str(),"r");
-    FILE *fp3 = vcl_fopen(fname3.c_str(),"r");
-    vcl_fscanf(fp1, "%d %d %d", &dimx1, &dimy1, &dimz1);
-    vcl_fscanf(fp2, "%d %d %d", &dimx2, &dimy2, &dimz2);
-    vcl_fscanf(fp3, "%d %d %d", &dimx3, &dimy3, &dimz3);
+    FILE *fp1 = std::fopen(fname1.c_str(),"r");
+    FILE *fp2 = std::fopen(fname2.c_str(),"r");
+    FILE *fp3 = std::fopen(fname3.c_str(),"r");
+    std::fscanf(fp1, "%d %d %d", &dimx1, &dimy1, &dimz1);
+    std::fscanf(fp2, "%d %d %d", &dimx2, &dimy2, &dimz2);
+    std::fscanf(fp3, "%d %d %d", &dimx3, &dimy3, &dimz3);
 
     int index=0;
     for(int k=0;k<dimz1;k++) {
-      vcl_cout << k << vcl_endl;
+      std::cout << k << std::endl;
       for(int j=0;j<dimy1;j++) {
         for(int i=0;i<dimx1;i++) {
-          vcl_fscanf(fp1,"%lf ", &intensity1);
-          vcl_fscanf(fp2,"%lf ", &intensity2);
-          vcl_fscanf(fp3,"%lf ", &intensity3);
-          intensity = vcl_sqrt(vcl_pow(intensity1, 2.0) + vcl_pow(intensity2, 2.0) + vcl_pow(intensity3, 2.0));
-          //        intensity = vcl_fabs(intensity3);
+          std::fscanf(fp1,"%lf ", &intensity1);
+          std::fscanf(fp2,"%lf ", &intensity2);
+          std::fscanf(fp3,"%lf ", &intensity3);
+          intensity = std::sqrt(std::pow(intensity1, 2.0) + std::pow(intensity2, 2.0) + std::pow(intensity3, 2.0));
+          //        intensity = std::fabs(intensity3);
           if(i>=marginx && i<dimx1-marginx && j>=marginy && j<dimy1-marginy && k>=marginz && k<dimz1-marginz )
           {
             if(max_intensity < intensity)
@@ -93,26 +93,26 @@ int main(int argc, char** argv)
         }
       }
     }
-    vcl_fclose(fp1);
-    vcl_fclose(fp2);
-    vcl_fclose(fp3);
+    std::fclose(fp1);
+    std::fclose(fp2);
+    std::fclose(fp3);
   }
   else if(strcmp(argv[1],"single") == 0)
   {
-    vcl_string fname = argv[2];
+    std::string fname = argv[2];
 
-    FILE *fp = vcl_fopen(fname.c_str(),"r");
-    vcl_fscanf(fp, "%d %d %d", &dimx1, &dimy1, &dimz1);
+    FILE *fp = std::fopen(fname.c_str(),"r");
+    std::fscanf(fp, "%d %d %d", &dimx1, &dimy1, &dimz1);
 
     int index=0;
     for(int k=0;k<dimz1;k++) {
-      vcl_cout << k << vcl_endl;
+      std::cout << k << std::endl;
       for(int j=0;j<dimy1;j++) {
         for(int i=0;i<dimx1;i++) {
-          vcl_fscanf(fp,"%lf ", &intensity);
-          intensity = vcl_fabs(intensity);
+          std::fscanf(fp,"%lf ", &intensity);
+          intensity = std::fabs(intensity);
 //          int ridge;
-//          vcl_fscanf(fp,"%d ", &ridge);
+//          std::fscanf(fp,"%d ", &ridge);
 //          if(ridge == 1)
 //            intensity = double(ridge);
 //          else
@@ -128,19 +128,19 @@ int main(int argc, char** argv)
         }
       }
     }
-    vcl_fclose(fp);
+    std::fclose(fp);
   }
   else
-    vcl_cout << "First argument not recognized..." << vcl_endl;
+    std::cout << "First argument not recognized..." << std::endl;
 
-  vcl_cout << "Max value: " << max_intensity << vcl_endl;
+  std::cout << "Max value: " << max_intensity << std::endl;
 
   const size_t blocksize = field.size();
   uint8_t * voxels = new uint8_t[blocksize];
 
   (void)memset(voxels, 0, blocksize);
 
-  vcl_cout << field.size() << vcl_endl;
+  std::cout << field.size() << std::endl;
   for(unsigned long i = 0; i < blocksize; i++)
     voxels[i] = static_cast<uint8_t>((field[i] - min_intensity)*255/(max_intensity - min_intensity));
 

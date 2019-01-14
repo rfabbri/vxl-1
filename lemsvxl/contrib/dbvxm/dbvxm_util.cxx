@@ -1,11 +1,11 @@
 
 #include "dbvxm_util.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <string>
+#include <vector>
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/vpgl_local_rational_camera.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
@@ -26,8 +26,8 @@ void dbvxm_util::compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvxm_
     vgl_point_3d<float> grid_corner = grid_corner_bottom + vgl_vector_3d<float>(0.0f,0.0f,vox_length*(grid_size.z() - 0.5f));
 
 
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_img;
-    vcl_vector<vgl_homg_point_2d<double> > voxel_corners_vox;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_img;
+    std::vector<vgl_homg_point_2d<double> > voxel_corners_vox;
 
     vgl_vector_3d<float> x_step(vox_length,0,0);
     vgl_vector_3d<float> y_step(0,vox_length,0);
@@ -60,20 +60,20 @@ void dbvxm_util::compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvxm_
 
     vgl_h_matrix_2d_compute_linear comp_4pt;
     if (!comp_4pt.compute(voxel_corners_img,voxel_corners_vox, H_image_to_plane)) {
-      vcl_cerr << "ERROR computing homography from image to voxel slice. " << vcl_endl;
+      std::cerr << "ERROR computing homography from image to voxel slice. " << std::endl;
     }
     if (!comp_4pt.compute(voxel_corners_vox,voxel_corners_img, H_plane_to_image)) {
-      vcl_cerr << "ERROR computing homography from voxel slice to image. " << vcl_endl;
+      std::cerr << "ERROR computing homography from voxel slice to image. " << std::endl;
     }
     return;
 }
 
 
-//bool dbvxm_util::read_cameras(const vcl_string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
+//bool dbvxm_util::read_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 //{
-//  vcl_ifstream file_inp(filename.c_str());
+//  std::ifstream file_inp(filename.c_str());
 //  if (!file_inp.good()) {
-//    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+//    std::cerr << "error opening file "<< filename <<std::endl;
 //    return false;
 //  }
 //  unsigned ncameras;
@@ -95,22 +95,22 @@ void dbvxm_util::compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvxm_
 //}
 //
 //
-//bool dbvxm_util::write_cameras(const vcl_string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
+//bool dbvxm_util::write_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts)
 //{
-//  vcl_ofstream file_out(filename.c_str());
+//  std::ofstream file_out(filename.c_str());
 //  if (!file_out.good()) {
-//    vcl_cerr << "error opening file "<< filename <<vcl_endl;
+//    std::cerr << "error opening file "<< filename <<std::endl;
 //    return false;
 //  }
 //  unsigned ncameras = Ks.size();
 //
-//  file_out << ncameras << vcl_endl << vcl_endl;
+//  file_out << ncameras << std::endl << std::endl;
 //  for (unsigned i=0; i < ncameras; i++) {
 //
-//    file_out << Ks[i] << vcl_endl;
-//    file_out << Rs[i] << vcl_endl;
-//    file_out << Ts[i] << vcl_endl;
-//    file_out << vcl_endl;
+//    file_out << Ks[i] << std::endl;
+//    file_out << Rs[i] << std::endl;
+//    file_out << Ts[i] << std::endl;
+//    file_out << std::endl;
 //  }
 //  file_out.close();
 //
@@ -148,12 +148,12 @@ void dbvxm_util::bilinear_weights(vgl_h_matrix_2d<double> invH, unsigned nx_out,
       float pix_in_x = pix_in_homg[0][n] / pix_in_homg[2][n];
       float pix_in_y = pix_in_homg[1][n] / pix_in_homg[2][n];
       // calculate weights and pixel values
-      unsigned x0 = (unsigned)vcl_floor(pix_in_x);
-      unsigned x1 = (unsigned)vcl_ceil(pix_in_x);
+      unsigned x0 = (unsigned)std::floor(pix_in_x);
+      unsigned x1 = (unsigned)std::ceil(pix_in_x);
       float x0_weight = (float)(x1 - pix_in_x);
       float x1_weight = (float)(1.0f - x0_weight);
-      unsigned y0 = (unsigned)vcl_floor(pix_in_y);
-      unsigned y1 = (unsigned)vcl_ceil(pix_in_y);
+      unsigned y0 = (unsigned)std::floor(pix_in_y);
+      unsigned y1 = (unsigned)std::ceil(pix_in_y);
       float y0_weight = (float)(y1 - pix_in_y);
       float y1_weight = (float)(1.0f - y0_weight);
       xvals.set_column(n,vnl_vector_fixed<unsigned,4>(x0,x0,x1,x1));
@@ -168,8 +168,8 @@ void dbvxm_util::bilinear_weights(vgl_h_matrix_2d<double> invH, unsigned nx_out,
 void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, float stdy)
 {
     if ( (stdx < 0) || (stdy < 0) ) {
-        vcl_cerr << "error: smooth_gaussian called with negative std. deviation!\n"
-            << "stdx = " << stdx << "  stdy = " << stdy << vcl_endl;
+        std::cerr << "error: smooth_gaussian called with negative std. deviation!\n"
+            << "stdx = " << stdx << "  stdy = " << stdy << std::endl;
         return;
     }
 
@@ -183,7 +183,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
 
     // fill in kernel
     for (unsigned i=0; i<kernel_size_x; ++i) {
-        kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * vcl_exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
+        kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * std::exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
     }
     // normalize kernel in case taps dont sum to exactly one
     kernel_1dx = kernel_1dx / kernel_1dx.sum();
@@ -193,12 +193,12 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
     vnl_vector<float> kernel_1dy(kernel_size_y);
     // fill in kernel
     for (unsigned i=0; i<kernel_size_y; ++i) {
-        kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * vcl_exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
+        kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * std::exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
     }
     // normalize kernel in case taps dont sum to exactly one
     kernel_1dy = kernel_1dy / kernel_1dy.sum();
 
-    //vcl_cout << "kernel co-eff sum: " << kernel_1dy.sum() << vcl_endl;
+    //std::cout << "kernel co-eff sum: " << kernel_1dy.sum() << std::endl;
 
     if (image->pixel_format() == VIL_PIXEL_FORMAT_BYTE)
     {
@@ -216,7 +216,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=1; k<kernel_size_x; ++k) {
                         sum += (*img_view)(x+k,y) * kernel_1dx[k];
                     }
-                    image_work(x+kernel_radius_x,y) = vcl_ceil(sum);
+                    image_work(x+kernel_radius_x,y) = std::ceil(sum);
                 }
                 // left edge
                 for (unsigned x=0; x<kernel_radius_x; ++x) {
@@ -224,7 +224,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=kernel_radius_x - x; k<kernel_size_x; ++k) {
                         sum += (*img_view)(x+k-kernel_radius_x,y) * kernel_1dx[k];
                     }
-                    image_work(x,y) = vcl_ceil(sum);
+                    image_work(x,y) = std::ceil(sum);
                 }
                 // right edge
                 for (unsigned x=image->ni() - kernel_radius_x; x<image->ni(); ++x) {
@@ -232,7 +232,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=0; k<(image->ni() - x + kernel_radius_x); ++k) {
                         sum += (*img_view)(x+k-kernel_radius_x,y) * kernel_1dx[k];
                     }
-                    image_work(x,y) = vcl_ceil(sum);
+                    image_work(x,y) = std::ceil(sum);
                 }
             }
         } else {
@@ -248,7 +248,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=1; k<kernel_size_y; ++k) {
                         sum += image_work(x,y+k) * kernel_1dy[k];
                     }
-                    (*img_view)(x,y+kernel_radius_y) = vcl_ceil(sum);
+                    (*img_view)(x,y+kernel_radius_y) = std::ceil(sum);
                 }
                 // top edge
                 for (unsigned y=0; y<kernel_radius_y; ++y) {
@@ -256,7 +256,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=kernel_radius_y - y; k<kernel_size_y; ++k) {
                         sum += image_work(x,y+k-kernel_radius_y) * kernel_1dy[k];
                     }
-                    (*img_view)(x,y) = vcl_ceil(sum);
+                    (*img_view)(x,y) = std::ceil(sum);
                 }
                 // bottom edge
                 for (unsigned y=image->nj()-kernel_radius_y; y<image->nj(); ++y) {
@@ -264,7 +264,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
                     for (unsigned k=0; k<(image->nj() - y + kernel_radius_y); ++k) {
                         sum += image_work(x,y+k-kernel_radius_y) * kernel_1dy[k];
                     }
-                    (*img_view)(x,y) = vcl_ceil(sum);
+                    (*img_view)(x,y) = std::ceil(sum);
                 }
             }
         }else {
@@ -346,7 +346,7 @@ void dbvxm_util::smooth_gaussian(vil_image_view_base_sptr image, float stdx, flo
 
     }
      else
-      vcl_cerr << "error: failed to cast image_view_base to image_view\n";
+      std::cerr << "error: failed to cast image_view_base to image_view\n";
     return;
 }
 
@@ -368,7 +368,7 @@ vil_image_view_base_sptr dbvxm_util::downsample_image_by_two(vil_image_view_base
     
 
 
-    vil_image_view<float> output((int)vcl_floor((float)img_view_float->ni()/2),(int)vcl_floor((float)img_view_float->nj()/2));
+    vil_image_view<float> output((int)std::floor((float)img_view_float->ni()/2),(int)std::floor((float)img_view_float->nj()/2));
 
     //vil_image_view<unsigned char>* img_view_out;
     /*= dbvxm_util::half_resolution(*img_view_float,0.359375f);
@@ -390,7 +390,7 @@ vil_image_view_base_sptr dbvxm_util::downsample_image_by_two(vil_image_view_base
             else
                 (*img_view_out)(i,j)=static_cast<vxl_byte>(output(i,j)+0.5);
 
-            //vcl_cout<<(*img_view_out)(i,j);
+            //std::cout<<(*img_view_out)(i,j);
         }
     ////vil_convert_stretch_range_limited<float>(output,*img_view_out,min_b,max_b);
     vil_image_view_base_sptr return_img=img_view_out;
@@ -504,11 +504,11 @@ vpgl_camera_double_sptr dbvxm_util::downsample_camera(vpgl_camera_double_sptr ca
         vpgl_local_rational_camera<double>* new_rat_camera=new vpgl_local_rational_camera<double>(*rat_camera);
         double u_s,v_s;
         rat_camera->image_scale(u_s,v_s);
-        new_rat_camera->set_image_scale(u_s/vcl_pow(2.0,scale),v_s/vcl_pow(2.0,scale));
+        new_rat_camera->set_image_scale(u_s/std::pow(2.0,scale),v_s/std::pow(2.0,scale));
 
         double u_off,v_off;
         rat_camera->image_offset(u_off,v_off);
-        new_rat_camera->set_image_offset(u_off/vcl_pow(2.0,scale),v_off/vcl_pow(2.0,scale));
+        new_rat_camera->set_image_offset(u_off/std::pow(2.0,scale),v_off/std::pow(2.0,scale));
 
         return new_rat_camera;
 
@@ -529,8 +529,8 @@ vpgl_camera_double_sptr dbvxm_util::downsample_persp_camera(vpgl_camera_double_s
         vnl_matrix_fixed<double,3,4> camera_matrix = persp_camera->get_matrix();
         vnl_matrix_fixed<double,3,3> scale_matrix;
         scale_matrix.fill(0.0);
-        scale_matrix.put(0,0,1/vcl_pow(2.0,scale));
-        scale_matrix.put(1,1,1/vcl_pow(2.0,scale));
+        scale_matrix.put(0,0,1/std::pow(2.0,scale));
+        scale_matrix.put(1,1,1/std::pow(2.0,scale));
         scale_matrix.put(2,2,1.0);
 
         vnl_matrix_fixed<double,3,4> new_camera_matrix = scale_matrix*camera_matrix;

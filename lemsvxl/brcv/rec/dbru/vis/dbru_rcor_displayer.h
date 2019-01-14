@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -25,7 +25,7 @@ public:
   dbru_rcor_displayer(){}
 
   //: Return type string
-  virtual vcl_string type() const { return "region_cor"; }
+  virtual std::string type() const { return "region_cor"; }
 
   //: Create a tableau if the storage object is of type image
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

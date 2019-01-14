@@ -11,7 +11,7 @@ dbseg_graph_process::dbseg_graph_process() : bpro1_process()
       !parameters()->add( "k" , "-k" , (float)3   ) ||
       !parameters()->add( "Min Size"   , "-min_size"    , (int)7 )      
     ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -31,7 +31,7 @@ dbseg_graph_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_graph_process::name()
+std::string dbseg_graph_process::name()
 {
   return "Graph Segmentation";
 }
@@ -46,10 +46,10 @@ dbseg_graph_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_graph_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
 
@@ -58,10 +58,10 @@ dbseg_graph_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "image" );
   
@@ -90,7 +90,7 @@ bool
 dbseg_graph_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_graph_process::execute() - "
+    std::cout << "In dbseg_graph_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -151,7 +151,7 @@ dbseg_graph_process::execute()
     segmented_storage->set_image(resource);
 
 
-    vcl_cout << "Graph segmentation completed. " << regionCount << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << vcl_endl; 
+    std::cout << "Graph segmentation completed. " << regionCount << " regions created.  Time elapsed: " << t.real()/1000 << " seconds." << std::endl; 
     output_data_[0].push_back(segmented_storage);
 
     return true;

@@ -3,7 +3,7 @@
 // \file
 
 #include "dbdet_keypoint.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
@@ -33,9 +33,9 @@ dbdet_keypoint::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_keypoint::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_keypoint::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -60,7 +60,7 @@ dbdet_keypoint::clone() const
 
 //: Print an ascii summary to the stream
 void
-dbdet_keypoint::print_summary(vcl_ostream &os) const
+dbdet_keypoint::print_summary(std::ostream &os) const
 {
   os << "dbdet_keypoint("<<x()<<", "<<y()<<")";
 }
@@ -84,7 +84,7 @@ void vsl_add_to_binary_loader(const dbdet_keypoint& k)
 
 //==============================================
 //: Stream summary output for base class pointer
-void vsl_print_summary(vcl_ostream& os,const dbdet_keypoint* k)
+void vsl_print_summary(std::ostream& os,const dbdet_keypoint* k)
 {
   if (k)
     k->print_summary(os);

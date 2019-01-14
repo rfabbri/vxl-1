@@ -90,7 +90,7 @@ int main(int argc, char** argv)
   han_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 1124, h = 900;
-  vcl_string title = "han GUI";
+  std::string title = "han GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis_manager::instance() );
   win->set_statusbar(true);

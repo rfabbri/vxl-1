@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -33,16 +33,16 @@
 //: Constructor
 dbdet_third_order_edge_detector_vxl_process::dbdet_third_order_edge_detector_vxl_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
 
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -56,7 +56,7 @@ dbdet_third_order_edge_detector_vxl_process::dbdet_third_order_edge_detector_vxl
       !parameters()->add( "Apply adaptive threshold "  , "-badap_thresh" , false ) ||
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -75,7 +75,7 @@ dbdet_third_order_edge_detector_vxl_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_third_order_edge_detector_vxl_process::name()
 {
   return "Third Order Edge Detector VXL";
@@ -98,18 +98,18 @@ dbdet_third_order_edge_detector_vxl_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_third_order_edge_detector_vxl_process::get_input_type()
+std::vector< std::string > dbdet_third_order_edge_detector_vxl_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_third_order_edge_detector_vxl_process::get_output_type()
+std::vector< std::string > dbdet_third_order_edge_detector_vxl_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -120,14 +120,14 @@ bool
 dbdet_third_order_edge_detector_vxl_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_third_order_edge_detector_vxl_process::execute() - not exactly one"
+    std::cout << "In dbdet_third_order_edge_detector_vxl_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Third_order edge detection VXL...";
-  vcl_cout.flush();
+  std::cout << "Third_order edge detection VXL...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -160,7 +160,7 @@ dbdet_third_order_edge_detector_vxl_process::execute()
    sdet_third_order_edge_det_params my_params(sigma, thresh, N, parabola_fit, grad_op, conv_algo, badap_thresh);
    sdet_third_order_edge_det my_det(my_params);
    my_det.apply(image_view);
-   vcl_vector<vdgl_edgel>& my_edgels = my_det.edgels();
+   std::vector<vdgl_edgel>& my_edgels = my_det.edgels();
 
    //Convert the edge vector to compatible edge map
    dbdet_edgemap_sptr edge_map;
@@ -168,7 +168,7 @@ dbdet_third_order_edge_detector_vxl_process::execute()
   
    for (unsigned i=0; i<my_edgels.size(); i++)
    {
-       dbdet_edgel* new_edgel = new dbdet_edgel(my_edgels[i].get_pt(), vcl_tan(my_edgels[i].get_theta()), my_edgels[i].get_grad()); 
+       dbdet_edgel* new_edgel = new dbdet_edgel(my_edgels[i].get_pt(), std::tan(my_edgels[i].get_theta()), my_edgels[i].get_grad()); 
        edge_map->insert(new_edgel);
    }
 
@@ -177,10 +177,10 @@ dbdet_third_order_edge_detector_vxl_process::execute()
   output_edgemap->set_edgemap(edge_map);
   output_data_[0].push_back(output_edgemap);
 
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+  std::cout << "done!" << std::endl;
+  std::cout << "#edgels = " << edge_map->num_edgels() << std::endl;
 
-  vcl_cout.flush();
+  std::cout.flush();
 
   return true;
 }

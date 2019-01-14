@@ -27,10 +27,10 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <utility>
 #include <assert.h>
 
 
@@ -45,7 +45,7 @@ public:
   //: Cost types at an edge 
   // first: contract cost of the edge
   // second: delete cost of the edge
-  typedef vcl_pair<float, float> dbskr_edge_info;
+  typedef std::pair<float, float> dbskr_edge_info;
 
 
   // Constructors / Destructors / Initializers----------------------------------
@@ -66,7 +66,7 @@ public:
   // in the same order as in "nodes_to_retain".
   // Each member of the inner vector corresponds to an edge incident at the node,
   // arranged counter-clockwise
-  bool acquire(vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > >& nodes);
+  bool acquire(std::vector< std::vector<std::pair<int, dbskr_edge_info> > >& nodes);
 
 
   // Virtual functions----------------------------------------------------------
@@ -130,14 +130,14 @@ public:
 
   //: Order of children of a dart is reverse of order in which the children appear in an Euler
   // string that omits the dart.  In other words, children appear left to right.
-  vcl_vector<int>& children(int dart) 
+  std::vector<int>& children(int dart) 
   { 
     assert((unsigned)dart<dart_cnt_); 
     return children_[dart]; 
   }
   
   //: given a NODE return its out darts, i.e. the darts whose tail is this node
-  vcl_vector<int>& out_darts(int node) 
+  std::vector<int>& out_darts(int node) 
   { 
     assert((unsigned)node<node_cnt_); 
     return out_darts_[node]; 
@@ -199,33 +199,33 @@ public:
 
   //: given a list of darts pointing down, set up flags for these darts and their mates, 
   //  and the subtrees they point to  
-  void set_up(vcl_vector<int>& down_darts);
+  void set_up(std::vector<int>& down_darts);
 
 
   //: given two darts d1 and d2, find the unique path in the rooted tree from d1 to d2
   //  return nodes in this path
   //  (if d2 is not a descendant of d1, return empty list)
-  vcl_vector<int> find_node_path(int d1, int d2);
+  std::vector<int> find_node_path(int d1, int d2);
 
   //: order the subproblems of a rooted tree (up flags are assumed to be set wrt the root)
   //  (this method is called for T1 in the algorithm)
-  vcl_vector<int> order_subproblems();
+  std::vector<int> order_subproblems();
 
   //: find a special order of subproblems of a tree with a fixed root 
   //  (this method is called for T2 in the algorithm)
   // this method also fills in the surrogate vector
-  vcl_vector<int> find_special_darts(vcl_vector<int>& root_ch);
+  std::vector<int> find_special_darts(std::vector<int>& root_ch);
 
   //: given two darts d1 and d2, find the unique path in the rooted tree from d1 to d2
   //  return darts in this path
   //  (if d2 is not a descendant of d1, return empty list)
-  vcl_vector<int>& get_dart_path(int d1, int d2);
+  std::vector<int>& get_dart_path(int d1, int d2);
 
   //: get dart path from end nodes  (only used in table writing part for debugging!)
-  vcl_vector<int>& get_dart_path_from_nodes(int node1, int node2);
+  std::vector<int>& get_dart_path_from_nodes(int node1, int node2);
 
   //: given a NODE find its out darts, i.e. the darts whose tail is this node
-  vcl_vector<int> find_out_darts(int node);
+  std::vector<int> find_out_darts(int node);
 
 
   // Cost Utilities-------------------------------------------------------------
@@ -239,10 +239,10 @@ public:
 
 
   //: find the total splice cost of branches if this path's nodes are merged
-  float get_splice_cost_for_merge(int td, int d, vcl_vector<bool>& used_darts);
+  float get_splice_cost_for_merge(int td, int d, std::vector<bool>& used_darts);
 
   //: get the total contract cost for the unused portions of the tree
-  float get_contract_cost(vcl_vector<bool>& used_darts);
+  float get_contract_cost(std::vector<bool>& used_darts);
 
 
   // Support functions----------------------------------------------------------
@@ -252,13 +252,13 @@ protected:
 
   
   //:
-  void helper(const vcl_vector<int>& child_list, vcl_vector<int>& sofar);
+  void helper(const std::vector<int>& child_list, std::vector<int>& sofar);
 
   //:
-  void siblings(const vcl_vector<int>& current_list, vcl_vector<int>& sofar);
+  void siblings(const std::vector<int>& current_list, std::vector<int>& sofar);
 
   //:
-  void left_path(int start, const vcl_vector<int>& current_list, vcl_vector<int>& sofar);
+  void left_path(int start, const std::vector<int>& current_list, std::vector<int>& sofar);
 
 
   // Cost related ///////////////////////////////
@@ -275,27 +275,27 @@ protected:
   // Graph variables ///////////////////
   unsigned dart_cnt_;
   unsigned node_cnt_;
-  vcl_vector<int> mate_;
-  vcl_vector<int> head_;
-  vcl_vector<int> tail_;
-  vcl_vector<int> surrogate_;
-  vcl_vector<bool> leaf_;
-  vcl_vector<bool> up_;
+  std::vector<int> mate_;
+  std::vector<int> head_;
+  std::vector<int> tail_;
+  std::vector<int> surrogate_;
+  std::vector<bool> leaf_;
+  std::vector<bool> up_;
 
   //: list of children for the darts
-  vcl_vector<vcl_vector<int> > children_;
+  std::vector<std::vector<int> > children_;
 
   //: cache out darts of each node
-  vcl_vector<vcl_vector<int> > out_darts_;
+  std::vector<std::vector<int> > out_darts_;
 
   // Cost variables ///////////////////////
 
   //: A list describing various costs associated with each dart
   // For now, only two: contract and delete
-  vcl_vector<dbskr_edge_info> info_;
+  std::vector<dbskr_edge_info> info_;
 
   //:
-  vcl_vector<float> subtree_delete_table_;
+  std::vector<float> subtree_delete_table_;
 
   
   //: total splice cost of the tree
@@ -304,7 +304,7 @@ protected:
   // Cache data /////////////////
 
   //: cache the unique path between dart pairs once it is computed
-  vbl_array_2d<vcl_vector<int> > dart_paths_;
+  vbl_array_2d<std::vector<int> > dart_paths_;
 };
 
 #endif // dbskr_directed_tree_h_

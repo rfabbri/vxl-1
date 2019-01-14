@@ -1,7 +1,7 @@
 #include"smw_graph.h"
 #include<vpdl/vpdl_gaussian.h>
 #include<testlib/testlib_test.h>
-#include<vcl_cstdlib.h>
+#include<cstdlib>
 #include<time.h>
 static void test_smw_graph()
 {
@@ -31,10 +31,10 @@ static void test_smw_graph()
     smw_graph test_graph;
     for(unsigned i = 0; i < observations.size(); ++i)
     {
-        vcl_cout << "======== " << i + 1 << "th observation ======="
-                 << vcl_endl;
-        vcl_cout << "updating graph with observation: "
-                 << observations[i] << vcl_endl;
+        std::cout << "======== " << i + 1 << "th observation ======="
+                 << std::endl;
+        std::cout << "updating graph with observation: "
+                 << observations[i] << std::endl;
         test_graph.update(observations[i]);
         test_graph.print_full_graph();
     }

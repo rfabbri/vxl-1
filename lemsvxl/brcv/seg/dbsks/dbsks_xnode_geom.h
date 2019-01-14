@@ -15,7 +15,7 @@
 
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // =============================================================================
 // dbsks_xnode_geom
@@ -42,7 +42,7 @@ public:
   // I/O =======================================================================
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
   // Member variables
 public:

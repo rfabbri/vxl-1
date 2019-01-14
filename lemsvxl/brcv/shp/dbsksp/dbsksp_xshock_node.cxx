@@ -4,11 +4,11 @@
 // \file
 
 #include "dbsksp_xshock_node.h"
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <algorithm>
+#include <utility>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_set.h>
+#include <set>
 #include <dbsksp/dbsksp_xshock_edge.h>
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <bnld/bnld_angle.h>
@@ -28,7 +28,7 @@
 dbsksp_xshock_node_descriptor* dbsksp_xshock_node::
 descriptor(const E_sptr& e)
 {
-  vcl_map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
+  std::map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
     this->descriptor_map().find(e);
   if (it == this->descriptor_map().end())
     return 0;
@@ -42,7 +42,7 @@ descriptor(const E_sptr& e)
 const dbsksp_xshock_node_descriptor* dbsksp_xshock_node::
 descriptor(const E_sptr& e) const
 {
-  vcl_map<E_sptr, dbsksp_xshock_node_descriptor >::const_iterator it = 
+  std::map<E_sptr, dbsksp_xshock_node_descriptor >::const_iterator it = 
     this->descriptor_map().find(e);
   if (it == this->descriptor_map().end())
     return 0;
@@ -67,7 +67,7 @@ set_pt(const vgl_point_2d<double >& pt)
   this->pt_ = pt;
   
   // update the point in all the descriptors as well
-  for (vcl_map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
+  for (std::map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
     this->descriptor_map().begin(); it != this->descriptor_map().end(); ++it)
   {
     it->second.pt_ = pt;
@@ -93,7 +93,7 @@ set_radius(double radius)
 {
   this->radius_ = radius;
   // update the point in all the descriptors as well
-  for (vcl_map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
+  for (std::map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it = 
     this->descriptor_map().begin(); it != this->descriptor_map().end(); ++it)
   {
     it->second.radius_ = radius;
@@ -116,7 +116,7 @@ remove_shock_edge(const E_sptr& e)
     assert(count == 1);
     if (count != 1)
     {
-      vcl_cerr << "ERROR: Inconsistency - More than one descriptor for one edge.";
+      std::cerr << "ERROR: Inconsistency - More than one descriptor for one edge.";
       return false;
     }
     return true;
@@ -160,8 +160,8 @@ replace_shock_edge(const E_sptr& old_xe, const E_sptr& new_xe)
   assert(count == 1);
 
   // ii. add the new descriptor
-  vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_node_descriptor >::iterator mit = 
-    this->descriptor_map_.insert(vcl_make_pair(new_xe, temp_xdesc)).first;
+  std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_node_descriptor >::iterator mit = 
+    this->descriptor_map_.insert(std::make_pair(new_xe, temp_xdesc)).first;
   mit->second = temp_xdesc;
 
   return &mit->second;
@@ -192,11 +192,11 @@ insert_shock_edge(const E_sptr& new_edge, const E_sptr& ref_edge)
   // find location of the ref_edge in the edge list
   if (ref_edge)
   {
-    vcl_list<E_sptr >::iterator eit = vcl_find(this->in_edges_.begin(),
+    std::list<E_sptr >::iterator eit = std::find(this->in_edges_.begin(),
       this->in_edges_.end(), ref_edge);
     if (eit == this->in_edges_.end())
     {
-      vcl_cerr << "ERROR: in dbsksp_shock_node::insert_edge(...)\n" 
+      std::cerr << "ERROR: in dbsksp_shock_node::insert_edge(...)\n" 
         << "reference edge is not incident to this node.\n";
       return 0;
     }
@@ -209,8 +209,8 @@ insert_shock_edge(const E_sptr& new_edge, const E_sptr& ref_edge)
     
   // insert the node descriptor
   dbsksp_xshock_node_descriptor descriptor;
-  vcl_map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it =
-    this->descriptor_map_.insert(vcl_make_pair(new_edge, descriptor)).first;
+  std::map<E_sptr, dbsksp_xshock_node_descriptor >::iterator it =
+    this->descriptor_map_.insert(std::make_pair(new_edge, descriptor)).first;
   return &it->second;
 }
 
@@ -290,7 +290,7 @@ rotate_tangent(const E_sptr& xe, double ds)
   }
   else
   {
-    vcl_cerr << "ERROR: rotate_tangent can't be applied to node degree "
+    std::cerr << "ERROR: rotate_tangent can't be applied to node degree "
       << this->degree() << ".\n";
     return false;
   }
@@ -311,7 +311,7 @@ void dbsksp_xshock_node::
 order_edge_list_by_shock_tangent()
 {
   // collect list of shock tangents
-  vcl_multimap<double, dbsksp_xshock_edge_sptr > map_angle_to_edge;
+  std::multimap<double, dbsksp_xshock_edge_sptr > map_angle_to_edge;
   for (dbsksp_xshock_node::edge_iterator eit = this->edges_begin(); eit !=
     this->edges_end(); ++eit)
   {
@@ -320,12 +320,12 @@ order_edge_list_by_shock_tangent()
 
     // tangent angle
     double angle = bnld_angle_0to2pi(xdesc->shock_tangent_angle());
-    map_angle_to_edge.insert(vcl_make_pair(angle, xe));
+    map_angle_to_edge.insert(std::make_pair(angle, xe));
   }
 
   // put the angle back in
   this->edge_list().clear();
-  for (vcl_multimap<double, dbsksp_xshock_edge_sptr >::iterator iter =
+  for (std::multimap<double, dbsksp_xshock_edge_sptr >::iterator iter =
     map_angle_to_edge.begin(); iter != map_angle_to_edge.end(); ++iter)
   {
     this->edge_list().push_back(iter->second);
@@ -340,8 +340,8 @@ order_edge_list_by_shock_tangent()
 
 // -----------------------------------------------------------------------------
 //: print info of the dbskpoint to an output stream
-vcl_ostream& dbsksp_xshock_node::
-print(vcl_ostream & os)
+std::ostream& dbsksp_xshock_node::
+print(std::ostream & os)
 {
   os << "\n<<\n"
     << "type[ " << this->is_a() << " ] id[ " << this->id() << " ]\n"

@@ -6,8 +6,8 @@
 
 void mw_point_matcher::
 sel_geometry_costs(
-    const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
-    const vcl_vector<dbdet_sel_sptr> &sel_,
+    const std::vector<std::vector< vsol_point_2d_sptr > > &points_,
+    const std::vector<dbdet_sel_sptr> &sel_,
     bmcsd_discrete_corresp *corr,
     unsigned iv1, unsigned iv2 )
 {
@@ -18,7 +18,7 @@ sel_geometry_costs(
   unsigned  long n_no_quads_1=0, n_no_quads_2=0, n_no_bundles_1=0, n_no_bundles_2=0;
   for (unsigned i = 0; i < points_[iv1].size(); ++i) {
     // run through list of candidates
-    for ( vcl_list<mw_attributed_point>::iterator itr= corr->corresp_[i].begin();
+    for ( std::list<mw_attributed_point>::iterator itr= corr->corresp_[i].begin();
           itr != corr->corresp_[i].end(); ++itr) {
 
       vsol_point_2d_sptr p1 = points_[iv1][i];
@@ -55,30 +55,30 @@ sel_geometry_costs(
           case FAIL_NO_CURVS_P2: ++n_no_quads_2; break;
           case FAIL_NO_BUNDLE_P1: ++n_no_bundles_1; break;
           case FAIL_NO_BUNDLE_P2: ++n_no_bundles_2; break;
-          case FAIL_UNDEFINED: vcl_cout << "Warning: Reason undefined\n";
+          case FAIL_UNDEFINED: std::cout << "Warning: Reason undefined\n";
                                break;
           default: break;
         }
         if (n_fail < 3) {
-        vcl_cout << "SEL geometry constraint failed for hypothesis (" << 
-          i << ", " << itr->pt_ << ")" << vcl_endl;
-        vcl_cout << "n_no_quads_1: " << n_no_quads_1 << "\tn_no_quads_2: " << n_no_quads_2 << vcl_endl;
-        vcl_cout << "n_no_bundles_1: " << n_no_bundles_1 << "\tn_no_bundles_2: " << n_no_bundles_2 << vcl_endl;
+        std::cout << "SEL geometry constraint failed for hypothesis (" << 
+          i << ", " << itr->pt_ << ")" << std::endl;
+        std::cout << "n_no_quads_1: " << n_no_quads_1 << "\tn_no_quads_2: " << n_no_quads_2 << std::endl;
+        std::cout << "n_no_bundles_1: " << n_no_bundles_1 << "\tn_no_bundles_2: " << n_no_bundles_2 << std::endl;
         }
       }
     }
 
     if (i%250 == 0) {
-      vcl_cout << "Processed " <<  100*(float)i/(float)points_[iv1].size() << "% (" << i << " out of " << points_[iv1].size() << ")" << vcl_endl;
-      vcl_cout << "SEL geometry constraint failed for " << 100*(float)n_fail/n_corr << "% correspondences so far processed (" << n_fail << " out of " << n_corr <<  ")\n";
-      vcl_cout << "\t Failure reasons:\n\t\t" << 
+      std::cout << "Processed " <<  100*(float)i/(float)points_[iv1].size() << "% (" << i << " out of " << points_[iv1].size() << ")" << std::endl;
+      std::cout << "SEL geometry constraint failed for " << 100*(float)n_fail/n_corr << "% correspondences so far processed (" << n_fail << " out of " << n_corr <<  ")\n";
+      std::cout << "\t Failure reasons:\n\t\t" << 
         "no quads 1: " << n_no_quads_1 << " (" << 100.0*(float)n_no_quads_1/(float)n_fail << "%) \n\t\t" <<
         "no quads 2: " << n_no_quads_2 << " (" << 100.0*(float)n_no_quads_2/(float)n_fail << "%) \n\t\t" <<
         "no quads 1+2: " << n_no_quads_1 + n_no_quads_2 << " (" << 100.0*(float)(n_no_quads_1+n_no_quads_2)/(float)n_fail << "%) \n\t\t" <<
         "no bundles 1: " << n_no_bundles_1 << " (" << 100.0*(float)n_no_bundles_1/(float)n_fail << "%) \n\t\t" <<
         "no bundles 2: " << n_no_bundles_2 << " (" << 100.0*(float)n_no_bundles_2/(float)n_fail << "%) \n\t\t" <<
         "no bundles 1+2: " << n_no_bundles_1 + n_no_bundles_2 << " (" << 100.0*(float)(n_no_bundles_1+n_no_bundles_2)/(float)n_fail << "%) \n\t\t" <<
-        "total failures due to no quads or no bundles (has to be equal fail number above) : " << n_no_quads_1 + n_no_quads_2 + n_no_bundles_1 + n_no_bundles_2 << vcl_endl;
+        "total failures due to no quads or no bundles (has to be equal fail number above) : " << n_no_quads_1 + n_no_quads_2 + n_no_bundles_1 + n_no_bundles_2 << std::endl;
     }
   }
 }
@@ -98,7 +98,7 @@ sel_geometry_match_cost(
 #if 0
   // XXX have to adapt code to use new SEL
   
-  double Gamma_3dot_min = vcl_numeric_limits<double>::infinity();
+  double Gamma_3dot_min = std::numeric_limits<double>::infinity();
   unsigned  cl = 2; bool valid_matching_curvelets_found=false;
 
 
@@ -123,17 +123,17 @@ sel_geometry_match_cost(
     if (!dont_even_try) {
       curvelet_list_const_iter it = e1->local_curvelets[cl].begin();
       for (; it != e1->local_curvelets[cl].end(); ++it) {
-//          vcl_cout << "   ==== Curvelet #" << n << " ====" << vcl_endl;
-//          vcl_cout << vcl_endl;
-//          vcl_cout << "#bundles: " << (*it)->curve_bundles.size() << vcl_endl;
-//            vcl_cout << " --- Bundle #" << i_cb << ":  ";
+//          std::cout << "   ==== Curvelet #" << n << " ====" << std::endl;
+//          std::cout << std::endl;
+//          std::cout << "#bundles: " << (*it)->curve_bundles.size() << std::endl;
+//            std::cout << " --- Bundle #" << i_cb << ":  ";
           if ( (*it)->curve_model && (*it)->ref_edgel->id == e1->id  ) {
             has_valid_bundle_1=true;
             //: Cast to ES_curve_model
 
             dbdet_ES_curve_model *crv_model1 = dynamic_cast<dbdet_ES_curve_model *> ((*it)->curve_model);
             if (!crv_model1) {
-              vcl_cerr << "Curve model must be Eulerspiral\n";
+              std::cerr << "Curve model must be Eulerspiral\n";
               abort();
             }
 
@@ -153,7 +153,7 @@ sel_geometry_match_cost(
 
                     dbdet_ES_curve_model *crv_model2 = dynamic_cast<dbdet_ES_curve_model *> ((*kit)->curve_model);
                     if (!crv_model2) {
-                      vcl_cerr << "Curve model must be Eulerspiral\n";
+                      std::cerr << "Curve model must be Eulerspiral\n";
                       abort();
                     }
 
@@ -189,7 +189,7 @@ sel_geometry_match_cost(
       }
     } // ! if !dont_even_try
     --cl;
-    valid_matching_curvelets_found = Gamma_3dot_min != vcl_numeric_limits<double>::infinity();
+    valid_matching_curvelets_found = Gamma_3dot_min != std::numeric_limits<double>::infinity();
   } // ! while curvelet level (trips, quads)
 
   *cost = Gamma_3dot_min;
@@ -200,7 +200,7 @@ sel_geometry_match_cost(
   }
 #endif
 
-  vcl_cerr << "Function code is being updated.\n";
+  std::cerr << "Function code is being updated.\n";
   abort();
   return false;
 }

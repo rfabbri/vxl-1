@@ -9,7 +9,7 @@
 // \author  Gamze Tunali
 // \date    April 20, 2006
 
-#include <vcl_string.h>
+#include <string>
 #include <vsl/vsl_binary_io.h>
 #include <vgl/vgl_box_3d.h>
 #include <vil/vil_save.h>
@@ -23,31 +23,31 @@
 ////#include <bil/bil_bounded_image_view.h>
 //#include <xscan/xscan_scan.h>
 
-int file_check(vcl_string logfile, vcl_string scanfile, vcl_string boxfile)
+int file_check(std::string logfile, std::string scanfile, std::string boxfile)
 {
     //file extension check
-    vcl_size_t dot_pos = logfile.find_first_of(".");
-    if(vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && vcl_strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
+    std::size_t dot_pos = logfile.find_first_of(".");
+    if(std::strcmp(logfile.substr(dot_pos+1, 3).data(), "log") != 0 && std::strcmp(logfile.substr(dot_pos+1, 3).data(), "LOG") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified log file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified log file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     dot_pos = scanfile.find_first_of(".");
-    if(vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && vcl_strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
+    if(std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "scn") != 0 && std::strcmp(scanfile.substr(dot_pos+1, 3).data(), "SCN") != 0)
     {
-      vcl_cout << "************************************************" << vcl_endl;
-      vcl_cout << "The specified scan file extension is not correct" << vcl_endl;
-      vcl_cout << "************************************************" << vcl_endl;
+      std::cout << "************************************************" << std::endl;
+      std::cout << "The specified scan file extension is not correct" << std::endl;
+      std::cout << "************************************************" << std::endl;
       return 1;
     }
     dot_pos = boxfile.find_first_of(".");
-    if(vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && vcl_strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
+    if(std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "bx3") != 0 && std::strcmp(boxfile.substr(dot_pos+1, 3).data(), "BX3") != 0)
     {
-      vcl_cout << "***********************************************" << vcl_endl;
-      vcl_cout << "The specified box file extension is not correct" << vcl_endl;
-      vcl_cout << "***********************************************" << vcl_endl;
+      std::cout << "***********************************************" << std::endl;
+      std::cout << "The specified box file extension is not correct" << std::endl;
+      std::cout << "***********************************************" << std::endl;
       return 1;
     }
     return 1;
@@ -55,89 +55,89 @@ int file_check(vcl_string logfile, vcl_string scanfile, vcl_string boxfile)
 
 int main(int argc, char** argv)
 {
-  vcl_string logfile="", scanfile="", boxfile="", outfile="";
+  std::string logfile="", scanfile="", boxfile="", outfile="";
 
   if (argc < 5) {
-    vcl_cerr << "Usage: " << argv[0] << " [-l logfile] [-s scanfile] [-b boxfile] [-o bin_output]" << vcl_endl;
+    std::cerr << "Usage: " << argv[0] << " [-l logfile] [-s scanfile] [-b boxfile] [-o bin_output]" << std::endl;
     return 1;
   }
 
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    if (arg == vcl_string ("-l")){
-      logfile = vcl_string(argv[++i]);
+    std::string arg (argv[i]);
+    if (arg == std::string ("-l")){
+      logfile = std::string(argv[++i]);
       if (strchr(argv[i],0x22)){
-        vcl_cerr << "quote start " << argv[i] << vcl_endl;
+        std::cerr << "quote start " << argv[i] << std::endl;
         int doneq =0;
         if (strchr(argv[i]+1,0x22))
-          vcl_cerr << "quote end " << argv[i] << vcl_endl;
+          std::cerr << "quote end " << argv[i] << std::endl;
         else do{
-          vcl_string arg (argv[++i]);
+          std::string arg (argv[++i]);
           logfile = logfile + " " + arg;
-          vcl_cerr << " arg in q " << arg << vcl_endl;
+          std::cerr << " arg in q " << arg << std::endl;
           if (strchr(argv[i],0x22)){
              doneq = 1;
-             vcl_cerr << "quote end " << argv[i] << vcl_endl;
+             std::cerr << "quote end " << argv[i] << std::endl;
           }
         }while ((doneq == 0) && (i < argc));
         logfile = logfile.substr(1, logfile.size()-2).data();
       }
     }
 
-    else  if (arg == vcl_string ("-s")) { 
-     scanfile = vcl_string(argv[++i]);
+    else  if (arg == std::string ("-s")) { 
+     scanfile = std::string(argv[++i]);
      if (strchr(argv[i],0x22)){
-        vcl_cerr << "quote start " << argv[i] << vcl_endl;
+        std::cerr << "quote start " << argv[i] << std::endl;
         int doneq =0;
         if (strchr(argv[i]+1,0x22))
-          vcl_cerr << "quote end " << argv[i] << vcl_endl;
+          std::cerr << "quote end " << argv[i] << std::endl;
         else do{
-          vcl_string arg (argv[++i]);
+          std::string arg (argv[++i]);
           scanfile = scanfile + " " + arg;
-          vcl_cerr << " arg in q " << arg << vcl_endl;
+          std::cerr << " arg in q " << arg << std::endl;
           if (strchr(argv[i],0x22)){
              doneq = 1;
-             vcl_cerr << "quote end " << argv[i] << vcl_endl;
+             std::cerr << "quote end " << argv[i] << std::endl;
           }
         }while ((doneq == 0) && (i < argc));
         scanfile = scanfile.substr(1, scanfile.size()-2).data();
       }
 
 }
-    else if (arg == vcl_string ("-b")) { 
-     boxfile = vcl_string (argv[++i]); 
+    else if (arg == std::string ("-b")) { 
+     boxfile = std::string (argv[++i]); 
      if (strchr(argv[i],0x22)){
-        vcl_cerr << "quote start " << argv[i] << vcl_endl;
+        std::cerr << "quote start " << argv[i] << std::endl;
         int doneq =0;
         if (strchr(argv[i]+1,0x22))
-          vcl_cerr << "quote end " << argv[i] << vcl_endl;
+          std::cerr << "quote end " << argv[i] << std::endl;
         else do{
-          vcl_string arg (argv[++i]);
+          std::string arg (argv[++i]);
           boxfile = boxfile + " " + arg;
-          vcl_cerr << " arg in q " << arg << vcl_endl;
+          std::cerr << " arg in q " << arg << std::endl;
           if (strchr(argv[i],0x22)){
              doneq = 1;
-             vcl_cerr << "quote end " << argv[i] << vcl_endl;
+             std::cerr << "quote end " << argv[i] << std::endl;
           }
         }while ((doneq == 0) && (i < argc));
         boxfile = boxfile.substr(1, boxfile.size()-2).data();
       }
 
 }
-    else if (arg == vcl_string ("-o")) { 
-     outfile = vcl_string (argv[++i]); 
+    else if (arg == std::string ("-o")) { 
+     outfile = std::string (argv[++i]); 
      if (strchr(argv[i],0x22)){
-        vcl_cerr << "quote start " << argv[i] << vcl_endl;
+        std::cerr << "quote start " << argv[i] << std::endl;
         int doneq =0;
         if (strchr(argv[i]+1,0x22))
-          vcl_cerr << "quote end " << argv[i] << vcl_endl;
+          std::cerr << "quote end " << argv[i] << std::endl;
         else do{
-          vcl_string arg (argv[++i]);
+          std::string arg (argv[++i]);
           outfile = outfile + " " + arg;
-          vcl_cerr << " arg in q " << arg << vcl_endl;
+          std::cerr << " arg in q " << arg << std::endl;
           if (strchr(argv[i],0x22)){
              doneq = 1;
-             vcl_cerr << "quote end " << argv[i] << vcl_endl;
+             std::cerr << "quote end " << argv[i] << std::endl;
           }
         }while ((doneq == 0) && (i < argc));
         outfile = outfile.substr(1, outfile.size()-2).data();
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 
 }
     else {
-      vcl_cout << "Usage: " << argv[0] << " [-l logfile] [-s scanfile] [-b boxfile] [-o bin_output]" << vcl_endl;
+      std::cout << "Usage: " << argv[0] << " [-l logfile] [-s scanfile] [-b boxfile] [-o bin_output]" << std::endl;
       return 1;
     }
   }
@@ -153,15 +153,15 @@ int main(int argc, char** argv)
     return 1;
 
   // remove double quotes if any at the beg and end
-  vcl_size_t first_q_pos, last_q_pos;
+  std::size_t first_q_pos, last_q_pos;
 
-  vcl_string q = "\"";
+  std::string q = "\"";
   first_q_pos = logfile.find("\"");
   last_q_pos = logfile.rfind("\"");
-  if (first_q_pos == vcl_string::npos)
-    vcl_cout << "double quotes not found at the beginning" << vcl_endl;
-  if (last_q_pos == vcl_string::npos)
-    vcl_cout << "double quotes not found at the end" << vcl_endl;
+  if (first_q_pos == std::string::npos)
+    std::cout << "double quotes not found at the beginning" << std::endl;
+  if (last_q_pos == std::string::npos)
+    std::cout << "double quotes not found at the end" << std::endl;
 
   if ((first_q_pos == 0) && (last_q_pos == logfile.size()-1))
      logfile = logfile.substr(first_q_pos+1, logfile.size()-2);
@@ -179,21 +179,21 @@ int main(int argc, char** argv)
   //// read the log file
   //imgr_skyscan_log log(logfile.data());
   //xscan_scan scan = log.get_scan();
-  //vcl_cout << "SCAN BEFORE\n" << scan << vcl_endl;
+  //std::cout << "SCAN BEFORE\n" << scan << std::endl;
 
   //// read the scan file
-  //vcl_ifstream scan_file(scanfile.c_str());
+  //std::ifstream scan_file(scanfile.c_str());
   //scan_file >> scan;
   //scan_file.close();
-  //vcl_cout << "SCAN AFTER\n" << scan << vcl_endl; 
+  //std::cout << "SCAN AFTER\n" << scan << std::endl; 
   //log.set_scan(scan);
   //
   ////get the box
-  //vcl_ifstream box_file(boxfile.c_str());
+  //std::ifstream box_file(boxfile.c_str());
   //vgl_box_3d<double> box;
   //box.read(box_file);
   //box_file.close();
-  //vcl_cout << "BOX\n" << box << vcl_endl;
+  //std::cout << "BOX\n" << box << std::endl;
   //
   //imgr_image_view_3d_base_sptr view_3d = log.get_bounded_view(box);
   ////unused variable unsigned nviews = scan.scan_size();

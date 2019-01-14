@@ -20,7 +20,7 @@
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 #include <dbxml/dbxml_vector_xio.h>
 #include <dbxml/dbxml_xio.h>
@@ -35,7 +35,7 @@
 #include <vul/vul_timer.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 
@@ -49,44 +49,44 @@
 bool dbsks_train_geom_model::
 collect_data()
 {
-  vcl_string xshock_folder = this->params_.xshock_folder;
-  vcl_string xshock_list_file = this->params_.xshock_list_file;
+  std::string xshock_folder = this->params_.xshock_folder;
+  std::string xshock_list_file = this->params_.xshock_list_file;
   int root_vid = this->params_.root_vid;
   int pseudo_parent_eid = this->params_.pseudo_parent_eid;
-  vcl_string output_file = this->params_.output_file;
+  std::string output_file = this->params_.output_file;
 
   //////////////////////////////////////////////////////////////////////////////
   double normalized_size = this->params_.normalized_xgraph_size;
   //////////////////////////////////////////////////////////////////////////////
 
   //> Load the exemplar shock graphs
-  vcl_cout << "\n> Load the exemplar xshock graphs from " << xshock_folder << "\n";
+  std::cout << "\n> Load the exemplar xshock graphs from " << xshock_folder << "\n";
   
   // parse input file containing list of xshock graphs
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Iterate thru the names and load one by one
-  vcl_vector<dbsksp_xshock_graph_sptr > list_xgraphs;
+  std::vector<dbsksp_xshock_graph_sptr > list_xgraphs;
   list_xgraphs.reserve(xml_filenames.size());
   for (unsigned index =0; index < xml_filenames.size(); ++index)
   {
     // filename
-    vcl_string fname = xml_filenames[index];
+    std::string fname = xml_filenames[index];
 
-    vcl_cout << "\n  Loading " << fname << "...";
+    std::cout << "\n  Loading " << fname << "...";
     
-    vcl_string xml_file = xshock_folder + "/" + xml_filenames[index];
+    std::string xml_file = xshock_folder + "/" + xml_filenames[index];
     dbsksp_xshock_graph_sptr xgraph = 0;
     if ( x_read(xml_file, xgraph) )
     {
-      vcl_cout << "[ OK ]";
+      std::cout << "[ OK ]";
       xgraph->compute_vertex_depths(root_vid);
       list_xgraphs.push_back(xgraph);
     }
     else
     {
-      vcl_cout << "[ Failed ].";
+      std::cout << "[ Failed ].";
       continue;
     }
   }
@@ -94,7 +94,7 @@ collect_data()
   // Check-up
   if (list_xgraphs.empty())
   {
-    vcl_cout << "ERROR: No xgraph was loaded. \n";
+    std::cout << "ERROR: No xgraph was loaded. \n";
     return false;
   }
   int num_xgraphs = list_xgraphs.size();
@@ -104,12 +104,12 @@ collect_data()
   this->prototype_xgraph->compute_vertex_depths(root_vid);
 
   if(this->params_.b_normalize)
-  	this->prototype_xgraph->scale_up(0, 0, normalized_size/vcl_sqrt(this->prototype_xgraph->area()));
+  	this->prototype_xgraph->scale_up(0, 0, normalized_size/std::sqrt(this->prototype_xgraph->area()));
   else
-	this->params_.normalized_xgraph_size = vcl_sqrt(this->prototype_xgraph->area());
+	this->params_.normalized_xgraph_size = std::sqrt(this->prototype_xgraph->area());
   
   //> Collect xfragments from the shock graphs
-  vcl_cout << "\n> Collect xfrags from the exemplar shock graphs\n";
+  std::cout << "\n> Collect xfrags from the exemplar shock graphs\n";
 
   // edges
   this->map_edge2frags.clear();
@@ -135,11 +135,11 @@ collect_data()
   // Iterate thru the xgraph list and collect edge and node info
   for (unsigned index =0; index < list_xgraphs.size(); ++index)
   {
-	vcl_cout << "graph index: " << index << vcl_endl; 
+	std::cout << "graph index: " << index << std::endl; 
     dbsksp_xshock_graph_sptr xgraph = list_xgraphs[index];
 
     // Normalize the exemplar xgraph to the standard size
-    double cur_size = vcl_sqrt(xgraph->area());
+    double cur_size = std::sqrt(xgraph->area());
 	xgraphs_size_vec[index] = cur_size;
 	
 	if(this->params_.b_normalize)
@@ -214,16 +214,16 @@ collect_data()
       }
       else // we don't know how to handle this
       {
-        vcl_cout << "\nERROR: Can't handle node with degree = " << xv->degree() << "\n";
+        std::cout << "\nERROR: Can't handle node with degree = " << xv->degree() << "\n";
         assert(false);
       }
       map_node2geom[xv->id()].push_back(xnode_geom);
     } // edge iterator
   } // index of xgraphs
 
-  vcl_cout << "\nmean of xgraph sizes: " << xgraphs_size_vec.mean();
-  vcl_cout << "\nmin of xgraph sizes: " << xgraphs_size_vec.min_value();
-  vcl_cout << "\nmax of xgraph sizes: " << xgraphs_size_vec.max_value() <<"\n\n";
+  std::cout << "\nmean of xgraph sizes: " << xgraphs_size_vec.mean();
+  std::cout << "\nmin of xgraph sizes: " << xgraphs_size_vec.min_value();
+  std::cout << "\nmax of xgraph sizes: " << xgraphs_size_vec.max_value() <<"\n\n";
   
   return true;
 }
@@ -264,10 +264,10 @@ bool dbsks_train_geom_model::
 save_geom_model_to_file()
 {
   //> open output file for writing
-  vcl_ofstream os(this->params_.output_file.c_str());
+  std::ofstream os(this->params_.output_file.c_str());
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " 
+    std::cout << " ERROR: Couldn't open for writing file: " 
       << this->params_.output_file << ".\n";
     return false;
   }
@@ -289,37 +289,37 @@ save_geom_model_to_file()
 bool dbsks_train_geom_model::
 save_list_of_xgraph_sizes()
 {
-  vcl_string xshock_folder = this->params_.xshock_folder;
-  vcl_string xshock_list_file = this->params_.xshock_list_file;
-  vcl_string output_file = this->params_.output_file + ".scales.txt";
+  std::string xshock_folder = this->params_.xshock_folder;
+  std::string xshock_list_file = this->params_.xshock_list_file;
+  std::string output_file = this->params_.output_file + ".scales.txt";
 
   //> Load the exemplar shock graphs
-  vcl_cout << "\n> Load the exemplar xshock graphs from " << xshock_folder << "\n";
+  std::cout << "\n> Load the exemplar xshock graphs from " << xshock_folder << "\n";
   
   // parse input file containing list of xshock graphs
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Iterate thru the names and load one by one
-  vcl_vector<dbsksp_xshock_graph_sptr > list_xgraph;
+  std::vector<dbsksp_xshock_graph_sptr > list_xgraph;
   list_xgraph.reserve(xml_filenames.size());
   for (unsigned index =0; index < xml_filenames.size(); ++index)
   {
     // filename
-    vcl_string fname = xml_filenames[index];
+    std::string fname = xml_filenames[index];
 
-    vcl_cout << "\n  Loading " << fname << "...";
+    std::cout << "\n  Loading " << fname << "...";
     
-    vcl_string xml_file = xshock_folder + "/" + xml_filenames[index];
+    std::string xml_file = xshock_folder + "/" + xml_filenames[index];
     dbsksp_xshock_graph_sptr xgraph = 0;
     if ( x_read(xml_file, xgraph) )
     {
-      vcl_cout << "[ OK ]";
+      std::cout << "[ OK ]";
       list_xgraph.push_back(xgraph);
     }
     else
     {
-      vcl_cout << "[ Failed ].";
+      std::cout << "[ Failed ].";
       continue;
     }
   }
@@ -327,24 +327,24 @@ save_list_of_xgraph_sizes()
   // Check-up
   if (list_xgraph.empty())
   {
-    vcl_cout << "ERROR: No xgraph was loaded. \n";
+    std::cout << "ERROR: No xgraph was loaded. \n";
     return false;
   }
   int num_xgraphs = list_xgraph.size();
 
   // Compute the xgraph scales and save to a vector
-  vcl_vector<double > xgraph_sizes;
+  std::vector<double > xgraph_sizes;
   xgraph_sizes.reserve(list_xgraph.size());
   for (unsigned i =0; i < list_xgraph.size(); ++i)
   {
     dbsksp_xshock_graph_sptr xgraph = list_xgraph[i];
-    xgraph_sizes.push_back(vcl_sqrt(xgraph->area()));
+    xgraph_sizes.push_back(std::sqrt(xgraph->area()));
   }
-  vcl_cout << "\n>> Saving list of xgraph scales to file: " 
+  std::cout << "\n>> Saving list of xgraph scales to file: " 
     << output_file << "\n";
 
 
-  vcl_ofstream os(output_file.c_str(), vcl_ios_out);
+  std::ofstream os(output_file.c_str(), std::ios::out);
   for (unsigned i =0; i < xgraph_sizes.size(); ++i)
   {
     os << xgraph_sizes[i] << "\n";

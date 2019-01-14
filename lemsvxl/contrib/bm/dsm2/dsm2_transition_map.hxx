@@ -3,14 +3,14 @@
 #define DSM2_TRANSITION_MAP_TXX_
 #include<dsm2/dsm2_transition_map.h>
 
-#include<vcl_cstddef.h>
-#include<vcl_fstream.h>
+#include<cstddef>
+#include<fstream>
 
 template<class T1, class T2, class T3>
 void dsm2_transition_map<T1,T2,T3>::add( node_id_type const& n1 )
 {
     //empty dummy map
-    vcl_map<T1, vcl_map<T2,T3> > temp;
+    std::map<T1, std::map<T2,T3> > temp;
     this->transition_table[n1] = temp;
 }//end add
 
@@ -43,13 +43,13 @@ typename dsm2_transition_map<T1,T2,T3>::frequency_type
     if( t1_itr == this->transition_table.end() )
         return frequency_type(0);
 
-    typename vcl_map<T1,vcl_map<T2,T3> >::const_iterator
+    typename std::map<T1,std::map<T2,T3> >::const_iterator
             t2_itr = t1_itr->second.find(n2);
 
     if( t2_itr == t1_itr->second.end() )
         return frequency_type(0);
 
-    typename vcl_map<T2,T3>::const_iterator t3_itr = t2_itr->second.find(t);
+    typename std::map<T2,T3>::const_iterator t3_itr = t2_itr->second.find(t);
 
     if( t3_itr == t2_itr->second.end() )
         return frequency_type(0);
@@ -70,8 +70,8 @@ void dsm2_transition_map<T1,T2,T3>::inc_frequency( node_id_type const& n1,
     //didn't find the first node id
     if(tr_itr == this->transition_table.end())
     {
-        vcl_map<T1,vcl_map<T2,T3> > temp1;
-        vcl_map<T2,T3> temp2;
+        std::map<T1,std::map<T2,T3> > temp1;
+        std::map<T2,T3> temp2;
         temp2[time] = delta;
         temp1[n2] = temp2;
         this->transition_table[n1] = temp1;
@@ -79,28 +79,28 @@ void dsm2_transition_map<T1,T2,T3>::inc_frequency( node_id_type const& n1,
     }//end if tr_itr == this->transition_table.end()
     else
     {
-        typename vcl_map<T1, vcl_map<T2,T3> >::iterator
+        typename std::map<T1, std::map<T2,T3> >::iterator
                     tc_itr = tr_itr->second.find(n2);
 
         //didn't find the second node id
         if( tc_itr == tr_itr->second.end() )
         {
-            vcl_map<T2,T3> temp1;
+            std::map<T2,T3> temp1;
             temp1[time] = delta;
             tr_itr->second.insert(
-                vcl_pair<T1,vcl_map<T2,T3> >(n2, temp1) );
+                std::pair<T1,std::map<T2,T3> >(n2, temp1) );
             return;
         }//end if tc_itr == tr_itr->second.end()
         else
         {
-            typename vcl_map<T2,T3>::iterator
+            typename std::map<T2,T3>::iterator
                             time_itr = tc_itr->second.find(time);
 
             //if didnt find the time
             if( time_itr == tc_itr->second.end() )
             {
                 tc_itr->second.insert(
-                        vcl_pair<T2,T3>(time,delta) );
+                        std::pair<T2,T3>(time,delta) );
                 return;
             }//end if time_itr == tc_itr->second.end()
             else //we found the time/frequency relation
@@ -126,12 +126,12 @@ T3 dsm2_transition_map<T1,T2,T3>::frequency_sum( node_id_type const& n1,
     if( tr_itr == this->transition_table.end() )
         return transition_sum;
 
-    typename vcl_map<T1, vcl_map<T2,T3> >::const_iterator 
+    typename std::map<T1, std::map<T2,T3> >::const_iterator 
         tc_itr, tc_end = tr_itr->second.end();
 
     for( tc_itr = tr_itr->second.begin(); tc_itr != tc_end; ++tc_itr )
     {
-        typename vcl_map<T2,T3>::const_iterator
+        typename std::map<T2,T3>::const_iterator
                     time_itr = tc_itr->second.find(time);
 
         if( time_itr != tc_itr->second.end() )
@@ -150,7 +150,7 @@ void dsm2_transition_map<T1,T2,T3>::b_write( vsl_b_ostream& os ) const
     //write the number of nodes
     vsl_b_write(os, this->transition_table.size());
 
-    typename vcl_map<T1, vcl_map<T1, vcl_map<T2,T3> > >::const_iterator
+    typename std::map<T1, std::map<T1, std::map<T2,T3> > >::const_iterator
         root_itr, root_end = this->transition_table.end();
 
     for( root_itr = this->transition_table.begin();
@@ -162,7 +162,7 @@ void dsm2_transition_map<T1,T2,T3>::b_write( vsl_b_ostream& os ) const
         //write the number of transition nodes
         vsl_b_write(os, root_itr->second.size());
 
-        typename vcl_map<T1, vcl_map<T2,T3> >::const_iterator
+        typename std::map<T1, std::map<T2,T3> >::const_iterator
             child_itr, child_end = root_itr->second.end();
 
         for( child_itr = root_itr->second.begin();
@@ -174,7 +174,7 @@ void dsm2_transition_map<T1,T2,T3>::b_write( vsl_b_ostream& os ) const
             //write the number of time/frequency pairs
             vsl_b_write(os, child_itr->second.size());
 
-            typename vcl_map<T2,T3>::const_iterator
+            typename std::map<T2,T3>::const_iterator
                 tf_itr, tf_end = child_itr->second.end();
 
             for( tf_itr = child_itr->second.begin(); 
@@ -205,21 +205,21 @@ void dsm2_transition_map<T1,T2,T3>::b_read( vsl_b_istream& is )
     case 1:
         {
             //read the number of root nodes
-            vcl_size_t nrnodes;
+            std::size_t nrnodes;
             vsl_b_read(is, nrnodes);
 
-            for( vcl_size_t rnode_idx = 0; rnode_idx < nrnodes; ++rnode_idx )
+            for( std::size_t rnode_idx = 0; rnode_idx < nrnodes; ++rnode_idx )
             {
                 //read the root node id
                 T1 rnode_id;
                 vsl_b_read(is, rnode_id);
 
                 //read the number of child nodes
-                vcl_size_t ncnodes;
+                std::size_t ncnodes;
                 vsl_b_read(is, ncnodes);
 
-                vcl_map<T1, vcl_map<T2,T3> > child_map;
-                for( vcl_size_t cnode_idx = 0;
+                std::map<T1, std::map<T2,T3> > child_map;
+                for( std::size_t cnode_idx = 0;
                      cnode_idx < ncnodes;
                      ++cnode_idx )
                 {
@@ -229,11 +229,11 @@ void dsm2_transition_map<T1,T2,T3>::b_read( vsl_b_istream& is )
 
                     //read the number of
                                         //time/frequency pairs
-                    vcl_size_t npairs;
+                    std::size_t npairs;
                     vsl_b_read(is, npairs);
 
-                    vcl_map<T2,T3> time_frequency_map;
-                    for( vcl_size_t tf_idx = 0;
+                    std::map<T2,T3> time_frequency_map;
+                    for( std::size_t tf_idx = 0;
                                              tf_idx < npairs;
                          ++tf_idx )
                     {
@@ -254,12 +254,12 @@ void dsm2_transition_map<T1,T2,T3>::b_read( vsl_b_istream& is )
         }//end case 1
     default:
         {
-            vcl_cerr << "----ERROR----\n"
+            std::cerr << "----ERROR----\n"
                      << "\tdsm2_transition_map<T1,T2,T3>::"
                      << "b_read( vsl_b_istream& is )\n"
                      << "\tUnknown Version Number.\n"
                      << "\tFILE: " << __FILE__ << '\n'
-                     << "\tLINE: " << __LINE__ << '\n' << vcl_flush;
+                     << "\tLINE: " << __LINE__ << '\n' << std::flush;
                      
             return;   
         }//end default
@@ -269,11 +269,11 @@ void dsm2_transition_map<T1,T2,T3>::b_read( vsl_b_istream& is )
 }//end b_read
 
 template<class T1, class T2, class T3>
-void dsm2_transition_map<T1,T2,T3>::write_txt( vcl_string const& filename ) const
+void dsm2_transition_map<T1,T2,T3>::write_txt( std::string const& filename ) const
 {
-    vcl_ofstream of( filename.c_str(), vcl_ios::out );
+    std::ofstream of( filename.c_str(), std::ios::out );
 
-    typename vcl_map<T1, vcl_map<T1, vcl_map<T2,T3> > >::const_iterator
+    typename std::map<T1, std::map<T1, std::map<T2,T3> > >::const_iterator
         root_itr, root_end = this->transition_table.end();
 
     for( root_itr = this->transition_table.begin();
@@ -281,13 +281,13 @@ void dsm2_transition_map<T1,T2,T3>::write_txt( vcl_string const& filename ) cons
                 ++root_itr )
     {
         
-        typename vcl_map<T1, vcl_map<T2,T3> >::const_iterator
+        typename std::map<T1, std::map<T2,T3> >::const_iterator
             child_itr, child_end = root_itr->second.end();
 
         for( child_itr = root_itr->second.begin();
                 child_itr != child_end; ++child_itr )
         {
-            typename vcl_map<T2,T3>::const_iterator
+            typename std::map<T2,T3>::const_iterator
                 tf_itr, tf_end = child_itr->second.end();
 
             for( tf_itr = child_itr->second.begin();

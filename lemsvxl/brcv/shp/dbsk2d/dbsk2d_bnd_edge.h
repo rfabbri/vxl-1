@@ -36,7 +36,7 @@ protected:
   dbsk2d_ishock_bcurve* right_bcurve_;
 
   //: list of cells `this' edge is contained in
-  mutable vcl_list<dbsk2d_bnd_cell* > cells_;
+  mutable std::list<dbsk2d_bnd_cell* > cells_;
 
 public:
   // CONSTRUCTORS/DESTRUCTORS/INITIALIZERS -------------------------------------
@@ -60,7 +60,7 @@ public:
   
   //: Return a platform independent string identifying the class
   // inherited
-  virtual vcl_string is_a() const { return vcl_string("dbsk2d_bnd_edge"); }
+  virtual std::string is_a() const { return std::string("dbsk2d_bnd_edge"); }
 
   //: Return true if `this' is a degenerate edge, i.e. it is a point
   virtual bool is_a_point() const { return this->v1_ == this->v2_; };
@@ -68,7 +68,7 @@ public:
   //: Return true if the argument matches the string 
   // identifying the class or any parent class
   // inherited
-  virtual bool is_class(const vcl_string& cls) const
+  virtual bool is_class(const std::string& cls) const
   { return cls==is_a() || vtol_edge::is_class(cls); }
 
   //: Return the left half dbsk2d_ishock_bcurve
@@ -137,7 +137,7 @@ public:
   //======= cell related functions ---------------------------------------------
 
   //: Return referece to list of cells `this' edge is contained in
-  const vcl_list<dbsk2d_bnd_cell* >& cells() const { return this->cells_; }
+  const std::list<dbsk2d_bnd_cell* >& cells() const { return this->cells_; }
 
   //: Return number of cells `this' edge belongs to
   int num_cells() const {return this->cells_.size(); }
@@ -160,14 +160,14 @@ public:
 
   //: print
   // inherited. Need rewrite.
-  virtual void print(vcl_ostream &os=vcl_cout) const;
+  virtual void print(std::ostream &os=std::cout) const;
 
-  void print_cell_info(vcl_ostream &os = vcl_cout) const;
+  void print_cell_info(std::ostream &os = std::cout) const;
 
   //
   ////: describe
   //// inherited. Need rewrite.
-  //virtual void describe(vcl_ostream &strm=vcl_cout,
+  //virtual void describe(std::ostream &strm=std::cout,
   //                       int blanking=0) const;
 
   //: Compute bounding box.

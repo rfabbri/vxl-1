@@ -100,7 +100,7 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
 
   vpgl_calibration_matrix<double> K(Kmatrix);
 
-  vcl_vector<bdifd_camera> cam;
+  std::vector<bdifd_camera> cam;
   cam.resize(nviews);
 
   for (unsigned i=0; i < nviews; ++i) { // 1 degree per view
@@ -128,9 +128,9 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
   // Define space curves
 
   // crv2d[i][j]  curve i view j
-  vcl_vector<vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > > crv2d;
+  std::vector<std::vector<std::vector<bdifd_3rd_order_point_2d> > > crv2d;
   {
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+    std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
     if (ctspheres)
       bdifd_data::space_curves_ctspheres( crv3d );
     else 
@@ -151,13 +151,13 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
   for (unsigned  i=0; i < crv2d.size(); ++i) {
     for (unsigned k=0; k < crv2d[i].size(); ++k) {
       if (k == 0 || k == 4 || k == 59) {
-        vcl_vector<bdifd_3rd_order_point_2d> ctmp;
-        vcl_cout << "CURVE #" << i+1 << " frame: " << k+1 << vcl_endl;
-        vcl_cout << "Before lim dist: " << crv2d[i][k].size() << "\n";
+        std::vector<bdifd_3rd_order_point_2d> ctmp;
+        std::cout << "CURVE #" << i+1 << " frame: " << k+1 << std::endl;
+        std::cout << "Before lim dist: " << crv2d[i][k].size() << "\n";
         if (!bdifd_analytic::limit_distance(crv2d[i][k], ctmp))
-          vcl_cout << "Warning: some distances are more than sqrt(2)\n";
-        vcl_cout << "After lim dist: " << ctmp.size() << vcl_endl;
-        vcl_cout << "-------\n";
+          std::cout << "Warning: some distances are more than sqrt(2)\n";
+        std::cout << "After lim dist: " << ctmp.size() << std::endl;
+        std::cout << "-------\n";
 
         crv2d[i][k].clear();
         crv2d[i][k] = ctmp;
@@ -174,7 +174,7 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
   //: image coordinates
   // xi[i][k] == curve i at view k
   unsigned  number_of_curves = crv2d.size();
-  vcl_vector< vcl_vector<vcl_vector<vsol_point_2d_sptr> > > xi; 
+  std::vector< std::vector<std::vector<vsol_point_2d_sptr> > > xi; 
 
   xi.resize(number_of_curves);
   for (unsigned i=0; i<number_of_curves; ++i) {
@@ -190,18 +190,18 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
   //----------------------------------------------------------------------
   // Reconstruct from the known correspondence, as a check.
 
-  vcl_vector<bmcsd_vector_3d> C_rec;
+  std::vector<bmcsd_vector_3d> C_rec;
   bdifd_rig rig(cam[0].Pr_,cam[1].Pr_);
   rig.reconstruct_3d_curve(&C_rec,xi[0][0],xi[0][1]);
 
-  mywritev(vcl_string("dat/crv3drec-1-tracer.dat"), C_rec);
+  mywritev(std::string("dat/crv3drec-1-tracer.dat"), C_rec);
 
   //----------------------------------------------------------------------
   // Create storages and add to repository
 
 
   for (unsigned k=0; k < nviews; ++k) {
-    vcl_vector<vsol_spatial_object_2d_sptr> p_xi;
+    std::vector<vsol_spatial_object_2d_sptr> p_xi;
 
     p_xi.resize(number_of_curves);
 
@@ -214,7 +214,7 @@ load_rotational_analytic_views(unsigned nviews, unsigned ngrids_wanted, bool cts
 
     // create the output storage class
     vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-    output_vsol->add_objects(p_xi, vcl_string("analytic_curves"));
+    output_vsol->add_objects(p_xi, std::string("analytic_curves"));
     output_vsol->set_name("analytic_curves");
     MANAGER->repository()->store_data(output_vsol);
   }

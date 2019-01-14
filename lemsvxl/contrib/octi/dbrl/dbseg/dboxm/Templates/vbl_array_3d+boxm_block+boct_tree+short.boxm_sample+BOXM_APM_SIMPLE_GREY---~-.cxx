@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_array_3d.hxx>
 #include <dboxm/boxm_apm_traits.h>
 #include <dboxm/boxm_block.hxx>

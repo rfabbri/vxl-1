@@ -79,7 +79,7 @@ SoSeparator* gdt_draw_edge_I (dbmsh3d_gdt_edge* cur_edge, int nSamples)
   SoSeparator* group = new SoSeparator;
 
   //: draw some testing lines for each interval in random color
-  vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
   for (; it != cur_edge->interval_section()->I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
     if (I->is_dege())
@@ -92,7 +92,7 @@ SoSeparator* gdt_draw_edge_I (dbmsh3d_gdt_edge* cur_edge, int nSamples)
     it = cur_edge->interval_section()->I_map()->begin();
     gdt_interval* I = (gdt_interval*) (*it).second;
 
-    vcl_map<double, gdt_ibase*>::iterator it2 = it;
+    std::map<double, gdt_ibase*>::iterator it2 = it;
     it2++;
     gdt_interval* I2 = (gdt_interval*) (*it2).second;
 
@@ -118,7 +118,7 @@ SoSeparator* gdt_draw_intervals (dbmsh3d_gdt_mesh* gdt_mesh, int nSamples, float
   ds->lineWidth.setValue (lineWidth);
   vis->addChild(ds);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
   for (; it != gdt_mesh->edgemap().end(); it++) {
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) (*it).second;
 
@@ -138,7 +138,7 @@ SoSeparator* gdtf_draw_I_on_front (dbmsh3d_gdt_mesh* gdt_mesh, int nSamples, flo
   ds->lineWidth.setValue (lineWidth);
   vis->addChild(ds);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
   for (; it != gdt_mesh->edgemap().end(); it++) {
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) (*it).second;
 
@@ -166,12 +166,12 @@ SoSeparator* gdt_draw_I_on_front_flag (dbmsh3d_gdt_mesh* gdt_mesh, int nSamples,
   ds->lineWidth.setValue (lineWidth);
   vis->addChild(ds);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
   for (; it != gdt_mesh->edgemap().end(); it++) {
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) (*it).second;
 
     //: draw each interval
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
     for (; it != cur_edge->interval_section()->I_map()->end(); it++) {
       gdt_interval* I = (gdt_interval*) (*it).second;
 

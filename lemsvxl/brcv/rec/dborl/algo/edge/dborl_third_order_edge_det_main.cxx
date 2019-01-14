@@ -19,7 +19,7 @@
 #include "dborl_third_order_edge_det_params.h"
 #include "dborl_third_order_edge_det_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
   //: always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -51,15 +51,15 @@ int main(int argc, char *argv[]) {
   set_process_parameters_of_bpro1(*params, pro, params->algo_abbreviation_);
   
   //load the input image
-  vcl_string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
+  std::string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
   if (!vul_file::exists(input_img)) {
-    vcl_cout << "Cannot find image: " << input_img << "\n";
+    std::cout << "Cannot find image: " << input_img << "\n";
     return 0;
   }
 
   vil_image_resource_sptr img = vil_load_image_resource(input_img.c_str());
   if (!img) {
-    vcl_cout << "Cannot load image: " << input_img << "\n";
+    std::cout << "Cannot load image: " << input_img << "\n";
     return 0;
   }
 
@@ -68,14 +68,14 @@ int main(int argc, char *argv[]) {
 
   pro.add_input(inp);
   pro.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
   pro.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   //:get the output
-  vcl_vector<bpro1_storage_sptr> out = pro.get_output();
+  std::vector<bpro1_storage_sptr> out = pro.get_output();
   if (out.size() != 1) {
-    vcl_cout << "Process output does not contain an edge_map\n";
+    std::cout << "Process output does not contain an edge_map\n";
     return 0;
   }
 
@@ -83,13 +83,13 @@ int main(int argc, char *argv[]) {
   if (params->save_edges_()) {
     dbdet_edgemap_storage* edge_map = dynamic_cast<dbdet_edgemap_storage*>(out[0].ptr());
     if (!edge_map) {
-      vcl_cout << "Process output cannot be cast to an edge_map\n";
+      std::cout << "Process output cannot be cast to an edge_map\n";
       return 0;
     }
 
     dbdet_edgemap_sptr edges = edge_map->get_edgemap();
 
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
     output_file = output_file + params->input_object_name_() + params->output_extension_();
 
     if (!dbdet_save_edg(output_file, edges)) {
-      vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving edge file: " << output_file << std::endl;
       return 0;
     }
   }

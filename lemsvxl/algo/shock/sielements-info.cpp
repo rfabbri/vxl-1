@@ -1,7 +1,7 @@
 #include <extrautils/msgout.h>
 
-#include <vcl_sstream.h>
-#include <vcl_cmath.h>
+#include <sstream>
+#include <cmath>
 
 //#include <stdio.h>
 
@@ -10,7 +10,7 @@
 
 extern MESSAGE_OPTION MessageOption;
 
-void SIA3Source::getInfo (vcl_ostream& ostrm)
+void SIA3Source::getInfo (std::ostream& ostrm)
 {/*
   int i;
   wxString s, buf;
@@ -70,7 +70,7 @@ void SIA3Source::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SISource::getInfo (vcl_ostream& ostrm)
+void SISource::getInfo (std::ostream& ostrm)
 {/*
   int i;
   wxString s, buf;
@@ -122,7 +122,7 @@ void SISource::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SISink::getInfo (vcl_ostream& ostrm)
+void SISink::getInfo (std::ostream& ostrm)
 {/*  
   int i;
   wxString s, buf;
@@ -180,7 +180,7 @@ void SISink::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SIJunct::getInfo (vcl_ostream& ostrm)
+void SIJunct::getInfo (std::ostream& ostrm)
 {/*
   int i;
   wxString s, buf;
@@ -239,7 +239,7 @@ void SIJunct::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SIPointPoint::getInfo (vcl_ostream& ostrm)
+void SIPointPoint::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -326,7 +326,7 @@ void SIPointPoint::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SIPointLineContact::getInfo (vcl_ostream& ostrm)
+void SIPointLineContact::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -428,7 +428,7 @@ void SIPointLineContact::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SIPointArcContact::getInfo (vcl_ostream& ostrm)
+void SIPointArcContact::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -534,7 +534,7 @@ void SIPointArcContact::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SIPointLine::getInfo (vcl_ostream& ostrm)
+void SIPointLine::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -636,7 +636,7 @@ void SIPointLine::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SIPointArc::getInfo (vcl_ostream& ostrm)
+void SIPointArc::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -761,7 +761,7 @@ void SIPointArc::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SILineLine::getInfo (vcl_ostream& ostrm)
+void SILineLine::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -853,7 +853,7 @@ void SILineLine::getInfo (vcl_ostream& ostrm)
   s.Printf ("_N1R (slope): %f\n", _N1R); buf+=s;
   s.Printf ("_N2L: %f, ", _N2L); buf+=s;
   s.Printf ("_N2R: %f\n", _N2R); buf+=s;
-  s.Printf ("v (1/vcl_cos(M_PI/4 - _thetaL/2)): %f\n\n", v(_LeTau)); buf+=s;
+  s.Printf ("v (1/std::cos(M_PI/4 - _thetaL/2)): %f\n\n", v(_LeTau)); buf+=s;
 
   if (MessageOption >= MSG_TERSE) {
     s.Printf ("bIO: %s\n", bIO ? "Inside" : "Outside"); buf+=s;
@@ -870,7 +870,7 @@ void SILineLine::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SILineArc::getInfo (vcl_ostream& ostrm)
+void SILineArc::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -970,7 +970,7 @@ void SILineArc::getInfo (vcl_ostream& ostrm)
 */
 }
 
-void SIArcArc::getInfo (vcl_ostream& ostrm)
+void SIArcArc::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -1094,7 +1094,7 @@ void SIArcArc::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SIThirdOrder::getInfo (vcl_ostream& ostrm)
+void SIThirdOrder::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -1188,7 +1188,7 @@ void SIThirdOrder::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void SIArcThirdOrder::getInfo (vcl_ostream& ostrm)
+void SIArcThirdOrder::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
    wxString endtime, simtime;
@@ -1277,7 +1277,7 @@ void SIArcThirdOrder::getInfo (vcl_ostream& ostrm)
   ostrm << buf;
 */}
 
-void VisFrag::getInfo (vcl_ostream& ostrm)
+void VisFrag::getInfo (std::ostream& ostrm)
 {/*
   wxString s, buf;
 

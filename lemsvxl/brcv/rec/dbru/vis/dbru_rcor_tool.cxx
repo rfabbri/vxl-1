@@ -5,8 +5,8 @@
 #include <dbru/vis/dbru_rcor_tool.h>
 
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <cstdio>
 #include <vgui/vgui.h> 
 
 #include <bvis1/bvis1_manager.h>
@@ -53,9 +53,9 @@ void dbru_rcor_tool::activate()
   fixed_set1_.clear();
 
   //set up the views for optimal usage  
-  vcl_vector<bvis1_view_tableau_sptr> views = bvis1_manager::instance()->get_views();
+  std::vector<bvis1_view_tableau_sptr> views = bvis1_manager::instance()->get_views();
   if (views.size() < 2) {
-    vcl_cout << "Need two views for this tool, please add the second view!\n";
+    std::cout << "Need two views for this tool, please add the second view!\n";
     activation_ok_ = false;
     return;
   }
@@ -89,9 +89,9 @@ void dbru_rcor_tool::activate()
   bvis1_manager::instance()->post_redraw();
 
   if (activation_ok_)
-    vcl_cout << "The tool is activated OK!!!\n";
+    std::cout << "The tool is activated OK!!!\n";
   else 
-    vcl_cout << "The tool has PROBLEMS!!!\n";
+    std::cout << "The tool has PROBLEMS!!!\n";
 
 
 }
@@ -134,7 +134,7 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
                          const bvis1_view_tableau_sptr& view )
 {
   if (!activation_ok_) {
-    vcl_cout << "Problems in activation!\n";
+    std::cout << "Problems in activation!\n";
     return false;
   }  
 
@@ -142,8 +142,8 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
   float ix, iy;
   vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
-  int mouse_x = static_cast<int>(vcl_floor(ix+0.5));
-  int mouse_y = static_cast<int>(vcl_floor(iy+0.5));
+  int mouse_x = static_cast<int>(std::floor(ix+0.5));
+  int mouse_y = static_cast<int>(std::floor(iy+0.5));
 
   //get the necessary info from the region correspondence computation
   //dbru_rcor_sptr rcor_ = storage_->get_rcor();
@@ -158,20 +158,20 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
   {
 
     int x = mouse_x, y = mouse_y;
-    vgui::out << "(" << mouse_x << ", " << mouse_y << ")" << vcl_endl;
+    vgui::out << "(" << mouse_x << ", " << mouse_y << ")" << std::endl;
     //: region_map starts from (0,0) 
     x = x - min_x_; y = y - min_y_;
     int rcor_map_size_int1 = static_cast<int>(rcor_map_.rows());
     if (x < 0 || (x >= rcor_map_size_int1 && rcor_map_size_int1 >= 0)) {
-      //vcl_cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's x limit! ";
-      //vcl_cout << "x: " << x << " rcor_map_.size: " << rcor_map_.size() << "\n";
+      //std::cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's x limit! ";
+      //std::cout << "x: " << x << " rcor_map_.size: " << rcor_map_.size() << "\n";
       return false;
     }
 
     int rcor_map_size_int2 = static_cast<int>(rcor_map_.cols());      
     if(y < 0 || (y >= rcor_map_size_int2 && rcor_map_size_int2 >= 0)) {
-      //vcl_cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's y limit! "; 
-      //vcl_cout << "x: " << x << " y: " << y << " rcor_map_[x].size: " << rcor_map_[x].size() << "\n";
+      //std::cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's y limit! "; 
+      //std::cout << "x: " << x << " y: " << y << " rcor_map_[x].size: " << rcor_map_[x].size() << "\n";
       return false;
     }
 
@@ -180,7 +180,7 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
     //record the corresponding region 2 pixel from map
     current_pt1_ = rcor_map_[x][y];
 
-    vcl_pair<double, double> pair = dbru_rcor_generator::dt(rcor_->p1(), ix, iy);
+    std::pair<double, double> pair = dbru_rcor_generator::dt(rcor_->p1(), ix, iy);
     vsol_point_2d_sptr tmp_pt = curve11_->point_at(pair.first);
     current_ct0_.set(tmp_pt->x(), tmp_pt->y());
     tmp_pt = curve22_->point_at(sil_cor_->get_arclength_on_curve2(pair.first));
@@ -197,15 +197,15 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
     x = x - min_x_; y = y - min_y_;
     int rcor_map_size_int3 = static_cast<int>(rcor_map_.rows());
     if (x < 0 || (x >= rcor_map_size_int3 && rcor_map_size_int3>=0)) {
-      //vcl_cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's x limit! ";
-      //vcl_cout << "x: " << x << " rcor_map_.size: " << rcor_map_.size() << "\n";
+      //std::cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's x limit! ";
+      //std::cout << "x: " << x << " rcor_map_.size: " << rcor_map_.size() << "\n";
       return false;
     }
 
     int rcor_map_size_int4 = static_cast<int>(rcor_map_.cols());
     if(y < 0 || (y >= rcor_map_size_int4 && rcor_map_size_int4>=0)) {
-      //vcl_cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's y limit! "; 
-      //vcl_cout << "x: " << x << " y: " << y << " rcor_map_[x].size: " << rcor_map_[x].size() << "\n";
+      //std::cout << "mouse point: (" << int(mouse_x) << ", " << int(mouse_y) << ") : is not in region 1's y limit! "; 
+      //std::cout << "x: " << x << " y: " << y << " rcor_map_[x].size: " << rcor_map_[x].size() << "\n";
       return false;
     }
 
@@ -223,9 +223,9 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
 
   if (gesture_print_histogram(e) && view == view0_) {
     
-    vbl_array_2d< vcl_vector< vcl_pair< vgl_point_2d<int>, int> > > & region1_hists_ = rcor_->get_region1_histograms();
+    vbl_array_2d< std::vector< std::pair< vgl_point_2d<int>, int> > > & region1_hists_ = rcor_->get_region1_histograms();
     if (region1_hists_.rows() <= 0 || region1_hists_.cols() <= 0) {
-      vcl_cout << "Vote distribution histograms are not saved!!!\n";
+      std::cout << "Vote distribution histograms are not saved!!!\n";
       return false;
     }
 
@@ -236,8 +236,8 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
     vbl_array_2d<int> region2(rcor_->get_upper2_x(), rcor_->get_upper2_y(), 0);
     int min2x = rcor_->get_min2_x();
     int min2y = rcor_->get_min2_y();
-    vcl_cout << "Printing vote distribution histogram for pixel: " << x << " " << y << " size: ";
-    vcl_cout << region1_hists_[x][y].size() << "\n";
+    std::cout << "Printing vote distribution histogram for pixel: " << x << " " << y << " size: ";
+    std::cout << region1_hists_[x][y].size() << "\n";
     int minx = 10000, miny = 10000, maxx = 0, maxy = 0;
     for (unsigned int i = 0; i<region1_hists_[x][y].size(); i++) {
       vgl_point_2d<int> p = region1_hists_[x][y][i].first;
@@ -245,12 +245,12 @@ bool dbru_rcor_tool::handle( const vgui_event & e,
       if (p.y() < miny) miny = p.y();
       if (p.x() > maxx) maxx = p.x();
       if (p.y() > maxy) maxy = p.y();
-      vcl_cout << "i: " << i << " " << p << " # of votes: " << region1_hists_[x][y][i].second << "\n";
+      std::cout << "i: " << i << " " << p << " # of votes: " << region1_hists_[x][y][i].second << "\n";
       region2[p.x()-min2x][p.y()-min2y] = region1_hists_[x][y][i].second;
     }
     
-    vcl_ofstream of("temp_histogram.out");
-    of << "Histogram of pixel x: " << mouse_x << " y: " << mouse_y << vcl_endl;
+    std::ofstream of("temp_histogram.out");
+    of << "Histogram of pixel x: " << mouse_x << " y: " << mouse_y << std::endl;
     minx -= min2x; maxx -= min2x; miny -= min2y; maxy -= min2y;
     of << "0\t";
     for (int j = miny; j<maxy; j++)

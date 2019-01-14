@@ -1,12 +1,12 @@
 #ifndef hsds_fd_tree_txx_
 #define hsds_fd_tree_txx_
 
-#include <vcl_iostream.h>
-#include <vcl_map.h>
-#include <vcl_cassert.h>
-#include <vcl_iomanip.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <map>
+#include <cassert>
+#include <iomanip>
+#include <utility>
+#include <vector>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -22,7 +22,7 @@ hsds_fd_tree<T,d>::hsds_fd_tree(vbl_bounding_box<double,d> bbox, unsigned int ma
 {
   // create root node
   hsds_fd_tree_node_index<d> index(0,0);
-  nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(index, T()));
+  nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(index, T()));
 }
 
 //: constructor taking the bounding box, initial level of subdivision, and init value for nodes.
@@ -34,13 +34,13 @@ hsds_fd_tree<T,d>::hsds_fd_tree(vbl_bounding_box<double,d> bbox, unsigned char i
   unsigned int shift = hsds_fd_tree_node_index<d>::level_shift(init_level);
   for (unsigned i=0; i < nnodes; ++i) {
     hsds_fd_tree_node_index<d> index(i << shift, init_level);
-    nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(index, init_data));
+    nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(index, init_data));
   }
 }
 
 //: constructor taking all data
 template<class T, unsigned d>
-hsds_fd_tree<T,d>::hsds_fd_tree(vbl_bounding_box<double,d> bbox, vcl_map<hsds_fd_tree_node_index<d>,T > nodes, unsigned int max_levels)
+hsds_fd_tree<T,d>::hsds_fd_tree(vbl_bounding_box<double,d> bbox, std::map<hsds_fd_tree_node_index<d>,T > nodes, unsigned int max_levels)
 : bbox_(bbox), nodes_(nodes), max_levels_(max_levels) {}
 
 
@@ -92,7 +92,7 @@ vbl_bounding_box<double,d> hsds_fd_tree<T,d>::cell_bounding_box(vbl_bounding_box
 template<class T, unsigned d>
 void hsds_fd_tree<T,d>::fill(T const& data)
 {
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::iterator it = nodes_.begin();
+  typename std::map<hsds_fd_tree_node_index<d>,T >::iterator it = nodes_.begin();
   for (; it != nodes_.end(); ++it) {
     it->second = data;
   }
@@ -109,7 +109,7 @@ hsds_fd_tree_node_index<d>  hsds_fd_tree<T,d>::index_at(vnl_vector<double> const
 
   vnl_vector_fixed<double,d> rel_pt = element_quotient((pt - bbox_min),(bbox_max - bbox_min));
   //if ( (rel_pt.min_value() < 0.0) || (rel_pt.max_value() > 1.0) ) {
-    //vcl_cerr << "error: point " << pt << " is not in bounding box of tree!";
+    //std::cerr << "error: point " << pt << " is not in bounding box of tree!";
     // what to do here? just return dummy index for now.
     //return hsds_fd_tree_node_index<d>(0,0);
   //}
@@ -120,9 +120,9 @@ hsds_fd_tree_node_index<d>  hsds_fd_tree<T,d>::index_at(vnl_vector<double> const
   for (unsigned level=0; level<=max_levels_; ++level) {
     // check for existance of node at desired level
     hsds_fd_tree_node_index<d> node_index(node_code,level);
-    typename vcl_map<hsds_fd_tree_node_index<d>, T >::const_iterator nit(nodes_.find(node_index));
+    typename std::map<hsds_fd_tree_node_index<d>, T >::const_iterator nit(nodes_.find(node_index));
     if (nit == nodes_.end()) {
-      vcl_cerr << "error: desired node not in tree." << vcl_endl;
+      std::cerr << "error: desired node not in tree." << std::endl;
       assert(false);
       return hsds_fd_tree_node_index<d>(0,0);
     }
@@ -140,7 +140,7 @@ hsds_fd_tree_node_index<d>  hsds_fd_tree<T,d>::index_at(vnl_vector<double> const
     }
   }
   // this should not be reached
-  vcl_cerr << "error: node not found in tree: should not happen" << vcl_endl;
+  std::cerr << "error: node not found in tree: should not happen" << std::endl;
   assert(false);
 
   // return root node index as dummy
@@ -157,7 +157,7 @@ hsds_fd_tree_node_index<d> hsds_fd_tree<T,d>::full_index_at(vnl_vector<double> c
   vnl_vector_fixed<double,d> rel_pt = element_quotient((pt - bbox_min),(bbox_max - bbox_min));
  
   //if ( (rel_pt.min_value() < 0.0) || (rel_pt.max_value() > 1.0) ) {
-  //  vcl_cerr << "error: point " << pt << " is not in bounding box of tree!";
+  //  std::cerr << "error: point " << pt << " is not in bounding box of tree!";
     // what to do here? just return dummy index for now.
   //  return hsds_fd_tree_node_index<d>(0,0);
   //}
@@ -238,7 +238,7 @@ bool hsds_fd_tree<T,d>::neighbor_cell(hsds_fd_tree_node_index<d> index, unsigned
   hsds_fd_tree_node_index<d> step_index = index;
   step_index.set_node_coordinate(dim,lvl_coord);
   // now search for closest index less than or equal to step_index
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::const_iterator nit = nodes_.upper_bound(step_index);
+  typename std::map<hsds_fd_tree_node_index<d>,T >::const_iterator nit = nodes_.upper_bound(step_index);
   // nit now points to an index equal to or greater than step_index
   if ( (nit == nodes_.end()) || ( (*nit).first != step_index) ) {
     // node not found. this means that the neighboring cell is lower depth than step_index
@@ -252,7 +252,7 @@ bool hsds_fd_tree<T,d>::neighbor_cell(hsds_fd_tree_node_index<d> index, unsigned
 
  //: return a set of cells bordering on the specified face of another cell
 template<class T, unsigned d>
-bool hsds_fd_tree<T,d>::neighbor_cells(hsds_fd_tree_node_index<d> index, unsigned int dim, bool positive_neighbor, vcl_vector<hsds_fd_tree_node_index<d> > &neighbors) const
+bool hsds_fd_tree<T,d>::neighbor_cells(hsds_fd_tree_node_index<d> index, unsigned int dim, bool positive_neighbor, std::vector<hsds_fd_tree_node_index<d> > &neighbors) const
 {
   neighbors.clear();
     // step to next index at same level
@@ -277,7 +277,7 @@ bool hsds_fd_tree<T,d>::neighbor_cells(hsds_fd_tree_node_index<d> index, unsigne
   neighbor_index.set_node_coordinate(dim,lvl_coord);
   
   // now search for closest index less than or equal to step_index
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::const_iterator nit = nodes_.upper_bound(neighbor_index);
+  typename std::map<hsds_fd_tree_node_index<d>,T >::const_iterator nit = nodes_.upper_bound(neighbor_index);
   // nit now points to an index equal to or greater than step_index
   if ( (nit == nodes_.end()) || ( (*nit).first != neighbor_index) ) {
     // node not found. this means that the neighboring cell is shallower depth than step_index
@@ -313,7 +313,7 @@ bool hsds_fd_tree<T,d>::neighbor_cells(hsds_fd_tree_node_index<d> index, unsigne
     } 
   }
   if (neighbors.size() == 0) {
-    vcl_cout << " neighbor_cells() : error! did not find any neighbors " << vcl_endl;
+    std::cout << " neighbor_cells() : error! did not find any neighbors " << std::endl;
   }
   return true;
 }
@@ -325,14 +325,14 @@ void hsds_fd_tree<T,d>::merge(hsds_fd_tree_node_index<d> index, T const& new_dat
   // check for degenerate case of total tree collapse (bit shifts of sizeof(int) dont seem to work)
   if (index.lvl == 0) {
     nodes_.clear();
-    nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(index, new_data));
+    nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(index, new_data));
     return;
   }
 
   // retrieve first node 
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::iterator nit = nodes_.find(index);
+  typename std::map<hsds_fd_tree_node_index<d>,T >::iterator nit = nodes_.find(index);
   if ( (nit == nodes_.end()) || ((*nit).first.lvl <= index.lvl) ) {
-    vcl_cerr << "error: tree does not contain any ancestors of " << index << vcl_endl;
+    std::cerr << "error: tree does not contain any ancestors of " << index << std::endl;
     return;
   }
 
@@ -344,16 +344,16 @@ void hsds_fd_tree<T,d>::merge(hsds_fd_tree_node_index<d> index, T const& new_dat
   unsigned int shifted_idx = index.idx >> nshift;
 
   // remove all ancestors of node
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::iterator first_nit = nit;
+  typename std::map<hsds_fd_tree_node_index<d>,T >::iterator first_nit = nit;
   while ( (nit != nodes_.end()) && ((*nit).first.idx >> nshift == shifted_idx) ) {
     ++nit;
-    //vcl_cout << "non-shifted idx = 0x" << vcl_hex << (*nit).first.idx << vcl_endl;
-    //vcl_cout << "idx shifted by " << vcl_dec << nshift << "= 0x" << vcl_hex << ((*nit).first.idx >> nshift) << vcl_endl;
+    //std::cout << "non-shifted idx = 0x" << std::hex << (*nit).first.idx << std::endl;
+    //std::cout << "idx shifted by " << std::dec << nshift << "= 0x" << std::hex << ((*nit).first.idx >> nshift) << std::endl;
   }
   nodes_.erase(first_nit, nit);
 
   // insert new node in tree
-  nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(index, new_data));
+  nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(index, new_data));
   
   return;
 }
@@ -362,20 +362,20 @@ template<class T, unsigned d>
 void hsds_fd_tree<T,d>::split(hsds_fd_tree_node_index<d> index, T const& new_data)
 {
   // retrieve old node 
-  typename vcl_map<hsds_fd_tree_node_index<d>,T >::iterator nit = nodes_.find(index);
+  typename std::map<hsds_fd_tree_node_index<d>,T >::iterator nit = nodes_.find(index);
   if (nit == nodes_.end()) {
-    vcl_cerr << "error: tree does not contain node with index " << index << vcl_endl;
+    std::cerr << "error: tree does not contain node with index " << index << std::endl;
     return;
   }
   if ((*nit).first.lvl != index.lvl) {
-    vcl_cerr << "error: tree node with index " << (*nit).first << " does not match levels with index " << index << vcl_endl;
+    std::cerr << "error: tree node with index " << (*nit).first << " does not match levels with index " << index << std::endl;
     return;
   }
   // remove old node from tree
   //T old_data = (*nit).second;
   unsigned char new_lvl = index.lvl + 1;
   if (new_lvl > this->max_levels_) {
-    //vcl_cerr << "warning: cannot split node: max level (" << this->max_levels_ << ") reached." << vcl_endl;
+    //std::cerr << "warning: cannot split node: max level (" << this->max_levels_ << ") reached." << std::endl;
     return;
   }
 
@@ -386,7 +386,7 @@ void hsds_fd_tree<T,d>::split(hsds_fd_tree_node_index<d> index, T const& new_dat
   for (unsigned int i=0; i<nnodes; ++i) {
     unsigned int new_idx = index.idx + (i << hsds_fd_tree_node_index<d>::level_shift(new_lvl));
     hsds_fd_tree_node_index<d> new_index(new_idx,new_lvl);
-    nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(new_index, new_data));
+    nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(new_index, new_data));
   }
 
   return;
@@ -395,30 +395,30 @@ void hsds_fd_tree<T,d>::split(hsds_fd_tree_node_index<d> index, T const& new_dat
 // IO functions
 //: write index to stream (for debugging)
 template <unsigned d>
-vcl_ostream&  operator<<(vcl_ostream& s, hsds_fd_tree_node_index<d> const& index)
+std::ostream&  operator<<(std::ostream& s, hsds_fd_tree_node_index<d> const& index)
 {
-  s << "0x" << vcl_setw(sizeof(index.idx)*2) << vcl_setfill('0') << vcl_hex << index.idx << ", " << vcl_dec << (int)index.lvl;
+  s << "0x" << std::setw(sizeof(index.idx)*2) << std::setfill('0') << std::hex << index.idx << ", " << std::dec << (int)index.lvl;
   return s;
 }
 
 
 template <class T, unsigned d>
-void hsds_fd_tree<T,d>::b_read(vcl_istream &is)
+void hsds_fd_tree<T,d>::b_read(std::istream &is)
 {
   // check stream
   if (!is.good()) {
-    vcl_cerr << "error: bad stream passed to b_read " << vcl_endl;
+    std::cerr << "error: bad stream passed to b_read " << std::endl;
     return;
   }
   hsds_fd_tree_header<T,d> header;
   is.read(reinterpret_cast<char*>(&header),sizeof(header));
   // check that header matches what we are expecting
   if (header.dimension != d) {
-    vcl_cerr << "error: dimension in header " << header.dimension << " does not match expected value " << d << vcl_endl;
+    std::cerr << "error: dimension in header " << header.dimension << " does not match expected value " << d << std::endl;
     return;
   }
   if (header.data_size != sizeof(T)) {
-    vcl_cerr << "error: data size in header " << header.data_size << " does not match expected value " << sizeof(T) << vcl_endl;
+    std::cerr << "error: data size in header " << header.data_size << " does not match expected value " << sizeof(T) << std::endl;
     return;
   }
   max_levels_ = header.max_levels;
@@ -448,7 +448,7 @@ void hsds_fd_tree<T,d>::b_read(vcl_istream &is)
     }
     is.read(reinterpret_cast<char*>(data),sizeof(T)*ndata_to_read);
     for (unsigned int i=0; i < ndata_to_read; ++i) {
-      nodes_.insert(vcl_make_pair<hsds_fd_tree_node_index<d>,T >(indices[data_read + i],data[i]));
+      nodes_.insert(std::make_pair<hsds_fd_tree_node_index<d>,T >(indices[data_read + i],data[i]));
     }
     data_read += ndata_to_read;
   }
@@ -458,18 +458,18 @@ void hsds_fd_tree<T,d>::b_read(vcl_istream &is)
 
 
 template <class T, unsigned d>
-void hsds_fd_tree<T,d>::b_write(vcl_ostream &os) const
+void hsds_fd_tree<T,d>::b_write(std::ostream &os) const
 {
   // check stream
   if (!os.good()) {
-    vcl_cerr << "error: bad stream passed to b_write " << vcl_endl;
+    std::cerr << "error: bad stream passed to b_write " << std::endl;
     return;
   }
   hsds_fd_tree_header<T,d> header(bbox_, nodes_.size(), max_levels_);
   os.write(reinterpret_cast<char*>(&header),sizeof(header));
-  //vcl_cout << "sizeof(header) = " << sizeof(header) << vcl_endl;
-  //vcl_cout << "data_size = " << header.data_size << vcl_endl;
-  //vcl_cout << "nnodes = " << header.nnodes << vcl_endl;
+  //std::cout << "sizeof(header) = " << sizeof(header) << std::endl;
+  //std::cout << "data_size = " << header.data_size << std::endl;
+  //std::cout << "nnodes = " << header.nnodes << std::endl;
   // allocate block for writing tree structure
   hsds_fd_tree_node_index<d>* indices = new hsds_fd_tree_node_index<d>[nodes_.size()];
   // fill in block
@@ -480,7 +480,7 @@ void hsds_fd_tree<T,d>::b_write(vcl_ostream &os) const
   }
   // write tree structure
   unsigned int idx_block_size = sizeof(hsds_fd_tree_node_index<d>)*nodes_.size();
-  //vcl_cout << "sizeof(node_index) = " << sizeof(hsds_fd_tree_node_index<d>) << vcl_endl;
+  //std::cout << "sizeof(node_index) = " << sizeof(hsds_fd_tree_node_index<d>) << std::endl;
   os.write(reinterpret_cast<char*>(indices),idx_block_size);
   delete[] indices;
 
@@ -514,7 +514,7 @@ void hsds_fd_tree<T,d>::b_write(vcl_ostream &os) const
 
 #define HSDS_FD_TREE_INSTANTIATE(T,d) \
 template class hsds_fd_tree<T,d>; \
-template vcl_ostream& operator<<(vcl_ostream&, const hsds_fd_tree_node_index<d>&) \
+template std::ostream& operator<<(std::ostream&, const hsds_fd_tree_node_index<d>&) \
 
 
 #endif

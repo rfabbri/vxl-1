@@ -12,11 +12,11 @@
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_double_3.h>
 
-#include <vcl_cassert.h>
-#include <vcl_cstring.h> // for memcpy
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <cstring> // for memcpy
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
 
 
 //=======================================================================
@@ -44,7 +44,7 @@ bvam_voxel_slab<T>::bvam_voxel_slab(const bvam_voxel_slab<T>& that)
 template<class T>
 void bvam_voxel_slab<T>::fill(T const& value)
 {
-  vcl_fill(begin(), end(), value);
+  std::fill(begin(), end(), value);
   return;
 }
 
@@ -69,7 +69,7 @@ void bvam_voxel_slab<T>::deep_copy(bvam_voxel_slab<T> const& src)
 {
   set_size(src.nx(),src.ny(),src.nz());
 
-  vcl_memcpy(this->first_voxel_,src.first_voxel(),src.size()*sizeof(T));
+  std::memcpy(this->first_voxel_,src.first_voxel(),src.size()*sizeof(T));
   return;
 }
 

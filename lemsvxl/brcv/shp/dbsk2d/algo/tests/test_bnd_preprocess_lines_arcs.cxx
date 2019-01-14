@@ -6,7 +6,7 @@
 
 #include <testlib/testlib_test.h>
 
-//#include <vcl_algorithm.h>
+//#include <algorithm>
 //
 #include <dbsk2d/algo/dbsk2d_bnd_preprocess.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
@@ -16,7 +16,7 @@
 // test intersecting 1 line segment and 1 arc
 void test_intersect_lines_and_arcs_1_pair()
 {
-  vcl_cout << "In test_intersect_lines_and_arcs_1_pair()" << vcl_endl;
+  std::cout << "In test_intersect_lines_and_arcs_1_pair()" << std::endl;
   
   // intersect 1 line and 1 arc
   vgl_point_2d<double > p11(0, 0);
@@ -38,8 +38,8 @@ void test_intersect_lines_and_arcs_1_pair()
   dbsk2d_bnd_edge_sptr bnd_arc2 = 
     dbsk2d_bnd_utils::new_arc_between(v21, v22, k2);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
   bnd_arcs.push_back(bnd_arc2);
   bnd_lines.push_back(bnd_line);
 
@@ -49,19 +49,19 @@ void test_intersect_lines_and_arcs_1_pair()
   dbsk2d_bnd_contour_sptr contour2 = new dbsk2d_bnd_contour();
   contour2->add_edge(bnd_arc2);
 
-  vcl_list<dbsk2d_bnd_contour_sptr > contours;
+  std::list<dbsk2d_bnd_contour_sptr > contours;
   contours.push_back(contour1);
   contours.push_back(contour2);
 
 #ifdef _DEBUG
   // print out list of contours information before preprocessing
-  vcl_cout << "\n\nArc contours before preprocessing\n";
+  std::cout << "\n\nArc contours before preprocessing\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -70,19 +70,19 @@ void test_intersect_lines_and_arcs_1_pair()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
 
   // intersecting the lines
@@ -95,13 +95,13 @@ void test_intersect_lines_and_arcs_1_pair()
 
 #ifdef _DEBUG
   // print out list of contours information before preprocessing
-  vcl_cout << "\n\nArc contours after intersecting\n";
+  std::cout << "\n\nArc contours after intersecting\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -110,19 +110,19 @@ void test_intersect_lines_and_arcs_1_pair()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
   
   
@@ -138,7 +138,7 @@ void test_intersect_lines_and_arcs_1_pair()
 // intersecting 3 pairs of arcs
 void test_intersect_lines_and_arcs_3_pairs()
 {
-  vcl_cout << "In test_intersect_lines_and_arcs_3_pairs()" << vcl_endl;
+  std::cout << "In test_intersect_lines_and_arcs_3_pairs()" << std::endl;
   
   // intersect 2 arcs and 1 line segment
   // arc 1
@@ -171,11 +171,11 @@ void test_intersect_lines_and_arcs_3_pairs()
   dbsk2d_bnd_edge_sptr bnd_line = 
     dbsk2d_bnd_utils::new_line_between(v31, v32);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
   bnd_arcs.push_back(bnd_arc1);
   bnd_arcs.push_back(bnd_arc2);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
   bnd_lines.push_back(bnd_line);
 
 
@@ -188,20 +188,20 @@ void test_intersect_lines_and_arcs_3_pairs()
   dbsk2d_bnd_contour_sptr contour3 = new dbsk2d_bnd_contour();
   contour3->add_edge(bnd_line);
 
-  vcl_list<dbsk2d_bnd_contour_sptr > contours;
+  std::list<dbsk2d_bnd_contour_sptr > contours;
   contours.push_back(contour1);
   contours.push_back(contour2);
   contours.push_back(contour3);
 
   #ifdef _DEBUG
   // print out list of contours information before preprocessing
-  vcl_cout << "\n\nArc contours before preprocessing\n";
+  std::cout << "\n\nArc contours before preprocessing\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -210,19 +210,19 @@ void test_intersect_lines_and_arcs_3_pairs()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
 
   // intersecting the lines
@@ -236,13 +236,13 @@ void test_intersect_lines_and_arcs_3_pairs()
 
 #ifdef _DEBUG
   // print out list of contours information after preprocessing
-  vcl_cout << "\n\nArc contours after preprocessing\n";
+  std::cout << "\n\nArc contours after preprocessing\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -251,19 +251,19 @@ void test_intersect_lines_and_arcs_3_pairs()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
  
   
@@ -279,8 +279,8 @@ void test_intersect_lines_and_arcs_3_pairs()
 // test intersecting two arcs, which already shares an enpoint
 void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
 {
-  vcl_cout << "In test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()" 
-    << vcl_endl;
+  std::cout << "In test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()" 
+    << std::endl;
   
   // intersect 1 line and 1 arc which shared an endpoint
   // arc 1
@@ -301,10 +301,10 @@ void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
   dbsk2d_bnd_edge_sptr bnd_line = 
     dbsk2d_bnd_utils::new_line_between(v12, v22);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_arcs;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_arcs;
   bnd_arcs.push_back(bnd_arc1);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
   bnd_lines.push_back(bnd_line);
   
   
@@ -315,20 +315,20 @@ void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
   dbsk2d_bnd_contour_sptr contour2 = new dbsk2d_bnd_contour();
   contour2->add_edge(bnd_line);
 
-  vcl_list<dbsk2d_bnd_contour_sptr > contours;
+  std::list<dbsk2d_bnd_contour_sptr > contours;
   contours.push_back(contour1);
   contours.push_back(contour2);
 
 
   #ifdef _DEBUG
   // print out list of contours information before preprocessing
-  vcl_cout << "\n\nArc contours before preprocessing\n";
+  std::cout << "\n\nArc contours before preprocessing\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -337,19 +337,19 @@ void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
 
 
@@ -362,13 +362,13 @@ void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
 
 #ifdef _DEBUG
   // print out list of contours information after preprocessing
-  vcl_cout << "\n\nArc contours after preprocessing\n";
+  std::cout << "\n\nArc contours after preprocessing\n";
   for (bnd_contour_list::iterator cit = contours.begin();
     cit != contours.end(); ++cit)
   {
     
     dbsk2d_bnd_contour_sptr contour = *cit;
-    vcl_cout << "\nContour (" << contour->num_edges() << " edges):\n";
+    std::cout << "\nContour (" << contour->num_edges() << " edges):\n";
     // print out arc parameters
     for (int i=0; i<contour->num_edges(); ++i)
     {
@@ -377,19 +377,19 @@ void test_intersect_lines_and_arcs_1_pair_with_shared_endpoint()
       {
         dbsk2d_ishock_bline* bline = 
           static_cast<dbsk2d_ishock_bline* >(e->left_bcurve());
-        vcl_cout << "\n\nLine \np1=" << e->point1() << 
+        std::cout << "\n\nLine \np1=" << e->point1() << 
           "\np2=" << e->point2(); 
       }
       else if (e->left_bcurve()->is_an_arc())
       {
         dbsk2d_ishock_barc* barc = 
           static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
-        vcl_cout << "\n\nArc \np1=" << e->point1() << 
+        std::cout << "\n\nArc \np1=" << e->point1() << 
           "\np2=" << e->point2() << "\nk=" << barc->curvature(); 
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
 
 

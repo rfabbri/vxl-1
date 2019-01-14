@@ -5,7 +5,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_plane.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vl/mathop.h>
 #include <vl/imopv.h>
 #include <vl/sift.h>
@@ -182,31 +182,31 @@ void compute_sobel_grad_color_maps(
 int main( int argc, char *argv[] )
 {
 
-    vcl_stringstream stream(argv[1]);
-    vcl_string input_img;
+    std::stringstream stream(argv[1]);
+    std::string input_img;
     stream>>input_img;
 
 
-    vcl_stringstream x_stream(argv[2]);
+    std::stringstream x_stream(argv[2]);
     double x_coord(0.0);
     x_stream>>x_coord;
 
-    vcl_stringstream y_stream(argv[3]);
+    std::stringstream y_stream(argv[3]);
     double y_coord(0.0);
     y_stream>>y_coord;
 
 
-    vcl_stringstream theta_stream(argv[4]);
+    std::stringstream theta_stream(argv[4]);
     double theta(0.0);
     theta_stream>>theta;
     theta=theta*(VL_PI/180);
-    vcl_cout<<theta<<vcl_endl;
+    std::cout<<theta<<std::endl;
 
-    vcl_stringstream scale_stream(argv[5]);
+    std::stringstream scale_stream(argv[5]);
     double scale(0.0);
     scale_stream>>scale;
 
-    vcl_stringstream color_stream(argv[6]);
+    std::stringstream color_stream(argv[6]);
     double color(0.0);
     color_stream>>color;
 
@@ -244,7 +244,7 @@ int main( int argc, char *argv[] )
         
         for ( unsigned int i=0; i < 128; ++i)
         {
-            vcl_cout<<512*descr_ps1[i]<<vcl_endl;
+            std::cout<<512*descr_ps1[i]<<std::endl;
             
         }
         
@@ -256,7 +256,7 @@ int main( int argc, char *argv[] )
     else
     {
 
-        vcl_cout<<"Computing color"<<vcl_endl;
+        std::cout<<"Computing color"<<std::endl;
 
         unsigned int width  = img_sptr->ni();
         unsigned int height = img_sptr->nj();
@@ -335,7 +335,7 @@ int main( int argc, char *argv[] )
         
         for ( unsigned int i=0; i < 384; ++i)
         {
-            vcl_cout<<descr1[i]<<vcl_endl;
+            std::cout<<descr1[i]<<std::endl;
             
         }
         

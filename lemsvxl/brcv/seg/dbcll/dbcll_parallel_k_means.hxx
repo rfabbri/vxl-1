@@ -13,31 +13,31 @@
 // \endverbatim
 
 #include "dbcll_parallel_k_means.h"
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_random.h>
 
 //: Compute distances between each pair of centroids
 template <unsigned dim>
-unsigned dbcll_parallel_k_means:init_pairwise_center_distance(const vcl_vector<vnl_vector_fixed<double,dim> >& centroids,
-                                                         vcl_vector<vcl_vector<double> > &d_cc,
-                                                         vcl_vector<double> &sc)
+unsigned dbcll_parallel_k_means:init_pairwise_center_distance(const std::vector<vnl_vector_fixed<double,dim> >& centroids,
+                                                         std::vector<std::vector<double> > &d_cc,
+                                                         std::vector<double> &sc)
 {
   const unsigned k = centroids.size();
   dcc.clear();
   dcc.resize(k, 0.0);
   
   // the distances between each pair of means
-  vcl_vector<vcl_vector<double> > d_cc(k);
+  std::vector<std::vector<double> > d_cc(k);
   // compute center distances
   for(unsigned i=0; i<k; ++i)
     for(unsigned j=0; j<i; ++j)
-      d_cc[i].push_back(vcl_sqrt(vnl_vector_ssd(centroids[i],centroids[j])));
+      d_cc[i].push_back(std::sqrt(vnl_vector_ssd(centroids[i],centroids[j])));
   
   // a vector of minimum distance between between each mean and other means
   // (divided by 2)
-  vcl_vector<double>
+  std::vector<double>
   sc.clear();
-  sc.resize(k,vcl_numeric_limits<double>::infinity());
+  sc.resize(k,std::numeric_limits<double>::infinity());
   
   for(unsigned i=0; i<k; ++i){
     double& s = sc[i];
@@ -54,18 +54,18 @@ unsigned dbcll_parallel_k_means:init_pairwise_center_distance(const vcl_vector<v
 
 //: Compute distances between each pair of centroids
 template <unsigned dim>
-unsigned dbcll_parallel_k_means:update_pairwise_center_distance(const vcl_vector<vnl_vector_fixed<double,dim> >& centroids,
-                                                              vcl_vector<vcl_vector<double> > &d_cc,
-                                                              vcl_vector<double> &sc)
+unsigned dbcll_parallel_k_means:update_pairwise_center_distance(const std::vector<vnl_vector_fixed<double,dim> >& centroids,
+                                                              std::vector<std::vector<double> > &d_cc,
+                                                              std::vector<double> &sc)
 {
   const unsigned k = centroids.size();
   
   // the distances between each pair of means
-  vcl_vector<vcl_vector<double> > d_cc(k);
+  std::vector<std::vector<double> > d_cc(k);
   // compute center distances
   for(unsigned i=0; i<k; ++i)
     for(unsigned j=0; j<i; ++j)
-      d_cc[i].push_back(vcl_sqrt(vnl_vector_ssd(centroids[i],centroids[j])));
+      d_cc[i].push_back(std::sqrt(vnl_vector_ssd(centroids[i],centroids[j])));
   
   // a vector of minimum distance between between each mean and other means
   // (divided by 2)
@@ -86,12 +86,12 @@ unsigned dbcll_parallel_k_means:update_pairwise_center_distance(const vcl_vector
 //: Assign n-points to k-means. Return cluster assigment and partial sum
 //  This function is proccessed by the clients
 template <unsigned dim>
-unsigned dbcll_parallel_k_means::dbcll_init_k_means(   const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                                       const vcl_vector<vnl_vector_fixed<double,dim> >& centroids,
-                                                       vcl_vector<vcl_vector<unsigned> >& clusters,
-                                                       vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums,
-                                                       vcl_vector<double> &ub,
-                                                       vcl_vector<vcl_vector<double> > lbs)
+unsigned dbcll_parallel_k_means::dbcll_init_k_means(   const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                                       const std::vector<vnl_vector_fixed<double,dim> >& centroids,
+                                                       std::vector<std::vector<unsigned> >& clusters,
+                                                       std::vector<vnl_vector_fixed<double,dim> >&partial_sums,
+                                                       std::vector<double> &ub,
+                                                       std::vector<std::vector<double> > lbs)
 {
   typedef vnl_vector_fixed<double,dim> vector;
 
@@ -103,7 +103,7 @@ unsigned dbcll_parallel_k_means::dbcll_init_k_means(   const vcl_vector<vnl_vect
   clusters.resize(k);
 
   // the minimum distances of each point to its cluster mean
-  vcl_vector<double> min_dists(points.size(), vcl_numeric_limits<double>::infinity());
+  std::vector<double> min_dists(points.size(), std::numeric_limits<double>::infinity());
 
   // partial sum of each cluster
   partial_sums.clear();
@@ -111,20 +111,20 @@ unsigned dbcll_parallel_k_means::dbcll_init_k_means(   const vcl_vector<vnl_vect
   
   //upper and lower bounds
   ub.clear();
-  ub.resize(points.size(),vcl_numeric_limits<double>::infinity());
+  ub.resize(points.size(),std::numeric_limits<double>::infinity());
   lbs.clear();
-  lbs.resize(points.size(),vcl_vector<double>(k,0.0));
+  lbs.resize(points.size(),std::vector<double>(k,0.0));
   
    // initialize the clusters
   for(unsigned pi=0; pi<points.size(); ++pi){
     const vector& point = points[pi];
     unsigned best_mean = 0;
     double& best_dist = ub[pi];
-    vcl_vector<double>& lb = lbs[pi];
+    std::vector<double>& lb = lbs[pi];
     for(unsigned mi=0; mi<k; ++mi){
       if(cluster_distance(mi,best_mean,dcs) > 2*best_dist)
         continue;
-      double dist = vcl_sqrt(vnl_vector_ssd(point,centroids[mi]));
+      double dist = std::sqrt(vnl_vector_ssd(point,centroids[mi]));
       lb[mi] = dist;
       if(dist < best_dist){
         best_dist = dist;
@@ -139,12 +139,12 @@ unsigned dbcll_parallel_k_means::dbcll_init_k_means(   const vcl_vector<vnl_vect
 //: Assign n-points to k-means. Return cluster assigment and partial sum
 //  This function is proccessed by the clients
 template <unsigned dim>
-unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                                        const vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                                                        vcl_vector<vcl_vector<unsigned> >& clusters,
-                                                        vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums,
-                                                        vcl_vector<double> &ub,
-                                                        vcl_vector<vcl_vector<double> > lbs
+unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                                        const std::vector<vnl_vector_fixed<double,dim> >& means,
+                                                        std::vector<std::vector<unsigned> >& clusters,
+                                                        std::vector<vnl_vector_fixed<double,dim> >&partial_sums,
+                                                        std::vector<double> &ub,
+                                                        std::vector<std::vector<double> > lbs
                                                         bool &change)
 {
   typedef vnl_vector_fixed<double,dim> vector;
@@ -155,13 +155,13 @@ unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const vcl_vector<vnl_vec
   const unsigned k = means.size();
   
   change = false;
-  vcl_vector<vcl_vector<unsigned> > new_clusters(k);
+  std::vector<std::vector<unsigned> > new_clusters(k);
   for(unsigned i=0; i<k; ++i)
     new_clusters[i].clear();
   
   //iterate through old means
   for(unsigned old_mi=0; old_mi<k; ++old_mi){
-    vcl_vector<unsigned>& cluster = clusters[old_mi];
+    std::vector<unsigned>& cluster = clusters[old_mi];
     
     // minimum distance between between this mean and other means (divided by 2)
     const double& s = sc[old_mi];
@@ -181,7 +181,7 @@ unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const vcl_vector<vnl_vec
       
       const vector& point = points[point_idx];
       unsigned best_mean = old_mi;
-      vcl_vector<double>& lb_c= lb_cx[point_idx];
+      std::vector<double>& lb_c= lb_cx[point_idx];
       bool valid_best_dist = false;
       //Step 3:
       for(unsigned new_mi=0; new_mi<k; ++new_mi){
@@ -192,13 +192,13 @@ unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const vcl_vector<vnl_vec
           continue;
         
         if(!valid_best_dist){
-          best_dist = vcl_sqrt(vnl_vector_ssd(point,means[best_mean]));
+          best_dist = std::sqrt(vnl_vector_ssd(point,means[best_mean]));
           lb[best_mean] = best_dist;
           valid_best_dist = true;
           if(best_dist <= lb[new_mi] || 2*best_dist <= cluster_distance(new_mi,best_mean,dcs))
             continue;
         }
-        double dist = vcl_sqrt(vnl_vector_ssd(point,means[new_mi]));
+        double dist = std::sqrt(vnl_vector_ssd(point,means[new_mi]));
         lb_c[new_mi] = dist;
         if(dist < best_dist){
           best_dist = dist;
@@ -226,9 +226,9 @@ unsigned dbcll_parallel_k_means::dbcll_update_k_means(  const vcl_vector<vnl_vec
 //  Partial sums are only modified for points that hanges membership
 //  Cluster membership is computed using triangle inequality
 template <unsigned dim>
-void dbcll_parallel_k_means::add_pairwise_partial_sums( const vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums1, const vcl_vector<unsigned long> n1,
-                                                            const vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums2, const vcl_vector<unsigned long> n2,
-                                                            vcl_vector<vnl_vector_fixed<double,dim> >&partial_sums_out, vcl_vector<unsigned long> n_out)
+void dbcll_parallel_k_means::add_pairwise_partial_sums( const std::vector<vnl_vector_fixed<double,dim> >&partial_sums1, const std::vector<unsigned long> n1,
+                                                            const std::vector<vnl_vector_fixed<double,dim> >&partial_sums2, const std::vector<unsigned long> n2,
+                                                            std::vector<vnl_vector_fixed<double,dim> >&partial_sums_out, std::vector<unsigned long> n_out)
 {
   
   const unsigned k = partial_sums1.size();
@@ -251,9 +251,9 @@ void dbcll_parallel_k_means::add_pairwise_partial_sums( const vcl_vector<vnl_vec
 //  Partial sums are only modified for points that hanges membership
 //  Cluster membership is computed using triangle inequality
 template <unsigned dim>
-void dbcll_parallel_k_means::recompute_means( const vcl_vector<vnl_vector_fixed<double,dim> >&total_sum, const vcl_vector<unsigned long> cluster_size,
-                                              vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                                              vcl_vector<vnl_vector_fixed<double,dim> >& new_means,)
+void dbcll_parallel_k_means::recompute_means( const std::vector<vnl_vector_fixed<double,dim> >&total_sum, const std::vector<unsigned long> cluster_size,
+                                              std::vector<vnl_vector_fixed<double,dim> >& means,
+                                              std::vector<vnl_vector_fixed<double,dim> >& new_means,)
 {
   const unsigned k = means.size();
 
@@ -268,7 +268,7 @@ void dbcll_parallel_k_means::recompute_means( const vcl_vector<vnl_vector_fixed<
     else {
       mean = total_sum[mi]/cluster_size[mi];
     }
-    mean_shifts[mi] = vcl_sqrt(vnl_vector_ssd(mean,old_mean));
+    mean_shifts[mi] = std::sqrt(vnl_vector_ssd(mean,old_mean));
   }
   
   return;
@@ -276,16 +276,16 @@ void dbcll_parallel_k_means::recompute_means( const vcl_vector<vnl_vector_fixed<
 
 // To be computed by clients after mean-shifts have been calculated
 template <unsigned dim>
-void dbcll_parallel_k_means::update_bounds( const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                                            const vcl_vector<double >&mean_shifts, 
-                                            vcl_vector<vcl_vector<unsigned> >& clusters,
-                                            vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                                           vcl_vector<double> &ub,
-                                           vcl_vector<vcl_vector<double> > &lbs)
+void dbcll_parallel_k_means::update_bounds( const std::vector<vnl_vector_fixed<double,dim> >& points,
+                                            const std::vector<double >&mean_shifts, 
+                                            std::vector<std::vector<unsigned> >& clusters,
+                                            std::vector<vnl_vector_fixed<double,dim> >& means,
+                                           std::vector<double> &ub,
+                                           std::vector<std::vector<double> > &lbs)
 {
   // update the lower bounds
   for(unsigned pi=0; pi<points.size(); ++pi){
-    vcl_vector<double>& lb = lbs[pi];
+    std::vector<double>& lb = lbs[pi];
     for(unsigned mi=0; mi<k; ++mi){
       double& l = lb[mi];
       l -= mean_shifts[mi];
@@ -295,7 +295,7 @@ void dbcll_parallel_k_means::update_bounds( const vcl_vector<vnl_vector_fixed<do
   
   // update the upper bounds
   for(unsigned mi=0; mi<k; ++mi){
-    vcl_vector<unsigned>& cluster = clusters[mi];
+    std::vector<unsigned>& cluster = clusters[mi];
     for(unsigned pi=0; pi<cluster.size(); ++pi){
       unsigned& ci = cluster[pi];
       ub[ci] += mean_shifts[mi];
@@ -307,8 +307,8 @@ void dbcll_parallel_k_means::update_bounds( const vcl_vector<vnl_vector_fixed<do
 
 //: Recompute centers
 template <unsigned dim>
-unsigned dbcll_recompute_centers( vcl_vector<vcl_vector<unsigned> >& clusters,
-                                  vcl_vector<vnl_vector_fixed<double,dim> >& means)
+unsigned dbcll_recompute_centers( std::vector<std::vector<unsigned> >& clusters,
+                                  std::vector<vnl_vector_fixed<double,dim> >& means)
 {
   bool change = true;
   unsigned n=0;
@@ -316,7 +316,7 @@ unsigned dbcll_recompute_centers( vcl_vector<vcl_vector<unsigned> >& clusters,
     // recompute the means
     for(unsigned mi=0; mi<k; ++mi){
       vector& mean = means[mi];
-      vcl_vector<unsigned>& cluster = clusters[mi];
+      std::vector<unsigned>& cluster = clusters[mi];
       // check for empty cluster
       if(cluster.empty()){
         mean = points[dbcll_random_sample_d2(min_dists)];
@@ -331,17 +331,17 @@ unsigned dbcll_recompute_centers( vcl_vector<vcl_vector<unsigned> >& clusters,
     }
 
     // recompute the clusters
-    vcl_vector<vcl_vector<unsigned> > new_clusters(k);
+    std::vector<std::vector<unsigned> > new_clusters(k);
     change = false;
     for(unsigned omi=0; omi<k; ++omi){
-      vcl_vector<unsigned>& cluster = clusters[omi];
+      std::vector<unsigned>& cluster = clusters[omi];
       for(unsigned pi=0; pi<cluster.size(); ++pi){
         const vector& point = points[cluster[pi]];
         unsigned best_mean = 0;
         double& best_dist = min_dists[cluster[pi]];
-        best_dist = vcl_numeric_limits<double>::infinity();
+        best_dist = std::numeric_limits<double>::infinity();
         for(unsigned nmi=0; nmi<k; ++nmi){
-          double dist = vcl_sqrt(vnl_vector_ssd(point,means[nmi]));
+          double dist = std::sqrt(vnl_vector_ssd(point,means[nmi]));
           if(dist < best_dist){
             best_dist = dist;
             best_mean = nmi;
@@ -362,7 +362,7 @@ unsigned dbcll_recompute_centers( vcl_vector<vcl_vector<unsigned> >& clusters,
 namespace {
 
   inline double cluster_distance(unsigned i, unsigned j,
-                                 const vcl_vector<vcl_vector<double> >& dcs)
+                                 const std::vector<std::vector<double> >& dcs)
   {
     if(i==j) return 0.0;
     if(i>j)  return dcs[i][j];
@@ -374,10 +374,10 @@ namespace {
 
 //: Randomly choose k points from the set to initialize K-Means suing Bradley98 refinment algotrithm
 template <unsigned dim>
-vcl_vector<vnl_vector_fixed<double,dim> >
-dbcll_parallel_k_means::init_k_means_refining(const vcl_vector<vnl_vector_fixed<double,dim> >& points, const unsigned k)
+std::vector<vnl_vector_fixed<double,dim> >
+dbcll_parallel_k_means::init_k_means_refining(const std::vector<vnl_vector_fixed<double,dim> >& points, const unsigned k)
 {
-  vcl_vector<vnl_vector_fixed<double,dim> > means;
+  std::vector<vnl_vector_fixed<double,dim> > means;
   vnl_random rand;
   
   for(unsigned i=0; i<k; ++i)
@@ -390,21 +390,21 @@ dbcll_parallel_k_means::init_k_means_refining(const vcl_vector<vnl_vector_fixed<
 
 #define DBCLL_K_MEANS_INSTANTIATE(T) \
 template \
-unsigned dbcll_k_means(const vcl_vector<vnl_vector_fixed<double,T > >& points,\
-                       vcl_vector<vcl_vector<unsigned> >& clusters,\
-                       vcl_vector<vnl_vector_fixed<double,T > >& means,\
+unsigned dbcll_k_means(const std::vector<vnl_vector_fixed<double,T > >& points,\
+                       std::vector<std::vector<unsigned> >& clusters,\
+                       std::vector<vnl_vector_fixed<double,T > >& means,\
                        const unsigned max_num_itr);\
 template \
-unsigned dbcll_fast_k_means(const vcl_vector<vnl_vector_fixed<double,T > >& points,\
-                            vcl_vector<vcl_vector<unsigned> >& clusters,\
-                            vcl_vector<vnl_vector_fixed<double,T > >& means,\
+unsigned dbcll_fast_k_means(const std::vector<vnl_vector_fixed<double,T > >& points,\
+                            std::vector<std::vector<unsigned> >& clusters,\
+                            std::vector<vnl_vector_fixed<double,T > >& means,\
                             const unsigned max_num_itr);\
 template \
-vcl_vector<vnl_vector_fixed<double,T > > \
-dbcll_init_k_means_rand(const vcl_vector<vnl_vector_fixed<double,T > >& points, const unsigned k);\
+std::vector<vnl_vector_fixed<double,T > > \
+dbcll_init_k_means_rand(const std::vector<vnl_vector_fixed<double,T > >& points, const unsigned k);\
 template \
-vcl_vector<vnl_vector_fixed<double,T > > \
-dbcll_init_k_means_d2(const vcl_vector<vnl_vector_fixed<double,T > >& points, unsigned k);
+std::vector<vnl_vector_fixed<double,T > > \
+dbcll_init_k_means_d2(const std::vector<vnl_vector_fixed<double,T > >& points, unsigned k);
 
 
 

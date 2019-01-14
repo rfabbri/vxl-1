@@ -18,7 +18,7 @@
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vidpro/storage/vidpro_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process loads a .EDG file into the current frame
 // \remarks The most recent and well-maintained version of the .EDG loader is in
@@ -34,17 +34,17 @@ public:
   //: Clone the process
   virtual bpro_process* clone() const;
   
-  vcl_string name() {
+  std::string name() {
     return "Load .EDG File";
   }
   
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     return to_return;
   }
 
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }

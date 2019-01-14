@@ -54,7 +54,7 @@ public:
   // --------------------------------------------------------------------------
 
   //: Return the type identifier string
-  vcl_string is_a() const {return "dbsksp_shock_graph"; }
+  std::string is_a() const {return "dbsksp_shock_graph"; }
 
   //: unique id given to its element
   unsigned int next_available_id(){ return ++this->next_available_id_; }
@@ -268,10 +268,10 @@ public:
   // ============= MISCELLANEOUS =============================================
   
   //: print info of the shock graph to an output stream
-  void print(vcl_ostream & os);
+  void print(std::ostream & os);
 
   //: Trace out the boundary of the shock graph
-  vcl_vector<vsol_spatial_object_2d_sptr > trace_boundary();
+  std::vector<vsol_spatial_object_2d_sptr > trace_boundary();
 
 
   

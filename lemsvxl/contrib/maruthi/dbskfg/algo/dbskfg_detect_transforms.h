@@ -21,7 +21,7 @@
 #include <dbskfg/algo/dbskfg_region_growing_transforms.h>
 #include <dbskfg/dbskfg_rag_graph_sptr.h>
 #include <dbskfg/dbskfg_rag_node.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_resource_sptr.h>
 
@@ -39,7 +39,7 @@ public:
     //: Destructor
     ~dbskfg_detect_transforms();
   
-    vcl_vector<dbskfg_transform_descriptor_sptr> objects()
+    std::vector<dbskfg_transform_descriptor_sptr> objects()
     {return transforms_;}
 
     void destroy_transforms(){transforms_.clear();
@@ -65,7 +65,7 @@ public:
     unsigned int transforms_valid(double threshold);
 
     void transform_affects_region(dbskfg_rag_node_sptr& rag_node,
-                                  vcl_set<unsigned int>& rag_con_ids);
+                                  std::set<unsigned int>& rag_con_ids);
 
     void transform_affects_region(dbskfg_rag_node_sptr& rag_node,
                                   double ess,
@@ -85,10 +85,10 @@ private:
     vil_image_resource_sptr image_; 
 
     // Holds a map storing all conflicting transforms
-    vcl_map<unsigned int,vcl_vector<unsigned int> > transform_neighbors_;
+    std::map<unsigned int,std::vector<unsigned int> > transform_neighbors_;
 
     // Keep track of all transform objects
-    vcl_vector<dbskfg_transform_descriptor_sptr> transforms_;
+    std::vector<dbskfg_transform_descriptor_sptr> transforms_;
 
     // Keep a region id to expand around
     dbskfg_rag_node_sptr rag_node_;

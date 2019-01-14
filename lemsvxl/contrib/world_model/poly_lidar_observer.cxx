@@ -16,7 +16,7 @@ poly_lidar_observer::poly_lidar_observer(bgui_image_tableau_sptr const& img, con
   img_res_ =  img->get_image_resource();
    
   // the file should be a geotiff
-  vcl_cout << "FORMAT=" << img_res_->file_format();
+  std::cout << "FORMAT=" << img_res_->file_format();
   if (strcmp(img_res_->file_format(), "tiff") != 0) 
     return;
 
@@ -46,7 +46,7 @@ poly_lidar_observer::poly_lidar_observer(bgui_image_tableau_sptr const& img, con
     utm_lat_lon utm;
     double lat, lon, elev ;
     for (unsigned i=0; i< tiepoints.size(); i++) {
-      vcl_vector<double> tiepoint = tiepoints[i];
+      std::vector<double> tiepoint = tiepoints[i];
       assert (tiepoint.size() == 6);
       double I = tiepoint[0];
       double J = tiepoint[1];
@@ -75,7 +75,7 @@ poly_lidar_observer::poly_lidar_observer(bgui_image_tableau_sptr const& img, con
     vil_tiff_image* tiff_img = static_cast<vil_tiff_image*> (img_res_.as_pointer());
     img_view_ = *(tiff_img->get_view());
   } else {
-      vcl_cout << "Only ProjectedCSTypeGeoKey=PCS_WGS84_UTM_zoneXX_X is defined rigth now, please define yours!!" << vcl_endl;
+      std::cout << "Only ProjectedCSTypeGeoKey=PCS_WGS84_UTM_zoneXX_X is defined rigth now, please define yours!!" << std::endl;
   }
 }
 
@@ -87,22 +87,22 @@ void poly_lidar_observer::set_lvcs(double lat, double lon, double elev)
 }
 
 void poly_lidar_observer::set_trans_matrix(vil_geotiff_header* gtif,
-                                      vcl_vector<vcl_vector<double> > tiepoints)
+                                      std::vector<std::vector<double> > tiepoints)
 {
 //return;//JLM Kludge
 //#if 0
   double sx, sy, sz, sx1, sy1, sz1;
   double* trans_matrix_values;
   if (gtif->gtif_trans_matrix(trans_matrix_values)){
-     vcl_cout << "Transfer matrix is given, using that...." << vcl_endl;
+     std::cout << "Transfer matrix is given, using that...." << std::endl;
      trans_matrix_.copy_in(trans_matrix_values);
-     vcl_cout << trans_matrix_ << vcl_endl;
+     std::cout << trans_matrix_ << std::endl;
   } else if (gtif->gtif_pixelscale(sx1, sy1, sz1)) {
 
     // use tiepoints and sclae values to create a transformation matrix
     // for now use the first tiepoint if there are more than one
     assert (tiepoints.size() > 0);
-    vcl_vector<double> tiepoint = tiepoints[0];
+    std::vector<double> tiepoint = tiepoints[0];
     assert (tiepoint.size() == 6);
     double I = tiepoint[0];
     double J = tiepoint[1];
@@ -138,9 +138,9 @@ void poly_lidar_observer::set_trans_matrix(vil_geotiff_header* gtif,
     m[1][3] = Ty;
     m[2][3] = Tz;
     trans_matrix_ = m;
-    vcl_cout << trans_matrix_ << vcl_endl;
+    std::cout << trans_matrix_ << std::endl;
   } else {
-    vcl_cerr << "Transform matrix cannot be formed.. " << vcl_endl;
+    std::cerr << "Transform matrix cannot be formed.. " << std::endl;
   }
 //#endif
 }
@@ -161,10 +161,10 @@ void poly_lidar_observer::proj_point(vsol_point_3d_sptr p3d,
   v[2] = 0;
   v[3] = 1;
   trans_matrix_[2][2] = 1;
-  //vcl_cout << trans_matrix_ << vcl_endl;
+  //std::cout << trans_matrix_ << std::endl;
   vnl_matrix<double> trans_matrix_inv = vnl_inverse(trans_matrix_);
   res = trans_matrix_inv*v;
-  //vcl_cout << res[0] << " " << res[1] << vcl_endl;
+  //std::cout << res[0] << " " << res[1] << std::endl;
   p2d = new vsol_point_2d (res[0], res[1]);
 }
    
@@ -178,7 +178,7 @@ void poly_lidar_observer::backproj_point(vsol_point_2d_sptr p2d,
   v[2] = 0;
   v[3] = 1;
 
-  //vcl_cout << "Northing=" << v[0] << " Easting=" << v[1];
+  //std::cout << "Northing=" << v[0] << " Easting=" << v[1];
 
   //find the UTM values 
   utm_lat_lon utm;
@@ -193,14 +193,14 @@ void poly_lidar_observer::backproj_point(vsol_point_2d_sptr p2d,
 void poly_lidar_observer::proj_poly(vsol_polygon_3d_sptr poly3d, 
                                     vsol_polygon_2d_sptr& poly2d)
 {
-  vcl_vector<vsol_point_2d_sptr> vertices;
+  std::vector<vsol_point_2d_sptr> vertices;
   for (unsigned i=0; i<poly3d->size(); i++) {
     vsol_point_3d_sptr p3d = poly3d->vertex(i);
     // transfer the point to geographic coord
     vsol_point_2d_sptr p2d;
-    //vcl_cout << *p3d << vcl_endl;
+    //std::cout << *p3d << std::endl;
     proj_point(p3d, p2d);
-    //vcl_cout << *p2d << vcl_endl;
+    //std::cout << *p2d << std::endl;
     // now find a 3d coordinates by bgeo_lvcs
     vertices.push_back(p2d);
   }
@@ -211,16 +211,16 @@ void poly_lidar_observer::proj_poly(vsol_polygon_3d_sptr poly3d,
 void poly_lidar_observer::backproj_poly(vsol_polygon_2d_sptr poly2d, 
                                         vsol_polygon_3d_sptr& poly3d)
 {
-  vcl_vector<vsol_point_3d_sptr> vertices;
+  std::vector<vsol_point_3d_sptr> vertices;
   for (unsigned i=0; i<poly2d->size(); i++) {
     vsol_point_2d_sptr p2d = poly2d->vertex(i);
    
     // transfer the point to geographic coord
     vsol_point_3d_sptr p3d;
-    //vcl_cout << vcl_endl << "-----------------------" << vcl_endl 
-    //  << *p2d << vcl_endl;
+    //std::cout << std::endl << "-----------------------" << std::endl 
+    //  << *p2d << std::endl;
     backproj_point(p2d, p3d);
-    //vcl_cout << *p3d << vcl_endl;
+    //std::cout << *p3d << std::endl;
     //set the elevation from the pixel intensity
     
     p3d->set_z(img_view_(p2d->x(), p2d->y()));
@@ -241,7 +241,7 @@ void poly_lidar_observer::set_ground_plane(unsigned int x1, unsigned int y1, uns
 {
   // find the image pixel values of the given points to calculate the elevation
   vil_pixel_format pf = img_res_->pixel_format();
-  vcl_cout << pf << vcl_endl;
+  std::cout << pf << std::endl;
 
   if (pf == VIL_PIXEL_FORMAT_FLOAT) {
     vil_tiff_image* tiff_img = static_cast<vil_tiff_image*> (img_res_.as_pointer());
@@ -253,8 +253,8 @@ void poly_lidar_observer::set_ground_plane(unsigned int x1, unsigned int y1, uns
     float i2 = view(x2,y2);
     ground_elev_ = (i1 + i2) / 2.;
   } else 
-    vcl_cout << "poly_lidar_observer::set_ground_plane() -- Pixel Format [" << 
-    pf << "] is not supported yet" << vcl_cout;
+    std::cout << "poly_lidar_observer::set_ground_plane() -- Pixel Format [" << 
+    pf << "] is not supported yet" << std::cout;
 }
 void poly_lidar_observer::img_to_wgs(const unsigned i, const unsigned j,
                                      double& lon, double& lat)
@@ -273,7 +273,7 @@ void poly_lidar_observer::img_to_wgs(const unsigned i, const unsigned j,
 bool poly_lidar_observer::get_point_cloud(const float x1, const float y1,
                                           const float x2, const float y2,
                                           bgeo_lvcs& lvcs,
-                                          vcl_vector<vsol_point_3d_sptr>& points)
+                                          std::vector<vsol_point_3d_sptr>& points)
 {
   if(!img_view_)
     return false;
@@ -315,17 +315,17 @@ bool poly_lidar_observer::get_point_cloud(const float x1, const float y1,
   return true;
 }
 
-bool poly_lidar_observer::save_meshed_point_cloud(const float x1, const float y1, const float x2, const float y2, vcl_string file)
+bool poly_lidar_observer::save_meshed_point_cloud(const float x1, const float y1, const float x2, const float y2, std::string file)
 {
 
-  vcl_ofstream os(file.c_str());  
+  std::ofstream os(file.c_str());  
   if(!os.is_open())
   {
-    vcl_cout << "Bad file path\n";
+    std::cout << "Bad file path\n";
     return false;
   }
 
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
   //observer_left_->get_point_cloud(x1, y1, x2, y2, lvcs, points);
 
   //vil_image_view<float> img_view = (vil_image_view<float>)observer_left_->get_image_tableau()->get_image_view();
@@ -359,7 +359,7 @@ bool poly_lidar_observer::save_meshed_point_cloud(const float x1, const float y1
   //double elev = img_view_(im, jm);
   //lvcs = bgeo_lvcs(lat, lon, elev);
 
-  vcl_vector<vgl_point_3d<double> > vertices;
+  std::vector<vgl_point_3d<double> > vertices;
 
   for(unsigned j = iy1; j<=iy2; ++j) {
     for(unsigned i = ix1; i<=ix2; ++i) {
@@ -374,7 +374,7 @@ bool poly_lidar_observer::save_meshed_point_cloud(const float x1, const float y1
   int sel_width = ix2 - ix1 + 1;
 
   // use vgl_point_3d to hold triangle vertex indices
-  vcl_vector<vgl_point_3d<int> > faces;
+  std::vector<vgl_point_3d<int> > faces;
 
   for (int j=0; j < sel_height - 1; ++j) {
     for (int i=0; i < sel_width - 1; ++i) {
@@ -390,16 +390,16 @@ bool poly_lidar_observer::save_meshed_point_cloud(const float x1, const float y1
 
   unsigned nverts = vertices.size();
   unsigned nfaces = faces.size();
-  os << nverts << vcl_endl;
-  os << nfaces << vcl_endl;
+  os << nverts << std::endl;
+  os << nfaces << std::endl;
   os.precision(12);
   for (unsigned i=0; i < nverts; ++i) {
     vgl_point_3d<double> vert = vertices[i];
-    os << vert.x() << " " << vert.y() << " " << vert.z() << vcl_endl;
+    os << vert.x() << " " << vert.y() << " " << vert.z() << std::endl;
   }
   for (unsigned i=0; i < nfaces; ++i) {
     vgl_point_3d<int> face = faces[i];
-    os << "3 " << face.x() << " " << face.y() << " " << face.z() << vcl_endl;
+    os << "3 " << face.x() << " " << face.y() << " " << face.z() << std::endl;
   }
 
   return true;

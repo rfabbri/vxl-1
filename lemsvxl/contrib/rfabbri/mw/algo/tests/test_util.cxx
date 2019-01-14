@@ -38,13 +38,13 @@ void  test_reprojection_errors()
 
   unsigned nviews = 3;
 
-  vcl_vector<unsigned> angles;
+  std::vector<unsigned> angles;
   angles.push_back(30);
   angles.push_back(50);
   angles.push_back(70);
 
-  vcl_vector<bdifd_camera> cam;
-  vcl_vector<vpgl_perspective_camera<double> *> pcam;
+  std::vector<bdifd_camera> cam;
+  std::vector<vpgl_perspective_camera<double> *> pcam;
 
   cam.resize(nviews);
 
@@ -55,23 +55,23 @@ void  test_reprojection_errors()
     pcam[i] = P;
   }
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d;
 //  bdifd_data::space_curves_digicam_turntable_medium_sized( crv3d );
   bdifd_data::space_curves_olympus_turntable( crv3d );
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d;
   bdifd_data::project_into_cams(crv3d, cam, crv2d);
-  vcl_cout << "Number of samples INCLUDING epitangencies: " << crv2d[0].size() << vcl_endl;
+  std::cout << "Number of samples INCLUDING epitangencies: " << crv2d[0].size() << std::endl;
 //  bdifd_data::project_into_cams_without_epitangency(crv3d, cam, crv2d, vnl_math::pi/6.0);
-//  vcl_cout << "Number of samples after removal of epipolar tangency: " << crv2d[0].size() << vcl_endl;
+//  std::cout << "Number of samples after removal of epipolar tangency: " << crv2d[0].size() << std::endl;
 
-  vcl_vector<unsigned> pt_id; //: can be used if you want to select only a subset of the points
+  std::vector<unsigned> pt_id; //: can be used if you want to select only a subset of the points
 
   for (unsigned n=0; n < crv2d[0].size(); n+=1)
     pt_id.push_back(n);
 
 
-  vcl_vector<vgl_point_3d<double> > vgl_pts;
+  std::vector<vgl_point_3d<double> > vgl_pts;
 
   for (unsigned i=0; i < pt_id.size(); ++i) {
     vgl_pts.push_back(bdifd_data::get_point_crv3d(crv3d,pt_id[i]));
@@ -79,7 +79,7 @@ void  test_reprojection_errors()
 
   // -------------------------------------------------------------------------------
 
-  vcl_vector<bdifd_camera> ecam(nviews);
+  std::vector<bdifd_camera> ecam(nviews);
   for (unsigned iv=0; iv < nviews; ++iv)
     ecam[iv].set_p(*(pcam[iv]));
 
@@ -88,7 +88,7 @@ void  test_reprojection_errors()
 //  double dk_total=0;
 //  double dkdot_total=0;
   unsigned n_total=0;
-  vcl_vector<bdifd_3rd_order_point_2d> pts;
+  std::vector<bdifd_3rd_order_point_2d> pts;
   pts.resize(nviews);
   double dnormal_plus_total=0;
   double dtangential_plus_total=0;
@@ -126,20 +126,20 @@ void  test_reprojection_errors()
 
     n_total+=n;
   }
-  dpos_total = vcl_sqrt(dpos_total);
+  dpos_total = std::sqrt(dpos_total);
   dtheta_total = dtheta_total/(double)n_total;
-  dtangential_plus_total = vcl_sqrt(dtangential_plus_total);
-  dnormal_plus_total = vcl_sqrt(dnormal_plus_total);
-  dtangential_minus_total = vcl_sqrt(dtangential_minus_total);
-  dnormal_minus_total = vcl_sqrt(dnormal_minus_total);
+  dtangential_plus_total = std::sqrt(dtangential_plus_total);
+  dnormal_plus_total = std::sqrt(dnormal_plus_total);
+  dtangential_minus_total = std::sqrt(dtangential_minus_total);
+  dnormal_minus_total = std::sqrt(dnormal_minus_total);
 
-  vcl_cout << "                   Pos reproj error using DG: " << dpos_total << vcl_endl;
-  vcl_cout << "            Theta reproj error using DG(rad): " << dtheta_total << vcl_endl;
-  vcl_cout << "      Normal distance (max,min) reproj error: " << dnormal_plus_total << ", " << dnormal_minus_total << vcl_endl;
-  vcl_cout << "  Tangential distance (max,min) reproj error: " << dtangential_plus_total << ", " << dtangential_minus_total << vcl_endl;
+  std::cout << "                   Pos reproj error using DG: " << dpos_total << std::endl;
+  std::cout << "            Theta reproj error using DG(rad): " << dtheta_total << std::endl;
+  std::cout << "      Normal distance (max,min) reproj error: " << dnormal_plus_total << ", " << dnormal_minus_total << std::endl;
+  std::cout << "  Tangential distance (max,min) reproj error: " << dtangential_plus_total << ", " << dtangential_minus_total << std::endl;
 
   TEST_NEAR("Positional reproj error using DG: ",dpos_total,0,1e-6);
-  vcl_cout << "#vaid points: " << n_total << vcl_endl;
+  std::cout << "#vaid points: " << n_total << std::endl;
 
   // -------------------------------------------------------------------------------
 
@@ -165,8 +165,8 @@ void  test_reprojection_errors()
         d_total += d*d;
       }
     }
-    d_total = vcl_sqrt(d_total);
-    vcl_cout << "Total reprojection error after change of coords: " << d_total << vcl_endl;
+    d_total = std::sqrt(d_total);
+    std::cout << "Total reprojection error after change of coords: " << d_total << std::endl;
     TEST("Total reprojection error after change of coords",d_total < 1e-5,true);
   }
 }

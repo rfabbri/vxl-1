@@ -27,7 +27,7 @@ load_ct_spheres_dataset()
   vpgl_calibration_matrix<double> K(m);
 
 
-  vcl_vector<vcl_string> fname;
+  std::vector<std::string> fname;
 
   fname.push_back("ct-spheres/artifact_2_0000_8bpp.tif");
   fname.push_back("ct-spheres/artifact_2_0001_8bpp.tif");
@@ -53,13 +53,13 @@ load_ct_spheres_dataset()
 
     vil_image_resource_sptr img = vil_load_image_resource( fname[frm_i].c_str() );
     if( !img ) {
-      vcl_cerr << "Failed to load image file" << fname[frm_i] << vcl_endl;
+      std::cerr << "Failed to load image file" << fname[frm_i] << std::endl;
       return;
     }
 
     // Create the storage data structures
-    vcl_string itype("image");
-    vcl_string iname(fname[frm_i].c_str());
+    std::string itype("image");
+    std::string iname(fname[frm_i].c_str());
 
     bpro1_storage_sptr img_data = MANAGER->repository()->new_data_at(itype,iname,frm_i);
     if (img_data) {
@@ -68,7 +68,7 @@ load_ct_spheres_dataset()
        img_storage->set_image(img);
        MANAGER->add_to_display(img_data);
     } else {
-       vcl_cerr << "error: unable to register new data\n";
+       std::cerr << "error: unable to register new data\n";
        return;
     }
 
@@ -89,10 +89,10 @@ load_ct_spheres_dataset()
 
 // reads levelset segmentation (a 3D image whose 0-levelset are the desired contours)
 void
-read_levelset(vcl_vector<vil_image_view<float> > &imgv)
+read_levelset(std::vector<vil_image_view<float> > &imgv)
 {
 
-  vcl_vector<double> v;
+  std::vector<double> v;
   myread("ct-spheres/dat/phi-0-5-600x.dat",v);
 
   // todo: improve this:
@@ -105,7 +105,7 @@ read_levelset(vcl_vector<vil_image_view<float> > &imgv)
 
   imgv.resize(nslices);
 
-  vcl_vector<double>::const_iterator vitr;
+  std::vector<double>::const_iterator vitr;
 
   vitr = v.begin();
 
@@ -125,8 +125,8 @@ read_levelset(vcl_vector<vil_image_view<float> > &imgv)
 
 //: trace 0-levelset at given slice
 void 
-trace_contours(const vcl_vector<vil_image_view<float> > &imgv, 
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &final_contours,
+trace_contours(const std::vector<vil_image_view<float> > &imgv, 
+    std::vector<std::vector<vsol_point_2d_sptr> >  &final_contours,
     unsigned slice_idx)
 {
   dbdet_contour_tracer tracer;
@@ -137,5 +137,5 @@ trace_contours(const vcl_vector<vil_image_view<float> > &imgv,
     if (tracer.contours()[i].size() > 3)
       final_contours.push_back(tracer.contours()[i]);
   }
-  vcl_cout << "Found " << final_contours.size() << " large enough contours\n";
+  std::cout << "Found " << final_contours.size() << " large enough contours\n";
 }

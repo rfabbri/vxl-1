@@ -32,7 +32,7 @@ public:
   //: Destructor
   virtual ~dber_instance_storage();
 
-  virtual vcl_string type() const { return "dber_instance_storage"; }
+  virtual std::string type() const { return "dber_instance_storage"; }
 
   //: Return IO version number;
   short version() const;
@@ -42,13 +42,13 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dber_instance_storage"; }
+  virtual std::string is_a() const { return "dber_instance_storage"; }
 
   //: set the instances in each frame
-  void set_frames(vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames) { frames_ = frames; }
+  void set_frames(std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames) { frames_ = frames; }
 
   //: get the pointer to frame array
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& get_frames(void) { return frames_; }
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> >& get_frames(void) { return frames_; }
 
   //: get the number of frames stored in OSL
   unsigned int size(void) { return frames_.size(); }
@@ -61,7 +61,7 @@ public:
 
 private:
 
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> > frames_;
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> > frames_;
   unsigned n_rows_, n_cols_;  // for visualization of the OSL
 };
 

@@ -1,8 +1,8 @@
 #include "bioproj_mem_io.h"
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
 #include <vnl/vnl_math.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
@@ -21,23 +21,23 @@
 // The globbing format expects only '#' to represent numbers.
 // Do not use "*" or "?"
 // All "#" should be in one contiguous group.
-static void parse_globbed_filenames(const vcl_string & input,
-                                    vcl_vector<vcl_string> &filenames)
+static void parse_globbed_filenames(const std::string & input,
+                                    std::vector<std::string> &filenames)
 {
   filenames.clear();
-  vcl_string filename = input;
+  std::string filename = input;
 
   // Avoid confusing globbing functions
   if (filename.find("*") != filename.npos) return;
   if (filename.find("?") != filename.npos) return;
 
   // Check that all the #s are in a single group.
-  vcl_size_t start = filename.find_first_of("#");
+  std::size_t start = filename.find_first_of("#");
   if (start == filename.npos) return;
-  vcl_size_t end = filename.find_first_not_of("#", start);
+  std::size_t end = filename.find_first_not_of("#", start);
   if (filename.find_first_of("#",end) != filename.npos) return;
   if (end == filename.npos) end = filename.length();
-  for (vcl_size_t i=start, j=start; i!=end; ++i, j+=12)
+  for (std::size_t i=start, j=start; i!=end; ++i, j+=12)
     filename.replace(j,1,"[0123456789]");
 
 
@@ -52,14 +52,14 @@ static void parse_globbed_filenames(const vcl_string & input,
   end = (end + filenames.front().size()) - input.size();
 
   // Put them all in numeric order.
-  vcl_sort(filenames.begin(), filenames.end());
+  std::sort(filenames.begin(), filenames.end());
 
   // Now discard non-contiguously numbered files.
-  long count = vcl_atol(filenames.front().substr(start, end-start).c_str());
-  vcl_vector<vcl_string>::iterator it=filenames.begin()+1;
+  long count = std::atol(filenames.front().substr(start, end-start).c_str());
+  std::vector<std::string>::iterator it=filenames.begin()+1;
   while (it != filenames.end())
   {
-    if (vcl_atol(it->substr(start, end-start).c_str()) != ++count)
+    if (std::atol(it->substr(start, end-start).c_str()) != ++count)
       break;
     ++it;
   }
@@ -67,7 +67,7 @@ static void parse_globbed_filenames(const vcl_string & input,
 }
 
 
-bioproj_mem_io::bioproj_mem_io(vcl_string log_fname, vcl_string scan_fname, vcl_string box_fname, vcl_string fname_pattern,
+bioproj_mem_io::bioproj_mem_io(std::string log_fname, std::string scan_fname, std::string box_fname, std::string fname_pattern,
                        float i_zero,float voxel_size, double sigma_r, double sigma_z)
                        : i_zero_(i_zero),voxel_size_(voxel_size), sigma_r_(sigma_r), sigma_z_(sigma_z) 
 {
@@ -81,46 +81,46 @@ bioproj_mem_io::bioproj_mem_io(vcl_string log_fname, vcl_string scan_fname, vcl_
   sensor_dim_[1] = hdr.number_of_rows_;
   rot_step_angle_ = hdr.rotation_step_;
 
-  vcl_cerr << "image_pix_size_ =    " << hdr.image_pixel_size_  << "\n"; 
-  vcl_cerr << "sensor_pix_size_ =   " << sensor_pix_size_   << "\n"; 
-  vcl_cerr << "source_origin_dist_ =" << source_origin_dist_  << "\n";
-  vcl_cerr << "source_sensor_dist_ =" << source_sensor_dist_  << "\n";
-  vcl_cerr << "sensor_dim_[0] =     " << sensor_dim_[0]  << "\n";
-  vcl_cerr << "sensor_dim_[1] =     " << sensor_dim_[1]  << "\n";
-  vcl_cerr << "rot_step_angle_ =    " << rot_step_angle_ << "\n";
+  std::cerr << "image_pix_size_ =    " << hdr.image_pixel_size_  << "\n"; 
+  std::cerr << "sensor_pix_size_ =   " << sensor_pix_size_   << "\n"; 
+  std::cerr << "source_origin_dist_ =" << source_origin_dist_  << "\n";
+  std::cerr << "source_sensor_dist_ =" << source_sensor_dist_  << "\n";
+  std::cerr << "sensor_dim_[0] =     " << sensor_dim_[0]  << "\n";
+  std::cerr << "sensor_dim_[1] =     " << sensor_dim_[1]  << "\n";
+  std::cerr << "rot_step_angle_ =    " << rot_step_angle_ << "\n";
 
   
   sigma_r_extent_ = static_cast<int>((sensor_dim_[0] > sensor_dim_[1] 
                           ?  sensor_dim_[1]
                           : sensor_dim_[0])/(2.*sigma_r_)) - 10;
-  sigma_z_extent_ = static_cast<int>(vcl_max(1.,sigma_r_extent_/20.));
-  vcl_cerr << "r_extent is " << sigma_r_extent_ << "\n";
-  vcl_cerr << "z_extent is " << sigma_z_extent_ << "\n";
+  sigma_z_extent_ = static_cast<int>(std::max(1.,sigma_r_extent_/20.));
+  std::cerr << "r_extent is " << sigma_r_extent_ << "\n";
+  std::cerr << "z_extent is " << sigma_z_extent_ << "\n";
 
   sigma_r_ *= hdr.image_pixel_size_;
   sigma_z_ *= hdr.image_pixel_size_;
-  vcl_cerr << "sigma_r_ =    " << sigma_r_ << "\n";
-  vcl_cerr << "sigma_z_ =    " << sigma_z_ << "\n";
+  std::cerr << "sigma_r_ =    " << sigma_r_ << "\n";
+  std::cerr << "sigma_z_ =    " << sigma_z_ << "\n";
 
   // read the scan
-  vcl_ifstream scan_file(scan_fname.c_str());
+  std::ifstream scan_file(scan_fname.c_str());
   scan_file >> scan_;
   scan_file.close();
 
-  vcl_cerr << "read scan file.  uses " << scan_.n_views() << " views \n";
-  vcl_cerr << "header has " <<hdr.number_of_files_ << " views\n";
+  std::cerr << "read scan file.  uses " << scan_.n_views() << " views \n";
+  std::cerr << "header has " <<hdr.number_of_files_ << " views\n";
 
   xscan_scan::correct_uniform_orbit(scan_,hdr.rotation_step_,hdr.number_of_files_);
 
 /*
   if(hdr.number_of_files_ != scan_.n_views()){
-          vcl_cerr << "correcting ...\n";
+          std::cerr << "correcting ...\n";
   // the # of views may change after calibration...
   // update scan according to the log file being used
   //----------------------------------------------------------------------------------------------
   xscan_orbit_base_sptr orbit_base = (scan_.orbit());
   xscan_uniform_orbit orbit = static_cast<const xscan_uniform_orbit&>(*orbit_base);
-  vcl_cerr << "old orbit was : " << orbit << "\n";
+  std::cerr << "old orbit was : " << orbit << "\n";
 
   vnl_double_3 rot_axis(0.0, 0.0, 1.0);
   // rotation in clockwise direction
@@ -131,9 +131,9 @@ bioproj_mem_io::bioproj_mem_io(vcl_string log_fname, vcl_string scan_fname, vcl_
       orbit.r0(),
       orbit.t0());
   scan_.set_orbit(new_orbit);
-  vcl_cerr << "new orbit is : " << static_cast<const xscan_uniform_orbit&>(*new_orbit) << "\n";
+  std::cerr << "new orbit is : " << static_cast<const xscan_uniform_orbit&>(*new_orbit) << "\n";
   scan_.set_scan_size(hdr.number_of_files_);
-  vcl_cerr << "new scan size : " << scan_.n_views() << "\n";
+  std::cerr << "new scan size : " << scan_.n_views() << "\n";
   //----------------------------------------------------------------------------------------------
   }
   */
@@ -141,11 +141,11 @@ bioproj_mem_io::bioproj_mem_io(vcl_string log_fname, vcl_string scan_fname, vcl_
   nviews_ =  hdr.number_of_files_;
 
   // read the box
-  vcl_ifstream box_file(box_fname.c_str());
+  std::ifstream box_file(box_fname.c_str());
   box_.read(box_file);
   box_file.close();
 
-  vcl_cerr << "voxel_size_ =    " << voxel_size_ << "\n";
+  std::cerr << "voxel_size_ =    " << voxel_size_ << "\n";
 
   //box is in biotree standard coordinate system, determine grid spacings
   bscs coord_system;
@@ -160,15 +160,15 @@ bioproj_mem_io::bioproj_mem_io(vcl_string log_fname, vcl_string scan_fname, vcl_
   grid_h_ = static_cast<int>(vnl_math_rnd(box_.height()*scalefactor));
   grid_d_ = static_cast<int>(vnl_math_rnd(box_.depth()*scalefactor));
 
-  vcl_cerr << "grid_w_ =    " << grid_w_ << "\n";
-  vcl_cerr << "grid_h_ =    " << grid_h_ << "\n";
-  vcl_cerr << "grid_d_ =    " << grid_d_ << "\n";
+  std::cerr << "grid_w_ =    " << grid_w_ << "\n";
+  std::cerr << "grid_h_ =    " << grid_h_ << "\n";
+  std::cerr << "grid_d_ =    " << grid_d_ << "\n";
 
   if(grid_d_ < 2*sigma_z_extent_){
-            vcl_cerr << "sigma_z_extent_ > .5*grid_d_\n";
-            vcl_cerr << "sigma_z_extent_ " << sigma_z_extent_ << " > grid_d_ " << grid_d_ << "\n";
-            vcl_cerr << "exiting immediately...\n";
-            vcl_exit(1);
+            std::cerr << "sigma_z_extent_ > .5*grid_d_\n";
+            std::cerr << "sigma_z_extent_ " << sigma_z_extent_ << " > grid_d_ " << grid_d_ << "\n";
+            std::cerr << "exiting immediately...\n";
+            std::exit(1);
   }
 
 

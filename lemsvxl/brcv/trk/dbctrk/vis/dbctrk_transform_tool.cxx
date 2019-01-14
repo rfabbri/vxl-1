@@ -91,7 +91,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
     //: tool to display T_1\bar{C_2}  and  T_2\bar{C_1}
     if( e.type == vgui_KEY_PRESS && e.key == 'i' && vgui_SHIFT){
-        vcl_vector<vgui_soview*> all_objects;
+        std::vector<vgui_soview*> all_objects;
         all_objects = tableau_->get_selected_soviews();
         if(all_objects.size()==2)
         {
@@ -103,7 +103,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
                 if(c1->get_best_match_prev().ptr() && c2->get_best_match_prev().ptr())
                 {
                     //: get T_1\bar{C_2}
-                    vcl_vector<vgl_point_2d<double> > transformed_T1_C2;
+                    std::vector<vgl_point_2d<double> > transformed_T1_C2;
                     dbctrk_algs::compute_transformation(c2->get_best_match_prev()->match_curve_set[0]->desc->curve_->pointarray(),
                         transformed_T1_C2,
                         c1->get_best_match_prev()->R_,
@@ -123,7 +123,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
 
                     //: get T_1\bar{C_2}
-                    vcl_vector<vgl_point_2d<double> > transformed_T2_C1;
+                    std::vector<vgl_point_2d<double> > transformed_T2_C1;
                     dbctrk_algs::compute_transformation(c1->get_best_match_prev()->match_curve_set[0]->desc->curve_->pointarray(),
                         transformed_T2_C1,
                         c2->get_best_match_prev()->R_,
@@ -136,10 +136,10 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
                 }
                 else
-                    vcl_cout<<"\n one or both of the curves do not have match";
+                    std::cout<<"\n one or both of the curves do not have match";
             }
             else
-                vcl_cout<<"\n curves should be selected from the same frame";
+                std::cout<<"\n curves should be selected from the same frame";
         }
         else
         {
@@ -149,7 +149,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
     }
 
     if( e.type == vgui_KEY_PRESS && e.key == 'j' && vgui_SHIFT){
-        vcl_vector<vgui_soview*> all_objects;
+        std::vector<vgui_soview*> all_objects;
         all_objects = tableau_->get_selected_soviews();
         if(all_objects.size()>2)
         {
@@ -163,7 +163,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
                     if(c1->get_best_match_prev().ptr() && c2->get_best_match_prev().ptr())
                     {
                         //: get T_1\bar{C_2}
-                        vcl_vector<vgl_point_2d<double> > transformed_T1_C2;
+                        std::vector<vgl_point_2d<double> > transformed_T1_C2;
                         dbctrk_algs::compute_transformation(c2->get_best_match_prev()->match_curve_set[0]->desc->curve_->pointarray(),
                             transformed_T1_C2,
                             c1->get_best_match_prev()->R_,
@@ -180,10 +180,10 @@ dbctrk_transform_tool::handle( const vgui_event & e,
                         dcs_.push_back(tableau_->add_edgel_curve(dc1));       
                     }
                     else
-                        vcl_cout<<"\n one or both of the curves do not have match";
+                        std::cout<<"\n one or both of the curves do not have match";
                 }
                 else
-                    vcl_cout<<"\n curves should be selected from the same frame";
+                    std::cout<<"\n curves should be selected from the same frame";
             }
         }
         else
@@ -221,13 +221,13 @@ dbctrk_transform_tool::handle( const vgui_event & e,
                 dbctrk_tracker_curve_sptr c11=curr_curve_->get_best_match_prev()->match_curve_set[0];
                 dbctrk_tracker_curve_sptr c111=curr_curve_;
 
-                vcl_vector<vgl_point_2d<double> > Tc1;
+                std::vector<vgl_point_2d<double> > Tc1;
                 dbctrk_algs::compute_transformation(c1->desc->curve_->pointarray(),
                     Tc1,
                     c1->get_best_match_next()->R_,
                     c1->get_best_match_next()->Tbar,
                     c1->get_best_match_next()->scale_);
-                vcl_vector<vgl_point_2d<double> > Tc2;
+                std::vector<vgl_point_2d<double> > Tc2;
                 dbctrk_algs::compute_transformation(Tc1,
                     Tc2,
                     c11->get_best_match_next()->R_,
@@ -245,7 +245,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
                 double cost1=curveMatch(c1->desc->curve_->pointarray(),
                     c111->desc->curve_->pointarray(),
                     m,e_,1,1,1);
-                vcl_vector<vgl_point_2d<double> > Tc13_1;
+                std::vector<vgl_point_2d<double> > Tc13_1;
                 dbctrk_algs::compute_transformation(c1->desc->curve_->pointarray(),
                     Tc13_1,
                     m->R_,
@@ -254,18 +254,18 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
                 vdgl_digital_curve_sptr dc1=dbctrk_algs::create_digital_curves(Tc13_1);
 
-                vcl_reverse(c1->desc->curve_->pointarray().begin(),c1->desc->curve_->pointarray().end());
+                std::reverse(c1->desc->curve_->pointarray().begin(),c1->desc->curve_->pointarray().end());
                 // reverse one of the curves
                 double cost2=curveMatch(c1->desc->curve_->pointarray(),
                     c111->desc->curve_->pointarray(),
                     m,e_,1,1,1);
-                vcl_vector<vgl_point_2d<double> > Tc13_2;
+                std::vector<vgl_point_2d<double> > Tc13_2;
                 dbctrk_algs::compute_transformation(c1->desc->curve_->pointarray(),
                     Tc13_2,
                     m->R_,
                     m->Tbar,
                     m->scale_);
-                vcl_reverse(c1->desc->curve_->pointarray().begin(),c1->desc->curve_->pointarray().end());
+                std::reverse(c1->desc->curve_->pointarray().begin(),c1->desc->curve_->pointarray().end());
                 vdgl_digital_curve_sptr dc2=dbctrk_algs::create_digital_curves(Tc13_2);
 
 
@@ -298,10 +298,10 @@ dbctrk_transform_tool::handle( const vgui_event & e,
             return false;
 
         dbctrk_tracker_curve_sptr chaincurve=curr_curve_;
-        vcl_vector<vgl_point_2d<double> > Tci;
-        vcl_vector<vgl_point_2d<double> > Tcf;
+        std::vector<vgl_point_2d<double> > Tci;
+        std::vector<vgl_point_2d<double> > Tcf;
         Tci=chaincurve->desc->curve_->pointarray();
-        vcl_vector<dbctrk_tracker_curve_sptr> Tcurves; 
+        std::vector<dbctrk_tracker_curve_sptr> Tcurves; 
         for(int i=0;i<history_;i++)
         {
             if(chaincurve->get_best_match_prev().ptr())
@@ -312,7 +312,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
             }
             else
             {
-                vcl_cout<<"\nThe track is not long enough";
+                std::cout<<"\nThe track is not long enough";
                 return false;
             }
 
@@ -349,7 +349,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
         double cost1=curveMatch(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray(),
             curr_curve_->desc->curve_->pointarray(),
             m1,e_,1,1,1);
-        vcl_vector<vgl_point_2d<double> > Tc1n_1;
+        std::vector<vgl_point_2d<double> > Tc1n_1;
         dbctrk_algs::compute_transformation(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray(),
             Tc1n_1,
             m1->R_,
@@ -358,18 +358,18 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
         vdgl_digital_curve_sptr dc1=dbctrk_algs::create_digital_curves(Tc1n_1);
         match_data_sptr m2=new match_data;
-        vcl_reverse(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().begin(),Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().end());
+        std::reverse(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().begin(),Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().end());
         // reverse one of the curves
         double cost2=curveMatch(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray(),
             curr_curve_->desc->curve_->pointarray(),
             m2,e_,1,1,1);
-        vcl_vector<vgl_point_2d<double> > Tc1n_2;
+        std::vector<vgl_point_2d<double> > Tc1n_2;
         dbctrk_algs::compute_transformation(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray(),
             Tc1n_2,
             m2->R_,
             m2->Tbar,
             m2->scale_);
-        vcl_reverse(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().begin(),Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().end());
+        std::reverse(Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().begin(),Tcurves[Tcurves.size()-1]->desc->curve_->pointarray().end());
         vdgl_digital_curve_sptr dc2=dbctrk_algs::create_digital_curves(Tc1n_2);
 
 
@@ -410,7 +410,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
         dbctrk_storage_sptr p;
         p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame));
-        vcl_vector<dbctrk_tracker_curve_sptr> tc;
+        std::vector<dbctrk_tracker_curve_sptr> tc;
         p->get_tracked_curves(tc);
 
         //if(curr_curve_->frame_number==frame)
@@ -435,11 +435,11 @@ dbctrk_transform_tool::handle( const vgui_event & e,
             {
                 dbctrk_tracker_curve_sptr prev_curve_=curr_curve_->get_best_match_prev()->match_curve_set[0];
 
-                vcl_vector<vgl_point_2d<double> > transformed_prev_curve;
+                std::vector<vgl_point_2d<double> > transformed_prev_curve;
                 //: draw the alignment
-                            vcl_map<int,int>::iterator iter;
-            vcl_vector<vsol_spatial_object_2d_sptr > lines;
-            vcl_vector<vsol_spatial_object_2d_sptr > Spoints;
+                            std::map<int,int>::iterator iter;
+            std::vector<vsol_spatial_object_2d_sptr > lines;
+            std::vector<vsol_spatial_object_2d_sptr > Spoints;
             int cnt=0;
             for(iter=curr_curve_->get_best_match_prev()->mapping_.begin();iter!=curr_curve_->get_best_match_prev()->mapping_.end();iter++)
             {
@@ -470,7 +470,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
                 vdgl_digital_curve_sptr dc=dbctrk_algs::create_digital_curves(transformed_prev_curve);
 
-                vcl_vector<vgl_point_2d<double> > temp_curve = prev_curve_->desc->curve_->pointarray();
+                std::vector<vgl_point_2d<double> > temp_curve = prev_curve_->desc->curve_->pointarray();
                 
                 vdgl_digital_curve_sptr prev_dc=dbctrk_algs::create_digital_curves(temp_curve);
 
@@ -510,7 +510,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
         //    if(curr_curve_->frame_number==frame)
         //    {
-        //        vcl_vector<vgl_point_2d<double> > transformed_next_curve;
+        //        std::vector<vgl_point_2d<double> > transformed_next_curve;
         //        dbctrk_algs::compute_transformation_next(curr_curve_->get_best_match_next()->match_curve_set[0]->desc->curve_->pointarray(),
         //            transformed_next_curve,
         //            curr_curve_->get_best_match_next()->R_,
@@ -552,7 +552,7 @@ dbctrk_transform_tool::handle( const vgui_event & e,
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_transform_tool::name() const
 
 {

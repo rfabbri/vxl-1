@@ -31,7 +31,7 @@ dbsk2d_ishock_splice_transform_tool::handle( const vgui_event & e,
   return dbsk2d_ishock_highlight_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_ishock_splice_transform_tool::name() const
 {
   return "Splice Transform";

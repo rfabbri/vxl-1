@@ -11,7 +11,7 @@
 #include <dbsks/dbsks_subpix_ccm.h>
 #include <dbsks/dbsks_xgraph_ccm_model.h>
 #include <dbsksp/algo/dbsksp_trace_boundary.h>
-#include <vcl_map.h>
+#include <map>
 #include <vnl/vnl_math.h>
 #include <bnld/bnld_angle.h>
 
@@ -101,7 +101,7 @@ estimate_loglike_bounds()
   }
   //
 
-  vcl_cout << "\n> Range of ccm cost: [min, max] = [" << xmin << " , " << xmax << "]\n";
+  std::cout << "\n> Range of ccm cost: [min, max] = [" << xmin << " , " << xmax << "]\n";
 
   // count number of elements from xmin to xmax
   int num_samples = 0;
@@ -117,7 +117,7 @@ estimate_loglike_bounds()
   }
 
   // Compute min and max likelihood for each edge using the computed list of samples
-  typedef vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator xfrag_ccm_iter;
+  typedef std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator xfrag_ccm_iter;
   for (xfrag_ccm_iter iter = this->xgraph_ccm()->map_edge2ccm().begin(); 
     iter != this->xgraph_ccm()->map_edge2ccm().end(); ++iter)
   {
@@ -148,8 +148,8 @@ estimate_loglike_bounds()
 double dbsks_xshock_ccm_likelihood::
 loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const
 {
-  static vcl_vector<int > left_x_vec, left_y_vec, left_angle_vec;
-  static vcl_vector<int > right_x_vec, right_y_vec, right_angle_vec;
+  static std::vector<int > left_x_vec, left_y_vec, left_angle_vec;
+  static std::vector<int > right_x_vec, right_y_vec, right_angle_vec;
 
   return this->loglike(edge_id, xfrag, left_x_vec, left_y_vec, left_angle_vec,
     right_x_vec, right_y_vec, right_angle_vec);
@@ -163,7 +163,7 @@ loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const
   //// compute cost
   //float cost_left, cost_right;
 
-  //static vcl_vector<int > x_vec, y_vec, angle_vec;
+  //static std::vector<int > x_vec, y_vec, angle_vec;
   //dbsksp_xshock_node_descriptor start = xfrag.start();
   //dbsksp_xshock_node_descriptor end = xfrag.end();
 
@@ -253,8 +253,8 @@ update_cache(unsigned edge_id) const
 //: Likelihood of a xshock fragment, also return the samples that are used
 double dbsks_xshock_ccm_likelihood::
 loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, 
-        vcl_vector<int >& left_x_vec, vcl_vector<int >& left_y_vec, vcl_vector<int >& left_angle_vec, 
-        vcl_vector<int >& right_x_vec, vcl_vector<int >& right_y_vec, vcl_vector<int >& right_angle_vec) const
+        std::vector<int >& left_x_vec, std::vector<int >& left_y_vec, std::vector<int >& left_angle_vec, 
+        std::vector<int >& right_x_vec, std::vector<int >& right_y_vec, std::vector<int >& right_angle_vec) const
 {
   // update cache values with new edge
   this->update_cache(edge_id);

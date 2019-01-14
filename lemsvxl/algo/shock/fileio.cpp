@@ -2,9 +2,9 @@
 
 #include <extrautils/msgout.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <string>
+#include <cmath>
 
 //#include <stdio.h>
 
@@ -24,7 +24,7 @@ void Boundary::LoadFile (const char* filename)
 {
   //1)If no filename, return.
   if (!filename || !strcmp(filename,"")) {
-    vcl_cout<< " No Filename given"<<vcl_endl;
+    std::cout<< " No Filename given"<<std::endl;
     return;
   }
 
@@ -61,9 +61,9 @@ void Boundary::LoadBND (const char* filename)
   int version =1;  //default version i.e., old .txt files
 
   //1)If file open fails, return.
-  vcl_ifstream fp (filename, vcl_ios::in);
+  std::ifstream fp (filename, std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -172,9 +172,9 @@ void Boundary::LoadTXT (const char* filename)
   char buffer[MAX_LEN];
 
   //1)If file open fails, return.
-  vcl_ifstream fp(filename,vcl_ios::in);
+  std::ifstream fp(filename,std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -264,9 +264,9 @@ void Boundary::LoadCON_Point (const char* filename)
    int nPoints;
 
   //1)If file open fails, return.
-  vcl_ifstream fp(filename,vcl_ios::in);
+  std::ifstream fp(filename,std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -274,7 +274,7 @@ void Boundary::LoadCON_Point (const char* filename)
    fp.getline (buffer,MAX_LEN); //CONTOUR
    fp.getline (buffer,MAX_LEN); //OPEN/CLOSE
    fp >> nPoints;
-   vcl_cout << "Number of Points from Contour:" << nPoints << vcl_endl;
+   std::cout << "Number of Points from Contour:" << nPoints << std::endl;
   
   //2-1)First point
   fp >> x >> y ; firstPt.x = x;  firstPt.y = y;
@@ -313,9 +313,9 @@ void Boundary::LoadCON_Line (const char* filename)
    int nPoints;
 
   //1)If file open fails, return.
-  vcl_ifstream fp(filename,vcl_ios::in);
+  std::ifstream fp(filename,std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -325,7 +325,7 @@ void Boundary::LoadCON_Line (const char* filename)
   if (!strncmp(buffer, "CLOSE", sizeof("CLOSE")-1))
     bIsCloseContour = true; //set the flag of Open/Close contour.
    fp >> nPoints;
-   vcl_cout << "Number of Points from Contour:" << nPoints << vcl_endl;
+   std::cout << "Number of Points from Contour:" << nPoints << std::endl;
   
   //2-1)First point
   fp >> x >> y; firstPt.x = x; firstPt.y = y;
@@ -382,9 +382,9 @@ void Boundary::LoadEDG (const char* filename)
   double idir, iconf, dir, conf;
 
   //1)If file open fails, return.
-  vcl_ifstream fp(filename,vcl_ios::in);
+  std::ifstream fp(filename,std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -425,9 +425,9 @@ void Boundary::LoadCEM (const char* filename)
   double lastY = ISHOCK_DIST_HUGE;
 
   //1)If file open fails, return.
-  vcl_ifstream fp(filename,vcl_ios::in);
+  std::ifstream fp(filename,std::ios::in);
   if (!fp){
-    vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+    std::cout<<" : Unable to Open "<<filename<<std::endl;
     return;
   }
 
@@ -518,14 +518,14 @@ void Boundary::LoadCEM (const char* filename)
 void Boundary::SaveBND (const char* filename)
 {
    if (!filename){
-      vcl_cout<< " No File name given"<<vcl_endl;
+      std::cout<< " No File name given"<<std::endl;
       return;
    }
 
-   vcl_ofstream fp(filename);
+   std::ofstream fp(filename);
 
    if (!fp){
-      vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+      std::cout<<" : Unable to Open "<<filename<<std::endl;
       return;
    }
 
@@ -542,41 +542,41 @@ void Boundary::SaveBND (const char* filename)
       switch (curBElm->type()) {
          case BPOINT:
               if (((BPoint *)curBElm)->pt().x > width) 
-                width = (int) vcl_ceil(((BPoint *)curBElm)->pt().x);
+                width = (int) std::ceil(((BPoint *)curBElm)->pt().x);
               if (((BPoint *)curBElm)->pt().y > height) 
-                height = (int) vcl_ceil(((BPoint *)curBElm)->pt().y);
+                height = (int) std::ceil(((BPoint *)curBElm)->pt().y);
               break;
          case BLINE:
               if (((BLine *)curBElm)->start().x > width) 
-                width = (int) vcl_ceil(((BLine *)curBElm)->start().x);
+                width = (int) std::ceil(((BLine *)curBElm)->start().x);
               if (((BLine *)curBElm)->start().y > height) 
-                height = (int) vcl_ceil(((BLine *)curBElm)->start().y);
+                height = (int) std::ceil(((BLine *)curBElm)->start().y);
 
               if (((BLine *)curBElm)->end().x > width) 
-                width = (int) vcl_ceil(((BLine *)curBElm)->end().x);
+                width = (int) std::ceil(((BLine *)curBElm)->end().x);
               if (((BLine *)curBElm)->end().y > height) 
-                height = (int) vcl_ceil(((BLine *)curBElm)->end().y);
+                height = (int) std::ceil(((BLine *)curBElm)->end().y);
               break;
          case BARC:        // NOT STRICTLY CORRECT
               if (((BArc *)curBElm)->start().x > width) 
-                width = (int) vcl_ceil(((BArc *)curBElm)->start().x);
+                width = (int) std::ceil(((BArc *)curBElm)->start().x);
               if (((BArc *)curBElm)->start().y > height) 
-                height = (int) vcl_ceil(((BArc *)curBElm)->start().y);
+                height = (int) std::ceil(((BArc *)curBElm)->start().y);
 
               if (((BArc *)curBElm)->end().x > width) 
-                width = (int) vcl_ceil(((BArc *)curBElm)->end().x);
+                width = (int) std::ceil(((BArc *)curBElm)->end().x);
               if (((BArc *)curBElm)->end().y > height) 
-                height = (int) vcl_ceil(((BArc *)curBElm)->end().y);
+                height = (int) std::ceil(((BArc *)curBElm)->end().y);
               break;
          default: break;
       }
    }
 
    // output header information
-   fp <<"Boundary File v3.0"<<vcl_endl;
-   fp <<"width: "<< width/dSaveRatio <<vcl_endl;
-   fp <<"height: "<< height/dSaveRatio <<vcl_endl;
-   fp <<"number-of-elements: "<<nBElement()<<vcl_endl;
+   fp <<"Boundary File v3.0"<<std::endl;
+   fp <<"width: "<< width/dSaveRatio <<std::endl;
+   fp <<"height: "<< height/dSaveRatio <<std::endl;
+   fp <<"number-of-elements: "<<nBElement()<<std::endl;
 
    //traverse the list again and output the data
   for(i=BElmList.begin();i!=BElmList.end(); i++){
@@ -594,18 +594,18 @@ void Boundary::SaveBND (const char* filename)
          case BPOINT:
         if (((BPoint *)curBElm)->tangent() == TANGENT_UNDEFINED){
           fp <<"point-at: ("<<((BPoint *)curBElm)->pt().x/dSaveRatio <<" "<<
-          ((BPoint *)curBElm)->pt().y/dSaveRatio <<")"<<vcl_endl;
+          ((BPoint *)curBElm)->pt().y/dSaveRatio <<")"<<std::endl;
         }
         else {
           fp <<"point-tangent-at: ("<<((BPoint *)curBElm)->pt().x/dSaveRatio <<" "<<
-          ((BPoint *)curBElm)->pt().y/dSaveRatio <<") ("<< ((BPoint *)curBElm)->tangent() <<")" << vcl_endl;
+          ((BPoint *)curBElm)->pt().y/dSaveRatio <<") ("<< ((BPoint *)curBElm)->tangent() <<")" << std::endl;
         }
             break;
          case BLINE:
               fp <<"line-from-to: ("<<((BLine *)curBElm)->start().x/dSaveRatio <<" "<<
               ((BLine *)curBElm)->start().y/dSaveRatio <<") ("<<
               ((BLine *)curBElm)->end().x/dSaveRatio <<" "<<
-              ((BLine *)curBElm)->end().y/dSaveRatio <<")"<<vcl_endl;
+              ((BLine *)curBElm)->end().y/dSaveRatio <<")"<<std::endl;
               break;
          case BARC:
               fp <<"arc-from-to: ("<<((BArc *)curBElm)->start().x/dSaveRatio <<" "<<
@@ -614,7 +614,7 @@ void Boundary::SaveBND (const char* filename)
               ((BArc *)curBElm)->end().y/dSaveRatio <<") ("<<
               ((BArc *)curBElm)->R()/dSaveRatio <<") ("<<
               ((BArc *)curBElm)->nud()<<" "<<
-              ARC_NUS_SMALL <<")"<<vcl_endl;
+              ARC_NUS_SMALL <<")"<<std::endl;
               break;
          default: break;
       }
@@ -630,14 +630,14 @@ void Boundary::SaveBND (const char* filename)
 void Boundary::SaveCON (const char* filename)
 {
    if (!filename){
-      vcl_cout<< " No File name given"<<vcl_endl;
+      std::cout<< " No File name given"<<std::endl;
       return;
    }
 
-   vcl_ofstream fp(filename);
+   std::ofstream fp(filename);
 
    if (!fp){
-      vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+      std::cout<<" : Unable to Open "<<filename<<std::endl;
       return;
    }
 
@@ -654,40 +654,40 @@ void Boundary::SaveCON (const char* filename)
       switch (curBElm->type()) {
          case BPOINT:
               if (((BPoint *)curBElm)->pt().x > width) 
-                width = (int) vcl_ceil(((BPoint *)curBElm)->pt().x);
+                width = (int) std::ceil(((BPoint *)curBElm)->pt().x);
               if (((BPoint *)curBElm)->pt().y > height) 
-                height = (int) vcl_ceil(((BPoint *)curBElm)->pt().y);
+                height = (int) std::ceil(((BPoint *)curBElm)->pt().y);
               break;
          case BLINE:
               if (((BLine *)curBElm)->start().x > width) 
-                width = (int) vcl_ceil(((BLine *)curBElm)->start().x);
+                width = (int) std::ceil(((BLine *)curBElm)->start().x);
               if (((BLine *)curBElm)->start().y > height) 
-                height = (int) vcl_ceil(((BLine *)curBElm)->start().y);
+                height = (int) std::ceil(((BLine *)curBElm)->start().y);
 
               if (((BLine *)curBElm)->end().x > width) 
-                width = (int) vcl_ceil(((BLine *)curBElm)->end().x);
+                width = (int) std::ceil(((BLine *)curBElm)->end().x);
               if (((BLine *)curBElm)->end().y > height) 
-                height = (int) vcl_ceil(((BLine *)curBElm)->end().y);
+                height = (int) std::ceil(((BLine *)curBElm)->end().y);
               break;
          case BARC:        // NOT STRICTLY CORRECT
               if (((BArc *)curBElm)->start().x > width) 
-                width = (int) vcl_ceil(((BArc *)curBElm)->start().x);
+                width = (int) std::ceil(((BArc *)curBElm)->start().x);
               if (((BArc *)curBElm)->start().y > height) 
-                height = (int) vcl_ceil(((BArc *)curBElm)->start().y);
+                height = (int) std::ceil(((BArc *)curBElm)->start().y);
 
               if (((BArc *)curBElm)->end().x > width) 
-                width = (int) vcl_ceil(((BArc *)curBElm)->end().x);
+                width = (int) std::ceil(((BArc *)curBElm)->end().x);
               if (((BArc *)curBElm)->end().y > height) 
-                height = (int) vcl_ceil(((BArc *)curBElm)->end().y);
+                height = (int) std::ceil(((BArc *)curBElm)->end().y);
               break;
          default: break;
       }
    }
 
    // output header information
-   fp <<"CONTOUR"<<vcl_endl;
-   fp <<"OPEN" <<vcl_endl;
-   fp << nBElement() <<vcl_endl;
+   fp <<"CONTOUR"<<std::endl;
+   fp <<"OPEN" <<std::endl;
+   fp << nBElement() <<std::endl;
 
    //traverse the list again and output the data
   for(i=BElmList.begin();i!=BElmList.end(); i++){
@@ -704,11 +704,11 @@ void Boundary::SaveCON (const char* filename)
       switch (curBElm->type()) {
       case BPOINT:
       fp << ((BPoint *)curBElm)->pt().x/dSaveRatio <<" "<<
-          ((BPoint *)curBElm)->pt().y/dSaveRatio <<vcl_endl;
+          ((BPoint *)curBElm)->pt().y/dSaveRatio <<std::endl;
       break;
       case BLINE:
       fp << ((BLine *)curBElm)->start().x/dSaveRatio <<" "<<
-          ((BLine *)curBElm)->start().y/dSaveRatio <<vcl_endl;
+          ((BLine *)curBElm)->start().y/dSaveRatio <<std::endl;
       break;
       case BARC:
       /*fp <<"arc-from-to: ("<<((BArc *)curBElm)->start().x/dSaveRatio <<" "<<
@@ -717,7 +717,7 @@ void Boundary::SaveCON (const char* filename)
               ((BArc *)curBElm)->end().y/dSaveRatio <<") ("<<
               ((BArc *)curBElm)->R()/dSaveRatio <<") ("<<
               ((BArc *)curBElm)->nud()<<" "<<
-              ((BArc *)curBElm)->nus()<<")"<<vcl_endl;*/
+              ((BArc *)curBElm)->nus()<<")"<<std::endl;*/
       break;
       default: break;
       }
@@ -733,41 +733,41 @@ void Boundary::SaveCON (const char* filename)
 void Boundary::SaveCEM (const char* filename)
 {
   if (!filename){
-      vcl_cout<< " No File name given"<<vcl_endl;
+      std::cout<< " No File name given"<<std::endl;
       return;
    }
 
-   vcl_ofstream fp(filename);
+   std::ofstream fp(filename);
 
    if (!fp){
-      vcl_cout<<" : Unable to Open "<<filename<<vcl_endl;
+      std::cout<<" : Unable to Open "<<filename<<std::endl;
       return;
    }
 
   // output header information
-   fp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<vcl_endl;
-   fp <<"# .cem files"<<vcl_endl;
-   fp <<"#"<<vcl_endl;
-   fp <<"# Format :"<<vcl_endl;
-   fp <<"# Each contour block will consist of the following"<<vcl_endl;
-   fp <<"# [BEGIN CONTOUR]"<<vcl_endl;
-   fp <<"# EDGE_COUNT=num_of_edges"<<vcl_endl;
-   fp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<vcl_endl;
-   fp <<"# ..."<<vcl_endl;
-   fp <<"# ..."<<vcl_endl;
-   fp <<"# [END CONTOUR]"<<vcl_endl;
+   fp <<"# CONTOUR_EDGE_MAP : Logical-Linear + Shock_Grouping"<<std::endl;
+   fp <<"# .cem files"<<std::endl;
+   fp <<"#"<<std::endl;
+   fp <<"# Format :"<<std::endl;
+   fp <<"# Each contour block will consist of the following"<<std::endl;
+   fp <<"# [BEGIN CONTOUR]"<<std::endl;
+   fp <<"# EDGE_COUNT=num_of_edges"<<std::endl;
+   fp <<"# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf "<<std::endl;
+   fp <<"# ..."<<std::endl;
+   fp <<"# ..."<<std::endl;
+   fp <<"# [END CONTOUR]"<<std::endl;
 
-  fp<<vcl_endl;
+  fp<<std::endl;
 
-   fp <<" CONTOUR_COUNT="<< contourList.size() << vcl_endl;
-   fp <<" TOTAL_EDGE_COUNT="<<vcl_endl;
+   fp <<" CONTOUR_COUNT="<< contourList.size() << std::endl;
+   fp <<" TOTAL_EDGE_COUNT="<<std::endl;
 
   BContourListIterator curConPtr = contourList.begin();
   for (; curConPtr != contourList.end(); curConPtr++){
     BContour* curCon = (*curConPtr);
 
-    fp <<" [BEGIN CONTOUR]"<<vcl_endl;
-    fp <<" EDGE_COUNT="<< curCon->elms.size() <<vcl_endl;
+    fp <<" [BEGIN CONTOUR]"<<std::endl;
+    fp <<" EDGE_COUNT="<< curCon->elms.size() <<std::endl;
 
     //this is assuming that the contours are all made up of points
     BElementListIterator belmPtr = curCon->elms.begin();
@@ -778,10 +778,10 @@ void Boundary::SaveCEM (const char* filename)
       //fp <<" [0, 0]   0.0 0.0  ["<< curPt->pt().x << ", " << curPt->pt().y <<"]  "<<
       //output as pixel contours
       fp <<" ["<< round(curPt->pt().x) << ", " << round(curPt->pt().y) <<"]  "<<
-        curPt->tangent() << " " << curPt->conf() << " [0, 0]   0.0 0.0"  <<vcl_endl;
+        curPt->tangent() << " " << curPt->conf() << " [0, 0]   0.0 0.0"  <<std::endl;
     }
     
-    fp <<" [END CONTOUR]"<<vcl_endl<<vcl_endl;
+    fp <<" [END CONTOUR]"<<std::endl<<std::endl;
   }
 
   //close file

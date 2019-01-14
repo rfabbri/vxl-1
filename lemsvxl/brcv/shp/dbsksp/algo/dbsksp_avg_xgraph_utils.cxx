@@ -48,18 +48,18 @@ double dbsksp_compute_kmax_cost(const dbsksp_xshock_fragment& xfrag)
   double kmax_cost = 0;
   // left side: min (negative) curvature allowed is (-1/r)
   kmax_cost       += (-left_k[0] > (1/r[0])) ? 
-                     (vcl_exp(r[0] + 1/left_k[0]) -1) : 0;
+                     (std::exp(r[0] + 1/left_k[0]) -1) : 0;
 
   kmax_cost       += (-left_k[1] > (1/r[1])) ? 
-                     (vcl_exp(r[1] + 1/left_k[1]) -1) : 0;
+                     (std::exp(r[1] + 1/left_k[1]) -1) : 0;
 
 
   // right side: max (positive) curvature allowed is (1/r)
   kmax_cost       += (right_k[0] > (1/r[0])) ? 
-                     (vcl_exp(r[0] - 1/right_k[0]) -1) : 0;
+                     (std::exp(r[0] - 1/right_k[0]) -1) : 0;
 
   kmax_cost       += (right_k[1] > (1/r[1])) ? 
-                     (vcl_exp(r[1] - 1/right_k[1]) -1) : 0;
+                     (std::exp(r[1] - 1/right_k[1]) -1) : 0;
 
   return kmax_cost;
 }
@@ -72,8 +72,8 @@ double dbsksp_compute_kmax_cost(const dbsksp_xshock_fragment& xfrag)
 //: Return true if parameter values of xgraph at active nodes and active edges
 // are within allowed range
 bool dbsksp_is_valid_xgraph(const dbsksp_xshock_graph_sptr& xgraph,
-                            const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-                            const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges)
+                            const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+                            const std::vector<dbsksp_xshock_edge_sptr >& active_edges)
 {
   //a) check the nodes  
   for (unsigned i =0; i < active_nodes.size(); ++i)
@@ -138,7 +138,7 @@ bool dbsksp_compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tre
   int centroid = common_tree1->centroid();
 
   // find the dart with maximum costs
-  vcl_vector<int > out_darts = common_tree1->out_darts(centroid);
+  std::vector<int > out_darts = common_tree1->out_darts(centroid);
   float max_subtree_cost = -1.0f;
   int max_dart_id = 0;
   for (unsigned i =0; i < out_darts.size(); ++i)
@@ -151,9 +151,9 @@ bool dbsksp_compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tre
     }
   }
 
-  vcl_vector<dbsksp_xshock_edge_sptr > edge_path;
+  std::vector<dbsksp_xshock_edge_sptr > edge_path;
   dbsksp_xshock_node_sptr start_node = 0;
-  common_tree1->get_edge_list(vcl_vector<int >(1, max_dart_id), start_node, edge_path);
+  common_tree1->get_edge_list(std::vector<int >(1, max_dart_id), start_node, edge_path);
 
   // save results
   root_node = start_node;
@@ -169,7 +169,7 @@ bool dbsksp_compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tre
 //------------------------------------------------------------------------------
 //: Compute coarse Euler tour for an xgraph (ignore degree-2 nodes)
 bool dbsksp_compute_coarse_euler_tour(const dbsksp_xshock_graph_sptr& model_xgraph, 
-    vcl_vector<dbsksp_xshock_node_sptr >& coarse_euler_tour)
+    std::vector<dbsksp_xshock_node_sptr >& coarse_euler_tour)
 {
   // sanitize output storage
   coarse_euler_tour.clear();

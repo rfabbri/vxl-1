@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include "utils.h"
 #include "redt.h"
 #include "graphics.h"

@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   
   vgui_menu bar = bcri_calib_menus::get_menu();
   unsigned w = 640, h = 360;
-  vcl_string title = "Brown Recognition";
+  std::string title = "Brown Recognition";
   vgui_window* win = vgui::produce_window(w, h, bar,title);
   
   win->get_adaptor()->set_tableau(bcri_calib::instance());

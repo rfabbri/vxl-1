@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_image_to_ostream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_image_storage.h>
@@ -49,7 +49,7 @@ vidpro_image_to_ostream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_image_to_ostream_process::name()
+std::string vidpro_image_to_ostream_process::name()
 {
   return "Image to output stream";
 }
@@ -63,9 +63,9 @@ vidpro_image_to_ostream_process::set_ostream(vidl_ostream_sptr ostream)
 }
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_image_to_ostream_process::get_input_type()
+std::vector< std::string > vidpro_image_to_ostream_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back("image");
 
@@ -74,9 +74,9 @@ vcl_vector< vcl_string > vidpro_image_to_ostream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_image_to_ostream_process::get_output_type()
+std::vector< std::string > vidpro_image_to_ostream_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.clear();
@@ -107,7 +107,7 @@ vidpro_image_to_ostream_process::execute()
 {
 
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_image_to_ostream_process::execute() - "
+    std::cout << "In vidpro_image_to_ostream_process::execute() - "
              << "not exactly one input stream \n";
     return false;
   }
@@ -128,7 +128,7 @@ vidpro_image_to_ostream_process::execute()
  // ostream_ = bvis_manager::instance()->repository()->get_data_by_name("ostream0")
 
   if (!ostream_->is_open()) {
-          vcl_cout << "Failed to open the output stream\n";
+          std::cout << "Failed to open the output stream\n";
           return false;
         }
    

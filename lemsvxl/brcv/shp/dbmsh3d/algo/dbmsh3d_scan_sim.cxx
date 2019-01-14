@@ -3,7 +3,7 @@
 // 3D scan simulator that takes a mesh and produces the simulated scan files.
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/algo/vgl_h_matrix_3d.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -39,14 +39,14 @@ bool scan_sim (dbmsh3d_mesh* M,
                const int minY, const int maxY, const int minX, const int maxX,
                const float ptb, const char* prefix)
 {
-  vul_printf (vcl_cout, "scan_sim(): M %u points, %u faces.\n",
+  vul_printf (std::cout, "scan_sim(): M %u points, %u faces.\n",
               M->vertexmap().size(), M->facemap().size());
-  vul_printf (vcl_cout, "  Parameters: file prefix: %s\n", prefix);
-  vul_printf (vcl_cout, "    %d simulated scan views, where view %d to %d will be processed.\n",
+  vul_printf (std::cout, "  Parameters: file prefix: %s\n", prefix);
+  vul_printf (std::cout, "    %d simulated scan views, where view %d to %d will be processed.\n",
               n_view, view_min, view_max);
-  vul_printf (vcl_cout, "    inter_sl_ratio %f (minY %d, maxY %d),\n",
+  vul_printf (std::cout, "    inter_sl_ratio %f (minY %d, maxY %d),\n",
               inter_sl_ratio, minY, maxY);
-  vul_printf (vcl_cout, "    intra_sl_ratio %f (minX %d, maxX %d).\n",
+  vul_printf (std::cout, "    intra_sl_ratio %f (minX %d, maxX %d).\n",
               intra_sl_ratio, minX, maxX);
 
   //1) Detect the center and bounding box of mesh M.
@@ -65,7 +65,7 @@ bool scan_sim (dbmsh3d_mesh* M,
   //inter- scanline sampling distance.
   const double delta_x = avg_samp_dist * inter_sl_ratio;
   const double max_noise = delta_y * ptb / 100;
-  vul_printf (vcl_cout, "    max. perturbation (noise): %lf (%2.2f %% of intra_dist %f).\n", 
+  vul_printf (std::cout, "    max. perturbation (noise): %lf (%2.2f %% of intra_dist %f).\n", 
               max_noise, ptb, delta_y);
   ptb_rand.reseed (7654321);
 
@@ -97,7 +97,7 @@ void scan_sim_cylinder (dbmsh3d_mesh* M,
   for (int i=view_min; i<=view_max; i++) {
     double theta = vnl_math::pi * 2 * i / n_view;
     //Computed the scan direction D = (d cos_theta. d sin_theta).
-    const vgl_vector_3d<double> D (vcl_cos (theta), vcl_sin (theta), 0);
+    const vgl_vector_3d<double> D (std::cos (theta), std::sin (theta), 0);
     //Compute the simulated scanner position C.
     const vgl_point_3d<double> C = O + D * dOC;
 
@@ -105,11 +105,11 @@ void scan_sim_cylinder (dbmsh3d_mesh* M,
     dbmsh3d_sg3pi* sg3pi = scan_sim_view (M, C, theta, delta_y, delta_x, minY, maxY, minX, maxX, max_noise);
 
     //Save to 3pi file.
-    vcl_string file_3pi = vul_sprintf ("%s_scan_%02d.3pi", prefix, i);
+    std::string file_3pi = vul_sprintf ("%s_scan_%02d.3pi", prefix, i);
     dbmsh3d_save_sg3pi (sg3pi, file_3pi.c_str());
 
     //Save the alignment file for this 3pi (to transform it back to original object).
-    vcl_string file_af = vul_sprintf ("%s_scan_%02d.txt", prefix, i);
+    std::string file_af = vul_sprintf ("%s_scan_%02d.txt", prefix, i);
     save_scan_sim_af_file (O, dOC, theta, file_af.c_str());
 
     delete sg3pi;
@@ -127,10 +127,10 @@ dbmsh3d_sg3pi* scan_sim_view (dbmsh3d_mesh* M,
                               const int minY, const int maxY, const int minX, const int maxX,
                               const double max_noise)
 {
-  vul_printf (vcl_cout, "scan_sim_view():\n");
+  vul_printf (std::cout, "scan_sim_view():\n");
   dbmsh3d_sg3pi* sg3pi = new dbmsh3d_sg3pi;
 
-  const vgl_vector_3d<double> minus_D (-vcl_cos (theta), -vcl_sin (theta), 0);
+  const vgl_vector_3d<double> minus_D (-std::cos (theta), -std::sin (theta), 0);
   const int intensity = 5000;
 
   //The scan process is simulated by repeatly 
@@ -140,12 +140,12 @@ dbmsh3d_sg3pi* scan_sim_view (dbmsh3d_mesh* M,
   assert (minX <= maxX);
   for (int i = minY; i <= maxY; i++) {
     //Add a scan line.
-    vgl_vector_3d<double> Vi (- delta_y * i * vcl_sin(theta), delta_y * i * vcl_cos(theta), 0);
+    vgl_vector_3d<double> Vi (- delta_y * i * std::sin(theta), delta_y * i * std::cos(theta), 0);
     vgl_point_3d<double> Si = C + Vi;     
-    vcl_vector<dbmsh3d_sg3pi_pt*> scanline;
+    std::vector<dbmsh3d_sg3pi_pt*> scanline;
     scanline.clear ();
     sg3pi->add_scanline (scanline);
-    vul_printf (vcl_cout, "scanline %d: ", i-minY);
+    vul_printf (std::cout, "scanline %d: ", i-minY);
 
     for (int j = minX; j <= maxX; j++) {
       //For each scan point Six and scan ray direction D, compute the closest mesh intersection.
@@ -165,7 +165,7 @@ dbmsh3d_sg3pi* scan_sim_view (dbmsh3d_mesh* M,
         z += max_noise * ptb_rand.drand32 (-1, 1);
         dbmsh3d_sg3pi_pt* scanpt = new dbmsh3d_sg3pi_pt (x, y, z, intensity, j-minX);
         sg3pi->add_scanpt (scanpt);
-        vul_printf (vcl_cout, "%d ", j-minX);
+        vul_printf (std::cout, "%d ", j-minX);
 
         ///#if DBMSH3D_DEBUG>4
         //Brute-forcely validate the transformation between (x,y,z) and (u,v,w) = iP
@@ -175,7 +175,7 @@ dbmsh3d_sg3pi* scan_sim_view (dbmsh3d_mesh* M,
         ///#endif
       }
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
 
   return sg3pi;
@@ -189,8 +189,8 @@ bool save_scan_sim_af_file (const vgl_point_3d<double>& O,
   // [v]  = [ 0  cos_theta -sin_theta ] [y] + [ Ov + dOC sin_theta ]
   // [w]    [ 1      0          0     ] [z]   [        Ow          ]
   vnl_matrix_fixed<double,4,4> H44;
-  double sin_theta = vcl_sin (theta);
-  double cos_theta = vcl_cos (theta);
+  double sin_theta = std::sin (theta);
+  double cos_theta = std::cos (theta);
 
   H44(0,0) = 0;
   H44(0,1) = - sin_theta;

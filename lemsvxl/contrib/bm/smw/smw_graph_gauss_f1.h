@@ -5,9 +5,9 @@
 #include "smw/smw_node_gauss_f1.h"
 #include "smw/smw_transition_tree.h"
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <map>
+#include <utility>
+#include <iostream>
 
 class smw_graph_gauss_f1
 {
@@ -42,7 +42,7 @@ private:
     //key == unique id of the node
     //value == the node instance
     //note: node is typedefed in the node class
-    vcl_map<unsigned, node> graph_;
+    std::map<unsigned, node> graph_;
 
     //transition tree to keep transition freqency values
     transition_tree transition_tree_;

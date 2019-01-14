@@ -13,10 +13,10 @@
 #include<dbctrk/dbctrk_tracker_curve.h>
 #include<dbctrk/dbctrk_tracker_curve_sptr.h>
 #include<dbctrk/dbctrk_curve_description.h>
-#include<vcl_vector.h>
-#include<vcl_algorithm.h>
-#include<vcl_utility.h>
-#include<vcl_map.h>
+#include<vector>
+#include<algorithm>
+#include<utility>
+#include<map>
 #include<mvl/FMatrix.h>
 #include<dbctrk/dbctrk_curveMatch.h>
 
@@ -54,10 +54,10 @@ class dbctrk_curve_matching_params
 
   void operator=(dbctrk_curve_matching_params mp);
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 };
 
-vcl_ostream& operator<<(vcl_ostream& s, const dbctrk_curve_matching_params & params);
+std::ostream& operator<<(std::ostream& s, const dbctrk_curve_matching_params & params);
 
 class dbctrk_curve_matching
 {
@@ -88,8 +88,8 @@ class dbctrk_curve_matching
                   match_data_sptr m,
                   vgl_point_2d<double> & e);
   // takes two sets of curves and returns the best corresponding(matching) curves
-  void match(vcl_vector<dbctrk_tracker_curve_sptr >  * new_curves,
-             vcl_vector<dbctrk_tracker_curve_sptr >  * old_curves);
+  void match(std::vector<dbctrk_tracker_curve_sptr >  * new_curves,
+             std::vector<dbctrk_tracker_curve_sptr >  * old_curves);
 
  // coarser version of curve-matching to reduce the number of
  // candidates of curve-matching
@@ -99,51 +99,51 @@ class dbctrk_curve_matching
  // curve-matching algorithm
   double match_DP(dbctrk_curve_description  * desc1,
                   dbctrk_curve_description  * desc2,
-                  vcl_map<int,int> & mapping,double &cost,
+                  std::map<int,int> & mapping,double &cost,
                   vnl_matrix<double> & R,vnl_matrix<double> & T,
                   vnl_matrix<double> & Tbar,double & scale,
-                  vcl_vector<int> & tail1,vcl_vector<int> & tail2,
+                  std::vector<int> & tail1,std::vector<int> & tail2,
                   vgl_point_2d<double> &e);
 
   // curve-matching algorithm
   double match_DP(dbctrk_curve_description  * desc1,
                   dbctrk_curve_description  * desc2,
-                  vcl_map<int,int> & mapping,double &cost,
+                  std::map<int,int> & mapping,double &cost,
                   vnl_matrix<double> & R,vnl_matrix<double> & T,
                   vnl_matrix<double> & Tbar,double & scale,
-                  vcl_vector<int> & tail1,vcl_vector<int> & tail2,
+                  std::vector<int> & tail1,std::vector<int> & tail2,
                   FMatrix F);
 
   // compute the euclidean dist of  b using transformation of a
   double compute_euc_dist(dbctrk_tracker_curve_sptr a,
                           dbctrk_tracker_curve_sptr b);
   // compute the best pairwise match
-  void best_matches(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                    vcl_vector<dbctrk_tracker_curve_sptr> * old_curves);
+  void best_matches(std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                    std::vector<dbctrk_tracker_curve_sptr> * old_curves);
 
-  void best_matches_tc(vcl_vector<dbctrk_tracker_curve_sptr> * current_curves,
-             vcl_vector<dbctrk_tracker_curve_sptr> * past_curves,
-             vcl_vector<dbctrk_tracker_curve_sptr> * future_curves);
-  void softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-               vcl_vector<dbctrk_tracker_curve_sptr> * old_curves);
-  void write_transformations(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves);
-  void compute_spatial_distance(vcl_vector<dbctrk_tracker_curve_sptr> curves,
-                vcl_map<vcl_pair<int,int>, double > & spatiald);
+  void best_matches_tc(std::vector<dbctrk_tracker_curve_sptr> * current_curves,
+             std::vector<dbctrk_tracker_curve_sptr> * past_curves,
+             std::vector<dbctrk_tracker_curve_sptr> * future_curves);
+  void softmax(std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+               std::vector<dbctrk_tracker_curve_sptr> * old_curves);
+  void write_transformations(std::vector<dbctrk_tracker_curve_sptr> * new_curves);
+  void compute_spatial_distance(std::vector<dbctrk_tracker_curve_sptr> curves,
+                std::map<std::pair<int,int>, double > & spatiald);
   double spatial_euclidean_dist(dbctrk_tracker_curve_sptr c1,
   dbctrk_tracker_curve_sptr c2);
 
   bool greedy_and_closure(int n,
-                          vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                          vcl_vector<dbctrk_tracker_curve_sptr> * old_curves);
+                          std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                          std::vector<dbctrk_tracker_curve_sptr> * old_curves);
   static bool best_n_matches(int n,
-     vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-     vcl_vector<dbctrk_tracker_curve_sptr> * old_curves,
-     vcl_map<int,vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > & transitives_);
+     std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+     std::vector<dbctrk_tracker_curve_sptr> * old_curves,
+     std::map<int,std::vector<std::pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > & transitives_);
 
   static bool best_topn_matches(int n,
-     vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-     vcl_vector<dbctrk_tracker_curve_sptr> * old_curves,
-     vcl_map<int,vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > & transitives_);
+     std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+     std::vector<dbctrk_tracker_curve_sptr> * old_curves,
+     std::map<int,std::vector<std::pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > & transitives_);
   //: sausage intersection
   static bool sausage_intersection(dbctrk_tracker_curve_sptr c1,dbctrk_tracker_curve_sptr c2, double motion);
  protected:
@@ -151,14 +151,14 @@ class dbctrk_curve_matching
     // compute the best match of tail in previous curve
   void match_prev_tail_curve(dbctrk_tracker_curve_sptr parent_curve,
                              dbctrk_tracker_curve_sptr & tail_curve,
-                             vcl_vector<dbctrk_tracker_curve_sptr> * new_curves);
+                             std::vector<dbctrk_tracker_curve_sptr> * new_curves);
    // compute the best match of tail in next curve
   void match_next_tail_curve(dbctrk_tracker_curve_sptr parent_curve,
                              dbctrk_tracker_curve_sptr & tail_curve,
-                             vcl_vector<dbctrk_tracker_curve_sptr> * old_curves);
+                             std::vector<dbctrk_tracker_curve_sptr> * old_curves);
   // initialize the cost matrix
-  void initialize_matrix(vcl_vector<dbctrk_tracker_curve>  new_curves,
-                         vcl_vector<dbctrk_tracker_curve > old_curves);
+  void initialize_matrix(std::vector<dbctrk_tracker_curve>  new_curves,
+                         std::vector<dbctrk_tracker_curve > old_curves);
 
   // function to compute matches using statistical info of curves
   ///double match_stat(dbctrk_curve_description * desc1,
@@ -173,9 +173,9 @@ class dbctrk_curve_matching
                     dbctrk_tracker_curve_sptr &outcs);
 
   // compute mean
-  double compute_mean(vcl_vector<double> t);
+  double compute_mean(std::vector<double> t);
     // compute stalndard deviation
-  double compute_std(vcl_vector<double> t);
+  double compute_std(std::vector<double> t);
   // estimated motion in pixels
   int motion_in_pixels_;
     // after coarse DP Match filter top rank choices

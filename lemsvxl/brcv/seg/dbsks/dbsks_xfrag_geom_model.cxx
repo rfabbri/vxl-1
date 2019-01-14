@@ -260,12 +260,12 @@ get_range_alpha_start(double& min_alpha, double& max_alpha) const
 //: Get data values for a geometric attribute
 // Return false if the attribute does not exist
 bool dbsks_xfrag_geom_model::
-get_attr_data(const vcl_string& attr_name, vcl_vector<double >& attr_values) const
+get_attr_data(const std::string& attr_name, std::vector<double >& attr_values) const
 {
   // clean up first
   attr_values.clear();
 
-  vcl_map<vcl_string, vcl_vector<double > >::const_iterator iter = 
+  std::map<std::string, std::vector<double > >::const_iterator iter = 
     this->attr_data_.find(attr_name);
 
   // return false if the specified attribute does not exist
@@ -284,7 +284,7 @@ get_attr_data(const vcl_string& attr_name, vcl_vector<double >& attr_values) con
 bool dbsks_xfrag_geom_model::
 sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& start, 
                                          int num_samples,
-                                         vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+                                         std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 {
   xdesc_list.resize(num_samples);
 
@@ -334,7 +334,7 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 //bool dbsks_xfrag_geom_model::
 //sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
 //                                                double graph_size, int num_samples, 
-//                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+//                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 //{
 //  xdesc_list.resize(num_samples);
 //
@@ -342,8 +342,8 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 //  double scale_coeff = graph_size / this->graph_size_;
 //
 //  // range of variation
-//  double mean_chord = vcl_sqrt(this->chord_model_.hi()*this->chord_model_.lo()) * scale_coeff;
-//  double delta_log_chord = vcl_log(this->chord_model_.hi() / this->chord_model_.lo()) / 2;
+//  double mean_chord = std::sqrt(this->chord_model_.hi()*this->chord_model_.lo()) * scale_coeff;
+//  double delta_log_chord = std::log(this->chord_model_.hi() / this->chord_model_.lo()) / 2;
 //
 //  double mean_alpha_start = (this->alpha_start_model_.hi() +this->alpha_start_model_.lo()) / 2;
 //  double delta_alpha_start = (this->alpha_start_model_.hi() - this->alpha_start_model_.lo()) / 2;
@@ -351,8 +351,8 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 //  double mean_phi_end = (this->phi_end_model_.hi() +this->phi_end_model_.lo()) / 2;
 //  double delta_phi_end = (this->phi_end_model_.hi()-this->phi_end_model_.lo()) / 2;
 //  
-//  double mean_r_end = vcl_sqrt(this->r_end_model_.hi()*this->r_end_model_.lo()) * scale_coeff;
-//  double delta_log_r_end = vcl_log(this->r_end_model_.hi()/this->r_end_model_.lo()) / 2;
+//  double mean_r_end = std::sqrt(this->r_end_model_.hi()*this->r_end_model_.lo()) * scale_coeff;
+//  double delta_log_r_end = std::log(this->r_end_model_.hi()/this->r_end_model_.lo()) / 2;
 //
 //  double mean_dpsi = (this->dpsi_model_.hi() + this->dpsi_model_.lo())/2;
 //  double delta_dpsi = (this->dpsi_model_.hi() - this->dpsi_model_.lo())/2;
@@ -364,13 +364,13 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 //  {
 //    // x and y
 //    double dlog_chord = random_engine.drand32(-delta_log_chord, delta_log_chord);
-//    double chord = mean_chord * vcl_exp(dlog_chord);
+//    double chord = mean_chord * std::exp(dlog_chord);
 //
 //    double dalpha_start = random_engine.drand32(-delta_alpha_start, delta_alpha_start);
 //    double alpha_start = mean_alpha_start + dalpha_start;
 //
-//    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-//    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+//    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+//    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 //
 //    // phi
 //    double dphi_end = random_engine.drand32(-delta_phi_end, delta_phi_end);
@@ -382,7 +382,7 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 //
 //    // radius
 //    double dlog_r_end = random_engine.drand32(-delta_log_r_end, delta_log_r_end);
-//    double r_end = mean_r_end * vcl_exp(dlog_r_end);
+//    double r_end = mean_r_end * std::exp(dlog_r_end);
 //
 //    xdesc_list[k].set(x_end, y_end, psi_end, phi_end, r_end);
 //  }
@@ -395,7 +395,7 @@ sample_end_given_start_using_fixed_range(const dbsksp_xshock_node_descriptor& st
 bool dbsks_xfrag_geom_model::
 sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 {
   xdesc_list.resize(num_samples);
 
@@ -434,8 +434,8 @@ sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descrip
     double chord = vec_chord[k]; //scale_coeff * this->chord_sampler_->sample();
     double alpha_start = vec_alpha_start[k]; // this->alpha_start_sampler_->sample();
 
-    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 
     // phi
     double phi_end = vec_phi_end[k]; // this->phi_end_sampler_->sample();
@@ -456,7 +456,7 @@ sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descrip
 bool dbsks_xfrag_geom_model::
 sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descriptor& end, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 {
   xdesc_list.resize(num_samples);
 
@@ -495,8 +495,8 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
     double chord = vec_chord[k]; //scale_coeff * this->chord_sampler_->sample();
     double alpha_start = vec_alpha_start[k]; // this->alpha_start_sampler_->sample();
 
-//    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-//    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+//    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+//    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 
 
 
@@ -507,8 +507,8 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
     double dpsi = vec_dpsi[k]; //this->dpsi_sampler_->sample();
     double psi_start = end.psi() - dpsi;
 
-	double x_start = x_end - vcl_cos(psi_start - alpha_start) * chord;
-	double y_start = y_end - vcl_sin(psi_start - alpha_start) * chord;
+	double x_start = x_end - std::cos(psi_start - alpha_start) * chord;
+	double y_start = y_end - std::sin(psi_start - alpha_start) * chord;
 
     // radius
     double r_start = vec_r_start[k]; //scale_coeff * this->r_end_sampler_->sample();
@@ -527,7 +527,7 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 //bool dbsks_xfrag_geom_model::
 //sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
 //                                                double graph_size, int num_samples, 
-//                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+//                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 //{
 //  //
 //  double length_padding_ratio = 1; //2;
@@ -539,8 +539,8 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 //  double scale_coeff = graph_size / this->graph_size_;
 //
 //  // range of variation
-//  double mean_chord = vcl_sqrt(this->chord_model_.hi()*this->chord_model_.lo()) * scale_coeff;
-//  double delta_log_chord = length_padding_ratio * vcl_log(this->chord_model_.hi() / this->chord_model_.lo()) / 2;
+//  double mean_chord = std::sqrt(this->chord_model_.hi()*this->chord_model_.lo()) * scale_coeff;
+//  double delta_log_chord = length_padding_ratio * std::log(this->chord_model_.hi() / this->chord_model_.lo()) / 2;
 //
 //  double mean_alpha_start = (this->alpha_start_model_.hi() +this->alpha_start_model_.lo()) / 2;
 //  double delta_alpha_start = angle_padding_ratio * (this->alpha_start_model_.hi()-this->alpha_start_model_.lo()) / 2;
@@ -548,8 +548,8 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 //  double mean_phi_end = (this->phi_end_model_.hi() +this->phi_end_model_.lo()) / 2;
 //  double delta_phi_end = angle_padding_ratio * (this->phi_end_model_.hi()-this->phi_end_model_.lo()) / 2;
 //  
-//  double mean_r_end = vcl_sqrt(this->r_end_model_.hi()*this->r_end_model_.lo()) * scale_coeff;
-//  double delta_log_r_end = length_padding_ratio * vcl_log(this->r_end_model_.hi()/this->r_end_model_.lo()) / 2;
+//  double mean_r_end = std::sqrt(this->r_end_model_.hi()*this->r_end_model_.lo()) * scale_coeff;
+//  double delta_log_r_end = length_padding_ratio * std::log(this->r_end_model_.hi()/this->r_end_model_.lo()) / 2;
 //
 //  double mean_dpsi = (this->dpsi_model_.hi() + this->dpsi_model_.lo())/2;
 //  double delta_dpsi = angle_padding_ratio * (this->dpsi_model_.hi() - this->dpsi_model_.lo())/2;
@@ -566,13 +566,13 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 //  {
 //    // x and y
 //    double dlog_chord = random_engine.drand32(-delta_log_chord, delta_log_chord);
-//    double chord = mean_chord * vcl_exp(dlog_chord);
+//    double chord = mean_chord * std::exp(dlog_chord);
 //
 //    double dalpha_start = random_engine.drand32(-delta_alpha_start, delta_alpha_start);
 //    double alpha_start = mean_alpha_start + dalpha_start;
 //
-//    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-//    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+//    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+//    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 //
 //    // phi
 //    double dphi_end = random_engine.drand32(-delta_phi_end, delta_phi_end);
@@ -584,7 +584,7 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 //
 //    // radius
 //    double dlog_r_end = random_engine.drand32(-delta_log_r_end, delta_log_r_end);
-//    double r_end = mean_r_end * vcl_exp(dlog_r_end);
+//    double r_end = mean_r_end * std::exp(dlog_r_end);
 //
 //    // only take this configuration if it forms a legal fragment
 //    dbsksp_xshock_node_descriptor end(x_end, y_end, psi_end, phi_end, r_end);
@@ -612,7 +612,7 @@ sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descrip
 bool dbsks_xfrag_geom_model::
 sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 {
   xdesc_list.clear();
 
@@ -634,8 +634,8 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
     double chord = scale_coeff * this->chord_sampler_->sample();
     double alpha_start = this->alpha_start_sampler_->sample();
 
-    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 
     // phi
     double phi_end = this->phi_end_sampler_->sample();
@@ -664,7 +664,7 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
   }
   if(xdesc_list.size() ==0)
   {
-	vcl_cout << "Fail in sampling any legal end" << vcl_endl;
+	std::cout << "Fail in sampling any legal end" << std::endl;
 	return false;
   }
   return true;
@@ -676,7 +676,7 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
 bool dbsks_xfrag_geom_model::
 sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
                                                 double graph_size, int num_samples, 
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+                                                std::vector<dbsksp_xshock_node_descriptor >& xdesc_list)
 {
   xdesc_list.clear();
 
@@ -698,8 +698,8 @@ sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_no
     double chord = scale_coeff * this->chord_sampler_->sample();
     double alpha_start = this->alpha_start_sampler_->sample();
 
-    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
-    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+    double x_end = x_start + std::cos(start.psi_ - alpha_start) * chord;
+    double y_end = y_start + std::sin(start.psi_ - alpha_start) * chord;
 
     // phi
     double phi_end = this->phi_end_sampler_->sample();
@@ -728,7 +728,7 @@ sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_no
   }
   if(xdesc_list.size() ==0)
   {
-	vcl_cout << "Fail in sampling any legal end" << vcl_endl;
+	std::cout << "Fail in sampling any legal end" << std::endl;
 	return false;
   }
   return true;
@@ -748,7 +748,7 @@ sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_no
 // deviation from the initial location
 bool dbsks_xfrag_geom_model::
 sample_start_position(int num_samples, double delta_x, double delta_y,
-                      vcl_vector<double >& x, vcl_vector<double >& y)
+                      std::vector<double >& x, std::vector<double >& y)
 {
   x.resize(num_samples);
   y.resize(num_samples);
@@ -772,7 +772,7 @@ sample_start_position(int num_samples, double delta_x, double delta_y,
 bool dbsks_xfrag_geom_model::
 sample_start_position(double step_x, int num_x_backward, int num_x_forward,
                       double step_y, int num_y_backward, int num_y_forward, 
-                      vcl_vector<double >& xs, vcl_vector<double >& ys)
+                      std::vector<double >& xs, std::vector<double >& ys)
 {
   int num_pts = (num_x_backward+num_x_forward+1) * (num_y_backward+num_y_forward+1);
   xs.reserve(num_pts);
@@ -805,7 +805,7 @@ sample_start_position(double step_x, int num_x_backward, int num_x_forward,
 //: Uniform sampling of the intrinsic properties of the start descriptor, given the allowed range
 bool dbsks_xfrag_geom_model::
 sample_start_idesc(int num_samples, double delta_psi, double delta_phi, double delta_log2r,
-                   vcl_vector<double >& psi, vcl_vector<double >& phi, vcl_vector<double >& r)
+                   std::vector<double >& psi, std::vector<double >& phi, std::vector<double >& r)
 {
   psi.resize(num_samples);
   phi.resize(num_samples);
@@ -820,7 +820,7 @@ sample_start_idesc(int num_samples, double delta_psi, double delta_phi, double d
   {
     psi[k] = psi0 + random_engine.drand32(-delta_psi, delta_psi);
     phi[k] = phi0 + random_engine.drand32(-delta_phi, delta_phi);
-    r[k] = r0 * vcl_exp(random_engine.drand32(-delta_log2r, delta_log2r) * vnl_math::ln2);
+    r[k] = r0 * std::exp(random_engine.drand32(-delta_log2r, delta_log2r) * vnl_math::ln2);
   }
   return true;
 }
@@ -843,16 +843,16 @@ build_from_attr_data()
   compute_method method = GAUSSIAN_3STD;
   //compute_method method = MINMAX;
 
-  vcl_vector<double > vcl_psi_start;
-  vcl_vector<double > vcl_r_start;
-  vcl_vector<double > vcl_phi_start;
+  std::vector<double > vcl_psi_start;
+  std::vector<double > vcl_r_start;
+  std::vector<double > vcl_phi_start;
 
-  vcl_vector<double > vcl_alpha_start;
-  vcl_vector<double > vcl_chord;
-  vcl_vector<double > vcl_dpsi;
+  std::vector<double > vcl_alpha_start;
+  std::vector<double > vcl_chord;
+  std::vector<double > vcl_dpsi;
 
-  vcl_vector<double > vcl_phi_end;
-  vcl_vector<double > vcl_r_end;
+  std::vector<double > vcl_phi_end;
+  std::vector<double > vcl_r_end;
 
   // Retrieve attribute data
   if (!this->get_attr_data("list_psi_start", vcl_psi_start) ||
@@ -912,8 +912,8 @@ build_from_attr_data()
       psi_start = dbsks_compute_angle_minmax(psi_start, min, max);      
       builder.build_from_array(*model, psi_start.data_block(), psi_start.size());
     }
-    double min_psi_start = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_psi_start = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_psi_start = model->mean() - num_std * std::sqrt(model->variance());
+    double max_psi_start = model->mean() + num_std * std::sqrt(model->variance());
 
 
     // r_start
@@ -921,16 +921,16 @@ build_from_attr_data()
       vnl_vector<double > r_start = vcl_vector_to_vnl_vector(vcl_r_start);
       builder.build_from_array(*model, r_start.data_block(), r_start.size());
     }
-    double min_r_start = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_r_start = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_r_start = model->mean() - num_std * std::sqrt(model->variance());
+    double max_r_start = model->mean() + num_std * std::sqrt(model->variance());
 
     // phi_start
     {
       vnl_vector<double > phi_start = vcl_vector_to_vnl_vector(vcl_phi_start);
       builder.build_from_array(*model, phi_start.data_block(), phi_start.size());
     }
-    double min_phi_start = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_phi_start = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_phi_start = model->mean() - num_std * std::sqrt(model->variance());
+    double max_phi_start = model->mean() + num_std * std::sqrt(model->variance());
 
     // make sure phi is > 0 and less then pi
     min_phi_start = vnl_math::max(min_phi_start, vnl_math::pi / 36);
@@ -944,8 +944,8 @@ build_from_attr_data()
       vnl_vector<double > alpha_start = vcl_vector_to_vnl_vector(vcl_alpha_start);
       builder.build_from_array(*model, alpha_start.data_block(), alpha_start.size());
     }
-    double min_alpha_start = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_alpha_start = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_alpha_start = model->mean() - num_std * std::sqrt(model->variance());
+    double max_alpha_start = model->mean() + num_std * std::sqrt(model->variance());
     
 
     // chord
@@ -953,24 +953,24 @@ build_from_attr_data()
       vnl_vector<double > chord = vcl_vector_to_vnl_vector(vcl_chord);
       builder.build_from_array(*model, chord.data_block(), chord.size());
     }
-    double min_chord = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_chord = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_chord = model->mean() - num_std * std::sqrt(model->variance());
+    double max_chord = model->mean() + num_std * std::sqrt(model->variance());
 
     // dpsi
     {
       vnl_vector<double > dpsi = vcl_vector_to_vnl_vector(vcl_dpsi);
       builder.build_from_array(*model, dpsi.data_block(), dpsi.size());
     }
-    double min_dpsi = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_dpsi = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_dpsi = model->mean() - num_std * std::sqrt(model->variance());
+    double max_dpsi = model->mean() + num_std * std::sqrt(model->variance());
 
     // phi_end
     {
       vnl_vector<double > phi_end = vcl_vector_to_vnl_vector(vcl_phi_end);
       builder.build_from_array(*model, phi_end.data_block(), phi_end.size());
     }
-    double min_phi_end = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_phi_end = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_phi_end = model->mean() - num_std * std::sqrt(model->variance());
+    double max_phi_end = model->mean() + num_std * std::sqrt(model->variance());
 
     // make sure phi is > 0 and less then pi
     min_phi_end = vnl_math::max(min_phi_end, vnl_math::pi / 36);
@@ -983,8 +983,8 @@ build_from_attr_data()
       vnl_vector<double > r_end = vcl_vector_to_vnl_vector(vcl_r_end);
       builder.build_from_array(*model, r_end.data_block(), r_end.size());
     }
-    double min_r_end = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_r_end = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_r_end = model->mean() - num_std * std::sqrt(model->variance());
+    double max_r_end = model->mean() + num_std * std::sqrt(model->variance());
 
     // set  min-max params
     this->set_param_range(min_psi_start, max_psi_start, 
@@ -1029,11 +1029,11 @@ compute_nkdiff_constraint_from_attr_data()
 {
   // Compute (Gaussian) distribution of normalized curvature difference
   // for each boundary biarc
-  vcl_vector<double > list_curvature_diff[2];
+  std::vector<double > list_curvature_diff[2];
   this->get_attr_data("list_left_curvature_diff", list_curvature_diff[0]);
   this->get_attr_data("list_right_curvature_diff", list_curvature_diff[1]);
 
-  vcl_vector<double > list_chord_length[2];
+  std::vector<double > list_chord_length[2];
   this->get_attr_data("list_left_chord_length", list_chord_length[0]);
   this->get_attr_data("list_right_chord_length", list_chord_length[1]);
 
@@ -1042,15 +1042,15 @@ compute_nkdiff_constraint_from_attr_data()
   assert (list_curvature_diff[0].size() == list_chord_length[0].size());
 
   unsigned num_samples = list_curvature_diff[0].size();
-  vcl_vector<double > list_norm_curvature_diff[2];
+  std::vector<double > list_norm_curvature_diff[2];
 
   // construct model for each side
   for (int side = 0; side < 2; ++side)
   {
     // compute normalized curvature difference samples = length * kdiff
-    vcl_vector<double >& x = list_norm_curvature_diff[side];
-    vcl_vector<double >& kdiff = list_curvature_diff[side];
-    vcl_vector<double >& len = list_chord_length[side];
+    std::vector<double >& x = list_norm_curvature_diff[side];
+    std::vector<double >& kdiff = list_curvature_diff[side];
+    std::vector<double >& len = list_chord_length[side];
     pdf1d_pdf& model = this->nkdiff_model_[side];
 
     x.resize(num_samples);
@@ -1081,7 +1081,7 @@ compute_start_width_constraint_from_attr_data()
 {
   // Compute (Gaussian) distribution of normalized curvature difference
   // for each boundary biarc
-  vcl_vector<double > list_start_width;
+  std::vector<double > list_start_width;
   this->get_attr_data("list_start_width", list_start_width);
 
   // build a new one
@@ -1126,7 +1126,7 @@ check_nkdiff_constraint_no_biarc_sampler(const dbsksp_xshock_fragment& xfrag) co
 bool dbsks_xfrag_geom_model::
 check_start_width_constraint(const dbsksp_xshock_node_descriptor& start, double graph_size) const
 {
-  double width = start.radius()*vcl_sin(start.phi()) * (this->graph_size_ / graph_size);
+  double width = start.radius()*std::sin(start.phi()) * (this->graph_size_ / graph_size);
   double num_sd = vnl_math::abs(width-this->start_width_model_.mean())/this->start_width_model_.sd();
   return (num_sd <= this->start_width_num_std_);
 }

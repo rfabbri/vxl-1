@@ -5,17 +5,17 @@
 ////{
 ////	dsm_bin lower(this->min_,range/2), upper(range/2,this->max_);
 ////
-////	this->bins_.insert(vcl_make_pair<double,dsm_bin>(lower.max_,lower));
-////	this->bins_.insert(vcl_make_pair<double,dsm_bin>(upper.max_,upper));
+////	this->bins_.insert(std::make_pair<double,dsm_bin>(lower.max_,lower));
+////	this->bins_.insert(std::make_pair<double,dsm_bin>(upper.max_,upper));
 ////}
 //
 //bool dsm_histogram::increment( double const& time, double const& v)
 //{
-//	vcl_map<double,dsm_bin>::iterator bin_itr = this->find_bin(time);
+//	std::map<double,dsm_bin>::iterator bin_itr = this->find_bin(time);
 //
 //	if( bin_itr == this->bins_.end() )
 //	{
-//		vcl_cerr << time << " exceeds the range of this histogram.\n" << vcl_flush;
+//		std::cerr << time << " exceeds the range of this histogram.\n" << std::flush;
 //		return false;
 //	}
 //
@@ -39,9 +39,9 @@
 //	return true;
 //}
 //
-//vcl_map<double,dsm_bin>::iterator dsm_histogram::find_bin( double const& time )
+//std::map<double,dsm_bin>::iterator dsm_histogram::find_bin( double const& time )
 //{
-//	vcl_map<double, dsm_bin>::iterator bin_itr, bin_end = this->bins_.end();
+//	std::map<double, dsm_bin>::iterator bin_itr, bin_end = this->bins_.end();
 //
 //	while( time < bin_itr->first && bin_itr != bin_end )
 //	{
@@ -55,14 +55,14 @@
 //{
 //	if(this->nobs_ == 0)
 //	{
-//		vcl_cerr << "WARNING: dsm_histogram::p There have been no observations thus far.\n" << vcl_flush;
+//		std::cerr << "WARNING: dsm_histogram::p There have been no observations thus far.\n" << std::flush;
 //		return 0.0;
 //	}
-//	vcl_map<double,dsm_bin>::iterator bin_itr = find_bin(time);
+//	std::map<double,dsm_bin>::iterator bin_itr = find_bin(time);
 //
 //	if( bin_itr == this->bins_.end() )
 //	{
-//		vcl_cerr << "WARNING: dsm_histogram::p " <<  time << " exceeds the range of this histogram.\n" << vcl_flush;
+//		std::cerr << "WARNING: dsm_histogram::p " <<  time << " exceeds the range of this histogram.\n" << std::flush;
 //		return 0.0;
 //	}
 //	
@@ -71,7 +71,7 @@
 //
 //double dsm_histogram::area()
 //{
-//	vcl_map<double,dsm_bin>::const_iterator b_itr, b_end = this->bins_.end();
+//	std::map<double,dsm_bin>::const_iterator b_itr, b_end = this->bins_.end();
 //
 //	double area = 0.0;
 //
@@ -81,7 +81,7 @@
 //
 //		if( bin_width < 0 )
 //		{
-//			vcl_cerr << "WARNING: dsm_histogram::area bin_width must be positive.\n " << vcl_flush;
+//			std::cerr << "WARNING: dsm_histogram::area bin_width must be positive.\n " << std::flush;
 //			return 0.0;
 //		}
 //

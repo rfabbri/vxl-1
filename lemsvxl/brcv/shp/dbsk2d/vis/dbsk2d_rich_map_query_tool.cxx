@@ -51,7 +51,7 @@ dbsk2d_rich_map_query_tool::handle( const vgui_event & e,
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     vgui::out << "[" << intx << " " << inty << "] : (" << pointx << " " << pointy << ") ";
 
     if (storage()->get_rich_map()) //if a rich map exists
@@ -78,7 +78,7 @@ dbsk2d_rich_map_query_tool::handle( const vgui_event & e,
   return false;
 }
 
-vcl_string
+std::string
 dbsk2d_rich_map_query_tool::name() const
 {
   return "Query Rich Map";

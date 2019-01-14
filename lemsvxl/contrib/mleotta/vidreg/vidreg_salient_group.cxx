@@ -10,8 +10,8 @@
 
 //: Constructor
 vidreg_salient_group::vidreg_salient_group(const rgrl_view_sptr& view,
-                                           const vcl_vector<rgrl_match_set_sptr>& matches,
-                                           const vcl_vector<rgrl_scale_sptr>& scales,
+                                           const std::vector<rgrl_match_set_sptr>& matches,
+                                           const std::vector<rgrl_scale_sptr>& scales,
                                            const rgrl_converge_status_sptr& status)
   : view_(view),
     matches_(matches),
@@ -35,8 +35,8 @@ vidreg_salient_group::vidreg_salient_group(const vidreg_feature_group& init_grou
   assert(init_group.corners.size() == init_group.corner_weights.size()
          || init_group.corner_weights.empty());
 
-  typedef vcl_vector<rgrl_feature_sptr>::const_iterator Fitr;
-  typedef vcl_vector<double>::const_iterator Witr;
+  typedef std::vector<rgrl_feature_sptr>::const_iterator Fitr;
+  typedef std::vector<double>::const_iterator Witr;
 
   if(init_group.edgel_weights.empty()){
     for(Fitr fi= init_group.edgels.begin(); fi!=init_group.edgels.end(); ++fi)
@@ -75,14 +75,14 @@ vidreg_salient_group::view() const
 }
 
 
-const vcl_vector<rgrl_match_set_sptr>&
+const std::vector<rgrl_match_set_sptr>&
 vidreg_salient_group::matches() const
 {
   return matches_;
 }
 
 
-const vcl_vector<rgrl_scale_sptr>&
+const std::vector<rgrl_scale_sptr>&
 vidreg_salient_group::scales() const
 {
   return scales_;
@@ -94,7 +94,7 @@ vidreg_salient_group::status() const
   return status_;
 }
 
-const vcl_map<rgrl_feature_sptr, double>&
+const std::map<rgrl_feature_sptr, double>&
 vidreg_salient_group::weight_map() const
 {
   return weight_map_;
@@ -118,7 +118,7 @@ vidreg_salient_group::set_growth_center(const vnl_vector<double>& center)
 vidreg_feature_group_sptr
 vidreg_salient_group::make_feature_group(double weight_thresh) const
 {
-  typedef vcl_map<rgrl_feature_sptr, double>::const_iterator Mitr;
+  typedef std::map<rgrl_feature_sptr, double>::const_iterator Mitr;
   vidreg_feature_group_sptr fg = new vidreg_feature_group();
   for(Mitr i=weight_map_.begin(); i!=weight_map_.end(); ++i){
     if(i->second < weight_thresh)
@@ -139,7 +139,7 @@ vidreg_salient_group::make_feature_group(double weight_thresh) const
 double
 vidreg_salient_group::weight(const rgrl_feature_sptr& feature) const
 {
-  vcl_map<rgrl_feature_sptr, double>::const_iterator itr = weight_map_.find(feature);
+  std::map<rgrl_feature_sptr, double>::const_iterator itr = weight_map_.find(feature);
   if(itr == weight_map_.end())
     return 0.0;
   return itr->second;
@@ -161,7 +161,7 @@ vidreg_salient_group::assign_weight(const rgrl_feature_sptr& feature, double wei
     weight_map_[feature] = weight;
 
   else if(weight == 0.0){
-    vcl_map<rgrl_feature_sptr, double>::iterator i = weight_map_.find(feature);
+    std::map<rgrl_feature_sptr, double>::iterator i = weight_map_.find(feature);
     if(i != weight_map_.end())
       weight_map_.erase(i);
   }

@@ -16,10 +16,10 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 
@@ -27,10 +27,10 @@ class dbmsh3d_pt_set
 {
 protected:
   //: The modified-halfedg mesh vertex data structure.
-  vcl_map<int, dbmsh3d_vertex*> vertexmap_;
+  std::map<int, dbmsh3d_vertex*> vertexmap_;
 
   //: traversal position of next vertex
-  vcl_map<int, dbmsh3d_vertex* >::iterator vertex_traversal_pos_;
+  std::map<int, dbmsh3d_vertex* >::iterator vertex_traversal_pos_;
 
   int vertex_id_counter_;
 
@@ -52,7 +52,7 @@ public:
   //  pointset->_new_vertex() instead of using 'new dbmsh3d_vertex' in the code
   //  for each object
   void _clear_vertexmap () {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
     for (; it != vertexmap_.end(); it++)
       _del_vertex ((*it).second);
     vertexmap_.clear();
@@ -60,7 +60,7 @@ public:
   }
 
   virtual void clear_vertices () {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
     while (it != vertexmap_.end()) {
       dbmsh3d_vertex* V = (*it).second;
       remove_vertex (V);
@@ -87,11 +87,11 @@ public:
     return this->vertexmap_.size(); 
   }
 
-  vcl_map<int, dbmsh3d_vertex*>& vertexmap() {
+  std::map<int, dbmsh3d_vertex*>& vertexmap() {
     return vertexmap_;
   }
   dbmsh3d_vertex* vertexmap (const int i) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (i);
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (i);
     if (it == vertexmap_.end())
       return NULL;
     return (*it).second;
@@ -105,11 +105,11 @@ public:
   }
 
   bool contains_V (const int vid) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (vid);
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (vid);
     return it != vertexmap_.end();
   }
   bool contains_V (const dbmsh3d_vertex* V) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (V->id());
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.find (V->id());
     return it != vertexmap_.end();
   }
 
@@ -128,7 +128,7 @@ public:
   }
 
   void _add_vertex (dbmsh3d_vertex* V) {
-    vertexmap_.insert (vcl_pair<int, dbmsh3d_vertex*>(V->id(), V));
+    vertexmap_.insert (std::pair<int, dbmsh3d_vertex*>(V->id(), V));
   }
   //: add a new vertex to the map
   dbmsh3d_vertex* add_vertex (const vgl_point_3d<double >& pt) {

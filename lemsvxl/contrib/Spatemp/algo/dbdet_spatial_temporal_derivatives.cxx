@@ -7,7 +7,7 @@
 #include <bsta/bsta_detector_gaussian.h>
 
 bool 
-dbdet_spatial_temporal_derivatives::compute_b(vcl_vector<float>  & forwardmap)
+dbdet_spatial_temporal_derivatives::compute_b(std::vector<float>  & forwardmap)
 {
     b.clear();
     typedef bsta_num_obs<bsta_gauss_f1> gauss_type;
@@ -31,14 +31,14 @@ dbdet_spatial_temporal_derivatives::compute_b(vcl_vector<float>  & forwardmap)
 }
 
 bool 
-dbdet_spatial_temporal_derivatives::compute_bt(vcl_vector<float>  & backmap)
+dbdet_spatial_temporal_derivatives::compute_bt(std::vector<float>  & backmap)
 {
     bt.clear();
     //: for each value of beta
     for (unsigned i=0;i<b.size();i++)
     {
         //: compute beta_t
-        vcl_vector<float> bts;
+        std::vector<float> bts;
         for (unsigned j=0;j<backmap.size();j++)
         {
             float beta_t=(b[i]-backmap[j]);
@@ -52,7 +52,7 @@ dbdet_spatial_temporal_derivatives::compute_bt(vcl_vector<float>  & backmap)
     return true;
 }
 bool 
-dbdet_spatial_temporal_derivatives::compute_bs(vcl_map<dbdet_curvelet*,vcl_vector<float> > & k_bs,vcl_map<dbdet_curvelet*,float > & k_bs_ds, vcl_map<dbdet_curvelet*,dbdet_edgel* > & k_bs_edges)
+dbdet_spatial_temporal_derivatives::compute_bs(std::map<dbdet_curvelet*,std::vector<float> > & k_bs,std::map<dbdet_curvelet*,float > & k_bs_ds, std::map<dbdet_curvelet*,dbdet_edgel* > & k_bs_edges)
 {
     bs.clear();
     float c_nx=-ty;
@@ -60,16 +60,16 @@ dbdet_spatial_temporal_derivatives::compute_bs(vcl_map<dbdet_curvelet*,vcl_vecto
     //: for each value of beta
     for (unsigned i=0;i<b.size();i++)
     {
-        vcl_map<dbdet_curvelet*,vcl_vector<float> >::iterator iter_curvelets;
-        vcl_map<dbdet_curvelet*,float >::iterator iter_curvelets_ds;
-        vcl_map<dbdet_curvelet*,dbdet_edgel* >::iterator  k_bs_edges_iter;
-        vcl_map<float, vcl_vector<float> > k_bs_;
+        std::map<dbdet_curvelet*,std::vector<float> >::iterator iter_curvelets;
+        std::map<dbdet_curvelet*,float >::iterator iter_curvelets_ds;
+        std::map<dbdet_curvelet*,dbdet_edgel* >::iterator  k_bs_edges_iter;
+        std::map<float, std::vector<float> > k_bs_;
 
         
         for (iter_curvelets=k_bs.begin(),iter_curvelets_ds=k_bs_ds.begin(),k_bs_edges_iter=k_bs_edges.begin();iter_curvelets!=k_bs.end();iter_curvelets++,iter_curvelets_ds++,k_bs_edges_iter++)
         {
-            float nx=-vcl_sin(k_bs_edges_iter->second->tangent);
-            float ny=vcl_cos(k_bs_edges_iter->second->tangent);
+            float nx=-std::sin(k_bs_edges_iter->second->tangent);
+            float ny=std::cos(k_bs_edges_iter->second->tangent);
 
             if(dbdet_CC_curve_model_3d * ccmodel=dynamic_cast<dbdet_CC_curve_model_3d *> (iter_curvelets->first->curve_model))
             {
@@ -100,7 +100,7 @@ dbdet_spatial_temporal_derivatives::compute_models()
         for(unsigned j=0;j<bt[b0].size();j++)
         {
             float bt0=bt[b0][j];
-            vcl_map<float,vcl_vector<float> >::iterator iter;
+            std::map<float,std::vector<float> >::iterator iter;
             for(iter=bs[b0].begin();iter!=bs[b0].end();iter++)
             { 
                 float k0=iter->first;

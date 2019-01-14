@@ -12,8 +12,8 @@
 // \verbatim
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 class bvis_mview_io_dialog
 {
@@ -23,14 +23,14 @@ public:
   ~bvis_mview_io_dialog();
 
   static bool 
-    input_dialog(vcl_vector< vcl_string > const& input_type_list,
-                 vcl_vector< vcl_string > & input_names);
+    input_dialog(std::vector< std::string > const& input_type_list,
+                 std::vector< std::string > & input_names);
 
   static bool 
-    output_dialog(vcl_vector< vcl_string > const& output_type_list,
-                  vcl_vector< vcl_string > const& output_suggested_names,
-                  vcl_vector< unsigned >& output_view_ids,
-                  vcl_vector< vcl_string >& output_names);
+    output_dialog(std::vector< std::string > const& output_type_list,
+                  std::vector< std::string > const& output_suggested_names,
+                  std::vector< unsigned >& output_view_ids,
+                  std::vector< std::string >& output_names);
 protected:
 
 private:

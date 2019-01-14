@@ -1,8 +1,8 @@
 #include "dbcvr_open_space_cvmatch_even_grid_cost.h"
 
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <bnld/algo/bnld_eno_third_order.h>
 
 dbcvr_open_space_cvmatch_even_grid_cost::
@@ -54,7 +54,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
   for (int i=0; i < num_samples_c2_; i++)
     curve2_torsions_.push_back(c2_->torsion_at(curve2_lengths_[i]));
 
-  if(vcl_strcmp(cfct_, "implicit") == 0)
+  if(std::strcmp(cfct_, "implicit") == 0)
   {
     // curve 1 angles (value independent of any parametrization)
     for (int i=0; i < num_samples_c1_; i++)
@@ -75,7 +75,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
     continuous_angles(curve2_phis_);
     continuous_angles(curve2_thetas_);
     
-    if(vcl_strcmp(adct_, "geometric-formulas") == 0)
+    if(std::strcmp(adct_, "geometric-formulas") == 0)
     {
       // curve1 phi_s and theta_s formulated computations
       for(int i=0; i < num_samples_c1_; i++)
@@ -85,8 +85,8 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         double phi = curve1_phis_[i];
         double theta = curve1_thetas_[i];
         vgl_vector_3d<double> Ts(k * N);
-        double phi_s = -Ts.z() / (vcl_sin(phi));
-        double theta_s = (Ts.y()*vcl_cos(theta) - Ts.x()*vcl_sin(theta)) / vcl_sin(phi);
+        double phi_s = -Ts.z() / (std::sin(phi));
+        double theta_s = (Ts.y()*std::cos(theta) - Ts.x()*std::sin(theta)) / std::sin(phi);
         curve1_dphis_.push_back(phi_s);
         curve1_dthetas_.push_back(theta_s);
       }
@@ -98,13 +98,13 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         double phi = curve2_phis_[i];
         double theta = curve2_thetas_[i];
         vgl_vector_3d<double> Ts(k * N);
-        double phi_s = -Ts.z() / (vcl_sin(phi));
-        double theta_s = (Ts.y()*vcl_cos(theta) - Ts.x()*vcl_sin(theta)) / vcl_sin(phi);
+        double phi_s = -Ts.z() / (std::sin(phi));
+        double theta_s = (Ts.y()*std::cos(theta) - Ts.x()*std::sin(theta)) / std::sin(phi);
         curve2_dphis_.push_back(phi_s);
         curve2_dthetas_.push_back(theta_s);
       }
     }
-    else if(vcl_strcmp(adct_, "eno-scheme") == 0)
+    else if(std::strcmp(adct_, "eno-scheme") == 0)
     {
       // adjust the angles to be continuous so that ENO works fine
       continuous_angles(curve1_phis_);
@@ -114,7 +114,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
       // ENO on phi of curve1
       int interval_index;
       double t, dphi, dtheta;
-      vcl_vector<double> points, arclengths;
+      std::vector<double> points, arclengths;
       double a0, a1, a2, a3;
       for(int i=0; i < num_samples_c1_-1; i++)
       {
@@ -126,12 +126,12 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         a2 = eno.coefficient(interval_index, 2);
         a3 = eno.coefficient(interval_index, 3);
         t = arclengths[interval_index];
-        dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+        dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
         curve1_dphis_.push_back(dphi);
       }
       // deal with last point
       t = arclengths[interval_index+1];
-      dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve1_dphis_.push_back(dphi);
 
       // ENO on theta of curve1
@@ -145,12 +145,12 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         a2 = eno.coefficient(interval_index, 2);
         a3 = eno.coefficient(interval_index, 3);
         t = arclengths[interval_index];
-        dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+        dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
         curve1_dthetas_.push_back(dtheta);
       }
       // deal with last point
       t = arclengths[interval_index+1];
-      dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve1_dthetas_.push_back(dtheta);
 
       // ENO on phi of curve2
@@ -164,12 +164,12 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         a2 = eno.coefficient(interval_index, 2);
         a3 = eno.coefficient(interval_index, 3);
         t = arclengths[interval_index];
-        dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+        dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
         curve2_dphis_.push_back(dphi);
       }
       // deal with last point
       t = arclengths[interval_index+1];
-      dphi = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dphi = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve2_dphis_.push_back(dphi);
 
       // ENO on theta of curve2
@@ -183,28 +183,28 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
         a2 = eno.coefficient(interval_index, 2);
         a3 = eno.coefficient(interval_index, 3);
         t = arclengths[interval_index];
-        dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+        dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
         curve2_dthetas_.push_back(dtheta);
       }
       // deal with last point
       t = arclengths[interval_index+1];
-      dtheta = a1 + 2 * a2 * t + 3 * a3 * vcl_pow(t, 2.0);
+      dtheta = a1 + 2 * a2 * t + 3 * a3 * std::pow(t, 2.0);
       curve2_dthetas_.push_back(dtheta);
     }
     else 
     {
-      vcl_cout << "Specified Angle Derivatives Computation Type Name is Wrong" << vcl_endl;
-      vcl_cout << "It can either be \"geometric-formulas\" or \"eno-scheme\" (case-sensitive)" << vcl_endl;
-      vcl_cout << "Aborting process..." << vcl_endl;
-      vcl_exit(-1);
+      std::cout << "Specified Angle Derivatives Computation Type Name is Wrong" << std::endl;
+      std::cout << "It can either be \"geometric-formulas\" or \"eno-scheme\" (case-sensitive)" << std::endl;
+      std::cout << "Aborting process..." << std::endl;
+      std::exit(-1);
     }
   }
-  else if(vcl_strcmp(cfct_, "explicit") != 0)
+  else if(std::strcmp(cfct_, "explicit") != 0)
   {
-    vcl_cout << "Specified Cost Formula Computation Type Name is Wrong" << vcl_endl;
-    vcl_cout << "It can either be \"explicit\" or \"implicit\" (case-sensitive)" << vcl_endl;
-    vcl_cout << "Aborting process..." << vcl_endl;
-    vcl_exit(-1);
+    std::cout << "Specified Cost Formula Computation Type Name is Wrong" << std::endl;
+    std::cout << "It can either be \"explicit\" or \"implicit\" (case-sensitive)" << std::endl;
+    std::cout << "Aborting process..." << std::endl;
+    std::exit(-1);
   }
 }
 
@@ -215,21 +215,21 @@ compute_interval_cost(int i, int ip, int j, int jp)
   // compute stretch cost
   double sc1 = curve1_lengths_[i] - curve1_lengths_[ip];
   double sc2 = curve2_lengths_[j] - curve2_lengths_[jp];
-  stretch_cost = vcl_fabs(sc1 - sc2);
+  stretch_cost = std::fabs(sc1 - sc2);
 
-  if(vcl_strcmp(cfct_, "explicit") == 0)
+  if(std::strcmp(cfct_, "explicit") == 0)
   {
     // compute extrinsic bend cost
     double bc1 = (curve1_curvatures_[i] + curve1_curvatures_[ip])/ 2;
     double bc2 = (curve2_curvatures_[j] + curve2_curvatures_[jp])/ 2;
-    bend_cost = vcl_fabs(bc1*sc1 - bc2*sc2);
+    bend_cost = std::fabs(bc1*sc1 - bc2*sc2);
 
     // compute extrinsic twist cost
     double tc1 = (curve1_torsions_[i] + curve1_torsions_[ip])/ 2;
     double tc2 = (curve2_torsions_[j] + curve2_torsions_[jp])/ 2;
-    twist_cost = vcl_fabs(tc1*sc1 - tc2*sc2);
+    twist_cost = std::fabs(tc1*sc1 - tc2*sc2);
   }
-  else if(vcl_strcmp(cfct_, "implicit") == 0)
+  else if(std::strcmp(cfct_, "implicit") == 0)
   {
     // compute necessary values for intrinsic bend and twist costs
     double phi1 = (curve1_phis_[i] + curve1_phis_[ip])/2;
@@ -245,22 +245,22 @@ compute_interval_cost(int i, int ip, int j, int jp)
     double d_theta_s2 = curve2_dthetas_[j] - curve2_dthetas_[jp];
 
     // bending cost
-    double bc1 = vcl_pow(d_phi1, 2.0) + vcl_pow(vcl_sin(phi1) * d_theta1, 2.0);
-    double bc2 = vcl_pow(d_phi2, 2.0) + vcl_pow(vcl_sin(phi2) * d_theta2, 2.0);
-    bend_cost = vcl_fabs(bc1-bc2);
+    double bc1 = std::pow(d_phi1, 2.0) + std::pow(std::sin(phi1) * d_theta1, 2.0);
+    double bc2 = std::pow(d_phi2, 2.0) + std::pow(std::sin(phi2) * d_theta2, 2.0);
+    bend_cost = std::fabs(bc1-bc2);
 
     // twist cost
-    double temp1 = 2*vcl_cos(phi1) * d_theta1 * vcl_pow(d_phi1, 2.0) + vcl_sin(phi1) * d_phi1 * d_theta_s1 * sc1;
-    double temp2 = vcl_sin(phi1) * d_theta1 * (-d_phi_s1 * sc1 + vcl_sin(phi1) * vcl_cos(phi1) * vcl_pow(d_theta1, 2.0));
-    double temp3 = vcl_pow(d_phi1, 2.0) + vcl_pow(vcl_sin(phi1) * d_theta1, 2.0);
+    double temp1 = 2*std::cos(phi1) * d_theta1 * std::pow(d_phi1, 2.0) + std::sin(phi1) * d_phi1 * d_theta_s1 * sc1;
+    double temp2 = std::sin(phi1) * d_theta1 * (-d_phi_s1 * sc1 + std::sin(phi1) * std::cos(phi1) * std::pow(d_theta1, 2.0));
+    double temp3 = std::pow(d_phi1, 2.0) + std::pow(std::sin(phi1) * d_theta1, 2.0);
     double tc1 = (temp1 + temp2) / temp3;
 
-    double temp4 = 2*vcl_cos(phi2) * d_theta2 * vcl_pow(d_phi2, 2.0) + vcl_sin(phi2) * d_phi2 * d_theta_s2 * sc2;
-    double temp5 = vcl_sin(phi2) * d_theta2 * (-d_phi_s2 * sc2 + vcl_sin(phi2) * vcl_cos(phi2) * vcl_pow(d_theta2, 2.0));
-    double temp6 = vcl_pow(d_phi2, 2.0) + vcl_pow(vcl_sin(phi2) * d_theta2, 2.0);
+    double temp4 = 2*std::cos(phi2) * d_theta2 * std::pow(d_phi2, 2.0) + std::sin(phi2) * d_phi2 * d_theta_s2 * sc2;
+    double temp5 = std::sin(phi2) * d_theta2 * (-d_phi_s2 * sc2 + std::sin(phi2) * std::cos(phi2) * std::pow(d_theta2, 2.0));
+    double temp6 = std::pow(d_phi2, 2.0) + std::pow(std::sin(phi2) * d_theta2, 2.0);
     double tc2 = (temp4 + temp5) / temp6;
 
-    twist_cost = vcl_fabs(tc1-tc2);
+    twist_cost = std::fabs(tc1-tc2);
   }
 
   double cost = stretch_cost + R1_ * bend_cost + R2_ * twist_cost;
@@ -268,8 +268,8 @@ compute_interval_cost(int i, int ip, int j, int jp)
   return cost;
 }
 int dbcvr_open_space_cvmatch_even_grid_cost::
-pick_points_for_eno(vcl_vector<double> &points, vcl_vector<double> &picked_points,    
-                    vcl_vector<double> &arclengths, vcl_vector<double> &picked_arclengths,
+pick_points_for_eno(std::vector<double> &points, std::vector<double> &picked_points,    
+                    std::vector<double> &arclengths, std::vector<double> &picked_arclengths,
                     int index)
 {
   picked_points.clear();
@@ -317,7 +317,7 @@ pick_points_for_eno(vcl_vector<double> &points, vcl_vector<double> &picked_point
   return interval_index;
 }
 
-void dbcvr_open_space_cvmatch_even_grid_cost::continuous_angles(vcl_vector<double> &angles)
+void dbcvr_open_space_cvmatch_even_grid_cost::continuous_angles(std::vector<double> &angles)
 {
   int size = angles.size();
   for(int i=1; i<size; i++)

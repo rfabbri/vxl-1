@@ -1,8 +1,8 @@
 #ifndef __TBS_CURVE_DEF__
 #define __TBS_CURVE_DEF__
-#include <vcl_string.h>
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
+#include <string>
+#include <cmath>
+#include <utility>
 #include <vgl/vgl_point_2d.h>
 #include <dbctrk/dbctrk_utils.h>
 #include <vsl/vsl_binary_io.h>
@@ -21,9 +21,9 @@ class Curve
   ~Curve(){};
 
   // Read data from Raphael contour format file
- void readDataFromFile(vcl_string fileName);
- void readDataFromVector(vcl_vector<vcl_pair<double,double> > v);
- void readDataFromVector(vcl_vector<vgl_point_2d<double> > v);
+ void readDataFromFile(std::string fileName);
+ void readDataFromVector(std::vector<std::pair<double,double> > v);
+ void readDataFromVector(std::vector<vgl_point_2d<double> > v);
   // Assignment operator
   Curve& operator=(const Curve &rhs);
 
@@ -41,11 +41,11 @@ class Curve
   double arcLength(int index){return arcLength_[index];};
   double normArcLength(int index){return normArcLength_[index];};
   double curvature(int index){return curvature_[index];};
-  double Tcurvature(){return vcl_fabs(totalCurvature_);}
+  double Tcurvature(){return std::fabs(totalCurvature_);}
   double angle(int index){return angle_[index];};
   double dx(int index){return dx_[index];};
   double dy(int index){return dy_[index];};
-  vcl_vector<vgl_point_2d <double> >  pointarray(){return ptArray_;}
+  std::vector<vgl_point_2d <double> >  pointarray(){return ptArray_;}
 
 
   //Functions to insert to the point list
@@ -68,22 +68,22 @@ class Curve
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const;
+  std::string is_a() const;
 
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(vcl_string const&) const;
+  bool is_class(std::string const&) const;
  protected:
   //Data
-  vcl_vector< vgl_point_2d<double> > ptArray_;
-  vcl_vector<double> arcLength_;
-  vcl_vector<double> normArcLength_;
-  vcl_vector<double> dx_;
-  vcl_vector<double> dy_;
-  vcl_vector<double> curvature_;
-  vcl_vector<double> angle_;
+  std::vector< vgl_point_2d<double> > ptArray_;
+  std::vector<double> arcLength_;
+  std::vector<double> normArcLength_;
+  std::vector<double> dx_;
+  std::vector<double> dy_;
+  std::vector<double> curvature_;
+  std::vector<double> angle_;
   int numPoints_;
   double length_;
   double totalCurvature_;

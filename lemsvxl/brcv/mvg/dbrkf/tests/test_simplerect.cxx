@@ -15,7 +15,7 @@
 int test_simplerect_main(int argc, char *argv[])
 {
     testlib_test_begin("simple rectification");
-    vcl_string image_base;
+    std::string image_base;
     if(argc>=2)
         image_base=argv[1];
    #ifdef VCL_WIN32
@@ -23,11 +23,11 @@ int test_simplerect_main(int argc, char *argv[])
    #else
     image_base += "/";
    #endif
-    vcl_string filename=image_base+"pp-aug16.tmp";
-    vcl_string imgl=image_base+"camera0-00000.png";
-    vcl_string imgr=image_base+"camera1-00000.png";
+    std::string filename=image_base+"pp-aug16.tmp";
+    std::string imgl=image_base+"camera0-00000.png";
+    std::string imgr=image_base+"camera1-00000.png";
 
-    vcl_vector<vsol_point_2d_sptr > pointsl_,pointsr_;
+    std::vector<vsol_point_2d_sptr > pointsl_,pointsr_;
     vsl_b_ifstream bfs(filename);
     short ver;
     vsl_b_read(bfs, ver);
@@ -49,7 +49,7 @@ int test_simplerect_main(int argc, char *argv[])
     else if ( imagel.nplanes() == 1 ) {
       grey_imgl = imagel;
      } else {
-    vcl_cerr << "Returning false. imagel.nplanes(): " << imagel.nplanes() << vcl_endl;
+    std::cerr << "Returning false. imagel.nplanes(): " << imagel.nplanes() << std::endl;
     return false;
     }
 
@@ -59,7 +59,7 @@ int test_simplerect_main(int argc, char *argv[])
   else if ( imager.nplanes() == 1 ) {
     grey_imgr = imager;
   } else {
-    vcl_cerr << "Returning false. imager.nplanes(): " << imager.nplanes() << vcl_endl;
+    std::cerr << "Returning false. imager.nplanes(): " << imager.nplanes() << std::endl;
     return false;
   } 
 
@@ -67,8 +67,8 @@ int test_simplerect_main(int argc, char *argv[])
     testcase.rect_step1();
     testcase.rect_step2();
 
-    vcl_string fileoutl=image_base+"step2l.png";
-    vcl_string fileoutr=image_base+"step2r.png";
+    std::string fileoutl=image_base+"step2l.png";
+    std::string fileoutr=image_base+"step2r.png";
     vil_save_image_resource(vil_new_image_resource_of_view( *(testcase.imgl_step2)),fileoutl.c_str());
     vil_save_image_resource(vil_new_image_resource_of_view( *(testcase.imgr_step2)),fileoutr.c_str());
 

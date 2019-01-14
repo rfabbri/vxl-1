@@ -29,7 +29,7 @@ dbskfg_detect_fragments_process::dbskfg_detect_fragments_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -46,25 +46,25 @@ dbskfg_detect_fragments_process::clone() const
     return new dbskfg_detect_fragments_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_detect_fragments_process::name()
 {
     return "Detect Composite Fragments";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_detect_fragments_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
     
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_detect_fragments_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // ouptut the storage class
     to_return.push_back( "vsol2D" );
     return to_return;
@@ -86,7 +86,7 @@ bool dbskfg_detect_fragments_process::execute()
     // get input file path
     bpro1_filepath input;
     parameters()->get_value( "-sminput" , input);
-    vcl_string input_file_path = input.path;
+    std::string input_file_path = input.path;
 
     // Read in parameters
     double threshold;
@@ -113,16 +113,16 @@ bool dbskfg_detect_fragments_process::execute()
         vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
         output_vsol->add_object(box_poly->cast_to_spatial_object());
         output_data_[0].push_back(output_vsol);
-        vcl_cout<<"Bounding box detected at this threshold"<<vcl_endl;
+        std::cout<<"Bounding box detected at this threshold"<<std::endl;
     }
     else
     {
 
-        vcl_cout<<"No bounding box detected at this threshold"<<vcl_endl;
+        std::cout<<"No bounding box detected at this threshold"<<std::endl;
 
     }
 
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
     return true;
 
 }

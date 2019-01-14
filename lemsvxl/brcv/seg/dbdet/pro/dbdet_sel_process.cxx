@@ -15,15 +15,15 @@
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/sel/dbdet_curve_model.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vil/vil_image_resource.h>
 
 //: Constructor
 dbdet_sel_process::dbdet_sel_process()
 {
-  vcl_vector<vcl_string> curve_model_choices;
+  std::vector<std::string> curve_model_choices;
   curve_model_choices.push_back("Simple Linear model");                   //0
   curve_model_choices.push_back("Linear model");                          //1
   curve_model_choices.push_back("Circular Arc w/o perturbations");        //2
@@ -34,27 +34,27 @@ dbdet_sel_process::dbdet_sel_process()
   curve_model_choices.push_back("ES w   perturbations");        //7
 
   //grouping_algo_choices
-  vcl_vector<vcl_string> grouping_algo_choices;
+  std::vector<std::string> grouping_algo_choices;
   grouping_algo_choices.push_back("Combinatorial grouping");               //0
   grouping_algo_choices.push_back("Hierarchical grouping");                //1
   grouping_algo_choices.push_back("Greedy Local grouping");                //2
   grouping_algo_choices.push_back("Very Greedy Local grouping");           //3
 
   //Curvelet type choices
-  vcl_vector<vcl_string> curvelet_type_choices;
+  std::vector<std::string> curvelet_type_choices;
   curvelet_type_choices.push_back("Anchor Centered");                      //0
   curvelet_type_choices.push_back("Anchor Centered/Bidirectional");        //1
   curvelet_type_choices.push_back("Anchor Leading/Bidirectional");         //2
   curvelet_type_choices.push_back("ENO Style around Anchor");              //3
 
   //Appearance_choices
-  vcl_vector<vcl_string> appearance_usage_choices;
+  std::vector<std::string> appearance_usage_choices;
   appearance_usage_choices.push_back("Do Not Use Appearance");             //0
   appearance_usage_choices.push_back("Use Local Comparison");              //1
   appearance_usage_choices.push_back("Compare against Ref.");              //2
 
   //LinkGraph_choices
-  vcl_vector<vcl_string> linkgraph_choices;
+  std::vector<std::string> linkgraph_choices;
   linkgraph_choices.push_back("all links");                                //0
   linkgraph_choices.push_back("immediate links only");                     //1
   linkgraph_choices.push_back("immediate reciprocal links");               //2
@@ -62,7 +62,7 @@ dbdet_sel_process::dbdet_sel_process()
   linkgraph_choices.push_back("triplets with support");                    //4
 
   //Linking algo choices
-  vcl_vector<vcl_string> linking_algo_choices;
+  std::vector<std::string> linking_algo_choices;
   linking_algo_choices.push_back("Do not Link");                           //0
   linking_algo_choices.push_back("From the Link Graph");                   //1
   linking_algo_choices.push_back("Regular Contours");                      //2
@@ -117,7 +117,7 @@ dbdet_sel_process::dbdet_sel_process()
       !parameters()->add( "Resolving Junctions", "-bDetJct", true )
 	)
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -137,7 +137,7 @@ dbdet_sel_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_sel_process::name()
 {
   return "Symbolic Edge Linker";
@@ -161,9 +161,9 @@ dbdet_sel_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_sel_process::get_input_type()
+std::vector< std::string > dbdet_sel_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map" );
 
   return to_return;
@@ -171,9 +171,9 @@ vcl_vector< vcl_string > dbdet_sel_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_sel_process::get_output_type()
+std::vector< std::string > dbdet_sel_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   //output the sel storage class
   to_return.push_back( "sel" );
   return to_return;
@@ -184,7 +184,7 @@ vcl_vector< vcl_string > dbdet_sel_process::get_output_type()
 bool dbdet_sel_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_sel_process::execute() - not exactly one input \n";
+    std::cout << "In dbdet_sel_process::execute() - not exactly one input \n";
     return false;
   }
   clear_output();
@@ -290,7 +290,7 @@ bool dbdet_sel_process::execute()
   
   double group_time = t.real() / 1000.0;
   t.mark();
-  vcl_cout << "Time taken to form groups and cunstruct curvelet map: " << group_time << " sec" << vcl_endl;
+  std::cout << "Time taken to form groups and cunstruct curvelet map: " << group_time << " sec" << std::endl;
 
   if (bFormLinkGraph){
   //form a link graph
@@ -337,7 +337,7 @@ bool dbdet_sel_process::execute()
 	 //edge_linker->Post_Process();
   //}
   double link_time = t.real() / 1000.0;
-  vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+  std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
 }
   //report stats
   //edge_linker->report_stats();

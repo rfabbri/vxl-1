@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro/bpro_process.h>
 #include <brdb/brdb_database_manager.h>
 #include <vidpro/vidpro_process_manager.h>
@@ -34,10 +34,10 @@ class vidpro_open_ostream_process : public bpro_process
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -47,20 +47,20 @@ class vidpro_open_ostream_process : public bpro_process
 
   
  protected:
- vcl_vector<vcl_string> choices_;
- vcl_vector<vcl_string> fmt_choices_;
- vcl_vector<int> choice_codes_;
+ std::vector<std::string> choices_;
+ std::vector<std::string> fmt_choices_;
+ std::vector<int> choice_codes_;
 
  void add_parameters();
  vidpro_ostream_storage_sptr open_ostream(int type, 
-                                           vcl_string const& directory,
-                                           vcl_string const &name_format,
-                                           vcl_string const &imagefile_fmt,
+                                           std::string const& directory,
+                                           std::string const &name_format,
+                                           std::string const &imagefile_fmt,
                                            unsigned int start_index);
  //: Use vgui dialogs to open an image list istream
-  static vidpro_ostream_storage_sptr image_list_ostream(vcl_string const &directory,
-                                                 vcl_string const &name_format,
-                                                 vcl_string const &imagefile_fmt,
+  static vidpro_ostream_storage_sptr image_list_ostream(std::string const &directory,
+                                                 std::string const &name_format,
+                                                 std::string const &imagefile_fmt,
                                                  unsigned int start_index);
   
   

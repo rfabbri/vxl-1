@@ -28,7 +28,7 @@ void test_find_primitive_pairs()
   kernels_3d.set_angle(0.0f);
   bvpl_kernel_sptr kernel1 = new bvpl_kernel(kernels_3d.create());
   kernel1->print();
-  vcl_string scene_path = "part1_scene";
+  std::string scene_path = "part1_scene";
   int context_id1 = dbrec3d_test_utils::find_primitive_parts(kernel1,scene_path );
   
   DATABASE->print();
@@ -63,7 +63,7 @@ void test_find_primitive_pairs()
   vnl_float_3 aux_axis;
   vgl_rotation_3d<float> pair_geometry = compositor.compute_rotation(part1->axis(), part1->aux_axis(), part2->axis(), part2->aux_axis(), aux_axis);
 
-  vcl_vector<int> children;
+  std::vector<int> children;
   children.push_back(part1->type_id());
   children.push_back(part2->type_id());
   float max_azimuthal; float min_azimuthal; float max_polar; float min_polar;
@@ -83,7 +83,7 @@ void test_find_primitive_pairs()
   boxm_scene<boct_tree<short, dbrec3d_pair_composite_instance > > *composition_scene = new boxm_scene<boct_tree<short, dbrec3d_pair_composite_instance > >(dbrec3d_test_utils::lvcs_, dbrec3d_test_utils::origin_, 
                                                                                                                                                        dbrec3d_test_utils::block_dim_, dbrec3d_test_utils::world_dim_,
                                                                                                                                                        max_level, init_level);
-  vcl_string parts_scene_path("./");
+  std::string parts_scene_path("./");
   composition_scene->set_paths("./", "composition_scene");
   composition_scene->write_scene("/dbrec3d_composition_scene.xml");
   boxm_init_scene(*composition_scene);
@@ -105,16 +105,16 @@ void test_find_primitive_pairs()
       if(cell->data().type_id() >=0)
       {
         vgl_point_3d<double> loc = cell->data().location();
-        if(vcl_abs(loc.x() - 7.50) > 1.0e-7)
+        if(std::abs(loc.x() - 7.50) > 1.0e-7)
           result = false;
-        if(vcl_abs(loc.y() - 8.75) > 1.0e-7)
+        if(std::abs(loc.y() - 8.75) > 1.0e-7)
           result = false;
         if((loc.z()< 6.24) || (loc.z() > 13.76))
           result = false;
-        if(vcl_abs(cell->data().posterior() - 0.0161) > 1.0e-3 )
+        if(std::abs(cell->data().posterior() - 0.0161) > 1.0e-3 )
           result = false;
         
-        vcl_cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << vcl_endl;
+        std::cout << " At cell located at: " << iterator.global_origin() << " \n Data: " << cell->data() << std::endl;
       }
       
       ++iterator;

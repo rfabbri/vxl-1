@@ -24,7 +24,7 @@ void vsl_b_read(vsl_b_istream &is, dsm2_manager_base* &p);
 
 void vsl_b_write(vsl_b_ostream &os, const dsm2_manager_base* p);
 
-void vsl_print_summary(vcl_ostream& os, const dsm2_manager_base *p);
+void vsl_print_summary(std::ostream& os, const dsm2_manager_base *p);
 
 
 #endif //DSM2_IO_MANAGER_BASE_H_

@@ -32,9 +32,9 @@ void dbrl_id_point_2d::b_read(vsl_b_istream &is)
             vsl_b_read(is, this->id_);
 
         default:
-            vcl_cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
+            std::cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
                 << "           Unknown version number "<< ver << '\n';
-            is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+            is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
             return;
         }
     }
@@ -68,7 +68,7 @@ void vsl_b_read(vsl_b_istream &is,dbrl_id_point_2d * &p)
         p = 0;
 }
 
-//double dbrl_id_points_cmx(vcl_vector<dbrl_id_point_2d_sptr> points)
+//double dbrl_id_points_cmx(std::vector<dbrl_id_point_2d_sptr> points)
 //{
 //    if(points.size()==0)
 //        return 0.0;
@@ -83,7 +83,7 @@ void vsl_b_read(vsl_b_istream &is,dbrl_id_point_2d * &p)
 //        return xaccu;
 //    }
 //}
-//double dbrl_id_points_cmy(vcl_vector<dbrl_id_point_2d_sptr> points)
+//double dbrl_id_points_cmy(std::vector<dbrl_id_point_2d_sptr> points)
 //{
 //    if(points.size()==0)
 //        return 0.0;

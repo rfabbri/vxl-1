@@ -4,9 +4,9 @@
 // \author Firat Kalaycilar (firat_kalaycilar@brown.edu)
 // \date Jul 20, 2011
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <string>
+#include <cstdlib>
 #include <dbdet/pro/dbdet_third_order_edge_detector_process.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -16,11 +16,11 @@
 
 int main(int argn, char* args[])
 {
-	vcl_string input_file = args[1];
-	vcl_string output_file = args[2];
-	double sigma = vcl_atof(args[3]);
-	double grad_thresh = vcl_atof(args[4]);
-	int N = vcl_atoi(args[5]);
+	std::string input_file = args[1];
+	std::string output_file = args[2];
+	double sigma = std::atof(args[3]);
+	double grad_thresh = std::atof(args[4]);
+	int N = std::atoi(args[5]);
 
 	vil_image_resource_sptr img_sptr = vil_load_image_resource(input_file.c_str());
 	vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
@@ -35,7 +35,7 @@ int main(int argn, char* args[])
 	pro.add_input(inp);
 	pro.execute();
 
-	vcl_vector<bpro1_storage_sptr> edge_det_results = pro.get_output();
+	std::vector<bpro1_storage_sptr> edge_det_results = pro.get_output();
 
 	dbdet_save_edg_process save_edg_pro;
 	bpro1_filepath output(output_file);

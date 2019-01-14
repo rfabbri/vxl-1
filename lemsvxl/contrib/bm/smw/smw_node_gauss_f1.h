@@ -7,7 +7,7 @@
 
 #include "smw/smw_freq_matrix.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 //really a wrapper around a bsta_gauss_f1
 class smw_node_gauss_f1

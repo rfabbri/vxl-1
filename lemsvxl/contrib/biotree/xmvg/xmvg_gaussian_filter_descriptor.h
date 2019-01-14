@@ -36,7 +36,7 @@
 //         _ _ _x
 //
 
-#include <vcl_string.h>
+#include <string>
 #include "xmvg_filter_descriptor.h"
 #include <vnl/vnl_double_3.h>
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -76,5 +76,5 @@ protected:
 };
 
 //: XML 
-void x_write(vcl_ostream & os, xmvg_gaussian_filter_descriptor f);
+void x_write(std::ostream & os, xmvg_gaussian_filter_descriptor f);
 #endif

@@ -39,7 +39,7 @@ mw_correspond_point_tool_basic()
 
 
 //---------------------------------------------------------------------------------------------------------------
-vcl_string mw_correspond_point_tool_basic::
+std::string mw_correspond_point_tool_basic::
 name() const
 {
   return "Multiview point correspond basic";
@@ -51,7 +51,7 @@ set_tableau( const vgui_tableau_sptr& tableau )
 {
   edgel_tableau_current_.vertical_cast(tableau);
   if( edgel_tableau_current_ == 0 )  {
-    vcl_cerr << "Warning: working in a tableau which is not expected\n";
+    std::cerr << "Warning: working in a tableau which is not expected\n";
     return false;
   }
 
@@ -72,12 +72,12 @@ activate ()
 //  compute_isets_ = true;
   any_selected_point_ = false;
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   if (views.size() < 2) {
-    vgui::out << "Error: need at least " << 2 << " views for this tool" << vcl_endl;
-    vcl_cerr << "Error: need at least " << 2 << " views for this tool" << vcl_endl;
+    vgui::out << "Error: need at least " << 2 << " views for this tool" << std::endl;
+    std::cerr << "Error: need at least " << 2 << " views for this tool" << std::endl;
     return;
   }
   nviews_ = views.size();
@@ -130,16 +130,16 @@ activate ()
     iv_frame_[frame_v_[i]] = i;
   }
   
-  vcl_cout << "Working in frames ";
+  std::cout << "Working in frames ";
   for (unsigned i=0; i<nviews_; ++i) {
-    vcl_cout << frame_v_[i] << "  " ;
+    std::cout << frame_v_[i] << "  " ;
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // -------- Get camera matrices from each frame
 
   {
-    //  vcl_string datatype();
+    //  std::string datatype();
 
     for (unsigned i=0; i<nviews_; ++i) {
       bpro1_storage_sptr 
@@ -149,7 +149,7 @@ activate ()
 
       cam_storage.vertical_cast(p);
       if(!p) {
-        vcl_cerr << "Error: tool requires a vpgl camera storage" << vcl_endl;
+        std::cerr << "Error: tool requires a vpgl camera storage" << std::endl;
         return;
       }
 
@@ -157,14 +157,14 @@ activate ()
 
       pcam = vpgld_cast_to_perspective_camera(cam_storage->get_camera());
       if(!pcam) {
-        vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+        std::cerr << "Error: tool requires a perspective camera" << std::endl;
         return;
       }
 
       cam_[i].set_p(*pcam);
 
-      vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-      vcl_cout << "Camera " << i << " : \n" << cam_[i].Pr_.get_matrix();
+      std::cout << "NAME: " << cam_storage->name() << std::endl;
+      std::cout << "Camera " << i << " : \n" << cam_[i].Pr_.get_matrix();
     }
 
   
@@ -174,8 +174,8 @@ activate ()
 
   // -------- Add tableaus to draw on
 
-  vcl_string type("vsol2D");
-  vcl_string name("corresp_tool");
+  std::string type("vsol2D");
+  std::string name("corresp_tool");
 
   for (unsigned i=0 ; i < nviews_; ++i) {
 
@@ -185,7 +185,7 @@ activate ()
     if (n_data) {
        MANAGER->add_to_display(n_data);
     } else {
-       vcl_cerr << "error: unable to register new data\n";
+       std::cerr << "error: unable to register new data\n";
        return ;
     }
 
@@ -198,11 +198,11 @@ activate ()
     if (tab_ptr1) {
       tab_[i].vertical_cast(tab_ptr1);
     } else {
-      vcl_cerr << "error: Could not find child tableaus in selector\n";
+      std::cerr << "error: Could not find child tableaus in selector\n";
       return ;
     }
 
-    vcl_string active;
+    std::string active;
     active = views[i]->selector()->active_name();
 
     views[i]->selector()->set_active(name);
@@ -220,14 +220,14 @@ activate ()
 
     sto.vertical_cast(MANAGER->storage_from_tableau(views[v]->selector()->active_tableau()));
     if(!sto) {
-      vcl_cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
+      std::cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
       return;
     }
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list= sto->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list= sto->all_data();
 
-    vcl_cout << "Number of vsols in storage named " << sto->name() <<  " in view index " 
-      << v+1 << ": " << vsol_list.size() << vcl_endl;
+    std::cout << "Number of vsols in storage named " << sto->name() <<  " in view index " 
+      << v+1 << ": " << vsol_list.size() << std::endl;
 
     vsols_[v].clear();
     vsols_[v].reserve(vsol_list.size());
@@ -260,8 +260,8 @@ handle( const vgui_event & e,
 {
 
   if (e.type == vgui_KEY_PRESS) {
-    vcl_cout << "-------------\n";
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "-------------\n";
+    std::cout << "Frame index: " << view->frame() << std::endl;
     return handle_key(e.key);
   }
 
@@ -284,7 +284,7 @@ handle_key(vgui_key key)
     /*
     case 'e': {
       // toggle if should display+compute all epipolar in image 2
-      vcl_cout << "Toggling display epipolar in image 2\n";
+      std::cout << "Toggling display epipolar in image 2\n";
       vgui::out << "Toggling display epipolar in image 2\n";
 
       display_all_right_epips_ = !display_all_right_epips_;
@@ -296,7 +296,7 @@ handle_key(vgui_key key)
     }
     case 'w': {
       // toggle if should display+compute all ep0..ep1 in image 1
-      vcl_cout << "Toggling display epipolars in image 1\n";
+      std::cout << "Toggling display epipolars in image 1\n";
       vgui::out << "Toggling display epipolars in image 1\n";
 
       display_all_left_epips_ = !display_all_left_epips_;
@@ -308,7 +308,7 @@ handle_key(vgui_key key)
     }
     case '4': {
       // toggle if should display+compute all ep0..ep1 in image 3
-      vcl_cout << "Toggling display epipolars in image 3\n";
+      std::cout << "Toggling display epipolars in image 3\n";
       vgui::out << "Toggling display epipolars in image 3\n";
 
       display_all_3rd_view_epips_= !display_all_3rd_view_epips_;
@@ -320,7 +320,7 @@ handle_key(vgui_key key)
       break;
     }
     case 'i': { 
-      vcl_cout << "Toggling compute intersections\n";
+      std::cout << "Toggling compute intersections\n";
       vgui::out << "Toggling compute intersections\n";
 
       compute_isets_ = !compute_isets_;
@@ -336,14 +336,14 @@ handle_key(vgui_key key)
     */
     case 'p': { // print misc info / debug
 
-      vcl_cout << "Npts: " << vsols_[0].size() << vcl_endl;
+      std::cout << "Npts: " << vsols_[0].size() << std::endl;
 
       return true;
       break;
     }
 
     default:
-      vcl_cout << "(basic) Unassigned key: " << key << " pressed.\n";
+      std::cout << "(basic) Unassigned key: " << key << " pressed.\n";
       return false;
       break;
   }
@@ -361,13 +361,13 @@ handle_mouse_event_whatever_view(
     const vgui_event & e, 
     const bvis1_view_tableau_sptr& view )
 {
-  vcl_cout << "-------------\n";
-  vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+  std::cout << "-------------\n";
+  std::cout << "Frame index: " << view->frame() << std::endl;
 
   float ix, iy;
   vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
-  vcl_cout << "ix,iy: " << ix << "," << iy << vcl_endl;
+  std::cout << "ix,iy: " << ix << "," << iy << std::endl;
 
   vgui_soview2D* selected_edgel_soview_base =  
     (vgui_soview2D*)edgel_tableau_current_->get_highlighted_soview();
@@ -376,33 +376,33 @@ handle_mouse_event_whatever_view(
     = dynamic_cast<bgui_vsol_soview2D_line_seg *>(selected_edgel_soview_base); 
 
   if (!selected_edgel_soview_line) {
-    vcl_cout << "Selected non-line segment object" << vcl_endl;
+    std::cout << "Selected non-line segment object" << std::endl;
     return false;
   }
 
   selected_edgel_ = selected_edgel_soview_line->sptr();
-  vcl_cout << "Middle of selected edgel: " << *(selected_edgel_->middle());
+  std::cout << "Middle of selected edgel: " << *(selected_edgel_->middle());
 
   unsigned p_iv = iv_frame_[view->frame()];
 
   unsigned idx;
   bool stat  = get_index_of_point( selected_edgel_, vsols_orig_cache_[p_iv], &idx);
 
-  vcl_cout << "Selected view[index " << p_iv << "]: ";
-  vcl_cout.flush();
+  std::cout << "Selected view[index " << p_iv << "]: ";
+  std::cout.flush();
   if (stat) {
-     vcl_cout << "selected point number: (" << idx+1 << ") out of " 
-               << vsols_[p_iv].size() << vcl_endl;
+     std::cout << "selected point number: (" << idx+1 << ") out of " 
+               << vsols_[p_iv].size() << std::endl;
      p_idx_[p_iv] = idx;
   } else {
-     vcl_cout << "selected point mysteriously not found among vsols\n";
+     std::cout << "selected point mysteriously not found among vsols\n";
   }
 
   for (unsigned i=0; i < nviews_; ++i) {
     if (i != p_iv && p_[i]) {
-      vcl_cout << "Previously selected view[index " << i << "]: ";
-      vcl_cout << "point number: (" << p_idx_[i]+1 << ") out of " 
-                << vsols_[i].size() << vcl_endl;
+      std::cout << "Previously selected view[index " << i << "]: ";
+      std::cout << "point number: (" << p_idx_[i]+1 << ") out of " 
+                << vsols_[i].size() << std::endl;
     }
   }
 
@@ -410,10 +410,10 @@ handle_mouse_event_whatever_view(
       //  bool stat=get_index_of_candidate_point(selected_edgel_,&idx);
 
       //  if (stat) {
-      //    vcl_cout << "View 2: epipolar intercept (" << idx+1 << ") out of " 
-      //             << intercepts_id_.size() << vcl_endl;
+      //    std::cout << "View 2: epipolar intercept (" << idx+1 << ") out of " 
+      //             << intercepts_id_.size() << std::endl;
       //  } else 
-      //    vcl_cout << "Selected soview NOT found in list of EPIPOLAR candidate pts.\n";
+      //    std::cout << "Selected soview NOT found in list of EPIPOLAR candidate pts.\n";
 
   // mark clicked point
   handle_point_selection_whatever_view(selected_edgel_->middle(),p_iv);
@@ -501,7 +501,7 @@ update_display_for_epipolars( bool redraw , unsigned v)
 bool mw_correspond_point_tool_basic::
 get_index_of_point(
     const vsol_point_2d_sptr& selected_point, 
-    const vcl_vector<vsol_point_2d_sptr> &pv,
+    const std::vector<vsol_point_2d_sptr> &pv,
     unsigned *idx)
 {
   for (unsigned i=0; i < pv.size(); ++i) {
@@ -518,7 +518,7 @@ get_index_of_point(
 bool mw_correspond_point_tool_basic::
 get_index_of_point(
     const vsol_line_2d_sptr& selected_edgel, 
-    const vcl_vector<vsol_line_2d_sptr> &pv,
+    const std::vector<vsol_line_2d_sptr> &pv,
     unsigned *idx)
 {
   for (unsigned i=0; i < pv.size(); ++i) {
@@ -543,7 +543,7 @@ bool mw_correspond_point_tool_basic::
 get_index_of_candidate_point(
     const vsol_point_2d_sptr& selected_point, unsigned *idx)
 {
-  vcl_list<unsigned>::const_iterator i = intercepts_id_.begin();
+  std::list<unsigned>::const_iterator i = intercepts_id_.begin();
   unsigned k=0;
   for (; i != intercepts_id_.end(); ++i,k++) {
     if (vsols_[p_iv_[1]][*i] == selected_point) {  // Pointer comparison
@@ -562,7 +562,7 @@ bool mw_correspond_point_tool_basic::
 get_index_of_candidate_point(
     const vsol_line_2d_sptr& selected_edgel, unsigned *idx)
 {
-  vcl_list<unsigned>::const_iterator i = intercepts_id_.begin();
+  std::list<unsigned>::const_iterator i = intercepts_id_.begin();
   unsigned k=0;
   for (; i != intercepts_id_.end(); ++i,k++) {
     if (vsols_orig_cache_[p_iv_[1]][*i] == selected_edgel) {  // Pointer comparison
@@ -611,7 +611,7 @@ show_all_intersection_points()
     all_intercept_pts_soviews_.clear();
 
   //  unsigned inz=(unsigned)-1; //: indexes curves having non-zero intersections
-    vcl_list<unsigned>::const_iterator i = intercepts_id_.begin();
+    std::list<unsigned>::const_iterator i = intercepts_id_.begin();
     for (; i != intercepts_id_.end(); ++i) {
         vsol_point_2d_sptr pt = vsols_[iv][ *i ];
         tab_[iv]->set_point_radius(2);

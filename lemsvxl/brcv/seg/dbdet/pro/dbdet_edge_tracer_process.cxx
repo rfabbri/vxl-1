@@ -10,8 +10,8 @@
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vidpro/storage/vidpro_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -29,7 +29,7 @@ dbdet_edge_tracer_process::dbdet_edge_tracer_process()
   if( !parameters()->add( "Edge pixel Value"   , "-edge_val" , 0) ||
       !parameters()->add( "Smooth Contour"  , "-bsmooth" , true ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ dbdet_edge_tracer_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_edge_tracer_process::name()
 {
   return "Edge Tracer";
@@ -71,18 +71,18 @@ dbdet_edge_tracer_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_edge_tracer_process::get_input_type()
+std::vector< std::string > dbdet_edge_tracer_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_edge_tracer_process::get_output_type()
+std::vector< std::string > dbdet_edge_tracer_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -93,14 +93,14 @@ bool
 dbdet_edge_tracer_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_edge_tracer_process::execute() - not exactly one"
+    std::cout << "In dbdet_edge_tracer_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Tracing ...";
-  vcl_cout.flush();
+  std::cout << "Tracing ...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro_image_storage_sptr frame_image;
@@ -115,7 +115,7 @@ dbdet_edge_tracer_process::execute()
   parameters()->get_value( "-bsmooth" , bsmooth );
   
   // perform edge tracing with the given parameters
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves;
   trace_edges(image_view, edge_val, image_curves);
 
   //smooth the traced curves if desired
@@ -127,8 +127,8 @@ dbdet_edge_tracer_process::execute()
   output_vsol->add_objects(image_curves, "traced contours");
   output_data_[0].push_back(output_vsol);
 
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout.flush();
+  std::cout << "done!" << std::endl;
+  std::cout.flush();
 
   return true;
 }
@@ -142,7 +142,7 @@ dbdet_edge_tracer_process::finish()
 
 void dbdet_edge_tracer_process::trace_edges(vil_image_view<vxl_byte> & image, 
                                             unsigned edge_val, 
-                                            vcl_vector<vsol_spatial_object_2d_sptr> & contours)
+                                            std::vector<vsol_spatial_object_2d_sptr> & contours)
 {
   //set up various buffers to assist in edge tracing
 
@@ -168,8 +168,8 @@ bool dbdet_edge_tracer_process::Is_8_Neighbor (int x1, int y1, int x2, int y2)
   //* Two points are 8-connected neighbors
   //* IF delta_x <= 1 AND delta_y <= 1
 
-  int delta_x = vcl_abs (x2 - x1);
-  int delta_y = vcl_abs (y2 - y1);
+  int delta_x = std::abs (x2 - x1);
+  int delta_y = std::abs (y2 - y1);
 
   return ((delta_x <= 1) && (delta_y <= 1));
 }
@@ -179,8 +179,8 @@ bool dbdet_edge_tracer_process::Is_4_Neighbor (int x1, int y1, int x2, int y2)
   //* Two points are 4-connected neighbors
   //* IF delta_x + delta_y = 1
 
-  int delta_x = vcl_abs (x2 - x1);
-  int delta_y = vcl_abs (y2 - y1);
+  int delta_x = std::abs (x2 - x1);
+  int delta_y = std::abs (y2 - y1);
 
   return ((delta_x+delta_y) == 1);
 }

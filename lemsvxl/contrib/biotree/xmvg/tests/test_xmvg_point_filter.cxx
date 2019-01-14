@@ -8,21 +8,21 @@
 #include <testlib/testlib_test.h>
 #include <xmvg/xmvg_point_filter_descriptor.h>
 #include <xmvg/xmvg_point_filter_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 static void test_xmvg_point_filter()
 {
-  vcl_cout << "---test descriptor---" << vcl_endl;
+  std::cout << "---test descriptor---" << std::endl;
 
   xmvg_point_filter_descriptor fd;
 
-  vcl_string name = fd.name();
+  std::string name = fd.name();
 
-  vcl_string id = "point_filter";
+  std::string id = "point_filter";
 
   bool same_name = ((name == id)? true : false);
 
@@ -30,7 +30,7 @@ static void test_xmvg_point_filter()
  
   xmvg_point_filter_3d filter(fd);
   
-  vcl_cout << "---test filter 3d splat---" << vcl_endl;
+  std::cout << "---test filter 3d splat---" << std::endl;
   // construct the initial camera
   xmvg_source source;
   vnl_double_3x3 m(0.0);
@@ -63,12 +63,12 @@ static void test_xmvg_point_filter()
   tr.set_rotation_about_axis(axis, -theta);
   xmvg_perspective_camera<double> cam_rot = xmvg_perspective_camera<double>::postmultiply(cam, tr);
   clock_t t1,t2;
-  t1 = vcl_clock();
+  t1 = std::clock();
   xmvg_atomic_filter_2d<double> res(f.splat(vgl_point_3d<double> (0.0, 0.0, 0.0), cam_rot));
-  t2 = vcl_clock();
+  t2 = std::clock();
   double tt = (double)(t2-t1) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is: " << tt << vcl_endl;
-  vcl_cout << "Splat size is: " << res.size() << vcl_endl;
+  std::cout << "Elapsed time is: " << tt << std::endl;
+  std::cout << "Splat size is: " << res.size() << std::endl;
 
   TEST("splat result x-size test", res.size().get(0), 1);
   TEST("splat result y-size test", res.size().get(1), 1);

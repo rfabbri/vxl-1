@@ -5,8 +5,8 @@
  *      Author: firat
  */
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <boost/thread/mutex.hpp>
 #include <boost/bind.hpp>
 #include <boost/threadpool.hpp>
@@ -18,10 +18,10 @@ using namespace boost::threadpool;
 // Helpers
 boost::mutex m_io_monitor;
 
-void print(vcl_string text)
+void print(std::string text)
 {
   boost::mutex::scoped_lock lock(m_io_monitor);
-  vcl_cout << text << vcl_endl;
+  std::cout << text << std::endl;
 }
 
 void task(int a)
@@ -30,7 +30,7 @@ void task(int a)
 	{
 		5*5;
 	}
-	vcl_string x = "q";
+	std::string x = "q";
 	x[0] = a + '0';
 	print(x);
 }

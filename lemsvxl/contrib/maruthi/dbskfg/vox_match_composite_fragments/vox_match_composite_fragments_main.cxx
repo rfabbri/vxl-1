@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    vcl_string model_img=params->model_image_();
-    vcl_string query_img=params->query_image_();
+    std::string model_img=params->model_image_();
+    std::string query_img=params->query_image_();
  
     // Grab image
     vil_image_resource_sptr model_img_sptr = 
@@ -78,14 +78,14 @@ int main(int argc, char *argv[])
     // Matching a model set of fragments to a query set of fragments
 
     //******************** Match Bag of Fragments ****************************
-    vcl_cout<<"************  Match Bag of Fragments  *************"<<vcl_endl;
+    std::cout<<"************  Match Bag of Fragments  *************"<<std::endl;
 
     bool proc_status(false);
     
 
 
     //******************** Extract Cgraph Fragments ****************************
-    vcl_cout<<"************ Match Medial Fragments *************"<<vcl_endl;
+    std::cout<<"************ Match Medial Fragments *************"<<std::endl;
     
     dbskfg_match_bag_of_fragments_process matchsg_pro;
     set_process_parameters_of_bpro1(*params, 
@@ -112,15 +112,15 @@ int main(int argc, char *argv[])
   
     if (!matchsg_status) 
     {
-        vcl_cerr << "Matching of Composite Fragments Failed"
-                 << vcl_endl;
+        std::cerr << "Matching of Composite Fragments Failed"
+                 << std::endl;
         return false;
     }
   
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

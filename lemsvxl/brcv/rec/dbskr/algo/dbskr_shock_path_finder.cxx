@@ -8,16 +8,16 @@
 
 #include <vil/vil_image_resource.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 
 void dbskr_shock_path_finder::clear() {
   sg_ = 0;
   
   for (path_tree_map_type::iterator it = path_tree_map_.begin(); it != path_tree_map_.end(); it++) {
-    vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >* vec = it->second;
+    std::vector<std::vector<dbskr_path_tree_node_sptr>* >* vec = it->second;
     for (unsigned d = 0; d < vec->size(); d++) {
-      vcl_vector<dbskr_path_tree_node_sptr>* depth_vec = (*vec)[d];
+      std::vector<dbskr_path_tree_node_sptr>* depth_vec = (*vec)[d];
       depth_vec->clear();
       delete depth_vec;
     }
@@ -39,24 +39,24 @@ bool dbskr_shock_path_finder::construct_v() {
   return true;
 }
 
-vcl_vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::initialize_depth_zero(dbskr_v_node_sptr v1) 
+std::vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::initialize_depth_zero(dbskr_v_node_sptr v1) 
 {
   dbskr_path_tree_node_sptr root = new dbskr_path_tree_node(v1, 0, 0.0f);  // root has no parent
-  vcl_vector<dbskr_path_tree_node_sptr>* zero_vec = new vcl_vector<dbskr_path_tree_node_sptr>();
+  std::vector<dbskr_path_tree_node_sptr>* zero_vec = new std::vector<dbskr_path_tree_node_sptr>();
   for (dbskr_v_graph::edge_iterator e_itr = v1->in_edges_begin(); e_itr != v1->in_edges_end(); e_itr++) {
     dbskr_v_node_sptr opp = (*e_itr)->opposite(v1);
     dbskr_path_tree_node_sptr node = new dbskr_path_tree_node(opp, root, (*e_itr)->length()); 
     zero_vec->push_back(node);
-    vcl_pair<int, int> p(v1->id_, opp->id_);
-    path_tree_multimap_.insert(vcl_pair<vcl_pair<int, int>, dbskr_path_tree_node_sptr>(p,node));
+    std::pair<int, int> p(v1->id_, opp->id_);
+    path_tree_multimap_.insert(std::pair<std::pair<int, int>, dbskr_path_tree_node_sptr>(p,node));
   }   
   return zero_vec;
 }
 
 //: advance one more depth
-vcl_vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::advance(vcl_vector<dbskr_path_tree_node_sptr>* last_vec, dbskr_v_node_sptr v1, float norm, float threshold)
+std::vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::advance(std::vector<dbskr_path_tree_node_sptr>* last_vec, dbskr_v_node_sptr v1, float norm, float threshold)
 {
-  vcl_vector<dbskr_path_tree_node_sptr>* new_vec = new vcl_vector<dbskr_path_tree_node_sptr>();
+  std::vector<dbskr_path_tree_node_sptr>* new_vec = new std::vector<dbskr_path_tree_node_sptr>();
   for (unsigned i = 0; i < last_vec->size(); i++) {
     dbskr_path_tree_node_sptr parent = (*last_vec)[i];
 
@@ -71,11 +71,11 @@ vcl_vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::advance(vcl_vect
       float length = (*e_itr)->length();
 
       //: do not create a new dbskr_tree_node if there exists this path tree node 
-      vcl_pair<int, int> p_search(v1->id_, opp->id_);
-      vcl_pair<vcl_multimap<vcl_pair<int, int>, dbskr_path_tree_node_sptr>::iterator, vcl_multimap<vcl_pair<int, int>, dbskr_path_tree_node_sptr>::iterator > itr_pair;  
+      std::pair<int, int> p_search(v1->id_, opp->id_);
+      std::pair<std::multimap<std::pair<int, int>, dbskr_path_tree_node_sptr>::iterator, std::multimap<std::pair<int, int>, dbskr_path_tree_node_sptr>::iterator > itr_pair;  
 
       bool advance = true;
-      vcl_multimap<vcl_pair<int, int>, dbskr_path_tree_node_sptr>::iterator itr;    
+      std::multimap<std::pair<int, int>, dbskr_path_tree_node_sptr>::iterator itr;    
       itr_pair = path_tree_multimap_.equal_range(p_search);
       for (itr = itr_pair.first; itr != itr_pair.second; itr++) {
         if (itr->second->parent_->node_->id_ == parent->node_->id_) {
@@ -116,8 +116,8 @@ vcl_vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::advance(vcl_vect
 
       dbskr_path_tree_node_sptr node = new dbskr_path_tree_node(opp, parent, parent->length_ + length); 
       new_vec->push_back(node);
-      vcl_pair<int, int> p(v1->id_, opp->id_);
-      path_tree_multimap_.insert(vcl_pair<vcl_pair<int, int>, dbskr_path_tree_node_sptr>(p,node));
+      std::pair<int, int> p(v1->id_, opp->id_);
+      path_tree_multimap_.insert(std::pair<std::pair<int, int>, dbskr_path_tree_node_sptr>(p,node));
     }
   }    
   return new_vec;
@@ -125,7 +125,7 @@ vcl_vector<dbskr_path_tree_node_sptr>* dbskr_shock_path_finder::advance(vcl_vect
 
 bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1, 
                               dbsk2d_shock_node_sptr n2, 
-                              vcl_vector<dbskr_v_node_sptr>& path)
+                              std::vector<dbskr_v_node_sptr>& path)
 {
   if (!v_ || !construct_v())
       return false;
@@ -143,13 +143,13 @@ bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1
   }
 
   path_tree_map_type::iterator it = path_tree_map_.find(v1->id_);
-  vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >* main_vec;
+  std::vector<std::vector<dbskr_path_tree_node_sptr>* >* main_vec;
   bool hit_v2 = false;
   int ind1, ind2;
   if (it == path_tree_map_.end()) { // create for the first time
     //: create depth 0 vector
 
-    vcl_vector<dbskr_path_tree_node_sptr>* zero_vec = initialize_depth_zero(v1);
+    std::vector<dbskr_path_tree_node_sptr>* zero_vec = initialize_depth_zero(v1);
 
     for (unsigned i = 0; i < zero_vec->size(); i++) {
       if (v2->id_ == (*zero_vec)[i]->node_->id_) {
@@ -159,14 +159,14 @@ bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1
       }
     }
      
-    main_vec = new vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >(1, zero_vec);
+    main_vec = new std::vector<std::vector<dbskr_path_tree_node_sptr>* >(1, zero_vec);
     path_tree_map_[v1->id_] = main_vec;
 
     //: proceed till we hit v2, for the first time at any of the depths
     while (!hit_v2) {
       //: pick the last depth row and advance all its elements one more level
-      vcl_vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
-      vcl_vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, 1.0f, 10000.0f);  // we don't impose any max here
+      std::vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
+      std::vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, 1.0f, 10000.0f);  // we don't impose any max here
 
       for (unsigned i = 0; i < new_vec->size(); i++) {
         if (v2->id_ == (*new_vec)[i]->node_->id_) {
@@ -183,7 +183,7 @@ bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1
     // search for the existing depths if v2 is already found before
     main_vec = it->second;
     for (unsigned d = 0; d < main_vec->size(); d++) {
-      vcl_vector<dbskr_path_tree_node_sptr>* depth_vec = (*main_vec)[d];
+      std::vector<dbskr_path_tree_node_sptr>* depth_vec = (*main_vec)[d];
       for (unsigned i = 0; i < depth_vec->size(); i++) {
         if ((*depth_vec)[i]->node_->id_ == v2->id_) {
           hit_v2 = true;
@@ -198,9 +198,9 @@ bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1
 
     while (!hit_v2) {  // keep searching if still not hit
       //: pick the last depth row and advance all its elements one more level
-      vcl_vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
+      std::vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
 
-      vcl_vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, 1.0f, 10000.0f);  // we don't impose any max here
+      std::vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, 1.0f, 10000.0f);  // we don't impose any max here
 
       for (unsigned i = 0; i < new_vec->size(); i++) {
         if (v2->id_ == (*new_vec)[i]->node_->id_) {
@@ -224,7 +224,7 @@ bool dbskr_shock_path_finder::get_shortest_v_node_path(dbsk2d_shock_node_sptr n1
 //  required because number of paths explode in complicated shock graphs
 bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1, 
                               dbsk2d_shock_node_sptr n2, 
-                              vcl_vector<vcl_vector<dbskr_v_node_sptr> >& paths, vcl_vector<float>& abs_lengths, float normalization_length, float length_thres)
+                              std::vector<std::vector<dbskr_v_node_sptr> >& paths, std::vector<float>& abs_lengths, float normalization_length, float length_thres)
 {
   if (!v_ || !construct_v())
       return false;
@@ -237,32 +237,32 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
     return false;
 
   if (v1 == v2) {
-    vcl_vector<dbskr_v_node_sptr> path;
+    std::vector<dbskr_v_node_sptr> path;
     path.push_back(v1);
     paths.push_back(path);
     return true;
   }
 
   path_tree_map_type::iterator it = path_tree_map_.find(v1->id_);
-  vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >* main_vec;
+  std::vector<std::vector<dbskr_path_tree_node_sptr>* >* main_vec;
   bool advanced = true;
-  vcl_vector<vcl_pair<int, int> > indices;
+  std::vector<std::pair<int, int> > indices;
 
   if (it == path_tree_map_.end()) { // create for the first time
     //: create depth 0 vector
 
-    vcl_vector<dbskr_path_tree_node_sptr>* zero_vec = initialize_depth_zero(v1);
+    std::vector<dbskr_path_tree_node_sptr>* zero_vec = initialize_depth_zero(v1);
 
     for (unsigned i = 0; i < zero_vec->size(); i++) {
       if (v2->id_ == (*zero_vec)[i]->node_->id_) {
         if ((*zero_vec)[i]->length_/normalization_length < length_thres) {
-          vcl_pair<int, int> p(0, i);
+          std::pair<int, int> p(0, i);
           indices.push_back(p);
         }
       }
     }
      
-    main_vec = new vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >(1, zero_vec);
+    main_vec = new std::vector<std::vector<dbskr_path_tree_node_sptr>* >(1, zero_vec);
     path_tree_map_[v1->id_] = main_vec;
 
     //: proceed till we advance all branches as long as possible
@@ -270,10 +270,10 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
       advanced = false;
 
       //: pick the last depth row and advance all its elements one more level
-      vcl_vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
+      std::vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
 
       //: advance only if there exists at least one in the last_vec less than the length threshold
-      for (vcl_vector<dbskr_path_tree_node_sptr>::iterator it = last_vec->begin(); it != last_vec->end(); it++) {
+      for (std::vector<dbskr_path_tree_node_sptr>::iterator it = last_vec->begin(); it != last_vec->end(); it++) {
         if ((*it)->length_/normalization_length < length_thres) {
           advanced = true;
           break;
@@ -285,12 +285,12 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
       } else
         break;    // none of the ones in the last_vec are shorter than the length_thres
       
-      vcl_vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, normalization_length, length_thres);
+      std::vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, normalization_length, length_thres);
 
       for (unsigned i = 0; i < new_vec->size(); i++) {
         if (v2->id_ == (*new_vec)[i]->node_->id_) {
           if ((*new_vec)[i]->length_/normalization_length < length_thres) {
-            vcl_pair<int, int> p(main_vec->size(), i);
+            std::pair<int, int> p(main_vec->size(), i);
             indices.push_back(p);
           }
         }
@@ -305,7 +305,7 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
     // search for the existing depths if v2 is already found before
     main_vec = it->second;
     for (unsigned d = 0; d < main_vec->size(); d++) {
-      vcl_vector<dbskr_path_tree_node_sptr>* depth_vec = (*main_vec)[d];
+      std::vector<dbskr_path_tree_node_sptr>* depth_vec = (*main_vec)[d];
 
       //: don't check the next depth if all the members at this depth were longer than thres
       bool keep_going = false;
@@ -314,7 +314,7 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
         if ((*depth_vec)[i]->length_/normalization_length < length_thres) {
           keep_going = true;
           if ((*depth_vec)[i]->node_->id_ == v2->id_) {
-            vcl_pair<int, int> p(d, i);
+            std::pair<int, int> p(d, i);
             indices.push_back(p);
           }
         }
@@ -328,10 +328,10 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
       advanced = false;
 
       //: pick the last depth row and advance all its elements one more level
-      vcl_vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
+      std::vector<dbskr_path_tree_node_sptr>* last_vec = ((*main_vec)[main_vec->size()-1]);
 
        //: advance only if there exists at least one in the last_vec less than the length threshold
-      for (vcl_vector<dbskr_path_tree_node_sptr>::iterator it = last_vec->begin(); it != last_vec->end(); it++) {
+      for (std::vector<dbskr_path_tree_node_sptr>::iterator it = last_vec->begin(); it != last_vec->end(); it++) {
         if ((*it)->length_/normalization_length < length_thres) {
           advanced = true;
           break;
@@ -343,11 +343,11 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
       } else
         break;    // none of the ones in the last_vec are shorter than the length_thres
 
-      vcl_vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, normalization_length, length_thres);
+      std::vector<dbskr_path_tree_node_sptr>* new_vec = advance(last_vec, v1, normalization_length, length_thres);
 
       for (unsigned i = 0; i < new_vec->size(); i++) {
         if (v2->id_ == (*new_vec)[i]->node_->id_) {
-          vcl_pair<int, int> p(main_vec->size(), i);
+          std::pair<int, int> p(main_vec->size(), i);
           indices.push_back(p);
         }
       }
@@ -360,7 +360,7 @@ bool dbskr_shock_path_finder::get_all_v_node_paths(dbsk2d_shock_node_sptr n1,
   }
 
   for (unsigned i = 0; i < indices.size(); i++) {
-    vcl_vector<dbskr_v_node_sptr> path;
+    std::vector<dbskr_v_node_sptr> path;
     float length;
     if (get_path(main_vec, indices[i].first, indices[i].second, path, length, n1->id(), n2->id())) {
 
@@ -426,10 +426,10 @@ void add_a_dummy_degree_one(dbskr_v_graph_sptr& new_g, int id) {
 void add_incoming_edges_in_correct_order_of_original_graph(dbskr_v_graph_sptr original_graph, dbskr_v_graph_sptr& new_g) 
 { 
   //: map from source to target ids in the original graph to the source and target pointers on the new graph
-  vcl_map<vcl_pair<int, int> , vcl_pair<int, dbskr_v_edge_sptr> > nodes_to_edges;
+  std::map<std::pair<int, int> , std::pair<int, dbskr_v_edge_sptr> > nodes_to_edges;
   for (dbskr_v_graph::edge_iterator e_it = new_g->edges_begin(); e_it != new_g->edges_end(); e_it++) {
-    vcl_pair<int, int> p((*e_it)->source()->id_, (*e_it)->target()->id_);
-    vcl_pair<int, dbskr_v_edge_sptr> p2((*e_it)->source()->id_, *e_it);
+    std::pair<int, int> p((*e_it)->source()->id_, (*e_it)->target()->id_);
+    std::pair<int, dbskr_v_edge_sptr> p2((*e_it)->source()->id_, *e_it);
     nodes_to_edges[p] = p2;
     p.first = (*e_it)->target()->id_;
     p.second = (*e_it)->source()->id_;
@@ -440,8 +440,8 @@ void add_incoming_edges_in_correct_order_of_original_graph(dbskr_v_graph_sptr or
   //: now go through vertices of original graph and add the edges in correct orders to the new_g
   for (dbskr_v_graph::vertex_iterator vv = original_graph->vertices_begin(); vv != original_graph->vertices_end(); vv++) {
     for (dbskr_v_node::edge_iterator e_vv = (*vv)->in_edges_begin(); e_vv != (*vv)->in_edges_end(); e_vv++) {
-      vcl_pair<int, int> p1((*vv)->id_, ((*e_vv)->opposite(*vv))->id_);
-      vcl_map<vcl_pair<int, int> , vcl_pair<int, dbskr_v_edge_sptr> >::iterator vv_it = 
+      std::pair<int, int> p1((*vv)->id_, ((*e_vv)->opposite(*vv))->id_);
+      std::map<std::pair<int, int> , std::pair<int, dbskr_v_edge_sptr> >::iterator vv_it = 
         nodes_to_edges.find(p1);
       if (vv_it != nodes_to_edges.end()) {
         //: add only if this is exactly the same edge
@@ -471,7 +471,7 @@ void merge(dbskr_v_graph_sptr new_g, dbskr_v_graph_sptr n2_v2_graph, int id)
     if ((*v1_itr)->id_ == id)
       break;
 
-  vcl_map<int, dbskr_v_node_sptr> v2_map;
+  std::map<int, dbskr_v_node_sptr> v2_map;
   dbskr_v_graph::vertex_iterator v2_itr;
   for (v2_itr = n2_v2_graph->vertices_begin(); v2_itr != n2_v2_graph->vertices_end(); v2_itr++) {
     if ((*v2_itr)->id_ == id)
@@ -497,18 +497,18 @@ void merge(dbskr_v_graph_sptr new_g, dbskr_v_graph_sptr n2_v2_graph, int id)
 
 bool dbskr_shock_path_finder::get_all_scurves(dbsk2d_shock_node_sptr n1, 
                        dbsk2d_shock_node_sptr n2, 
-                       vcl_vector<dbskr_scurve_sptr>& scurves, 
-                       vcl_vector<float>& abs_lengths, float norm_length, float length_threshold, float interpolate_ds, float sample_ds)
+                       std::vector<dbskr_scurve_sptr>& scurves, 
+                       std::vector<float>& abs_lengths, float norm_length, float length_threshold, float interpolate_ds, float sample_ds)
 {
-  vcl_vector<vcl_vector<dbskr_v_node_sptr> > all_paths;
-  vcl_vector<float> abs_lengths_temp;
+  std::vector<std::vector<dbskr_v_node_sptr> > all_paths;
+  std::vector<float> abs_lengths_temp;
   get_all_v_node_paths(n1, n2, all_paths, abs_lengths_temp, norm_length, length_threshold);
   abs_lengths.clear();
 
   for (unsigned i = 0; i < all_paths.size(); i++) {
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
     if (get_edges_on_path(all_paths[i], edges)) {
-      dbskr_scurve_sptr s = dbskr_compute_scurve(n1, edges, false, true, true, vcl_min((float)sample_ds, interpolate_ds), sample_ds);
+      dbskr_scurve_sptr s = dbskr_compute_scurve(n1, edges, false, true, true, std::min((float)sample_ds, interpolate_ds), sample_ds);
       scurves.push_back(s);
       abs_lengths.push_back(abs_lengths_temp[i]);
     }
@@ -523,42 +523,42 @@ bool dbskr_shock_path_finder::get_all_scurves(dbsk2d_shock_node_sptr n1,
 //  find all such v graphs using the paths and various unions of paths
 bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1, 
                               dbsk2d_shock_node_sptr n2, dbskr_v_graph_sptr v1, dbskr_v_graph_sptr v2,
-                              vcl_vector<dbskr_v_graph_sptr>& graphs, vcl_vector<float>& abs_lengths, float norm_length, float length_threshold)
+                              std::vector<dbskr_v_graph_sptr>& graphs, std::vector<float>& abs_lengths, float norm_length, float length_threshold)
 {
-  vcl_vector<vcl_vector<dbskr_v_node_sptr> > all_paths;
-  vcl_vector<float> abs_lengths_temp;
+  std::vector<std::vector<dbskr_v_node_sptr> > all_paths;
+  std::vector<float> abs_lengths_temp;
   get_all_v_node_paths(n1, n2, all_paths, abs_lengths_temp, norm_length, length_threshold);
   abs_lengths.clear();
 
  /* for (unsigned i = 0; i < all_paths.size(); i++) {
-    vcl_cout << "path " << i << ": ";
+    std::cout << "path " << i << ": ";
     for (unsigned j = 0; j < all_paths[i].size(); j++) {
-      vcl_cout << all_paths[i][j]->id_ << " ";
+      std::cout << all_paths[i][j]->id_ << " ";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }*/
   
-  vcl_vector<dbskr_v_node_sptr> v1_verts, v2_verts;
+  std::vector<dbskr_v_node_sptr> v1_verts, v2_verts;
   
   v1->get_all_degree_one_vertices(v1_verts);
-  //vcl_cout << "v1 degree one nodes: ";
+  //std::cout << "v1 degree one nodes: ";
   //for (unsigned i = 0; i < v1_verts.size(); i++) 
-  //  vcl_cout << v1_verts[i]->id_ << " ";
-  //vcl_cout << vcl_endl;
+  //  std::cout << v1_verts[i]->id_ << " ";
+  //std::cout << std::endl;
 
   v2->get_all_degree_one_vertices(v2_verts);
-  //vcl_cout << "v2 degree one nodes: ";
+  //std::cout << "v2 degree one nodes: ";
   //for (unsigned i = 0; i < v2_verts.size(); i++) 
-  //  vcl_cout << v2_verts[i]->id_ << " ";
-  //vcl_cout << vcl_endl;
+  //  std::cout << v2_verts[i]->id_ << " ";
+  //std::cout << std::endl;
 
-  vcl_vector<bool> v1_verts_valid(v1_verts.size(), false);
-  vcl_vector<bool> v2_verts_valid(v2_verts.size(), false);
+  std::vector<bool> v1_verts_valid(v1_verts.size(), false);
+  std::vector<bool> v2_verts_valid(v2_verts.size(), false);
   
 
   //: mark the v1 degree 1 nodes which are on a path from n1 to n2
   //  and the initial part of the path from n1 to v1 should consist of v1 nodes and edges
-  vcl_multimap<int, vcl_pair<unsigned, unsigned> > v1_vert_id_to_path_ind;
+  std::multimap<int, std::pair<unsigned, unsigned> > v1_vert_id_to_path_ind;
   for (unsigned ii = 0; ii < v1_verts.size(); ii++) {
     for (unsigned i = 0; i < all_paths.size(); i++) {
 
@@ -594,8 +594,8 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
           if (skip)
             break;
           //: all the nodes from the beginning consists of v1 nodes and edges so add this to multimap
-          vcl_pair<unsigned, unsigned> p(i, j);
-          v1_vert_id_to_path_ind.insert(vcl_pair<int, vcl_pair<unsigned, unsigned> >(v1_verts[ii]->id_, p));
+          std::pair<unsigned, unsigned> p(i, j);
+          v1_vert_id_to_path_ind.insert(std::pair<int, std::pair<unsigned, unsigned> >(v1_verts[ii]->id_, p));
           v1_verts_valid[ii] = true;
           break;
         }
@@ -607,7 +607,7 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
 
   //: mark the v2 degree 1 nodes which are on a path from n1 to n2
   //  and the final part of the path from v2 node to n2 should consist of v2 nodes and edges
-  vcl_multimap<int, vcl_pair<unsigned, unsigned> > v2_vert_id_to_path_ind;
+  std::multimap<int, std::pair<unsigned, unsigned> > v2_vert_id_to_path_ind;
   for (unsigned ii = 0; ii < v2_verts.size(); ii++) {
     for (unsigned i = 0; i < all_paths.size(); i++) {
 
@@ -643,8 +643,8 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
           if (skip)
             break;
           //: all the nodes in the final portion consists of v2 nodes and edges so add this to multimap
-          vcl_pair<unsigned, unsigned> p(i, j);
-          v2_vert_id_to_path_ind.insert(vcl_pair<int, vcl_pair<unsigned, unsigned> >(v2_verts[ii]->id_, p));
+          std::pair<unsigned, unsigned> p(i, j);
+          v2_vert_id_to_path_ind.insert(std::pair<int, std::pair<unsigned, unsigned> >(v2_verts[ii]->id_, p));
           v2_verts_valid[ii] = true;
           break;
         }
@@ -652,11 +652,11 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     }
   }
 
-  vcl_vector<dbskr_v_graph_sptr> graphs_temp;
+  std::vector<dbskr_v_graph_sptr> graphs_temp;
 
   //: find n1_v1 and n2_v2's
-  vcl_vector<dbskr_v_graph_sptr> n1_v1_graphs(v1_verts.size(), 0);
-  vcl_vector<dbskr_v_graph_sptr> n2_v2_graphs(v2_verts.size(), 0);
+  std::vector<dbskr_v_graph_sptr> n1_v1_graphs(v1_verts.size(), 0);
+  std::vector<dbskr_v_graph_sptr> n2_v2_graphs(v2_verts.size(), 0);
 
   for (unsigned ii = 0; ii < v1_verts.size(); ii++) {
     if (!v1_verts_valid[ii]) 
@@ -668,17 +668,17 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     // find portion between n1 and v1_vert as a v graph
     // use the edges on the paths as edge proposals and add them
     dbskr_v_graph_sptr n1_v1_graph = new dbskr_v_graph();
-    vcl_pair<vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator, 
-             vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator > it_p = v1_vert_id_to_path_ind.equal_range(v1_node->id_);
-    vcl_map<vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool> proposals;
-    for (vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator it = it_p.first; it != it_p.second; it++) {
+    std::pair<std::multimap<int, std::pair<unsigned, unsigned> >::iterator, 
+             std::multimap<int, std::pair<unsigned, unsigned> >::iterator > it_p = v1_vert_id_to_path_ind.equal_range(v1_node->id_);
+    std::map<std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool> proposals;
+    for (std::multimap<int, std::pair<unsigned, unsigned> >::iterator it = it_p.first; it != it_p.second; it++) {
       for (unsigned kkk = 1; kkk <= it->second.second; kkk++) {
-        vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr> p(all_paths[it->second.first][kkk-1], all_paths[it->second.first][kkk]); 
+        std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr> p(all_paths[it->second.first][kkk-1], all_paths[it->second.first][kkk]); 
         proposals[p] = true;
       }   
     }
    
-    for (vcl_map<vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool>::iterator it = proposals.begin(); it != proposals.end(); it++) {
+    for (std::map<std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool>::iterator it = proposals.begin(); it != proposals.end(); it++) {
       dbskr_v_node_sptr from = it->first.first;
       dbskr_v_node_sptr to = it->first.second;
       //: find the edge between them which is in v1
@@ -742,9 +742,9 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
       }
     }
       
-    //vcl_cout << "n1_v1_graph: " << vcl_endl;
+    //std::cout << "n1_v1_graph: " << std::endl;
     //print_v_graph(n1_v1_graph);
-    //vcl_cout << "-------\n";
+    //std::cout << "-------\n";
     n1_v1_graphs[ii] = n1_v1_graph;
 
     if (v1_verts[ii]->id_ == n2->id()) {// this portion of v1 graph is already a solution
@@ -765,18 +765,18 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     // find portion between n1 and v1_vert as a v graph
     // use the edges on the paths as edge proposals and add them only if they are already edges in v1 
     dbskr_v_graph_sptr n2_v2_graph = new dbskr_v_graph();
-    vcl_pair<vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator, 
-             vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator > it2_p = v2_vert_id_to_path_ind.equal_range(v2_node->id_);
-    vcl_map<vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool> proposals;
-    for (vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator it = it2_p.first; it != it2_p.second; it++) {
+    std::pair<std::multimap<int, std::pair<unsigned, unsigned> >::iterator, 
+             std::multimap<int, std::pair<unsigned, unsigned> >::iterator > it2_p = v2_vert_id_to_path_ind.equal_range(v2_node->id_);
+    std::map<std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool> proposals;
+    for (std::multimap<int, std::pair<unsigned, unsigned> >::iterator it = it2_p.first; it != it2_p.second; it++) {
       for (unsigned kkk = it->second.second; kkk < all_paths[it->second.first].size()-1; kkk++) {
-        vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr> p(all_paths[it->second.first][kkk], all_paths[it->second.first][kkk+1]);
+        std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr> p(all_paths[it->second.first][kkk], all_paths[it->second.first][kkk+1]);
         proposals[p] = true;
       }
     }
 
     //: add the nodes and edges in the proposals which are actually in v2
-    for (vcl_map<vcl_pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool>::iterator it = proposals.begin(); it != proposals.end(); it++) {
+    for (std::map<std::pair<dbskr_v_node_sptr, dbskr_v_node_sptr>, bool>::iterator it = proposals.begin(); it != proposals.end(); it++) {
       dbskr_v_node_sptr from = it->first.first;
       dbskr_v_node_sptr to = it->first.second;
     
@@ -842,9 +842,9 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
       }
     }
 
-    //vcl_cout << "n2_v2_graph: " << vcl_endl;
+    //std::cout << "n2_v2_graph: " << std::endl;
     //print_v_graph(n2_v2_graph);
-    //vcl_cout << "-------\n";
+    //std::cout << "-------\n";
     n2_v2_graphs[jj] = n2_v2_graph;
 
     if (v2_verts[jj]->id_ == n1->id()) {// this portion of v2 graph is already a solution
@@ -864,8 +864,8 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     dbskr_v_node_sptr v1_node = v1_verts[ii];
     dbskr_v_graph_sptr n1_v1_graph = n1_v1_graphs[ii];
 
-    vcl_pair<vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator, 
-             vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator > it_p = v1_vert_id_to_path_ind.equal_range(v1_node->id_);
+    std::pair<std::multimap<int, std::pair<unsigned, unsigned> >::iterator, 
+             std::multimap<int, std::pair<unsigned, unsigned> >::iterator > it_p = v1_vert_id_to_path_ind.equal_range(v1_node->id_);
       
     //: pick a v2 node
     for (unsigned jj = 0; jj < v2_verts.size(); jj++) {
@@ -876,17 +876,17 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
       dbskr_v_graph_sptr n2_v2_graph = n2_v2_graphs[jj];
 
       //: find all the common paths between the two
-      vcl_vector<vcl_pair<int, vcl_pair<unsigned, unsigned> > > common_paths;
+      std::vector<std::pair<int, std::pair<unsigned, unsigned> > > common_paths;
 
-      vcl_pair<vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator, 
-               vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator > it2_p = v2_vert_id_to_path_ind.equal_range(v2_node->id_);
+      std::pair<std::multimap<int, std::pair<unsigned, unsigned> >::iterator, 
+               std::multimap<int, std::pair<unsigned, unsigned> >::iterator > it2_p = v2_vert_id_to_path_ind.equal_range(v2_node->id_);
 
-      for (vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator it = it_p.first; it != it_p.second; it++) {
-          for (vcl_multimap<int, vcl_pair<unsigned, unsigned> >::iterator it2 = it2_p.first; it2 != it2_p.second; it2++) {
+      for (std::multimap<int, std::pair<unsigned, unsigned> >::iterator it = it_p.first; it != it_p.second; it++) {
+          for (std::multimap<int, std::pair<unsigned, unsigned> >::iterator it2 = it2_p.first; it2 != it2_p.second; it2++) {
             if (it->second.first == it2->second.first) { 
-              vcl_pair<unsigned, unsigned> pp(it->second.second, it2->second.second);
+              std::pair<unsigned, unsigned> pp(it->second.second, it2->second.second);
               if (pp.second > pp.first) {
-                vcl_pair<int, vcl_pair<unsigned, unsigned> > p(it->second.first, pp);
+                std::pair<int, std::pair<unsigned, unsigned> > p(it->second.first, pp);
                 common_paths.push_back(p);
               }
             }
@@ -894,7 +894,7 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
       }
 
       //: for each unique common_path create a dbskr_v_graph
-      vcl_vector<bool> common_paths_use(common_paths.size(), true);
+      std::vector<bool> common_paths_use(common_paths.size(), true);
       for (unsigned p = 0; p < common_paths.size(); p++) {
         if (!common_paths_use[p])
           continue;
@@ -953,9 +953,9 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
         merge(new_g, n1_v1_graph, v1_node->id_);
         merge(new_g, n2_v2_graph, v2_node->id_);
 
-        //vcl_cout << "new_g: " << vcl_endl;
+        //std::cout << "new_g: " << std::endl;
         //print_v_graph(new_g);
-        //vcl_cout << "-----\n";
+        //std::cout << "-----\n";
         graphs_temp.push_back(new_g);
         abs_lengths.push_back(abs_lengths_temp[common_paths[p].first]);
       }
@@ -963,7 +963,7 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     }
   }
  
-  vcl_vector<float> abs_lengths_temp2(abs_lengths);
+  std::vector<float> abs_lengths_temp2(abs_lengths);
   abs_lengths.clear();
 
   graphs.clear();
@@ -996,20 +996,20 @@ bool dbskr_shock_path_finder::get_all_v_graphs(dbsk2d_shock_node_sptr n1,
     //: shock patch extractor finds the euler tour of these graphs and it looks for an edge degree 1 target to start
     //  the euler tour, these graphs may not have such nodes so create a dummy one after merge
     add_a_dummy_degree_one(new_g, n1->id());
-    //vcl_cout << "new_g: " << vcl_endl;
+    //std::cout << "new_g: " << std::endl;
     //print_v_graph(new_g);
-    //vcl_cout << "-----\n";
+    //std::cout << "-----\n";
   }
 
   return true;
 }
 
 //: do not generate a new path if n2 or n1 repeats in the path, which means there was a loop around n2 node
-bool dbskr_shock_path_finder::get_path(vcl_vector<vcl_vector<dbskr_path_tree_node_sptr>* >* vec, 
-                                       int ind1, int ind2, vcl_vector<dbskr_v_node_sptr>& path, float& length, int n1_id, int n2_id)
+bool dbskr_shock_path_finder::get_path(std::vector<std::vector<dbskr_path_tree_node_sptr>* >* vec, 
+                                       int ind1, int ind2, std::vector<dbskr_v_node_sptr>& path, float& length, int n1_id, int n2_id)
 {
   // return the path
-  vcl_vector<dbskr_v_node_sptr> temp;
+  std::vector<dbskr_v_node_sptr> temp;
   dbskr_path_tree_node_sptr tn = (*((*vec)[ind1]))[ind2];
   temp.push_back(tn->node_);
   length = tn->length_;
@@ -1034,8 +1034,8 @@ bool dbskr_shock_path_finder::get_path(vcl_vector<vcl_vector<dbskr_path_tree_nod
   return true;
 }
 
-bool dbskr_shock_path_finder::get_edges_on_path(vcl_vector<dbskr_v_node_sptr>& path, 
-                         vcl_vector<dbsk2d_shock_edge_sptr>& edges)
+bool dbskr_shock_path_finder::get_edges_on_path(std::vector<dbskr_v_node_sptr>& path, 
+                         std::vector<dbsk2d_shock_edge_sptr>& edges)
 {
   for (unsigned i = 1; i < path.size(); i++) {
     dbskr_v_node_sptr prev_v = path[i-1];

@@ -16,10 +16,10 @@
 //-------------------------------------------------------------------------
 
 #include <softassign/softassign.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>   // for rand() function
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <cstdlib>   // for rand() function
 
   //: Constructor
 softassign::softassign() : MI(100), T(1000) {}
@@ -36,7 +36,7 @@ void softassign::get_assignment(double **A, double**M, int row_no, int col_no) {
   int i, j, iter;
   double beta = 1/T;
 
-  vcl_srand(5);
+  std::srand(5);
 
   current_M = new double*[row_no];
 
@@ -45,27 +45,27 @@ void softassign::get_assignment(double **A, double**M, int row_no, int col_no) {
 
   for (i = 0; i<row_no; i++)
     for (j = 0; j<col_no; j++)
-      M[i][j] = vcl_exp(beta*A[i][j]);
+      M[i][j] = std::exp(beta*A[i][j]);
 
-  vcl_cout << "Benefit matrix A:\n";
+  std::cout << "Benefit matrix A:\n";
   print_M(A, row_no, col_no);
-  vcl_cout << "initial M after exponential operation\n";
+  std::cout << "initial M after exponential operation\n";
   print_M(M, row_no, col_no);
 
   iter = 0;
   while (iter <= MI) {
     normalize_rows(M, row_no, col_no);
-    //vcl_cout << "iter: " << iter << " after rows are normalized:\n";
+    //std::cout << "iter: " << iter << " after rows are normalized:\n";
     //print_M(M, row_no, col_no);
     normalize_cols(M, row_no, col_no);
-    //vcl_cout << "after cols are normalized:\n";
+    //std::cout << "after cols are normalized:\n";
     //print_M(M, row_no, col_no);
     if (almost_doubly_stochastic(M, row_no, col_no))
       break;
     iter++;
   }
 
-  //vcl_cout << "Final M after " << iter << " iterations :\n";
+  //std::cout << "Final M after " << iter << " iterations :\n";
   //print_M(M, row_no, col_no);
 
 }
@@ -99,9 +99,9 @@ void softassign::get_assignment_Rangarajan(double **A, double**M, int row_no, in
 
   for (i = 0; i<row_no; i++)
     for (j = 0; j<col_no; j++)
-      ME[i][j] = vcl_exp(beta*A[i][j]);
+      ME[i][j] = std::exp(beta*A[i][j]);
 
-  //vcl_cout << "initial ME after exponential operation\n";
+  //std::cout << "initial ME after exponential operation\n";
   //print_M(ME, row_no, col_no);
 
   iter = 0;
@@ -126,7 +126,7 @@ void softassign::get_assignment_Rangarajan(double **A, double**M, int row_no, in
     for (j = 0; j<col_no; j++)
       M[i][j] = ME[i][j];
 
-  //vcl_cout << "\nFinal ME after " << iter << " iterations:\n";
+  //std::cout << "\nFinal ME after " << iter << " iterations:\n";
   //print_M(ME, row_no, col_no);
 
 }
@@ -176,7 +176,7 @@ void softassign::get_optimum_permutation(double **A, double **M, int row_no, int
       temp[i][a[i]] = 1;
     }
 
-    //vcl_cout << "\nNext M:\n";
+    //std::cout << "\nNext M:\n";
     //print_M(temp, row_no, col_no);
 
     energy = current_energy(A, temp, row_no, col_no);
@@ -185,13 +185,13 @@ void softassign::get_optimum_permutation(double **A, double **M, int row_no, int
       set_matrix(M, temp, row_no, col_no);
     }
 
-    //vcl_cout << "\nenergy: " << energy << " \n";
+    //std::cout << "\nenergy: " << energy << " \n";
 
     for (i = 0; i<row_no; i++)
       for (j = 0; j<col_no; j++)
         temp[i][j] = 0;
 
-  } while (vcl_next_permutation(a, a+row_no));
+  } while (std::next_permutation(a, a+row_no));
 }
 
 int softassign::almost_doubly_stochastic(double **M, int row_no, int col_no) {
@@ -201,7 +201,7 @@ int softassign::almost_doubly_stochastic(double **M, int row_no, int col_no) {
     sum = 0;
     for (j = 0; j<col_no; j++)
       sum = sum + M[i][j];
-    //vcl_cout << "row: " << i << " sum: " << sum << "\n";
+    //std::cout << "row: " << i << " sum: " << sum << "\n";
     if (sum > ETHRES)
       return 0;
   }
@@ -210,7 +210,7 @@ int softassign::almost_doubly_stochastic(double **M, int row_no, int col_no) {
     sum = 0;
     for (i = 0; i<row_no; i++)
       sum = sum + M[i][j];
-    //vcl_cout << "col: " <<  j << " sum: " << sum << "\n";
+    //std::cout << "col: " <<  j << " sum: " << sum << "\n";
     if (sum > ETHRES)
       return 0;
   }
@@ -281,7 +281,7 @@ void softassign::normalize_rows(double **M, int row_no, int col_no) {
   int a, i;
   double sum;
 
-  //vcl_cout << "In normalize rows, initial M:\n";
+  //std::cout << "In normalize rows, initial M:\n";
   //print_M(M, row_no, col_no);
 
   for (a = 0; a<row_no; a++) {
@@ -292,7 +292,7 @@ void softassign::normalize_rows(double **M, int row_no, int col_no) {
     for (i = 0; i<col_no; i++)  // do not normalize slack
       M[a][i] /= sum;
 
-//    vcl_cout << "after normalization of " << a << " row, M:\n";
+//    std::cout << "after normalization of " << a << " row, M:\n";
 //    print_M(M, row_no, col_no);
   }
 }
@@ -301,7 +301,7 @@ void softassign::normalize_cols(double **M, int row_no, int col_no) {
   int a, i;
   double sum;
 
-  //vcl_cout << "In normalize cols, initial M:\n";
+  //std::cout << "In normalize cols, initial M:\n";
   //print_M(M, row_no, col_no);
 
   for (i = 0; i<col_no; i++) {
@@ -312,7 +312,7 @@ void softassign::normalize_cols(double **M, int row_no, int col_no) {
     for (a = 0; a<row_no; a++)
       M[a][i] /= sum;
 
-//    vcl_cout << "after normalization of " << i << " col, M:\n";
+//    std::cout << "after normalization of " << i << " col, M:\n";
 //    print_M(M, row_no, col_no);
   }
 }
@@ -325,12 +325,12 @@ void softassign::set_matrix(double **current_M_init, double **current_M, int row
 }
 
 void softassign::print_M(double **M, int row_no, int col_no) {
-  //vcl_cout << "row_no: " << row_no << " col_no: " << col_no << vcl_endl;
-  vcl_cout << vcl_endl;
+  //std::cout << "row_no: " << row_no << " col_no: " << col_no << std::endl;
+  std::cout << std::endl;
   for (int i = 0; i<row_no; i++) {
     for (int j = 0; j<col_no; j++)
       printf("%.3f\t", M[i][j]);
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 
 }

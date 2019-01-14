@@ -11,9 +11,9 @@
 
 
 #include <dbsks/dbsks_xshock_det_record.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <string>
+#include <iostream>
+#include <vector>
 
 
 //==============================================================================
@@ -21,7 +21,7 @@
 //==============================================================================
 
 //: Create a template for a xshock detection record with all necessary fields
-dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const vcl_string& version = "3");
+dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const std::string& version = "3");
 
 
 
@@ -31,10 +31,10 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const vcl_string& versi
 //==============================================================================
 
 //: Write a list of xshock detection to a stream
-bool x_write(vcl_string outfile, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_write(std::string outfile, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 //: Write a list of xshock detection to a stream
-bool x_write(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_write(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 
 //==============================================================================
@@ -42,7 +42,7 @@ bool x_write(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& x
 //==============================================================================
 
 //: load a list of xshock detection
-bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_read(const std::string& filepath, std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 
 #endif

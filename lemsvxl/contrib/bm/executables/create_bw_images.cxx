@@ -1,11 +1,11 @@
-#include<vcl_string.h>
+#include<string>
 
 #include<vil/vil_image_view.h>
 #include<vil/vil_save.h>
 
 int main()
 {
-    vcl_string output_dir = "/media/DATAPART1/BrandonDataFolder/ChangeDetection/westin/bw_images/";
+    std::string output_dir = "/media/DATAPART1/BrandonDataFolder/ChangeDetection/westin/bw_images/";
 
     
     
@@ -19,8 +19,8 @@ int main()
             white_img(i,j,0) = 255;
         }
 
-    vcl_string black_out = output_dir + "black_20_40.png";
-    vcl_string white_out = output_dir + "white_20_40.png";
+    std::string black_out = output_dir + "black_20_40.png";
+    std::string white_out = output_dir + "white_20_40.png";
     
     vil_save(black_img,black_out.c_str());
     vil_save(white_img,white_out.c_str());

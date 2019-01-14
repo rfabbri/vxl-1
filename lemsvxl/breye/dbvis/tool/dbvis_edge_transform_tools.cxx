@@ -58,7 +58,7 @@ dbvis_edge_transform_tool::storage()
   return vsol_storage;
 }
 
-double compute_mean(vcl_vector<double> t)
+double compute_mean(std::vector<double> t)
 {
   double sum=0;
   for (unsigned int i=0; i<t.size(); ++i)
@@ -68,9 +68,9 @@ double compute_mean(vcl_vector<double> t)
   sum=sum/t.size();
   return sum;
 }
-void transform_curve(vcl_vector<double> x, 
-                     vcl_vector<double> y, 
-                     vcl_vector<vsol_point_2d_sptr> &new_vertices, 
+void transform_curve(std::vector<double> x, 
+                     std::vector<double> y, 
+                     std::vector<vsol_point_2d_sptr> &new_vertices, 
                      vnl_matrix <double> Tbar,
                      vnl_matrix <double> R,
                      double scale) {
@@ -100,12 +100,12 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
 
   if ( gesture_register_(e) && curves_.size() < 2) {
 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
     
     for (unsigned int i = 0; i<all_objects.size(); i++) {
       if (tableau_->is_selected(all_objects[i]->get_id())) {      
-        vcl_cout << "found a selected curve, curves size: " << curves_.size() << "\n";
+        std::cout << "found a selected curve, curves size: " << curves_.size() << "\n";
         if (((bgui_vsol_soview2D_polyline*)all_objects[i])->type_name_() == "bgui_vsol_soview2D_polyline") {
           curves_.push_back(((bgui_vsol_soview2D_polyline*)all_objects[i])->sptr());   
 
@@ -123,12 +123,12 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
 
   if ( gesture_register_(e) && curves_.size() == 2) {
 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
     
     for (unsigned int i = 0; i<all_objects.size(); i++) {
       if (tableau_->is_selected(all_objects[i]->get_id())) {      
-        vcl_cout << "found a selected curve, curves size: " << curves_.size() << "\n";
+        std::cout << "found a selected curve, curves size: " << curves_.size() << "\n";
         if (((bgui_vsol_soview2D_polyline*)all_objects[i])->type_name_() == "bgui_vsol_soview2D_polyline") {
           curves_.push_back(((bgui_vsol_soview2D_polyline*)all_objects[i])->sptr());   
 
@@ -145,25 +145,25 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
     vsol_polyline_2d_sptr curve_2d1 = curves_[0];
     vsol_polyline_2d_sptr curve_2d2 = curves_[1];
 
-    vcl_vector<vcl_pair<double,double> > points1;
-    vcl_vector<vcl_pair<double,double> > points2;
+    std::vector<std::pair<double,double> > points1;
+    std::vector<std::pair<double,double> > points2;
     
 
-    vcl_cout << "in curve 1 number of points: " << curve_2d1->size() << "\n";
+    std::cout << "in curve 1 number of points: " << curve_2d1->size() << "\n";
     for (unsigned int j = 0; j<curve_2d1->size(); j++) {
-      vcl_pair<double,double> newPt;
+      std::pair<double,double> newPt;
       newPt.first  = curve_2d1->vertex(j)->x();
       newPt.second = curve_2d1->vertex(j)->y();
-      //vcl_cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
+      //std::cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
       points1.push_back(newPt);
     }
 
-    vcl_cout << "in curve 2 number of points: " << curve_2d2->size() << "\n";
+    std::cout << "in curve 2 number of points: " << curve_2d2->size() << "\n";
     for (unsigned int j = 0; j<curve_2d2->size(); j++) {
-      vcl_pair<double,double> newPt;
+      std::pair<double,double> newPt;
       newPt.first  = curve_2d2->vertex(j)->x();
       newPt.second = curve_2d2->vertex(j)->y();
-      //vcl_cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
+      //std::cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
       points2.push_back(newPt);
     }
 
@@ -172,32 +172,32 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
 
     ctrk_DPMatch d1(c1,c2);
     d1.match();
-    vcl_vector<int> tail1,tail2;
+    std::vector<int> tail1,tail2;
     d1.detect_tail(tail1,tail2);
     double b = d1.normfinalCost();
-    vcl_cout << "cost of matching these curves: " << b <<"\n";
+    std::cout << "cost of matching these curves: " << b <<"\n";
     double norm = 2.0;       //assuming norm is the largest possible value!!
     if (b>norm) b = norm;   // if curves matching cost is larger than 2, these nodes are not comparable.
     b = 1-b/norm;
-    vcl_cout << "normalized cost: " << b <<"\n"; 
+    std::cout << "normalized cost: " << b <<"\n"; 
 
     double euc_dist           = d1.transformed_euclidean_distance();
-    vcl_map<int,int> mapping  = d1.alignment;
+    std::map<int,int> mapping  = d1.alignment;
     vnl_matrix <double> R     = d1.R;
     vnl_matrix <double> Tbar  = d1.Tbar;  // local one 
     double scale              = d1.scale;
 
-    vcl_cout << "transformed euclidean distance between curves: " << euc_dist << "\n";
-    vcl_cout << "R:\n";
-    vcl_cout << R << "\n";
-    vcl_cout << "Tbar:\n";
-    vcl_cout << Tbar << "\n";
-    vcl_cout << "scale: " << scale << "\n";
+    std::cout << "transformed euclidean distance between curves: " << euc_dist << "\n";
+    std::cout << "R:\n";
+    std::cout << R << "\n";
+    std::cout << "Tbar:\n";
+    std::cout << Tbar << "\n";
+    std::cout << "scale: " << scale << "\n";
 
     
-    vcl_vector<double> x;
-    vcl_vector<double> y;
-    vcl_vector<vsol_point_2d_sptr> new_vertices;
+    std::vector<double> x;
+    std::vector<double> y;
+    std::vector<vsol_point_2d_sptr> new_vertices;
 
     for (unsigned int i=0; i<points1.size(); ++i)
     {
@@ -207,7 +207,7 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
 
     transform_curve(x, y, new_vertices, Tbar, R, scale);
 
-    vcl_cout << "transformation computed..., size of new_vertices: " << new_vertices.size() << "\n";
+    std::cout << "transformation computed..., size of new_vertices: " << new_vertices.size() << "\n";
 
     vsol_polyline_2d_sptr transformed_curve = new vsol_polyline_2d(new_vertices);
     tableau_->add_vsol_polyline_2d(transformed_curve, vgui_style::new_style(0,1,0,3.0,3.0));
@@ -215,12 +215,12 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
     if (curves_.size() == 3) {
       curve_2d2 = curves_[2];
       points2.clear();
-      vcl_cout << "in curve 3 number of points: " << curve_2d2->size() << "\n";
+      std::cout << "in curve 3 number of points: " << curve_2d2->size() << "\n";
       for (unsigned int j = 0; j<curve_2d2->size(); j++) {
-        vcl_pair<double,double> newPt;
+        std::pair<double,double> newPt;
         newPt.first  = curve_2d2->vertex(j)->x();
         newPt.second = curve_2d2->vertex(j)->y();
-        //vcl_cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
+        //std::cout << "x: " << newPt.first << " y: " << newPt.second << "\n";
         points2.push_back(newPt);
       }
 
@@ -244,7 +244,7 @@ dbvis_edge_transform_tool::handle( const vgui_event & e,
 }
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbvis_edge_transform_tool::name() const
 {
   return "Edge Transform";

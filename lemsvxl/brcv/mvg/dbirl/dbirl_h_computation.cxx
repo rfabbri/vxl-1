@@ -7,8 +7,8 @@
 //-------------------------------------
 bool 
 dbirl_h_computation::compute_affine( 
-  vcl_vector< dbinfo_track_geometry_sptr >& tracks,
-  vcl_vector< vgl_h_matrix_2d<double> >& homographies,
+  std::vector< dbinfo_track_geometry_sptr >& tracks,
+  std::vector< vgl_h_matrix_2d<double> >& homographies,
   int ground_frame )
 {
   // Deduce the number of frames and constraints in the sequence.
@@ -98,8 +98,8 @@ dbirl_h_computation::compute_affine(
 //-------------------------------------
 bool 
 dbirl_h_computation::compute_similarity( 
-  vcl_vector< dbinfo_track_geometry_sptr >& tracks,
-  vcl_vector< vgl_h_matrix_2d<double> >& homographies,
+  std::vector< dbinfo_track_geometry_sptr >& tracks,
+  std::vector< vgl_h_matrix_2d<double> >& homographies,
   int ground_frame )
 {
   int max_frame = 10000;
@@ -108,7 +108,7 @@ dbirl_h_computation::compute_similarity(
   int num_frames = 0; 
   int num_constraints = 0;
   for( int i = 0; i < static_cast<int>(tracks.size()); i++ ){
-    vcl_cerr << "\nTrack " << i << ": " << tracks[i]->start_frame() 
+    std::cerr << "\nTrack " << i << ": " << tracks[i]->start_frame() 
       << " " << tracks[i]->end_frame() << '\n';
     if( 1+static_cast<int>(tracks[i]->end_frame()) > num_frames )
       num_frames = 1+tracks[i]->end_frame();
@@ -168,10 +168,10 @@ dbirl_h_computation::compute_similarity(
   }
 /*
   // DEBUGGING START:
-  vcl_string bs("c:\\data\\house\\db.txt");
-  vcl_ofstream ofp( bs.c_str() );
+  std::string bs("c:\\data\\house\\db.txt");
+  std::ofstream ofp( bs.c_str() );
   if(!ofp){
-      vcl_cout << "\n Could not open debugging file.\n";
+      std::cout << "\n Could not open debugging file.\n";
       return false; }
   ofp << "\nS matrix:\n";
   for( int i = 0; i < S.rows(); i++ ){

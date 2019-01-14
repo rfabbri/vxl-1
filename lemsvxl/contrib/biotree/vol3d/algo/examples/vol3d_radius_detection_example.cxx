@@ -34,8 +34,8 @@ biosim_deformed_torus def_tor(80,80,80);
 vbl_array_3d<double>vol = def_tor.volume();
 
 
-vcl_string torus_txt_file = "C:\\torus_x_y_values.txt"; 
-          vcl_ofstream fstream(torus_txt_file.c_str());
+std::string torus_txt_file = "C:\\torus_x_y_values.txt"; 
+          std::ofstream fstream(torus_txt_file.c_str());
 
   for(int k = 0; k<vol.get_row3_count(); k++)
       {
@@ -46,9 +46,9 @@ vcl_string torus_txt_file = "C:\\torus_x_y_values.txt";
           
 fstream <<int( vol[i][j][k]/255) << " " ;
           }
-      fstream << vcl_endl;
+      fstream << std::endl;
         }
-fstream << "end of row " << k << vcl_endl;
+fstream << "end of row " << k << std::endl;
     }
 fstream.close();
 
@@ -78,8 +78,8 @@ bool success = img_res->put_view(img_3d);
 
   vbl_array_3d<unsigned char> result_vol(80, 80, 80);
 
-  vcl_string txt_file = "C:\\radius_labeling.txt"; 
-          vcl_ofstream fstr(txt_file.c_str());
+  std::string txt_file = "C:\\radius_labeling.txt"; 
+          std::ofstream fstr(txt_file.c_str());
 
   for(int k = 0; k<rads.get_row3_count(); k++)
       {
@@ -90,14 +90,14 @@ bool success = img_res->put_view(img_3d);
           
 fstr << rads[i][j][k] << " " ;
           }
-      fstr<< vcl_endl;
+      fstr<< std::endl;
         }
-fstr << "end of row " << k << vcl_endl;
+fstr << "end of row " << k << std::endl;
     }
 fstr.close();
 
- vcl_string txt_file_2 = "C:\\radius_labeling_in_x_z_plane.txt"; 
-          vcl_ofstream stream(txt_file_2.c_str());
+ std::string txt_file_2 = "C:\\radius_labeling_in_x_z_plane.txt"; 
+          std::ofstream stream(txt_file_2.c_str());
 
   for(int j = 0; j < rads.get_row2_count(); j++)
       {
@@ -108,9 +108,9 @@ fstr.close();
           
 stream << rads[i][j][k] << " " ;
           }
-      stream << vcl_endl;
+      stream << std::endl;
         }
-stream << "end of row " << j << vcl_endl;
+stream << "end of row " << j << std::endl;
     }
 stream.close();
 

@@ -47,10 +47,10 @@ void vsl_b_write(vsl_b_ostream &os,
 }
 
 template<class pixelType, class timeType, class elementType, unsigned n >
-void vsl_print_summary(vcl_ostream& os, 
+void vsl_print_summary(std::ostream& os, 
     const dts_pixel_time_series<pixelType, timeType, elementType, n> *p)
 {
-    os << "vsl_print_summary not yet implemented. " << vcl_flush;
+    os << "vsl_print_summary not yet implemented. " << std::flush;
 }
 
 #define DTS_IO_PIXEL_TIME_SERIES_INSTANTIATE(pixelType,timeType,elementType,n)\
@@ -58,6 +58,6 @@ template void vsl_b_read(vsl_b_istream &is, dts_pixel_time_series<pixelType, tim
 template void vsl_b_write(vsl_b_ostream &os, dts_pixel_time_series<pixelType, timeType, elementType, n> const& pixel_time_series);\
 template void vsl_b_read(vsl_b_istream &is, dts_pixel_time_series<pixelType, timeType, elementType, n> * &p);\
 template void vsl_b_write(vsl_b_ostream &os, const dts_pixel_time_series<pixelType, timeType, elementType, n> * p);\
-template void vsl_print_summary(vcl_ostream& os, const dts_pixel_time_series<pixelType, timeType, elementType, n> *p)
+template void vsl_print_summary(std::ostream& os, const dts_pixel_time_series<pixelType, timeType, elementType, n> *p)
 
 #endif DTS_IO_PIXEL_TIME_SERIES_TXX_

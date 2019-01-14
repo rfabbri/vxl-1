@@ -32,19 +32,19 @@ public:
    dborl_parameter<bool> save_to_output_folder;       // if false saves each con file to the object's folder
                                                      // if saving to output folder then saves VOX style, i.e. creates a new directory for each object
  
-  dborl_parameter<vcl_string> index_filename;
-  dborl_parameter<vcl_string> output_directory;
+  dborl_parameter<std::string> index_filename;
+  dborl_parameter<std::string> output_directory;
   
   dborl_parameter<bool> use_assoc_contours;   // use the associated contour files, if false assumes that the input files exist in input object directory 
-  dborl_parameter<vcl_string> input_contour_dir;   // if use_assoc_contours is true, this should be a valid path
+  dborl_parameter<std::string> input_contour_dir;   // if use_assoc_contours is true, this should be a valid path
   
   dborl_parameter<bool> input_simple_closed_contours;
-  dborl_parameter<vcl_string> input_extension;       // extensions of input files to load, assumption: <obj name><.ext> is found in the object directory
-  dborl_parameter<vcl_string> output_extension;       // extensions of input files to load, assumption: <obj name><.ext> is found in the object directory
+  dborl_parameter<std::string> input_extension;       // extensions of input files to load, assumption: <obj name><.ext> is found in the object directory
+  dborl_parameter<std::string> output_extension;       // extensions of input files to load, assumption: <obj name><.ext> is found in the object directory
 
   dbskr_extract_shock_params2 extract_shock_;
   
-  dborl_extract_shock_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_extract_shock_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     use_assoc_contours.set_values(param_list_, "io", "use_assoc_contours", "use assoc contours?", true, true);
     input_contour_dir.set_values(param_list_, "io", 
       "input_contour_dir", 

@@ -31,7 +31,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_3x3.h>
@@ -53,28 +53,28 @@ class brct_epi_reconstructor
   void write_results(const char* fname);
   vgl_point_2d<double> get_cur_epipole() const;
   //: get backprojection for debugging
-  vcl_vector<vnl_matrix<double> > get_back_projection() const;
+  std::vector<vnl_matrix<double> > get_back_projection() const;
 
   //: predict next curve.
   vnl_matrix<double> get_predicted_curve();
   vnl_double_3 get_next_motion(vnl_double_3 v);
-  vcl_vector<vgl_point_2d<double> > get_pre_observes();
-  vcl_vector<vgl_point_2d<double> > get_cur_observes();
-  vcl_vector<vgl_point_2d<double> > get_next_observes();
+  std::vector<vgl_point_2d<double> > get_pre_observes();
+  std::vector<vgl_point_2d<double> > get_cur_observes();
+  std::vector<vgl_point_2d<double> > get_next_observes();
   //joe version
-  vcl_vector<vgl_point_2d<double> > get_joe_pre_observes();
-  vcl_vector<vgl_point_2d<double> > get_joe_cur_observes();
-  vcl_vector<vgl_point_2d<double> > get_joe_next_observes();
+  std::vector<vgl_point_2d<double> > get_joe_pre_observes();
+  std::vector<vgl_point_2d<double> > get_joe_cur_observes();
+  std::vector<vgl_point_2d<double> > get_joe_next_observes();
 
 
-  vcl_vector<vgl_point_3d<double> > get_local_pts(); // will be superseded
+  std::vector<vgl_point_3d<double> > get_local_pts(); // will be superseded
   bugl_curve_3d get_curve_3d();
 
   //: read all the data including time stamps and  tracks.
   void read_data(const char* fname);
 
   //: read visual tracker result out of a file
-  vcl_vector<vdgl_digital_curve_sptr> read_track_file(char* fname);
+  std::vector<vdgl_digital_curve_sptr> read_track_file(char* fname);
 
 
   //: initialize the kalman filter states
@@ -90,7 +90,7 @@ class brct_epi_reconstructor
   virtual ~brct_epi_reconstructor();
 
   //: direct access
-  void add_track(vcl_vector<vdgl_digital_curve_sptr> const& track);
+  void add_track(std::vector<vdgl_digital_curve_sptr> const& track);
 
   //: print track data
   void print_track(const int track_index, const int frame);
@@ -99,7 +99,7 @@ class brct_epi_reconstructor
   void print_motion_array();
  protected:
   //: read time stamp
-  vcl_vector<double> read_timestamp_file(char* fname);
+  std::vector<double> read_timestamp_file(char* fname);
 
   //: if zero probability returned, the matched point is an outlier
   double matched_point_prob(vnl_double_2& z, vnl_double_2& z_pred);
@@ -132,31 +132,31 @@ class brct_epi_reconstructor
                    double grad_angle,
                    bugl_gaussian_point_2d<double>& p);
 
-  vcl_vector<bugl_gaussian_point_2d<double> >
+  std::vector<bugl_gaussian_point_2d<double> >
     get_cur_joe_observes(int frame);
  private:
   //: position and confidence of feature samples
   bugl_curve_3d curve_3d_;
 
-  vcl_vector<double> prob_;
+  std::vector<double> prob_;
 
   //: the set of 2-d points in each frame, used for matching
-  vcl_vector<vcl_vector<bugl_gaussian_point_2d<double> > > observes_;
+  std::vector<std::vector<bugl_gaussian_point_2d<double> > > observes_;
 
   //: the set of 2-d points in each frame grouped by tracked curves
-  vcl_vector<vcl_vector<vcl_vector<bugl_gaussian_point_2d<double> > > > joe_observes_;
+  std::vector<std::vector<std::vector<bugl_gaussian_point_2d<double> > > > joe_observes_;
 
   //: the gradient angles corresponding to frame 0 matched tracked curves
-  vcl_vector<vcl_vector<double> > grad_angles_;
+  std::vector<std::vector<double> > grad_angles_;
 
   //: each element represents image capture time for each frame.
-  vcl_vector<double> time_tick_;
+  std::vector<double> time_tick_;
 
   //: each element of the vector represents a projection of the same 3D curves.
-  vcl_vector<vcl_vector<vdgl_digital_curve_sptr> > tracks_;
+  std::vector<std::vector<vdgl_digital_curve_sptr> > tracks_;
 
   //: the sequence of translations
-  vcl_vector<vnl_double_3> motions_;
+  std::vector<vnl_double_3> motions_;
 
   //: current frame position in history pool
   int cur_pos_;

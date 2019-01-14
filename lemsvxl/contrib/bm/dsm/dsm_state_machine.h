@@ -75,13 +75,13 @@ public:
 
 	virtual void b_read(vsl_b_istream& is);
 
-	virtual void write_dot_file( vcl_string const& filename );
+	virtual void write_dot_file( std::string const& filename );
 
-	virtual void write_dot_file_full( vcl_string const& filename );
+	virtual void write_dot_file_full( std::string const& filename );
 
 protected:
 	
-	virtual vcl_map<unsigned, dsm_node_base_sptr>::iterator add_node();
+	virtual std::map<unsigned, dsm_node_base_sptr>::iterator add_node();
 
 	virtual bool remove_node( unsigned const& node_id );
 

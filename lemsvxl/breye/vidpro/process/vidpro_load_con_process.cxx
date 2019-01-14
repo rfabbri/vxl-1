@@ -1,9 +1,9 @@
 //This is vidpro/process/vidpro_load_con_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vidpro/process/vidpro_load_con_process.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -13,9 +13,9 @@
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -29,7 +29,7 @@ vidpro_load_con_process::vidpro_load_con_process() : bpro_process(), num_frames_
       !parameters()->add( "Translation: " , "-trans" , 0.0f )||
       !parameters()->add( "reverse: " , "-rev" , (bool)false ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -41,15 +41,15 @@ vidpro_load_con_process::clone() const
   return new vidpro_load_con_process(*this);
 }
 
-vcl_vector< vcl_string > vidpro_load_con_process::get_input_type() 
+std::vector< std::string > vidpro_load_con_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_load_con_process::get_output_type() 
+std::vector< std::string > vidpro_load_con_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -58,7 +58,7 @@ bool vidpro_load_con_process::execute()
 {
   bpro_filepath input;
   parameters()->get_value( "-coninput" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
 
   float scale=0, rot=0, trans=0;
   bool rev=false;
@@ -76,7 +76,7 @@ bool vidpro_load_con_process::execute()
   // make sure that input_file_path is sane
   if (input_file_path == "") { return false; }
 
-  vcl_cout<<vul_file::dirname(input_file_path);
+  std::cout<<vul_file::dirname(input_file_path);
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
   {
@@ -85,32 +85,32 @@ bool vidpro_load_con_process::execute()
     //vul_file_iterator fn=input_file_path+"/*.con";
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
+      std::string input_file = fn();
   
       //vidpro_vsol2D_storage_sptr new_con = loadCON(input_file, scale, rot, trans);
       loadCON(input_file, scale, rot, trans, output_vsol);
       /*if (output_data_.size() == 0)
-        output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,new_con));
+        output_data_.push_back(std::vector< bpro_storage_sptr > (1,new_con));
       else
         output_data_[0].push_back(new_con);
       num_of_files++;*/
     }
 
-    output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,output_vsol));
+    output_data_.push_back(std::vector< bpro_storage_sptr > (1,output_vsol));
 
     //this is the number of frames to be outputted
     //num_frames_ = num_of_files;
     num_frames_ = 1;
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
 
     //vidpro_vsol2D_storage_sptr new_con = loadCON(input_file, scale, rot, trans);
     loadCON(input_file, scale, rot, trans, output_vsol);
     
-    //output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,output_vsol));
+    //output_data_.push_back(std::vector< bpro_storage_sptr > (1,output_vsol));
     if (output_data_.size() == 0)
-      output_data_.push_back(vcl_vector< bpro_storage_sptr > (1,output_vsol));
+      output_data_.push_back(std::vector< bpro_storage_sptr > (1,output_vsol));
     else
       output_data_[0].push_back(output_vsol);
 
@@ -123,14 +123,14 @@ bool vidpro_load_con_process::execute()
 
   //{
   // 
-  //  vcl_vector<vcl_vector<bpro_storage_sptr> > v_copy;
+  //  std::vector<std::vector<bpro_storage_sptr> > v_copy;
   // 
-  //  for (vcl_vector<vcl_vector<bpro_storage_sptr> >::reverse_iterator it = output_data_.rbegin(); it != output_data_.rend( ); it++ ) {
+  //  for (std::vector<std::vector<bpro_storage_sptr> >::reverse_iterator it = output_data_.rbegin(); it != output_data_.rend( ); it++ ) {
 
   //    v_copy.push_back(*it);
   //  }
   //  output_data_.clear();
-  //  for (vcl_vector<vcl_vector<bpro_storage_sptr> >::iterator it = v_copy.begin(); it != v_copy.end( ); it++ ) {
+  //  for (std::vector<std::vector<bpro_storage_sptr> >::iterator it = v_copy.begin(); it != v_copy.end( ); it++ ) {
 
   //    output_data_.push_back(*it);
   //  }
@@ -139,44 +139,44 @@ bool vidpro_load_con_process::execute()
   
   // 9/11//2006 : simpler way
   //reverse the order of the objects so that they come out in the right order
-  vcl_reverse(output_data_.begin(),output_data_.end());
+  std::reverse(output_data_.begin(),output_data_.end());
 
   return true;
 }
 
-void vidpro_load_con_process::loadCON (vcl_string filename, float scale, float rot, float trans, vidpro_vsol2D_storage_sptr output_vsol)
+void vidpro_load_con_process::loadCON (std::string filename, float scale, float rot, float trans, vidpro_vsol2D_storage_sptr output_vsol)
 {
   // new vector to store the contours
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
   
   // vector to store the points
-  vcl_vector< vsol_point_2d_sptr > points;
+  std::vector< vsol_point_2d_sptr > points;
 
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
   bool isOpen_;
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << filename << vcl_endl;
+    std::cout << " Error opening file  " << filename << std::endl;
     return;
   }
 
   char lineBuffer[2000]; //200
   infp.getline(lineBuffer,2000);
-  if (vcl_strncmp(lineBuffer,"CONTOUR",7)) {
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be CONTOUR " << lineBuffer << vcl_endl;
+  if (std::strncmp(lineBuffer,"CONTOUR",7)) {
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be CONTOUR " << lineBuffer << std::endl;
     return;
   }
 
   char openFlag[2000];
   infp.getline(openFlag,2000);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     isOpen_ = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     isOpen_ = false;
   else{
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return;
   }
 
@@ -188,7 +188,7 @@ void vidpro_load_con_process::loadCON (vcl_string filename, float scale, float r
 
   
   
-  vcl_cout<<numOfPoints<<vcl_endl;
+  std::cout<<numOfPoints<<std::endl;
   if (infp.eof()) return;
   float x,y; 
   for (i=0;i<numOfPoints;i++) {
@@ -231,7 +231,7 @@ void vidpro_load_con_process::loadCON (vcl_string filename, float scale, float r
 //  vidpro_vsol2D_storage_sptr output_vsol = vidpro_vsol2D_storage_new();
   output_vsol->add_objects(contours, filename);
   
-  vcl_cout << "Loaded: " << filename.c_str() << ".\n";
+  std::cout << "Loaded: " << filename.c_str() << ".\n";
 
   //return output_vsol;
   return;

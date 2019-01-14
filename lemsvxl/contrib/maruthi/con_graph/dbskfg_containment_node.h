@@ -27,10 +27,10 @@
 #include <con_graph/dbskfg_containment_node_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
-#include <vcl_ostream.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
+#include <ostream>
+#include <vector>
+#include <map>
+#include <set>
 
 
 class dbskfg_containment_graph;
@@ -63,11 +63,11 @@ public:
 
     // ******************** Info Methods ************************************
     // Prints out information about this node
-    void print(vcl_ostream& os);
+    void print(std::ostream& os);
 
     // Print map
     void print_cem(  
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours);
      
     // Returns id
@@ -76,17 +76,17 @@ public:
     // ******************** Setters/Getters ************************************
 
     // Holds the attribute vector which tells which contours on/off
-    void set_attributes(vcl_map<unsigned int,bool> attr){attr_ = attr;}
+    void set_attributes(std::map<unsigned int,bool> attr){attr_ = attr;}
 
     // Returns attribute map
-    vcl_map<unsigned int,bool> get_attributes(){return attr_;}
+    std::map<unsigned int,bool> get_attributes(){return attr_;}
 
     // Holds the original set of contour ids for this node
-    void set_rag_con_ids(vcl_set<unsigned int> ids){
+    void set_rag_con_ids(std::set<unsigned int> ids){
         rag_con_ids_=ids;}
    
     // Holds the initial wavefront of the node
-    void set_rag_wavefront(vcl_set<vcl_string> wavefront){
+    void set_rag_wavefront(std::set<std::string> wavefront){
         rag_node_wavefront_=wavefront;}
 
     // Holds the initial polygon of the node
@@ -97,14 +97,14 @@ public:
     vgl_polygon<double>& get_polygon(){return poly_;}
 
     // Holds the initial wavefront of the node
-    vcl_set<vcl_string> get_rag_wavefront(){return rag_node_wavefront_;}
+    std::set<std::string> get_rag_wavefront(){return rag_node_wavefront_;}
 
     // Update attributes
     void update_attributes();
 
     // Combine node
     bool nodes_merge(dbskfg_containment_node_sptr compare_node,
-                     vcl_vector<unsigned int> contours_affected,
+                     std::vector<unsigned int> contours_affected,
                      dbskfg_transform_descriptor::TransformType transform);
 
     // Node has zero contours
@@ -116,27 +116,27 @@ public:
     // *************** Methods for expanding nodes ****************************x
     // Expand node using explicit method
     void expand_node_explicit(
-        vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
         dbskfg_containment_graph& con_graph);
 
     // Expand node using implicit method
     void expand_node_implicit(
-        vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
         dbskfg_containment_graph& con_graph);
 
     // Expand node using implicit method
     void expand_node_implicit_multi(
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
         dbskfg_containment_graph& con_graph);
 
     // Expand root node
     void expand_root_node(
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
         dbskfg_containment_graph& con_graph,
         dbskfg_rag_node_sptr root_node);
@@ -144,23 +144,23 @@ public:
     // Expand the node
     void expand_node_helper(
         const dbskfg_transform_descriptor_sptr& transform,
-        vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+        std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
-        vcl_vector<unsigned int>& contours_affected);
+        std::vector<unsigned int>& contours_affected);
 
     // Insert new node
     void insert_new_node(
          dbskfg_containment_graph& cgraph,
-         const vcl_vector<unsigned int>& contours_affected,
+         const std::vector<unsigned int>& contours_affected,
          const dbskfg_transform_descriptor_sptr& transform,
          dbskfg_rag_node_sptr rag_node);
 
 
     // Insert new node
     void insert_new_node(
-         vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+         std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
          dbskfg_containment_graph& cgraph,
-         const vcl_vector<unsigned int>& contours_affected,
+         const std::vector<unsigned int>& contours_affected,
          const dbskfg_transform_descriptor_sptr& transform);
 
     // Set probability of fragment
@@ -178,10 +178,10 @@ private:
     unsigned int id_;
 
     // Holds vector of all attributes
-    vcl_map<unsigned int,bool> attr_;
+    std::map<unsigned int,bool> attr_;
 
     // Holds contours of original rag node
-    vcl_set<unsigned int> rag_con_ids_;
+    std::set<unsigned int> rag_con_ids_;
 
     // Holds rag id for this node
     unsigned int rag_node_id_;
@@ -202,7 +202,7 @@ private:
     vgl_polygon<double> poly_;
 
     // Keep a set of old rag node wavefront
-    vcl_set<vcl_string> rag_node_wavefront_;
+    std::set<std::string> rag_node_wavefront_;
 
     // Make copy constructor private
     dbskfg_containment_node(const dbskfg_containment_node&);

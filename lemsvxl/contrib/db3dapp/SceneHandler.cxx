@@ -241,7 +241,7 @@ SceneHandler::addLink( SoSeparator* group, dbmsh_vis_node* node1, dbmsh_vis_node
   link->setDrawnItem( line );
   line->setItem( link );
   line->setParent( newLinkSep );  
-  vcl_vector<dbmsh_face*> faces = commonFaces( node1, node2 );
+  std::vector<dbmsh_face*> faces = commonFaces( node1, node2 );
   for( unsigned int i=0; i<faces.size(); i++ )
   {
     dbmsh_face* face = faces[i];
@@ -274,14 +274,14 @@ SceneHandler::addLink( SoSeparator* group, dbmsh_vis_node* node1, dbmsh_vis_node
  *************************************************************************/
 
 dbmsh_vis_face*
-SceneHandler::addFace( vcl_vector<dbmsh_vis_node*> nodes )
+SceneHandler::addFace( std::vector<dbmsh_vis_node*> nodes )
 {
   return addFace( _faces, nodes );
 }
 
 
 dbmsh_vis_face*
-SceneHandler::addFace( SoSeparator* group, vcl_vector<dbmsh_vis_node*> nodes )
+SceneHandler::addFace( SoSeparator* group, std::vector<dbmsh_vis_node*> nodes )
 {
   SoSeparator* newFaceSep = new SoSeparator;
   
@@ -291,7 +291,7 @@ SceneHandler::addFace( SoSeparator* group, vcl_vector<dbmsh_vis_node*> nodes )
   sheet->setItem( face );
   face->setDrawnItem( sheet );  
   sheet->setParent( newFaceSep );
-  vcl_vector<dbmsh_link*> links = commonLinks( nodes );
+  std::vector<dbmsh_link*> links = commonLinks( nodes );
   for( unsigned int i=0; i<links.size(); i++ )
   {
     dbmsh_link* link = links[i];
@@ -321,9 +321,9 @@ SceneHandler::addFace( SoSeparator* group, vcl_vector<dbmsh_vis_node*> nodes )
 }
 
 dbmsh_vis_face*
-SceneHandler::addFace( vcl_queue<dbmsh_vis_node*> nodes )
+SceneHandler::addFace( std::queue<dbmsh_vis_node*> nodes )
 {
-  vcl_vector<dbmsh_vis_node*> newNodes;
+  std::vector<dbmsh_vis_node*> newNodes;
 
   while(nodes.size() > 0 )
     {
@@ -557,9 +557,9 @@ SbColor SceneHandler::colorFromNumber( int number )
  * Parameters:
  * Effects:
  *************************************************************************/
-vcl_vector<dbmsh_face*> SceneHandler::commonFaces( dbmsh_vis_node* node1, dbmsh_vis_node* node2 )
+std::vector<dbmsh_face*> SceneHandler::commonFaces( dbmsh_vis_node* node1, dbmsh_vis_node* node2 )
 {
-  vcl_vector<dbmsh_face*> faces = node1->getItem()->commonFaces( node2->getItem() );
+  std::vector<dbmsh_face*> faces = node1->getItem()->commonFaces( node2->getItem() );
 
   return faces;
 }
@@ -569,9 +569,9 @@ vcl_vector<dbmsh_face*> SceneHandler::commonFaces( dbmsh_vis_node* node1, dbmsh_
  * Parameters:
  * Effects:
  *************************************************************************/
-vcl_vector<dbmsh_link*> SceneHandler::commonLinks( vcl_vector<dbmsh_vis_node*> nodes )
+std::vector<dbmsh_link*> SceneHandler::commonLinks( std::vector<dbmsh_vis_node*> nodes )
 {
-  vcl_vector<dbmsh_link*> links;
+  std::vector<dbmsh_link*> links;
   
   for( unsigned int i = 0; i< nodes.size(); i++ )
   {
@@ -609,13 +609,13 @@ void SceneHandler::viewAll()
  * Parameters:
  * Effects:
  *************************************************************************/
-void SceneHandler::openIV( vcl_string strfilename )
+void SceneHandler::openIV( std::string strfilename )
 {
   const char* filename = strfilename.c_str();
   SoInput mySceneInput;
   if (!mySceneInput.openFile(filename)) 
   {
-    vcl_fprintf(stderr, "Cannot open file %s\n", filename);
+    std::fprintf(stderr, "Cannot open file %s\n", filename);
     return;
   }
 
@@ -623,7 +623,7 @@ void SceneHandler::openIV( vcl_string strfilename )
   SoSeparator *scene = SoDB::readAll(&mySceneInput);
   if (scene == NULL) 
   {
-    vcl_fprintf(stderr, "Problem reading IV file %s\n", filename);
+    std::fprintf(stderr, "Problem reading IV file %s\n", filename);
     return;
   }
   scene->ref();
@@ -664,7 +664,7 @@ void SceneHandler::openIV( vcl_string strfilename )
     
     //SoNormal* normals = (Normal*)sa.getPath()->getTail();
 
-    vcl_vector<dbmsh_vis_node*> nodes;
+    std::vector<dbmsh_vis_node*> nodes;
     for( int curVert = 0; curVert < vertices->point.getNum(); curVert++ )
     {
       SbVec3f pos = vertices->point[ curVert ];
@@ -675,7 +675,7 @@ void SceneHandler::openIV( vcl_string strfilename )
     {
       // this while loop divides out the individual geometry
       int geomIndex = 0;
-      vcl_vector< dbmsh_vis_node* > nodeShapes;
+      std::vector< dbmsh_vis_node* > nodeShapes;
       while( indices->coordIndex[ curIndex ] != -1 )
       {
         nodeShapes.push_back( nodes[ indices->coordIndex[ curIndex ] ] );     
@@ -704,7 +704,7 @@ void SceneHandler::openIV( vcl_string strfilename )
     path->truncate( path->getLength() - 1 );
 
 
-    vcl_vector<dbmsh_vis_node*> nodes;
+    std::vector<dbmsh_vis_node*> nodes;
     
     for( int curVert = 0; curVert < prop->vertex.getNum(); curVert++ )
     {
@@ -717,7 +717,7 @@ void SceneHandler::openIV( vcl_string strfilename )
     
     while( curIndex< indices->coordIndex.getNum() ) {
       //new face
-      vcl_queue<dbmsh_vis_node*> nodeShapes;
+      std::queue<dbmsh_vis_node*> nodeShapes;
 
       // this while loop divides out the individual geometry
       int geomIndex = 0;
@@ -741,31 +741,31 @@ void SceneHandler::openIV( vcl_string strfilename )
   scene->unref();
 }
 
-void SceneHandler::openFS( vcl_string strfilename )
+void SceneHandler::openFS( std::string strfilename )
 {
 }
 
 void
-SceneHandler::openP3D( vcl_string filename )
+SceneHandler::openP3D( std::string filename )
 {
   float nodeSize = MenuHandler::instance()->getNodeSize();
 
   FILE* fp;
   if ( (fp = fopen(filename.c_str(), "r") ) == NULL) 
   {
-    vcl_fprintf (stderr, "ERROR: Can't open input .P3D file %s\n", filename.c_str());
+    std::fprintf (stderr, "ERROR: Can't open input .P3D file %s\n", filename.c_str());
     return; 
   }
   int dim;
-  vcl_fscanf (fp, "%d\n", &dim);
+  std::fscanf (fp, "%d\n", &dim);
   assert (dim==3);
   int numGenes;
-  vcl_fscanf (fp, "%d\n", &numGenes);
+  std::fscanf (fp, "%d\n", &numGenes);
 
   for( int i=0; i<numGenes; i++ ) 
   {
     double x, y, z;
-    vcl_fscanf (fp, "%lf %lf %lf\n", &x, &y, &z);
+    std::fscanf (fp, "%lf %lf %lf\n", &x, &y, &z);
     addNode( SbVec3f(x,y,z), nodeSize );
 
   }
@@ -775,28 +775,28 @@ SceneHandler::openP3D( vcl_string filename )
 }
 
 void
-SceneHandler::saveP3D( vcl_string filename )
+SceneHandler::saveP3D( std::string filename )
 {
   int num = _meshNodes.size();
   FILE* fp = fopen( filename.c_str(), "w" );
   if( fp == NULL )
   {
-    vcl_fprintf (stderr, "ERROR: Can't create file %s\n", filename.c_str());
+    std::fprintf (stderr, "ERROR: Can't create file %s\n", filename.c_str());
     return; 
   }
-  vcl_fprintf( fp, "3\n" );
-  vcl_fprintf( fp, "%i\n", num );
+  std::fprintf( fp, "3\n" );
+  std::fprintf( fp, "%i\n", num );
   for( int i=0; i<num; i++ )
   {
     SbVec3f pos = ((dbmsh_vis_node*)_meshNodes[i]->getDrawnItem())->getPosition();
-    vcl_fprintf (fp, "%f %f %f\n", pos[0], pos[1], pos[2] );
+    std::fprintf (fp, "%f %f %f\n", pos[0], pos[1], pos[2] );
   }
   
 
 }
 
 void
-SceneHandler::saveIV( vcl_string filename, bool saveNodes, bool saveLinks, bool saveFaces )
+SceneHandler::saveIV( std::string filename, bool saveNodes, bool saveLinks, bool saveFaces )
 {
   SoSeparator* saveRoot = new SoSeparator;
   saveRoot->ref();

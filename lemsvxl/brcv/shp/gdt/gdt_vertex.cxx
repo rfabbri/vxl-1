@@ -22,12 +22,12 @@ gdt_interval* dbmsh3d_gdt_vertex_3d::get_adjacent_interval ()
 
     //: the interval_section on cur_edge should be a coverage
     if (cur_edge->sV() == this) {
-      vcl_map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator it = cur_edge->interval_section()->I_map()->begin();
       I = (*it).second;
       assert (I->stau() == 0);
     }
     else {
-      vcl_map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
+      std::map<double, gdt_ibase*>::reverse_iterator rit = cur_edge->interval_section()->I_map()->rbegin();
       I = (*rit).second;
       double len = cur_edge->length ();
       assert (I->etau() == len);
@@ -87,7 +87,7 @@ int dbmsh3d_gdt_vertex_3d::V_iter_to_source (double query_s, double& local_s)
 
 gdt_interval* dbmsh3d_gdt_vertex_3d::_find_childI_on_edge (const dbmsh3d_edge* edge) 
 {
-  vcl_set<gdt_interval*>::iterator it = childIs_.begin();
+  std::set<gdt_interval*>::iterator it = childIs_.begin();
   for (; it != childIs_.end(); it++) {
     gdt_interval* I = (*it);
     if (I->edge() == edge)

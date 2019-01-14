@@ -1,10 +1,10 @@
 // This is mleotta/cmd/mesh/mesh_extract_features.cxx
 
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_map.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <cmath>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vgl/vgl_polygon.h>
@@ -24,14 +24,14 @@ void smooth_vert_normals(imesh_mesh& mesh, double sigma)
 {
   const imesh_half_edge_set& half_edges = mesh.half_edges();
   imesh_vertex_array<3>& verts = mesh.vertices<3>();
-  vcl_vector<vgl_vector_3d<double> > normals(verts.normals());
+  std::vector<vgl_vector_3d<double> > normals(verts.normals());
   for(unsigned int i=0; i<half_edges.size(); ++i){
     const imesh_half_edge& he = half_edges[i];
     unsigned int vi = he.vert_index();
     unsigned int nvi = half_edges[he.next_index()].vert_index();
     double wgt = vgl_distance(vgl_point_3d<double>(verts[vi]),
                               vgl_point_3d<double>(verts[nvi]));
-    wgt = vcl_exp(-0.5*wgt*wgt/sigma);
+    wgt = std::exp(-0.5*wgt*wgt/sigma);
     normals[vi] += wgt*verts.normals()[nvi];
   }
 
@@ -43,12 +43,12 @@ void smooth_vert_normals(imesh_mesh& mesh, double sigma)
 
 
 
-vgl_polygon<double> project_part(const vcl_string& name,
+vgl_polygon<double> project_part(const std::string& name,
                                  const imesh_mesh& body,
                                  const imesh_mesh& surface)
 {
-  vcl_set<unsigned int> selection = body.faces().group_face_set(name);
-  vcl_cout << name<<"\nnum faces: "<< selection.size() << vcl_endl;
+  std::set<unsigned int> selection = body.faces().group_face_set(name);
+  std::cout << name<<"\nnum faces: "<< selection.size() << std::endl;
   if(selection.empty())
     return vgl_polygon<double>();
   imesh_mesh part = imesh_submesh_from_faces(body,selection);
@@ -59,20 +59,20 @@ vgl_polygon<double> project_part(const vcl_string& name,
     smooth_vert_normals(part,0.01);
 
   const imesh_half_edge_set& half_edges = part.half_edges();
-  vcl_vector<vcl_vector<unsigned int> > loops = imesh_detect_boundary_loops(half_edges);
+  std::vector<std::vector<unsigned int> > loops = imesh_detect_boundary_loops(half_edges);
 
   if(loops.empty())
   {
     return vgl_polygon<double>();
   }
 
-  vcl_cout << "num loops: "<<loops.size() << vcl_endl;
+  std::cout << "num loops: "<<loops.size() << std::endl;
   const imesh_vertex_array<3>& verts = part.vertices<3>();
 
   vgl_polygon<double> object;
   for(unsigned int i=0; i<loops.size(); ++i){
-    const vcl_vector<unsigned int>& loop = loops[i];
-    vcl_vector<vgl_point_2d<double> > tex_path;
+    const std::vector<unsigned int>& loop = loops[i];
+    std::vector<vgl_point_2d<double> > tex_path;
     for(unsigned int j=0; j<loop.size(); ++j){
       unsigned int vi = half_edges[loop[j]].vert_index();
       vgl_point_3d<double> pt(verts[vi]);
@@ -87,7 +87,7 @@ vgl_polygon<double> project_part(const vcl_string& name,
       if(ind >=0){
         vgl_vector_3d<double> sn = normalized(surface.faces().normal(ind));
         if(dot_product(sn,dir) > -0.866 || dist > 2*cdist){
-          vcl_cout << "poor normal alignment" << vcl_endl;
+          std::cout << "poor normal alignment" << std::endl;
           ind = -1;
         }
       }
@@ -103,7 +103,7 @@ vgl_polygon<double> project_part(const vcl_string& name,
         tex_path.push_back(pt);
       }
       else
-        vcl_cerr << "unable to project point" << vcl_endl;
+        std::cerr << "unable to project point" << std::endl;
     }
     vgl_polygon<double> part(tex_path);
     if(vgl_area_signed(part) <= 0.0)
@@ -117,20 +117,20 @@ vgl_polygon<double> project_part(const vcl_string& name,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_in_file("-i", "input mesh file", "");
-  vul_arg<vcl_string>  a_body_file("-b", "input mesh body file", "");
-  vul_arg<vcl_string>  a_out_file("-o", "output parts file", "");
-  vul_arg<vcl_string>  a_svg_file("-s", "output svg file", "");
-  vul_arg<vcl_string>  a_part_file("-p", "part names file", "");
-  vul_arg<vcl_string>  a_group("-g", "group name", "");
+  vul_arg<std::string>  a_in_file("-i", "input mesh file", "");
+  vul_arg<std::string>  a_body_file("-b", "input mesh body file", "");
+  vul_arg<std::string>  a_out_file("-o", "output parts file", "");
+  vul_arg<std::string>  a_svg_file("-s", "output svg file", "");
+  vul_arg<std::string>  a_part_file("-p", "part names file", "");
+  vul_arg<std::string>  a_group("-g", "group name", "");
   vul_arg_parse(argc, argv);
 
   if(!a_in_file.set()){
-    vcl_cerr << "input file required" << vcl_endl;
+    std::cerr << "input file required" << std::endl;
     return -1;
   }
   if(!a_out_file.set()){
-    vcl_cerr << "output file required" << vcl_endl;
+    std::cerr << "output file required" << std::endl;
     return -1;
   }
 
@@ -142,23 +142,23 @@ int main(int argc, char** argv)
   if(!imesh_read(a_body_file(),body_mesh))
     return -1;
 
-  vcl_vector<vcl_string> part_names;
-  vcl_ifstream ifs(a_part_file().c_str());
-  vcl_string name;
+  std::vector<std::string> part_names;
+  std::ifstream ifs(a_part_file().c_str());
+  std::string name;
   while(ifs >> name) part_names.push_back(name);
   ifs.close();
 
-  vcl_set<unsigned int> selection = mesh.faces().group_face_set(a_group());
+  std::set<unsigned int> selection = mesh.faces().group_face_set(a_group());
   imesh_mesh submesh = imesh_submesh_from_faces(mesh,selection);
 
   imesh_quad_subdivide(submesh);
   imesh_quad_subdivide(submesh);
-  vcl_auto_ptr<imesh_face_array_base> tris(imesh_triangulate(submesh.faces()));
+  std::auto_ptr<imesh_face_array_base> tris(imesh_triangulate(submesh.faces()));
   submesh.set_faces(tris);
   submesh.compute_face_normals(false);
 
 
-  vcl_map<vcl_string,vgl_polygon<double> > parts;
+  std::map<std::string,vgl_polygon<double> > parts;
 
 
   for(unsigned int i=0; i<part_names.size(); ++i)

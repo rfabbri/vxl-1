@@ -14,11 +14,11 @@
 
 // see dborl/algo/tests/ --> for example xml files
 
-#include <vcl_string.h>
+#include <string>
 #include <borld/borld_image_description_sptr.h>
 
 //: Read XML file of an image description
-bool x_read(const vcl_string& filename, borld_image_description_sptr& image_desc);
+bool x_read(const std::string& filename, borld_image_description_sptr& image_desc);
 
 
 #endif  // _DBORL_IMAGE_DESC_PARSER_H

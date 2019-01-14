@@ -1,7 +1,7 @@
 #include <dbskr/dbskr_dpmatch.h>
 #include <dbskr/dbskr_scurve.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #define VERY_LARGE_BOUNDARY_COST  (300)
 
@@ -10,7 +10,7 @@ dbskr_dpmatch::dbskr_dpmatch() : dbcvr_cvmatch_even()
   R1_ = 6.0f;
 
   num_cost_elems_=3;
-  vcl_vector <double> v(num_cost_elems_,0);
+  std::vector <double> v(num_cost_elems_,0);
   ds1_=v;
   ds2_=v;
   dt1_=v;
@@ -30,7 +30,7 @@ dbskr_dpmatch::dbskr_dpmatch(dbskr_scurve_sptr c1, dbskr_scurve_sptr c2) : dbcvr
   R1_ = 6.0f; 
   
   num_cost_elems_=3;
-  vcl_vector <double> v(num_cost_elems_,0);
+  std::vector <double> v(num_cost_elems_,0);
   ds1_=v;
   ds2_=v;
   dt1_=v;
@@ -50,7 +50,7 @@ void dbskr_dpmatch::set_scurves(dbskr_scurve_sptr sc1, dbskr_scurve_sptr sc2)
 dbskr_dpmatch::dbskr_dpmatch(dbskr_scurve_sptr c1,
                              dbskr_scurve_sptr c2, 
                              double R1, 
-                             vcl_vector<double>& lambda, 
+                             std::vector<double>& lambda, 
                              int num_cost_elems) : dbcvr_cvmatch_even() 
 {
   scurve1_ = c1;
@@ -62,7 +62,7 @@ dbskr_dpmatch::dbskr_dpmatch(dbskr_scurve_sptr c1,
 
   lambda_ =lambda;
   num_cost_elems_=num_cost_elems;
-  vcl_vector <double> v(num_cost_elems_,0);
+  std::vector <double> v(num_cost_elems_,0);
   ds1_=v;
   ds2_=v;
   dt1_=v;
@@ -89,10 +89,10 @@ void dbskr_dpmatch::initializeDPCosts()
   assert (_n2>0);
 
   for (int i=0;i<_n1;i++) {
-    vcl_vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_n2,DP_VERY_LARGE_COST);
     _DPCost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_n2,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_n2,tmp3);
     _DPMap.push_back(tmp2);
   }
 
@@ -114,8 +114,8 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
   double dA1(0.0),dA2(0.0);
   double area_cost(0.0);
   double outside_shock_cost(0.0);
-  vcl_vector<double> os_cost_sc1(2,0.0);
-  vcl_vector<double> os_cost_sc2(2,0.0);
+  std::vector<double> os_cost_sc1(2,0.0);
+  std::vector<double> os_cost_sc2(2,0.0);
 
   int k;
   scurve1_->stretch_cost(i,ip,ds1_);
@@ -124,16 +124,16 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
   scurve2_->bend_cost(j,jp,dt2_);
 
   for (k=0;k<num_cost_elems_;k++)
-    dF = dF+vcl_fabs(ds1_[k]-lambda_[k]*ds2_[k]);
+    dF = dF+std::fabs(ds1_[k]-lambda_[k]*ds2_[k]);
   
   for (k=0;k<num_cost_elems_;k++)
-    dK = dK+vcl_fabs(dt1_[k]-dt2_[k]);
+    dK = dK+std::fabs(dt1_[k]-dt2_[k]);
  
   if ( scurve1_->get_area_factor() > 0.0)
   {
       scurve1_->area_cost(i,ip,dA1);
       scurve2_->area_cost(j,jp,dA2);  
-      area_cost=scurve1_->get_area_factor()*vcl_fabs(dA1-dA2);
+      area_cost=scurve1_->get_area_factor()*std::fabs(dA1-dA2);
   }
 
   if ( scurve1_->get_bdry_plus_outside_shock_radius().size() )
@@ -141,8 +141,8 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
       scurve1_->outer_shock_cost(i,ip,os_cost_sc1);
       scurve2_->outer_shock_cost(j,jp,os_cost_sc2);
             
-      outside_shock_cost=vcl_fabs(os_cost_sc1[0]-os_cost_sc2[0])+
-                         vcl_fabs(os_cost_sc1[1]-os_cost_sc2[1]);
+      outside_shock_cost=std::fabs(os_cost_sc1[0]-os_cost_sc2[0])+
+                         std::fabs(os_cost_sc1[1]-os_cost_sc2[1]);
   }
 
   cost = dF+R1_*dK+area_cost+outside_shock_cost;
@@ -158,43 +158,43 @@ double dbskr_dpmatch::computeIntervalCostPrint(int i, int ip, int j, int jp)
   scurve1_->bend_cost(i,ip,dt1_);
   scurve2_->bend_cost(j,jp,dt2_);
 
-  //vcl_cout.precision(2);
-  //vcl_cout<<i<<"-"<<ip<<":"<<j<<"-"<<jp<<"\n";
-  vcl_cout.precision(2);
-  vcl_cout << "\tds1+: " << ds1_[0] << "\tds1-: " << ds1_[1] << "\t2*dr1: " << ds1_[2] << "\n";
-  vcl_cout.precision(2);
-  vcl_cout << "\tds2+: " << ds2_[0] << "\tds2-: " << ds2_[1] << "\t2*dr2: " << ds2_[2] << "\n";
+  //std::cout.precision(2);
+  //std::cout<<i<<"-"<<ip<<":"<<j<<"-"<<jp<<"\n";
+  std::cout.precision(2);
+  std::cout << "\tds1+: " << ds1_[0] << "\tds1-: " << ds1_[1] << "\t2*dr1: " << ds1_[2] << "\n";
+  std::cout.precision(2);
+  std::cout << "\tds2+: " << ds2_[0] << "\tds2-: " << ds2_[1] << "\t2*dr2: " << ds2_[2] << "\n";
 
   for (k=0;k<num_cost_elems_;k++) 
-    dF = dF+vcl_fabs(ds1_[k]-lambda_[k]*ds2_[k]);
+    dF = dF+std::fabs(ds1_[k]-lambda_[k]*ds2_[k]);
   
-  vcl_cout.precision(2);
-  vcl_cout << "\tdS+: " << vcl_fabs(ds1_[0]-lambda_[0]*ds2_[0]) << " dS-: " << vcl_fabs(ds1_[1]-lambda_[1]*ds2_[1]) << " ";
-  vcl_cout.precision(2);
-  vcl_cout << "dR: " << vcl_fabs(ds1_[2]-lambda_[2]*ds2_[2]) << " dS = dS+ + dS- + dR = " << dF << "\n";
+  std::cout.precision(2);
+  std::cout << "\tdS+: " << std::fabs(ds1_[0]-lambda_[0]*ds2_[0]) << " dS-: " << std::fabs(ds1_[1]-lambda_[1]*ds2_[1]) << " ";
+  std::cout.precision(2);
+  std::cout << "dR: " << std::fabs(ds1_[2]-lambda_[2]*ds2_[2]) << " dS = dS+ + dS- + dR = " << dF << "\n";
 
-  vcl_cout.precision(2);
-  vcl_cout << "\tdt1+: " << dt1_[0] << " dt1-: " << dt1_[1] << " 2*dphi1: " << dt1_[2] << "\n";
-  vcl_cout.precision(2);
-  vcl_cout << "\tdt2+: " << dt2_[0] << " dt2-: " << dt2_[1] << " 2*dphi2: " << dt2_[2] << "\n";
+  std::cout.precision(2);
+  std::cout << "\tdt1+: " << dt1_[0] << " dt1-: " << dt1_[1] << " 2*dphi1: " << dt1_[2] << "\n";
+  std::cout.precision(2);
+  std::cout << "\tdt2+: " << dt2_[0] << " dt2-: " << dt2_[1] << " 2*dphi2: " << dt2_[2] << "\n";
 
   for (k=0;k<num_cost_elems_;k++) {
-    dK = dK+vcl_fabs(dt1_[k]-dt2_[k]);
+    dK = dK+std::fabs(dt1_[k]-dt2_[k]);
   }
 
-  vcl_cout.precision(2);
-  vcl_cout << "\tdT+: " << vcl_fabs(dt1_[0]-dt2_[0]) << " dT-: " << vcl_fabs(dt1_[1]-dt2_[1]) << " ";
-  vcl_cout.precision(2);
-  vcl_cout << "dPhi: " << vcl_fabs(dt1_[2]-dt2_[2]) << " dT = dT+ + dT- + dPhi = " << dK << "\n";
-  vcl_cout.precision(2);
-  vcl_cout << "\t\tR1: " << R1_ << " R1*dT: " << R1_*dK << " dS+R1*dT: " << dF+R1_*dK << vcl_endl;
+  std::cout.precision(2);
+  std::cout << "\tdT+: " << std::fabs(dt1_[0]-dt2_[0]) << " dT-: " << std::fabs(dt1_[1]-dt2_[1]) << " ";
+  std::cout.precision(2);
+  std::cout << "dPhi: " << std::fabs(dt1_[2]-dt2_[2]) << " dT = dT+ + dT- + dPhi = " << dK << "\n";
+  std::cout.precision(2);
+  std::cout << "\t\tR1: " << R1_ << " R1*dT: " << R1_*dK << " dS+R1*dT: " << dF+R1_*dK << std::endl;
 
   //double phi11=scurve1_->phi(i);
   //double phi12=scurve1_->phi(ip);
   //double phi21=scurve2_->phi(j);
   //double phi22=scurve2_->phi(jp);
-  //vcl_cout.precision(5);
-  //vcl_cout<<"phi11:"<<phi11<<" "<<"phi12:"<<phi12<<" "<<"phi21:"<<phi21<<" "<<"phi22:"<<phi22<<" "<<vcl_endl;
+  //std::cout.precision(5);
+  //std::cout<<"phi11:"<<phi11<<" "<<"phi12:"<<phi12<<" "<<"phi21:"<<phi21<<" "<<"phi22:"<<phi22<<" "<<std::endl;
 
 
   cost = dF+R1_*dK;
@@ -223,8 +223,8 @@ float dbskr_dpmatch::approx_cost()
 #endif
 
   //Amir: we need to update this function to reflect the new cost function
-  float approx_cost =  float (vcl_fabs(scurve1_->boundary_plus_length() - lambda_[0]*scurve2_->boundary_plus_length()) +
-                              vcl_fabs(scurve1_->boundary_minus_length() - lambda_[1]*scurve2_->boundary_minus_length()));
+  float approx_cost =  float (std::fabs(scurve1_->boundary_plus_length() - lambda_[0]*scurve2_->boundary_plus_length()) +
+                              std::fabs(scurve1_->boundary_minus_length() - lambda_[1]*scurve2_->boundary_minus_length()));
   return approx_cost;
 }
 
@@ -236,11 +236,11 @@ float dbskr_dpmatch::init_dr()
   int n2 = scurve2_->num_points()-1;
 
 #if 0  //Same as Matching-Tek 
-  float initDr = float((vcl_fabs(scurve1_->time(0)-lambda_[2]*scurve2_->time(0)) +
-                        vcl_fabs(scurve1_->time(n1)-lambda_[2]*scurve2_->time(n2)))/2.0);
+  float initDr = float((std::fabs(scurve1_->time(0)-lambda_[2]*scurve2_->time(0)) +
+                        std::fabs(scurve1_->time(n1)-lambda_[2]*scurve2_->time(n2)))/2.0);
 #else //: Ozge added multiplication by 2.0 (which cancels averaging..) on May 18, 07. In the original implementation there is no multiplication even though in the PAMI06 paper there is..
-  float initDr = float(2.0*(vcl_fabs(scurve1_->time(0)-lambda_[2]*scurve2_->time(0)) +
-                        vcl_fabs(scurve1_->time(n1)-lambda_[2]*scurve2_->time(n2)))/2.0);
+  float initDr = float(2.0*(std::fabs(scurve1_->time(0)-lambda_[2]*scurve2_->time(0)) +
+                        std::fabs(scurve1_->time(n1)-lambda_[2]*scurve2_->time(n2)))/2.0);
 #endif  
   return initDr; 
 }
@@ -250,12 +250,12 @@ float dbskr_dpmatch::init_phi()
   int n1 = scurve1_->num_points()-1;
   int n2 = scurve2_->num_points()-1;
   //: Ozge added multiplication by 2.0 on May 18, 07. In the original implementation there is no multiplication even though in the PAMI06 paper there is..
-  //float initAlp = float(2.0*R1_*(vcl_fabs(angleDiff_new(scurve1_->phi(0),scurve2_->phi(0)))+
-  //                               vcl_fabs(angleDiff_new(scurve1_->phi(n1),scurve2_->phi(n2))))/2.0);
+  //float initAlp = float(2.0*R1_*(std::fabs(angleDiff_new(scurve1_->phi(0),scurve2_->phi(0)))+
+  //                               std::fabs(angleDiff_new(scurve1_->phi(n1),scurve2_->phi(n2))))/2.0);
   
   //same as Matching-Tek
-  float initAlp = float(R1_*(vcl_fabs(angleDiff_new(scurve1_->phi(0),scurve2_->phi(0)))+
-                             vcl_fabs(angleDiff_new(scurve1_->phi(n1),scurve2_->phi(n2))))/2.0);
+  float initAlp = float(R1_*(std::fabs(angleDiff_new(scurve1_->phi(0),scurve2_->phi(0)))+
+                             std::fabs(angleDiff_new(scurve1_->phi(n1),scurve2_->phi(n2))))/2.0);
   
   return initAlp; 
 }
@@ -275,18 +275,18 @@ float dbskr_dpmatch::coarse_match()
 {
   // create the final map as the diagonal in the DPMatch table
   _finalMap.clear();
-  vcl_pair <int,int> p(_n1-1,_n2-1);
+  std::pair <int,int> p(_n1-1,_n2-1);
   _finalMap.push_back(p);
   if (_n1 < _n2) {
     int rat = _n2/_n1;
     for (int j = _n1-2, k = _n2-1-rat; (j > 0 && k > 0); j--, k -= rat) {
-      vcl_pair <int,int> p(j,k);
+      std::pair <int,int> p(j,k);
       _finalMap.push_back(p);
     }
   } else {
     int rat = _n1/_n2;
     for (int k = _n2-2, j = _n1-1-rat; (j > 0 && k > 0); k--, j -= rat) {
-      vcl_pair <int,int> p(j,k);
+      std::pair <int,int> p(j,k);
       _finalMap.push_back(p);
     }
   }

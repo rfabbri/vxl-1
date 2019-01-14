@@ -4,15 +4,15 @@
 #include "psm_scene_block_storage.h"
 #include "psm_scene_block_storage_cached.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_ios.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <fstream>
+#include <ios>
+#include <string>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <map>
+#include <utility>
+#include <deque>
+#include <algorithm>
 
 #include <vul/vul_file.h>
 #include <vgl/vgl_point_3d.h>
@@ -30,21 +30,21 @@ template <class T>
 //: retrieve a block from storage
 hsds_fd_tree<T,3>& psm_scene_block_storage_cached<T>::get_block(vgl_point_3d<int> block_index)
 {
-  typename vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator map_it;
+  typename std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator map_it;
 
   // check if block_index is already in lru_
-  typename vcl_deque<vgl_point_3d<int> >::iterator it = find(lru_.begin(), lru_.end(), block_index);
+  typename std::deque<vgl_point_3d<int> >::iterator it = find(lru_.begin(), lru_.end(), block_index);
   if (it == lru_.end()) {
-    //vcl_cout << "miss" << vcl_endl;
+    //std::cout << "miss" << std::endl;
     // cache miss
     if (lru_.size() >= max_blocks_) {
       // need to remove an item from the cache
       vgl_point_3d<int> back_index = lru_.back();
-      typename vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator map_it =
+      typename std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator map_it =
         blocks_.find(back_index);
       if (map_it == blocks_.end()) {
         // this should not happen.
-        vcl_cerr << "error: psm_scene_block_storage_cached: index is in lru_ but not blocks_!" << vcl_endl;
+        std::cerr << "error: psm_scene_block_storage_cached: index is in lru_ but not blocks_!" << std::endl;
       }
       // write to disk
      write_block(map_it);
@@ -55,14 +55,14 @@ hsds_fd_tree<T,3>& psm_scene_block_storage_cached<T>::get_block(vgl_point_3d<int
     }
     // insert new block into the cache
     lru_.insert(lru_.begin(),block_index);
-    blocks_.insert(vcl_make_pair<vgl_point_3d<int>,hsds_fd_tree<T,3> >(block_index, hsds_fd_tree<T,3>()));
+    blocks_.insert(std::make_pair<vgl_point_3d<int>,hsds_fd_tree<T,3> >(block_index, hsds_fd_tree<T,3>()));
     map_it = blocks_.find(block_index);
-    vcl_string fname = this->storage_filename(block_index.x(),block_index.y(),block_index.z());
+    std::string fname = this->storage_filename(block_index.x(),block_index.y(),block_index.z());
     // check if file exists already or not
     if (vul_file::exists(fname))  {
-      vcl_ifstream is(fname.c_str(),vcl_ios::binary);
+      std::ifstream is(fname.c_str(),std::ios::binary);
       if (!is.good()) {
-        vcl_cerr << "error opening file " << fname << " for read! " << vcl_endl;
+        std::cerr << "error opening file " << fname << " for read! " << std::endl;
       }
       else {
         // file exists: read from disk.
@@ -71,7 +71,7 @@ hsds_fd_tree<T,3>& psm_scene_block_storage_cached<T>::get_block(vgl_point_3d<int
     }
   }
   else {
-    //vcl_cout << "hit" << vcl_endl;
+    //std::cout << "hit" << std::endl;
     // block is in cache
     // move index to back of deque
     lru_.erase(it);
@@ -80,7 +80,7 @@ hsds_fd_tree<T,3>& psm_scene_block_storage_cached<T>::get_block(vgl_point_3d<int
     map_it = blocks_.find(block_index);
     if (map_it == blocks_.end()) {
       // this should not happen.
-      vcl_cerr << "error: psm_scene_block_storage_cached: block_index is in lru_ but not blocks_!" << vcl_endl;
+      std::cerr << "error: psm_scene_block_storage_cached: block_index is in lru_ but not blocks_!" << std::endl;
     }
   }
   return map_it->second;
@@ -95,7 +95,7 @@ void psm_scene_block_storage_cached<T>::put_block() {}
 template <class T>
 void psm_scene_block_storage_cached<T>::put_blocks()
 {
-  typename vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it = blocks_.begin();
+  typename std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it = blocks_.begin();
   for (; it != blocks_.end(); ++it) {
     write_block(it);
   }
@@ -103,11 +103,11 @@ void psm_scene_block_storage_cached<T>::put_blocks()
 }
 
 template <class T>
-void psm_scene_block_storage_cached<T>::write_block(typename vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it)
+void psm_scene_block_storage_cached<T>::write_block(typename std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it)
 {
   vgl_point_3d<int> block_idx = it->first;
-  vcl_string fname = this->storage_filename(block_idx.x(),block_idx.y(),block_idx.z());
-  vcl_ofstream os(fname.c_str(),vcl_ios::binary);
+  std::string fname = this->storage_filename(block_idx.x(),block_idx.y(),block_idx.z());
+  std::ofstream os(fname.c_str(),std::ios::binary);
   it->second.b_write(os);
 }
 

@@ -1,6 +1,6 @@
 #include "mw_3_correspond_point_tool.h"
 
-#include <vcl_iomanip.h>
+#include <iomanip>
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -86,7 +86,7 @@ mw_3_correspond_point_tool()
   es_gt_ = 0;
 }
 
-vcl_string mw_3_correspond_point_tool::
+std::string mw_3_correspond_point_tool::
 name() const
 {
   return "Multiview _3_ point correspond";
@@ -145,7 +145,7 @@ activate()
   if (synthetic_ || synthetic_olympus_) {
     // generate spc curve & store it
 
-    vcl_cout << "Generating curves..."; vcl_cout.flush();
+    std::cout << "Generating curves..."; std::cout.flush();
 
     if (synthetic_) {
       bdifd_data::space_curves_ctspheres( crv3d_gt_ );
@@ -174,7 +174,7 @@ activate()
 
 
     bdifd_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
-    vcl_cout << "done.\n";
+    std::cout << "done.\n";
 
     gt_3_.set_size(crv2d_gt_[0].size(), crv2d_gt_[1].size(), crv2d_gt_[2].size());
     assert (crv2d_gt_[0].size() == crv2d_gt_[1].size() && crv2d_gt_[1].size() == crv2d_gt_[2].size());
@@ -183,10 +183,10 @@ activate()
       gt_3_.l_.put(i,i,i,bmcsd_match_attribute());
     }
 
-    vcl_cout << "Hashing ground truth...";
-    vcl_cout.flush();
+    std::cout << "Hashing ground truth...";
+    std::cout.flush();
     gt_3_.hash();
-    vcl_cout << "done\n";
+    std::cout << "done\n";
   }
 
   // coloring of points in image 0 having any correspondents
@@ -202,13 +202,13 @@ get_corresp()
   vgui_dialog io_dialog("Select Inputs" );
 
 
-  vcl_vector< vcl_string > input_type_list;
+  std::vector< std::string > input_type_list;
   input_type_list.push_back("mw_3_pt_corresp");
 
   io_dialog.message("Select Input(s) From Available ones:");
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
        
   for( unsigned int i = 0 ; i < input_type_list.size(); i++ )
   {
@@ -224,7 +224,7 @@ get_corresp()
   io_dialog.checkbox("Deal with synthetic data DIGICAM TURNTABLE", synthetic_olympus_);
 
   if (!io_dialog.ask()) {
-    vcl_cout << "Canceled\n";
+    std::cout << "Canceled\n";
     return;
   } else {
     vgui_dialog null_inputs("Name Missing Inputs");
@@ -243,7 +243,7 @@ get_corresp()
       null_inputs.ask();
   }
 
-  vcl_cout << "Selected input: " << input_names[0] << " ";
+  std::cout << "Selected input: " << input_names[0] << " ";
   
   bpro1_storage_sptr 
     p = MANAGER->repository()->get_data_by_name_at(input_names[0],frame_v_[0]);
@@ -251,32 +251,32 @@ get_corresp()
 
   p_sto_3_.vertical_cast(p);
   if(!p_sto_3_) {
-    vcl_cerr << "Error: tool requires a valid correspondence storage" << vcl_endl;
+    std::cerr << "Error: tool requires a valid correspondence storage" << std::endl;
     return;
   }
   
   corr_3_ = p_sto_3_->corresp();
   if(!corr_3_) {
-    vcl_cerr << "Empty storage - allocating data" << vcl_endl;
+    std::cerr << "Empty storage - allocating data" << std::endl;
     corr_3_ = new bmcsd_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
     p_sto_3_->set_corresp(corr_3_); // storage deletes it
   } else {
     if (corr_3_->n0() != vsols_[0].size() || corr_3_->n1() != vsols_[1].size() ||corr_3_->n2() != vsols_[2].size()) {
-      vcl_cerr << "Error: input correspondence is not valid for current edgels\n" 
-        << vcl_endl;
-      vcl_cerr << "corresp size n0: " << corr_3_->n0() << vcl_endl;
-      vcl_cerr << "vsols size 0: " << vsols_[0].size() << vcl_endl;
+      std::cerr << "Error: input correspondence is not valid for current edgels\n" 
+        << std::endl;
+      std::cerr << "corresp size n0: " << corr_3_->n0() << std::endl;
+      std::cerr << "vsols size 0: " << vsols_[0].size() << std::endl;
       return;
     }
   }
 
-  vcl_cout << "Hashing corresp 3...";
-  vcl_cout.flush();
+  std::cout << "Hashing corresp 3...";
+  std::cout.flush();
   corr_3_->hash();
-  vcl_cout << "done\n";
+  std::cout << "done\n";
 
-  vcl_cout << "Corresp NAME: " << p_sto_3_->name() << vcl_endl;
-  // vcl_cout << "Corresp: " << " : \n" << *corr_ << vcl_endl;
+  std::cout << "Corresp NAME: " << p_sto_3_->name() << std::endl;
+  // std::cout << "Corresp: " << " : \n" << *corr_ << std::endl;
 }
 
 void mw_3_correspond_point_tool::
@@ -292,7 +292,7 @@ get_images()
 
     if (!frame_image) {
       if (!synthetic_ && !synthetic_olympus_) {
-        vcl_cout << "ERROR: no images in view " << i << vcl_endl;
+        std::cout << "ERROR: no images in view " << i << std::endl;
         return;
       }
     } else {
@@ -300,9 +300,9 @@ get_images()
       ncols_ = images_[i]->ni();
       nrows_ = images_[i]->nj();
 
-      vcl_cout << "Image view # " << i << "  ";
-      vcl_cout << "Nrows: " << nrows_;
-      vcl_cout << "  Ncols: " << ncols_ << vcl_endl;
+      std::cout << "Image view # " << i << "  ";
+      std::cout << "Nrows: " << nrows_;
+      std::cout << "  Ncols: " << ncols_ << std::endl;
     }
   }
 }
@@ -312,7 +312,7 @@ void
 mw_3_correspond_point_tool::
 deactivate ()
 {
-  vcl_cout << "mw_3_correspond_point_tool OFF\n";
+  std::cout << "mw_3_correspond_point_tool OFF\n";
   mw_correspond_point_tool_basic::deactivate ();
 
   if (has_sp_)
@@ -325,7 +325,7 @@ handle( const vgui_event & e,
         const bvis1_view_tableau_sptr& view )
 {
   if (e.type == vgui_KEY_PRESS) {
-    vcl_cout << "Frame index: " << view->frame() << vcl_endl;
+    std::cout << "Frame index: " << view->frame() << std::endl;
     return handle_key(e.key);
   }
 
@@ -353,7 +353,7 @@ handle( const vgui_event & e,
     } else if (view->frame() == frame_v_[1]) {
       handle_mouse_event_at_view_1(e,view);
     } else { // 3rd view
-      vcl_cout << "3rd view\n";
+      std::cout << "3rd view\n";
       handle_mouse_event_at_view_2(e,view);
     }
   }
@@ -371,11 +371,11 @@ handle_key(vgui_key key)
   switch (key) {
     case 277: // Del
       if (query_is_corresp_) {
-        vcl_cout << "Removing " 
+        std::cout << "Removing " 
           << p_query_id_[0] << " "
           << p_query_id_[1] << " "
           << p_query_id_[2]
-          << vcl_endl;
+          << std::endl;
 
         assert(corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2]));
         corr_3_->l_.erase(vbl_make_triple(p_query_id_[0],p_query_id_[1],p_query_id_[2]));
@@ -383,7 +383,7 @@ handle_key(vgui_key key)
 
         // - delete this guy from correspondents soview list, if there.
 
-        vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator >::iterator 
+        std::map<unsigned, std::list<bgui_vsol_soview2D_line_seg *>::iterator >::iterator 
           itr = correspondents_idx_[1].find(p_query_id_[1]);
         if (itr != correspondents_idx_[1].end() && *((*itr).second) != 0) {
           tab_[1]->remove(*(correspondents_idx_[1][p_query_id_[1]]));
@@ -409,7 +409,7 @@ handle_key(vgui_key key)
         tab_[1]->post_redraw();
         tab_[0]->post_redraw();
       } else {
-        vcl_cout << "Selected correspondence inexist\n";
+        std::cout << "Selected correspondence inexist\n";
       }
 
       return true;
@@ -420,7 +420,7 @@ handle_key(vgui_key key)
         bool tuplet_not_selected = false;
         for (unsigned v=0; v < nviews_; ++v) {
           if (p_query_id_[v] == (unsigned)-1) {
-            vcl_cout << "Error: edgels must be selected in all views prior to inserting.\n";
+            std::cout << "Error: edgels must be selected in all views prior to inserting.\n";
             tuplet_not_selected = true;
             break;
           }
@@ -432,11 +432,11 @@ handle_key(vgui_key key)
           corr_3_->l_.put(p_query_id_[0],p_query_id_[1],p_query_id_[2], bmcsd_match_attribute());
 
         if (stat) {
-          vcl_cout << "Inserting " 
+          std::cout << "Inserting " 
             << p_query_id_[0] << " "
             << p_query_id_[1] << " "
             << p_query_id_[2]
-            << vcl_endl;
+            << std::endl;
 
           query_is_corresp_ = true;
 
@@ -465,25 +465,25 @@ handle_key(vgui_key key)
           tab_[2]->post_redraw();
           corr_3_->hash();
         } else {
-          vcl_cout << "Error/Insert: tuplet is already in corresp datastructure\n";
-          vcl_cout << "p_query_id_[0]:" << p_query_id_[0] 
+          std::cout << "Error/Insert: tuplet is already in corresp datastructure\n";
+          std::cout << "p_query_id_[0]:" << p_query_id_[0] 
             << "  p_query_id_[1]:" << p_query_id_[1] 
             << "  p_query_id_[2]:" << p_query_id_[2] 
-            << vcl_endl;
+            << std::endl;
         }
       } else {
-        vcl_cout << "Selected correspondence already inserted\n";
+        std::cout << "Selected correspondence already inserted\n";
       }
       break;
 
     case 'p': // print misc info / debug
-      vcl_cout << *corr_3_ << vcl_endl;
+      std::cout << *corr_3_ << std::endl;
 
       return true;
       break;
       /*
     case 's': // fill corresp. structure with stereo results
-      vcl_cout << "Epipolar constraint";
+      std::cout << "Epipolar constraint";
       run_stereo_matcher();
 
       return true;
@@ -553,7 +553,7 @@ handle_key(vgui_key key)
 
     case 5: { // Ctrl-E
       srm_display_full_ = !srm_display_full_;
-      vgui::out << "Display srm reproj " << ( (srm_display_full_)? "ON" : "OFF") << vcl_endl;
+      vgui::out << "Display srm reproj " << ( (srm_display_full_)? "ON" : "OFF") << std::endl;
     }
     break;
     */
@@ -561,7 +561,7 @@ handle_key(vgui_key key)
     case '^': /* Shift-6 */
       // - Display eulerspiral off
       srm_display_es_ = !srm_display_es_;
-      vgui::out << "Display Eulerspirals " << ( (srm_display_es_)? "ON" : "OFF") << vcl_endl;
+      vgui::out << "Display Eulerspirals " << ( (srm_display_es_)? "ON" : "OFF") << std::endl;
     break;
     case '6':
 
@@ -579,9 +579,9 @@ handle_key(vgui_key key)
         es_gt_=0;
       }
 
-      vcl_cout << "6 pressed\n";
+      std::cout << "6 pressed\n";
       if (srm_display_es_) { // TODO: also make sure some point is selected 
-        vcl_cout << "Drawing Eulerspirals\n";
+        std::cout << "Drawing Eulerspirals\n";
         vgui::out << "Drawing Eulerspirals\n";
         srm_angle_= angle_cam_[2];
 
@@ -644,26 +644,26 @@ handle_key(vgui_key key)
 
         rig.reconstruct_3rd_order(p1_w, p2_w, &srm_Prec_);
 
-//        vcl_cout << "HERE: Prec.K: " << srm_Prec_.K
+//        std::cout << "HERE: Prec.K: " << srm_Prec_.K
 //                 << " Prec.T[0]: " << srm_Prec_.T[0] 
 //                 << " Prec.T[1]: " << srm_Prec_.T[1]
 //                 << " Prec.T[2]: " << srm_Prec_.T[2]
 //                 << " Prec.Gama[0]: " << srm_Prec_.Gama[0] 
 //                 << " Prec.Gama[1]: " << srm_Prec_.Gama[1]
-//                 << " Prec.Gama[2]: " << srm_Prec_.Gama[2] << vcl_endl;
+//                 << " Prec.Gama[2]: " << srm_Prec_.Gama[2] << std::endl;
         
         // theta1 = theta(view3) 
 
         bool valid;
         bdifd_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
 
-//        vcl_cout << "HERE: p_rec_reproj.K: " << p_rec_reproj.k
+//        std::cout << "HERE: p_rec_reproj.K: " << p_rec_reproj.k
 //                 << " p_rec_reproj.T[0]: " << p_rec_reproj.t[0] 
 //                 << " p_rec_reproj.T[1]: " << p_rec_reproj.t[1]
 //                 << " p_rec_reproj.T[2]: " << p_rec_reproj.t[2]
 //                 << " p_rec_reproj.Gama[0]: " << p_rec_reproj.gama[0] 
 //                 << " p_rec_reproj.Gama[1]: " << p_rec_reproj.gama[1]
-//                 << " p_rec_reproj.Gama[2]: " << p_rec_reproj.gama[2] << vcl_endl;
+//                 << " p_rec_reproj.Gama[2]: " << p_rec_reproj.gama[2] << std::endl;
 
         bdifd_3rd_order_point_3d gt_Prec;
         bdifd_3rd_order_point_2d p_rec_reproj_gt;
@@ -687,8 +687,8 @@ handle_key(vgui_key key)
              es_gt_ = get_new_eulerspiral (p_rec_reproj_gt);
 
           { // construct eulerspirals for true cams
-            vcl_vector<vsol_point_2d_sptr> vp;
-            vp.reserve((unsigned)vcl_ceil(24.0/0.1));
+            std::vector<vsol_point_2d_sptr> vp;
+            vp.reserve((unsigned)std::ceil(24.0/0.1));
             for (double s=-12.0; s<12.0; s+=0.1)
               vp.push_back(
                   new vsol_point_2d(es_gt_->point_at_length(s).x(), es_gt_->point_at_length(s).y()));
@@ -709,9 +709,9 @@ handle_key(vgui_key key)
 
         es_so_.resize(es_.size());
         for (unsigned ie=0; ie < es_.size(); ++ie) {
-          vcl_vector<vsol_point_2d_sptr> vp;
+          std::vector<vsol_point_2d_sptr> vp;
 
-          vp.reserve((unsigned)vcl_ceil(24.0/0.1));
+          vp.reserve((unsigned)std::ceil(24.0/0.1));
           for (double s=-12.0; s<12.0; s+=0.1)
             vp.push_back(
                 new vsol_point_2d(es_[ie]->point_at_length(s).x(), es_[ie]->point_at_length(s).y()));
@@ -732,36 +732,36 @@ handle_key(vgui_key key)
     break;
     /*
     case '7':
-      vcl_cout << "Epipolar constraint...";
-      vcl_cout.flush();
+      std::cout << "Epipolar constraint...";
+      std::cout.flush();
       get_epipolar_candidates();
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
     break;
 
     case '8':
-      vcl_cout << "Writing energies to file...";
+      std::cout << "Writing energies to file...";
       vgui::out << "Writing energies to file...";
       write_energies();
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
       vgui::out << "done!\n";
     break;
 
     case '9':
-      vcl_cout << "Trimming any ones bellow cost threshold...";
+      std::cout << "Trimming any ones bellow cost threshold...";
       corr_->threshold_by_cost(500);
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
     break;
 
     case '0': // misc. stuff
-      vcl_cout << "Sorting corrresps....";
+      std::cout << "Sorting corrresps....";
       corr_->sort();
-      vcl_cout << "done!\n";
+      std::cout << "done!\n";
       break;
       */
 
     default:
       if (!base_stat)
-        vcl_cout << "Unassigned key: " << key << " pressed.\n";
+        std::cout << "Unassigned key: " << key << " pressed.\n";
       return base_stat;
       break;
   }
@@ -795,11 +795,11 @@ handle_mouse_event_at_view_1(
   bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[1], &idx);
 
   if (stat) {
-     vcl_cout << "View #2: mouse click on point number: (" << idx+1 << ") out of " 
-               << vsols_[1].size() << vcl_endl;
+     std::cout << "View #2: mouse click on point number: (" << idx+1 << ") out of " 
+               << vsols_[1].size() << std::endl;
      p_query_id_[1] = idx;
   } else {
-     vcl_cout << "View #2: mouse click on mysterious pont\n";
+     std::cout << "View #2: mouse click on mysterious pont\n";
      return false;
   }
 
@@ -816,9 +816,9 @@ handle_mouse_event_at_view_1(
 
   if (corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2])) {
 
-//    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
-//      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
-//    vcl_cout << "    " << *itr << vcl_endl;
+//    std::cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+//      << corr_->corresp_[p_query_id_[0]].size() << std::endl;
+//    std::cout << "    " << *itr << std::endl;
     query_is_corresp_ = true;
 
     /*
@@ -843,7 +843,7 @@ handle_mouse_event_at_view_1(
       printf("view 2(mm)     -- k2: %8g\t(r=%8g),\tkdot2:%8g\n", p2_w.k, 1./p2_w.k, p2_w.kdot);
       printf("reconstr       --  K: %8g\t(R=%8g),\tKdot :%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P_rec.K, 1./P_rec.K, P_rec.Kdot, P_rec.Tau, 1.0/rig.cam[0].speed(P_rec), P_rec.Gamma_3dot_abs());
       double depth_rec = dot_product(P_rec.Gama - cam_[0].c, cam_[0].F);
-      vcl_cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << vcl_endl;
+      std::cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << std::endl;
       bool is_the_match = (idx == p_query_id_[0]);
       if (is_the_match) {
         unsigned  i_crv, i_pt;
@@ -853,24 +853,24 @@ handle_mouse_event_at_view_1(
           bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("gnd-truth      --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, 1.0/rig.cam[0].speed(P), P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
-          vcl_cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
+          std::cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << std::endl;
 
           // angle of reprojection with the edgel in 3rd view
           bool valid;
           bdifd_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
-          vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
-            << "\tangle(rad): " << vcl_acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+          std::cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
+            << "\tangle(rad): " << std::acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << std::endl;
           double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
-          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
+          std::cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << std::endl;
           
         } else {
-          vcl_cout << "WARNING: Not found among ground-truth!\n";
+          std::cout << "WARNING: Not found among ground-truth!\n";
         }
       }
     } // ! synthetic
     */
   } else {
-    vcl_cout << "Clicked point NOT found among candidates\n";
+    std::cout << "Clicked point NOT found among candidates\n";
     query_is_corresp_ = false;
   }
 
@@ -890,11 +890,11 @@ handle_mouse_event_at_view_2(
   bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[2], &idx);
 
   if (stat) {
-     vcl_cout << "View #3: mouse click on point number: (" << idx+1 << ") out of " 
-               << vsols_[2].size() << vcl_endl;
+     std::cout << "View #3: mouse click on point number: (" << idx+1 << ") out of " 
+               << vsols_[2].size() << std::endl;
      p_query_id_[2] = idx;
   } else {
-     vcl_cout << "View #3: mouse click on mysterious pont\n";
+     std::cout << "View #3: mouse click on mysterious pont\n";
      return false;
   }
 
@@ -911,15 +911,15 @@ handle_mouse_event_at_view_2(
 
   if (corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2])) {
 
-//    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
-//      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
-//    vcl_cout << "    " << *itr << vcl_endl;
+//    std::cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+//      << corr_->corresp_[p_query_id_[0]].size() << std::endl;
+//    std::cout << "    " << *itr << std::endl;
     query_is_corresp_ = true;
 
     /*
-    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
-      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
-    vcl_cout << "    " << *itr << vcl_endl;
+    std::cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+      << corr_->corresp_[p_query_id_[0]].size() << std::endl;
+    std::cout << "    " << *itr << std::endl;
     p1_query_itr_ = itr;
     query_is_corresp_ = true;
 
@@ -944,7 +944,7 @@ handle_mouse_event_at_view_2(
       printf("view 2(mm)     -- k2: %8g\t(r=%8g),\tkdot2:%8g\n", p2_w.k, 1./p2_w.k, p2_w.kdot);
       printf("reconstr       --  K: %8g\t(R=%8g),\tKdot :%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P_rec.K, 1./P_rec.K, P_rec.Kdot, P_rec.Tau, 1.0/rig.cam[0].speed(P_rec), P_rec.Gamma_3dot_abs());
       double depth_rec = dot_product(P_rec.Gama - cam_[0].c, cam_[0].F);
-      vcl_cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << vcl_endl;
+      std::cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << std::endl;
       bool is_the_match = (idx == p_query_id_[0]);
       if (is_the_match) {
         unsigned  i_crv, i_pt;
@@ -954,24 +954,24 @@ handle_mouse_event_at_view_2(
           bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("gnd-truth      --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, 1.0/rig.cam[0].speed(P), P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
-          vcl_cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
+          std::cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << std::endl;
 
           // angle of reprojection with the edgel in 3rd view
           bool valid;
           bdifd_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
-          vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
-            << "\tangle(rad): " << vcl_acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+          std::cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
+            << "\tangle(rad): " << std::acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << std::endl;
           double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
-          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
+          std::cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << std::endl;
           
         } else {
-          vcl_cout << "WARNING: Not found among ground-truth!\n";
+          std::cout << "WARNING: Not found among ground-truth!\n";
         }
       }
     } // !synthetic
     */
   } else {
-    vcl_cout << "Clicked point NOT found among candidates\n";
+    std::cout << "Clicked point NOT found among candidates\n";
     query_is_corresp_ = false;
   }
 
@@ -988,7 +988,7 @@ handle_corresp_query_whatever_view
     ( const vgui_event & e, 
     const bvis1_view_tableau_sptr& /*view*/ )
 {
-//  vcl_cout << "mouse over - Frame index: " << view->frame() << vcl_endl;
+//  std::cout << "mouse over - Frame index: " << view->frame() << std::endl;
 
   float ix, iy;
   vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
@@ -1005,13 +1005,13 @@ handle_corresp_query_whatever_view
     = dynamic_cast<bgui_vsol_soview2D_line_seg *>(selected_edgel_soview_base); 
 
   if (!selected_edgel_soview_line || !selected_edgel_soview_line->sptr()) {
-    // vcl_cout << "mouse over - Nothing\n";
+    // std::cout << "mouse over - Nothing\n";
     return false;
   }
 
   selected_edgel_in_corresp_ = selected_edgel_soview_line->sptr();
-  // vcl_cout << "mouse over - Middle of selected edgel: " << 
-    // *(selected_edgel_in_corresp_->middle()) << vcl_endl;
+  // std::cout << "mouse over - Middle of selected edgel: " << 
+    // *(selected_edgel_in_corresp_->middle()) << std::endl;
   return true;
 }
 
@@ -1025,12 +1025,12 @@ handle_corresp_query_at_view_0
   unsigned idx;
   bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[0], &idx);
   if (stat) {
-     vcl_cout << "mw_3_corr: View[0]: mouse over point number: (" << idx+1 << ") out of " 
-               << vsols_[0].size() << vcl_endl;
+     std::cout << "mw_3_corr: View[0]: mouse over point number: (" << idx+1 << ") out of " 
+               << vsols_[0].size() << std::endl;
      p_query_id_[0] = idx;
      query_is_corresp_ = false; // TODO need to properly check if edgels are already in correps datastruct
   } else {
-     vcl_cout << "mw_3_corr: View[0]: mouse over mysterious point\n";
+     std::cout << "mw_3_corr: View[0]: mouse over mysterious point\n";
      return false;
   }
 
@@ -1042,7 +1042,7 @@ handle_corresp_query_at_view_0
     double epipolar_angle = bdifd_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
     epipolar_angle *= 180.0/vnl_math::pi;
 
-    vcl_cout << "epi angle: " << epipolar_angle << "deg" << vcl_endl;
+    std::cout << "epi angle: " << epipolar_angle << "deg" << std::endl;
   }
 
   // mark selected edgel
@@ -1057,7 +1057,7 @@ handle_corresp_query_at_view_0
       
   // add the correspondents in 2nd and 3rd view
   
-  for (vcl_list<bgui_vsol_soview2D_line_seg *>::iterator 
+  for (std::list<bgui_vsol_soview2D_line_seg *>::iterator 
       itr = correspondents_soview_[1].begin() ; 
       itr != correspondents_soview_[1].end(); ++itr) {
     tab_[1]->remove(*itr);
@@ -1065,7 +1065,7 @@ handle_corresp_query_at_view_0
   correspondents_soview_[1].clear();
   correspondents_idx_[1].clear();
 
-  for (vcl_list<bgui_vsol_soview2D_line_seg *>::iterator 
+  for (std::list<bgui_vsol_soview2D_line_seg *>::iterator 
       itr = correspondents_soview_[2].begin() ; 
       itr != correspondents_soview_[2].end(); ++itr) {
     tab_[2]->remove(*itr);
@@ -1074,12 +1074,12 @@ handle_corresp_query_at_view_0
   correspondents_idx_[2].clear();
 
 
-  vcl_list<unsigned> p1_l, p2_l;
+  std::list<unsigned> p1_l, p2_l;
 
   //TODO: sort
   mw_3_correspond_point_tool::get_candidates_from_p0(*corr_3_, idx, p1_l, p2_l);
 
-  vcl_list<unsigned>::const_iterator itr;
+  std::list<unsigned>::const_iterator itr;
 
   itr = p1_l.begin(); unsigned ii=0;
   for (; itr != p1_l.end(); ++itr, ++ii) {
@@ -1135,11 +1135,11 @@ handle_corresp_inspection_at_view_1
   unsigned idx, p1_idx;
   bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[1], &idx);
   if (stat) {
-     vcl_cout << "View #2: mouse over point number: (" << idx+1 << ") out of " 
-               << vsols_[1].size() << vcl_endl;
+     std::cout << "View #2: mouse over point number: (" << idx+1 << ") out of " 
+               << vsols_[1].size() << std::endl;
      p1_idx = idx;
   } else {
-     vcl_cout << "View #2: mouse over mysterious pont\n";
+     std::cout << "View #2: mouse over mysterious pont\n";
      return false;
   }
 
@@ -1151,13 +1151,13 @@ handle_corresp_inspection_at_view_1
     double epipolar_angle = bdifd_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
     epipolar_angle *= 180.0/vnl_math::pi;
 
-    vcl_cout << "epi angle: " << epipolar_angle << "deg" << vcl_endl;
+    std::cout << "epi angle: " << epipolar_angle << "deg" << std::endl;
   }
 
   // add the correspondents in 3rd view
   
   /*
-  for (vcl_list<bgui_vsol_soview2D_line_seg *>::iterator 
+  for (std::list<bgui_vsol_soview2D_line_seg *>::iterator 
       itr = correspondents_soview_3_.begin() ; 
       itr != correspondents_soview_3_.end(); ++itr) {
     tab_[2]->remove(*itr);
@@ -1166,11 +1166,11 @@ handle_corresp_inspection_at_view_1
   correspondents_idx_[1]3_.clear();
 
 
-  vcl_set<triplet_uuu> s3;
+  std::set<triplet_uuu> s3;
 
   corr_3_->triplets(0,p_query_id_[0], 1,p1_idx,s3);
 
-  vcl_set<triplet_uuu>::const_iterator itr;
+  std::set<triplet_uuu>::const_iterator itr;
 
   itr = s3.begin(); unsigned ii=0;
   for (; itr != s3.end(); ++itr, ++ii) {
@@ -1201,20 +1201,20 @@ handle_corresp_inspection_at_view_1
 //: This fn. depends on the correspondence structure implementation.
 // TODO: sort contents of lists according to cost
 void mw_3_correspond_point_tool::
-get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l)
+get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, std::list<unsigned> &p1_l, std::list<unsigned> &p2_l)
 {
-  vcl_vector<bool> p1_in,p2_in;
+  std::vector<bool> p1_in,p2_in;
 
   p1_in.resize(c.n1(),false); p2_in.resize(c.n2(),false);
 
-  const vcl_set<triplet_uuu> t = c.triplets(0,idx);
+  const std::set<triplet_uuu> t = c.triplets(0,idx);
 
-  vcl_set<triplet_uuu>::const_iterator p;
+  std::set<triplet_uuu>::const_iterator p;
 
   for (p=t.begin(); p!=t.end(); ++p) {
     const unsigned j= p->second;
     const unsigned k= p->third;
-    if (c(idx,j,k).cost_ != vcl_numeric_limits<double>::infinity()) {
+    if (c(idx,j,k).cost_ != std::numeric_limits<double>::infinity()) {
       if (!p1_in[j]) {
         p1_l.push_back(j);
         p1_in[j] = true;
@@ -1231,7 +1231,7 @@ get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, vcl_list
 void mw_3_correspond_point_tool::
 toggle_lock_correspondence_query()
 {
-  vcl_string state;
+  std::string state;
   if (lock_corresp_query_) {
     lock_corresp_query_= false;
     state = "off";
@@ -1239,8 +1239,8 @@ toggle_lock_correspondence_query()
     lock_corresp_query_= true;
     state = "on";
   }
-  vcl_cout << "Inspect correspondence " << state << vcl_endl;;
-  vgui::out << "Inspect correspondence " << state << vcl_endl;;
+  std::cout << "Inspect correspondence " << state << std::endl;;
+  vgui::out << "Inspect correspondence " << state << std::endl;;
 
 }
 
@@ -1265,7 +1265,7 @@ bgld_eulerspiral * mw_3_correspond_point_tool::
 get_new_eulerspiral(const bdifd_3rd_order_point_2d &p) const
 {
   vgl_point_2d<double> start_pt(p.gama[0], p.gama[1]);
-  double start_angle = bmcsd_util::angle0To2Pi (vcl_atan2 (p.t[1],p.t[0]));
+  double start_angle = bmcsd_util::angle0To2Pi (std::atan2 (p.t[1],p.t[0]));
   return new bgld_eulerspiral(start_pt, start_angle, p.k, p.kdot, 3);
 }
 
@@ -1292,11 +1292,11 @@ srm_draw_eulerspiral()
       bdifd_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
 
       if (valid) {
-        vcl_cout << "Angle: " << srm_angle_ << "deg\n";
+        std::cout << "Angle: " << srm_angle_ << "deg\n";
         es_.push_back(get_new_eulerspiral (p_rec_reproj)); 
 
         unsigned ie=2;
-        vcl_vector<vsol_point_2d_sptr> vp;
+        std::vector<vsol_point_2d_sptr> vp;
 
         for (double s=-12.0; s<12.0; s+=0.1)
           vp.push_back(
@@ -1311,7 +1311,7 @@ srm_draw_eulerspiral()
         printf("SRM: proj (pixels) -- k1: %8g\t(r=%8g),\tkdot1:%8g\n", p_rec_reproj.k, 1./p_rec_reproj.k, p_rec_reproj.kdot);
         printf("SRM: reconstr      --  K: %8g\t(R=%8g),\tKdot :%8g,\tTau:%8g\tEnergy(Gama3dot):%8g\n", srm_Prec_.K, 1./srm_Prec_.K, srm_Prec_.Kdot, srm_Prec_.Tau, srm_Prec_.Gamma_3dot_abs());
         double depth_srm = dot_product(srm_Prec_.Gama - srm_cam_.c, srm_cam_.F);
-        vcl_cout << "SRM: reconstr      -- depth: " << depth_srm << vcl_endl;
+        std::cout << "SRM: reconstr      -- depth: " << depth_srm << std::endl;
 
         unsigned  i_crv, i_pt;
         bool found = find_crv3d_idx(p_query_id_[0], i_crv, i_pt);
@@ -1320,11 +1320,11 @@ srm_draw_eulerspiral()
           bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("SRM: P gnd-truth   --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tEnergy(Gama3dot):%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
-          vcl_cout << "SRM: P gnd-truth   --    Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
+          std::cout << "SRM: P gnd-truth   --    Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << std::endl;
         } else {
-          vcl_cout << "WARNING: Not found ground-truth for P0!\n";
+          std::cout << "WARNING: Not found ground-truth for P0!\n";
         }
-        vcl_cout << "\n\n";
+        std::cout << "\n\n";
       }
 
       unsigned ie = 2;
@@ -1340,7 +1340,7 @@ srm_draw_eulerspiral()
         tab_[ie]->set_current_grouping(srm_allcrvs_layer_.c_str());
         srm_allcrvs_so_.resize(crv3d_gt_.size());
         for (unsigned i_crv=0; i_crv < crv3d_gt_.size(); ++i_crv) {
-          vcl_vector<vsol_point_2d_sptr> vp;
+          std::vector<vsol_point_2d_sptr> vp;
           vp.reserve(crv3d_gt_[i_crv].size());
           for (unsigned i_pt=0; i_pt < crv3d_gt_[i_crv].size(); i_pt+=4) {
             bool valid;
@@ -1367,7 +1367,7 @@ run_stereo_matcher_1pt(mw_point_matcher::trinocular_DG_constraint constr)
   // Apply symmetric tangential constraint
   mw_point_matcher m(cam_);
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d;
   build_point_tangents_from_edgels(crv2d,vsols_orig_cache_);
 
   m.trinocular_DG_costs_3(
@@ -1376,7 +1376,7 @@ run_stereo_matcher_1pt(mw_point_matcher::trinocular_DG_constraint constr)
     0,1,2,
     constr
    );
-  vcl_cout << "Resulting corr\n"<< *corr_3_<<vcl_endl;
+  std::cout << "Resulting corr\n"<< *corr_3_<<std::endl;
 }
 
 void mw_3_correspond_point_tool::
@@ -1386,9 +1386,9 @@ trinocular_epipolar_candidates_1pt()
   // - get hold of point in view 1
   // - run stereo such as:
 
-  vcl_cout << "Computing trinocular epipolar correspondent for current point...";
+  std::cout << "Computing trinocular epipolar correspondent for current point...";
   if (p_[0] == 0) {
-    vcl_cout << "No selected point in view 0!\n";
+    std::cout << "No selected point in view 0!\n";
     return;
   }
 
@@ -1401,7 +1401,7 @@ trinocular_epipolar_candidates_1pt()
     has_sp_ = true;
   }
 
-  vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
+  std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms;
 
   fms.resize(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
@@ -1414,14 +1414,14 @@ trinocular_epipolar_candidates_1pt()
   }
 
 
-  vcl_vector<vcl_vector< vsol_point_2d_sptr > > vsols_1pt;
+  std::vector<std::vector< vsol_point_2d_sptr > > vsols_1pt;
   vsols_1pt = vsols_;
   vsols_1pt[0].clear();
   vsols_1pt[0].push_back(vsols_[0][p_idx_[0]]);
 
   bmcsd_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
   //: todo initialize 
-  vcl_vector<unsigned> npts(nviews_);
+  std::vector<unsigned> npts(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
     npts[i] = vsols_[i].size();
   }
@@ -1430,7 +1430,7 @@ trinocular_epipolar_candidates_1pt()
   unsigned err_pos = 2;
 
   mw_match_position_band(vsols_1pt, &corr_1pt, fms, sp_, err_pos,false);// false = do not debug synthetic
-  vcl_cout << corr_1pt;
+  std::cout << corr_1pt;
   //: Just need to transfer all triplets to internal corr_3 structure, but changing the index of the
   //first point to the right index.
   
@@ -1447,10 +1447,10 @@ trinocular_epipolar_candidates_1pt()
     corr_3_->l_.put(p_idx_[0],tup[1],tup[2],p->second);
   }
 
-  vcl_cout << "Hashing corresp 3...";
-  vcl_cout.flush();
+  std::cout << "Hashing corresp 3...";
+  std::cout.flush();
   corr_3_->hash();
-  vcl_cout << "done\n";
+  std::cout << "done\n";
 
   color_pts0_with_correspondents();
 }
@@ -1464,9 +1464,9 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
   // - get hold of point in view 1
   // - run stereo such as:
 
-  vcl_cout << "Computing trinocular epipolar correspondent + tangent constraint for current point...";
+  std::cout << "Computing trinocular epipolar correspondent + tangent constraint for current point...";
   if (p_[0] == 0) {
-    vcl_cout << "No selected point in view 0!\n";
+    std::cout << "No selected point in view 0!\n";
     return;
   }
 
@@ -1479,7 +1479,7 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
     has_sp_ = true;
   }
 
-  vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
+  std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms;
 
   fms.resize(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
@@ -1493,9 +1493,9 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
 
 
 
-  vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > dg_points_1pt;
+  std::vector<std::vector< bdifd_3rd_order_point_2d > > dg_points_1pt;
   {
-    vcl_vector<vcl_vector< vsol_line_2d_sptr > > vsols_line_1pt;
+    std::vector<std::vector< vsol_line_2d_sptr > > vsols_line_1pt;
     vsols_line_1pt = vsols_orig_cache_;
     vsols_line_1pt[0].clear();
     vsols_line_1pt[0].push_back(vsols_orig_cache_[0][p_idx_[0]]);
@@ -1503,14 +1503,14 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
     build_point_tangents_from_edgels(dg_points_1pt,vsols_line_1pt);
   }
 
-  vcl_vector<vcl_vector< vsol_point_2d_sptr > > vsols_1pt;
+  std::vector<std::vector< vsol_point_2d_sptr > > vsols_1pt;
   vsols_1pt = vsols_;
   vsols_1pt[0].clear();
   vsols_1pt[0].push_back(vsols_[0][p_idx_[0]]);
 
   bmcsd_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
   //: todo initialize 
-  vcl_vector<unsigned> npts(nviews_);
+  std::vector<unsigned> npts(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
     npts[i] = vsols_[i].size();
   }
@@ -1519,7 +1519,7 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
   double err_pos = 2; double err_t=vnl_math::pi/180.;
 
   mw_match_tangent_band(vsols_1pt, dg_points_1pt, &corr_1pt, fms, cam_, sp_, err_pos, err_t, false);// false = do not debug synthetic
-  vcl_cout << corr_1pt;
+  std::cout << corr_1pt;
   //: Just need to transfer all triplets to internal corr_3 structure, but changing the index of the
   //first point to the right index.
   
@@ -1536,10 +1536,10 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
     corr_3_->l_.put(p_idx_[0],tup[1],tup[2],p->second);
   }
 
-  vcl_cout << "Hashing corresp 3...";
-  vcl_cout.flush();
+  std::cout << "Hashing corresp 3...";
+  std::cout.flush();
   corr_3_->hash();
-  vcl_cout << "done\n";
+  std::cout << "done\n";
 
   color_pts0_with_correspondents();
 }
@@ -1548,27 +1548,27 @@ void mw_3_correspond_point_tool::
 reproject_from_triplet() 
 {
   const double t_thresh=vnl_math::pi/20.0;
-  vcl_cout << "Computing reprojections for selected triplet.";
+  std::cout << "Computing reprojections for selected triplet.";
   
   // - make sure three base points are selected
   //    - the indices into vsols are stored in p_idx_[iv]
   if (p_[0] == 0) {
-    vcl_cout << "No selected point in view 0!\n";
+    std::cout << "No selected point in view 0!\n";
     return;
   }
   if (p_[1] == 0) {
-    vcl_cout << "No selected point in view 1!\n";
+    std::cout << "No selected point in view 1!\n";
     return;
   }
   if (p_[2] == 0) {
-    vcl_cout << "No selected point in view 2!\n";
+    std::cout << "No selected point in view 2!\n";
     return;
   }
   
 
   // - compute reprojections
 
-  vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
+  std::vector<bdifd_3rd_order_point_2d> dg_pt(3);
 
   //    - TODO add reprojection objects like in eulerspiral case.
   
@@ -1606,10 +1606,10 @@ reproject_from_triplet()
   valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
   // Output reconstruction from views 0,1
-  vcl_cout << vcl_setprecision(20);
-  vcl_cout << "Reconstruction from views 0,1:" << vcl_endl;
-  vcl_cout << "\t Prec.Gama: " << Prec.Gama << vcl_endl;
-  vcl_cout << "\t Prec.Tangent: " << Prec.T << vcl_endl;
+  std::cout << std::setprecision(20);
+  std::cout << "Reconstruction from views 0,1:" << std::endl;
+  std::cout << "\t Prec.Gama: " << Prec.Gama << std::endl;
+  std::cout << "\t Prec.Tangent: " << Prec.T << std::endl;
 
   // -- 2
 
@@ -1622,35 +1622,35 @@ reproject_from_triplet()
   valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
   
   // compare p_rep and pt_img3
-  double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+  double dt3 = std::acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
   // compare p_rep and pt_img2
-  double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+  double dt2 = std::acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
   // compare p_rep and pt_img1
-  double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+  double dt1 = std::acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
-  vcl_cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << vcl_endl;
+  std::cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << std::endl;
 
-  vcl_cout << "directions: " 
+  std::cout << "directions: " 
     << vsols_orig_cache_[0][p_idx_[0]]->direction() << "; " 
     << vsols_orig_cache_[1][p_idx_[1]]->direction() << "; " 
-    << vsols_orig_cache_[2][p_idx_[2]]->direction() << vcl_endl;
+    << vsols_orig_cache_[2][p_idx_[2]]->direction() << std::endl;
 
 
   if ( dt1 > t_thresh ||
        dt2 > t_thresh ||
        dt3 > t_thresh 
       ) {
-    vcl_cout << "Triplet FAIL\n";
+    std::cout << "Triplet FAIL\n";
 //        if (dt1 < t_thresh && dt2 > t_thresh)
-//          vcl_cout << "dt1 < thresh but symmetrics are not\n";
+//          std::cout << "dt1 < thresh but symmetrics are not\n";
 //    if (dt1 < t_thresh)
-//      vcl_cout << "dt1 < thresh but symmetrics are not\n";
+//      std::cout << "dt1 < thresh but symmetrics are not\n";
 
 //    if (dt2 < t_thresh)
-//      vcl_cout << "dt2 < thresh but symmetrics are not\n";
+//      std::cout << "dt2 < thresh but symmetrics are not\n";
 
 //    if (dt3 < t_thresh)
-//      vcl_cout << "dt3 < thresh but symmetrics are not\n";
+//      std::cout << "dt3 < thresh but symmetrics are not\n";
 
   }
 }
@@ -1658,24 +1658,24 @@ reproject_from_triplet()
 void mw_3_correspond_point_tool::
 reproject_from_triplet_allcorr() 
 {
-  vcl_cout << vcl_setprecision(20);
+  std::cout << std::setprecision(20);
 
   // Output cameras
   for (unsigned v=0; v < nviews_; ++v) {
-    vcl_cout << "Cam from View: " << v << vcl_endl;
-    vcl_cout << "K:\n" << cam_[v].K_ << vcl_endl;
-    vcl_cout << "Rot: " << cam_[v].Rot << vcl_endl;
-    vcl_cout << "C: " << cam_[v].c << vcl_endl;
+    std::cout << "Cam from View: " << v << std::endl;
+    std::cout << "K:\n" << cam_[v].K_ << std::endl;
+    std::cout << "Rot: " << cam_[v].Rot << std::endl;
+    std::cout << "C: " << cam_[v].c << std::endl;
   }
 
   vbl_sparse_array_3d<bmcsd_match_attribute>::const_iterator p;
   for (p = corr_3_->l_.begin(); p != corr_3_->l_.end(); ++p) {
-      vcl_cout   << '(' << (*p).first.first
+      std::cout   << '(' << (*p).first.first
           << ',' << (*p).first.second
           << ',' << (*p).first.third
           << "): " << (*p).second << '\n';
 
-      vcl_vector<unsigned> p_id(3);
+      std::vector<unsigned> p_id(3);
       p_id[0] = (*p).first.first;
       p_id[1] = (*p).first.second;
       p_id[2] = (*p).first.third;
@@ -1683,20 +1683,20 @@ reproject_from_triplet_allcorr()
       
       // Output image points and tangents
 
-      vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
+      std::vector<bdifd_3rd_order_point_2d> dg_pt(3);
       for (unsigned iv=0; iv < nviews_; ++iv) {
         dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
         dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
         dg_pt[iv].gama[2]  = 0;
 
-        vcl_cout << "gama_img[" << iv << "]:" << dg_pt[iv].gama << vcl_endl;
+        std::cout << "gama_img[" << iv << "]:" << dg_pt[iv].gama << std::endl;
 
         vgl_vector_2d<double> dir = normalized(vsols_orig_cache_[iv][p_id[iv]]->direction());
 
         dg_pt[iv].t[0] = dir.x();
         dg_pt[iv].t[1] = dir.y();
         dg_pt[iv].t[2] = 0;
-        vcl_cout << "tgt_img[" << iv << "]:" << dg_pt[iv].t << vcl_endl;
+        std::cout << "tgt_img[" << iv << "]:" << dg_pt[iv].t << std::endl;
 
         dg_pt[iv].n[0] = -dir.y();
         dg_pt[iv].n[1] = dir.x();
@@ -1721,10 +1721,10 @@ reproject_from_triplet_allcorr()
       valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
       // Output reconstruction from views 0,1
-      vcl_cout << vcl_setprecision(20);
-      vcl_cout << "Reconstruction from views 0,1:" << vcl_endl;
-      vcl_cout << "\t Prec.Gama: " << Prec.Gama << vcl_endl;
-      vcl_cout << "\t Prec.Tangent: " << Prec.T << vcl_endl;
+      std::cout << std::setprecision(20);
+      std::cout << "Reconstruction from views 0,1:" << std::endl;
+      std::cout << "\t Prec.Gama: " << Prec.Gama << std::endl;
+      std::cout << "\t Prec.Tangent: " << Prec.T << std::endl;
 
       // -- 2
 
@@ -1737,18 +1737,18 @@ reproject_from_triplet_allcorr()
       valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
       
       // compare p_rep and pt_img3
-      double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      double dt3 = std::acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
       // compare p_rep and pt_img2
-      double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      double dt2 = std::acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
       // compare p_rep and pt_img1
-      double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+      double dt1 = std::acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
-      vcl_cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << vcl_endl;
+      std::cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << std::endl;
 
-      vcl_cout << "directions: " 
+      std::cout << "directions: " 
         << vsols_orig_cache_[0][p_id[0]]->direction() << "; " 
         << vsols_orig_cache_[1][p_id[1]]->direction() << "; " 
-        << vsols_orig_cache_[2][p_id[2]]->direction() << vcl_endl;
+        << vsols_orig_cache_[2][p_id[2]]->direction() << std::endl;
 
       const double t_thresh=vnl_math::pi/20.0;
 
@@ -1756,21 +1756,21 @@ reproject_from_triplet_allcorr()
            dt2 > t_thresh ||
            dt3 > t_thresh 
           ) {
-        vcl_cout << "Triplet FAIL orientation threshold of " 
-          << t_thresh*180.0/vnl_math::pi << "deg" << vcl_endl;
+        std::cout << "Triplet FAIL orientation threshold of " 
+          << t_thresh*180.0/vnl_math::pi << "deg" << std::endl;
     //        if (dt1 < t_thresh && dt2 > t_thresh)
-    //          vcl_cout << "dt1 < thresh but symmetrics are not\n";
+    //          std::cout << "dt1 < thresh but symmetrics are not\n";
     //    if (dt1 < t_thresh)
-    //      vcl_cout << "dt1 < thresh but symmetrics are not\n";
+    //      std::cout << "dt1 < thresh but symmetrics are not\n";
 
     //    if (dt2 < t_thresh)
-    //      vcl_cout << "dt2 < thresh but symmetrics are not\n";
+    //      std::cout << "dt2 < thresh but symmetrics are not\n";
 
     //    if (dt3 < t_thresh)
-    //      vcl_cout << "dt3 < thresh but symmetrics are not\n";
+    //      std::cout << "dt3 < thresh but symmetrics are not\n";
 
       }
-      vcl_cout << "---------" << vcl_endl;
+      std::cout << "---------" << std::endl;
   }
 
 
@@ -1778,11 +1778,11 @@ reproject_from_triplet_allcorr()
   // -1 separates triplets.
 
   for (p = corr_3_->l_.begin(); p != corr_3_->l_.end(); ++p) {
-      vcl_cout << "-1 -1 -1\n";    // triplet delimiter
-      vcl_cout << (*p).first.first << ' ' << (*p).first.second
-          << ' ' << (*p).first.third << vcl_endl;
+      std::cout << "-1 -1 -1\n";    // triplet delimiter
+      std::cout << (*p).first.first << ' ' << (*p).first.second
+          << ' ' << (*p).first.third << std::endl;
 
-      vcl_vector<unsigned> p_id(3);
+      std::vector<unsigned> p_id(3);
       p_id[0] = (*p).first.first;
       p_id[1] = (*p).first.second;
       p_id[2] = (*p).first.third;
@@ -1790,20 +1790,20 @@ reproject_from_triplet_allcorr()
       
       // Output image points and tangents
 
-      vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
+      std::vector<bdifd_3rd_order_point_2d> dg_pt(3);
       for (unsigned iv=0; iv < nviews_; ++iv) {
         dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
         dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
         dg_pt[iv].gama[2]  = 0;
 
-        vcl_cout << dg_pt[iv].gama << vcl_endl;
+        std::cout << dg_pt[iv].gama << std::endl;
 
         vgl_vector_2d<double> dir = normalized(vsols_orig_cache_[iv][p_id[iv]]->direction());
 
         dg_pt[iv].t[0] = dir.x();
         dg_pt[iv].t[1] = dir.y();
         dg_pt[iv].t[2] = 0;
-        vcl_cout << dg_pt[iv].t << vcl_endl;
+        std::cout << dg_pt[iv].t << std::endl;
 
         dg_pt[iv].n[0] = -dir.y();
         dg_pt[iv].n[1] = dir.x();
@@ -1828,8 +1828,8 @@ reproject_from_triplet_allcorr()
       valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
       // Output reconstruction from views 0,1
-      vcl_cout << Prec.Gama << vcl_endl;
-      vcl_cout << Prec.T << vcl_endl;
+      std::cout << Prec.Gama << std::endl;
+      std::cout << Prec.T << std::endl;
 
       // -- 2
 
@@ -1842,13 +1842,13 @@ reproject_from_triplet_allcorr()
       valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
       
       // compare p_rep and pt_img3
-      double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      double dt3 = std::acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
       // compare p_rep and pt_img2
-      double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      double dt2 = std::acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
       // compare p_rep and pt_img1
-      double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+      double dt1 = std::acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
-      vcl_cout << dt1*(180./vnl_math::pi) << " " << dt2*(180./vnl_math::pi) << " " << dt3*(180./vnl_math::pi) << vcl_endl;
+      std::cout << dt1*(180./vnl_math::pi) << " " << dt2*(180./vnl_math::pi) << " " << dt3*(180./vnl_math::pi) << std::endl;
   }
 }
 
@@ -1886,8 +1886,8 @@ color_pts0_with_correspondents()
 
 void mw_3_correspond_point_tool::
 build_point_tangents_from_edgels(
-    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &dg,
-    const vcl_vector<vcl_vector<vsol_line_2d_sptr> > &v
+    std::vector<std::vector<bdifd_3rd_order_point_2d> > &dg,
+    const std::vector<std::vector<vsol_line_2d_sptr> > &v
     )
 {
   unsigned nviews = v.size();

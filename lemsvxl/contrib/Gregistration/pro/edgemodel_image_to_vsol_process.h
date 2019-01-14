@@ -18,7 +18,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_point_2d.h>
 
 
@@ -32,13 +32,13 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();

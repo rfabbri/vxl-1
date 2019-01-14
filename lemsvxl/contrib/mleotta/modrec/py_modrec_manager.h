@@ -26,38 +26,38 @@ public:
   static py_modrec_manager *instance();
   
   //: load a camera matrix for frame \a i
-  bool set_camera(unsigned int i, const vcl_string& filename);
+  bool set_camera(unsigned int i, const std::string& filename);
   
   //: compute the sun direction for shadow casting
   void compute_sun_direction();
   
   //: load an image file for frame \a i
-  bool set_image(unsigned int i, const vcl_string& filename);
+  bool set_image(unsigned int i, const std::string& filename);
   
   //: load input video file 
-  bool set_video(const vcl_string& filename);
+  bool set_video(const std::string& filename);
   
   //: clear all images and cameras
   void reset_views();
   
   //: load the parts from a file
-  bool set_parts(const vcl_string& filename);
+  bool set_parts(const std::string& filename);
   
   //: load the pca parameters from a file
-  bool set_pca(const vcl_string& filename);
+  bool set_pca(const std::string& filename);
   
   //: load the mesh and projected into PCA space
-  bool set_mesh(const vcl_string& filename, 
-                const vcl_string& partsfile = "");
+  bool set_mesh(const std::string& filename, 
+                const std::string& partsfile = "");
   
   //: Choose the type of vehicle model from the enum
   void set_vehicle_model(vehicle_model vm);
   
   //: load the polyhedral approximation mesh
-  bool set_poly_mesh(const vcl_string& filename);
+  bool set_poly_mesh(const std::string& filename);
   
   //: set the options for which parameters to optimize
-  void set_options(const vcl_vector<bool>& options,
+  void set_options(const std::vector<bool>& options,
                    unsigned int num_pc);
   
   //: set the scale of the initial uncertainty
@@ -73,13 +73,13 @@ public:
   void set_rotation(double rx, double ry, double rz);
   
   //: set the parameter vector
-  void set_params(const vcl_vector<double>& params);
+  void set_params(const std::vector<double>& params);
   
   //: set the regularization factor
   void set_lambda(double lambda);
   
   //: set the states produced by the tracker
-  void set_tracking_states(const vcl_vector<modrec_vehicle_state>& states);
+  void set_tracking_states(const std::vector<modrec_vehicle_state>& states);
   
   //: Enable video mode (true), or multiview mode (false)
   void set_fit_mode(bool use_video);
@@ -91,10 +91,10 @@ public:
   void fit_model(unsigned int max_itr);
   
   //: write an svg file with the last projected curves in view \a i
-  bool write_svg_curves(unsigned int i, const vcl_string& filename) const;
+  bool write_svg_curves(unsigned int i, const std::string& filename) const;
   
   //: load a mesh as the ground truth mesh
-  bool set_truth_mesh(const vcl_string& filename);
+  bool set_truth_mesh(const std::string& filename);
   
   //: compute the RMS error between the PCA mesh and Ground truth
   double compute_error() const;
@@ -124,13 +124,13 @@ public:
   void get_rotation(double& rx, double& ry, double& rz) const;
   
   //: get the parameter vector
-  void get_params(vcl_vector<double>& params) const;
+  void get_params(std::vector<double>& params) const;
   
   //: get the type of vehicle model used
   void get_vehicle_model(vehicle_model& vm);
   
   //: get the current vehicle tracking states
-  const vcl_vector<modrec_vehicle_state>& get_vehicle_states() const;
+  const std::vector<modrec_vehicle_state>& get_vehicle_states() const;
   
   //: compute the edgel coverage of the contours and part boundaries in the last projection
   void compute_edgel_coverage(double dist_thresh,
@@ -170,7 +170,7 @@ private:
   vgl_vector_3d<double> t_;
   vgl_rotation_3d<double> R_;
   
-  vcl_vector<modrec_vehicle_state> vehicle_states_;
+  std::vector<modrec_vehicle_state> vehicle_states_;
   
   //: the video stream
   vidl_istream_sptr istream_;
@@ -190,7 +190,7 @@ private:
   
   imesh_mesh truth_mesh_;
   imesh_mesh poly_mesh_;
-  vcl_auto_ptr<imesh_kd_tree_node> truth_kd_tree_;
+  std::auto_ptr<imesh_kd_tree_node> truth_kd_tree_;
 
 };
 

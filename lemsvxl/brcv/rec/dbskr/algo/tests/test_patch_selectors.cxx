@@ -127,7 +127,7 @@ static void test_patch_selectors(int argc, char* argv[])
 
   TEST(" prune_same_patches_at_all_depths() ", sel2.patch_sets().size(), 8);
   sel2.prune_same_patches_at_all_depths();
-  vcl_cout << " size after: " << sel2.patch_sets().size() << vcl_endl;
+  std::cout << " size after: " << sel2.patch_sets().size() << std::endl;
   TEST(" prune_same_patches_at_all_depths() ", sel2.patch_sets().size(), 3);
 
   TEST(" find_min_full_depth() ", find_min_full_depth(sg), 3);
@@ -135,13 +135,13 @@ static void test_patch_selectors(int argc, char* argv[])
 
 
 /*
-vcl_string image_file = "tomato1-090-180.png";
-vcl_string esf_file = "tomato1-090-180.esf";
-vcl_string boundary_file = "tomato1-090-180_boundary.bnd";
+std::string image_file = "tomato1-090-180.png";
+std::string esf_file = "tomato1-090-180.esf";
+std::string boundary_file = "tomato1-090-180_boundary.bnd";
 
-vcl_string kept_dir_name = "./kept/";
-vcl_string discarded_dir_name = "./discarded/";
-vcl_string output_name = "Horse_horse122-patch_strg.bin";
+std::string kept_dir_name = "./kept/";
+std::string discarded_dir_name = "./discarded/";
+std::string output_name = "Horse_horse122-patch_strg.bin";
 
 bool contour_ratio = false;
 bool circular_ends = true;
@@ -159,12 +159,12 @@ extract_subgraph_and_find_shock_patches(image_file, esf_file, boundary_file, kep
 
 //test loading
 output_name = "/vision/projects/kimia/categorization/visual_fragment_regions/CVPR08-expts/bmvc07-opelt-horses/dataset/Horse_horse122/Horse_horse122-color-s-6-e-18-i-3-pd-2-st-0.5-ot-0.8/Horse_horse122-color-s-6-e-18-i-3-pd-2-st-0.5-ot-0.8-patch_strg.bin";
-vcl_cout << "loading: " << output_name << vcl_endl;
+std::cout << "loading: " << output_name << std::endl;
  dbskr_shock_patch_storage_sptr st = dbskr_shock_patch_storage_new();
     vsl_b_ifstream ifs(output_name.c_str());
     st->b_read(ifs);
     ifs.close();
-    vcl_cout << "loaded a shock patch storage with size: " << st->size() << vcl_endl;
+    std::cout << "loaded a shock patch storage with size: " << st->size() << std::endl;
 */
 
 /*
@@ -173,7 +173,7 @@ vcl_cout << "loading: " << output_name << vcl_endl;
   //print_shock_graph(sg2);
 
   TEST("load_xshock_graph() ", !sg2, false);
-  vcl_cout << "sg2 # of vertices: " << sg2->number_of_vertices()  << vcl_endl;
+  std::cout << "sg2 # of vertices: " << sg2->number_of_vertices()  << std::endl;
   int cnt = 0;
   for (dbsk2d_shock_graph::vertex_iterator v_itr = sg2->vertices_begin(); v_itr != sg2->vertices_end(); v_itr++)
   { 
@@ -181,7 +181,7 @@ vcl_cout << "loading: " << output_name << vcl_endl;
       continue;
     cnt++;
   }
-  vcl_cout << "number of degree 3 nodes: " << cnt << vcl_endl;
+  std::cout << "number of degree 3 nodes: " << cnt << std::endl;
 
   dbskr_shock_patch_selector selector(sg2);
 
@@ -191,7 +191,7 @@ vcl_cout << "loading: " << output_name << vcl_endl;
 
 
   vsol_box_2d_sptr bbox = new vsol_box_2d();
-  vcl_vector< vsol_spatial_object_2d_sptr > geoms;
+  std::vector< vsol_spatial_object_2d_sptr > geoms;
 
   dbsk2d_file_io::load_bnd_v3_0("Horse_horse116_boundary.bnd", geoms);
   //dbsk2d_file_io::load_bnd_v3_0("tomato1-090-180_boundary.bnd", geoms);
@@ -206,33 +206,33 @@ vcl_cout << "loading: " << output_name << vcl_endl;
       }
   }
 
-  vcl_cout << "bbox area: " << bbox->area() << vcl_endl;
+  std::cout << "bbox area: " << bbox->area() << std::endl;
   TEST("bbox area() ", !bbox->area(), false);
 
   float area_threshold = (img_sptr->ni()*img_sptr->nj())*0.01f;
-  vcl_cout << "area_threshold: " << area_threshold << vcl_endl;
+  std::cout << "area_threshold: " << area_threshold << std::endl;
 
   selector.set_area_threshold(area_threshold);
 
   selector.set_image(img_sptr);
   bool circular_ends = true;
   //selector.extract(18, circular_ends);
-  //vcl_cout << " all patches extracted at depth 18\n";
+  //std::cout << " all patches extracted at depth 18\n";
   //selector.prune_same_patches(18);
-  //vcl_cout << " same patches are pruned at depth 18\n";
+  //std::cout << " same patches are pruned at depth 18\n";
   //selector.clear_bounding_box_contours(18, bbox);
-  //vcl_cout << " bounding box contours are cleared\n";
+  //std::cout << " bounding box contours are cleared\n";
   //TEST("find_and_sort_wrt_color_contrast() ", !selector.find_and_sort_wrt_color_contrast(18, 0.5f), false);
-  //vcl_cout << " sorted wrt color contrast\n";
+  //std::cout << " sorted wrt color contrast\n";
   //selector.prune(18, 2, true);
-  //vcl_cout << " pruning done\n";
+  //std::cout << " pruning done\n";
   float sort_threshold = 0.5;
   bool keep_pruned = false;
   dbskr_shock_patch_storage_sptr output = dbskr_shock_patch_storage_new();
   dbskr_shock_patch_storage_sptr discarded = dbskr_shock_patch_storage_new();
   //for (int d = 6; d <= 18; d += 3) {
   int d = 2;
-    vcl_cout << "depth: " << d << vcl_endl;
+    std::cout << "depth: " << d << std::endl;
     selector.extract(d, circular_ends);
     selector.prune_same_patches(d);
     //selector.prune_bounding_box_patches(d, bbox);
@@ -243,7 +243,7 @@ vcl_cout << "loading: " << output_name << vcl_endl;
     //} else
     //  selector.find_and_sort_wrt_contour_ratio(d, sort_threshold);
    selector.prune(d, 2, keep_pruned);
-    vcl_cout << " ...... DONE!\n";
+    std::cout << " ...... DONE!\n";
   //}
   selector.prune_overlaps(0.8f, keep_pruned, true);
   //for (int d = 6; d <= 18; d += 3) {
@@ -252,20 +252,20 @@ vcl_cout << "loading: " << output_name << vcl_endl;
       selector.add_discarded_to_storage(d, discarded);
   //}
 
-  vcl_cout << "output size: " << output->size() << vcl_endl;
-  vcl_cout << "discarded size: " << discarded->size() << vcl_endl;
+  std::cout << "output size: " << output->size() << std::endl;
+  std::cout << "discarded size: " << discarded->size() << std::endl;
   */
 
 // test detection
 #if 0
-  vcl_string image_file = "horse1-090-180.png";
-  vcl_string esf_file = "horse1-090-180.esf";
-  vcl_string boundary_file = "horse1-090-180_boundary.bnd";
-  vcl_string kept_dir_name = "./model-kept/";
+  std::string image_file = "horse1-090-180.png";
+  std::string esf_file = "horse1-090-180.esf";
+  std::string boundary_file = "horse1-090-180_boundary.bnd";
+  std::string kept_dir_name = "./model-kept/";
   vul_file::make_directory(kept_dir_name);
-  vcl_string discarded_dir_name = "./model-discarded/";
+  std::string discarded_dir_name = "./model-discarded/";
   vul_file::make_directory(discarded_dir_name);
-  vcl_string output_name = "horse1-090-180-nocirc-color-s-5-e-5-i-1-pd-2-st-0.5-ot-0.8-patch_strg.bin";
+  std::string output_name = "horse1-090-180-nocirc-color-s-5-e-5-i-1-pd-2-st-0.5-ot-0.8-patch_strg.bin";
 
   bool contour_ratio = false;
   bool circular_ends = true;
@@ -279,14 +279,14 @@ vcl_cout << "loading: " << output_name << vcl_endl;
                                         contour_ratio, circular_ends, area_threshold_ratio, overlap_threshold,
                                              5, 5, 1, 2, sort_threshold, keep_pruned, save_images, save_discarded_images);
 
-  vcl_string image_file2 = "Horse_horse116.png";
-  vcl_string esf_file2 = "Horse_horse116.esf";
-  vcl_string boundary_file2 = "Horse_horse116_boundary.bnd";
-  vcl_string kept_dir_name2 = "./116kept/";
+  std::string image_file2 = "Horse_horse116.png";
+  std::string esf_file2 = "Horse_horse116.esf";
+  std::string boundary_file2 = "Horse_horse116_boundary.bnd";
+  std::string kept_dir_name2 = "./116kept/";
   vul_file::make_directory(kept_dir_name2);
-  vcl_string discarded_dir_name2 = "./116discarded/";
+  std::string discarded_dir_name2 = "./116discarded/";
   vul_file::make_directory(discarded_dir_name2);
-  vcl_string output_name2 = "Horse_horse116-patch_strg.bin";
+  std::string output_name2 = "Horse_horse116-patch_strg.bin";
 
   bool contour_ratio2 = false;
   bool circular_ends2 = true;
@@ -302,17 +302,17 @@ vcl_cout << "loading: " << output_name << vcl_endl;
 
   #endif
 
-  //vcl_string image_file = "kk0732.pgm";
-  //vcl_string esf_file = "kk0732.esf";
-  //vcl_string bnd_file = "kk0732_boundary.bnd";
-  vcl_string image_file = "easterncottontail.pgm";
-  vcl_string esf_file = "easterncottontail.esf";
-  vcl_string bnd_file = "easterncottontail_boundary.bnd";
+  //std::string image_file = "kk0732.pgm";
+  //std::string esf_file = "kk0732.esf";
+  //std::string bnd_file = "kk0732_boundary.bnd";
+  std::string image_file = "easterncottontail.pgm";
+  std::string esf_file = "easterncottontail.esf";
+  std::string bnd_file = "easterncottontail_boundary.bnd";
 
   dbsk2d_xshock_graph_fileio loader;
   dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(esf_file.c_str());
 
-  vcl_vector<vsol_spatial_object_2d_sptr> conts;
+  std::vector<vsol_spatial_object_2d_sptr> conts;
   vsol_box_2d_sptr box = new vsol_box_2d();
   //: find the bounding box 
   dbsk2d_file_io::load_bnd_v3_0(bnd_file, conts);
@@ -332,11 +332,11 @@ vcl_cout << "loading: " << output_name << vcl_endl;
   //dbsk2d_compute_bounding_box(sg);
   //vsol_box_2d_sptr box = sg->get_bounding_box();
 
-  vcl_string kept_dir_name = "./model-kept/";
+  std::string kept_dir_name = "./model-kept/";
   vul_file::make_directory(kept_dir_name);
-  vcl_string discarded_dir_name = "./model-discarded/";
+  std::string discarded_dir_name = "./model-discarded/";
   vul_file::make_directory(discarded_dir_name);
-  vcl_string output_name = "kk0732-patch_strg.bin";
+  std::string output_name = "kk0732-patch_strg.bin";
 
   bool contour_ratio = false;
   bool circular_ends = true;

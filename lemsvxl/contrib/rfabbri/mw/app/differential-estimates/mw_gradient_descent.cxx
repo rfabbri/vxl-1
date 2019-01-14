@@ -8,19 +8,19 @@
 static void compute_tangent_gradient(
     const bsold_geno_curve_2d &c,
     double delta_angle,
-    vcl_vector<double> &grad);
+    std::vector<double> &grad);
 
 static void 
 compute_positional_gradient_arc(
     const bsold_geno_curve_2d &c,
     double delta_normal,
-    vcl_vector<double> &grad);
+    std::vector<double> &grad);
 
 void 
 compute_positional_gradient_arc_dt(
     const bsold_geno_curve_2d &c,
     double delta_normal,
-    vcl_vector<double> &grad);
+    std::vector<double> &grad);
 
 //: Compute gradient of a smoothness energy on the eulerspiral-geno
 // interpolation, relative to variation on tangent angles. This is used for
@@ -33,12 +33,12 @@ void
 compute_tangent_gradient(
     const bsold_geno_curve_2d &c,
     double delta_angle,
-    vcl_vector<double> &grad) 
+    std::vector<double> &grad) 
 {
   assert(delta_angle > 0);
 
-  vcl_vector<double> dk; //:< differences of curvature at each sample
-  vcl_vector<double> dksq; //: squared dk's
+  std::vector<double> dk; //:< differences of curvature at each sample
+  std::vector<double> dksq; //: squared dk's
 
   dk.resize(c.size()+1,0);
   grad.resize(dk.size(),0);
@@ -50,14 +50,14 @@ compute_tangent_gradient(
     dksq[i] = dk[i]*(dk[i]);
     E += dksq[i];
     if (!(fabs(c[i].tangent_angle_at(0)- c[i-1].tangent_angle_at(1)) < tolerance)) {
-      vcl_cout.precision(20);
+      std::cout.precision(20);
 
-      vcl_cout << "Warning; tangent error: \n" << 
-        "Interval " << i << vcl_endl << 
-        "c[i].tangent_angle_at(0) " << c[i].tangent_angle_at(0) << vcl_endl << 
-        "c[i-1].tangent_angle_at(1) " << c[i-1].tangent_angle_at(1) << vcl_endl
+      std::cout << "Warning; tangent error: \n" << 
+        "Interval " << i << std::endl << 
+        "c[i].tangent_angle_at(0) " << c[i].tangent_angle_at(0) << std::endl << 
+        "c[i-1].tangent_angle_at(1) " << c[i-1].tangent_angle_at(1) << std::endl
         << "difference: " << fabs(c[i].tangent_angle_at(0)- c[i-1].tangent_angle_at(1)) 
-        << vcl_endl;
+        << std::endl;
     }
   }
 
@@ -494,13 +494,13 @@ gradient_descent(
   assert(c.closed() == false);
   assert(c.order() == 3);
   
-  vcl_vector<double> grad;
-  vcl_vector<double> tangent;
+  std::vector<double> grad;
+  std::vector<double> tangent;
 
   // compute gradient vector
   compute_tangent_gradient(c, delta_angle, grad);
 
-  vcl_vector<vsol_point_2d_sptr> pts;
+  std::vector<vsol_point_2d_sptr> pts;
 
   pts.resize(grad.size());
 
@@ -510,9 +510,9 @@ gradient_descent(
     tangent[i] = c[i].tangent_angle_at(0) - psi*grad[i];
     
     if (!(fabs(psi*grad[i]) < vnl_math::pi/6)) {
-      vcl_cout << "Warning: Interval" << i << vcl_endl <<
+      std::cout << "Warning: Interval" << i << std::endl <<
         "psi*grad[i] = " << psi*grad[i]/vnl_math::pi << "pi" <<
-        vcl_endl;
+        std::endl;
     }
 
     if (tangent[i] < 0)
@@ -541,12 +541,12 @@ void
 compute_positional_gradient(
     const bsold_geno_curve_2d &c,
     double delta_normal,
-    vcl_vector<double> &grad) 
+    std::vector<double> &grad) 
 {
   assert(delta_normal > 0);
 
-  vcl_vector<double> dk; //:< differences of curvature at each sample
-  vcl_vector<double> dksq; //: squared dk's
+  std::vector<double> dk; //:< differences of curvature at each sample
+  std::vector<double> dksq; //: squared dk's
 
   dk.resize(c.size()+1,0);
   grad.resize(dk.size(),0);
@@ -558,14 +558,14 @@ compute_positional_gradient(
     dksq[i] = dk[i]*(dk[i]);
     E += dksq[i];
     if (!(fabs(c[i].tangent_angle_at(0)- c[i-1].tangent_angle_at(1)) < tolerance)) {
-      vcl_cout.precision(20);
+      std::cout.precision(20);
 
-      vcl_cout << "Warning; tangent error: \n" << 
-        "Interval " << i << vcl_endl << 
-        "c[i].tangent_angle_at(0) " << c[i].tangent_angle_at(0) << vcl_endl << 
-        "c[i-1].tangent_angle_at(1) " << c[i-1].tangent_angle_at(1) << vcl_endl
+      std::cout << "Warning; tangent error: \n" << 
+        "Interval " << i << std::endl << 
+        "c[i].tangent_angle_at(0) " << c[i].tangent_angle_at(0) << std::endl << 
+        "c[i-1].tangent_angle_at(1) " << c[i-1].tangent_angle_at(1) << std::endl
         << "difference: " << fabs(c[i].tangent_angle_at(0)- c[i-1].tangent_angle_at(1)) 
-        << vcl_endl;
+        << std::endl;
     }
   }
 
@@ -835,11 +835,11 @@ compute_positional_gradient(
 //
 void 
 gradient_descent_positional(
-    vcl_vector<vsol_point_2d_sptr> &pts,
+    std::vector<vsol_point_2d_sptr> &pts,
     const bsold_geno_curve_2d &c,
     double delta_norm,
     double psi,
-    vcl_vector<double> &grad
+    std::vector<double> &grad
     )
 {
 
@@ -858,25 +858,25 @@ gradient_descent_positional(
   double normal_x, normal_y;
 
    // NORMALIZATION
-  double max = vcl_fabs(grad[0]);
+  double max = std::fabs(grad[0]);
   for (unsigned i=1; i<=c.size(); ++i) {
-    if (vcl_fabs(grad[i]) > max)
-      max = vcl_fabs(grad[i]);
+    if (std::fabs(grad[i]) > max)
+      max = std::fabs(grad[i]);
   }
 
   // normalize gradient to [-1,1] range
-//  min = vcl_fabs(min);
+//  min = std::fabs(min);
 //  for (unsigned i=0; i<=c.size(); ++i) {
 //    grad[i] =  2*(grad[i] - min)/(max - min) + 1;
 //  }
 
   // normalize gradient
-  if (vcl_fabs(max) > 1e-10 ) {
+  if (std::fabs(max) > 1e-10 ) {
     for (unsigned i=0; i<=c.size(); ++i) {
       grad[i] /=  max;
     }
   } else {
-    vcl_cerr << "Warning: grad == 0" << vcl_endl;
+    std::cerr << "Warning: grad == 0" << std::endl;
   }
 
   assert (grad.size() == c.size()+1);
@@ -945,7 +945,7 @@ void
 compute_positional_gradient_arc(
     const bsold_geno_curve_2d &c,
     double delta_normal,
-    vcl_vector<double> &grad) 
+    std::vector<double> &grad) 
 {
   bool fwd; // is arc fwd or not
 
@@ -953,10 +953,10 @@ compute_positional_gradient_arc(
   assert(c.order() == 2);
   assert(c.size() >= 6);
 
-  vcl_vector<double> dk; //:< differences of curvature at each sample
-  vcl_vector<double> dksq; //: squared dk's
-  vcl_vector<double> dt; //:< differences of tangent at each sample
-  vcl_vector<double> dtsq; //: squared dt's
+  std::vector<double> dk; //:< differences of curvature at each sample
+  std::vector<double> dksq; //: squared dk's
+  std::vector<double> dt; //:< differences of tangent at each sample
+  std::vector<double> dtsq; //: squared dt's
 
   const unsigned nsamples = c.size()+1;
 
@@ -1317,10 +1317,10 @@ double energy_dt_middlepts(
     const bsold_geno_curve_2d &c,
     unsigned i,
     const vsol_point_2d_sptr & point, // new point at sample i
-    vcl_vector<double> &dt, // not read; only written and used as scrap
-    const vcl_vector<double> &dtsq, 
-    vcl_vector<double> &dk, // not read; only written and used as scrap
-    const vcl_vector<double> &,//dksq,
+    std::vector<double> &dt, // not read; only written and used as scrap
+    const std::vector<double> &dtsq, 
+    std::vector<double> &dk, // not read; only written and used as scrap
+    const std::vector<double> &,//dksq,
     double E_ini 
     )
 {
@@ -1412,8 +1412,8 @@ double energy_dt_middlepts(
 double energy_dt_sample0(
     const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
-    const vcl_vector<double> &dtsq, 
-    const vcl_vector<double> &,//dksq,
+    const std::vector<double> &dtsq, 
+    const std::vector<double> &,//dksq,
     double E_ini 
     )
 {
@@ -1443,10 +1443,10 @@ double energy_dt_sample0(
 double energy_dt_sample1(
     const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
-    vcl_vector<double> &dt, // not read; only written and used as scrap
-    const vcl_vector<double> &dtsq, 
-    vcl_vector<double> &dk, // not read; only written and used as scrap
-    const vcl_vector<double> &,//dksq,
+    std::vector<double> &dt, // not read; only written and used as scrap
+    const std::vector<double> &dtsq, 
+    std::vector<double> &dk, // not read; only written and used as scrap
+    const std::vector<double> &,//dksq,
     double E_ini 
     )
 {
@@ -1521,8 +1521,8 @@ double energy_dt_sample1(
 double energy_dt_sample_last(
     const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
-    const vcl_vector<double> &dtsq, 
-    const vcl_vector<double> &,//dksq,
+    const std::vector<double> &dtsq, 
+    const std::vector<double> &,//dksq,
     double E_ini 
     )
 {
@@ -1559,10 +1559,10 @@ double energy_dt_sample_last(
 double energy_dt_sample_before_last(
     const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
-    vcl_vector<double> &dt, // not read; only written and used as scrap
-    const vcl_vector<double> &dtsq, 
-    vcl_vector<double> &dk, // not read; only written and used as scrap
-    const vcl_vector<double> &,//dksq,
+    std::vector<double> &dt, // not read; only written and used as scrap
+    const std::vector<double> &dtsq, 
+    std::vector<double> &dk, // not read; only written and used as scrap
+    const std::vector<double> &,//dksq,
     double E_ini 
     )
 {
@@ -1636,49 +1636,49 @@ void
 compute_positional_gradient_arc_dt(
     const bsold_geno_curve_2d &c,
     double delta_normal,
-    vcl_vector<double> &grad) 
+    std::vector<double> &grad) 
 {
 
   double energy_dt_middlepts(
       const bsold_geno_curve_2d &c,
       unsigned i,
       const vsol_point_2d_sptr & newpoint,
-      vcl_vector<double> &dt, // not read; only written and used as scrap
-      const vcl_vector<double> &dtsq, 
-      vcl_vector<double> &dk, // not read; only written and used as scrap
-      const vcl_vector<double> &,//dksq,
+      std::vector<double> &dt, // not read; only written and used as scrap
+      const std::vector<double> &dtsq, 
+      std::vector<double> &dk, // not read; only written and used as scrap
+      const std::vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample0(
       const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
-      const vcl_vector<double> &dtsq, 
-      const vcl_vector<double> &,//dksq,
+      const std::vector<double> &dtsq, 
+      const std::vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample1(
       const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
-      vcl_vector<double> &dt, // not read; only written and used as scrap
-      const vcl_vector<double> &dtsq, 
-      vcl_vector<double> &dk, // not read; only written and used as scrap
-      const vcl_vector<double> &,//dksq,
+      std::vector<double> &dt, // not read; only written and used as scrap
+      const std::vector<double> &dtsq, 
+      std::vector<double> &dk, // not read; only written and used as scrap
+      const std::vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample_last(
       const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
-      const vcl_vector<double> &dtsq, 
-      const vcl_vector<double> &,//dksq,
+      const std::vector<double> &dtsq, 
+      const std::vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample_before_last(
       const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
-      vcl_vector<double> &dt, // not read; only written and used as scrap
-      const vcl_vector<double> &dtsq, 
-      vcl_vector<double> &dk, // not read; only written and used as scrap
-      const vcl_vector<double> &,//dksq,
+      std::vector<double> &dt, // not read; only written and used as scrap
+      const std::vector<double> &dtsq, 
+      std::vector<double> &dk, // not read; only written and used as scrap
+      const std::vector<double> &,//dksq,
       double E_ini 
       );
 
@@ -1686,10 +1686,10 @@ compute_positional_gradient_arc_dt(
   assert(c.order() == 2);
   assert(c.size() >= 6);
 
-  vcl_vector<double> dk; //:< differences of curvature at each sample
-  vcl_vector<double> dksq; //: squared dk's
-  vcl_vector<double> dt; //:< differences of tangent at each sample
-  vcl_vector<double> dtsq; //: squared dt's
+  std::vector<double> dk; //:< differences of curvature at each sample
+  std::vector<double> dksq; //: squared dk's
+  std::vector<double> dt; //:< differences of tangent at each sample
+  std::vector<double> dtsq; //: squared dt's
 
   const unsigned nsamples = c.size()+1;
   dk.resize(nsamples,0);

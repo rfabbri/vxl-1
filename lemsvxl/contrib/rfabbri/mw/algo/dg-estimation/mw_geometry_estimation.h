@@ -18,30 +18,30 @@ class mw_geometry_estimation {
   public:
 
   static bool 
-  differential_geometry_at(dbdet_edgel *e1, vcl_vector<double> &k, vcl_vector<double> &kdot);
+  differential_geometry_at(dbdet_edgel *e1, std::vector<double> &k, std::vector<double> &kdot);
 
   static void
   sel_quad(
-      vcl_vector<vsol_line_2d_sptr> &lines,
+      std::vector<vsol_line_2d_sptr> &lines,
       unsigned  nrows,
       unsigned  ncols,
       unsigned  nrad,
       double    dtheta,
       double    dpos,
-      vcl_vector<vcl_vector<double> > &k, 
-      vcl_vector<vcl_vector<double> > &kdot,
-      vcl_vector<vcl_vector<double> > &k_stdv, 
-      vcl_vector<vcl_vector<double> > &kdot_stdv,
+      std::vector<std::vector<double> > &k, 
+      std::vector<std::vector<double> > &kdot,
+      std::vector<std::vector<double> > &k_stdv, 
+      std::vector<std::vector<double> > &kdot_stdv,
       dbdet_sel_sptr &sel
       );
 
   static void 
   sel_quad(
       const dbdet_sel_sptr &sel,
-      vcl_vector<vcl_vector<double> > &k, 
-      vcl_vector<vcl_vector<double> > &kdot,
-      vcl_vector<vcl_vector<double> > &k_stdv, 
-      vcl_vector<vcl_vector<double> > &kdot_stdv
+      std::vector<std::vector<double> > &k, 
+      std::vector<std::vector<double> > &kdot,
+      std::vector<std::vector<double> > &k_stdv, 
+      std::vector<std::vector<double> > &kdot_stdv
       );
 };
 

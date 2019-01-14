@@ -1,6 +1,6 @@
 #include <dbbgm/bbgm_vil_wavelet.h>
 #include <gevd/gevd_float_operators.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <gevd/gevd_bufferxy.h>
 #include <vil/vil_copy.h>
 #include <vil/vil_crop.h>
@@ -12,7 +12,7 @@ bbgm_vil_wavelet<T>::bbgm_vil_wavelet(vil_image_view<T> &spatialIm,int level,int
 	_waveletIm= new vil_image_view<T>(spatialIm.ni(),spatialIm.nj(),1,1);
 	bool success=waveletTransform(spatialIm,_waveletIm,level,waveletNo,true);
 	if(!success)
-		vcl_cerr<<"error in wavelet transform "<<vcl_endl;
+		std::cerr<<"error in wavelet transform "<<std::endl;
 	
 
 }
@@ -57,7 +57,7 @@ vil_image_view<T> bbgm_vil_wavelet<T>::LL_n(int ni,int nj,int depth)
 		return 0;
 			
 		
-	vcl_string path=vcl_string("C:\\Users\\Deus\\Documents\\Mundy Group\\imagedata\\small tree sequence\\out");
+	std::string path=std::string("C:\\Users\\Deus\\Documents\\Mundy Group\\imagedata\\small tree sequence\\out");
 	vil_image_view<T> tmp=vil_crop(this->_waveletIm,0,ni,0,nj);
 	vil_save(tmp,(path+"\\Input.tiff").c_str());
 	vil_image_view<T> subband=vil_image_view<T>(ni,nj,1,1);

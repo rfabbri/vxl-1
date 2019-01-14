@@ -15,9 +15,9 @@
 // \endverbatim
 
 #include <proximity_graph/dborl_proximity_graph.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
-#include <vcl_string.h>
+#include <string>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 
@@ -36,10 +36,10 @@ public:
     ~dborl_knn_graph(){};
 
     // Construct Graph
-    void construct_graph(vcl_string exemplar_dataset_file, 
-                         vcl_string exemplar_label_file, 
+    void construct_graph(std::string exemplar_dataset_file, 
+                         std::string exemplar_label_file, 
                          unsigned int neighbors,
-                         vcl_string output_file_name,
+                         std::string output_file_name,
                          bool verbose);
     
 private:
@@ -48,20 +48,20 @@ private:
 
     // Read in datafiles
     // Helper method to read in datafiles
-    void read_files(vcl_string dataset_file, vcl_string node_name_files);
+    void read_files(std::string dataset_file, std::string node_name_files);
 
     // Build graph
     void build_knn_graph(unsigned int neighbors);
 
     // Write graph out
-    void write_graph(vcl_string output_file_name);
+    void write_graph(std::string output_file_name);
 
     // Print graph out to std out
     void print_graph();
 
     // Attributes
     // List of exemplars names
-    vcl_vector<vcl_string> exemplars_;
+    std::vector<std::string> exemplars_;
     
     // List of similarity matrices
     vnl_matrix<double> exemplars_sim_matrix_;
@@ -73,7 +73,7 @@ private:
     dborl_proximity_graph::Undirected_Graph knn_graph_;
 
     // Define a vector of vertex objects
-    vcl_vector<dborl_proximity_graph::Vertex> vertex_objects_;
+    std::vector<dborl_proximity_graph::Vertex> vertex_objects_;
 
     // Make copy constructor private
     dborl_knn_graph(const dborl_knn_graph&);

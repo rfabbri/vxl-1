@@ -20,11 +20,11 @@ void dsm2_km_updater<nodeT>::update(dsm2_state_machine_base_sptr const&
 
     if( feature_ptr == 0 )
     {
-        vcl_cerr << "----ERROR---- dsm2_km_updater<mathT,dim>::update\n"
+        std::cerr << "----ERROR---- dsm2_km_updater<mathT,dim>::update\n"
                  << "\t feature base smart pointer is not "
                  << "compatible with the updater.\n"
                  << __FILE__ << '\n'
-                 << __LINE__ << '\n' << vcl_flush;
+                 << __LINE__ << '\n' << std::flush;
         exit(1);
     }//if the dynamic cast is unsuccessfull
 
@@ -34,11 +34,11 @@ void dsm2_km_updater<nodeT>::update(dsm2_state_machine_base_sptr const&
 
     if( state_machine_km_ptr == 0)
     {
-        vcl_cerr << "----ERROR---- dsm2_km_updater<mathT,dim>::update\n"
+        std::cerr << "----ERROR---- dsm2_km_updater<mathT,dim>::update\n"
                  << "\t state machine type is not compatible "
                  << "with the updater.\n"
                  << __FILE__ << '\n'
-                 << __LINE__ << '\n' << vcl_flush;
+                 << __LINE__ << '\n' << std::flush;
         exit(1);
     }//end if the state machine dynamic cast is unsuccessfull.
 
@@ -59,10 +59,10 @@ void dsm2_km_updater<nodeT>::update(dsm2_state_machine_base_sptr const&
     }//end if graph.empty
     else//graph is not empty
     {
-        vcl_map<double, vcl_map<unsigned,dsm2_node_base_sptr>::iterator>
+        std::map<double, std::map<unsigned,dsm2_node_base_sptr>::iterator>
             weight_node_map;
 
-        vcl_map<unsigned, dsm2_node_base_sptr>::iterator 
+        std::map<unsigned, dsm2_node_base_sptr>::iterator 
             g_itr, g_end = state_machine_km_ptr->graph.end();
 
         unsigned curr_node_id = state_machine_km_ptr->curr_node_itr->first;
@@ -87,9 +87,9 @@ void dsm2_km_updater<nodeT>::update(dsm2_state_machine_base_sptr const&
                 double covar_det = node_ptr->det_covar();
 
                 double discriminant =
-                    -5*sqr_mahalan + vcl_log(transition_prob) - .5*covar_det;
+                    -5*sqr_mahalan + std::log(transition_prob) - .5*covar_det;
 
-                weight_node_map.insert(vcl_make_pair(discriminant,g_itr));
+                weight_node_map.insert(std::make_pair(discriminant,g_itr));
             }//end if sqr_mahalan < mahalan_thresh        
         }//end graph iteration
 
@@ -121,7 +121,7 @@ void dsm2_km_updater<nodeT>::update(dsm2_state_machine_base_sptr const&
             //most probable node is the node that maximizes the discriminant
             //maps stored from lower to higher key so the most probable node
             //will be stored at the back of the map.
-            vcl_map<unsigned,dsm2_node_base_sptr>::iterator 
+            std::map<unsigned,dsm2_node_base_sptr>::iterator 
                 most_prob_itr = weight_node_map.rbegin()->second;
 
             unsigned old_node_id = state_machine_km_ptr->curr_node_itr->first;

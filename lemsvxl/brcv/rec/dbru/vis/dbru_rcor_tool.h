@@ -48,7 +48,7 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const { return "Region Correspondence Tool"; }
+  virtual std::string name() const { return "Region Correspondence Tool"; }
   
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -76,8 +76,8 @@ protected:
   vgl_point_2d<float> current_ct1_;
 
   //: Once clicked, the current point under the mouse is held as a fixed point
-  vcl_vector<vgl_point_2d<int> > fixed_set0_;
-  vcl_vector<vgl_point_2d<int> > fixed_set1_;
+  std::vector<vgl_point_2d<int> > fixed_set0_;
+  std::vector<vgl_point_2d<int> > fixed_set1_;
   vbl_array_2d<float> colors_;
   
   // fix the rcor at initialization from active storage

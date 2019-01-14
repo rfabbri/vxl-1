@@ -8,8 +8,8 @@
 // \author Vishal Jain, (vj@lems.brown.edu)
 // \date 08/31/04
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vsrl/vsrl_parameters.h>
 
 class dbrct_wide_dense_match_params
@@ -20,7 +20,7 @@ class dbrct_wide_dense_match_params
          dbrct_wide_dense_match_params(int no_of_levels, int downsampling);
          ~dbrct_wide_dense_match_params();
          int levels;
-        vcl_vector<vsrl_parameters> paramslist;
+        std::vector<vsrl_parameters> paramslist;
          int coarsestscale;
 
 

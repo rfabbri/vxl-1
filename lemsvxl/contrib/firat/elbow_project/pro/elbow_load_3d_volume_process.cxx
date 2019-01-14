@@ -20,7 +20,7 @@ elbow_load_3d_volume_process()
 	if( !parameters()->add( "Input 3D volume file (*.vtk)" , "-volfile",
 			bpro1_filepath("",".vtk")) )
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -41,26 +41,26 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string elbow_load_3d_volume_process::
+std::string elbow_load_3d_volume_process::
 name()
 { 
 	return "Load 3D volume";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > elbow_load_3d_volume_process::
+std::vector< std::string > elbow_load_3d_volume_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > elbow_load_3d_volume_process::
+std::vector< std::string > elbow_load_3d_volume_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("3d_dataset");
 	return to_return;
 }
@@ -97,7 +97,7 @@ execute()
 	reader->SetOutput(out);
 	reader->Update();
 	int* dims = out->GetDimensions();
-	vcl_cout << "Image dimensions: " << dims[0] << " x " << dims[1] << " x " << dims[2] << vcl_endl;
+	std::cout << "Image dimensions: " << dims[0] << " x " << dims[1] << " x " << dims[2] << std::endl;
 	unsigned short* v = (unsigned short*)out->GetScalarPointer();
 	vil3d_image_view<double> image(dims[1],dims[0], dims[2]);
 	int num_pts_in_a_slice = dims[1]*dims[0];

@@ -20,14 +20,14 @@ public:
 
   dbcvr_curvematch_storage() {}
   virtual ~dbcvr_curvematch_storage() {}
-  virtual vcl_string type() const { return "curvematch"; }
+  virtual std::string type() const { return "curvematch"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro1_curvematch_storage"; }
+  virtual std::string is_a() const { return "vidpro1_curvematch_storage"; }
 
   dbcvr_cvmatch_sptr get_curvematch() {
     return curvematch_;

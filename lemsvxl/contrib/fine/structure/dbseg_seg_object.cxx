@@ -42,7 +42,7 @@ labeled_image(labeled), image(original)
 
     totalPixels = 0;
     initial_scan();
-    vcl_cout << "Segmentation Structure Generation Complete" << vcl_endl;
+    std::cout << "Segmentation Structure Generation Complete" << std::endl;
      
 
 
@@ -124,8 +124,8 @@ dbseg_seg_object<T>::~dbseg_seg_object() {
 template <class T>
 void dbseg_seg_object<T>::trace(int o, TraceType type) {
 
-    vcl_vector<vsol_point_2d_sptr> l;
-    vcl_vector<vsol_point_2d_sptr>::iterator i2;
+    std::vector<vsol_point_2d_sptr> l;
+    std::vector<vsol_point_2d_sptr>::iterator i2;
 
     int offsetX = tree->get_object_list()[o]->get_left();
     int offsetY = tree->get_object_list()[o]->get_top();
@@ -294,7 +294,7 @@ void dbseg_seg_object<T>::trace(int o, TraceType type) {
     }
 
     if (type != INIT) {
-        vcl_cout << "Contour of region " << o << " has " << l.size() << " points and " << tempNeighbors.size() << " adjacent regions" << vcl_endl;
+        std::cout << "Contour of region " << o << " has " << l.size() << " points and " << tempNeighbors.size() << " adjacent regions" << std::endl;
     }
     set<int>::iterator m;
     for (m = tempNeighbors.begin(); m != tempNeighbors.end(); ++m) {
@@ -435,7 +435,7 @@ void dbseg_seg_object<T>::create_bounding_box(int o) {
     }
     tree->get_object_list()[o]->set_data(tempData2);
     //(tree->get_object_list())[o]->set_mean_intensity(rb/count, gb/count, bb/count);
-    //vcl_cout << "mean intensity of object " << o << " set to R: " << tree->get_object_list()[o]->get_r() << " G: " << tree->get_object_list()[o]->get_g() << " B: " << tree->get_object_list()[o]->get_r() << vcl_endl;
+    //std::cout << "mean intensity of object " << o << " set to R: " << tree->get_object_list()[o]->get_r() << " G: " << tree->get_object_list()[o]->get_g() << " B: " << tree->get_object_list()[o]->get_r() << std::endl;
     (tree->get_object_list())[o]->set_bounding_box(t, b, l, r);
 
 }
@@ -457,7 +457,7 @@ void dbseg_seg_object<T>::initial_scan() {
         }
     }
     numSegs++;
-    vcl_cout << "Beginning Segmentation Object Generation, " << numSegs << " regions found..." << vcl_endl;
+    std::cout << "Beginning Segmentation Object Generation, " << numSegs << " regions found..." << std::endl;
     
     tree = new dbseg_seg_tree<T>(numSegs);
     neighborhood = new dbseg_seg_neighborhood(numSegs);
@@ -548,13 +548,13 @@ void dbseg_seg_object<T>::initial_scan() {
             }
         }
     }
-    vcl_cout << "Bounding boxes created. Time elapsed: " << t1.real()/1000 << " seconds. Beginning contour tracing..." << vcl_endl;
+    std::cout << "Bounding boxes created. Time elapsed: " << t1.real()/1000 << " seconds. Beginning contour tracing..." << std::endl;
     t1.mark();
     int block = numSegs / 10;
     for (int i = 1; i < numSegs; i++) {
         if (block != 0) {
             if (i % block == 0) {
-                vcl_cout << i / block * 10 << "% ";
+                std::cout << i / block * 10 << "% ";
             }
         }
 
@@ -577,15 +577,15 @@ void dbseg_seg_object<T>::initial_scan() {
         (tree->get_object_list())[i]->set_mean_intensity(rCount[i]/aCount[i], gCount[i]/aCount[i], bCount[i]/aCount[i]);
         */
         
-        //vcl_cout << "mean intensity of object " << i << " set to R: " << tree->get_object_list()[i]->get_r() << " G: " << tree->get_object_list()[i]->get_g() << " B: " << tree->get_object_list()[i]->get_r() << vcl_endl;
+        //std::cout << "mean intensity of object " << i << " set to R: " << tree->get_object_list()[i]->get_r() << " G: " << tree->get_object_list()[i]->get_g() << " B: " << tree->get_object_list()[i]->get_r() << std::endl;
 
         //trace the outlines (which sets up the neighborhood)
         trace(i, INIT);
         //((tree->get_object_list())[i])->set_bounding_box(tops[i], bottoms[i], left[i], rights[i]);
     }
-    vcl_cout << vcl_endl<< "Outer contours traced.  Time elapsed: " << t1.real()/1000 << " seconds." << vcl_endl;
+    std::cout << std::endl<< "Outer contours traced.  Time elapsed: " << t1.real()/1000 << " seconds." << std::endl;
     t1.mark();
-    vcl_cout << "Adding inner contours..." << vcl_endl;
+    std::cout << "Adding inner contours..." << std::endl;
     //add in any inner contours
     int innerContCount = 0;
     int innerContTest = 0;
@@ -593,7 +593,7 @@ void dbseg_seg_object<T>::initial_scan() {
     for (int k = 1; k < numSegs; k++) {
         if (block != 0) {
             if (k % block == 0) {
-                vcl_cout << k / block * 10 << "% ";
+                std::cout << k / block * 10 << "% ";
             }
         }
 
@@ -660,10 +660,10 @@ void dbseg_seg_object<T>::initial_scan() {
                 }
             }
         }*/
-        //vcl_cout << "Region " << k << " complete" << vcl_endl;
+        //std::cout << "Region " << k << " complete" << std::endl;
     }
-    vcl_cout << vcl_endl << "Inner Cont Count: " << innerContCount << "  test times: " << innerContTest << "  test 1 point: " << testAfter1 << vcl_endl;
-    vcl_cout << vcl_endl << "Initial Scan Complete.  Total time elapsed: " << t.real()/1000 << " seconds." << vcl_endl;
+    std::cout << std::endl << "Inner Cont Count: " << innerContCount << "  test times: " << innerContTest << "  test 1 point: " << testAfter1 << std::endl;
+    std::cout << std::endl << "Initial Scan Complete.  Total time elapsed: " << t.real()/1000 << " seconds." << std::endl;
     tops.~vector();
     lefts.~vector();
     bottoms.~vector();
@@ -863,7 +863,7 @@ vil_image_view<vxl_byte> dbseg_seg_object<T>::get_display(int dep, int editing) 
         }
     }
     else {
-        vcl_cerr << "Error - Unable to display data type." << vcl_endl;
+        std::cerr << "Error - Unable to display data type." << std::endl;
     }
 
     return *img;
@@ -877,10 +877,10 @@ bool dbseg_seg_object<T>::create_region(list<int> l) {
     
     discontinuous = is_continuous(l);
     if (discontinuous != 0) {
-        vcl_cerr << "Error creating region - selected sections do not form a continuous region" << vcl_endl;
+        std::cerr << "Error creating region - selected sections do not form a continuous region" << std::endl;
         return false;
     }
-    vcl_cout << "Creating Region - New Region is continuous" << vcl_endl;
+    std::cout << "Creating Region - New Region is continuous" << std::endl;
     //check to see that if the region includes a section that surrounds another section
 
 
@@ -962,7 +962,7 @@ bool dbseg_seg_object<T>::create_region(list<int> l) {
         }
 
     }*/
-    vcl_cout << "Region Successfully Created.  Time Elapsed: " << t.real()/1000 << " seconds." << vcl_endl;
+    std::cout << "Region Successfully Created.  Time Elapsed: " << t.real()/1000 << " seconds." << std::endl;
     idCount++;
     return true;
 }    
@@ -972,7 +972,7 @@ list<list<vgl_polygon<double>*>> dbseg_seg_object<T>::get_outlines(int dep, list
     list<list<vgl_polygon<double>*>> l;
     list<int>::iterator i;
     list<int> tempList = outL;//tree->get_valid_IDs();
-    //cl_cout << "size of depth list: " << tempList.size() << " at depth " << dep << vcl_endl;
+    //cl_cout << "size of depth list: " << tempList.size() << " at depth " << dep << std::endl;
     for (i = (tempList.begin()); i != tempList.end(); ++i) {
         /*if (i == tree->get_depth_list()[dep].begin()) {
             ++i;
@@ -1152,7 +1152,7 @@ bool dbseg_seg_object<T>::edit_children(std::list<int> l, int p) {
     if (l.size() > 1) {
         discontinuous = is_continuous(l, tree->get_object_list()[p]->get_depth());
         if (discontinuous != 0) {
-            vcl_cerr << "Error editing region:  Selected sections form a non-continuous region" << vcl_endl;
+            std::cerr << "Error editing region:  Selected sections form a non-continuous region" << std::endl;
             return false;
         }    
     }    
@@ -1169,7 +1169,7 @@ bool dbseg_seg_object<T>::edit_children(std::list<int> l, int p) {
     //add in objects
     for (i = l.begin(); i != l.end(); ++i) {
         if (tree->get_parent(*i) != tree->get_parent(p) && tree->get_parent(*i) != p) {
-            vcl_cerr << "Error editing region:  Selected region " << *i << " is a child of " << tree->get_parent(*i) << " not " << tree->get_parent(p) << vcl_endl;
+            std::cerr << "Error editing region:  Selected region " << *i << " is a child of " << tree->get_parent(*i) << " not " << tree->get_parent(p) << std::endl;
             return false;
         }
         newChildrenSet.insert(*i);
@@ -1191,12 +1191,12 @@ bool dbseg_seg_object<T>::edit_children(std::list<int> l, int p) {
     if (tree->get_child_count(p) == 1) {
         temp = false;
         tree->remove_child(tree->get_children(p).front(), p);
-        vcl_cerr << "Editing Region:  Selected regions do not warrent higher level containment.  Region removed." << vcl_endl;
+        std::cerr << "Editing Region:  Selected regions do not warrent higher level containment.  Region removed." << std::endl;
     }
 
 
     if (!temp) { // if the object was destroyed then return
-        vcl_cerr << "Editing Region:  Selected regions do not warrent higher level containment.  Region removed." << vcl_endl;
+        std::cerr << "Editing Region:  Selected regions do not warrent higher level containment.  Region removed." << std::endl;
         return false;
     }
     
@@ -1216,7 +1216,7 @@ bool dbseg_seg_object<T>::edit_children(std::list<int> l, int p) {
         o=(get_object_list())[tree->get_parent(o->get_id())];
         //check if these new children will form a region continuous with the children of the parent at this depth level
         if (!is_continuous(tree->get_base_children(o->get_id(), p))) {
-            vcl_cout << "Error editing region:  Selected sections form a non-continuous region in tree structure at depth: " << o->get_depth() << vcl_endl;
+            std::cout << "Error editing region:  Selected sections form a non-continuous region in tree structure at depth: " << o->get_depth() << std::endl;
             return false;
         }
     }
@@ -1227,7 +1227,7 @@ bool dbseg_seg_object<T>::edit_children(std::list<int> l, int p) {
 }
 
 template <class T>
-vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
+std::ostream& dbseg_seg_object<T>::save_text(std::ostream &os) {
     /*
             version
             nplanes
@@ -1267,7 +1267,7 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
     for (i = tempList.begin(); i != tempList.end(); ++i) {
         os << " " << *i;
     }
-    os << vcl_endl;
+    os << std::endl;
     
     for (i = tempList.begin(); i != tempList.end(); ++i) {
         if (i != tempList.begin()) {
@@ -1275,7 +1275,7 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
         }
         os << tree->get_parent(*i);
     }
-    os << vcl_endl;
+    os << std::endl;
     
     for (i = tempList.begin(); i != tempList.end(); ++i) {
         os << tree->get_child_count(*i);
@@ -1284,7 +1284,7 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
         for (k = temp2.begin(); k != temp2.end(); ++k) {
             os << " " << *k;
         }
-        os << vcl_endl;
+        os << std::endl;
     }
 
     for (i = tempList.begin(); i != tempList.end(); ++i) {
@@ -1294,16 +1294,16 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
         for (k = temp2.begin(); k != temp2.end(); ++k) {
             os << " " << *k;
         }
-        os << vcl_endl;
+        os << std::endl;
     }
 
-    os << get_max_depth() << vcl_endl;
+    os << get_max_depth() << std::endl;
 
     for (i = tempList.begin(); i != tempList.end(); ++i) {
         tree->get_object_list()[*i]->save_text(os);
     }
 
-    os << labeled_image.ni() << " " << labeled_image.nj() << vcl_endl;
+    os << labeled_image.ni() << " " << labeled_image.nj() << std::endl;
 
     for (int x = 0; x < labeled_image.ni(); x++) {
         for (int y = 0; y < labeled_image.nj(); y++) {
@@ -1312,9 +1312,9 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
             }
             os << labeled_image(x,y);
         }
-        os << vcl_endl;
+        os << std::endl;
     }
-    os << vcl_endl;
+    os << std::endl;
 
     for (int rgb = 0; rgb < 3; rgb++) {
         for (int x = 0; x < labeled_image.ni(); x++) {
@@ -1324,9 +1324,9 @@ vcl_ostream& dbseg_seg_object<T>::save_text(vcl_ostream &os) {
                 }
                 os << (int)image(x,y,rgb);
             }
-            os << vcl_endl;
+            os << std::endl;
         }
-        os << vcl_endl;
+        os << std::endl;
     }
 
     //vil_save(image, "bobbefore.jpg");
@@ -1586,7 +1586,7 @@ void dbseg_seg_object<T>::b_write(vsl_b_ostream &os) const
     list<int> tempValidIDs = tree->get_valid_IDs();
     vsl_b_write(os, tempValidIDs.size());
     list<int>::iterator i;
-    vcl_vector<int> tempIDsVector;
+    std::vector<int> tempIDsVector;
     for (i = tempValidIDs.begin(); i != tempValidIDs.end(); ++i) {
         //vsl_b_write(os, static_cast<short>(rand()%200));
         tempIDsVector.push_back(*i);
@@ -1665,7 +1665,7 @@ void dbseg_seg_object<T>::b_write(vsl_b_ostream &os) const
             vsl_b_write(os, count);
             for (int countI = 0; countI < count; countI++) {
                 if ( (*i == 6 && countI == 7) || (*i == 7 && countI == 0)  || (*i == 4 && countI == 5) || (*i == 5 && countI == 1) || (*i == 7 && countI == 8)) {
-                    //vcl_cout << "x: " << coords[countI].first << " y: " << coords[countI].second << vcl_endl;
+                    //std::cout << "x: " << coords[countI].first << " y: " << coords[countI].second << std::endl;
                 }
                 if (countI < 111050 
                     
@@ -1681,7 +1681,7 @@ void dbseg_seg_object<T>::b_write(vsl_b_ostream &os) const
                 }
                 else {
                     if (countI < 111050) {
-                        vcl_cout << "x: " << coords[countI].first << " y: " << coords[countI].second << vcl_endl;
+                        std::cout << "x: " << coords[countI].first << " y: " << coords[countI].second << std::endl;
                     }
                     vsl_b_write(os, static_cast<double>(rand()%234));
                     vsl_b_write(os, static_cast<double>(rand()%180));
@@ -1726,12 +1726,12 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
         vsl_b_read(is, numIDs);
         list<int> validIDs;
         idCount = 0;
-        vcl_vector<int> validIDsVector;
+        std::vector<int> validIDsVector;
         vsl_b_read(is, validIDsVector);
         for (int j = 0; j < numIDs; j++) {
             int tempID=0;
             if (!is.is()) {
-                vcl_cout << "break";
+                std::cout << "break";
             }
             //vsl_b_read(is, tempID);
             tempID = validIDsVector[j];
@@ -1832,12 +1832,12 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
 
                     vsl_b_read(is, tempX);
                         if (!is) {
-                            vcl_cout << "not IS" << vcl_endl;
+                            std::cout << "not IS" << std::endl;
                         }
 
                     vsl_b_read(is, tempY);
                         if (!is) {
-                            vcl_cout << "not IS" << vcl_endl;
+                            std::cout << "not IS" << std::endl;
                         }
                     //tempX /= 100;
                     //tempY /= 100;
@@ -1855,7 +1855,7 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
                 tempPoly.new_sheet();
                 //vsl_b_read(is, tempPoly);
                 if (!is) {
-                    vcl_cout << "not IS" << vcl_endl;
+                    std::cout << "not IS" << std::endl;
                 }
                 int tempPolySize;
                 vsl_b_read(is, tempPolySize);
@@ -1863,11 +1863,11 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
                     int tempX = 0;
                     int tempY = 0;
                     if (!is) {
-                        vcl_cout << "not IS" << vcl_endl;
+                        std::cout << "not IS" << std::endl;
                     }
                     vsl_b_read(is, tempX);
                     if (!is) {
-                        vcl_cout << "not IS" << vcl_endl;
+                        std::cout << "not IS" << std::endl;
                     }
 
                     vsl_b_read(is, tempY);
@@ -1886,23 +1886,23 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
             int tempY1 = 0;
             int tempY2 = 0;    
             if (!is) {
-                vcl_cout << "not IS 1" << vcl_endl;
+                std::cout << "not IS 1" << std::endl;
             }
             vsl_b_read(is, tempX1);
             if (!is) {
-                vcl_cout << "not IS 2" << vcl_endl;
+                std::cout << "not IS 2" << std::endl;
             }
             vsl_b_read(is, tempY1);
             if (!is) {
-                vcl_cout << "not IS 3" << vcl_endl;
+                std::cout << "not IS 3" << std::endl;
             }
             vsl_b_read(is, tempX2);
             if (!is) {
-                vcl_cout << "not IS 4" << vcl_endl;
+                std::cout << "not IS 4" << std::endl;
             }
             vsl_b_read(is, tempY2);
             if (!is) {
-                vcl_cout << "not IS 5" << vcl_endl;
+                std::cout << "not IS 5" << std::endl;
             }
             tempPoly.push_back(tempX1, tempY1);
             tempPoly.push_back(tempX2, tempY2);
@@ -1987,7 +1987,7 @@ void dbseg_seg_object<T>::b_read(vsl_b_istream &is)
     }
     
    else {
-    vcl_cerr << "dbseg_seg_object: unknown I/O version " << ver << '\n';
+    std::cerr << "dbseg_seg_object: unknown I/O version " << ver << '\n';
    }
   
 }
@@ -2001,7 +2001,7 @@ short dbseg_seg_object<T>::version() const
 
 //: Print an ascii summary to the stream
 template <class T>
-void dbseg_seg_object<T>::print_summary(vcl_ostream &os) const
+void dbseg_seg_object<T>::print_summary(std::ostream &os) const
 {
   //os << *this;
 }

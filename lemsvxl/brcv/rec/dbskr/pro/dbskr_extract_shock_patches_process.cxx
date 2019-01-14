@@ -14,10 +14,10 @@
 
 #include <vsol/vsol_polygon_2d.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 
@@ -30,7 +30,7 @@ dbskr_extract_shock_patches_process::dbskr_extract_shock_patches_process() : bpr
                            bpro1_filepath("W:\\ICCV07-expts\\eth80\\patches\\cow\\cow2-090-180-patches_color__6_9_3_3_0.5\\cow2-090-180_patch_storage.bin", "*.bin")
                            ) ||
        !parameters()->add( "if load from storage, load esfs as well?" , "-loadesfs", (bool) true ) ||
-       !parameters()->add( "if load esfs, postfix: " , "-postfix", (vcl_string) "patch_strg.bin" ) ||
+       !parameters()->add( "if load esfs, postfix: " , "-postfix", (std::string) "patch_strg.bin" ) ||
        
        !parameters()->add( "min depth:" , "-min_depth" , (int) 5 ) ||
        !parameters()->add( "max depth:" , "-max_depth" , (int) 5 ) ||
@@ -40,7 +40,7 @@ dbskr_extract_shock_patches_process::dbskr_extract_shock_patches_process() : bpr
        !parameters()->add( "traced shock pruning thres" , "-prune" , (double) 0.8)
        )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,16 +51,16 @@ dbskr_extract_shock_patches_process::clone() const
   return new dbskr_extract_shock_patches_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_extract_shock_patches_process::get_input_type()
+std::vector< std::string > dbskr_extract_shock_patches_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_extract_shock_patches_process::get_output_type()
+std::vector< std::string > dbskr_extract_shock_patches_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock_patch");
   return to_return;
 }
@@ -78,7 +78,7 @@ bool dbskr_extract_shock_patches_process::execute()
 
   bpro1_filepath input_path;
   parameters()->get_value( "-stf" , input_path);
-  vcl_string st_file = input_path.path;
+  std::string st_file = input_path.path;
 
   if (bin_st) {
     shock_p = dbskr_shock_patch_storage_new();
@@ -89,14 +89,14 @@ bool dbskr_extract_shock_patches_process::execute()
 
     //: load the esf files if exist
     if (loadesfs) { 
-      vcl_string postfix;
+      std::string postfix;
       parameters()->get_value("-postfix", postfix);
-      vcl_string esf_prefix = st_file.substr(0, st_file.length()-postfix.size());
+      std::string esf_prefix = st_file.substr(0, st_file.length()-postfix.size());
       for (unsigned iii = 0; iii < shock_p->size(); iii++) {
         dbskr_shock_patch_sptr sp = shock_p->get_patch(iii);
-        vcl_ostringstream oss;
+        std::ostringstream oss;
         oss << sp->id();
-        vcl_string patch_esf_name = esf_prefix+oss.str()+".esf";
+        std::string patch_esf_name = esf_prefix+oss.str()+".esf";
         dbsk2d_xshock_graph_fileio file_io;
         dbsk2d_shock_graph_sptr sg = file_io.load_xshock_graph(patch_esf_name);
         sp->set_shock_graph(sg);
@@ -111,7 +111,7 @@ bool dbskr_extract_shock_patches_process::execute()
   
   if (!sg)
   {
-    vcl_cout << "Problems in getting shock graph!\n";
+    std::cout << "Problems in getting shock graph!\n";
     return false;
   }
 
@@ -151,7 +151,7 @@ bool dbskr_extract_shock_patches_process::execute()
   }
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,shock_p));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,shock_p));
 
   return true;
 }

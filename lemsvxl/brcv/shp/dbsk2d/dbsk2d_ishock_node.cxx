@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_node.h>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
 #include <dbsk2d/dbsk2d_ishock_contact.h>
@@ -143,7 +143,7 @@ void dbsk2d_ishock_node::compute_extrinsic_locus()
   ex_pts_.push_back(_origin);
 }
 
-void dbsk2d_ishock_node::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_node::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
@@ -159,22 +159,22 @@ void dbsk2d_ishock_node::getInfo (vcl_ostream& ostrm)
   if (this->is_a_sink())
     ostrm << "SINK: ";
 
-  ostrm << "[" << _id << "] " << vcl_endl; 
-  vcl_sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
-  vcl_sprintf(s, "{ ts=%.7f}\n", _startTime); ostrm << s <<vcl_endl;
+  ostrm << "[" << _id << "] " << std::endl; 
+  std::sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
+  std::sprintf(s, "{ ts=%.7f}\n", _startTime); ostrm << s <<std::endl;
 
-  vcl_cout << "PS: [";
+  std::cout << "PS: [";
   for(ishock_edge_list::iterator curS = _pShockList.begin();
       curS != _pShockList.end(); ++curS)
   {
-    vcl_cout << (*curS)->id() << " ";
+    std::cout << (*curS)->id() << " ";
   }
-  ostrm << "]" << vcl_endl;
+  ostrm << "]" << std::endl;
   if (_cShock)
     ostrm << "cS1: " << _cShock->id();
   if (_cShock2)
     ostrm << ", cS2: " << _cShock2->id(); 
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
 /*
    s.Printf ("nBElement: %d\n", nBElement()); buf+=s;

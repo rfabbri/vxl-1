@@ -20,8 +20,8 @@
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 #include <vnl/vnl_vector.h>
 
 // =============================================================================
@@ -63,18 +63,18 @@ public:
   void set_graph_size(double new_size){this->graph_size_ = new_size; }
 
   //: Return a full list of geometric models for the edges
-  const vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom() const
+  const std::map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom() const
   { return this->map_edge2geom_; };
 
-  vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom()
+  std::map<unsigned, dbsks_xfrag_geom_model_sptr >& map_edge2geom()
   { return this->map_edge2geom_; };
 
 
   //: Return a full list of geometric models for the vertices
-  const vcl_map<unsigned, dbsks_xnode_geom_model_sptr >& map_node2geom() const
+  const std::map<unsigned, dbsks_xnode_geom_model_sptr >& map_node2geom() const
   { return this->map_node2geom_; };
 
-  vcl_map<unsigned, dbsks_xnode_geom_model_sptr >& map_node2geom()
+  std::map<unsigned, dbsks_xnode_geom_model_sptr >& map_node2geom()
   { return this->map_node2geom_; };
 
 
@@ -83,8 +83,8 @@ public:
 
   //: Build the model
   bool build(const dbsksp_xshock_graph_sptr& xgraph,
-             const vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >& map_edge2xfrag, 
-             const vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >& map_node2xgeom,
+             const std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >& map_edge2xfrag, 
+             const std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >& map_node2xgeom,
              unsigned root_vid, 
              unsigned major_child_eid,
              double normalized_scale);
@@ -104,7 +104,7 @@ public:
   // I/O -----------------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
   // MISC-----------------------------------------------------------------------
   
@@ -113,12 +113,12 @@ protected:
   //: Compute edge geometric attributes from training data
   void compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
     double norm_graph_size,
-    const vcl_map<unsigned, vcl_vector<dbsksp_xshock_fragment_sptr > >& map_eid2xfrag);
+    const std::map<unsigned, std::vector<dbsksp_xshock_fragment_sptr > >& map_eid2xfrag);
 
   //: Compute vertex geometric attributes from training data
   void compute_vertex_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
     double norm_graph_size,
-    const vcl_map<unsigned, vcl_vector<dbsks_xnode_geom_sptr > >& map_vid2xnode);
+    const std::map<unsigned, std::vector<dbsks_xnode_geom_sptr > >& map_vid2xnode);
 
   //: build geom models for edges from geometric attributes
   bool build_edge_geom_models();
@@ -136,8 +136,8 @@ protected:
   // All length parametes scale up with the graph size
   double graph_size_;
   
-  vcl_map<unsigned, dbsks_xfrag_geom_model_sptr > map_edge2geom_;
-  vcl_map<unsigned, dbsks_xnode_geom_model_sptr > map_node2geom_;
+  std::map<unsigned, dbsks_xfrag_geom_model_sptr > map_edge2geom_;
+  std::map<unsigned, dbsks_xnode_geom_model_sptr > map_node2geom_;
 
 
   //: A biarc sampler

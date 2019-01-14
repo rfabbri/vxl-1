@@ -174,7 +174,7 @@ vul_arg<char const*>  dbmsh3d_cmd_gen_rand_box ("-grbox", "Generate random point
 
 //#####################################################################
 //: dbmsh3d_cmdpara process parameters.
-vcl_string            dbmsh3d_app_window_title = "LEMS 3D Mesh App";
+std::string            dbmsh3d_app_window_title = "LEMS 3D Mesh App";
 
 //: continuing the processing from the last step on existing data
 bool                  dbmsh3d_pro_contiune = false;

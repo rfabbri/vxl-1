@@ -1,11 +1,11 @@
 #ifndef POWELLS_ALGORITHM_H
 #define POWELLS_ALGORITHM_H
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
-#include <vcl_iomanip.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <utility>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <vector>
 
 
 namespace  Powell_NS
@@ -14,7 +14,7 @@ namespace  Powell_NS
             class DirectionMatrix
               {
                 private:
-                    vcl_vector<vcl_vector<double> > _matrix;
+                    std::vector<std::vector<double> > _matrix;
                     void _allocateMatrix()
                       {
                         assert(_matrix.size()==NumDim);
@@ -27,7 +27,7 @@ namespace  Powell_NS
                        }
 
                 public:
-                    typedef vcl_vector<double>  DirectionVectorType;
+                    typedef std::vector<double>  DirectionVectorType;
 
                     DirectionMatrix():_matrix(NumDim)
                       {
@@ -35,7 +35,7 @@ namespace  Powell_NS
                         reset();
                        }
 
-                    void getDirectionVector(int dir, vcl_vector<double> &dir_vec) const
+                    void getDirectionVector(int dir, std::vector<double> &dir_vec) const
                       {
                         assert(dir<NumDim);
                         assert(dir>=0);
@@ -63,7 +63,7 @@ namespace  Powell_NS
                        }
 
 
-                    void setDirectionVector(int dir, const vcl_vector<double> &dir_vec)
+                    void setDirectionVector(int dir, const std::vector<double> &dir_vec)
                       {
                         assert(dir<NumDim);
                         assert(dir>=0);
@@ -92,11 +92,11 @@ namespace  Powell_NS
 
 
 
-                    vcl_string printMatrix()
+                    std::string printMatrix()
                       {
-                        vcl_ostringstream ostrm;
+                        std::ostringstream ostrm;
 
-                        ostrm<<vcl_endl;
+                        ostrm<<std::endl;
                         for (int i=0;i<NumDim;i++)
                           {
                             ostrm<<"[ ";
@@ -105,18 +105,18 @@ namespace  Powell_NS
                                 ostrm<<setprecision(5)<<setw(7)<<_matrix[i][j]<<"  ";
                                }
                             ostrm<<"] ";
-                            ostrm<<vcl_endl;
+                            ostrm<<std::endl;
                            }
-                        ostrm<<vcl_endl;
+                        ostrm<<std::endl;
                         return ostrm.str();
                        }
 
-                    vcl_string printVector(int i)
+                    std::string printVector(int i)
                       {
                         assert(i<NumDim);
                         assert(i>=0);
 
-                        vcl_ostringstream ostrm;
+                        std::ostringstream ostrm;
 
                         ostrm<<"[ ";
                         for (int j=0;j<NumDim;j++)
@@ -124,7 +124,7 @@ namespace  Powell_NS
                             ostrm<<setprecision(5)<<setw(7)<<_matrix[i][j]<<"  ";
                            }
                         ostrm<<"] ";
-                        ostrm<<vcl_endl;
+                        ostrm<<std::endl;
                         return ostrm.str();
                        }
                };
@@ -159,7 +159,7 @@ namespace  Powell_NS
                       {
                        };
 
-                    ~SingleDimFunction(){vcl_cout<<" SingleDimFunction()   : Evaluations = "<<_evalCount<<vcl_endl;};
+                    ~SingleDimFunction(){std::cout<<" SingleDimFunction()   : Evaluations = "<<_evalCount<<std::endl;};
 
                     void setParams(PointType  *pt, DirectionVectorType *dir_vec, FunctionType* func)
                       {
@@ -202,7 +202,7 @@ namespace  Powell_NS
               {
                };
 
-            ~BrentsMethod(){vcl_cout<<" BrentsMethod()        : Calls = "<<_callCount<<" Iterations = "<<_itCount<<vcl_endl;};
+            ~BrentsMethod(){std::cout<<" BrentsMethod()        : Calls = "<<_callCount<<" Iterations = "<<_itCount<<std::endl;};
             template<typename SingleDimFunctionType>
                     double operator()(double ax, double bx, double cx, SingleDimFunctionType &single_dim_energy_func, double tol, double *xmin, double current_val)
                       {
@@ -233,16 +233,16 @@ namespace  Powell_NS
                             _itCount++;
                             /*Main program loop.*/
                             xm=0.5*(a+b);
-                            tol2=2.0*(tol1=tol*vcl_fabs(x)+_zeps);
-                            if (vcl_fabs(x-xm) <= (tol2-0.5*(b-a))) 
+                            tol2=2.0*(tol1=tol*std::fabs(x)+_zeps);
+                            if (std::fabs(x-xm) <= (tol2-0.5*(b-a))) 
                               { 
                                 /*Test for done here.*/
                                 *xmin=x;
                                 return fx;
                                }
 
-                            //vcl_cout<<" It ="<<_itCount<<" x="<<x<<" tol2-0.5*(b-a) ="<<tol2-0.5*(b-a)<<" vcl_fabs(x-xm) ="<<vcl_fabs(x-xm)<<vcl_endl;
-                            if (vcl_fabs(e) > tol1) 
+                            //std::cout<<" It ="<<_itCount<<" x="<<x<<" tol2-0.5*(b-a) ="<<tol2-0.5*(b-a)<<" std::fabs(x-xm) ="<<std::fabs(x-xm)<<std::endl;
+                            if (std::fabs(e) > tol1) 
                               { 
                                 /* Construct a trial parabolic fit. */
                                 r=(x-w)*(fx-fv);
@@ -250,10 +250,10 @@ namespace  Powell_NS
                                 p=(x-v)*q-(x-w)*r;
                                 q=2.0*(q-r);
                                 if (q > 0.0) p = -p;
-                                q=vcl_fabs(q);
+                                q=std::fabs(q);
                                 etemp=e;
                                 e=d;
-                                if (vcl_fabs(p) >= vcl_fabs(0.5*q*etemp) || p <= q*(a-x) || p >= q*(b-x))
+                                if (std::fabs(p) >= std::fabs(0.5*q*etemp) || p <= q*(a-x) || p >= q*(b-x))
                                     d=_cgold*(e=(x >= xm ? a-x : b-x));
                                 /* The above conditions determine the acceptability of the parabolic 
                                    fit. Here we take the golden section step into the larger of the two 
@@ -270,7 +270,7 @@ namespace  Powell_NS
                               {
                                 d=_cgold*(e=(x >= xm ? a-x : b-x));
                                }
-                            u=(vcl_fabs(d) >= tol1 ? x+d : x+PAsign(tol1,d));
+                            u=(std::fabs(d) >= tol1 ? x+d : x+PAsign(tol1,d));
                             /* This is the one function evaluation per iteration.*/
                             fu=(single_dim_energy_func)(u);
                             if (fu <= fx) 
@@ -310,9 +310,9 @@ namespace  Powell_NS
             double PAsign(const double a, const double b) const
               {
                 if (b>=0)
-                    return vcl_fabs(a);
+                    return std::fabs(a);
                 else
-                    return -vcl_fabs(a);
+                    return -std::fabs(a);
                }
 
 
@@ -338,7 +338,7 @@ namespace  Powell_NS
                       {
                        }
 
-                    ~LineOptimizer(){vcl_cout<<" LineOptimizer()       : Calls = "<<_callCount<<vcl_endl;};
+                    ~LineOptimizer(){std::cout<<" LineOptimizer()       : Calls = "<<_callCount<<std::endl;};
 
                     template<typename PointType, typename DirectionVectorType, typename FunctionType>
                             void operator()(PointType &current_pt, DirectionVectorType &dir_vec, FunctionType& energy_func, double &current_value)
@@ -354,13 +354,13 @@ namespace  Powell_NS
                                 xx=0;
                                 bx=-0.5;
 
-                                //vcl_cout<<" Min Bracketer : Dir = ["<<dir_vec[0]<<", "<<dir_vec[1]<<") "<<vcl_endl;
+                                //std::cout<<" Min Bracketer : Dir = ["<<dir_vec[0]<<", "<<dir_vec[1]<<") "<<std::endl;
 
                                 current_value=_brentsMethod(ax,xx,bx,_singleDimFunc,_tolerance,&xmin, current_value);
 
                                 for (unsigned int i=0;i<dir_vec.size();i++) 
                                   { 
-                                    /*Construct the vcl_vector results to return.*/
+                                    /*Construct the std::vector results to return.*/
                                     dir_vec[i]    *= xmin;
                                     current_pt[i] += dir_vec[i];
                                    }
@@ -398,7 +398,7 @@ namespace  Powell_NS
                       {
                        }
 
-                    ~PowellOptimizer(){vcl_cout<<" PowellOptimizer()     : Calls = "<<_callCount<<" Iterations = "<<_itCount<<vcl_endl;};
+                    ~PowellOptimizer(){std::cout<<" PowellOptimizer()     : Calls = "<<_callCount<<" Iterations = "<<_itCount<<std::endl;};
                     template<typename PointType, typename DirectionMatrixType, typename FunctionType>
                             void operator()(PointType &current_pt, DirectionMatrixType &dir_matrix, FunctionType& energy_func, double &current_value)
                               {
@@ -446,7 +446,7 @@ namespace  Powell_NS
                                        }
 
 
-                                    if (2.0*(func_value_temp1-current_value) <= _fractionalTolerance*(vcl_fabs(func_value_temp1)+vcl_fabs(current_value))+_tiny) 
+                                    if (2.0*(func_value_temp1-current_value) <= _fractionalTolerance*(std::fabs(func_value_temp1)+std::fabs(current_value))+_tiny) 
                                       {
                                         /*
                                          * Termination criterion.
@@ -468,7 +468,7 @@ namespace  Powell_NS
                                     func_value_temp2=energy_func(point_temp2); /*Function value at extrapolated point.*/
                                     if (func_value_temp2 < func_value_temp1)
                                       {
-                                        if ((2.0*(func_value_temp1-2.0*(current_value)+func_value_temp2)*vcl_sqrt(func_value_temp1-(current_value)-largest_decrease)-largest_decrease*vcl_sqrt(func_value_temp1-func_value_temp2))<0)
+                                        if ((2.0*(func_value_temp1-2.0*(current_value)+func_value_temp2)*std::sqrt(func_value_temp1-(current_value)-largest_decrease)-largest_decrease*std::sqrt(func_value_temp1-func_value_temp2))<0)
                                           {
                                             /*
                                              * Move to the minimum of the new direc-tion, and save the new direction. 

@@ -10,9 +10,9 @@
 //    
 // \endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <iostream>
+#include <fstream>
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_point_3d.h>
@@ -48,9 +48,9 @@ bool psm_save_alpha_raw_process_cons(bprb_func_process& pro)
   //input[1]: The filename to write to
   //input[2]: The resolution level of the output
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "int";
   input_types_[4] = "int";
@@ -72,7 +72,7 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -81,21 +81,21 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
 
   psm_apm_type apm_type = scene_base->appearance_model_type();
 
-  vcl_string filename = pro.get_input<vcl_string>(1);
+  std::string filename = pro.get_input<std::string>(1);
   unsigned int resolution_level = pro.get_input<unsigned>(2);
 
   int block_x = pro.get_input<int>(3);
   int block_y = pro.get_input<int>(4);
   int block_z = pro.get_input<int>(5);
 
-  vcl_cout << "converting scene.. resolution level = " << resolution_level << vcl_endl;
+  std::cout << "converting scene.. resolution level = " << resolution_level << std::endl;
 
   switch (apm_type) {
     case PSM_APM_MOG_GREY:
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         scene->save_alpha_raw(filename, vgl_point_3d<int>(block_x,block_y,block_z), resolution_level);
@@ -106,7 +106,7 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }   
         scene->save_alpha_raw(filename, vgl_point_3d<int>(block_x,block_y,block_z), resolution_level);
@@ -117,7 +117,7 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         scene->save_alpha_raw(filename, vgl_point_3d<int>(block_x,block_y,block_z), resolution_level);
@@ -128,7 +128,7 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }   
         scene->save_alpha_raw(filename, vgl_point_3d<int>(block_x,block_y,block_z), resolution_level);
@@ -136,7 +136,7 @@ bool psm_save_alpha_raw_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_save_alpha_raw_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_save_alpha_raw_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
 

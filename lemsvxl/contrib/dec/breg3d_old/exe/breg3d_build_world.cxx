@@ -18,7 +18,7 @@
 #include <breg3d/breg3d_voxel_grid.h>
 #include <breg3d/breg3d_util.h>
 
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 
 
@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
   breg3d_voxel_grid voxels("d:/dec/matlab/reg3d/data/seq2_voxels_cam50",300,300,120,grid_corner,vox_size);
   voxels.init_voxels();
 
-  vcl_vector<vnl_double_3x3> Ks, Rs;
-  vcl_vector<vnl_double_3x1> Ts;
+  std::vector<vnl_double_3x3> Ks, Rs;
+  std::vector<vnl_double_3x1> Ts;
   breg3d_util::read_cameras("D:/dec/matlab/reg3d/data/seq2_KRT_cameras.txt",Ks,Rs,Ts);
 
   // fill cameras with some data
@@ -43,9 +43,9 @@ int main(int argc, char* argv[])
   //for (unsigned i=0; i<100; i++) {
     //unsigned c = (i*23) % 100;
     // open image
-    vcl_stringstream frame_fname;
-    frame_fname << "d:/dec/matlab/reg3d/data/seq2/frame_" << vcl_setw(5) << vcl_setfill('0') << (int)c << ".png";
-    vcl_cout << "loading " << frame_fname.str() << vcl_endl;
+    std::stringstream frame_fname;
+    frame_fname << "d:/dec/matlab/reg3d/data/seq2/frame_" << std::setw(5) << std::setfill('0') << (int)c << ".png";
+    std::cout << "loading " << frame_fname.str() << std::endl;
     vil_image_view<float> frame_view = breg3d_util::load_image(frame_fname.str());
 
     vnl_double_3x4 RT;
@@ -55,13 +55,13 @@ int main(int argc, char* argv[])
     vnl_matrix_fixed<double,3,4> cam_P = Ks[c]*RT;
     vpgl_proj_camera<double> camera_og(cam_P);
 
-    vcl_cout << "updating voxels with camera " << c <<".";
+    std::cout << "updating voxels with camera " << c <<".";
     vul_timer timer;
     timer.mark();
     voxels.update_voxels(frame_view,&camera_og);
     double elapsed = timer.real();
-    vcl_cout << " ..done." << vcl_endl;
-    vcl_cout << " update took " << elapsed / 1000.0 << "seconds." << vcl_endl;
+    std::cout << " ..done." << std::endl;
+    std::cout << " update took " << elapsed / 1000.0 << "seconds." << std::endl;
   }
   return 0;
 

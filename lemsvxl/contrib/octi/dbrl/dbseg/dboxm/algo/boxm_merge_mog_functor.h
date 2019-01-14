@@ -24,7 +24,7 @@
 #include <boxm/boxm_mog_grey_processor.h>
 #include <boxm/boxm_simple_grey_processor.h>
 #include <vil/vil_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <enum boxm_apm_type APM>
 class boxm_merge_mog_functor

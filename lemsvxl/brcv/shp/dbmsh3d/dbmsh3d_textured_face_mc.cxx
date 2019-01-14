@@ -22,16 +22,16 @@
 #include "dbmsh3d_vertex.h"
 #include <vgl/vgl_point_3d.h>
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 
-dbmsh3d_textured_face_mc::dbmsh3d_textured_face_mc(const dbmsh3d_face* face, vcl_string tex_map_uri) 
+dbmsh3d_textured_face_mc::dbmsh3d_textured_face_mc(const dbmsh3d_face* face, std::string tex_map_uri) 
 : dbmsh3d_face_mc(face->id()) 
 { 
   tex_map_uri_ = tex_map_uri; 
 
   // copy vertices
-  vcl_vector<dbmsh3d_vertex*> old_verts = face->vertices();
+  std::vector<dbmsh3d_vertex*> old_verts = face->vertices();
   for (unsigned v = 0; v < old_verts.size(); v++) {
     dbmsh3d_vertex* vert = (dbmsh3d_vertex*)old_verts[v];
     _add_vertex(vert);
@@ -78,8 +78,8 @@ void dbmsh3d_textured_face_mc::print()
       dbmsh3d_vertex* e =  HE->edge()->eV();
       vgl_point_2d<double> s_tex = tex_coords_[s->id()];
       vgl_point_2d<double> e_tex = tex_coords_[e->id()];
-      vcl_cout << "S=" << HE->edge()->sV() << " " << s->get_pt() << "tex= " << s_tex << vcl_endl;
-      vcl_cout << "E=" << HE->edge()->eV() << " " << e->get_pt() << "tex= " << e_tex << vcl_endl;
+      std::cout << "S=" << HE->edge()->sV() << " " << s->get_pt() << "tex= " << s_tex << std::endl;
+      std::cout << "E=" << HE->edge()->eV() << " " << e->get_pt() << "tex= " << e_tex << std::endl;
       HE = HE->next();
     } while (HE != he);
   }

@@ -19,7 +19,7 @@
 #include <dbskr/dbskr_scurve_sptr.h>
 #include <dbsksp/dbsksp_xshock_node_sptr.h>
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbsksp/algo/dbsksp_shock_path_sptr.h>
@@ -28,14 +28,14 @@
 //: \relates dbsksp_xshock_graph
 //: Compute a shock curve from a shock graph path
 dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_node_sptr& start_node,
-                                       const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+                                       const std::vector<dbsksp_xshock_edge_sptr>& path,
                                        double sample_ds = 1.0f);
 
 
 //: \relates dbsksp_xshock_graph
 //: Compute a shock curve from a shock graph path
 dbskr_scurve_sptr dbsksp_compute_scurve(const dbsksp_xshock_node_sptr& start_node,
-                                       const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+                                       const std::vector<dbsksp_xshock_edge_sptr>& path,
                                        double sample_ds = 1.0f);
 
 #endif //dbsksp_compute_scurve_h_

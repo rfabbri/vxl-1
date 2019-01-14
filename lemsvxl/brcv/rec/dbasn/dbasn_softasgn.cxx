@@ -15,14 +15,14 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>   // for rand() function
-#include <vcl_vector.h>
-#include <vcl_cfloat.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <cassert>
+#include <cmath>
+#include <algorithm>
+#include <cstdlib>   // for rand() function
+#include <vector>
+#include <cfloat>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 
@@ -61,24 +61,24 @@ void copy_M (long double **targetM, long double **fromM, const int row, const in
 
 void print_M (double **M, const int row, const int col) 
 {
-  vul_printf (vcl_cout,"Matrix value*100. row: %d, col: %d\n", row, col);
+  vul_printf (std::cout,"Matrix value*100. row: %d, col: %d\n", row, col);
   for (int i=0; i<row; i++) {
     for (int j=0; j<col; j++)
-      vul_printf (vcl_cout, "%2.0lf ", M[i][j]*100);
-    vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "%2.0lf ", M[i][j]*100);
+    vul_printf (std::cout, "\n");
   }
-  ///vul_printf (vcl_cout,"\n");
+  ///vul_printf (std::cout,"\n");
 }
 
 void print_M_bin (double **M, const int row, const int col)
 {
-  vcl_cout << "Matrix row: " << row << " col: " << col << vcl_endl;
+  std::cout << "Matrix row: " << row << " col: " << col << std::endl;
   for (int i=0; i<row; i++) {
     for (int j=0; j<col; j++)
-      vul_printf (vcl_cout, "%d ", (int) M[i][j]);
-    vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "%d ", (int) M[i][j]);
+    vul_printf (std::cout, "\n");
   }
-  vul_printf (vcl_cout,"\n");
+  vul_printf (std::cout,"\n");
 }
 
 void normalize_M_rows (double **M, const int row, const int col) 
@@ -140,7 +140,7 @@ bool test_M_converge (double **M1, double **M2,
 
   for (i = 0; i<row; i++)
     for (j = 0; j<col; j++)
-      sum += vcl_fabs (M1[i][j] - M2[i][j]);
+      sum += std::fabs (M1[i][j] - M2[i][j]);
 
   if (sum < e) 
     return true;
@@ -156,7 +156,7 @@ bool test_M_converge (long double **M1, long double **M2,
 
   for (i = 0; i<row; i++)
     for (j = 0; j<col; j++)
-      sum += vcl_fabs (M1[i][j] - M2[i][j]);
+      sum += std::fabs (M1[i][j] - M2[i][j]);
 
   if (sum < e) 
     return true;
@@ -221,7 +221,7 @@ bool dbasn_softasgn::run_assign (double** inputM, double** outputM,
 
   for (int i = 0; i<M_row_; i++) {
     for (int j = 0; j<M_col_; j++) {
-      ME_[i][j] = vcl_exp (beta*inputM[i][j]);
+      ME_[i][j] = std::exp (beta*inputM[i][j]);
       //return false if exp. explosion happens.
       if (vnl_math::isfinite(ME_[i][j]) == false)
         return false;

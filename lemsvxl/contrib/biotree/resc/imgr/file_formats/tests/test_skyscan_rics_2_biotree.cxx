@@ -7,7 +7,7 @@
 // \date    2006-3-30
 // 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <imgr/file_formats/imgr_skyscan_reconlog.h>
 #include <xscan/xscan_scan.h>
 #include <testlib/testlib_test.h>
@@ -18,19 +18,19 @@ static void test_skyscan_rics_2_biotree(int argc, char* argv[] )
     double eps = 1e-12;
   /*if(argc < 3)
   {
-    vcl_cerr << "usage:\n"<<argv[0]<<" reconstructed_image_header_name"<<"  the scan_file_name "<<'\n';
+    std::cerr << "usage:\n"<<argv[0]<<" reconstructed_image_header_name"<<"  the scan_file_name "<<'\n';
     exit(1);
   }*/
 
-  vcl_string recon_log_file = argv[1];
-  vcl_string scan_file = argv[2];
-  vcl_ifstream ifstr(scan_file.c_str());
+  std::string recon_log_file = argv[1];
+  std::string scan_file = argv[2];
+  std::ifstream ifstr(scan_file.c_str());
 
     xscan_scan scan;
 
     ifstr>>scan;
 
-    vcl_cout <<scan <<vcl_endl;
+    std::cout <<scan <<std::endl;
   
   imgr_skyscan_reconlog header(recon_log_file.c_str(),scan);
 

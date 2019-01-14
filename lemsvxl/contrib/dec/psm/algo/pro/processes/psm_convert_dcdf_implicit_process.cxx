@@ -11,9 +11,9 @@
 // \endverbatim
 
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <iostream>
+#include <fstream>
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_point_3d.h>
@@ -51,9 +51,9 @@ bool psm_convert_dcdf_implicit_process_cons(bprb_func_process& pro)
   //input[2]: The resolution level of the output
   //input[3]: The scale factor for the output data
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "float";
 
@@ -72,7 +72,7 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -81,7 +81,7 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
 
   psm_apm_type apm_type = scene_base->appearance_model_type();
 
-  vcl_string filename = pro.get_input<vcl_string>(1);
+  std::string filename = pro.get_input<std::string>(1);
 
   unsigned resolution_level = pro.get_input<unsigned>(2);
 
@@ -95,13 +95,13 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY>();
         psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY>*>(aux_scene_base.ptr());
         if (!aux_scene) {
-          vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+          std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
           return false;
         }
         status = psm_convert_dcdf_implicit(aux_scene, resolution_level, scale_factor, filename);
@@ -112,13 +112,13 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY>();
         psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_GREY>*>(aux_scene_base.ptr());
         if (!aux_scene) {
-          vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+          std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
           return false;
         }
         status = psm_convert_dcdf_implicit(aux_scene, resolution_level, scale_factor, filename);
@@ -129,13 +129,13 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB>();
         psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB>*>(aux_scene_base.ptr());
         if (!aux_scene) {
-          vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+          std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
           return false;
         }
         status = psm_convert_dcdf_implicit(aux_scene, resolution_level, scale_factor, filename);
@@ -146,20 +146,20 @@ bool psm_convert_dcdf_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB>();
         psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_DCDF_IMPLICIT_RGB>*>(aux_scene_base.ptr());
         if (!aux_scene) {
-          vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+          std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
           return false;
         }
         status = psm_convert_dcdf_implicit(aux_scene, resolution_level, scale_factor, filename);
         break;
       }
     default:
-      vcl_cerr << "error - psm_convert_dcdf_implicit_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_convert_dcdf_implicit_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
 

@@ -5,7 +5,7 @@
 #ifndef dbsk3d_fs_comp_h_
 #define dbsk3d_fs_comp_h_
 
-#include <vcl_set.h>
+#include <set>
 
 #include <dbsk3d/dbsk3d_fs_sheet.h>
 
@@ -14,7 +14,7 @@
 class dbsk3d_fs_comp
 {
 protected:
-  vcl_vector<dbsk3d_fs_sheet*> fs_sheets_;
+  std::vector<dbsk3d_fs_sheet*> fs_sheets_;
   int         id_;
   int         cost_;
 
@@ -42,7 +42,7 @@ public:
     cost_ = cost;
   }
 
-  vcl_vector<dbsk3d_fs_sheet*>& fs_sheets() {
+  std::vector<dbsk3d_fs_sheet*>& fs_sheets() {
     return fs_sheets_;
   }
   dbsk3d_fs_sheet* fs_sheets (const int i) {

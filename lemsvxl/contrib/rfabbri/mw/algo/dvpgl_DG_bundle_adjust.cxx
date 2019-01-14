@@ -9,9 +9,9 @@
 #include <vnl/algo/vnl_cholesky.h>
 #include <vnl/algo/vnl_sparse_lm.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 
 #include <bdifd/bdifd_camera.h>
 #include <mw/algo/mw_algo_util.h>
@@ -19,9 +19,9 @@
 
 //: Constructor
 dvpgl_DG_bundle_adj_lsqr::
-  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
-                        const vcl_vector<bdifd_3rd_order_point_2d>& image_points,
-                        const vcl_vector<vcl_vector<bool> >& mask,
+  dvpgl_DG_bundle_adj_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+                        const std::vector<bdifd_3rd_order_point_2d>& image_points,
+                        const std::vector<std::vector<bool> >& mask,
                         bool use_confidence_weights)
  : vnl_sparse_lst_sqr_function(K.size(),6,mask[0].size(),3,0,mask,3,use_gradient),
    K_(K),
@@ -39,10 +39,10 @@ dvpgl_DG_bundle_adj_lsqr::
 //  Each image point is assigned an inverse covariance (error projector) matrix
 // \note image points are not homogeneous because they require finite points to measure projection error
 dvpgl_DG_bundle_adj_lsqr::
-dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
-                      const vcl_vector<vgl_point_2d<double> >& image_points,
-                      const vcl_vector<vnl_matrix<double> >& inv_covars,
-                      const vcl_vector<vcl_vector<bool> >& mask,
+dvpgl_DG_bundle_adj_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+                      const std::vector<vgl_point_2d<double> >& image_points,
+                      const std::vector<vnl_matrix<double> >& inv_covars,
+                      const std::vector<std::vector<bool> >& mask,
                       bool use_confidence_weights)
  : vnl_sparse_lst_sqr_function(K.size(),6,mask[0].size(),3,mask,2,use_gradient),
    K_(K),
@@ -52,26 +52,26 @@ dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
    weights_(image_points.size(),1.0),
    iteration_count_(0)
 {
-  vcl_cerr << "Not implemented.\n";
+  std::cerr << "Not implemented.\n";
   abort();
   assert(image_points.size() == inv_covars.size());
   vnl_matrix<double> U(2,2,0.0);
   for(unsigned i=0; i<inv_covars.size(); ++i){
     const vnl_matrix<double>& S = inv_covars[i];
     if(S(0,0) > 0.0){
-      U(0,0) = vcl_sqrt(S(0,0));
+      U(0,0) = std::sqrt(S(0,0));
       U(0,1) = S(0,1)/U(0,0);
       double U11 = S(1,1)-S(0,1)*S(0,1)/S(0,0);
-      U(1,1) = (U11>0.0)?vcl_sqrt(U11):0.0;
+      U(1,1) = (U11>0.0)?std::sqrt(U11):0.0;
     }
     else if(S(1,1) > 0.0){
       assert(S(0,1) == 0.0);
       U(0,0) = 0.0;
       U(0,1) = 0.0;
-      U(1,1) = vcl_sqrt(S(1,1));
+      U(1,1) = std::sqrt(S(1,1));
     }
     else{
-      vcl_cout << "warning: not positive definite"<<vcl_endl;
+      std::cout << "warning: not positive definite"<<std::endl;
       U.fill(0.0);
     }
     factored_inv_covars_.push_back(U);
@@ -93,8 +93,8 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
 {
   typedef vnl_crs_index::sparse_vector::iterator sv_itr;
 
-  vcl_vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
-  vcl_vector<bdifd_camera> cam(number_of_a());
+  std::vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
+  std::vector<bdifd_camera> cam(number_of_a());
   for(unsigned int i=0; i<number_of_a(); ++i) {
     Pi_vec[i] = param_to_cam(i,a);
     cam[i].set_p(Pi_vec[i]);
@@ -103,8 +103,8 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
   double total_rms=0;
   unsigned my_n_e=0;
   double dpos_rms=0, dtheta_rms=0, dnormal_plus_rms=0;
-  vcl_vector<double> dthetas;
-  vcl_vector<double> dnormal_plus_v;
+  std::vector<double> dthetas;
+  std::vector<double> dnormal_plus_v;
   unsigned n_total_dg_err=0;
 
   for(unsigned int i=0; i<number_of_a(); ++i)
@@ -135,7 +135,7 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       //: Current implementation does not allow for incomplete corresps
 //      assert(i0 == (unsigned)residual_indices_.sparse_col(i)[0].first);
 
-      vcl_vector<bdifd_3rd_order_point_2d> pts(number_of_a());
+      std::vector<bdifd_3rd_order_point_2d> pts(number_of_a());
       for (unsigned iv=0; iv < number_of_a(); ++iv) {
         pts[iv] = image_points_[i0 + iv*residual_indices_.num_cols()];
       }
@@ -163,14 +163,14 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       if (!one_true)
         eij[2] = 0;
       else {
-        eij[2] = vcl_sqrt(dtheta/n);
+        eij[2] = std::sqrt(dtheta/n);
 
         dthetas.push_back(dtheta/n);
         dnormal_plus_v.push_back(dnormal_plus/n);
 //        if (dthetas.size() == 1128)
-//          vcl_cout << "*** MAX err (1128):" << dtheta/n << " points: " << vcl_endl;
+//          std::cout << "*** MAX err (1128):" << dtheta/n << " points: " << std::endl;
 //        for (unsigned qq=0; qq < pts.size() ; ++qq) {
-//          vcl_cout << pts[i] << vcl_endl;
+//          std::cout << pts[i] << std::endl;
 //        }
         n_total_dg_err += n;
       }
@@ -184,7 +184,7 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       my_n_e+=3;
 
       if(use_covars_){
-        vcl_cerr << "Not coded\n";
+        std::cerr << "Not coded\n";
         abort();
         // multiply this error by upper triangular Sij
         vnl_matrix<double>& Sij = factored_inv_covars_[k];
@@ -196,25 +196,25 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
   }
 
   assert(my_n_e == e.size());
-  total_rms = vcl_sqrt(total_rms/e.size());
-  dtheta_rms = vcl_sqrt(dtheta_rms/(e.size()/3.0));
-  dnormal_plus_rms = vcl_sqrt(dnormal_plus_rms/(e.size()/3.0));
-  dpos_rms = vcl_sqrt(dpos_rms/(2.0*e.size()/3.0));
+  total_rms = std::sqrt(total_rms/e.size());
+  dtheta_rms = std::sqrt(dtheta_rms/(e.size()/3.0));
+  dnormal_plus_rms = std::sqrt(dnormal_plus_rms/(e.size()/3.0));
+  dpos_rms = std::sqrt(dpos_rms/(2.0*e.size()/3.0));
 
   unsigned dummy;
-  vcl_cout << "     MY Total RMS: " << total_rms << vcl_endl
-           << "         dpos RMS: " << dpos_rms << vcl_endl
-           << "       dtheta RMS: " << dtheta_rms << " (max: " << vcl_sqrt(bmcsd_util::max(dthetas,dummy))
-           << ", min: " << vcl_sqrt(bmcsd_util::min(dthetas,dummy))
-           << ", avg: " << vcl_sqrt(bmcsd_util::mean(dthetas)) << ")" << vcl_endl
+  std::cout << "     MY Total RMS: " << total_rms << std::endl
+           << "         dpos RMS: " << dpos_rms << std::endl
+           << "       dtheta RMS: " << dtheta_rms << " (max: " << std::sqrt(bmcsd_util::max(dthetas,dummy))
+           << ", min: " << std::sqrt(bmcsd_util::min(dthetas,dummy))
+           << ", avg: " << std::sqrt(bmcsd_util::mean(dthetas)) << ")" << std::endl
 
-           << " dnormal_plus RMS: " << dnormal_plus_rms << " (max: " << vcl_sqrt(bmcsd_util::max(dnormal_plus_v,dummy))
-           << ", min: " << vcl_sqrt(bmcsd_util::min(dnormal_plus_v,dummy))
-           << ", avg: " << vcl_sqrt(bmcsd_util::mean(dnormal_plus_v)) << ")"
-           << vcl_endl;
+           << " dnormal_plus RMS: " << dnormal_plus_rms << " (max: " << std::sqrt(bmcsd_util::max(dnormal_plus_v,dummy))
+           << ", min: " << std::sqrt(bmcsd_util::min(dnormal_plus_v,dummy))
+           << ", avg: " << std::sqrt(bmcsd_util::mean(dnormal_plus_v)) << ")"
+           << std::endl;
 
   if(use_weights_ && iteration_count_++ > 50 ){
-    vcl_cerr << "Not coded\n";
+    std::cerr << "Not coded\n";
     abort();
     vnl_vector<double> unweighted(e);
     for(unsigned int k=0; k<weights_.size(); ++k){
@@ -227,14 +227,14 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       vnl_vector_ref<double> uw(2,unweighted.data_block()+2*k);
       double update = 2.0*avg_error/uw.rms();
       if(update < 1.0)
-        weights_[k] = vcl_min(weights_[k], update);
+        weights_[k] = std::min(weights_[k], update);
       else
         weights_[k] = 1.0;
-      //vcl_cout << weights_[k] << " ";  
+      //std::cout << weights_[k] << " ";  
       e[2*k]   = unweighted[2*k]   * weights_[k];
       e[2*k+1] = unweighted[2*k+1] * weights_[k];
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 }
 
@@ -242,13 +242,13 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
 //: Compute the sparse Jacobian in block form.
 void
 dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
-                                  vcl_vector<vnl_matrix<double> >& A,
-                                  vcl_vector<vnl_matrix<double> >& B)
+                                  std::vector<vnl_matrix<double> >& A,
+                                  std::vector<vnl_matrix<double> >& B)
 {
   const double stepsize = 0.001;
 
-  vcl_vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
-  vcl_vector<bdifd_camera> cam(number_of_a());
+  std::vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
+  std::vector<bdifd_camera> cam(number_of_a());
   for(unsigned int i=0; i<number_of_a(); ++i) {
     Pi_vec[i] = param_to_cam(i,a);
     cam[i].set_p(Pi_vec[i]);
@@ -317,7 +317,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
         //: Current implementation does not allow for incomplete corresps
 //        assert(i0 == (unsigned)residual_indices_.sparse_row(i)[0].first);
 
-        vcl_vector<bdifd_3rd_order_point_2d> pts(number_of_a());
+        std::vector<bdifd_3rd_order_point_2d> pts(number_of_a());
         for (unsigned iv=0; iv < number_of_a(); ++iv) {
           pts[iv] = image_points_[i0 + iv*residual_indices_.num_cols()];
         }
@@ -383,7 +383,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
         Aij(2,ii) = (dg_err_plus - dg_err_minus)* h * weights_[k];
 
         if(use_covars_){
-          vcl_cerr << "Not coded\n";
+          std::cerr << "Not coded\n";
           abort();
           // multiple this column of A by upper triangular Sij
           vnl_matrix<double>& Sij = factored_inv_covars_[k];
@@ -439,7 +439,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> c
 
 //: Create the parameter vector \p a from a vector of cameras
 vnl_vector<double> 
-dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
+dvpgl_DG_bundle_adj_lsqr::create_param_vector(const std::vector<vpgl_perspective_camera<double> >& cameras)
 {
   vnl_vector<double> a(6*cameras.size(),0.0);
   for(unsigned int i=0; i<cameras.size(); ++i){
@@ -453,7 +453,7 @@ dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_
     w[1] = R(0,2)-R(2,0);
     w[2] = R(1,0)-R(0,1);
     w.normalize();
-    w *= vcl_acos(vcl_sqrt( R(0,0)+R(1,1)+R(2,2)+1.0)/2.0)*2.0;
+    w *= std::acos(std::sqrt( R(0,0)+R(1,1)+R(2,2)+1.0)/2.0)*2.0;
     
     double* ai = a.data_block() + i*6;
     ai[0]=w[0];   ai[1]=w[1];   ai[2]=w[2];
@@ -465,7 +465,7 @@ dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_
 
 //: Create the parameter vector \p b from a vector of 3D points
 vnl_vector<double> 
-dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
+dvpgl_DG_bundle_adj_lsqr::create_param_vector(const std::vector<vgl_point_3d<double> >& world_points)
 { 
   vnl_vector<double> b(3*world_points.size(),0.0);
   for(unsigned int j=0; j<world_points.size(); ++j){

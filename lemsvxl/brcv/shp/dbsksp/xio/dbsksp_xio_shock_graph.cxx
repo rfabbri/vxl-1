@@ -10,8 +10,8 @@
 #include <dbsksp/dbsksp_shock_node.h>
 #include <dbsksp/dbsksp_shock_edge.h>
 
-#include <vcl_utility.h>
-#include <vcl_fstream.h>
+#include <utility>
+#include <fstream>
 
 enum dbsksp_xio_tag_index{
   SHOCK_GRAPH = 0,
@@ -41,7 +41,7 @@ enum dbsksp_xio_tag_index{
   REFERENCE_EDGE = 24,
   EDGE_ID = 25
 };
-vcl_string dbsksp_xio_tag[] = {
+std::string dbsksp_xio_tag[] = {
   "shock_graph",                            // 0
   "shock_node_list",                        // 1
   "shock_node",                             // 2      
@@ -83,10 +83,10 @@ vcl_string dbsksp_xio_tag[] = {
 template<class T>
 bxml_element* 
 append_simple_elm(bxml_element* parent_elm, 
-                                 const vcl_string& elm_name, 
+                                 const std::string& elm_name, 
                                  T elm_value)
 {
-  vcl_stringstream s;
+  std::stringstream s;
   s.str("");
   s << elm_value;
   
@@ -112,14 +112,14 @@ public:
   // (an element with only one text as child data)
   template<class T> 
   static bool get_data_from_simple_child_element(bxml_element* elm, 
-    const vcl_string& elm_name,
+    const std::string& elm_name,
     T& return_value);
 
   ////: Parse an descriptor list element and return a list of descriptors
   //// is ready to be added to a node
   //bool parse_descriptor_list( bxml_element* descriptor_list_elm,
-  //  const vcl_map<int, dbsksp_shock_edge_sptr >& edge_map,
-  //  vcl_vector<dbsksp_shock_node_descriptor_sptr >& descriptor_list);
+  //  const std::map<int, dbsksp_shock_edge_sptr >& edge_map,
+  //  std::vector<dbsksp_shock_node_descriptor_sptr >& descriptor_list);
 
   //: Find a (immedicate) child element
   static bxml_element* find_child_element(const bxml_element* parent_elem, 
@@ -142,7 +142,7 @@ private:
 template<class T> bool
 dbsksp_xio_shock_graph_xml_parser::
 get_data_from_simple_child_element(bxml_element* parent_elm, 
-                                   const vcl_string& child_elm_name,
+                                   const std::string& child_elm_name,
                                    T& return_value)
 {
   // iterate thru all the child data
@@ -163,7 +163,7 @@ get_data_from_simple_child_element(bxml_element* parent_elm,
         continue;
       
       bxml_text* text_data = static_cast<bxml_text*>(data.ptr());
-      vcl_stringstream s(text_data->data());
+      std::stringstream s(text_data->data());
 
       s >> return_value;
       return true;
@@ -210,9 +210,9 @@ find_child_element(const bxml_element* parent_elm,
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to an xml file
-bool x_write(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph)
+bool x_write(const std::string& filepath, const dbsksp_shock_graph_sptr& graph)
 {
-  vcl_ofstream file(filepath.c_str());
+  std::ofstream file(filepath.c_str());
   if (x_write(file, graph))
   {
     file.close();
@@ -228,7 +228,7 @@ bool x_write(const vcl_string& filepath, const dbsksp_shock_graph_sptr& graph)
 
 // ----------------------------------------------------------------------------
 //: write a shock graph to a stream
-bool x_write(vcl_ostream& os, const dbsksp_shock_graph_sptr& graph)
+bool x_write(std::ostream& os, const dbsksp_shock_graph_sptr& graph)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element(dbsksp_xio_tag[SHOCK_GRAPH]); // "shock_graph"
@@ -267,8 +267,8 @@ bool x_write(vcl_ostream& os, const dbsksp_shock_graph_sptr& graph)
       dbsksp_xio_tag[SHOCK_NODE_DESCRIPTOR_LIST]); // "shock_node_descriptor_list"
     node_elm->append_data(descriptor_list_elm);
 
-    vcl_list<dbsksp_shock_node_descriptor_sptr > dlist = v->descriptor_list();
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator itr = 
+    std::list<dbsksp_shock_node_descriptor_sptr > dlist = v->descriptor_list();
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator itr = 
       dlist.begin(); itr != dlist.end(); ++itr)
     {
       dbsksp_shock_node_descriptor_sptr desc = *itr;
@@ -387,7 +387,7 @@ bool x_write(vcl_ostream& os, const dbsksp_shock_graph_sptr& graph)
 
 // ----------------------------------------------------------------------------
 //: load a shock graph from an xml file
-bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
+bool x_read(const std::string& filepath, dbsksp_shock_graph_sptr& graph)
 {
   bxml_document doc = bxml_read(filepath);
 
@@ -408,12 +408,12 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
   if (!node_list_elm)
   {
-    vcl_cerr << "ERROR: No shock node list found.\n";
+    std::cerr << "ERROR: No shock node list found.\n";
     return false;
   }
 
   // iterate thru the nodes in the node list and create the nodes
-  vcl_map<int, dbsksp_shock_node_sptr > node_list;
+  std::map<int, dbsksp_shock_node_sptr > node_list;
   for(bxml_element::const_data_iterator itr = node_list_elm->data_begin();
     itr != node_list_elm->data_end();  ++itr)
   {
@@ -428,13 +428,13 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     int id = 0;
     if (!node_elm->get_attribute(dbsksp_xio_tag[ID], id)) // "id"
     {
-      vcl_cerr << "ERROR : found node with no ID.\n";
+      std::cerr << "ERROR : found node with no ID.\n";
       return false;
     };
 
     // create the node
     dbsksp_shock_node_sptr v = new dbsksp_shock_node(id);
-    node_list.insert(vcl_make_pair(id, v));
+    node_list.insert(std::make_pair(id, v));
   }
 
 
@@ -446,12 +446,12 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
   if (!edge_list_elm)
   {
-    vcl_cerr << "ERROR: No shock edge list found.\n";
+    std::cerr << "ERROR: No shock edge list found.\n";
     return false;
   }
 
   // iterate thru the edges in the edge list and create the edges
-  vcl_map<int, dbsksp_shock_edge_sptr > edge_list;
+  std::map<int, dbsksp_shock_edge_sptr > edge_list;
   for(bxml_element::const_data_iterator itr = edge_list_elm->data_begin();
     itr != edge_list_elm->data_end();  ++itr)
   {
@@ -466,7 +466,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     int id = 0;
     if (!edge_elm->get_attribute(dbsksp_xio_tag[ID], id)) // "id"
     {
-      vcl_cerr << "ERROR : found edge with no ID.\n";
+      std::cerr << "ERROR : found edge with no ID.\n";
       return false;
     };
 
@@ -486,15 +486,15 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     // find the pointers to the source and target
     if (source_id == -1 || target_id == -1)
     {
-      vcl_cerr << "ERROR: either source or target of edge is not specified.\n";
+      std::cerr << "ERROR: either source or target of edge is not specified.\n";
       return false;
     }
 
-    vcl_map<int, dbsksp_shock_node_sptr >::iterator vit = node_list.find(source_id);
+    std::map<int, dbsksp_shock_node_sptr >::iterator vit = node_list.find(source_id);
     if (vit == node_list.end())
     {
-      vcl_cerr << "ERROR: cannot find source of edge, source_id=" << source_id 
-        << vcl_endl;
+      std::cerr << "ERROR: cannot find source of edge, source_id=" << source_id 
+        << std::endl;
       return false;
     }
     dbsksp_shock_node_sptr source_sptr = vit->second;
@@ -502,21 +502,21 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     vit = node_list.find(target_id);
     if (vit == node_list.end())
     {
-      vcl_cerr << "ERROR: cannot find target of edge, target_id=" << target_id 
-        << vcl_endl;
+      std::cerr << "ERROR: cannot find target of edge, target_id=" << target_id 
+        << std::endl;
       return false;
     }
     dbsksp_shock_node_sptr target_sptr = vit->second;
 
     // create the edge
     dbsksp_shock_edge_sptr e = new dbsksp_shock_edge(source_sptr, target_sptr, id);
-    edge_list.insert(vcl_make_pair(id, e));
+    edge_list.insert(std::make_pair(id, e));
 
     double param_m = 0;
     if ( !dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
       edge_elm, dbsksp_xio_tag[PARAM_M], param_m) ) // "param_m"
     {
-      vcl_cerr << "ERROR: param_m of edge (id= " << id << ") not specified.\n";
+      std::cerr << "ERROR: param_m of edge (id= " << id << ") not specified.\n";
       return false;
     };
     e->set_param_m(param_m);
@@ -525,7 +525,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     if ( !dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
       edge_elm, dbsksp_xio_tag[CHORD_LENGTH], chord_length) ) // "chord_length"
     {
-      vcl_cerr << "ERROR: chord length of edge (id= " << id << ") not specified.\n";
+      std::cerr << "ERROR: chord length of edge (id= " << id << ") not specified.\n";
       return false;
     };
     e->set_chord_length(chord_length);
@@ -610,7 +610,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
     if (!descriptor_list_elm)
     {
-      vcl_cout << "ERROR: shock_node_descriptor_list not found.\n";
+      std::cout << "ERROR: shock_node_descriptor_list not found.\n";
       return false;
     }
 
@@ -633,7 +633,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
       if ( !dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
         descriptor_elm, dbsksp_xio_tag[EDGE_ID], edge_id) )
       {
-        vcl_cerr << "ERROR: Missing edge id for node (id = " << node_sptr->id() << " ).\n";
+        std::cerr << "ERROR: Missing edge id for node (id = " << node_sptr->id() << " ).\n";
         return false;
       }
       // retrieve edge from edge id
@@ -655,7 +655,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
       if ( ! dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
         descriptor_elm, dbsksp_xio_tag[PHI], phi) )
       {
-        vcl_cerr << "ERROR: angle phi missing for node descriptor ( node_id= " 
+        std::cerr << "ERROR: angle phi missing for node descriptor ( node_id= " 
           << node_sptr->id() << " , edge_id = " << edge_sptr->id() << " ).\n";
         return false;
       }
@@ -680,13 +680,13 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
   }
 
   // insert all the nodes and edges to the shock graph
-  for (vcl_map<int, dbsksp_shock_node_sptr >::iterator itr = node_list.begin();
+  for (std::map<int, dbsksp_shock_node_sptr >::iterator itr = node_list.begin();
     itr != node_list.end(); ++itr)
   {
     graph->add_vertex(itr->second);
   }
 
-  for (vcl_map<int, dbsksp_shock_edge_sptr >::iterator itr = edge_list.begin();
+  for (std::map<int, dbsksp_shock_edge_sptr >::iterator itr = edge_list.begin();
     itr != edge_list.end(); ++itr)
   {
     graph->add_edge(itr->second);
@@ -702,7 +702,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
   if ( !ref_node_elm )
   {
-    vcl_cerr << "ERROR: Could not find reference node.\n";
+    std::cerr << "ERROR: Could not find reference node.\n";
     return false;
   }
 
@@ -711,7 +711,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
   if ( ! dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
     ref_node_elm, "id", ref_node_id) )
   {
-    vcl_cerr << "ERROR: Id of reference node missing.\n";
+    std::cerr << "ERROR: Id of reference node missing.\n";
     return false;
   }
   graph->set_ref_node(node_list.find(ref_node_id)->second);
@@ -721,7 +721,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
     ref_node_elm, bxml_element(dbsksp_xio_tag[POINT]) );
   if ( !ref_node_point_elm )
   {
-    vcl_cerr << "ERROR: Coordinate of reference node missing.\n";
+    std::cerr << "ERROR: Coordinate of reference node missing.\n";
     return false;
   }
 
@@ -740,7 +740,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
   if ( !dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
     ref_node_elm, dbsksp_xio_tag[RADIUS], ref_node_radius) )
   {
-    vcl_cerr << "ERROR: radius at reference node missing. ref_node_id = "
+    std::cerr << "ERROR: radius at reference node missing. ref_node_id = "
       << graph->ref_node()->id() << " \n";
     return false;
   }
@@ -753,7 +753,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
   if ( !ref_edge_elm )
   {
-    vcl_cerr << "Reference edge element missing.\n";
+    std::cerr << "Reference edge element missing.\n";
     return false;
   }
 
@@ -762,7 +762,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
   if ( !dbsksp_xio_shock_graph_xml_parser::get_data_from_simple_child_element(
     ref_edge_elm, dbsksp_xio_tag[ID], ref_edge_id ) )
   {
-    vcl_cerr << "Reference edge id missing.\n";
+    std::cerr << "Reference edge id missing.\n";
     return false;
   }
   graph->set_ref_edge(edge_list.find(ref_edge_id)->second);
@@ -774,7 +774,7 @@ bool x_read(const vcl_string& filepath, dbsksp_shock_graph_sptr& graph)
 
   if (!ref_edge_dir_elm)
   {
-    vcl_cerr << "Direction of reference edge missing.\n";
+    std::cerr << "Direction of reference edge missing.\n";
     return false;
   }
 

@@ -50,7 +50,7 @@ vpgl_perspective_camera<double> generate_camera(double angle1, double angle2)
   vgl_point_2d<double> principal_point(IMAGE_U/2., IMAGE_V/2.);
 
   vgl_point_3d<double> centroid(0,0,0);
-  //vcl_cout << "centroid: " << centroid << vcl_endl;
+  //std::cout << "centroid: " << centroid << std::endl;
   double camera_dist = 10;
   //vgl_point_3d<double> camera_center_vec(0, 0, camera_dist);
   vgl_vector_3d<double> camera_center_vec(0, 0, 1);  
@@ -73,7 +73,7 @@ vpgl_perspective_camera<double> generate_camera(double angle1, double angle2)
   camera_center_vec = vgl_vector_3d<double>(camera_center_point.x(), camera_center_point.y(), camera_center_point.z());
   camera_center_vec = normalize(camera_center_vec);
   camera_center_vec = camera_dist*camera_center_vec;  
-  vcl_cout << camera_center_vec.x() << " " << camera_center_vec.y() << " " << camera_center_vec.z() << "\n";
+  std::cout << camera_center_vec.x() << " " << camera_center_vec.y() << " " << camera_center_vec.z() << "\n";
 
   vpgl_perspective_camera<double> persp_cam;
 
@@ -81,7 +81,7 @@ vpgl_perspective_camera<double> generate_camera(double angle1, double angle2)
   vpgl_calibration_matrix<double> K(focal_length, principal_point, x_scale, y_scale);
   persp_cam.set_calibration(K);
   vgl_point_3d<double> camera_center_point2(camera_center_vec.x(), camera_center_vec.y(), camera_center_vec.z());
-  vcl_cout << camera_center_point2.x() << " " << camera_center_point2.y() << " " << camera_center_point2.z() << "\n";
+  std::cout << camera_center_point2.x() << " " << camera_center_point2.y() << " " << camera_center_point2.z() << "\n";
   persp_cam.set_camera_center(camera_center_point2);
 
   persp_cam.look_at(vgl_homg_point_3d<double>(centroid));
@@ -90,48 +90,48 @@ vpgl_perspective_camera<double> generate_camera(double angle1, double angle2)
 
 
 //: also prepares the command file
-bool prepare_cameras_for_eth80(vcl_string output_prefix)
+bool prepare_cameras_for_eth80(std::string output_prefix)
 {
   if (output_prefix.compare("") == 0) {
-    vcl_cout << "output_prefix not specified\n";
+    std::cout << "output_prefix not specified\n";
     return false;
   }
 
-  vcl_vector<vcl_pair<int, int> > angles(26, vcl_pair<int, int>(0,0));
-  angles[0] = vcl_pair<int, int>(0,0);
-  angles[1] = vcl_pair<int, int>(22,0);
-  angles[2] = vcl_pair<int, int>(22,90);
-  angles[3] = vcl_pair<int, int>(22,180);
-  angles[4] = vcl_pair<int, int>(22,270);
-  angles[5] = vcl_pair<int, int>(35,45);
-  angles[6] = vcl_pair<int, int>(35,135);
-  angles[7] = vcl_pair<int, int>(35,225);
-  angles[8] = vcl_pair<int, int>(35,315);
-  angles[9] = vcl_pair<int, int>(45,0);
-  angles[10] = vcl_pair<int, int>(45,90);
-  angles[11] = vcl_pair<int, int>(45,180);
-  angles[12] = vcl_pair<int, int>(45,270);
-  angles[13] = vcl_pair<int, int>(66,27);
-  angles[14] = vcl_pair<int, int>(66,63);
-  angles[15] = vcl_pair<int, int>(66,117);
-  angles[16] = vcl_pair<int, int>(66,153);
-  angles[17] = vcl_pair<int, int>(66,207);
-  angles[18] = vcl_pair<int, int>(66,243);
-  angles[19] = vcl_pair<int, int>(66,297);
-  angles[20] = vcl_pair<int, int>(66,333);
-  angles[21] = vcl_pair<int, int>(68,0);
-  angles[22] = vcl_pair<int, int>(68,90);
-  angles[23] = vcl_pair<int, int>(68,180);
-  angles[24] = vcl_pair<int, int>(68,270);
-  angles[25] = vcl_pair<int, int>(30,100);
+  std::vector<std::pair<int, int> > angles(26, std::pair<int, int>(0,0));
+  angles[0] = std::pair<int, int>(0,0);
+  angles[1] = std::pair<int, int>(22,0);
+  angles[2] = std::pair<int, int>(22,90);
+  angles[3] = std::pair<int, int>(22,180);
+  angles[4] = std::pair<int, int>(22,270);
+  angles[5] = std::pair<int, int>(35,45);
+  angles[6] = std::pair<int, int>(35,135);
+  angles[7] = std::pair<int, int>(35,225);
+  angles[8] = std::pair<int, int>(35,315);
+  angles[9] = std::pair<int, int>(45,0);
+  angles[10] = std::pair<int, int>(45,90);
+  angles[11] = std::pair<int, int>(45,180);
+  angles[12] = std::pair<int, int>(45,270);
+  angles[13] = std::pair<int, int>(66,27);
+  angles[14] = std::pair<int, int>(66,63);
+  angles[15] = std::pair<int, int>(66,117);
+  angles[16] = std::pair<int, int>(66,153);
+  angles[17] = std::pair<int, int>(66,207);
+  angles[18] = std::pair<int, int>(66,243);
+  angles[19] = std::pair<int, int>(66,297);
+  angles[20] = std::pair<int, int>(66,333);
+  angles[21] = std::pair<int, int>(68,0);
+  angles[22] = std::pair<int, int>(68,90);
+  angles[23] = std::pair<int, int>(68,180);
+  angles[24] = std::pair<int, int>(68,270);
+  angles[25] = std::pair<int, int>(30,100);
 
   for (unsigned i = 0; i < angles.size(); i++) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss.width(3);
     ss.fill('0');
     ss << angles[i].first;
 
-    vcl_stringstream ss2;
+    std::stringstream ss2;
     ss2.width(3);
     ss2.fill('0');
     ss2 << angles[i].second;
@@ -141,12 +141,12 @@ bool prepare_cameras_for_eth80(vcl_string output_prefix)
 
     vpgl_perspective_camera<double> persp_cam = generate_camera(angle1, angle2);
 
-    vcl_string camera_file = output_prefix + "-" + ss.str() + "-" + ss2.str() + ".txt";
-    //vcl_cout << "cam file: " << camera_file << vcl_endl;
+    std::string camera_file = output_prefix + "-" + ss.str() + "-" + ss2.str() + ".txt";
+    //std::cout << "cam file: " << camera_file << std::endl;
     
-    vcl_ofstream ofs(camera_file.c_str());
+    std::ofstream ofs(camera_file.c_str());
     if (!ofs.is_open()) {
-      vcl_cerr << "Failed to open file " << camera_file << vcl_endl;
+      std::cerr << "Failed to open file " << camera_file << std::endl;
       return false;
     }
 
@@ -154,43 +154,43 @@ bool prepare_cameras_for_eth80(vcl_string output_prefix)
     ofs << P;
     ofs.close();
 
-    vcl_string camera_file_krt = output_prefix + "-" + ss.str() + "-" + ss2.str() + "-krt.txt";
-    vcl_ofstream ofs_krt(camera_file_krt.c_str());
+    std::string camera_file_krt = output_prefix + "-" + ss.str() + "-" + ss2.str() + "-krt.txt";
+    std::ofstream ofs_krt(camera_file_krt.c_str());
     if (!ofs_krt.is_open()) {
-      vcl_cerr << "Failed to open file " << camera_file_krt << vcl_endl;
+      std::cerr << "Failed to open file " << camera_file_krt << std::endl;
       return false;
     }
 
     vpgl_calibration_matrix<double> K = persp_cam.get_calibration();
-    ofs_krt << K.get_matrix() << vcl_endl;
+    ofs_krt << K.get_matrix() << std::endl;
   
     vgl_rotation_3d<double> R = persp_cam.get_rotation();
-    ofs_krt << R.as_matrix() << vcl_endl;
+    ofs_krt << R.as_matrix() << std::endl;
 
     vgl_point_3d<double> C = persp_cam.get_camera_center();
-    ofs_krt << C.x() << " " << C.y() << " " << C.z() << vcl_endl;
+    ofs_krt << C.x() << " " << C.y() << " " << C.z() << std::endl;
     ofs_krt.close();
   }
 
   return true;
 }
 
-bool prepare_joint_hist(vcl_string image_name, vcl_string changes_file)
+bool prepare_joint_hist(std::string image_name, std::string changes_file)
 {
   if (image_name.compare("") == 0) {
-    vcl_cout << "image_name not specified\n";
+    std::cout << "image_name not specified\n";
     return false;
   }
 
   if (changes_file.compare("") == 0) {
-    vcl_cout << "changes_file not specified\n";
+    std::cout << "changes_file not specified\n";
     return false;
   }
 
   // try loading the image
   vil_image_resource_sptr res = vil_load_image_resource(image_name.c_str());
   if (res->nplanes() == 3) {
-    vcl_cout << "input image is not grey scale!\n";
+    std::cout << "input image is not grey scale!\n";
     return false;
   }
 
@@ -200,27 +200,27 @@ bool prepare_joint_hist(vcl_string image_name, vcl_string changes_file)
   c->b_read(is);
   is.close();
 
-  vcl_vector<vcl_pair<float, float> > pairs;
+  std::vector<std::pair<float, float> > pairs;
   if (!bvxm_param_estimation::create_fg_pairs(res, c, pairs, true, "./out.wrl")) {
-    vcl_cout << "Problems in creation of foreground pairs\n";
+    std::cout << "Problems in creation of foreground pairs\n";
     return false;
   }
 
   for (unsigned i = 0; i < pairs.size(); i++) {
-    vcl_cout << "pair " << i << ": " << pairs[i].first << " " << pairs[i].second << "\n";
+    std::cout << "pair " << i << ": " << pairs[i].first << " " << pairs[i].second << "\n";
   }
 
-  vcl_cout << "number of pairs: " << pairs.size() << vcl_endl;
+  std::cout << "number of pairs: " << pairs.size() << std::endl;
   double init_sigma = bvxm_param_estimation::estimate_fg_pair_density_initial_sigma(pairs);
-  vcl_cout << "initial sigma: " << init_sigma << vcl_endl;
+  std::cout << "initial sigma: " << init_sigma << std::endl;
   double est_sigma = bvxm_param_estimation::estimate_fg_pair_density_sigma_amoeba(pairs, init_sigma);
-  vcl_cout << "estimated sigma: " << est_sigma << vcl_endl;
+  std::cout << "estimated sigma: " << est_sigma << std::endl;
 
   unsigned ni = res->ni();
   unsigned nj = res->nj();
   vil_image_view<float> inp_img(ni, nj, 1);
   if (res->nplanes() != 1) {
-    vcl_cout << "In dbvxm_param_estimation::create_fg_pairs() -- input view is not grey scale!\n";
+    std::cout << "In dbvxm_param_estimation::create_fg_pairs() -- input view is not grey scale!\n";
     return false;
   }
   vil_image_view<vxl_byte> inp_img_view(res->get_view());
@@ -245,34 +245,34 @@ bool prepare_joint_hist(vcl_string image_name, vcl_string changes_file)
 }
 
 
-bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_map_name, vcl_string glitch_img_name,
+bool collect_statistics_for_glitch_area(std::string mask_name, std::string prob_map_name, std::string glitch_img_name,
                                         float measurement_max, int measurement_bin_cnt, int neighborhood_size, bool not, bool fit_weibull)
 {
   if (mask_name.compare("") == 0) {
-    vcl_cout << "mask_name not specified\n";
+    std::cout << "mask_name not specified\n";
     return false;
   }
 
   if (prob_map_name.compare("") == 0) {
-    vcl_cout << "prob_map_name not specified\n";
+    std::cout << "prob_map_name not specified\n";
     return false;
   }
 
   if (glitch_img_name.compare("") == 0) {
-    vcl_cout << "glitch_img_name not specified\n";
+    std::cout << "glitch_img_name not specified\n";
     return false;
   }
-  vcl_cout << "Running collect_statistics_for_glitch_area() with:\n";
-  vcl_cout << " -mask: \t" << mask_name << vcl_endl;
-  vcl_cout << " -prob-map: \t" << prob_map_name << vcl_endl;
-  vcl_cout << " -meas-img: \t" << glitch_img_name << vcl_endl;
-  vcl_cout << " -meas-max: \t" << measurement_max << vcl_endl;
-  vcl_cout << " -meas-bin: \t" << measurement_bin_cnt << vcl_endl;
-  vcl_cout << " -n: \t" << neighborhood_size << vcl_endl;
+  std::cout << "Running collect_statistics_for_glitch_area() with:\n";
+  std::cout << " -mask: \t" << mask_name << std::endl;
+  std::cout << " -prob-map: \t" << prob_map_name << std::endl;
+  std::cout << " -meas-img: \t" << glitch_img_name << std::endl;
+  std::cout << " -meas-max: \t" << measurement_max << std::endl;
+  std::cout << " -meas-bin: \t" << measurement_bin_cnt << std::endl;
+  std::cout << " -n: \t" << neighborhood_size << std::endl;
 
   //: load the image
-  //vcl_string image_filename1 = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\density_mask0.bin";
-  vcl_string image_filename1 = mask_name;
+  //std::string image_filename1 = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\density_mask0.bin";
+  std::string image_filename1 = mask_name;
   vsl_b_ifstream is(image_filename1);
   vil_image_view_base_sptr mask_sptr;
   vsl_b_read(is, mask_sptr);
@@ -280,28 +280,28 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
   vil_image_view<bool> mask(mask_sptr);
 
   //: load the image
-  //vcl_string image_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_map_0.tiff";
+  //std::string image_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_map_0.tiff";
   //vil_image_view<float> image = vil_load(image_filename.c_str());
-  //vcl_string image_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_glitch_map_0.tiff";
-  vcl_string image_filename = glitch_img_name;
+  //std::string image_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_glitch_map_0.tiff";
+  std::string image_filename = glitch_img_name;
   vil_image_view<float> image = vil_load(image_filename.c_str());
 
-  //vcl_string map_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\brown_prob_map_conv_0.tiff";
+  //std::string map_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\brown_prob_map_conv_0.tiff";
   //vil_image_view<float> map = vil_load(map_filename.c_str());
-  //vcl_string map_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_glitch_norm_prob_map_0.tiff";
-  vcl_string map_filename = prob_map_name;
+  //std::string map_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\change_area_glitch_norm_prob_map_0.tiff";
+  std::string map_filename = prob_map_name;
   vil_image_view<float> map = vil_load(map_filename.c_str());
 
   float min, max;
   vil_math_value_range(map, min, max);
-  vcl_cout << " input prob map value range min: " << min << " max: " << max << vcl_endl;
+  std::cout << " input prob map value range min: " << min << " max: " << max << std::endl;
 
   if (not) {
-    vcl_cout << " -not: true --> will invert the input prob map\n";
+    std::cout << " -not: true --> will invert the input prob map\n";
      for (unsigned i = 0; i < map.ni(); i++) 
        for (unsigned j = 0; j < map.nj(); j++) { 
          if (map(i, j) < 0 || map(i, j) > 1.0f) {
-           vcl_cout << "In collect_statistics_for_glitch_area() -- Problem with the input probability map, val: " << map(i,j) << " not in [0,1] range\n";
+           std::cout << "In collect_statistics_for_glitch_area() -- Problem with the input probability map, val: " << map(i,j) << " not in [0,1] range\n";
            return true;
          }
          map(i,j) = 1.0f-map(i,j);
@@ -309,7 +309,7 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
   }
 
 
-  //vcl_string gt_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\test_img_0_gt.png";
+  //std::string gt_filename = "C:\\projects\\roi_1\\bin_6\\bin_all_test_output\\test_img_0_gt.png";
   //vil_image_view<vxl_byte> gt_view = vil_load(gt_filename.c_str());
   //vil_image_view<bool> gt_foreground(gt_view.ni(), gt_view.nj(), 1);
   //gt_foreground.fill(false);
@@ -318,7 +318,7 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
   //    gt_foreground(i,j) = (gt_view(i,j) == 255 ? true : false);
  
   if ( image.ni() == 0 || image.nj() == 0 || map.ni() == 0 || map.nj() == 0) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   }
   
@@ -326,8 +326,8 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
   //bsta_histogram<float> hist(25.0f,25);  //value range [0,25], 25 bins
   bsta_histogram<float> hist(measurement_max, measurement_bin_cnt);  //value range [0,25], 25 bins
 
-  vcl_vector<vcl_pair<int, int> > neighborhood;
-  vcl_vector<vcl_pair<int, int> > neighborhood_outer;
+  std::vector<std::pair<int, int> > neighborhood;
+  std::vector<std::pair<int, int> > neighborhood_outer;
   bvxm_glitch::square_glitch(neighborhood_size, neighborhood, neighborhood_outer);
   
   unsigned si = 3; unsigned sj = 3;   // the whole image
@@ -361,33 +361,33 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
       }
     }
 
-  vcl_vector<float> counts = hist.count_array();
-  vcl_vector<float> vals = hist.value_array();
+  std::vector<float> counts = hist.count_array();
+  std::vector<float> vals = hist.value_array();
 
   float mean = hist.mean();
   float var = hist.variance();
   float stad_dev = (float)sqrt(var);
   
-  vcl_ofstream of("collect_stats_and_fit_weibull_out.out");
+  std::ofstream of("collect_stats_and_fit_weibull_out.out");
   for (unsigned i = 0; i < vals.size(); i++) {
-    vcl_cout << vals[i] << "\t";
+    std::cout << vals[i] << "\t";
     of << vals[i] << "\t";
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
   of << "\n";
 
   for (unsigned i = 0; i < counts.size(); i++) {
-    vcl_cout << counts[i] << "\t";
+    std::cout << counts[i] << "\t";
     of << counts[i] << "\t";
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
   of << "\n";
-  vcl_cout << "\n";
+  std::cout << "\n";
   of << "\n";
   
   
   //bsta_weibull<float> back_model_(mean, 1.0f);
-  vcl_vector<float> wei_out(vals.size(), 0.0f);
+  std::vector<float> wei_out(vals.size(), 0.0f);
   float lambda = mean;
   float k = 1.0f;
 
@@ -399,25 +399,25 @@ bool collect_statistics_for_glitch_area(vcl_string mask_name, vcl_string prob_ma
     fw.solve(k);
     float residual = fw.residual();
     lambda = fw.lambda(k);
-    vcl_cout << "weibull fitted with residual: " << residual << vcl_endl; 
+    std::cout << "weibull fitted with residual: " << residual << std::endl; 
     
   }
   
   bsta_weibull<float> back_model_(lambda, k);
-  vcl_cout << " weibull params: " << " lambda: " << lambda << " k: " << k << vcl_endl;
+  std::cout << " weibull params: " << " lambda: " << lambda << " k: " << k << std::endl;
   
   
   for (unsigned i = 0; i < vals.size(); i++) {
     wei_out[i] = back_model_.prob_density(vals[i]);
-    vcl_cout << wei_out[i] << "\t";
+    std::cout << wei_out[i] << "\t";
     of << wei_out[i] << "\t";
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
   of << "\n";
   
-  of << "mean: " << mean << " var: " << var << " stad dev: " << stad_dev << vcl_endl; 
-  of << "lambda: " << lambda << " k: " << k << vcl_endl;
-  vcl_cout << "mean: " << mean << " var: " << var << " stad dev: " << stad_dev << vcl_endl; 
+  of << "mean: " << mean << " var: " << var << " stad dev: " << stad_dev << std::endl; 
+  of << "lambda: " << lambda << " k: " << k << std::endl;
+  std::cout << "mean: " << mean << " var: " << var << " stad dev: " << stad_dev << std::endl; 
   
   of.close();
   return true;

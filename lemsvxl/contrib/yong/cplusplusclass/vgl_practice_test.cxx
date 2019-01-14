@@ -1,16 +1,16 @@
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_vector.h>
-#include <vcl_vector.hxx>
-#include <vcl_iostream.h>
+#include <vector>
+#include <vectorxx>
+#include <iostream>
 
 //Globals
-vcl_vector<vgl_point_2d<double>> p;
-vcl_vector<vgl_point_2d<double>> p2;
+std::vector<vgl_point_2d<double>> p;
+std::vector<vgl_point_2d<double>> p2;
 
 //template <class Type>
-//vcl_ostream&  operator<<(vcl_ostream& s, vcl_vector<Type> const& p);
+//std::ostream&  operator<<(std::ostream& s, std::vector<Type> const& p);
 
 
 int main()
@@ -37,19 +37,19 @@ int main()
     
     for (psi.reset(); psi.next(); ) {
         int y = psi.scany();
-        vcl_cout << vcl_endl;
-        vcl_cout<<"y = "<< y<< vcl_endl;
+        std::cout << std::endl;
+        std::cout<<"y = "<< y<< std::endl;
         for (int x = psi.startx(); x <= psi.endx(); ++x){
-            vcl_cout<<x;
+            std::cout<<x;
         }
     }
 
-    vcl_cout <<poly.num_sheets()<< vcl_endl;
-    vcl_cout <<poly.num_vertices()<< vcl_endl;
-    vcl_cout<<poly<<vcl_endl;
+    std::cout <<poly.num_sheets()<< std::endl;
+    std::cout <<poly.num_vertices()<< std::endl;
+    std::cout<<poly<<std::endl;
     
     vgl_polygon<double> poly2(poly[0]);
-    vcl_cout<<"Poly2"<<vcl_endl<<poly2<<vcl_endl;
+    std::cout<<"Poly2"<<std::endl<<poly2<<std::endl;
     while(1);
 
 }

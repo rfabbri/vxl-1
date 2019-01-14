@@ -30,7 +30,7 @@ dbknee_export_thickness_map_process()
     "-thickness_map_file", bpro1_filepath("",".txt"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -52,19 +52,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_export_thickness_map_process::
+std::vector< std::string > dbknee_export_thickness_map_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_export_thickness_map_process::
+std::vector< std::string > dbknee_export_thickness_map_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -111,7 +111,7 @@ execute()
   bool show_gui = false;
   if (export_full)
   {
-    vcl_cout << "Export full thickness map.\n";
+    std::cout << "Export full thickness map.\n";
     dbknee_export_thickness_map_process::export_full_thickness_map_to_file(
       thickness_mesh_file.path, cs_file.path, thickness_map_file.path);
     return true;
@@ -143,12 +143,12 @@ finish()
 //: Take in the data and execute
 bool dbknee_export_thickness_map_process::
 export_thickness_map_to_file(
-  const vcl_string& thickness_mesh_file,
-  const vcl_string& cs_file, 
+  const std::string& thickness_mesh_file,
+  const std::string& cs_file, 
   double band_width_ratio,
   double start_angle,
   double end_angle,
-  const vcl_string& thickness_map_file,
+  const std::string& thickness_map_file,
   bool show_gui)
 {
   // load the coordinate system
@@ -158,27 +158,27 @@ export_thickness_map_to_file(
   // i. Load the meshes
   dbmsh3d_richmesh richmesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.push_back("verror_abs");
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
 
   ///////////////////////////////
   dbmsh3d_load_ply(&richmesh, thickness_mesh_file.c_str(), vertex_prop_list, face_prop_list);
   ///////////////////////////////
 
-  vcl_cout << "done.\n";
-  vcl_cout << "#v[ " << richmesh.num_vertices() 
+  std::cout << "done.\n";
+  std::cout << "#v[ " << richmesh.num_vertices() 
     << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
 
   // iterate thru the vertices and output their cylindrical coordinates
   // and thickness
-  vcl_cout << "Save thickness maps to file ... \n";
+  std::cout << "Save thickness maps to file ... \n";
 
   // figure out the min and max of z for each band
   double zmin_top = coord.z_top_band_centroid() - 
@@ -205,9 +205,9 @@ export_thickness_map_to_file(
   {
     if (vb->is_a() != "dbmsh3d_richvertex")
     {
-      vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-      vcl_cerr << "Current vertex type: " << vb->is_a() << vcl_endl;
-      vcl_cerr << "Quit now. \n";
+      std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+      std::cerr << "Current vertex type: " << vb->is_a() << std::endl;
+      std::cerr << "Quit now. \n";
       return 1;
     }
     dbmsh3d_richvertex* v = static_cast<dbmsh3d_richvertex*>(vb);
@@ -248,8 +248,8 @@ export_thickness_map_to_file(
 
   // write output table to files
   
-  vcl_cout << "Thickness map file = " << thickness_map_file << vcl_endl;
-  vcl_fstream outfile(thickness_map_file.c_str(), vcl_ios_out);
+  std::cout << "Thickness map file = " << thickness_map_file << std::endl;
+  std::fstream outfile(thickness_map_file.c_str(), std::ios::out);
   outfile << "id radius theta z thickness\n";
   
   // bottom map
@@ -259,7 +259,7 @@ export_thickness_map_to_file(
   top_table.get_n_rows(0, vertex_count_top).print(outfile);
 
   outfile.close();
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
 
   return false;
@@ -269,9 +269,9 @@ export_thickness_map_to_file(
 
 //: Take in the data and execute
 bool dbknee_export_thickness_map_process::
-export_full_thickness_map_to_file(const vcl_string& thickness_mesh_file,
-                                  const vcl_string& cs_file,
-                                  const vcl_string& thickness_map_file)
+export_full_thickness_map_to_file(const std::string& thickness_mesh_file,
+                                  const std::string& cs_file,
+                                  const std::string& thickness_map_file)
 {
   // load the coordinate system
   dbknee_cylinder_based_coord coord;
@@ -280,27 +280,27 @@ export_full_thickness_map_to_file(const vcl_string& thickness_mesh_file,
   // i. Load the meshes
   dbmsh3d_richmesh richmesh;
 
-  vcl_cout << "\n\nLoad mesh file = " << thickness_mesh_file << vcl_endl;
+  std::cout << "\n\nLoad mesh file = " << thickness_mesh_file << std::endl;
 
   // list of properties to load
-  vcl_vector<vcl_string > vertex_prop_list;
+  std::vector<std::string > vertex_prop_list;
   vertex_prop_list.push_back("verror_abs");
 
-  vcl_vector<vcl_string > face_prop_list;
+  std::vector<std::string > face_prop_list;
   face_prop_list.clear();
 
   ///////////////////////////////
   dbmsh3d_load_ply(&richmesh, thickness_mesh_file.c_str(), vertex_prop_list, face_prop_list);
   ///////////////////////////////
 
-  vcl_cout << "done.\n";
-  vcl_cout << "#v[ " << richmesh.num_vertices() 
+  std::cout << "done.\n";
+  std::cout << "#v[ " << richmesh.num_vertices() 
     << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
 
   // iterate thru the vertices and output their cylindrical coordinates
   // and thickness
-  vcl_cout << "Save thickness maps to file ... \n";
+  std::cout << "Save thickness maps to file ... \n";
 
   vnl_matrix<double > full_table(richmesh.num_vertices(), 5);
   int vertex_count_full = 0;
@@ -311,9 +311,9 @@ export_full_thickness_map_to_file(const vcl_string& thickness_mesh_file,
   {
     if (vb->is_a() != "dbmsh3d_richvertex")
     {
-      vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-      vcl_cerr << "Current vertex type: " << vb->is_a() << vcl_endl;
-      vcl_cerr << "Quit now. \n";
+      std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+      std::cerr << "Current vertex type: " << vb->is_a() << std::endl;
+      std::cerr << "Quit now. \n";
       return 1;
     }
     dbmsh3d_richvertex* v = static_cast<dbmsh3d_richvertex*>(vb);
@@ -340,15 +340,15 @@ export_full_thickness_map_to_file(const vcl_string& thickness_mesh_file,
 
   // write output table to files
   
-  vcl_cout << "Thickness map file = " << thickness_map_file << vcl_endl;
-  vcl_fstream outfile(thickness_map_file.c_str(), vcl_ios_out);
+  std::cout << "Thickness map file = " << thickness_map_file << std::endl;
+  std::fstream outfile(thickness_map_file.c_str(), std::ios::out);
   outfile << "id radius theta z thickness\n";
   
   // top map
   full_table.get_n_rows(0, vertex_count_full).print(outfile);
 
   outfile.close();
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
 
   return false;

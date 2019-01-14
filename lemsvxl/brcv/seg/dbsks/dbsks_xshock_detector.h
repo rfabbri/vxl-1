@@ -29,8 +29,8 @@
 #include <vgl/vgl_box_2d.h>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_image_view.h>
-#include <vcl_iostream.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <map>
 
 // ============================================================================
 // dbsks_xshock_detector
@@ -94,17 +94,17 @@ protected:
 public:
 
   //: Reconstruct an xshock graph from a graph configuration
-  dbsksp_xshock_graph_sptr reconstruct_xgraph(const vcl_map<unsigned, int >& xgraph_state);
+  dbsksp_xshock_graph_sptr reconstruct_xgraph(const std::map<unsigned, int >& xgraph_state);
 
   // I/O functions--------------------------------------------------------------
 
   //: Print Optimization results to a stream
-  vcl_ostream& print_summary(vcl_ostream& str) const;
+  std::ostream& print_summary(std::ostream& str) const;
 
   // Intermediate data ---------------------------------------------------------
 
   //: Map of id of a vertex to its grid of states
-  vcl_map<unsigned int, dbsks_xnode_grid > map_xnode_grid_;
+  std::map<unsigned int, dbsks_xnode_grid > map_xnode_grid_;
 
   //: Image
   // different methods to construct the grid. These evolve over time. We just hard-code for now
@@ -140,27 +140,27 @@ public:
 
 
   //: Solutions
-  vcl_vector<dbsksp_xshock_graph_sptr > list_solutions_;
-  vcl_vector<float > list_solution_costs_;
-  vcl_vector<float > list_solution_real_costs_;
+  std::vector<dbsksp_xshock_graph_sptr > list_solutions_;
+  std::vector<float > list_solution_costs_;
+  std::vector<float > list_solution_real_costs_;
 
   // Graph-tree info
   unsigned root_vid_;
   unsigned major_child_eid_;
 
   // detections from the previous frame
-  vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets_;
+  std::vector<dbsks_det_desc_xgraph_sptr > prev_dets_;
   // statistic from the previous frame dets
-  vcl_vector<double> xgraph_vertices_min_x_;
-  vcl_vector<double> xgraph_vertices_max_x_;
-  vcl_vector<double> xgraph_vertices_min_y_;
-  vcl_vector<double> xgraph_vertices_max_y_;
-  vcl_vector<double> xgraph_vertices_min_phi_;
-  vcl_vector<double> xgraph_vertices_max_phi_;
-  vcl_vector<double> xgraph_vertices_min_psi_;
-  vcl_vector<double> xgraph_vertices_max_psi_;
-  vcl_vector<double> xgraph_vertices_min_r_;
-  vcl_vector<double> xgraph_vertices_max_r_;
+  std::vector<double> xgraph_vertices_min_x_;
+  std::vector<double> xgraph_vertices_max_x_;
+  std::vector<double> xgraph_vertices_min_y_;
+  std::vector<double> xgraph_vertices_max_y_;
+  std::vector<double> xgraph_vertices_min_phi_;
+  std::vector<double> xgraph_vertices_max_phi_;
+  std::vector<double> xgraph_vertices_min_psi_;
+  std::vector<double> xgraph_vertices_max_psi_;
+  std::vector<double> xgraph_vertices_min_r_;
+  std::vector<double> xgraph_vertices_max_r_;
 
 protected:
   // Working graph

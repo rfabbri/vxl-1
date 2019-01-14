@@ -20,7 +20,7 @@ dbrl_compare_matchsets_process::~dbrl_compare_matchsets_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_compare_matchsets_process::name()
     {
         return "Compare Match Sets";
@@ -44,9 +44,9 @@ dbrl_compare_matchsets_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_compare_matchsets_process::get_input_type()
+std::vector< std::string > dbrl_compare_matchsets_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_match_set" );
     to_return.push_back( "dbrl_match_set" );
     return to_return;
@@ -54,9 +54,9 @@ vcl_vector< vcl_string > dbrl_compare_matchsets_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_compare_matchsets_process::get_output_type()
+std::vector< std::string > dbrl_compare_matchsets_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     return to_return;
     }
 
@@ -67,7 +67,7 @@ dbrl_compare_matchsets_process::execute()
     {
     if ( input_data_[0].size() != 2 )
         {
-        vcl_cout << "In dbrl_compare_matchsets_process::execute() - "<< "not exactly two match sets \n";
+        std::cout << "In dbrl_compare_matchsets_process::execute() - "<< "not exactly two match sets \n";
         return false;
         }
     clear_output();
@@ -84,7 +84,7 @@ dbrl_compare_matchsets_process::execute()
     //: if they have different number of features return false
     if(ms1->size_set1()!=ms2->size_set1() && ms1->size_set2()!=ms2->size_set2())
         {
-        vcl_cout<<"\nMatch Sets are different";
+        std::cout<<"\nMatch Sets are different";
         return false;
         }
     //: comparing the matching sets
@@ -95,7 +95,7 @@ dbrl_compare_matchsets_process::execute()
             cnt++;
         }
 
-    vcl_cout<<"\nNo of correct matches are "<<cnt/(double)ms1->size_set1();
+    std::cout<<"\nNo of correct matches are "<<cnt/(double)ms1->size_set1();
 
     return true;  
     }

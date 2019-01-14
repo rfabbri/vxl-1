@@ -1,10 +1,10 @@
 #include "dbdet_curvelet.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <algorithm>
 
 //: copy constructor
 dbdet_curvelet::dbdet_curvelet(const dbdet_curvelet& other)
@@ -96,7 +96,7 @@ void dbdet_curvelet::compute_properties(double R, double token_len)
 }
 
 //: print info to file
-void dbdet_curvelet::print(vcl_ostream& os)
+void dbdet_curvelet::print(std::ostream& os)
 {
   //first output the edgel chain
   os << "[";
@@ -115,21 +115,21 @@ void dbdet_curvelet::print(vcl_ostream& os)
   curve_model->print(os);
 
   //then output the other properties
-  os << " " << length << " " << quality << vcl_endl;
+  os << " " << length << " " << quality << std::endl;
 }
 
 //: read info from file
-void dbdet_curvelet::read(vcl_istream& /*is*/)
+void dbdet_curvelet::read(std::istream& /*is*/)
 {
   //this is not possible without access to the edgemap
 }
 
 
 
-vcl_list<dbdet_edgel*> dbdet_curvelet::child_chain()
+std::list<dbdet_edgel*> dbdet_curvelet::child_chain()
 {
     bool flag=false;
-    vcl_list<dbdet_edgel*> return_chain;
+    std::list<dbdet_edgel*> return_chain;
     for(unsigned i=0;i<edgel_chain.size();i++)
     {
         if(flag)
@@ -143,10 +143,10 @@ vcl_list<dbdet_edgel*> dbdet_curvelet::child_chain()
 }
 
 
-vcl_list<dbdet_edgel*> dbdet_curvelet::parent_chain()
+std::list<dbdet_edgel*> dbdet_curvelet::parent_chain()
 {
     bool flag=true;
-    vcl_list<dbdet_edgel*> return_chain;
+    std::list<dbdet_edgel*> return_chain;
     for(unsigned i=0;i<edgel_chain.size();i++)
     {
 

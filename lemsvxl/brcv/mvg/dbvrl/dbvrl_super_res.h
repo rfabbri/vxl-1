@@ -12,9 +12,9 @@
 //   None
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_string.h>
+#include <vector>
+#include <list>
+#include <string>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -28,14 +28,14 @@ class dbvrl_super_res
 {
 public:
   //: Constructor
-  dbvrl_super_res(vcl_vector<vimt_image_2d_of<vxl_byte> >& images, int block_size=10);
+  dbvrl_super_res(std::vector<vimt_image_2d_of<vxl_byte> >& images, int block_size=10);
 
   //: Destructor
   ~dbvrl_super_res(){}
 
   //: Compute the higher resolution image
   vil_image_view<double> compute_high_res( dbvrl_region_sptr region,
-                                           vcl_string path, double blur=0.25);
+                                           std::string path, double blur=0.25);
 
   //: Compute the largest region to estimate
   dbvrl_region_sptr compute_region(double area_mag=4.0);
@@ -49,8 +49,8 @@ protected:
 
   //: Compute the weights and data vector for the given index
   void compute_weights( int index, 
-                        vcl_list<vnl_vector<double> >& data, 
-                        vcl_list<vnl_vector<double> >& weights,
+                        std::list<vnl_vector<double> >& data, 
+                        std::list<vnl_vector<double> >& weights,
                         const vgl_box_2d<int>& bounds ) const;
 
   //; Sample from the estimated point spread function 
@@ -61,7 +61,7 @@ protected:
   dbvrl_region_sptr region_;
 
   //: The input images
-  vcl_vector<vimt_image_2d_of<vxl_byte> >& images_;
+  std::vector<vimt_image_2d_of<vxl_byte> >& images_;
 
   //: block size
   int bsi_;

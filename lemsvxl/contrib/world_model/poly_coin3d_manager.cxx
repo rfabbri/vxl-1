@@ -96,26 +96,26 @@ void test(SoGroup *root)
 void poly_coin3d_manager::setup_scene (vgui_grid_tableau_sptr grid, int argc, char** argv)
 {
   // Load the first image
-  vcl_string image_file = argv[1];
+  std::string image_file = argv[1];
   vil_image_resource_sptr image = load_image(image_file.c_str());
   if(!image)
   {
-    vcl_cout << "couldn't load image\n";
+    std::cout << "couldn't load image\n";
     return;
   }
 
   // Load the first image
-  vcl_string image_file2 = argv[3];
+  std::string image_file2 = argv[3];
   vil_image_resource_sptr image2 = load_image(image_file2.c_str());
   if(!image2)
   {
-    vcl_cout << "couldn't load image\n";
+    std::cout << "couldn't load image\n";
     return;
   }
   // ################################################
   // Load the camera
-  vcl_string cam_file1 = argv[2];
-  vcl_string cam_file2 = argv[4];
+  std::string cam_file1 = argv[2];
+  std::string cam_file2 = argv[4];
   cam1=0; cam2=0;
 
   vpgl_rational_camera<double> *rat_cam1=0, *rat_cam2=0;
@@ -174,7 +174,7 @@ void poly_coin3d_manager::setup_scene (vgui_grid_tableau_sptr grid, int argc, ch
   grid_tableau_->add_at(right, 1, 1);
 }
 
-vil_image_resource_sptr poly_coin3d_manager::load_image(vcl_string filename)
+vil_image_resource_sptr poly_coin3d_manager::load_image(std::string filename)
 {
   vil_image_resource_sptr res;
   float gamma = 1.0;
@@ -193,7 +193,7 @@ vil_image_resource_sptr poly_coin3d_manager::load_image(vcl_string filename)
       res = pyr.ptr();
     }
     else {
-      vcl_cerr << "error loading image pyramid "<< filename << vcl_endl;
+      std::cerr << "error loading image pyramid "<< filename << std::endl;
       return 0;
     }
   } 
@@ -207,21 +207,21 @@ vil_image_resource_sptr poly_coin3d_manager::load_image(vcl_string filename)
   return res;
 }
 
-void poly_coin3d_manager::load_cameras(vcl_string cam_file1, vcl_string cam_file2,
+void poly_coin3d_manager::load_cameras(std::string cam_file1, std::string cam_file2,
                                        vpgl_proj_camera<double> * &cam1, 
                                        vpgl_proj_camera<double> * &cam2)
 {
   if (CAMERA_TYPE == 0) { //PERSPECTIVE_CAMERA
     vpgl_proj_camera<double> camera;
-    vcl_ifstream cam_stream1(cam_file1.data());
+    std::ifstream cam_stream1(cam_file1.data());
     cam_stream1 >> camera;
     cam1 = camera.clone();
-   // vcl_cout << *cam1 << vcl_endl;
+   // std::cout << *cam1 << std::endl;
 
-    vcl_ifstream cam_stream2(cam_file2.data());
+    std::ifstream cam_stream2(cam_file2.data());
     cam_stream2 >> camera;
     cam2 = camera.clone();
-   // vcl_cout << *cam2 << vcl_endl;
+   // std::cout << *cam2 << std::endl;
 
   } else { // RATIONAL CAMERA
     vpgl_rational_camera<double> rat_cam1;
@@ -230,10 +230,10 @@ void poly_coin3d_manager::load_cameras(vcl_string cam_file1, vcl_string cam_file
     rat_cam2 = vpgl_rational_camera<double>(cam_file2);
     /////////////////////////
     /*vpgl_proj_camera<double> camera;
-    vcl_ifstream cam_stream1("C:\\test_images\\providence1\\cam.txt");
+    std::ifstream cam_stream1("C:\\test_images\\providence1\\cam.txt");
     cam_stream1 >> camera;
     cam1 = camera.clone();
-    vcl_cout << *cam1 << vcl_endl;*/
+    std::cout << *cam1 << std::endl;*/
     /////////////////////////
 
     rat_proj_cam1.set_rat_cam(rat_cam1);
@@ -245,8 +245,8 @@ void poly_coin3d_manager::load_cameras(vcl_string cam_file1, vcl_string cam_file
     pcam1 = rat_proj_cam1.get_persp_cam();
     //pcam2 = rat_proj_cam2.get_persp_cam();
 
-    vcl_cout << pcam1 << vcl_endl;
-    //vcl_cout << pcam2 << vcl_endl;
+    std::cout << pcam1 << std::endl;
+    //std::cout << pcam2 << std::endl;
 
     cam1 = new vpgl_proj_camera<double> (pcam1);
     //cam2 = new vpgl_proj_camera<double> (pcam2);
@@ -255,17 +255,17 @@ void poly_coin3d_manager::load_cameras(vcl_string cam_file1, vcl_string cam_file
   // create perspective cameras out of projective ones
   /*bool ok = vpgl_perspective_decomposition<double>(proj_cam1.get_matrix(), persp_cam1); 
     if (!ok)
-      vcl_cout << "Cannot create a perspective camera" << vcl_endl;
-    vcl_cout << "Center " << persp_cam1.camera_center() << vcl_endl;
-    vcl_cout << "Rotation " << persp_cam1.get_rotation() << vcl_endl;
-    vcl_cout << "Matrix " << persp_cam1.get_matrix()<< vcl_endl;
+      std::cout << "Cannot create a perspective camera" << std::endl;
+    std::cout << "Center " << persp_cam1.camera_center() << std::endl;
+    std::cout << "Rotation " << persp_cam1.get_rotation() << std::endl;
+    std::cout << "Matrix " << persp_cam1.get_matrix()<< std::endl;
     vpgl_calibration_matrix<double> calib = persp_cam1.get_calibration();
-    vcl_cout << "Calib Matrix=  " << calib.get_matrix() << vcl_endl;
-    vcl_cout << "Focal Length=  " << calib.focal_length() << vcl_endl;
+    std::cout << "Calib Matrix=  " << calib.get_matrix() << std::endl;
+    std::cout << "Focal Length=  " << calib.focal_length() << std::endl;
 
     ok = vpgl_perspective_decomposition<double>(proj_cam2.get_matrix(), persp_cam2); 
     if (!ok)
-      vcl_cout << "Cannot create a perspective camera" << vcl_endl;*/
+      std::cout << "Cannot create a perspective camera" << std::endl;*/
 }
 
 //: Combines the the first and the last points to create a polygon
@@ -277,13 +277,13 @@ void poly_coin3d_manager::create_poly()
   picker_->set_color(1, 0, 0);
   picker_->pick_polygon(poly);
   if(!poly)
-  {vcl_cout << "Null polygon - no creation in world\n";
+  {std::cout << "Null polygon - no creation in world\n";
   return;
   }
   poly2d = poly->cast_to_polygon();
   unsigned n = poly2d->size();
   
-    /*vcl_vector<vsol_point_2d_sptr> vertices;
+    /*std::vector<vsol_point_2d_sptr> vertices;
     // erase the last vertex
     for (unsigned i=0; i<poly2d->size(); i++) {
       vertices.push_back(new vsol_point_2d(poly2d->vertex(i)->x()/0.0219, poly2d->vertex(i)->y()/0.0347));
@@ -345,7 +345,7 @@ void poly_coin3d_manager::draw_line()
 
 //: Creates a polygon from the given vertex list and adds it to the mesh
 dbmsh3d_face*
-poly_coin3d_manager::create_face(dbmsh3d_mesh& mesh, vcl_vector<vgl_point_3d<double> > &vertex_list)
+poly_coin3d_manager::create_face(dbmsh3d_mesh& mesh, std::vector<vgl_point_3d<double> > &vertex_list)
 {
   for(unsigned int i=0; i<vertex_list.size(); i++) {
     double x = vertex_list[i].x();
@@ -410,18 +410,18 @@ bool poly_coin3d_manager::handle(const vgui_event &e)
   {
     
     vgui_projection_inspector pi;
-    //vcl_cout << "X=" << e.wx << " Y=" << e.wy << vcl_endl;
+    //std::cout << "X=" << e.wx << " Y=" << e.wy << std::endl;
     if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == vgui_SHIFT) {
       left_button_down = true;
       // take the position of the first point
       pi.window_to_image_coordinates(e.wx, e.wy, mouse_start_x, mouse_start_y);
-      //vcl_cout << "1............................... "  << mouse_start_x << " " << mouse_start_x << vcl_endl;
+      //std::cout << "1............................... "  << mouse_start_x << " " << mouse_start_x << std::endl;
 
-      vcl_vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
-      //vcl_cout << select_list.size();
+      std::vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
+      //std::cout << select_list.size();
       if (select_list.size() > 0) {
         // TODO: if there are more than one polygon, move all of them
-        //select_list[0]->print(vcl_cout);
+        //select_list[0]->print(std::cout);
         unsigned id = select_list[0]->get_id();
         vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
         cam_observer_->deselect(id);
@@ -445,7 +445,7 @@ bool poly_coin3d_manager::handle(const vgui_event &e)
         float wy = e.wy;     
         pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
         double diff = -1 * (cur_pointy - mouse_start_y)*1.0;
-        //vcl_cout << diff << vcl_endl;
+        //std::cout << diff << std::endl;
         vsol_polygon_3d_sptr poly3d;
         cam_observer_->backproj_poly(poly2d, poly3d, diff);
         my_polygon->move(poly3d);
@@ -479,7 +479,7 @@ bool poly_coin3d_manager::handle(const vgui_event &e)
       
       pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
       double diff = (mouse_start_y - cur_pointy)*1.0;
-      //vcl_cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << vcl_endl;
+      //std::cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << std::endl;
       mouse_start_y = cur_pointy;
       if (my_obj != 0)
         my_obj->move_extr_face(diff);
@@ -498,7 +498,7 @@ obj_observable* poly_coin3d_manager::find_polygon_in_3D(unsigned id,
                                                  vsol_polygon_3d_sptr& poly,
                                                  unsigned& index)
 { 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     obj_observable* o = *it;
     if (o->is_poly_in(id, index)) {
@@ -514,7 +514,7 @@ obj_observable* poly_coin3d_manager::find_polygon_in_3D(unsigned id,
 
 void poly_coin3d_manager::delete_observable(observable* obs)
 {
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     if (*it == obs) {
       delete (*it);
@@ -528,9 +528,9 @@ void poly_coin3d_manager::delete_observable(observable* obs)
 void poly_coin3d_manager::get_selection(obj_observable* &obs, unsigned &face_id)
 {
 
-  vcl_vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
+  std::vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
   if (select_list.size() == 0 || select_list.size() > 1) {
-    vcl_cerr << "Select only ONE face" << vcl_endl;
+    std::cerr << "Select only ONE face" << std::endl;
   } else {
     unsigned sel_id = select_list[0]->get_id();
     vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
@@ -551,13 +551,13 @@ void poly_coin3d_manager::deselect_all()
 void poly_coin3d_manager::set_selected_vertex()
 {
   //Now find out which polygon is selected (if any)
-  vcl_vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
+  std::vector<vgui_soview*> select_list = cam_observer_->get_selected_soviews();
   //Check if there is at least one selected polygon
   if (select_list.size() > 0) {
 
       unsigned list_index = 0;
       bool found = false;
-      for(vcl_vector<vgui_soview*>::iterator sit = select_list.begin();
+      for(std::vector<vgui_soview*>::iterator sit = select_list.begin();
           sit != select_list.end(); ++sit,++list_index)
         if((*sit)->type_name()!= "vgui_soview2D_polygon")
           continue;
@@ -576,7 +576,7 @@ void poly_coin3d_manager::set_selected_vertex()
     vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[list_index]);
  if(!polygon)
  {
-      vcl_cout << "Is a face selected?\n";
+      std::cout << "Is a face selected?\n";
   return;
  }
     //deselect the polygon since we have it 
@@ -587,7 +587,7 @@ void poly_coin3d_manager::set_selected_vertex()
     observable *obs = find_polygon_in_3D(id, poly3d, face_id);
  if(!poly3d)
  {
-      vcl_cout << "Is a face selected?\n";
+      std::cout << "Is a face selected?\n";
   return;
  }
     unsigned vindex =cam_observer_->get_selected_3d_vertex_index(id);
@@ -604,8 +604,8 @@ void poly_coin3d_manager::print_selected_vertex()
   this->set_selected_vertex();
   if(!selected_vertex_)
     return;
-  vcl_cout.precision(10);
-    vcl_cout << "Lat: " << selected_vertex_->y() << ' '
+  std::cout.precision(10);
+    std::cout << "Lat: " << selected_vertex_->y() << ' '
              << "Lon: " << selected_vertex_->x() << ' '
              << "Elv: " << selected_vertex_->z() << '\n';
 }
@@ -621,7 +621,7 @@ void poly_coin3d_manager::clear_poly()
 
 void poly_coin3d_manager::clear_all()
 {
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     delete (*it);
     it++;

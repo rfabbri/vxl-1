@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -28,7 +28,7 @@ Lie_contour_mean_process::Lie_contour_mean_process()
         !parameters()->add( "Contour file list <filename...>" , "-contour_file_list", bpro1_filepath("","*")) ||
         !parameters()->add( "Output contour file <filename...>" , "-output_contour_file", bpro1_filepath("","*")))
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_contour_mean_process::Lie_contour_mean_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_contour_mean_process::Lie_contour_mean_process()" << std::endl;
         }
 
     }
@@ -42,7 +42,7 @@ Lie_contour_mean_process::clone() const
 
 
 
-double Lie_contour_mean_process::compute_lie_cost(vcl_vector<vsol_point_2d_sptr> curve1_samples,vcl_vector<vsol_point_2d_sptr> curve2_samples )
+double Lie_contour_mean_process::compute_lie_cost(std::vector<vsol_point_2d_sptr> curve1_samples,std::vector<vsol_point_2d_sptr> curve2_samples )
     {
     double lie_cost = 0,length_1,length_2,angle_1,angle_2,scale_comp,angle_comp;
 
@@ -51,32 +51,32 @@ double Lie_contour_mean_process::compute_lie_cost(vcl_vector<vsol_point_2d_sptr>
         length_1 = curve1_samples[i]->distance(curve1_samples[i+1]);
         length_2 = curve2_samples[i]->distance(curve2_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
-        angle_2 = vcl_atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
+        angle_1 = std::atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
+        angle_2 = std::atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
 
-        scale_comp = vcl_log(length_2/length_1);
+        scale_comp = std::log(length_2/length_1);
         angle_comp = angle_2 - angle_1;
         lie_cost = lie_cost + (scale_comp*scale_comp) + (angle_comp*angle_comp);
         }
-    lie_cost = vcl_sqrt(lie_cost);
+    lie_cost = std::sqrt(lie_cost);
 
     return lie_cost;
     }
 
-void Lie_contour_mean_process::angles_scales(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2,
-                                             vcl_vector<double> &angles,vcl_vector<double> &scales)
+void Lie_contour_mean_process::angles_scales(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2,
+                                             std::vector<double> &angles,std::vector<double> &scales)
     {
     double length_1,length_2,angle_1,angle_2,Lie_cost,min_lie_cost = 1e100;
     unsigned int min_lie_index;
-    vcl_vector <double> Lie_cost_vec;
+    std::vector <double> Lie_cost_vec;
 
-    vcl_vector<vsol_point_2d_sptr> curve2_augmented;
+    std::vector<vsol_point_2d_sptr> curve2_augmented;
 
     for (unsigned int j = 0;j<2;j++)
         for (unsigned int i = 0;i<curve2.size();i++)
             curve2_augmented.push_back(curve2[i]);
 
-    vcl_vector<vsol_point_2d_sptr> curve2_open_samples;
+    std::vector<vsol_point_2d_sptr> curve2_open_samples;
 
     for (unsigned int k = 0;k<curve2.size();k++)
         {
@@ -113,14 +113,14 @@ void Lie_contour_mean_process::angles_scales(vcl_vector<vsol_point_2d_sptr> curv
         length_1 = curve1[i]->distance(curve1[i+1]);
         length_2 = curve2_open_samples[i]->distance(curve2_open_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
-        angle_2 = vcl_atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
+        angle_1 = std::atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
+        angle_2 = std::atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
 
 
 
-        scales.push_back(vcl_log(length_2/length_1));
+        scales.push_back(std::log(length_2/length_1));
         angles.push_back( angle_2 - angle_1 );
-        vcl_cout << "angles: " << angle_2 - angle_1 << vcl_endl;
+        std::cout << "angles: " << angle_2 - angle_1 << std::endl;
         }
     }
 
@@ -137,7 +137,7 @@ bool Lie_contour_mean_process::execute()
     clear_output();
 
     bpro1_filepath input_file,output_file;
-    vcl_string file_path,inp1,out;
+    std::string file_path,inp1,out;
     int num_samples_c1,num_samples_c2;
 
     parameters()->get_value( "-contour_file_list" , input_file );
@@ -148,23 +148,23 @@ bool Lie_contour_mean_process::execute()
     file_path = input_file.path;
     out = output_file.path;
 
-    vcl_ifstream infp(file_path.c_str());
-    vcl_ofstream outfp(out.c_str());
+    std::ifstream infp(file_path.c_str());
+    std::ofstream outfp(out.c_str());
 
     infp >> inp1;
 
     // construct the first curve
-    vcl_vector<vsol_point_2d_sptr> points1,mean_points;
+    std::vector<vsol_point_2d_sptr> points1,mean_points;
     loadCON(inp1, points1);
     dbsol_interp_curve_2d curve1;
     vnl_vector<double> samples1;
 
-    vcl_vector<vcl_vector<double> > angles_vec,scales_vec;
-    vcl_vector<vsol_point_2d_sptr> curve1_samples,curve2_samples;
+    std::vector<std::vector<double> > angles_vec,scales_vec;
+    std::vector<vsol_point_2d_sptr> curve1_samples,curve2_samples;
 
     while (1)
         {
-        vcl_string inp2;
+        std::string inp2;
         infp >> inp2;
 
         if(inp2.size() == 0)
@@ -173,11 +173,11 @@ bool Lie_contour_mean_process::execute()
         curve1_samples.clear();
         curve2_samples.clear();
 
-        vcl_cout << inp1 << vcl_endl;
-        vcl_cout << inp2 << vcl_endl;
+        std::cout << inp1 << std::endl;
+        std::cout << inp2 << std::endl;
 
         // construct the second curve
-        vcl_vector<vsol_point_2d_sptr> points2;
+        std::vector<vsol_point_2d_sptr> points2;
         loadCON(inp2, points2);
         dbsol_interp_curve_2d curve2;
         vnl_vector<double> samples2;
@@ -188,29 +188,29 @@ bool Lie_contour_mean_process::execute()
 
         double s;
 
-        outfp << "curve 1: " << vcl_endl;
+        outfp << "curve 1: " << std::endl;
 
         for (unsigned int i = 0;i<num_samples_c1;i++)
             {
             s = (double(i)/double(num_samples_c1))*curve1.length();
 
             vsol_point_2d_sptr sample = curve1.point_at(s);
-            outfp << sample->x() << "  " << sample->y() << vcl_endl;
+            outfp << sample->x() << "  " << sample->y() << std::endl;
             curve1_samples.push_back(sample);
             }
 
-        outfp << "curve 2: " << vcl_endl;
+        outfp << "curve 2: " << std::endl;
 
         for (unsigned int i = 0;i<num_samples_c2;i++)
             {
             s = (double(i)/double(num_samples_c2))*curve2.length();
 
             vsol_point_2d_sptr sample = curve2.point_at(s);
-            outfp << sample->x() << "  " << sample->y() << vcl_endl;
+            outfp << sample->x() << "  " << sample->y() << std::endl;
             curve2_samples.push_back(sample);
             }
 
-        vcl_vector<double> angles,scales;
+        std::vector<double> angles,scales;
         angles_scales(curve1_samples,curve2_samples,angles,scales);
         //  angles_scales(points1,points2,angles,scales);
 
@@ -226,12 +226,12 @@ bool Lie_contour_mean_process::execute()
     curve1_samples.push_back(points1[i]);
     }*/
 
-    vcl_vector<double>mean_scales,mean_angles;
+    std::vector<double>mean_scales,mean_angles;
     double angle,scale,sum_ang;
 
   /*  for (unsigned int j = 0;j<angles_vec.size();j++)
         {
-        vcl_vector <double> angles_struct = angles_vec[j];
+        std::vector <double> angles_struct = angles_vec[j];
 
         for (unsigned int i = 0;i < angles_struct.size();i++)
             {
@@ -262,22 +262,22 @@ bool Lie_contour_mean_process::execute()
             scale = scale + scales_vec[i][j];
 
         scale = scale/scales_vec.size();
-        scale = vcl_exp(scale);
+        scale = std::exp(scale);
         mean_scales.push_back(scale);
         }
 
-    outfp << "mean scale values: " << vcl_endl;
+    outfp << "mean scale values: " << std::endl;
 
     for (unsigned int i = 0;i<mean_scales.size();i++)
         {
-        outfp << /*" scale: " << scales_vec[0][i] << "mean scale: " <<*/ mean_scales[i] << vcl_endl;
+        outfp << /*" scale: " << scales_vec[0][i] << "mean scale: " <<*/ mean_scales[i] << std::endl;
         }
 
-    outfp << "mean angle values: " << vcl_endl;
+    outfp << "mean angle values: " << std::endl;
 
     for (unsigned int i = 0;i<mean_angles.size();i++)
         {
-        outfp << /*" angle: " << angles_vec[0][i] << "mean angle: " <<*/ mean_angles[i] << vcl_endl;
+        outfp << /*" angle: " << angles_vec[0][i] << "mean angle: " <<*/ mean_angles[i] << std::endl;
         }
 
     for (unsigned int i = 0;i < mean_angles.size();i++)
@@ -289,7 +289,7 @@ bool Lie_contour_mean_process::execute()
 
         mean_angles[i] = mean_angles[i] - sum_ang;
 
-        vcl_cout << "mean angles: " << mean_angles[i] << vcl_endl;
+        std::cout << "mean angles: " << mean_angles[i] << std::endl;
         }
 
     double pivot_x,pivot_y, pt1_x, pt1_y, pt2_x, pt2_y,thet,tx,ty,x_val,y_val;
@@ -342,8 +342,8 @@ bool Lie_contour_mean_process::execute()
         pt1_x = curve1_samples[i]->x() - pivot_x;
         pt1_y = curve1_samples[i]->y() - pivot_y;
 
-        pt2_x = pt1_x*vcl_cos(thet) - pt1_y*vcl_sin(thet) + pivot_x;
-        pt2_y = pt1_x*vcl_sin(thet) + pt1_y*vcl_cos(thet) + pivot_y;
+        pt2_x = pt1_x*std::cos(thet) - pt1_y*std::sin(thet) + pivot_x;
+        pt2_y = pt1_x*std::sin(thet) + pt1_y*std::cos(thet) + pivot_y;
 
         vsol_point_2d_sptr pt = new vsol_point_2d(pt2_x,pt2_y);
         mean_points.push_back(pt);
@@ -355,21 +355,21 @@ bool Lie_contour_mean_process::execute()
             x_val = curve1_samples[j]->x() - pivot_x;
             y_val = curve1_samples[j]->y() - pivot_y;
 
-            curve1_samples[j]->set_x(x_val*vcl_cos(thet) - y_val*vcl_sin(thet) + pivot_x);
-            curve1_samples[j]->set_y(x_val*vcl_sin(thet) + y_val*vcl_cos(thet) + pivot_y);
+            curve1_samples[j]->set_x(x_val*std::cos(thet) - y_val*std::sin(thet) + pivot_x);
+            curve1_samples[j]->set_y(x_val*std::sin(thet) + y_val*std::cos(thet) + pivot_y);
             }
         }
 
-    outfp << "mean samples: " << vcl_endl;
+    outfp << "mean samples: " << std::endl;
 
     for (unsigned int i = 0;i<mean_points.size();i++)
         {
-        outfp << mean_points[i]->x() << " " << mean_points[i]->y() << vcl_endl;
+        outfp << mean_points[i]->x() << " " << mean_points[i]->y() << std::endl;
         }
 
-    vcl_vector<vsol_point_2d_sptr> closed_form = closed_articulated_structure(mean_points);
+    std::vector<vsol_point_2d_sptr> closed_form = closed_articulated_structure(mean_points);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > mean_contour;
+    std::vector< vsol_spatial_object_2d_sptr > mean_contour;
     //vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (mean_points);
     vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (closed_form);
     mean_contour.push_back(newpolyline->cast_to_spatial_object());

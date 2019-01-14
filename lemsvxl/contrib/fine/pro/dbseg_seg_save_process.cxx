@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <structure/dbseg_seg_storage.h>
@@ -24,7 +24,7 @@ dbseg_seg_save_process::dbseg_seg_save_process() : bpro1_process()
 {
   if( !parameters()->add( "Filename" , "-filename", bpro1_filepath("","*") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -44,7 +44,7 @@ dbseg_seg_save_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_save_process::name()
+std::string dbseg_seg_save_process::name()
 {
   return "Save Segmentation Structure";
 }
@@ -59,10 +59,10 @@ dbseg_seg_save_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // seg type required
   to_return.push_back( "seg" );
 
@@ -71,10 +71,10 @@ dbseg_seg_save_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -101,7 +101,7 @@ dbseg_seg_save_process::execute()
     vul_timer t;
     t.mark();
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_seg_save_process::execute() - "
+    std::cout << "In dbseg_seg_save_process::execute() - "
              << "not exactly one input seg structure \n";
     return false;
   }
@@ -116,7 +116,7 @@ dbseg_seg_save_process::execute()
   bpro1_filepath file;
   parameters()->get_value( "-filename" , file );
   static_execute(seg_stg->get_object(), file);
-  vcl_cout << "Struture Saved. Time: " << t.real()/1000 << " seconds." << vcl_endl;
+  std::cout << "Struture Saved. Time: " << t.real()/1000 << " seconds." << std::endl;
   //vil_save(save_image,file.path.c_str());
  
 
@@ -144,7 +144,7 @@ void dbseg_seg_save_process::static_execute(dbseg_seg_object_base* obj, bpro1_fi
     list<int> tempValidIDs = obj2->get_tree()->get_valid_IDs();
     vsl_b_write(out2, tempValidIDs.size());
     list<int>::iterator i;
-    vcl_vector<int> tempIDsVector;
+    std::vector<int> tempIDsVector;
     for (i = tempValidIDs.begin(); i != tempValidIDs.end(); ++i) {
         //vsl_b_write(os, static_cast<short>(rand()%200));
         tempIDsVector.push_back(*i);
@@ -153,7 +153,7 @@ void dbseg_seg_save_process::static_execute(dbseg_seg_object_base* obj, bpro1_fi
   //vsl_b_write(out2, static_cast<dbseg_seg_object<vxl_byte>*>(obj) );*/
     
   dbseg_seg_object<vxl_byte>* obj2 = static_cast<dbseg_seg_object<vxl_byte>*>(obj);
-    //vcl_ostream out2(;    
+    //std::ostream out2(;    
   obj2->save_text(out);
   out.close();
 

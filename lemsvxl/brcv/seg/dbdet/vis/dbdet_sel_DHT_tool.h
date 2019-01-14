@@ -13,8 +13,8 @@
 
 #include <bvis1/bvis1_tool.h>
 
-#include <vcl_set.h>
-#include <vcl_queue.h>
+#include <set>
+#include <queue>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_style_sptr.h>
 
@@ -35,7 +35,7 @@ public:
   ~dbdet_sel_DHT_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 

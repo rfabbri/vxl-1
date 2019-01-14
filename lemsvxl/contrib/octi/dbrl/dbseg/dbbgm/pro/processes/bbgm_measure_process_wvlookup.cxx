@@ -4,7 +4,7 @@
 // \file
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_update.h>
@@ -34,8 +34,8 @@
 #include <vil/vil_math.h>
 #include <dbbgm/bbgm_measure.h>
 #include <brip/brip_vil_float_ops.h>
-#include <vcl_cstddef.h> // for std::size_t
-#include <vcl_string.h> // for std::string::npos
+#include <cstddef> // for std::size_t
+#include <string> // for std::string::npos
 
 typedef bsta_gauss_f1 bsta_gauss1_t;
 typedef bsta_num_obs<bsta_gauss1_t> gauss_type1;
@@ -56,14 +56,14 @@ bbgm_interp_ftr_base<imageofgaussmix3,obs_mix_gauss_type3> color_ftr;
 
 bool bbgm_measure_wvlookup_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(8), out_types(1);
+  std::vector<std::string> in_types(8), out_types(1);
   in_types[0]= "bbgm_wavelet_sptr"; //wavelet transform background image
   in_types[1]= "vil_image_view_base_sptr"; //test image
-  in_types[2]= "vcl_string"; //what to measure
+  in_types[2]= vcl_string"; //what to measure
   in_types[3]= "float"; // measure tolerance
-  in_types[4]="vcl_string"; //which functor
-  in_types[5]="vcl_string";//data path
-  in_types[6]="vcl_string";//frame suffix
+  in_types[4]=vcl_string"; //which functor
+  in_types[5]=vcl_string";//data path
+  in_types[6]=vcl_string";//frame suffix
   in_types[7]="float";//threshold
   pro.set_input_types(in_types);
   out_types[0]= "vil_image_view_base_sptr"; //the probability map
@@ -78,7 +78,7 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
 
   // Sanity check
   if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -87,7 +87,7 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
 
   bbgm_wavelet_sptr wavelet_ptr = pro.get_input<bbgm_wavelet_sptr>(0);
   if (!wavelet_ptr) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null wavelet model image\n";
     return false;
   }
@@ -95,7 +95,7 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
   vil_image_view_base_sptr img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(1);
   if (!img_ptr) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
@@ -106,10 +106,10 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
   unsigned np = image.nplanes();
 
   //Retrieve attribute to measure, e.g. probability
-  vcl_string attr = pro.get_input<vcl_string>(2);
-  vcl_string interp_ftr_str=pro.get_input<vcl_string>(4);
-  vcl_string data_path=pro.get_input<vcl_string>(5);
-  vcl_string frame_suffix=pro.get_input<vcl_string>(6);
+  std::string attr = pro.get_input<std::string>(2);
+  std::string interp_ftr_str=pro.get_input<std::string>(4);
+  std::string data_path=pro.get_input<std::string>(5);
+  std::string frame_suffix=pro.get_input<std::string>(6);
   float threshold=pro.get_input<float>(7);
   //Retrieve measure tolerance
   float tolerance = pro.get_input<float>(3);
@@ -133,7 +133,7 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
     }
 #endif // MEASURE_BKGROUND
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;
     }
@@ -149,7 +149,7 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
 	  else if(interp_ftr_str=="lancz") 
 		  color_ftr=bbgm_interp_lanczos_ftr<imageofgaussmix3,obs_mix_gauss_type3>();
 	  else {
-	  	  vcl_cerr << "In bbgm_measure_process::execute() -"
+	  	  std::cerr << "In bbgm_measure_process::execute() -"
              << " invalid interp functor; must be one of nearest ,bil, cubic or lancz\n";
 		  return false;
 	  }
@@ -170,12 +170,12 @@ bool bbgm_measure_wvlookup_process(bprb_func_process& pro)
     }
 #endif // MEASURE_BKGROUND	 */
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;
     }
   }
-  vcl_vector<vcl_string> output_types(1);
+  std::vector<std::string> output_types(1);
   output_types[0]= "vil_image_view_base_sptr";
   pro.set_output_types(output_types);
   brdb_value_sptr output =

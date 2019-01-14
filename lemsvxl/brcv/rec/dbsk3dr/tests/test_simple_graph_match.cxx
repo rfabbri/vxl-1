@@ -9,11 +9,11 @@
 //
 
 #include <testlib/testlib_test.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <fstream>
+#include <ctime>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 
@@ -51,7 +51,7 @@ MAIN_ARGS (dbsk3dr_simple_graph_match)
 {
   dbsk3dr_match SM;  
   dbasn_params GAparams;
-  get_rand_s.reseed ((unsigned int) vcl_time(NULL));
+  get_rand_s.reseed ((unsigned int) std::time(NULL));
 
   //Repeat the test for N times.
   int i;
@@ -74,10 +74,10 @@ MAIN_ARGS (dbsk3dr_simple_graph_match)
     if (r)
       n_test_3_success++;
   }
-  vul_printf (vcl_cout, "\n===========================================\n");
-  vul_printf (vcl_cout, "Test 1 success: %d (out of total %d).\n", n_test_1_success, REPEAT_N);
-  vul_printf (vcl_cout, "Test 2 success: %d (out of total %d).\n", n_test_2_success, REPEAT_N);
-  vul_printf (vcl_cout, "Test 3 success: %d (out of total %d).\n", n_test_3_success, REPEAT_N);
+  vul_printf (std::cout, "\n===========================================\n");
+  vul_printf (std::cout, "Test 1 success: %d (out of total %d).\n", n_test_1_success, REPEAT_N);
+  vul_printf (std::cout, "Test 2 success: %d (out of total %d).\n", n_test_2_success, REPEAT_N);
+  vul_printf (std::cout, "Test 3 success: %d (out of total %d).\n", n_test_3_success, REPEAT_N);
   
   return testlib_test_summary();
 }
@@ -99,8 +99,8 @@ bool test_graphs_1_node (dbsk3dr_match& SM, dbasn_params& GAparams)
   r = T1_VERTEX_RADIUS + (float) get_rand_s.drand32 (0, T1_VERTEX_RADIUS_VAR);
   V1->set_radius (r);
 
-  vul_printf (vcl_cout, "Graph G: %u nodes, %u links.\n", SG0->vertexmap().size(), SG0->edgemap().size());
-  vul_printf (vcl_cout, "Graph g: %u nodes, %u links.\n", SG1->vertexmap().size(), SG1->edgemap().size());
+  vul_printf (std::cout, "Graph G: %u nodes, %u links.\n", SG0->vertexmap().size(), SG0->edgemap().size());
+  vul_printf (std::cout, "Graph g: %u nodes, %u links.\n", SG1->vertexmap().size(), SG1->edgemap().size());
 
   SG0->setup_gradasgn_hypg ();
   SG1->setup_gradasgn_hypg ();
@@ -162,8 +162,8 @@ bool test_graphs_2_nodes (dbsk3dr_match& SM, dbasn_params& GAparams)
   SC1->set_length (l);
   SC1->set_type (C_TYPE_AXIAL);
 
-  vul_printf (vcl_cout, "Graph G: %u nodes, %u links.\n", SG0->vertexmap().size(), SG0->edgemap().size());
-  vul_printf (vcl_cout, "Graph g: %u nodes, %u links.\n", SG1->vertexmap().size(), SG1->edgemap().size());
+  vul_printf (std::cout, "Graph G: %u nodes, %u links.\n", SG0->vertexmap().size(), SG0->edgemap().size());
+  vul_printf (std::cout, "Graph g: %u nodes, %u links.\n", SG1->vertexmap().size(), SG1->edgemap().size());
 
   SG0->setup_gradasgn_hypg ();
   SG1->setup_gradasgn_hypg ();
@@ -251,8 +251,8 @@ bool test_graphs_3_nodes (dbsk3dr_match& SM, dbasn_params& GAparams)
   SC01->set_length (l);
   SC01->set_type (C_TYPE_AXIAL);
 
-  vul_printf (vcl_cout, "Graph G: %u nodes, %u links.\n", SG[0]->vertexmap().size(), SG[0]->edgemap().size());
-  vul_printf (vcl_cout, "Graph g: %u nodes, %u links.\n", SG[1]->vertexmap().size(), SG[1]->edgemap().size());
+  vul_printf (std::cout, "Graph G: %u nodes, %u links.\n", SG[0]->vertexmap().size(), SG[0]->edgemap().size());
+  vul_printf (std::cout, "Graph g: %u nodes, %u links.\n", SG[1]->vertexmap().size(), SG[1]->edgemap().size());
 
   SG[0]->setup_gradasgn_hypg ();
   SG[1]->setup_gradasgn_hypg ();

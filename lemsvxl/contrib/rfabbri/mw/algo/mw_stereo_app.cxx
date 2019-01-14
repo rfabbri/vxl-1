@@ -1,6 +1,6 @@
 #include "mw_stereo_app.h"
 
-#include <vcl_sstream.h>
+#include <sstream>
 #include <bmcsd/bmcsd_util.h>
 #include <mw/algo/mw_point_matcher.h>
 #include <mw/algo/mw_match_position_band.h>
@@ -23,34 +23,34 @@ static vnl_random myrand;
 
 void mw_stereo_app_args::
 set(
-  vul_arg<vcl_string> &a_prefix, 
-  vul_arg<vcl_string> &a_out_path, 
-  vul_arg<vcl_string> &a_fname1,
-  vul_arg<vcl_string> &a_fname2, 
-  vul_arg<vcl_string> &a_fname3,
-  vul_arg<vcl_vector<vcl_string> > &a_fnames,
-  vul_arg<vcl_string> &a_corresp_gt,
-  vul_arg<vcl_string> &a_precomputed_epip,
-  vul_arg<vcl_string> &a_edgels1,
-  vul_arg<vcl_string> &a_edgels2,
-  vul_arg<vcl_string> &a_edgels3,
-  vul_arg<vcl_string> &a_edgel_type,
-  vul_arg<vcl_vector<vcl_string> > &a_edgels,
+  vul_arg<std::string> &a_prefix, 
+  vul_arg<std::string> &a_out_path, 
+  vul_arg<std::string> &a_fname1,
+  vul_arg<std::string> &a_fname2, 
+  vul_arg<std::string> &a_fname3,
+  vul_arg<std::vector<std::string> > &a_fnames,
+  vul_arg<std::string> &a_corresp_gt,
+  vul_arg<std::string> &a_precomputed_epip,
+  vul_arg<std::string> &a_edgels1,
+  vul_arg<std::string> &a_edgels2,
+  vul_arg<std::string> &a_edgels3,
+  vul_arg<std::string> &a_edgel_type,
+  vul_arg<std::vector<std::string> > &a_edgels,
   vul_arg<bool> &a_run_trinocular,
   vul_arg<bool> &a_run_trinocular_t_diff,
   vul_arg<bool> &a_run_trinocular_k_diff,
   vul_arg<bool> &a_write_epipolar_corresp,
   vul_arg<bool> &a_read_epipolar_corresp,
-  vul_arg<vcl_string> &a_corresp_in,
+  vul_arg<std::string> &a_corresp_in,
   vul_arg<bool> &a_compare_corresp,
   vul_arg<bool> &a_compute_epipolars,
   vul_arg<bool> &a_symmetric_3,
   vul_arg<bool> &a_symmetric_n,
   vul_arg<bool> &a_run_sel_geometry,
   vul_arg<bool> &a_read_sel,
-  vul_arg<vcl_string> &a_sel_in1,
-  vul_arg<vcl_string> &a_sel_in2,
-  vul_arg<vcl_string> &a_sel_in3,
+  vul_arg<std::string> &a_sel_in1,
+  vul_arg<std::string> &a_sel_in2,
+  vul_arg<std::string> &a_sel_in3,
   vul_arg<bool> &a_synth_data_1,
   vul_arg<bool> &a_synth_data_2,
   vul_arg<bool> &a_synth_data_med,
@@ -60,13 +60,13 @@ set(
   vul_arg<double> &a_angle1,
   vul_arg<double> &a_angle2,
   vul_arg<double> &a_angle3,
-  vul_arg<vcl_vector<double> > &a_angles,
+  vul_arg<std::vector<double> > &a_angles,
   vul_arg<bool> &a_perturb_camera,
   vul_arg<bool> &a_write_perturb_camera,
   vul_arg<unsigned> &a_trinocular_nrad,
   vul_arg<double> &a_err_pos,
   vul_arg<bool> &a_remove_epitangency,
-  vul_arg<vcl_string> &a_cam_type
+  vul_arg<std::string> &a_cam_type
     )
 {
   prefix = &a_prefix;
@@ -74,10 +74,10 @@ set(
   // parse the arguments. When I run the app without parsing any arguments, this
   // will never be set.
   if (!(a_out_path.set())) {
-    vcl_cout << "Out path not set\n";
+    std::cout << "Out path not set\n";
     a_out_path.value_ = a_prefix.value_;
   } else {
-    vcl_cout << "Out path SET\n";
+    std::cout << "Out path SET\n";
   }
   out_path = &a_out_path;
   fname1 = &a_fname1;
@@ -164,9 +164,9 @@ init(mw_stereo_app_args &arg)
     else
       nviews_ = arg.angles->value_.size();
     angles_ = arg.angles->value_;
-    vcl_cout << "ANGLES (size " << arg.angles->value_.size() << "):\n";
-    print_value(vcl_cout, *(arg.angles));
-    vcl_cout << vcl_endl;
+    std::cout << "ANGLES (size " << arg.angles->value_.size() << "):\n";
+    print_value(std::cout, *(arg.angles));
+    std::cout << std::endl;
   } else {
     angles_.push_back(arg.angle1->value_);
     angles_.push_back(arg.angle2->value_);
@@ -253,7 +253,7 @@ init(mw_stereo_app_args &arg)
       const double angle3_perturb = arg.angle3->value_+dtheta;
 
       if (arg.synth_data_1->value_) {
-        vcl_cerr << "ERROR: perturbation of microCT cameras still not coded\n";
+        std::cerr << "ERROR: perturbation of microCT cameras still not coded\n";
         abort();
       } else {// valid for synth data 2 and 3 alike
         // Using simple perturb criteria for now
@@ -271,34 +271,34 @@ init(mw_stereo_app_args &arg)
 
         // TODO: form string for fname. do for all 3 cams.
 
-        vcl_vector<vcl_string> fnames(3); 
+        std::vector<std::string> fnames(3); 
         
         {
-        vcl_ostringstream s_angle, s_angle_perturb;
+        std::ostringstream s_angle, s_angle_perturb;
         s_angle << arg.angle1->value_; s_angle_perturb << angle1_perturb;
-        fnames[0] = arg.out_path->value_ + vcl_string("out/cam-olympus") 
-          + s_angle.str() + vcl_string("-perturb_") + s_angle_perturb.str() + vcl_string(".bvl");
+        fnames[0] = arg.out_path->value_ + std::string("out/cam-olympus") 
+          + s_angle.str() + std::string("-perturb_") + s_angle_perturb.str() + std::string(".bvl");
         }
 
         {
-        vcl_ostringstream s_angle, s_angle_perturb;
+        std::ostringstream s_angle, s_angle_perturb;
         s_angle << arg.angle2->value_; s_angle_perturb << angle2_perturb;
-        fnames[1] = arg.out_path->value_ + vcl_string("out/cam-olympus") 
-          + s_angle.str() + vcl_string("-perturb_") + s_angle_perturb.str() + vcl_string(".bvl");
+        fnames[1] = arg.out_path->value_ + std::string("out/cam-olympus") 
+          + s_angle.str() + std::string("-perturb_") + s_angle_perturb.str() + std::string(".bvl");
         }
 
         {
-        vcl_ostringstream s_angle, s_angle_perturb;
+        std::ostringstream s_angle, s_angle_perturb;
         s_angle << arg.angle3->value_; s_angle_perturb << angle3_perturb;
-        fnames[2] = arg.out_path->value_ + vcl_string("out/cam-olympus") 
-          + s_angle.str() + vcl_string("-perturb_") + s_angle_perturb.str() + vcl_string(".bvl");
+        fnames[2] = arg.out_path->value_ + std::string("out/cam-olympus") 
+          + s_angle.str() + std::string("-perturb_") + s_angle_perturb.str() + std::string(".bvl");
         }
 
         for (unsigned i=0; i < 3; ++i ) {
           vsl_b_ofstream bp_out(fnames[i]);
-          vcl_cout << "Writing camera file " << fnames[i] << vcl_endl;
+          std::cout << "Writing camera file " << fnames[i] << std::endl;
           if (!bp_out) {
-            vcl_cerr << "ERROR: while trying to write camera file " << fnames[i] << vcl_endl;
+            std::cerr << "ERROR: while trying to write camera file " << fnames[i] << std::endl;
             abort();
           }
 
@@ -308,7 +308,7 @@ init(mw_stereo_app_args &arg)
       }
     }
 
-    vcl_cout << "Generating curves...\n"; vcl_cout.flush();
+    std::cout << "Generating curves...\n"; std::cout.flush();
 
     if (arg.synth_data_1->value_) {
       bdifd_data::space_curves_ctspheres( crv3d_gt_ );
@@ -330,12 +330,12 @@ init(mw_stereo_app_args &arg)
     // eliminate epipolar tangency 
     if (arg.remove_epitangency->value_) {
       bdifd_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
-      vcl_cout << "Number of samples after removal of epipolar tangency: " 
-        << crv2d_gt_[0].size() << vcl_endl;
+      std::cout << "Number of samples after removal of epipolar tangency: " 
+        << crv2d_gt_[0].size() << std::endl;
     } else {
       bdifd_data::project_into_cams(crv3d_gt_, cam_gt_, crv2d_gt_);
-      vcl_cout << "Number of samples INCLUDING epitangencies: " 
-        << crv2d_gt_[0].size() << vcl_endl;
+      std::cout << "Number of samples INCLUDING epitangencies: " 
+        << crv2d_gt_[0].size() << std::endl;
     }
 
     // - fill up vsols_ point vector if wanted
@@ -347,15 +347,15 @@ init(mw_stereo_app_args &arg)
         vsols_[i][k] = new vsol_point_2d(crv2d_gt_[i][k].gama[0], crv2d_gt_[i][k].gama[1]);
       }
     }
-    vcl_cout << "Done generating curves.\n";
+    std::cout << "Done generating curves.\n";
 
     // Reconstruct from the known correspondence, as a check.
 
-    //    vcl_vector<bmcsd_vector_3d> C_rec;
+    //    std::vector<bmcsd_vector_3d> C_rec;
     //    bdifd_rig rig(cam_gt_[0].Pr_,cam_[1].Pr_);
     //    rig.reconstruct_3d_curve(&C_rec,vsols_[0],vsols_[1]);
 
-    //    mywritev(vcl_string("dat/synth_data3d_rec.dat"), C_rec);
+    //    mywritev(std::string("dat/synth_data3d_rec.dat"), C_rec);
 
     if (!symmetric_3_) {
       if (!symmetric_n_) {
@@ -364,7 +364,7 @@ init(mw_stereo_app_args &arg)
           gt_.corresp_[i].push_back(bmcsd_attributed_object(i));
         }
       } else { // N-tuple groundtruth
-        vcl_vector<unsigned> npts(nviews_);
+        std::vector<unsigned> npts(nviews_);
         npts[0] = crv2d_gt_[0].size();
         for (unsigned i=1; i < nviews_; ++i) {
           npts[i] = crv2d_gt_[i].size();
@@ -415,7 +415,7 @@ init(mw_stereo_app_args &arg)
     if (arg.compare_corresp->value_) {
       vsl_b_ifstream bfs_in(arg.prefix->value_+arg.corresp_gt->value_);
       if (!bfs_in) {
-        vcl_cout << "Error: unable to open file " << arg.prefix->value_ + arg.corresp_gt->value_ << vcl_endl;
+        std::cout << "Error: unable to open file " << arg.prefix->value_ + arg.corresp_gt->value_ << std::endl;
         return false;
       }
 
@@ -423,18 +423,18 @@ init(mw_stereo_app_args &arg)
         if (!symmetric_n_) {
           vsl_b_read(bfs_in, gt_3_);
           bfs_in.close();
-          vcl_cout << gt_3_;
+          std::cout << gt_3_;
         } else {
           vsl_b_read(bfs_in, gt_n_);
           bfs_in.close();
-          vcl_cout << gt_n_;
+          std::cout << gt_n_;
         }
       } else {
         vsl_b_read(bfs_in, gt_);
         bfs_in.close();
-        vcl_cout << gt_;
+        std::cout << gt_;
       }
-      vcl_cout << "Finished reading " << arg.prefix->value_ + arg.corresp_gt->value_ << vcl_endl;
+      std::cout << "Finished reading " << arg.prefix->value_ + arg.corresp_gt->value_ << std::endl;
     }
   } // ! arg.synth_data_1 && ! arg.synth_data_2
   
@@ -447,7 +447,7 @@ init(mw_stereo_app_args &arg)
   if (arg.read_epipolar_corresp->value_) {
     vsl_b_ifstream bfs_in(arg.prefix->value_+arg.precomputed_epip->value_);
     if (!bfs_in) {
-      vcl_cout << "Error: unable to open file " << arg.prefix->value_ + arg.precomputed_epip->value_ << vcl_endl;
+      std::cout << "Error: unable to open file " << arg.prefix->value_ + arg.precomputed_epip->value_ << std::endl;
       return false;
     }
     have_precomputed_epi_corresp_= true;
@@ -456,24 +456,24 @@ init(mw_stereo_app_args &arg)
       if (!symmetric_n_) {
         vsl_b_read(bfs_in, corr_ep_);
         bfs_in.close();
-        vcl_cout << corr_ep_;
+        std::cout << corr_ep_;
       } else {
         vsl_b_read(bfs_in, corr_ep_n_);
         bfs_in.close();
-        vcl_cout << corr_ep_n_;
+        std::cout << corr_ep_n_;
       }
     } else {
       vsl_b_read(bfs_in, corr_ep_3_);
       bfs_in.close();
-      vcl_cout << corr_ep_3_;
+      std::cout << corr_ep_3_;
     }
-    vcl_cout << "Finished reading " << arg.prefix->value_ + arg.precomputed_epip->value_ << vcl_endl;
+    std::cout << "Finished reading " << arg.prefix->value_ + arg.precomputed_epip->value_ << std::endl;
   } else {
     if (!symmetric_3_) {
       if (!symmetric_n_) {
         corr_ep_.set_size(vsols_[0].size(),vsols_[1].size());
       } else {
-        vcl_vector<unsigned> npts(nviews_);
+        std::vector<unsigned> npts(nviews_);
         for (unsigned i=0; i < nviews_; ++i) {
           npts[i] = vsols_[i].size();
         }
@@ -489,26 +489,26 @@ init(mw_stereo_app_args &arg)
   if (/*arg.corresp_in->set() ||*/ arg.compare_corresp->value_) {
     vsl_b_ifstream bfs_in(arg.prefix->value_+arg.corresp_in->value_);
     if (!bfs_in) {
-      vcl_cout << "Error: unable to open file " << arg.prefix->value_ + arg.corresp_in->value_ << vcl_endl;
+      std::cout << "Error: unable to open file " << arg.prefix->value_ + arg.corresp_in->value_ << std::endl;
       return false;
     }
 
     if (symmetric_3_) {
       vsl_b_read(bfs_in, corr_out_3_);
       bfs_in.close();
-      vcl_cout << corr_out_3_;
+      std::cout << corr_out_3_;
     } else {
       if (symmetric_n_) {
         vsl_b_read(bfs_in, corr_out_n_);
         bfs_in.close();
-        vcl_cout << corr_out_n_;
+        std::cout << corr_out_n_;
       } else {
         vsl_b_read(bfs_in, corr_out_);
         bfs_in.close();
-        vcl_cout << corr_out_;
+        std::cout << corr_out_;
       }
     }
-    vcl_cout << "Finished reading " << arg.prefix->value_ + arg.corresp_in->value_ << vcl_endl;
+    std::cout << "Finished reading " << arg.prefix->value_ + arg.corresp_in->value_ << std::endl;
 
     have_stereo_result_corresp_= true;
   } else {
@@ -517,7 +517,7 @@ init(mw_stereo_app_args &arg)
         corr_out_.set_size(vsols_[0].size(),vsols_[1].size());
         have_stereo_result_corresp_= true;
       } else {
-        vcl_vector<unsigned> npts(nviews_);
+        std::vector<unsigned> npts(nviews_);
         for (unsigned i=0; i < nviews_; ++i) {
           npts[i] = vsols_[i].size();
         }
@@ -539,7 +539,7 @@ init(mw_stereo_app_args &arg)
   run_trinocular_DG_ = run_trinocular_t_diff_ || run_trinocular_k_diff_;
 
   if (run_trinocular_k_diff_ && !(synth_data_2_ || synth_data_3_||synth_data_med_)) {
-    vcl_cerr << "ERROR: trinocular tangent difference currently requires synthetic data 2 or 3(turntable)\n";
+    std::cerr << "ERROR: trinocular tangent difference currently requires synthetic data 2 or 3(turntable)\n";
     return false;
   }
 
@@ -569,24 +569,24 @@ run_stereo()
     if (compute_epipolars_) {
       if (!symmetric_3_) {
         if (!symmetric_n_) {
-          vcl_cout << "Computing epipolar correspondents...";
-          vcl_cout.flush();
+          std::cout << "Computing epipolar correspondents...";
+          std::cout.flush();
           m.epipolar_constraint(vsols_, &corr_ep_, 0, 1,*fm_);
-          vcl_cout << "done.\n";
-          vcl_cout << corr_ep_;
+          std::cout << "done.\n";
+          std::cout << corr_ep_;
           have_precomputed_epi_corresp_ = true;
         } else {
-          vcl_cout << "Computing bucketing...";
-          vcl_cout.flush();
+          std::cout << "Computing bucketing...";
+          std::cout.flush();
 
-          vcl_vector<mw_subpixel_point_set *> sp(nviews_);
+          std::vector<mw_subpixel_point_set *> sp(nviews_);
 
           for (unsigned i=0; i < nviews_; ++i) {
             sp[i] = new mw_subpixel_point_set (vsols_[i]);
             sp[i]->build_bucketing_grid(nrows_,ncols_);
           }
 
-          vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
+          std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms;
 
 
           fms.resize(nviews_);
@@ -599,37 +599,37 @@ run_stereo()
             }
           }
 
-          vcl_cout << "done (bucketing).\n";
+          std::cout << "done (bucketing).\n";
 
           if (!run_trinocular_DG_) {
-            vcl_cout << "Computing n-view epipolar correspondents...";
+            std::cout << "Computing n-view epipolar correspondents...";
             if (synth_data_2_ || synth_data_3_||synth_data_med_)
               mw_match_position_band(vsols_, &corr_ep_n_, fms, sp, err_pos_,true);
             else
               mw_match_position_band(vsols_, &corr_ep_n_, fms, sp, err_pos_,false);
 
-            vcl_cout << "done (n-tuplet building).\n";
-            vcl_cout << corr_ep_n_;
+            std::cout << "done (n-tuplet building).\n";
+            std::cout << corr_ep_n_;
           } else {
             //
             // -symmetric_n -trinocular_tangent_diff 
             // TODO: we're using -trinocular to actually run multiview stereo.
             // Right thing to do would be to have a param -stereo_n
             //
-            vcl_cout << "Computing integrated n-view epipolar and tangential correspondents...\n"; 
-            vcl_cout.flush();
+            std::cout << "Computing integrated n-view epipolar and tangential correspondents...\n"; 
+            std::cout.flush();
             const double err_t=vnl_math::pi/180.; //: TODO pass as param
 
             if (synth_data_2_ || synth_data_1_ || synth_data_3_ || synth_data_med_) {
               mw_match_tangent_band(vsols_, crv2d_gt_, &corr_ep_n_, fms, 
                   cam_, sp, err_pos_, err_t, false);// false = do not debug synthetic
             } else {
-              vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > dg_points;
+              std::vector<std::vector<bdifd_3rd_order_point_2d> > dg_points;
               build_point_tangents_from_edgels(dg_points);
               mw_match_tangent_band(vsols_, dg_points, &corr_ep_n_, fms, 
                   cam_, sp, err_pos_, err_t, false);// false = do not debug synthetic
             }
-            vcl_cout << "done (n-tuplet building).\n";
+            std::cout << "done (n-tuplet building).\n";
 
             have_stereo_result_corresp_=true;
           }
@@ -640,26 +640,26 @@ run_stereo()
             delete sp[i];
         }
       } else {
-        vcl_cout << "Computing trinocular epipolar correspondents...";
+        std::cout << "Computing trinocular epipolar correspondents...";
         assert (nviews_ == 3);
 
-        vcl_vector<unsigned> npts(nviews_);
+        std::vector<unsigned> npts(nviews_);
         for (unsigned i=0; i < nviews_; ++i) {
           npts[i] = vsols_[i].size();
         }
         corr_ep_n_.set_size(npts);
 
-        vcl_cout << "Computing bucketing...";
-        vcl_cout.flush();
+        std::cout << "Computing bucketing...";
+        std::cout.flush();
 
-        vcl_vector<mw_subpixel_point_set *> sp(nviews_);
+        std::vector<mw_subpixel_point_set *> sp(nviews_);
 
         for (unsigned i=0; i < nviews_; ++i) {
           sp[i] = new mw_subpixel_point_set (vsols_[i]);
           sp[i]->build_bucketing_grid(nrows_,ncols_);
         }
 
-        vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
+        std::vector<std::vector <vpgl_fundamental_matrix<double> > > fms;
 
         fms.resize(nviews_);
         for (unsigned i=0; i < nviews_; ++i) {
@@ -671,9 +671,9 @@ run_stereo()
           }
         }
 
-        vcl_cout << "done (bucketing).\n";
+        std::cout << "done (bucketing).\n";
 
-        vcl_cout << "Computing 3-view epipolar correspondents...";
+        std::cout << "Computing 3-view epipolar correspondents...";
         if (synth_data_2_ || synth_data_3_||synth_data_med_)
           mw_match_position_band(vsols_, &corr_ep_n_, fms, 
               sp, err_pos_,true); // true = debug synthetic
@@ -681,15 +681,15 @@ run_stereo()
           mw_match_position_band(vsols_, &corr_ep_n_, fms, 
               sp, err_pos_,false);// false = do not debug synthetic
 
-        vcl_cout << "done (triplet building).\n";
+        std::cout << "done (triplet building).\n";
 
         // Convert to corr_ep_3.
 
-        vcl_cout << corr_ep_n_;
+        std::cout << corr_ep_n_;
 
-        vcl_cout << "======== Converting to 3 ========\n";
+        std::cout << "======== Converting to 3 ========\n";
         corr_ep_3_ = bmcsd_discrete_corresp_3(corr_ep_n_);
-        vcl_cout << corr_ep_3_;
+        std::cout << corr_ep_3_;
         have_precomputed_epi_corresp_ = true;
 
         for (unsigned i=0; i < nviews_; ++i) {
@@ -697,22 +697,22 @@ run_stereo()
         }
 
         /* Old one-way trinocoular reproj
-        vcl_cout << "Computing bucketing...";
-        vcl_cout.flush();
+        std::cout << "Computing bucketing...";
+        std::cout.flush();
 
         mw_subpixel_point_set p_img3(vsols_[2]);
         p_img3.build_bucketing_grid(nrows_,ncols_);
         p_img3.set_nhood_radius(trinocular_nrad_);
-        vcl_cout << "done.\n";
+        std::cout << "done.\n";
         m.epipolar_constraint_3(vsols_, &corr_ep_3_, 0, 1, 2,*fm_, p_img3);
-        vcl_cout << "done.\n";
-        vcl_cout << corr_ep_3_;
+        std::cout << "done.\n";
+        std::cout << corr_ep_3_;
         have_precomputed_epi_corresp_ = true;
         */
       }
     }
   } else {
-    vcl_cout << "NOT computing epipolar correspondents\n";
+    std::cout << "NOT computing epipolar correspondents\n";
   }
 
   if (run_trinocular_ || run_trinocular_DG_ || run_sel_geometry_ || 
@@ -727,7 +727,7 @@ run_stereo()
   }
 
   if (!symmetric_n_ && (run_trinocular_ || run_trinocular_DG_ /*|| run_n_view_DG_*/ )) {
-    vcl_cout << "Running trinocular constraints\n";
+    std::cout << "Running trinocular constraints\n";
 
     if (symmetric_3_) {
       if (synth_data_2_ || synth_data_1_ || synth_data_3_ || synth_data_med_) {
@@ -738,7 +738,7 @@ run_stereo()
           mw_point_matcher::C_THRESHOLD_TANGENT_AND_CURVATURE
          );
       } else {
-        vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
+        std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d;
         build_point_tangents_from_edgels(crv2d);
 
         m.trinocular_DG_costs_3(
@@ -752,37 +752,37 @@ run_stereo()
       }
 
     } else {
-        vcl_cout << "Computing bucketing...";
+        std::cout << "Computing bucketing...";
         mw_subpixel_point_set p_img3(vsols_[2]);
         p_img3.build_bucketing_grid(nrows_,ncols_);
         p_img3.set_nhood_radius(trinocular_nrad_);
-        vcl_cout << "done.\n";
+        std::cout << "done.\n";
 
         if (run_trinocular_) {
           m.trinocular_costs(vsols_, p_img3, &corr_out_, 0, 1, 2);
         } else if (run_trinocular_t_diff_) {
-          vcl_cout << "TANGENT ANGLE diff constraint\n";
+          std::cout << "TANGENT ANGLE diff constraint\n";
           if (synth_data_2_ || synth_data_1_ || synth_data_3_ || synth_data_med_) { 
             m.trinocular_DG_costs(crv2d_gt_, p_img3, &corr_out_, 0, 1, 2, 
                 mw_point_matcher::C_MIN_TANGENT);
           } else { 
             //: non-synthetic data, using edgel tangents
             
-            vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
+            std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d;
             build_point_tangents_from_edgels(crv2d);
 
             m.trinocular_DG_costs(crv2d, p_img3, &corr_out_, 0, 1, 2, 
                 mw_point_matcher::C_TANGENT_CLOSEST_EDGEL);
           }
         } else if (run_trinocular_k_diff_) { //:< implies synthetic data
-          vcl_cout << "CURVATURE diff constraint\n";
+          std::cout << "CURVATURE diff constraint\n";
           m.trinocular_DG_costs(crv2d_gt_, p_img3, &corr_out_, 0, 1, 2, 
               mw_point_matcher::C_MIN_CURVATURE);
         }
 
-        vcl_cout << "Sorting...";
+        std::cout << "Sorting...";
         corr_out_.sort();
-        vcl_cout << "done.\n";
+        std::cout << "done.\n";
     }
 
     have_stereo_result_corresp_=true;
@@ -794,14 +794,14 @@ run_stereo()
   if (run_synth_geometry_) {
     if (symmetric_3_ || symmetric_n_) {
       // TODO
-      vcl_cerr << "Not yet coded\n";
+      std::cerr << "Not yet coded\n";
       abort();
     }
-    vcl_cout << "Running geometry constraints on synthetic data\n";
+    std::cout << "Running geometry constraints on synthetic data\n";
     m.synthetic_geometry_costs(crv2d_gt_, &corr_out_, 0 , 1);
-    vcl_cout << "Sorting...";
+    std::cout << "Sorting...";
     corr_out_.sort();
-    vcl_cout << "done.\n";
+    std::cout << "done.\n";
     have_stereo_result_corresp_=true;
   }
 
@@ -819,7 +819,7 @@ run_stereo()
 }
 
 void mw_stereo_app::
-build_point_tangents_from_edgels(vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d) const
+build_point_tangents_from_edgels(std::vector<std::vector<bdifd_3rd_order_point_2d> > &crv2d) const
 {
   crv2d.resize(nviews_);
   for (unsigned iv=0; iv < nviews_; ++iv) {
@@ -845,7 +845,7 @@ build_point_tangents_from_edgels(vcl_vector<vcl_vector<bdifd_3rd_order_point_2d>
 }
 
 bool mw_stereo_app::
-write_results(vcl_string &path_corresp_out, vcl_string &path_precomputed_epip)
+write_results(std::string &path_corresp_out, std::string &path_precomputed_epip)
 {
   // write results of match
 
@@ -853,33 +853,33 @@ write_results(vcl_string &path_corresp_out, vcl_string &path_precomputed_epip)
   {
     vsl_b_ofstream bfs_out(path_corresp_out);
     if (!bfs_out) {
-      vcl_cout << "Error: unable to open " << path_corresp_out << vcl_endl;
+      std::cout << "Error: unable to open " << path_corresp_out << std::endl;
       return false;
     }
 
     if (symmetric_3_) {
       vsl_b_write(bfs_out, corr_out_3_);
       bfs_out.close();
-      vcl_cout << corr_out_3_;
+      std::cout << corr_out_3_;
     } else {
       if (symmetric_n_) {
         vsl_b_write(bfs_out, corr_out_n_);
         bfs_out.close();
-        vcl_cout << corr_out_n_;
+        std::cout << corr_out_n_;
       } else {
         vsl_b_write(bfs_out, corr_out_);
         bfs_out.close();
-        vcl_cout << corr_out_;
+        std::cout << corr_out_;
       }
     }
-    vcl_cout << "Finished writing " << path_corresp_out << vcl_endl;
+    std::cout << "Finished writing " << path_corresp_out << std::endl;
   }
   
   // write epip. corresp in case no arg provided
   if (write_epipolar_corresp_) {
     vsl_b_ofstream bfs_out(path_precomputed_epip);
     if (!bfs_out) {
-      vcl_cout << "Error: unable to open " << path_precomputed_epip << vcl_endl;
+      std::cout << "Error: unable to open " << path_precomputed_epip << std::endl;
       return false;
     }
 
@@ -893,7 +893,7 @@ write_results(vcl_string &path_corresp_out, vcl_string &path_precomputed_epip)
     }
 
     bfs_out.close();
-    vcl_cout << "Finished writing " << path_precomputed_epip << vcl_endl;
+    std::cout << "Finished writing " << path_precomputed_epip << std::endl;
   }
 
   return true;
@@ -914,7 +914,7 @@ read_edgels(mw_stereo_app_args &arg)
       double scale=1.0;
 
       // edgels (vsol)
-      vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+      std::vector< vsol_spatial_object_2d_sptr > edgels;
 
       bool retval =dbdet_load_edg(
           arg.prefix->value_ + edgel_fnames_[v],
@@ -936,7 +936,7 @@ read_edgels(mw_stereo_app_args &arg)
         vsols_[v][i] = vsols_orig_cache_[v][i]->middle();
       }
 
-      vcl_cout << "Number of points in view " << v << ": " << vsols_[v].size() << vcl_endl;
+      std::cout << "Number of points in view " << v << ": " << vsols_[v].size() << std::endl;
     }
   } else {
     vidpro1_vsol2D_storage_sptr model = vidpro1_vsol2D_storage_new();
@@ -944,21 +944,21 @@ read_edgels(mw_stereo_app_args &arg)
     for (unsigned v=0; v < nviews_; ++v) {
       vsl_b_ifstream bp_in(arg.prefix->value_ + edgel_fnames_[v]);
       if (!bp_in) {
-        vcl_cout << " Error opening file  " << arg.prefix->value_ +edgel_fnames_[v]  << vcl_endl;
+        std::cout << " Error opening file  " << arg.prefix->value_ +edgel_fnames_[v]  << std::endl;
         return false;
       }
 
-      vcl_cout << "Opened " << edgel_fnames_[v] <<  " for reading" << vcl_endl;
+      std::cout << "Opened " << edgel_fnames_[v] <<  " for reading" << std::endl;
 
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->b_read(bp_in);
       bp_in.close();
-      vcl_cout << "Finished reading " << edgel_fnames_[v]<<  vcl_endl;
+      std::cout << "Finished reading " << edgel_fnames_[v]<<  std::endl;
 
-      vcl_cout << "Storage named " << output_vsol->name() << vcl_endl;
+      std::cout << "Storage named " << output_vsol->name() << std::endl;
 
 
-      vcl_vector< vsol_spatial_object_2d_sptr > vsol_list= output_vsol->all_data();
+      std::vector< vsol_spatial_object_2d_sptr > vsol_list= output_vsol->all_data();
 
       vsols_[v].clear();
       vsols_orig_cache_[v].clear();
@@ -979,7 +979,7 @@ read_edgels(mw_stereo_app_args &arg)
         }
       }
 
-      vcl_cout << "Number of points in view " << v << ": " << vsols_[v].size() << vcl_endl;
+      std::cout << "Number of points in view " << v << ": " << vsols_[v].size() << std::endl;
     }
   }
 
@@ -989,30 +989,30 @@ read_edgels(mw_stereo_app_args &arg)
     if (vsols_[0].size() <=nsamples)
       return true;
     double ox = 330, oy=15, wx=780, wy=640; // currently specific for Capitol dataset
-    vcl_cout << "WARNING: currently specific for capitol dataset\n";
+    std::cout << "WARNING: currently specific for capitol dataset\n";
 
     for (unsigned i=0; i < vsols_.size(); ++i) {
-      vcl_cout << "view " << i << ", ini #pts: " << vsols_[i].size() << "; " 
-        << vsols_orig_cache_[i].size() << vcl_endl;
+      std::cout << "view " << i << ", ini #pts: " << vsols_[i].size() << "; " 
+        << vsols_orig_cache_[i].size() << std::endl;
     }
 
 //    for (unsigned iv=0; iv < nviews_; ++iv) {
     unsigned iv=0;
-      vcl_vector<bool> include(vsols_[iv].size(),false);
+      std::vector<bool> include(vsols_[iv].size(),false);
       unsigned ns = 0;
       do {
         // pick random index
         unsigned id = myrand.lrand32(vsols_[iv].size()-1);
         if (vsols_[iv][id]->x() >= ox && vsols_[iv][id]->x() <= ox + wx && 
             vsols_[iv][id]->y() >= oy && vsols_[iv][id]->y() <= oy + wy) {
-          vcl_cout << "Including random id: " << id << "\n";
+          std::cout << "Including random id: " << id << "\n";
           ns++;
           include[id] = true;
         }
       } while (ns < nsamples);
 
-      vcl_vector<vsol_point_2d_sptr> new_vsols_;
-      vcl_vector<vsol_line_2d_sptr> new_vsols_orig_;
+      std::vector<vsol_point_2d_sptr> new_vsols_;
+      std::vector<vsol_line_2d_sptr> new_vsols_orig_;
       new_vsols_.reserve(ns);
       new_vsols_orig_.reserve(ns);
 
@@ -1028,8 +1028,8 @@ read_edgels(mw_stereo_app_args &arg)
 //    }
 
     for (unsigned i=0; i < vsols_.size(); ++i) {
-      vcl_cout << "view " << i << ", new #pts: " << vsols_[i].size() << "; " 
-        << vsols_orig_cache_[i].size() << vcl_endl;
+      std::cout << "view " << i << ", new #pts: " << vsols_[i].size() << "; " 
+        << vsols_orig_cache_[i].size() << std::endl;
     }
   }
 
@@ -1041,10 +1041,10 @@ write_gt_edgels(mw_stereo_app_args &arg)
 {
   for (unsigned  iv=0; iv < nviews_; ++iv) {
 
-    vcl_vector<vsol_line_2d_sptr> lines;
+    std::vector<vsol_line_2d_sptr> lines;
     bdifd_data::get_lines(lines, crv2d_gt_[iv], false);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+    std::vector< vsol_spatial_object_2d_sptr > edgels;
 
     const double scale=1;
     for (unsigned i=0; i<lines.size(); i++) {
@@ -1056,16 +1056,16 @@ write_gt_edgels(mw_stereo_app_args &arg)
     vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
     output_vsol->add_objects(edgels, "edgels");
     
-    vcl_string fname = arg.out_path->value_ + vcl_string("/") + edgel_fnames_[iv];
+    std::string fname = arg.out_path->value_ + std::string("/") + edgel_fnames_[iv];
 
     vsl_b_ofstream bp_out(fname);
 
     if (!bp_out){
-      vcl_cout << " Error opening file  " << fname << vcl_endl;
+      std::cout << " Error opening file  " << fname << std::endl;
       return false;
     }
 
-    vcl_cout << "Created " << fname << " for writing vsol\n";
+    std::cout << "Created " << fname << " for writing vsol\n";
 
     output_vsol->b_write(bp_out);
 
@@ -1079,7 +1079,7 @@ void mw_stereo_app::
 init_sel(mw_stereo_app_args &arg)
 {
   if (arg.read_sel->value_) { 
-    vcl_cout << "Reading precomputed SELs\n";
+    std::cout << "Reading precomputed SELs\n";
     // TODO
     compute_sel_ = false;
   } else 
@@ -1094,15 +1094,15 @@ read_images(mw_stereo_app_args &arg)
   for (unsigned i=0; i < nviews_; ++i) {
     images_.push_back(vil_load_image_resource( (arg.prefix->value_ + fnames_[i]).c_str() ) );
     if( !images_.back()) {
-      vcl_cerr << "Failed to load image file " << arg.prefix->value_ + fnames_[i] << vcl_endl;
+      std::cerr << "Failed to load image file " << arg.prefix->value_ + fnames_[i] << std::endl;
       return false;
     }
     ncols_ = images_[i]->ni();
     nrows_ = images_[i]->nj();
 
-    vcl_cout << "Image view # " << i << "  ";
-    vcl_cout << "Nrows: " << nrows_;
-    vcl_cout << "  Ncols: " << ncols_ << vcl_endl;
+    std::cout << "Image view # " << i << "  ";
+    std::cout << "Nrows: " << nrows_;
+    std::cout << "  Ncols: " << ncols_ << std::endl;
   }
   return true;
 }
@@ -1122,7 +1122,7 @@ read_cams(mw_stereo_app_args &arg)
     if (arg.cam_type->value_ == "projcamera")
       cam_type = PROJCAMERA;
     else  {
-      vcl_cerr << "Error: invalid camera type " << arg.cam_type->value_ << vcl_endl;
+      std::cerr << "Error: invalid camera type " << arg.cam_type->value_ << std::endl;
       return false;
     }
   }
@@ -1134,21 +1134,21 @@ read_cams(mw_stereo_app_args &arg)
     vpgl_perspective_camera<double> mycam;
 
     if (cam_type == INTRINSIC_EXTRINSIC ) {
-      vcl_string cam_fname = arg.prefix->value_ + fnames_[i];
+      std::string cam_fname = arg.prefix->value_ + fnames_[i];
       if (! read_cam(cam_fname, &mycam) ) {
-        vcl_cout << "Error reading cam " << cam_fname << vcl_endl;
+        std::cout << "Error reading cam " << cam_fname << std::endl;
          return false;
       }
     } else { //cam_type == PROJCAMERA
-      vcl_string cam_fname = arg.prefix->value_ + fnames_[i];
+      std::string cam_fname = arg.prefix->value_ + fnames_[i];
       if (! read_3x4_matrix_into_cam( cam_fname ,&mycam) ) {
-        vcl_cout << "Error reading cam " << cam_fname << vcl_endl;
+        std::cout << "Error reading cam " << cam_fname << std::endl;
          return false;
       }
     }
 
     cam_[i].set_p(mycam);
-    vcl_cout << "Camera #" << i << vcl_endl << cam_[i].Pr_.get_matrix() << vcl_endl;
+    std::cout << "Camera #" << i << std::endl << cam_[i].Pr_.get_matrix() << std::endl;
   }
   return true;
 }
@@ -1156,8 +1156,8 @@ read_cams(mw_stereo_app_args &arg)
 void mw_stereo_app::
 compute_sel()
 {
-    vcl_cout << "Computing SEL geometry" << vcl_endl;
-    vcl_cout << "Code not yet updated." << vcl_endl;
+    std::cout << "Computing SEL geometry" << std::endl;
+    std::cout << "Code not yet updated." << std::endl;
     abort();
 
 
@@ -1166,8 +1166,8 @@ compute_sel()
 
     for (unsigned i=0; i < 2 /*nviews_*/; ++i) {
 
-      vcl_cout  << "SEL: doing view " << i << vcl_endl;
-      vcl_vector<dbdet_edgel *> all_edgels(vsols_orig_cache_[i].size());
+      std::cout  << "SEL: doing view " << i << std::endl;
+      std::vector<dbdet_edgel *> all_edgels(vsols_orig_cache_[i].size());
 
       for (unsigned k=0; k < vsols_orig_cache_[i].size(); ++k) { 
         vsol_line_2d_sptr eline = vsols_orig_cache_[i][k];
@@ -1192,16 +1192,16 @@ compute_sel()
   if (run_sel_geometry_) {
     if (symmetric_3_ || symmetric_n_) {
       // TODO
-      vcl_cerr << "Not yet coded\n";
+      std::cerr << "Not yet coded\n";
       abort();
     }
 
-    vcl_cout << "Running sel geometry constraints\n";
+    std::cout << "Running sel geometry constraints\n";
 
     m.sel_geometry_costs(vsols_, sel_, &corr_out_, 0 , 1);
-    vcl_cout << "Sorting...";
+    std::cout << "Sorting...";
     corr_out_.sort();
-    vcl_cout << "done.\n";
+    std::cout << "done.\n";
     have_stereo_result_corresp_=true;
   }
   */

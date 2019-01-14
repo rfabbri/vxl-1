@@ -11,8 +11,8 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_arg.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdlib>
 
 
 
@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
   vul_arg_info_list arg_list;
   
   // Input files
-  vul_arg<vcl_string > input_files(arg_list,"-in", "Input esf files", vcl_string(""));
+  vul_arg<std::string > input_files(arg_list,"-in", "Input esf files", std::string(""));
 
   // Output folder
-  vul_arg<vcl_string > output_folder(arg_list,"-out", "Output folder", vcl_string("."));
+  vul_arg<std::string > output_folder(arg_list,"-out", "Output folder", std::string("."));
 
   // Distance threshold for fitting
   vul_arg<float > tol (arg_list,"-tol", "Fitting tolerance", 0.5f);
@@ -43,13 +43,13 @@ int main(int argc, char *argv[])
 
   if (!vul_file::is_directory(output_folder()))
   {
-    vcl_cout << "\nERROR: value for \"-out\" option is not a directory.\n";
+    std::cout << "\nERROR: value for \"-out\" option is not a directory.\n";
     return EXIT_FAILURE;
   }
 
   if (vul_file::is_directory(input_files()))
   {
-    vcl_cout << "\nERROR: value for \"-in\" option is not file name(s).\n";
+    std::cout << "\nERROR: value for \"-in\" option is not file name(s).\n";
     return EXIT_FAILURE;
   }
  
@@ -58,9 +58,9 @@ int main(int argc, char *argv[])
   for (vul_file_iterator fn = input_files(); fn; ++fn)
   {
     // a) Load input
-    vcl_string esf_file = fn();
+    std::string esf_file = fn();
 
-    vcl_cout << "\nLoading esf file: " << esf_file << "...";
+    std::cout << "\nLoading esf file: " << esf_file << "...";
     dbsk2d_load_esf_process load_esf_process;
     load_esf_process.parameters()->set_value("-esfinput", bpro1_filepath(esf_file));
     load_esf_process.clear_input();
@@ -69,10 +69,10 @@ int main(int argc, char *argv[])
     bool load_success = load_esf_process.execute();
     if (!load_success)
     {
-      vcl_cout << "[ Failed ]\n";
+      std::cout << "[ Failed ]\n";
       continue;
     }
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
 
     dbsk2d_shock_storage_sptr sk2d_storage;
     sk2d_storage.vertical_cast(load_esf_process.get_output()[0]);
@@ -92,21 +92,21 @@ int main(int argc, char *argv[])
 
     if (!fit_process.execute())
     {
-      vcl_cout << "[ Failed ]\n"; 
+      std::cout << "[ Failed ]\n"; 
       continue;
     }
     else
     {
-      vcl_cout << "[ OK ]\n";
+      std::cout << "[ OK ]\n";
     }
     dbsksp_xgraph_storage_sptr xgraph_storage;
     xgraph_storage.vertical_cast(fit_process.get_output()[0]);
     
     // c) Save output
-    vcl_string xml_fname = vul_file::strip_extension(vul_file::strip_directory(esf_file)) + ".xml";
-    vcl_string xml_file = output_folder() + "/" + xml_fname;
+    std::string xml_fname = vul_file::strip_extension(vul_file::strip_directory(esf_file)) + ".xml";
+    std::string xml_file = output_folder() + "/" + xml_fname;
 
-    vcl_cout << "\nSaving xgraph to xml file: " << xml_file << "...";
+    std::cout << "\nSaving xgraph to xml file: " << xml_file << "...";
 
     dbsksp_save_xgraph_xml_process save_xgraph_process;
     save_xgraph_process.parameters()->set_value("-xmlfile", bpro1_filepath(xml_file));
@@ -116,12 +116,12 @@ int main(int argc, char *argv[])
     save_xgraph_process.add_input(xgraph_storage.ptr());
     if (!save_xgraph_process.execute())
     {
-      vcl_cout << "[ Failed ]\n";
+      std::cout << "[ Failed ]\n";
       continue;
     }
     else
     {
-      vcl_cout << "[ OK ]\n";
+      std::cout << "[ OK ]\n";
     }
   }
 

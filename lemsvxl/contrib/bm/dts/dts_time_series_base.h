@@ -14,7 +14,7 @@
 #include<vbl/vbl_ref_count.h>
 #include<vbl/vbl_smart_ptr.h>
 
-#include<vcl_cstddef.h>
+#include<cstddef>
 
 #include<vsl/vsl_binary_io.h>
 
@@ -25,7 +25,7 @@ public:
 
     virtual ~dts_time_series_base(){}
 
-    virtual vcl_size_t size() const = 0;
+    virtual std::size_t size() const = 0;
 
     virtual unsigned dimension() = 0;
 
@@ -33,7 +33,7 @@ public:
 
     virtual void b_read( vsl_b_istream& is ) = 0;
 
-    virtual void write_txt( vcl_string const& filename) const = 0;
+    virtual void write_txt( std::string const& filename) const = 0;
 };
 
 

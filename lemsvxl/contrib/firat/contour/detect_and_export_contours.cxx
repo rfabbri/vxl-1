@@ -14,8 +14,8 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/sel/dbdet_edgel.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdlib.h>
+#include <fstream>
+#include <cstdlib>
 
 int main(int argc, char* argv[])
 {
@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
     dbdet_edgel_chain_list cl = storage->CFG().frags;
     dbdet_edgel_chain_list::iterator it = cl.begin();
     int count = 0;
-    int length_threshold = vcl_atoi(argv[3]);
-    vcl_ofstream ofs(argv[2]);
+    int length_threshold = std::atoi(argv[3]);
+    std::ofstream ofs(argv[2]);
 
     for(; it != cl.end(); it++)
     {
@@ -57,18 +57,18 @@ int main(int argc, char* argv[])
         dbdet_edgel_list el = chain->edgels;
         if(el.size() > length_threshold)
         {
-            vcl_cout << "Size: " << el.size() << vcl_endl;
-            ofs << el.size() << " 0" << vcl_endl;
+            std::cout << "Size: " << el.size() << std::endl;
+            ofs << el.size() << " 0" << std::endl;
             for(int i = 0; i < el.size(); i++)
             {
                 dbdet_edgel* edg = el[i];
                 vgl_point_2d<double> pt = edg->pt;
-                ofs << pt.x() << " " << pt.y() << vcl_endl;
+                ofs << pt.x() << " " << pt.y() << std::endl;
             }
             count++;
         }
     }
     ofs.close();
-    vcl_cout << "Number of cf longer than " << length_threshold << ": " << count << vcl_endl;
+    std::cout << "Number of cf longer than " << length_threshold << ": " << count << std::endl;
 
 }

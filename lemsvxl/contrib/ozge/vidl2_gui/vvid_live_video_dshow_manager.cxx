@@ -1,10 +1,10 @@
 // This is brl/vvid/vvid_live_video_dshow_manager.cxx
 #include "vvid_live_video_dshow_manager.h"
 
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_sstream.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cstdlib> // for std::exit()
+#include <sstream>
+#include <vector>
+#include <iostream>
 #include <vul/vul_timer.h>
 #include <vul/vul_file.h>
 //#include <vil1/vil1_memory_image_of.h>
@@ -74,38 +74,38 @@ void vvid_live_video_dshow_manager::init()
   // for now we assume use a pre-defined _N_views
 
   // Get the list of available cameras
-  vcl_vector<vcl_string> device_names = vidl_dshow::get_capture_device_names();
+  std::vector<std::string> device_names = vidl_dshow::get_capture_device_names();
   num_cameras_ = device_names.size();
-  vcl_cout << "Number of Cameras Detected: " << num_cameras_ << vcl_endl;
+  std::cout << "Number of Cameras Detected: " << num_cameras_ << std::endl;
   
   //for (unsigned int i = 0; i<num_cameras_; i++) {
   //  vidl_dshow_istream_params::print_parameter_help(device_names[i]);
   //}
 
   if (num_cameras_ <= 0) {
-    vcl_cerr << "Exiting - no cameras detected\n";
-    vcl_exit(0);
+    std::cerr << "Exiting - no cameras detected\n";
+    std::exit(0);
   }
 
-  //vcl_vector<vidl_dshow_istream_params> params;
+  //std::vector<vidl_dshow_istream_params> params;
 
   /*num_cameras_ = 0;
-  vcl_vector<bool> chosen(device_names.size(), false);
+  std::vector<bool> chosen(device_names.size(), false);
   for (unsigned i = 0; i<device_names.size(); i++) {
 
     vgui_dialog cam_dlg("Select Camera to view");
-   //vcl_vector<bool> chosen(num_cameras_, false);
+   //std::vector<bool> chosen(num_cameras_, false);
     bool dummy;
-    vcl_string str = "Use camera " + device_names[i];
+    std::string str = "Use camera " + device_names[i];
     cam_dlg.checkbox(str.c_str(), dummy);
     if (!cam_dlg.ask())
       return;
 
     if (dummy) {
       num_cameras_++;
-      vcl_cout << "camera " << device_names[i] << " was chosen\n";
+      std::cout << "camera " << device_names[i] << " was chosen\n";
     } else
-      vcl_cout << "camera " << device_names[i] << " was not chosen\n";
+      std::cout << "camera " << device_names[i] << " was not chosen\n";
     chosen[i] = dummy;
   }*/
 
@@ -117,8 +117,8 @@ void vvid_live_video_dshow_manager::init()
   if (!cam_dlg.ask())
     return;
 
-  vcl_cout << "camera " << device_names[choice] << " is chosen\n";
-  vcl_cout << "num of cameras: " << num_cameras_ << "\n";
+  std::cout << "camera " << device_names[choice] << " is chosen\n";
+  std::cout << "num of cameras: " << num_cameras_ << "\n";
 
   vgui_grid_tableau_sptr grid = vgui_grid_tableau_new(2*num_cameras_,2);
   grid->set_grid_size_changeable(true);
@@ -132,18 +132,18 @@ void vvid_live_video_dshow_manager::init()
   for (unsigned cam=0, i = 0; cam<num_cameras_; ++cam, i++)
   {
     //if (!chosen[i]) i++;
-    //vcl_cout << "i: " << i << " setting camera params: " << device_names[i] << "\n";
-    vcl_cout << " setting camera params of " << device_names[choice] << "\n";
+    //std::cout << "i: " << i << " setting camera params: " << device_names[i] << "\n";
+    std::cout << " setting camera params of " << device_names[choice] << "\n";
     vidl_dshow_istream_params cp = vidl_dshow_istream_params();
     cp.set_device_name(device_names[choice]);
     set_camera_params(cp, sample_);
-    //vcl_cout << "Camera " << cam << " is chosen device: " << cp.device_name() << "\n";
+    //std::cout << "Camera " << cam << " is chosen device: " << cp.device_name() << "\n";
     vidl_dshow_live_istream<vidl_dshow_istream_params> *ds_istream = 
         new vidl_dshow_live_istream<vidl_dshow_istream_params>(cp);
 
     if (!ds_istream || !ds_istream->is_open()) {
-      vcl_cout << "Failed to open the input stream for camera: " << cp.device_name() << "\n";
-      vcl_exit(1);
+      std::cout << "Failed to open the input stream for camera: " << cp.device_name() << "\n";
+      std::exit(1);
     }
 
     vtab = vvid_live_video_dshow_tableau_new(cam, sample_, ds_istream);
@@ -151,8 +151,8 @@ void vvid_live_video_dshow_manager::init()
     //init_successful_ = init_successful_&&vtab->attach_live_video();
     if (!init_successful_)
     {
-      vcl_cout << "In vvid_live_video_dshow_manager::init() -"
-               << " bad initialization - camera #"<< cam << vcl_endl;
+      std::cout << "In vvid_live_video_dshow_manager::init() -"
+               << " bad initialization - camera #"<< cam << std::endl;
       return;
     }
     vt2D =  bgui_vtol2D_tableau_new(vtab);
@@ -213,17 +213,17 @@ void vvid_live_video_dshow_manager::set_camera_params(vidl_dshow_istream_params&
   //static int pix_sample_interval = 1;
   pix_sample_interval = 1;
 
-  //vcl_vector<vcl_string> choices;
-  //vcl_string no_choice="CurrentConfiguration";
+  //std::vector<std::string> choices;
+  //std::string no_choice="CurrentConfiguration";
   //choices.push_back(no_choice);
 
-  //vcl_vector<vcl_string> device_names = vidl_dshow::get_capture_device_names();
+  //std::vector<std::string> device_names = vidl_dshow::get_capture_device_names();
   //for (unsigned int i = 0; i<device_names.size(); i++)
     //choices.push_back(device_names[i]);
 
 /*
-  vcl_vector<vcl_string> valid_descrs = vtab->get_capability_descriptions();
-  for (vcl_vector<vcl_string>::iterator cit = valid_descrs.begin();
+  std::vector<std::string> valid_descrs = vtab->get_capability_descriptions();
+  for (std::vector<std::string>::iterator cit = valid_descrs.begin();
        cit != valid_descrs.end(); cit++)
        choices.push_back(*cit);
        */
@@ -268,7 +268,7 @@ void vvid_live_video_dshow_manager::set_detection_params()
 {
   if (vtabs_.size() != num_cameras_)
   {
-    vcl_cout << "in vvid_live_video_dshow_manager::set_camera_params() -"
+    std::cout << "in vvid_live_video_dshow_manager::set_camera_params() -"
              << " no live video tableau\n";
     return;
   }
@@ -329,25 +329,25 @@ void vvid_live_video_dshow_manager::camera_calibration()
     vt2Ds_[i]->clear_all();
   }
   vgui_dialog cal_dialog("Camera Calibration Process Params");
-  vcl_string file_name = "";
-  vcl_string ext = ".ply";
+  std::string file_name = "";
+  std::string ext = ".ply";
   cal_dialog.file("Calibration model file: ", ext, file_name);
   unsigned int num_pts = 6;
   cal_dialog.field("Number of points: ", num_pts);
   if (!cal_dialog.ask())
     return;
   if (num_pts < 6) {
-    vcl_cout << "Minimum number of points is 6\n";
+    std::cout << "Minimum number of points is 6\n";
     return;
   }
 
   // cakibrate the first camera!!!!!!! for now
   vpro_camera_calibration_process* pro = new vpro_camera_calibration_process(file_name, num_pts);
-  vcl_vector< vgl_homg_point_2d<double> > pts = vtabs_[0]->get_image_pts();
+  std::vector< vgl_homg_point_2d<double> > pts = vtabs_[0]->get_image_pts();
   //vtabs_[i]->get_image_pts(pts);
-  vcl_cout << "pushed points size: " << pts.size() << " exiting if 0\n";
+  std::cout << "pushed points size: " << pts.size() << " exiting if 0\n";
   if (pts.size() < 6) {
-    vcl_cout << "In vvid_live_video_dshow_manager::camera_calibration() - points are not entered properly\n";
+    std::cout << "In vvid_live_video_dshow_manager::camera_calibration() - points are not entered properly\n";
     return;
   }
 
@@ -405,8 +405,8 @@ void vvid_live_video_dshow_manager::capture_sequence()
 {
   this->stop_live_video();
   vgui_dialog save_video_dlg("Save Video Sequence");
-  static vcl_string video_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string video_filename = "";
+  static std::string ext = "*.*";
   save_video_dlg.file("Video Filename:", ext, video_filename);
   if (!save_video_dlg.ask())
     return;
@@ -418,16 +418,16 @@ void vvid_live_video_dshow_manager::init_capture()
 {
   this->stop_live_video();
   vgui_dialog save_video_dlg("Init Capture");
-  static vcl_string video_directory = vul_file::get_cwd();
-  static vcl_string ext = "*.*";
+  static std::string video_directory = vul_file::get_cwd();
+  static std::string ext = "*.*";
   static bool auto_increment = true;
-  static vcl_string dir_prefix = "video";
+  static std::string dir_prefix = "video";
   static int dir_index = 0;
   save_video_dlg.file("Video Directory:", ext, video_directory);
   save_video_dlg.checkbox("Automatically Create Incremental Subdirectories", auto_increment);
   save_video_dlg.field("Directory Prefix", dir_prefix);
   save_video_dlg.field("Current Directory Index", dir_index);
-  vcl_stringstream complete_path;
+  std::stringstream complete_path;
   complete_path << "Complete Path: " << video_directory << '/' << dir_prefix << dir_index;
   save_video_dlg.message(complete_path.str().c_str());
 
@@ -438,9 +438,9 @@ void vvid_live_video_dshow_manager::init_capture()
   if (!vul_file::is_directory(video_directory))
     video_directory = vul_file::dirname(video_directory);
 
-  vcl_string video_filename = video_directory;
+  std::string video_filename = video_directory;
   if (auto_increment){
-    vcl_stringstream auto_dir;
+    std::stringstream auto_dir;
     auto_dir << '/' << dir_prefix << dir_index++;
     video_filename += auto_dir.str();
     vul_file::make_directory(video_filename);
@@ -448,7 +448,7 @@ void vvid_live_video_dshow_manager::init_capture()
 
   for (unsigned i=0; i<num_cameras_; ++i)
   {
-    vcl_stringstream camera_subdir;
+    std::stringstream camera_subdir;
     camera_subdir << "/camera" << i << '/';
     vul_file::make_directory(video_filename+camera_subdir.str());
     vtabs_[i]->start_capture(video_filename+camera_subdir.str());
@@ -486,9 +486,9 @@ void vvid_live_video_dshow_manager::display_topology()
   for (unsigned i=0; i<num_cameras_; ++i)
   {
     vt2Ds_[i]->clear_all();
-    vcl_vector<vtol_topology_object_sptr> const & seg = video_process_->get_output_topology();
+    std::vector<vtol_topology_object_sptr> const & seg = video_process_->get_output_topology();
 
-    for (vcl_vector<vtol_topology_object_sptr>::const_iterator ti=seg.begin();
+    for (std::vector<vtol_topology_object_sptr>::const_iterator ti=seg.begin();
          ti != seg.end(); ti++)
     {
       if (edges_)
@@ -523,7 +523,7 @@ void vvid_live_video_dshow_manager::display_spatial_objects()
   for (unsigned i=0; i<num_cameras_; ++i)
   {
     vt2Ds_[i]->clear_all();   
-    vcl_vector<vsol_spatial_object_2d_sptr> const & objs = video_process_->get_output_spatial_objects();
+    std::vector<vsol_spatial_object_2d_sptr> const & objs = video_process_->get_output_spatial_objects();
     vt2Ds_[i]->add_spatial_objects(objs);
   }
 }
@@ -579,8 +579,8 @@ void vvid_live_video_dshow_manager::start_live_video()
   for (unsigned i=0; i<num_cameras_; ++i)
     if (!vtabs_[i]->start_live_video())
     {
-      vcl_cout << "In vvid_live_video_dshow_manager::start_live_video() -"
-               << " start failed - camera #" << i << vcl_endl;
+      std::cout << "In vvid_live_video_dshow_manager::start_live_video() -"
+               << " start failed - camera #" << i << std::endl;
       return;
     }
   this->run_frames();
@@ -605,7 +605,7 @@ void vvid_live_video_dshow_manager::quit()
     vt2Ds_[i]->clear_all();
   }
   this->stop_live_video();
-  vcl_exit(1);
+  std::exit(1);
 }
 
 bool vvid_live_video_dshow_manager::
@@ -615,7 +615,7 @@ get_current_image(unsigned camera_index,
 {
   if (!init_successful_||!vtabs_[camera_index])
   {
-    vcl_cout << "In vvid_live_video_manger::get_current_imge(..) -"
+    std::cout << "In vvid_live_video_manger::get_current_imge(..) -"
              << " bad initialization\n";
     return false;
   }

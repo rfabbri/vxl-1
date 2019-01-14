@@ -3,23 +3,23 @@
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_dpmatch.h>
 #include <dbskr/dbskr_tree_sptr.h>
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
  
-int read_curve_file(vcl_ifstream& fs,
-                    vcl_vector<double>& time, 
-                    vcl_vector<double>& alpha, 
-                    vcl_vector <int>& shock_dir, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_plus, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_minus,  
-                    vcl_vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
-                    vcl_vector<double>& bdry_plus_arclength, 
-                    vcl_vector<double>& bdry_plus_angle, 
-                    vcl_vector<double>& bdry_minus_arclength, 
-                    vcl_vector<double>& bdry_minus_angle,
-                    vcl_vector<double>& angle,
-                    vcl_vector<double>& velocity,
-                    vcl_vector<double>& curvature) {
+int read_curve_file(std::ifstream& fs,
+                    std::vector<double>& time, 
+                    std::vector<double>& alpha, 
+                    std::vector <int>& shock_dir, 
+                    std::vector< vgl_point_2d<double> >& bdry_plus, 
+                    std::vector< vgl_point_2d<double> >& bdry_minus,  
+                    std::vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
+                    std::vector<double>& bdry_plus_arclength, 
+                    std::vector<double>& bdry_plus_angle, 
+                    std::vector<double>& bdry_minus_arclength, 
+                    std::vector<double>& bdry_minus_angle,
+                    std::vector<double>& angle,
+                    std::vector<double>& velocity,
+                    std::vector<double>& curvature) {
   int size;
   fs >> size;
   for (int i = 0; i<size; i++) {
@@ -68,19 +68,19 @@ int read_curve_file(vcl_ifstream& fs,
   return size;
 }
  
-void clear_all (    vcl_vector<double>& time, 
-                    vcl_vector<double>& alpha, 
-                    vcl_vector <int>& shock_dir, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_plus, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_minus,  
-                    vcl_vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
-                    vcl_vector<double>& bdry_plus_arclength, 
-                    vcl_vector<double>& bdry_plus_angle, 
-                    vcl_vector<double>& bdry_minus_arclength, 
-                    vcl_vector<double>& bdry_minus_angle,
-                    vcl_vector<double>& angle,
-                    vcl_vector<double>& velocity,
-                    vcl_vector<double>& curvature) {
+void clear_all (    std::vector<double>& time, 
+                    std::vector<double>& alpha, 
+                    std::vector <int>& shock_dir, 
+                    std::vector< vgl_point_2d<double> >& bdry_plus, 
+                    std::vector< vgl_point_2d<double> >& bdry_minus,  
+                    std::vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
+                    std::vector<double>& bdry_plus_arclength, 
+                    std::vector<double>& bdry_plus_angle, 
+                    std::vector<double>& bdry_minus_arclength, 
+                    std::vector<double>& bdry_minus_angle,
+                    std::vector<double>& angle,
+                    std::vector<double>& velocity,
+                    std::vector<double>& curvature) {
   time.clear();
   alpha.clear();
   shock_dir.clear();
@@ -97,20 +97,20 @@ void clear_all (    vcl_vector<double>& time,
 }
 
 bool check_properties(dbskr_scurve_sptr c, 
-                      vcl_vector<double>& bdry_plus_arclength, 
-                      vcl_vector<double>& bdry_plus_angle, 
-                      vcl_vector<double>& bdry_minus_arclength, 
-                      vcl_vector<double>& bdry_minus_angle, double precision) {
+                      std::vector<double>& bdry_plus_arclength, 
+                      std::vector<double>& bdry_plus_angle, 
+                      std::vector<double>& bdry_minus_arclength, 
+                      std::vector<double>& bdry_minus_angle, double precision) {
 
   int size = c->num_points();
   for (int i = 0; i<size; i++) {
-    if (vcl_fabs(c->boundary_plus_arclength(i) - bdry_plus_arclength[i]) > precision)
+    if (std::fabs(c->boundary_plus_arclength(i) - bdry_plus_arclength[i]) > precision)
       return false;
-    if (vcl_fabs(c->boundary_minus_arclength(i) - bdry_minus_arclength[i]) > precision)
+    if (std::fabs(c->boundary_minus_arclength(i) - bdry_minus_arclength[i]) > precision)
       return false;
-    if (vcl_fabs(c->boundary_plus_angle(i) - bdry_plus_angle[i]) > precision)
+    if (std::fabs(c->boundary_plus_angle(i) - bdry_plus_angle[i]) > precision)
       return false;
-    if (vcl_fabs(c->boundary_minus_angle(i) - bdry_minus_angle[i]) > precision)
+    if (std::fabs(c->boundary_minus_angle(i) - bdry_minus_angle[i]) > precision)
       return false;
   }
   return true;
@@ -119,7 +119,7 @@ bool check_properties(dbskr_scurve_sptr c,
 MAIN_ARGS(test_scvmatch)
 {
 
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -132,24 +132,24 @@ MAIN_ARGS(test_scvmatch)
 
   testlib_test_start("testing dbskr_dpmatch class ");
 
-  vcl_string curve_file1 = "data/brk001-pln006-0-1-vs-0-2-5-curves.txt";
-  vcl_string curve_file2 = "data/brk001-pln006-0-1-vs-1-3-4-13-15-curves.txt";
-  vcl_string curve_file3 = "data/brk001-pln006-0-1-2-vs-0-2-5-curves.txt";
+  std::string curve_file1 = "data/brk001-pln006-0-1-vs-0-2-5-curves.txt";
+  std::string curve_file2 = "data/brk001-pln006-0-1-vs-1-3-4-13-15-curves.txt";
+  std::string curve_file3 = "data/brk001-pln006-0-1-2-vs-0-2-5-curves.txt";
   
-  vcl_ifstream cf1((dir_base+curve_file1).c_str(), vcl_ios::in);
+  std::ifstream cf1((dir_base+curve_file1).c_str(), std::ios::in);
   TEST("file1 open ", cf1.is_open(), true);
-  vcl_ifstream cf2((dir_base+curve_file2).c_str(), vcl_ios::in);
+  std::ifstream cf2((dir_base+curve_file2).c_str(), std::ios::in);
   TEST("file2 open ", cf2.is_open(), true);
-  vcl_ifstream cf3((dir_base+curve_file3).c_str(), vcl_ios::in);
+  std::ifstream cf3((dir_base+curve_file3).c_str(), std::ios::in);
   TEST("file3 open ", cf3.is_open(), true);
   
   //: testing first curve pair's matching
-  vcl_vector<double> time, alpha;
-  vcl_vector <int> shock_dir;
+  std::vector<double> time, alpha;
+  std::vector <int> shock_dir;
   int num_points;
-  vcl_vector< vgl_point_2d<double> > bdry_plus, bdry_minus, pt_array;
-  vcl_vector<double> bdry_plus_arclength, bdry_plus_angle, bdry_minus_arclength, bdry_minus_angle;
-  vcl_vector<double> angle, velocity, curvature;
+  std::vector< vgl_point_2d<double> > bdry_plus, bdry_minus, pt_array;
+  std::vector<double> bdry_plus_arclength, bdry_plus_angle, bdry_minus_arclength, bdry_minus_angle;
+  std::vector<double> angle, velocity, curvature;
   num_points = read_curve_file(cf1, time, alpha, shock_dir, 
                                bdry_plus, bdry_minus, pt_array, 
                                bdry_plus_arclength, bdry_plus_angle, 
@@ -178,16 +178,16 @@ MAIN_ARGS(test_scvmatch)
 
   float finalCost;
   cf1 >> finalCost;
-  //vcl_cout << "real final cost of matching c1 and c2: " << finalCost << vcl_endl;
+  //std::cout << "real final cost of matching c1 and c2: " << finalCost << std::endl;
 
-  vcl_vector <double> lambda;
+  std::vector <double> lambda;
   for (int i=0;i<3;i++)
     lambda.push_back(1.0);
   double R = 6.0;
   dbskr_dpmatch d(c1, c2, R, lambda, 3);
   d.Match();
   double finalCostM = d.finalCost();
-  //vcl_cout << "final cost of matching c1 and c2: " << finalCostM << vcl_endl;
+  //std::cout << "final cost of matching c1 and c2: " << finalCostM << std::endl;
   
   TEST_NEAR("final_cost() ", finalCost, finalCostM, 0.01);
   cf1.close();
@@ -223,12 +223,12 @@ MAIN_ARGS(test_scvmatch)
                                                         bdry_minus_arclength, bdry_minus_angle, 0.001), true);
 
   cf2 >> finalCost;
-  //vcl_cout << "real final cost of matching c21 and c22: " << finalCost << vcl_endl;
+  //std::cout << "real final cost of matching c21 and c22: " << finalCost << std::endl;
   
   dbskr_dpmatch d2(c21, c22, R, lambda, 3);
   d2.Match();
   finalCostM = d2.finalCost();
-  //vcl_cout << "final cost of matching c21 and c22: " << finalCostM << vcl_endl;
+  //std::cout << "final cost of matching c21 and c22: " << finalCostM << std::endl;
   
   TEST_NEAR("final_cost() ", finalCost, finalCostM, 0.01);
 
@@ -265,12 +265,12 @@ MAIN_ARGS(test_scvmatch)
                                                         bdry_minus_arclength, bdry_minus_angle, 0.001), true);
 
   cf3 >> finalCost;
-  //vcl_cout << "real final cost of matching c31 and c32: " << finalCost << vcl_endl;
+  //std::cout << "real final cost of matching c31 and c32: " << finalCost << std::endl;
 
   dbskr_dpmatch d3(c31, c32, R, lambda, 3);
   d3.Match();
   finalCostM = d3.finalCost();
-  //vcl_cout << "final cost of matching c31 and c32: " << finalCostM << vcl_endl;
+  //std::cout << "final cost of matching c31 and c32: " << finalCostM << std::endl;
   
   TEST_NEAR("final_cost() ", finalCost, finalCostM, 0.01);
   cf3.close();

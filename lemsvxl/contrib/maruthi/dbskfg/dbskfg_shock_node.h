@@ -15,7 +15,7 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <dbskfg/dbskfg_composite_node.h>
 #include <dbsk2d/dbsk2d_shock_node.h>
@@ -34,7 +34,7 @@ public:
 
     /* virtual */ ~dbskfg_shock_node();
 
-    /* virtual */ void print(vcl_ostream& os);
+    /* virtual */ void print(std::ostream& os);
 
     // Methods    
     dbsk2d_shock_node::shock_node_type 
@@ -56,7 +56,7 @@ private:
 
     // Holds a vector of phis depending on the type of node, this is the 
     // of the angle of the shock tangent with the normal to the contact point
-    vcl_vector<double> phi_;
+    std::vector<double> phi_;
 
     // Make copy constructor private
     dbskfg_shock_node(const dbskfg_shock_node&);

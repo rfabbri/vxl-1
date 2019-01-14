@@ -4,8 +4,8 @@
 // \date   July 23, 2009
 //
 #include "dbfs_measure.h"
-#include <vcl_cmath.h>
-#include <vcl_limits.h> 
+#include <cmath>
+#include <limits> 
 
 void dbfs_measure_simple::cache_values()
 {
@@ -57,9 +57,9 @@ float dbfs_measure::mutual_info(int class_id, int feature_id)
 {
   float prob2 = prob(class_id, feature_id);
   float div = prob2/(prob_class(class_id)*prob_feature(feature_id));
-  if (div <= vcl_numeric_limits<float>::epsilon())
+  if (div <= std::numeric_limits<float>::epsilon())
     return 0.0f;  
-  float ldiv = (float)(vcl_log(div)/vcl_log(2.0));
+  float ldiv = (float)(std::log(div)/std::log(2.0));
   return prob2*ldiv;
 }
 //: I(C, F=f)

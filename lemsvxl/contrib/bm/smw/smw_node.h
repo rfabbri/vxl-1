@@ -8,9 +8,9 @@
 
 #include"smw/smw_frame_clock.h"
 
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<map>
+#include<set>
+#include<utility>
 
 #include<vnl/vnl_math.h>
 
@@ -18,9 +18,9 @@ namespace node_typedefs{
     typedef unsigned node_id_type;
     typedef unsigned time_type;
     typedef unsigned frequency_type;
-    typedef vcl_map<time_type,frequency_type> time_frequency_map;
-    typedef vcl_map<node_id_type,time_frequency_map> transition_table;
-    typedef vcl_set<time_type> time_set;
+    typedef std::map<time_type,frequency_type> time_frequency_map;
+    typedef std::map<node_id_type,time_frequency_map> transition_table;
+    typedef std::set<time_type> time_set;
     typedef bsta_gauss_f1 model;
 };
 

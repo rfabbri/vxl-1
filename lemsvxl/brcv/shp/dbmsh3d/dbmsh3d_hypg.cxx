@@ -15,27 +15,27 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/dbmsh3d_hypg.h>
 
 void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S)
 {
-  vcl_set<dbmsh3d_edge*> rem_C;
-  vcl_set<dbmsh3d_vertex*> rem_N;
+  std::set<dbmsh3d_edge*> rem_C;
+  std::set<dbmsh3d_vertex*> rem_N;
   remove_S_complete_hypg (S, rem_C, rem_N);
 
-  vcl_set<dbmsh3d_edge*> removed_Cs;
-  vcl_set<dbmsh3d_vertex*> removed_Ns;
+  std::set<dbmsh3d_edge*> removed_Cs;
+  std::set<dbmsh3d_vertex*> removed_Ns;
   remove_S_complete_fix (rem_C, rem_N, removed_Cs, removed_Ns);
 }
 
 //: Delete the sheet S, also remove all MC's and SV's only incident to S.
 //  This ensures the hypergraph is a complete geometric hypergraph.
 void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S,
-                                           vcl_set<dbmsh3d_edge*>& rem_C,
-                                           vcl_set<dbmsh3d_vertex*>& rem_N)
+                                           std::set<dbmsh3d_edge*>& rem_C,
+                                           std::set<dbmsh3d_vertex*>& rem_N)
 {
   rem_C.clear();
   rem_N.clear();
@@ -61,22 +61,22 @@ void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S,
 
   //1) Loop through the bnd_chain and disconnect each curve.
   //   Remove the curve if its n_incidence == 1.
-  vcl_vector<dbmsh3d_edge*> incident_edge_list;
+  std::vector<dbmsh3d_edge*> incident_edge_list;
   _delete_HE_chain (S->halfedge(), incident_edge_list);
   assert (S->halfedge() ==  NULL);
 
   //2) Make incident_edge_set from incident_edge_list.
   //   Consider the A5 swallow-tail case,there could be multiple (triple) instances.
-  vcl_set<dbmsh3d_edge*> incident_E_set;
+  std::set<dbmsh3d_edge*> incident_E_set;
   for (unsigned int i=0; i<incident_edge_list.size(); i++) {
     dbmsh3d_edge* E = incident_edge_list[i];
     incident_E_set.insert (E);
   }
 
-  vcl_set<dbmsh3d_vertex*> cand_N_rem;
+  std::set<dbmsh3d_vertex*> cand_N_rem;
 
   //Go through the incident_edge_set and remove each edge.
-  vcl_set<dbmsh3d_edge*>::iterator it = incident_E_set.begin();
+  std::set<dbmsh3d_edge*>::iterator it = incident_E_set.begin();
   while (it != incident_E_set.end()) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) (*it);
     incident_E_set.erase (it);
@@ -94,7 +94,7 @@ void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S,
     //If C is isolated, clear C's shared_E
     if (C->halfedge() == NULL) {
       if (C->have_shared_Es())
-        vul_printf (vcl_cout, "Error: isolated C%d has shared_Es!\n", C->id());
+        vul_printf (std::cout, "Error: isolated C%d has shared_Es!\n", C->id());
     }
 
     if (try_remove_edge (C)) {
@@ -111,7 +111,7 @@ void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S,
   remove_sheet (S->id());
 
   //3) Also remove isolated vertices
-  vcl_set<dbmsh3d_vertex*>::iterator nit = cand_N_rem.begin();
+  std::set<dbmsh3d_vertex*>::iterator nit = cand_N_rem.begin();
   while (nit != cand_N_rem.end()) {
     dbmsh3d_vertex* V = (*nit);
     if (try_remove_vertex (V) == false) {
@@ -122,22 +122,22 @@ void dbmsh3d_hypg::remove_S_complete_hypg (dbmsh3d_sheet* S,
   }
 }
 
-void dbmsh3d_hypg::remove_S_complete_fix (vcl_set<dbmsh3d_edge*>& rem_C, vcl_set<dbmsh3d_vertex*>& rem_N,
-                                          vcl_set<dbmsh3d_edge*>& removed_Cs, vcl_set<dbmsh3d_vertex*>& removed_Ns)
+void dbmsh3d_hypg::remove_S_complete_fix (std::set<dbmsh3d_edge*>& rem_C, std::set<dbmsh3d_vertex*>& rem_N,
+                                          std::set<dbmsh3d_edge*>& removed_Cs, std::set<dbmsh3d_vertex*>& removed_Ns)
 {
   //4) A rarely happened case: rem_N's only has 2-incident curves, where their incident sheets are identical. 
   //   Should merge these two curves and delete the remaining_V.
-  vcl_set<dbmsh3d_vertex*>::iterator nit = rem_N.begin();
+  std::set<dbmsh3d_vertex*>::iterator nit = rem_N.begin();
   while (nit != rem_N.end()) {
     dbmsh3d_node* N = (dbmsh3d_node*) (*nit);
-    vcl_set<void*> incident_Es;
+    std::set<void*> incident_Es;
     unsigned int ne = N->get_incident_Es (incident_Es);
     if (ne != 2) {
       nit++;
       continue;
     }
 
-    vcl_set<void*>::iterator it = incident_Es.begin();
+    std::set<void*>::iterator it = incident_Es.begin();
     dbmsh3d_curve* C1 = (dbmsh3d_curve*) (*it);
     it++;
     dbmsh3d_curve* C2 = (dbmsh3d_curve*) (*it);
@@ -154,7 +154,7 @@ void dbmsh3d_hypg::remove_S_complete_fix (vcl_set<dbmsh3d_edge*>& rem_C, vcl_set
       nit = rem_N.begin();
     }
     else {
-      vcl_set<dbmsh3d_vertex*>::iterator tmp = nit;
+      std::set<dbmsh3d_vertex*>::iterator tmp = nit;
       nit--;
       rem_N.erase (N);
       nit++;
@@ -169,7 +169,7 @@ void dbmsh3d_hypg::remove_S_complete_fix (vcl_set<dbmsh3d_edge*>& rem_C, vcl_set
   }
   
   //Re-compute MC.type for remaining curves.
-  vcl_set<dbmsh3d_edge*>::iterator cit = rem_C.begin();
+  std::set<dbmsh3d_edge*>::iterator cit = rem_C.begin();
   for (; cit != rem_C.end(); cit++) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) (*cit);
     C->compute_c_type();
@@ -187,7 +187,7 @@ void dbmsh3d_hypg::remove_S_complete_fix (vcl_set<dbmsh3d_edge*>& rem_C, vcl_set
 //  Keep C1 and merge all edge elements of C2 to C1.
 void dbmsh3d_hypg::merge_Cs_sharing_N (dbmsh3d_node* N, dbmsh3d_curve* C1, dbmsh3d_curve* C2)
 {
-  vul_printf (vcl_cout, "merge C%d to C%d at N%d, ", C2->id(), C1->id(), N->id());
+  vul_printf (std::cout, "merge C%d to C%d at N%d, ", C2->id(), C1->id(), N->id());
 
   _merge_E_vec_C2_to_C1 (N, C1, C2);
 
@@ -208,7 +208,7 @@ void dbmsh3d_hypg::merge_Es_sharing_V (const dbmsh3d_vertex* V, dbmsh3d_edge* E1
 
   //disconnect and delete E2.
   //No need to loop through disconn_faces and fix their halfedge_.
-  vcl_set<dbmsh3d_face*> disconn_faces;
+  std::set<dbmsh3d_face*> disconn_faces;
   E2->_disconnect_all_Fs (disconn_faces);
 
   remove_edge (E2);
@@ -240,7 +240,7 @@ bool dbmsh3d_hypg::check_integrity ()
   if (dbmsh3d_graph::check_integrity() == false)
     return false;
   
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = sheetmap_.begin();
   for (; it != sheetmap_.end(); it++) {
     dbmsh3d_sheet* S = (*it).second;
     if (S->id() != (*it).first)
@@ -257,7 +257,7 @@ dbmsh3d_hypg* dbmsh3d_hypg::clone (dbmsh3d_mesh* M2)
   dbmsh3d_hypg* HG2 = new dbmsh3d_hypg (M2);
 
   //deep-copy all vertices.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbmsh3d_node* N = (dbmsh3d_node*) (*vit).second;
     dbmsh3d_node* N2 = (dbmsh3d_node*) N->clone (M2);
@@ -267,7 +267,7 @@ dbmsh3d_hypg* dbmsh3d_hypg::clone (dbmsh3d_mesh* M2)
   assert (HG2->vertexmap().size() == vertexmap_.size());
 
   //deep-copy all curves.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) (*eit).second;
     dbmsh3d_curve* C2 = (dbmsh3d_curve*) C->clone (HG2, M2);
@@ -277,7 +277,7 @@ dbmsh3d_hypg* dbmsh3d_hypg::clone (dbmsh3d_mesh* M2)
   assert (HG2->edgemap().size() == edgemap_.size());
 
   //deep-copy all sheets.
-  vcl_map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
+  std::map<int, dbmsh3d_sheet*>::iterator sit = sheetmap_.begin();
   for (; sit != sheetmap_.end(); sit++) {
     dbmsh3d_sheet* S = (dbmsh3d_sheet*) (*sit).second;
     dbmsh3d_sheet* S2 = (dbmsh3d_sheet*) S->clone (HG2, M2);
@@ -302,8 +302,8 @@ dbmsh3d_pt_set* dbmsh3d_hypg::clone ()
 void _merge_E_vec_C2_to_C1 (dbmsh3d_node* N, dbmsh3d_curve* C1, dbmsh3d_curve* C2)
 {
   //1) Prepare the array of edge elements of C2 in both order.
-  vcl_vector<dbmsh3d_edge*> C2_Evec_N_N2;
-  vcl_vector<dbmsh3d_edge*> C2_Evec_N2_N;
+  std::vector<dbmsh3d_edge*> C2_Evec_N_N2;
+  std::vector<dbmsh3d_edge*> C2_Evec_N2_N;
   if (C2->s_N() == N) {
     for (unsigned int i=0; i<C2->E_vec().size(); i++)
       C2_Evec_N_N2.push_back (C2->E_vec(i));
@@ -330,10 +330,10 @@ void _merge_E_vec_C2_to_C1 (dbmsh3d_node* N, dbmsh3d_curve* C1, dbmsh3d_curve* C
 
 void dbmsh3d_hypg_print_object_size ()
 {  
-  vul_printf (vcl_cout, "------------------------------------\n");
-  vul_printf (vcl_cout, "dbmsh3d_sheet        --  %3d\n", sizeof (dbmsh3d_sheet));  
-  vul_printf (vcl_cout, "\n");
-  vul_printf (vcl_cout, "dbmsh3d_graph            %3d\n", sizeof (dbmsh3d_graph));
-  vul_printf (vcl_cout, "dbmsh3d_hypg             %3d\n", sizeof (dbmsh3d_hypg));
+  vul_printf (std::cout, "------------------------------------\n");
+  vul_printf (std::cout, "dbmsh3d_sheet        --  %3d\n", sizeof (dbmsh3d_sheet));  
+  vul_printf (std::cout, "\n");
+  vul_printf (std::cout, "dbmsh3d_graph            %3d\n", sizeof (dbmsh3d_graph));
+  vul_printf (std::cout, "dbmsh3d_hypg             %3d\n", sizeof (dbmsh3d_hypg));
 }
 

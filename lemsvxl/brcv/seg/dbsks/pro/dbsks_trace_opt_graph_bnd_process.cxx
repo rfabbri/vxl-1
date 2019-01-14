@@ -28,7 +28,7 @@ dbsks_trace_opt_graph_bnd_process()
     !parameters()->add("Out file to: " , "-out_file", bpro1_filepath("","*") )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,17 +48,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_trace_opt_graph_bnd_process::
+std::string dbsks_trace_opt_graph_bnd_process::
 name()
 { 
   return "Trace opt graph boundary"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_trace_opt_graph_bnd_process::
+std::vector< std::string > dbsks_trace_opt_graph_bnd_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsks_shapematch" );
   to_return.push_back( "image" );
   return to_return;
@@ -66,10 +66,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_trace_opt_graph_bnd_process::
+std::vector< std::string > dbsks_trace_opt_graph_bnd_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("vsol2D");
   return to_return;
 }
@@ -94,8 +94,8 @@ bool dbsks_trace_opt_graph_bnd_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_trace_opt_graph_bnd_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_trace_opt_graph_bnd_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -123,7 +123,7 @@ execute()
   // PROCESS DATA -------------------------------------------------------------
 
 
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list;
   ///////////////////////////////////////////////////////////////////////////////
   dp_engine->trace_opt_graph_bnd(vsol_list);
   ///////////////////////////////////////////////////////////////////////////////

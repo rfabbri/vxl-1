@@ -23,7 +23,7 @@ dbdet_convert_edgemap_to_image_process()
       !parameters()->add( "Edge intensity (0-255)", "-edge_intensity",  int(255) )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ clone() const
 
 
 //: Return the name of this process
-vcl_string dbdet_convert_edgemap_to_image_process::
+std::string dbdet_convert_edgemap_to_image_process::
 name()
 {
   return "Convert Edgemap to Image";
@@ -66,10 +66,10 @@ output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_convert_edgemap_to_image_process::
+std::vector< std::string > dbdet_convert_edgemap_to_image_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool linked = false;
 
@@ -88,10 +88,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_convert_edgemap_to_image_process::
+std::vector< std::string > dbdet_convert_edgemap_to_image_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -102,7 +102,7 @@ bool
 dbdet_convert_edgemap_to_image_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_convert_edgemap_to_image_process::execute() - not exactly one"
+    std::cout << "In dbdet_convert_edgemap_to_image_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }

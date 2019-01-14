@@ -1,14 +1,14 @@
 #include <det/det_cylinder_detect.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_numeric_traits.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h>
-#include <vcl_limits.h>
+#include <list>
+#include <set>
+#include <utility>
+#include <iostream>
+#include <cstdlib>
+#include <cassert>
+#include <algorithm>
+#include <limits>
 
 // max eigen value of the noise covariance matrix is multiplied by a big number to get 
 // smaller results at the end as strength
@@ -31,13 +31,13 @@ det_cylinder_detect::~det_cylinder_detect(void)
 
 // gets a vector of vectors and a number to search inside. All the vectors containing 
 // index will be stored in a new vector and returned
-vcl_vector<vcl_vector<unsigned > *>
-det_cylinder_detect::includes(vcl_vector<vcl_vector<unsigned > *> v, unsigned index)
+std::vector<std::vector<unsigned > *>
+det_cylinder_detect::includes(std::vector<std::vector<unsigned > *> v, unsigned index)
 {
-  vcl_vector<vcl_vector<unsigned > *> result;
+  std::vector<std::vector<unsigned > *> result;
  
   for (unsigned int i=0; i < v.size(); i++){
-    vcl_vector<unsigned > l = *(v[i]);
+    std::vector<unsigned > l = *(v[i]);
     bool found = false;
     for (unsigned int j=0; j < l.size() && !found; j++){
       if (l[j] == index) {
@@ -50,22 +50,22 @@ det_cylinder_detect::includes(vcl_vector<vcl_vector<unsigned > *> v, unsigned in
   return result;
 }
 
-vcl_vector<vgl_vector_3d<double> >
+std::vector<vgl_vector_3d<double> >
 det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
-                               vcl_vector<vgl_vector_3d<double> > filter_dir) {
+                               std::vector<vgl_vector_3d<double> > filter_dir) {
 
-  vcl_list<vcl_pair<double, unsigned int > > resp_and_direct;
+  std::list<std::pair<double, unsigned int > > resp_and_direct;
   for (unsigned int i=0; i < resp.size(); i++) {
-    resp_and_direct.push_back(vcl_pair<double, unsigned int > (resp[i], i));
+    resp_and_direct.push_back(std::pair<double, unsigned int > (resp[i], i));
   }
   resp_and_direct.sort();
 
   // reverse the directions so that the biggest is at the beginning
   resp_and_direct.reverse();
  
-  vcl_vector<vcl_pair<double, unsigned int > > resp_and_direct_vector;
-  for (vcl_list<vcl_pair<double, unsigned int > >::iterator it = resp_and_direct.begin(); it != resp_and_direct.end(); it++) {
-    vcl_pair<double, unsigned int > p = *it;
+  std::vector<std::pair<double, unsigned int > > resp_and_direct_vector;
+  for (std::list<std::pair<double, unsigned int > >::iterator it = resp_and_direct.begin(); it != resp_and_direct.end(); it++) {
+    std::pair<double, unsigned int > p = *it;
     resp_and_direct_vector.push_back(p);
   }
 
@@ -75,58 +75,58 @@ det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
   // os << "the biggest filter indices: " << first_index << " " << second_index << " " << third_index << "\n";
  
   // creates the valid indices sets
-  vcl_vector<vcl_vector<unsigned > *> triangles;
-  vcl_vector<unsigned> *tri1 = new vcl_vector<unsigned> (3);
+  std::vector<std::vector<unsigned > *> triangles;
+  std::vector<unsigned> *tri1 = new std::vector<unsigned> (3);
   (*tri1)[0]=0; (*tri1)[1]=1; (*tri1)[2]=4;   // case 014
   triangles.push_back(tri1);
     
-  vcl_vector<unsigned> *tri2 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri2 = new std::vector<unsigned> (3);
   (*tri2)[0]=0; (*tri2)[1]=2; (*tri2)[2]=3;   // case 015
   triangles.push_back(tri2);
 
-  vcl_vector<unsigned> *tri3 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri3 = new std::vector<unsigned> (3);
   (*tri3)[0]=0; (*tri3)[1]=2; (*tri3)[2]=4;   // case 023
   triangles.push_back(tri3);
 
-  vcl_vector<unsigned> *tri4 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri4 = new std::vector<unsigned> (3);
   (*tri4)[0]=1; (*tri4)[1]=4; (*tri4)[2]=3;   // case 024
   triangles.push_back(tri4);
 
-  vcl_vector<unsigned> *tri5 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri5 = new std::vector<unsigned> (3);
   (*tri5)[0]=2; (*tri5)[1]=1; (*tri5)[2]=5;   // case 035
   triangles.push_back(tri5);
 
-  vcl_vector<unsigned> *tri6 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri6 = new std::vector<unsigned> (3);
   (*tri6)[0]=2; (*tri6)[1]=3; (*tri6)[2]=1;   // case 123
   triangles.push_back(tri6);
 
-  vcl_vector<unsigned> *tri7 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri7 = new std::vector<unsigned> (3);
   (*tri7)[0]=2; (*tri7)[1]=4; (*tri7)[2]=5;   // case 125
   triangles.push_back(tri7);
 
-  vcl_vector<unsigned> *tri8 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri8 = new std::vector<unsigned> (3);
   (*tri8)[0]=4; (*tri8)[1]=3; (*tri8)[2]=5;   // case 134
   triangles.push_back(tri8);
 
-  vcl_vector<unsigned> *tri9 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri9 = new std::vector<unsigned> (3);
   (*tri9)[0]=5; (*tri9)[1]=0; (*tri9)[2]=1;   // case 245
   triangles.push_back(tri9);
 
-  vcl_vector<unsigned> *tri10 = new vcl_vector<unsigned> (3);
+  std::vector<unsigned> *tri10 = new std::vector<unsigned> (3);
   (*tri10)[0]=5; (*tri10)[1]=0; (*tri10)[2]=3;   // case 345
   triangles.push_back(tri10);
 
-  vcl_vector<vcl_vector<unsigned > *> third_set, second_set;
+  std::vector<std::vector<unsigned > *> third_set, second_set;
 
   // first find the set of valid indices that contain the biggest response
-  vcl_vector<vcl_vector<unsigned > *> first_set = includes(triangles, first_index);
+  std::vector<std::vector<unsigned > *> first_set = includes(triangles, first_index);
   if (first_set.empty()) {
-    //os << "ERROR  --- first biggest filter is not found!!!!!" << vcl_endl;
+    //os << "ERROR  --- first biggest filter is not found!!!!!" << std::endl;
   } else {
     // find the second set which includes the 2nd one
     second_set = includes(first_set, second_index);
     if (second_set.empty()) {
-      //os << "ERROR  --- second biggest filter is not found!!!!!" << vcl_endl;
+      //os << "ERROR  --- second biggest filter is not found!!!!!" << std::endl;
     } else {
       // find the second set which includes the 2nd one
       third_set = includes(second_set, third_index);
@@ -136,7 +136,7 @@ det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
         bool selected = false;
         for (unsigned int i = 3; i < resp_and_direct_vector.size() && !selected; i++) {
           unsigned int index = resp_and_direct_vector[i].second;
-          //vcl_vector<vcl_vector<unsigned > *>
+          //std::vector<std::vector<unsigned > *>
             third_set = includes(second_set, index);
           if (!third_set.empty()) {
             third_index = index;
@@ -144,7 +144,7 @@ det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
           }
         }
         if (!selected) {
-          //os << "ERROR  --- second biggest filter is not found!!!!!" << vcl_endl;
+          //os << "ERROR  --- second biggest filter is not found!!!!!" << std::endl;
         }
       }
       else {
@@ -210,7 +210,7 @@ det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
   }
  
   // compute the sub filter positions
-  vcl_vector<vgl_vector_3d<double> > v(15);
+  std::vector<vgl_vector_3d<double> > v(15);
   v[0] = fmax;
   v[14] = fmax_;
   v[10] = fmax__;
@@ -256,10 +256,10 @@ det_cylinder_detect::compute_v(xmvg_filter_response<double> &resp,
 }
 vgl_vector_3d<double>
 det_cylinder_detect::detect_dir(xmvg_filter_response<double>& resp,
-                            vcl_vector<vgl_vector_3d<double> > v,
-                            vcl_vector<vgl_vector_3d<double> > filter_dir)
+                            std::vector<vgl_vector_3d<double> > v,
+                            std::vector<vgl_vector_3d<double> > filter_dir)
 {
-  vcl_vector<xmvg_filter_response<double> > fv;
+  std::vector<xmvg_filter_response<double> > fv;
 
   // for each v, compute the filter response
   for (unsigned int i=0; i < v.size(); i++) {
@@ -267,14 +267,14 @@ det_cylinder_detect::detect_dir(xmvg_filter_response<double>& resp,
     for (unsigned int j=0; j < filter_dir.size(); j++) {
       double dot = dot_product(v[i], filter_dir[j]);
       f[j] = (1.0 - (1.0 - 2.0*EPS*EPS)*dot*dot) / 
-        vcl_pow((1. - (1. -(EPS*EPS))*dot*dot), 1.5);
+        std::pow((1. - (1. -(EPS*EPS))*dot*dot), 1.5);
     }
     fv.push_back(f);
   }
 
 
   // find a, scale factor
-  vcl_vector<double> a;
+  std::vector<double> a;
   for (unsigned j=0; j < v.size(); j++) {
     double sum1 = 0;
     for (unsigned i=0; i< resp.size(); i++) {
@@ -288,7 +288,7 @@ det_cylinder_detect::detect_dir(xmvg_filter_response<double>& resp,
   }
 
   // find the error for each v
-  vcl_vector<double> E;
+  std::vector<double> E;
   double min_e = vnl_numeric_traits<double>::maxval;
   int min_index=0;
   for (unsigned j=0; j < v.size(); j++) {
@@ -321,7 +321,7 @@ void det_cylinder_detect::normalize(xmvg_filter_response<double> &resp) {
   double sum = 0.0;
   double max = 0.0;
   for (unsigned i=0; i < resp.size(); i++) {
-    double val = vcl_fabs(resp[i]);
+    double val = std::fabs(resp[i]);
     sum += val;
     if (val > max)
       max = val;
@@ -344,8 +344,8 @@ det_map_entry det_cylinder_detect::det_type(xmvg_filter_response<double> & resp,
   int num_filters = resp.size();
   assert(num_filters == fds.size());
 
-  vcl_vector<vgl_vector_3d<double> > filter_dir(num_filters);
-  vcl_vector<double> resp_value(num_filters);
+  std::vector<vgl_vector_3d<double> > filter_dir(num_filters);
+  std::vector<double> resp_value(num_filters);
 
   for(int i = 0; i < num_filters; i++)
   {
@@ -353,8 +353,8 @@ det_map_entry det_cylinder_detect::det_type(xmvg_filter_response<double> & resp,
     resp_value[i] = resp[i];
   }
 
-  double min_val = *(vcl_min_element(resp_value.begin(), resp_value.end()));
-  double max_val = *(vcl_max_element(resp_value.begin(), resp_value.end()));
+  double min_val = *(std::min_element(resp_value.begin(), resp_value.end()));
+  double max_val = *(std::max_element(resp_value.begin(), resp_value.end()));
   
   double t = sqrt((min_val*min_val)/DET_MAX_EIG_VAL);
  
@@ -377,7 +377,7 @@ det_map_entry det_cylinder_detect::det_type(xmvg_filter_response<double> & resp,
     }
     // icosahedron filter case
     if (resp.size() == 6) {
-      vcl_vector<vgl_vector_3d<double> > v = compute_v(resp, filter_dir);
+      std::vector<vgl_vector_3d<double> > v = compute_v(resp, filter_dir);
       vgl_vector_3d<double> dir = detect_dir(resp, v, filter_dir);
       cm.dir_ = dir; 
     } else {
@@ -391,7 +391,7 @@ det_map_entry det_cylinder_detect::det_type(xmvg_filter_response<double> & resp,
 
 // creates a cylinder map from the filter responses
 det_cylinder_map det_cylinder_detect::apply(unsigned nx, unsigned ny, unsigned nz,
-    vcl_vector<xmvg_filter_response<double> > const& responses,
+    std::vector<xmvg_filter_response<double> > const& responses,
     xmvg_composite_filter_descriptor const & fds,
     vil3d_image_view<unsigned char> *radius_view) 
 {

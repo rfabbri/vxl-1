@@ -102,12 +102,12 @@ get_param_range(double& min_psi, double& max_psi,
 //: Get data values for a geometric attribute
 // Return false if the attribute does not exist
 bool dbsks_xnode_geom_model::
-get_attr_data(const vcl_string& attr_name, vcl_vector<double >& attr_values) const
+get_attr_data(const std::string& attr_name, std::vector<double >& attr_values) const
 {
   // clean up first
   attr_values.clear();
 
-  vcl_map<vcl_string, vcl_vector<double > >::const_iterator iter = 
+  std::map<std::string, std::vector<double > >::const_iterator iter = 
     this->attr_data_.find(attr_name);
 
   // return false if the specified attribute does not exist
@@ -137,10 +137,10 @@ build_from_attr_data()
   compute_method method = GAUSSIAN_3STD;
 
   // raw data
-  vcl_vector<double > vcl_psi;
-  vcl_vector<double > vcl_phi;
-  vcl_vector<double > vcl_radius;
-  vcl_vector<double > vcl_phi_diff;
+  std::vector<double > vcl_psi;
+  std::vector<double > vcl_phi;
+  std::vector<double > vcl_radius;
+  std::vector<double > vcl_phi_diff;
 
   if (!this->get_attr_data("list_psi", vcl_psi) ||
     !this->get_attr_data("list_phi", vcl_phi) ||
@@ -186,26 +186,26 @@ build_from_attr_data()
     psi = dbsks_compute_angle_minmax(psi, min_psi, max_psi);
     
     builder.build_from_array(*model, psi.data_block(), psi.size()); 
-    min_psi = model->mean() - num_std * vcl_sqrt(model->variance());
-    max_psi = model->mean() + num_std * vcl_sqrt(model->variance());
+    min_psi = model->mean() - num_std * std::sqrt(model->variance());
+    max_psi = model->mean() + num_std * std::sqrt(model->variance());
         
     // radius
     vnl_vector<double > radius = vcl_vector_to_vnl_vector(vcl_radius);
     builder.build_from_array(*model, radius.data_block(), radius.size());
-    double min_radius = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_radius = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_radius = model->mean() - num_std * std::sqrt(model->variance());
+    double max_radius = model->mean() + num_std * std::sqrt(model->variance());
 
     // phi
     vnl_vector<double > phi = vcl_vector_to_vnl_vector(vcl_phi);
     builder.build_from_array(*model, phi.data_block(), phi.size());
-    double min_phi = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_phi = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_phi = model->mean() - num_std * std::sqrt(model->variance());
+    double max_phi = model->mean() + num_std * std::sqrt(model->variance());
 
     // phi_diff
     vnl_vector<double >phi_diff = vcl_vector_to_vnl_vector(vcl_phi_diff);
     builder.build_from_array(*model, phi_diff.data_block(), phi_diff.size());
-    double min_phi_diff = model->mean() - num_std * vcl_sqrt(model->variance());
-    double max_phi_diff = model->mean() + num_std * vcl_sqrt(model->variance());
+    double min_phi_diff = model->mean() - num_std * std::sqrt(model->variance());
+    double max_phi_diff = model->mean() + num_std * std::sqrt(model->variance());
 
     this->set_param_range(min_psi, max_psi, 
       min_radius, max_radius, 

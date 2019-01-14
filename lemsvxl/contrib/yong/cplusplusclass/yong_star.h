@@ -4,7 +4,7 @@
 
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <cplusplusclass/yong_star_sptr.h>
 
 class yong_star : public vbl_ref_count 
@@ -20,7 +20,7 @@ public:
     //Constructor, destructor, initializers
     yong_star():center_x_(0), center_y_(0), arm_number_(3), arm_size_(1.0), orientation_(0.0){}
     yong_star(unsigned const& x,unsigned const& y,unsigned const& arm_num, double const& arm_size, double const& orientaion) : center_x_(x), center_y_(y), arm_number_(arm_num), arm_size_(arm_size), orientation_(orientaion){}
-    ~yong_star() {}//vcl_cout<<"destructing rectangle"<< vcl_endl;}
+    ~yong_star() {}//std::cout<<"destructing rectangle"<< std::endl;}
 
     double center_x(){return center_x_;}
     void set_center_x(double x){center_x_ = x;}
@@ -39,7 +39,7 @@ public:
 
     //: output description to stream
     friend
-        vcl_ostream&  operator<<(vcl_ostream& s,  yong_star &star);
+        std::ostream&  operator<<(std::ostream& s,  yong_star &star);
 
 };
 

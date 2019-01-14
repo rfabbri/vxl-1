@@ -2,7 +2,7 @@
 //  Mar 02, 2004  Creation
 //  3D ShockGraph-Boundary Reconstruction
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/algo/dbsk3d_ms_recon.h>
@@ -13,7 +13,7 @@
 
 #define NUM_LOOK_BACK 10
 
-bool _add_to_ridgebnd (vcl_vector<vgl_point_3d<double> >& ridgebnd_curve,
+bool _add_to_ridgebnd (std::vector<vgl_point_3d<double> >& ridgebnd_curve,
                        const vgl_point_3d<double> Ga)
 {
   //Check if Pa already exists in ridgebnd_curve or not
@@ -30,8 +30,8 @@ bool _add_to_ridgebnd (vcl_vector<vgl_point_3d<double> >& ridgebnd_curve,
 }
 
 void get_ridge_bnd_curves (dbsk3d_ms_curve* SCurve, 
-                           vcl_vector<vgl_point_3d<double> >& ridgebnd_curve_a, 
-                           vcl_vector<vgl_point_3d<double> >& ridgebnd_curve_b)
+                           std::vector<vgl_point_3d<double> >& ridgebnd_curve_a, 
+                           std::vector<vgl_point_3d<double> >& ridgebnd_curve_b)
 {
   assert (SCurve->c_type() == C_TYPE_RIB);
   ridgebnd_curve_a.clear();
@@ -100,8 +100,8 @@ dbsk3d_fs_face* get_F_of_E_MS (dbsk3d_fs_edge* FE, dbsk3d_ms_sheet* MS)
 }
 
 void get_curoff_patch_bnd_curves (dbsk3d_ms_curve* SCurve, dbsk3d_ms_sheet* MS,
-                                  vcl_vector<vgl_point_3d<double> >& surfbnd_curve_a, 
-                                  vcl_vector<vgl_point_3d<double> >& surfbnd_curve_b)
+                                  std::vector<vgl_point_3d<double> >& surfbnd_curve_a, 
+                                  std::vector<vgl_point_3d<double> >& surfbnd_curve_b)
 {
   assert (SCurve->c_type() == C_TYPE_AXIAL);
   surfbnd_curve_a.clear();
@@ -195,37 +195,37 @@ vgl_vector_3d<double> get_ridge_vector (const dbsk3d_fs_edge* A3RibElm,
   return ridge_V;
 }
 
-bool save_ms_bnd_link_g3d (dbmsh3d_graph* ms_graph, dbmsh3d_mesh* bndset, vcl_string filename)
+bool save_ms_bnd_link_g3d (dbmsh3d_graph* ms_graph, dbmsh3d_mesh* bndset, std::string filename)
 {
-  vul_printf (vcl_cout, "\nSaving the shock-boundary trace curves into .g3d.\n");
+  vul_printf (std::cout, "\nSaving the shock-boundary trace curves into .g3d.\n");
 
   float rib_col[3] = {0, 0, 1};
   float axial_col[3] = {1, 0, 0};
 
   FILE* fp;
-  if ((fp = vcl_fopen(filename.c_str(), "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open input G3d file %s\n", filename.c_str());
+  if ((fp = std::fopen(filename.c_str(), "w")) == NULL) {
+    vul_printf (std::cout, "Can't open input G3d file %s\n", filename.c_str());
     return false; 
   }
-  vcl_fprintf (fp, "%d\n", 3);
+  std::fprintf (fp, "%d\n", 3);
 
-  vcl_vector <vgl_point_3d<double> > rib_pts, axial_pts;
+  std::vector <vgl_point_3d<double> > rib_pts, axial_pts;
   get_A3Rib_bnd_trace_points (ms_graph, &rib_pts); 
   get_A13Axial_bnd_trace_points (ms_graph, &axial_pts); 
 
-  vcl_fprintf (fp, "%u\n", rib_pts.size() + axial_pts.size());
+  std::fprintf (fp, "%u\n", rib_pts.size() + axial_pts.size());
 
   //Rib
   for (unsigned int i=0; i<rib_pts.size(); i++) {
     vgl_point_3d<double> p = rib_pts[i];
-    vcl_fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
+    std::fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
                  p.x(), p.y(), p.z(), 
                  rib_col[0], rib_col[1], rib_col[2]);
   }
   //Axial
   for (unsigned int i=0; i<axial_pts.size(); i++) {
     vgl_point_3d<double> p = axial_pts[i];
-    vcl_fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
+    std::fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
                  p.x(), p.y(), p.z(), 
                  axial_col[0], axial_col[1], axial_col[2]);
   }
@@ -235,10 +235,10 @@ bool save_ms_bnd_link_g3d (dbmsh3d_graph* ms_graph, dbmsh3d_mesh* bndset, vcl_st
 }
 
 void get_A3Rib_bnd_trace_points (dbmsh3d_graph* ms_graph, 
-                                 vcl_vector <vgl_point_3d<double> >* pts)
+                                 std::vector <vgl_point_3d<double> >* pts)
 {
   //Get all boundary points of A3 Ribs.
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = ms_graph->edgemap().begin();
   for (; SC_it != ms_graph->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* SCurve = (dbsk3d_ms_curve*) (*SC_it).second;
     if (SCurve->c_type() != C_TYPE_RIB) 
@@ -247,10 +247,10 @@ void get_A3Rib_bnd_trace_points (dbmsh3d_graph* ms_graph,
     //Go through all V_vec of this A3Rib.
     for (unsigned int j=0; j<SCurve->V_vec().size(); j++) {
       dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) SCurve->V_vec(j);
-      vcl_set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
+      std::set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
 
       //draw line from this FV to each gene.
-      vcl_set<dbmsh3d_vertex*>::iterator git = Genes.begin();
+      std::set<dbmsh3d_vertex*>::iterator git = Genes.begin();
       while (git != Genes.end()) {
         const dbmsh3d_vertex* g = (*git);
         pts->push_back (g->pt());
@@ -262,10 +262,10 @@ void get_A3Rib_bnd_trace_points (dbmsh3d_graph* ms_graph,
 }
 
 void get_A13Axial_bnd_trace_points (dbmsh3d_graph* ms_graph, 
-                                    vcl_vector <vgl_point_3d<double> >* pts)
+                                    std::vector <vgl_point_3d<double> >* pts)
 {
   //Get all boundary points of A13 Axials.
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = ms_graph->edgemap().begin();
   for (; SC_it != ms_graph->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* SCurve = (dbsk3d_ms_curve*) (*SC_it).second;
     if (SCurve->c_type() != C_TYPE_AXIAL) 
@@ -274,10 +274,10 @@ void get_A13Axial_bnd_trace_points (dbmsh3d_graph* ms_graph,
     //Go through all V_vec of this A13Axial
     for (unsigned int j=0; j<SCurve->V_vec().size(); j++) {
       dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) SCurve->V_vec(j);
-      vcl_set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
+      std::set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
 
       //draw line from this FV to each gene.
-      vcl_set<dbmsh3d_vertex*>::iterator git = Genes.begin();
+      std::set<dbmsh3d_vertex*>::iterator git = Genes.begin();
       while (git != Genes.end()) {
         const dbmsh3d_vertex* g = (*git);
         pts->push_back (g->pt());

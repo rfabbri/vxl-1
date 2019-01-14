@@ -14,9 +14,9 @@
 //
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_deque.h>
+#include <vector>
+#include <iostream>
+#include <deque>
 #include <vnl/vnl_math.h>
 
 #include <vgl/vgl_point_2d.h>
@@ -46,10 +46,10 @@ public:
   virtual bool bundle_is_valid()=0;
 
   //: Compute the best fit curve from the curve bundle 
-  virtual void compute_best_fit(vcl_deque<dbdet_edgel*> &edgel_chain)=0; 
+  virtual void compute_best_fit(std::deque<dbdet_edgel*> &edgel_chain)=0; 
 
   //: function to check if the curve fit is reasonable
-  virtual bool curve_fit_is_reasonable(vcl_deque<dbdet_edgel*> &edgel_chain, dbdet_edgel* ref_e, double dpos)=0;
+  virtual bool curve_fit_is_reasonable(std::deque<dbdet_edgel*> &edgel_chain, dbdet_edgel* ref_e, double dpos)=0;
 
   //: report accuracy of measurement
   virtual void report_accuracy(double *estimates, double *min_estimates, double *max_estimates)=0;

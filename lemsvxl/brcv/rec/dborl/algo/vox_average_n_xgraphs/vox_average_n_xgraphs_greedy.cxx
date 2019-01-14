@@ -80,7 +80,7 @@ initialize()
 
   if ( !dataset_index )
   {
-    vcl_cerr<<"\nParing index file failed!\n";
+    std::cerr<<"\nParing index file failed!\n";
     return false;
   }
 
@@ -99,13 +99,13 @@ initialize()
 
   for (unsigned i =start_index; i < end_index; ++i)
   {
-    vcl_string object_name = index_node->names()[i];
+    std::string object_name = index_node->names()[i];
     // form the full file path for the esf file
-    vcl_string esf_file = index_node->paths()[i] + "/" + object_name + ".esf";
+    std::string esf_file = index_node->paths()[i] + "/" + object_name + ".esf";
 
     if (!vul_file::exists(esf_file)) 
     {
-      vcl_cerr << "\nCannot find shock (.esf) files: " << esf_file << "\n";
+      std::cerr << "\nCannot find shock (.esf) files: " << esf_file << "\n";
       return false;
     }
     this->list_esf_file_.push_back(esf_file);
@@ -114,12 +114,12 @@ initialize()
 
 
   // Print out list of object names
-  vcl_cout << "\nDataset has " << this->list_object_name_.size() << " objects:\n";
+  std::cout << "\nDataset has " << this->list_object_name_.size() << " objects:\n";
   for (unsigned i =0; i < this->list_esf_file_.size(); ++i)
   {
-    vcl_cout << "\n  " << this->list_object_name_[i];
+    std::cout << "\n  " << this->list_object_name_[i];
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   //2) set-up folder for intermediate fields
 
@@ -149,49 +149,49 @@ bool vox_average_n_xgraphs_greedy::
 perform_averaging()
 {
   // 1) Load the two esf files
-  vcl_cout << "\n>>Load all esf files ...\n";
+  std::cout << "\n>>Load all esf files ...\n";
   
   // Output container:
-  vcl_vector<dbsk2d_shock_storage_sptr > list_sk2d_storage;
+  std::vector<dbsk2d_shock_storage_sptr > list_sk2d_storage;
 
   // Status
   bool load_status = true;
   for (unsigned i =0; i < this->list_esf_file_.size(); ++i)
   {
-    vcl_cout << "\nLoading " << this->list_esf_file_[i] << "...";
+    std::cout << "\nLoading " << this->list_esf_file_[i] << "...";
     dbsk2d_shock_storage_sptr shock_storage;
     load_status &= this->load_esf(this->list_esf_file_[i], shock_storage);
     list_sk2d_storage.push_back(shock_storage);
     if (!load_status)
     {
-      vcl_cout << "[ Failed ]\n";
+      std::cout << "[ Failed ]\n";
       return false;
     }
     else
     {
-      vcl_cout << "[ OK ]";
+      std::cout << "[ OK ]";
     }
   }
 
   //2) Convert dbsk2d_shock_graph to dbsksp_xshock_graph
-  vcl_cout << "\n>>Convert dbsk2d_shock_graph to dbsksp_xshock_graph ...\n";
+  std::cout << "\n>>Convert dbsk2d_shock_graph to dbsksp_xshock_graph ...\n";
 
   // Output container
-  vcl_vector<dbsksp_xgraph_storage_sptr > list_xgraph_storage;
+  std::vector<dbsksp_xgraph_storage_sptr > list_xgraph_storage;
   for (unsigned i =0; i < list_sk2d_storage.size(); ++i)
   {
-    vcl_cout << "\n  Converting sk2d_storage i =" << i << "...";
+    std::cout << "\n  Converting sk2d_storage i =" << i << "...";
     dbsksp_xgraph_storage_sptr xgraph_storage;
     bool convert_status = this->convert_sk2d_to_sksp(list_sk2d_storage[i], xgraph_storage);
     if (!convert_status)
     {
-      vcl_cout << "[ Failed ]\n";
+      std::cout << "[ Failed ]\n";
       return false;
     }
     else
     {
       list_xgraph_storage.push_back(xgraph_storage);
-      vcl_cout << "[ OK ]";
+      std::cout << "[ OK ]";
     }
   }
 
@@ -205,23 +205,23 @@ perform_averaging()
   
 
   //3) Average list of load xgraphs
-  vcl_cout << 
+  std::cout << 
     "\n[Begin]----------------------------------------------------------------\n";
   
-  vcl_cout << "Compute average of N xgraphs";
+  std::cout << "Compute average of N xgraphs";
   
   bool average_status = this->compute_average();
   if (!average_status)
   {
-    vcl_cout << "[ Failed ]<<\n";
+    std::cout << "[ Failed ]<<\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]<<\n";
+    std::cout << "[ OK ]<<\n";
   }
 
-  vcl_cout << 
+  std::cout << 
     "\n[End]----------------------------------------------------------------\n";
 
   return true;
@@ -234,7 +234,7 @@ perform_averaging()
 //------------------------------------------------------------------------------
 //: Load esf file
 bool vox_average_n_xgraphs_greedy::
-load_esf(const vcl_string& esf_file, dbsk2d_shock_storage_sptr& shock_storage)
+load_esf(const std::string& esf_file, dbsk2d_shock_storage_sptr& shock_storage)
 {
   // sanitize output container
   shock_storage = 0;
@@ -341,15 +341,15 @@ compute_average()
 
     // do nothing for now
     // \todo Implement this
-    vcl_cout << "\nThis function has not been implemented.\n";
+    std::cout << "\nThis function has not been implemented.\n";
     return false;
   }
   else if (this->params_->use_existing_xgraph_in_object_folder_())
   {
     this->method_name_ = "-use_existing_xgraph_in_object_folder";
 
-    vcl_string ext = this->params_->extension_of_existing_xgraph_();
-    vcl_string xgraph_file = this->params_->dataset_object_dir_() + "/" + 
+    std::string ext = this->params_->extension_of_existing_xgraph_();
+    std::string xgraph_file = this->params_->dataset_object_dir_() + "/" + 
       this->params_->dataset_object_name_() + ext;
 
     dbsksp_xshock_graph_sptr xg = 0;
@@ -366,7 +366,7 @@ compute_average()
     unsigned index = this->params_->index_of_specific_exemplar_();
     if (index >= this->list_xgraph_.size())
     {
-      vcl_cout << "\nERROR: exemplar index exceeds xgraph vector range."
+      std::cout << "\nERROR: exemplar index exceeds xgraph vector range."
         << "\n  exemplar index = " << index
         << "\n  vector size    = " << this->list_xgraph_.size() << "\n";
     }
@@ -374,13 +374,13 @@ compute_average()
   }
   else
   {
-    vcl_cout << "\nERROR: no averaging method was chosen.\n";
+    std::cout << "\nERROR: no averaging method was chosen.\n";
     return false;
   }
   
   if (!average_xgraph)
   {
-    vcl_cout << "\nERROR: average xgraph not computed.\n";
+    std::cout << "\nERROR: average xgraph not computed.\n";
     return false;
   }
 
@@ -391,7 +391,7 @@ compute_average()
   {
     dbsksp_avg_n_xgraphs_grad_descent engine;
 
-    vcl_vector<double > weights(this->list_xgraph_.size(), 1);
+    std::vector<double > weights(this->list_xgraph_.size(), 1);
     engine.set_parent_xgraphs(this->list_xgraph_, weights);
     engine.set_scurve_matching_R(this->params_->average_xgraph_scurve_matching_R_());
     engine.set_scurve_sample_ds(this->params_->average_xgraph_scurve_sample_ds_());
@@ -427,8 +427,8 @@ compute_average()
 //: Compute edit cost and deformation cost from all parents to an xgraph
 void vox_average_n_xgraphs_greedy::
 compute_edit_distance(const dbsksp_xshock_graph_sptr& query,
-                      vcl_vector<double >& distance_parent_to_query,
-                      vcl_vector<double >& deform_cost_parent_to_query)
+                      std::vector<double >& distance_parent_to_query,
+                      std::vector<double >& deform_cost_parent_to_query)
 {
   unsigned num_xgraphs = this->list_xgraph_.size();
   distance_parent_to_query.resize(num_xgraphs);
@@ -447,7 +447,7 @@ compute_edit_distance(const dbsksp_xshock_graph_sptr& query,
     distance_parent_to_query[i] = work.final_cost();
 
     // deform cost
-    vcl_vector<pathtable_key > correspondence;
+    std::vector<pathtable_key > correspondence;
     double deform_cost = work.get_deform_cost(correspondence);
     deform_cost_parent_to_query[i] = deform_cost;
   }
@@ -470,18 +470,18 @@ write_out()
     return false;
 
   // save average file
-  vcl_string xgraph_file = this->base_name_ +  "-average.xml";
+  std::string xgraph_file = this->base_name_ +  "-average.xml";
   dbsksp_xshock_graph_sptr xgraph = this->average_xgraph_storage_->xgraph();
   bool success = x_write(xgraph_file, xgraph);
 
   if (!success)
   {
-    vcl_cout << "\nERROR: Failed to write out average xgraph xml file.\n";
+    std::cout << "\nERROR: Failed to write out average xgraph xml file.\n";
     return false;
   }
 
   // save computation data
-  vcl_string data_file = this->base_name_ + "-data.xml";
+  std::string data_file = this->base_name_ + "-data.xml";
 
   // write an xml document for output
   bxml_document doc;
@@ -539,7 +539,7 @@ write_out()
   bxml_write(data_file, doc);
 
   //c) save screenshot of the shock graphs
-  vcl_string screenshot_file = this->base_name_ + "-average.png";
+  std::string screenshot_file = this->base_name_ + "-average.png";
   this->save_screenshot(xgraph, screenshot_file);
 
   //d) Copy three new files to object folder
@@ -567,7 +567,7 @@ write_out()
 //------------------------------------------------------------------------------
 //: save a screenshot of an to a file
 bool vox_average_n_xgraphs_greedy::
-save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_png_filename)
+save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const std::string& out_png_filename)
 {
   // compute bounding box for the xgraph
   xgraph->update_bounding_box();

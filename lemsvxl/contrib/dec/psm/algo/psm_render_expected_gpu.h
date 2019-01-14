@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_matrix_fixed.h>
 #include <vnl/vnl_vector.h>
@@ -89,18 +89,18 @@ void psm_render_expected(psm_scene<APM> &scene, vpgl_perspective_camera<double> 
   if (GLEW_OK != err)
   {
     /* Problem: glewInit failed, something is seriously wrong. */
-    vcl_cerr << "Error: " << glewGetErrorString(err) << vcl_endl;
+    std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
     return;
   }
   if (!GLEW_VERSION_2_1) {
-    vcl_cerr << "error: need OpenGL 2.1 compatibility for GPU optimizations." << vcl_endl;
+    std::cerr << "error: need OpenGL 2.1 compatibility for GPU optimizations." << std::endl;
     return;
   }
   if (!GLEW_EXT_framebuffer_object) {
-    vcl_cerr << "error: need support for EXT_framebuffer_object extension for GPU optimizations." << vcl_endl;
+    std::cerr << "error: need support for EXT_framebuffer_object extension for GPU optimizations." << std::endl;
     return;
   }
-  vcl_cout << "* using GPU optimization *" << vcl_endl;
+  std::cout << "* using GPU optimization *" << std::endl;
 
   psm_parallel_raytrace_function<psm_render_expected_functor<APM>, APM> raytrace_fn(scene, cam, expected.ni(), expected.nj());
 
@@ -244,13 +244,13 @@ public:
     // check framebuffer status to make sure we are all set
     GLuint fbo_status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
     if (fbo_status != GL_FRAMEBUFFER_COMPLETE_EXT) {
-      vcl_cerr << "error creating framebuffer: error code = 0x" << vcl_hex << fbo_status;
+      std::cerr << "error creating framebuffer: error code = 0x" << std::hex << fbo_status;
       if (fbo_status == GL_FRAMEBUFFER_UNSUPPORTED_EXT) {
-        vcl_cerr << " GL_FRAMEBUFFER_UNSUPPORTED_EXT";
+        std::cerr << " GL_FRAMEBUFFER_UNSUPPORTED_EXT";
       }
-      vcl_cerr << vcl_endl;
+      std::cerr << std::endl;
     }
-    vcl_cout << "frame buffer created successfully." << vcl_endl;
+    std::cout << "frame buffer created successfully." << std::endl;
     // bind framebuffer object
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_);
 
@@ -273,9 +273,9 @@ public:
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, data_tex_in_);
 
-    vcl_cout << "camera_center = " << cam.get_camera_center() << vcl_endl;
-    vcl_cout << "camera_R = " << cam.get_rotation().as_h_matrix_3d().get_matrix() << vcl_endl;
-    vcl_cout << "camera_K = " << cam.get_calibration().get_matrix() << vcl_endl;
+    std::cout << "camera_center = " << cam.get_camera_center() << std::endl;
+    std::cout << "camera_R = " << cam.get_rotation().as_h_matrix_3d().get_matrix() << std::endl;
+    std::cout << "camera_K = " << cam.get_calibration().get_matrix() << std::endl;
 
     vgl_point_3d<double> cam_center(cam_.camera_center());
 #if 1
@@ -313,8 +313,8 @@ public:
 
     glMultTransposeMatrixd(GL_K.data_block());
 
-    vcl_cout << "RT = " << RT << vcl_endl;
-    vcl_cout << "GL_K = " << GL_K << vcl_endl;
+    std::cout << "RT = " << RT << std::endl;
+    std::cout << "GL_K = " << GL_K << std::endl;
 #else
     // TEMP
 
@@ -339,8 +339,8 @@ public:
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview.data_block());
     vnl_matrix_fixed<double,4,4> projection(0.0);
     glGetDoublev(GL_PROJECTION_MATRIX, projection.data_block());
-    vcl_cout << "MODELVIEW = " << modelview.transpose() << vcl_endl;
-    vcl_cout << "PROJECTION = " << projection.transpose() << vcl_endl;
+    std::cout << "MODELVIEW = " << modelview.transpose() << std::endl;
+    std::cout << "PROJECTION = " << projection.transpose() << std::endl;
 
     // set viewport
     glViewport(0,0,ni,nj);
@@ -360,8 +360,8 @@ public:
       glGetShaderiv(vert_shader, GL_INFO_LOG_LENGTH, &len);
       err_log = new GLchar[len];
       glGetShaderInfoLog(vert_shader, len, &len, err_log);
-      vcl_cerr << "ERROR: vertex shader failed to compile: " << vcl_endl;
-      vcl_cerr << err_log << vcl_endl;
+      std::cerr << "ERROR: vertex shader failed to compile: " << std::endl;
+      std::cerr << err_log << std::endl;
       delete[] err_log;
       return;
     }
@@ -379,8 +379,8 @@ public:
       glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &len);
       err_log = new GLchar[len];
       glGetShaderInfoLog(frag_shader, len, &len, err_log);
-      vcl_cerr << "ERROR: fragment shader failed to compile: " << vcl_endl;
-      vcl_cerr << err_log << vcl_endl;
+      std::cerr << "ERROR: fragment shader failed to compile: " << std::endl;
+      std::cerr << err_log << std::endl;
       delete[] err_log;
       return;
     }
@@ -396,7 +396,7 @@ public:
   
 
     if(prog_linked) {
-      vcl_cout << "shader program sucessfully linked" << vcl_endl;
+      std::cout << "shader program sucessfully linked" << std::endl;
       glUseProgram(shader_program_);
     } else {
       GLint len;
@@ -404,8 +404,8 @@ public:
       glGetProgramiv(shader_program_, GL_INFO_LOG_LENGTH, &len);
       err_log = new GLchar[len];
       glGetProgramInfoLog(shader_program_, len, &len, err_log);
-      vcl_cerr << "ERROR: fragment program failed to link: " << vcl_endl;
-      vcl_cerr << err_log << vcl_endl;
+      std::cerr << "ERROR: fragment program failed to link: " << std::endl;
+      std::cerr << err_log << std::endl;
       delete[] err_log;
       return;
     }
@@ -425,9 +425,9 @@ public:
 
     GLenum err_code = glGetError();
     if (err_code != GL_NO_ERROR) {
-      vcl_cerr << "OpenGL ERROR: 0x" << vcl_hex << err_code << vcl_endl;
+      std::cerr << "OpenGL ERROR: 0x" << std::hex << err_code << std::endl;
       const GLubyte *errString = gluErrorString(err_code);
-      vcl_cerr << errString << vcl_endl;
+      std::cerr << errString << std::endl;
     }
 
   }
@@ -439,7 +439,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(hsds_fd_tree<psm_sample<APM>,3> &block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(hsds_fd_tree<psm_sample<APM>,3> &block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
 
@@ -465,7 +465,7 @@ public:
 
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     double xverts_3d[2], yverts_3d[2], zverts_3d[2];
     for (; cell_it != cells.end(); ++cell_it) {
       // get cell bounding box
@@ -500,7 +500,7 @@ public:
 
     
     if (step_count_ == 200) {
-    vcl_cout << vcl_endl << "ncubes = " << cells.size() << vcl_endl;
+    std::cout << std::endl << "ncubes = " << cells.size() << std::endl;
     glReadBuffer(GL_COLOR_ATTACHMENT2_EXT);
     vil_image_view<float> rgba_test(ni_,nj_,4);
     rgba_test.fill(0.78f);
@@ -511,10 +511,10 @@ public:
 
     GLenum err_code = glGetError();
     if (err_code != GL_NO_ERROR) {
-      vcl_cerr << "OpenGL ERROR: 0x" << vcl_hex << err_code << vcl_endl;
+      std::cerr << "OpenGL ERROR: 0x" << std::hex << err_code << std::endl;
       const GLubyte *errString = gluErrorString(err_code);
       if (errString) {
-        vcl_cerr << (char*)errString << vcl_endl;
+        std::cerr << (char*)errString << std::endl;
       }
       return false;
     }
@@ -570,7 +570,7 @@ private:
     unsigned int ni = img.ni();
     unsigned int nj = img.nj();
     if (img.nplanes() != 4) {
-      vcl_cerr << "exptract_image_rgba: image must have 4 planes" << vcl_endl;
+      std::cerr << "exptract_image_rgba: image must have 4 planes" << std::endl;
       return;
     }
     glPixelStorei(GL_PACK_ALIGNMENT,1);

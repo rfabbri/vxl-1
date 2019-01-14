@@ -11,9 +11,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <cassert>
+#include <iostream>
+#include <vector>
 
 template<class S, class V, class E>
 class bcal_camera_graph
@@ -84,7 +84,7 @@ class bcal_camera_graph
   {
    public:
     iterator() : ptr_(0), pos_(0) {}
-    iterator(vcl_vector<vertex_node*> *p, int pos = 0) : ptr_(p), pos_(pos) {}
+    iterator(std::vector<vertex_node*> *p, int pos = 0) : ptr_(p), pos_(pos) {}
     iterator(const iterator& x) : ptr_( x.ptr_ ), pos_(x.pos_) {}
     V& operator*() const {return *((*ptr_)[pos_]->v_); }
     V* operator->() const {return &(* *this); }
@@ -134,7 +134,7 @@ class bcal_camera_graph
     int get_vertex_id() const { return (*ptr_)[pos_]->id_; }
 
    protected:
-    vcl_vector<vertex_node*>* ptr_;
+    std::vector<vertex_node*>* ptr_;
     int pos_;
   };
 #endif // 0
@@ -189,7 +189,7 @@ class bcal_camera_graph
     vertice_.push_back(v);
 
     // add a neighbour list into edges
-    vcl_vector<edge_node*> *neighbour_list = new vcl_vector<edge_node*>;
+    std::vector<edge_node*> *neighbour_list = new std::vector<edge_node*>;
     edges_.push_back(neighbour_list);
 
     // update old adjacent neighbour list
@@ -217,7 +217,7 @@ class bcal_camera_graph
   inline E* get_edge(int v1, int v2)
   {
     assert(v1 == 0 && v2 <= num_vertice_); // only from source to camera is available
-    vcl_vector<edge_node*>* plist = edges_[v1];
+    std::vector<edge_node*>* plist = edges_[v1];
     for (unsigned int i=0; i < plist->size(); i++){
       edge_node *e = (*plist)[i];
       vertex_node *v = e->v_;
@@ -237,7 +237,7 @@ class bcal_camera_graph
 
 
   // for debug
-  void print(vcl_ostream& out = vcl_cerr)
+  void print(std::ostream& out = std::cerr)
   {
     out<<"print graph\n";
     for (int i=0; i<num_vertice_; i++){
@@ -284,8 +284,8 @@ class bcal_camera_graph
   }
 
  private:
-  vcl_vector<vertex_node*> vertice_;
-  vcl_vector<vcl_vector<edge_node*>* > edges_; // adjacent neighbour list
+  std::vector<vertex_node*> vertice_;
+  std::vector<std::vector<edge_node*>* > edges_; // adjacent neighbour list
   S* source_;
   int num_vertice_;
 };

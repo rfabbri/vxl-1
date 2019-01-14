@@ -6,7 +6,7 @@
 
 static void test_draw()
 {
-    vcl_string filename = "test_draw.wrl";
+    std::string filename = "test_draw.wrl";
 
     vgl_point_3d<double> pt1_center(2.0,3.0,1.0), pt2_center(0.0,0.0,0.0), pt3_center(5.0,5.0,5.0);
     double pt2_radius = 5;
@@ -21,7 +21,7 @@ static void test_draw()
     dvrml_point_sptr pt2 = new dvrml_point(pt2_center,ap_blue2);
     dvrml_point_sptr pt3 = new dvrml_point(pt3_center,ap_blue2);
 
-    vcl_ofstream os(filename.c_str(),vcl_ios::out);
+    std::ofstream os(filename.c_str(),std::ios::out);
 
     dvrml vrml_out(os);
 
@@ -29,17 +29,17 @@ static void test_draw()
     vrml_out.draw(pt2.as_pointer());
     vrml_out.draw(pt3.as_pointer());
 
-    vcl_vector<vgl_point_3d<double> > line_point_list;
+    std::vector<vgl_point_3d<double> > line_point_list;
 
     line_point_list.push_back(pt2_center);
     line_point_list.push_back(pt3_center);
 
-    vcl_vector<vcl_vector<unsigned> > connection_list;
-    vcl_vector<unsigned> connection1;
+    std::vector<std::vector<unsigned> > connection_list;
+    std::vector<unsigned> connection1;
     connection1.push_back(0);
     connection1.push_back(1);
     connection_list.push_back(connection1);
-    vcl_vector<dvrml_appearance_sptr> appearance_list;
+    std::vector<dvrml_appearance_sptr> appearance_list;
     appearance_list.push_back(ap_blue);
 
     dvrml_indexed_lineset_sptr lineset_sptr = new dvrml_indexed_lineset(line_point_list,connection_list, appearance_list);

@@ -33,7 +33,7 @@ class dbskr_extract_shock_params
     bool add_noise_in_a_loop_;
     float noise_radius_;
 
-    vcl_string output_file_postfix_;
+    std::string output_file_postfix_;
 
     bool parse_from_data(bxml_data_sptr root);
     static bxml_element *create_default_document_data();

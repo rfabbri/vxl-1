@@ -32,7 +32,7 @@ dbsksp_build_from_xshock_graph_process()
     "-shock_interp_sample_ds", double(6.0) )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -57,7 +57,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_build_from_xshock_graph_process::
+std::string dbsksp_build_from_xshock_graph_process::
 name()
 { 
   return "Build from extrinsic shock graph"; 
@@ -66,10 +66,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_build_from_xshock_graph_process::
+std::vector< std::string > dbsksp_build_from_xshock_graph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock");
   
 
@@ -80,10 +80,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_build_from_xshock_graph_process::
+std::vector< std::string > dbsksp_build_from_xshock_graph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_shock" );  
   return to_return;
 }
@@ -115,7 +115,7 @@ execute()
 
   unsigned int build_type = 0;
   parameters()->get_value( "-build_type" , build_type);
-  vcl_string mode = this->build_type_descriptions_[build_type];
+  std::string mode = this->build_type_descriptions_[build_type];
 
   double scurve_sample_ds = 0;
   parameters()->get_value( "-scurve_sample_ds" , scurve_sample_ds);
@@ -126,14 +126,14 @@ execute()
   // type 1: create a shock graph from a polyline
   if (mode != "build from extrinsic shock graph")
   {
-    vcl_cerr << "ERROR: invalid build type.\n";
+    std::cerr << "ERROR: invalid build type.\n";
     return false;
   }
 
   if ( input_data_.size() != 1 )
   {
-    vcl_cerr << "In dbsksp_build_from_xshock_graph_process::execute() - "
-            << "not exactly one input frame" << vcl_endl;
+    std::cerr << "In dbsksp_build_from_xshock_graph_process::execute() - "
+            << "not exactly one input frame" << std::endl;
     return false;
   }
 

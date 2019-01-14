@@ -1,7 +1,7 @@
 #ifndef psm_update_dcdf_implicit_h_
 #define psm_update_dcdf_implicit_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -71,7 +71,7 @@ public:
     // update alpha integral
     alpha_integral_(i,j) += cell_value.alpha * seg_len;
     // compute new visibility probability with updated alpha_integral
-    const float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    const float vis_prob_end = std::exp(-alpha_integral_(i,j));
     // compute weight for this cell
     const float Omega = vis_img_(i,j) - vis_prob_end;
     // and update pre 
@@ -112,7 +112,7 @@ public:
     // update alpha integral
     alpha_integral_(i,j) += cell_value.alpha * seg_len;
     // compute new visibility probability with updated alpha_integral
-    const float vis_prob_end = vcl_exp(-alpha_integral_(i,j));
+    const float vis_prob_end = std::exp(-alpha_integral_(i,j));
     // grab this cell's pre and vis value
     const float pre = pre_img_(i,j);
     const float vis = vis_img_(i,j);
@@ -160,7 +160,7 @@ template<>
 void fill_PI_inf_black<vil_rgb<float> >(vil_image_view<vil_rgb<float> > const& img, vil_image_view<float> &PI_inf, vil_rgb<float> background_mean, float background_std_dev)
 {
   psm_simple_rgb background_apm;
-  psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_processor::init_appearance(background_mean, vcl_sqrt(background_std_dev), background_apm);
+  psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_processor::init_appearance(background_mean, std::sqrt(background_std_dev), background_apm);
 
   vil_image_view<vil_rgb<float> >::const_iterator img_it = img.begin();
   vil_image_view<float>::iterator PI_it = PI_inf.begin();
@@ -174,12 +174,12 @@ void psm_update_dcdf_implicit(psm_scene<APM> &scene, psm_aux_scene_base_sptr aux
 {
  
   // 0th pass: traverse and compute mean cell observations.
-  vcl_cout << "compute mean cell observations.." << vcl_endl;
+  std::cout << "compute mean cell observations.." << std::endl;
   psm_raytrace_function<psm_update_dcdf_implicit_pass0_functor<APM,AUX>, APM, AUX> raytrace_fn0(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
   psm_update_dcdf_implicit_pass0_functor<APM,AUX> pass0_functor(img);
   raytrace_fn0.run(pass0_functor);
 
-  vcl_cout << "normalizing and computing PI values.." << vcl_endl;
+  std::cout << "normalizing and computing PI values.." << std::endl;
   // normalize appearance values
   psm_aux_scene<AUX> *aux_scene = static_cast<psm_aux_scene<AUX>*>(aux_scene_ptr.ptr());
   typename psm_aux_scene<AUX>::block_index_iterator block_index_it = scene.block_index_begin();
@@ -201,7 +201,7 @@ void psm_update_dcdf_implicit(psm_scene<APM> &scene, psm_aux_scene_base_sptr aux
   }
 
   // first pass: traverse in forward direction, accumulating vis_inf and pre_inf
-  vcl_cout << "first pass.." << vcl_endl;
+  std::cout << "first pass.." << std::endl;
   vil_image_view<float> vis_inf(img.ni(), img.nj());
   vil_image_view<float> pre_inf(img.ni(), img.nj());
   psm_raytrace_function<psm_update_dcdf_implicit_pass1_functor<APM,AUX>, APM, AUX> raytrace_fn1(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
@@ -210,7 +210,7 @@ void psm_update_dcdf_implicit(psm_scene<APM> &scene, psm_aux_scene_base_sptr aux
 
   vil_image_view<float> PI_inf(img.ni(), img.nj());
   if (black_background) {
-    vcl_cout << "using black background" << vcl_endl;
+    std::cout << "using black background" << std::endl;
     psm_apm_traits<APM>::obs_datatype black(0.0f);
     float background_std_dev = 8.0f/255;
 
@@ -225,7 +225,7 @@ void psm_update_dcdf_implicit(psm_scene<APM> &scene, psm_aux_scene_base_sptr aux
   vil_image_view<float> total_prob_img(img.ni(), img.nj());
   vil_math_image_sum(pre_inf,inf_term, total_prob_img);
 
-  vcl_cout << "second pass.." << vcl_endl;
+  std::cout << "second pass.." << std::endl;
   psm_raytrace_function<psm_update_dcdf_implicit_pass2_functor<APM,AUX>, APM, AUX> raytrace_fn2(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false);
   psm_update_dcdf_implicit_pass2_functor<APM,AUX> pass2_functor(total_prob_img);
   raytrace_fn2.run(pass2_functor);
@@ -250,7 +250,7 @@ void psm_update_dcdf_implicit(psm_scene<APM> &scene, psm_aux_scene_base_sptr aux
     }
   }
 
-  vcl_cout << "done." << vcl_endl;
+  std::cout << "done." << std::endl;
 
   return;
 }

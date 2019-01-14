@@ -4,9 +4,9 @@
 #ifndef gdt_shock_section_h_
 #define gdt_shock_section_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <cmath>
+#include <utility>
+#include <map>
 
 #include <gdt/gdt_shock.h>
 
@@ -17,7 +17,7 @@ class gdt_shock_section
 {
 protected:
   //: a map of shocks sorted by its tau as key. 
-  vcl_map<double, gdt_shock*> S_map_;
+  std::map<double, gdt_shock*> S_map_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -25,7 +25,7 @@ public:
   }
 
   //: ====== Data access functions ======
-  vcl_map<double, gdt_shock*>* S_map() {
+  std::map<double, gdt_shock*>* S_map() {
     return &S_map_;
   }
 
@@ -34,7 +34,7 @@ public:
     return S_map_.size();
   }
   gdt_shock* _find_shock (const double stau) {
-    vcl_map<double, gdt_shock*>::iterator it = S_map_.find (stau);
+    std::map<double, gdt_shock*>::iterator it = S_map_.find (stau);
     if (it == S_map_.end())
       return NULL;
     return (*it).second;
@@ -46,7 +46,7 @@ public:
     S_map_.clear ();
   }
 
-  void put_all_shocks_to_queue (vcl_map<vcl_pair<double, int>, gdt_shock*>* shock_queue); 
+  void put_all_shocks_to_queue (std::map<std::pair<double, int>, gdt_shock*>* shock_queue); 
 };
 
 #endif

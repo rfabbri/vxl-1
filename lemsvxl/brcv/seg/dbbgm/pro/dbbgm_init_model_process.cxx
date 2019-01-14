@@ -34,7 +34,7 @@ dbbgm_init_model_process::dbbgm_init_model_process()
       !parameters()->add( "Component Threshold" ,  "-g_thresh", 3.0f        ) ||
       !parameters()->add( "Update Masked" ,        "-masked",   false       ) ||
       !parameters()->add( "YUV Color Space" ,      "-yuv",      false       )   ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -54,7 +54,7 @@ dbbgm_init_model_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_init_model_process::name()
 {
   return "Init Background";
@@ -78,9 +78,9 @@ dbbgm_init_model_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_init_model_process::get_input_type()
+std::vector< std::string > dbbgm_init_model_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   // optionally use an image mask
   bool masked=false;
@@ -92,18 +92,18 @@ vcl_vector< vcl_string > dbbgm_init_model_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_init_model_process::get_output_type()
+std::vector< std::string > dbbgm_init_model_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbbgm_image" );
   return to_return;
 }
 
 
 //: Returns a vector of strings with suggested names for output classes
-vcl_vector< vcl_string > dbbgm_init_model_process::suggest_output_names()
+std::vector< std::string > dbbgm_init_model_process::suggest_output_names()
 {
-  vcl_vector< vcl_string > names;
+  std::vector< std::string > names;
   names.push_back("bg model");
 
   return names;
@@ -142,8 +142,8 @@ dbbgm_init_model_process::finish()
   if(frame >= input_data_.size())
     return false;
 
-  vcl_vector<vil_image_view<float> > images;
-  vcl_vector<vil_image_view<bool> > masks;
+  std::vector<vil_image_view<float> > images;
+  std::vector<vil_image_view<bool> > masks;
   for(; (frame < input_data_.size()) && input_data_[frame][0]; ++frame){
 
     // get image from the storage class

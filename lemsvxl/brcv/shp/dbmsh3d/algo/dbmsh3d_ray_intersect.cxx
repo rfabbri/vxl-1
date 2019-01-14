@@ -1,5 +1,5 @@
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgld/bgld_triangle.h>
@@ -12,7 +12,7 @@ dbmsh3d_face* intersect_ray_mesh (const vgl_point_3d<double>& v_orig,
                                   const vgl_vector_3d<double>& vector, 
                                   dbmsh3d_mesh* M, vgl_point_3d<double>& iP)
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     bool result = dbmsh3d_intersect_ray_face (v_orig, vector, F, iP);
@@ -32,7 +32,7 @@ dbmsh3d_face* intersect_ray_mesh_all (const vgl_point_3d<double>& v_orig,
   vgl_point_3d<double> closest_iP, iP;
   dbmsh3d_face* closestF = NULL;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   for (; it != M->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     bool result = dbmsh3d_intersect_ray_face (v_orig, vector, F, iP);
@@ -65,7 +65,7 @@ bool dbmsh3d_intersect_ray_face (const vgl_point_3d<double>& v_orig,
                                  const vgl_vector_3d<double>& vector, 
                                  dbmsh3d_face* F, vgl_point_3d<double>& iP)
 {
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   F->get_bnd_Vs (vertices);
   int nv = vertices.size();
   double ori[3];
@@ -111,9 +111,9 @@ bool dbmsh3d_intersect_ray_face (const vgl_point_3d<double>& v_orig,
       return false;
   }
   else { //2) The polygon case.
-    vcl_cerr << "\tnon-triangular face id: " << F->id() << "#vertices: " <<  nv << vcl_endl;
+    std::cerr << "\tnon-triangular face id: " << F->id() << "#vertices: " <<  nv << std::endl;
 
-    //bool dbmsh3d_triangulate_face (const dbmsh3d_face* F, vcl_vector<vcl_vector<int> >& tri_faces)
+    //bool dbmsh3d_triangulate_face (const dbmsh3d_face* F, std::vector<std::vector<int> >& tri_faces)
     assert (0);
 
     return false;

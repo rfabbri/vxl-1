@@ -15,9 +15,9 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <vector>
+#include <string>
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 
 
@@ -79,7 +79,7 @@ public:
 
   //: Compute the shock graph parameter statistics from a set of shock graphs
   // with exactly the same topology
-  bool compute_stats(const vcl_vector<dbsksp_shapelet_sptr >& shock_graph_list);
+  bool compute_stats(const std::vector<dbsksp_shapelet_sptr >& shock_graph_list);
 
   // Extract statistics of a parameter
   void get_stats(unsigned index, double& mean, double& var, double& min, double& max) const;
@@ -88,7 +88,7 @@ public:
   void set_stats(unsigned index, double mean, double var, double min, double max);
 
   //: Print summary
-  vcl_ostream& print(vcl_ostream& str) const {return str; };
+  std::ostream& print(std::ostream& str) const {return str; };
 
   // Member variables ----------------------------------------------------------
 

@@ -4,7 +4,7 @@
 #include<vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include<vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include<vul/vul_sprintf.h>
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include<georegister/dbrl_id_point_2d_sptr.h>
 #include<georegister/dbrl_id_point_2d.h>
 #include"dbrl_id_point_2d_storage_sptr.h"
@@ -16,7 +16,7 @@ edgemodel_image_to_vsol_process::edgemodel_image_to_vsol_process() : bpro1_proce
         !parameters()->add( "Scale" ,           "-scale" ,        (float)1)
       )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     
 }
@@ -45,10 +45,10 @@ edgemodel_image_to_vsol_process::clone() const
 /*************************************************************************
 * Function Name: edgemodel_image_to_vsol_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 edgemodel_image_to_vsol_process::name()
 {
     return "Image to Vsol";
@@ -58,12 +58,12 @@ edgemodel_image_to_vsol_process::name()
 /*************************************************************************
 * Function Name: dedgemodel_image_to_vsol_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > edgemodel_image_to_vsol_process::get_input_type()
+std::vector< std::string > edgemodel_image_to_vsol_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
@@ -72,12 +72,12 @@ vcl_vector< vcl_string > edgemodel_image_to_vsol_process::get_input_type()
 /*************************************************************************
 * Function Name: edgemodel_image_to_vsol_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > edgemodel_image_to_vsol_process::get_output_type()
+std::vector< std::string > edgemodel_image_to_vsol_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     to_return.push_back( "vsol2D" );
     to_return.push_back( "dbrl_id_point_2d" );
@@ -110,7 +110,7 @@ bool
 edgemodel_image_to_vsol_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In edgemodel_image_to_vsol_process::execute() - not exactly one"
+        std::cout << "In edgemodel_image_to_vsol_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -136,21 +136,21 @@ edgemodel_image_to_vsol_process::execute()
     }
     else
     {
-        vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+        std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
         return false;
     }
     bpro1_filepath filepath;
     parameters()->get_value("-name",filepath);
 
     char  filename[1000];//=vul_sprintf("%s%05d.%s",filepath.path,input_data_[0][0]->frame(),"txt");
-    vcl_sprintf(filename, "%s%05d.%s", filepath.path.c_str(),input_data_[0][0]->frame(),"txt");
-    vcl_ofstream ofile(filename);
+    std::sprintf(filename, "%s%05d.%s", filepath.path.c_str(),input_data_[0][0]->frame(),"txt");
+    std::ofstream ofile(filename);
     static float thresh=128.0;
     static float scale=1.0;
     parameters()->get_value( "-thresh" , thresh);
     parameters()->get_value( "-scale" , scale);
-    vcl_vector<vsol_spatial_object_2d_sptr> points;
-    vcl_vector<dbrl_id_point_2d_sptr> idpoints;
+    std::vector<vsol_spatial_object_2d_sptr> points;
+    std::vector<dbrl_id_point_2d_sptr> idpoints;
     int id=1;
     for(unsigned j=0;j<greyscale_view.nj();j++)
         for(unsigned i=0;i<greyscale_view.ni();i++)
@@ -168,7 +168,7 @@ edgemodel_image_to_vsol_process::execute()
         }
      
 
-    vcl_cout<<"No of points are "<<points.size();
+    std::cout<<"No of points are "<<points.size();
      ofile.close();
      vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
      output_vsol->add_objects(points, "vsolpoints");

@@ -12,8 +12,8 @@ static void test_pizza_slice_symmetry(){
   vnl_quaternion<double> q(vnl_double_3(0.,0.,1.), -2*vnl_math::pi/3);
   vnl_double_3x3 R(q.rotation_matrix_transpose());
   vgl_h_matrix_3d<double> vgmat(R.transpose(),vnl_double_3(0.,0.,0.));
-  vcl_cout << vgmat << "\n";
-  vcl_cout << "transform of (1,0,0): " << biob_worldpt_transformation(vgmat)( worldpt(1.0,0.0,0.0)) << "\n";
+  std::cout << vgmat << "\n";
+  std::cout << "transform of (1,0,0): " << biob_worldpt_transformation(vgmat)( worldpt(1.0,0.0,0.0)) << "\n";
 
   biob_explicit_worldpt_roster representatives;
   double pi = vnl_math::pi;

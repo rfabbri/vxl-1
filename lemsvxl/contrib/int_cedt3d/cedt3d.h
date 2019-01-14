@@ -1,7 +1,7 @@
 #ifndef _CEDT3D_H_
 #define _CEDT3D_H_
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

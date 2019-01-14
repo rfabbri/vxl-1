@@ -7,11 +7,11 @@
 #include <vil/vil_convert.h>
 bool bbgm_ROC_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(4);
+  std::vector<std::string> in_types(4);
   in_types[0]="vil_image_view_sptr";//truth
   in_types[1]="vil_image_view_sptr";//test
   in_types[2]="float";//bg thresh
-  in_types[3]="vcl_string"; //path
+  in_types[3]=vcl_string"; //path
   pro.set_input_types(in_types);
   return true;
 
@@ -22,7 +22,7 @@ bool bbgm_ROC_process(bprb_func_process& pro)
    vil_image_view_base_sptr truth_img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(1);
   if (!truth_img_ptr) {
-    vcl_cerr << "In bbgm_ROC_process::execute() -"
+    std::cerr << "In bbgm_ROC_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
@@ -31,12 +31,12 @@ bool bbgm_ROC_process(bprb_func_process& pro)
   vil_image_view_base_sptr test_img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(2);
   if (!test_img_ptr) {
-    vcl_cerr << "In bbgm_ROC_process::execute() -"
+    std::cerr << "In bbgm_ROC_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
   vil_image_view<float> test = *vil_convert_cast(float(), test_img_ptr);
-  vcl_string path=pro.get_input<vcl_string>(3);
+  std::string path=pro.get_input<std::string>(3);
   float bg_thresh=pro.get_input<float>(2);
   specificitySensitivityCount(truth,test,bg_thresh,path);
   return true;

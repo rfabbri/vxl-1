@@ -23,7 +23,7 @@
 #include <dbsksp/dbsksp_xshock_node.h>
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbskr/dbskr_tree_sptr.h>
-#include <vcl_map.h>
+#include <map>
 
 #include <dbskr/dbskr_scurve_sptr.h>
 
@@ -90,16 +90,16 @@ public:
   //void interpolate_shock_curve(const dbskr_scurve_sptr& sc, 
   //  const dbsksp_shock_node_sptr& start_node,
   //  const dbsksp_shock_node_sptr& end_node,
-  //  vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-  //  vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges);
+  //  std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+  //  std::vector<dbsksp_shock_edge_sptr >& ordered_edges);
 
   //: Interpolate an order list of xnodes with a sequence of shock edges
   void interpolate_xnodes(
-     const vcl_vector<dbsksp_xshock_node_descriptor >& xshock_node_list,
+     const std::vector<dbsksp_xshock_node_descriptor >& xshock_node_list,
      const dbsksp_shock_node_sptr& start_node,
      const dbsksp_shock_node_sptr& end_node,
-     vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-     vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges);
+     std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+     std::vector<dbsksp_shock_edge_sptr >& ordered_edges);
 
 
   // =======================================================================
@@ -110,7 +110,7 @@ public:
   // results in two shock edges
   dbsksp_shock_graph_sptr build_from_skr_tree(
     const dbskr_tree_sptr& tree,
-    const vcl_vector<int >& num_segments);
+    const std::vector<int >& num_segments);
 
   
 
@@ -120,14 +120,14 @@ public:
     const dbsksp_shock_node_sptr& start_node,
     const dbsksp_shock_node_sptr& end_node,
     int num_segments,
-    vcl_vector<dbsksp_shock_node_sptr >& ordered_nodes,
-    vcl_vector<dbsksp_shock_edge_sptr >& ordered_edges);
+    std::vector<dbsksp_shock_node_sptr >& ordered_nodes,
+    std::vector<dbsksp_shock_edge_sptr >& ordered_edges);
 
 
   //: Compute number of segments for each dart in the tree given a sampling rate
   static void compute_num_segments_for_darts(const dbskr_tree_sptr& tree,
     double segment_ds, 
-    vcl_vector<int >& num_segments);
+    std::vector<int >& num_segments);
 
 
 
@@ -140,14 +140,14 @@ public:
 
 
   //: Retrieve the list of edges corresponding to a dart
-  vcl_vector<dbsksp_shock_edge_sptr > get_shock_edges_of_dart(int dart);
+  std::vector<dbsksp_shock_edge_sptr > get_shock_edges_of_dart(int dart);
 
   
   //: Retrieve the list of edges corresponding to a dart
-  vcl_vector<dbsksp_shock_node_sptr > get_shock_nodes_of_dart(int dart);
+  std::vector<dbsksp_shock_node_sptr > get_shock_nodes_of_dart(int dart);
 
   // for debugging purpose only
-  vcl_vector<dbsksp_shapelet_sptr > shapelets;
+  std::vector<dbsksp_shapelet_sptr > shapelets;
 
 
 protected:
@@ -161,19 +161,19 @@ protected:
 
   // keeping track of the nodes of the coarse graph
   // map<coarse_node_id, node_sptr >
-  vcl_map<int, dbsksp_shock_node_sptr > coarse_graph_nodes_map_;
+  std::map<int, dbsksp_shock_node_sptr > coarse_graph_nodes_map_;
 
   // nodes of the shock graph being constructed
-  vcl_map<int, dbsksp_shock_node_sptr > nodes_map_;
+  std::map<int, dbsksp_shock_node_sptr > nodes_map_;
 
   // edges of the shock graph being constructed
-  vcl_map<int, dbsksp_shock_edge_sptr > edges_map_;
+  std::map<int, dbsksp_shock_edge_sptr > edges_map_;
 
   // mapping from the darts of the tree to their correponding shock edges and nodes
   // map<dart_id, ordered list of shock edges>
-  vcl_map<int, vcl_vector<dbsksp_shock_edge_sptr > > dart_to_edges_map_;
+  std::map<int, std::vector<dbsksp_shock_edge_sptr > > dart_to_edges_map_;
   // map<dart_id, ordered list of nodes >
-  vcl_map<int, vcl_vector<dbsksp_shock_node_sptr > > dart_to_nodes_map_;
+  std::map<int, std::vector<dbsksp_shock_node_sptr > > dart_to_nodes_map_;
 
   
   

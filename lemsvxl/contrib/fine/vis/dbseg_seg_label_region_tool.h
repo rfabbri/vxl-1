@@ -37,7 +37,7 @@ public:
   ~dbseg_seg_label_region_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -77,7 +77,7 @@ protected:
 private:
 
   bool active;
-/*  vcl_vector<vgl_point_2d<double> > point_list;
+/*  std::vector<vgl_point_2d<double> > point_list;
   double last_x;
   double last_y;*/
     int current_label;
@@ -86,7 +86,7 @@ private:
   double disx1, disx2, disy1, disy2;
   bool dis;
 
-  vcl_string get_label_name(int i);
+  std::string get_label_name(int i);
   //bool init;
 };
 

@@ -22,7 +22,7 @@ dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process()
   if( !parameters()->add("Distance RMS error threshold (pixels): " , "-distance-rms-error-threshold" , 0.5f)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -47,7 +47,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
+std::string dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
 name()
 { 
   return "Fit sksp_xgraph to sk2d_xgraph"; 
@@ -56,10 +56,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
+std::vector< std::string > dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("shock");
   return to_return;
 }
@@ -68,10 +68,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
+std::vector< std::string > dbsksp_fit_sksp_xgraph_to_sk2d_xgraph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
 }

@@ -18,7 +18,7 @@
 #include <vnl/vnl_vector.h>
 #include <QStatusBar>
 
-dbrec3d_kernel_viewer::dbrec3d_kernel_viewer(vcl_map<vcl_string, bvpl_kernel_sptr> &kernels, float tf_min, float tf_max)
+dbrec3d_kernel_viewer::dbrec3d_kernel_viewer(std::map<std::string, bvpl_kernel_sptr> &kernels, float tf_min, float tf_max)
 {
   //initialize the widget to display the first principal component
   kernels_= kernels;
@@ -77,12 +77,12 @@ void dbrec3d_kernel_viewer::prev_volume()
 
 /****************************** for vectors ********************************/
 
-dbrec3d_vector_kernel_viewer::dbrec3d_vector_kernel_viewer(vcl_vector< vnl_vector<double> > &kernels, unsigned dimx, unsigned dimy, unsigned dimz,float tf_min, float tf_max)
+dbrec3d_vector_kernel_viewer::dbrec3d_vector_kernel_viewer(std::vector< vnl_vector<double> > &kernels, unsigned dimx, unsigned dimy, unsigned dimz,float tf_min, float tf_max)
 {
   //initialize the widget to display the first principal component
   kernels_= kernels;
   curr_kernel_it_ = kernels_.begin();
-  vcl_cout << *curr_kernel_it_ << vcl_endl;
+  std::cout << *curr_kernel_it_ << std::endl;
   curr_kernel_idx_ = 0;
   kernel_widget_ = new dbrec3d_filter_grid_widget((*curr_kernel_it_), dimx,  dimy,  dimz, tf_min, tf_max);
   hist_widget_ = new dbrec3d_histogram_widget((*curr_kernel_it_), tf_min, tf_max, 10);
@@ -143,9 +143,9 @@ void dbrec3d_vector_kernel_viewer::prev_volume()
 
 /****************************** for steerable basis ********************************/
 
-dbrec3d_steerable_basis_viewer::dbrec3d_steerable_basis_viewer(vcl_vector<vcl_vector<vcl_string> > basis,
-                                                               vcl_vector<vcl_string> basis_names,
-                                                               vcl_map<vcl_string, vnl_vector_fixed<float,5> > separable_taps, 
+dbrec3d_steerable_basis_viewer::dbrec3d_steerable_basis_viewer(std::vector<std::vector<std::string> > basis,
+                                                               std::vector<std::string> basis_names,
+                                                               std::map<std::string, vnl_vector_fixed<float,5> > separable_taps, 
                                                                float tf_min, float tf_max)
 {
   //initialize the widget to display the first principal component
@@ -154,9 +154,9 @@ dbrec3d_steerable_basis_viewer::dbrec3d_steerable_basis_viewer(vcl_vector<vcl_ve
   curr_bases_it_ = basis_.begin();
   curr_name_it_ = basis_names_.begin();
   separable_taps_=separable_taps;
-  vcl_vector<vcl_string> filter_names = *curr_bases_it_;
+  std::vector<std::string> filter_names = *curr_bases_it_;
   if (filter_names.size() !=3) {
-    vcl_cerr <<"Error creating dbrec3d_steerable_basis_viewer\n"; 
+    std::cerr <<"Error creating dbrec3d_steerable_basis_viewer\n"; 
     throw;
   }
   kernel_widget_ = new dbrec3d_filter_grid_widget(separable_taps[filter_names[0]], 
@@ -198,7 +198,7 @@ void dbrec3d_steerable_basis_viewer::next_volume()
   
   
   component_label_->setText(curr_name_it_->c_str());
-  vcl_vector<vcl_string> filter_names = *curr_bases_it_;
+  std::vector<std::string> filter_names = *curr_bases_it_;
   kernel_widget_->grid_widget_->update_volume_data(separable_taps_[filter_names[0]],
                                                    separable_taps_[filter_names[1]],
                                                    separable_taps_[filter_names[2]]);
@@ -216,7 +216,7 @@ void dbrec3d_steerable_basis_viewer::prev_volume()
   curr_name_it_--;
   
   component_label_->setText(curr_name_it_->c_str());
-  vcl_vector<vcl_string> filter_names = *curr_bases_it_;
+  std::vector<std::string> filter_names = *curr_bases_it_;
   kernel_widget_->grid_widget_->update_volume_data(separable_taps_[filter_names[0]],
                                                    separable_taps_[filter_names[1]],
                                                    separable_taps_[filter_names[2]]);

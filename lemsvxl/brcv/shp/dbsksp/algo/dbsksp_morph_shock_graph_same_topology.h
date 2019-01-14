@@ -14,7 +14,7 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
+#include <map>
 #include <dbsksp/dbsksp_shock_graph_sptr.h>
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>
@@ -73,14 +73,14 @@ public:
   dbsksp_shock_graph_sptr get_intermediate_graph(double t);
 
   //: print info of the morpher to an output stream
-  virtual vcl_ostream& print(vcl_ostream & os) const;
+  virtual std::ostream& print(std::ostream & os) const;
 
   //: Get the 1-1 correpondence mapping between edges of the two graphs
-  const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map()
+  const std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map()
   {return this->edge_map_; };
   
   //: Get the 1-1 correpondence mapping between nodes of the two graphs
-  const vcl_map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map()
+  const std::map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map()
   {return this->node_map_; };
   
 
@@ -93,10 +93,10 @@ protected:
   
 
   // edge correspondence map<source_edge, target_edge>
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> edge_map_;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> edge_map_;
 
   // vertex correspondence map<source_node_id, target_node_id>
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr> node_map_;
+  std::map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr> node_map_;
 
 
   //: ingredients for the morphing

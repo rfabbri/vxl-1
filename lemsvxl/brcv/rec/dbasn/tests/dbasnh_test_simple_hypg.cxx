@@ -19,11 +19,11 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
-#include <vcl_fstream.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
+#include <fstream>
 #include <vul/vul_printf.h>
 #include <testlib/testlib_test.h>
 #include <dbasn/dbasnh_gradasgn.h>
@@ -38,7 +38,7 @@
 
 MAIN_ARGS( dbasnh_test_simple_hypg )
 {
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
       dir_base = argv[1];
@@ -54,14 +54,14 @@ MAIN_ARGS( dbasnh_test_simple_hypg )
   dbasn_graph* G = new dbasn_graph ();
   dbasn_graph* g = new dbasn_graph ();
   
-  vcl_string true_data_file = "GF1_bicr1p_GF2_bicr2p_ground_truth.txt";
+  std::string true_data_file = "GF1_bicr1p_GF2_bicr2p_ground_truth.txt";
 
   int G_nL = load_GA_graph_file (G, dir_base + "GraphFile1_bicr1p500x_NoSearchRadius.txt");
   TEST("Load first graph ", G->nN(), 20);
   int g_nL = load_GA_graph_file (g, dir_base + "GraphFile2_bicr2p500x_NoSearchRadius.txt");
   TEST("Load second graph ", g->nN(), 19);
 
-  vcl_ifstream fin( (dir_base+true_data_file).c_str() );
+  std::ifstream fin( (dir_base+true_data_file).c_str() );
 
   dbasn_gradasgn gradAssign;  
   dbasn_params params; //Use the default parameters.
@@ -69,12 +69,12 @@ MAIN_ARGS( dbasnh_test_simple_hypg )
   ///params.wL_ = 2, 3;  
   params.wN_ = 1;
   params.wL_ = 1.5;
-  vcl_cout<< params;
+  std::cout<< params;
   gradAssign.setup_GA_params (G, g, params);
 
-  vcl_cout <<"\n=================\n";
-  vcl_cout <<"Graph G with nodes: "<< G->nN() << ", links: "<< G_nL << vcl_endl;
-  vcl_cout <<"Graph g with nodes: "<< g->nN() << ", links: "<< g_nL << vcl_endl;
+  std::cout <<"\n=================\n";
+  std::cout <<"Graph G with nodes: "<< G->nN() << ", links: "<< G_nL << std::endl;
+  std::cout <<"Graph g with nodes: "<< g->nN() << ", links: "<< g_nL << std::endl;
 
   gradAssign.get_assignment ();
 
@@ -83,29 +83,29 @@ MAIN_ARGS( dbasnh_test_simple_hypg )
     labelG[i] = -1;
 
   //Read ground truth
-  vul_printf (vcl_cout, "The ground truth result is:\n");
+  vul_printf (std::cout, "The ground truth result is:\n");
   float temp;
   for (int i = 0; i<G->nN(); i++) {
     for (int j = 0; j<g->nN()+1; j++) {
       fin >> temp;
-      vcl_cout << temp << " ";
+      std::cout << temp << " ";
       if (temp > 0.0f) {
         labelG[i] = j;
       }
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   for (int i = 0; i<G->nN(); i++) 
-    vcl_cout << labelG[i] << " ";  
+    std::cout << labelG[i] << " ";  
 
   int incorrect = 0;
   for (int i = 0; i<G->nN(); i++) {
     if (gradAssign.labelGg(i) > 0)
       if (labelG[i] != gradAssign.labelGg(i)) incorrect++;
   }
-  vcl_cout<<"\n Result: "<< incorrect <<" incorrect matches out of " << G->nN() << "in the first graph\n";
+  std::cout<<"\n Result: "<< incorrect <<" incorrect matches out of " << G->nN() << "in the first graph\n";
   TEST("# of incorrect matches (should be 0) ", incorrect, 0);
 
   delete G;

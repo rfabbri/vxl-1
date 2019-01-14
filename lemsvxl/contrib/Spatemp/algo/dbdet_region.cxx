@@ -5,19 +5,19 @@
 void dbdet_region::compute_V()
 {
 
-    //vcl_map<int,int>::iterator iter_option=ids_ws.begin();
-    //vcl_map<int,float>::iterator iter_weights=ids_weights.begin();
-    //vcl_map<int,dbdet_temporal_model*>::iterator iter_model=ids_model.begin();
+    //std::map<int,int>::iterator iter_option=ids_ws.begin();
+    //std::map<int,float>::iterator iter_weights=ids_weights.begin();
+    //std::map<int,dbdet_temporal_model*>::iterator iter_model=ids_model.begin();
 
-    //vcl_map<int,dbdet_temporal_model*>::iterator iter_model_i;
-    //vcl_map<int,dbdet_temporal_model*>::iterator iter_model_j;
-    //vcl_map<int,dbdet_temporal_model*>::iterator iter_model_k;
+    //std::map<int,dbdet_temporal_model*>::iterator iter_model_i;
+    //std::map<int,dbdet_temporal_model*>::iterator iter_model_j;
+    //std::map<int,dbdet_temporal_model*>::iterator iter_model_k;
 
-    //vcl_map<int,float>::iterator iter_weights_i=ids_weights.begin();
-    //vcl_map<int,float>::iterator iter_weights_j;
-    //vcl_map<int,float>::iterator iter_weights_k;
-    //vcl_map<int,int>::iterator iter_option_i=ids_ws.begin();
-    //vcl_map<int,int>::iterator iter_option_j;
+    //std::map<int,float>::iterator iter_weights_i=ids_weights.begin();
+    //std::map<int,float>::iterator iter_weights_j;
+    //std::map<int,float>::iterator iter_weights_k;
+    //std::map<int,int>::iterator iter_option_i=ids_ws.begin();
+    //std::map<int,int>::iterator iter_option_j;
 
     //int tableofcoeffs[9][2]={{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}};
 
@@ -43,7 +43,7 @@ void dbdet_region::compute_V()
     //        Dtau+=iter_weights_i->second*tau_i;
 
     //        iter_weights_k=ids_weights.begin();
-    //        vcl_map<int,int>::iterator iter_option_k=ids_ws.begin();
+    //        std::map<int,int>::iterator iter_option_k=ids_ws.begin();
 
     //        for(iter_model_k=ids_model.begin();iter_model_k!=ids_model.end();iter_model_k++,iter_weights_k++,iter_option_k++)
     //        {
@@ -54,7 +54,7 @@ void dbdet_region::compute_V()
     //                else if(iter_option_k->second==2)
     //                    tau_k=m_k->tau2;
     //                iter_weights_j=ids_weights.begin();
-    //                vcl_map<int,int>::iterator iter_option_j=ids_ws.begin();
+    //                std::map<int,int>::iterator iter_option_j=ids_ws.begin();
 
     //                for(iter_model_j=ids_model.begin();iter_model_j!=ids_model.end();iter_model_j++,iter_weights_j++,iter_option_j++)
     //                {
@@ -160,7 +160,7 @@ void dbdet_region::compute_V()
 
 
 
-    ////                vcl_map<int,dbdet_temporal_model*>::iterator iter_model1=ids_model.begin();
+    ////                std::map<int,dbdet_temporal_model*>::iterator iter_model1=ids_model.begin();
 
     ////                for(;iter_model1!=ids_model.end();iter_model1++)
     ////                    if(iter_model1->first!=iter_model->first)
@@ -174,18 +174,18 @@ void dbdet_region::compute_V()
     //vnl_matrix<float> D1=outer_product<float>(Dtau,Dtau);
     //vnl_vector<float> lambdas(3);
     //vnl_matrix<float> Vs(3,3);
-    //vcl_cout<<"\n Dd is "<<"\n";
-    //vcl_cout<<dd<<"\n";
+    //std::cout<<"\n Dd is "<<"\n";
+    //std::cout<<dd<<"\n";
     //if(!vnl_symmetric_eigensystem_compute(D,Vs,lambdas))
     //    return ;
-    //vcl_cout<<   lambdas;
-    //vcl_cout<< Vs;
+    //std::cout<<   lambdas;
+    //std::cout<< Vs;
 
     //if(!vnl_symmetric_eigensystem_compute(D1,Vs,lambdas))
     //    return ;
-    //vcl_cout<<"Actual one";
-    //vcl_cout<<lambdas;
-    //vcl_cout<< Vs;
+    //std::cout<<"Actual one";
+    //std::cout<<lambdas;
+    //std::cout<< Vs;
 
     //v1=Vs.get_column(0);
     //v2=Vs.get_column(1);
@@ -214,9 +214,9 @@ void dbdet_region::compute_V()
     //v1v2=Vs*Delta1*Vs.transpose()*U1*dd*U2.transpose()*Vs*Delta2*Vs.transpose();
     //v2v2=Vs*Delta2*Vs.transpose()*U2*dd*U2.transpose()*Vs*Delta2*Vs.transpose();
 
-    //vcl_cout<<"v1v1\n"<<v1v1;
-    //vcl_cout<<"v2v2\n"<<v2v2;
-    //vcl_cout<<"v1v2\n"<<v1v2;
+    //std::cout<<"v1v1\n"<<v1v1;
+    //std::cout<<"v2v2\n"<<v2v2;
+    //std::cout<<"v1v2\n"<<v1v2;
 
 }
 
@@ -224,9 +224,9 @@ void dbdet_region::range_for_phi()
 {
     //: to compute range for free paramter using +ve depth constraint
     //double va=0,vb=0;
-    //vcl_map<int,int>::iterator iter_option=ids_ws.begin();
-    //vcl_map<int,float>::iterator iter_weights=ids_weights.begin();
-    //vcl_map<int,dbdet_temporal_model*>::iterator iter_model=ids_model.begin();
+    //std::map<int,int>::iterator iter_option=ids_ws.begin();
+    //std::map<int,float>::iterator iter_weights=ids_weights.begin();
+    //std::map<int,dbdet_temporal_model*>::iterator iter_model=ids_model.begin();
 
 
     //for(;iter_model!=ids_model.end();iter_model++,iter_option++,iter_weights++)
@@ -236,7 +236,7 @@ void dbdet_region::range_for_phi()
     //    {
     //        vnl_vector<float> dtau=m->dtau;
 
-    //        if(vcl_fabs(m->b0)>0.2)
+    //        if(std::fabs(m->b0)>0.2)
     //        {
     //            va+=iter_weights->second*dot_product<float>(dtau,v1)/m->b0;
     //            vb+=iter_weights->second*dot_product<float>(dtau,v2)/m->b0;
@@ -244,7 +244,7 @@ void dbdet_region::range_for_phi()
     //    }
     //}
 
-    //double psi=vcl_atan2(vb,va);
+    //double psi=std::atan2(vb,va);
 
     //phi_min=vnl_math::pi_over_2+psi;
     //phi_max=3*vnl_math::pi_over_2+psi;
@@ -255,7 +255,7 @@ void dbdet_region::range_for_phi()
 
 bool dbdet_region::compute_dist()
 {
-    vcl_map<int,dbdet_spherical_histogram_sptr >::iterator iter;
+    std::map<int,dbdet_spherical_histogram_sptr >::iterator iter;
     Vdist=new dbdet_spherical_histogram();
     //Vdist.fill(0.0);
     float sum=0;

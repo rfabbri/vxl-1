@@ -18,7 +18,7 @@
 #include <bvis1/bvis1_manager.h>
 #include <vidpro1/vidpro1_repository.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process saves a contour fragment graph into a .cem file
 class dbdet_save_cem_seq_process : public bpro1_process
@@ -30,9 +30,9 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name();
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::string name();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

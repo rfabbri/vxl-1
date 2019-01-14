@@ -5,7 +5,7 @@
 #include "../bseg3d_explore_mixtures.h"
 #include "../bseg3d_window_detector.h"
 #include "../bseg3d_gmm_l2norm.h"
-#include <vcl_limits.h>
+#include <limits>
 #include <bsta/bsta_distribution.h>
 #include <bsta/bsta_gauss_f1.h>
 #include <bsta/bsta_attributes.h>
@@ -55,11 +55,11 @@ void test1()
   }
 
   bseg3d_explore_mixtures explorer;
-  vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
+  std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
  // bvxm_voxel_grid_base_sptr win_sptr = new bvxm_voxel_grid<float>(window);
   explorer.save_float_grid_raw(window,filename);
   
-  vcl_string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/cap.raw");
+  std::string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/cap.raw");
   //bvxm_voxel_grid_base_sptr capitol_sptr = new bvxm_voxel_grid<float>(capitol_grid);
   explorer.save_float_grid_raw(capitol_grid,filename2);
 
@@ -114,7 +114,7 @@ void test2()
   //       }
   // }
 
-  //vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/win.raw");
+  //std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/win.raw");
   ////bvxm_voxel_grid_base_sptr capitol_sptr = new bvxm_voxel_grid<float>(capitol_grid);
   //explorer.save_float_grid_raw(window_grid,filename);
 
@@ -140,19 +140,19 @@ void test2()
            //window plane lies in the main diagonal
               for(unsigned z_w = 0; z_w< window_size.z(); z_w++)
               {
-                //vcl_cout << (*cap_slab_it)(x+x_w, y+x_w,z_w) << vcl_endl;
+                //std::cout << (*cap_slab_it)(x+x_w, y+x_w,z_w) << std::endl;
                 if(window(x_w, x_w, z_w)== 0){
-                  mask_val = mask_val +vcl_log(( 1-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                  mask_val = mask_val +std::log(( 1-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
                   mask_val2 = mask_val2 *( 1-(*cap_slab_it)(x+x_w, y+x_w,z_w));
                 }
                 if(window(x_w, x_w, z_w)== 1){
-                  mask_val = mask_val + vcl_log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                  mask_val = mask_val + std::log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
                   mask_val2 = mask_val2 * ((*cap_slab_it)(x+x_w, y+x_w,z_w));
                 }
               }
          }
-          if((float(mask_val) ==vcl_numeric_limits<float>::infinity()) ||
-           (float(mask_val) == -1 *vcl_numeric_limits<float>::infinity()))
+          if((float(mask_val) ==std::numeric_limits<float>::infinity()) ||
+           (float(mask_val) == -1 *std::numeric_limits<float>::infinity()))
            mask_val = -1000;
            (*conv_slab_it)(x+5,y+5,8) =float(mask_val);  //(*conv_slab_it)(x+5,y+5,8) + window(x_w, y_w, z_w)*(*conv_slab_it)(x+x_w, y+y_w,z_w);
            (*conv_slab_it2)(x+5,y+5,8) =float(mask_val2); 
@@ -160,14 +160,14 @@ void test2()
    }
 
     
-   vcl_cout <<count<<"\n";
+   std::cout <<count<<"\n";
 
   bseg3d_explore_mixtures explorer;
- // vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
+ // std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
  //// bvxm_voxel_grid_base_sptr win_sptr = new bvxm_voxel_grid<float>(window);
  // explorer.save_float_grid_raw(window,filename);
  
-  vcl_string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/fake_conv.raw");
+  std::string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/fake_conv.raw");
   //bvxm_voxel_grid_base_sptr capitol_sptr = new bvxm_voxel_grid<float>(capitol_grid);
   explorer.save_float_grid_raw(convolved_grid,filename2);
 
@@ -236,36 +236,36 @@ void log_ocp()
               {
 
                 if(window(x_w, x_w, z_w)== 0)
-                  mask_val = mask_val + vcl_log(( 1-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                  mask_val = mask_val + std::log(( 1-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
                 if(window(x_w, x_w, z_w)== 1)
-                  mask_val = mask_val + vcl_log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                  mask_val = mask_val + std::log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
               }
          }
-         if((float(mask_val) ==vcl_numeric_limits<float>::infinity()) ||
-           (float(mask_val) == -1 *vcl_numeric_limits<float>::infinity()))
+         if((float(mask_val) ==std::numeric_limits<float>::infinity()) ||
+           (float(mask_val) == -1 *std::numeric_limits<float>::infinity()))
            mask_val = -1000;
-        /* if (float(mask_val) - vcl_log(1.0 - float(mask_val)) > vcl_log(0.5))
+        /* if (float(mask_val) - std::log(1.0 - float(mask_val)) > std::log(0.5))
            (*conv_slab_it)(x+5,y+5,8) =1; */ 
          (*conv_slab_it)(x+5,y+5,8)= float(mask_val);
       
        }
 
    }
-   vcl_cout <<count<<"\n";
+   std::cout <<count<<"\n";
 
   bseg3d_explore_mixtures explorer;
- // vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
+ // std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/window.raw");
  //// bvxm_voxel_grid_base_sptr win_sptr = new bvxm_voxel_grid<float>(window);
  // explorer.save_float_grid_raw(window,filename);
  
-  vcl_string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/cap_conv_short.raw");
+  std::string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/cap_conv_short.raw");
   //bvxm_voxel_grid_base_sptr capitol_sptr = new bvxm_voxel_grid<float>(capitol_grid);
   explorer.save_float_grid_raw(convolved_grid,filename2);
 
 }
 void ocp()
 {
-  vcl_cout<<"Finding windows...ocp \n";
+  std::cout<<"Finding windows...ocp \n";
    //1. Define a grid with the size of the capitol grid
   vgl_vector_3d<unsigned> grid_size(475,475,185);
   bvxm_voxel_grid_base_sptr convolved_base = new bvxm_voxel_grid<float>("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/ocp_avg.vox", grid_size);
@@ -296,7 +296,7 @@ void ocp()
    timer.mark();
   for(; slab_idx  < grid_size.z() - window_size.z(); ++cap_slab_it, ++conv_slab_it, ++slab_idx)
    {
-     vcl_cout<<".";
+     std::cout<<".";
     for (unsigned x = 0; x<(grid_size.x() - window_size.x()); x++)
    //  for (unsigned x = 177; x<(327 - window_size.x()); x++)
      {
@@ -320,36 +320,36 @@ void ocp()
                  double this_ocp = (*cap_slab_it)(x+x_w, y+x_w,z_w);
 
                 //if(window(x_w, x_w, z_w)== 0)
-                //  p_window = p_window + vcl_log(( 1.0-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                //  p_window = p_window + std::log(( 1.0-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
                  if(window(x_w, x_w, z_w)== 1)
                    avg = avg + (*cap_slab_it)(x+x_w, y+x_w,z_w);
-                  //p_window = p_window + vcl_log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
+                  //p_window = p_window + std::log(((*cap_slab_it)(x+x_w, y+x_w,z_w)));
                  
-               // p_empty =  p_empty + vcl_log(1.0-(*cap_slab_it)(x+x_w, y+x_w,z_w));
-                //p_full = p_full + vcl_log((*cap_slab_it)(x+x_w, y+x_w,z_w));
-                //p_rand = p_rand + vcl_log(vcl_abs(double(rand.lrand32(0, 1))-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
+               // p_empty =  p_empty + std::log(1.0-(*cap_slab_it)(x+x_w, y+x_w,z_w));
+                //p_full = p_full + std::log((*cap_slab_it)(x+x_w, y+x_w,z_w));
+                //p_rand = p_rand + std::log(std::abs(double(rand.lrand32(0, 1))-(*cap_slab_it)(x+x_w, y+x_w,z_w)));
               }
          }
        
      
-         //double r1 = vcl_exp(p_full-p_window);
-         //double r2 = vcl_exp(p_empty-p_window);
-         //double r3 = vcl_exp(p_rand-p_window);
+         //double r1 = std::exp(p_full-p_window);
+         //double r2 = std::exp(p_empty-p_window);
+         //double r3 = std::exp(p_rand-p_window);
          //double den = r1+r3 +1.0;
-         //double den = vcl_abs(p_window + 600.0);
+         //double den = std::abs(p_window + 600.0);
          (*conv_slab_it)(x+5,y+5,8)= avg/146.0;
        }
      }
   
   }
 
-  vcl_cout<<vcl_endl;
-  vcl_cout<< "Running time in ms" <<timer.real()/6000.0 <<vcl_endl;
+  std::cout<<std::endl;
+  std::cout<< "Running time in ms" <<timer.real()/6000.0 <<std::endl;
  
 
   bseg3d_explore_mixtures explorer; 
-  //vcl_string filename_byte("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_ocp2_byte.raw");
-  vcl_string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_ocp_avg_float.raw");
+  //std::string filename_byte("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_ocp2_byte.raw");
+  std::string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_ocp_avg_float.raw");
 
  // explorer.save_byte_grid_raw(convolved_grid,filename_byte);
   explorer.save_float_grid_raw(convolved_grid,filename_float);
@@ -420,14 +420,14 @@ void apm_kl()
              {
                empty_mixture.insert(this_gauss, 1.0f/float(empty_dim));
                mean_empty = mean_empty +this_gauss.mean();
-               var_empty = var_empty + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_empty = var_empty + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                empty_dim_idx++;
              }
              else if(window(x_w, x_w, z_w)== 1)
              {
                frame_mixture.insert(this_gauss, 1.0f/float(frame_dim));
                mean_frame = mean_frame +this_gauss.mean();
-               var_frame = var_frame + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_frame = var_frame + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                
                frame_dim_idx++;
              }
@@ -435,14 +435,14 @@ void apm_kl()
          }
 
          if((frame_dim_idx!= frame_dim)||(empty_dim_idx!= empty_dim))
-           vcl_cerr<<"dimension error \n";
+           std::cerr<<"dimension error \n";
 
          mean_empty = mean_empty/float(empty_dim_idx);
-         var_empty = var_empty/float(empty_dim_idx) - vcl_pow(mean_empty,2);
+         var_empty = var_empty/float(empty_dim_idx) - std::pow(mean_empty,2);
          bsta_gauss_f1 mean_gauss_empty(mean_empty, var_empty);
 
          mean_frame = mean_frame/float(frame_dim_idx);
-         var_frame = var_frame/float(frame_dim_idx) - vcl_pow(mean_frame,2);
+         var_frame = var_frame/float(frame_dim_idx) - std::pow(mean_frame,2);
          bsta_gauss_f1 mean_gauss_frame(mean_frame,var_frame);
 
          //distance between regions
@@ -469,7 +469,7 @@ void apm_kl()
          avg_empty_dist = avg_empty_dist/float(empty_dim);
 
          if((avg_empty_dist<0)||(avg_empty_dist<0)||(dist_btw<0))
-           vcl_cout<< "dist smaller than 0 at " << slab_idx <<vcl_endl;
+           std::cout<< "dist smaller than 0 at " << slab_idx <<std::endl;
 
          (*conv_slab_it)(x+5,y+5,8)=(1.0f/(1.0f + avg_empty_dist))*(1.0f/(1.0f + avg_frame_dist)) * (1.0f - 1.0f/(1.0f + dist_btw));
 
@@ -480,7 +480,7 @@ void apm_kl()
 
   
    bseg3d_explore_mixtures explorer;
-   vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/apm_conv2.raw");
+   std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/apm_conv2.raw");
    explorer.save_float_grid_raw(convolved_grid,filename);
 
 
@@ -489,7 +489,7 @@ void apm_kl()
 
 void apm_l2_kl()
 {
-  vcl_cout<<"Detecting windows... amp l2-kl \n";
+  std::cout<<"Detecting windows... amp l2-kl \n";
    //1. Define a grid with the size of the capitol grid
   vgl_vector_3d<unsigned> grid_size(475,475,185);
   bvxm_voxel_grid_base_sptr convolved_base = new bvxm_voxel_grid<float>("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_apm_kl_l2.vox", grid_size);
@@ -524,7 +524,7 @@ void apm_l2_kl()
    for(; slab_idx + window_size.z() < grid_size.z(); ++cap_slab_it, ++conv_slab_it, ++slab_idx)
   // for(; slab_idx + window_size.z() < 161; ++cap_slab_it, ++conv_slab_it, ++slab_idx)
    {
-     vcl_cout<<".";
+     std::cout<<".";
      count++;
      for (unsigned x = 0; x<(grid_size.x() - window_size.x()); x++)
        for (unsigned y = 0; y<(grid_size.y() - window_size.y()); y++)
@@ -550,14 +550,14 @@ void apm_l2_kl()
              {
                empty_mixture.insert(this_gauss, 1.0f/float(empty_dim));
                mean_empty = mean_empty +this_gauss.mean();
-               var_empty = var_empty + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_empty = var_empty + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                empty_dim_idx++;
              }
              else if(window(x_w, x_w, z_w)== 1)
              {
                frame_mixture.insert(this_gauss, 1.0f/float(frame_dim));
                mean_frame = mean_frame +this_gauss.mean();
-               var_frame = var_frame + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_frame = var_frame + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                
                frame_dim_idx++;
              }
@@ -565,14 +565,14 @@ void apm_l2_kl()
          }
 
          if((frame_dim_idx!= frame_dim)||(empty_dim_idx!= empty_dim))
-           vcl_cerr<<"dimension error \n";
+           std::cerr<<"dimension error \n";
 
          mean_empty = mean_empty/float(empty_dim_idx);
-         var_empty = var_empty/float(empty_dim_idx) - vcl_pow(mean_empty,2);
+         var_empty = var_empty/float(empty_dim_idx) - std::pow(mean_empty,2);
          bsta_gauss_f1 mean_gauss_empty(mean_empty, var_empty);
 
          mean_frame = mean_frame/float(frame_dim_idx);
-         var_frame = var_frame/float(frame_dim_idx) - vcl_pow(mean_frame,2);
+         var_frame = var_frame/float(frame_dim_idx) - std::pow(mean_frame,2);
          bsta_gauss_f1 mean_gauss_frame(mean_frame,var_frame);
 
          //distance between regions
@@ -586,7 +586,7 @@ void apm_l2_kl()
 
 
          if((within_frame_dist<0)||(within_empty_dist<0)||(dist_btw<0))
-           vcl_cout<< "dist smaller than 0 at " << slab_idx <<vcl_endl;
+           std::cout<< "dist smaller than 0 at " << slab_idx <<std::endl;
 
          (*conv_slab_it)(x+5,y+5,8)=(1.0f-within_frame_dist)*(1.0f- within_empty_dist) * (1.0f - 1.0f/(1.0f + dist_btw));
 
@@ -595,11 +595,11 @@ void apm_l2_kl()
    }
 
 
-   vcl_cout<<vcl_endl;
-   vcl_cout<< "Running time in ms" <<timer.real() <<vcl_endl;
+   std::cout<<std::endl;
+   std::cout<< "Running time in ms" <<timer.real() <<std::endl;
    bseg3d_explore_mixtures explorer;
-   vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_kl_byte.raw");
-   vcl_string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_kl_float.raw");
+   std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_kl_byte.raw");
+   std::string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_kl_float.raw");
   
    explorer.save_byte_grid_raw(convolved_grid,filename);
    explorer.save_float_grid_raw(convolved_grid,filename_float);
@@ -608,7 +608,7 @@ void apm_l2_kl()
 
 void apm_l2()
 {
-  vcl_cout<<"Detecting windows... amp l2\n";
+  std::cout<<"Detecting windows... amp l2\n";
    //1. Define a grid with the size of the capitol grid
   vgl_vector_3d<unsigned> grid_size(475,475,185);
   bvxm_voxel_grid_base_sptr convolved_base = new bvxm_voxel_grid<float>("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_apml2.vox", grid_size);
@@ -640,12 +640,12 @@ void apm_l2()
    bvxm_voxel_grid<float>::iterator conv_slab_it = convolved_grid->slab_iterator(slab_idx,window_size.z());
    unsigned count = 0;
    vul_timer timer;
-   vcl_cout<<"Start timing \n";
+   std::cout<<"Start timing \n";
    timer.mark();
    for(; slab_idx + window_size.z() < grid_size.z(); ++cap_slab_it, ++conv_slab_it, ++slab_idx)
   // for(; slab_idx + window_size.z() < 161; ++cap_slab_it, ++conv_slab_it, ++slab_idx)
    {
-     vcl_cout<<".";
+     std::cout<<".";
      count++;
      for (unsigned x = 0; x<(grid_size.x() - window_size.x()); x++)
        for (unsigned y = 0; y<(grid_size.y() - window_size.y()); y++)
@@ -671,14 +671,14 @@ void apm_l2()
              {
                empty_mixture.insert(this_gauss, 1.0f/float(empty_dim));
                mean_empty = mean_empty +this_gauss.mean();
-               var_empty = var_empty + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_empty = var_empty + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                empty_dim_idx++;
              }
              else if(window(x_w, x_w, z_w)== 1)
              {
                frame_mixture.insert(this_gauss, 1.0f/float(frame_dim));
                mean_frame = mean_frame +this_gauss.mean();
-               var_frame = var_frame + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_frame = var_frame + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                
                frame_dim_idx++;
              }
@@ -686,14 +686,14 @@ void apm_l2()
          }
 
          if((frame_dim_idx!= frame_dim)||(empty_dim_idx!= empty_dim))
-           vcl_cerr<<"dimension error \n";
+           std::cerr<<"dimension error \n";
 
          mean_empty = mean_empty/float(empty_dim_idx);
-         var_empty = var_empty/float(empty_dim_idx) - vcl_pow(mean_empty,2);
+         var_empty = var_empty/float(empty_dim_idx) - std::pow(mean_empty,2);
          bsta_gauss_f1 mean_gauss_empty(mean_empty, var_empty);
 
          mean_frame = mean_frame/float(frame_dim_idx);
-         var_frame = var_frame/float(frame_dim_idx) - vcl_pow(mean_frame,2);
+         var_frame = var_frame/float(frame_dim_idx) - std::pow(mean_frame,2);
          bsta_gauss_f1 mean_gauss_frame(mean_frame,var_frame);
 
           //distance between regions
@@ -706,7 +706,7 @@ void apm_l2()
 
 
          if((within_frame_dist<0)||(within_empty_dist<0)||(dist_btw<0))
-           vcl_cout<< "dist smaller than 0 at " << slab_idx <<vcl_endl;
+           std::cout<< "dist smaller than 0 at " << slab_idx <<std::endl;
 
          (*conv_slab_it)(x+5,y+5,8)=(1.0f-within_frame_dist)*(1.0f- within_empty_dist) * dist_btw;
 
@@ -714,11 +714,11 @@ void apm_l2()
        }
    }
 
-   vcl_cout<< vcl_endl;
-   vcl_cout<< "Running time in ms" <<timer.real() <<vcl_endl;
+   std::cout<< std::endl;
+   std::cout<< "Running time in ms" <<timer.real() <<std::endl;
    bseg3d_explore_mixtures explorer;
-   vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_byte.raw");
-   vcl_string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_float.raw");
+   std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_byte.raw");
+   std::string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_l2_float.raw");
   
    explorer.save_byte_grid_raw(convolved_grid,filename);
    explorer.save_float_grid_raw(convolved_grid,filename_float);
@@ -727,7 +727,7 @@ void apm_l2()
 
 void apm_weighted_l2()
 {
-  vcl_cout<<"Detecting windows... amp l2 with simple weights\n";
+  std::cout<<"Detecting windows... amp l2 with simple weights\n";
    //1. Define a grid with the size of the capitol grid
   vgl_vector_3d<unsigned> grid_size(475,475,185);
   bvxm_voxel_grid_base_sptr convolved_base = new bvxm_voxel_grid<float>("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/conv_apm_wl2.vox", grid_size);
@@ -759,12 +759,12 @@ void apm_weighted_l2()
    bvxm_voxel_grid<float>::iterator conv_slab_it = convolved_grid->slab_iterator(slab_idx,window_size.z());
    unsigned count = 0;
    vul_timer timer;
-   vcl_cout<<"Start timing \n";
+   std::cout<<"Start timing \n";
    timer.mark();
    for(; slab_idx + window_size.z() < grid_size.z(); ++cap_slab_it, ++conv_slab_it, ++slab_idx)
   // for(; slab_idx + window_size.z() < 161; ++cap_slab_it, ++conv_slab_it, ++slab_idx)
    {
-     vcl_cout<<".";
+     std::cout<<".";
      count++;
      for (unsigned x = 0; x<(grid_size.x() - window_size.x()); x++)
        for (unsigned y = 0; y<(grid_size.y() - window_size.y()); y++)
@@ -788,34 +788,34 @@ void apm_weighted_l2()
              if(window(x_w, x_w, z_w)== 0)
              {
                mean_empty = mean_empty +this_gauss.mean();
-               var_empty = var_empty + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_empty = var_empty + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                empty_dim_idx++;
              }
              else if(window(x_w, x_w, z_w)== 1)
              {
                mean_frame = mean_frame +this_gauss.mean();
-               var_frame = var_frame + this_gauss.var() + vcl_pow(this_gauss.mean(),2);  
+               var_frame = var_frame + this_gauss.var() + std::pow(this_gauss.mean(),2);  
                frame_dim_idx++;
              }
            }
          }
 
          if((frame_dim_idx!= frame_dim)||(empty_dim_idx!= empty_dim))
-           vcl_cerr<<"dimension error \n";
+           std::cerr<<"dimension error \n";
 
          mean_empty = mean_empty/float(empty_dim_idx);
-         var_empty = var_empty/float(empty_dim_idx) - vcl_pow(mean_empty,2);
+         var_empty = var_empty/float(empty_dim_idx) - std::pow(mean_empty,2);
          bsta_gauss_f1 mean_gauss_empty(mean_empty, var_empty);
 
          mean_frame = mean_frame/float(frame_dim_idx);
-         var_frame = var_frame/float(frame_dim_idx) - vcl_pow(mean_frame,2);
+         var_frame = var_frame/float(frame_dim_idx) - std::pow(mean_frame,2);
          bsta_gauss_f1 mean_gauss_frame(mean_frame,var_frame);
 
          //distance between regions
          float dist_btw = distance.kl_symmetric_distance(mean_gauss_empty,mean_gauss_frame);
             
          if((dist_btw<0))
-           vcl_cout<< "dist smaller than 0 at " << slab_idx <<vcl_endl;
+           std::cout<< "dist smaller than 0 at " << slab_idx <<std::endl;
 
          (*conv_slab_it)(x+5,y+5,8)=(1.0f/(1.0f +var_frame))*(1.0f/(1.0f + var_empty)) * (1.0f - 1.0f/(1.0f + dist_btw));
 
@@ -823,11 +823,11 @@ void apm_weighted_l2()
        }
    }
 
-   vcl_cout<<vcl_endl;
-   vcl_cout<< "Running time in ms" <<timer.real() <<vcl_endl;
+   std::cout<<std::endl;
+   std::cout<< "Running time in ms" <<timer.real() <<std::endl;
    bseg3d_explore_mixtures explorer;
-   vcl_string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_simple_byte.raw");
-   vcl_string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_simple_float.raw");
+   std::string filename("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_simple_byte.raw");
+   std::string filename_float("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/new/apm_conv_simple_float.raw");
   
    explorer.save_byte_grid_raw(convolved_grid,filename);
    explorer.save_float_grid_raw(convolved_grid,filename_float);
@@ -835,7 +835,7 @@ void apm_weighted_l2()
 }
 //void create_fake_world()
 //{
-//  vcl_cout<<"Creating fake world \n";
+//  std::cout<<"Creating fake world \n";
 //   //1. Define a grid with the size of the capitol grid
 //  vgl_vector_3d<unsigned> grid_size(475,475,185);
 //
@@ -904,7 +904,7 @@ void apm_weighted_l2()
 //   ++cap_slab_it;
 //
 //  bseg3d_explore_mixtures explorer;
-//  vcl_string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/fake_world2.raw");
+//  std::string filename2("C:/Experiments/object_recognition/bseg3d/CapitolSiteHigh/test_windows/fake_world2.raw");
 //  explorer.save_float_grid_raw(capitol_grid,filename2);
 //}
 

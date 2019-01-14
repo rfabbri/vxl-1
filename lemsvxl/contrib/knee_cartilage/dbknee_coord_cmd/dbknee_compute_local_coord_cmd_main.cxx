@@ -104,17 +104,17 @@ int main (int argc, char **argv)
   // ==========================================================================
   
   // input files
-  vul_arg<vcl_string > meshfile("-meshfile", "Mesh file", "");
-  vul_arg<vcl_string > csfile("-csfile", "Coordinate system file", "");
+  vul_arg<std::string > meshfile("-meshfile", "Mesh file", "");
+  vul_arg<std::string > csfile("-csfile", "Coordinate system file", "");
 
-  vul_arg<vcl_string > outmesh("-outmesh", "Ouput mesh file", "");
+  vul_arg<std::string > outmesh("-outmesh", "Ouput mesh file", "");
   
  
   vul_arg<int > show_gui("-show_gui", "Visualize results", 1);
   vul_arg_parse(argc, argv);
   
   // ================== SOME APPLICATION RELATED VARIABLES ==================
-  vcl_string ApplicationTitle = "Knee Cartilage 3D Visualizer";
+  std::string ApplicationTitle = "Knee Cartilage 3D Visualizer";
 
   //: ================== VARIABLES ==================
   
@@ -166,12 +166,12 @@ int main (int argc, char **argv)
   // determine file name
   if (meshfile() == "")
   {
-    vcl_cerr << "One mesh files is required."
+    std::cerr << "One mesh files is required."
       << "Use '-meshfile' option for input mesh file.\n";
     return RUN_RESULT_NO_PROCESS;
   }
 
-  vcl_cout << "Mesh file = " << meshfile() << vcl_endl;
+  std::cout << "Mesh file = " << meshfile() << std::endl;
   dbmsh3d_mesh mesh;
   dbmsh3d_load(&mesh, meshfile().c_str());
 
@@ -185,7 +185,7 @@ int main (int argc, char **argv)
 
   if (csfile() == "")
   {
-    vcl_cerr << "One cartesian coordinate system file is required."
+    std::cerr << "One cartesian coordinate system file is required."
       << "Use '-csfile' option for input coordinate system file.\n";
     return RUN_RESULT_NO_PROCESS;
   }
@@ -227,7 +227,7 @@ int main (int argc, char **argv)
   // ==========================================================================
   
   if (show_gui() == 0) {
-    vcl_cout << "Show gui = " << show_gui() << vcl_endl;
+    std::cout << "Show gui = " << show_gui() << std::endl;
     //: Don't show the GUI Window.
     return RUN_RESULT_SUCCESS;
   }

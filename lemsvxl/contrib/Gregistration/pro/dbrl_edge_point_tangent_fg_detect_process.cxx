@@ -36,7 +36,7 @@ if(!parameters()->add( "Distance Theshold" ,    "-dist" ,    2.5f        ) ||
    !parameters()->add( "Minimum Weight Threshold" ,    "-minweightthresh" ,    0.3f        )||
    !parameters()->add( "Radius of Uncertainity" ,    "-rad" ,    (int)2       ) ||
    !parameters()->add( "Decimate by" ,    "-decimateby" ,    2        ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -56,7 +56,7 @@ dbrl_edge_point_tangent_fg_detect_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_edge_point_tangent_fg_detect_process::name()
 {
   return "Subpixel edge point tangent Foreground Detection";
@@ -80,9 +80,9 @@ dbrl_edge_point_tangent_fg_detect_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_fg_detect_process::get_input_type()
+std::vector< std::string > dbrl_edge_point_tangent_fg_detect_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_distribution_image" );
 
@@ -91,9 +91,9 @@ vcl_vector< vcl_string > dbrl_edge_point_tangent_fg_detect_process::get_input_ty
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_fg_detect_process::get_output_type()
+std::vector< std::string > dbrl_edge_point_tangent_fg_detect_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbrl_id_point_2d" );
   //to_return.push_back( "image" );
@@ -106,7 +106,7 @@ bool
 dbrl_edge_point_tangent_fg_detect_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbrl_edge_point_tangent_fg_detect_process::execute() - "
+    std::cout << "In dbrl_edge_point_tangent_fg_detect_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -152,7 +152,7 @@ dbrl_edge_point_tangent_fg_detect_process::execute()
 
 
   //fg.deep_copy(model->detect(img,detector,vnl_vector_fixed<float,1>(-1.0f)));
-  vcl_vector<dbrl_id_point_2d_sptr> pointids;
+  std::vector<dbrl_id_point_2d_sptr> pointids;
   static int decimateby=1;
   parameters()->get_value( "-decimateby" ,   decimateby);
   int cnt=1;
@@ -181,7 +181,7 @@ dbrl_edge_point_tangent_fg_detect_process::execute()
               }
           }
 
-      vcl_cout<<"No of Foreground edges or points "<<pointids.size()<<"\n";
+      std::cout<<"No of Foreground edges or points "<<pointids.size()<<"\n";
   vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();
   output_storage->set_image(vil_new_image_resource_of_view( floatimg));
   output_data_[0].push_back(output_storage);  

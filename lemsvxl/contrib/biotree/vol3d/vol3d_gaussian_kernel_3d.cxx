@@ -30,7 +30,7 @@ sigma_z_(sigma_z),dir_(dir)
         v[0]=i*voxel_size_; v[1]=j*voxel_size_; v[2]=k*voxel_size_;
 
         // check if direction is very close to z ,if so do not rotate the direction
-        if ((1.0 - vcl_fabs(angle)) < Z_DIR_THRESH) {
+        if ((1.0 - std::fabs(angle)) < Z_DIR_THRESH) {
           new_pos = v;
         } else {
           new_pos = q.rotate(v);
@@ -50,7 +50,7 @@ double vol3d_gaussian_kernel_3d::gaussian(double x, double y, double z)
 
   double a = ((x*x) + (y*y))/(sigma_r_*sigma_r_);
   double b = -0.5*(a + ((z*z) / (sigma_z_*sigma_z_)));
-  double res = -1.*(a - 2.0)*vcl_exp(b);
+  double res = -1.*(a - 2.0)*std::exp(b);
   return res;
 }
 
@@ -73,7 +73,7 @@ vnl_quaternion<double> vol3d_gaussian_kernel_3d::get_rotation()
   axis = vnl_cross_3d<double> (f_vec, z_vec);
   axis.normalize();
   double d = dot_product(f_vec, z_vec);
-  double rot_angle = vcl_acos(d);
+  double rot_angle = std::acos(d);
 
   vnl_quaternion<double> q(axis, rot_angle);
   return q;
@@ -86,7 +86,7 @@ double vol3d_gaussian_kernel_3d::get(int i, int j, int k)
   k += kernel_width_;
   unsigned index =  dim()*dim()*k + dim()*j + i;
   if (index >= field_.size()) {
-    vcl_cerr << "vol3d_gaussian_kernel_3d::get(i, j, k), index is out of bounds)" << vcl_endl; 
+    std::cerr << "vol3d_gaussian_kernel_3d::get(i, j, k), index is out of bounds)" << std::endl; 
     return 0;
   }
   return field_[index];
@@ -105,7 +105,7 @@ double vol3d_gaussian_kernel_3d::sum()
   return sum;
 }
 
-void vol3d_gaussian_kernel_3d::print(vcl_ostream& os) 
+void vol3d_gaussian_kernel_3d::print(std::ostream& os) 
 {
   for (int k = (-1*kernel_width_); k <= kernel_width_; k++) {
     for (int j = (-1*kernel_width_); j <= kernel_width_; j++) {
@@ -118,9 +118,9 @@ void vol3d_gaussian_kernel_3d::print(vcl_ostream& os)
   }
 }
 
-void x_write(vcl_ostream& os, vol3d_gaussian_kernel_3d kernel, vcl_string name)
+void x_write(std::ostream& os, vol3d_gaussian_kernel_3d kernel, std::string name)
 {
-  vcl_string elm_name;
+  std::string elm_name;
 
   if (name.length() == 0)
     elm_name = "vol3d_gaussian_kernel_3d";

@@ -1,44 +1,44 @@
 #ifndef __SSTREAM2_H__
 #define __SSTREAM2_H__
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <map>
 
 // SStream2 is an extended version istreamstream.
 // It does the same thing, except that it understands
 // user-defined special strings (ex. "=", ":", "->", etc) as delimiters.
 
-class SStream2 : public vcl_istringstream {
+class SStream2 : public std::istringstream {
  private:
-  vcl_string _origStr;
-  vcl_string _resStr;
-  vcl_vector<vcl_string> _specialStrings;
+  std::string _origStr;
+  std::string _resStr;
+  std::vector<std::string> _specialStrings;
   void _convStr();
   
  public:
-  SStream2(const vcl_string& str_, const vcl_string& specialChars_=vcl_string());
-  SStream2(const vcl_string& str_, const vcl_vector<vcl_string>& specialStrings_);
+  SStream2(const std::string& str_, const std::string& specialChars_=std::string());
+  SStream2(const std::string& str_, const std::vector<std::string>& specialStrings_);
   ~SStream2();
   char StdDelim;
   char StdQuote;
   char StdEsc;
   
-  void setSpecialChars(const vcl_string& specialChars_);
-  void setSpecialStrings(const vcl_vector<vcl_string>& specialStrings_);
+  void setSpecialChars(const std::string& specialChars_);
+  void setSpecialStrings(const std::vector<std::string>& specialStrings_);
 };
 
 // This is a simple manipulator class to skip the delimiter.
 class Check {
  public: // modified by MC, check the Check() function.
-  vcl_string _skipStr;
+  std::string _skipStr;
  public:
-  Check(const vcl_string& skipStr);
+  Check(const std::string& skipStr);
   ~Check();
-  friend vcl_istream &operator >> (vcl_istream &strm, const Check &obj);
+  friend std::istream &operator >> (std::istream &strm, const Check &obj);
 };
-vcl_istream &operator >> (vcl_istream &strm, const Check &obj);
+std::istream &operator >> (std::istream &strm, const Check &obj);
 
 #endif

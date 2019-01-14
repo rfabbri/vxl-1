@@ -22,7 +22,7 @@
 #ifndef _closed_dpmatch_2d_h
 #define _closed_dpmatch_2d_h
 
-#include <vcl_ctime.h>
+#include <ctime>
 
 #include "curve_dpmatch_2d.h"
 
@@ -34,12 +34,12 @@ protected:
   bsol_intrinsic_curve_2d_sptr _curve2;
 
   DPCostType _cost; //Temporary array for each match (2_n x _m)
-  vcl_vector<int> _leftMask;
-  vcl_vector<int> _rightMask;
+  std::vector<int> _leftMask;
+  std::vector<int> _rightMask;
 
   DPMapType _map; //Temporary array for each match (2_n x _m)
   DPMapType _finalMap; //Shortest Path for each start point (_n+1 x 1)
-  vcl_vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
+  std::vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
   DPCostType _finalMapCost;
   int _n;
   int _m;
@@ -70,15 +70,15 @@ public:
   
   //access functions
   double finalCost(int index){return _finalCost[index];};
-  vcl_vector<double> finalCost(){return _finalCost;};
+  std::vector<double> finalCost(){return _finalCost;};
   FinalMapType finalMap(int index){return _finalMap[index];};
-  vcl_vector<double> finalMapCost(int index){return _finalMapCost[index];};
+  std::vector<double> finalMapCost(int index){return _finalMapCost[index];};
   int n(){return _n;};
   int m(){return _m;};
 
   //display functions (debug)
   void printCost();
-  void writeCost(vcl_string f);
+  void writeCost(std::string f);
   void printMap();
   //void printFinalMap();
   
@@ -103,7 +103,7 @@ class closednew_dpmatch_2d: public closed_dpmatch_2d
   int _numLenElems;
   double _R1;
   double _R2;
-  //vcl_vector<double> _lambda;
+  //std::vector<double> _lambda;
   double _lambda;
 
   //Functions

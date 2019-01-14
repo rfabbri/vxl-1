@@ -2,8 +2,8 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgld/bgld_dist.h>

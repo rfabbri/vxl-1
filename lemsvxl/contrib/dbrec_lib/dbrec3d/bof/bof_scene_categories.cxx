@@ -21,7 +21,7 @@ class bof_fileio_parsed_ply_
 public:
   vgl_box_3d<double> bbox;
   double p[3];
-  vcl_vector<int > vertex_indices;
+  std::vector<int > vertex_indices;
 };
 
 // ============================== End PLY ==============================
@@ -31,20 +31,20 @@ public:
 int bof_plyio_vertex_cb_(p_ply_argument argument);
 
 
-bof_scene_categories::bof_scene_categories(vcl_string bof_dir):info_(bof_info(bof_dir)),path_out_(bof_dir), bbox_scale_(10.0)
+bof_scene_categories::bof_scene_categories(std::string bof_dir):info_(bof_info(bof_dir)),path_out_(bof_dir), bbox_scale_(10.0)
 {
-  vcl_ifstream xml_ifs(xml_path().c_str());
+  std::ifstream xml_ifs(xml_path().c_str());
   if(!xml_ifs.is_open()){
-    vcl_cerr << "Error: Could not open xml info file: " << xml_path() << " \n";
+    std::cerr << "Error: Could not open xml info file: " << xml_path() << " \n";
     throw;
   }
-  vcl_cout << "Parsing: " << xml_path() << "\n";
+  std::cout << "Parsing: " << xml_path() << "\n";
   
   bxml_document doc = bxml_read(xml_ifs);
   bxml_element query("bof_category_info");
   bxml_data_sptr root = bxml_find_by_name(doc.root_element(), query);
   if (!root) {
-    vcl_cerr << "Error: bof_info - could not parse xml root\n";
+    std::cerr << "Error: bof_info - could not parse xml root\n";
     throw;
   }
   
@@ -62,37 +62,37 @@ bof_scene_categories::bof_scene_categories(vcl_string bof_dir):info_(bof_info(bo
   category_scenes_.resize(ncategories);
   
                           
-  vcl_cout << "Number of categories: " << ncategories << vcl_endl;
+  std::cout << "Number of categories: " << ncategories << std::endl;
   
   //parse scenes
-  vcl_vector<bxml_data_sptr> scene_data = bxml_find_all_with_name(root, bxml_element("scene"));
+  std::vector<bxml_data_sptr> scene_data = bxml_find_all_with_name(root, bxml_element("scene"));
   unsigned n_scenes = scene_data.size();
   ply_paths_.clear();
   ply_paths_.resize(n_scenes);
-  vcl_cout << "Number of scenes: " << n_scenes << vcl_endl;
+  std::cout << "Number of scenes: " << n_scenes << std::endl;
   for (unsigned si=0; si<n_scenes; si++) {
     bxml_element* scene_elm = dynamic_cast<bxml_element*>(scene_data[si].ptr());
     int scene_id = -1;
-    vcl_string path;
+    std::string path;
     unsigned n = 0;
     scene_elm->get_attribute("id", scene_id);
     scene_elm->get_attribute("path", path);
     
     if (info_.scenes_[scene_id]!=path) {
-      vcl_cerr << "Scene path should be: " << info_.scenes_[scene_id]<< ", but it is: " <<path << vcl_endl;
+      std::cerr << "Scene path should be: " << info_.scenes_[scene_id]<< ", but it is: " <<path << std::endl;
       throw;
     }
 
-    vcl_vector<bxml_data_sptr> category_data = bxml_find_all_with_name(scene_elm, bxml_element("object"));
+    std::vector<bxml_data_sptr> category_data = bxml_find_all_with_name(scene_elm, bxml_element("object"));
     
-    vcl_vector<bof_scene_object> scene_ply_paths;
+    std::vector<bof_scene_object> scene_ply_paths;
     
 
     for (unsigned ci = 0; ci < category_data.size(); ci++) {
       bxml_element* category_elm = dynamic_cast<bxml_element*>(category_data[ci].ptr());
       int class_id = -1;
-      vcl_string name;
-      vcl_string ply_path;
+      std::string name;
+      std::string ply_path;
       category_elm->get_attribute("class_id", class_id);
       category_elm->get_attribute("class_name", name);
       category_elm->get_attribute("ply_path", ply_path);
@@ -106,23 +106,23 @@ bof_scene_categories::bof_scene_categories(vcl_string bof_dir):info_(bof_info(bo
       
       //set the category name
       category_names_[class_id]= name; 
-     // vcl_cout << "Object " << ci << " is " << scene_ply_paths.size() << vcl_endl;
+     // std::cout << "Object " << ci << " is " << scene_ply_paths.size() << std::endl;
 
       bof_scene_object bof_obj; bof_obj.ply_path = ply_path; bof_obj.class_id = class_id;
       scene_ply_paths.push_back(bof_obj);                             
     }
-    vcl_cout << "Number of objects in scene " << scene_id << " is " << scene_ply_paths.size() << vcl_endl;
+    std::cout << "Number of objects in scene " << scene_id << " is " << scene_ply_paths.size() << std::endl;
 
     ply_paths_[scene_id] = scene_ply_paths;
   }
   
   for (unsigned i=0; i<ncategories; i++) {
-    vcl_cout << "Category " << i << " is "<< category_names_[i] << "\n";
+    std::cout << "Category " << i << " is "<< category_names_[i] << "\n";
   }
   
 }
 
-bool bof_scene_categories::load_bbox_from_ply(const vcl_string &ply_file, vgl_box_3d<double> &box)
+bool bof_scene_categories::load_bbox_from_ply(const std::string &ply_file, vgl_box_3d<double> &box)
 {
   long nvertices;
   
@@ -130,7 +130,7 @@ bool bof_scene_categories::load_bbox_from_ply(const vcl_string &ply_file, vgl_bo
   parsed_ply.bbox = box;
   
   // OPEN file
-  vcl_cerr << " loading " << ply_file << " :\n";
+  std::cerr << " loading " << ply_file << " :\n";
   p_ply ply = ply_open(ply_file.c_str(), NULL, 0, NULL);
   if (!ply)
     return false;
@@ -148,7 +148,7 @@ bool bof_scene_categories::load_bbox_from_ply(const vcl_string &ply_file, vgl_bo
                   bof_plyio_vertex_cb_, (void*) (&parsed_ply), 2);
   
   
-  vcl_cerr << nvertices << " points \n";
+  std::cerr << nvertices << " points \n";
   
   // Read DATA
   if (!ply_read(ply)) return false;
@@ -158,12 +158,12 @@ bool bof_scene_categories::load_bbox_from_ply(const vcl_string &ply_file, vgl_bo
   
   box=parsed_ply.bbox;
 
-  vcl_cerr << "  done.\n";
+  std::cerr << "  done.\n";
   
 }
 
 
-bool bof_scene_categories::scale_ply(const vcl_string &ply_file_in, const vcl_string &ply_file_out, const double scale )
+bool bof_scene_categories::scale_ply(const std::string &ply_file_in, const std::string &ply_file_out, const double scale )
 {
   
   long nvertices;
@@ -188,7 +188,7 @@ bool bof_scene_categories::scale_ply(const vcl_string &ply_file_in, const vcl_st
                   bof_plyio_vertex_cb_, (void*) (&parsed_ply), 2);
   
   
-  vcl_cerr << " loading " << ply_file_in << " :\n\t" << nvertices << " points \n";
+  std::cerr << " loading " << ply_file_in << " :\n\t" << nvertices << " points \n";
   
   // Read DATA
   if (!ply_read(ply)) return false;
@@ -199,14 +199,14 @@ bool bof_scene_categories::scale_ply(const vcl_string &ply_file_in, const vcl_st
   vgl_box_3d<double> box=parsed_ply.bbox;
   
 //  if(box.height() <1.0e-7 || box.width() < 1.0e-7){
-//    vcl_cerr << "Skipping: " << ply_file_out << " input box has 0-dim\n";
+//    std::cerr << "Skipping: " << ply_file_out << " input box has 0-dim\n";
 //    return false;
 //  }
   
   // OPEN output file
   p_ply oply = ply_create(ply_file_out.c_str(), PLY_ASCII, NULL, 0, NULL);
   
-  vcl_cerr << "  saving " << ply_file_out << " :\n";
+  std::cerr << "  saving " << ply_file_out << " :\n";
 
   
   // HEADER SECTION
@@ -234,7 +234,7 @@ bool bof_scene_categories::scale_ply(const vcl_string &ply_file_in, const vcl_st
   
   // CLOSE PLY FILE
   ply_close(oply);
-  vcl_cerr << "  done.\n";
+  std::cerr << "  done.\n";
   return true; 
   
   
@@ -244,8 +244,8 @@ bool bof_scene_categories::scale_ply(const vcl_string &ply_file_in, const vcl_st
 //  Category labels may not be known so only use this function for debugging purposes
 void bof_examine_ground_truth(boxm_scene<boct_tree<short, char> > *labeled_scene,
                               double finest_cell_length,
-                              const vcl_vector<vcl_string> &ply_paths,
-                              const vcl_string &class_name)
+                              const std::vector<std::string> &ply_paths,
+                              const std::string &class_name)
 {
   
   typedef boct_tree<short, char> char_tree_type;
@@ -253,13 +253,13 @@ void bof_examine_ground_truth(boxm_scene<boct_tree<short, char> > *labeled_scene
   
   if(!(labeled_scene))
   {
-    vcl_cerr << "Error in bof_examine_ground_truth --> Could not cast scene" << vcl_endl;
+    std::cerr << "Error in bof_examine_ground_truth --> Could not cast scene" << std::endl;
     return;
   }
   
-  vcl_cout << "Number of objects for this scene is " << ply_paths.size() <<vcl_endl;;
+  std::cout << "Number of objects for this scene is " << ply_paths.size() <<std::endl;;
   
-  vcl_vector<vcl_string>::const_iterator it = ply_paths.begin();
+  std::vector<std::string>::const_iterator it = ply_paths.begin();
   for (; it!=ply_paths.end(); it++) {
     
     
@@ -272,13 +272,13 @@ void bof_examine_ground_truth(boxm_scene<boct_tree<short, char> > *labeled_scene
     outer_bbox.expand_about_centroid(finest_cell_length*10.0);
 
     
-    vcl_cout << "Object's tight box: " << tight_bbox << "\n"
+    std::cout << "Object's tight box: " << tight_bbox << "\n"
     << "Object's outer box: " << outer_bbox << "\n";
     
-    vcl_vector<char_cell_type*> labeled_leaves;
+    std::vector<char_cell_type*> labeled_leaves;
     labeled_scene->leaves_in_region(outer_bbox,labeled_leaves);
     
-    vcl_cout << "Number of samples in the object: " << labeled_leaves.size() << "\n";
+    std::cout << "Number of samples in the object: " << labeled_leaves.size() << "\n";
     
  
     for (unsigned i=0; i<labeled_leaves.size(); i++) {
@@ -295,7 +295,7 @@ void bof_examine_ground_truth(boxm_scene<boct_tree<short, char> > *labeled_scene
 }
 
 //: Learn the joint P(X,C) voxels of this scene inside the object with appropiate category
-bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned scene_id, bof_labels_keypoint_joint &p_cx, vcl_string path_out)
+bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned scene_id, bof_labels_keypoint_joint &p_cx, std::string path_out)
 {
   if(!info_.training_scenes_[scene_id])
     return false;
@@ -317,16 +317,16 @@ bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned
   
   if(!(scene && class_id_scene && valid_scene))
   {
-    vcl_cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << vcl_endl;
+    std::cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << std::endl;
     return false;
   }
     
-  vcl_cout << "Number of objects for scene " << scene_id << " is " << ply_paths_[scene_id].size() <<vcl_endl;
+  std::cout << "Number of objects for scene " << scene_id << " is " << ply_paths_[scene_id].size() <<std::endl;
   
   if(ply_paths_[scene_id].empty())
     return false;
   
-  vcl_vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
+  std::vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
   for (; it!=ply_paths_[scene_id].end(); it++) {
     
     if (it->class_id < 0) {
@@ -343,23 +343,23 @@ bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned
     outer_bbox.expand_about_centroid(info_.finest_cell_length_[scene_id]*this->bbox_scale_);
     
 #ifdef DEBUG_BOF
-    vcl_cout << "Object's tight box: " << tight_bbox << "\n"
+    std::cout << "Object's tight box: " << tight_bbox << "\n"
     << "Object's outer box: " << outer_bbox << "\n";
 
 #endif
    
-    vcl_vector<feature_cell_type*> object_leaves;
-    vcl_vector<char_cell_type*> label_leaves;
-    vcl_vector<boct_tree_cell<short, bool>* > valid_leaves;
+    std::vector<feature_cell_type*> object_leaves;
+    std::vector<char_cell_type*> label_leaves;
+    std::vector<boct_tree_cell<short, bool>* > valid_leaves;
     scene->leaves_in_region(outer_bbox, object_leaves);
     class_id_scene->leaves_in_region(outer_bbox,label_leaves);
     valid_scene->leaves_in_region(outer_bbox, valid_leaves);
     
 #ifdef DEBUG_BOF
-    vcl_cout << "Number of leaves in the object: " << object_leaves.size() << "\n";
+    std::cout << "Number of leaves in the object: " << object_leaves.size() << "\n";
 #endif
     
-    vcl_vector<vnl_vector_fixed<double, 10> > leaves_data;
+    std::vector<vnl_vector_fixed<double, 10> > leaves_data;
     
     for (unsigned i=0; i<object_leaves.size(); i++) {
       if((object_leaves[i]->level() == 0) && valid_leaves[i]->data()){
@@ -370,7 +370,7 @@ bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned
     }
     
 
-    vcl_cout << "Number of valid leaves (at level 0) in the object: " << leaves_data.size() << "\n";
+    std::cout << "Number of valid leaves (at level 0) in the object: " << leaves_data.size() << "\n";
 
     
     if(leaves_data.size()==0)
@@ -380,10 +380,10 @@ bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned
     class_id_scene->write_active_blocks(false);
     
     
-    vcl_vector<dbcll_euclidean_cluster_light<10> > clusters;
+    std::vector<dbcll_euclidean_cluster_light<10> > clusters;
     dbcll_compute_euclidean_clusters(leaves_data,codebook->means_, clusters);
     
-    vcl_stringstream mesh_ss;
+    std::stringstream mesh_ss;
     mesh_ss << path_out << "/" << vul_file::strip_extension(vul_file::strip_directory(it->ply_path)) << ".xml";
     dbcll_xml_write(clusters, mesh_ss.str());
     
@@ -399,7 +399,7 @@ bool bof_scene_categories::learn_categories(bof_codebook_sptr codebook, unsigned
 
 //: Given an object in a scene and the joint P(X,C), choose the maximum aposteriory category.
 void bof_scene_categories::classify(bof_codebook_sptr codebook, unsigned scene_id, 
-                                    const bof_labels_keypoint_joint &p_cx, vcl_string classification_dir)
+                                    const bof_labels_keypoint_joint &p_cx, std::string classification_dir)
 {
   if(info_.training_scenes_[scene_id])
     return;
@@ -421,25 +421,25 @@ void bof_scene_categories::classify(bof_codebook_sptr codebook, unsigned scene_i
     
   if(!(scene))
   {
-    vcl_cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << vcl_endl;
+    std::cerr << "Error in bof_scene_categories::label_objects --> Could not cast scene" << std::endl;
     return;
   }
    
-  vcl_cout << "Number of objects for scene " << scene_id << " is " << ply_paths_[scene_id].size() <<vcl_endl;;
+  std::cout << "Number of objects for scene " << scene_id << " is " << ply_paths_[scene_id].size() <<std::endl;;
                                       
-  vcl_vector< vcl_vector<double> > log_p_c_given_obj;
+  std::vector< std::vector<double> > log_p_c_given_obj;
   
-  vcl_vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
+  std::vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
   
   //file to write classification results
-  vcl_stringstream cl_ss;
+  std::stringstream cl_ss;
   cl_ss << classification_dir << "/scene_" << scene_id; 
   
   if(!vul_file::exists(cl_ss.str()))
     vul_file::make_directory(cl_ss.str());
   
   cl_ss<< "/classification.txt";
-  vcl_ofstream cl_ofs(cl_ss.str().c_str());
+  std::ofstream cl_ofs(cl_ss.str().c_str());
   
   for (; it!=ply_paths_[scene_id].end(); it++) {
     if (it->class_id < 0) {
@@ -455,20 +455,20 @@ void bof_scene_categories::classify(bof_codebook_sptr codebook, unsigned scene_i
     outer_bbox = tight_bbox;
     outer_bbox.expand_about_centroid(info_.finest_cell_length_[scene_id]*this->bbox_scale_);    
 #ifdef DEBUG_BOF
-    vcl_cout << "Object's tight box: " << tight_bbox << "\n"
+    std::cout << "Object's tight box: " << tight_bbox << "\n"
     << "Object's outer box: " << outer_bbox << "\n";
 #endif
     
-    vcl_vector<feature_cell_type*> object_leaves;
+    std::vector<feature_cell_type*> object_leaves;
     scene->leaves_in_region(outer_bbox, object_leaves);
-    vcl_vector<boct_tree_cell<short, bool>* > valid_leaves;
+    std::vector<boct_tree_cell<short, bool>* > valid_leaves;
     valid_scene->leaves_in_region(outer_bbox, valid_leaves);
     
 #ifdef DEBUG_BOF
-    vcl_cout << "Number of leaves in the object: " << object_leaves.size() << "\n";
+    std::cout << "Number of leaves in the object: " << object_leaves.size() << "\n";
 #endif
     
-    vcl_vector<vnl_vector_fixed<double, 10> > leaves_data;
+    std::vector<vnl_vector_fixed<double, 10> > leaves_data;
     
     for (unsigned i=0; i<object_leaves.size(); i++) {
        if((object_leaves[i]->level() == 0) && valid_leaves[i]->data()){
@@ -478,33 +478,33 @@ void bof_scene_categories::classify(bof_codebook_sptr codebook, unsigned scene_i
     }
     
 
-    vcl_cout << "Number of  valid leaves at level 0 in the object: " << leaves_data.size() << "\n";
+    std::cout << "Number of  valid leaves at level 0 in the object: " << leaves_data.size() << "\n";
     
     if(leaves_data.size()==0)
       continue;
     
-    vcl_vector<dbcll_euclidean_cluster_light<10> > clusters;
+    std::vector<dbcll_euclidean_cluster_light<10> > clusters;
     dbcll_compute_euclidean_clusters(leaves_data,codebook->means_, clusters);
     
     
-    vcl_vector<double> log_p_c_given_obj_ith;
+    std::vector<double> log_p_c_given_obj_ith;
     char max_c = p_cx.max_aposteriori(clusters, log_p_c_given_obj_ith);
     
     cl_ofs << (int)class_id << " " << (int)max_c << "\n";
     
     //write to file
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << classification_dir << "/scene_" << scene_id << "/";
     
-    vcl_stringstream mesh_ss;
+    std::stringstream mesh_ss;
     mesh_ss << classification_dir << "/scene_" << scene_id << "/" << vul_file::strip_extension(vul_file::strip_directory(it->ply_path)) << ".xml";
     dbcll_xml_write(clusters, mesh_ss.str());
     
     ss << "aposteriori_" << vul_file::strip_extension(vul_file::strip_directory(it->ply_path)) << ".txt";
     
-    vcl_ofstream ofs(ss.str().c_str());
+    std::ofstream ofs(ss.str().c_str());
     if(!ofs.is_open()){
-      vcl_cerr << "Failed to open " << ss.str() << " for write\n";
+      std::cerr << "Failed to open " << ss.str() << " for write\n";
       continue;
     }
     
@@ -524,15 +524,15 @@ void bof_scene_categories::classify(bof_codebook_sptr codebook, unsigned scene_i
 void bof_scene_categories::bounding_box_statictics()
 {
   
-  vcl_vector<double> avg_bbox_xy(nclasses(), 0.0);
-  vcl_vector<double> avg_bbox_yz(nclasses(), 0.0);
-  vcl_vector<double> avg_bbox_x(nclasses(), 0.0);
+  std::vector<double> avg_bbox_xy(nclasses(), 0.0);
+  std::vector<double> avg_bbox_yz(nclasses(), 0.0);
+  std::vector<double> avg_bbox_x(nclasses(), 0.0);
   
-  vcl_vector<double> var_bbox_xy(nclasses(), 0.0);
-  vcl_vector<double> var_bbox_yz(nclasses(), 0.0);
-  vcl_vector<double> var_bbox_x(nclasses(), 0.0);
+  std::vector<double> var_bbox_xy(nclasses(), 0.0);
+  std::vector<double> var_bbox_yz(nclasses(), 0.0);
+  std::vector<double> var_bbox_x(nclasses(), 0.0);
 
-  vcl_vector<unsigned> n_objects(nclasses(), 0);
+  std::vector<unsigned> n_objects(nclasses(), 0);
   
   for (unsigned scene_id = 0; scene_id < nscenes(); scene_id++) {
     
@@ -540,7 +540,7 @@ void bof_scene_categories::bounding_box_statictics()
       continue;
     
     
-    vcl_vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
+    std::vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
     for (; it!=ply_paths_[scene_id].end(); it++) {
       
       if (it->class_id < 0) {
@@ -585,13 +585,13 @@ void bof_scene_categories::bounding_box_statictics()
     var_bbox_x[class_id] =  var_bbox_x[class_id]/(double)n_objects[class_id]  -  avg_bbox_x[class_id];
     
     
-    vcl_cout << "***************************************\n"
+    std::cout << "***************************************\n"
     << "Class: " << category_names_[class_id] << "\n"
     << "Average x:y ratio: " << avg_bbox_xy[class_id] << "\n"
     << "Average y:z ratio: " << avg_bbox_yz[class_id] << "\n"
     << "Average x length: " << avg_bbox_x[class_id] << "\n";
 
-    double typical_width = avg_bbox_x[class_id] + vcl_sqrt(var_bbox_x[class_id]);
+    double typical_width = avg_bbox_x[class_id] + std::sqrt(var_bbox_x[class_id]);
     double typical_height = typical_width/avg_bbox_xy[class_id];
     double typical_depth = typical_height/var_bbox_yz[class_id];
     
@@ -599,7 +599,7 @@ void bof_scene_categories::bounding_box_statictics()
     
     
     //Write a characteristic bounding box
-    vcl_stringstream ply_file_out;
+    std::stringstream ply_file_out;
     ply_file_out << path_out_ << "/typical_bbox";
     
     if(!vul_file::exists(ply_file_out.str()))
@@ -610,7 +610,7 @@ void bof_scene_categories::bounding_box_statictics()
     // OPEN output file
     p_ply oply = ply_create(ply_file_out.str().c_str(), PLY_ASCII, NULL, 0, NULL);
     
-    vcl_cerr << "  saving " << ply_file_out << " :\n";
+    std::cerr << "  saving " << ply_file_out << " :\n";
     
     
     // HEADER SECTION
@@ -638,17 +638,17 @@ void bof_scene_categories::bounding_box_statictics()
     
     // CLOSE PLY FILE
     ply_close(oply);
-    vcl_cerr << "  done.\n";
+    std::cerr << "  done.\n";
 
   }
 }
 
 
 //: Load all objects for the given scene
-void bof_scene_categories::load_objects(unsigned scene_id, vcl_vector<vgl_box_3d<double> > &bboxes)
+void bof_scene_categories::load_objects(unsigned scene_id, std::vector<vgl_box_3d<double> > &bboxes)
 {
   bboxes.clear();
-  vcl_vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
+  std::vector<bof_scene_object>::iterator it = ply_paths_[scene_id].begin();
   for (; it!=ply_paths_[scene_id].end(); it++) 
   {    
     vgl_box_3d<double> outer_bbox;
@@ -658,14 +658,14 @@ void bof_scene_categories::load_objects(unsigned scene_id, vcl_vector<vgl_box_3d
     outer_bbox = tight_bbox;
     outer_bbox.expand_about_centroid(info_.finest_cell_length_[scene_id]*bbox_scale_);
     bboxes.push_back(outer_bbox);
-    vcl_cout << outer_bbox << vcl_endl;
+    std::cout << outer_bbox << std::endl;
   }
   
 }
 
 
 // Function to init the xml infp file
-void bof_init_scene_categories_xml(vcl_string bof_dir)
+void bof_init_scene_categories_xml(std::string bof_dir)
 {
   bof_info info(bof_dir);
   info.init_category_scenes(-1);
@@ -707,7 +707,7 @@ void bof_init_scene_categories_xml(vcl_string bof_dir)
     }
     
     //write to disk  
-    vcl_ofstream os((bof_dir + "/bof_category_info.xml").c_str());
+    std::ofstream os((bof_dir + "/bof_category_info.xml").c_str());
     bxml_write(os, doc);
     os.close();  
   }
@@ -753,7 +753,7 @@ int bof_plyio_vertex_cb_(p_ply_argument argument)
 //: Binary save parameters to stream.
 void vsl_b_write(vsl_b_ostream & , bof_scene_categories const & )
 {
-  vcl_cerr << "Error: Trying to save but binary io not implemented\n";
+  std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
@@ -761,20 +761,20 @@ void vsl_b_write(vsl_b_ostream & , bof_scene_categories const & )
 //: Binary load parameters from stream.
 void vsl_b_read(vsl_b_istream & , bof_scene_categories & )
 {
-  vcl_cerr << "Error: Trying to read but binary io not implemented\n";
+  std::cerr << "Error: Trying to read but binary io not implemented\n";
   return;
 }
 
-void vsl_print_summary(vcl_ostream & , const bof_scene_categories & )
+void vsl_print_summary(std::ostream & , const bof_scene_categories & )
 {
-  vcl_cerr << "Error: Trying to print but binary io not implemented\n";
+  std::cerr << "Error: Trying to print but binary io not implemented\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream& is,bof_scene_categories* p)
 {
   delete p;
-  vcl_cerr << "Error: Trying to read but binary io not implemented\n";
+  std::cerr << "Error: Trying to read but binary io not implemented\n";
   return;
 }
 
@@ -791,7 +791,7 @@ void vsl_b_write(vsl_b_ostream& os, const bof_scene_categories* &p)
   }
 }
 
-void vsl_print_summary(vcl_ostream& os, const bof_scene_categories* &p)
+void vsl_print_summary(std::ostream& os, const bof_scene_categories* &p)
 {
   if (p==0)
     os << "NULL PTR";

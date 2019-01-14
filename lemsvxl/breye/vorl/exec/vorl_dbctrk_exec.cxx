@@ -23,29 +23,29 @@ int main(int argc, char** argv)
 
   // Make each process and add it to the list of program args
   bpro_process_sptr my_process(new dbctrk_process()); 
-  my_process->set_input_names(vcl_vector<vcl_string>(1,"video"));
-  my_process->set_output_names(vcl_vector<vcl_string>(1,"curves"));
+  my_process->set_input_names(std::vector<std::string>(1,"video"));
+  my_process->set_output_names(std::vector<std::string>(1,"curves"));
   vorl_manager::instance()->add_process_to_args(my_process); 
 
   vorl_manager::instance()->parse_params(argc, argv); 
-  vcl_string output_dir = vorl_manager::instance()->get_output_dir(); 
-  vcl_string output_ps = vorl_manager::instance()->get_output_ps_dir(); 
-//  vcl_string output_video_dir = vorl_manager::instance()->get_output_video_dir(); 
-  vcl_string video_assoc_dir = vorl_manager::instance()->get_video_assoc_dir()+"//contour"; 
+  std::string output_dir = vorl_manager::instance()->get_output_dir(); 
+  std::string output_ps = vorl_manager::instance()->get_output_ps_dir(); 
+//  std::string output_video_dir = vorl_manager::instance()->get_output_video_dir(); 
+  std::string video_assoc_dir = vorl_manager::instance()->get_video_assoc_dir()+"//contour"; 
   vorl_manager::instance()->load_video();
 
   //: loading the ground truth file
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > contours2d;
+  std::vector<std::vector<vgl_point_2d<double> > > contours2d;
   if(vul_file::is_directory(video_assoc_dir.c_str()))
   for (vul_file_iterator fn=video_assoc_dir+"//*.con"; fn; ++fn) {
     if(vul_file::exists(fn()))
     {
-      vcl_vector<vgl_point_2d<double> > points;
+      std::vector<vgl_point_2d<double> > points;
       points.clear(); 
     
       dbctrk_benchmarking::read_outlines(fn(),points);
       contours2d.push_back(points);
-    vcl_cout<<"\n the number of points are";
+    std::cout<<"\n the number of points are";
     }
   }
 
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
        vorl_manager::instance()->run_process_on_current_frame(my_process);
        double tp,tn;
        bpro_storage_sptr result = rep->get_data_by_name("curves");
-       vcl_vector< dbctrk_tracker_curve_sptr > tracked_curves;
+       std::vector< dbctrk_tracker_curve_sptr > tracked_curves;
        dbctrk_storage_sptr dbctrk_storage_obj;
        dbctrk_storage_obj.vertical_cast(result);
        dbctrk_storage_obj->get_tracked_curves(tracked_curves);
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
   // Write final status notice (100%)
   vorl_manager::instance()->write_status(1.0);
 
-  vcl_string binfile=output_dir+"/bin.dat";
+  std::string binfile=output_dir+"/bin.dat";
   vorl_manager::instance()->save_repository(binfile);
   vorl_manager::instance()->write_performance("");
 

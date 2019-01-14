@@ -1,8 +1,8 @@
 #if !defined(SLICE_RIDGEDETECT_PROCESSOR_H_)
 #define SLICE_RIDGEDETECT_PROCESSOR_H_ 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <slice/sliceProcessor.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vil/vil_image_view.h>
@@ -11,11 +11,11 @@ class sliceRidgeDetectProcessor  : public sliceProcessor<float>
 {
   public:
     sliceRidgeDetectProcessor( const float& epsilon) : epsilon_(epsilon) {};
-    virtual vcl_vector<float*> process(const vcl_vector< vcl_vector<float*> >& slice_sets, int w, int h, int slice);
+    virtual std::vector<float*> process(const std::vector< std::vector<float*> >& slice_sets, int w, int h, int slice);
     virtual const int nstreams() const { return 3;}
     virtual const int nslices() const{ return 5;}
     virtual const int noutputs() const{ return 3;}
-    virtual const vcl_string name() const{ return vcl_string("sliceRidgeDetectProcessor");}
+    virtual const std::string name() const{ return std::string("sliceRidgeDetectProcessor");}
   protected:
     
     void hessian_decompose_oneslice(const vil_image_view<float>& Im_xx,

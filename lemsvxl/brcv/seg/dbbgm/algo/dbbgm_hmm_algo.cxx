@@ -4,8 +4,8 @@
 
 
 #include "dbbgm_hmm_algo.h"
-#include <vcl_vector.h>
-#include <vcl_limits.h>
+#include <vector>
+#include <limits>
 #include <vil/vil_plane.h>
 #include <vil/vil_crop.h>
 #include <vil/algo/vil_correlate_2d.h>
@@ -51,7 +51,7 @@ void dbbgm_normalize_probs(vil_image_view<float>& probs)
       for(unsigned int p=0; p<np; ++p){
         sum += probs(i,j,p);
       }
-      if(sum > vcl_numeric_limits<double>::epsilon()){
+      if(sum > std::numeric_limits<double>::epsilon()){
         for(unsigned int p=0; p<np; ++p){
           probs(i,j,p) /= sum;
         }
@@ -97,7 +97,7 @@ void dbbgm_mean_field(vil_image_view<float>& probs,
     }
 
     float sum = 0.0f, Vsum = 0.0f;
-    vcl_vector<float> diff(nc);
+    std::vector<float> diff(nc);
     sqr_diff=0.0f;
     for(unsigned int j=0; j<nj; ++j){
       for(unsigned int i=0; i<ni; ++i){
@@ -107,7 +107,7 @@ void dbbgm_mean_field(vil_image_view<float>& probs,
         sum = 0.0f;
         for(unsigned int c=0; c<nc; ++c){
           diff[c] = q(i,j,c);
-          q(i,j,c) = probs(i,j,c)*vcl_exp(-Vsum + V(i,j,c));
+          q(i,j,c) = probs(i,j,c)*std::exp(-Vsum + V(i,j,c));
           sum += q(i,j,c);
         }
         for(unsigned int c=0; c<nc; ++c){
@@ -117,7 +117,7 @@ void dbbgm_mean_field(vil_image_view<float>& probs,
         }
       }
     }
-    vcl_cout << itr << ": sqr_diff = "<< sqr_diff <<vcl_endl;
+    std::cout << itr << ": sqr_diff = "<< sqr_diff <<std::endl;
     if(sqr_diff<1e-6)
       break;
   }

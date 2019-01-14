@@ -5,7 +5,7 @@
 #include "basegui_scenegraph.h"
 #include "basegui_view.h"
 #include "basegui_visitor.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <iostream>
 #include <assert.h>
 
@@ -33,7 +33,7 @@ public:
   PSPrinterVisitor(const char *file, double thickenn) :  mode(NONE), thicken(thickenn), clip(false){
     f = fopen(file, "w");
     if(!f)
-      std::cerr << "error opening file " << file << " for printing" << vcl_endl;
+      std::cerr << "error opening file " << file << " for printing" << std::endl;
     now_hidden = true;
   }
   virtual ~PSPrinterVisitor() {

@@ -5,17 +5,17 @@
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_least_squares_function.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include "vehicle_model.h"
 
 struct geodesic_vnl_least_squares_function:public vnl_least_squares_function
     {
-geodesic_vnl_least_squares_function(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> params_freeze,
+geodesic_vnl_least_squares_function(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> params_freeze,
                                     vnl_vector<double> fixed_param_values,int num_params);
                                                                                                                 
     //since we are loooking for the projection onto 1-D sub manifold,there is only 1 parameter and the number of residuals 
@@ -24,7 +24,7 @@ geodesic_vnl_least_squares_function(vcl_vector<vnl_matrix<double> > group_elemen
 
  void f(vnl_vector<double> const& params, vnl_vector<double>& residuals);
 
-vcl_vector<vnl_matrix<double> >group_elements_;
+std::vector<vnl_matrix<double> >group_elements_;
 vnl_vector<double> params_freeze_;
 vnl_vector<double> fixed_param_values_;
 int num_params_;
@@ -32,7 +32,7 @@ int num_params_;
 
 struct geodesic_vnl_least_squares_function_9x9:public vnl_least_squares_function
     {
-geodesic_vnl_least_squares_function_9x9(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> params_freeze,
+geodesic_vnl_least_squares_function_9x9(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> params_freeze,
                                     vnl_vector<double> fixed_param_values,int num_params);
                                                                                                                 
     //since we are loooking for the projection onto 1-D sub manifold,there is only 1 parameter and the number of residuals 
@@ -41,7 +41,7 @@ geodesic_vnl_least_squares_function_9x9(vcl_vector<vnl_matrix<double> > group_el
 
  void f(vnl_vector<double> const& params, vnl_vector<double>& residuals);
 
-vcl_vector<vnl_matrix<double> >group_elements_;
+std::vector<vnl_matrix<double> >group_elements_;
 vnl_vector<double> params_freeze_;
 vnl_vector<double> fixed_param_values_;
 int num_params_;
@@ -85,7 +85,7 @@ vnl_matrix<double> get_transformation_matrix(vsol_rectangle_2d from_box,vsol_rec
 double matrix_log_dist(vnl_matrix<double> M1,vnl_matrix<double> M2);
     
 double calculate_Lie_distance_between_vectors
-(vcl_vector<vsol_rectangle_2d >model1,vcl_vector<vsol_rectangle_2d  >model2,vcl_vector<vsol_rectangle_2d  >ref_model);
+(std::vector<vsol_rectangle_2d >model1,std::vector<vsol_rectangle_2d  >model2,std::vector<vsol_rectangle_2d  >ref_model);
    
 double calculate_Lie_distance(vehicle_model M1,vehicle_model M2,vehicle_model RM);
 
@@ -117,18 +117,18 @@ vnl_matrix<double> get_Lie_group(vnl_matrix<double> g);
 // where g1,g2 and g3 are 3x3 matrices 
 vnl_matrix<double> get_Lie_group_9x9(vnl_matrix<double> g);
 
-void calculate_coupled_intrinsic_mean(vcl_vector<vnl_matrix<double> > box_one_elements,
-                                            vcl_vector<vnl_matrix<double> > box_two_elements,
-                                            vcl_vector<vnl_matrix<double> > box_three_elements,
+void calculate_coupled_intrinsic_mean(std::vector<vnl_matrix<double> > box_one_elements,
+                                            std::vector<vnl_matrix<double> > box_two_elements,
+                                            std::vector<vnl_matrix<double> > box_three_elements,
                                             double M1_x2,double M1_x4,
                                               vnl_matrix<double> &In_mean_B1,
                                               vnl_matrix<double> &In_mean_B2,
                                               vnl_matrix<double> &In_mean_B3);
 
 
-vnl_matrix<double> calculate_intrinsic_mean(vcl_vector<vnl_matrix<double> > group_elements);
+vnl_matrix<double> calculate_intrinsic_mean(std::vector<vnl_matrix<double> > group_elements);
 
-double get_variance(vcl_vector<vnl_matrix<double> > group_elements,vnl_matrix<double> intrinsic_mean);
+double get_variance(std::vector<vnl_matrix<double> > group_elements,vnl_matrix<double> intrinsic_mean);
 
 //get the optimal 1 d geodesic by minimizing the variation of projection of each point
 //onto this goedesic
@@ -141,10 +141,10 @@ double get_variance(vcl_vector<vnl_matrix<double> > group_elements,vnl_matrix<do
 //      so this gives 'n' unknowns where 'n' is the number of elements
 //      The total number of unknowns is n+9 
 
-vnl_matrix<double> get_geodesic(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
+vnl_matrix<double> get_geodesic(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
                                 vnl_vector<double> params_freeze,vnl_vector<double> &params);
 
-vnl_matrix<double> get_geodesic_9x9(vcl_vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
+vnl_matrix<double> get_geodesic_9x9(std::vector<vnl_matrix<double> > group_elements,vnl_vector<double> initial_params,
                                 vnl_vector<double> params_freeze,vnl_vector<double> &params);
                                 
 vnl_matrix<double> get_projection(vnl_matrix<double> G1,vnl_matrix<double> sub_manifold_gen);

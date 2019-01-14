@@ -7,7 +7,7 @@
 #include <dbmsh3d/algo/dbmsh3d_xform.h>
 #include <dbgdt3d/pro/dbgdt3d_process.h>
 
-bool dbgdt3d_pro::load_ply2_gdt (vcl_string dirfile)
+bool dbgdt3d_pro::load_ply2_gdt (std::string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();

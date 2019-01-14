@@ -34,8 +34,8 @@ private:
   dbsk3dapp_view_manager*     view_manager_;
   dbsk3dapp_action*           action_;
 
-  vcl_string                  file_opened_cache_;
-  vcl_string                  file_saved_cache_;
+  std::string                  file_opened_cache_;
+  std::string                  file_saved_cache_;
 
 public:  
   dbsk3d_pro_vis* dual_bnd_shock_vis() { 

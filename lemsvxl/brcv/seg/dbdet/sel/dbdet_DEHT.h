@@ -11,9 +11,9 @@
 //  Modifications
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
+#include <vector>
+#include <list>
+#include <set>
 
 #include "dbdet_edgel.h"
 #include "dbdet_curvelet.h"
@@ -24,8 +24,8 @@ class dbdet_DEHT_node
 public :
   dbdet_edgel* e;
   dbdet_DEHT_node* parent;
-  vcl_list<dbdet_DEHT_node*> children;
-  vcl_vector<dbdet_edgel*> path; // it's optimal path to root
+  std::list<dbdet_DEHT_node*> children;
+  std::vector<dbdet_edgel*> path; // it's optimal path to root
   double path_cost; // the cost of the optimal path to root
 
   dbdet_DEHT_node(dbdet_edgel* new_e): e(new_e), parent(0), children(0), path(0), path_cost(0) {}
@@ -54,9 +54,9 @@ class dbdet_DEHT
 {
 public:
   dbdet_DEHT_node* root;
-  vcl_vector<dbdet_edgel*> best_path; // the overall best path from leaf to root
-  vcl_vector<dbdet_edgel*> best_free_end_path; // the overall best free_end path from leaf to root
-  //vcl_vector<dbdet_DEHT_node*> all_nodes; // all the participating nodes in the Tree
+  std::vector<dbdet_edgel*> best_path; // the overall best path from leaf to root
+  std::vector<dbdet_edgel*> best_free_end_path; // the overall best free_end path from leaf to root
+  //std::vector<dbdet_DEHT_node*> all_nodes; // all the participating nodes in the Tree
   //: constructor 1
   dbdet_DEHT(dbdet_DEHT_node* new_root=0): root(new_root) {}
   
@@ -145,7 +145,7 @@ public:
           }
 
           //next valid one can be set (find the current child on the parents list and set it to the next)
-          vcl_list<dbdet_DEHT_node*>::iterator nit = parent->children.begin();
+          std::list<dbdet_DEHT_node*>::iterator nit = parent->children.begin();
           for (; nit != parent->children.end(); nit++){
             if ((*nit)==cur){
               nit++;
@@ -166,11 +166,11 @@ public:
       }
 
       //: return the current path
-      vcl_vector<dbdet_edgel*>& get_cur_path() { return cur_path_; }
+      std::vector<dbdet_edgel*>& get_cur_path() { return cur_path_; }
 
     protected:
       dbdet_DEHT_node* ptr_;             //this is the node that the iterator is currently pointing to
-      vcl_vector<dbdet_edgel*> cur_path_; // this is the path from point where the iterator was initialized to the current node
+      std::vector<dbdet_edgel*> cur_path_; // this is the path from point where the iterator was initialized to the current node
   };
 
   //: Return an iterator to the first element

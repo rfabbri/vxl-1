@@ -27,11 +27,11 @@
 // v 1.0 0.0 0.0
 // f 1 2 3
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
@@ -40,34 +40,34 @@
 //  ignoring all other attributes.
 bool dbmsh3d_load_obj (dbmsh3d_mesh* M, const char* file)
 {
-  vcl_ifstream  in;
-  vcl_string    linestr;
+  std::ifstream  in;
+  std::string    linestr;
   in.open (file);
   assert (M->vertexmap().size() == 0);
   double x, y, z;
-  vcl_string key;
+  std::string key;
   int v;
   int vidcounter = 1; //the vertex id starts from 1, not 0.
   
   //main loop
   while (in) {
     linestr.clear();
-    vcl_getline (in, linestr);
-    //vcl_cout << linestr << vcl_endl;
+    std::getline (in, linestr);
+    //std::cout << linestr << std::endl;
     
-    if (linestr.length() == 0 || vcl_strncmp (linestr.c_str(), "#", 1) == 0)
+    if (linestr.length() == 0 || std::strncmp (linestr.c_str(), "#", 1) == 0)
       continue; //skip empty line and comments.
     
-    if (vcl_strncmp (linestr.c_str(), "v", 1) == 0) { //vertex
-      vcl_sscanf (linestr.c_str(), "v %lf %lf %lf", &x, &y, &z);
+    if (std::strncmp (linestr.c_str(), "v", 1) == 0) { //vertex
+      std::sscanf (linestr.c_str(), "v %lf %lf %lf", &x, &y, &z);
       dbmsh3d_vertex* V = M->_new_vertex (vidcounter++);
       V->get_pt().set (x, y, z);
       M->_add_vertex (V);
       continue;
     }
-    if (vcl_strncmp (linestr.c_str(), "f", 1) == 0) { //face
+    if (std::strncmp (linestr.c_str(), "f", 1) == 0) { //face
       dbmsh3d_face* F = M->_new_face ();
-      vcl_stringstream ss (vcl_stringstream::in | vcl_stringstream::out);
+      std::stringstream ss (std::stringstream::in | std::stringstream::out);
       ss << linestr;
       ss >> key;
       while (ss.good()) { //read in each vertex index of this face.
@@ -86,7 +86,7 @@ bool dbmsh3d_load_obj (dbmsh3d_mesh* M, const char* file)
   }
 
   in.close();
-  vul_printf (vcl_cout, "  %d points and %d faces loaded from %s.\n", 
+  vul_printf (std::cout, "  %d points and %d faces loaded from %s.\n", 
               M->vertexmap().size(), M->facemap().size(), file);
   return true;
 }
@@ -94,34 +94,34 @@ bool dbmsh3d_load_obj (dbmsh3d_mesh* M, const char* file)
 bool dbmsh3d_save_obj (dbmsh3d_mesh* M, const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen (file, "w")) == NULL) {
-    vul_printf (vcl_cout, "  can't open output .OBJ file %s\n", file);
+  if ((fp = std::fopen (file, "w")) == NULL) {
+    vul_printf (std::cout, "  can't open output .OBJ file %s\n", file);
     return false; 
   }
-  vul_printf (vcl_cout, "  saving %s : %d points %d faces...\n", 
+  vul_printf (std::cout, "  saving %s : %d points %d faces...\n", 
               file, M->vertexmap().size(), M->facemap().size());
 
   //Saving mesh vertices.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
-    vcl_fprintf (fp, "v %.16f %.16f %.16f\n", V->pt().x(), V->pt().y(), V->pt().z());
+    std::fprintf (fp, "v %.16f %.16f %.16f\n", V->pt().x(), V->pt().y(), V->pt().z());
   }
 
   //Saving mesh faces.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
-    vcl_fprintf (fp, "f ");
+    std::fprintf (fp, "f ");
     for (unsigned int j=0; j<F->vertices().size(); j++) {
       dbmsh3d_vertex* V = F->vertices(j);
-      vcl_fprintf (fp, "%d ", V->id());
+      std::fprintf (fp, "%d ", V->id());
     }
-    vcl_fprintf (fp, "\n");
+    std::fprintf (fp, "\n");
   }
 
   fclose (fp);
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 

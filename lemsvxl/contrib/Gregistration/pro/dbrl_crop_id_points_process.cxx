@@ -12,7 +12,7 @@ dbrl_crop_id_points_process::dbrl_crop_id_points_process() : bpro1_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     
 }
@@ -41,10 +41,10 @@ dbrl_crop_id_points_process::clone() const
 /*************************************************************************
 * Function Name: dbrl_crop_id_points_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbrl_crop_id_points_process::name()
 {
     return "Crop id points";
@@ -54,12 +54,12 @@ dbrl_crop_id_points_process::name()
 /*************************************************************************
 * Function Name: ddbil_osl_canny_edges_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_crop_id_points_process::get_input_type()
+std::vector< std::string > dbrl_crop_id_points_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_id_point_2d" );
     return to_return;
 }
@@ -68,12 +68,12 @@ vcl_vector< vcl_string > dbrl_crop_id_points_process::get_input_type()
 /*************************************************************************
 * Function Name: dbrl_crop_id_points_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbrl_crop_id_points_process::get_output_type()
+std::vector< std::string > dbrl_crop_id_points_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_id_point_2d" );
     return to_return;
 }
@@ -103,7 +103,7 @@ bool
 dbrl_crop_id_points_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_crop_id_points_process::execute() - not exactly one"
+        std::cout << "In dbrl_crop_id_points_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -114,8 +114,8 @@ dbrl_crop_id_points_process::execute()
     dbrl_id_point_2d_storage_sptr frame_idpoints;
     frame_idpoints.vertical_cast(input_data_[0][0]);
 
-    vcl_vector<dbrl_id_point_2d_sptr> pts=frame_idpoints->points();
-    vcl_vector<dbrl_id_point_2d_sptr> crppts;
+    std::vector<dbrl_id_point_2d_sptr> pts=frame_idpoints->points();
+    std::vector<dbrl_id_point_2d_sptr> crppts;
 
     static int topx=0;
     static int topy=0;

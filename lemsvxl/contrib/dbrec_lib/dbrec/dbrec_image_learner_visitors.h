@@ -33,16 +33,16 @@ public:
     x_sum_ += prob*op_response; 
     xsq_sum_ += prob*op_response*op_response; 
     p_sum_ += prob; 
-    h_.upcount(vcl_log10(op_response), prob); 
+    h_.upcount(std::log10(op_response), prob); 
   }
 
   //: fits a weibull model to the current parameters
   dbrec_gaussian_appearance_model_sptr fit_weibull(double& k, double& lambda); 
 
   //: creates a histogram from the model and writes as an svg doc
-  static void visualize_model(dbrec_gaussian_appearance_model_sptr m, const vcl_string& name, float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30);
+  static void visualize_model(dbrec_gaussian_appearance_model_sptr m, const std::string& name, float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30);
   //: writes the histogram as an svg doc
-  void visualize_hist(const vcl_string& name, float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30);
+  void visualize_hist(const std::string& name, float width = 600.0f, float height = 600.0f, float margin = 40.0f, int font_size = 30);
 
 protected:
   double x_sum_;
@@ -56,7 +56,7 @@ protected:
 class dbrec_gaussian_weibull_model_learner_visitor : public dbrec_visitor {
 
 protected:
-  typedef vcl_map<unsigned, vcl_pair<dbrec_gaussian_weibull_model_learner_sptr, dbrec_gaussian_weibull_model_learner_sptr> > map_type;
+  typedef std::map<unsigned, std::pair<dbrec_gaussian_weibull_model_learner_sptr, dbrec_gaussian_weibull_model_learner_sptr> > map_type;
 public:
   
   dbrec_gaussian_weibull_model_learner_visitor(dbrec_hierarchy_sptr h) : h_(h), data_set_(false) {}
@@ -71,8 +71,8 @@ public:
     data_set_ = true; }
 
   dbrec_hierarchy_sptr h() { return h_; }
-  void print_current_histograms(const vcl_string& prefix);
-  void print_current_models(const vcl_string& prefix);
+  void print_current_histograms(const std::string& prefix);
+  void print_current_models(const std::string& prefix);
 
 protected:
   
@@ -91,27 +91,27 @@ public:
   dbrec_rot_inv_gaussian_weibull_model_learner_visitor(dbrec_hierarchy_sptr h) : dbrec_gaussian_weibull_model_learner_visitor(h) {}
   virtual void visit_gaussian_primitive(dbrec_gaussian* g);
   //: same as dbrec_gaussian_weibull_model_learner_visitor::print_current_models(), but it prints the model parameters for each orientation
-  void print_current_models_at_each_orientation(const vcl_string& prefix, float angle_inc);
+  void print_current_models_at_each_orientation(const std::string& prefix, float angle_inc);
 };
 
 //: finds mu and sigma images for each primitive part and writes them to model folder, does nothing for the compositions, just passes the composition to children
 class dbrec_image_construct_bg_model_visitor : public dbrec_visitor {
 public:
   dbrec_image_construct_bg_model_visitor(const vil_image_view<float>& mean_img, 
-    const vil_image_view<float>& std_dev_img, const vcl_string& model_folder) : mean_img_(mean_img), std_dev_img_(std_dev_img), model_folder_(model_folder) {}
+    const vil_image_view<float>& std_dev_img, const std::string& model_folder) : mean_img_(mean_img), std_dev_img_(std_dev_img), model_folder_(model_folder) {}
 
   virtual void visit_composition(dbrec_composition* c);
   virtual void visit_gaussian_primitive(dbrec_gaussian* g);
 protected:
   vil_image_view<float> mean_img_;
   vil_image_view<float> std_dev_img_;
-  vcl_string model_folder_;
+  std::string model_folder_;
 };
 
 class dbrec_image_construct_bg_model_rot_inv_visitor : public dbrec_image_construct_bg_model_visitor {
 public:
   dbrec_image_construct_bg_model_rot_inv_visitor(const vil_image_view<float>& mean_img, const vil_image_view<float>& std_dev_img, 
-    float angle_inc, const vcl_string& model_folder) : dbrec_image_construct_bg_model_visitor(mean_img, std_dev_img, model_folder), angle_inc_(angle_inc) {}
+    float angle_inc, const std::string& model_folder) : dbrec_image_construct_bg_model_visitor(mean_img, std_dev_img, model_folder), angle_inc_(angle_inc) {}
   virtual void visit_gaussian_primitive(dbrec_gaussian* g);
 protected:
   float angle_inc_;

@@ -1,9 +1,9 @@
 //This is brcv/seg/dbdet/pro/dbdet_save_edg_seq_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
 
 #include "dbdet_save_edg_seq_process.h"
 
@@ -20,7 +20,7 @@
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/algo/dbdet_load_edg.h>
 
-static vcl_string num2str_frame (int n);
+static std::string num2str_frame (int n);
 
 dbdet_save_edg_seq_process::dbdet_save_edg_seq_process() : bpro1_process()
 {
@@ -31,7 +31,7 @@ dbdet_save_edg_seq_process::dbdet_save_edg_seq_process() : bpro1_process()
 	  !parameters()->add( "Start index of saving files" , "-sindex" , (int)1) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 /*
   int sframe = 0;
@@ -43,21 +43,21 @@ dbdet_save_edg_seq_process::dbdet_save_edg_seq_process() : bpro1_process()
   repo->go_to_frame( sframe + numframes -1 );*/
 }
 
-vcl_string dbdet_save_edg_seq_process::name() 
+std::string dbdet_save_edg_seq_process::name() 
 {
   return "Save .EDG seq Files";
 }
 
-vcl_vector< vcl_string > dbdet_save_edg_seq_process::get_input_type() 
+std::vector< std::string > dbdet_save_edg_seq_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map");
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_save_edg_seq_process::get_output_type() 
+std::vector< std::string > dbdet_save_edg_seq_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -88,7 +88,7 @@ bool dbdet_save_edg_seq_process::execute()
 
   bpro1_filepath output;
   parameters()->get_value( "-edgoutput" , output );
-  vcl_string output_file = output.path;
+  std::string output_file = output.path;
 
   vidpro1_repository_sptr repo = bvis1_manager::instance()->repository();
 
@@ -99,16 +99,16 @@ bool dbdet_save_edg_seq_process::execute()
 	  bpro1_storage_sptr repomap = repo->get_data_by_name_at(input_names()[0], sframe + i-1);
 	  input_edgemap.vertical_cast(repomap);
 	  dbdet_edgemap_sptr edgemap = input_edgemap->get_edgemap();
-	  //vcl_ostringstream convert;   // stream used for the conversion
+	  //std::ostringstream convert;   // stream used for the conversion
 	  //convert << (sindex + i);      // insert the textual representation of 'Number' in the characters in the stream
-	  //vcl_string output_file_1 = output_file + "_" + convert.str() + ".edg";
-	  vcl_string output_file_1 = output_file + "_" + num2str_frame(sindex+i) + ".edg";
-	  vcl_cout<< output_file_1 << vcl_endl;
+	  //std::string output_file_1 = output_file + "_" + convert.str() + ".edg";
+	  std::string output_file_1 = output_file + "_" + num2str_frame(sindex+i) + ".edg";
+	  std::cout<< output_file_1 << std::endl;
 	  //save this edge map onto a file
 	  bool retval = dbdet_save_edg(output_file_1, edgemap);
 
 	  if (!retval) {
-		vcl_cerr << "Error while saving file: " << output_file_1 << vcl_endl;
+		std::cerr << "Error while saving file: " << output_file_1 << std::endl;
 		return false;
 	  }
 
@@ -116,9 +116,9 @@ bool dbdet_save_edg_seq_process::execute()
   return true;
 }
 
-static vcl_string num2str_frame (int n)
+static std::string num2str_frame (int n)
 {
-	vcl_ostringstream convert;   // stream used for the conversion
+	std::ostringstream convert;   // stream used for the conversion
 	if (n<=9999)
 	{
 		convert << floor(n/1000) << floor(fmod(n, 1000)/100) << floor(fmod(fmod(n, 1000),100)/10) << fmod(fmod(fmod(n, 1000),100), 10);
@@ -128,7 +128,7 @@ static vcl_string num2str_frame (int n)
 		convert << floor(n/10000) << floor(fmod(n, 10000)/1000) << floor(fmod(fmod(n, 10000),1000)/100) << floor(fmod(fmod(fmod(n, 10000),1000), 100)/10) << fmod(fmod(fmod(fmod(n, 10000),1000), 100), 10);
 	}
 	else{
-		vcl_cerr<< "number of frames exceed 99999!" << vcl_endl;
+		std::cerr<< "number of frames exceed 99999!" << std::endl;
 	}
 	return convert.str();
 }

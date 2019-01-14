@@ -254,7 +254,7 @@ public:
   double _compute_tauP_on_I (const double& px, const double& py) const;
 
   //: ====== getInfo ======
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 };
 
 inline double _local_closest_dist (const double& stau,

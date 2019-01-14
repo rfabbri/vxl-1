@@ -11,7 +11,7 @@
 #include <vpgl/algo/vpgl_ba_fixed_k_lsqr.h>
 #include <vnl/algo/vnl_sparse_lm.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 
 #include <dbdet/pro/dbdet_keypoint_storage.h>
@@ -31,7 +31,7 @@ dbkpr_reconstruct_process::dbkpr_reconstruct_process()
       !parameters()->add( "Gradient Tolerence", "-gtol",      (float)1e-6) ||
       !parameters()->add( "Use Adaptive Weights", "-usewgt",  (bool)true) ||
       !parameters()->add( "Verbose",            "-verbose",   (bool)true)) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,7 +51,7 @@ dbkpr_reconstruct_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_reconstruct_process::name()
 {
   return "Reconstruct Keypoints";
@@ -75,18 +75,18 @@ dbkpr_reconstruct_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_reconstruct_process::get_input_type()
+std::vector< std::string > dbkpr_reconstruct_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_reconstruct_process::get_output_type()
+std::vector< std::string > dbkpr_reconstruct_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
@@ -101,11 +101,11 @@ dbkpr_reconstruct_process::execute()
 
 
 // write the output for use my CS224 project
-static void write_cs224(const vcl_string& filename,
-                        vcl_vector<vpgl_perspective_camera<double> >& cameras,
-                        vcl_vector<vgl_point_3d<double> >& world_points)
+static void write_cs224(const std::string& filename,
+                        std::vector<vpgl_perspective_camera<double> >& cameras,
+                        std::vector<vgl_point_3d<double> >& world_points)
 {
-  vcl_ofstream os(filename.c_str());
+  std::ofstream os(filename.c_str());
 
   os << cameras.size() << '\n'
      << "\"/u/imagephysics/data/views/ambient2/\"\n\n";
@@ -116,7 +116,7 @@ static void write_cs224(const vcl_string& filename,
     R = R * vgl_rotation_3d<double>(3.141592653,0,0);
     vgl_point_3d<double> ctr = cameras[i].get_camera_center();
     vnl_vector<double> r = R.as_rodrigues();
-    double fov = 2.0*vcl_min(vcl_atan(K[1][2]/K[1][1]), vcl_atan(K[0][2]/K[0][0])) * 180.0/3.141592653;
+    double fov = 2.0*std::min(std::atan(K[1][2]/K[1][1]), std::atan(K[0][2]/K[0][0])) * 180.0/3.141592653;
     os  << '('<< ctr.x() << ", " << ctr.y() << ", " << ctr.z() << ") ("
         << r[0] << ", " << r[1] << ", " << r[2] <<") "
         << fov << "\n\n";
@@ -137,8 +137,8 @@ dbkpr_reconstruct_process::finish()
 {
 
   // cast the storage classes
-  vcl_vector<dbdet_keypoint_corr3d_sptr> all_corr3d;
-  vcl_vector<vpgl_perspective_camera<double> > cameras;
+  std::vector<dbdet_keypoint_corr3d_sptr> all_corr3d;
+  std::vector<vpgl_perspective_camera<double> > cameras;
   cameras.reserve(input_data_.size());
   for(unsigned int i=0; i<input_data_.size(); ++i){
     dbkpr_corr3d_storage_sptr frame_corr3d;
@@ -148,7 +148,7 @@ dbkpr_reconstruct_process::finish()
 
     const vpgl_perspective_camera<double> *pcam;
     if (frame_corr3d->get_camera()->type_name() != "vpgl_perspective_camera") {
-      vcl_cerr << "Error: requires a perspective  camera" << vcl_endl;
+      std::cerr << "Error: requires a perspective  camera" << std::endl;
       return false;
     }
     pcam = static_cast<const vpgl_perspective_camera<double> *> (frame_corr3d->get_camera());
@@ -166,23 +166,23 @@ dbkpr_reconstruct_process::finish()
   parameters()->get_value( "-maxitr" , maxitr );
   parameters()->get_value( "-usewgt" , usewgt );
 
-  vcl_cerr << "Warning: implementation uses new vpgl and treats use_weight to use_m_estimator\n";
-  vcl_cerr << "Warning: implementation uses new vpgl and has not been thoroughly tested\n";
+  std::cerr << "Warning: implementation uses new vpgl and treats use_weight to use_m_estimator\n";
+  std::cerr << "Warning: implementation uses new vpgl and has not been thoroughly tested\n";
 
   parameters()->get_value( "-verbose" , verbose );
   parameters()->get_value( "-gtol" , gtol );
 
   // collect the subset of points with more than 2 projections
-  vcl_vector<dbdet_keypoint_corr3d_sptr> some_corr3d;
+  std::vector<dbdet_keypoint_corr3d_sptr> some_corr3d;
   for(unsigned int i=0; i<all_corr3d.size(); ++i){
     if(all_corr3d[i]->size() >= (unsigned int)minproj)
       some_corr3d.push_back(new dbdet_keypoint_corr3d(*all_corr3d[i]));
   }
 
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_vector<vgl_point_3d<double> > world_points;
-  vcl_vector<vcl_vector<bool> > mask(cameras.size(),
-                                     vcl_vector<bool>(some_corr3d.size(),false));
+  std::vector<vgl_point_2d<double> > image_points;
+  std::vector<vgl_point_3d<double> > world_points;
+  std::vector<std::vector<bool> > mask(cameras.size(),
+                                     std::vector<bool>(some_corr3d.size(),false));
   for(unsigned int j=0; j<some_corr3d.size(); ++j)
     world_points.push_back(*some_corr3d[j]);
   for(unsigned int i=0; i<cameras.size(); ++i){
@@ -195,16 +195,16 @@ dbkpr_reconstruct_process::finish()
     }
   }
 
-  vcl_cout << "==========================================\n";
-  vcl_cout << "Calibration BEFORE bundle adjustment:\n";
+  std::cout << "==========================================\n";
+  std::cout << "Calibration BEFORE bundle adjustment:\n";
   // This is a customized version of what is already implemented inside the
   // bpgl_bundle_adjust class
-  vcl_vector<vpgl_calibration_matrix<double> > Ks;
+  std::vector<vpgl_calibration_matrix<double> > Ks;
   vnl_vector<double> init_a = vpgl_ba_fixed_k_lsqr::create_param_vector(cameras);
   vnl_vector<double> init_b = vpgl_ba_fixed_k_lsqr::create_param_vector(world_points);
   for(unsigned int i=0; i<cameras.size(); ++i){
     Ks.push_back(cameras[i].get_calibration());
-    vcl_cout << "\nK" << i << ":\n" << Ks.back().get_matrix() << vcl_endl;
+    std::cout << "\nK" << i << ":\n" << Ks.back().get_matrix() << std::endl;
   }
   
   vnl_vector<double> a(init_a), b(init_b), c(0);
@@ -258,7 +258,7 @@ dbkpr_reconstruct_process::finish()
   
   if(usewgt)
   {
-    vcl_vector<double> weights = vcl_vector<double>(lm.get_weights().begin(), lm.get_weights().end());
+    std::vector<double> weights = std::vector<double>(lm.get_weights().begin(), lm.get_weights().end());
 
     const vnl_crs_index& crs = ba_func.residual_indices();
     typedef vnl_crs_index::sparse_vector::iterator sv_itr;
@@ -287,13 +287,13 @@ dbkpr_reconstruct_process::finish()
   }
   avg_dist /= (cameras.size()*(cameras.size()-1))/2.0;
   
-  vcl_vector<int> num_meaningful(some_corr3d.size());
+  std::vector<int> num_meaningful(some_corr3d.size());
   for(unsigned int k=0; k<some_corr3d.size(); ++k){
     num_meaningful[k] = some_corr3d[k]->size();
   }
   for(unsigned int i=0; i<cameras.size(); ++i){
     vgl_point_3d<double> c1 = cameras[i].camera_center();
-    vcl_vector<bool> meaningful(some_corr3d.size(),true);
+    std::vector<bool> meaningful(some_corr3d.size(),true);
     for(unsigned int j=i+1; j<cameras.size(); ++j){
       vgl_point_3d<double> c2 = cameras[j].camera_center();
       if(vgl_distance(c1,c2) < avg_dist*.1){
@@ -309,8 +309,8 @@ dbkpr_reconstruct_process::finish()
   }
   
   // remove all points without at least minproj meaningful projections
-  vcl_vector<dbdet_keypoint_corr3d_sptr> old_corr3d(some_corr3d); some_corr3d.clear(); 
-  vcl_vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
+  std::vector<dbdet_keypoint_corr3d_sptr> old_corr3d(some_corr3d); some_corr3d.clear(); 
+  std::vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
   for(unsigned int j=0; j<old_corr3d.size(); ++j)
     if(num_meaningful[j] >= minproj){
       some_corr3d.push_back(old_corr3d[j]);
@@ -354,10 +354,10 @@ dbkpr_reconstruct_process::finish()
 
   // XXX 
   //
-  vcl_cout << "==========================================\n";
-  vcl_cout << "Calibration after bundle adjustment:\n";
+  std::cout << "==========================================\n";
+  std::cout << "Calibration after bundle adjustment:\n";
   for (unsigned i=0; i < cameras.size(); ++i) {
-    vcl_cout << "\nK" << i << ":\n" << cameras[i].get_calibration().get_matrix() << vcl_endl;
+    std::cout << "\nK" << i << ":\n" << cameras[i].get_calibration().get_matrix() << std::endl;
   }
 
 

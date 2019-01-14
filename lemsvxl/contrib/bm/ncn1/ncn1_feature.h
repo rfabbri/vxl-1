@@ -7,9 +7,9 @@
 #include<vbl/vbl_ref_count.h>
 //#include<vbl/vbl_array_1d.h>
 
-#include<vcl_map.h>
-#include<vcl_string.h>
-#include<vcl_vector.h>
+#include<map>
+#include<string>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 #include<vgl/vgl_point_3d.h>
@@ -27,15 +27,15 @@ namespace feature_typedefs
 {
     typedef vnl_vector<vxl_byte> intensity_vector_type;
 
-    typedef vcl_map< vgl_point_2d<unsigned>, intensity_vector_type, ncn1_vgl_point_2d_less_than > feature_vector_type;
+    typedef std::map< vgl_point_2d<unsigned>, intensity_vector_type, ncn1_vgl_point_2d_less_than > feature_vector_type;
 
-    typedef vcl_map< unsigned, feature_vector_type > feature_map_type;
+    typedef std::map< unsigned, feature_vector_type > feature_map_type;
     
     //maps a target pixel to a 2d point in the reduced feature space
-    typedef vcl_map< vgl_point_2d<unsigned>, vgl_point_2d<double>, ncn1_vgl_point_2d_less_than > target_reduced_feature_map_2d_type;
+    typedef std::map< vgl_point_2d<unsigned>, vgl_point_2d<double>, ncn1_vgl_point_2d_less_than > target_reduced_feature_map_2d_type;
 
     //maps a set of target/feature point pairs to a frame number
-    typedef vcl_map< unsigned, target_reduced_feature_map_2d_type > frame_reduced_feature_map_2d_type;
+    typedef std::map< unsigned, target_reduced_feature_map_2d_type > frame_reduced_feature_map_2d_type;
 
 }
 
@@ -74,9 +74,9 @@ public:
     void set_is_groud_truth( bool& gt ) { is_ground_truth_ = gt; }
 
     //save/load methods
-    void save_feature_dat( vcl_string const& filename );
+    void save_feature_dat( std::string const& filename );
 
-    void save_2d_pts_dat( vcl_string const& filename );
+    void save_2d_pts_dat( std::string const& filename );
     
 private:
     feature_map_type feature_map_;

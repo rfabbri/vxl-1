@@ -14,7 +14,7 @@ class dbmsh_vis_node;
 class SoDragger;
 class SoSeparator;
 
-#include <vcl_vector.h>
+#include <vector>
 #include <Inventor/SbColor.h>
 
 enum Action {
@@ -30,8 +30,8 @@ private:
   static SceneEventHandler* instance_;
   
   Action _action;
-  vcl_vector<dbmsh_vis_shape*> _highlightedVector;
-  vcl_vector<dbmsh_vis_node*> _additionVector;
+  std::vector<dbmsh_vis_shape*> _highlightedVector;
+  std::vector<dbmsh_vis_node*> _additionVector;
 
   int _highlightColor;
 

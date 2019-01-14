@@ -14,11 +14,11 @@ class mw_dist {
   public:
 
   static double 
-  dir_hausdorff_distance(vcl_vector<bmcsd_vector_3d> &c1, vcl_vector<bmcsd_vector_3d> &c2);
+  dir_hausdorff_distance(std::vector<bmcsd_vector_3d> &c1, std::vector<bmcsd_vector_3d> &c2);
 
   // (squared) hausdorff distance
   static double
-  hdist(vcl_vector<bmcsd_vector_3d> &c1, vcl_vector<bmcsd_vector_3d> &c2);
+  hdist(std::vector<bmcsd_vector_3d> &c1, std::vector<bmcsd_vector_3d> &c2);
 };
 
 #endif // mw_dist_h

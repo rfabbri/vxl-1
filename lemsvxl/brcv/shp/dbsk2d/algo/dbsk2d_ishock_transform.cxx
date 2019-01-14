@@ -164,12 +164,12 @@ void dbsk2d_ishock_transform::local_shock_compute()
 {
     ishock_detector_.compile_the_active_selm_list();
 
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator bit;
+    std::map<unsigned int,dbsk2d_ishock_belm*>::iterator bit;
     for ( bit = interacting_bnd_elements_.begin(); 
           bit != interacting_bnd_elements_.end(); ++bit)
     {
 
-        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator dit=bit;
+        std::map<unsigned int,dbsk2d_ishock_belm*>::iterator dit=bit;
         ++dit;
 
         for ( ; dit != interacting_bnd_elements_.end(); ++dit)
@@ -199,15 +199,15 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
         ishock_detector_.clear();
         this->clear();
 
-        vcl_vector<dbsk2d_ishock_belm*> belm_list=boundary_->belm_list();
+        std::vector<dbsk2d_ishock_belm*> belm_list=boundary_->belm_list();
 
         vnl_random mz_random;
         mz_random.reseed((unsigned long)time(NULL));
         float noise_radius=0.002f;
 
-        vcl_map<int,bool> visibility_map;
+        std::map<int,bool> visibility_map;
 
-        vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
+        std::vector<dbsk2d_ishock_belm*>::iterator bit;
         for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
         {
             if ( (*bit)->is_a_point() && (*bit)->is_a_GUIelm())
@@ -235,13 +235,13 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
         ishock_detector_.initialize_contacts_and_A3s_recompute();
 
-        vcl_vector< vcl_vector<dbsk2d_ishock_belm*> > gaps=
+        std::vector< std::vector<dbsk2d_ishock_belm*> > gaps=
             boundary_->gaps();
 
         for ( unsigned int i=0; i < gaps.size() ; ++i)
         {
-            vcl_vector< dbsk2d_ishock_belm*>  temp_euler_spiral = gaps[i];
-            vcl_vector< dbsk2d_ishock_belm*>  euler_spiral;
+            std::vector< dbsk2d_ishock_belm*>  temp_euler_spiral = gaps[i];
+            std::vector< dbsk2d_ishock_belm*>  euler_spiral;
             for ( unsigned int e=0; e < temp_euler_spiral.size() ; e=e+2 )
             {
                 if ( temp_euler_spiral[e]->is_a_GUIelm())
@@ -267,7 +267,7 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
             if ( (*bit)->is_a_GUIelm() )
             {
-                vcl_vector<dbsk2d_ishock_belm*>::iterator dit=bit;
+                std::vector<dbsk2d_ishock_belm*>::iterator dit=bit;
                 ++dit;
 
                 for ( ; dit != belm_list.end(); ++dit)
@@ -297,11 +297,11 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
         if ( !valid_shock_computation )
         {
             add_noise=true;
-            vcl_cout<<"Rerun with Noise"<<vcl_endl;
+            std::cout<<"Rerun with Noise"<<std::endl;
         }
         else
         {
-            vcl_cout<<"Valid shock graph: "<<valid_shock_computation<<vcl_endl;
+            std::cout<<"Valid shock graph: "<<valid_shock_computation<<std::endl;
         }
 
     }while( valid_shock_computation == false);
@@ -313,7 +313,7 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 void dbsk2d_ishock_transform::delete_shock_vertices()
 {
 
-    vcl_map<unsigned int,dbsk2d_ishock_node*>::iterator it;
+    std::map<unsigned int,dbsk2d_ishock_node*>::iterator it;
     while ( outer_wavefront_.size() > 0 )
     {
         it = outer_wavefront_.begin();
@@ -388,14 +388,14 @@ void dbsk2d_ishock_transform::delete_shock_vertices()
     }
 }
 
-void dbsk2d_ishock_transform::write_boundary(vcl_string filename)
+void dbsk2d_ishock_transform::write_boundary(std::string filename)
 {
 
     // Grap all boundary elements
-    vcl_vector<dbsk2d_ishock_belm* > belm_list = boundary_->belm_list();
+    std::vector<dbsk2d_ishock_belm* > belm_list = boundary_->belm_list();
     
-    vcl_map<unsigned int,vcl_string> lines_visited;
-    vcl_vector<vsol_spatial_object_2d_sptr> line_objects;
+    std::map<unsigned int,std::string> lines_visited;
+    std::vector<vsol_spatial_object_2d_sptr> line_objects;
     for ( unsigned int i=0; i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_line() )
@@ -425,10 +425,10 @@ void dbsk2d_ishock_transform::write_boundary(vcl_string filename)
 }
 
 
-void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
+void dbsk2d_ishock_transform::write_shock_boundary(std::string filename)
 {
 
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+    std::vector<vsol_spatial_object_2d_sptr> vsol_list;
         
     //draw the edges first
     for ( dbsk2d_ishock_graph::edge_iterator curE = 
@@ -437,7 +437,7 @@ void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
           curE++ ) 
     {
         dbsk2d_ishock_edge* selm = (*curE);
-        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        std::vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
         
         if ( selm->is_a_contact() )
         {
@@ -464,11 +464,11 @@ void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
 
 }
 
-void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
+void dbsk2d_ishock_transform::write_shock_classification(std::string filename)
 {
 
-    vcl_ofstream stream(filename.c_str());
-    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+    std::ofstream stream(filename.c_str());
+    std::vector<vsol_spatial_object_2d_sptr> vsol_list;
         
     //draw the edges first
     for ( dbsk2d_ishock_graph::edge_iterator curE = 
@@ -477,7 +477,7 @@ void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
           curE++ ) 
     {
         dbsk2d_ishock_edge* selm = (*curE);
-        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        std::vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
         
         if ( selm->is_a_contact() ) 
         {
@@ -486,7 +486,7 @@ void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
 
         if (selm->type() == dbsk2d_ishock_elm::LINELINE) 
         {
-            stream<<"4 0"<<vcl_endl;
+            stream<<"4 0"<<std::endl;
             continue;
         }
         
@@ -516,15 +516,15 @@ void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
 
         if ( left_ept && right_ept )
         {
-            stream<<"1 1"<<vcl_endl;
+            stream<<"1 1"<<std::endl;
         }
         else if ( left_ept || right_ept )
         {
-            stream<<"2 1"<<vcl_endl;
+            stream<<"2 1"<<std::endl;
         }
         else
         {
-            stream<<"4 0"<<vcl_endl;
+            stream<<"4 0"<<std::endl;
 
         }
        
@@ -538,17 +538,17 @@ void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
 }
 
 void dbsk2d_ishock_transform::write_polygons(
-    vcl_string mvf_string,
-    vcl_vector<vgl_polygon<double> >& polys)
+    std::string mvf_string,
+    std::vector<vgl_polygon<double> >& polys)
 {
-    vcl_ofstream file_stream_mvf_frags(mvf_string.c_str());
+    std::ofstream file_stream_mvf_frags(mvf_string.c_str());
 
     for ( unsigned int i=0; i < polys.size() ; ++i)
     {
 
         vgl_polygon<double> region=polys[i];
 
-        file_stream_mvf_frags<<region.num_vertices()<<vcl_endl;
+        file_stream_mvf_frags<<region.num_vertices()<<std::endl;
         for (unsigned int s = 0; s < region.num_sheets(); ++s)
         {
             for (unsigned int p = 0; p < region[s].size(); ++p)
@@ -559,7 +559,7 @@ void dbsk2d_ishock_transform::write_polygons(
             }
         }
      
-        file_stream_mvf_frags<<vcl_endl;
+        file_stream_mvf_frags<<std::endl;
 
     }
 
@@ -568,15 +568,15 @@ void dbsk2d_ishock_transform::write_polygons(
 }
 
 void dbsk2d_ishock_transform::write_fragments(
-    vcl_string prefix,
-    vcl_vector<vgl_polygon<double> >& polys)
+    std::string prefix,
+    std::vector<vgl_polygon<double> >& polys)
 {
 
-    vcl_string regular_afrags=prefix + "_regular_atomic_fragments.txt";
-    vcl_string degen_afrags=prefix + "_degen_atomic_fragments.txt";
+    std::string regular_afrags=prefix + "_regular_atomic_fragments.txt";
+    std::string degen_afrags=prefix + "_degen_atomic_fragments.txt";
 
-    vcl_ofstream file_stream_regular_afrags(regular_afrags.c_str());
-    vcl_ofstream file_stream_degen_afrags(degen_afrags.c_str());
+    std::ofstream file_stream_regular_afrags(regular_afrags.c_str());
+    std::ofstream file_stream_degen_afrags(degen_afrags.c_str());
 
     //draw the edges first
     for ( dbsk2d_ishock_graph::edge_iterator curE = 
@@ -604,7 +604,7 @@ void dbsk2d_ishock_transform::write_fragments(
         dbsk2d_ishock_node* target_node=edge->cSNode();
         
         // create polygon
-        vcl_vector<vgl_point_2d<double> > temp_poly;
+        std::vector<vgl_point_2d<double> > temp_poly;
         
         //Line/Line
         if ( edge->lBElement()->is_a_line() && 
@@ -670,13 +670,13 @@ void dbsk2d_ishock_transform::write_fragments(
         
         if ( endpoint )
         {
-            file_stream_degen_afrags<<temp_poly.size()<<vcl_endl;
+            file_stream_degen_afrags<<temp_poly.size()<<std::endl;
             for ( unsigned int k=0; k < temp_poly.size() ; ++k)
             {
                 vgl_point_2d<double> pt=temp_poly[k];
                 if ( k == temp_poly.size() - 1 )
                 {
-                    file_stream_degen_afrags<<pt.x()<<" "<<pt.y()<<vcl_endl;
+                    file_stream_degen_afrags<<pt.x()<<" "<<pt.y()<<std::endl;
                 }
                 else
                 {
@@ -688,13 +688,13 @@ void dbsk2d_ishock_transform::write_fragments(
         }
         else
         {
-            file_stream_regular_afrags<<temp_poly.size()<<vcl_endl;
+            file_stream_regular_afrags<<temp_poly.size()<<std::endl;
             for ( unsigned int k=0; k < temp_poly.size() ; ++k)
             {
                 vgl_point_2d<double> pt=temp_poly[k];
                 if ( k == temp_poly.size() - 1 )
                 {
-                    file_stream_regular_afrags<<pt.x()<<" "<<pt.y()<<vcl_endl;
+                    file_stream_regular_afrags<<pt.x()<<" "<<pt.y()<<std::endl;
                 }
                 else
                 {
@@ -708,15 +708,15 @@ void dbsk2d_ishock_transform::write_fragments(
     file_stream_regular_afrags.close();
 
     // Write out medial visual fragments
-    vcl_string mvf_string=prefix+"_mvf_fragments.txt";
-    vcl_ofstream file_stream_mvf_frags(mvf_string.c_str());
+    std::string mvf_string=prefix+"_mvf_fragments.txt";
+    std::ofstream file_stream_mvf_frags(mvf_string.c_str());
 
     for ( unsigned int i=0; i < polys.size() ; ++i)
     {
 
         vgl_polygon<double> region=polys[i];
 
-        file_stream_mvf_frags<<region.num_vertices()<<vcl_endl;
+        file_stream_mvf_frags<<region.num_vertices()<<std::endl;
         for (unsigned int s = 0; s < region.num_sheets(); ++s)
         {
             for (unsigned int p = 0; p < region[s].size(); ++p)
@@ -727,7 +727,7 @@ void dbsk2d_ishock_transform::write_fragments(
             }
         }
      
-        file_stream_mvf_frags<<vcl_endl;
+        file_stream_mvf_frags<<std::endl;
 
     }
 
@@ -736,8 +736,8 @@ void dbsk2d_ishock_transform::write_fragments(
 }
 
 void dbsk2d_ishock_transform::write_state(
-    vcl_string filename,
-    vcl_vector<vgl_polygon<double> >& polys,
+    std::string filename,
+    std::vector<vgl_polygon<double> >& polys,
     bool show_shock)
 {
 
@@ -777,10 +777,10 @@ void dbsk2d_ishock_transform::write_state(
     }
 
     // Grap all boundary elements
-    vcl_vector<dbsk2d_ishock_belm* > belm_list = boundary_->belm_list();
+    std::vector<dbsk2d_ishock_belm* > belm_list = boundary_->belm_list();
     
-    vcl_map<unsigned int,vcl_string> lines_visited;
-    vcl_vector<vsol_spatial_object_2d_sptr> line_objects;
+    std::map<unsigned int,std::string> lines_visited;
+    std::vector<vsol_spatial_object_2d_sptr> line_objects;
     for ( unsigned int i=0; i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_line() )
@@ -826,7 +826,7 @@ void dbsk2d_ishock_transform::write_state(
 	      curE++ ) 
 	{
 	    dbsk2d_ishock_edge* selm = (*curE);
-	    vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+	    std::vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
 
 	    if ( selm->is_a_contact() )
 	    {
@@ -973,11 +973,11 @@ void dbsk2d_ishock_transform::form_contact_shocks(
 }
 
 double dbsk2d_ishock_transform::distance_from_ess(
-    vcl_vector<dbsk2d_ishock_belm*>& belm_list,
+    std::vector<dbsk2d_ishock_belm*>& belm_list,
     vgl_point_2d<double> test_point)
 {
 
-    vcl_vector<double> distances;
+    std::vector<double> distances;
 
     // Grab distance to poly line
     // We have to also account for distances to the individual points
@@ -993,7 +993,7 @@ double dbsk2d_ishock_transform::distance_from_ess(
         distances.push_back(vgl_distance(line_seg,test_point));
     }
 
-    return *vcl_min_element(distances.begin(),distances.end());
+    return *std::min_element(distances.begin(),distances.end());
 
 
 }

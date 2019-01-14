@@ -2,7 +2,7 @@
 #define SPLR_EXPLICIT_SPLAT_COLLECTION_TXX_
 
 #include <splr/splr_explicit_splat_collection.h>
-#include <vcl_utility.h>
+#include <utility>
 #include <biob/biob_worldpt_index.h>
 #include <splr/splr_map.hxx>
 #include <vsl/vsl_pair_io.hxx>
@@ -56,7 +56,7 @@ template<class T, class F, class scan_class, class filter_2d_class, class filter
 void splr_explicit_splat_collection<T,F, scan_class, filter_2d_class, filter_3d_class, camera_class>::populate(orbit_index t){
   for (unsigned i = 0; i < roster_->num_points(); ++i){
    if (i % 100 == 0){
-      vcl_cout << "(splr_explicit_splat_collection.hxx) populating: point number " << i << "\n";
+      std::cout << "(splr_explicit_splat_collection.hxx) populating: point number " << i << "\n";
    }
    populate(t, biob_worldpt_index(i));
   }
@@ -70,7 +70,7 @@ const filter_2d_class & splr_explicit_splat_collection<T,F, scan_class, filter_2
   return map_.lookup(lookup_pair);
 }                                            
 
-typedef vcl_pair<orbit_index, biob_worldpt_index> splr_key_type;
+typedef std::pair<orbit_index, biob_worldpt_index> splr_key_type;
 
 template<class T, class F, class scan_class, class filter_2d_class, class filter_3d_class, class camera_class>
 biob_worldpt_index_enumerator_sptr splr_explicit_splat_collection<T,F, scan_class, filter_2d_class, filter_3d_class, camera_class>::enumerator(biob_subset_worldpt_roster::const_which_points_t & which_points){
@@ -79,7 +79,7 @@ biob_worldpt_index_enumerator_sptr splr_explicit_splat_collection<T,F, scan_clas
 
 template<class T, class F, class scan_class, class filter_2d_class, class filter_3d_class, class camera_class>
 biob_worldpt_index_enumerator_sptr splr_explicit_splat_collection<T,F, scan_class, filter_2d_class, filter_3d_class, camera_class>::enumerator(){
-  vcl_cerr << "(splr_explicit_splat_collection.hxx) enumerate() with no arg not implemented.\n";
+  std::cerr << "(splr_explicit_splat_collection.hxx) enumerate() with no arg not implemented.\n";
   assert(false);
   return 0;
 }

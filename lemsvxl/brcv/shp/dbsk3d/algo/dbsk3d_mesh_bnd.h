@@ -5,7 +5,7 @@
 #ifndef _dbsk3d_mesh_bnd_h_
 #define _dbsk3d_mesh_bnd_h_
 
-#include <vcl_set.h>
+#include <set>
 #include <dbmsh3d/algo/dbmsh3d_mesh_bnd.h>
 #include <dbsk3d/dbsk3d_fs_face.h>
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -13,7 +13,7 @@
 class dbsk3d_bnd_chain : public dbmsh3d_bnd_chain
 {
 protected:
-  vcl_set<dbsk3d_fs_face*>  P_set_;
+  std::set<dbsk3d_fs_face*>  P_set_;
 
 public:
   //=========== Constructor & Destructor ===========

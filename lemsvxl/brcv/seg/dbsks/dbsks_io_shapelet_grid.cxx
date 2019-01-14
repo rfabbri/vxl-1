@@ -4,7 +4,7 @@
 // \file
 
 #include "dbsks_io_shapelet_grid.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/vnl_math.h>
@@ -125,9 +125,9 @@ void vsl_b_read(vsl_b_istream & is, dbsks_shapelet_grid_params& params)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
       << "         Unknown version number " << version << "\n";
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 
   return;
@@ -304,9 +304,9 @@ void vsl_b_read(vsl_b_istream & is, dbsks_shapelet_grid& grid)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
       << "         Unknown version number " << version << "\n";
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 
   return;

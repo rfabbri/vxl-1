@@ -18,10 +18,10 @@
 #ifndef dbasn_node_h_
 #define dbasn_node_h_
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <utility>
+#include <map>
+#include <cassert>
 
 #include <vgl/vgl_point_3d.h>
 
@@ -33,7 +33,7 @@ protected:
   float         cost_;            // node cost
   
   //: To improve efficiency. Assume the connectivity is sparse.
-  vcl_vector<int> conn_nids_;   
+  std::vector<int> conn_nids_;   
 
 public:
   //####### Constructor/Destructor #######
@@ -67,7 +67,7 @@ public:
   int n_conn_nids () const {
     return conn_nids_.size();
   }
-  vcl_vector<int>& conn_nids() {
+  std::vector<int>& conn_nids() {
     return conn_nids_;
   }
   int conn_nids (const unsigned int i) const {

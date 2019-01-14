@@ -11,7 +11,7 @@
 
 #include <string>
 #include <sstream>
-#include <vcl_cmath.h>
+#include <cmath>
 
 class SubPixelOptionsBase
   {
@@ -77,7 +77,7 @@ class SubPixelOptionsBase
         
         void setFilterDimensions()
           {
-            _filterRows              = 2*vcl_ceil((_filterSizeFactor*(vnl_math_max(_tangentialSigma, _normalSigma))))+1;
+            _filterRows              = 2*std::ceil((_filterSizeFactor*(vnl_math_max(_tangentialSigma, _normalSigma))))+1;
             _filterCols              = _filterRows;
            }
 
@@ -173,17 +173,17 @@ class SubPixelOptionsBase
 
         
         
-        virtual vcl_string printOptions(vcl_string str="") const
+        virtual std::string printOptions(std::string str="") const
           {
-            vcl_ostringstream ostrm;
-            ostrm<<str<<" Base-Options :"<<vcl_endl;
-            ostrm<<str<<" \tStep-Size                          : "<<_stepSize<<vcl_endl;
-            ostrm<<str<<" \tTangential-Sigma                   : "<<_tangentialSigma<<vcl_endl;
-            ostrm<<str<<" \tNormal-Sigma                       : "<<_normalSigma<<vcl_endl;
-            ostrm<<str<<" \tFilter-Rows                        : "<<_filterRows<<vcl_endl;
-            ostrm<<str<<" \tFilter-Cols                        : "<<_filterCols<<vcl_endl;
-            ostrm<<str<<" \tFilter-Size-Factor                 : "<<_filterSizeFactor<<vcl_endl;
-            ostrm<<str<<" \tPixel Directions (Half)            : "<<_nDirs<<vcl_endl;
+            std::ostringstream ostrm;
+            ostrm<<str<<" Base-Options :"<<std::endl;
+            ostrm<<str<<" \tStep-Size                          : "<<_stepSize<<std::endl;
+            ostrm<<str<<" \tTangential-Sigma                   : "<<_tangentialSigma<<std::endl;
+            ostrm<<str<<" \tNormal-Sigma                       : "<<_normalSigma<<std::endl;
+            ostrm<<str<<" \tFilter-Rows                        : "<<_filterRows<<std::endl;
+            ostrm<<str<<" \tFilter-Cols                        : "<<_filterCols<<std::endl;
+            ostrm<<str<<" \tFilter-Size-Factor                 : "<<_filterSizeFactor<<std::endl;
+            ostrm<<str<<" \tPixel Directions (Half)            : "<<_nDirs<<std::endl;
             ostrm<<str<<" \tThreshold                          : "<<_threshold;
            
 

@@ -11,7 +11,7 @@
 #include <dbnl/algo/dbnl_matrix_multiply.h>
 #include <vnl/vnl_trace.h>
 
-dbrl_thin_plate_spline_transformation::dbrl_thin_plate_spline_transformation(vnl_matrix<double> A,vnl_matrix<double> warp_coeffs, vnl_matrix<double> tps_kernel, vcl_vector<dbrl_feature_sptr> fs)
+dbrl_thin_plate_spline_transformation::dbrl_thin_plate_spline_transformation(vnl_matrix<double> A,vnl_matrix<double> warp_coeffs, vnl_matrix<double> tps_kernel, std::vector<dbrl_feature_sptr> fs)
             :A_(A),tps_kernel_(tps_kernel),warp_coeffs_(warp_coeffs),fs_(fs)
 {
     tps_warp_=tps_kernel_*warp_coeffs_;
@@ -104,15 +104,15 @@ dbrl_thin_plate_spline_transformation::map_location(vnl_vector<double>  loc, int
             if(d2<1e-10)
                 d=0;
             else
-                d=d2*vcl_log(d2)/2;
-                //d=vcl_exp(-d2/(2));
+                d=d2*std::log(d2)/2;
+                //d=std::exp(-d2/(2));
 
 
             xtps+=d*warp_coeffs_(i,1);
             ytps+=d*warp_coeffs_(i,2);
         }
 
-        //vcl_cout<<vnl_transpose(A_)*homgpt<<" -> "<<tps_kernel_.get_row(index)*warp_coeffs_<<"\n";
+        //std::cout<<vnl_transpose(A_)*homgpt<<" -> "<<tps_kernel_.get_row(index)*warp_coeffs_<<"\n";
         vnl_vector<double> tononhomgpt(loc.size(),1.0);
         tononhomgpt[0]=tohomgpt[1]+xtps;
         tononhomgpt[1]=tohomgpt[2]+ytps;
@@ -122,7 +122,7 @@ dbrl_thin_plate_spline_transformation::map_location(vnl_vector<double>  loc, int
         return tononhomgpt;
     }
 
-void dbrl_thin_plate_spline_transformation::print_transformation(vcl_ostream &os)
+void dbrl_thin_plate_spline_transformation::print_transformation(std::ostream &os)
     {
     os<<"Affine Transformation is : \n"<<A_;
     
@@ -137,7 +137,7 @@ void dbrl_thin_plate_spline_transformation::print_transformation(vcl_ostream &os
     }
 
 
-void dbrl_thin_plate_spline_transformation::build_K(vcl_vector<dbrl_feature_sptr> &x ) 
+void dbrl_thin_plate_spline_transformation::build_K(std::vector<dbrl_feature_sptr> &x ) 
     {
 
 
@@ -171,7 +171,7 @@ void dbrl_thin_plate_spline_transformation::build_K(vcl_vector<dbrl_feature_sptr
                     if(d2<1e-10)
                         d=0;
                     else
-                        d=d2*vcl_log(d2)/2;
+                        d=d2*std::log(d2)/2;
                     tps_kernel_(i,j)=d;
                     }
                 }
@@ -212,7 +212,7 @@ void dbrl_thin_plate_spline_transformation::b_read(vsl_b_istream &is)
             
             break;
         default:
-            vcl_cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -220,7 +220,7 @@ short dbrl_thin_plate_spline_transformation::version() const
     {
     return 1;
     }
-void dbrl_thin_plate_spline_transformation::print_summary(vcl_ostream &os) const
+void dbrl_thin_plate_spline_transformation::print_summary(std::ostream &os) const
 {
   
 }

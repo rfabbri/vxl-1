@@ -1,6 +1,6 @@
 //: This is dbmsh3d/algo/tests/test_pt_mesh_dist.cxx
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <testlib/testlib_test.h>
 
 #include <bgld/algo/bgld_distance.h>
@@ -116,7 +116,7 @@ MAIN( test_pt_mesh_dist )
 {
   START ("Point-to-Mesh Distance in R3");
 
-  vcl_cout << "Test point to mesh distance in R3:" << vcl_endl;
+  std::cout << "Test point to mesh distance in R3:" << std::endl;
   vgl_point_3d<double> P (0.3, 0.3, -0.1);
 
   dbmsh3d_mesh* M = build_tetrahedron ();
@@ -135,8 +135,8 @@ MAIN( test_pt_mesh_dist )
 
   dbmsh3d_mesh* M2 = build_tetrahedron2 ();
   //vector to store the closest distance and id for each vertex of M1.
-  vcl_vector<double> min_dists;
-  vcl_vector<vgl_point_3d<double> > closest_pts;
+  std::vector<double> min_dists;
+  std::vector<vgl_point_3d<double> > closest_pts;
 
   //Test mesh-mesh distance.
   top_n = 1;

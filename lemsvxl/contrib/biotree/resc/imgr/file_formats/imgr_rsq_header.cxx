@@ -1,6 +1,6 @@
 #include "imgr_rsq_header.h"
 #include <vil/vil_stream_read.h>
-#include <vcl_cstring.h>
+#include <cstring>
 
 const unsigned rsq_magic_len = 16;
 
@@ -34,7 +34,7 @@ imgr_rsq_header::imgr_rsq_header(vil_stream * fs)
       // read magic words
       if (fs->read(check_, rsq_magic_len) == rsq_magic_len)
       {
-        if(vcl_strncmp( check_, rsq_magic, rsq_magic_len) == 0)
+        if(std::strncmp( check_, rsq_magic, rsq_magic_len) == 0)
         {
           is_valid_ = true;
 

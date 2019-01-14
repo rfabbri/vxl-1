@@ -12,7 +12,7 @@
 
 #include "mpi_compute_ishock_processor.h"
 #include <dborl/algo/mpi/dborl_cluster.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include <vul/vul_timer.h>
 
@@ -30,16 +30,16 @@ int main(int argc, char *argv[]) {
     if (!cluster.mpi_initialize(argc, argv))  //-> in this method the command line arguments are broadcasted to all others by the lead processor
       throw dborl_cluster_exception (dborl_cluster_exception::MPIError, "MPI initialization failed", 0, 0);
 
-    vcl_vector<mpi_compute_ishock_processor_input> things; 
+    std::vector<mpi_compute_ishock_processor_input> things; 
     e.set_total_processors(cluster.total_processors());
-    vcl_cout << "Total # of processors = " << cluster.total_processors() << "\n";
+    std::cout << "Total # of processors = " << cluster.total_processors() << "\n";
 
     e.set_processor_name(cluster.processor_name());
-    vcl_cout << "Processor name = " << cluster.processor_name() << "\n";
+    std::cout << "Processor name = " << cluster.processor_name() << "\n";
 
     if (!e.initialize(things)) 
     {
-      vcl_cout << "Problems during initialization! Exiting!\n";
+      std::cout << "Problems during initialization! Exiting!\n";
       throw dborl_cluster_exception (dborl_cluster_exception::MPIError, "data initialization failed", 0, 0);
     }
 
@@ -58,10 +58,10 @@ int main(int argc, char *argv[]) {
         // Error thrown by dborl_cluster class
         if (e.get_error() != e.Incomplete)
         {
-            vcl_cout << "dborl_cluster_exception: " << e.get_message()
+            std::cout << "dborl_cluster_exception: " << e.get_message()
             << " err: " << e.get_error() << " mpi: " 
             << e.get_MPI_error() << " sys: " 
-            << e.get_syserror() << vcl_endl;
+            << e.get_syserror() << std::endl;
 
             return_status = e.get_error();
         }

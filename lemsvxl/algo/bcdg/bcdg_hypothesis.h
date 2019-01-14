@@ -12,7 +12,7 @@
 #include "bcdg_hypothesis_sptr.h"
 #include "bcdg_hypothel.h"
 
-#include <vcl_iostream.h> // temp
+#include <iostream> // temp
 
 //: A 3D explanation for a set of 2D curves (one in each frame)
 class bcdg_hypothesis : public vbl_ref_count {
@@ -20,7 +20,7 @@ public:
   bcdg_hypothesis() : _first(NULL) {}
   //: Add a hypothel to the front of the chain
   void prepend_hypothesis(bcdg_hypothel_sptr h) {
-//    vcl_cerr << "Prepending hypo!\n";
+//    std::cerr << "Prepending hypo!\n";
     h->set_next(_first);
     _first = h;
     // Cost is basically an average of the cost of each hypothel.

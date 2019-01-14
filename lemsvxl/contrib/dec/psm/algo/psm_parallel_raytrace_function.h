@@ -1,7 +1,7 @@
 #ifndef psm_parallel_raytrace_function_h_
 #define psm_parallel_raytrace_function_h_
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <psm/psm_apm_traits.h>
 #include <psm/psm_aux_traits.h>
@@ -48,7 +48,7 @@ public:
 
     psm_aux_scene<AUX_T> *aux_scene = dynamic_cast<psm_aux_scene<AUX_T>*>(aux_scene_ptr_.ptr());
     if (!aux_scene) {
-      vcl_cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << vcl_endl;
+      std::cerr << "error: psm_parallel_raytrace_function: failed to cast aux_scene to correct type." << std::endl;
       return false;
     }
 
@@ -58,13 +58,13 @@ public:
         continue_trace = false;
         break;
       }
-      vcl_vector<vgl_point_3d<int> > vis_blocks;
+      std::vector<vgl_point_3d<int> > vis_blocks;
       block_vis_it.current_blocks(vis_blocks);
       // traverse each visible block one at a time
-      vcl_vector<vgl_point_3d<int> >::iterator block_it = vis_blocks.begin();
+      std::vector<vgl_point_3d<int> >::iterator block_it = vis_blocks.begin();
       for (; block_it != vis_blocks.end(); ++block_it) {
 
-        if (debug_lvl_ > 0) vcl_cout << "processing block at index (" << block_it->x() << ", " << block_it->y() << ", " << block_it->z() << ")" << vcl_endl;
+        if (debug_lvl_ > 0) std::cout << "processing block at index (" << block_it->x() << ", " << block_it->y() << ", " << block_it->z() << ")" << std::endl;
         // make sure block projects to inside of image
         vbl_bounding_box<double,3> block_bb = scene_.block_bounding_box(*block_it);
         if (!cube_visible(block_bb, cam_, 0,0, img_ni_, img_nj_, false)) {
@@ -74,30 +74,30 @@ public:
         hsds_fd_tree<psm_sample<APM>,3> &block = scene_.get_block(*block_it);
         hsds_fd_tree<typename psm_aux_traits<AUX_T>::sample_datatype,3> &aux_block = aux_scene->get_block(*block_it);
 
-        if (debug_lvl_ > 0) vcl_cout << "building visibility graph for block..";
+        if (debug_lvl_ > 0) std::cout << "building visibility graph for block..";
         psm_cell_visibility_iterator<APM> cell_vis_it(block, cam_, img_ni_, img_nj_, full_vis_needed_, reverse_traversal_);
-        if (debug_lvl_ > 0) vcl_cout << "..done" << vcl_endl;
+        if (debug_lvl_ > 0) std::cout << "..done" << std::endl;
 
         while(cell_vis_it.next()) {
-          vcl_vector<hsds_fd_tree_node_index<3> > to_process_indices;
+          std::vector<hsds_fd_tree_node_index<3> > to_process_indices;
           cell_vis_it.current_cells(to_process_indices);
           // do the processing 
-          if (debug_lvl_ > 0) vcl_cout << "+";
+          if (debug_lvl_ > 0) std::cout << "+";
             continue_trace = step_functor.step_cells(*block_it,block,aux_block,to_process_indices);
 
           if (!continue_trace) {
             break;
           }
-          if (debug_lvl_ > 0) vcl_cout << "-";
+          if (debug_lvl_ > 0) std::cout << "-";
         }
-        if (debug_lvl_ > 0) vcl_cout << "done" << vcl_endl;
+        if (debug_lvl_ > 0) std::cout << "done" << std::endl;
         if (!continue_trace) {
           // stop raytrace. no need to search for next block.
           break;
         }
       }
     }
-    if (debug_lvl_ > 0) vcl_cout << "done with all blocks. " << vcl_endl;
+    if (debug_lvl_ > 0) std::cout << "done with all blocks. " << std::endl;
 
     step_functor.finish(scene_, *aux_scene);
 

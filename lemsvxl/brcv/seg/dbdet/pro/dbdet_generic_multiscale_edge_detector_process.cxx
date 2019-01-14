@@ -12,8 +12,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -40,7 +40,7 @@
 //: Constructor
 dbdet_generic_multiscale_edge_detector_process::dbdet_generic_multiscale_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
@@ -57,7 +57,7 @@ dbdet_generic_multiscale_edge_detector_process::dbdet_generic_multiscale_edge_de
       !parameters()->add( "Output reliable Iuu map"  , "-output_rel_Iuu" , false )||
       !parameters()->add( "Output reliable Iu map"  , "-output_rel_Iu" , false )) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -77,7 +77,7 @@ dbdet_generic_multiscale_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_generic_multiscale_edge_detector_process::name()
 {
   return "Generic Multiscale Edge Detector";
@@ -101,23 +101,23 @@ dbdet_generic_multiscale_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_generic_multiscale_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_generic_multiscale_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_generic_multiscale_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_generic_multiscale_edge_detector_process::get_output_type()
 {
   bool output_min_rel_scale, output_rel_Iuu, output_rel_Iu;
   parameters()->get_value( "-output_min_rel_scale", output_min_rel_scale);
   parameters()->get_value( "-output_rel_Iuu", output_rel_Iuu);
   parameters()->get_value( "-output_rel_Iu", output_rel_Iu);
   
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   if (output_min_rel_scale)
     to_return.push_back( "image" );
   if (output_rel_Iuu)
@@ -135,14 +135,14 @@ bool
 dbdet_generic_multiscale_edge_detector_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_generic_multiscale_edge_detector_process::execute() - not exactly one"
+    std::cout << "In dbdet_generic_multiscale_edge_detector_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Generic multiscale edge detection...";
-  vcl_cout.flush();
+  std::cout << "Generic multiscale edge detection...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -181,18 +181,18 @@ dbdet_generic_multiscale_edge_detector_process::execute()
   parameters()->get_value( "-output_rel_Iuu", output_rel_Iuu);
   parameters()->get_value( "-output_rel_Iu", output_rel_Iu);
 
-  //unsigned Nscales = (unsigned) vcl_floor((max_sigma-min_sigma)/dsigma + 1.0);
-  unsigned Nscales = (unsigned) vcl_ceil(vcl_log(max_sigma/min_sigma)/vcl_log(sigma_factor));
+  //unsigned Nscales = (unsigned) std::floor((max_sigma-min_sigma)/dsigma + 1.0);
+  unsigned Nscales = (unsigned) std::ceil(std::log(max_sigma/min_sigma)/std::log(sigma_factor));
 
   //1) compute image gradients at all scales
-  vcl_vector<vil_image_view<double> > I, Ix, Iy, Iu, Iuu;
+  std::vector<vil_image_view<double> > I, Ix, Iy, Iu, Iuu;
   I.resize(Nscales); //smoothed images
   Ix.resize(Nscales);
   Iy.resize(Nscales);
   Iu.resize(Nscales);
   Iuu.resize(Nscales);
   
-  double scale = vcl_pow(2.0, N);
+  double scale = std::pow(2.0, N);
 
   double sigma = min_sigma; //current scale
   for (unsigned sc=0; sc<Nscales; sc++)
@@ -263,7 +263,7 @@ dbdet_generic_multiscale_edge_detector_process::execute()
     {
       double sq_grad = ix[i]*ix[i]+iy[i]*iy[i];
 
-      iu[i] = vcl_sqrt(sq_grad);
+      iu[i] = std::sqrt(sq_grad);
       if (sq_grad>1e-5) iuu[i] = (ix[i]*ix[i]*ixx[i]+2*ix[i]*iy[i]*ixy[i]+iy[i]*iy[i]*iyy[i])/sq_grad;
       else              iuu[i] = 10.0;
     }
@@ -280,7 +280,7 @@ dbdet_generic_multiscale_edge_detector_process::execute()
   unsigned *mrs   =  min_rel_scale.top_left_ptr();
 
   //determine the critical value function
-  vcl_vector <double> c2;
+  std::vector <double> c2;
 
   sigma = min_sigma;
   for (unsigned sc=0; sc<Nscales; sc++){
@@ -293,7 +293,7 @@ dbdet_generic_multiscale_edge_detector_process::execute()
   for(unsigned long i=0; i<min_rel_scale.size(); i++)
   {
     for (unsigned sc=0; sc<Nscales; sc++){
-      if (vcl_fabs(Iuu[sc].top_left_ptr()[i])>c2[sc]){
+      if (std::fabs(Iuu[sc].top_left_ptr()[i])>c2[sc]){
         mrs[i] = sc;
         break;
       }
@@ -326,7 +326,7 @@ dbdet_generic_multiscale_edge_detector_process::execute()
 
   for(unsigned long i=0; i<sm_min_rel_scale.size(); i++)
   {
-    unsigned sc = (unsigned) vcl_floor(sm_mrs[i] + 0.5); //round to the nearest scale
+    unsigned sc = (unsigned) std::floor(sm_mrs[i] + 0.5); //round to the nearest scale
     rix[i]  = Ix[sc].top_left_ptr()[i];
     riy[i]  = Iy[sc].top_left_ptr()[i];
     riu[i]  = Iu[sc].top_left_ptr()[i];
@@ -339,20 +339,20 @@ dbdet_generic_multiscale_edge_detector_process::execute()
   //5) compute the zero crossings of the reliable fuu map
 
   //Now call the zero crossing code to get the subpixel curve tokens
-  vcl_vector<vgl_point_2d<double> > loc;
-  vcl_vector<double> orientation, mag;
+  std::vector<vgl_point_2d<double> > loc;
+  std::vector<double> orientation, mag;
 
   dbdet_zc_det ZC(dbdet_zc_det_params(thresh, 1, 1), rel_Ix, rel_Iy, rel_Iuu, rel_Iu); //maximas only (negative third derivative)
   ZC.apply(true, loc, orientation, mag);
 
   double zc_time = t.real();
 
-   vcl_cout << "done!" << vcl_endl;
+   std::cout << "done!" << std::endl;
   
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for min. rel scale determination: " << min_rel_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for ZC det: " << zc_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << loc.size(); 
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for min. rel scale determination: " << min_rel_time << " msec" << std::endl;
+  std::cout << "time taken for ZC det: " << zc_time << " msec" << std::endl;
+  std::cout << "#edgels = " << loc.size(); 
 
   //6) create a new edgemap from the tokens collected from NMS
   dbdet_edgemap_sptr edge_map;

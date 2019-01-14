@@ -26,13 +26,13 @@
 // \endverbatim
 //
 //---------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <map>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_1d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
 #include <dbru/dbru_object_sptr.h>
@@ -49,13 +49,13 @@ class dbru_osl : public vbl_ref_count
 
   // if this constructer is used all the prototypes will be added as a separate object with 
   // labels only containing category
-  //dbru_osl(vcl_vector<vcl_string> const& classes,
-  //         vcl_vector<vcl_vector<dbinfo_observation_sptr> > const& prototypes
+  //dbru_osl(std::vector<std::string> const& classes,
+  //         std::vector<std::vector<dbinfo_observation_sptr> > const& prototypes
   //         );
 
   // normally this constructer should be used and objects should be appropriately labeled
   // e.g. via dbru_labeling_tool
-  dbru_osl(vcl_vector<dbru_object_sptr> const& objects
+  dbru_osl(std::vector<dbru_object_sptr> const& objects
            );
 
   //: copy constructor
@@ -65,24 +65,24 @@ class dbru_osl : public vbl_ref_count
 
   //:mutators
   // this method adds the new prototype as a new object with a category label
-  //void add_prototype(vcl_string const& cls,
+  //void add_prototype(std::string const& cls,
   //                   dbinfo_observation_sptr const& proto);
   //void add_prototype(dbru_label_sptr lbl,
   //                   dbinfo_observation_sptr const& proto);
 
-  //void add_prototypes(vcl_vector<vcl_string> const& classes,
-  //                    vcl_vector<vcl_vector<dbinfo_observation_sptr> > const& prototypes);
+  //void add_prototypes(std::vector<std::string> const& classes,
+  //                    std::vector<std::vector<dbinfo_observation_sptr> > const& prototypes);
 
   //: fill_category_id_map() method should be called after all objects are added
   //  to make that information available
   void add_object(dbru_object_sptr const& obj);
 
-  void add_objects(vcl_vector<dbru_object_sptr> const& objects);
+  void add_objects(std::vector<dbru_object_sptr> const& objects);
 
   //: remove a prototype observation. Return false if not in osl
-  //bool remove_prototype(vcl_string const& cls, vcl_string const& obs_doc);
+  //bool remove_prototype(std::string const& cls, std::string const& obs_doc);
   //: remove all the prototypes for a class and delete the class from the osl
-  bool remove_class(vcl_string const& cls);
+  bool remove_class(std::string const& cls);
 
   //: remove a particular object
   bool remove_object(unsigned i);
@@ -91,11 +91,11 @@ class dbru_osl : public vbl_ref_count
   bool null_prototype(unsigned i, unsigned j);
 
   //:accessors
-  //bool find_prototype_vector(vcl_string const& cls, 
-  //                           vcl_vector<dbinfo_observation_sptr>*& prototypes );
-  bool prototypes(vcl_string const& cls, 
-                  vcl_vector<dbinfo_observation_sptr>& prototypes);
-  //dbinfo_observation_sptr prototype(vcl_string const& cls, const unsigned index);
+  //bool find_prototype_vector(std::string const& cls, 
+  //                           std::vector<dbinfo_observation_sptr>*& prototypes );
+  bool prototypes(std::string const& cls, 
+                  std::vector<dbinfo_observation_sptr>& prototypes);
+  //dbinfo_observation_sptr prototype(std::string const& cls, const unsigned index);
 
   //: get a particular object
   dbru_object_sptr get_object(unsigned i);
@@ -109,30 +109,30 @@ class dbru_osl : public vbl_ref_count
 
   //: get all prototypes of an object
 //  bool prototypes(unsigned i, 
-//                  vcl_vector<dbinfo_observation_sptr>& prototypes);
+//                  std::vector<dbinfo_observation_sptr>& prototypes);
   //: get all prototypes of an object based on doc
-//  bool prototypes(vcl_string const& object_doc, 
-//                  vcl_vector<dbinfo_observation_sptr>& prototypes);
+//  bool prototypes(std::string const& object_doc, 
+//                  std::vector<dbinfo_observation_sptr>& prototypes);
 
-  vcl_map<vcl_string, int>& get_category_id_map(void) { return category_id_map_; }
+  std::map<std::string, int>& get_category_id_map(void) { return category_id_map_; }
   bool fill_category_id_map(void);
 
-  vcl_vector<vcl_string> classes() const;
+  std::vector<std::string> classes() const;
 
   //:total number of classes
   unsigned n_classes() const { return osl_class_map_.size(); }
   
   //: the number of prototypes per class
-  unsigned n_protos_in_class(vcl_string const& cls) const;
+  unsigned n_protos_in_class(std::string const& cls) const;
 
   //:total number of objects
   unsigned n_objects() const { return osl_.size(); }
   unsigned size() const { return osl_.size(); }
 
   //: the vector of number of class prototypes by enumerated by class
-  vcl_vector<unsigned> n_prototypes() const;
+  std::vector<unsigned> n_prototypes() const;
 
-  void print(vcl_ostream& os = vcl_cout) const;
+  void print(std::ostream& os = std::cout) const;
 
   //-----------------------
   //:  BINARY I/O METHODS |
@@ -142,10 +142,10 @@ class dbru_osl : public vbl_ref_count
   virtual unsigned version() const {return 1;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbru_object_signature_library";}
+  virtual std::string is_a() const {return "dbru_object_signature_library";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
     { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -159,14 +159,14 @@ class dbru_osl : public vbl_ref_count
  private:
   //: keep record of class structure 
   //                                     object id  prototype id
-  vcl_map<vcl_string, vcl_vector<vcl_pair<unsigned, unsigned> >* > osl_class_map_;
+  std::map<std::string, std::vector<std::pair<unsigned, unsigned> >* > osl_class_map_;
 
   // main data structure that holds the prototypes
-  vcl_vector<dbru_object_sptr> osl_;
+  std::vector<dbru_object_sptr> osl_;
   
   //: category map that assigns ids to categories, 
   //  this is useful during recognition phase
-  vcl_map<vcl_string, int> category_id_map_;
+  std::map<std::string, int> category_id_map_;
 
 };
 
@@ -195,13 +195,13 @@ inline void vsl_b_read(vsl_b_istream &is, dbru_osl* &osl)
   vsl_b_read(is, *osl);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbru_osl const& osl)
+inline std::ostream &operator<<(std::ostream &os, dbru_osl const& osl)
 {
   osl.print(os);
   return os;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, dbru_osl const*  osl)
+inline void vsl_print_summary(std::ostream& os, dbru_osl const*  osl)
 {os << osl;}
 
 

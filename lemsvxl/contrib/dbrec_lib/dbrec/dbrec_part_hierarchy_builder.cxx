@@ -5,8 +5,8 @@
 
 #include "dbrec_part_hierarchy_builder.h"
 
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 
 #include <vil/vil_image_resource.h>
 

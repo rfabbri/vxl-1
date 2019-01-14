@@ -19,7 +19,7 @@ class obj_observable : public observable
 {
 public:
  
-  vcl_string type_name() {return "obj_observable"; }
+  std::string type_name() {return "obj_observable"; }
 
   //: constructers
   obj_observable() 
@@ -52,14 +52,14 @@ public:
   void replace(vsol_polygon_3d &polygon);
   void attach_inner_face(unsigned face_id, vsol_polygon_3d_sptr poly);
 
-  vcl_map<int, vsol_polygon_3d_sptr> extract_faces();
+  std::map<int, vsol_polygon_3d_sptr> extract_faces();
   vsol_polygon_3d_sptr extract_face(dbmsh3d_face_mc* face, 
-                                    vcl_vector<dbmsh3d_vertex*> &vertices);
+                                    std::vector<dbmsh3d_vertex*> &vertices);
   vsol_polygon_3d_sptr extract_face(unsigned i);
 
-  vcl_map<int, vsol_polygon_3d_sptr> extract_inner_faces(dbmsh3d_face_mc* face);
+  std::map<int, vsol_polygon_3d_sptr> extract_inner_faces(dbmsh3d_face_mc* face);
 
-  vcl_map<int, vsol_polygon_3d_sptr> extract_inner_faces(int face_id);
+  std::map<int, vsol_polygon_3d_sptr> extract_inner_faces(int face_id);
 
   void divide_face(unsigned face_id, vgl_point_3d<double> l1, vgl_point_3d<double> l2,
     vgl_point_3d<double> p1, vgl_point_3d<double> l3, 
@@ -85,18 +85,18 @@ private:
   dbmsh3d_face_mc* current_extr_face;
 
   // first id is the face id and the second one is the polygon id from the UI
-  vcl_map<unsigned, unsigned> ids_; 
+  std::map<unsigned, unsigned> ids_; 
 
   // the pair is <face_id, inner_face_id> and it is mapped to the polygon id from the UI
-  vcl_map<unsigned, vcl_pair<unsigned, unsigned> > inner_ids_;
+  std::map<unsigned, std::pair<unsigned, unsigned> > inner_ids_;
 
-  vcl_map<unsigned, OBS_FACE_LABEL> labels_;
+  std::map<unsigned, OBS_FACE_LABEL> labels_;
 
-  void create_mesh_HE(vsol_polygon_3d_sptr polygon, double dist, vcl_map<int, vsol_polygon_3d_sptr> inner_faces);
+  void create_mesh_HE(vsol_polygon_3d_sptr polygon, double dist, std::map<int, vsol_polygon_3d_sptr> inner_faces);
   dbmsh3d_face* create_inner_face(vsol_polygon_3d_sptr polygon);
   dbmsh3d_face_mc* create_face(vsol_polygon_3d_sptr polygon);
   dbmsh3d_face_mc* extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_mc* F);
-  void notify_observers(vcl_string message_type);
+  void notify_observers(std::string message_type);
   void move_points_to_plane(dbmsh3d_face_mc* face);
   void shrink_mesh(dbmsh3d_mesh_mc* mesh, double dist);
   void print_faces();

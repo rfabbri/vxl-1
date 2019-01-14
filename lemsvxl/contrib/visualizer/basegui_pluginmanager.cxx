@@ -1,10 +1,10 @@
 #include "basegui_baseplugin.h"
 #include "basegui_pluginmanager.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 
 
@@ -39,22 +39,22 @@ int PluginManager::RegisterPlugin(BasePlugin *plugin)
   {
     if (!plugin)
       {
-        vcl_cout<<" Warning: <RegisterPlugin> Null Args. {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+        std::cout<<" Warning: <RegisterPlugin> Null Args. {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
         return -1;
        }
     PluginManager *mgr = GetGlobalPluginManager();
-    vcl_vector<BasePlugin *> plugin_list =mgr->_plugin_list; 
+    std::vector<BasePlugin *> plugin_list =mgr->_plugin_list; 
 
     for (unsigned int i =0;i<plugin_list.size();i++)
       {
         if ((plugin_list[i]->GetPluginName())==(plugin->GetPluginName()))
           {
-            vcl_cout<<" Error: Plugin Cannot be registered as another plugin with same name has already been registered. {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+            std::cout<<" Error: Plugin Cannot be registered as another plugin with same name has already been registered. {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
            }
   
 //        if ((plugin_list.at(i)->GetPluginID())==(plugin->GetPluginID()))
 //          {
-//            vcl_cout<<" Error: Plugin Cannot be registered as another plugin with same ID has already been registered. {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+//            std::cout<<" Error: Plugin Cannot be registered as another plugin with same ID has already been registered. {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
 //           }
 //
        
@@ -72,13 +72,13 @@ int PluginManager::UnRegisterPlugin (BasePlugin *plugin)
             
     if (!plugin)
       {
-        vcl_cout<<" Error: <PluginManager::UnRegisterPlugin> Null Args. {"__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+        std::cout<<" Error: <PluginManager::UnRegisterPlugin> Null Args. {"__FILE__<<", "<<__LINE__<<"} "<<std::endl;
         return -1;
        }
 
     PluginManager *mgr = GetGlobalPluginManager();
 
-    vcl_vector<BasePlugin *>::iterator it = mgr->_plugin_list.begin();
+    std::vector<BasePlugin *>::iterator it = mgr->_plugin_list.begin();
     for (;it!=mgr->_plugin_list.end();++it)
       {
    
@@ -92,12 +92,12 @@ int PluginManager::UnRegisterPlugin (BasePlugin *plugin)
            }
        }
 
-    vcl_cout<<" Error: <PluginManager::UnRegisterPlugin> Unable to find plugin with name = "<<plugin->GetPluginName()<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+    std::cout<<" Error: <PluginManager::UnRegisterPlugin> Unable to find plugin with name = "<<plugin->GetPluginName()<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
     return -1;
    }
 
 
-vcl_vector<BasePlugin *>& PluginManager::GetPluginList(void)
+std::vector<BasePlugin *>& PluginManager::GetPluginList(void)
  {
     PluginManager *mgr = GetGlobalPluginManager();
     return mgr->_plugin_list;
@@ -107,18 +107,18 @@ vcl_vector<BasePlugin *>& PluginManager::GetPluginList(void)
 
 
 
-BasePlugin* PluginManager::GetPluginFromService(const vcl_string& service) 
+BasePlugin* PluginManager::GetPluginFromService(const std::string& service) 
   {
     PluginManager *mgr = GetGlobalPluginManager();
-    vcl_vector<BasePlugin *> plugin_list = mgr->_plugin_list;
+    std::vector<BasePlugin *> plugin_list = mgr->_plugin_list;
     for (unsigned int i=0;i<plugin_list.size();i++)
       {
-        vcl_vector<vcl_string> temp;
+        std::vector<std::string> temp;
         
         temp = plugin_list[i]->GetPluginServices();
         if (temp.size()==0)
           {
-            vcl_cout<<" Error: <GetPluginFromService> Unable to get Plugin Services. {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+            std::cout<<" Error: <GetPluginFromService> Unable to get Plugin Services. {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
             return 0;
            }
         
@@ -131,15 +131,15 @@ BasePlugin* PluginManager::GetPluginFromService(const vcl_string& service)
            }
        }
 
-    vcl_cout<<" Error : <PluginManager::GetPluginFromService> Unable to get Plugin with service = "<<service<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+    std::cout<<" Error : <PluginManager::GetPluginFromService> Unable to get Plugin with service = "<<service<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
     return 0;
    }
 
-BasePlugin* PluginManager::GetPluginFromName   (const vcl_string& name)   
+BasePlugin* PluginManager::GetPluginFromName   (const std::string& name)   
   {
     PluginManager *mgr = GetGlobalPluginManager();
 
-    vcl_vector<BasePlugin *> plugin_list = mgr->_plugin_list;
+    std::vector<BasePlugin *> plugin_list = mgr->_plugin_list;
     for (unsigned int i =0;i<plugin_list.size();i++)
       {
         if (plugin_list[i]->GetPluginName()==name)
@@ -148,7 +148,7 @@ BasePlugin* PluginManager::GetPluginFromName   (const vcl_string& name)
            }
        }
 
-    vcl_cout<<" Error : <PluginManager::GetPluginName> Unable to get Plugin with name = "<<name<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+    std::cout<<" Error : <PluginManager::GetPluginName> Unable to get Plugin with name = "<<name<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
     return 0;
    }
   
@@ -156,7 +156,7 @@ BasePlugin* PluginManager::GetPluginFromName   (const vcl_string& name)
 BasePlugin* PluginManager::GetPluginFromID   (int id) 
   {
     PluginManager *mgr = GetGlobalPluginManager();
-    vcl_vector<BasePlugin *> plugin_list = mgr->_plugin_list;
+    std::vector<BasePlugin *> plugin_list = mgr->_plugin_list;
     
     for (unsigned int i =0;i<plugin_list.size();i++)
       {
@@ -166,7 +166,7 @@ BasePlugin* PluginManager::GetPluginFromID   (int id)
            }
        }
 
-    vcl_cout<<" Error : <PluginManager::GetPluginFromID> Unable to get Plugin with ID = "<<id<<" {"__FILE__<<", "<<__LINE__<<" } "<<vcl_endl;
+    std::cout<<" Error : <PluginManager::GetPluginFromID> Unable to get Plugin with ID = "<<id<<" {"__FILE__<<", "<<__LINE__<<" } "<<std::endl;
     return 0;
    }
 
@@ -185,10 +185,10 @@ int PluginManager::GetPluginCount()
  * return "";
  * */
 
-vcl_string PluginManager::GetUniquePluginName() 
+std::string PluginManager::GetUniquePluginName() 
   {
     PluginManager *mgr = GetGlobalPluginManager();
-    vcl_vector<BasePlugin *> plugin_list = mgr->_plugin_list;
+    std::vector<BasePlugin *> plugin_list = mgr->_plugin_list;
     if (plugin_list.size()==1)
         return (plugin_list[0]->GetPluginName());
     else

@@ -39,30 +39,30 @@ class bfrag2D {
 
 public:
     bfrag2D();
-    bfrag2D( int index, vcl_string s = "unnamed" );
+    bfrag2D( int index, std::string s = "unnamed" );
     virtual ~bfrag2D();
     
     //loading functions return 0 on success, NEG on failure
-    int loadContour( vcl_string fn, bool top = 1 );
-    int loadImage( vcl_string fn, bool top = 1 );
+    int loadContour( std::string fn, bool top = 1 );
+    int loadImage( std::string fn, bool top = 1 );
 
     vil_image_view_base_sptr getTopRGBImage(){ return topRGBImage; };
     vil_image_view_base_sptr getBotRGBImage(){ return botRGBImage; };
     vsol_polygon_2d_sptr getTopPolygon(){ return topPolygon; };
     vsol_polygon_2d_sptr getBotPolygon(){ return botPolygon; };
 
-    void setName( vcl_string n ){ myName = n; };
+    void setName( std::string n ){ myName = n; };
 
     void popupInfo(bool &drawTopImage, bool &drawBotCurve, bool &drawBotImage);
 
     //accessor stuff
     Curve<double,double> getTopContourAsCurve(); //hacky one
     int getIndex(){ return myIndex; };
-    vcl_string getName(){ return myName; };
-    vcl_string getTopCurveFn(){ return topCurveFn; };
-    vcl_string getBotCurveFn(){ return botCurveFn; };
-    vcl_string getTopImageFn(){ return topImageFn; };
-    vcl_string getBotImageFn(){ return botImageFn; };
+    std::string getName(){ return myName; };
+    std::string getTopCurveFn(){ return topCurveFn; };
+    std::string getBotCurveFn(){ return botCurveFn; };
+    std::string getTopImageFn(){ return topImageFn; };
+    std::string getBotImageFn(){ return botImageFn; };
     int centerX(){ return _centerX; };
     int centerY(){ return _centerY; };
     int maxX(){ return _maxX; };
@@ -73,15 +73,15 @@ public:
 private:
 
     int myIndex;
-    vcl_string myName;
+    std::string myName;
 
     vil_image_view_base_sptr topRGBImage, botRGBImage;
     vsol_polygon_2d_sptr topPolygon, botPolygon;
 
-    vcl_string topCurveFn, botCurveFn, topImageFn, botImageFn;
+    std::string topCurveFn, botCurveFn, topImageFn, botImageFn;
 
-    int loadCEM( vcl_string fn, vsol_polygon_2d_sptr &givenContour, Curve<double,double> &givenCurve );
-    int loadCON( vcl_string fn, vsol_polygon_2d_sptr &givenContour, Curve<double,double> &givenCurve );
+    int loadCEM( std::string fn, vsol_polygon_2d_sptr &givenContour, Curve<double,double> &givenCurve );
+    int loadCON( std::string fn, vsol_polygon_2d_sptr &givenContour, Curve<double,double> &givenCurve );
 
     bool topContourCurveMade, botContourCurveMade;
     Curve<double,double> topContourCurve, botContourCurve;

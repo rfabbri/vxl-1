@@ -10,7 +10,7 @@ int main( int argc, char* argv[] )
 	//user should provide video glob and results directory respectively
     if( argc < 2)
     {
-        vcl_cerr << "error dncn_westin_cropped::must provide input glob and output directory" << vcl_endl;
+        std::cerr << "error dncn_westin_cropped::must provide input glob and output directory" << std::endl;
         return 1;
     }
 
@@ -36,46 +36,46 @@ int main( int argc, char* argv[] )
 
 
 	if( argc > 3)
-		mahalan_dist_factor = vcl_atof(argv[3]);		
+		mahalan_dist_factor = std::atof(argv[3]);		
 	else
 		mahalan_dist_factor = 1;
 
 	if( argc > 4 )
-		t_forget = vcl_atof(argv[4]);
+		t_forget = std::atof(argv[4]);
 	else
 		t_forget = 200;
 
-    vcl_string video_glob = argv[1];
+    std::string video_glob = argv[1];
 
 	vidl_image_list_istream video_stream_temp;
 
-	vcl_vector<double> target_coord;
+	std::vector<double> target_coord;
 	target_coord.push_back(345);
 	target_coord.push_back(411);
 
-	vcl_stringstream ss;
+	std::stringstream ss;
 	ss << argv[2] << "\\target_" << target_coord[0] << "_" << target_coord[1] << "_" << "num_pivot_" << num_pivot_pixels << "_num_particles_" << num_particles;
 	ss << "_num_neighbors_" << num_neighbors << "_t_forget_" << t_forget << "_mahalan_dist_factor_" << mahalan_dist_factor;
 
 		vul_file::make_directory(ss.str().c_str());
 
-	vcl_string result_dir = ss.str();
+	std::string result_dir = ss.str();
 
-	vcl_string base_result_dir = argv[2];
+	std::string base_result_dir = argv[2];
 
-    vcl_string entropy_bin = base_result_dir + "\\westin_entropy.bin";
+    std::string entropy_bin = base_result_dir + "\\westin_entropy.bin";
 
-	vcl_string entropy_dat = result_dir + "\\westin_entropy.dat";
+	std::string entropy_dat = result_dir + "\\westin_entropy.dat";
 
-	//vcl_string factory_bin = result_dir + "\\factory_bin.bin";
+	//std::string factory_bin = result_dir + "\\factory_bin.bin";
 
-	vcl_string neighborhood_mfile = result_dir + "\\neighborhoods_mfile.m";
+	std::string neighborhood_mfile = result_dir + "\\neighborhoods_mfile.m";
 
-	vcl_string pivot_pixels_mfile = result_dir + "\\pivot_pixels_mfile.m";
+	std::string pivot_pixels_mfile = result_dir + "\\pivot_pixels_mfile.m";
 
-	vcl_string probability_distribution_mfile = result_dir + "\\probability_distribution_mfile.m";
+	std::string probability_distribution_mfile = result_dir + "\\probability_distribution_mfile.m";
 
-	vcl_string reduced_feature_mfile = result_dir + "\\reduced_feature_mfile.m";
+	std::string reduced_feature_mfile = result_dir + "\\reduced_feature_mfile.m";
 
 	video_stream_temp.open(video_glob.c_str());
     unsigned nrows = video_stream_temp.height();

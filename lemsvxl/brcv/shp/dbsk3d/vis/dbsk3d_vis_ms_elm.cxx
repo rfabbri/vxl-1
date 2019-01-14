@@ -32,7 +32,7 @@ SoSeparator* draw_ms_vertex (const dbsk3d_ms_node* MN,
 
   if (show_id) {
     char buf[64];
-    vcl_sprintf (buf, "%d", MN->id());
+    std::sprintf (buf, "%d", MN->id());
     draw_text2d_geom (root, buf);
   }
   
@@ -117,7 +117,7 @@ SoSeparator* draw_ms_curve (const dbsk3d_ms_curve* MC,
 
   if (show_id) {
     char id_buf[64];
-    vcl_sprintf (id_buf, "%d", MC->id());
+    std::sprintf (id_buf, "%d", MC->id());
 
     //draw at the middle of the curve.
     const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) MC->get_middle_V ();
@@ -136,7 +136,7 @@ void draw_ms_curve_geom (SoSeparator* root,
   SoCoordinate3* coords = new SoCoordinate3;
   root->addChild (coords);
   
-  vcl_vector<dbmsh3d_vertex*> N_vec;
+  std::vector<dbmsh3d_vertex*> N_vec;
   MC->get_V_vec (N_vec);
   assert (N_vec.size() > 1);
 
@@ -185,7 +185,7 @@ SoSeparator* draw_ms_loop (dbsk3d_ms_curve* MC,
 
   if (show_id) {
     char id_buf[64];
-    vcl_sprintf (id_buf, "%d", MC->id());
+    std::sprintf (id_buf, "%d", MC->id());
 
     //draw at the middle of the curve.
     const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) MC->get_middle_V ();
@@ -205,7 +205,7 @@ void draw_ms_loop_geom (SoSeparator* root,
   SoCoordinate3* coords = new SoCoordinate3;
   root->addChild( coords );
  
-  vcl_vector<dbmsh3d_vertex*> N_vec;
+  std::vector<dbmsh3d_vertex*> N_vec;
   MC->get_V_vec (N_vec);
   assert (N_vec.size() > 1);
 
@@ -241,7 +241,7 @@ SoSeparator* draw_ms_sheet (dbsk3d_ms_sheet* MS, const SbColor color, const floa
   root->addChild (m);
 
   if (idv) { //draw individual fs_faces.
-    vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
       draw_fs_face_geom (root, FF, user_defined_class);
@@ -252,7 +252,7 @@ SoSeparator* draw_ms_sheet (dbsk3d_ms_sheet* MS, const SbColor color, const floa
 
   if (show_id) {
     char id_buf[64];
-    vcl_sprintf (id_buf, "%d", MS->id());
+    std::sprintf (id_buf, "%d", MS->id());
 
     //show id at the middle of the sheet.
     const dbsk3d_fs_vertex* FV = MS->get_middle_FV ();
@@ -266,8 +266,8 @@ SoSeparator* draw_ms_sheet (dbsk3d_ms_sheet* MS, const SbColor color, const floa
 void draw_ms_sheet_geom (SoSeparator* root, dbsk3d_ms_sheet* MS,
                          const bool user_defined_class)
 {
-  //convert to vcl_vector and draw.
-  vcl_map<int, dbmsh3d_vertex*> V_map;
+  //convert to std::vector and draw.
+  std::map<int, dbmsh3d_vertex*> V_map;
   MS->get_fine_scale_vertices (V_map);
 
   if (user_defined_class)
@@ -298,24 +298,24 @@ void draw_ms_sheet_geom (SoSeparator* root, dbsk3d_ms_sheet* MS,
 }
 
 void draw_SS_faces_geom (SoGroup* root, dbsk3d_ms_sheet* MS,
-                         vcl_map<int, dbmsh3d_vertex*>& V_map,
-                         vcl_map<int, dbmsh3d_face*>& F_map)
+                         std::map<int, dbmsh3d_vertex*>& V_map,
+                         std::map<int, dbmsh3d_face*>& F_map)
 {
-  //convert to vcl_vector and draw.
-  vcl_vector<vgl_point_3d<double> > pts_vector (V_map.size());
-  vcl_vector<vcl_vector<int> > faces_vector (F_map.size());
+  //convert to std::vector and draw.
+  std::vector<vgl_point_3d<double> > pts_vector (V_map.size());
+  std::vector<std::vector<int> > faces_vector (F_map.size());
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = V_map.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = V_map.begin();
   for (unsigned int i=0; vit != V_map.end(); vit++, i++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_vid (i);
     pts_vector[i] = V->pt();
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = F_map.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = F_map.begin();
   for (unsigned int i=0 ; fit != F_map.end(); fit++, i++) {
     dbmsh3d_face* F = (*fit).second;
-    vcl_vector<dbmsh3d_vertex*> vertices; 
+    std::vector<dbmsh3d_vertex*> vertices; 
     F->get_bnd_Vs (vertices);
     faces_vector[i].resize (vertices.size());
 
@@ -330,8 +330,8 @@ void draw_SS_faces_geom (SoGroup* root, dbsk3d_ms_sheet* MS,
 }
 
 void draw_SS_ifs_geom (SoGroup* root, dbsk3d_ms_sheet* MS,
-                       const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces)
+                       const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces)
 {
   //Assign vertices
   int nVertices = pts.size();

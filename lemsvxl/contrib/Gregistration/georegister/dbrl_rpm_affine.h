@@ -1,7 +1,7 @@
 #ifndef _dbrl_rpm_affine_
 #define _dbrl_rpm_affine_
 #include "dbrl_robust_point_matching.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include "dbrl_match_set_sptr.h"
 #include "dbrl_estimator_point_affine.h"
 #include "dbrl_correspondence.h"
@@ -30,19 +30,19 @@ class dbrl_rpm_affine: public dbrl_robust_point_matching
     {
     public:
         dbrl_rpm_affine(dbrl_rpm_affine_params & params,
-            vcl_vector<dbrl_feature_sptr>  f1,
-            vcl_vector<dbrl_feature_sptr>  f2);
+            std::vector<dbrl_feature_sptr>  f1,
+            std::vector<dbrl_feature_sptr>  f2);
         virtual ~dbrl_rpm_affine(){};
 
-        virtual dbrl_match_set_sptr rpm(vcl_string name="Euclidean");
+        virtual dbrl_match_set_sptr rpm(std::string name="Euclidean");
 
         bool rpm_at(double T,dbrl_correspondence & M,dbrl_estimator_point_affine * affine_est,
-            dbrl_transformation_sptr &tform,vcl_vector<dbrl_feature_sptr> &f1x,
-            vcl_vector<dbrl_feature_sptr> & f2x,
-            double l,vcl_string name="Euclidean");
+            dbrl_transformation_sptr &tform,std::vector<dbrl_feature_sptr> &f1x,
+            std::vector<dbrl_feature_sptr> & f2x,
+            double l,std::string name="Euclidean");
 
-        double distance(vcl_vector<dbrl_feature_sptr> f1,
-                vcl_vector<dbrl_feature_sptr> f2, dbrl_correspondence & M);
+        double distance(std::vector<dbrl_feature_sptr> f1,
+                std::vector<dbrl_feature_sptr> f2, dbrl_correspondence & M);
 
         double energy(){return energy_;}
     protected:

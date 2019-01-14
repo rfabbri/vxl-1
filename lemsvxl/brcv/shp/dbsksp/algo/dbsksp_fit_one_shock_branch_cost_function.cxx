@@ -23,14 +23,14 @@
 dbsksp_fit_shock_branch_residual::
 dbsksp_fit_shock_branch_residual(const dbsksp_xshock_node_descriptor& start_xdesc, 
                                  const dbsksp_xshock_node_descriptor& end_xdesc, 
-                                 const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_xdesc,
-                                 const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+                                 const std::vector<dbsksp_xshock_node_descriptor >& list_init_xdesc,
+                                 const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
                                  double total_left_bnd_length, double total_right_bnd_length)
 {
   // Preliminary checks
   if ( (list_init_xdesc.size() +1) != list_xsamples_per_interval.size() )
   {
-    vcl_cerr << "\nERROR: the number of xsample intervals should be 1 more than the number of unknown xshock nodes.\n";
+    std::cerr << "\nERROR: the number of xsample intervals should be 1 more than the number of unknown xshock nodes.\n";
     return;
   }
 
@@ -87,7 +87,7 @@ compute_residual( vnl_vector<double >& fx )
     double multiplier = xfrag.is_legal() ? 1 : 100; 
 
     // Retrieve xsamples corresponding to this interval
-    vcl_vector<const dbsksp_xshock_node_descriptor* >& interval_xsamples = this->list_xsamples_per_interval_[k-1];
+    std::vector<const dbsksp_xshock_node_descriptor* >& interval_xsamples = this->list_xsamples_per_interval_[k-1];
 
     // Computer error for each of these samples
     for (unsigned i =0; i < interval_xsamples.size(); ++i)
@@ -107,9 +107,9 @@ compute_residual( vnl_vector<double >& fx )
   {
     ////
     //double delta_s = cur_bnd_lengths[side] - 1.2* this->orig_bnd_lengths_[side];
-    //double cost = (delta_s < 0) ? 0 : (vcl_exp(delta_s)-1); 
+    //double cost = (delta_s < 0) ? 0 : (std::exp(delta_s)-1); 
 
-    double cost = vcl_exp(long_bnd_penalty[side]) - 1;
+    double cost = std::exp(long_bnd_penalty[side]) - 1;
     *(iter++) = cost;
   }
 
@@ -146,7 +146,7 @@ forward(const dbsksp_xshock_node_descriptor& xdesc)
   x[3] = t0.y();
 
   // (signed) distance from boundary centroid to the shock point
-  x[4] = -xdesc.radius() * vcl_cos(xdesc.phi());
+  x[4] = -xdesc.radius() * std::cos(xdesc.phi());
 
   return x;
 }
@@ -164,16 +164,16 @@ backward(const vnl_vector<double >& x)
   double H = t0.length();
 
   // shock radius
-  double R = vcl_sqrt(H*H + b*b);
+  double R = std::sqrt(H*H + b*b);
 
   // shock point
   vgl_point_2d<double > pt = bnd_center + (b/H) * t0;
 
   // phi angle
-  double phi = vcl_acos(-b / R);
+  double phi = std::acos(-b / R);
 
   // shock tangent angle
-  double psi = vcl_atan2(t0.y(), t0.x());
+  double psi = std::atan2(t0.y(), t0.x());
 
   dbsksp_xshock_node_descriptor xdesc(pt.x(), pt.y(), psi, phi, R);
   return xdesc;
@@ -195,8 +195,8 @@ backward(const vnl_vector<double >& x)
 dbsksp_fit_one_shock_branch_cost_function::
 dbsksp_fit_one_shock_branch_cost_function(const dbsksp_xshock_node_descriptor& start_xdesc, 
     const dbsksp_xshock_node_descriptor& end_xdesc, 
-    const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_xdesc,
-    const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+    const std::vector<dbsksp_xshock_node_descriptor >& list_init_xdesc,
+    const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
     double total_left_bnd_length, double total_right_bnd_length):
 dbsksp_fit_shock_branch_residual(start_xdesc, end_xdesc, list_init_xdesc, list_xsamples_per_interval,
                                  total_left_bnd_length, total_right_bnd_length),
@@ -276,7 +276,7 @@ cur_x(vnl_vector<double >& x)
 //: Return a list of xshock nodes corresponding to a given value of the unknown "x"
 bool dbsksp_fit_one_shock_branch_cost_function::
 x_to_xsamples(const vnl_vector<double >& x, 
-              vcl_vector<dbsksp_xshock_node_descriptor >& xsamples)
+              std::vector<dbsksp_xshock_node_descriptor >& xsamples)
 {
   // Preliminary check for vector size
   if (x.size() != this->get_number_of_unknowns())
@@ -318,8 +318,8 @@ dbsksp_fit_shock_branch_with_fixed_shock_points_cost_function::
 dbsksp_fit_shock_branch_with_fixed_shock_points_cost_function(
   const dbsksp_xshock_node_descriptor& start_xdesc, 
   const dbsksp_xshock_node_descriptor& end_xdesc, 
-  const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
-  const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+  const std::vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
+  const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
   double total_left_bnd_length, double total_right_bnd_length):
 dbsksp_fit_shock_branch_residual(start_xdesc, end_xdesc, list_init_middle_xdesc, list_xsamples_per_interval,
                                  total_left_bnd_length, total_right_bnd_length),
@@ -383,7 +383,7 @@ cur_x(vnl_vector<double >& x)
 //: Return list of xsamples corresponding to a given value of the unknown "x"
 bool dbsksp_fit_shock_branch_with_fixed_shock_points_cost_function::
 x_to_xsamples(const vnl_vector<double >& x, 
-              vcl_vector<dbsksp_xshock_node_descriptor >& xsamples) const
+              std::vector<dbsksp_xshock_node_descriptor >& xsamples) const
 {
   // We fix the position of the shock points and allow the other three variables 
   // (psi, phi, radius) to change

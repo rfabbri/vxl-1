@@ -31,16 +31,16 @@ public:
   bioproj_proc(bioproj_io *proj_io);
 
   //: execute the algorithm
-  void execute(int view_filter, int spatial_filter, vcl_string outfile);
+  void execute(int view_filter, int spatial_filter, std::string outfile);
 
   void view_space_ops_with_fixed_magnification();
   double response_at_point(vgl_point_3d<double> p);
   double interpolate_convolved_data_at_point(vgl_point_2d<double> p, int viewno);
   void apply_z_filtering();
-  void write_result(vcl_string outfile);
+  void write_result(std::string outfile);
   void print_error_message(int error_code);
 
-  vcl_vector <xmvg_perspective_camera<double> > cameras_;
+  std::vector <xmvg_perspective_camera<double> > cameras_;
 
   bioproj_io *proj_io_;
   bioproj_data *proj_data_;

@@ -19,7 +19,7 @@
 // \endverbatim
 
 #include "biolung_3D_Tree.h"
-#include <vcl_string.h>
+#include <string>
 
 class biolung_lungmodel
 {
@@ -32,7 +32,7 @@ public:
   biolung_lungmodel(int zdim=700);  //1 voxel corresponds to 35cm/zdim
   ~biolung_lungmodel();
 
-  void saveVolumeInFile(vcl_string filename);
+  void saveVolumeInFile(std::string filename);
 
 };
 

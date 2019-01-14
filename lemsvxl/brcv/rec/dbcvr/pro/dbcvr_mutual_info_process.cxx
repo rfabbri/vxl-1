@@ -1,9 +1,9 @@
 #include "dbcvr_mutual_info_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -78,7 +78,7 @@ dbcvr_mutual_info_process::dbcvr_mutual_info_process()
       !parameters()->add( "Use distance transform region correspondence? (if not shock matching):" , "-disttrans" , false )  ||
       !parameters()->add( "lamda for dt: " , "-lambda" , 1.0f ) 
       ) {
-    vcl_cerr << "ERROR: Adding parameters in dbcvr_mutual_info_process::dbcvr_mutual_info_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbcvr_mutual_info_process::dbcvr_mutual_info_process()" << std::endl;
   }
 
   total_info_ = 0;
@@ -117,11 +117,11 @@ bool dbcvr_mutual_info_process::execute()
   parameters()->get_value("-lambda", lambda);
   int increment;
   parameters()->get_value("-increment", increment);
-  //vcl_cout << "increment value is: " << increment << vcl_endl;
+  //std::cout << "increment value is: " << increment << std::endl;
 
   int image_bits;
   parameters()->get_value("-imagebits", image_bits);
-  float max_value = float(vcl_pow(double(2.0), double(image_bits))-1);
+  float max_value = float(std::pow(double(2.0), double(image_bits))-1);
 
   clear_output();
 
@@ -136,11 +136,11 @@ bool dbcvr_mutual_info_process::execute()
 
   
 
-  vcl_vector<vsol_point_2d_sptr> inp1, inp2;
+  std::vector<vsol_point_2d_sptr> inp1, inp2;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_curve())
@@ -227,7 +227,7 @@ bool dbcvr_mutual_info_process::execute()
   rep->register_type( dummy2 ); 
 
   //: prepare the repository
-  vcl_vector< vsol_spatial_object_2d_sptr > contour1, contour2;
+  std::vector< vsol_spatial_object_2d_sptr > contour1, contour2;
   contour1.push_back(poly1->cast_to_spatial_object());
   contour2.push_back(poly2->cast_to_spatial_object());
   vidpro1_vsol2D_storage_sptr vsol1 = vidpro1_vsol2D_storage_new();
@@ -235,13 +235,13 @@ bool dbcvr_mutual_info_process::execute()
   vsol1->add_objects(contour1, "poly1");
   vsol1->set_name("vsol2D1");
   if (!rep->store_data(vsol1)) {
-    vcl_cout << "Problems in adding contour1 into repository as vsol2D\n";
+    std::cout << "Problems in adding contour1 into repository as vsol2D\n";
     return 0;
   }
   vsol2->add_objects(contour2, "poly2");
   vsol2->set_name("vsol2D2");
   if (!rep->store_data(vsol2)) {
-    vcl_cout << "Problems in adding contour2 into repository as vsol2D\n";
+    std::cout << "Problems in adding contour2 into repository as vsol2D\n";
     return 0;
   }
 
@@ -262,7 +262,7 @@ bool dbcvr_mutual_info_process::execute()
   //: TODO for AMIR: smoothing might be good but there is a bug currently
   get_shock->parameters()->set_value("-b_smooth", bool(false) );
 
-  vcl_vector<vcl_string> input_names, output_names;
+  std::vector<std::string> input_names, output_names;
   input_names.push_back("image");
   input_names.push_back("vsol2D1");  get_shock->set_input_names(input_names);
   output_names.push_back("shock0");  get_shock->set_output_names(output_names);
@@ -292,17 +292,17 @@ bool dbcvr_mutual_info_process::execute()
   ishock_sampler2.sample((double)1.0);
   sg1 = ishock_sampler2.extrinsic_shock_graph();
   
-  vcl_cout << " sg0 number of vertices: " << sg0->number_of_vertices() << " ";
-  vcl_cout << " sg1 number of vertices: " << sg1->number_of_vertices() << vcl_endl;
+  std::cout << " sg0 number of vertices: " << sg0->number_of_vertices() << " ";
+  std::cout << " sg1 number of vertices: " << sg1->number_of_vertices() << std::endl;
 
   if (sg0->number_of_vertices() == 0) {
-    vcl_cout << "First shock: ZERO number of vertices, skipping\n";
+    std::cout << "First shock: ZERO number of vertices, skipping\n";
     total_info_ = 0;
     return 0;
   }
 
   if (sg1->number_of_vertices() == 0) {
-    vcl_cout << "Second shock: ZERO number of vertices, skipping\n";
+    std::cout << "Second shock: ZERO number of vertices, skipping\n";
     total_info_ = 0;
     return 0;
   }
@@ -311,7 +311,7 @@ bool dbcvr_mutual_info_process::execute()
 
   if (shock_matching && (!sg0 || !sg1))
   {
-    vcl_cout << "Problems in getting shock graphs!\n";
+    std::cout << "Problems in getting shock graphs!\n";
     return 0;
   }
 
@@ -329,7 +329,7 @@ bool dbcvr_mutual_info_process::execute()
     grey_image_sptr = vil_new_image_resource_of_view( *vil_convert_to_grey_using_rgb_weighting ( image1_sptr->get_view() ) );
     if (grey_image_sptr->ni()==0)
     {
-      vcl_cout<<"Failed to load image 1."<<vcl_endl;
+      std::cout<<"Failed to load image 1."<<std::endl;
       return false;
     }
     image1_sptr = grey_image_sptr;
@@ -338,7 +338,7 @@ bool dbcvr_mutual_info_process::execute()
     vil_image_resource_sptr grey_image_sptr = vil_new_image_resource_of_view( *vil_convert_to_grey_using_rgb_weighting ( image2_sptr->get_view() ) );
     if (grey_image_sptr->ni()==0)
     {
-      vcl_cout<<"Failed to load image 2."<<vcl_endl;
+      std::cout<<"Failed to load image 2."<<std::endl;
       return false;
     }
     image2_sptr = grey_image_sptr;
@@ -350,10 +350,10 @@ bool dbcvr_mutual_info_process::execute()
   lenx1 = (topx1+lenx1+2*MARGIN) > w ? (w-topx1-1) : (lenx1+2*MARGIN);
   leny1 = (topy1+leny1+2*MARGIN) > h ? (h-topy1-1) : (leny1+2*MARGIN);
   vil_image_resource_sptr crop_img1=vil_crop(image1_sptr,
-                                             (unsigned int)vcl_floor(topx1+0.5),
-                                             (unsigned int)vcl_floor(lenx1+0.5),
-                                             (unsigned int)vcl_floor(topy1+0.5),
-                                             (unsigned int)vcl_floor(leny1+0.5));
+                                             (unsigned int)std::floor(topx1+0.5),
+                                             (unsigned int)std::floor(lenx1+0.5),
+                                             (unsigned int)std::floor(topy1+0.5),
+                                             (unsigned int)std::floor(leny1+0.5));
   
   
   w = image2_sptr->ni(); h = image2_sptr->nj();
@@ -362,10 +362,10 @@ bool dbcvr_mutual_info_process::execute()
   lenx2 = (topx2+lenx2+2*MARGIN) > w ? (w-topx2-1) : (lenx2+2*MARGIN);
   leny2 = (topy2+leny2+2*MARGIN) > h ? (h-topy2-1) : (leny2+2*MARGIN);
   vil_image_resource_sptr crop_img2 = vil_crop(image2_sptr, 
-                                               (unsigned int)vcl_floor(topx2+0.5), 
-                                               (unsigned int)vcl_floor(lenx2+0.5), 
-                                               (unsigned int)vcl_floor(topy2+0.5), 
-                                               (unsigned int)vcl_floor(leny2+0.5));
+                                               (unsigned int)std::floor(topx2+0.5), 
+                                               (unsigned int)std::floor(lenx2+0.5), 
+                                               (unsigned int)std::floor(topy2+0.5), 
+                                               (unsigned int)std::floor(leny2+0.5));
 
   
   vil_image_view<float> float_image1, float_image2;
@@ -383,7 +383,7 @@ bool dbcvr_mutual_info_process::execute()
   w = img1.width(), h = img1.height(); 
   
   //: create vtol_face_2d instances from vertices of vsol input
-  vcl_vector<vtol_vertex_sptr> vert1, vert2;
+  std::vector<vtol_vertex_sptr> vert1, vert2;
   
   vgl_vector_2d<double> origin(-topx1, -topy1);
   for (unsigned int i = 0; i<inp1.size(); i++) {
@@ -420,7 +420,7 @@ bool dbcvr_mutual_info_process::execute()
 
   //: find alignment between input contours using curve matching
   clock_t time1, time2;
-  vcl_vector< vsol_point_2d_sptr > pts1, pts2;
+  std::vector< vsol_point_2d_sptr > pts1, pts2;
 
   time1 = clock();
 
@@ -446,14 +446,14 @@ bool dbcvr_mutual_info_process::execute()
       
     double length1 = curve1->length();
     double length2 = curve2->length();
-    //vcl_cout << "length 1: " << length1 << vcl_endl; vcl_cout << "length 2: " << length2 << vcl_endl;
+    //std::cout << "length 1: " << length1 << std::endl; std::cout << "length 2: " << length2 << std::endl;
 
     dbcvr_clsd_cvmatch_even_sptr clsdp = new dbcvr_clsd_cvmatch_even (curve1, curve2, n1, n2, (double)R, 3);
     clsdp->Match();
 
     bool change = (n1 != clsdp->n1());
     if (change) { // curve matching have exchanged the curves, change them back 
-      //vcl_cout << "changed them back!!\n";
+      //std::cout << "changed them back!!\n";
       curve1 = clsdp->curve2();
       curve2 = clsdp->curve1();
     }
@@ -469,8 +469,8 @@ bool dbcvr_mutual_info_process::execute()
         minIndex=count;
       }
     }
-    vcl_vector< vcl_pair <int,int> > map = clsdp->finalMap(minIndex);
-    //vcl_cout << "final cost of matching: " << minCost << vcl_endl;
+    std::vector< std::pair <int,int> > map = clsdp->finalMap(minIndex);
+    //std::cout << "final cost of matching: " << minCost << std::endl;
 
     for (unsigned int k = 0; k<map.size(); k++) {
       int i;
@@ -483,9 +483,9 @@ bool dbcvr_mutual_info_process::execute()
         j = map[k].second;
       }
 
-      vsol_point_2d_sptr p = curve1->point_at(vcl_fmod(i*delta_s1, length1));
+      vsol_point_2d_sptr p = curve1->point_at(std::fmod(i*delta_s1, length1));
       pts1.push_back(p);
-      vsol_point_2d_sptr p2 = curve2->point_at(vcl_fmod(j*delta_s2, length2));
+      vsol_point_2d_sptr p2 = curve2->point_at(std::fmod(j*delta_s2, length2));
       pts2.push_back(p2);
     }
 
@@ -502,9 +502,9 @@ bool dbcvr_mutual_info_process::execute()
     curve2->computeProperties();
 
     double length1=curve1->arcLength(curve1->size()-1);
-    //vcl_cout << "length of first curve: " << length1 << vcl_endl;
+    //std::cout << "length of first curve: " << length1 << std::endl;
     double length2=curve2->arcLength(curve2->size()-1);
-    //vcl_cout << "length of second curve: " << length2 << vcl_endl;
+    //std::cout << "length of second curve: " << length2 << std::endl;
 
     dbcvr_clsd_cvmatch_sptr d1 = new dbcvr_clsd_cvmatch(curve1,curve2,(double)R, 3);
     //d1->setStretchCostFlag(flag);
@@ -525,8 +525,8 @@ bool dbcvr_mutual_info_process::execute()
     time2 = clock();
 
     double normCost=minCost/(length1+length2);
-    vcl_printf("%9.6f %9.6f %9.6f\n",minCost,normCost,(length1+length2));
-    //vcl_cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+    std::printf("%9.6f %9.6f %9.6f\n",minCost,normCost,(length1+length2));
+    //std::cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   
     for( unsigned int i = 0 ; i < d1->finalMap(minIndex).size() ; i++ ) {
       vsol_point_2d_sptr pt = curve2->vertex(d1->finalMap(minIndex)[i].second);
@@ -543,7 +543,7 @@ bool dbcvr_mutual_info_process::execute()
   dbru_rcor rcor(face1, face2);
 
   if (distance_transform) {
-    //vcl_cout << "Using distance transform to find region correspondences!\n";
+    //std::cout << "Using distance transform to find region correspondences!\n";
     //: use interpolated curves for interpolation based on arclength
     bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
     bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
@@ -551,16 +551,16 @@ bool dbcvr_mutual_info_process::execute()
     bsold_curve_algs::interpolate_linear(curve2.ptr(), inp2, true);  // removed closed2   
 
     if (!rcor.find_correspondence_dt(curve1, curve2, pts1, pts2, lambda)) {
-      vcl_cout << "Region correspondence based on distance transform could not be found!\n";
+      std::cout << "Region correspondence based on distance transform could not be found!\n";
       return false;
     }
 
   }
 
   if (line_intersections) {
-    //vcl_cout << "Using line intersections to find region correspondences!\n";
+    //std::cout << "Using line intersections to find region correspondences!\n";
     if (!rcor.find_correspondence(pts1, pts2, increment) ) {
-      vcl_cout << "Region correspondence based on line intersections could not be found!\n";
+      std::cout << "Region correspondence based on line intersections could not be found!\n";
       return false;
     }
   }
@@ -574,28 +574,28 @@ bool dbcvr_mutual_info_process::execute()
     tree1->acquire(sg1);
 
     dbskr_tree_edit edit(tree0, tree1);
-    vcl_vector<pathtable_key> path_map;
-    vcl_vector<dbskr_scurve_sptr> curve_list1, curve_list2;
-    vcl_vector< vcl_vector< vcl_pair<int, int> > > map_list;
+    std::vector<pathtable_key> path_map;
+    std::vector<dbskr_scurve_sptr> curve_list1, curve_list2;
+    std::vector< std::vector< std::pair<int, int> > > map_list;
 
     edit.save_path(true);
     if (!edit.edit()) {
-      vcl_cout << "Problems in editing trees\n";
+      std::cout << "Problems in editing trees\n";
       return 0;
     }
 
     float val = edit.final_cost();
-    vcl_cout << " cost: " << val << vcl_endl; 
+    std::cout << " cost: " << val << std::endl; 
     //edit.write_shgm(shgm_file);
     edit.get_correspondence(curve_list1, curve_list2, map_list);
 
     if (!rcor.find_correspondence_shock(curve_list1, curve_list2, map_list, topx1, topy1, topx2, topy2)) {
-      vcl_cout << "Region correspondence based on shock matching could not be found!\n";
+      std::cout << "Region correspondence based on shock matching could not be found!\n";
       return 0;
     }
   }
 
-  vcl_vector <vcl_vector< vgl_point_2d<int> > > region1_map_output = rcor.get_map();
+  std::vector <std::vector< vgl_point_2d<int> > > region1_map_output = rcor.get_map();
   int min_x = rcor.get_min_x();
   int min_y = rcor.get_min_y();
 
@@ -631,7 +631,7 @@ bool dbcvr_mutual_info_process::execute()
 
   //: using region correspondence to compute mutual information
   if (!tf->compute_mutual_information(region1_map_output, min_x, min_y, image_1_, Ix_1_, Iy_1_, hue_1_, sat_1_)) {
-      vcl_cout << "Problem in mutual information computation!\n";
+      std::cout << "Problem in mutual information computation!\n";
     return false;
   }
   
@@ -640,11 +640,11 @@ bool dbcvr_mutual_info_process::execute()
   grad_mutual_info_ = tf->grad_mutual_info();
   color_mutual_info_ = tf->color_mutual_info();
 
-  vcl_cout << "Total Inf = " << total_info_
+  std::cout << "Total Inf = " << total_info_
              << " = IntInfo(" <<  int_mutual_info_
              << ") + GradInfo(" <<  grad_mutual_info_
              << ") + ColorInfo(" <<  color_mutual_info_
-             << ')' << vcl_endl;
+             << ')' << std::endl;
 
   w = img1.width()+img2.width()+img1.width();
   h = img1.height()>img2.height()?img1.height():img2.height();

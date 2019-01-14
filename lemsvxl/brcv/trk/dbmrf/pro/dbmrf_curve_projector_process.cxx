@@ -24,7 +24,7 @@
 dbmrf_curve_projector_process::dbmrf_curve_projector_process() : bpro1_process()
 {
   if( !parameters()->add( "Extract(false)/Project(true)" , "-project", false ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -44,7 +44,7 @@ dbmrf_curve_projector_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_curve_projector_process::name()
 {
   return "Extract 2D Curves";
@@ -52,18 +52,18 @@ dbmrf_curve_projector_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_curve_projector_process::get_input_type()
+std::vector< std::string > dbmrf_curve_projector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "curvel_3d" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_curve_projector_process::get_output_type()
+std::vector< std::string > dbmrf_curve_projector_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -126,7 +126,7 @@ bool
 dbmrf_curve_projector_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -135,7 +135,7 @@ dbmrf_curve_projector_process::execute()
   dbmrf_curvel_3d_storage_sptr frame_curves_3D;
   frame_curves_3D.vertical_cast(input_data_[0][0]);
 
-  vcl_set<bmrf_curve_3d_sptr> curves;
+  std::set<bmrf_curve_3d_sptr> curves;
   frame_curves_3D->get_curvel_3d( curves );
   int frame = frame_curves_3D->frame();
   vnl_double_3x4 camera = frame_curves_3D->camera();
@@ -143,8 +143,8 @@ dbmrf_curve_projector_process::execute()
   bool project=false;
   parameters()->get_value( "-project", project );
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol2d_curves;
-  for ( vcl_set<bmrf_curve_3d_sptr>::iterator itr = curves.begin();
+  std::vector< vsol_spatial_object_2d_sptr > vsol2d_curves;
+  for ( std::set<bmrf_curve_3d_sptr>::iterator itr = curves.begin();
         itr != curves.end();  ++itr )
   {
     if(project){ // Project the curves into the image

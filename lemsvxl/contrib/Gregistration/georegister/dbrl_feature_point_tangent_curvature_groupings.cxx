@@ -5,17 +5,17 @@
 #include "dbrl_rigid_transformation.h"
 #include "dbrl_translation.h"
 #include <vnl/io/vnl_io_vector.h>
-#include <vcl_string.h>
+#include <string>
 dbrl_feature_point_tangent_curvature_groupings::dbrl_feature_point_tangent_curvature_groupings():dbrl_feature_point_tangent_curvature()
     {
     }
 
 dbrl_feature_point_tangent_curvature_groupings::
-dbrl_feature_point_tangent_curvature_groupings(vnl_vector<double> const loc, double const  dir,vcl_vector<unsigned> ns):dbrl_feature_point_tangent_curvature(loc,dir)
+dbrl_feature_point_tangent_curvature_groupings(vnl_vector<double> const loc, double const  dir,std::vector<unsigned> ns):dbrl_feature_point_tangent_curvature(loc,dir)
     {
         feature_neighbor_map_=ns;
     }
-dbrl_feature_point_tangent_curvature_groupings::dbrl_feature_point_tangent_curvature_groupings(double x,double y, double dir, vcl_vector<unsigned> ns ):dbrl_feature_point_tangent_curvature(x,y,dir)
+dbrl_feature_point_tangent_curvature_groupings::dbrl_feature_point_tangent_curvature_groupings(double x,double y, double dir, std::vector<unsigned> ns ):dbrl_feature_point_tangent_curvature(x,y,dir)
     {
         feature_neighbor_map_=ns;
     }
@@ -23,7 +23,7 @@ dbrl_feature_point_tangent_curvature_groupings::~dbrl_feature_point_tangent_curv
     {
 
     }
-void dbrl_feature_point_tangent_curvature_groupings::print_feature(vcl_ostream &os)
+void dbrl_feature_point_tangent_curvature_groupings::print_feature(std::ostream &os)
     {
     os<<"\n point location is "<<location_;
     os<<"\n direction is "<<dir_;
@@ -52,7 +52,7 @@ dbrl_feature_point_tangent_curvature_groupings::b_read(vsl_b_istream &is)
         case 1:
             break;
         default:
-            vcl_cerr << "dbrl_feature_point_tangent_curvature_groupings: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_feature_point_tangent_curvature_groupings: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -61,7 +61,7 @@ dbrl_feature_point_tangent_curvature_groupings::version() const
     {
     return 1;
     }
-void dbrl_feature_point_tangent_curvature_groupings::print_summary(vcl_ostream &os) const
+void dbrl_feature_point_tangent_curvature_groupings::print_summary(std::ostream &os) const
 {
   
 }

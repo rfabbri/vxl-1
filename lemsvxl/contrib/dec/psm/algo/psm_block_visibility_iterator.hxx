@@ -1,9 +1,9 @@
 #ifndef psm_block_visibility_iterator_txx_
 #define psm_block_visibility_iterator_txx_
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <set>
+#include <utility>
 
 #include <vbl/vbl_bounding_box.h>
 #include <vgl/vgl_point_3d.h>
@@ -19,13 +19,13 @@ psm_block_visibility_iterator<APM>::psm_block_visibility_iterator(psm_scene<APM>
 {
   //vgl_point_3d<double> cam_center(cam_.camera_center());
 
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene_.valid_blocks();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene_.valid_blocks();
 
   // initalize visibility graph
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::const_iterator bit = valid_blocks.begin();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::const_iterator bit = valid_blocks.begin();
   for (; bit != valid_blocks.end(); ++bit) {
     if (cube_visible(scene.block_bounding_box(*bit),cam, i0, j0, img_ni,img_nj,true)) {
-      vis_graph_.insert(vcl_make_pair<vgl_point_3d<int>,psm_block_vis_graph_node>(*bit,psm_block_vis_graph_node()));
+      vis_graph_.insert(std::make_pair<vgl_point_3d<int>,psm_block_vis_graph_node>(*bit,psm_block_vis_graph_node()));
     }
   }
 
@@ -148,9 +148,9 @@ psm_block_visibility_iterator<APM>::psm_block_visibility_iterator(psm_scene<APM>
 template<psm_apm_type APM>
 bool psm_block_visibility_iterator<APM>::next()
 {
-  vcl_vector<psm_block_vis_graph_type::iterator> to_process;
+  std::vector<psm_block_vis_graph_type::iterator> to_process;
 
-  vcl_vector<psm_block_vis_graph_type::iterator>::iterator block_it = curr_blocks_.begin();
+  std::vector<psm_block_vis_graph_type::iterator>::iterator block_it = curr_blocks_.begin();
 
   for (; block_it != curr_blocks_.end(); ++block_it) {
     // decrement each block's count in list. if count == 0, add to list of nodes to process
@@ -165,7 +165,7 @@ bool psm_block_visibility_iterator<APM>::next()
   }
   to_process_indices_.resize(to_process.size());
 
-  vcl_vector<vgl_point_3d<int> >::iterator to_proc_it = to_process_indices_.begin();
+  std::vector<vgl_point_3d<int> >::iterator to_proc_it = to_process_indices_.begin();
   for (block_it = to_process.begin(); block_it != to_process.end(); ++block_it, ++to_proc_it) {
     *to_proc_it = (*block_it)->first;
   }
@@ -173,8 +173,8 @@ bool psm_block_visibility_iterator<APM>::next()
   // add linked blocks to list for next iteration
   curr_blocks_.clear();
   for (block_it = to_process.begin(); block_it != to_process.end(); ++block_it) {
-    vcl_vector<psm_block_vis_graph_type::iterator > &links = (*block_it)->second.outgoing_links;
-    vcl_vector<psm_block_vis_graph_type::iterator >::iterator neighbor_it = links.begin();
+    std::vector<psm_block_vis_graph_type::iterator > &links = (*block_it)->second.outgoing_links;
+    std::vector<psm_block_vis_graph_type::iterator >::iterator neighbor_it = links.begin();
     for (; neighbor_it != links.end(); ++neighbor_it) {
       curr_blocks_.push_back(*neighbor_it);
     }
@@ -183,7 +183,7 @@ bool psm_block_visibility_iterator<APM>::next()
 }
 
 template<psm_apm_type APM>
-void psm_block_visibility_iterator<APM>::current_blocks(vcl_vector<vgl_point_3d<int> > &blocks)
+void psm_block_visibility_iterator<APM>::current_blocks(std::vector<vgl_point_3d<int> > &blocks)
 {
   blocks = to_process_indices_;
 }

@@ -16,7 +16,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 MAIN_ARGS(test_index)
 {
@@ -48,7 +48,7 @@ MAIN_ARGS(test_index)
   dborl_image_object_sptr rio1 = new dborl_image_object("test1", img);
   dborl_image_object_sptr rio2 = new dborl_image_object("test2", img);
   dborl_image_object_sptr rio3 = new dborl_image_object("test3", img);
-  vcl_vector<dborl_object_base_sptr> objs; objs.push_back(rio1->cast_to_object_base()); objs.push_back(rio2->cast_to_object_base()); objs.push_back(rio3->cast_to_object_base());
+  std::vector<dborl_object_base_sptr> objs; objs.push_back(rio1->cast_to_object_base()); objs.push_back(rio2->cast_to_object_base()); objs.push_back(rio3->cast_to_object_base());
   TEST("test index node fill_in_the_pointers() ", n->fill_in_the_pointers(objs), true);
   TEST("test index_node fill_in_the_pointers() ", n->objects().size(), 2);
 
@@ -97,7 +97,7 @@ MAIN_ARGS(test_index)
   TEST("test index add_child() ", ind->add_child(c2->cast_to_index_node_base(), c22->cast_to_index_node_base()), true);
   TEST("test index add_dhild() ", ind->node_exists(c22->cast_to_index_node_base()), true);
   
-  vcl_vector<dborl_index_node_base_sptr> cs;
+  std::vector<dborl_index_node_base_sptr> cs;
   TEST("test index get_children() ", ind->get_children(n->cast_to_index_node_base(), cs), true);
   TEST("test index get_children() ", cs.size(), 2);
   TEST("test index get_children() ", cs[0]->name_.compare("child1"), 0);

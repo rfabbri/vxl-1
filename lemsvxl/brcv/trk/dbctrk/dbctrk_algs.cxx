@@ -1,9 +1,9 @@
 //:
 // \file
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h> // for std::abs(int)
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <cstdlib> // for std::abs(int)
+#include <cassert>
+#include <iostream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
@@ -26,7 +26,7 @@
 
 // smooth a curve by convolving x(s),y(s) with a gaussian filter
 void dbctrk_algs::
-smooth_curve(vcl_vector<vgl_point_2d<double> > &curve,double sigma)
+smooth_curve(std::vector<vgl_point_2d<double> > &curve,double sigma)
 {
   vnl_gaussian_kernel_1d gauss_1d(sigma);
   curve.insert(curve.begin(),curve[0]);
@@ -66,7 +66,7 @@ smooth_curve(vcl_vector<vgl_point_2d<double> > &curve,double sigma)
 }
 
 vdgl_digital_curve_sptr  dbctrk_algs::
-create_digital_curves(vcl_vector<vgl_point_2d<double> > & curve)
+create_digital_curves(std::vector<vgl_point_2d<double> > & curve)
 {
   vdgl_edgel_chain_sptr vec;
   vec= new vdgl_edgel_chain;
@@ -99,16 +99,16 @@ double  dbctrk_algs::compute_transformed_euclidean_distance
                        dbctrk_tracker_curve_sptr c2,
                        vnl_matrix<double> R,
                        vnl_matrix<double> T,
-                       double /*s*/,vcl_map<int,int> alignment)
+                       double /*s*/,std::map<int,int> alignment)
 
 {
   if(!c1.ptr() && !c2.ptr())
     return -1;
-  vcl_vector<double> x1,y1,x2,y2,x1t,y1t;
+  std::vector<double> x1,y1,x2,y2,x1t,y1t;
   double xcen1=0,xcen2=0,ycen1=0,ycen2=0;
     double H[2]={0,0};
-  vcl_map<int,int>::iterator iter1;
-  vcl_cout<<"\n"<<c1->desc->curve_->numPoints()<<"\t"<<c2->desc->curve_->numPoints();
+  std::map<int,int>::iterator iter1;
+  std::cout<<"\n"<<c1->desc->curve_->numPoints()<<"\t"<<c2->desc->curve_->numPoints();
   for(iter1 = alignment.begin(); iter1!=alignment.end(); ++iter1)
   {
      x1.push_back(c1->desc->curve_->point((*iter1).first).x());
@@ -154,8 +154,8 @@ double  dbctrk_algs::compute_transformed_euclidean_distance
    
   vnl_matrix<double> X1center(X1cen,2,1);
   vnl_matrix<double> Xt=R*X+T+X1center-X2t;
-    vcl_cout<<"\n"<<X2t(0,0)<<"\t"<<X2t(1,0)<<"\t"<<X(0,0)+X1center(0,0)<<"\t"<<X(1,0)+X1center(0,0);
-    dist+=vcl_sqrt(Xt(0,0)*Xt(0,0)+Xt(1,0)*Xt(1,0));
+    std::cout<<"\n"<<X2t(0,0)<<"\t"<<X2t(1,0)<<"\t"<<X(0,0)+X1center(0,0)<<"\t"<<X(1,0)+X1center(0,0);
+    dist+=std::sqrt(Xt(0,0)*Xt(0,0)+Xt(1,0)*Xt(1,0));
   }
   dist/=alignment.size();
   return dist;
@@ -163,8 +163,8 @@ double  dbctrk_algs::compute_transformed_euclidean_distance
   }
 
 
-bool dbctrk_algs::compute_transformation(vcl_vector<vgl_point_2d<double> > curve,
-                              vcl_vector<vgl_point_2d<double> > & transformed_curve,
+bool dbctrk_algs::compute_transformation(std::vector<vgl_point_2d<double> > curve,
+                              std::vector<vgl_point_2d<double> > & transformed_curve,
                               vnl_matrix<double> R,vnl_matrix<double> T,double scale)
 {
   if(curve.size()<=0)
@@ -194,8 +194,8 @@ return true;
 }
 
 
-bool dbctrk_algs::compute_transformation_next(vcl_vector<vgl_point_2d<double> > curve,
-                              vcl_vector<vgl_point_2d<double> > & transformed_curve,
+bool dbctrk_algs::compute_transformation_next(std::vector<vgl_point_2d<double> > curve,
+                              std::vector<vgl_point_2d<double> > & transformed_curve,
                               vnl_double_2x2 R,vnl_matrix<double> T,double scale)
 {
   if(curve.size()<=0)

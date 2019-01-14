@@ -8,7 +8,7 @@
 #include "dbmrf_bmrf_storage.h"
 
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3x4.h>
 #include <vnl/vnl_double_3.h>
@@ -30,7 +30,7 @@ dbmrf_backproject_process::dbmrf_backproject_process()
       !parameters()->add( "min length" , "-min_length" ,  5       ) ||
       !parameters()->add( "Camera" ,     "-camera" ,      bpro1_filepath("","*")  ) ||
       !parameters()->add( "MAT file" ,   "-mat_file" ,    bpro1_filepath("","*")  ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -56,7 +56,7 @@ dbmrf_backproject_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_backproject_process::name()
 {
   return "BMRF Back Project";
@@ -64,18 +64,18 @@ dbmrf_backproject_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_backproject_process::get_input_type()
+std::vector< std::string > dbmrf_backproject_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_backproject_process::get_output_type()
+std::vector< std::string > dbmrf_backproject_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -101,7 +101,7 @@ bool
 dbmrf_backproject_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -123,7 +123,7 @@ dbmrf_backproject_process::execute()
   int frame = frame_network->frame();
 
   vnl_double_3x4 camera;
-  vcl_fstream fh(camera_file.path.c_str());
+  std::fstream fh(camera_file.path.c_str());
   fh >> camera;
   fh.close();
 
@@ -131,7 +131,7 @@ dbmrf_backproject_process::execute()
   vnl_double_3x3 Minv = vnl_inverse(M);
   vnl_double_3 t(camera.get_column(3));
 
-  vcl_ofstream mat_out(mat_file.path.c_str(), vcl_fstream::app);
+  std::ofstream mat_out(mat_file.path.c_str(), std::fstream::app);
 
   unsigned long count = 0;
   for(bmrf_network::seg_node_map::const_iterator n = network->begin(frame);
@@ -149,7 +149,7 @@ dbmrf_backproject_process::execute()
 
     ++count;
     mat_out << "curve{"<<frame<<","<<count<<"} = [";
-    for(vcl_vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
+    for(std::vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
         pi != n->first->end(); ++pi)
     {
       vgl_point_2d<double> gpt((*pi)->p());
@@ -163,7 +163,7 @@ dbmrf_backproject_process::execute()
       }
 
     }
-    mat_out << "];"<< vcl_endl;
+    mat_out << "];"<< std::endl;
   }
 
   mat_out.close();

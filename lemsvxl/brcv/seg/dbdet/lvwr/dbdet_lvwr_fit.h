@@ -51,8 +51,8 @@ protected:
   vsol_polygon_2d_sptr poly_;
   vsol_polygon_2d_sptr output_poly_;
 
-  vcl_vector<vsol_point_2d_sptr> contour_;
-  vcl_vector<vcl_pair<int, int> > cor_;
+  std::vector<vsol_point_2d_sptr> contour_;
+  std::vector<std::pair<int, int> > cor_;
   int last_x, last_y, last_xx, last_yy;
 
 private:

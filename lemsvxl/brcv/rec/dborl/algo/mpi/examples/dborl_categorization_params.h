@@ -56,13 +56,13 @@ public:
   dborl_parameter<float> rms;
   dborl_parameter<bool> normalized_stretch_cost;
 
-  dborl_parameter<vcl_string> input_object_path;
-  dborl_parameter<vcl_string> input_object_name;
-  dborl_parameter<vcl_string> index_filename;
-  dborl_parameter<vcl_string> output_directory;
-  dborl_parameter<vcl_string> input_extension;       // extensions of images to load, assumption: <obj name><.ext> is found in the object directory
+  dborl_parameter<std::string> input_object_path;
+  dborl_parameter<std::string> input_object_name;
+  dborl_parameter<std::string> index_filename;
+  dborl_parameter<std::string> output_directory;
+  dborl_parameter<std::string> input_extension;       // extensions of images to load, assumption: <obj name><.ext> is found in the object directory
   
-  dborl_categorization_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_categorization_params(std::string algo_name) : dborl_algo_params(algo_name) { 
     use_shock_matching.set_values(param_list_, "data", "use_shock_matching", "if false use curve matching to find similarity of the input object to the objects in the index", true, true);
     
     scurve_sample_ds.set_values(param_list_, "tree_edit_params", "scurve_sample_ds", "Sampling ds to reconstruct the scurve", 1.0f, 1.0f); 

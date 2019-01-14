@@ -5,9 +5,9 @@
 #ifndef dbsk3d_fs_segre_h_
 #define dbsk3d_fs_segre_h_
 
-#include <vcl_queue.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <queue>
+#include <algorithm>
+#include <utility>
 
 #include <dbsk3d/algo/dbsk3d_mesh_bnd.h>
 #include <dbsk3d/dbsk3d_fs_face.h>
@@ -45,14 +45,14 @@ protected:
   int             greedy_option_;
 
   //: The classified priority queue of shock link elements.  
-  vcl_multimap<double, dbsk3d_fs_edge*>  L_1st_queue_;
-  vcl_multimap<double, dbsk3d_fs_edge*>  L_2nd_queue_;
+  std::multimap<double, dbsk3d_fs_edge*>  L_1st_queue_;
+  std::multimap<double, dbsk3d_fs_edge*>  L_2nd_queue_;
 
   //: Variable to store the stopping cost threshold
   float           stop_rth_;
 
   //: A vector to store the backward association of bnd_face to shock_link.
-  vcl_vector<dbsk3d_fs_edge*>   F_L_vector_;
+  std::vector<dbsk3d_fs_edge*>   F_L_vector_;
 
   dbsk3d_bnd_chain_set*  mesh_bnd_chains_; 
 
@@ -87,16 +87,16 @@ public:
   }
 
   void _add_to_L_1st_queue (const dbsk3d_fs_edge* FE) {
-    L_1st_queue_.insert (vcl_pair<double, dbsk3d_fs_edge*> (FE->cost(), (dbsk3d_fs_edge*) FE));
+    L_1st_queue_.insert (std::pair<double, dbsk3d_fs_edge*> (FE->cost(), (dbsk3d_fs_edge*) FE));
   }  
   void _add_to_L_1st_queue (const double cost, const dbsk3d_fs_edge* FE) {
-    L_1st_queue_.insert (vcl_pair<double, dbsk3d_fs_edge*> (cost, (dbsk3d_fs_edge*) FE));
+    L_1st_queue_.insert (std::pair<double, dbsk3d_fs_edge*> (cost, (dbsk3d_fs_edge*) FE));
   }  
   bool _remove_from_L_1st_queue (const dbsk3d_fs_edge* FE) {
     double key = FE->cost();  
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator lower = L_1st_queue_.lower_bound(key);
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator upper = L_1st_queue_.upper_bound(key);
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = lower;
+    std::multimap<double, dbsk3d_fs_edge*>::iterator lower = L_1st_queue_.lower_bound(key);
+    std::multimap<double, dbsk3d_fs_edge*>::iterator upper = L_1st_queue_.upper_bound(key);
+    std::multimap<double, dbsk3d_fs_edge*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == FE) {
         L_1st_queue_.erase (it);
@@ -105,10 +105,10 @@ public:
     }
     return false;
   }
-  vcl_multimap<double, dbsk3d_fs_edge*>& L_1st_queue () {
+  std::multimap<double, dbsk3d_fs_edge*>& L_1st_queue () {
     return L_1st_queue_;
   }
-  vcl_multimap<double, dbsk3d_fs_edge*>& L_2nd_queue () {
+  std::multimap<double, dbsk3d_fs_edge*>& L_2nd_queue () {
     return L_2nd_queue_;
   }
     
@@ -121,18 +121,18 @@ public:
       cost = 0;
     }
     else {
-      vcl_set<dbmsh3d_vertex*> pass_genes;
+      std::set<dbmsh3d_vertex*> pass_genes;
       cost = FE->get_pass_Gs (pass_genes);
     }
 
-    //L_2nd_queue_.insert (vcl_pair<double, dbsk3d_fs_edge*> (FE->cost(), (dbsk3d_fs_edge*) FE));
-    L_2nd_queue_.insert (vcl_pair<double, dbsk3d_fs_edge*> (cost, (dbsk3d_fs_edge*) FE));
+    //L_2nd_queue_.insert (std::pair<double, dbsk3d_fs_edge*> (FE->cost(), (dbsk3d_fs_edge*) FE));
+    L_2nd_queue_.insert (std::pair<double, dbsk3d_fs_edge*> (cost, (dbsk3d_fs_edge*) FE));
   }  
   bool _remove_from_L_2nd_queue (const dbsk3d_fs_edge* FE) {
     double key = FE->cost();  
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator lower = L_2nd_queue_.lower_bound(key);
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator upper = L_2nd_queue_.upper_bound(key);
-    vcl_multimap<double, dbsk3d_fs_edge*>::iterator it = lower;
+    std::multimap<double, dbsk3d_fs_edge*>::iterator lower = L_2nd_queue_.lower_bound(key);
+    std::multimap<double, dbsk3d_fs_edge*>::iterator upper = L_2nd_queue_.upper_bound(key);
+    std::multimap<double, dbsk3d_fs_edge*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == FE) {
         L_2nd_queue_.erase (it);
@@ -190,7 +190,7 @@ public:
   unsigned int first_greedy_iteration (const float percentage);  
     bool first_greedy_step (dbsk3d_fs_edge* FE);
       SURF_TOPO_TYPE check_L_topology_1 (const dbsk3d_fs_edge* FE,
-                                         vcl_set<dbsk3d_fs_edge*>& undo_L_set);
+                                         std::set<dbsk3d_fs_edge*>& undo_L_set);
     bool first_greedy_fix_vtopo (dbsk3d_fs_edge* FE);
 
   unsigned int first_topo_fixing ();

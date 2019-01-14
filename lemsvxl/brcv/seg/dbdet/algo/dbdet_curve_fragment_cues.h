@@ -1,7 +1,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vbl/vbl_array_2d.h>
 #include <vxl_config.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vil/vil_image_view.h>
 #include <vil/vil_rgb.h>
 #include <vil/vil_border.h>
@@ -20,7 +20,7 @@
 //\date 05/25/2016 21:57:40 BRT
 //
 
-//static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = vcl_numeric_limits<vxl_uint_32>::max();
+//static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = std::numeric_limits<vxl_uint_32>::max();
 
 //: Compute curve fragment cues for many curves.
 // Holds state information such as distance transform and auxiliary buffers,

@@ -19,13 +19,13 @@ int main()
     vil_image_view<vxl_byte> apple_img = vil_load("/home/firat/lemsvxl/src/contrib/firat/dbdet_pb_edge_detector/data/apple.jpg");
     vil_image_view<vxl_byte> horse_img = vil_load("/home/firat/lemsvxl/src/contrib/firat/dbdet_pb_edge_detector/data/horse.jpg");
 
-    vcl_string edg_file;
-    vcl_string png_file;
+    std::string edg_file;
+    std::string png_file;
     dbdet_edgemap_sptr edgemap_ptr;
 
     /*for(int i = 0; i < 2; i++)
     {*/
-        //vcl_cout << "PASS " << i+1 << vcl_endl;
+        //std::cout << "PASS " << i+1 << std::endl;
         edgemap_ptr = pb.detect_bg(horse_img);
         edg_file = "/home/firat/lemsvxl/src/contrib/firat/dbdet_pb_edge_detector/data/horse_bg.edg";
         png_file = "/home/firat/lemsvxl/src/contrib/firat/dbdet_pb_edge_detector/data/horse_bg.png";
@@ -33,8 +33,8 @@ int main()
         dbdet_edgemap_sptr out_EM;
         dbdet_curve_fragment_graph out_CFG;
         kel.link_and_prune_edges(edgemap_ptr, 15, 4, out_EM, out_CFG);
-        vcl_cout << "Number of edges = " << out_EM->num_edgels() << vcl_endl;
-        vcl_cout << "Size of CFG = " << out_CFG.frags.size() << vcl_endl;
+        std::cout << "Number of edges = " << out_EM->num_edgels() << std::endl;
+        std::cout << "Size of CFG = " << out_CFG.frags.size() << std::endl;
         //vil_save(out, png_file.c_str());
 
         /*edgemap_ptr = pb.detect_cg(apple_img);

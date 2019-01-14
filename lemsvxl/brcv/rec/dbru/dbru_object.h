@@ -16,10 +16,10 @@
 //  
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <cassert>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <dbru/dbru_label_sptr.h>
@@ -80,11 +80,11 @@ class dbru_object : public vbl_ref_count
  //: get ith polygon's label
  dbru_label_sptr get_label(unsigned int i); 
 
- void write_xml(vcl_ostream& os);
+ void write_xml(std::ostream& os);
  
  //: my simple reader for a very strict and limited output format for object instances
  //  as written out by write_xml method
- bool read_xml(vcl_istream& os);
+ bool read_xml(std::istream& os);
 
  //: add an observation
  bool add_observation(dbinfo_observation_sptr obs); 
@@ -96,10 +96,10 @@ class dbru_object : public vbl_ref_count
  bool set_observation(unsigned int i, dbinfo_observation_sptr obs);
 
  //: get the observation with given documentation
- dbinfo_observation_sptr get_observation(vcl_string const& obs_doc); 
+ dbinfo_observation_sptr get_observation(std::string const& obs_doc); 
 
  //: replace an existing observation with given documentation
- bool set_observation(vcl_string const& obs_doc, dbinfo_observation_sptr obs);
+ bool set_observation(std::string const& obs_doc, dbinfo_observation_sptr obs);
 
  //: add an instance
  bool add_instance(dbru_multiple_instance_object_sptr ins); 
@@ -134,17 +134,17 @@ class dbru_object : public vbl_ref_count
  unsigned int n_labels() { return labels_.size(); }
 
  //:Documentation concerning the observation
-  void set_doc(vcl_string const& doc){doc_ = doc;}
+  void set_doc(std::string const& doc){doc_ = doc;}
 
-  vcl_string doc() {return doc_;}
+  std::string doc() {return doc_;}
 
   //: category the observation
-  void set_category(vcl_string const& cat){category_ = cat;}
+  void set_category(std::string const& cat){category_ = cat;}
 
-  vcl_string category() {return category_;}
+  std::string category() {return category_;}
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const;
+  virtual void print(std::ostream& os = std::cout) const;
 
   dbru_object& operator=(const dbru_object& right);
 
@@ -157,10 +157,10 @@ class dbru_object : public vbl_ref_count
  virtual unsigned version() const {return 3;}
 
  //: Return a platform independent string identifying the class
- virtual vcl_string is_a() const {return "dbru_object";}
+ virtual std::string is_a() const {return "dbru_object";}
 
  //: determine if this is the given class
- virtual bool is_class(vcl_string const& cls) const
+ virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
  //: Binary save self to stream.
@@ -177,23 +177,23 @@ class dbru_object : public vbl_ref_count
   int video_id_;                               //!< id of the video this object is extracted from
   int start_frame_;                            //!< the first frame object appears 
   int end_frame_;                              //!< the last frame object appears
-  vcl_string category_;                        //!< category name, this name should be repeated for all labels
+  std::string category_;                        //!< category name, this name should be repeated for all labels
   unsigned int polygon_cnt_;                   //!< number of polygonal contours associated to this object
   int polygon_per_frame_;                      //!< each frame might contain more than one polygon (e.g. vehicle and shadow contours)
-  vcl_vector < dbru_label_sptr > labels_;         //!< labels of each polygonal contour (motion orientation, etc.)
-  vcl_vector < vsol_polygon_2d_sptr > polygons_;  //!< vector of polygons, without regard to frames, user should keep track of frames
+  std::vector < dbru_label_sptr > labels_;         //!< labels of each polygonal contour (motion orientation, etc.)
+  std::vector < vsol_polygon_2d_sptr > polygons_;  //!< vector of polygons, without regard to frames, user should keep track of frames
 
   //: A documentation string to describe the object (e.g. pickup1, car2)
   // this is another way of accessing objects and observations (via names determined by users)
-  vcl_string doc_;
+  std::string doc_;
                               
   //: keep inner region features extracted from image for each polygon
-  vcl_vector< dbinfo_observation_sptr > observations_;
+  std::vector< dbinfo_observation_sptr > observations_;
 
   //: After tracking, additional info from multiple frames are kept in these multiple_instance_object
   //  They contain edgels fused into the middle frame from adjacent frames and
   //  an array of intensity images transformed onto middle frame (created via algos by Vishal Jain)
-  vcl_vector< dbru_multiple_instance_object_sptr > instances_;
+  std::vector< dbru_multiple_instance_object_sptr > instances_;
 
 };
 
@@ -223,17 +223,17 @@ inline void vsl_b_read(vsl_b_istream &is, dbru_object* &obj)
 
 #include <dbru/dbru_object_sptr.h>
 
-inline vcl_ostream &operator<<(vcl_ostream &os, dbru_object const& fb)
+inline std::ostream &operator<<(std::ostream &os, dbru_object const& fb)
 {
   fb.print(os);
   return os;
 }
 
-inline void vsl_print_summary(vcl_ostream & os, const dbru_object* fbp)
+inline void vsl_print_summary(std::ostream & os, const dbru_object* fbp)
 {os << *fbp;}
 
-bool read_objects_from_file(const char *filename, vcl_vector< dbru_object_sptr>& objects);
-int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_polygon_2d_sptr > >& frame_polys);
-void read_ins_file(const char *filename, vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames);
+bool read_objects_from_file(const char *filename, std::vector< dbru_object_sptr>& objects);
+int read_poly_file(std::string const& poly_file, std::vector<std::vector< vsol_polygon_2d_sptr > >& frame_polys);
+void read_ins_file(const char *filename, std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames);
 
 #endif // dbru_object_h_

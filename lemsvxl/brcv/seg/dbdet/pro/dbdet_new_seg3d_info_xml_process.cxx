@@ -5,8 +5,8 @@
 
 #include "dbdet_new_seg3d_info_xml_process.h"
 
-#include <vcl_fstream.h>
-#include <vcl_algorithm.h>
+#include <fstream>
+#include <algorithm>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
 #include <bpro1/bpro1_parameters.h>
@@ -32,7 +32,7 @@ dbdet_new_seg3d_info_xml_process() : bpro1_process()
     !this->parameters()->add("has contours in repository?", "-has_contours", false ) 
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbdet_new_seg3d_info_xml_process::
+std::string dbdet_new_seg3d_info_xml_process::
 name()
 {
   return "new seg3d_info .xml";
@@ -83,10 +83,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbdet_new_seg3d_info_xml_process::
+std::vector< std::string > dbdet_new_seg3d_info_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -96,9 +96,9 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbdet_new_seg3d_info_xml_process::get_output_type()
+std::vector< std::string > dbdet_new_seg3d_info_xml_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -130,7 +130,7 @@ execute()
   seg3d->load_contours_from_image_names();
 
   //// get the list of files
-  //vcl_vector<vcl_string> filenames;
+  //std::vector<std::string> filenames;
   //for ( vul_file_iterator fit = image_folder.path + "/*.*"; fit; ++fit )
   //{
   //  // check to see if file is a directory.
@@ -145,13 +145,13 @@ execute()
   //}
   //// Sort - because the file iterator uses readdir() it does not
   ////        iterate over files in alphanumeric order 
-  //vcl_sort(filenames.begin(),filenames.end());
+  //std::sort(filenames.begin(),filenames.end());
 
 
   //// Load the images
   //for ( unsigned i=0; i<filenames.size(); ++i )
   //{
-  //  vcl_string filename = vul_file::strip_directory(filenames[i].c_str());
+  //  std::string filename = vul_file::strip_directory(filenames[i].c_str());
   //  dbdet_seg3d_info_frame frame;
   //  frame.image_file = filename;
   //  frame.contour_file_list.clear();
@@ -160,7 +160,7 @@ execute()
 
 
   // write data to an .xml file
-  vcl_ofstream xml_file(xml_path.path.c_str());
+  std::ofstream xml_file(xml_path.path.c_str());
   x_write(xml_file, seg3d);
   xml_file.close();
 

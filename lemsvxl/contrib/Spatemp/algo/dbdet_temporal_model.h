@@ -1,7 +1,7 @@
 #ifndef dbdet_temporal_model_h
 #define dbdet_temporal_model_h
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -67,9 +67,9 @@ public:
     dbdet_temporal_normal_velocity_model(const dbdet_temporal_normal_velocity_model & m, dbdet_temporal_normal_velocity_model & nbr);
     dbdet_temporal_normal_velocity_model(float beta, int t);
     dbdet_temporal_normal_velocity_model(dbdet_curvelet * c1, dbdet_curvelet *c2, int t);
-    dbdet_temporal_normal_velocity_model( vcl_map<int,double> betamap);
+    dbdet_temporal_normal_velocity_model( std::map<int,double> betamap);
 
-    dbdet_temporal_normal_velocity_model(dbdet_curvelet * refc, vcl_map<int,double> betamap,vcl_map<int,dbdet_curvelet*> cmap);
+    dbdet_temporal_normal_velocity_model(dbdet_curvelet * refc, std::map<int,double> betamap,std::map<int,dbdet_curvelet*> cmap);
     ~dbdet_temporal_normal_velocity_model(){}
     bool iscompatible(dbdet_curvelet * c);
     bool is_model_intersect(dbdet_temporal_model * m,  double dist_epsilon_square);
@@ -79,8 +79,8 @@ public:
     bool compute_beta_s(dbdet_temporal_normal_velocity_model & nbr);
     void print_model();
     dbdet_curvelet* ref_curvelet;
-    vcl_map<int,double> betas;
-    //vcl_map<int,dbdet_curvelet*> cs;
+    std::map<int,double> betas;
+    //std::map<int,dbdet_curvelet*> cs;
     void compute_2d_map();
     bool compute_intersection(dbdet_curvelet * refc, dbdet_curvelet * c, double & beta);
 
@@ -124,11 +124,11 @@ public:
     double tangent;
 
     bool iscomputed_;
-    vcl_vector<float> f1t;
-    vcl_vector<float> f2t;
+    std::vector<float> f1t;
+    std::vector<float> f2t;
 
-    vcl_vector<float> f1p;
-    vcl_vector<float> f2p;
+    std::vector<float> f1p;
+    std::vector<float> f2p;
 
     float phi1_min;
     float phi1_max;

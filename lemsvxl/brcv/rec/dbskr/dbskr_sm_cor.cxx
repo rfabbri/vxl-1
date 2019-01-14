@@ -6,9 +6,9 @@
 #include <dbskr/dbskr_sm_cor.h>
 
 
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 
 #include <dbskr/dbskr_dpmatch.h>
 #include <dbskr/dbskr_dpmatch_combined.h>
@@ -57,7 +57,7 @@ dbskr_sm_cor::dbskr_sm_cor(dbskr_tree_sptr t1, dbskr_tree_sptr t2)
   //use_dpmatch_combined_ = false;
   //localize_match_ = false;
   //curve_matching_R_ = 6.0f; // this is the default, if correspondence will be read from a file, this should be set before
-                            // calling read_and_construct_from_shgm(vcl_string fname);
+                            // calling read_and_construct_from_shgm(std::string fname);
   trans_matrix_ = 0;
 }
 
@@ -86,7 +86,7 @@ dbskr_sm_cor::new_sm_reverse_maps()
 {
   dbskr_sm_cor_sptr new_sm = new dbskr_sm_cor();
   
-  vcl_vector<pathtable_key> map;
+  std::vector<pathtable_key> map;
   for (unsigned i = 0; i < dart_path_map_.size(); i++) {
     pathtable_key key = dart_path_map_[i];
     pathtable_key new_key;
@@ -117,24 +117,24 @@ bool dbskr_sm_cor::compute_similarity2D(vgl_h_matrix_2d<double>& H, bool tree1_t
   //  return false;
 
   if (!map_list_.size()) {
-    vcl_cout << " map list is empty\n";
+    std::cout << " map list is empty\n";
     return false;
   }
 
   if (map_list_.size() != curve_list1_.size() || map_list_.size() != curve_list2_.size()) {
-    vcl_cout << " map list size: " << map_list_.size() << " curve list1 size: " << curve_list1_.size() << " curve list2 size: " << curve_list2_.size() << "\n";
+    std::cout << " map list size: " << map_list_.size() << " curve list1 size: " << curve_list1_.size() << " curve list2 size: " << curve_list2_.size() << "\n";
     return false;
   }
 
-  vcl_vector< rgrl_feature_sptr > pts1;
-  vcl_vector< rgrl_feature_sptr > pts2;
+  std::vector< rgrl_feature_sptr > pts1;
+  std::vector< rgrl_feature_sptr > pts2;
   for (unsigned i = 0; i < map_list_.size(); i++) {
 
     dbskr_scurve_sptr sc1 = curve_list1_[i];
     dbskr_scurve_sptr sc2 = curve_list2_[i];
 
     for (unsigned j = 0; j < map_list_[i].size(); j+=sampling_interval) {
-      vcl_pair<int, int> cor = map_list_[i][j];
+      std::pair<int, int> cor = map_list_[i][j];
 
       vnl_vector<double> v(2);
       if (use_shock_points) {
@@ -181,13 +181,13 @@ bool dbskr_sm_cor::compute_similarity2D(vgl_h_matrix_2d<double>& H, bool tree1_t
   rgrl_trans_similarity dummy_trans(2);
   rgrl_transformation_sptr trans = est->estimate( ms, dummy_trans );
   if (!trans) {
-    vcl_cout << "transformation could not be estimated by rgrl\n";
+    std::cout << "transformation could not be estimated by rgrl\n";
     return false;
   }
 
   rgrl_trans_similarity* s_trans = dynamic_cast<rgrl_trans_similarity*>(trans.as_pointer());
   if (!s_trans) {
-    vcl_cout << "transformation pointer could not be retrieved\n";
+    std::cout << "transformation pointer could not be retrieved\n";
     return false;
   }
   
@@ -207,7 +207,7 @@ bool dbskr_sm_cor::compute_similarity2D(vgl_h_matrix_2d<double>& H, bool tree1_t
 
   if (save_trans) {
     
-    //vcl_cout << " saving the trans_matrix_\n";
+    //std::cout << " saving the trans_matrix_\n";
 
     trans_matrix_ = vnl_matrix<double>(3,3,0.0);
 
@@ -255,14 +255,14 @@ bool dbskr_sm_cor::compute_homography(vgl_h_matrix_2d<double>& H, bool tree1_to_
   if (map_list_.size() != curve_list1_.size() || map_list_.size() != curve_list2_.size())
     return false;
 
-  vcl_vector<vgl_homg_point_2d<double> > points1, points2;
+  std::vector<vgl_homg_point_2d<double> > points1, points2;
   for (unsigned i = 0; i < map_list_.size(); i++) {
 
     dbskr_scurve_sptr sc1 = curve_list1_[i];
     dbskr_scurve_sptr sc2 = curve_list2_[i];
 
     for (unsigned j = 0; j < map_list_[i].size(); j+=sampling_interval) {
-      vcl_pair<int, int> cor = map_list_[i][j];
+      std::pair<int, int> cor = map_list_[i][j];
 
       if (use_shock_points) {
         vgl_homg_point_2d<double> ps1(sc1->sh_pt(cor.first));
@@ -288,7 +288,7 @@ bool dbskr_sm_cor::compute_homography(vgl_h_matrix_2d<double>& H, bool tree1_to_
 
   if (use_ransac)
   {
-	vcl_cout << "ERROR: 'use_rasac' option is not implemented.\n";
+	std::cout << "ERROR: 'use_rasac' option is not implemented.\n";
   }
 
   
@@ -306,8 +306,8 @@ bool dbskr_sm_cor::compute_homography(vgl_h_matrix_2d<double>& H, bool tree1_to_
 
   //} else {
   //  
-  //  vcl_vector<vgl_point_3d<double> > world_points;
-  //  vcl_vector<vgl_point_2d<double> > image_points;
+  //  std::vector<vgl_point_3d<double> > world_points;
+  //  std::vector<vgl_point_2d<double> > image_points;
 
   //  if (tree1_to_tree2) {
   //    for (unsigned i = 0; i < points1.size(); i++) 
@@ -357,18 +357,18 @@ dbskr_sm_cor::~dbskr_sm_cor()
   match_costs_init_alp_.clear();
 }
 
-//void dbskr_sm_cor::write_shgm(double matching_cost, vcl_string fname) 
-void dbskr_sm_cor::write_shgm(vcl_string fname) 
+//void dbskr_sm_cor::write_shgm(double matching_cost, std::string fname) 
+void dbskr_sm_cor::write_shgm(std::string fname) 
 {
   if (!dart_path_map_.size()) {
-    vcl_cout << "Paths are not computed, sm_cor object is empty!" << vcl_endl;
+    std::cout << "Paths are not computed, sm_cor object is empty!" << std::endl;
     return;
   }
 
-  vcl_ofstream tf(fname.c_str());
+  std::ofstream tf(fname.c_str());
   
   if (!tf) {
-    vcl_cout << "Unable to open shgm file " << fname << " for write " << vcl_endl;
+    std::cout << "Unable to open shgm file " << fname << " for write " << std::endl;
     return;
   }
 
@@ -377,56 +377,56 @@ void dbskr_sm_cor::write_shgm(vcl_string fname)
   // to comply with the format of the shgm file
   tf << "name1.shg\n";
   tf << "name2.shg\n";
-  //tf << matching_cost << vcl_endl;
-  tf << final_cost_ << vcl_endl;
+  //tf << matching_cost << std::endl;
+  tf << final_cost_ << std::endl;
 
   for (unsigned int i = 0; i<dart_path_map_.size(); i++) {
     pathtable_key key = dart_path_map_[i];
     //: find node paths
-    vcl_vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
-    vcl_vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
+    std::vector<int> nodes1 = tree1_->find_node_path(key.first.first, key.first.second);
+    std::vector<int> nodes2 = tree2_->find_node_path(key.second.first, key.second.second);
 
     for (unsigned int j = 0; j<nodes1.size(); j++) 
       tf << nodes1[j] << " ";
-    tf << vcl_endl;
+    tf << std::endl;
     for (unsigned int j = 0; j<nodes2.size(); j++) 
       tf << nodes2[j] << " ";
-    tf << vcl_endl;
-    tf << vcl_endl;    
+    tf << std::endl;
+    tf << std::endl;    
   }
 
   tf.close();
   return;
 }
 
-float dbskr_sm_cor::read_and_construct_from_shgm(vcl_string fname, bool recover_dart_ids_scurves) 
+float dbskr_sm_cor::read_and_construct_from_shgm(std::string fname, bool recover_dart_ids_scurves) 
 {
   //clear everything
   clear();
   clear_lists();
 
   // first load the pathmap from the shgm file
-  vcl_ifstream tf(fname.c_str());
+  std::ifstream tf(fname.c_str());
   
   if (!tf) {
-    vcl_cout << "Unable to open file " << fname << " for write " << vcl_endl;
+    std::cout << "Unable to open file " << fname << " for write " << std::endl;
     return -1;
   }
 
   char buffer[1000];
   tf.getline(buffer, 1000);  // version
   tf.getline(buffer, 1000);  // name 1
-  vcl_string line = buffer;
+  std::string line = buffer;
   tf.getline(buffer, 1000);  // name 2
   line = buffer;
 
   //float cost;
   //tf >> cost;
   tf >> final_cost_;
-  //vcl_cout << "matching cost: " << final_cost_ << "\n";
+  //std::cout << "matching cost: " << final_cost_ << "\n";
   
-  vcl_map<vcl_string, vcl_string> paths;
-  vcl_string line2;
+  std::map<std::string, std::string> paths;
+  std::string line2;
 
   while (!tf.eof()) {
     tf.getline(buffer, 1000);
@@ -437,13 +437,13 @@ float dbskr_sm_cor::read_and_construct_from_shgm(vcl_string fname, bool recover_
     tf.getline(buffer, 1000);
     line2 = buffer;
     if (line2.length() < 2) {  // something is wrong with this file
-      vcl_cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
+      std::cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
       return -1;  // return as it is
     }
 
     char * pch;
     char tmp[1000];
-    vcl_sprintf(tmp, "%s", line.c_str());
+    std::sprintf(tmp, "%s", line.c_str());
     //pch = strtok (line.c_str()," ");
     pch = strtok(tmp," ");
     int first = atoi(pch);
@@ -458,7 +458,7 @@ float dbskr_sm_cor::read_and_construct_from_shgm(vcl_string fname, bool recover_
     key.first.first = first;
     key.first.second = id;
 
-    vcl_sprintf(tmp, "%s", line2.c_str());
+    std::sprintf(tmp, "%s", line2.c_str());
     pch = strtok(tmp," ");
     first = atoi(pch);
     
@@ -476,7 +476,7 @@ float dbskr_sm_cor::read_and_construct_from_shgm(vcl_string fname, bool recover_
   tf.close();
 
 #if WRITE_OUTPUT
-  vcl_set<int> dart_set1, dart_set2;
+  std::set<int> dart_set1, dart_set2;
 #endif 
 
   dart_path_map_has_node_ids_ = true;
@@ -490,11 +490,11 @@ bool dbskr_sm_cor::recover_dart_ids_and_scurves() {
 
   if (dart_path_map_has_node_ids_) {
      // currently dart_path_map_ has keys with node ids on the tree, we need to turn them into dart ids on the tree
-    //  using vcl_vector<int>& get_dart_path_from_nodes(int node1, int node2) method of tree
+    //  using std::vector<int>& get_dart_path_from_nodes(int node1, int node2) method of tree
 
     for (unsigned int i = 0; i<dart_path_map_.size(); i++) {
-      vcl_vector<int> dart_path1 = tree1_->get_dart_path_from_nodes(dart_path_map_[i].first.first, dart_path_map_[i].first.second);
-      vcl_vector<int> dart_path2 = tree2_->get_dart_path_from_nodes(dart_path_map_[i].second.first, dart_path_map_[i].second.second);
+      std::vector<int> dart_path1 = tree1_->get_dart_path_from_nodes(dart_path_map_[i].first.first, dart_path_map_[i].first.second);
+      std::vector<int> dart_path2 = tree2_->get_dart_path_from_nodes(dart_path_map_[i].second.first, dart_path_map_[i].second.second);
       
       dart_path_map_[i].first.first = dart_path1[0];
       dart_path_map_[i].first.second = dart_path1[dart_path1.size()-1];
@@ -522,7 +522,7 @@ bool dbskr_sm_cor::recover_dart_ids_and_scurves() {
   // get all the correspondences from the path map
   //for (int i = dart_path_map_.size()-1; i>=0; i--) 
   if (!map_list_.size()) {  // recompute the matches
-    vcl_cout << "previous final_cost_: " << final_cost_ << vcl_endl;
+    std::cout << "previous final_cost_: " << final_cost_ << std::endl;
     final_cost_ = 0;
     curve_list1_.clear();
     curve_list2_.clear();
@@ -532,12 +532,12 @@ bool dbskr_sm_cor::recover_dart_ids_and_scurves() {
     match_costs_init_dr_.clear();
     match_costs_init_alp_.clear();
 
-    vcl_vector<bool> tree1_used_darts(tree1_->size(), false), tree2_used_darts(tree2_->size(), false);
+    std::vector<bool> tree1_used_darts(tree1_->size(), false), tree2_used_darts(tree2_->size(), false);
     for (unsigned int i = 0; i<dart_path_map_.size(); i++) 
     {
       pathtable_key key = dart_path_map_[i];
 
-      vcl_cout << "key: " << key.first.first << ", " << key.first.second << " " << key.second.first << ", " << key.second.second << ":\n";
+      std::cout << "key: " << key.first.first << ", " << key.first.second << " " << key.second.first << ", " << key.second.second << ":\n";
       
       //dbskr_scurve_sptr sc1 = tree1_->get_curve(key.first.first, key.first.second, contstruct_circular_ends_);
       //dbskr_scurve_sptr sc2 = tree2_->get_curve(key.second.first, key.second.second, contstruct_circular_ends_);
@@ -546,16 +546,16 @@ bool dbskr_sm_cor::recover_dart_ids_and_scurves() {
       dbskr_scurve_sptr sc1 = curve_pair1->coarse;
       dbskr_scurve_sptr sc2 = curve_pair2->coarse;
 
-      vcl_cout << "\t sc1: " << sc1->num_points() << " pts, + bnd len: " << sc1->boundary_plus_length() << " - bnd len: " << sc1->boundary_minus_length() << " sh len: " << sc1->arclength(sc1->num_points()-1) << vcl_endl;
-      vcl_cout << "\t sc2: " << sc2->num_points() << " pts, + bnd len: " << sc2->boundary_plus_length() << " - bnd len: " << sc2->boundary_minus_length() << " sh len: " << sc2->arclength(sc2->num_points()-1) << vcl_endl;
-      vcl_cout << "\t sc1 dense: " << curve_pair1->dense->num_points() << " pts, + bnd len: " << curve_pair1->dense->boundary_plus_length() << " - bnd len: " << curve_pair1->dense->boundary_minus_length() << " sh len: " << curve_pair1->dense->arclength(curve_pair1->dense->num_points()-1) << vcl_endl;
-      vcl_cout << "\t sc2 dense: " << curve_pair2->dense->num_points() << " pts, + bnd len: " << curve_pair2->dense->boundary_plus_length() << " - bnd len: " << curve_pair2->dense->boundary_minus_length() << " sh len: " << curve_pair2->dense->arclength(curve_pair2->dense->num_points()-1) << vcl_endl;
+      std::cout << "\t sc1: " << sc1->num_points() << " pts, + bnd len: " << sc1->boundary_plus_length() << " - bnd len: " << sc1->boundary_minus_length() << " sh len: " << sc1->arclength(sc1->num_points()-1) << std::endl;
+      std::cout << "\t sc2: " << sc2->num_points() << " pts, + bnd len: " << sc2->boundary_plus_length() << " - bnd len: " << sc2->boundary_minus_length() << " sh len: " << sc2->arclength(sc2->num_points()-1) << std::endl;
+      std::cout << "\t sc1 dense: " << curve_pair1->dense->num_points() << " pts, + bnd len: " << curve_pair1->dense->boundary_plus_length() << " - bnd len: " << curve_pair1->dense->boundary_minus_length() << " sh len: " << curve_pair1->dense->arclength(curve_pair1->dense->num_points()-1) << std::endl;
+      std::cout << "\t sc2 dense: " << curve_pair2->dense->num_points() << " pts, + bnd len: " << curve_pair2->dense->boundary_plus_length() << " - bnd len: " << curve_pair2->dense->boundary_minus_length() << " sh len: " << curve_pair2->dense->arclength(curve_pair2->dense->num_points()-1) << std::endl;
 
       curve_list1_.push_back(sc1);
       curve_list2_.push_back(sc2);
 
       float match_cost, dr, alp;
-      vcl_vector<vcl_pair<int,int> > fmap;
+      std::vector<std::pair<int,int> > fmap;
       if (edit_params_.combined_edit_) {
         dbskr_dpmatch_combined d(sc1, sc2);
         d.set_R(edit_params_.curve_matching_R_);
@@ -602,24 +602,24 @@ bool dbskr_sm_cor::recover_dart_ids_and_scurves() {
       match_costs_init_dr_.push_back(dr);
       match_costs_init_alp_.push_back(alp);
 
-      vcl_cout << "\t\t match cost: " << match_costs_d_[match_costs_d_.size()-1] << " init dr: " << dr << " init phi: " << alp << " total: " << match_costs_d_[match_costs_d_.size()-1] + dr + alp;
+      std::cout << "\t\t match cost: " << match_costs_d_[match_costs_d_.size()-1] << " init dr: " << dr << " init phi: " << alp << " total: " << match_costs_d_[match_costs_d_.size()-1] + dr + alp;
       if (edit_params_.localized_edit_ && fmap.size() > 3)
-        vcl_cout << " total localized: " << match_costs_localized_[match_costs_localized_.size()-1] << vcl_endl;
+        std::cout << " total localized: " << match_costs_localized_[match_costs_localized_.size()-1] << std::endl;
       else
-        vcl_cout << vcl_endl;
-      vcl_cout << "\t\t splice cost for merge in tree1: " << tree1_sp_cost << " in tree2: " << tree2_sp_cost << vcl_endl;
+        std::cout << std::endl;
+      std::cout << "\t\t splice cost for merge in tree1: " << tree1_sp_cost << " in tree2: " << tree2_sp_cost << std::endl;
     }
 
     float tree1_contract_cost = tree1_->get_contract_cost(tree1_used_darts);
     final_cost_ += tree1_contract_cost;
     float tree2_contract_cost = tree2_->get_contract_cost(tree2_used_darts);
     final_cost_ += tree2_contract_cost;
-    vcl_cout << "\t\t total contract costs for tree1: " << tree1_contract_cost << " in tree2: " << tree2_contract_cost << vcl_endl;
-    vcl_cout << "new final_cost_: " << final_cost_ << vcl_endl;
-    vcl_cout << "previous final_norm_cost_: " << final_norm_cost_ << " new final_norm_cost_: ";
+    std::cout << "\t\t total contract costs for tree1: " << tree1_contract_cost << " in tree2: " << tree2_contract_cost << std::endl;
+    std::cout << "new final_cost_: " << final_cost_ << std::endl;
+    std::cout << "previous final_norm_cost_: " << final_norm_cost_ << " new final_norm_cost_: ";
     final_norm_cost_ = final_cost_/(tree1_->total_splice_cost()+tree2_->total_splice_cost());
-    vcl_cout << "tree1 total splice: " << tree1_->total_splice_cost() << " tree2 total splice: " << tree2_->total_splice_cost() << vcl_endl;
-    vcl_cout << final_norm_cost_ << vcl_endl;
+    std::cout << "tree1 total splice: " << tree1_->total_splice_cost() << " tree2 total splice: " << tree2_->total_splice_cost() << std::endl;
+    std::cout << final_norm_cost_ << std::endl;
     fine_final_norm_costs_computed_ = true;
   } else if (!curve_list1_.size() || !curve_list2_.size()) 
   {  // matches were also read from the binary file, or the match file was not cleared intentionally for recomputation
@@ -663,7 +663,7 @@ void dbskr_sm_cor::b_write(vsl_b_ostream &os) const
     vsl_b_write(os, key.second.first); vsl_b_write(os, key.second.second);
   }
   
-  //vcl_vector<vcl_vector < vcl_pair <int,int> > > map_list_;
+  //std::vector<std::vector < std::pair <int,int> > > map_list_;
   vsl_b_write(os, map_list_.size());
   for (unsigned i = 0; i < map_list_.size(); i++) {
     vsl_b_write(os, map_list_[i].size());
@@ -699,11 +699,11 @@ void dbskr_sm_cor::b_read(vsl_b_istream &is)
       }
       vsl_b_read(is, cnt);
       for (unsigned i = 0; i < cnt; i++) {
-       vcl_vector < vcl_pair <int,int> > v;
+       std::vector < std::pair <int,int> > v;
        unsigned cnt2;
        vsl_b_read(is, cnt2);
        for (unsigned j = 0; j < cnt2; j++) {
-         vcl_pair <int,int> p;
+         std::pair <int,int> p;
          vsl_b_read(is, p.first); vsl_b_read(is, p.second);
          v.push_back(p);
        }
@@ -732,11 +732,11 @@ void dbskr_sm_cor::b_read(vsl_b_istream &is)
        }
        vsl_b_read(is, cnt);
        for (unsigned i = 0; i < cnt; i++) {
-        vcl_vector < vcl_pair <int,int> > v;
+        std::vector < std::pair <int,int> > v;
         unsigned cnt2;
         vsl_b_read(is, cnt2);
         for (unsigned j = 0; j < cnt2; j++) {
-          vcl_pair <int,int> p;
+          std::pair <int,int> p;
           vsl_b_read(is, p.first); vsl_b_read(is, p.second);
           v.push_back(p);
         }
@@ -749,7 +749,7 @@ void dbskr_sm_cor::b_read(vsl_b_istream &is)
   }
 }
 
-void dbskr_sm_cor::save_pathtable(vcl_map<pathtable_key, float>& table)
+void dbskr_sm_cor::save_pathtable(std::map<pathtable_key, float>& table)
 { 
   pathtable_ = table; 
   pathtable_saved_ = true;
@@ -762,7 +762,7 @@ float dbskr_sm_cor::get_pathtable_val(pathtable_key key)
   if (!pathtable_saved_)
     return -1;
 
-  vcl_map<pathtable_key, float>::iterator iter = pathtable_.find(key);   // searching for either key or key2 is enough
+  std::map<pathtable_key, float>::iterator iter = pathtable_.find(key);   // searching for either key or key2 is enough
   if (iter == pathtable_.end()) {  // recompute
     return -1;
   }

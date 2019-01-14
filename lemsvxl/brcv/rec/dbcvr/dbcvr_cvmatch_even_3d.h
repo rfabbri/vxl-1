@@ -43,31 +43,31 @@ protected:
   double delta_s2_;
 
   DPCostType DPCost_; //DPMap of cost: n*m array of double
-  DPMapType DPMap_; //DPMap of prev point vcl_map: n*m array of vcl_pair of index
+  DPMapType DPMap_; //DPMap of prev point std::map: n*m array of std::pair of index
   FinalMapType finalMap_; //alignment curve
-  vcl_vector<double> finalMap_Cost_; //cost on alignment curve
+  std::vector<double> finalMap_Cost_; //cost on alignment curve
   
   // curvature at each sampling point
-  vcl_vector<double>  curve1_curvatures_;
-  vcl_vector<double>  curve2_curvatures_;
+  std::vector<double>  curve1_curvatures_;
+  std::vector<double>  curve2_curvatures_;
   // torsion at each sampling point
-  vcl_vector<double>  curve1_torsions_;
-  vcl_vector<double>  curve2_torsions_;
+  std::vector<double>  curve1_torsions_;
+  std::vector<double>  curve2_torsions_;
   // arclength at each sampling point
-  vcl_vector<double>  curve1_lengths_;
-  vcl_vector<double>  curve2_lengths_;
+  std::vector<double>  curve1_lengths_;
+  std::vector<double>  curve2_lengths_;
   // phi (tilt angle of the tangent vector) at each sampling point
-  vcl_vector<double>  curve1_phis_;
-  vcl_vector<double>  curve2_phis_;
+  std::vector<double>  curve1_phis_;
+  std::vector<double>  curve2_phis_;
   // theta (azimuth angle of the tangent vector) at each sampling point
-  vcl_vector<double>  curve1_thetas_;
-  vcl_vector<double>  curve2_thetas_;
+  std::vector<double>  curve1_thetas_;
+  std::vector<double>  curve2_thetas_;
   // dphi at each sample point (derivative w.r.t. to arclength)
-  vcl_vector<double>  curve1_dphis_;
-  vcl_vector<double>  curve2_dphis_;
+  std::vector<double>  curve1_dphis_;
+  std::vector<double>  curve2_dphis_;
   // dtheta at each sample point (derivative w.r.t. to arclength)
-  vcl_vector<double>  curve1_dthetas_;
-  vcl_vector<double>  curve2_dthetas_;
+  std::vector<double>  curve1_dthetas_;
+  std::vector<double>  curve2_dthetas_;
 
   double finalCost_; // final cost
 
@@ -76,8 +76,8 @@ protected:
 
   bool normalized_stretch_cost_;
   int template_size_;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 
   // cost formula type to use: extrinsic or intrinsic
   int cost_formula_type_;
@@ -90,7 +90,7 @@ public:
   DPCostType* DPCost(){ return &DPCost_; }
   DPMapType* DPMap(){ return &DPMap_; }
   FinalMapType* finalMap(){ return &finalMap_; }
-  vcl_vector<double>* finalMapCost(){ return &finalMap_Cost_; }
+  std::vector<double>* finalMapCost(){ return &finalMap_Cost_; }
   double finalCost(){ return finalCost_; }
 
   int getFMapFirst (int i)
@@ -104,7 +104,7 @@ public:
     return (*finalMap())[i].second;
   }
 
-  vcl_string    _fileName1, _fileName2;
+  std::string    _fileName1, _fileName2;
   bsold_interp_curve_3d_sptr curve1() { return curve1_; }
   bsold_interp_curve_3d_sptr curve2() { return curve2_; }
   void setFinalMap (FinalMapType map) { finalMap_ = map; }
@@ -137,13 +137,13 @@ public:
   // helper function for applying ENO on angles
   // "picked_points/picked_arclengths" are picked from "points/arclengths" arrays, respectively,
   // based on the index value
-  int pick_points_for_eno(vcl_vector<double> &points, vcl_vector<double> &picked_points, 
-                          vcl_vector<double> &arclengths, vcl_vector<double> &picked_arclengths,
+  int pick_points_for_eno(std::vector<double> &points, std::vector<double> &picked_points, 
+                          std::vector<double> &arclengths, std::vector<double> &picked_arclengths,
                           int index);
   // removes discontinuties of the specified array holding angle values
-  void continuous_angles(vcl_vector<double> &angles);
+  void continuous_angles(std::vector<double> &angles);
   // writes "data" to the file named "fname" in plain text format
-  void write_data(vcl_vector<double> &data, vcl_string fname);
+  void write_data(std::vector<double> &data, std::string fname);
 };
 
 #endif

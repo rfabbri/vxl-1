@@ -4,10 +4,10 @@
 // \file
 #include "bsta_joint_histogram.h"
 
-#include <vcl_cmath.h> // for log()
-#include <vcl_iostream.h>
+#include <cmath> // for log()
+#include <iostream>
 #include "bsta_gauss.h"
-#include <vnl/vnl_math.h> // for log2e == 1/vcl_log(2.0)
+#include <vnl/vnl_math.h> // for log2e == 1/std::log(2.0)
 template <class T>
 bsta_joint_histogram<T>::bsta_joint_histogram()
   : volume_valid_(false), volume_(0),
@@ -187,7 +187,7 @@ bool bsta_joint_histogram<T>::avg_and_variance_bin_for_row_a(const unsigned int 
   var = 0;
   for (unsigned int b =0; b<nbins_b_; b++) {
     T dif = (b+1)*delta_b_/2-avg;
-    var += vcl_pow(dif, T(2.0))*(counts_[a][b]/sum);
+    var += std::pow(dif, T(2.0))*(counts_[a][b]/sum);
   }
 
   return true;
@@ -210,7 +210,7 @@ T bsta_joint_histogram<T>::entropy() const
     {
       T pij = this->p(i,j);
       if (pij>min_prob_)
-        ent -= pij*T(vcl_log(pij));
+        ent -= pij*T(std::log(pij));
     }
   ent *= (T)vnl_math::log2e;
   return ent;
@@ -227,7 +227,7 @@ T bsta_joint_histogram<T>::renyi_entropy() const
       sum += pij*pij;
     }
   if (sum>min_prob_)
-    ent = - T(vcl_log(sum))*(T)vnl_math::log2e;
+    ent = - T(std::log(sum))*(T)vnl_math::log2e;
   return ent;
 }
 
@@ -259,7 +259,7 @@ T bsta_joint_histogram<T>::get_count(T a, T b) const
 }
 
 template <class T>
-void bsta_joint_histogram<T>::print(vcl_ostream& os) const
+void bsta_joint_histogram<T>::print(std::ostream& os) const
 {
   for (unsigned int a = 0; a<nbins_a_; a++)
     for (unsigned int b = 0; b<nbins_b_; b++)
@@ -268,7 +268,7 @@ void bsta_joint_histogram<T>::print(vcl_ostream& os) const
 }
 
 template <class T>
-void bsta_joint_histogram<T>::print_to_vrml(vcl_ostream& os) const
+void bsta_joint_histogram<T>::print_to_vrml(std::ostream& os) const
 {
   // we need to scale the display, find magnitude of largest value
   T max = (T)0;
@@ -286,7 +286,7 @@ void bsta_joint_histogram<T>::print_to_vrml(vcl_ostream& os) const
     {
       float height = float((p(a,b)/max)*avg);
       os << "Transform {\n"
-         << "  translation " << a << ' ' << b << ' ' << height << vcl_endl
+         << "  translation " << a << ' ' << b << ' ' << height << std::endl
          << "  children Shape {\n"
          << "    geometry Sphere { radius 0.2 }\n"
          << "    appearance DEF A1 Appearance {"
@@ -335,7 +335,7 @@ void bsta_joint_histogram<T>::print_to_vrml(vcl_ostream& os) const
 }
 
 template <class T>
-void bsta_joint_histogram<T>::print_to_m(vcl_ostream& os) const
+void bsta_joint_histogram<T>::print_to_m(std::ostream& os) const
 {
   os << "y = zeros(" << nbins_a_ << ", " << nbins_b_ << ");\n";
   for (unsigned int a = 0; a<nbins_a_; a++) {

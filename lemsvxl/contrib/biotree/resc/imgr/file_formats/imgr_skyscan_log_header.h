@@ -13,10 +13,10 @@
 // \date    2005-06-14
 // 
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vxl_config.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 class imgr_skyscan_log_header
 {
@@ -25,7 +25,7 @@ public:
   virtual ~imgr_skyscan_log_header() {};
 
   //: read parameters from file
-  imgr_skyscan_log_header(vcl_FILE *fp);
+  imgr_skyscan_log_header(std::FILE *fp);
   //: camera pixel size in X direction of the sensor
   double cam_pixel_size_;
   //: camera pixel size ratio X/Y
@@ -50,15 +50,15 @@ public:
   double cs_static_rotation_;
   //: number of actual camera pixels merged into one virtual camera pixel
   unsigned cam_pixel_multiplier_;
-  vcl_string Use_360_Rotation_;
+  std::string Use_360_Rotation_;
 
-friend  vcl_ostream& operator << (vcl_ostream& stream, const imgr_skyscan_log_header& header);
+friend  std::ostream& operator << (std::ostream& stream, const imgr_skyscan_log_header& header);
 
 private:
   //: correct the virtual camera pixel size
   void update_camera_pixel_size();
 };
 
-void x_write(vcl_ostream& oc, imgr_skyscan_log_header header, vcl_string name);
+void x_write(std::ostream& oc, imgr_skyscan_log_header header, std::string name);
 
 #endif

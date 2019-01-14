@@ -1,11 +1,11 @@
 // This is bvam/bvma_voxel_world.cxx
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <utility>
+#include <map>
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -60,10 +60,10 @@ vgl_plane_3d<double> bvam_voxel_world::fit_plane()
 }
 
 //: output description of voxel world to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, bvam_voxel_world const& vox_world)
+std::ostream&  operator<<(std::ostream& s, bvam_voxel_world const& vox_world)
 {
   bvam_world_params_sptr params = vox_world.get_params();
-  s << "bvam_voxel_world : " << params->num_voxels().x() << " x " << params->num_voxels().y() << " x " << params->num_voxels().z() << vcl_endl;
+  s << "bvam_voxel_world : " << params->num_voxels().x() << " x " << params->num_voxels().y() << " x " << params->num_voxels().z() << std::endl;
   return s;
 }
 
@@ -71,11 +71,11 @@ vcl_ostream&  operator<<(vcl_ostream& s, bvam_voxel_world const& vox_world)
 
 
 //: save the occupancy grid in a ".raw" format readable by Drishti volume rendering software
-bool bvam_voxel_world::save_occupancy_raw(vcl_string filename)
+bool bvam_voxel_world::save_occupancy_raw(std::string filename)
 {
-  vcl_fstream ofs(filename.c_str(),vcl_ios::binary | vcl_ios::out);
+  std::fstream ofs(filename.c_str(),std::ios::binary | std::ios::out);
   if (!ofs.is_open()) {
-    vcl_cerr << "error opening file " << filename << " for write! " << vcl_endl;
+    std::cerr << "error opening file " << filename << " for write! " << std::endl;
     return false;
   }
   typedef bvam_voxel_traits<OCCUPANCY>::voxel_datatype ocp_datatype;
@@ -103,14 +103,14 @@ bool bvam_voxel_world::save_occupancy_raw(vcl_string filename)
 
   bvam_voxel_grid<ocp_datatype>::iterator ocp_it = ocp_grid->begin();
   for (unsigned k=0; ocp_it != ocp_grid->end(); ++ocp_it, ++k) {
-    vcl_cout << ".";
+    std::cout << ".";
     for (unsigned i=0; i<(*ocp_it).nx(); ++i) {
       for (unsigned j=0; j < (*ocp_it).ny(); ++j) {
         ocp_array[i*ny*nz + j*nz + k] = (unsigned char)((*ocp_it)(i,j) * 255.0);;
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   ofs.write(reinterpret_cast<char*>(ocp_array),sizeof(unsigned char)*nx*ny*nz);
 
   ofs.close();
@@ -125,9 +125,9 @@ bool bvam_voxel_world::save_occupancy_raw(vcl_string filename)
 bool bvam_voxel_world::clean_grids()
 {
     // look for existing grids in the directory
-    vcl_string storage_directory = params_->model_dir();
+    std::string storage_directory = params_->model_dir();
 
-    vcl_stringstream grid_glob;
+    std::stringstream grid_glob;
     grid_glob << storage_directory << "/*.vox";
     bool result = vul_file::delete_file_glob(grid_glob.str().c_str());
     
@@ -146,8 +146,8 @@ bool bvam_voxel_world::update_edges(bvam_image_metadata const& metadata){
   vgl_vector_3d<unsigned int> grid_size = params_->num_voxels();
 
   // compute homographies from voxel planes to image coordinates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
     for (unsigned z=0; z < (unsigned)grid_size.z(); ++z)
@@ -161,7 +161,7 @@ bool bvam_voxel_world::update_edges(bvam_image_metadata const& metadata){
   // convert image to a voxel_slab
   bvam_voxel_slab<edges_datatype> image_slab(metadata.img->ni(), metadata.img->nj(), 1);
   if (!bvam_util::img_to_slab(metadata.img,image_slab)) {
-    vcl_cerr << "error converting image to voxel slab of observation type for bvam_voxel_type:" << EDGES << vcl_endl;
+    std::cerr << "error converting image to voxel slab of observation type for bvam_voxel_type:" << EDGES << std::endl;
     return false;
   }
 
@@ -172,13 +172,13 @@ bool bvam_voxel_world::update_edges(bvam_image_metadata const& metadata){
   bvam_voxel_grid<edges_datatype> *edges_grid  = static_cast<bvam_voxel_grid<edges_datatype>*>(edges_grid_base.ptr());
   bvam_voxel_grid<edges_datatype>::iterator edges_slab_it = edges_grid->begin();
 
-  vcl_cout << "Updating Voxels for the Edge Model: " << vcl_endl;
+  std::cout << "Updating Voxels for the Edge Model: " << std::endl;
 
   for (unsigned z=0; z<(unsigned)grid_size.z(); ++z, ++edges_slab_it)
   {
-    vcl_cout << ".";
+    std::cout << ".";
     if ( (edges_slab_it == edges_grid->end()) ) {
-      vcl_cerr << "error: reached end of grid slabs at z = " << z << ".  nz = " << grid_size.z() << vcl_endl;
+      std::cerr << "error: reached end of grid slabs at z = " << z << ".  nz = " << grid_size.z() << std::endl;
       return false;
     }
 
@@ -192,7 +192,7 @@ bool bvam_voxel_world::update_edges(bvam_image_metadata const& metadata){
       (*edges_slab_it_it) = (*edges_slab_it_it)*(*frame_backproj_it);
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   return true;
 }
 
@@ -204,8 +204,8 @@ bool bvam_voxel_world::expected_edge_image(bvam_image_metadata const& camera,vil
   vgl_vector_3d<unsigned int> grid_size = params_->num_voxels();
 
   // compute homographies from voxel planes to image coordinates and vise-versa.
-  vcl_vector<vgl_h_matrix_2d<double> > H_plane_to_img;
-  vcl_vector<vgl_h_matrix_2d<double> > H_img_to_plane;
+  std::vector<vgl_h_matrix_2d<double> > H_plane_to_img;
+  std::vector<vgl_h_matrix_2d<double> > H_img_to_plane;
   for (unsigned z=0; z < (unsigned)grid_size.z(); ++z)
   {
     vgl_h_matrix_2d<double> Hp2i, Hi2p;
@@ -226,9 +226,9 @@ bool bvam_voxel_world::expected_edge_image(bvam_image_metadata const& camera,vil
 
   bvam_voxel_grid<edges_datatype>::const_iterator edges_slab_it = edges_grid->begin();
 
-  vcl_cout << "Generating Expected Edge Image: " << vcl_endl;
+  std::cout << "Generating Expected Edge Image: " << std::endl;
   for (unsigned z=0; z<(unsigned)grid_size.z(); ++z, ++edges_slab_it) {
-    vcl_cout << ".";
+    std::cout << ".";
     // warp slice_probability to image plane
     bvam_util::warp_slab_bilinear(*edges_slab_it, H_img_to_plane[z], slice_edges);
 
@@ -239,7 +239,7 @@ bool bvam_voxel_world::expected_edge_image(bvam_image_metadata const& camera,vil
       (*expected_edge_image_it) = vnl_math_max((*expected_edge_image_it),(*slice_edges_it));
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // convert back to vil_image_view
   bvam_util::slab_to_img(expected_edge_image, expected);

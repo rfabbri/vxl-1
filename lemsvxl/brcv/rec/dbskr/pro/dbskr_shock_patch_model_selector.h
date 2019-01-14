@@ -17,10 +17,10 @@
 // \endverbatim 
 //-----------------------------------------------------------------------------
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -62,13 +62,13 @@ public:
   //: add the patches to the storage
   bool add_to_storage(int depth, dbskr_shock_patch_storage_sptr str);
 
-  vcl_vector<vcl_vector<dbskr_shock_patch_sptr > *>& patch_sets() { return patch_sets_; }
+  std::vector<std::vector<dbskr_shock_patch_sptr > *>& patch_sets() { return patch_sets_; }
 
 protected:
   dbsk2d_shock_graph_sptr sg_;
 
   //: keep sets of patches at various depths
-  vcl_vector<vcl_vector<dbskr_shock_patch_sptr > *> patch_sets_;
+  std::vector<std::vector<dbskr_shock_patch_sptr > *> patch_sets_;
 
 };
 

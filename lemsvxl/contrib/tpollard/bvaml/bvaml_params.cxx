@@ -4,9 +4,9 @@
 #include "bvaml_params.h"
 #include "bvaml_log_writer.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vnl/vnl_vector_fixed.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
@@ -14,19 +14,19 @@
 
 //-------------------------------------
 bool bvaml_params::read_params( 
-  vcl_string param_file )
+  std::string param_file )
 {
   bvaml_log_writer log("bvaml_params::read_params");
 
   // Check that the file is good.
   log.print_msg( "parsing file " + param_file );
-  vcl_ifstream file_stream( param_file.c_str() );
+  std::ifstream file_stream( param_file.c_str() );
   if( !(file_stream.good()) ){
     log.print_error( "can't read file" );
     return false;
   }
   vul_awk awk( file_stream );
-  vcl_stringstream first_line;
+  std::stringstream first_line;
   for( int i = 0; i < awk.NF(); i++ )
     first_line << awk[i] << ' ';
   if( first_line.str() != "bvaml parameter file " ){
@@ -40,7 +40,7 @@ bool bvaml_params::read_params(
     ++awk;
     line_counter++;
     if( awk.NF() == 0 ) continue;
-    vcl_stringstream this_field;
+    std::stringstream this_field;
     this_field << awk[0];
     if( this_field.str()[0] == '#' ) continue;
 
@@ -70,9 +70,9 @@ bool bvaml_params::read_params(
       if( this_field.str() == "detection_images" ) this_mode = 1;
       if( this_field.str() == "render_images" ) this_mode = 2;
       if( this_field.str() == "save_normalized_images" ) this_mode = 6;
-      vcl_vector< vcl_string > new_images;
-      vcl_vector< vpgl_proj_camera<double> > new_cameras;
-      vcl_vector< vnl_vector<float> > new_lights;
+      std::vector< std::string > new_images;
+      std::vector< vpgl_proj_camera<double> > new_cameras;
+      std::vector< vnl_vector<float> > new_lights;
       get_images( awk[1], new_images );
       get_cameras( awk[2], new_cameras );
       get_lights( awk[3], new_lights );
@@ -85,7 +85,7 @@ bool bvaml_params::read_params(
          ( new_lights.size() != 0 && new_lights.size() != new_images.size() ) )
         log.print_error( "different numbers of images/cameras/lights" );
 
-      vcl_vector< unsigned > new_order;
+      std::vector< unsigned > new_order;
       if( order_by_date ) reorder_by_date( new_images, new_order );
 
       for( int i = subset_range[0]; i <= subset_range[2]; i+= subset_range[1] ){
@@ -94,7 +94,7 @@ bool bvaml_params::read_params(
         cameras.push_back( new_cameras[idx] );
         if( new_lights.size() != 0 ) lights.push_back( new_lights[idx] );
         process_modes.push_back( this_mode );
-        inspect_pixels.push_back( vcl_vector< vgl_point_2d<int> >() );
+        inspect_pixels.push_back( std::vector< vgl_point_2d<int> >() );
       }
     }
 
@@ -103,8 +103,8 @@ bool bvaml_params::read_params(
         log.print_error( "error on line " + line_counter );
         continue;
       }
-      vcl_vector< vcl_string > new_images;
-      vcl_vector< vpgl_proj_camera<double> > new_cameras, new_render_camera;
+      std::vector< std::string > new_images;
+      std::vector< vpgl_proj_camera<double> > new_cameras, new_render_camera;
       get_images( awk[1], new_images );
       get_cameras( awk[2], new_cameras );
       get_cameras( awk[3], new_render_camera );
@@ -123,13 +123,13 @@ bool bvaml_params::read_params(
         cameras.push_back( new_cameras[i] );
         lights.push_back( vnl_vector<float>() );
         process_modes.push_back( 3 );
-        inspect_pixels.push_back( vcl_vector< vgl_point_2d<int> >() );
+        inspect_pixels.push_back( std::vector< vgl_point_2d<int> >() );
         
         images.push_back( new_images[i] );
         cameras.push_back( new_render_camera[0] );
         lights.push_back( vnl_vector<float>() );
         process_modes.push_back( 4 );
-        inspect_pixels.push_back( vcl_vector< vgl_point_2d<int> >() );
+        inspect_pixels.push_back( std::vector< vgl_point_2d<int> >() );
       }
       
     }
@@ -139,14 +139,14 @@ bool bvaml_params::read_params(
         log.print_error( "error on line " + line_counter );
         continue;
       }
-      vcl_vector< vpgl_proj_camera<double> > new_camera;
+      std::vector< vpgl_proj_camera<double> > new_camera;
       get_cameras( awk[2], new_camera );
 
       images.push_back( awk[1] );
       cameras.push_back( new_camera[0] );
       lights.push_back( vnl_vector<float>() );
       process_modes.push_back( 5 );
-      inspect_pixels.push_back( vcl_vector< vgl_point_2d<int> >() );
+      inspect_pixels.push_back( std::vector< vgl_point_2d<int> >() );
     }
 
     else if( this_field.str() == "inspect_frame" ){
@@ -302,7 +302,7 @@ bvaml_params::print_summary()
   bvaml_log_writer log("bvaml_params::print_summary");
 
   // Print world params.
-  vcl_stringstream world_summary;
+  std::stringstream world_summary;
   world_summary
     << "corner " << corner.x() << " " << corner.y() << " " << corner.z() << '\n'
     << "voxel_length " << voxel_length << '\n'
@@ -318,7 +318,7 @@ bvaml_params::print_summary()
   log.print_block( "world summary", world_summary.str() );
 
   // Print job params.
-  vcl_stringstream job_summary;
+  std::stringstream job_summary;
   job_summary
     << "model_dir " << model_dir << '\n'
     << "output_dir " << output_dir << '\n'
@@ -368,12 +368,12 @@ bvaml_params::print_summary()
 //------------------------------------------------------
 bool
 bvaml_params::get_cameras(
-  vcl_string camera_file,
-  vcl_vector< vpgl_proj_camera<double> >& cameras )
+  std::string camera_file,
+  std::vector< vpgl_proj_camera<double> >& cameras )
 {
   bvaml_log_writer log( "bvaml_params::get_cameras" );
   cameras.clear();
-  vcl_ifstream camera_stream( camera_file.c_str() );
+  std::ifstream camera_stream( camera_file.c_str() );
   char line_buffer[256];
   if( !(camera_stream.good()) ){
     log.print_error( "bad camera file " + camera_file );
@@ -397,8 +397,8 @@ bvaml_params::get_cameras(
 //----------------------------------------------------
 bool 
 bvaml_params::get_images(
-  vcl_string image_dir,
-  vcl_vector< vcl_string >& images )
+  std::string image_dir,
+  std::vector< std::string >& images )
 {
   bvaml_log_writer log( "bvaml_params::get_images" );
   images.clear();
@@ -407,7 +407,7 @@ bvaml_params::get_images(
   for( vul_file_iterator fit = image_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 &&
@@ -424,14 +424,14 @@ bvaml_params::get_images(
 //----------------------------------------------------
 bool 
 bvaml_params::get_lights(
-  vcl_string light_file,
-  vcl_vector< vnl_vector<float> >& lights )
+  std::string light_file,
+  std::vector< vnl_vector<float> >& lights )
 {
   bvaml_log_writer log( "bvaml_params::get_lights" );
   if( light_file == "NONE" ) return true;
   lights.clear();
 
-  vcl_ifstream light_stream( light_file.c_str() );
+  std::ifstream light_stream( light_file.c_str() );
   //vul_awk lawk( light_file.c_str() );
   //while( lawk ){
   for( vul_awk lawk( light_stream ); lawk; ++lawk ){
@@ -444,7 +444,7 @@ bvaml_params::get_lights(
     //++lawk
   }
 /*
-  vcl_ifstream light_stream( light_file.c_str() );
+  std::ifstream light_stream( light_file.c_str() );
   if( !(light_stream.good()) ){
     log.print_error( "bad light file " + light_file );
     return false;
@@ -468,7 +468,7 @@ bvaml_params::get_lights(
 //-----------------------------------------------------
 bool 
 bvaml_params::get_range(
-  vcl_string range_str,
+  std::string range_str,
   vnl_vector_fixed<int,3>& range_indices )
 {
   int first_colon = -1, second_colon = -1;
@@ -483,7 +483,7 @@ bvaml_params::get_range(
   }
   if( first_colon == -1 || second_colon == -1 ) return false;
 
-  vcl_string start_index_str, index_inc_str, end_index_str;
+  std::string start_index_str, index_inc_str, end_index_str;
   for( int c = 0; c < first_colon; c++ )
     start_index_str += range_str[c];
   for( int c = first_colon+1; c < second_colon; c++ )
@@ -499,16 +499,16 @@ bvaml_params::get_range(
 
 //----------------------------------------------------
 void bvaml_params::reorder_by_date(
-  const vcl_vector< vcl_string >& file_list,
-  vcl_vector< unsigned >& new_order )
+  const std::vector< std::string >& file_list,
+  std::vector< unsigned >& new_order )
 {
   new_order.resize( file_list.size() );
-  vcl_vector<double> dates;
+  std::vector<double> dates;
   for( unsigned i = 0; i < file_list.size(); i++ ){
-    vcl_string filename = vul_file::strip_directory( file_list[i] );
-    vcl_string year; year += filename[0]; year += filename[1];
-    vcl_string month; month += filename[2]; month += filename[3]; month += filename[4]; 
-    vcl_string day; day += filename[5]; day += filename[6];
+    std::string filename = vul_file::strip_directory( file_list[i] );
+    std::string year; year += filename[0]; year += filename[1];
+    std::string month; month += filename[2]; month += filename[3]; month += filename[4]; 
+    std::string day; day += filename[5]; day += filename[6];
     double date = atoi(year.c_str())/100.0;
     if( month == "JAN" ) date += .0001;
     else if( month == "FEB" ) date += .0002;
@@ -522,7 +522,7 @@ void bvaml_params::reorder_by_date(
     else if( month == "OCT" ) date += .0010;
     else if( month == "NOV" ) date += .0011;
     else if( month == "DEC" ) date += .0012;
-    else vcl_cerr << "ERROR: UNKNOWN DATE: " << month << '\n';
+    else std::cerr << "ERROR: UNKNOWN DATE: " << month << '\n';
     date += atoi(day.c_str())/1000000.0;
     dates.push_back( date );
   }

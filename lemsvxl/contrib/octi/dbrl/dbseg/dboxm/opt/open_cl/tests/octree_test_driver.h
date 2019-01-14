@@ -4,9 +4,9 @@
 #include <dboxm/opt/open_cl/boxm_ray_trace_manager.h>
 #include <boct/boct_tree.h>
 #include "bcl_cl.h"
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 
 #define SDK_SUCCESS 0
 #define SDK_FAILURE 1
@@ -36,7 +36,7 @@ class octree_test_driver
   bool init()
   {
     if (setup_cl()!=SDK_SUCCESS) {
-      vcl_cout << "In octree_test_driver::constructor - setup_cl failed" << vcl_endl;
+      std::cout << "In octree_test_driver::constructor - setup_cl failed" << std::endl;
       return false;
     }
     else
@@ -45,18 +45,18 @@ class octree_test_driver
 
   int check_val(cl_int status, cl_int result, std::string message) {
     if (status != result) {
-      vcl_cout << message << vcl_endl;
+      std::cout << message << std::endl;
       return 0;
     }
     else
       return 1;
   }
   cl_int* tree_results() { return cl_manager_->tree_results(); }
-  vcl_size_t tree_result_size_bytes() const { return 4*cl_manager_->tree_result_size(); }
+  std::size_t tree_result_size_bytes() const { return 4*cl_manager_->tree_result_size(); }
 
   void set_buffers();
 
-  int create_kernel(vcl_string const& name);
+  int create_kernel(std::string const& name);
   cl_float * ray_results() { return cl_manager_->ray_results(); }
   int release_kernel();
 
@@ -72,7 +72,7 @@ class octree_test_driver
 
   int cleanup_ray_test();
 
-  vcl_size_t n_rays() const {return cl_manager_->n_rays();}
+  std::size_t n_rays() const {return cl_manager_->n_rays();}
 
   void print_kernel_usage_info();
  private:

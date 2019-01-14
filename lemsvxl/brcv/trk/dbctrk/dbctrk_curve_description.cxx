@@ -1,8 +1,8 @@
 //:
 // \file
 #include <dbctrk/dbctrk_curve_description.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vdgl/vdgl_edgel_chain.h>
 #include <vdgl/vdgl_interpolator_linear.h>
@@ -45,7 +45,7 @@ void dbctrk_curve_description::init(vdgl_edgel_chain_sptr const& ec)
 {
   if (!ec)
   {
-    vcl_cout<<"In dbctrk_curve_description::dbctrk_curve_description(..) - warning, null chain\n";
+    std::cout<<"In dbctrk_curve_description::dbctrk_curve_description(..) - warning, null chain\n";
     return;
   }
 
@@ -64,8 +64,8 @@ void dbctrk_curve_description::init(vdgl_edgel_chain_sptr const& ec)
   
   int j=0;
  
-  vcl_vector<vgl_point_2d<double> > points;
-  vcl_vector<vgl_point_2d<double> > coarser_points;
+  std::vector<vgl_point_2d<double> > points;
+  std::vector<vgl_point_2d<double> > coarser_points;
 
   for (unsigned int i=0; i<N; ++i)
   {
@@ -115,8 +115,8 @@ void dbctrk_curve_description::compute_mirror_curves(double r,vil_image_view<flo
      double thetap=curve_->angle(i)+vnl_math::pi/2;
      double thetan=curve_->angle(i)-vnl_math::pi/2;
 
-     vsol_point_2d_sptr  pointp=new vsol_point_2d(curve_->point(i).x()+r*vcl_cos(thetap),curve_->point(i).y()+r*vcl_sin(thetap));
-     vsol_point_2d_sptr  pointn=new vsol_point_2d(curve_->point(i).x()+r*vcl_cos(thetan),curve_->point(i).y()+r*vcl_sin(thetan));
+     vsol_point_2d_sptr  pointp=new vsol_point_2d(curve_->point(i).x()+r*std::cos(thetap),curve_->point(i).y()+r*std::sin(thetap));
+     vsol_point_2d_sptr  pointn=new vsol_point_2d(curve_->point(i).x()+r*std::cos(thetan),curve_->point(i).y()+r*std::sin(thetan));
 
      pospoints.push_back(pointp);
      negpoints.push_back(pointn);
@@ -131,10 +131,10 @@ void dbctrk_curve_description::compute_mirror_curves(double r,vil_image_view<flo
 
  for(unsigned int k=0;k<pospoints.size();k++)
  {
-   int p_x=(int)vcl_floor(pospoints[k]->x()+0.5);
-   int p_y=(int)vcl_floor(pospoints[k]->y()+0.5);
-   vcl_vector<vsol_point_2d_sptr> points;
-   vcl_vector<bool> isinmask;
+   int p_x=(int)std::floor(pospoints[k]->x()+0.5);
+   int p_y=(int)std::floor(pospoints[k]->y()+0.5);
+   std::vector<vsol_point_2d_sptr> points;
+   std::vector<bool> isinmask;
    vil_image_view<float> pmask;
    pmask.set_size(2*mask_size+1, 2*mask_size+1, 1);
    for(int j=-mask_size;j<=mask_size;j++)
@@ -175,10 +175,10 @@ void dbctrk_curve_description::compute_mirror_curves(double r,vil_image_view<flo
  for(unsigned int k=0;k<negpoints.size();k++)
 
    {
-     int p_x=(int)vcl_floor(negpoints[k]->x()+0.5);
-     int p_y=(int)vcl_floor(negpoints[k]->y()+0.5);
-     vcl_vector<vsol_point_2d_sptr> points;
-     vcl_vector<bool> isinmask;
+     int p_x=(int)std::floor(negpoints[k]->x()+0.5);
+     int p_y=(int)std::floor(negpoints[k]->y()+0.5);
+     std::vector<vsol_point_2d_sptr> points;
+     std::vector<bool> isinmask;
      vil_image_view<float> nmask;
      nmask.set_size(2*mask_size+1, 2*mask_size+1, 1);
      nmask.fill(0);
@@ -226,8 +226,8 @@ void dbctrk_curve_description::assign_rgb_values(vil_image_view<float> p0,vil_im
    //: smoothing the masked regions for each point
    for(unsigned int k=0;k<pospoints.size();k++)
    {
-     int p_x=(int)vcl_floor(pospoints[k]->x()+0.5);
-     int p_y=(int)vcl_floor(pospoints[k]->y()+0.5);
+     int p_x=(int)std::floor(pospoints[k]->x()+0.5);
+     int p_y=(int)std::floor(pospoints[k]->y()+0.5);
    
 
      vbl_bounding_box<double,2> p_box_temp;
@@ -256,7 +256,7 @@ void dbctrk_curve_description::assign_rgb_values(vil_image_view<float> p0,vil_im
   
     if(isIHS)
     {
-      //vcl_cout<<"\n I = "<<Ival<<" H = "<<Hval<<" S =" <<Sval;
+      //std::cout<<"\n I = "<<Ival<<" H = "<<Hval<<" S =" <<Sval;
         Prcolor.push_back(Ival);
         Pgcolor.push_back(Hval);
         Pbcolor.push_back(Sval);
@@ -336,7 +336,7 @@ void dbctrk_curve_description::assign_rgb_values(vil_image_view<float> p0,vil_im
 // text description
 void dbctrk_curve_description::info()
 {
-  vcl_cout<<"curve: c ("<<center_.x()<<", "<<center_.y()<<")"; 
+  std::cout<<"curve: c ("<<center_.x()<<", "<<center_.y()<<")"; 
   return;
 }
 
@@ -412,8 +412,8 @@ void dbctrk_curve_description::b_write(vsl_b_ostream &os) const
 }
 void dbctrk_curve_description::compute_IHS_histograms(int thetabins,double r1, double v1)
 {
-    int satbins=(int)vcl_ceil(1/vcl_pow(r1,2));
-    int valuebins=(int)vcl_ceil(1/vcl_pow(v1,3));
+    int satbins=(int)std::ceil(1/std::pow(r1,2));
+    int valuebins=(int)std::ceil(1/std::pow(v1,3));
 
     chistp.resize(thetabins,satbins,valuebins);
     chistn.resize(thetabins,satbins,valuebins);
@@ -429,8 +429,8 @@ void dbctrk_curve_description::b_read(vsl_b_istream &is)
   if (!is) return;
       int maskpossize;
       int masknegsize;
-      vcl_vector<vsol_point_2d_sptr> points;
-      vcl_vector<bool> ispoints;
+      std::vector<vsol_point_2d_sptr> points;
+      std::vector<bool> ispoints;
       int isvalidmaskpossize;
       int isvalidmasknegsize;
   short ver;
@@ -482,16 +482,16 @@ void dbctrk_curve_description::b_read(vsl_b_istream &is)
       break;
       
   default:
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
-vcl_string dbctrk_curve_description::is_a() const
+std::string dbctrk_curve_description::is_a() const
 {
-  return vcl_string("dbctrk_curve_description");
+  return std::string("dbctrk_curve_description");
 }
 
-bool dbctrk_curve_description::is_class(vcl_string const& string) const
+bool dbctrk_curve_description::is_class(std::string const& string) const
 {
   if(string==is_a())
     return true;
@@ -525,7 +525,7 @@ void vsl_b_read(vsl_b_istream &is,dbctrk_curve_description * &p)
     p = 0;
  
 }
-void dbctrk_curve_description::print_summary(vcl_ostream &os) const
+void dbctrk_curve_description::print_summary(std::ostream &os) const
 {
   //os<<"\n the id of the curve is "<<this->id_;
 }

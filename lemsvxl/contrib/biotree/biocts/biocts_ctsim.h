@@ -19,8 +19,8 @@
 // \endverbatim
 
 #include <vil/vil_image_view.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 #include "biocts_Volume3D.h"
 
 #ifndef PI
@@ -40,7 +40,7 @@ public:
   biocts_Volume3D* orig_vol;       // 
   biocts_Volume3D* rot_vol;       //
 
-  vcl_vector<vil_image_view<vxl_byte> > screens;
+  std::vector<vil_image_view<vxl_byte> > screens;
 
   biocts_ctsim(int _lambda, int _backgrnd_noise, int _gain, int _NViews, biocts_Volume3D* volume);
   ~biocts_ctsim();

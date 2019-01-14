@@ -14,8 +14,8 @@
 #include <georegister/dbrl_estimator_thin_plate_spline.h>
 #include <georegister/dbrl_match_set_sptr.h>
 #include <vnl/vnl_math.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vnl/vnl_matrix.h>
@@ -232,8 +232,8 @@ void test_dbrl_match_set_io()
     vsl_add_to_binary_loader(dbrl_affine_transformation());
     vsl_add_to_binary_loader(dbrl_thin_plate_spline_transformation());
 
-    vcl_vector<dbrl_feature_sptr> f1;
-    vcl_vector<dbrl_feature_sptr> f2;
+    std::vector<dbrl_feature_sptr> f1;
+    std::vector<dbrl_feature_sptr> f2;
 
     f1.push_back(new dbrl_feature_point(0.2,0.4));
     f1.push_back(new dbrl_feature_point(0.1,0.5));

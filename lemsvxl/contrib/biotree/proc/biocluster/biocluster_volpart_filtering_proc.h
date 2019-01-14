@@ -53,7 +53,7 @@ private:
     // Bioproc error type
     BioClusterError m_error;
     // Exception message
-    vcl_string m_message;
+    std::string m_message;
     // MPI specific error.
     int m_mpierror;
     // System specific error code.
@@ -63,7 +63,7 @@ public:
     // Default is thrown when a container tries to fetch the filter response on non-LeadProcessor
     BioClusterException() : m_error (Incomplete), m_message ("Response field is only complete on processor 0"), m_mpierror (0), m_syserror (0) {}
     // Customizable exception instance
-    BioClusterException(BioClusterError err, vcl_string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
+    BioClusterException(BioClusterError err, std::string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
 
     // Property accessors
     const char* GetMessage() { return m_message.data (); }
@@ -81,7 +81,7 @@ public:
                            vgl_box_3d<double> & box,
                            double resolution,
                            vgl_box_3d<double> &outer_box,
-                           vcl_string bin_scan_file,
+                           std::string bin_scan_file,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
                            biob_worldpt_roster_sptr sample_roster = 0,
                            int verbose = TRACE_ERROR);
@@ -91,7 +91,7 @@ public:
         vgl_box_3d<double> &box,                            // Bounding box definition
         double resolution,                                  // Resolution in the bounding box
         vgl_box_3d<double> &outer_box,
-        vcl_string bin_scan_file,
+        std::string bin_scan_file,
         xmvg_composite_filter_3d<T, F> const& filter_3d,    // Filters to use
         biob_worldpt_roster_sptr sample_roster = 0,      // TODO - Is this used by any callers?
         int verbose = TRACE_ERROR                           // Errors only
@@ -99,10 +99,10 @@ public:
     ~biocluster_volpart_filtering_proc ();
   
     // Execute the algorithm and create the filter repsonse
-    void execute (const vcl_vector<biob_worldpt_index> * which_samples = 0);
+    void execute (const std::vector<biob_worldpt_index> * which_samples = 0);
 
     // Fetch the filter response - throws if not on LeadProcessor
-    /*vcl_vector<xmvg_filter_response<T> > const & responses () const
+    /*std::vector<xmvg_filter_response<T> > const & responses () const
         {
             // Only on processor 0. Otherwise throw an exception.
             if (m_MyRank == 0) return m_response_field;
@@ -160,10 +160,10 @@ private:
     imgr_bounded_image_view_3d<unsigned short> v3d_;
 
     // Response field
-    vcl_vector<xmvg_filter_response<T> > m_response_field;
+    std::vector<xmvg_filter_response<T> > m_response_field;
 
     // new addition
-        vcl_vector<vil_image_resource_sptr> images;
+        std::vector<vil_image_resource_sptr> images;
     // Configuration including number of processors, our rank, and computer name
     int m_TotalProcessors;
     int m_MyRank;
@@ -214,6 +214,6 @@ private:
 };
 
 template <class T, class F>
-void x_write(vcl_ostream& os, biocluster_volpart_filtering_proc<T,F> &proc);
+void x_write(std::ostream& os, biocluster_volpart_filtering_proc<T,F> &proc);
 
 #endif //BIOCLUSTER_VOLPART_FILTERING_PROC_H_

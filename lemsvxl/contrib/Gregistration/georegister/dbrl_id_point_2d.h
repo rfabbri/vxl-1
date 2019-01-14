@@ -3,8 +3,8 @@
 #ifndef _dbrl_id_point_2d_
 #define _dbrl_id_point_2d_
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -45,7 +45,7 @@ void vsl_b_write(vsl_b_ostream & os, const dbrl_id_point_2d * p);
 void vsl_b_read(vsl_b_istream &is,dbrl_id_point_2d * &p);
 
 
-//double cmx(vcl_vector<dbrl_id_point_2d_sptr> points);
-//double cmy(vcl_vector<dbrl_id_point_2d_sptr> points);
+//double cmx(std::vector<dbrl_id_point_2d_sptr> points);
+//double cmy(std::vector<dbrl_id_point_2d_sptr> points);
 
 #endif

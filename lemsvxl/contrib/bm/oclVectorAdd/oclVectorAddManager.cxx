@@ -21,14 +21,14 @@ oclVectorAddManager::oclVectorAddManager()
 {
 	this->bmocl_manager_instance = bmocl_manager::instance();
 	this->bmocl_manager_instance->load_kernel_source("cl/oclVectorAdd.cl");
-	vcl_string src = bmocl_manager_instance->program_source();
+	std::string src = bmocl_manager_instance->program_source();
 
-	vcl_size_t sourceSize[] = {src.size()};
+	std::size_t sourceSize[] = {src.size()};
 	const char* source = src.c_str();
 
 	if(!sourceSize[0])
 	{
-		vcl_cerr << "Program Source is empty." << vcl_flush;
+		std::cerr << "Program Source is empty." << std::flush;
 		exit(1);
 	}
 	cl_int status = CL_SUCCESS;
@@ -41,7 +41,7 @@ oclVectorAddManager::oclVectorAddManager()
 												&status);
 	if(status!=CL_SUCCESS)
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 
@@ -56,7 +56,7 @@ oclVectorAddManager::oclVectorAddManager()
 	
 	if( status != CL_SUCCESS )
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 
@@ -67,7 +67,7 @@ oclVectorAddManager::oclVectorAddManager()
 
 	if(status != CL_SUCCESS)
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 	
@@ -78,13 +78,13 @@ oclVectorAddManager::oclVectorAddManager()
 										&status);
 	if(status != CL_SUCCESS)
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 
 }//end default constructor
 
-vcl_vector<float> oclVectorAddManager::oclAdd(vcl_vector<float> const& vect_a, vcl_vector<float> const& vect_b)
+std::vector<float> oclVectorAddManager::oclAdd(std::vector<float> const& vect_a, std::vector<float> const& vect_b)
 {
 	assert(vect_a.size() == vect_b.size());
 	unsigned n = vect_a.size();
@@ -99,12 +99,12 @@ vcl_vector<float> oclVectorAddManager::oclAdd(vcl_vector<float> const& vect_a, v
 	}
 	c = oclAdd(a,b,n);
 
-	vcl_vector<float> result(n,0);
+	std::vector<float> result(n,0);
 	for( unsigned i = 0; i < n; ++i )
 		result[i] = c[i];
 
 	return result;
-}//end oclAdd vcl_vector<float> wrapper
+}//end oclAdd std::vector<float> wrapper
 
 float* oclVectorAddManager::oclAdd(float* a, float* b, unsigned const& n)
 {
@@ -132,11 +132,11 @@ float* oclVectorAddManager::oclAdd(float* a, float* b, unsigned const& n)
 	clSetKernelArg(this->kernel_, 3, sizeof(unsigned), &n);
 
 	//SET WORK GROUP SIZE TO MAX
-	vcl_size_t wg_size = this->bmocl_manager_instance->max_work_group_size();
+	std::size_t wg_size = this->bmocl_manager_instance->max_work_group_size();
 	
 	//GET THE GLOBAL SIZE BY DIVIDING THE SIZE OF THE VECTOR BY THE WG_SIZE
 	//AND ROUNDING UP
-	vcl_size_t global_size = RoundUp(n,wg_size);
+	std::size_t global_size = RoundUp(n,wg_size);
 
 	cl_int status = CL_SUCCESS;
 
@@ -153,7 +153,7 @@ float* oclVectorAddManager::oclAdd(float* a, float* b, unsigned const& n)
 
 	if( status != CL_SUCCESS )
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 
@@ -171,7 +171,7 @@ float* oclVectorAddManager::oclAdd(float* a, float* b, unsigned const& n)
 
 	if( status != CL_SUCCESS )
 	{
-		vcl_cerr << error_to_string(status) << vcl_flush;
+		std::cerr << error_to_string(status) << std::flush;
 		exit(1);
 	}
 

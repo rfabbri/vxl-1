@@ -1,16 +1,16 @@
 #ifndef  GEOMETRY_FUNCTIONS_H
 #define  GEOMETRY_FUNCTIONS_H
 
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+#include <vector>
+#include <algorithm>
+#include <cassert>
 //using namespace std;
 
 #include "defines.h"
 #include "points.h"
 //#include "line.h"
 
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 #define  TWICE_PI       2*M_PI
@@ -20,8 +20,8 @@ inline Point2D<double> rotateCCWPoint2D (Point2D<double>pt, double angle)
 {
    Point2D<double> rpt;
 
-   rpt.setX (pt.getX()*vcl_cos(angle) - pt.getY()*vcl_sin(angle));
-   rpt.setY (pt.getX()*vcl_sin(angle) + pt.getY()*vcl_cos(angle));
+   rpt.setX (pt.getX()*std::cos(angle) - pt.getY()*std::sin(angle));
+   rpt.setY (pt.getX()*std::sin(angle) + pt.getY()*std::cos(angle));
 
    return rpt;
 }
@@ -30,22 +30,22 @@ inline Point2D<double> rotateCCWPoint2D (double x, double y, double angle)
 {
    Point2D<double> rpt;
 
-   rpt.setX (x*vcl_cos(angle) - y*vcl_sin(angle));
-   rpt.setY (x*vcl_sin(angle) + y*vcl_cos(angle));
+   rpt.setX (x*std::cos(angle) - y*std::sin(angle));
+   rpt.setY (x*std::sin(angle) + y*std::cos(angle));
 
    return rpt;
 }
 
 inline double GetVector(Point2D<double> s_pt, Point2D<double> e_pt)
 {
-   return vcl_atan2( e_pt.getY() - s_pt.getY(), e_pt.getX() - s_pt.getX());
+   return std::atan2( e_pt.getY() - s_pt.getY(), e_pt.getX() - s_pt.getX());
 }
 
 inline Point2D<double> vectorPoint (Point2D<double> pt, double vec, double length)
 {
   Point2D<double> dpt;
-   dpt.setX (pt.getX() + length*vcl_cos(vec));
-   dpt.setY (pt.getY() + length*vcl_sin(vec));
+   dpt.setX (pt.getX() + length*std::cos(vec));
+   dpt.setY (pt.getY() + length*std::sin(vec));
   return dpt;
 }
 
@@ -125,7 +125,7 @@ int area_sign(const Point2D<point_type1> &pt0, const Point2D<point_type2> &pt1, 
         return 0;
        }
 
-    vcl_cout<<" Error in calculating area_sign. Area= "<<area<<vcl_endl;
+    std::cout<<" Error in calculating area_sign. Area= "<<area<<std::endl;
     return 0;
    }
 
@@ -137,14 +137,14 @@ double euc_distance(Point2D<point_type1> pt1, Point2D<point_type2> pt2)
     x_dist = (pt1.getX()-pt2.getX())*(pt1.getX()-pt2.getX());
     y_dist = (pt1.getY()-pt2.getY())*(pt1.getY()-pt2.getY());
 
-    dist = vcl_sqrt(x_dist+y_dist);
+    dist = std::sqrt(x_dist+y_dist);
     return dist;
    }
 
     template <class point_type1, class point_type2>
 double EuclideanDisvcl_tance(Point2D<point_type1> pt1, Point2D<point_type2> pt2)
   {
-    return  vcl_sqrt((pt1.getX()-pt2.getX())*(pt1.getX()-pt2.getX())+(pt1.getY()-pt2.getY())*(pt1.getY()-pt2.getY()));
+    return  std::sqrt((pt1.getX()-pt2.getX())*(pt1.getX()-pt2.getX())+(pt1.getY()-pt2.getY())*(pt1.getY()-pt2.getY()));
    }
 
 
@@ -164,7 +164,7 @@ double EuclideanDisvcl_tanceSquare(Point2D<point_type1> pt1, Point2D<point_type2
 //
 //ORIGINAL Function
 //    template <typename lineType, typename coord_type2>
-//int PointInPolygon(const vcl_vector<lineType> &polygon , const Point2D<coord_type2> pt)
+//int PointInPolygon(const std::vector<lineType> &polygon , const Point2D<coord_type2> pt)
 //  {
 //    int c = 0;
 //    for (unsigned int i = 0; i<polygon.size(); i++) 
@@ -179,7 +179,7 @@ double EuclideanDisvcl_tanceSquare(Point2D<point_type1> pt1, Point2D<point_type2
 
 
 //    template <typename coord_type1, typename coord_type2>
-//int PointInPolygon(const vcl_vector<Line2D<coord_type1> > &polygon , const Point2D<coord_type2> pt)
+//int PointInPolygon(const std::vector<Line2D<coord_type1> > &polygon , const Point2D<coord_type2> pt)
 //  {
 //    int c = 0;
 //    for (int i = 0; i<polygon.size(); i++) 
@@ -195,7 +195,7 @@ double EuclideanDisvcl_tanceSquare(Point2D<point_type1> pt1, Point2D<point_type2
 
 
     template <typename coord_type1, typename coord_type2>
-int PointInPolygon(const vcl_vector<coord_type1> &polygon , const Point2D<coord_type2> pt)
+int PointInPolygon(const std::vector<coord_type1> &polygon , const Point2D<coord_type2> pt)
   {
     int c = 0;
     int size = (int)polygon.size();
@@ -226,7 +226,7 @@ int PointInPolygon(const vcl_vector<coord_type1> &polygon , const Point2D<coord_
  * is not even defined in this case.
  * */
 
-inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
+inline double  ComputeTangentAverage(std::vector<double> tangentList_)
   {
     unsigned int i;
     assert(tangentList_.size()>=1);
@@ -236,11 +236,11 @@ inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
     //
     for (i=0;i<tangentList_.size();i++)
       {
-        tangentList_[i]= vcl_fmod (tangentList_[i], 2*M_PI);
+        tangentList_[i]= std::fmod (tangentList_[i], 2*M_PI);
         if (tangentList_[i]<0)
             tangentList_[i] +=2*M_PI;
        }
-    vcl_sort(tangentList_.begin(), tangentList_.end()); 
+    std::sort(tangentList_.begin(), tangentList_.end()); 
     
     double tangent=0, prev_tangent=0, tangent_sum=0, av_tangent=0;
     for (i=0;i<tangentList_.size();i++)
@@ -249,7 +249,7 @@ inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
         if (i==0)
             prev_tangent = tangent;
         
-        if (vcl_fabs(tangent-prev_tangent)>M_PI)
+        if (std::fabs(tangent-prev_tangent)>M_PI)
           {
             if (tangent>0)
                 tangent = tangent-2*M_PI;
@@ -257,9 +257,9 @@ inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
                 tangent = tangent+2*M_PI;
            }
         
-        if (vcl_fabs(tangent-prev_tangent)>M_PI)
+        if (std::fabs(tangent-prev_tangent)>M_PI)
           {
-            vcl_cout<<" Warning : Angle Difference >M_PI"<<"  Prev = "<<prev_tangent*(180/M_PI)<<" Tangent = "<<tangent*(180/M_PI)<<" Diff = "<<vcl_fabs(tangent-prev_tangent)*(180/M_PI)<<vcl_endl;
+            std::cout<<" Warning : Angle Difference >M_PI"<<"  Prev = "<<prev_tangent*(180/M_PI)<<" Tangent = "<<tangent*(180/M_PI)<<" Diff = "<<std::fabs(tangent-prev_tangent)*(180/M_PI)<<std::endl;
            }
    
         
@@ -269,7 +269,7 @@ inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
     
     
     av_tangent = (tangent_sum/(tangentList_.size()*(1.0)));
-    av_tangent =  vcl_fmod (av_tangent, 2*M_PI);
+    av_tangent =  std::fmod (av_tangent, 2*M_PI);
     if (av_tangent<0)
         av_tangent +=2*M_PI;
 
@@ -280,7 +280,7 @@ inline double  ComputeTangentAverage(vcl_vector<double> tangentList_)
 template<typename point1_type, typename point2_type>
 double GetSlope(Point2D<point1_type> start, Point2D<point2_type> end)
   {
-    double slope = vcl_atan2(end.getY()-start.getY(), end.getX()-start.getX());
+    double slope = std::atan2(end.getY()-start.getY(), end.getX()-start.getX());
     
     if (slope<0)
         slope +=2*M_PI;
@@ -293,7 +293,7 @@ inline double AngleDiff(double start, double end)
   {
     double diff = end-start;
 
-    diff =  vcl_fmod (diff, TWICE_PI);
+    diff =  std::fmod (diff, TWICE_PI);
     if (diff<0)
         diff+=TWICE_PI;
 
@@ -307,8 +307,8 @@ class ArcFitter
   {
     private:
         double _span;
-        vcl_vector<Point2D<double> > _boundary;
-        vcl_vector<double>           _tangents;
+        std::vector<Point2D<double> > _boundary;
+        std::vector<double>           _tangents;
         double _startAngle;
         double _endAngle;
         double _radius;
@@ -332,7 +332,7 @@ class ArcFitter
 
         void operator()(Point2D<double> start, Point2D<double> end, Point2D<double> center)
           {
-            //vcl_cout<<" Error = "<<(euc_distance(start, center) - euc_distance(end, center))<<vcl_endl; 
+            //std::cout<<" Error = "<<(euc_distance(start, center) - euc_distance(end, center))<<std::endl; 
             _boundary.clear();
             _tangents.clear();
             _span       = 0;
@@ -361,23 +361,23 @@ class ArcFitter
                }
             
             double angle=0;
-            int num_steps = (int)vcl_fabs(_span/angle_step);
+            int num_steps = (int)std::fabs(_span/angle_step);
             
             
             for (int i=1;i<(num_steps-1);i++)
               {
                 angle = _startAngle+(angle_step)*i;
-                _boundary.push_back(center+_radius*(Point2D<double>(vcl_cos(angle), vcl_sin(angle))));
+                _boundary.push_back(center+_radius*(Point2D<double>(std::cos(angle), std::sin(angle))));
                 if (_maxSpan==0)
                     _tangents.push_back(angle+tangent_add);
                 else
                   {
-                    if (vcl_fabs(angle_step*i)<_maxSpan)
+                    if (std::fabs(angle_step*i)<_maxSpan)
                         _tangents.push_back(angle+tangent_add);
                    }
                }
             
-            //vcl_cout<<" Start = "<<start<<" End = "<<end<<" Center = "<<center<<" Radius ="<<_radius<<" Error ="<<error<<vcl_endl;
+            //std::cout<<" Start = "<<start<<" End = "<<end<<" Center = "<<center<<" Radius ="<<_radius<<" Error ="<<error<<std::endl;
             return;
            }
         
@@ -392,7 +392,7 @@ class ArcFitter
                 return false;
             else
               {
-                if (vcl_fabs(_span)<_maxSpan)
+                if (std::fabs(_span)<_maxSpan)
                     return false;
                 else
                     return true;
@@ -404,12 +404,12 @@ class ArcFitter
             _counterClockwise = cond;
            }
         
-        vcl_vector<double> getTangents()
+        std::vector<double> getTangents()
           {
             return _tangents;
            }
 
-        vcl_vector<Point2D<double> > getBoundary()
+        std::vector<Point2D<double> > getBoundary()
           {
             return _boundary;
            }
@@ -427,14 +427,14 @@ class ArcFitter
 
     
     template<typename pointType>
-vcl_vector<double> FitArc(pointType start, pointType end, pointType center, double step, bool counterClockwise, vcl_vector<pointType> &contour)
+std::vector<double> FitArc(pointType start, pointType end, pointType center, double step, bool counterClockwise, std::vector<pointType> &contour)
   {
     assert(step>0);
     double radius = euc_distance(start, center);
     assert(radius>0);
     double angle_step = (step/radius);
     double start_angle, end_angle, span;
-    vcl_vector<double> tangents;
+    std::vector<double> tangents;
     
     start_angle = GetSlope(center, start);
     end_angle   = GetSlope(center, end);
@@ -454,13 +454,13 @@ vcl_vector<double> FitArc(pointType start, pointType end, pointType center, doub
        }
 
     double angle=0;
-    int num_steps = (int)vcl_fabs(span/angle_step);
+    int num_steps = (int)std::fabs(span/angle_step);
     
     
     for (int i=1;i<(num_steps-1);i++)
       {
         angle = start_angle+(angle_step)*i;
-        contour.push_back(center+radius*(pointType(vcl_cos(angle), vcl_sin(angle))));
+        contour.push_back(center+radius*(pointType(std::cos(angle), std::sin(angle))));
         tangents.push_back(angle+tangent_add);
        }
    

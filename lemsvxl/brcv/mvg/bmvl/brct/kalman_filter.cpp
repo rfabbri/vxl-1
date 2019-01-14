@@ -1,11 +1,11 @@
 /////////////////////////////////////////////////////////////////////
 
 #include "kalman_filter.h"
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h> // for sscanf()
-#include <vcl_cmath.h> // for exp()
-#include <vcl_cstdlib.h> // for exit()
+#include <fstream>
+#include <cassert>
+#include <cstdio> // for sscanf()
+#include <cmath> // for exp()
+#include <cstdlib> // for exit()
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -79,7 +79,7 @@ void kalman_filter::init_state_3d_estimation()
 {
   double dt = time_tick_[1] - time_tick_[0];
   vnl_double_3 T(X_[3]*dt,X_[4]*dt,X_[5]*dt);
-  vcl_cout<<"T = "<<T<<'\n';
+  std::cout<<"T = "<<T<<'\n';
 
   // compute camera calibration matrix
   vnl_double_3x4 E1, E2;
@@ -110,10 +110,10 @@ void kalman_filter::init_state_3d_estimation()
 
   vnl_double_2x2 Sigma2d; Sigma2d.set_identity();
   vnl_double_3x3 Sigma3d; Sigma3d.set_identity();
-  vcl_cout<<Sigma3d<<'\n';
+  std::cout<<Sigma3d<<'\n';
 
   for (int t =0; t<c; t++) {
-    vcl_vector<bugl_normal_point_3d_sptr> pts_3d;
+    std::vector<bugl_normal_point_3d_sptr> pts_3d;
 
     //assert(trackers_[t].size()== time_tick_.size());
     vdgl_digital_curve_sptr dc0 = trackers_[t][0];
@@ -148,7 +148,7 @@ void kalman_filter::init_state_3d_estimation()
         // get rid of any matching candidate point whose gradient is far away from original gradient
         // getting the intersection point
         vgl_point_2d<double> p2(1e99, 1e99); // dummy initialisation, to avoid compiler warning
-        vcl_vector<vgl_point_2d<double> > pts;
+        std::vector<vgl_point_2d<double> > pts;
         bdgl_curve_algs::intersect_line(dc1, lr, pts);
 
         // find the corresponding point
@@ -162,7 +162,7 @@ void kalman_filter::init_state_3d_estimation()
           double angle1 = (*ec1)[x1_index].get_theta();
 
           double dist_p1p2 = vgl_homg_operators_2d<double>::distance_squared(p1, temp);
-          if (vcl_fabs(angle1-angle0)<12.5 && dist > dist_p1p2)
+          if (std::fabs(angle1-angle0)<12.5 && dist > dist_p1p2)
           { // make sure it filters out lines parallel to epipole lines.
             p2 = temp;
             flag = true;
@@ -317,7 +317,7 @@ void kalman_filter::update_observes(const vnl_double_3x4 &P, int iframe)
 void kalman_filter::update_confidence()
 {
 #if 1
-  vcl_vector<vnl_double_3x4> cams(memory_size_); //cur_pos_ is 0 based
+  std::vector<vnl_double_3x4> cams(memory_size_); //cur_pos_ is 0 based
   for (int i = 0; i < memory_size_; i++)
     cams[i] = get_projective_matrix(motions_[(cur_pos_-i)%memory_size_]);
 
@@ -349,7 +349,7 @@ void kalman_filter::update_confidence()
     }
   }
 
-  vcl_cout<<"normalization_factor = "<<normalization_factor;
+  std::cout<<"normalization_factor = "<<normalization_factor;
   // normalize the probability weight across all the points
 
   if (normalization_factor == 0)
@@ -371,7 +371,7 @@ void kalman_filter::update_confidence()
 void kalman_filter::inc()
 {
   if ((unsigned)(cur_pos_+1) >= trackers_[0].size()){ // end of the data
-    vcl_cout<<"\n at the end of last curve\n";
+    std::cout<<"\n at the end of last curve\n";
     return;
   }
 
@@ -381,7 +381,7 @@ void kalman_filter::inc()
   // prediction step:
   //
   vnl_matrix_fixed<double, 6, 6> A = get_transit_matrix(cur_pos_-1, cur_pos_);
-  vcl_cout<<A<<'\n'
+  std::cout<<A<<'\n'
           <<X_<<'\n';
   vnl_vector_fixed<double, 6> Xpred = A*X_;
   vnl_double_3 camCenter(Xpred[0],Xpred[1],Xpred[2]);
@@ -389,7 +389,7 @@ void kalman_filter::inc()
   update_observes(P, cur_pos_);
 
   // adjustion
-  vcl_vector<bugl_gaussian_point_2d<double> > & cur_measures = observes_[cur_pos_%queue_size_];
+  std::vector<bugl_gaussian_point_2d<double> > & cur_measures = observes_[cur_pos_%queue_size_];
 
   //int c = trackers_.size();
   //for (int t = 0; t < c; t ++)
@@ -436,14 +436,14 @@ void kalman_filter::inc()
 
   // store the history
   X_ = Xpred;
-  vcl_cout<<"X_ = "<< X_;
+  std::cout<<"X_ = "<< X_;
 
   if (memory_size_ < queue_size_)
     ++memory_size_;
 
   // update 3d reconstruction results
-  vcl_vector<vnl_double_3x4> Ps(memory_size_);
-  vcl_vector<vnl_double_2> pts(memory_size_);
+  std::vector<vnl_double_3x4> Ps(memory_size_);
+  std::vector<vnl_double_2> pts(memory_size_);
 
   for (int i=0; i<num_points_; i++)
   {
@@ -479,11 +479,11 @@ void kalman_filter::inc()
 
 void kalman_filter::read_data(const char *fname)
 {
-  vcl_ifstream fin(fname);
+  std::ifstream fin(fname);
 
   if (!fin){
-    vcl_cerr<<"cannot open the file - "<<fname<<'\n';
-    vcl_exit(2);
+    std::cerr<<"cannot open the file - "<<fname<<'\n';
+    std::exit(2);
   }
 
   char buff[255];
@@ -492,7 +492,7 @@ void kalman_filter::read_data(const char *fname)
   time_tick_ = read_timestamp_file(buff);
 
   while (fin>>buff){ // for each line
-    if (vcl_strlen(buff)<2 || buff[0]=='#')
+    if (std::strlen(buff)<2 || buff[0]=='#')
       continue;
 
     // push a tracker into the memory
@@ -500,18 +500,18 @@ void kalman_filter::read_data(const char *fname)
   }
 }
 
-vcl_vector<double> kalman_filter::read_timestamp_file(char *fname)
+std::vector<double> kalman_filter::read_timestamp_file(char *fname)
 {
-  vcl_ifstream fin(fname);
+  std::ifstream fin(fname);
 
   if (!fin){
-    vcl_cerr<<"cannot open the file - "<<fname<<'\n';
-    vcl_exit(2);
+    std::cerr<<"cannot open the file - "<<fname<<'\n';
+    std::exit(2);
   }
 
   int nviews =0, junk=0;
   fin >> nviews;
-  vcl_vector<double> times(nviews);
+  std::vector<double> times(nviews);
 
   for (int i=0; i<nviews; i++){
     fin>> junk >> times[i];
@@ -520,37 +520,37 @@ vcl_vector<double> kalman_filter::read_timestamp_file(char *fname)
   return times;
 }
 
-vcl_vector<vdgl_digital_curve_sptr> kalman_filter::read_tracker_file(char *fname)
+std::vector<vdgl_digital_curve_sptr> kalman_filter::read_tracker_file(char *fname)
 {
-  vcl_ifstream fp(fname);
+  std::ifstream fp(fname);
 
   if (!fp){
-    vcl_cerr<<" cannot open the file - "<<fname<<'\n';
-    vcl_exit(2);
+    std::cerr<<" cannot open the file - "<<fname<<'\n';
+    std::exit(2);
   }
 
   char buffer[1000];
   int MAX_LEN=1000;
   int numEdges;
 
-  vcl_vector<vdgl_digital_curve_sptr > tracker;
+  std::vector<vdgl_digital_curve_sptr > tracker;
 
   double x, y, dir, conf;
   while (fp.getline(buffer,MAX_LEN))
   {
     //ignore comment lines and empty lines
-    if (vcl_strlen(buffer)<2 || buffer[0]=='#')
+    if (std::strlen(buffer)<2 || buffer[0]=='#')
       continue;
     //read the line with the contour count info
 
     //read the beginning of a contour block
 
-    if (!vcl_strncmp(buffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1))
+    if (!std::strncmp(buffer, "[BEGIN CONTOUR]", sizeof("[BEGIN CONTOUR]")-1))
     {
       //read in the next line to get the number of edges in this contour
       fp.getline(buffer,MAX_LEN);
 
-      vcl_sscanf(buffer,"EDGE_COUNT=%d",&(numEdges));
+      std::sscanf(buffer,"EDGE_COUNT=%d",&(numEdges));
 
       //instantiate a new contour structure here
       vdgl_edgel_chain_sptr ec=new vdgl_edgel_chain;
@@ -559,7 +559,7 @@ vcl_vector<vdgl_digital_curve_sptr> kalman_filter::read_tracker_file(char *fname
       {
         //read in all the edge information
         fp.getline(buffer,MAX_LEN);
-        vcl_sscanf(buffer," [%lf, %lf]   %lf %lf  ", &(x), &(y), &(dir), &(conf));
+        std::sscanf(buffer," [%lf, %lf]   %lf %lf  ", &(x), &(y), &(dir), &(conf));
         vdgl_edgel e;
         e.set_x(x);
         e.set_y(y);
@@ -574,7 +574,7 @@ vcl_vector<vdgl_digital_curve_sptr> kalman_filter::read_tracker_file(char *fname
       fp.getline(buffer,MAX_LEN);
 
       //make sure that this is the end marker
-      assert(!vcl_strncmp(buffer, "[END CONTOUR]", sizeof("[END CONTOUR]")-1));
+      assert(!std::strncmp(buffer, "[END CONTOUR]", sizeof("[END CONTOUR]")-1));
 
       continue;
     }
@@ -585,10 +585,10 @@ vcl_vector<vdgl_digital_curve_sptr> kalman_filter::read_tracker_file(char *fname
 
 void kalman_filter::init_velocity()
 {
-  vcl_vector<vgl_homg_line_2d<double> > lines;
+  std::vector<vgl_homg_line_2d<double> > lines;
 
   if (!e_) //if epipole is not initialized
-    vcl_cerr<<"epipole is not initialized\n";
+    std::cerr<<"epipole is not initialized\n";
 
   vnl_double_3 e((*e_)[0],(*e_)[1],1.0);
   init_cam_intrinsic();
@@ -596,7 +596,7 @@ void kalman_filter::init_velocity()
   // get translation
   double trans_dist = 1.0; // 105mm
   vnl_double_3 T = vnl_inverse(K_) * e;
-  T /= vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  T /= std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   if (T[2]<0)
     T *= trans_dist;
   else
@@ -618,9 +618,9 @@ bugl_curve_3d kalman_filter::get_curve_3d()
   return curve_3d_;
 }
 
-vcl_vector<vgl_point_3d<double> > kalman_filter::get_local_pts()
+std::vector<vgl_point_3d<double> > kalman_filter::get_local_pts()
 {
-  vcl_vector<vgl_point_3d<double> > pts;
+  std::vector<vgl_point_3d<double> > pts;
 
   double xc=0, yc=0, zc=0;
 
@@ -647,9 +647,9 @@ vcl_vector<vgl_point_3d<double> > kalman_filter::get_local_pts()
 }
 
 
-vcl_vector<vgl_point_2d<double> > kalman_filter::get_next_observes()
+std::vector<vgl_point_2d<double> > kalman_filter::get_next_observes()
 {
-  vcl_vector<vgl_point_2d<double> > pts(num_points_);
+  std::vector<vgl_point_2d<double> > pts(num_points_);
 
   int c = trackers_.size();
   for (int t=0; t<c; t++){
@@ -667,9 +667,9 @@ vcl_vector<vgl_point_2d<double> > kalman_filter::get_next_observes()
 }
 
 
-vcl_vector<vgl_point_2d<double> > kalman_filter::get_cur_observes()
+std::vector<vgl_point_2d<double> > kalman_filter::get_cur_observes()
 {
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
 
   int c = trackers_.size();
 
@@ -688,10 +688,10 @@ vcl_vector<vgl_point_2d<double> > kalman_filter::get_cur_observes()
 }
 
 
-vcl_vector<vgl_point_2d<double> > kalman_filter::get_pre_observes()
+std::vector<vgl_point_2d<double> > kalman_filter::get_pre_observes()
 {
   assert(cur_pos_ > 0);
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
 
   int c = trackers_.size();
 
@@ -738,9 +738,9 @@ vnl_matrix<double> kalman_filter::get_predicted_curve()
 }
 
 
-vcl_vector<vnl_matrix<double> > kalman_filter::get_back_projection() const
+std::vector<vnl_matrix<double> > kalman_filter::get_back_projection() const
 {
-  vcl_vector<vnl_matrix<double> > res(memory_size_);
+  std::vector<vnl_matrix<double> > res(memory_size_);
   for (int f=0; f<memory_size_; f++)
   {
     vnl_double_3x4 P = get_projective_matrix(motions_[f]);
@@ -800,7 +800,7 @@ double kalman_filter::matched_point_prob(vnl_double_2& z, vnl_double_2& z_pred)
   if (d2 > 5)
     return 0;
   else
-    return vcl_exp(-d2/2);
+    return std::exp(-d2/2);
 }
 
 

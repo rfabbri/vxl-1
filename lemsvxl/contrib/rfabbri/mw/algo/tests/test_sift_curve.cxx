@@ -10,9 +10,9 @@
 static void
 print_all(const mw_sift_curve_algo &computor, const bmcsd_sift_curve &sc)
 {
-  vcl_cout << "Number of descriptor dimensions: " << sc.num_dims() << vcl_endl;
-  vcl_cout << "Total number of scales: " << sc.num_scales() << vcl_endl;
-  vcl_cout << "Number of curve samples : " << sc.num_samples() << vcl_endl;
+  std::cout << "Number of descriptor dimensions: " << sc.num_dims() << std::endl;
+  std::cout << "Total number of scales: " << sc.num_scales() << std::endl;
+  std::cout << "Number of curve samples : " << sc.num_samples() << std::endl;
 
   // Print all sigmas
   computor.print_sigmas();
@@ -54,11 +54,11 @@ MAIN( test_sift_curve )
   y_feature_vector v;
 
   // corner case: empty curve -- should work
-  vcl_cout << "\n--- Testing empty curve case ---\n";
+  std::cout << "\n--- Testing empty curve case ---\n";
 
   cue_computer.compute_all_cues(crv, &v);
 
-  vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  std::cout << "\n--- Testing 3-edgel curve case ---\n";
 
   dbdet_edgel e1;
   e1.pt.set(3.,3.);

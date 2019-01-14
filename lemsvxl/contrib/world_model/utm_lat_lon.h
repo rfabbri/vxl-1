@@ -62,7 +62,7 @@
 //
 //======================================================================
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 class utm_lat_lon {
 public:

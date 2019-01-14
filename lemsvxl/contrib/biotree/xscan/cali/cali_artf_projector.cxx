@@ -1,6 +1,6 @@
 #include <cali/cali_artf_projector.h>
 #include <cali/cali_cylinder_artifact.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_homg_line_3d_2_points.h>
 #include <vgl/vgl_line_3d_2_points.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -14,22 +14,22 @@
 
 cali_artf_projector::cali_artf_projector(cali_artf_model* artifact)
 :artifact_(artifact){
-    //vcl_string txt_file = "C:\\test_images\\gen_calib\\centers.txt";
-   // vcl_string txt_file = cali_filepaths::CENTERS;
-    vcl_string txt_file = CENTERS;
+    //std::string txt_file = "C:\\test_images\\gen_calib\\centers.txt";
+   // std::string txt_file = cali_filepaths::CENTERS;
+    std::string txt_file = CENTERS;
     fstream.open(txt_file.c_str());
 }
 
 cali_artf_projector::cali_artf_projector(cali_artf_model* artifact,cali_param par)
 :artifact_(artifact),par_(par){
-    //vcl_string txt_file = "C:\\test_images\\gen_calib\\centers.txt";
-   // vcl_string txt_file = cali_filepaths::CENTERS;
-    vcl_string txt_file = par_.CENTERS;
+    //std::string txt_file = "C:\\test_images\\gen_calib\\centers.txt";
+   // std::string txt_file = cali_filepaths::CENTERS;
+    std::string txt_file = par_.CENTERS;
    // fstream.open(txt_file.c_str());
-    fstream.open(txt_file.c_str(),vcl_ofstream::out | vcl_ofstream::app);
+    fstream.open(txt_file.c_str(),std::ofstream::out | std::ofstream::app);
 
     /*this->fstream.open (par_.DIFF.c_str(), 
-    vcl_ofstream::out | vcl_ofstream::app);*/
+    std::ofstream::out | std::ofstream::app);*/
 }
 
 //: generates backprojected rays throughout the bounded image and finds the intersection 
@@ -81,7 +81,7 @@ cali_artf_projector::build_centers_projection_img(xmvg_perspective_camera<double
   //vil_image_view<unsigned char> img(view.nib(), view.njb());
   vil_image_resource_sptr res= vil_new_image_resource(view.nib(), view.njb(), 1, VIL_PIXEL_FORMAT_BYTE);
   vil_image_view<unsigned char> img = *(res->get_copy_view());
-  vcl_vector<vsol_conic_2d >  centers = build_ball_projections(camera);
+  std::vector<vsol_conic_2d >  centers = build_ball_projections(camera);
   for (unsigned int i=0; i < centers.size(); i++){
      
       //unsigned char& pix = view.gpix(i, j);
@@ -104,15 +104,15 @@ cali_artf_projector::build_centers_projection_img(xmvg_perspective_camera<double
 
 //: creates a vector of conics, as the projections of the given spheres on the 
 // image plane with the given paramaters
-vcl_vector<vsol_conic_2d> 
+std::vector<vsol_conic_2d> 
 cali_artf_projector::build_ball_projections(xmvg_perspective_camera<double> camera)
 {
-  vcl_vector<vgl_point_3d<double> > balls = artifact_->ball_centers();
+  std::vector<vgl_point_3d<double> > balls = artifact_->ball_centers();
   vgl_homg_point_2d<double> center_proj;
-  vcl_vector<vsol_conic_2d > result_set;
-  vcl_vector<double>radius = artifact_->ball_radii();
-//  vcl_vector<double>radius(cali_cylinder_artifact::BALL_NUMBER);
- // vcl_vector<double>radius;
+  std::vector<vsol_conic_2d > result_set;
+  std::vector<double>radius = artifact_->ball_radii();
+//  std::vector<double>radius(cali_cylinder_artifact::BALL_NUMBER);
+ // std::vector<double>radius;
  // double radius;
   double a, b;
  
@@ -123,7 +123,7 @@ cali_artf_projector::build_ball_projections(xmvg_perspective_camera<double> came
   for (unsigned int i=0; i<balls.size(); i++) {
      
      vgl_homg_point_3d<double> center(balls[i].x(), balls[i].y(), balls[i].z(), 1.0);
-   //  vcl_cout<<" ball centres: "<<" x "<<balls[i].x()<<" y "<<balls[i].y()<<" z "<<balls[i].z()<<vcl_endl<<vcl_endl;
+   //  std::cout<<" ball centres: "<<" x "<<balls[i].x()<<" y "<<balls[i].y()<<" z "<<balls[i].z()<<std::endl<<std::endl;
 
      center_proj = camera.project(center);
      vgl_point_3d<double> point(center_proj.x()/center_proj.w(), 
@@ -139,13 +139,13 @@ cali_artf_projector::build_ball_projections(xmvg_perspective_camera<double> came
      */
   /*vgl_point_2d<double>cent = project_sphere_image(camera, center, radius[i], a, b); 
   vsol_conic_2d ellipse(vsol_point_2d (cent.x(), cent.y()), a, b, 0.0);
-  fstream << ++k <<" x " <<cent.x() <<" y " <<cent.y() <<" a "<<a<<" b "<<b<<vcl_endl;*/
+  fstream << ++k <<" x " <<cent.x() <<" y " <<cent.y() <<" a "<<a<<" b "<<b<<std::endl;*/
      project_sphere(camera, center, radius[i], a, b);
 
      vsol_conic_2d ellipse(vsol_point_2d (point.x(), point.y()), a, b, 0.0);
-fstream << ++k <<" x " <<point.x() <<" y " <<point.y() <<" a "<<a<<" b "<<b<<vcl_endl;
+fstream << ++k <<" x " <<point.x() <<" y " <<point.y() <<" a "<<a<<" b "<<b<<std::endl;
 
-     //    vcl_cout<<" x " <<point.x() <<" y " <<point.y() <<" a "<<a<<" b "<<b<<vcl_endl<<vcl_endl;
+     //    std::cout<<" x " <<point.x() <<" y " <<point.y() <<" a "<<a<<" b "<<b<<std::endl<<std::endl;
 
      result_set.push_back(ellipse);
   }
@@ -184,7 +184,7 @@ cali_artf_projector::project_sphere_image(xmvg_perspective_camera<double> camera
   S.put(3,3,a10);
   double det = vnl_det(S);
   if (det == 0) {
-    vcl_cout << "Determinant is 0" << vcl_endl;
+    std::cout << "Determinant is 0" << std::endl;
   }
 
   vnl_matrix<double> Sinv = vnl_matrix_inverse<double>(S);
@@ -276,7 +276,7 @@ cali_artf_projector::project_sphere(xmvg_perspective_camera<double> camera,
   S.put(3,3,a10);
   double det = vnl_det(S);
   if (det == 0) {
-    vcl_cout << "Determinant is 0" << vcl_endl;
+    std::cout << "Determinant is 0" << std::endl;
   }
 
   vnl_matrix<double> Sinv = vnl_matrix_inverse<double>(S);

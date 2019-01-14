@@ -45,11 +45,11 @@ class vol3d_radius_detection
     vbl_array_3d<double> radius(vbl_array_3d<double>vol,double sigma,float threshold);
 
 
-    vcl_valarray<double> probes() {return rp_;}
+    std::valarray<double> probes() {return rp_;}
 
   private:
     // radius probes
-    vcl_valarray<double> rp_;
+    std::valarray<double> rp_;
 
 
     vol3d_radius_filter *rf_;

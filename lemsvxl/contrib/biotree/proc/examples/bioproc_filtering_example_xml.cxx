@@ -11,8 +11,8 @@
 //    instead of gui and make it ready for batch process. 
 //    
 
-#include <vcl_ctime.h>
-#include <vcl_vector.h>
+#include <ctime>
+#include <vector>
 #include <vgl/xio/vgl_xio_box_3d.h>
 #include <vgl/xio/vgl_xio_vector_3d.h>
 #include <vgl/vgl_box_3d.h>
@@ -30,28 +30,28 @@
 int main(int argc, char** argv)
 {
   proc_io_run_xml_parser parser;
-  vcl_FILE *xmlFile;
-  vcl_string fname="", bin_fname = "";
+  std::FILE *xmlFile;
+  std::string fname="", bin_fname = "";
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    vcl_cout << arg << vcl_endl;
-    if (arg == vcl_string ("-x")) { fname = vcl_string(argv[++i]);}
-    else if (arg == vcl_string ("-b")) { bin_fname = vcl_string (argv[++i]); }
+    std::string arg (argv[i]);
+    std::cout << arg << std::endl;
+    if (arg == std::string ("-x")) { fname = std::string(argv[++i]);}
+    else if (arg == std::string ("-b")) { bin_fname = std::string (argv[++i]); }
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-x xml_script] [-b binary_scan_file]" << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-x xml_script] [-b binary_scan_file]" << std::endl;
       throw -1;
     }
   }
   
   if (  fname == ""){
-    vcl_cout << "File not specified" << vcl_endl; 
+    std::cout << "File not specified" << std::endl; 
     return(1);
   }
    
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile){
     fprintf(stderr, " %s error on opening", fname.c_str() );
     return(1);
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  vcl_cout << "parsing finished!" << vcl_endl;
+  std::cout << "parsing finished!" << std::endl;
 
   return proc_flow_manage(parser, xmlFile, fname, bin_fname);
  

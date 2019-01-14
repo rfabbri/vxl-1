@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_box_2d.h>
@@ -84,13 +84,13 @@ void create_top_box(vgl_box_3d<double> box, vgl_box_3d<double>& top_box,
   // translate it a bit
   vgl_point_3d<double> top_centroid = top_box.centroid();
   top_box.set_centroid(vgl_point_3d<double>(top_centroid.x()+dimx/3., top_centroid.y()+dimx/3., top_centroid.z()));
-  vcl_cout << top_box << vcl_endl;
+  std::cout << top_box << std::endl;
 }
 
-vcl_vector<vgl_point_3d<double> > 
+std::vector<vgl_point_3d<double> > 
 corners_of_box_3d(vgl_box_3d<double> box)
 {
-  vcl_vector<vgl_point_3d<double> > corners;
+  std::vector<vgl_point_3d<double> > corners;
 
   corners.push_back(box.min_point());
   corners.push_back(vgl_point_3d<double> (box.min_x()+box.width(), box.min_y(), box.min_z()));
@@ -118,7 +118,7 @@ vpgl_rational_camera<double>
 perspective_to_rational(vpgl_perspective_camera<double>& cam_pers)
 {
   vnl_matrix_fixed<double,3,4> cam_pers_matrix = cam_pers.get_matrix();
-  vcl_vector<double> neu_u,den_u,neu_v,den_v;
+  std::vector<double> neu_u,den_u,neu_v,den_v;
   double x_scale = 1.0,
          x_off = 0.0,
          y_scale = 1.0,
@@ -153,7 +153,7 @@ perspective_to_rational(vpgl_perspective_camera<double>& cam_pers)
 
 
 
-vcl_vector<vpgl_camera_double_sptr >
+std::vector<vpgl_camera_double_sptr >
 generate_cameras_z(vgl_box_3d<double>& world)
 {
   vgl_point_2d<double> principal_point(IMAGE_U/2., IMAGE_V/2.);
@@ -162,17 +162,17 @@ generate_cameras_z(vgl_box_3d<double>& world)
   double x,z;
   double alpha = (vnl_math::pi/8.) * 3;
   double delta_alpha = vnl_math::pi/40.;
-  vcl_vector<vgl_point_3d<double> > centers;
+  std::vector<vgl_point_3d<double> > centers;
   for (unsigned i=0; i<11; i++) {
     x = camera_dist*cos(alpha);
     z = camera_dist*sin(alpha);
     centers.push_back(vgl_point_3d<double> (centroid.x()+x, centroid.y(), centroid.z()+z));
-    vcl_cout << centers[i] << vcl_endl;
+    std::cout << centers[i] << std::endl;
     alpha += delta_alpha;
   }
 
   vgl_box_2d<double> bb;
-  vcl_vector<vpgl_camera_double_sptr> rat_cameras;
+  std::vector<vpgl_camera_double_sptr> rat_cameras;
   for(unsigned i=0; i<centers.size(); i++) {
     vgl_point_3d<double> camera_center  = centers[i];
     vpgl_perspective_camera<double> persp_cam;
@@ -181,22 +181,22 @@ generate_cameras_z(vgl_box_3d<double>& world)
     vpgl_rational_camera<double>* rat_cam = new vpgl_rational_camera<double>(perspective_to_rational(persp_cam));
     rat_cameras.push_back(rat_cam);
 
-    vcl_vector<vgl_point_3d<double> > corners = corners_of_box_3d(world);
+    std::vector<vgl_point_3d<double> > corners = corners_of_box_3d(world);
     for(unsigned i=0; i<corners.size(); i++) {
       vgl_point_3d<double> c = corners[i];
       double u,v, u2, v2;
       persp_cam.project(c.x(), c.y() ,c.z(), u, v);
       rat_cam->project(c.x(), c.y() ,c.z(), u2, v2);
       bb.add(vgl_point_2d<double> (u,v));
-      //vcl_cout << "Perspective [" << u << "," << v << "]" << vcl_endl;
-      //vcl_cout << "Rational [" << u2 << "," << v2 << "]" << vcl_endl << vcl_endl;
+      //std::cout << "Perspective [" << u << "," << v << "]" << std::endl;
+      //std::cout << "Rational [" << u2 << "," << v2 << "]" << std::endl << std::endl;
     }
-    vcl_cout << bb << vcl_endl;
+    std::cout << bb << std::endl;
   }
   return rat_cameras;
 }
 
-vcl_vector<vpgl_camera_double_sptr >
+std::vector<vpgl_camera_double_sptr >
 generate_cameras_yz(vgl_box_3d<double>& world)
 {
   vgl_point_2d<double> principal_point(IMAGE_U/2., IMAGE_V/2.);
@@ -205,17 +205,17 @@ generate_cameras_yz(vgl_box_3d<double>& world)
   double x,y;
   double alpha = (vnl_math::pi/8.) * 3;
   double delta_alpha = vnl_math::pi/40.;
-  vcl_vector<vgl_point_3d<double> > centers;
+  std::vector<vgl_point_3d<double> > centers;
   for (unsigned i=0; i<11; i++) {
     x = camera_dist*cos(alpha);
     y = camera_dist*sin(alpha);
     centers.push_back(vgl_point_3d<double> (x+centroid.x(), y+centroid.y(), 200+centroid.z()));
-    vcl_cout << centers[i] << vcl_endl;
+    std::cout << centers[i] << std::endl;
     alpha += delta_alpha;
   }
 
   vgl_box_2d<double> bb;
-  vcl_vector<vpgl_camera_double_sptr> rat_cameras;
+  std::vector<vpgl_camera_double_sptr> rat_cameras;
   for(unsigned i=0; i<centers.size(); i++) {
     vgl_point_3d<double> camera_center  = centers[i];
     vpgl_perspective_camera<double> persp_cam;
@@ -224,17 +224,17 @@ generate_cameras_yz(vgl_box_3d<double>& world)
     vpgl_rational_camera<double>* rat_cam = new vpgl_rational_camera<double>(perspective_to_rational(persp_cam));
     rat_cameras.push_back(rat_cam);
 
-    vcl_vector<vgl_point_3d<double> > corners = corners_of_box_3d(world);
+    std::vector<vgl_point_3d<double> > corners = corners_of_box_3d(world);
     for(unsigned i=0; i<corners.size(); i++) {
       vgl_point_3d<double> c = corners[i];
       double u,v, u2, v2;
       persp_cam.project(c.x(), c.y() ,c.z(), u, v);
       rat_cam->project(c.x(), c.y() ,c.z(), u2, v2);
       bb.add(vgl_point_2d<double> (u,v));
-      //vcl_cout << "Perspective [" << u << "," << v << "]" << vcl_endl;
-      //vcl_cout << "Rational [" << u2 << "," << v2 << "]" << vcl_endl << vcl_endl;
+      //std::cout << "Perspective [" << u << "," << v << "]" << std::endl;
+      //std::cout << "Rational [" << u2 << "," << v2 << "]" << std::endl << std::endl;
     }
-    vcl_cout << bb << vcl_endl;
+    std::cout << bb << std::endl;
   }
   return rat_cameras;
 }
@@ -245,8 +245,8 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
                 bvam_voxel_grid<float>* intensity_grid,
                 bvam_voxel_grid<float>* ocp_grid,
                 bvam_voxel_grid<apm_datatype>* apm_grid,
-                vcl_vector<vpgl_camera_double_sptr>& cameras, 
-                vcl_vector <vil_image_view_base_sptr>& image_set,
+                std::vector<vpgl_camera_double_sptr>& cameras, 
+                std::vector <vil_image_view_base_sptr>& image_set,
                 unsigned int bin_num)
 {
   
@@ -274,7 +274,7 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
 
  // world->save_occupancy_raw("./test_gen_synthetic_world/occp.raw");
 
-  vcl_string path = "./test_gen_synthetic_world/test_img";
+  std::string path = "./test_gen_synthetic_world/test_img";
   for (unsigned i=0; i<cameras.size(); i++) {
     vil_image_view_base_sptr img_arg;
     vil_image_view<float> mask(IMAGE_U, IMAGE_V);
@@ -282,7 +282,7 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
     bvam_image_metadata camera(img_arg, cameras[i]);
 
     world->expected_image<APM_MOG_GREY>(camera, expected, mask, bin_num);
-    vcl_stringstream s;
+    std::stringstream s;
     s << path << i << "_" << bin_num << ".tif";
     vil_save(*expected, s.str().c_str());
     image_set.push_back(expected);
@@ -291,11 +291,11 @@ bool gen_images(vgl_vector_3d<unsigned> grid_size,
 
 }
 
-bool reconstruct_world( bvam_voxel_world_sptr recon_world, vcl_vector<vpgl_camera_double_sptr>& cameras, 
-                 vcl_vector <vil_image_view_base_sptr>& image_set,unsigned int bin_num)
+bool reconstruct_world( bvam_voxel_world_sptr recon_world, std::vector<vpgl_camera_double_sptr>& cameras, 
+                 std::vector <vil_image_view_base_sptr>& image_set,unsigned int bin_num)
 {
-  vcl_string recon_path = "recon_world/test_img";
-  vcl_string camera_path = "test_gen_cameras/camera";
+  std::string recon_path = "recon_world/test_img";
+  std::string camera_path = "test_gen_cameras/camera";
 
   for (unsigned i = 0;i<cameras.size();i++)
   {
@@ -311,9 +311,9 @@ bool reconstruct_world( bvam_voxel_world_sptr recon_world, vcl_vector<vpgl_camer
 
 
     recon_world->expected_image<APM_MOG_GREY>(camera, expected, mask);
-    vcl_stringstream s;
+    std::stringstream s;
     s << recon_path << i << "_" << bin_num << ".tif";
-    vcl_stringstream c;
+    std::stringstream c;
     c << camera_path << i << ".rpc";
     vil_save(*expected, s.str().c_str());
     vpgl_rational_camera<double>* cam = static_cast<vpgl_rational_camera<double>*> (cameras[i].as_pointer());
@@ -345,19 +345,19 @@ void gen_voxel_world_2box(vgl_vector_3d<unsigned> grid_size,
   create_top_box(box, top_box, 30,30,10);
 
   float face_intens[6] = {0.3, 0.45, 0.6, 0.75, 0.85, 1.0};
-  vcl_ofstream is("test_gen_synthetic_world/intensity_grid.txt");
+  std::ofstream is("test_gen_synthetic_world/intensity_grid.txt");
   unsigned z=nz;
   for (ocp_slab_it = ocp_grid->begin(); 
     ocp_slab_it != ocp_grid->end(); 
     ++ocp_slab_it,++intensity_slab_it) {
     z--;
-    is << z << "--->" << vcl_endl;
+    is << z << "--->" << std::endl;
     bvam_voxel_slab<float>::iterator vit,iit;
     
     iit = intensity_slab_it->begin();
     vit = ocp_slab_it->begin();
     for (unsigned i=0; i<nx; i++) {
-      is << vcl_endl;
+      is << std::endl;
       for (unsigned j=0; j<ny; j++) {
         int face1 = on_box_surface(box, vgl_point_3d<double>(i,j,z));
         int face2 = on_box_surface(top_box, vgl_point_3d<double>(i,j,z));
@@ -373,7 +373,7 @@ void gen_voxel_world_2box(vgl_vector_3d<unsigned> grid_size,
       }
     }
   }
-  vcl_cout << "grid done." << vcl_endl;
+  std::cout << "grid done." << std::endl;
 }
 
 void gen_voxel_world_plane(vgl_vector_3d<unsigned> grid_size,
@@ -393,19 +393,19 @@ void gen_voxel_world_plane(vgl_vector_3d<unsigned> grid_size,
   vgl_box_3d<double> plane_box(vgl_point_3d<double> (20,20,24), 
     vgl_point_3d<double> (80, 80, 25));
 
-  vcl_ofstream is("test_gen_synthetic_world/intensity_grid.txt");
+  std::ofstream is("test_gen_synthetic_world/intensity_grid.txt");
   unsigned z=nz;
   for (ocp_slab_it = ocp_grid->begin(); 
     ocp_slab_it != ocp_grid->end(); 
     ++ocp_slab_it,++intensity_slab_it) {
     z--;
-    is << z << "--->" << vcl_endl;
+    is << z << "--->" << std::endl;
     bvam_voxel_slab<float>::iterator vit,iit;
 
     iit = intensity_slab_it->begin();
     vit = ocp_slab_it->begin();
     for (unsigned i=0; i<nx; i++) {
-      is << vcl_endl;
+      is << std::endl;
       for (unsigned j=0; j<ny; j++) {
         int face1 = on_box_surface(plane_box, vgl_point_3d<double>(i,j,z));
         if (face1 != -1) {  
@@ -417,7 +417,7 @@ void gen_voxel_world_plane(vgl_vector_3d<unsigned> grid_size,
       }
     }
   }
-  vcl_cout << "grid done." << vcl_endl;
+  std::cout << "grid done." << std::endl;
 }
 
 static void test_gen_synthetic_world()
@@ -425,10 +425,10 @@ static void test_gen_synthetic_world()
   START("test_gen_synthetic_world test");
 
   // create the directory under build to put the intermediate files and the generated images
-  vcl_string model_dir("./test_gen_synthetic_world");
+  std::string model_dir("./test_gen_synthetic_world");
   vul_file::make_directory(model_dir);
 
-  vcl_string recon_model_dir("./recon_world");
+  std::string recon_model_dir("./recon_world");
   vul_file::make_directory(recon_model_dir);
 
   vul_file::make_directory("./test_gen_cameras");
@@ -460,9 +460,9 @@ static void test_gen_synthetic_world()
     ("test_gen_synthetic_world/intensity.vox",grid_size);
 
   gen_voxel_world_2box(grid_size, voxel_world, ocp_grid, intensity_grid);
-  vcl_vector<vpgl_camera_double_sptr> cameras = generate_cameras_yz(voxel_world);
+  std::vector<vpgl_camera_double_sptr> cameras = generate_cameras_yz(voxel_world);
 
-  vcl_vector <vil_image_view_base_sptr> image_set_1,image_set_2;
+  std::vector <vil_image_view_base_sptr> image_set_1,image_set_2;
 
   // generate images from synthetis world
   gen_images(grid_size, world, intensity_grid, ocp_grid, apm_grid_1, 

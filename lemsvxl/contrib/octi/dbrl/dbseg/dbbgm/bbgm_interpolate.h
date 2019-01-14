@@ -26,7 +26,7 @@ class bbgm_interp_nearest_ftr:public bbgm_interp_ftr_base<image_,T>
 
 		if ((p1x<1)||(p1y<1)||(p1x>data.ni()-2)||(p1y>data.nj()-2)) 
 	 {
-		// vcl_cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<vcl_endl;
+		// std::cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<std::endl;
 		 return false;
 	 }
 	
@@ -54,7 +54,7 @@ class bbgm_interp_bicubic_ftr:public bbgm_interp_ftr_base<image_,T>
 
 	 if ((p1x<1)||(p1y<1)||(p1x>data.ni()-3)||(p1y>data.nj()-3)) 
 	 {
-		 //vcl_cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<vcl_endl;
+		 //std::cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<std::endl;
 		 return false;
 	 }
 	if (normx == 0.0 && normy == 0.0)  
@@ -121,7 +121,7 @@ class bbgm_interp_bilinear_ftr:public bbgm_interp_ftr_base<image_,T>
 
 		if ((p1x<1)||(p1y<1)||(p1x>data.ni()-2)||(p1y>data.nj()-2)) 
 	 {
-		// vcl_cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<vcl_endl;
+		// std::cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<std::endl;
 		 return false;
 	 }
 	
@@ -149,7 +149,7 @@ class bbgm_interp_lanczos_ftr:public bbgm_interp_ftr_base<image_,T>
 
 		if((p1x<1)||(p1y<1)||(p1x>data.ni()-3)||(p1y>data.nj()-3)) 
 	 {
-		// vcl_cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<vcl_endl;
+		// std::cerr<<"location "<<x<<" , "<<y<<" is not inside the interpolable area!"<<std::endl;
 		 return false;
 	 }
 		 

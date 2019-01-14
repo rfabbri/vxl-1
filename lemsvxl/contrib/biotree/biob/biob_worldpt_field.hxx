@@ -6,7 +6,7 @@
 #include <vsl/vsl_basic_xml_element.h>
 
 template <class T>
-void x_write(vcl_ostream& os, biob_worldpt_field<T> f)
+void x_write(std::ostream& os, biob_worldpt_field<T> f)
 {
   
   vsl_basic_xml_element element("biob_worldpt_field");
@@ -16,7 +16,7 @@ void x_write(vcl_ostream& os, biob_worldpt_field<T> f)
   f.roster()->x_write_this(os);
   
   // write the values
-  vcl_vector<T> values = f.values();
+  std::vector<T> values = f.values();
   vsl_basic_xml_element values_elm("biob_worldpt_field_values");
   values_elm.add_attribute("size", (int) values.size());
   values_elm.x_write_open(os);
@@ -31,6 +31,6 @@ void x_write(vcl_ostream& os, biob_worldpt_field<T> f)
 #undef BIOB_WORLDPT_FIELD_INSTANTIATE
 #define BIOB_WORLDPT_FIELD_INSTANTIATE(T) \
 template class biob_worldpt_field<T>;\
-template void x_write(vcl_ostream&, biob_worldpt_field<T>)
+template void x_write(std::ostream&, biob_worldpt_field<T>)
 
 #endif

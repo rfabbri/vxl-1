@@ -49,7 +49,7 @@ public:
                 dbdet_edgel_link_graph& ELG, 
                 dbdet_curve_fragment_graph& CFG, 
                 vbl_array_2d<bool>& EULM,
-                vcl_list<dbdet_edgel_chain_list>& c_groups) 
+                std::list<dbdet_edgel_chain_list>& c_groups) 
   { EM_=EM; CM_=CM; ELG_=ELG; CFG_=CFG; EULM_=EULM; c_groups_=c_groups; }
 
   //: return the instance of the edge linker stored here
@@ -132,7 +132,7 @@ private:
   dbdet_edgel_link_graph& ELG_;     ///< The edge link graph (ELG)
   dbdet_curve_fragment_graph& CFG_; ///< The curve fragment graph (CFG)
   vbl_array_2d<bool>& EULM_;        ///< The edge Unlinked map (EULM)
-  vcl_list<dbdet_edgel_chain_list>& c_groups_ ; ///< the contour groups from CFG, By Yuliang
+  std::list<dbdet_edgel_chain_list>& c_groups_ ; ///< the contour groups from CFG, By Yuliang
   dbdet_edgel_chain_list prune_frags_; ///< curve fragments pruned in evaluation process
   //keep an instance of the sel linker for sel_commands
   dbdet_sel_sptr edge_linker_;

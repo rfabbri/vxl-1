@@ -1,8 +1,8 @@
 // match shock patches 
 
-#include <vcl_ctime.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <algorithm>
+#include <iostream>
 
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/dbsk2d_shock_graph.h>
@@ -29,17 +29,17 @@
 
 void individual_usage()
 {
-  vcl_cout << "Usage: <program name> <shock_patch_storage1> <shock_patch_storage2> <out_file> <shock_curve_sample_ds> <match_with_circular_completions>\n";
-  vcl_cout << "Last argument is 1 if matching with circular completions at the leaf scurves, otherwise 0 (open boundary matching)\n";
-  //vcl_cout << "shock curve sample ds is typically 2.0f\n";
+  std::cout << "Usage: <program name> <shock_patch_storage1> <shock_patch_storage2> <out_file> <shock_curve_sample_ds> <match_with_circular_completions>\n";
+  std::cout << "Last argument is 1 if matching with circular completions at the leaf scurves, otherwise 0 (open boundary matching)\n";
+  //std::cout << "shock curve sample ds is typically 2.0f\n";
 }
 int main_individual(int argc, char *argv[]) {
-  vcl_cout << "Matching shock patches!\n";
+  std::cout << "Matching shock patches!\n";
 
   //: out file contains the wrong mathces if any
-  vcl_string st_file1, st_file2, output_file;
+  std::string st_file1, st_file2, output_file;
 
-  vcl_cout << "argc: " << argc << vcl_endl;
+  std::cout << "argc: " << argc << std::endl;
   
   if (argc != 6) {
     individual_usage();
@@ -62,9 +62,9 @@ int main_individual(int argc, char *argv[]) {
   vsl_b_ifstream ifs2(st_file2.c_str());
   st2->b_read(ifs2);
   ifs2.close();
-  vcl_cout << "read the shock patch storages...\n";
-  vcl_vector<dbskr_shock_patch_sptr>& pv1 = st1->get_patches();
-  vcl_vector<dbskr_shock_patch_sptr>& pv2 = st2->get_patches();
+  std::cout << "read the shock patch storages...\n";
+  std::vector<dbskr_shock_patch_sptr>& pv1 = st1->get_patches();
+  std::vector<dbskr_shock_patch_sptr>& pv2 = st2->get_patches();
 
   dbskr_shock_patch_match_sptr match = new dbskr_shock_patch_match();
   patch_cor_map_type& map = match->get_map();
@@ -89,13 +89,13 @@ int main_individual(int argc, char *argv[]) {
   vul_timer t;
   t.mark();
   for (unsigned i = 0; i < pv1.size(); i++) {  
-    vcl_cout << i << " out of " << pv1.size() << ": ";
+    std::cout << i << " out of " << pv1.size() << ": ";
     find_patch_correspondences_coarse_edit(pv1[i], pv2, map, match_with_circular_completions);
     pv1[i]->kill_tree();
     pv1[i]->kill_shock_graph();
   }
    
-  vcl_cout << "writing bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "writing bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
   vsl_b_ofstream bfs(output_file.c_str());
   match->b_write(bfs);
   bfs.close();
@@ -103,14 +103,14 @@ int main_individual(int argc, char *argv[]) {
 }
 
 void eth_usage() {
-  vcl_cout << "Usage : <program name> <category name> <view_sptr> <patch_storage_dir> <match_output_dir> <scurve_sample_ds> <match_with_circular_completions>\n";
-  vcl_cout << "Modify the source code to change parameters to construct patch storage name depending on class\n";
-  vcl_cout << "scurve sample ds is typically 4 for coarse matching\n";
-  vcl_cout << "<match_with_circular_completions> = 0 if end scurves are not to be completed with circular arcs during matching, this is almost always the case for this database, 0 otherwise (closed boundary matching)\n";
+  std::cout << "Usage : <program name> <category name> <view_sptr> <patch_storage_dir> <match_output_dir> <scurve_sample_ds> <match_with_circular_completions>\n";
+  std::cout << "Modify the source code to change parameters to construct patch storage name depending on class\n";
+  std::cout << "scurve sample ds is typically 4 for coarse matching\n";
+  std::cout << "<match_with_circular_completions> = 0 if end scurves are not to be completed with circular arcs during matching, this is almost always the case for this database, 0 otherwise (closed boundary matching)\n";
 }
 int main_eth(int argc, char *argv[]) {
-  vcl_cout << "matching shock patches from eth set!\n";
-  vcl_string image_dir, patch_dir, match_dir, view_str, cat_str;
+  std::cout << "matching shock patches from eth set!\n";
+  std::string image_dir, patch_dir, match_dir, view_str, cat_str;
 
   if (argc != 7) {
     eth_usage();
@@ -121,7 +121,7 @@ int main_eth(int argc, char *argv[]) {
   float scurve_sample_ds = float(atof(argv[5]));
   bool match_with_circular_completions = (atoi(argv[6]) == 1 ? true : false);
   
-  vcl_vector<vcl_string> cats, cat_par_strs;
+  std::vector<std::string> cats, cat_par_strs;
   cats.push_back("horse");  cat_par_strs.push_back("_3_9_3_2_0.3_0.8");
   cats.push_back("dog");    cat_par_strs.push_back("_3_9_3_2_0.3_0.8");
   cats.push_back("cow");    cat_par_strs.push_back("_3_9_3_2_0.3_0.8");
@@ -130,7 +130,7 @@ int main_eth(int argc, char *argv[]) {
   cats.push_back("pear");   cat_par_strs.push_back("_2_6_2_1_0.3_0.8");
   cats.push_back("cup");    cat_par_strs.push_back("_2_6_2_1_0.3_0.8");
   cats.push_back("tomato"); cat_par_strs.push_back("_2_6_2_1_0.3_0.8");
-  vcl_string sorting_method_str = "_color_";
+  std::string sorting_method_str = "_color_";
 
   float shock_pruning_threshold = 0.8f;
   bool elastic_splice_cost = true;
@@ -143,28 +143,28 @@ int main_eth(int argc, char *argv[]) {
 
   
   // outputs are written as e.g. ./cow/cow1-090-180/cow1-090-180-cow2-090-180-sc-2.0.bin
-  vcl_string out_dir = match_dir+cats[i]+"/";
+  std::string out_dir = match_dir+cats[i]+"/";
   vul_file::make_directory_path(out_dir);
-  vcl_cout << cats[i] << "\n";
+  std::cout << cats[i] << "\n";
   for (unsigned j = 1; j < 11; j++) {
-    vcl_ostringstream oss;
+    std::ostringstream oss;
     oss << j;
 
-    vcl_string ins_name = cats[i]+oss.str()+"-"+view_str;
+    std::string ins_name = cats[i]+oss.str()+"-"+view_str;
 
-    vcl_string ins_dir = out_dir+ins_name+"/";
+    std::string ins_dir = out_dir+ins_name+"/";
     vul_file::make_directory_path(ins_dir);
     
-    vcl_cout << "\t\t" << ins_name << vcl_endl;
+    std::cout << "\t\t" << ins_name << std::endl;
 
-    vcl_string st_file1 = patch_dir+cats[i]+"/"+ins_name+"-patches"+sorting_method_str+cat_par_strs[i]+"/"+ins_name+"_patch_storage.bin";
+    std::string st_file1 = patch_dir+cats[i]+"/"+ins_name+"-patches"+sorting_method_str+cat_par_strs[i]+"/"+ins_name+"_patch_storage.bin";
     // create the input storage class
     dbskr_shock_patch_storage_sptr st1 = dbskr_shock_patch_storage_new();
     vsl_b_ifstream ifs(st_file1.c_str());
     st1->b_read(ifs);
     ifs.close();
-    vcl_vector<dbskr_shock_patch_sptr>& pv1 = st1->get_patches();
-    vcl_map<int, dbskr_shock_patch_sptr> map1;
+    std::vector<dbskr_shock_patch_sptr>& pv1 = st1->get_patches();
+    std::map<int, dbskr_shock_patch_sptr> map1;
     //: set the parameters in the patches
     for (unsigned i = 0; i < pv1.size(); i++) {
       pv1[i]->shock_pruning_threshold_ = shock_pruning_threshold;
@@ -176,28 +176,28 @@ int main_eth(int argc, char *argv[]) {
     for (unsigned c = 0; c < cats.size(); c++) {
       
       for (unsigned cj = 1; cj < 11; cj++) {
-        vcl_ostringstream oss2;
+        std::ostringstream oss2;
         oss2 << cj;
-        vcl_string ins_name2 = cats[c]+oss2.str()+"-"+view_str;
+        std::string ins_name2 = cats[c]+oss2.str()+"-"+view_str;
         if (ins_name == ins_name2)
           continue;
-        vcl_cout << "\t\t\t" << ins_name2 << vcl_endl;
+        std::cout << "\t\t\t" << ins_name2 << std::endl;
 
-        vcl_string output_name = ins_dir+ins_name+"-"+ins_name2+"-sc-"+argv[5]+".bin";
-        vcl_string output_name_fine = ins_dir+ins_name+"-"+ins_name2+"-sc-"+argv[5]+"-fine-no-Ainf.bin";
+        std::string output_name = ins_dir+ins_name+"-"+ins_name2+"-sc-"+argv[5]+".bin";
+        std::string output_name_fine = ins_dir+ins_name+"-"+ins_name2+"-sc-"+argv[5]+"-fine-no-Ainf.bin";
         
-        vcl_string output_name2 = match_dir+cats[c]+"/"+ins_name2+"/"+ins_name2+"-"+ins_name+"-sc-"+argv[5]+".bin";
-        vcl_string output_name2_fine = match_dir+cats[c]+"/"+ins_name2+"/"+ins_name2+"-"+ins_name+"-sc-"+argv[5]+"-fine-no-Ainf.bin";
+        std::string output_name2 = match_dir+cats[c]+"/"+ins_name2+"/"+ins_name2+"-"+ins_name+"-sc-"+argv[5]+".bin";
+        std::string output_name2_fine = match_dir+cats[c]+"/"+ins_name2+"/"+ins_name2+"-"+ins_name+"-sc-"+argv[5]+"-fine-no-Ainf.bin";
 
-        vcl_string st_file2 = patch_dir+cats[c]+"/"+ins_name2+"-patches"+sorting_method_str+cat_par_strs[c]+"/"+ins_name2+"_patch_storage.bin";
+        std::string st_file2 = patch_dir+cats[c]+"/"+ins_name2+"-patches"+sorting_method_str+cat_par_strs[c]+"/"+ins_name2+"_patch_storage.bin";
         // create the input storage class
         dbskr_shock_patch_storage_sptr st2 = dbskr_shock_patch_storage_new();
         vsl_b_ifstream ifs2(st_file2.c_str());
         st2->b_read(ifs2);
         ifs2.close();
 
-        vcl_vector<dbskr_shock_patch_sptr>& pv2 = st2->get_patches();
-        vcl_map<int, dbskr_shock_patch_sptr> map2;
+        std::vector<dbskr_shock_patch_sptr>& pv2 = st2->get_patches();
+        std::map<int, dbskr_shock_patch_sptr> map2;
         for (unsigned i = 0; i < pv2.size(); i++) 
           map2[pv2[i]->id()] = pv2[i];
 
@@ -232,8 +232,8 @@ int main_eth(int argc, char *argv[]) {
           t.mark();
           match->compute_norm_fine_costs_of_cors();  // no need for sorting
                     
-          vcl_cout << "match_found!\n";
-          vcl_cout << "\t\t\t writing fine fine bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
+          std::cout << "match_found!\n";
+          std::cout << "\t\t\t writing fine fine bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
           vsl_b_ofstream bfs(output_name_fine.c_str());
           match->b_write(bfs);
           bfs.close();
@@ -274,14 +274,14 @@ int main_eth(int argc, char *argv[]) {
 
           vul_timer t;
           t.mark();
-          vcl_cout << "\t\t\twriting fine bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
+          std::cout << "\t\t\twriting fine bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
           vsl_b_ofstream bfs(output_name2_fine.c_str());
           match->b_write(bfs);
           bfs.close();
           
           match->clear();
 
-          vcl_cout << "match_found, reversing!\n";
+          std::cout << "match_found, reversing!\n";
         
         } else {  // match
 
@@ -301,13 +301,13 @@ int main_eth(int argc, char *argv[]) {
           vul_timer t;
           t.mark();
           for (unsigned i = 0; i < pv1.size(); i++) {  
-            vcl_cout << i << " out of " << pv1.size() << ": ";
+            std::cout << i << " out of " << pv1.size() << ": ";
             find_patch_correspondences_coarse_edit(pv1[i], pv2, map, match_with_circular_completions);
             //pv1[i]->kill_tree();
             //pv1[i]->kill_shock_graph();
           }
 
-          vcl_cout << "\t\t\twriting bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
+          std::cout << "\t\t\twriting bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
           vsl_b_ofstream bfs(output_name.c_str());
           match->b_write(bfs);
           bfs.close();
@@ -320,7 +320,7 @@ int main_eth(int argc, char *argv[]) {
             pv2[i]->kill_tree();
           }
            
-          vcl_cout << "\t\t\twriting bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
+          std::cout << "\t\t\twriting bin file total time: " << ((t.real()/1000.0f)/60.0f) << " mins.\n";
           vsl_b_ofstream bfsf(output_name_fine.c_str());
           match->b_write(bfsf);
           bfsf.close();

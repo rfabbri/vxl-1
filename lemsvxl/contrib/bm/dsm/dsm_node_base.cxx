@@ -14,7 +14,7 @@ double dsm_node_base::transition_prob(unsigned const& node_id, unsigned const& r
 {
 	unsigned transition_sum = 0;
 
-	vcl_map<unsigned, vcl_map<unsigned, unsigned> >::iterator table_itr, table_end = this->transition_table_.end();
+	std::map<unsigned, std::map<unsigned, unsigned> >::iterator table_itr, table_end = this->transition_table_.end();
 
 	unsigned num_states = this->transition_table_.size();
 	double transition_prob = 0.0;
@@ -59,7 +59,7 @@ bool dsm_node_base::inc_trans_freq( unsigned const& node_id, unsigned const& rel
 			//we had no observations for the relative time therefore
 			//we increased it to one observation. And insert zeros for all
 			//other nodes we can observe at this time.
-			vcl_map<unsigned, vcl_map<unsigned, unsigned> >::iterator table_itr, table_end = this->transition_table_.end();
+			std::map<unsigned, std::map<unsigned, unsigned> >::iterator table_itr, table_end = this->transition_table_.end();
 		
 			for( table_itr = this->transition_table_.begin(); table_itr != table_end; ++table_itr )
 			{

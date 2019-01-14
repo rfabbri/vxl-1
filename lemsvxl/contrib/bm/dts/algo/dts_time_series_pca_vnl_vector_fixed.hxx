@@ -5,7 +5,7 @@
 #include<dts/algo/dts_time_series_pca_vnl_vector_fixed.h>
 
 // for iterator distance function
-#include<vcl_iterator.h> 
+#include<iterator> 
 
 #include<vnl/vnl_vector_fixed.h>
 

@@ -7,7 +7,7 @@
 // \date 10/26/05
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vtol/vtol_vertex_2d.h>
 #include <vgel/vgel_multi_view_data.hxx>
 #include <vgel/vgel_kl.h>
@@ -23,15 +23,15 @@ public:
 
   bool compute_cameras(
     vgel_multi_view_data_vertex_sptr& tracked_points,
-    const vcl_vector< vpgl_proj_camera<double> >& known_cameras,
-    const vcl_vector<int>& known_frames,
-    vcl_vector< vpgl_proj_camera<double> >& cameras );
+    const std::vector< vpgl_proj_camera<double> >& known_cameras,
+    const std::vector<int>& known_frames,
+    std::vector< vpgl_proj_camera<double> >& cameras );
 
   bool compute_cameras(
-    vcl_vector< dbinfo_track_geometry_sptr >& tracks,
-    const vcl_vector< vpgl_proj_camera<double> >& known_cameras,
-    const vcl_vector<int>& known_frames,
-    vcl_vector< vpgl_proj_camera<double> >& cameras );
+    std::vector< dbinfo_track_geometry_sptr >& tracks,
+    const std::vector< vpgl_proj_camera<double> >& known_cameras,
+    const std::vector<int>& known_frames,
+    std::vector< vpgl_proj_camera<double> >& cameras );
 
   bool verbose;
 

@@ -90,8 +90,8 @@ bool dbvxm_part_instance::mark_center(vil_image_view<vxl_byte>& img, unsigned pl
   int ni = (int)img.ni();
   int nj = (int)img.nj();
 
-  int ic = (int)vcl_floor(x_ + 0.5f);
-  int jc = (int)vcl_floor(y_ + 0.5f);
+  int ic = (int)std::floor(x_ + 0.5f);
+  int jc = (int)std::floor(y_ + 0.5f);
   if (ic >= 0 && jc >= 0 && ic < ni && jc < nj)
     img(ic, jc, plane) = (vxl_byte)(strength_*255);
 

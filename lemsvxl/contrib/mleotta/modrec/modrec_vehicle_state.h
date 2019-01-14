@@ -15,9 +15,9 @@
 //=========================================================================
 
 
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <string>
+#include <map>
+#include <vector>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vgl/vgl_polygon.h>
@@ -98,9 +98,9 @@ modrec_circ_motion_predict_position(const modrec_vehicle_state& s, double t);
 
 //: read a tracking result file
 unsigned int 
-modrec_read_track_file(const vcl_string& filename, 
-                       vcl_string& vid_file, vcl_string& cam_file, vcl_string& model_type,
-                       vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> >& state_map);
+modrec_read_track_file(const std::string& filename, 
+                       std::string& vid_file, std::string& cam_file, std::string& model_type,
+                       std::map<unsigned int,std::vector<modrec_vehicle_state> >& state_map);
 
 
 #endif // modrec_vehicle_state_h_

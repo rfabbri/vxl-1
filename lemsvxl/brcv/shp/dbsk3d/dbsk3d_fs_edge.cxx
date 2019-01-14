@@ -2,11 +2,11 @@
 //: MingChing Chang
 //  Nov. 14, 2004        Creation
 
-#include <vcl_cstdio.h>
-#include <vcl_cstring.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
-#include <vcl_sstream.h>
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
 #include <vgl/vgl_vector_3d.h>
 #include <vul/vul_printf.h>
 
@@ -62,7 +62,7 @@ const dbmsh3d_vertex* dbsk3d_fs_edge::A13_opposite_G (const dbsk3d_fs_face* FE) 
 //: Get ordered generators via the connecting shock patchElm information.
 //  Be careful on the A3-Rib-elm case.
 //  return false if this operation can not be done (after pruning).
-bool dbsk3d_fs_edge::get_ordered_Gs_via_FF (vcl_vector<dbmsh3d_vertex*>& genes) const 
+bool dbsk3d_fs_edge::get_ordered_Gs_via_FF (std::vector<dbmsh3d_vertex*>& genes) const 
 {
   if (halfedge_ == NULL)
     return false;
@@ -81,7 +81,7 @@ bool dbsk3d_fs_edge::get_ordered_Gs_via_FF (vcl_vector<dbmsh3d_vertex*>& genes) 
   return true;
 }
 
-bool dbsk3d_fs_edge::get_ordered_Gs_via_FF (vcl_set<dbmsh3d_vertex*>& genes) const 
+bool dbsk3d_fs_edge::get_ordered_Gs_via_FF (std::set<dbmsh3d_vertex*>& genes) const 
 {
   dbmsh3d_halfedge* HE = halfedge_;
   dbsk3d_fs_face* FE = (dbsk3d_fs_face*) HE->face();
@@ -118,10 +118,10 @@ void dbsk3d_fs_edge::get_3_Gs_via_FF (dbmsh3d_vertex** G0,
 
 //: Go through the set of generators asso_genes[] and try to
 //  add to this link if all existing fs_face of it do not contain it.
-void dbsk3d_fs_edge::check_add_asgn_Gs_to_set (vcl_map<int, dbmsh3d_vertex*>& asso_genes,
+void dbsk3d_fs_edge::check_add_asgn_Gs_to_set (std::map<int, dbmsh3d_vertex*>& asso_genes,
                                                const dbsk3d_fs_face* fromP)
 {
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = asso_genes.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = asso_genes.begin();
   for (; it != asso_genes.end(); it++) {
     dbmsh3d_vertex* G = (*it).second;
     if (_is_G_asgn_in_FF (G, fromP))
@@ -149,24 +149,24 @@ bool dbsk3d_fs_edge::_is_G_asgn_in_FF (const dbmsh3d_vertex* G,
   return false;  
 }
 
-bool dbsk3d_fs_edge::prune_pass_Gs_to_FV (vcl_map<int, dbmsh3d_vertex*>& asso_genes,
+bool dbsk3d_fs_edge::prune_pass_Gs_to_FV (std::map<int, dbmsh3d_vertex*>& asso_genes,
                                           dbsk3d_fs_vertex* FV)
 {
   #if DBMSH3D_DEBUG>3
-  vul_printf (vcl_cout, "\n  prune_pass_Gs_to_FV(): %d genes to A14 %d.", asso_genes.size(), FV->id());
+  vul_printf (std::cout, "\n  prune_pass_Gs_to_FV(): %d genes to A14 %d.", asso_genes.size(), FV->id());
   #endif
   
   //Loop through FV to collect all current associated G's.
-  vcl_map<int, dbmsh3d_vertex*> N_asso_genes;
+  std::map<int, dbmsh3d_vertex*> N_asso_genes;
   FV->get_asso_Gs_excld_FE (this, N_asso_genes);
 
   //Loop through all associated genes and check if it is required to pass to FV
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = asso_genes.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = asso_genes.begin();
   for (; it != asso_genes.end(); it++) {
     dbmsh3d_vertex* G = (*it).second;
     if (N_asso_genes.find (G->id()) == N_asso_genes.end()) {    
       #if DBMSH3d_DEBUG>2
-      vul_printf (vcl_cout, "\n    FV %d add_asgn_G (G %d).", FV->id(), G->id());
+      vul_printf (std::cout, "\n    FV %d add_asgn_G (G %d).", FV->id(), G->id());
       #endif
       FV->add_asgn_G (G);
     }
@@ -176,25 +176,25 @@ bool dbsk3d_fs_edge::prune_pass_Gs_to_FV (vcl_map<int, dbmsh3d_vertex*>& asso_ge
 }
 
 //: Get all associated generators of this FE.
-void dbsk3d_fs_edge::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_genes)
+void dbsk3d_fs_edge::get_asso_Gs (std::map<int, dbmsh3d_vertex*>& asso_genes)
 {  
   //Add all assigned genes of this fs_edge.
   for (dbmsh3d_ptr_node* cur = asgn_G_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-    asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (G->id(), G));
+    asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (G->id(), G));
   }
 }
 
 //: Get all associated generators of this FE and incident valid FE's.
-void dbsk3d_fs_edge::get_asso_Gs_incld_FFs (vcl_map<int, dbmsh3d_vertex*>& asso_genes)
+void dbsk3d_fs_edge::get_asso_Gs_incld_FFs (std::map<int, dbmsh3d_vertex*>& asso_genes)
 {  
   //Add all assigned genes of valid incident fs_faces.
   dbmsh3d_halfedge* HE = halfedge_;
   do {
     dbsk3d_fs_face* FE = (dbsk3d_fs_face*) HE->face();
     if (FE->b_valid()) {
-      asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*>(FE->genes(0)->id(), FE->genes(0)));
-      asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*>(FE->genes(1)->id(), FE->genes(1)));
+      asso_genes.insert (std::pair<int, dbmsh3d_vertex*>(FE->genes(0)->id(), FE->genes(0)));
+      asso_genes.insert (std::pair<int, dbmsh3d_vertex*>(FE->genes(1)->id(), FE->genes(1)));
     }
 
     HE = HE->pair();
@@ -205,7 +205,7 @@ void dbsk3d_fs_edge::get_asso_Gs_incld_FFs (vcl_map<int, dbmsh3d_vertex*>& asso_
   get_asso_Gs (asso_genes);
 }
 
-unsigned int dbsk3d_fs_edge::get_pass_Gs (vcl_set<dbmsh3d_vertex*>& pass_genes) const
+unsigned int dbsk3d_fs_edge::get_pass_Gs (std::set<dbmsh3d_vertex*>& pass_genes) const
 {
   assert (pass_genes.size() == 0);
   for (dbmsh3d_ptr_node* cur = s_FV()->asgn_G_list(); cur != NULL; cur = cur->next()) {
@@ -417,7 +417,7 @@ double dbsk3d_fs_edge::compute_min_radius (const int nG, dbmsh3d_vertex** G) con
   vgl_point_3d<double> C = circum_center_3pts (G[0]->pt(), G[1]->pt(), G[2]->pt());
   const double SC = vgl_distance (s_FV()->pt(), C);
   const double EC = vgl_distance (e_FV()->pt(), C);
-  return vcl_min (SC, EC);
+  return std::min (SC, EC);
 }
 
 //: Return if the surface interpolant is acute or not.
@@ -431,7 +431,7 @@ bool dbsk3d_fs_edge::dual_DT_contains_A13_2 (const int nG, dbmsh3d_vertex** G) c
   }
   else { //for surface polygon 
     assert (nG > 3);
-    vcl_vector<dbmsh3d_vertex*> genes;
+    std::vector<dbmsh3d_vertex*> genes;
     bool result = get_ordered_Gs_via_FF (genes);
     assert (result);
 
@@ -444,7 +444,7 @@ bool dbsk3d_fs_edge::dual_DT_contains_A13_2 (const int nG, dbmsh3d_vertex** G) c
 
 //: return true if the surface face contains the A13-2 point.
 //  shoot the ray of shock-link to intersect with the surface polygon.
-bool dbsk3d_fs_edge::_dual_polygon_contains_A13_2 (const vcl_vector<dbmsh3d_vertex*>& genes) const
+bool dbsk3d_fs_edge::_dual_polygon_contains_A13_2 (const std::vector<dbmsh3d_vertex*>& genes) const
 {    
   dbmsh3d_vertex* G0 = (dbmsh3d_vertex*) genes[0];
   double t, u, v;
@@ -491,7 +491,7 @@ void dbsk3d_fs_edge::update_validity_FFs ()
 
 bool dbsk3d_fs_edge::check_fit_hole (const dbmsh3d_vertex* Vo, const dbmsh3d_edge* E) const
 {
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   get_ordered_Gs_via_FF (genes);
   if (genes.size() != 3)
     return false; //Skip unbounded fs_edge
@@ -524,7 +524,7 @@ dbmsh3d_edge* dbsk3d_fs_edge::clone () const
 void dbsk3d_fs_edge::_clone_FE_G_conn (dbsk3d_fs_edge* FE2, dbmsh3d_pt_set* BND2) const
 {    
   //deep-copy the gene_list to FE2.   
-  vcl_vector<dbmsh3d_vertex*> G_list; 
+  std::vector<dbmsh3d_vertex*> G_list; 
   for (dbmsh3d_ptr_node* cur = asgn_G_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
     dbmsh3d_vertex* G2 = BND2->vertexmap (G->id());
@@ -542,17 +542,17 @@ dbsk3d_fs_edge* dbsk3d_fs_edge::clone (dbmsh3d_pt_set* PS2, dbmsh3d_pt_set* BND2
   return FE2;
 }
 
-void dbsk3d_fs_edge::getInfo (vcl_ostringstream& ostrm)
+void dbsk3d_fs_edge::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbsk3d_fs_edge id: %d (s_FV %d, e_FV %d)    ", id_,
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbsk3d_fs_edge id: %d (s_FV %d, e_FV %d)    ", id_,
                s_FV()->id(), e_FV()->id()); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
-  vcl_sprintf (s, "%s, ", is_valid_via_F() ? "Valid" : "Invalid"); ostrm<<s;
+  std::sprintf (s, "%s, ", is_valid_via_F() ? "Valid" : "Invalid"); ostrm<<s;
 
   //Compute the surface triangle parameters:
   double max_side, perimeter;
@@ -560,93 +560,93 @@ void dbsk3d_fs_edge::getInfo (vcl_ostringstream& ostrm)
   double Side[3];
   dbmsh3d_vertex* Gene[3];
   if (get_tri_params (max_side, perimeter, nG, Side, Gene)) {
-    vcl_sprintf (s, "%s", dual_DT_contains_A13_2 (nG, Gene) ? "Acute" : "Obtuse"); ostrm<<s;
-    vcl_sprintf (s, " interpolant with %u sides.\n", nG); ostrm<<s;
+    std::sprintf (s, "%s", dual_DT_contains_A13_2 (nG, Gene) ? "Acute" : "Obtuse"); ostrm<<s;
+    std::sprintf (s, " interpolant with %u sides.\n", nG); ostrm<<s;
   }
 
   //Incident fs_edges
   unsigned int numP = n_incident_Fs();
   unsigned int nv = count_valid_Fs ();
-  vcl_sprintf (s, "%u incident fs_faces (%u valid):", numP, nv); ostrm<<s;
+  std::sprintf (s, "%u incident fs_faces (%u valid):", numP, nv); ostrm<<s;
   dbmsh3d_halfedge* HE = halfedge_;
   do {
     dbsk3d_fs_face* FE = (dbsk3d_fs_face*) HE->face();
-    vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+    std::sprintf (s, " %d", FE->id()); ostrm<<s;
     if (FE->b_valid())
       ostrm<<"v";
     HE = HE->pair();
   }
   while (HE != halfedge_ && HE != NULL);
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //Ordered boundary generators via shock sheets.
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   if (get_ordered_Gs_via_FF (genes)) {
-    vcl_sprintf (s, "%u Ordered Genes: ", genes.size()); ostrm<<s;
+    std::sprintf (s, "%u Ordered Genes: ", genes.size()); ostrm<<s;
     for (unsigned int j=0; j<genes.size(); j++) {
-      vcl_sprintf (s, " %d", genes[j]->id()); ostrm<<s;
+      std::sprintf (s, " %d", genes[j]->id()); ostrm<<s;
     }
-    vcl_sprintf (s, "\n"); ostrm<<s;
+    std::sprintf (s, "\n"); ostrm<<s;
   }
 
   //Assigned boundary generators.
   if (have_asgn_Gs() == false) {
-    vcl_sprintf (s, "0 Assigned Genes:"); ostrm<<s;
+    std::sprintf (s, "0 Assigned Genes:"); ostrm<<s;
   }
   else {
-    vcl_set<void*> asgn_genes;
+    std::set<void*> asgn_genes;
     get_asgn_Gs (asgn_genes);    
-    vcl_set<void*>::iterator vit = asgn_genes.begin();
+    std::set<void*>::iterator vit = asgn_genes.begin();
     for (; vit != asgn_genes.end(); vit++) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*)(*vit);
-      vcl_sprintf (s, " %d", G->id()); ostrm<<s;
+      std::sprintf (s, " %d", G->id()); ostrm<<s;
     }
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //###############################################################
 //       dbsk3d_ms_edge TEXT FILE I/O FUNCTIONS
 //###############################################################
 
-void fe_save_text_file (vcl_FILE* fp, dbsk3d_fs_edge* FE)
+void fe_save_text_file (std::FILE* fp, dbsk3d_fs_edge* FE)
 {
   //For each dbsk3d_fs_edge
   const dbsk3d_fs_vertex* s_FV = FE->s_FV();
   const dbsk3d_fs_vertex* e_FV = FE->e_FV();
 
-  vcl_fprintf (fp, "e %d (%d %d) %c\n", 
+  std::fprintf (fp, "e %d (%d %d) %c\n", 
                FE->id(), s_FV->id(), e_FV->id(), (char)FE->e_type());
 
   //Assigned genes
   unsigned int nG = FE->n_asgn_Gs();
   if (nG == 0) {
-    vcl_fprintf (fp, "\t0:");
+    std::fprintf (fp, "\t0:");
   }
   else {
-    vcl_fprintf (fp, "\t%u:", nG);
+    std::fprintf (fp, "\t%u:", nG);
     for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      vcl_fprintf (fp, " %d", G->id());
+      std::fprintf (fp, " %d", G->id());
     }
   }
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
 }
 
-void fe_load_text_file (vcl_FILE* fp, dbsk3d_fs_edge* FE, 
-                        vcl_map <int, dbmsh3d_vertex*>& vertexmap,
-                        vcl_map <int, dbmsh3d_vertex*>& genemap)
+void fe_load_text_file (std::FILE* fp, dbsk3d_fs_edge* FE, 
+                        std::map <int, dbmsh3d_vertex*>& vertexmap,
+                        std::map <int, dbmsh3d_vertex*>& genemap)
 {
   //For each dbsk3d_fs_edge
   int id, nodeIds[2];
   char type;
-  vcl_fscanf (fp, "e %d (%d %d) %c\n", &id, &nodeIds[0], &nodeIds[1], &type);
+  std::fscanf (fp, "e %d (%d %d) %c\n", &id, &nodeIds[0], &nodeIds[1], &type);
   FE->set_id (id); //Use the id from the file
   
   for (unsigned int j=0; j<2; j++) {
     dbsk3d_fs_vertex* FV = NULL;
-    vcl_map<int, dbmsh3d_vertex*>::iterator nit = vertexmap.find (nodeIds[j]);
+    std::map<int, dbmsh3d_vertex*>::iterator nit = vertexmap.find (nodeIds[j]);
     if (nit != vertexmap.end())
       FV = (dbsk3d_fs_vertex*) (*nit).second;
 
@@ -659,21 +659,21 @@ void fe_load_text_file (vcl_FILE* fp, dbsk3d_fs_edge* FE,
 
   //Read associated genes  
   unsigned int nG;
-  vcl_vector<dbmsh3d_vertex*> asgn_G;
-  vcl_fscanf (fp, "\t%u:", &nG);
+  std::vector<dbmsh3d_vertex*> asgn_G;
+  std::fscanf (fp, "\t%u:", &nG);
   if (nG != 0) {
     for (unsigned int j=0; j<nG; j++) {
       int gid;
-      vcl_fscanf (fp, " %d", &gid);
+      std::fscanf (fp, " %d", &gid);
       dbmsh3d_vertex* G = NULL;
-      vcl_map <int, dbmsh3d_vertex*>::iterator git = genemap.find (gid);
+      std::map <int, dbmsh3d_vertex*>::iterator git = genemap.find (gid);
       if (git != genemap.end()) {
         G = (dbmsh3d_vertex*) (*git).second;      
         asgn_G.push_back (G);
       }
     }
   }
-  vcl_fscanf(fp, "\n");
+  std::fscanf(fp, "\n");
 
   //Note that the adding order of FV.asgn_G_ is inversed.
   for (int j=int(asgn_G.size()-1); j>=0; j--)

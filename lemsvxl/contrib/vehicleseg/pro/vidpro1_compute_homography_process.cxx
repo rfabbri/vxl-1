@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "vidpro1_compute_homography_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -57,7 +57,7 @@ vidpro1_compute_homography_process::vidpro1_compute_homography_process(void): bp
 
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_compute_homography_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_compute_homography_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
     else
     {
@@ -77,7 +77,7 @@ vidpro1_compute_homography_process::~vidpro1_compute_homography_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_compute_homography_process::name()
 {
     return "Compute Homography";
@@ -101,18 +101,18 @@ vidpro1_compute_homography_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_compute_homography_process::get_input_type()
+std::vector< std::string > vidpro1_compute_homography_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_compute_homography_process::get_output_type()
+std::vector< std::string > vidpro1_compute_homography_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     return to_return;
 }
 
@@ -122,22 +122,22 @@ bool
 vidpro1_compute_homography_process::execute()
 {
     /*if ( input_data_.size() != 2 ){
-        vcl_cout << "In vidpro1_compute_homography_process::execute() - "
+        std::cout << "In vidpro1_compute_homography_process::execute() - "
             << "not exactly two input images \n";
         return false;
     }*/
-    vcl_cout<<"\n Comuputing Homography for frame no "<<last_frame_no;
+    std::cout<<"\n Comuputing Homography for frame no "<<last_frame_no;
     clear_output();
     parameters()->get_value( "-rerode" , eroderadius );
     parameters()->get_value( "-rdilate" , dilateradius );
     bpro1_filepath filename;
     parameters()->get_value("-fout",filename);
-    vcl_string fname=filename.path;
+    std::string fname=filename.path;
 
-    vcl_ofstream ofp(fname.c_str(),vcl_ios::out|vcl_ios::app);
+    std::ofstream ofp(fname.c_str(),std::ios::out|std::ios::app);
     if(!ofp)
     {
-        vcl_cout<<"\n Could not open file "<<fname;
+        std::cout<<"\n Could not open file "<<fname;
         return false;
     }
     parameters()->get_value( "-first" , first_frame_ );
@@ -276,7 +276,7 @@ vimt_transform_2d vidpro1_compute_homography_process::register_image_with_optica
     parameters()->get_value("-numbins",no_of_bins);
     
     //: using otsu thresholding method to select the threshold for motion
-    vcl_vector<double> hist;
+    std::vector<double> hist;
     vil_histogram<float>(vsum,hist,lrange_,hrange_,no_of_bins);
     bsta_otsu_threshold<double> ot(hist,lrange_,hrange_);
     double motionthresh=ot.threshold();

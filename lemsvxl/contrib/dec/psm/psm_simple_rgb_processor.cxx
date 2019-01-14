@@ -25,7 +25,7 @@ float psm_simple_rgb_processor::prob_density(apm_datatype const& appear, obs_dat
     const float exp_term = diff[i]*one_over_sigma[i];
     exponent -= exp_term*exp_term*0.5f;
   }
-  float p = norm[0]*norm[1]*norm[2]*vcl_exp(exponent);
+  float p = norm[0]*norm[1]*norm[2]*std::exp(exponent);
   // normalize by area of distribution between 0 and 1
   //p /= total_prob(appear);
   return p;
@@ -66,7 +66,7 @@ float psm_simple_rgb_processor::prob_range(apm_datatype const& appear, obs_datat
 //: Return probabilities that pixels are in range [0,1] - used for normalizing 
 float psm_simple_rgb_processor::total_prob(apm_datatype const& appear)
 {
-  vcl_cerr << "WARNING:: psm_simple_rgb_processor::total_prob not implemented!" << vcl_endl;
+  std::cerr << "WARNING:: psm_simple_rgb_processor::total_prob not implemented!" << std::endl;
   return 1.0f;
 }
 #if 0
@@ -117,26 +117,26 @@ void psm_simple_rgb_processor::init_appearance(psm_apm_traits<PSM_APM_SIMPLE_RGB
 {
   vnl_vector_fixed<float,3> mean_v;
   obs_to_vector(mean,mean_v);
-  model = psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype(mean_v, vcl_sqrt(variance));
+  model = psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype(mean_v, std::sqrt(variance));
   return;
 }
 
 
-void psm_simple_rgb_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma)
+void psm_simple_rgb_processor::compute_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma)
 {
-  vcl_cerr << "ERROR: psm_simple_rgb_processor:::compute_appearance NOT IMPLEMENTED YET" << vcl_endl;
+  std::cerr << "ERROR: psm_simple_rgb_processor:::compute_appearance NOT IMPLEMENTED YET" << std::endl;
   //update_appearance(obs,weights,model,min_sigma);
   //finalize_appearance(obs,weights,model);
   return;
 }
 
 
-void psm_simple_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma)
+void psm_simple_rgb_processor::update_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model, float min_sigma)
 {
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
   const unsigned int nobs = obs.size();
-  vcl_vector<vnl_vector_fixed<float,3> > obs_v(nobs);
+  std::vector<vnl_vector_fixed<float,3> > obs_v(nobs);
   for (unsigned int i=0; i<nobs; ++i) {
     obs_to_vector(obs[i], obs_v[i]);
   }
@@ -152,7 +152,7 @@ void psm_simple_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_A
   } 
   else {
     // compute estimate of gaussian weight by summing probabilities
-    vcl_vector<float> obs_gauss_weights = weights;
+    std::vector<float> obs_gauss_weights = weights;
     float gauss_weight = 0.0f;
     if (USE_UNIFORM_COMPONENT) {
       float weight_sum = 0.0f;
@@ -200,7 +200,7 @@ void psm_simple_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_A
   return;
 }
 
-void psm_simple_rgb_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model)
+void psm_simple_rgb_processor::finalize_appearance(std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype &model)
 {
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
 
@@ -222,7 +222,7 @@ void psm_simple_rgb_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM
 }
 
 
-void psm_simple_rgb_processor::compute_gaussian_params(vcl_vector<vnl_vector_fixed<float,3> > const& obs, vcl_vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &sigma)
+void psm_simple_rgb_processor::compute_gaussian_params(std::vector<vnl_vector_fixed<float,3> > const& obs, std::vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &sigma)
 {
   const unsigned int nobs = obs.size();
   double w_sum = 0.0;
@@ -243,7 +243,7 @@ void psm_simple_rgb_processor::compute_gaussian_params(vcl_vector<vnl_vector_fix
   }
   const vnl_vector_fixed<float,3> var = var_sum / (float)(w_sum - (w2_sum/w_sum));
 
-  sigma = vnl_vector_fixed<float,3>((float)vcl_sqrt(var[0]), (float)vcl_sqrt(var[1]), (float)vcl_sqrt(var[2]));
+  sigma = vnl_vector_fixed<float,3>((float)std::sqrt(var[0]), (float)std::sqrt(var[1]), (float)std::sqrt(var[2]));
 }
 
 float psm_simple_rgb_processor::sigma_norm_factor(unsigned int nobs)
@@ -283,9 +283,9 @@ void psm_simple_rgb_processor::vector_to_obs(vnl_vector_fixed<float,3> const& v,
 
     
 
-vcl_ostream& operator<<(vcl_ostream &os, psm_simple_rgb const& apm) 
+std::ostream& operator<<(std::ostream &os, psm_simple_rgb const& apm) 
 { 
-  os << "color: " << apm.color() << ", one_over_sigma: " << apm.one_over_sigma() << vcl_endl;
+  os << "color: " << apm.color() << ", one_over_sigma: " << apm.one_over_sigma() << std::endl;
   return os;
 }
 

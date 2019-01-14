@@ -1,6 +1,6 @@
-#include <vcl_cstdio.h> 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdio> 
+#include <iostream>
+#include <fstream>
 #include "bprt_plane_reconst.h"
 #include <vdgl/vdgl_digital_curve.h>
 #include <vdgl/vdgl_digital_curve_sptr.h>
@@ -36,7 +36,7 @@
 bprt_plane_reconst::bprt_plane_reconst()
 {
 }
-bprt_plane_reconst::bprt_plane_reconst(vcl_vector <vtol_edge_2d_sptr >  curvs1,vcl_vector <vtol_edge_2d_sptr >  curvs2,int samp,double std)
+bprt_plane_reconst::bprt_plane_reconst(std::vector <vtol_edge_2d_sptr >  curvs1,std::vector <vtol_edge_2d_sptr >  curvs2,int samp,double std)
 {
         int samp_=samp;
         std_=std;
@@ -49,7 +49,7 @@ bprt_plane_reconst::bprt_plane_reconst(vcl_vector <vtol_edge_2d_sptr >  curvs1,v
                 {
                         vgl_homg_point_2d<double> point1(curv1->get_x(j/samp_),curv1->get_y(j/samp_));
         //              ptlist1_.push_back(point1);
-                //      vcl_cout<<point1.x()<<" , "<<point1.y()<<" , "<<point1.w()<<"   ";
+                //      std::cout<<point1.x()<<" , "<<point1.y()<<" , "<<point1.w()<<"   ";
                 }
         }
 
@@ -60,7 +60,7 @@ bprt_plane_reconst::bprt_plane_reconst(vcl_vector <vtol_edge_2d_sptr >  curvs1,v
                 {
                         vgl_homg_point_2d<double> point2(curv2->get_x(j/samp_),curv2->get_y(j/samp_));
         //              ptlist2_.push_back(point2);
-                        //vcl_cout<<point2.x()<<"  "<<point2.y()<<"\n";
+                        //std::cout<<point2.x()<<"  "<<point2.y()<<"\n";
                 }
         }
 
@@ -88,7 +88,7 @@ bool bprt_plane_reconst::findplaneparams(HMatrix2D H,vnl_double_3x3 K1,vnl_doubl
         double a,b,c;
         double d;
         IR=R-(vnl_inverse(K1)*tempH*K2);
-//      vcl_cout<<tempH[0][0]<<","<<tempH[1][0]<<","<<tempH[0][1]<<","<<tempH[2][1]<<","<<tempH[1][1]<<","<<
+//      std::cout<<tempH[0][0]<<","<<tempH[1][0]<<","<<tempH[0][1]<<","<<tempH[2][1]<<","<<tempH[1][1]<<","<<
 //              IR[1][1]<<","<<tempH[1][2]<<","<<tempH[2][2]<<","<<IR[2][0]<<","<<IR[0][0]<<","<<IR[1][2]<<"\n";
         
         a=0;
@@ -109,7 +109,7 @@ bool bprt_plane_reconst::findplaneparams(HMatrix2D H,vnl_double_3x3 K1,vnl_doubl
                 c+=c/(k+1);
                 }
         }
-        vcl_cout<<a<<","<<b<<","<<c<<"\n";
+        std::cout<<a<<","<<b<<","<<c<<"\n";
         d=sqrt(1.0/((a*a)+(b*b)+(c*c)));
         this->param_.set_params(a,b,c);
 
@@ -132,9 +132,9 @@ void bprt_plane_reconst::comp_param()
 
 }
 
-vcl_vector< vsol_spatial_object_2d_sptr>  bprt_plane_reconst::get_vsol_point_2ds(int view)
+std::vector< vsol_spatial_object_2d_sptr>  bprt_plane_reconst::get_vsol_point_2ds(int view)
 {
-        vcl_vector< vsol_spatial_object_2d_sptr> points;
+        std::vector< vsol_spatial_object_2d_sptr> points;
         if (view==0)
         {
         
@@ -168,22 +168,22 @@ int bprt_plane_reconst::calibrate()
          //
   // following block is used for reading the model data
   //
-        vcl_string fname="corr_left.txt";
-        vcl_string fname2="corr_right.txt";
-  vcl_ifstream  in(fname.c_str());
+        std::string fname="corr_left.txt";
+        std::string fname2="corr_right.txt";
+  std::ifstream  in(fname.c_str());
 
   if (!in){
-    vcl_cerr<<"cannot open the file: corr_left.txt" << vcl_endl;
+    std::cerr<<"cannot open the file: corr_left.txt" << std::endl;
   }
 
   int num_points = 0;
   if (in.eof()){
-    vcl_cerr<<"wrong file! at least number of points in the calibration board are needed\n"<< vcl_endl;
+    std::cerr<<"wrong file! at least number of points in the calibration board are needed\n"<< std::endl;
   }
 
   in >> num_points;
-  vcl_cout << "num_points = " << num_points << '\n'<< vcl_endl;
-  vcl_vector<vgl_homg_point_2d<double> > pts(num_points);
+  std::cout << "num_points = " << num_points << '\n'<< std::endl;
+  std::vector<vgl_homg_point_2d<double> > pts(num_points);
 
   for (int i=0; i<num_points; i++) {
     double u, v; in >> u >> v;
@@ -202,9 +202,9 @@ int bprt_plane_reconst::calibrate()
   // add a camera with 7 views into a graph
   int nviews = 0;
   in >> nviews;
-  vcl_cout << "nviews = " << nviews << '\n'<< vcl_endl;
+  std::cout << "nviews = " << nviews << '\n'<< std::endl;
 
-  vcl_vector<double> t_beats(nviews);
+  std::vector<double> t_beats(nviews);
   for (int i=0; i<nviews; i++)
     t_beats[i] = i;
 
@@ -216,7 +216,7 @@ int bprt_plane_reconst::calibrate()
   //assert(trans);
   trans->set_beat(t_beats);
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 
 
   //
@@ -225,7 +225,7 @@ int bprt_plane_reconst::calibrate()
   int num=6;
 
   for (int i=0; i<nviews; i++){
-    vcl_vector<vgl_homg_point_2d<double> > features(num_points);
+    std::vector<vgl_homg_point_2d<double> > features(num_points);
     for (int j = 0; j<num_points; j++) {
       double u, v; in>>u>>v;
       features[j] = vgl_homg_point_2d<double>(u, v);
@@ -239,20 +239,20 @@ int bprt_plane_reconst::calibrate()
   //Adding second camera
 
 
-  vcl_ifstream  in2(fname2.c_str());
+  std::ifstream  in2(fname2.c_str());
 
   if (!in2){
-    vcl_cerr<<"cannot open the file: corr_right.txt"<< vcl_endl;
+    std::cerr<<"cannot open the file: corr_right.txt"<< std::endl;
   }
 
   num_points = 0;
   if (in2.eof()){
-    vcl_cerr<<"wrong file! at least number of points in the calibration board are needed\n"<< vcl_endl;
+    std::cerr<<"wrong file! at least number of points in the calibration board are needed\n"<< std::endl;
   }
 
   in2 >> num_points;
-  vcl_cout << "num_points = " << num_points << '\n'<<vcl_endl;
-  vcl_vector<vgl_homg_point_2d<double> > pts2(num_points);
+  std::cout << "num_points = " << num_points << '\n'<<std::endl;
+  std::vector<vgl_homg_point_2d<double> > pts2(num_points);
 
   for (int i=0; i<num_points; i++) {
     double u, v; in2 >> u >> v;
@@ -264,9 +264,9 @@ int bprt_plane_reconst::calibrate()
 
  //int nviews = 0;
   in2 >> nviews;
-  vcl_cout << "nviews = " << nviews << '\n'<<vcl_endl;
+  std::cout << "nviews = " << nviews << '\n'<<std::endl;
 
-  //vcl_vector<double> t_beats(nviews);
+  //std::vector<double> t_beats(nviews);
  // for (int i=0; i<nviews; i++)
   //  t_beats[i] = i;
 
@@ -281,7 +281,7 @@ int bprt_plane_reconst::calibrate()
  
 
   for (int i=0; i<nviews; i++){
-    vcl_vector<vgl_homg_point_2d<double> > features2(num_points);
+    std::vector<vgl_homg_point_2d<double> > features2(num_points);
     for (int j = 0; j<num_points; j++) {
       double u, v; in2>>u>>v;
       features2[j] = vgl_homg_point_2d<double>(u, v);
@@ -293,16 +293,16 @@ int bprt_plane_reconst::calibrate()
 
 
   // do the calibration
-  vcl_cout<<"\n\nlinear calibration..............\n\n"<<vcl_endl;
+  std::cout<<"\n\nlinear calibration..............\n\n"<<std::endl;
   bcal_zhang_linear_calibrate lc;
   lc.setCameraGraph(&cg);
   lc.calibrate();
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
   K1_=cg.get_vertex(camID)->get_intrinsic();
   K2_=cg.get_vertex(camID2)->get_intrinsic();
   
-  vcl_vector <vnl_double_3x3> Rot1,Rot2;
+  std::vector <vnl_double_3x3> Rot1,Rot2;
   Rot1.resize(nviews);
   Rot2.resize(nviews);
   vnl_double_3x3 Rot;
@@ -322,13 +322,13 @@ int bprt_plane_reconst::calibrate()
           vnl_double_4x4 M2=cg.get_edge(source_id, camID2)->get_trans_matrix(i);
           Rot1[i]=M1.extract(3,3,0,0);
           Rot2[i]=M2.extract(3,3,0,0);
-          vcl_cout<<i<<" , " <<vnl_det(Rot1[i])<<"\n";
-          vcl_cout<<i<<" , " <<vnl_det(Rot2[i])<<"\n";
+          std::cout<<i<<" , " <<vnl_det(Rot1[i])<<"\n";
+          std::cout<<i<<" , " <<vnl_det(Rot2[i])<<"\n";
           tr1=M1.extract(3,1,0,3);
           tr2=M2.extract(3,1,0,3);
            Rot=(vnl_inverse(Rot1[i])*Rot2[i]);
            vnl_quaternion<double> quat(Rot);
-          // quat.print(vcl_cout);
+          // quat.print(std::cout);
           tr=tr2-tr1;
   }
   
@@ -339,9 +339,9 @@ int bprt_plane_reconst::calibrate()
                    for (int n=0;n<3;n++)
                    {vnl_double_3x3 Res=vnl_inverse(Rot1[i])*Rot2[i];
                            
-                           vcl_cout<<(Rot[m][n]-Res[m][n])<<",";
+                           std::cout<<(Rot[m][n]-Res[m][n])<<",";
                    }
-                   vcl_cout<<"\n"<<vnl_det(Rot);
+                   std::cout<<"\n"<<vnl_det(Rot);
                    
 
            }

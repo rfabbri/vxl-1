@@ -9,9 +9,9 @@
 
 #include <vsol/vsol_digital_curve_2d_sptr.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_vector.h>
+#include <vector>
 
-bool dbcvr_diff_chord_angles(vsol_digital_curve_2d_sptr curve, bool is_closed, vcl_vector<unsigned>& indices, vnl_matrix<double>& alpha_prime);
+bool dbcvr_diff_chord_angles(vsol_digital_curve_2d_sptr curve, bool is_closed, std::vector<unsigned>& indices, vnl_matrix<double>& alpha_prime);
 
 
 #endif /* DBCVR_2D_SHAPE_DESCRIPTORS_H_ */

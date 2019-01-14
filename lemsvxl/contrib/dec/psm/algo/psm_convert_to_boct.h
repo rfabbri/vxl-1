@@ -1,8 +1,8 @@
 #ifndef psm_convert_to_boct_h
 #define psm_convert_to_boct_h
 
-#include <vcl_vector.h>
-#include <vcl_set.h>
+#include <vector>
+#include <set>
 
 #include <vbl/vbl_bounding_box.h>
 
@@ -76,9 +76,9 @@ boxm_sample<BOXM_APM_MOG_GREY> copy_data(psm_sample<PSM_APM_SIMPLE_GREY> psm_cel
 }
 //: copy it to boxm scene
 template<psm_apm_type APM, class T_data, class T_loc>
-boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scene, vcl_string dirpath, vcl_string prefix)
+boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scene, std::string dirpath, std::string prefix)
 {   
-    vcl_cout<<"Scene Length"<<scene.block_len()<<vcl_endl;
+    std::cout<<"Scene Length"<<scene.block_len()<<std::endl;
 
     //: copied the block dimension
     vgl_vector_3d<double> block_dim(scene.block_len(),
@@ -86,9 +86,9 @@ boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scen
         scene.block_len());
 
     //: iterate over each block
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
-    vcl_cout<<"# of blocks" << valid_blocks.size()<<vcl_endl;
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene.valid_blocks();
+    std::cout<<"# of blocks" << valid_blocks.size()<<std::endl;
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
 
     int minx=10000; int miny=10000;  int minz=10000;
     int maxx=-10000;int maxy=-10000; int maxz=-10000;
@@ -102,8 +102,8 @@ boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scen
         if(vbit->z()<minz)            minz=vbit->z();
         if(vbit->z()>maxz)            maxz=vbit->z();
     }
-    vcl_cout<<"min/max xyz" << minx<<" "<<maxx<<" "<<miny<<" "<<maxy<<" "<<minz<<" "<<maxz<<vcl_endl;
-    vcl_cout.flush();
+    std::cout<<"min/max xyz" << minx<<" "<<maxx<<" "<<miny<<" "<<maxy<<" "<<minz<<" "<<maxz<<std::endl;
+    std::cout.flush();
 
     if(maxx-minx<0 || maxy-miny<0 || maxz-minz<0)
         return new boxm_scene<boct_tree<T_loc,T_data> >();
@@ -115,24 +115,24 @@ boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scen
     vgl_point_3d<double> boxmorigin(scene.origin().x()+minx*scene.block_len(),
                                     scene.origin().y()+miny*scene.block_len(),
                                     scene.origin().z()+minz*scene.block_len());
-    vcl_cout<<"boxmorigin" << boxmorigin<<vcl_endl;
-    vcl_cout.flush();
+    std::cout<<"boxmorigin" << boxmorigin<<std::endl;
+    std::cout.flush();
     boxm_scene<boct_tree<T_loc,T_data> >  *boxmscene=new boxm_scene<boct_tree<T_loc,T_data> >(boxmorigin,block_dim,worlddim);
     boxmscene->set_paths(dirpath,prefix);
 
     for (vbit = valid_blocks.begin(); vbit != valid_blocks.end(); ++vbit) {
-        vcl_cout<<"Round";vcl_cout.flush();
+        std::cout<<"Round";std::cout.flush();
         hsds_fd_tree<psm_sample<APM>,3> &block = scene.get_block(*vbit);
         typename hsds_fd_tree<psm_sample<APM>,3>::iterator block_it = block.begin();
 
         //: converting array index from hsds to boxm ( can have only positive indices)
         boxmscene->load_block((*vbit).x()-minx,(*vbit).y()-miny,(*vbit).z()-minz);
-        vcl_cout<<(*vbit).x()-minx<<" "<<(*vbit).y()-miny<<" "<<(*vbit).z()-minz<<"\n";
-        vcl_cout.flush();
+        std::cout<<(*vbit).x()-minx<<" "<<(*vbit).y()-miny<<" "<<(*vbit).z()-minz<<"\n";
+        std::cout.flush();
         boxm_block<boct_tree<T_loc,T_data> > * boxmblock=boxmscene->get_active_block();
         //: create tree 
         boct_tree<T_loc,T_data > * tree=new boct_tree<T_loc,T_data >(hsds_fd_tree_node_index<3>::MAX_LEVELS+1);
-        vcl_cout<<"Created Tree"<<vcl_endl;
+        std::cout<<"Created Tree"<<std::endl;
         //: iterating over cells in a block 
         for (; block_it != block.end(); ++block_it) {
             hsds_fd_tree_node_index<3> cell_index=block_it->first;
@@ -154,13 +154,13 @@ boxm_scene<boct_tree<T_loc,T_data> > *  psm_convert_to_boct(psm_scene<APM> &scen
             }
             else
             {
-                vcl_cout<<"ERROR "<<vcl_endl;
+                std::cout<<"ERROR "<<std::endl;
             }
 
         }
-        vcl_cout<<tree->leaf_cells().size();
+        std::cout<<tree->leaf_cells().size();
         //assert(tree->leaf_cells().size()==block.size());
-        //vcl_cout<<"\n Writing the active block "<<vcl_cout.flush();
+        //std::cout<<"\n Writing the active block "<<std::cout.flush();
         boxmblock->init_tree(tree);
         boxmscene->write_active_block();
     }

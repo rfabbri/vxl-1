@@ -22,12 +22,12 @@ static void test_ray_trace(octree_test_driver& driver, unsigned repeats = 1)
     }
   double time = t.real();
   double nrays = driver.n_rays();
-  vcl_cout << "Average ray trace of octree: " << time/(repeats*nrays) << " msecs/ray\n";
+  std::cout << "Average ray trace of octree: " << time/(repeats*nrays) << " msecs/ray\n";
 }
 
 static void ray_trace_tests(octree_test_driver& test_driver)
 {
-  vcl_string root_dir = testlib_root_dir();
+  std::string root_dir = testlib_root_dir();
   boxm_ray_trace_manager* ray_mgr = boxm_ray_trace_manager::instance();
 #if 0
   vbl_array_2d<vnl_vector_fixed<float, 3> > ray_origin;
@@ -53,15 +53,15 @@ static void ray_trace_tests(octree_test_driver& test_driver)
   test_ray_trace(test_driver, 100);
 }
 
-static  void create_test_tree(vcl_string const& image_path,
-                              vcl_string const& tree_path,
-                              vcl_string const& ray_path)
+static  void create_test_tree(std::string const& image_path,
+                              std::string const& tree_path,
+                              std::string const& ray_path)
 {
   boxm_ray_trace_manager* ray_mgr = boxm_ray_trace_manager::instance();
   boct_tree<short, vnl_vector_fixed<float, 2> >* tree =0;
   vbl_array_2d<vnl_vector_fixed<float, 3> > ray_origin;
   vbl_array_2d<vnl_vector_fixed<float, 3> > ray_dir;
-  vcl_size_t gsize = ray_mgr->group_size();
+  std::size_t gsize = ray_mgr->group_size();
   open_cl_test_data::tree_and_rays_from_image(image_path, gsize, tree,
                                               ray_origin, ray_dir);
   ray_mgr->set_tree(tree);
@@ -72,7 +72,7 @@ static  void create_test_tree(vcl_string const& image_path,
 
 MAIN( test_ray_trace )
 {
-  vcl_string root_dir = testlib_root_dir();
+  std::string root_dir = testlib_root_dir();
   boxm_ray_trace_manager* ray_mgr = boxm_ray_trace_manager::instance();
     create_test_tree(root_dir + "/contrib/brl/bseg/boxm/opt/open_cl/tests/dalmation.tif", root_dir + "/contrib/brl/bseg/boxm/opt/open_cl/tests/dalmation_tree.vsl", root_dir + "/contrib/brl/bseg/boxm/opt/open_cl/tests/dalmation_rays.vsl");
 

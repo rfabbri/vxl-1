@@ -34,7 +34,7 @@ void camera_cost_function(vpgl_camera<double> *camera, breg3d_voxel_grid &voxels
     //if(*score_it < min_score)
     //  min_score = *score_it;
   }
-  //vcl_cout << vcl_endl << "max_score = " << max_score <<"    min_score = " << min_score << vcl_endl;
+  //std::cout << std::endl << "max_score = " << max_score <<"    min_score = " << min_score << std::endl;
 
 #else // prod cost
   vil_image_view<float> cost_img = voxels.camera_cost(frame, camera);
@@ -49,7 +49,7 @@ void camera_cost_function(vpgl_camera<double> *camera, breg3d_voxel_grid &voxels
     //   if(*fx_it < min_score)
     //     min_score = *fx_it;
   }
-  //vcl_cout << vcl_endl << "max_score = " << max_score <<"    min_score = " << min_score << vcl_endl;
+  //std::cout << std::endl << "max_score = " << max_score <<"    min_score = " << min_score << std::endl;
 
 #endif
 
@@ -76,8 +76,8 @@ void breg3d_proj_camera_cost_function_6dof::f(const vnl_vector<double> &x, vnl_v
   RT.set_columns(0,R);
   RT.set_columns(3,T);
 
-  //vcl_cout << "RT = " << vcl_endl;
-  //vcl_cout << RT << vcl_endl;
+  //std::cout << "RT = " << std::endl;
+  //std::cout << RT << std::endl;
 
   vnl_matrix_fixed<double,3,4> cam_P = K_*RT;
   vpgl_proj_camera<double> camera(cam_P);
@@ -144,8 +144,8 @@ void breg3d_proj_camera_cost_function_3dof::f(const vnl_vector<double> &x, vnl_v
   RT.set_columns(0,R);
   RT.set_columns(3,T);
 
-  //vcl_cout << "RT = " << vcl_endl;
-  //vcl_cout << RT << vcl_endl;
+  //std::cout << "RT = " << std::endl;
+  //std::cout << RT << std::endl;
 
   vnl_matrix_fixed<double,3,4> cam_P = K_*RT;
   vpgl_proj_camera<double> camera(cam_P);

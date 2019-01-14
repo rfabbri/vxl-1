@@ -26,7 +26,7 @@ dbvxm_register_feature_process::dbvxm_register_feature_process()
   input_types_[0] = "bvxm_voxel_world_sptr";   // feature world
   input_types_[1] = "vpgl_camera_double_sptr";   // original view camera (later: an initial estimate of it)
   input_types_[2] = "vil_image_view_base_sptr";   // original view
-  input_types_[3] = "vcl_string";
+  input_types_[3] = vcl_string";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";  // scale
 
@@ -89,13 +89,13 @@ bool dbvxm_register_feature_process::execute()
 
   unsigned ni = img->ni();
   unsigned nj = img->nj();
-  vcl_cout << "input img ni: " << ni << " nj: " << nj << vcl_endl;
+  std::cout << "input img ni: " << ni << " nj: " << nj << std::endl;
 
   vil_image_view<vxl_byte> input_img_view(img);
 
-  brdb_value_t<vcl_string>* input3 =
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
-  vcl_string voxel_type = input3->value();
+  brdb_value_t<std::string>* input3 =
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 =
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -132,8 +132,8 @@ bool dbvxm_register_feature_process::execute()
   
 
   if (verbose) {
-    vcl_cout << "instance detection parameters to be used in this run:\n"
-             << "ni: " << ni << " nj: " << nj << vcl_endl;
+    std::cout << "instance detection parameters to be used in this run:\n"
+             << "ni: " << ni << " nj: " << nj << std::endl;
   }
 
   // if the world is not updated yet, we just return an empty image
@@ -163,8 +163,8 @@ bool dbvxm_register_feature_process::execute()
   }
  
   if (verbose) {
-    vcl_cout << "feature world dims: " << feature_world->get_params()->num_voxels().x();
-    vcl_cout << " " << feature_world->get_params()->num_voxels().y() << " " << feature_world->get_params()->num_voxels().z() << "\n";
+    std::cout << "feature world dims: " << feature_world->get_params()->num_voxels().x();
+    std::cout << " " << feature_world->get_params()->num_voxels().y() << " " << feature_world->get_params()->num_voxels().z() << "\n";
   }
 
   //unsigned max_x = max_dimx-feature_world->get_params()->num_voxels().x();
@@ -201,35 +201,35 @@ bool dbvxm_register_feature_process::execute()
   vul_timer t, t2;
 
   if (voxel_type == "apm_mog_rgb") {
-    vcl_cout << "color not implemented yet!\n";
+    std::cout << "color not implemented yet!\n";
     return false;
   }
   else if (voxel_type == "apm_mog_grey") {
     typedef bvxm_voxel_traits<APM_MOG_GREY>::voxel_datatype mog_type;
     typedef bvxm_voxel_traits<APM_MOG_GREY>::obs_datatype obs_datatype;
 
-    vcl_cout << "will create image slab\n";
-    vcl_cout.flush();
+    std::cout << "will create image slab\n";
+    std::cout.flush();
 
     //: create image slab from the input img
     //vil_image_view<float>* input_img_float_stretched = new vil_image_view<float>( ni, nj, 1 );
     vil_image_view<float> input_img_float_stretched( ni, nj, 1 );
     //vil_convert_stretch_range_limited<vxl_byte>(img, *input_img_float_stretched, 0, 255, 0.0f, 1.0f);
     vil_convert_stretch_range_limited<vxl_byte>(input_img_view, input_img_float_stretched, (vxl_byte)0, (vxl_byte)255, 0.0f, 1.0f);
-    vcl_cout << "done stretch range\n";
-    vcl_cout.flush();
+    std::cout << "done stretch range\n";
+    std::cout.flush();
 
     vil_image_view_base_sptr nimg_sptr = new vil_image_view<float>(input_img_float_stretched);        
     // convert image to a voxel_slab
     bvxm_voxel_slab<obs_datatype> image_slab(ni, nj, 1);
     if (!bvxm_util::img_to_slab(nimg_sptr,image_slab)) {
-      vcl_cout << "problems in img to slab conversion\n";
-      vcl_cout.flush();
+      std::cout << "problems in img to slab conversion\n";
+      std::cout.flush();
       return false;
     }
 
-    vcl_cout << "entering exhaustive search\n";
-    vcl_cout.flush();
+    std::cout << "entering exhaustive search\n";
+    std::cout.flush();
     
     t2.mark();
     float best_x = 0, best_y = 0, best_z = 0;
@@ -239,8 +239,8 @@ bool dbvxm_register_feature_process::execute()
         unsigned cor_z = 0;
           t.mark();
           vgl_point_3d<float> cor(cx + (float)cor_x*voxel_length, cy + (float)cor_y*voxel_length, cz + (float)cor_z*voxel_length);
-          vcl_cout << "trying: " << cor << " " << " cor_x: " << cor_x << " cor_y: " << cor_y << " cor_z: " << cor_z << vcl_endl;
-          vcl_cout.flush();
+          std::cout << "trying: " << cor << " " << " cor_x: " << cor_x << " cor_y: " << cor_y << " cor_z: " << cor_z << std::endl;
+          std::cout.flush();
       
           feature_world->get_params()->set_corner(cor);
 
@@ -253,9 +253,9 @@ bool dbvxm_register_feature_process::execute()
           bvxm_util::slab_to_img(exp_img, mix_exp_img);
 
           if (verbose) {
-            vcl_stringstream s_cx, s_cy, s_cz;
+            std::stringstream s_cx, s_cy, s_cz;
             s_cx << cor_x; s_cy << cor_y; s_cz << cor_z;
-            vcl_string feat_exp_name = "./feature_world_mix_exp_img_cor_x_" + s_cx.str() + "_y_" + s_cy.str() + "_z_" + s_cz.str() + ".png";
+            std::string feat_exp_name = "./feature_world_mix_exp_img_cor_x_" + s_cx.str() + "_y_" + s_cy.str() + "_z_" + s_cz.str() + ".png";
             vil_save(*mix_exp_img, feat_exp_name.c_str());
           }
           
@@ -265,16 +265,16 @@ bool dbvxm_register_feature_process::execute()
           bvxm_util::multiply_slabs(prob, weights, product);
           float this_prob = bvxm_util::sum_slab(product);
 
-          vcl_cout << "prob: " << this_prob << "\n";
+          std::cout << "prob: " << this_prob << "\n";
           if ( this_prob < 0 ) {
-            vcl_cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
+            std::cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
             return false;
           }
 
           mother_slab(cor_x, cor_y) = this_prob;
          
           //: prob value is in range [0.9, 1.1], stretch this to [0, 1]
-          float eq_prob = (this_prob-0.9f)/0.2f; vcl_cout << "equalized prob: " << eq_prob << "\n";
+          float eq_prob = (this_prob-0.9f)/0.2f; std::cout << "equalized prob: " << eq_prob << "\n";
           mother_slab_equalized(cor_x, cor_y) = eq_prob;
 
           if ( this_prob > best_prob ) { 
@@ -290,7 +290,7 @@ bool dbvxm_register_feature_process::execute()
           }
           
         //}
-          vcl_cout << " took: " << t.real() / 1000.0f << " secs.\n";
+          std::cout << " took: " << t.real() / 1000.0f << " secs.\n";
         
       }
     }
@@ -299,7 +299,7 @@ bool dbvxm_register_feature_process::execute()
 
   }
   else {
-    vcl_cout << "In bvxm_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
+    std::cout << "In bvxm_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
     return false;
   }
 
@@ -376,7 +376,7 @@ bool dbvxm_register_feature_process::execute()
   brdb_value_sptr output3 = new brdb_value_t<vil_image_view_base_sptr>(out3);
   output_data_[3] = output3;
 
-   vcl_cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
+   std::cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
 
   return true;
 }

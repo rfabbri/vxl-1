@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <structure/dbseg_seg_storage.h>
@@ -22,7 +22,7 @@ dbseg_seg_save_contour_process::dbseg_seg_save_contour_process() : bpro1_process
 {
   if( !parameters()->add( "Filename" , "-filename", bpro1_filepath("","con") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -42,7 +42,7 @@ dbseg_seg_save_contour_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_save_contour_process::name()
+std::string dbseg_seg_save_contour_process::name()
 {
   return "Save Segmentation Contour";
 }
@@ -57,10 +57,10 @@ dbseg_seg_save_contour_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_contour_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // seg structure required
   to_return.push_back( "seg" );
 
@@ -69,10 +69,10 @@ dbseg_seg_save_contour_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbseg_seg_save_contour_process::get_output_type()
 {
-  return vcl_vector< vcl_string >();
+  return std::vector< std::string >();
 }
 
 
@@ -97,7 +97,7 @@ bool
 dbseg_seg_save_contour_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbseg_seg_save_contour_process::execute() - "
+    std::cout << "In dbseg_seg_save_contour_process::execute() - "
              << "not exactly one input seg structure \n";
     return false;
   }
@@ -130,12 +130,12 @@ bool dbseg_seg_save_contour_process::static_execute(dbseg_seg_object_base* obj, 
  
     //dbseg_seg_object* object = seg_stg->get_object();
     if (static_cast<dbseg_seg_object<vxl_byte>* >( obj )->get_outlined_regions().size() > 1) {
-        vcl_cout << "In dbseg_seg_save_contour_process::execute() - "
+        std::cout << "In dbseg_seg_save_contour_process::execute() - "
              << "more than one region selected \n";
         false;
     }
     if (static_cast<dbseg_seg_object<vxl_byte>* >( obj )->get_outlined_regions().size() == 0) {
-        vcl_cout << "In dbseg_seg_save_contour_process::execute() - "
+        std::cout << "In dbseg_seg_save_contour_process::execute() - "
              << "no region selected, saving middle region contour \n";
         saveMiddle = true;
         //return false;
@@ -160,14 +160,14 @@ bool dbseg_seg_save_contour_process::static_execute(dbseg_seg_object_base* obj, 
  
    fstream out(file.path.c_str(), fstream::out);
   //the actual saving 
-   out << "CONTOUR" << vcl_endl << "CLOSED" << vcl_endl << poly[0].size() << vcl_endl;
+   out << "CONTOUR" << std::endl << "CLOSED" << std::endl << poly[0].size() << std::endl;
    for (int i = 0; i < poly[0].size(); i++) {
         out << poly[0][i].x() << " ";
         out << poly[0][i].y() << " ";
    }
   out.close();
 
- vcl_cout << "Contour of region " << tempID << " saved." << vcl_endl;
+ std::cout << "Contour of region " << tempID << " saved." << std::endl;
     return true;
 }
 

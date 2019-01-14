@@ -85,42 +85,42 @@ load_params_and_models()
   //xgraph_geom->compute_attribute_constraints();
 
   //// Check compatibility between the geometric model and the shock graph (are all edges covered?)
-  //vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
+  //std::cout << "\n>> Checking compatibility between geometric model and xgraph...";
   //if (!xgraph_geom->is_compatible(xgraph_prototype_))
   //{
-  //  vcl_cout << "Failed\n." << vcl_endl;
+  //  std::cout << "Failed\n." << std::endl;
   //  return false;
   //}
   //else
   //{
-  //  vcl_cout << "Passed\n." << vcl_endl;
+  //  std::cout << "Passed\n." << std::endl;
   //}
 
   //// ccm model
   //dbsks_load_xgraph_ccm_model(xgraph_ccm_file, xgraph_ccm);
 
   //// Check compatibility between Contour Chamfer Matching model and xgraph (are all edges covered)
-  //vcl_cout << ">> Checking compatibility between CCM model and xgraph...";
+  //std::cout << ">> Checking compatibility between CCM model and xgraph...";
   //if (!xgraph_ccm->is_compatible(xgraph_prototype_))
   //{
-  //  vcl_cout << "Failed\n." << vcl_endl;
+  //  std::cout << "Failed\n." << std::endl;
   //  return false;
   //}
   //else
   //{
-  //  vcl_cout << "Passed\n." << vcl_endl;
+  //  std::cout << "Passed\n." << std::endl;
   //}
 
   //// Set distributions of user-selected boundary fragments to constant
-  //vcl_cout << "\n>> Overriding 'ignored' edges with constant distribution...";
+  //std::cout << "\n>> Overriding 'ignored' edges with constant distribution...";
   //if (!xgraph_ccm->override_cfrag_with_constant_distribution(cfrag_list_to_ignore))
   //{
-  //  vcl_cout << "[ Failed ]\n";
+  //  std::cout << "[ Failed ]\n";
   //  return false;
   //}
   //else
   //{
-  //  vcl_cout << "[ OK ]\n";
+  //  std::cout << "[ OK ]\n";
   //}
 
   ////: Compute cache values for ccm models
@@ -144,7 +144,7 @@ load_params_and_models()
 //// local data structure to facilitate sorting the edgemap by their width
 //struct edgemap_level_info
 //{
-//  vcl_string base_name;
+//  std::string base_name;
 //  int width;
 //  double scale;
 //};
@@ -161,10 +161,10 @@ load_edgemap_pyramid()
 //load_edgemap_pyramid()
 //{
 //  //>> Load all edgemaps in the pyramid ........................................
-//  vcl_cout << "\n>> Loading all edgemap images in the pyramid ... ";
+//  std::cout << "\n>> Loading all edgemap images in the pyramid ... ";
 //
 //  // regular expression to iterate thru edgemap files
-//  vcl_string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
+//  std::string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
 //  
 //  // clean up any existing data
 //  this->list_edgemap_base_name.clear();
@@ -175,7 +175,7 @@ load_edgemap_pyramid()
 //  
 //
 //  // sort the edgemaps by their width, decreasing order
-//  vcl_map<int, edgemap_level_info> map_width2info;
+//  std::map<int, edgemap_level_info> map_width2info;
 //  for (vul_file_iterator fn = edgemap_regexp; fn; ++fn)
 //  {
 //    vil_image_resource_sptr img = vil_load_image_resource(fn());
@@ -188,14 +188,14 @@ load_edgemap_pyramid()
 //      // note that "vul_file::strip_extension(...) will not work because 
 //      // "edgemap_ext" may containt a dot ".", which will confuse the 
 //      // vul_file::strip_extension(...) function
-//      vcl_string fname = vul_file::strip_directory(fn());
+//      std::string fname = vul_file::strip_directory(fn());
 //      info.base_name = fname.substr(0, fname.size()-edgemap_ext.size());
-//      map_width2info.insert(vcl_make_pair(-info.width, info));
+//      map_width2info.insert(std::make_pair(-info.width, info));
 //    }
 //  }
 //
 //  // put the info back in the form we're familiar with
-//  for (vcl_map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
+//  for (std::map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
 //    iter != map_width2info.end(); ++iter)
 //  {
 //    edgemap_level_info info = iter->second;

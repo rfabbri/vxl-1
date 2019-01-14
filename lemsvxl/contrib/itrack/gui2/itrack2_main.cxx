@@ -97,14 +97,14 @@ int main(int argc, char** argv)
   //REG_PROCESS( dbbgm_blob_finder_process );
 
 #if defined(VCL_WIN32)
-vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
 _setmaxstdio(2048);
 #endif
   
   itrack2_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 600, h = 512;
-  vcl_string title = "itrack2 GUI";
+  std::string title = "itrack2 GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
 #if 0
   bvis_video_manager::instance()->add_new_frame();

@@ -34,7 +34,7 @@ spatemp_backward_beta_process::spatemp_backward_beta_process(void): bpro1_proces
         if( !parameters()->add( "# of frames" , "-nframes" , 1 )||
             !parameters()->add( "Expected Motion" , "-expmotion" , (unsigned int)5 ))
             {
-                vcl_cout<<"\n Could not read the parameters";                 
+                std::cout<<"\n Could not read the parameters";                 
             }
     }
 
@@ -46,7 +46,7 @@ spatemp_backward_beta_process::~spatemp_backward_beta_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 spatemp_backward_beta_process::name()
     {
     return "Backward Beta Map";
@@ -78,20 +78,20 @@ spatemp_backward_beta_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 spatemp_backward_beta_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "sel" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 spatemp_backward_beta_process::get_output_type()
     {  
-        vcl_vector<vcl_string > to_return;
+        std::vector<std::string > to_return;
         to_return.push_back( "temporalmap" );
         return to_return;
     }
@@ -116,8 +116,8 @@ spatemp_backward_beta_process::execute()
 
         dbdet_temporal_map_storage_sptr tmap_storage=dbdet_temporal_map_storage_new();
 
-        vcl_map<int,dbdet_curvelet_map*> neighbor_cmap;
-        vcl_map<int,dbdet_edgemap_sptr> neighbor_emap;
+        std::map<int,dbdet_curvelet_map*> neighbor_cmap;
+        std::map<int,dbdet_edgemap_sptr> neighbor_emap;
         dbdet_temporal_map_sptr tmap;
         for (int i =0;i<2*nframes+1;i++){
             // get vsol from the storage class

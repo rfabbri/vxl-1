@@ -12,7 +12,7 @@
 bool dbdet_keypoint_storage::registered_ = false;
 
 //: Constructor
-dbdet_keypoint_storage::dbdet_keypoint_storage( const vcl_vector< dbdet_keypoint_sptr >& keypoints,
+dbdet_keypoint_storage::dbdet_keypoint_storage( const std::vector< dbdet_keypoint_sptr >& keypoints,
                                                   int ni, int nj)
  : keypoints_(keypoints), ni_(ni), nj_(nj)
 {
@@ -71,9 +71,9 @@ dbdet_keypoint_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_keypoint_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_keypoint_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -90,7 +90,7 @@ dbdet_keypoint_storage::clone() const
 
 //: Set the keypoint storage vector
 void
-dbdet_keypoint_storage::set_keypoints( const vcl_vector< dbdet_keypoint_sptr >& keypoints)
+dbdet_keypoint_storage::set_keypoints( const std::vector< dbdet_keypoint_sptr >& keypoints)
 {
   keypoints_ = keypoints;
 }

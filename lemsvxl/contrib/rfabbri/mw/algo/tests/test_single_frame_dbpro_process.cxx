@@ -5,10 +5,10 @@
 //
 #include <testlib/testlib_test.h>
 #include <bprod/bprod_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bprod/bprod_observer.h>
 #include <bprod/tests/bprod_sample_processes.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
@@ -45,8 +45,8 @@ class view_aggregator : public bprod_sink
     label_ = input<vil_image_view<unsigned> >(3);
 
     //: Curve frags
-    assert(input_type_id(4) == typeid(vcl_vector< vsol_polyline_2d_sptr >));
-    curves_ = input<vcl_vector< vsol_polyline_2d_sptr > >(4);
+    assert(input_type_id(4) == typeid(std::vector< vsol_polyline_2d_sptr >));
+    curves_ = input<std::vector< vsol_polyline_2d_sptr > >(4);
 
     return BPROD_VALID;
   }
@@ -55,17 +55,17 @@ class view_aggregator : public bprod_sink
   vil_image_view<vxl_uint_32> dt_;
   vil_image_view<unsigned> label_;
   dbdet_edgemap_sptr em_;
-  vcl_vector< vsol_polyline_2d_sptr > curves_;
+  std::vector< vsol_polyline_2d_sptr > curves_;
 };
 
 MAIN( test_multiview_bprod_process )
 {
   START ("multiview bprod processes");
 
-  vcl_string datapath("/usr/local/moredata/subset");
-  vcl_string img_fname = datapath + vcl_string("/frame_00066.png");
-  vcl_string edg_fname = datapath + vcl_string("/frame_00066-grad_thresh5.edg");
-  vcl_string frag_fname = datapath + vcl_string("/frame_00066.vsl");
+  std::string datapath("/usr/local/moredata/subset");
+  std::string img_fname = datapath + std::string("/frame_00066.png");
+  std::string edg_fname = datapath + std::string("/frame_00066-grad_thresh5.edg");
+  std::string frag_fname = datapath + std::string("/frame_00066.vsl");
 
   // 1 Cam loader
   bprod_process_sptr 
@@ -99,16 +99,16 @@ MAIN( test_multiview_bprod_process )
 
   out->run(1);
 
-  vcl_cout << "========\nResulting Camera:\n\n";
-  vcl_cout << *(out_ptr->cam_) << "\n";
-  vcl_cout << vcl_endl;
+  std::cout << "========\nResulting Camera:\n\n";
+  std::cout << *(out_ptr->cam_) << "\n";
+  std::cout << std::endl;
 
-  vcl_cout << "Resulting edgemap output:\n";
-  vcl_cout << "Edgemap size: " <<  out_ptr->em_->num_edgels() << "\n\n\n";
+  std::cout << "Resulting edgemap output:\n";
+  std::cout << "Edgemap size: " <<  out_ptr->em_->num_edgels() << "\n\n\n";
 
-  vcl_cout << "Resulting distance transforms:\n";
-  vcl_cout << "DT : " <<  out_ptr->dt_ << "\n\n\n";
-  vcl_cout << "Label : " <<  out_ptr->label_ << "\n\n\n";
+  std::cout << "Resulting distance transforms:\n";
+  std::cout << "DT : " <<  out_ptr->dt_ << "\n\n\n";
+  std::cout << "Label : " <<  out_ptr->label_ << "\n\n\n";
 
   vil_image_view<vxl_byte> dt_byte, label_byte;
 
@@ -118,8 +118,8 @@ MAIN( test_multiview_bprod_process )
   vil_save(dt_byte,"test-dt.pbm");
   vil_save(label_byte,"test-label.pbm");
 
-  vcl_cout << "Resulting curves:\n";
-  vcl_cout << "Curve frags size: " <<  out_ptr->curves_.size() << "\n\n\n";
+  std::cout << "Resulting curves:\n";
+  std::cout << "Curve frags size: " <<  out_ptr->curves_.size() << "\n\n\n";
 
   SUMMARY();
 }

@@ -13,7 +13,7 @@ class dbrl_postprocess_observation:public bpro1_process
         dbrl_postprocess_observation();
         ~dbrl_postprocess_observation();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process* clone() const;
@@ -21,8 +21,8 @@ class dbrl_postprocess_observation:public bpro1_process
         int input_frames();
         int output_frames();
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
 
         bool execute();
         bool finish();
@@ -32,6 +32,6 @@ class dbrl_postprocess_observation:public bpro1_process
         void compute_clips_from_observ(dbinfo_observation_sptr obs,
                                        vil_image_resource_sptr img);
 
-        bool compute_curvelets_from_observation(vcl_vector<dbinfo_observation_sptr> obs);
+        bool compute_curvelets_from_observation(std::vector<dbinfo_observation_sptr> obs);
     };
 #endif

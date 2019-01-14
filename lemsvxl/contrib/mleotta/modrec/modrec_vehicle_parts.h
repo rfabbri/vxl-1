@@ -13,25 +13,25 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 #include <vgl/vgl_polygon.h>
 
 
 //: read the vehicle parts from a file
-vcl_map<vcl_string, vgl_polygon<double> >
-modrec_read_vehicle_parts(const vcl_string filename);
+std::map<std::string, vgl_polygon<double> >
+modrec_read_vehicle_parts(const std::string filename);
 
 
 //: write the vehicle parts to a file
 void
-modrec_write_vehicle_parts(const vcl_string filename,
-                           const vcl_map<vcl_string, vgl_polygon<double> >& parts);
+modrec_write_vehicle_parts(const std::string filename,
+                           const std::map<std::string, vgl_polygon<double> >& parts);
 
 
 //: write the vehicle parts as an SVG file
-void modrec_write_svg(const vcl_string& file,
-                      const vcl_map<vcl_string,vgl_polygon<double> >& paths);
+void modrec_write_svg(const std::string& file,
+                      const std::map<std::string,vgl_polygon<double> >& paths);
 
 
 

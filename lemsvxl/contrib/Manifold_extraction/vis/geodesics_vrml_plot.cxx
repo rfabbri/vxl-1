@@ -5,12 +5,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -25,9 +25,9 @@
 
 int main(int argc,char **argv)
     {
-    vcl_string trucks_info = argv[1];
-    vcl_string geodesics_info = argv[2];
-    vcl_string vrml_file = argv[3];
+    std::string trucks_info = argv[1];
+    std::string geodesics_info = argv[2];
+    std::string vrml_file = argv[3];
 
     //usage: 
 
@@ -40,8 +40,8 @@ int main(int argc,char **argv)
     //vrml_file is the output vrml file which has the trucks plotted as spheres in 3d and the
     //curves in 3d representing the principal geodesics
     
-    vcl_ifstream trucks_info_read(trucks_info.c_str());
-   vcl_ifstream geodesics_info_read(geodesics_info.c_str());
+    std::ifstream trucks_info_read(trucks_info.c_str());
+   std::ifstream geodesics_info_read(geodesics_info.c_str());
 
     int i,it,num_models,num_samples;
     trucks_info_read >> num_models;
@@ -62,7 +62,7 @@ for (i = 0;i<3*num_samples;i++)
         }
     
 
-    vcl_ofstream out(vrml_file.c_str());
+    std::ofstream out(vrml_file.c_str());
     
 
     out <<      "#VRML V2.0 utf8\n";
@@ -129,7 +129,7 @@ double s_b1,s_b2,s_b3,k,s = 1;
 for (k=0;k<num_samples;k++)
     {   
 
-out <<" " << x_g[it*num_samples+k] <<" " << y_g[it*num_samples+k] << " " <<z_g[it*num_samples+k] << vcl_endl;
+out <<" " << x_g[it*num_samples+k] <<" " << y_g[it*num_samples+k] << " " <<z_g[it*num_samples+k] << std::endl;
     }
 
 out <<"    ] \n";

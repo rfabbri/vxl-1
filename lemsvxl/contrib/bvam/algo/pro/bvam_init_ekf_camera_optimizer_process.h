@@ -12,7 +12,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class bvam_init_ekf_camera_optimizer_process : public bprb_process
@@ -29,7 +29,7 @@ class bvam_init_ekf_camera_optimizer_process : public bprb_process
   //: Clone the process
   virtual bvam_init_ekf_camera_optimizer_process* clone() const {return new bvam_init_ekf_camera_optimizer_process(*this);}
 
-  vcl_string name(){return "BvamInitEkfCameraOptimizer";}
+  std::string name(){return "BvamInitEkfCameraOptimizer";}
 
   bool init() { return true; }
   bool execute();

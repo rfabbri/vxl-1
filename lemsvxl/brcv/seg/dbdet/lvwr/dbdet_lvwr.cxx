@@ -2,12 +2,12 @@
 //:
 //  \file
 
-//#include <vcl_cassert.h>
+//#include <cassert>
 
 #include <dbdet/lvwr/dbdet_lvwr.h>
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 #include <vil1/vil1_image_as.h>
 #include <vil1/vil1_copy.h>
@@ -44,13 +44,13 @@ void dbdet_lvwr::prepare_buffers(int w, int h, int seed_x_, int seed_y_)
 
   // set up 2d arrays
   expanded = new bool*[image_h];
-  pointed_neighbours = new vcl_pair<float, float> *[image_h];
+  pointed_neighbours = new std::pair<float, float> *[image_h];
   path_length = new int *[image_h];
   global_costs = new float *[image_h];
 
   for (int loop = 0; loop<image_h; loop++) {
     expanded[loop] = new bool[image_w];
-    pointed_neighbours[loop] = new vcl_pair<float, float> [image_w];
+    pointed_neighbours[loop] = new std::pair<float, float> [image_w];
     path_length[loop] = new int[image_w];
     global_costs[loop] = new float[image_w];
   }
@@ -109,17 +109,17 @@ void dbdet_lvwr::set_costs_from_image(vil1_image const &image)
 }
 
 //: just give zero cost to edge pixels and 1 cost to the remaining pixels
-void dbdet_lvwr::compute_costs_from_edges(vcl_list<osl_edge*> canny_edges) {
+void dbdet_lvwr::compute_costs_from_edges(std::list<osl_edge*> canny_edges) {
 
-  vcl_cout << image_edgecosts_buf.width() << vcl_endl;
-  vcl_cout << image_edgecosts_buf.height() << vcl_endl;
+  std::cout << image_edgecosts_buf.width() << std::endl;
+  std::cout << image_edgecosts_buf.height() << std::endl;
 
   for (int row = 0; row < image_h; row++)
    for (int col = 0; col < image_w; col++) {
     image_edgecosts_buf[row][col] = 1;
     }
 
-  vcl_list<osl_edge*>::const_iterator i;
+  std::list<osl_edge*>::const_iterator i;
   for (i = canny_edges.begin(); i != canny_edges.end(); ++i)
   {
     osl_edge const* e = *i;
@@ -145,7 +145,7 @@ void dbdet_lvwr::compute_gradients(vil1_image const &image)
   // compute gradients
 #if 0
     for (int i = 0; i < 10; ++i)
-      vcl_cout << "image pixel " << i << ": " << (int)image_buf(i,i+4) << '\n';
+      std::cout << "image pixel " << i << ": " << (int)image_buf(i,i+4) << '\n';
 #endif
 
   // trim the window
@@ -197,8 +197,8 @@ void dbdet_lvwr::compute_gradmag (osl_roi_window      *window_str,
     for (int col = col_start; col < col_end; col++) {
 
     (*image_gradmag_ptr)[row][col] =
-      (float)vcl_sqrt(vcl_pow((double)(*image_gradx_ptr)[row][col], 2.0) +
-                      vcl_pow((double)(*image_grady_ptr)[row][col], 2.0));
+      (float)std::sqrt(std::pow((double)(*image_gradx_ptr)[row][col], 2.0) +
+                      std::pow((double)(*image_grady_ptr)[row][col], 2.0));
 
     }
   }
@@ -211,7 +211,7 @@ void dbdet_lvwr::compute_gradmag (osl_roi_window      *window_str,
       max = (*image_gradmag_ptr)[row][col];
   }
   }
-  vcl_cout << "max in mag: " << max << vcl_endl;
+  std::cout << "max in mag: " << max << std::endl;
 
 
   for (int row = row_start; row < row_end; row++) {
@@ -249,7 +249,7 @@ void dbdet_lvwr::compute_laplacian(osl_roi_window      *window_str,
     }
   }
 
-  vcl_pair<int, int> *temp = new vcl_pair<int, int>[3];
+  std::pair<int, int> *temp = new std::pair<int, int>[3];
   temp[0].first = 0;
   temp[0].second = 1;
   temp[1].first = 1;
@@ -269,9 +269,9 @@ void dbdet_lvwr::compute_laplacian(osl_roi_window      *window_str,
       if ( ((*image_laplacian_ptr)[row][col] *
           (*image_laplacian_ptr)[row+temp[i].first][col+temp[i].second]) < 0 )
       {
-        //vcl_cout << " !!!!!!!!!!!! found sign change!!!!!\n";
-        if (vcl_abs((*image_laplacian_ptr)[row][col]) <
-          vcl_abs((*image_laplacian_ptr)[row+temp[i].first][col+temp[i].second]))
+        //std::cout << " !!!!!!!!!!!! found sign change!!!!!\n";
+        if (std::abs((*image_laplacian_ptr)[row][col]) <
+          std::abs((*image_laplacian_ptr)[row+temp[i].first][col+temp[i].second]))
           (*image_fxx_ptr)[row][col] = 0;
         else
           (*image_fxx_ptr)[row+temp[i].first][col+temp[i].second] = 0;
@@ -291,7 +291,7 @@ void dbdet_lvwr::compute_laplacian(osl_roi_window      *window_str,
   }
 }
 
-vcl_ostream& operator<< (vcl_ostream& Out, const my_pixel &p1)
+std::ostream& operator<< (std::ostream& Out, const my_pixel &p1)
 {
   Out << "my pixel object row: " << p1.row << " col: " << p1.col;
   Out << " total_cost: " << p1.total_cost /*<< " points to: << p1.point_to */<< "\n";
@@ -309,9 +309,9 @@ bool operator== (const my_pixel &p1, const my_pixel &p2)
   return (p1.row == p2.row && p1.col == p2.col);
 }
 
-bool dbdet_lvwr::contains(vcl_multiset<my_pixel> *active_pixels, my_pixel p1) {
+bool dbdet_lvwr::contains(std::multiset<my_pixel> *active_pixels, my_pixel p1) {
 
-  vcl_multiset<my_pixel>::iterator pos;
+  std::multiset<my_pixel>::iterator pos;
   for (pos = active_pixels->begin(); pos != active_pixels->end(); ++pos) {
     if (*pos == p1)
       return true;
@@ -321,7 +321,7 @@ bool dbdet_lvwr::contains(vcl_multiset<my_pixel> *active_pixels, my_pixel p1) {
 
 float dbdet_lvwr::my_get_factor(int i, int j) {
   if (i == 0 || j == 0)
-    return 1.0/vcl_sqrt(2.0);
+    return 1.0/std::sqrt(2.0);
   else
     return 1.0;
 }
@@ -336,7 +336,7 @@ float dbdet_lvwr::edge_direction_cost(my_pixel p, my_pixel q, float *dp) {
 
   float d_prime_p_x = image_grady_buf[p.row][p.col];
   float d_prime_p_y = -image_gradx_buf[p.row][p.col];
-  float d_prime_mag = vcl_sqrt( (d_prime_p_x*d_prime_p_x) + (d_prime_p_y*d_prime_p_y));
+  float d_prime_mag = std::sqrt( (d_prime_p_x*d_prime_p_x) + (d_prime_p_y*d_prime_p_y));
 
   // make it unit vector
   d_prime_p_x /= d_prime_mag;
@@ -344,7 +344,7 @@ float dbdet_lvwr::edge_direction_cost(my_pixel p, my_pixel q, float *dp) {
 
   float d_prime_q_x = image_grady_buf[q.row][q.col];
   float d_prime_q_y = -image_gradx_buf[q.row][q.col];
-  d_prime_mag = vcl_sqrt( (d_prime_q_x*d_prime_q_x) + (d_prime_q_y*d_prime_q_y));
+  d_prime_mag = std::sqrt( (d_prime_q_x*d_prime_q_x) + (d_prime_q_y*d_prime_q_y));
 
   // make it unit vector
   d_prime_q_x /= d_prime_mag;
@@ -354,7 +354,7 @@ float dbdet_lvwr::edge_direction_cost(my_pixel p, my_pixel q, float *dp) {
   float q_minus_p_x = q.row-p.row;
   float q_minus_p_y = q.col-p.col;
 
-  float q_minus_p_mag = vcl_sqrt( (q_minus_p_x*q_minus_p_x) + (q_minus_p_y*q_minus_p_y));
+  float q_minus_p_mag = std::sqrt( (q_minus_p_x*q_minus_p_x) + (q_minus_p_y*q_minus_p_y));
 
   // find l_pq
   float l_p_q_x = 0, l_p_q_y = 0;
@@ -374,11 +374,11 @@ float dbdet_lvwr::edge_direction_cost(my_pixel p, my_pixel q, float *dp) {
   *dp = d_q;
   float acos_p, acos_q;
   if (d_p == 0) acos_p = (3.14f)/2;
-  else acos_p = vcl_acos(d_p);
+  else acos_p = std::acos(d_p);
   if (d_q == 0) acos_q = (3.14f)/2;
-  else acos_q = vcl_acos(d_q);
+  else acos_q = std::acos(d_q);
   return (2/(3*3.14f))*(acos_p+acos_q);
-  //return vcl_acos(d_q);
+  //return std::acos(d_q);
 
 }
 
@@ -388,8 +388,8 @@ void dbdet_lvwr::compute_directions(int seed_x_, int seed_y_)
   seed_y = seed_y_;
   my_pixel p0 = my_pixel(seed_y, seed_x);
 
-  vcl_multiset<my_pixel> active_pixels;
-  vcl_multiset<my_pixel>::iterator pos;
+  std::multiset<my_pixel> active_pixels;
+  std::multiset<my_pixel>::iterator pos;
 
   for (int i = 0; i<image_h; i++)
     for (int j = 0; j<image_w; j++) {
@@ -435,7 +435,7 @@ void dbdet_lvwr::compute_directions(int seed_x_, int seed_y_)
     counter++;
 
     if (counter % 500 == 0)
-      vcl_cout << "size: " << active_pixels.size() << "\n";
+      std::cout << "size: " << active_pixels.size() << "\n";
 
     //vcl_assert (active_pixels.size() > 0);
     pos = active_pixels.begin();   // begin holds the pixel with min cost
@@ -519,7 +519,7 @@ float dbdet_lvwr::get_global_cost(int x, int y) {
 // y      --> row
 
 bool dbdet_lvwr::get_path(int free_x, int free_y,
-                 vcl_vector<vcl_pair<int, int> > &cor) {
+                 std::vector<std::pair<int, int> > &cor) {
 
   bool out = false;
   // store the optimum path to this free point
@@ -563,7 +563,7 @@ bool dbdet_lvwr::get_path(int free_x, int free_y,
     free_x >= seed_x+params_.window_w/2-1 ||
     free_y <= seed_y-params_.window_h/2 ||
     free_y >= seed_y+params_.window_h/2-1) {
-      vcl_cout << "Free point is outside the window!\n";
+      std::cout << "Free point is outside the window!\n";
       return;
   }*/
 
@@ -571,7 +571,7 @@ bool dbdet_lvwr::get_path(int free_x, int free_y,
     free_y > image_h-6 ||
     free_x < 5 ||
     free_x > image_w-6) {
-      vcl_cout << "Point is out of exceptable image area!\n";
+      std::cout << "Point is out of exceptable image area!\n";
       return false;
   }
 
@@ -581,7 +581,7 @@ bool dbdet_lvwr::get_path(int free_x, int free_y,
   current_y = free_y;
 
   while (!(current_x == seed_x && current_y == seed_y)) {
-    cor.push_back(vcl_pair<int, int>(int(current_y),
+    cor.push_back(std::pair<int, int>(int(current_y),
                      int(current_x)));
     temp_y     = int(pointed_neighbours[current_y][current_x].first);
     current_x  = int(pointed_neighbours[current_y][current_x].second);
@@ -589,13 +589,13 @@ bool dbdet_lvwr::get_path(int free_x, int free_y,
   }
 
   // push seed
-  cor.push_back(vcl_pair<int, int>(int(current_y),
+  cor.push_back(std::pair<int, int>(int(current_y),
                    int(current_x)));
   return out;
 
 }
 
-bool dbdet_lvwr::get_processed_path(int free_x, int free_y, vcl_vector<vcl_pair<int, int> > &cor)
+bool dbdet_lvwr::get_processed_path(int free_x, int free_y, std::vector<std::pair<int, int> > &cor)
 {
   bool out = false;
   // store the optimum path to this free point
@@ -638,7 +638,7 @@ bool dbdet_lvwr::get_processed_path(int free_x, int free_y, vcl_vector<vcl_pair<
     free_y > image_h-6 ||
     free_x < 5 ||
     free_x > image_w-6) {
-      vcl_cout << "Point is out of exceptable image area!\n";
+      std::cout << "Point is out of exceptable image area!\n";
       return false;
   }
 
@@ -646,7 +646,7 @@ bool dbdet_lvwr::get_processed_path(int free_x, int free_y, vcl_vector<vcl_pair<
   current_x = int(pointed_neighbours[free_y][free_x].second);
 
   while (!(current_x == seed_x && current_y == seed_y)) {
-    cor.push_back(vcl_pair<int, int>(int(current_y),
+    cor.push_back(std::pair<int, int>(int(current_y),
                      int(current_x)));
     temp_y     = int(pointed_neighbours[current_y][current_x].first);
     current_x  = int(pointed_neighbours[current_y][current_x].second);
@@ -654,7 +654,7 @@ bool dbdet_lvwr::get_processed_path(int free_x, int free_y, vcl_vector<vcl_pair<
   }
 
   // push seed
-  cor.push_back(vcl_pair<int, int>(int(current_y),
+  cor.push_back(std::pair<int, int>(int(current_y),
                    int(current_x)));
 
   return out;

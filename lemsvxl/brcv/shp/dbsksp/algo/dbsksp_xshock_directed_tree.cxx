@@ -1,7 +1,7 @@
 #include "dbsksp_xshock_directed_tree.h"
 
-#include <vcl_algorithm.h> 
-#include <vcl_iostream.h>
+#include <algorithm> 
+#include <iostream>
 
 
 #include <dbskr/dbskr_scurve.h>
@@ -75,12 +75,12 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
   this->set_xgraph(xgraph);
 
   //  elastic_splice_cost_ = elastic_splice_cost;
-  vcl_vector<dbsksp_xshock_node_sptr> nodes_to_retain;
+  std::vector<dbsksp_xshock_node_sptr> nodes_to_retain;
   
   //: make a map of nodes_to_retain list for fast access
   // first: id of the node in the shock graph
   // second: index of the node in the nodes_to_retain vector
-  vcl_map<int, int> nodes_to_retain_map;
+  std::map<int, int> nodes_to_retain_map;
   for (dbsksp_xshock_graph::vertex_iterator v_it = this->xgraph()->vertices_begin();
     v_it != this->xgraph()->vertices_end(); ++v_it)
   {
@@ -105,7 +105,7 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
   // first: pair of ids of the shock nodes (as in the shock graph) corresponding to
   // the two ends of the tree edge. The pair is ordered: start-node --> end-node.
   // second: list of shock links
-  vcl_map<vcl_pair<int, int>, vcl_vector<dbsksp_xshock_edge_sptr> > ids_to_edge_vector_map;
+  std::map<std::pair<int, int>, std::vector<dbsksp_xshock_edge_sptr> > ids_to_edge_vector_map;
 
 
   // Storage for the neighrboring nodes and costs of neighboring edges around each node
@@ -113,11 +113,11 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
   // in the same order as in "nodes_to_retain".
   // Each member of the inner vector corresponds to an edge incident at the node,
   // arranged counter-clockwise
-  vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > > nodes;
+  std::vector< std::vector<std::pair<int, dbskr_edge_info> > > nodes;
 
   for (unsigned int i = 0; i<nodes_to_retain.size(); i++) 
   {
-    vcl_vector<vcl_pair<int, dbskr_edge_info> > current_node; 
+    std::vector<std::pair<int, dbskr_edge_info> > current_node; 
     dbsksp_xshock_node_sptr cur_node = nodes_to_retain[i];
 
     // start with its first adjacent edge (there is an order in esf file!)
@@ -130,11 +130,11 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
       dbsksp_xshock_node_sptr adj_node = e->opposite(cur_node);
 
       // List of edges of the current chain
-      vcl_vector<dbsksp_xshock_edge_sptr> tmp;
+      std::vector<dbsksp_xshock_edge_sptr> tmp;
       tmp.push_back(e);
 
       // see if this node is in "nodes_to_retain" list
-      vcl_map<int, int>::iterator iter = nodes_to_retain_map.find(adj_node->id());
+      std::map<int, int>::iterator iter = nodes_to_retain_map.find(adj_node->id());
       
       // advance until you hit a node which is in nodes_to_retain_map
       int prev_id = cur_node->id();
@@ -160,12 +160,12 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
 
       // CONSIDER makeing this function more effecient later on
 
-      vcl_pair<int, int> ids;
+      std::pair<int, int> ids;
       ids.first = cur_node->id();
       ids.second = nodes_to_retain[tree_node_id]->id();
       ids_to_edge_vector_map[ids] = tmp;
       
-      vcl_pair<int, dbskr_edge_info> p;
+      std::pair<int, dbskr_edge_info> p;
       p.first = tree_node_id;
       // costs are unknown for now
       (p.second).first = -1.0f;   // contract cost
@@ -194,12 +194,12 @@ acquire_tree_topology(const dbsksp_xshock_graph_sptr& xgraph)
       int tail = tail_[i];
       
       // ids of shock nodes at two ends of dart
-      vcl_pair<int, int> ids;
+      std::pair<int, int> ids;
       ids.first = nodes_to_retain[tail]->id();
       ids.second = nodes_to_retain[head]->id();
 
       // retrieve list edges corresponding to the dart
-      vcl_vector<dbsksp_xshock_edge_sptr> tmp = ids_to_edge_vector_map[ids];
+      std::vector<dbsksp_xshock_edge_sptr> tmp = ids_to_edge_vector_map[ids];
       shock_edges_.push_back(tmp);
       starting_nodes_.push_back(nodes_to_retain[tail]);
     }
@@ -253,10 +253,10 @@ compute_delete_and_contract_costs()
           this->elastic_splice_cost_, 
           construct_circular_ends, dpmatch_combined, true);
         /*if (construct_circular_ends)
-        vcl_cout << "constructing WITH circular ends at the leaf dart, splice cost: " << info_[i].second << vcl_endl;
+        std::cout << "constructing WITH circular ends at the leaf dart, splice cost: " << info_[i].second << std::endl;
         else {
-        vcl_cout << "constructing WITHOUT circular ends at the leaf dart, splice cost: " << info_[i].second << vcl_endl;
-        vcl_cout << "cost WITH circular end would be: " << sc->splice_cost(elastic_splice_cost, true, dpmatch_combined) << vcl_endl;
+        std::cout << "constructing WITHOUT circular ends at the leaf dart, splice cost: " << info_[i].second << std::endl;
+        std::cout << "cost WITH circular end would be: " << sc->splice_cost(elastic_splice_cost, true, dpmatch_combined) << std::endl;
         }*/
         info_[mate_[i]].second = info_[i].second;
       } 
@@ -288,16 +288,16 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
 dbskr_sc_pair_sptr dbsksp_xshock_directed_tree::
 get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 {
-  vcl_pair<int, int> p;
+  std::pair<int, int> p;
   p.first = start_dart;
   p.second = end_dart;
-  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = dart_path_scurve_map_.find(p);
+  std::map<std::pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = dart_path_scurve_map_.find(p);
   if (iter == dart_path_scurve_map_.end()) // not found yet
   {    
-    vcl_vector<int>& dart_list = this->get_dart_path(start_dart, end_dart);
+    std::vector<int>& dart_list = this->get_dart_path(start_dart, end_dart);
     
     dbsksp_xshock_node_sptr start_node;  
-    vcl_vector<dbsksp_xshock_edge_sptr> edges;
+    std::vector<dbsksp_xshock_edge_sptr> edges;
 
     // get the underlying shock graph edge list for this dart path on the tree
     this->get_edge_list(dart_list, start_node, edges);
@@ -312,8 +312,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     // we never use the dense version, there is no need to construct it
     curve_pair->dense = 0;
 
-    //: note: even if interpolate_ds_ is not properly set by the user vcl_min takes care of it
-    //curve_pair->dense = new dbskr_scurve(*sc, curve_pair->c_d_map, vcl_min(scurve_sample_ds_, interpolate_ds_));
+    //: note: even if interpolate_ds_ is not properly set by the user std::min takes care of it
+    //curve_pair->dense = new dbskr_scurve(*sc, curve_pair->c_d_map, std::min(scurve_sample_ds_, interpolate_ds_));
 
     dart_path_scurve_map_[p] = curve_pair;
 
@@ -329,9 +329,9 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 //------------------------------------------------------------------------------
 //: return a vector of pointers to the edges in underlying shock graph for the given dart list
 void dbsksp_xshock_directed_tree::
-get_edge_list(const vcl_vector<int>& dart_list,  
+get_edge_list(const std::vector<int>& dart_list,  
               dbsksp_xshock_node_sptr& start_node,  
-              vcl_vector<dbsksp_xshock_edge_sptr>& path) 
+              std::vector<dbsksp_xshock_edge_sptr>& path) 
 {
   
   int dart_id = dart_list[0];
@@ -355,29 +355,29 @@ get_edge_list(const vcl_vector<int>& dart_list,
 
 ////Amir added this function for debug
 ////: create and write .shg file to debug splice and contract costs
-//bool dbsksp_xshock_directed_tree::create_shg(vcl_string fname)
+//bool dbsksp_xshock_directed_tree::create_shg(std::string fname)
 //{
 //  //create a file
-//  vcl_ofstream outf(fname.c_str(), vcl_ios::out);
+//  std::ofstream outf(fname.c_str(), std::ios::out);
 //  if (!outf){
-//    vcl_cerr << "file could not be created";
+//    std::cerr << "file could not be created";
 //    return false;
 //  }
 //
 //  //Header
-//  outf << "Shock Graph v1.0 " << "0.0" << " " << this->total_splice_cost() << " " << this->node_size() << vcl_endl;
+//  outf << "Shock Graph v1.0 " << "0.0" << " " << this->total_splice_cost() << " " << this->node_size() << std::endl;
 //
 //  outf.precision(6);
 //
 //  //costs for the rest of the graph
 //  for (int nn=0;nn<node_size();nn++)
 //  {
-//    vcl_vector<int>& odarts = out_darts(nn) ;
+//    std::vector<int>& odarts = out_darts(nn) ;
 //
 //    for (unsigned j=0; j<odarts.size(); j++)
-//      outf << this->head(odarts[j]) << " "   << this->contract_cost(odarts[j]) << " " << this->delete_cost(odarts[j]) << vcl_endl;
+//      outf << this->head(odarts[j]) << " "   << this->contract_cost(odarts[j]) << " " << this->delete_cost(odarts[j]) << std::endl;
 //
-//    outf << vcl_endl;
+//    outf << std::endl;
 //  }
 //
 //  outf.close();
@@ -387,27 +387,27 @@ get_edge_list(const vcl_vector<int>& dart_list,
 //
 ////Amir added this function for debug
 ////: create and write .shgesg file to hold the correspondences between shock node ids and tree node ids
-//bool dbsksp_xshock_directed_tree::create_shgesg(vcl_string fname)
+//bool dbsksp_xshock_directed_tree::create_shgesg(std::string fname)
 //{
 //  //create a file
-//  vcl_ofstream outf(fname.c_str(), vcl_ios::out);
+//  std::ofstream outf(fname.c_str(), std::ios::out);
 //  if (!outf){
-//    vcl_cerr << "file could not be created";
+//    std::cerr << "file could not be created";
 //    return false;
 //  }
 //
 //  //Header
-//  outf << "Shock Graph v1.0 Correspondences" << vcl_endl;
-//  outf << "Nodes" << vcl_endl;
+//  outf << "Shock Graph v1.0 Correspondences" << std::endl;
+//  outf << "Nodes" << std::endl;
 //
 //  //loop over all the nodes and find the corresponding shock node ids for them
 //  for (int nn=0;nn<node_size();nn++){
-//    vcl_vector<int>& odarts = out_darts(nn) ;
+//    std::vector<int>& odarts = out_darts(nn) ;
 //    dbsk2d_shock_node_sptr sh_node = this->starting_nodes_[odarts.front()];
 //
-//    outf << nn << " " << sh_node->id() << vcl_endl;
+//    outf << nn << " " << sh_node->id() << std::endl;
 //  }
-//  outf << "Links" << vcl_endl;
+//  outf << "Links" << std::endl;
 //
 //  outf.close();
 //  return true;

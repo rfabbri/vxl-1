@@ -46,12 +46,12 @@ void pairMatchMenu::drawMatchLines(){
 
 void pairMatchMenu::loadCurves(){
 
-    vcl_string fn1, fn2;
+    std::string fn1, fn2;
     int sampling = 1;
 
     vgui_dialog loadDialog("Load");
-    loadDialog.file( "Curve A: ", vcl_string("*"), fn1 );
-    loadDialog.file( "Curve B: ", vcl_string("*"), fn2 );
+    loadDialog.file( "Curve A: ", std::string("*"), fn1 );
+    loadDialog.file( "Curve B: ", std::string("*"), fn2 );
     loadDialog.field( "Sampling: ", sampling );
 
     if( loadDialog.ask() ){

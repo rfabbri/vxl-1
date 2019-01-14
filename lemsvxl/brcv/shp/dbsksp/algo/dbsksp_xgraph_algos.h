@@ -50,39 +50,39 @@ public:
 
   //: Compute a list of shapelet to fit in a chain of shock edges
   static bool fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-    vcl_vector<dbsksp_shapelet_sptr >& list_shapelet);
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
+    std::vector<dbsksp_shapelet_sptr >& list_shapelet);
 
   //: Compute extrinsic samples of a shock fragment
   // The samples are equally spaced along the chordal curve
   static void compute_xsamples(int num_intervals,
     const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
+    std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 
   //: Sample a shock path
   // sample_ds is the sampling rate along the chordal curve
   static void compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
     double sample_ds,
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+    std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 protected:
 
   //: Compute extrinsic samples of a shock fragment by first fitting shapelets to the path
   static void compute_xsamples_by_fitting_shapelets(int num_intervals,
     const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
+    std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 
   //: Compute extrinsic samples of a shock fragment by moving along the boundary
   // biarc and compute the symmetry points on the opposite boundary curve
   static void compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
     const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
+    std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 
 

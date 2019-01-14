@@ -16,7 +16,7 @@
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: A process to load a .cem file as a contour fragment graph
 class dbdet_load_cem_process : public bpro1_process
@@ -28,9 +28,9 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name();
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::string name();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -44,7 +44,7 @@ public:
     return true;
   }
   
-  bool load_CEM(vcl_string filename);
+  bool load_CEM(std::string filename);
 
 protected:
   int num_frames_;

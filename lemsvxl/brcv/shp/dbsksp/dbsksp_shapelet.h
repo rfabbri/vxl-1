@@ -102,14 +102,14 @@ public:
   //: coordinate of ending node
   vgl_point_2d<double > end() const
   {
-    return vgl_point_2d<double >(this->x0()+this->len()*vcl_cos(this->theta0()),
-      this->y0() + this->len()*vcl_sin(this->theta0()));
+    return vgl_point_2d<double >(this->x0()+this->len()*std::cos(this->theta0()),
+      this->y0() + this->len()*std::sin(this->theta0()));
   }
 
   //: direction of the chord
   vgl_vector_2d<double > chord_dir() const
   {
-    return vgl_vector_2d<double >(vcl_cos(this->theta0()), vcl_sin(this->theta0()));  }
+    return vgl_vector_2d<double >(std::cos(this->theta0()), std::sin(this->theta0()));  }
 
   //:
   double chord_length() const {return this->len(); }
@@ -127,13 +127,13 @@ public:
   //:
   double alpha_start() const
   {
-    return vcl_asin( this->m0() * vcl_sin(this->phi0()) ); 
+    return std::asin( this->m0() * std::sin(this->phi0()) ); 
   }
 
   //:
   double alpha_end() const
   {
-    return vcl_asin( -this->m0() * vcl_sin(this->phi_end()) );
+    return std::asin( -this->m0() * std::sin(this->phi_end()) );
   }
 
   //: normalized radius increment
@@ -202,18 +202,18 @@ public:
 
   //: Compute extrinsic shock samples given a list of parameter t, t \in [0, 1]
   // Return false if computation fails, e.g. t < 0 or t > 1
-  bool compute_xshock_samples(const vcl_vector<double >& ts,
-    vcl_vector<dbsksp_xshock_node_descriptor >& list_xdesc);
+  bool compute_xshock_samples(const std::vector<double >& ts,
+    std::vector<dbsksp_xshock_node_descriptor >& list_xdesc);
 
 
 
   
   ////: Compute point samples of the shapelet, given sampling rate "ds"
-  //vcl_vector<vgl_point_2d<double > > compute_samples(double ds) const;
+  //std::vector<vgl_point_2d<double > > compute_samples(double ds) const;
 
   ////: Compute point-tangent samples of the shapelet, given sampling rate "ds"
-  //void compute_samples(double ds, vcl_vector<vgl_point_2d<double > >& pts,
-  //  vcl_vector<vgl_vector_2d<double > >& tangents) const;
+  //void compute_samples(double ds, std::vector<vgl_point_2d<double > >& pts,
+  //  std::vector<vgl_vector_2d<double > >& tangents) const;
 
   
   // UTILITY FUNCTIONS---------------------------------------------------------
@@ -242,7 +242,7 @@ public:
   // MISCELLANEOUS-------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os);
+  virtual void print(std::ostream & os);
 
   
   // MEMBER VARIABLES ---------------------------------------------------------
@@ -389,7 +389,7 @@ public:
   // --------------------- MISCELLANEOUS ---------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os);
+  virtual void print(std::ostream & os);
 
   
   // --------------------- MEMBER VARIABLES ---------------------
@@ -470,7 +470,7 @@ public:
 
   //: Tangent at the shock point
   vgl_vector_2d<double > shock_dir() const
-  { return vgl_vector_2d<double >(vcl_cos(this->theta0()), vcl_sin(this->theta0()));}
+  { return vgl_vector_2d<double >(std::cos(this->theta0()), std::sin(this->theta0()));}
     
   //: Return boundary arcs: 0: left boundary, 1: right boundary
   bgld_circ_arc bnd_arc(int i) const;
@@ -497,7 +497,7 @@ public:
   // MISCELLANEOUS ------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  void print(vcl_ostream & os);
+  void print(std::ostream & os);
 
   
   // MEMBER VARIABLES ---------------------------------------------------------

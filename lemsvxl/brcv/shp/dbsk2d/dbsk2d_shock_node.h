@@ -13,7 +13,7 @@
 //   Amir Tamrakar 06/08/2005    Initial version.
 // \endverbatim
 
-#include <vcl_list.h>
+#include <list>
 #include <vbl/vbl_smart_ptr.h>
 
 #include <bgrld/bgrld_vertex.h>
@@ -114,7 +114,7 @@ public:
   void set_radius(double radius) { radius_ = radius; }
 
   //: return ordered list of intrinsic parameters at this node
-  vcl_list<dbsk2d_shock_node_descriptor>& descriptor_list() { return descriptor_list_; }
+  std::list<dbsk2d_shock_node_descriptor>& descriptor_list() { return descriptor_list_; }
 
   //: form shock fragment from this edge
   virtual void form_shock_fragments();
@@ -135,7 +135,7 @@ public:
   virtual void compute_extrinsic_locus(){}
 
   //: Return some information about the element
-  virtual void getInfo (vcl_ostream& ostrm=vcl_cout);
+  virtual void getInfo (std::ostream& ostrm=std::cout);
 
 protected:
 
@@ -144,7 +144,7 @@ protected:
   double radius_; ///< The radius of the contact circle 
   
   //: ordered list of node descriptors at this node
-  vcl_list<dbsk2d_shock_node_descriptor> descriptor_list_;  
+  std::list<dbsk2d_shock_node_descriptor> descriptor_list_;  
 
 };
 

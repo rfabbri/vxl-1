@@ -6,20 +6,20 @@
 #include <vul/vul_timer.h>
 
 #include <unistd.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 void print_usage()
 {
 
-    vcl_cout<<"./ed_match_exec -m <file model esfs> -q <file query esfs> -s <sampling> -r <R matching> -h <help>"<<vcl_endl;
-    vcl_cout<<" -m: List of esf files that represent models/training"<<vcl_endl;
-    vcl_cout<<" -q: List of esf files that represent query/test"<<vcl_endl;
-    vcl_cout<<" -s: Sampling rate, unit of pixels, space between samples, 5 pixels default"<<vcl_endl;
-    vcl_cout<<" -r: R weights the bending and stretching costs"<<vcl_endl;
-    vcl_cout<<" -l: Perform lambda scaling (1,0)"<<vcl_endl;
-    vcl_cout<<" -a: Area in units of pixesl to scale all shapes to will do if -l equals 1"<<vcl_endl;
-    vcl_cout<<" -d: Whether to save out dense correspondence , default is true"<<vcl_endl;
-    vcl_cout<<" -h: Help,prints out usage"<<vcl_endl;
+    std::cout<<"./ed_match_exec -m <file model esfs> -q <file query esfs> -s <sampling> -r <R matching> -h <help>"<<std::endl;
+    std::cout<<" -m: List of esf files that represent models/training"<<std::endl;
+    std::cout<<" -q: List of esf files that represent query/test"<<std::endl;
+    std::cout<<" -s: Sampling rate, unit of pixels, space between samples, 5 pixels default"<<std::endl;
+    std::cout<<" -r: R weights the bending and stretching costs"<<std::endl;
+    std::cout<<" -l: Perform lambda scaling (1,0)"<<std::endl;
+    std::cout<<" -a: Area in units of pixesl to scale all shapes to will do if -l equals 1"<<std::endl;
+    std::cout<<" -d: Whether to save out dense correspondence , default is true"<<std::endl;
+    std::cout<<" -h: Help,prints out usage"<<std::endl;
 
 }
 int main( int argc, char *argv[] )
@@ -33,9 +33,9 @@ int main( int argc, char *argv[] )
 
     int c;
 
-    vcl_string mfile,qfile;
+    std::string mfile,qfile;
 
-    vcl_stringstream ds_stream,r_stream,l_stream,a_stream,d_stream;
+    std::stringstream ds_stream,r_stream,l_stream,a_stream,d_stream;
 
     bool elastic_splice_cost    = false; 
     float scurve_sample_ds      = 5.0f; 
@@ -90,21 +90,21 @@ int main( int argc, char *argv[] )
         }
     }
 
-    vcl_cout<<"Matching esfs from "<<mfile<<" to esfs from "<<qfile<<vcl_endl;
-    vcl_cout<<"Matching with a dS of "
-            <<scurve_sample_ds<<" and a R of "<<scurve_matching_R<<vcl_endl;
+    std::cout<<"Matching esfs from "<<mfile<<" to esfs from "<<qfile<<std::endl;
+    std::cout<<"Matching with a dS of "
+            <<scurve_sample_ds<<" and a R of "<<scurve_matching_R<<std::endl;
     if ( lambda_scaling )
     {
-        vcl_cout<<"Performing lambda scaling at an area of "<<lambda_area
-                <<" pixels"<<vcl_endl;
+        std::cout<<"Performing lambda scaling at an area of "<<lambda_area
+                <<" pixels"<<std::endl;
     }
 
     if ( save_dc )
     {
-        vcl_cout<<"Also saving out Dense Correspondence"<<vcl_endl;
+        std::cout<<"Also saving out Dense Correspondence"<<std::endl;
     }
     
-    vcl_cout<<vcl_endl;
+    std::cout<<std::endl;
 
     vul_timer t;
 
@@ -129,8 +129,8 @@ int main( int argc, char *argv[] )
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     return 0;
 }

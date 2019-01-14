@@ -209,7 +209,7 @@ compute_log_cost()
 //: Force static cost (gradient magnitude and Laplacian of Gaussian) to some
 // const value at selected points
 void dbdet_dlvwr::
-force_static_cost(vcl_vector<vgl_point_2d<int > >& pts, float val)
+force_static_cost(std::vector<vgl_point_2d<int > >& pts, float val)
 {
   for (unsigned int m=0; m<pts.size(); ++m)
   {
@@ -321,7 +321,7 @@ linked_cost(vgl_point_2d<int > p, vgl_point_2d<int > q)
 {
   // static cost
   float reliability_coeff = 1-this->grad_mag_cost_(q.x(), q.y());
-  float wn = (p.x()==q.x()|| p.y()==q.y()) ? 1.0f/vcl_sqrt(2.0f) : 1.0f;
+  float wn = (p.x()==q.x()|| p.y()==q.y()) ? 1.0f/std::sqrt(2.0f) : 1.0f;
   float static_cost = 
     this->params_.weight_z*this->log_cost_(q.x(), q.y())+ 
     wn *this->params_.weight_g * this->grad_mag_cost_(q.x(), q.y());
@@ -348,7 +348,7 @@ linked_cost(vgl_point_2d<int > p, vgl_point_2d<int > q)
   float dq = dot_product<float >(link_pq, dprime_q);
 
   // gradient direction cost
-  float fd = (float)((2.0/3*vnl_math::pi) * (vcl_acos(dp) + vcl_acos(dq)));
+  float fd = (float)((2.0/3*vnl_math::pi) * (std::acos(dp) + std::acos(dq)));
   float dynamic_cost = this->params_.weight_d * reliability_coeff *fd;
 
   // sum up
@@ -359,17 +359,17 @@ linked_cost(vgl_point_2d<int > p, vgl_point_2d<int > q)
 
 
 ////: just give zero cost to edge pixels and 1 cost to the remaining pixels
-//void dbdet_dlvwr::compute_costs_from_edges(vcl_list<osl_edge*> canny_edges) {
+//void dbdet_dlvwr::compute_costs_from_edges(std::list<osl_edge*> canny_edges) {
 //
-//  vcl_cout << image_edgecosts_buf.width() << vcl_endl;
-//  vcl_cout << image_edgecosts_buf.height() << vcl_endl;
+//  std::cout << image_edgecosts_buf.width() << std::endl;
+//  std::cout << image_edgecosts_buf.height() << std::endl;
 //
 //  for (int row = 0; row < image_h; row++)
 //   for (int col = 0; col < image_w; col++) {
 //    image_edgecosts_buf[row][col] = 1;
 //    }
 //
-//  vcl_list<osl_edge*>::const_iterator i;
+//  std::list<osl_edge*>::const_iterator i;
 //  for (i = canny_edges.begin(); i != canny_edges.end(); ++i)
 //  {
 //    osl_edge const* e = *i;
@@ -385,7 +385,7 @@ linked_cost(vgl_point_2d<int > p, vgl_point_2d<int > q)
 //}
 
 
-//vcl_ostream& operator<< (vcl_ostream& Out, const my_pixel &p1)
+//std::ostream& operator<< (std::ostream& Out, const my_pixel &p1)
 //{
 //  Out << "my pixel object row: " << p1.row << " col: " << p1.col;
 //  Out << " total_cost: " << p1.total_cost /*<< " points to: << p1.point_to */<< "\n";
@@ -499,7 +499,7 @@ neighbor_of(vgl_point_2d<int > pt, int dir, int half_side)
 // return the optimum path from the free point to the seed point
 bool dbdet_dlvwr::
 get_path(int free_x, int free_y, 
-         vcl_vector<vgl_point_2d<int > >& path)
+         std::vector<vgl_point_2d<int > >& path)
 {
   path.clear();
   if (!this->explored_region().contains(free_x, free_y))

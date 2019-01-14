@@ -4,7 +4,7 @@
 // \file
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_update.h>
@@ -28,15 +28,15 @@
 #include <vil/vil_math.h>
 #include <dbbgm/bbgm_measure.h>
 #include <brip/brip_vil_float_ops.h>
-#include <vcl_cstddef.h> // for std::size_t
-#include <vcl_string.h> // for std::string::npos
+#include <cstddef> // for std::size_t
+#include <string> // for std::string::npos
 
 bool bbgm_measure_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(4), out_types(1);
+  std::vector<std::string> in_types(4), out_types(1);
   in_types[0]= "bbgm_image_sptr"; //background image
   in_types[1]= "vil_image_view_base_sptr"; //test image
-  in_types[2]= "vcl_string"; //what to measure
+  in_types[2]= vcl_string"; //what to measure
   in_types[3]= "float"; // measure tolerance
   pro.set_input_types(in_types);
   out_types[0]= "vil_image_view_base_sptr"; //the display image
@@ -49,7 +49,7 @@ bool bbgm_measure_process(bprb_func_process& pro)
 {
   // Sanity check
   if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -58,19 +58,19 @@ bool bbgm_measure_process(bprb_func_process& pro)
 
   bbgm_image_sptr bgm = pro.get_input<bbgm_image_sptr>(0);
   if (!bgm) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null distribution image\n";
     return false;
   }
-  vcl_string image_type = bgm->is_a();
+  std::string image_type = bgm->is_a();
   //for now just check for parzen_sphere in the string
-  vcl_size_t str_indx = image_type.find("parzen_sphere");
-  bool parzen = str_indx != vcl_string::npos;
+  std::size_t str_indx = image_type.find("parzen_sphere");
+  bool parzen = str_indx != std::string::npos;
 
   vil_image_view_base_sptr img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(1);
   if (!img_ptr) {
-    vcl_cerr << "In bbgm_measure_process::execute() -"
+    std::cerr << "In bbgm_measure_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
@@ -81,7 +81,7 @@ bool bbgm_measure_process(bprb_func_process& pro)
   unsigned np = image.nplanes();
 
   //Retrieve attribute to measure, e.g. probability
-  vcl_string attr = pro.get_input<vcl_string>(2);
+  std::string attr = pro.get_input<std::string>(2);
 
   //Retrieve measure tolerance
   float tolerance = pro.get_input<float>(3);
@@ -106,7 +106,7 @@ bool bbgm_measure_process(bprb_func_process& pro)
     }
 #endif // MEASURE_BKGROUND
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;					
     }
@@ -141,12 +141,12 @@ bool bbgm_measure_process(bprb_func_process& pro)
     }
 #endif // MEASURE_BKGROUND
     else {
-      vcl_cout << "In bbgm_measure_process::execute() -"
+      std::cout << "In bbgm_measure_process::execute() -"
                << " measurement not available\n";
       return false;
     }
   }
-  vcl_vector<vcl_string> output_types(1);
+  std::vector<std::string> output_types(1);
   output_types[0]= "vil_image_view_base_sptr";
   pro.set_output_types(output_types);
   brdb_value_sptr output =

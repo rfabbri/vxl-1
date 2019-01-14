@@ -58,47 +58,47 @@ evolve_one_timestep(float timestep)
     nj=this->phi_.nj(), 
     np=this->phi_.nplanes();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_phi=this->phi_.istep(), 
     jstep_phi=this->phi_.jstep(),
     pstep_phi=this->phi_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_hj=this->hj_flux_.istep(), 
     jstep_hj=this->hj_flux_.jstep(),
     pstep_hj=this->hj_flux_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_k=this->curvature_.istep(), 
     jstep_k=this->curvature_.jstep(),
     pstep_k=this->curvature_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dxc=this->dxc_.istep(), 
     jstep_dxc=this->dxc_.jstep(),
     pstep_dxc=this->dxc_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_dyc=this->dyc_.istep(), 
     jstep_dyc=this->dyc_.jstep(),
     pstep_dyc=this->dyc_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_gmap=this->gmap_.istep(), 
     jstep_gmap=this->gmap_.jstep(),
     pstep_gmap=this->gmap_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_gx=this->gx_.istep(), 
     jstep_gx=this->gx_.jstep(),
     pstep_gx=this->gx_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_gy=this->gy_.istep(), 
     jstep_gy=this->gy_.jstep(),
     pstep_gy=this->gy_.planestep();
 
-  vcl_ptrdiff_t 
+  std::ptrdiff_t 
     istep_kmap=this->kmap_.istep(), 
     jstep_kmap=this->kmap_.jstep(),
     pstep_kmap=this->kmap_.planestep();

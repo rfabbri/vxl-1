@@ -13,8 +13,8 @@
 // \endverbatim
 
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 #include <imesh/imesh_mesh.h>
 #include <bxml/bxml_read.h>
@@ -22,7 +22,7 @@
 
 
 template<class T>
-bool modrec_pro_read_param(const bxml_document& xdoc, const vcl_string& name, T& val)
+bool modrec_pro_read_param(const bxml_document& xdoc, const std::string& name, T& val)
 {
   bxml_element query("param");
   query.set_attribute("name",name);
@@ -37,8 +37,8 @@ bool modrec_pro_read_param(const bxml_document& xdoc, const vcl_string& name, T&
 }
 
 
-void modrec_pro_read_models(const vcl_string& path,
-                            vcl_vector<imesh_mesh>& models,
-                            vcl_vector<vcl_string>& names);
+void modrec_pro_read_models(const std::string& path,
+                            std::vector<imesh_mesh>& models,
+                            std::vector<std::string>& names);
 
 #endif

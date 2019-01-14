@@ -23,7 +23,7 @@
 
 #include <dbskr/pro/dbskr_shock_match_storage_sptr.h>
 
-typedef vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> > pathtable_key;
+typedef std::pair<std::pair<int, int>, std::pair<int, int> > pathtable_key;
 
 //: Storage class for dbskr_edit_distance
 class dbskr_shock_match_storage : public bpro1_storage 
@@ -36,14 +36,14 @@ public:
   //: Destructor
   virtual ~dbskr_shock_match_storage();
 
-  virtual vcl_string type() const { return "shock_match"; }
+  virtual std::string type() const { return "shock_match"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbskr_shock_match_storage"; }
+  virtual std::string is_a() const { return "dbskr_shock_match_storage"; }
 
   //: set the shock matching correspondence
   void set_sm_cor(dbskr_sm_cor_sptr sm_cor) { sm_cor_ = sm_cor; }

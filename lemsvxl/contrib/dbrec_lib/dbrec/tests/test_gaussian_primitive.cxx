@@ -12,7 +12,7 @@
 #include <dbrec/dbrec_gaussian_primitive.h>
 #include <dbrec/dbrec_image_compositor.h>
 #include <dbrec/dbrec_image_visitors.h>
-#include <vcl_limits.h>
+#include <limits>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 #include <vil/algo/vil_threshold.h>
@@ -31,22 +31,22 @@ static void test_gaussian_primitive()
   
   vnl_vector_fixed<float,2> v; vnl_vector_fixed<float,2> out_v; out_v(0) = -1.0f; out_v(1) = 0.0f;
   gop->get_direction_vector(v); 
-  vcl_cout << "direction vector: " << v << vcl_endl;
+  std::cout << "direction vector: " << v << std::endl;
   TEST("get direction vector", v == out_v, true);
   
   dbrec_part_sptr g3 = gop;
-  vcl_vector<dbrec_part_sptr> parts; parts.push_back(g2); parts.push_back(g3);
+  std::vector<dbrec_part_sptr> parts; parts.push_back(g2); parts.push_back(g3);
   dbrec_composition c(ins->new_type(), parts, new dbrec_or_compositor, 10.0f);
 
-  vcl_cout << c;
+  std::cout << c;
   float lambda0 = 2.0f; float lambda1 = 1.0f; float theta = 45.0f; bool brightness = true;
   dbrec_gaussian* gop4  = new dbrec_gaussian(ins->new_type(), lambda0, lambda1, theta, brightness);
   //gop4->set_cutoff_percentage(0.1f);
   
-  out_v(0) = (float)vcl_cos(45*vnl_math::pi/180.0); out_v(1) = (float)vcl_sin(45*vnl_math::pi/180.0);
+  out_v(0) = (float)std::cos(45*vnl_math::pi/180.0); out_v(1) = (float)std::sin(45*vnl_math::pi/180.0);
   gop4->get_direction_vector(v); 
-  vcl_cout << "direction vector: " << v << vcl_endl;
-  TEST("get direction vector", (v(0)-out_v(0) < vcl_numeric_limits<float>::epsilon())&&(v(1)-out_v(1) < vcl_numeric_limits<float>::epsilon()), true);
+  std::cout << "direction vector: " << v << std::endl;
+  TEST("get direction vector", (v(0)-out_v(0) < std::numeric_limits<float>::epsilon())&&(v(1)-out_v(1) < std::numeric_limits<float>::epsilon()), true);
 
   dbrec_part_sptr g4 = gop4;
   dbrec_gaussian g5(ins->new_type(), 1.0f, 1.0f, 0.0f, true);
@@ -57,7 +57,7 @@ static void test_gaussian_primitive()
   pf->add(1.0f, 1.0f, 0.0f, true, false);
   pf->populate(4, 2.0f, 0.5f, true, false);
 
-  vcl_cout << *pf;
+  std::cout << *pf;
 
   // test sampling and drawing parts
   int ni = 100; int nj = 100;
@@ -101,7 +101,7 @@ TESTMAIN( test_gaussian_primitive );
   vbl_array_2d<bool> maskarr;
   brip_vil_float_ops::extrema_kernel_mask(lambda0, lambda1, theta,
                                           fa, maskarr);
-  vcl_cout << fa;
+  std::cout << fa;
 
   vil_image_view<float> extr;
  // if (gop4->fast()) 
@@ -120,11 +120,11 @@ TESTMAIN( test_gaussian_primitive );
         overlayed(i,j,1) = (vxl_byte)(res(i,j)*255);
         overlayed(i,j,2) = (vxl_byte)(mask(i,j)*255);
         if (i == 50 && j == 50)
-          vcl_cout << "res at 50, 50: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << vcl_endl;
+          std::cout << "res at 50, 50: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << std::endl;
         if (i == 46 && j == 54)
-          vcl_cout << "res at 46, 54: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << vcl_endl;
+          std::cout << "res at 46, 54: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << std::endl;
         if (i == 54 && j == 46)
-          vcl_cout << "res at 54, 46: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << vcl_endl;
+          std::cout << "res at 54, 46: " << res(i,j) << " unc value: " << unclipped(i,j) << " overlayed g: " << (int)overlayed(i,j,1) << std::endl;
       }
   }
   

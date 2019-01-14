@@ -2,7 +2,7 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_wavelet.h>
 #include <dbbgm/bbgm_wavelet_sptr.h>
 #include <brdb/brdb_value.h>
@@ -11,8 +11,8 @@
 //: Process construct function
 bool bbgm_save_wavelet_process_cons(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(2);
-  in_types[0]="vcl_string";//path for saved distribution image
+  std::vector<std::string> in_types(2);
+  in_types[0]=vcl_string";//path for saved distribution image
   in_types[1]="bbgm_wavelet_sptr";//pointer to distribution image
   pro.set_input_types(in_types);
   return true;
@@ -23,16 +23,16 @@ bool bbgm_save_wavelet_process(bprb_func_process& pro)
 {
   // Sanity check
   if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_save_wavelet::execute - invalid inputs\n";
+    std::cerr << "In bbgm_save_wavelet::execute - invalid inputs\n";
     return false;
   }
 
-  vcl_string binary_filename = pro.get_input<vcl_string>(0);
+  std::string binary_filename = pro.get_input<std::string>(0);
 
   vsl_b_ofstream ostr(binary_filename);
   if (!ostr) {
-    vcl_cerr << "Failed to load wavelet image from "
-             << binary_filename << vcl_endl;
+    std::cerr << "Failed to load wavelet image from "
+             << binary_filename << std::endl;
     return false;
   }
 
@@ -40,7 +40,7 @@ bool bbgm_save_wavelet_process(bprb_func_process& pro)
 
   bbgm_wavelet_sptr wvl = pro.get_input<bbgm_wavelet_sptr>(1);
   if (!wvl) {
-    vcl_cerr << "Null wavelet object\n";
+    std::cerr << "Null wavelet object\n";
     return false;
   }
 

@@ -12,7 +12,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 
 bool get_other_edge(dbsk2d_shock_node_sptr& next_node, dbsk2d_shock_edge_sptr& current_edge); 

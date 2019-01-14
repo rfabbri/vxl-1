@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
+#include <iostream>
+#include <streambuf>
 #include <math.h>
 #include <bdifd/bdifd_analytic.h>
 #include <bdifd/algo/bdifd_data.h>
@@ -21,7 +21,7 @@ void mymex(
       mxArray **p_proj1,
       mxArray **p_pts3d,
       mxArray **p_tgts3d,
-      vcl_string &angles,
+      std::string &angles,
       double yaw,
       bool do_occl
       )
@@ -30,24 +30,24 @@ void mymex(
 
   // set default params
 
-  vul_arg<vcl_string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./"); // < diff from default
-  vul_arg<vcl_string> a_out_path("-out_path", "path to output. Defaults to -prefix");
+  vul_arg<std::string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./"); // < diff from default
+  vul_arg<std::string> a_out_path("-out_path", "path to output. Defaults to -prefix");
 
-  vul_arg<vcl_string> a_fname1("-image1", "image fname 1","000-maximage.png");
-  vul_arg<vcl_string> a_fname2("-image2", "image fname 2","003-maximage.png");
-  vul_arg<vcl_string> a_fname3("-image3", "image fname 3","006-maximage.png");
-  vul_arg<vcl_vector<vcl_string> > a_fnames("-images","fname's of images (space-separated)");
+  vul_arg<std::string> a_fname1("-image1", "image fname 1","000-maximage.png");
+  vul_arg<std::string> a_fname2("-image2", "image fname 2","003-maximage.png");
+  vul_arg<std::string> a_fname3("-image3", "image fname 3","006-maximage.png");
+  vul_arg<std::vector<std::string> > a_fnames("-images","fname's of images (space-separated)");
 
-  vul_arg<vcl_string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
-  vul_arg<vcl_string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
-  vul_arg<vcl_string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
-  vul_arg<vcl_string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
+  vul_arg<std::string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
+  vul_arg<std::string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
+  vul_arg<std::string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
+  vul_arg<std::string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
   
-  vul_arg<vcl_string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
-  vul_arg<vcl_vector<vcl_string> > a_edgels("-edgels","fname's of edgels (space-separated)");
+  vul_arg<std::string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
+  vul_arg<std::vector<std::string> > a_edgels("-edgels","fname's of edgels (space-separated)");
 
   vul_arg<bool> a_run_trinocular("-trinocular", "compute trinocular reprojection costs based on point distance",false);
   vul_arg<bool> a_run_trinocular_t_diff("-trinocular_tangent_diff", "compute trinocular reprojection costs based on tangent difference",false);
@@ -61,9 +61,9 @@ void mymex(
 
   vul_arg<bool> a_run_sel_geometry("-sel_geometry", "compute costs based on differential geometry of Amir's edge linking",false);
   vul_arg<bool> a_read_sel("-read_sel", "read edge linking hypotheses from binary files",false);
-  vul_arg<vcl_string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
-  vul_arg<vcl_string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
-  vul_arg<vcl_string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
 
   vul_arg<bool> a_synth_data_1("-synthetic_1", "Use synthetic data (ctspheres camera setup)", false);
   vul_arg<bool> a_synth_data_2("-synthetic_2", "Use synthetic data (digicam turntable setup)", false);
@@ -75,14 +75,14 @@ void mymex(
   vul_arg<double> a_angle1("-angle1", "angle of 1st view in Deg (for synthetic data)", 0);
   vul_arg<double> a_angle2("-angle2", "angle of 2nd view in Deg (for synthetic data)", 5);
   vul_arg<double> a_angle3("-angle3", "angle of 3rd view in Deg (for synthetic data)", 60);
-  vul_arg<vcl_vector<double> > a_angles("-angles","angles of views (for synthetic data)");
+  vul_arg<std::vector<double> > a_angles("-angles","angles of views (for synthetic data)");
 
   vul_arg<bool> a_perturb_camera("-perturb_camera", "perturb camera for synthetic data. -synthetic_x must be set.", false);
   vul_arg<bool> a_write_perturb_camera("-write_perturb_camera", "write perturbed cameras", false);
   vul_arg<unsigned> a_trinocular_radius("-trinocular_nrad", "trinocular neighborhood radius", 10);
   vul_arg<double> a_err_pos("-err_pos", "localization error range", 2);
   vul_arg<bool> a_remove_epitangency("-no_epitangency",false);
-  vul_arg<vcl_string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
+  vul_arg<std::string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
 
   mw_stereo_app_args args;
 
@@ -149,7 +149,7 @@ void mymex(
         && app.vsols_[0].size() == app.vsols_[1].size()) )
     mexErrMsgTxt("Inconsistent error being returned from internal app\n");
 
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > data_pts_occl(app.nviews_);
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > data_pts_occl(app.nviews_);
   if (do_occl) {
     // Generate and project the occluding contours in 2 views.
 
@@ -160,7 +160,7 @@ void mymex(
     for (unsigned v=0; v < app.nviews_; ++v) {
       const bdifd_vector_3d &c = app.cam_gt_[v].c;
       
-      vcl_vector<bdifd_3rd_order_point_3d> crv3d;
+      std::vector<bdifd_3rd_order_point_3d> crv3d;
       bdifd_vector_3d Gamma_center;
       double Gamma_radius;
 
@@ -168,10 +168,10 @@ void mymex(
 
       // we need to regenerate the curve for each view; we can't just
       // project crv3d to all cams at once.
-      vcl_vector<bdifd_camera> cam;
+      std::vector<bdifd_camera> cam;
       cam.push_back(app.cam_gt_[v]);
 
-      vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > xi; //:< image coordinates
+      std::vector<std::vector<bdifd_3rd_order_point_2d> > xi; //:< image coordinates
       bdifd_data::project_into_cams( crv3d, cam, xi); 
 
       data_pts_occl[v] = xi[0];
@@ -205,8 +205,8 @@ void mymex(
     pts1[i] = app.vsols_[1][i]->x();
     pts1[i+npts_2d] = app.vsols_[1][i]->y();
 
-    tgts0[i] = vcl_atan2(app.crv2d_gt_[0][i].t[1], app.crv2d_gt_[0][i].t[0]);
-    tgts1[i] = vcl_atan2(app.crv2d_gt_[1][i].t[1], app.crv2d_gt_[1][i].t[0]);
+    tgts0[i] = std::atan2(app.crv2d_gt_[0][i].t[1], app.crv2d_gt_[0][i].t[0]);
+    tgts1[i] = std::atan2(app.crv2d_gt_[1][i].t[1], app.crv2d_gt_[1][i].t[0]);
   }
 
   //: the occluding contours
@@ -218,8 +218,8 @@ void mymex(
       pts1[i + npts_fixed] = data_pts_occl[1][i].gama[0];
       pts1[i+npts_2d + npts_fixed] =  data_pts_occl[1][i].gama[1];
 
-      tgts0[i + npts_fixed] = vcl_atan2(data_pts_occl[0][i].t[1], data_pts_occl[0][i].t[0]);
-      tgts1[i + npts_fixed] = vcl_atan2(data_pts_occl[1][i].t[1], data_pts_occl[1][i].t[0]);
+      tgts0[i + npts_fixed] = std::atan2(data_pts_occl[0][i].t[1], data_pts_occl[0][i].t[0]);
+      tgts1[i + npts_fixed] = std::atan2(data_pts_occl[1][i].t[1], data_pts_occl[1][i].t[0]);
     }
   }
 
@@ -258,7 +258,7 @@ void mymex(
   vpgl_perspective_camera<double> pr0;
   vpgl_perspective_camera<double> pr1;
   if (yaw != 0) {
-    vcl_cout << "yaw != 0" << vcl_endl;
+    std::cout << "yaw != 0" << std::endl;
     // create rotation around x-axis 
     pr0 = app.cam_gt_[0].Pr_;
     //  double yaw = -13.0*vnl_math::pi/180.0;
@@ -270,14 +270,14 @@ void mymex(
     vgl_rotation_3d<double> rot_result1 = rot*pr1.get_rotation();
     pr1.set_rotation(rot_result);
   } else {
-    vcl_cout << "yaw == 0" << vcl_endl;
+    std::cout << "yaw == 0" << std::endl;
     pr0 = app.cam_gt_[0].Pr_;
     pr1 = app.cam_gt_[1].Pr_;
   }
 
   fm = vpgl_fundamental_matrix <double> (pr0, pr1);
 
-  vcl_cout << "Fundamental Matrix from Ground Truth \n" << fm.get_matrix() << vcl_endl;
+  std::cout << "Fundamental Matrix from Ground Truth \n" << fm.get_matrix() << std::endl;
   // Write the fundamental matrix to matlab
   //mexPrintf("Fm: ");
   for (unsigned i=0; i < 9; ++i) {
@@ -285,8 +285,8 @@ void mymex(
     p_fm[i] = fm.get_matrix()(i%3,i/3);
   }
 
-  vcl_cout << "Proj matrix 0\n" << pr0.get_matrix() << vcl_endl;
-  vcl_cout << "Proj matrix 1\n" << pr1.get_matrix() << vcl_endl;
+  std::cout << "Proj matrix 0\n" << pr0.get_matrix() << std::endl;
+  std::cout << "Proj matrix 1\n" << pr1.get_matrix() << std::endl;
   for (unsigned i=0; i < 12; ++i) {
     p_pr0[i] = pr0.get_matrix()(i%3,i/3);
     p_pr1[i] = pr1.get_matrix()(i%3,i/3);
@@ -328,7 +328,7 @@ void mexFunction(
      const mxArray *prhs[]
      )
 {
-  vcl_string angles;
+  std::string angles;
   double yaw = 0;
   bool do_occl = false;
 
@@ -337,7 +337,7 @@ void mexFunction(
   }
 
   if (nrhs == 0) {
-    angles = vcl_string("30,60");
+    angles = std::string("30,60");
   } else {
     mxClassID category = mxGetClassID(prhs[0]);
     if (category != mxCHAR_CLASS)
@@ -350,7 +350,7 @@ void mexFunction(
     if (mxGetString(prhs[0], buf, buflen) != 0)
       mexErrMsgTxt("Could not convert string data.\n");
 
-    angles = vcl_string(buf);
+    angles = std::string(buf);
     if (nrhs >= 2) {
       mwSize arg2_nrows = mxGetM(prhs[1]);
       mwSize arg2_ncols = mxGetN(prhs[1]);
@@ -366,7 +366,7 @@ void mexFunction(
         double do_occl_dbl = *(mxGetPr(prhs[2]));
         if (do_occl_dbl) {
           do_occl = true;
-          vcl_cout << "Doing occluding contours\n";
+          std::cout << "Doing occluding contours\n";
         }
       }
     }
@@ -376,16 +376,16 @@ void mexFunction(
     mexErrMsgTxt("Too many output arguments");
   }
 
-  vcl_cout.sync_with_stdio(true);
-  vcl_cerr.sync_with_stdio(true);
+  std::cout.sync_with_stdio(true);
+  std::cerr.sync_with_stdio(true);
 
-  vcl_streambuf* cout_sbuf = vcl_cout.rdbuf();
-  vcl_stringbuf myout_sbuf;
-  vcl_cout.rdbuf(&myout_sbuf);
+  std::streambuf* cout_sbuf = std::cout.rdbuf();
+  std::stringbuf myout_sbuf;
+  std::cout.rdbuf(&myout_sbuf);
 
-  vcl_streambuf* cerr_sbuf = vcl_cerr.rdbuf();
-  vcl_stringbuf myerr_sbuf;
-  vcl_cerr.rdbuf(&myerr_sbuf);
+  std::streambuf* cerr_sbuf = std::cerr.rdbuf();
+  std::stringbuf myerr_sbuf;
+  std::cerr.rdbuf(&myerr_sbuf);
 
   mymex(&(plhs[0]),&(plhs[1]),
         &(plhs[5]),&(plhs[6]),
@@ -396,10 +396,10 @@ void mexFunction(
   mexPrintf("cout_contents: \n%s\n",myout_sbuf.str().c_str());
   mexPrintf("cerr_contents: \n%s\n",myerr_sbuf.str().c_str());
 
-  vcl_cout.rdbuf(cout_sbuf);
-  vcl_cerr.rdbuf(cerr_sbuf);
-  vcl_flush(vcl_cout);
-  vcl_flush(vcl_cerr);
+  std::cout.rdbuf(cout_sbuf);
+  std::cerr.rdbuf(cerr_sbuf);
+  std::flush(std::cout);
+  std::flush(std::cerr);
 
   return;
 }

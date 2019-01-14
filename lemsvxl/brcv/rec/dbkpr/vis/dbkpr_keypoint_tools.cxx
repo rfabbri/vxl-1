@@ -6,7 +6,7 @@
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 #include <dbdet/pro/dbdet_keypoint_storage.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 
 
@@ -65,7 +65,7 @@ dbkpr_keypoint_inspector_tool::~dbkpr_keypoint_inspector_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbkpr_keypoint_inspector_tool::name() const
 {
   return "Keypoint Inspector"; 
@@ -128,9 +128,9 @@ dbkpr_keypoint_inspector_tool::handle( const vgui_event & e,
       curr_keypt_ = NULL;
       if( curr_obj && curr_obj->type_name() == "dbdet_keypoint_soview2D"){   
         curr_keypt_ = object_->sptr;
-        const vcl_vector< dbdet_keypoint_sptr > & all_keypts = storage_->keypoints();
-        vcl_vector< dbdet_keypoint_sptr >::const_iterator itr =
-          vcl_find(all_keypts.begin(),all_keypts.end(), curr_keypt_);
+        const std::vector< dbdet_keypoint_sptr > & all_keypts = storage_->keypoints();
+        std::vector< dbdet_keypoint_sptr >::const_iterator itr =
+          std::find(all_keypts.begin(),all_keypts.end(), curr_keypt_);
         if(itr != all_keypts.end())
           match_index_ = int(itr - all_keypts.begin());
         else
@@ -153,7 +153,7 @@ void
 dbkpr_keypoint_inspector_tool::get_popup( const vgui_popup_params& params, 
                                           vgui_menu &menu )
 {
-  //vcl_string on = "[x] ", off = "[ ] ";
+  //std::string on = "[x] ", off = "[ ] ";
   //menu.add( ((draw_epipolar_line_)?on:off)+"Epipolar Line", 
   //          bvis1_tool_toggle, (void*)(&draw_epipolar_line_) );
 }

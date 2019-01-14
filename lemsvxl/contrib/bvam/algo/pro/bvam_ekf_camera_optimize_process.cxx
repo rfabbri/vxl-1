@@ -43,27 +43,27 @@ bvam_ekf_camera_optimize_process::bvam_ekf_camera_optimize_process()
   // parameters
   // default corresponds to roughly 1 degree std deviation
   if (!parameters()->add("Rotation Prediction Variance", "rotation_prediction_variance", 0.5))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   // default corresponds to roughly 1.0 meter std deviation
   if (!parameters()->add("Position Prediction Variance", "position_prediction_variance", 1.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
     // default corresponds to roughly 1 degree std deviation
   if (!parameters()->add("Rotation Measurement Variance", "rotation_measurement_variance", 3e-4))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   // default corresponds to roughly 1.0 meter std deviation
   if (!parameters()->add("Position Measurement Variance", "position_measurement_variance", 1.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
     // 
   if (!parameters()->add("Homography terms Variance", "homography_term_variance", 0.1))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
       // 
   if (!parameters()->add("Homography translation terms Variance", "homography_translation_term_variance", 0.1))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
 
 }
@@ -106,30 +106,30 @@ bool bvam_ekf_camera_optimize_process::execute()
 
   // get parameters
   double rot_var_measure, pos_var_measure;
-  if (!parameters()->get_value(vcl_string("position_measurement_variance"), rot_var_measure)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter rotation_variance\n";
+  if (!parameters()->get_value(std::string("position_measurement_variance"), rot_var_measure)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter rotation_variance\n";
     return false;
   }
-  if (!parameters()->get_value(vcl_string("position_measurement_variance"), pos_var_measure)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter position_variance\n";
+  if (!parameters()->get_value(std::string("position_measurement_variance"), pos_var_measure)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter position_variance\n";
     return false;
   }
   double rot_var_predict, pos_var_predict;
-  if (!parameters()->get_value(vcl_string("position_prediction_variance"), rot_var_predict)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter rotation_variance\n";
+  if (!parameters()->get_value(std::string("position_prediction_variance"), rot_var_predict)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter rotation_variance\n";
     return false;
   }
-  if (!parameters()->get_value(vcl_string("position_prediction_variance"), pos_var_predict)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter position_variance\n";
+  if (!parameters()->get_value(std::string("position_prediction_variance"), pos_var_predict)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter position_variance\n";
     return false;
   }
   double homography_var, homography_t_var;
-  if (!parameters()->get_value(vcl_string("homography_term_variance"), homography_var)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter homography_variance\n";
+  if (!parameters()->get_value(std::string("homography_term_variance"), homography_var)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter homography_variance\n";
     return false;
   }
-  if (!parameters()->get_value(vcl_string("homography_translation_term_variance"), homography_t_var)) {
-    vcl_cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter homography_variance\n";
+  if (!parameters()->get_value(std::string("homography_translation_term_variance"), homography_t_var)) {
+    std::cout << "bvam_init_ekf_camera_optimize_process::execute() -- problem in retrieving parameter homography_variance\n";
     return false;
   }
 

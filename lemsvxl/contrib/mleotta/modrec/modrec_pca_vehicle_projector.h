@@ -52,7 +52,7 @@ public:
                const vgl_rotation_3d<double>& R,
                const vgl_vector_3d<double>& t,
                const vgl_vector_3d<double>& sun = vgl_vector_3d<double>(0,0,0),
-               const vcl_vector<bool>& options = vcl_vector<bool>(7,false), 
+               const std::vector<bool>& options = std::vector<bool>(7,false), 
                unsigned int num_pc = 0);
   
   //: Reproject the last vehicle curves using the camera.
@@ -63,7 +63,7 @@ public:
                  const vgl_rotation_3d<double>& R,
                  const vgl_vector_3d<double>& t,
                  const vgl_vector_3d<double>& sun = vgl_vector_3d<double>(0,0,0),
-                 const vcl_vector<bool>& options = vcl_vector<bool>(7,false), 
+                 const std::vector<bool>& options = std::vector<bool>(7,false), 
                  unsigned int num_pc = 0);
   
   //: Project all mesh edges and no parts using the camera
@@ -72,7 +72,7 @@ public:
                          const vgl_rotation_3d<double>& R,
                          const vgl_vector_3d<double>& t,
                          const vgl_vector_3d<double>& sun = vgl_vector_3d<double>(0,0,0),
-                         const vcl_vector<bool>& options = vcl_vector<bool>(7,false), 
+                         const std::vector<bool>& options = std::vector<bool>(7,false), 
                          unsigned int num_pc = 0);
   
   //: Project the shadow of the vehicle onto Z=0 along the sun direction
@@ -88,7 +88,7 @@ public:
                     const vgl_point_2d<double>& pt);
   
   //: Project all mesh edges
-  vcl_vector<vcl_vector<vgl_point_2d<double> > >
+  std::vector<std::vector<vgl_point_2d<double> > >
   project_all_edges(const vpgl_perspective_camera<double>& camera,
                     const imesh_mesh& vehicle,
                     const vgl_rotation_3d<double>& R,
@@ -98,7 +98,7 @@ public:
   void resize(unsigned int w, unsigned int h);
   
   //: The last used set of Jacobian computation options
-  vcl_vector<bool> options() { return options_; } 
+  std::vector<bool> options() { return options_; } 
   //: The last used number of principal components in Jacobian computation
   unsigned int num_pc() { return num_pc_; }
 
@@ -110,30 +110,30 @@ public:
   const vil_image_view<double>& depth_map() const { return depth_img_; }
 
   //: Return a const reference to the projected contours
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >&
+  const std::vector<std::vector<vgl_point_2d<double> > >&
   contours() const { return contours_; }
   
   //: Return a const reference to the projected silhouette
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >&
+  const std::vector<std::vector<vgl_point_2d<double> > >&
   silhouette() const { return silhouette_; }  
   
   //: Arrange the projected silhouette as a closed polygon
   vgl_polygon<double> silhouette_polygon() const; 
   
   //: Return a const reference to the PCA Jacobians of silhouette vertices
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >&
+  const std::vector<std::vector<vnl_matrix<double> > >&
   silhouette_jacobians() const { return silhouette_jac_; }
   
   //: Return a boolean vector, true for each section of the silhouette that comes from the cast shadow
-  const vcl_vector<bool>& 
+  const std::vector<bool>& 
   silhouette_shadow() const { return silhouette_shadow_; }
 
   //: Return a const reference to the projected contour vertex indices
-  const vcl_vector<vcl_vector<unsigned int> >&
+  const std::vector<std::vector<unsigned int> >&
   contours_vert_indices() const { return contours_vidx_; }
 
   //: Return a const reference to the PCA Jacobians of contour vertices
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >&
+  const std::vector<std::vector<vnl_matrix<double> > >&
   contours_jacobians() const { return contours_jac_; }
   
   //: Return a const reference to the projected ground shadow
@@ -141,19 +141,19 @@ public:
   shadow() const { return shadow_; } 
 
   //: Return a const reference to the projected part boundaries
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >&
+  const std::vector<std::vector<vgl_point_2d<double> > >&
   parts() const { return parts_; }
 
   //: Return a const reference to the projected part point face indices
-  const vcl_vector<vcl_vector<vcl_pair<unsigned int,unsigned int> > >&
+  const std::vector<std::vector<std::pair<unsigned int,unsigned int> > >&
   parts_indices() const { return parts_idx_; }
 
   //: Return a const reference to the PCA Jacobians of parts points
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >&
+  const std::vector<std::vector<vnl_matrix<double> > >&
   parts_jacobians() const { return parts_jac_; }
   
   //: Return a const reference to the PCA Jacobians of parts points in texture space
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >&
+  const std::vector<std::vector<vnl_matrix<double> > >&
   parts_texture_jacobians() const { return parts_tex_jac_; }
   
   //: Store the starting point and ending point along the visible portion of part
@@ -189,16 +189,16 @@ private:
   
   //: map the silhouette contours back to vehicle mesh vertices
   void map_silhouette(const modrec_pca_vehicle& vehicle,
-                      const vcl_vector<vcl_vector<unsigned int> >& edge_loops,
+                      const std::vector<std::vector<unsigned int> >& edge_loops,
                       const vgl_polygon<double>& sil,
-                      const vcl_vector<vcl_pair<unsigned, unsigned> >& sil_idx,
-                      const vcl_vector<vcl_pair<double,double> >& sil_range,
+                      const std::vector<std::pair<unsigned, unsigned> >& sil_idx,
+                      const std::vector<std::pair<double,double> >& sil_range,
                       unsigned int num_vehicle_loops);
   
   //: trace the outer silhoutte of the occluding contours
   bool trace_silhouette(vgl_polygon<double>& p,
-                        vcl_vector<vcl_pair<unsigned, unsigned> >& sil_idx,
-                        vcl_vector<vcl_pair<double,double> >& sil_frac);
+                        std::vector<std::pair<unsigned, unsigned> >& sil_idx,
+                        std::vector<std::pair<double,double> >& sil_frac);
   
   //: reproject the last visible part boundaries into the image
   void reproject_parts(const vpgl_perspective_camera<double>& camera,
@@ -220,56 +220,56 @@ private:
   
   //: compute the PCA image Jacobians for contour points given the world-to-image Jacobians
   void compute_contour_pca_jacobians(const modrec_pca_vehicle& vehicle,
-                                     vcl_vector<vnl_matrix_fixed<double,2,3> >::iterator J);
+                                     std::vector<vnl_matrix_fixed<double,2,3> >::iterator J);
   
   //: compute the PCA image Jacobians for part boundaries given the world-to-image Jacobians
   void compute_parts_pca_jacobians(const modrec_pca_vehicle& vehicle,
-                                   vcl_vector<vnl_matrix_fixed<double,2,3> >::iterator J);
+                                   std::vector<vnl_matrix_fixed<double,2,3> >::iterator J);
 
 
   //: A depth map image for the vehicle
   vil_image_view<double> depth_img_;
   //: projected mesh vertices
-  vcl_vector<vgl_point_2d<double> > verts2d_;
+  std::vector<vgl_point_2d<double> > verts2d_;
   //: projected mesh vertex depths
-  vcl_vector<double> depths_;
+  std::vector<double> depths_;
   
   //: The set of Jacobian computation options
-  vcl_vector<bool> options_; 
+  std::vector<bool> options_; 
   //: The number of principal components to use in Jacobians
   unsigned int num_pc_;
 
   // ==== The projected data ====
   //: the projected contours (not closed)
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > contours_;
+  std::vector<std::vector<vgl_point_2d<double> > > contours_;
   //: the mesh vertex indices of the contour points
-  vcl_vector<vcl_vector<unsigned int> > contours_vidx_;
+  std::vector<std::vector<unsigned int> > contours_vidx_;
   //: PCA Jacobian for contour points
-  vcl_vector<vcl_vector<vnl_matrix<double> > > contours_jac_;
+  std::vector<std::vector<vnl_matrix<double> > > contours_jac_;
   //: the shadow on the ground plane projected to the image
   vgl_polygon<double> shadow_;
   //: edge loop indices for projected shadow points
-  vcl_vector<vcl_vector<unsigned int> > shadow_edge_loops_;
+  std::vector<std::vector<unsigned int> > shadow_edge_loops_;
   //: the projected silhouette contours
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > silhouette_;
+  std::vector<std::vector<vgl_point_2d<double> > > silhouette_;
   //: the mesh vertex indices of the silhouette contour points
-  vcl_vector<vcl_vector<unsigned int> > silhouette_vidx_;
+  std::vector<std::vector<unsigned int> > silhouette_vidx_;
   //: the normalized range in [0,1] that start/end silhouette edges are trimmed
-  vcl_vector<vcl_pair<double,double> > silhouette_range_;
+  std::vector<std::pair<double,double> > silhouette_range_;
   //: true for each section of the silhouette that comes from the cast shadow
-  vcl_vector<bool> silhouette_shadow_;
+  std::vector<bool> silhouette_shadow_;
   //: PCA Jacobian for silhouette points
-  vcl_vector<vcl_vector<vnl_matrix<double> > > silhouette_jac_;
+  std::vector<std::vector<vnl_matrix<double> > > silhouette_jac_;
   //: the projected part boundaries (not closed)
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > parts_;
+  std::vector<std::vector<vgl_point_2d<double> > > parts_;
   //: the index pair of the contour points mapping back to (part,point) on the mesh
-  vcl_vector<vcl_vector<vcl_pair<unsigned int,unsigned int> > > parts_idx_;
+  std::vector<std::vector<std::pair<unsigned int,unsigned int> > > parts_idx_;
   //: the boundaries of the visible portions of parts
-  vcl_vector<part_bounds> parts_bounds_;
+  std::vector<part_bounds> parts_bounds_;
   //: PCA Jacobian for parts points
-  vcl_vector<vcl_vector<vnl_matrix<double> > > parts_jac_;
+  std::vector<std::vector<vnl_matrix<double> > > parts_jac_;
   //: PCA Jacobian for parts points in texture space
-  vcl_vector<vcl_vector<vnl_matrix<double> > > parts_tex_jac_;
+  std::vector<std::vector<vnl_matrix<double> > > parts_tex_jac_;
 };
 
 
@@ -278,7 +278,7 @@ private:
 
 
 //: Save the projected contours as SVG
-bool modrec_write_svg_curves(const vcl_string& filename,
+bool modrec_write_svg_curves(const std::string& filename,
                              const modrec_pca_vehicle_projector& projector);
 
 

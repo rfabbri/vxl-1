@@ -52,8 +52,8 @@ bool dbbgm_inspector_tool::handle(const vgui_event & e)
   {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-    last_x_ = static_cast<int>(vcl_floor(ix+0.5));
-    last_y_ = static_cast<int>(vcl_floor(iy+0.5));
+    last_x_ = static_cast<int>(std::floor(ix+0.5));
+    last_y_ = static_cast<int>(std::floor(iy+0.5));
   }
   if(e.type==vgui_MOTION || e.type==vgui_DRAW)
   {
@@ -88,13 +88,13 @@ bool dbbgm_inspector_tool::handle(const vgui_event & e)
     if(last_x_ <0 || last_x_ >= (int)model->ni() || last_y_ <0 || last_y_ >= (int)model->nj())
       return false;
 
-    vcl_cout << "pixel ("<<last_x_<<", "<<last_y_<<")\n";
+    std::cout << "pixel ("<<last_x_<<", "<<last_y_<<")\n";
     const _dist& d = (*model)(last_x_,last_y_);
     for(unsigned int i=0; i<d.num_components(); ++i){
       const _component& c = d.distribution(i);
-      vcl_cout<< "weight= "<<d.weight(i)<<"\t mean("<<c.mean()<<")\t diag_covar("<<c.diag_covar()<<")\n";
+      std::cout<< "weight= "<<d.weight(i)<<"\t mean("<<c.mean()<<")\t diag_covar("<<c.diag_covar()<<")\n";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
     return true;
   }
   return false;

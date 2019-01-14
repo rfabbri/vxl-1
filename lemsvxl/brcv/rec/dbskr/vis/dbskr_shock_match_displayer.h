@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -25,7 +25,7 @@ public:
   dbskr_shock_match_displayer(){}
 
   //: Return type string "shock_match"
-  virtual vcl_string type() const { return "shock_match"; }
+  virtual std::string type() const { return "shock_match"; }
 
   //: Create a tableau if the storage object is of type shock_match
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

@@ -32,7 +32,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -41,10 +41,10 @@ public:
   virtual bool handle( const vgui_event & e, 
                        const bvis1_view_tableau_sptr& view );
 
-  void readpatchinfo(char const * filename, vcl_string &type, vnl_double_3 & mean, vnl_double_3 &std,bool IHS);
-  vnl_double_3 mean3d(vcl_vector<vnl_double_3>);
-  vnl_double_3 std3d(vcl_vector<vnl_double_3>);
-  int return_color(vcl_string type);
+  void readpatchinfo(char const * filename, std::string &type, vnl_double_3 & mean, vnl_double_3 &std,bool IHS);
+  vnl_double_3 mean3d(std::vector<vnl_double_3>);
+  vnl_double_3 std3d(std::vector<vnl_double_3>);
+  int return_color(std::string type);
   bool doesbelong(vnl_double_3 cmean,vnl_double_3 cstd,vnl_double_3 p);
  protected:
   
@@ -58,18 +58,18 @@ public:
   vgui_style_sptr neighbor_style_;
   vgui_event_condition gesture_info_;
  
-  vcl_vector<bgui_vsol_soview2D_digital_curve*> dcs_;
+  std::vector<bgui_vsol_soview2D_digital_curve*> dcs_;
   dbctrk_soview2D* object_;
   dbctrk_tracker_curve_sptr curr_curve_;
   
-  vcl_vector<vnl_double_3> vecmeanI;
-  vcl_vector<vnl_double_3> vecstdI;
-  vcl_vector<vnl_double_3> vecmeanL;
-  vcl_vector<vnl_double_3> vecstdL;
-  vcl_vector<vcl_string> vectype;
+  std::vector<vnl_double_3> vecmeanI;
+  std::vector<vnl_double_3> vecstdI;
+  std::vector<vnl_double_3> vecmeanL;
+  std::vector<vnl_double_3> vecstdL;
+  std::vector<std::string> vectype;
 
-  vcl_map<vcl_string,vcl_vector<vnl_double_3> > maptypeL;
-  vcl_map<vcl_string,vcl_vector<vnl_double_3> > maptypeI;
+  std::map<std::string,std::vector<vnl_double_3> > maptypeL;
+  std::map<std::string,std::vector<vnl_double_3> > maptypeI;
 };
 
 

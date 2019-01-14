@@ -28,7 +28,7 @@
 class dborl_sks_match_shape_processor_input
 { 
 public:
-  dborl_sks_match_shape_processor_input(dbsksp_shock_graph_sptr s, vcl_string n):
+  dborl_sks_match_shape_processor_input(dbsksp_shock_graph_sptr s, std::string n):
       shock_graph_(s), image_name_(n) 
   {}
       
@@ -36,7 +36,7 @@ public:
   
   // member variables
   dbsksp_shock_graph_sptr shock_graph_;
-  vcl_string image_name_;
+  std::string image_name_;
 };
 
 
@@ -49,13 +49,13 @@ public:
   dborl_sks_match_shape_processor() {}
 
   // set processor name
-  vcl_string processor_name() const {return this->processor_name_; }
-  void set_processor_name(const vcl_string& processor_name)
+  std::string processor_name() const {return this->processor_name_; }
+  void set_processor_name(const std::string& processor_name)
   { this->processor_name_ = processor_name; }
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
@@ -66,13 +66,13 @@ public:
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_sks_match_shape_processor_input>& t);
+  virtual bool initialize(std::vector<dborl_sks_match_shape_processor_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_sks_match_shape_processor_input i, float& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<float>& results);
+  virtual bool finalize(std::vector<float>& results);
 
   void print_time();
 
@@ -89,7 +89,7 @@ protected:
   dborl_sks_match_shape_params params_;
   vul_timer t_;
   unsigned total_processors_;
-  vcl_string processor_name_;
+  std::string processor_name_;
 };
 
 #endif  //_dborl_sks_match_shape_processor_h

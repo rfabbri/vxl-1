@@ -3,9 +3,9 @@
 
 #include "psm_scene_block_storage.h"
 
-#include <vcl_string.h>
-#include <vcl_deque.h>
-#include <vcl_map.h>
+#include <string>
+#include <deque>
+#include <map>
 
 #include <vgl/vgl_point_3d.h>
 #include <hsds/hsds_fd_tree.h>
@@ -16,7 +16,7 @@ class psm_scene_block_storage_cached : public psm_scene_block_storage<T>
 {
 public:
   //: constructor
-  psm_scene_block_storage_cached(vcl_string storage_dir, unsigned int max_blocks) : psm_scene_block_storage<T>(storage_dir), max_blocks_(max_blocks) {}
+  psm_scene_block_storage_cached(std::string storage_dir, unsigned int max_blocks) : psm_scene_block_storage<T>(storage_dir), max_blocks_(max_blocks) {}
 
   //: destructor
   virtual ~psm_scene_block_storage_cached();
@@ -32,12 +32,12 @@ public:
 
 private:
   //: write a block to disk
-  void write_block(typename vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it);
+  void write_block(typename std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> >::iterator it);
 
   const unsigned int max_blocks_;
 
-  vcl_map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> > blocks_;
-  vcl_deque<vgl_point_3d<int> > lru_;
+  std::map<vgl_point_3d<int>, hsds_fd_tree<T,3>, vgl_point_3d_cmp<int> > blocks_;
+  std::deque<vgl_point_3d<int> > lru_;
 
 
 };

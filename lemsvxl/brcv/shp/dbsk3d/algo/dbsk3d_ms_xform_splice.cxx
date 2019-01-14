@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Sep 10, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
@@ -26,7 +26,7 @@ bool MS_valid_for_splice_xform (dbsk3d_ms_sheet* MS)
   return true;
 }
 
-bool get_2_A1A3s_from_axials (vcl_vector<dbsk3d_ms_curve*>& bnd_A13_MCs,
+bool get_2_A1A3s_from_axials (std::vector<dbsk3d_ms_curve*>& bnd_A13_MCs,
                               dbsk3d_ms_node*& A1A3_1, dbsk3d_ms_node*& A1A3_2)
 {
   int nA3, nA13, nDege, nVirtual;
@@ -57,11 +57,11 @@ bool get_2_A1A3s_from_axials (vcl_vector<dbsk3d_ms_curve*>& bnd_A13_MCs,
 
 //: Remove the shared_E on the splicing curve MC during a splice xform.
 void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
-                                 vcl_set<dbsk3d_ms_curve*>& modified_MC_set)
+                                 std::set<dbsk3d_ms_curve*>& modified_MC_set)
 {
   //Collect shared_C_set from incident curves of MC.s and MC.e
   //as the set of possible curves to share E with MC.
-  vcl_set<void*> shared_C_set;
+  std::set<void*> shared_C_set;
   MC->s_MN()->get_incident_Es (shared_C_set);
   MC->e_MN()->get_incident_Es (shared_C_set);
   assert (MS->have_icurve_chain() == false);
@@ -72,8 +72,8 @@ void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
 
     //Collect the set of curves sharing E in Cs_share_E.
-    vcl_set<dbmsh3d_curve*> Cs_share_E;
-    vcl_set<void*>::iterator it = shared_C_set.begin();
+    std::set<dbmsh3d_curve*> Cs_share_E;
+    std::set<void*>::iterator it = shared_C_set.begin();
     for (; it != shared_C_set.end(); it++) {
       dbmsh3d_curve* C = (dbmsh3d_curve*) (*it);
       if (C->is_E_shared (E))
@@ -83,7 +83,7 @@ void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
       continue; //skip
 
     //Go through Cs_share_E and remove entry incident to MS.
-    vcl_set<dbmsh3d_curve*>::iterator cit = Cs_share_E.begin();
+    std::set<dbmsh3d_curve*>::iterator cit = Cs_share_E.begin();
     while (cit != Cs_share_E.end()) {
       dbmsh3d_curve* C = (dbmsh3d_curve*) (*cit);
       if (C == MC || MS->is_bnd_E (C)) {
@@ -92,7 +92,7 @@ void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
           cit = Cs_share_E.begin();
         }
         else {
-          vcl_set<dbmsh3d_curve*>::iterator tmp = cit;
+          std::set<dbmsh3d_curve*>::iterator tmp = cit;
           tmp--;
           Cs_share_E.erase (cit);
           tmp++;
@@ -121,7 +121,7 @@ void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
   }
 
   //Delete all shared_E on MC with other ms_curves on MS.
-  vcl_vector<dbsk3d_ms_curve*> shared_MCs;
+  std::vector<dbsk3d_ms_curve*> shared_MCs;
   MS->find_MCs_sharing_E (MC, shared_MCs);
   //Remove the sharing_E from MC to shared_MC_set.
   for (unsigned int i=0; i<shared_MCs.size(); i++) {
@@ -140,7 +140,7 @@ void MS_splice_ms_sheets (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_curve* MC,
 {
   assert (MS1 != MS2);
 
-  vul_printf (vcl_cout, "splice S%d to S%d at C%d, ", MS2->id(), MS1->id(), MC->id());
+  vul_printf (std::cout, "splice S%d to S%d at C%d, ", MS2->id(), MS1->id(), MC->id());
 
   //Disconnect the bordering curve MC and connecting the boundary chain of MS2 to MS1.
   //MC is not deleted, will be deleted later in remove_S_complete_hypg().  
@@ -160,7 +160,7 @@ void MS_splice_ms_sheets (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_curve* MC,
 
   //Merge fine-scale mesh elements.
   //Transfer all facemap, edgemap, vertexmap of MS2 to MS1.  
-  vcl_map<int, dbmsh3d_face*>::iterator fit = MS2->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = MS2->facemap().begin();
   for (; fit != MS2->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     MS1->add_F (F);

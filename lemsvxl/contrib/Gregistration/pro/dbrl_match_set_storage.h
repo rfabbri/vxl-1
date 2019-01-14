@@ -12,13 +12,13 @@ class dbrl_match_set_storage: public bpro1_storage
         dbrl_match_set_storage(const dbrl_match_set_sptr & dms);
         ~dbrl_match_set_storage();
         //: Returns the type string "dbrl_match_set"
-        virtual vcl_string type() const { return "dbrl_match_set"; }
+        virtual std::string type() const { return "dbrl_match_set"; }
 
     virtual void register_binary_io() const ;
     //: Set the dbrl_match_set storage 
     void set_match_set(const dbrl_match_set_sptr dms);
 
-    virtual vcl_string is_a() const {return "dbrl_match_set_storage";};
+    virtual std::string is_a() const {return "dbrl_match_set_storage";};
 
     virtual bpro1_storage* clone() const;
 

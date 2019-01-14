@@ -1,6 +1,6 @@
 #include "dbdet_crop_curvelet_map_tool.h"
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/vgui_style.h>
@@ -26,7 +26,7 @@ dbdet_crop_curvelet_map_tool::dbdet_crop_curvelet_map_tool() :
 {
 }
 
-vcl_string dbdet_crop_curvelet_map_tool::name() const
+std::string dbdet_crop_curvelet_map_tool::name() const
 {
   return "Crop Curvelet Map";
 }
@@ -124,7 +124,7 @@ void dbdet_crop_curvelet_map_tool::crop_curvelet_map()
   sel_storage_->EULM().clear();
 
   // 1) first mark the edgels for deletion
-  vcl_vector<bool> del_flag(sel_storage_->EM()->edgels.size(), false);
+  std::vector<bool> del_flag(sel_storage_->EM()->edgels.size(), false);
 
   //go over all the edgels in the edgemap and test if they are inside/outside the polygon
   vgl_polygon<float> cur_poly(point_list);
@@ -135,7 +135,7 @@ void dbdet_crop_curvelet_map_tool::crop_curvelet_map()
   }
 
   // 2) delete all the curvelets containing edgels that are marked to be deleted
-  vcl_vector<dbdet_curvelet*> cvlets_to_del;
+  std::vector<dbdet_curvelet*> cvlets_to_del;
   for (unsigned i=0; i<sel_storage_->EM()->edgels.size(); i++){
     if (del_flag[i]) //this edgel is marked for deletion so delete all the curvelets anchored on it
       sel_storage_->CM().delete_all_curvelets(sel_storage_->EM()->edgels[i]);
@@ -159,7 +159,7 @@ void dbdet_crop_curvelet_map_tool::crop_curvelet_map()
     sel_storage_->CM().remove_curvelet(cvlets_to_del[i]);
 
   // 3) finally delete the edgels :: go over each cell and delete the marked edgels
-  vcl_vector<dbdet_edgel*> edgels_to_keep;
+  std::vector<dbdet_edgel*> edgels_to_keep;
   for (unsigned i=0; i<del_flag.size(); i++){
     if (!del_flag[i])
       edgels_to_keep.push_back(sel_storage_->EM()->edgels[i]);
@@ -175,7 +175,7 @@ void dbdet_crop_curvelet_map_tool::crop_curvelet_map()
   // 4) relabel the remaining edgels as well as the remaining curvelets 
 
   //make a copy of the cvlet map
-  vcl_vector<cvlet_list> CM_map = sel_storage_->CM().map_;
+  std::vector<cvlet_list> CM_map = sel_storage_->CM().map_;
 
   //clear the CM map
   sel_storage_->CM().map_.clear();

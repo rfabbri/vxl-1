@@ -1,8 +1,8 @@
 #ifndef boxm_opt_rt_bayesian_optimizer_h_
 #define boxm_opt_rt_bayesian_optimizer_h_
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include "boxm_aux_traits.h"
 #include <boxm/boxm_apm_traits.h>
@@ -16,7 +16,7 @@ class boxm_opt_rt_bayesian_optimizer
 public:
 
   boxm_opt_rt_bayesian_optimizer(boxm_scene<boct_tree<T_loc, boxm_sample<APM> > > &scene, 
-                                 vcl_vector<vcl_string> const& image_ids);
+                                 std::vector<std::string> const& image_ids);
 
   ~boxm_opt_rt_bayesian_optimizer(){}
 
@@ -24,7 +24,7 @@ public:
 
 protected:
 
-  vcl_vector<vcl_string> image_ids_;
+  std::vector<std::string> image_ids_;
 
   boxm_scene<boct_tree<T_loc, boxm_sample<APM> > > &scene_;
 

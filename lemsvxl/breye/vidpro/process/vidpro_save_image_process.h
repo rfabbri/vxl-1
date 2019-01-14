@@ -14,10 +14,10 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro/bpro_process.h>
-#include <vcl_list.h>
+#include <list>
 #include <vil/vil_image_resource_sptr.h>
 
 class vidpro_save_image_process : public bpro_process
@@ -30,10 +30,10 @@ class vidpro_save_image_process : public bpro_process
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   void clear_output();
 

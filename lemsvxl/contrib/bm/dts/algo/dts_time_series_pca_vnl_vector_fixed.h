@@ -23,11 +23,11 @@ public:
             dest_feature_type;
 
     typedef 
-        vcl_map<time_type, src_feature_type> 
+        std::map<time_type, src_feature_type> 
             src_map_type;
 
     typedef 
-        vcl_map<time_type, dest_feature_type>
+        std::map<time_type, dest_feature_type>
             dest_map_type;
 
     typedef 

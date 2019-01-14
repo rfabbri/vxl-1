@@ -7,8 +7,8 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     July 29, 2006
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <dbdet/dbdet_seg3d_info.h>
 #include <dbdet/dbdet_seg3d_info_sptr.h>
 #include <expatpp/expatpp.h>
@@ -37,14 +37,14 @@ protected:
   virtual void endElement(const XML_Char* name);
   virtual void charData(const XML_Char* s, int len);
 
-  void handle_char_data(const vcl_string& element, const vcl_string& char_data);
+  void handle_char_data(const std::string& element, const std::string& char_data);
 
   //Data - used during parsing
   int depth_;                                     // depth in the xml file
   int frame_index_;                               // index of frame being read  
   int contour_index_;                             // index of contour being read    
-  vcl_vector<vcl_string > opened_elements_stack_; // names of elements opened
-  vcl_string char_data_;                          // accumulated read string data
+  std::vector<std::string > opened_elements_stack_; // names of elements opened
+  std::string char_data_;                          // accumulated read string data
   dbdet_seg3d_info_frame current_frame_;          // frame to push to seg3d_info
 
   // pointer to the data container

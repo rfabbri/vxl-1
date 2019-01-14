@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vgl/vgl_distance.h>
 
@@ -12,20 +12,20 @@
 #include <dbskr/dbskr_compute_scurve.h>
 #include <dbskr/dbskr_dpmatch.h>
 
-int read_curve_file2(vcl_ifstream& fs,
-                    vcl_vector<double>& time, 
-                    vcl_vector<double>& alpha, 
-                    vcl_vector <int>& shock_dir, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_plus, 
-                    vcl_vector< vgl_point_2d<double> >& bdry_minus,  
-                    vcl_vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
-                    vcl_vector<double>& bdry_plus_arclength, 
-                    vcl_vector<double>& bdry_plus_angle, 
-                    vcl_vector<double>& bdry_minus_arclength, 
-                    vcl_vector<double>& bdry_minus_angle,
-                    vcl_vector<double>& angle,
-                    vcl_vector<double>& velocity,
-                    vcl_vector<double>& curvature) 
+int read_curve_file2(std::ifstream& fs,
+                    std::vector<double>& time, 
+                    std::vector<double>& alpha, 
+                    std::vector <int>& shock_dir, 
+                    std::vector< vgl_point_2d<double> >& bdry_plus, 
+                    std::vector< vgl_point_2d<double> >& bdry_minus,  
+                    std::vector< vgl_point_2d<double> >& pt_array,   // points on shock branch  
+                    std::vector<double>& bdry_plus_arclength, 
+                    std::vector<double>& bdry_plus_angle, 
+                    std::vector<double>& bdry_minus_arclength, 
+                    std::vector<double>& bdry_minus_angle,
+                    std::vector<double>& angle,
+                    std::vector<double>& velocity,
+                    std::vector<double>& curvature) 
 {
   int size;
   fs >> size;
@@ -79,7 +79,7 @@ int read_curve_file2(vcl_ifstream& fs,
 //This information will be compiled by a shock tree (in the real case)
 void get_path_from_ids (dbsk2d_shock_graph_sptr shock_graph, 
                         dbsk2d_shock_node_sptr & start_node,
-                        vcl_vector<dbsk2d_shock_edge_sptr> & path1, 
+                        std::vector<dbsk2d_shock_edge_sptr> & path1, 
                         int start_node_id,
                         int edge_ids[], int num_of_edges)
 {
@@ -120,18 +120,18 @@ bool compare_curves_pt_by_pt(dbskr_scurve_sptr c1, dbskr_scurve_sptr c2)
     if (i >= c2->num_points())
       break;
 
-    //vcl_cout << "Sh pt: (" << c1->sh_pt(i).x() << ", " << c1->sh_pt(i).y() << ")";
-    //vcl_cout << "(" << c2->sh_pt(i).x() << ", " << c2->sh_pt(i).y() << ")" << vcl_endl;
+    //std::cout << "Sh pt: (" << c1->sh_pt(i).x() << ", " << c1->sh_pt(i).y() << ")";
+    //std::cout << "(" << c2->sh_pt(i).x() << ", " << c2->sh_pt(i).y() << ")" << std::endl;
 
-    //vcl_cout << "B+ pt: (" << c1->bdry_plus_pt(i).x() << ", " << c1->bdry_plus_pt(i).y() << ")";
-    //vcl_cout << "(" << c2->bdry_plus_pt(i).x() << ", " << c2->bdry_plus_pt(i).y() << ")" << vcl_endl;
+    //std::cout << "B+ pt: (" << c1->bdry_plus_pt(i).x() << ", " << c1->bdry_plus_pt(i).y() << ")";
+    //std::cout << "(" << c2->bdry_plus_pt(i).x() << ", " << c2->bdry_plus_pt(i).y() << ")" << std::endl;
 
-    //vcl_cout << "B- pt: (" << c1->bdry_minus_pt(i).x() << ", " << c1->bdry_minus_pt(i).y() << ")";
-    //vcl_cout << "(" << c2->bdry_minus_pt(i).x() << ", " << c2->bdry_minus_pt(i).y() << ")" << vcl_endl;
+    //std::cout << "B- pt: (" << c1->bdry_minus_pt(i).x() << ", " << c1->bdry_minus_pt(i).y() << ")";
+    //std::cout << "(" << c2->bdry_minus_pt(i).x() << ", " << c2->bdry_minus_pt(i).y() << ")" << std::endl;
 
-    //vcl_cout << "Radiu: " << c1->time(i) << ", " << c2->time(i) << vcl_endl;
-    //vcl_cout << "alpha: " << c1->alpha(i) << ", " << c2->alpha(i) << vcl_endl;
-    //vcl_cout << "S-dir: " << c1->shock_dir(i) << ", " << c2->shock_dir(i) << vcl_endl;
+    //std::cout << "Radiu: " << c1->time(i) << ", " << c2->time(i) << std::endl;
+    //std::cout << "alpha: " << c1->alpha(i) << ", " << c2->alpha(i) << std::endl;
+    //std::cout << "S-dir: " << c1->shock_dir(i) << ", " << c2->shock_dir(i) << std::endl;
 
     //since the sampling is slightly different, true matching can only be done via curve matching!
     error += vgl_distance(c1->sh_pt(i), c2->sh_pt(i)) + 
@@ -149,7 +149,7 @@ double compute_deform_cost(dbskr_scurve_sptr c1, dbskr_scurve_sptr c2)
 {
   //compare curves by performing curve matching instead
 
-  vcl_vector <double> lambda(3, 1.0);
+  std::vector <double> lambda(3, 1.0);
   double R = 6.0;
 
   //call the shock curve matching code
@@ -171,7 +171,7 @@ bool compare_curves(dbskr_scurve_sptr c1, dbskr_scurve_sptr c2)
 MAIN_ARGS(test_scurve)
 {
 
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -185,8 +185,8 @@ MAIN_ARGS(test_scurve)
   testlib_test_start("testing scurve class ");
 
   //1) load the esf files
-  vcl_string esf_file1 = "data/brk001.esf";
-  vcl_string esf_file2 = "data/pln006.esf";
+  std::string esf_file1 = "data/brk001.esf";
+  std::string esf_file2 = "data/pln006.esf";
 
   //the esf file I/O class
   dbsk2d_xshock_graph_fileio file_io; 
@@ -203,7 +203,7 @@ MAIN_ARGS(test_scurve)
   int edge_ids2[] = {164, 165, 113, 114, 107, 106, 96, 97, 73, 72, 66, 67, 38, 39, 979};
 
   dbsk2d_shock_node_sptr start_node1, start_node2;
-  vcl_vector<dbsk2d_shock_edge_sptr> path1, path2;
+  std::vector<dbsk2d_shock_edge_sptr> path1, path2;
   dbskr_scurve_sptr sk_path_curve1, sk_path_curve2;
 
   if (xsg1){
@@ -225,18 +225,18 @@ MAIN_ARGS(test_scurve)
   TEST("compute path2 from esf file1", sk_path_curve2->num_points()>0, true);
 
   //3) read a corresponding manually generated scurve from the file
-  vcl_string curve_file1 = "data/brk001-pln006-0-1-vs-0-2-5-curves.txt";
-  vcl_string curve_file2 = "data/brk001-pln006-0-1-2-vs-0-2-5-curves.txt";
+  std::string curve_file1 = "data/brk001-pln006-0-1-vs-0-2-5-curves.txt";
+  std::string curve_file2 = "data/brk001-pln006-0-1-2-vs-0-2-5-curves.txt";
 
-  vcl_vector<double> time, alpha;
-  vcl_vector <int> shock_dir;
+  std::vector<double> time, alpha;
+  std::vector <int> shock_dir;
   int num_points;
-  vcl_vector< vgl_point_2d<double> > bdry_plus, bdry_minus, pt_array;
-  vcl_vector<double> bdry_plus_arclength, bdry_plus_angle, bdry_minus_arclength, bdry_minus_angle;
-  vcl_vector<double> angle, velocity, curvature;
+  std::vector< vgl_point_2d<double> > bdry_plus, bdry_minus, pt_array;
+  std::vector<double> bdry_plus_arclength, bdry_plus_angle, bdry_minus_arclength, bdry_minus_angle;
+  std::vector<double> angle, velocity, curvature;
 
   //open file1
-  vcl_ifstream cf1((dir_base+curve_file1).c_str());
+  std::ifstream cf1((dir_base+curve_file1).c_str());
   TEST("file1 open", cf1.is_open(), true);
   //read curve1
   num_points = read_curve_file2(cf1, time, alpha, shock_dir, 
@@ -260,7 +260,7 @@ MAIN_ARGS(test_scurve)
   pt_array.clear();
 
   //open file2
-  vcl_ifstream cf2((dir_base+curve_file2).c_str());
+  std::ifstream cf2((dir_base+curve_file2).c_str());
   TEST("file2 open ", cf2.is_open(), true);
 
   //read curve2
@@ -307,7 +307,7 @@ MAIN_ARGS(test_scurve)
   -------------------------------------------------------------------------
 */
   //1) load the esf files
-  vcl_string esf_file3 = "data/rect2.esf";
+  std::string esf_file3 = "data/rect2.esf";
   dbsk2d_shock_graph_sptr xsg2 = file_io.load_xshock_graph(dir_base+esf_file3);
 
   //2) construct a scurve from the shock graph for a given path
@@ -315,7 +315,7 @@ MAIN_ARGS(test_scurve)
   int edge_ids4[] = {24};
 
   dbsk2d_shock_node_sptr start_node3, start_node3p, start_node4;
-  vcl_vector<dbsk2d_shock_edge_sptr> path3, path3p, path4;
+  std::vector<dbsk2d_shock_edge_sptr> path3, path3p, path4;
   dbskr_scurve_sptr sk_path_curve3, sk_path_curve3p, sk_path_curve4;
 
   if (xsg2){
@@ -349,8 +349,8 @@ MAIN_ARGS(test_scurve)
   //-------------------------------------------------------------------------
 
   //1) load the esf files
-  vcl_string esf_file4 = "data/rect.esf";
-  vcl_string esf_file5 = "data/quad.esf";
+  std::string esf_file4 = "data/rect.esf";
+  std::string esf_file5 = "data/quad.esf";
 
   dbsk2d_shock_graph_sptr xsg3 = file_io.load_xshock_graph(dir_base+esf_file4);
   dbsk2d_shock_graph_sptr xsg4 = file_io.load_xshock_graph(dir_base+esf_file5);
@@ -360,7 +360,7 @@ MAIN_ARGS(test_scurve)
   int edge_ids6[] = {22, 26, 21};
 
   dbsk2d_shock_node_sptr start_node5, start_node6;
-  vcl_vector<dbsk2d_shock_edge_sptr> path5, path6;
+  std::vector<dbsk2d_shock_edge_sptr> path5, path6;
   dbskr_scurve_sptr sk_path_curve5, sk_path_curve6;
 
   if (xsg3 && xsg4){
@@ -380,8 +380,8 @@ MAIN_ARGS(test_scurve)
   }
 
   //open file3  
-  vcl_string curve_file3 = "data/rect-quad-17-25-26-18-vs-18-27-25-17-curves.txt";
-  vcl_ifstream cf3((dir_base+curve_file3).c_str());
+  std::string curve_file3 = "data/rect-quad-17-25-26-18-vs-18-27-25-17-curves.txt";
+  std::ifstream cf3((dir_base+curve_file3).c_str());
   TEST("file3 open ", cf3.is_open(), true);
 
   //clear these vectors first

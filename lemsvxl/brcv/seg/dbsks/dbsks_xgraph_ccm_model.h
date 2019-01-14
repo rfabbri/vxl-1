@@ -22,10 +22,10 @@
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_vector.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 
 
@@ -105,7 +105,7 @@ public:
   // I/O -----------------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual vcl_ostream& print(vcl_ostream & os){return os; };
+  virtual std::ostream& print(std::ostream & os){return os; };
 
 protected:
 
@@ -240,10 +240,10 @@ public:
     float ccm_gamma, float ccm_lambda, int nbins_0topi);
   // END - TO BE DEPRECIATED FUNCTIONS -----------------------------------------------
 
-  vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >& map_edge2ccm()
+  std::map<unsigned, dbsks_xfrag_ccm_model_sptr >& map_edge2ccm()
   { return this->map_edge2ccm_; }
 
-  const vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >& map_edge2ccm() const
+  const std::map<unsigned, dbsks_xfrag_ccm_model_sptr >& map_edge2ccm() const
   { return this->map_edge2ccm_; }
 
 
@@ -252,12 +252,12 @@ public:
   //: Override the probability distribution in the xfrag's boundary with constant distribution
   // each boundary fragment should be written in format "edgeid-sideid". E.g. "13-R" means
   // the right boundary fragment of edge 13.
-  bool override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_list);
+  bool override_cfrag_with_constant_distribution(const std::vector<std::string >& cfrag_list);
 
   //: Override the probability distribution in the xfrag's boundary with constant distribution
   // list of bfrags is concatenated in a list, with a delimitor of choice. Avoid 0-9, L, R, -.
   // Example: ...("13-R,13-L,4-L", ',');
-  bool override_cfrag_with_constant_distribution(const vcl_string& bfrag_list, char delimiter = ',');
+  bool override_cfrag_with_constant_distribution(const std::string& bfrag_list, char delimiter = ',');
 
   //: Return true if this model is compatible with a given xgraph topology
   bool is_compatible(const dbsksp_xshock_graph_sptr& xgraph);
@@ -268,7 +268,7 @@ public:
   // I/O -----------------------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual vcl_ostream& print(vcl_ostream & os){ return os; };
+  virtual std::ostream& print(std::ostream & os){ return os; };
 
   // MEMBER VARIABLES ----------------------------------------------------------
 protected:
@@ -278,7 +278,7 @@ protected:
   //: Parameters to compute a CCM cost calculator
   dbsks_ccm_params ccm_params_;
 
-  vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr > map_edge2ccm_;
+  std::map<unsigned, dbsks_xfrag_ccm_model_sptr > map_edge2ccm_;
 };
 
 #endif // shp/dbsksp/dbsks_xgraph_ccm_model.h

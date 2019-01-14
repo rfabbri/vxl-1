@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -20,7 +20,7 @@ static void test_voxel_world_mog_image()
 
   START("bvam_voxel_world_mog_image test");
 
-  vcl_string model_dir("./test_world_dir");
+  std::string model_dir("./test_world_dir");
   vul_file::make_directory(model_dir);
 
   unsigned nx = 200;

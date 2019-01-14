@@ -14,8 +14,8 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro1/bpro1_process.h>
 
 class vidpro1_load_video_edgemap_process : public bpro1_process
@@ -28,10 +28,10 @@ class vidpro1_load_video_edgemap_process : public bpro1_process
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   virtual void clear_output(int resize = -1);
 
@@ -44,7 +44,7 @@ class vidpro1_load_video_edgemap_process : public bpro1_process
   int num_frames() {return num_frames_;}
 
   //: load edgemap
-  bool loadEDG(vcl_string input_file);
+  bool loadEDG(std::string input_file);
 
  protected:
 

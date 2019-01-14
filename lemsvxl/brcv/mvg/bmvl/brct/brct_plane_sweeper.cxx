@@ -1,8 +1,8 @@
 #include "brct_plane_sweeper.h"
 //:
 // \file
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <fstream>
+#include <cmath>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -42,9 +42,9 @@ static vgl_h_matrix_2d<double> normalize_h(vgl_h_matrix_2d<double> const& H)
 {
   vnl_matrix_fixed<double,3, 3> M = H.get_matrix();
   double s = M[2][2];
-  if (vcl_fabs(s)<1e-06)
+  if (std::fabs(s)<1e-06)
   {
-    vcl_cout << "In brct_plane_sweeper - singular homography\n";
+    std::cout << "In brct_plane_sweeper - singular homography\n";
     return H;
   }
   for (int r = 0; r<3; r++)
@@ -66,12 +66,12 @@ static vgl_h_matrix_2d<double> translate_h(vgl_h_matrix_2d<double> const& H,
   return Ht;
 }
 
-vcl_vector<vsol_point_2d_sptr> brct_plane_sweeper::
+std::vector<vsol_point_2d_sptr> brct_plane_sweeper::
 project_corners(vgl_h_matrix_2d<double> const & H,
-                vcl_vector<vsol_point_2d_sptr> const& corners)
+                std::vector<vsol_point_2d_sptr> const& corners)
 {
-  vcl_vector<vsol_point_2d_sptr> out;
-  for (vcl_vector<vsol_point_2d_sptr>::const_iterator pit = corners.begin();
+  std::vector<vsol_point_2d_sptr> out;
+  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = corners.begin();
        pit != corners.end(); pit++)
   {
     vgl_homg_point_2d<double> p((*pit)->x(), (*pit)->y()), hp;
@@ -83,27 +83,27 @@ project_corners(vgl_h_matrix_2d<double> const & H,
   return out;
 }
 
-bool brct_plane_sweeper::read_homographies(vcl_string const& homography_file)
+bool brct_plane_sweeper::read_homographies(std::string const& homography_file)
 {
-  vcl_ifstream is(homography_file.c_str());
+  std::ifstream is(homography_file.c_str());
   if (!is)
   {
-    vcl_cout << "In brct_plane_calibrator::write_homographies -"
+    std::cout << "In brct_plane_calibrator::write_homographies -"
              << " could not open file " << homography_file << '\n';
     return false;
   }
-  vcl_string s;
+  std::string s;
   is >> s;
   if (!(s=="N_PLANES:"))
   {
-    vcl_cout << "Parse error\n";
+    std::cout << "Parse error\n";
     return false;
   }
   is >> n_planes_;
   is >> s;
   if (!(s=="N_CAMS:"))
   {
-    vcl_cout << "Parse error\n";
+    std::cout << "Parse error\n";
     return false;
   }
   is >> n_cams_;
@@ -125,14 +125,14 @@ bool brct_plane_sweeper::read_homographies(vcl_string const& homography_file)
       is >> s;
       if (!(s=="PLANE:"))
       {
-        vcl_cout << "Parse error\n";
+        std::cout << "Parse error\n";
         return false;
       }
       is >> p;
       is >> s;
       if (!(s=="Z:"))
       {
-        vcl_cout << "Parse error\n";
+        std::cout << "Parse error\n";
         return false;
       }
       is >> z;
@@ -140,7 +140,7 @@ bool brct_plane_sweeper::read_homographies(vcl_string const& homography_file)
       is >> s;
       if (!(s=="CAM:"))
       {
-        vcl_cout << "Parse error\n";
+        std::cout << "Parse error\n";
         return false;
       }
       is >> c;
@@ -157,13 +157,13 @@ bool brct_plane_sweeper::set_image(const int cam, vil1_image const& image)
 {
   if (cam>=n_cams_)
   {
-    vcl_cout << "In brct_plane_sweeper::set_image - "
+    std::cout << "In brct_plane_sweeper::set_image - "
              << " cam index out of bounds\n";
     return false;
   }
   if (!image)
   {
-    vcl_cout << "In brct_plane_sweeper::set_image - "
+    std::cout << "In brct_plane_sweeper::set_image - "
              << " null image\n";
     return false;
   }
@@ -179,7 +179,7 @@ bool brct_plane_sweeper::set_image(const int cam, vil1_image const& image)
 //: compute homographies for each camera that project to the specified z plane.
 //  For now assume two cameras.
 void brct_plane_sweeper::
-homographies_at_z(double z, vcl_vector<vgl_h_matrix_2d<double> >& homgs)
+homographies_at_z(double z, std::vector<vgl_h_matrix_2d<double> >& homgs)
 {
   if (!homographies_valid_)
     return;
@@ -217,7 +217,7 @@ brct_plane_sweeper::project_image_to_plane(const int plane,
   vil1_memory_image_of<unsigned char> out;
   if (!homographies_valid_)
   {
-    vcl_cout << "In brct_plane_sweeper::project_image_to_plane -"
+    std::cout << "In brct_plane_sweeper::project_image_to_plane -"
              << " homographies not loaded yet\n";
     return out;
   }
@@ -240,7 +240,7 @@ static vsol_box_2d_sptr box_from_image(vil1_memory_image_of<float> const& img)
 }
 
 bool brct_plane_sweeper::
-overlapping_box(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
+overlapping_box(std::vector<vgl_h_matrix_2d<double> > const& homgs,
                 vsol_box_2d_sptr & box)
 {
   vsol_box_2d_sptr intersection = new vsol_box_2d();
@@ -265,13 +265,13 @@ overlapping_box(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
 }
 
 bool brct_plane_sweeper::
-overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
-                        vcl_vector<vil1_memory_image_of<float> >& imgs,
+overlapping_projections(std::vector<vgl_h_matrix_2d<double> > const& homgs,
+                        std::vector<vil1_memory_image_of<float> >& imgs,
                         double& tx, double& ty)
 {
   if (!n_cams_)
   {
-    vcl_cout << "In brct_plane_sweeper::overlapping_projections(.._)-"
+    std::cout << "In brct_plane_sweeper::overlapping_projections(.._)-"
              << " no cameras\n";
     return false;
   }
@@ -280,7 +280,7 @@ overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
   vsol_box_2d_sptr intersection;
   if (!this->overlapping_box(homgs, intersection))
   {
-    vcl_cout << "In brct_plane_sweeper::overlapping_projections(.._)-"
+    std::cout << "In brct_plane_sweeper::overlapping_projections(.._)-"
              << " no overlap\n";
     return false;
   }
@@ -291,7 +291,7 @@ overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
   {
     vgl_h_matrix_2d<double> H = homgs[cam];
     //JLM Debug
-    //      vcl_cout << "H(" << cam << ")\n" << H << "\n\n";
+    //      std::cout << "H(" << cam << ")\n" << H << "\n\n";
     //end debug
     vgl_h_matrix_2d<double> Hinv = H.get_inverse();
     //modify the homography to map the corner to (0, 0)
@@ -308,9 +308,9 @@ overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
 
 //: compute overlapping projections of images and Harris corners
 bool brct_plane_sweeper::
-overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
-                        vcl_vector<vil1_memory_image_of<float> >& imgs,
-                        vcl_vector<vcl_vector<vsol_point_2d_sptr> >& corners,
+overlapping_projections(std::vector<vgl_h_matrix_2d<double> > const& homgs,
+                        std::vector<vil1_memory_image_of<float> >& imgs,
+                        std::vector<std::vector<vsol_point_2d_sptr> >& corners,
                         double& tx, double& ty)
 {
   if (!overlapping_projections(homgs, imgs, tx, ty))
@@ -322,8 +322,8 @@ overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
     vgl_h_matrix_2d<double> H = homgs[cam];
     vgl_h_matrix_2d<double> Hinv = H.get_inverse();
     vgl_h_matrix_2d<double> Hinvt = translate_h(Hinv, tx, ty);
-    vcl_vector<vsol_point_2d_sptr> hc = harris_corners_[cam];
-    vcl_vector<vsol_point_2d_sptr> pcs =
+    std::vector<vsol_point_2d_sptr> hc = harris_corners_[cam];
+    std::vector<vsol_point_2d_sptr> pcs =
       this->project_corners(Hinvt, hc);
     corners.push_back(pcs);
   }
@@ -334,9 +334,9 @@ overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
 //:compute the projections of left and right images that overlap on the specified plane
 bool brct_plane_sweeper::
 overlapping_projections(const int plane,
-                        vcl_vector<vil1_memory_image_of<float> >& imgs)
+                        std::vector<vil1_memory_image_of<float> >& imgs)
 {
-  vcl_vector<vgl_h_matrix_2d<double> > homgs = homographies_[plane];
+  std::vector<vgl_h_matrix_2d<double> > homgs = homographies_[plane];
   double tx=0, ty=0;
   return overlapping_projections(homgs, imgs, tx, ty);
 }
@@ -344,9 +344,9 @@ overlapping_projections(const int plane,
 //:compute the projections of left and right images that overlap on the plane at depth z
 bool brct_plane_sweeper::
 overlapping_projections(const double z,
-                        vcl_vector<vil1_memory_image_of<float> >& imgs)
+                        std::vector<vil1_memory_image_of<float> >& imgs)
 {
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   double tx=0, ty=0;
   return overlapping_projections(homgs, imgs, tx, ty);
@@ -354,10 +354,10 @@ overlapping_projections(const double z,
 
 bool brct_plane_sweeper::
 overlapping_projections(const double z,
-                        vcl_vector<vil1_memory_image_of<float> >& imgs,
-                        vcl_vector<vcl_vector<vsol_point_2d_sptr> >& corners)
+                        std::vector<vil1_memory_image_of<float> >& imgs,
+                        std::vector<std::vector<vsol_point_2d_sptr> >& corners)
 {
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   double tx=0, ty=0;
   return overlapping_projections(homgs, imgs, corners, tx, ty);
@@ -372,11 +372,11 @@ brct_plane_sweeper::cross_correlate_projections(const int plane)
   vil1_memory_image_of<unsigned char> out;
   if (n_cams_<2)
   {
-    vcl_cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
+    std::cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
              << "less than two images\n";
     return out;
   }
-  vcl_vector<vil1_memory_image_of<float> > imgs;
+  std::vector<vil1_memory_image_of<float> > imgs;
   this->overlapping_projections(plane, imgs);
   vil1_memory_image_of<float> cc;
   if (!brip_vil1_float_ops::cross_correlate(imgs[0], imgs[1], cc,
@@ -395,12 +395,12 @@ brct_plane_sweeper::cross_correlate_projections(const double z)
   vil1_memory_image_of<unsigned char> out;
   if (n_cams_<2)
   {
-    vcl_cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
+    std::cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
              << "less than two images\n";
     return out;
   }
-  vcl_vector<vil1_memory_image_of<float> > imgs;
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vil1_memory_image_of<float> > imgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   double tx=0, ty=0;
   this->overlapping_projections(homgs, imgs, tx, ty);
@@ -416,42 +416,42 @@ bool
 brct_plane_sweeper::
 cross_correlate_proj_corners(const double z,
                              vil1_image& back,
-                             vcl_vector<vsol_point_2d_sptr>& matched_corners,
-                             vcl_vector<vsol_point_2d_sptr>& back_proj_cnrs,
-                             vcl_vector<vsol_point_2d_sptr>& orig_cnrs0)
+                             std::vector<vsol_point_2d_sptr>& matched_corners,
+                             std::vector<vsol_point_2d_sptr>& back_proj_cnrs,
+                             std::vector<vsol_point_2d_sptr>& orig_cnrs0)
 {
   if (n_cams_<2)
   {
-    vcl_cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
+    std::cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
              << "less than two images\n";
     return false;
   }
   //reset match flags
-  vcl_vector<vil1_memory_image_of<float> > imgs;
-  vcl_vector<vsol_point_2d_sptr> temp;
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > proj_corners;
+  std::vector<vil1_memory_image_of<float> > imgs;
+  std::vector<vsol_point_2d_sptr> temp;
+  std::vector<std::vector<vsol_point_2d_sptr> > proj_corners;
   if (!overlapping_projections(z, imgs, proj_corners))
     return false;
-  vcl_cout << "Correlating corners at z"  << z << vcl_endl;
+  std::cout << "Correlating corners at z"  << z << std::endl;
   //matched corners are in original image1 coordinates
   if (!this->correlate_corners(imgs, proj_corners, matched_corners))
     return false;
   //JLM DEBUG
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   vgl_h_matrix_2d<double> H0=homgs[0], H1 = homgs[1];
   vgl_h_matrix_2d<double> H1inv = H1.get_inverse();
-  vcl_vector<vsol_point_2d_sptr> world_pts =
+  std::vector<vsol_point_2d_sptr> world_pts =
     this->project_corners(H1inv, matched_corners);
   back_proj_cnrs = this->project_corners(H0, world_pts);
   orig_cnrs0 = harris_corners_[0];
-  vcl_cout << "World Points/BackProj\n";
+  std::cout << "World Points/BackProj\n";
   int n = world_pts.size();
   for (int i = 0; i<n; i++)
   {
     bsol_algs::print(world_pts[i]);
     bsol_algs::print(back_proj_cnrs[i]);
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
 
   //END JLM DEBUG
@@ -464,7 +464,7 @@ depth_image_box(const double zmin, const double zmax)
 {
   vsol_box_2d_sptr un = new vsol_box_2d();
   un->add_point(0, 0);//initialize the empty box
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   for (double z = zmin; z<=zmax; z+=del_)
   {
     this->homographies_at_z(zmin, homgs);
@@ -485,7 +485,7 @@ static void debug_print(const int c0, const int r0, const int dr,
   int cmax = c0+dr, rmax = r0+dr;
   if (c<cmin||c>cmax||r<rmin||r>rmax)
     return;
-  vcl_cout << "C[" << r << "][" << c << "]= " << cc_val << vcl_endl;
+  std::cout << "C[" << r << "][" << c << "]= " << cc_val << std::endl;
 }
 #endif // 0
 
@@ -496,7 +496,7 @@ depth_image(vil1_memory_image_of<unsigned char>& depth_out,
 {
   if (n_cams_<2)
   {
-    vcl_cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
+    std::cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
              << "less than two images\n";
     return false;
   }
@@ -525,8 +525,8 @@ depth_image(vil1_memory_image_of<unsigned char>& depth_out,
   float null_corr = -1.0;
 
   //iterate through the depth planes
-  vcl_vector<vil1_memory_image_of<float> > imgs;
-  vcl_vector<vgl_h_matrix_2d<double> > homgs, trans_homgs;
+  std::vector<vil1_memory_image_of<float> > imgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs, trans_homgs;
   for (double z = zmin_; z<=zmax_; z+=del_)
   {
     //get the overlap of the left and right images at the specified depth
@@ -550,7 +550,7 @@ depth_image(vil1_memory_image_of<unsigned char>& depth_out,
     if (!brip_vil1_float_ops::homography(cc, Htrans, base, true, null_corr))
       continue;
     z_corr_images_.push_back(base);
-    vcl_cout << "corr for depth " << z << vcl_endl;
+    std::cout << "corr for depth " << z << std::endl;
     for (int r = 0; r<h; r++)
       for (int c=0; c<w; c++)
       {
@@ -572,12 +572,12 @@ depth_image(vil1_memory_image_of<unsigned char>& depth_out,
 
 //: sweep the z plane and find positions of max cross-correlation
 bool brct_plane_sweeper::
-harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
-                   vcl_vector<vsol_point_2d_sptr>& proj_points)
+harris_depth_match(std::vector<vsol_point_3d_sptr>& points_3d,
+                   std::vector<vsol_point_2d_sptr>& proj_points)
 {
   if (n_cams_<2)
   {
-    vcl_cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
+    std::cout << "In brct_plane_sweeper::cross_correlate_projections(..)-"
              << "less than two images\n";
     return false;
   }
@@ -606,9 +606,9 @@ harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
   depth.fill(null_depth);
   //iterate through the depth planes
   vil1_memory_image_of<float> back;
-  vcl_vector<vil1_memory_image_of<float> > imgs;
-  vcl_vector<vgl_h_matrix_2d<double> > homgs, trans_homgs;
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > proj_corners;
+  std::vector<vil1_memory_image_of<float> > imgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs, trans_homgs;
+  std::vector<std::vector<vsol_point_2d_sptr> > proj_corners;
 
   for (double z = zmin_; z<=zmax_; z+=del_)
   {
@@ -616,12 +616,12 @@ harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
     this->homographies_at_z(z, homgs);
     double tx=0, ty=0;
     this->overlapping_projections(homgs, imgs, proj_corners, tx, ty);
-    vcl_vector<vsol_point_2d_sptr> matched_corners;
+    std::vector<vsol_point_2d_sptr> matched_corners;
     if (!this->correlate_corners(imgs, proj_corners, matched_corners))
       return false;
-    vcl_cout << "Matched " << matched_corners.size() << " corners at z = "
-             << z << vcl_endl;
-    for (vcl_vector<vsol_point_2d_sptr>::iterator pit = matched_corners.begin();
+    std::cout << "Matched " << matched_corners.size() << " corners at z = "
+             << z << std::endl;
+    for (std::vector<vsol_point_2d_sptr>::iterator pit = matched_corners.begin();
          pit != matched_corners.end(); pit++)
     {
       proj_points.push_back(*pit);
@@ -629,10 +629,10 @@ harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
     }
 
     //back project the matched corners (cam 1) onto the world x-y-z plane
-    vcl_vector<vsol_point_2d_sptr> trans_pts =
+    std::vector<vsol_point_2d_sptr> trans_pts =
       this->project_corners(homgs[1], matched_corners);
     //convert to 3-d points
-    for (vcl_vector<vsol_point_2d_sptr>::iterator pit = trans_pts.begin();
+    for (std::vector<vsol_point_2d_sptr>::iterator pit = trans_pts.begin();
          pit != trans_pts.end(); pit++)
     {
       double x = (*pit)->x(), y = (*pit)->y();
@@ -640,7 +640,7 @@ harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
       points_3d.push_back(p3d);
       bsol_algs::print(p3d);
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
   }
   return true;
 }
@@ -650,18 +650,18 @@ bool brct_plane_sweeper::compute_harris()
   int n_images = images_.size();
   if (n_images!=n_cams_)
   {
-    vcl_cout << "In brct_plane_sweeper::compute_harris() - "
+    std::cout << "In brct_plane_sweeper::compute_harris() - "
              << "images not matched to cameras\n";
     return false;
   }
-  vcl_cout << hdp_ << vcl_endl;
+  std::cout << hdp_ << std::endl;
   sdet_harris_detector hd(hdp_);
   for (int cam = 0; cam<n_cams_; cam++)
   {
     hd.clear();
     hd.set_image(images_[cam]);
     hd.extract_corners();
-    vcl_vector<vsol_point_2d_sptr> points = hd.get_points();
+    std::vector<vsol_point_2d_sptr> points = hd.get_points();
     harris_corners_[cam]=points;
   }
   harris_valid_ = true;
@@ -686,9 +686,9 @@ static bool has_neighbor(const int r, const int c , const int radius,
 
 //: match harris corners from image 1 to image 0 and return matches
 bool brct_plane_sweeper::
-correlate_corners(vcl_vector<vil1_memory_image_of<float> > const& imgs,
-                  vcl_vector<vcl_vector<vsol_point_2d_sptr> > const& corners,
-                  vcl_vector<vsol_point_2d_sptr>& matched_corners)
+correlate_corners(std::vector<vil1_memory_image_of<float> > const& imgs,
+                  std::vector<std::vector<vsol_point_2d_sptr> > const& corners,
+                  std::vector<vsol_point_2d_sptr>& matched_corners)
 {
   int n_imgs=imgs.size();
   int n_corn=corners.size();
@@ -698,12 +698,12 @@ correlate_corners(vcl_vector<vil1_memory_image_of<float> > const& imgs,
   int w = imgs[0].width(), h = imgs[0].height();
   vbl_array_2d<bool> pt_index(h, w);
   pt_index.fill(false);
-  vcl_vector<vsol_point_2d_sptr> const& pts0 = corners[0],
+  std::vector<vsol_point_2d_sptr> const& pts0 = corners[0],
     pts1 = corners[1];
   //for marking
-  vcl_vector<vsol_point_2d_sptr> h1 = harris_corners_[1];
+  std::vector<vsol_point_2d_sptr> h1 = harris_corners_[1];
   //set the image 0 point_index array at Harris corner locations
-  for (vcl_vector<vsol_point_2d_sptr>::const_iterator pit = pts0.begin();
+  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = pts0.begin();
        pit != pts0.end(); pit++)
   {
     int r = (int)((*pit)->y()), c = (int)((*pit)->x());
@@ -734,18 +734,18 @@ correlate_corners(vcl_vector<vil1_memory_image_of<float> > const& imgs,
       {
         vsol_point_2d_sptr p = h1[i];
         matched_corners.push_back(p);//cache original Harris point
-        vcl_cout << "C(" << p->x() << ' ' << p->y()
-                 << ")=" << val << vcl_endl;
+        std::cout << "C(" << p->x() << ' ' << p->y()
+                 << ")=" << val << std::endl;
       }
     }
   }
   return true;
 }
 
-vcl_vector<vsol_point_2d_sptr>
+std::vector<vsol_point_2d_sptr>
 brct_plane_sweeper::harris_corners(const int cam)
 {
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   if (cam>=n_cams_||!harris_valid_)
     return points;
   return harris_corners_[cam];
@@ -768,8 +768,8 @@ brct_plane_sweeper::z_corr_image(const int i)
 }
 
 void brct_plane_sweeper::corr_vals(const int col, const int row,
-                                   vcl_vector<float>& z,
-                                   vcl_vector<float>& corr)
+                                   std::vector<float>& z,
+                                   std::vector<float>& corr)
 {
   z.clear();
   corr.clear();
@@ -798,7 +798,7 @@ map_point(vsol_point_2d_sptr const& p, const int cam, const double z)
   vsol_point_2d_sptr q;
   if (!p)
     return q;
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   //assume two cameras for now
   int nc = homgs.size();
@@ -814,11 +814,11 @@ map_point(vsol_point_2d_sptr const& p, const int cam, const double z)
 //Map points from one image to the other assuming that they lie on plane z
 bool brct_plane_sweeper::
 map_points(const int from_cam, const double z,
-           vcl_vector<vsol_point_2d_sptr> const& from_points,
-           vcl_vector<vsol_point_2d_sptr>& to_points)
+           std::vector<vsol_point_2d_sptr> const& from_points,
+           std::vector<vsol_point_2d_sptr>& to_points)
 {
   //get the homographies interpolated at plane z
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   int nc = homgs.size();
   if (nc!=2||from_cam>=nc)
@@ -830,7 +830,7 @@ map_points(const int from_cam, const double z,
   vgl_h_matrix_2d<double> H_from_inv = H_from.get_inverse();
   vgl_h_matrix_2d<double> Hcomp = H_to*H_from_inv;
 
-  for (vcl_vector<vsol_point_2d_sptr>::const_iterator pit = from_points.begin();
+  for (std::vector<vsol_point_2d_sptr>::const_iterator pit = from_points.begin();
        pit != from_points.end(); pit++)
     to_points.push_back(this->map_point(*pit, Hcomp));
 
@@ -843,7 +843,7 @@ bool brct_plane_sweeper::map_image(const int from_cam, const double z,
                                    vil1_memory_image_of<float>& mapped_image)
 {
   //get the homographies interpolated at plane z
-  vcl_vector<vgl_h_matrix_2d<double> > homgs;
+  std::vector<vgl_h_matrix_2d<double> > homgs;
   this->homographies_at_z(z, homgs);
   int nc = homgs.size();
   if (nc!=2||from_cam>=nc)
@@ -857,7 +857,7 @@ bool brct_plane_sweeper::map_image(const int from_cam, const double z,
     to = smooth_images_[to_cam];
   vsol_box_2d_sptr from_box =box_from_image(temp), to_box = box_from_image(to),
     inter_box;
-  vcl_cout << "Intersecting Mapped Box\n";
+  std::cout << "Intersecting Mapped Box\n";
   if (this->intersecting_bounding_box(Hcomp, from_box, to_box, inter_box))
     bsol_algs::print(inter_box);
 
@@ -895,15 +895,15 @@ intersecting_bounding_box(vgl_h_matrix_2d<double> const& Hcomp,
 
 bool brct_plane_sweeper::
 map_harris_corners(const int from_cam, const double z,
-                   vcl_vector<vsol_point_2d_sptr>& mapped_to_points,
-                   vcl_vector<vsol_point_2d_sptr>& orig_to_points)
+                   std::vector<vsol_point_2d_sptr>& mapped_to_points,
+                   std::vector<vsol_point_2d_sptr>& orig_to_points)
 {
   if (from_cam<0||from_cam>=2)
     return false;
   if (!harris_valid_)
     return false;
   int to_cam = 1-from_cam;
-  vcl_vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
+  std::vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
   orig_to_points = harris_corners_[to_cam];
   this->map_points(from_cam, z, harris_from, mapped_to_points);
   return true;
@@ -915,10 +915,10 @@ void brct_plane_sweeper::init_harris_match(const int from_cam)
   //make the grid 1/4 the size of the image
   int nrows = 192, ncols = 256;
   int to_cam = 1-from_cam;
-  vcl_vector<vsol_point_2d_sptr> to_points = harris_corners_[to_cam];
+  std::vector<vsol_point_2d_sptr> to_points = harris_corners_[to_cam];
   pindx_ = bsol_point_index_2d(nrows, ncols, to_points);
-  vcl_vector<vsol_point_2d_sptr> temp = pindx_.points();
-  vcl_cout << "\nTotal points in point index = " << temp.size() << vcl_endl;
+  std::vector<vsol_point_2d_sptr> temp = pindx_.points();
+  std::cout << "\nTotal points in point index = " << temp.size() << std::endl;
   pindx_.clear_marks();
   matched_corners_.clear();
   del_ = (zmax_-zmin_)/nz_;
@@ -927,8 +927,8 @@ void brct_plane_sweeper::init_harris_match(const int from_cam)
 //:for debugging testing
 bool brct_plane_sweeper::
 match_harris_corners(const int from_cam, const double z,
-                     vcl_vector<vsol_point_2d_sptr>& matched_points,
-                     vcl_vector<vsol_point_2d_sptr>& orig_to_points)
+                     std::vector<vsol_point_2d_sptr>& matched_points,
+                     std::vector<vsol_point_2d_sptr>& orig_to_points)
 {
   if (from_cam<0||from_cam>=2)
     return false;
@@ -938,13 +938,13 @@ match_harris_corners(const int from_cam, const double z,
   orig_to_points.clear();
   float rad = point_radius_;
   int to_cam = 1-from_cam;
-  vcl_vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
-  vcl_vector<vsol_point_2d_sptr> to_points = harris_corners_[to_cam];
-  vcl_vector<vsol_point_2d_sptr> mapped_to_points;
+  std::vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
+  std::vector<vsol_point_2d_sptr> to_points = harris_corners_[to_cam];
+  std::vector<vsol_point_2d_sptr> mapped_to_points;
   if (!this->map_points(from_cam, z, harris_from, mapped_to_points))
     return false;
   vsol_point_2d_sptr mp;
-  for (vcl_vector<vsol_point_2d_sptr>::iterator pit = mapped_to_points.begin();
+  for (std::vector<vsol_point_2d_sptr>::iterator pit = mapped_to_points.begin();
        pit != mapped_to_points.end(); pit++)
     if (pindx_.closest_in_radius(rad, *pit, mp))
     {
@@ -962,16 +962,16 @@ bool brct_plane_sweeper::harris_sweep(const int from_cam)
   if (!harris_valid_)
     return false;
   this->init_harris_match(from_cam);
-  vcl_vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
+  std::vector<vsol_point_2d_sptr> harris_from = harris_corners_[from_cam];
   to_cam_ = 1-from_cam;
   vil1_memory_image_of<float> orig_to_image = smooth_images_[to_cam_];
   int n_matched = 0;
   int nh = harris_from.size();
   //mark the harris corners in the from_cam that are matched
-  vcl_vector<bool> match_index(nh, false);
+  std::vector<bool> match_index(nh, false);
   for (double z = zmin_; z<=zmax_; z+=del_)
   {
-    vcl_vector<vsol_point_2d_sptr> matched_points, mapped_points;
+    std::vector<vsol_point_2d_sptr> matched_points, mapped_points;
     if (!this->map_points(from_cam, z, harris_from, mapped_points))
       continue;
 
@@ -989,12 +989,12 @@ bool brct_plane_sweeper::harris_sweep(const int from_cam)
     int n = matched_points.size();
 
     //now confirm with correlation
-    vcl_vector<vsol_point_2d_sptr> correlated_points;
+    std::vector<vsol_point_2d_sptr> correlated_points;
     if (n)
     {
       vil1_memory_image_of<float> mapped_to_image;
       this->map_image(from_cam, z, mapped_to_image);
-      for (vcl_vector<vsol_point_2d_sptr>::iterator pit=matched_points.begin();
+      for (std::vector<vsol_point_2d_sptr>::iterator pit=matched_points.begin();
            pit != matched_points.end(); pit++)
       {
         float x = (float)(*pit)->x(), y = (float)(*pit)->y();
@@ -1011,15 +1011,15 @@ bool brct_plane_sweeper::harris_sweep(const int from_cam)
       }
       int nc = correlated_points.size();
       n_matched += nc;
-      vcl_cout << "N(" << z << ")=" << nc << " total matched = "
-               << n_matched << vcl_endl;
+      std::cout << "N(" << z << ")=" << nc << " total matched = "
+               << n_matched << std::endl;
       matched_corners_.push_back(correlated_points);
     }
   }
   return true;
 }
 
-vcl_vector<vsol_point_2d_sptr>
+std::vector<vsol_point_2d_sptr>
 brct_plane_sweeper::matched_points_at_z_index(const int z_index)
 {
   int n = matched_corners_.size();
@@ -1030,18 +1030,18 @@ brct_plane_sweeper::matched_points_at_z_index(const int z_index)
 }
 
 //:get the matched corners as 3-d points with x-y in the matched image
-vcl_vector<vsol_point_3d_sptr>
+std::vector<vsol_point_3d_sptr>
 brct_plane_sweeper::proj_points_3d()
 {
-  vcl_vector<vsol_point_3d_sptr> out;
+  std::vector<vsol_point_3d_sptr> out;
   double z = zmin_;
   int n_z = matched_corners_.size();
   if (!n_z)
     return out;
   for (int i = 0; i<n_z; i++, z+=del_)
   {
-    vcl_vector<vsol_point_2d_sptr> pts = matched_corners_[i];
-    for (vcl_vector<vsol_point_2d_sptr>::iterator pit = pts.begin();
+    std::vector<vsol_point_2d_sptr> pts = matched_corners_[i];
+    for (std::vector<vsol_point_2d_sptr>::iterator pit = pts.begin();
          pit != pts.end(); pit++)
     {
       double x = (*pit)->x(), y = (*pit)->y();
@@ -1053,10 +1053,10 @@ brct_plane_sweeper::proj_points_3d()
 }
 
 //:get the matched corners as 3-d points with world x-y coordinates
-vcl_vector<vsol_point_3d_sptr>
+std::vector<vsol_point_3d_sptr>
 brct_plane_sweeper::world_points_3d()
 {
-  vcl_vector<vsol_point_3d_sptr> out, temp;
+  std::vector<vsol_point_3d_sptr> out, temp;
   temp = this->proj_points_3d();
   int n = temp.size();
   if (!n)
@@ -1077,12 +1077,12 @@ brct_plane_sweeper::world_points_3d()
   return out;
 }
 
-bool brct_plane_sweeper::save_world_points(vcl_string const& out_file)
+bool brct_plane_sweeper::save_world_points(std::string const& out_file)
 {
-  vcl_ofstream out(out_file.c_str());
+  std::ofstream out(out_file.c_str());
   if (!out)
     return false;
-  vcl_vector<vsol_point_3d_sptr> pts3d =
+  std::vector<vsol_point_3d_sptr> pts3d =
     this->world_points_3d();
   int n = pts3d.size();
   if (!n)

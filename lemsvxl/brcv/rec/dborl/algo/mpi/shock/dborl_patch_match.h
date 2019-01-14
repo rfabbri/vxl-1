@@ -31,7 +31,7 @@
 #include <dborl/algo/mpi/dborl_processor_base.h>
 #include "dborl_patch_match_params.h"
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 
 #include <dborl/dborl_index_sptr.h>
@@ -39,22 +39,22 @@
 
 class dborl_patch_match_input
 { public:
-    dborl_patch_match_input(vcl_string pn, vcl_string qn, 
+    dborl_patch_match_input(std::string pn, std::string qn, 
                             borld_image_description_sptr pi, 
                             borld_image_description_sptr qi,
-                            vcl_string pstn, vcl_string qstn,
-                            vcl_string pp, vcl_string qp) : proto_name(pn), query_name(qn), proto_id(pi), query_id(qi),
+                            std::string pstn, std::string qstn,
+                            std::string pp, std::string qp) : proto_name(pn), query_name(qn), proto_id(pi), query_id(qi),
                                                                 proto_st_name(pstn), query_st_name(qstn),
                                                                 proto_path(pp), query_path(qp) {}
 
     borld_image_description_sptr proto_id;
     borld_image_description_sptr query_id;
-    vcl_string proto_name;
-    vcl_string query_name;
-    vcl_string proto_st_name;
-    vcl_string query_st_name;
-    vcl_string proto_path;
-    vcl_string query_path;
+    std::string proto_name;
+    std::string query_name;
+    std::string proto_st_name;
+    std::string query_st_name;
+    std::string proto_path;
+    std::string query_path;
 };
 
 class dborl_patch_match_output
@@ -82,26 +82,26 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
   virtual bool parse(const char* param_file);
 
-  virtual bool parse_index(vcl_string index_file, dborl_index_sptr& ind, dborl_index_node_sptr& root);
+  virtual bool parse_index(std::string index_file, dborl_index_sptr& ind, dborl_index_node_sptr& root);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_patch_match_input>& t);
+  virtual bool initialize(std::vector<dborl_patch_match_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_patch_match_input i, dborl_patch_match_output& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<dborl_patch_match_output>& results);
+  virtual bool finalize(std::vector<dborl_patch_match_output>& results);
 
   void print_time();
   void set_total_processors(unsigned tot) { total_processors_ = tot; }
@@ -120,8 +120,8 @@ protected:
   dborl_index_sptr proto_ind_, query_ind_;
   dborl_index_node_sptr proto_root_, query_root_;
 
-  vcl_vector<borld_image_description_sptr> query_img_d_;
-  vcl_vector<borld_image_description_sptr> proto_img_d_;
+  std::vector<borld_image_description_sptr> query_img_d_;
+  std::vector<borld_image_description_sptr> proto_img_d_;
 
   vul_timer t_;
   unsigned total_processors_;

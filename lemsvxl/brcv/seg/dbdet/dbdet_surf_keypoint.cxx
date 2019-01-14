@@ -43,9 +43,9 @@ dbdet_surf_keypoint::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_surf_keypoint::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_surf_keypoint::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -70,14 +70,14 @@ dbdet_surf_keypoint::clone() const
 
 //: Print an ascii summary to the stream
 void
-dbdet_surf_keypoint::print_summary(vcl_ostream &os) const
+dbdet_surf_keypoint::print_summary(std::ostream &os) const
 {
   os << "dbdet_surf_keypoint("<<x()<<", "<<y()<<", "<<scale_<<", "<<orientation_<<")";
 }
 
 //=============================================================================
 
-vcl_istream& operator >> (vcl_istream& is, dbdet_surf_keypoint& s)
+std::istream& operator >> (std::istream& is, dbdet_surf_keypoint& s)
 {
   double x,y;
   int sgn;

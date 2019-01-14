@@ -211,7 +211,7 @@ public:
   virtual double f(const dbsksp_shapelet_sptr& s, int which_side);
 
   //: Sum of energy at a set of points
-  float f(const vcl_vector<vgl_point_2d<double > >& pts, float default_value = 0);
+  float f(const std::vector<vgl_point_2d<double > >& pts, float default_value = 0);
 
   // --------------------------------------------------------------------------
   //                  SUPPORT FUNCTIONS

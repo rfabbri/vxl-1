@@ -18,13 +18,13 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstring.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <string>
+#include <algorithm>
 #include <vul/vul_file.h>
 #include <vul/vul_string.h>
 #include <vgl/vgl_point_3d.h>
@@ -87,7 +87,7 @@ public:
 class dbmsh3d_sg3pi
 {
 protected:
-  vcl_vector <vcl_vector<dbmsh3d_sg3pi_pt*> > data_;
+  std::vector <std::vector<dbmsh3d_sg3pi_pt*> > data_;
 
   //: average intra-scanline sample distance.
   float intra_sl_dist_;
@@ -116,13 +116,13 @@ public:
   }
   
   //: ====== Data access functions ======
-  const vcl_vector <vcl_vector<dbmsh3d_sg3pi_pt*> >& data () const {
+  const std::vector <std::vector<dbmsh3d_sg3pi_pt*> >& data () const {
     return data_;
   }
-  vcl_vector <vcl_vector<dbmsh3d_sg3pi_pt*> >& get_data () {
+  std::vector <std::vector<dbmsh3d_sg3pi_pt*> >& get_data () {
     return data_;
   }
-  const vcl_vector<dbmsh3d_sg3pi_pt*>& data (const int i) const {
+  const std::vector<dbmsh3d_sg3pi_pt*>& data (const int i) const {
     return data_[i];
   }
   const dbmsh3d_sg3pi_pt* data (const int i, const int j) const {
@@ -160,7 +160,7 @@ public:
   void compute_range ();
 
   //: ====== Data Modification Functions ======
-  void add_scanline (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline) {
+  void add_scanline (std::vector<dbmsh3d_sg3pi_pt*>& scanline) {
     data_.push_back (scanline);
   }
 
@@ -169,22 +169,22 @@ public:
   }
 };
 
-double _min_sqd_between_scanlines (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0, 
-                                   vcl_vector<dbmsh3d_sg3pi_pt*>& scanline1);
+double _min_sqd_between_scanlines (std::vector<dbmsh3d_sg3pi_pt*>& scanline0, 
+                                   std::vector<dbmsh3d_sg3pi_pt*>& scanline1);
 
-vgl_vector_3d<double> _compute_scanline_normal (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline);
+vgl_vector_3d<double> _compute_scanline_normal (const std::vector<dbmsh3d_sg3pi_pt*>& scanline);
 
-bool _get_closest_pts (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
+bool _get_closest_pts (const std::vector<dbmsh3d_sg3pi_pt*>& scanline, 
                        const dbmsh3d_sg3pi_pt* SP, const double& intra_scanline_th,
                        int& m, int& n);
 
 void _add_to_kernel_1 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
-                       const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,                     
-                       vcl_vector<float>& kernel);
+                       const std::vector<dbmsh3d_sg3pi_pt*>& scanline,                     
+                       std::vector<float>& kernel);
 
 void _add_to_kernel_2 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
-                       const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,                     
-                       vcl_vector<float>& kernel);
+                       const std::vector<dbmsh3d_sg3pi_pt*>& scanline,                     
+                       std::vector<float>& kernel);
 
 #endif
 

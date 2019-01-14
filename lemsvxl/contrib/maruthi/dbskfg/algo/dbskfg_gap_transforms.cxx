@@ -26,8 +26,8 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_lineseg_test.h>
 // vcl headers
-#include <vcl_sstream.h>
-#include <vcl_algorithm.h>
+#include <sstream>
+#include <algorithm>
 // vnl headers
 #include <vnl/vnl_vector_fixed.h>
 // vil headers
@@ -73,13 +73,13 @@ dbskfg_gap_transforms::~dbskfg_gap_transforms()
 }
 
 void dbskfg_gap_transforms::detect_gaps(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
     
     // Keep track by looking at contour pair
-    vcl_map< vcl_pair<unsigned int,unsigned int>, vcl_string> id_map;
+    std::map< std::pair<unsigned int,unsigned int>, std::string> id_map;
 
-    vcl_map<unsigned int,vcl_string> degree_ones;
+    std::map<unsigned int,std::string> degree_ones;
 
     for (dbskfg_composite_graph::edge_iterator eit =
              composite_graph_->edges_begin();
@@ -114,8 +114,8 @@ void dbskfg_gap_transforms::detect_gaps(
                         
                         if ( lcnode->contour_id() != rcnode->contour_id() )
                         {
-                            vcl_pair<unsigned int,unsigned int> cpair = 
-                                vcl_make_pair(lcnode->id(),rcnode->id());
+                            std::pair<unsigned int,unsigned int> cpair = 
+                                std::make_pair(lcnode->id(),rcnode->id());
                             
                             // Make pair
                             if ( id_map.count(cpair) == 0 )
@@ -130,7 +130,7 @@ void dbskfg_gap_transforms::detect_gaps(
                                 }
 
                                 id_map[cpair]="temp";
-                                id_map[vcl_make_pair(cpair.second,
+                                id_map[std::make_pair(cpair.second,
                                                      cpair.first)]="temp";
                             }
                          
@@ -194,15 +194,15 @@ void dbskfg_gap_transforms::detect_gaps(
 
 
 void dbskfg_gap_transforms::detect_gaps_knn(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
+    std::vector<dbskfg_transform_descriptor_sptr>& objects,
     unsigned int K)
 {
     
 
-    vcl_map< vcl_pair<unsigned int,unsigned int>, vcl_string> id_map;
+    std::map< std::pair<unsigned int,unsigned int>, std::string> id_map;
 
     // degree one nodes
-    vcl_vector<dbskfg_composite_node_sptr> degree_ones;
+    std::vector<dbskfg_composite_node_sptr> degree_ones;
 
     for (dbskfg_composite_graph::vertex_iterator vit =
              composite_graph_->vertices_begin();
@@ -225,7 +225,7 @@ void dbskfg_gap_transforms::detect_gaps_knn(
         dbskfg_contour_node* con_node1 = dynamic_cast<dbskfg_contour_node*>
             (&(*vertex));
 
-        vcl_map<double,dbskfg_composite_node_sptr> local_distances;
+        std::map<double,dbskfg_composite_node_sptr> local_distances;
         for ( unsigned int j=0; j < degree_ones.size() ; ++j)
         {
 
@@ -243,7 +243,7 @@ void dbskfg_gap_transforms::detect_gaps_knn(
 
         }
 
-        vcl_map<double,dbskfg_composite_node_sptr>::iterator it;
+        std::map<double,dbskfg_composite_node_sptr>::iterator it;
         
         unsigned int count=0;
         for ( it =local_distances.begin() ; 
@@ -257,9 +257,9 @@ void dbskfg_gap_transforms::detect_gaps_knn(
             dbskfg_composite_node_sptr lcnode=vertex;
             dbskfg_composite_node_sptr rcnode=(*it).second;
 
-            vcl_pair<unsigned int,unsigned int> 
+            std::pair<unsigned int,unsigned int> 
                 cpair = 
-                vcl_make_pair(lcnode->id(),rcnode->id());
+                std::make_pair(lcnode->id(),rcnode->id());
                             
             // Make pair
             if ( id_map.count(cpair) == 0 )
@@ -267,7 +267,7 @@ void dbskfg_gap_transforms::detect_gaps_knn(
                 bool flag = 
                     detect_gaps_helper(lcnode,rcnode,objects);
                 id_map[cpair]="temp";
-                id_map[vcl_make_pair(cpair.second,
+                id_map[std::make_pair(cpair.second,
                                      cpair.first)]="temp";
             }
 
@@ -280,7 +280,7 @@ void dbskfg_gap_transforms::detect_gaps_knn(
 
 
     // Keep track by looking at contour pair
-    vcl_map< vcl_pair<unsigned int,unsigned int>, vcl_string> id_map_shock;
+    std::map< std::pair<unsigned int,unsigned int>, std::string> id_map_shock;
     {
         for (dbskfg_composite_graph::edge_iterator eit =
                  composite_graph_->edges_begin();
@@ -315,15 +315,15 @@ void dbskfg_gap_transforms::detect_gaps_knn(
                         
                             if ( lcnode->contour_id() != rcnode->contour_id() )
                             {
-                                vcl_pair<unsigned int,unsigned int> cpair = 
-                                    vcl_make_pair(lcnode->id(),rcnode->id());
+                                std::pair<unsigned int,unsigned int> cpair = 
+                                    std::make_pair(lcnode->id(),rcnode->id());
                             
                                 // Make pair
                                 if ( id_map_shock.count(cpair) == 0 )
                                 {
 
                                     id_map_shock[cpair]="temp";
-                                    id_map_shock[vcl_make_pair(cpair.second,
+                                    id_map_shock[std::make_pair(cpair.second,
                                                                cpair.first)]
                                         ="temp";
                                 }
@@ -345,8 +345,8 @@ void dbskfg_gap_transforms::detect_gaps_knn(
         dbskfg_composite_node_sptr pt1 = objects[b]->gap_.first;
         dbskfg_composite_node_sptr pt2 = objects[b]->gap_.second;
         
-        vcl_pair<unsigned int,unsigned int> pair = 
-            vcl_make_pair(pt1->id(),pt2->id());
+        std::pair<unsigned int,unsigned int> pair = 
+            std::make_pair(pt1->id(),pt2->id());
 
         if ( id_map_shock.count(pair))
         {
@@ -362,11 +362,11 @@ void dbskfg_gap_transforms::detect_gaps_knn(
 
 
 void dbskfg_gap_transforms::detect_gaps_single(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
     
     // Keep track by looking at contour pair
-    vcl_map< vcl_pair<unsigned int,unsigned int>, vcl_string> id_map;
+    std::map< std::pair<unsigned int,unsigned int>, std::string> id_map;
 
     for (dbskfg_composite_graph::edge_iterator eit =
              composite_graph_->edges_begin();
@@ -399,8 +399,8 @@ void dbskfg_gap_transforms::detect_gaps_single(
                         dbskfg_contour_node* rcnode = 
                             shock_link->get_right_point();
                    
-                        vcl_stringstream leftstream;
-                        vcl_stringstream rightstream;
+                        std::stringstream leftstream;
+                        std::stringstream rightstream;
                         leftstream<<lcnode->pt();
                         rightstream<<rcnode->pt();
             
@@ -415,9 +415,9 @@ void dbskfg_gap_transforms::detect_gaps_single(
                             if ( lcnode->contour_id() != 
                                  rcnode->contour_id() )
                             {
-                                vcl_pair<unsigned int,unsigned int> 
+                                std::pair<unsigned int,unsigned int> 
                                     cpair = 
-                                    vcl_make_pair(lcnode->id(),rcnode->id());
+                                    std::make_pair(lcnode->id(),rcnode->id());
                             
                                 // Make pair
                                 if ( id_map.count(cpair) == 0 )
@@ -425,7 +425,7 @@ void dbskfg_gap_transforms::detect_gaps_single(
                                     bool flag = 
                                         detect_gaps_helper(shock_link,objects);
                                     id_map[cpair]="temp";
-                                    id_map[vcl_make_pair(cpair.second,
+                                    id_map[std::make_pair(cpair.second,
                                                          cpair.first)]="temp";
                                 }
                             }
@@ -444,21 +444,21 @@ void dbskfg_gap_transforms::detect_gaps_single(
 
 
 void dbskfg_gap_transforms::detect_gaps_endpoint(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
-    vcl_vector<dbskfg_composite_node_sptr>& endpoints)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects,
+    std::vector<dbskfg_composite_node_sptr>& endpoints)
 {
     // Keep track by looking at contour pair
-    vcl_map< vcl_pair<unsigned int,unsigned int>, vcl_string> id_map;
+    std::map< std::pair<unsigned int,unsigned int>, std::string> id_map;
 
     // Keep degree ones
-    vcl_map<unsigned int,vcl_string> degree_ones;
+    std::map<unsigned int,std::string> degree_ones;
 
     for ( unsigned int c=0; c < endpoints.size() ; ++c )
     {
         dbskfg_contour_node* con_endpoint = dynamic_cast<dbskfg_contour_node*>
             (&(*endpoints[c]));
 
-        vcl_vector<dbskfg_shock_link*> shocks = con_endpoint->shocks_affected();
+        std::vector<dbskfg_shock_link*> shocks = con_endpoint->shocks_affected();
 
         for ( unsigned int s=0; s < shocks.size() ; ++s)
         {
@@ -484,8 +484,8 @@ void dbskfg_gap_transforms::detect_gaps_endpoint(
                     dbskfg_contour_node* rcnode = 
                         shock_link->get_right_point();
                    
-                    vcl_stringstream leftstream;
-                    vcl_stringstream rightstream;
+                    std::stringstream leftstream;
+                    std::stringstream rightstream;
                     leftstream<<lcnode->pt();
                     rightstream<<rcnode->pt();
                 
@@ -497,9 +497,9 @@ void dbskfg_gap_transforms::detect_gaps_endpoint(
                     if ( lcnode->contour_id() != 
                          rcnode->contour_id() )
                     {
-                        vcl_pair<unsigned int,unsigned int> 
+                        std::pair<unsigned int,unsigned int> 
                             cpair = 
-                            vcl_make_pair(lcnode->id(),rcnode->id());
+                            std::make_pair(lcnode->id(),rcnode->id());
                         
                         // Make pair
                         if ( id_map.count(cpair) == 0 )
@@ -515,7 +515,7 @@ void dbskfg_gap_transforms::detect_gaps_endpoint(
                             }
 
                             id_map[cpair]="temp";
-                            id_map[vcl_make_pair(cpair.second,
+                            id_map[std::make_pair(cpair.second,
                                                  cpair.first)]="temp";
                         }
                         
@@ -543,7 +543,7 @@ void dbskfg_gap_transforms::detect_gaps_endpoint(
 }
 
 bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
 
     // Create new transform object
@@ -573,19 +573,19 @@ bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
     double theta1=0.0;
     double theta2=0.0;
 
-    vcl_pair<double,double> tan_pair=
+    std::pair<double,double> tan_pair=
         dbskfg_utilities::get_tangent_pairs(lpt,rpt,theta1,theta2);
 
     // Use two percent of gap
     double offset = vgl_distance(lpt->pt(),rpt->pt())*ess_completion_;
 
     vgl_point_2d<double> start_point(
-        lpt->pt().x()+offset*vcl_cos(tan_pair.first),
-        lpt->pt().y()+offset*vcl_sin(tan_pair.first));
+        lpt->pt().x()+offset*std::cos(tan_pair.first),
+        lpt->pt().y()+offset*std::sin(tan_pair.first));
 
     vgl_point_2d<double> end_point(
-        rpt->pt().x()-offset*vcl_cos(tan_pair.second),
-        rpt->pt().y()-offset*vcl_sin(tan_pair.second));
+        rpt->pt().x()-offset*std::cos(tan_pair.second),
+        rpt->pt().y()-offset*std::sin(tan_pair.second));
 
     // Add in contours for front 
     vsol_spatial_object_2d_sptr obj=
@@ -600,8 +600,8 @@ bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
         tan_pair.second);
 
     // Convert euler spiral to vsol object
-    vcl_vector<vgl_point_2d<double> > point_samples;
-    vcl_vector<vsol_point_2d_sptr> ps;
+    std::vector<vgl_point_2d<double> > point_samples;
+    std::vector<vsol_point_2d_sptr> ps;
     es.compute_spiral(point_samples, 0.1);
     {
         for (unsigned j = 0; j < point_samples.size(); j++)
@@ -638,7 +638,7 @@ bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
 
 
     //********************** Add extra contour nodes *********************
-    vcl_map<unsigned int,vcl_string> contour_map;
+    std::map<unsigned int,std::string> contour_map;
     for ( unsigned int j=0; j < transformer->contours_affected_.size();
           ++j)
     {
@@ -734,8 +734,8 @@ bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
 
     if ( !valid_euler_spiral(transformer))
     {
-        vcl_cout<<"Invalid Euler Spiral Intersects with Original Contours"
-                <<vcl_endl;
+        std::cout<<"Invalid Euler Spiral Intersects with Original Contours"
+                <<std::endl;
         objects.pop_back();
         return false;
     }
@@ -775,7 +775,7 @@ bool dbskfg_gap_transforms::detect_gaps_helper(dbskfg_shock_link* shock_link,
 bool dbskfg_gap_transforms::detect_gaps_helper(
     dbskfg_composite_node_sptr pt1,
     dbskfg_composite_node_sptr pt2,
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
 
     // Create new transform object
@@ -805,19 +805,19 @@ bool dbskfg_gap_transforms::detect_gaps_helper(
     double theta1=0.0;
     double theta2=0.0;
 
-    vcl_pair<double,double> tan_pair=
+    std::pair<double,double> tan_pair=
         dbskfg_utilities::get_tangent_pairs(lpt,rpt,theta1,theta2);
 
     // Use two percent of gap
     double offset = vgl_distance(lpt->pt(),rpt->pt())*ess_completion_;
 
     vgl_point_2d<double> start_point(
-        lpt->pt().x()+offset*vcl_cos(tan_pair.first),
-        lpt->pt().y()+offset*vcl_sin(tan_pair.first));
+        lpt->pt().x()+offset*std::cos(tan_pair.first),
+        lpt->pt().y()+offset*std::sin(tan_pair.first));
 
     vgl_point_2d<double> end_point(
-        rpt->pt().x()-offset*vcl_cos(tan_pair.second),
-        rpt->pt().y()-offset*vcl_sin(tan_pair.second));
+        rpt->pt().x()-offset*std::cos(tan_pair.second),
+        rpt->pt().y()-offset*std::sin(tan_pair.second));
 
     // Add in contours for front 
     vsol_spatial_object_2d_sptr obj=
@@ -832,8 +832,8 @@ bool dbskfg_gap_transforms::detect_gaps_helper(
         tan_pair.second);
 
     // Convert euler spiral to vsol object
-    vcl_vector<vgl_point_2d<double> > point_samples;
-    vcl_vector<vsol_point_2d_sptr> ps;
+    std::vector<vgl_point_2d<double> > point_samples;
+    std::vector<vsol_point_2d_sptr> ps;
     es.compute_spiral(point_samples, 0.1);
     {
         for (unsigned j = 0; j < point_samples.size(); j++)
@@ -874,8 +874,8 @@ bool dbskfg_gap_transforms::detect_gaps_helper(
 
     if ( !valid_euler_spiral(transformer))
     {
-        vcl_cout<<"Invalid Euler Spiral Intersects with Original Contours"
-                <<vcl_endl;
+        std::cout<<"Invalid Euler Spiral Intersects with Original Contours"
+                <<std::endl;
         objects.pop_back();
         return false;
     }
@@ -898,7 +898,7 @@ bool dbskfg_gap_transforms::detect_gaps_helper(
 // Helper function to detect gaps
 void dbskfg_gap_transforms::detect_gap_4_helper(
     dbskfg_contour_node* endpoint,
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
     // Create new transform object
     dbskfg_transform_descriptor_sptr transformer = new
@@ -944,7 +944,7 @@ void dbskfg_gap_transforms::detect_gap_4_helper(
     dbskfg_expand_local_context expand(transformer);
 
     //********************** Add extra contour nodes *********************
-    vcl_map<unsigned int,vcl_string> contour_map;
+    std::map<unsigned int,std::string> contour_map;
     for ( unsigned int j=0; j < transformer->contours_affected_.size();
           ++j)
     {
@@ -1066,7 +1066,7 @@ bool dbskfg_gap_transforms::valid_euler_spiral(
 {
 
     // Create a vector of line segments
-    vcl_vector<vgl_line_segment_2d<double> > line_segs;
+    std::vector<vgl_line_segment_2d<double> > line_segs;
 
     // Grab first line
     vsol_line_2d* first_line = transform->new_contours_spatial_objects_[0]
@@ -1126,7 +1126,7 @@ bool dbskfg_gap_transforms::valid_euler_spiral(
         vgl_point_2d<double> pt2=line_seg.point2();
 
         // Loop over contours affected
-        vcl_vector<dbskfg_composite_link_sptr>::iterator lit;
+        std::vector<dbskfg_composite_link_sptr>::iterator lit;
         for ( lit = transform->contours_affected_.begin() ; 
               lit != transform->contours_affected_.end() ; ++lit )
         {
@@ -1167,8 +1167,8 @@ double dbskfg_gap_transforms::determine_app_cost(
 {
 
     // Create a vector of all the points in the scanline
-    vcl_vector<vgl_point_2d<double> > poly1_points;
-    vcl_vector<vgl_point_2d<double> > poly2_points;
+    std::vector<vgl_point_2d<double> > poly1_points;
+    std::vector<vgl_point_2d<double> > poly2_points;
 
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly1, false);  
@@ -1283,8 +1283,8 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
     vgl_point_2d<double> gap2=transform->gap_.second->pt();
 
     // Look at first sheet only
-    vcl_stringstream gap1_stream;
-    vcl_stringstream gap2_stream;
+    std::stringstream gap1_stream;
+    std::stringstream gap2_stream;
     gap1_stream<<gap1;
     gap2_stream<<gap2;
 
@@ -1294,7 +1294,7 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
     // Find start stop index of gap points
     for (unsigned int p = 0; p < transform_poly[0].size(); ++p) 
     {
-        vcl_stringstream temp;
+        std::stringstream temp;
         vgl_point_2d<double> c0(transform_poly[0][p].x(),
                                 transform_poly[0][p].y());
         temp<<c0;
@@ -1325,18 +1325,18 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
     unsigned int outer_count(0);
     for (unsigned int o=0; o < transform->outer_shock_nodes_.size() ; ++o)
     {
-        vcl_stringstream outer_shock_node;
+        std::stringstream outer_shock_node;
         vgl_point_2d<double> snode = transform->outer_shock_nodes_[o]->pt();
         outer_shock_node<<snode;
         
-        unsigned int start=vcl_min(gap1_index,gap2_index);
-        unsigned int stop =vcl_max(gap1_index,gap2_index);
+        unsigned int start=std::min(gap1_index,gap2_index);
+        unsigned int stop =std::max(gap1_index,gap2_index);
 
         for ( unsigned int b=start; b <= stop ; ++b)
         {
             vgl_point_2d<double> c0(transform_poly[0][b].x(),
                                     transform_poly[0][b].y());        
-            vcl_stringstream temp;
+            std::stringstream temp;
             temp<<c0;
   
             if (c0 == snode || outer_shock_node.str() == temp.str())
@@ -1373,8 +1373,8 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
     }
     else
     {                                              
-        unsigned int start=vcl_min(gap1_index,gap2_index);
-        unsigned int stop =vcl_max(gap1_index,gap2_index);
+        unsigned int start=std::min(gap1_index,gap2_index);
+        unsigned int stop =std::max(gap1_index,gap2_index);
 
         for ( unsigned int b=start; b <= stop ; ++b)
         {
@@ -1385,7 +1385,7 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
 
         // Now to create the second polygon we have to take the outer sets
         // do in two loops
-        for ( unsigned int a =0 ; a <= vcl_min(gap1_index,gap2_index) ; ++a)
+        for ( unsigned int a =0 ; a <= std::min(gap1_index,gap2_index) ; ++a)
         {
             vgl_point_2d<double> c0(transform_poly[0][a].x(),
                                     transform_poly[0][a].y());
@@ -1393,7 +1393,7 @@ void dbskfg_gap_transforms::determine_contrast_polygons(
 
         }
 
-        for ( unsigned int c =vcl_max(gap1_index,gap2_index) ; 
+        for ( unsigned int c =std::max(gap1_index,gap2_index) ; 
               c < transform_poly[0].size(); ++c)
         {
             vgl_point_2d<double> c0(transform_poly[0][c].x(),

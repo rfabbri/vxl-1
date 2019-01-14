@@ -2,11 +2,11 @@
 //:
 // \file
 #include <dbru/dbru_object.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <dbru/dbru_label.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
@@ -70,7 +70,7 @@ bool dbru_object::add_polygon(vsol_polygon_2d_sptr poly, dbru_label_sptr label)
   if (polygon_cnt_ == 0) 
     category_ = label->category_name_;
   else if (category_ != label->category_name_) {
-    vcl_cout << "category mismatch in adding polygon!! Polygon not added!!\n";
+    std::cout << "category mismatch in adding polygon!! Polygon not added!!\n";
     return false;
   }
     
@@ -118,7 +118,7 @@ int dbru_object::remove_last_polygon(void) {
 bool dbru_object::set_polygon(unsigned int i, vsol_polygon_2d_sptr poly, dbru_label_sptr label)
 {
   if (category_ != label->category_name_) {
-    vcl_cout << "category mismatch in setting polygon!! Polygon not set!!\n";
+    std::cout << "category mismatch in setting polygon!! Polygon not set!!\n";
     return false;
   }
 
@@ -159,7 +159,7 @@ bool dbru_object::set_observation(unsigned int i, dbinfo_observation_sptr obs)
 bool dbru_object::set_polygon_label(unsigned int i, dbru_label_sptr label)
 {
   if (category_ != label->category_name_) {
-    vcl_cout << "category mismatch in setting label!! Label not set!!\n";
+    std::cout << "category mismatch in setting label!! Label not set!!\n";
     return false;
   }
 
@@ -253,7 +253,7 @@ dbinfo_observation_sptr dbru_object::get_observation(unsigned int i) {
 }
 
 //: get the observation with given documentation
-dbinfo_observation_sptr dbru_object::get_observation(vcl_string const& obs_doc) {
+dbinfo_observation_sptr dbru_object::get_observation(std::string const& obs_doc) {
   for (unsigned i = 0; i<observations_.size(); i++)
     if (observations_[i]->doc() == obs_doc)
       return observations_[i];
@@ -266,22 +266,22 @@ void dbru_object::remove_observation(unsigned int i)
   if (i >= observations_.size()) 
     return;
 
-  vcl_cout << "WARNING in dbru_object::remove_observation() -- this method destroys the consecutiveness of the observations and polygons\n";
-  vcl_cout << "                                                start frame and end_frame may not be meaningful after this\n";
+  std::cout << "WARNING in dbru_object::remove_observation() -- this method destroys the consecutiveness of the observations and polygons\n";
+  std::cout << "                                                start frame and end_frame may not be meaningful after this\n";
                
-  vcl_vector< dbinfo_observation_sptr >::iterator iter;
+  std::vector< dbinfo_observation_sptr >::iterator iter;
   iter = observations_.begin()+i;
   observations_.erase(iter);
 
-  vcl_vector< dbru_multiple_instance_object_sptr >::iterator iter_i;
+  std::vector< dbru_multiple_instance_object_sptr >::iterator iter_i;
   iter_i = instances_.begin()+i;
   instances_.erase(iter_i);
 
-  vcl_vector< vsol_polygon_2d_sptr >::iterator iter_p;
+  std::vector< vsol_polygon_2d_sptr >::iterator iter_p;
   iter_p = polygons_.begin()+(i*polygon_per_frame_);
   polygons_.erase(iter_p, iter_p+polygon_per_frame_-1);
 
-  vcl_vector< dbru_label_sptr >::iterator iter_l;
+  std::vector< dbru_label_sptr >::iterator iter_l;
   iter_l = labels_.begin()+(i*polygon_per_frame_);
   labels_.erase(iter_l, iter_l+polygon_per_frame_-1);
 }
@@ -302,7 +302,7 @@ bool dbru_object::null_observation(unsigned i)
 }
 
 //: replace an existing observation with given documentation
-bool dbru_object::set_observation(vcl_string const& obs_doc, dbinfo_observation_sptr obs) {
+bool dbru_object::set_observation(std::string const& obs_doc, dbinfo_observation_sptr obs) {
   for (unsigned i = 0; i<polygon_cnt_; i++)
     if (observations_[i]->doc() == obs_doc) {
       observations_[i] = obs;
@@ -311,7 +311,7 @@ bool dbru_object::set_observation(vcl_string const& obs_doc, dbinfo_observation_
   return false;
 }
 
-void dbru_object::write_xml(vcl_ostream& os) 
+void dbru_object::write_xml(std::ostream& os) 
 {
   os << "<object videofile_id= \"" << video_id_ << "\" "; 
   os << " start_frame= \"" << start_frame_ << "\" ";
@@ -333,15 +333,15 @@ void dbru_object::write_xml(vcl_ostream& os)
     int width = 2; int height = 2;
     if (p->size() > 0) {
       cent = p->centroid();
-      width = (int)vcl_floor(p->get_max_x()-p->get_min_x()+0.5);
-      height = (int)vcl_floor(p->get_max_y()-p->get_min_y()+0.5);
+      width = (int)std::floor(p->get_max_x()-p->get_min_x()+0.5);
+      height = (int)std::floor(p->get_max_y()-p->get_min_y()+0.5);
     }
 
     os << "<track x=\"" << cent->x() << "\" y = \"" << cent->y() << "\" ";
     os << "width=\"" << width << "\" ";
     os << "height=\"" << height << "\" ";
-    os << "x_margin=\"" << (int)vcl_floor(width/4.0f) << "\" ";
-    os << "y_margin=\"" << (int)vcl_floor(height/4.0f) << "\">\n";
+    os << "x_margin=\"" << (int)std::floor(width/4.0f) << "\" ";
+    os << "y_margin=\"" << (int)std::floor(height/4.0f) << "\">\n";
 
     dbru_label_sptr label = labels_[i];
     //os << "\t\t<polygon number_of_vertices= \"" << p->size() << "\" ";
@@ -366,34 +366,34 @@ void dbru_object::write_xml(vcl_ostream& os)
 }
 
 //: my simple reader in our strict format
-bool dbru_object::read_xml(vcl_istream& os) 
+bool dbru_object::read_xml(std::istream& os) 
 {
   if (!os || os.eof()) {
-    vcl_cout << "Input file is not opened or empty!\n";
+    std::cout << "Input file is not opened or empty!\n";
     return false;
   }
 
-  vcl_string dummy;
-  vcl_string::size_type pos1, pos2;
+  std::string dummy;
+  std::string::size_type pos1, pos2;
   char buffer[1000];
-  vcl_string line;
+  std::string line;
 
   do {
     os.getline(buffer, 1000);
 
     if (os.eof()) {
-      vcl_cout << "Input file is empty! or <object> flag could not be found in this file\n";
+      std::cout << "Input file is empty! or <object> flag could not be found in this file\n";
       return false;
     }
 
     line = buffer;
     pos1 = line.find("object", 0);
   
-  } while (pos1 == vcl_string::npos);  // if false, assume there is a complete object afterwards 
+  } while (pos1 == std::string::npos);  // if false, assume there is a complete object afterwards 
 
   pos1 = line.find("\"", 0);
-  if (pos1 == vcl_string::npos) {// not found 
-    vcl_cout << "Video id could not be found!\n";
+  if (pos1 == std::string::npos) {// not found 
+    std::cout << "Video id could not be found!\n";
     return false;
   }
   
@@ -402,8 +402,8 @@ bool dbru_object::read_xml(vcl_istream& os)
   sscanf(dummy.c_str(), "%d", &video_id_);
 
   pos1 = line.find("\"", pos2+1);
-  if (pos1 == vcl_string::npos) {// not found
-    vcl_cout << "Start frame could not be found!\n";
+  if (pos1 == std::string::npos) {// not found
+    std::cout << "Start frame could not be found!\n";
     return false;
   }
 
@@ -412,8 +412,8 @@ bool dbru_object::read_xml(vcl_istream& os)
   sscanf(dummy.c_str(), "%d", &start_frame_);
 
   pos1 = line.find("\"", pos2+1);
-  if (pos1 == vcl_string::npos) {// not found
-    vcl_cout << "End frame could not be found!\n";
+  if (pos1 == std::string::npos) {// not found
+    std::cout << "End frame could not be found!\n";
     return false;
   }
 
@@ -422,24 +422,24 @@ bool dbru_object::read_xml(vcl_istream& os)
   sscanf(dummy.c_str(), "%d", &end_frame_);
 
   pos1 = line.find("\"", pos2+1);  // find category and skip
-  if (pos1 == vcl_string::npos) {// not found
-    vcl_cout << "Category could not be found!\n";
+  if (pos1 == std::string::npos) {// not found
+    std::cout << "Category could not be found!\n";
     return false;
   }
 
   pos2 = line.find("\"", pos1+1);
   
   pos1 = line.find("\"", pos2+1);  // find subcategory and skip
-  if (pos1 == vcl_string::npos) {// not found
-    vcl_cout << "Subcategory could not be found!\n";
+  if (pos1 == std::string::npos) {// not found
+    std::cout << "Subcategory could not be found!\n";
     return false;
   }
 
   pos2 = line.find("\"", pos1+1);
 
   pos1 = line.find("\"", pos2+1);  // find subject and save
-  if (pos1 == vcl_string::npos) {// not found
-    vcl_cout << "Subject could not be found!\n";
+  if (pos1 == std::string::npos) {// not found
+    std::cout << "Subject could not be found!\n";
     return false;
   }
 
@@ -491,7 +491,7 @@ bool dbru_object::read_xml(vcl_istream& os)
     os >> dummy; // <LinearRing>
     os >> dummy; // <coordinates>
 
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     for (unsigned int j = 0; j < size; j++) {
       float x, y;
       os >> x; 
@@ -516,20 +516,20 @@ bool dbru_object::read_xml(vcl_istream& os)
   //os >> dummy; // </serises_of_polygon>
   //os >> dummy; // </object>
   if (dummy != "</object>") {
-    vcl_cout << "Problems in parsing!\n";
+    std::cout << "Problems in parsing!\n";
   }
 
   polygon_per_frame_ = 1;
   return true;
 }
 
-void dbru_object::print(vcl_ostream& os) const
+void dbru_object::print(std::ostream& os) const
 {
-  os << "OBJECT video id:\t" << video_id_ << vcl_endl
-     << "start frame:\t" << start_frame_ << vcl_endl
-     << "end frame:\t" << end_frame_ << vcl_endl
-     << "polygons_per_frame:\t" << polygon_per_frame_ << vcl_endl
-     << "polygon_cnt:\t" << polygon_cnt_ << vcl_endl;
+  os << "OBJECT video id:\t" << video_id_ << std::endl
+     << "start frame:\t" << start_frame_ << std::endl
+     << "end frame:\t" << end_frame_ << std::endl
+     << "polygons_per_frame:\t" << polygon_per_frame_ << std::endl
+     << "polygon_cnt:\t" << polygon_cnt_ << std::endl;
 
   for (unsigned int i = 0; i<polygon_cnt_; i++) {
     vsol_polygon_2d_sptr p = polygons_[i];
@@ -700,19 +700,19 @@ void dbru_object::b_read(vsl_b_istream &is)
   }
 }
 
-bool read_objects_from_file(const char *filename, vcl_vector< dbru_object_sptr>& objects)
+bool read_objects_from_file(const char *filename, std::vector< dbru_object_sptr>& objects)
 {
-  vcl_ifstream dbfp(filename);
+  std::ifstream dbfp(filename);
   if (!dbfp) {
-    vcl_cout << "Problems in opening objects xml file!\n";
+    std::cout << "Problems in opening objects xml file!\n";
     return false;
   }
 
-  vcl_cout << "reading objects...\n";
+  std::cout << "reading objects...\n";
   
   char buffer[1000]; 
   dbfp.getline(buffer, 1000);  // comment 
-  vcl_string dummy;
+  std::string dummy;
   dbfp >> dummy;   // <contour_segmentation   
   
   // there are two types of object files, with object_cnt at the beginning and no object_cnt at the beginning
@@ -720,17 +720,17 @@ bool read_objects_from_file(const char *filename, vcl_vector< dbru_object_sptr>&
 
   dbfp >> dummy; // object_cnt="23">
 
-  vcl_string::size_type loc = dummy.find( "object_cnt", 0 );
-  if (loc == vcl_string::npos) {
+  std::string::size_type loc = dummy.find( "object_cnt", 0 );
+  if (loc == std::string::npos) {
     loc = dummy.find( "</contour_segmentation>", 0 );
     int cnt = 0;
-    while (loc == vcl_string::npos) {
+    while (loc == std::string::npos) {
       dbfp.putback(' ');
       dbfp.putback('t'); dbfp.putback('c'); dbfp.putback('e'); dbfp.putback('j'); dbfp.putback('b'); dbfp.putback('o');
 
       dbru_object_sptr obj = new dbru_object();
       if (!obj->read_xml(dbfp)) { 
-        vcl_cout << "problems in reading database object number: " << cnt << vcl_endl;
+        std::cout << "problems in reading database object number: " << cnt << std::endl;
         return false;
       }
       objects.push_back(obj);
@@ -746,10 +746,10 @@ bool read_objects_from_file(const char *filename, vcl_vector< dbru_object_sptr>&
  
     // read and extract all objects in this file, if they can be located in poly file and a multiple instance exists then add to OSL
     for (unsigned i = 0; i<size; i++) {
-      vcl_cout << "reading database object: " << i << "...\n";
+      std::cout << "reading database object: " << i << "...\n";
       dbru_object_sptr obj = new dbru_object();
       if (!obj->read_xml(dbfp)) { 
-        vcl_cout << "problems in reading database object number: " << i << vcl_endl;
+        std::cout << "problems in reading database object number: " << i << std::endl;
         return false;
       }
 
@@ -760,20 +760,20 @@ bool read_objects_from_file(const char *filename, vcl_vector< dbru_object_sptr>&
   return true;
 }
 
-int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_polygon_2d_sptr > >& frame_polys)
+int read_poly_file(std::string const& poly_file, std::vector<std::vector< vsol_polygon_2d_sptr > >& frame_polys)
 {
-  vcl_ifstream fs(poly_file.c_str());
+  std::ifstream fs(poly_file.c_str());
   
   if (!fs) {
-    vcl_cout << "Problems in opening file: " << poly_file << "\n";
+    std::cout << "Problems in opening file: " << poly_file << "\n";
     return -1;
   }
 
-  vcl_string dummy;
+  std::string dummy;
   int video_id;
   fs >> dummy; // VIDEOID:
   if (dummy != "VIDEOID:" && dummy != "FILEID:" && dummy != "VIDEOFILEID:") {
-    vcl_cout << "No video id specified in input file!\n";
+    std::cout << "No video id specified in input file!\n";
     return -1;
   } else {
     fs >> video_id;
@@ -785,7 +785,7 @@ int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_poly
   
   //: initialize polygon vector
   for (int i = 0; i<frame_cnt; i++) {
-    vcl_vector<vsol_polygon_2d_sptr> tmp;
+    std::vector<vsol_polygon_2d_sptr> tmp;
     frame_polys.push_back(tmp);
   }
 
@@ -803,7 +803,7 @@ int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_poly
       fs >> dummy; // NVERTS: 
       int vertex_cnt;
       fs >> vertex_cnt;
-      vcl_vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
+      std::vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
       
       fs >> dummy; // X: 
       for (int k = 0; k<vertex_cnt; k++) 
@@ -813,7 +813,7 @@ int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_poly
       for (int k = 0; k<vertex_cnt; k++) 
         fs >> y_corners[k];
 
-      vcl_vector< vsol_point_2d_sptr > points;
+      std::vector< vsol_point_2d_sptr > points;
       for (int k = 0; k<vertex_cnt; k++) {
         vsol_point_2d_sptr p = new vsol_point_2d(x_corners[k], y_corners[k]);
         points.push_back(p);
@@ -827,16 +827,16 @@ int read_poly_file(vcl_string const& poly_file, vcl_vector<vcl_vector< vsol_poly
   return video_id;
 }
 
-void read_ins_file(const char *filename, vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames)
+void read_ins_file(const char *filename, std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames)
 {
   vsl_b_ifstream ifile(filename);
   unsigned numframes=0;
   vsl_b_read(ifile,numframes);
   for(unsigned i=0;i<numframes;i++)
   {
-      vcl_vector<dbru_multiple_instance_object_sptr> temp;
+      std::vector<dbru_multiple_instance_object_sptr> temp;
       vsl_b_read(ifile,temp);
-      vcl_cout << "frame: " << i << " size: " << temp.size() << vcl_endl;
+      std::cout << "frame: " << i << " size: " << temp.size() << std::endl;
       frames.push_back(temp);
   }
 }

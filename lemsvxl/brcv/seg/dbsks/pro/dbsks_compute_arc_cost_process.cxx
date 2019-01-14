@@ -51,7 +51,7 @@ dbsks_compute_arc_cost_process()
     !parameters()->add("Initialize only?: " , "initialize_only", false )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -71,27 +71,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_compute_arc_cost_process::
+std::string dbsks_compute_arc_cost_process::
 name()
 { 
   return "Compute arc cost"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_compute_arc_cost_process::
+std::vector< std::string > dbsks_compute_arc_cost_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_compute_arc_cost_process::
+std::vector< std::string > dbsks_compute_arc_cost_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back("dbsks_shapematch");
   to_return.push_back( "image" );
   return to_return;
@@ -117,8 +117,8 @@ bool dbsks_compute_arc_cost_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_compute_arc_cost_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_compute_arc_cost_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 

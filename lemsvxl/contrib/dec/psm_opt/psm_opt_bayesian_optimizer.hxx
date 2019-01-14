@@ -1,10 +1,10 @@
 #ifndef psm_opt_bayesian_optimizer_txx_
 #define psm_opt_bayesian_optimizer_txx_
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <set>
+#include <map>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -22,7 +22,7 @@
 #include "psm_opt_appearance_estimator.h"
 
 template <psm_apm_type APM, psm_aux_type AUX>
-psm_opt_bayesian_optimizer<APM,AUX>::psm_opt_bayesian_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_string> const& image_ids)
+psm_opt_bayesian_optimizer<APM,AUX>::psm_opt_bayesian_optimizer(psm_scene<APM> &scene, std::vector<std::string> const& image_ids)
 : scene_(scene), image_ids_(image_ids), min_cell_P_(0.0001f), max_cell_P_(0.995f)
 {}
 
@@ -33,20 +33,20 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
   unsigned int c = 0;
   const unsigned int debug_c = 1509732;
   // get auxillary scenes associated with each imput image
-  vcl_vector<psm_aux_scene_base_sptr> aux_scenes;
+  std::vector<psm_aux_scene_base_sptr> aux_scenes;
   for (unsigned int i=0; i<image_ids_.size(); ++i) {
     psm_aux_scene_base_sptr aux_scene_base = scene_.template get_aux_scene<AUX>(image_ids_[i]);
     aux_scenes.push_back(aux_scene_base);
   }
 
-  vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > aux_samples;
+  std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > aux_samples;
 
   // for each block
   typename psm_scene<APM>::block_index_iterator block_it = scene_.block_index_begin();
   for (; block_it != scene_.block_index_end(); ++block_it) {
     hsds_fd_tree<psm_sample<APM>,3> &block = scene_.get_block(*block_it);
     // get a vector of incremental readers for each aux scene.
-    vcl_vector<hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>*> aux_readers(aux_scenes.size());
+    std::vector<hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>*> aux_readers(aux_scenes.size());
     for(unsigned int i=0; i<aux_scenes.size(); ++i) {
       aux_readers[i] = new hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>();
       psm_aux_scene<AUX> *aux_scene_ptr = static_cast<psm_aux_scene<AUX>*>(aux_scenes[i].ptr());
@@ -62,11 +62,11 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
         psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> aux_cell;
         hsds_fd_tree_node_index<3> aux_idx;
         if (!aux_readers[i]->next(aux_idx, aux_cell)) {
-          vcl_cerr << "error: incremental reader returned false." << vcl_endl;
+          std::cerr << "error: incremental reader returned false." << std::endl;
           return false;
         }
         if (aux_idx != cell_it->first) {
-          vcl_cerr << "error: aux_cell idx does not match cell idx." << vcl_endl;
+          std::cerr << "error: aux_cell idx does not match cell idx." << std::endl;
           return false;
         }
         if (aux_cell.seg_len_ > 0.0f) {
@@ -77,19 +77,19 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
       psm_sample<APM> &cell = cell_it->second;
 
 
-      vcl_vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
-      vcl_vector<float> vis_vector, pre_vector;//, post_vector;
+      std::vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
+      std::vector<float> vis_vector, pre_vector;//, post_vector;
 
       for (unsigned int e=0; e<aux_samples.size(); ++e) {
 #define PSM_OPT_DEBUG
 #ifdef PSM_OPT_DEBUG
         if (c == debug_c) {
-          vcl_cout << "edge " << e << ": " << vcl_endl;
-          vcl_cout << "   vis = " << aux_samples[e].vis_ << vcl_endl;
-          vcl_cout << "   pre = " << aux_samples[e].pre_ << vcl_endl;
-          //vcl_cout << "   post = " << aux_samples[e].post_ << vcl_endl;
-          vcl_cout << "   obs = " << aux_samples[e].obs_ << vcl_endl;
-          vcl_cout << "   seg_len = " << aux_samples[e].seg_len_ << vcl_endl;
+          std::cout << "edge " << e << ": " << std::endl;
+          std::cout << "   vis = " << aux_samples[e].vis_ << std::endl;
+          std::cout << "   pre = " << aux_samples[e].pre_ << std::endl;
+          //std::cout << "   post = " << aux_samples[e].post_ << std::endl;
+          std::cout << "   obs = " << aux_samples[e].obs_ << std::endl;
+          std::cout << "   seg_len = " << aux_samples[e].seg_len_ << std::endl;
         }
 #endif
         obs_vector.push_back(aux_samples[e].obs_);
@@ -107,7 +107,7 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
 
         for (unsigned int s=0; s<aux_samples.size(); ++s) {
           float PI = aux_samples[s].PI_;
-          float pass_prob = vcl_exp(cell.alpha * aux_samples[s].seg_len_);
+          float pass_prob = std::exp(cell.alpha * aux_samples[s].seg_len_);
           float total_ray_prob = aux_samples[s].pre_ + PI * aux_samples[s].vis_ + pass_prob*aux_samples[s].vis_*(aux_samples[s].post_ - PI);
           float ray_prob_given_x = (aux_samples[s].pre_ + aux_samples[s].vis_ * PI);
           if (total_ray_prob > 1e-6) {
@@ -134,8 +134,8 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
         // do bounds check on new alpha value
         vbl_bounding_box<double,3> cell_bb = block.cell_bounding_box(cell_it->first);
         const float cell_len = float(cell_bb.xmax() - cell_bb.xmin());
-        const float max_alpha = -vcl_log(1.0f - max_cell_P_)/cell_len;
-        const float min_alpha = -vcl_log(1.0f - min_cell_P_)/cell_len;
+        const float max_alpha = -std::log(1.0f - max_cell_P_)/cell_len;
+        const float min_alpha = -std::log(1.0f - min_cell_P_)/cell_len;
         if (cell.alpha > max_alpha) {
           cell.alpha = max_alpha;
         }
@@ -143,8 +143,8 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
           cell.alpha = min_alpha;
         }
         if (!((cell.alpha >= min_alpha) && (cell.alpha <= max_alpha)) ){
-          vcl_cerr << vcl_endl << "error: cell.alpha = " << cell.alpha << vcl_endl;
-          vcl_cerr << "damped_alpha_mult = " << damped_alpha_mult << vcl_endl;
+          std::cerr << std::endl << "error: cell.alpha = " << cell.alpha << std::endl;
+          std::cerr << "damped_alpha_mult = " << damped_alpha_mult << std::endl;
         }
       }
       // update with new appearance
@@ -156,7 +156,7 @@ bool psm_opt_bayesian_optimizer<APM,AUX>::optimize_cells(double damping_factor)
     }
   }
 
-  vcl_cout << "done with all cells" << vcl_endl;
+  std::cout << "done with all cells" << std::endl;
 
   return true;
 }

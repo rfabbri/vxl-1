@@ -16,10 +16,10 @@
 #ifndef dbasn_graph_h_
 #define dbasn_graph_h_
 
-#include <vcl_utility.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <utility>
+#include <cstdio>
+#include <vector>
+#include <string>
 
 #include <dbasn/dbasn_node.h>
 
@@ -28,7 +28,7 @@ class dbasn_graph
 {
 protected:
   //: List of grad. assignment graph nodes.
-  vcl_vector<dbasn_node*> nodes_;
+  std::vector<dbasn_node*> nodes_;
   
   //: adjacency matrix of this graph, nN * nN. 
   //  Value represents the cost of each link.
@@ -56,7 +56,7 @@ public:
   }
 
   //####### Data access functions ####### 
-  const vcl_vector<dbasn_node*>& nodes () const {
+  const std::vector<dbasn_node*>& nodes () const {
     return nodes_;
   }
   const dbasn_node* nodes (const unsigned int i) const {

@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 #include <vidl1/vidl1_io.h>
@@ -23,23 +23,23 @@
 int main(int argc, char** argv)
 {
   // --- Program Arguments ---
-  vul_arg<vcl_string> video_file("-video-path", "input video file");
+  vul_arg<std::string> video_file("-video-path", "input video file");
   vul_arg<double> frame_index("-frame-index", "for N frames, range [1, N-1], fractional [0.0, 0.999]");
-  vul_arg<vcl_string> image_file("-image-file", "output image file, ext=.jpeg");
-  vul_arg<vcl_string> numframe_file("-numframe-file", "output number of frames file, ext=.txt");
+  vul_arg<std::string> image_file("-image-file", "output image file, ext=.jpeg");
+  vul_arg<std::string> numframe_file("-numframe-file", "output number of frames file, ext=.txt");
   vul_arg_parse(argc, argv);
 
   // --- Load the Movie ---
   vidl1_movie_sptr my_movie = vidl1_io::load_movie(video_file().c_str());
   if (!my_movie)
     {
-      vcl_cout << "Failed to load movie \n";
+      std::cout << "Failed to load movie \n";
       return -1;
     }
-  vcl_cout << "Movie has " << my_movie->length() << " frames\n";
+  std::cout << "Movie has " << my_movie->length() << " frames\n";
   if(frame_index()<0||frame_index()>=my_movie->length())
     {
-      vcl_cout << "Frame index out of range \n";
+      std::cout << "Frame index out of range \n";
       return -2;
     }
   int pos;
@@ -125,13 +125,13 @@ int main(int argc, char** argv)
   // --- Save the number of Frames in a File ---
  
   if (!numframe_file.set()){
-    vcl_cerr << "Error: The numframes file was not specified" << vcl_endl;
+    std::cerr << "Error: The numframes file was not specified" << std::endl;
   return -3;
   }
-  vcl_ofstream outstream(numframe_file().c_str());
+  std::ofstream outstream(numframe_file().c_str());
   if (!outstream)
   {
-    vcl_cerr << "Error: could not create numframe output file ["<<numframe_file()<<"]" << vcl_endl;
+    std::cerr << "Error: could not create numframe output file ["<<numframe_file()<<"]" << std::endl;
     return -4;
   }
 

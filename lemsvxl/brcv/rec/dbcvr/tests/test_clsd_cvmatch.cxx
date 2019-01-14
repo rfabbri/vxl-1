@@ -1,13 +1,13 @@
 #include <testlib/testlib_test.h>
 #include <dbcvr/dbcvr_clsd_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
-#include <vcl_string.h>
-//#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <string>
+//#include <iostream>
+//#include <cmath>
 
 MAIN_ARGS(test_clsd_cvmatch)
 {
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -20,7 +20,7 @@ MAIN_ARGS(test_clsd_cvmatch)
 
   testlib_test_start("testing closed curve matching ");
 
-  vcl_string data_file = "line1.con";
+  std::string data_file = "line1.con";
   // Test generic file loads
   bsol_intrinsic_curve_2d_sptr curve_2d1 = new bsol_intrinsic_curve_2d;
   curve_2d1->readCONFromFile( (dir_base+data_file).c_str() );

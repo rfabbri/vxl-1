@@ -8,14 +8,14 @@ void dbcl_classifier::add_feature( dbcl_temporal_feature_sptr tf, feature_map_ty
 {
     unsigned time = tf->time();
 
-    vcl_pair<feature_map_type::iterator,bool> ret;
+    std::pair<feature_map_type::iterator,bool> ret;
 
-    ret = fm.insert(vcl_pair<unsigned,dbcl_temporal_feature_sptr>(time,tf));
+    ret = fm.insert(std::pair<unsigned,dbcl_temporal_feature_sptr>(time,tf));
 
     if( ret.second == false )
     {
         fm.erase(ret.first);
-        fm.insert(vcl_pair<unsigned, dbcl_temporal_feature_sptr>(time,tf));
+        fm.insert(std::pair<unsigned, dbcl_temporal_feature_sptr>(time,tf));
     }
 
 }//end dbcl_classifier::add_feature
@@ -47,7 +47,7 @@ bool dbcl_classifier::set_training_label( unsigned const& time, unsigned& label 
 {
     if( !this->set_label(time,label,this->training_data_) )
     {
-        vcl_cerr << "ERROR dbcl_classifier::set_training_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::set_training_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
     else
@@ -59,7 +59,7 @@ bool dbcl_classifier::set_test_label( unsigned const& time, unsigned& label )
 {
     if( !this->set_label(time,label,this->test_data_) )
     {
-        vcl_cerr << "ERROR dbcl_classifier::set_test_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::set_test_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
     else
@@ -87,7 +87,7 @@ bool dbcl_classifier::training_label( unsigned const& time, unsigned& label )
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::training_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::training_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::training_label
@@ -98,7 +98,7 @@ bool dbcl_classifier::test_label( unsigned const& time, unsigned& label )
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::test_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::test_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::test_data
@@ -122,7 +122,7 @@ bool dbcl_classifier::training_feature_vector( unsigned const& time, dbcl_tempor
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::training_feature_vector training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::training_feature_vector training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::training_feature_vector
@@ -133,7 +133,7 @@ bool dbcl_classifier::test_feature_vector( unsigned const& time, dbcl_temporal_f
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::test_feature_vector training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::test_feature_vector training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::test_feature_vector
@@ -158,7 +158,7 @@ bool dbcl_classifier::training_feature_label( unsigned const& time, dbcl_tempora
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::training_feature_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::training_feature_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::training_feature_label
@@ -169,7 +169,7 @@ bool dbcl_classifier::test_feature_label( unsigned const& time, dbcl_temporal_fe
         return true;
     else
     {
-        vcl_cerr << "ERROR dbcl_classifier::test_feature_label training feature with time stamp " << time << " not found." << vcl_flush;
+        std::cerr << "ERROR dbcl_classifier::test_feature_label training feature with time stamp " << time << " not found." << std::flush;
         return false;
     }
 }//end dbcl_classifier::training_feature_label

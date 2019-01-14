@@ -16,7 +16,7 @@
 #include <dborl/dborl_index_leaf.h>
 #include <dborl/dborl_index_node.h>
 
-vcl_string dborl_index::get_type_string()
+std::string dborl_index::get_type_string()
 { 
   switch(type_) {
     case dborl_index_type::flat_image:
@@ -33,7 +33,7 @@ vcl_string dborl_index::get_type_string()
   return "unknown";
 }
 
-int dborl_index::set_type_from_string(vcl_string type_str)
+int dborl_index::set_type_from_string(std::string type_str)
 {
   if (type_str.compare("flat_image") == 0) {
     type_ = dborl_index_type::flat_image;
@@ -103,13 +103,13 @@ bool dborl_index::add_child(dborl_index_node_base_sptr parent, dborl_index_node_
 }
 
 //: does not check whether parent exists before accessing the outgoing edges to get children, use node_exists() if need to be sure
-bool dborl_index::get_children(dborl_index_node_base_sptr parent, vcl_vector<dborl_index_node_base_sptr>& cs)
+bool dborl_index::get_children(dborl_index_node_base_sptr parent, std::vector<dborl_index_node_base_sptr>& cs)
 {
-  //vcl_list<dborl_index_edge_sptr>& edges = parent->out_edges();
+  //std::list<dborl_index_edge_sptr>& edges = parent->out_edges();
   if (!parent->out_edges().size())
     return false;
 
-  for (vcl_list<dborl_index_edge_sptr>::const_iterator it = parent->out_edges().begin(); it != parent->out_edges().end(); it++)
+  for (std::list<dborl_index_edge_sptr>::const_iterator it = parent->out_edges().begin(); it != parent->out_edges().end(); it++)
     cs.push_back((*it)->target());
 
   return true;
@@ -122,7 +122,7 @@ dborl_index_node_base_sptr dborl_index::get_parent(dborl_index_node_base_sptr ch
     return 0;
 
   //: return the first incoming edge's source
-  vcl_list<dborl_index_edge_sptr>::const_iterator it = child->in_edges().begin();
+  std::list<dborl_index_edge_sptr>::const_iterator it = child->in_edges().begin();
   return (*it)->source();
 }
   
@@ -136,11 +136,11 @@ void dborl_index::b_write()
 
 }
 
-void dborl_index::write_node_xml(dborl_index_node_sptr n, vcl_ostream& os)
+void dborl_index::write_node_xml(dborl_index_node_sptr n, std::ostream& os)
 {
   os << "<node>\n";
   n->write_xml(os);
-  vcl_vector<dborl_index_node_base_sptr> ch;
+  std::vector<dborl_index_node_base_sptr> ch;
   get_children(n->cast_to_index_node_base(), ch);
   for (unsigned i = 0; i < ch.size(); i++) {
     if (ch[i]->cast_to_index_node())
@@ -151,7 +151,7 @@ void dborl_index::write_node_xml(dborl_index_node_sptr n, vcl_ostream& os)
   os << "</node>\n";
 }
 
-void dborl_index::write_xml(vcl_ostream& os)
+void dborl_index::write_xml(std::ostream& os)
 {
   os << "<file basictype=\"index\" name = \"" << name_ << "\" filetype = \"" << get_type_string() << "\">\n";
   write_node_xml(root_->cast_to_index_node(), os);

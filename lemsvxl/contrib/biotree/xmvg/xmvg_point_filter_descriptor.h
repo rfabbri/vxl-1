@@ -10,7 +10,7 @@
 // \date    July 19th, 05
 // 
 
-#include <vcl_string.h>
+#include <string>
 #include "xmvg_filter_descriptor.h"
 #include <vnl/vnl_double_3.h>
 

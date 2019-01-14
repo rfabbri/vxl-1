@@ -5,11 +5,11 @@
 // \file
 // \author Kongbin Kang
 
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <cassert>
 #include <bugl/bugl_curve_3d.h>
 #include <bgui/bgui_picker_tableau.h>
 #include <vgui/vgui.h>
@@ -147,7 +147,7 @@ bool brct_windows_frame::handle(const vgui_event &e)
 void brct_windows_frame::quit()
 {
   clean_up();
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void brct_windows_frame::clean_up()
@@ -162,7 +162,7 @@ void brct_windows_frame::clean_up()
     delete e_;
 }
 
-void brct_windows_frame::add_curve2d(vcl_vector<vgl_point_2d<double> > &pts,
+void brct_windows_frame::add_curve2d(std::vector<vgl_point_2d<double> > &pts,
                                      float r, float g, float b)
 {
   int size = pts.size();
@@ -241,7 +241,7 @@ void brct_windows_frame::remove_curve3d()
 }
 
 void brct_windows_frame::
-show_epipolar_lines(vcl_vector<vgl_point_2d<double> > const& c2d)
+show_epipolar_lines(std::vector<vgl_point_2d<double> > const& c2d)
 {
   vgl_point_2d<double> e;
   if (kalman_)
@@ -249,7 +249,7 @@ show_epipolar_lines(vcl_vector<vgl_point_2d<double> > const& c2d)
   else
     e = epi_recon_->get_cur_epipole();
   double ex = e.x(), ey = e.y();
-  vcl_vector<vgl_point_2d<double> >::const_iterator pit = c2d.begin();
+  std::vector<vgl_point_2d<double> >::const_iterator pit = c2d.begin();
   for (int n = 0; pit != c2d.end(); ++pit, ++n)
   {
     double px = (*pit).x(), py = (*pit).y();
@@ -261,7 +261,7 @@ show_epipolar_lines(vcl_vector<vgl_point_2d<double> > const& c2d)
 
 void brct_windows_frame::init_kalman()
 {
-  vcl_vector<vgl_point_2d<double> > c2d;
+  std::vector<vgl_point_2d<double> > c2d;
 
   if (!e_)
   {
@@ -271,7 +271,7 @@ void brct_windows_frame::init_kalman()
 
   if (!kalman_&&!epi_recon_)
   {
-    vcl_cout<<"brct_windows_frame::kalman or recon not created yet\n";
+    std::cout<<"brct_windows_frame::kalman or recon not created yet\n";
     return;
   }
   if (kalman_)
@@ -314,7 +314,7 @@ void brct_windows_frame::go()
   remove_curve3d();
 
   // add current data
-  vcl_vector<vgl_point_2d<double> > c2d;
+  std::vector<vgl_point_2d<double> > c2d;
   if (kalman_)
   {
     c2d = kalman_->get_cur_observes();
@@ -349,7 +349,7 @@ void brct_windows_frame::show_predicted_curve()
     pts = epi_recon_->get_predicted_curve();
 
   int num_points = pts.columns();
-  vcl_vector<vgl_point_2d<double> > curve(num_points);
+  std::vector<vgl_point_2d<double> > curve(num_points);
 
   for (int i=0; i<num_points; i++)
     curve[i]= vgl_point_2d<double>(pts[0][i], pts[1][i]);
@@ -359,7 +359,7 @@ void brct_windows_frame::show_predicted_curve()
   this->post_redraw();
 }
 
-void brct_windows_frame::add_predicted_curve2d(vcl_vector<vgl_point_2d<double> > &pts)
+void brct_windows_frame::add_predicted_curve2d(std::vector<vgl_point_2d<double> > &pts)
 {
   int size = pts.size();
   assert(size > 1);
@@ -375,7 +375,7 @@ void brct_windows_frame::add_predicted_curve2d(vcl_vector<vgl_point_2d<double> >
   instance_->post_redraw();
 }
 
-void brct_windows_frame::add_next_observes(vcl_vector<vgl_point_2d<double> >&pts)
+void brct_windows_frame::add_next_observes(std::vector<vgl_point_2d<double> >&pts)
 {
   int size = pts.size();
   assert(size > 1);
@@ -396,7 +396,7 @@ void brct_windows_frame::add_next_observes(vcl_vector<vgl_point_2d<double> >&pts
 
 void brct_windows_frame::show_next_observes()
 {
-  vcl_vector<vgl_point_2d<double> > c2d;
+  std::vector<vgl_point_2d<double> > c2d;
   if (kalman_)
     c2d = kalman_->get_next_observes();
   else
@@ -407,7 +407,7 @@ void brct_windows_frame::show_next_observes()
 
 void brct_windows_frame::show_back_projection()
 {
-  vcl_vector<vnl_matrix<double> > c2d;
+  std::vector<vnl_matrix<double> > c2d;
   if (kalman_)
     c2d = kalman_->get_back_projection();
   else
@@ -445,7 +445,7 @@ void brct_windows_frame::print_motion_array()
 {
   if (kalman_)
   {
-    vcl_cout << "Not Implemented\n";
+    std::cout << "Not Implemented\n";
     return;
   }
   else
@@ -456,8 +456,8 @@ void brct_windows_frame::load_image()
 {
   bool greyscale = false;
   vgui_dialog load_image_dlg("Load Image");
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   load_image_dlg.file("Image Filename:", ext, image_filename);
   load_image_dlg.checkbox("greyscale ", greyscale);
   if (!load_image_dlg.ask())
@@ -471,7 +471,7 @@ void brct_windows_frame::load_image()
     status_info_ += "\n";
   }
   else
-    vcl_cout << "In brct_windows_frame::load_image() - null tableau\n";
+    std::cout << "In brct_windows_frame::load_image() - null tableau\n";
 }
 
 void brct_windows_frame::show_epipole()
@@ -483,7 +483,7 @@ void brct_windows_frame::show_epipole()
   else
     e = epi_recon_->get_cur_epipole();
 
-  vcl_cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
+  std::cout<<"\n epipole ("<<e.x() <<'\t'<<e.y()<<")\n";
   instance_->easy_2d_->add_point(e.x(), e.y());
 }
 
@@ -495,7 +495,7 @@ void brct_windows_frame::init_epipole()
   assert(lines_.size() >= 2);
   vgl_homg_point_2d<double> epipole = vgl_homg_operators_2d<double>::lines_to_point(lines_);
 
-  vcl_cout<<"epipole = ("<<epipole.x()<<' ' << epipole.y() << ' '<< epipole.w()<<")\n";
+  std::cout<<"epipole = ("<<epipole.x()<<' ' << epipole.y() << ' '<< epipole.w()<<")\n";
 
   vgl_point_2d<double> pt(epipole);
   e_ -> set(pt.x(), pt.y());
@@ -505,7 +505,7 @@ void brct_windows_frame::init_epipole()
   else
     epi_recon_->init_epipole(pt.x(), pt.y());
 
-  vcl_stringstream ss;
+  std::stringstream ss;
   ss<<pt.x()<<' '<<pt.y();
   status_info_ += ss.str();
 }
@@ -513,7 +513,7 @@ void brct_windows_frame::init_epipole()
 void brct_windows_frame::creat_line()
 {
   float x1=0, y1=0, x2=0, y2=0;
-  vcl_cout<<"pick a line\n";
+  std::cout<<"pick a line\n";
   tab_picker_->pick_line(&x1, &y1, &x2, &y2);
   vgl_homg_point_2d<double> p1(x1, y1, 1), p2(x2, y2, 1);
   vgl_homg_line_2d<double> l(p1, p2);
@@ -525,15 +525,15 @@ void brct_windows_frame::creat_line()
 void brct_windows_frame::save_status()
 {
   vgui_dialog save_file_dlg("save status");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   save_file_dlg.file("file name", ext, filename);
   if (!save_file_dlg.ask())
     return;
 
   if (filename != "")
   {
-    vcl_ofstream of(filename.c_str());
+    std::ofstream of(filename.c_str());
     of << status_info_;
   }
 }
@@ -541,17 +541,17 @@ void brct_windows_frame::save_status()
 void brct_windows_frame::load_status()
 {
   vgui_dialog load_file_dlg("load status");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_file_dlg.file("file name", ext, filename);
   if (!load_file_dlg.ask())
     return;
 
   if (filename != "")
   {
-    vcl_ifstream in(filename.c_str());
+    std::ifstream in(filename.c_str());
 
-    vcl_string str;
+    std::string str;
     in >> str;
     img_ = vil1_load(str.c_str());
     status_info_ = str;
@@ -574,13 +574,13 @@ void brct_windows_frame::load_status()
   else
     epi_recon_->init_epipole(x, y);
 
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << x <<' '<<y;
     status_info_ += ss.str();
   }
 }
 
-static void write_vrml_header(vcl_ofstream& str)
+static void write_vrml_header(std::ofstream& str)
 {
   str << "#VRML V2.0 utf8\n"
       << "Background {\n"
@@ -606,7 +606,7 @@ static void write_vrml_header(vcl_ofstream& str)
       << "   point[\n";
 }
 
-static void write_vrml_trailer(vcl_ofstream& str)
+static void write_vrml_trailer(std::ofstream& str)
 {
   str << "  ]\n"
       << "  }\n"
@@ -618,8 +618,8 @@ static void write_vrml_trailer(vcl_ofstream& str)
 void brct_windows_frame::write_results_file()
 {
   vgui_dialog save_file_dlg("save vrml file");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   save_file_dlg.file("file name", ext, filename);
 
   if (!save_file_dlg.ask())
@@ -630,7 +630,7 @@ void brct_windows_frame::write_results_file()
 
   if (kalman_)
   {
-    vcl_cout << "Not Implemented\n";
+    std::cout << "Not Implemented\n";
     return;
   }
   else
@@ -640,8 +640,8 @@ void brct_windows_frame::write_results_file()
 void brct_windows_frame::write_vrml_file()
 {
   vgui_dialog save_file_dlg("save vrml file");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   save_file_dlg.file("file name", ext, filename);
 
   if (!save_file_dlg.ask())
@@ -650,7 +650,7 @@ void brct_windows_frame::write_vrml_file()
   if (filename == "")
     return;
 
-  vcl_ofstream out(filename.c_str());
+  std::ofstream out(filename.c_str());
   if (!out)
     return;
   write_vrml_header(out);
@@ -658,7 +658,7 @@ void brct_windows_frame::write_vrml_file()
                               : epi_recon_->get_curve_3d();
 
   int size = c3d.get_num_points();
-  vcl_vector<vgl_point_3d<double> > pts(size);
+  std::vector<vgl_point_3d<double> > pts(size);
     for (int i=0; i<size; i++){
       if (!c3d.get_point(i)->exists())
         continue;//JLM

@@ -4,7 +4,7 @@
 
 #include "smw/smw_graph.h"
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 #include <vil/vil_image_view.h>
 
@@ -36,13 +36,13 @@ public:
     //write a text file to disk that describes the world.
     //Number of graphs, number of nodes per graph and each 
     //mean and standard deviation.
-    void print_log_file(vcl_string const& file_full_path);
+    void print_log_file(std::string const& file_full_path);
 
 
 private:
     unsigned ni_;
     unsigned nj_;
-    vcl_vector< vcl_vector<smw_graph_gaussian_frames> > world_; 
+    std::vector< std::vector<smw_graph_gaussian_frames> > world_; 
 };
 
 #endif //SMW_WORLD_H_

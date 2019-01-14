@@ -30,7 +30,7 @@ extern vul_arg<char const*>   bwm_lidar_cmd_dir;
 extern vul_arg<int>           bwm_lidar_cmd_lidar;
 extern vul_arg<char const*>   bwm_lidar_cmd_ft;
 
-extern vcl_string             dbmsh3d_app_window_title;
+extern std::string             dbmsh3d_app_window_title;
 
 #endif
 

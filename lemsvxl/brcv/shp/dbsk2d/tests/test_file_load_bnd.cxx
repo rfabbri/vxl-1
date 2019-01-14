@@ -11,7 +11,7 @@
 // Compare the results of loading different files with the true data
 // that's supposed to be in those files.
 
-vcl_string file_base;
+std::string file_base;
 
 bool load_bnd_and_compare()
 {

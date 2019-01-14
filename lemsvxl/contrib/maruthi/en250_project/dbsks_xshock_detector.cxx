@@ -14,7 +14,7 @@
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 #include <dbil/algo/dbil_gradient_color.h>
 #include <vnl/vnl_math.h>
-#include <vcl_utility.h>
+#include <utility>
 
 // ============================================================================
 // dbsks_xshock_detector
@@ -38,8 +38,8 @@ detect(const vgl_box_2d<int >& window)
   dbsksp_xshock_node_sptr xv_root = this->xgraph()->node_from_id(this->root_vid_);
   if (!xv_root)
   {
-    vcl_cout << "ERROR: There is no vertex with id=root_vid=" << this->root_vid_ 
-      << ". Please double check. Quit now." << vcl_endl;
+    std::cout << "ERROR: There is no vertex with id=root_vid=" << this->root_vid_ 
+      << ". Please double check. Quit now." << std::endl;
     return;
   }
   this->xgraph()->compute_vertex_depths(this->root_vid_);
@@ -48,8 +48,8 @@ detect(const vgl_box_2d<int >& window)
   dbsksp_xshock_edge_sptr major_child_edge = this->xgraph()->edge_from_id(this->major_child_eid_);
   if (!major_child_edge)
   {
-    vcl_cout << "ERROR: There is no edge with major_child_eid=" << this->major_child_eid_
-      << ". Please double check. Quit now." << vcl_endl;
+    std::cout << "ERROR: There is no edge with major_child_eid=" << this->major_child_eid_
+      << ". Please double check. Quit now." << std::endl;
     return;
   }
 
@@ -90,14 +90,14 @@ detect(const vgl_box_2d<int >& window)
   //bool hack = true;
   //if (hack)
   //{
-  //  vcl_string temp_xshock_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/applelogos-xgraph/applelogos_four.xgraph.3.prototype1.xml";
+  //  std::string temp_xshock_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/applelogos-xgraph/applelogos_four.xgraph.3.prototype1.xml";
   //  dbsksp_xshock_graph_sptr temp_xgraph = 0;
   //  x_read(temp_xshock_file, temp_xgraph);
   //  temp_xgraph->compute_vertex_depths(this->root_vid_);
   //  //temp_xgraph->scale_up(0, 0, 2);
-  //  double temp_wcm_confidence1 = this->app_like_->f_whole_contour(temp_xgraph, vcl_vector<unsigned >(), true);
-  //  double temp_wcm_confidence = this->app_like_->f_whole_contour(temp_xgraph, vcl_vector<unsigned >(1, 10), true);
-  //  vcl_cout << "temp_wcm_confidence = " << temp_wcm_confidence << "\n";
+  //  double temp_wcm_confidence1 = this->app_like_->f_whole_contour(temp_xgraph, std::vector<unsigned >(), true);
+  //  double temp_wcm_confidence = this->app_like_->f_whole_contour(temp_xgraph, std::vector<unsigned >(1, 10), true);
+  //  std::cout << "temp_wcm_confidence = " << temp_wcm_confidence << "\n";
 
   //  return;
 
@@ -120,7 +120,7 @@ detect(const vgl_box_2d<int >& window)
   unsigned num_sols = xshock_dp.list_opt_xgraph_state.size();
   for (unsigned k =0; k < num_sols; ++k)
   {
-    vcl_map<unsigned, int >& map_node_state = xshock_dp.list_opt_xgraph_state[k];
+    std::map<unsigned, int >& map_node_state = xshock_dp.list_opt_xgraph_state[k];
     dbsksp_xshock_graph_sptr new_graph = this->reconstruct_xgraph(map_node_state);
 
     // only accept as a solution when it corresponds to a real, legal xgraph
@@ -132,14 +132,14 @@ detect(const vgl_box_2d<int >& window)
     
       // Real cost is the whole-contour matching cost
       new_graph->compute_vertex_depths(this->root_vid_);
-      float real_cost = float(-this->app_like_->f_whole_contour(new_graph, vcl_vector<unsigned >(), false));
-      vcl_cout<<"real_cost : "<<real_cost<<vcl_endl;
+      float real_cost = float(-this->app_like_->f_whole_contour(new_graph, std::vector<unsigned >(), false));
+      std::cout<<"real_cost : "<<real_cost<<std::endl;
       this->list_solution_real_costs_.push_back(real_cost);
     }
     else
     {
-      vcl_cout << "\nERROR: couldn't reconstruct xraph for solution k=" << k 
-        << ". DP cost = " << xshock_dp.list_opt_cost[k] << vcl_endl;
+      std::cout << "\nERROR: couldn't reconstruct xraph for solution k=" << k 
+        << ". DP cost = " << xshock_dp.list_opt_cost[k] << std::endl;
       continue;
     }
   } // solution
@@ -173,7 +173,7 @@ build_xnode_grid(const vgl_box_2d<int >& window)
   }
   else
   {
-    vcl_cout << "\nERROR: unknown generate_xnode_grid_option= " << generate_xnode_grid_option << vcl_endl;
+    std::cout << "\nERROR: unknown generate_xnode_grid_option= " << generate_xnode_grid_option << std::endl;
     return;
   } // else
 
@@ -240,7 +240,7 @@ build_xnode_grid_using_only_input_xgraph(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -257,12 +257,12 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
 
   if (!this->xgraph_geom_ || this->xgraph_geom_->map_node2geom_.empty())
   {
-    vcl_cout << "\nERROR: xgraph geometric model is either not defined or empty.\n";
+    std::cout << "\nERROR: xgraph geometric model is either not defined or empty.\n";
     return;
   }
 
   // size of the reference graph
-  double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+  double cur_graph_size = std::sqrt(this->xgraph()->area());
   
   // set root id, etc
   this->root_vid_ = this->xgraph_geom_->root_vid_;
@@ -333,8 +333,8 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
     params.min_phi0 = (max_phi+min_phi)/2 - params.step_phi0 * (params.num_phi0-1)/2;
 
     //>> radius
-    params.r0 = vcl_sqrt(max_radius*min_radius);
-    double range_radius = 1.5*vcl_log(max_radius/min_radius) / vnl_math::ln2;
+    params.r0 = std::sqrt(max_radius*min_radius);
+    double range_radius = 1.5*std::log(max_radius/min_radius) / vnl_math::ln2;
     params.step_log2r = 0.2;
     
     params.num_log2r = vnl_math_rnd( range_radius / params.step_log2r);
@@ -362,7 +362,7 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
     dbsks_xnode_grid xnode_grid;
     xnode_grid.compute(params);
 
-    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+    this->map_xnode_grid_.insert(std::make_pair(xv->id(), xnode_grid));
   }
   return;
 }
@@ -389,14 +389,14 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
 // -----------------------------------------------------------------------------
 //: Reconstruct an xshock graph from a graph configuration
 dbsksp_xshock_graph_sptr dbsks_xshock_detector::
-reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
+reconstruct_xgraph(const std::map<unsigned, int >& map_xgraph_vid_to_state)
 {
   // create a duplicate graph
   dbsksp_xshock_graph_sptr new_graph = new dbsksp_xshock_graph(*this->xgraph());
   new_graph->compute_vertex_depths(this->root_vid_);
 
   // set properties for the nodes
-  for (vcl_map<unsigned, int >::const_iterator it = map_xgraph_vid_to_state.begin(); it != 
+  for (std::map<unsigned, int >::const_iterator it = map_xgraph_vid_to_state.begin(); it != 
     map_xgraph_vid_to_state.end(); ++it)
   {
     unsigned vid = it->first;
@@ -409,7 +409,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       int i_x, i_y, i_psi, i_phi0, i_r;
       if (!grid.linear_to_grid(it->second, i_x, i_y, i_psi, i_phi0, i_r))
       {
-        vcl_cout << "ERROR: point not in the grid.\n";
+        std::cout << "ERROR: point not in the grid.\n";
         return 0;
       };
       dbsksp_xshock_node_descriptor xdesc = grid.xdesc(i_x, i_y, i_psi, i_phi0, i_r);
@@ -438,7 +438,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       int i_x, i_y, i_psi, i_phi0, i_r, i_phi1;
       if (!grid.linear_to_grid(it->second, i_x, i_y, i_psi, i_phi0, i_r, i_phi1))
       {
-        vcl_cout << "ERROR: node state not in the grid.\n";
+        std::cout << "ERROR: node state not in the grid.\n";
         return 0;
       };
 
@@ -459,7 +459,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
       
       if (parent_edge == 0)
       {
-        vcl_cout << "ERROR: couldn't identify the parent edge. "
+        std::cout << "ERROR: couldn't identify the parent edge. "
           << "Something is seriously wrong.\n";
         return 0;
       }
@@ -482,7 +482,7 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
     }
     else
     {
-      vcl_cout << "ERROR: degree not 2 or 3. Can't handle.\n";
+      std::cout << "ERROR: degree not 2 or 3. Can't handle.\n";
       return 0;
     }
   }

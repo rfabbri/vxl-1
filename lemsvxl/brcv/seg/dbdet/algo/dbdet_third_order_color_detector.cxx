@@ -36,7 +36,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
   {
     case 0: //Gaussian
     {  
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       if (conv_algo==0){
@@ -59,7 +59,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     }
     case 1: //h0-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients  
       if (conv_algo==0){
@@ -83,7 +83,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     }
     case 2:  //h1-operator
     {
-      scale = (int) vcl_pow(2.0, N);
+      scale = (int) std::pow(2.0, N);
 
       //compute gradients
       if (conv_algo==0){
@@ -129,18 +129,18 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     double B = f1x[i]*f1y[i]+f2x[i]*f2y[i]+f3x[i]*f3y[i];
     double C = f1y[i]*f1y[i]+f2y[i]*f2y[i]+f3y[i]*f3y[i];
 
-    double l = (A+C+ vcl_sqrt((A-C)*(A-C) + 4*B*B))/2;
+    double l = (A+C+ std::sqrt((A-C)*(A-C) + 4*B*B))/2;
 
-    if (vcl_fabs(B)>1e-2){
-      n1[i] = B/vcl_sqrt(B*B+(l-A)*(l-A));
-      n2[i] = (l-A)/vcl_sqrt(B*B+(l-A)*(l-A));
+    if (std::fabs(B)>1e-2){
+      n1[i] = B/std::sqrt(B*B+(l-A)*(l-A));
+      n2[i] = (l-A)/std::sqrt(B*B+(l-A)*(l-A));
     }
     else {
-      n1[i] = (l-C)/vcl_sqrt(B*B+(l-C)*(l-C));
-      n2[i] = B/vcl_sqrt(B*B+(l-C)*(l-C));
+      n1[i] = (l-C)/std::sqrt(B*B+(l-C)*(l-C));
+      n2[i] = B/std::sqrt(B*B+(l-C)*(l-C));
     }
 
-    g_mag[i] = vcl_sqrt(l/3); //take the square root of the squared norm
+    g_mag[i] = std::sqrt(l/3); //take the square root of the squared norm
   }
 
 
@@ -148,8 +148,8 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
   t.mark(); //reset timer
 
   //Now call the nms code to get the subpixel edge tokens
-  vcl_vector<vgl_point_2d<double> > edge_locations;
-  vcl_vector<double> orientation, mag, d2f;
+  std::vector<vgl_point_2d<double> > edge_locations;
+  std::vector<double> orientation, mag, d2f;
 
   dbdet_nms NMS(dbdet_nms_params(thresh, (dbdet_nms_params::PFIT_TYPE)parabola_fit), nu1, nu2, grad_mag);
   NMS.apply(true, edge_locations, orientation, mag, d2f);
@@ -162,9 +162,9 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     edge_locations[i].set(edge_locations[i].x()/scale, edge_locations[i].y()/scale);
 
   //for each edge, compute all the gradients to compute the new orientation
-  vcl_vector<double> If1x, If1y, If1xx, If1xy, If1yy, If1xxy, If1xyy, If1xxx, If1yyy;
-  vcl_vector<double> If2x, If2y, If2xx, If2xy, If2yy, If2xxy, If2xyy, If2xxx, If2yyy;
-  vcl_vector<double> If3x, If3y, If3xx, If3xy, If3yy, If3xxy, If3xyy, If3xxx, If3yyy;
+  std::vector<double> If1x, If1y, If1xx, If1xy, If1yy, If1xxy, If1xyy, If1xxx, If1yyy;
+  std::vector<double> If2x, If2y, If2xx, If2xy, If2yy, If2xxy, If2xyy, If2xxx, If2yyy;
+  std::vector<double> If3x, If3y, If3xx, If3xy, If3yy, If3xxy, If3xyy, If3xxx, If3yyy;
 
   switch (grad_op)
   {
@@ -273,7 +273,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
   }
       
   //Now, compute and update each edge with its new orientation
-  vcl_vector<double> edge_orientations(edge_locations.size());
+  std::vector<double> edge_orientations(edge_locations.size());
   
   for (unsigned i=0; i<edge_locations.size();i++)
   {
@@ -298,7 +298,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     double Cxy = 2*If1y[i]*If1xyy[i] + 2*If1yy[i]*If1xy[i] + 2*If2y[i]*If2xyy[i] + 2*If2yy[i]*If2xy[i] + 2*If3y[i]*If3xyy[i] + 2*If3yy[i]*If3xy[i];
     double Cyy = 2*If1y[i]*If1yyy[i] + 2*If1yy[i]*If1yy[i] + 2*If2y[i]*If2yyy[i] + 2*If2yy[i]*If2yy[i] + 2*If3y[i]*If3yyy[i] + 2*If3yy[i]*If3yy[i];
 
-    double l = ((C+A) + vcl_sqrt((A-C)*(A-C) + 4*B*B))/2.0;
+    double l = ((C+A) + std::sqrt((A-C)*(A-C) + 4*B*B))/2.0;
     double e = (2*l-A-C);
 
     double lx = ( (l-C)*Ax + (l-A)*Cx + 2*B*Bx)/e;
@@ -309,12 +309,12 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
 
     /********************************************************************************
     // This computation is noisy
-    double n1 = vcl_sqrt((1.0 + (A-C)/d)/2.0);
-    double n2 = vnl_math_sgn(B)*vcl_sqrt((1.0 - (A-C)/d)/2.0);
+    double n1 = std::sqrt((1.0 + (A-C)/d)/2.0);
+    double n2 = vnl_math_sgn(B)*std::sqrt((1.0 - (A-C)/d)/2.0);
 
     // when B is zero, these derivatives need to be corrected to the limiting value
     double n1x, n1y, n2x, n2y;
-    if (vcl_fabs(B)>1e-2){
+    if (std::fabs(B)>1e-2){
       n1x = ( 2*(Ax-Cx)/d - (A-C)*(2*(C-A)*(Cx-Ax) + 8*B*Bx)/(d*d*d))/2/n1;
       n1y = ( 2*(Ay-Cy)/d - (A-C)*(2*(C-A)*(Cy-Ay) + 8*B*By)/(d*d*d))/2/n1;
       n2x = (-2*(Ax-Cx)/d + (A-C)*(2*(C-A)*(Cx-Ax) + 8*B*Bx)/(d*d*d))/2/n2;
@@ -330,8 +330,8 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
 
     double n1, n2, n1x, n1y, n2x, n2y;
     // when B is zero, these derivatives need to be fixed
-    if (vcl_fabs(B)>1e-2){
-      double f = vcl_sqrt(B*B+(l-A)*(l-A));
+    if (std::fabs(B)>1e-2){
+      double f = std::sqrt(B*B+(l-A)*(l-A));
 
       n1 = B/f;
       n2 = (l-A)/f;
@@ -342,7 +342,7 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
       n2y = (ly-Ay)/f - (l-A)*(B*By + (l-A)*(ly-Ay))/(f*f*f);
     }
     else {
-      double f = vcl_sqrt(B*B+(l-C)*(l-C));
+      double f = std::sqrt(B*B+(l-C)*(l-C));
 
       n1 = (l-C)/f;
       n2 = B/f;
@@ -358,16 +358,16 @@ dbdet_edgemap_sptr dbdet_third_order_color(unsigned grad_op, unsigned conv_algo,
     double Fy = lx*n1y + n1*lxy + n2y*ly + n2*lyy;
 
     //save new orientation
-    edge_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+    edge_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
   }
 
   double third_order_time = t.real();
 
   //report timings
-  vcl_cout << vcl_endl;
-  vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "time taken for color third-order: " << third_order_time << " msec" << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  std::cout << "time taken for nms: " << nms_time << " msec" << std::endl;
+  std::cout << "time taken for color third-order: " << third_order_time << " msec" << std::endl;
  
 
   //create a new edgemap from the tokens collected from NMS

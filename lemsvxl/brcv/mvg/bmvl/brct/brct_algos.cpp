@@ -5,8 +5,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "brct_algos.h"
-#include <vcl_algorithm.h>//for sort
-#include <vcl_cmath.h>
+#include <algorithm>//for sort
+#include <cmath>
 #include <vnl/vnl_numeric_traits.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -45,7 +45,7 @@
 #include <brct/brct_corr_sptr.h>
 
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 // Construction/Destruction
 
@@ -109,7 +109,7 @@ bugl_gaussian_point_2d<double> brct_algos::project_3d_point(const vnl_double_3x4
   vnl_matrix_fixed<double, 3, 3> Sigma3d = X.get_covariant_matrix();
   vnl_matrix_fixed<double, 2, 2> Sigma2d = H*Sigma3d*H.transpose();
 #ifdef DEBUG
-  vcl_cout << "Sigma2d\n" << Sigma2d << vcl_endl;
+  std::cout << "Sigma2d\n" << Sigma2d << std::endl;
 #endif
   vgl_homg_point_2d<double> hp2d(u[0], u[1], u[2]);
   vgl_point_2d<double> p2d(hp2d);
@@ -119,7 +119,7 @@ bugl_gaussian_point_2d<double> brct_algos::project_3d_point(const vnl_double_3x4
 //:  Given a set of perspective views of a point reconstruct the point according to least squares (SVD).
 //   The cameras for each view are given.
 //
-vgl_point_3d<double> vpgld_reconstruct_3d_points_nviews_linear(vcl_vector<vnl_double_2> &pts, vcl_vector<vnl_double_3x4> &Ps)
+vgl_point_3d<double> vpgld_reconstruct_3d_points_nviews_linear(std::vector<vnl_double_2> &pts, std::vector<vnl_double_3x4> &Ps)
 {
   assert(pts.size() == Ps.size());
   unsigned int nviews = pts.size();
@@ -136,7 +136,7 @@ vgl_point_3d<double> vpgld_reconstruct_3d_points_nviews_linear(vcl_vector<vnl_do
   return vgl_homg_point_3d<double>(p[0],p[1],p[2],p[3]);
 }
 
-vsol_box_3d_sptr brct_algos::get_bounding_box(vcl_vector<vgl_point_3d<double> > &pts_3d)
+vsol_box_3d_sptr brct_algos::get_bounding_box(std::vector<vgl_point_3d<double> > &pts_3d)
 {
   vsol_box_3d_sptr box = new vsol_box_3d;
 
@@ -152,7 +152,7 @@ vsol_box_3d_sptr brct_algos::get_bounding_box(vcl_vector<vgl_point_3d<double> > 
 
 void brct_algos::add_box_vrml(double /*xmin*/, double /*ymin*/, double /*zmin*/, double /*xmax*/, double /*ymax*/, double /*zmax*/)
 {
-  vcl_cerr << "brct_algos::add_box_vrml() NYI\n"; // TODO
+  std::cerr << "brct_algos::add_box_vrml() NYI\n"; // TODO
 }
 
 vgl_point_2d<double> brct_algos::closest_point(vdgl_digital_curve_sptr dc, vgl_point_2d<double> pt)
@@ -172,7 +172,7 @@ vgl_point_2d<double> brct_algos::most_possible_point(vdgl_digital_curve_sptr dc,
 
   if (!ec)
   {
-    vcl_cout<<"In brct_algos::most_possible_point(...) - warning, null chain\n";
+    std::cout<<"In brct_algos::most_possible_point(...) - warning, null chain\n";
     return vgl_point_2d<double>();
   }
 
@@ -228,8 +228,8 @@ static bool error_compare(brct_error_index* const e1,
 //
 void brct_algos::filter_outliers(const vnl_double_3x3& K,
                                  const vnl_double_3& trans,
-                                 vcl_vector<vnl_double_2> & pts_2d,
-                                 vcl_vector<vnl_double_3> & pts_3d,
+                                 std::vector<vnl_double_2> & pts_2d,
+                                 std::vector<vnl_double_3> & pts_3d,
                                  double fraction)
 {
   // compute camera calibration matrix
@@ -238,7 +238,7 @@ void brct_algos::filter_outliers(const vnl_double_3x3& K,
   Pe[1][0] = 0;    Pe[1][1] = 1;     Pe[1][2] = 0;      Pe[1][3] = trans[1];
   Pe[2][0] = 0;    Pe[2][1] = 0;     Pe[2][2] = 1;      Pe[2][3] = trans[2];
   vnl_double_3x4 P = K*Pe;
-  vcl_vector<brct_error_index*> errors;
+  std::vector<brct_error_index*> errors;
   int Np = pts_2d.size();
   for (int i = 0; i<Np; i++)
   {
@@ -247,16 +247,16 @@ void brct_algos::filter_outliers(const vnl_double_3x3& K,
     vnl_double_3 p = P*X;
     double x_proj = p[0]/p[2], y_proj = p[1]/p[2];
     double x = pts_2d[i][0], y = pts_2d[i][1];
-    double error = vcl_sqrt((x-x_proj)*(x-x_proj)+(y-y_proj)*(y-y_proj));
+    double error = std::sqrt((x-x_proj)*(x-x_proj)+(y-y_proj)*(y-y_proj));
     errors.push_back(new brct_error_index(i,error));
   }
   //sort the errors, largest first
-  vcl_sort(errors.begin(), errors.end(), error_compare);
+  std::sort(errors.begin(), errors.end(), error_compare);
   int n_errors = errors.size();
   //remove the top fraction of correspondences
   int n_remove = (int)(fraction*n_errors);
-  vcl_vector<vnl_double_2> filt_pts_2d;
-  vcl_vector<vnl_double_3> filt_pts_3d;
+  std::vector<vnl_double_2> filt_pts_2d;
+  std::vector<vnl_double_3> filt_pts_3d;
   for (int i = 0; i<Np; i++)
   {
     bool erase = false;
@@ -271,10 +271,10 @@ void brct_algos::filter_outliers(const vnl_double_3x3& K,
     }
 #ifdef DEBUG
     else
-      vcl_cout << "Error(" << pts_2d[i][0] << ' ' << pts_2d[i][1]
+      std::cout << "Error(" << pts_2d[i][0] << ' ' << pts_2d[i][1]
                << ")/("<< pts_3d[i][0] << ' ' << pts_3d[i][0]
                << ' ' << pts_3d[i][2] << ")= " << errors[k]->error()
-               << vcl_endl;
+               << std::endl;
 #endif
   }
   for (int k = 0; k<n_errors; k++)
@@ -296,8 +296,8 @@ void brct_algos::filter_outliers(const vnl_double_3x3& K,
 // Solve for tx, ty, tz
 //
 bool brct_algos::camera_translation(const vnl_double_3x3& K,
-                                    vcl_vector<vnl_double_2> & pts_2d,
-                                    vcl_vector<vnl_double_3> & pts_3d,
+                                    std::vector<vnl_double_2> & pts_2d,
+                                    std::vector<vnl_double_3> & pts_3d,
                                     vnl_double_3& trans)
 {
   int Np = pts_2d.size();
@@ -324,11 +324,11 @@ bool brct_algos::camera_translation(const vnl_double_3x3& K,
   vnl_double_4 t = svd_solver.nullvector();
   vnl_matrix<double> sings = svd_solver.W();
 #ifdef DEBUG
-  vcl_cout << "W:\n" << sings << vcl_endl;
+  std::cout << "W:\n" << sings << std::endl;
 #endif
-  if (vcl_fabs(t[3])<1e-06)
+  if (std::fabs(t[3])<1e-06)
   {
-    vcl_cout << "In brct_algos::camera_translation(...) -"
+    std::cout << "In brct_algos::camera_translation(...) -"
              << " singular matrix - returning 0\n";
     trans[0] = 0.0; trans[1] = 0.0; trans[2] = 0.0;
     return false;
@@ -339,13 +339,13 @@ bool brct_algos::camera_translation(const vnl_double_3x3& K,
 
 void brct_algos::
 robust_camera_translation(const vnl_double_3x3& K,
-                          vcl_vector<bugl_gaussian_point_2d<double> > & pts_2d,
-                          vcl_vector<vgl_point_3d<double> > & pts_3d,
+                          std::vector<bugl_gaussian_point_2d<double> > & pts_2d,
+                          std::vector<vgl_point_3d<double> > & pts_3d,
                           vnl_double_3& trans)
 {
   //filter out the uncorresponded 2d points
-  vcl_vector<vnl_double_2> p2d;
-  vcl_vector<vnl_double_3> p3d;
+  std::vector<vnl_double_2> p2d;
+  std::vector<vnl_double_3> p3d;
   int npts_2d = pts_2d.size();
   for (int i = 0; i<npts_2d; i++)
     if (pts_2d[i].exists())
@@ -357,14 +357,14 @@ robust_camera_translation(const vnl_double_3x3& K,
   if (!camera_translation(K, p2d, p3d, trans))
     return;
 #ifdef DEBUG
-  vcl_cout << "Initial Trans (" << trans[0] << ' ' << trans[1]
-           << ' ' << trans[2] << ')' << vcl_endl;
+  std::cout << "Initial Trans (" << trans[0] << ' ' << trans[1]
+           << ' ' << trans[2] << ')' << std::endl;
 #endif
   brct_algos::filter_outliers(K, trans, p2d, p3d);//JLM
   //recompute camera translation
   camera_translation(K, p2d, p3d, trans);
-  vcl_cout << "Trans after filtering (" << trans[0] << ' ' << trans[1]
-           << ' ' << trans[2] << ')' << vcl_endl;
+  std::cout << "Trans after filtering (" << trans[0] << ' ' << trans[1]
+           << ' ' << trans[2] << ')' << std::endl;
   //just to print new errors
   brct_algos::filter_outliers(K, trans, p2d, p3d);
 }
@@ -378,7 +378,7 @@ static double line_trans(const double p0,
 {
   if (p0==p1)
   {
-    vcl_cout << "In line_trans(..) - infinite translation\n";
+    std::cout << "In line_trans(..) - infinite translation\n";
     return 0;
   }
   //from the cross ratio
@@ -408,9 +408,9 @@ static double line_distance(vgl_line_segment_2d<double> const& seg,
 void
 brct_algos::camera_translation(vnl_double_3x3 const & K,
                                vnl_double_2 const& image_epipole,
-                               vcl_vector<vnl_double_2> const& points_0,
-                               vcl_vector<vnl_double_2> const& points_1,
-                               vcl_vector<vnl_double_2> const& points,
+                               std::vector<vnl_double_2> const& points_0,
+                               std::vector<vnl_double_2> const& points_1,
+                               std::vector<vnl_double_2> const& points,
                                vnl_double_3& T)
 {
   unsigned int n = points_0.size();
@@ -438,12 +438,12 @@ brct_algos::camera_translation(vnl_double_3x3 const & K,
   sumt/=n;//the average epipolar translation magnitude
   vnl_double_3 e(E.x(), E.y(), 1);
   T = vnl_inverse(K) * e;
-  T /= vcl_sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
+  T /= std::sqrt(T[0]*T[0] + T[1]*T[1] + T[2]*T[2]);
   if (T[2]<0)
     T *= -sumt;
   else
     T *= sumt;
-  vcl_cout << "Camera Trans " << T << vcl_endl;
+  std::cout << "Camera Trans " << T << std::endl;
 }
 
 double brct_algos::motion_constant(vnl_double_2 const& image_epipole,
@@ -471,10 +471,10 @@ double brct_algos::motion_constant(vnl_double_2 const& image_epipole,
 //: NYI
 void brct_algos::print_motion_array(vnl_matrix<double>& H)
 {
-  vcl_cerr << "brct_algos::print_motion_array(H) NYI\nH=\n" << H;
+  std::cerr << "brct_algos::print_motion_array(H) NYI\nH=\n" << H;
 }
 
-void brct_algos::write_vrml_header(vcl_ofstream& str)
+void brct_algos::write_vrml_header(std::ofstream& str)
 {
   str << "#VRML V2.0 utf8\n"
       << "Background {\n"
@@ -492,13 +492,13 @@ void brct_algos::write_vrml_header(vcl_ofstream& str)
       << "}\n";
 }
 
-void brct_algos::write_vrml_trailer(vcl_ofstream&)
+void brct_algos::write_vrml_trailer(std::ofstream&)
 {
-  vcl_cerr << "brct_algos::write_vrml_trailer(std::ofstream&) NYI (empty trailer)\n";
+  std::cerr << "brct_algos::write_vrml_trailer(std::ofstream&) NYI (empty trailer)\n";
 }
 
-void brct_algos::write_vrml_points(vcl_ofstream& str,
-                                   vcl_vector<vsol_point_3d_sptr> const& pts3d)
+void brct_algos::write_vrml_points(std::ofstream& str,
+                                   std::vector<vsol_point_3d_sptr> const& pts3d)
 {
   str << "Shape {\n"
       << "  appearance NULL\n"
@@ -513,9 +513,9 @@ void brct_algos::write_vrml_points(vcl_ofstream& str,
 }
 
 void
-brct_algos::write_vrml_points(vcl_ofstream& str,
-                              vcl_vector<vgl_point_3d<double> > const& pts3d,
-                              vcl_vector<vgl_point_3d<float> > const& color
+brct_algos::write_vrml_points(std::ofstream& str,
+                              std::vector<vgl_point_3d<double> > const& pts3d,
+                              std::vector<vgl_point_3d<float> > const& color
                              )
 {
   str << "Shape {\n"
@@ -537,7 +537,7 @@ brct_algos::write_vrml_points(vcl_ofstream& str,
   str << "   ]\n  }\n }\n}\n";
 }
 
-void brct_algos::write_vrml_box(vcl_ofstream& str, vsol_box_3d_sptr const& box,
+void brct_algos::write_vrml_box(std::ofstream& str, vsol_box_3d_sptr const& box,
                                 const float r, const float g, const float b,
                                 const float transparency)
 {
@@ -567,7 +567,7 @@ void brct_algos::write_vrml_box(vcl_ofstream& str, vsol_box_3d_sptr const& box,
       << "}\n";
 }
 
-void brct_algos::write_vrml_sphere(vcl_ofstream& str, vgl_sphere_3d<double> const& sphere,
+void brct_algos::write_vrml_sphere(std::ofstream& str, vgl_sphere_3d<double> const& sphere,
                                    const float r, const float g, const float b,
                                    const float transparency)
 {
@@ -594,8 +594,8 @@ void brct_algos::write_vrml_sphere(vcl_ofstream& str, vgl_sphere_3d<double> cons
       << "}\n";
 }
 
-void brct_algos::write_vrml_polyline(vcl_ofstream& str,
-                                     vcl_vector<vgl_point_3d<double> > const& vts,
+void brct_algos::write_vrml_polyline(std::ofstream& str,
+                                     std::vector<vgl_point_3d<double> > const& vts,
                                      const float r,
                                      const float g,
                                      const float b)
@@ -629,12 +629,12 @@ void brct_algos::write_vrml_polyline(vcl_ofstream& str,
       << "}\n";
 }
 
-void brct_algos::read_vrml_points(vcl_ifstream& str,
-                                  vcl_vector<vsol_point_3d_sptr>& pts3d)
+void brct_algos::read_vrml_points(std::ifstream& str,
+                                  std::vector<vsol_point_3d_sptr>& pts3d)
 {
   pts3d.clear();
   bool point_set_found = false;
-  vcl_string s, ps = "point[";
+  std::string s, ps = "point[";
   while (!point_set_found&&!str.eof())
   {
     str >> s;
@@ -644,7 +644,7 @@ void brct_algos::read_vrml_points(vcl_ifstream& str,
     return;
 
   //we found the beginning of the points
-  vcl_string np0 = "#", np1 = "npoints";
+  std::string np0 = "#", np1 = "npoints";
   str >> s;
   if (s!=np0)
     return;
@@ -663,8 +663,8 @@ void brct_algos::read_vrml_points(vcl_ifstream& str,
 }
 
 bool brct_algos::
-solve_p_matrix(vcl_vector<vgl_homg_point_2d<double> >const& image_points,
-               vcl_vector<vgl_homg_point_3d<double> >const& world_points,
+solve_p_matrix(std::vector<vgl_homg_point_2d<double> >const& image_points,
+               std::vector<vgl_homg_point_3d<double> >const& world_points,
                vnl_double_3x4& P)
 {
   //set up linear regression matrix
@@ -683,14 +683,14 @@ solve_p_matrix(vcl_vector<vgl_homg_point_2d<double> >const& image_points,
     return false;
   vnl_matrix<double> M(2*ni, 12);
   int k = 0;
-  vcl_vector<vgl_homg_point_2d<double> > norm_image_points;
-  vcl_vector<vgl_homg_point_3d<double> > norm_world_points;
+  std::vector<vgl_homg_point_2d<double> > norm_image_points;
+  std::vector<vgl_homg_point_3d<double> > norm_world_points;
 
   for (int i = 0; i<ni; i++, k+=2)
   {
     vgl_homg_point_2d<double> const & pi = image_points[i];
     vgl_homg_point_3d<double> const & pw = world_points[i];
-    //    vcl_cout << "pw[" << i << "]= " << pw << "pi[" << i << "]= " << pi << '\n';
+    //    std::cout << "pw[" << i << "]= " << pw << "pi[" << i << "]= " << pi << '\n';
     if (pi.ideal(1e-06)||pw.ideal(1e-06))
       return false;
     vgl_homg_point_2d<double> norm_pi = Hi(pi);
@@ -726,23 +726,23 @@ solve_p_matrix(vcl_vector<vgl_homg_point_2d<double> >const& image_points,
 }
 
 bool brct_algos::
-compute_euclidean_camera(vcl_vector<vgl_point_2d<double> > const& image_points,
-                         vcl_vector<vgl_point_3d<double> > const& world_points,
+compute_euclidean_camera(std::vector<vgl_point_2d<double> > const& image_points,
+                         std::vector<vgl_point_3d<double> > const& world_points,
                          vnl_double_3x3 const & K,
                          vnl_double_3x4& P)
 {
   //convert the input image points to homogeneous points
-  vcl_vector<vgl_homg_point_2d<double> > h_image_points;
+  std::vector<vgl_homg_point_2d<double> > h_image_points;
   vnl_double_3x3 Kinv = vnl_inverse(K);
-  for (vcl_vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
+  for (std::vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
        pit != image_points.end(); pit++)
   {
     vnl_double_3 p((*pit).x(), (*pit).y(), 1.0), pnorm = Kinv*p;
     h_image_points.push_back(vgl_homg_point_2d<double>(pnorm[0], pnorm[1], pnorm[2]));
   }
   //convert the input world points to normalized homogeneous points
-  vcl_vector<vgl_homg_point_3d<double> > h_world_points;
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  std::vector<vgl_homg_point_3d<double> > h_world_points;
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
     h_world_points.push_back(vgl_homg_point_3d<double>((*pit).x(),
                                                        (*pit).y(),
@@ -758,19 +758,19 @@ compute_euclidean_camera(vcl_vector<vgl_point_2d<double> > const& image_points,
 
 //: Assume that the world points have all z ==0. Otherwise a preprocessing
 // step to project points onto the best fitting plane.
-bool brct_algos::homography(vcl_vector<vgl_point_3d<double> > const& world_points,
-                            vcl_vector<vgl_point_2d<double> > const& image_points,
+bool brct_algos::homography(std::vector<vgl_point_3d<double> > const& world_points,
+                            std::vector<vgl_point_2d<double> > const& image_points,
                             vgl_h_matrix_2d<double> & H,
                             bool optimize)
 {
   //convert points to homogeneous points
-  vcl_vector<vgl_homg_point_2d<double> > h_image_points;
-  for (vcl_vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_image_points;
+  for (std::vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
        pit != image_points.end(); pit++)
     h_image_points.push_back(vgl_homg_point_2d<double>((*pit).x(), (*pit).y()));
 
-  vcl_vector<vgl_homg_point_2d<double> > h_world_points;
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_world_points;
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
     h_world_points.push_back(vgl_homg_point_2d<double>((*pit).x(),(*pit).y()));
   vgl_h_matrix_2d_compute_linear hc;
@@ -786,18 +786,18 @@ bool brct_algos::homography(vcl_vector<vgl_point_3d<double> > const& world_point
 }
 
 bool brct_algos::
-homography_ransac(vcl_vector<vgl_point_3d<double> > const& world_points,
-                  vcl_vector<vgl_point_2d<double> > const& image_points,
+homography_ransac(std::vector<vgl_point_3d<double> > const& world_points,
+                  std::vector<vgl_point_2d<double> > const& image_points,
                   vgl_h_matrix_2d<double> & H, bool optimize)
 {
   //convert points to homogeneous points
-  vcl_vector<vgl_homg_point_2d<double> > h_image_points;
-  for (vcl_vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_image_points;
+  for (std::vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
        pit != image_points.end(); pit++)
     h_image_points.push_back(vgl_homg_point_2d<double>((*pit).x(), (*pit).y()));
 
-  vcl_vector<vgl_homg_point_2d<double> > h_world_points;
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_world_points;
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
     h_world_points.push_back(vgl_homg_point_2d<double>((*pit).x(),(*pit).y()));
 
@@ -815,12 +815,12 @@ homography_ransac(vcl_vector<vgl_point_3d<double> > const& world_points,
 #endif // 0
   ransam->set_gen_all_samples();
   if ( !ransam->estimate( &hg, ransac ) )
-  {vcl_cout << "RANSAC failed!!\n";
+  {std::cout << "RANSAC failed!!\n";
   return false;}
     else {
-      vcl_cout << "RANSAC succeeded.\n"
-               << "estimate = " << ransam->params() << vcl_endl
-               << "scale = " << ransam->scale() << vcl_endl;
+      std::cout << "RANSAC succeeded.\n"
+               << "estimate = " << ransam->params() << std::endl
+               << "scale = " << ransam->scale() << std::endl;
     }
   H.set((ransam->params()).data_block());
   delete ransac;
@@ -834,18 +834,18 @@ homography_ransac(vcl_vector<vgl_point_3d<double> > const& world_points,
 }
 
 bool brct_algos::
-homography_muse(vcl_vector<vgl_point_3d<double> > const& world_points,
-                vcl_vector<vgl_point_2d<double> > const& image_points,
+homography_muse(std::vector<vgl_point_3d<double> > const& world_points,
+                std::vector<vgl_point_2d<double> > const& image_points,
                 vgl_h_matrix_2d<double> & H, bool optimize)
 {
   //convert points to homogeneous points
-  vcl_vector<vgl_homg_point_2d<double> > h_image_points;
-  for (vcl_vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_image_points;
+  for (std::vector<vgl_point_2d<double> >::const_iterator pit = image_points.begin();
        pit != image_points.end(); pit++)
     h_image_points.push_back(vgl_homg_point_2d<double>((*pit).x(), (*pit).y()));
 
-  vcl_vector<vgl_homg_point_2d<double> > h_world_points;
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  std::vector<vgl_homg_point_2d<double> > h_world_points;
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
     h_world_points.push_back(vgl_homg_point_2d<double>((*pit).x(),(*pit).y()));
 
@@ -857,12 +857,12 @@ homography_muse(vcl_vector<vgl_point_3d<double> > const& world_points,
   ransam->set_trace_level(trace_level);
   ransam->set_gen_all_samples();
   if ( !ransam->estimate( &hg, muset ) )
-  {vcl_cout << "MUSE failed!!\n";
+  {std::cout << "MUSE failed!!\n";
   return false;}
     else {
-      vcl_cout << "MUSE succeeded.\n"
-               << "estimate = " << ransam->params() << vcl_endl
-               << "scale = " << ransam->scale() << vcl_endl;
+      std::cout << "MUSE succeeded.\n"
+               << "estimate = " << ransam->params() << std::endl
+               << "scale = " << ransam->scale() << std::endl;
     }
 
   H.set((ransam->params()).data_block());
@@ -876,12 +876,12 @@ homography_muse(vcl_vector<vgl_point_3d<double> > const& world_points,
   return lm.optimize(h_world_points, h_image_points, H);
 }
 
-void brct_algos:: project(vcl_vector<vgl_point_3d<double> > const& world_points,
+void brct_algos:: project(std::vector<vgl_point_3d<double> > const& world_points,
                           vgl_h_matrix_2d<double> const& H,
-                          vcl_vector<vgl_point_2d<double> > & image_points)
+                          std::vector<vgl_point_2d<double> > & image_points)
 {
   image_points.clear();
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
   {
     vgl_homg_point_2d<double> pw((*pit).x(),(*pit).y());
@@ -891,19 +891,19 @@ void brct_algos:: project(vcl_vector<vgl_point_3d<double> > const& world_points,
 }
 
 //: project world points into an image using a projection matrix
-void brct_algos::project(vcl_vector<vgl_point_3d<double> > const& world_points,
+void brct_algos::project(std::vector<vgl_point_3d<double> > const& world_points,
                          vgl_p_matrix<double> const& P,
-                         vcl_vector<vgl_point_2d<double> > & image_points)
+                         std::vector<vgl_point_2d<double> > & image_points)
 {
   image_points.clear();
   image_points.resize(0);
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
   {
     vgl_homg_point_3d<double> pw((*pit).x(),(*pit).y(), (*pit).z());
     vgl_homg_point_2d<double> pi = P(pw);
     image_points.push_back(vgl_point_2d<double>(pi));
-    vcl_cout << "W:" << *pit << " I:" << vgl_point_2d<double>(pi) << '\n';
+    std::cout << "W:" << *pit << " I:" << vgl_point_2d<double>(pi) << '\n';
   }
 }
 
@@ -912,7 +912,7 @@ vsol_polygon_2d_sptr
 brct_algos::project(vsol_polygon_3d_sptr const& world_poly,
                     vgl_h_matrix_2d<double> const& H)
 {
-  vcl_vector<vsol_point_2d_sptr > image_verts;
+  std::vector<vsol_point_2d_sptr > image_verts;
   unsigned nv = world_poly->size();
   for (unsigned i = 0; i<nv; ++i)
   {
@@ -926,12 +926,12 @@ brct_algos::project(vsol_polygon_3d_sptr const& world_poly,
   return new vsol_polygon_2d(image_verts);
 }
 
-void brct_algos::project(vcl_vector<vsol_polygon_3d_sptr> const& world_polys,
+void brct_algos::project(std::vector<vsol_polygon_3d_sptr> const& world_polys,
                          vgl_h_matrix_2d<double> const& H,
-                         vcl_vector<vsol_polygon_2d_sptr > & image_polys)
+                         std::vector<vsol_polygon_2d_sptr > & image_polys)
 {
   image_polys.clear();
-  for (vcl_vector<vsol_polygon_3d_sptr>::const_iterator wpi=world_polys.begin();
+  for (std::vector<vsol_polygon_3d_sptr>::const_iterator wpi=world_polys.begin();
        wpi != world_polys.end(); ++wpi)
     image_polys.push_back(brct_algos::project(*wpi, H));
 }
@@ -940,7 +940,7 @@ vsol_polygon_2d_sptr
 brct_algos::project(vsol_polygon_3d_sptr const& world_poly,
                     vgl_p_matrix<double> const& P)
 {
-  vcl_vector<vsol_point_2d_sptr > image_verts;
+  std::vector<vsol_point_2d_sptr > image_verts;
   unsigned nv = world_poly->size();
   for (unsigned i = 0; i<nv; ++i)
   {
@@ -954,12 +954,12 @@ brct_algos::project(vsol_polygon_3d_sptr const& world_poly,
   return new vsol_polygon_2d(image_verts);
 }
 
-void brct_algos::project(vcl_vector<vsol_polygon_3d_sptr> const& world_polys,
+void brct_algos::project(std::vector<vsol_polygon_3d_sptr> const& world_polys,
                          vgl_p_matrix<double> const& P,
-                         vcl_vector<vsol_polygon_2d_sptr > & image_polys)
+                         std::vector<vsol_polygon_2d_sptr > & image_polys)
 {
   image_polys.clear();
-  for (vcl_vector<vsol_polygon_3d_sptr>::const_iterator wpi=world_polys.begin();
+  for (std::vector<vsol_polygon_3d_sptr>::const_iterator wpi=world_polys.begin();
        wpi != world_polys.end(); ++wpi)
     image_polys.push_back(brct_algos::project(*wpi, P));
 }
@@ -968,7 +968,7 @@ vsol_polygon_3d_sptr
 brct_algos::back_project(vsol_polygon_2d_sptr const& image_poly,
                          vgl_h_matrix_2d<double> const& H)
 {
-  vcl_vector<vsol_point_3d_sptr > world_verts;
+  std::vector<vsol_point_3d_sptr > world_verts;
   unsigned nv = image_poly->size();
   for (unsigned i = 0; i<nv; ++i)
   {
@@ -999,7 +999,7 @@ brct_algos::back_project(vsol_polygon_2d_sptr const& image_poly,
     M[r][2] = Mp[r][2]*height + Mp[r][3];
   vgl_h_matrix_2d<double> H(M);
   vsol_polygon_3d_sptr temp = brct_algos::back_project(image_poly, H);
-  vcl_vector<vsol_point_3d_sptr> verts;
+  std::vector<vsol_point_3d_sptr> verts;
   for (unsigned i = 0; i<image_poly->size(); ++i)
   {
     vsol_point_3d_sptr p = new vsol_point_3d(*temp->vertex(i));
@@ -1010,13 +1010,13 @@ brct_algos::back_project(vsol_polygon_2d_sptr const& image_poly,
 }
 
 void brct_algos::
-scale_and_translate_world(vcl_vector<vgl_point_3d<double> > const& world_points,
+scale_and_translate_world(std::vector<vgl_point_3d<double> > const& world_points,
                           const double magnification,
                           vgl_h_matrix_2d<double> & H)
 {
   double xmin = vnl_numeric_traits<double>::maxval;
   double ymin = xmin;
-  for (vcl_vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
+  for (std::vector<vgl_point_3d<double> >::const_iterator pit = world_points.begin();
        pit != world_points.end(); pit++)
   {
     xmin = vnl_math::min(xmin, (*pit).x());
@@ -1060,11 +1060,11 @@ vnl_double_4x4 brct_algos::convert_to_target(vnl_double_3x4 const& P)
   return T.transpose();
 }
 
-bool brct_algos::read_world_points(vcl_ifstream& str,
-                                   vcl_vector<vgl_point_3d<double> >& world_points)
+bool brct_algos::read_world_points(std::ifstream& str,
+                                   std::vector<vgl_point_3d<double> >& world_points)
 {
   world_points.clear();
-  vcl_string temp;
+  std::string temp;
   str >> temp;
   if (temp != "NUMPOINTS:")
     return false;
@@ -1077,16 +1077,16 @@ bool brct_algos::read_world_points(vcl_ifstream& str,
       return false;
     vgl_point_3d<double> world_point;
     str >> world_point;
-    vcl_cout << "W " << world_point << '\n';
+    std::cout << "W " << world_point << '\n';
     world_points.push_back(world_point);
   }
   return true;
 }
 
-bool brct_algos::read_world(vcl_ifstream& str,
-                            vcl_vector<vgl_point_3d<double> >& world_points,
-                            vcl_vector<vsol_polygon_3d_sptr>& polys,
-                            vcl_vector<vcl_vector<unsigned> >& indexed_face_set)
+bool brct_algos::read_world(std::ifstream& str,
+                            std::vector<vgl_point_3d<double> >& world_points,
+                            std::vector<vsol_polygon_3d_sptr>& polys,
+                            std::vector<std::vector<unsigned> >& indexed_face_set)
 {
   if (!read_world_points(str, world_points))
     return false;
@@ -1094,7 +1094,7 @@ bool brct_algos::read_world(vcl_ifstream& str,
   //see if there are any polygons in the world
   if (str.eof())
     return true;
-  vcl_string temp;
+  std::string temp;
   str >> temp;
   if (temp == "")
     return true;
@@ -1109,8 +1109,8 @@ bool brct_algos::read_world(vcl_ifstream& str,
     if (temp != "NVERTS:")
       return false;
     str >> nverts;
-    vcl_vector<vsol_point_3d_sptr> verts;
-    vcl_vector<unsigned> vert_indices;
+    std::vector<vsol_point_3d_sptr> verts;
+    std::vector<unsigned> vert_indices;
     for (unsigned i=0; i< nverts; ++i)
     {
       unsigned vert_index;
@@ -1129,8 +1129,8 @@ bool brct_algos::read_world(vcl_ifstream& str,
 }
 
 void brct_algos::
-write_world_points(vcl_ofstream& str,
-                   vcl_vector<vgl_point_3d<double> >const& world_points)
+write_world_points(std::ofstream& str,
+                   std::vector<vgl_point_3d<double> >const& world_points)
 {
   unsigned npts = world_points.size();
   str << "NUMPOINTS: " << npts << '\n';
@@ -1143,9 +1143,9 @@ write_world_points(vcl_ofstream& str,
 }
 
 void brct_algos::
-write_world(vcl_ofstream& str,
-            vcl_vector<vgl_point_3d<double> > const& world_points,
-            vcl_vector<vcl_vector<unsigned> > const& polys)
+write_world(std::ofstream& str,
+            std::vector<vgl_point_3d<double> > const& world_points,
+            std::vector<std::vector<unsigned> > const& polys)
 {
   brct_algos::write_world_points(str, world_points);
   unsigned npolys = polys.size();
@@ -1162,9 +1162,9 @@ write_world(vcl_ofstream& str,
 }
 
 void brct_algos::
-write_world_ply2(vcl_ofstream& str,
-                 vcl_vector<vgl_point_3d<double> > const& world_points,
-                 vcl_vector<vcl_vector<unsigned> > const& polys)
+write_world_ply2(std::ofstream& str,
+                 std::vector<vgl_point_3d<double> > const& world_points,
+                 std::vector<std::vector<unsigned> > const& polys)
 {
   unsigned npts = world_points.size();
   unsigned nfaces = polys.size();
@@ -1186,10 +1186,10 @@ write_world_ply2(vcl_ofstream& str,
 }
 
 bool brct_algos::
-read_world_ply2(vcl_ifstream& str,
-                vcl_vector<vgl_point_3d<double> >& world_points,
-                vcl_vector<vsol_polygon_3d_sptr>& polys,
-                vcl_vector<vcl_vector<unsigned> >& indexed_face_set)
+read_world_ply2(std::ifstream& str,
+                std::vector<vgl_point_3d<double> >& world_points,
+                std::vector<vsol_polygon_3d_sptr>& polys,
+                std::vector<std::vector<unsigned> >& indexed_face_set)
 {
   world_points.clear();
   polys.clear();
@@ -1206,8 +1206,8 @@ read_world_ply2(vcl_ifstream& str,
   unsigned nverts = 0;
   for (unsigned ip = 0; ip<nfaces; ++ip)
   {
-    vcl_vector<vsol_point_3d_sptr> verts;
-    vcl_vector<unsigned> vert_indices;
+    std::vector<vsol_point_3d_sptr> verts;
+    std::vector<unsigned> vert_indices;
     str >> nverts;
     for (unsigned i=0; i< nverts; ++i)
     {
@@ -1227,12 +1227,12 @@ read_world_ply2(vcl_ifstream& str,
 }
 
 bool brct_algos::
-read_target_corrs(vcl_ifstream& str,
-                  vcl_vector<bool>& valid,
-                  vcl_vector<vgl_point_2d<double> >& image_points,
-                  vcl_vector<vgl_point_3d<double> >& world_points)
+read_target_corrs(std::ifstream& str,
+                  std::vector<bool>& valid,
+                  std::vector<vgl_point_2d<double> >& image_points,
+                  std::vector<vgl_point_3d<double> >& world_points)
 {
-  vcl_string temp;
+  std::string temp;
   str >> temp;
   if (temp != "NUMPOINTS:")
     return false;
@@ -1249,7 +1249,7 @@ read_target_corrs(vcl_ifstream& str,
     vgl_point_3d<double> world_point;
     str >> val >> junk
         >> world_point >> image_point;
-    vcl_cout << "W " << world_point << "  I " << image_point << '\n';
+    std::cout << "W " << world_point << "  I " << image_point << '\n';
     valid.push_back(val);
     image_points.push_back(image_point);
     world_points.push_back(world_point);
@@ -1257,10 +1257,10 @@ read_target_corrs(vcl_ifstream& str,
   return true;
 }
 
-bool brct_algos::write_corrs(vcl_ofstream& str,
-                             vcl_vector<bool>& valid,
-                             vcl_vector<vgl_point_2d<double> >& image_points,
-                             vcl_vector<vgl_point_3d<double> >& world_points)
+bool brct_algos::write_corrs(std::ofstream& str,
+                             std::vector<bool>& valid,
+                             std::vector<vgl_point_2d<double> >& image_points,
+                             std::vector<vgl_point_3d<double> >& world_points)
 {
   if (!str)
     return false;
@@ -1280,8 +1280,8 @@ bool brct_algos::write_corrs(vcl_ofstream& str,
   return true;
 }
 
-bool brct_algos::write_brct_corrs(vcl_ofstream& str,
-                                  vcl_vector<brct_corr_sptr> const& corrs)
+bool brct_algos::write_brct_corrs(std::ofstream& str,
+                                  std::vector<brct_corr_sptr> const& corrs)
 {
   unsigned n = corrs.size();
   if (!n)
@@ -1308,11 +1308,11 @@ bool brct_algos::write_brct_corrs(vcl_ofstream& str,
   return true;
 }
 
-bool brct_algos::read_brct_corrs(vcl_ifstream& str,
-                                 vcl_vector<brct_corr_sptr>& corrs)
+bool brct_algos::read_brct_corrs(std::ifstream& str,
+                                 std::vector<brct_corr_sptr>& corrs)
 {
   corrs.clear();
-  vcl_string temp;
+  std::string temp;
   str >> temp;
   if (temp != "NCAMS:")
     return false;
@@ -1351,10 +1351,10 @@ bool brct_algos::read_brct_corrs(vcl_ifstream& str,
   return true;
 }
 
-void brct_algos::reconstruct_corrs(vcl_vector<brct_corr_sptr> const& image_corrs,
+void brct_algos::reconstruct_corrs(std::vector<brct_corr_sptr> const& image_corrs,
                                    vpgl_proj_camera<double> const& cam0,
                                    vpgl_proj_camera<double> const& cam1,
-                                   vcl_vector<vgl_point_3d<double> >& world_points)
+                                   std::vector<vgl_point_3d<double> >& world_points)
 {
   world_points.clear();
   for (unsigned i = 0; i<image_corrs.size(); ++i)
@@ -1370,12 +1370,12 @@ void brct_algos::reconstruct_corrs(vcl_vector<brct_corr_sptr> const& image_corrs
   }
 }
 
-void brct_algos::write_target_camera(vcl_ofstream& str, vnl_double_3x4 const& P)
+void brct_algos::write_target_camera(std::ofstream& str, vnl_double_3x4 const& P)
 {
   str << "TRANSFORM:\n"
       << 0 << '\n' << 0 << '\n' << 0 <<'\n';
   vnl_double_4x4 T = brct_algos::convert_to_target(P);
-  vcl_cout << "T =\n" << T << '\n';
+  std::cout << "T =\n" << T << '\n';
   str << T << '\n';
   str.close();
 }
@@ -1442,8 +1442,8 @@ vgl_p_matrix<double> brct_algos::p_from_h(vgl_h_matrix_2d<double> const& H)
 //  Thus  $ v =  (y(h_{02}X + h_{12}Y  + h_{22}) - h_{01}X - h_{11}Y - h_{21}) / Z $
 //
 vgl_p_matrix<double> brct_algos::
-p_from_h(vgl_h_matrix_2d<double> const& H, vcl_vector<double> const& image_y,
-         vcl_vector<vgl_point_3d<double> > const& world_p)
+p_from_h(vgl_h_matrix_2d<double> const& H, std::vector<double> const& image_y,
+         std::vector<vgl_point_3d<double> > const& world_p)
 {
   unsigned n = world_p.size();
   if (!n)
@@ -1453,7 +1453,7 @@ p_from_h(vgl_h_matrix_2d<double> const& H, vcl_vector<double> const& image_y,
   for (unsigned i = 0; i<n; ++i)
   {
     vgl_point_3d<double> pw = world_p[i];
-    if (vcl_fabs(pw.z()) < 0.01)
+    if (std::fabs(pw.z()) < 0.01)
       continue;
     //note h has row vectors not column vectors as in comments
     //so transpose indices
@@ -1465,7 +1465,7 @@ p_from_h(vgl_h_matrix_2d<double> const& H, vcl_vector<double> const& image_y,
     vsum += temp;
   }
   vsum /= n;
-  if (vcl_fabs(vsum) < 1e-6)
+  if (std::fabs(vsum) < 1e-6)
     return brct_algos::p_from_h(H);
   vgl_p_matrix<double> P = brct_algos::p_from_h(H);
   vnl_double_3x4 p = P.get_matrix();
@@ -1532,11 +1532,11 @@ map_image_to_world(vil_image_resource_sptr const& image,
 }
 
 bool brct_algos::
-save_constraint_file(vcl_vector<vgl_point_2d<double> > const& image_pts,
-                     vcl_vector<bool> const& valid,
-                     vcl_vector<vgl_point_3d<double> > const& world_pts,
-                     vcl_vector<vgl_line_segment_2d<double> > const& vertls,
-                     vcl_ofstream& str)
+save_constraint_file(std::vector<vgl_point_2d<double> > const& image_pts,
+                     std::vector<bool> const& valid,
+                     std::vector<vgl_point_3d<double> > const& world_pts,
+                     std::vector<vgl_line_segment_2d<double> > const& vertls,
+                     std::ofstream& str)
 {
   unsigned npts = image_pts.size();
   if (npts!=world_pts.size())
@@ -1552,7 +1552,7 @@ save_constraint_file(vcl_vector<vgl_point_2d<double> > const& image_pts,
         << world_pts[i].x()<< ' ' << world_pts[i].y() << ' ' << world_pts[i].z() << '\n'
         << image_pts[i].x()<< ' ' << image_pts[i].y() << "\n\n";
   }
-  for (vcl_vector<vgl_line_segment_2d<double> >::const_iterator lit = vertls.begin(); lit != vertls.end(); ++lit)
+  for (std::vector<vgl_line_segment_2d<double> >::const_iterator lit = vertls.begin(); lit != vertls.end(); ++lit)
   {
     str << "height\n"
         << (*lit).point1().x() << ' ' << (*lit).point1().y() << '\n'
@@ -1573,9 +1573,9 @@ save_constraint_file(vcl_vector<vgl_point_2d<double> > const& image_pts,
 void brct_algos::box_3d(vgl_point_3d<double> const& c0,
                         vgl_point_3d<double> const& c1,
                         vgl_point_3d<double> const& c2,
-                        vcl_vector<vgl_point_3d<double> >& world_points,
-                        vcl_vector<vsol_polygon_3d_sptr>& polys,
-                        vcl_vector<vcl_vector<unsigned> >& indexed_face_set)
+                        std::vector<vgl_point_3d<double> >& world_points,
+                        std::vector<vsol_polygon_3d_sptr>& polys,
+                        std::vector<std::vector<unsigned> >& indexed_face_set)
 {
   world_points.clear();
   polys.clear();
@@ -1591,10 +1591,10 @@ void brct_algos::box_3d(vgl_point_3d<double> const& c0,
   for (unsigned i = 0; i<8; ++i)
   {
     world_points.push_back(p[i]);
-    vcl_cout << "p[" << i << "]= " << p[i] << '\n';
+    std::cout << "p[" << i << "]= " << p[i] << '\n';
   }
 
-  vcl_vector<unsigned> v(4);
+  std::vector<unsigned> v(4);
   v[0]=0;   v[1]=3;   v[2]=2; v[3]=1;
   indexed_face_set.push_back(v);
   v[0]=2;   v[1]=3;   v[2]=7; v[3]=6;
@@ -1609,7 +1609,7 @@ void brct_algos::box_3d(vgl_point_3d<double> const& c0,
   indexed_face_set.push_back(v);
   for (unsigned ip = 0; ip<6; ++ip)
   {
-    vcl_vector<vsol_point_3d_sptr> verts;
+    std::vector<vsol_point_3d_sptr> verts;
     for (unsigned iv = 0; iv<4; ++iv)
     {
       vsol_point_3d_sptr pv =
@@ -1621,9 +1621,9 @@ void brct_algos::box_3d(vgl_point_3d<double> const& c0,
 }
 
 bool brct_algos::
-write_ifs_box(vcl_ofstream& ostr,
-              vcl_vector<vgl_point_3d<double> > const& verts,
-              vcl_vector<vcl_vector<unsigned> > const& faces,
+write_ifs_box(std::ofstream& ostr,
+              std::vector<vgl_point_3d<double> > const& verts,
+              std::vector<std::vector<unsigned> > const& faces,
               const float r, const float g, const float b)
 {
   if (verts.size()!=8 ||faces.size()!=6)
@@ -1660,9 +1660,9 @@ write_ifs_box(vcl_ofstream& ostr,
 }
 
 bool brct_algos::
-write_ifs(vcl_ofstream& ostr,
-          vcl_vector<vgl_point_3d<double> > const& verts,
-          vcl_vector<vcl_vector<unsigned> > const& faces,
+write_ifs(std::ofstream& ostr,
+          std::vector<vgl_point_3d<double> > const& verts,
+          std::vector<std::vector<unsigned> > const& faces,
           const float r, const float g, const float b)
 {
   if (!ostr.is_open())
@@ -1703,12 +1703,12 @@ write_ifs(vcl_ofstream& ostr,
 
 //extract boxes from merged ply2 file and write as individual indexed face sets
 //in vrml 2.0 format. Assumes the ply2 file contains only rectangular boxes
-bool brct_algos::translate_ply2_to_vrml(vcl_ifstream& istr, vcl_ofstream& ostr,
+bool brct_algos::translate_ply2_to_vrml(std::ifstream& istr, std::ofstream& ostr,
                                         const float r, const float g, const float b)
 {
-  vcl_vector<vgl_point_3d<double> > pts;
-  vcl_vector<vsol_polygon_3d_sptr> polys;
-  vcl_vector<vcl_vector<unsigned> > ifs;
+  std::vector<vgl_point_3d<double> > pts;
+  std::vector<vsol_polygon_3d_sptr> polys;
+  std::vector<std::vector<unsigned> > ifs;
   if (!brct_algos::read_world_ply2(istr, pts, polys, ifs))
     return false;
   brct_algos::write_vrml_header(ostr);

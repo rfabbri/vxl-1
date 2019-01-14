@@ -16,7 +16,7 @@
 #include <proc/io/proc_io_filter_xml_parser.h>
 #include <biob/biob_grid_worldpt_roster.h>
 #include <biob/biob_roster_to_grid_mapping.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <geom/geom_index_structure.h>
 #include <geom/geom_rectangular_probe_volume.h>
 #include <vgl/vgl_distance.h>
@@ -51,46 +51,46 @@ SoVolumeRendering::init();
   return tab3d;
     }
 
-uint8_t * read_ede_responses(vcl_string fbase,unsigned int marginx,unsigned int marginy,unsigned int marginz,
+uint8_t * read_ede_responses(std::string fbase,unsigned int marginx,unsigned int marginy,unsigned int marginz,
                         SbVec3s & dim)
     {
     double max_intensity = - 1e23;
   double min_intensity = 1e23;
   double intensity;
 
- vcl_string fname = fbase + "_x_res.xml";
+ std::string fname = fbase + "_x_res.xml";
   proc_io_filter_xml_parser parser_x;
   if (!parse(fname, parser_x)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
+  std::vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
   // read y edge responses
   fname = fbase + "_y_res.xml";
   proc_io_filter_xml_parser parser_y;
   if (!parse(fname, parser_y)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
+  std::vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
   // read z edge responses
   fname = fbase + "_z_res.xml";
   proc_io_filter_xml_parser parser_z;
   if (!parse(fname, parser_z)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
+  std::vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
 
   int dimx = parser_x.dim_x();
   int dimy = parser_x.dim_y();
   int dimz = parser_x.dim_z();
-  vcl_cout << "dimx: " << dimx << vcl_endl;
-  vcl_cout << "dimy: " << dimy << vcl_endl;
-  vcl_cout << "dimz: " << dimz << vcl_endl;
+  std::cout << "dimx: " << dimx << std::endl;
+  std::cout << "dimy: " << dimy << std::endl;
+  std::cout << "dimz: " << dimz << std::endl;
 
   assert(dimx > 2*marginx && dimy > 2*marginy && dimz > 2*marginz);
 
   double sharpening_coefficient = 2.8;
   // temporarily filled with x responses to create the response vector
-  vcl_vector<xmvg_filter_response<double> > responses(responses_x);
+  std::vector<xmvg_filter_response<double> > responses(responses_x);
   int index = 0;
   for(int k=0;k<dimz;k++)
   {
@@ -101,8 +101,8 @@ uint8_t * read_ede_responses(vcl_string fbase,unsigned int marginx,unsigned int 
         double resp_x = responses_x[index][0] * sharpening_coefficient;
         double resp_y = responses_y[index][0] * sharpening_coefficient;
         double resp_z = responses_z[index][0];
-//        responses[index][0] = vcl_fabs(resp_y);
-        responses[index][0] = vcl_sqrt(vcl_pow(resp_x,2.0)+vcl_pow(resp_y,2.0)+vcl_pow(resp_z,2.0));
+//        responses[index][0] = std::fabs(resp_y);
+        responses[index][0] = std::sqrt(std::pow(resp_x,2.0)+std::pow(resp_y,2.0)+std::pow(resp_z,2.0));
         index++;
       }
     }
@@ -123,7 +123,7 @@ uint8_t * read_ede_responses(vcl_string fbase,unsigned int marginx,unsigned int 
     }
   }
 
-  vcl_cout << max_intensity << vcl_endl;
+  std::cout << max_intensity << std::endl;
 
   const size_t blocksize = responses.size();
    uint8_t * voxels = new uint8_t[blocksize];
@@ -141,7 +141,7 @@ uint8_t * read_ede_responses(vcl_string fbase,unsigned int marginx,unsigned int 
 
 
 
-uint8_t *  read_filter_responses(vcl_string fname,unsigned int filter_num,unsigned int marginx,unsigned int marginy,
+uint8_t *  read_filter_responses(std::string fname,unsigned int filter_num,unsigned int marginx,unsigned int marginy,
                            unsigned int marginz,SbVec3s & dim)
     {
                         
@@ -155,7 +155,7 @@ uint8_t *  read_filter_responses(vcl_string fname,unsigned int filter_num,unsign
   proc_io_filter_xml_parser parser;
 
   if (!parse(fname, parser)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
   }
   dimx = parser.dim_x();
   dimy = parser.dim_y();
@@ -163,10 +163,10 @@ uint8_t *  read_filter_responses(vcl_string fname,unsigned int filter_num,unsign
   int filters_size = parser.filter_num();
   assert (filter_num <= filters_size);
 
-  vcl_vector<xmvg_filter_response<double> > responses = parser.responses();
+  std::vector<xmvg_filter_response<double> > responses = parser.responses();
   assert(dimx > 2*marginx && dimy > 2*marginy && dimz > 2*marginz);
 
-  vcl_vector<double> field;
+  std::vector<double> field;
           
   int index=0;
   for(int k=0;k<dimz;k++) {
@@ -190,7 +190,7 @@ uint8_t *  read_filter_responses(vcl_string fname,unsigned int filter_num,unsign
 
   (void)memset(voxels, 0, blocksize);
 
-  vcl_cout << field.size() << vcl_endl;
+  std::cout << field.size() << std::endl;
   for(unsigned long i = 0; i < blocksize; i++)
     voxels[i] = static_cast<uint8_t>((field[i] - min_intensity)*255/(max_intensity - min_intensity));
 
@@ -200,13 +200,13 @@ uint8_t *  read_filter_responses(vcl_string fname,unsigned int filter_num,unsign
 
   }
 
-uint8_t *  read_splr_responses(vcl_string fname,unsigned int filter_num,double resolution,
+uint8_t *  read_splr_responses(std::string fname,unsigned int filter_num,double resolution,
                            SbVec3s & dim)
     {
 proc_io_filter_xml_parser parser;
 
   if (!parse(fname, parser)) {
-    vcl_cout << "failed to load response file\n";
+    std::cout << "failed to load response file\n";
 
   }
   
@@ -218,15 +218,15 @@ proc_io_filter_xml_parser parser;
 
 
   biob_worldpt_field<xmvg_filter_response<double> > response_field = parser.splr_response_field();
-  vcl_cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->num_points() << "\n";
-  vcl_cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->point(biob_worldpt_index(0)) << "\n";
+  std::cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->num_points() << "\n";
+  std::cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->point(biob_worldpt_index(0)) << "\n";
   geom_index_structure geom(response_field.roster(), resolution);
     
  
   int filters_size = parser.filter_num();
   assert (filter_num <= filters_size);
   biob_worldpt_index not_found = biob_worldpt_index(response_field.roster()->num_points());
-  vcl_vector<double> grid_response_values(grid.num_points());
+  std::vector<double> grid_response_values(grid.num_points());
   for (unsigned int i = 0; i < grid.num_points(); ++i){
     biob_worldpt_index closest_sample_pt = not_found;
     double best_distance = 9e9;//should use infinity
@@ -294,8 +294,8 @@ static bool click_splr;
 
     if (click_filter)
         {
-        static vcl_string fname = " ";
-        static vcl_string ext = "*.*";
+        static std::string fname = " ";
+        static std::string ext = "*.*";
         static bool mfc_use_gl;
         unsigned int marginx = 0;
         unsigned int marginy = 0;
@@ -337,8 +337,8 @@ voxels = read_filter_responses(fname,filter_num,marginx,marginy,marginz,dim);
 
     if (click_edge)
         {
-        static vcl_string fbase = " ";
-        static vcl_string ext = "*.*";
+        static std::string fbase = " ";
+        static std::string ext = "*.*";
         static unsigned int marginx = 0;
         static unsigned int marginy = 0;
         static unsigned int marginz = 0;
@@ -374,8 +374,8 @@ voxels = read_ede_responses(fbase,marginx,marginy,marginz,dim);
 
      if (click_splr)
         {
-        static vcl_string fname = " ";
-        static vcl_string ext = "*.*";
+        static std::string fname = " ";
+        static std::string ext = "*.*";
         double resolution = 0;
         unsigned int filter_num = 0;
         

@@ -38,7 +38,7 @@ protected:
 
 public:
   dbvxm_bg_pair_density(bvxm_voxel_world_sptr w, vpgl_camera_double_sptr cam, 
-    vcl_string voxel_type, unsigned bin, unsigned scale, unsigned ni, unsigned nj) : dbvxm_pair_density(), world_(w), cam_(cam), 
+    std::string voxel_type, unsigned bin, unsigned scale, unsigned ni, unsigned nj) : dbvxm_pair_density(), world_(w), cam_(cam), 
     voxel_type_(voxel_type), bin_(bin), scale_(scale), ni_(ni), nj_(nj), verbose(false), i_(0), j_(0) {}
 
   //: if an existing density map will be used there is no need to generate mixture of gaussians image, hence no need for 
@@ -72,7 +72,7 @@ public:
 private:
   bvxm_voxel_world_sptr world_;
   vpgl_camera_double_sptr cam_;
-  vcl_string voxel_type_;
+  std::string voxel_type_;
   unsigned bin_;
   unsigned scale_;
   unsigned ni_;

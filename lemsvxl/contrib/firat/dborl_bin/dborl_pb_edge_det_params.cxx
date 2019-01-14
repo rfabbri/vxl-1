@@ -1,6 +1,6 @@
 #include "dborl_pb_edge_det_params.h"
 
-dborl_pb_edge_det_params::dborl_pb_edge_det_params (vcl_string algo_name) : dborl_algo_params(algo_name) 
+dborl_pb_edge_det_params::dborl_pb_edge_det_params (std::string algo_name) : dborl_algo_params(algo_name) 
 { 
         algo_abbreviation_ = "pb_edge_det";
         

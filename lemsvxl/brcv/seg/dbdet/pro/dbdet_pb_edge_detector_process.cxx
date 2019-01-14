@@ -19,13 +19,13 @@
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "dbdet_pb_edge_detector_process.h"
 
 dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
 {
-    vcl_vector<vcl_string> detector_choices;
+    std::vector<std::string> detector_choices;
     detector_choices.push_back("BG (Brightness Gardient)");       //0
     detector_choices.push_back("CG (Color Gradient)");    //1
     detector_choices.push_back("TG (Texture Gradient)");    //2
@@ -34,11 +34,11 @@ dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
     detector_choices.push_back("BGTG (Brightness + Texture Gradient)"); //5
     detector_choices.push_back("CGTG (Color + Texture Gradient)"); //6
 
-    vcl_vector<vcl_string> pres_choices;
+    std::vector<std::string> pres_choices;
     pres_choices.push_back("gray");
     pres_choices.push_back("color");
 
-    if(     !parameters()->add( "Temporary location for storing pb octave files:"   , "-temp_path" , vcl_string("/vision/scratch/octave_tmp/pb")) ||
+    if(     !parameters()->add( "Temporary location for storing pb octave files:"   , "-temp_path" , std::string("/vision/scratch/octave_tmp/pb")) ||
 
             !parameters()->add( "Detector type:"   , "-pb_detector_type" , detector_choices, 5) ||
 
@@ -55,7 +55,7 @@ dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
 
             !parameters()->add( "Sigma (GM, GM2):"  , "-sigma" , 2.0 ))
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -73,7 +73,7 @@ bpro1_process* dbdet_pb_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string dbdet_pb_edge_detector_process::name()
+std::string dbdet_pb_edge_detector_process::name()
 {
     return "Pb Edge Detector (Octave)";
 }
@@ -93,18 +93,18 @@ int dbdet_pb_edge_detector_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_pb_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_pb_edge_detector_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_pb_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_pb_edge_detector_process::get_output_type()
 {
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "edge_map" );
     return to_return;
 }
@@ -114,13 +114,13 @@ vcl_vector< vcl_string > dbdet_pb_edge_detector_process::get_output_type()
 bool dbdet_pb_edge_detector_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbdet_pb_edge_detector_process::execute() - not exactly one"
+        std::cout << "In dbdet_pb_edge_detector_process::execute() - not exactly one"
                 << " input images \n";
         return false;
     }
     clear_output();
 
-    vcl_cout << "Pb edge detection..." << vcl_endl;;
+    std::cout << "Pb edge detection..." << std::endl;;
 
     // get image from the storage class
     vidpro1_image_storage_sptr frame_image;
@@ -133,7 +133,7 @@ bool dbdet_pb_edge_detector_process::execute()
     double rv0, rv1, rv2, rv3, sigma;
     int norient;
     bool use_default;
-    vcl_string pb_temp_dir;
+    std::string pb_temp_dir;
 
     parameters()->get_value( "-temp_path", pb_temp_dir);
     parameters()->get_value( "-pb_detector_type", detector_type);
@@ -208,7 +208,7 @@ bool dbdet_pb_edge_detector_process::execute()
         }
         else
         {
-            vcl_string pres;
+            std::string pres;
             if(presentation == 1)
             {
                 pres = "color";
@@ -239,10 +239,10 @@ bool dbdet_pb_edge_detector_process::execute()
     output_edgemap->set_edgemap(edge_map);
     output_data_[0].push_back(output_edgemap);
 
-    vcl_cout << "done!" << vcl_endl;
-    vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+    std::cout << "done!" << std::endl;
+    std::cout << "#edgels = " << edge_map->num_edgels() << std::endl;
 
-    vcl_cout.flush();
+    std::cout.flush();
 
     return true;
 }

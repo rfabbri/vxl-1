@@ -12,8 +12,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <dborl/dborl_det_desc_sptr.h>
 #include <borld/borld_image_description_sptr.h>
 
@@ -30,22 +30,22 @@
 // "confidence", "TP", "FP": total number of true positives (TP) and false positive (FP)
 // for each confidence threshold level of the detection result
 bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc, 
-                        const vcl_string& model_category,
+                        const std::string& model_category,
                         double min_required_overlap,
-                        const vcl_vector<dborl_det_desc_sptr >& list_det,
-                        vcl_vector<double >& confidence,
-                        vcl_vector<int >& FP,
-                        vcl_vector<int >& TP,
+                        const std::vector<dborl_det_desc_sptr >& list_det,
+                        std::vector<double >& confidence,
+                        std::vector<int >& FP,
+                        std::vector<int >& TP,
                         int& num_positives);
 
 //: Print evaluation results of object detections to a file
-bool dborl_VOC2008_print_eval_results(const vcl_string& eval_file,
+bool dborl_VOC2008_print_eval_results(const std::string& eval_file,
                                       int num_pos, // total number of positives
-                                      const vcl_string& object_name, // name of input image
-                                      const vcl_string& model_category, // detection category
-                                      const vcl_vector<double >& confidence_vec, // confidence of each detection
-                                      const vcl_vector<int >& TP_vec, // Is detection a true positive?
-                                      const vcl_vector<int >& FP_vec // Is detection a false positive?
+                                      const std::string& object_name, // name of input image
+                                      const std::string& model_category, // detection category
+                                      const std::vector<double >& confidence_vec, // confidence of each detection
+                                      const std::vector<int >& TP_vec, // Is detection a true positive?
+                                      const std::vector<int >& FP_vec // Is detection a false positive?
                                       );
 
 #endif

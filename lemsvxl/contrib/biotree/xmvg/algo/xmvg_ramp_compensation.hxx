@@ -2,11 +2,11 @@
 #define xmvg_ramp_compensation_2d_txx_
 
 #include "xmvg_ramp_compensation.h"
-#include <vcl_complex.h>
-#include <vcl_cassert.h>
+#include <complex>
+#include <cassert>
 #include <vnl/vnl_int_2.h>
 #include <vnl/algo/vnl_fft_1d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 //The fft algorithm requires that the size of the 1-d array be expressable as
 // 2^p * 3^q * 5^r. This function gives the nearest factorable size.
 static unsigned nearest_prime_factor_size(const unsigned ncols, bool odd)
@@ -44,7 +44,7 @@ void xmvg_ramp_compensation(xmvg_atomic_filter_2d<T> const &filter,
   assert(n>=ncols);
   //Create a row of values corresponding to |omega|.
   //The FFT puts reflected negative frequencies at the right end of the array 
-  vcl_vector<T> omega(n);
+  std::vector<T> omega(n);
   unsigned rf = ncols/2;
   unsigned rp = n/2, dr = rp-rf;
   if(odd){
@@ -67,15 +67,15 @@ void xmvg_ramp_compensation(xmvg_atomic_filter_2d<T> const &filter,
   T scale = static_cast<T>(mag);
   for(unsigned j = 0; j<nrows; ++j)
     {
-      vcl_vector<vcl_complex<T> > row(n, vcl_complex<T>((T)0, (T)0));
+      std::vector<std::complex<T> > row(n, std::complex<T>((T)0, (T)0));
       for(unsigned i = 0; i<ncols; ++i)
-        row[i+dr]= vcl_complex<T>(filter[i][j], T(0));
+        row[i+dr]= std::complex<T>(filter[i][j], T(0));
       fft.fwd_transform(row);
       for(unsigned i = 0; i<n; ++i)
         row[i]*=omega[i];
       fft.bwd_transform(row);
       for(unsigned i = 0; i<ncols; ++i)
-        out[i][j]=vcl_real(row[i+dr])*scale;
+        out[i][j]=std::real(row[i+dr])*scale;
     }
   for(unsigned j = 0; j<nrows; ++j)
     for(unsigned i = 0; i<ncols; ++i)
@@ -90,7 +90,7 @@ void xmvg_ramp_compensation(xmvg_composite_filter_2d<T> const &filters,
                             xmvg_composite_filter_2d<T>& comp_filts)
 {
   unsigned n = static_cast<unsigned>(filters.size());
-  vcl_vector<xmvg_atomic_filter_2d<T> > out_filters;
+  std::vector<xmvg_atomic_filter_2d<T> > out_filters;
   for(unsigned i=0; i<n; ++i)
     {
       xmvg_atomic_filter_2d<T> filt = filters.atomic_filter(i), compen_filt;

@@ -70,7 +70,7 @@ public:
   virtual ~mw_curve_tracing_tool_3() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -115,21 +115,21 @@ protected:
   bgui_vsol2D_tableau_sptr tab_r_; //:< tableau used to draw in right img
   bgui_vsol2D_tableau_sptr curve_tableau_l_;
 
-  vcl_vector< vsol_polyline_2d_sptr > vsols_right_;
+  std::vector< vsol_polyline_2d_sptr > vsols_right_;
 
-  vcl_list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
-  vcl_vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
+  std::list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
+  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
+  std::list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
   vgui_style_sptr cc_style_;  //:< style for curve segts
 
 
-  vcl_list<vgui_soview2D_point *> intercept_pts_soviews_;
-  vcl_vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
+  std::list<vgui_soview2D_point *> intercept_pts_soviews_;
+  std::vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
   bool display_all_intersections_; 
 
   //: epipolar lines of curve segt points in image 1
-  vcl_vector<vgl_homg_line_2d<double> > ep_; 
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_;
+  std::vector<vgl_homg_line_2d<double> > ep_; 
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_;
   vgui_style_sptr ep_style_;
   bool display_all_epips_;
 

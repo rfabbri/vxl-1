@@ -5,9 +5,9 @@
 
 #include "dbsk2d_ishock_barc.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_math.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 #include <dbsk2d/dbsk2d_ishock_edge.h>
 #include <dbsk2d/dbsk2d_bnd_edge.h>
@@ -70,10 +70,10 @@ void dbsk2d_ishock_barc::
 compute_bounding_box(vbl_bounding_box<double, 2 >& box ) const
 {
   // initialize the bounding box with end points of the arc
-  double min_x = vcl_min(this->start().x(), this->end().x());
-  double min_y = vcl_min(this->start().y(), this->end().y());
-  double max_x = vcl_max(this->start().x(), this->end().x());
-  double max_y = vcl_max(this->start().y(), this->end().y());
+  double min_x = std::min(this->start().x(), this->end().x());
+  double min_y = std::min(this->start().y(), this->end().y());
+  double max_x = std::max(this->start().x(), this->end().x());
+  double max_y = std::max(this->start().y(), this->end().y());
   
   // sweeping angle of the arc
   double arc_angle = CCW(this->CCWStartVector(), this->CCWEndVector());
@@ -194,40 +194,40 @@ reconnect(dbsk2d_ishock_bpoint* oldPt, dbsk2d_ishock_bpoint* newPt)
 }
 
 
-void dbsk2d_ishock_barc::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_barc::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   ostrm << "\n==============================\n";
   ostrm << "BA: [" << _id << "] Twin: [" << this->twinArc()->id() << "] s_pt: [";
   ostrm << this->s_pt()->id() << "] e_pt: [" << this->e_pt()->id() << "]\n";
-  vcl_sprintf (s, 
+  std::sprintf (s, 
     "S-E:(%.3f, %.3f)-(%.3f, %.3f)\n", 
     this->start().x(), this->start().y(), 
     this->end().x(),   this->end().y()); 
   ostrm << s;
 
-  vcl_sprintf (s, 
+  std::sprintf (s, 
     "C:(%.3f, %.3f)\n", 
     this->center().x(), this->center().y()); 
   ostrm << s;
 
-  vcl_sprintf (s, "R: %.5f, k: %.5f\n", _R, 1/_R); ostrm<<s;
-  vcl_sprintf (s, "nud: %s, ", (_nud==ARC_NUD_CW) ? "1 (CW)" : "-1 (CCW)"); ostrm<<s;
+  std::sprintf (s, "R: %.5f, k: %.5f\n", _R, 1/_R); ostrm<<s;
+  std::sprintf (s, "nud: %s, ", (_nud==ARC_NUD_CW) ? "1 (CW)" : "-1 (CCW)"); ostrm<<s;
 
-  vcl_sprintf (s, 
+  std::sprintf (s, 
     "Sv-Ev: (%.5f) - (%.5f), Degrees: (%.5f) - (%.5f)\n", 
     _StartVector, _EndVector, _StartVector*180/vnl_math::pi, _EndVector*180/vnl_math::pi); 
   ostrm << s;
 
-  vcl_sprintf (s, "length: %.5f\n", this->l()); ostrm<<s;
-  vcl_sprintf (s, "bGUIElm: %s\n\n", _bGUIElm ? "yes" : "no"); ostrm<<s;
+  std::sprintf (s, "length: %.5f\n", this->l()); ostrm<<s;
+  std::sprintf (s, "bGUIElm: %s\n\n", _bGUIElm ? "yes" : "no"); ostrm<<s;
 
   //bnd_ishock_map
   bnd_ishock_map_iter curS = shock_map_.begin();
-  ostrm << "ShockMap: [" << id() << "]" << vcl_endl;
+  ostrm << "ShockMap: [" << id() << "]" << std::endl;
   for (; curS!=shock_map_.end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -235,9 +235,9 @@ void dbsk2d_ishock_barc::getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* twL = twinArc();
-  ostrm << "Twin ShockMap: [" << twL->id() << "]" << vcl_endl;
+  ostrm << "Twin ShockMap: [" << twL->id() << "]" << std::endl;
   for (curS = twL->shock_map().begin(); curS!=twL->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -245,9 +245,9 @@ void dbsk2d_ishock_barc::getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* sp = s_pt();
-  ostrm << "SPT ShockMap [" << sp->id() << "]" << vcl_endl;
+  ostrm << "SPT ShockMap [" << sp->id() << "]" << std::endl;
   for (curS = sp->shock_map().begin(); curS!=sp->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -255,9 +255,9 @@ void dbsk2d_ishock_barc::getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* ep = e_pt();
-  ostrm << "EPT ShockMap [" << ep->id() << "]" << vcl_endl;
+  ostrm << "EPT ShockMap [" << ep->id() << "]" << std::endl;
   for (curS = ep->shock_map().begin(); curS!=ep->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str());
     ostrm<<s;
@@ -279,12 +279,12 @@ compute_extrinsic_locus()
   if (endVector < startVector) endVector += 2*vnl_math::pi;
 
   const int NUM_ELLIPSE_SUBDIVISIONS = 100;
-  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*vcl_fabs(endVector-startVector)/(2*vnl_math::pi));
+  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*std::fabs(endVector-startVector)/(2*vnl_math::pi));
   if(n_line_segs < 4) n_line_segs = 4;
 
   for(int i = 0; i < n_line_segs; ++i) {
     double v = startVector + (endVector-startVector)*i/double(n_line_segs-1);
-    ex_pts_.push_back(vgl_point_2d<double>(_center.x()+_R*vcl_cos(v), _center.y()+_R*vcl_sin(v)));
+    ex_pts_.push_back(vgl_point_2d<double>(_center.x()+_R*std::cos(v), _center.y()+_R*std::sin(v)));
   }
 }
 

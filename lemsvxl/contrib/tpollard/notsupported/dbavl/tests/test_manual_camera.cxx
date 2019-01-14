@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../dbavl_manual_camera.h"
 
@@ -15,9 +15,9 @@ static void test_manual_camera()
   P_true.set_calibration(K);
   P_true.set_camera_center( vgl_point_3d<double>(1,2,4) );
 
-  vcl_vector< vgl_point_3d<double> > world_points;
-  vcl_vector< vgl_point_2d<double> > image_points;
-  vcl_vector< vgl_line_segment_2d<double> > up_lines;
+  std::vector< vgl_point_3d<double> > world_points;
+  std::vector< vgl_point_2d<double> > image_points;
+  std::vector< vgl_line_segment_2d<double> > up_lines;
   for( int i = 0; i < 8; i++ ){
     vgl_point_3d<double> wp;
     if( i == 0 ) wp.set( 1, -1, 2 );
@@ -54,7 +54,7 @@ static void test_manual_camera()
   P_true_norm /= P_true_norm(2,3);
   vnl_matrix<double> P_est_norm = P_est.get_matrix();
   P_est_norm /= P_est_norm(2,3);
-  vcl_cerr << P_true_norm << '\n' << P_est_norm;
+  std::cerr << P_true_norm << '\n' << P_est_norm;
   TEST_NEAR( "Testing full computation:", (P_true_norm-P_est_norm).frobenius_norm(), 0.0, .1 );
 }
 

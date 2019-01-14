@@ -87,15 +87,15 @@ bool vox_match_bag_of_fragments::initialize()
     bool model_status = vul_file::exists(model_file_);
     if (!model_status ) 
     {
-        vcl_cerr << "Cannot find model cgraph storage (.txt) file: " << 
-            model_file_ << vcl_endl;
+        std::cerr << "Cannot find model cgraph storage (.txt) file: " << 
+            model_file_ << std::endl;
     }
 
     bool query_status = vul_file::exists(query_file_);
     if ( !query_status ) 
     {
-        vcl_cerr << "Cannot find query cgraph storage (.txt) file: " << 
-            query_file_ << vcl_endl;
+        std::cerr << "Cannot find query cgraph storage (.txt) file: " << 
+            query_file_ << std::endl;
     }
 
     return query_status & model_status;
@@ -107,7 +107,7 @@ bool vox_match_bag_of_fragments::perform_matching()
 {
 
     //******************** Match Cgraph Fragmets ****************************
-    vcl_cout<<"***********  Match Perceptual Fragments  ************"<<vcl_endl;
+    std::cout<<"***********  Match Perceptual Fragments  ************"<<std::endl;
 
     // Create file path objects
     bpro1_filepath model(model_file_,".txt");
@@ -140,8 +140,8 @@ bool vox_match_bag_of_fragments::perform_matching()
 
     if (!matchsg_status) 
     {
-        vcl_cerr << "Matching of Composite Fragments Failed"
-                 << vcl_endl;
+        std::cerr << "Matching of Composite Fragments Failed"
+                 << std::endl;
         return false;
     }
   

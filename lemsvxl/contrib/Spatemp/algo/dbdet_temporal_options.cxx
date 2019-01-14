@@ -21,8 +21,8 @@ void
 dbdet_temporal_options::merge_the_models()
 {
     double epsilon_error=0.5;
-    vcl_map<int, dbdet_curvelet*>::iterator cvletiter;
-    typedef vcl_map<int, vcl_list<dbdet_temporal_bundle> >::iterator frame_iter;
+    std::map<int, dbdet_curvelet*>::iterator cvletiter;
+    typedef std::map<int, std::list<dbdet_temporal_bundle> >::iterator frame_iter;
 
     list_options_.sort(compare_temporal_bundle);
     //:  merge the models of pair of edges which have close enough parameters.
@@ -45,7 +45,7 @@ dbdet_temporal_options::merge_the_models()
                             {
                                 
                                 //: we will treat biterator as the anchor 
-                                vcl_map<int, dbdet_curvelet*> tempmembers;
+                                std::map<int, dbdet_curvelet*> tempmembers;
                                 for(cvletiter=biterator->bundle_.begin();cvletiter!=biterator->bundle_.end();cvletiter++)
                                     tempmembers[cvletiter->first]=cvletiter->second;
                                 for(cvletiter=sub_biterator->bundle_.begin();cvletiter!=sub_biterator->bundle_.end();cvletiter++)
@@ -106,8 +106,8 @@ dbdet_temporal_options::merge_the_models()
 bool 
 dbdet_temporal_options::check_compatibility(dbdet_temporal_bundle & b1, dbdet_temporal_bundle & b2)
 {
-    vcl_map<int,dbdet_curvelet* >::iterator iter1;
-    vcl_map<int,dbdet_curvelet* >::iterator iter2;
+    std::map<int,dbdet_curvelet* >::iterator iter1;
+    std::map<int,dbdet_curvelet* >::iterator iter2;
     //if(b1.bundle_.size()+b2.bundle_.size()>2)
     //    return false;
     bool flag=true;
@@ -143,7 +143,7 @@ dbdet_temporal_options::refine_bundles(int t)
     bsta_mg_statistical_updater<bsta_mix_t> updater(init_gauss, 10);
 
 
-    vcl_list<dbdet_temporal_bundle>::iterator iter=list_options_.begin();
+    std::list<dbdet_temporal_bundle>::iterator iter=list_options_.begin();
     for(;iter!=list_options_.end();iter++)
     {
         if(dbdet_temporal_normal_velocity_model * m=dynamic_cast<dbdet_temporal_normal_velocity_model*> (iter->model_))
@@ -162,7 +162,7 @@ dbdet_temporal_options::refine_bundles(int t)
   {
       dbdet_temporal_normal_velocity_model * model=new dbdet_temporal_normal_velocity_model(mixture.distribution(i).mean(),t);
       model->ref_curvelet=refc_;
-      vcl_map<int,dbdet_curvelet*> dummy;
+      std::map<int,dbdet_curvelet*> dummy;
       dummy[t]=0;
       dbdet_temporal_bundle b(dummy,model);
       b.refc=refc_;
@@ -191,9 +191,9 @@ dbdet_temporal_options::refine_bundles(int t)
 
 bool compare_temporal_bundle(dbdet_temporal_bundle  b1,dbdet_temporal_bundle  b2)
 {
-    if (vcl_abs(b1.bundle_.begin()->first)<vcl_abs(b2.bundle_.begin()->first))
+    if (std::abs(b1.bundle_.begin()->first)<std::abs(b2.bundle_.begin()->first))
         return true;
-    else if (vcl_abs(b1.bundle_.begin()->first)==vcl_abs(b2.bundle_.begin()->first))
+    else if (std::abs(b1.bundle_.begin()->first)==std::abs(b2.bundle_.begin()->first))
     {
         if(b1.bundle_.begin()->first<b2.bundle_.begin()->first)
             return false;
@@ -219,7 +219,7 @@ void dbdet_temporal_options::sort_by_weight()
 void dbdet_temporal_options::normalize_weights()
 {
     double tot_weight_=0;
-    vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+    std::list<dbdet_temporal_bundle>::iterator list_iter;
     for(list_iter=list_options_.begin();list_iter!=list_options_.end();list_iter++)
     {   
         if(!list_iter->used_ && list_iter->bundle_.size()>1) 
@@ -244,15 +244,15 @@ void dbdet_temporal_options::normalize_weights()
 
 void dbdet_temporal_options::print()
 {
-    vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+    std::list<dbdet_temporal_bundle>::iterator list_iter;
     for(list_iter=list_options_.begin();list_iter!=list_options_.end();list_iter++)
     {   
         if(!list_iter->used_ && list_iter->bundle_.size()>1) 
         {
             list_iter->model_->print_model();
             refc_->curve_model->print_info();
-            vcl_cout<<"  weight"<<list_iter->nweight_;
-            vcl_cout<<" # "<<list_iter->bundle_.size()<<"\n";
+            std::cout<<"  weight"<<list_iter->nweight_;
+            std::cout<<" # "<<list_iter->bundle_.size()<<"\n";
         }
     }
 }

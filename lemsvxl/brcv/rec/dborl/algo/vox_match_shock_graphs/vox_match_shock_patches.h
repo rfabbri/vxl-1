@@ -18,7 +18,7 @@
 #define vox_match_shock_patches_h_
 
 #include "vox_match_shock_graphs_params_sptr.h"
-#include <vcl_string.h>
+#include <string>
 
 class vox_match_shock_patches
 {
@@ -51,16 +51,16 @@ private:
     vox_match_shock_graphs_params_sptr params_;
    
     // The file path of the model shock patch storage
-    vcl_string model_file_;
+    std::string model_file_;
 
     // The file path of the query shock patch storage
-    vcl_string query_file_;
+    std::string query_file_;
 
     // The file path of the where the matching results should go
-    vcl_string output_match_folder_;
+    std::string output_match_folder_;
 
     // The output string attached to the results of matching
-    vcl_string output_match_prefix_;
+    std::string output_match_prefix_;
 
      // Good practice make copy ctor and assign operator private
 

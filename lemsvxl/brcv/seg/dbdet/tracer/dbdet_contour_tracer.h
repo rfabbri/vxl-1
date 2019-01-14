@@ -64,20 +64,20 @@ public:
   // be traced.
   bool trace_sedt_image(const vil_image_view<float >& s_edt);
 
-  const vcl_vector<vcl_vector<vsol_point_2d_sptr> > & contours() const
+  const std::vector<std::vector<vsol_point_2d_sptr> > & contours() const
     { return contours_; }
 
   //: returns largest traced contour
-  const vcl_vector<vsol_point_2d_sptr>& largest_contour() const
+  const std::vector<vsol_point_2d_sptr>& largest_contour() const
     { return contours_[index_of_max_contour_]; }
 
   //: index of largest contour in the structure returned by contours()
   unsigned index_of_largest_contour() const
     { return index_of_max_contour_; }
 
-  bool output_con_file(const vcl_string &filename, unsigned idx);
+  bool output_con_file(const std::string &filename, unsigned idx);
 
-  bool output_con_file(const vcl_string &filename)
+  bool output_con_file(const std::string &filename)
     { return output_con_file(filename, index_of_max_contour_); }
 
 protected:
@@ -87,7 +87,7 @@ protected:
   float curvature_smooth_beta_;
 
   //: Vector of detected contours
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > contours_;
+  std::vector<std::vector<vsol_point_2d_sptr> > contours_;
   //: index of largest contour in the vector
   unsigned index_of_max_contour_;
 

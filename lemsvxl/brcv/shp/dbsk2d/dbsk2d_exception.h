@@ -25,11 +25,11 @@
 // \author Amir Tamrakar
 // \date 10/25/06
 
-#include <vcl_string.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <cstdlib>
+#include <iostream>
 #if VCL_HAS_EXCEPTIONS
-# include <vcl_stdexcept.h>
+# include <stdexcept>
 #endif
 
 
@@ -39,11 +39,11 @@
 template <class T>
 void dbsk2d_exception_error(T exception)
 {
-  vcl_cerr << "\nERROR: " << exception.what() << vcl_endl;
+  std::cerr << "\nERROR: " << exception.what() << std::endl;
 #if !defined DBSK2D_EXCEPTIONS_DISABLE  && VCL_HAS_EXCEPTIONS
   throw exception;
 #else
-  vcl_abort();
+  std::abort();
 #endif
 }
 
@@ -53,7 +53,7 @@ void dbsk2d_exception_error(T exception)
 template <class T>
 void dbsk2d_exception_warning(T exception)
 {
-  vcl_cerr << "\nWARNING: " << exception.what() << vcl_endl;
+  std::cerr << "\nWARNING: " << exception.what() << std::endl;
 #if !defined DBSK2D_EXCEPTIONS_DISABLE  && VCL_HAS_EXCEPTIONS
   throw exception;
 #endif
@@ -61,28 +61,28 @@ void dbsk2d_exception_warning(T exception)
 
 #if !VCL_HAS_EXCEPTIONS
 
-  //: General purpose - a replacement for vcl_abort.
+  //: General purpose - a replacement for std::abort.
   // The only point of catching this exception, is to
   // give you a chance to save your data. If this exception
   // is thrown, then the program correctness is in doubt.
   class dbsk2d_exception_abort
   {
-    vcl_string msg_;
+    std::string msg_;
    public:
-    dbsk2d_exception_abort(const vcl_string& comment);
+    dbsk2d_exception_abort(const std::string& comment);
     const char * what() const {return msg_.c_str();}
   };
 
 #else
 
-  //: General purpose - a replacement for vcl_abort.
+  //: General purpose - a replacement for std::abort.
   // The only point of catching this exception, is to
   // give you a chance to save your data. If this exception
   // is thrown, then the program correctness is in doubt.
-  class dbsk2d_exception_abort : public vcl_logic_error
+  class dbsk2d_exception_abort : public std::logic_error
   {
    public:
-    dbsk2d_exception_abort(const vcl_string& comment);
+    dbsk2d_exception_abort(const std::string& comment);
     virtual ~dbsk2d_exception_abort() throw() {}
   };
 
@@ -95,9 +95,9 @@ void dbsk2d_exception_warning(T exception)
   //  the bnd_ishock_map. This is a very serious error
   class dbsk2d_exception_topology_error
   {
-    vcl_string msg_;
+    std::string msg_;
    public:
-    dbsk2d_exception_topology_error(const vcl_string &msg)
+    dbsk2d_exception_topology_error(const std::string &msg)
       : msg_(msg) {}
     const char * what() const {return msg_.c_str();}
   };
@@ -106,10 +106,10 @@ void dbsk2d_exception_warning(T exception)
 
   //: Indicates a problem with the topology of shocks as it appears in the 
   //  the bnd_ishock_map. This is a very serious error
-  class dbsk2d_exception_topology_error: public vcl_logic_error
+  class dbsk2d_exception_topology_error: public std::logic_error
   {
    public:
-    dbsk2d_exception_topology_error(const vcl_string &msg);
+    dbsk2d_exception_topology_error(const std::string &msg);
     virtual ~dbsk2d_exception_topology_error() throw() {}
   };
 

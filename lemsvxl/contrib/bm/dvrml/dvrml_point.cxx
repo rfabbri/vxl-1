@@ -2,7 +2,7 @@
 
 #include"dvrml_point.h"
 
-void dvrml_point::draw( vcl_ostream& os )
+void dvrml_point::draw( std::ostream& os )
 {
     os << '#' << this->shape() << '\n'
        << "Transform{\n"
@@ -26,4 +26,4 @@ void dvrml_point::draw( vcl_ostream& os )
        << "   ] #end children\n"
        << "} #end transform\n\n";
 
-}//end dvrml_point::draw( vcl_ostream& os )
+}//end dvrml_point::draw( std::ostream& os )

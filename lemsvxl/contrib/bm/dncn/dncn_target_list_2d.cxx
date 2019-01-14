@@ -3,12 +3,12 @@
 
 void dncn_target_list_2d::add_target( dncn_target_2d_sptr target_sptr )
 {
-    //vcl_pair<target_list_type::iterator,bool> ret = this->target_list_.insert( vcl_pair<vgl_point_2d<unsigned>, dncn_target_2d_sptr>(target_sptr->target(),target_sptr) );
+    //std::pair<target_list_type::iterator,bool> ret = this->target_list_.insert( std::pair<vgl_point_2d<unsigned>, dncn_target_2d_sptr>(target_sptr->target(),target_sptr) );
 
     //if( ret.second == false )
     //{
     //    this->target_list_.erase(ret.first);
-    //    this->target_list_.insert( vcl_pair<vgl_point_2d<unsigned>, dncn_target_2d_sptr>(target_sptr->target(),target_sptr) );
+    //    this->target_list_.insert( std::pair<vgl_point_2d<unsigned>, dncn_target_2d_sptr>(target_sptr->target(),target_sptr) );
     //}
 
 	this->target_list_.push_back(target_sptr);
@@ -26,7 +26,7 @@ void dncn_target_list_2d::reduce_dimensionality( unsigned const& dimensions_to_r
     target_list_type::iterator target_list_itr;
     target_list_type::iterator target_list_end = this->target_list_.end();
 
-    //vcl_vector<vgl_point_2d<unsigned> > target_index_vector; //to maintain ordering
+    //std::vector<vgl_point_2d<unsigned> > target_index_vector; //to maintain ordering
 
     //this will create the data matrix who's n'th row is the n'th data point.
     unsigned data_row_indx;
@@ -72,15 +72,15 @@ void dncn_target_list_2d::reduce_dimensionality( unsigned const& dimensions_to_r
             data_adjusted_matrix(row,col) = data(row,col) - mean;
     }//end column iteration and zeroing
 
-    vcl_cout << "Building Covariance Matrix..." << vcl_flush;
+    std::cout << "Building Covariance Matrix..." << std::flush;
     vnl_matrix<double> covariance_matrix = data_adjusted_matrix.transpose() * data_adjusted_matrix;
 	//vnl_matrix<double> covariance_matrix = data.transpose() * data;
 
     //can now do svd on the feature vocariance matrix and reduce the dimensionality of each feature vector
-    vcl_cout << "Computing SVD of Covariance Matrix..." << vcl_endl;
+    std::cout << "Computing SVD of Covariance Matrix..." << std::endl;
     vnl_svd<double> svd(covariance_matrix);
 
-    vcl_cout << "Computing PCA using the result of SVD..." << vcl_endl;
+    std::cout << "Computing PCA using the result of SVD..." << std::endl;
     vnl_matrix<double> U = svd.U();
     //vnl_matrix<double> reduced_U_(num_dimensions, dimensions_to_retain);
 	this->reduced_U_.set_size(num_dimensions, dimensions_to_retain);
@@ -88,7 +88,7 @@ void dncn_target_list_2d::reduce_dimensionality( unsigned const& dimensions_to_r
     U.extract(reduced_U_);
     reduced_data = data * reduced_U_;
 
-    vcl_cout << "Re-organizing reduced points into reduced feature maps..." << vcl_endl;
+    std::cout << "Re-organizing reduced points into reduced feature maps..." << std::endl;
 
     data_row_indx = 0;
     for( target_list_itr = this->target_list_.begin(); target_list_itr != target_list_end; ++target_list_itr )
@@ -119,18 +119,18 @@ void dncn_target_list_2d::reduce_dimensionality( unsigned const& dimensions_to_r
 
 			//assert(this->dimension_means_.size() == curr_target_vector.size() );
 
-			//vcl_cout << "Original curr_target_vector = " << curr_target_vector << vcl_endl << vcl_endl;
+			//std::cout << "Original curr_target_vector = " << curr_target_vector << std::endl << std::endl;
 
 			//for( unsigned i = 0; i < curr_target_vector.size(); ++i )
 			//	curr_target_vector[i] = curr_target_vector[i] - dimension_means_[i];
 
 			vnl_vector<double> curr_target_reduced_vector = curr_target_vector * reduced_U_;
 
-			//vcl_cout << "dimension_means_ = " << dimension_means_ << vcl_endl << vcl_endl;
+			//std::cout << "dimension_means_ = " << dimension_means_ << std::endl << std::endl;
 
-			//vcl_cout << "mean subtracted curr_target_vector = " << curr_target_vector << vcl_endl << vcl_endl;
+			//std::cout << "mean subtracted curr_target_vector = " << curr_target_vector << std::endl << std::endl;
 
-			//vcl_cout << "curr_target_reduced_vector = " << curr_target_reduced_vector << vcl_endl << vcl_endl << vcl_endl;
+			//std::cout << "curr_target_reduced_vector = " << curr_target_reduced_vector << std::endl << std::endl << std::endl;
 
 			curr_target_feature_sptr->set_feature_vector_reduced(curr_target_reduced_vector);
 
@@ -140,13 +140,13 @@ void dncn_target_list_2d::reduce_dimensionality( unsigned const& dimensions_to_r
 
 	
 
-    vcl_cout << "Feature Reduction Complete." << vcl_endl;
+    std::cout << "Feature Reduction Complete." << std::endl;
 
 }//end dncn_target_list_2d::reduce_dimensionality
 
-void dncn_target_list_2d::write_neighborhood_mfile( vcl_string const& filename )
+void dncn_target_list_2d::write_neighborhood_mfile( std::string const& filename )
 {
-    vcl_ofstream os(filename.c_str(), vcl_ios::out);
+    std::ofstream os(filename.c_str(), std::ios::out);
 
     os << "neighborhoods = cell(" << this->num_targets() << ", 2);\n";
 
@@ -174,9 +174,9 @@ void dncn_target_list_2d::write_neighborhood_mfile( vcl_string const& filename )
     }//end target list iteration
 }//end dncn_target_list_2d::save_neighborhood_mfile
 
-void dncn_target_list_2d::write_feature_mfile( vcl_string const& filename, unsigned const& num_frames )
+void dncn_target_list_2d::write_feature_mfile( std::string const& filename, unsigned const& num_frames )
 {
-    vcl_ofstream os(filename.c_str(), vcl_ios::out);
+    std::ofstream os(filename.c_str(), std::ios::out);
 
     os << "features = cell(" << this->num_targets() << ',' << num_frames+ 1 << ");\n";
 
@@ -216,9 +216,9 @@ void dncn_target_list_2d::write_feature_mfile( vcl_string const& filename, unsig
     }//end target list iteration
 }//end dncn_target_list_2d::write_features_mfile
 
-void dncn_target_list_2d::write_reduced_feature_mfile( vcl_string const& filename, unsigned const& num_frames )
+void dncn_target_list_2d::write_reduced_feature_mfile( std::string const& filename, unsigned const& num_frames )
 {
-    vcl_ofstream os( filename.c_str(), vcl_ios::out );
+    std::ofstream os( filename.c_str(), std::ios::out );
     os << "reduced_features = cell(" << this->num_targets() << ',' << num_frames+ 1 << ");\n";
 
         target_list_type::iterator target_list_itr;

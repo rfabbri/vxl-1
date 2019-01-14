@@ -38,7 +38,7 @@ public:
     ~dbseg_seg_create_region_tool() {}
 
     //: Returns the string name of this tool
-    vcl_string name() const;
+    std::string name() const;
 
     //: Handle events.
     bool handle( const vgui_event & e, const bvis1_view_tableau_sptr& view );
@@ -72,7 +72,7 @@ private:
 
     //related to the polygon
     bool active;
-    vcl_vector<vgl_point_2d<double> > point_list;
+    std::vector<vgl_point_2d<double> > point_list;
     double last_x;
     double last_y;
   

@@ -19,7 +19,7 @@
 
 #include <vpgld/pro/vpgld_camera_storage.h>
 
-#include <vcl_set.h>
+#include <set>
 #include <vnl/vnl_math.h>
 
 #include <vsol/vsol_polyline_2d.h>

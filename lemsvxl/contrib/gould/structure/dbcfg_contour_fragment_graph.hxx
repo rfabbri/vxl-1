@@ -7,7 +7,7 @@
 // 7/20/09
 
 #include "dbcfg_contour_fragment_graph.h"
-#include <vcl_deque.h>
+#include <deque>
 #include <vgl/vgl_point_2d.h>
 
 
@@ -20,8 +20,8 @@ _boundless(false),
 _xsize(xsize),
 _ysize(ysize),
 _epsilon(epsilon) {
-  _curve_matrix = vnl_matrix<vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * >(_xsize, _ysize, false);
-  _junction_matrix = vnl_matrix<vcl_vector<dbcfg_junction<T> * > * >(_xsize, _ysize, false);
+  _curve_matrix = vnl_matrix<std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * >(_xsize, _ysize, false);
+  _junction_matrix = vnl_matrix<std::vector<dbcfg_junction<T> * > * >(_xsize, _ysize, false);
 }
 
 // creates an empty contour fragment graph with no bounds
@@ -31,8 +31,8 @@ _boundless(true),
 _xsize(200),
 _ysize(200),
 _epsilon(epsilon) {
-  _curve_matrix = vnl_matrix<vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * >(_xsize, _ysize, false);
-  _junction_matrix = vnl_matrix<vcl_vector<dbcfg_junction<T> * > * >(_xsize, _ysize, false);
+  _curve_matrix = vnl_matrix<std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> > * >(_xsize, _ysize, false);
+  _junction_matrix = vnl_matrix<std::vector<dbcfg_junction<T> * > * >(_xsize, _ysize, false);
 }
 
 // destruct the contour fragment graph
@@ -89,23 +89,23 @@ void dbcfg_contour_fragment_graph<T>::reset(int xsize, int ysize) {
 // created from the bottom up (highest depth to lowest depth)
 template <class T>
 void dbcfg_contour_fragment_graph<T>::add_curve(dbcfg_curve<T>* curve) {
-  vcl_deque<dbdet_edgel* >* edgels = &(curve->get_edgel_chain()->edgels);
-  for (vcl_deque<dbdet_edgel* >::iterator iter = edgels->begin(); iter < edgels->end(); iter++) {
+  std::deque<dbdet_edgel* >* edgels = &(curve->get_edgel_chain()->edgels);
+  for (std::deque<dbdet_edgel* >::iterator iter = edgels->begin(); iter < edgels->end(); iter++) {
     vgl_point_2d<double> pt = (*iter)->pt;
     int ix, iy;
     internal_xy((T) pt.x(), (T) pt.y(), ix, iy);
-    vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
+    std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
     if (curve_bucket == false) {
-      _curve_matrix(ix, iy) = new vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >();
+      _curve_matrix(ix, iy) = new std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >();
       curve_bucket = _curve_matrix(ix, iy);
     }
-    for (vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
+    for (std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
       if ((*citer).exists_at(pt.x(), pt.y(), curve->min_depth(), curve->max_depth())) {
         dbcfg_junction<T>* junction = (*citer).get_object()->intersect(curve, pt.x(), pt.y());
         if (junction != false) {
-          vcl_vector<dbcfg_junction<T> * >* junction_bucket = _junction_matrix(ix, iy);
+          std::vector<dbcfg_junction<T> * >* junction_bucket = _junction_matrix(ix, iy);
           if (junction_bucket == false) {
-            _junction_matrix(ix, iy) = new vcl_vector<dbcfg_junction<T> * >();
+            _junction_matrix(ix, iy) = new std::vector<dbcfg_junction<T> * >();
             junction_bucket = _junction_matrix(ix, iy);
           }
           junction_bucket->push_back(junction);
@@ -124,11 +124,11 @@ template <class T>
 dbcfg_junction<T>* dbcfg_contour_fragment_graph<T>::find_junction(T x, T y) {
   int ix, iy;
   internal_xy(x, y, ix, iy);
-  vcl_vector<dbcfg_junction<T> * >* junction_bucket = _junction_matrix(ix, iy);
+  std::vector<dbcfg_junction<T> * >* junction_bucket = _junction_matrix(ix, iy);
   if (junction_bucket == false) {
     return false;
   }
-  for (vcl_vector<dbcfg_junction<T> * >::iterator iter = junction_bucket->begin(); iter < junction_bucket->end(); iter++) {
+  for (std::vector<dbcfg_junction<T> * >::iterator iter = junction_bucket->begin(); iter < junction_bucket->end(); iter++) {
     if ((*iter)->x() == x && (*iter)->y() == y) {
       return (*iter);
     }
@@ -138,15 +138,15 @@ dbcfg_junction<T>* dbcfg_contour_fragment_graph<T>::find_junction(T x, T y) {
   
 // returns all curves at the given point
 template <class T>
-vcl_vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, T y) {
-  vcl_vector<dbcfg_curve<T> * > curves;
+std::vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, T y) {
+  std::vector<dbcfg_curve<T> * > curves;
   int ix, iy;
   internal_xy(x, y, ix, iy);
-  vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
+  std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
   if (curve_bucket == false) {
     return curves;
   }
-  for (vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
+  for (std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
     if ((*citer).exists_at(x, y)) {
       curves.push_back((*citer).get_object());
     }
@@ -156,15 +156,15 @@ vcl_vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, 
   
 // returns all curves at the given point and depth
 template <class T>
-vcl_vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, T y, int depth) {
-  vcl_vector<dbcfg_curve<T> * > curves;
+std::vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, T y, int depth) {
+  std::vector<dbcfg_curve<T> * > curves;
   int ix, iy;
   internal_xy(x, y, ix, iy);
-  vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
+  std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >* curve_bucket = _curve_matrix(ix, iy);
   if (curve_bucket == false) {
     return curves;
   }
-  for (vcl_vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
+  for (std::vector<dbcfg_cfg_object_location<dbcfg_curve<T> *, T> >::iterator citer = curve_bucket->begin(); citer < curve_bucket->end(); citer++) {
     if ((*citer).exists_at(x, y, depth)) {
       curves.push_back((*citer).get_object());
     }
@@ -175,14 +175,14 @@ vcl_vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::find_curves(T x, 
 // returns all junctions in the cfg
 template <class T>
 inline
-vcl_vector<dbcfg_junction<T> * > dbcfg_contour_fragment_graph<T>::get_junctions() {
+std::vector<dbcfg_junction<T> * > dbcfg_contour_fragment_graph<T>::get_junctions() {
   return _junctions;
 }
 
 // returns all curves in the cfg
 template <class T>
 inline
-vcl_vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::get_curves() {
+std::vector<dbcfg_curve<T> * > dbcfg_contour_fragment_graph<T>::get_curves() {
   return _curves;
 }
 

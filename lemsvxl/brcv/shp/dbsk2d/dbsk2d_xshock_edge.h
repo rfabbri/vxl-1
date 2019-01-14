@@ -21,7 +21,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsk2d/dbsk2d_shock_edge.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_sample_sptr.h>
@@ -37,7 +37,7 @@ public:
 
   //: Constructor 2
   dbsk2d_xshock_edge(int id, dbsk2d_shock_node_sptr src_node, dbsk2d_shock_node_sptr tgt_node,
-                     vcl_vector<dbsk2d_xshock_sample_sptr > samples, bool bIO=true);
+                     std::vector<dbsk2d_xshock_sample_sptr > samples, bool bIO=true);
 
   //: Destructor
   virtual ~dbsk2d_xshock_edge();
@@ -71,7 +71,7 @@ public:
   virtual void form_shock_fragment();
 
   //: get fragment boundary
-  void get_fragment_boundary(vcl_vector<vgl_point_2d<double> >& pts );
+  void get_fragment_boundary(std::vector<vgl_point_2d<double> >& pts );
 
   //: return the maximum intrinsic parameter
   virtual double psi_max() { return (double)(samples_.size()-1); }
@@ -95,7 +95,7 @@ protected:
   bool bIO_;   //inside=true, outside=false
 
   //: ordered list of samples along the shock edge
-  vcl_vector<dbsk2d_xshock_sample_sptr > samples_;
+  std::vector<dbsk2d_xshock_sample_sptr > samples_;
 
 };
 

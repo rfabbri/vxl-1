@@ -36,7 +36,7 @@ vidpro_combine_storage_process::vidpro_combine_storage_process()
           
           
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro_combine_storage_process::vidpro_combine_storage_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro_combine_storage_process::vidpro_combine_storage_process()" << std::endl;
   }
 }
 
@@ -49,7 +49,7 @@ vidpro_combine_storage_process::~vidpro_combine_storage_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_combine_storage_process::name()
 {
   return "Combine Storage";
@@ -81,14 +81,14 @@ return 1;
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_combine_storage_process::get_input_type()
 {
   // this process looks for  vsol2D storage classes
   // at each input frame
         int param1;
          parameters()->get_value( "-p1" , param1 );
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   for (int i = 0; i<param1; i++)
   to_return.push_back( "vsol2D" );
   
@@ -97,12 +97,12 @@ vidpro_combine_storage_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_combine_storage_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
         
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
  
   to_return.push_back( "vsol2D" );
   
@@ -116,8 +116,8 @@ vidpro_combine_storage_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_combine_storage_process::execute() - not exactly two"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro_combine_storage_process::execute() - not exactly two"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
@@ -127,17 +127,17 @@ vidpro_combine_storage_process::execute()
    parameters()->get_value( "-p1" , param1 );
   // get vsol2d from the storage classes
   vidpro_vsol2D_storage_sptr curr_frame_corn; 
-  vcl_vector < vsol_spatial_object_2d_sptr > origpts;
+  std::vector < vsol_spatial_object_2d_sptr > origpts;
   for (int i = 0; i<param1; i++)
   {
           curr_frame_corn.vertical_cast(input_data_[0][i]);
-          vcl_vector<vcl_string> dataname = curr_frame_corn->groups();
+          std::vector<std::string> dataname = curr_frame_corn->groups();
       
           
       for (int nameindex=0; nameindex<dataname.size(); nameindex++)
       {
                   
-          vcl_vector < vsol_spatial_object_2d_sptr > curr_group = curr_frame_corn->data_named(dataname[nameindex]);
+          std::vector < vsol_spatial_object_2d_sptr > curr_group = curr_frame_corn->data_named(dataname[nameindex]);
           for (int m = 0; m<curr_group.size(); m++)
               origpts.push_back(curr_group[m]);
       }

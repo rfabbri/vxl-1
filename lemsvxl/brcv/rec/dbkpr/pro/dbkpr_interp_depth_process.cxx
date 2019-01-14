@@ -13,10 +13,10 @@
 #include <vil/vil_new.h>
 #include <vnl/algo/vnl_svd.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_iomanip.h>
-#include <vcl_algorithm.h>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
 
 #include <dbkpr/pro/dbkpr_corr3d_storage_sptr.h>
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>
@@ -31,7 +31,7 @@ dbkpr_interp_depth_process::dbkpr_interp_depth_process()
 {
   if( !parameters()->add( "Output File",       "-file",  bpro1_filepath("","*")) ||
       !parameters()->add( "Sample Rate",       "-samp",  (int)1) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -51,7 +51,7 @@ dbkpr_interp_depth_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_interp_depth_process::name()
 {
   return "Depth Iterpolation";
@@ -75,18 +75,18 @@ dbkpr_interp_depth_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_interp_depth_process::get_input_type()
+std::vector< std::string > dbkpr_interp_depth_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_interp_depth_process::get_output_type()
+std::vector< std::string > dbkpr_interp_depth_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -94,12 +94,12 @@ vcl_vector< vcl_string > dbkpr_interp_depth_process::get_output_type()
 inline static double phi(const vgl_vector_2d<double>& v)
 {
   double dist = v.length();
-  return (dist==0.0) ? 0.0 : dist*dist*vcl_log(dist);
+  return (dist==0.0) ? 0.0 : dist*dist*std::log(dist);
 }
 
 inline static double eval_depth(const vgl_point_2d<double>& c, 
                                 const vnl_vector<double>& w,
-                                const vcl_vector<vgl_point_2d<double> >& pts)
+                                const std::vector<vgl_point_2d<double> >& pts)
 {
   double depth = 0.0;
   unsigned int dim = w.size();
@@ -112,8 +112,8 @@ inline static double eval_depth(const vgl_point_2d<double>& c,
 }
 
 inline static vnl_vector<double>
-find_weights(const vcl_vector<vgl_point_2d<double> >& points,
-             const vcl_vector<double>& depths)
+find_weights(const std::vector<vgl_point_2d<double> >& points,
+             const std::vector<double>& depths)
 {
   unsigned int dim = points.size()+3;
   vnl_matrix<double> M(dim,dim,0.0);
@@ -143,7 +143,7 @@ dbkpr_interp_depth_process::execute()
   int frame = frame_corr3d->frame();
 
   // get the data
-  vcl_vector<dbdet_keypoint_corr3d_sptr> all_corr3d = frame_corr3d->correspondences();
+  std::vector<dbdet_keypoint_corr3d_sptr> all_corr3d = frame_corr3d->correspondences();
   const vpgl_proj_camera<double> &camera = *(frame_corr3d->get_camera());
   unsigned int ni = frame_corr3d->ni();
   unsigned int nj = frame_corr3d->nj();
@@ -152,15 +152,15 @@ dbkpr_interp_depth_process::execute()
   int samp_rate=0;
   parameters()->get_value( "-file" , file );
   parameters()->get_value( "-samp" , samp_rate );
-  vcl_stringstream filename;
-  filename << file.path << vcl_setfill('0') <<vcl_setw(5) << frame <<".dmp";
+  std::stringstream filename;
+  filename << file.path << std::setfill('0') <<std::setw(5) << frame <<".dmp";
   vil_image_view<float> depthmap(ni/samp_rate+1,nj/samp_rate+1);
   depthmap.fill(0.0);
 
-  vcl_vector<vgl_point_2d<double> > points;
-  vcl_vector<double> depths;
+  std::vector<vgl_point_2d<double> > points;
+  std::vector<double> depths;
   double max_d = 0.0;
-  double min_d = vcl_numeric_limits<double>::infinity();
+  double min_d = std::numeric_limits<double>::infinity();
   for(unsigned int i=0; i<all_corr3d.size(); ++i)
   {
     //if(points.size() > 100) break;
@@ -178,8 +178,8 @@ dbkpr_interp_depth_process::execute()
   
   
   // remove duplicates that could cause singularities
-  vcl_vector<vgl_point_2d<double> > points_u;
-  vcl_vector<double> depths_u;
+  std::vector<vgl_point_2d<double> > points_u;
+  std::vector<double> depths_u;
   for(unsigned int i=0; i<points.size(); ++i){
     bool unique = true;
     for(unsigned int j=i+1; j<points.size(); ++j){
@@ -194,14 +194,14 @@ dbkpr_interp_depth_process::execute()
     } 
   }
 
-  vcl_cout << "solving"<< vcl_endl;
+  std::cout << "solving"<< std::endl;
   vnl_vector<double> w = find_weights(points_u,depths_u);
 
-  vcl_vector<vcl_pair<double,int> > ind_weights;
+  std::vector<std::pair<double,int> > ind_weights;
   for(int i=0; i<(int)w.size()-3; ++i)
-    ind_weights.push_back(vcl_pair<double,int>(vcl_abs(w[i]),i));
+    ind_weights.push_back(std::pair<double,int>(std::abs(w[i]),i));
 
-  vcl_sort(ind_weights.begin(), ind_weights.end(), vcl_less<vcl_pair<double,int> >());
+  std::sort(ind_weights.begin(), ind_weights.end(), std::less<std::pair<double,int> >());
 
   // remove extreme points
   points.clear();
@@ -212,18 +212,18 @@ dbkpr_interp_depth_process::execute()
     depths.push_back(depths_u[idx]);
   }
 
-  vcl_cout << "solving again"<< vcl_endl;
+  std::cout << "solving again"<< std::endl;
   w = find_weights(points,depths);
   
-  vcl_cout << "evaluating" << vcl_endl;
+  std::cout << "evaluating" << std::endl;
   
   for(unsigned int i=0; i<=ni; i+=samp_rate)
     for(unsigned int j=0; j<=nj; j+=samp_rate)
       depthmap(i/samp_rate,j/samp_rate) = (float)eval_depth(vgl_point_2d<double>(i,j),w,points);
       
-  vcl_ofstream os(filename.str().c_str(), vcl_ios::out | vcl_ios::binary);
+  std::ofstream os(filename.str().c_str(), std::ios::out | std::ios::binary);
   unsigned int size[] = {ni/samp_rate+1, nj/samp_rate+1};
-  vcl_cout << size[0] <<" x "<<size[1]<<vcl_endl;
+  std::cout << size[0] <<" x "<<size[1]<<std::endl;
   os.write((const char*)size, (unsigned long)2*sizeof(unsigned int));
   os.write((const char*)depthmap.top_left_ptr(), (unsigned long)(size[0]*size[1]*sizeof(float)));
   os.close();

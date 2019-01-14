@@ -13,7 +13,7 @@
 
 #include <vil/vil_image_resource.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 
@@ -37,7 +37,7 @@ bool dbskr_shock_patch_model_selector::extract(int depth, bool circular_ends, do
   if (!sg_)
     return false;
 
-  vcl_vector<dbskr_shock_patch_sptr> *pv = new vcl_vector<dbskr_shock_patch_sptr>();
+  std::vector<dbskr_shock_patch_sptr> *pv = new std::vector<dbskr_shock_patch_sptr>();
   for (dbsk2d_shock_graph::vertex_iterator v_itr = sg_->vertices_begin(); v_itr != sg_->vertices_end(); v_itr++)
   { 
     if ((*v_itr)->degree() < 3)
@@ -65,7 +65,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches(int depth)
 
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
     
-    vcl_vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
+    std::vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
 
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i];
@@ -86,7 +86,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches(int depth)
     }
 
     //: now actually delete all the deleted ones from the patch_sets_
-    vcl_vector<dbskr_shock_patch_sptr> temp;
+    std::vector<dbskr_shock_patch_sptr> temp;
     for (unsigned i = 0; i < pv->size(); i++) {
       if ((*pv)[i])
         temp.push_back((*pv)[i]);
@@ -107,7 +107,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches_at_all_depths()
 {
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
     
-    vcl_vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
+    std::vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
 
     for (unsigned i = 0; i < pv->size(); i++) {
       dbskr_shock_patch_sptr sp = (*pv)[i];
@@ -118,7 +118,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches_at_all_depths()
         if (index == index2)  // assumes that the same patches at the same depths are already pruned
           continue;
     
-        vcl_vector<dbskr_shock_patch_sptr> *pv2 = patch_sets_[index2];
+        std::vector<dbskr_shock_patch_sptr> *pv2 = patch_sets_[index2];
 
         for (unsigned j = 0; j < pv2->size(); j++) {
           dbskr_shock_patch_sptr sp2 = (*pv2)[j];
@@ -132,7 +132,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches_at_all_depths()
     }
 
     //: now actually delete all the deleted ones from the patch_sets_
-    vcl_vector<dbskr_shock_patch_sptr> temp;
+    std::vector<dbskr_shock_patch_sptr> temp;
     for (unsigned i = 0; i < pv->size(); i++) {
       if ((*pv)[i])
         temp.push_back((*pv)[i]);
@@ -146,9 +146,9 @@ bool dbskr_shock_patch_model_selector::prune_same_patches_at_all_depths()
     }
   }
   //: clear the empty depths
-  vcl_vector<vcl_vector<dbskr_shock_patch_sptr>* > temp_patch_sets;
+  std::vector<std::vector<dbskr_shock_patch_sptr>* > temp_patch_sets;
   for (unsigned index = 0; index < patch_sets_.size(); index++) {
-    vcl_vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
+    std::vector<dbskr_shock_patch_sptr> *pv = patch_sets_[index];
     if (pv->size())
       temp_patch_sets.push_back(pv);
     else
@@ -163,7 +163,7 @@ bool dbskr_shock_patch_model_selector::prune_same_patches_at_all_depths()
 bool dbskr_shock_patch_model_selector::add_to_storage(int depth, dbskr_shock_patch_storage_sptr str)
 {
   for (unsigned j = 0; j < patch_sets_.size(); j++) {
-    vcl_vector<dbskr_shock_patch_sptr>* pv = patch_sets_[j];
+    std::vector<dbskr_shock_patch_sptr>* pv = patch_sets_[j];
     for (unsigned i = 0; i < pv->size(); i++) {
       if ((*pv)[i]->depth() != depth)
         break;

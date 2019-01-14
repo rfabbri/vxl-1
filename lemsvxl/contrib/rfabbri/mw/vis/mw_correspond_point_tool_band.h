@@ -23,7 +23,7 @@ public:
   virtual ~mw_correspond_point_tool_band() {}
   
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events.
   virtual bool handle( const vgui_event & e, 
@@ -33,18 +33,18 @@ public:
   virtual void deactivate ();
 
 protected:
-  vcl_vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all vsols
+  std::vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all vsols
   
-  vcl_vector<becld_grid_cover_window*> w_;
+  std::vector<becld_grid_cover_window*> w_;
 
-  vcl_vector< vcl_vector<becld_epiband *> > epband_;
-  vcl_vector< vcl_vector<bgui_vsol_soview2D_polygon *> > epband_soview_;
+  std::vector< std::vector<becld_epiband *> > epband_;
+  std::vector< std::vector<bgui_vsol_soview2D_polygon *> > epband_soview_;
 
-  vcl_vector< vcl_list<vgui_soview2D_point *> > covering_soviews_; 
+  std::vector< std::list<vgui_soview2D_point *> > covering_soviews_; 
 
-  vcl_vector<vgui_style_sptr> epband_style_;
+  std::vector<vgui_style_sptr> epband_style_;
   
-  vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fm_;
+  std::vector<std::vector <vpgl_fundamental_matrix<double> > > fm_;
 
   double err_pos_;
 

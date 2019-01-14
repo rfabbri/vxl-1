@@ -17,7 +17,7 @@ dbskfg_load_composite_graph_process::dbskfg_load_composite_graph_process()
     if( !parameters()->add( "Input file <filename...>" , "-cginput" , 
                             bpro1_filepath("","*.xml") ) )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -34,24 +34,24 @@ dbskfg_load_composite_graph_process::clone() const
     return new dbskfg_load_composite_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_load_composite_graph_process::name()
 {
     return "Load Composite Graph";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_load_composite_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_load_composite_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back("composite_graph");
     return to_return;
 }
@@ -71,7 +71,7 @@ bool dbskfg_load_composite_graph_process::execute()
     // get input file path
     bpro1_filepath input;
     parameters()->get_value( "-cginput" , input);
-    vcl_string input_file_path = input.path;
+    std::string input_file_path = input.path;
 
     int num_of_files = 0;
 

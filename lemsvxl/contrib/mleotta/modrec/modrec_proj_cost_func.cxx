@@ -65,10 +65,10 @@ modrec_proj_cost_func::f(vnl_vector<double> const& x)
   bbox.add(bbox_shadow);
 
   unsigned ni = errors_.ni();
-  vcl_ptrdiff_t istep=errors_.istep();
+  std::ptrdiff_t istep=errors_.istep();
   unsigned nj = errors_.nj();
-  vcl_ptrdiff_t jstep=errors_.jstep();
-  vcl_ptrdiff_t pstep = errors_.planestep();
+  std::ptrdiff_t jstep=errors_.jstep();
+  std::ptrdiff_t pstep = errors_.planestep();
 
   assert(mask_.is_contiguous() && mask_.istep()==1);
   assert(shadow_mask_.is_contiguous() && shadow_mask_.istep()==1);
@@ -103,7 +103,7 @@ modrec_proj_cost_func::f(vnl_vector<double> const& x)
 
 //: Constructor
 modrec_motion_cost_func::
-modrec_motion_cost_func( const vcl_vector<vil_image_view<float> >& errors,
+modrec_motion_cost_func( const std::vector<vil_image_view<float> >& errors,
                          const vnl_double_3x4& camera,
                          const vpgl_poly_radial_distortion<double,4>& lens,
                          const imesh_mesh& model,

@@ -10,7 +10,7 @@
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_box_2d.h>
 
-#include <vcl_list.h>
+#include <list>
 
 #include <vul/vul_timer.h>
 #include <vil/vil_save.h>
@@ -18,14 +18,14 @@
 #include <vil/vil_copy.h>
 #include <vil/vil_fill.h>
 #include <vil/vil_math.h>
-#include <vcl_sstream.h>
-#include <vcl_iomanip.h>
+#include <sstream>
+#include <iomanip>
 #include <vimt/vimt_sample_grid_bilin.h>
 #include <vnl/algo/vnl_qr.h>
 
 
 //: Constructor
-dbvrl_super_res::dbvrl_super_res(vcl_vector<vimt_image_2d_of<vxl_byte> >& images,
+dbvrl_super_res::dbvrl_super_res(std::vector<vimt_image_2d_of<vxl_byte> >& images,
                                int block_size)
  : images_(images), bsi_(block_size), bsj_(block_size), blur_(0.0)
 {
@@ -34,33 +34,33 @@ dbvrl_super_res::dbvrl_super_res(vcl_vector<vimt_image_2d_of<vxl_byte> >& images
 
 //: Compute the higher resolution image
 vil_image_view<double> 
-dbvrl_super_res::compute_high_res(dbvrl_region_sptr region, vcl_string path, double blur)
+dbvrl_super_res::compute_high_res(dbvrl_region_sptr region, std::string path, double blur)
 {
   region_ = region;
   blur_ = blur;
-  vcl_cout << "Region: " << region_->ni()<<' '<<region_->nj()<<vcl_endl;
+  std::cout << "Region: " << region_->ni()<<' '<<region_->nj()<<std::endl;
   vil_image_view<double> super_image(region_->ni(),region_->nj(),images_[0].image().nplanes());
   vil_fill(super_image,0.0);
 
   for (int h=0; h<region_->ni(); h+=bsi_){
     for (int v=0; v<region_->nj(); v+=bsj_){
-      vcl_cout << "location: "<<h <<","<< v << vcl_endl;
+      std::cout << "location: "<<h <<","<< v << std::endl;
       vgl_box_2d<int> bounds(h,h+bsi_,v,v+bsj_);
-      bounds.set_max_x(vcl_min(bounds.max_x(), region_->ni()));
-      bounds.set_max_y(vcl_min(bounds.max_y(), region_->nj()));
+      bounds.set_max_x(std::min(bounds.max_x(), region_->ni()));
+      bounds.set_max_y(std::min(bounds.max_y(), region_->nj()));
       vnl_matrix<double> data;
       vnl_matrix<double> weights;
       vul_timer time;
       this->compute_weights(data, weights, bounds);
-      vcl_cout << "Weight time: " << time.real() << vcl_endl;
+      std::cout << "Weight time: " << time.real() << std::endl;
       time.mark();
       vnl_matrix<double> super_data = vnl_qr<double>(weights).solve(data);
-      vcl_cout << "QR time: " << time.real() <<'\n'<< vcl_endl;
+      std::cout << "QR time: " << time.real() <<'\n'<< std::endl;
 
-      //vcl_cout << "----Data----\n"<<data << vcl_endl;
-      //vcl_cout << "----Weights----\n"<<weights << vcl_endl;
-      //vcl_cout << "----Inverse----\n"<<inv_weights << vcl_endl;
-      //vcl_cout << "----Super Data----\n"<< super_data << '\n' << vcl_endl;
+      //std::cout << "----Data----\n"<<data << std::endl;
+      //std::cout << "----Weights----\n"<<weights << std::endl;
+      //std::cout << "----Inverse----\n"<<inv_weights << std::endl;
+      //std::cout << "----Super Data----\n"<< super_data << '\n' << std::endl;
 
       vil_image_view<double> super_block( super_data.data_block(), 
                                           bounds.width(), bounds.height(), data.cols(), 
@@ -84,7 +84,7 @@ dbvrl_super_res::compute_region(double area_mag)
 {
   double total_area = 0.0;
   double aspect_ratio = 0.0;
-  typedef vcl_vector<vimt_image_2d_of<vxl_byte> >::const_iterator image_itr;
+  typedef std::vector<vimt_image_2d_of<vxl_byte> >::const_iterator image_itr;
   for(image_itr itr = images_.begin(); itr!=images_.end(); ++itr){
     vimt_transform_2d xform = itr->world2im();
 
@@ -102,12 +102,12 @@ dbvrl_super_res::compute_region(double area_mag)
     aspect_ratio += width/height;
   }
   double avg_asp = aspect_ratio/images_.size();
-  vcl_cout << "Total Area = " << total_area << vcl_endl;
-  vcl_cout << "Average Aspect = " << avg_asp << vcl_endl;
+  std::cout << "Total Area = " << total_area << std::endl;
+  std::cout << "Average Aspect = " << avg_asp << std::endl;
 
   double avg_area = total_area/images_.size();
-  double width = vcl_sqrt(area_mag * avg_area * avg_asp);
-  double height = vcl_sqrt(area_mag * avg_area / avg_asp);
+  double width = std::sqrt(area_mag * avg_area * avg_asp);
+  double height = std::sqrt(area_mag * avg_area / avg_asp);
   return new dbvrl_region(int(width), int(height));
 }
 
@@ -118,11 +118,11 @@ dbvrl_super_res::compute_weights( vnl_matrix<double>& data,
                                  vnl_matrix<double>& weights,
                                  const vgl_box_2d<int>& bounds) const
 {
-  vcl_list<vnl_vector<double> > weight_list;
-  vcl_list<vnl_vector<double> > data_list;
+  std::list<vnl_vector<double> > weight_list;
+  std::list<vnl_vector<double> > data_list;
   for(unsigned int i=0; i<images_.size(); ++i){
-    vcl_list<vnl_vector<double> > curr_data;
-    vcl_list<vnl_vector<double> > curr_weights;
+    std::list<vnl_vector<double> > curr_data;
+    std::list<vnl_vector<double> > curr_weights;
     this->compute_weights(i, curr_data, curr_weights, bounds);
     weight_list.splice(weight_list.end(), curr_weights);
     data_list.splice(data_list.end(), curr_data);
@@ -131,7 +131,7 @@ dbvrl_super_res::compute_weights( vnl_matrix<double>& data,
   data.set_size(data_list.size(), data_list.front().size());
   weights.set_size(weight_list.size(), bounds.volume());
   int r=0;
-  typedef vcl_list<vnl_vector<double> >::iterator vec_itr;
+  typedef std::list<vnl_vector<double> >::iterator vec_itr;
   for( vec_itr d_itr = data_list.begin(), w_itr = weight_list.begin();
        d_itr != data_list.end(); ++d_itr, ++w_itr, ++r )
   {
@@ -144,8 +144,8 @@ dbvrl_super_res::compute_weights( vnl_matrix<double>& data,
 //: Compute the weights and data vector for the given index
 void
 dbvrl_super_res::compute_weights( int index, 
-                                 vcl_list<vnl_vector<double> >& data, 
-                                 vcl_list<vnl_vector<double> >& weights,
+                                 std::list<vnl_vector<double> >& data, 
+                                 std::list<vnl_vector<double> >& weights,
                                  const vgl_box_2d<int>& bounds) const
 {
   vimt_transform_2d xform = images_[index].world2im() * region_->xform();
@@ -163,10 +163,10 @@ dbvrl_super_res::compute_weights( int index,
   xform_box.add(points[2]);
   xform_box.add(points[3]);
 
-  int i_min = vcl_max(int(xform_box.min_x()+0.5) - 1, 0);
-  int i_max = vcl_min(int(xform_box.max_x()+0.5) + 1, int(image.ni())-1);
-  int j_min = vcl_max(int(xform_box.min_y()+0.5) - 1, 0);
-  int j_max = vcl_min(int(xform_box.max_y()+0.5) + 1, int(image.nj())-1);
+  int i_min = std::max(int(xform_box.min_x()+0.5) - 1, 0);
+  int i_max = std::min(int(xform_box.max_x()+0.5) + 1, int(image.ni())-1);
+  int j_min = std::max(int(xform_box.min_y()+0.5) - 1, 0);
+  int j_max = std::min(int(xform_box.max_y()+0.5) + 1, int(image.nj())-1);
 
   //data.set_size((i_max-i_min+1)*(j_max-j_min+1), image.nplanes());
   //weights.set_size(data.rows(), bounds.volume());
@@ -194,7 +194,7 @@ dbvrl_super_res::compute_weights( int index,
     }
   }
 
-  typedef vcl_list<vnl_vector<double> >::iterator vec_itr;
+  typedef std::list<vnl_vector<double> >::iterator vec_itr;
   for( vec_itr d_itr = data.begin(), w_itr = weights.begin();
        d_itr != data.end(); ++d_itr, ++w_itr )
   {
@@ -207,10 +207,10 @@ dbvrl_super_res::compute_weights( int index,
     }
   }
 
-  //vcl_cout << "Frame "<<index<<'\n'
-  //         << " number of pixels = " << data.size() << vcl_endl;
-  //vcl_cout << "data size = "<< data.size() << vcl_endl;
-  //vcl_cout << "weight size = " << weights.rows()<<','<<weights.cols()<<vcl_endl;
+  //std::cout << "Frame "<<index<<'\n'
+  //         << " number of pixels = " << data.size() << std::endl;
+  //std::cout << "data size = "<< data.size() << std::endl;
+  //std::cout << "weight size = " << weights.rows()<<','<<weights.cols()<<std::endl;
   
 }
 
@@ -224,8 +224,8 @@ dbvrl_super_res::point_spread( const vgl_point_2d<double>& m,
   double b_max = 0.5 + blur_;
   double b_min = 0.5 - blur_;
 
-  double dx = vcl_abs(m.x() - p.x());
-  double dy = vcl_abs(m.y() - p.y());
+  double dx = std::abs(m.x() - p.x());
+  double dy = std::abs(m.y() - p.y());
 
   if(dx > b_max || dy > b_max)
     return 0.0;

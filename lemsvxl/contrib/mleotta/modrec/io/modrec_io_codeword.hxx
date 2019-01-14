@@ -65,9 +65,9 @@ void vsl_b_read(vsl_b_istream &is, modrec_codeword<n> & c)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, modrec_codeword<n>&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, modrec_codeword<n>&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -76,7 +76,7 @@ void vsl_b_read(vsl_b_istream &is, modrec_codeword<n> & c)
 //============================================================================
 //: Output a human readable summary to the stream
 template<unsigned n>
-void vsl_print_summary(vcl_ostream& os,const modrec_codeword<n> & c)
+void vsl_print_summary(std::ostream& os,const modrec_codeword<n> & c)
 {
   os << "{p=" << c.position()
      << " o=" << c.orientation()
@@ -84,7 +84,7 @@ void vsl_print_summary(vcl_ostream& os,const modrec_codeword<n> & c)
 }
 
 #define MODREC_IO_CODEWORD_INSTANTIATE(n) \
-template void vsl_print_summary(vcl_ostream &, const modrec_codeword<n> &); \
+template void vsl_print_summary(std::ostream &, const modrec_codeword<n> &); \
 template void vsl_b_read(vsl_b_istream &, modrec_codeword<n> &); \
 template void vsl_b_write(vsl_b_ostream &, const modrec_codeword<n> &)
 

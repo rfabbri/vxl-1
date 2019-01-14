@@ -30,26 +30,26 @@ epip_interactive()
 
    // dialog to ask for 2 filenames
 
-   vcl_string fname1("tst1/p1010053.jpg");
-   vcl_string fname2("tst1/p1010047.jpg");
+   std::string fname1("tst1/p1010053.jpg");
+   std::string fname2("tst1/p1010047.jpg");
 
 
    // Reading images
    vil_image_resource_sptr img1 = vil_load_image_resource( fname1.c_str() );
    if( !img1 ) {
-     vcl_cerr << "Failed to load image file" << fname1 << vcl_endl;
+     std::cerr << "Failed to load image file" << fname1 << std::endl;
      return;
    }
 
    vil_image_resource_sptr img2 = vil_load_image_resource( fname2.c_str() );
    if( !img2 ) {
-     vcl_cerr << "Failed to load image file" << fname2 << vcl_endl;
+     std::cerr << "Failed to load image file" << fname2 << std::endl;
      return;
    }
    
    // Create the storage data structures
-   vcl_string itype("image");
-   vcl_string iname("cur_image");
+   std::string itype("image");
+   std::string iname("cur_image");
    bpro1_storage_sptr img_data = MANAGER->repository()->new_data(itype,iname);
    if (img_data) {
       vidpro1_image_storage_sptr img_storage;
@@ -57,11 +57,11 @@ epip_interactive()
       img_storage->set_image(img1);
       MANAGER->add_to_display(img_data);
    } else {
-      vcl_cerr << "error: unable to register new data\n";
+      std::cerr << "error: unable to register new data\n";
       return;
    }
 
-   vcl_string iname2("nxt_image");
+   std::string iname2("nxt_image");
    img_data = MANAGER->repository()->new_data(itype,iname2);
    if (img_data) {
       vidpro1_image_storage_sptr img_storage;
@@ -70,7 +70,7 @@ epip_interactive()
       MANAGER->add_to_display(img_data);
       MANAGER->display_current_frame();
    } else {
-      vcl_cerr << "error: unable to register new data\n";
+      std::cerr << "error: unable to register new data\n";
       return;
    }
 
@@ -82,7 +82,7 @@ epip_interactive()
    P2 = new vpgl_perspective_camera<double>;
 
    if (!read_cam(fname1,fname2,P1,P2)) {
-      vcl_cerr << "epip_interactive: error reading cam\n";
+      std::cerr << "epip_interactive: error reading cam\n";
       return;
    }
 
@@ -102,25 +102,25 @@ epip_interactive()
 
    // ADD TABLEAUS TO DRAW ON
 
-   vcl_string type("vsol2D");
-   vcl_string name("cur_vsol2D");
+   std::string type("vsol2D");
+   std::string name("cur_vsol2D");
    bpro1_storage_sptr n_data = MANAGER->repository()->new_data(type,name);
    if (n_data) {
       MANAGER->add_to_display(n_data);
       MANAGER->display_current_frame();
    } else {
-      vcl_cerr << "error: unable to register new data\n";
+      std::cerr << "error: unable to register new data\n";
       return;
    }
 
-   vcl_string type2("vsol2D");
-   vcl_string name2("nxt_vsol2D");
+   std::string type2("vsol2D");
+   std::string name2("nxt_vsol2D");
    n_data = MANAGER->repository()->new_data(type2,name2);
    if (n_data) {
       MANAGER->add_to_display(n_data);
       MANAGER->display_current_frame();
    } else {
-      vcl_cerr << "error: unable to register new data\n";
+      std::cerr << "error: unable to register new data\n";
       return;
    }
    
@@ -187,16 +187,16 @@ handle(const vgui_event &e)
       // project world origin into both images
       vgl_homg_point_3d<double> orig(0,0,0);
       vgl_point_2d<double> gama1 = p_l_->project(orig);
-      vcl_cout << "Gama1:" << gama1 << vcl_endl;
+      std::cout << "Gama1:" << gama1 << std::endl;
       vgl_point_2d<double> gama2 = p_r_->project(orig);
-      vcl_cout << "Gama2:" << gama2 << vcl_endl;
+      std::cout << "Gama2:" << gama2 << std::endl;
 
-      vcl_cout << "\nProjective matrices:\n";
-      vcl_cout << *p_l_ << vcl_endl << vcl_endl;
-      vcl_cout << p_l_->get_matrix() << vcl_endl;
+      std::cout << "\nProjective matrices:\n";
+      std::cout << *p_l_ << std::endl << std::endl;
+      std::cout << p_l_->get_matrix() << std::endl;
 
-      vcl_cout << *p_r_ << vcl_endl;
-      vcl_cout << p_r_->get_matrix() << vcl_endl;
+      std::cout << *p_r_ << std::endl;
+      std::cout << p_r_->get_matrix() << std::endl;
 
       // add gama1 and gama2 as blue points
       tab_l_->set_foreground(0,0,1);
@@ -221,9 +221,9 @@ handle(const vgui_event &e)
 
    if (e.button  == vgui_LEFT) {
       activated_ = !activated_;
-      vcl_cout << "Offset: " << view_r_->token.offsetX << " " << view_r_->token.offsetY << vcl_endl;
-      vcl_cout << "My point: " << ix << ", " << iy << vcl_endl;
-      vcl_cout << "Event: " << e.wx << ", " << e.wy << vcl_endl;
+      std::cout << "Offset: " << view_r_->token.offsetX << " " << view_r_->token.offsetY << std::endl;
+      std::cout << "My point: " << ix << ", " << iy << std::endl;
+      std::cout << "Event: " << e.wx << ", " << e.wy << std::endl;
    }
 
    if (gesture0(e) || (activated_ && e.type == vgui_MOTION)) {
@@ -262,20 +262,20 @@ point_transfer_app()
 {
   vgl_homg_point_2d<double> p1,p2,p3;
 
-  vcl_string fname1("curr/p1010049.jpg");
-  vcl_string fname2("curr/p1010053.jpg");
-  vcl_string fname3("curr/p1010069.jpg");
+  std::string fname1("curr/p1010049.jpg");
+  std::string fname2("curr/p1010053.jpg");
+  std::string fname3("curr/p1010069.jpg");
 
   // Reading cameras
   vpgl_perspective_camera <double> Pr1,Pr2,Pr3;
 
   if (!read_cam(fname1,fname2,&Pr1,&Pr2)) {
-     vcl_cerr << "epip_interactive: error reading cam\n";
+     std::cerr << "epip_interactive: error reading cam\n";
      return;
   }
 
   if (!read_cam(fname3,&Pr3)) {
-     vcl_cerr << "epip_interactive: error reading cam\n";
+     std::cerr << "epip_interactive: error reading cam\n";
      return;
   }
 
@@ -288,5 +288,5 @@ point_transfer_app()
 
   p3 = mw_epipolar_point_transfer(p1,p2,f13,f23);
 
-  vcl_cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
+  std::cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  std::endl;
 }

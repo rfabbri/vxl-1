@@ -1,6 +1,6 @@
 #include "bfrag_curve.h"
 #include "extern_params.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
 #include <dbgl/algo/dbgl_curve_smoothing.h>
@@ -26,7 +26,7 @@ bfrag_curve::~bfrag_curve()
 {
 }
 
-bfrag_curve::bfrag_curve(vcl_vector<vgl_point_2d<double> > &points, bool is_open)
+bfrag_curve::bfrag_curve(std::vector<vgl_point_2d<double> > &points, bool is_open)
 {
   transform_.set_identity();
   is_open_ = is_open;
@@ -38,67 +38,67 @@ bfrag_curve::bfrag_curve(vcl_vector<vgl_point_2d<double> > &points, bool is_open
   compute_properties();
 }
 
-void bfrag_curve::write_out(vcl_ofstream &out)
+void bfrag_curve::write_out(std::ofstream &out)
 {
   unsigned size;
 
-  out << "START_DUMPING_BFRAG_CURVE" << vcl_endl;
-  out << "is_open_: " << (is_open_ != 0) << vcl_endl;
+  out << "START_DUMPING_BFRAG_CURVE" << std::endl;
+  out << "is_open_: " << (is_open_ != 0) << std::endl;
   out << "box_: "; box_.write(out);
-  out << "frag_id_: " << frag_id_ << vcl_endl;
-  out << "transform_: " << vcl_endl;
+  out << "frag_id_: " << frag_id_ << std::endl;
+  out << "transform_: " << std::endl;
   transform_.print(out);
 
   size = level1_.size();
-  out << "level1_ " << size << vcl_endl;
+  out << "level1_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << level1_[i] << vcl_endl;
+    out << level1_[i] << std::endl;
   
   size = level2_.size();
-  out << "level2_ " << size << vcl_endl;
+  out << "level2_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << level2_[i].x() << " " << level2_[i].y() << vcl_endl;
+    out << level2_[i].x() << " " << level2_[i].y() << std::endl;
   
   size = coarse_fine_corr_.size();
-  out << "coarse_fine_corr_ " << size << vcl_endl;
+  out << "coarse_fine_corr_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << coarse_fine_corr_[i] << vcl_endl;
+    out << coarse_fine_corr_[i] << std::endl;
   
   size = level3_.size();
-  out << "level3_ " << size << vcl_endl;
+  out << "level3_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << level3_[i].x() << " " << level3_[i].y() << vcl_endl;
+    out << level3_[i].x() << " " << level3_[i].y() << std::endl;
   
   size = level4_.size();
-  out << "level4_ " << size << vcl_endl;
+  out << "level4_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << level4_[i].x() << " " << level4_[i].y() << vcl_endl;
+    out << level4_[i].x() << " " << level4_[i].y() << std::endl;
 
   size = arclength_.size();
-  out << "arclength_ " << size << vcl_endl;
+  out << "arclength_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << arclength_[i] << vcl_endl;
+    out << arclength_[i] << std::endl;
 
   size = cum_arclength_.size();
-  out << "cum_arclength_ " << size << vcl_endl;
+  out << "cum_arclength_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << cum_arclength_[i] << vcl_endl;
+    out << cum_arclength_[i] << std::endl;
 
   size = angle_.size();
-  out << "angle_ " << size << vcl_endl;
+  out << "angle_ " << size << std::endl;
   for(unsigned i=0; i<size; i++)
-    out << angle_[i] << vcl_endl;
+    out << angle_[i] << std::endl;
 
-  out << "length_: " << length_ << vcl_endl;
+  out << "length_: " << length_ << std::endl;
 
-  out << "isTop: " << (isTop != 0) << vcl_endl;
-  out << "END_DUMPING_BFRAG_CURVE" << vcl_endl;
+  out << "isTop: " << (isTop != 0) << std::endl;
+  out << "END_DUMPING_BFRAG_CURVE" << std::endl;
 }
 
-void bfrag_curve::read_in(vcl_ifstream &in)
+void bfrag_curve::read_in(std::ifstream &in)
 {
   unsigned size;
-  vcl_string dummy;
+  std::string dummy;
 
   in >> dummy;
   assert(dummy == "START_DUMPING_BFRAG_CURVE");
@@ -318,7 +318,7 @@ double bfrag_curve::operator -(bfrag_curve &other)
     {
       double x_diff = this->x(i) - other.x(i);
       double y_diff = this->y(i) - other.y(i);
-      total_dist += vcl_sqrt(vcl_pow(x_diff, 2.0) + vcl_pow(y_diff, 2.0));
+      total_dist += std::sqrt(std::pow(x_diff, 2.0) + std::pow(y_diff, 2.0));
     }
     double avg_dist = total_dist / this->num_fine_points();
     return avg_dist;
@@ -523,10 +523,10 @@ void bfrag_curve::resample(double ds)
 {
   dbsol_interp_curve_2d level3_curve;
   compute_level3_interpolated_curve(level3_curve);
-  vcl_cout << level3_curve.length() << vcl_endl;
+  std::cout << level3_curve.length() << std::endl;
   level3_.clear();
   // calculate the number of points after resampling
-  int new_num_points = int(vcl_ceil(level3_curve.length() / ds)) + 1;
+  int new_num_points = int(std::ceil(level3_curve.length() / ds)) + 1;
   assert(new_num_points > 2);
   double exact_dS = level3_curve.length() / new_num_points;
   for(int i=0; i<=new_num_points; i++)
@@ -557,7 +557,7 @@ void bfrag_curve::resample_coarsely(double ds)
   // Find the corners according to the level-3 point indices
   find_corners();
   // Shift points such that the first point is the first corner
-  vcl_vector<vgl_point_2d<double> > temp_pts;
+  std::vector<vgl_point_2d<double> > temp_pts;
   for(unsigned i=level1_[0]; i < num_fine_points(); i++)
     temp_pts.push_back(level3_[i]);
   for(int i=0; i < level1_[0]; i++)
@@ -594,7 +594,7 @@ void bfrag_curve::resample_coarsely(double ds)
     double len = total_length(corner_prev, corner_curr);
     if(len > 0)
     {
-      int num_segments = int(vcl_ceil(len / ds));
+      int num_segments = int(std::ceil(len / ds));
       if(num_segments > 1)
       {
         double exact_ds = len / num_segments;
@@ -635,7 +635,7 @@ void bfrag_curve::find_corners()
   dbsol_interp_curve_2d level3_curve;
   this->compute_level3_interpolated_curve(level3_curve);
   cf.find_corners(&level3_curve, false, VICINITY, DIST_STEP, MIN_TAN_TURN);
-  vcl_vector<int> *indices;
+  std::vector<int> *indices;
   indices = cf.get_corner_indices();
 
   for(unsigned i=0; i < indices->size(); i++)
@@ -644,8 +644,8 @@ void bfrag_curve::find_corners()
 
 void bfrag_curve::rotate(double angle)
 {
-  double cos_angle = vcl_cos(angle);
-  double sin_angle = vcl_sin(angle);
+  double cos_angle = std::cos(angle);
+  double sin_angle = std::sin(angle);
   if(angle != 0)
   {
     for(unsigned i=0; i < num_coarse_points(); i++)
@@ -693,7 +693,7 @@ void bfrag_curve::rotate_translate(double angle, double tx, double ty)
   this->rotate(angle);
   this->translate(tx, ty);
   // compute current transformation matrix and update cumulative transformation matrix of the class
-  double coeffs[9] = {vcl_cos(angle), vcl_sin(angle), tx, -vcl_sin(angle), vcl_cos(angle), ty, 0.0, 0.0, 1.0};
+  double coeffs[9] = {std::cos(angle), std::sin(angle), tx, -std::sin(angle), std::cos(angle), ty, 0.0, 0.0, 1.0};
   vnl_matrix_fixed<double,3,3> curr(coeffs);
   transform_ = curr * transform_;
 
@@ -781,51 +781,51 @@ void bfrag_curve::empty()
 //  level4_.clear();
 }
 
-void bfrag_curve::write_level1(vcl_string fname)
+void bfrag_curve::write_level1(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
-  fp << num_corners() << vcl_endl;
+  std::ofstream fp(fname.c_str());
+  fp << num_corners() << std::endl;
   for(unsigned i=0; i < num_corners(); i++)
-    fp << level1_[i] << vcl_endl;
+    fp << level1_[i] << std::endl;
 }
 
-void bfrag_curve::write_level2(vcl_string fname)
+void bfrag_curve::write_level2(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < num_coarse_points(); i++)
-    fp << level2_[i].x() << " " << level2_[i].y() << vcl_endl;
+    fp << level2_[i].x() << " " << level2_[i].y() << std::endl;
 }
 
-void bfrag_curve::write_level3(vcl_string fname)
+void bfrag_curve::write_level3(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < num_fine_points(); i++)
-    fp << level3_[i].x() << " " << level3_[i].y() << vcl_endl;
+    fp << level3_[i].x() << " " << level3_[i].y() << std::endl;
 }
 
-void bfrag_curve::write_level4(vcl_string fname)
+void bfrag_curve::write_level4(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < num_orig_points(); i++)
-    fp << level4_[i].x() << " " << level4_[i].y() << vcl_endl;
+    fp << level4_[i].x() << " " << level4_[i].y() << std::endl;
 }
 
-void bfrag_curve::write_coarse_fine_correspondence(vcl_string fname)
+void bfrag_curve::write_coarse_fine_correspondence(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < num_coarse_points(); i++)
-    fp << coarse_fine_corr_[i] << vcl_endl;
+    fp << coarse_fine_corr_[i] << std::endl;
 }
-void bfrag_curve::write_arclengths(vcl_string fname)
+void bfrag_curve::write_arclengths(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < arclength_.size(); i++)
-    fp << arclength_[i] << vcl_endl;
+    fp << arclength_[i] << std::endl;
 }
-void bfrag_curve::write_angles(vcl_string fname)
+void bfrag_curve::write_angles(std::string fname)
 {
-  vcl_ofstream fp(fname.c_str());
+  std::ofstream fp(fname.c_str());
   for(unsigned i=0; i < angle_.size(); i++)
-    fp << angle_[i] << vcl_endl;
+    fp << angle_[i] << std::endl;
 }
 

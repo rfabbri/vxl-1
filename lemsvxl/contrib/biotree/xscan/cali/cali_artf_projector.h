@@ -13,7 +13,7 @@ class cali_artf_projector:public cali_param
 {
 private:
   cali_artf_model* artifact_;
-  vcl_ofstream fstream;
+  std::ofstream fstream;
 
 protected:
    
@@ -35,6 +35,6 @@ public:
   vil_image_resource_sptr build_projection_img(xmvg_perspective_camera<double> camera, dbil_bounded_image_view<unsigned char> & view);
   vil_image_resource_sptr build_centers_projection_img(xmvg_perspective_camera<double> camera, 
                                          dbil_bounded_image_view<unsigned char> & view);
-  vcl_vector<vsol_conic_2d> build_ball_projections(xmvg_perspective_camera<double> camera);
+  std::vector<vsol_conic_2d> build_ball_projections(xmvg_perspective_camera<double> camera);
 };
 #endif

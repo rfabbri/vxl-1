@@ -29,10 +29,10 @@
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 // vcl headers
-#include <vcl_sstream.h>
-#include <vcl_algorithm.h>
-#include <vcl_algorithm.h>
-#include <vcl_iterator.h>
+#include <sstream>
+#include <algorithm>
+#include <algorithm>
+#include <iterator>
 // vil headers
 #include <vil/vil_image_resource.h>
 
@@ -92,41 +92,41 @@ dbskfg_containment_node::~dbskfg_containment_node()
 }
 
 //: Prints information about the node
-void dbskfg_containment_node::print(vcl_ostream& os)
+void dbskfg_containment_node::print(std::ostream& os)
 {
-    os<<"Node id: "<<id_<<vcl_endl;
-    os<<"Rag  id: "<<rag_node_id_<<vcl_endl;
+    os<<"Node id: "<<id_<<std::endl;
+    os<<"Rag  id: "<<rag_node_id_<<std::endl;
 
     os<<"Rag  con ids: ";
-    vcl_set<unsigned int>::iterator bit;
+    std::set<unsigned int>::iterator bit;
     for ( bit = rag_con_ids_.begin(); bit != rag_con_ids_.end(); ++bit)
     {
         os<<*bit<<" ";
     }
-    os<<vcl_endl;
+    os<<std::endl;
 
     os<<"Rag Wavefront: ";
-    vcl_set<vcl_string>::iterator sit;
+    std::set<std::string>::iterator sit;
     for ( sit = rag_node_wavefront_.begin(); 
           sit != rag_node_wavefront_.end(); ++sit)
     {
         os<<*sit<<" ";
     }
-    os<<vcl_endl;
+    os<<std::endl;
     
-    os<<"Attribute vector: "<<vcl_endl;
-    vcl_map<unsigned int,bool>::iterator it;
+    os<<"Attribute vector: "<<std::endl;
+    std::map<unsigned int,bool>::iterator it;
     for ( it = attr_.begin() ; it != attr_.end() ; ++it)
     {
-        os<<"Contour ("<<(*it).first<<") : "<<(*it).second<<vcl_endl; 
+        os<<"Contour ("<<(*it).first<<") : "<<(*it).second<<std::endl; 
     }
-    vcl_cout<<"Numb trans applicable "<<this->out_degree()<<vcl_endl;
-    vcl_cout<<vcl_endl;
+    std::cout<<"Numb trans applicable "<<this->out_degree()<<std::endl;
+    std::cout<<std::endl;
 }
 
 //: Prints the output of the node as a cem
 void dbskfg_containment_node::print_cem(
-    vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+    std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
     contours)                 
 {
 
@@ -134,15 +134,15 @@ void dbskfg_containment_node::print_cem(
     // Create vsol storage class with affected contour for transforms
     vidpro1_vsol2D_storage_sptr contour_storage = vidpro1_vsol2D_storage_new();
     
-    vcl_vector<vsol_spatial_object_2d_sptr> all_contours;
-    vcl_map<unsigned int,bool>::iterator ait;
+    std::vector<vsol_spatial_object_2d_sptr> all_contours;
+    std::map<unsigned int,bool>::iterator ait;
 
     // Determine contours to populate 
     for ( ait = attr_.begin() ; ait != attr_.end() ; ++ait)
     {
         if ( (*ait).second )
         {
-            vcl_vector<vsol_spatial_object_2d_sptr> cons = 
+            std::vector<vsol_spatial_object_2d_sptr> cons = 
                 contours[(*ait).first];
 
             // If we have more than one coutour is signifies a gap set
@@ -159,7 +159,7 @@ void dbskfg_containment_node::print_cem(
                 vsol_line_2d* second_line = cons[2]->
                     cast_to_curve()->cast_to_line();
 
-                vcl_vector<vsol_point_2d_sptr> ps;
+                std::vector<vsol_point_2d_sptr> ps;
                 ps.push_back(first_line->p0());
 
                 for ( unsigned int p=0; p < poly_line->size() ; ++p)
@@ -193,7 +193,7 @@ void dbskfg_containment_node::print_cem(
 
     save_cem.add_input(contour_storage);
 
-    vcl_stringstream fstream;
+    std::stringstream fstream;
     fstream<<"Node"<<id_<<"_map.cem";
 
     bpro1_filepath file_pathf(fstream.str());
@@ -218,7 +218,7 @@ void dbskfg_containment_node::update_attributes()
            in_edges_begin()))->source();
 
     // Grab old vertices
-    vcl_map<unsigned int, bool> attr =source_node->get_attributes();
+    std::map<unsigned int, bool> attr =source_node->get_attributes();
 
     // Lets look at incoming link
     dbskfg_containment_link_sptr incoming_link = *this->in_edges_begin();
@@ -234,7 +234,7 @@ void dbskfg_containment_node::update_attributes()
     }
     else
     {
-        vcl_vector<unsigned int> contours = incoming_link->
+        std::vector<unsigned int> contours = incoming_link->
             get_contours_affected();
         for ( unsigned int k=0; k < contours.size() ; ++k)
         {
@@ -248,7 +248,7 @@ void dbskfg_containment_node::update_attributes()
 // Detect whether two nodes merge
 bool dbskfg_containment_node::nodes_merge(
     dbskfg_containment_node_sptr compare_node,
-    vcl_vector<unsigned int> contours_affected,
+    std::vector<unsigned int> contours_affected,
     dbskfg_transform_descriptor::TransformType transform)
 {
     
@@ -256,7 +256,7 @@ bool dbskfg_containment_node::nodes_merge(
    
     // This is the node we are going to expand
     // We want to make a copy here not reference! due to seeing what node is
-    vcl_map<unsigned int,bool> node_to_expand_attr = attr_; 
+    std::map<unsigned int,bool> node_to_expand_attr = attr_; 
 
     // If gap update map
     if ( transform == dbskfg_transform_descriptor::GAP )
@@ -273,15 +273,15 @@ bool dbskfg_containment_node::nodes_merge(
     }
 
     // Next compute string for comparision node
-    vcl_map<unsigned int,bool> compare_node_attr = 
+    std::map<unsigned int,bool> compare_node_attr = 
         compare_node->get_attributes();    
       
     // Lets determine maximum size of original size
     unsigned int string1_size  = (*compare_node_attr.rbegin()).first;
     unsigned int string2_size  = (*node_to_expand_attr.rbegin()).first;
 
-    vcl_vector<bool> bit_set1(string1_size,false);
-    vcl_vector<bool> bit_set2(string2_size,false);
+    std::vector<bool> bit_set1(string1_size,false);
+    std::vector<bool> bit_set2(string2_size,false);
 
     for  ( unsigned int i=0; i <= string1_size ; ++i) 
     {
@@ -307,7 +307,7 @@ bool dbskfg_containment_node::node_empty()
 {
 
     unsigned int count=0;
-    vcl_map<unsigned int,bool>::iterator it;
+    std::map<unsigned int,bool>::iterator it;
     for ( it = attr_.begin() ; it != attr_.end() ; ++it)
     {
         if ( (*it).second )
@@ -320,16 +320,16 @@ bool dbskfg_containment_node::node_empty()
 }
 
 void dbskfg_containment_node::expand_node_explicit(
-    vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
-    vcl_map<unsigned int, 
-    vcl_vector<vsol_spatial_object_2d_sptr> >& contours,
+    std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+    std::map<unsigned int, 
+    std::vector<vsol_spatial_object_2d_sptr> >& contours,
     dbskfg_containment_graph& cgraph)
 {
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
-    vcl_cout<<"Expanding Node: "<<id_<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"********************************"<<std::endl;
+    std::cout<<"Expanding Node: "<<id_<<std::endl;
+    std::cout<<"********************************"<<std::endl;
 
     // Lets look at incoming link
     dbskfg_containment_link_sptr incoming_link = *this->in_edges_begin();
@@ -370,20 +370,20 @@ void dbskfg_containment_node::expand_node_explicit(
     this->rag_node_id_ = region->id();
 
     // Write out the region
-    vcl_stringstream node_str,depth_str;
+    std::stringstream node_str,depth_str;
     node_str<<id_;
     depth_str<<depth_;
 
     // Create wavefront set
     {
-         vcl_map<unsigned int, dbskfg_shock_node*> wavefront
+         std::map<unsigned int, dbskfg_shock_node*> wavefront
              = region->get_wavefront();
 
-         vcl_map<unsigned int, dbskfg_shock_node*>::iterator it;
+         std::map<unsigned int, dbskfg_shock_node*>::iterator it;
          for ( it = wavefront.begin(); it != wavefront.end() ; ++it)
          {
              vgl_point_2d<double> point = (*it).second->pt();
-             vcl_stringstream stream;
+             std::stringstream stream;
              stream<<point;
              rag_node_wavefront_.insert(stream.str());
          }
@@ -391,15 +391,15 @@ void dbskfg_containment_node::expand_node_explicit(
 
     // Print region
     // Look at incoming set
-    vcl_set<vcl_string> incoming_node_set = incoming_link->source()->
+    std::set<std::string> incoming_node_set = incoming_link->source()->
         rag_node_wavefront_;
-    if( !vcl_includes(this->rag_node_wavefront_.begin(),
+    if( !std::includes(this->rag_node_wavefront_.begin(),
                       this->rag_node_wavefront_.end(),
                       incoming_node_set.begin(),
                       incoming_node_set.end()))
     {
         // Create node name
-        vcl_string node_name = dbskfg_transform_manager::Instance().
+        std::string node_name = dbskfg_transform_manager::Instance().
             get_output_prefix()+"_cgraph_node_"+node_str.str()+"_"
             +depth_str.str();
 
@@ -421,7 +421,7 @@ void dbskfg_containment_node::expand_node_explicit(
     }
 
     // Now with this region find new transforms
-    vcl_vector<dbskfg_transform_descriptor_sptr> trans;
+    std::vector<dbskfg_transform_descriptor_sptr> trans;
     {
         // First lets detect transforms
         dbskfg_detect_transforms transforms(
@@ -434,7 +434,7 @@ void dbskfg_containment_node::expand_node_explicit(
 
     for ( unsigned int i=0; i < trans.size() ; ++i)
     {
-        vcl_vector<unsigned int> contours_affected = 
+        std::vector<unsigned int> contours_affected = 
             trans[i]->contour_ids_affected();
         
         if ( trans[i]->transform_type_ == dbskfg_transform_descriptor::LOOP)
@@ -485,16 +485,16 @@ void dbskfg_containment_node::expand_node_explicit(
 
 
 void dbskfg_containment_node::expand_node_implicit(
-    vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
-    vcl_map<unsigned int, 
-    vcl_vector<vsol_spatial_object_2d_sptr> >& contours,
+    std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+    std::map<unsigned int, 
+    std::vector<vsol_spatial_object_2d_sptr> >& contours,
     dbskfg_containment_graph& cgraph)
 {
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
-    vcl_cout<<"Expanding Node: "<<id_<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"********************************"<<std::endl;
+    std::cout<<"Expanding Node: "<<id_<<std::endl;
+    std::cout<<"********************************"<<std::endl;
 
     // Lets look at incoming link
     dbskfg_containment_link_sptr incoming_link = *this->in_edges_begin();
@@ -555,20 +555,20 @@ void dbskfg_containment_node::expand_node_implicit(
     local_rag_graph_sptr->destroy_map();
 
     // Write out the region
-    vcl_stringstream node_str,depth_str;
+    std::stringstream node_str,depth_str;
     node_str<<id_;
     depth_str<<depth_;
 
     // Create wavefront set
     {
-         vcl_map<unsigned int, dbskfg_shock_node*> wavefront
+         std::map<unsigned int, dbskfg_shock_node*> wavefront
              = region->get_wavefront();
 
-         vcl_map<unsigned int, dbskfg_shock_node*>::iterator it;
+         std::map<unsigned int, dbskfg_shock_node*>::iterator it;
          for ( it = wavefront.begin(); it != wavefront.end() ; ++it)
          {
              vgl_point_2d<double> point = (*it).second->pt();
-             vcl_stringstream stream;
+             std::stringstream stream;
              stream<<point;
              rag_node_wavefront_.insert(stream.str());
          }
@@ -576,15 +576,15 @@ void dbskfg_containment_node::expand_node_implicit(
 
     // Print region
     // Look at incoming set
-    vcl_set<vcl_string> incoming_node_set = incoming_link->source()->
+    std::set<std::string> incoming_node_set = incoming_link->source()->
         rag_node_wavefront_;
-    if( !vcl_includes(this->rag_node_wavefront_.begin(),
+    if( !std::includes(this->rag_node_wavefront_.begin(),
                       this->rag_node_wavefront_.end(),
                       incoming_node_set.begin(),
                       incoming_node_set.end()))
     {
         // Create node name
-        vcl_string node_name = dbskfg_transform_manager::Instance().
+        std::string node_name = dbskfg_transform_manager::Instance().
             get_output_prefix()+"_cgraph_node_"+node_str.str()+
             "_"+depth_str.str();
 
@@ -605,7 +605,7 @@ void dbskfg_containment_node::expand_node_implicit(
     }
 
     // Now with this region find new transforms
-    vcl_vector<dbskfg_transform_descriptor_sptr> trans;
+    std::vector<dbskfg_transform_descriptor_sptr> trans;
     {
         // First lets detect transforms
         dbskfg_detect_transforms transforms(
@@ -626,7 +626,7 @@ void dbskfg_containment_node::expand_node_implicit(
 
     for ( unsigned int i=0; i < trans.size() ; ++i)
     {
-        vcl_vector<unsigned int> contours_affected = 
+        std::vector<unsigned int> contours_affected = 
             trans[i]->contour_ids_affected();
         
         if ( trans[i]->transform_type_ == dbskfg_transform_descriptor::LOOP)
@@ -681,15 +681,15 @@ void dbskfg_containment_node::expand_node_implicit(
 
 
 void dbskfg_containment_node::expand_node_implicit_multi(
-    vcl_map<unsigned int, 
-    vcl_vector<vsol_spatial_object_2d_sptr> >& contours,
+    std::map<unsigned int, 
+    std::vector<vsol_spatial_object_2d_sptr> >& contours,
     dbskfg_containment_graph& cgraph)
 {
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
-    vcl_cout<<"Expanding Node: "<<id_<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"********************************"<<std::endl;
+    std::cout<<"Expanding Node: "<<id_<<std::endl;
+    std::cout<<"********************************"<<std::endl;
 
     // **************** Recreate State First/Find Region ******************
 
@@ -716,7 +716,7 @@ void dbskfg_containment_node::expand_node_implicit_multi(
     //  Create smart ptrs for both
     dbskfg_rag_graph_sptr local_rag_graph_sptr = &local_rag_graph;        
   
-    vcl_vector<unsigned int> region_ids;
+    std::vector<unsigned int> region_ids;
     // Apply the actual transform
     {
   
@@ -798,7 +798,7 @@ void dbskfg_containment_node::expand_node_implicit_multi(
         dbskfg_transform_manager::Instance().get_ess());
     
     // Grab transforms for this region
-    vcl_vector<dbskfg_transform_descriptor_sptr> trans=
+    std::vector<dbskfg_transform_descriptor_sptr> trans=
         transforms.objects();
 
     dbskfg_composite_graph_sptr cgraph_local = 
@@ -886,7 +886,7 @@ void dbskfg_containment_node::expand_node_implicit_multi(
             &local_trans_rag_graph;
 
         // Grab new regions
-        vcl_vector<unsigned int> new_region_ids;
+        std::vector<unsigned int> new_region_ids;
         {
             
             dbskfg_transformer transformer(trans[i],
@@ -921,7 +921,7 @@ void dbskfg_containment_node::expand_node_implicit_multi(
         }
 
         // Find region
-        vcl_vector<dbskfg_rag_node_sptr> region_vector;
+        std::vector<dbskfg_rag_node_sptr> region_vector;
         {
    
             local_trans_rag_graph_sptr->rag_node(this->rag_con_ids_,
@@ -941,15 +941,15 @@ void dbskfg_containment_node::expand_node_implicit_multi(
                     ->nj()))
             {
                 // // Write out the region
-                // vcl_stringstream node_str,depth_str;
+                // std::stringstream node_str,depth_str;
                 // node_str<<this->id_;
                 // depth_str<<this->depth_;
 
-                // vcl_stringstream streamer;
+                // std::stringstream streamer;
                 // streamer<<closed_count;
 
                 // // Create node name
-                // vcl_string node_name = dbskfg_transform_manager::Instance().
+                // std::string node_name = dbskfg_transform_manager::Instance().
                 //     get_output_prefix()+"_cgraph_node_"+node_str.str()+
                 //     "_closed_"+streamer.str()+"_"
                 //     +depth_str.str();
@@ -968,7 +968,7 @@ void dbskfg_containment_node::expand_node_implicit_multi(
             }
 
             // Grab contours affected
-            vcl_vector<unsigned int> contours_affected = 
+            std::vector<unsigned int> contours_affected = 
                 trans[i]->contour_ids_affected();
 
             // Expand node helper
@@ -1021,16 +1021,16 @@ void dbskfg_containment_node::expand_node_implicit_multi(
 
 
 void dbskfg_containment_node::expand_root_node(
-    vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >& 
+    std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >& 
         contours,
     dbskfg_containment_graph& cgraph,
     dbskfg_rag_node_sptr root_node)
 {
 
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
-    vcl_cout<<"Expanding Node: "<<id_<<vcl_endl;
-    vcl_cout<<"********************************"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"********************************"<<std::endl;
+    std::cout<<"Expanding Node: "<<id_<<std::endl;
+    std::cout<<"********************************"<<std::endl;
     
     // First lets detect transforms
     dbskfg_detect_transforms transforms(
@@ -1044,7 +1044,7 @@ void dbskfg_containment_node::expand_root_node(
         dbskfg_transform_manager::Instance().get_ess());
     
     // Grab transforms for this region
-    vcl_vector<dbskfg_transform_descriptor_sptr> trans=
+    std::vector<dbskfg_transform_descriptor_sptr> trans=
         transforms.objects();
 
     unsigned int closed_count=0;
@@ -1077,7 +1077,7 @@ void dbskfg_containment_node::expand_root_node(
         dbskfg_rag_graph_sptr local_rag_graph_sptr = &local_rag_graph;        
 
         // Grab new regions
-        vcl_vector<unsigned int> new_region_ids;
+        std::vector<unsigned int> new_region_ids;
         {
             
             dbskfg_transformer transformer(trans[i],
@@ -1096,7 +1096,7 @@ void dbskfg_containment_node::expand_root_node(
         }
 
         // Find region
-        vcl_vector<dbskfg_rag_node_sptr> region_vector;
+        std::vector<dbskfg_rag_node_sptr> region_vector;
         {
    
             local_rag_graph_sptr->rag_node(this->rag_con_ids_,
@@ -1122,15 +1122,15 @@ void dbskfg_containment_node::expand_root_node(
             {
 
                 // // Write out the region
-                // vcl_stringstream node_str,depth_str;
+                // std::stringstream node_str,depth_str;
                 // node_str<<this->id_;
                 // depth_str<<this->depth_;
 
-                // vcl_stringstream streamer;
+                // std::stringstream streamer;
                 // streamer<<closed_count;
 
                 // // Create node name
-                // vcl_string node_name = dbskfg_transform_manager::Instance().
+                // std::string node_name = dbskfg_transform_manager::Instance().
                 //     get_output_prefix()+"_cgraph_node_"+node_str.str()+
                 //     "_closed_"+streamer.str()+"_"
                 //     +depth_str.str();
@@ -1148,7 +1148,7 @@ void dbskfg_containment_node::expand_root_node(
             }
 
             // Grab contours affected
-            vcl_vector<unsigned int> contours_affected = 
+            std::vector<unsigned int> contours_affected = 
                 trans[i]->contour_ids_affected();
             
             // Expand node helper
@@ -1185,11 +1185,11 @@ void dbskfg_containment_node::expand_root_node(
 
 void dbskfg_containment_node::expand_node_helper(
     const dbskfg_transform_descriptor_sptr& transform,
-    vcl_map<unsigned int, 
-    vcl_vector<vsol_spatial_object_2d_sptr> >& contours,
-    vcl_vector<unsigned int>& contours_affected)
+    std::map<unsigned int, 
+    std::vector<vsol_spatial_object_2d_sptr> >& contours,
+    std::vector<unsigned int>& contours_affected)
 { 
-    vcl_map<vcl_string,unsigned int>& gap_map = 
+    std::map<std::string,unsigned int>& gap_map = 
         dbskfg_transform_manager::Instance().gap_map();
 
     // Determine transform type
@@ -1201,10 +1201,10 @@ void dbskfg_containment_node::expand_node_helper(
 
     if ( ttype == dbskfg_transform_descriptor::GAP )
     {
-        vcl_vector<vsol_spatial_object_2d_sptr> 
+        std::vector<vsol_spatial_object_2d_sptr> 
             gap_contours = transform->new_contours_spatial_objects_;
             
-        vcl_pair<vcl_string,vcl_string> gap_strings =
+        std::pair<std::string,std::string> gap_strings =
             transform->gap_string();
 
         if ( gap_map.count(gap_strings.first) == 0 && 
@@ -1231,9 +1231,9 @@ void dbskfg_containment_node::expand_node_helper(
 }
    
 void dbskfg_containment_node::insert_new_node( 
-    vcl_map<unsigned int,dbskfg_containment_node_sptr>& nodes,
+    std::map<unsigned int,dbskfg_containment_node_sptr>& nodes,
     dbskfg_containment_graph& cgraph,
-    const vcl_vector<unsigned int>& contours_affected,
+    const std::vector<unsigned int>& contours_affected,
     const dbskfg_transform_descriptor_sptr& transform)
 {
 
@@ -1245,7 +1245,7 @@ void dbskfg_containment_node::insert_new_node(
     dbskfg_containment_link_sptr link(0);
     dbskfg_containment_node_sptr fold_node(0);
     bool flag(false);
-    vcl_map<unsigned int,dbskfg_containment_node_sptr>::iterator nit;
+    std::map<unsigned int,dbskfg_containment_node_sptr>::iterator nit;
     for ( nit = nodes.begin() ; nit != nodes.end() ; ++nit)
     {
        
@@ -1306,7 +1306,7 @@ void dbskfg_containment_node::insert_new_node(
    
 void dbskfg_containment_node::insert_new_node( 
     dbskfg_containment_graph& cgraph,
-    const vcl_vector<unsigned int>& contours_affected,
+    const std::vector<unsigned int>& contours_affected,
     const dbskfg_transform_descriptor_sptr& transform,
     dbskfg_rag_node_sptr rag_node)
 {
@@ -1319,7 +1319,7 @@ void dbskfg_containment_node::insert_new_node(
 
     // This is the node we are going to expand
     // We want to make a copy here not reference! due to seeing what node is
-    vcl_map<unsigned int,bool> node_to_expand_attr = attr_; 
+    std::map<unsigned int,bool> node_to_expand_attr = attr_; 
 
     // If gap update map
     if ( ttype == dbskfg_transform_descriptor::GAP )
@@ -1335,7 +1335,7 @@ void dbskfg_containment_node::insert_new_node(
         }
     }
 
-    vcl_set<vcl_string> wavefront;
+    std::set<std::string> wavefront;
     rag_node->wavefront_string(wavefront);
 
     dbskfg_containment_node_sptr fold_node = 
@@ -1369,12 +1369,12 @@ void dbskfg_containment_node::insert_new_node(
         }
 
         // Write out the region
-        vcl_stringstream node_str,depth_str;
+        std::stringstream node_str,depth_str;
         node_str<<next_node->id_;
         depth_str<<next_node->depth_;
 
         // Create node name
-        vcl_string node_name = dbskfg_transform_manager::Instance().
+        std::string node_name = dbskfg_transform_manager::Instance().
             get_output_prefix()+"_cgraph_node_"+node_str.str()+"_"
             +depth_str.str();
         
@@ -1411,7 +1411,7 @@ void dbskfg_containment_node::insert_new_node(
         
     this->add_outgoing_edge(link);
    
-    vcl_set<unsigned int> rag_ids;
+    std::set<unsigned int> rag_ids;
     rag_node->rag_contour_ids(rag_ids);
     
     next_node->add_incoming_edge(link);
@@ -1493,20 +1493,20 @@ void dbskfg_containment_node::print_rag_node(ExpandType expansion)
         local_rag_graph_sptr->destroy_map();
 
         // Write out the region
-        vcl_stringstream node_str,depth_str;
+        std::stringstream node_str,depth_str;
         node_str<<id_;
         depth_str<<depth_;
 
         // Create wavefront set
         {
-            vcl_map<unsigned int, dbskfg_shock_node*> wavefront
+            std::map<unsigned int, dbskfg_shock_node*> wavefront
                 = region->get_wavefront();
 
-            vcl_map<unsigned int, dbskfg_shock_node*>::iterator it;
+            std::map<unsigned int, dbskfg_shock_node*>::iterator it;
             for ( it = wavefront.begin(); it != wavefront.end() ; ++it)
             {
                 vgl_point_2d<double> point = (*it).second->pt();
-                vcl_stringstream stream;
+                std::stringstream stream;
                 stream<<point;
                 rag_node_wavefront_.insert(stream.str());
             }
@@ -1514,15 +1514,15 @@ void dbskfg_containment_node::print_rag_node(ExpandType expansion)
 
         // Print region
         // Look at incoming set
-        vcl_set<vcl_string> incoming_node_set = incoming_link->source()->
+        std::set<std::string> incoming_node_set = incoming_link->source()->
             rag_node_wavefront_;
-        if( !vcl_includes(this->rag_node_wavefront_.begin(),
+        if( !std::includes(this->rag_node_wavefront_.begin(),
                           this->rag_node_wavefront_.end(),
                           incoming_node_set.begin(),
                           incoming_node_set.end()))
         {
             // Create node name
-            vcl_string node_name = dbskfg_transform_manager::Instance().
+            std::string node_name = dbskfg_transform_manager::Instance().
                 get_output_prefix()+"_cgraph_node_"+node_str.str()+
                 "_"+depth_str.str();
 
@@ -1593,20 +1593,20 @@ void dbskfg_containment_node::print_rag_node(ExpandType expansion)
         this->rag_node_id_ = region->id();
 
         // Write out the region
-        vcl_stringstream node_str,depth_str;
+        std::stringstream node_str,depth_str;
         node_str<<id_;
         depth_str<<depth_;
 
         // Create wavefront set
         {
-            vcl_map<unsigned int, dbskfg_shock_node*> wavefront
+            std::map<unsigned int, dbskfg_shock_node*> wavefront
                 = region->get_wavefront();
 
-            vcl_map<unsigned int, dbskfg_shock_node*>::iterator it;
+            std::map<unsigned int, dbskfg_shock_node*>::iterator it;
             for ( it = wavefront.begin(); it != wavefront.end() ; ++it)
             {
                 vgl_point_2d<double> point = (*it).second->pt();
-                vcl_stringstream stream;
+                std::stringstream stream;
                 stream<<point;
                 rag_node_wavefront_.insert(stream.str());
             }
@@ -1614,15 +1614,15 @@ void dbskfg_containment_node::print_rag_node(ExpandType expansion)
 
         // Print region
         // Look at incoming set
-        vcl_set<vcl_string> incoming_node_set = incoming_link->source()->
+        std::set<std::string> incoming_node_set = incoming_link->source()->
             rag_node_wavefront_;
-        if( !vcl_includes(this->rag_node_wavefront_.begin(),
+        if( !std::includes(this->rag_node_wavefront_.begin(),
                           this->rag_node_wavefront_.end(),
                           incoming_node_set.begin(),
                           incoming_node_set.end()))
         {
             // Create node name
-            vcl_string node_name = dbskfg_transform_manager::Instance().
+            std::string node_name = dbskfg_transform_manager::Instance().
                 get_output_prefix()+"_cgraph_node_"+node_str.str()+"_"
                 +depth_str.str();
 

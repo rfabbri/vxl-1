@@ -1,7 +1,7 @@
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <iostream>
 #include <vgl/vgl_triangle_scan_iterator.h>
 
 #include "psm_triangle_scan_iterator.h"

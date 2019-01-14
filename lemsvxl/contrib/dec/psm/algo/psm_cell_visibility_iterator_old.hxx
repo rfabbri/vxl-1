@@ -1,7 +1,7 @@
 #ifndef psm_cell_visibility_iterator_txx_
 #define psm_cell_visibility_iterator_txx_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vbl/vbl_bounding_box.h>
 #include <vgl/vgl_point_3d.h>
@@ -31,7 +31,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
 
     // add edge to other neighboring cell for each visible face
     if (vis_faces & psm_cube_face::X_HIGH) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighbors on X_HIGH face
       bool search_high = !reverse_it_;
       block_.neighbor_cells(nit->first,0,search_high,neighbors);
@@ -39,14 +39,14 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
         }
       }
     } else if (vis_faces & psm_cube_face::X_LOW) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighors on X_LOW face
       bool search_high = reverse_it_;
       block_.neighbor_cells(nit->first,0,search_high,neighbors);
@@ -54,7 +54,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
@@ -62,7 +62,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
       }
     }
     if (vis_faces & psm_cube_face::Y_HIGH) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighbors on Y_HIGH face
       bool search_high = !reverse_it_;
       block_.neighbor_cells(nit->first,1,search_high,neighbors);
@@ -70,14 +70,14 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
         }
       }
     } else if (vis_faces & psm_cube_face::Y_LOW) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighors on Y_LOW face
       bool search_high = reverse_it_;
       block_.neighbor_cells(nit->first,1,search_high,neighbors);
@@ -85,7 +85,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
@@ -94,7 +94,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
     }
 
     if (vis_faces & psm_cube_face::Z_HIGH) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighbors on Z_HIGH face
       bool search_high = !reverse_it_;
       block_.neighbor_cells(nit->first,2,search_high,neighbors);
@@ -102,14 +102,14 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
         }
       }
     } else if (vis_faces & psm_cube_face::Z_LOW) {
-      vcl_vector<hsds_fd_tree_node_index<3> > neighbors;
+      std::vector<hsds_fd_tree_node_index<3> > neighbors;
       // find neighors on Z_LOW face
       bool search_high = reverse_it_;
       block_.neighbor_cells(nit->first,2,reverse_it_,neighbors);
@@ -117,7 +117,7 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
         vit->second.incoming_count++;
         curr_cells_.push_back(vit);
       } else {
-        vcl_vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
+        std::vector<hsds_fd_tree_node_index<3> >::iterator neighbor_it = neighbors.begin();
         for (; neighbor_it != neighbors.end(); ++neighbor_it) {
           vit->second.incoming_count++;
           vis_graph_[*neighbor_it].outgoing_links.push_back(vit);
@@ -132,9 +132,9 @@ psm_cell_visibility_iterator<APM>::psm_cell_visibility_iterator(hsds_fd_tree<psm
 template<psm_apm_type APM>
 bool psm_cell_visibility_iterator<APM>::next()
 {
-  vcl_vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator > to_process;
+  std::vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator > to_process;
 
-  vcl_vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator >::iterator cell_it = curr_cells_.begin();
+  std::vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator >::iterator cell_it = curr_cells_.begin();
   for (; cell_it != curr_cells_.end(); ++cell_it) {
     // decrement each cell's count in list. if count == 0, add to list of nodes to process
     if (--((*cell_it)->second.incoming_count) == 0) {
@@ -164,8 +164,8 @@ bool psm_cell_visibility_iterator<APM>::next()
   // add linked cells to list for next iteration
   curr_cells_.clear();
   for (cell_it = to_process.begin(); cell_it != to_process.end(); ++cell_it) {
-    vcl_vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator > &links = (*cell_it)->second.outgoing_links;
-    vcl_vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator >::iterator neighbor_it = links.begin();
+    std::vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator > &links = (*cell_it)->second.outgoing_links;
+    std::vector<hsds_fd_tree<psm_cell_vis_graph_node,3>::iterator >::iterator neighbor_it = links.begin();
     for (; neighbor_it != links.end(); ++neighbor_it) {
       curr_cells_.push_back(*neighbor_it);
     }
@@ -174,7 +174,7 @@ bool psm_cell_visibility_iterator<APM>::next()
 }
 
 template<psm_apm_type APM>
-void psm_cell_visibility_iterator<APM>::current_cells(vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+void psm_cell_visibility_iterator<APM>::current_cells(std::vector<hsds_fd_tree_node_index<3> > &cells)
 {
   cells = to_process_indices_;
 }

@@ -126,8 +126,8 @@ public:
 
   //: average cost of an ordered set of oriented points, each represented by an
   // index triplet (i_x, i_y, i_orient), where 0 <= i_orient < 2*nbins_0topi
-  float f(const vcl_vector<int >& xs, const vcl_vector<int >& ys, 
-    const vcl_vector<int >& orient_bins) const;
+  float f(const std::vector<int >& xs, const std::vector<int >& ys, 
+    const std::vector<int >& orient_bins) const;
 
   //: Estimate lower bound value of ccm cost for the specified ROI
   float compute_f_lower_bound() const;
@@ -223,7 +223,7 @@ protected:
   vbl_array_2d<bool > cost_update_to_date_;
 
   //: Matched edgel for each oriented point (x, y, orient) on the image
-  vbl_array_2d<vcl_vector<dbdet_edgel*> > matched_edgel_; 
+  vbl_array_2d<std::vector<dbdet_edgel*> > matched_edgel_; 
 
   //: Distance (Chamfer) cost
   vbl_array_2d<vnl_vector<float > > chamfer_cost_;

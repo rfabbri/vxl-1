@@ -5,10 +5,10 @@
 
 #include "vidpro_process_manager.h"
 
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <cassert>
+#include <utility>
+#include <iostream>
+#include <sstream>
 
 #include <vul/vul_arg.h>
 #include <vul/vul_file_iterator.h>
@@ -99,15 +99,15 @@ vidpro_process_manager::unset_costum_window()
 
 bool
 vidpro_process_manager::check_process_ostreams(bpro_process_sptr const &process,
-                                                vcl_string const & ostream_name,
-                                                vcl_string const & ostream_type) 
+                                                std::string const & ostream_name,
+                                                std::string const & ostream_type) 
 {
 
   //find the ostream corresponding to active process
 
- // vcl_map<vcl_string, vcl_string> ostreams = repository_sptr->get_process_ostreams(process);
+ // std::map<std::string, std::string> ostreams = repository_sptr->get_process_ostreams(process);
 
- // for ( vcl_map<vcl_string, vcl_string>::iterator it = ostreams.begin();it != ostreams.end();  ++it)
+ // for ( std::map<std::string, std::string>::iterator it = ostreams.begin();it != ostreams.end();  ++it)
  // {  
  //   //isa: is this necessary, or closing the streams is enough?
  ///*   if(ostream_name == it->first && ostream_type ==it->second)
@@ -129,14 +129,14 @@ vidpro_process_manager::check_process_ostreams(bpro_process_sptr const &process,
 
 bool
 vidpro_process_manager::set_process_ostreams (const bpro_process_sptr& process, 
-                                               vcl_map<vcl_string, vcl_vector<vcl_string> > & output_list,
+                                               std::map<std::string, std::vector<std::string> > & output_list,
                                                bool has_ostream)
 {
 
   if (!has_ostream)
   {
-    vcl_string name = "NONE";
-    vcl_string type = "NONE";
+    std::string name = "NONE";
+    std::string type = "NONE";
     //add or update in ostream-process relation
     this->check_process_ostreams(process,name,type);
     return true;
@@ -145,19 +145,19 @@ vidpro_process_manager::set_process_ostreams (const bpro_process_sptr& process,
   //if the user wants to save the ostream need to:
 
   //find if the ostream extis in memory 
-  for(vcl_map<vcl_string, vcl_vector<vcl_string> >::iterator mit = output_list.begin(); mit!=output_list.end(); mit++)
+  for(std::map<std::string, std::vector<std::string> >::iterator mit = output_list.begin(); mit!=output_list.end(); mit++)
   {
-    vcl_string type =mit->first;
+    std::string type =mit->first;
 
-    for(vcl_vector<vcl_string>::iterator it = (mit->second).begin(); it!=(mit->second).end(); it++)
+    for(std::vector<std::string>::iterator it = (mit->second).begin(); it!=(mit->second).end(); it++)
     {
 
-      vcl_string name =(*it);
+      std::string name =(*it);
 
-      vcl_string ostream_name = name + "_os";
+      std::string ostream_name = name + "_os";
 
-      vcl_string ostream_dir;
-      vcl_string glob;
+      std::string ostream_dir;
+      std::string glob;
 
       ostream_dir= vul_file::get_cwd() + '/' + ostream_name;
       glob= ostream_dir+ '/'+ '*'; 
@@ -165,9 +165,9 @@ vidpro_process_manager::set_process_ostreams (const bpro_process_sptr& process,
       //if the directory exists, old files are remove
       if (vul_file::is_directory(ostream_dir))
       {
-        vcl_string current_dir= vul_file::get_cwd();
+        std::string current_dir= vul_file::get_cwd();
         vul_file::change_directory (ostream_dir.c_str());
-        vcl_string filename;
+        std::string filename;
 
         for (vul_file_iterator fit=glob.c_str(); fit; ++fit) {
 
@@ -194,18 +194,18 @@ vidpro_process_manager::set_process_ostreams (const bpro_process_sptr& process,
 
       if(type=="ostream")
       {
-          vcl_string ostream_name = name + "_os";
+          std::string ostream_name = name + "_os";
           if (!repository_sptr->exist_in_global(name, type))
           {
               this->new_ostream(ostream_dir,ostream_name,"%05d","tiff",0);
-              vcl_cout<<vul_file::get_cwd()<<"\n";
+              std::cout<<vul_file::get_cwd()<<"\n";
           }
 
       }
 
       if(type=="object stream")
       {
-          vcl_string ostream_name = name + "_os";
+          std::string ostream_name = name + "_os";
           if (!repository_sptr->exist_in_global(name, type))
               this->new_obj_stream(ostream_dir, ostream_name);
 
@@ -238,11 +238,11 @@ vidpro_process_manager::get_repository_sptr() const
 
 //takes care of seeing streams as images for processes
 bool
-vidpro_process_manager::get_process_input_names(vcl_map<vcl_string,vcl_vector<vcl_string> > &input_names,
+vidpro_process_manager::get_process_input_names(std::map<std::string,std::vector<std::string> > &input_names,
                                                  const bpro_process_sptr& process )
 {
 
-  vcl_vector<vcl_string> input_types = process->get_input_type();
+  std::vector<std::string> input_types = process->get_input_type();
 
   if(input_types.empty())
   {
@@ -250,19 +250,19 @@ vidpro_process_manager::get_process_input_names(vcl_map<vcl_string,vcl_vector<vc
     return false;
   }
 
-  for(vcl_vector<vcl_string>::iterator it = input_types.begin(); it!=input_types.end(); it++)
+  for(std::vector<std::string>::iterator it = input_types.begin(); it!=input_types.end(); it++)
   {
 
     if ( (*it)== "image")
     { 
-      vcl_vector<vcl_string> images; 
+      std::vector<std::string> images; 
       if(this->recording_macro())
         images= repository_sptr->get_all_storage_class_names("image");
 
       //remove unprocessed and image_from_istream from the list
       for(unsigned i= 0; i<images.size(); i++)
       {
-        if(!((images[i].rfind("_unpro"))==vcl_string::npos) || !(((images[i]).rfind("image_from"))==vcl_string::npos))
+        if(!((images[i].rfind("_unpro"))==std::string::npos) || !(((images[i]).rfind("image_from"))==std::string::npos))
         {
           images.erase(images.begin()+i);
           i--;
@@ -271,23 +271,23 @@ vidpro_process_manager::get_process_input_names(vcl_map<vcl_string,vcl_vector<vc
       }
 
 
-      vcl_vector<vcl_string> i_streams = repository_sptr->get_all_storage_class_names("istream");
+      std::vector<std::string> i_streams = repository_sptr->get_all_storage_class_names("istream");
 
       if (!i_streams.empty())
       {
-        for(vcl_vector<vcl_string>::iterator vis_it = i_streams.begin(); vis_it!=i_streams.end(); vis_it++)
+        for(std::vector<std::string>::iterator vis_it = i_streams.begin(); vis_it!=i_streams.end(); vis_it++)
         {
           images.push_back(*vis_it);
         }
       }
 
-      input_names.insert(vcl_pair<vcl_string,vcl_vector<vcl_string> >((*it),images));
+      input_names.insert(std::pair<std::string,std::vector<std::string> >((*it),images));
 
     }
     else
     {
-      vcl_vector<vcl_string> types = repository_sptr->get_all_storage_class_names(*it);
-      input_names.insert(vcl_pair<vcl_string,vcl_vector<vcl_string> >((*it),types));
+      std::vector<std::string> types = repository_sptr->get_all_storage_class_names(*it);
+      input_names.insert(std::pair<std::string,std::vector<std::string> >((*it),types));
     }
   }
   return true;
@@ -297,11 +297,11 @@ vidpro_process_manager::get_process_input_names(vcl_map<vcl_string,vcl_vector<vc
 //: Adds any missing input_names 
 //takes care of seeing streams as images for processes
 bool
-vidpro_process_manager::get_process_output_names(vcl_map<vcl_string,vcl_vector<vcl_string> > &output_names,
+vidpro_process_manager::get_process_output_names(std::map<std::string,std::vector<std::string> > &output_names,
                                                   const bpro_process_sptr& process )
 {
 
-  vcl_vector<vcl_string> output_types = process->get_output_type();
+  std::vector<std::string> output_types = process->get_output_type();
 
   if(output_types.empty())
   {
@@ -309,27 +309,27 @@ vidpro_process_manager::get_process_output_names(vcl_map<vcl_string,vcl_vector<v
     return false;
   }
 
-  for(vcl_vector<vcl_string>::iterator it = output_types.begin(); it!=output_types.end(); it++)
+  for(std::vector<std::string>::iterator it = output_types.begin(); it!=output_types.end(); it++)
   {
 
     if ( (*it)== "image")
     {
-      vcl_vector<vcl_string> images = repository_sptr->get_all_storage_class_names("image");
-      vcl_vector<vcl_string> o_streams = repository_sptr->get_all_storage_class_names("ostream");
+      std::vector<std::string> images = repository_sptr->get_all_storage_class_names("image");
+      std::vector<std::string> o_streams = repository_sptr->get_all_storage_class_names("ostream");
 
       if (!o_streams.empty())
       {
-        for(vcl_vector<vcl_string>::iterator vos_it = o_streams.begin(); vos_it!=o_streams.end(); vos_it++)
+        for(std::vector<std::string>::iterator vos_it = o_streams.begin(); vos_it!=o_streams.end(); vos_it++)
         {
           images.push_back(*vos_it);
         }
       }
-      output_names.insert(vcl_pair<vcl_string,vcl_vector<vcl_string> >((*it),images));
+      output_names.insert(std::pair<std::string,std::vector<std::string> >((*it),images));
     }
     else
     {
-      vcl_vector<vcl_string> types = repository_sptr->get_all_storage_class_names(*it);
-      output_names.insert(vcl_pair<vcl_string,vcl_vector<vcl_string> >((*it),types));
+      std::vector<std::string> types = repository_sptr->get_all_storage_class_names(*it);
+      output_names.insert(std::pair<std::string,std::vector<std::string> >((*it),types));
     }
   }
   return true;
@@ -339,16 +339,16 @@ vidpro_process_manager::get_process_output_names(vcl_map<vcl_string,vcl_vector<v
 
 
 bool 
-vidpro_process_manager::add_missing_input_names(vcl_vector<vcl_string> &input_names, const bpro_process_sptr& process)
+vidpro_process_manager::add_missing_input_names(std::vector<std::string> &input_names, const bpro_process_sptr& process)
 {
   //Find if process selected a video stream as a input
 
   int i=0;
-  for( vcl_vector<vcl_string>::const_iterator it= input_names.begin(); it!=input_names.end(); it++, i++)
+  for( std::vector<std::string>::const_iterator it= input_names.begin(); it!=input_names.end(); it++, i++)
   {
     bpro_storage_sptr sto = repository_sptr->get_global_storage_by_name(input_names[i]);
 
-    vcl_string type;
+    std::string type;
     repository_sptr->get_storage_type(sto, type);
 
     if(type== "istream")
@@ -376,7 +376,7 @@ vidpro_process_manager::go_to_next_frame()
 
   if(repository_sptr->current_frame() < 0)
   {
-    vcl_cerr << "ERROR: initializing process inputs, current frame is negative " <<vcl_endl;
+    std::cerr << "ERROR: initializing process inputs, current frame is negative " <<std::endl;
     return false;
   }
 
@@ -386,10 +386,10 @@ vidpro_process_manager::go_to_next_frame()
   bool advanced= false;   
   bool loading_required = false;
 
-  vcl_set<bpro_storage_sptr> vistreams = repository_sptr->get_all_storage_classes("istream");
-  vcl_set<bpro_storage_sptr> obj_streams = repository_sptr->get_all_storage_classes("object stream");
+  std::set<bpro_storage_sptr> vistreams = repository_sptr->get_all_storage_classes("istream");
+  std::set<bpro_storage_sptr> obj_streams = repository_sptr->get_all_storage_classes("object stream");
 
-  vcl_map<vcl_string, vcl_set<bpro_storage_sptr> > streams;
+  std::map<std::string, std::set<bpro_storage_sptr> > streams;
  
   vidpro_istream_storage_sptr vistream_sto;
   vidl_istream_sptr vistream;
@@ -398,18 +398,18 @@ vidpro_process_manager::go_to_next_frame()
   int global_frame =0;
 
   if (!vistreams.empty())
-  streams.insert(vcl_pair<vcl_string, vcl_set<bpro_storage_sptr> >("istream", vistreams));
+  streams.insert(std::pair<std::string, std::set<bpro_storage_sptr> >("istream", vistreams));
   
   if (!obj_streams.empty())
-  streams.insert(vcl_pair<vcl_string, vcl_set<bpro_storage_sptr> >("object stream", obj_streams));
+  streams.insert(std::pair<std::string, std::set<bpro_storage_sptr> >("object stream", obj_streams));
 
-  for(vcl_map<vcl_string, vcl_set<bpro_storage_sptr> >::iterator mit = streams.begin();
+  for(std::map<std::string, std::set<bpro_storage_sptr> >::iterator mit = streams.begin();
     mit!= streams.end(); mit++)
   {
-    vcl_string type = mit->first;
-    vcl_set<bpro_storage_sptr> streams = mit->second;
+    std::string type = mit->first;
+    std::set<bpro_storage_sptr> streams = mit->second;
 
-    vcl_set<bpro_storage_sptr>::iterator it = streams.begin();
+    std::set<bpro_storage_sptr>::iterator it = streams.begin();
     for( ; it != streams.end();it++)
     {
       
@@ -493,7 +493,7 @@ vidpro_process_manager::go_to_prev_frame()
 
     if(repository_sptr->current_frame() < 0)
     {
-        vcl_cerr << "ERROR: initializing process inputs, current frame is negative " <<vcl_endl;
+        std::cerr << "ERROR: initializing process inputs, current frame is negative " <<std::endl;
         return false;
     }
 
@@ -503,10 +503,10 @@ vidpro_process_manager::go_to_prev_frame()
     bool rewound = false;
     bool loading_required = false;
 
-    vcl_set<bpro_storage_sptr> vistreams = repository_sptr->get_all_storage_classes("istream");
-    vcl_set<bpro_storage_sptr> obj_streams = repository_sptr->get_all_storage_classes("object stream");
+    std::set<bpro_storage_sptr> vistreams = repository_sptr->get_all_storage_classes("istream");
+    std::set<bpro_storage_sptr> obj_streams = repository_sptr->get_all_storage_classes("object stream");
 
-    vcl_map<vcl_string, vcl_set<bpro_storage_sptr> > streams;
+    std::map<std::string, std::set<bpro_storage_sptr> > streams;
 
     vidpro_istream_storage_sptr vistream_sto;
     vidl_istream_sptr vistream;
@@ -515,20 +515,20 @@ vidpro_process_manager::go_to_prev_frame()
     int global_frame =0;
 
     if (!vistreams.empty())
-        streams.insert(vcl_pair<vcl_string, vcl_set<bpro_storage_sptr> >("istream", vistreams));
+        streams.insert(std::pair<std::string, std::set<bpro_storage_sptr> >("istream", vistreams));
 
     if (!obj_streams.empty())
-        streams.insert(vcl_pair<vcl_string, vcl_set<bpro_storage_sptr> >("object stream", obj_streams));
+        streams.insert(std::pair<std::string, std::set<bpro_storage_sptr> >("object stream", obj_streams));
 
 
-    for(vcl_map<vcl_string, vcl_set<bpro_storage_sptr> >::iterator mit = streams.begin();
+    for(std::map<std::string, std::set<bpro_storage_sptr> >::iterator mit = streams.begin();
         mit!= streams.end(); mit++)
     {
-        vcl_string type = mit->first;
-        vcl_set<bpro_storage_sptr> streams = mit->second;
+        std::string type = mit->first;
+        std::set<bpro_storage_sptr> streams = mit->second;
 
 
-        vcl_set<bpro_storage_sptr>::iterator it = streams.begin();
+        std::set<bpro_storage_sptr>::iterator it = streams.begin();
         for( ; it != streams.end();it++)
         {
             if (type=="istream")
@@ -608,7 +608,7 @@ vidpro_process_manager::load_frame_from_istream( int frame, vidpro_istream_stora
     return false;
 
   if (!vistream->is_open()) {
-    vcl_cout << "Failed to open the input stream\n";
+    std::cout << "Failed to open the input stream\n";
     return false;
   }
 
@@ -642,7 +642,7 @@ vidpro_process_manager::load_object_from_stream(int global_frame, int local_fram
     return false;
 
   if (!obj_stream->is_open()) {
-    vcl_cout << "Failed to open the input stream\n";
+    std::cout << "Failed to open the input stream\n";
     return false;
   }
 
@@ -660,10 +660,10 @@ vidpro_process_manager::load_object_from_stream(int global_frame, int local_fram
 
 
 bool 
-vidpro_process_manager::new_ostream(const vcl_string& directory,
-                                     const vcl_string& storage_name,
-                                     const vcl_string& name_format,
-                                     const vcl_string& file_format,
+vidpro_process_manager::new_ostream(const std::string& directory,
+                                     const std::string& storage_name,
+                                     const std::string& name_format,
+                                     const std::string& file_format,
                                      const unsigned int init_index)
 {
 
@@ -682,8 +682,8 @@ vidpro_process_manager::new_ostream(const vcl_string& directory,
 }
 
 bool 
-vidpro_process_manager::new_obj_stream(const vcl_string& directory,
-                                     const vcl_string& storage_name)
+vidpro_process_manager::new_obj_stream(const std::string& directory,
+                                     const std::string& storage_name)
 {
 
     bpro_storage_sptr sto;
@@ -697,14 +697,14 @@ vidpro_process_manager::new_obj_stream(const vcl_string& directory,
     obj_storage->set_name(storage_name);
     sto = obj_storage;
 
-    DATABASE->add_tuple("global_data", new brdb_tuple(storage_name,vcl_string("object stream"),sto));
+    DATABASE->add_tuple("global_data", new brdb_tuple(storage_name,std::string("object stream"),sto));
 
   return true;
 }
 
 bool 
 vidpro_process_manager::write_to_object_ostream(const bpro_storage_sptr& sto,
-                                                 vcl_string const & ostream_name)
+                                                 std::string const & ostream_name)
 
 {
  
@@ -716,7 +716,7 @@ vidpro_process_manager::write_to_object_ostream(const bpro_storage_sptr& sto,
     vidpro_object_stream_sptr obj_stream = obj_sto->get_stream();
 
     if (!obj_stream->is_open()) {
-      vcl_cout << "Failed to open the output stream\n";
+      std::cout << "Failed to open the output stream\n";
       return false;
     }
 
@@ -732,21 +732,21 @@ vidpro_process_manager::write_to_ostream(const bpro_process_sptr& process,
   if(!DATABASE->exists("ostream-process"))
     return false;
 
-  vcl_map<vcl_string, vcl_string> ostreams = repository_sptr->get_process_ostreams(process);
+  std::map<std::string, std::string> ostreams = repository_sptr->get_process_ostreams(process);
 
 
-  for ( vcl_map<vcl_string, vcl_string>::iterator it = ostreams.begin();it != ostreams.end();  ++it)
+  for ( std::map<std::string, std::string>::iterator it = ostreams.begin();it != ostreams.end();  ++it)
   {
-    vcl_string type= it->first;
-    vcl_string ostream_name = it->second;
+    std::string type= it->first;
+    std::string ostream_name = it->second;
 
     //careful check
     if(type!=sto->type())
-      vcl_cerr<<"Warning: ostream type does not agree with its database type\n";
+      std::cerr<<"Warning: ostream type does not agree with its database type\n";
 
     if(ostream_name == "NONE")
     {
-      vcl_cerr<<"Warning: Currently not writing to output stream by user request\n";
+      std::cerr<<"Warning: Currently not writing to output stream by user request\n";
       return false;
     }
 
@@ -771,7 +771,7 @@ vidpro_process_manager::write_to_ostream(const bpro_process_sptr& process,
     vidl_ostream_sptr vos = vos_storage->get_ostream();
 
     if (!vos->is_open()) {
-      vcl_cout << "Failed to open the output stream\n";
+      std::cout << "Failed to open the output stream\n";
       return false;
     }
 
@@ -786,7 +786,7 @@ vidpro_process_manager::write_to_ostream(const bpro_process_sptr& process,
 //: Run a process on the current frame
 bool
 vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& process,
-                                                      vcl_set<bpro_storage_sptr>* modified )
+                                                      std::set<bpro_storage_sptr>* modified )
 {
 
   bool to_return = false;
@@ -796,8 +796,8 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
 
   // SET INPUTS ////////////////////////////////////////////
 
-  vcl_vector< vcl_string > input_type_list = process->get_input_type();
-  vcl_vector< vcl_string > input_names = process->input_names();
+  std::vector< std::string > input_type_list = process->get_input_type();
+  std::vector< std::string > input_names = process->input_names();
 
   for( unsigned int i = 0 ;
     i < input_names.size();
@@ -811,12 +811,12 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
           //use the storage names in the process that maps to the exact input to be used
           bpro_storage_sptr input_storage_sptr = repository_sptr->get_data_by_name( input_names[i], -a );
           //assert(input_type_list[i] == input_storage_sptr->type());
-          vcl_cout<< input_storage_sptr->name() << "vs" <<input_names[i]<< "\n";
+          std::cout<< input_storage_sptr->name() << "vs" <<input_names[i]<< "\n";
           process->add_input(input_storage_sptr, a);
       }
   }
 
-  vcl_vector<vcl_vector<bpro_storage_sptr> >  initial_inputs;
+  std::vector<std::vector<bpro_storage_sptr> >  initial_inputs;
   for(int a = 0; a < process->input_frames(); ++a)
     initial_inputs.push_back(process->get_input(a));
 
@@ -832,7 +832,7 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
   // See if any missing input storage classes have been created
   if( to_return ){
     for(int a = 0; a < process->input_frames(); ++a){
-      vcl_vector<bpro_storage_sptr> final_inputs = process->get_input(a);
+      std::vector<bpro_storage_sptr> final_inputs = process->get_input(a);
       for(unsigned int i = 0; i < final_inputs.size(); ++i){
         if( final_inputs[i] && !initial_inputs[a][i] ){
           final_inputs[i]->set_name(input_names[i]);
@@ -849,7 +849,7 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
 
   // GET OUTPUTS ///////////////////////////////////////////
 
-  vcl_vector<vcl_vector<bool> > is_global = process->get_global();
+  std::vector<std::vector<bool> > is_global = process->get_global();
   bool global_is_present = !is_global.empty();
 
   if( to_return ) {
@@ -857,8 +857,8 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
       a < process->output_frames();
       a++ ) {
 
-        vcl_vector < bpro_storage_sptr > output_storage_classes = process->get_output(a);
-        vcl_vector< vcl_string > output_names = process->output_names();
+        std::vector < bpro_storage_sptr > output_storage_classes = process->get_output(a);
+        std::vector< std::string > output_names = process->output_names();
 
         // Any outputs beyond those specified with output_names() are 
         // added to the modified set but not added to the repository
@@ -913,24 +913,24 @@ vidpro_process_manager::run_process_on_current_frame( const bpro_process_sptr& p
 bool
 vidpro_process_manager::close_ostreams()
 {
-  vcl_vector< bpro_process_sptr >::iterator it = process_queue.begin();
-  vcl_map<vcl_string, vcl_string> ostream_names;
+  std::vector< bpro_process_sptr >::iterator it = process_queue.begin();
+  std::map<std::string, std::string> ostream_names;
   bpro_process_sptr process;
   unsigned i = 0;
   for (; it != process_queue.end(); ++it, i++){
     process=(*it);
     ostream_names = repository_sptr->get_process_ostreams(process);
-    for(vcl_map<vcl_string, vcl_string>::iterator mit = ostream_names.begin();
+    for(std::map<std::string, std::string>::iterator mit = ostream_names.begin();
       mit!=ostream_names.end(); mit++)
     {
-      vcl_string type =mit->first;
-      vcl_string name =mit->second;
-      vcl_string os_path = vul_file::get_cwd() + '/' + name;
+      std::string type =mit->first;
+      std::string name =mit->second;
+      std::string os_path = vul_file::get_cwd() + '/' + name;
 
       if(type=="ostream")
       {
         //get ostream and close it
-        vcl_map<vcl_string, vcl_string> ostream_names;
+        std::map<std::string, std::string> ostream_names;
         bpro_storage_sptr sto = repository_sptr->get_global_storage_by_name(name);
         vidpro_ostream_storage_sptr os_sto;
         os_sto.vertical_cast(sto);
@@ -941,7 +941,7 @@ vidpro_process_manager::close_ostreams()
 
         bpro_storage_sptr is_sto;
         is_sto = vidpro_open_istream_process::image_list_istream(os_path.c_str());
-        DATABASE->add_tuple("global_data", new brdb_tuple(mit->second,vcl_string("istream"),is_sto));
+        DATABASE->add_tuple("global_data", new brdb_tuple(mit->second,std::string("istream"),is_sto));
 
       }
  
@@ -956,9 +956,9 @@ vidpro_process_manager::close_ostreams()
 
 
 bool
-vidpro_process_manager::run_process_queue_on_current_frame( vcl_set<bpro_storage_sptr>* modified )
+vidpro_process_manager::run_process_queue_on_current_frame( std::set<bpro_storage_sptr>* modified )
 {
-  vcl_vector< bpro_process_sptr >::iterator it = process_queue.begin();
+  std::vector< bpro_process_sptr >::iterator it = process_queue.begin();
   unsigned i = 0;
   for (; it != process_queue.end(); ++it, i++){
 
@@ -975,7 +975,7 @@ vidpro_process_manager::run_process_queue_on_current_frame( vcl_set<bpro_storage
 bool
 vidpro_process_manager::finish_process( int first_frame, int last_frame,
                                         const bpro_process_sptr& process,
-                                        vcl_set<bpro_storage_sptr>* modified )
+                                        std::set<bpro_storage_sptr>* modified )
 {
 
   process->clear_input(last_frame+1);
@@ -983,11 +983,11 @@ vidpro_process_manager::finish_process( int first_frame, int last_frame,
 
   // SET INPUTS ////////////////////////////////////////////
 
-  vcl_vector< vcl_string > input_type_list = process->get_input_type();
-  vcl_vector< vcl_string > input_names = process->input_names();
+  std::vector< std::string > input_type_list = process->get_input_type();
+  std::vector< std::string > input_names = process->input_names();
 
-  vcl_vector< vcl_string > output_type_list = process->get_output_type();
-  vcl_vector< vcl_string > output_names = process->output_names();
+  std::vector< std::string > output_type_list = process->get_output_type();
+  std::vector< std::string > output_names = process->output_names();
 
   //Get the right storage classes from the repository
   for( int f = first_frame; f <= last_frame; ++f) {
@@ -1012,13 +1012,13 @@ vidpro_process_manager::finish_process( int first_frame, int last_frame,
 
   // GET OUTPUTS ///////////////////////////////////////////
 
-  vcl_vector<vcl_vector<bool> > is_global = process->get_global();
+  std::vector<std::vector<bool> > is_global = process->get_global();
   bool global_is_present = !is_global.empty();
 
   for( int f = 0; f <= last_frame; ++f)
   {
-    vcl_vector < bpro_storage_sptr > output_storage_classes = process->get_output(f);
-    vcl_vector< vcl_string > output_names = process->output_names();
+    std::vector < bpro_storage_sptr > output_storage_classes = process->get_output(f);
+    std::vector< std::string > output_names = process->output_names();
 
     // Any outputs beyond those specified with output_names() are 
     // added to the modified set but not added to the repository
@@ -1055,9 +1055,9 @@ vidpro_process_manager::finish_process( int first_frame, int last_frame,
 //: Call the finish function on the process queue
 bool
 vidpro_process_manager::finish_process_queue( int first_frame, int last_frame,
-                                              vcl_set<bpro_storage_sptr>* modified )
+                                              std::set<bpro_storage_sptr>* modified )
 {
-  vcl_vector< bpro_process_sptr >::iterator it = process_queue.begin();
+  std::vector< bpro_process_sptr >::iterator it = process_queue.begin();
   for (; it != process_queue.end(); ++it){
     bool success = finish_process( first_frame, last_frame, (*it), modified );
     if( !success )

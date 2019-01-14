@@ -5,7 +5,7 @@
 #ifndef dbmsh3d_vis_mesh_h_
 #define dbmsh3d_vis_mesh_h_
 
-#include <vcl_set.h>
+#include <set>
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/dbmsh3d_textured_mesh_mc.h>
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
@@ -22,38 +22,38 @@ class SoSeparator;
 class SoVertexProperty;
 
 //###############################################################
-int _count_faces_indices (const vcl_vector<vcl_vector<int> >& faces);
+int _count_faces_indices (const std::vector<std::vector<int> >& faces);
 
 void draw_ifs_geom (SoGroup* root, 
-                    const vcl_vector<vgl_point_3d<double> >& pts,
-                    const vcl_vector<vcl_vector<int> >& faces);
+                    const std::vector<vgl_point_3d<double> >& pts,
+                    const std::vector<std::vector<int> >& faces);
 
-void draw_ifs_geom (SoGroup* root, vcl_set<dbmsh3d_vertex*>& V_set,
-                    vcl_set<dbmsh3d_face*>& F_set);
+void draw_ifs_geom (SoGroup* root, std::set<dbmsh3d_vertex*>& V_set,
+                    std::set<dbmsh3d_face*>& F_set);
 
-void draw_faces_geom (SoGroup* root, vcl_map<int, dbmsh3d_vertex*>& V_map,
-                      vcl_map<int, dbmsh3d_face*>& F_map);
+void draw_faces_geom (SoGroup* root, std::map<int, dbmsh3d_vertex*>& V_map,
+                      std::map<int, dbmsh3d_face*>& F_map);
 
-SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces,
+SoSeparator* draw_ifs (const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces,
                        const int colorcode = COLOR_SILVER,
                        const bool b_shape_hints = false, 
                        const float transp = 0.0f);
 
-SoSeparator* draw_ifs (const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces,
+SoSeparator* draw_ifs (const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces,
                        const SbColor& color,
                        const bool b_shape_hints = false, 
                        const float transp = 0.0f);
 
-SoSeparator* draw_ifs (vcl_set<dbmsh3d_vertex*>& pts,
-                       vcl_set<dbmsh3d_face*>& faces,
+SoSeparator* draw_ifs (std::set<dbmsh3d_vertex*>& pts,
+                       std::set<dbmsh3d_face*>& faces,
                        const int colorcode = COLOR_SILVER,
                        const bool b_shape_hints = false, 
                        const float transp = 0.0f);
 
-SoSeparator* draw_ifs (vcl_set<dbmsh3d_vertex*>& pts,
-                       vcl_set<dbmsh3d_face*>& faces,
+SoSeparator* draw_ifs (std::set<dbmsh3d_vertex*>& pts,
+                       std::set<dbmsh3d_face*>& faces,
                        const SbColor& color,
                        const bool b_shape_hints = false, 
                        const float transp = 0.0f);
@@ -104,7 +104,7 @@ SoSeparator* draw_M_faces_idv (dbmsh3d_mesh* M, const bool b_shape_hints = false
 
 SoSeparator* draw_M_color (dbmsh3d_mesh* M, 
                            const bool b_shape_hints, const float trans,
-                           const vcl_vector<SbColor>& color_set,
+                           const std::vector<SbColor>& color_set,
                            const bool user_defined_class = true);
 
 SoSeparator* draw_mesh_vertices (dbmsh3d_mesh* M, const float size);
@@ -126,7 +126,7 @@ VIS_COLOR_CODE get_M_face_topo_color (const TRIFACE_TYPE type);
 SoSeparator* draw_M_bnd_faces_anim (dbmsh3d_mesh* M, const int nF_batch = 30);
 
 void draw_faces_in_switch (SoSeparator* root, 
-                           const vcl_vector<dbmsh3d_face*>& Faces);
+                           const std::vector<dbmsh3d_face*>& Faces);
 
 #endif
 

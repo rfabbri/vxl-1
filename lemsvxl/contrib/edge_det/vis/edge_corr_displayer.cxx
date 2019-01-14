@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 #include "edge_corr_displayer.h"
 #include <edge_det/pro/edge_corr_storage.h>

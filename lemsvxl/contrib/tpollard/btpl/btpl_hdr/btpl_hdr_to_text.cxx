@@ -1,9 +1,9 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
@@ -23,9 +23,9 @@
 bool average_intensity( float &intensity,
               float &max_intensity,
             bool is_hdr,
-                        vcl_string file,            
-            const vcl_vector< vgl_point_2d<int> >& region_bounds,
-            vcl_string debug_file = "NONE" )
+                        std::string file,            
+            const std::vector< vgl_point_2d<int> >& region_bounds,
+            std::string debug_file = "NONE" )
 {
   vil_image_view<float> img(640,480);
   bool is_missing = true;
@@ -106,13 +106,13 @@ bool average_intensity( float &intensity,
 
 // Get regions from a file.
 void get_regions(
-         vcl_string file,
-         vcl_vector< vcl_vector< vgl_point_2d<int> > >& regions )
+         std::string file,
+         std::vector< std::vector< vgl_point_2d<int> > >& regions )
 {
   regions.clear();
-  vcl_ifstream ifs( file.c_str() );
+  std::ifstream ifs( file.c_str() );
   for( int c = 0; c < 16; c++ ){
-    vcl_vector< vgl_point_2d<int> > new_region;
+    std::vector< vgl_point_2d<int> > new_region;
     for( int p = 0; p < 4; p++ ){
       int x, y;
       ifs >> x; ifs >> y;
@@ -122,7 +122,7 @@ void get_regions(
   }
 };
 
-//void init_folders(vcl_vector<vcl_string> &in_files)
+//void init_folders(std::vector<std::string> &in_files)
 //{
 //  
 //  in_files.push_back("e:\\dome_images\\00_calibration");
@@ -142,7 +142,7 @@ void get_regions(
 //}
 //
 //
-//void init_folders(vcl_vector<vcl_string> &out_files)
+//void init_folders(std::vector<std::string> &out_files)
 //{
 //  
 //  in_files.push_back("e:\\dome_images\\00_calibration");
@@ -168,71 +168,71 @@ int main( int argc, char* argv[] )
   bool calibration = true;
   bool is_hdr = true;
   
-  //for(vcl_vector<vcl_string>.iterator it; 
-  vcl_string debug_dir = "c:\\debug";
-  vcl_string main_dir = "E:\\dome_images\\00_calibration";
-  vcl_string out_file;
+  //for(std::vector<std::string>.iterator it; 
+  std::string debug_dir = "c:\\debug";
+  std::string main_dir = "E:\\dome_images\\00_calibration";
+  std::string out_file;
   
   if(is_hdr)
     out_file = "e:\\dome_images\\calibration_sphere.txt";
   else
     out_file = "E:\\dome_images\\04_aluminum_png.txt";
 
-  vcl_vector< float > region_times;
-  vcl_vector< vcl_vector< vcl_vector< vgl_point_2d<int> > > > regions;
+  std::vector< float > region_times;
+  std::vector< std::vector< std::vector< vgl_point_2d<int> > > > regions;
   for( int i = 0; i < 14; i++ )
-    regions.push_back( vcl_vector< vcl_vector< vgl_point_2d<int> > >() );
+    regions.push_back( std::vector< std::vector< vgl_point_2d<int> > >() );
 
 
   region_times.push_back( 7.0 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\7am.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\7am.txt" ),
     regions[0] );
   region_times.push_back( 7.75 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\745am.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\745am.txt" ),
     regions[1] );
   region_times.push_back( 8.5 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\830am.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\830am.txt" ),
     regions[2] );
   region_times.push_back( 9.2 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\930.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\930.txt" ),
     regions[3] );
   region_times.push_back( 10 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\10.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\10.txt" ),
     regions[4] );
   region_times.push_back( 11 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\11.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\11.txt" ),
     regions[5] );
   region_times.push_back( 12 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\12.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\12.txt" ),
     regions[6] );
   region_times.push_back( 12.9 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\1.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\1.txt" ),
     regions[7] );
   region_times.push_back( 13.9 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\2.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\2.txt" ),
     regions[8] );
   region_times.push_back( 14.9 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\3.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\3.txt" ),
     regions[9] );
   region_times.push_back( 16 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\4.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\4.txt" ),
     regions[10] );
   region_times.push_back( 17 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\5.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\5.txt" ),
     regions[11] );
   region_times.push_back( 18 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\6.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\6.txt" ),
     regions[12] );
   region_times.push_back( 18.45 );
-  get_regions( vcl_string( "e:\\dome_images\\cal_sphere_regions\\7.txt" ),
+  get_regions( std::string( "e:\\dome_images\\cal_sphere_regions\\7.txt" ),
     regions[13] );
 
   /*
-  vcl_vector< vcl_vector< vgl_point_2d<int> > > day1_regions, day2_regions;
+  std::vector< std::vector< vgl_point_2d<int> > > day1_regions, day2_regions;
   // DAY 1
 
   // Camera 1
-  vcl_vector< vgl_point_2d<int> > new_region;
+  std::vector< vgl_point_2d<int> > new_region;
   new_region.push_back( vgl_point_2d<int>( 321, 317 ) );
   new_region.push_back( vgl_point_2d<int>( 275, 330 ) );
   new_region.push_back( vgl_point_2d<int>( 266, 291 ) );
@@ -459,13 +459,13 @@ int main( int argc, char* argv[] )
   day2_regions.push_back( new_region ); new_region.clear();
 
   */
-  vcl_ofstream ofs( out_file.c_str() );
+  std::ofstream ofs( out_file.c_str() );
   for( vul_file_iterator f= (main_dir+"\\*").c_str(); f; ++f ){
 
     // Extract information from the filename.
-    vcl_string current_file( f() );
+    std::string current_file( f() );
     int cf_ext_index = current_file.size()-4;
-    vcl_string cf_ext;
+    std::string cf_ext;
     cf_ext+=current_file[cf_ext_index]; cf_ext+=current_file[cf_ext_index+1];
     cf_ext+=current_file[cf_ext_index+2]; cf_ext+=current_file[cf_ext_index+3];
 
@@ -477,19 +477,19 @@ int main( int argc, char* argv[] )
       if ( cf_ext != ".png" ) continue;
       break;
     default:
-      vcl_cerr<<"unsopported extension" << vcl_endl;
+      std::cerr<<"unsopported extension" << std::endl;
 
     }
 
 
 
-    vcl_cerr << current_file << '\n';
+    std::cerr << current_file << '\n';
 
     int last_slash_loc = 0;
     for( int i = 0; i < current_file.size(); i++ )
       if( current_file[i] == '\\' ) last_slash_loc = i;
 
-    vcl_stringstream camera_string, rotation_string, hour_string, minute_string, 
+    std::stringstream camera_string, rotation_string, hour_string, minute_string, 
       day_string, debug_file_string;
     day_string << current_file[last_slash_loc+1];
     hour_string << current_file[last_slash_loc+2] << current_file[last_slash_loc+3];

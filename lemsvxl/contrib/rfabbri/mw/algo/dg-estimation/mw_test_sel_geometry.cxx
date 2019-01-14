@@ -3,7 +3,7 @@
 #include <dbdet/sel/dbdet_sel_sptr.h>
 #include <mw/mw_analytic.h>
 #include <vsol/vsol_line_2d.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <mw/algo/mw_data.h> // for get_lines
 
 
@@ -22,17 +22,17 @@ test_circle(
   for (double radius=rad_ini; radius <= rad_end; radius += 1.0) {
 
     // - create circle edgels (function)
-    vcl_vector<vsol_line_2d_sptr> lines;
-    vcl_vector<bdifd_3rd_order_point_2d> crv;
+    std::vector<vsol_line_2d_sptr> lines;
+    std::vector<bdifd_3rd_order_point_2d> crv;
     get_circle_edgels(radius, lines, crv, do_perturb, pert_pos, pert_tan);
     
     // k[i][j] == curvature at edgel i, valid quad number j
-    vcl_vector<vcl_vector<double> > k, kdot;
-    vcl_vector<vcl_vector<double> > k_stdv, kdot_stdv;
+    std::vector<std::vector<double> > k, kdot;
+    std::vector<std::vector<double> > k_stdv, kdot_stdv;
 
     dbdet_sel_sptr sel;
     unsigned  nrows, ncols;
-    nrows = ncols  = (unsigned) (2*vcl_ceil(radius)+1);
+    nrows = ncols  = (unsigned) (2*std::ceil(radius)+1);
     mw_geometry_estimation::sel_quad(
         lines, 
         nrows,
@@ -52,11 +52,11 @@ test_circle(
     compute_circle_stats( crv, k, kdot, k_stdv, kdot_stdv,
         k_err, k_mean, k_stdev_nopoly, kdot_err, kdot_mean, kdot_stdev_nopoly, nquads_pass);
 
-    vcl_cout << "------------------\n";
-    vcl_cout << "Circle radius: " << radius << " (k = " << 1.0/radius << ") " 
-      << ",      # quads used: " << nquads_pass << vcl_endl;
-    vcl_cout << "k - Global error: " << k_err << " avg: " << k_mean << " stddev: " << k_stdev_nopoly << vcl_endl;
-    vcl_cout << "kdot - Global error: " << kdot_err << " avg: " << kdot_mean << " stddev: " << kdot_stdev_nopoly << vcl_endl;
+    std::cout << "------------------\n";
+    std::cout << "Circle radius: " << radius << " (k = " << 1.0/radius << ") " 
+      << ",      # quads used: " << nquads_pass << std::endl;
+    std::cout << "k - Global error: " << k_err << " avg: " << k_mean << " stddev: " << k_stdev_nopoly << std::endl;
+    std::cout << "kdot - Global error: " << kdot_err << " avg: " << kdot_mean << " stddev: " << kdot_stdev_nopoly << std::endl;
   }
 
   // - final output:
@@ -68,11 +68,11 @@ test_circle(
 
 void mw_test_sel_geometry::
 compute_circle_stats(
-  const vcl_vector<bdifd_3rd_order_point_2d> &crv,
-  const vcl_vector<vcl_vector<double> > &k, 
-  const vcl_vector<vcl_vector<double> > &kdot,
-  const vcl_vector<vcl_vector<double> > &/*k_stdv*/, 
-  const vcl_vector<vcl_vector<double> > &/*kdot_stdv*/,
+  const std::vector<bdifd_3rd_order_point_2d> &crv,
+  const std::vector<std::vector<double> > &k, 
+  const std::vector<std::vector<double> > &kdot,
+  const std::vector<std::vector<double> > &/*k_stdv*/, 
+  const std::vector<std::vector<double> > &/*kdot_stdv*/,
   double &k_err,
   double &k_mean,
   double &k_stddev_nopoly,//:< disconsidering k_stdv, kdot_stddv
@@ -92,17 +92,17 @@ compute_circle_stats(
         k_mean += k[i][j];
         ++n;
 
-        k_err += vcl_fabs(k[i][j] - crv[i].k);
-        if (j ==1 && vcl_fabs(k[i][0] - k[i][1]) > 1e-3 && n_print < 10) {
+        k_err += std::fabs(k[i][j] - crv[i].k);
+        if (j ==1 && std::fabs(k[i][0] - k[i][1]) > 1e-3 && n_print < 10) {
           ++n_print;
-          vcl_cout << "Different k's --" << " id: " << i+1 << " k_left: " << k[i][0] << " k_right: " << k[i][1] << vcl_endl;
+          std::cout << "Different k's --" << " id: " << i+1 << " k_left: " << k[i][0] << " k_right: " << k[i][1] << std::endl;
         }       
       }
     }
     if (n_print) {
       if (n_print == 10)
-        vcl_cout << "...\n";
-      vcl_cout << vcl_endl;
+        std::cout << "...\n";
+      std::cout << std::endl;
     }
 
     assert(n != 0);
@@ -129,7 +129,7 @@ compute_circle_stats(
         kdot_mean += kdot[i][j];
         ++n;
 
-        kdot_err += vcl_fabs(kdot[i][j] - crv[i].kdot);
+        kdot_err += std::fabs(kdot[i][j] - crv[i].kdot);
       }
     }
     assert(n != 0);

@@ -29,7 +29,7 @@ class vox_extract_shock_patches_params : public dborl_algo_params
 {
 public:
   //: Constructor
-  vox_extract_shock_patches_params(vcl_string algo_name);
+  vox_extract_shock_patches_params(std::string algo_name);
 
   // MEMBER VARIABLES
 
@@ -37,27 +37,27 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
   
   //: Name of input object
-  dborl_parameter<vcl_string> input_object_name_;
+  dborl_parameter<std::string> input_object_name_;
   
   //: passes the folder of the input object
-  dborl_parameter<vcl_string> input_object_dir_;    
+  dborl_parameter<std::string> input_object_dir_;    
 
   //: passes the folder of the input assoc directory
-  dborl_parameter<vcl_string> input_assoc_dir_;    
+  dborl_parameter<std::string> input_assoc_dir_;    
 
   //: extension of the input extrinsinc shock file ( .esf ) 
-  dborl_parameter<vcl_string> input_shock_extension_;     
+  dborl_parameter<std::string> input_shock_extension_;     
 
   //: extension of the image for shock patch extraction
-  dborl_parameter<vcl_string> input_image_extension_;     
+  dborl_parameter<std::string> input_image_extension_;     
 
   // if written to this folder as opposed to object folder then the 
   // shock patches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_shock_patch_folder_;  
+  dborl_parameter<std::string> output_shock_patch_folder_;  
 
   //: tag for intrinsinc shock computation
-  vcl_string tag_extract_shock_patches_;
+  std::string tag_extract_shock_patches_;
   
 };
 

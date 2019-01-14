@@ -306,7 +306,7 @@ void initialize_world_by_triangulation(
 
 void write_cams(std::string suffix, std::vector<vpgl_perspective_camera<double> > &cams)
 {
-  vcl_vector<vcl_string> cam_fname_noexts; 
+  std::vector<std::string> cam_fname_noexts; 
   for (unsigned i=0; i < cams.size(); ++i) {
     std::stringstream sstm;
     sstm << i+1;
@@ -320,19 +320,19 @@ void write_cams(std::string suffix, std::vector<vpgl_perspective_camera<double> 
 }
 
 void write_stats(std::string suffix, const vpgl_bundle_adjust &ba) {
-    vcl_string e_fname("./badj/stats" + suffix + vcl_string(".txt"));
-    vcl_cout << "Writing stats file: " << e_fname << vcl_endl;
-    vcl_ofstream fp;
+    std::string e_fname("./badj/stats" + suffix + std::string(".txt"));
+    std::cout << "Writing stats file: " << e_fname << std::endl;
+    std::ofstream fp;
 
-    fp.open(e_fname.c_str(),vcl_ios::out);
+    fp.open(e_fname.c_str(),std::ios::out);
 
     if (!fp) {
-      vcl_cerr << "write_stats: error, unable to open file name " << e_fname << vcl_endl;
+      std::cerr << "write_stats: error, unable to open file name " << e_fname << std::endl;
       return;
     }
-    fp << vcl_setprecision(20);
-    fp << "start error = " << ba.start_error() << vcl_endl;
-    fp << "end error = " << ba.end_error() << vcl_endl;
+    fp << std::setprecision(20);
+    fp << "start error = " << ba.start_error() << std::endl;
+    fp << "end error = " << ba.end_error() << std::endl;
     fp.close();
 }
 

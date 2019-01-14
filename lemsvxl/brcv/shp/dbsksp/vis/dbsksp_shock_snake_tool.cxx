@@ -115,7 +115,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr){
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbsksp_shock_snake_tool::
+std::string dbsksp_shock_snake_tool::
 name() const {
   return "Shock Snake";
 }
@@ -203,14 +203,14 @@ execute()
   vgui_dialog io_dialog("Select image to segment" );
 
   //display input options
-  vcl_vector< vcl_string > input_type_list;
+  std::vector< std::string > input_type_list;
   input_type_list.push_back("image");
   io_dialog.message("Select Input(s) From Available ones:");
 
   //store the choices
-  vcl_vector<int> input_choices(input_type_list.size());
-  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-  vcl_vector< vcl_string > input_names(input_type_list.size());
+  std::vector<int> input_choices(input_type_list.size());
+  std::vector< std::vector <std::string> > available_storage_classes(input_type_list.size());
+  std::vector< std::string > input_names(input_type_list.size());
   
   //get the repository and extract the qualified ones
   vidpro1_repository_sptr repository_sptr = bvis1_manager::instance()->repository();
@@ -227,7 +227,7 @@ execute()
   io_dialog.ask();
 
   // get the names of the user-select image storage
-  vcl_string image_name = available_storage_classes[0].at(input_choices[0]);
+  std::string image_name = available_storage_classes[0].at(input_choices[0]);
 
   // get input storage class
   bpro1_storage_sptr storage = repository_sptr->get_data_by_name(image_name);
@@ -272,12 +272,12 @@ void dbsksp_fit_two_edges_command::
 execute()
 {
 
-  vcl_vector<vcl_string > deform_type_descriptions_;
+  std::vector<std::string > deform_type_descriptions_;
   deform_type_descriptions_.push_back("Two active edges");
   deform_type_descriptions_.push_back(
     "Insert two edges at terminal node and deform");
 
-  vcl_vector<vcl_string > energy_type_choices;
+  std::vector<std::string > energy_type_choices;
   energy_type_choices.push_back("Negative Normalized Gradient");
 
 
@@ -343,11 +343,11 @@ execute()
   // >> Deform the shock graph
   if (deform_type_descriptions_[deform_type] == "Two active edges")
   {
-    vcl_cout << "Snake on two shapelet \n";
+    std::cout << "Snake on two shapelet \n";
 
     if (!this->tool()->image_storage())
     {
-      vcl_cout << "ERROR: no image to segment.\n";
+      std::cout << "ERROR: no image to segment.\n";
     }
 
     // set up the shock snake
@@ -368,7 +368,7 @@ execute()
 
     if (error_code == 0)
     {
-      vcl_cerr << "ERROR running the process.\n";
+      std::cerr << "ERROR running the process.\n";
       return;
     }
 
@@ -381,7 +381,7 @@ execute()
   }
   else
   {
-    vcl_cout << "Unknown option";
+    std::cout << "Unknown option";
     return;
   }
 
@@ -414,7 +414,7 @@ execute()
 void dbsksp_add_one_edge_and_deform_command::
 execute()
 {
-  vcl_vector<vcl_string > energy_type_choices;
+  std::vector<std::string > energy_type_choices;
   energy_type_choices.push_back("Negative Normalized Gradient");
 
   // ------------- USER PARAMS --------------------------------------
@@ -460,24 +460,24 @@ execute()
   }
 
   // >> Deform the shock graph
-  vcl_cout << "Extend and fit pairs of shapelets \n";
+  std::cout << "Extend and fit pairs of shapelets \n";
 
   if (!this->tool()->image_storage())
   {
-    vcl_cout << "ERROR: no image to segment.\n";
+    std::cout << "ERROR: no image to segment.\n";
   }
 
   // parameter check up
   if (this->tool()->chord_length_ <= 0)
   {
-    vcl_cerr << "ERROR: the chord lengths need to be strictly positive"
+    std::cerr << "ERROR: the chord lengths need to be strictly positive"
       << "to run this process.\n";
     return;
   }
 
   if (this->tool()->num_times_ <= 0)
   {
-    vcl_cerr << "ERROR: num_times needs to be strictly positive"
+    std::cerr << "ERROR: num_times needs to be strictly positive"
       << "to run this process.\n";
     return;
   }
@@ -509,7 +509,7 @@ execute()
     ///////////////////////////////////////////////////////////////////////
     if (error_code <= 0)
     {
-      vcl_cerr << "ERROR running the process.\n";
+      std::cerr << "ERROR running the process.\n";
       return;
     }
     source_node = source_edge->opposite(source_node);

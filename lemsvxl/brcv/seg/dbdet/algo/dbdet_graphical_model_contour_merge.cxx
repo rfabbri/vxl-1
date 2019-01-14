@@ -1,14 +1,14 @@
-#include <vcl_map.h>
+#include <map>
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include "dbdet_graphical_model_contour_merge.h"
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 struct var_node {
   /*enum label { UNDETERMINED, BREAK, MERGE };
   unsigned id;*/
   unsigned dim;
   unsigned edgel_id;
-  vcl_vector<unsigned> n_facs;
+  std::vector<unsigned> n_facs;
   /*bool merged;
   double p;
   label gt_label;*/
@@ -25,33 +25,33 @@ struct var_node {
 struct fac_node {
   dbdet_edgel_chain * chain;
   //unsigned id;
-  vcl_vector<unsigned> n_vars;
+  std::vector<unsigned> n_vars;
   //bool removed;
 
-  fac_node(dbdet_edgel_chain * c, /*unsigned uid,*/ vcl_vector<unsigned> vars) : chain(c), n_vars(vars)/*, id(uid), removed(false) */{}
+  fac_node(dbdet_edgel_chain * c, /*unsigned uid,*/ std::vector<unsigned> vars) : chain(c), n_vars(vars)/*, id(uid), removed(false) */{}
 };
 
 class dbdet_graphical_model_contour_merge::dbdet_factor_graph {
   
 public:
-  vcl_vector<var_node> var;
-  vcl_vector<fac_node> fac;
+  std::vector<var_node> var;
+  std::vector<fac_node> fac;
  
   dbdet_factor_graph(dbdet_curve_fragment_graph & CFG)
   {
     var.reserve(2 * CFG.frags.size());
     fac.reserve(CFG.frags.size());
-    typedef vcl_pair<vcl_map<unsigned, unsigned>::iterator, bool> insert_ret;
-    vcl_map<unsigned, unsigned> used_edgels;// edgel_id, var_node_id
+    typedef std::pair<std::map<unsigned, unsigned>::iterator, bool> insert_ret;
+    std::map<unsigned, unsigned> used_edgels;// edgel_id, var_node_id
 
     for (dbdet_edgel_chain_list_const_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
     {
       dbdet_edgel * e1 = (*it)->edgels.front();
       dbdet_edgel * e2 = (*it)->edgels.back();
 
-      vcl_vector<unsigned> var_ids;
+      std::vector<unsigned> var_ids;
       unsigned id = var.size();
-      insert_ret ret = used_edgels.insert(vcl_pair<unsigned, unsigned>(e1->id, id));
+      insert_ret ret = used_edgels.insert(std::pair<unsigned, unsigned>(e1->id, id));
       if(ret.second)
       {
         add_var_node(e1->id);
@@ -63,7 +63,7 @@ public:
       }
 
       id = var.size();
-      ret = used_edgels.insert(vcl_pair<unsigned, unsigned>(e2->id, id));
+      ret = used_edgels.insert(std::pair<unsigned, unsigned>(e2->id, id));
       if(ret.second)
       {
         add_var_node(e2->id);
@@ -83,7 +83,7 @@ private:
     var.push_back(var_node(/*var.size() + 1, */edgel_id));
   }
 
-  void add_fac_node(dbdet_edgel_chain * c, vcl_vector<unsigned> vars)
+  void add_fac_node(dbdet_edgel_chain * c, std::vector<unsigned> vars)
   {
     unsigned id = fac.size();
     fac.push_back(fac_node(c,/* id,*/ vars));
@@ -139,7 +139,7 @@ dbdet_merge_contour(
       //Original direction c1 -> node -> c2
       //Our directions c1 -> node <- c2
 
-      unsigned cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c1->edgels.size()));
+      unsigned cut_size = std::min(nbr_num_edges, static_cast<unsigned>(c1->edgels.size()));
       c1_cut.edgels.resize(cut_size);
       if (c1->edgels.front()->id == cur_node.edgel_id)
       {
@@ -152,7 +152,7 @@ dbdet_merge_contour(
         for (unsigned i = 0; i < cut_size; ++i)
           c1_cut.edgels[i] = c1->edgels[start_i + i];
       }
-      cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
+      cut_size = std::min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
       c2_cut.edgels.resize(cut_size);
 
       if (c2->edgels.front()->id == cur_node.edgel_id)
@@ -183,7 +183,7 @@ dbdet_merge_contour(
 
       for (unsigned i = 1; i < cues.size(); ++i)
       {
-        cues[i] = vcl_abs(c1_features[i] - c2_features[i]);
+        cues[i] = std::abs(c1_features[i] - c2_features[i]);
       }
 
       double geom_diff, texture_diff;
@@ -235,7 +235,7 @@ dbdet_merge_contour(
       //                               |
       //                               c3
 
-      unsigned cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c1->edgels.size()));
+      unsigned cut_size = std::min(nbr_num_edges, static_cast<unsigned>(c1->edgels.size()));
       c1_cut.edgels.resize(cut_size);
       if (c1->edgels.front()->id == cur_node.edgel_id)
       {
@@ -249,7 +249,7 @@ dbdet_merge_contour(
           c1_cut.edgels[i] = c1->edgels[start_i + i];
       }
 
-      cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
+      cut_size = std::min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
       c2_cut.edgels.resize(cut_size);
       if (c2->edgels.front()->id == cur_node.edgel_id)
       {
@@ -263,7 +263,7 @@ dbdet_merge_contour(
           c2_cut.edgels[i] = c2->edgels[start_i + i];
       }
 
-      cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c3->edgels.size()));
+      cut_size = std::min(nbr_num_edges, static_cast<unsigned>(c3->edgels.size()));
       c3_cut.edgels.resize(cut_size);
       if (c3->edgels.front()->id == cur_node.edgel_id)
       {
@@ -287,17 +287,17 @@ dbdet_merge_contour(
 
       for (unsigned i = y_params_0::Y_ABS_K; i < cues_12.size(); ++i)
       {
-        cues_12[i] = vcl_abs(c1_features[i] - c2_features[i]);
-        cues_13[i] = vcl_abs(c1_features[i] - c3_features[i]);
-        cues_23[i] = vcl_abs(c2_features[i] - c3_features[i]);
+        cues_12[i] = std::abs(c1_features[i] - c2_features[i]);
+        cues_13[i] = std::abs(c1_features[i] - c3_features[i]);
+        cues_23[i] = std::abs(c2_features[i] - c3_features[i]);
       }
 
       //Sums because of inverted (converging) direction
       for (unsigned i = y_params_0::Y_BG_GRAD; i <= y_params_0::Y_HUE_GRAD; ++i)
       {
-        cues_12[i] = vcl_abs(c1_features[i] + c2_features[i]);
-        cues_13[i] = vcl_abs(c1_features[i] + c3_features[i]);
-        cues_23[i] = vcl_abs(c2_features[i] + c3_features[i]);
+        cues_12[i] = std::abs(c1_features[i] + c2_features[i]);
+        cues_13[i] = std::abs(c1_features[i] + c3_features[i]);
+        cues_23[i] = std::abs(c2_features[i] + c3_features[i]);
       }
 
 
@@ -347,12 +347,12 @@ dbdet_degree_2_node_cues(
       bool invert
       )
 {
-  unsigned nbr_range_th = vcl_min(c1.edgels.size(), c2.edgels.size());
+  unsigned nbr_range_th = std::min(c1.edgels.size(), c2.edgels.size());
   vgl_vector_2d<double> a_ori = c1.edgels.back()->pt - c1.edgels[c1.edgels.size() - nbr_range_th]->pt;
   vgl_vector_2d<double> b_ori = c2.edgels.back()->pt - c2.edgels[c2.edgels.size() - nbr_range_th]->pt;
   
   geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() * a_ori.y()) / 
-        (vcl_sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
+        (std::sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * std::sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
 
   if(invert)
     geom_diff *= -1.0;
@@ -418,7 +418,7 @@ dbdet_merge_at_degree_2_node(
   G.var[g_idx].n_facs.clear();
   //G.var[g_idx].merged = true;
 
-  for (vcl_vector<unsigned>::iterator it = G.fac[c1_id].n_vars.begin(); it != G.fac[c1_id].n_vars.end(); it++)
+  for (std::vector<unsigned>::iterator it = G.fac[c1_id].n_vars.begin(); it != G.fac[c1_id].n_vars.end(); it++)
   {
     if(*it == g_idx)
     {
@@ -427,7 +427,7 @@ dbdet_merge_at_degree_2_node(
     }
   }
 
-  for (vcl_vector<unsigned>::iterator it = G.fac[c2_id].n_vars.begin(); it != G.fac[c2_id].n_vars.end(); it++)
+  for (std::vector<unsigned>::iterator it = G.fac[c2_id].n_vars.begin(); it != G.fac[c2_id].n_vars.end(); it++)
   {
     if(*it == g_idx)
     {
@@ -455,7 +455,7 @@ dbdet_merge_at_degree_2_node(
 void dbdet_graphical_model_contour_merge::
 compute_texture_hist(
       dbdet_edgel_chain & chain,
-      vcl_vector< vnl_vector_fixed<double, 2> > & n,
+      std::vector< vnl_vector_fixed<double, 2> > & n,
       y_hist_vector & left, 
       y_hist_vector & right
       )
@@ -472,11 +472,11 @@ compute_texture_hist(
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
     for (int l = 1; l <= tex_nbr_dist; ++l)
     {
-      unsigned il = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * l + 0.5)));
-      unsigned ir = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * l + 0.5)));
+      unsigned il = std::max(0, std::min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * l + 0.5)));
+      unsigned ir = std::max(0, std::min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * l + 0.5)));
 
-      unsigned jl = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * l + 0.5)));
-      unsigned jr = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * l + 0.5)));
+      unsigned jl = std::max(0, std::min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * l + 0.5)));
+      unsigned jr = std::max(0, std::min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * l + 0.5)));
 
       left[tmap_(il, jl)]++;
       right[tmap_(ir, jr)]++;

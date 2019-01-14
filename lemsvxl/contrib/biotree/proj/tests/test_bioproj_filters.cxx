@@ -14,8 +14,8 @@
 #include <proj/bioproj_g_filter.h>
 #include <proj/bioproj_gz_filter.h>
 #include <proj/bioproj_gzz_filter.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <fstream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 void test_bioproj_filters()
@@ -77,10 +77,10 @@ void test_bioproj_filters()
   TEST_NEAR("test filter value", filter8.filter_[13], -0.00944282756940, 1e-06);
 
 #if 0
-  int half_filter_size = int(vcl_ceil(sigma*extent));
+  int half_filter_size = int(std::ceil(sigma*extent));
   int full_kernel_size = 2*half_filter_size + 1;
   for(int i = 0; i < full_kernel_size; i++)
-    vcl_cout << filter8.filter_[i] << vcl_endl;
+    std::cout << filter8.filter_[i] << std::endl;
 #endif
 
 }

@@ -4,9 +4,9 @@
 // \author  Kongbin Kang and H. Can Aras
 // \date    2005-03-03
 // 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_ios.h>
+#include <iostream>
+#include <fstream>
+#include <ios>
 #include <testlib/testlib_test.h>
 #include <xscan/xscan_uniform_orbit.h>
 #include <vnl/vnl_math.h>
@@ -29,18 +29,18 @@ static void test_xscan_uniform_orbit()
   // set up the orbit 
   xscan_uniform_orbit orbit(rot, t, r0, t0);
 
-  vcl_cout << orbit;
+  std::cout << orbit;
 
   vnl_double_4x4 trans = orbit.global_transform(1).get_matrix();
 
   // test stream to file
-  vcl_string filename("test_uniform_orbit.txt");
-  vcl_ofstream ofile(filename.c_str());
+  std::string filename("test_uniform_orbit.txt");
+  std::ofstream ofile(filename.c_str());
   ofile << orbit;
   ofile.close();
 
   xscan_uniform_orbit orbit_from_file;
-  vcl_ifstream ifile(filename.c_str());
+  std::ifstream ifile(filename.c_str());
   ifile >> orbit_from_file;
   ifile.close();
 

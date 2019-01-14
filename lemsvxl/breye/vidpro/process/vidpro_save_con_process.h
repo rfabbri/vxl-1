@@ -23,7 +23,7 @@
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vidpro/storage/vidpro_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This class saves the geometry from the current frame into a .CON file.
 // It only saves vsol2D_curve types and ignores the rest
@@ -33,15 +33,15 @@ public:
   vidpro_save_con_process();
   ~vidpro_save_con_process() {}
   
-  vcl_string name() {
+  std::string name() {
     return "Save .CON File";
   }
 
   //: Clone the process
   virtual bpro_process* clone() const;
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -53,9 +53,9 @@ public:
   bool execute();
   bool finish();
 
-  bool saveCON (vcl_string con_file_rootname, 
+  bool saveCON (std::string con_file_rootname, 
                 bool output_poly_file, int video_id, 
-                int num_frames, vcl_string poly_filename);
+                int num_frames, std::string poly_filename);
 
 protected:
   bool first_frame_;

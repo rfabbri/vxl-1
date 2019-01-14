@@ -1,20 +1,20 @@
 #include <slice/sliceFileManager.h>
 #include <slice/algo/sliceEdgeDetectProcessor.h>
 #include <slice/sliceEngine.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/io/vil3d_io_image_view.h>
 #include <vil3d/algo/vil3d_grad_1x3.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/vil3d_transform.h>
 #include <basic/dbil3d/algo/dbil3d_gauss_filter.h> 
-#include <vcl_cmath.h>
+#include <cmath>
 
 int main(int argc, char* argv[])
 {        
 
         if(argc < 2){
-                vcl_cerr << "usage : " << argv[0]  << " <vil3d binary image file> \n";
+                std::cerr << "usage : " << argv[0]  << " <vil3d binary image file> \n";
                 return 1;
         }
 

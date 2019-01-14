@@ -1,10 +1,10 @@
 #ifndef dbdet_spherical_histogram_h_
 #define dbdet_spherical_histogram_h_
 
-#include <vcl_algorithm.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_map.h>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <map>
 #include <vbl/vbl_ref_count.h>
 
 class dbdet_spherical_histogram: public vbl_ref_count 
@@ -21,9 +21,9 @@ public:
 
    float get_theta(int i);
    float get_phi(int i,int j);
-    vcl_map<int,vcl_vector<float> > hist_;
+    std::map<int,std::vector<float> > hist_;
     int theta_partitions_; //: 8 
-    vcl_map<int,int> phi_partitions_; 
+    std::map<int,int> phi_partitions_; 
 
 protected:
 

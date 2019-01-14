@@ -29,7 +29,7 @@ dbinfo_mutual_info_process::dbinfo_mutual_info_process()
       !parameters()->add( "Intensity", "-int", true)                        ||
       !parameters()->add( "Gradient", "-grad", true)                        ||
       !parameters()->add( "Color", "-color", true))                          
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 } 
 
 //: Copy Constructor
@@ -52,9 +52,9 @@ dbinfo_mutual_info_process::clone() const
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbinfo_mutual_info_process::get_input_type()
+std::vector< std::string > dbinfo_mutual_info_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
@@ -63,9 +63,9 @@ vcl_vector< vcl_string > dbinfo_mutual_info_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbinfo_mutual_info_process::get_output_type()
+std::vector< std::string > dbinfo_mutual_info_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -88,26 +88,26 @@ dbinfo_mutual_info_process::output_frames()
 
 static bool 
 extract_polygons_from_storage(vidpro1_vsol2D_storage_sptr const& region_storage,
-                              vcl_vector<vsol_polygon_2d_sptr>& regions)
+                              std::vector<vsol_polygon_2d_sptr>& regions)
 {
   regions.clear();
-  vcl_vector< vsol_spatial_object_2d_sptr > region_sos = 
+  std::vector< vsol_spatial_object_2d_sptr > region_sos = 
     region_storage->all_data(); 
   if(!region_sos.size())
     {
-      vcl_cout << "In dbinfo_mutual_info_process::execute() -"
+      std::cout << "In dbinfo_mutual_info_process::execute() -"
                << " no source regions to match\n";
       return false;
     }
   //Cast to polygons
-  for(vcl_vector< vsol_spatial_object_2d_sptr >::iterator rit =
+  for(std::vector< vsol_spatial_object_2d_sptr >::iterator rit =
         region_sos.begin(); rit != region_sos.end(); ++rit)
     {
       vsol_region_2d* r = (*rit)->cast_to_region();
       vsol_polygon_2d_sptr poly = r->cast_to_polygon();
       if(!poly)
         {
-          vcl_cout << "In dbinfo_mutual_info_process::execute() -"
+          std::cout << "In dbinfo_mutual_info_process::execute() -"
                    << " null polygon in input storage\n";
           return false;
         }
@@ -115,7 +115,7 @@ extract_polygons_from_storage(vidpro1_vsol2D_storage_sptr const& region_storage,
     }
   if(!regions.size())
     {
-      vcl_cout << "In dbinfo_mutual_info_process::execute() -"
+      std::cout << "In dbinfo_mutual_info_process::execute() -"
                << " no input regions\n";
       return false;
     }
@@ -162,7 +162,7 @@ bool find_match(dbinfo_observation_sptr const& obs,
           dbinfo_observation_generator::generate(obs, H);
         hypo->scan(0,imgr);
         float mi = dbinfo_observation_matcher::minfo(obs, hypo);
-        vcl_cout << "MI(" << i << ' ' << j << ")= " << mi << '\n';
+        std::cout << "MI(" << i << ' ' << j << ")= " << mi << '\n';
         if(mi>mi_max)
           {
             mi_max = mi;
@@ -172,20 +172,20 @@ bool find_match(dbinfo_observation_sptr const& obs,
   if(!best_hypo)
     return false;
   dbinfo_region_geometry_sptr geo = best_hypo->geometry();
-  vcl_cout << "Best Hypothesis " << *(geo->cog()) << '\n';
-  vcl_cout << "Compared with Original Region " << *(rg->cog()) << '\n';
+  std::cout << "Best Hypothesis " << *(geo->cog()) << '\n';
+  std::cout << "Compared with Original Region " << *(rg->cog()) << '\n';
   match = geo->poly(0);
   return true;
 }
 
 static 
-bool find_matches(vcl_vector<dbinfo_observation_sptr> const& observs,
+bool find_matches(std::vector<dbinfo_observation_sptr> const& observs,
                   vil_image_resource_sptr const& imgr1, 
                   const unsigned step,
-                  vcl_vector<vsol_polygon_2d_sptr>& matches)
+                  std::vector<vsol_polygon_2d_sptr>& matches)
 {
   matches.clear();
-  for(vcl_vector<dbinfo_observation_sptr>::const_iterator oit = observs.begin();
+  for(std::vector<dbinfo_observation_sptr>::const_iterator oit = observs.begin();
       oit != observs.end(); ++oit)
     {
       vsol_polygon_2d_sptr match;
@@ -196,12 +196,12 @@ bool find_matches(vcl_vector<dbinfo_observation_sptr> const& observs,
   return matches.size()>0;
 }
 static 
-void package_output_regions(vcl_vector<vsol_polygon_2d_sptr> const& regions,
+void package_output_regions(std::vector<vsol_polygon_2d_sptr> const& regions,
                             vidpro1_vsol2D_storage_sptr& output_storage)
 {
   //cast to spatial objects
-  vcl_vector<vsol_spatial_object_2d_sptr> sos;
-  for(vcl_vector<vsol_polygon_2d_sptr>::const_iterator rit = regions.begin();
+  std::vector<vsol_spatial_object_2d_sptr> sos;
+  for(std::vector<vsol_polygon_2d_sptr>::const_iterator rit = regions.begin();
       rit != regions.end(); ++rit)
     {
       vsol_region_2d* r = (*rit)->cast_to_region();
@@ -215,7 +215,7 @@ bool
 dbinfo_mutual_info_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
   unsigned step;
@@ -244,20 +244,20 @@ dbinfo_mutual_info_process::execute()
   vil_image_resource_sptr imgr1 = image_storage1->get_image();
 
   //get the input spatial objects
-  vcl_vector<vsol_polygon_2d_sptr> regions;
+  std::vector<vsol_polygon_2d_sptr> regions;
   if(!extract_polygons_from_storage(source_region_storage, regions))
     return false;
   
   // generate observations from the input polygons on image0;
-  vcl_vector<dbinfo_observation_sptr> source_observations;
-  for(vcl_vector<vsol_polygon_2d_sptr>::iterator rit = regions.begin();  
+  std::vector<dbinfo_observation_sptr> source_observations;
+  for(std::vector<vsol_polygon_2d_sptr>::iterator rit = regions.begin();  
       rit != regions.end(); ++rit)
     source_observations.push_back(construct_observation(imgr0, *rit,
                                                         inten, grad, color));
   //find the optimum transformation of each region in image1
   //i.e. find the transformation that maximizes the total mutual information
   //and the resulting region polygon
-  vcl_vector<vsol_polygon_2d_sptr> matched_regions;
+  std::vector<vsol_polygon_2d_sptr> matched_regions;
   if(!find_matches(source_observations, imgr1,  step, matched_regions))
     return false;
   

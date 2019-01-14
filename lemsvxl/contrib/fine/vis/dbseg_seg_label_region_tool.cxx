@@ -1,6 +1,6 @@
 #include "dbseg_seg_label_region_tool.h"
 
-//#include <vcl_limits.h>
+//#include <limits>
 //#include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
 //#include <vgui/vgui_style.h>
@@ -33,7 +33,7 @@ dbseg_seg_label_region_tool::dbseg_seg_label_region_tool() :
 {
 }
 
-vcl_string dbseg_seg_label_region_tool::name() const
+std::string dbseg_seg_label_region_tool::name() const
 {
   return "Label Region";
 }
@@ -79,17 +79,17 @@ bool dbseg_seg_label_region_tool::handle( const vgui_event & e, const bvis1_view
 
 
   if (shift_right_click(e)) { // display what is currently labeled
-        vcl_cout << "******* Labeled Regions of the Spine *******" << vcl_endl;
-        vcl_cout << get_label_name(0) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C1) << vcl_endl;
-        vcl_cout << get_label_name(1) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D1) << vcl_endl;
-        vcl_cout << get_label_name(4) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C2) << vcl_endl;
-        vcl_cout << get_label_name(5) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D2) << vcl_endl;
-        vcl_cout << get_label_name(8) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C3) << vcl_endl;
-        vcl_cout << get_label_name(9) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D3) << vcl_endl;
-        vcl_cout << get_label_name(12) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C4) << vcl_endl;
-        vcl_cout << get_label_name(13) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D4) << vcl_endl;
-        vcl_cout << get_label_name(16) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C5) << vcl_endl;
-        vcl_cout << get_label_name(17) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->SPINE) << vcl_endl;
+        std::cout << "******* Labeled Regions of the Spine *******" << std::endl;
+        std::cout << get_label_name(0) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C1) << std::endl;
+        std::cout << get_label_name(1) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D1) << std::endl;
+        std::cout << get_label_name(4) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C2) << std::endl;
+        std::cout << get_label_name(5) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D2) << std::endl;
+        std::cout << get_label_name(8) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C3) << std::endl;
+        std::cout << get_label_name(9) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D3) << std::endl;
+        std::cout << get_label_name(12) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C4) << std::endl;
+        std::cout << get_label_name(13) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->D4) << std::endl;
+        std::cout << get_label_name(16) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->C5) << std::endl;
+        std::cout << get_label_name(17) << " is region " << seg_tab_->get_object()->get_spine_part(seg_tab_->get_object()->SPINE) << std::endl;
         //for (int i = 1; i < 5; i++) {
             double x1, y1, x2, y2;
             seg_tab_->get_object()->get_disk_corners(1, x1, y1, x2, y2);
@@ -151,25 +151,25 @@ bool dbseg_seg_label_region_tool::handle( const vgui_event & e, const bvis1_view
                 seg_tab_->get_object()->set_disk_corner(4, true, ix, iy);
                 break;
         }
-        vcl_cout << "point set" << vcl_endl;
+        std::cout << "point set" << std::endl;
         return true;
     }
   }
 
   if( home_key(e) ) {
       if (current_label == 2 ||  current_label == 3 || current_label == 6 || current_label == 7 || current_label == 10 || current_label == 11 || current_label == 14 || current_label == 15) {
-          vcl_cout << "currently labeling a point, not a region" << vcl_endl;
+          std::cout << "currently labeling a point, not a region" << std::endl;
       }
       else {
           int a = seg_tab_->get_outlined_regions().size();
           list<int> tempList = seg_tab_->get_outlined_regions();
               
           if (tempList.size() > 1) {
-              vcl_cout << "Error Labeling Region - more than one region selected" << vcl_endl;
+              std::cout << "Error Labeling Region - more than one region selected" << std::endl;
               return true;
           }
           if (tempList.size() < 1) {
-              vcl_cout << "Error Labeling Region - no region selected" << vcl_endl;
+              std::cout << "Error Labeling Region - no region selected" << std::endl;
               return true;
           }
 
@@ -206,7 +206,7 @@ bool dbseg_seg_label_region_tool::handle( const vgui_event & e, const bvis1_view
                 seg_tab_->get_object()->set_spine_part(seg_tab_->get_object()->SPINE, tempID);
                 break;
         }        
-        vcl_cout << "Region " << tempID << " set as " << get_label_name(current_label) << "." << vcl_endl;
+        std::cout << "Region " << tempID << " set as " << get_label_name(current_label) << "." << std::endl;
         seg_tab_->clear_all_outlines();
       }
     /*point_list.clear();
@@ -220,7 +220,7 @@ bool dbseg_seg_label_region_tool::handle( const vgui_event & e, const bvis1_view
     if (current_label < 0) {
         current_label = 17;
     }
-    vcl_cout << "Ready to label the " << get_label_name(current_label) << " region." << vcl_endl;
+    std::cout << "Ready to label the " << get_label_name(current_label) << " region." << std::endl;
     if (seg_tab_->get_display_background()) {
         seg_tab_->toggle_display_background();
     }
@@ -231,7 +231,7 @@ bool dbseg_seg_label_region_tool::handle( const vgui_event & e, const bvis1_view
     if (current_label > 17) {
         current_label = 0;
     }
-    vcl_cout << "Ready to label the " << get_label_name(current_label) << " region." << vcl_endl;
+    std::cout << "Ready to label the " << get_label_name(current_label) << " region." << std::endl;
     
     return true;
   }
@@ -310,7 +310,7 @@ void dbseg_seg_label_region_tool::cancel() {
     seg_tab_->post_redraw();*/
 }
 
-vcl_string dbseg_seg_label_region_tool::get_label_name(int i) {
+std::string dbseg_seg_label_region_tool::get_label_name(int i) {
     switch (i) {
         case 0: //C1
             return "C1";

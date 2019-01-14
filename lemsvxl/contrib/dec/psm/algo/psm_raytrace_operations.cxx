@@ -104,7 +104,7 @@ void project_cube_vertices(vbl_bounding_box<double,3> const &cube, vpgl_camera<d
     }
   } 
   else {
-    vcl_cerr << "ERROR: unsupported camera type " << vcl_endl;
+    std::cerr << "ERROR: unsupported camera type " << std::endl;
     return;
   }
 
@@ -709,7 +709,7 @@ float pixel_polygon_coverage(unsigned int i, unsigned int j, double *xverts_2d, 
       // solve 2x2 system [ d1 d2 ] * x  = d3
       double det = d1.x() * d2.y() - d2.x()*d1.y();
       if (det == 0) {
-        vcl_cerr << "error computing barycentic coordinates of subsampled point" << vcl_endl;
+        std::cerr << "error computing barycentic coordinates of subsampled point" << std::endl;
         return 0.0f;
       }
       double w0 = (d3.x()*d2.y() - d2.x()*d3.y())/det;

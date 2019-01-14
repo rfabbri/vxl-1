@@ -10,7 +10,7 @@
 #include <vgui/vgui_easy2D_tableau.h>
 
 #include <vul/vul_arg.h>
-#include <vcl_ios.h>
+#include <ios>
 
 #include <bgui/bgui_selector_tableau.h>
 #include <bgui3d/bgui3d.h>
@@ -80,49 +80,49 @@ class make_codebook_command : public vgui_command
       if(!source || !source->is->is().good())
         return;
       
-      vcl_vector<vcl_vector<dbdet_keypoint_sptr> > kypts;
-      vcl_istream::pos_type pos = source->is->is().tellg();
-      vcl_cout << "file position = " << pos << vcl_endl;
-      source->is->is().seekg(6,vcl_ios_base::beg);
-      vcl_cout << "new file position = " << source->is->is().tellg() << vcl_endl;
+      std::vector<std::vector<dbdet_keypoint_sptr> > kypts;
+      std::istream::pos_type pos = source->is->is().tellg();
+      std::cout << "file position = " << pos << std::endl;
+      source->is->is().seekg(6,std::ios_base::beg);
+      std::cout << "new file position = " << source->is->is().tellg() << std::endl;
       while(source->is->is().good()){
-        vcl_vector<dbdet_keypoint_sptr> k;
+        std::vector<dbdet_keypoint_sptr> k;
         vsl_b_read(*source->is, k);
         kypts.push_back(k);
         source->is->is().peek();
       }
       source->is->is().seekg(pos);
       source->is->is().clear();
-      vcl_cout << "read " << kypts.size() << vcl_endl;
+      std::cout << "read " << kypts.size() << std::endl;
       
-      vcl_vector<vnl_vector_fixed<double,128> > features;
+      std::vector<vnl_vector_fixed<double,128> > features;
       for(unsigned i=0; i<kypts.size(); ++i){
         for(unsigned j=0; j<kypts[i].size(); ++j){
           dbdet_lowe_keypoint* k = static_cast<dbdet_lowe_keypoint*>(kypts[i][j].ptr());
           features.push_back(k->descriptor());
         }
       }
-      vcl_cout << "num features: " << features.size() << vcl_endl;
+      std::cout << "num features: " << features.size() << std::endl;
       
-      vcl_vector<dbcll_cluster_sptr> clusters = dbcll_init_euclidean_clusters(features);
+      std::vector<dbcll_cluster_sptr> clusters = dbcll_init_euclidean_clusters(features);
       dbcll_remainder_heap remain(clusters.begin(), clusters.end());
       clusters.clear();
       dbcll_rnn_agg_clustering(remain, clusters, -.2);
-      vcl_cout << "num clusters = " << clusters.size() << vcl_endl;
-      vcl_vector<dbcll_cluster_sptr> good_clusters;
+      std::cout << "num clusters = " << clusters.size() << std::endl;
+      std::vector<dbcll_cluster_sptr> good_clusters;
       for(unsigned i=0; i<clusters.size(); ++i){
         const dbcll_euclidean_cluster<128>* c = 
           static_cast<const dbcll_euclidean_cluster<128>*>(clusters[i].ptr());
         if(c->size() > 1)
           good_clusters.push_back(clusters[i]);
       }
-      vcl_cout << "num good clusters = " << good_clusters.size() << vcl_endl;
+      std::cout << "num good clusters = " << good_clusters.size() << std::endl;
       for(unsigned i=0; i<good_clusters.size(); ++i){
         const dbcll_euclidean_cluster<128>* c = 
           static_cast<const dbcll_euclidean_cluster<128>*>(good_clusters[i].ptr());
-        vcl_cout << "size: "<< c->size()
+        std::cout << "size: "<< c->size()
         <<  "  var: "
-        << c->var() << vcl_endl;
+        << c->var() << std::endl;
       }
     }
     
@@ -159,13 +159,13 @@ class keypoint_observer: public dbpro_observer
       assert(data);
       tab->clear();
       if(data->info() == DBPRO_VALID){
-        assert(data->type_id() == typeid(vcl_vector<dbdet_keypoint_sptr>));
-        vcl_vector<dbdet_keypoint_sptr> keypoints =
-          data->data<vcl_vector<dbdet_keypoint_sptr> >();
+        assert(data->type_id() == typeid(std::vector<dbdet_keypoint_sptr>));
+        std::vector<dbdet_keypoint_sptr> keypoints =
+          data->data<std::vector<dbdet_keypoint_sptr> >();
         
         vgui_style_sptr line_style = vgui_style::new_style(1.0f , 1.0f , 0.0f , 1.0f , 1.0f);
         vgui_style_sptr point_style = vgui_style::new_style(0.0f , 1.0f , 0.0f , 4.0f , 1.0f);
-        for( vcl_vector< dbdet_keypoint_sptr >::const_iterator itr = keypoints.begin();
+        for( std::vector< dbdet_keypoint_sptr >::const_iterator itr = keypoints.begin();
             itr != keypoints.end();  ++itr ){
           if(*itr){
             dbdet_keypoint_soview2D* obj = new dbdet_keypoint_soview2D(*itr,false);
@@ -242,7 +242,7 @@ class mesh_observer: public dbpro_observer
         coords->point.set1Value(idx++, SbVec3f((*v)[0], (*v)[1], (*v)[2]));
       }
 
-      typedef vcl_vector<vgl_point_2d<double> >::const_iterator uv_itr;
+      typedef std::vector<vgl_point_2d<double> >::const_iterator uv_itr;
       idx = 0;
       for(uv_itr uv = mesh.tex_coords().begin(); uv!=mesh.tex_coords().end(); ++uv)
       {
@@ -327,9 +327,9 @@ class read_mesh_command : public vgui_command
         dynamic_cast< dbpro_static_source<imesh_mesh>*>(process_.ptr());
       if(source){
         vgui_dialog file_dlg("Select Input File");
-        vcl_string regexp("*.ply2"), filename;
+        std::string regexp("*.ply2"), filename;
         file_dlg.inline_file("Mesh File (PLY2)",regexp,filename);
-        vcl_string regexp2("*.uv2"), filename2;
+        std::string regexp2("*.uv2"), filename2;
         file_dlg.inline_file("Texture File (UV2)",regexp2,filename2);
         if(!file_dlg.ask())
           return;
@@ -353,9 +353,9 @@ class mesh_proj_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<dbdet_keypoint_sptr>));
-      vcl_vector<dbdet_keypoint_sptr> keypoints = 
-      input<vcl_vector<dbdet_keypoint_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<dbdet_keypoint_sptr>));
+      std::vector<dbdet_keypoint_sptr> keypoints = 
+      input<std::vector<dbdet_keypoint_sptr> >(0);
       
       assert(input_type_id(1) == typeid(vnl_double_3x4));
       vnl_double_3x4 cam = input<vnl_double_3x4>(1);
@@ -366,10 +366,10 @@ class mesh_proj_filter : public dbpro_filter
       vpgl_perspective_camera<double> camera;
       vpgl_perspective_decomposition(cam,camera);
       
-      vcl_vector<vgl_point_2d<double> > verts2d;
+      std::vector<vgl_point_2d<double> > verts2d;
       imesh_project_verts(mesh.vertices<3>(), camera, verts2d);
       
-      vcl_vector<modrec_desc_feature_3d<128> > features;
+      std::vector<modrec_desc_feature_3d<128> > features;
       vgl_point_3d<double> c = camera.get_camera_center();
       for(unsigned int i=0; i<keypoints.size(); ++i){
         vgl_point_3d<double> pt_3d;
@@ -383,7 +383,7 @@ class mesh_proj_filter : public dbpro_filter
           
           double s = 8.0 * k->scale();
           double o = k->orientation();
-          vgl_homg_point_2d<double> pt2(k->x()+s*vcl_cos(o), k->y()+s*vcl_sin(o));
+          vgl_homg_point_2d<double> pt2(k->x()+s*std::cos(o), k->y()+s*std::sin(o));
           vgl_line_3d_2_points<double> line = camera.backproject(pt2);
           vgl_point_3d<double> pt_3d2 = vgl_intersection(line,vgl_plane_3d<double>(ray,pt_3d));
           s = vgl_distance(pt_3d, pt_3d2);
@@ -411,9 +411,9 @@ class texture_proj_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<dbdet_keypoint_sptr>));
-      vcl_vector<dbdet_keypoint_sptr> keypoints = 
-        input<vcl_vector<dbdet_keypoint_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<dbdet_keypoint_sptr>));
+      std::vector<dbdet_keypoint_sptr> keypoints = 
+        input<std::vector<dbdet_keypoint_sptr> >(0);
       
       assert(input_type_id(1) == typeid(vnl_double_3x4));
       vnl_double_3x4 cam = input<vnl_double_3x4>(1);
@@ -424,10 +424,10 @@ class texture_proj_filter : public dbpro_filter
       vpgl_perspective_camera<double> camera;
       vpgl_perspective_decomposition(cam,camera);
       
-      vcl_vector<vgl_point_2d<double> > verts2d;
+      std::vector<vgl_point_2d<double> > verts2d;
       imesh_project_verts(mesh.vertices<3>(), camera, verts2d);
       
-      vcl_vector<vgl_point_2d<double> > tex_coords;
+      std::vector<vgl_point_2d<double> > tex_coords;
       for(unsigned int i=0; i<keypoints.size(); ++i){
         vgl_point_2d<double> pt_uv;
         int tri_idx = imesh_project_onto_mesh_texture(mesh, verts2d, camera,
@@ -452,20 +452,20 @@ class hist_image_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<vgl_point_2d<double> >));
-      vcl_vector<vgl_point_2d<double> > tex_coords = 
-        input<vcl_vector<vgl_point_2d<double> > >(0);
+      assert(input_type_id(0) == typeid(std::vector<vgl_point_2d<double> >));
+      std::vector<vgl_point_2d<double> > tex_coords = 
+        input<std::vector<vgl_point_2d<double> > >(0);
       
       unsigned w = image.ni();
       unsigned h = image.nj();
       
       for(unsigned int k=0; k<tex_coords.size(); ++k){
-        unsigned i = static_cast<unsigned>(vcl_floor(w*tex_coords[k].x()));
-        unsigned j = static_cast<unsigned>(vcl_floor(h*tex_coords[k].y()));
+        unsigned i = static_cast<unsigned>(std::floor(w*tex_coords[k].x()));
+        unsigned j = static_cast<unsigned>(std::floor(h*tex_coords[k].y()));
         if(i < w && j < h)
           image(i,j) += 16;
         else
-          vcl_cout << "bad tex point: " << i << ", "<< j << vcl_endl;
+          std::cout << "bad tex point: " << i << ", "<< j << std::endl;
       }
       
       output(0, vil_new_image_resource_of_view(image));
@@ -479,12 +479,12 @@ class hist_image_filter : public dbpro_filter
 int main(int argc, char** argv)
 {
   
-  vul_arg<vcl_string>  a_images("-images", "path to images", "");
-  vul_arg<vcl_string>  a_keypoints("-keypoints", "path to keypoints", "");
-  vul_arg<vcl_string>  a_cameras("-cameras", "path to cameras", "");
-  vul_arg<vcl_string>  a_mesh("-mesh", "path to mesh", "");
-  vul_arg<vcl_string>  a_tex_coords("-tex_coords", "path to texture coordinates", "");
-  vul_arg<vcl_string>  a_feat3d("-feat3d", "path to feature 3d output", "");
+  vul_arg<std::string>  a_images("-images", "path to images", "");
+  vul_arg<std::string>  a_keypoints("-keypoints", "path to keypoints", "");
+  vul_arg<std::string>  a_cameras("-cameras", "path to cameras", "");
+  vul_arg<std::string>  a_mesh("-mesh", "path to mesh", "");
+  vul_arg<std::string>  a_tex_coords("-tex_coords", "path to texture coordinates", "");
+  vul_arg<std::string>  a_feat3d("-feat3d", "path to feature 3d output", "");
   vul_arg_parse(argc, argv);
   
   vidl_istream_sptr default_vidl2_istream = NULL;
@@ -504,7 +504,7 @@ int main(int argc, char** argv)
   }
 
   
-  typedef vcl_vector<dbdet_keypoint_sptr> keypoint_vector;
+  typedef std::vector<dbdet_keypoint_sptr> keypoint_vector;
   vsl_add_to_binary_loader(dbdet_keypoint());
   vsl_add_to_binary_loader(dbdet_lowe_keypoint());
 
@@ -534,7 +534,7 @@ int main(int argc, char** argv)
   graph["proj_tex"]    = new texture_proj_filter();
   graph["hist_img"]    = new hist_image_filter();
   
-  typedef vcl_vector<modrec_desc_feature_3d<128> > feat_vector;
+  typedef std::vector<modrec_desc_feature_3d<128> > feat_vector;
   graph["proj_mesh"]   = new mesh_proj_filter();
   graph["feat_3d_snk"] = new dbpro_b_ostream_sink<feat_vector>(a_feat3d());
 

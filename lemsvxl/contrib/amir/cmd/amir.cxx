@@ -4,10 +4,10 @@
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_random.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <cstdio>
 
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
@@ -39,12 +39,12 @@ int comp(const void* n, const void* m);
 int main(int argc, char** argv)
 {
   if (argc < 3) {
-    vcl_cout << "USAGE: amir <image file name> <num of edges>\n";
+    std::cout << "USAGE: amir <image file name> <num of edges>\n";
     return 1;
   }
 
   //get the image filename
-  vcl_string image_filename(argv[1]);
+  std::string image_filename(argv[1]);
   int number = atoi(argv[2]);
 
   //load image
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
   //write out the edgels
   for(int i=0; i< ((number < num_edgels) ? number : num_edgels); i++)
   {
-    vcl_cout << dat[4*i+1] << " " << dat[4*i+2] << " " << dat[4*i+3] << " " << dat[4*i] << "\n";
+    std::cout << dat[4*i+1] << " " << dat[4*i+2] << " " << dat[4*i+3] << " " << dat[4*i] << "\n";
   }
 
   return true;

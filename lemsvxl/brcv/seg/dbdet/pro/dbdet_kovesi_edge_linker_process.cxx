@@ -21,16 +21,16 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 
-#include <vcl_string.h>
+#include <string>
 
 //: Constructor
 dbdet_kovesi_edge_linker_process::dbdet_kovesi_edge_linker_process()
 {
-    if (    !parameters()->add( "Temporary location for storing kovesi octave files:"   , "-temp_path" , vcl_string("/vision/scratch/octave_tmp/kovesi")) ||
+    if (    !parameters()->add( "Temporary location for storing kovesi octave files:"   , "-temp_path" , std::string("/vision/scratch/octave_tmp/kovesi")) ||
             !parameters()->add( "Edge strength threshold (0-255)" , "-edge_threshold" , 15 ) ||
             !parameters()->add( "Linking edge length threshold" , "-edge_length" , 4 ) )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -49,7 +49,7 @@ bpro1_process* dbdet_kovesi_edge_linker_process::clone() const
 
 
 //: Return the name of this process
-vcl_string dbdet_kovesi_edge_linker_process::name()
+std::string dbdet_kovesi_edge_linker_process::name()
 {
     return "Kovesi Edge Linker (Octave)";
 }
@@ -70,9 +70,9 @@ int dbdet_kovesi_edge_linker_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_kovesi_edge_linker_process::get_input_type()
+std::vector< std::string > dbdet_kovesi_edge_linker_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map" );
 
     return to_return;
@@ -80,9 +80,9 @@ vcl_vector< vcl_string > dbdet_kovesi_edge_linker_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_kovesi_edge_linker_process::get_output_type()
+std::vector< std::string > dbdet_kovesi_edge_linker_process::get_output_type()
 {
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //output the sel storage class
     to_return.push_back( "sel" );
 
@@ -94,14 +94,14 @@ vcl_vector< vcl_string > dbdet_kovesi_edge_linker_process::get_output_type()
 bool dbdet_kovesi_edge_linker_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbdet_kovesi_edge_linker_process::::execute() - not exactly one input \n";
+        std::cout << "In dbdet_kovesi_edge_linker_process::::execute() - not exactly one input \n";
         return false;
     }
     clear_output();
 
     //get the parameters
     int edge_threshold, edge_length;
-    vcl_string kovesi_temp_dir;
+    std::string kovesi_temp_dir;
 
     parameters()->get_value( "-temp_path", kovesi_temp_dir);
     parameters()->get_value( "-edge_threshold", edge_threshold);
@@ -112,7 +112,7 @@ bool dbdet_kovesi_edge_linker_process::execute()
     input_edgemap.vertical_cast(input_data_[0][0]);
     dbdet_edgemap_sptr in_EM = input_edgemap->get_edgemap();
 
-    vcl_cout << "EM: Height:" << in_EM->height() << " Width:" << in_EM->width() << vcl_endl;
+    std::cout << "EM: Height:" << in_EM->height() << " Width:" << in_EM->width() << std::endl;
 
     // create the sel storage class
     dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();

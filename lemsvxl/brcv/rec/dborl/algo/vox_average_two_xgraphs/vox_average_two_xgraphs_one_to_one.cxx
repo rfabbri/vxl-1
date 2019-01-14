@@ -78,8 +78,8 @@ initialize()
     vul_file::make_directory(this->output_folder_);
   }
 
-  vcl_string name1 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[0]));
-  vcl_string name2 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[1]));
+  std::string name1 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[0]));
+  std::string name2 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[1]));
   this->base_name_ = this->output_folder_ + "/" + name1 + "+" + name2;
 
   // save input file
@@ -97,13 +97,13 @@ bool vox_average_two_xgraphs_one_to_one::
 perform_averaging()
 {
   // 0) Make some annoucement
-  vcl_cout 
+  std::cout 
     << "\nAveraging two shock graphs:"
     << "\n  esf1 = " << vul_file::strip_directory(esf_file_[0])
     << "\n  esf2 = " << vul_file::strip_directory(esf_file_[1]) << "\n";
 
   // 1) Load the two esf files
-  vcl_cout 
+  std::cout 
     << "\n>>Loading two esf files ...";
   
   // Output container:
@@ -117,16 +117,16 @@ perform_averaging()
   load_status &= this->load_esf(this->esf_file_[1], sk2d_storage[1]);
   if (!load_status)
   {
-    vcl_cout << "[ Failed ]<<\n";
+    std::cout << "[ Failed ]<<\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]<<\n";
+    std::cout << "[ OK ]<<\n";
   }
 
   // 2) Convert dbsk2d_shock_graph to dbsksp_xshock_graph
-  vcl_cout << "\n>>Convert dbsk2d_shock_graph to dbsksp_xshock_graph ... ";
+  std::cout << "\n>>Convert dbsk2d_shock_graph to dbsksp_xshock_graph ... ";
 
   // Output container
   dbsksp_xgraph_storage_sptr xgraph_storage[2];
@@ -138,27 +138,27 @@ perform_averaging()
   
   if (!convert_status)
   {
-    vcl_cout << "[ Failed ]<<\n";
+    std::cout << "[ Failed ]<<\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]<<\n";
+    std::cout << "[ OK ]<<\n";
   }
 
   //3) Average the two xgraphs
-  vcl_cout << "\n>>Compute average of two converted xgraphs...";
+  std::cout << "\n>>Compute average of two converted xgraphs...";
   
   bool average_status = this->compute_average(xgraph_storage[0], xgraph_storage[1], this->average_xgraph_storage_);
 
   if (!average_status)
   {
-    vcl_cout << "[ Failed ]<<\n";
+    std::cout << "[ Failed ]<<\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]<<\n";
+    std::cout << "[ OK ]<<\n";
   }
 
   return true;
@@ -169,7 +169,7 @@ perform_averaging()
 //------------------------------------------------------------------------------
 //: Load esf file
 bool vox_average_two_xgraphs_one_to_one::
-load_esf(const vcl_string& esf_file, dbsk2d_shock_storage_sptr& shock_storage)
+load_esf(const std::string& esf_file, dbsk2d_shock_storage_sptr& shock_storage)
 {
   // sanitize output container
   shock_storage = 0;
@@ -276,7 +276,7 @@ compute_average(const dbsksp_xgraph_storage_sptr& xgraph1,
 //------------------------------------------------------------------------------
 //: save a screenshot of an to a file
 bool vox_average_two_xgraphs_one_to_one::
-save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_png_filename)
+save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const std::string& out_png_filename)
 {
   // compute bounding box for the xgraph
   xgraph->update_bounding_box();
@@ -324,8 +324,8 @@ save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_pn
 bool vox_average_two_xgraphs_one_to_one::
 write_out()
 {
-  vcl_string name1 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[0]));
-  vcl_string name2 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[1]));
+  std::string name1 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[0]));
+  std::string name2 = vul_file::strip_extension(vul_file::strip_directory(this->esf_file_[1]));
 
   ////
   //if (!vul_file::is_directory(this->output_folder_))
@@ -333,25 +333,25 @@ write_out()
   //  vul_file::make_directory(this->output_folder_);
   //}
 
-  //vcl_string base_name = this->output_folder_ + "/" + name1 + "+" + name2;
+  //std::string base_name = this->output_folder_ + "/" + name1 + "+" + name2;
 
   // save average file
-  vcl_string xgraph_file = this->base_name_ + "-average.xml";
+  std::string xgraph_file = this->base_name_ + "-average.xml";
   bool success = x_write(xgraph_file, this->average_xgraph_storage_->xgraph());
 
   if (!success)
   {
-    vcl_cout << "\nERROR: Failed to write out average xgraph xml file.\n";
+    std::cout << "\nERROR: Failed to write out average xgraph xml file.\n";
     return false;
   }
 
   // save computation data
-  vcl_string data_file = this->base_name_ + "-data.txt";
+  std::string data_file = this->base_name_ + "-data.txt";
 
-  vcl_ofstream ofs(data_file.c_str());
+  std::ofstream ofs(data_file.c_str());
   if (!ofs)
   {
-    vcl_cout << "\nERROR: can't open data file for writing.\n";
+    std::cout << "\nERROR: can't open data file for writing.\n";
     return false;
   }
 

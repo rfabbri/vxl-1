@@ -110,7 +110,7 @@ dbinfo_track_geometry_sptr dbinfo_track::track_geometry()
   return track_geom_;
 }
 
-void dbinfo_track::print(vcl_ostream& os) const
+void dbinfo_track::print(std::ostream& os) const
 {
   dbinfo_track& trk = (dbinfo_track&)(*this);  
   os << trk.is_a() << " [\n"
@@ -151,7 +151,7 @@ void dbinfo_track::b_read(vsl_b_istream &is)
     case 1:
       {
         vsl_b_read(is, id_);
-        vcl_vector<dbinfo_observation_sptr> obs;
+        std::vector<dbinfo_observation_sptr> obs;
         vsl_b_read(is, obs);
         unsigned n = obs.size();
         for(unsigned i = 0; i<n; ++i)
@@ -173,6 +173,6 @@ void dbinfo_track::b_read(vsl_b_istream &is)
         break;
       }
     default:
-      vcl_cout << "In dbinfo_track::b_read(..) - unknown binary I/O version\n";
+      std::cout << "In dbinfo_track::b_read(..) - unknown binary I/O version\n";
     }
 }

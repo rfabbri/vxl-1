@@ -9,7 +9,7 @@
 #include "dborl_extract_shock.h"
 #include "dborl_extract_shock_params.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dborl/algo/dborl_index_parser.h>
 #include <dborl/dborl_index.h>
@@ -41,13 +41,13 @@
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-bool dborl_extract_shock::parse_command_line(vcl_vector<vcl_string>& argv)
+bool dborl_extract_shock::parse_command_line(std::vector<std::string>& argv)
 {
   params_->parse_command_line_args(argv);  // parses the input.xml file if its name is passed from command line
   
   //: always print the params file if an executable to work with ORL web interface
   if (!params_->print_params_xml(params_->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params_->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params_->print_params_file() << std::endl;
 
   if (params_->exit_with_no_processing() || params_->print_params_only())
     return false;
@@ -59,20 +59,20 @@ bool dborl_extract_shock::parse_command_line(vcl_vector<vcl_string>& argv)
 }
 
 //: this method is run on each processor
-bool dborl_extract_shock::parse_index(vcl_string index_file)
+bool dborl_extract_shock::parse_index(std::string index_file)
 {
   dborl_index_parser parser;
   parser.clear();
 
-  vcl_FILE *xmlFile = vcl_fopen(index_file.c_str(), "r");
+  std::FILE *xmlFile = std::fopen(index_file.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << "dborl_extract_shock::parse_index() -- " << index_file << "-- error on opening" << vcl_endl;
+    std::cout << "dborl_extract_shock::parse_index() -- " << index_file << "-- error on opening" << std::endl;
     return false;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
 
@@ -99,19 +99,19 @@ bool dborl_extract_shock::parse(const char* param_file)
 //  run the algorithm to generate this file, then modify it  
 void dborl_extract_shock::print_default_file(const char* def_file)
 {
-  params_->print_default_input_xml(vcl_string(def_file));
+  params_->print_default_input_xml(std::string(def_file));
 }
 
 //: this method is run on each processor
 //  initialize the input vector with indices of objects in the root of the index file
 //  assuming a flat index of images so only distributes the objects at the root
-bool dborl_extract_shock::initialize(vcl_vector<int>& t)
+bool dborl_extract_shock::initialize(std::vector<int>& t)
 {
   dborl_index_node_sptr root = ind_->root_->cast_to_index_node();
   
   //: check if the index contains all the information needed
   if (root->names().size() != root->paths().size()) {
-    vcl_cout << "The index does not contain object names as well as object paths! Exiting!\n";
+    std::cout << "The index does not contain object names as well as object paths! Exiting!\n";
     return false;
   }
 
@@ -127,7 +127,7 @@ bool dborl_extract_shock::process(int t1, char& f)
 {
   dborl_index_node_sptr root = ind_->root_->cast_to_index_node();
 
-  vcl_string contour_name;
+  std::string contour_name;
   if (params_->use_assoc_contours())
     //contour_name = params_->input_contour_dir() + "/" + params_->input_contour_dir.file_type() + "/" + root->names()[t1] + "/" + root->names()[t1] + params_->input_extension();
     contour_name = params_->input_contour_dir() + "/" + root->names()[t1] + "/" + root->names()[t1] + params_->input_extension();
@@ -135,14 +135,14 @@ bool dborl_extract_shock::process(int t1, char& f)
     contour_name = root->paths()[t1] + "/" + root->names()[t1] + params_->input_extension();
 
   if (!vul_file::exists(contour_name)) {
-    vcl_cout << "In dborl_extract_shock::process() -- contour: " << contour_name << " could not be loaded\n";
+    std::cout << "In dborl_extract_shock::process() -- contour: " << contour_name << " could not be loaded\n";
     f = 0;
     return false;
   } 
 
-  //vcl_cout << "In dborl_extract_shock::process() -- processing: " << contour_name << "\n";
+  //std::cout << "In dborl_extract_shock::process() -- processing: " << contour_name << "\n";
 
-  vcl_string out_name;
+  std::string out_name;
   
   if (params_->save_to_output_folder()) {
     out_name = params_->output_directory() + "/" + params_->output_directory.file_type() + "/";
@@ -156,25 +156,25 @@ bool dborl_extract_shock::process(int t1, char& f)
   if (!vul_file::exists(out_name)) 
     vul_file::make_directory(out_name);
   
-  vcl_string out_shock_name = out_name + root->names()[t1] + params_->output_extension();
+  std::string out_shock_name = out_name + root->names()[t1] + params_->output_extension();
   
   if (vul_file::exists(out_shock_name)) {
-    vcl_cout << root->names()[t1] << " exists\n";
+    std::cout << root->names()[t1] << " exists\n";
     f = 1;
     return true;
   }
   
-  vcl_cout << "extracting: " << root->names()[t1] << "\n";
-  vcl_vector<vsol_spatial_object_2d_sptr> conts_temp;
+  std::cout << "extracting: " << root->names()[t1] << "\n";
+  std::vector<vsol_spatial_object_2d_sptr> conts_temp;
 
-  vcl_vector<vsol_spatial_object_2d_sptr> conts;
+  std::vector<vsol_spatial_object_2d_sptr> conts;
   
   if (params_->input_simple_closed_contours()) {  // input is in .con format
 
-    vcl_vector<vsol_point_2d_sptr> points;
+    std::vector<vsol_point_2d_sptr> points;
     bool is_closed;
     if (!bsold_load_con_file(contour_name.c_str(), points, is_closed)) {
-      vcl_cout << "In dborl_extract_shock::process() -- contour: " << contour_name << " could not be loaded\n";
+      std::cout << "In dborl_extract_shock::process() -- contour: " << contour_name << " could not be loaded\n";
       f = 0;
       return false;
     }
@@ -186,7 +186,7 @@ bool dborl_extract_shock::process(int t1, char& f)
      // load the cem file
      
      if (!bsold_load_cem(conts_temp, contour_name)) {
-      vcl_cout << "In dborl_extract_shock::process() -- contour cem: " << contour_name << " could not be loaded\n";
+      std::cout << "In dborl_extract_shock::process() -- contour cem: " << contour_name << " could not be loaded\n";
       f = 0;
       return false;
      }
@@ -198,11 +198,11 @@ bool dborl_extract_shock::process(int t1, char& f)
   float fit_lines_rms = params_->extract_shock_.fit_lines_rms_();
   int cnt = 0;
   while (!test_shock_graph_for_rec(sampled_sg)) {  
-    vcl_cout << "\ttrial: " << cnt << vcl_endl;
+    std::cout << "\ttrial: " << cnt << std::endl;
 
     conts.clear();
    if ((first_time && params_->extract_shock_.fit_lines_()) || !first_time) {
-     vcl_cout << "\t\tfitting lines, rms: " << fit_lines_rms << vcl_endl;
+     std::cout << "\t\tfitting lines, rms: " << fit_lines_rms << std::endl;
      
      for (unsigned kk = 0; kk < conts_temp.size(); kk++) {
        if (conts_temp[kk]->cast_to_region()) {
@@ -218,7 +218,7 @@ bool dborl_extract_shock::process(int t1, char& f)
             conts.push_back(fitted_poly->cast_to_spatial_object());
          }
        } else {
-         vcl_cout << "In dborl_extract_shock::process() -- WARNING: cem file contains type other than  polygon and polyline!!:" << contour_name << " skipping the object with this type in this cem file\n";
+         std::cout << "In dborl_extract_shock::process() -- WARNING: cem file contains type other than  polygon and polyline!!:" << contour_name << " skipping the object with this type in this cem file\n";
        }
      }
    } else {
@@ -254,7 +254,7 @@ bool dborl_extract_shock::process(int t1, char& f)
    cnt++;
 
    if (fit_lines_rms > 0.1 || cnt > 100) {
-    vcl_cout << "\tfit lines rms threshold exceeded 0.1, or cnt exceeded 100, quitting!!\n";
+    std::cout << "\tfit lines rms threshold exceeded 0.1, or cnt exceeded 100, quitting!!\n";
     f = 0;
     return false;
    }
@@ -269,7 +269,7 @@ bool dborl_extract_shock::process(int t1, char& f)
   dbsk2d_boundary_sptr boundary = dbsk2d_create_boundary(conts, false, xmin, ymin, num_rows, num_cols, cell_width, cell_height, true, true);
   dbsk2d_ishock_graph_sptr isg = dbsk2d_compute_ishocks(boundary);
   if (!isg) {
-    vcl_cout << "\tproblems in intrinsic shock computation!!\n";
+    std::cout << "\tproblems in intrinsic shock computation!!\n";
     f = 0;
     continue;
   }
@@ -278,7 +278,7 @@ bool dborl_extract_shock::process(int t1, char& f)
   ishock_pruner.prune(params_->extract_shock_.prune_threshold_());  // prune threshold is 1.0f
   ishock_pruner.compile_coarse_shock_graph();
   if (!sg->number_of_vertices() || !sg->number_of_edges()) {
-    vcl_cout << "\tsampled shock graph has zero vertices or edges!!\n";
+    std::cout << "\tsampled shock graph has zero vertices or edges!!\n";
     f = 0;
     continue;
   }
@@ -297,11 +297,11 @@ bool dborl_extract_shock::process(int t1, char& f)
   return true;
 }
 
-bool dborl_extract_shock::finalize(vcl_vector<char>& results)
+bool dborl_extract_shock::finalize(std::vector<char>& results)
 {
   for (unsigned i = 0; i < results.size(); i++) {
     if (!results[i]) {
-      vcl_cout << "Problems occurred processing some of the inputs\n";
+      std::cout << "Problems occurred processing some of the inputs\n";
       return false;
     }
   }

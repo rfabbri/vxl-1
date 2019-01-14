@@ -27,19 +27,19 @@
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
 #include <dbskr/algo/io/dbskr_match_patch_params.h>
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 
 class dborl_match_patch_processor_input
 { public:
     dborl_match_patch_processor_input(dbskr_shock_patch_storage_sptr t1, 
                                       dbskr_shock_patch_storage_sptr t2, 
-                                      vcl_string n1, vcl_string n2) :
+                                      std::string n1, std::string n2) :
                                       st1(t1), st2(t2), name1(n1), name2(n2) {}
     dbskr_shock_patch_storage_sptr st1;
     dbskr_shock_patch_storage_sptr st2;
-    vcl_string name1;
-    vcl_string name2;
+    std::string name1;
+    std::string name2;
 };
 
 
@@ -52,7 +52,7 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
@@ -63,13 +63,13 @@ public:
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_match_patch_processor_input>& t);
+  virtual bool initialize(std::vector<dborl_match_patch_processor_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_match_patch_processor_input i, char& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<char>& results);
+  virtual bool finalize(std::vector<char>& results);
 
   void print_time();
 
@@ -84,7 +84,7 @@ protected:
   bxml_document param_doc_;  // parse the input file into a document
   dbskr_match_patch_params params_;
 
-  vcl_vector<vcl_string> database, training_set;
+  std::vector<std::string> database, training_set;
   unsigned D1, D2;
 
   vul_timer t_;

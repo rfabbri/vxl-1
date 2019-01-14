@@ -5,7 +5,7 @@
 #ifndef dbsk3d_fs_sheet_h_
 #define dbsk3d_fs_sheet_h_
 
-#include <vcl_list.h>
+#include <list>
 #include <dbmsh3d/dbmsh3d_utils.h>
 
 #include <dbsk3d/dbsk3d_fs_face.h>
@@ -73,25 +73,25 @@ public:
   void set_type (const FS_TYPE type) {
     type_ = type;
   }
-  vcl_string type_string() {
+  std::string type_string() {
     switch (type_) {
     case FS_TYPE_TAB:
-      return vcl_string ("TAB");
+      return std::string ("TAB");
     break;      
     case FS_TYPE_INTERIOR:
-      return vcl_string ("INTERIOR");      
+      return std::string ("INTERIOR");      
     break;
     case FS_TYPE_UNBOUNDED:
-      return vcl_string ("UNBOUNDED");
+      return std::string ("UNBOUNDED");
     break;
     default:
-      return vcl_string ("BOGUS");
+      return std::string ("BOGUS");
     break;
     }
   }
 
   //###### Handle the fs_faces ######  
-  unsigned int get_FFs (vcl_set<void*>& FF_set) const {
+  unsigned int get_FFs (std::set<void*>& FF_set) const {
     return get_all_ptrs (FF_list_, FF_set);
   }
   unsigned int n_FFs() const {
@@ -132,15 +132,15 @@ public:
 
   //####### Connectivity Query Functions #######
   //: Get all associated generators of this fs_sheet.
-  void get_asso_Gs (vcl_set<dbmsh3d_vertex*>& Gset, const bool remove_G_from_L_N);
+  void get_asso_Gs (std::set<dbmsh3d_vertex*>& Gset, const bool remove_G_from_L_N);
 
   //: Get the associated boundary mesh faces (triangles) of this fs_sheet.
-  void get_bnd_mesh_Fs (vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<dbmsh3d_face*>& Gfaces,
-                        vcl_set<dbmsh3d_face*>& Gfaces2, vcl_set<dbmsh3d_face*>& Gfaces1);
+  void get_bnd_mesh_Fs (std::set<dbmsh3d_vertex*>& Gset, std::set<dbmsh3d_face*>& Gfaces,
+                        std::set<dbmsh3d_face*>& Gfaces2, std::set<dbmsh3d_face*>& Gfaces1);
 
   //: Collect all boundary A3 and A13 (and higher order) fs_edges.
-  void get_bnd_FEs (vcl_set<dbsk3d_fs_edge*>& A3_fs_edges, 
-                   vcl_set<dbsk3d_fs_edge*>& A13_fs_edges);
+  void get_bnd_FEs (std::set<dbsk3d_fs_edge*>& A3_fs_edges, 
+                   std::set<dbsk3d_fs_edge*>& A13_fs_edges);
   
   //####### Modification Functions #######
   void set_all_FFs_sid ();
@@ -149,7 +149,7 @@ public:
   void mark_all_FFs_valid ();
   void mark_all_FFs_invalid ();
 
-  void S_pass_Gs (vcl_vector<dbsk3d_fs_edge*>& C_Lset);
+  void S_pass_Gs (std::vector<dbsk3d_fs_edge*>& C_Lset);
 
   void clear_incident_LN_asgn_Gs ();
 
@@ -157,13 +157,13 @@ public:
 
   //####### Other functions #######
   virtual bool check_integrity ();
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 };
 
-void get_ifs_faces_pts (vcl_set<dbmsh3d_face*>& Gfaces, vcl_set<dbmsh3d_vertex*>& Gset);
+void get_ifs_faces_pts (std::set<dbmsh3d_face*>& Gfaces, std::set<dbmsh3d_vertex*>& Gset);
 
 void get_closest_L_from_G (const dbmsh3d_vertex* G,
-                           const vcl_vector<dbsk3d_fs_edge*>& C_Ls,
+                           const std::vector<dbsk3d_fs_edge*>& C_Ls,
                            dbsk3d_fs_edge** closestL,
                            dbsk3d_fs_vertex** closest_FV);
 

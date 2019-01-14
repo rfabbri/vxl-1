@@ -74,8 +74,8 @@ unsigned int loadmodel(char *filename)
   vsl_add_to_binary_loader(dbsta_mixture<float>());
   dbbgm_distribution_image<float> * model= new dbbgm_distribution_image<float>();
   vsl_b_ifstream ifile(filename);
-  vcl_cout<<"\n file opened succesfully";
-  vcl_cout.flush();
+  std::cout<<"\n file opened succesfully";
+  std::cout.flush();
   model->b_read(ifile);
   ifile.close();
   return  reinterpret_cast<unsigned int>(model);
@@ -88,7 +88,7 @@ void updatemodel(unsigned int handle,unsigned char *imgdata,unsigned int max_com
     init_gauss.set_data(dbsta_stats_data<float>(1));                                  
     dbsta_mg_window_updater<float> updater(init_gauss, max_components);
     
-    //vcl_cout.flush();
+    //std::cout.flush();
     if(dbbgm_distribution_image<float> * model=reinterpret_cast<dbbgm_distribution_image<float> *> (handle))
       {
           vil_image_view<unsigned char> imgd(imgdata,ni,nj,1,1,ni,ni*nj);
@@ -101,11 +101,11 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
                int min_no_of_pixels,int max_no_of_pixels,float erosionrad,float postdilationerosionrad,
                float dilationrad, int ni,int nj,float sigma, int rad_of_uncert)
 {
-  vcl_cout<<"\n get polygons ...";
+  std::cout<<"\n get polygons ...";
   if(dbbgm_distribution_image<float> * model=reinterpret_cast<dbbgm_distribution_image<float> *> (handle))
     {
     
-    vcl_cout<<"\n Size of the model is "<<model->ni()<<"\t"<<model->nj();
+    std::cout<<"\n Size of the model is "<<model->ni()<<"\t"<<model->nj();
     dbsta_top_weight_detector<float> detector(new dbsta_g_mdist_detector<float>(sigmathresh), minweightthresh);
     vil_image_view<unsigned char> imgd(img_data,ni,nj,1,1,ni,ni*nj);
 
@@ -129,7 +129,7 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
           }
       //vil_save(temp1,"temp.tiff");
 
-    vcl_vector<vcl_vector<vsol_polygon_2d_sptr > > frame_polygons;
+    std::vector<std::vector<vsol_polygon_2d_sptr > > frame_polygons;
 
     
     vil_structuring_element se;
@@ -159,7 +159,7 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
     ctracer.trace(fg);
     
   //get the interesting contours
-  vcl_vector<vcl_vector<vsol_point_2d_sptr > > * allpts=new vcl_vector<vcl_vector<vsol_point_2d_sptr > >();
+  std::vector<std::vector<vsol_point_2d_sptr > > * allpts=new std::vector<std::vector<vsol_point_2d_sptr > >();
   for (unsigned i=0; i<ctracer.contours().size(); i++)
   {
 
@@ -173,20 +173,20 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
     //vil_image_view<unsigned char> outimage(temp.ni(),temp.nj());
 
     //outimage.fill(0);
-    //vcl_vector<int> bi,bj;
+    //std::vector<int> bi,bj;
 
     //bil_blob_finder finder(temp);
     //
-    //vcl_vector<vsol_spatial_object_2d_sptr> polygons;
-    //vcl_vector<vsol_polygon_2d_sptr> polys;
-    //vcl_vector<vcl_vector<vsol_point_2d_sptr > > * allpts= new vcl_vector<vcl_vector<vsol_point_2d_sptr > >(); 
+    //std::vector<vsol_spatial_object_2d_sptr> polygons;
+    //std::vector<vsol_polygon_2d_sptr> polys;
+    //std::vector<std::vector<vsol_point_2d_sptr > > * allpts= new std::vector<std::vector<vsol_point_2d_sptr > >(); 
     //meanpts.clear();
     //while (finder.next_4con_region(bi,bj))
     //    {
     //    if(bi.size()> static_cast<unsigned>(min_no_of_pixels) && bi.size()<static_cast<unsigned>(max_no_of_pixels))
     //        {
 
-    //        vcl_vector<vsol_point_2d_sptr> points; 
+    //        std::vector<vsol_point_2d_sptr> points; 
 
     //        double mux=0;
     //        double muy=0;
@@ -208,10 +208,10 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
     //    }
     //int no_of_polys=meanpts.size();
     unsigned int polyhandle=reinterpret_cast<unsigned int>(allpts);
-    vcl_ofstream ofile("temp.txt");
+    std::ofstream ofile("temp.txt");
     ofile<<"\n No of contours are "<<allpts->size();
     ofile.close();
-    vcl_cout.flush();
+    std::cout.flush();
     return polyhandle;//no_of_polys;
   
     }
@@ -221,16 +221,16 @@ unsigned int getpolygon(unsigned int handle,unsigned char* img_data,float sigmat
 }
 int num_of_poly(unsigned int handle)
 {
- if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-     reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (handle))
+ if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+     reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (handle))
    return polys->size();
  else
    return -1;
 }
 int numvertices_i(int i,unsigned int polyhandle)
 {
- if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-     reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+ if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+     reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
     {
       if(i<static_cast<int>(polys->size()))
         {
@@ -241,8 +241,8 @@ int numvertices_i(int i,unsigned int polyhandle)
 }
 void returnvertices(int i, double * x, double *y, unsigned int polyhandle)
 {
-  if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-     reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+  if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+     reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
     {
       if(i<static_cast<int>(polys->size()))
         {
@@ -257,19 +257,19 @@ void returnvertices(int i, double * x, double *y, unsigned int polyhandle)
 }
 unsigned int getconvexhulls(unsigned int polyhandle)
     {
-  vcl_vector<vcl_vector<vsol_point_2d_sptr > > * allpts=new vcl_vector<vcl_vector<vsol_point_2d_sptr > >();
-    if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-        reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+  std::vector<std::vector<vsol_point_2d_sptr > > * allpts=new std::vector<std::vector<vsol_point_2d_sptr > >();
+    if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+        reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
         {
         for(int i=0;i<static_cast<int>(polys->size());i++)
             {
-            vcl_vector<vgl_point_2d<double> > ps;
+            std::vector<vgl_point_2d<double> > ps;
             for(int j=0;j<static_cast<int>((*polys)[i].size());j++)
                 {
                 vgl_point_2d<double> p((*polys)[i][j]->x(),(*polys)[i][j]->y());
                 ps.push_back(p);
                 }
-            vcl_vector<vsol_point_2d_sptr> cps;
+            std::vector<vsol_point_2d_sptr> cps;
             vgl_convex_hull_2d<double> hullp(ps);
             vgl_polygon<double> psg=hullp.hull();
             for(int k=0;k<static_cast<int>(psg[0].size());k++)
@@ -283,10 +283,10 @@ unsigned int getconvexhulls(unsigned int polyhandle)
 int getnumpointsconvexhull(int i,  unsigned int polyhandle)
 {
     
-vcl_vector<vgl_point_2d<double> > ps;
+std::vector<vgl_point_2d<double> > ps;
 
-if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-   reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+   reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
     {
     if(i<static_cast<int>(polys->size()))
         {
@@ -306,9 +306,9 @@ if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
 void getconvexhullpoints(int i, double * x, double *y, unsigned int polyhandle)
 {
     
-vcl_vector<vgl_point_2d<double> > ps;
-if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-   reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+std::vector<vgl_point_2d<double> > ps;
+if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+   reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
     {
     if(i<static_cast<int>(polys->size()))
         {
@@ -335,8 +335,8 @@ if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
 void returnmean(int i, double *pt, unsigned int polyhandle)
 {
 
-       if(vcl_vector<vcl_vector<vsol_point_2d_sptr > > * polys=
-          reinterpret_cast<vcl_vector<vcl_vector<vsol_point_2d_sptr > > *> (polyhandle))
+       if(std::vector<std::vector<vsol_point_2d_sptr > > * polys=
+          reinterpret_cast<std::vector<std::vector<vsol_point_2d_sptr > > *> (polyhandle))
          {
              if(i<static_cast<int>(polys->size()))
                {

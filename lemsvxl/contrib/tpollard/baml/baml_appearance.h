@@ -9,9 +9,9 @@
 // \date 9/26/07
 
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 
 
@@ -59,7 +59,7 @@ public:
 
   // Draw the model in an x3d stream.
   virtual void draw_x3d(
-    vcl_ofstream& x3d_stream ) = 0;
+    std::ofstream& x3d_stream ) = 0;
 
 
 protected:

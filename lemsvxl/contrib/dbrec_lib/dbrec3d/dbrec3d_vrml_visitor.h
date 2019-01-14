@@ -24,8 +24,8 @@ class dbrec3d_vrml_visitor
 {
 
 public:
-  dbrec3d_vrml_visitor(vcl_ofstream& os) : os_(os), radius_(1.0) { bvrml_write::write_vrml_header(os); }
-  dbrec3d_vrml_visitor(vcl_ofstream& os, double radius) : os_(os), radius_(radius) { bvrml_write::write_vrml_header(os); }
+  dbrec3d_vrml_visitor(std::ofstream& os) : os_(os), radius_(1.0) { bvrml_write::write_vrml_header(os); }
+  dbrec3d_vrml_visitor(std::ofstream& os, double radius) : os_(os), radius_(radius) { bvrml_write::write_vrml_header(os); }
 
 #if 0
   void visit(dbrec3d_part_sptr part){
@@ -51,7 +51,7 @@ public:
         count ++;
       }
     }
-    vcl_cout << " number of vrml parts: " << count << vcl_endl;
+    std::cout << " number of vrml parts: " << count << std::endl;
   }
 
   
@@ -61,9 +61,9 @@ public:
     
     write_box(roi);
     float N = context->part()->max_posterior();
-    vcl_vector<T_instance> parts;
+    std::vector<T_instance> parts;
     context->query(roi, parts);
-    typename vcl_vector<T_instance>::iterator it = parts.begin();
+    typename std::vector<T_instance>::iterator it = parts.begin();
     unsigned count = 0;
     for(; it!=parts.end(); it++)
     {
@@ -72,7 +72,7 @@ public:
       
     }
     
-    vcl_cout << " number of vrml parts: " << count << vcl_endl;
+    std::cout << " number of vrml parts: " << count << std::endl;
   }
   
   void visit(const dbrec3d_part_instance &part, float N=1.0f){
@@ -100,7 +100,7 @@ public:
   }
   
 private:
-  vcl_ofstream& os_;
+  std::ofstream& os_;
   double radius_; //the radius associated with this visitor
 };
 

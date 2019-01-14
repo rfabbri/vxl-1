@@ -56,9 +56,9 @@ void vsl_b_read(vsl_b_istream &is, modrec_desc_feature_3d<n> & f)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, modrec_desc_feature_3d<n>&)\n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, modrec_desc_feature_3d<n>&)\n"
              << "           Unknown version number "<< v << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -67,7 +67,7 @@ void vsl_b_read(vsl_b_istream &is, modrec_desc_feature_3d<n> & f)
 //============================================================================
 //: Output a human readable summary to the stream
 template<unsigned n>
-void vsl_print_summary(vcl_ostream& os,const modrec_desc_feature_3d<n> & f)
+void vsl_print_summary(std::ostream& os,const modrec_desc_feature_3d<n> & f)
 {
   os << "{p=" << f.position() 
      << " o=" << f.orientation()
@@ -75,7 +75,7 @@ void vsl_print_summary(vcl_ostream& os,const modrec_desc_feature_3d<n> & f)
 }
 
 #define MODREC_IO_DESC_FEATURE_3D_INSTANTIATE(n) \
-template void vsl_print_summary(vcl_ostream &, const modrec_desc_feature_3d<n> &); \
+template void vsl_print_summary(std::ostream &, const modrec_desc_feature_3d<n> &); \
 template void vsl_b_read(vsl_b_istream &, modrec_desc_feature_3d<n> &); \
 template void vsl_b_write(vsl_b_ostream &, const modrec_desc_feature_3d<n> &)
 

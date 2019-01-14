@@ -29,8 +29,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <vil1/vil1_rgb.h>
@@ -49,7 +49,7 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   //:Accessors
   vil1_memory_image_of<unsigned char> z_corr_image(const int i);
 
-  vcl_vector<vsol_point_2d_sptr> harris_corners(const int cam);
+  std::vector<vsol_point_2d_sptr> harris_corners(const int cam);
 
   //:Mutators
   bool set_image(const int cam, vil1_image const& image);
@@ -57,7 +57,7 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   // Utility functions
 
   //: Read the homographies for two parallel planes to each camera plane
-  bool read_homographies(vcl_string const& homography_file);
+  bool read_homographies(std::string const& homography_file);
 
   //: compute harris corners for each image
   bool compute_harris();
@@ -73,17 +73,17 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
 
   //: Construct images corresponding to the overlap in the two cam projections
   bool overlapping_projections(const int plane,
-                               vcl_vector<vil1_memory_image_of<float> >& imgs);
+                               std::vector<vil1_memory_image_of<float> >& imgs);
 
   //: Construct images corresponding to the overlap in the two cam projections
   bool overlapping_projections(const double z,
-                               vcl_vector<vil1_memory_image_of<float> >& imgs);
+                               std::vector<vil1_memory_image_of<float> >& imgs);
 
 
   //: Construct images and corners corresponding to the overlap
   bool overlapping_projections(const double z,
-                               vcl_vector<vil1_memory_image_of<float> >& imgs,
-                               vcl_vector<vcl_vector<vsol_point_2d_sptr> >& corners);
+                               std::vector<vil1_memory_image_of<float> >& imgs,
+                               std::vector<std::vector<vsol_point_2d_sptr> >& corners);
 
   //: Compute the cross correlation between overlapping projections for plane
   vil1_memory_image_of<unsigned char>
@@ -97,21 +97,21 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   bool
     cross_correlate_proj_corners(const double z,
                                  vil1_image& back,
-                                 vcl_vector<vsol_point_2d_sptr>& matched_cnrs,
-                                 vcl_vector<vsol_point_2d_sptr>& back_prj_cnrs,
-                                 vcl_vector<vsol_point_2d_sptr>& orig_cnrs0);
+                                 std::vector<vsol_point_2d_sptr>& matched_cnrs,
+                                 std::vector<vsol_point_2d_sptr>& back_prj_cnrs,
+                                 std::vector<vsol_point_2d_sptr>& orig_cnrs0);
 
   //: Compute a depth image based on max cross-correlation.
   bool depth_image(vil1_memory_image_of<unsigned char>& depth_out,
                    vil1_memory_image_of<unsigned char>& coor_out);
 
   //: Compute Harris point matches by plane sweeping
-  bool harris_depth_match(vcl_vector<vsol_point_3d_sptr>& points_3d,
-                          vcl_vector<vsol_point_2d_sptr>& proj_points);
+  bool harris_depth_match(std::vector<vsol_point_3d_sptr>& points_3d,
+                          std::vector<vsol_point_2d_sptr>& proj_points);
 
   //: Correlation values by depth
   void corr_vals(const int col, const int row,
-                 vcl_vector<float>& z, vcl_vector<float>& corr);
+                 std::vector<float>& z, std::vector<float>& corr);
 
   //: Correlation values by depth
   vsol_point_2d_sptr map_point(vsol_point_2d_sptr const& p, const int cam,
@@ -120,8 +120,8 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   //: Map harris corners from one image to the other via plane at z
   bool
     map_harris_corners(const int from_cam, const double z,
-                       vcl_vector<vsol_point_2d_sptr>& mapped_to_points,
-                       vcl_vector<vsol_point_2d_sptr>& orig_to_points);
+                       std::vector<vsol_point_2d_sptr>& mapped_to_points,
+                       std::vector<vsol_point_2d_sptr>& orig_to_points);
 
   //:init harris matcher
   void init_harris_match(const int from_cam);
@@ -129,58 +129,58 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   //: Map and match harris corners from one image to the other via plane at z
   bool
     match_harris_corners(const int from_cam, const double z,
-                         vcl_vector<vsol_point_2d_sptr>& matched_points,
-                         vcl_vector<vsol_point_2d_sptr>& orig_to_points);
+                         std::vector<vsol_point_2d_sptr>& matched_points,
+                         std::vector<vsol_point_2d_sptr>& orig_to_points);
 
   bool harris_sweep(const int from_cam);
 
-  vcl_vector<vsol_point_2d_sptr> matched_points_at_z_index(int z_index);
+  std::vector<vsol_point_2d_sptr> matched_points_at_z_index(int z_index);
 
-  vcl_vector<vsol_point_3d_sptr> proj_points_3d();
+  std::vector<vsol_point_3d_sptr> proj_points_3d();
 
-  vcl_vector<vsol_point_3d_sptr> world_points_3d();
+  std::vector<vsol_point_3d_sptr> world_points_3d();
 
-  bool save_world_points(vcl_string const& out_file);
+  bool save_world_points(std::string const& out_file);
 
  protected:
   //local utility functions
 
-  bool overlapping_box(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
+  bool overlapping_box(std::vector<vgl_h_matrix_2d<double> > const& homgs,
                        vsol_box_2d_sptr& box);
   //: tx and ty shift the projections to the (0,0) image origin
   bool
-    overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
-                            vcl_vector<vil1_memory_image_of<float> >& imgs,
+    overlapping_projections(std::vector<vgl_h_matrix_2d<double> > const& homgs,
+                            std::vector<vil1_memory_image_of<float> >& imgs,
                             double& tx, double& ty);
   bool
-    overlapping_projections(vcl_vector<vgl_h_matrix_2d<double> > const& homgs,
-                            vcl_vector<vil1_memory_image_of<float> >& imgs,
-                            vcl_vector<vcl_vector<vsol_point_2d_sptr> >& corners,
+    overlapping_projections(std::vector<vgl_h_matrix_2d<double> > const& homgs,
+                            std::vector<vil1_memory_image_of<float> >& imgs,
+                            std::vector<std::vector<vsol_point_2d_sptr> >& corners,
                             double& tx, double& ty);
 
   void homographies_at_z(double z,
-                         vcl_vector<vgl_h_matrix_2d<double> >& homgs);
+                         std::vector<vgl_h_matrix_2d<double> >& homgs);
   vsol_box_2d_sptr
     depth_image_box(const double zmin, const double zmax);
 
-  vcl_vector<vsol_point_2d_sptr> project_corners(vgl_h_matrix_2d<double> const & H,
-                                                 vcl_vector<vsol_point_2d_sptr> const& corners);
+  std::vector<vsol_point_2d_sptr> project_corners(vgl_h_matrix_2d<double> const & H,
+                                                 std::vector<vsol_point_2d_sptr> const& corners);
 
   bool
-    correlate_corners(vcl_vector<vil1_memory_image_of<float> > const& imgs,
-                      vcl_vector<vcl_vector<vsol_point_2d_sptr> > const& cnrs,
-                      vcl_vector<vsol_point_2d_sptr>& matched_corners);
+    correlate_corners(std::vector<vil1_memory_image_of<float> > const& imgs,
+                      std::vector<std::vector<vsol_point_2d_sptr> > const& cnrs,
+                      std::vector<vsol_point_2d_sptr>& matched_corners);
 
   vil1_memory_image_of<vil1_rgb<unsigned char> >
-    overlay_matches(vcl_vector<vsol_point_2d_sptr>,
+    overlay_matches(std::vector<vsol_point_2d_sptr>,
                     vil1_memory_image_of<float> const& back);
 
   vsol_point_2d_sptr map_point(vsol_point_2d_sptr const& p,
                                vgl_h_matrix_2d<double> const& Hcomp);
 
   bool map_points(const int from_cam, const double z,
-                  vcl_vector<vsol_point_2d_sptr> const& from_points,
-                  vcl_vector<vsol_point_2d_sptr>& to_points);
+                  std::vector<vsol_point_2d_sptr> const& from_points,
+                  std::vector<vsol_point_2d_sptr>& to_points);
 
   bool intersecting_bounding_box(vgl_h_matrix_2d<double> const& Hcomp,
                                  vsol_box_2d_sptr const& from_box,
@@ -200,18 +200,18 @@ class brct_plane_sweeper : public brct_plane_sweeper_params
   float del_;
   int to_cam_;
   //world plane
-  vcl_vector<double> z_;
+  std::vector<double> z_;
   //world plane camera
-  vcl_vector< vcl_vector<vgl_h_matrix_2d<double> > > homographies_;
+  std::vector< std::vector<vgl_h_matrix_2d<double> > > homographies_;
   //cam
-  vcl_vector<vil1_image> images_;
-  vcl_vector<vil1_memory_image_of<float> > smooth_images_;
+  std::vector<vil1_image> images_;
+  std::vector<vil1_memory_image_of<float> > smooth_images_;
   //z
-  vcl_vector<vil1_memory_image_of<float> > z_corr_images_;
+  std::vector<vil1_memory_image_of<float> > z_corr_images_;
   //cam       corners
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > harris_corners_;
+  std::vector<std::vector<vsol_point_2d_sptr> > harris_corners_;
   //z                  matched corners
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > matched_corners_;
+  std::vector<std::vector<vsol_point_2d_sptr> > matched_corners_;
   bsol_point_index_2d pindx_;
 };
 

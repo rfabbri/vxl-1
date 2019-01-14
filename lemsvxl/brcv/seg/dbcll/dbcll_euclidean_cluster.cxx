@@ -11,7 +11,7 @@
 //#include <bxml/bxml_find.h>
 //
 //
-//void dbcll_xml_write(const vcl_vector<dbcll_cluster_sptr> &all_clusters, vcl_string xml_file)
+//void dbcll_xml_write(const std::vector<dbcll_cluster_sptr> &all_clusters, std::string xml_file)
 //{
 //  bxml_document doc;
 //  bxml_element *root = new bxml_element("dbcll_clusters");
@@ -49,7 +49,7 @@
 //  root->append_text("\n");
 //  
 //  //write to disk  
-//  vcl_ofstream os(xml_file.c_str());
+//  std::ofstream os(xml_file.c_str());
 //  os.precision(15);
 //  bxml_write(os, doc);
 //  os.close();  
@@ -57,7 +57,7 @@
 //}
 //
 //: Write a basic cluster info to xml_file. The indeces and means are not saves because they may be large vectors
-//void dbcll_xml_write(const vcl_vector<unsigned> &sizes, const vcl_vector<double> sse_vector, vcl_string xml_file)
+//void dbcll_xml_write(const std::vector<unsigned> &sizes, const std::vector<double> sse_vector, std::string xml_file)
 //{
 //  bxml_document doc;
 //  bxml_element *root = new bxml_element("dbcll_clusters");
@@ -92,7 +92,7 @@
 //  root->append_text("\n");
 //  
 //  //write to disk  
-//  vcl_ofstream os(xml_file.c_str());
+//  std::ofstream os(xml_file.c_str());
 //  os.precision(15);
 //  bxml_write(os, doc);
 //  os.close();  

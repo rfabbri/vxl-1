@@ -5,7 +5,7 @@
 
 #include<dsm/dsm_pixel_time_series_map_sptr.h>
 
-#include<vcl_vector.h>
+#include<vector>
 
 namespace dsm_create_pixel_time_series_map_sptr_process_globals
 {
@@ -17,8 +17,8 @@ bool dsm_create_pixel_time_series_map_sptr_process_cons(bprb_func_process& pro)
 {
 	//set input/output types
 	using namespace dsm_create_pixel_time_series_map_sptr_process_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 	input_types_[0] = "unsigned";//the feature dimension
 	output_types_[0] = "dsm_pixel_time_series_map_sptr";
 

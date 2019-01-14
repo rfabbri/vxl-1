@@ -19,7 +19,7 @@
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
 
 #include <vgl/vgl_vector_2d.h>
-#include <vcl_string.h>
+#include <string>
 
 // forward declaration
 class dbsksp_xshock_node;
@@ -44,7 +44,7 @@ public:
   void set_id(unsigned int id){ this->id_ = id; }
 
   //: Return name of the class
-  vcl_string is_a() const{ return "dbsksp_xshock_edge"; }
+  std::string is_a() const{ return "dbsksp_xshock_edge"; }
   
   //: Return true if `this' is a terminal edge (A_^1-A_\infty)
   bool is_terminal_edge() const;
@@ -75,7 +75,7 @@ public:
   // UTILITY FUNCTIONS ---------------------------------------------------------
 
   //: write info of the dbskbranch to an output stream
-  virtual vcl_ostream& print(vcl_ostream& os);
+  virtual std::ostream& print(std::ostream& os);
 
   // MEMBER VARIABLES ----------------------------------------------------------
 protected:

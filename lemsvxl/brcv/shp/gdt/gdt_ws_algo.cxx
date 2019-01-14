@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_timer.h>
@@ -20,12 +20,12 @@ void gdt_ws_manager::gdt_propagation (unsigned int n_total_iter)
   dbmsh3d_gdt_vertex_3d* v;
   gdt_shock* S;
 
-  vcl_multimap<double, gdt_2nd_shock_source*>::iterator s2it;
-  vcl_multimap<double, gdt_welm*>::iterator           wit;
-  vcl_multimap<double, gdt_active_vertex*>::iterator  vit;
-  vcl_multimap<double, gdt_shock*>::iterator          sit;
+  std::multimap<double, gdt_2nd_shock_source*>::iterator s2it;
+  std::multimap<double, gdt_welm*>::iterator           wit;
+  std::multimap<double, gdt_active_vertex*>::iterator  vit;
+  std::multimap<double, gdt_shock*>::iterator          sit;
 
-  vul_printf (vcl_cerr, "\n====== Start Wavefront+Shock propagation GDT computation. =====\n");
+  vul_printf (std::cerr, "\n====== Start Wavefront+Shock propagation GDT computation. =====\n");
 
   while (n_prop_iter_ < n_total_iter) {
 
@@ -57,12 +57,12 @@ void gdt_ws_manager::gdt_propagation (unsigned int n_total_iter)
       
     if (n_verbose_)
       if (n_prop_iter_ % 1000 == 0)
-        vul_printf (vcl_cerr, " %d", n_prop_iter_);
+        vul_printf (std::cerr, " %d", n_prop_iter_);
     else if (n_verbose_>1)
-      vul_printf (vcl_cerr, "\nIter %d, ", n_prop_iter_);
+      vul_printf (std::cerr, "\nIter %d, ", n_prop_iter_);
 
     if (n_verbose_>3) {
-      vul_printf (vcl_cerr, "\nIter %d, simtime = %lf, Qs2(%d), Qw(%d), Qv(%d), Qs(%d).\n", 
+      vul_printf (std::cerr, "\nIter %d, simtime = %lf, Qs2(%d), Qw(%d), Qv(%d), Qs(%d).\n", 
                    n_prop_iter_, cur_simT_, (int) Qs2_.size(), (int) Qw_.size(), (int) Qv_.size(), (int) Qs_.size());
       if (n_verbose_ > 3) {
         print_Qs2 ();
@@ -157,7 +157,7 @@ void gdt_ws_manager::gdt_propagation (unsigned int n_total_iter)
   }
 
   double prop_time = time.real();
-  vul_printf (vcl_cerr, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
+  vul_printf (std::cerr, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
                (int) n_prop_iter_, prop_time/1000);
 }
 
@@ -168,7 +168,7 @@ void gdt_ws_manager::Propagate_Qs2_one_step (gdt_welm* Wa, gdt_welm* Wb)
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>1) {
-    vul_printf (vcl_cerr, " Validate an entry in Qs2 Wa %d (%.3f, %.3f) and Wb %d (%.3f, %.3f).\n", //0x%x 
+    vul_printf (std::cerr, " Validate an entry in Qs2 Wa %d (%.3f, %.3f) and Wb %d (%.3f, %.3f).\n", //0x%x 
                  Wa->edge()->id(), Wa->stau(), Wa->etau(), 
                  Wb->edge()->id(), Wb->stau(), Wb->etau());
   }
@@ -315,7 +315,7 @@ void gdt_ws_manager::Propagate_welm (gdt_welm* W)
   if (W->next_event() == WENE_NA) {
     #if GDT_DEBUG_MSG
     if (n_verbose_>3) {
-      vul_printf (vcl_cerr, "  No more event for psrcW %d (%.3f, %.3f). Remove from Qw.\n",
+      vul_printf (std::cerr, "  No more event for psrcW %d (%.3f, %.3f). Remove from Qw.\n",
                    W->edge()->id(), W->stau(), W->etau());
     }
     #endif
@@ -327,26 +327,26 @@ void gdt_ws_manager::Propagate_welm (gdt_welm* W)
     if (n_verbose_>3) {
       char s[32];
       if (W->next_event() == WENE_RF_FPT)
-        vcl_sprintf (s, "WENE_RF_FPT");
+        std::sprintf (s, "WENE_RF_FPT");
       else if (W->next_event() == WENE_SV)
-        vcl_sprintf (s, "WENE_SV");
+        std::sprintf (s, "WENE_SV");
       else if (W->next_event() == WENE_EV)
-        vcl_sprintf (s, "WENE_EV");
+        std::sprintf (s, "WENE_EV");
       else if (W->next_event() == WENE_LE_FPT)
-        vcl_sprintf (s, "WENE_LE_FPT");
+        std::sprintf (s, "WENE_LE_FPT");
       else if (W->next_event() == WENE_RE_FPT)
-        vcl_sprintf (s, "WENE_RE_FPT");
+        std::sprintf (s, "WENE_RE_FPT");
       else if (W->next_event() == WENE_OV)
-        vcl_sprintf (s, "WENE_OV");      
+        std::sprintf (s, "WENE_OV");      
       else
         assert (0);
 
-      vul_printf (vcl_cerr, "  Propagate ");
+      vul_printf (std::cerr, "  Propagate ");
       if (W->is_dege())
-        vul_printf (vcl_cerr, "dege");
+        vul_printf (std::cerr, "dege");
       else if (W->is_psrc())
-        vul_printf (vcl_cerr, "psrc");
-      vul_printf (vcl_cerr, "W %d (%.3f, %.3f) to %s, simT %f.\n", 
+        vul_printf (std::cerr, "psrc");
+      vul_printf (std::cerr, "W %d (%.3f, %.3f) to %s, simT %f.\n", 
                    W->edge()->id(), W->stau(), W->etau(), s, W->simT());
     }
     #endif
@@ -396,7 +396,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
     if (W->_has_nextI_on_edge (eL)) {
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. W already exists.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. W already exists.\n", 
                      W->edge()->id(), W->stau(), W->etau(), eL->id());
       #endif
     }
@@ -407,7 +407,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
         add_to_Qw (nW);
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Advance psrcW %d (%.3f, %.3f) to strike eL %d. Create nW (%.3f, %.3f).\n", 
+          vul_printf (std::cerr, "  Advance psrcW %d (%.3f, %.3f) to strike eL %d. Create nW (%.3f, %.3f).\n", 
                        W->edge()->id(), W->stau(), W->etau(),
                        nW->edge()->id(), nW->stau(), nW->etau());
         #endif       
@@ -420,7 +420,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
     if (W->_has_nextI_on_edge (eR)) {
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. W already exists.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. W already exists.\n", 
                      W->edge()->id(), W->stau(), W->etau(), eR->id());
       #endif
     }
@@ -431,7 +431,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
         add_to_Qw (nW);
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Advance psrcW %d (%.3f, %.3f) to strike eR %d. Create nW (%.3f, %.3f).\n", 
+          vul_printf (std::cerr, "  Advance psrcW %d (%.3f, %.3f) to strike eR %d. Create nW (%.3f, %.3f).\n", 
                        W->edge()->id(), W->stau(), W->etau(), 
                        nW->edge()->id(), nW->stau(), nW->etau());
         #endif 
@@ -447,7 +447,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
       if (W->_has_nextI_on_edge(eR)) {
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike vO. nextI already exists.\n", 
+          vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike vO. nextI already exists.\n", 
                        W->edge()->id(), W->stau(), W->etau());
         #endif
       }
@@ -475,7 +475,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
       if (W->_has_nextI_on_edge (eL)) {
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike vO. nextI already exists.\n", 
+          vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike vO. nextI already exists.\n", 
                        W->edge()->id(), W->stau(), W->etau());
         #endif
       }
@@ -502,7 +502,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
     
     #if GDT_DEBUG_MSG
     if (nW && n_verbose_>3)
-      vul_printf (vcl_cerr, "  Advance psrcW %d (%.3f, %.3f) to strike vO. Create nW %d (%.3f, %.3f).\n", 
+      vul_printf (std::cerr, "  Advance psrcW %d (%.3f, %.3f) to strike vO. Create nW %d (%.3f, %.3f).\n", 
                    W->edge()->id(), W->stau(), W->etau(), nW->edge()->id(), nW->stau(), nW->etau());
     #endif
   break;
@@ -526,7 +526,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
 
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Advance RF %d (%.3f, %.3f) to FPT, nW created.\n", 
+        vul_printf (std::cerr, "  Advance RF %d (%.3f, %.3f) to FPT, nW created.\n", 
                      W->edge()->id(), W->stau(), W->etau());
       #endif 
     }
@@ -553,7 +553,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
 
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Advance RF %d (%.3f, %.3f) to SV, nW created.\n", 
+          vul_printf (std::cerr, "  Advance RF %d (%.3f, %.3f) to SV, nW created.\n", 
                        W->edge()->id(), W->stau(), W->etau());
         #endif 
       }
@@ -589,7 +589,7 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
 
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Advance RF %d (%.3f, %.3f) to EV, nW created.\n", 
+          vul_printf (std::cerr, "  Advance RF %d (%.3f, %.3f) to EV, nW created.\n", 
                        W->edge()->id(), W->stau(), W->etau());
         #endif 
       }
@@ -624,10 +624,10 @@ void gdt_ws_manager::Advance_welm (gdt_welm* W)
   #if GDT_DEBUG_MSG
   if (n_verbose_>3 && W->is_final()) {
     if (W->is_dege())
-      vul_printf (vcl_cerr, "  Finalize_I dege");
+      vul_printf (std::cerr, "  Finalize_I dege");
     else if (W->is_psrc())
-      vul_printf (vcl_cerr, "  Finalize_I psrc");
-    vul_printf (vcl_cerr, "W %d (%.3f, %.3f).\n", W->edge()->id(), W->stau(), W->etau());
+      vul_printf (std::cerr, "  Finalize_I psrc");
+    vul_printf (std::cerr, "W %d (%.3f, %.3f).\n", W->edge()->id(), W->stau(), W->etau());
   }
   #endif
 }
@@ -652,7 +652,7 @@ void gdt_ws_manager::Propagate_Qv_one_step (dbmsh3d_gdt_vertex_3d* v, gdt_welm* 
   if (degeV) {
     #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cerr, "  Qv: Skip the dege S-V vertex %d.\n", v->id());
+      vul_printf (std::cerr, "  Qv: Skip the dege S-V vertex %d.\n", v->id());
     #endif
     return;
   }
@@ -683,7 +683,7 @@ void gdt_ws_manager::Propagate_Qv_one_step (dbmsh3d_gdt_vertex_3d* v, gdt_welm* 
       #if GDT_DEBUG_MSG
       n_V_bnd_RF_++;
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Qv: No next face to create shock from v %d.\n", v->id());
+        vul_printf (std::cerr, "  Qv: No next face to create shock from v %d.\n", v->id());
       #endif
     }
   }

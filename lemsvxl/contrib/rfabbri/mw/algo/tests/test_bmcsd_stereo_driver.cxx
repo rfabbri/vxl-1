@@ -9,7 +9,7 @@
 MAIN( test_bmcsd_stereo_driver )
 {
    bmcsd_curve_stereo_data_path dpath;
-   vcl_string fname_path("/usr/local/moredata/subset/");
+   std::string fname_path("/usr/local/moredata/subset/");
 
   // Hardcoded:
   // bmcsd_data::get_capitol_building_subset(&dpath);
@@ -33,7 +33,7 @@ MAIN( test_bmcsd_stereo_driver )
 
   // Files:
   retval =  bmcsd_view_set::read_txt(
-      fname_path + vcl_string("/mcs_stereo_instances.txt"), 
+      fname_path + std::string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
 
   TEST("frames to match from file", retval, true);
@@ -67,14 +67,14 @@ MAIN( test_bmcsd_stereo_driver )
 //  TEST("Curve stereo interface: one attribute struct per curve", s.curves_3d().size(),
 //  s.curves_3d_attributes().size());
 
-  // s.curves_3d_attributes(); //:< returns ref to a vcl_vector of attributes
+  // s.curves_3d_attributes(); //:< returns ref to a std::vector of attributes
 
   //: Write 3D curves to file. using curve sketcnb
   /* TODO update for 3d curve sketch
   retval = mywritev(
-      fname_path + vcl_string("/out/test-3Dcurve"), ".dat", s.curves_3d());
+      fname_path + std::string("/out/test-3Dcurve"), ".dat", s.curves_3d());
   if(!retval) {
-    vcl_cerr << "Error while trying to write file.\n";
+    std::cerr << "Error while trying to write file.\n";
     abort();
   }
   */

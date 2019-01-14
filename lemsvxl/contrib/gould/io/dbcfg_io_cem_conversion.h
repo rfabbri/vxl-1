@@ -13,10 +13,10 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <cstring>
 #include <structure/dbcfg_contour_fragment_graph.h>
 #include <dbdet/sel/dbdet_edgel.h>
 
@@ -25,9 +25,9 @@
 // -------------------------
 // functions
 // -------------------------
-void dbcfg_cem_to_cfg(dbcfg_contour_fragment_graph<double> &cfg, vcl_string filename);
+void dbcfg_cem_to_cfg(dbcfg_contour_fragment_graph<double> &cfg, std::string filename);
 
-void dbcfg_cfg_to_cem(dbcfg_contour_fragment_graph<double> &cfg, vcl_string filename, int depth = 1);
+void dbcfg_cfg_to_cem(dbcfg_contour_fragment_graph<double> &cfg, std::string filename, int depth = 1);
 
 
 

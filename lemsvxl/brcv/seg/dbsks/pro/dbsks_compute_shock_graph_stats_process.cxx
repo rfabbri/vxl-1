@@ -26,7 +26,7 @@ dbsks_compute_shock_graph_stats_process()
     !parameters()->add("Save result to file: " , "out_stats_file", bpro1_filepath(""))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,27 +46,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_compute_shock_graph_stats_process::
+std::string dbsks_compute_shock_graph_stats_process::
 name()
 { 
   return "Compute shock graph statistics"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_compute_shock_graph_stats_process::
+std::vector< std::string > dbsks_compute_shock_graph_stats_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_shock");
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_compute_shock_graph_stats_process::
+std::vector< std::string > dbsks_compute_shock_graph_stats_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -91,8 +91,8 @@ execute()
 {  
   if ( input_data_.size() != 1 )
   {
-    vcl_cerr << "In dbsks_compute_shock_graph_stats_process::execute() - "
-      << "not exactly one input frame" << vcl_endl;
+    std::cerr << "In dbsks_compute_shock_graph_stats_process::execute() - "
+      << "not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -121,18 +121,18 @@ execute()
   dbsksp_shock_graph_sptr ref_graph = shock_storage->shock_graph();
 
   // Load list of shock graphs used as data to compute statistics
-  vcl_vector<vcl_string > file_list;
+  std::vector<std::string > file_list;
   this->parse_lines_from_file(shock_graph_list.path, file_list);
 
   // list of loaded shock graphs
-  vcl_vector<dbsksp_shock_graph_sptr > loaded_shock_graphs;
+  std::vector<dbsksp_shock_graph_sptr > loaded_shock_graphs;
   for (unsigned i =0; i < file_list.size(); ++i)
   {
-    vcl_string shock_graph_file_path = shock_graph_folder.path + "\\" + file_list[i];
+    std::string shock_graph_file_path = shock_graph_folder.path + "\\" + file_list[i];
     dbsksp_shock_graph_sptr graph;
     if (!x_read(shock_graph_file_path, graph))
     {
-      vcl_cout << "ERROR: Unable to loaded shock graph file: " 
+      std::cout << "ERROR: Unable to loaded shock graph file: " 
         << shock_graph_file_path << ".\n";
     }
     loaded_shock_graphs.push_back(graph);
@@ -173,18 +173,18 @@ finish()
 
 
 bool dbsks_compute_shock_graph_stats_process::
-parse_lines_from_file(vcl_string fname, vcl_vector<vcl_string>& strings)
+parse_lines_from_file(std::string fname, std::vector<std::string>& strings)
 {
-  vcl_ifstream fp(fname.c_str());
+  std::ifstream fp(fname.c_str());
   if (!fp) {
-    vcl_cout<<" In dborl_utilities - parse_file(): Unable to Open " << fname << vcl_endl;
+    std::cout<<" In dborl_utilities - parse_file(): Unable to Open " << fname << std::endl;
     return false;
   }
 
   while (!fp.eof()) {
     char buffer[1000];
     fp.getline(buffer, 1000);
-    vcl_string name = buffer;
+    std::string name = buffer;
     if (name.size() > 0) {
       strings.push_back(name);
     }

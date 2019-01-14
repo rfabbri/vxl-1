@@ -14,9 +14,9 @@
 #include "vox_assoc_geom_and_ccm_model_params.h"
 #include "vox_assoc_geom_and_ccm_model_params_sptr.h"
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " <<
-        params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " <<
+        params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -55,13 +55,13 @@ int main(int argc, char *argv[]) {
     {
         vul_file::make_directory(params->output_ccm_dir_());
     }
-    vcl_string dest_file_name = params->output_ccm_dir_() + "/object_ccm_overall_model.xml";
+    std::string dest_file_name = params->output_ccm_dir_() + "/object_ccm_overall_model.xml";
     bool copy_status = buld_copy_file(params->input_ccm_(), dest_file_name);
     if(!copy_status)
     {
-        vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;
-        vcl_cerr << params->input_ccm_() << vcl_endl;
-        vcl_cerr << dest_file_name << vcl_endl;
+        std::cerr << "Association cannot be completed. Check paths:" << std::endl;
+        std::cerr << params->input_ccm_() << std::endl;
+        std::cerr << dest_file_name << std::endl;
         if(vul_file_exists(params->output_ccm_dir_()))
         {
             vpl_unlink(dest_file_name.c_str());
@@ -74,13 +74,13 @@ int main(int argc, char *argv[]) {
     {
         vul_file::make_directory(params->output_geom_dir_());
     }
-    vcl_string dest_file_name2 = params->output_geom_dir_() + "/object_geom_model.xml";
+    std::string dest_file_name2 = params->output_geom_dir_() + "/object_geom_model.xml";
     copy_status = buld_copy_file(params->input_geom_(), dest_file_name2);
     if(!copy_status)
     {
-        vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;
-        vcl_cerr << params->input_geom_() << vcl_endl;
-        vcl_cerr << dest_file_name2 << vcl_endl;
+        std::cerr << "Association cannot be completed. Check paths:" << std::endl;
+        std::cerr << params->input_geom_() << std::endl;
+        std::cerr << dest_file_name2 << std::endl;
         if(vul_file_exists(params->output_geom_dir_()))
         {
             vpl_unlink(dest_file_name2.c_str());
@@ -91,12 +91,12 @@ int main(int argc, char *argv[]) {
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

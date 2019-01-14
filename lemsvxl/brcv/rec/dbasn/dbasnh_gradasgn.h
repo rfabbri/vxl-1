@@ -72,16 +72,16 @@ protected:
   bool use_DP_cost_;
 
   //: table to store edit distance: match G <-> g curves
-  vcl_vector<vcl_vector<double> > Gg_ed_dist_;
+  std::vector<std::vector<double> > Gg_ed_dist_;
 
   //: table to store Euclidean distance: match G <-> g curves
-  vcl_vector<vcl_vector<double> > Gg_Eu_dist_;
+  std::vector<std::vector<double> > Gg_Eu_dist_;
 
   //: table to store edit distance: match G <-> g curves flip
-  vcl_vector<vcl_vector<double> > Gg_ed_dist_f_;
+  std::vector<std::vector<double> > Gg_ed_dist_f_;
 
   //: table to store Euclidean distance: match G <-> g curves flip
-  vcl_vector<vcl_vector<double> > Gg_Eu_dist_f_;
+  std::vector<std::vector<double> > Gg_Eu_dist_f_;
 
   vnl_matrix_fixed<double,3,3>    R_; 
   vnl_vector_fixed<double,3>      T_; 
@@ -140,10 +140,10 @@ public:
   }
 
   //: table to store edit distance: match G <-> g curves
-  vcl_vector<vcl_vector<double> >& Gg_ed_dist () {
+  std::vector<std::vector<double> >& Gg_ed_dist () {
     return Gg_ed_dist_;
   }
-  vcl_vector<double>& Gg_ed_dist (const unsigned int i) {
+  std::vector<double>& Gg_ed_dist (const unsigned int i) {
     return Gg_ed_dist_[i];
   }
   const double Gg_ed_dist (const unsigned int i, const unsigned int j) const {
@@ -151,10 +151,10 @@ public:
   }
 
   //: table to store Euclidean distance: match G <-> g curves
-  vcl_vector<vcl_vector<double> >& Gg_Eu_dist() {
+  std::vector<std::vector<double> >& Gg_Eu_dist() {
     return Gg_Eu_dist_;
   }
-  vcl_vector<double>& Gg_Eu_dist (const unsigned int i) {
+  std::vector<double>& Gg_Eu_dist (const unsigned int i) {
     return Gg_Eu_dist_[i];
   }
   const double Gg_Eu_dist (const unsigned int i, const unsigned int j) const {
@@ -162,10 +162,10 @@ public:
   }
 
   //: table to store edit distance: match G <-> g curves flip
-  vcl_vector<vcl_vector<double> >& Gg_ed_dist_f() {
+  std::vector<std::vector<double> >& Gg_ed_dist_f() {
     return Gg_ed_dist_f_;
   }
-  vcl_vector<double>& Gg_ed_dist_f (const unsigned int i) {
+  std::vector<double>& Gg_ed_dist_f (const unsigned int i) {
     return Gg_ed_dist_f_[i];
   }
   const double Gg_ed_dist_f (const unsigned int i, const unsigned int j) const {
@@ -173,10 +173,10 @@ public:
   }
 
   //: table to store Euclidean distance: match G <-> g curves flip
-  vcl_vector<vcl_vector<double> >& Gg_Eu_dist_f() {
+  std::vector<std::vector<double> >& Gg_Eu_dist_f() {
     return Gg_Eu_dist_f_;
   }
-  vcl_vector<double>& Gg_Eu_dist_f (const unsigned int i) {
+  std::vector<double>& Gg_Eu_dist_f (const unsigned int i) {
     return Gg_Eu_dist_f_[i];
   }
   const double Gg_Eu_dist_f (const unsigned int i, const unsigned int j) const {
@@ -207,12 +207,12 @@ public:
   }
 
   //####### Data query functions ####### 
-  double get_norm_row_dist (vcl_vector<vcl_vector<double> >& table,
+  double get_norm_row_dist (std::vector<std::vector<double> >& table,
                             const int r, const int c);
 
   //####### Data modification functions ####### 
   void init_table (const int Gne, const int gne) {
-    vcl_vector<double> dummy;
+    std::vector<double> dummy;
     
     for (int i=0; i<Gne; i++) {
       //Table to store edit distance: match G <-> g curves

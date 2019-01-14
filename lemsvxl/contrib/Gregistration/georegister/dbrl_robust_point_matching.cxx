@@ -4,7 +4,7 @@
 #include "dbrl_feature_point_tangent.h"
 #include "dbrl_feature_point_tangent_curvature.h"
 #include "dbrl_feature_point_tangent_curvature_groupings.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_transpose.h>
 //#include <dbgl/algo/dbgl_circ_arc.h>
 //#include <dbgl/algo/dbgl_closest_point.h>
@@ -26,8 +26,8 @@ dbrl_robust_point_matching::dbrl_robust_point_matching()
     }
 
 vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_weights(double T,
-                                                          vcl_vector<dbrl_feature_sptr> f1,
-                                                          vcl_vector<dbrl_feature_sptr> f2)
+                                                          std::vector<dbrl_feature_sptr> f1,
+                                                          std::vector<dbrl_feature_sptr> f2)
     {
         assert(f1.size()>0);
         assert(f2.size()>0);
@@ -83,7 +83,7 @@ vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_weights(do
         double *d_data_block=d.data_block();
         for(unsigned i=0;i<static_cast<unsigned>(m);i++)
             for(unsigned j=0;j<static_cast<unsigned>(n);j++)
-                d_data_block[i*n+j]=vcl_exp(-vcl_sqrt((f1x[i]-f2x[j])*(f1x[i]-f2x[j])+(f1y[i]-f2y[j])*(f1y[i]-f2y[j]))/T);
+                d_data_block[i*n+j]=std::exp(-std::sqrt((f1x[i]-f2x[j])*(f1x[i]-f2x[j])+(f1y[i]-f2y[j])*(f1y[i]-f2y[j]))/T);
 
         delete f1x;
         delete f1y;
@@ -100,18 +100,18 @@ double dbrl_robust_point_matching::distPointLineSegment(double ptx,double pty,
 {
 
     //Ken: divide is slow.
-    double l = vcl_sqrt((lendy-lstarty)*(lendy-lstarty) + 
+    double l = std::sqrt((lendy-lstarty)*(lendy-lstarty) + 
         (lendx-lstartx)*(lendx-lstartx));
 
     double t = ((pty-lstarty)*(lendy-lstarty) + 
         (           ptx-lstartx)*(lendx-lstartx))/l;
 
     if (t<0)
-        return vcl_sqrt((pty-lstarty)*(pty-lstarty) +(ptx-lstartx)*(ptx-lstartx));
+        return std::sqrt((pty-lstarty)*(pty-lstarty) +(ptx-lstartx)*(ptx-lstartx));
     else if (t>l)
-        return vcl_sqrt((pty-lendy)*(pty-lendy) + (ptx-lendx)*(ptx-lendx));
+        return std::sqrt((pty-lendy)*(pty-lendy) + (ptx-lendx)*(ptx-lendx));
     else
-        return vcl_fabs((pty-lstarty)*(lendx-lstartx) - (ptx-lstartx)*(lendy-lstarty))/l;
+        return std::fabs((pty-lstarty)*(lendx-lstartx) - (ptx-lstartx)*(lendy-lstarty))/l;
 
 }
 
@@ -126,15 +126,15 @@ double dbrl_robust_point_matching:: projected_distance (double x1,double y1,doub
 
     double d_e=(x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
 
-    double startx2=x2-1.0*vcl_sin(theta2);
-    double starty2=y2+1.0*vcl_cos(theta2);
-    double endx2=x2+1.0*vcl_sin(theta2);
-    double endy2=y2-1.0*vcl_cos(theta2);
+    double startx2=x2-1.0*std::sin(theta2);
+    double starty2=y2+1.0*std::cos(theta2);
+    double endx2=x2+1.0*std::sin(theta2);
+    double endy2=y2-1.0*std::cos(theta2);
 
-    double l = vcl_sqrt((endy2-starty2)*(endy2-starty2) + 
+    double l = std::sqrt((endy2-starty2)*(endy2-starty2) + 
                         (endx2-startx2)*(endx2-startx2));
 
-    double d_p= vcl_fabs((y1-starty2)*(endx2-startx2) - (x1-startx2)*(endy2-starty2))/l;
+    double d_p= std::fabs((y1-starty2)*(endx2-startx2) - (x1-startx2)*(endy2-starty2))/l;
     double d_theta=(theta1-theta2)*(theta1-theta2);
 
     double d_t=(d_e/(2*sigma_e*sigma_e)+d_p*d_p/(2*sigma_p*sigma_p)+0.5*d_theta/(2*sigma_t*sigma_t));
@@ -145,8 +145,8 @@ double dbrl_robust_point_matching:: projected_distance (double x1,double y1,doub
 
 
 vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_point_tangent_weights(double T,
-                                                          vcl_vector<dbrl_feature_sptr> f1,
-                                                          vcl_vector<dbrl_feature_sptr> f2)
+                                                          std::vector<dbrl_feature_sptr> f1,
+                                                          std::vector<dbrl_feature_sptr> f2)
     {
         assert(f1.size()>0);
         assert(f2.size()>0);
@@ -191,20 +191,20 @@ vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_point_tang
                     f2x[i]=pt->location()[0];
                     f2y[i]=pt->location()[1];
                     tangent2[i]=pt->dir();
-                    lstartx[i]=f2x[i]-1.0*vcl_sin(tangent2[i]);
-                    lstarty[i]=f2y[i]+1.0*vcl_cos(tangent2[i]);
-                    lendx[i]=f2x[i]+1.0*vcl_sin(tangent2[i]);
-                    lendy[i]=f2y[i]-1.0*vcl_cos(tangent2[i]);
+                    lstartx[i]=f2x[i]-1.0*std::sin(tangent2[i]);
+                    lstarty[i]=f2y[i]+1.0*std::cos(tangent2[i]);
+                    lendx[i]=f2x[i]+1.0*std::sin(tangent2[i]);
+                    lendy[i]=f2y[i]-1.0*std::cos(tangent2[i]);
                     }
                 if(dbrl_feature_point_tangent_curvature* pt=dynamic_cast<dbrl_feature_point_tangent_curvature*>(f2[i].ptr()))
                 {
                     f2x[i]=pt->location()[0];
                     f2y[i]=pt->location()[1];
                     tangent2[i]=pt->dir();
-                    lstartx[i]=f2x[i]-1.0*vcl_sin(tangent2[i]);
-                    lstarty[i]=f2y[i]+1.0*vcl_cos(tangent2[i]);
-                    lendx[i]=f2x[i]+1.0*vcl_sin(tangent2[i]);
-                    lendy[i]=f2y[i]-1.0*vcl_cos(tangent2[i]);
+                    lstartx[i]=f2x[i]-1.0*std::sin(tangent2[i]);
+                    lstarty[i]=f2y[i]+1.0*std::cos(tangent2[i]);
+                    lendx[i]=f2x[i]+1.0*std::sin(tangent2[i]);
+                    lendy[i]=f2y[i]-1.0*std::cos(tangent2[i]);
                 }
 
             }
@@ -218,8 +218,8 @@ vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_point_tang
                 double dist=projected_distance(f1x[i],f1y[i], tangent1[i], 
                                                   f2x[j],f2y[j], tangent2[j]);
 
-               //     vcl_fabs((f1x[i]-f2x[j])*vcl_sin(tangent1[i])-(f1y[i]-f2y[j])*vcl_cos(tangent1[i]));
-                d_data_block[i*n+j]=vcl_exp(-dist/(T*T));
+               //     std::fabs((f1x[i]-f2x[j])*std::sin(tangent1[i])-(f1y[i]-f2y[j])*std::cos(tangent1[i]));
+                d_data_block[i*n+j]=std::exp(-dist/(T*T));
 
                 }
 
@@ -234,8 +234,8 @@ vnl_matrix<double> dbrl_robust_point_matching::compute_correspondence_point_tang
 
 vnl_matrix<double> 
 dbrl_robust_point_matching::compute_correspondence_point_tangent_curvature_weights(double T,
-                                                                                   vcl_vector<dbrl_feature_sptr> f1,
-                                                                                   vcl_vector<dbrl_feature_sptr> f2)
+                                                                                   std::vector<dbrl_feature_sptr> f1,
+                                                                                   std::vector<dbrl_feature_sptr> f2)
     {
         assert(f1.size()>0);
         assert(f2.size()>0);
@@ -279,10 +279,10 @@ dbrl_robust_point_matching::compute_correspondence_point_tangent_curvature_weigh
         //        f2x[i]=pt->location()[0];
         //        f2y[i]=pt->location()[1];
         //        tangent2[i]=pt->dir();
-        //        lstartx[i]=f2x[i]-1.0*vcl_sin(tangent2[i]);
-        //        lstarty[i]=f2y[i]+1.0*vcl_cos(tangent2[i]);
-        //        lendx[i]=f2x[i]+1.0*vcl_sin(tangent2[i]);
-        //        lendy[i]=f2y[i]-1.0*vcl_cos(tangent2[i]);
+        //        lstartx[i]=f2x[i]-1.0*std::sin(tangent2[i]);
+        //        lstarty[i]=f2y[i]+1.0*std::cos(tangent2[i]);
+        //        lendx[i]=f2x[i]+1.0*std::sin(tangent2[i]);
+        //        lendy[i]=f2y[i]-1.0*std::cos(tangent2[i]);
         //        }
         //    }
         //}
@@ -305,17 +305,17 @@ dbrl_robust_point_matching::compute_correspondence_point_tangent_curvature_weigh
                     else
                     {
                         double tangent2=pt->dir();
-                        double startx=x2-1.0*vcl_sin(tangent2);
-                        double starty=y2+1.0*vcl_cos(tangent2);
-                        double endx=x2+1.0*vcl_sin(tangent2);
-                        double endy=y2-1.0*vcl_cos(tangent2);
+                        double startx=x2-1.0*std::sin(tangent2);
+                        double starty=y2+1.0*std::cos(tangent2);
+                        double endx=x2+1.0*std::sin(tangent2);
+                        double endy=y2-1.0*std::cos(tangent2);
                         dist=distPointLineSegment (f1x[i],f1y[i],startx, starty,endx,endy);
                     }
                 }
                 //double dist=distPointLineSegment (f1x[i],f1y[i], lstartx[j], lstarty[j], 
                 //    lendx[j],lendy[j]);
-                ////     vcl_fabs((f1x[i]-f2x[j])*vcl_sin(tangent1[i])-(f1y[i]-f2y[j])*vcl_cos(tangent1[i]));
-                d_data_block[i*n+j]=vcl_exp(-dist/T);
+                ////     std::fabs((f1x[i]-f2x[j])*std::sin(tangent1[i])-(f1y[i]-f2y[j])*std::cos(tangent1[i]));
+                d_data_block[i*n+j]=std::exp(-dist/T);
             }
             delete [] f1x;
             delete [] f1y;
@@ -330,15 +330,15 @@ dbrl_robust_point_matching::compute_correspondence_point_tangent_curvature_weigh
 
 vnl_matrix<double> 
 dbrl_robust_point_matching::compute_neighborhood_weights(double T,
-                                                         vcl_vector<dbrl_feature_sptr> f1,
-                                                         vcl_vector<dbrl_feature_sptr> f2, 
+                                                         std::vector<dbrl_feature_sptr> f1,
+                                                         std::vector<dbrl_feature_sptr> f2, 
                                                          vnl_matrix<double> dist)
                                                          
     {
         //if(type=="Euclidean")
         //{
         vnl_matrix<double> dnew=dist;
-        //vcl_cout<<"\n Before : \n"<<d;
+        //std::cout<<"\n Before : \n"<<d;
         for(unsigned i=0;i<dist.rows();i++)
         {
             if(dbrl_feature_point_tangent_curvature_groupings* pt1
@@ -364,7 +364,7 @@ dbrl_robust_point_matching::compute_neighborhood_weights(double T,
                 }
             }
         }
-        //vcl_cout<<"\n After : \n"<<dnew;
+        //std::cout<<"\n After : \n"<<dnew;
         return dnew;
 
         //}

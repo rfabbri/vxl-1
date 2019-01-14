@@ -41,26 +41,26 @@ vox_train_xshock_ccm_model_process()
             //!parameters()->add("Base size for xgraph (square root of area, in pixels):", "-base_xgraph_size", float(64)) ||
 
             !parameters()->add("Index file path", "-index_file", bpro1_filepath("")) ||
-            !parameters()->add("Input image extension", "-image_ext", vcl_string(".jpg")) ||
+            !parameters()->add("Input image extension", "-image_ext", std::string(".jpg")) ||
             // edge folder
 
-            !parameters()->add("edgemap extension (to add to image name):", "-edgemap_ext", vcl_string("_linked.png")) ||
-            !parameters()->add("edgeorient extension (to add to image name):", "-edgeorient_ext", vcl_string("_linked_orient.txt")) ||
-            !parameters()->add("Edgemap/orient VOX label", "-edge_vox", vcl_string("weizmann_pyramid_gray_linked_edge_img_orient")) ||
+            !parameters()->add("edgemap extension (to add to image name):", "-edgemap_ext", std::string("_linked.png")) ||
+            !parameters()->add("edgeorient extension (to add to image name):", "-edgeorient_ext", std::string("_linked_orient.txt")) ||
+            !parameters()->add("Edgemap/orient VOX label", "-edge_vox", std::string("weizmann_pyramid_gray_linked_edge_img_orient")) ||
             // Category-specific info
-            //!parameters()->add("Object category:", "-category", vcl_string("applelogos")) ||
+            //!parameters()->add("Object category:", "-category", std::string("applelogos")) ||
             !parameters()->add("File containing list of training positive object names", "-list_pos_images", bpro1_filepath("/vision/scratch/firat/weizmann_xshock/gt-objects.txt")) ||
             !parameters()->add("File containing list of training negative object names", "-list_neg_images", bpro1_filepath("/vision/scratch/firat/weizmann_xshock/gt-objects.txt")) ||
             !parameters()->add("File containing list of objects with groundtruth xgraphs:", "-list_gt_xgraph", bpro1_filepath("/vision/scratch/firat/weizmann_xshock/gt-objects.txt")) ||
-            !parameters()->add("Groundtruth xgraph VOX label", "-xgraph_vox", vcl_string("weizmann_gt_xgraph")) ||
-            !parameters()->add("Prototype xgraph object", "-prototype_xgraph_file", vcl_string("horse001")) ||
+            !parameters()->add("Groundtruth xgraph VOX label", "-xgraph_vox", std::string("weizmann_gt_xgraph")) ||
+            !parameters()->add("Prototype xgraph object", "-prototype_xgraph_file", std::string("horse001")) ||
             !parameters()->add("Root vertex id:", "-root_vid", unsigned(1)) ||
             !parameters()->add("Positive output data file:", "-pos_output_file", bpro1_filepath("")) ||
             !parameters()->add("Negative output data file:", "-neg_output_file", bpro1_filepath(""))
             //
     )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -80,27 +80,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string vox_train_xshock_ccm_model_process::
+std::string vox_train_xshock_ccm_model_process::
 name()
 { 
     return "Train xshock ccm model (vox)";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vox_train_xshock_ccm_model_process::
+std::vector< std::string > vox_train_xshock_ccm_model_process::
 get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vox_train_xshock_ccm_model_process::
+std::vector< std::string > vox_train_xshock_ccm_model_process::
 get_output_type()
 {
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.clear();
     return to_return;
 }

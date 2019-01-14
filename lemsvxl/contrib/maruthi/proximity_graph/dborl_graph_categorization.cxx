@@ -1,21 +1,21 @@
 #include <proximity_graph/dborl_graph_categorization.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_numeric.h>
-#include <vcl_map.h>
-#include <vcl_cfloat.h>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <cmath>
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <cfloat>
 #include <vnl/vnl_vector.h>
 #include <boost/graph/graphml.hpp>
 
 void dborl_graph_categorization::graph_categorize(
-    vcl_string xml_graph_file,
-    vcl_string exemplar_dataset_file,
-    vcl_string query_dataset_file,
-    vcl_string query_label_file,
-    vcl_string stats_file,
+    std::string xml_graph_file,
+    std::string exemplar_dataset_file,
+    std::string query_dataset_file,
+    std::string query_label_file,
+    std::string stats_file,
     double beta)
 {
 
@@ -26,7 +26,7 @@ void dborl_graph_categorization::graph_categorize(
                query_label_file );
 
     // open stats file
-    vcl_ofstream stats_opener(stats_file.c_str(),std::ios::app);
+    std::ofstream stats_opener(stats_file.c_str(),std::ios::app);
 
     // Loop over query matrix
     unsigned int num_rows = query_sim_matrix_.rows();
@@ -69,14 +69,14 @@ void dborl_graph_categorization::graph_categorize(
         rebuild_graph(total_matrix,beta);
 
         // do the categorization
-        vcl_string category=perform_categorization();
+        std::string category=perform_categorization();
 
         // write out stats
         stats_opener<<"query: "
                     << queries_[rows]
                     <<" category: "
                     << category
-                    << vcl_endl;
+                    << std::endl;
 
     }
 
@@ -85,19 +85,19 @@ void dborl_graph_categorization::graph_categorize(
  
 }
 
-void dborl_graph_categorization::read_files( vcl_string exemplar_dataset_file, 
-                                             vcl_string query_dataset_file,
-                                             vcl_string query_label_file)
+void dborl_graph_categorization::read_files( std::string exemplar_dataset_file, 
+                                             std::string query_dataset_file,
+                                             std::string query_label_file)
 {
     // Create a file stream opener
-    vcl_ifstream file_opener;
-    vcl_string temp;
+    std::ifstream file_opener;
+    std::string temp;
 
     // get number of nodes
     file_opener.open(exemplar_dataset_file.c_str());
     
     number_of_nodes_=0;
-    vcl_string line;
+    std::string line;
     while(file_opener)
     {
 
@@ -169,8 +169,8 @@ void dborl_graph_categorization::read_files( vcl_string exemplar_dataset_file,
     
 }
 
-void dborl_graph_categorization::read_graph(vcl_string xml_graph_file,
-                                            vcl_string query_name)
+void dborl_graph_categorization::read_graph(std::string xml_graph_file,
+                                            std::string query_name)
 {
 
     // -------------------- Read in graph file -----------------------------
@@ -184,13 +184,13 @@ void dborl_graph_categorization::read_graph(vcl_string xml_graph_file,
     dp.property("category",get(dborl_proximity_graph::vertex_cat_t(),
                                proximity_graph_));
 
-    vcl_ifstream ifile(xml_graph_file.c_str());
+    std::ifstream ifile(xml_graph_file.c_str());
     read_graphml(ifile,proximity_graph_,dp);
     ifile.close();
 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
         ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
     // Loop thru all nodes
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
@@ -258,7 +258,7 @@ void dborl_graph_categorization::rebuild_graph(
                         if (  (dij*dij) 
                               > ((dik*dik) + 
                                  (djk*djk) +
-                                 2*vcl_sqrt(1-(beta*beta))*
+                                 2*std::sqrt(1-(beta*beta))*
                                  (dik*djk)  ))
                         {
                             flag=false;
@@ -268,7 +268,7 @@ void dborl_graph_categorization::rebuild_graph(
                     else
                     {
                         // Beta_ greater than 1 case
-                        if ( dij*dij > vcl_max(
+                        if ( dij*dij > std::max(
                                  ((dik*dik)*((2/beta)-1))+(djk*djk)
                                  ,(dik*dik)+(((2/beta)-1)*(djk*djk)) ))
                         {
@@ -306,15 +306,15 @@ void dborl_graph_categorization::rebuild_graph(
     }
 
     // Print out minimal information
-    vcl_cout << "After Embedding  "<< vcl_endl;
-    vcl_cout << "Number of Edges: "<< num_edges(proximity_graph_)<<vcl_endl;
-    vcl_cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<vcl_endl;
-    vcl_cout <<vcl_endl;
+    std::cout << "After Embedding  "<< std::endl;
+    std::cout << "Number of Edges: "<< num_edges(proximity_graph_)<<std::endl;
+    std::cout << "Number of Nodes: "<< num_vertices(proximity_graph_)<<std::endl;
+    std::cout <<std::endl;
 
 
 }
 
-vcl_string dborl_graph_categorization::perform_categorization()
+std::string dborl_graph_categorization::perform_categorization()
 {
 
     //Look through all adjacent vertices of the graph
@@ -332,7 +332,7 @@ vcl_string dborl_graph_categorization::perform_categorization()
         cat_name = get(dborl_proximity_graph::vertex_cat_t(), proximity_graph_);
 
     // neighbors of edge in question
-    vcl_map<vcl_string,vcl_vector<double> > neighbors;
+    std::map<std::string,std::vector<double> > neighbors;
        
     for (tie(ai, ai_end) = 
              adjacent_vertices(vertex_objects_.back(), 
@@ -347,15 +347,15 @@ vcl_string dborl_graph_categorization::perform_categorization()
       
     //create iterator
     unsigned int count_neighbors(0);
-    vcl_string neighbor_index;
+    std::string neighbor_index;
     double mean(DBL_MAX);
 
-    vcl_map<vcl_string,vcl_vector<double> >::iterator it;
+    std::map<std::string,std::vector<double> >::iterator it;
     for (it = neighbors.begin() ; it != neighbors.end() ; it++)
     {
         
         unsigned int temp = (it->second).size();
-        double temp_mean = vcl_accumulate((it->second).begin(),
+        double temp_mean = std::accumulate((it->second).begin(),
                                           (it->second).end(),
                                           0.0f)/(it->second).size();
 

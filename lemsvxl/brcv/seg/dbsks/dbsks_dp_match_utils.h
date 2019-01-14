@@ -19,9 +19,9 @@
 //#include <vnl/vnl_vector.h>
 //#include <vgl/vgl_point_2d.h>
 //#include <vgl/vgl_vector_3d.h>
-//#include <vcl_string.h>
+//#include <string>
 //#include <dbsksp/dbsksp_xshock_node.h>
-//#include <vcl_vector.h>
+//#include <vector>
 
 
 #include <dbsks/dbsks_dp_match.h>
@@ -33,12 +33,12 @@
 //: Construct a graph from a list of states for each of its edges
 dbsksp_shock_graph_sptr dbsks_construct_graph(
   dbsks_dp_match_sptr dp_engine,
-  vcl_map<unsigned int, vgl_point_2d<int > >& graph_i_state_map);
+  std::map<unsigned int, vgl_point_2d<int > >& graph_i_state_map);
 
 //: 
 dbsksp_shock_graph_sptr dbsks_construct_graph(
   dbsks_dp_match_sptr dp_engine,
-  vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map);
+  std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map);
 
 
 

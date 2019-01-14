@@ -17,7 +17,7 @@ void dsm2_manager_pixels<pixelT, smT>::b_write( vsl_b_ostream& os ) const
     //write the number of pixels
     vsl_b_write(os, this->pixel_state_machine_map.size());
 
-    typename vcl_map<vgl_point_2d<pixelT>, dsm2_state_machine_base_sptr,
+    typename std::map<vgl_point_2d<pixelT>, dsm2_state_machine_base_sptr,
         dsm_vgl_point_2d_coord_compare<pixelT> >::const_iterator
         p_itr, p_end = this->pixel_state_machine_map.end();
 
@@ -47,10 +47,10 @@ void dsm2_manager_pixels<pixelT, smT>::b_read( vsl_b_istream& is )
     case 1:
         {
             //read the number of pixels
-            vcl_size_t nnodes;
+            std::size_t nnodes;
             vsl_b_read(is, nnodes);
 
-            for( vcl_size_t n = 0; n < nnodes; ++n )
+            for( std::size_t n = 0; n < nnodes; ++n )
             {
                 //read the point
                 vgl_point_2d<pixelT> pt;
@@ -66,7 +66,7 @@ void dsm2_manager_pixels<pixelT, smT>::b_read( vsl_b_istream& is )
         }//end case 1
     default:
         {
-            vcl_cerr << "ERROR: dsm2_manager_pixels::b_read() -- unknown version number." << vcl_flush;
+            std::cerr << "ERROR: dsm2_manager_pixels::b_read() -- unknown version number." << std::flush;
             return;
         }//end default
     }//end switch(v)

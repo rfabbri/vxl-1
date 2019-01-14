@@ -6,8 +6,8 @@
 // \author  Philip Klein
 // \date    April 17, 2006
 #include <mpi.h>
-#include <vcl_ctime.h>
-#include <vcl_vector.h>
+#include <ctime>
+#include <vector>
 #include <vgl/xio/vgl_xio_box_3d.h>
 #include <vgl/xio/vgl_xio_vector_3d.h>
 #include <proc/bioproc_splr_filtering_proc.h>
@@ -30,7 +30,7 @@
 #include <xscan/xscan_scan.h>
 #include <xscan/xscan_dummy_scan.h>
 #include <vsl/vsl_basic_xml_element.h>
-#include <vcl_sstream.h>
+#include <sstream>
 //#include <proc/biocluster/biocluster_volpart_filtering_proc.h> //to get BioClusterException, some other
 
 #define TRACE_ERROR     0
@@ -47,7 +47,7 @@ private:
   // Bioproc error type
   BioClusterError m_error;
   // Exception message
-  vcl_string m_message;
+  std::string m_message;
   // MPI specific error.
   int m_mpierror;
   // System specific error code.
@@ -57,7 +57,7 @@ public:
   // Default is thrown when a container tries to fetch the filter response on non-LeadProcessor
   BioClusterException2() : m_error (Incomplete), m_message ("Response field is only complete on processor 0"), m_mpierror (0), m_syserror (0) {}
   // Customizable exception instance
-  BioClusterException2(BioClusterError err, vcl_string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
+  BioClusterException2(BioClusterError err, std::string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
   
   // Property accessors
   const char* GetMessage() { return m_message.data (); }
@@ -68,15 +68,15 @@ public:
 
 typedef biob_worldpt_field<xmvg_filter_response<double> >::values_t response_field_values_t;
 
-void collect_responses(int num_filters, vcl_string output_filename_stem, int num_processors, response_field_values_t & response_field_values){
+void collect_responses(int num_filters, std::string output_filename_stem, int num_processors, response_field_values_t & response_field_values){
   for (int proc_number = 0; proc_number < num_processors; ++proc_number){
     //get the filename for the given processor number
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << output_filename_stem << proc_number;
     //access the file
-    vcl_ifstream response_file(ss.str().c_str());
+    std::ifstream response_file(ss.str().c_str());
     while (response_file){
-      vcl_string buf;
+      std::string buf;
       // get a line
       getline(response_file, buf);
       if (buf == "" || !response_file)
@@ -98,23 +98,23 @@ void collect_responses(int num_filters, vcl_string output_filename_stem, int num
 }//end of procedure
 
 struct run_args {
-  vcl_vector<vgl_vector_3d<double> > &orients_;
+  std::vector<vgl_vector_3d<double> > &orients_;
   double f_radius_, f_length_;
   vgl_point_3d<double> f_centre_;
   vgl_box_3d<double> & box_;
   imgr_skyscan_log& log_;
   double resolution_;
   unsigned which_processor_, num_processors_;
-  vcl_string output_filename_stem_;
-  vcl_ofstream * xml_response_file_;
+  std::string output_filename_stem_;
+  std::ofstream * xml_response_file_;
   vsl_basic_xml_element main_xml_element_;
-  vcl_string bin_scan_file_;
-  run_args(vcl_vector<vgl_vector_3d<double> > &orients,
+  std::string bin_scan_file_;
+  run_args(std::vector<vgl_vector_3d<double> > &orients,
            double f_radius, double f_length, vgl_point_3d<double> f_centre,
            vgl_box_3d<double> & box, imgr_skyscan_log& log,
            double resolution, unsigned which_processor, unsigned num_processors,
-           vcl_string output_filename_stem, vcl_ofstream * xml_response_file,
-           vsl_basic_xml_element main_xml_element,   vcl_string bin_scan_file) :
+           std::string output_filename_stem, std::ofstream * xml_response_file,
+           vsl_basic_xml_element main_xml_element,   std::string bin_scan_file) :
     orients_(orients), f_radius_(f_radius), f_length_(f_length),
     f_centre_(f_centre), box_(box),
     log_(log), resolution_(resolution), which_processor_(which_processor), 
@@ -126,8 +126,8 @@ template <class filter_descriptor_t, class basic_filter_t, template <class X> cl
 void run//<filter_descriptor_t, basic_filter_t, filter_wrapper_t, proc_t>
 (run_args & args){
   typedef filter_wrapper_t<basic_filter_t> filter_3d_t;
-  vcl_vector<filter_3d_t> filters;
-  vcl_vector<xmvg_filter_descriptor> descr;
+  std::vector<filter_3d_t> filters;
+  std::vector<xmvg_filter_descriptor> descr;
   for (unsigned i=0; i<args.orients_.size(); i++) {
     filter_descriptor_t nnfd(args.f_radius_, args.f_length_, args.f_centre_, args.orients_[i]);
     descr.push_back(nnfd);
@@ -140,10 +140,10 @@ void run//<filter_descriptor_t, basic_filter_t, filter_wrapper_t, proc_t>
   xmvg_composite_filter_3d<double, filter_3d_t> comp3d(filters);
   proc_t<double, filter_3d_t> proc(args.log_, args.box_, args.resolution_, outer_box, comp3d, args.bin_scan_file_, args.which_processor_, args.num_processors_);
   //create a file whose name incorporates processor number
-  vcl_stringstream ss;
+  std::stringstream ss;
   ss << args.output_filename_stem_;
   ss << args.which_processor_;
-  vcl_ofstream outputfile(ss.str().c_str());
+  std::ofstream outputfile(ss.str().c_str());
   proc.execute(&outputfile);
   outputfile.close();
   MPI_Barrier(MPI_COMM_WORLD);//wait for all processors to finish
@@ -161,12 +161,12 @@ int main(int argc, char** argv)
   // Initialize defaults
   int returnStatus = 0;
   int verbose = TRACE_ERROR;
-  vcl_string fname;//file path for xml script
-  vcl_string binary_image_file; //file path for binary image file
-  vcl_string tag1;//will be assigned "-x"
-  vcl_string tag2;//if optional arg provided, will be assigned "-b"
+  std::string fname;//file path for xml script
+  std::string binary_image_file; //file path for binary image file
+  std::string tag1;//will be assigned "-x"
+  std::string tag2;//if optional arg provided, will be assigned "-b"
   proc_io_run_xml_parser parser;
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
   try
     {
       // Fetch the total number of processors and our rank - a value from 0 to m_TotalProcessors - 1
@@ -198,13 +198,13 @@ int main(int argc, char** argv)
         binary_image_file = argv[4];
       }
       if (tag1 != "-x" || argc == 5 && tag2 != "-b" || argc != 3 && argc != 5){
-          vcl_cout << "Usage: " << argv[0] << "-x <xml_script_filename> [-b <binary_image_file_path>]\n";
+          std::cout << "Usage: " << argv[0] << "-x <xml_script_filename> [-b <binary_image_file_path>]\n";
           throw -1;
       }
       
-      xmlFile = vcl_fopen(fname.c_str(), "r");
+      xmlFile = std::fopen(fname.c_str(), "r");
       if (!xmlFile){
-        vcl_cout << fname << " error on opening" << vcl_endl;
+        std::cout << fname << " error on opening" << std::endl;
         return(1);
       }
       if (!parser.parseFile(xmlFile)) {
@@ -215,51 +215,51 @@ int main(int argc, char** argv)
                 );
         return 1;
       }
-      vcl_cout << "parsing finished!" << vcl_endl;
+      std::cout << "parsing finished!" << std::endl;
       
       // get the parameters from parser
-      vcl_string logfile = parser.log();
-      vcl_string scanfile = parser.scan();
-      vcl_string boxfile = parser.box();
+      std::string logfile = parser.log();
+      std::string scanfile = parser.scan();
+      std::string boxfile = parser.box();
       double filter_radius = parser.filter_radius();
       double filter_length = parser.filter_length();
       double res = parser.res();
-      vcl_string outputfile = parser.output_file();
+      std::string outputfile = parser.output_file();
       
       if (file_check(logfile, scanfile, boxfile) == 0)
         return 1;
       
       //find the directory containing the output file
       int pos = outputfile.rfind("/", outputfile.size()-1);
-      if (pos == vcl_string::npos){
+      if (pos == std::string::npos){
         pos = -1;
       }
-      vcl_string output_file_path_only = outputfile.substr(0, pos+1);
-      vcl_string output_filename_stem = output_file_path_only + "temp";
+      std::string output_file_path_only = outputfile.substr(0, pos+1);
+      std::string output_filename_stem = output_file_path_only + "temp";
       
       imgr_skyscan_log log(logfile.data());
       xscan_scan scan = log.get_scan();
-      vcl_cout << "SCAN BEFORE\n" << scan << vcl_endl;
+      std::cout << "SCAN BEFORE\n" << scan << std::endl;
       
-      vcl_ifstream scan_file(scanfile.c_str());
+      std::ifstream scan_file(scanfile.c_str());
       scan_file >> scan;
       scan_file.close();
-      vcl_cout << "SCAN AFTER\n" << scan << vcl_endl;
+      std::cout << "SCAN AFTER\n" << scan << std::endl;
       
       //imgr_skyscan_log log(logfile.data()); 
       log.set_scan(scan);
       //get the box
-      vcl_ifstream box_file(boxfile.c_str());
+      std::ifstream box_file(boxfile.c_str());
       vgl_box_3d<double> box;
       box.read(box_file);
       box_file.close();
-      vcl_cout << "BOX\n" << box << vcl_endl;
+      std::cout << "BOX\n" << box << std::endl;
       
-      vcl_ofstream * maybe_xml_response_file = 0;
+      std::ofstream * maybe_xml_response_file = 0;
       vsl_basic_xml_element main_element("proc_filter_responses");
       if (m_MyRank == 0){
         // open output file to write the xml elements and the filter response
-        maybe_xml_response_file = new vcl_ofstream(outputfile.data());
+        maybe_xml_response_file = new std::ofstream(outputfile.data());
         *maybe_xml_response_file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << "\n";
         // create a main node for the whole xml document
         main_element.x_write_open(*maybe_xml_response_file);
@@ -280,11 +280,11 @@ int main(int argc, char** argv)
       
       PROC_FILTER_TYPE filter_type = parser.filter_type();
       PROC_SPLAT_TYPE splatting_type = parser.splatting_type();
-      vcl_vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
+      std::vector<vgl_vector_3d<double> > orientation_list = parser.filter_orient();
       run_args args(orientation_list, f_radius, f_length, f_centre, box, log, resolution, 
         m_MyRank, m_TotalProcessors, output_filename_stem, maybe_xml_response_file, 
         main_element, binary_image_file);
-      vcl_cout << "about to run\n";
+      std::cout << "about to run\n";
       if (filter_type == GAUSSIAN) {
         if (splatting_type == PARALLEL)
           run<xmvg_gaussian_filter_descriptor,xmvg_gaussian_integrating_filter_3d, xmvg_parallel_beam_filter_3d, bioproc_splr_filtering_proc>(args);
@@ -329,10 +329,10 @@ int main(int argc, char** argv)
     if (e.GetError () != e.Incomplete)
       {
         if (verbose >= TRACE_ERROR) 
-          vcl_cout << "BioProcException: " //<< e.GetMessage()
+          std::cout << "BioProcException: " //<< e.GetMessage()
                    << " err: " << e.GetError() << " mpi: " 
                    << e.GetMPIError() << " sys: " 
-                   << e.GetSysError() << vcl_endl;
+                   << e.GetSysError() << std::endl;
         returnStatus = e.GetError();
       }
   }

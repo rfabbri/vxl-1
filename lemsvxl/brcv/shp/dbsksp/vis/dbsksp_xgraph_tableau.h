@@ -61,7 +61,7 @@ public:
   {this->shock_graph_ = shock_graph; }
 
   //: Returns the type of tableau ('dbsksp_xgraph_tableau').
-  vcl_string type_name() const { return "dbsksp_xgraph_tableau"; }
+  std::string type_name() const { return "dbsksp_xgraph_tableau"; }
 
 
   ////: Get child image tableau

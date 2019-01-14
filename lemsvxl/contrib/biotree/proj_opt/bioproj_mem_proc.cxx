@@ -1,11 +1,11 @@
 #include "bioproj_mem_proc.h"
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vgl/vgl_box_2d.h>
 #include <vpgl/algo/vpgl_project.h>
 #include <vnl/vnl_math.h>
 #include <vil/algo/vil_convolve_1d.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <cstdio>
+#include <ctime>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
 #include <vil/vil_convert.h>
@@ -44,7 +44,7 @@ template<class T>
 inline void invert_given_i_zero(vil_image_view<T>& imA, const float& i_zero)
 {
   unsigned ni = imA.ni(),nj = imA.nj(),np = imA.nplanes();
-  vcl_ptrdiff_t istepA=imA.istep(),jstepA=imA.jstep(),pstepA = imA.planestep();
+  std::ptrdiff_t istepA=imA.istep(),jstepA=imA.jstep(),pstepA = imA.planestep();
   T* planeA = imA.top_left_ptr();
   for (unsigned p=0;p<np;++p,planeA += pstepA)
   {
@@ -63,7 +63,7 @@ inline void invert_given_i_zero(vil_image_view<T>& imA, const float& i_zero)
 bool bioproj_mem_proc::execute(int view_filter_type, int spatial_filter_type, int resize_factor)
 {
   if(view_filter_type > 2 || view_filter_type < 0){
-          vcl_cout << "PROJECTED FILTER " << view_filter_type << " NOT DEFINED!!!" << vcl_endl;
+          std::cout << "PROJECTED FILTER " << view_filter_type << " NOT DEFINED!!!" << std::endl;
           return 0;
   }
 
@@ -91,17 +91,17 @@ bool bioproj_mem_proc::execute(int view_filter_type, int spatial_filter_type, in
   clock_t start, end;
   for(unsigned viewno = 0; viewno < proj_mem_io_->nviews_; viewno++)
   {
-    vcl_cout << "Processing " << viewno << vcl_endl;
-    start = vcl_clock();
+    std::cout << "Processing " << viewno << std::endl;
+    start = std::clock();
 
     if(!proj_mem_io_->found_filenames()){
-            vcl_cerr << "Error: Found no filenames\n";
+            std::cerr << "Error: Found no filenames\n";
             return 1;
     }
     // get the view
     vil_image_resource_sptr resc  = vil_load_image_resource(proj_mem_io_->filenames_[viewno].c_str());
     if(!resc){
-            vcl_cerr << "unable to load image resource from proj_mem_io_->filenames_[viewno]\n";
+            std::cerr << "unable to load image resource from proj_mem_io_->filenames_[viewno]\n";
             return 0;
     }
     if(resc->pixel_format() == VIL_PIXEL_FORMAT_UINT_16){
@@ -113,7 +113,7 @@ bool bioproj_mem_proc::execute(int view_filter_type, int spatial_filter_type, in
       vil_convert_cast(temp_view,temp_view_double_);
     }
     else{
-      vcl_cerr << "ERROR: Can't handle pixel format\n"; return 0;
+      std::cerr << "ERROR: Can't handle pixel format\n"; return 0;
     }
     invert_given_i_zero(temp_view_double_,proj_mem_io_->i_zero_);
 
@@ -130,7 +130,7 @@ bool bioproj_mem_proc::execute(int view_filter_type, int spatial_filter_type, in
     }
 
     if(!current_view_.is_contiguous()){
-      vcl_cerr << "Current_view must be contiguous\n";
+      std::cerr << "Current_view must be contiguous\n";
       return 0;
     }
         
@@ -150,8 +150,8 @@ bool bioproj_mem_proc::execute(int view_filter_type, int spatial_filter_type, in
 
     // accumulate the responses for the grid points from this convolved view
     accumulate_responses_from_current_convolved_view(viewno);
-    end = vcl_clock();
-    vcl_cout << "Elapsed time is " << ((end - start)) << vcl_endl;
+    end = std::clock();
+    std::cout << "Elapsed time is " << ((end - start)) << std::endl;
   }
   // multiply accumulated values by the coefficent in front of the integral     
   vil3d_math_scale_and_offset_values(proj_mem_io_->grid_,float(1.0/(2*proj_mem_io_->nviews_)),0);
@@ -169,8 +169,8 @@ void bioproj_mem_proc::convolve_current_view(bioproj_filter* filter, const int& 
   xmvg_perspective_camera<double> cam = cameras_[viewno];
   vgl_box_2d<double> box_2d = vpgl_project::project_bounding_box(cam, proj_mem_io_->box_);
 
-  int u_min = int(vcl_floor(box_2d.min_x())); int u_max = int(vcl_ceil(box_2d.max_x()));
-  int v_min = int(vcl_floor(box_2d.min_y())); int v_max = int(vcl_ceil(box_2d.max_y()));
+  int u_min = int(std::floor(box_2d.min_x())); int u_max = int(std::ceil(box_2d.max_x()));
+  int v_min = int(std::floor(box_2d.min_y())); int v_max = int(std::ceil(box_2d.max_y()));
   int u,v;
   if(resize_factor_ == 1)
   {
@@ -194,7 +194,7 @@ void bioproj_mem_proc::convolve_current_view(bioproj_filter* filter, const int& 
 
   current_view_convolved_.set_size(u, v);
   int ni = current_view_.ni();
-  vcl_ptrdiff_t jstep = current_view_.jstep();
+  std::ptrdiff_t jstep = current_view_.jstep();
   double* curptr = current_view_.top_left_ptr() + v_min*jstep;
   double* resptr = current_view_convolved_.top_left_ptr() + v_min*jstep;
   // loop over view data rows
@@ -252,8 +252,8 @@ double bioproj_mem_proc::interpolate_convolved_data_at_point(vgl_point_2d<double
   double val3 = 0;
   double val4 = 0;
   
-  int floor_x = int(vcl_floor(x)); int ceil_x = int(vcl_ceil(x));
-  int floor_y = int(vcl_floor(y)); int ceil_y = int(vcl_ceil(y));
+  int floor_x = int(std::floor(x)); int ceil_x = int(std::ceil(x));
+  int floor_y = int(std::floor(y)); int ceil_y = int(std::ceil(y));
 
   double d1 = x - floor_x;
   double d2 = y - floor_y;
@@ -292,24 +292,24 @@ void bioproj_mem_proc::apply_z_filtering()
     bioproj_g_filter z_filter(proj_mem_io_->sigma_z_/(1000*res_z_), extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else if(spatial_filter_type_ == 1)
   {
     bioproj_gz_filter z_filter(proj_mem_io_->sigma_z_/(1000*res_z_), extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else if(spatial_filter_type_ == 2)
   {
     bioproj_gzz_filter z_filter(proj_mem_io_->sigma_z_/(1000*res_z_), extent);
     kernel_center = z_filter.half_kernel_size_;
     filter_ = new double[2*kernel_center+1];
-    vcl_memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
+    std::memcpy(filter_, z_filter.filter_, sizeof(double)*z_filter.full_kernel_size_);
   }
   else
-    vcl_cout << "SPATIAL FILTER NOT DEFINED!!!" << vcl_endl;
+    std::cout << "SPATIAL FILTER NOT DEFINED!!!" << std::endl;
 
   double *z_line;
   double *z_line_convolved;
@@ -334,14 +334,14 @@ void bioproj_mem_proc::apply_z_filtering()
         proj_mem_io_->grid_(i, j, k) = float(z_line_convolved[k]);
 
     }
-      vcl_cout << index++ / double(num_grid_points) * 10000.0 << "% of z convolution finished" << vcl_endl;
+      std::cout << index++ / double(num_grid_points) * 10000.0 << "% of z convolution finished" << std::endl;
   }
   delete [] z_line;
   delete [] z_line_convolved;
   delete [] filter_;
 }
 
-void bioproj_mem_proc::write_result(vcl_string outfile)
+void bioproj_mem_proc::write_result(std::string outfile)
 {
-        vcl_cerr << "write_result deprecated; access proj_mem_io_->grid in calling function\n";
+        std::cerr << "write_result deprecated; access proj_mem_io_->grid in calling function\n";
 }

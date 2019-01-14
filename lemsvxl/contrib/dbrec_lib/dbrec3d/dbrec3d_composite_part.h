@@ -17,8 +17,8 @@
 #include "dbrec3d_visitor.h"
 #include <bxml/bxml_document.h>
 #include <bxml/bxml_find.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 //: Forward declaration of XML read
 dbrec3d_part_sptr dbrec3d_composite_part_parse_xml_element(bxml_data_sptr d);
@@ -46,7 +46,7 @@ private:
   
   
   //: Constructor from: compositor part id, geometry, children, neighborhood radious
-  dbrec3d_composite_part(const T_compositor &compositor, int type_id, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, vnl_float_3 radius, bool symmetric, bool rot_invar, const vcl_vector<int>& children ) 
+  dbrec3d_composite_part(const T_compositor &compositor, int type_id, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, vnl_float_3 radius, bool symmetric, bool rot_invar, const std::vector<int>& children ) 
   : dbrec3d_part(type_id, axis, aux_axis, angle, scale, radius, symmetric, rot_invar),compositor_(compositor), children_(children), class_prior_(-1.0f) {}
   
   //: Copy constructor
@@ -69,7 +69,7 @@ public:
   //void set_type_id(float type_id) { reset_type_id(type_id); }
  
   //: Return vector of children
-  vcl_vector<int>& children_id() { return children_; }
+  std::vector<int>& children_id() { return children_; }
   
     //: Return number of children
   unsigned num_children() const { return children_.size(); }
@@ -105,7 +105,7 @@ protected:
   T_compositor compositor_;
   
   //:ID's of children. They can be either primitive parts or composite parts
-  vcl_vector<int> children_;
+  std::vector<int> children_;
   
   //: Prior distribution of this composition
   float class_prior_;
@@ -129,7 +129,7 @@ protected:
 //  
 //  //: Constructor from: part id, geometry, children, neighborhood radious and bin ranges
 //  dbrec3d_discrete_composite_part(const T_compositor &compositor, int type_id, vnl_float_3 axis, float angle, vnl_float_3 scale, bool symmetric, bool rot_invar, 
-//                                  const vcl_vector<dbrec3d_part_sptr>& children, float radius,
+//                                  const std::vector<dbrec3d_part_sptr>& children, float radius,
 //                                  float max_azimuthal, float min_azimuthal, float max_polar, float min_polar) 
 //  : dbrec3d_composite_part<T_compositor>(compositor, type_id, axis, angle, scale, symmetric, rot_invar,children,-1.0f, radius),
 //  max_azimuthal_(max_azimuthal), min_azimuthal_(min_azimuthal), max_polar_(max_polar), min_polar_(min_polar) {}
@@ -161,7 +161,7 @@ bxml_data_sptr dbrec3d_composite_part<T_compositor>::xml_element() const
   data->set_attribute("type_id", this->type_id_);
   data->set_attribute("class_prior", this->class_prior_);
   data->set_attribute("nchildren", children_.size());
-  vcl_stringstream ss;
+  std::stringstream ss;
   for (unsigned i = 0; i < children_.size(); i++) 
     ss << children_[i]<< " ";
   data->append_text(ss.str());
@@ -192,19 +192,19 @@ dbrec3d_part_sptr dbrec3d_composite_part<T_compositor>::parse_xml_element(bxml_d
   root_elm->get_attribute("nchildren",nchildren);
   
   //: read out the children
-  vcl_vector<int> children;
+  std::vector<int> children;
   for (bxml_element::const_data_iterator s_it = root_elm->data_begin(); s_it != root_elm->data_end(); s_it++) {
     if ((*s_it)->type() == bxml_data::TEXT) {
       bxml_text* t = dynamic_cast<bxml_text*>((*s_it).ptr());
-      vcl_stringstream text_d(t->data()); vcl_string buf;
-      vcl_vector<vcl_string> tokens;
+      std::stringstream text_d(t->data()); std::string buf;
+      std::vector<std::string> tokens;
       while (text_d >> buf) {
         tokens.push_back(buf);
       }
       if (tokens.size() != nchildren)
         continue;
       for (unsigned i = 0; i < nchildren; i++) {
-        vcl_stringstream ss2(tokens[i]); int c_type_id;
+        std::stringstream ss2(tokens[i]); int c_type_id;
         ss2 >> c_type_id;
         children.push_back(c_type_id);
       }
@@ -235,7 +235,7 @@ dbrec3d_part_sptr dbrec3d_composite_part<T_compositor>::parse_xml_element(bxml_d
   //return part;
 }
 
-//vcl_ostream & operator<<(vcl_ostream& out, const dbrec3d_composition& p);
+//std::ostream & operator<<(std::ostream& out, const dbrec3d_composition& p);
 
 
 

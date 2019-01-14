@@ -9,7 +9,7 @@
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/pro/dbsk2d_transform_manager.h>
 #include <dbsk2d/algo/dbsk2d_prune_ishock.h>
@@ -34,7 +34,7 @@ void dbsk2d_ishock_grouping_transform::grow_coarse_regions()
     dbsk2d_ishock_graph::vertex_iterator curN = 
         ishock_graph_->all_nodes().begin();
 
-    vcl_set<int> ids;
+    std::set<int> ids;
 
     for (; curN != ishock_graph_->all_nodes().end(); curN++)
     {
@@ -94,7 +94,7 @@ void dbsk2d_ishock_grouping_transform::grow_coarse_regions()
 
     }
 
-     vcl_cout<<"Number of Regions: "<<region_nodes_.size()<<vcl_endl;
+     std::cout<<"Number of Regions: "<<region_nodes_.size()<<std::endl;
 
 
 }
@@ -140,7 +140,7 @@ void dbsk2d_ishock_grouping_transform::grow_regions()
 
     }
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     {
         dbsk2d_ishock_edge* first_elm=*(*it).second.begin();
@@ -216,36 +216,36 @@ void dbsk2d_ishock_grouping_transform::grow_regions()
             }
         }
  
-        vcl_sort((*it).second.begin(),(*it).second.end(),
+        std::sort((*it).second.begin(),(*it).second.end(),
                  dbsk2d_ishock_grouping_transform::sort_edges);
     }
 
-    vcl_cout<<"Number of Regions: "<<region_nodes_.size()<<vcl_endl;
-    // vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::cout<<"Number of Regions: "<<region_nodes_.size()<<std::endl;
+    // std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     // for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     // {
-    //     vcl_vector<dbsk2d_ishock_edge*> edges=(*it).second;
-    //     vcl_cout<<"Region id: "<<(*it).first<<" with edges: ";
+    //     std::vector<dbsk2d_ishock_edge*> edges=(*it).second;
+    //     std::cout<<"Region id: "<<(*it).first<<" with edges: ";
     //     for ( unsigned int i =0 ;i < edges.size()  ; ++i)
     //     {
-    //         vcl_cout<<edges[i]->id()<<" ";
+    //         std::cout<<edges[i]->id()<<" ";
     //     }
-    //     vcl_cout<<vcl_endl;
+    //     std::cout<<std::endl;
 
     // double con_ratio=contour_ratio(26);
-    // vcl_cout<<"Contour Ratio: "<<con_ratio<<vcl_endl;
+    // std::cout<<"Contour Ratio: "<<con_ratio<<std::endl;
 
-    // vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >::iterator nit;
+    // std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >::iterator nit;
     // for ( nit = outer_shock_nodes_.begin() ; 
     //       nit != outer_shock_nodes_.end() ; ++nit)
     // {
-    //     vcl_vector<dbsk2d_ishock_node*> nodes=(*nit).second;
-    //     vcl_cout<<"Region id: "<<(*nit).first<<" with outer nodes: ";
+    //     std::vector<dbsk2d_ishock_node*> nodes=(*nit).second;
+    //     std::cout<<"Region id: "<<(*nit).first<<" with outer nodes: ";
     //     for ( unsigned int i =0 ;i < nodes.size()  ; ++i)
     //     {
-    //         vcl_cout<<nodes[i]->id()<<" ";
+    //         std::cout<<nodes[i]->id()<<" ";
     //     }
-    //     vcl_cout<<vcl_endl;
+    //     std::cout<<std::endl;
     // }
 }
 
@@ -254,7 +254,7 @@ void dbsk2d_ishock_grouping_transform::grow_transformed_regions(int id)
 
     unsigned int index=0;
 
-    vcl_list<dbsk2d_ishock_edge*>::reverse_iterator curE;
+    std::list<dbsk2d_ishock_edge*>::reverse_iterator curE;
 
     //draw the edges first
     for ( curE = ishock_graph_->all_edges().rbegin();
@@ -296,11 +296,11 @@ void dbsk2d_ishock_grouping_transform::grow_transformed_regions(int id)
 
     }
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     {
 
-        vcl_sort((*it).second.begin(),(*it).second.end(),
+        std::sort((*it).second.begin(),(*it).second.end(),
                  dbsk2d_ishock_grouping_transform::sort_edges);
     }
 
@@ -380,23 +380,23 @@ void dbsk2d_ishock_grouping_transform::extract_polygon(
 
     poly=temp_poly;
 
-    double G = vcl_pow(2.0,-25.0);
+    double G = std::pow(2.0,-25.0);
 
     for (unsigned int s = 0; s < poly.num_sheets(); ++s)
     {
         for (unsigned int p = 0; p < poly[s].size(); ++p)
         { 
             poly[s][p].x()=
-                (vcl_floor((poly[s][p].x()/G)+0.5))*G;
+                (std::floor((poly[s][p].x()/G)+0.5))*G;
             poly[s][p].y()=
-                (vcl_floor((poly[s][p].y()/G)+0.5))*G;
+                (std::floor((poly[s][p].y()/G)+0.5))*G;
         }
     }
 }
 
 void dbsk2d_ishock_grouping_transform::get_region_stats(
     unsigned int index, vgl_polygon<double>& poly,
-    vcl_vector<double>& region_stats)
+    std::vector<double>& region_stats)
 {
 
 
@@ -420,7 +420,7 @@ void dbsk2d_ishock_grouping_transform::get_region_stats(
 
     vgl_box_2d<double> bbox;
 
-    vcl_vector<vgl_point_2d<double>  > points;
+    std::vector<vgl_point_2d<double>  > points;
 
     vgl_polygon<double> final_poly(poly[f_index]);
 
@@ -474,7 +474,7 @@ void dbsk2d_ishock_grouping_transform::get_region_stats(
     this->real_contour_ratio(index,gt_ratio,gap_ratio);
 
 
-    vcl_vector<dbsk2d_ishock_edge*> edges=region_nodes_[index];
+    std::vector<dbsk2d_ishock_edge*> edges=region_nodes_[index];
 
     
     dbsk2d_shock_graph_sptr shock_graph=new dbsk2d_shock_graph();
@@ -533,7 +533,7 @@ double dbsk2d_ishock_grouping_transform::convex_area(vgl_polygon<double>&
         
     }
     
-    vcl_vector<vgl_point_2d<double>  > points;
+    std::vector<vgl_point_2d<double>  > points;
 
     vgl_polygon<double> final_poly(poly[f_index]);
 
@@ -555,12 +555,12 @@ double dbsk2d_ishock_grouping_transform::convex_area(vgl_polygon<double>&
 double dbsk2d_ishock_grouping_transform::convex_area(unsigned int index)
 {
     
-    vcl_vector<dbsk2d_ishock_belm*> frag_belms = region_belms_[index];
+    std::vector<dbsk2d_ishock_belm*> frag_belms = region_belms_[index];
 
 
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > points;
   
-    vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
+    std::vector<dbsk2d_ishock_belm*>::iterator lit;  
     for (lit = frag_belms.begin() ; lit != frag_belms.end() ; ++lit)
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
@@ -578,7 +578,7 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
 {
 
     double virtual_boundary_length=0;
-    vcl_vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
+    std::vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
     
     unsigned int i=0; 
     for ( ; i < outer_nodes.size() ; ++i)
@@ -615,7 +615,7 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
 {
 
     double virtual_boundary_length=0;
-    vcl_vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
+    std::vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
     
     unsigned int i=0; 
     for ( ; i < outer_nodes.size() ; ++i)
@@ -629,7 +629,7 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
 
     double real_distance=0.0;
 
-    vcl_vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
+    std::vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
 
     for ( unsigned int s=0; s < shock_edges.size() ; ++s)
     {  
@@ -677,7 +677,7 @@ void dbsk2d_ishock_grouping_transform::real_contour_ratio(
 {
 
     double virtual_boundary_length=0;
-    vcl_vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
+    std::vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
     
     unsigned int i=0; 
     for ( ; i < outer_nodes.size() ; ++i)
@@ -692,7 +692,7 @@ void dbsk2d_ishock_grouping_transform::real_contour_ratio(
     double real_distance=0.0;
     double gap_distance=0.0;
 
-    vcl_vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
+    std::vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
 
     for ( unsigned int s=0; s < shock_edges.size() ; ++s)
     {  
@@ -774,7 +774,7 @@ double dbsk2d_ishock_grouping_transform::real_contour_length(unsigned int index)
 {
     double real_distance=0.0;
 
-    vcl_vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
+    std::vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
 
     for ( unsigned int s=0; s < shock_edges.size() ; ++s)
     {  
@@ -820,7 +820,7 @@ bool dbsk2d_ishock_grouping_transform::region_within_image(
     vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
         get_image();
    
-    vcl_vector<dbsk2d_ishock_belm*> belms  = region_belms_[index];
+    std::vector<dbsk2d_ishock_belm*> belms  = region_belms_[index];
     
     for ( unsigned int i=0; i < belms.size() ; ++i)
     {
@@ -916,7 +916,7 @@ void dbsk2d_ishock_grouping_transform::polygon_fragment(
 {
     //***************** Compute Polygon ************************
     //Loop over all shock links
-    vcl_vector<dbsk2d_ishock_edge*> edges = region_nodes_[index];
+    std::vector<dbsk2d_ishock_edge*> edges = region_nodes_[index];
     
     // Start polygon
     vgl_polygon<double> start_poly;
@@ -967,16 +967,16 @@ void dbsk2d_ishock_grouping_transform::polygon_fragment(
     
 }
 
-void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename)
+void dbsk2d_ishock_grouping_transform::write_out_polygons(std::string filename)
 {
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(filename.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     {
         vgl_polygon<double> poly;
@@ -1009,17 +1009,17 @@ void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename)
 }
 
 
-void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename,
+void dbsk2d_ishock_grouping_transform::write_out_polygons(std::string filename,
     dbsk2d_ishock_transform& transform)
 {
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(filename.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     {
         if ( transform.region_affected(region_belms_contour_ids_[(*it).first]))
@@ -1055,11 +1055,11 @@ void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename,
 void dbsk2d_ishock_grouping_transform::
 expand_wavefront_coarse(
     dbsk2d_ishock_node* node,dbsk2d_ishock_edge* ic_edge,
-    unsigned int map_key,vcl_set<int>& ids)
+    unsigned int map_key,std::set<int>& ids)
 {
 
     bool ed_spawned = shock_from_endpoint(ic_edge);
-    vcl_vector<dbsk2d_ishock_edge*> edges;
+    std::vector<dbsk2d_ishock_edge*> edges;
     bool insert=false;    
     node_coarse_expandable(node,edges,insert);
     if ( !edges.size() )
@@ -1195,7 +1195,7 @@ void dbsk2d_ishock_grouping_transform::
 expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
 {
 
-    vcl_vector<dbsk2d_ishock_edge*> edges;
+    std::vector<dbsk2d_ishock_edge*> edges;
     bool insert=false;
     node_expandable(node,edges,insert);
     if ( !edges.size() )
@@ -1307,10 +1307,10 @@ expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
     }
 }
 
-void dbsk2d_ishock_grouping_transform::write_out_file(vcl_string filename)
+void dbsk2d_ishock_grouping_transform::write_out_file(std::string filename)
 {
 
-    vcl_ofstream stream(filename.c_str());
+    std::ofstream stream(filename.c_str());
     
     //go through the vertex_list and insert it into the list
     dbsk2d_ishock_graph::vertex_iterator curN = 
@@ -1323,7 +1323,7 @@ void dbsk2d_ishock_grouping_transform::write_out_file(vcl_string filename)
 
         if ( curShock->degree(true) >= 3 )
         {
-            stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+            stream<<origin.x()<<" "<<origin.y()<<std::endl;
         }
         else if (curShock->degree(true) == 2 )
         {
@@ -1331,12 +1331,12 @@ void dbsk2d_ishock_grouping_transform::write_out_file(vcl_string filename)
             
             if ( flag )
             {
-                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+                stream<<origin.x()<<" "<<origin.y()<<std::endl;
             }
         }
         else if( curShock->degree(true) == 1 )
         {
-                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+                stream<<origin.x()<<" "<<origin.y()<<std::endl;
         }
         
     }

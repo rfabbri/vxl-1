@@ -6,8 +6,8 @@
 #include <vnl/vnl_double_3.h> // for vnl_cross_3d
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_linear.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 #include <vnl/algo/vnl_svd.h>
 
 //////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ setCameraGraph(bcal_camera_graph<bcal_calibrate_plane, bcal_zhang_camera_node, b
 int bcal_zhang_linear_calibrate::compute_homography()
 {
   if (!cam_graph_ptr_){
-    vcl_cerr<<"empty graphy, need to set graph first\n";
+    std::cerr<<"empty graphy, need to set graph first\n";
     return 1;
   }
 
@@ -45,7 +45,7 @@ int bcal_zhang_linear_calibrate::compute_homography()
   int size = cam_graph_ptr_->num_vertice();
   clear(); h_matrice_.resize(size);
 
-  vcl_vector<vgl_homg_point_2d<double> > &p0 = cam_graph_ptr_->get_source()->get_points();
+  std::vector<vgl_homg_point_2d<double> > &p0 = cam_graph_ptr_->get_source()->get_points();
 
 
   for (int i=0; i<size; i++) {// for each camera
@@ -55,7 +55,7 @@ int bcal_zhang_linear_calibrate::compute_homography()
     int nViews = cam->num_views();
     h_matrice_[i] = new vgl_h_matrix_2d<double> [nViews];
     for (int j=0; j<nViews; j++){ // for each view
-      vcl_vector<vgl_homg_point_2d<double> > &p1 = cam->getPoints(j);
+      std::vector<vgl_homg_point_2d<double> > &p1 = cam->getPoints(j);
       h_matrice_[i][j] = hmcl.compute(p0, p1);
     }
   }
@@ -158,8 +158,8 @@ vnl_double_3x3 bcal_zhang_linear_calibrate::compute_intrinsic(vgl_h_matrix_2d<do
   if (sv5){ /* error check */
     double ratio = sv4/sv5;
 
-    if (vcl_fabs(ratio) < 200){
-      vcl_cerr << "Warning after comparing the singular values\n"
+    if (std::fabs(ratio) < 200){
+      std::cerr << "Warning after comparing the singular values\n"
                << "It may be that the system of homographies is underconstrained:\n"
                << sv4 <<  ' ' << sv5 << '\n';
     }
@@ -177,8 +177,8 @@ vnl_double_3x3 bcal_zhang_linear_calibrate::compute_intrinsic(vgl_h_matrix_2d<do
 
   double v0 = (B12*B13 - B11*B23)/(B11*B22 - B12*B12);
   double lamda = B33 - (B13*B13 + v0*(B12*B13-B11*B23))/B11;
-  double alpha = vcl_sqrt(vcl_fabs(lamda/B11));
-  double beta = vcl_sqrt(vcl_fabs(lamda * B11 /(B11*B22 - B12*B12)));
+  double alpha = std::sqrt(std::fabs(lamda/B11));
+  double beta = std::sqrt(std::fabs(lamda * B11 /(B11*B22 - B12*B12)));
   double gamma = 0.0-B12*alpha*alpha*beta/lamda;
   double u0 = gamma*v0/beta - B13*alpha*alpha/lamda;
 
@@ -277,7 +277,7 @@ void bcal_zhang_linear_calibrate::calibrate_intrinsic()
     assert(cam);
     vnl_double_3x3 K = compute_intrinsic(h_matrice_[i], num_views_[i]);
     cam->set_intrinsic(K);
-    vcl_cerr<<"intrinsic parameters K is:\n"<<cam->get_intrinsic()<<'\n';
+    std::cerr<<"intrinsic parameters K is:\n"<<cam->get_intrinsic()<<'\n';
   }
 }
 
@@ -298,7 +298,7 @@ int bcal_zhang_linear_calibrate::calibrate_extrinsic()
     vnl_double_3x3 K = cam->get_intrinsic();
     int num_views = cam->num_views();
 
-    vcl_vector<vgl_h_matrix_3d<double> > trans_list(num_views);
+    std::vector<vgl_h_matrix_3d<double> > trans_list(num_views);
     for (int j=0; j< num_views; j++){ // for each view
       trans_list[j] = compute_extrinsic(h_matrice_[i][j], K);
     }

@@ -18,7 +18,7 @@
 
 #include <dbrec/dbrec_part_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class dbrec_image_hierarchy_factory
 {

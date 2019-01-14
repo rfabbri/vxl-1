@@ -10,7 +10,7 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
 #include <vil/vil_math.h>
-#include <vcl_limits.h>
+#include <limits>
 
 #include <dbbgm/pro/dbbgm_image_storage.h>
 #include <bbgm/bbgm_image_sptr.h>
@@ -59,7 +59,7 @@ modrec_position_process::modrec_position_process()
       !parameters()->add( "Model      " ,      "-model" ,   bpro1_filepath("","*")  ) ||
       !parameters()->add( "YUV Color Space" ,  "-yuv",      false ) ||
       !parameters()->add( "debug" ,            "-debug",    false ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -79,7 +79,7 @@ modrec_position_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 modrec_position_process::name()
 {
   return "Position Model";
@@ -103,9 +103,9 @@ modrec_position_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > modrec_position_process::get_input_type()
+std::vector< std::string > modrec_position_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "bbgm_image" );
   to_return.push_back( "bbgm_image" );
@@ -115,9 +115,9 @@ vcl_vector< vcl_string > modrec_position_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > modrec_position_process::get_output_type()
+std::vector< std::string > modrec_position_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
@@ -127,9 +127,9 @@ vcl_vector< vcl_string > modrec_position_process::get_output_type()
 
 
 //: Returns a vector of strings with suggested names for output classes
-vcl_vector< vcl_string > modrec_position_process::suggest_output_names()
+std::vector< std::string > modrec_position_process::suggest_output_names()
 {
-  vcl_vector< vcl_string > names;
+  std::vector< std::string > names;
   names.push_back("overlay");
   names.push_back("state labels");
   names.push_back("projected mesh");
@@ -143,7 +143,7 @@ bool
 modrec_position_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In modrec_position_process::execute() - "
+    std::cout << "In modrec_position_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -182,12 +182,12 @@ modrec_position_process::execute()
     frame_model.vertical_cast(input_data_[0][1]);
   }
   else{ 
-    vcl_cerr << "background model not provided" << vcl_endl;
+    std::cerr << "background model not provided" << std::endl;
     return false;
   }
   model = dynamic_cast<bbgm_image_of<mix_gauss_type>*>(frame_model->dist_image().ptr());
   if(!model){
-    vcl_cerr << "background model not correct type" << vcl_endl;
+    std::cerr << "background model not correct type" << std::endl;
     return false;
   }
 
@@ -271,11 +271,11 @@ modrec_position_process::finish()
   vnl_double_3x4 camera;
   if(result){
     bxml_element* elm = static_cast<bxml_element*>(result.ptr());
-    vcl_stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
+    std::stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
     s >> camera;
   }
   else{
-    vcl_cout << "error reading \"camera\" from XML" <<vcl_endl;
+    std::cout << "error reading \"camera\" from XML" <<std::endl;
     return false;
   }
 
@@ -285,38 +285,38 @@ modrec_position_process::finish()
   double k[4];
   if(result){
     bxml_element* elm = static_cast<bxml_element*>(result.ptr());
-    vcl_stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
+    std::stringstream s(static_cast<bxml_text*>(elm->data_begin()->ptr())->data());
     s >> k[0] >> k[1] >> k[2] >> k[3];
   }
   else{
-    vcl_cout << "error reading \"lens\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lens\" from XML" <<std::endl;
     return false;
   }
 
   float starttime;
   if(!modrec_pro_read_param(xdoc,"starttime",starttime)){
-    vcl_cout << "error reading \"starttime\" from XML" <<vcl_endl;
+    std::cout << "error reading \"starttime\" from XML" <<std::endl;
     return false;
   }
   hour += starttime;
 
   if(!modrec_pro_read_param(xdoc,"date",day)){
-    vcl_cout << "error reading \"date\" from XML" <<vcl_endl;
+    std::cout << "error reading \"date\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"lat",lat)){
-    vcl_cout << "error reading \"lat\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lat\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"lon",lon)){
-    vcl_cout << "error reading \"lon\" from XML" <<vcl_endl;
+    std::cout << "error reading \"lon\" from XML" <<std::endl;
     return false;
   }
 
   if(!modrec_pro_read_param(xdoc,"heading",heading)){
-    vcl_cout << "error reading \"heading\" from XML" <<vcl_endl;
+    std::cout << "error reading \"heading\" from XML" <<std::endl;
     return false;
   }
 
@@ -355,7 +355,7 @@ modrec_position_process::finish()
   double alt, az;
   dbul_solar_position(day, hour , lat, lon, alt, az);
   az = heading*3.1415926/180.0 - az;
-  double xa = -vcl_cos(az)/vcl_tan(alt), ya = -vcl_sin(az)/vcl_tan(alt);
+  double xa = -std::cos(az)/std::tan(alt), ya = -std::sin(az)/std::tan(alt);
 
 
   float scale, f_tol, initx, inity, initvx;
@@ -379,7 +379,7 @@ modrec_position_process::finish()
   a.minimize(x,ds);
   double min_error = func.f(x);
 
-  vcl_cout << "x="<<x(0)<< " y="<<x(1)<< " v="<<x(2)<<"  error="<<min_error<<vcl_endl;
+  std::cout << "x="<<x(0)<< " y="<<x(1)<< " v="<<x(2)<<"  error="<<min_error<<std::endl;
 
   unsigned int t0 = 0;
   for(; t0<input_data_.size(); ++t0){
@@ -442,11 +442,11 @@ modrec_position_process::finish()
       }
     }
 
-    vcl_vector<vgl_point_2d<double> > verts2d;
+    std::vector<vgl_point_2d<double> > verts2d;
     vpgl_proj_camera<double> pcam(cam);
     imesh_project_verts(mesh.vertices<3>(), pcam, verts2d);
     imesh_distort_verts(verts2d, lens, verts2d);
-    vcl_vector<vsol_point_2d_sptr> vsol_pts;
+    std::vector<vsol_point_2d_sptr> vsol_pts;
     for(unsigned int k=0; k<verts2d.size(); ++k)
       vsol_pts.push_back(new vsol_point_2d(verts2d[k]));
 
@@ -457,7 +457,7 @@ modrec_position_process::finish()
     if(c.w() < 0.0)
       c.rescale_w(-c.w());
     typedef imesh_regular_face_array<3>::const_iterator itr_t;
-    typedef vcl_vector<vgl_vector_3d<double> >::const_iterator itr_n;
+    typedef std::vector<vgl_vector_3d<double> >::const_iterator itr_n;
     itr_n n = mesh.faces().normals().begin();
     const imesh_regular_face_array<3>& tris =
         static_cast<const imesh_regular_face_array<3>&>(mesh.faces());

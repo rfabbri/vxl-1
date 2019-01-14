@@ -13,7 +13,7 @@
 #include <vul/vul_timer.h>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 //: Constructor
@@ -40,27 +40,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string elbow_show_3d_mesh_process::
+std::string elbow_show_3d_mesh_process::
 name()
 {
 	return "Show 3D mesh";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > elbow_show_3d_mesh_process::
+std::vector< std::string > elbow_show_3d_mesh_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("mesh_file");
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > elbow_show_3d_mesh_process::
+std::vector< std::string > elbow_show_3d_mesh_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	return to_return;
 }
 
@@ -80,15 +80,15 @@ output_frames()
 	return 0;
 }
 
-void elbow_mesh_view(const vcl_string& root_path, const vcl_vector<vcl_string>& in)
+void elbow_mesh_view(const std::string& root_path, const std::vector<std::string>& in)
 {
-	vcl_string cmd = root_path + MESH_VIEW_COMMAND;
+	std::string cmd = root_path + MESH_VIEW_COMMAND;
 	for(int i = 0; i < in.size(); i++)
 	{
 		cmd = cmd + " " + in[i];
 	}
-	vcl_cout << cmd << vcl_endl;
-	vcl_system(cmd.c_str());
+	std::cout << cmd << std::endl;
+	std::system(cmd.c_str());
 }
 
 
@@ -103,9 +103,9 @@ execute()
 
 	elbow_mesh_file_storage_sptr in_file_storage;
 	in_file_storage.vertical_cast(input_data_[0][0]);
-	vcl_string folder = in_file_storage->folder();
-	vcl_vector<vcl_string> files = in_file_storage->files();
-	vcl_string cwd = vul_file::get_cwd();
+	std::string folder = in_file_storage->folder();
+	std::vector<std::string> files = in_file_storage->files();
+	std::string cwd = vul_file::get_cwd();
 	vul_file::change_directory(folder);
 
 	elbow_mesh_view(cwd, files);
@@ -114,7 +114,7 @@ execute()
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

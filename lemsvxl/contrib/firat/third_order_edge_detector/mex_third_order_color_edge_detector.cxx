@@ -5,9 +5,9 @@
  *      Author: firat
  */
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <string>
+#include <cstdlib>
 #include <dbdet/algo/dbdet_third_order_color_detector.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -92,7 +92,7 @@ void mexFunction(int nlhs, mxArray *plhs[ ], int nrhs, const mxArray *prhs[ ])
 	int num_edges = edgemap->num_edgels();
 	plhs[0] = mxCreateDoubleMatrix(num_edges, 4, mxREAL);
 	double* out_ptr = mxGetPr(plhs[0]);
-	vcl_vector<dbdet_edgel*> edges = edgemap->edgels;
+	std::vector<dbdet_edgel*> edges = edgemap->edgels;
 	for(int i = 0; i < num_edges; i++)
 	{
 		out_ptr[i] = edges[i]->pt.x()+1;

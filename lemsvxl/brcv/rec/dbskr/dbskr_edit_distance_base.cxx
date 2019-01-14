@@ -9,7 +9,7 @@
 #include "dbskr_edit_distance_base.h"
 #include <dbskr/dbskr_directed_tree.h>
 #include <vbl/vbl_array_1d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 #define NEWEPS     float(1e-5)
@@ -38,7 +38,7 @@ bool dbskr_edit_distance_base::edit()
 {
   if (!tree1_ || !tree2_) 
   {
-    vcl_cout << "trees not read!\n";
+    std::cout << "trees not read!\n";
     return false;
   }
 
@@ -69,39 +69,39 @@ bool dbskr_edit_distance_base::edit()
       root2_ = tree2_->centroid();
   }
 
-  vcl_vector<int>& out_darts_root2 = tree2_->out_darts(root2_); 
+  std::vector<int>& out_darts_root2 = tree2_->out_darts(root2_); 
   
   //: set up flags in T2
   tree2_->set_up(out_darts_root2);
 
   //: set up flags in T1 such that dart 0's head is root
-  vcl_vector<int> tmp2;
+  std::vector<int> tmp2;
   tmp2.push_back(root1);
   tree1_->set_up(tmp2);
 
   //: order the sub problems in T1
-  vcl_vector<int> a1_list = tree1_->order_subproblems();
+  std::vector<int> a1_list = tree1_->order_subproblems();
 
   //: find special darts in T2
-  vcl_vector<int> a2_list = tree2_->find_special_darts(out_darts_root2);
+  std::vector<int> a2_list = tree2_->find_special_darts(out_darts_root2);
 
   //: initialize complete subproblem array to all zeros
-  vcl_vector<float> tmp(size1_, 0);
+  std::vector<float> tmp(size1_, 0);
   C_ = tmp;
 
   if (return_path_) 
   {
     for (int i = 0; i<size1_; i++) 
     {
-      vcl_vector<pathtable_key> tmp;
+      std::vector<pathtable_key> tmp;
       CP_.push_back(tmp);
     }
   }
 
-  //: initialize M (vcl_vector<vcl_vector<float> > M_);
+  //: initialize M (std::vector<std::vector<float> > M_);
   for (int i = 0; i<size1_; i++) 
   {
-    vcl_vector<float> tmp(size2_);
+    std::vector<float> tmp(size2_);
     M_.push_back(tmp);
   }
 
@@ -109,8 +109,8 @@ bool dbskr_edit_distance_base::edit()
   {
     for (int i = 0; i<size1_; i++) 
     {
-      vcl_vector<pathtable_key> tmp3;
-      vcl_vector<vcl_vector<pathtable_key> > tmp2(size2_, tmp3);
+      std::vector<pathtable_key> tmp3;
+      std::vector<std::vector<pathtable_key> > tmp2(size2_, tmp3);
       MP_.push_back(tmp2);
     }
   }
@@ -131,10 +131,10 @@ bool dbskr_edit_distance_base::edit()
     }
   }
 
-  //: take space for A (vcl_vector<vcl_vector<float> > A_);
+  //: take space for A (std::vector<std::vector<float> > A_);
   for (int i = 0; i<size1_; i++) 
   {
-    vcl_vector<float> tmp(size2_);
+    std::vector<float> tmp(size2_);
     A_.push_back(tmp);
   }
 
@@ -142,8 +142,8 @@ bool dbskr_edit_distance_base::edit()
   {
     for (int i = 0; i<size1_; i++) 
     {
-      vcl_vector<pathtable_key> tmp3;
-      vcl_vector<vcl_vector<pathtable_key> > tmp2(size2_, tmp3);
+      std::vector<pathtable_key> tmp3;
+      std::vector<std::vector<pathtable_key> > tmp2(size2_, tmp3);
       AP_.push_back(tmp2);
     }
   }
@@ -152,20 +152,20 @@ bool dbskr_edit_distance_base::edit()
   solve_complete_subproblems();
 
 #if 0
-  vcl_string name = "mypathtable.txt";
-  vcl_ofstream mypof(name.c_str(), vcl_ios::out);
-  mypof << pathtable_.size() << vcl_endl;
-  vcl_map<pathtable_key, float>::iterator iter;
+  std::string name = "mypathtable.txt";
+  std::ofstream mypof(name.c_str(), std::ios::out);
+  mypof << pathtable_.size() << std::endl;
+  std::map<pathtable_key, float>::iterator iter;
   for(iter = pathtable_.begin(); iter != pathtable_.end(); iter++)
     {
         pathtable_key key = (*iter).first;
         float val = iter->second;
-        //vcl_cout << "(" << key.first.first << ", " << key.first.second << "), ";
+        //std::cout << "(" << key.first.first << ", " << key.first.second << "), ";
         mypof << key.first.first << " " << key.first.second << " ";
-        //vcl_cout << "(" << key.second.first << ", " << key.second.second << ") is the key and its value is " << val << vcl_endl;    
-        mypof << key.second.first << " " << key.second.second << " " << val << vcl_endl;    
+        //std::cout << "(" << key.second.first << ", " << key.second.second << ") is the key and its value is " << val << std::endl;    
+        mypof << key.second.first << " " << key.second.second << " " << val << std::endl;    
     }
-  //vcl_cout << "size of map: " << pathtable_.size() << vcl_endl;
+  //std::cout << "size of map: " << pathtable_.size() << std::endl;
 #endif
 
   return true;
@@ -176,7 +176,7 @@ bool dbskr_edit_distance_base::edit()
 //: incomplete subproblems are kept in M: 
 //  M_[d1][d2] = rooted tree edit distance of T1(d1) (after tree of d1 in T1) and T2(d2) (after 
 void dbskr_edit_distance_base::
-solve_incomplete_subproblems(vcl_vector<int>& a1_list, vcl_vector<int>& a2_list) 
+solve_incomplete_subproblems(std::vector<int>& a1_list, std::vector<int>& a2_list) 
 {
   if (return_path_) 
   {
@@ -186,7 +186,7 @@ solve_incomplete_subproblems(vcl_vector<int>& a1_list, vcl_vector<int>& a2_list)
       for (unsigned int j = 0; j<a1_list.size(); j++) 
       {
         int a1 = a1_list[j];
-        vcl_vector<int> tmp;
+        std::vector<int> tmp;
         tmp.push_back(tree1_->mate(tree1_->next(a1)));
 
         //: this sets the up flags in the appropriate subtree only
@@ -205,7 +205,7 @@ solve_incomplete_subproblems(vcl_vector<int>& a1_list, vcl_vector<int>& a2_list)
       for (unsigned int j = 0; j<a1_list.size(); j++) 
       {
         int a1 = a1_list[j];
-        vcl_vector<int> tmp;
+        std::vector<int> tmp;
         tmp.push_back(tree1_->mate(tree1_->next(a1)));
         
         //: this sets the up flags in the appropriate subtree only
@@ -414,7 +414,7 @@ basic_path(int a1, int a2, int d1, int d2)
         if (isL(val1,val3,NEWEPS)) 
         {
           //: now call again to get the vector
-          vcl_vector<pathtable_key> vec;
+          std::vector<pathtable_key> vec;
           witht(a1, a2, d1, d2, d1, d2, vec);
           AP_[d1][d2] = vec;
           return val1;
@@ -601,9 +601,9 @@ witht(int a1, int a2, int d1, int d2, int td1, int td2)
 //------------------------------------------------------------------------------
 //: find the min deformation cost in matching branches starting with down pointing darts d1 and d2
 float dbskr_edit_distance_base::
-witht(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) 
+witht(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) 
 {
-  vcl_vector<pathtable_key> vec1, vec2, vec3;
+  std::vector<pathtable_key> vec1, vec2, vec3;
   float val1 = match(a1, a2, d1, d2, td1, td2, vec1);
   float val2 = merge_down_tree1(a1, a2, d1, d2, td1, td2, vec2);
   float val3 = merge_down_tree2(a1, a2, d1, d2, td1, td2, vec3);
@@ -654,7 +654,7 @@ match(int a1, int a2, int d1, int d2, int td1, int td2)
   key.second.second = tree2_->head(d2);
 
   float match_cost;
-  vcl_map<pathtable_key, float>::iterator iter;
+  std::map<pathtable_key, float>::iterator iter;
   iter = pathtable_.find(key);
   if (iter == pathtable_.end())
     match_cost = LARGE;
@@ -669,7 +669,7 @@ match(int a1, int a2, int d1, int d2, int td1, int td2)
 //: compute cost of matching path in T1 from td1 through d1 
 //                   against path in T2 from td2 through d2
 float dbskr_edit_distance_base::
-match(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) 
+match(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) 
 {  
   //: find cost of upper part
   int mate_td1 = tree1_->mate(td1);
@@ -709,7 +709,7 @@ match(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key
 float dbskr_edit_distance_base::
 merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2) 
 {
-  vcl_vector<int>& ch = tree1_->children(d1);
+  std::vector<int>& ch = tree1_->children(d1);
   float min_cost = LARGE;
 
   // changing the order of children processing
@@ -737,12 +737,12 @@ merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2)
 //------------------------------------------------------------------------------
 //:
 float dbskr_edit_distance_base::
-merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) 
+merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) 
 {  
-  vcl_vector<int>& ch = tree1_->children(d1);
+  std::vector<int>& ch = tree1_->children(d1);
   float min_cost = LARGE;
-  vcl_vector<pathtable_key> tmp;
-  vcl_vector<vcl_vector<pathtable_key> > big_tmp(ch.size(), tmp);
+  std::vector<pathtable_key> tmp;
+  std::vector<std::vector<pathtable_key> > big_tmp(ch.size(), tmp);
   int min_id = -1;
 
   for (int i = ch.size()-1; i>=0; i--) 
@@ -775,7 +775,7 @@ merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pa
 float dbskr_edit_distance_base::
 merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2) 
 {
-  vcl_vector<int>& ch = tree2_->children(d2);
+  std::vector<int>& ch = tree2_->children(d2);
   float min_cost = LARGE;
   for (int i = ch.size()-1; i>=0; i--) 
   {
@@ -801,17 +801,17 @@ merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2)
 //------------------------------------------------------------------------------
 //:
 float dbskr_edit_distance_base::
-merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec) 
+merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec) 
 {
-  vcl_vector<int>& ch = tree2_->children(d2);
+  std::vector<int>& ch = tree2_->children(d2);
   float min_cost = LARGE;
-  vcl_vector<pathtable_key> tmp;
-  //vcl_vector<vcl_vector<pathtable_key> > big_tmp(ch.size(), tmp);
-  vbl_array_1d<vcl_vector<pathtable_key> > big_tmp(ch.size(), tmp);
+  std::vector<pathtable_key> tmp;
+  //std::vector<std::vector<pathtable_key> > big_tmp(ch.size(), tmp);
+  vbl_array_1d<std::vector<pathtable_key> > big_tmp(ch.size(), tmp);
   int min_id = -1;
   for (int i = ch.size()-1; i>=0; i--) {
     int d = ch[i];
-    //vcl_vector<pathtable_key> tmp;  
+    //std::vector<pathtable_key> tmp;  
     float cost = witht(a1, a2, d1, d, td1, td2, big_tmp[i]);
     
     // just add to this cost the cost of splicing siblings of d
@@ -867,7 +867,7 @@ maybe_right_splice_out_tree1(int a1, int d1, int d2)
 
 //------------------------------------------------------------------------------
 //:
-vcl_vector<pathtable_key>& dbskr_edit_distance_base::
+std::vector<pathtable_key>& dbskr_edit_distance_base::
 maybe_right_splice_out_tree1_vec(int a1, int d1, int d2) 
 {
   int d = tree1_->next(tree1_->mate(d1));
@@ -923,7 +923,7 @@ maybe_right_splice_out_tree2(int a2, int d2, int d1)
 
 //------------------------------------------------------------------------------
 //:
-vcl_vector<pathtable_key>& dbskr_edit_distance_base::
+std::vector<pathtable_key>& dbskr_edit_distance_base::
 maybe_right_splice_out_tree2_vec(int a2, int d2, int d1) 
 {
   int d = tree2_->next(tree2_->mate(d2));
@@ -961,13 +961,13 @@ maybe_right_splice_out_tree2_vec(int a2, int d2, int d1)
 void dbskr_edit_distance_base::
 solve_complete_subproblems() 
 {
-  vcl_vector<int> tmp = tree2_->out_darts(root2_);
+  std::vector<int> tmp = tree2_->out_darts(root2_);
   int a2 = tree2_->mate(tmp[0]);
 
   //: first solve without keeping the paths
   for (int a1 = 0; a1<size1_; a1++) 
   {
-    vcl_vector<int>& tmp = tree1_->out_darts(tree1_->head(a1));
+    std::vector<int>& tmp = tree1_->out_darts(tree1_->head(a1));
     tree1_->set_up(tmp);
     phase(a1, a2, true);
   }
@@ -987,13 +987,13 @@ solve_complete_subproblems()
   //: now solve again to find the path if the user wants it
   if (return_path_) 
   {
-    vcl_vector<int>& tmp = tree1_->out_darts(tree1_->head(final_a1_));
+    std::vector<int>& tmp = tree1_->out_darts(tree1_->head(final_a1_));
     tree1_->set_up(tmp);
     phase_path(final_a1_, a2, true);
 
     if (C_[final_a1_] != final_cost_) 
     {
-      vcl_cout << "PROBLEM in dbskr_edit_distance_base::solve_complete_subproblems(): "
+      std::cout << "PROBLEM in dbskr_edit_distance_base::solve_complete_subproblems(): "
         << "final_cost_ (" << final_cost_ << ") is dif then C_[final_a1_] (" 
         << C_[final_a1_] << ")\n";
     }

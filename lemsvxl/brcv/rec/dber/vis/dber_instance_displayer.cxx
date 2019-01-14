@@ -19,7 +19,7 @@ dber_instance_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Return a NULL tableau if the types don't match
   if( storage->type() != this->type() )
     {
-      vcl_cout << "In dber_instance_displayer::make_tableau -"
+      std::cout << "In dber_instance_displayer::make_tableau -"
                << " types don't match\n";
       return NULL;
     }
@@ -34,16 +34,16 @@ dber_instance_displayer::make_tableau( bpro1_storage_sptr storage) const
   grid->set_grid_size_changeable(false);
   
   // Extract the instances
-  vcl_vector< vcl_vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage->get_frames();
+  std::vector< std::vector<dbru_multiple_instance_object_sptr> >& frames = ins_storage->get_frames();
   if(frames.size()==0)
     return grid;
   unsigned col = 0;
-  vcl_cout << "adding frames to display: " << col << " ";
+  std::cout << "adding frames to display: " << col << " ";
   for ( ; col < ncols && col < frames.size(); col++) {
-    vcl_cout << "frame at: " << col << " ";
+    std::cout << "frame at: " << col << " ";
     unsigned np = frames[col].size();
     for (unsigned row = 0; row < np && row < nrows; row++) {
-      vcl_cout << row << " ";
+      std::cout << row << " ";
       dbru_multiple_instance_object_sptr obs = frames[col][row];
       if (!obs) 
         continue;
@@ -55,7 +55,7 @@ dber_instance_displayer::make_tableau( bpro1_storage_sptr storage) const
           grid->add_at(vtab, col, row);
         }
     }
-    vcl_cout << "...done!\n";
+    std::cout << "...done!\n";
   }
     
   return grid; 

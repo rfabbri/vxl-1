@@ -21,7 +21,7 @@
 #include <dbskr/pro/dbskr_shock_match_storage_sptr.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process is for matching extrinsic shock graphs
 class dbskr_shock_match_pmi_process : public dbskr_shock_match_process
@@ -32,12 +32,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  virtual vcl_string name() {
+  virtual std::string name() {
     return "Match Shock Graphs using MI";
   }
 
-  virtual vcl_vector< vcl_string > get_input_type();
-  virtual vcl_vector< vcl_string > get_output_type();
+  virtual std::vector< std::string > get_input_type();
+  virtual std::vector< std::string > get_output_type();
   
   virtual bool execute();
 };

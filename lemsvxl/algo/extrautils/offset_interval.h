@@ -2,7 +2,7 @@
 #define OFFSET_INTERVAL_H_INCLUDED
 
 #include "geomnodes.h"
-#include <vcl_vector>
+#include <std::vector>
 
 class OffsetIntervalGeom : public GeometryNode {
   double start_length, end_length;

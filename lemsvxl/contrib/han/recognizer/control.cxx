@@ -2,7 +2,7 @@
 // Ian Scott, Feb 2004.
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 #include "tube.h"
 #include <vnl/vnl_math.h>

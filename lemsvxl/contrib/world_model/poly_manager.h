@@ -39,10 +39,10 @@ public:
   //==================== Polygon Functions ====================
   // POLYGON MENU
   void load_left_image();  
-  void load_left_image(vcl_string filename);
+  void load_left_image(std::string filename);
   void load_left_camera(); 
   void load_right_image();
-  void load_right_image(vcl_string filename);
+  void load_right_image(std::string filename);
   void load_right_camera();
   void load_images_and_cameras();
   //: selects an existing polygon as the projection plane
@@ -89,7 +89,7 @@ public:
   void save_x3d();
   void load_mesh_single();
   void load_mesh_multiple();
-  void load_mesh(vcl_string fname);
+  void load_mesh(std::string fname);
   void define_lvcs_utm();
   void define_lvcs();
   void save_lvcs();
@@ -129,21 +129,21 @@ private:
 
   obj_observable* my_obj;
   obj_observable* selected_mesh_;
-  vcl_list<obj_observable* >objects;
+  std::list<obj_observable* >objects;
   vsol_polygon_2d_sptr poly2d; 
   float mouse_start_x, mouse_start_y;
   float cur_pointx, cur_pointy;
   bool left_button_down, middle_button_down, left_shift_down;
   vbl_smart_ptr<bgeo_lvcs> lvcs_;
   vsol_point_3d_sptr selected_vertex_;
-  vcl_string select_file();
-  void read_world_points(vcl_string fname);
+  std::string select_file();
+  void read_world_points(std::string fname);
   obj_observable* find_polygon_in_3D(unsigned id, vsol_polygon_3d_sptr& poly, unsigned& index);
   void delete_observable(observable* obs);
 
   vpgl_camera<double>* select_camera();
 
-  vpgl_proj_camera<double> read_projective_camera(vcl_string cam_path);
+  vpgl_proj_camera<double> read_projective_camera(std::string cam_path);
 
   void get_selection(obj_observable* &obs, unsigned &face_id);
 

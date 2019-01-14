@@ -8,7 +8,7 @@
 // \date        2005-09-09
 // 
 #include "det_cylinder_map.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_double_2.h>
@@ -20,10 +20,10 @@ class det_nonmaxium_suppression
     int nv_;
 
     //: vetice indice for each voxel
-    vcl_vector<vbl_array_3d<int> > vertice_map_;
+    std::vector<vbl_array_3d<int> > vertice_map_;
 
     //: vertice in the suppression box
-    vcl_vector<vgl_point_3d<double> > vertice_; 
+    std::vector<vgl_point_3d<double> > vertice_; 
 
     //: changing from (i, j, k) index to 1d vector index
     inline int vertice_index(int i, int j, int k)
@@ -37,8 +37,8 @@ class det_nonmaxium_suppression
     //: use a second degree monger term to interprelate location
     vnl_double_2 quadratic_interp_loc(const vbl_array_2d<double> &a) const;
 
-    void create_vertices(int n, vcl_vector<vbl_array_3d<int> > &vertice_map, 
-      vcl_vector<vgl_point_3d<double> > &vertice);
+    void create_vertices(int n, std::vector<vbl_array_3d<int> > &vertice_map, 
+      std::vector<vgl_point_3d<double> > &vertice);
 
   public:
 

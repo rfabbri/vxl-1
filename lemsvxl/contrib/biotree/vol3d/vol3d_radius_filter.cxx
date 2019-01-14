@@ -1,14 +1,14 @@
 #include "vol3d_radius_filter.h"
-#include <vcl_cmath.h>
-#include <vcl_valarray.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <valarray>
+#include <algorithm>
+#include <cassert>
+#include <fstream>
 
 
 vol3d_radius_filter::vol3d_radius_filter(int r)
   : shells_(2*r + 1, 2*r + 1, 2*r + 1), 
-  lookup_((int)vcl_ceil(vcl_sqrt(3.0)*r)+1)
+  lookup_((int)std::ceil(std::sqrt(3.0)*r)+1)
 {
   assert( r > 0);
 
@@ -21,11 +21,11 @@ vol3d_radius_filter::vol3d_radius_filter(int r)
     for(int j = 0; j < dim_; j++)
       for(int k = 0; k < dim_; k++)
       {
-        double d = vcl_sqrt(static_cast<double>((i-r)*(i-r) + (j-r)*(j-r) + (k-r)*(k-r)));
+        double d = std::sqrt(static_cast<double>((i-r)*(i-r) + (j-r)*(j-r) + (k-r)*(k-r)));
         
         shells_[i][j][k] = d;
         
-        int shell_index = static_cast<int>( vcl_floor(d));
+        int shell_index = static_cast<int>( std::floor(d));
 
         // change to a coordinate origin at center of the filter.
         quadret coord(i - r, j - r, k - r,d);
@@ -59,7 +59,7 @@ assert(radius< (dim_ -1)/2);
   double density = 0;
   int num_pts = 0;
 
-  int upper_bound = static_cast<int>(vcl_ceil(radius));
+  int upper_bound = static_cast<int>(std::ceil(radius));
 
   for(int r = 0; r <= upper_bound; r++)
   {
@@ -91,7 +91,7 @@ int coord_z = k+z;
 
 }
 
-vcl_valarray<double> vol3d_radius_filter::densities(
+std::valarray<double> vol3d_radius_filter::densities(
     vbl_array_3d<double> const & vol,
     int i, int j, int k)
 {
@@ -99,7 +99,7 @@ vcl_valarray<double> vol3d_radius_filter::densities(
 unsigned int dimy = vol.get_row2_count();
 unsigned int dimz = vol.get_row3_count();
 
-  vcl_valarray<int> tmp(7);
+  std::valarray<int> tmp(7);
   
   tmp[0] = i;
   
@@ -118,7 +118,7 @@ unsigned int dimz = vol.get_row3_count();
   
   int min_r = tmp.min();
   
-  vcl_valarray<double> dens(min_r);
+  std::valarray<double> dens(min_r);
   for(int r = 0; r < min_r; r++)
   {
     int num_pts = 0;
@@ -150,9 +150,9 @@ unsigned int dimz = vol.get_row3_count();
   return dens;
 }
 
-vcl_valarray<double> 
+std::valarray<double> 
 vol3d_radius_filter::densities(vbl_array_3d<double> const & vol,
-    vcl_valarray<double> const &rprobes, 
+    std::valarray<double> const &rprobes, 
     int i, int j, int k)
 {
 unsigned int dimx = vol.get_row1_count();
@@ -160,7 +160,7 @@ unsigned int dimy = vol.get_row2_count();
 unsigned int dimz = vol.get_row3_count();
 
   // for each probe shell
-  vcl_valarray<double> dens(0.0, rprobes.size());
+  std::valarray<double> dens(0.0, rprobes.size());
   
   assert(rprobes.size() > 0);
   for(int l = 0; l < rprobes.size(); l++)
@@ -180,8 +180,8 @@ unsigned int dimz = vol.get_row3_count();
    double lower_val = rprobes[rp-1];
    double upper_val = rprobes[rp];
    
-   int lower_bound = static_cast<int> (vcl_floor(lower_val));
-   int upper_bound = static_cast<int> (vcl_ceil(upper_val));
+   int lower_bound = static_cast<int> (std::floor(lower_val));
+   int upper_bound = static_cast<int> (std::ceil(upper_val));
 
     for(int r = lower_bound; r <= upper_bound; r++)
     {
@@ -255,9 +255,9 @@ assert(radius < (dim_ -1) / 2);
 
 }
 
-vcl_valarray<double> 
+std::valarray<double> 
 vol3d_radius_filter::densities(vil3d_image_view<vxl_uint_16>const & vol_view,
-    vcl_valarray<double> const &rprobes, 
+    std::valarray<double> const &rprobes, 
     int i, int j, int k)
 {
 unsigned int dimx = vol_view.ni();
@@ -265,7 +265,7 @@ unsigned int dimy = vol_view.nj();
 unsigned int dimz = vol_view.nk();
 
   // for each probe shell
-  vcl_valarray<double> dens(0.0, rprobes.size());
+  std::valarray<double> dens(0.0, rprobes.size());
   
   assert(rprobes.size() > 0);
   for(int l = 0; l < rprobes.size(); l++)
@@ -277,8 +277,8 @@ unsigned int dimz = vol_view.nk();
 
   // all the other shell
 
-  vcl_string point_intensity = "C:\\scale_selection\\intensities.txt";
-  vcl_ofstream fstream(point_intensity.c_str());
+  std::string point_intensity = "C:\\scale_selection\\intensities.txt";
+  std::ofstream fstream(point_intensity.c_str());
 
   for(int rp = 1; rp < rprobes.size(); rp ++)
   {

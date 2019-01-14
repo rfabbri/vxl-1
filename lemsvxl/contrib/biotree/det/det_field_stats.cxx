@@ -4,7 +4,7 @@ det_field_stats::det_field_stats()
 {
 }
 
-det_field_stats::det_field_stats(vcl_vector< xmvg_filter_response<double> > responses) : 
+det_field_stats::det_field_stats(std::vector< xmvg_filter_response<double> > responses) : 
 responses_(responses)
 {
 }
@@ -31,7 +31,7 @@ void det_field_stats::compute_responses_at(xscan_dummy_scan scan, vgl_box_3d<dou
   xmvg_no_noise_filter_3d fy(fdy);
   xmvg_no_noise_filter_3d fz(fdz);
   // push the constructed filters into a vector
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   filters.push_back(fx);
   filters.push_back(fy);
   filters.push_back(fz);

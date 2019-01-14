@@ -2,8 +2,8 @@
 #include <wx/colour.h>
 #include <wx/gdicmn.h>
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 
 #include "basegui_color.h"
 #include "basegui_style.h"
@@ -19,7 +19,7 @@ void lookup_standard_color(StandardColor c, float &r, float &g, float &b)
 
 void ColorList::lookupStandardColor(StandardColor color, float &r, float &g, float &b)
   {
-    vcl_map<StandardColor, vcl_string>::iterator it;
+    std::map<StandardColor, std::string>::iterator it;
 
     it = _colorList.find(color);
 
@@ -67,7 +67,7 @@ StyleSet ColorAllocator::operator()()
     if (_count>=MAX_COLORS)
         _count =0;  
 
-    while(vcl_find(_blockColors.begin(), _blockColors.end(),StandardColor(_count))!=_blockColors.end())
+    while(std::find(_blockColors.begin(), _blockColors.end(),StandardColor(_count))!=_blockColors.end())
       {
         _count++;
         if (_count>=MAX_COLORS)

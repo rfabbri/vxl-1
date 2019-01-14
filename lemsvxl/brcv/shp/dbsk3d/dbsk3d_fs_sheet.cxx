@@ -2,9 +2,9 @@
 //: MingChing Chang
 //  Nov 30, 2006        Creation
 
-#include <vcl_cstdio.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <cstdio>
+#include <iostream>
+#include <sstream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_fs_sheet.h>
@@ -14,12 +14,12 @@
 #include <dbsk3d/dbsk3d_fs_mesh.h>
 
 //: Get all associated generators of this fs_sheet.
-void dbsk3d_fs_sheet::get_asso_Gs (vcl_set<dbmsh3d_vertex*>& Gset,
+void dbsk3d_fs_sheet::get_asso_Gs (std::set<dbmsh3d_vertex*>& Gset,
                                    const bool remove_G_from_L_N)
 {
   //Collect genes from all fs_faces and all FEs and FVs.
-  vcl_set<dbsk3d_fs_edge*> FE_set;
-  vcl_set<dbsk3d_fs_vertex*> FV_set;
+  std::set<dbsk3d_fs_edge*> FE_set;
+  std::set<dbsk3d_fs_vertex*> FV_set;
 
   for (dbmsh3d_ptr_node* cur = FF_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) cur->ptr();
@@ -40,7 +40,7 @@ void dbsk3d_fs_sheet::get_asso_Gs (vcl_set<dbmsh3d_vertex*>& Gset,
   }
 
   //Go through FE_set and add all genes to Gset.
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = FE_set.begin();
+  std::set<dbsk3d_fs_edge*>::iterator lit = FE_set.begin();
   for (; lit != FE_set.end(); lit++) {
     dbsk3d_fs_edge* FE = (*lit);      
     for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
@@ -52,7 +52,7 @@ void dbsk3d_fs_sheet::get_asso_Gs (vcl_set<dbmsh3d_vertex*>& Gset,
   }
 
   //Go through FV_set and add all genes to Gset.
-  vcl_set<dbsk3d_fs_vertex*>::iterator nit = FV_set.begin();
+  std::set<dbsk3d_fs_vertex*>::iterator nit = FV_set.begin();
   for (; nit != FV_set.end(); nit++) {
     dbsk3d_fs_vertex* FV = (*nit);    
     for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
@@ -65,10 +65,10 @@ void dbsk3d_fs_sheet::get_asso_Gs (vcl_set<dbmsh3d_vertex*>& Gset,
 }
 
 //: Get the associated boundary mesh faces (triangles) of this fs_sheet.
-void dbsk3d_fs_sheet::get_bnd_mesh_Fs (vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<dbmsh3d_face*>& Gfaces,
-                                       vcl_set<dbmsh3d_face*>& Gfaces2, vcl_set<dbmsh3d_face*>& Gfaces1)
+void dbsk3d_fs_sheet::get_bnd_mesh_Fs (std::set<dbmsh3d_vertex*>& Gset, std::set<dbmsh3d_face*>& Gfaces,
+                                       std::set<dbmsh3d_face*>& Gfaces2, std::set<dbmsh3d_face*>& Gfaces1)
 {
-  vcl_vector<dbsk3d_fs_face*> fs_faces;
+  std::vector<dbsk3d_fs_face*> fs_faces;
   for (dbmsh3d_ptr_node* cur = FF_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) cur->ptr();
     fs_faces.push_back (FF);
@@ -78,11 +78,11 @@ void dbsk3d_fs_sheet::get_bnd_mesh_Fs (vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<d
 
 //: Collect all boundary A3 and A13 (and higher order) fs_edges.
 //  The interior fs_edges are ignored, even if they are of type A13.
-void dbsk3d_fs_sheet::get_bnd_FEs (vcl_set<dbsk3d_fs_edge*>& A3_fs_edges, 
-                                   vcl_set<dbsk3d_fs_edge*>& A13_fs_edges)
+void dbsk3d_fs_sheet::get_bnd_FEs (std::set<dbsk3d_fs_edge*>& A3_fs_edges, 
+                                   std::set<dbsk3d_fs_edge*>& A13_fs_edges)
 {
   //Make a temporary FF_set for efficient query.
-  vcl_set<dbmsh3d_face*> Fset;
+  std::set<dbmsh3d_face*> Fset;
   for (dbmsh3d_ptr_node* cur = FF_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) cur->ptr();
     Fset.insert (FF);      
@@ -177,16 +177,16 @@ void dbsk3d_fs_sheet::mark_all_FFs_invalid ()
 }
 
 //: Pass all S'generators of S to the remaining fs_edges.
-void dbsk3d_fs_sheet::S_pass_Gs (vcl_vector<dbsk3d_fs_edge*>& C_Ls)
+void dbsk3d_fs_sheet::S_pass_Gs (std::vector<dbsk3d_fs_edge*>& C_Ls)
 {
   assert (C_Ls.size());
 
   //Collect all genes of S and un-assign them.
-  vcl_set<dbmsh3d_vertex*> Gset;
+  std::set<dbmsh3d_vertex*> Gset;
   get_asso_Gs (Gset, true);
 
   //Loop through each G in GSet and assign to closest FE or FV of C
-  vcl_set<dbmsh3d_vertex*>::iterator it = Gset.begin();
+  std::set<dbmsh3d_vertex*>::iterator it = Gset.begin();
   while (it != Gset.end()) {
     dbmsh3d_vertex* G = *it;
     Gset.erase (it);
@@ -231,7 +231,7 @@ void dbsk3d_fs_sheet::clear_incident_LN_asgn_Gs ()
     while (he != FF->halfedge());
   }
   #if DBMSH3D_DEBUG>2
-  vul_printf (vcl_cout, "S %d (%u fs_faces): %u L_G_asgn and %u N_G_asgn cleared.\n", 
+  vul_printf (std::cout, "S %d (%u fs_faces): %u L_G_asgn and %u N_G_asgn cleared.\n", 
               id_, count, n_LG_asgn, n_NG_asgn);
   #endif
 }
@@ -241,7 +241,7 @@ void dbsk3d_fs_sheet::clear_incident_LN_asgn_Gs ()
 void dbsk3d_fs_sheet::compute_splice_cost ()
 {
   //Go through all assigned genes and count their number.
-  vcl_set<const dbmsh3d_vertex*> genes;
+  std::set<const dbmsh3d_vertex*> genes;
 
   for (dbmsh3d_ptr_node* cur = FF_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) cur->ptr();
@@ -269,79 +269,79 @@ bool dbsk3d_fs_sheet::check_integrity ()
   return true;
 }
 
-void dbsk3d_fs_sheet::getInfo (vcl_ostringstream& ostrm)
+void dbsk3d_fs_sheet::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
 
-  vcl_sprintf (s, "==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbsk3d_fs_sheet id: %d    ", id_); ostrm<<s;
+  std::sprintf (s, "==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbsk3d_fs_sheet id: %d    ", id_); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
   //Query the boundary A3 and A13 shock curves.
-  vcl_set<dbsk3d_fs_edge*> A3_fs_edges; 
-  vcl_set<dbsk3d_fs_edge*> A13_fs_edges;
+  std::set<dbsk3d_fs_edge*> A3_fs_edges; 
+  std::set<dbsk3d_fs_edge*> A13_fs_edges;
   get_bnd_FEs (A3_fs_edges, A13_fs_edges);
 
   unsigned int n_total_A3_genes = 0;
-  vcl_sprintf (s, "\n# boundary A3 links %u: ", A3_fs_edges.size()); ostrm<<s;
-  vcl_set<dbsk3d_fs_edge*>::iterator lit = A3_fs_edges.begin();
+  std::sprintf (s, "\n# boundary A3 links %u: ", A3_fs_edges.size()); ostrm<<s;
+  std::set<dbsk3d_fs_edge*>::iterator lit = A3_fs_edges.begin();
   for (; lit != A3_fs_edges.end(); lit++) {
     dbsk3d_fs_edge* FE = *lit;
-    vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+    std::sprintf (s, " %d", FE->id()); ostrm<<s;
     n_total_A3_genes += FE->n_asgn_Gs();
   }
-  vcl_sprintf (s, "\n  with %u generators.\n", 
+  std::sprintf (s, "\n  with %u generators.\n", 
                A3_fs_edges.size(), n_total_A3_genes); ostrm<<s;
 
-  vcl_sprintf (s, "\n# boundary A13 links %u: ", A13_fs_edges.size()); ostrm<<s;
+  std::sprintf (s, "\n# boundary A13 links %u: ", A13_fs_edges.size()); ostrm<<s;
   lit = A13_fs_edges.begin();
   for (; lit != A13_fs_edges.end(); lit++) {
     dbsk3d_fs_edge* FE = *lit;
-    vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+    std::sprintf (s, " %d", FE->id()); ostrm<<s;
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //fs_faces
-  vcl_set<void*> FF_set;
+  std::set<void*> FF_set;
   unsigned int n_FFs = get_FFs (FF_set);
-  vcl_sprintf (s, "\n# fs_faces %u: ", n_FFs); ostrm<<s;
-  vcl_set<void*>::iterator pit = FF_set.begin();
+  std::sprintf (s, "\n# fs_faces %u: ", n_FFs); ostrm<<s;
+  std::set<void*>::iterator pit = FF_set.begin();
   for (; pit != FF_set.end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit);
-    vcl_sprintf (s, " %d", FF->id()); ostrm<<s;
+    std::sprintf (s, " %d", FF->id()); ostrm<<s;
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
   
   //All assigned generators.
-  vcl_set<dbmsh3d_vertex*> Gset;
+  std::set<dbmsh3d_vertex*> Gset;
   get_asso_Gs (Gset, false);
-  vcl_sprintf (s, "\nTotal asso genes %u: ", Gset.size()); ostrm<<s;
-  vcl_set<dbmsh3d_vertex*>::iterator git = Gset.begin();
+  std::sprintf (s, "\nTotal asso genes %u: ", Gset.size()); ostrm<<s;
+  std::set<dbmsh3d_vertex*>::iterator git = Gset.begin();
   for (; git != Gset.end(); git++) {
     dbmsh3d_vertex* G = *git;
-    vcl_sprintf (s, " %d", G->id()); ostrm<<s;
+    std::sprintf (s, " %d", G->id()); ostrm<<s;
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //All associated bnd_mesh triangles.
-  vcl_set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
+  std::set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
   get_bnd_mesh_Fs (Gset, Gfaces, Gfaces2, Gfaces1);
-  vcl_sprintf (s, "\nGfaces %u: \n", Gfaces.size()); ostrm<<s;
-  vcl_sprintf (s, "Gfaces2 %u: \n", Gfaces2.size()); ostrm<<s;
-  vcl_sprintf (s, "Gfaces1 %u: \n", Gfaces1.size()); ostrm<<s;
+  std::sprintf (s, "\nGfaces %u: \n", Gfaces.size()); ostrm<<s;
+  std::sprintf (s, "Gfaces2 %u: \n", Gfaces2.size()); ostrm<<s;
+  std::sprintf (s, "Gfaces1 %u: \n", Gfaces1.size()); ostrm<<s;
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //##########################################################################
 
-void get_ifs_faces_pts (vcl_set<dbmsh3d_face*>& Gfaces, vcl_set<dbmsh3d_vertex*>& Gset)
+void get_ifs_faces_pts (std::set<dbmsh3d_face*>& Gfaces, std::set<dbmsh3d_vertex*>& Gset)
 {
-  vcl_set<dbmsh3d_face*>::iterator fit = Gfaces.begin();
+  std::set<dbmsh3d_face*>::iterator fit = Gfaces.begin();
   for (; fit != Gfaces.end(); fit++) {
     dbmsh3d_face* F = *fit;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
     for (unsigned int i=0; i<vertices.size(); i++) {
       dbmsh3d_vertex* V = vertices[i];
@@ -353,7 +353,7 @@ void get_ifs_faces_pts (vcl_set<dbmsh3d_face*>& Gfaces, vcl_set<dbmsh3d_vertex*>
 //: Given a generator G and a set of fs_edges on a curve,
 //  find the closest fs_edge or fs_vertex to G.
 void get_closest_L_from_G (const dbmsh3d_vertex* G,
-                           const vcl_vector<dbsk3d_fs_edge*>& C_Ls,
+                           const std::vector<dbsk3d_fs_edge*>& C_Ls,
                            dbsk3d_fs_edge** closestL,
                            dbsk3d_fs_vertex** closestN)
 {

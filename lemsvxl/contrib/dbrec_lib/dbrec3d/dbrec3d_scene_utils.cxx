@@ -7,7 +7,7 @@
 #include <boxm/boxm_scene_parser.h>
 #include "dbrec3d_part_instance.h"
 
-boxm_scene_base_sptr dbrec3d_load_scene(vcl_string filename)
+boxm_scene_base_sptr dbrec3d_load_scene(std::string filename)
 {
   boxm_scene_parser parser;
 
@@ -26,7 +26,7 @@ boxm_scene_base_sptr dbrec3d_load_scene(vcl_string filename)
     scene_ptr = scene;
   }
   else {
-    vcl_cerr << "dbrec3d_create_scene_process: undefined datatype\n";
+    std::cerr << "dbrec3d_create_scene_process: undefined datatype\n";
     return false;
   }
   return 0;

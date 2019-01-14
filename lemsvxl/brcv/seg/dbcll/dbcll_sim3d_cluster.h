@@ -14,7 +14,7 @@
 
 
 #include "dbcll_cluster.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <bgld/algo/bgld_similarity_3d.h>
 
 #include "dbcll_cluster_sptr.h"
@@ -29,13 +29,13 @@ class dbcll_sim3d_cluster : public dbcll_cluster
     : xforms_(NULL), mean_(), var_(0.0) {}
 
   //: Constructor - from a single point
-  dbcll_sim3d_cluster(const vcl_vector<bgld_similarity_3d<double> >& xforms,
+  dbcll_sim3d_cluster(const std::vector<bgld_similarity_3d<double> >& xforms,
                       unsigned idx)
     : dbcll_cluster(idx), xforms_(&xforms), mean_(xforms[idx]), var_(0.0) {}
 
   //: Constructor
-  dbcll_sim3d_cluster(const vcl_vector<bgld_similarity_3d<double> >& xforms,
-                      const vcl_vector<unsigned>& idxs)
+  dbcll_sim3d_cluster(const std::vector<bgld_similarity_3d<double> >& xforms,
+                      const std::vector<unsigned>& idxs)
     : dbcll_cluster(idxs), xforms_(&xforms), mean_(xforms[idxs[0]]), var_(0.0)
   {
     compute_stats();
@@ -70,7 +70,7 @@ class dbcll_sim3d_cluster : public dbcll_cluster
   void compute_stats();
 
  private:
-  const vcl_vector<bgld_similarity_3d<double> >* xforms_;
+  const std::vector<bgld_similarity_3d<double> >* xforms_;
   bgld_similarity_3d<double> mean_;
   double var_;
 
@@ -78,8 +78,8 @@ class dbcll_sim3d_cluster : public dbcll_cluster
 
 
 //: Generate a vector of single element clusters
-vcl_vector<dbcll_cluster_sptr> 
-dbcll_init_sim3d_clusters(const vcl_vector<bgld_similarity_3d<double> >& pts);
+std::vector<dbcll_cluster_sptr> 
+dbcll_init_sim3d_clusters(const std::vector<bgld_similarity_3d<double> >& pts);
 
 
 

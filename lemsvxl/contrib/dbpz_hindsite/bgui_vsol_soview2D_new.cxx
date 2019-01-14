@@ -2,7 +2,7 @@
 // \file
 #include "bgui_vsol_soview2D_new.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_style.h>
@@ -31,7 +31,7 @@ bgui_vsol_soview2D_new::bgui_vsol_soview2D_new( vsol_spatial_object_2d_sptr cons
 {
 }
 
-vcl_ostream& bgui_vsol_soview2D_new::print(vcl_ostream& s) const
+std::ostream& bgui_vsol_soview2D_new::print(std::ostream& s) const
 {
   this->sptr_->describe(s);
   return vgui_soview2D::print(s);
@@ -96,7 +96,7 @@ vsol_line_2d_sptr bgui_vsol_soview2D_new_line_seg::sptr() const
 
 void bgui_vsol_soview2D_new_line_seg::draw() const
 {
-  //vcl_cerr << "line id : " << id << vcl_endl;
+  //std::cerr << "line id : " << id << std::endl;
 
   //glLineWidth(style->line_width);
   glBegin(GL_LINES);
@@ -206,7 +206,7 @@ void bgui_vsol_soview2D_new_polyline::translate(float tx, float ty)
 //: vdgl_digital_curve regular view
 //--------------------------------------------------------------------------
 
-vcl_ostream& bgui_vsol_soview2D_new_digital_curve::print(vcl_ostream& s) const
+std::ostream& bgui_vsol_soview2D_new_digital_curve::print(std::ostream& s) const
 {
   return s;
 }
@@ -323,7 +323,7 @@ vsol_polygon_2d_sptr bgui_vsol_soview2D_new_polygon::sptr() const
 // such that selection will work when INSIDE the polygon (this, BTW is how it should work
 // in all cases, makes no sense to do it the same as a polyLINE when this is a POLYGON (not line!)
 void bgui_vsol_soview2D_new_polygon::draw_select() const {
-    //vcl_cout << "inside polygon draw select!" << vcl_endl;
+    //std::cout << "inside polygon draw select!" << std::endl;
   unsigned int n = sptr()->size();
 
   //yup, all i did was change from GL_LINE_STRIP to GL_POLYGON
@@ -339,7 +339,7 @@ void bgui_vsol_soview2D_new_polygon::draw_select() const {
 void bgui_vsol_soview2D_new_polygon::draw() const
 {
     //DEBUG
-    //vcl_cout << "inside polygon and drawing!" << vcl_endl;
+    //std::cout << "inside polygon and drawing!" << std::endl;
     
 
   unsigned int n = sptr()->size();
@@ -347,7 +347,7 @@ void bgui_vsol_soview2D_new_polygon::draw() const
   glBegin( GL_LINE_STRIP );
   for (unsigned int i=0; i<n;i++)
   {
-      //vcl_cout << "drawing: (" << sptr()->vertex(i)->x() << ", " << sptr()->vertex(i)->y() << ")" << vcl_endl;
+      //std::cout << "drawing: (" << sptr()->vertex(i)->x() << ", " << sptr()->vertex(i)->y() << ")" << std::endl;
     glVertex2f( sptr()->vertex(i)->x() , sptr()->vertex(i)->y() );
   }
   glEnd();

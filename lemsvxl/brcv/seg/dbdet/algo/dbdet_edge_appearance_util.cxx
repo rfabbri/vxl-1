@@ -29,10 +29,10 @@ void dbdet_add_intensity_app(vil_image_view<vxl_byte>& greyscale_view, dbdet_edg
         dbdet_edgel* e = edgemap->edgels[i];
 
         //get the point to read off the intensity from
-        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() - 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
-        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() + 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() - 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() + 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
 
         // get the appearance data
         dbdet_appearance* lapp = new dbdet_intensity(vil_bilin_interp(greyscale_view, ptL.x(), ptL.y()));
@@ -55,10 +55,10 @@ void dbdet_add_intensity_app(vil_image_view<vxl_byte>& greyscale_view, dbdet_edg
         dbdet_edgel* e = edgemap->edgels[i];
 
         //get the point to read off the intensity from
-        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() - 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
-        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() + 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() - 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() + 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
 
         // get the appearance data
         dbdet_appearance* lapp = new dbdet_intensity(vil_bilin_interp(sm_img, ptL.x(), ptL.y()));
@@ -73,9 +73,9 @@ void dbdet_add_intensity_app(vil_image_view<vxl_byte>& greyscale_view, dbdet_edg
     case 2: //get intensity from half Gaussian kernels
     {
       //compute the intensities on either side of the edge smoothed by a half gaussian
-      vcl_vector<double> IL, IR;
-      vcl_vector<vgl_point_2d<double> > pts(edgemap->edgels.size());
-      vcl_vector<double> thetas(edgemap->edgels.size());
+      std::vector<double> IL, IR;
+      std::vector<vgl_point_2d<double> > pts(edgemap->edgels.size());
+      std::vector<double> thetas(edgemap->edgels.size());
       
       for (unsigned i=0; i<edgemap->edgels.size(); i++)
       {
@@ -120,10 +120,10 @@ void dbdet_add_color_app(vil_image_view<float>& comp1,
         dbdet_edgel* e = edgemap->edgels[i];
 
         //get the point to read off the intensity from
-        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() - 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
-        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() + 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() - 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() + 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
 
         // get the appearance data
         dbdet_appearance* lapp = new dbdet_color(vil_bilin_interp(comp1, ptL.x(), ptL.y()),
@@ -152,10 +152,10 @@ void dbdet_add_color_app(vil_image_view<float>& comp1,
         dbdet_edgel* e = edgemap->edgels[i];
 
         //get the point to read off the intensity from
-        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() - 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
-        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*vcl_cos(e->tangent-vnl_math::pi_over_2), 
-                                 e->pt.y() + 1.5*sigma*vcl_sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptL(e->pt.x() - 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() - 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
+        vgl_point_2d<double> ptR(e->pt.x() + 1.5*sigma*std::cos(e->tangent-vnl_math::pi_over_2), 
+                                 e->pt.y() + 1.5*sigma*std::sin(e->tangent-vnl_math::pi_over_2));
 
         // get the appearance data
         dbdet_appearance* lapp = new dbdet_color(vil_bilin_interp(sm_comp1, ptL.x(), ptL.y()),

@@ -9,10 +9,10 @@
 #include "dbdet_savitzky_golay_filter_2d.h"
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
-#include <vcl_list.h>
+#include <utility>
+#include <vector>
+#include <deque>
+#include <list>
 
 #include <vgl/vgl_point_2d.h>
 
@@ -44,13 +44,13 @@ int CreateMask(double sigma, int n_wedges, int masksz, int weight_type, double *
   for (int i = 0; i < masksz; i++){
     for (int j = 0; j < masksz; j++) 
     {
-      double r = vcl_sqrt((masksz-i-0.5) * (masksz-i-0.5) + (j+0.5) * (j+0.5));
+      double r = std::sqrt((masksz-i-0.5) * (masksz-i-0.5) + (j+0.5) * (j+0.5));
 
       // Various pixel weighting masks
       if (weight_type==1)
-        gauss[j*masksz+i] = r * vcl_exp(-(r*r)/(2*sigma*sigma));  //RAYLEIGH
+        gauss[j*masksz+i] = r * std::exp(-(r*r)/(2*sigma*sigma));  //RAYLEIGH
       else if (weight_type==2)
-        gauss[j*masksz+i] = vcl_exp(-(r*r)/(2*sigma*sigma)); //GAUSSIAN
+        gauss[j*masksz+i] = std::exp(-(r*r)/(2*sigma*sigma)); //GAUSSIAN
 
       // gauss[j*masksz+i] = 1 - r / masksz;  // LINEAR
     }
@@ -266,7 +266,7 @@ void ComputeCostMatrix(double cluster[][CDIM], int nclusters)
         /* dist = sqrt(dist) / PERCEPTUAL_THRESH; 
         dbdet_EMD_cost[i][j] = (dist >= 1) ? 1 : dist;*/
 
-        dbdet_EMD_cost[i][j] = 1 - vcl_exp(-vcl_sqrt(dist) / GAMMA);
+        dbdet_EMD_cost[i][j] = 1 - std::exp(-std::sqrt(dist) / GAMMA);
         /* dbdet_EMD_cost[i][j] = sqrt(dist) / 100; */
       }
     }
@@ -309,10 +309,10 @@ void dbdet_compute_compass_color_gradient( vil_image_view<double>& L,
 {
   // determine some relevant parameters
   int n_orient = 2*n_wedges; //number of orientations
-  int masksz = (int) vcl_ceil(3 * sigma); //mask size
+  int masksz = (int) std::ceil(3 * sigma); //mask size
 
   // allocate space for histogram gradients at various orientations
-  vcl_vector<vil_image_view<double> > hist_dist(n_orient);
+  std::vector<vil_image_view<double> > hist_dist(n_orient);
   for (int i=0; i<n_orient; i++){
     hist_dist[i].set_size(L.ni(), L.nj());
     hist_dist[i].fill(0.0);
@@ -434,7 +434,7 @@ void dbdet_compute_compass_color_gradient( vil_image_view<double>& L,
 
   //Filter the responses at each orientation using Savistzky-Golay filtering
   //  Allocate space for the filtered responses
-  vcl_vector<vil_image_view<double> > filt_hist_dist(n_orient);
+  std::vector<vil_image_view<double> > filt_hist_dist(n_orient);
 
   if (SG_filter){
     for (int i=0; i<n_orient; i++){
@@ -501,16 +501,16 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
 {
   // determine some relevant parameters
   int n_orient = 2*n_wedges; //number of orientations
-  int masksz = (int) vcl_ceil(3 * sigma); //mask size
+  int masksz = (int) std::ceil(3 * sigma); //mask size
 
   // allocate space for the histograms at various orientations
-  vcl_vector<vbl_array_2d<vcl_pair<dbdet_color_sig, dbdet_color_sig> > > compass_sigs(n_orient); 
+  std::vector<vbl_array_2d<std::pair<dbdet_color_sig, dbdet_color_sig> > > compass_sigs(n_orient); 
   //for (int i=0; i<n_orient; i++){
   //  compass_sigs[i].resize(L.ni(), L.nj());
   //}
 
   // allocate space for histogram gradients at various orientations
-  vcl_vector<vil_image_view<double> > hist_dist(n_orient);
+  std::vector<vil_image_view<double> > hist_dist(n_orient);
   for (int i=0; i<n_orient; i++){
     hist_dist[i].set_size(L.ni(), L.nj());
     hist_dist[i].fill(0.0);
@@ -617,10 +617,10 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
         qsig1.n = nclusters; qsig2.n = nclusters; qsig3.n = nclusters; qsig4.n = nclusters;
 
         //record the normalized histograms at the current pixel
-        //compass_sigs[i](x,y) = vcl_pair<dbdet_signature, dbdet_signature>(hist1norm, hist2norm);
+        //compass_sigs[i](x,y) = std::pair<dbdet_signature, dbdet_signature>(hist1norm, hist2norm);
 
         //record the normalized quarter histograms at the current pixel
-        //compass_sigs[i](x,y) = vcl_pair<dbdet_color_sig, dbdet_color_sig>(qsig2, qsig3);
+        //compass_sigs[i](x,y) = std::pair<dbdet_color_sig, dbdet_color_sig>(qsig2, qsig3);
 
         //compute distance between the normalized signatures
         double d = 0.0;
@@ -684,7 +684,7 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
 
   //Filter the responses at each orientation using Savistzky-Golay filtering
   //  Allocate space for the filtered responses
-  vcl_vector<vil_image_view<double> > filt_hist_dist(n_orient);
+  std::vector<vil_image_view<double> > filt_hist_dist(n_orient);
 
   if (SG_filter){
     for (int i=0; i<n_orient; i++){
@@ -729,8 +729,8 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
   double* Gy = dy.top_left_ptr();
 
   for(unsigned long i=0; i<hist_ori.size(); i++){
-    Gx[i] = vcl_sin(Ori[i]);
-    Gy[i] = vcl_cos(Ori[i]);
+    Gx[i] = std::sin(Ori[i]);
+    Gy[i] = std::cos(Ori[i]);
   }
 
   //the edgemap
@@ -746,8 +746,8 @@ dbdet_detect_compass_color_edges(vil_image_view<double>& L,
   }
   else {
     //Now call the NMS code to get the subpixel edge tokens
-    vcl_vector<vgl_point_2d<double> > loc;
-    vcl_vector<double> orientation, mag, d2f;
+    std::vector<vgl_point_2d<double> > loc;
+    std::vector<double> orientation, mag, d2f;
 
     dbdet_nms NMS(dbdet_nms_params(threshold, dbdet_nms_params::PFIT_3_POINTS), dx, dy, hist_grad);
     NMS.apply(true, loc, orientation, mag, d2f);
@@ -836,8 +836,8 @@ dbdet_detect_compass_color_edges_independent(vil_image_view<double>& L,
   double* Gy = dy.top_left_ptr();
 
   for(unsigned long i=0; i<L_ori.size(); i++){
-    Gx[i] = vcl_sin(Ori[i]);
-    Gy[i] = vcl_cos(Ori[i]);
+    Gx[i] = std::sin(Ori[i]);
+    Gy[i] = std::cos(Ori[i]);
   }
 
   //the edgemap
@@ -847,14 +847,14 @@ dbdet_detect_compass_color_edges_independent(vil_image_view<double>& L,
     //create the edgemap from the orientation map 
     for (unsigned x = 0; x < hist_grad.ni(); x++){
       for (unsigned y = 0; y < hist_grad.nj(); y++){
-        edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(x, y), vcl_fmod(L_ori(x,y)+vnl_math::pi_over_2, vnl_math::pi), hist_grad(x,y)));
+        edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(x, y), std::fmod(L_ori(x,y)+vnl_math::pi_over_2, vnl_math::pi), hist_grad(x,y)));
       }
     }
   }
   else {
     //Now call the NMS code to get the subpixel edge tokens
-    vcl_vector<vgl_point_2d<double> > loc;
-    vcl_vector<double> orientation, mag, d2f;
+    std::vector<vgl_point_2d<double> > loc;
+    std::vector<double> orientation, mag, d2f;
 
     dbdet_nms NMS(dbdet_nms_params(threshold, dbdet_nms_params::PFIT_3_POINTS), dx, dy, hist_grad);
     NMS.apply(true, loc, orientation, mag, d2f);

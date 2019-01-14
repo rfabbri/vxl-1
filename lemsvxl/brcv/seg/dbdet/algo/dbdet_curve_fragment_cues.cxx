@@ -1,8 +1,8 @@
 #include "dbdet_curve_fragment_cues.h"
 #include <bgld/algo/bgld_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 
 void dbdet_curve_fragment_cues::
 compute_all_cues(
@@ -45,7 +45,7 @@ cuvature_cues(
   y_feature_vector &features = *features_ptr;
   // curvature
   vnl_vector<double> k;
-  vcl_vector<vgl_point_2d<double> > points;
+  std::vector<vgl_point_2d<double> > points;
   points.reserve(npts);
 
   //to vector of points..
@@ -85,9 +85,9 @@ hsv_gradient_cues(
   // examine local_dist neighborhood around curve along normals
   unsigned const npts = c.edgels.size();
   if (!npts) return;
-  vcl_vector< vnl_vector_fixed<double, 2> > n;
+  std::vector< vnl_vector_fixed<double, 2> > n;
   n.reserve(npts);
-  vcl_vector<vgl_point_2d<double> > points;
+  std::vector<vgl_point_2d<double> > points;
   points.reserve(npts);
 
   //to vector of points..
@@ -120,10 +120,10 @@ hsv_gradient_cues(
         &hue_right, &sat_right, &bg_right);
 
     // TODO test if imae indexing is (x,y) or (y,x)
-    features[y_features::Y_SAT_GRAD] += /*vcl_abs*/(sat_left - sat_right);
-    features[y_features::Y_BG_GRAD]  += /*vcl_abs*/(bg_left - bg_right) / 255.;
+    features[y_features::Y_SAT_GRAD] += /*std::abs*/(sat_left - sat_right);
+    features[y_features::Y_BG_GRAD]  += /*std::abs*/(bg_left - bg_right) / 255.;
     // TODO need to make angle difference to make sense
-    features[y_features::Y_HUE_GRAD] += /*vcl_abs*/(hue_left - hue_right)/360.;
+    features[y_features::Y_HUE_GRAD] += /*std::abs*/(hue_left - hue_right)/360.;
   }
   features[y_features::Y_HUE_GRAD] /= npts;
   features[y_features::Y_SAT_GRAD] /= npts;
@@ -213,8 +213,8 @@ lateral_edge_sparsity_cue(
   {
     int px = static_cast<int>(e[k]->pt.x()+0.5);
     int py = static_cast<int>(e[k]->pt.y()+0.5);
-    for(int i = vcl_max(px - static_cast<int>(nbr_width_), 0); i < vcl_min(w, 1 + px + static_cast<int>(nbr_width_)); i++)
-      for(int j = vcl_max(py - static_cast<int>(nbr_width_), 0); j < vcl_min(h, 1 + py + static_cast<int>(nbr_width_)); j++)
+    for(int i = std::max(px - static_cast<int>(nbr_width_), 0); i < std::min(w, 1 + px + static_cast<int>(nbr_width_)); i++)
+      for(int j = std::max(py - static_cast<int>(nbr_width_), 0); j < std::min(h, 1 + py + static_cast<int>(nbr_width_)); j++)
         mask(i, j) = 1;
   }
 

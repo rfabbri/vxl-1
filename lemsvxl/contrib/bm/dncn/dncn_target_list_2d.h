@@ -19,9 +19,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_string.h>
-#include<vcl_utility.h>
+#include<map>
+#include<string>
+#include<utility>
 
 #include<vgl/vgl_distance.h>
 #include<vgl/vgl_point_2d.h>
@@ -33,9 +33,9 @@
 class dncn_target_list_2d: public vbl_ref_count
 {
 public:
-    //typedef vcl_map<vgl_point_2d<unsigned>, dncn_target_2d_sptr, dncn_less_than> target_list_type;
+    //typedef std::map<vgl_point_2d<unsigned>, dncn_target_2d_sptr, dncn_less_than> target_list_type;
 
-	typedef vcl_vector<dncn_target_2d_sptr> target_list_type;
+	typedef std::vector<dncn_target_2d_sptr> target_list_type;
 
     dncn_target_list_2d(){}
 
@@ -72,11 +72,11 @@ public:
 
     unsigned num_targets(){ return this->target_list_.size(); }
 
-    void write_neighborhood_mfile( vcl_string const& filename );
+    void write_neighborhood_mfile( std::string const& filename );
 
-    void write_feature_mfile( vcl_string const& filename, unsigned const& num_frames );
+    void write_feature_mfile( std::string const& filename, unsigned const& num_frames );
 
-    void write_reduced_feature_mfile( vcl_string const& filename, unsigned const& num_frames );
+    void write_reduced_feature_mfile( std::string const& filename, unsigned const& num_frames );
 
     unsigned rows(){ return rows_; }
 

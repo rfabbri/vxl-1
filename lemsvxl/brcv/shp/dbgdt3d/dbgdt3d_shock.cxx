@@ -1,9 +1,9 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_algorithm.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
+#include <algorithm>
+#include <sstream>
+#include <string>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -420,8 +420,8 @@ vgl_point_2d<double> gdt_shock::_SV_Ib_coord_to_Ia (const double& thetav,
   assert (_is_from_vertex());
   assert (0 < thetav && thetav < vnl_math::pi);
 
-  const double cos_theta = vcl_cos (thetav);
-  const double sin_theta = vcl_sin (thetav);
+  const double cos_theta = std::cos (thetav);
+  const double sin_theta = std::sin (thetav);
   double xa, ya, xb, yb;
 
   if (_is_Ia_outward()) { //SO_LVERTEX
@@ -451,8 +451,8 @@ void gdt_shock::_SV_LbHb_to_Ia_coord (const double& thetav, double& Lb, double& 
   assert (_is_from_vertex());
   assert (0 < thetav && thetav < vnl_math::pi);
 
-  const double cos_theta = vcl_cos (thetav);
-  const double sin_theta = vcl_sin (thetav);
+  const double cos_theta = std::cos (thetav);
+  const double sin_theta = std::sin (thetav);
   double xa, ya, xb, yb;
 
   if (_is_Ia_outward()) { //SO_LVERTEX
@@ -485,8 +485,8 @@ vgl_point_2d<double> gdt_shock::_SV_Ia_coord_to_Ib (const double& thetav,
   assert (_is_from_vertex());
   assert (0 < thetav && thetav < vnl_math::pi);
 
-  const double cos_theta = vcl_cos (thetav);
-  const double sin_theta = vcl_sin (thetav);
+  const double cos_theta = std::cos (thetav);
+  const double sin_theta = std::sin (thetav);
   double xa, ya, xb, yb;
 
   if (_is_Ia_outward()) { //SO_LVERTEX
@@ -519,8 +519,8 @@ void gdt_shock::_SV_LaHa_to_Ib_coord (const double& thetav, double& La, double& 
   assert (_is_from_vertex());
   assert (0 < thetav && thetav < vnl_math::pi);
 
-  const double cos_theta = vcl_cos (thetav);
-  const double sin_theta = vcl_sin (thetav);
+  const double cos_theta = std::cos (thetav);
+  const double sin_theta = std::sin (thetav);
   double xa, ya, xb, yb;
 
   if (_is_Ia_outward()) { //SO_LVERTEX
@@ -699,7 +699,7 @@ void gdt_shock::Sl_get_OL_OC_abc (const gdt_welm* Wc, const double& alphaCL,
   double old_c = c_;
 
   _compute_a();
-  assert (vcl_fabs(old_a) == vcl_fabs(a_));
+  assert (std::fabs(old_a) == std::fabs(a_));
   _compute_c();
   assert (_eqM (old_c, c_));
   _compute_b2();
@@ -726,7 +726,7 @@ void gdt_shock::Sr_get_OC_OR_abc (const gdt_welm* Wc, const double& alphaCR,
   double old_c = c_;
 
   _compute_a();
-  assert (vcl_fabs(old_a) == vcl_fabs(a_));
+  assert (std::fabs(old_a) == std::fabs(a_));
   _compute_c();
   assert (_eqM (old_c, c_));
   _compute_b2();
@@ -1234,13 +1234,13 @@ vgl_point_2d<double> gdt_shock::get_ext_pt_2d (const gdt_welm* Wc,
   //unused const double atan2_OR_OL = atan2_vector (OR, OL);
   //unused const double phi2 = CCW_angle (atan2_OC_F, atan2_OR_OL);
 
-  // Rotate (dc*vcl_cos(tauC), dc*vcl_sin(tauC)) CCW for phip and 
+  // Rotate (dc*std::cos(tauC), dc*std::sin(tauC)) CCW for phip and 
   // translate by (Lc, -hc) to get the 2d point P
-  double px = dC*vcl_cos(tauC);
-  double py = dC*vcl_sin(tauC);
+  double px = dC*std::cos(tauC);
+  double py = dC*std::sin(tauC);
 
-  const double cos_phip = vcl_cos (phip);
-  const double sin_phip = vcl_sin (phip);
+  const double cos_phip = std::cos (phip);
+  const double sin_phip = std::sin (phip);
 
   // (pxy, pyr) is the 2D point for P
   double pxr = cos_phip*px - sin_phip*py + Wc->L();
@@ -1587,7 +1587,7 @@ void gdt_shock::_set_next_prjE (const dbmsh3d_gdt_edge* eL, const double& tauL, 
 gdt_welm* gdt_shock::_get_nWa_on_prjE () const 
 {
   //Loop through Wa.nextI[] to find the one adjacent to tauE on prjE.
-  vcl_vector<gdt_interval*>::iterator it = Wa_->nextIs().begin();
+  std::vector<gdt_interval*>::iterator it = Wa_->nextIs().begin();
   for (; it != Wa_->nextIs().end(); it++) {
     gdt_interval* I = (*it);
     if (I->edge() != prjE_)
@@ -1602,7 +1602,7 @@ gdt_welm* gdt_shock::_get_nWa_on_prjE () const
 gdt_welm* gdt_shock::_get_nWb_on_prjE () const 
 {
   //Loop through Wb.nextI[] to find the one adjacent to tauE on prjE.
-  vcl_vector<gdt_interval*>::iterator it = Wb_->nextIs().begin();
+  std::vector<gdt_interval*>::iterator it = Wb_->nextIs().begin();
   for (; it != Wb_->nextIs().end(); it++) {
     gdt_interval* I = (*it);
     if (I->edge() != prjE_)
@@ -1678,64 +1678,64 @@ bool gdt_shock::validate_W_event (const gdt_welm* W, const double& tauP, double&
     return true;  
 }
 
-void gdt_shock::getInfo (vcl_ostringstream& ostrm) 
+void gdt_shock::getInfo (std::ostringstream& ostrm) 
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
   char tmp[512];
   if (Enode_)
-    vcl_sprintf (tmp, "%d", Enode_->id());
+    std::sprintf (tmp, "%d", Enode_->id());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, "gdt_shock id: %d (Snode %d, Enode %s) SVE: %s\n", 
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, "gdt_shock id: %d (Snode %d, Enode %s) SVE: %s\n", 
                id_, Snode_->id(), tmp,
                bSVE_ ? "true" : "false"); ostrm<<s;
 
-  vcl_sprintf (s, " startT: %f, simT: %f, endT: %f, edgeT: %f\n", 
+  std::sprintf (s, " startT: %f, simT: %f, endT: %f, edgeT: %f\n", 
                startT_, simT_, endT_, edgeT_); ostrm<<s;
 
   if (Wa_)
-    vcl_sprintf (tmp, "%s%d (%.3f, %.3f), psrc %d, mu: %f, L: %f, H: %f", Wa_->_is_RF() ? "RF " : "",
+    std::sprintf (tmp, "%s%d (%.3f, %.3f), psrc %d, mu: %f, L: %f, H: %f", Wa_->_is_RF() ? "RF " : "",
                  Wa_->edge()->id(), Wa_->stau(), Wa_->etau(), Wa_->psrc()->id(), Wa_->mu(), Wa_->L(), Wa_->H());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " Wa: %s\n", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " Wa: %s\n", tmp); ostrm<<s;
 
   if (Wb_)
-    vcl_sprintf (tmp, "%s%d (%.3f, %.3f), psrc %d, mu: %f, L: %f, H: %f\n", Wb_->_is_RF() ? "RF " : "",
+    std::sprintf (tmp, "%s%d (%.3f, %.3f), psrc %d, mu: %f, L: %f, H: %f\n", Wb_->_is_RF() ? "RF " : "",
                  Wb_->edge()->id(), Wb_->stau(), Wb_->etau(), Wb_->psrc()->id(), Wb_->mu(), Wb_->L(), Wb_->H()); 
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " Wb: %s\n", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " Wb: %s\n", tmp); ostrm<<s;
 
   if (b2_ == 0)
-    vcl_sprintf (tmp, "Contact");
+    std::sprintf (tmp, "Contact");
   else if (a_ == 0)
-    vcl_sprintf (tmp, "Line");
+    std::sprintf (tmp, "Line");
   else
-    vcl_sprintf (tmp, "Hypb");
-  vcl_sprintf (s, "%s: a %f, b %f, c %f.\n", tmp, a_, b2_, c_); ostrm<<s;
+    std::sprintf (tmp, "Hypb");
+  std::sprintf (s, "%s: a %f, b %f, c %f.\n", tmp, a_, b2_, c_); ostrm<<s;
 
   if (Sa_)
-    vcl_sprintf (tmp, "%d", Sa_->id());
+    std::sprintf (tmp, "%d", Sa_->id());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " Sa: %s,", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " Sa: %s,", tmp); ostrm<<s;
   if (Sb_)
-    vcl_sprintf (tmp, "%d", Sb_->id());
+    std::sprintf (tmp, "%d", Sb_->id());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " Sb: %s,", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " Sb: %s,", tmp); ostrm<<s;
 
   if (prjE_)
     sprintf (tmp, "%d", prjE_->id());
   else
     sprintf (tmp, "NULL");
-  vcl_sprintf (s, " propagated: %s. tau %f, tauE %f, prjE: %s", 
+  std::sprintf (s, " propagated: %s. tau %f, tauE %f, prjE: %s", 
               b_propagated_ ? "true" : "false", tau_, tauE_, tmp); ostrm<<s;
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 // ################################################################

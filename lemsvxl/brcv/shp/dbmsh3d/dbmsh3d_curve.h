@@ -41,10 +41,10 @@ class dbmsh3d_curve : public dbmsh3d_edge
 {
 protected:
   //: Vector of ordered edge elements.
-  vcl_vector<dbmsh3d_edge*>     E_vec_;
+  std::vector<dbmsh3d_edge*>     E_vec_;
   
   //: Vector of ordered vertex elements.
-  vcl_vector<dbmsh3d_vertex*>   V_vec_;
+  std::vector<dbmsh3d_vertex*>   V_vec_;
 
   //: link list to store shared edge elements.
   dbmsh3d_ptr_node* shared_E_list_;
@@ -105,10 +105,10 @@ public:
     c_type_ = c_type;
   }  
 
-  const vcl_vector<dbmsh3d_edge*>& E_vec() const {
+  const std::vector<dbmsh3d_edge*>& E_vec() const {
     return E_vec_;
   }
-  vcl_vector<dbmsh3d_edge*>& E_vec() {
+  std::vector<dbmsh3d_edge*>& E_vec() {
     return E_vec_;
   }
   dbmsh3d_edge* E_vec (const unsigned int i) const {
@@ -126,7 +126,7 @@ public:
     return E_vec_[ E_vec_.size() - 1 ];
   }
 
-  const vcl_vector<dbmsh3d_vertex*>& V_vec() const {
+  const std::vector<dbmsh3d_vertex*>& V_vec() const {
     return V_vec_;
   }
   const dbmsh3d_vertex* V_vec (const unsigned int i) const {
@@ -147,7 +147,7 @@ public:
     shared_E_list_ = shared_E_list;
   }
   
-  unsigned int get_shared_Es (vcl_set<void*>& shared_Es) const {
+  unsigned int get_shared_Es (std::set<void*>& shared_Es) const {
     return get_all_ptrs (shared_E_list_, shared_Es);
   }
   unsigned int n_shared_Es() const {
@@ -177,15 +177,15 @@ public:
 
   //###### Fine-scale edge (E_vec) Query Functions ######
   bool contain_E (const dbmsh3d_edge* inputE) const;
-  void get_Evec (vcl_vector<dbmsh3d_edge*>& Evec) const;
-  void get_Eset (vcl_set<dbmsh3d_edge*>& Eset) const;
-  bool all_Es_in_vec (const vcl_vector<dbmsh3d_edge*>& Evec) const;
+  void get_Evec (std::vector<dbmsh3d_edge*>& Evec) const;
+  void get_Eset (std::set<dbmsh3d_edge*>& Eset) const;
+  bool all_Es_in_vec (const std::vector<dbmsh3d_edge*>& Evec) const;
 
   dbmsh3d_edge* get_E_incident_N (const dbmsh3d_node* N) const;
-  void get_Evec_incident_F (const dbmsh3d_face* F, const dbmsh3d_node* N, vcl_vector<dbmsh3d_edge*>& Evec) const;
+  void get_Evec_incident_F (const dbmsh3d_face* F, const dbmsh3d_node* N, std::vector<dbmsh3d_edge*>& Evec) const;
 
-  void get_Eset_S_M (const dbmsh3d_vertex* M, vcl_set<dbmsh3d_edge*>& Eset) const;
-  void get_Eset_M_E (const dbmsh3d_vertex* M, vcl_set<dbmsh3d_edge*>& Eset) const;
+  void get_Eset_S_M (const dbmsh3d_vertex* M, std::set<dbmsh3d_edge*>& Eset) const;
+  void get_Eset_M_E (const dbmsh3d_vertex* M, std::set<dbmsh3d_edge*>& Eset) const;
   
   double compute_length_Es () const;
   
@@ -197,14 +197,14 @@ public:
       assert (E_vec_[E_vec_.size()-1] != E);
     E_vec_.push_back ((dbmsh3d_edge*) E);
   }
-  void add_E_vec_to_front (const vcl_vector<dbmsh3d_edge*>& E_vec);
-  void check_add_E_vec_to_front (vcl_vector<dbmsh3d_edge*>& E_vec);
+  void add_E_vec_to_front (const std::vector<dbmsh3d_edge*>& E_vec);
+  void check_add_E_vec_to_front (std::vector<dbmsh3d_edge*>& E_vec);
 
-  void add_E_vec_to_back (const vcl_vector<dbmsh3d_edge*>& E_vec);
-  void check_add_E_vec_to_back (vcl_vector<dbmsh3d_edge*>& E_vec);
+  void add_E_vec_to_back (const std::vector<dbmsh3d_edge*>& E_vec);
+  void check_add_E_vec_to_back (std::vector<dbmsh3d_edge*>& E_vec);
 
   bool del_from_E_vec (const dbmsh3d_edge* E) {
-    vcl_vector<dbmsh3d_edge*>::iterator it = E_vec_.begin();
+    std::vector<dbmsh3d_edge*>::iterator it = E_vec_.begin();
     for (; it != E_vec_.end(); it++) {
       if ((*it) == E) {
         E_vec_.erase (it);
@@ -219,22 +219,22 @@ public:
   }
   void _reverse_E_vec() {
     assert (data_type_ == C_DATA_TYPE_EDGE);
-    vcl_reverse (E_vec_.begin(), E_vec_.end());
+    std::reverse (E_vec_.begin(), E_vec_.end());
   }
   void _del_E_vec_i_to_end (const unsigned int i) {
     assert (data_type_ == C_DATA_TYPE_EDGE);
-    vcl_vector<dbmsh3d_edge*>::iterator it = E_vec_.begin();
+    std::vector<dbmsh3d_edge*>::iterator it = E_vec_.begin();
     it = it + i;
     E_vec_.erase (it, E_vec_.end());
   }
 
   //###### Fine-scale vertex (V_vec) Query Functions ######
-  void get_V_vec (vcl_vector<dbmsh3d_vertex*>& V_vec) const;
-  void get_V_set (vcl_set<dbmsh3d_vertex*>& Vset) const;
+  void get_V_vec (std::vector<dbmsh3d_vertex*>& V_vec) const;
+  void get_V_set (std::set<dbmsh3d_vertex*>& Vset) const;
   bool is_V_on_C (const dbmsh3d_vertex* inputV) const;
 
-  void get_V_set_S_M (const dbmsh3d_vertex* M, vcl_set<dbmsh3d_vertex*>& Vset) const;  
-  void get_V_set_M_E (const dbmsh3d_vertex* M, vcl_set<dbmsh3d_vertex*>& Vset) const;
+  void get_V_set_S_M (const dbmsh3d_vertex* M, std::set<dbmsh3d_vertex*>& Vset) const;  
+  void get_V_set_M_E (const dbmsh3d_vertex* M, std::set<dbmsh3d_vertex*>& Vset) const;
 
   int get_nE_of_V_from_N (const dbmsh3d_vertex* inputV, const dbmsh3d_node* N) const;
   
@@ -254,17 +254,17 @@ public:
 
   //: Remove the first vertex.
   void remove_first_V () {    
-    vcl_vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin();
+    std::vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin();
     V_vec_.erase (it);
   }
   //: Remove the last vertex.
   void remove_last_V () {    
-    vcl_vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin() + V_vec_.size()-1;
+    std::vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin() + V_vec_.size()-1;
     V_vec_.erase (it);
   }
   
   bool del_from_V_vec (const dbmsh3d_vertex* V) {
-    vcl_vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin();
+    std::vector<dbmsh3d_vertex*>::iterator it = V_vec_.begin();
     for (; it != V_vec_.end(); it++) {
       if ((*it) == V) {
         V_vec_.erase (it);
@@ -286,7 +286,7 @@ public:
   bool shared_E_incident_to_V (const dbmsh3d_vertex* V) const;
 
   //: Return true if all shared_E[] are with one of the given set of C's.
-  bool shared_E_with_Cset (vcl_set<dbmsh3d_curve*>& shared_E_Cset) const;
+  bool shared_E_with_Cset (std::set<dbmsh3d_curve*>& shared_E_Cset) const;
 
   //###### Connectivity Modification Functions ######
   virtual void switch_sV_eV ();
@@ -305,7 +305,7 @@ public:
   void _clone_C_EV_conn (dbmsh3d_curve* C2, dbmsh3d_mesh* M2) const;
   virtual dbmsh3d_curve* clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2) const;
   
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
   double compute_length () const;
 };

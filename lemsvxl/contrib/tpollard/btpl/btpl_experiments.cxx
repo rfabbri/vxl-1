@@ -1,9 +1,9 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -66,17 +66,17 @@ int main( int argc, char* argv[] )
 
 // Helper apps.
 void load_view_files(
-  vcl_string img_dir,
-  vcl_string camera_file,
-  vcl_string lighting_file,
-  vcl_vector< vcl_string >* imgs,
-  vcl_vector< vpgl_proj_camera<double> >* cams,
-  vcl_vector< vgl_vector_3d<double> >* lights );
+  std::string img_dir,
+  std::string camera_file,
+  std::string lighting_file,
+  std::vector< std::string >* imgs,
+  std::vector< vpgl_proj_camera<double> >* cams,
+  std::vector< vgl_vector_3d<double> >* lights );
 
 void write_x3d_insp_file(
-  const vcl_vector< vcl_vector<double> >& obs,
-  const vcl_vector< vgl_vector_3d<double> >& lights,
-  vcl_string file );
+  const std::vector< std::vector<double> >& obs,
+  const std::vector< vgl_vector_3d<double> >& lights,
+  std::string file );
 
 
 //------------------------------------------------------
@@ -84,7 +84,7 @@ void draw_black()
 {
   vil_image_view<vxl_byte> img = vil_load("D:/images_multiview/baghdad/parkway/06NOV11081521-P1BS-005630692010_01_P001_parkway.png");
   vil_image_view<float> changes = vil_load("D:/images_multiview/baghdad/parkway_warped/test_aff/06nov_change_aff.tiff");
-  vcl_string save_img("D:/out.png");
+  std::string save_img("D:/out.png");
   float scale = 1.0;
   float thresh = .001;
 
@@ -104,22 +104,22 @@ void draw_black()
 //-----------------------------------------------------
 void rocgen()
 {
-  vcl_string test_dir("D:/images_multiview/baghdad/hiafa_warped/test_aff"); 
-  vcl_string truth_dir("D:/images_multiview/baghdad/hiafa_truth");
-  vcl_ofstream roc_ofs("D:/roc.txt");
+  std::string test_dir("D:/images_multiview/baghdad/hiafa_warped/test_aff"); 
+  std::string truth_dir("D:/images_multiview/baghdad/hiafa_truth");
+  std::ofstream roc_ofs("D:/roc.txt");
   float scale = 1.0;
 
   for( float thresh = .0001; thresh < 5.0; thresh*=1.5 ){
-    vcl_cerr << thresh << '\n';
+    std::cerr << thresh << '\n';
 
     int true_positives = 0, false_positives = 0;//,  true_negatives = 0, false_negatives = 0;
     int total_changes = 0, total_nonchanges = 0;
 
     vul_file_iterator truth_iter = (truth_dir+"\\*").c_str();
     for( vul_file_iterator test_iter= (test_dir+"\\*").c_str(); test_iter; ++test_iter ){
-      vcl_string test_file( test_iter() );
-      vcl_string truth_file( truth_iter() );
-      vcl_string test_ext = vul_file::extension( test_file );
+      std::string test_file( test_iter() );
+      std::string truth_file( truth_iter() );
+      std::string test_ext = vul_file::extension( test_file );
       if( test_ext != ".tiff" ){++truth_iter; continue;}
       
       vil_image_view<float> test_img = vil_load( test_file.c_str() );
@@ -158,15 +158,15 @@ void rocgen()
 void phong_exp2()
 {
   int rad = 100;
-  vcl_string imgname("D:/phong_pic.png");
-  vcl_ofstream samplefile("D:/samples.txt");
+  std::string imgname("D:/phong_pic.png");
+  std::ofstream samplefile("D:/samples.txt");
   float a = 127, b=128;
   int alpha = 8;
   float rx=0, ry=.05, rz=1.0;
   float vphi = 60.0*(3.1417/2.0)/90.0;
   int vtheta_incs = 500;
 
-  float n = vcl_sqrt( rx*rx+ry*ry+rz*rz );
+  float n = std::sqrt( rx*rx+ry*ry+rz*rz );
   rx/=n; ry/=n; rz/=n;
   vil_image_view<vxl_byte> img( 1+2*rad, 1+2*rad );
 
@@ -180,12 +180,12 @@ void phong_exp2()
         continue;
       }
 
-      float z = (vcl_sqrt(1-(x*x+y*y)));
+      float z = (std::sqrt(1-(x*x+y*y)));
       float rv = x*rx+y*ry+z*rz;
       if( rv < 0 )
         img(cx,cy)=a;
       else{
-        rv = vcl_pow( rv, alpha );
+        rv = std::pow( rv, alpha );
         img(cx,cy)=a+b*rv;
       }
 
@@ -195,16 +195,16 @@ void phong_exp2()
 
   for( int i = 0; i < vtheta_incs; i++ ){
     float vtheta = (2*3.1417)*i/(float)vtheta_incs;
-    float vx = vcl_cos(vphi)*vcl_cos(vtheta);
-    float vy = vcl_cos(vphi)*vcl_sin(vtheta); 
-    float vz = vcl_sin(vphi);
-    int cx = (int)vcl_floor(rad + vx*rad);
-    int cy = (int)vcl_floor(rad + vy*rad);
+    float vx = std::cos(vphi)*std::cos(vtheta);
+    float vy = std::cos(vphi)*std::sin(vtheta); 
+    float vz = std::sin(vphi);
+    int cx = (int)std::floor(rad + vx*rad);
+    int cy = (int)std::floor(rad + vy*rad);
     img(cx,cy)=0.0;
 
     float rv = vx*rx+vy*ry+vz*rz;
     if( rv < 0 ) rv = 0;
-    rv = vcl_pow( rv, alpha );
+    rv = std::pow( rv, alpha );
     samplefile << (a+b*rv) << '\n';
   }
   vil_save( img, imgname.c_str() );
@@ -219,7 +219,7 @@ void edge_hist()
   vgl_point_2d<int> p1(1071,170+2);
   vgl_point_2d<int> p2(1060,163+2);
   double dist_thresh = 1.0;
-  vcl_ofstream ofs( "D:/hist.txt" );
+  std::ofstream ofs( "D:/hist.txt" );
   
   vgl_line_2d<double> l( vgl_point_2d<double>(p1.x(), p1.y()), vgl_point_2d<double>(p2.x(), p2.y()) );
   int min_x = p1.x(), max_x = p2.x();
@@ -268,7 +268,7 @@ void phong_exp()
   // Train on samples
   int num_training_samples = 10000;
   for( int i = 0; i < num_training_samples; i++ ){
-    float sample = iad + is*vcl_pow( vcl_cos( 3.1416*(rand()/(float)RAND_MAX)/2.0 ), alpha );
+    float sample = iad + is*std::pow( std::cos( 3.1416*(rand()/(float)RAND_MAX)/2.0 ), alpha );
     if( sample > 1.0 ) sample = .9999;
     H[(int)floor(sample*20)]++;
     mog.update( sample, 1.0, vnl_vector<float>() );
@@ -276,12 +276,12 @@ void phong_exp()
 
   // Print the learned mixture and histogram
   for( int i = 0; i < 20; i++ )
-    vcl_cerr << H[i] << ' ';
-  vcl_cerr << '\n';
+    std::cerr << H[i] << ' ';
+  std::cerr << '\n';
   for( int i = 0; i < 9; i++ )
-    vcl_cerr << mog.get_data()[i] << ' ';
+    std::cerr << mog.get_data()[i] << ' ';
 
-  vcl_ofstream ofs( "D:/a.txt" );
+  std::ofstream ofs( "D:/a.txt" );
   for( float x = 0; x <= 1.01; x += .01 ){
     ofs << x << '\t' << mog.prob(x,vnl_vector<float>()) << '\n';
   }
@@ -290,7 +290,7 @@ void phong_exp()
   vnl_vector<float> dist_samples(10000);
   vnl_vector<float> change_samples(10000);
   for( int i = 0; i < dist_samples.size(); i++ ){
-    float sample = iad + is*vcl_pow( vcl_cos( 3.1416*(rand()/(float)RAND_MAX)/2.0 ), alpha );
+    float sample = iad + is*std::pow( std::cos( 3.1416*(rand()/(float)RAND_MAX)/2.0 ), alpha );
     if( sample > 1.0 ) sample = .9999;
     dist_samples[i] = sample;
   }
@@ -299,8 +299,8 @@ void phong_exp()
   }
 
   // Compute ROC
-  vcl_string roc_file( "D:\\roc.txt");
-  vcl_ofstream rocstream( roc_file.c_str() );
+  std::string roc_file( "D:\\roc.txt");
+  std::ofstream rocstream( roc_file.c_str() );
   for( float thresh = .1; thresh < 100.0; thresh *= 1.5 ){
 
     int false_positives = 0;
@@ -320,19 +320,19 @@ void phong_exp()
 //-----------------------------------------------------------
 void recover_normalization()
 {
-  vcl_string out_file("D:/norm_params.txt");
-  vcl_ofstream ofs(out_file.c_str());
-  vcl_string orig_dir("D:/images_multiview/baghdad/hiafa");
-  vcl_string norm_dir("D:/results/baghdad/hiafa_mmog1/norm");
+  std::string out_file("D:/norm_params.txt");
+  std::ofstream ofs(out_file.c_str());
+  std::string orig_dir("D:/images_multiview/baghdad/hiafa");
+  std::string norm_dir("D:/results/baghdad/hiafa_mmog1/norm");
   int num_samples = 100;
 
   vul_file_iterator of = (orig_dir+"\\*").c_str();
   for( vul_file_iterator nf= (norm_dir+"\\*").c_str(); nf; ++nf ){
-    vcl_string orig_file( of() );
-    vcl_string norm_file( nf() );
-    vcl_string orig_ext = vul_file::extension( orig_file );
+    std::string orig_file( of() );
+    std::string norm_file( nf() );
+    std::string orig_ext = vul_file::extension( orig_file );
     if( orig_ext != ".png" ){++of; continue;}
-    vcl_string norm_ext = vul_file::extension( norm_file );
+    std::string norm_ext = vul_file::extension( norm_file );
     if( norm_ext != ".png" ){++of; continue;}
     vil_image_view<vxl_byte> orig_img = vil_load( orig_file.c_str() );
     vil_image_view<vxl_byte> norm_img = vil_load( norm_file.c_str() );
@@ -425,20 +425,20 @@ void exp_change_render()
 //--------------------------------------------------------------------
 void add_haze()
 {
-  /*vcl_ofstream haze_file( "D:/images_multiview/baghdad/normseq_true_haze.txt" );
-  vcl_string original_img_dir( "D:/images_multiview/baghdad/normseq_original" );
-  vcl_string haze_img_dir( "D:/images_multiview/baghdad/normseq_haze" );
-  vcl_string original_cam_file( "D:/images_multiview/baghdad/normseq_original_cameras.txt" );
-  vcl_ofstream haze_cam_file( "D:/images_multiview/baghdad/normseq_haze_cameras.txt" );
+  /*std::ofstream haze_file( "D:/images_multiview/baghdad/normseq_true_haze.txt" );
+  std::string original_img_dir( "D:/images_multiview/baghdad/normseq_original" );
+  std::string haze_img_dir( "D:/images_multiview/baghdad/normseq_haze" );
+  std::string original_cam_file( "D:/images_multiview/baghdad/normseq_original_cameras.txt" );
+  std::ofstream haze_cam_file( "D:/images_multiview/baghdad/normseq_haze_cameras.txt" );
 */
-  vcl_ofstream haze_file( "D:/images_multiview/plasticville/sunseq/050_true_haze.txt" );
-  vcl_string original_img_dir( "D:/images_multiview/plasticville/sunseq/050" );
-  vcl_string haze_img_dir( "D:/images_multiview/plasticville/sunseq/050_haze" );
-  vcl_string original_cam_file( "D:/images_multiview/plasticville/sunseq/050_cameras.txt" );
-  //vcl_ofstream haze_cam_file( "D:/images_multiview/plasticville/sunseq/_haze_cameras.txt" );
+  std::ofstream haze_file( "D:/images_multiview/plasticville/sunseq/050_true_haze.txt" );
+  std::string original_img_dir( "D:/images_multiview/plasticville/sunseq/050" );
+  std::string haze_img_dir( "D:/images_multiview/plasticville/sunseq/050_haze" );
+  std::string original_cam_file( "D:/images_multiview/plasticville/sunseq/050_cameras.txt" );
+  //std::ofstream haze_cam_file( "D:/images_multiview/plasticville/sunseq/_haze_cameras.txt" );
 
-  vcl_vector< vcl_string > imgs;
-  vcl_vector< vpgl_proj_camera<double> > cams;
+  std::vector< std::string > imgs;
+  std::vector< vpgl_proj_camera<double> > cams;
   load_view_files( original_img_dir, original_cam_file, "NONE", &imgs, &cams, NULL );
 
   for( int img = 0; img < imgs.size(); img++ ){
@@ -448,7 +448,7 @@ void add_haze()
     vil_resample_bilin( original_img_color, original_img, 
       original_img_color.ni(), original_img_color.nj() );
 
-    vcl_string namebase = vul_file::strip_extension( vul_file::strip_directory( imgs[img] ) );
+    std::string namebase = vul_file::strip_extension( vul_file::strip_directory( imgs[img] ) );
     for( int h = 0; h < 1; h++ ){
 
       // Pick haze parameters
@@ -457,7 +457,7 @@ void add_haze()
       haze_file << 1.0/(1.0-haze_amount) << ' ' << -haze_amount*haze_color/(1-haze_amount) << '\n';
 
       // Get the new name.
-      vcl_stringstream haze_img_name;
+      std::stringstream haze_img_name;
       haze_img_name << haze_img_dir; haze_img_name << '/' << namebase << '_' << h << ".png";
 
       // Haze the image.
@@ -484,8 +484,8 @@ void add_haze()
 void contrast_exp()
 {
   int num_bins = 20;
-  vcl_ofstream ofs( "D:/0.txt" );
-  vcl_string img_dir( "D:/images_multiview/baghdad/hiafa_ref" );
+  std::ofstream ofs( "D:/0.txt" );
+  std::string img_dir( "D:/images_multiview/baghdad/hiafa_ref" );
   for( vul_file_iterator f = (img_dir+"\\*").c_str(); f; ++f ){
 
     if( vul_file::extension( f() ) != ".png" ) continue;
@@ -517,20 +517,20 @@ void contrast_exp()
 //--------------------------------------------------------------------
 void prob_img_test()
 {
-  vcl_string pimg_file( "D:/33" );
-  vcl_string draw_file( "D:/33.png" );
+  std::string pimg_file( "D:/33" );
+  std::string draw_file( "D:/33.png" );
   baml_prob_img pimg;
   pimg.read( pimg_file );
-  vcl_string img_file( "D:/images_multiview/prov_c/seq1/vlcsnap-33.png" );
+  std::string img_file( "D:/images_multiview/prov_c/seq1/vlcsnap-33.png" );
   vil_image_view<vxl_byte> img_unscaled = vil_load( img_file.c_str() );
   vil_image_view<float> img;
   vil_resample_bicub( img_unscaled, img, 
     (int)floor( img_unscaled.ni()*.5 ), 
     (int)floor( img_unscaled.nj()*.5 ) );
 
-  vcl_string excel_file( "D:/0.txt" );
+  std::string excel_file( "D:/0.txt" );
   int ix = 512, iy = 273;
-  vcl_cerr << img(ix,iy)/255.0 << '\n';
+  std::cerr << img(ix,iy)/255.0 << '\n';
   pimg.write_pixel( ix, iy, excel_file );
   pimg.draw_best( draw_file );
 
@@ -548,9 +548,9 @@ void prob_img_test()
         }
       }
       //vil_save( nimg, "D:/m.png" );
-      vcl_cerr << pimg.prob( nimg ) << ' ';
+      std::cerr << pimg.prob( nimg ) << ' ';
     }
-    vcl_cerr << '\n';
+    std::cerr << '\n';
   //}
 
 };
@@ -559,8 +559,8 @@ void prob_img_test()
 //--------------------------------------------------------------------
 void shadow_thresh()
 {
-  vcl_string input_img = "D:/images_multiview/baghdad/hiafa_ref/02AUG18074303-P1BS-005630620010_01_P001_hiafa.png";
-  vcl_string output_img = "D:/results/baghdad/shadow_thresh.png";
+  std::string input_img = "D:/images_multiview/baghdad/hiafa_ref/02AUG18074303-P1BS-005630620010_01_P001_hiafa.png";
+  std::string output_img = "D:/results/baghdad/shadow_thresh.png";
   double t1 = .2, t2 = .3;
 
   vil_image_view<vxl_byte> img = vil_load( input_img.c_str() );
@@ -583,9 +583,9 @@ void shadow_thresh()
 //--------------------------------------------------------------------
 void intensity_ratios()
 {
-  vcl_string img1_file = "D:/images_multiview/plasticville/statseq/DSCN1135.JPG";
-  vcl_string img2_file = "D:/images_multiview/plasticville/statseq/DSCN1160.JPG";
-  vcl_string ratio_file = "D:/results/ratio.png";
+  std::string img1_file = "D:/images_multiview/plasticville/statseq/DSCN1135.JPG";
+  std::string img2_file = "D:/images_multiview/plasticville/statseq/DSCN1160.JPG";
+  std::string ratio_file = "D:/results/ratio.png";
   int max_ratio = 10;
 
   vil_image_view<vxl_byte> img1 = vil_load( img1_file.c_str() );
@@ -613,17 +613,17 @@ void intensity_ratios()
 //------------------------------------------------------------------
 void inspect_baghdad()
 {
-  vcl_string img_dir = "D:/images_multiview/baghdad/hiafa";
-  vcl_string cam_file = "D:/images_multiview/baghdad/hiafa_cameras.txt";
-  vcl_string lighting_file = "D:/images_multiview/baghdad/hiafa_lights.txt";
-  vcl_string x3d_file = "D:/results/baghdad/insp.x3d";
-  vcl_string ray_check_img = "D:/results/baghdad/ray_check.png";
+  std::string img_dir = "D:/images_multiview/baghdad/hiafa";
+  std::string cam_file = "D:/images_multiview/baghdad/hiafa_cameras.txt";
+  std::string lighting_file = "D:/images_multiview/baghdad/hiafa_lights.txt";
+  std::string x3d_file = "D:/results/baghdad/insp.x3d";
+  std::string ray_check_img = "D:/results/baghdad/ray_check.png";
   vgl_point_2d<double> inspect_pixel( 839, 687 );
   double bot_elv = 0, top_elv = 200;
   int num_insp = 50;
 
   // Set up an occluding polygon.
-  vcl_vector< vgl_point_3d<double> > occluding_polygon;
+  std::vector< vgl_point_3d<double> > occluding_polygon;
   occluding_polygon.push_back( vgl_point_3d<double>( 44.38218061, 33.33570869, 92 ) );
   occluding_polygon.push_back( vgl_point_3d<double>( 44.38239647, 33.33557447, 92 ) );
   occluding_polygon.push_back( vgl_point_3d<double>( 44.38258841, 33.3357829, 92 ) );
@@ -634,9 +634,9 @@ void inspect_baghdad()
     occluding_polygon[i] = baghdad.transform_wp( occluding_polygon[i] );
   baghdad.scene_bounds();
   
-  vcl_vector< vcl_string > imgs;
-  vcl_vector< vpgl_proj_camera<double> > cams;
-  vcl_vector< vgl_vector_3d<double> > lights;
+  std::vector< std::string > imgs;
+  std::vector< vpgl_proj_camera<double> > cams;
+  std::vector< vgl_vector_3d<double> > lights;
   load_view_files( img_dir, cam_file, lighting_file, &imgs, &cams, &lights );
 
   // Get voxels along the ray.
@@ -650,9 +650,9 @@ void inspect_baghdad()
   vgl_vector_3d<double> inspect_dir = inspect_bot-inspect_top;
 
   // Get observations of each voxel on the ray.
-  vcl_vector< vcl_vector<double> > obs;
+  std::vector< std::vector<double> > obs;
   for( unsigned img = 0; img < imgs.size(); img++ ){
-    vcl_cerr << imgs[img] << '\n';
+    std::cerr << imgs[img] << '\n';
     vil_image_view<vxl_byte> img_view = vil_load( imgs[img].c_str() );
     vil_image_view<vxl_byte> ray_check( img_view.ni(), img_view.nj(), 3 );
     for( int i = 0; i < img_view.ni(); i++ )
@@ -660,7 +660,7 @@ void inspect_baghdad()
         ray_check(i,j,0) = ray_check(i,j,1) = ray_check(i,j,2) = img_view(i,j);
 
     // Get the occluding polygon in this image.
-    vcl_vector< vgl_point_2d<double> > img_polygon_pts;
+    std::vector< vgl_point_2d<double> > img_polygon_pts;
     for( int i = 0; i < occluding_polygon.size(); i++ ){
       vgl_homg_point_2d<double> new_ip = cams[img].project( 
         vgl_homg_point_3d<double>( occluding_polygon[i] ) );
@@ -669,7 +669,7 @@ void inspect_baghdad()
     }
     vgl_polygon<double> img_polygon( img_polygon_pts );
 
-    vcl_vector<double> img_obs;
+    std::vector<double> img_obs;
     for( unsigned n = 0; n < num_insp; n++ ){
       vgl_homg_point_3d<double> v( inspect_bot + (n/(double)num_insp)*inspect_dir );
       vgl_homg_point_2d<double> ph = cams[img].project( v );
@@ -711,14 +711,14 @@ void syn_brdf_exp1()
 
   vil_image_view<vxl_byte> img1 = vil_load( "D:\\images\\brdf2.png" );
   vil_image_view<vxl_byte> img2 = vil_load( "D:\\images\\brdf2.png" );
-  vcl_string output_file( "D:\\results\\baml_exp.png" );
+  std::string output_file( "D:\\results\\baml_exp.png" );
   vil_image_view<vxl_byte> prob_img( img1.ni(), img1.nj(), 3 );
   int img_size = 200;
 
   // Train on some sample points
   baml_rbf rbf;
-  vcl_vector< vnl_vector<int> > training_points, unused_points;
-  vcl_vector<float> training_vals;
+  std::vector< vnl_vector<int> > training_points, unused_points;
+  std::vector<float> training_vals;
   for( int i = 0; i < num_training_points; i++ ){
     vnl_vector<int> training_point(2); 
     training_point(0) = (int)floor(img_size*rand()/(float)RAND_MAX); 
@@ -768,24 +768,24 @@ void plasticville_exp1()
 {
   vgl_point_2d<int> inspect_pixel( 655, 655 );
   int num_inc = 50;
-  vcl_string img_dir( "D:\\images_multiview\\plasticville\\lightseq" );
-  vcl_string light_file( "D:\\images_multiview\\plasticville\\lightseq_lights.txt" );
-  vcl_string camera_file( "D:\\images_multiview\\plasticville\\lightseq_cameras.txt" );
-  vcl_string insp_x3d( "D:\\results\\pville_inspect.x3d" );
-  vcl_string insp_img( "D:\\results\\pville_inspect.png" );
+  std::string img_dir( "D:\\images_multiview\\plasticville\\lightseq" );
+  std::string light_file( "D:\\images_multiview\\plasticville\\lightseq_lights.txt" );
+  std::string camera_file( "D:\\images_multiview\\plasticville\\lightseq_cameras.txt" );
+  std::string insp_x3d( "D:\\results\\pville_inspect.x3d" );
+  std::string insp_img( "D:\\results\\pville_inspect.png" );
 
   // Load images.
-  vcl_vector< vcl_string > imgs;
+  std::vector< std::string > imgs;
   for( vul_file_iterator f= (img_dir+"\\*").c_str(); f; ++f ){
-    vcl_string current_file( f() );
+    std::string current_file( f() );
     if( current_file[current_file.size()-1] == 'G' )
       imgs.push_back( current_file );
   }
   int num_imgs = imgs.size();
 
   // Load lights.
-  vcl_vector< vgl_point_2d<double> > lights;
-  vcl_ifstream light_stream( light_file.c_str() );
+  std::vector< vgl_point_2d<double> > lights;
+  std::ifstream light_stream( light_file.c_str() );
   vul_awk light_awk( light_stream );
   while( light_awk ){
     if( light_awk.NF() != 2 ){ ++light_awk; continue; }
@@ -795,9 +795,9 @@ void plasticville_exp1()
   int num_lights = lights.size();
 
   // Load cameras.
-  vcl_vector< vpgl_proj_camera<double> > cams;
+  std::vector< vpgl_proj_camera<double> > cams;
   cams.clear();
-  vcl_ifstream camera_stream( camera_file.c_str() );
+  std::ifstream camera_stream( camera_file.c_str() );
   char line_buffer[256];
   if( !(camera_stream.good()) )
     return;
@@ -826,7 +826,7 @@ void plasticville_exp1()
   inspect_inc /=(num_inc-1.0);
 
   // Write the x3d file.
-  vcl_ofstream ofs( insp_x3d.c_str() );
+  std::ofstream ofs( insp_x3d.c_str() );
   ofs << "<X3D version='3.0' profile='Immersive'>\n\n"
     << "<Scene>\n"
     << "<Background skyColor='0 0 1'/>\n\n";
@@ -899,21 +899,21 @@ vgl_point_2d<int> centered_pixel_coord(
  */
 void beach_exp1()
 {  
-  vcl_string img_dir = "C:\\beach_6_12";
-  vcl_string out_file = "C:\\out2.txt";
+  std::string img_dir = "C:\\beach_6_12";
+  std::string out_file = "C:\\out2.txt";
 
   vgl_point_2d<int> sample1( 27, 127 );
-  vcl_vector<float> sample1_obs;
+  std::vector<float> sample1_obs;
 
   for( vul_file_iterator f = (img_dir+"\\*").c_str(); f; ++f ){
 
     // Get the time from the current file.
-    vcl_string current_file( f() );
+    std::string current_file( f() );
     if( current_file[current_file.size()-1] != 'g' ) continue;
     int last_slash = 0;
     for( int i = 0; i < current_file.size(); i++ )
       if( current_file[i] == '\\' ) last_slash = i;
-    vcl_stringstream hour_string, minute_string;
+    std::stringstream hour_string, minute_string;
     hour_string << current_file[last_slash+1] << current_file[last_slash+2];
     minute_string << current_file[last_slash+3] << current_file[last_slash+4];
     float time = atoi( hour_string.str().c_str() ) +
@@ -932,7 +932,7 @@ void beach_exp1()
 
 
   // Print observations to file.
-  vcl_ofstream ofs( out_file.c_str() );
+  std::ofstream ofs( out_file.c_str() );
   for( int i =0 ; i < sample1_obs.size(); i++ ){
     ofs << sample1_obs[i] << '\n';
   }
@@ -941,13 +941,13 @@ void beach_exp1()
 
 void beach_exp2()
 { /*
-  vcl_string residual_img_name( "c:\\res.png" );
-  vcl_string img_dir = "E:\\images\\beach_6_12";
+  std::string residual_img_name( "c:\\res.png" );
+  std::string img_dir = "E:\\images\\beach_6_12";
   float percent_training = .2;
 
   // Get the light directions for the outside data set.
-  vcl_vector<float> alt, azim;
-  vcl_vector< vgl_vector_3d<float> > light_dirs;
+  std::vector<float> alt, azim;
+  std::vector< vgl_vector_3d<float> > light_dirs;
   alt.push_back( 48.5 ); azim.push_back( 104.2 );
   alt.push_back( 49.4 ); azim.push_back(        105.3);
   alt.push_back( 50.3 ); azim.push_back(        106.4);
@@ -1063,9 +1063,9 @@ void beach_exp2()
   }
 
   // Load all outside images.
-  vcl_vector< vil_image_view<vxl_byte> > imgs;
+  std::vector< vil_image_view<vxl_byte> > imgs;
   for( vul_file_iterator f = (img_dir+"\\*").c_str(); f; ++f ){
-    vcl_string this_file = f();
+    std::string this_file = f();
     if( this_file[ this_file.size()-1 ] != 'g' ) continue;
     imgs.push_back( vil_load( this_file.c_str() ) );
   }
@@ -1073,7 +1073,7 @@ void beach_exp2()
   int ni = imgs[0].ni(), nj = imgs[0].nj();
 
   // Divide the images into training images and test images.
-  vcl_vector<bool> training_images;
+  std::vector<bool> training_images;
   for( int i = 0; i < imgs.size(); i++ ){
     if( rand()/(float)RAND_MAX < percent_training ) training_images.push_back( true );
     else training_images.push_back( false );
@@ -1105,11 +1105,11 @@ void beach_exp2()
 };
 
 float estimate_surface_params(
-  const vcl_vector<float>& alt,
-  const vcl_vector<float>& az,
-  const vcl_vector<float>& intensity,
+  const std::vector<float>& alt,
+  const std::vector<float>& az,
+  const std::vector<float>& intensity,
   vnl_vector<float>& params,
-  vcl_string save_file = "NONE" )
+  std::string save_file = "NONE" )
 {
   int num_obs = intensity.size();
   vnl_matrix<float> A( num_obs, 4 );
@@ -1128,7 +1128,7 @@ float estimate_surface_params(
   vnl_vector<float> b2 = A*params;
 
   if( save_file != "NONE" ){
-    vcl_ofstream ofs( save_file.c_str() );
+    std::ofstream ofs( save_file.c_str() );
     for( int i = 0; i < num_obs; i++ )
       ofs << alt[i] << '\t' << b(i) << '\t' << b2(i) << '\n';
   }
@@ -1146,17 +1146,17 @@ float estimate_surface_params(
 void change_render(){
 
   float dark_factor = .5;
-  vcl_string old_img_dir = "D:\\images_multiview\\prov_c\\seq1";
-  vcl_string masks_dir = "D:\\results\\prov_c_large\\red";
-  vcl_string output_dir = "D:\\results\\prov_c_large\\final";
+  std::string old_img_dir = "D:\\images_multiview\\prov_c\\seq1";
+  std::string masks_dir = "D:\\results\\prov_c_large\\red";
+  std::string output_dir = "D:\\results\\prov_c_large\\final";
 
   // Get the image names
-  vcl_vector< vcl_string > old_imgs, masks;
+  std::vector< std::string > old_imgs, masks;
   old_img_dir += "/*.*";
   for( vul_file_iterator fit = old_img_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
@@ -1168,7 +1168,7 @@ void change_render(){
   for( vul_file_iterator fit = masks_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
@@ -1179,7 +1179,7 @@ void change_render(){
 
   // Process all the images.
   for( int img = 0; img < old_imgs.size(); img++ ){
-    vcl_cerr << "Processing image: " << old_imgs[img] << '\n';
+    std::cerr << "Processing image: " << old_imgs[img] << '\n';
     vil_image_view<vxl_byte> new_img = vil_load( old_imgs[img].c_str() );
     vil_image_view<vxl_byte> mask_img = vil_load( masks[img].c_str() );
     
@@ -1198,7 +1198,7 @@ void change_render(){
       }
     }
 
-    vcl_stringstream new_img_name;
+    std::stringstream new_img_name;
     new_img_name << output_dir << "\\";
     if( img < 10 ) new_img_name << '0';
     new_img_name << img << ".png";
@@ -1208,20 +1208,20 @@ void change_render(){
 
 void registration_render(){
 
-  vcl_string registration_dir = "D:\\results\\prov_c_reg";
-  vcl_string mask_file = "D:\\results\\prov_c_reg_mask.png";
-  vcl_string background_file = "D:\\images_multiview\\prov_c\\seq2\\0919.png";
-  vcl_string output_dir = "D:\\results\\prov_c_reg_final";
+  std::string registration_dir = "D:\\results\\prov_c_reg";
+  std::string mask_file = "D:\\results\\prov_c_reg_mask.png";
+  std::string background_file = "D:\\images_multiview\\prov_c\\seq2\\0919.png";
+  std::string output_dir = "D:\\results\\prov_c_reg_final";
   float background_scale = .5;
   float dark_factor = .5;
 
   // Get the image names
-  vcl_vector< vcl_string > reg_imgs;
+  std::vector< std::string > reg_imgs;
   registration_dir += "/*.*";
   for( vul_file_iterator fit = registration_dir; fit; ++fit ){
     if( vul_file::is_directory(fit()) )
       continue;
-    vcl_string image_name = fit();
+    std::string image_name = fit();
     if( image_name.find( ".jpg" ) > 1000 &&
         image_name.find( ".png" ) > 1000 &&
         image_name.find( ".tif" ) > 1000 ){
@@ -1238,7 +1238,7 @@ void registration_render(){
 
   // Process all the images.
   for( int img = 0; img < reg_imgs.size(); img++ ){
-    vcl_cerr << "Processing image: " << reg_imgs[img] << '\n';
+    std::cerr << "Processing image: " << reg_imgs[img] << '\n';
     vil_image_view<vxl_byte> new_img = vil_load( reg_imgs[img].c_str() );
     
     for( int i = 0; i < new_img.ni(); i++ ){
@@ -1250,8 +1250,8 @@ void registration_render(){
         }
       }
     }
-    vcl_string namebase = vul_file::strip_extension(vul_file::basename( reg_imgs[img] ));
-    vcl_stringstream new_img_name;
+    std::string namebase = vul_file::strip_extension(vul_file::basename( reg_imgs[img] ));
+    std::stringstream new_img_name;
     new_img_name << output_dir << "\\" << namebase << "_reg.png";
     vil_save( new_img, new_img_name.str().c_str() );
   }
@@ -1275,8 +1275,8 @@ void overhead_cam()
   P1.set_camera_center( c );
   P1.look_at( vgl_homg_point_3d<double>( 30, 20, 0 ),
     vgl_vector_3d<double>(0,1,0) );
-  vcl_cerr << P1.get_matrix() << '\n';
-  //vcl_ofstream ofs( "D:\\images_multiview\\prov_c\\overhead_cam.txt" );
+  std::cerr << P1.get_matrix() << '\n';
+  //std::ofstream ofs( "D:\\images_multiview\\prov_c\\overhead_cam.txt" );
   //ofs << "FRAME 0\n" << P1.get_matrix() << '\n';
   for( int i = 0; i < 4; i++ ){
     vgl_homg_point_3d<double> p;
@@ -1285,7 +1285,7 @@ void overhead_cam()
     if( i == 2 ) p.set( 0,40,15 );
     if( i == 3 ) p.set( 60,40,15 );
     vgl_homg_point_2d<double> pi = P1.project( p );
-    vcl_cerr << pi.x()/pi.w() << ' ' << pi.y()/pi.w() << '\n';
+    std::cerr << pi.x()/pi.w() << ' ' << pi.y()/pi.w() << '\n';
   }
 }
 
@@ -1296,19 +1296,19 @@ void overhead_cam()
 
 //-----------------------------------------------------------
 void load_view_files(
-  vcl_string img_dir,
-  vcl_string camera_file,
-  vcl_string lighting_file,
-  vcl_vector< vcl_string >* imgs,
-  vcl_vector< vpgl_proj_camera<double> >* cams,
-  vcl_vector< vgl_vector_3d<double> >* lights )
+  std::string img_dir,
+  std::string camera_file,
+  std::string lighting_file,
+  std::vector< std::string >* imgs,
+  std::vector< vpgl_proj_camera<double> >* cams,
+  std::vector< vgl_vector_3d<double> >* lights )
 {
   // Load images.
   if( imgs != NULL ){
     imgs->clear();
     for( vul_file_iterator f= (img_dir+"\\*").c_str(); f; ++f ){
-      vcl_string current_file( f() );
-      vcl_string ext = vul_file::extension( current_file );
+      std::string current_file( f() );
+      std::string ext = vul_file::extension( current_file );
       if( ext == ".tif" || ext == ".png" || ext == ".jpg" || ext == ".JPG" )
         imgs->push_back( current_file );
     }
@@ -1317,10 +1317,10 @@ void load_view_files(
   // Load cameras.
   if( cams != NULL ){
     cams->clear();
-    vcl_ifstream camera_stream( camera_file.c_str() );
+    std::ifstream camera_stream( camera_file.c_str() );
     char line_buffer[256];
     if( !(camera_stream.good()) )
-      vcl_cerr << "\n\nBAD CAMERA FILE\n\n";
+      std::cerr << "\n\nBAD CAMERA FILE\n\n";
     while( camera_stream.eof() == 0 ){
       char nc = camera_stream.peek();
       if( nc == '-' || nc == '0' || nc == '1' || nc == '2' || nc == '3' || nc == '4' || 
@@ -1337,7 +1337,7 @@ void load_view_files(
   // Load lights.
   if( lights != NULL ){
     lights->clear();
-    vcl_ifstream light_stream( lighting_file.c_str() );
+    std::ifstream light_stream( lighting_file.c_str() );
     vul_awk light_awk( light_stream );
     while( light_awk ){
       if( light_awk.NF() == 0 ){ ++light_awk; continue; }
@@ -1355,11 +1355,11 @@ void load_view_files(
 
 //----------------------------------------------------------
 void write_x3d_insp_file(
-  const vcl_vector< vcl_vector<double> >& obs,
-  const vcl_vector< vgl_vector_3d<double> >& lights,
-  vcl_string file )
+  const std::vector< std::vector<double> >& obs,
+  const std::vector< vgl_vector_3d<double> >& lights,
+  std::string file )
 {
-  vcl_ofstream ofs( file.c_str() );
+  std::ofstream ofs( file.c_str() );
   ofs << "<X3D version='3.0' profile='Immersive'>\n\n"
     << "<Scene>\n"
     << "<Background skyColor='0 0 1'/>\n\n";

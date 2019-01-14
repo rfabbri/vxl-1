@@ -16,7 +16,7 @@
 #ifndef dbasnh_hypg_h_
 #define dbasnh_hypg_h_
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 #include <dbasn/dbasn_graph.h>
@@ -102,7 +102,7 @@ public:
     }
     else {
       assert (corners_[k][j][i] != 0);
-      vul_printf (vcl_cout, "  add corner[%d][%d][%d] = %f skipped, existing value %f!\n", i, j, k, cost, corners_[i][j][k]);
+      vul_printf (std::cout, "  add corner[%d][%d][%d] = %f skipped, existing value %f!\n", i, j, k, cost, corners_[i][j][k]);
     }
 
     if (cost > corner_cost_max_)

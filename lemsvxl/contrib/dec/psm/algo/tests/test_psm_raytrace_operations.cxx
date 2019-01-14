@@ -23,7 +23,7 @@ static void test_psm_raytrace_operations()
 
   float mean_val = -1.0f;
   if (cube_mean_aa(xverts_2d,yverts_2d,vert_dists,psm_cube_face::Z_HIGH, test_img, mean_val)) {
-    vcl_cout << "mean_val = " << mean_val << vcl_endl;
+    std::cout << "mean_val = " << mean_val << std::endl;
   }
   TEST_NEAR("cube_mean_aa x_varying",mean_val,31.0/9,1e-4);
 
@@ -130,8 +130,8 @@ static void test_psm_raytrace_operations()
 
   TEST_EQUAL("project_cube_vertices: visible_faces",visible_faces,psm_cube_face::Z_HIGH | psm_cube_face::X_HIGH | psm_cube_face::Y_HIGH);
 
-  TEST_NEAR("project_cube_vertices: vert_dists0",vert_dists[0],vcl_sqrt(double(300*300 + 300*300 + 300*300)),1e-4);
-  TEST_NEAR("project_cube_vertices: vert_dists7",vert_dists[7],vcl_sqrt(double(200*200 + 200*200 + 200*200)),1e-4);
+  TEST_NEAR("project_cube_vertices: vert_dists0",vert_dists[0],std::sqrt(double(300*300 + 300*300 + 300*300)),1e-4);
+  TEST_NEAR("project_cube_vertices: vert_dists7",vert_dists[7],std::sqrt(double(200*200 + 200*200 + 200*200)),1e-4);
 
 
   return;

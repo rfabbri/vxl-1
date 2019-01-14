@@ -15,8 +15,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_compute_cylinder_cs_process : public bpro1_process 
@@ -33,10 +33,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Compute cylinder CS"; }
+  std::string name() {  return "Compute cylinder CS"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -47,10 +47,10 @@ public:
   // Support function
   
   //: Take in the data (mesh file, param file) and execute
-  static bool compute_cylinder_cs(const vcl_string& data_file,
-    const vcl_string& param_file, 
-    const vcl_string& cs_file,
-    const vcl_string& cropped_mesh_file);
+  static bool compute_cylinder_cs(const std::string& data_file,
+    const std::string& param_file, 
+    const std::string& cs_file,
+    const std::string& cropped_mesh_file);
 
 };
 

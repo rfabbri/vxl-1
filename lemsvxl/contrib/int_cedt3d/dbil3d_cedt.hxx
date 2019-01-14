@@ -1,7 +1,7 @@
 #ifndef dbil3d_cedt_txx_
 #define dbil3d_cedt_txx_
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_image_resource.h>
 #include <vil3d/vil3d_new.h>
@@ -15,11 +15,11 @@ template <class T>
 void dbil3d_cedt(vil3d_image_view<T>& image, vil3d_image_view<int>& offsets, bool take_sqrt, bool get_offsets) 
 {
         if(!image.is_contiguous()){
-                vcl_cerr << "dbil3d_cedt requires contiguous image" << vcl_endl;
+                std::cerr << "dbil3d_cedt requires contiguous image" << std::endl;
                 return;
         }
         if(!image.nplanes() == 1){
-                vcl_cerr << "dbil3d_cedt requires single plane images" << vcl_endl;
+                std::cerr << "dbil3d_cedt requires single plane images" << std::endl;
                 return;
         }
 
@@ -76,7 +76,7 @@ void dbil3d_cedt(vil3d_image_view<T>& image, vil3d_image_view<int>& offsets, boo
                 for(unsigned k = 0; k < nk; ++k){
                         for(unsigned j = 0; j < nj; ++j){
                                 for(unsigned i = 0; i < ni; ++i){
-                                        image(i,j,k) = (T)vcl_sqrt((float)image(i,j,k));
+                                        image(i,j,k) = (T)std::sqrt((float)image(i,j,k));
                                 }
                         }
                 }
@@ -116,7 +116,7 @@ void dbil3d_signed_cedt(vil3d_image_view<T>& image, vil3d_image_view<int>& offse
         vil3d_image_view<T> tmp;
 
         //compute the "outside" distance transform w/ original image
-        vcl_cerr << "\toutside DT " << vcl_endl;    
+        std::cerr << "\toutside DT " << std::endl;    
         dbil3d_cedt(image,offsets,take_sqrt, get_offsets);
 
         //create a complement image by swapping source and background values
@@ -132,7 +132,7 @@ void dbil3d_signed_cedt(vil3d_image_view<T>& image, vil3d_image_view<int>& offse
         }
         }
 
-        vcl_cerr << "\tinside DT " << vcl_endl;    
+        std::cerr << "\tinside DT " << std::endl;    
         //compute the "inside" distance transform w/ complement image
         vil3d_image_view<int> tmp_offsets;
         dbil3d_cedt(tmp,tmp_offsets,take_sqrt,get_offsets);

@@ -1,10 +1,10 @@
 #ifndef psm_triangle_interpolation_iterator_txx_
 #define psm_triangle_interpolation_iterator_txx_
 
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <iostream>
 
 #include <vnl/algo/vnl_determinant.h>
 #include <vgl/vgl_triangle_scan_iterator.h>
@@ -37,7 +37,7 @@ psm_triangle_interpolation_iterator<T>::psm_triangle_interpolation_iterator(doub
   s1_ = vnl_determinant(Acol0, Z, Acol2) / detA;
   s2_ = vnl_determinant(Acol0, Acol1, Z) / detA;
 
-  //vcl_cout << "s0 = " << s0_ <<"  s1 = " << s1_ << " s2 = " << s2_ << vcl_endl;
+  //std::cout << "s0 = " << s0_ <<"  s1 = " << s1_ << " s2 = " << s2_ << std::endl;
 }
 
 

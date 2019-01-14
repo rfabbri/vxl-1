@@ -13,7 +13,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 
@@ -46,14 +46,14 @@ void deselect_callback (void* data, SoPath* path)
 //: Handle human interaction: click and delete a drawing object.
 void click_to_delete (void* data, SoPath* path)
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
 
   SoShape* object = (SoShape*) path->getTail();
   path->truncate(path->getLength() - 1 );
   SoSeparator* group = (SoSeparator*) path->getTail();
   group->removeChild (object);
 
-  //vcl_string name = path->getTail()->getTypeId().getName().getString();
+  //std::string name = path->getTail()->getTypeId().getName().getString();
   //if (strcmp("SoIndexedLineSet", name.c_str())) {
   //   SoIndexedLineSet* line = (SoIndexedLineSet*) path->getTail();
   //   path->truncate(path->getLength() - 1 );
@@ -144,9 +144,9 @@ int main (int argc, char** argv)
   
   //Print message if no command-line process executed.
   if (task == false) {
-    vul_printf (vcl_cout, "\nERROR in main():\tNo task specified!\n");
-    vul_printf (vcl_cout, "\n\t Specify filename to view, or");
-    vul_printf (vcl_cout, "\n\t use -h for more help.\n");
+    vul_printf (std::cout, "\nERROR in main():\tNo task specified!\n");
+    vul_printf (std::cout, "\n\t Specify filename to view, or");
+    vul_printf (std::cout, "\n\t use -h for more help.\n");
     dbmsh3d_cmd_gui() = 0;
     result = PRO_RESULT_NO_PROCESS;
   }
@@ -156,14 +156,14 @@ int main (int argc, char** argv)
     _root->addChild (dbmsh3d_cmdproc_execute_2 (mpv2));
   }
   if (dbmsh3d_cmd_verbose()) {
-    vcl_cerr << "\nTotal running time: " << total_timer.real() << " milliseconds.\n";
-    total_timer.print(vcl_cout);
+    std::cerr << "\nTotal running time: " << total_timer.real() << " milliseconds.\n";
+    total_timer.print(std::cout);
   }
   /////////////////////////////////////////////////////////////////////
 
   if (dbmsh3d_cmd_gui()) {
     //Use SoWinExaminerViewer as our main viewer
-    vul_printf (vcl_cout, "Starting the Coin3D SoWin GUI...\n");
+    vul_printf (std::cout, "Starting the Coin3D SoWin GUI...\n");
     SoWinExaminerViewer* eviewer = new SoWinExaminerViewer (mainwin);
     ///eviewer->setTransparencyType(SoGLRenderAction::ADD);
     eviewer->setTransparencyType (SoGLRenderAction::SORTED_OBJECT_BLEND);

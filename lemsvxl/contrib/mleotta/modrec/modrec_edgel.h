@@ -12,7 +12,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vil/vil_image_view.h>
@@ -44,7 +44,7 @@ public:
   //: Return a unit normal vector to the edge (points in the gradient direction)
   vgl_vector_2d<double> normal() const
   {
-    return vgl_vector_2d<double>(vcl_cos(angle_), vcl_sin(angle_));
+    return vgl_vector_2d<double>(std::cos(angle_), std::sin(angle_));
   }
 
 
@@ -63,7 +63,7 @@ inline bool modrec_edgel_strength_less(const modrec_edgel& e1,
 
 
 //: Return a vector of all edgels in the edge map
-vcl_vector<modrec_edgel>
+std::vector<modrec_edgel>
 modrec_find_all_edgels(const vil_image_view<float>& edge_map);
 
 
@@ -71,7 +71,7 @@ modrec_find_all_edgels(const vil_image_view<float>& edge_map);
 //  return a vector of edgels found within \a ndist pixel in the normal direction,
 //  with a \a edist pixel padding added in the line direction.
 //  Edgel orientation must form an angle with the line less than \a ang_t (modulo pi/2 radians)
-vcl_vector<modrec_edgel>
+std::vector<modrec_edgel>
 modrec_find_edgel_neighbors(const vil_image_view<float>& edge_map,
                             const vgl_line_segment_2d<double>& line,
                             int ndist, int edist, double ang_t);

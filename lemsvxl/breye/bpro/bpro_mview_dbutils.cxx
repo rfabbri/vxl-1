@@ -10,52 +10,52 @@
 
 void bpro_mview_dbutils::create_new_database()
 {
-  vcl_set<vcl_string> types = bpro_storage_registry::types();
-  for( vcl_set<vcl_string>::iterator 
+  std::set<std::string> types = bpro_storage_registry::types();
+  for( std::set<std::string>::iterator 
          type_itr = types.begin();
        type_itr != types.end();  ++type_itr )
     {      
-      vcl_vector<vcl_string> r_names;
-      vcl_vector<vcl_string> r_types;
+      std::vector<std::string> r_names;
+      std::vector<std::string> r_types;
       r_names.push_back("view_id");
       r_names.push_back("name");
       r_names.push_back("sptr");
       r_types.push_back(brdb_value_t<unsigned>::type()); // "unsigned"
-      r_types.push_back(brdb_value_t<vcl_string>::type()); // "vcl_string"
+      r_types.push_back(brdb_value_t<std::string>::type()); // vcl_string"
       r_types.push_back(brdb_value_t<bpro_storage_sptr>::type()); // "bpro_storage_sptr"
       brdb_relation_sptr r = new brdb_relation(r_names, r_types);
       brdb_database_manager::instance()->add_relation(*type_itr,r);
     }
   {
-    vcl_vector<vcl_string> r_names;
-    vcl_vector<vcl_string> r_types;
+    std::vector<std::string> r_names;
+    std::vector<std::string> r_types;
     r_names.push_back("name");
     r_names.push_back("type");
     r_names.push_back("sptr");
-    r_types.push_back(brdb_value_t<vcl_string>::type()); //"vcl_string"
-    r_types.push_back(brdb_value_t<vcl_string>::type()); // "vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); //vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); // vcl_string"
     r_types.push_back(brdb_value_t<bpro_storage_sptr>::type()); // "bpro_storage_sptr"
     brdb_relation_sptr r = new brdb_relation(r_names, r_types);
     brdb_database_manager::instance()->add_relation("global_data",r);
   }
   {
-    vcl_vector<vcl_string> r_names;
-    vcl_vector<vcl_string> r_types;
+    std::vector<std::string> r_names;
+    std::vector<std::string> r_types;
     r_names.push_back("view_id");
     r_names.push_back("view_name");
     r_types.push_back(brdb_value_t<unsigned>::type()); // "unsigned"
-    r_types.push_back(brdb_value_t<vcl_string>::type()); // "vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); // vcl_string"
     brdb_relation_sptr r = new brdb_relation(r_names, r_types);
     brdb_database_manager::instance()->add_relation("existing_views",r);
   }
 }
 
 bpro_storage_sptr 
-bpro_mview_dbutils::get_view_data_by_name_at( const vcl_string& name,
+bpro_mview_dbutils::get_view_data_by_name_at( const std::string& name,
                                                const unsigned view_id)
 {
-  vcl_set<vcl_string> types = bpro_storage_registry::types();
-  for( vcl_set<vcl_string>::iterator type_itr = types.begin(); 
+  std::set<std::string> types = bpro_storage_registry::types();
+  for( std::set<std::string>::iterator type_itr = types.begin(); 
        type_itr != types.end();  ++type_itr )
     {
       brdb_query_aptr Q = brdb_query_comp_new("view_id", brdb_query::EQ, view_id)
@@ -65,7 +65,7 @@ bpro_mview_dbutils::get_view_data_by_name_at( const vcl_string& name,
       if(!selec->empty())
         {
           if (selec->size() > 1) {
-            vcl_cerr << "\nWarning: multiple storage have the same name and frame\n";
+            std::cerr << "\nWarning: multiple storage have the same name and frame\n";
             return NULL;
           }
           else {
@@ -89,14 +89,14 @@ bool bpro_mview_dbutils::store_data_at(const bpro_storage_sptr& storage,
   return true;
 }
 
-vcl_set < bpro_storage_sptr > bpro_mview_dbutils::get_all_storage_classes()
+std::set < bpro_storage_sptr > bpro_mview_dbutils::get_all_storage_classes()
 {
-  vcl_set< bpro_storage_sptr > whole_set;
-  vcl_set<vcl_string> types = bpro_storage_registry::types();  
-  for( vcl_set<vcl_string>::iterator type_itr = types.begin();
+  std::set< bpro_storage_sptr > whole_set;
+  std::set<std::string> types = bpro_storage_registry::types();  
+  for( std::set<std::string>::iterator type_itr = types.begin();
        type_itr != types.end();  ++type_itr )
     {
-      vcl_set< bpro_storage_sptr > local_type;
+      std::set< bpro_storage_sptr > local_type;
       bpro_mview_dbutils::get_all_storage_classes(*type_itr);
       whole_set.insert(local_type.begin(),local_type.end());
     }
@@ -104,10 +104,10 @@ vcl_set < bpro_storage_sptr > bpro_mview_dbutils::get_all_storage_classes()
 }
 
 
-vcl_set < bpro_storage_sptr > 
-bpro_mview_dbutils::get_all_storage_classes(const vcl_string& type)
+std::set < bpro_storage_sptr > 
+bpro_mview_dbutils::get_all_storage_classes(const std::string& type)
 {
-  vcl_set < bpro_storage_sptr > storage_set;
+  std::set < bpro_storage_sptr > storage_set;
 
   // Local data
   brdb_query_aptr Q = brdb_query_comp_new("view_id", brdb_query::ALL, 0);
@@ -135,12 +135,12 @@ bpro_mview_dbutils::get_all_storage_classes(const vcl_string& type)
 
 
 //: Returns the set of all storage classes (all types) at the given view id
-vcl_set < bpro_storage_sptr > 
+std::set < bpro_storage_sptr > 
 bpro_mview_dbutils::get_all_storage_classes(const unsigned view_id)
 {
-  vcl_set < bpro_storage_sptr > storage_set;
-  vcl_set<vcl_string> types = bpro_storage_registry::types();  
-  for( vcl_set<vcl_string>::iterator type_itr = types.begin();
+  std::set < bpro_storage_sptr > storage_set;
+  std::set<std::string> types = bpro_storage_registry::types();  
+  for( std::set<std::string>::iterator type_itr = types.begin();
        type_itr != types.end();  ++type_itr )
     {
       brdb_query_aptr Q = brdb_query_comp_new("view_id", brdb_query::EQ, view_id);
@@ -161,7 +161,7 @@ bpro_mview_dbutils::get_all_storage_classes(const unsigned view_id)
 
 
 bpro_storage_sptr bpro_mview_dbutils::
-get_data_by_name_at(const vcl_string& name, const unsigned view_id)
+get_data_by_name_at(const std::string& name, const unsigned view_id)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
   brdb_selection_sptr selec = brdb_database_manager::instance()->select("global_data", Q);
@@ -169,7 +169,7 @@ get_data_by_name_at(const vcl_string& name, const unsigned view_id)
   if(!selec->empty())
     {
       if (selec->size() > 1){
-        vcl_cerr << "\nWarning: multiple global storage have the same name\n";
+        std::cerr << "\nWarning: multiple global storage have the same name\n";
         return NULL;
       }
       else {
@@ -179,8 +179,8 @@ get_data_by_name_at(const vcl_string& name, const unsigned view_id)
       }
     }
   
-  vcl_set<vcl_string> types = bpro_storage_registry::types();  
-  for( vcl_set<vcl_string>::iterator type_itr = types.begin();
+  std::set<std::string> types = bpro_storage_registry::types();  
+  for( std::set<std::string>::iterator type_itr = types.begin();
        type_itr != types.end();  ++type_itr )
     {
       Q = brdb_query_comp_new( "view_id", brdb_query::EQ, view_id)
@@ -190,7 +190,7 @@ get_data_by_name_at(const vcl_string& name, const unsigned view_id)
       if(!selec->empty())
         {
           if (selec->size() > 1) {
-            vcl_cerr << "\nWarning: multiple storage have the same name and frame\n";
+            std::cerr << "\nWarning: multiple storage have the same name and frame\n";
             return NULL;
           }
           else {
@@ -204,18 +204,18 @@ get_data_by_name_at(const vcl_string& name, const unsigned view_id)
 }
 
 
-vcl_vector < vcl_string > 
-bpro_mview_dbutils::get_all_storage_class_names(const vcl_string& type,
+std::vector < std::string > 
+bpro_mview_dbutils::get_all_storage_class_names(const std::string& type,
                                                  const unsigned view_id)
 {
-  vcl_vector<vcl_string> names;
+  std::vector<std::string> names;
   brdb_query_aptr Q = brdb_query_comp_new("view_id", brdb_query::EQ, view_id);
   brdb_selection_sptr selec = brdb_database_manager::instance()->select(type, Q);
   if (!selec->empty()) 
     {
       for(unsigned i=0; i<selec->size(); i++)
         {
-          vcl_string name;
+          std::string name;
           selec->get("name", i, name);
           names.push_back(name);
         }
@@ -224,29 +224,29 @@ bpro_mview_dbutils::get_all_storage_class_names(const vcl_string& type,
 }
 
 
-vcl_vector< vcl_vector < vcl_string > >
-bpro_mview_dbutils::get_all_storage_class_names(const vcl_string& type)
+std::vector< std::vector < std::string > >
+bpro_mview_dbutils::get_all_storage_class_names(const std::string& type)
 {
-  vcl_vector <vcl_vector < vcl_string > > result;
-  vcl_set<unsigned> vids = bpro_mview_dbutils::existing_view_ids();
-  for(vcl_set<unsigned>::iterator vit = vids.begin();
+  std::vector <std::vector < std::string > > result;
+  std::set<unsigned> vids = bpro_mview_dbutils::existing_view_ids();
+  for(std::set<unsigned>::iterator vit = vids.begin();
       vit != vids.end(); ++vit)
     {
-      vcl_vector < vcl_string > names =
+      std::vector < std::string > names =
         bpro_mview_dbutils::get_all_storage_class_names(type,*vit);
       result.push_back(names);
     }
   return result;
 }
 
-bpro_storage_sptr bpro_mview_dbutils::new_data_at(const vcl_string& type, 
-                                                    const vcl_string& name, 
+bpro_storage_sptr bpro_mview_dbutils::new_data_at(const std::string& type, 
+                                                    const std::string& name, 
                                                     const unsigned view_id)
 {
   if( name == "" )
     return NULL;
-  vcl_set<vcl_string> types = bpro_storage_registry::types();  
-  vcl_set<vcl_string>::iterator result = types.find(type);
+  std::set<std::string> types = bpro_storage_registry::types();  
+  std::set<std::string>::iterator result = types.find(type);
   if( result == types.end() )
     return NULL;
   bpro_storage_sptr temp = bpro_storage_registry::storage(type);
@@ -258,9 +258,9 @@ bpro_storage_sptr bpro_mview_dbutils::new_data_at(const vcl_string& type,
 }
 
 //Get the current set of view_ids
-vcl_set<unsigned> bpro_mview_dbutils::existing_view_ids()
+std::set<unsigned> bpro_mview_dbutils::existing_view_ids()
 {
-  vcl_set<unsigned> view_ids;
+  std::set<unsigned> view_ids;
   brdb_query_aptr Q = brdb_query_comp_new("view_id", brdb_query::ALL, 0);
   brdb_selection_sptr selec = brdb_database_manager::instance()->select("existing_views", Q);
   if (!selec->empty()) 
@@ -278,25 +278,25 @@ vcl_set<unsigned> bpro_mview_dbutils::existing_view_ids()
 
 //will invoke name later
 bool bpro_mview_dbutils::add_view_id(const unsigned view_id,
-                                          vcl_string const& name)
+                                          std::string const& name)
 {
   return brdb_database_manager::instance()->
     add_tuple("existing_views", new brdb_tuple(view_id, name));
 }
 
 
-vcl_vector < vcl_string > bpro_mview_dbutils::
-get_global_storage_names(const vcl_string& type)
+std::vector < std::string > bpro_mview_dbutils::
+get_global_storage_names(const std::string& type)
 {
 
-  vcl_vector<vcl_string> names;
+  std::vector<std::string> names;
   brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::EQ, type);
   brdb_selection_sptr selec = brdb_database_manager::instance()->select("global_data", Q);
   if (!selec->empty()) 
     {
       for(unsigned i=0; i<selec->size(); i++)
         {
-          vcl_string name;
+          std::string name;
           selec->get("name", i, name);
           names.push_back(name);
         }

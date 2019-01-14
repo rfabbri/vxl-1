@@ -6,9 +6,9 @@
 #include <dbil/dbil_bounded_image_view.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/io/vgl_io_box_3d.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_ostream.h>
+#include <string>
+#include <cassert>
+#include <ostream>
 #include <vil/vil_pixel_format.h>
 
 
@@ -18,13 +18,13 @@
 
 template<class T>
 imgr_bounded_image_view_3d<T>::
-imgr_bounded_image_view_3d(vcl_vector<dbil_bounded_image_view<T>* > const& views,
+imgr_bounded_image_view_3d(std::vector<dbil_bounded_image_view<T>* > const& views,
                            vgl_box_3d<double> const& bounds)
   :  bounds_(bounds) 
 {
    view_data_2d_=new imgr_view_data_base();
   
-  for(typename vcl_vector<dbil_bounded_image_view<T>* >::const_iterator vit = views.begin();
+  for(typename std::vector<dbil_bounded_image_view<T>* >::const_iterator vit = views.begin();
      vit != views.end(); ++vit)
  view_data_2d_->add_view_2d((vil_image_view<T>*)(*vit));
   
@@ -101,7 +101,7 @@ imgr_bounded_image_view_3d<T>::b_read(vsl_b_istream &is){
   short ver;
   unsigned num_views;
   vgl_box_3d<double> box;
-  vcl_vector<dbil_bounded_image_view<T>* > views;
+  std::vector<dbil_bounded_image_view<T>* > views;
   
   if (!is)
     return;
@@ -120,9 +120,9 @@ imgr_bounded_image_view_3d<T>::b_read(vsl_b_istream &is){
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: imgr_bounded_image_view_3d<T>::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: imgr_bounded_image_view_3d<T>::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream*/
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream*/
     return;
  }
  }

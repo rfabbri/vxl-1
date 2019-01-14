@@ -3,10 +3,10 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <limits>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -40,7 +40,7 @@ class edge_corr_tableau_set_int_params_command : public vgui_command
 {
  public:
   edge_corr_tableau_set_int_params_command(edge_corr_tableau* tab, 
-    const vcl_string& name, const void* intref) : edgecorr_tab(tab),  iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : edgecorr_tab(tab),  iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -56,14 +56,14 @@ class edge_corr_tableau_set_int_params_command : public vgui_command
 
   edge_corr_tableau *edgecorr_tab;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class edge_corr_tableau_set_display_params_command : public vgui_command
 {
  public:
   edge_corr_tableau_set_display_params_command(edge_corr_tableau* tab, 
-    const vcl_string& name, const void* floatref) : edgecorr_tab(tab),  floatref_((float*)floatref), name_(name) {}
+    const std::string& name, const void* floatref) : edgecorr_tab(tab),  floatref_((float*)floatref), name_(name) {}
 
   void execute() 
   { 
@@ -79,7 +79,7 @@ class edge_corr_tableau_set_display_params_command : public vgui_command
 
   edge_corr_tableau *edgecorr_tab;
   float* floatref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 class edge_corr_tableau_set_current_color_command : public vgui_command
@@ -91,17 +91,17 @@ class edge_corr_tableau_set_current_color_command : public vgui_command
   { 
     vgui_dialog style_dlg("Change Style");
     char TPcolor[50], FPcolor[50], TNcolor[50];
-    vcl_sprintf (TPcolor, "%.3f %.3f %.3f", edgecorr_tab->TP_color_[0], 
+    std::sprintf (TPcolor, "%.3f %.3f %.3f", edgecorr_tab->TP_color_[0], 
                                             edgecorr_tab->TP_color_[1], 
                                             edgecorr_tab->TP_color_[2]);
-    vcl_sprintf (FPcolor, "%.3f %.3f %.3f", edgecorr_tab->FP_color_[0], 
+    std::sprintf (FPcolor, "%.3f %.3f %.3f", edgecorr_tab->FP_color_[0], 
                                             edgecorr_tab->FP_color_[1], 
                                             edgecorr_tab->FP_color_[2]);
-    vcl_sprintf (TNcolor, "%.3f %.3f %.3f", edgecorr_tab->TN_color_[0], 
+    std::sprintf (TNcolor, "%.3f %.3f %.3f", edgecorr_tab->TN_color_[0], 
                                             edgecorr_tab->TN_color_[1], 
                                             edgecorr_tab->TN_color_[2]);
 
-    vcl_string TPcol(TPcolor), FPcol(FPcolor), TNcol(TNcolor);
+    std::string TPcol(TPcolor), FPcol(FPcolor), TNcol(TNcolor);
 
     float point_size = edgecorr_tab->point_size();
     float line_width = edgecorr_tab->line_width();
@@ -117,7 +117,7 @@ class edge_corr_tableau_set_current_color_command : public vgui_command
     if(!style_dlg.ask())
       return;
 
-    vcl_istringstream color_strm1(TPcol), color_strm2(FPcol), color_strm3(TNcol);
+    std::istringstream color_strm1(TPcol), color_strm2(FPcol), color_strm3(TNcol);
     color_strm1 >> TPcolor_[0] >> TPcolor_[1] >> TPcolor_[2];
     color_strm2 >> FPcolor_[0] >> FPcolor_[1] >> FPcolor_[2];
     color_strm3 >> TNcolor_[0] >> TNcolor_[1] >> TNcolor_[2];
@@ -184,7 +184,7 @@ bool edge_corr_tableau::handle( const vgui_event & e )
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
     // Display on status bar:
-    vgui::out << "(" << ix << ", " << iy << ")" << vcl_endl;
+    vgui::out << "(" << ix << ", " << iy << ")" << std::endl;
   }
 
   ////handle queries
@@ -198,13 +198,13 @@ bool edge_corr_tableau::handle( const vgui_event & e )
   //  int xx = dbdet_round(ix);
   //  int yy = dbdet_round(iy);
 
-  //  //vcl_cout << "ix,iy: " << ix << "," << iy << vcl_endl;
+  //  //std::cout << "ix,iy: " << ix << "," << iy << std::endl;
 
   //  //reset cur_edgel
   //  cur_edgel = 0;
 
   //  // b) find the closest edgel in the neighboring cells
-  //  double dmin = vcl_numeric_limits<double>::infinity();
+  //  double dmin = std::numeric_limits<double>::infinity();
   //  for (int xcell = xx-2; xcell <= xx+2; xcell++){
   //    for (int ycell = yy-2; ycell <= yy+2; ycell++){
   //      if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap_->width() || ycell >= (int)edgemap_->height()) 
@@ -225,11 +225,11 @@ bool edge_corr_tableau::handle( const vgui_event & e )
   //  }
   //  //output edgel info
   //  if (cur_edgel){
-  //    vcl_cout << "Edgel " << cur_edgel->id << " : (x, y, theta, strength) = (";
-  //    vcl_cout << cur_edgel->pt.x() << ", " << cur_edgel->pt.y() << ", " ;
-  //    vcl_cout << cur_edgel->tangent << ", " << cur_edgel->strength << ")" << vcl_endl; 
-  //    vcl_cout << "L Attr: " << cur_edgel->left_app->print_info() << vcl_endl;
-  //    vcl_cout << "R Attr: " << cur_edgel->right_app->print_info() << vcl_endl;
+  //    std::cout << "Edgel " << cur_edgel->id << " : (x, y, theta, strength) = (";
+  //    std::cout << cur_edgel->pt.x() << ", " << cur_edgel->pt.y() << ", " ;
+  //    std::cout << cur_edgel->tangent << ", " << cur_edgel->strength << ")" << std::endl; 
+  //    std::cout << "L Attr: " << cur_edgel->left_app->print_info() << std::endl;
+  //    std::cout << "R Attr: " << cur_edgel->right_app->print_info() << std::endl;
   //  }
 
   //  // hightlight the selected edgel
@@ -245,16 +245,16 @@ bool edge_corr_tableau::handle( const vgui_event & e )
   //  if (cur_edgel)
   //  {
   //    if (cur_edgel->strength>=threshold_ &&
-  //        vcl_fabs(cur_edgel->deriv) >= d2f_thresh_)
+  //        std::fabs(cur_edgel->deriv) >= d2f_thresh_)
   //    {
   //      glColor3f( 1.0-curr_color_[0], 1.0-curr_color_[1], 1.0-curr_color_[2] );
   //      glLineWidth (line_width_);
   //      glBegin( GL_LINE_STRIP );
-  //      glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*vcl_cos(cur_edgel->tangent),
-  //                 cur_edgel->pt.y() - 0.5*line_length_*vcl_sin(cur_edgel->tangent));
+  //      glVertex2d(cur_edgel->pt.x() - 0.5*line_length_*std::cos(cur_edgel->tangent),
+  //                 cur_edgel->pt.y() - 0.5*line_length_*std::sin(cur_edgel->tangent));
   //      
-  //      glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*vcl_cos(cur_edgel->tangent),
-  //                 cur_edgel->pt.y() + 0.5*line_length_*vcl_sin(cur_edgel->tangent));
+  //      glVertex2d(cur_edgel->pt.x() + 0.5*line_length_*std::cos(cur_edgel->tangent),
+  //                 cur_edgel->pt.y() + 0.5*line_length_*std::sin(cur_edgel->tangent));
   //      glEnd();
   //    }
   //  }
@@ -295,11 +295,11 @@ void edge_corr_tableau::draw_edgels()
         glLineWidth (line_width_);
         //gl2psLineWidth(line_width_);
         glBegin( GL_LINE_STRIP );
-        glVertex2d(e->pt.x() - 0.5*line_length_*vcl_cos(e->tangent),
-                   e->pt.y() - 0.5*line_length_*vcl_sin(e->tangent));
+        glVertex2d(e->pt.x() - 0.5*line_length_*std::cos(e->tangent),
+                   e->pt.y() - 0.5*line_length_*std::sin(e->tangent));
         
-        glVertex2d(e->pt.x() + 0.5*line_length_*vcl_cos(e->tangent),
-                   e->pt.y() + 0.5*line_length_*vcl_sin(e->tangent));
+        glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
+                   e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
         glEnd();
       }
     }
@@ -326,11 +326,11 @@ void edge_corr_tableau::draw_edgels()
         glLineWidth (line_width_);
         //gl2psLineWidth(line_width_);
         glBegin( GL_LINE_STRIP );
-        glVertex2d(e->pt.x() - 0.5*line_length_*vcl_cos(e->tangent),
-                   e->pt.y() - 0.5*line_length_*vcl_sin(e->tangent));
+        glVertex2d(e->pt.x() - 0.5*line_length_*std::cos(e->tangent),
+                   e->pt.y() - 0.5*line_length_*std::sin(e->tangent));
         
-        glVertex2d(e->pt.x() + 0.5*line_length_*vcl_cos(e->tangent),
-                   e->pt.y() + 0.5*line_length_*vcl_sin(e->tangent));
+        glVertex2d(e->pt.x() + 0.5*line_length_*std::cos(e->tangent),
+                   e->pt.y() + 0.5*line_length_*std::sin(e->tangent));
         glEnd();
       }
     }
@@ -363,7 +363,7 @@ void
 edge_corr_tableau::get_popup(const vgui_popup_params& /*params*/, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   //submenu.add( "Set threshold 1", new edge_corr_tableau_set_display_params_command(this, "Edge strength", &threshold1_));
   //submenu.add( "Set threshold 2", new edge_corr_tableau_set_display_params_command(this, "Edge strength", &threshold2_));

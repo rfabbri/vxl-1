@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbbgm/bbgm_image_of.h>
 #include <dbbgm/bbgm_image_sptr.h>
 #include <dbbgm/bbgm_wavelet_sptr.h>
@@ -6,7 +6,7 @@
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <brdb/brdb_value.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vil/vil_image_view.h>
@@ -30,16 +30,16 @@ typedef bsta_num_obs<bsta_gauss3_t> gauss_type3;
 typedef bsta_mixture<gauss_type3> mix_gauss_type3;
 typedef bsta_num_obs<mix_gauss_type3> obs_mix_gauss_type3;
 //: Process construct function//
-bool stringToArgv(vcl_vector<char*>& args,vcl_istringstream& iss,int &argc);
+bool stringToArgv(std::vector<char*>& args,std::istringstream& iss,int &argc);
 bool bbgm_wavelet_xform_set_inputs(bprb_func_process& pro)
 {
-  vcl_vector<vcl_string> in_types(6);
-  in_types[0]="vcl_string";//type of image
+  std::vector<std::string> in_types(6);
+  in_types[0]=vcl_string";//type of image
   in_types[1]="int";//wavelet number
   in_types[2]="int";//level
-  in_types[3]=pro.get_input<vcl_string>(0); //in image
+  in_types[3]=pro.get_input<std::string>(0); //in image
   in_types[4]="int";//number of planes
-  in_types[5]="vcl_string";
+  in_types[5]=vcl_string";
   pro.set_input_types(in_types);
   return true;
 }
@@ -52,21 +52,21 @@ bool bbgm_wavelet_xform_process(bprb_func_process& pro)
 	// Sanity check
 	bbgm_wavelet_xform_set_inputs(pro);
 	if (!pro.verify_inputs()) {
-		vcl_cerr << "In bbgm_wavelet_xform_process::execute - invalid inputs\n";
+		std::cerr << "In bbgm_wavelet_xform_process::execute - invalid inputs\n";
 		return false;
 	}
    
-	vcl_vector<vcl_string> output_types(2);
+	std::vector<std::string> output_types(2);
     output_types[0]= "bbgm_wavelet_sptr";
   
-	vcl_string type=pro.get_input<vcl_string>(0);
+	std::string type=pro.get_input<std::string>(0);
 	int waveletNo=pro.get_input<int>(1);
 	int level=pro.get_input<int>(2);
 	int nplanes=pro.get_input<int>(4);
-	vcl_string arg_string=pro.get_input<vcl_string>(5);
-	vcl_istringstream istr(arg_string);
+	std::string arg_string=pro.get_input<std::string>(5);
+	std::istringstream istr(arg_string);
 	int argc=0;
-	vcl_vector<char*> args;
+	std::vector<char*> args;
 	bool success=stringToArgv(args,istr,argc);
 
 	bbgm_wavelet_sptr output_wavelet;
@@ -78,7 +78,7 @@ bool bbgm_wavelet_xform_process(bprb_func_process& pro)
 		
 		
 		if (!input_image) {
-			vcl_cerr << "Null background image\n";
+			std::cerr << "Null background image\n";
 			return false;
 		}
 			if (nplanes ==3)
@@ -128,10 +128,10 @@ bool bbgm_wavelet_xform_process(bprb_func_process& pro)
   return true;
 }
 
-bool stringToArgv(vcl_vector<char*>& args,vcl_istringstream& iss,int &argc)
+bool stringToArgv(std::vector<char*>& args,std::istringstream& iss,int &argc)
 {
 	argc=0;
-	vcl_string token;
+	std::string token;
 	;
 	 while(iss >> token) 
 	{  

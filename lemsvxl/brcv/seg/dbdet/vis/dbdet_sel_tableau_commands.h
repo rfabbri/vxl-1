@@ -13,7 +13,7 @@
 //
 //\endverbatim
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbdet/algo/dbdet_postprocess_contours.h>
 
 //: command to toggle a boolean flag
@@ -38,7 +38,7 @@ class dbdet_sel_tableau_set_int_command : public vgui_command
 {
  public:
   dbdet_sel_tableau_set_int_command(dbdet_sel_tableau* tab, 
-    const vcl_string& name, const void* intref) : sel_tableau(tab),  iref_((int*)intref), name_(name) {}
+    const std::string& name, const void* intref) : sel_tableau(tab),  iref_((int*)intref), name_(name) {}
 
   void execute() 
   { 
@@ -54,7 +54,7 @@ class dbdet_sel_tableau_set_int_command : public vgui_command
 
   dbdet_sel_tableau *sel_tableau;
   int* iref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 //: Command to set some double values
@@ -62,7 +62,7 @@ class dbdet_sel_tableau_set_double_command : public vgui_command
 {
  public:
   dbdet_sel_tableau_set_double_command(dbdet_sel_tableau* tab, 
-    const vcl_string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
+    const std::string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
 
   void execute() 
   { 
@@ -78,7 +78,7 @@ class dbdet_sel_tableau_set_double_command : public vgui_command
 
   dbdet_sel_tableau *sel_tableau;
   double* dref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 //: Command to choose a color
@@ -116,8 +116,8 @@ class dbdet_sel_tableau_set_style_command : public vgui_command
   void execute() 
   { 
     char color[50];
-    vcl_sprintf (color, "%.3f %.3f %.3f", (*color_)[0], (*color_)[1], (*color_)[2]);
-    vcl_string col(color);
+    std::sprintf (color, "%.3f %.3f %.3f", (*color_)[0], (*color_)[1], (*color_)[2]);
+    std::string col(color);
 
     vgui_dialog style_dlg("Change Style");
     style_dlg.inline_color("Color", col);
@@ -126,7 +126,7 @@ class dbdet_sel_tableau_set_style_command : public vgui_command
     if(!style_dlg.ask())
       return;
 
-    vcl_istringstream color_strm(col);
+    std::istringstream color_strm(col);
     color_strm >> color_[0] >> color_[1] >> color_[2];
     sel_tableau->post_redraw(); 
   }
@@ -207,7 +207,7 @@ class dbdet_sel_tableau_sel_command : public vgui_command
 
         // Amir: just construct the full link graph
         ////Linking_algo_choices
-        //vcl_vector<vcl_string> linking_algo_choices;
+        //std::vector<std::string> linking_algo_choices;
         //linking_algo_choices.push_back("all links");                              //0
         //linking_algo_choices.push_back("immediate links only");                   //1
         //linking_algo_choices.push_back("immediate reciprocal links");             //2
@@ -296,7 +296,7 @@ class dbdet_sel_tableau_sel_command : public vgui_command
         int method = 0;
 
         //quality_function_choices
-        vcl_vector<vcl_string> quality_function_choices;
+        std::vector<std::string> quality_function_choices;
         quality_function_choices.push_back("average dist between edgels");     //0
         quality_function_choices.push_back("max distance between edgels");     //1
         quality_function_choices.push_back("max dist/L");                      //2

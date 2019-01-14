@@ -11,7 +11,7 @@
 // \date        2005-04-12
 // 
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_stream.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -37,7 +37,7 @@ class imgr_isq_file_format
     vgl_point_3d<double> world_point(double i, double j, double k);
    
     //: make a image resource from image id and vil_stream
-    vcl_vector<vil_image_resource_sptr> get_images();
+    std::vector<vil_image_resource_sptr> get_images();
 
   private:
 

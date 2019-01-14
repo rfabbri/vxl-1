@@ -3,25 +3,25 @@
 
 #include <vnl/vnl_math.h>
 #include <vsol/vsol_rectangle_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vehicle_model.h>
 
-void vrml_print_box(vsol_rectangle_2d box,vcl_ostream& out)
+void vrml_print_box(vsol_rectangle_2d box,std::ostream& out)
     {
-out << box.p0()->x() << " " << box.p0()->y() << " " << 1 << vcl_endl;
-out << box.p1()->x() << " " << box.p1()->y() << " " << 1 << vcl_endl;
-out << box.p2()->x() << " " << box.p2()->y() << " " << 1 << vcl_endl;
-out << box.p3()->x() << " " << box.p3()->y() << " " << 1 << vcl_endl;
+out << box.p0()->x() << " " << box.p0()->y() << " " << 1 << std::endl;
+out << box.p1()->x() << " " << box.p1()->y() << " " << 1 << std::endl;
+out << box.p2()->x() << " " << box.p2()->y() << " " << 1 << std::endl;
+out << box.p3()->x() << " " << box.p3()->y() << " " << 1 << std::endl;
 
     }
 
-void print_vrml_header(vcl_ostream& out)
+void print_vrml_header(std::ostream& out)
     {
  out <<      "#VRML V2.0 utf8\n";
     out <<      "Background { \n";
@@ -39,7 +39,7 @@ void print_vrml_header(vcl_ostream& out)
     out <<      "}\n";
     }
 
-void print_vrml_model(vcl_ostream& out,vehicle_model M1,double color_coeff)
+void print_vrml_model(std::ostream& out,vehicle_model M1,double color_coeff)
     {
      out << " Transform {\n";
      out << "translation 0 0  0 \n";
@@ -52,7 +52,7 @@ void print_vrml_model(vcl_ostream& out,vehicle_model M1,double color_coeff)
     out <<      "   geometry IndexedFaceSet {\n";
     out <<      "      coord Coordinate{\n";
     out <<      "         point[\n";
-    // out << M1 << vcl_endl;
+    // out << M1 << std::endl;
       M1.vrml_print(out);
     out <<      "         ]\n";
    out <<      " }   coordIndex [";

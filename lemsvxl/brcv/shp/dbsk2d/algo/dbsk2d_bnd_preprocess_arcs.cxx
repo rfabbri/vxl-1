@@ -7,7 +7,7 @@
 
 #include "dbsk2d_bnd_preprocess.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 
 #include <bgld/algo/bgld_circ_arc.h>
@@ -32,9 +32,9 @@
 // `tainted_arcs' contains all arcs affected by intersection and need
 // further processing
 void dbsk2d_bnd_preprocess::
-intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs, 
-                   vcl_list<dbsk2d_bnd_edge_sptr >* arcset1, 
-                   vcl_list<dbsk2d_bnd_edge_sptr >* arcset2)
+intersect_bnd_arcs(std::list<dbsk2d_bnd_edge_sptr >* tainted_arcs, 
+                   std::list<dbsk2d_bnd_edge_sptr >* arcset1, 
+                   std::list<dbsk2d_bnd_edge_sptr >* arcset2)
 {
   // clear old stuffs
   tainted_arcs->clear();
@@ -97,8 +97,8 @@ intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs,
       double k2 = barc2->curvature();
 
       // potential intersecting locations
-      vcl_vector<double > arc1_ratios;
-      vcl_vector<double > arc2_ratios;
+      std::vector<double > arc1_ratios;
+      std::vector<double > arc2_ratios;
       double d = bgld_closest_point::circular_arc_to_circular_arc(
         p11, p12, k1, p21, p22, k2, arc1_ratios, arc2_ratios);
 
@@ -172,7 +172,7 @@ intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs,
 //: Remove (exact) duplicate arcs - 
 // arcs with same end vertices and maximum distance is < threshold
 void dbsk2d_bnd_preprocess::
-remove_duplicate_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
+remove_duplicate_arcs(std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
 {
   // Order N^2
   for (bnd_edge_list::iterator eit1 = bnd_arcs.begin();

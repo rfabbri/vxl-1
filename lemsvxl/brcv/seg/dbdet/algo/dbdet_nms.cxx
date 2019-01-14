@@ -4,8 +4,8 @@
 // \file
 
 #include "dbdet_nms.h"
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>   // for vcl_abs(int) and vcl_sqrt()
+#include <cstdio>
+#include <cstdlib>   // for std::abs(int) and std::sqrt()
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_matrix_inverse.h>
@@ -59,24 +59,24 @@ dbdet_nms::dbdet_nms(const dbdet_nms_params& nsp, const vil_image_view<double>& 
 
 // backward compatible method
 void dbdet_nms::apply(bool collect_tokens,
-                      vcl_vector<vgl_point_2d<double> >& loc, 
-                      vcl_vector<double>& orientation, 
-                      vcl_vector<double>& mag)
+                      std::vector<vgl_point_2d<double> >& loc, 
+                      std::vector<double>& orientation, 
+                      std::vector<double>& mag)
 {
-  vcl_vector<double> d2f;
-  vcl_vector<vgl_point_2d<int> > pix_loc;
+  std::vector<double> d2f;
+  std::vector<vgl_point_2d<int> > pix_loc;
 
   //call the main method
   apply(collect_tokens, loc, orientation, mag, d2f, pix_loc);
 }
 
 void dbdet_nms::apply(bool collect_tokens,
-                      vcl_vector<vgl_point_2d<double> >& loc, 
-                      vcl_vector<double>& orientation, 
-                      vcl_vector<double>& mag,
-                      vcl_vector<double>& d2f)
+                      std::vector<vgl_point_2d<double> >& loc, 
+                      std::vector<double>& orientation, 
+                      std::vector<double>& mag,
+                      std::vector<double>& d2f)
 {
-  vcl_vector<vgl_point_2d<int> > pix_loc;
+  std::vector<vgl_point_2d<int> > pix_loc;
 
   //call the main method
   apply(collect_tokens, loc, orientation, mag, d2f, pix_loc);
@@ -84,11 +84,11 @@ void dbdet_nms::apply(bool collect_tokens,
 
 //: Apply the algorithm
 void dbdet_nms::apply(bool collect_tokens,
-                      vcl_vector<vgl_point_2d<double> >& loc, 
-                      vcl_vector<double>& orientation, 
-                      vcl_vector<double>& mag,
-                      vcl_vector<double>& d2f,
-                      vcl_vector<vgl_point_2d<int> >& pix_loc)
+                      std::vector<vgl_point_2d<double> >& loc, 
+                      std::vector<double>& orientation, 
+                      std::vector<double>& mag,
+                      std::vector<double>& d2f,
+                      std::vector<vgl_point_2d<int> >& pix_loc)
 {
   double f[3], s_list[3];
 
@@ -105,17 +105,17 @@ void dbdet_nms::apply(bool collect_tokens,
       normalize(direction);
 
       //The gradient has to be non-degenerate
-      if (vcl_abs(direction.x()) < 10e-6 && vcl_abs(direction.y()) < 10e-6)
+      if (std::abs(direction.x()) < 10e-6 && std::abs(direction.y()) < 10e-6)
         continue;
 
       //now compute the values orthogonal to the edge and fit a parabola
       int face_num = intersected_face_number(direction); 
       if (face_num == -1) {
 #ifndef NDEBUG
-        vcl_cout << "Ignoring bad gradient direction: " <<  direction <<  vcl_endl
-          << " gx: " << gx << " gy: " << gy << vcl_endl
+        std::cout << "Ignoring bad gradient direction: " <<  direction <<  std::endl
+          << " gx: " << gx << " gy: " << gy << std::endl
           << " x: " << x << " y: " << y << " margin: " << margin_ 
-          << "grad_mag_.ni: " << grad_mag_.ni() << " grad_mag_.nj: " << grad_mag_.nj() << vcl_endl;
+          << "grad_mag_.ni: " << grad_mag_.ni() << " grad_mag_.nj: " << grad_mag_.nj() << std::endl;
         // TODO: investigate the bad gradient directions when they happen
         // and perhaps make sure it can't be fixed instead of ignored
 
@@ -140,12 +140,12 @@ void dbdet_nms::apply(bool collect_tokens,
         double s_star = (parabola_fit_type_ == dbdet_nms_params::PFIT_3_POINTS) ? 
                             subpixel_s(s_list, f, max_val, grad_val) : subpixel_s(x, y, direction, max_val);
 
-        if (vcl_fabs(s_star)< 0.7)
+        if (std::fabs(s_star)< 0.7)
         {
           //record this edgel
           x_(y,x) = x + s_star * direction.x();
           y_(y,x) = y + s_star * direction.y();
-          dir_(y,x) = vcl_atan2(direction.x(), -direction.y());
+          dir_(y,x) = std::atan2(direction.x(), -direction.y());
           mag_(y,x) = max_val; //the mag at the max of the parabola
           deriv_(y,x) = grad_val;
         }
@@ -215,21 +215,21 @@ int dbdet_nms::intersected_face_number(const vgl_vector_2d<double>& direction)
   }
   else if (direction.x() < 0 && direction.y() >= 0)
   {
-    if (vcl_abs(direction.x()) < direction.y())
+    if (std::abs(direction.x()) < direction.y())
       return 3;
     else
       return 4;
   }
   else if (direction.x() < 0 && direction.y() < 0)
   {
-    if (vcl_abs(direction.x()) >= vcl_abs(direction.y()))
+    if (std::abs(direction.x()) >= std::abs(direction.y()))
       return 5;
     else
       return 6;
   }
   else if (direction.x() >= 0 && direction.y() < 0)
   {
-    if (direction.x() < vcl_abs(direction.y()))
+    if (direction.x() < std::abs(direction.y()))
       return 7;
     else
       return 8;
@@ -365,7 +365,7 @@ double dbdet_nms::subpixel_s(double *s, double *f, double &max_f, double &max_d)
 
   if (A<0){ //make sure this is a maximum
     if (use_adaptive_thresh_){
-      //if (vcl_fabs(d2fp)>rel_thresh_ || vcl_fabs(d2fm)>rel_thresh_)
+      //if (std::fabs(d2fp)>rel_thresh_ || std::fabs(d2fm)>rel_thresh_)
       if (d2f<-rel_thresh_)//d2f is always negative at a maxima
         return s_star;
       else
@@ -412,7 +412,7 @@ double dbdet_nms::subpixel_s(int x, int y, const vgl_vector_2d<double>& directio
     {
       find_distance_s_and_f_for_point(i, j, line1, d, s, direction);
       f = grad_mag_(x+i,y+j);
-      A(index, 0) = vcl_pow(s,2.0);
+      A(index, 0) = std::pow(s,2.0);
       A(index, 1) = s;
       A(index, 2) = 1.0;
       B(index, 0) = f;

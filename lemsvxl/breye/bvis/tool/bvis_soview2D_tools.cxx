@@ -6,7 +6,7 @@
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 //Constructor
 bvis_translate_tool::bvis_translate_tool( const vgui_event_condition& lift,
@@ -24,7 +24,7 @@ bvis_translate_tool::~bvis_translate_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis_translate_tool::name() const
 {
   return "Translate";
@@ -112,7 +112,7 @@ bvis_style_tool::~bvis_style_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis_style_tool::name() const
 {
   return "Change Style";
@@ -143,7 +143,7 @@ bvis_style_tool::handle( const vgui_event & e,
         return false;
 
       vgui_dialog style_dlg("Change Style");
-      static vcl_string color = "";
+      static std::string color = "";
       float point_size = style->point_size;
       float line_width = style->line_width;
       style_dlg.inline_color("Color",color);
@@ -155,7 +155,7 @@ bvis_style_tool::handle( const vgui_event & e,
 
       style->point_size = point_size;
       style->line_width = line_width;
-      vcl_istringstream color_strm(color);
+      std::istringstream color_strm(color);
       color_strm >> style->rgba[0] >> style->rgba[1] >> style->rgba[2];
 
       return true;

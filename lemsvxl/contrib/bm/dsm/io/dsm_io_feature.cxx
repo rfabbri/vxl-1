@@ -36,7 +36,7 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_feature* p)
 	}
 }
 
-void vsl_print_summary(vcl_ostream& os, const dsm_feature *p)
+void vsl_print_summary(std::ostream& os, const dsm_feature *p)
 {
-	os << "vsl_print_summary not yet implemented. " << vcl_flush;
+	os << "vsl_print_summary not yet implemented. " << std::flush;
 }

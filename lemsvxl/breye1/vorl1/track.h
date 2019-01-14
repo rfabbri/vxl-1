@@ -1,9 +1,9 @@
 #include <expatpp/expatpplib.h>
 #include <stdio.h>
 #include <string.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-//#include <vcl_fstream.h>
+#include <cstdio>
+#include <cassert>
+//#include <fstream>
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 
@@ -13,10 +13,10 @@
 
 class track_coord_info  {
   public:
-  vcl_string x;
-  vcl_string y;
-  vcl_string x_margin;
-  vcl_string y_margin;
+  std::string x;
+  std::string y;
+  std::string x_margin;
+  std::string y_margin;
 };
 class track_info {
 public://functions
@@ -25,17 +25,17 @@ public://functions
   int get_count();
   void setTrackCoordindateInfo ( track_coord_info* info);
   void addTrackCoordinateInfo();
-  vcl_string getWidth();
-  vcl_string getHeight();
-  void setX(vcl_string *s);
-  void setY(vcl_string *s);
-  void setYmargin(vcl_string *s);
-  void setXmargin(vcl_string *s);
-  void setWidth(vcl_string *s);
-  void setHeight(vcl_string *s);
+  std::string getWidth();
+  std::string getHeight();
+  void setX(std::string *s);
+  void setY(std::string *s);
+  void setYmargin(std::string *s);
+  void setXmargin(std::string *s);
+  void setWidth(std::string *s);
+  void setHeight(std::string *s);
 
    //Data
-   vcl_vector<track_coord_info> coordinates; 
+   std::vector<track_coord_info> coordinates; 
 
 private:
     void increment_count();
@@ -45,8 +45,8 @@ private:
 
     //Data
     int count;
-    vcl_string width;
-    vcl_string height;
+    std::string width;
+    std::string height;
 
 
 };

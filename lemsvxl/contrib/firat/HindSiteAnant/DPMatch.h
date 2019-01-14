@@ -3,10 +3,10 @@
 #ifndef __TBS_DPMATCH_DEF__
 #define __TBS_DPMATCH_DEF__
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <utility>
 
 #define DP_VERY_LARGE_COST 1E12
 
@@ -21,27 +21,27 @@ public:
   //access functions
   floatType finalCost(){return _finalCost;};
   floatType finalCost(floatType cost){_finalCost=cost; return _finalCost;};
-  vcl_vector < vcl_pair <int,int> > finalMap(){return _finalMap;};
-  vcl_vector< floatType > finalMapCost(){return _finalMapCost;};
+  std::vector < std::pair <int,int> > finalMap(){return _finalMap;};
+  std::vector< floatType > finalMapCost(){return _finalMapCost;};
   int n(){return _n;};
   int m(){return _m;};
 
   curveType curve1(){return _curve1;};
   curveType curve2(){return _curve2;};
   void match();
-  vcl_pair<int,int> Start(){vcl_pair<int,int> tmp(_nstart,_mstart); return tmp;}
-  vcl_pair<int,int> End(){vcl_pair<int,int> tmp(_nend,_mend); return tmp;}
+  std::pair<int,int> Start(){std::pair<int,int> tmp(_nstart,_mstart); return tmp;}
+  std::pair<int,int> End(){std::pair<int,int> tmp(_nend,_mend); return tmp;}
   double length;
 protected:
   //Data
   curveType _curve1;
   curveType _curve2;
-  vcl_vector< vcl_vector<floatType> > _cost;
-  vcl_vector< vcl_vector< vcl_pair <int,int> > > _map;
-  vcl_vector< vcl_vector< vcl_pair <floatType,floatType> > > _angle;
-  vcl_vector< vcl_pair <int,int> > _finalMap;
+  std::vector< std::vector<floatType> > _cost;
+  std::vector< std::vector< std::pair <int,int> > > _map;
+  std::vector< std::vector< std::pair <floatType,floatType> > > _angle;
+  std::vector< std::pair <int,int> > _finalMap;
   floatType _finalCost;
-  vcl_vector< floatType > _finalMapCost;
+  std::vector< floatType > _finalMapCost;
   int _n;
   int _m;
 
@@ -67,17 +67,17 @@ protected:
   //Altered from virtual function to real function from NewDPMatch
   floatType computeIntervalCost(int i, int ip, int j, int jp, int ri, int rj, int C_FLAG);
   // CAN DEBUG
-  void write_dp_costs(vcl_string fname);
+  void write_dp_costs(std::string fname);
 };
 
 //###########################
 template <class curveType,class floatType>
 DPMatch<curveType,floatType>::DPMatch() 
 {
-  vcl_vector< vcl_vector<floatType> > a;
-  vcl_vector< vcl_vector< vcl_pair <int,int> > > b;
-  vcl_vector< vcl_pair <int,int> > c;
-  vcl_vector< floatType > d;
+  std::vector< std::vector<floatType> > a;
+  std::vector< std::vector< std::pair <int,int> > > b;
+  std::vector< std::pair <int,int> > c;
+  std::vector< floatType > d;
 
   curveType c1,c2;
   _curve1 = c1;
@@ -96,10 +96,10 @@ DPMatch<curveType,floatType>::DPMatch()
 template <class curveType,class floatType>
 DPMatch<curveType,floatType>::DPMatch(curveType &c1, curveType &c2, int nstart, int mstart)
 {  
-  vcl_vector< vcl_vector<floatType> > a;
-  vcl_vector< vcl_vector< vcl_pair <int,int> > > b;
-  vcl_vector< vcl_pair <int,int> > c;
-  vcl_vector< floatType > d;
+  std::vector< std::vector<floatType> > a;
+  std::vector< std::vector< std::pair <int,int> > > b;
+  std::vector< std::pair <int,int> > c;
+  std::vector< floatType > d;
 
   _curve1 = c1;
   _curve2 = c2;
@@ -116,15 +116,15 @@ DPMatch<curveType,floatType>::DPMatch(curveType &c1, curveType &c2, int nstart, 
   // initialize the DP table cost array, backlinking pointers, angle value array
   for (n=0;n<_n;n++)
   {
-    vcl_vector<floatType> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<floatType> tmp1(_m,DP_VERY_LARGE_COST);
     _cost.push_back(tmp1);
 
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _map.push_back(tmp2);
 
-    vcl_pair<floatType,floatType> tmp4(0,0);
-    vcl_vector <vcl_pair<floatType,floatType> > tmp5(_m,tmp4);
+    std::pair<floatType,floatType> tmp4(0,0);
+    std::vector <std::pair<floatType,floatType> > tmp5(_m,tmp4);
     _angle.push_back(tmp5);
   }
  
@@ -325,7 +325,7 @@ void DPMatch<curveType,floatType>::findDPCorrespondence()
   jp=_mend;
   i=_nend;
   j=_mend;
-  vcl_pair <int,int> p(i,j);
+  std::pair <int,int> p(i,j);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_cost[p.first][p.second]);
   
@@ -334,13 +334,13 @@ void DPMatch<curveType,floatType>::findDPCorrespondence()
     ip=_map[i][j].first;
     jp=_map[i][j].second;
     
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_cost[p.first][p.second]);
 
     if((ip==0 && jp!=0) || (ip!=0 && jp==0)) 
     {
-      vcl_cout << "ERROR" << vcl_endl;
+      std::cout << "ERROR" << std::endl;
       exit(-1);
     }
 
@@ -364,16 +364,16 @@ void DPMatch<curveType,floatType>::match()
 #endif
 
 template <class curveType,class floatType>
-void DPMatch<curveType,floatType>::write_dp_costs(vcl_string fname)
+void DPMatch<curveType,floatType>::write_dp_costs(std::string fname)
 {
-  vcl_ofstream out(fname.c_str());
+  std::ofstream out(fname.c_str());
   for(int i=0; i<_n; i++)
   {
     for(int j=0; j<_m; j++)
     {
       out << _cost[i][j] << " ";
     }
-    out << vcl_endl;
+    out << std::endl;
   }
   out.close();
 }

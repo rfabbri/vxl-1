@@ -17,10 +17,10 @@
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string> scene_file("-scene_file", "scene filename", "");
+  vul_arg<std::string> scene_file("-scene_file", "scene filename", "");
   vul_arg<int> scene_id("-scene_id", "scene id", 0);
-  vul_arg<vcl_string> bof_dir("-bof_dir", "Bag Of Features xml path", "");
-  vul_arg<vcl_string> pcd_dir("-pcd_dir", "Dir to write the pcd files to");
+  vul_arg<std::string> bof_dir("-bof_dir", "Bag Of Features xml path", "");
+  vul_arg<std::string> pcd_dir("-pcd_dir", "Dir to write the pcd files to");
   vul_arg_parse(argc, argv);
   
  
@@ -38,20 +38,20 @@ int main(int argc, char** argv)
     scene->load_scene(parser);
     scene_ptr = scene;
         
-    vcl_vector<vgl_box_3d<double> > bboxes;
+    std::vector<vgl_box_3d<double> > bboxes;
     bof_scene_categories category_info(bof_dir());
     category_info.load_objects(scene_id(), bboxes);
     
-    vcl_vector<vgl_box_3d<double> >::iterator bboxes_it= bboxes.begin();
+    std::vector<vgl_box_3d<double> >::iterator bboxes_it= bboxes.begin();
     
     //iterate through the objects
     unsigned object_id = 0;
     for (; bboxes_it != bboxes.end(); bboxes_it++) {
-      vcl_stringstream pcd_file;
+      std::stringstream pcd_file;
       
       pcd_file << pcd_dir() << "/object_" << object_id++ << ".pcd"; 
       
-      vcl_vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > cell_data;
+      std::vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > cell_data;
       scene->cell_data_in_region(*bboxes_it, cell_data, 0);
       
       //convert the cell_data into point cloud
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
       // Compute the features
       fpfh.compute (*fpfhs); 
 
-      vcl_stringstream pcd_file_out;
+      std::stringstream pcd_file_out;
       pcd_file_out << pcd_dir() << "/fpfh_object_" << object_id++ << ".pcd"; 
 
       pcl::io::savePCDFileASCII (pcd_file_out.str(), *fpfhs);     

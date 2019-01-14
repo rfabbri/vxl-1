@@ -19,9 +19,9 @@
 // Approved for Public Release, Distribution Unlimited (DISTAR Case 12529)
 
 #include <dbsta/bsta_parzen_sphere.h>
-#include <vcl_algorithm.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 
 //: A parzen window (kernel) updater.
 // If a new sample is within tol of the existing samples then don't insert.

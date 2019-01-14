@@ -2,9 +2,9 @@
 #include <vidpro/vidpro_repository.h>
 #include <bpro/bpro_storage.h>
 #include <bpro/bpro_process.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <sstream>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_map_io.h>
 #include <vsl/vsl_vector_io.h>
@@ -43,16 +43,16 @@ vidpro_repository::remove_all()
 
 //: Remove all data from the repository except those with the given names
 void 
-vidpro_repository::remove_all_except(const vcl_set<vcl_string>& retain)
+vidpro_repository::remove_all_except(const std::set<std::string>& retain)
 {
 
   // Local data
-  for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  for( std::map<std::string, bpro_storage_sptr>::const_iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
     brdb_query_aptr Q(NULL);
-    for (vcl_set<vcl_string>::const_iterator keep_it = retain.begin();
+    for (std::set<std::string>::const_iterator keep_it = retain.begin();
       keep_it != retain.end();keep_it++)
     {
       Q = Q | brdb_query_comp_new("name", brdb_query::NEQ, *keep_it);
@@ -62,10 +62,10 @@ vidpro_repository::remove_all_except(const vcl_set<vcl_string>& retain)
 
   // Global data
   brdb_selection_sptr selec, total;
-  for (vcl_set<vcl_string>::const_iterator keep_it = retain.begin();
+  for (std::set<std::string>::const_iterator keep_it = retain.begin();
     keep_it != retain.end();keep_it++)
   {
-    // Not-Equal operator not defined for vcl_string: using brdb_query::EQ and NOT the selection
+    // Not-Equal operator not defined for std::string: using brdb_query::EQ and NOT the selection
     brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, *keep_it);
     selec = DATABASE->select("global_data", Q);
     if (keep_it == retain.begin())
@@ -82,7 +82,7 @@ vidpro_repository::remove_all_except(const vcl_set<vcl_string>& retain)
 //: Clear the repository and replace with a new one
 // \note the registered types in new_rep must be a subset of types registered here
 bool 
-vidpro_repository::replace_data(const vcl_string& path)
+vidpro_repository::replace_data(const std::string& path)
 {
   this->remove_all();
   return brdb_database_manager::load_database(path);
@@ -91,7 +91,7 @@ vidpro_repository::replace_data(const vcl_string& path)
 bool
 vidpro_repository::remove_frame(int frame)
 {
-  for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  for( std::map<std::string, bpro_storage_sptr>::const_iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -113,7 +113,7 @@ vidpro_repository::remove_frame(int frame)
 bool
 vidpro_repository::decrement_frame_number()
 {
-  for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  for( std::map<std::string, bpro_storage_sptr>::const_iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -122,9 +122,9 @@ vidpro_repository::decrement_frame_number()
     {
       brdb_query_aptr Q = brdb_query_comp_new("frame", brdb_query::EQ, i+1);
       brdb_selection_sptr s_all = DATABASE->select(type_itr->first, Q);
-      vcl_vector<vcl_string> names = this->get_all_storage_class_names((type_itr->first), i+1);
+      std::vector<std::string> names = this->get_all_storage_class_names((type_itr->first), i+1);
 
-      for(vcl_vector<vcl_string>::iterator it = names.begin(); it!=names.end(); it++)
+      for(std::vector<std::string>::iterator it = names.begin(); it!=names.end(); it++)
       {
         Q = brdb_query_comp_new("name", brdb_query::EQ, *it);
         brdb_selection_sptr s = new brdb_selection(s_all, Q);
@@ -140,7 +140,7 @@ vidpro_repository::decrement_frame_number()
 bool
 vidpro_repository::increment_frame_number()
 {
-  for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  for( std::map<std::string, bpro_storage_sptr>::const_iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -149,9 +149,9 @@ vidpro_repository::increment_frame_number()
     {
       brdb_query_aptr Q=brdb_query_comp_new("frame", brdb_query::EQ, i);
       brdb_selection_sptr s_all = DATABASE->select(type_itr->first, Q);
-      vcl_vector<vcl_string> names = this->get_all_storage_class_names((type_itr->first), i);
+      std::vector<std::string> names = this->get_all_storage_class_names((type_itr->first), i);
 
-      for(vcl_vector<vcl_string>::iterator it = names.begin(); it!=names.end(); it++)
+      for(std::vector<std::string>::iterator it = names.begin(); it!=names.end(); it++)
       {
         Q = brdb_query_comp_new("name", brdb_query::EQ, *it);
         brdb_selection_sptr s = new brdb_selection(s_all, Q);
@@ -166,13 +166,13 @@ vidpro_repository::increment_frame_number()
 
 //: Write repository to a file
 void 
-vidpro_repository::save_data(const vcl_string& path)
+vidpro_repository::save_data(const std::string& path)
 {
   brdb_database_manager::save_database(path);
 }
 
 //: Add in a new repository to the existing storage elements
-bool vidpro_repository::add_repository(const vcl_string& path)
+bool vidpro_repository::add_repository(const std::string& path)
 {
   return brdb_database_manager::merge_database(path);
 }
@@ -183,46 +183,46 @@ vidpro_repository::initialize( int num_frames )
   this->remove_all();
 
   // create a template map of NULL smart pointers
-  //storage_map <==> vcl_map< vcl_string, vcl_vector< bpro_storage_sptr > >
+  //storage_map <==> std::map< std::string, std::vector< bpro_storage_sptr > >
   vidpro_repository::storage_map temp_map;
 
-  for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  for( std::map<std::string, bpro_storage_sptr>::const_iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {      
-    vcl_vector<vcl_string> r_names;
-    vcl_vector<vcl_string> r_types;
+    std::vector<std::string> r_names;
+    std::vector<std::string> r_types;
     r_names.push_back("frame");
     r_names.push_back("name");
     r_names.push_back("sptr");
     r_types.push_back(brdb_value_t<int>::type()); // "int"
-    r_types.push_back(brdb_value_t<vcl_string>::type()); // "vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); // vcl_string"
     r_types.push_back(brdb_value_t<bpro_storage_sptr>::type()); // "bpro_storage_sptr"
     brdb_relation_sptr r = new brdb_relation(r_names, r_types);
     DATABASE->add_relation(type_itr->first,r);
   }
   {
-    vcl_vector<vcl_string> r_names;
-    vcl_vector<vcl_string> r_types;
+    std::vector<std::string> r_names;
+    std::vector<std::string> r_types;
     r_names.push_back("name");
     r_names.push_back("type");
     r_names.push_back("sptr");
-    r_types.push_back(brdb_value_t<vcl_string>::type()); //"vcl_string"
-    r_types.push_back(brdb_value_t<vcl_string>::type()); // "vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); //vcl_string"
+    r_types.push_back(brdb_value_t<std::string>::type()); // vcl_string"
     r_types.push_back(brdb_value_t<bpro_storage_sptr>::type()); // "bpro_storage_sptr"
     brdb_relation_sptr r = new brdb_relation(r_names, r_types);
     DATABASE->add_relation("global_data",r);
   }
 
   {
-    vcl_vector<vcl_string> r_names;
-    vcl_vector<vcl_string> r_types;
+    std::vector<std::string> r_names;
+    std::vector<std::string> r_types;
     r_names.push_back("process");
     r_names.push_back("ostream");
     r_names.push_back("type");
-    r_types.push_back(brdb_value_t<vcl_string>::type()); 
-    r_types.push_back(brdb_value_t<vcl_string>::type()); 
-    r_types.push_back(brdb_value_t<vcl_string>::type());
+    r_types.push_back(brdb_value_t<std::string>::type()); 
+    r_types.push_back(brdb_value_t<std::string>::type()); 
+    r_types.push_back(brdb_value_t<std::string>::type());
     brdb_relation_sptr r = new brdb_relation(r_names, r_types);
     DATABASE->add_relation("ostream-process",r);
   }
@@ -244,7 +244,7 @@ vidpro_repository::add_new_frame()
   //in adding empty  vector<bpro_storage_sptr>
 
   // NEW: need some work
-  //vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  //std::map<std::string, bpro_storage_sptr>::iterator 
   //  result = registered_types_.begin();
   //for(;result != registered_types_.end();  ++result){
 
@@ -257,10 +257,10 @@ vidpro_repository::add_new_frame()
 
   // OLD:
   //vidpro_repository::storage_map temp_map;
-  //for( vcl_map<vcl_string, bpro_storage_sptr>::const_iterator 
+  //for( std::map<std::string, bpro_storage_sptr>::const_iterator 
   //     type_itr = registered_types_.begin();
   //     type_itr != registered_types_.end();  ++type_itr ){
-  //  temp_map[type_itr->first] = vcl_vector< bpro_storage_sptr >();
+  //  temp_map[type_itr->first] = std::vector< bpro_storage_sptr >();
   //}
   //data_.push_back( temp_map );
 
@@ -331,7 +331,7 @@ vidpro_repository::valid_frame( int frame ) const
     return false;
   }
 
-  for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -345,15 +345,15 @@ vidpro_repository::valid_frame( int frame ) const
 
 
 //: Retrieve a vector of names that describe the storage classes of a given type
-vcl_vector < vcl_string > 
-vidpro_repository::get_all_storage_class_names(const vcl_string& type)
+std::vector < std::string > 
+vidpro_repository::get_all_storage_class_names(const std::string& type)
 {
   return get_all_storage_class_names(type, current_frame_);
 }
 
 //: Retrieve a storage smart pointer to the global data named \p name
 bpro_storage_sptr
-vidpro_repository::get_global_storage_by_name(const vcl_string& name)
+vidpro_repository::get_global_storage_by_name(const std::string& name)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -366,7 +366,7 @@ vidpro_repository::get_global_storage_by_name(const vcl_string& name)
 
 //: Remove a global storage named \p name
 bool
-vidpro_repository::remove_global_storage_by_name(const vcl_string& name)
+vidpro_repository::remove_global_storage_by_name(const std::string& name)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -377,18 +377,18 @@ vidpro_repository::remove_global_storage_by_name(const vcl_string& name)
 }
 
 //: Retrieve a vector of names that describe the storage classes of a given type
-vcl_vector < vcl_string > 
-vidpro_repository::get_all_storage_class_names(const vcl_string& type, int frame)
+std::vector < std::string > 
+vidpro_repository::get_all_storage_class_names(const std::string& type, int frame)
 {
 
-  vcl_vector<vcl_string> names;
+  std::vector<std::string> names;
 
   brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::EQ, type);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
 
   for(unsigned i=0; i<selec->size(); i++)
   {
-    vcl_string name;
+    std::string name;
     selec->get("name", i, name);
     names.push_back(name);
   }
@@ -399,7 +399,7 @@ vidpro_repository::get_all_storage_class_names(const vcl_string& type, int frame
 
     for(unsigned i=0; i<selec->size(); i++)
     {
-      vcl_string name;
+      std::string name;
       selec->get("name", i, name);
       names.push_back(name);
     }
@@ -410,12 +410,12 @@ vidpro_repository::get_all_storage_class_names(const vcl_string& type, int frame
 
 
 //: Returns the set of all storage classes sptrs (all types) at the given frame
-vcl_set < bpro_storage_sptr > 
+std::set < bpro_storage_sptr > 
 vidpro_repository::get_all_storage_classes(int frame) const
 {
 
-  vcl_set < bpro_storage_sptr > storage_set;
-  for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  std::set < bpro_storage_sptr > storage_set;
+  for( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -434,7 +434,7 @@ vidpro_repository::get_all_storage_classes(int frame) const
   }
 
   // This is a dummy query just to get the global_data relation
-  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, vcl_string(""));
+  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, std::string(""));
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
   if (!selec->empty()) 
   {
@@ -451,10 +451,10 @@ vidpro_repository::get_all_storage_classes(int frame) const
 }
 
 //: Returns the set of all storage classes sptrs of a given type (at all frames)
-vcl_set < bpro_storage_sptr > 
-vidpro_repository::get_all_storage_classes(const vcl_string& type) const
+std::set < bpro_storage_sptr > 
+vidpro_repository::get_all_storage_classes(const std::string& type) const
 {
-  vcl_set < bpro_storage_sptr > storage_set;
+  std::set < bpro_storage_sptr > storage_set;
 
   // Local data
   brdb_query_aptr Q = brdb_query_comp_new("frame", brdb_query::ALL, 0);
@@ -482,16 +482,16 @@ vidpro_repository::get_all_storage_classes(const vcl_string& type) const
 }
 
 //: Returns complete set of all storage classes sptr's (global and local)
-vcl_set < bpro_storage_sptr > 
+std::set < bpro_storage_sptr > 
 vidpro_repository::get_all_storage_classes() const
 {
-  vcl_set< bpro_storage_sptr > whole_set;
+  std::set< bpro_storage_sptr > whole_set;
 
-  for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
-    vcl_set< bpro_storage_sptr > local_type;
+    std::set< bpro_storage_sptr > local_type;
     local_type = get_all_storage_classes(type_itr->first);
     whole_set.insert(local_type.begin(),local_type.end());
   }
@@ -500,7 +500,7 @@ vidpro_repository::get_all_storage_classes() const
 
 //: Returns the name that describe the a storage class
 bool 
-vidpro_repository::get_storage_name(const bpro_storage_sptr& storage, vcl_string& name)
+vidpro_repository::get_storage_name(const bpro_storage_sptr& storage, std::string& name)
 {
   brdb_query_aptr Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -509,7 +509,7 @@ vidpro_repository::get_storage_name(const bpro_storage_sptr& storage, vcl_string
     return true;
   }
 
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr){
       Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
@@ -525,7 +525,7 @@ vidpro_repository::get_storage_name(const bpro_storage_sptr& storage, vcl_string
 
 //: Returns the type that describe the a storage class
 bool
-vidpro_repository::get_storage_type(const bpro_storage_sptr& storage, vcl_string& type)
+vidpro_repository::get_storage_type(const bpro_storage_sptr& storage, std::string& type)
 {
   brdb_query_aptr Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -534,7 +534,7 @@ vidpro_repository::get_storage_type(const bpro_storage_sptr& storage, vcl_string
     return true;
   }
 
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr){
       Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
@@ -553,7 +553,7 @@ vidpro_repository::get_storage_type(const bpro_storage_sptr& storage, vcl_string
 bool 
 vidpro_repository::get_storage_frame(const bpro_storage_sptr& storage, int &frame)
 {
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr){
       brdb_query_aptr Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
@@ -569,9 +569,9 @@ vidpro_repository::get_storage_frame(const bpro_storage_sptr& storage, int &fram
 
 //: Checks whether not global storage class is stored at
 bool 
-vidpro_repository::exist(vcl_string const & name , int frame)
+vidpro_repository::exist(std::string const & name , int frame)
 {
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr){
       brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
@@ -585,7 +585,7 @@ vidpro_repository::exist(vcl_string const & name , int frame)
 
 //: Checks whether not global storage class is stored at
 bool 
-vidpro_repository::exist_in_global(vcl_string const & name , vcl_string const & type)
+vidpro_repository::exist_in_global(std::string const & name , std::string const & type)
 {
 
   brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::EQ, type)
@@ -598,7 +598,7 @@ vidpro_repository::exist_in_global(vcl_string const & name , vcl_string const & 
 }
 
 bool 
-vidpro_repository::update_storage(vcl_string const name , int frame, bpro_storage_sptr const& sto)
+vidpro_repository::update_storage(std::string const name , int frame, bpro_storage_sptr const& sto)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name",  brdb_query::EQ, name)
                     & brdb_query_comp_new("frame", brdb_query::EQ, frame);
@@ -611,7 +611,7 @@ vidpro_repository::update_storage(vcl_string const name , int frame, bpro_storag
 }
 
 bool 
-vidpro_repository::remove_storage(vcl_string const name , int frame)
+vidpro_repository::remove_storage(std::string const name , int frame)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name",  brdb_query::EQ, name)
                     & brdb_query_comp_new("frame", brdb_query::EQ, frame);
@@ -626,7 +626,7 @@ vidpro_repository::remove_storage(vcl_string const name , int frame)
 
 //: Returns the number of storage classes of a given type at the current frame
 unsigned int 
-vidpro_repository::get_storage_class_size(const vcl_string& type) const
+vidpro_repository::get_storage_class_size(const std::string& type) const
 {
   if( valid_frame( current_frame_ ) ) {
     brdb_query_aptr Q = brdb_query_comp_new("frame", brdb_query::EQ, current_frame_);
@@ -646,7 +646,7 @@ vidpro_repository::is_stored(const bpro_storage_sptr& storage)
     return true;
   }
 
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr){
       Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
@@ -663,7 +663,7 @@ vidpro_repository::is_stored(const bpro_storage_sptr& storage)
 //: Retrieve a storage smart pointer to the data named \p name at the current frame
 //  The optional frame_offset is added to the current frame number
 bpro_storage_sptr 
-vidpro_repository::get_data_by_name(const vcl_string& name, int frame_offset )
+vidpro_repository::get_data_by_name(const std::string& name, int frame_offset )
 {
   return get_data_by_name_at( name, current_frame_ + frame_offset);
 }
@@ -671,7 +671,7 @@ vidpro_repository::get_data_by_name(const vcl_string& name, int frame_offset )
 
 //: Retrieve a storage smart pointer to the data named \p name at the given frame
 bpro_storage_sptr 
-vidpro_repository::get_data_by_name_at( const vcl_string& name, int frame)
+vidpro_repository::get_data_by_name_at( const std::string& name, int frame)
 {
   brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -679,7 +679,7 @@ vidpro_repository::get_data_by_name_at( const vcl_string& name, int frame)
   if(!selec->empty())
   {
     if (selec->size() > 1)
-      vcl_cerr << "\nWarning: multiple global storage have the same name:\n"
+      std::cerr << "\nWarning: multiple global storage have the same name:\n"
       << name << "\n";
 
     bpro_storage_sptr storage;
@@ -687,7 +687,7 @@ vidpro_repository::get_data_by_name_at( const vcl_string& name, int frame)
     return storage;
   }
 
-  for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -698,7 +698,7 @@ vidpro_repository::get_data_by_name_at( const vcl_string& name, int frame)
     if(!selec->empty())
     {
       if (selec->size() > 1)
-        vcl_cerr << "\nWarning: multiple storage have the same name and frame:\n"
+        std::cerr << "\nWarning: multiple storage have the same name and frame:\n"
         << name <<" @ frame "<<frame<<"\n";
 
       bpro_storage_sptr storage;
@@ -714,7 +714,7 @@ vidpro_repository::get_data_by_name_at( const vcl_string& name, int frame)
 //: Retrieve a storage smart pointer to the data indexed by ind of a given type at the current frame
 //  The optional frame_offset is added to the current frame number
 bpro_storage_sptr 
-vidpro_repository::get_data(const vcl_string& type, int frame_offset, int ind)
+vidpro_repository::get_data(const std::string& type, int frame_offset, int ind)
 {
   return get_data_at( type, current_frame_ + frame_offset, ind);
 }
@@ -723,7 +723,7 @@ vidpro_repository::get_data(const vcl_string& type, int frame_offset, int ind)
 
 //: Retrieve a storage smart pointer to the data indexed by ind of a given type at the given frame
 bpro_storage_sptr 
-vidpro_repository::get_data_at(const vcl_string& type, int frame, int ind)
+vidpro_repository::get_data_at(const std::string& type, int frame, int ind)
 {
   if( valid_frame( frame ) ) {
 
@@ -738,7 +738,7 @@ vidpro_repository::get_data_at(const vcl_string& type, int frame, int ind)
 
 //: Retrieve a storage smart pointer to the data indexed by ind of a given type at the given frame
 bpro_storage_sptr 
-vidpro_repository::get_global_data(const vcl_string& type, int ind)
+vidpro_repository::get_global_data(const std::string& type, int ind)
 {
   brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::EQ, type);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
@@ -779,20 +779,20 @@ vidpro_repository::store_data_at(const bpro_storage_sptr& storage, int frame)
   if( !storage.ptr() )
     return false;
 
-  int sto_frame; vcl_string name;
+  int sto_frame; std::string name;
   if( get_storage_name(storage,name) ){
-    vcl_cerr << __FILE__ << ":\nWarning: storage \""<<name<< "\" is already stored ";
+    std::cerr << __FILE__ << ":\nWarning: storage \""<<name<< "\" is already stored ";
     if (get_storage_frame(storage,sto_frame))
-      vcl_cerr << "at frame " << sto_frame << ".\n";
+      std::cerr << "at frame " << sto_frame << ".\n";
     else
-      vcl_cerr << "in global relation.\n";
+      std::cerr << "in global relation.\n";
     return false;
   }
 
   // Construct the new tuple
   brdb_tuple_sptr new_tuple = new brdb_tuple(frame,storage->name(),storage);
   name = storage->name();
-  vcl_string type = storage->type();
+  std::string type = storage->type();
 
   // Search for existing global storage with the same name
   brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::EQ, name);
@@ -805,7 +805,7 @@ vidpro_repository::store_data_at(const bpro_storage_sptr& storage, int frame)
 
   if ( (!selec_global->empty() && !selec_local->empty()) ||
     selec_global->size() > 1  ||  selec_local->size() > 1 )
-    vcl_cerr << "\nWarning: Multiple storage have the same name: "<<name<<"!\n";
+    std::cerr << "\nWarning: Multiple storage have the same name: "<<name<<"!\n";
 
   // Remove found tuples to insure the storage's name/frame is unique
   selec_global->delete_tuples();
@@ -829,8 +829,8 @@ vidpro_repository::store_data_at(const bpro_storage_sptr& storage, int frame)
 //  The optional frame_offset is added to the current frame number
 //  \return false if this data type is not registered
 bpro_storage_sptr  
-vidpro_repository::new_data( const vcl_string& type, 
-                             const vcl_string& name, 
+vidpro_repository::new_data( const std::string& type, 
+                             const std::string& name, 
                              int frame_offset )
 {
   return new_data_at( type, name, current_frame_ + frame_offset );
@@ -840,13 +840,13 @@ vidpro_repository::new_data( const vcl_string& type,
 //: Create a new empty storage class
 //  \return false if this data type is not registered
 bpro_storage_sptr  
-vidpro_repository::new_data_at( const vcl_string& type, 
-                                const vcl_string& name, 
+vidpro_repository::new_data_at( const std::string& type, 
+                                const std::string& name, 
                                 int frame )
 {
   if( name == "" )
     return NULL;
-  vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  std::map<std::string, bpro_storage_sptr>::iterator 
     result = registered_types_.find(type);
   if( result == registered_types_.end() )
     return NULL;
@@ -862,12 +862,12 @@ vidpro_repository::new_data_at( const vcl_string& type,
 //: Create a new empty global storage class
 //  \return false if this data type is not registered
 bpro_storage_sptr  
-vidpro_repository::new_global_data( const vcl_string& type, 
-                                    const vcl_string& name)
+vidpro_repository::new_global_data( const std::string& type, 
+                                    const std::string& name)
 {
   if( name == "" )
     return NULL;
-  vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  std::map<std::string, bpro_storage_sptr>::iterator 
     result = registered_types_.find(type);
   if( result == registered_types_.end() )
     return NULL;
@@ -881,19 +881,19 @@ vidpro_repository::new_global_data( const vcl_string& type,
 }
 
 //:Returns a map with names and types of output streams of a given process
-vcl_map<vcl_string, vcl_string> 
+std::map<std::string, std::string> 
 vidpro_repository::get_process_ostreams(bpro_process_sptr const & pro)
 {
-  vcl_map<vcl_string, vcl_string> ostream_names;
+  std::map<std::string, std::string> ostream_names;
   brdb_query_aptr Q = brdb_query_comp_new("process", brdb_query::EQ, pro->name());
   brdb_selection_sptr selec = DATABASE->select("ostream-process", Q);
   for(unsigned i=0; i<selec->size(); i++)
   {
-    vcl_string name;
-    vcl_string type;
+    std::string name;
+    std::string type;
     selec->get( "ostream", i, name);
     selec->get( "type", i, type);
-    ostream_names.insert(vcl_pair<vcl_string,vcl_string>(type,name));
+    ostream_names.insert(std::pair<std::string,std::string>(type,name));
   }
 
   return ostream_names;
@@ -902,7 +902,7 @@ vidpro_repository::get_process_ostreams(bpro_process_sptr const & pro)
 void
 vidpro_repository::clear_process_ostreams(bpro_process_sptr const & pro)
 {
-  vcl_map<vcl_string, vcl_string> ostream_names;
+  std::map<std::string, std::string> ostream_names;
   brdb_query_aptr Q = brdb_query_comp_new("process", brdb_query::EQ, pro->name());
   brdb_selection_sptr selec = DATABASE->select("ostream-process", Q);
   if(selec->empty())
@@ -912,16 +912,16 @@ vidpro_repository::clear_process_ostreams(bpro_process_sptr const & pro)
   return;
 }
 
-vcl_vector<vcl_string> 
+std::vector<std::string> 
 vidpro_repository::get_object_stream_types()
 {
-  vcl_vector<vcl_string> types;
+  std::vector<std::string> types;
 
-  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, vcl_string(""));
+  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, std::string(""));
   brdb_selection_sptr selec = DATABASE->select("object ostreams", Q);
   for(unsigned i=0; i<selec->size(); i++)
   {
-    vcl_string type;
+    std::string type;
     selec->get( "type", i, type);
     types.push_back(type);
   }
@@ -929,16 +929,16 @@ vidpro_repository::get_object_stream_types()
   return types;
 }
 
-vcl_vector<vcl_string> 
+std::vector<std::string> 
 vidpro_repository::get_object_stream_names()
 {
-  vcl_vector<vcl_string> names;
+  std::vector<std::string> names;
 
-  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, vcl_string(""));
+  brdb_query_aptr Q = brdb_query_comp_new("name", brdb_query::ALL, std::string(""));
   brdb_selection_sptr selec = DATABASE->select("object ostreams", Q);
   for(unsigned i=0; i<selec->size(); i++)
   {
-    vcl_string name;
+    std::string name;
     selec->get( "name", i, name);
     names.push_back(name);
   }
@@ -946,34 +946,34 @@ vidpro_repository::get_object_stream_names()
   return names;
 }
 
-vcl_string
-vidpro_repository::get_object_stream_name( vcl_string const &path )
+std::string
+vidpro_repository::get_object_stream_name( std::string const &path )
 {
-  vcl_string name;
+  std::string name;
 
   brdb_query_aptr Q = brdb_query_comp_new("path", brdb_query::EQ, path);
   brdb_selection_sptr selec = DATABASE->select("object ostreams", Q);
   if(selec->size()==1)
     selec->get("name", name);
   else
-    vcl_cerr<< "Warning: Couldn't find requested object stream name\n"; 
+    std::cerr<< "Warning: Couldn't find requested object stream name\n"; 
 
   return name;
 }
 
-vcl_vector<vcl_string> 
+std::vector<std::string> 
 vidpro_repository::get_object_stream_paths()
 {
-  vcl_vector<vcl_string> paths;
+  std::vector<std::string> paths;
 
   if(!DATABASE->exists("object ostreams"))
     return paths;
 
-  brdb_query_aptr Q = brdb_query_comp_new("path", brdb_query::ALL, vcl_string(""));
+  brdb_query_aptr Q = brdb_query_comp_new("path", brdb_query::ALL, std::string(""));
   brdb_selection_sptr selec = DATABASE->select("object ostreams", Q);
   for(unsigned i=0; i<selec->size(); i++)
   {
-    vcl_string path;
+    std::string path;
     selec->get( "path", i, path);
     paths.push_back(path);
   }
@@ -988,49 +988,49 @@ vidpro_repository::print_summary()
 {
   DATABASE->print();
 
-  vcl_cout << "\n**** vidpro_repository summary: ****\n\n";
-  vcl_cout << "Number of frames: " << num_frames() << vcl_endl;
+  std::cout << "\n**** vidpro_repository summary: ****\n\n";
+  std::cout << "Number of frames: " << num_frames() << std::endl;
 
-  vcl_cout << "Registered Types: " ;
+  std::cout << "Registered Types: " ;
 
   //Registered Types
-  for ( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for ( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin(); 
     type_itr != registered_types_.end();  ++type_itr)
-    vcl_cout << (type_itr->first) << ", " ;
-  vcl_cout << "\b\b.";
+    std::cout << (type_itr->first) << ", " ;
+  std::cout << "\b\b.";
 
   if (num_frames()) {
     // Local data
-    vcl_cout << "\n\nCurrent frame:";
-    for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+    std::cout << "\n\nCurrent frame:";
+    for( std::map<std::string, bpro_storage_sptr>::iterator 
       type_itr = registered_types_.begin();
       type_itr != registered_types_.end();  ++type_itr )
     {
       brdb_query_aptr Q = brdb_query_comp_new("frame", brdb_query::EQ, current_frame_);
       brdb_selection_sptr selec = DATABASE->select(type_itr->first, Q);
       if (!selec->empty()){
-        vcl_cout << "\n  " <<type_itr->first << ": ";
+        std::cout << "\n  " <<type_itr->first << ": ";
       }
 
       for(unsigned i=0; i<selec->size(); i++)
       {
-        vcl_string name;
+        std::string name;
         selec->get( "name", i, name);
-        vcl_cout << name << " ";
+        std::cout << name << " ";
       }
     }
   }
 
   // Global data
-  vcl_stringstream global_summary;
-  brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::ALL, vcl_string(""));
+  std::stringstream global_summary;
+  brdb_query_aptr Q = brdb_query_comp_new("type", brdb_query::ALL, std::string(""));
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
 
   if(!selec->empty()) {
     // if the global relation is not empty:
     global_summary << "\n\nGlobal:";
-    for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+    for( std::map<std::string, bpro_storage_sptr>::iterator 
       type_itr = registered_types_.begin();
       type_itr != registered_types_.end();  ++type_itr )
     {
@@ -1041,15 +1041,15 @@ vidpro_repository::print_summary()
 
       for(unsigned i=0; i<selec->size(); i++)
       {
-        vcl_string name;
+        std::string name;
         selec->get( "name", i, name);
         global_summary << name << " ";
       }
     }
-    vcl_cout << global_summary.str();
+    std::cout << global_summary.str();
   }
 
-  vcl_cout << "\n\n************************************\n";
+  std::cout << "\n\n************************************\n";
 
 }
 
@@ -1058,7 +1058,7 @@ int
 vidpro_repository::num_frames() const
 {
   int maxf=-1;
-  for( vcl_map<vcl_string, bpro_storage_sptr>::iterator 
+  for( std::map<std::string, bpro_storage_sptr>::iterator 
     type_itr = registered_types_.begin();
     type_itr != registered_types_.end();  ++type_itr )
   {
@@ -1097,6 +1097,6 @@ void vsl_b_read(vsl_b_istream &is, vidpro_repository* &n)
 };
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const vidpro_repository* n)
+void vsl_print_summary(std::ostream &os, const vidpro_repository* n)
 {
 };

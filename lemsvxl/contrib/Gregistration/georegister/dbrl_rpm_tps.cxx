@@ -25,8 +25,8 @@ dbrl_rpm_tps_params::dbrl_rpm_tps_params(double initlambda1,double initlambda2,d
 
 
 dbrl_rpm_tps::dbrl_rpm_tps(dbrl_rpm_tps_params & params,
-                           vcl_vector<dbrl_feature_sptr>  f1,
-                           vcl_vector<dbrl_feature_sptr>  f2)
+                           std::vector<dbrl_feature_sptr>  f1,
+                           std::vector<dbrl_feature_sptr>  f2)
     {
     params_=params;
     f1_=f1;
@@ -34,7 +34,7 @@ dbrl_rpm_tps::dbrl_rpm_tps(dbrl_rpm_tps_params & params,
 
     }
 
-dbrl_match_set_sptr dbrl_rpm_tps::rpm(vcl_string name)
+dbrl_match_set_sptr dbrl_rpm_tps::rpm(std::string name)
     {
 
     dbrl_estimator_point_thin_plate_spline * tps_est= new dbrl_estimator_point_thin_plate_spline();
@@ -52,14 +52,14 @@ dbrl_match_set_sptr dbrl_rpm_tps::rpm(vcl_string name)
     lambda1=lambda1init*T;
     lambda2=lambda2init*T;
 
-    vcl_vector<dbrl_feature_sptr> f1x(f1_);
-    vcl_vector<dbrl_feature_sptr> f2x(f2_);
+    std::vector<dbrl_feature_sptr> f1x(f1_);
+    std::vector<dbrl_feature_sptr> f2x(f2_);
     //unused double residual=0.0;
     //: annealing (outer loop)
     while(T>params_.finalT())
         {
         rpm_at(T,M,tps_est,tform,f1x,f2x,lambda1,lambda2);
-        //vcl_cout<<"\nTemperature is "<<T;//<<" and residual is "<<residual;
+        //std::cout<<"\nTemperature is "<<T;//<<" and residual is "<<residual;
         //: update parameters
         T*=params_.annealrate();
         lambda1=lambda1init*params_.annealrate();
@@ -67,17 +67,17 @@ dbrl_match_set_sptr dbrl_rpm_tps::rpm(vcl_string name)
         }
 
     //: compute actual transformation
-    vcl_vector<dbrl_feature_sptr> f1xtemp(f1_);
-    vcl_vector<dbrl_feature_sptr> f2xtemp(f2_);
+    std::vector<dbrl_feature_sptr> f1xtemp(f1_);
+    std::vector<dbrl_feature_sptr> f2xtemp(f2_);
     normalize_point_set(M.M(),f1xtemp);
     tps_est->set_lambda1(10.0);
     tps_est->set_lambda2(0.01);
     tform=tps_est->estimate(f1xtemp,f2xtemp,M);
     dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
 
-    tpstform->print_transformation(vcl_cout);
+    tpstform->print_transformation(std::cout);
 
-    ////tpstform->print_transformation(vcl_cout);
+    ////tpstform->print_transformation(std::cout);
     tpstform->set_from_features(f2xtemp);
     tpstform->transform();
     f2xtemp.clear();
@@ -99,9 +99,9 @@ dbrl_match_set_sptr dbrl_rpm_tps::rpm(vcl_string name)
 bool dbrl_rpm_tps::rpm_at(double T,dbrl_correspondence & M,
                           dbrl_estimator_point_thin_plate_spline * tps_est,
                           dbrl_transformation_sptr &tform,
-                          vcl_vector<dbrl_feature_sptr> &f1x,
-                          vcl_vector<dbrl_feature_sptr> & f2x,
-                          double l1,double l2,vcl_string name)
+                          std::vector<dbrl_feature_sptr> &f1x,
+                          std::vector<dbrl_feature_sptr> & f2x,
+                          double l1,double l2,std::string name)
     {
 
     vul_timer t;
@@ -116,11 +116,11 @@ bool dbrl_rpm_tps::rpm_at(double T,dbrl_correspondence & M,
         M.updateM(m_tmp);
         errdist=M.errdist();
 
-        vcl_vector<dbrl_feature_sptr> f1xform(f1x);
+        std::vector<dbrl_feature_sptr> f1xform(f1x);
         normalize_point_set(M.M(),f1xform);
         tform=tps_est->estimate(f1xform,f2x,M);
         dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
-        //tpstform->print_transformation(vcl_cout);
+        //tpstform->print_transformation(std::cout);
         tpstform->set_from_features(f2x);
         tpstform->transform();
 
@@ -132,7 +132,7 @@ bool dbrl_rpm_tps::rpm_at(double T,dbrl_correspondence & M,
     return true;
     }
 
- void dbrl_rpm_tps::normalize_point_set(vnl_matrix<double> & M, vcl_vector<dbrl_feature_sptr> & f2)
+ void dbrl_rpm_tps::normalize_point_set(vnl_matrix<double> & M, std::vector<dbrl_feature_sptr> & f2)
     {
 
     vnl_matrix<double> pts(f2.size(),2,0.0);
@@ -165,8 +165,8 @@ bool dbrl_rpm_tps::rpm_at(double T,dbrl_correspondence & M,
         }
     }
     
- double dbrl_rpm_tps::distance(vcl_vector<dbrl_feature_sptr> f1,
-                vcl_vector<dbrl_feature_sptr> f2)
+ double dbrl_rpm_tps::distance(std::vector<dbrl_feature_sptr> f1,
+                std::vector<dbrl_feature_sptr> f2)
 {
     double dist=0.0;
     for(unsigned i=0;i<f1.size();i++)

@@ -66,8 +66,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xshock_node::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xshock_node::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -142,8 +142,8 @@ get_centroid(float* x, float* y) const
 
 // -----------------------------------------------------------------------------
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xshock_chord::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xshock_chord::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -233,8 +233,8 @@ get_centroid(float* x, float* y) const
 
 //------------------------------------------------------------------------------
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xshock_curve::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xshock_curve::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -343,8 +343,8 @@ get_centroid(float* x, float* y) const
 
 // -----------------------------------------------------------------------------
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xshock_contact::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xshock_contact::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -426,8 +426,8 @@ get_centroid(float* x, float* y) const
 
 // -----------------------------------------------------------------------------
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xshock_bnd::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xshock_bnd::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -602,8 +602,8 @@ get_centroid(float* x, float* y) const
 }
 
 //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xfrag::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xfrag::
+print(std::ostream& os) const
 {
   return os;
 }
@@ -678,8 +678,8 @@ get_centroid(float* x, float* y) const
 
 //------------------------------------------------------------------------------
   //: Print details about this object to the given stream.
-vcl_ostream& dbsksp_soview_xsample::
-print(vcl_ostream& os) const
+std::ostream& dbsksp_soview_xsample::
+print(std::ostream& os) const
 {
   return os;
 }

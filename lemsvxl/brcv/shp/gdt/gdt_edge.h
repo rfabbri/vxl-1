@@ -5,11 +5,11 @@
 #ifndef gdt_edge_h_
 #define gdt_edge_h_
 
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_vector.h>
+#include <utility>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 #include <dbmsh3d/dbmsh3d_edge.h>
@@ -58,13 +58,13 @@ public:
   }
 
   gdt_interval* get_firstI() {
-    vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
     assert (it != interval_section_.I_map()->end());
     return (gdt_interval*) (*it).second;
   }
   gdt_interval* get_lastI() {
     assert (interval_section_.I_map()->size() != 0);
-    vcl_map<double, gdt_ibase*>::reverse_iterator rit = interval_section_.I_map()->rbegin();
+    std::map<double, gdt_ibase*>::reverse_iterator rit = interval_section_.I_map()->rbegin();
     assert (rit != interval_section_.I_map()->rend());
     return (gdt_interval*) (*rit).second;
   }
@@ -88,7 +88,7 @@ public:
   }
 
   bool is_face_to_propagate (dbmsh3d_face* face) {
-    vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
     for (; it != interval_section_.I_map()->end(); it++) {
       gdt_interval* I = (gdt_interval*) (*it).second;
       if (I->is_on_face(face))
@@ -100,7 +100,7 @@ public:
 
   //: if any of its interval is on the input_face, return true.
   bool any_interval_on_face (dbmsh3d_face* face) {
-    vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
     for (; it != interval_section_.I_map()->end(); it++) {
       gdt_interval* I = (gdt_interval*) (*it).second;
       if (I->is_on_face(face))
@@ -154,8 +154,8 @@ public:
 
   bool fix_interval (double& stau, double& etau) const {
     assert (stau < etau);
-    stau = vcl_max (0.0, stau);
-    etau = vcl_min (len(), etau);
+    stau = std::max (0.0, stau);
+    etau = std::min (len(), etau);
 
     if (_eqT (stau, 0))
       stau = 0;
@@ -175,8 +175,8 @@ public:
     double e = tau_e;
     double len = interval_section_.len();
     if (s < e) {
-      tau_s = vcl_max (0.0, s);
-      tau_e = vcl_min (len, e);
+      tau_s = std::max (0.0, s);
+      tau_e = std::min (len, e);
 
       if (_eqT (tau_s, 0))
         tau_s = 0;
@@ -184,8 +184,8 @@ public:
         tau_e = len;
     }
     else { // e < s 
-      tau_s = vcl_max (0.0, e);
-      tau_e = vcl_min (len, s);
+      tau_s = std::max (0.0, e);
+      tau_e = std::min (len, s);
 
       if (_eqT (tau_s, 0))
         tau_s = 0;
@@ -197,7 +197,7 @@ public:
   //: if it has only one I and it is degenerate
   bool one_dege_I () {
     if (interval_section_.size() == 1) {
-      vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
       gdt_ibase* I = (*it).second;
       return I->is_dege();
     }
@@ -205,7 +205,7 @@ public:
   }
   gdt_interval* get_dege_I () {
     if (interval_section_.size() == 1) {
-      vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
       gdt_ibase* I = (*it).second;
       if (I->is_dege())
         return (gdt_interval*) I;
@@ -214,13 +214,13 @@ public:
   }
   gdt_interval* get_I_incident_vertex (dbmsh3d_vertex* vertex) {
     if (vertex == vertices_[0]) {
-      vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
       gdt_interval* I = (gdt_interval*) (*it).second;
       return I;
     }
     else {
       assert (vertex == vertices_[1]);
-      vcl_map<double, gdt_ibase*>::reverse_iterator rit = interval_section_.I_map()->rbegin();
+      std::map<double, gdt_ibase*>::reverse_iterator rit = interval_section_.I_map()->rbegin();
       gdt_interval* I = (gdt_interval*) (*rit).second;
       return I;
     }
@@ -270,16 +270,16 @@ public:
 
   //: given the query_dist, there exists at almost two point with the given geodesic distance
   void get_gdt_points (const double gdt_dist, 
-                       vcl_pair<gdt_interval*, double>& gdt_point_1,
-                       vcl_pair<gdt_interval*, double>& gdt_point_2);
+                       std::pair<gdt_interval*, double>& gdt_point_1,
+                       std::pair<gdt_interval*, double>& gdt_point_2);
 
   
 #if GDT_ALGO_WS // =============================================
 protected:
-  vcl_set<gdt_interval*> activeIs_;
+  std::set<gdt_interval*> activeIs_;
 
 public:
-  vcl_set<gdt_interval*>& activeIs() {
+  std::set<gdt_interval*>& activeIs() {
     return activeIs_;
   }
   void _add_activeI (const gdt_interval* I) {

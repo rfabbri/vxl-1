@@ -61,7 +61,7 @@ template<class T_data>
 class normalize_expected_functor_edge
 {
  public:
-   normalize_expected_functor_edge(float n_normal, unsigned int dof) : n_normal_(n_normal), dof_(dof) {vcl_cout << "Degree of freedom " << dof << vcl_endl; }
+   normalize_expected_functor_edge(float n_normal, unsigned int dof) : n_normal_(n_normal), dof_(dof) {std::cout << "Degree of freedom " << dof << std::endl; }
 
    void operator()(float mask, float &pix) const
    {

@@ -18,14 +18,14 @@
 #include "ncn_mutual_information.h"
 #include "ncn_image_point.h"
 
-#include< vcl_algorithm.h >
-#include< vcl_iomanip.h >
-#include< vcl_iostream.h >
+#include< algorithm >
+#include< iomanip >
+#include< iostream >
 
-#include< vcl_map.h>
-#include< vcl_set.h>
-#include< vcl_utility.h >
-#include< vcl_string.h >
+#include< map>
+#include< set>
+#include< utility >
+#include< string >
 
 #include<vgl/vgl_point_2d.h>
 
@@ -50,19 +50,19 @@ class ncn_utilities
 public:
     ~ncn_utilities() {}
     
-    static vcl_map<unsigned, vil_image_view<float> > load_image_sequence(vcl_string const& img_directory);
+    static std::map<unsigned, vil_image_view<float> > load_image_sequence(std::string const& img_directory);
 
     //produce .dat file that can be loaded into matlab
-    static void vnl_matrix2dat(vcl_ofstream& ofs,vnl_matrix<float> const& mat);
+    static void vnl_matrix2dat(std::ofstream& ofs,vnl_matrix<float> const& mat);
 
     //produce .dat file from unsigned matrix
-    static void vnl_matrix2dat(vcl_ofstream& ofs,vnl_matrix<unsigned> const& mat);
+    static void vnl_matrix2dat(std::ofstream& ofs,vnl_matrix<unsigned> const& mat);
 
     //produce .dat file from vnl_vector unsigned
-    static void vnl_vector2dat(vcl_ofstream& ofs, vnl_vector<float> const& vec);
+    static void vnl_vector2dat(std::ofstream& ofs, vnl_vector<float> const& vec);
 
     //calculate the entropy of each pixel over time
-    static vnl_matrix<float> calculate_temporal_entropy(vcl_map<unsigned, vil_image_view<float> >& img_sequence, unsigned const& nbins);
+    static vnl_matrix<float> calculate_temporal_entropy(std::map<unsigned, vil_image_view<float> >& img_sequence, unsigned const& nbins);
 
     //normalize entropy matrix
     static bool normalize_entropy_matrix(vnl_matrix<float>& mat);
@@ -92,31 +92,31 @@ public:
              vnl_matrix<unsigned>& output, unsigned const& nparticles = 5000);   
 
     static bool sample_pivot_pixels_importance(vnl_matrix<float> const& entropy_matrix, unsigned const& num_samples,
-             vcl_set<ncn_image_point>& pivot_pixel_candidates, unsigned const& nparticles = 5000);
+             std::set<ncn_image_point>& pivot_pixel_candidates, unsigned const& nparticles = 5000);
 
     //sample the whole thing just use the binary search algorithm for speed up.
     static bool sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matrix, unsigned const& num_piv_pix,
              vnl_matrix<unsigned>& output);
 
     //returns index of bin
-    static unsigned find_bin(vcl_vector<float> const& cdf, float const& target);
+    static unsigned find_bin(std::vector<float> const& cdf, float const& target);
 
     //extract region of interest in the image sequence
-    static bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, vcl_vector<ncn_image_point>& roi);
+    static bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, std::vector<ncn_image_point>& roi);
 
-    static bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, vcl_vector<vgl_point_2d<unsigned> >&roi);
+    static bool get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, std::vector<vgl_point_2d<unsigned> >&roi);
 
     //form non-compact neighborhood for region of interest
-    static bool get_neighborhood(unsigned x_tl,unsigned y_tl, unsigned x_lr, unsigned y_lr, vcl_map<unsigned,vil_image_view<float> >& img_seq,
-                                    unsigned const& num_neighbors, vcl_set<ncn_image_point> pivot_pixel_candidates,
-                                    vcl_map<vcl_vector<ncn_image_point>::const_iterator, vcl_set<ncn_image_point> >non_compact_neighborhood);
+    static bool get_neighborhood(unsigned x_tl,unsigned y_tl, unsigned x_lr, unsigned y_lr, std::map<unsigned,vil_image_view<float> >& img_seq,
+                                    unsigned const& num_neighbors, std::set<ncn_image_point> pivot_pixel_candidates,
+                                    std::map<std::vector<ncn_image_point>::const_iterator, std::set<ncn_image_point> >non_compact_neighborhood);
 
     
-    static bool pointSet2dat(vcl_ostream& os, vcl_set<ncn_image_point> const& point_set);
+    static bool pointSet2dat(std::ostream& os, std::set<ncn_image_point> const& point_set);
 
-    static bool pointVect2dat(vcl_ostream& os, vcl_vector<ncn_image_point> const& point_vector);
+    static bool pointVect2dat(std::ostream& os, std::vector<ncn_image_point> const& point_vector);
 
-    static bool pointVect2dat(vcl_ostream& os, vcl_vector<vgl_point_2d<unsigned> > const& point_vector);
+    static bool pointVect2dat(std::ostream& os, std::vector<vgl_point_2d<unsigned> > const& point_vector);
 };
 
 #endif //ncn_utilities_h_

@@ -15,10 +15,10 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 
 #include <vbl/vbl_ref_count.h>
 #include <bpro/bpro_process_sptr.h>
@@ -34,16 +34,16 @@ public:
 
   
   bool run_process( const bpro_process_sptr& process,
-                    vcl_set<bpro_storage_sptr>* modified = NULL );
+                    std::set<bpro_storage_sptr>* modified = NULL );
 
   //: FIXME - this is not implemented
   bool run_process_queue(){ return false; }
 
 
   //set by bvis or vorl according to desired setup
-  void set_input_view_ids(vcl_vector<unsigned int>const& vids)
+  void set_input_view_ids(std::vector<unsigned int>const& vids)
     {input_view_ids_=vids;}
-  void set_output_view_ids(vcl_vector<unsigned int>const& vids)
+  void set_output_view_ids(std::vector<unsigned int>const& vids)
   {output_view_ids_=vids;}
 
   // FIXME: this should do something -- MJL
@@ -56,8 +56,8 @@ protected:
   bpro_mview_process_manager();
 
   //: Members
-  vcl_vector<unsigned int> input_view_ids_;
-  vcl_vector<unsigned int> output_view_ids_;
+  std::vector<unsigned int> input_view_ids_;
+  std::vector<unsigned int> output_view_ids_;
 };
 
 #endif // bpro_mview_process_manager_h_

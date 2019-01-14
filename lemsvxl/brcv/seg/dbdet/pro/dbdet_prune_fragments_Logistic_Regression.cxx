@@ -1,7 +1,7 @@
 #include "dbdet_prune_fragments_Logistic_Regression.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vil/vil_load.h>
 #include <vil/vil_bilin_interp.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -36,7 +36,7 @@ dbdet_prune_fragments_Logistic_Regression::dbdet_prune_fragments_Logistic_Regres
      !parameters()->add( "Threshold Probability: " , "-prob" ,  0.3 )
      )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
   
   call_in_gui = 1;
@@ -51,17 +51,17 @@ dbdet_prune_fragments_Logistic_Regression::clone() const
 }
 
 
-vcl_vector< vcl_string > dbdet_prune_fragments_Logistic_Regression::get_input_type()
+std::vector< std::string > dbdet_prune_fragments_Logistic_Regression::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel" );
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_prune_fragments_Logistic_Regression::get_output_type()
+std::vector< std::string > dbdet_prune_fragments_Logistic_Regression::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel" );
   return to_return;
 }
@@ -92,7 +92,7 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 
   	bool LAB = false;
   	if( img.nplanes() != 3 ) {
-    	vcl_cout << "image is not colored, using intensity differences!!!\n"; 
+    	std::cout << "image is not colored, using intensity differences!!!\n"; 
   	} else {
     	LAB = true;
     	convert_RGB_to_Lab(img, L_, A_, B_);
@@ -109,9 +109,9 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 
 	int Final_contours1=0;
 	int Nbins1=50;int Nbins2=85;
-	vcl_vector<dbdet_edgel*> new_chain3;
+	std::vector<dbdet_edgel*> new_chain3;
 	dbdet_edgel_chain* new_chain4=new dbdet_edgel_chain();
-	for(vcl_list<dbdet_edgel_chain*>::const_iterator f = CFG_input.frags.begin();f!=CFG_input.frags.end();f++)
+	for(std::list<dbdet_edgel_chain*>::const_iterator f = CFG_input.frags.begin();f!=CFG_input.frags.end();f++)
 	{
         	dbdet_edgel_chain *test1=*f;
         	for(int d=0;d<test1->edgels.size();d++) new_chain3.push_back(test1->edgels[d]); 
@@ -127,18 +127,18 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
      		if(n1==0) {new_chain4->edgels.push_back(EM->edgels[i]);}
      		else {n1=0; continue;}
 	}
-	for(vcl_list<dbdet_edgel_chain*>::const_iterator fit = CFG_input.frags.begin();fit!=CFG_input.frags.end();fit++)
+	for(std::list<dbdet_edgel_chain*>::const_iterator fit = CFG_input.frags.begin();fit!=CFG_input.frags.end();fit++)
    	{
 		double contrast=0;
 		dbdet_edgel_chain* c1 = new dbdet_edgel_chain (**fit);
 		if(c1->edgels.size() < 2) continue;
 		vbl_array_2d<double> first,second;
   		vbl_array_2d<double> firsthist,secondhist;
-		vcl_vector<vsol_point_2d_sptr> point_samples;
+		std::vector<vsol_point_2d_sptr> point_samples;
 		for(int i=0;i<c1->edgels.size();i++) point_samples.push_back(new vsol_point_2d(c1->edgels[i]->pt.x(),c1->edgels[i]->pt.y()));
 		bsold_interp_curve_2d_sptr curve = new bsold_interp_curve_2d();
 		bsold_curve_algs::interpolate_linear(curve.ptr(),point_samples,false);
-		vcl_vector<vsol_point_2d_sptr > region_pts;                                                     
+		std::vector<vsol_point_2d_sptr > region_pts;                                                     
  		bsold_curve_algs::sample_region_along_curve(*curve, region_pts, 0.5f, curve->length(), 3, false);
 		//Total Number of Neighborhood Edges
 		double Total_Edges=0;
@@ -154,7 +154,7 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 				}
 			}
 		}
-		for (vcl_list<dbdet_edgel_chain*>::const_iterator f_it2 = CFG_input.frags.begin();f_it2!=CFG_input.frags.end();f_it2++)
+		for (std::list<dbdet_edgel_chain*>::const_iterator f_it2 = CFG_input.frags.begin();f_it2!=CFG_input.frags.end();f_it2++)
   		{
 			dbdet_edgel_chain* chain2=(*f_it2);
 			double len=0;
@@ -220,7 +220,7 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 				m1=m2;
 				m2=m2 + 255/Nbins2;
 			}
-		 first[i][3]=vcl_sqrt(first[i][1]*first[i][1]+first[i][2]*first[i][2])/vcl_sqrt(first[i][1]*first[i][1]+first[i][2]*first[i][2]+first[i][0]*first[i][0]);
+		 first[i][3]=std::sqrt(first[i][1]*first[i][1]+first[i][2]*first[i][2])/std::sqrt(first[i][1]*first[i][1]+first[i][2]*first[i][2]+first[i][0]*first[i][0]);
 		 first[i][3]=first[i][3]*100;
 			m1=0;m2= m1 + 100/Nbins1;
 			for(int j=0;j<Nbins1;j++)
@@ -266,7 +266,7 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 				m1=m2;
 				m2=m2 + 255/Nbins2;
 			}	
-      second[k][3]=vcl_sqrt(second[k][1]*second[k][1]+second[k][2]*second[k][2])/vcl_sqrt(second[k][1]*second[k][1]+second[k][2]*second[k][2]+second[k][0]*second[k][0]);
+      second[k][3]=std::sqrt(second[k][1]*second[k][1]+second[k][2]*second[k][2])/std::sqrt(second[k][1]*second[k][1]+second[k][2]*second[k][2]+second[k][0]*second[k][0]);
       second[k][3]=second[k][3]*100;
 			m1=0;m2= m1 + 100/Nbins1;
 			for(int j=0;j<Nbins1;j++)
@@ -315,13 +315,13 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 		//All the beta values
 		double b0=-3.9111,b1=-1.2212,b2=0.2794,b3=-0.2985,b4=4.7712,b5=-0.3965,b6=0.0416;
 		//Logistic Regression Probability
-		double Logist_prob= 1 -(1/(1 + vcl_exp(b0 +b1*BG_Lvalue + b2*Hue + b3*Saturation + b4*contrast + b5*Total_Edges + b6*length)));
+		double Logist_prob= 1 -(1/(1 + std::exp(b0 +b1*BG_Lvalue + b2*Hue + b3*Saturation + b4*contrast + b5*Total_Edges + b6*length)));
 		if(Logist_prob > prob) {Final_contours1=Final_contours1 + 1;CFG_output1.frags.push_back(c1);}
 	}
 		output_data_[0].push_back(output_sel1);
-		vcl_cout << "Done logistic regression prune" << vcl_endl;
-		vcl_cout << "INITIAL CONTOURS: " << CFG_input.frags.size() << vcl_endl;
-		vcl_cout << "FINAL CONTOURS: " << Final_contours1 << vcl_endl;
+		std::cout << "Done logistic regression prune" << std::endl;
+		std::cout << "INITIAL CONTOURS: " << CFG_input.frags.size() << std::endl;
+		std::cout << "FINAL CONTOURS: " << Final_contours1 << std::endl;
 		return true;
   	
 }

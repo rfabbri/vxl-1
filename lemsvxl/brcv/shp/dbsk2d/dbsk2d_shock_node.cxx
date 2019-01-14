@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_shock_node.h>
 
 //: Constructor
@@ -40,7 +40,7 @@ void dbsk2d_shock_node::form_shock_fragments()
 {
   //traverse the descriptor list and form shock fragments for the 
   //degenerate descriptors
-  vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = descriptor_list_.begin();
+  std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = descriptor_list_.begin();
   for (; p_itr != descriptor_list_.end(); ++ p_itr){
     dbsk2d_shock_node_descriptor* cur_descriptor = &(*p_itr);
 
@@ -71,14 +71,14 @@ void dbsk2d_shock_node::form_shock_fragments()
 }
 
 //: Return some information about the element
-void dbsk2d_shock_node::getInfo (vcl_ostream& ostrm)
+void dbsk2d_shock_node::getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   ostrm << "\n==============================\n";
-  ostrm << "N: [" << id_ << "]" << vcl_endl;
-  vcl_sprintf(s, "Position : (%.3f, %.3f)\n", pt_.x(), pt_.y()); ostrm << s;
-  ostrm << "Radius : " << radius_ <<vcl_endl;
+  ostrm << "N: [" << id_ << "]" << std::endl;
+  std::sprintf(s, "Position : (%.3f, %.3f)\n", pt_.x(), pt_.y()); ostrm << s;
+  ostrm << "Radius : " << radius_ <<std::endl;
 
   // connected edges in order
   ostrm << "Adj. edges CCW [ ";
@@ -92,13 +92,13 @@ void dbsk2d_shock_node::getInfo (vcl_ostream& ostrm)
        e_itr != out_edges_.end(); ++ e_itr)
     ostrm << (*e_itr)->id() << " ";
 
-  ostrm << "]" << vcl_endl;
+  ostrm << "]" << std::endl;
 
   //connectivity and intrinsic parameters
-  ostrm << "Intrinsic Parameters: " << vcl_endl;
-  ostrm << "....................." << vcl_endl;
+  ostrm << "Intrinsic Parameters: " << std::endl;
+  ostrm << "....................." << std::endl;
 
-  vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = descriptor_list_.begin();
+  std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = descriptor_list_.begin();
   for (; p_itr != descriptor_list_.end(); ++ p_itr){
     dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
 
@@ -110,8 +110,8 @@ void dbsk2d_shock_node::getInfo (vcl_ostream& ostrm)
       ostrm << "A-inf";
       ostrm << ": [T1=" << cur_descriptor.tangent << ", T2=" << cur_descriptor.tangent2;
     }
-    ostrm << ", phi=" << cur_descriptor.phi << "]" << vcl_endl;
-    ostrm << "Frag? : " << (cur_descriptor.fragment==0?"no":"yes") << vcl_endl;
+    ostrm << ", phi=" << cur_descriptor.phi << "]" << std::endl;
+    ostrm << "Frag? : " << (cur_descriptor.fragment==0?"no":"yes") << std::endl;
   }
 }
 

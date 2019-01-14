@@ -19,7 +19,7 @@
 
 #include <dber/pro/dber_instance_storage_sptr.h>
 #include <dbru/dbru_label_sptr.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 //:------------------- OSL LABEK INSTANCES TOOL ------------------------
@@ -34,7 +34,7 @@ public:
   virtual ~dber_instance_label_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );

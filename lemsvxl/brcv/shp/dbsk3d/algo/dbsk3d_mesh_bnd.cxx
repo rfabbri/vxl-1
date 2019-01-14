@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Dec 14, 2006
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbsk3d/algo/dbsk3d_mesh_bnd.h>
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -12,7 +12,7 @@ dbsk3d_fs_edge* dbsk3d_bnd_chain::find_L_for_hole (const dbmsh3d_vertex* Vo,
                                                        const dbmsh3d_edge* E)
 {
   //Loop through all shock patch elms.
-  vcl_set<dbsk3d_fs_face*>::iterator it = P_set_.begin();
+  std::set<dbsk3d_fs_face*>::iterator it = P_set_.begin();
   for (; it != P_set_.end(); it++) {
     dbsk3d_fs_face* FF = (*it);
     
@@ -41,7 +41,7 @@ bool dbsk3d_bnd_chain_set::detect_bnd_chains_th (const unsigned int th,
 
   //If number of bnd_chain too large, return.
   if (chainset_.size() > skip_chain_th) {
-    vul_printf (vcl_cout, "\t!! Skip for too many bnd chains (%u, th = %u).\n", 
+    vul_printf (std::cout, "\t!! Skip for too many bnd chains (%u, th = %u).\n", 
                 chainset_.size(), skip_chain_th);
     return false;
   }
@@ -49,7 +49,7 @@ bool dbsk3d_bnd_chain_set::detect_bnd_chains_th (const unsigned int th,
   //Brute-forcely prepare the associated shock sheet elements for each chain.
   
   //Go through all shock patch elements and insert valid ones to bnd_chain.
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh_->facemap().begin();
   for (; pit != fs_mesh_->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     if (FF->b_valid() == false)
@@ -74,7 +74,7 @@ void dbsk3d_bnd_chain_set::add_P_to_bnd_chain (const dbmsh3d_vertex* G,
                                                const dbsk3d_fs_face* FF)
 {
   //Put FF into the bnd_chain containing G
-  vcl_vector<dbmsh3d_bnd_chain*>::iterator it = chainset_.begin();
+  std::vector<dbmsh3d_bnd_chain*>::iterator it = chainset_.begin();
   for (; it != chainset_.end(); it++) {
     dbsk3d_bnd_chain* BCs = (dbsk3d_bnd_chain*) (*it);
     if (BCs->is_V_incident_via_HE (G)) {

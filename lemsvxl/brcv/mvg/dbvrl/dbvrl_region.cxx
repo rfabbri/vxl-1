@@ -45,10 +45,10 @@ dbvrl_region::nj() const
 
 
 //: Returns a vector of four region corners in image coords 
-vcl_vector<vgl_point_2d<double> > 
+std::vector<vgl_point_2d<double> > 
 dbvrl_region::corners() const
 {
-  vcl_vector<vgl_point_2d<double> > corners;
+  std::vector<vgl_point_2d<double> > corners;
   corners.push_back( vgl_point_2d<double>(0.0, 0.0) );
   corners.push_back( vgl_point_2d<double>(1.0, 0.0) );
   corners.push_back( vgl_point_2d<double>(1.0, 1.0) );
@@ -103,9 +103,9 @@ dbvrl_region::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: dbvrl_region::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbvrl_region::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -145,7 +145,7 @@ vsl_b_read(vsl_b_istream &is, dbvrl_region* &r)
 
 //: Print an ASCII summary to the stream
 void
-vsl_print_summary(vcl_ostream &os, const dbvrl_region* r)
+vsl_print_summary(std::ostream &os, const dbvrl_region* r)
 {
   os << "dbvrl_region("<<r->ni()<<","<<r->nj()<<")";
 }

@@ -26,7 +26,7 @@
 #include <xmvg/xmvg_filter_descriptor.h>
 #include <xmvg/xmvg_composite_filter_descriptor.h>
 #include <det/det_cylinder_map.h>
-#include <vcl_string.h>
+#include <string>
 #include <vil3d/vil3d_image_view.h>
 
 typedef enum  {SPHERE, CYLINDER, NOISE, PLANE} det_icosafilter_resp_types;
@@ -55,7 +55,7 @@ public:
     double radius=0);
 
   det_cylinder_map apply(unsigned nx, unsigned ny, unsigned nz,
-    vcl_vector<xmvg_filter_response<double> > const& responses,
+    std::vector<xmvg_filter_response<double> > const& responses,
     xmvg_composite_filter_descriptor const & fds,
     vil3d_image_view<unsigned char>* radius_view=0);
 
@@ -64,17 +64,17 @@ public:
     vil3d_image_view<float> &I_s);
 
 private:
-  vcl_vector<vcl_vector<unsigned > *> includes(vcl_vector<vcl_vector<unsigned > *> v, 
+  std::vector<std::vector<unsigned > *> includes(std::vector<std::vector<unsigned > *> v, 
     unsigned index);
 
   void normalize(xmvg_filter_response<double> &resp);
 
-  vcl_vector<vgl_vector_3d<double> > compute_v(xmvg_filter_response<double> &resp,
-            vcl_vector<vgl_vector_3d<double> > filter_dir);
+  std::vector<vgl_vector_3d<double> > compute_v(xmvg_filter_response<double> &resp,
+            std::vector<vgl_vector_3d<double> > filter_dir);
 
   vgl_vector_3d<double> detect_dir(xmvg_filter_response<double>& resp,
-                            vcl_vector<vgl_vector_3d<double> > v,
-                            vcl_vector<vgl_vector_3d<double> > filter_dir);
+                            std::vector<vgl_vector_3d<double> > v,
+                            std::vector<vgl_vector_3d<double> > filter_dir);
 };
 
 #endif

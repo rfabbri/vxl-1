@@ -16,25 +16,25 @@
 //: test computing bounding box of boundary
 void test_boundary_bounding_box()
 {
-  vcl_cout << "This is test_boundary_bounding_box()" << vcl_endl;
+  std::cout << "This is test_boundary_bounding_box()" << std::endl;
 
   // bounding box of a bline
-  double x[] = {0, 2 + vcl_sqrt(2.0) };
-  double y[] = {2, 2 + vcl_sqrt(2.0) };
+  double x[] = {0, 2 + std::sqrt(2.0) };
+  double y[] = {2, 2 + std::sqrt(2.0) };
   dbsk2d_ishock_bpoint* bp1 = new dbsk2d_ishock_bpoint(x[0], y[0]);
   dbsk2d_ishock_bpoint* bp2 = new dbsk2d_ishock_bpoint(x[1], y[1]);
 
   dbsk2d_ishock_bline* bline = new dbsk2d_ishock_bline(bp1, bp2);
-  vcl_cout << "Bline: start = " << bline->start() << "  end = " << bline->end() << vcl_endl;
+  std::cout << "Bline: start = " << bline->start() << "  end = " << bline->end() << std::endl;
   // bounding box of bline
   vbl_bounding_box<double, 2 > bline_box;
   bline->compute_bounding_box(bline_box);
-  vcl_cout << "bounding box of bline = " << bline_box << vcl_endl;
+  std::cout << "bounding box of bline = " << bline_box << std::endl;
   
   TEST_NEAR("Test bline box xmin", bline_box.xmin(), 0, 1e-5);
   TEST_NEAR("Test bline box ymin", bline_box.ymin(), 2, 1e-5);
-  TEST_NEAR("Test bline box xmax", bline_box.xmax(), 2+vcl_sqrt(2.0), 1e-5);
-  TEST_NEAR("Test bline box ymax", bline_box.ymax(), 2+vcl_sqrt(2.0), 1e-5);
+  TEST_NEAR("Test bline box xmax", bline_box.xmax(), 2+std::sqrt(2.0), 1e-5);
+  TEST_NEAR("Test bline box ymax", bline_box.ymax(), 2+std::sqrt(2.0), 1e-5);
 
   delete bline;
 
@@ -43,34 +43,34 @@ void test_boundary_bounding_box()
   // barc1 - clockwise
   dbsk2d_ishock_barc* barc1= new dbsk2d_ishock_barc(bp1, bp2, -1, false, 
     vgl_point_2d<double >(2,2), 2, ARC_NUD_CW);
-  vcl_cout << "barc1 = ";
-  barc1->getInfo(vcl_cout);
+  std::cout << "barc1 = ";
+  barc1->getInfo(std::cout);
 
   //bounding box of barc1
   vbl_bounding_box<double, 2 > barc1_box;
   barc1->compute_bounding_box(barc1_box);
-  vcl_cout << "bounding box of barc1 = " << barc1_box << vcl_endl;
+  std::cout << "bounding box of barc1 = " << barc1_box << std::endl;
   
   TEST_NEAR("Test barc1 box xmin", barc1_box.xmin(), 0, 1e-5);
   TEST_NEAR("Test barc1 box ymin", barc1_box.ymin(), 2, 1e-5);
-  TEST_NEAR("Test barc1 box xmax", barc1_box.xmax(), 2+vcl_sqrt(2.0), 1e-5);
+  TEST_NEAR("Test barc1 box xmax", barc1_box.xmax(), 2+std::sqrt(2.0), 1e-5);
   TEST_NEAR("Test barc1 box ymax", barc1_box.ymax(), 4, 1e-5);
 
   // barc2 - counterclockwise
   dbsk2d_ishock_barc* barc2= new dbsk2d_ishock_barc(bp1, bp2, -1, false, 
     vgl_point_2d<double >(2,2), 2, ARC_NUD_CCW);
-  vcl_cout << "barc2 = ";
-  barc2->getInfo(vcl_cout);
+  std::cout << "barc2 = ";
+  barc2->getInfo(std::cout);
 
   //bounding box of barc2
   vbl_bounding_box<double, 2 > barc2_box;
   barc2->compute_bounding_box(barc2_box);
-  vcl_cout << "bounding box of barc2 = " << barc2_box << vcl_endl;
+  std::cout << "bounding box of barc2 = " << barc2_box << std::endl;
   
   TEST_NEAR("Test barc2_box xmin", barc2_box.xmin(), 0, 1e-5);
   TEST_NEAR("Test barc2_box ymin", barc2_box.ymin(), 0, 1e-5);
   TEST_NEAR("Test barc2_box xmax", barc2_box.xmax(), 4, 1e-5);
-  TEST_NEAR("Test barc2_box ymax", barc2_box.ymax(), 2+vcl_sqrt(2.0), 1e-5);
+  TEST_NEAR("Test barc2_box ymax", barc2_box.ymax(), 2+std::sqrt(2.0), 1e-5);
 
   // bounding box of an bnd_edge
   dbsk2d_bnd_vertex_sptr v1 = new dbsk2d_bnd_vertex(bp1);
@@ -83,7 +83,7 @@ void test_boundary_bounding_box()
   vsol_box_2d_sptr edge1_box = edge1->get_bounding_box();
   TEST_NEAR("Test edge1_box xmin", edge1_box->get_min_x(), 0, 1e-5);
   TEST_NEAR("Test edge1_box ymin", edge1_box->get_min_y(), 2, 1e-5);
-  TEST_NEAR("Test edge1_box xmax", edge1_box->get_max_x(), 2+vcl_sqrt(2.0), 1e-5);
+  TEST_NEAR("Test edge1_box xmax", edge1_box->get_max_x(), 2+std::sqrt(2.0), 1e-5);
   TEST_NEAR("Test edge1_box ymax", edge1_box->get_max_y(), 4, 1e-5);
 
   delete barc2;
@@ -92,14 +92,14 @@ void test_boundary_bounding_box()
   double x_1[] = { 0 , 1, 2, -1};
   double y_1[] = { 0 , 1, 1, 3};
 
-  vcl_vector< vsol_point_2d_sptr > vertices_1;
+  std::vector< vsol_point_2d_sptr > vertices_1;
   for (int i = 0; i < 4; i ++)
   {
     vertices_1.push_back(new vsol_point_2d(x_1[i], y_1[i]));
   }
 
   vsol_polyline_2d_sptr polyline_1 = new vsol_polyline_2d(vertices_1);
-  polyline_1->print_summary(vcl_cout);
+  polyline_1->print_summary(std::cout);
 
   
   // add the the two polylines to the boundary

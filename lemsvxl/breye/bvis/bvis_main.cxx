@@ -30,8 +30,8 @@
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_composite_tableau.h>
 #include <vgui/vgui_shell_tableau.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 
 #include <bvis/bvis_menu.h>
 
@@ -85,7 +85,7 @@ int main( int argc , char** argv )
   bvis_menu menu;
   
   if( bvis_manager::manager()->commandline_mode() ) {
-   vcl_cerr << "Command Line Mode" << vcl_endl;
+   std::cerr << "Command Line Mode" << std::endl;
   } else {
 
     vgui_menu menu_holder = menu.setup_menu();

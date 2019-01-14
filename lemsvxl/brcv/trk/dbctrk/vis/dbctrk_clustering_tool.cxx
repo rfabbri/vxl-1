@@ -8,9 +8,9 @@
 #include <bvis1/bvis1_view_tableau.h>
 #include <dbctrk/vis/dbctrk_displayer.h>
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
-#include <vcl_map.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <map>
+#include <algorithm>
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -22,7 +22,7 @@
 
 struct less_val
 {
-  bool operator()( vcl_pair< int, vcl_vector<dbctrk_soview2D*> > x, vcl_pair<int , vcl_vector<dbctrk_soview2D*> > y)
+  bool operator()( std::pair< int, std::vector<dbctrk_soview2D*> > x, std::pair<int , std::vector<dbctrk_soview2D*> > y)
   { return x.second.size() > y.second.size(); }
 };
 //: Constructor - protected
@@ -89,7 +89,7 @@ dbctrk_inspector_tool::~dbctrk_inspector_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbctrk_inspector_tool::name() const
 {
   return "Transformation induced neighbors"; 
@@ -107,9 +107,9 @@ dbctrk_inspector_tool::handle( const vgui_event & e,
     return false;
 
   if( e.type == vgui_KEY_PRESS && e.key == 's' && vgui_SHIFT ){
-    vcl_vector<dbctrk_tracker_curve_sptr> tc;
+    std::vector<dbctrk_tracker_curve_sptr> tc;
     storage_->get_tracked_curves(tc);
-    typedef vcl_vector<dbctrk_tracker_curve_sptr>::const_iterator curve_iterator;
+    typedef std::vector<dbctrk_tracker_curve_sptr>::const_iterator curve_iterator;
     for( curve_iterator c_itr = tc.begin(); c_itr != tc.end();  ++c_itr )
     {
       if((*c_itr)->ismovingobject_)
@@ -154,7 +154,7 @@ dbctrk_inspector_tool::handle( const vgui_event & e,
 
   // gives the transformation distance between two curves
   if( e.type == vgui_KEY_PRESS && e.key == 'r' && vgui_SHIFT ){
-  vcl_vector<vgui_soview*> all_objects;
+  std::vector<vgui_soview*> all_objects;
   all_objects = tableau_->get_selected_soviews();
   if(all_objects.size()==2)
   {
@@ -163,16 +163,16 @@ dbctrk_inspector_tool::handle( const vgui_event & e,
 
     if(c1->get_best_match_prev().ptr() && c2->get_best_match_prev().ptr())
     {
-      vcl_map<double,int>::iterator iter;
+      std::map<double,int>::iterator iter;
       for(iter=c1->neighbors_.begin();iter!=c1->neighbors_.end();iter++)
       {
         if((*iter).second==c2->get_id())
-          vcl_cout<<"\n the distance between curves "<<c1->get_id() <<" and "<<c2->get_id()
+          std::cout<<"\n the distance between curves "<<c1->get_id() <<" and "<<c2->get_id()
               <<" is "<<(*iter).first;
       }
     }
     else
-      vcl_cout<<"\n one or both of the curves do not have match";
+      std::cout<<"\n one or both of the curves do not have match";
   }
   else
   {
@@ -190,8 +190,8 @@ dbctrk_inspector_tool::handle( const vgui_event & e,
 
   if(curr_curve_->get_best_match_prev())
     {
-    vcl_map<double,int>::iterator iter;
-    vcl_vector<dbctrk_tracker_curve_sptr> tc;
+    std::map<double,int>::iterator iter;
+    std::vector<dbctrk_tracker_curve_sptr> tc;
     storage_->get_tracked_curves(tc);
     
     if(curr_curve_->frame_number==frame)
@@ -272,7 +272,7 @@ dbctrk_foreground_background_tool::~dbctrk_foreground_background_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbctrk_foreground_background_tool::name() const
 {
   return "See clusters"; 
@@ -293,7 +293,7 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
 
 
 
-     vcl_vector<vgui_soview*> all_objects;
+     std::vector<vgui_soview*> all_objects;
      all_objects = tableau_->get_all();
 
      for(unsigned int i=0;i<all_objects.size();i++)
@@ -321,7 +321,7 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
 
   
   if( e.type == vgui_KEY_PRESS && e.key == 'r'){
-     vcl_vector<vgui_soview*> all_objects;
+     std::vector<vgui_soview*> all_objects;
      all_objects = tableau_->get_all();
      for(unsigned int i=0;i<all_objects.size();i++)
      {
@@ -341,9 +341,9 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
  
   if( e.type == vgui_KEY_PRESS && e.key == 'l')
   {
-     vcl_map<int, vcl_vector<dbctrk_soview2D*> > groupings;
-     vcl_map<int, vcl_vector<dbctrk_soview2D*> >::iterator iter;
-      vcl_vector<vgui_soview*> all_objects;
+     std::map<int, std::vector<dbctrk_soview2D*> > groupings;
+     std::map<int, std::vector<dbctrk_soview2D*> >::iterator iter;
+      std::vector<vgui_soview*> all_objects;
      all_objects = tableau_->get_all();
      for(unsigned int i=0;i<all_objects.size();i++)
      {
@@ -358,12 +358,12 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
      
      }
     }
-     vcl_vector<vcl_pair<int, vcl_vector<dbctrk_soview2D*> > > pairs;
+     std::vector<std::pair<int, std::vector<dbctrk_soview2D*> > > pairs;
      for(iter=groupings.begin();iter!=groupings.end();iter++)
      {
-        pairs.push_back(vcl_make_pair((*iter).first,(*iter).second));
+        pairs.push_back(std::make_pair((*iter).first,(*iter).second));
      }
-     vcl_sort(pairs.begin(),pairs.end(),less_val());
+     std::sort(pairs.begin(),pairs.end(),less_val());
 
 
      for(unsigned int i=0;i<7 && i<pairs.size();i++)
@@ -392,7 +392,7 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
     if(!see_moving_curves_dlg.ask())
       return true;
 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
      all_objects = tableau_->get_all();
 
     for(unsigned int i=0;i<all_objects.size();i++)
@@ -402,10 +402,10 @@ dbctrk_foreground_background_tool::handle( const vgui_event & e,
       if(((dbctrk_soview2D*)all_objects[i])->dbctrk_sptr()->get_best_match_prev().ptr())
       {
         double tx=((dbctrk_soview2D*)all_objects[i])->dbctrk_sptr()->get_best_match_prev()->Tbar(0,0);
-        double theta=vcl_acos(((dbctrk_soview2D*)all_objects[i])->dbctrk_sptr()->get_best_match_prev()->R_(0,0));
+        double theta=std::acos(((dbctrk_soview2D*)all_objects[i])->dbctrk_sptr()->get_best_match_prev()->R_(0,0));
 
-        theta=vcl_fabs(theta);
-        vcl_cout<<"\n the values are "<<tx<<" "<<top_X<<" "<<bottom_X;
+        theta=std::fabs(theta);
+        std::cout<<"\n the values are "<<tx<<" "<<top_X<<" "<<bottom_X;
         if(tx<top_X && tx>bottom_X && theta < theta_R)
         {
          neighbor_style_ = vgui_style::new_style(0.0,1.0,0.0,2.0,2.0);

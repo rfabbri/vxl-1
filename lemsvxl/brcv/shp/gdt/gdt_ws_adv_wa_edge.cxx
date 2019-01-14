@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 #include <gdt/gdt_manager.h>
@@ -13,7 +13,7 @@ bool gdt_ws_manager::_vertex_strike_at_Sv (gdt_welm* W)
 {
   #if GDT_DEBUG_MSG
   if (n_verbose_>3)
-    vul_printf (vcl_cerr, "  Advanve psrcW %d (%.3f, %.3f) to W-Vs(%d) strike.\n", 
+    vul_printf (std::cerr, "  Advanve psrcW %d (%.3f, %.3f) to W-Vs(%d) strike.\n", 
                  W->edge()->id(), W->stau(), W->etau(), W->sV()->id());
   #endif
 
@@ -30,14 +30,14 @@ bool gdt_ws_manager::_vertex_strike_at_Sv (gdt_welm* W)
     if (W->_has_nextI_on_edge (eL)) {
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. W already exists.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. W already exists.\n", 
                      W->edge()->id(), W->stau(), W->etau(), eL->id());
       #endif
     }
     else if (W->sV()->b_propagated()) { //Check if sV has been propagated.
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. sV already been propagated.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eL %d. sV already been propagated.\n", 
                      W->edge()->id(), W->stau(), W->etau(), W->sV()->id());
       #endif
     }
@@ -48,7 +48,7 @@ bool gdt_ws_manager::_vertex_strike_at_Sv (gdt_welm* W)
     
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Create psrcW %d (%.3f, %.3f) with simT %f.\n", 
+          vul_printf (std::cerr, "  Create psrcW %d (%.3f, %.3f) with simT %f.\n", 
                        nW->edge()->id(), nW->stau(), nW->etau(), nW->simT());
         #endif
       }
@@ -63,7 +63,7 @@ bool gdt_ws_manager::_vertex_strike_at_Ev (gdt_welm* W)
 {
   #if GDT_DEBUG_MSG
   if (n_verbose_>3)
-    vul_printf (vcl_cerr, "  Advanve psrcW %d (%.3f, %.3f) to W-Ve(%d) strike.\n", 
+    vul_printf (std::cerr, "  Advanve psrcW %d (%.3f, %.3f) to W-Ve(%d) strike.\n", 
                  W->edge()->id(), W->stau(), W->etau(), W->eV()->id());
   #endif
 
@@ -80,14 +80,14 @@ bool gdt_ws_manager::_vertex_strike_at_Ev (gdt_welm* W)
     if (W->_has_nextI_on_edge(eR)) {
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. W already exists.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. W already exists.\n", 
                      W->edge()->id(), W->stau(), W->etau(), eR->id());
       #endif
     }
     else if (W->eV()->b_propagated()) { //Check if eV has been propagated.
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. eV already been propagated.\n", 
+        vul_printf (std::cerr, "  Skip psrcW %d (%.3f, %.3f) to strike eR %d. eV already been propagated.\n", 
                      W->edge()->id(), W->stau(), W->etau(), W->eV()->id());
       #endif
     }
@@ -98,7 +98,7 @@ bool gdt_ws_manager::_vertex_strike_at_Ev (gdt_welm* W)
     
         #if GDT_DEBUG_MSG
         if (n_verbose_>3)
-          vul_printf (vcl_cerr, "  Create psrcW %d (%.3f, %.3f) with simT %f.\n", 
+          vul_printf (std::cerr, "  Create psrcW %d (%.3f, %.3f) with simT %f.\n", 
                        nW->edge()->id(), nW->stau(), nW->etau(), nW->simT());
         #endif
       }
@@ -339,7 +339,7 @@ bool gdt_ws_manager::advance_W_to_endvertex (gdt_welm* W, dbmsh3d_gdt_vertex_3d*
   #endif
 
   // Search in the active vertex queue Qv for v  ///_brute_force_find_in_Qv (v);
-  vcl_multimap<double, gdt_active_vertex*>::iterator it = _find_in_Qv (v); 
+  std::multimap<double, gdt_active_vertex*>::iterator it = _find_in_Qv (v); 
 
   if (it == Qv_.end()) {
     // We use the first wavefront struck v to comute its dist.
@@ -384,7 +384,7 @@ bool gdt_ws_manager::advance_W_to_endvertex (gdt_welm* W, dbmsh3d_gdt_vertex_3d*
     if (va->Wb_ != NULL) {
       #if GDT_DEBUG_MSG
       if (n_verbose_>3)
-        vul_printf (vcl_cerr, "  !! Degenerate S-V detected: W %d (%.3f, %.3f) strikes v %d.\n", 
+        vul_printf (std::cerr, "  !! Degenerate S-V detected: W %d (%.3f, %.3f) strikes v %d.\n", 
                      W->edge()->id(), W->stau(), W->etau(), v->id());
       #endif
       va->dege_ = true;

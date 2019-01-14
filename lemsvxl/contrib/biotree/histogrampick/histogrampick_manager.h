@@ -40,7 +40,7 @@ class histogrampick_manager : public vgui_wrapper_tableau
 
     enum region_type {INSIDE_VESSEL,INSIDE_BOUNDARY,OUTSIDE_BOUNDARY,OUTSIDE_VESSEL, N_REGION_TYPES};
 
-    static vcl_string nameOf(histogrampick_manager::region_type t){
+    static std::string nameOf(histogrampick_manager::region_type t){
       switch(t){
         case INSIDE_VESSEL : return "INSIDE_VESSEL"; 
         case INSIDE_BOUNDARY : return "INSIDE_BOUNDARY";
@@ -60,10 +60,10 @@ class histogrampick_manager : public vgui_wrapper_tableau
     region_type region_select_;
 
     unsigned w_,h_,d_;
-    vcl_string path_;
-    vcl_string prefix_;
-    vcl_string pixel_type_;
-    vcl_string extension_;
+    std::string path_;
+    std::string prefix_;
+    std::string pixel_type_;
+    std::string extension_;
 
     vsol_polygon_2d_sptr polygon_;
     vgl_polygon<float> vglpoly_;
@@ -73,11 +73,11 @@ class histogrampick_manager : public vgui_wrapper_tableau
     vgui_easy2D_tableau_sptr easy2D_;
     vgui_range_map_params_sptr rmp_;
     bgui_picker_tableau_sptr pick_;
-    vcl_vector<vcl_string> filenames_;
+    std::vector<std::string> filenames_;
 
     vil_image_resource_sptr curimg_;
 
-    vcl_vector<vgui_soview2D_polygon*> display_polygons_;
-    vcl_vector<vcl_vector<float > > samples_;
+    std::vector<vgui_soview2D_polygon*> display_polygons_;
+    std::vector<std::vector<float > > samples_;
 };
 #endif

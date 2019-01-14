@@ -10,7 +10,7 @@
 // 
 
 #include <vnl/vnl_matrix_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <xmvg/xmvg_icosafilter_response.h>
 
 
@@ -19,14 +19,14 @@ class proc_det_filter_utils
 public:
   proc_det_filter_utils(void);
   ~proc_det_filter_utils(void);
-  vcl_vector<xmvg_filter_response<double> >  read_responses(vcl_string response_file,
+  std::vector<xmvg_filter_response<double> >  read_responses(std::string response_file,
                                           int &dimx, int &dimy, 
                                           int &dimz, int &filter_size);
 
-  void diff_responses(vcl_string f1, vcl_string f2, vcl_string out);
+  void diff_responses(std::string f1, std::string f2, std::string out);
 
-  void crop_responses(vcl_string response_file,
-                                          vcl_string output_file,
+  void crop_responses(std::string response_file,
+                                          std::string output_file,
                                           int &dimx, int &dimy, 
                                           int &dimz, int &filter_size,
                                           int xmar, int ymar, int zmar);

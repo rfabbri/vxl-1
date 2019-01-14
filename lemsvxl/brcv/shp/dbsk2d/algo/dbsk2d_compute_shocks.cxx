@@ -24,7 +24,7 @@
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 
 dbsk2d_boundary_sptr 
-dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
+dbsk2d_create_boundary( std::vector< vsol_spatial_object_2d_sptr > vsol_list,
                         bool override_default_partitioning,
                         float xmin, float ymin,
                         int num_rows, int num_cols, 
@@ -44,7 +44,7 @@ dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
   //   parse through all the vsol classes and add to the boundary
 
   //timer1.mark(); // start timer
-  //vcl_cout << "\nPutting VSOL objects into boundary ... ";
+  //std::cout << "\nPutting VSOL objects into boundary ... ";
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
   {
     if( vsol_list[b]->cast_to_point() ) //POINT
@@ -79,17 +79,17 @@ dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
   }
 
   //double vsol2boundary = (float)(timer1.real())/1000;
-  //vcl_cout << "done. Time taken= " << vsol2boundary << "seconds\n";
+  //std::cout << "done. Time taken= " << vsol2boundary << "seconds\n";
   
   //----------------------------------------------------------------------
   //3) Partition the boundary elements into cells
   //timer1.mark();
-  //vcl_cout << "Partitioning boundary into cells...";
+  //std::cout << "Partitioning boundary into cells...";
 
   if (!override_default_partitioning)
   {
     vsol_box_2d_sptr box = boundary->get_bounding_box();
-    // box->print_summary(vcl_cout);
+    // box->print_summary(std::cout);
     cell_width = (float)( box->width()/(num_cols-0.5) );
     cell_height = (float)( box->height()/(num_rows-0.5) );
     xmin = (float)(box->get_min_x() - cell_width/4);
@@ -104,31 +104,31 @@ dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
   boundary->partition_into_cells(true, false, dbsk2d_bnd_preprocess::distance_tol);
 
   //double partition_time = (float)(timer1.real())/1000;
-  //vcl_cout << "done. Time taken= " << partition_time << "seconds\n";
+  //std::cout << "done. Time taken= " << partition_time << "seconds\n";
   
   //----------------------------------------------------------------------
   //4) Preprocess the boundary to build topology
   if (preprocess_boundary){
     timer1.mark();
-    //vcl_cout << "Preprocessing boundary ... ";
+    //std::cout << "Preprocessing boundary ... ";
 
     dbsk2d_bnd_preprocess bnd_preprocessor;
     bnd_preprocessor.preprocess(boundary, false);
 
     //double preprocess_time = (float)(timer1.real())/1000;
-    //vcl_cout << "done. Time taken= " << preprocess_time << "seconds\n";
+    //std::cout << "done. Time taken= " << preprocess_time << "seconds\n";
 
     //// validate boundary preprocessing 
     //timer1.mark();
-    //vcl_cout << "Verifying boundary preprocessing .. " ;
+    //std::cout << "Verifying boundary preprocessing .. " ;
     //
     //bool need_preprocess = bnd_preprocessor.need_preprocessing(boundary);
 
     ////double verify_time = (float)(timer1.real())/1000;
-    ////vcl_cout << "done. Time taken= " << verify_time << "seconds\n";
+    ////std::cout << "done. Time taken= " << verify_time << "seconds\n";
 
-    //vcl_string result = (need_preprocess) ? "Yes" : "No";
-    //vcl_cout <<"Boundary needs preprocessing " << result << vcl_endl;
+    //std::string result = (need_preprocess) ? "Yes" : "No";
+    //std::cout <<"Boundary needs preprocessing " << result << std::endl;
 
     //if (need_preprocess) 
     //  return false;
@@ -140,15 +140,15 @@ dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
       boundary->break_long_line_edges(dbsk2d_bnd_preprocess::distance_tol);
 
       //double time_to_break_long_lines = (float)(timer1.real())/1000;
-      //vcl_cout << "done. Time taken= " << time_to_break_long_lines << "seconds\n";
+      //std::cout << "done. Time taken= " << time_to_break_long_lines << "seconds\n";
     }
   }
 
   //after everything is converted, compile the belm_list
   boundary->update_belm_list();
-  //vcl_cout << "Number of edges = " << boundary->all_edges().size() << vcl_endl;
-  //vcl_cout << "Number of belms = " << boundary->num_belms() << vcl_endl;
-  //boundary->print_belm_list(vcl_cout);
+  //std::cout << "Number of edges = " << boundary->all_edges().size() << std::endl;
+  //std::cout << "Number of belms = " << boundary->num_belms() << std::endl;
+  //boundary->print_belm_list(std::cout);
 
   return boundary;
 }
@@ -207,7 +207,7 @@ dbsk2d_compute_shocks (dbsk2d_boundary_sptr boundary,
 }
 
 dbsk2d_shock_graph_sptr 
-dbsk2d_compute_shocks (vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
+dbsk2d_compute_shocks (std::vector< vsol_spatial_object_2d_sptr > vsol_list,
                        float prune_threshold,
                        bool override_default_partitioning,
                        float xmin, float ymin,
@@ -235,7 +235,7 @@ dbsk2d_compute_shocks (vsol_polygon_2d_sptr & polygon,
 {
   //----------------------------------------------------------------------
   //1) Form the boundary class from the vsol_polygon_2d
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list;
   vsol_list.push_back(polygon->cast_to_spatial_object());
   dbsk2d_boundary_sptr boundary = dbsk2d_create_boundary(vsol_list);
 
@@ -288,17 +288,17 @@ dbsk2d_compute_xshocks (vsol_polygon_2d_sptr & polygon,
 bool test_xshock_graph(dbsk2d_shock_graph_sptr sg)
 {
   if (!sg) { 
-    vcl_cout << "In  test_xshock_graph() -- invalid pointer!\n";
+    std::cout << "In  test_xshock_graph() -- invalid pointer!\n";
     return false;
   }
 
   if (!sg->number_of_edges()) {
-    vcl_cout << "In  test_xshock_graph() -- zero edges!\n";
+    std::cout << "In  test_xshock_graph() -- zero edges!\n";
     return false;
   }
 
   if (!sg->number_of_vertices()) {
-    vcl_cout << "In  test_xshock_graph() -- zero vertices!\n";
+    std::cout << "In  test_xshock_graph() -- zero vertices!\n";
     return false;
   }
 

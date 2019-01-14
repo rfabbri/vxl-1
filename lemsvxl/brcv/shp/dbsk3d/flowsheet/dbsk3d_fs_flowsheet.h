@@ -1,12 +1,12 @@
 #ifndef _3DSHOCK_FRE_FLOWSHEET_H_
 #define _3DSHOCK_FRE_FLOWSHEET_H_
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cmath.h>
-#include <vcl_cstring.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <dbmsh3d/dbmsh3d_utils.h>
 

@@ -42,8 +42,8 @@
 //  // check its dynamic range and map it to [0 255]
 //  vil_image_resource_sptr image = image_storage->get_image();
 //
-//  vcl_cout << "file format = " << image->file_format() << vcl_endl;
-//  if (vcl_string(image->file_format()) == "dicom")
+//  std::cout << "file format = " << image->file_format() << std::endl;
+//  if (std::string(image->file_format()) == "dicom")
 //    if (image->pixel_format() == VIL_PIXEL_FORMAT_UINT_16)
 //  {
 //    image_tab->set_image_resource(image);
@@ -80,7 +80,7 @@ update_image_tableau( bgui_image_tableau_sptr image_tab,
   // check and map its dynamic range to [0 255]
   vil_image_resource_sptr image = image_storage->get_image();
   
-  if (image->file_format() && (vcl_string(image->file_format()) == "dicom") && 
+  if (image->file_format() && (std::string(image->file_format()) == "dicom") && 
     image->pixel_format() == VIL_PIXEL_FORMAT_UINT_16)
   {
     image_tab->set_image_resource(image);

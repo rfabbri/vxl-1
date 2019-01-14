@@ -14,12 +14,12 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <iostream>
+#include <string>
 #include "bcl_cl.h"
-#include <vcl_cstddef.h>
+#include <cstddef>
 #define SDK_SUCCESS 0
 #define SDK_FAILURE 1
 #define GROUP_SIZE 64
@@ -30,10 +30,10 @@ template <class T>
 class opencl_manager
 {
  protected:
-  vcl_size_t number_devices_;
-  vcl_size_t max_work_group_size_;   //!< Max allowed work-items in a group
+  std::size_t number_devices_;
+  std::size_t max_work_group_size_;   //!< Max allowed work-items in a group
   cl_uint max_dimensions_;           //!< Max group dimensions allowed
-  vcl_size_t * max_work_item_sizes_; //!< Max work-items sizes in each dimension
+  std::size_t * max_work_item_sizes_; //!< Max work-items sizes in each dimension
   cl_ulong total_local_memory_;      //!< Max local memory allowed
   cl_ulong total_global_memory_;     //!< Max global memory allowed
   cl_uint max_compute_units_;        //!< Max compute units
@@ -61,12 +61,12 @@ class opencl_manager
   //: Check for error returns
   int check_val(cl_int status, cl_int result, std::string message) {
     if (status != result) {
-      vcl_cout << message << '\n';
+      std::cout << message << '\n';
       return 0;
     }
     return 1;
   }
-  vcl_size_t group_size() const {return GROUP_SIZE;}
+  std::size_t group_size() const {return GROUP_SIZE;}
   cl_ulong total_local_memory() const {return total_local_memory_;}
   cl_context context() {return context_;}
   cl_device_id * devices() {return devices_;}

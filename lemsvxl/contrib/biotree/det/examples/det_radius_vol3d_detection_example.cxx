@@ -4,7 +4,7 @@
 // \author    Kongbin Kang
 // \date        2006-05-29
 //
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vbl/vbl_array_3d.h>
 #include <vol3d/vol3d_radius_filter.h>
 #include <vol3d/algo/vol3d_radius_detection.h>
@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
 
   if(argc != 2)
   {
-    vcl_cout << "usage: "<< argv[0] << " outfile\n";
+    std::cout << "usage: "<< argv[0] << " outfile\n";
     exit(1);
   }
 
@@ -44,10 +44,10 @@ int main(int argc, char * argv[])
   
   vol3d_radius_detection rd(2, 8);
 
-  vcl_valarray<int> probes = rd.probes();
+  std::valarray<int> probes = rd.probes();
 
   // need to be deleted
-  vcl_vector<vol3d_gaussian_kernel_3d*> filters(probes.size());
+  std::vector<vol3d_gaussian_kernel_3d*> filters(probes.size());
 
   biosim_cylinder_pyramid pyramid(density, sigma);
   
@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
 
   vbl_array_3d<double> rads = rd.radius(vol, density, sigma);
 
-  vcl_ofstream outfile("temp");
+  std::ofstream outfile("temp");
 
   for(int i =0; i < 80; i++)
   {
@@ -110,7 +110,7 @@ int main(int argc, char * argv[])
   int dimy = result_cm.ny();
   int dimz = result_cm.nz();
 
-  vcl_vector<double> field;
+  std::vector<double> field;
   for(int k=0;k<dimz;k++)
   {
     for(int j=0;j<dimy;j++)
@@ -133,8 +133,8 @@ int main(int argc, char * argv[])
   }
 
   // create cylinder and write to binary stream
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
   vsl_b_ofstream stream(argv[1]);
   
   for(int k=0;k<dimz;k++)
@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
   stream.close();
 
 
-  //vcl_cout << result_cm;
+  //std::cout << result_cm;
 
   const size_t blocksize = field.size();
   uint8_t * voxels = new uint8_t[blocksize];

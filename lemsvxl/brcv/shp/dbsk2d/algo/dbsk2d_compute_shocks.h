@@ -12,7 +12,7 @@
 //
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
@@ -29,7 +29,7 @@
 //  \relates dbsk2d_boundary
 //  \relates dbsk2d_bnd_preprocess
 dbsk2d_boundary_sptr 
-dbsk2d_create_boundary( vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
+dbsk2d_create_boundary( std::vector< vsol_spatial_object_2d_sptr > vsol_list,
                         bool override_default_partitioning = true,
                         float xmin=0.0, float ymin=0.0,
                         int num_rows=1, int num_cols=1, 
@@ -52,7 +52,7 @@ dbsk2d_compute_shocks (dbsk2d_boundary_sptr bnd,
 //: \relates dbsk2d_ishock_detector 
 //  \relates dbsk2d_prune_ishock
 dbsk2d_shock_graph_sptr 
-dbsk2d_compute_shocks (vcl_vector< vsol_spatial_object_2d_sptr > vsol_list,
+dbsk2d_compute_shocks (std::vector< vsol_spatial_object_2d_sptr > vsol_list,
                        float prune_threshold=1.0,
                        bool override_default_partitioning = true,
                        float xmin=0.0, float ymin=0.0,

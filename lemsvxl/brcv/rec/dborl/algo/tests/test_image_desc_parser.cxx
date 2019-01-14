@@ -6,9 +6,9 @@
 #include <borld/borld_image_bbox_description.h>
 #include <borld/borld_image_polygon_description.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+#include <fstream>
+//#include <cmath>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_new.h>
@@ -117,16 +117,16 @@ static void test_image_desc_parser(int argc, char* argv[])
   TEST_NEAR("parse() polygon 26", pd->get_polygon_vector("skyhawk")[2]->vertex(6)->x(), 74.2741, 0.001);
   TEST_NEAR("parse() polygon 27", pd->get_polygon_vector("skyhawk")[2]->vertex(6)->y(), 26, 0.001);
 
-  vcl_ofstream os3;
-  os3.open("test3.xml", vcl_ios_out);
+  std::ofstream os3;
+  os3.open("test3.xml", std::ios::out);
   id3->write_xml(os3);
-  vcl_cout << "test3.xml written.\n";
+  std::cout << "test3.xml written.\n";
   os3.close();
 
-  vcl_ofstream os4;
-  os4.open("test2.xml", vcl_ios_out);
+  std::ofstream os4;
+  os4.open("test2.xml", std::ios::out);
   id2->write_xml(os4);
-  vcl_cout << "test2.xml written.\n";
+  std::cout << "test2.xml written.\n";
   os4.close();
 
   parser.clear();
@@ -139,8 +139,8 @@ static void test_image_desc_parser(int argc, char* argv[])
   TEST("write() ", id->category_list_["chair"], id5->category_list_["chair"]);
   TEST("parse() ", id5->category_data_->cast_to_image_bbox_description()->get_box_vector("dog")[0]->get_min_x(), 277);
 
-  vcl_string input_f = "dog2.con";
-  vcl_string output_f = "test2.xml";
+  std::string input_f = "dog2.con";
+  std::string output_f = "test2.xml";
   if (read_con_write_image_description_xml(input_f, "dog", output_f)) {
     parser.clear();
     borld_image_description_sptr id6 = borld_image_description_parse("test2.xml", parser);
@@ -151,7 +151,7 @@ static void test_image_desc_parser(int argc, char* argv[])
     TEST_NEAR("read con write xml() ", id6->category_data_->cast_to_image_polygon_description()->get_polygon_vector("dog")[0]->vertex(271)->y(), 10, 0.001);
 
   } else
-    vcl_cout << "Problems in reading dog2.con and writing test2.xml\n";
+    std::cout << "Problems in reading dog2.con and writing test2.xml\n";
 
   parser.set_default_tags();
   parser.clear();

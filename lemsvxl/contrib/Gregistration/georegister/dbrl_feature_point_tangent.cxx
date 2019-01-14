@@ -5,7 +5,7 @@
 #include "dbrl_rigid_transformation.h"
 #include "dbrl_translation.h"
 #include <vnl/io/vnl_io_vector.h>
-#include <vcl_string.h>
+#include <string>
 dbrl_feature_point_tangent::dbrl_feature_point_tangent()
     {
     }
@@ -38,7 +38,7 @@ double dbrl_feature_point_tangent::distance(const dbrl_feature_sptr & pt)
                 return 0;
             }
     }
-void dbrl_feature_point_tangent::print_feature(vcl_ostream &os)
+void dbrl_feature_point_tangent::print_feature(std::ostream &os)
     {
     os<<"\n point location is "<<location_;
     os<<"\n direction is "<<dir_;
@@ -59,25 +59,25 @@ double dbrl_feature_point_tangent::dir() const
     }
 //: write feature
 void
-dbrl_feature_point_tangent::write( vcl_ostream& os ) const
+dbrl_feature_point_tangent::write( std::ostream& os ) const
 {
-  os << "POINT-TANGENT" << vcl_endl;
-  os << location_.size() << vcl_endl;
-  os << location_ <<vcl_endl;
-  os << dir_ <<vcl_endl;
+  os << "POINT-TANGENT" << std::endl;
+  os << location_.size() << std::endl;
+  os << location_ <<std::endl;
+  os << dir_ <<std::endl;
 }
 
 //: read  feature
 bool 
 dbrl_feature_point_tangent::
-read( vcl_istream& is)
+read( std::istream& is)
 {
-    vcl_string str;
-    vcl_getline( is, str );
+    std::string str;
+    std::getline( is, str );
     
     // The token should appear at the beginning of line
     if ( str.find( "POINT-TANGENT" ) != 0 ) {
-      vcl_cout<< "It is not a POINT-TANGENT. reading is aborted.\n" ;
+      std::cout<< "It is not a POINT-TANGENT. reading is aborted.\n" ;
       return false;
     }
   
@@ -123,7 +123,7 @@ dbrl_feature_point_tangent::b_read(vsl_b_istream &is)
             vsl_b_read(is, id_);
             break;
         default:
-            vcl_cerr << "dbrl_feature_point_tangent: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_feature_point_tangent: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -132,7 +132,7 @@ dbrl_feature_point_tangent::version() const
     {
     return 1;
     }
-void dbrl_feature_point_tangent::print_summary(vcl_ostream &os) const
+void dbrl_feature_point_tangent::print_summary(std::ostream &os) const
 {
   
 }

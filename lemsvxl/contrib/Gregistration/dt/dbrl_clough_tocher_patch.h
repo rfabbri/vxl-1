@@ -1,10 +1,10 @@
 #ifndef dbrl_clough_tocher_patch_h_
 #define dbrl_clough_tocher_patch_h_
 
-#include<vcl_iostream.h>
+#include<iostream>
 #include<vgl/vgl_point_3d.h>
 #include<vgl/vgl_point_2d.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 class dbrl_clough_tocher_patch
 {

@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_train_xgraph_ccm_model_params::vox_train_xgraph_ccm_model_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_train_xgraph_ccm_model_params::vox_train_xgraph_ccm_model_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
 
     this->index_filename_.set_values(param_list_,
@@ -29,11 +29,11 @@ vox_train_xgraph_ccm_model_params::vox_train_xgraph_ccm_model_params(vcl_string 
 
 
     vox_train_xshock_ccm_model_process pro1;
-    vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+    std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
     for (unsigned i = 0; i < pars.size(); i++)
     {
         bpro1_param* par = pars[i];
-        vcl_string par_name = par->name();
+        std::string par_name = par->name();
         if(par_name != "-index_file" && par_name != "-pos_output_file" && par_name != "-neg_output_file")
         {
             param_list_.push_back(

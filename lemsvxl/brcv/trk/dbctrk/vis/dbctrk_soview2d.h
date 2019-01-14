@@ -13,7 +13,7 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 #include <dbctrk/dbctrk_tracker_curve_sptr.h>
 #include <vgui/vgui_soview2D.h>
@@ -32,10 +32,10 @@ class dbctrk_soview2D : public vgui_soview2D
   virtual void draw() const;
 
   //: Print details to the given stream.
-  virtual vcl_ostream& print(vcl_ostream&) const;
+  virtual std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class ('dbctrk_soview2D').
-  vcl_string type_name() const { return "dbctrk_soview2D"; }
+  std::string type_name() const { return "dbctrk_soview2D"; }
 
   //: Returns the distance squared from this dbctrk_curve to the given position.
   virtual float distance_squared(float x, float y) const;

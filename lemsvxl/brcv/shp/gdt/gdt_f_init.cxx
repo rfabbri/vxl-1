@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <gdt/gdt_manager.h>
 
@@ -15,7 +15,7 @@ void gdt_f_manager::gdt_init ()
   gdt_mesh_->reset_traverse ();
 
   if (n_verbose_>1)
-    vul_printf (vcl_cerr, "Initialization for %d sources:\n", (int)source_vertices_.size());
+    vul_printf (std::cerr, "Initialization for %d sources:\n", (int)source_vertices_.size());
 
   //: Construct a wavefront for each src_vertex by putting its one-ring neighborhood edges surrounding it
   //  assume the sources are not adjacent !!
@@ -23,7 +23,7 @@ void gdt_f_manager::gdt_init ()
     dbmsh3d_gdt_vertex_3d* src_vertex = source_vertices_[i];
     src_vertex->set_dist (0);
 
-    vcl_vector<dbmsh3d_halfedge*> ordered_halfedges;
+    std::vector<dbmsh3d_halfedge*> ordered_halfedges;
     ordered_halfedges.clear();
 
     dbmsh3d_halfedge* last_he = src_vertex->m2_get_ordered_HEs (ordered_halfedges);
@@ -37,7 +37,7 @@ void gdt_f_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
       if (n_verbose_>1)
-        vul_printf (vcl_cerr, "  init_dege_edge %d propagated\n", last_he->edge()->id());
+        vul_printf (std::cerr, "  init_dege_edge %d propagated\n", last_he->edge()->id());
 #endif
     }
 
@@ -63,9 +63,9 @@ void gdt_f_manager::gdt_init ()
 
 #if GDT_DEBUG_MSG
       if (n_verbose_>1) {
-        vul_printf (vcl_cerr, "  init_wavefront_edge %d propagated\n", edge_j->id());
-        vul_printf (vcl_cerr, "  init_dege_edge %d propagated\n", he_d->edge()->id());
-        vul_printf (vcl_cerr, "    face %d propagated.\n", face_j->id());
+        vul_printf (std::cerr, "  init_wavefront_edge %d propagated\n", edge_j->id());
+        vul_printf (std::cerr, "  init_dege_edge %d propagated\n", he_d->edge()->id());
+        vul_printf (std::cerr, "    face %d propagated.\n", face_j->id());
       }
 #endif
 

@@ -6,13 +6,13 @@
 #include "vox_generate_shape_params.h"
 #include <dborl/algo/dborl_algo_params.h>
 #include <vul/vul_file.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 //#include <dborl/algo/dborl_utilities.h>
 
 // -----------------------------------------------------------------------------
 //: Constructor
 vox_generate_shape_params::
-vox_generate_shape_params(vcl_string algo_name) : 
+vox_generate_shape_params(std::string algo_name) : 
   dborl_algo_params(algo_name) 
 {
 
@@ -27,7 +27,7 @@ vox_generate_shape_params(vcl_string algo_name) :
   // Category-spectific info ////////////////////////////////////////////////////////
 
   // a hack to change default info for debugging purpose
-  vcl_string category = "mouse";
+  std::string category = "mouse";
 
   if(category == "mouse")
   {
@@ -58,7 +58,7 @@ vox_generate_shape_params(vcl_string algo_name) :
   }
   else
   {
-    vcl_cout << "\nERROR!!!! Unknown category. Many parameters were not set properly.\n";
+    std::cout << "\nERROR!!!! Unknown category. Many parameters were not set properly.\n";
   }
 
   
@@ -88,35 +88,35 @@ vox_generate_shape_params(vcl_string algo_name) :
 
 //------------------------------------------------------------------------------  
 //:
-vcl_string vox_generate_shape_params::
+std::string vox_generate_shape_params::
 get_xgraph_file() const
 {
-  vcl_string xgraph_file = this->input_xgraph_folder_()+ "/" +this->input_xgraph_prototype_filename_();
+  std::string xgraph_file = this->input_xgraph_folder_()+ "/" +this->input_xgraph_prototype_filename_();
   return xgraph_file;
 }
 
 
 //------------------------------------------------------------------------------
 //: xgraph geometric model
-vcl_string vox_generate_shape_params::
+std::string vox_generate_shape_params::
 get_xgraph_geom_file() const
 {
-  vcl_string xgraph_geom_file = this->input_xgraph_folder_()+ "/" +this->input_xgraph_geom_filename_();
+  std::string xgraph_geom_file = this->input_xgraph_folder_()+ "/" +this->input_xgraph_geom_filename_();
   return xgraph_geom_file;
 }
 
 //: xgraph geometric model
-vcl_string vox_generate_shape_params::
+std::string vox_generate_shape_params::
 get_xgraph_geom_param_file() const
 {
-  vcl_string xgraph_geom_param_file = this->input_xgraph_geom_param_filename_();
+  std::string xgraph_geom_param_file = this->input_xgraph_geom_param_filename_();
   return xgraph_geom_param_file;
 }
 
 
 
 // location of all output files
-vcl_string vox_generate_shape_params::
+std::string vox_generate_shape_params::
 get_output_folder() const
 {
   if (this->save_to_object_folder_())
@@ -132,7 +132,7 @@ get_output_folder() const
 
 
 //: Name of the prototype xgraph
-vcl_string vox_generate_shape_params::
+std::string vox_generate_shape_params::
 get_xgraph_prototype_name() const
 {
   return vul_file::strip_extension(this->input_xgraph_prototype_filename_());

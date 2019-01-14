@@ -1,9 +1,9 @@
 //This is brcv/seg/dbdet/pro/dbdet_save_edg_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
 
 #include "dbdet_save_edg_process.h"
 
@@ -24,25 +24,25 @@ dbdet_save_edg_process::dbdet_save_edg_process() : bpro1_process()
 {
   if( !parameters()->add( "Output file <filename...>" , "-edgoutput" , bpro1_filepath("","*.edg")))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
-vcl_string dbdet_save_edg_process::name() 
+std::string dbdet_save_edg_process::name() 
 {
   return "Save .EDG File";
 }
 
-vcl_vector< vcl_string > dbdet_save_edg_process::get_input_type() 
+std::vector< std::string > dbdet_save_edg_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map");
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_save_edg_process::get_output_type() 
+std::vector< std::string > dbdet_save_edg_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -65,7 +65,7 @@ bool dbdet_save_edg_process::execute()
   dbdet_edgemap_sptr edgemap = input_edgemap->get_edgemap();
 
   parameters()->get_value( "-edgoutput" , output );
-  vcl_string output_file = output.path;
+  std::string output_file = output.path;
 
   //save this edge map onto a file
   bool retval = dbdet_save_edg(output_file, edgemap);

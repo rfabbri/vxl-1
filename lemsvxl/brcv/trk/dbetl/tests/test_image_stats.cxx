@@ -1,22 +1,22 @@
 #include <testlib/testlib_test.h>
 #include <dbetl/dbetl_image_stats.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 
 
 static bool approx_equal(double a, double b, double thresh=1e-12)
 {
-  return vcl_abs(b-a) < thresh;
+  return std::abs(b-a) < thresh;
 }
 
 static bool approx_equal(const vil_rgb<double>& a, 
                          const vil_rgb<double>& b, 
                          double thresh=1e-12)
 {
-  return vcl_abs(b.R()-a.R()) < thresh &&
-         vcl_abs(b.G()-a.G()) < thresh &&
-         vcl_abs(b.B()-a.B()) < thresh;
+  return std::abs(b.R()-a.R()) < thresh &&
+         std::abs(b.G()-a.G()) < thresh &&
+         std::abs(b.B()-a.B()) < thresh;
 }
 
 
@@ -45,7 +45,7 @@ MAIN( test_image_stats )
   TEST("1 Sample Variance", approx_equal(stats1.int_var(), 0.0, 1e-6), true);
   TEST("1 Sample Color", stats1.color(), data[0]);
 
-  vcl_cout << "cost 1 = " << stats1.intensity_cost(stats1.int_mean()) << vcl_endl;
+  std::cout << "cost 1 = " << stats1.intensity_cost(stats1.int_mean()) << std::endl;
 
   stats1.add_sample(data[1]);
   double mean = (data[0].grey()+data[1].grey())/2.0;
@@ -54,7 +54,7 @@ MAIN( test_image_stats )
   TEST("2 Sample Variance", approx_equal(stats1.int_var(), var, 1e-6), true);
   TEST("2 Sample Color", approx_equal(stats1.color(), (data[0]+data[1])/2.0), true);
 
-  vcl_cout << "cost 2 = " << stats1.intensity_cost(stats1.int_mean()) << vcl_endl;
+  std::cout << "cost 2 = " << stats1.intensity_cost(stats1.int_mean()) << std::endl;
 
   for(int i=2; i<6; ++i)
     stats1.add_sample(data[i]);
@@ -73,7 +73,7 @@ MAIN( test_image_stats )
   }
   var /= 5;
 
-  vcl_cout << "6 Samples => mean=" << mean << " var=" << var << vcl_endl;
+  std::cout << "6 Samples => mean=" << mean << " var=" << var << std::endl;
   
   TEST("6 Sample Mean", approx_equal(stats1.int_mean(), mean), true);
   TEST("6 Sample Variance", approx_equal(stats1.int_var(), var, 1e-6), true);
@@ -106,7 +106,7 @@ MAIN( test_image_stats )
   }
   var /= 9;
 
-  vcl_cout << "10 Samples => mean=" << mean << " var=" << var << vcl_endl;
+  std::cout << "10 Samples => mean=" << mean << " var=" << var << std::endl;
 
   TEST("10 Sample Mean", approx_equal(stats3.int_mean(), mean), true);
   TEST("10 Sample Variance", approx_equal(stats3.int_var(), var, 1e-6), true);

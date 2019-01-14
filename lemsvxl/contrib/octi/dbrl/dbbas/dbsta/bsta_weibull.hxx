@@ -5,8 +5,8 @@
 // \file
 
 #include "bsta_weibull.h"
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 
 
 template <class T>
@@ -37,8 +37,8 @@ T bsta_weibull<T>::prob_density(const vector_& pt) const
   double c = dk/la;
   double x = static_cast<double>(pt)-m;
   x /= la;
-  c *= vcl_pow(x,dk-1.0);
-  c *= vcl_exp(-vcl_pow(x,dk));
+  c *= std::pow(x,dk-1.0);
+  c *= std::exp(-std::pow(x,dk));
   return static_cast<T>(c);
 }
 
@@ -53,8 +53,8 @@ T bsta_weibull<T>::probability(const vector_& min_pt,
   double m = static_cast<double>(mu_);
   double xmin = min_pt-m;
   double xmax = max_pt-m;
-  double tp = vcl_exp(-vcl_pow(xmin/la, dk));
-  double tm = vcl_exp(-vcl_pow(xmax/la, dk));
+  double tp = std::exp(-std::pow(xmin/la, dk));
+  double tm = std::exp(-std::pow(xmax/la, dk));
   return static_cast<T>(tp-tm);
 }
 

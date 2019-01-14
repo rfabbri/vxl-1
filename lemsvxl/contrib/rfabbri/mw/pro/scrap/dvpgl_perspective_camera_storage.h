@@ -17,14 +17,14 @@ public:
 
   vpgl_perspective_camera_storage() {}
   virtual ~vpgl_perspective_camera_storage() {}
-  virtual vcl_string type() const { return "vpgl perspective camera"; }
+  virtual std::string type() const { return "vpgl perspective camera"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vpgl_perspective_camera_storage"; }
+  virtual std::string is_a() const { return "vpgl_perspective_camera_storage"; }
 
   const vpgl_perspective_camera<double> &get_camera() {
     return Cam_;

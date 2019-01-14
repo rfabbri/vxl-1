@@ -31,7 +31,7 @@ public:
   ~dbdet_crop_edgemap_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -55,7 +55,7 @@ protected:
 private:
 
   bool active;
-  vcl_vector<vgl_point_2d<float> > point_list;
+  std::vector<vgl_point_2d<float> > point_list;
   float last_x;
   float last_y;
 };

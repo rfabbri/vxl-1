@@ -156,7 +156,7 @@ public:
 
 
   //: Print grid information
-  void print(vcl_ostream& str) const;
+  void print(std::ostream& str) const;
 };
 
 

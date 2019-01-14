@@ -3,8 +3,8 @@
 
 #include "vpgl_rays_to_voxels.h"
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vgl/vgl_line_3d_2_points.h>
 #include <vgl/vgl_distance.h>
 
@@ -61,7 +61,7 @@ vpgl_rays_to_voxels::vpgl_rays_to_voxels(
 void 
 vpgl_rays_to_voxels::get_ray_voxels(
   const vgl_point_2d<int>& pixel_index,
-  vcl_vector< vgl_point_3d<int> >& ray_voxels,
+  std::vector< vgl_point_3d<int> >& ray_voxels,
   bool unique_assignment )
 {
   ray_voxels.clear();
@@ -72,7 +72,7 @@ vpgl_rays_to_voxels::get_ray_voxels(
     return;
   }
 
-  vcl_vector< vgl_point_3d<int> > pre_voxels;
+  std::vector< vgl_point_3d<int> > pre_voxels;
   pre_voxels.reserve( num_voxels_to_reserve_ );
   get_ray_voxels( pixel_index, pre_voxels );
 
@@ -95,7 +95,7 @@ vpgl_rays_to_voxels::get_ray_voxels(
 void 
 vpgl_rays_to_voxels::get_ray_voxels(
   const vgl_point_2d<int>& pixel_index,
-  vcl_vector< vgl_point_3d<int> >& ray_voxels )
+  std::vector< vgl_point_3d<int> >& ray_voxels )
 {
   ray_voxels.clear();
   ray_voxels.reserve( num_voxels_to_reserve_ );
@@ -132,8 +132,8 @@ vpgl_rays_to_voxels::get_ray_voxels(
 
     // Check the 27 voxels around the search voxel. Put all voxels that haven't
     // been seen by this ray that are sufficiently close to the ray in new_voxels.
-    vcl_vector< vgl_point_3d<int> > new_voxels; new_voxels.reserve( 27 );
-    vcl_vector<double> new_voxel_distances; new_voxel_distances.reserve( 27 );
+    std::vector< vgl_point_3d<int> > new_voxels; new_voxels.reserve( 27 );
+    std::vector<double> new_voxel_distances; new_voxel_distances.reserve( 27 );
     for( int i = -1; i <= 1; i++ ){
       for( int j = -1; j <= 1; j++ ){
         for( int k = -1; k <= 1; k++ ){

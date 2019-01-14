@@ -20,8 +20,8 @@
 #include <dbsksp/dbsksp_xshock_fragment.h>
 
 #include <vnl/vnl_cost_function.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 
 //==============================================================================
@@ -38,8 +38,8 @@ public:
     const dbsksp_xshock_directed_tree_sptr& tree1,      // original tree1
     const dbsksp_xshock_directed_tree_sptr& tree2,      // original tree2
     const dbsksp_xshock_directed_tree_sptr& model_tree, // model tree, to be optimized
-    const vcl_vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
-    const vcl_vector<pathtable_key >& correspondence2,  // correspondence between tree2 and model tree
+    const std::vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
+    const std::vector<pathtable_key >& correspondence2,  // correspondence between tree2 and model tree
     float scurve_matching_R,                            // parameter R in shock matching
     dbsksp_xgraph_model_using_L_alpha_phi_radius* const xgraph_model // a model to modify the xgraph inside model_tree
     );
@@ -76,7 +76,7 @@ protected:
   dbsksp_xshock_directed_tree_sptr model_tree_; // model tree, to be optimized
 
   //: Correspondence between parent tree and the model tree
-  vcl_vector<pathtable_key > dart_corr_parent_to_model_[2]; // correspondence between tree1 and model tree
+  std::vector<pathtable_key > dart_corr_parent_to_model_[2]; // correspondence between tree1 and model tree
 
   //: Parameter R in shock matching
   float scurve_matching_R_;
@@ -85,7 +85,7 @@ protected:
   dbsksp_xgraph_model_using_L_alpha_phi_radius* xgraph_model_; // a model to modify the xgraph inside model_tree
 
   //: List of properties the model should obey
-  vcl_map<unsigned, xfrag_properties> map_model_xfrag_properties_; 
+  std::map<unsigned, xfrag_properties> map_model_xfrag_properties_; 
 };
 
 #endif // shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs_cost_function.h

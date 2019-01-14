@@ -3,7 +3,7 @@
 
 #include <extrautils/common.h>
 #include <extrautils/arc.h>
-//#include <vcl_algorithm.h>
+//#include <algorithm>
 
 //##########################################################
 // IMPORTANT SYSTEM NUMERICAL PARAMETERS
@@ -231,7 +231,7 @@ bool _validStartEnd0To2PiEPIncld (VECTOR_TYPE v, VECTOR_TYPE start, VECTOR_TYPE 
 //#define isL(a,b)      ((a)+2*G_EPSILON<(b)?1:0)
 //#define isGEq(a,b)    ((a)+2*G_EPSILON<(b)?0:1)
 //#define isLEq(a,b)    ((a)>(b)+2*G_EPSILON?0:1)
-//#define isEq(a,b)     (vcl_fabs((a)-(b))<G_EPSILON?1:0)
+//#define isEq(a,b)     (std::fabs((a)-(b))<G_EPSILON?1:0)
 
 ////////////////////////////////////////////////
 // Common struct definition...
@@ -316,8 +316,8 @@ inline double VectorLenSq (Vector& v)
 //try if can pass a unit vector (x,y)
 inline Point rotateCCW (Point pt, double angle)
 {
-   double rptx = ((double)pt.x)*vcl_cos(angle) - ((double)pt.y)*vcl_sin(angle);
-   double rpty = ((double)pt.x)*vcl_sin(angle) + ((double)pt.y)*vcl_cos(angle);
+   double rptx = ((double)pt.x)*std::cos(angle) - ((double)pt.y)*std::sin(angle);
+   double rpty = ((double)pt.x)*std::sin(angle) + ((double)pt.y)*std::cos(angle);
 
    return Point ((float)rptx, (float)rpty);
 }
@@ -326,8 +326,8 @@ inline Point rotateCCW (double x, double y, double angle)
 {
    Point rpt;
 
-   rpt.x = (float) (x*vcl_cos(angle) - y*vcl_sin(angle));
-   rpt.y = (float) (x*vcl_sin(angle) + y*vcl_cos(angle));
+   rpt.x = (float) (x*std::cos(angle) - y*std::sin(angle));
+   rpt.y = (float) (x*std::sin(angle) + y*std::cos(angle));
 
    return rpt;
 }
@@ -348,7 +348,7 @@ inline double _distSqPointPoint (Point p1, Point p2)
 //DON"T NEED THIS CONVERSION.
 inline VECTOR_TYPE _vPointPoint (Point startpoint, Point endpoint)
 {
-    return angle02Pi (vcl_atan2 ( (double)endpoint.y - (double)startpoint.y,
+    return angle02Pi (std::atan2 ( (double)endpoint.y - (double)startpoint.y,
                      (double)endpoint.x - (double)startpoint.x) );
 }
 
@@ -382,12 +382,12 @@ inline Point _vectorPoint (Point pt, VECTOR_TYPE vector, DIST_TYPE length)
     dpt.x = f*length+pt.x;
     dpt.y = g*length+pt.y;
   #else //Else, just do the job in normal way.
-    dpt.x = pt.x + length*vcl_cos(vector);
-    dpt.y = pt.y + length*vcl_sin(vector);
+    dpt.x = pt.x + length*std::cos(vector);
+    dpt.y = pt.y + length*std::sin(vector);
   #endif
 #else
-   dpt.x = pt.x + length*vcl_cos(vector);
-   dpt.y = pt.y + length*vcl_sin(vector);
+   dpt.x = pt.x + length*std::cos(vector);
+   dpt.y = pt.y + length*std::sin(vector);
 #endif
 
   return dpt;
@@ -487,7 +487,7 @@ inline DIST_TYPE _distPointLine (Point pt, Point lstart, Point lend)
   double dxt = (double)pt.x   - (double)lstart.x;
   double dyt = (double)pt.y   - (double)lstart.y;
 
-  return vcl_fabs(dyt*dx - dxt*dy)/ vcl_sqrt(dx*dx + dy*dy);
+  return std::fabs(dyt*dx - dxt*dy)/ std::sqrt(dx*dx + dy*dy);
 }
 
 inline DIST_TYPE _distSqPointLine (Point pt, Point lstart, Point lend)

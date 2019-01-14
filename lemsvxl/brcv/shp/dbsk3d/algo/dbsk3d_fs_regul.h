@@ -5,10 +5,10 @@
 #ifndef dbsk3d_fs_regul_h_
 #define dbsk3d_fs_regul_h_
 
-#include <vcl_queue.h>
-#include <vcl_list.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <queue>
+#include <list>
+#include <algorithm>
+#include <utility>
 
 #include <dbsk3d/dbsk3d_fs_face.h>
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -22,7 +22,7 @@ protected:
   dbsk3d_fs_sheet_set* fs_ss_;
 
   //: Priority queue of rank ordered shock sheets.
-  vcl_multimap<float, dbsk3d_fs_sheet*>  fs_sheet_queue_;
+  std::multimap<float, dbsk3d_fs_sheet*>  fs_sheet_queue_;
 
 public:
   //###### Constructor & Destructor ######
@@ -44,14 +44,14 @@ public:
   void _add_FS_to_Q (const dbsk3d_fs_sheet* S) {
     assert (S->cost() >= 0);
     assert (S->type() == FS_TYPE_TAB || S->type() == FS_TYPE_UNBOUNDED);
-    fs_sheet_queue_.insert (vcl_pair<float, dbsk3d_fs_sheet*> (S->cost(), (dbsk3d_fs_sheet*) S));
+    fs_sheet_queue_.insert (std::pair<float, dbsk3d_fs_sheet*> (S->cost(), (dbsk3d_fs_sheet*) S));
   }
   
   bool _remove_S_from_Q (const dbsk3d_fs_sheet* S) {
     float key = S->cost();  
-    vcl_multimap<float, dbsk3d_fs_sheet*>::iterator lower = fs_sheet_queue_.lower_bound(key);
-    vcl_multimap<float, dbsk3d_fs_sheet*>::iterator upper = fs_sheet_queue_.upper_bound(key);
-    vcl_multimap<float, dbsk3d_fs_sheet*>::iterator it = lower;
+    std::multimap<float, dbsk3d_fs_sheet*>::iterator lower = fs_sheet_queue_.lower_bound(key);
+    std::multimap<float, dbsk3d_fs_sheet*>::iterator upper = fs_sheet_queue_.upper_bound(key);
+    std::multimap<float, dbsk3d_fs_sheet*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == S) {
         fs_sheet_queue_.erase (it);
@@ -73,8 +73,8 @@ public:
 
   //: 3D Splice Transform on a fs_sheet.
   void S_3d_splice_xform (dbsk3d_fs_sheet* S, 
-                          vcl_list<vcl_pair<int, int> >& S_to_splice,
-                          vcl_vector<dbsk3d_fs_edge*>& C_Lset,
+                          std::list<std::pair<int, int> >& S_to_splice,
+                          std::vector<dbsk3d_fs_edge*>& C_Lset,
                           const float reg_th);
 };
 

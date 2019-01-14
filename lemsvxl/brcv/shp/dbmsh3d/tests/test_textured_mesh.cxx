@@ -4,10 +4,10 @@
 //  all D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbmsh3d\tests\data
 
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cassert>
 #include <vnl/vnl_math.h>
 
 #include <testlib/testlib_test.h>

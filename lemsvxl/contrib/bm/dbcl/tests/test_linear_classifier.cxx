@@ -67,7 +67,7 @@ static void test_linear_classifier()
         
         test_feature_map[i] = test_feature_sptr;
 
-        //vcl_cout << "temporal_feature_sptr[i] = " << temporal_feature_sptr->feature_vector(0) << '\t' << temporal_feature_sptr->feature_vector(1) << '\n';
+        //std::cout << "temporal_feature_sptr[i] = " << temporal_feature_sptr->feature_vector(0) << '\t' << temporal_feature_sptr->feature_vector(1) << '\n';
     }
 
     dbcl_classifier::feature_map_type::iterator fm_itr;
@@ -96,12 +96,12 @@ static void test_linear_classifier()
     TEST_NEAR("w(1,1)",w(1,1),-0.085623445128345,0.00001);
     TEST_NEAR("w(2,1)",w(2,1),-3.620264954550673e-04,0.00001);
         
-    //vcl_cout << "w = " << '\n' << w << '\n';
+    //std::cout << "w = " << '\n' << w << '\n';
 
-    //vcl_cout << "linear_classifier_sptr = " << linear_classifier_sptr.as_pointer() <<'\n';
-    //vcl_cout << "W = " << '\n' << linear_classifier_sptr->W() << '\n';
-    //vcl_cout << "X = " << '\n' << linear_classifier_sptr->X() << '\n';
-    //vcl_cout << "T = " << '\n' << linear_classifier_sptr->T() << '\n';
+    //std::cout << "linear_classifier_sptr = " << linear_classifier_sptr.as_pointer() <<'\n';
+    //std::cout << "W = " << '\n' << linear_classifier_sptr->W() << '\n';
+    //std::cout << "X = " << '\n' << linear_classifier_sptr->X() << '\n';
+    //std::cout << "T = " << '\n' << linear_classifier_sptr->T() << '\n';
 
     dbcl_classifier::feature_map_type test_data = classifier_sptr->test_data();
 
@@ -111,25 +111,25 @@ static void test_linear_classifier()
     unsigned cnt;
     for( cnt = 1, test_data_itr = test_data.begin(); test_data_itr != test_data_end; ++test_data_itr, ++cnt )
     {
-        //vcl_cout << "test point " << test_data_itr->first << " = " << test_data_itr->second->label() << vcl_endl;
-        vcl_stringstream stream;
+        //std::cout << "test point " << test_data_itr->first << " = " << test_data_itr->second->label() << std::endl;
+        std::stringstream stream;
         stream << test_data_itr->first;
-        vcl_string test_string = "test label: " + stream.str();
+        std::string test_string = "test label: " + stream.str();
         if( cnt < 6 )
             TEST_NEAR(test_string.c_str(),test_data_itr->second->label(),0,0.00001);
         else
             TEST_NEAR(test_string.c_str(), test_data_itr->second->label(),1,0.00001);
     }
 
-    vcl_string filename = "linear_classifier_view.wrl";
-    vcl_ofstream of(filename.c_str(),vcl_ios::out);
+    std::string filename = "linear_classifier_view.wrl";
+    std::ofstream of(filename.c_str(),std::ios::out);
     dbcl_linear_classifier_vrml_view::vrml_view(of,classifier_sptr);
 
 
     //test 3 classes
-    vcl_vector<vgl_point_2d<double> > class0;
-    vcl_vector<vgl_point_2d<double> > class1;
-    vcl_vector<vgl_point_2d<double> > class2;
+    std::vector<vgl_point_2d<double> > class0;
+    std::vector<vgl_point_2d<double> > class1;
+    std::vector<vgl_point_2d<double> > class2;
 
     
     class0.push_back(vgl_point_2d<double>(5.53766713954610,	6.83388501459509));
@@ -251,8 +251,8 @@ static void test_linear_classifier()
     TEST_NEAR("w2(2,1) = ", w2(2,1), w_ground_truth(2,1), tol);
     TEST_NEAR("w2(2,2) = ", w2(2,2), w_ground_truth(2,2), tol);
 
-    vcl_string filename2 = "linear_classifier_3_classes_view.wrl";
-    vcl_ofstream of2(filename2.c_str(),vcl_ios::out);
+    std::string filename2 = "linear_classifier_3_classes_view.wrl";
+    std::ofstream of2(filename2.c_str(),std::ios::out);
     dbcl_linear_classifier_vrml_view::vrml_view(of2,classifier_sptr2);
 
 }//end static void test_linear_classifier

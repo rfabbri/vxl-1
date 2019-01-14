@@ -20,9 +20,9 @@ class dvrml_indexed_lineset: public dvrml_shape
 public:
     dvrml_indexed_lineset(){}
 
-    typedef vcl_vector<vgl_point_3d<double> > point_list_type;
-    typedef vcl_vector<vcl_vector<unsigned> > connection_list_type;
-    typedef vcl_vector<dvrml_appearance_sptr> appearance_list_type;
+    typedef std::vector<vgl_point_3d<double> > point_list_type;
+    typedef std::vector<std::vector<unsigned> > connection_list_type;
+    typedef std::vector<dvrml_appearance_sptr> appearance_list_type;
 
     dvrml_indexed_lineset( point_list_type point_list,
                            connection_list_type connection_list,
@@ -34,13 +34,13 @@ public:
 
     ~dvrml_indexed_lineset(){}
 
-    vcl_vector<vgl_point_3d<double> >lineset_point_list;
-    vcl_vector<vcl_vector<unsigned> >lineset_connection_list;
-    vcl_vector<dvrml_appearance_sptr> lineset_appearance_list;
+    std::vector<vgl_point_3d<double> >lineset_point_list;
+    std::vector<std::vector<unsigned> >lineset_connection_list;
+    std::vector<dvrml_appearance_sptr> lineset_appearance_list;
   
-    virtual void draw( vcl_ostream& os );
+    virtual void draw( std::ostream& os );
 
-    virtual vcl_string shape(){ return "indexed lineset";}
+    virtual std::string shape(){ return "indexed lineset";}
 };
 
 #endif //dvrml_indexed_lineset_h_

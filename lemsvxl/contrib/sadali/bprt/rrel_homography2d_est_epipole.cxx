@@ -6,12 +6,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_svd.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <cmath>
 
-rrel_homography2d_est_epipole :: rrel_homography2d_est_epipole( const vcl_vector< vgl_homg_point_2d<double> > & from_pts,
-                                                const vcl_vector< vgl_homg_point_2d<double> > & to_pts, 
+rrel_homography2d_est_epipole :: rrel_homography2d_est_epipole( const std::vector< vgl_homg_point_2d<double> > & from_pts,
+                                                const std::vector< vgl_homg_point_2d<double> > & to_pts, 
                                                 vgl_homg_point_2d<double> from_epi, vgl_homg_point_2d<double> to_epi)
   : rrel_homography2d_est( from_pts, to_pts, 6)
 {
@@ -29,8 +29,8 @@ rrel_homography2d_est_epipole :: rrel_homography2d_est_epipole( const vcl_vector
   
 }
 
-rrel_homography2d_est_epipole :: rrel_homography2d_est_epipole( const vcl_vector< vnl_vector<double> > & from_pts,
-                                                const vcl_vector< vnl_vector<double> > & to_pts ,
+rrel_homography2d_est_epipole :: rrel_homography2d_est_epipole( const std::vector< vnl_vector<double> > & from_pts,
+                                                const std::vector< vnl_vector<double> > & to_pts ,
                                                 vnl_vector<double> from_epi, vnl_vector<double> to_epi)
                                                  
   : rrel_homography2d_est( from_pts, to_pts, 6)
@@ -48,7 +48,7 @@ rrel_homography2d_est_epipole::~rrel_homography2d_est_epipole()
 
 
 bool
-rrel_homography2d_est_epipole :: fit_from_minimal_set( const vcl_vector<int>& point_indices,
+rrel_homography2d_est_epipole :: fit_from_minimal_set( const std::vector<int>& point_indices,
                                                vnl_vector<double>& params ) const
 {
   vnl_matrix< double > A(9, 9, 0.0);

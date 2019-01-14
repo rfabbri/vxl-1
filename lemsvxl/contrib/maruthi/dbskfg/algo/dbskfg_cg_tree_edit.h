@@ -135,15 +135,15 @@ public:
   // UTILITIES------------------------------------------------------------------
 
   //: return the corresponding shock curves and their maps
-  virtual bool get_correspondence_just_map_helper(vcl_vector<vcl_vector <vcl_pair<int,int> > >& map_list,
-                                   vcl_vector< pathtable_key >& path_map); 
+  virtual bool get_correspondence_just_map_helper(std::vector<std::vector <std::pair<int,int> > >& map_list,
+                                   std::vector< pathtable_key >& path_map); 
 
 
   //: return the corresponding shock curves and their maps
-  virtual bool get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                          vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                          vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                          vcl_vector< pathtable_key >& path_map); 
+  virtual bool get_correspondence(std::vector<dbskr_scurve_sptr>& curve_list1, 
+                          std::vector<dbskr_scurve_sptr>& curve_list2, 
+                          std::vector< std::vector < std::pair <int,int> > >& map_list,
+                          std::vector< pathtable_key >& path_map); 
 
   //: Return correspondence between two trees
   virtual dbskr_sm_cor_sptr get_correspondence(bool save_pathtable = false);
@@ -154,21 +154,21 @@ public:
 
 
   //: read path table
-  bool read_data(vcl_string treefile1, vcl_string treefile2, 
-    vcl_string pathtable_file, bool elastic_splice_cost);
+  bool read_data(std::string treefile1, std::string treefile2, 
+    std::string pathtable_file, bool elastic_splice_cost);
 
 
   //: write shgm output file
-  bool write_shgm(vcl_string shgm_filename);
+  bool write_shgm(std::string shgm_filename);
 
   //: compare path 
-  bool compare_path(vcl_string shgm_filename, double precision);
+  bool compare_path(std::string shgm_filename, double precision);
 
   //: compare costs 
-  bool compare_cost(vcl_string shgm_filename);
+  bool compare_cost(std::string shgm_filename);
 
   //: create and write table file in advance (for debugging purposes!!)
-  bool populate_table(vcl_string fname);
+  bool populate_table(std::string fname);
 
 protected:
 

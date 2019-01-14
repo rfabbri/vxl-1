@@ -48,7 +48,7 @@ dbmrf_curvel_3d_inspect_tool::handle( const vgui_event & e,
       
     vgui_style_sptr line_style = vgui_style::new_style(1.0, 0.0, 0.0, 3.0, 1.0);
     line_style->apply_all();
-    vcl_vector<float> pos_x, pos_y;
+    std::vector<float> pos_x, pos_y;
     for ( bmrf_curve_3d::iterator itr = curr_curve_->begin();
           itr != curr_curve_->end();  ++itr )
     {
@@ -95,7 +95,7 @@ dbmrf_curvel_3d_inspect_tool::handle( const vgui_event & e,
         SoCurvel3D * curve_view = (SoCurvel3D*) node;
         curve_view->set_highlight(true);
         curr_curve_ = curve_view->curve();
-        vcl_cout << "Curve size: " << curr_curve_->size() << vcl_endl;
+        std::cout << "Curve size: " << curr_curve_->size() << std::endl;
         view->post_overlay_redraw();
         return true;
       }

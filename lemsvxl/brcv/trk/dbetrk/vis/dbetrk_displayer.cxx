@@ -6,13 +6,13 @@
 #include <dbetrk/pro/dbetrk_storage.h>
 #include <vgui/vgui_easy2D_tableau.h>
 #include <bgui/bgui_image_tableau.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <dbctrk/dbctrk_algs.h>
 #include <bvis1/bvis1_manager.h>
 #include <dbctrk/dbctrk_utils.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui_style_sptr.h>
 #include <vgui/vgui_style.h>
 #include <dbetrk/vis/dbetrk_soview2D.h>
@@ -28,11 +28,11 @@ dbvis1_edgetrk_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbetrk_storage_sptr edgetrk_storage;
   edgetrk_storage.vertical_cast(storage);
 
-  vcl_vector< dbetrk_edge_sptr > edge_nodes;
+  std::vector< dbetrk_edge_sptr > edge_nodes;
   edgetrk_storage->get_dbetrk_edges(edge_nodes);
   bgui_vsol2D_tableau_sptr btab= bgui_vsol2D_tableau_new();
 
-  vcl_vector<dbetrk_edge_sptr >::iterator itr;
+  std::vector<dbetrk_edge_sptr >::iterator itr;
   int cnt=0;
   for(itr=edge_nodes.begin();itr!=edge_nodes.end();itr++,cnt++)
     {

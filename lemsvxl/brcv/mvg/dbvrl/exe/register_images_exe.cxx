@@ -1,12 +1,12 @@
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include<vcl_cstdio.h>
+#include <string>
+#include <vector>
+#include<cstdio>
 #include <vbl/vbl_bounding_box.h>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
 #include <vul/vul_sequence_filename_map.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -24,9 +24,9 @@
 #include <vbl/vbl_bounding_box.h>
 #include <brip/brip_vil_float_ops.h>
 
-static void filenames_from_directory(vcl_string const& dirname,
-                                     vcl_vector<vcl_string>& filenames)
-{  vcl_string s(dirname);
+static void filenames_from_directory(std::string const& dirname,
+                                     std::vector<std::string>& filenames)
+{  std::string s(dirname);
   s += "/*.*";
   for (vul_file_iterator fit = s;fit; ++fit) {
     // check to see if file is a directory.
@@ -35,15 +35,15 @@ static void filenames_from_directory(vcl_string const& dirname,
     filenames.push_back(fit());
   }
 }
-static bool read_homographies(vcl_string const& filename, vcl_vector<vnl_matrix<double> >& homographies)
+static bool read_homographies(std::string const& filename, std::vector<vnl_matrix<double> >& homographies)
 {
-    vcl_ifstream ifile(filename.c_str(),vcl_ios::in);
-    vcl_cout<<"\n Reading Homographies "<<filename;
+    std::ifstream ifile(filename.c_str(),std::ios::in);
+    std::cout<<"\n Reading Homographies "<<filename;
 
     if(!ifile)
     {
-        vcl_cout<<"\n error opening file";
-        vcl_cout.flush();
+        std::cout<<"\n error opening file";
+        std::cout.flush();
         return false;
 
     }
@@ -52,17 +52,17 @@ static bool read_homographies(vcl_string const& filename, vcl_vector<vnl_matrix<
     {
         vnl_matrix<double> p(3,3);
         ifile>>p;
-        vcl_cout<<p;
+        std::cout<<p;
         homographies.push_back(p);
         ifile.getline(buffer,100);
     }
-    vcl_cout.flush();
+    std::cout.flush();
     return true;
 }
 
-static bool register_images(vcl_string const& homography_file,
-                     vcl_string const& image_indir,
-                     vcl_string const& image_outdir){
+static bool register_images(std::string const& homography_file,
+                     std::string const& image_indir,
+                     std::string const& image_outdir){
   int bimg_ni;
   int bimg_nj;
 
@@ -70,15 +70,15 @@ static bool register_images(vcl_string const& homography_file,
   int offset_j;
 
   vbl_bounding_box<double,2> box;
-  vcl_vector<vnl_matrix<double> > homographies;
+  std::vector<vnl_matrix<double> > homographies;
   read_homographies(homography_file, homographies);
   unsigned nframes = homographies.size();
   if(!nframes)
     {
-      vcl_cout << "no transforms to use in registration\n";
+      std::cout << "no transforms to use in registration\n";
       return false;
     }
-  vcl_vector<vcl_string> in_filenames;
+  std::vector<std::string> in_filenames;
   filenames_from_directory(image_indir, in_filenames);
   unsigned n_infiles = in_filenames.size();
   unsigned infile_counter = 0;
@@ -96,7 +96,7 @@ static bool register_images(vcl_string const& homography_file,
       unsigned ni =  imgr->ni(), nj =  imgr->nj(); 
       infile_counter = 0;//return to first frame
 
-  vcl_vector<vimt_transform_2d > xforms;  
+  std::vector<vimt_transform_2d > xforms;  
   for(unsigned i=0;i<nframes;i++)
     {
       vimt_transform_2d p;
@@ -108,13 +108,13 @@ static bool register_images(vcl_string const& homography_file,
       box.update(p(ni,nj).x(),p(ni,nj).y());
     }
   
-  bimg_ni=(int)vcl_ceil(box.max()[0]-box.min()[0]);
-  bimg_nj=(int)vcl_ceil(box.max()[1]-box.min()[1]);
+  bimg_ni=(int)std::ceil(box.max()[0]-box.min()[0]);
+  bimg_nj=(int)std::ceil(box.max()[1]-box.min()[1]);
 
-  offset_i=(int)vcl_ceil(0-box.min()[0]);
-  offset_j=(int)vcl_ceil(0-box.min()[1]);
+  offset_i=(int)std::ceil(0-box.min()[0]);
+  offset_j=(int)std::ceil(0-box.min()[1]);
 
-  vcl_string outfile = image_outdir + "/reg";
+  std::string outfile = image_outdir + "/reg";
 
   for(unsigned frame = 0;frame<nframes; ++frame)
     {
@@ -126,7 +126,7 @@ static bool register_images(vcl_string const& homography_file,
           no_valid_image = !imgr||imgr->ni()==0||imgr->nj()==0;
           if(infile_counter>=n_infiles)
             {
-              vcl_cout << "Number of homographies and input images do not match\n";
+              std::cout << "Number of homographies and input images do not match\n";
               return false;
             }
         }
@@ -145,7 +145,7 @@ static bool register_images(vcl_string const& homography_file,
 
         vil_image_resource_sptr outresc = 
           vil_new_image_resource_of_view(brip_vil_float_ops::convert_to_byte(sample_im.image()));
-        vcl_string outname = vul_sprintf("%s%05d.%s", outfile.c_str(),
+        std::string outname = vul_sprintf("%s%05d.%s", outfile.c_str(),
                                              frame,
                                              "tif");
         vil_save(brip_vil_float_ops::convert_to_byte(outresc), 
@@ -157,17 +157,17 @@ int main(int argc,char * argv[])
 {
     if(argc!=4)
     {
-        vcl_cout<<"Usage : register_images.exe homography_file image_in_dir image_out_dir\n";
+        std::cout<<"Usage : register_images.exe homography_file image_in_dir image_out_dir\n";
         return -1;
     }
     else
     {
-        vcl_string homography_name(argv[1]);
-        vcl_string image_indir(argv[2]);
-        vcl_string image_outdir(argv[3]);
+        std::string homography_name(argv[1]);
+        std::string image_indir(argv[2]);
+        std::string image_outdir(argv[3]);
         if(!register_images(homography_name, image_indir, image_outdir))
           {  
-            vcl_cout << "Registration failed \n";
+            std::cout << "Registration failed \n";
             return -1;
           }
         return 0;

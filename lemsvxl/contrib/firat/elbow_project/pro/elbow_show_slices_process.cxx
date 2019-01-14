@@ -20,14 +20,14 @@ elbow_show_slices_process::
 elbow_show_slices_process()
 {
 	num_frames_ = 0;
-	vcl_vector<vcl_string> choices;
+	std::vector<std::string> choices;
 	choices.push_back("X-Y Slices");
 	choices.push_back("X-Z Slices");
 	choices.push_back("Y-Z Slices");
 	if( !parameters()->add( "2D Slice Type" , "-slicetype",
 			choices, 0 ))
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -48,27 +48,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string elbow_show_slices_process::
+std::string elbow_show_slices_process::
 name()
 { 
 	return "Show 2D slices";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > elbow_show_slices_process::
+std::vector< std::string > elbow_show_slices_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_dataset");
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > elbow_show_slices_process::
+std::vector< std::string > elbow_show_slices_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("image");
 	return to_return;
 }
@@ -103,7 +103,7 @@ execute()
 	num_frames_ = image.nk();
 	this->clear_input();
 	this->clear_output();
-	vcl_cout << "Num frames = " << num_frames_ << vcl_endl;
+	std::cout << "Num frames = " << num_frames_ << std::endl;
 
 	for(int i = 0; i < num_frames_; i++)
 	{

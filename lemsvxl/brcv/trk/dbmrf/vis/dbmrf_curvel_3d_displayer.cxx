@@ -4,8 +4,8 @@
 #include <dbmrf/pro/dbmrf_curvel_3d_storage.h>
 #include <vgui/vgui_deck_tableau.h>
 
-#include <vcl_set.h>
-#include <vcl_list.h>
+#include <set>
+#include <list>
 #include <bmrf/bmrf_curvel_3d.h>
 #include <bmrf/bmrf_curve_3d.h>
 
@@ -24,7 +24,7 @@
 static SoSeparator* make_scene(const dbmrf_curvel_3d_storage_sptr& storage)
 {
   // Extract the curves
-  vcl_set<bmrf_curve_3d_sptr> curves;
+  std::set<bmrf_curve_3d_sptr> curves;
   storage->get_curvel_3d(curves);
   
   if(curves.empty())
@@ -34,7 +34,7 @@ static SoSeparator* make_scene(const dbmrf_curvel_3d_storage_sptr& storage)
 
   SoSeparator* group = new SoSeparator;
   scene_root->addChild(group);
-  for ( vcl_set<bmrf_curve_3d_sptr>::const_iterator c_itr = curves.begin();
+  for ( std::set<bmrf_curve_3d_sptr>::const_iterator c_itr = curves.begin();
         c_itr != curves.end();  ++c_itr ) {
     SoCoordinate3* line_coords = new SoCoordinate3;
     SoMaterialBinding* material_bind = new SoMaterialBinding;
@@ -133,7 +133,7 @@ dbmrf_curvel_3d_displayer::make_tableau( bpro1_storage_sptr storage) const
   static SoSeparator* scene_root = NULL;
   
   // Extract the curves
-  vcl_set<bmrf_curve_3d_sptr> curves;
+  std::set<bmrf_curve_3d_sptr> curves;
   curvel_3d_storage->get_curvel_3d(curves);
 
   // Make the scene if not already made

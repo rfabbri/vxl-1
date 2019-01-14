@@ -16,7 +16,7 @@
 
 #include <vgl/vgl_point_2d.h>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include "dbsk2d_geometry_utils.h"
 
@@ -72,7 +72,7 @@ public:
   {
     double phi;
     if (speed != 0 && speed < 99990) //100000 signals infinity
-        phi = vcl_acos(-1/speed);
+        phi = std::acos(-1/speed);
       else
         phi = vnl_math::pi/2;
 

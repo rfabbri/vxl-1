@@ -11,7 +11,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vul/vul_file.h>
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -33,15 +33,15 @@ bool bseg3d_save_float_grid_process_cons(bprb_func_process& pro)
   // 2. nx //size of grid
   // 3. ny
   // 4. nz
-  vcl_vector<vcl_string> input_types_(5);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
+  std::vector<std::string> input_types_(5);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "unsigned";
   input_types_[4] = "unsigned";
 
   // No outputs
-  vcl_vector<vcl_string> output_types_(0);
+  std::vector<std::string> output_types_(0);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -59,14 +59,14 @@ bool bseg3d_save_float_grid_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != 5)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << 5 << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << 5 << std::endl;
     return false;
   }
 
 
-  vcl_string grid_path = pro.get_input<vcl_string>(0);
+  std::string grid_path = pro.get_input<std::string>(0);
  
-  vcl_string volume_path = pro.get_input<vcl_string>(1);
+  std::string volume_path = pro.get_input<std::string>(1);
 
   unsigned nx = pro.get_input<unsigned>(2);
   unsigned ny = pro.get_input<unsigned>(3);

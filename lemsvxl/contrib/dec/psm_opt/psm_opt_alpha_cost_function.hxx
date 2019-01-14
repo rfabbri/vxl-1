@@ -1,8 +1,8 @@
  #ifndef psm_opt_alpha_cost_function_txx_
 #define psm_opt_alpha_cost_function_txx_
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -17,7 +17,7 @@
 
 
 template<psm_apm_type APM>
-psm_opt_alpha_cost_function<APM>::psm_opt_alpha_cost_function(psm_sample<APM> &cell, vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data, float obs_range)
+psm_opt_alpha_cost_function<APM>::psm_opt_alpha_cost_function(psm_sample<APM> &cell, std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data, float obs_range)
 : vnl_least_squares_function(1, data.size(), use_gradient), cell_(cell), data_(data), obs_range_(obs_range),
 damp_(0.4), alpha_deflate_(0.00001) {}
 
@@ -29,20 +29,20 @@ void psm_opt_alpha_cost_function<APM>::f(vnl_vector<double> const& x, vnl_vector
     alpha = 0.0;
   }
 
-  typename vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
+  typename std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
   vnl_vector<double>::iterator fx_it = fx.begin();
 
   for (; data_it != data_.end(); ++data_it, ++fx_it) {
     *fx_it = 0.0;
     float PI = psm_apm_traits<APM>::apm_processor::prob_range(cell_.appearance, data_it->obs_ - obs_range_,  data_it->obs_ + obs_range_);
-    double pass_prob = vcl_exp(-alpha * data_it->seg_len_);
-    double pass_prob_diff = pass_prob - vcl_exp(-cell_.alpha * data_it->seg_len_);
+    double pass_prob = std::exp(-alpha * data_it->seg_len_);
+    double pass_prob_diff = pass_prob - std::exp(-cell_.alpha * data_it->seg_len_);
 
 
 
     *fx_it = 1.0 - data_it->pre_ - PI*data_it->vis_ + pass_prob*data_it->vis_*(PI - data_it->post_);
     if (*fx_it < -1e-6) {
-      vcl_cerr << vcl_endl << "ERROR: residual value " << *fx_it << "is less than 0" << vcl_endl;
+      std::cerr << std::endl << "ERROR: residual value " << *fx_it << "is less than 0" << std::endl;
     }
     *fx_it += alpha_deflate_*alpha*data_it->seg_len_ + damp_*pass_prob_diff*pass_prob_diff;
 
@@ -50,11 +50,11 @@ void psm_opt_alpha_cost_function<APM>::f(vnl_vector<double> const& x, vnl_vector
       // penalize alpha values < 0
       *fx_it += x[0]*x[0];
     }
-    //vcl_cout << "fx = " << *fx_it;
+    //std::cout << "fx = " << *fx_it;
     //*fx_it *= (data_it->seg_len_*0.1);
-    //vcl_cout << "  fx scaled = " << *fx_it << vcl_endl;
+    //std::cout << "  fx scaled = " << *fx_it << std::endl;
   }
-  //vcl_cout << "f(" << x[0] << ") = " << fx << vcl_endl;
+  //std::cout << "f(" << x[0] << ") = " << fx << std::endl;
 }
 
 
@@ -66,7 +66,7 @@ void psm_opt_alpha_cost_function<APM>::gradf(vnl_vector<double> const&x, vnl_mat
   if (alpha < 0.0) {
     alpha = 0.0;
   }
-  typename vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
+  typename std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
 
   for (unsigned int i=0; i < get_number_of_residuals(); ++i, ++data_it) {
     // force alpha to be non-negative
@@ -76,15 +76,15 @@ void psm_opt_alpha_cost_function<APM>::gradf(vnl_vector<double> const&x, vnl_mat
     else {
       float PI = psm_apm_traits<APM>::apm_processor::prob_range(cell_.appearance, data_it->obs_ - obs_range_, data_it->obs_ + obs_range_);
 
-      double pass_prob = vcl_exp(-alpha * data_it->seg_len_);
-      double pass_prob_diff = pass_prob - vcl_exp(-cell_.alpha * data_it->seg_len_);
+      double pass_prob = std::exp(-alpha * data_it->seg_len_);
+      double pass_prob_diff = pass_prob - std::exp(-cell_.alpha * data_it->seg_len_);
 
       // partial wrt alpha
       double partial = -data_it->vis_*(PI - data_it->post_)*data_it->seg_len_*pass_prob + alpha_deflate_*data_it->seg_len_ - 2.0*damp_*pass_prob_diff*data_it->seg_len_*pass_prob;
       J[i][0] = partial;
     }
   }
-  //vcl_cout << "J(" << x[0] << ")= " << J << vcl_endl;
+  //std::cout << "J(" << x[0] << ")= " << J << std::endl;
   return;
 }
 

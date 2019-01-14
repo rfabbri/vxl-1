@@ -10,8 +10,8 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -40,7 +40,7 @@ dbdet_contour_tracer_process::dbdet_contour_tracer_process()
       !parameters()->add( "perform_area_normalization" , "-perform_area_normalization" , false) ||
       !parameters()->add( "desired_area" , "-desired_area" , (double) 3448.0))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -60,7 +60,7 @@ dbdet_contour_tracer_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_contour_tracer_process::name()
 {
   return "Contour Tracer";
@@ -84,18 +84,18 @@ dbdet_contour_tracer_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_contour_tracer_process::get_input_type()
+std::vector< std::string > dbdet_contour_tracer_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_contour_tracer_process::get_output_type()
+std::vector< std::string > dbdet_contour_tracer_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -106,7 +106,7 @@ bool
 dbdet_contour_tracer_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_contour_tracer_process::execute() - not exactly one"
+    std::cout << "In dbdet_contour_tracer_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -183,7 +183,7 @@ dbdet_contour_tracer_process::execute()
   ctracer.trace(binary_img);
   
   //get the interesting contours
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
   
   for (unsigned i=0; i<ctracer.contours().size(); i++)
   {
@@ -203,7 +203,7 @@ dbdet_contour_tracer_process::execute()
       // If area normalization is desired on the contours, equalize all the contour areas to the provided value
       if(areaNorm)
       {
-          double normFactor = vcl_sqrt(desiredArea/newContour->area());
+          double normFactor = std::sqrt(desiredArea/newContour->area());
           vsol_point_2d_sptr cent = newContour->centroid();
           double centroid_x = cent->x();
           double centroid_y = cent->y();

@@ -6,17 +6,17 @@
 #include <testlib/testlib_test.h>
 #include <xmvg/xmvg_gaussian_filter_descriptor.h>
 #include <xmvg/xmvg_gaussian_filter_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 static void test_xmvg_gaussian_filter_descriptor()
 {
-  vcl_cout << "---test descriptor---" << vcl_endl;
+  std::cout << "---test descriptor---" << std::endl;
   // Filter at the centre and along the z-axis
-  vcl_cout << "Along z-axis" << vcl_endl;
+  std::cout << "Along z-axis" << std::endl;
   double sigma_r = 5;
   double length = 10;
   vgl_point_3d<double> centre(0.0, 0.0, 0.0);

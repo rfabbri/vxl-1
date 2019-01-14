@@ -27,7 +27,7 @@ dbdet_load_seg3d_info_xml_process() : bpro1_process()
   if( !parameters()->add( "xml file <filename...>" , "-xml_filename", 
     bpro1_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -50,7 +50,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbdet_load_seg3d_info_xml_process::
+std::string dbdet_load_seg3d_info_xml_process::
 name()
 {
   return "load volume seg. xml";
@@ -87,10 +87,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbdet_load_seg3d_info_xml_process::
+std::vector< std::string > dbdet_load_seg3d_info_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -100,9 +100,9 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbdet_load_seg3d_info_xml_process::get_output_type()
+std::vector< std::string > dbdet_load_seg3d_info_xml_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "vsol2D" );
@@ -120,29 +120,29 @@ execute()
   this->clear_output();
   bpro1_filepath xml_path;
   this->parameters()->get_value( "-xml_filename" , xml_path );    
-  vcl_string xml_filename = xml_path.path;
+  std::string xml_filename = xml_path.path;
 
   dbdet_seg3d_info_sptr seg3d = new dbdet_seg3d_info();
 
   
   x_read(xml_filename, seg3d);
 
-  vcl_vector<vidpro1_image_storage_sptr > image_storage_list;
-  vcl_vector<vidpro1_vsol2D_storage_sptr > vsol_storage_list;
+  std::vector<vidpro1_image_storage_sptr > image_storage_list;
+  std::vector<vidpro1_vsol2D_storage_sptr > vsol_storage_list;
 
   for (int i=0; i<seg3d->num_frames(); ++i)
   {
     dbdet_seg3d_info_frame frame = seg3d->frame(i);
 
     // 1) load image
-    vcl_string image_filename = seg3d->image_folder() + 
+    std::string image_filename = seg3d->image_folder() + 
       "/" + frame.image_file;
 
     vil_image_resource_sptr loaded_image = 
       vil_load_image_resource( image_filename.c_str() );
     if( !loaded_image ) 
     {
-      vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+      std::cerr << "Failed to load image file" << image_filename << std::endl;
       return false;
     }
 
@@ -154,12 +154,12 @@ execute()
     image_storage_list.push_back(image_storage);
 
     // 2) load the contours
-    vcl_vector<vsol_spatial_object_2d_sptr > contour_list;
+    std::vector<vsol_spatial_object_2d_sptr > contour_list;
     contour_list.reserve(frame.contour_file_list.size());
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
-      vcl_string contour_filename = seg3d->contour_folder() + 
+      std::string contour_filename = seg3d->contour_folder() + 
         "/" + frame.contour_file_list[k];
 
       // load the contour
@@ -168,7 +168,7 @@ execute()
 
       if (! contour)
       {
-        vcl_cerr << "Failed to load contour file" << contour_filename << vcl_endl;
+        std::cerr << "Failed to load contour file" << contour_filename << std::endl;
         return false;
       }
       contour_list.push_back(contour);
@@ -185,7 +185,7 @@ execute()
   // Now everything has been loaded sucessfully, save them to output data
   for (int i=seg3d->num_frames()-1; i>=0; --i)
   {
-    vcl_vector<bpro1_storage_sptr > frame_storage;
+    std::vector<bpro1_storage_sptr > frame_storage;
     frame_storage.push_back(vsol_storage_list[i]);
     frame_storage.push_back(image_storage_list[i]);
     output_data_.push_back(frame_storage);

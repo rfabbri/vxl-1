@@ -57,7 +57,7 @@ void gdt_draw_iso_contours (SoSeparator* group, dbmsh3d_mesh* gdt_mesh,
                             int n_query_contours, float total_length,
                             float step_dist, float lineWidth)
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = gdt_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = gdt_mesh->facemap().begin();
   for (; it != gdt_mesh->facemap().end(); it++) {
     dbmsh3d_face* cur_face = (*it).second;
 
@@ -68,7 +68,7 @@ void gdt_draw_iso_contours (SoSeparator* group, dbmsh3d_mesh* gdt_mesh,
       dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) cur_he->edge();
 
       //: loop through each interval
-      vcl_map<double, gdt_ibase*>::iterator iit = cur_edge->interval_section()->I_map()->begin();
+      std::map<double, gdt_ibase*>::iterator iit = cur_edge->interval_section()->I_map()->begin();
       for (; iit != cur_edge->interval_section()->I_map()->end(); iit++) {
         gdt_interval* I = (gdt_interval*) (*iit).second;
         if (I->is_dege() || !I->is_on_face(cur_face))
@@ -282,7 +282,7 @@ void gdt_draw_isocontour_I_face (SoSeparator* group,
 void gdt_draw_gdt_path (SoSeparator* group, gdt_path* gdt_path,
                         SbColor color, float lineWidth)
 {
-  vcl_vector<vgl_point_3d<double> > vertices;
+  std::vector<vgl_point_3d<double> > vertices;
   for (unsigned int i=0; i<gdt_path->I_tau_pairs()->size(); i++) {
     vgl_point_3d<double> pt = gdt_path->get_point (i);
     vertices.push_back (pt);

@@ -62,7 +62,7 @@ void SCDMSeed::delAllSeedPoints (void)
 //1)Compute tangent information
 //2)Fit BiArc from two pair of point-tangents
 //3)Add the BiArc
-#include <vcl_cassert.h>
+#include <cassert>
 void SCDMSeed::FitBiArc (Boundary* boundary)
 {
   ///////////////////////////////
@@ -120,8 +120,8 @@ void SCDMSeed::FitBiArc (Boundary* boundary)
     mid = biarc.bi_arc_params.end1;
     center1 = biarc.bi_arc_params.center1;
     center2 = biarc.bi_arc_params.center2;
-    R1 = vcl_fabs(biarc.bi_arc_params.radius1);
-    R2 = vcl_fabs(biarc.bi_arc_params.radius2);
+    R1 = std::fabs(biarc.bi_arc_params.radius1);
+    R2 = std::fabs(biarc.bi_arc_params.radius2);
     dir1 = biarc.bi_arc_params.dir1;
     dir2 = biarc.bi_arc_params.dir2;
     BPoint* mid_pt = boundary->addGUIPoint (mid.x, mid.y);

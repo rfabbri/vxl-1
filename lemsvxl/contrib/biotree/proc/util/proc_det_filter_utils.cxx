@@ -8,8 +8,8 @@
 // 
 
 #include "proc_det_filter_utils.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <cstdio>
 
 proc_det_filter_utils::proc_det_filter_utils(void)
 {
@@ -21,16 +21,16 @@ proc_det_filter_utils::~proc_det_filter_utils(void)
 
 //: reads the responses from files, it also sets the filter dimensions 
 // and the number of filters
-vcl_vector<xmvg_filter_response<double> >   
-proc_det_filter_utils::read_responses(vcl_string response_file,
+std::vector<xmvg_filter_response<double> >   
+proc_det_filter_utils::read_responses(std::string response_file,
                                           int &dimx, int &dimy, 
                                           int &dimz, int &filter_size) 
 {
   // read the responses from the text file
-  FILE *fp = vcl_fopen(response_file.data(),"r");
-  vcl_fscanf(fp,"%d %d %d %d\n", &dimx, &dimy, &dimz, &filter_size);
+  FILE *fp = std::fopen(response_file.data(),"r");
+  std::fscanf(fp,"%d %d %d %d\n", &dimx, &dimy, &dimz, &filter_size);
   int num_voxels = dimz*dimy*dimx;
-  vcl_vector<xmvg_filter_response<double> > resp_vector;
+  std::vector<xmvg_filter_response<double> > resp_vector;
 
   for (int dim = 0; dim < num_voxels; dim++) {
     resp_vector.push_back(xmvg_icosafilter_response(filter_size, 0.0));
@@ -44,21 +44,21 @@ proc_det_filter_utils::read_responses(vcl_string response_file,
       for (int y = 0; y < dimy; y++) {
         for (int x = 0; x < dimx; x++) {
           index++;
-          if (vcl_fscanf(fp,"%lf ", &intensity) == EOF) {
-            vcl_cout << "PREMATURE END OF FILE" << vcl_endl;
+          if (std::fscanf(fp,"%lf ", &intensity) == EOF) {
+            std::cout << "PREMATURE END OF FILE" << std::endl;
             return resp_vector;
           };
           //xmvg_filter_response<double> ptr = resp_vector[index];
           resp_vector[index][f] = intensity;
         }
-        //vcl_fscanf(fp,"\n", &intensity);
-         vcl_fscanf(fp,"%lf", &intensity);
+        //std::fscanf(fp,"\n", &intensity);
+         std::fscanf(fp,"%lf", &intensity);
       }
-      //vcl_fscanf(fp,"\n", &intensity);
-      vcl_fscanf(fp,"%lf", &intensity);
+      //std::fscanf(fp,"\n", &intensity);
+      std::fscanf(fp,"%lf", &intensity);
     }
-  //vcl_fscanf(fp,"\n", &intensity);
-    vcl_fscanf(fp,"%lf", &intensity);
+  //std::fscanf(fp,"\n", &intensity);
+    std::fscanf(fp,"%lf", &intensity);
   }
   
   return resp_vector;
@@ -66,19 +66,19 @@ proc_det_filter_utils::read_responses(vcl_string response_file,
 }
 
 void 
-proc_det_filter_utils::diff_responses(vcl_string f1, vcl_string f2, vcl_string out) 
+proc_det_filter_utils::diff_responses(std::string f1, std::string f2, std::string out) 
 {
   int dimx, dimy, dimz, filter_size;
 
-  vcl_vector<xmvg_filter_response<double> > resp1 = read_responses(f1,
+  std::vector<xmvg_filter_response<double> > resp1 = read_responses(f1,
                                           dimx, dimy, 
                                           dimz, filter_size);
 
-  vcl_vector<xmvg_filter_response<double> > resp2 = read_responses(f2,
+  std::vector<xmvg_filter_response<double> > resp2 = read_responses(f2,
                                           dimx, dimy, 
                                           dimz, filter_size);
-  FILE *fp = vcl_fopen(out.data(),"w");
-  vcl_fprintf(fp,"%d %d %d\n", dimx, dimy, dimz);
+  FILE *fp = std::fopen(out.data(),"w");
+  std::fprintf(fp,"%d %d %d\n", dimx, dimy, dimz);
   for(int f=0; f<filter_size; f++)
   {
     
@@ -95,27 +95,27 @@ proc_det_filter_utils::diff_responses(vcl_string f1, vcl_string f2, vcl_string o
           double diff = resp1[index][f] - resp2[index][f];
           //double sum = (resp1[index][f] + resp2[index][f])/2.0;
           double perc = (diff/resp1[index][f])*100.0;
-          vcl_fprintf(fp, "%lf ", perc);
+          std::fprintf(fp, "%lf ", perc);
         }
-        vcl_fprintf(fp,"\n");
+        std::fprintf(fp,"\n");
       }
-      vcl_fprintf(fp,"\n");
+      std::fprintf(fp,"\n");
     }
-  vcl_fprintf(fp,"\n");
+  std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 }
 
 //: crops the voxels from a given box by the x, y and z margin,
 // writes the result of the filter responses into a file
 void
-proc_det_filter_utils::crop_responses(vcl_string response_file,
-                                          vcl_string output_file,
+proc_det_filter_utils::crop_responses(std::string response_file,
+                                          std::string output_file,
                                           int &dimx, int &dimy, 
                                           int &dimz, int &filter_size,
                                           int xmar, int ymar, int zmar) {
 
-  vcl_vector<xmvg_filter_response<double> > responses;
+  std::vector<xmvg_filter_response<double> > responses;
   responses = read_responses(response_file,dimx, dimy, dimz, filter_size);
   FILE *fp2 = fopen(output_file.data(),"w");
   

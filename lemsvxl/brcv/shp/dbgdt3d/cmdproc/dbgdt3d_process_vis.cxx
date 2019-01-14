@@ -1,9 +1,9 @@
 //: This is lemsvxlsrc/brcv/shp/dbsk3d/pro/dbsk3d_process_vis.cxx
 //  Creation: Dec 24, 2005   Ming-Ching Chang
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <iostream>
+#include <fstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -83,7 +83,7 @@ SoSeparator* dbgdt3d_pro_vis::vis_mesh (const bool draw_idv,
                                        const int colorcode,
                                        const bool b_draw_isolated_pts)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
 
@@ -107,7 +107,7 @@ SoSeparator* dbgdt3d_pro_vis::vis_mesh (const bool draw_idv,
     root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -146,7 +146,7 @@ SoSeparator* dbgdt3d_pro_vis::vis_mesh_color ()
 //  Note that this surface is the 
 SoSeparator* dbgdt3d_pro_vis::vis_mesh_options (int option, const bool draw_idv, const bool showid)
 {
-  vul_printf (vcl_cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_bnd_mesh(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
   SoSeparator* root = new SoSeparator;
@@ -177,7 +177,7 @@ SoSeparator* dbgdt3d_pro_vis::vis_mesh_options (int option, const bool draw_idv,
   root->addChild (draw_ptset (mesh_, m_vertex_ccode_, pt_size_, true));
 
   unsigned n_unmeshed_pts = mesh_->count_unmeshed_pts ();
-  vul_printf (vcl_cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
+  vul_printf (std::cout, "  # unmeshed pts: %d\n", n_unmeshed_pts);
 
   return root;
 }
@@ -185,7 +185,7 @@ SoSeparator* dbgdt3d_pro_vis::vis_mesh_options (int option, const bool draw_idv,
 //: Visualize the reconstructed surface mesh in animation
 SoSeparator* dbgdt3d_pro_vis::vis_mesh_anim (const int nF_batch)
 {
-  vul_printf (vcl_cout, "vis_mesh_anim(): V: %d, E: %d, F: %d\n", 
+  vul_printf (std::cout, "vis_mesh_anim(): V: %d, E: %d, F: %d\n", 
               mesh_->vertexmap().size(), mesh_->edgemap().size(),
               mesh_->facemap().size());
   SoSeparator* root = new SoSeparator;

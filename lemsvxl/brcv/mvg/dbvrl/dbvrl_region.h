@@ -12,7 +12,7 @@
 //   None
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_2d.h>
@@ -48,7 +48,7 @@ public:
   int nj() const;
 
   //: Returns a vector of four region corners in image coords 
-  vcl_vector<vgl_point_2d<double> > corners() const;
+  std::vector<vgl_point_2d<double> > corners() const;
 
   //: Return the transformation from world to image coords
   vimt_transform_2d xform() const;
@@ -68,7 +68,7 @@ void vsl_b_write(vsl_b_ostream &os, const dbvrl_region* r);
 void vsl_b_read(vsl_b_istream &is, dbvrl_region* &r);
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const dbvrl_region* r);
+void vsl_print_summary(std::ostream &os, const dbvrl_region* r);
 
 
 #endif // dbvrl_region_h_

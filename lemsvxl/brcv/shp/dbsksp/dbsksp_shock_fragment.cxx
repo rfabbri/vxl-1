@@ -41,7 +41,7 @@ build_from_regular_edge(const dbsksp_shock_edge_sptr& edge)
   double x0, y0, theta0, r0, phi0, phi1, m0, len;
   x0 = edge->source()->pt().x();
   y0 = edge->source()->pt().y();
-  theta0 = vcl_atan2(edge->chord_dir().y(), edge->chord_dir().x());
+  theta0 = std::atan2(edge->chord_dir().y(), edge->chord_dir().x());
   r0 = edge->source()->radius();
   phi0 = edge->source()->descriptor(edge)->phi;
   phi1 = vnl_math::pi - edge->target()->descriptor(edge)->phi;
@@ -65,7 +65,7 @@ get_shapelet() const
   double x0, y0, theta0, r0, phi0, phi1, m0, len;
   x0 = edge->source()->pt().x();
   y0 = edge->source()->pt().y();
-  theta0 = vcl_atan2(edge->chord_dir().y(), edge->chord_dir().x());
+  theta0 = std::atan2(edge->chord_dir().y(), edge->chord_dir().x());
   r0 = edge->source()->radius();
   phi0 = edge->source()->descriptor(edge)->phi;
   phi1 = vnl_math::pi - edge->target()->descriptor(edge)->phi;

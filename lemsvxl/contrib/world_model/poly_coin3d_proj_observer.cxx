@@ -52,20 +52,20 @@
 #include <Inventor/misc/SoChildList.h> 
 #include <Inventor/details/SoDetail.h>
 
-vcl_vector<SoNode*> poly_coin3d_proj_observer::selected_nodes = vcl_vector<SoNode*> (0);
+std::vector<SoNode*> poly_coin3d_proj_observer::selected_nodes = std::vector<SoNode*> (0);
 
 void selectionCallback2(void *userData, SoEventCallback *eventCB)
 {
   SoSelection *selection = (SoSelection *) userData;
   const SoEvent *ev =  eventCB->getEvent();
   if (SO_MOUSE_PRESS_EVENT(ev, BUTTON1)) {
-    vcl_cout << "Selected!" << vcl_endl;
-    vcl_cout << "Num Selected " << selection->getNumSelected() << vcl_endl;
+    std::cout << "Selected!" << std::endl;
+    std::cout << "Num Selected " << selection->getNumSelected() << std::endl;
     if (selection->getNumSelected() > 0) {
       SoPath* path = selection->getPath(0);
       SoNode* node = path->getTail();
       if (node->isOfType(SoIndexedFaceSet::getClassTypeId())) {
-        vcl_cout << "Found a MESH!" << vcl_endl;
+        std::cout << "Found a MESH!" << std::endl;
         // put the parent in the list
         poly_coin3d_proj_observer::set_selected(path->getNodeFromTail(1));
         const SoPickedPoint *pp = eventCB->getPickedPoint();
@@ -95,7 +95,7 @@ void poly_coin3d_proj_observer::update (vgui_message const& msg)
   vgui_message m = const_cast <vgui_message const& > (msg);
   const observable* o = static_cast<const observable*> (m.from);
   observable* o2= const_cast<observable*> (o);
-  vcl_string type = o2->type_name();
+  std::string type = o2->type_name();
   if (strcmp(type.data(),"obj_observable") == 0)
   {
     const obj_observable* o = static_cast<const obj_observable*> (m.from);
@@ -107,7 +107,7 @@ void poly_coin3d_proj_observer::update (vgui_message const& msg)
 void poly_coin3d_proj_observer::handle_update(vgui_message const& msg, 
                                   obj_observable* observable) 
 {
-  const vcl_string* str = static_cast<const vcl_string*> (msg.data);
+  const std::string* str = static_cast<const std::string*> (msg.data);
   dbmsh3d_mesh_mc* M = observable->get_object();
   //SoSeparator* root = (SoSeparator*) this->user_scene_root();
   
@@ -125,7 +125,7 @@ void poly_coin3d_proj_observer::handle_update(vgui_message const& msg,
     
     SoSeparator* mesh = draw_M (M, false, 0.0, COLOR_BLUE);
     mesh->ref();
-    vcl_string name = create_mesh_name();
+    std::string name = create_mesh_name();
     mesh->setName(SbName(name.data()));
     //root_sel_->addChild(myMaterial);
     SoTransform *myTransform = new SoTransform;
@@ -155,7 +155,7 @@ void poly_coin3d_proj_observer::handle_update(vgui_message const& msg,
     double x = p2.x() - p1.x();
     double y = p2.y() - p1.y();
     double z = p2.z() - p1.z();
-    //vcl_cout << "X=" << x << " Y=" << y << " Z=" << z << vcl_endl;
+    //std::cout << "X=" << x << " Y=" << y << " Z=" << z << std::endl;
     float x1, y1, z1;
     tr.getValue(x1, y1, z1);
     myTransform->translation.setValue(x1+x, y1+y, z1+z);
@@ -170,7 +170,7 @@ void poly_coin3d_proj_observer::handle_update(vgui_message const& msg,
 
     SoSeparator* group = (SoSeparator*)this->scene_root();
     SbName n = m->getName();
-    vcl_cout << n.getString() << vcl_endl;
+    std::cout << n.getString() << std::endl;
     SoSeparator* node = (SoSeparator *) SoNode::getByName(m->getName());
     root_sel_->removeChild(node);
     M->IFS_to_MHE();
@@ -204,9 +204,9 @@ void poly_coin3d_proj_observer::handle_update(vgui_message const& msg,
 }
 bool poly_coin3d_proj_observer::handle(const vgui_event& e)
 {
-  //vcl_cout << e.modifier << vcl_endl;
+  //std::cout << e.modifier << std::endl;
   if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == vgui_SHIFT) {
-    //vcl_cout << "left mouse" << vcl_endl;
+    //std::cout << "left mouse" << std::endl;
     start_x_ = e.wx;
     start_y_ = e.wy;
     left_button_down_ = true;
@@ -221,13 +221,13 @@ bool poly_coin3d_proj_observer::handle(const vgui_event& e)
     if (selected_nodes.size() > 0) {
       double x = e.wx;
       double y = e.wy;
-      double dist = vcl_sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/60;
+      double dist = std::sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/60;
       if (y > start_y_)
         dist *= -1;
-      //vcl_cout << "dist=" << dist << vcl_endl;
+      //std::cout << "dist=" << dist << std::endl;
 
       SoNode* node = selected_nodes[0];
-      vcl_map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
+      std::map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
       while (iter != objects.end()) {
         SoSeparator* sep = iter->second;
         if (node == sep) {
@@ -255,10 +255,10 @@ bool poly_coin3d_proj_observer::handle(const vgui_event& e)
       if (selected_nodes.size() > 0) {
         double x = e.wx;
         double y = e.wy;
-        double dist = vcl_sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/20;
+        double dist = std::sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/20;
         if (y > start_y_)
           dist *= -1;
-        //vcl_cout << "dist=" << dist << vcl_endl;
+        //std::cout << "dist=" << dist << std::endl;
 
         obj_observable *obs = find_selected_obs();
         if (obs)
@@ -277,7 +277,7 @@ bool poly_coin3d_proj_observer::handle(const vgui_event& e)
 obj_observable* poly_coin3d_proj_observer::find_selected_obs()
 {
   SoNode* node = selected_nodes[selected_nodes.size()-1];
-  vcl_map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
+  std::map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
   while (iter != objects.end()) {
     SoSeparator* sep = iter->second;
     if (node == sep) {
@@ -289,13 +289,13 @@ obj_observable* poly_coin3d_proj_observer::find_selected_obs()
   return 0;
 }
 
-vcl_string poly_coin3d_proj_observer::create_mesh_name()
+std::string poly_coin3d_proj_observer::create_mesh_name()
 {
-   vcl_string base = "mesh";
+   std::string base = "mesh";
 
-   vcl_stringstream strm;
-   strm << vcl_fixed << num_meshes_;
-   vcl_string str(strm.str());
+   std::stringstream strm;
+   strm << std::fixed << num_meshes_;
+   std::string str(strm.str());
    num_meshes_++;
    return (base+str);
 }

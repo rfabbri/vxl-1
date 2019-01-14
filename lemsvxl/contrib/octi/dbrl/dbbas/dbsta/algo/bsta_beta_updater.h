@@ -13,8 +13,8 @@
 
 #include <dbsta/bsta_beta.h>
 #include <dbsta/bsta_attributes.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 
 //: Update the statistics given a 1D beta distribution and a learning rate
 // \note if rho = 1/(num observations) then this just an online cumulative average
@@ -132,8 +132,8 @@ class bsta_mix_beta_updater
     T beta=(1-sample)*t;
     init_dist_.set_alpha_beta(alpha,beta); ///??? this was setting mean
 #endif
-    T lower = T(0.5-vcl_sqrt(1-4*var_)/2);
-    T upper = T(0.5+vcl_sqrt(1-4*var_)/2);
+    T lower = T(0.5-std::sqrt(1-4*var_)/2);
+    T upper = T(0.5+std::sqrt(1-4*var_)/2);
 
     vector_ val = sample;
     if (sample < lower)

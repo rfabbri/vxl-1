@@ -9,7 +9,7 @@
 
 #include <vul/vul_timer.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 void dbrec3d_compute_pcl_fpfh_features(pcl::PointCloud<pcl::PointNormal>::Ptr cloud_in, 
@@ -34,10 +34,10 @@ void dbrec3d_compute_pcl_fpfh_features(pcl::PointCloud<pcl::PointNormal>::Ptr cl
   // Compute the features
   vul_timer timer;
   timer.mark();
-  vcl_cout << "Computing FPFH: " << vcl_endl;
+  std::cout << "Computing FPFH: " << std::endl;
   fpfh.compute (*cloud_out); 
-  vcl_cout << "Done \n";
-  timer.print(vcl_cout);
+  std::cout << "Done \n";
+  timer.print(std::cout);
   
 
 }
@@ -63,17 +63,17 @@ void dbrec3d_compute_pcl_fpfh_features(pcl::PointCloud<pcl::PointNormal>::Ptr cl
   // Compute the features
   vul_timer timer;
   timer.mark();
-  vcl_cout << "Computing FPFH: " << vcl_endl;
+  std::cout << "Computing FPFH: " << std::endl;
   fpfh.compute (*cloud_out); 
-  vcl_cout << "Done \n";
-  timer.print(vcl_cout);
+  std::cout << "Done \n";
+  timer.print(std::cout);
   
 }
 
 //: Put the data inside the point cloud into a stl vector.
 //  This only cares about the data and not the 3-d location
 void dbrec3d_pcd_to_vnl_vector(pcl::PointCloud<pcl::FPFHSignature33>::Ptr cloud,
-                               vcl_vector<vnl_vector_fixed<double, 33 > > &features)
+                               std::vector<vnl_vector_fixed<double, 33 > > &features)
 {
   for (size_t i = 0; i < cloud->points.size (); ++i) {
     vnl_vector_fixed<double, 33> hist(0.0);

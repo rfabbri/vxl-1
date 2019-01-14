@@ -14,8 +14,8 @@
 //   Amir Tamrakar 02/02/2005    Initial version. Conversion to VXL standard.
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <vgl/vgl_point_2d.h>
 
 //: This class does not exist in vxl nor is it needed
@@ -42,7 +42,7 @@ public :
   virtual ~dbsk2d_base_gui_geometry(){ex_pts_.clear();}
 
   //: return the extrinsic points for rendering this geometry
-  virtual vcl_vector<vgl_point_2d<double> >& ex_pts() { return ex_pts_; }
+  virtual std::vector<vgl_point_2d<double> >& ex_pts() { return ex_pts_; }
 
   //: compute the extrinsic locus of this element for easier rendering
   virtual void compute_extrinsic_locus()=0;
@@ -50,12 +50,12 @@ public :
   virtual GraphicsNode* getGUIItem() { return GUIItem; }  
 
   //: Return some information about the element
-  virtual void getInfo (vcl_ostream& ostrm=vcl_cout){};
+  virtual void getInfo (std::ostream& ostrm=std::cout){};
 
 protected:
 
   //: extrinsic points for drawing purposes
-  vcl_vector<vgl_point_2d<double> > ex_pts_;
+  std::vector<vgl_point_2d<double> > ex_pts_;
 
 };
 

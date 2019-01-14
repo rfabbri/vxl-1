@@ -1,7 +1,7 @@
 #ifndef COMMAND_H_INCLUDED
 #define COMMAND_H_INCLUDED
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include "basegui_scenegraph.h"
 
@@ -47,7 +47,7 @@ public:
 class MultiCommand :public GfxCommand
   {
     private:
-        vcl_vector<GfxCommand *>_commands;
+        std::vector<GfxCommand *>_commands;
     
     public:
        virtual ~MultiCommand();

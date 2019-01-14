@@ -15,7 +15,7 @@
 /********************************************/
 
 # include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <cplusplusclass/my_rectangle_sptr.h>
 
 class my_rectangle : public vbl_ref_count 
@@ -27,7 +27,7 @@ public:
     //Constructor, destructor, initializers
     my_rectangle():width_(0), height_(0){}
     my_rectangle(unsigned const& w,unsigned const& h) : width_(w), height_(h){}
-    ~my_rectangle() {}//vcl_cout<<"destructing rectangle"<< vcl_endl;}
+    ~my_rectangle() {}//std::cout<<"destructing rectangle"<< std::endl;}
 
 public:
     unsigned height(){return height_;}
@@ -44,7 +44,7 @@ public:
 
     //: output description to stream
     friend
-        vcl_ostream&  operator<<(vcl_ostream& s,  my_rectangle &r);
+        std::ostream&  operator<<(std::ostream& s,  my_rectangle &r);
 
 
 

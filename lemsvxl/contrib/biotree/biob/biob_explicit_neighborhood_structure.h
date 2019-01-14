@@ -3,7 +3,7 @@
 
 #include "biob_worldpt_neighborhood_structure.h"
 #include "biob_worldpt_roster_sptr.h"
-#include <vcl_vector.h>
+#include <vector>
 
 class biob_explicit_neighborhood_structure : public biob_worldpt_neighborhood_structure {
  public:
@@ -12,7 +12,7 @@ class biob_explicit_neighborhood_structure : public biob_worldpt_neighborhood_st
   }
   void populate(biob_worldpt_roster_sptr roster, double resolution);
  private:
-  vcl_vector<neighbors_t> neighbors_vector_;
+  std::vector<neighbors_t> neighbors_vector_;
 };
 
 #endif

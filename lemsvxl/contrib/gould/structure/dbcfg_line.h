@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
@@ -30,9 +30,9 @@ class dbcfg_line {
 private:
   // typedef point and line
   typedef vgl_point_2d<T> point_t;
-  typedef vcl_vector<point_t> points_t;
+  typedef std::vector<point_t> points_t;
   typedef dbcfg_line<T> line_t;
-  typedef vcl_vector<line_t> lines_t;
+  typedef std::vector<line_t> lines_t;
 
   point_t p1_;
   point_t p2_;
@@ -58,7 +58,7 @@ public:
   bool is_duplicate(line_t& line, T epsilon = 0);
   point_t get_intersection(point_t& point, T epsilon = 0);
   point_t get_intersection(line_t& line, T epsilon = 0);
-  lines_t get_transform(vcl_vector<unsigned>& point_nums, points_t& points, T epsilon = 0);
+  lines_t get_transform(std::vector<unsigned>& point_nums, points_t& points, T epsilon = 0);
 
 };
 

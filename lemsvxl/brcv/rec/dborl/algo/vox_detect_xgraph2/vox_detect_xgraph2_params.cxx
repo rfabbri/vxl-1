@@ -14,7 +14,7 @@
 // -----------------------------------------------------------------------------
 //: Constructor
 vox_detect_xgraph2_params::
-vox_detect_xgraph2_params(vcl_string algo_name) :
+vox_detect_xgraph2_params(std::string algo_name) :
 dborl_algo_params(algo_name)
 {
 
@@ -224,14 +224,14 @@ dborl_algo_params(algo_name)
 //------------------------------------------------------------------------------
 //: List of boundary contour fragment to ignore
 bool vox_detect_xgraph2_params::
-parse_input_cfrag_list_to_ignore(vcl_vector<vcl_string >& cfrag_list_to_ignore) const
+parse_input_cfrag_list_to_ignore(std::vector<std::string >& cfrag_list_to_ignore) const
 {
     // clean-up first
     cfrag_list_to_ignore.clear();
 
 
     // parse the corresponding parameter
-    vcl_string buffer = this->input_cfrag_list_to_ignore_();
+    std::string buffer = this->input_cfrag_list_to_ignore_();
 
     // replace "," by space so that we can use standard parser
     for (unsigned i =0; i < buffer.length(); ++i)
@@ -243,10 +243,10 @@ parse_input_cfrag_list_to_ignore(vcl_vector<vcl_string >& cfrag_list_to_ignore) 
     }
 
     // parse the string using stringstream
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << buffer;
 
-    vcl_string cfrag_desc;
+    std::string cfrag_desc;
     while (ss >> cfrag_desc)
     {
         cfrag_list_to_ignore.push_back(cfrag_desc);
@@ -256,11 +256,11 @@ parse_input_cfrag_list_to_ignore(vcl_vector<vcl_string >& cfrag_list_to_ignore) 
 
 //------------------------------------------------------------------------------
 //:
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_image_file() const
 {
-    vcl_string image_folder = this->input_object_dir_();
-    vcl_string image_file = image_folder + "/" + this->input_object_name_() +
+    std::string image_folder = this->input_object_dir_();
+    std::string image_file = image_folder + "/" + this->input_object_name_() +
             this->input_image_extension_();
     return image_file;
 }
@@ -268,14 +268,14 @@ get_image_file() const
 
 //------------------------------------------------------------------------------  
 //:
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_xgraph_file() const
 {
     dborl_index_query index_query;
     index_query.add_object_name(this->input_xgraph_prototype_object_());
     index_query.add_assoc_file_label(this->input_gt_xgraph_label_());
     index_query.add_assoc_file_type("groundtruth_xgraph_directory");
-    vcl_vector<vcl_string> query_result = dborl_get_assoc_file_paths(this->index_filename_(), index_query);
+    std::vector<std::string> query_result = dborl_get_assoc_file_paths(this->index_filename_(), index_query);
 
     if(query_result.size() == 1)
     {
@@ -284,7 +284,7 @@ get_xgraph_file() const
     }
     else
     {
-        vcl_cerr << "\nERROR: Could not load prototype xgraph. Quit now. Query result size = " << query_result.size() << "\n";
+        std::cerr << "\nERROR: Could not load prototype xgraph. Quit now. Query result size = " << query_result.size() << "\n";
         return "";
     }
 }
@@ -292,19 +292,19 @@ get_xgraph_file() const
 
 //------------------------------------------------------------------------------
 //: xgraph geometric model
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_xgraph_geom_file() const
 {
-    vcl_string xgraph_geom_file = this->input_xgraph_geom_dir_() + "/object_geom_model.xml";
+    std::string xgraph_geom_file = this->input_xgraph_geom_dir_() + "/object_geom_model.xml";
     return xgraph_geom_file;
 }
 
 //------------------------------------------------------------------------------
 //:
-vcl_vector<double > vox_detect_xgraph2_params::
+std::vector<double > vox_detect_xgraph2_params::
 get_xgraph_scales() const
 {
-    vcl_vector<double > xgraph_scales;
+    std::vector<double > xgraph_scales;
     ////
     //if (this->parse_input_model_scales(xgraph_scales))
     //{
@@ -312,7 +312,7 @@ get_xgraph_scales() const
     //}
     //else
     //{
-    //  return vcl_vector<double >();
+    //  return std::vector<double >();
     //}
     return xgraph_scales;
 }
@@ -320,33 +320,33 @@ get_xgraph_scales() const
 
 //------------------------------------------------------------------------------
 //:
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_xgraph_ccm_file() const
 {
-    vcl_string xgraph_ccm_file = this->input_xgraph_ccm_dir_() + "/object_ccm_overall_model.xml";
+    std::string xgraph_ccm_file = this->input_xgraph_ccm_dir_() + "/object_ccm_overall_model.xml";
     return xgraph_ccm_file;
 }
 
 
 //------------------------------------------------------------------------------
 //: list of boundary fragments to ignore
-vcl_vector<vcl_string > vox_detect_xgraph2_params::
+std::vector<std::string > vox_detect_xgraph2_params::
 get_cfrag_list_to_ignore() const
 {
-    vcl_vector<vcl_string > cfrag_list_to_ignore;
+    std::vector<std::string > cfrag_list_to_ignore;
     if (this->parse_input_cfrag_list_to_ignore(cfrag_list_to_ignore))
     {
         return cfrag_list_to_ignore;
     }
     else
     {
-        return vcl_vector<vcl_string >();
+        return std::vector<std::string >();
     }
 }
 
 
 // location of all output files
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_output_folder() const
 {
     return this->output_object_folder_();
@@ -355,7 +355,7 @@ get_output_folder() const
 
 
 //: Name of the prototype xgraph
-vcl_string vox_detect_xgraph2_params::
+std::string vox_detect_xgraph2_params::
 get_xgraph_prototype_name() const
 {
     return vul_file::strip_extension(vul_file::strip_directory(this->get_xgraph_file()));

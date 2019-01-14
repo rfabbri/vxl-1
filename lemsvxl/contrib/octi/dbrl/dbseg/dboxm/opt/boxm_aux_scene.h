@@ -28,7 +28,7 @@ class boxm_aux_scene
    typedef  boct_tree<T_loc, T> tree_type;
    typedef  boct_tree<T_loc, T_AUX> aux_tree_type;
    boxm_aux_scene(){}
-   boxm_aux_scene(boxm_scene<tree_type>* scene, vcl_string suffix, tree_creation_type type);
+   boxm_aux_scene(boxm_scene<tree_type>* scene, std::string suffix, tree_creation_type type);
 
    ~boxm_aux_scene(){ /*delete aux_scene_;*/ }
 
@@ -45,7 +45,7 @@ class boxm_aux_scene
 
  private:
   boxm_scene<aux_tree_type>* aux_scene_;
-  vcl_string aux_storage_dir_;
+  std::string aux_storage_dir_;
 };
 
 #endif

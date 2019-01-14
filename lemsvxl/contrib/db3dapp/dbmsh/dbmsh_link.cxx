@@ -40,10 +40,10 @@ dbmsh_link::~dbmsh_link()
 
 void dbmsh_link::remove()
 {
-  vcl_set<dbmsh_node*>::iterator nodeIter;
+  std::set<dbmsh_node*>::iterator nodeIter;
   for( nodeIter = _nodes.begin(); nodeIter!=_nodes.end(); nodeIter++ )
     (*nodeIter)->removeLink( this );
-  vcl_set<dbmsh_face*>::iterator faceIter;
+  std::set<dbmsh_face*>::iterator faceIter;
   for( faceIter = _faces.begin(); faceIter!=_faces.end(); faceIter++ )
     (*faceIter)->removeLink( this );
 }

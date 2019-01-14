@@ -1,10 +1,10 @@
 #ifndef psm_triangle_interpolation_iterator_aa_txx_
 #define psm_triangle_interpolation_iterator_aa_txx_
 
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <iostream>
 
 #include <vnl/algo/vnl_determinant.h>
 #include <vgl/vgl_triangle_scan_iterator.h>
@@ -28,8 +28,8 @@ psm_triangle_interpolation_iterator_aa<T>::psm_triangle_interpolation_iterator_a
   tri_bb_.update(verts_x[v1], verts_y[v1]);
   tri_bb_.update(verts_x[v2], verts_y[v2]);
 
-  int tri_xmin = (int)vcl_floor(tri_bb_.xmin());
-  int tri_xmax = (int)vcl_floor(tri_bb_.xmax()) + 1;
+  int tri_xmin = (int)std::floor(tri_bb_.xmin());
+  int tri_xmax = (int)std::floor(tri_bb_.xmax()) + 1;
   tri_diameter_x_ = (tri_xmax - tri_xmin) + 1;
   aa_vals_.resize(tri_diameter_x_);
   interp_vals_.resize(tri_diameter_x_);
@@ -48,7 +48,7 @@ psm_triangle_interpolation_iterator_aa<T>::psm_triangle_interpolation_iterator_a
   s1_ = vnl_determinant(Acol0, Z, Acol2) / detA;
   s2_ = vnl_determinant(Acol0, Acol1, Z) / detA;
 
-  //vcl_cout << "s0 = " << s0_ <<"  s1 = " << s1_ << " s2 = " << s2_ << vcl_endl;
+  //std::cout << "s0 = " << s0_ <<"  s1 = " << s1_ << " s2 = " << s2_ << std::endl;
 }
 
 
@@ -81,8 +81,8 @@ bool psm_triangle_interpolation_iterator_aa<T>::next()
   endx_ =  int(tri_bb_.xmin()) - 1;
 
   // compute antialiasing values for each pixel in scanline
-  vcl_fill(aa_vals_.begin(),aa_vals_.end(), 0.0f);
-  vcl_fill(interp_vals_.begin(), interp_vals_.end(), 0.0f);
+  std::fill(aa_vals_.begin(),aa_vals_.end(), 0.0f);
+  std::fill(interp_vals_.begin(), interp_vals_.end(), 0.0f);
   int super_scany_end = (scany_ + 1)*supersample_ratio_;
   static const float increment = 1.0f / (supersample_ratio_*supersample_ratio_);
   static const float full_increment = 1.0f / (supersample_ratio_); 
@@ -91,8 +91,8 @@ bool psm_triangle_interpolation_iterator_aa<T>::next()
     int super_startx = super_tri_it_.startx();
     int super_endx = super_tri_it_.endx() + 1;
 
-    super_startx = vcl_max(0, super_startx);
-    super_endx = vcl_max(0, super_endx);
+    super_startx = std::max(0, super_startx);
+    super_endx = std::max(0, super_endx);
     // make sure super_startx < super_endx
     if (super_endx > super_startx) {
       int scanline_startx = super_startx / supersample_ratio_;

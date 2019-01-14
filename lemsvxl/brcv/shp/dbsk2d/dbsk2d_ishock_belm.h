@@ -24,9 +24,9 @@
 //
 // \endverbatim
 
-#include <vcl_utility.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <utility>
+#include <map>
+#include <string>
 
 #include <dbsk2d/dbsk2d_base_gui_geometry.h>
 #include <dbsk2d/dbsk2d_utils.h>
@@ -52,11 +52,11 @@ class dbsk2d_ishock_edge;
 class dbsk2d_ishock_contact;
 
 //useful type definitions
-typedef vcl_multimap <dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*> bnd_ishock_map;
+typedef std::multimap <dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*> bnd_ishock_map;
 typedef bnd_ishock_map::iterator bnd_ishock_map_iter;
 typedef bnd_ishock_map::reverse_iterator bnd_ishock_map_riter;
 
-typedef vcl_list<dbsk2d_ishock_belm* > belm_list;
+typedef std::list<dbsk2d_ishock_belm* > belm_list;
 typedef belm_list::iterator  belm_list_iter;
 
 //for GetInfo functions
@@ -94,7 +94,7 @@ public:
   virtual ~dbsk2d_ishock_belm (){}
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a () const=0; 
+  virtual std::string is_a () const=0; 
 
   //: Return the unique ID of this element
   int id() const { return _id; }

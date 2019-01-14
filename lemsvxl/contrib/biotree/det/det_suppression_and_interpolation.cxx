@@ -1,7 +1,7 @@
 #include "det_suppression_and_interpolation.h"
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_distance.h>
@@ -60,8 +60,8 @@ public:
 
 
 
-vgl_point_2d<double> fit_2d(const vcl_vector<vgl_point_2d<double> > &locations_in_plane,
-                             const vcl_vector<double> & strengths){
+vgl_point_2d<double> fit_2d(const std::vector<vgl_point_2d<double> > &locations_in_plane,
+                             const std::vector<double> & strengths){
   int num_eqns = locations_in_plane.size();
   int num_vars = 6;
   
@@ -120,7 +120,7 @@ det_suppression_and_interpolation::apply(biob_worldpt_field<vgl_vector_3d<double
               then output a unit vector at the position where the quadratic surface achieves its maximum
   */
   biob_explicit_neighborhood_structure neighborhood_structure;
-  neighborhood_structure.populate(field.roster(), vcl_sqrt(height*height + width*width));
+  neighborhood_structure.populate(field.roster(), std::sqrt(height*height + width*width));
   biob_explicit_worldpt_roster * new_locations = new biob_explicit_worldpt_roster();
   //shouldn't have to have a separate variable...
   biob_worldpt_roster_sptr new_roster_sptr = new_locations;
@@ -134,8 +134,8 @@ det_suppression_and_interpolation::apply(biob_worldpt_field<vgl_vector_3d<double
       //find the plane through p0 perpendicular to c0
       vgl_plane_3d<double> the_plane(c0, p0);
       plane_coordinate_system plane_coords(c0, p0);
-      vcl_vector<vgl_point_2d<double> > locations_in_plane;
-      vcl_vector<double> strengths;
+      std::vector<vgl_point_2d<double> > locations_in_plane;
+      std::vector<double> strengths;
       //find the points that are close enough to the plane
       biob_worldpt_neighborhood_structure::neighbors_t neighbors = neighborhood_structure.neighbors(biob_worldpt_index(i));
       for (biob_worldpt_neighborhood_structure::neighbors_t::const_iterator it = neighbors.begin();
@@ -166,9 +166,9 @@ det_suppression_and_interpolation::apply(biob_worldpt_field<vgl_vector_3d<double
         //for debugging...
         bool flag = false;
         if (flag){
-          vcl_cout << "locations in plane: \n" ;
+          std::cout << "locations in plane: \n" ;
           for (int j = 0; j < locations_in_plane.size(); ++j){
-            vcl_cout << locations_in_plane[i] << "\n";
+            std::cout << locations_in_plane[i] << "\n";
           }
         }
         worldpt max_location_3d = plane_coords.to_3d(max_location);

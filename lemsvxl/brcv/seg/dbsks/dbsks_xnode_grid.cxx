@@ -168,7 +168,7 @@ xdesc_to_grid(const dbsksp_xshock_node_descriptor& xdesc,
     i_phi0<0 || i_phi0>=(int)this->phi0_.size() ||
     i_r<0 || i_r>=(int)this->r_.size())
   {
-	//vcl_cout << "i_x: "<< i_x  << " i_y: "<< i_y << " i_psi: "<< i_psi  << " i_phi0: "<< i_phi0  << " i_r: "<< i_r << vcl_endl;
+	//std::cout << "i_x: "<< i_x  << " i_y: "<< i_y << " i_psi: "<< i_psi  << " i_phi0: "<< i_phi0  << " i_r: "<< i_r << std::endl;
     return false;
   }
 
@@ -378,8 +378,8 @@ i_phi1(double phi1) const
 bool dbsks_xnode_grid::
 sample_xy(double x0, double y0, int num_x_backward, int num_x_forward,
           int num_y_backward, int num_y_forward, 
-          vcl_vector<double >& xs, vcl_vector<double >& ys,
-          vcl_vector<int >& index_xs, vcl_vector<int >& index_ys)
+          std::vector<double >& xs, std::vector<double >& ys,
+          std::vector<int >& index_xs, std::vector<int >& index_ys)
 {
   // index of reference point
   int i_x0 = this->i_x(x0);
@@ -426,7 +426,7 @@ sample_xy(double x0, double y0, int num_x_backward, int num_x_forward,
 //: sample x
 bool dbsks_xnode_grid::
 sample_x(double ref_x, int num_x_backward, int num_x_forward,
-         vcl_vector<double >& x_vec, vcl_vector<int >& index_x_vec) const
+         std::vector<double >& x_vec, std::vector<int >& index_x_vec) const
 {
   // clear existing elements
   x_vec.clear();
@@ -454,7 +454,7 @@ sample_x(double ref_x, int num_x_backward, int num_x_forward,
 //: sample y
 bool dbsks_xnode_grid::
 sample_y(double ref_y, int num_y_backward, int num_y_forward,
-         vcl_vector<double >& y_vec, vcl_vector<int >& index_y_vec) const
+         std::vector<double >& y_vec, std::vector<int >& index_y_vec) const
 {
   // clear existing elements
   y_vec.clear();
@@ -489,7 +489,7 @@ sample_y(double ref_y, int num_y_backward, int num_y_forward,
 //: samples of psi on the grid around a given psi value "central_psi"
 bool dbsks_xnode_grid::
 sample_psi(double ref_psi, int num_psi_backward, int num_psi_forward, 
-           vcl_vector<double >& psi_vec, vcl_vector<int >& index_psi_vec) const
+           std::vector<double >& psi_vec, std::vector<int >& index_psi_vec) const
 {
   // clear existing elements
   psi_vec.clear();
@@ -529,7 +529,7 @@ sample_psi(double ref_psi, int num_psi_backward, int num_psi_forward,
 //: sample phi0
 bool dbsks_xnode_grid::
 sample_phi0(double ref_phi0, int num_phi0_backward, int num_phi0_forward,
-            vcl_vector<double >& phi0_vec, vcl_vector<int >& index_phi0_vec) const
+            std::vector<double >& phi0_vec, std::vector<int >& index_phi0_vec) const
 {
   // clear existing elements
   phi0_vec.clear();
@@ -557,7 +557,7 @@ sample_phi0(double ref_phi0, int num_phi0_backward, int num_phi0_forward,
 //: sample r
 bool dbsks_xnode_grid::
 sample_r(double ref_r, int num_r_backward, int num_r_forward,
-         vcl_vector<double >& r_vec, vcl_vector<int >& index_r_vec) const
+         std::vector<double >& r_vec, std::vector<int >& index_r_vec) const
 {
   // clear existing elements
   r_vec.clear();
@@ -586,7 +586,7 @@ sample_r(double ref_r, int num_r_backward, int num_r_forward,
 //: sample phi1
 bool dbsks_xnode_grid::
 sample_phi1(double ref_phi1, int num_phi1_backward, int num_phi1_forward,
-            vcl_vector<double >& phi1_vec, vcl_vector<int >& index_phi1_vec) const
+            std::vector<double >& phi1_vec, std::vector<int >& index_phi1_vec) const
 {
   // clear existing elements
   phi1_vec.clear();

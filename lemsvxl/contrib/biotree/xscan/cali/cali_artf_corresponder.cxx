@@ -12,13 +12,13 @@
 #include <vnl/vnl_math.h>
 #include <vsl/vsl_binary_io.h>
 #include <cali/cali_conic_info.h>
-#include <vcl_cstddef.h>
-#include <vcl_string.h>
-#include <vcl_iomanip.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <cstddef>
+#include <string>
+#include <iomanip>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <vgl/vgl_sphere_3d.h>
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_point_2d.h>
@@ -27,13 +27,13 @@
 cali_artf_corresponder::cali_artf_corresponder()
  // : NUM_OF_CORRESP(3)
 {
-  this->fstream.open ("diff.txt", vcl_ofstream::out);
+  this->fstream.open ("diff.txt", std::ofstream::out);
 }
 
 cali_artf_corresponder::cali_artf_corresponder(cali_param par):par_(par)
 {
  
-    this->fstream.open (par_.DIFF.c_str(), vcl_ofstream::out );
+    this->fstream.open (par_.DIFF.c_str(), std::ofstream::out );
 }
 
 cali_artf_corresponder::~cali_artf_corresponder(void)
@@ -44,7 +44,7 @@ conic_vector_set cali_artf_corresponder::fit_conics(vil_image_resource_sptr img)
 {
         if (!img||!img->ni()||!img->nj())
         {
-                vcl_cout << "In segv_vil_segmentation_manager::vd_edges() - no image\n";
+                std::cout << "In segv_vil_segmentation_manager::vd_edges() - no image\n";
                 conic_vector_set empty(0);
                 return empty;
         }
@@ -66,20 +66,20 @@ conic_vector_set cali_artf_corresponder::fit_conics(vil_image_resource_sptr img)
         sdet_detector det(dp);
         det.SetImage(img);
         det.DoContour();
-        vcl_vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
+        std::vector<vtol_edge_2d_sptr>* edges = det.GetEdges();
         if (!edges)
         {
-                vcl_cout << "No edges to fit conics\n";
+                std::cout << "No edges to fit conics\n";
                 conic_vector_set empty(0);
                 return empty;
         }
         sdet_fit_conics fl(fcp);
         fl.set_edges(*edges);
         fl.fit_conics();
-        vcl_vector<vsol_conic_2d_sptr> conics = fl.get_conic_segs();
+        std::vector<vsol_conic_2d_sptr> conics = fl.get_conic_segs();
 
-        vcl_cout << " cali_artf_corresponder::fit_conics(vil_image_resource_sptr img)\n";
-        vcl_cout << "fit " << conics.size() << "conics\n";
+        std::cout << " cali_artf_corresponder::fit_conics(vil_image_resource_sptr img)\n";
+        std::cout << "fit " << conics.size() << "conics\n";
         return combine_conics(conics);
 }
 
@@ -89,9 +89,9 @@ double cali_artf_corresponder::ellipse_angle(vsol_conic_2d_sptr e) const{
         return theta; 
 }
 
-conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d_sptr> conics) const
+conic_vector_set cali_artf_corresponder::combine_conics(std::vector<vsol_conic_2d_sptr> conics) const
 {
-        vcl_cout << "conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d_sptr> conics)\n";
+        std::cout << "conic_vector_set cali_artf_corresponder::combine_conics(std::vector<vsol_conic_2d_sptr> conics)\n";
 
         conic_vector_set comb_conics;
         double cx,cy,phi,width,height;
@@ -99,18 +99,18 @@ conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d
         bool comb;
         double theta;
 
-        vcl_cout << conics.size() << vcl_endl;
-        for(vcl_vector<vsol_conic_2d_sptr>::iterator it1=conics.begin(); 
+        std::cout << conics.size() << std::endl;
+        for(std::vector<vsol_conic_2d_sptr>::iterator it1=conics.begin(); 
                         it1 != conics.end(); ++it1) 
         {
                 if ((*it1)->is_real_ellipse()){
                         (*it1)->ellipse_parameters(cx,cy,phi,width,height);
-                        vcl_cout << "Center-- x=" << cx << "  y=" << cy << vcl_endl;
-                        vcl_cout << "\twidth " << width << " " ;
-                        vcl_cout << "height " << height << "\n" ;
-                        vcl_cout << "\tarc length " <<(*it1)->length()  << "\n" ;
+                        std::cout << "Center-- x=" << cx << "  y=" << cy << std::endl;
+                        std::cout << "\twidth " << width << " " ;
+                        std::cout << "height " << height << "\n" ;
+                        std::cout << "\tarc length " <<(*it1)->length()  << "\n" ;
                         //eliminating small conics and conics with high ellipticity 
-                        if ((vcl_fabs(width - height) < par_.WIDTH_HEIGHT_DIFF_THRESHOLD)
+                        if ((std::fabs(width - height) < par_.WIDTH_HEIGHT_DIFF_THRESHOLD)
                                         && (width > par_.WIDTH_THRESHOLD)) 
                         {
                                 theta = ellipse_angle(*it1);
@@ -122,17 +122,17 @@ conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d
                                 theta = angle0-angle1;
                                 if (theta < 0) theta = 2*vnl_math::pi + theta;
                                 */
-                                vcl_cout << "\tellipse subtends " << theta*180./vnl_math::pi << "\n" ;
+                                std::cout << "\tellipse subtends " << theta*180./vnl_math::pi << "\n" ;
                                 if (theta <= 3*vnl_math::pi/2) {
-                                        vcl_cout << "\t\tangle <= 270 degrees"  << "\n" ;
+                                        std::cout << "\t\tangle <= 270 degrees"  << "\n" ;
                                         comb = false;
                                         // add an error margin to the center of the ellipse
                                         double center_x0 = cx - (width + height)/par_.ERROR_MARGIN_FACTOR;
                                         double center_x1 = cx + (width + height)/par_.ERROR_MARGIN_FACTOR;
                                         double center_y0 = cy - (width + height)/par_.ERROR_MARGIN_FACTOR;
                                         double center_y1 = cy + (width + height)/par_.ERROR_MARGIN_FACTOR;
-                                        vcl_cout << "\t\tlooking for centers bounded by " << center_x0 << " " << center_y0;
-                                        vcl_cout << "and " << center_x1 << " " << center_y1 << "\n";
+                                        std::cout << "\t\tlooking for centers bounded by " << center_x0 << " " << center_y0;
+                                        std::cout << "and " << center_x1 << " " << center_y1 << "\n";
 
                                         for(conic_vector_set::iterator it2=comb_conics.begin(); it2 != comb_conics.end(); ++it2) 
                                         { 
@@ -143,15 +143,15 @@ conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d
                                                         if ((cx2 >= center_x0) && (cx2 <= center_x1) && 
                                                                         (cy2 >= center_y0) && (cy2 <= center_y1)) {
                                                                 // conics are close enough to say they are part of the same ellipse
-                                                               vcl_cout  << "\t\t\tfound conic, " << cx2 << " " << cy2 << " within range\n"; 
+                                                               std::cout  << "\t\t\tfound conic, " << cx2 << " " << cy2 << " within range\n"; 
                                                                double newtheta = ellipse_angle(ptr);
-                                                               vcl_cout  << "\t\t\tnew conic subtends " << newtheta*180./vnl_math::pi << ",  old one " << theta*180./vnl_math::pi << "\n";
+                                                               std::cout  << "\t\t\tnew conic subtends " << newtheta*180./vnl_math::pi << ",  old one " << theta*180./vnl_math::pi << "\n";
                                                                if(newtheta > theta){
-                                                                       vcl_cout  << "\t\t\tnew conic wins, pushing front\n";
+                                                                       std::cout  << "\t\t\tnew conic wins, pushing front\n";
                                                                        (*it2).insert(it2->begin(),*it1);
                                                                }
                                                                else{
-                                                                       vcl_cout  << "\t\t\tnew conic loses, pushing back\n";
+                                                                       std::cout  << "\t\t\tnew conic loses, pushing back\n";
                                                                        (*it2).push_back(*it1);
                                                                }
                                                                comb = true;
@@ -160,20 +160,20 @@ conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d
                                                 }
                                         }
                                         if (!comb){   // add it to the list
-                                                vcl_cout  << "\t\t\tno existing match found, adding to list\n";
-                                                vcl_vector<vsol_conic_2d_sptr> v;
+                                                std::cout  << "\t\t\tno existing match found, adding to list\n";
+                                                std::vector<vsol_conic_2d_sptr> v;
                                                 v.push_back(*it1);
                                                 comb_conics.push_back(v);
                                         }
                                 }
                                 else{
-                                        vcl_cout << "\t\tangle > 270 degrees"  << "\n" ;
-                                        vcl_cout << "\t\tdoing ... nothing???"  << "\n" ;
+                                        std::cout << "\t\tangle > 270 degrees"  << "\n" ;
+                                        std::cout << "\t\tdoing ... nothing???"  << "\n" ;
                                 }
                         }
                         else{
-                                vcl_cout << "width/height diff exceeds threshold " << par_.WIDTH_HEIGHT_DIFF_THRESHOLD << "\n";
-                                vcl_cout << "or width exceeds threshold " << par_.WIDTH_THRESHOLD << "\n";
+                                std::cout << "width/height diff exceeds threshold " << par_.WIDTH_HEIGHT_DIFF_THRESHOLD << "\n";
+                                std::cout << "or width exceeds threshold " << par_.WIDTH_THRESHOLD << "\n";
                         }
                 }
         }
@@ -181,7 +181,7 @@ conic_vector_set cali_artf_corresponder::combine_conics(vcl_vector<vsol_conic_2d
         conic_vector_set sorted = order_conics(comb_conics);
         //  conic_vector_set sorted_along_axis = axis_orientation_sort(sorted);
 
-        vcl_cout << vcl_endl << "After SORTING" << vcl_endl;
+        std::cout << std::endl << "After SORTING" << std::endl;
         /*print(sorted_along_axis);
           return sorted_along_axis;*/
         print(sorted);
@@ -203,7 +203,7 @@ cali_artf_corresponder::order_conics(conic_vector_set &conics) const{
    //  double max_y = 0;
     for(conic_vector_set::iterator it=conics.begin(); 
       it != conics.end(); ++it) {
-      vcl_vector<vsol_conic_2d_sptr> v = (*it);
+      std::vector<vsol_conic_2d_sptr> v = (*it);
       // only check the first in the list, they all have the (almost) same center
       v[0]->ellipse_parameters(cx,cy,phi,width,height); 
       if (cy < min_y) {
@@ -231,7 +231,7 @@ cali_artf_corresponder::reverse_order_conics(conic_vector_set &conics){
      double max_y = -100;
     for(conic_vector_set::iterator it=conics.begin(); 
       it != conics.end(); ++it) {
-      vcl_vector<vsol_conic_2d_sptr> v = (*it);
+      std::vector<vsol_conic_2d_sptr> v = (*it);
       // only check the first in the list, they all have the (almost) same center
       v[0]->ellipse_parameters(cx,cy,phi,width,height); 
       if (cy > max_y) {
@@ -247,27 +247,27 @@ cali_artf_corresponder::reverse_order_conics(conic_vector_set &conics){
 
 //:takes a set of simulated artifact images and a list of binary files 
 // where real artifact images' conic info is stored
-vcl_vector<vcl_pair<conic_vector_set *, conic_vector_set *> > 
-cali_artf_corresponder::gen_corresp(vcl_vector<vil_image_resource_sptr> img_vector, 
-                                   vcl_string file_base, int interval)
+std::vector<std::pair<conic_vector_set *, conic_vector_set *> > 
+cali_artf_corresponder::gen_corresp(std::vector<vil_image_resource_sptr> img_vector, 
+                                   std::string file_base, int interval)
 {
-    vcl_cout << "file_base is " << file_base << "\n";
+    std::cout << "file_base is " << file_base << "\n";
   // find the conic info of the given simulated images
   for (unsigned int i=0; i<img_vector.size(); i++) {
     conic_vector_set conics = fit_conics(img_vector[i]);
-    vcl_string file_name = gen_read_fname(file_base, i*interval);
-    vcl_cout << "reading conics from " << file_name << "...\n";
+    std::string file_name = gen_read_fname(file_base, i*interval);
+    std::cout << "reading conics from " << file_name << "...\n";
     conic_vector_set saved_conics = read_conics_bin(file_name);
-    vcl_cout << "SAVED CONICS------->" << vcl_endl;
+    std::cout << "SAVED CONICS------->" << std::endl;
     print(saved_conics);
-    correspondences.push_back(vcl_pair<conic_vector_set *, conic_vector_set *>(&conics, &saved_conics));
+    correspondences.push_back(std::pair<conic_vector_set *, conic_vector_set *>(&conics, &saved_conics));
   }
   return correspondences;
 }
 
 
-void cali_artf_corresponder::diff_corresp_set(vcl_vector<vcl_vector<vsol_conic_2d > > first, 
-                vcl_vector<conic_vector_set> second, vnl_vector<double> &diff_vector)
+void cali_artf_corresponder::diff_corresp_set(std::vector<std::vector<vsol_conic_2d > > first, 
+                std::vector<conic_vector_set> second, vnl_vector<double> &diff_vector)
 {
   unsigned int size=0, v_size=0, k=0, i, j,count;
   double cx2,cy2,phi2,width2,height2;
@@ -280,8 +280,8 @@ void cali_artf_corresponder::diff_corresp_set(vcl_vector<vcl_vector<vsol_conic_2
     
   for (i=0; i<v_size; i++) {
     
-     //   vcl_cout<<" first size "<<first[i].size()<<vcl_endl;
-     //   vcl_cout<<" second size "<<second[i].size()<<vcl_endl;
+     //   std::cout<<" first size "<<first[i].size()<<std::endl;
+     //   std::cout<<" second size "<<second[i].size()<<std::endl;
 
     if (first[i].size() < second[i].size()) 
       size = first[i].size();
@@ -307,7 +307,7 @@ void cali_artf_corresponder::diff_corresp_set(vcl_vector<vcl_vector<vsol_conic_2
         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
       
         diff_vector[k++] = diff; 
-      //  vcl_cout<<" difference vector 1 "<< k <<" "<<diff<<vcl_endl;
+      //  std::cout<<" difference vector 1 "<< k <<" "<<diff<<std::endl;
      
         double rad_diff = sqrt((width2 - width1)*(width2 - width1) + 
           (height2 - height1)*(height2 - height1));
@@ -315,12 +315,12 @@ void cali_artf_corresponder::diff_corresp_set(vcl_vector<vcl_vector<vsol_conic_2
         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";
        
         diff_vector[k++] = rad_diff;
-       //  vcl_cout<<" difference vector 2 "<< k <<" "<<rad_diff<<vcl_endl;
+       //  std::cout<<" difference vector 2 "<< k <<" "<<rad_diff<<std::endl;
       //}
      }
       else {
-        vcl_cout << "Not a real ellipse!" << vcl_endl;
-        vcl_cout << first[i][j] << vcl_endl;
+        std::cout << "Not a real ellipse!" << std::endl;
+        std::cout << first[i][j] << std::endl;
         // to ignore the correspondence, place 0 for the differences,
         // one for the center difference, one for the width, height difference
         diff_vector[k++] = 0;
@@ -342,8 +342,8 @@ void cali_artf_corresponder::diff_corresp_set(vcl_vector<vcl_vector<vsol_conic_2
   
 
 }
-  void cali_artf_corresponder::robust_corresp_set(vcl_vector<vcl_vector<vsol_conic_2d> > first, 
-                                             vcl_vector<conic_vector_set> second, 
+  void cali_artf_corresponder::robust_corresp_set(std::vector<std::vector<vsol_conic_2d> > first, 
+                                             std::vector<conic_vector_set> second, 
                                              vnl_vector<double> &diff_vector)
 {
    unsigned int t_size,i,j,size,k = 0,count,offset;
@@ -375,7 +375,7 @@ size = par_.NUM_OF_CORRESP;
 offset = 0;
         while(((cy1 - cy2) > 200) & (j+offset<size))
         {
-            vcl_cout<<" the correspondences where there is mismatch " << k <<vcl_endl;
+            std::cout<<" the correspondences where there is mismatch " << k <<std::endl;
             first[i][j+offset].ellipse_parameters(cx1,cy1,phi1,width1,height1);
             offset++;
         }
@@ -383,7 +383,7 @@ offset = 0;
      double diff = sqrt((cx2 - cx1)*(cx2 - cx1) + 
           (cy2 - cy1)*(cy2 - cy1));
         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
-      /* vcl_cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" <<vcl_endl;*/
+      /* std::cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" <<std::endl;*/
         diff_vector[k++] = diff; 
       
      
@@ -391,13 +391,13 @@ offset = 0;
           (height2 - height1)*(height2 - height1));
 
         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";
-    /* vcl_cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" <<vcl_endl;  */
+    /* std::cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" <<std::endl;  */
         diff_vector[k++] = rad_diff;
 
     }
     else {
-        vcl_cout << "Not a real ellipse!" << vcl_endl;
-        vcl_cout << first[i][j] << vcl_endl;
+        std::cout << "Not a real ellipse!" << std::endl;
+        std::cout << first[i][j] << std::endl;
         // to ignore the correspondence, place 0 for the differences,
         // one for the center difference, one for the width, height difference
         diff_vector[k++] = 0;
@@ -421,7 +421,7 @@ offset = 0;
  * assumes that synthetic_conics and found_conics are both sorted by y-value
  **/
 
-void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_conic_2d> > first, 
+void cali_artf_corresponder::verbose_error_summary(std::vector<std::vector<vsol_conic_2d> > first, 
                                              conic_vector_set second, 
                                              vnl_vector<double> &diff_vector) 
 {
@@ -434,15 +434,15 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
         else
                 t_size = first.size();
 
-        vcl_cout << "first.size() " <<first.size() << " images\n";
-        vcl_cout << "comparing " << t_size << " images\n";
+        std::cout << "first.size() " <<first.size() << " images\n";
+        std::cout << "comparing " << t_size << " images\n";
         for (i = 0;i<t_size;i++)
         {
                 if (i != 0)
                 {
                         int first_ball;
-                        vcl_cout << "first[" << i << "].size() " << first[i].size() << "\n";
-                        vcl_cout << "second[" << i << "].size() " << second[i].size() << "\n";
+                        std::cout << "first[" << i << "].size() " << first[i].size() << "\n";
+                        std::cout << "second[" << i << "].size() " << second[i].size() << "\n";
                         //number of conics found in each image.  
                         //might differ depending on fitting
                         if (first[i].size()>second[i].size())
@@ -450,29 +450,29 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                         else
                                 size = first[i].size();
 
-                        vcl_cout << "image  " << i << ", choosing smaller, using " << size << " conics\n";
+                        std::cout << "image  " << i << ", choosing smaller, using " << size << " conics\n";
                         if (size>par_.NUM_OF_CORRESP)
                                 size = par_.NUM_OF_CORRESP;
                         m = 0;
 
-                        //vcl_cout << "NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
-                        vcl_cout << "image " << i << ", using " << size << " conics\n";
+                        //std::cout << "NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
+                        std::cout << "image " << i << ", using " << size << " conics\n";
                         for(int idx = 0; idx < first[i].size(); idx++){
                                         if (first[i][idx].is_real_ellipse()){
                                                 first[i][idx].ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                                                vcl_cout << "\tfirst[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                                                std::cout << "\tfirst[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                                         }
                                         else{
-                                                vcl_cout << "\tfirst[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
+                                                std::cout << "\tfirst[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
                                         }
                         }
                         for(int idx = 0; idx < second[i].size(); idx++){
                                 if(second[i][idx]->is_real_ellipse()){ 
                                         second[i][idx]->ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                                        vcl_cout << "\tsecond[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                                        std::cout << "\tsecond[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                                 }
                                 else{
-                                        vcl_cout << "\tsecond[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
+                                        std::cout << "\tsecond[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
 
                                 }
                         }
@@ -501,8 +501,8 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                                 //why always  second[i][j+m][0]??
                                                 first[i][j+m].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                 second[i][j+m]->ellipse_parameters(cx2,cy2,phi2,width2,height2);
-                                                vcl_cout << "\tfirst list " << j+m << " center " << cx1 << " " << cy1 << "\n"; 
-                                                vcl_cout << "\tsecond list " << j+m << " center " << cx2 << " " << cy2 << "\n"; 
+                                                std::cout << "\tfirst list " << j+m << " center " << cx1 << " " << cy1 << "\n"; 
+                                                std::cout << "\tsecond list " << j+m << " center " << cx2 << " " << cy2 << "\n"; 
                                                 first_ball = j+m;
 
                                                 offset = 0;
@@ -519,8 +519,8 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                                                 first[i][j+m+offset].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                                 first_ball = j+m+offset;
                                                         }
-                                                        vcl_cout << "\t\t mismatch...";
-                                                        vcl_cout << " first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
+                                                        std::cout << "\t\t mismatch...";
+                                                        std::cout << " first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
                                                         offset++;
                                                 }
 
@@ -529,14 +529,14 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                                 //previous loop...
                                                 if (fabs(cy1 - cy2)>par_.Y_COORD_DIFF_RANGE)
                                                 {
-                                                        vcl_cout << "\t\t mismatch again...\n";
+                                                        std::cout << "\t\t mismatch again...\n";
                                                         //go back to checking
                                                         //against the first ball
                                                         //in the first list
                                                         offset = 0;
                                                         first[i][j+m].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                         first_ball = j+m;
-                                                        vcl_cout << "\t\tnow on first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
+                                                        std::cout << "\t\tnow on first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
                                                         //search through the
                                                         //second list until you
                                                         //hit the end or find a
@@ -547,8 +547,8 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                                         {
                                                                 second[i][j+m+offset]->ellipse_parameters(cx2,cy2,phi2,width2,height2);
 
-                                                                vcl_cout << "\t\t mismatch...";
-                                                                vcl_cout << " second list " << j+m+offset << " center " << cx2 << " " << cy2 << "\n"; 
+                                                                std::cout << "\t\t mismatch...";
+                                                                std::cout << " second list " << j+m+offset << " center " << cx2 << " " << cy2 << "\n"; 
                                                                 offset++;
                                                         }
                                                 }
@@ -561,7 +561,7 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                                 //radius differnces
                                                 if ((fabs(cy1 - cy2)<par_.Y_COORD_DIFF_RANGE) && (fabs(cx1 - cx2)<par_.X_COORD_DIFF_RANGE))
                                                 { 
-                                                        vcl_cout << "\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
+                                                        std::cout << "\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
                                                         double diff = sqrt((cx2 - cx1)*(cx2 - cx1) + 
                                                                         (cy2 - cy1)*(cy2 - cy1));
                                                         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) 
@@ -573,12 +573,12 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
 
                                                         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ") img: " << i << "(" << cx1 << "," << cy1 << ") RAD, ball " << first_ball +1<< "\n";
                                                         diff_vector[k++] = rad_diff; 
-                                                        vcl_cout << "\t" << k << " differences; new diffs: dcenter = " << diff << " drad = " << rad_diff << "\n";
+                                                        std::cout << "\t" << k << " differences; new diffs: dcenter = " << diff << " drad = " << rad_diff << "\n";
                                                 }
                                                 //otherwise, put zeroes
                                                 else
                                                 {
-                                                        vcl_cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<vcl_endl;
+                                                        std::cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<std::endl;
                                                         fstream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" 
                                                         << ") img: " << i << "(" << cx1 << "," << cy1 << ")\n";
 
@@ -593,8 +593,8 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                         //when the first ball of the first list
                                         //is not a real ellipse, add zeroes and go to the next ball
                                         else {
-                                                vcl_cout << "Not a real ellipse!" << vcl_endl;
-                                                vcl_cout << first[i][j] << vcl_endl;
+                                                std::cout << "Not a real ellipse!" << std::endl;
+                                                std::cout << first[i][j] << std::endl;
                                                 // to ignore the correspondence, place 0 for the differences,
                                                 // one for the center difference, one for the width, height difference
                                                 diff_vector[k++] = 0;
@@ -612,7 +612,7 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
                                 diff_vector[k++] = 0;
                                 fstream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" "\n";
                                 diff_vector[k++] = 0;
-                                vcl_cout << "\t" << k << " differences; padding with zero for remaining correspondences\n";
+                                std::cout << "\t" << k << " differences; padding with zero for remaining correspondences\n";
 
                         }
                 }
@@ -622,25 +622,25 @@ void cali_artf_corresponder::verbose_error_summary(vcl_vector<vcl_vector<vsol_co
 /**
  * assumes that synthetic_conics and found_conics are both sorted by y-value
  **/
-void cali_artf_corresponder::new_correspondence(const vcl_vector<vcl_vector<vsol_conic_2d> >& synthetic_conics, 
+void cali_artf_corresponder::new_correspondence(const std::vector<std::vector<vsol_conic_2d> >& synthetic_conics, 
                                              const conic_vector_set& found_conics, 
                                              vnl_vector<double> &diff_vector) 
 { 
         unsigned int t_size,size,k = 0,count,offset,m;
         //number of images.  these should never differ 
         if(synthetic_conics.size() > found_conics.size()){
-                    vcl_cerr << "WHOAH! Why is found_conics vector smaller than synthetic conic vector ???\n";
+                    std::cerr << "WHOAH! Why is found_conics vector smaller than synthetic conic vector ???\n";
                     exit(1);
         }
 
         for(int img = 0; img < synthetic_conics.size(); img++){
-                vcl_cout << "Image : " << img << "\n";
+                std::cout << "Image : " << img << "\n";
 
                 if(synthetic_conics[img].size() < par_.BALL_NUMBER){
-                            vcl_cerr << "In img : " << img << ", only found " << synthetic_conics[img].size() << " conics\n";
+                            std::cerr << "In img : " << img << ", only found " << synthetic_conics[img].size() << " conics\n";
                 }
                 else if(synthetic_conics[img].size() > par_.BALL_NUMBER){
-                            vcl_cerr << "In img : " << img << ", found too many:  " << synthetic_conics[img].size() << " conics\n";
+                            std::cerr << "In img : " << img << ", found too many:  " << synthetic_conics[img].size() << " conics\n";
                 }
 
                 int mask_count = 0;
@@ -648,25 +648,25 @@ void cali_artf_corresponder::new_correspondence(const vcl_vector<vcl_vector<vsol
                         mask_count += par_.SETMASK[maskidx];
                 }
                 if(mask_count != par_.NUM_OF_CORRESP){
-                        vcl_cerr << "Mask indicates using " << mask_count << " balls, but par_.NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
+                        std::cerr << "Mask indicates using " << mask_count << " balls, but par_.NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
                         exit(1);
                 }
 
                 for(int idx = 0; idx < synthetic_conics[img].size(); idx++){
                         double cx1,cy1,width1,height1,phi1,cx2,cy2,width2,height2,phi2;
                         synthetic_conics[img][idx].ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                        vcl_cout << "\tsynth[" << img <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                        std::cout << "\tsynth[" << img <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                 }
                 for(int idx = 0; idx < found_conics[img].size(); idx++){ 
                         double cx1,cy1,width1,height1,phi1,cx2,cy2,width2,height2,phi2;
                         found_conics[img][idx]->ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                        vcl_cout << "\tfound_conics[" << img <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                        std::cout << "\tfound_conics[" << img <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                 }
 
 
                 int last_match = -1; 
                 for(int conic_count = 0; conic_count < synthetic_conics[img].size(); conic_count++){
-                        vcl_cout << "\tBall : " << conic_count << "\n";
+                        std::cout << "\tBall : " << conic_count << "\n";
 
                         double cx1,cy1,width1,height1,phi1,cx2,cy2,width2,height2,phi2;
 
@@ -676,13 +676,13 @@ void cali_artf_corresponder::new_correspondence(const vcl_vector<vcl_vector<vsol
                         if(par_.SETMASK[conic_count]){
                                 if(synthetic_conics[img][conic_count].is_real_ellipse()){
                                         synthetic_conics[img][conic_count].ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                                        vcl_cout << "\t\tSynthetic [" << conic_count << "] : " << cx1 << " " << cy1  << "\n";
+                                        std::cout << "\t\tSynthetic [" << conic_count << "] : " << cx1 << " " << cy1  << "\n";
 
                                         bool found=false;
                                         for(int offset = last_match+1; offset < found_conics[img].size(); offset++){
                                                 found_conics[img][offset]->ellipse_parameters(cx2,cy2,phi2,width2,height2); 
-                                                vcl_cout << "\t\tFound[" << offset << "] : " << cx2 << " " << cy2  << "\n";
-                                                if((vcl_fabs(cy1 - cy2) < par_.Y_COORD_DIFF_RANGE)){
+                                                std::cout << "\t\tFound[" << offset << "] : " << cx2 << " " << cy2  << "\n";
+                                                if((std::fabs(cy1 - cy2) < par_.Y_COORD_DIFF_RANGE)){
                                                         last_match = offset;
                                                         found = true; break;
                                                 }
@@ -690,29 +690,29 @@ void cali_artf_corresponder::new_correspondence(const vcl_vector<vcl_vector<vsol
 
                                         if(found){
 
-                                                if(vcl_fabs(cx1-cx2) < par_.X_COORD_DIFF_RANGE){
-                                                        vcl_cout << "\t\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
+                                                if(std::fabs(cx1-cx2) < par_.X_COORD_DIFF_RANGE){
+                                                        std::cout << "\t\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
                                                         diff = sqrt((cx2 - cx1)*(cx2 - cx1) + (cy2 - cy1)*(cy2 - cy1));
                                                         rad_diff = sqrt((width2 - width1)*(width2 - width1) + (height2 - height1)*(height2 - height1));
                                                 }
                                                 else{
-                                                        vcl_cout << "\t\t mismatch on X coords , centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
-                                                        vcl_cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<vcl_endl;
+                                                        std::cout << "\t\t mismatch on X coords , centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
+                                                        std::cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<std::endl;
                                                 }
 
                                         } 
                                         else{
-                                                vcl_cout << "\t\t mismatch on Y coords, last centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
-                                                vcl_cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<vcl_endl;
+                                                std::cout << "\t\t mismatch on Y coords, last centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
+                                                std::cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<std::endl;
                                         }
 
                                 }
                                 else{
-                                        vcl_cout << "Image : " << img << ", synthetic conic " << conic_count << " not a real ellipse\n";
+                                        std::cout << "Image : " << img << ", synthetic conic " << conic_count << " not a real ellipse\n";
                                 }
                         }
                         else{
-                                vcl_cout << "Image : " << img << ",ball " << conic_count << " masked out\n";
+                                std::cout << "Image : " << img << ",ball " << conic_count << " masked out\n";
                         }
 
 
@@ -729,8 +729,8 @@ void cali_artf_corresponder::new_correspondence(const vcl_vector<vcl_vector<vsol
 
 }
 
-void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic_2d> > first, 
-                vcl_vector<conic_vector_set> second, 
+void cali_artf_corresponder::masked_corresp_set(std::vector<std::vector<vsol_conic_2d> > first, 
+                std::vector<conic_vector_set> second, 
                 vnl_vector<double> &diff_vector)
 
 
@@ -782,7 +782,7 @@ void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic
                                                 //   while((abs(cy1 - cy2) > 20) & (j+m+offset<first[i].size()) )
                                                 while((fabs(cy1 - cy2) > par_.Y_COORD_DIFF_RANGE) & (j+m+offset<first[i].size()) )
                                                 {
-                                                        /*  vcl_cout<<" the correspondences where there is mismatch " << k <<vcl_endl;*/
+                                                        /*  std::cout<<" the correspondences where there is mismatch " << k <<std::endl;*/
                                                         first[i][j+m+offset].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                         offset++;
                                                 }
@@ -796,7 +796,7 @@ void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic
                                                         //     while((abs(cy1 - cy2) > 20) & (j+m+offset<second[i].size()) )
                                                         while((fabs(cy1 - cy2) > static_cast<double>(par_.Y_COORD_DIFF_RANGE)) & (j+m+offset<second[i].size()) )
                                                         {
-                                                                /*vcl_cout<<" the correspondences where there is mismatch " << k <<vcl_endl;*/
+                                                                /*std::cout<<" the correspondences where there is mismatch " << k <<std::endl;*/
                                                                 second[i][j+m+offset][0]->ellipse_parameters(cx2,cy2,phi2,width2,height2);
                                                                 offset++;
                                                         }
@@ -812,7 +812,7 @@ void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic
                                                                         (cy2 - cy1)*(cy2 - cy1));
                                                         //   f_stream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
                                                         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
-                                                        /* vcl_cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" <<vcl_endl;*/
+                                                        /* std::cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" <<std::endl;*/
                                                         diff_vector[k++] = diff; 
 
 
@@ -822,13 +822,13 @@ void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic
                                                         //  f_stream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";
 
                                                         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";
-                                                        /* vcl_cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" <<vcl_endl;  */
+                                                        /* std::cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" <<std::endl;  */
                                                         diff_vector[k++] = rad_diff;
 
                                                 }
                                                 else
                                                 {
-                                                        vcl_cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<vcl_endl;
+                                                        std::cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<std::endl;
                                                         //    f_stream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" "\n";
 
                                                         fstream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" "\n";
@@ -843,8 +843,8 @@ void cali_artf_corresponder::masked_corresp_set(vcl_vector<vcl_vector<vsol_conic
 
                                         }
                                         else {
-                                                vcl_cout << "Not a real ellipse!" << vcl_endl;
-                                                vcl_cout << first[i][j] << vcl_endl;
+                                                std::cout << "Not a real ellipse!" << std::endl;
+                                                std::cout << first[i][j] << std::endl;
                                                 // to ignore the correspondence, place 0 for the differences,
                                                 // one for the center difference, one for the width, height difference
                                                 diff_vector[k++] = 0;
@@ -878,7 +878,7 @@ void cali_artf_corresponder::manual_corresp_set(conic_vector_setfirst,vnl_vector
   double diff,rad_diff; 
   unsigned int i,k = 0,j = 0,a = 0,size;
   
-  vcl_ofstream out(par_.DIFF.c_str(),vcl_fstream::out | vcl_ofstream::app);
+  std::ofstream out(par_.DIFF.c_str(),std::fstream::out | std::ofstream::app);
 
 
 for (i = 0;i<first.size();i++)
@@ -899,15 +899,15 @@ if (size > par_.NUM_OF_CORRESP) size = par_.NUM_OF_CORRESP;
         diff = sqrt((cx2 - cx1)*(cx2 - cx1) + 
           (cy2 - cy1)*(cy2 - cy1));
      out << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
- //     vcl_cout<< k << "  " <<diff <<vcl_endl;
-//  vcl_cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
+ //     std::cout<< k << "  " <<diff <<std::endl;
+//  std::cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
         diff_vector[k++] = diff;
 
         rad_diff = sqrt((width2 - width1)*(width2 - width1) + 
             (height2 - height1)*(height2 - height1));
      out << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
- //  vcl_cout<< k << "  " <<rad_diff <<vcl_endl;
-// vcl_cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
+ //  std::cout<< k << "  " <<rad_diff <<std::endl;
+// std::cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
         diff_vector[k++] = diff;
         a++;
     }
@@ -920,13 +920,13 @@ if (size > par_.NUM_OF_CORRESP) size = par_.NUM_OF_CORRESP;
 
 
                                              
-  void cali_artf_corresponder::manual_corresp_set(vcl_vector<vcl_vector<vsol_conic_2d > > first,vnl_vector<double> &diff_vector)
+  void cali_artf_corresponder::manual_corresp_set(std::vector<std::vector<vsol_conic_2d > > first,vnl_vector<double> &diff_vector)
 {
   double cx1,cy1,cx2,cy2,width1,height1,width2,height2,phi2;
   double diff,rad_diff; 
   unsigned int i,k = 0,j = 0,a = 0,size,count;
   
-  vcl_ofstream out(par_.DIFF.c_str(),vcl_fstream::out | vcl_ofstream::app);
+  std::ofstream out(par_.DIFF.c_str(),std::fstream::out | std::ofstream::app);
 
 
 for (i = 0;i<first.size();i++)
@@ -952,15 +952,15 @@ count = 0;
         diff = sqrt((cx2 - cx1)*(cx2 - cx1) + 
           (cy2 - cy1)*(cy2 - cy1));
      out << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
- //     vcl_cout<< k << "  " <<diff <<vcl_endl;
-//  vcl_cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
+ //     std::cout<< k << "  " <<diff <<std::endl;
+//  std::cout << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
         diff_vector[k++] = diff;
 
         rad_diff = sqrt((width2 - width1)*(width2 - width1) + 
             (height2 - height1)*(height2 - height1));
      out << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
- //  vcl_cout<< k << "  " <<rad_diff <<vcl_endl;
-// vcl_cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
+ //  std::cout<< k << "  " <<rad_diff <<std::endl;
+// std::cout << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";   
         diff_vector[k++] = diff;
         a++;
     }
@@ -974,8 +974,8 @@ count = 0;
 
 
 //: saves a given conic sets list into 
-void cali_artf_corresponder::save_conics_bin(conic_vector_set conics, vcl_string file_name){
-  //vcl_string file_name = "test_binary_write.bin";
+void cali_artf_corresponder::save_conics_bin(conic_vector_set conics, std::string file_name){
+  //std::string file_name = "test_binary_write.bin";
   
   cali_conic_info info(conics, 0, 10);
   vsl_b_ofstream stream(file_name.c_str());
@@ -983,7 +983,7 @@ void cali_artf_corresponder::save_conics_bin(conic_vector_set conics, vcl_string
   stream.close();
 }
 
-conic_vector_set cali_artf_corresponder::read_conics_bin(vcl_string file_name){
+conic_vector_set cali_artf_corresponder::read_conics_bin(std::string file_name){
   vsl_b_ifstream istream(file_name.c_str());
   cali_conic_info newinfo=cali_conic_info();
   newinfo.b_read(istream);
@@ -991,7 +991,7 @@ conic_vector_set cali_artf_corresponder::read_conics_bin(vcl_string file_name){
 
 }
 
-vcl_ostream& cali_artf_corresponder::print(vcl_ostream&  s,  
+std::ostream& cali_artf_corresponder::print(std::ostream&  s,  
   conic_vector_set const &list)
 {
   unsigned int i,j;
@@ -999,7 +999,7 @@ vcl_ostream& cali_artf_corresponder::print(vcl_ostream&  s,
 
   s << "size=" << list.size() << "\n";
   for(i=0; i < list.size(); i++) {
-      vcl_vector<vsol_conic_2d_sptr> v = list[i];
+      std::vector<vsol_conic_2d_sptr> v = list[i];
       for(j=0; j <v.size(); j++) {
       v[j]->ellipse_parameters(cx,cy,phi,width,height);
       s  << i << "-" << j << " Center-- x=" << cx << "  y=" << cy << " width=" << width << " height=" << height << " p0=" << *(v[j]->p0()) << " p1=" << *(v[j]->p1()) << " length = " << v[j]->length();
@@ -1011,19 +1011,19 @@ vcl_ostream& cali_artf_corresponder::print(vcl_ostream&  s,
    
 
 void cali_artf_corresponder::print(conic_vector_set &list){
-  vcl_cout << list.size() << vcl_endl;
+  std::cout << list.size() << std::endl;
   int i =0;
   unsigned int j;
   double cx, cy, phi, width, height;
 
   for(conic_vector_set::iterator it3=list.begin(); 
     it3 != list.end(); ++it3) {
-      vcl_vector<vsol_conic_2d_sptr> v = (*it3);
+      std::vector<vsol_conic_2d_sptr> v = (*it3);
       for(j=0; j <v.size(); j++) {
         v[j]->ellipse_parameters(cx,cy,phi,width,height);
-        vcl_cout << i << "-" << j << " Center-- x=" << cx << "  y=" << cy << " width=" << width << " height=" << height << 
+        std::cout << i << "-" << j << " Center-- x=" << cx << "  y=" << cy << " width=" << width << " height=" << height << 
         " p0=" << *(v[j]->p0()) << " p1=" << *(v[j]->p1()) << " length = " << v[j]->length() <<
- vcl_endl;
+ std::endl;
     }
     i++;
   }
@@ -1031,17 +1031,17 @@ void cali_artf_corresponder::print(conic_vector_set &list){
 
 //: generates a file name for reading the binary conic files
 // it appends a number and .bin at the end of the file base
-vcl_string cali_artf_corresponder::gen_read_fname(vcl_string file_base, int i)
+std::string cali_artf_corresponder::gen_read_fname(std::string file_base, int i)
 {
         return gen_write_fname(file_base,i);
         /*
     char* num = new char[4];
     num[0] = num[1] = num[2] = num[3] = '0';
     sprintf (num, "%d", i);
-    vcl_string num_str = num;
-    vcl_cout<<"num" <<num<<vcl_endl;
+    std::string num_str = num;
+    std::cout<<"num" <<num<<std::endl;
     file_base.replace(file_base.size()-num_str.size(), num_str.size(), num);
-    vcl_string outname = file_base;
+    std::string outname = file_base;
     outname += ".bin";
     return outname;
     */
@@ -1052,13 +1052,13 @@ vcl_string cali_artf_corresponder::gen_read_fname(vcl_string file_base, int i)
 // e.g. artifact0000.tif becomes bins/artifact0000.bin
 //      artifact0010.tif becomes bins/artifact0010.bin
 //      
-vcl_string cali_artf_corresponder::gen_write_fname(vcl_string fname, int i)
+std::string cali_artf_corresponder::gen_write_fname(std::string fname, int i)
 {
-        vcl_string dir = vul_file::dirname(fname);
-        vcl_string ext = vul_file::extension(fname);
-        vcl_string base = vul_file::basename(fname,ext.c_str());
-        vcl_string num_str;
-        vcl_stringstream ss;
+        std::string dir = vul_file::dirname(fname);
+        std::string ext = vul_file::extension(fname);
+        std::string base = vul_file::basename(fname,ext.c_str());
+        std::string num_str;
+        std::stringstream ss;
         ss << std::setfill('0') << std::setw(4);
         ss << i; 
         ss >> num_str;
@@ -1087,12 +1087,12 @@ conic_vector_set cali_artf_corresponder::axis_orientation_sort(conic_vector_set 
 
 
         // conic_vector_setreverse_sorted = reverse_order_conics(real_conics);
-        vcl_vector<vgl_point_2d<double> >centers;
+        std::vector<vgl_point_2d<double> >centers;
 
         for (conic_vector_set::iterator iter = real_conics.begin();iter != real_conics.end();iter++)
         {
                 count++;
-                vcl_vector<vsol_conic_2d_sptr> v = (*iter);
+                std::vector<vsol_conic_2d_sptr> v = (*iter);
                 v[0]->ellipse_parameters(cx,cy,phi,width,height);
                 vgl_point_2d<double>point(cx,cy);
                 centers.push_back(point);
@@ -1107,18 +1107,18 @@ conic_vector_set cali_artf_corresponder::axis_orientation_sort(conic_vector_set 
         angle = fabs(angle);
         angle = -(- vnl_math::pi/2 + angle);
 
-        vcl_vector<double>y_coord;
-        for (vcl_vector<vgl_point_2d<double> >::iterator it = centers.begin();it != centers.end();it++)
+        std::vector<double>y_coord;
+        for (std::vector<vgl_point_2d<double> >::iterator it = centers.begin();it != centers.end();it++)
         {
                 x =  it->x();
                 y = it->y();
                 x = x - p2.x();
                 y = y - p2.y();
-                x1 = x*vcl_cos(angle) - y *vcl_sin(angle);
-                y1 = x*vcl_sin(angle) + y *vcl_cos(angle);
+                x1 = x*std::cos(angle) - y *std::sin(angle);
+                y1 = x*std::sin(angle) + y *std::cos(angle);
 
-                /*r = vcl_sqrt((x-p1.x())*(x - p1.x()) + (y - p1.y())*(y-p1.y()));
-                  y = y + r - r*vcl_cos(angle);*/
+                /*r = std::sqrt((x-p1.x())*(x - p1.x()) + (y - p1.y())*(y-p1.y()));
+                  y = y + r - r*std::cos(angle);*/
                 y_coord.push_back(y1);
         }
 
@@ -1128,8 +1128,8 @@ conic_vector_set cali_artf_corresponder::axis_orientation_sort(conic_vector_set 
                 min_y = 10000;
                 count = 0;
                 j = 0,k =0;
-                vcl_vector<double> ::iterator min_ptr;
-                for (vcl_vector<double> ::iterator it = y_coord.begin();it != y_coord.end();it++)
+                std::vector<double> ::iterator min_ptr;
+                for (std::vector<double> ::iterator it = y_coord.begin();it != y_coord.end();it++)
                 {
 
                         if ((*it)<min_y)
@@ -1142,8 +1142,8 @@ conic_vector_set cali_artf_corresponder::axis_orientation_sort(conic_vector_set 
                         j++;
                 }
                 y_coord[count] = 10000;
-                //  vcl_vector<vsol_conic_2d_sptr>temp;
-                /* vcl_cout<<" testing the size in orientation_sort " <<real_conics[count].size() <<vcl_endl;
+                //  std::vector<vsol_conic_2d_sptr>temp;
+                /* std::cout<<" testing the size in orientation_sort " <<real_conics[count].size() <<std::endl;
                    for (int k = 0;k <real_conics[count].size();k++)
                    {
                    temp.push_back(real_conics[count][k]);
@@ -1169,7 +1169,7 @@ conic_vector_set cali_artf_corresponder::axis_orientation_sort(conic_vector_set 
 #if 0
 
 void cali_artf_corresponder::diff_corresp_set(conic_vector_set first, 
-                                             vcl_vector<conic_vector_set> second, 
+                                             std::vector<conic_vector_set> second, 
                                              vnl_vector<double> &diff_vector) 
 {
   unsigned int size=0, v_size=0, k=0, i, j,count;
@@ -1183,8 +1183,8 @@ void cali_artf_corresponder::diff_corresp_set(conic_vector_set first,
     
   for (i=0; i<v_size; i++) {
     
-     //   vcl_cout<<" first size "<<first[i].size()<<vcl_endl;
-     //   vcl_cout<<" second size "<<second[i].size()<<vcl_endl;
+     //   std::cout<<" first size "<<first[i].size()<<std::endl;
+     //   std::cout<<" second size "<<second[i].size()<<std::endl;
 
     if (first[i].size() < second[i].size()) 
       size = first[i].size();
@@ -1210,7 +1210,7 @@ void cali_artf_corresponder::diff_corresp_set(conic_vector_set first,
         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) << ")" "\n";
       
         diff_vector[k++] = diff; 
-      //  vcl_cout<<" difference vector 1 "<< k <<" "<<diff<<vcl_endl;
+      //  std::cout<<" difference vector 1 "<< k <<" "<<diff<<std::endl;
      
         double rad_diff = sqrt((width2 - width1)*(width2 - width1) + 
           (height2 - height1)*(height2 - height1));
@@ -1218,12 +1218,12 @@ void cali_artf_corresponder::diff_corresp_set(conic_vector_set first,
         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ")" "\n";
        
         diff_vector[k++] = rad_diff;
-       //  vcl_cout<<" difference vector 2 "<< k <<" "<<rad_diff<<vcl_endl;
+       //  std::cout<<" difference vector 2 "<< k <<" "<<rad_diff<<std::endl;
       //}
      }
       else {
-        vcl_cout << "Not a real ellipse!" << vcl_endl;
-        vcl_cout << first[i][j] << vcl_endl;
+        std::cout << "Not a real ellipse!" << std::endl;
+        std::cout << first[i][j] << std::endl;
         // to ignore the correspondence, place 0 for the differences,
         // one for the center difference, one for the width, height difference
         diff_vector[k++] = 0;

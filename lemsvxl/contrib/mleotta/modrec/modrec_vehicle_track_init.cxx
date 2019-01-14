@@ -9,7 +9,7 @@
 #include "modrec_vehicle_track_init.h"
 #include <modrec/modrec_vehicle_fit_video.h>
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_box_2d.h>
@@ -125,8 +125,8 @@ set_vehicle(const modrec_pca_vehicle& vehicle)
       vehicle_type_ = DETAILED3;
       break;
     default:
-      vcl_cerr << "Unknown model type with "
-               << vehicle_.num_verts() << " vertices" << vcl_endl;
+      std::cerr << "Unknown model type with "
+               << vehicle_.num_verts() << " vertices" << std::endl;
   }
 }
 
@@ -137,7 +137,7 @@ silhouette_plausible(const vgl_polygon<double>& silhouette)
 {
   double area = vgl_area(silhouette);
   double circ = 0.0;
-  const vcl_vector<vgl_point_2d<double> >& sheet = silhouette[0];
+  const std::vector<vgl_point_2d<double> >& sheet = silhouette[0];
   const int n = sheet.size();
   vgl_box_2d<double> bbox;
   for(int i=n-1, j=0; j < n; i=j, ++j){
@@ -146,21 +146,21 @@ silhouette_plausible(const vgl_polygon<double>& silhouette)
     circ += (p2-p1).length();
     bbox.add(p1);
   }
-  if(area/bbox.area() < 0.5 || circ/vcl_sqrt(area) > 10.0)
+  if(area/bbox.area() < 0.5 || circ/std::sqrt(area) > 10.0)
     return false;
-  vcl_cout << "area="<<area <<" circ="<< circ<<" box area="<<bbox.area()
-  << "box ratio="<<area/bbox.area()<<" circ ratio="<< circ/vcl_sqrt(area)<<vcl_endl;
+  std::cout << "area="<<area <<" circ="<< circ<<" box area="<<bbox.area()
+  << "box ratio="<<area/bbox.area()<<" circ ratio="<< circ/std::sqrt(area)<<std::endl;
   return true;
 }
 
 
 //: estimate the Z rotation angle from optical flow vectors
 double modrec_vehicle_track_init::
-estimate_angle(const vcl_vector<pv_pair>& flow)
+estimate_angle(const std::vector<pv_pair>& flow)
 {
   // use a histogram to estimate the vehicle direction robustly
-  vcl_vector<unsigned int> angle_hist(8,0);
-  vcl_vector<vgl_vector_2d<double> > dir_bins(8,vgl_vector_2d<double>(0,0));
+  std::vector<unsigned int> angle_hist(8,0);
+  std::vector<vgl_vector_2d<double> > dir_bins(8,vgl_vector_2d<double>(0,0));
   for(unsigned int j=0; j<flow.size(); ++j)
   {
     // get the start and end points of the flow vector
@@ -172,7 +172,7 @@ estimate_angle(const vcl_vector<pv_pair>& flow)
     // compute the unit flow vector in the ground plane
     vgl_vector_2d<double> dir = normalized(gp2-gp1);
     // bin the vector by angle
-    double angle = vcl_atan2(dir.y(),dir.x());
+    double angle = std::atan2(dir.y(),dir.x());
     int bin = (angle/vnl_math::pi+1-0.0625)*4;
     if(bin<0)
       bin = 7;
@@ -195,7 +195,7 @@ estimate_angle(const vcl_vector<pv_pair>& flow)
   if(double(angle_hist[(max_bin+7)%8])/max_hist > 0.75)
     dir += dir_bins[(max_bin+7)%8];
   
-  return vcl_atan2(dir.y(),dir.x());
+  return std::atan2(dir.y(),dir.x());
 }
 
 
@@ -228,15 +228,15 @@ align_centroids(const vgl_point_2d<double>& c,
 
 
 //: compute the errors in silhouette alignment
-vcl_vector<double> modrec_vehicle_track_init::
+std::vector<double> modrec_vehicle_track_init::
 silhouette_error(const vgl_polygon<double>& silhouette,
-                 vcl_vector<vgl_vector_2d<double> >& norms)
+                 std::vector<vgl_vector_2d<double> >& norms)
 {
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
+  const std::vector<std::vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
   norms.clear();
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     vgl_vector_2d<double> n1(0,0), n2(0,0);
@@ -251,7 +251,7 @@ silhouette_error(const vgl_polygon<double>& silhouette,
     norms.push_back(n2);
   }
   
-  vcl_vector<double> errors, dist;
+  std::vector<double> errors, dist;
   modrec_vehicle_fit_video::
   compute_silhouette_errors(pts,norms,silhouette,errors);
  
@@ -265,17 +265,17 @@ fit_to_silhouette(const vgl_polygon<double>& silhouette,
                   const vgl_rotation_3d<double>& R,
                   vgl_vector_3d<double>& t)
 {
-  vcl_vector<bool> options(7,false); 
+  std::vector<bool> options(7,false); 
   options[0] = options[1] = options[2] = true;
   unsigned int num_pc = 3;
   vnl_vector<double> init_params(vehicle_.params().extract(num_pc));
   mesh_projector_.project(camera_,vehicle_,R,t,sun_dir_,options,num_pc);
   
   // compute the errors in silhouette alignment
-  vcl_vector<vgl_vector_2d<double> > norms;
-  vcl_vector<double> errors = silhouette_error(silhouette,norms);
+  std::vector<vgl_vector_2d<double> > norms;
+  std::vector<double> errors = silhouette_error(silhouette,norms);
   
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
+  const std::vector<std::vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
   
   unsigned int num_finite = 0;
   for(unsigned int i=0; i<errors.size(); ++i)
@@ -284,10 +284,10 @@ fit_to_silhouette(const vgl_polygon<double>& silhouette,
   
   // not enough error measurements found
   if(num_finite < 5)
-    return vcl_numeric_limits<double>::infinity();
+    return std::numeric_limits<double>::infinity();
   
   
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Js = 
+  const std::vector<std::vector<vnl_matrix<double> > >& Js = 
       mesh_projector_.silhouette_jacobians();
   
   vnl_matrix<double> M(num_finite+num_pc, 5, 0.0);
@@ -295,7 +295,7 @@ fit_to_silhouette(const vgl_polygon<double>& silhouette,
   unsigned int k=0; // error term index
   unsigned int c=0; // M row index
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     for(unsigned int j=0; j<si.size(); ++j){
@@ -314,7 +314,7 @@ fit_to_silhouette(const vgl_polygon<double>& silhouette,
   }
   
   vnl_vector<double> soln = vnl_svd<double>(M).solve(b);
-  vcl_cout << "soln = "<<soln<<vcl_endl;
+  std::cout << "soln = "<<soln<<std::endl;
   
   
   vnl_vector<double> p(vehicle_.params());
@@ -342,17 +342,17 @@ median_error(const vgl_polygon<double>& silhouette,
              const vgl_rotation_3d<double>& R,
              vgl_vector_3d<double>& t)
 {
-  vcl_vector<bool> options(7,false); 
+  std::vector<bool> options(7,false); 
   options[0] = options[1] = options[2] = true;
   unsigned int num_pc = 3;
   vnl_vector<double> init_params(vehicle_.params().extract(num_pc));
   mesh_projector_.project(camera_,vehicle_,R,t,sun_dir_,options,num_pc);
   
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vgl_vector_2d<double> > norms;
+  const std::vector<std::vector<vgl_point_2d<double> > >& sil = mesh_projector_.silhouette();
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_vector_2d<double> > norms;
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     vgl_vector_2d<double> n1(0,0), n2(0,0);
@@ -367,20 +367,20 @@ median_error(const vgl_polygon<double>& silhouette,
     norms.push_back(n2);
   }
   
-  vcl_vector<double> errors, dist;
+  std::vector<double> errors, dist;
   modrec_vehicle_fit_video::
       compute_silhouette_errors(pts,norms,silhouette,errors);
   for(unsigned int i=0; i<errors.size(); ++i)
     if(vnl_math_isfinite(errors[i]))
-      dist.push_back(vcl_abs(errors[i]));
-  vcl_sort(dist.begin(),dist.end());
+      dist.push_back(std::abs(errors[i]));
+  std::sort(dist.begin(),dist.end());
 
   // not enough error measurements found
   if(dist.size() < 5)
-    return vcl_numeric_limits<double>::infinity();
+    return std::numeric_limits<double>::infinity();
 
 
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Js = 
+  const std::vector<std::vector<vnl_matrix<double> > >& Js = 
     mesh_projector_.silhouette_jacobians();
   
   vnl_matrix<double> M(dist.size()+num_pc, 5, 0.0);
@@ -388,7 +388,7 @@ median_error(const vgl_polygon<double>& silhouette,
   unsigned int k=0; // error term index
   unsigned int c=0; // M row index
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     for(unsigned int j=0; j<si.size(); ++j){
@@ -407,7 +407,7 @@ median_error(const vgl_polygon<double>& silhouette,
   }
   
   vnl_vector<double> soln = vnl_svd<double>(M).solve(b);
-  vcl_cout << "soln = "<<soln<<vcl_endl;
+  std::cout << "soln = "<<soln<<std::endl;
   
 
   vnl_vector<double> p(vehicle_.params());
@@ -439,15 +439,15 @@ vgl_box_2d<double> polygon_bbox(const vgl_polygon<double>& poly)
 
 //: match observed silhouettes and flow vectors to existing states
 //  return a vector of unmatched silhouettes
-vcl_vector<vgl_polygon<double> >
+std::vector<vgl_polygon<double> >
 modrec_vehicle_track_init::
-match_silhouettes(const vcl_vector<vgl_polygon<double> >& silhouettes,
-                  const vcl_vector<pv_pair>& flow,
-                        vcl_vector<modrec_vehicle_state>& states)
+match_silhouettes(const std::vector<vgl_polygon<double> >& silhouettes,
+                  const std::vector<pv_pair>& flow,
+                        std::vector<modrec_vehicle_state>& states)
 {
-  vcl_vector<vgl_polygon<double> > remain_sils(silhouettes);
+  std::vector<vgl_polygon<double> > remain_sils(silhouettes);
   
-  vcl_vector<vgl_box_2d<double> > sil_bbox;
+  std::vector<vgl_box_2d<double> > sil_bbox;
   for(unsigned int i=0; i<silhouettes.size(); ++i)
   {
     sil_bbox.push_back(polygon_bbox(silhouettes[i]));
@@ -463,7 +463,7 @@ match_silhouettes(const vcl_vector<vgl_polygon<double> >& silhouettes,
     vgl_polygon<double> sil = mesh_projector_.silhouette_polygon();
     // FIXME This hack prevents creation of new states when the silhouette computation fails
     if(sil.num_sheets()==0 || sil[0].empty())
-      return vcl_vector<vgl_polygon<double> >();
+      return std::vector<vgl_polygon<double> >();
     
     vgl_point_2d<double> c = vgl_centroid(sil);
     double area = vgl_area(sil);
@@ -472,9 +472,9 @@ match_silhouettes(const vcl_vector<vgl_polygon<double> >& silhouettes,
     for(int j=0; j<remain_sils.size(); ++j)
     {
       vgl_box_2d<double> ibox = vgl_intersection(bbox, sil_bbox[j]);
-      vcl_cout << j<<" pbox="<<bbox.area()<<" dbox="<<sil_bbox[j].area()<<" ibox="<<ibox.area()
-      << " r1="<<ibox.area()/sil_bbox[j].area()<<" r2="<<ibox.area()/bbox.area()<<vcl_endl;
-      double aratio = vcl_min(1.0, bbox.area()/sil_bbox[j].area());
+      std::cout << j<<" pbox="<<bbox.area()<<" dbox="<<sil_bbox[j].area()<<" ibox="<<ibox.area()
+      << " r1="<<ibox.area()/sil_bbox[j].area()<<" r2="<<ibox.area()/bbox.area()<<std::endl;
+      double aratio = std::min(1.0, bbox.area()/sil_bbox[j].area());
       if(ibox.area()/sil_bbox[j].area() > .5*aratio)
       {
         // associate this silhouette to the state if a complete covering
@@ -496,15 +496,15 @@ match_silhouettes(const vcl_vector<vgl_polygon<double> >& silhouettes,
 //  Also merge in states predicted from the previous frame
 void
 modrec_vehicle_track_init::
-find_states(const vcl_vector<vgl_polygon<double> >& silhouettes,
-            const vcl_vector<pv_pair>& flow,
-                  vcl_vector<modrec_vehicle_state>& states)
+find_states(const std::vector<vgl_polygon<double> >& silhouettes,
+            const std::vector<pv_pair>& flow,
+                  std::vector<modrec_vehicle_state>& states)
 {      
   // match observed silhouettes and flow vectors to existing states
-  vcl_vector<vgl_polygon<double> > remain_sils = 
+  std::vector<vgl_polygon<double> > remain_sils = 
       match_silhouettes(silhouettes, flow, states);
 
-  vcl_cout << flow.size() <<" total flow vectors"<<vcl_endl;
+  std::cout << flow.size() <<" total flow vectors"<<std::endl;
   for(unsigned int i=0; i<remain_sils.size(); ++i)
   {
     const vgl_polygon<double>& curr_sil = remain_sils[i];
@@ -513,7 +513,7 @@ find_states(const vcl_vector<vgl_polygon<double> >& silhouettes,
       continue;
     
     // find flow vectors inside this polygon
-    vcl_vector<pv_pair> inside;
+    std::vector<pv_pair> inside;
     for(unsigned int j=0; j<flow.size(); ++j)
     {
       if(curr_sil.contains(flow[j].first))
@@ -522,20 +522,20 @@ find_states(const vcl_vector<vgl_polygon<double> >& silhouettes,
     
     if(inside.size() < 5)
       continue;
-    vcl_cout << inside.size() <<" flow vectors in polygon "<< i<<vcl_endl;
+    std::cout << inside.size() <<" flow vectors in polygon "<< i<<std::endl;
     
     double angle = estimate_angle(inside);
     vgl_rotation_3d<double> rotation(0,0,angle);
 
-    vcl_cout << "vehicle angle "<<i<<": "<<angle<<vcl_endl;
+    std::cout << "vehicle angle "<<i<<": "<<angle<<std::endl;
     
     
     vgl_vector_3d<double> translation;
     double target_area = vgl_area(curr_sil);
-    vcl_cout << "silhouette area "<< vgl_area(curr_sil)<<vcl_endl;
+    std::cout << "silhouette area "<< vgl_area(curr_sil)<<std::endl;
     
     if(estimate_shape_){
-      double min_error = vcl_numeric_limits<double>::infinity();
+      double min_error = std::numeric_limits<double>::infinity();
       int best_k = -1;
       vnl_vector<double> best_p;
       for(unsigned int k=0; k<init_params_[vehicle_type_].size(); ++k){
@@ -552,7 +552,7 @@ find_states(const vcl_vector<vgl_polygon<double> >& silhouettes,
         if(!vnl_math_isfinite(fit_error))
           continue;
         
-        vcl_cout << k << " has area "<< sil_area<<" and error "<< fit_error<<vcl_endl;
+        std::cout << k << " has area "<< sil_area<<" and error "<< fit_error<<std::endl;
         
         double pdiff = (init_params_[vehicle_type_][k]-vehicle_.params().extract(5)).magnitude();
         if(pdiff > 0.5)

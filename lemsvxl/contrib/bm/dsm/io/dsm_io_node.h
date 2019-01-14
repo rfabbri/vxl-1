@@ -15,6 +15,6 @@ void vsl_b_read(vsl_b_istream &is, dsm_node<T>* &p);
 template<int T>
 void vsl_b_write(vsl_b_ostream &os, const dsm_node<T>* p);
 template<int T>
-void vsl_print_summary(vcl_ostream& os, const dsm_node<T>* p);
+void vsl_print_summary(std::ostream& os, const dsm_node<T>* p);
 
 #endif //DSM_IO_NODE_H_

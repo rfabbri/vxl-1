@@ -32,24 +32,24 @@ test_band_reprojection()
 
   // set default params
 
-  vul_arg<vcl_string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./"); // < diff from default
-  vul_arg<vcl_string> a_out_path("-out_path", "path to output. Defaults to -prefix");
+  vul_arg<std::string> a_prefix("-prefix", "path to directory of files (suffixed with slash)","./"); // < diff from default
+  vul_arg<std::string> a_out_path("-out_path", "path to output. Defaults to -prefix");
 
-  vul_arg<vcl_string> a_fname1("-image1", "image fname 1","000-maximage.png");
-  vul_arg<vcl_string> a_fname2("-image2", "image fname 2","003-maximage.png");
-  vul_arg<vcl_string> a_fname3("-image3", "image fname 3","006-maximage.png");
-  vul_arg<vcl_vector<vcl_string> > a_fnames("-images","fname's of images (space-separated)");
+  vul_arg<std::string> a_fname1("-image1", "image fname 1","000-maximage.png");
+  vul_arg<std::string> a_fname2("-image2", "image fname 2","003-maximage.png");
+  vul_arg<std::string> a_fname3("-image3", "image fname 3","006-maximage.png");
+  vul_arg<std::vector<std::string> > a_fnames("-images","fname's of images (space-separated)");
 
-  vul_arg<vcl_string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
-  vul_arg<vcl_string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
-  vul_arg<vcl_string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
-  vul_arg<vcl_string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
+  vul_arg<std::string> a_corresp_out("-corresp_out", "correspondence output fname 1","out/david-0-3-edges_t10-stereo_result.corresp");
+  vul_arg<std::string> a_corresp_gt("-corresp_gt", "correspondence ground-truth fname 1","david-0-3-edges_t10.corresp");
+  vul_arg<std::string> a_precomputed_epip("-corresp_epip","correspondence (pre-computed epipolar candidates) fname", "david-0-3-edges_t10-epipolar.corresp");
+  vul_arg<std::string> a_corresp_in("-corresp_in", "correspondence (pre-computed) fname","david-0-3-edges_t10-stereo_result-trinocular_costs.corresp");
   
-  vul_arg<vcl_string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
-  vul_arg<vcl_string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
-  vul_arg<vcl_vector<vcl_string> > a_edgels("-edgels","fname's of edgels (space-separated)");
+  vul_arg<std::string> a_edgels1("-edgels1", "edgels fname 1","000-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgels2("-edgels2", "edgels fname 2","003-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgels3("-edgels3", "edgels fname 3","006-maximage.nms.t10.edgels");
+  vul_arg<std::string> a_edgel_type("-edgel_type","file format 'edg' or 'vsol'");
+  vul_arg<std::vector<std::string> > a_edgels("-edgels","fname's of edgels (space-separated)");
 
   vul_arg<bool> a_run_trinocular("-trinocular", "compute trinocular reprojection costs based on point distance",false);
   vul_arg<bool> a_run_trinocular_t_diff("-trinocular_tangent_diff", "compute trinocular reprojection costs based on tangent difference",false);
@@ -63,9 +63,9 @@ test_band_reprojection()
 
   vul_arg<bool> a_run_sel_geometry("-sel_geometry", "compute costs based on differential geometry of Amir's edge linking",false);
   vul_arg<bool> a_read_sel("-read_sel", "read edge linking hypotheses from binary files",false);
-  vul_arg<vcl_string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
-  vul_arg<vcl_string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
-  vul_arg<vcl_string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in1("-sel_file1", "filename of edge linking hypotheses", "000-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in2("-sel_file2", "filename of edge linking hypotheses", "003-maximage.nms.t10.sel2");
+  vul_arg<std::string> a_sel_in3("-sel_file3", "filename of edge linking hypotheses", "006-maximage.nms.t10.sel2");
 
   vul_arg<bool> a_synth_data_1("-synthetic_1", "Use synthetic data (ctspheres camera setup)", false);
   vul_arg<bool> a_synth_data_2("-synthetic_2", "Use synthetic data (digicam turntable setup)", false);
@@ -77,14 +77,14 @@ test_band_reprojection()
   vul_arg<double> a_angle1("-angle1", "angle of 1st view in Deg (for synthetic data)", 0);
   vul_arg<double> a_angle2("-angle2", "angle of 2nd view in Deg (for synthetic data)", 5);
   vul_arg<double> a_angle3("-angle3", "angle of 3rd view in Deg (for synthetic data)", 60);
-  vul_arg<vcl_vector<double> > a_angles("-angles","angles of views (for synthetic data)");
+  vul_arg<std::vector<double> > a_angles("-angles","angles of views (for synthetic data)");
 
   vul_arg<bool> a_perturb_camera("-perturb_camera", "perturb camera for synthetic data. -synthetic_x must be set.", false);
   vul_arg<bool> a_write_perturb_camera("-write_perturb_camera", "write perturbed cameras", false);
   vul_arg<unsigned> a_trinocular_radius("-trinocular_nrad", "trinocular neighborhood radius", 10);
   vul_arg<double> a_err_pos("-err_pos", "localization error range", 2);
   vul_arg<bool> a_remove_epitangency("-no_epitangency",false);
-  vul_arg<vcl_string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
+  vul_arg<std::string> a_cam_type("-cam_type","camera type: intrinsic_extrinsic or projcamera","");
 
   mw_stereo_app_args args;
 
@@ -183,7 +183,7 @@ test_contains_all_gt_synth(mw_stereo_app &app)
     bmcsd_ntuplet tup(app.nviews_, i);
     if (!app.corr_ep_n_.l_.fullp(tup)) {
       contains_all_gt = false;
-      vcl_cout << "Epipolar geometry missed corresp: " << tup << vcl_endl;
+      std::cout << "Epipolar geometry missed corresp: " << tup << std::endl;
     }
   }
 
@@ -199,7 +199,7 @@ test_band_transfer(mw_stereo_app &app)
 {
   assert(app.nviews_ == 3);
   unsigned npts = app.crv2d_gt_[0].size();
-  vcl_cout << "size: " <<  npts << vcl_endl;
+  std::cout << "size: " <<  npts << std::endl;
 
   for (unsigned i=0; i < npts; ++i) {
 
@@ -220,8 +220,8 @@ test_band_transfer(mw_stereo_app &app)
         app.cam_[2], rig );
 
     double perturb = 1 * t_err;
-    double s = vcl_sin(perturb);
-    double c = vcl_cos(perturb);
+    double s = std::sin(perturb);
+    double c = std::cos(perturb);
     p2_gt.t = bmcsd_vector_3d (c*p2_gt.t[0] + s*p2_gt.t[1], -s*p2_gt.t[0] + c*p2_gt.t[1], 0);
     bool has_intersection = bdifd_transfer::has_tangent_band_intersection(p2_gt.t[0],p2_gt.t[1],t_err, theta_min_reproj,theta_max_reproj);
 

@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -58,23 +58,23 @@ int main(int argc, char *argv[])
     // Do batch processing
 
     // batch processing grab all graph files
-    vcl_vector<vcl_string> batch_graph_files;
+    std::vector<std::string> batch_graph_files;
 
     // batch processing grab all matrix files
-    vcl_vector<vcl_string> batch_mat_files;
+    std::vector<std::string> batch_mat_files;
 
     // batch processing grab all seeds files
-    vcl_vector<vcl_string> batch_seed_files;
+    std::vector<std::string> batch_seed_files;
 
     // Open the file
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open((params->dataset_dir_()+"/"+
                       params->batch_files_graphs_list_()).c_str());
 
     // Grab graphs
          
     // Read each graph file
-    vcl_string temp;
+    std::string temp;
     while(file_opener)
     {
         getline(file_opener,temp);
@@ -137,28 +137,28 @@ int main(int argc, char *argv[])
     {
 
         // Grab file name
-        vcl_string input_graph = vul_file::strip_extension
+        std::string input_graph = vul_file::strip_extension
             (vul_file::strip_directory(batch_graph_files[i]));
 
         
-        vcl_string query_labels = params->dataset_dir_()+"/"+
+        std::string query_labels = params->dataset_dir_()+"/"+
             params->query_label_file_();
 
-        vcl_cout<<"Processing file:" << batch_graph_files[i]<<vcl_endl;
-        vcl_cout<<"Using matrix:" << batch_mat_files[i]<<vcl_endl;
+        std::cout<<"Processing file:" << batch_graph_files[i]<<std::endl;
+        std::cout<<"Using matrix:" << batch_mat_files[i]<<std::endl;
         
         if ( params->action_type_() == 0 )
         {
 
             // Create output name
-            vcl_string stats_file_name = params->output_dir_()+
+            std::string stats_file_name = params->output_dir_()+
                 "/"+input_graph+"_fnn_stats.txt";        
-            vcl_cout<<"Writing results to:"<< stats_file_name<<vcl_endl;
+            std::cout<<"Writing results to:"<< stats_file_name<<std::endl;
 
-            vcl_cout<<"Using seeds file:"<< batch_seed_files[i]<<vcl_endl;
-            vcl_cout<<"Using query file:"<< query_labels <<vcl_endl;
-            vcl_cout<<"Find nearest neighbor"<<vcl_endl;
-            vcl_cout<<vcl_endl;
+            std::cout<<"Using seeds file:"<< batch_seed_files[i]<<std::endl;
+            std::cout<<"Using query file:"<< query_labels <<std::endl;
+            std::cout<<"Find nearest neighbor"<<std::endl;
+            std::cout<<std::endl;
 
             // Do query searching
             dborl_graph_wave_propagation graph_search;
@@ -177,12 +177,12 @@ int main(int argc, char *argv[])
         }
         else if( params->action_type_() == 1 )
         {
-            vcl_cout<<"Testing node reachability on graph"<<vcl_endl;
+            std::cout<<"Testing node reachability on graph"<<std::endl;
             
             // Create output name
-            vcl_string stats_file_name = params->output_dir_()+
+            std::string stats_file_name = params->output_dir_()+
                 "/"+input_graph+"_tr_stats.txt"; 
-            vcl_cout<<"Writing results to:"<< stats_file_name<<vcl_endl;
+            std::cout<<"Writing results to:"<< stats_file_name<<std::endl;
 
             // Create object to do graph searching
             dborl_graph_wave_propagation graph_search;
@@ -196,13 +196,13 @@ int main(int argc, char *argv[])
         else
         {
 
-            vcl_cout<<"Testing optmal seed selection"<<vcl_endl;
+            std::cout<<"Testing optmal seed selection"<<std::endl;
 
 
             // Create output name
-            vcl_string stats_file_name = params->output_dir_()+
+            std::string stats_file_name = params->output_dir_()+
                 "/"+input_graph+"_oss_stats.txt"; 
-            vcl_cout<<"Writing results to:"<< stats_file_name<<vcl_endl;
+            std::cout<<"Writing results to:"<< stats_file_name<<std::endl;
 
             // Create object to do graph searching
             dborl_graph_wave_propagation graph_search;
@@ -220,8 +220,8 @@ int main(int argc, char *argv[])
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

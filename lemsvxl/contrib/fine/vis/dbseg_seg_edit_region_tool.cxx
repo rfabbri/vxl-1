@@ -1,6 +1,6 @@
 #include "dbseg_seg_edit_region_tool.h"
 
-//#include <vcl_limits.h>
+//#include <limits>
 //#include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
 //#include <vgui/vgui_style.h>
@@ -30,7 +30,7 @@ dbseg_seg_edit_region_tool::dbseg_seg_edit_region_tool() :
 {
 }
 
-vcl_string dbseg_seg_edit_region_tool::name() const
+std::string dbseg_seg_edit_region_tool::name() const
 {
   return "Edit Region";
 }
@@ -102,17 +102,17 @@ bool dbseg_seg_edit_region_tool::handle( const vgui_event & e, const bvis1_view_
       list<int> tempList = seg_tab_->get_outlined_regions();
           
       if (tempList.size() > 1) {
-          vcl_cout << "Error Editing Region - more than one region selected" << vcl_endl;
+          std::cout << "Error Editing Region - more than one region selected" << std::endl;
           return true;
       }
       if (tempList.size() < 1) {
-          vcl_cout << "Error Editing Region - no region selected" << vcl_endl;
+          std::cout << "Error Editing Region - no region selected" << std::endl;
           return true;
       }
 
       int tempID = tempList.front();//seg_object_->get_pixel_ID(ix, iy, seg_tab_->get_depth());
     if (seg_object_->get_child_count(tempID) == 0) {//if (seg_object_->get_max_depth() == seg_object_->get_object_list()[tempID]->get_depth()) {
-        vcl_cout << "Error Editing Region - Cannot edit a base level region" << vcl_endl;
+        std::cout << "Error Editing Region - Cannot edit a base level region" << std::endl;
         return true;
     }
     else {

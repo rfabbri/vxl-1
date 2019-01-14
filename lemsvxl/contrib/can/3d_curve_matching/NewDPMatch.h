@@ -1,10 +1,10 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 //#include <stl_config.h>
 //#include <string>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
+#include <string>
+#include <vector>
+#include <cmath>
 
 
 #ifndef __TBS_NEW_DPMATCH_DEF__

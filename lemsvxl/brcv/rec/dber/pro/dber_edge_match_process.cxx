@@ -28,7 +28,7 @@ dber_edge_match_process::dber_edge_match_process() : bpro1_process()
        !parameters()->add( "pure affine? (otherwise uses TPS):" , "-tps" , (bool) false ) ||
        !parameters()->add( "skip every n edgel (for now):" , "-skip" , (int) 1 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -39,9 +39,9 @@ dber_edge_match_process::clone() const
   return new dber_edge_match_process(*this);
 }
 
-vcl_vector< vcl_string > dber_edge_match_process::get_input_type()
+std::vector< std::string > dber_edge_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );  // image 1 
   to_return.push_back( "vsol2D" );  // vsol2D 1
   to_return.push_back( "image" );  // image 2
@@ -52,9 +52,9 @@ vcl_vector< vcl_string > dber_edge_match_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > dber_edge_match_process::get_output_type()
+std::vector< std::string > dber_edge_match_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("edge_match");
   to_return.push_back("image");
   return to_return;
@@ -92,15 +92,15 @@ bool dber_edge_match_process::execute()
   input_vsol3.vertical_cast(input_data_[0][4]);
   input_vsol4.vertical_cast(input_data_[0][5]);
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list3 = input_vsol3->all_data();
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list4 = input_vsol4->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list3 = input_vsol3->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list4 = input_vsol4->all_data();
   vsol_polygon_2d_sptr poly1 = vsol_list3[0]->cast_to_region()->cast_to_polygon();
   vsol_polygon_2d_sptr poly2 = vsol_list4[0]->cast_to_region()->cast_to_polygon();
 
   dber_match matcher;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
-  vcl_vector<vsol_line_2d_sptr> temp_lines1;
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector<vsol_line_2d_sptr> temp_lines1;
 
   for (unsigned int b = 0 ; b < vsol_list.size() ; b += skip ) 
   {
@@ -115,8 +115,8 @@ bool dber_edge_match_process::execute()
     }
   }
 
-  vcl_vector<vsol_line_2d_sptr> temp_lines2;
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list2 = input_vsol2->all_data();
+  std::vector<vsol_line_2d_sptr> temp_lines2;
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list2 = input_vsol2->all_data();
   for (unsigned int b = 0 ; b < vsol_list2.size() ; b += skip ) 
   {
     //we want line segments
@@ -130,7 +130,7 @@ bool dber_edge_match_process::execute()
     }
   }
 
-  vcl_vector<vsol_line_2d_sptr>& lines1 = matcher.get_lines1();
+  std::vector<vsol_line_2d_sptr>& lines1 = matcher.get_lines1();
   // find mean of height and width of data to set the sigma
 
   //mask the edgels using the polygon
@@ -144,11 +144,11 @@ bool dber_edge_match_process::execute()
     else
       cnt_elim++;
   }
-  vcl_cout << "for set1: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
+  std::cout << "for set1: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
 
   vsol_box_2d_sptr box1 = dber_utilities::get_box(lines1);
 
-  vcl_vector<vsol_line_2d_sptr>& lines2 = matcher.get_lines2();
+  std::vector<vsol_line_2d_sptr>& lines2 = matcher.get_lines2();
   vgl_polygon<double> polyg2 = bsol_algs::vgl_from_poly(poly2);
   cnt = 0; cnt_elim = 0;
   for (unsigned k=0; k<temp_lines2.size(); k++) {
@@ -160,7 +160,7 @@ bool dber_edge_match_process::execute()
       cnt_elim++;
   }
   vsol_box_2d_sptr box2 = dber_utilities::get_box(lines2);
-  vcl_cout << "for set2: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
+  std::cout << "for set2: " << cnt << " edgels in vsol, " << cnt_elim << " are eliminated\n";
 
   vul_timer t;
   t.mark();
@@ -189,13 +189,13 @@ bool dber_edge_match_process::execute()
   dber_utilities::rotate_lines(lines2, H, gc2->x(), gc2->y());
   
   /*double cost = matcher.match_greedy(threshold);
-  //vcl_cout << "cost of matching: " << cost << vcl_endl;
+  //std::cout << "cost of matching: " << cost << std::endl;
 
   dbinfo_observation_sptr obs1 = new dbinfo_observation(0, image_sptr1, poly1, true, true, false);
   dbinfo_observation_sptr obs2 = new dbinfo_observation(0, image_sptr2, poly2, true, true, false);
 
   double mi = matcher.find_global_mi(obs1, obs2, poor_affine);
-  vcl_cout << "overall mutual information: " << mi << vcl_endl;
+  std::cout << "overall mutual information: " << mi << std::endl;
   */
   vil_image_resource_sptr correspondence_im = matcher.get_correspondence_image();
 
@@ -210,7 +210,7 @@ bool dber_edge_match_process::execute()
   output_storage->set_image(correspondence_im);
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output_match));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output_match));
   output_data_[0].push_back(output_storage);
 
   return true;
@@ -218,17 +218,17 @@ bool dber_edge_match_process::execute()
 
 /************ Returning the current-matching norm after scaling and translation
   double support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "support before scaling & translation: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "support before scaling & translation: " << support << " time: " << t.real()/1000.0f << std::endl;
 
   double scale_factor = box1->width()/box2->width();
   matcher.scale_lines(lines2, scale_factor);
   support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "support before translation: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "support before translation: " << support << " time: " << t.real()/1000.0f << std::endl;
 
   vsol_point_2d_sptr gc1 = dber_match::center_of_gravity(lines1);
   vsol_point_2d_sptr gc2 = dber_match::center_of_gravity(lines2);
   matcher.translate_lines(lines2, gc1->x()-gc2->x(), gc1->y()-gc2->y());
   support = dber_match::current_norm(lines1, lines2, sigma*sigma);
-  vcl_cout << "final support: " << support << " time: " << t.real()/1000.0f << vcl_endl;
+  std::cout << "final support: " << support << " time: " << t.real()/1000.0f << std::endl;
   */
 

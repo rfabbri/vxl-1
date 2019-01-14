@@ -33,27 +33,27 @@ vidpro_split_into_RGB_process::clone() const
 }
 
 //: Returns the name of this process
-vcl_string 
+std::string 
 vidpro_split_into_RGB_process::name()
 { 
   return "Split into RGB"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_split_into_RGB_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_split_into_RGB_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "image" );
@@ -80,8 +80,8 @@ bool
 vidpro_split_into_RGB_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In vidpro_split_into_RGB_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In vidpro_split_into_RGB_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 

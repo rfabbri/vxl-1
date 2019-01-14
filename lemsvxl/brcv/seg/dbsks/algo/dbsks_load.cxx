@@ -30,19 +30,19 @@
 //
 //------------------------------------------------------------------------------
 //: load the image
-bool dbsks_load_image_resource(const vcl_string& image_file, vil_image_resource_sptr& image_resource)
+bool dbsks_load_image_resource(const std::string& image_file, vil_image_resource_sptr& image_resource)
 {
-  vcl_cout << "\n> Loading image: " << image_file << " ... ";
+  std::cout << "\n> Loading image: " << image_file << " ... ";
   image_resource = vil_load_image_resource(image_file.c_str());
   
   if (!image_resource) 
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else 
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
   return true;
 }
@@ -50,19 +50,19 @@ bool dbsks_load_image_resource(const vcl_string& image_file, vil_image_resource_
 
 //------------------------------------------------------------------------------
 //: Load edgemap
-bool dbsks_load_edgemap(const vcl_string& edgemap_file, vil_image_view<float >& edgemap)
+bool dbsks_load_edgemap(const std::string& edgemap_file, vil_image_view<float >& edgemap)
 {
   //>>> load the edge map
-  vcl_cout << "\n> Loading edgemap: " << edgemap_file << " ... ";
+  std::cout << "\n> Loading edgemap: " << edgemap_file << " ... ";
   edgemap = *vil_convert_cast(float(), vil_load(edgemap_file.c_str()));
   if (!edgemap) 
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else 
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
   return true;
 }
@@ -71,20 +71,20 @@ bool dbsks_load_edgemap(const vcl_string& edgemap_file, vil_image_view<float >& 
 
 //------------------------------------------------------------------------------
 //: Load edge angle
-bool dbsks_load_edge_angle(const vcl_string& edgeorient_file, vil_image_view<float >& edge_angle)
+bool dbsks_load_edge_angle(const std::string& edgeorient_file, vil_image_view<float >& edge_angle)
 {
   // Load edge orientation file
-  vcl_cout << "\n> Loading edge orientation file: " << edgeorient_file << " ... ";
+  std::cout << "\n> Loading edge orientation file: " << edgeorient_file << " ... ";
   vnl_file_matrix<double > theta(edgeorient_file.c_str());
   bool loaded_edgeorient = !theta.empty();
   if (!loaded_edgeorient)
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
 
   // create edge angle image view from a matrix
@@ -103,13 +103,13 @@ bool dbsks_load_edge_angle(const vcl_string& edgeorient_file, vil_image_view<flo
 //------------------------------------------------------------------------------
 //: Load an sub-pixel edgemap from 2 files: a binary image of edge location
 // and a text file of edge orientation at each location
-dbdet_edgemap_sptr dbsks_load_subpix_edgemap(const vcl_string edgemap_file, 
-                                             const vcl_string edgeorient_file,
+dbdet_edgemap_sptr dbsks_load_subpix_edgemap(const std::string edgemap_file, 
+                                             const std::string edgeorient_file,
                                              float lower_threshold,
                                              float max_edge_value)
 {
   // Load edge orientation file
-  vcl_cout << "\n> Loading sub-pixel edgemap from 2 files: \n"
+  std::cout << "\n> Loading sub-pixel edgemap from 2 files: \n"
     << "    edge location: " << edgemap_file << "\n"
     << "    edge orientation: " << edgeorient_file << "\n";
 
@@ -124,7 +124,7 @@ dbdet_edgemap_sptr dbsks_load_subpix_edgemap(const vcl_string edgemap_file,
   if (edgemap_view.ni() != edge_angle_view.ni() || 
     edgemap_view.nj() != edge_angle_view.nj())
   {
-    vcl_cout << "  \nERROR: dimension mismatched.... [ Failed ]\n";
+    std::cout << "  \nERROR: dimension mismatched.... [ Failed ]\n";
     return 0;
   }
 
@@ -150,7 +150,7 @@ dbdet_edgemap_sptr dbsks_load_subpix_edgemap(const vcl_string edgemap_file,
       edgemap->insert(e);      
     }
   }
-  vcl_cout << "    \nSub-pixel edgemap constructed.... [ OK ]\n";
+  std::cout << "    \nSub-pixel edgemap constructed.... [ OK ]\n";
   
   return edgemap;
 }
@@ -161,20 +161,20 @@ dbdet_edgemap_sptr dbsks_load_subpix_edgemap(const vcl_string edgemap_file,
 
 //------------------------------------------------------------------------------
 //: Load linked-edge list
-bool dbsks_load_polyline_list(const vcl_string& cemv_file, 
-                              vcl_vector<vsol_polyline_2d_sptr >& polyline_list)
+bool dbsks_load_polyline_list(const std::string& cemv_file, 
+                              std::vector<vsol_polyline_2d_sptr >& polyline_list)
 {
   //>> Load the cemv file containing linked contour info
-  vcl_cout << "\n>>Loading linked-edge contour file: " << cemv_file << "...";
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  std::cout << "\n>>Loading linked-edge contour file: " << cemv_file << "...";
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list;
   if (!bsold_load_cem(vsol_list, cemv_file))
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
 
 
@@ -195,18 +195,18 @@ bool dbsks_load_polyline_list(const vcl_string& cemv_file,
 
 //------------------------------------------------------------------------------
 //: Load the shock graph
-bool dbsks_load_xgraph(const vcl_string& xgraph_file, dbsksp_xshock_graph_sptr& xgraph)
+bool dbsks_load_xgraph(const std::string& xgraph_file, dbsksp_xshock_graph_sptr& xgraph)
 {
-  vcl_cout << "\n> Loading xshock_graph XML file: " << xgraph_file << "...";
+  std::cout << "\n> Loading xshock_graph XML file: " << xgraph_file << "...";
   xgraph = 0;
   if (!x_read(xgraph_file, xgraph) )
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
   return true;
 }
@@ -214,21 +214,21 @@ bool dbsks_load_xgraph(const vcl_string& xgraph_file, dbsksp_xshock_graph_sptr& 
 
 //------------------------------------------------------------------------------
 //: Load the xgraph geometric model
-bool dbsks_load_xgraph_geom_model(const vcl_string& xgraph_geom_file,
-                                  const vcl_string& xgraph_geom_param_file,
+bool dbsks_load_xgraph_geom_model(const std::string& xgraph_geom_file,
+                                  const std::string& xgraph_geom_param_file,
                                   dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
-    vcl_cout << "\n> Loading xgraph geometric model file (.xml):"
-    << xgraph_geom_file << vcl_endl << " and geom parameter file (.xml):" << xgraph_geom_param_file << "...";
+    std::cout << "\n> Loading xgraph geometric model file (.xml):"
+    << xgraph_geom_file << std::endl << " and geom parameter file (.xml):" << xgraph_geom_param_file << "...";
   xgraph_geom = 0;
   if (!x_read(xgraph_geom_file, xgraph_geom_param_file, xgraph_geom))
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
   return true;
 }
@@ -236,22 +236,22 @@ bool dbsks_load_xgraph_geom_model(const vcl_string& xgraph_geom_file,
 
 //------------------------------------------------------------------------------
 //: Load the xgraph CCM model
-bool dbsks_load_xgraph_ccm_model(const vcl_string& xgraph_ccm_file,
-                                 const vcl_string& xgraph_ccm_param_file,
+bool dbsks_load_xgraph_ccm_model(const std::string& xgraph_ccm_file,
+                                 const std::string& xgraph_ccm_param_file,
                                  dbsks_xgraph_ccm_model_sptr& xgraph_ccm)
 {
-  vcl_cout << "> Loading xgraph CCM (Contour Chamfer Matching) model file (.xml):" 
-    << xgraph_ccm_file << vcl_endl << " and CCM parameter file (.xml):" << xgraph_ccm_param_file << "...";
+  std::cout << "> Loading xgraph CCM (Contour Chamfer Matching) model file (.xml):" 
+    << xgraph_ccm_file << std::endl << " and CCM parameter file (.xml):" << xgraph_ccm_param_file << "...";
   xgraph_ccm = 0;
 
   if (!x_read(xgraph_ccm_file, xgraph_ccm_param_file, xgraph_ccm))
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
   return true;
 }

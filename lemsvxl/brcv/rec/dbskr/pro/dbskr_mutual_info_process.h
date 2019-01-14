@@ -34,7 +34,7 @@
 #include <dbskr/dbskr_tree_sptr.h>
 #include <dbskr/dbskr_scurve_sptr.h>
 
-typedef vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> > pathtable_key;
+typedef std::pair<std::pair<int, int>, std::pair<int, int> > pathtable_key;
 
 class dbskr_mutual_info_process : public bpro1_process 
 {
@@ -45,12 +45,12 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "Mutual Info with Shock Matching";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );   // 0
     to_return.push_back( "shock" );    // 1
     to_return.push_back( "image" );    // 2
@@ -59,8 +59,8 @@ public:
     to_return.push_back( "image" );    // 5
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
   }
@@ -89,12 +89,12 @@ protected:
   float color_mutual_info_;
 
 private:
-  vcl_vector<pathtable_key> read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2, vcl_string fname); 
+  std::vector<pathtable_key> read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2, std::string fname); 
   void get_correspondence(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2, 
-                          vcl_vector<pathtable_key>& path_map, 
-                          vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                          vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                          vcl_vector<vcl_vector<vcl_pair<int, int> > >& map_list);
+                          std::vector<pathtable_key>& path_map, 
+                          std::vector<dbskr_scurve_sptr>& curve_list1, 
+                          std::vector<dbskr_scurve_sptr>& curve_list2, 
+                          std::vector<std::vector<std::pair<int, int> > >& map_list);
 
   
 

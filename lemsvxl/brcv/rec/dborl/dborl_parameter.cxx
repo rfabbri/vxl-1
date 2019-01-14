@@ -7,8 +7,8 @@
 //
 
 #include "dborl_parameter.h"
-#include <vcl_sstream.h>
-#include <vcl_typeinfo.h>
+#include <sstream>
+#include <typeinfo>
 
 template <class T> 
 dborl_parameter<T> &
@@ -27,7 +27,7 @@ dborl_parameter<T>::operator =(const dborl_parameter<T> &rhs) {
 }
 
 template <class T> 
-void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_string description, T value)
+void dborl_parameter<T>::set_values(std::string group, std::string name, std::string description, T value)
 {
   param_group_ = group;
   param_name_ = name;
@@ -38,7 +38,7 @@ void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_strin
   if (type_.compare(typeid(false).name()) == 0) {
     type_ = "flag";
     type_info_ = dborl_parameter_type_info::FLAG;
-  } else if (type_.compare(typeid(vcl_string("dummystring")).name()) == 0) {
+  } else if (type_.compare(typeid(std::string("dummystring")).name()) == 0) {
     type_ = "string";
     type_info_ = dborl_parameter_type_info::STRING;
   } else if (type_.compare(typeid(0.0f).name()) == 0) {
@@ -52,7 +52,7 @@ void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_strin
     type_info_ = dborl_parameter_type_info::NUMERAL;  // float, double, int, short etc.
   }
 
-  //vcl_cout << " type of parameter: " << param_name_ << " is " << type_ << vcl_endl;
+  //std::cout << " type of parameter: " << param_name_ << " is " << type_ << std::endl;
   value_ = value;
   default_ = value;
   system_info_ = dborl_parameter_system_info::NOT_APPLICABLE;  // default value for system_info field
@@ -61,15 +61,15 @@ void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_strin
 }
 
 template <class T> 
-void dborl_parameter<T>::set_values(vcl_vector<dborl_parameter_base*>& list, vcl_string group, vcl_string name, vcl_string description, T value)
+void dborl_parameter<T>::set_values(std::vector<dborl_parameter_base*>& list, std::string group, std::string name, std::string description, T value)
 {
   list.push_back(dynamic_cast<dborl_parameter_base*>(this));
   set_values(group, name, description, value);
 }
 //: constructor for special parameters with an option to set type info field so that type can be set
 template <class T> 
-void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_string description, T value,
-              T default_value, int system_info_index, short system_info, vcl_string file_type, char type_info)
+void dborl_parameter<T>::set_values(std::string group, std::string name, std::string description, T value,
+              T default_value, int system_info_index, short system_info, std::string file_type, char type_info)
 {
   param_group_ = group;
   param_name_ = name;
@@ -97,7 +97,7 @@ void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_strin
       if (type_.compare(typeid(false).name()) == 0) {
         type_ = "flag";
         type_info_ = dborl_parameter_type_info::FLAG;  // reset type_info just in case it was not set properly
-      } else if (type_.compare(typeid(vcl_string("dummystring")).name()) == 0) {
+      } else if (type_.compare(typeid(std::string("dummystring")).name()) == 0) {
         type_ = "string";
         type_info_ = dborl_parameter_type_info::STRING;
       } else if (type_.compare(typeid(0.0f).name()) == 0) {
@@ -113,27 +113,27 @@ void dborl_parameter<T>::set_values(vcl_string group, vcl_string name, vcl_strin
       break;
   }
 
-  //vcl_cout << " type of parameter: " << param_name_ << " is " << type_ << vcl_endl;
+  //std::cout << " type of parameter: " << param_name_ << " is " << type_ << std::endl;
  
 }
 
 template <class T> 
-void dborl_parameter<T>::set_values(vcl_vector<dborl_parameter_base*>& list, vcl_string group, vcl_string name, vcl_string description, T value, 
-                                    T default_value, int system_info_index, short system_info, vcl_string file_type, char type_info)
+void dborl_parameter<T>::set_values(std::vector<dborl_parameter_base*>& list, std::string group, std::string name, std::string description, T value, 
+                                    T default_value, int system_info_index, short system_info, std::string file_type, char type_info)
 {
   list.push_back(dynamic_cast<dborl_parameter_base*>(this));
   set_values(group, name, description, value, default_value, system_info_index, system_info, file_type, type_info);
 }
 
 template <class T> 
-vcl_string dborl_parameter<T>::get_params_file_tag()
+std::string dborl_parameter<T>::get_params_file_tag()
 {
-  vcl_string tag = "\t\t<param attribute_label=\"" + param_group_ + "*" + param_name_ + "\" description=\"" + desc_ + "\"";
+  std::string tag = "\t\t<param attribute_label=\"" + param_group_ + "*" + param_name_ + "\" description=\"" + desc_ + "\"";
   tag = tag + " type=\"" + type_ + "\" default=\"" + default_str() + "\" value=\"" + value_str() + "\"";
 
   if (system_info_ != dborl_parameter_system_info::NOT_APPLICABLE) {// && system_info_ != dborl_parameter_system_info::NOT_DEFINED) {
     if (system_info_index_ >= 0) {
-      vcl_stringstream def_sys;
+      std::stringstream def_sys;
       def_sys << system_info_index_;
       tag = tag + " system_info_index=\"" + def_sys.str() + "\"";
     }
@@ -152,10 +152,10 @@ vcl_string dborl_parameter<T>::get_params_file_tag()
 }
 
 template <class T> 
-vcl_string dborl_parameter<T>::value_str() 
+std::string dborl_parameter<T>::value_str() 
 { 
-  vcl_string tag;
-  vcl_stringstream ss;
+  std::string tag;
+  std::stringstream ss;
   ss << value_;
   tag = ss.str();
   switch(type_info_) {
@@ -172,10 +172,10 @@ vcl_string dborl_parameter<T>::value_str()
 }
 
 template <class T> 
-vcl_string dborl_parameter<T>::default_str() 
+std::string dborl_parameter<T>::default_str() 
 { 
-  vcl_string tag;
-  vcl_stringstream ss;
+  std::string tag;
+  std::stringstream ss;
   ss << default_;
   tag = ss.str();
   switch(type_info_) {
@@ -192,7 +192,7 @@ vcl_string dborl_parameter<T>::default_str()
 }
 
 template <class T> 
-void dborl_parameter<T>::parse_value_from_str(vcl_string val)
+void dborl_parameter<T>::parse_value_from_str(std::string val)
 {
   switch(type_info_) {
     case dborl_parameter_type_info::FLAG : {
@@ -201,7 +201,7 @@ void dborl_parameter<T>::parse_value_from_str(vcl_string val)
     }
     default: {
       // including dborl_parameter_type_info::NUMERAL
-      vcl_stringstream ss(val);
+      std::stringstream ss(val);
       ss >> value_;
       break;
     }
@@ -209,12 +209,12 @@ void dborl_parameter<T>::parse_value_from_str(vcl_string val)
 }
 
 template<> 
-void dborl_parameter<vcl_string>::parse_value_from_str(vcl_string val)
+void dborl_parameter<std::string>::parse_value_from_str(std::string val)
 {
   value_ = val;
 }
 
-template class dborl_parameter<vcl_string>;
+template class dborl_parameter<std::string>;
 template class dborl_parameter<int>;
 template class dborl_parameter<unsigned>;
 template class dborl_parameter<bool>;

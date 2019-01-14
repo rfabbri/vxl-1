@@ -24,7 +24,7 @@
 
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbskr/dbskr_scurve_sptr.h>
 
 
@@ -44,7 +44,7 @@ public:
   //  and plus and minus boundary
   dbskr_scurve_sptr dense;
   //: correspondence map from coarse shock curve to dense 
-  vcl_vector<int> c_d_map;
+  std::vector<int> c_d_map;
 };
 
 

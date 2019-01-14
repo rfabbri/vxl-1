@@ -35,7 +35,7 @@ vidpro1_homog_2d_preimage_process::
 
 
 //: Return the name of this process
-vcl_string vidpro1_homog_2d_preimage_process::
+std::string vidpro1_homog_2d_preimage_process::
 name()
 {
   return "Homography 2D Pre-image";
@@ -60,20 +60,20 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_homog_2d_preimage_process::
+std::vector< std::string > vidpro1_homog_2d_preimage_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "homog_2d" );
   return to_return;
 }
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_homog_2d_preimage_process::
+std::vector< std::string > vidpro1_homog_2d_preimage_process::
 get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -83,10 +83,10 @@ get_output_type()
 bool vidpro1_homog_2d_preimage_process::
 execute()
 {
-  vcl_cout << "\n Compute pre-image of current frame using homography matrix" << vcl_endl;
+  std::cout << "\n Compute pre-image of current frame using homography matrix" << std::endl;
   if ( this->input_data_.size() != 1 )
   {
-    vcl_cout << "In vidpro1_homog_2d_preimage_process::execute() - not exactly one"
+    std::cout << "In vidpro1_homog_2d_preimage_process::execute() - not exactly one"
              << " input frames \n";
     return false;
   }
@@ -98,8 +98,8 @@ execute()
   
   vgl_h_matrix_2d< double > H = homog_2d_storage->H();
 
-  vcl_cout << "Homography matrix H = \n" << H << vcl_endl;
-  vcl_cout << "Det(H) = " << vnl_det(H.get_matrix()) << vcl_endl;
+  std::cout << "Homography matrix H = \n" << H << std::endl;
+  std::cout << "Det(H) = " << vnl_det(H.get_matrix()) << std::endl;
   
   vgl_h_matrix_2d< double > H_inv = H.get_inverse();
 
@@ -107,7 +107,7 @@ execute()
   this->H_inv_ = H_inv;
   
   // Now we've got the homography matrix, apply it to the image of the current frame.
-  vcl_cout << "Apply homography to the current image \n";
+  std::cout << "Apply homography to the current image \n";
   
   // get input image from storage class
   vidpro1_image_storage_sptr im_storage;
@@ -130,13 +130,13 @@ execute()
   // homography using the inverse matrix
   if (! brip_vil_float_ops::homography(im_view_float, H_inv, return_im_view, true, 0.0f))
   {
-    vcl_cout << "Homography transform failed" << vcl_endl;
+    std::cout << "Homography transform failed" << std::endl;
     return false;
   }
   ///////////////////////////////////////////////////////////////////////////
   
-  vcl_cout << "Homography succeeded " << vcl_endl;
-  return_im_view.print(vcl_cout);
+  std::cout << "Homography succeeded " << std::endl;
+  return_im_view.print(std::cout);
  
   // create the output storage class
   vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

@@ -13,7 +13,7 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 #include <dbdet/dbdet_keypoint_sptr.h>
 
@@ -34,10 +34,10 @@ class dbdet_keypoint_soview2D : public vgui_soview2D //_linestrip
   void set_point_style(const vgui_style_sptr& newstyle){ point_style_ = newstyle; }
 
   //: Print details about this keypoint to the given stream.
-  virtual vcl_ostream& print(vcl_ostream&) const;
+  virtual std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class ('dbdet_keypoint_soview2D').
-  vcl_string type_name() const { return "dbdet_keypoint_soview2D"; }
+  std::string type_name() const { return "dbdet_keypoint_soview2D"; }
 
   //: Returns the distance squared from this keypoint to the given position.
   virtual float distance_squared(float x, float y) const;

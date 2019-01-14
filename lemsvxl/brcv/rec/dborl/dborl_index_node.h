@@ -19,7 +19,7 @@
 
 #include "dborl_index_node_base.h"
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dborl/dborl_object_base_sptr.h>
 
 //:        IMPORTANT NOTE:
@@ -30,40 +30,40 @@
 class dborl_index_node : public dborl_index_node_base
 {
 protected:
-  vcl_vector<vcl_string> name_list_;
-  vcl_vector<vcl_string> path_list_;
-  vcl_vector<dborl_object_base_sptr> obj_list_;  
+  std::vector<std::string> name_list_;
+  std::vector<std::string> path_list_;
+  std::vector<dborl_object_base_sptr> obj_list_;  
   
 public:
   dborl_index_node() : dborl_index_node_base() {};
-  dborl_index_node(vcl_string name) : dborl_index_node_base(name) {}
+  dborl_index_node(std::string name) : dborl_index_node_base(name) {}
 
   virtual bool is_leaf() { return false; }
 
-  void add_name(vcl_string n) { name_list_.push_back(n); }
-  void add_names(vcl_vector<vcl_string>& names) { name_list_.insert(name_list_.end(), names.begin(), names.end()); } 
+  void add_name(std::string n) { name_list_.push_back(n); }
+  void add_names(std::vector<std::string>& names) { name_list_.insert(name_list_.end(), names.begin(), names.end()); } 
 
   //: it is upto the user to make sure that the paths and names are inserted in correct order
-  void add_path(vcl_string p) { path_list_.push_back(p); }
-  void add_paths(vcl_vector<vcl_string>& paths) { path_list_.insert(path_list_.end(), paths.begin(), paths.end()); } 
+  void add_path(std::string p) { path_list_.push_back(p); }
+  void add_paths(std::vector<std::string>& paths) { path_list_.insert(path_list_.end(), paths.begin(), paths.end()); } 
 
   //: it is upto the user to make sure that the paths and names are inserted in correct order
   void add_obj(dborl_object_base_sptr o) { obj_list_.push_back(o); }
-  void add_objs(vcl_vector<dborl_object_base_sptr>& objs) { obj_list_.insert(obj_list_.end(), objs.begin(), objs.end()); } 
+  void add_objs(std::vector<dborl_object_base_sptr>& objs) { obj_list_.insert(obj_list_.end(), objs.begin(), objs.end()); } 
 
   //: return false if not all of the names in the name list are matched with a pointer
-  bool fill_in_the_pointers(vcl_vector<dborl_object_base_sptr>& objects);
+  bool fill_in_the_pointers(std::vector<dborl_object_base_sptr>& objects);
 
   //: add path/<name>/ as the path of each object in the name list
-  void fill_in_the_paths_using_names(vcl_string path);
+  void fill_in_the_paths_using_names(std::string path);
 
-  vcl_vector<dborl_object_base_sptr>& objects(void) { return obj_list_; }
-  vcl_vector<vcl_string>& paths(void) { return path_list_; }
-  vcl_vector<vcl_string>& names(void) { return name_list_; }
+  std::vector<dborl_object_base_sptr>& objects(void) { return obj_list_; }
+  std::vector<std::string>& paths(void) { return path_list_; }
+  std::vector<std::string>& names(void) { return name_list_; }
 
   virtual void b_read();
   virtual void b_write();
-  virtual void write_xml(vcl_ostream& os);
+  virtual void write_xml(std::ostream& os);
 
   virtual dborl_index_node* cast_to_index_node() { return this; }
   virtual dborl_index_leaf* cast_to_index_leaf() { return 0; }

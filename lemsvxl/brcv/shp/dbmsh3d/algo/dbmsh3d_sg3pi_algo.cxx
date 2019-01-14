@@ -2,7 +2,7 @@
 // This is brcv/shp/dbmsh3d/algo/dbmsh3d_sg_scan_algo.cxx
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -19,45 +19,45 @@
 
 bool dbmsh3d_load_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
 {
-  vcl_ifstream  in;
-  vcl_string    linestr;
+  std::ifstream  in;
+  std::string    linestr;
   in.open (file);
   assert (sg3pi->data().size() == 0);
   unsigned int n_scanlines = 0;
   unsigned int n_scanpts = 0;
   double x, y, z;
   int intensity, np;
-  vcl_vector<dbmsh3d_sg3pi_pt*> scanline;
+  std::vector<dbmsh3d_sg3pi_pt*> scanline;
 
   if (in == NULL) {
     return false;
   }
 
-  vul_printf (vcl_cout, "  loading %s...\n", file);
+  vul_printf (std::cout, "  loading %s...\n", file);
 
   //Main loop of file reading
   while (in) {
     linestr.clear();
-    vcl_getline (in, linestr);
-    //vcl_cout << linestr << vcl_endl;
+    std::getline (in, linestr);
+    //std::cout << linestr << std::endl;
 
     //skip empty lines
     if (linestr.length() == 0)
       continue;
 
     //count scan lines.
-    if (vcl_strncmp (linestr.c_str(), "#:Profile:", 10) == 0) {
+    if (std::strncmp (linestr.c_str(), "#:Profile:", 10) == 0) {
       n_scanlines++;
       scanline.clear();
       sg3pi->add_scanline (scanline);
     }
 
     //skip comments
-    if (vcl_strncmp (linestr.c_str(), "#", 1) == 0)
+    if (std::strncmp (linestr.c_str(), "#", 1) == 0)
       continue;
 
     //put points into the scan data structure.
-    vcl_sscanf (linestr.c_str(), "%lf %lf %lf %d %d", &x, &y, &z, &intensity, &np);
+    std::sscanf (linestr.c_str(), "%lf %lf %lf %d %d", &x, &y, &z, &intensity, &np);
     n_scanpts++;
 
     dbmsh3d_sg3pi_pt* scanpt = new dbmsh3d_sg3pi_pt (x, y, z, intensity, np);
@@ -65,43 +65,43 @@ bool dbmsh3d_load_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
   }
 
   in.close();
-  vul_printf (vcl_cout, "  %d points loaded from %s.\n", n_scanpts, file);
+  vul_printf (std::cout, "  %d points loaded from %s.\n", n_scanpts, file);
   return true;
 }
 
 bool dbmsh3d_save_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen (file, "w")) == NULL) {
-    vul_printf (vcl_cout, "  can't open output .3PI file %s\n", file);
+  if ((fp = std::fopen (file, "w")) == NULL) {
+    vul_printf (std::cout, "  can't open output .3PI file %s\n", file);
     return false; 
   }
-  vul_printf (vcl_cout, "  saving %s : %u scanlines ...\n", 
+  vul_printf (std::cout, "  saving %s : %u scanlines ...\n", 
                file, sg3pi->data().size());
 
-  vcl_fprintf (fp, "#3PI file Copyright(C) 1997-2001 ShapeGrabber Incorporated\n");
+  std::fprintf (fp, "#3PI file Copyright(C) 1997-2001 ShapeGrabber Incorporated\n");
 
   int max_pn = sg3pi->get_max_pn ();
-  vcl_fprintf (fp, "#:Number of Points per Profiles: %d\n", max_pn);
-  vcl_fprintf (fp, "#:Number of Profiles: %d\n", sg3pi->data().size());
-  vcl_fprintf (fp, "#:Pose Transformation:\n");
-  vcl_fprintf (fp, "#                      1.000000 0.000000 0.000000 0.000000\n");
-  vcl_fprintf (fp, "#                      0.000000 1.000000 0.000000 0.000000\n");
-  vcl_fprintf (fp, "#                      0.000000 0.000000 1.000000 0.000000\n");
-  vcl_fprintf (fp, "#                      0.000000 0.000000 0.000000 1.000000\n");
+  std::fprintf (fp, "#:Number of Points per Profiles: %d\n", max_pn);
+  std::fprintf (fp, "#:Number of Profiles: %d\n", sg3pi->data().size());
+  std::fprintf (fp, "#:Pose Transformation:\n");
+  std::fprintf (fp, "#                      1.000000 0.000000 0.000000 0.000000\n");
+  std::fprintf (fp, "#                      0.000000 1.000000 0.000000 0.000000\n");
+  std::fprintf (fp, "#                      0.000000 0.000000 1.000000 0.000000\n");
+  std::fprintf (fp, "#                      0.000000 0.000000 0.000000 1.000000\n");
 
   for (unsigned int i=0; i<sg3pi->data().size(); i++) {
-    vcl_fprintf (fp, "#:Profile: %d\n", i);
+    std::fprintf (fp, "#:Profile: %d\n", i);
 
     for (unsigned int j=0; j<sg3pi->data()[i].size(); j++) {
       dbmsh3d_sg3pi_pt* SP = sg3pi->data()[i][j];
-      vcl_fprintf (fp, "%.16lf %.16lf %.16lf %d %d\n", 
+      std::fprintf (fp, "%.16lf %.16lf %.16lf %d %d\n", 
                    SP->pt().x(), SP->pt().y(), SP->pt().z(), SP->intensity(), SP->pn());
     }
   }
 
-  vcl_fclose (fp);
-  vul_printf (vcl_cout, "  done.\n");
+  std::fclose (fp);
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 
@@ -113,12 +113,12 @@ bool dbmsh3d_save_sg3pi (dbmsh3d_sg3pi* sg3pi, const char* file)
 void dcs_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int nsteps,
                                const float DCS_psi, const float DCS_th_ratio)
 {
-  vul_printf (vcl_cout, "dcs_smooth_scanlines_3pi(): %u scan lines, nsteps = %d\n", 
+  vul_printf (std::cout, "dcs_smooth_scanlines_3pi(): %u scan lines, nsteps = %d\n", 
                sg3pi->data().size(), nsteps);
-  vul_printf (vcl_cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
+  vul_printf (std::cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
 
   const double intra_sl_kth = sg3pi->intra_sl_dist() * DCS_th_ratio;
-  vcl_vector<vgl_point_3d<double> > scanline;
+  std::vector<vgl_point_3d<double> > scanline;
 
   for (unsigned int i=0; i<sg3pi->data().size(); i++) {
     assert (scanline.size() == 0);
@@ -142,16 +142,16 @@ void dcs_smooth_across_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int n
                                       const float DCS_psi, const float DCS_th_ratio)
 {
   unsigned int i, j, count, total;
-  vul_printf (vcl_cout, "dcs_smooth_across_scanlines_3pi(): %u scan lines, nsteps = %d\n", 
+  vul_printf (std::cout, "dcs_smooth_across_scanlines_3pi(): %u scan lines, nsteps = %d\n", 
               sg3pi->data().size(), nsteps);
-  vul_printf (vcl_cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
+  vul_printf (std::cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
 
   //Build the points across scanlines into curves into another array,
   //  (transpose of the original array)
   //# curves: max number of point indicex: get_max_pn()
   //  where each curve can be broken into many sub-curves.
   //# length of curve: # profiles: sg3pi->data().size()
-  vcl_vector <vcl_vector<dbmsh3d_sg3pi_pt*> > datat;
+  std::vector <std::vector<dbmsh3d_sg3pi_pt*> > datat;
   const int maxpn = sg3pi->get_max_pn ();
   const int maxlen = sg3pi->data().size();
   datat.resize (maxpn);
@@ -177,7 +177,7 @@ void dcs_smooth_across_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int n
       continue;
 
     //try just put all points into a curve and smooth it (ignoring all gaps).
-    vcl_vector<vgl_point_3d<double> > curve;
+    std::vector<vgl_point_3d<double> > curve;
     curve.clear();
 
     count=0; 
@@ -217,16 +217,16 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
 {
   unsigned int i, j, count, total;
   
-  vul_printf (vcl_cout, "dcs_smooth_scanlines_2dirs_3pi(): %u scan lines\n", 
+  vul_printf (std::cout, "dcs_smooth_scanlines_2dirs_3pi(): %u scan lines\n", 
               sg3pi->data().size());
-  vul_printf (vcl_cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
-  vul_printf (vcl_cout, "\tn_intra: %d, n_inter: %d.\n", n_intra, n_inter);
+  vul_printf (std::cout, "\tDCS_psi: %f, DCS_th_ratio: %f.\n", DCS_psi, DCS_th_ratio);
+  vul_printf (std::cout, "\tn_intra: %d, n_inter: %d.\n", n_intra, n_inter);
 
   const double intra_sl_kth = sg3pi->intra_sl_dist() * DCS_th_ratio;
   const double inter_sl_kth = sg3pi->inter_sl_dist() * DCS_th_ratio;
   //The stepsize is 1/4 of the smaller vector length that 
   //the resulting mesh will not cross itself.
-  vcl_vector<vgl_point_3d<double> > scanline;
+  std::vector<vgl_point_3d<double> > scanline;
 
   //1) Smooth each scanline for n_intra times.
   for (unsigned int i=0; i<sg3pi->data().size(); i++) {
@@ -248,7 +248,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
   //# curves: max number of point indicex: get_max_pn()
   //  where each curve can be broken into many sub-curves.
   //# length of curve: # profiles: sg3pi->data().size()
-  vcl_vector <vcl_vector<dbmsh3d_sg3pi_pt*> > datat;
+  std::vector <std::vector<dbmsh3d_sg3pi_pt*> > datat;
   const int maxpn = sg3pi->get_max_pn ();
   const int maxlen = sg3pi->data().size();
   datat.resize (maxpn);
@@ -274,7 +274,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
       continue;
 
     //try just put all points into a curve and smooth it (ignoring all gaps).
-    vcl_vector<vgl_point_3d<double> > curve;
+    std::vector<vgl_point_3d<double> > curve;
     curve.clear();
 
     count=0; 
@@ -308,14 +308,14 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
 }
 
 //: only smooth the range z(x,y)
-bool bgld_curve_shorten_z (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
+bool bgld_curve_shorten_z (std::vector<dbmsh3d_sg3pi_pt*>& scanline, 
                            const float psi, const unsigned int nsteps)
 {
   unsigned int n = scanline.size();
   if (n < 3)
     return false;
 
-  vcl_vector<vgl_point_3d<double> > cs;
+  std::vector<vgl_point_3d<double> > cs;
   cs.resize(n);
 
   cs[0] = vgl_point_3d<double> (scanline[0]->pt());
@@ -374,7 +374,7 @@ void apply_median_filter_1 (dbmsh3d_sg3pi* sg3pi)
   const double dist_th = KERNEL_DIST_TH_1 * sg3pi->intra_sl_dist();    
 
   //Temporary result array.
-  vcl_vector <vcl_vector<vgl_point_3d<double> > > result;
+  std::vector <std::vector<vgl_point_3d<double> > > result;
   result.resize (sg3pi->data().size());
   for (i=0; i<int(sg3pi->data().size()); i++)
     result[i].resize (sg3pi->data(i).size());
@@ -383,7 +383,7 @@ void apply_median_filter_1 (dbmsh3d_sg3pi* sg3pi)
     for (j=0; j<int(sg3pi->data(i).size()); j++) {
       dbmsh3d_sg3pi_pt* SP = sg3pi->get_data(i,j);
 
-      vcl_vector<float> kernel;
+      std::vector<float> kernel;
       kernel.clear();
       
       for (k=-KERNEL_SCANLINE_SIZE_1; k<=KERNEL_SCANLINE_SIZE_1; k++) {
@@ -398,7 +398,7 @@ void apply_median_filter_1 (dbmsh3d_sg3pi* sg3pi)
         continue;
 
       //find the median depth
-      vcl_nth_element (kernel.begin(),
+      std::nth_element (kernel.begin(),
                        kernel.begin() + int(kernel.size()/2), 
                        kernel.end());
       double median_depth = *(kernel.begin() + int(kernel.size()/2));
@@ -428,7 +428,7 @@ void apply_median_filter_2 (dbmsh3d_sg3pi* sg3pi)
   const double dist_th = KERNEL_DIST_TH_2 * sg3pi->intra_sl_dist();    
 
   //Temporary result array.
-  vcl_vector <vcl_vector<vgl_point_3d<double> > > result;
+  std::vector <std::vector<vgl_point_3d<double> > > result;
   result.resize (sg3pi->data().size());
   for (i=0; i<int(sg3pi->data().size()); i++)
     result[i].resize (sg3pi->data(i).size());
@@ -437,7 +437,7 @@ void apply_median_filter_2 (dbmsh3d_sg3pi* sg3pi)
     for (j=0; j<int(sg3pi->data(i).size()); j++) {
       dbmsh3d_sg3pi_pt* SP = sg3pi->get_data(i,j);
 
-      vcl_vector<float> kernel;
+      std::vector<float> kernel;
       kernel.clear();
       
       for (k=-KERNEL_SCANLINE_SIZE_2; k<=KERNEL_SCANLINE_SIZE_2; k++) {
@@ -452,7 +452,7 @@ void apply_median_filter_2 (dbmsh3d_sg3pi* sg3pi)
         continue;
 
       //find the median depth
-      vcl_nth_element (kernel.begin(),
+      std::nth_element (kernel.begin(),
                        kernel.begin() + int(kernel.size()/2), 
                        kernel.end());
       double median_depth = *(kernel.begin() + int(kernel.size()/2));
@@ -474,7 +474,7 @@ void apply_median_filter_2 (dbmsh3d_sg3pi* sg3pi)
 
 void median_filter_3pi (dbmsh3d_sg3pi* sg3pi, const int option, const int nsteps)
 {
-  vul_printf (vcl_cout, "median_filter_3pi(): option = %d, %d steps\n", option, nsteps);
+  vul_printf (std::cout, "median_filter_3pi(): option = %d, %d steps\n", option, nsteps);
 
   sg3pi->estimate_range_coord ();
 
@@ -495,17 +495,17 @@ void median_filter_3pi (dbmsh3d_sg3pi* sg3pi, const int option, const int nsteps
 void gaussian_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
                                     const float G_th_ratio)
 {
-  vul_printf (vcl_cout, "gaussian_smooth_scanlines_3pi(): %d steps\n", nsteps);
+  vul_printf (std::cout, "gaussian_smooth_scanlines_3pi(): %d steps\n", nsteps);
 
   const double intra_sl_kth = sg3pi->intra_sl_dist() * G_th_ratio;
   //const double inter_sl_kth = sg3pi->inter_sl_dist() * G_th_ratio;
 
   //Gaussian kernel parameters.
-  /*double sigma = vcl_max (d_intra, d_inter) * G_sigma_ratio;
+  /*double sigma = std::max (d_intra, d_inter) * G_sigma_ratio;
   vnl_gaussian_kernel_1d gauss1 ((double) sigma);
   vnl_gaussian_kernel_1d gauss2 ((double) sigma); 
-  double ksize = vcl_max (d_intra, d_inter) * G_radius_ratio;
-  double kth = vcl_max (d_intra, d_inter) * G_th_ratio;*/
+  double ksize = std::max (d_intra, d_inter) * G_radius_ratio;
+  double kth = std::max (d_intra, d_inter) * G_th_ratio;*/
 
 
 
@@ -527,7 +527,7 @@ void gaussian_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
         je = sg3pi->data(i).size()-1;
 
       //smooth curve[js, je] with end points fixed
-      vcl_vector<vgl_point_3d<double> > curve;
+      std::vector<vgl_point_3d<double> > curve;
       curve.clear();
       for (unsigned int j=js; j<=je; j++)
         curve.push_back (sg3pi->data(i,j)->pt());
@@ -552,8 +552,8 @@ void gaussian_smooth_2d_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
                              const float G_radius_ratio,
                              const float G_th_ratio)
 {
-  vul_printf (vcl_cout, "gaussian_smooth_2d_3pi(): %d steps\n", nsteps);
-  vul_printf (vcl_cout, "\tG_sigma_r: %f, G_kernel_r: %f, G_th_r: %f.\n", 
+  vul_printf (std::cout, "gaussian_smooth_2d_3pi(): %d steps\n", nsteps);
+  vul_printf (std::cout, "\tG_sigma_r: %f, G_kernel_r: %f, G_th_r: %f.\n", 
               G_sigma_ratio, G_radius_ratio, G_th_ratio);
 
   //Estimate intra- and inter- scanline sample distance.
@@ -563,7 +563,7 @@ void gaussian_smooth_2d_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
   //# Row: Raw->data().size(), # Column: maxpn.
   //Non-data value is DBL_MAX (default)
   const int maxpn = sg3pi->get_max_pn() + 1;
-  vcl_vector<vcl_vector<double> > range;
+  std::vector<std::vector<double> > range;
   range.resize (sg3pi->data().size());
   for (unsigned int i=0; i<range.size(); i++)
     range[i].resize (maxpn, DBL_MAX);
@@ -595,7 +595,7 @@ void gaussian_smooth_2d_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
 
 void build_mesh_faces_3pi (dbmsh3d_sg3pi* sg3pi, dbmsh3d_mesh* M)
 {
-  vul_printf (vcl_cout, "build_mesh_faces_3pi(): %u scanlines.\n", sg3pi->data().size());
+  vul_printf (std::cout, "build_mesh_faces_3pi(): %u scanlines.\n", sg3pi->data().size());
 
   //2) Estimate the average intra-scanline sample distance and
   //   inter-scanline sample distance.
@@ -607,28 +607,28 @@ void build_mesh_faces_3pi (dbmsh3d_sg3pi* sg3pi, dbmsh3d_mesh* M)
 
   double intra_scanline_th = INTRA_SCANLINE_TH * sg3pi->intra_sl_dist();
 
-  vul_printf (vcl_cout, "  meshing triangles between scanlines: ");
+  vul_printf (std::cout, "  meshing triangles between scanlines: ");
 
   for (int i=0; i<int(sg3pi->data().size())-1; i++) {
-    vcl_vector<dbmsh3d_sg3pi_pt*> scanline0 = sg3pi->data()[i];
+    std::vector<dbmsh3d_sg3pi_pt*> scanline0 = sg3pi->data()[i];
     if (scanline0.size() == 0)
       continue;
 
     //Look for next scan line
-    vcl_vector<dbmsh3d_sg3pi_pt*> scanline1 = sg3pi->data()[i+1];
+    std::vector<dbmsh3d_sg3pi_pt*> scanline1 = sg3pi->data()[i+1];
     if (scanline1.size() == 0)
       continue;
 
     if (i % 5 == 0)
-      vul_printf (vcl_cout, "%d ", i);
+      vul_printf (std::cout, "%d ", i);
     mesh_between_scanlines (scanline0, scanline1, intra_scanline_th, M);
   }
 
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
 }
 
-void mesh_between_scanlines (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0, 
-                             const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline1, 
+void mesh_between_scanlines (const std::vector<dbmsh3d_sg3pi_pt*>& scanline0, 
+                             const std::vector<dbmsh3d_sg3pi_pt*>& scanline1, 
                              const double intra_scanline_th,
                              dbmsh3d_mesh* M)
 {
@@ -700,7 +700,7 @@ void mesh_between_scanlines (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0,
 
 void sg_detect_bbox (const dbmsh3d_sg3pi* sg3pi, vgl_box_3d<double>& box)
 {
-  vul_printf (vcl_cout, "  sg_detect_bbox()\n");
+  vul_printf (std::cout, "  sg_detect_bbox()\n");
   box.empty();  
   for (unsigned int i=0; i<sg3pi->data().size(); i++) {
     for (unsigned int j=0; j<sg3pi->data()[i].size(); j++) {
@@ -709,9 +709,9 @@ void sg_detect_bbox (const dbmsh3d_sg3pi* sg3pi, vgl_box_3d<double>& box)
     }
   }
   if (box.is_empty())
-    vcl_cerr << "    Empty point set, bounding box undefined." << vcl_endl;
+    std::cerr << "    Empty point set, bounding box undefined." << std::endl;
   else
-    vcl_cerr << "    " << box << vcl_endl;
+    std::cerr << "    " << box << std::endl;
 }
 
 //: Crop the scanned dataset.
@@ -719,10 +719,10 @@ void sg_crop_3pi (dbmsh3d_sg3pi* sg3pi,
                   const double minX, const double minY, const double minZ, 
                   const double maxX, const double maxY, const double maxZ)
 {
-  vul_printf (vcl_cout, "sg_crop_3pi(): %u points.\n", sg3pi->get_num_points());
+  vul_printf (std::cout, "sg_crop_3pi(): %u points.\n", sg3pi->get_num_points());
   
   for (unsigned int i=0; i<sg3pi->data().size(); i++) {
-    vcl_vector<dbmsh3d_sg3pi_pt*>::iterator it = sg3pi->get_data()[i].begin();
+    std::vector<dbmsh3d_sg3pi_pt*>::iterator it = sg3pi->get_data()[i].begin();
     while (it != sg3pi->get_data()[i].end()) {
       dbmsh3d_sg3pi_pt* SP = (*it);
 
@@ -735,7 +735,7 @@ void sg_crop_3pi (dbmsh3d_sg3pi* sg3pi,
           it = sg3pi->get_data()[i].begin();
         }
         else {
-          vcl_vector<dbmsh3d_sg3pi_pt*>::iterator prev = it;
+          std::vector<dbmsh3d_sg3pi_pt*>::iterator prev = it;
           prev--;
           (sg3pi->get_data()[i]).erase (it);
           it = ++prev;
@@ -746,6 +746,6 @@ void sg_crop_3pi (dbmsh3d_sg3pi* sg3pi,
     }
   }
 
-  vul_printf (vcl_cout, "  After cropping, remaining %u points.\n", sg3pi->get_num_points());
+  vul_printf (std::cout, "  After cropping, remaining %u points.\n", sg3pi->get_num_points());
 }
 

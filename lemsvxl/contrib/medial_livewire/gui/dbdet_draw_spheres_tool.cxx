@@ -84,7 +84,7 @@ activate()
 //    vidpro1_vsol2D_storage_sptr input_vsol;
 //    input_vsol.vertical_cast(storage);
 //
-//    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+//    std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 //    for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
 //    {
 //      // get the first polyline or polygon
@@ -107,7 +107,7 @@ activate()
 //    bdgl_curve_algs::smooth_curve(this->preloaded_curve_, 1.0);
 //
   //}
-  vcl_cout << "\nDraw Spheres tool is activated!!!\n";
+  std::cout << "\nDraw Spheres tool is activated!!!\n";
 }
 
 //: Set the tableau to work with
@@ -120,14 +120,14 @@ set_tableau ( const vgui_tableau_sptr& tableau)
     return true;
   }
   
-  vcl_cout << "NON vgui_image_tableau is set!!\n";
+  std::cout << "NON vgui_image_tableau is set!!\n";
   this->tableau_ = 0;
   return false;
 }
 
 
 //: Return name of the tool
-vcl_string dbdet_draw_spheres_tool::
+std::string dbdet_draw_spheres_tool::
 name() const
 {
   return "Draw Spheres";
@@ -150,7 +150,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //    {
 //      this->handle_run_fast_mode();
 //      vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-//        "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+//        "," << this->mouse_curve.back().y() << ")" << std::endl;
 //    
 //      bvis1_manager::instance()->post_overlay_redraw();
 //      // start here
@@ -192,7 +192,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //  // Event: choose initial seed point)
 //  if (!seed_picked && gesture_start(e)) 
 //  { 
-//    vgui::out << "Initial seed selected" << vcl_endl;
+//    vgui::out << "Initial seed selected" << std::endl;
 //    this->handle_pick_initial_seed();
 //    //do the following no matter what mode we are in
 //    bvis1_manager::instance()->post_overlay_redraw();
@@ -205,14 +205,14 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //  if(gesture_increase_radius(e))
 //  {
 //    this->handle_change_radius(0.1);
-//    vgui::out << "r =" << this->rad << vcl_endl;
+//    vgui::out << "r =" << this->rad << std::endl;
 //    return false;
 //  }
 //
 //  if(gesture_decrease_radius(e))
 //  {
 //    this->handle_change_radius(-0.1);
-//    vgui::out << "r =" << this->rad << vcl_endl;
+//    vgui::out << "r =" << this->rad << std::endl;
 //    return false;
 //  }
 //
@@ -224,7 +224,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //     {      
 //       this->handle_mouse_motion(mouse_x, mouse_y);
 //       vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-//         "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+//         "," << this->mouse_curve.back().y() << ")" << std::endl;
 //       bvis1_manager::instance()->post_overlay_redraw();
 //     }
 //     return false;
@@ -243,7 +243,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //  {
 //    this->handle_delete_end_segments();
 //    vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-//         "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+//         "," << this->mouse_curve.back().y() << ")" << std::endl;
 //    bvis1_manager::instance()->post_overlay_redraw();
 //    return false;
 //  }
@@ -262,7 +262,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
 //  {
 //    this->handle_save_contour();
 //    bvis1_manager::instance()->post_overlay_redraw();
-//    vcl_cout<<"We are at the end of the Save event"<<"\n";
+//    std::cout<<"We are at the end of the Save event"<<"\n";
 //    return false;
 //  }   
 

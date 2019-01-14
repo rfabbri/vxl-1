@@ -39,9 +39,9 @@ public:
   {
     assert(data);
     if(data->info() == DBPRO_VALID){
-      assert(data->type_id() == typeid(vcl_vector<modrec_vehicle_state>));
-      const vcl_vector<modrec_vehicle_state>& states = 
-      data->data<vcl_vector<modrec_vehicle_state> >();
+      assert(data->type_id() == typeid(std::vector<modrec_vehicle_state>));
+      const std::vector<modrec_vehicle_state>& states = 
+      data->data<std::vector<modrec_vehicle_state> >();
       
       manager_.set_tracking_states(states);
     }
@@ -85,12 +85,12 @@ void py_modrec_manager::init_mesh_tex(modrec_pca_vehicle& mesh)
   assert(mesh.has_tex_coords());
   
   // remove hidden faces from the texture map
-  vcl_set<unsigned int> no_tex, tmp;
+  std::set<unsigned int> no_tex, tmp;
   no_tex = mesh.faces().group_face_set("undercarriage");
   tmp = mesh.faces().group_face_set("wheel_back");
   no_tex.insert(tmp.begin(),tmp.end());
-  vcl_vector<bool> valid_tex(mesh.num_faces(),true);
-  for(vcl_set<unsigned int>::const_iterator itr=no_tex.begin();
+  std::vector<bool> valid_tex(mesh.num_faces(),true);
+  for(std::set<unsigned int>::const_iterator itr=no_tex.begin();
       itr!=no_tex.end(); ++itr)
     valid_tex[*itr] = false;
   mesh.set_valid_tex_faces(valid_tex);
@@ -139,21 +139,21 @@ void py_modrec_manager::init_mesh()
 
 //: load a camera matrix for frame \a i
 bool py_modrec_manager::set_camera(unsigned int frame, 
-                                   const vcl_string& filename)
+                                   const std::string& filename)
 {
   vnl_double_3x4 M;
   norm_cam_ = false;
-  vcl_ifstream ifs(filename.c_str());
+  std::ifstream ifs(filename.c_str());
   ifs >> M;
   
-  vcl_string type;
+  std::string type;
   ifs >> type;
   if(ifs.good() && type == "normalized")
     norm_cam_ = true;
   
   // read enviroment data
-  vcl_map<vcl_string,double> env_data;
-  vcl_string name;
+  std::map<std::string,double> env_data;
+  std::string name;
   double val;
   ifs >> name >> val;
   while(ifs.good()){
@@ -188,7 +188,7 @@ bool py_modrec_manager::set_camera(unsigned int frame,
       pp.y() *= nj;
       K.set_principal_point(pp);
       camera.set_calibration(K);
-      vcl_cout << K.get_matrix() << vcl_endl;
+      std::cout << K.get_matrix() << std::endl;
     }
   }
   
@@ -201,13 +201,13 @@ bool py_modrec_manager::set_camera(unsigned int frame,
     solar_day_ = 0;
     solar_utc_ = 17;
     solar_atn_ = 0;
-    vcl_map<vcl_string,double>::const_iterator e;
+    std::map<std::string,double>::const_iterator e;
     if((e = env_data.find("lat")) != env_data.end())
       solar_lat_ = e->second;  
     if((e = env_data.find("lon")) != env_data.end())
       solar_lon_ = e->second; 
     if((e = env_data.find("day")) != env_data.end())
-      solar_day_ = static_cast<int>(vcl_floor(e->second)); 
+      solar_day_ = static_cast<int>(std::floor(e->second)); 
     if((e = env_data.find("utc")) != env_data.end())
       solar_utc_ = e->second; 
     if((e = env_data.find("atn")) != env_data.end())
@@ -243,9 +243,9 @@ void py_modrec_manager::compute_sun_direction()
     double alt,az;
     dbul_solar_position(solar_day_, solar_utc_+rel_time, solar_lat_, solar_lon_, alt, az);
     double sag = solar_atn_ - az;
-    sun_dir_ = vgl_vector_3d<double>(-vcl_cos(sag)*vcl_cos(alt),
-                                     -vcl_sin(sag)*vcl_cos(alt),
-                                     -vcl_sin(alt));
+    sun_dir_ = vgl_vector_3d<double>(-std::cos(sag)*std::cos(alt),
+                                     -std::sin(sag)*std::cos(alt),
+                                     -std::sin(alt));
   }
   if(is_fit_mode_video())
     video_optimizer_.set_sun_direction(sun_dir_);
@@ -253,12 +253,12 @@ void py_modrec_manager::compute_sun_direction()
 
 
 //: load an image file for frame \a i
-bool py_modrec_manager::set_image(unsigned int frame, const vcl_string& filename)
+bool py_modrec_manager::set_image(unsigned int frame, const std::string& filename)
 {
   vil_image_resource_sptr img = vil_load_image_resource(filename.c_str());
   if(!img)
   {
-    vcl_cerr << "unable to load image file: "<<filename << vcl_endl;
+    std::cerr << "unable to load image file: "<<filename << std::endl;
     return false;
   }
     
@@ -272,7 +272,7 @@ bool py_modrec_manager::set_image(unsigned int frame, const vcl_string& filename
 
 
 //: Open input video stream
-bool py_modrec_manager::set_video(const vcl_string& filename)
+bool py_modrec_manager::set_video(const std::string& filename)
 {
   if(vul_file::exists(filename) && !vul_file::is_directory(filename))
     istream_ = new vidl_ffmpeg_istream(filename);
@@ -314,13 +314,13 @@ bool py_modrec_manager::set_video(const vcl_string& filename)
 //: clear all images and cameras
 void py_modrec_manager::reset_views()
 {
-  vcl_cout << "clearing views"<<vcl_endl;
+  std::cout << "clearing views"<<std::endl;
   optimizer_->reset();
 }
 
 
 //: load the parts from a file
-bool py_modrec_manager::set_parts(const vcl_string& filename)
+bool py_modrec_manager::set_parts(const std::string& filename)
 {
   mesh_->set_parts(modrec_read_vehicle_parts(filename));  
   return true;
@@ -328,14 +328,14 @@ bool py_modrec_manager::set_parts(const vcl_string& filename)
 
 
 //: load the pca parameters from a file
-bool py_modrec_manager::set_pca(const vcl_string& filename)
+bool py_modrec_manager::set_pca(const std::string& filename)
 {
   vnl_vector<double> mean;
   vnl_vector<double> std_devs;
   vnl_matrix<double> pc;
   if(!imesh_read_pca(filename,mean,std_devs,pc))
   {
-    vcl_cerr << "error reading PCA file" << vcl_endl;
+    std::cerr << "error reading PCA file" << std::endl;
     return false;
   }
   
@@ -349,22 +349,22 @@ bool py_modrec_manager::set_pca(const vcl_string& filename)
 
 
 //: load the mesh and projected into PCA space
-bool py_modrec_manager::set_mesh(const vcl_string& filename, 
-                                 const vcl_string& partsfile)
+bool py_modrec_manager::set_mesh(const std::string& filename, 
+                                 const std::string& partsfile)
 {
   imesh_mesh new_mesh; 
   if(!imesh_read(filename,new_mesh)){
-    vcl_cerr << "error, could not read mesh file: "<<filename<<vcl_endl; 
+    std::cerr << "error, could not read mesh file: "<<filename<<std::endl; 
     return false;
   }
   
   if(mesh_->num_verts() != new_mesh.num_verts()){
-    vcl_cerr << "error: mesh must have the same number of vertices as the PCA mesh" <<vcl_endl; 
-    vcl_cerr << "PCA: "<<mesh_->num_verts()<<" loaded: "<<new_mesh.num_verts()<<vcl_endl;
+    std::cerr << "error: mesh must have the same number of vertices as the PCA mesh" <<std::endl; 
+    std::cerr << "PCA: "<<mesh_->num_verts()<<" loaded: "<<new_mesh.num_verts()<<std::endl;
     return false;
   }
   
-  vcl_auto_ptr<imesh_vertex_array_base> new_verts(new_mesh.vertices().clone());
+  std::auto_ptr<imesh_vertex_array_base> new_verts(new_mesh.vertices().clone());
   mesh_->set_vertices(new_verts);
   mesh_->compute_face_normals();
   
@@ -409,28 +409,28 @@ void py_modrec_manager::set_vehicle_model(vehicle_model vm)
 
 
 //: load the polyhedral approximation mesh
-bool py_modrec_manager::set_poly_mesh(const vcl_string& filename)
+bool py_modrec_manager::set_poly_mesh(const std::string& filename)
 {
   if(!imesh_read(filename,poly_mesh_)){
-    vcl_cerr << "error, could not read mesh file: "<<filename<<vcl_endl; 
+    std::cerr << "error, could not read mesh file: "<<filename<<std::endl; 
     return false;
   }
 }
 
 
 //: set the options for which parameters to optimize
-void py_modrec_manager::set_options(const vcl_vector<bool>& options,
+void py_modrec_manager::set_options(const std::vector<bool>& options,
                                     unsigned int num_pc)
 {
-  vcl_cout << "Enable ";
-  if(options[1]) vcl_cout << "tx, ";
-  if(options[2]) vcl_cout << "ty, ";
-  if(options[3]) vcl_cout << "tz, ";
-  if(options[4]) vcl_cout << "rx, ";
-  if(options[5]) vcl_cout << "ry, ";
-  if(options[6]) vcl_cout << "rz, ";
-  if(options[0]) vcl_cout << "with "<<num_pc<<" PC"<<vcl_endl;
-  else vcl_cout << "without PCs"<<vcl_endl;
+  std::cout << "Enable ";
+  if(options[1]) std::cout << "tx, ";
+  if(options[2]) std::cout << "ty, ";
+  if(options[3]) std::cout << "tz, ";
+  if(options[4]) std::cout << "rx, ";
+  if(options[5]) std::cout << "ry, ";
+  if(options[6]) std::cout << "rz, ";
+  if(options[0]) std::cout << "with "<<num_pc<<" PC"<<std::endl;
+  else std::cout << "without PCs"<<std::endl;
   optimizer_->set_options(options,num_pc);
   if(!options[0] || num_pc == 0)
     video_optimizer_.tracker().set_estimate_shape(false);
@@ -457,7 +457,7 @@ void py_modrec_manager::set_track_with_silhouette(bool val)
 void py_modrec_manager::set_translation(double tx, double ty, double tz)
 {
   t_.set(tx,ty,tz);
-  vcl_cout << "translation set to "<<t_<<vcl_endl;
+  std::cout << "translation set to "<<t_<<std::endl;
 }
 
 
@@ -465,17 +465,17 @@ void py_modrec_manager::set_translation(double tx, double ty, double tz)
 void py_modrec_manager::set_rotation(double rx, double ry, double rz)
 {
   R_ = vgl_rotation_3d<double>(vnl_vector_fixed<double,3>(rx,ry,rz));
-  vcl_cout << "Rotation set to "<< R_.as_rodrigues() << vcl_endl;
+  std::cout << "Rotation set to "<< R_.as_rodrigues() << std::endl;
 }
 
 
 //: set the rotation vector
-void py_modrec_manager::set_params(const vcl_vector<double>& params)
+void py_modrec_manager::set_params(const std::vector<double>& params)
 {
   vnl_vector<double> p(params.size());
   for(unsigned int i=0; i<params.size(); ++i)
     p[i] = params[i];
-  vcl_cout << "setting params ["<<p<<"]"<<vcl_endl;
+  std::cout << "setting params ["<<p<<"]"<<std::endl;
   mesh_->set_params(p);
   mesh_->compute_face_normals();
 }
@@ -489,7 +489,7 @@ void py_modrec_manager::set_lambda(double lambda)
 
 
 //: set the vehicle tracking states
-void py_modrec_manager::set_tracking_states(const vcl_vector<modrec_vehicle_state>& states)
+void py_modrec_manager::set_tracking_states(const std::vector<modrec_vehicle_state>& states)
 {
   vehicle_states_ = states;
 }
@@ -525,7 +525,7 @@ void py_modrec_manager::fit_model(unsigned int max_itr)
 
 //: write an svg file with the last projected curves in view \a i
 bool py_modrec_manager::write_svg_curves(unsigned int i,
-                                         const vcl_string& filename) const
+                                         const std::string& filename) const
 {
   const modrec_pca_vehicle_projector& projector = is_fit_mode_video() ? 
                                                   video_optimizer_.projector() : 
@@ -535,10 +535,10 @@ bool py_modrec_manager::write_svg_curves(unsigned int i,
 
 
 //: load a mesh as the ground truth mesh
-bool py_modrec_manager::set_truth_mesh(const vcl_string& filename)
+bool py_modrec_manager::set_truth_mesh(const std::string& filename)
 {
   if(!imesh_read(filename,truth_mesh_)){
-    vcl_cerr << "error, could not read truth mesh file: "<<filename<<vcl_endl; 
+    std::cerr << "error, could not read truth mesh file: "<<filename<<std::endl; 
     return false;
   }
 
@@ -557,7 +557,7 @@ double py_modrec_manager::compute_error() const
   imesh_transform_inplace(body, R_, t_);
   while(body.num_verts() < 1000)
     imesh_quad_subdivide(body);
-  vcl_cout << "num body vertices = "<<body.num_verts()<<vcl_endl;
+  std::cout << "num body vertices = "<<body.num_verts()<<std::endl;
   const imesh_vertex_array<3>& verts = body.vertices<3>();
   
   vgl_point_3d<double> cp;
@@ -575,7 +575,7 @@ double py_modrec_manager::compute_error() const
   }
   error /= verts.size();
   
-  return vcl_sqrt(error);
+  return std::sqrt(error);
   //return max_dist;
 }
 
@@ -603,7 +603,7 @@ void py_modrec_manager::video_seek(int fnum)
   compute_sun_direction();
   
   frame_number_ = fnum;
-  vcl_cout << "seek to "<< fnum << "\n";
+  std::cout << "seek to "<< fnum << "\n";
   
   
   vidl_frame_sptr frame = istream_->current_frame();
@@ -674,7 +674,7 @@ void py_modrec_manager::get_rotation(double& rx, double& ry, double& rz) const
 
 
 //: get the parameter vector
-void py_modrec_manager::get_params(vcl_vector<double>& params) const
+void py_modrec_manager::get_params(std::vector<double>& params) const
 {
   const vnl_vector<double>& p = mesh_->params();
   params.resize(p.size());
@@ -700,7 +700,7 @@ void py_modrec_manager::get_vehicle_model(vehicle_model& vm)
 
 
 //: get the current vehicle tracking states
-const vcl_vector<modrec_vehicle_state>& 
+const std::vector<modrec_vehicle_state>& 
 py_modrec_manager::get_vehicle_states() const
 {
   return vehicle_states_;
@@ -735,20 +735,20 @@ compute_edgel_coverage(double dist_thresh,
 namespace{
   vil_image_view<float>
   edge_dist_map(const vil_image_view<float>& edge_map,
-                const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves)
+                const std::vector<std::vector<vgl_point_2d<double> > >& curves)
   {
-    vcl_vector<vcl_pair<int,int> > edge_pos;
-    vcl_vector<modrec_edgel > edgels;
+    std::vector<std::pair<int,int> > edge_pos;
+    std::vector<modrec_edgel > edgels;
     const unsigned ni = edge_map.ni();
     const unsigned nj = edge_map.nj();
     for(unsigned int j=0; j<nj; ++j){
       for(unsigned int i=0; i<ni; ++i){
         if(edge_map(i,j,0) > 0.0){
-          edge_pos.push_back(vcl_pair<int,int>(i,j));
+          edge_pos.push_back(std::pair<int,int>(i,j));
           double theta = edge_map(i,j,1);
           double offset = edge_map(i,j,2);
-          double gx = vcl_cos(theta);
-          double gy = vcl_sin(theta);
+          double gx = std::cos(theta);
+          double gy = std::sin(theta);
           edgels.push_back(modrec_edgel(i+gx*offset, j+gy*offset,
                                         theta, edge_map(i,j,0)));
         }
@@ -756,7 +756,7 @@ namespace{
     }
     
     vil_image_view<float> dist_edges(ni,nj);
-    dist_edges.fill(vcl_numeric_limits<float>::infinity());
+    dist_edges.fill(std::numeric_limits<float>::infinity());
     for(unsigned int i=0; i<curves.size(); ++i){
       for(unsigned int j=1; j<curves[i].size(); ++j){
         const vgl_point_2d<double>& p0 = curves[i][j-1];
@@ -765,7 +765,7 @@ namespace{
         vgl_vector_2d<double> n(v.y(),-v.x());
         double len = v.sqr_length();
         v /= len;
-        n /= vcl_sqrt(len);
+        n /= std::sqrt(len);
         for(unsigned int k=0; k<edgels.size(); ++k)
         {
           const modrec_edgel& e = edgels[k];
@@ -774,7 +774,7 @@ namespace{
           double s = dot_product(v,v2);
           if(s < 0.0) continue;
           else if (s > 1.0) continue;
-          double d = vcl_abs(dot_product(n,v2));
+          double d = std::abs(dot_product(n,v2));
           if(dist_edges(edge_pos[k].first,edge_pos[k].second) > d)
             dist_edges(edge_pos[k].first,edge_pos[k].second) = d;
           
@@ -784,11 +784,11 @@ namespace{
     return dist_edges;
   }
   
-  bool write_poly_curves(const vcl_string& filename,
-                         const vcl_vector<vcl_vector<vgl_point_2d<double> > >& curves,
+  bool write_poly_curves(const std::string& filename,
+                         const std::vector<std::vector<vgl_point_2d<double> > >& curves,
                          unsigned int ni, unsigned int nj)
   {
-    vcl_ofstream ofs(filename.c_str());
+    std::ofstream ofs(filename.c_str());
     if(!ofs.is_open())
       return false;
     
@@ -806,7 +806,7 @@ namespace{
     // Draw the parts in red
     for(unsigned int i=0; i<curves.size(); ++i)
     {
-      const vcl_vector<vgl_point_2d<double> >& curve = curves[i];
+      const std::vector<vgl_point_2d<double> >& curve = curves[i];
       ofs << "  <polyline fill=\"none\" stroke=\"red\" stroke-width=\"1px\"\n"
       << "           points=\"";
       for(unsigned int j=0; j<curve.size(); ++j)
@@ -862,7 +862,7 @@ compare_relative_coverage(double dist_thesh,
       }
     }
     
-    vcl_vector<vcl_vector<vgl_point_2d<double> > > curves = projector.contours();
+    std::vector<std::vector<vgl_point_2d<double> > > curves = projector.contours();
     curves.insert(curves.end(),projector.parts().begin(),projector.parts().end());
     vil_image_view<float> dist_map = edge_dist_map(edge_map, curves);
     
@@ -881,10 +881,10 @@ compare_relative_coverage(double dist_thesh,
     if(!poly_mesh_.has_half_edges())
       poly_mesh_.build_edge_graph();
     
-    vcl_vector<vcl_vector<vgl_point_2d<double> > > poly_curves = 
+    std::vector<std::vector<vgl_point_2d<double> > > poly_curves = 
        projector.project_all_edges(mv_optimizer_.camera(i),poly_mesh_,R_,t_);
     write_poly_curves("poly_curves.svg",poly_curves,ni,nj);
-    vcl_cout << "num poly curves = "<< poly_curves.size()<<vcl_endl;
+    std::cout << "num poly curves = "<< poly_curves.size()<<std::endl;
     vil_image_view<float> dist_map2 = edge_dist_map(edge_map, poly_curves);
     
     for(unsigned int j=0; j<nj; ++j){

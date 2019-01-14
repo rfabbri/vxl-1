@@ -56,18 +56,18 @@ bool bvam_generate_edge_map_process::execute()
     !parameters()->get_value("line_fitting_min_length", line_fitting_min_length) ||
     !parameters()->get_value("line_fitting_error_tolerance", line_fitting_error_tolerance)
     ) {
-      vcl_cout << "problems in retrieving parameters\n";
+      std::cout << "problems in retrieving parameters\n";
       return false;
   }
 
-  vcl_vector<bprb_param*> all_parameters = parameters()->get_param_list();
-  vcl_cout << vcl_endl;
-  vcl_cout << "printing parameters:" << vcl_endl;
-  vcl_cout << "--------------------" << vcl_endl;
+  std::vector<bprb_param*> all_parameters = parameters()->get_param_list();
+  std::cout << std::endl;
+  std::cout << "printing parameters:" << std::endl;
+  std::cout << "--------------------" << std::endl;
   for(unsigned i=0; i<all_parameters.size(); i++){
-    vcl_cout << all_parameters[i]->name() << ": " << all_parameters[i]->value_str() << vcl_endl;
+    std::cout << all_parameters[i]->name() << ": " << all_parameters[i]->value_str() << std::endl;
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   vil_image_view<vxl_byte> input_image(input_image_sptr);
 
@@ -87,14 +87,14 @@ bool bvam_generate_edge_map_process::execute()
   vil_image_resource_sptr input_image_res_sptr = vil_new_image_resource_of_view(*input_image_sptr);
   detector.SetImage(input_image_res_sptr);
   detector.DoContour();
-  vcl_vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
+  std::vector<vtol_edge_2d_sptr> * edges = detector.GetEdges();
 
   if(use_lines){
     sdet_fit_lines_params line_detector_params((int)line_fitting_min_length,line_fitting_error_tolerance);
     sdet_fit_lines line_detector(line_detector_params);
     line_detector.set_edges(*edges);
     line_detector.fit_lines();
-    vcl_vector<vsol_line_2d_sptr> & lines = line_detector.get_line_segs();
+    std::vector<vsol_line_2d_sptr> & lines = line_detector.get_line_segs();
 
     double ni_d = (double)ni;
     double nj_d = (double)nj;
@@ -133,9 +133,9 @@ bool bvam_generate_edge_map_process::execute()
     }
   }
   else{
-    vcl_vector<vcl_pair<int,int> > curr_edge_points;
+    std::vector<std::pair<int,int> > curr_edge_points;
 
-    for (vcl_vector<vtol_edge_2d_sptr>::iterator eit = edges->begin(); eit != edges->end(); eit++)
+    for (std::vector<vtol_edge_2d_sptr>::iterator eit = edges->begin(); eit != edges->end(); eit++)
     {
       vsol_curve_2d_sptr c = (*eit)->curve();
       vdgl_digital_curve_sptr dc = c->cast_to_vdgl_digital_curve();
@@ -148,7 +148,7 @@ bool bvam_generate_edge_map_process::execute()
         int cr_x = (int)curr_edgel.x();
         int cr_y = (int)curr_edgel.y();
 
-        vcl_pair<int,int> curr_pair(cr_x,cr_y);
+        std::pair<int,int> curr_pair(cr_x,cr_y);
         curr_edge_points.push_back(curr_pair);
       }
     }

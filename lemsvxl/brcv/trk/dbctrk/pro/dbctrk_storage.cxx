@@ -7,21 +7,21 @@
 #include <dbctrk/dbctrk_curve_matching.h>
 
 //: Constructor
-dbctrk_storage::dbctrk_storage( const vcl_vector<dbctrk_tracker_curve_sptr>& tracked_curves):tracked_curves_ (tracked_curves)
+dbctrk_storage::dbctrk_storage( const std::vector<dbctrk_tracker_curve_sptr>& tracked_curves):tracked_curves_ (tracked_curves)
 {
 }
 
 
 //: Set the curvetracking storage vector
 void
-dbctrk_storage::set_tracked_curves( const vcl_vector<dbctrk_tracker_curve_sptr >& tracked_curves)
+dbctrk_storage::set_tracked_curves( const std::vector<dbctrk_tracker_curve_sptr >& tracked_curves)
 {
   tracked_curves_=  tracked_curves;
 }
 
 //: Retrieve the curvetracking storage vector
 void
-dbctrk_storage::get_tracked_curves( vcl_vector<dbctrk_tracker_curve_sptr>& tracked_curves) const
+dbctrk_storage::get_tracked_curves( std::vector<dbctrk_tracker_curve_sptr>& tracked_curves) const
 {
   tracked_curves=  tracked_curves_;
 }
@@ -70,9 +70,9 @@ dbctrk_storage::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbctrk_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbctrk_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

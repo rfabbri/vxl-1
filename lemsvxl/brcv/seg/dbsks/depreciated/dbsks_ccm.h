@@ -21,7 +21,7 @@
 #include <vbl/vbl_array_3d.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 // ============================================================================
@@ -110,7 +110,7 @@ public:
   float f(int i, int j, int orient_channel);
 
   //: cost of an oriented point, represented by its index
-  float f(const vcl_vector<int >& x, const vcl_vector<int >& y, const vcl_vector<int >& orient_channel);
+  float f(const std::vector<int >& x, const std::vector<int >& y, const std::vector<int >& orient_channel);
 
 protected:
 

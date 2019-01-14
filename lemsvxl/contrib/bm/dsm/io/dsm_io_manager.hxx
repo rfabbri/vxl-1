@@ -44,7 +44,7 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_manager<T>* p)
 }//end vsl_b_write
 
 template<unsigned T>
-void vsl_print_summary(vcl_ostream &os, const dsm_manager<T>* p)
+void vsl_print_summary(std::ostream &os, const dsm_manager<T>* p)
 {
     os << "dsm_io_manager -- vsl_print_summary not implemented.\n";
 }//emd vsl_print_summary
@@ -54,6 +54,6 @@ template void vsl_b_read(vsl_b_istream &is, dsm_manager<T>& manager);\
 template void vsl_b_write(vsl_b_ostream &os, dsm_manager<T> const& manager);\
 template void vsl_b_read(vsl_b_istream &is, dsm_manager<T>* &p);\
 template void vsl_b_write(vsl_b_ostream &os, const dsm_manager<T>* p);\
-template void vsl_print_summary(vcl_ostream &os, const dsm_manager<T>* p)
+template void vsl_print_summary(std::ostream &os, const dsm_manager<T>* p)
 
 #endif //DSM_IO_MANAGER_TXX_

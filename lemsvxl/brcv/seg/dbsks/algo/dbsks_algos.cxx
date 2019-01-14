@@ -30,7 +30,7 @@
 void dbsks_algos::
 compute_detection_windows(int max_window_width, int max_window_height,
                                 int image_width, int image_height,
-                                vcl_vector<vgl_box_2d<int > >& windows)
+                                std::vector<vgl_box_2d<int > >& windows)
 {
   windows.clear();
 

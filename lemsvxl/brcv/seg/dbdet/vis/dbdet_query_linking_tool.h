@@ -51,7 +51,7 @@ public:
   virtual ~dbdet_query_linking_tool();
 
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   void deactivate();
 
@@ -78,8 +78,8 @@ protected:
 private:
   bgui_vsol_soview2D * object_;
 
-  vcl_vector<vsol_line_2d_sptr> edges_; //edges in the grouping (in order)
-  vcl_vector<bgui_vsol_soview2D_line_seg*> edge_so_; //corresponding line soviews 
+  std::vector<vsol_line_2d_sptr> edges_; //edges in the grouping (in order)
+  std::vector<bgui_vsol_soview2D_line_seg*> edge_so_; //corresponding line soviews 
 
   unsigned ref_edge_ind_; //index of the reference edgel
 
@@ -90,7 +90,7 @@ private:
 
   bool fit_spline_; //fit a spline through grouping
 
-  vcl_vector<vgl_polygon<double> > polys;
+  std::vector<vgl_polygon<double> > polys;
   vgl_polygon<double> p_int;
 
   vgl_point_2d<double> sel_pt_;

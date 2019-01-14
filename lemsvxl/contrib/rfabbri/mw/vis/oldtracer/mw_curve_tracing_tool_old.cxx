@@ -7,7 +7,7 @@
 #include <vpgld/pro/vpgld_camera_storage.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_set.h>
+#include <set>
 
 #define MANAGER bvis1_manager::instance()
 
@@ -20,7 +20,7 @@ mw_curve_tracing_tool_3()
   gesture0 = vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true);
 }
 
-vcl_string
+std::string
 mw_curve_tracing_tool_3::name() const
 {
   return "Multiview Curve Tracing";
@@ -29,13 +29,13 @@ mw_curve_tracing_tool_3::name() const
 void   
 mw_curve_tracing_tool_3::activate ()
 {
-  vcl_cout << "mw_curve_tracing_tool_3 ON\n";
+  std::cout << "mw_curve_tracing_tool_3 ON\n";
   
 
   // -------- Get camera matrices from each frame
 
   {
-    //  vcl_string datatype();
+    //  std::string datatype();
 
     // camera 1
     bpro1_storage_sptr 
@@ -47,12 +47,12 @@ mw_curve_tracing_tool_3::activate ()
 
     p1_ = cam_storage->get_camera()->cast_to_perspective_camera();
     if(!p1_) {
-      vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+      std::cerr << "Error: tool requires a perspective camera" << std::endl;
       return;
     }
 
-    vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
-    vcl_cout << "Camera1: \n" << *p1_;
+    std::cout << "NAME: " << cam_storage->name() << std::endl;
+    std::cout << "Camera1: \n" << *p1_;
 
     // camera 2
     p = MANAGER->repository()->get_data("vpgl camera",1);
@@ -62,12 +62,12 @@ mw_curve_tracing_tool_3::activate ()
     p2_ = cam_storage->get_camera()->cast_to_perspective_camera();
 
     if(!p2_) {
-      vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
+      std::cerr << "Error: tool requires a perspective camera" << std::endl;
       return;
     }
 
-    vcl_cout << "NAME2: " << cam_storage->name() << vcl_endl;
-    vcl_cout << "Camera2: \n" << *p2_;
+    std::cout << "NAME2: " << cam_storage->name() << std::endl;
+    std::cout << "Camera2: \n" << *p2_;
 
     // Fundamental matrix
     fm_ = new vpgl_fundamental_matrix <double> (*p1_,*p2_);
@@ -77,39 +77,39 @@ mw_curve_tracing_tool_3::activate ()
 
   // -------- Add tableaus to draw on
  
-  vcl_string type("vsol2D");
-  vcl_string name("mw_curve_tracer");
+  std::string type("vsol2D");
+  std::string name("mw_curve_tracer");
   bpro1_storage_sptr n_data = MANAGER->repository()->new_data(type,name);
   if (n_data) {
      MANAGER->add_to_display(n_data);
      MANAGER->display_current_frame();
   } else {
-     vcl_cerr << "error: unable to register new data\n";
+     std::cerr << "error: unable to register new data\n";
      return ;
   }
 
   int curr_frame = MANAGER->current_frame();
   tab_l_.vertical_cast(MANAGER->tableau_sequence()[curr_frame][name]);
-  vcl_cout << "Current frame now: " << curr_frame << vcl_endl;
+  std::cout << "Current frame now: " << curr_frame << std::endl;
 //  frame_of_left_tableau_ = curr_frame;
 
 //  MANAGER->active_selector()->set_active("epipolar");
 
   MANAGER->next_frame();
-  vcl_string type2("vsol2D");
-  vcl_string name2("mw_curve_tracer");
+  std::string type2("vsol2D");
+  std::string name2("mw_curve_tracer");
   n_data = MANAGER->repository()->new_data(type2,name2);
   if (n_data) {
      MANAGER->add_to_display(n_data);
      MANAGER->display_current_frame();
   } else {
-     vcl_cerr << "error: unable to register new data\n";
+     std::cerr << "error: unable to register new data\n";
      return ;
   }
 
   curr_frame = MANAGER->current_frame();
   tab_r_.vertical_cast(MANAGER->tableau_sequence()[curr_frame][name]);
-  vcl_cout << "Current frame then: " << curr_frame << vcl_endl;
+  std::cout << "Current frame then: " << curr_frame << std::endl;
 
 //  MANAGER->active_selector()->set_active("epipolar");
 
@@ -118,13 +118,13 @@ mw_curve_tracing_tool_3::activate ()
 
   vsols_right_sto.vertical_cast(MANAGER->storage_from_tableau(MANAGER->active_tableau()));
   if (vsols_right_sto == 0) {
-    vcl_cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
+    std::cerr << "Tool error: Could not find an active vsol in 2nd frame.\n";
     return;
   }
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsols_right_base = vsols_right_sto->all_data ();
+  std::vector< vsol_spatial_object_2d_sptr > vsols_right_base = vsols_right_sto->all_data ();
 
-  vcl_cout << "Number of vsols in storage named " << vsols_right_sto->name() <<  ": " << vsols_right_base.size() << vcl_endl;
+  std::cout << "Number of vsols in storage named " << vsols_right_sto->name() <<  ": " << vsols_right_base.size() << std::endl;
 
 
   vsols_right_.resize(vsols_right_base.size(),0);
@@ -135,8 +135,8 @@ mw_curve_tracing_tool_3::activate ()
     vsols_right_[i] = dynamic_cast<vsol_polyline_2d *> (vsols_right_base[i].ptr());
 
     if (!vsols_right_[i]) {
-      vcl_cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << vcl_endl;
-//      vcl_cout << "Object type found: " << vsols_right_base[i]->type_name() << vcl_endl;
+      std::cout << "Non-polyline found active in 2nd frame; but only POLYLINES supported!" << std::endl;
+//      std::cout << "Object type found: " << vsols_right_base[i]->type_name() << std::endl;
       return ;
     }
   } 
@@ -148,7 +148,7 @@ void
 mw_curve_tracing_tool_3::deactivate ()
 {
   delete fm_;
-  vcl_cout << "mw_curve_tracing_tool_3 OFF\n";
+  std::cout << "mw_curve_tracing_tool_3 OFF\n";
 }
 
 bool 
@@ -157,7 +157,7 @@ mw_curve_tracing_tool_3::set_tableau( const vgui_tableau_sptr& tableau )
 
   curve_tableau_l_ = bgui_vsol2D_tableau_sptr(dynamic_cast<bgui_vsol2D_tableau*>(tableau.ptr()));
   if( curve_tableau_l_ == 0 )  {
-    vcl_cerr << "Warning: working in a vsol tableau which is not expected\n";
+    std::cerr << "Warning: working in a vsol tableau which is not expected\n";
     return false;
   }
 
@@ -191,15 +191,15 @@ mw_curve_tracing_tool_3::handle( const vgui_event & e,
         = dynamic_cast<bgui_vsol_soview2D_polyline *>(selected_curve_soview_base); 
 
       if (!selected_curve_soview_poly) {
-        vcl_cout << "Selected non-Polyline spatial object" << vcl_endl;
-        vcl_cout << "Selected object type: " << selected_curve_soview_base->type_name() << vcl_endl;
+        std::cout << "Selected non-Polyline spatial object" << std::endl;
+        std::cout << "Selected object type: " << selected_curve_soview_base->type_name() << std::endl;
         return false;
       } else {
 //        selected_curve_soview_poly->set_point_size(10);
 //        selected_curve_soview_poly->set_colour(1,1,0);
 //        curve_tableau_l_->post_redraw();
         crv = selected_curve_soview_poly->sptr();
-        vcl_cout << "Size of selected obj: " << crv->size() << vcl_endl;
+        std::cout << "Size of selected obj: " << crv->size() << std::endl;
 
         if (current_curve_id_ != curve_tableau_l_->get_highlighted()) {
           selected_new_curve_ = true;
@@ -209,7 +209,7 @@ mw_curve_tracing_tool_3::handle( const vgui_event & e,
 
 
         if (selected_new_curve_) {
-          vcl_cout << "New curve selected.\n";
+          std::cout << "New curve selected.\n";
           if (pt_ini_) {
              tab_l_->remove(pt_ini_);
              tab_r_->remove(line_r_end_);
@@ -233,7 +233,7 @@ mw_curve_tracing_tool_3::handle( const vgui_event & e,
           tab_r_->set_current_grouping( "default" );
           tab_r_->post_redraw();
         } else { // 2nd point at same curve
-          vcl_cout << "Same curve selected. Defining 2nd point.\n";
+          std::cout << "Same curve selected. Defining 2nd point.\n";
           vsol_point_2d_sptr pt = crv->p1();
 
           tab_l_->set_foreground(1,1,0);
@@ -291,15 +291,15 @@ mw_curve_tracing_tool_3::handle2( const vgui_event & e,
         = dynamic_cast<bgui_vsol_soview2D_polyline *>(selected_curve_soview_base); 
 
       if (!selected_curve_soview_poly) {
-        vcl_cout << "Selected non-Polyline spatial object" << vcl_endl;
-        vcl_cout << "Selected object type: " << selected_curve_soview_base->type_name() << vcl_endl;
+        std::cout << "Selected non-Polyline spatial object" << std::endl;
+        std::cout << "Selected object type: " << selected_curve_soview_base->type_name() << std::endl;
         return false;
       } else {
 //        selected_curve_soview_poly->set_point_size(10);
 //        selected_curve_soview_poly->set_colour(1,1,0);
 //        curve_tableau_l_->post_redraw();
         crv = selected_curve_soview_poly->sptr();
-        vcl_cout << "Size of selected obj: " << crv->size() << vcl_endl;
+        std::cout << "Size of selected obj: " << crv->size() << std::endl;
 
         if (current_curve_id_ != curve_tableau_l_->get_highlighted()) {
           selected_new_curve_ = true;
@@ -309,7 +309,7 @@ mw_curve_tracing_tool_3::handle2( const vgui_event & e,
 
 
         if (selected_new_curve_) {
-          vcl_cout << "New curve selected.\n";
+          std::cout << "New curve selected.\n";
           if (pt_ini_) {
              tab_l_->remove(pt_ini_);
              tab_r_->remove(line_r_end_);
@@ -333,7 +333,7 @@ mw_curve_tracing_tool_3::handle2( const vgui_event & e,
           tab_r_->set_current_grouping( "default" );
           tab_r_->post_redraw();
         } else { // 2nd point at same curve
-          vcl_cout << "Same curve selected. Defining 2nd point.\n";
+          std::cout << "Same curve selected. Defining 2nd point.\n";
           vsol_point_2d_sptr pt = crv->p1();
 
           tab_l_->set_foreground(1,1,0);

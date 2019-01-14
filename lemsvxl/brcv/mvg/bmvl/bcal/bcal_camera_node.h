@@ -10,7 +10,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vcsl/vcsl_spatial.h>
 #include <vnl/vnl_double_3x3.h>
 class bcal_camera;
@@ -24,7 +24,7 @@ class bcal_camera_node : public vcsl_spatial
   bcal_camera_node(int id=0);
   virtual ~bcal_camera_node();
 
-  virtual void set_beat(vcl_vector<double> const & new_beat);
+  virtual void set_beat(std::vector<double> const & new_beat);
   vnl_double_3x3 get_intrinsic() const;
   void set_intrinsic(vnl_double_3x3 k);
   int get_id() const;

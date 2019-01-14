@@ -16,11 +16,11 @@ SoSeparator* dbmsh3d_draw_fmm_mesh (dbmsh3d_fmm_mesh* fmm_mesh)
 {
   //: compute the farthest distance value to decide color
   float max_distance = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = fmm_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = fmm_mesh->vertexmap().begin();
   for (; vit != fmm_mesh->vertexmap().end(); vit++) {
     dbmsh3d_fmm_vertex_3d* vertex = (dbmsh3d_fmm_vertex_3d*) (*vit).second;
     // DEBUG: print out the geodesic value for each vertex:
-    // vul_printf (vcl_cout, "v[%d]=%f \n", vertex->id(), vertex->distance_);
+    // vul_printf (std::cout, "v[%d]=%f \n", vertex->id(), vertex->distance_);
     if (vertex->dist() > max_distance)
       max_distance = vertex->dist();
   }
@@ -68,7 +68,7 @@ SoSeparator* dbmsh3d_draw_fmm_mesh (dbmsh3d_fmm_mesh* fmm_mesh)
 
   return group;
 
-    /*vcl_map<int, dbmsh3d_vertex*>::iterator vit = fmm_mesh->vertexmap().begin();
+    /*std::map<int, dbmsh3d_vertex*>::iterator vit = fmm_mesh->vertexmap().begin();
     for (; vit != fmm_mesh->vertexmap().end(); vit++) {
       dbmsh3d_fmm_vertex_3d* vertex = (dbmsh3d_fmm_vertex_3d*) (*vit).second;
       float distance = vertex->distance_;

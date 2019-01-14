@@ -23,10 +23,10 @@
 bool dbfs_create_rect_features_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbfs_rect_feature_set_sptr");      // output hierarchy
   ok = pro.set_output_types(output_types);
   return ok;
@@ -34,7 +34,7 @@ bool dbfs_create_rect_features_process_cons(bprb_func_process& pro)
 bool dbfs_create_rect_features_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() != 0) {
-    vcl_cerr << "dbfs_create_rect_features_process - invalid inputs\n";
+    std::cerr << "dbfs_create_rect_features_process - invalid inputs\n";
     return false;
   }
   dbfs_rect_feature_set_sptr fs = new dbfs_rect_feature_set();
@@ -47,7 +47,7 @@ bool dbfs_create_rect_features_process(bprb_func_process& pro)
 bool dbfs_populate_rect_features_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("vil_image_view_base_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // ground truth map for foreground or foreground map, a float img
   input_types.push_back("dbfs_rect_feature_set_sptr");    
@@ -55,29 +55,29 @@ bool dbfs_populate_rect_features_process_cons(bprb_func_process& pro)
   input_types.push_back("int");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbfs_populate_rect_features_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 5) {
-    vcl_cerr << "dbfs_populate_rect_features_process - invalid inputs\n";
+    std::cerr << "dbfs_populate_rect_features_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
-  vcl_cout << "In populate features!\n";
+  std::cout << "In populate features!\n";
   vil_image_view_base_sptr img = pro.get_input<vil_image_view_base_sptr>(i++);
   if (img->pixel_format() != VIL_PIXEL_FORMAT_BYTE) {
-    vcl_cerr << "dbfs_populate_rect_features_process - Img is not in BYTE format!\n";
+    std::cerr << "dbfs_populate_rect_features_process - Img is not in BYTE format!\n";
     return false;
   }
-  vcl_cout << "In populate features!\n";
+  std::cout << "In populate features!\n";
   if (img->nplanes() == 3) {
-    vcl_cerr << "dbfs_populate_rect_features_process - Img is not a Grey img!\n";
+    std::cerr << "dbfs_populate_rect_features_process - Img is not a Grey img!\n";
     return false;
   }
-vcl_cout << "In populate features!\n";
+std::cout << "In populate features!\n";
   vil_image_view_base_sptr img_f = pro.get_input<vil_image_view_base_sptr>(i++);
   vil_image_view<float> img_fg;
   if (img_f->pixel_format() == VIL_PIXEL_FORMAT_BOOL) {
@@ -87,7 +87,7 @@ vcl_cout << "In populate features!\n";
   else
     img_fg = img_f;
   
-vcl_cout << "In populate features!\n";
+std::cout << "In populate features!\n";
   dbfs_rect_feature_set_sptr fs = pro.get_input<dbfs_rect_feature_set_sptr>(i++);
   int w = pro.get_input<int>(i++);
   int h = pro.get_input<int>(i++);
@@ -99,30 +99,30 @@ vcl_cout << "In populate features!\n";
 bool dbfs_display_rect_features_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbfs_rect_feature_set_sptr");    
-  input_types.push_back("vcl_string");    // output prefix
+  input_types.push_back(vcl_string");    // output prefix
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
 bool dbfs_display_rect_features_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbfs_display_rect_features_process - invalid inputs\n";
+    std::cerr << "dbfs_display_rect_features_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbfs_rect_feature_set_sptr fs = pro.get_input<dbfs_rect_feature_set_sptr>(i++);
-  vcl_string prefix = pro.get_input<vcl_string>(i++);
-  vcl_cout << "------Displaying " << fs->size() << " patches!\n";
+  std::string prefix = pro.get_input<std::string>(i++);
+  std::cout << "------Displaying " << fs->size() << " patches!\n";
   for (unsigned i = 0; i < fs->size(); i++) {
     dbfs_rect_feature_sptr f = fs->get_feature(i);
     vil_image_resource_sptr img_r = f->create_patch();
-    vcl_stringstream ids; ids << i;
-    vcl_string name = prefix + "_" + ids.str() + ".png";
+    std::stringstream ids; ids << i;
+    std::string name = prefix + "_" + ids.str() + ".png";
     vil_save_image_resource(img_r, name.c_str());
   }
   return true;

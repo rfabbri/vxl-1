@@ -34,7 +34,7 @@
 
 
 
-vcl_string dborl_sks_temp_data_folder(const vcl_string& processor_name)
+std::string dborl_sks_temp_data_folder(const std::string& processor_name)
 {
   if (processor_name == "compute-1-0.local" ||
     processor_name == "compute-1-1.local" ||
@@ -77,10 +77,10 @@ vcl_string dborl_sks_temp_data_folder(const vcl_string& processor_name)
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
 bool dborl_sks_match_shape_processor::
-parse_command_line(vcl_vector<vcl_string>& argv)
+parse_command_line(std::vector<std::string>& argv)
 {
   vul_arg_info_list arg_list;
-  vul_arg<vcl_string> input_xml_file(arg_list, "-inp", 
+  vul_arg<std::string> input_xml_file(arg_list, "-inp", 
     "the input file in xml format that sets parameters of the algorithm","");
   vul_arg<bool> print_usage_only(arg_list, "-usage", "print usage info and exit", false);
   vul_arg<bool> print_help(arg_list, "-help", "print usage info and exit", false);
@@ -91,20 +91,20 @@ parse_command_line(vcl_vector<vcl_string>& argv)
 
   for (unsigned i = 1; i < argv.size(); ++i) 
   {
-    vcl_string arg = argv[i];
-    if (arg == vcl_string ("-inp")) 
+    std::string arg = argv[i];
+    if (arg == std::string ("-inp")) 
     { 
       input_xml_file.value_ = argv[++i]; 
     } 
-    else if (arg == vcl_string ("-usage")) 
+    else if (arg == std::string ("-usage")) 
     { 
       print_usage_only.value_ = true; 
     }
-    else if (arg == vcl_string ("-help")) 
+    else if (arg == std::string ("-help")) 
     { 
       print_help.value_ = true; 
     }
-    else if (arg == vcl_string ("-print-def-xml")) 
+    else if (arg == std::string ("-print-def-xml")) 
     { 
       print_def_xml.value_ = true; 
     }
@@ -118,7 +118,7 @@ parse_command_line(vcl_vector<vcl_string>& argv)
 
   if (print_def_xml()) 
   {
-    vcl_string input = "input.xml";
+    std::string input = "input.xml";
     dborl_sks_match_shape_processor::print_default_file(input.c_str());
     return false;  // --> to exit
   }
@@ -126,7 +126,7 @@ parse_command_line(vcl_vector<vcl_string>& argv)
   if (input_xml_file().compare("") == 0) 
   {
     arg_list.display_help();
-    vcl_cout << "XML filename is empty \n";
+    std::cout << "XML filename is empty \n";
     return false;  // --> to exit
   }
 
@@ -146,15 +146,15 @@ parse(const char* param_file)
   //
   if (!param_doc_.root_element())
   {
-    vcl_cout << "ERROR reading parameter XML file: "
+    std::cout << "ERROR reading parameter XML file: "
       << param_file << "\n";
-    vcl_cout << "root = " << param_doc_.root_element() << "\n";
+    std::cout << "root = " << param_doc_.root_element() << "\n";
     return false;
   }
   
   if (param_doc_.root_element()->type() != bxml_data::ELEMENT) 
   {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return false;
   }
 
@@ -177,31 +177,31 @@ print_default_file(const char* def_file)
   root->append_data(data1);
   root->append_text("\n");
   
-  bxml_write(vcl_string(def_file), doc);
+  bxml_write(std::string(def_file), doc);
 }
 
 
 // -----------------------------------------------------------------------------
 //: this method is run on each processor
 bool dborl_sks_match_shape_processor::initialize(
-  vcl_vector<dborl_sks_match_shape_processor_input>& t)
+  std::vector<dborl_sks_match_shape_processor_input>& t)
 {
   t_.mark();
 
   dbsksp_shock_graph_sptr shock_graph = 0;
   if ( !x_read(params_.model_file_, shock_graph) )
   {
-    vcl_cerr << "Loading shock graph XML file: " << params_.model_file_ << "  failed.\n";
+    std::cerr << "Loading shock graph XML file: " << params_.model_file_ << "  failed.\n";
     return false;
   }
   
-  vcl_cout << "Loading shock graph XML file ... Done.\n";
+  std::cout << "Loading shock graph XML file ... Done.\n";
   shock_graph->compute_all_dependent_params();
 
-  vcl_vector<vcl_string> image_names;
+  std::vector<std::string> image_names;
   if (!parse_strings_from_file(params_.file_list_, image_names)) 
   {
-    vcl_cout << "Unable to open list file! " << params_.file_list_ << "!\n";
+    std::cout << "Unable to open list file! " << params_.file_list_ << "!\n";
     return false;
   }
 
@@ -231,7 +231,7 @@ process(dborl_sks_match_shape_processor_input i, float& f)
 {
   // Think of this as converting the process to an executable
 
-  vcl_cout << "processing: " << i.image_name_ << " ";
+  std::cout << "processing: " << i.image_name_ << " ";
 
   // Process I : compute_circ_arc_cost
 
@@ -240,31 +240,31 @@ process(dborl_sks_match_shape_processor_input i, float& f)
   arc_cost_process->clear_input();
   arc_cost_process->clear_output();
 
-  vcl_cout << "Process : " << arc_cost_process->name() << "\n";
+  std::cout << "Process : " << arc_cost_process->name() << "\n";
 
   // >> Input storage //////////////////////////////////////////////////////////
 
   // input 1: "image"
   
   // load the edgemap and put into a storage
-  vcl_string edgemap_path = this->params_.file_dir_ + 
+  std::string edgemap_path = this->params_.file_dir_ + 
     i.image_name_ + 
     this->params_.extension_;
 
   if (!vul_file::exists(edgemap_path)) 
   {
-    vcl_cout << "ERROR: image: " << edgemap_path << " does not exist!!\n";
+    std::cout << "ERROR: image: " << edgemap_path << " does not exist!!\n";
     return false;
   }
   vil_image_resource_sptr edgemap_resource = vil_load_image_resource(edgemap_path.c_str());
 
   if (!edgemap_resource)
   {
-    vcl_cout << "ERROR: couldn't load image: " << edgemap_path << "\n";
+    std::cout << "ERROR: couldn't load image: " << edgemap_path << "\n";
     return false;
   }
 
-  vcl_cout << "Loaded edgemap. " 
+  std::cout << "Loaded edgemap. " 
     << " ni: " << edgemap_resource->ni() 
     << " nj: " << edgemap_resource->nj() << "\n";
 
@@ -302,7 +302,7 @@ process(dborl_sks_match_shape_processor_input i, float& f)
   detect_shape_process->clear_input();
   detect_shape_process->clear_output();
 
-  vcl_cout << "Process : " << detect_shape_process->name() << "\n";
+  std::cout << "Process : " << detect_shape_process->name() << "\n";
 
   // >> Input storages /////////////////////////////////////////////////////////
   // ( "dbsks_shapematch" );
@@ -323,15 +323,15 @@ process(dborl_sks_match_shape_processor_input i, float& f)
   detect_shape_process->set_parameters(params);
 
   // modified the temp prefix to include processor name
-  vcl_string tmp_prefix;
+  std::string tmp_prefix;
   detect_shape_process->parameters()->get_value("tmp_prefix", tmp_prefix);
   detect_shape_process->parameters()->set_value("tmp_prefix", 
     tmp_prefix + "_" +  this->processor_name() + "_" + i.image_name_);
 
-  vcl_cout << "tmp_prefix = " << tmp_prefix << "\n";
+  std::cout << "tmp_prefix = " << tmp_prefix << "\n";
 
-  vcl_string temp_data_folder = dborl_sks_temp_data_folder(this->processor_name());
-  vcl_cout << "temp_data_folder = " << temp_data_folder << "\n";
+  std::string temp_data_folder = dborl_sks_temp_data_folder(this->processor_name());
+  std::cout << "temp_data_folder = " << temp_data_folder << "\n";
 
   detect_shape_process->parameters()->set_value("temp_data_folder", temp_data_folder);
 
@@ -365,7 +365,7 @@ process(dborl_sks_match_shape_processor_input i, float& f)
     local_match_process->clear_input();
     local_match_process->clear_output();
 
-    vcl_cout << "Process : " << local_match_process->name() << "\n";
+    std::cout << "Process : " << local_match_process->name() << "\n";
 
     // >> Input storages /////////////////////////////////////////////////////////
     // ( "dbsks_shapematch" );
@@ -388,21 +388,21 @@ process(dborl_sks_match_shape_processor_input i, float& f)
     local_match_process->clear_input();
     local_match_process->clear_output();
 
-    vcl_cout << "Done with " << local_match_process->name() << ".\n";
+    std::cout << "Done with " << local_match_process->name() << ".\n";
 
     /////////////////////////////////////////////////////////////////////////////
     // Save final results to files
 
     // a. Write out summary file
 
-    vcl_string shapematch_file = params_.out_dir_ + i.image_name_ + "_shapematch_out.txt";
-    vcl_cout << "Shapematch_file = " << shapematch_file << "\n";
+    std::string shapematch_file = params_.out_dir_ + i.image_name_ + "_shapematch_out.txt";
+    std::cout << "Shapematch_file = " << shapematch_file << "\n";
     
     // open file
-    vcl_ofstream os(shapematch_file.c_str());
+    std::ofstream os(shapematch_file.c_str());
     if (!os.good())
     {
-      vcl_cout << "ERROR opening file. Quit now.\n";
+      std::cout << "ERROR opening file. Quit now.\n";
       return false;
     }
 
@@ -411,23 +411,23 @@ process(dborl_sks_match_shape_processor_input i, float& f)
       << "model_file " << vul_file::strip_directory(this->params_.model_file_) << "\n";
 
     // write summary from dp_engine
-    vcl_cout << "Print summary from dp_engine.\n";
+    std::cout << "Print summary from dp_engine.\n";
     shapematch_storage->dp_engine()->print_summary(os);
 
     // write summary from local match
-    vcl_cout << "Print summary from lm_engine.\n";
+    std::cout << "Print summary from lm_engine.\n";
     shapematch_storage->lm_engine()->print_summary(os);
 
     // close file
     os.close();
-    vcl_cout << "Done writing out summary.\n";
+    std::cout << "Done writing out summary.\n";
 
     // 2. write out the segmentation to ps file
 
-    vcl_string shapematch_ps_file = params_.out_dir_ + i.image_name_ + "_shapematch_out.ps";
-    vcl_cout << "Shapematch_PS_file = " << shapematch_ps_file << "\n";
+    std::string shapematch_ps_file = params_.out_dir_ + i.image_name_ + "_shapematch_out.ps";
+    std::cout << "Shapematch_PS_file = " << shapematch_ps_file << "\n";
 
-    vcl_string image_file = this->params_.file_dir_ + i.image_name_ + ".jpg";
+    std::string image_file = this->params_.file_dir_ + i.image_name_ + ".jpg";
     dbsksp_shock_graph_sptr graph = shapematch_storage->lm_engine()->graph();
 
     dbsks_write_shapematch_to_ps_process::save_ps_file(shapematch_ps_file, 
@@ -442,7 +442,7 @@ process(dborl_sks_match_shape_processor_input i, float& f)
       local_match_process->clear_input();
       local_match_process->clear_output();
 
-      vcl_cout << "Process : " << local_match_process->name() << "\n";
+      std::cout << "Process : " << local_match_process->name() << "\n";
 
       // >> Input storages /////////////////////////////////////////////////////////
       // ( "dbsks_shapematch" );
@@ -467,22 +467,22 @@ process(dborl_sks_match_shape_processor_input i, float& f)
       local_match_process->clear_input();
       local_match_process->clear_output();
 
-      vcl_cout << "Done with " << local_match_process->name() << ".\n";
+      std::cout << "Done with " << local_match_process->name() << ".\n";
 
       /////////////////////////////////////////////////////////////////////////////
       // Save final results to files
 
       // a. Write out summary file
 
-      vcl_string shapematch_file = vul_sprintf("%s%s_shapematch_out_%d.txt",
+      std::string shapematch_file = vul_sprintf("%s%s_shapematch_out_%d.txt",
         params_.out_dir_.c_str(), i.image_name_.c_str(), sub_optimal_index);
-      vcl_cout << "Shapematch_file = " << shapematch_file << "\n";
+      std::cout << "Shapematch_file = " << shapematch_file << "\n";
       
       // open file
-      vcl_ofstream os(shapematch_file.c_str());
+      std::ofstream os(shapematch_file.c_str());
       if (!os.good())
       {
-        vcl_cout << "ERROR opening file. Quit now.\n";
+        std::cout << "ERROR opening file. Quit now.\n";
         return false;
       }
 
@@ -492,25 +492,25 @@ process(dborl_sks_match_shape_processor_input i, float& f)
         << "sub_optimal_index " << sub_optimal_index << "\n";
 
       // write summary from dp_engine
-      vcl_cout << "Print summary from dp_engine.\n";
+      std::cout << "Print summary from dp_engine.\n";
       shapematch_storage->dp_engine()->print_summary(os);
 
       // write summary from local match
-      vcl_cout << "Print summary from lm_engine.\n";
+      std::cout << "Print summary from lm_engine.\n";
       shapematch_storage->lm_engine()->print_summary(os);
 
       // close file
       os.close();
-      vcl_cout << "Done writing out summary.\n";
+      std::cout << "Done writing out summary.\n";
 
       // 2. write out the segmentation to ps file
       
 
-      vcl_string shapematch_ps_file = 
+      std::string shapematch_ps_file = 
         vul_file::strip_extension(shapematch_file) + ".ps";
-      vcl_cout << "Shapematch_PS_file = " << shapematch_ps_file << "\n";
+      std::cout << "Shapematch_PS_file = " << shapematch_ps_file << "\n";
 
-      vcl_string image_file = this->params_.file_dir_ + i.image_name_ + ".jpg";
+      std::string image_file = this->params_.file_dir_ + i.image_name_ + ".jpg";
       dbsksp_shock_graph_sptr graph = shapematch_storage->lm_engine()->graph();
 
       dbsks_write_shapematch_to_ps_process::save_ps_file(shapematch_ps_file, 
@@ -539,21 +539,21 @@ process(dborl_sks_match_shape_processor_input i, float& f)
 void dborl_sks_match_shape_processor::
 print_time()
 {
-  vcl_cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
-  vcl_cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
+  std::cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
 }
 
 
 // -----------------------------------------------------------------------------
 //: this method is run on the lead processor once after results are collected from each processor
 bool dborl_sks_match_shape_processor::
-finalize(vcl_vector<float>& results)
+finalize(std::vector<float>& results)
 {
-  //vcl_cout << "results size: " << results.size() << " not doing anything with them\n";
+  //std::cout << "results size: " << results.size() << " not doing anything with them\n";
   //for (unsigned i = 0; i < results.size(); i++) {
-  //  vcl_cout << results[i];
+  //  std::cout << results[i];
   //}
-  //vcl_cout << vcl_endl;
+  //std::cout << std::endl;
   return true;
 }
 

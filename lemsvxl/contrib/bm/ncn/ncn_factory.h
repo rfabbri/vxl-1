@@ -9,9 +9,9 @@
 
 #include<vbl/vbl_array_1d.h>
 
-#include<vcl_iomanip.h>
-#include<vcl_string.h>
-#include<vcl_utility.h>
+#include<iomanip>
+#include<string>
+#include<utility>
 
 #include<vidl/vidl_convert.h>
 #include<vidl/vidl_image_list_istream.h>
@@ -32,9 +32,9 @@ class ncn_factory
 public:
 
 	ncn_factory():num_pivot_pixels_(2000),n_particles_(10000){}
-	ncn_factory(vcl_string const& video_list_glob);
-	ncn_factory(vcl_string const& video_list_glob, target_pixel_type const& target_pixels,unsigned const& n_neighbors_);
-	ncn_factory(vcl_string const& video_list_glob, vsl_b_ifstream& entropy_binary, target_pixel_type const& target_pixels, unsigned const& n_neighbors_);
+	ncn_factory(std::string const& video_list_glob);
+	ncn_factory(std::string const& video_list_glob, target_pixel_type const& target_pixels,unsigned const& n_neighbors_);
+	ncn_factory(std::string const& video_list_glob, vsl_b_ifstream& entropy_binary, target_pixel_type const& target_pixels, unsigned const& n_neighbors_);
 
 	~ncn_factory(){}
 	void build_neighborhood();

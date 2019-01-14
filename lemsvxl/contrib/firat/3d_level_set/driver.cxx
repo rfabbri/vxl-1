@@ -12,7 +12,7 @@
 #include <vil/vil_save.h>
 #include <vil3d/vil3d_slice.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 int main()
 {
@@ -22,9 +22,9 @@ int main()
 	reader->SetOutput(out);
 	reader->Update();
 	int* dims = out->GetDimensions();
-	vcl_cout<< dims[0] << " " << dims[1] << " " << dims[2]<<vcl_endl;
+	std::cout<< dims[0] << " " << dims[1] << " " << dims[2]<<std::endl;
 	unsigned short* v = (unsigned short*)out->GetScalarPointer();
-	vcl_cout << v[0] << " " << v[1] << " " << v[3499] << " " << v[5672] << " " << v[3150012] << vcl_endl;
+	std::cout << v[0] << " " << v[1] << " " << v[3499] << " " << v[5672] << " " << v[3150012] << std::endl;
 	vil3d_image_view<unsigned short> image(dims[1],dims[0], dims[2]);
 	int num_pts_in_a_slice = dims[1]*dims[0];
 	for(int i = 0; i < out->GetNumberOfPoints(); i++)

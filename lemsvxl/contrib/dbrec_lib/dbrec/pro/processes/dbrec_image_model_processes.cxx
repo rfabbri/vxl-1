@@ -24,16 +24,16 @@ bool dbrec_construct_bg_op_models_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr"); // h
-  input_types.push_back("vcl_string"); // output directory to save the models
+  input_types.push_back(vcl_string"); // output directory to save the models
   input_types.push_back("vil_image_view_base_sptr");      // bg model mean img to construct response models, float img with values in [0,1] range
   input_types.push_back("vil_image_view_base_sptr");      // bg model std dev img to construct response models, float img with values in [0,1] range
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -42,14 +42,14 @@ bool dbrec_construct_bg_op_models_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs()< 4) {
-    vcl_cerr << "brec_construct_bg_op_models_process - invalid inputs\n";
+    std::cerr << "brec_construct_bg_op_models_process - invalid inputs\n";
     return false;
   }
 
   // get the inputs
   unsigned i=0;
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
-  vcl_string output_dir = pro.get_input<vcl_string>(i++);
+  std::string output_dir = pro.get_input<std::string>(i++);
   vil_image_view_base_sptr inp_mean = pro.get_input<vil_image_view_base_sptr>(i++);
 
   if (inp_mean->pixel_format() != VIL_PIXEL_FORMAT_FLOAT)
@@ -75,15 +75,15 @@ bool dbrec_construct_bg_op_models_process(bprb_func_process& pro)
 bool dbrec_construct_bg_op_models_rot_inv_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_hierarchy_sptr"); // h
   input_types.push_back("float"); // angle increments
-  input_types.push_back("vcl_string"); // output directory to save the models
+  input_types.push_back(vcl_string"); // output directory to save the models
   input_types.push_back("vil_image_view_base_sptr");      // bg model mean img to construct response models, float img with values in [0,1] range
   input_types.push_back("vil_image_view_base_sptr");      // bg model std dev img to construct response models, float img with values in [0,1] range
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -91,13 +91,13 @@ bool dbrec_construct_bg_op_models_rot_inv_process_cons(bprb_func_process& pro)
 bool dbrec_construct_bg_op_models_rot_inv_process(bprb_func_process& pro)
 {
   if (pro.n_inputs()< 5) {
-    vcl_cerr << "brec_construct_bg_op_models_process - invalid inputs\n";
+    std::cerr << "brec_construct_bg_op_models_process - invalid inputs\n";
     return false;
   }
   unsigned i=0;
   dbrec_hierarchy_sptr h = pro.get_input<dbrec_hierarchy_sptr>(i++);
   float angle_inc = pro.get_input<float>(i++);
-  vcl_string output_dir = pro.get_input<vcl_string>(i++);
+  std::string output_dir = pro.get_input<std::string>(i++);
   vil_image_view_base_sptr inp_mean = pro.get_input<vil_image_view_base_sptr>(i++);
 
   if (inp_mean->pixel_format() != VIL_PIXEL_FORMAT_FLOAT)

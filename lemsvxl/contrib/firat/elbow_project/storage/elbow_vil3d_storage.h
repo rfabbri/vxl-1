@@ -41,7 +41,7 @@ public:
   virtual bpro1_storage* clone() const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const
+  virtual std::string is_a() const
   { return "elbow_vil3d_storage"; }
 
 
@@ -57,7 +57,7 @@ public:
   // Binary IO -----------------------------------------------------------------
 
   //: Returns the type string
-  virtual vcl_string type() const { return "3d_dataset"; }
+  virtual std::string type() const { return "3d_dataset"; }
 
   //: Return IO version number;
   short version() const;

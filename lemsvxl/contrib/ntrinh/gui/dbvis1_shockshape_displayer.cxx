@@ -28,7 +28,7 @@ dbvis1_shockshape_displayer::make_tableau( bpro1_storage_sptr storage) const
   // create a new shockshape tableau
   dbgui_shockshape_tableau_new shockshape_tab;
   
-  //vcl_vector<vsol_spatial_object_2d_sptr > shock_pts = shockshape_storage->shock_line;
+  //std::vector<vsol_spatial_object_2d_sptr > shock_pts = shockshape_storage->shock_line;
   //shockshape_tab->add_spatial_objects(shock_pts);
   
   return shockshape_tab;

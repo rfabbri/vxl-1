@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 #include "graphics.h"
 

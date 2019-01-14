@@ -17,7 +17,7 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
                                    int max_ms_curves)
 {
   if (verbose_)
-    vul_printf (vcl_cout, "run_shock_match(): \n");
+    vul_printf (std::cout, "run_shock_match(): \n");
   shock_match_->set_match_subset_of_curves (match_subset_of_curves);
 
   //Initializing the matching of the ms_hypgs of processes p0() and p1().
@@ -26,11 +26,11 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
 
   if (shock_match()->match_subset_of_curves()) {
     //find the min of # of ms_curves in G and g.
-    int min_ms_curves = vcl_min (p0()->ms_hypg()->edgemap().size(), p1()->ms_hypg()->edgemap().size());
+    int min_ms_curves = std::min (p0()->ms_hypg()->edgemap().size(), p1()->ms_hypg()->edgemap().size());
     if (max_ms_curves > min_ms_curves) {
       max_ms_curves = min_ms_curves;
       if (verbose_)
-        vul_printf (vcl_cout, "  Set max_ms_curves to %d (min # ms_curves in G and g).\n", max_ms_curves);
+        vul_printf (std::cout, "  Set max_ms_curves to %d (min # ms_curves in G and g).\n", max_ms_curves);
     }
     const int ms_curve_min_elm = 10;
     p0()->ms_hypg()->select_salient_ms_curves (ms_curve_min_elm, max_ms_curves, verbose_);
@@ -50,7 +50,7 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
 
   dbasn_params GA_params;
   if (verbose_)
-    vcl_cout<< GA_params;
+    std::cout<< GA_params;
   shock_match_->ga_match()->set_params (GA_params);
   shock_match_->ga_match()->_reset_mem ();
 
@@ -105,7 +105,7 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
   //Move hypg_G (and its boundary shape) to hypg_g.
   if (register_rigid) {
     if (verbose_)
-      vul_printf (vcl_cout, "\nRigidly transform G to g from the node & curve assignemnts:");
+      vul_printf (std::cout, "\nRigidly transform G to g from the node & curve assignemnts:");
     //Option use node correspondence only: set to false.
     shock_match_->get_rigid_xform_matrices (false, verbose_);
     if (verbose_)
@@ -116,16 +116,16 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
   }
   else {
     if (verbose_)
-      vul_printf (vcl_cout, "\nSkip the rigidly transform of G to g from the node assignemnt.\n");
+      vul_printf (std::cout, "\nSkip the rigidly transform of G to g from the node assignemnt.\n");
   }
 
   //output the final matching score into a file.
-  vcl_string smatch_match_result_file = "smatch";
-  vcl_string tmp = vul_sprintf ("%d", option);
+  std::string smatch_match_result_file = "smatch";
+  std::string tmp = vul_sprintf ("%d", option);
   smatch_match_result_file += tmp;
   smatch_match_result_file += "_";      
-  vcl_string file1 = buld_get_file(pro(0)->dir_file());
-  vcl_string file2 = buld_get_file(pro(1)->dir_file());
+  std::string file1 = buld_get_file(pro(0)->dir_file());
+  std::string file2 = buld_get_file(pro(1)->dir_file());
   smatch_match_result_file += file1;
   smatch_match_result_file += "__";
   smatch_match_result_file += file2;
@@ -135,49 +135,49 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
   return shock_match_->ga_match()->num_stable();
 }
 
-bool dbsk3dr_pro::save_shock_match_result_file (const vcl_string& filename, const int verbose)
+bool dbsk3dr_pro::save_shock_match_result_file (const std::string& filename, const int verbose)
 {
-  FILE*   fp = vcl_fopen (filename.c_str(), "w");
+  FILE*   fp = std::fopen (filename.c_str(), "w");
   if (fp == NULL) {
-      vul_printf (vcl_cerr, "ERROR: Can't write file %s.\n", filename.c_str());
+      vul_printf (std::cerr, "ERROR: Can't write file %s.\n", filename.c_str());
     return false; 
   }
 
   if (verbose)
-    vul_printf (vcl_cout, "  saving %s\n", filename.c_str());
+    vul_printf (std::cout, "  saving %s\n", filename.c_str());
 
-  vcl_fprintf (fp, "3d_shock_matching_result v1.0\n");
-  vcl_fprintf (fp, "file1: %s\n", p0()->dir_file().c_str());
-  vcl_fprintf (fp, "file2: %s\n", p1()->dir_file().c_str());
+  std::fprintf (fp, "3d_shock_matching_result v1.0\n");
+  std::fprintf (fp, "file1: %s\n", p0()->dir_file().c_str());
+  std::fprintf (fp, "file2: %s\n", p1()->dir_file().c_str());
   double similarity = shock_match_->ga_match()->similarity ();
-  vcl_fprintf (fp, "similarity: %f\n", similarity);
+  std::fprintf (fp, "similarity: %f\n", similarity);
   double norm_similarity = shock_match_->ga_match()->norm_similarity ();
-  vcl_fprintf (fp, "normalized_similarity: %f\n", norm_similarity);
-  vcl_fprintf (fp, "norm_sim_node: %f\n", shock_match_->ga_match()->norm_sim_node());
-  vcl_fprintf (fp, "norm_sim_curve: %f\n", shock_match_->ga_match()->norm_sim_curve());
-  vcl_fprintf (fp, "norm_sim_corner: %f\n", shock_match_->ga_match()->norm_sim_corner());  
+  std::fprintf (fp, "normalized_similarity: %f\n", norm_similarity);
+  std::fprintf (fp, "norm_sim_node: %f\n", shock_match_->ga_match()->norm_sim_node());
+  std::fprintf (fp, "norm_sim_curve: %f\n", shock_match_->ga_match()->norm_sim_curve());
+  std::fprintf (fp, "norm_sim_corner: %f\n", shock_match_->ga_match()->norm_sim_corner());  
   bool num_stable = shock_match_->ga_match()->num_stable();
-  vcl_fprintf (fp, "numerically_stable: %s\n", num_stable ? "1" : "0");
-  vcl_fclose (fp);
+  std::fprintf (fp, "numerically_stable: %s\n", num_stable ? "1" : "0");
+  std::fclose (fp);
   return true;
 }
 
 bool dbsk3dr_pro::run_shock_match_icp (const int max_iter, const float conv_th)
 {
   if (verbose_)
-    vul_printf (vcl_cout, "run_shock_match_icp(): max_iter %d, conv_th %f.\n", 
+    vul_printf (std::cout, "run_shock_match_icp(): max_iter %d, conv_th %f.\n", 
                 max_iter, conv_th);
   bool b_conv;
 
   //Register G (moving) to g (fixed).
-  vcl_vector<vgl_point_3d<double> > ptsG;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = p0()->mesh()->vertexmap().begin();
+  std::vector<vgl_point_3d<double> > ptsG;
+  std::map<int, dbmsh3d_vertex*>::iterator it = p0()->mesh()->vertexmap().begin();
   for (; it != p0()->mesh()->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     ptsG.push_back (V->pt());
   }
 
-  vcl_vector<vgl_point_3d<double> > ptsg;
+  std::vector<vgl_point_3d<double> > ptsg;
   it = p1()->mesh()->vertexmap().begin();
   for (; it != p1()->mesh()->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;

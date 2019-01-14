@@ -1,7 +1,7 @@
 #include "brct_dense_reconstructor.h"
 //:
 // \file
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil1/vil1_save.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsrl/vsrl_parameters.h>
@@ -74,7 +74,7 @@ void brct_dense_reconstructor::execute()
 
   // start the dynamic program for each raster
 
-  vcl_cout << "Performing dynamic programs\n";
+  std::cout << "Performing dynamic programs\n";
 
   for (int i=0;i<num_raster_;i++)
     evaluate_raster(i);
@@ -87,7 +87,7 @@ void brct_dense_reconstructor::initial_calculations()
   // step 1 - compute the correlations between the two images
   //          so that the dynamic programs can perform their calculations efficiently
 
-  vcl_cout << "Performing image correlations\n";
+  std::cout << "Performing image correlations\n";
 
   image_correlation_.set_correlation_range(correlation_range_);
 
@@ -136,11 +136,11 @@ int brct_dense_reconstructor::get_assignment(int x, int y)
 void brct_dense_reconstructor::evaluate_raster(const int i)
 {
   if (i<0 || i>= num_raster_)
-    vcl_cout << "Warning tried to evaluate inapropriate raster\n";
+    std::cout << "Warning tried to evaluate inapropriate raster\n";
 
   // we want to evaulate the raster i
 
-  vcl_cout << "evaluating raster " << i << vcl_endl;
+  std::cout << "evaluating raster " << i << std::endl;
 
   // set up the i'th raster array
   vsrl_raster_dp_setup *raster = new vsrl_raster_dp_setup(i, &image_correlation_);
@@ -202,17 +202,17 @@ void brct_dense_reconstructor::write_disparity_image(char *filename)
 
 void brct_dense_reconstructor::print_correlation_cost(const int x, const int y)
 {
-  vcl_cout << "Correlation costs for pixel " << x << ' ' << y << vcl_endl;
+  std::cout << "Correlation costs for pixel " << x << ' ' << y << std::endl;
 
   for (int disp = 0-correlation_range_;disp < correlation_range_;disp++)
-    vcl_cout << disp << " -> " << image_correlation_.get_correlation(x,y,disp) << vcl_endl;
+    std::cout << disp << " -> " << image_correlation_.get_correlation(x,y,disp) << std::endl;
 }
 
 //: get vsol points corresponding to a line from image 0
-vcl_vector<vsol_point_2d_sptr> brct_dense_reconstructor::points0(const int i,
+std::vector<vsol_point_2d_sptr> brct_dense_reconstructor::points0(const int i,
                                                                  const int del)
 {
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   int w = image_correlation_.get_image1_width();
   int h = image_correlation_.get_image1_height();
   if (i<0||i>=h)
@@ -223,10 +223,10 @@ vcl_vector<vsol_point_2d_sptr> brct_dense_reconstructor::points0(const int i,
 }
 
 //: get vsol points corresponding to a line from image 1
-vcl_vector<vsol_point_2d_sptr> brct_dense_reconstructor::points1(const int i,
+std::vector<vsol_point_2d_sptr> brct_dense_reconstructor::points1(const int i,
                                                                  const int del)
 {
-  vcl_vector<vsol_point_2d_sptr> points;
+  std::vector<vsol_point_2d_sptr> points;
   int w = image_correlation_.get_image1_width();
   int h = image_correlation_.get_image1_height();
   if (i<0||i>=h)
@@ -234,16 +234,16 @@ vcl_vector<vsol_point_2d_sptr> brct_dense_reconstructor::points1(const int i,
   for (int x = 0; x<w; x+=del)
   {
     int xa = this->get_assignment(x, i);
-    vcl_cout << '(' << x << ' ' << xa << ")\n";
+    std::cout << '(' << x << ' ' << xa << ")\n";
     points.push_back(new vsol_point_2d(xa, i));
   }
-  vcl_cout << vcl_flush;
+  std::cout << std::flush;
   return points;
 }
 
 void  brct_dense_reconstructor::get_correlation(const int x0, const int y0,
-                                                vcl_vector<int>& xpos,
-                                                vcl_vector<double>& corr)
+                                                std::vector<int>& xpos,
+                                                std::vector<double>& corr)
 {
   xpos.clear();
   corr.clear();

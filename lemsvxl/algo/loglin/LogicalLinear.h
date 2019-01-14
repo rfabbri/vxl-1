@@ -1,10 +1,10 @@
 #ifndef  LOGICAL_LINEAR_H
 #define  LOGICAL_LINEAR_H
 
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <sstream>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include "EdgeDetection.h"
 #include "LogicalLinearFilters.h"
 #include "LogicalLinearPixel.h"
@@ -77,30 +77,30 @@ class LogicalLinearEdgeDetector
         template<typename OutputDS>
                 void getPixelEdges(OutputDS &edges , bool bool_nms)
                   {
-                    vcl_cout<<" Getting Pixel Edges .."<<vcl_endl;
+                    std::cout<<" Getting Pixel Edges .."<<std::endl;
                     LogicalLinearPixelEdgeDetector< HalfCount , vil_image_view< unsigned char > >  pixel_edge_detector(_img, _options);
                     pixel_edge_detector.getPixelEdges(edges , bool_nms);
-                    vcl_cout<<" Got a Total of  "<<edges.size()<<" Pixel Edges"<<vcl_endl;
+                    std::cout<<" Got a Total of  "<<edges.size()<<" Pixel Edges"<<std::endl;
                    };
         
                
         template<typename OutputDS>
                 void getPixelPLines(OutputDS &plines)
                   {
-                    vcl_cout<<" Getting Pixel PLines .."<<vcl_endl;
+                    std::cout<<" Getting Pixel PLines .."<<std::endl;
                     LogicalLinearPixelEdgeDetector< HalfCount , vil_image_view< unsigned char > >  pixel_pline_detector(_img, _options);
                     pixel_pline_detector.getPixelPLines(plines);
-                    vcl_cout<<" Got a Total of  "<<plines.size()<<" Pixel PLines"<<vcl_endl;
+                    std::cout<<" Got a Total of  "<<plines.size()<<" Pixel PLines"<<std::endl;
                    };
         
     
         template<typename OutputDS>
                 void getPixelNLines(OutputDS &nlines)
                   {
-                    vcl_cout<<" Getting Pixel NLines .."<<vcl_endl;
+                    std::cout<<" Getting Pixel NLines .."<<std::endl;
                     LogicalLinearPixelEdgeDetector< HalfCount , vil_image_view< unsigned char > >  pixel_pline_detector(_img, _options);
                     pixel_pline_detector.getPixelNLines(nlines);
-                    vcl_cout<<" Got a Total of  "<<nlines.size()<<" Pixel NLines"<<vcl_endl;
+                    std::cout<<" Got a Total of  "<<nlines.size()<<" Pixel NLines"<<std::endl;
                    };
 
        
@@ -142,7 +142,7 @@ class LogicalLinearEdgeDetector
 
        
 
-        vcl_string getName() 
+        std::string getName() 
          {
            return "Logical-Linear";
           }

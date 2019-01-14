@@ -6,7 +6,7 @@
 // \brief Manager for multiview 3d reconstruction gui applications
 // \author Dongjin Han 09-19-03
 
-#include <vcl_string.h>
+#include <string>
 #include <vgui/vgui_wrapper_tableau.h>
 #include <vgui/vgui_easy3D_tableau.h>
 #include <vgui/vgui_easy3D_tableau_sptr.h>
@@ -78,12 +78,12 @@ struct tripplet_cov_set
 {   
    bool use;
    int id0,id1,id2;
-   //vcl_vector <vnl_matrix <float> > S3;
-   vcl_vector <vnl_matrix <float> > Sl_;
-   vcl_vector <vnl_matrix <float> >  ml_;
-   vcl_vector <int> countl_;
-   vcl_vector <float> detl_;
-   vcl_vector <vnl_matrix <float> > S_invl_;
+   //std::vector <vnl_matrix <float> > S3;
+   std::vector <vnl_matrix <float> > Sl_;
+   std::vector <vnl_matrix <float> >  ml_;
+   std::vector <int> countl_;
+   std::vector <float> detl_;
+   std::vector <vnl_matrix <float> > S_invl_;
    float mi;
    //int j;
    //less_cost_knn(int newj) {j=newj;}
@@ -96,13 +96,13 @@ struct tripplet_selection_list
    int id0,id1,id2;
    float error0,error1,error2;
    float p0,p1,p2;
-   vcl_vector <int> set;
+   std::vector <int> set;
 };
 typedef struct tripplet_selection_list tripplet_selection_list;
 struct p_list_set 
 {
    int probe_number;
-   vcl_vector <vnl_matrix <float>  >p_list;
+   std::vector <vnl_matrix <float>  >p_list;
    int class_id;
    float scale;
 };
@@ -117,7 +117,7 @@ struct feat_
    int type_; //single=1 double=2 tripple=3..
    int whos_[3];
    bool flag_;
-   vcl_string explantaion_;
+   std::string explantaion_;
    //less_cost_knn(int newj) {j=newj;}
    //bool operator()(vnl_matrix<float> x, vnl_matrix<float> y)
    //{ return x[j][3] < y[j][3]; }
@@ -164,7 +164,7 @@ typedef struct singletons singletons;
 
 
 struct batch {
- vcl_string file_name;
+ std::string file_name;
  int file_mode;
  float x,y,z;
 };
@@ -201,8 +201,8 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
    void klth();
    void klth_epi();
 
-         vcl_vector <vnl_matrix <float> > p_con_test(vcl_vector <vnl_matrix <float> >);//,vcl_vector <bsol_intrinsic_curve_2d_sptr>);
-         vcl_vector <vgl_point_3d<double> > point_;
+         std::vector <vnl_matrix <float> > p_con_test(std::vector <vnl_matrix <float> >);//,std::vector <bsol_intrinsic_curve_2d_sptr>);
+         std::vector <vgl_point_3d<double> > point_;
          singletons sing_[PN_][PN_];
 
          int singleton_usage_[PN_][PN_];
@@ -246,7 +246,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
     void rotate_back();
     
     float d3_point_distance(vnl_matrix <float>p1, vnl_matrix <float> p2);
-    float back_ground_clustering(vcl_vector <float>);
+    float back_ground_clustering(std::vector <float>);
     void back_ground();
     
     vnl_vector <float> han(vnl_matrix <float>,vnl_matrix <float>,
@@ -269,8 +269,8 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
 
     int IR_mxl(float scale,
                          int survival_number);
-    double geometric_constraint(vcl_vector <vnl_matrix <float> > p,float scale);
-    void print_p_list(vcl_vector <vnl_matrix <float> > p_list); 
+    double geometric_constraint(std::vector <vnl_matrix <float> > p,float scale);
+    void print_p_list(std::vector <vnl_matrix <float> > p_list); 
     void manual_reconstruction_on_epiline_debug_temp();
     void binary_save();
     void select_var123(vnl_matrix <float > *var1,
@@ -281,10 +281,10 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
     vnl_vector <float> pair_sum(float,  unsigned, unsigned);
     vnl_vector <float> tripplet_sum(float, float, float,unsigned, unsigned, unsigned);
     vnl_vector <float> tripplet_sum_fast(float, float, float,unsigned, unsigned, unsigned);
-    vnl_vector <float> IR_on_line(vcl_vector <vnl_matrix <float> >,float);
-    vnl_vector <float> IR_on_line_ptr(vcl_vector <vnl_matrix <float> *>,float);
-        vnl_vector <float> IR_on_line_ptr_2view(vcl_vector <vnl_matrix <float> *>,float);
-        vnl_vector <float> IR_on_line_ptr_fast(vcl_vector <vnl_matrix <float> *>,float);
+    vnl_vector <float> IR_on_line(std::vector <vnl_matrix <float> >,float);
+    vnl_vector <float> IR_on_line_ptr(std::vector <vnl_matrix <float> *>,float);
+        vnl_vector <float> IR_on_line_ptr_2view(std::vector <vnl_matrix <float> *>,float);
+        vnl_vector <float> IR_on_line_ptr_fast(std::vector <vnl_matrix <float> *>,float);
     void IR();
     void covariance(vnl_matrix <float> pts1,
                            vnl_matrix <float> pts2,
@@ -297,13 +297,13 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
                            unsigned,unsigned,unsigned,bool,bool,bool,int);
 
     void write_vrml_points(vnl_matrix <float>,vnl_matrix <float>,
-       vnl_matrix <float>, int, vcl_string);
+       vnl_matrix <float>, int, std::string);
                 void write_vrml_points(float,float,
-       float, int, vcl_string, float ,float, float, float);
-                void write_vrml_probes(vnl_vector <unsigned> ,int , vcl_string);
+       float, int, std::string, float ,float, float, float);
+                void write_vrml_probes(vnl_vector <unsigned> ,int , std::string);
 
 
-    vcl_vector <float> distribution_distance(vnl_matrix <float>);
+    std::vector <float> distribution_distance(vnl_matrix <float>);
     void select_probe_tripplet();
     void select_probe_tripplet_2view();
                 void draw_probe_tripplet();
@@ -313,7 +313,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
 
     void find_tripplet_edges(vnl_matrix <float> &,vnl_matrix <float> &,
                     vnl_matrix <float> &,int,int,int);
-    bool already_in_list(int,int,int,vcl_vector <tripplet_selection_list>);
+    bool already_in_list(int,int,int,std::vector <tripplet_selection_list>);
          
                
                 void read_bb_and_probe(float,double &cube_x, double &cube_y, double &cube_z,
@@ -334,10 +334,10 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
     void read_distance_one_shot();void read_distance_one_shot_2view();
     void read_detected_points();
                     void read_detected_points_vorl_out();
-     void read_detected_points(vcl_string);
+     void read_detected_points(std::string);
 
 
-    void variance(vcl_vector <float>,double *var, double *mean);
+    void variance(std::vector <float>,double *var, double *mean);
     double measure();
     void model_probe_dependency_test();
     void model_probe_dependency_test_2();
@@ -352,8 +352,8 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   // methods for debug menu callbacks
   //void show_epipole();
   void load_image();
-  void load_image_file(vcl_string, bool, unsigned , unsigned);
- void load_image_file(vcl_string, bool, unsigned );
+  void load_image_file(std::string, bool, unsigned , unsigned);
+ void load_image_file(std::string, bool, unsigned );
 
   rc3d_windows_frame();
   ~rc3d_windows_frame();
@@ -363,14 +363,14 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   // methods for run menu callbacks
   void creat_line();
   void quit();
- // void add_curve2d(vcl_vector<vgl_point_2d<double> > &pts);
+ // void add_curve2d(std::vector<vgl_point_2d<double> > &pts);
  // void remove_curve2d();
   void remove_debug_info();
 
-  void add_curve3d(vcl_vector<vgl_point_3d<double> > &pts);
+  void add_curve3d(std::vector<vgl_point_3d<double> > &pts);
   void remove_curve3d();
 
-  void add_next_observes(vcl_vector<vgl_point_2d<double> > &pts);
+  void add_next_observes(std::vector<vgl_point_2d<double> > &pts);
   
   void init();
   void vd_edges();
@@ -397,10 +397,10 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   vgl_point_3d<double> manual_reconstruction();
   void manual_recon_rec_test(); 
   void manual_recon_tripplet_optimization();
-  vcl_vector <vgl_point_3d<double> > manual_reconstruction_on_epiline();
+  std::vector <vgl_point_3d<double> > manual_reconstruction_on_epiline();
   vgl_point_3d<double> manual_reconstruction_on_epiline_BB_Front();
-  void draw_point(vcl_vector <vnl_double_3x4> PL,vgl_point_3d<double> X);
-  void draw_point(vcl_vector <vnl_double_3x4> PL,vgl_point_3d<double> X,
+  void draw_point(std::vector <vnl_double_3x4> PL,vgl_point_3d<double> X);
+  void draw_point(std::vector <vnl_double_3x4> PL,vgl_point_3d<double> X,
      float r,float g,float b, float size);
         void draw_point();
   void mouse_point_selection_3_frame(float *xm,float *ym);
@@ -421,7 +421,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
     bgui_vtol2D_tableau_sptr );
   
   
-  vnl_matrix<double> probe_prob_smart_refine(vcl_vector<vdgl_edgel_chain_sptr>  ec_inR,
+  vnl_matrix<double> probe_prob_smart_refine(std::vector<vdgl_edgel_chain_sptr>  ec_inR,
     double , double );
   vnl_matrix <double> recursive_probe_ret(double,double,double, double, double, double , double,
     bgui_vtol2D_tableau_sptr,int );
@@ -438,16 +438,16 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   
   vnl_matrix <double> recursive_probe_ret_map_special(double,double,double, double, double, double , double,
     bgui_vtol2D_tableau_sptr,int, double ,double, double);
-  vnl_matrix <double> recursive_probe_ret_simple(double,double,double, double, double,vcl_vector<vdgl_edgel_chain_sptr> ,
+  vnl_matrix <double> recursive_probe_ret_simple(double,double,double, double, double,std::vector<vdgl_edgel_chain_sptr> ,
     bgui_vtol2D_tableau_sptr );
   
   
-  vcl_vector <vnl_matrix<float> > d3_refinement(vcl_vector <vnl_matrix<float> >p_some_list) ;
+  std::vector <vnl_matrix<float> > d3_refinement(std::vector <vnl_matrix<float> >p_some_list) ;
   
   
   vnl_matrix <double> recursive_probe_ret_refine(double, double, double , double,
     bgui_vtol2D_tableau_sptr );
-  vcl_vector<vdgl_edgel_chain_sptr> find_sovs_in_BOX(bgui_vtol2D_tableau_sptr,
+  std::vector<vdgl_edgel_chain_sptr> find_sovs_in_BOX(bgui_vtol2D_tableau_sptr,
     double,double,double);
   void probe_design();
   void generate_probe_shape( double, double );
@@ -479,7 +479,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
                                           int frame2,
                                           int frame3,
                                           double Scale,
-                                          vcl_string filename);
+                                          std::string filename);
 
   void initialize_camera_3_debug_temp();
   void initialize_camera_3_string_scan();
@@ -489,9 +489,9 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   void initialize_d3_probe();
   void d3_search();
   void d3_search_trip();
-  vcl_vector<vnl_matrix <float> > d3_search_trip(vgl_point_3d<double> point_3d,
+  std::vector<vnl_matrix <float> > d3_search_trip(vgl_point_3d<double> point_3d,
      double cube_x,double cube_y, double cube_z);
-  vcl_vector<vnl_matrix <float> > d3_search_trip_2(vgl_point_3d<double> point_3d,
+  std::vector<vnl_matrix <float> > d3_search_trip_2(vgl_point_3d<double> point_3d,
      double cube_x_pos,double cube_x_neg,double cube_y_pos,double cube_y_neg, double cube_z_pos,double cube_z_neg);
 
   vnl_matrix<double> back_project(int i_frame, double d3_x0_, double d3_y0_,double d3_z0_);
@@ -499,8 +499,8 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   vnl_matrix<double> back_project_for_d_(int i_frame, double d3_x0_, double d3_y0_,double d3_z0_);
   double vec2theta( double, double, double, double );
   void probe_adjust(vnl_matrix<double>);
-  vcl_vector<vnl_matrix <float> > p_sort(vcl_vector <vnl_matrix<float> >);
-  vcl_vector <vnl_matrix<float> >  p_reduce(vcl_vector <vnl_matrix<float> >);
+  std::vector<vnl_matrix <float> > p_sort(std::vector <vnl_matrix<float> >);
+  std::vector <vnl_matrix<float> >  p_reduce(std::vector <vnl_matrix<float> >);
   float measure_distance( vnl_matrix<float> , vnl_matrix<float> );
   float measure_distance_3d( vnl_matrix<float> , vnl_matrix<float> );
   void quickSort(int *,int);
@@ -523,7 +523,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   void probability_gauss_scale();
   
   void knn_ftr_sl();
-  vcl_vector<vnl_matrix <float> > k_sort(vcl_vector <vnl_matrix<float> >,int);
+  std::vector<vnl_matrix <float> > k_sort(std::vector <vnl_matrix<float> >,int);
   void save_knn_model();
   void BB();
   void Auto_BB();
@@ -535,28 +535,28 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
 
 
   void Detector_in_Box();
-  vnl_matrix<double> reverse_mapping(vcl_vector<vnl_matrix <float> >);
+  vnl_matrix<double> reverse_mapping(std::vector<vnl_matrix <float> >);
 
   void model_statistics();
   void model_statistics_min_max();
   void model_statistics_svd();
   void model_statistics_distance();
-  void feature_extraction(vcl_vector<vnl_matrix<float> >, vcl_vector <feat_ >, vcl_vector <feat_ >);
+  void feature_extraction(std::vector<vnl_matrix<float> >, std::vector <feat_ >, std::vector <feat_ >);
   
   void save_d3_probe() ;
   void d3_probe_load();
-  bool d3_probe_load(vcl_string);
-  void d3_probe_load_all(vcl_string);
+  bool d3_probe_load(std::string);
+  void d3_probe_load_all(std::string);
   void d3_probe_model(); 
-  void d3_probe_load_direct(vcl_string);
-    void d3_probe_load_direct_mute(vcl_string);
+  void d3_probe_load_direct(std::string);
+    void d3_probe_load_direct_mute(std::string);
   void d3_probe_load_wheel(int,float);
     void d3_probe_load_front_windshield(int,float,vgl_point_3d<double>,vgl_point_3d<double>);
   // drawing ..
   void d3_show_selected_model_and_recon();
   void ball_plot(float x,float y,float z,
      float r,float g,float b, float R,
-     vcl_ofstream out );
+     std::ofstream out );
   
   // global features..
   void feat_add();
@@ -586,7 +586,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
   
  protected:
 
-                vcl_vector <bsol_intrinsic_curve_2d_sptr> curve_2dl_;
+                std::vector <bsol_intrinsic_curve_2d_sptr> curve_2dl_;
     //internal utility methods
     
     //: initialize the epipole from the lines modelled road
@@ -606,10 +606,10 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
 
 
          float W_;float E_;
-   vcl_ofstream out_;//(out_filename.c_str());
+   std::ofstream out_;//(out_filename.c_str());
          //batch mode
          bool BATCH_;
-         vcl_string batch_dir_, batch_cam_filename_;
+         std::string batch_dir_, batch_cam_filename_;
          int batch_auto_cam_;
    int batch_frame_1_;
          int batch_frame_2_;
@@ -618,7 +618,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
          float batch_shift_x_,batch_shift_y_,batch_shift_z_,batch_Box_Add_;
 
          int batch_how_many_trial_;
-         vcl_vector <int> batch_classification_;
+         std::vector <int> batch_classification_;
          int batch_real_class_;
          int batch_index_;
          
@@ -636,7 +636,7 @@ class rc3d_windows_frame : public vgui_wrapper_tableau
    vgl_point_3d <double> slope_detector_pivot_;
 
    bool con_flag_; // occludding contour..
-vcl_vector <vgl_polygon<double> > veh_cons_;
+std::vector <vgl_polygon<double> > veh_cons_;
 
 
 
@@ -651,19 +651,19 @@ vcl_vector <vgl_polygon<double> > veh_cons_;
     bool special_flag_wheel_well_2_;
     bool special_flag_wheel_well_1_;
     //: get track of all the 3d points added into 3d tableau
-    vcl_vector<vgui_lineseg3D* > curves_3d_;
+    std::vector<vgui_lineseg3D* > curves_3d_;
     
     //: get predicted curves 2d
-    vcl_vector<vgui_soview2D_point* > predicted_curves_2d_;
+    std::vector<vgui_soview2D_point* > predicted_curves_2d_;
     
     //: 2d curve for the next frame, which is used for debugging
-    vcl_vector<vgui_soview2D_lineseg* > debug_curves_2d_;
+    std::vector<vgui_soview2D_lineseg* > debug_curves_2d_;
     
     //: 2d curve at time t
-    vcl_vector<vgui_soview2D_lineseg* > curves_2d_;
+    std::vector<vgui_soview2D_lineseg* > curves_2d_;
     
     //: 2d curve at time 0
-    vcl_vector<vgui_soview2D_lineseg* > curves_2d_0_;
+    std::vector<vgui_soview2D_lineseg* > curves_2d_0_;
     
     //: kalman filter
     kalman_filter* kalman_;
@@ -671,21 +671,21 @@ vcl_vector <vgl_polygon<double> > veh_cons_;
     vgui_composite_tableau_sptr tab_cps_;
     
     
-    //vcl_vector <vgui_image_tableau_sptr> img_2d_;
-    //vcl_vector <vgui_easy2D_tableau_sptr> easy_2d_;
-    vcl_vector<bgui_vtol2D_tableau_sptr> vtol_tabs_;
-    vcl_vector<bgui_picker_tableau_sptr> tabs_picker_;
+    //std::vector <vgui_image_tableau_sptr> img_2d_;
+    //std::vector <vgui_easy2D_tableau_sptr> easy_2d_;
+    std::vector<bgui_vtol2D_tableau_sptr> vtol_tabs_;
+    std::vector<bgui_picker_tableau_sptr> tabs_picker_;
     
     vgui_easy3D_tableau_sptr tab_3d_;
     //vgui_rubberband_tableau_sptr tab_rubber_;
     vil1_image img_;
     vgui_grid_tableau_sptr grid_;
-    //vcl_string data_file_name_;
+    //std::string data_file_name_;
     
     //: inital epipole
-    vcl_vector<vgl_homg_line_2d<double> > lines_;
+    std::vector<vgl_homg_line_2d<double> > lines_;
     vgl_point_2d<double> *e_;
-    vcl_string status_info_;
+    std::string status_info_;
     static rc3d_windows_frame *instance_;
     
     vnl_double_3 epi_;
@@ -695,12 +695,12 @@ vcl_vector <vgl_polygon<double> > veh_cons_;
     bool how_many_dots_flag_;
     int how_many_dots_;
     
-    //vcl_vector <vdgl_edgel_chain_sptr>  ecs;
+    //std::vector <vdgl_edgel_chain_sptr>  ecs;
     vdgl_edgel_chain_sptr  ecs[3];
     vdgl_digital_curve_sptr dcs[3];
     
     
-    vcl_vector<vnl_double_3x4 > Cam_List_;
+    std::vector<vnl_double_3x4 > Cam_List_;
     vnl_double_3x4  Cam_List_KLT_[60];
     //Number of image frame..
     unsigned iview_;
@@ -753,57 +753,57 @@ vcl_vector <vgl_polygon<double> > veh_cons_;
     vnl_double_3x4 E1, E2, E3, E_intpl;
     
     // camera parameters..
-    vcl_vector <vnl_double_3x4> PL_;
+    std::vector <vnl_double_3x4> PL_;
 
     // 5-6-04 Model Scale,Rotation,Translation parameters
     vnl_matrix <double> BB_Rot_;
     vgl_point_3d<double> BB_front_;
-    vcl_vector < vgl_point_3d<double> > BB_bottom_;
+    std::vector < vgl_point_3d<double> > BB_bottom_;
      vgl_point_3d<double> BB_shift_;
     vnl_matrix <double> BB_RT_matt_;
     vgl_point_3d<double> BB_Front_shift_;
     //knn
-    vcl_vector <vnl_matrix<float> > model_list_;
-    vcl_vector <vnl_matrix<float> > feature_list_;
+    std::vector <vnl_matrix<float> > model_list_;
+    std::vector <vnl_matrix<float> > feature_list_;
 //    vnl_matrix<float>  feature_list_(15,3);
-    vcl_vector <vnl_vector<float> > model_distance_list_;
-    vcl_vector <vnl_matrix<float> > var_list_;
-    vcl_vector <vcl_vector <vnl_matrix<float> > > p_list_;
+    std::vector <vnl_vector<float> > model_distance_list_;
+    std::vector <vnl_matrix<float> > var_list_;
+    std::vector <std::vector <vnl_matrix<float> > > p_list_;
 
     //selected 3d Points
-    vcl_vector <vnl_vector<float> > d3_pts_list_;
+    std::vector <vnl_vector<float> > d3_pts_list_;
     float d3_one_pt_[3];
     
     //global geomtric constraint
-    vcl_vector <vcl_vector<vnl_matrix <float> > > geo_feat_;
-    vcl_vector<vnl_matrix <float> > temp_geo_feat_;
+    std::vector <std::vector<vnl_matrix <float> > > geo_feat_;
+    std::vector<vnl_matrix <float> > temp_geo_feat_;
     
-    //vcl_vector <vil1_memory_image_of<float>> maps_; 
+    //std::vector <vil1_memory_image_of<float>> maps_; 
     vil1_memory_image_of <float> maps_[3]; //later vector
     vil1_memory_image_of <float> maps_search_[3];
     vil1_memory_image_of <float> fore_ground_[3];
     vil1_memory_image_of <float> back_ground_; 
     vil1_memory_image_of<vil1_rgb<unsigned char> > fore_ground_rgb_[3];  
     
-    vcl_vector <vcl_string> fore_name;
+    std::vector <std::string> fore_name;
 
     //
     
 
-    vcl_vector <struct tripplet_cov_set> trio_;
+    std::vector <struct tripplet_cov_set> trio_;
     struct tripplet_cov_set trios_[14][14][14];
-    vcl_vector <struct p_list_set> p_list_set_;
+    std::vector <struct p_list_set> p_list_set_;
 
                 //11-7-2005 recognizer combination
-                vcl_vector <struct p_list_set> p_list_set_1_;
-                vcl_vector <struct p_list_set> p_list_set_2_;
+                std::vector <struct p_list_set> p_list_set_1_;
+                std::vector <struct p_list_set> p_list_set_2_;
 
 
     struct p_list_set p_list_set_cs_[3][10];
-    //vcl_vector <struct p_list_set> p_list_set_0_;
-    //vcl_vector <struct p_list_set> p_list_set_1_;
-    //vcl_vector <struct p_list_set> p_list_set_2_;
-   vcl_vector < vcl_vector <struct p_list_set> > ppll_;
+    //std::vector <struct p_list_set> p_list_set_0_;
+    //std::vector <struct p_list_set> p_list_set_1_;
+    //std::vector <struct p_list_set> p_list_set_2_;
+   std::vector < std::vector <struct p_list_set> > ppll_;
    // backgorund test
    bool back_ground_test_flag_;
    vnl_matrix <double> back_ground_test_;
@@ -829,7 +829,7 @@ class probe{
 public:
 probe();
 probe(double th1,double th2,double th3);
-probe(vcl_vector<double>);
+probe(std::vector<double>);
 ~probe();
 void set_angle(double,double,double); 
 

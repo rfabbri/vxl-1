@@ -10,7 +10,7 @@
 
 //: Constructor
 vox_convert_esf_to_xgraph_params::
-vox_convert_esf_to_xgraph_params(vcl_string algo_name) : 
+vox_convert_esf_to_xgraph_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
   // Process parameters

@@ -19,7 +19,7 @@ bool dbsk2d_lagrangian_ishock_detector::propagate_shocks ()
 {
   PROPAGATION_TYPE ret=NO_PROPAGATION;
   #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout<< "\n===== Start Propagating Shocks =====" <<vcl_endl;
+    std::cout<< "\n===== Start Propagating Shocks =====" <<std::endl;
   #endif
 
   try {
@@ -36,14 +36,14 @@ bool dbsk2d_lagrangian_ishock_detector::propagate_shocks ()
       //validate shocks at each step of the propagation
       #ifdef VALIDATE_SHOCKS_AT_EVERY_STEP
       if (!ValidateShockList()) {
-        vcl_cout<< "ValidateShockList() error! " <<vcl_endl;
+        std::cout<< "ValidateShockList() error! " <<std::endl;
       }
       #endif
     }
   }
   catch (const dbsk2d_exception_topology_error &e)
   {
-    vcl_cout << e.what() << vcl_endl;
+    std::cout << e.what() << std::endl;
 
     delete_the_active_selm_list();
     delete_the_candidate_src_list();
@@ -72,7 +72,7 @@ void dbsk2d_lagrangian_ishock_detector::propagate_a_bunch_of_shocks ()
     //validate shocks at each step of the propagation
     #ifdef VALIDATE_SHOCKS_AT_EVERY_STEP
     if (!ValidateShockList()) {
-      vcl_cout<< "ValidateShockList() error! " <<vcl_endl;
+      std::cout<< "ValidateShockList() error! " <<std::endl;
     }
     #endif
 
@@ -88,7 +88,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_next_active_shock()
   if (number_of_active_shocks()==0 && number_of_candidate_sources()==0)
   {
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout<< "No more active shocks!" <<vcl_endl;
+    std::cout<< "No more active shocks!" <<std::endl;
     #endif
 
     finalize_propagation();
@@ -128,7 +128,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_next_active_shock()
         _sim_time = curSrc->simTime();   
 
         #ifdef DEBUG_SHOCK_VERBOSE
-        vcl_cout << "t= " << _sim_time << " " << "SN: " << curSrc->id() << ": ";
+        std::cout << "t= " << _sim_time << " " << "SN: " << curSrc->id() << ": ";
         #endif
         
         return validate_candidate_source(curSrc);
@@ -139,7 +139,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_next_active_shock()
       _sim_time = curSrc->simTime();
 
       #ifdef DEBUG_SHOCK_VERBOSE
-      vcl_cout << "t= " << _sim_time << " " << "SN: " << curSrc->id() << ": ";
+      std::cout << "t= " << _sim_time << " " << "SN: " << curSrc->id() << ": ";
       #endif
       
       return validate_candidate_source(curSrc);
@@ -150,7 +150,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_next_active_shock()
   _sim_time = curEdge->simTime();
 
   #ifdef DEBUG_SHOCK_VERBOSE
-  vcl_cout << "t= " << _sim_time << " " << "Sh: " << curEdge->id() << ": ";
+  std::cout << "t= " << _sim_time << " " << "Sh: " << curEdge->id() << ": ";
   #endif
 
   //7)If not propagated, propagate it...
@@ -239,52 +239,52 @@ void dbsk2d_lagrangian_ishock_detector::finalize_propagation()
 
   //Display wavefronts at the 
   #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "\n========================================================\n";
-    vcl_cout << "Cell ID: (" << _bnd_cell->index().row << " " << _bnd_cell->index().col << ")\n\n";
+    std::cout << "\n========================================================\n";
+    std::cout << "Cell ID: (" << _bnd_cell->index().row << " " << _bnd_cell->index().col << ")\n\n";
     
-    vcl_cout << "LEFT:: \n";
+    std::cout << "LEFT:: \n";
     if (_left_bnd->swf()) 
-      vcl_cout << "SWF: {" << _left_bnd->swf()->id() << "}\n";
+      std::cout << "SWF: {" << _left_bnd->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
-    vcl_cout << "Sh list: [ ";
+      std::cout << "SWF: {}\n";
+    std::cout << "Sh list: [ ";
     for (ordered_shock_list_iter s_it = _left_bnd->active_shocks_list().begin();
       s_it != _left_bnd->active_shocks_list().end(); s_it++)
-      vcl_cout << s_it->second->id() << " ";
-    vcl_cout << "]\n";
+      std::cout << s_it->second->id() << " ";
+    std::cout << "]\n";
   
-    vcl_cout << "RIGHT:: \n";
+    std::cout << "RIGHT:: \n";
     if (_right_bnd->swf()) 
-      vcl_cout << "SWF: {" << _right_bnd->swf()->id() << "}\n";
+      std::cout << "SWF: {" << _right_bnd->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
-    vcl_cout << "Sh list: [ ";
+      std::cout << "SWF: {}\n";
+    std::cout << "Sh list: [ ";
     for (ordered_shock_list_iter s_it = _right_bnd->active_shocks_list().begin();
       s_it != _right_bnd->active_shocks_list().end(); s_it++)
-      vcl_cout << s_it->second->id() << " ";
-    vcl_cout << "]\n";
+      std::cout << s_it->second->id() << " ";
+    std::cout << "]\n";
 
-    vcl_cout << "TOP:: \n";
+    std::cout << "TOP:: \n";
     if (_top_bnd->swf()) 
-      vcl_cout << "SWF: {" << _top_bnd->swf()->id() << "}\n";
+      std::cout << "SWF: {" << _top_bnd->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
+      std::cout << "SWF: {}\n";
     for (ordered_shock_list_iter s_it = _top_bnd->active_shocks_list().begin();
       s_it != _top_bnd->active_shocks_list().end(); s_it++)
-      vcl_cout << s_it->second->id() << " ";
-    vcl_cout << "]\n";
+      std::cout << s_it->second->id() << " ";
+    std::cout << "]\n";
 
-    vcl_cout << "BOTTOM:: \n";
+    std::cout << "BOTTOM:: \n";
     if (_bottom_bnd->swf()) 
-      vcl_cout << "SWF: {" << _bottom_bnd->swf()->id() << "}\n";
+      std::cout << "SWF: {" << _bottom_bnd->swf()->id() << "}\n";
     else
-      vcl_cout << "SWF: {}\n";
+      std::cout << "SWF: {}\n";
     for (ordered_shock_list_iter s_it = _bottom_bnd->active_shocks_list().begin();
       s_it != _bottom_bnd->active_shocks_list().end(); s_it++)
-      vcl_cout << s_it->second->id() << " ";
-    vcl_cout << "]\n";
+      std::cout << s_it->second->id() << " ";
+    std::cout << "]\n";
   
-    vcl_cout << "========================================================\n";
+    std::cout << "========================================================\n";
   #endif
 
 }
@@ -302,11 +302,11 @@ dbsk2d_lagrangian_ishock_detector::validate_candidate_source(dbsk2d_ishock_node*
   candidate_src_list.erase(candidate_src_list.begin());
 
   #ifdef DEBUG_SHOCK_VERBOSE
-  vcl_cout << "Validate Src=( "; 
+  std::cout << "Validate Src=( "; 
   for (ishock_node_belm_list_iter curB = candsrc->bndList().begin();
        curB != candsrc->bndList().end(); ++curB)
-    vcl_cout << (curB->second)->id() << " ";
-  vcl_cout << "):" ;
+    std::cout << (curB->second)->id() << " ";
+  std::cout << "):" ;
   #endif
 
   //2) then check to see if all the wavefronts are still alive at the current time
@@ -475,14 +475,14 @@ dbsk2d_lagrangian_ishock_detector::propagate_from_a_junction(dbsk2d_ishock_node*
     }
 
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Inv. Junct. : ";
+    std::cout << "Inv. Junct. : ";
     #endif
 
     return NEW_CAND_SRC;
   }
 
   #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Junct formed. : ";
+    std::cout << "Junct formed. : ";
   #endif
 
   //successful initialization of a new shock from this junction
@@ -500,7 +500,7 @@ void dbsk2d_lagrangian_ishock_detector::force_propagate_a_shock_to_a_junction(
   if (dir==LEFT)
   {
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Force Prop. LN=" << neighbor->id() << " to degen. node";
+    std::cout << "Force Prop. LN=" << neighbor->id() << " to degen. node";
     #endif
 
     double cur_time = neighbor->rFromRTau(tau);
@@ -534,7 +534,7 @@ void dbsk2d_lagrangian_ishock_detector::force_propagate_a_shock_to_a_junction(
   {
     
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Force Prop. RN=" << neighbor->id() << " to degen. node";
+    std::cout << "Force Prop. RN=" << neighbor->id() << " to degen. node";
     #endif
 
     double cur_time = neighbor->rFromLTau(tau);
@@ -576,7 +576,7 @@ void dbsk2d_lagrangian_ishock_detector::force_propagate_a_shock_to_a_junction(
   if (dir==LEFT)
   {
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Force Prop. LN=" << neighbor->id() << " to degen. node";
+    std::cout << "Force Prop. LN=" << neighbor->id() << " to degen. node";
     #endif
 
     //1) If there is a neighbor on the left side of the left neighbor that is 
@@ -608,7 +608,7 @@ void dbsk2d_lagrangian_ishock_detector::force_propagate_a_shock_to_a_junction(
   {
     
     #ifdef DEBUG_SHOCK_VERBOSE
-    vcl_cout << "Force Prop. RN=" << neighbor->id() << " to degen. node";
+    std::cout << "Force Prop. RN=" << neighbor->id() << " to degen. node";
     #endif
 
     //1) If there is a neighbor on the right side of the right neighbor that is 
@@ -746,7 +746,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_from_a_node(dbsk2d_ishock_node* cur
     // update the wavefront info(bnd_list) at this node
     lbelm = lNshock->lBElement(); //the new wavefront getting to this junction
     lEta = lNshock->LeEta();
-    cur_node->bndList().push_front(vcl_pair<double, dbsk2d_ishock_belm*>(lEta, lbelm));
+    cur_node->bndList().push_front(std::pair<double, dbsk2d_ishock_belm*>(lEta, lbelm));
 
     lshock = lNshock; //update the leftmost shock at the junction
   }
@@ -760,7 +760,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_from_a_node(dbsk2d_ishock_node* cur
     // update the wavefront info(bnd_list) at this node
     rbelm = rNshock->rBElement(); //the new wavefront getting to this junction
     rEta = rNshock->ReEta();
-    cur_node->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(rEta, rbelm));
+    cur_node->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(rEta, rbelm));
 
     rshock = rNshock; //update the rightmost shock at the junction
   }
@@ -906,7 +906,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_from_a_node(dbsk2d_ishock_node* cur
 //    // update the wavefront info(bnd_list) at this node
 //    lbelm = lNshock->lBElement(); //the new wavefront getting to this junction
 //    lEta = lNshock->LeEta();
-//    cur_node->bndList().push_front(vcl_pair<double, dbsk2d_ishock_belm*>(lEta, lbelm));
+//    cur_node->bndList().push_front(std::pair<double, dbsk2d_ishock_belm*>(lEta, lbelm));
 //  }
 //  else
 //    lNshock = lshock; //the current leftmost shock is still the leftmost shock
@@ -1001,7 +1001,7 @@ dbsk2d_lagrangian_ishock_detector::propagate_from_a_node(dbsk2d_ishock_node* cur
 //    // update the wavefront info(bnd_list) at this node
 //    rbelm = rNshock->rBElement(); //the new wavefront getting to this junction
 //    rEta = rNshock->ReEta();
-//    cur_node->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(rEta, rbelm));
+//    cur_node->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(rEta, rbelm));
 //  }
 //  else
 //    rNshock = rshock; //the current righmost shock is still the rightmost shock
@@ -1315,7 +1315,7 @@ dbsk2d_lagrangian_ishock_detector::get_junction_type (dbsk2d_ishock_edge* sedge)
   //But it does happen when numerical epsilon of R is introduced.
   //( see sink-bug1.bnd)
   if (lshock->lBElement() == rshock->rBElement()) {
-  //vcl_cout<< vcl_endl<<"WARNING: Numerical Issue--Special case of SINK." <<vcl_endl;
+  //std::cout<< std::endl<<"WARNING: Numerical Issue--Special case of SINK." <<std::endl;
     lshock->set_lNeighbor (rshock);
     rshock->set_rNeighbor (lshock);
     return SINK_JUNCTION;
@@ -1630,7 +1630,7 @@ dbsk2d_lagrangian_ishock_detector::form_a_sink(dbsk2d_ishock_edge* current)
   cur = current;
   do 
   {
-    newSink->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm* >(cur->LeEta(), cur->lBElement()));
+    newSink->bndList().push_back(std::pair<double, dbsk2d_ishock_belm* >(cur->LeEta(), cur->lBElement()));
     newSink->pShocks().push_back(cur);
     cur->set_cSNode(newSink);
     cur = cur->rNeighbor();
@@ -1681,7 +1681,7 @@ dbsk2d_lagrangian_ishock_detector::form_a_junction(dbsk2d_ishock_edge* current)
   //  By traversing from the leftmost to the rightmost shock
   dbsk2d_ishock_edge* cur = lshock;
   while (cur) {
-    newJunction->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(cur->LeEta(), cur->lBElement()));
+    newJunction->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(cur->LeEta(), cur->lBElement()));
     newJunction->pShocks().push_back(cur);
 
     deactivate_an_ishock_elm(cur);
@@ -1690,7 +1690,7 @@ dbsk2d_lagrangian_ishock_detector::form_a_junction(dbsk2d_ishock_edge* current)
     cur = cur->rNeighbor();
   }
   //rightmost boundary element
-  newJunction->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(rshock->ReEta(), rshock->rBElement()));
+  newJunction->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(rshock->ReEta(), rshock->rBElement()));
 
   //add this junction on to the shock list
   add_an_ishock_node (newJunction);

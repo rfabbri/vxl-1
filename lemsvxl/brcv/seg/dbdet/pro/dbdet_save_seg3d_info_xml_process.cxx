@@ -30,10 +30,10 @@ dbdet_save_seg3d_info_xml_process() : bpro1_process()
     !parameters()->add( "new contour folder <folder ... >" , "-new_contour_folder", 
     bpro1_filepath("","*")) ||
     !parameters()->add( "contour suffix" , "-contour_suffix", 
-    vcl_string(""))
+    std::string(""))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbdet_save_seg3d_info_xml_process::
+std::string dbdet_save_seg3d_info_xml_process::
 name()
 {
   return "save seg3d_info .xml";
@@ -83,10 +83,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbdet_save_seg3d_info_xml_process::
+std::vector< std::string > dbdet_save_seg3d_info_xml_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("seg3d_info");
   return to_return;
 }
@@ -94,10 +94,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbdet_save_seg3d_info_xml_process::
+std::vector< std::string > dbdet_save_seg3d_info_xml_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -113,7 +113,7 @@ execute()
   
   bpro1_filepath xml_path;
   this->parameters()->get_value( "-xml_filename" , xml_path );    
-  vcl_string xml_filename = xml_path.path;
+  std::string xml_filename = xml_path.path;
   
   dbdet_seg3d_info_storage_sptr seg3d_info_storage;
   seg3d_info_storage.vertical_cast(input_data_[0][0]);
@@ -124,7 +124,7 @@ execute()
   bool save_new = false;
   this->parameters()->get_value("-save_new", save_new);
 
-  vcl_string con_file_suffix("");
+  std::string con_file_suffix("");
   this->parameters()->get_value("-contour_suffix", con_file_suffix);
 
 
@@ -140,7 +140,7 @@ execute()
   for (int i=0; i<seg3d_info->num_frames(); ++i)
   {
     vidpro1_vsol2D_storage_sptr vsol_storage = seg3d_info_storage->vsol_storage_at_frame(i);
-    vcl_vector<vsol_spatial_object_2d_sptr > all_vsols = vsol_storage->all_data();
+    std::vector<vsol_spatial_object_2d_sptr > all_vsols = vsol_storage->all_data();
 
     dbdet_seg3d_info_frame * cur_frame = &seg3d_info->frame(i);
 
@@ -150,12 +150,12 @@ execute()
     for (unsigned k=0; k<all_vsols.size(); ++k)
     {
       // next contour name
-      vcl_ostringstream ostring;
+      std::ostringstream ostring;
       ostring << vul_file::strip_extension(cur_frame->image_file) << "_" 
         << con_file_suffix
         << contour_count << ".con";
       
-      vcl_string contour_name = ostring.str();
+      std::string contour_name = ostring.str();
 
       vsol_spatial_object_2d_sptr obj = all_vsols[k];
       if (obj->cast_to_curve())
@@ -168,7 +168,7 @@ execute()
           
 
           // save the contour
-          vcl_string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
+          std::string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
           bsold_save_con_file(file_fullname.c_str(), polyline);
 
           // update to cur_frame
@@ -184,7 +184,7 @@ execute()
 
           
           // save the contour
-          vcl_string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
+          std::string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
           bsold_save_con_file(file_fullname.c_str(), polygon);
 
           // update to cur_frame
@@ -195,7 +195,7 @@ execute()
   }
 
   // update xml file
-  vcl_ofstream xml_filestream(xml_filename.c_str());
+  std::ofstream xml_filestream(xml_filename.c_str());
   x_write(xml_filestream, seg3d_info);
   xml_filestream.close();
   return true;

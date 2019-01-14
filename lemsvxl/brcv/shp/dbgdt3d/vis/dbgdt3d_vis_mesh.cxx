@@ -39,7 +39,7 @@ SoSeparator* gdt_draw_faces_vispt (dbmsh3d_gdt_mesh* mesh,
   ds->setName( SbName("boundary_mesh_style") );
   group->addChild (ds);
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = mesh->facemap().begin();
   for (; it != mesh->facemap().end(); it++) {
     dbmsh3d_face* face = (*it).second;
     
@@ -59,7 +59,7 @@ SoSeparator* gdt_draw_edges_vispt (dbmsh3d_gdt_mesh* gdt_mesh, float lineWidth)
   ds->lineWidth.setValue (lineWidth);
   group->addChild(ds);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
   for (; it != gdt_mesh->edgemap().end(); it++) {
     dbmsh3d_gdt_edge* cur_edge = (dbmsh3d_gdt_edge*) (*it).second;
 
@@ -103,7 +103,7 @@ SoSeparator* gdt_draw_vertices_vispt (dbmsh3d_gdt_mesh* gdt_mesh,
 {
   SoSeparator* vis = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = gdt_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = gdt_mesh->vertexmap().begin();
   for (; it != gdt_mesh->vertexmap().end(); it++) {
     dbmsh3d_gdt_vertex_3d* vertex = (dbmsh3d_gdt_vertex_3d*) (*it).second;
 

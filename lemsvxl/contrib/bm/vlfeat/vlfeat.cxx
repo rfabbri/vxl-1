@@ -1,12 +1,12 @@
 //this is /contrib/bm/vlfeat/vlfeat_dsift.cxx
 #include"vlfeat.h"
 
-vcl_map<vgl_point_2d<float>, vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > vlfeat::dsift( vil_image_view<float> &img,
+std::map<vgl_point_2d<float>, std::vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > vlfeat::dsift( vil_image_view<float> &img,
 																									 unsigned const& step,
 																								     unsigned const& size,
 																								     bool const& flat_window )
 {
-	vcl_map<vgl_point_2d<float>, vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > target_descriptor_map;
+	std::map<vgl_point_2d<float>, std::vector<float>,vlfeat_vgl_point_2d_coord_compare<float> > target_descriptor_map;
 
 	vl_bool floatDescriptors = VL_TRUE;
 	vl_bool useFlatWindow = flat_window ? VL_TRUE : VL_FALSE;
@@ -31,12 +31,12 @@ vcl_map<vgl_point_2d<float>, vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare
 	vl_dsift_get_steps(dsiftFilter, &stepY, &stepX);
 	vl_dsift_get_bounds(dsiftFilter, &minY, &minX, &maxY, &maxX);
 
-	vcl_cout << "stepX = " << stepX << vcl_endl;
-	vcl_cout << "stepY = " << stepY << vcl_endl;
-	vcl_cout << "minX = " << minX << vcl_endl;
-	vcl_cout << "minY = " << minY << vcl_endl;
-	vcl_cout << "maxX = " << maxX << vcl_endl;
-	vcl_cout << "maxY = " << maxY << vcl_endl;
+	std::cout << "stepX = " << stepX << std::endl;
+	std::cout << "stepY = " << stepY << std::endl;
+	std::cout << "minX = " << minX << std::endl;
+	std::cout << "minY = " << minY << std::endl;
+	std::cout << "maxX = " << maxX << std::endl;
+	std::cout << "maxY = " << maxY << std::endl;
 	}
 
 #endif
@@ -62,7 +62,7 @@ vcl_map<vgl_point_2d<float>, vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare
 	for(int i = 0; i < numFrames; ++i)
 	{
 		vgl_point_2d<float> pt(frames[i].x, frames[i].y);
-		vcl_vector<float> descriptor(descrSize,float(0));
+		std::vector<float> descriptor(descrSize,float(0));
 		
 		for(int j = 0; j < descrSize; ++j)
 		{
@@ -70,12 +70,12 @@ vcl_map<vgl_point_2d<float>, vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare
 			descriptor[j] = VL_MIN(512.0F*descriptor[j],255.0F);
 		}
 
-		//vcl_cout << pt << vcl_endl;
+		//std::cout << pt << std::endl;
 		target_descriptor_map[pt] = descriptor;
-		//vcl_pair<vcl_map<vgl_point_2d<unsigned>,vcl_vector<float>,vlfeat_vgl_point_2d_coord_compare>::iterator,bool> ret;
-		//ret=target_descriptor_map.insert(vcl_pair<vgl_point_2d<unsigned>,vcl_vector<float> >(pt, descriptor));
+		//std::pair<std::map<vgl_point_2d<unsigned>,std::vector<float>,vlfeat_vgl_point_2d_coord_compare>::iterator,bool> ret;
+		//ret=target_descriptor_map.insert(std::pair<vgl_point_2d<unsigned>,std::vector<float> >(pt, descriptor));
 		//if(ret.second == false)
-		//	vcl_cout << "pt: " << pt << " already exists." << vcl_endl;
+		//	std::cout << "pt: " << pt << " already exists." << std::endl;
 	}
 	
 	//deleting the dsift filter object.

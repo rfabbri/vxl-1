@@ -22,8 +22,8 @@
 #include <dbskfg/algo/dbskfg_transform_descriptor_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
 #include <bxml/bxml_read.h>
 #include <vgl/vgl_box_2d.h>
@@ -44,29 +44,29 @@ public:
 
   //: Load a composite graph xml file
   void load_composite_graph(
-      dbskfg_composite_graph_sptr composite_graph,vcl_string filename);
+      dbskfg_composite_graph_sptr composite_graph,std::string filename);
 
   //: Write out a specific rag node
   void write_out(const dbskfg_rag_graph_sptr& rag_graph,
                  const vil_image_resource_sptr& image,
                  unsigned int id_to_extract,
                  double prune_threshold=1.0,
-                 vcl_string output_prefix="",
-                 vcl_string output_folder="");
+                 std::string output_prefix="",
+                 std::string output_folder="");
 
   //: Write out all rag nodes
   void write_out(const dbskfg_rag_graph_sptr& rag_graph,
                  const vil_image_resource_sptr& image,
-                 vcl_string output_prefix,
-                 vcl_string output_folder,
+                 std::string output_prefix,
+                 std::string output_folder,
                  double contour_threshold,
                  double prune_threshold);
 
   //: Write out all rag nodes
   void write_out(const dbskfg_rag_graph_sptr& rag_graph,
                  const vil_image_resource_sptr& image,
-                 vcl_string output_prefix,
-                 vcl_string output_folder,
+                 std::string output_prefix,
+                 std::string output_folder,
                  double contour_threshold,
                  double prune_threshold,
                  vgl_box_2d<double> bbox);
@@ -75,41 +75,41 @@ public:
   void write_out(const dbskfg_rag_node_sptr& rag_node,
                  const vil_image_resource_sptr& image,
                  double prune_threshold=1.0,
-                  vcl_string output_prefix="",
-                 vcl_string output_folder="");
+                  std::string output_prefix="",
+                 std::string output_folder="");
 
   //: Write out transform
   void write_out_transform(const dbskfg_transform_descriptor_sptr& transform,
                            const vil_image_resource_sptr& image,
-                           vcl_string filename);
+                           std::string filename);
 
 
   // Write out composite graph to two bnd files
   void write_contour_composite_graph(dbskfg_composite_graph_sptr 
                                      composite_graph,
-                                     vcl_string filename);
+                                     std::string filename);
 
 private:
 
   //: Write an xml file of the graph
   void write_rag_node(const dbskfg_rag_node_sptr& rag_node,
-                      vcl_map<unsigned int,dbskfg_shock_link*>& shock_links,
-                      vcl_string file_name);
+                      std::map<unsigned int,dbskfg_shock_link*>& shock_links,
+                      std::string file_name);
 
   //: Write all rag_nodes to one file
   void write_rag_node_one_file(const dbskfg_rag_node_sptr& rag_node,
-                               vcl_map<unsigned int,dbskfg_shock_link*>& 
+                               std::map<unsigned int,dbskfg_shock_link*>& 
                                shock_links);
 
   //: Write an image of the graph
   void write_rag_node_image(const dbskfg_rag_node_sptr& rag_node,
-                            vcl_map<unsigned int,dbskfg_shock_link*>& 
+                            std::map<unsigned int,dbskfg_shock_link*>& 
                             shock_links,
                             const vil_image_resource_sptr& image,
-                            vcl_string file_name);
+                            std::string file_name);
 
   //: Keep a method to prune ids
-  void prune_rag_node(vcl_map<unsigned int,dbskfg_shock_link*>& prune_links,
+  void prune_rag_node(std::map<unsigned int,dbskfg_shock_link*>& prune_links,
                       dbskfg_rag_node_sptr rag_node,double prune_threshold);
 
   //: compile all nodes
@@ -132,13 +132,13 @@ private:
   dbskfg_composite_graph_sptr composite_graph_;
 
   //: Keep track of file name to write out
-  vcl_string file_name_;
+  std::string file_name_;
 
   //: Keep a set of all nodes
-  vcl_map<unsigned int,dbskfg_composite_node_sptr> all_nodes_;
+  std::map<unsigned int,dbskfg_composite_node_sptr> all_nodes_;
   
   //: Keep track of all contour links
-  vcl_map<unsigned int,dbskfg_composite_link_sptr> contour_links_;
+  std::map<unsigned int,dbskfg_composite_link_sptr> contour_links_;
 
 
 };

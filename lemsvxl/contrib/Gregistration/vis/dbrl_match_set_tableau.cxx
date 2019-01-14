@@ -36,7 +36,7 @@ dbrl_match_set_tableau::~dbrl_match_set_tableau()
     }
 
 
-vcl_string dbrl_match_set_tableau::type_name() const
+std::string dbrl_match_set_tableau::type_name() const
     {
         return "dbrl_match_set_tableau";
     }
@@ -170,14 +170,14 @@ handle(vgui_event const &e)
               set_index=2;
           }
       }
-      vcl_cout<<"Feature Set "<<set_index<<"\n";
+      std::cout<<"Feature Set "<<set_index<<"\n";
       if(set_index==1 && minindex>-1)
       {
-          vcl_cout<<" Id is  "<<dms_->feature_set1_i(minindex)->id<<"\n";
+          std::cout<<" Id is  "<<dms_->feature_set1_i(minindex)->id<<"\n";
       }
             if(set_index==2 && minindex>-1)
       {
-          vcl_cout<<" Id is  "<<dms_->feature_set2_i(minindex)->id<<"\n";
+          std::cout<<" Id is  "<<dms_->feature_set2_i(minindex)->id<<"\n";
       }
 
 
@@ -188,10 +188,10 @@ handle(vgui_event const &e)
     //if closest feature selected display the top 5 correspondences
     if (minindex>=0)
     {
-        vcl_map<double,dbrl_feature_sptr> f=dms_->correspondences1to2(minindex);
-        vcl_map<double,dbrl_feature_sptr>::iterator iter;
+        std::map<double,dbrl_feature_sptr> f=dms_->correspondences1to2(minindex);
+        std::map<double,dbrl_feature_sptr>::iterator iter;
         int cnt=0;
-        vcl_vector<vcl_string> colornames;
+        std::vector<std::string> colornames;
         colornames.push_back("aqua");
         colornames.push_back("mediumorchid");
         colornames.push_back("darkorange");
@@ -219,9 +219,9 @@ handle(vgui_event const &e)
                     //    draw_a_point_tangent_curvature_groupings(pt,false,dms_->get_feature_set2());
                 }
             }
-            vcl_cout<<cnt<< " : "<<1-(*iter).first<<" "<<colornames[cnt]<<"\n";
+            std::cout<<cnt<< " : "<<1-(*iter).first<<" "<<colornames[cnt]<<"\n";
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
 
     //return true;
@@ -243,7 +243,7 @@ bool dbrl_match_set_tableau::draw()
 void dbrl_match_set_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
     {
     vgui_menu submenu;
-    vcl_string on = "[x] ", off = "[ ] ";
+    std::string on = "[x] ", off = "[ ] ";
 
     submenu.add( ((display_correspondence_)?on:off)+"Show Correspondence ", 
         new dbrl_match_set_tableau_toggle_command(this, &display_correspondence_));
@@ -291,10 +291,10 @@ void dbrl_match_set_tableau::draw_a_point_tangent(dbrl_feature_point_tangent *pt
     glVertex2f(pt->location()[0], pt->location()[1]);
     glEnd();
     glBegin(GL_LINES);
-    glVertex2f(pt->location()[0]+0.5*vcl_cos(pt->dir()), 
-               pt->location()[1]+0.5*vcl_sin(pt->dir()));
-    glVertex2f(pt->location()[0]-0.5*vcl_cos(pt->dir()), 
-               pt->location()[1]-0.5*vcl_sin(pt->dir()));
+    glVertex2f(pt->location()[0]+0.5*std::cos(pt->dir()), 
+               pt->location()[1]+0.5*std::sin(pt->dir()));
+    glVertex2f(pt->location()[0]-0.5*std::cos(pt->dir()), 
+               pt->location()[1]-0.5*std::sin(pt->dir()));
     glEnd();
 
 }
@@ -318,17 +318,17 @@ void dbrl_match_set_tableau::draw_a_point_tangent_curvature(dbrl_feature_point_t
     {
         glPointSize(1.0);
         glBegin(GL_LINES);
-        glVertex2f(pt->location()[0]+0.5*vcl_cos(pt->dir()), 
-                   pt->location()[1]+0.5*vcl_sin(pt->dir()));
-        glVertex2f(pt->location()[0]-0.5*vcl_cos(pt->dir()), 
-                   pt->location()[1]-0.5*vcl_sin(pt->dir()));
+        glVertex2f(pt->location()[0]+0.5*std::cos(pt->dir()), 
+                   pt->location()[1]+0.5*std::sin(pt->dir()));
+        glVertex2f(pt->location()[0]-0.5*std::cos(pt->dir()), 
+                   pt->location()[1]-0.5*std::sin(pt->dir()));
         glEnd();
         glPointSize(2.0);
     }
 
 }
 void dbrl_match_set_tableau::draw_a_point_tangent_curvature_groupings(dbrl_feature_point_tangent_curvature_groupings *pt,
-                                                                      bool flag,vcl_vector<dbrl_feature_sptr> allpts)
+                                                                      bool flag,std::vector<dbrl_feature_sptr> allpts)
 {
     glBegin( GL_POINTS );
     glVertex2f(pt->location()[0], pt->location()[1]);
@@ -349,8 +349,8 @@ void dbrl_match_set_tableau::draw_a_point_tangent_curvature_groupings(dbrl_featu
     {
         glPointSize(1.0);
         glBegin(GL_LINES);
-        glVertex2f(pt->location()[0]+0.5*vcl_cos(pt->dir()),pt->location()[1]+0.5*vcl_sin(pt->dir()));
-        glVertex2f(pt->location()[0]-0.5*vcl_cos(pt->dir()),pt->location()[1]-0.5*vcl_sin(pt->dir()));
+        glVertex2f(pt->location()[0]+0.5*std::cos(pt->dir()),pt->location()[1]+0.5*std::sin(pt->dir()));
+        glVertex2f(pt->location()[0]-0.5*std::cos(pt->dir()),pt->location()[1]-0.5*std::sin(pt->dir()));
         glEnd();
         glPointSize(2.0);
     }
@@ -427,7 +427,7 @@ double dbrl_match_set_tableau::dist_from_feature(dbrl_feature_sptr f1,float x, f
         y1=pt->location()[1];
     }
 
-    double dist=vcl_sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1));
+    double dist=std::sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1));
 
     return dist;
 }

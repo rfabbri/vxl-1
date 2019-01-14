@@ -26,9 +26,9 @@
 #include <vul/vul_psfile.h>
 #include <vul/vul_timer.h>
 // vcl headers
-#include <vcl_sstream.h>
-#include <vcl_numeric.h>
-#include <vcl_algorithm.h>
+#include <sstream>
+#include <numeric>
+#include <algorithm>
 #include <vnl/vnl_random.h>
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -48,7 +48,7 @@ dbskfg_containment_graph(vidpro1_vsol2D_storage_sptr contour_map,
 
 
     // 1) Set id equivalent to what they are
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
         contour_map->all_data();
 
     for ( unsigned int i=0; i < vsol_list.size() ; ++i)
@@ -58,10 +58,10 @@ dbskfg_containment_graph(vidpro1_vsol2D_storage_sptr contour_map,
     }
 
     // Create initial set of attributes
-    vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >::iterator it;
+    std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >::iterator it;
     for ( it = original_list_.begin() ; it != original_list_.end() ; ++it)
     {
-        vcl_vector<vsol_spatial_object_2d_sptr> cons
+        std::vector<vsol_spatial_object_2d_sptr> cons
             = (*it).second;
         initial_attributes_[(*it).first]=true;
 
@@ -92,11 +92,11 @@ void dbskfg_containment_graph::compute_region_root(
 {
     
     // Grab the original contours that bound region
-    vcl_set<unsigned int> rag_con_ids;
+    std::set<unsigned int> rag_con_ids;
     rag_node->rag_contour_ids(rag_con_ids);
 
     // Detect transforms affecting this region
-    vcl_vector<dbskfg_transform_descriptor_sptr> results; 
+    std::vector<dbskfg_transform_descriptor_sptr> results; 
     {
         dbskfg_detect_transforms transforms(
             dbskfg_transform_manager::Instance().get_cgraph(),
@@ -115,16 +115,16 @@ void dbskfg_containment_graph::compute_region_root(
     this->add_vertex(root_node);
 
     // Grab initial wavefront to create
-    vcl_map<unsigned int, dbskfg_shock_node*> wavefront
+    std::map<unsigned int, dbskfg_shock_node*> wavefront
         = rag_node->get_wavefront();
 
-    vcl_set<vcl_string> rag_node_wavefront;
+    std::set<std::string> rag_node_wavefront;
 
-    vcl_map<unsigned int, dbskfg_shock_node*>::iterator it;
+    std::map<unsigned int, dbskfg_shock_node*>::iterator it;
     for ( it = wavefront.begin(); it != wavefront.end() ; ++it)
     {
         vgl_point_2d<double> point = (*it).second->pt();
-        vcl_stringstream stream;
+        std::stringstream stream;
         stream<<point;
         rag_node_wavefront.insert(stream.str());
     }
@@ -135,15 +135,15 @@ void dbskfg_containment_graph::compute_region_root(
     root_node->set_rag_con_ids(rag_con_ids);
     root_node->set_rag_wavefront(rag_node_wavefront);
 
-    vcl_map<vcl_string,unsigned int>& gap_map =
+    std::map<std::string,unsigned int>& gap_map =
         dbskfg_transform_manager::Instance().gap_map();
-    vcl_vector<vcl_vector<unsigned int> > total_contours;
+    std::vector<std::vector<unsigned int> > total_contours;
 
     // Determine all new contours to be entered
     for ( unsigned int i(0) ; i < results.size()  ; ++i)
     {
         // For each transform lets compute polygon
-        vcl_vector<unsigned int> contours_affected =
+        std::vector<unsigned int> contours_affected =
             results[i]->contour_ids_affected();
 
         // Determine transform type
@@ -155,9 +155,9 @@ void dbskfg_containment_graph::compute_region_root(
 
         if ( ttype == dbskfg_transform_descriptor::GAP )
         {
-            vcl_vector<vsol_spatial_object_2d_sptr> 
+            std::vector<vsol_spatial_object_2d_sptr> 
                 gap_contours = results[i]->new_contours_spatial_objects_;
-            vcl_pair<vcl_string,vcl_string> gap_strings =
+            std::pair<std::string,std::string> gap_strings =
                 results[i]->gap_string();
 
             gap_map[gap_strings.first]=next_id;
@@ -228,7 +228,7 @@ void dbskfg_containment_graph::compute_region_root(
     total_contours.clear();
    
     // expand_tree();
-    print(vcl_cout);
+    print(std::cout);
   
 }
 
@@ -249,8 +249,8 @@ bool dbskfg_containment_graph::expand_region_root(
     this->add_vertex(root_node);
 
 
-    vcl_set<vcl_string> rag_wavefront;
-    vcl_set<unsigned int> rag_con_ids;
+    std::set<std::string> rag_wavefront;
+    std::set<unsigned int> rag_con_ids;
     rag_node->rag_contour_ids(rag_con_ids);
     rag_node->wavefront_string(rag_wavefront);
 
@@ -276,27 +276,27 @@ bool dbskfg_containment_graph::expand_region_root(
     return flag;
 }
 
-void dbskfg_containment_graph::print(vcl_ostream& os)
+void dbskfg_containment_graph::print(std::ostream& os)
 {
     os<<"Containment Graph Vertices: "<<this->number_of_vertices()
-            <<vcl_endl;
-    os<<"Number of Edges "<<this->number_of_edges()<<vcl_endl;
+            <<std::endl;
+    os<<"Number of Edges "<<this->number_of_edges()<<std::endl;
 
 
     for (dbskfg_containment_graph::vertex_iterator vit = 
              this->vertices_begin(); 
          vit != this->vertices_end(); ++vit)
     {
-        os<<"Number of Outgoing Edges "<<(*vit)->out_degree()<<vcl_endl;
-        os<<"Number of Incoming Edges "<<(*vit)->in_degree()<<vcl_endl;
+        os<<"Number of Outgoing Edges "<<(*vit)->out_degree()<<std::endl;
+        os<<"Number of Incoming Edges "<<(*vit)->in_degree()<<std::endl;
         (*vit)->print(os);
 
 
     }
 
-    vcl_stringstream file_stream;
+    std::stringstream file_stream;
 
-    vcl_string output_string;
+    std::string output_string;
 
     file_stream<<"cgraph_"<<this->number_of_vertices()<<".dot";
     if ( output_filename_.size() )
@@ -308,9 +308,9 @@ void dbskfg_containment_graph::print(vcl_ostream& os)
         output_string=file_stream.str();
     }
 
-    vcl_ofstream file(output_string.c_str());
+    std::ofstream file(output_string.c_str());
 
-    file<<"digraph G {"<<vcl_endl;
+    file<<"digraph G {"<<std::endl;
     for (dbskfg_containment_graph::vertex_iterator vit = 
              this->vertices_begin(); 
          vit != this->vertices_end(); ++vit)
@@ -318,9 +318,9 @@ void dbskfg_containment_graph::print(vcl_ostream& os)
   
 
        
-        vcl_stringstream filename;
+        std::stringstream filename;
         filename<<"Node"<<(*vit)->id()<<".ps";
-        vcl_string filestring=filename.str();
+        std::string filestring=filename.str();
         print_node((*vit)->get_attributes(),filestring,(*vit)->get_polygon());
 
          dbskfg_containment_node::edge_iterator srit;
@@ -330,13 +330,13 @@ void dbskfg_containment_graph::print(vcl_ostream& os)
               srit != (*vit)->out_edges_end() 
                   ; ++srit)
         {
-            vcl_string transform_string;
+            std::string transform_string;
             if ((*srit)->transform_type() == 
                 dbskfg_transform_descriptor::GAP) 
             {
-                vcl_vector<unsigned int> contours_affected = 
+                std::vector<unsigned int> contours_affected = 
                     (*srit)->get_contours_affected();
-                vcl_stringstream sstream;
+                std::stringstream sstream;
                 sstream<<"G={";
                 for ( unsigned int b=0; b < contours_affected.size() ; b++)
                 {
@@ -355,9 +355,9 @@ void dbskfg_containment_graph::print(vcl_ostream& os)
             }
             else
             {
-                vcl_vector<unsigned int> contours_affected = 
+                std::vector<unsigned int> contours_affected = 
                     (*srit)->get_contours_affected();
-                vcl_stringstream sstream;
+                std::stringstream sstream;
                 sstream<<"L={";
                 for ( unsigned int b=0; b < contours_affected.size() ; b++)
                 {
@@ -381,19 +381,19 @@ void dbskfg_containment_graph::print(vcl_ostream& os)
                 <<" dist= "
                 <<(*srit)->get_distance()
                 <<"\" ];"
-                <<vcl_endl; 
+                <<std::endl; 
         }
 
         
 
     }
-    file<<"}"<<vcl_endl;
+    file<<"}"<<std::endl;
     file.close();
 
 
 }
 
-void dbskfg_containment_graph::expand_tree(vcl_ofstream& stream)
+void dbskfg_containment_graph::expand_tree(std::ofstream& stream)
 {
 
     unsigned int depth=1;
@@ -403,15 +403,15 @@ void dbskfg_containment_graph::expand_tree(vcl_ofstream& stream)
         // Start timer
         vul_timer t;
 
-        vcl_vector<dbskfg_containment_node_sptr> queue=
+        std::vector<dbskfg_containment_node_sptr> queue=
             depth_nodes_[depth];
 
-        stream<<"Depth: "<<depth<<" Node: "<<queue.size()<<vcl_endl;
+        stream<<"Depth: "<<depth<<" Node: "<<queue.size()<<std::endl;
         depth_map_[depth]=queue.size();
 
-        vcl_cout<<"*************************"<<vcl_endl;
-        vcl_cout<<"EXPANDING DEPTH : "<<depth<<vcl_endl;
-        vcl_cout<<"*************************"<<vcl_endl;
+        std::cout<<"*************************"<<std::endl;
+        std::cout<<"EXPANDING DEPTH : "<<depth<<std::endl;
+        std::cout<<"*************************"<<std::endl;
 
         expand_tree_level(queue,stream);
 
@@ -422,8 +422,8 @@ void dbskfg_containment_graph::expand_tree(vcl_ofstream& stream)
         double vox_time = t.real()/1000.0;
         t.mark();
       
-        stream<<"Time: "<<vox_time<<" sec"<<vcl_endl;
-        stream<<vcl_endl;
+        stream<<"Time: "<<vox_time<<" sec"<<std::endl;
+        stream<<std::endl;
 
 
     }while(depth_nodes_.count(depth));
@@ -432,11 +432,11 @@ void dbskfg_containment_graph::expand_tree(vcl_ofstream& stream)
 }
 
 void dbskfg_containment_graph::expand_tree_level(
-    vcl_vector<dbskfg_containment_node_sptr>& queue,
-    vcl_ofstream& stream)
+    std::vector<dbskfg_containment_node_sptr>& queue,
+    std::ofstream& stream)
 {
-    vcl_vector<double> times_per_node;
-    vcl_map<unsigned int,dbskfg_containment_node_sptr> nodes;
+    std::vector<double> times_per_node;
+    std::map<unsigned int,dbskfg_containment_node_sptr> nodes;
 
     while(!queue.empty())
     {
@@ -474,19 +474,19 @@ void dbskfg_containment_graph::expand_tree_level(
 
     }
 
-    double average_node_time = vcl_accumulate(times_per_node.begin(),
+    double average_node_time = std::accumulate(times_per_node.begin(),
                                               times_per_node.end(),
                                               0.0);
 
     stream<<"Average Node Time: "<<average_node_time/times_per_node.size()
-            <<vcl_endl;
+            <<std::endl;
     
 
     nodes.clear();
 }
 
-void dbskfg_containment_graph::print_node(vcl_map<unsigned int,bool> attributes,
-                                          vcl_string filename,
+void dbskfg_containment_graph::print_node(std::map<unsigned int,bool> attributes,
+                                          std::string filename,
                                           vgl_polygon<double>& vgl_poly)
 {
     // create a ps file object
@@ -518,12 +518,12 @@ void dbskfg_containment_graph::print_node(vcl_map<unsigned int,bool> attributes,
         }
     }
 
-    vcl_map<unsigned int,vcl_vector<vsol_spatial_object_2d_sptr> >::iterator it;
+    std::map<unsigned int,std::vector<vsol_spatial_object_2d_sptr> >::iterator it;
     for ( it = original_list_.begin() ; it != original_list_.end() ; ++it)
     {
         if (attributes[(*it).first] == true )
         {
-            vcl_vector<vsol_spatial_object_2d_sptr> cons
+            std::vector<vsol_spatial_object_2d_sptr> cons
                 = (*it).second;
 
             for ( unsigned int k=0; k < cons.size() ; ++k)
@@ -581,7 +581,7 @@ void dbskfg_containment_graph::print_node(vcl_map<unsigned int,bool> attributes,
                             object->cast_to_curve()->cast_to_polyline();
 
                         // collect vertices of the polyline
-                        vcl_vector<vgl_point_2d<double > > pts;
+                        std::vector<vgl_point_2d<double > > pts;
 
                         for (unsigned int i = 1; i < polyline->size(); i++)
                         {
@@ -607,29 +607,29 @@ void dbskfg_containment_graph::print_node_cache()
 {
 
     // Keep a map of all nodes for easy cache
-    vcl_map< vcl_vector<bool>, vcl_vector< vcl_pair<vcl_set<vcl_string>
+    std::map< std::vector<bool>, std::vector< std::pair<std::set<std::string>
         ,dbskfg_containment_node_sptr > > >::iterator bit;
     for ( bit = node_cache_.begin(); bit != node_cache_.end() ; ++bit)
     {
-        vcl_vector<bool> attr = (*bit).first;
+        std::vector<bool> attr = (*bit).first;
         for ( unsigned int k=0; k < attr.size() ; ++k)
         {
-            vcl_cout<<" Contour ( "<<k <<" ) "<< attr[k]<<vcl_endl;
+            std::cout<<" Contour ( "<<k <<" ) "<< attr[k]<<std::endl;
         }
-        vcl_vector< vcl_pair<vcl_set<vcl_string>, 
+        std::vector< std::pair<std::set<std::string>, 
             dbskfg_containment_node_sptr > > nodes_to_consider = 
             (*bit).second;
 
-        vcl_vector< vcl_pair<vcl_set<vcl_string>, 
+        std::vector< std::pair<std::set<std::string>, 
             dbskfg_containment_node_sptr > >::iterator it;
 
         for ( it = nodes_to_consider.begin() ; it != nodes_to_consider.end(); 
               ++it)
         {
-            vcl_pair<vcl_set<vcl_string>, dbskfg_containment_node_sptr >
+            std::pair<std::set<std::string>, dbskfg_containment_node_sptr >
               node_pair   = (*it);
 
-            node_pair.second->print(vcl_cout);
+            node_pair.second->print(std::cout);
         }
         
 
@@ -638,13 +638,13 @@ void dbskfg_containment_graph::print_node_cache()
 
 //: Return node if
 dbskfg_containment_node_sptr dbskfg_containment_graph::node_merge(
-    vcl_map<unsigned int,bool>& attr,
-    vcl_set<vcl_string>& wavefront)
+    std::map<unsigned int,bool>& attr,
+    std::set<std::string>& wavefront)
 {
     dbskfg_containment_node_sptr node=0;
 
     unsigned int string1_size  = (*attr.rbegin()).first+1;
-    vcl_vector<bool> bit_set1(string1_size,false);
+    std::vector<bool> bit_set1(string1_size,false);
 
     for  ( unsigned int i=0; i < bit_set1.size() ; ++i) 
     {
@@ -654,12 +654,12 @@ dbskfg_containment_node_sptr dbskfg_containment_graph::node_merge(
         }
     }
 
-    vcl_vector< vcl_pair<vcl_set<vcl_string>, 
+    std::vector< std::pair<std::set<std::string>, 
         dbskfg_containment_node_sptr > >::iterator it; 
         
     if ( node_cache_.count(bit_set1))
     {
-        vcl_vector< vcl_pair<vcl_set<vcl_string>, 
+        std::vector< std::pair<std::set<std::string>, 
             dbskfg_containment_node_sptr > > nodes_to_consider = 
             node_cache_[bit_set1];
 
@@ -668,21 +668,21 @@ dbskfg_containment_node_sptr dbskfg_containment_graph::node_merge(
         for ( it = nodes_to_consider.begin() ; it != nodes_to_consider.end(); 
               ++it)
         {
-            vcl_pair<vcl_set<vcl_string>, dbskfg_containment_node_sptr >
+            std::pair<std::set<std::string>, dbskfg_containment_node_sptr >
               node_pair   = (*it);
 
             if ( wavefront.size() == node_pair.first.size())
             {
 
-                vcl_set<vcl_string> regions_to_compare =
+                std::set<std::string> regions_to_compare =
                     node_pair.first;
 
-                vcl_vector<vcl_string> intersection(100);
-                vcl_vector<vcl_string>::iterator start_iterator;
+                std::vector<std::string> intersection(100);
+                std::vector<std::string>::iterator start_iterator;
                 start_iterator=intersection.begin();
-                vcl_vector<vcl_string>::iterator out_iterator;
+                std::vector<std::string>::iterator out_iterator;
 
-                out_iterator=vcl_set_intersection(wavefront.begin(),
+                out_iterator=std::set_intersection(wavefront.begin(),
                                                   wavefront.end(),
                                                   regions_to_compare.begin(),
                                                   regions_to_compare.end(),
@@ -707,14 +707,14 @@ dbskfg_containment_node_sptr dbskfg_containment_graph::node_merge(
 void dbskfg_containment_graph::insert_node(
     dbskfg_containment_node_sptr node)
 {
-    vcl_map<unsigned int,bool> attr = node->get_attributes();
-    vcl_set<vcl_string> wavefront   = node->get_rag_wavefront();
+    std::map<unsigned int,bool> attr = node->get_attributes();
+    std::set<std::string> wavefront   = node->get_rag_wavefront();
 
-    vcl_pair<vcl_set<vcl_string>,dbskfg_containment_node_sptr> pair
-        = vcl_make_pair(wavefront,node);
+    std::pair<std::set<std::string>,dbskfg_containment_node_sptr> pair
+        = std::make_pair(wavefront,node);
 
     unsigned int string1_size  = (*attr.rbegin()).first+1;
-    vcl_vector<bool> bit_set1(string1_size,false);
+    std::vector<bool> bit_set1(string1_size,false);
     
     for  ( unsigned int i=0; i < bit_set1.size() ; ++i) 
     {

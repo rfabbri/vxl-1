@@ -6,8 +6,8 @@
 #include "boxm_apm_traits.h"
 #include "boxm_scene_parser.h"
 
-#include <vcl_cmath.h>
-#include <vcl_cstdio.h>
+#include <cmath>
+#include <cstdio>
 #include <vgl/xio/vgl_xio_point_3d.h>
 #include <vgl/xio/vgl_xio_vector_3d.h>
 #include <vsl/vsl_basic_xml_element.h>
@@ -62,9 +62,9 @@ void boxm_scene<T>::create_blocks(const vgl_vector_3d<double>& block_dim,
                                   const vgl_vector_3d<int>& world_dim)
 {
   // compute the dimensions of 3D array
-  //int x_dim = static_cast<int>(vcl_floor(world_dim.x()/block_dim.x()));
-  //int y_dim = static_cast<int>(vcl_floor(world_dim.y()/block_dim.y()));
-  //int z_dim = static_cast<int>(vcl_floor(world_dim.z()/block_dim.z()));
+  //int x_dim = static_cast<int>(std::floor(world_dim.x()/block_dim.x()));
+  //int y_dim = static_cast<int>(std::floor(world_dim.y()/block_dim.y()));
+  //int z_dim = static_cast<int>(std::floor(world_dim.z()/block_dim.z()));
 
   // pointers are initialized to NULL
   blocks_ =  vbl_array_3d<boxm_block<T>*>(world_dim.x(),world_dim.y(),world_dim.z(), (boxm_block<T>*)NULL);
@@ -122,10 +122,10 @@ void boxm_scene<T>::write_active_block()
   if (valid_index(active_block_))
   {
     int x=active_block_.x(), y=active_block_.y(), z=active_block_.z();
-    vcl_string path = gen_block_path(x,y,z);
+    std::string path = gen_block_path(x,y,z);
     vsl_b_ofstream os(path);
 #if 0
-    vcl_cout << "Internal Nodes 2: " << save_internal_nodes_ << vcl_endl;
+    std::cout << "Internal Nodes 2: " << save_internal_nodes_ << std::endl;
 #endif
     blocks_(x,y,z)->b_write(os, save_internal_nodes_);
     // delete the block's data
@@ -149,7 +149,7 @@ boxm_block<T>* boxm_scene<T>::get_block(vgl_point_3d<double>& p)
     unsigned k = static_cast<unsigned>((p.z()-origin_.z())/block_dim_.z());
     return blocks_(i,j,k);
   } else {
-    vcl_cerr << "Point " << p << " is out of world " << world << '\n';
+    std::cerr << "Point " << p << " is out of world " << world << '\n';
     return 0;
   }
 }
@@ -174,7 +174,7 @@ bool boxm_scene<T>::get_block_index(vgl_point_3d<double>& p, vgl_point_3d<int> &
     index=vgl_point_3d<int>(i,j,k);
     return true;
   } else {
-    vcl_cerr << "Point " << p << " is out of world " << world << '\n';
+    std::cerr << "Point " << p << " is out of world " << world << '\n';
     return false;
   }
 }
@@ -188,7 +188,7 @@ boxm_block<T>* boxm_scene<T>::get_active_block()
       load_block(active_block_.x(),active_block_.y(),active_block_.z());
     return block;
   } else{
-    vcl_cerr << "index"<<active_block_<<"  is out of world\n";
+    std::cerr << "index"<<active_block_<<"  is out of world\n";
     return 0;
   }
 }
@@ -216,9 +216,9 @@ vgl_box_3d<double> boxm_scene<T>::get_block_bbox(int x, int y, int z)
 }
 
 template <class T>
-vcl_string boxm_scene<T>::gen_block_path(int x, int y, int z)
+std::string boxm_scene<T>::gen_block_path(int x, int y, int z)
 {
-  vcl_stringstream strm;
+  std::stringstream strm;
 
   strm << scene_path_ << '/' << block_pref_ << '_' <<  x << '_' << y << '_' << z << ".bin";
 
@@ -229,7 +229,7 @@ bool boxm_scene<T>::discover_block(unsigned i, unsigned j, unsigned k)
 {
   if (!valid_index(vgl_point_3d<int>(i,j,k)))
     return false;
-  vcl_string block_path = gen_block_path(i,j,k);
+  std::string block_path = gen_block_path(i,j,k);
   vsl_b_ifstream os(block_path);
 
   //if the binary block file is not found
@@ -262,7 +262,7 @@ bool boxm_scene<T>::load_block(unsigned i, unsigned j, unsigned k)
   }
   active_block_.set(i,j,k);
 
-  vcl_string block_path = gen_block_path(i,j,k);
+  std::string block_path = gen_block_path(i,j,k);
   vsl_b_ifstream os(block_path);
 
   //if the binary block file is not found
@@ -302,17 +302,17 @@ void boxm_scene<T>::b_read(vsl_b_istream & is)
   switch (version)
   {
     case 1:
-      vcl_string xml="";
+      std::string xml="";
       vsl_b_read(is, xml);
-      vcl_cout << xml << vcl_endl;
+      std::cout << xml << std::endl;
       boxm_scene_parser parser;
       parse_xml_string(xml, parser);
       break;
 #if 0
     default:
-      vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, boxm_scene<T>&)\n"
+      std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, boxm_scene<T>&)\n"
                << "           Unknown version number "<< version << '\n';
-      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
       return;
 #endif
   }
@@ -322,10 +322,10 @@ template <class T>
 void boxm_scene<T>::b_write(vsl_b_ostream & s) const
 {
   // create an XML stream for the parameters
-  vcl_stringstream strm;
+  std::stringstream strm;
   boxm_scene<T> scene(this->lvcs(), this->origin(), this->block_dim(), this->world_dim());
   x_write(strm, scene, "scene");
-  vcl_string str(strm.str());
+  std::string str(strm.str());
 
   short v = boxm_scene<T>::version_no();
   vsl_b_write(s, v);
@@ -334,16 +334,16 @@ void boxm_scene<T>::b_write(vsl_b_ostream & s) const
 }
 
 template <class T>
-void boxm_scene<T>::write_scene(vcl_string filename)
+void boxm_scene<T>::write_scene(std::string filename)
 {
-  vcl_string fullpath=scene_path_+ filename;
-  vcl_ofstream os(fullpath.c_str());
+  std::string fullpath=scene_path_+ filename;
+  std::ofstream os(fullpath.c_str());
   x_write(os, *this, "boxm_scene");
   os.close();
 }
 
 template <class T>
-void boxm_scene<T>::load_scene(vcl_string filename)
+void boxm_scene<T>::load_scene(std::string filename)
 {
   boxm_scene_parser parser;
   boxm_scene_base::load_scene(filename, parser);
@@ -357,7 +357,7 @@ void boxm_scene<T>::load_scene(boxm_scene_parser& parser)
 }
 
 template <class T>
-void x_write(vcl_ostream &os, boxm_scene<T>& scene, vcl_string name)
+void x_write(std::ostream &os, boxm_scene<T>& scene, std::string name)
 {
   vsl_basic_xml_element scene_elm(name);
   scene_elm.x_write_open(os);
@@ -411,27 +411,27 @@ bool boxm_scene<T>::parse_config(boxm_scene_parser& parser)
   multi_bin_ = parser.multi_bin();
   save_internal_nodes_ =parser.save_internal_nodes();
 #if 0
-  vcl_cout << "Internal Nodes 1: " << save_internal_nodes_ << vcl_endl;
+  std::cout << "Internal Nodes 1: " << save_internal_nodes_ << std::endl;
 #endif
   parser.levels(max_tree_level_, init_tree_level_);
   return true;
 }
 
 template <class T>
-bool boxm_scene<T>::parse_xml_string(vcl_string xml, boxm_scene_parser& parser)
+bool boxm_scene<T>::parse_xml_string(std::string xml, boxm_scene_parser& parser)
 {
   if (xml.size() == 0) {
-    vcl_cerr << "XML string is empty\n";
+    std::cerr << "XML string is empty\n";
     return 0;
   }
   if (!parser.parseString(xml.data())) {
-    vcl_cerr << XML_ErrorString(parser.XML_GetErrorCode()) << " at line "
+    std::cerr << XML_ErrorString(parser.XML_GetErrorCode()) << " at line "
              << parser.XML_GetCurrentLineNumber() << '\n';
 
     return false;
   }
 
-  vcl_cout << "finished!" << vcl_endl;
+  std::cout << "finished!" << std::endl;
   bgeo_lvcs lvcs;
   parser.lvcs(lvcs);
   vgl_vector_3d<unsigned> nums = parser.block_nums();
@@ -454,7 +454,7 @@ void boxm_scene<T>::clean_scene()
   iter.begin();
   while (!iter.end()) {
     if (this->discover_block(iter.index().x(),iter.index().y(),iter.index().z())) {
-      vcl_string filename=this->gen_block_path(iter.index().x(),iter.index().y(),iter.index().z());
+      std::string filename=this->gen_block_path(iter.index().x(),iter.index().y(),iter.index().z());
       vpl_unlink(filename.c_str());
     }
     iter++;
@@ -587,7 +587,7 @@ void vsl_b_read(vsl_b_istream & is, boxm_scene<T> *&scene)
 
 #define BOXM_SCENE_INSTANTIATE(T) \
 template class boxm_scene<T >; \
-template void x_write(vcl_ostream&, boxm_scene<T >&, vcl_string); \
+template void x_write(std::ostream&, boxm_scene<T >&, std::string); \
 template void vsl_b_write(vsl_b_ostream & os, boxm_scene<T > const &scene); \
 template void vsl_b_write(vsl_b_ostream & os, boxm_scene<T > const * &scene); \
 template void vsl_b_read(vsl_b_istream & is, boxm_scene<T >  &scene); \

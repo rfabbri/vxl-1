@@ -35,7 +35,7 @@ dbru_show_tps_process::dbru_show_tps_process(void): bpro1_process()
         "-corfile" , bpro1_filepath("","*.out") ) 
         ) 
         {
-            vcl_cerr << "ERROR: Adding parameters in dbru_show_tps_process::dbru_show_tps_process()" << vcl_endl;
+            std::cerr << "ERROR: Adding parameters in dbru_show_tps_process::dbru_show_tps_process()" << std::endl;
         }
     
     }
@@ -44,7 +44,7 @@ dbru_show_tps_process::~dbru_show_tps_process()
     {
     }
 //: Return the name of this process
-vcl_string
+std::string
 dbru_show_tps_process::name()
     {
         return "Show TPS";
@@ -62,18 +62,18 @@ dbru_show_tps_process::output_frames()
         return 1;
     }
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbru_show_tps_process::get_input_type()
+std::vector< std::string > dbru_show_tps_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     //to_return.push_back( "dbrl_id_point_2d" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbru_show_tps_process::get_output_type()
+std::vector< std::string > dbru_show_tps_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //to_return.push_back( "image" );
     //to_return.push_back( "dbrl_match_set" );
     //to_return.push_back( "dbrl_match_set" );
@@ -92,20 +92,20 @@ dbru_show_tps_process::execute()
 
   bpro1_filepath input_path;
   parameters()->get_value( "-corfile" , input_path);
-  vcl_string cor_file = input_path.path;
+  std::string cor_file = input_path.path;
 
   float delta=0, delta_s=0, margin=0;
   parameters()->get_value( "-delta" , delta);
   parameters()->get_value( "-margin" , margin);
   parameters()->get_value( "-sdelta" , delta_s);
   
-  vcl_ifstream ifs(cor_file.c_str());
+  std::ifstream ifs(cor_file.c_str());
   if (!ifs) {
-    vcl_cout << "file not found!\n";
+    std::cout << "file not found!\n";
     return false;
   }
   // read points
-  vcl_vector<vsol_spatial_object_2d_sptr> points1, points2, grid2;
+  std::vector<vsol_spatial_object_2d_sptr> points1, points2, grid2;
   
   int size1, size2;
   ifs >> size1;
@@ -154,19 +154,19 @@ dbru_show_tps_process::execute()
   float minyr = miny-margin;
   float minxr2 = minx2-margin;
   float minyr2 = miny2-margin;
-  vcl_vector<vgl_point_2d<double> > src_pts(size1), dest_pts(size2);
+  std::vector<vgl_point_2d<double> > src_pts(size1), dest_pts(size2);
   for (int i = 0; i<size1; i++) {
     double x = (points1[i]->cast_to_point()->x()-minxr)/xrange;
     double y = (points1[i]->cast_to_point()->y()-minyr)/yrange;
     vgl_point_2d<double> p(x,y);
-    vcl_cout << "src " << i << ": " << p << vcl_endl;
+    std::cout << "src " << i << ": " << p << std::endl;
     src_pts.push_back(p);
   }
   for (int i = 0; i<size2; i++) {
     double x = (points2[i]->cast_to_point()->x()-minxr2)/xrange2;
     double y = (points2[i]->cast_to_point()->y()-minyr2)/yrange2;
     vgl_point_2d<double> p(x,y);
-    vcl_cout << "src " << i << ": " << p << vcl_endl;
+    std::cout << "src " << i << ": " << p << std::endl;
     dest_pts.push_back(p);
   }
 
@@ -187,11 +187,11 @@ dbru_show_tps_process::execute()
   for (unsigned i = 0 ; i < src_pts.size(); i++) {
     vgl_point_2d<double> p = tps(src_pts[i]);
     double dist = vgl_distance(p,dest_pts[i]);
-    vcl_cout << "src: " << src_pts[i] << " dest: " << dest_pts[i] << " warped dest: " << p << " dist: " << dist << vcl_endl;
-    if (vcl_abs(dist) > 1e-2)
-      vcl_cout << "!!!!!!!!!!!!!!!!DIST IS NOT OK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+    std::cout << "src: " << src_pts[i] << " dest: " << dest_pts[i] << " warped dest: " << p << " dist: " << dist << std::endl;
+    if (std::abs(dist) > 1e-2)
+      std::cout << "!!!!!!!!!!!!!!!!DIST IS NOT OK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
     else 
-      vcl_cout << " dist is ok!\n";
+      std::cout << " dist is ok!\n";
   }
 
   // create grid1 and grid2
@@ -203,9 +203,9 @@ dbru_show_tps_process::execute()
   for (double y = minyr; y < minyr+yrange; y+=delta) {
     vsol_polyline_2d_sptr line = new vsol_polyline_2d();
     for (double x = minxr; x < minxr+xrange; x+=delta_s) {
-      //vcl_cout << "x: " << x << ", y: " << y;
+      //std::cout << "x: " << x << ", y: " << y;
       vgl_point_2d<double> p = tps((x-minxr)/xrange,(y-minyr)/yrange);
-      //vcl_cout << " tps x: " << p.x() << ", y: " << p.y() << vcl_endl;
+      //std::cout << " tps x: " << p.x() << ", y: " << p.y() << std::endl;
       vsol_point_2d_sptr new_p = new vsol_point_2d( (p.x()*xrange+minxr), (p.y()*yrange+minyr));
       line->add_vertex(new_p);
     }
@@ -215,9 +215,9 @@ dbru_show_tps_process::execute()
   for (double x = minxr; x <minxr+xrange; x+=delta) {
     vsol_polyline_2d_sptr line = new vsol_polyline_2d();
     for (double y = minyr; y <minyr+yrange; y+=delta_s) {
-      //vcl_cout << "x: " << x << ", y: " << y;
+      //std::cout << "x: " << x << ", y: " << y;
       vgl_point_2d<double> p = tps((x-minxr)/xrange,(y-minyr)/yrange);
-      //vcl_cout << " tps x: " << p.x() << ", y: " << p.y() << vcl_endl;
+      //std::cout << " tps x: " << p.x() << ", y: " << p.y() << std::endl;
       vsol_point_2d_sptr new_p = new vsol_point_2d( (p.x()*xrange+minxr), (p.y()*yrange+minyr));
       line->add_vertex(new_p);
     }

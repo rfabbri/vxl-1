@@ -46,7 +46,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/console/parse.h>
-#include <vcl_iostream.h>
+#include <iostream>
 // --------------
 // -----Help-----
 // --------------
@@ -325,15 +325,15 @@ main (int argc, char** argv)
     std::vector<int> p_file_indices   = pcl::console::parse_file_extension_argument (argc, argv, ".pcd");
     if (p_file_indices.size () == 0)
     {
-      vcl_cout << "No .PCD file given. Nothing to visualize.\n";
+      std::cout << "No .PCD file given. Nothing to visualize.\n";
       return (-1);
     }
-    vcl_cout << "Loading "<< argv[p_file_indices.at(0)] <<  "\n";
+    std::cout << "Loading "<< argv[p_file_indices.at(0)] <<  "\n";
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
     if (pcl::io::loadPCDFile (argv[p_file_indices.at(0)], *point_cloud_ptr) < 0)
       return (false);
-    vcl_cout << " Done:" <<  point_cloud_ptr->width * point_cloud_ptr->height << " points\n";
-  vcl_cout << "Available dimensions: " << pcl::getFieldsList(*point_cloud_ptr).c_str ();
+    std::cout << " Done:" <<  point_cloud_ptr->width * point_cloud_ptr->height << " points\n";
+  std::cout << "Available dimensions: " << pcl::getFieldsList(*point_cloud_ptr).c_str ();
     
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
     if (simple)

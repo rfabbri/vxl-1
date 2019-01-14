@@ -22,15 +22,15 @@ class dborl_image_object;
 class dborl_object_base : public vbl_ref_count
 {
 public:
-  vcl_string name_;
-  vcl_string path_;
+  std::string name_;
+  std::string path_;
   borld_description_base_sptr desc_;
 
   inline dborl_object_base() : name_("") {}
-  inline dborl_object_base(vcl_string name) : name_(name) {}
+  inline dborl_object_base(std::string name) : name_(name) {}
 
-  inline void set_path(vcl_string path) { path_ = path; }
-  inline vcl_string path() { return path_; }
+  inline void set_path(std::string path) { path_ = path; }
+  inline std::string path() { return path_; }
 
   virtual unsigned get_object_type() = 0;
 

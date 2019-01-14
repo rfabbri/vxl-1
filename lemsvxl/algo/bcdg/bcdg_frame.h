@@ -8,7 +8,7 @@
 // \date 7/9/04
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_smart_ptr.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_digital_curve_2d.h>
@@ -21,13 +21,13 @@
 class bcdg_frame : public vbl_ref_count {
 public:
   //: Constructor
-  bcdg_frame(const vcl_vector<vsol_digital_curve_2d_sptr>&, int, double);
+  bcdg_frame(const std::vector<vsol_digital_curve_2d_sptr>&, int, double);
   //: Returns all (2D) edges in this frame.
-  //vcl_vector<vsol_digital_curve_2d_sptr> curves() const;
+  //std::vector<vsol_digital_curve_2d_sptr> curves() const;
   //: Returns the time associated with this frame.
   int time() const;
   //: Returns the neighbors of the specified point
-  vcl_vector<dbecl_episeg_point> neighbors(vgl_point_2d<double>) const;
+  std::vector<dbecl_episeg_point> neighbors(vgl_point_2d<double>) const;
 
   //: Convert the digital curves to episegments
   void convert(bcdg_algo_params);
@@ -85,17 +85,17 @@ public:
   
 private:
   //: Convert one curve
-  vcl_vector<dbecl_episeg_sptr> convert_curve(vsol_digital_curve_2d_sptr, bcdg_algo_params) const;
+  std::vector<dbecl_episeg_sptr> convert_curve(vsol_digital_curve_2d_sptr, bcdg_algo_params) const;
   //: Compute point discretization
   void discretize();
   //: The list of edges
-  vcl_vector<vsol_digital_curve_2d_sptr> _curves;
+  std::vector<vsol_digital_curve_2d_sptr> _curves;
   //: The list of curves
-  vcl_vector<dbecl_episeg_sptr> _epi_segs;
+  std::vector<dbecl_episeg_sptr> _epi_segs;
   //: The time
   int _time;
   //: Discretization of the points
-  vcl_vector< vcl_vector< vcl_vector<dbecl_episeg_point > > > _point_buckets;
+  std::vector< std::vector< std::vector<dbecl_episeg_point > > > _point_buckets;
   //: Neighbor radius
   double _neighbor_radius;
 };

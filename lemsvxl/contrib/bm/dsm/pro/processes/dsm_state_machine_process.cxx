@@ -6,9 +6,9 @@
 
 #include<dsm/dsm_state_machine.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 
 namespace dsm_state_machine_process_globals
@@ -21,8 +21,8 @@ bool dsm_state_machine_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_state_machine_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
     input_types_[i++] = "unsigned"; //state machine id
@@ -65,7 +65,7 @@ bool dsm_state_machine_process(bprb_func_process& pro)
     {
     case 1:
         {
-            vcl_cout << "ERROR: dsm_state_machine_process ---------Cannot instantiate a state machine with dimension 1. Not yet implemented.--------- \n";
+            std::cout << "ERROR: dsm_state_machine_process ---------Cannot instantiate a state machine with dimension 1. Not yet implemented.--------- \n";
             return false;
         }//end case 1
         break;
@@ -98,8 +98,8 @@ bool dsm_state_machine_process(bprb_func_process& pro)
         break;
     default:
         {
-            vcl_cerr << "------ERROR PROCESS DSM_STATE_MACHINE_PROCESS: " << ndims 
-                     << "UNSPECIFIED DIMENSION PLEASE ADD THIS CASE OR USE A DIFFERENT VALUE.---------" << vcl_flush;
+            std::cerr << "------ERROR PROCESS DSM_STATE_MACHINE_PROCESS: " << ndims 
+                     << "UNSPECIFIED DIMENSION PLEASE ADD THIS CASE OR USE A DIFFERENT VALUE.---------" << std::flush;
             return false;   
         }//end default
     }//end switch

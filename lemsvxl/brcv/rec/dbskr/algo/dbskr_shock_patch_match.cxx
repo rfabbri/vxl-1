@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 #include <dbskr/algo/dbskr_shock_patch_match.h>
 #include <dbskr/dbskr_shock_patch.h>
 #include <dbskr/dbskr_sm_cor.h>
@@ -47,17 +47,17 @@
 
 void dbskr_shock_patch_match::clear()
 {
-   for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+   for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
       v_ptr->clear();
       delete v_ptr;
    }
    patch_cor_map_.clear();
 
-   for (vcl_map<int, vcl_vector<vcl_pair<int, float> >* >::const_iterator  iter = patch_cor_info_map_.begin(); 
+   for (std::map<int, std::vector<std::pair<int, float> >* >::const_iterator  iter = patch_cor_info_map_.begin(); 
      iter != patch_cor_info_map_.end(); iter++) {
-     vcl_vector<vcl_pair<int, float> >* v_ptr = iter->second;
+     std::vector<std::pair<int, float> >* v_ptr = iter->second;
      v_ptr->clear();
      delete v_ptr;
    }
@@ -76,9 +76,9 @@ void dbskr_shock_patch_match::clear()
 
 void dbskr_shock_patch_match::clear_sm_map_lists()
 {
-   for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+   for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
       for (unsigned i = 0; i < v_ptr->size(); i++) {
         (*v_ptr)[i].second->clear_map_list();
       }
@@ -89,9 +89,9 @@ void dbskr_shock_patch_match::clear_sm_map_lists()
 
 void dbskr_shock_patch_match::clear_edit_costs()
 {
-   for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+   for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
       delete v_ptr;
    }
    patch_cor_map_.clear();
@@ -99,24 +99,24 @@ void dbskr_shock_patch_match::clear_edit_costs()
 }
 
 inline bool
-norm_cost_less(const vcl_pair<int, dbskr_sm_cor_sptr>& p1,
-               const vcl_pair<int, dbskr_sm_cor_sptr>& p2) {
+norm_cost_less(const std::pair<int, dbskr_sm_cor_sptr>& p1,
+               const std::pair<int, dbskr_sm_cor_sptr>& p2) {
   return (p1.second->final_norm_cost() < p2.second->final_norm_cost());
 }
 
 inline bool
-cost_less(const vcl_pair<int, dbskr_sm_cor_sptr>& p1,
-          const vcl_pair<int, dbskr_sm_cor_sptr>& p2) {        
+cost_less(const std::pair<int, dbskr_sm_cor_sptr>& p1,
+          const std::pair<int, dbskr_sm_cor_sptr>& p2) {        
   return (p1.second->final_cost() < p2.second->final_cost());
 }
 
 //: sort again wrt norm costs
 void dbskr_shock_patch_match::resort_wrt_norm_cost()
 {
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
    }
 
 }
@@ -124,10 +124,10 @@ void dbskr_shock_patch_match::resort_wrt_norm_cost()
 //: sort wrt costs
 void dbskr_shock_patch_match::resort_wrt_cost()
 {
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), cost_less);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), cost_less);
    }
 }
 
@@ -136,17 +136,17 @@ void dbskr_shock_patch_match::resort_wrt_cost()
 bool dbskr_shock_patch_match::compute_norm_fine_costs_of_cors()
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
       dbskr_shock_patch_sptr sp1;
       if (spi == map1_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
+        std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
         return false;
       } else
         sp1 = spi->second;
@@ -159,10 +159,10 @@ bool dbskr_shock_patch_match::compute_norm_fine_costs_of_cors()
 
         dbskr_tree_sptr tree1 = sp1->tree();  // compute if not there
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+        std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
         dbskr_shock_patch_sptr sp2;
         if (spi2 == map2_.end()) {
-          vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
+          std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
           return false;
         } else
           sp2 = spi2->second;
@@ -172,7 +172,7 @@ bool dbskr_shock_patch_match::compute_norm_fine_costs_of_cors()
         sm->set_tree1(tree1);
         sm->set_tree2(tree2);  // in this method it calls recover_node_ids which recomputes the matches if necessary (fi map_list_ is empty)
       }
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
   }
 
   return true;
@@ -183,17 +183,17 @@ bool dbskr_shock_patch_match::compute_norm_fine_costs_of_cors()
 bool dbskr_shock_patch_match::compute_length_norm_costs_of_cors()
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_length_norm_costs_of_cors() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_length_norm_costs_of_cors() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
       dbskr_shock_patch_sptr sp1;
       if (spi == map1_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_length_norm_fine_costs_of_cors() - an id in match vector could not be found in map1_\n";
+        std::cout << "dbskr_shock_patch_match::compute_length_norm_fine_costs_of_cors() - an id in match vector could not be found in map1_\n";
         return false;
       } else
         sp1 = spi->second;
@@ -205,10 +205,10 @@ bool dbskr_shock_patch_match::compute_length_norm_costs_of_cors()
 
         dbskr_tree_sptr tree1 = sp1->tree();  // compute if not there
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+        std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
         dbskr_shock_patch_sptr sp2;
         if (spi2 == map2_.end()) {
-          vcl_cout << "dbskr_shock_patch_match::compute_length_norm_costs_of_cor() - an id in match vector could not be found in map2_\n";
+          std::cout << "dbskr_shock_patch_match::compute_length_norm_costs_of_cor() - an id in match vector could not be found in map2_\n";
           return false;
         } else
           sp2 = spi2->second;
@@ -216,7 +216,7 @@ bool dbskr_shock_patch_match::compute_length_norm_costs_of_cors()
         dbskr_tree_sptr tree2 = sp2->tree();  // compute if not there
         sm->set_final_norm_cost(sm->final_cost()/(tree1->total_reconstructed_boundary_length()+tree2->total_reconstructed_boundary_length()));
       }
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
   }
   return true;
 }
@@ -226,17 +226,17 @@ bool dbskr_shock_patch_match::compute_length_norm_costs_of_cors()
 bool dbskr_shock_patch_match::compute_splice_norm_costs_of_cors()
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cors() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cors() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
       dbskr_shock_patch_sptr sp1;
       if (spi == map1_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cors() - an id in match vector could not be found in map1_\n";
+        std::cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cors() - an id in match vector could not be found in map1_\n";
         return false;
       } else
         sp1 = spi->second;
@@ -248,10 +248,10 @@ bool dbskr_shock_patch_match::compute_splice_norm_costs_of_cors()
 
         dbskr_tree_sptr tree1 = sp1->tree();  // compute if not there
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+        std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
         dbskr_shock_patch_sptr sp2;
         if (spi2 == map2_.end()) {
-          vcl_cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cor() - an id in match vector could not be found in map2_\n";
+          std::cout << "dbskr_shock_patch_match::compute_splice_norm_costs_of_cor() - an id in match vector could not be found in map2_\n";
           return false;
         } else
           sp2 = spi2->second;
@@ -259,7 +259,7 @@ bool dbskr_shock_patch_match::compute_splice_norm_costs_of_cors()
         dbskr_tree_sptr tree2 = sp2->tree();  // compute if not there
         sm->set_final_norm_cost(sm->final_cost()/(tree1->total_splice_cost()+tree2->total_splice_cost()));
       }
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
   }
   return true;
 }
@@ -270,17 +270,17 @@ bool dbskr_shock_patch_match::compute_splice_norm_costs_of_cors()
 bool dbskr_shock_patch_match::compute_just_norm_fine_costs_of_cors()
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
       dbskr_shock_patch_sptr sp1;
       if (spi == map1_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
+        std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
         return false;
       } else
         sp1 = spi->second;
@@ -292,10 +292,10 @@ bool dbskr_shock_patch_match::compute_just_norm_fine_costs_of_cors()
 
         dbskr_tree_sptr tree1 = sp1->tree();  // compute if not there
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+        std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
         dbskr_shock_patch_sptr sp2;
         if (spi2 == map2_.end()) {
-          vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
+          std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
           return false;
         } else
           sp2 = spi2->second;
@@ -303,7 +303,7 @@ bool dbskr_shock_patch_match::compute_just_norm_fine_costs_of_cors()
         dbskr_tree_sptr tree2 = sp2->tree();  // compute if not there
         sm->set_final_norm_cost(sm->final_cost()/(tree1->total_splice_cost()+tree2->total_splice_cost()));
       }
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
   }
 
   return true;
@@ -314,17 +314,17 @@ bool dbskr_shock_patch_match::compute_just_norm_fine_costs_of_cors()
 bool dbskr_shock_patch_match::weight_norm_cost_wrt_area()
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
       dbskr_shock_patch_sptr sp1;
       if (spi == map1_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
+        std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
         return false;
       } else
         sp1 = spi->second;
@@ -336,10 +336,10 @@ bool dbskr_shock_patch_match::weight_norm_cost_wrt_area()
 
         dbskr_tree_sptr tree1 = sp1->tree();  // compute if not there
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+        std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
         dbskr_shock_patch_sptr sp2;
         if (spi2 == map2_.end()) {
-          vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
+          std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
           return false;
         } else
           sp2 = spi2->second;
@@ -349,47 +349,47 @@ bool dbskr_shock_patch_match::weight_norm_cost_wrt_area()
         sm->set_tree1(tree1);
         sm->set_tree2(tree2);  // in this method it calls recover_node_ids which recomputes the matches if necessary (fi map_list_ is empty)
       }
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), norm_cost_less);
   }
 
   return true;
 
 }
 
-vcl_pair<int, dbskr_sm_cor_sptr>& dbskr_shock_patch_match::get_best_match(int patch_id) 
+std::pair<int, dbskr_sm_cor_sptr>& dbskr_shock_patch_match::get_best_match(int patch_id) 
 {
   patch_cor_map_iterator iter = patch_cor_map_.find(patch_id);
   if (iter == patch_cor_map_.end()) {
-    vcl_pair<int, dbskr_sm_cor_sptr> *p = new vcl_pair<int, dbskr_sm_cor_sptr>(-1, (dbskr_sm_cor*) 0);
-    vcl_cout << "FOR THIS PATCH: " << patch_id << " NO MATCHES ARE AVAILABLE!!!!!\n";
+    std::pair<int, dbskr_sm_cor_sptr> *p = new std::pair<int, dbskr_sm_cor_sptr>(-1, (dbskr_sm_cor*) 0);
+    std::cout << "FOR THIS PATCH: " << patch_id << " NO MATCHES ARE AVAILABLE!!!!!\n";
     return (*p);
   } else {
     if ((*(iter->second)).size() > 0)
       return (*(iter->second))[0]; 
     else {
-      vcl_pair<int, dbskr_sm_cor_sptr> *p = new vcl_pair<int, dbskr_sm_cor_sptr>(-1, (dbskr_sm_cor*) 0);
-      vcl_cout << "FOR THIS PATCH: " << patch_id << " there exists a vector in the map but it is empty!! NO MATCHES ARE AVAILABLE!!!!!\n";
+      std::pair<int, dbskr_sm_cor_sptr> *p = new std::pair<int, dbskr_sm_cor_sptr>(-1, (dbskr_sm_cor*) 0);
+      std::cout << "FOR THIS PATCH: " << patch_id << " there exists a vector in the map but it is empty!! NO MATCHES ARE AVAILABLE!!!!!\n";
       return (*p);
     }
   }
 }
 
 //: get the best match of the patch with this id
-vcl_pair<int, float>& dbskr_shock_patch_match::get_best_match_info(int patch_id) 
+std::pair<int, float>& dbskr_shock_patch_match::get_best_match_info(int patch_id) 
 { 
   patch_cor_info_map_iterator iter = patch_cor_info_map_.find(patch_id);
   if (iter == patch_cor_info_map_.end()) {
-    vcl_pair<int, float> *p = new vcl_pair<int, float>(-1, 0);
-    vcl_cout << "FOR THIS PATCH: " << patch_id << " NO MATCHES ARE AVAILABLE!!!!!\n";
+    std::pair<int, float> *p = new std::pair<int, float>(-1, 0);
+    std::cout << "FOR THIS PATCH: " << patch_id << " NO MATCHES ARE AVAILABLE!!!!!\n";
     return (*p);
   } else
     return (*(iter->second))[0]; 
 }
 
   //: get the top n best match of the patch with this id
-vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* dbskr_shock_patch_match::get_best_n_match(int patch_id, int n)
+std::vector< std::pair<int, dbskr_sm_cor_sptr> >* dbskr_shock_patch_match::get_best_n_match(int patch_id, int n)
 {
-  vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >* temp = new vcl_vector< vcl_pair<int, dbskr_sm_cor_sptr> >();
+  std::vector< std::pair<int, dbskr_sm_cor_sptr> >* temp = new std::vector< std::pair<int, dbskr_sm_cor_sptr> >();
   temp->insert(temp->begin(), (*patch_cor_map_[patch_id]).begin(), (*patch_cor_map_[patch_id]).begin()+n);
   return temp;
 }
@@ -405,20 +405,20 @@ dbskr_shock_patch_match_sptr dbskr_shock_patch_match::construct_match_just_cost(
 
   patch_cor_map_type& new_map = new_match->get_map();
   patch_cor_map_iterator it;
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
       for (unsigned i = 0; i < v->size(); i++) {
         it = new_map.find((*v)[i].first);
         if (it == new_map.end()) { // insert it
-          vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* new_v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
-          vcl_pair<int, dbskr_sm_cor_sptr> p;
+          std::vector<std::pair<int, dbskr_sm_cor_sptr> >* new_v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
+          std::pair<int, dbskr_sm_cor_sptr> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  // the scurve correspondence is totally wrong but the cost is fine
           new_v->push_back(p);
           new_map[(*v)[i].first] = new_v;
         } else {
-          vcl_pair<int, dbskr_sm_cor_sptr> p;
+          std::pair<int, dbskr_sm_cor_sptr> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  // the scurve correspondence is totally wrong but the cost is find
           (it->second)->push_back(p);
@@ -428,20 +428,20 @@ dbskr_shock_patch_match_sptr dbskr_shock_patch_match::construct_match_just_cost(
 
   patch_cor_info_map_type& new_info_map = new_match->get_info_map();
   patch_cor_info_map_iterator itr;
-  for (vcl_map<int, vcl_vector<vcl_pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin();
+  for (std::map<int, std::vector<std::pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin();
     iter != patch_cor_info_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, float> >* v = (iter->second);
+      std::vector<std::pair<int, float> >* v = (iter->second);
       for (unsigned i = 0; i < v->size(); i++) {
         itr = new_info_map.find((*v)[i].first);
         if (itr == new_info_map.end()) { // insert it
-          vcl_vector<vcl_pair<int, float> >* new_v = new vcl_vector<vcl_pair<int, float> >();
-          vcl_pair<int, float> p;
+          std::vector<std::pair<int, float> >* new_v = new std::vector<std::pair<int, float> >();
+          std::pair<int, float> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  
           new_v->push_back(p);
           new_info_map[(*v)[i].first] = new_v;
         } else {
-          vcl_pair<int, float> p;
+          std::pair<int, float> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  
           (itr->second)->push_back(p);
@@ -463,20 +463,20 @@ dbskr_shock_patch_match_sptr dbskr_shock_patch_match::construct_match()
  
   patch_cor_map_type& new_map = new_match->get_map();
   patch_cor_map_iterator it;
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
       for (unsigned i = 0; i < v->size(); i++) {
         it = new_map.find((*v)[i].first);
         if (it == new_map.end()) { // insert it
-          vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* new_v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
-          vcl_pair<int, dbskr_sm_cor_sptr> p;
+          std::vector<std::pair<int, dbskr_sm_cor_sptr> >* new_v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
+          std::pair<int, dbskr_sm_cor_sptr> p;
           p.first = iter->first;
           p.second = (*v)[i].second->new_sm_reverse_maps();  // the scurve correspondences reversed
           new_v->push_back(p);
           new_map[(*v)[i].first] = new_v;
         } else {
-          vcl_pair<int, dbskr_sm_cor_sptr> p;
+          std::pair<int, dbskr_sm_cor_sptr> p;
           p.first = iter->first;
           p.second = (*v)[i].second->new_sm_reverse_maps();  // the scurve correspondences reversed
           (it->second)->push_back(p);
@@ -487,20 +487,20 @@ dbskr_shock_patch_match_sptr dbskr_shock_patch_match::construct_match()
 
   patch_cor_info_map_type& new_info_map = new_match->get_info_map();
   patch_cor_info_map_iterator itr;
-  for (vcl_map<int, vcl_vector<vcl_pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin();
+  for (std::map<int, std::vector<std::pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin();
     iter != patch_cor_info_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, float> >* v = (iter->second);
+      std::vector<std::pair<int, float> >* v = (iter->second);
       for (unsigned i = 0; i < v->size(); i++) {
         itr = new_info_map.find((*v)[i].first);
         if (itr == new_info_map.end()) { // insert it
-          vcl_vector<vcl_pair<int, float> >* new_v = new vcl_vector<vcl_pair<int, float> >();
-          vcl_pair<int, float> p;
+          std::vector<std::pair<int, float> >* new_v = new std::vector<std::pair<int, float> >();
+          std::pair<int, float> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  
           new_v->push_back(p);
           new_info_map[(*v)[i].first] = new_v;
         } else {
-          vcl_pair<int, float> p;
+          std::pair<int, float> p;
           p.first = iter->first;
           p.second = (*v)[i].second;  
           (itr->second)->push_back(p);
@@ -516,10 +516,10 @@ void dbskr_shock_patch_match::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   vsl_b_write(os, patch_cor_map_.size());
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
     vsl_b_write(os, iter->first);
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v = (iter->second);
     vsl_b_write(os, v->size());
     for (unsigned i = 0; i < v->size(); i++) {
       vsl_b_write(os, (*v)[i].first);
@@ -548,11 +548,11 @@ void dbskr_shock_patch_match::b_read(vsl_b_istream &is)
         for (unsigned i = 0; i < cnt; i++) {
           int id1;
           vsl_b_read(is, id1);
-          vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> > *v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
+          std::vector<std::pair<int, dbskr_sm_cor_sptr> > *v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
           unsigned v_cnt;
           vsl_b_read(is, v_cnt);
           for (unsigned j = 0; j < v_cnt; j++) {
-            vcl_pair<int, dbskr_sm_cor_sptr> pp;
+            std::pair<int, dbskr_sm_cor_sptr> pp;
             vsl_b_read(is, pp.first);
             dbskr_sm_cor_sptr sm = new dbskr_sm_cor();
             sm->b_read(is);
@@ -575,11 +575,11 @@ void dbskr_shock_patch_match::b_read(vsl_b_istream &is)
         for (unsigned i = 0; i < cnt; i++) {
           int id1;
           vsl_b_read(is, id1);
-          vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> > *v = new vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >();
+          std::vector<std::pair<int, dbskr_sm_cor_sptr> > *v = new std::vector<std::pair<int, dbskr_sm_cor_sptr> >();
           unsigned v_cnt;
           vsl_b_read(is, v_cnt);
           for (unsigned j = 0; j < v_cnt; j++) {
-            vcl_pair<int, dbskr_sm_cor_sptr> pp;
+            std::pair<int, dbskr_sm_cor_sptr> pp;
             vsl_b_read(is, pp.first);
             dbskr_sm_cor_sptr sm = new dbskr_sm_cor();
             sm->b_read(is);
@@ -600,17 +600,17 @@ void dbskr_shock_patch_match::b_read(vsl_b_istream &is)
 
 
 inline bool
-info_max(const vcl_pair<int, float>& p1, const vcl_pair<int, float>& p2) {
+info_max(const std::pair<int, float>& p1, const std::pair<int, float>& p2) {
   return (p1.second > p2.second);
 }
 
 //: sort again wrt infos
 void dbskr_shock_patch_match::resort_wrt_info()
 {
-  for (vcl_map<int, vcl_vector<vcl_pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, float> >* >::const_iterator iter = patch_cor_info_map_.begin(); 
     iter != patch_cor_info_map_.end(); iter++) {
-      vcl_vector<vcl_pair<int, float> >* v_ptr = iter->second;
-      vcl_sort((*v_ptr).begin(), (*v_ptr).end(), info_max);
+      std::vector<std::pair<int, float> >* v_ptr = iter->second;
+      std::sort((*v_ptr).begin(), (*v_ptr).end(), info_max);
    }
 }
 
@@ -620,18 +620,18 @@ void dbskr_shock_patch_match::resort_wrt_info()
 bool dbskr_shock_patch_match::compute_mutual_infos(void)
 {
   if (!map1_.size() || !map2_.size()) {
-    vcl_cout << "dbskr_shock_patch_match::compute_mutual_infos() - shock patch id maps are not available!\n";
+    std::cout << "dbskr_shock_patch_match::compute_mutual_infos() - shock patch id maps are not available!\n";
     return false;
   }
 
-  for (vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
+  for (std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::const_iterator iter = patch_cor_map_.begin(); 
     iter != patch_cor_map_.end(); iter++) {
 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* v_ptr = iter->second;
+    std::map<int, dbskr_shock_patch_sptr>::iterator spi = map1_.find(iter->first);
     dbskr_shock_patch_sptr sp1;
     if (spi == map1_.end()) {
-      vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
+      std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map1_\n";
       return false;
     } else
       sp1 = spi->second;
@@ -639,17 +639,17 @@ bool dbskr_shock_patch_match::compute_mutual_infos(void)
 
     dbinfo_observation_sptr obs1 = sp1->observation();  // compute if not there assuming images are set!!
 
-    vcl_vector<vcl_pair<int, float> >* info_costs = new vcl_vector<vcl_pair<int, float> >();
+    std::vector<std::pair<int, float> >* info_costs = new std::vector<std::pair<int, float> >();
     //: recompute each matchings cost
     for (unsigned j = 0; j < (*v_ptr).size(); j++) {
       dbskr_sm_cor_sptr sm = (*v_ptr)[j].second; 
 
       dbskr_tree_sptr tree1 = sp1->tree(sm->contstruct_circular_ends_, sm->use_dpmatch_combined_);  // compute if not there
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
+      std::map<int, dbskr_shock_patch_sptr>::iterator spi2 = map2_.find((*v_ptr)[j].first);
       dbskr_shock_patch_sptr sp2;
       if (spi2 == map2_.end()) {
-        vcl_cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
+        std::cout << "dbskr_shock_patch_match::compute_norm_fine_costs_of_cor() - an id in match vector could not be found in map2_\n";
         return false;
       } else
         sp2 = spi2->second;
@@ -661,12 +661,12 @@ bool dbskr_shock_patch_match::compute_mutual_infos(void)
       dbinfo_observation_sptr obs2 = sp2->observation();  // compute if not there assuming images are set!!
       double info_shock = 0;
       vil_image_resource_sptr img = dbru_object_matcher::minfo_shock_matching(obs1, obs2, sm, info_shock, false);
-      //vcl_ostringstream oss1, oss2, oss3;
+      //std::ostringstream oss1, oss2, oss3;
       //oss1 << sp1->id();  oss2 << sp2->id(); oss3 << info_shock;
-      //vil_save_image_resource(img, vcl_string("c:\\temp\\"+oss1.str()+"-"+oss2.str()+"-"+oss3.str()+".png").c_str());
-      info_costs->push_back(vcl_pair<int, float>(sp2->id(), float(info_shock)));
+      //vil_save_image_resource(img, std::string("c:\\temp\\"+oss1.str()+"-"+oss2.str()+"-"+oss3.str()+".png").c_str());
+      info_costs->push_back(std::pair<int, float>(sp2->id(), float(info_shock)));
     }
-    vcl_sort((*info_costs).begin(), (*info_costs).end(), info_max);
+    std::sort((*info_costs).begin(), (*info_costs).end(), info_max);
     patch_cor_info_map_[sp1->id()] = info_costs;
   }
   
@@ -679,15 +679,15 @@ bool dbskr_shock_patch_match::compute_mutual_infos(void)
 bool dbskr_shock_patch_match::compute_similarity_transformations(int sampling_interval) {
   
   //: need to set the trees first
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
 
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
     
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map1_.find(id1);
+    std::map<int, dbskr_shock_patch_sptr>::iterator it = map1_.find(id1);
     if (it == map1_.end()) {
-      vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+      std::cout << " set the id to shock patch sptr maps in the match instance\n";
       return false;
     }
     dbskr_shock_patch_sptr sp1 = it->second;
@@ -697,11 +697,11 @@ bool dbskr_shock_patch_match::compute_similarity_transformations(int sampling_in
     if (train_patch_vec == 0)  // this model patch does not qualify as it does not have at least N matches
       continue;
     for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
       if (it2 == map2_.end()) {
-        vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+        std::cout << " set the id to shock patch sptr maps in the match instance\n";
         return false;
       }
       dbskr_shock_patch_sptr sp2 = it2->second;
@@ -711,7 +711,7 @@ bool dbskr_shock_patch_match::compute_similarity_transformations(int sampling_in
 
       vgl_h_matrix_2d<double> dummy_H; 
       if (!p.second->compute_similarity2D(dummy_H, true, sampling_interval, false, true))  // saving the transformation in dbskr_sm_cor
-        vcl_cout << "Could not compute sim trans!!!!!!!\n";
+        std::cout << "Could not compute sim trans!!!!!!!\n";
       
       p.second->kill_trees();
 
@@ -723,9 +723,9 @@ bool dbskr_shock_patch_match::compute_similarity_transformations(int sampling_in
   return true;
 }
 bool dbskr_shock_patch_match::clear_similarity_transformations() {
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
 
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
     train_patch_vec = iter->second;  // this vector is sorted with respect to the costs so check directly
@@ -734,7 +734,7 @@ bool dbskr_shock_patch_match::clear_similarity_transformations() {
       continue;
 
     for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
       p.second->clear_transformation();
     }
   }
@@ -743,14 +743,14 @@ bool dbskr_shock_patch_match::clear_similarity_transformations() {
 }
 
 inline bool
-Lie_dist_less(const vcl_pair< vcl_pair<int, int>, double >& p1,
-               const vcl_pair< vcl_pair<int, int>, double >& p2) {
+Lie_dist_less(const std::pair< std::pair<int, int>, double >& p1,
+               const std::pair< std::pair<int, int>, double >& p2) {
   return (p1.second < p2.second);
 }
 
 inline bool
-Lie_dist_less2(const vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double> > >& p1,
-               const vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double> > >& p2) {
+Lie_dist_less2(const std::pair< std::pair<int, int>, std::pair<double, vnl_matrix<double> > >& p1,
+               const std::pair< std::pair<int, int>, std::pair<double, vnl_matrix<double> > >& p2) {
                  return (p1.second.first < p2.second.first);
 }
 #if 0
@@ -758,17 +758,17 @@ Lie_dist_less2(const vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<d
 //  their similarity transformation's similarity to the given pairs transformation
 //  the distance between the transformations is computed via Lie Algebra and the Lie Distance
 //  (similarity transformations form a Lie Group, hence we can find distances between them in the Lie Space)
-//  vcl_vector<vcl_pair< vcl_pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
+//  std::vector<std::pair< std::pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
 bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans_lie(
   int model_id, int query_id, 
-  vcl_vector<vcl_pair< vcl_pair<int, int>, double > >& out_vec, float sim_threshold)
+  std::vector<std::pair< std::pair<int, int>, double > >& out_vec, float sim_threshold)
 {
   // first find the sim trans of the input pair
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
   vnl_matrix<double> *input_pair_trans = 0;
 
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   bool found = false;
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
@@ -779,7 +779,7 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans_lie(
         continue;
 
       for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-        vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+        std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
         if (p.first == query_id) {
           input_pair_trans = p.second->get_similarity_trans();
           found = true;
@@ -804,7 +804,7 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans_lie(
       continue;
 
     for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
       
       if (p.second->final_norm_cost() > sim_threshold)
         break;
@@ -818,26 +818,26 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans_lie(
       vnl_matrix<double> resultant_alg = get_Lie_algebra(resultant);
       double dist = resultant_alg.frobenius_norm();
 
-      vcl_pair<int, int> id_p(id1, p.first);
-      vcl_pair<vcl_pair<int, int>, double> pppp(id_p, dist);
+      std::pair<int, int> id_p(id1, p.first);
+      std::pair<std::pair<int, int>, double> pppp(id_p, dist);
       out_vec.push_back(pppp);
 /*
-      vcl_cout << "-----------------\n";
-      vcl_cout << "model_id: " << model_id << " query_id: " << query_id << " mod_id: " << id1 << " q_id: " << p.first << "\n";
-      vcl_cout << *input_pair_trans << vcl_endl << vcl_endl;
-      vcl_cout << *pair_trans << vcl_endl << vcl_endl;
-      vcl_cout << "resultant: " << vcl_endl;
-      vcl_cout << resultant << vcl_endl;
-      vcl_cout << "resultant_algebra: " << vcl_endl;
-      vcl_cout << resultant_alg << vcl_endl;
-      vcl_cout << "dist: " << dist << vcl_endl;
-      vcl_cout << "-----------------\n";
+      std::cout << "-----------------\n";
+      std::cout << "model_id: " << model_id << " query_id: " << query_id << " mod_id: " << id1 << " q_id: " << p.first << "\n";
+      std::cout << *input_pair_trans << std::endl << std::endl;
+      std::cout << *pair_trans << std::endl << std::endl;
+      std::cout << "resultant: " << std::endl;
+      std::cout << resultant << std::endl;
+      std::cout << "resultant_algebra: " << std::endl;
+      std::cout << resultant_alg << std::endl;
+      std::cout << "dist: " << dist << std::endl;
+      std::cout << "-----------------\n";
 */
     }
   }
 
   //: sort the out_vec
-  vcl_sort(out_vec.begin(), out_vec.end(), Lie_dist_less);
+  std::sort(out_vec.begin(), out_vec.end(), Lie_dist_less);
 
   return true;
 }
@@ -846,18 +846,18 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans_lie(
 void get_values(vnl_matrix<double>& G, double& sin_theta, double& cos_theta, double& sx, double& sy, double& tx, double& ty) {  
   double tol = 1e-6;
   //get the scaling,rotation angle and translation values from G
-  sx = vcl_sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
-  sy = vcl_sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
+  sx = std::sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
+  sy = std::sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
 
   if (sy > tol)
       {
       sin_theta = G.get(1,0)/sy;
-      cos_theta = vcl_sqrt(1-sin_theta*sin_theta);
+      cos_theta = std::sqrt(1-sin_theta*sin_theta);
       }
   else if (sx > tol)
       {
       cos_theta = G.get(0,0)/sx;
-      sin_theta = vcl_sqrt(1-cos_theta*cos_theta);
+      sin_theta = std::sqrt(1-cos_theta*cos_theta);
       }
   else
       {
@@ -877,9 +877,9 @@ bool dbskr_shock_patch_match::get_rotation_angle(vgl_h_matrix_2d<double>& G, dou
 
   double sin_theta, cos_theta, sx, sy, tx, ty;
   get_values(VG, sin_theta, cos_theta, sx, sy, tx, ty);
-  theta = vcl_asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-  if (vcl_abs(theta - vcl_acos(cos_theta)) < 0.1) {
-    vcl_cout << "asin and acos do not match for the query\n";
+  theta = std::asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+  if (std::abs(theta - std::acos(cos_theta)) < 0.1) {
+    std::cout << "asin and acos do not match for the query\n";
     return false;
   }
   return true;
@@ -891,9 +891,9 @@ bool dbskr_shock_patch_match::get_rotation_angle_degree(vgl_h_matrix_2d<double>&
 
   double sin_theta, cos_theta, sx, sy, tx, ty;
   get_values(VG, sin_theta, cos_theta, sx, sy, tx, ty);
-  theta = vcl_asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-  if (vcl_abs(theta - vcl_acos(cos_theta)) < 0.1) {
-    vcl_cout << "asin and acos do not match for the query\n";
+  theta = std::asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+  if (std::abs(theta - std::acos(cos_theta)) < 0.1) {
+    std::cout << "asin and acos do not match for the query\n";
     return false;
   }
   theta = (theta*180.0/vnl_math::pi);
@@ -923,18 +923,18 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     double sin_theta,cos_theta,sx,sy,tx,ty;
 
     //get the scaling,rotation angle and translation values from G
-    sx = vcl_sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
-    sy = vcl_sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
+    sx = std::sqrt(G.get(0,0)*G.get(0,0)+G.get(0,1)*G.get(0,1));
+    sy = std::sqrt(G.get(1,0)*G.get(1,0)+G.get(1,1)*G.get(1,1));
 
     if (sy > tol)
         {
         sin_theta = G.get(1,0)/sy;
-        cos_theta = vcl_sqrt(1-sin_theta*sin_theta);
+        cos_theta = std::sqrt(1-sin_theta*sin_theta);
         }
     else if (sx > tol)
         {
         cos_theta = G.get(0,0)/sx;
-        sin_theta = vcl_sqrt(1-cos_theta*cos_theta);
+        sin_theta = std::sqrt(1-cos_theta*cos_theta);
         }
     else
         {
@@ -956,11 +956,11 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     S.put(1,1,sy);
 
     //setting the entries of the Lie algebra element
-    A.put(0,1,-1*vcl_acos(cos_theta));
-    A.put(1,0,vcl_acos(cos_theta));
+    A.put(0,1,-1*std::acos(cos_theta));
+    A.put(1,0,std::acos(cos_theta));
 
     if (sx > tol)
-        g11 = vcl_log(sx);
+        g11 = std::log(sx);
     else
         g11 = 0;
 
@@ -969,7 +969,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     g21 = A.get(1,0);
 
     if (sy > tol)
-        g22 = vcl_log(sy);
+        g22 = std::log(sy);
     else
         g22 = 0;
 
@@ -984,7 +984,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
 
     vnl_matrix<double> Pinv(2,2,0.0);
 
-    if (vcl_abs(det_val) > 1e-6 )
+    if (std::abs(det_val) > 1e-6 )
         Pinv = vnl_matrix_inverse<double>(P);
 
     vnl_matrix<double> result1 = S*R;
@@ -992,7 +992,7 @@ vnl_matrix<double> get_Lie_algebra(vnl_matrix<double> G)
     vnl_matrix<double> res_inv = vnl_matrix_inverse<double>(result2);
     vnl_matrix<double> res = res_inv*P;
 
-    if (((vcl_abs(sx -1) < tol)||(vcl_abs(sy -1) < tol))&&(vcl_abs(sin_theta) < tol))
+    if (((std::abs(sx -1) < tol)||(std::abs(sy -1) < tol))&&(std::abs(sin_theta) < tol))
         {
         g13 = tx;
         g23 = ty;
@@ -1055,9 +1055,9 @@ bool dbskr_shock_patch_match::get_Lie_dist_to_identity_only_rotation(vgl_h_matri
 bool dbskr_shock_patch_match::get_rotation_angle(vnl_matrix<double>& G, double& theta) {
   double sin_theta, cos_theta, sx, sy, tx, ty;
   get_values(G, sin_theta, cos_theta, sx, sy, tx, ty);
-  theta = vcl_asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-  if (vcl_abs(theta - vcl_acos(cos_theta)) < 0.1) {
-    vcl_cout << "asin and acos do not match for the query\n";
+  theta = std::asin(sin_theta); //+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+  if (std::abs(theta - std::acos(cos_theta)) < 0.1) {
+    std::cout << "asin and acos do not match for the query\n";
     return false;
   }
   return true;
@@ -1066,17 +1066,17 @@ bool dbskr_shock_patch_match::get_rotation_angle(vnl_matrix<double>& G, double& 
 double find_trans_dist(vnl_matrix<double>& inp_pair_trans, vnl_matrix<double>& pair_trans) {
   double inp_sin_theta,inp_cos_theta,inp_sx,inp_sy,inp_tx,inp_ty;
   get_values(inp_pair_trans, inp_sin_theta, inp_cos_theta, inp_sx, inp_sy, inp_tx, inp_ty);  
-  double inp_theta = vcl_asin(inp_sin_theta) + (vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-  if (vcl_abs(inp_theta - (vcl_acos(inp_cos_theta) + (vnl_math::pi/2.0)) ) < 0.1) {
-    vcl_cout << "asin and acos do not match\n";
+  double inp_theta = std::asin(inp_sin_theta) + (vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+  if (std::abs(inp_theta - (std::acos(inp_cos_theta) + (vnl_math::pi/2.0)) ) < 0.1) {
+    std::cout << "asin and acos do not match\n";
     //return false;
   }
       
   double sin_theta,cos_theta,sx,sy,tx,ty;
   get_values(pair_trans, sin_theta, cos_theta, sx, sy, tx, ty);  
-  double theta = vcl_asin(sin_theta)+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-  if (vcl_abs(theta - (vcl_acos(cos_theta)+(vnl_math::pi/2.0)) ) < 0.1) {
-    vcl_cout << "asin and acos do not match for the query\n";
+  double theta = std::asin(sin_theta)+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+  if (std::abs(theta - (std::acos(cos_theta)+(vnl_math::pi/2.0)) ) < 0.1) {
+    std::cout << "asin and acos do not match for the query\n";
     //return false;
   }
 
@@ -1085,15 +1085,15 @@ double find_trans_dist(vnl_matrix<double>& inp_pair_trans, vnl_matrix<double>& p
   //  scale up translation range from ~[0,200] to [0,5]  
   //  so that all the added values are roughly at the same value ranges and have equal importances
   double wt = 2, ws = 6, wtr = 1.0/40.0;
-  double dist = wt *vcl_abs(inp_theta - theta) + 
-                ws *(vcl_sqrt(vcl_pow(vcl_abs(inp_sx-sx),2)+vcl_pow(vcl_abs(inp_sy-sy),2))) +
-                wtr*(vcl_sqrt(vcl_pow(vcl_abs(inp_tx-tx),2)+vcl_pow(vcl_abs(inp_ty-ty),2)));
+  double dist = wt *std::abs(inp_theta - theta) + 
+                ws *(std::sqrt(std::pow(std::abs(inp_sx-sx),2)+std::pow(std::abs(inp_sy-sy),2))) +
+                wtr*(std::sqrt(std::pow(std::abs(inp_tx-tx),2)+std::pow(std::abs(inp_ty-ty),2)));
 
-  vcl_cout << "input theta: " << inp_theta << " sin_theta: " << inp_sin_theta << " cos_theta: " << inp_cos_theta << " sx: " << inp_sx << " sy: " << inp_sy << " tx: " << inp_tx << " ty: " << inp_ty << vcl_endl;
-  vcl_cout << "      theta: " << theta << " sin_theta: " << sin_theta << " cos_theta: " << cos_theta << " sx: " << sx << " sy: " << sy << " tx: " << tx << " ty: " << ty << vcl_endl;
-  vcl_cout << "theta dif: " << vcl_abs(inp_theta - theta) << " weighted (" << wt << "): " << wt *vcl_abs(inp_theta - theta) << vcl_endl;
-  vcl_cout << "scale dif: " << (vcl_sqrt(vcl_pow(vcl_abs(inp_sx-sx),2)+vcl_pow(vcl_abs(inp_sy-sy),2))) << " weighted (" << ws << "): " << ws *(vcl_sqrt(vcl_pow(vcl_abs(inp_sx-sx),2)+vcl_pow(vcl_abs(inp_sy-sy),2))) << vcl_endl;
-  vcl_cout << "trans dif: " << (vcl_sqrt(vcl_pow(vcl_abs(inp_tx-tx),2)+vcl_pow(vcl_abs(inp_ty-ty),2))) << " weighted (" << wtr << "): " << wtr*(vcl_sqrt(vcl_pow(vcl_abs(inp_tx-tx),2)+vcl_pow(vcl_abs(inp_ty-ty),2))) << vcl_endl;
+  std::cout << "input theta: " << inp_theta << " sin_theta: " << inp_sin_theta << " cos_theta: " << inp_cos_theta << " sx: " << inp_sx << " sy: " << inp_sy << " tx: " << inp_tx << " ty: " << inp_ty << std::endl;
+  std::cout << "      theta: " << theta << " sin_theta: " << sin_theta << " cos_theta: " << cos_theta << " sx: " << sx << " sy: " << sy << " tx: " << tx << " ty: " << ty << std::endl;
+  std::cout << "theta dif: " << std::abs(inp_theta - theta) << " weighted (" << wt << "): " << wt *std::abs(inp_theta - theta) << std::endl;
+  std::cout << "scale dif: " << (std::sqrt(std::pow(std::abs(inp_sx-sx),2)+std::pow(std::abs(inp_sy-sy),2))) << " weighted (" << ws << "): " << ws *(std::sqrt(std::pow(std::abs(inp_sx-sx),2)+std::pow(std::abs(inp_sy-sy),2))) << std::endl;
+  std::cout << "trans dif: " << (std::sqrt(std::pow(std::abs(inp_tx-tx),2)+std::pow(std::abs(inp_ty-ty),2))) << " weighted (" << wtr << "): " << wtr*(std::sqrt(std::pow(std::abs(inp_tx-tx),2)+std::pow(std::abs(inp_ty-ty),2))) << std::endl;
       
   return dist;
 }
@@ -1101,19 +1101,19 @@ double find_trans_dist(vnl_matrix<double>& inp_pair_trans, vnl_matrix<double>& p
 //: create a rank ordered vector of "other" model patches and their matching query patches wrt to 
 //  their similarity transformation's similarity to the given pairs transformation
 //  the distance between the transformations is computed via a simple formula measuring angle, scale and translation differences
-//  vcl_vector<vcl_pair< vcl_pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
+//  std::vector<std::pair< std::pair<int, int>, double > > vector of < <mod_id, q_id>, distance to the given model_id, query_id >
 bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans(
   int model_id, int query_id, 
-//  vcl_vector<vcl_pair< vcl_pair<int, int>, double > >& out_vec, float sim_threshold)
-  vcl_vector<vcl_pair< vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double> > > >& out_vec, float sim_threshold)
+//  std::vector<std::pair< std::pair<int, int>, double > >& out_vec, float sim_threshold)
+  std::vector<std::pair< std::pair<int, int>, std::pair<double, vnl_matrix<double> > > >& out_vec, float sim_threshold)
 {
   // first find the sim trans of the input pair
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
   vgl_h_matrix_2d<double> input_pair_H;
   vnl_matrix<double> input_pair_trans;
 
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   bool found = false;
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
@@ -1125,7 +1125,7 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans(
         continue;
 
       for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-        vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+        std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
         if (p.first == query_id) {
       
           p.second->get_similarity_trans(input_pair_H);
@@ -1152,15 +1152,15 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans(
     if (train_patch_vec == 0)  
       continue;
 
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map1_.find(id1);
+    std::map<int, dbskr_shock_patch_sptr>::iterator it = map1_.find(id1);
     if (it == map1_.end()) {
-      vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+      std::cout << " set the id to shock patch sptr maps in the match instance\n";
       return false;
     }
     dbskr_shock_patch_sptr sp1 = it->second;
 
     for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
       
       if (p.second->final_norm_cost() > sim_threshold)
         break;
@@ -1169,40 +1169,40 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans(
       if (pair_trans.rows() != 3 || pair_trans.cols() != 3)
         continue;
       
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
       if (it2 == map2_.end()) {
-        vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+        std::cout << " set the id to shock patch sptr maps in the match instance\n";
         return false;
       }
       
       double sin_theta,cos_theta,sx,sy,tx,ty;
       get_values(pair_trans, sin_theta, cos_theta, sx, sy, tx, ty);  
-      double theta = vcl_asin(sin_theta)+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
-      if (vcl_abs(theta - (vcl_acos(cos_theta)+(vnl_math::pi/2.0)) ) < 0.1) {
-        vcl_cout << "asin and acos do not match for the query\n";
+      double theta = std::asin(sin_theta)+(vnl_math::pi/2.0);  // result of asin is in [-pi/2,pi/2] --> bring it to the interval [0,pi]
+      if (std::abs(theta - (std::acos(cos_theta)+(vnl_math::pi/2.0)) ) < 0.1) {
+        std::cout << "asin and acos do not match for the query\n";
         //return false;
       }
 
-      vcl_cout << "-----------------\n";
-      vcl_cout << "model_id: " << model_id << " query_id: " << query_id << " mod_id: " << id1 << " q_id: " << p.first << "\n";
-      vcl_cout << input_pair_trans << vcl_endl << vcl_endl;
-      vcl_cout << pair_trans << vcl_endl << vcl_endl;
+      std::cout << "-----------------\n";
+      std::cout << "model_id: " << model_id << " query_id: " << query_id << " mod_id: " << id1 << " q_id: " << p.first << "\n";
+      std::cout << input_pair_trans << std::endl << std::endl;
+      std::cout << pair_trans << std::endl << std::endl;
       
       double dist = find_trans_dist(input_pair_trans, pair_trans);
 
-      vcl_cout << "dist: " << dist << vcl_endl;
-      vcl_cout << "-----------------\n";
+      std::cout << "dist: " << dist << std::endl;
+      std::cout << "-----------------\n";
 
-      vcl_pair<int, int> id_p(id1, p.first);
-      //vcl_pair<vcl_pair<int, int>, double> pppp(id_p, dist);
-      vcl_pair<double, vnl_matrix<double> > dist_p(dist, pair_trans);
-      vcl_pair<vcl_pair<int, int>, vcl_pair<double, vnl_matrix<double> > > pppp(id_p, dist_p);
+      std::pair<int, int> id_p(id1, p.first);
+      //std::pair<std::pair<int, int>, double> pppp(id_p, dist);
+      std::pair<double, vnl_matrix<double> > dist_p(dist, pair_trans);
+      std::pair<std::pair<int, int>, std::pair<double, vnl_matrix<double> > > pppp(id_p, dist_p);
       out_vec.push_back(pppp);
     }
   }
 
   //: sort the out_vec
-  vcl_sort(out_vec.begin(), out_vec.end(), Lie_dist_less2);
+  std::sort(out_vec.begin(), out_vec.end(), Lie_dist_less2);
 
   return true;
 }
@@ -1215,9 +1215,9 @@ bool dbskr_shock_patch_match::rank_order_other_patch_pairs_wrt_sim_trans(
 bool dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box, int N, int k, float threshold) {
 
   int qualifying_model_patch_cnt = 0;  // <model patch id, # of matches less than threshold>
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
 
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
@@ -1227,7 +1227,7 @@ bool dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box, i
       continue;
     }
 
-    vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[N-1];
+    std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[N-1];
     if (p.second->final_norm_cost() > threshold)  // this model patch's top N matches are not less than the threshold
       continue;
 
@@ -1235,17 +1235,17 @@ bool dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box, i
 
     //: collect the bounding boxes 
     for (unsigned iii = 0; int(iii) < N; iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
       dbskr_shock_patch_sptr sp = map2_[p.first];
       vsol_box_2d_sptr box = sp->shock_graph()->get_bounding_box(); 
       if (!box && !dbsk2d_compute_bounding_box(sp->shock_graph())) {
-        vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << sp->id() << " in the second storage " << vcl_endl;
+        std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << sp->id() << " in the second storage " << std::endl;
         return false;
       }
           
       box = sp->shock_graph()->get_bounding_box(); 
       if (!box) {
-        vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << sp->id() << " in the second storage " << vcl_endl;
+        std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << sp->id() << " in the second storage " << std::endl;
         return false;
       }
 
@@ -1258,7 +1258,7 @@ bool dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box, i
   if (qualifying_model_patch_cnt < k)  // not enough model patches with at least N top matches less than threshold
     detection_box = 0;
 
-  //vcl_cout << "there were " << qualifying_model_patch_cnt << " many qualifying model patches\n";
+  //std::cout << "there were " << qualifying_model_patch_cnt << " many qualifying model patches\n";
 
   return true;
 }
@@ -1267,38 +1267,38 @@ bool dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box, i
 //: detect an instance of the category of the first storage in the second storage's image, implied by this match
 //  use the consistency similarity transformation's of patch pairs
 //  algorithm explained in Kimia's NSF december proposal 2007
-bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_sptr>& detection_box, int k, float trans_threshold)
+bool dbskr_shock_patch_match::detect_instance_wrt_trans(std::vector<vsol_box_2d_sptr>& detection_box, int k, float trans_threshold)
 {
 #if 0
   if (!map1_.size() || !map2_.size())
     return false;
 
-  vcl_vector<int> ids1; vcl_map<int, unsigned> ids1_to_ind;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map1_.begin(); it != map1_.end(); it++) {
+  std::vector<int> ids1; std::map<int, unsigned> ids1_to_ind;
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator it = map1_.begin(); it != map1_.end(); it++) {
     ids1.push_back(it->first);
     ids1_to_ind[it->first] = ids1.size()-1;
   }
 
-  vcl_vector<int> ids2; vcl_map<int, unsigned> ids2_to_ind;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++) {
+  std::vector<int> ids2; std::map<int, unsigned> ids2_to_ind;
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++) {
     ids2.push_back(it->first);
     ids2_to_ind[it->first] = ids2.size()-1;
   }
 
-  vcl_vector<vcl_vector<bool> > valid_pairs;  // holds in the order of ids in map1_ and map2_
+  std::vector<std::vector<bool> > valid_pairs;  // holds in the order of ids in map1_ and map2_
   for (unsigned i = 0; i < ids1.size(); i++) {
-    vcl_vector<bool> tmp(ids2.size(), false);
+    std::vector<bool> tmp(ids2.size(), false);
     valid_pairs.push_back(tmp);
   }
 
-  vcl_vector<vcl_vector<vnl_matrix<double>* > > valid_pair_ts;  // holds in the order of ids in map1_ and map2_
+  std::vector<std::vector<vnl_matrix<double>* > > valid_pair_ts;  // holds in the order of ids in map1_ and map2_
   for (unsigned i = 0; i < ids1.size(); i++) {
-    vcl_vector<vnl_matrix<double>* > tmp(ids2.size(), 0);
+    std::vector<vnl_matrix<double>* > tmp(ids2.size(), 0);
     valid_pair_ts.push_back(tmp);
   }
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   for ( ; iter != patch_cor_map_.end(); iter++) {
     int id1 = iter->first;
     train_patch_vec = iter->second;  // this vector is sorted with respect to the costs so check directly
@@ -1308,7 +1308,7 @@ bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_s
     unsigned ind1 = ids1_to_ind[id1];
 
     for (unsigned iii = 0; iii < train_patch_vec->size(); iii++) {
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[iii];
       if (p.second->get_similarity_trans() != 0) {
         unsigned ind2 = ids2_to_ind[p.first];
         valid_pairs[ind1][ind2] = true;
@@ -1327,9 +1327,9 @@ bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_s
       cnt_i++;
       cnt++;
     }
-    vcl_cout << "i: " << i << " model id: " << ids1[i] << " cnt_i: " << cnt_i << vcl_endl;
+    std::cout << "i: " << i << " model id: " << ids1[i] << " cnt_i: " << cnt_i << std::endl;
   }
-  vcl_cout << " total valid pairs: " << cnt << vcl_endl;
+  std::cout << " total valid pairs: " << cnt << std::endl;
 
   //: find all the pairs with transformation similarity less than the given 
   //: for each model (i) - query (j) pair, sort all the other pairs except the model row (i) and query column (j)
@@ -1343,7 +1343,7 @@ bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_s
 
 
       //: create the valid matrix for this pair
-      vcl_vector<vcl_vector<bool> > valid_pairs_ij(valid_pairs);
+      std::vector<std::vector<bool> > valid_pairs_ij(valid_pairs);
       //: invalidate row i and column j
       for (unsigned jj = 0; jj < cols; jj++)
         valid_pairs_ij[i][jj] = false;
@@ -1351,17 +1351,17 @@ bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_s
         valid_pairs_ij[ii][j] = false;
 
       //: find the distance of this pairs transformation to each other valid one 
-      vcl_vector<vcl_pair< vcl_pair<int, int>, double > > dists;
+      std::vector<std::pair< std::pair<int, int>, double > > dists;
       unsigned t_cnt = 0;
       for (unsigned ii = 0; ii < rows; ii++) {
         for (unsigned jj = 0; jj < cols; jj++)
           if (valid_pairs_ij[ii][jj]) {
             t_cnt++;
             double dist = find_trans_dist(pair_trans, valid_pair_ts[ii][jj]);
-            vcl_pair<int, int> idp;
+            std::pair<int, int> idp;
             idp.first = int(ii);
             idp.second = int(jj);
-            vcl_pair<vcl_pair<int, int>, double> idpp;
+            std::pair<std::pair<int, int>, double> idpp;
             idpp.first = idp;
             idpp.second = dist;
             dists.push_back(idpp);
@@ -1369,10 +1369,10 @@ bool dbskr_shock_patch_match::detect_instance_wrt_trans(vcl_vector<vsol_box_2d_s
       }
       if (dists.size() != t_cnt)
         return false;
-      vcl_sort(dists.begin(), dists.end(), Lie_dist_less);
+      std::sort(dists.begin(), dists.end(), Lie_dist_less);
       
       if (!dists.size() || dists[0].second > trans_threshold) {
-        vcl_cout << "this i: " << i << " j: " << j << " pair has no other consistent pairs\n";
+        std::cout << "this i: " << i << " j: " << j << " pair has no other consistent pairs\n";
         continue;  
       }
 
@@ -1432,7 +1432,7 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
                                          dbskr_tree_edit_params& edit_params, 
                                          bool normalize, float alpha,
                                          vil_image_resource_sptr img1,
-                                         vil_image_resource_sptr img2, vcl_string out_img)
+                                         vil_image_resource_sptr img2, std::string out_img)
 {
   unsigned n1 = map1_.size();
   unsigned n2 = map2_.size();
@@ -1453,19 +1453,19 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
     return false;
 
   //: make a dummy map for indices
-  vcl_map<int, unsigned> map2_dummy;
+  std::map<int, unsigned> map2_dummy;
   unsigned cnt = 0;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
   {  map2_dummy[it->first] = cnt;  }
 
   //: let n1 = size of storage 1
   //      n2 = size of storage 2
   //  prepare an n1xn2 size bool table that keeps track of valid pairs
-  vcl_vector<float> tmp(n2, 100000.0f);
-  vcl_vector<vcl_vector<float> > valid(n1, tmp);
+  std::vector<float> tmp(n2, 100000.0f);
+  std::vector<std::vector<float> > valid(n1, tmp);
   
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   cnt = 0; unsigned valid_cnt = 0; 
   for ( ; iter != patch_cor_map_.end(); iter++, cnt++) {
     int id1 = iter->first;
@@ -1473,24 +1473,24 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
     if (!train_patch_vec)  // this model patch does not qualify as it does not have any matches
       continue;
     
-    //vcl_cout << "id1: " << id1 << " matches: ";
+    //std::cout << "id1: " << id1 << " matches: ";
     for (unsigned j = 0; j < train_patch_vec->size(); j++) {
       //: check all the pairs with cost less than upper_threshold
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
-      //vcl_cout << p.second->final_norm_cost() << " ";
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
+      //std::cout << p.second->final_norm_cost() << " ";
       if (p.second->final_norm_cost() > upper_threshold)  // this model patch's j th match does not satisfy 
         break;
       //find index of this patch using its id
-      vcl_map<int, unsigned>::iterator it = map2_dummy.find(p.first);
+      std::map<int, unsigned>::iterator it = map2_dummy.find(p.first);
       if (it == map2_dummy.end())
         continue;
       unsigned ind = it->second;
       valid[cnt][ind] = p.second->final_norm_cost();
       valid_cnt++;
     }
-    //vcl_cout << "\n";
+    //std::cout << "\n";
   }
-  vcl_cout << "\t" << valid_cnt << " pairs < " << upper_threshold << "\n";
+  std::cout << "\t" << valid_cnt << " pairs < " << upper_threshold << "\n";
   if (!valid_cnt) {
     detection_box = 0;
     return true;
@@ -1503,20 +1503,20 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
   dbskr_shock_patch_sptr min_p_1_i, min_p_1_j, min_p_2_k, min_p_2_m;
   dbskr_sm_cor_sptr min_sm_cor; dbsk2d_shock_graph_sptr min_sg_1, min_sg_2;
 
-  vcl_map<int, dbsk2d_shock_node_sptr> sg1_map, sg2_map;
+  std::map<int, dbsk2d_shock_node_sptr> sg1_map, sg2_map;
   get_node_map(sg1_map, sg1);
   get_node_map(sg2_map, sg2);
 
-  vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>*> > patch_map1; 
-  vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>*> > patch_map2; 
+  std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>*> > patch_map1; 
+  std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>*> > patch_map2; 
 
   unsigned quad_cnt = 0;
-  vcl_vector<bool> tried_on_sg1(n1, false);
-  vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
+  std::vector<bool> tried_on_sg1(n1, false);
+  std::map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
   for (unsigned i = 0; it1_i != map1_.end(); it1_i++, i++) {
     dbskr_shock_patch_sptr p_1_i = it1_i->second;
           
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
+    std::map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
     it1_j++;
     for (unsigned j = i+1; it1_j != map1_.end(); it1_j++, j++) {
       
@@ -1551,18 +1551,18 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
         p_1_j->set_v_graph(vg_1_j);
       }
 
-      vcl_pair<unsigned, unsigned> p1(i, j);
-      vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>*> >::iterator it = patch_map1.find(p1); 
-      vcl_vector<dbskr_shock_patch_sptr>* patches1;
-      vcl_vector<float>* lengths1;
+      std::pair<unsigned, unsigned> p1(i, j);
+      std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>*> >::iterator it = patch_map1.find(p1); 
+      std::vector<dbskr_shock_patch_sptr>* patches1;
+      std::vector<float>* lengths1;
       if (it == patch_map1.end()) {
-        vcl_vector<dbskr_v_graph_sptr> graphs1;
-        vcl_vector<float> abs_lengths1;
+        std::vector<dbskr_v_graph_sptr> graphs1;
+        std::vector<float> abs_lengths1;
         f1.get_all_v_graphs(node_1_i, node_1_j, vg_1_i, vg_1_j, graphs1, abs_lengths1, 1.0f, 10000.0f);  // do not restrict prototype by length 
 
 
-        patches1 = new vcl_vector<dbskr_shock_patch_sptr>();
-        lengths1 = new vcl_vector<float>();
+        patches1 = new std::vector<dbskr_shock_patch_sptr>();
+        lengths1 = new std::vector<float>();
         for (unsigned ii = 0; ii < graphs1.size(); ii++) {
           dbskr_shock_patch_sptr p_ii = extract_patch_from_v_graph(graphs1[ii], 0, 0, 0.05, true, true, true, interpolate_ds, sample_ds);
           p_ii->set_tree_parameters(edit_params.elastic_splice_cost_, edit_params.circular_ends_, edit_params.combined_edit_, edit_params.scurve_sample_ds_, edit_params.scurve_interpolate_ds_);
@@ -1571,14 +1571,14 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
             lengths1->push_back(abs_lengths1[ii]);
           }
         }
-        patch_map1[p1] = vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>* >(patches1, lengths1);
+        patch_map1[p1] = std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>* >(patches1, lengths1);
       } else {
         patches1 = it->second.first;
         lengths1 = it->second.second;
       }
 
       if (!lengths1->size()) {
-        //vcl_cout << "no patches1 for this quad!!\n";
+        //std::cout << "no patches1 for this quad!!\n";
         //continue;
         
         // find the union of p_1_i and p_1_j to be compared (this is a quick hack to get protos with badly generated patch sets to work, i.e. their patches all originate from the same root)
@@ -1623,13 +1623,13 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
       float norm_thres = 1.5f*max_l/box_perim;
 
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
       for (unsigned k = 0; it2_k != map2_.end(); it2_k++, k++) {
         if (valid[i][k] > upper_threshold)
           continue;
 
         dbskr_shock_patch_sptr p_2_k = it2_k->second;
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
+        std::map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
         it2_m++;
         for (unsigned m = k+1; it2_m != map2_.end(); it2_m++, m++) {
           if (valid[j][m] > upper_threshold)
@@ -1641,7 +1641,7 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
             continue;
 
           //: now find the similarity of super-patches formed by this quad
-          //vcl_cout << "quad: i: " << p_1_i->id() << " matches k: " << p_2_k->id() << " j: " << p_1_j->id() << " matches m: " << p_2_m->id() << vcl_endl;
+          //std::cout << "quad: i: " << p_1_i->id() << " matches k: " << p_2_k->id() << " j: " << p_1_j->id() << " matches m: " << p_2_m->id() << std::endl;
  
          
           dbskr_v_graph_sptr vg_2_k = p_2_k->get_v_graph(); 
@@ -1670,17 +1670,17 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
           vsol_box_2d_sptr box2 = p_2_k->union_box(*p_2_m);
           float box2_perim = (float)(2*box2->width() + 2*box2->height());
           
-          vcl_pair<unsigned, unsigned> p2(k, m);
+          std::pair<unsigned, unsigned> p2(k, m);
           it = patch_map2.find(p2);
-          vcl_vector<dbskr_shock_patch_sptr>* patches2;
-          vcl_vector<float>* lengths2;
+          std::vector<dbskr_shock_patch_sptr>* patches2;
+          std::vector<float>* lengths2;
           //if (it == patch_map2.end()) {
-            vcl_vector<dbskr_v_graph_sptr> graphs2;
-            vcl_vector<float> abs_lengths2;
+            std::vector<dbskr_v_graph_sptr> graphs2;
+            std::vector<float> abs_lengths2;
             f2.get_all_v_graphs(node_2_k, node_2_m, vg_2_k, vg_2_m, graphs2, abs_lengths2, box2_perim, norm_thres); 
 
-            patches2 = new vcl_vector<dbskr_shock_patch_sptr>();
-            lengths2 = new vcl_vector<float>();
+            patches2 = new std::vector<dbskr_shock_patch_sptr>();
+            lengths2 = new std::vector<float>();
             for (unsigned ii = 0; ii < graphs2.size(); ii++) {
               dbskr_shock_patch_sptr p_ii = extract_patch_from_v_graph(graphs2[ii], 0, 0, 0.05, true, true, true, interpolate_ds, sample_ds);
               p_ii->set_tree_parameters(edit_params.elastic_splice_cost_, edit_params.circular_ends_, edit_params.combined_edit_, edit_params.scurve_sample_ds_, edit_params.scurve_interpolate_ds_);
@@ -1689,7 +1689,7 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
                 lengths2->push_back(abs_lengths2[ii]);
               }
             }
-           // patch_map2[p2] = vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>* >(patches2, lengths2);
+           // patch_map2[p2] = std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>* >(patches2, lengths2);
           //} else {
           //  patches2 = it->second.first;
           //  lengths2 = it->second.second;
@@ -1713,7 +1713,7 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
 
               edit->save_path(true);
               if (!edit->edit()) {
-                vcl_cout << "Problems in editing trees\n";
+                std::cout << "Problems in editing trees\n";
                 continue;
               }
               float val = edit->final_cost();
@@ -1722,7 +1722,7 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
                 
               if (normalize) {
                 float norm_val = val/(t_ii->total_reconstructed_boundary_length()+t_jj->total_reconstructed_boundary_length());
-                //vcl_cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
+                //std::cout << "norm cost: " << norm_val << " time: "<< t.real()/1000.0f << " secs.\n";
                 sm_cor->set_final_norm_cost(norm_val);
                 val = norm_val;
               }
@@ -1757,31 +1757,31 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
     }
   }
   //: clear the maps
-  for (vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>*> >::iterator it = patch_map1.begin(); it != patch_map1.end(); it++) {
+  for (std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>*> >::iterator it = patch_map1.begin(); it != patch_map1.end(); it++) {
     it->second.first->clear();
     it->second.second->clear();
     delete it->second.first;
     delete it->second.second;
   }
 
-  for (vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_shock_patch_sptr>*, vcl_vector<float>*> >::iterator it = patch_map2.begin(); it != patch_map2.end(); it++) {
+  for (std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_shock_patch_sptr>*, std::vector<float>*> >::iterator it = patch_map2.begin(); it != patch_map2.end(); it++) {
     it->second.first->clear();
     it->second.second->clear();
     delete it->second.first;
     delete it->second.second;
   }
 
-  vcl_cout << quad_cnt << " quads\n";
+  std::cout << quad_cnt << " quads\n";
 
   if (!min_p_1_ij || !min_p_2_km) {  // no min found, no valid quads with distinct root nodes
     detection_box = 0;
     return true;
   }
 
-  vcl_cout << "\tmin_sim: " << min_sim << " sim i,k: " << min_sim_i_k << " sim j,m: " << min_sim_j_m << vcl_endl;
+  std::cout << "\tmin_sim: " << min_sim << " sim i,k: " << min_sim_i_k << " sim j,m: " << min_sim_j_m << std::endl;
 
   if (img1 != 0 && img2 != 0) {  // prepare output images
-    vcl_vector<dbskr_shock_patch_sptr> ps;  vcl_vector<vil_rgb<int> > colors;
+    std::vector<dbskr_shock_patch_sptr> ps;  std::vector<vil_rgb<int> > colors;
     ps.push_back(min_p_1_i);  colors.push_back(vil_rgb<int>(1,0,0));
     ps.push_back(min_p_1_j);  colors.push_back(vil_rgb<int>(0,1,0));
     ps.push_back(min_p_1_ij); colors.push_back(vil_rgb<int>(0,0,1));
@@ -1807,40 +1807,40 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
     detection_box = new vsol_box_2d();
     vsol_box_2d_sptr box = min_p_2_m->shock_graph()->get_bounding_box(); 
     if (!box && !dbsk2d_compute_bounding_box(min_p_2_m->shock_graph())) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << std::endl;
       return false;
     }
     box = min_p_2_m->shock_graph()->get_bounding_box(); 
     if (!box) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << std::endl;
       return false;
     }
     detection_box->grow_minmax_bounds(box);
 
     box = min_p_2_k->shock_graph()->get_bounding_box(); 
     if (!box && !dbsk2d_compute_bounding_box(min_p_2_k->shock_graph())) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << std::endl;
       return false;
     }
     box = min_p_2_k->shock_graph()->get_bounding_box(); 
     if (!box) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << std::endl;
       return false;
     }
     detection_box->grow_minmax_bounds(box);
 
     box = min_p_2_km->shock_graph()->get_bounding_box(); 
     if (!box && !dbsk2d_compute_bounding_box(min_p_2_km->shock_graph())) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_km->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_km->id() << " in the second storage " << std::endl;
       return false;
     }
     box = min_p_2_km->shock_graph()->get_bounding_box(); 
     if (!box) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_km->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_km->id() << " in the second storage " << std::endl;
       return false;
     }
     detection_box->grow_minmax_bounds(box);
-    //vcl_cout << "box area: " << detection_box->area() << "\n";
+    //std::cout << "box area: " << detection_box->area() << "\n";
   } else {
     detection_box = 0;
   }
@@ -1848,16 +1848,16 @@ dbskr_shock_patch_match::detect_instance(vsol_box_2d_sptr& detection_box,
   return true;
 }
 
-void dbskr_shock_patch_match::find_valid_pairs(float upper_threshold, vcl_vector<vcl_vector<float> >& valid, unsigned int& valid_cnt) 
+void dbskr_shock_patch_match::find_valid_pairs(float upper_threshold, std::vector<std::vector<float> >& valid, unsigned int& valid_cnt) 
 {
   //: make a dummy map for indices
-  vcl_map<int, unsigned> map2_dummy;
+  std::map<int, unsigned> map2_dummy;
   unsigned cnt = 0;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
   {  map2_dummy[it->first] = cnt;  }
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   cnt = 0; 
   for ( ; iter != patch_cor_map_.end(); iter++, cnt++) {
     int id1 = iter->first;
@@ -1865,30 +1865,30 @@ void dbskr_shock_patch_match::find_valid_pairs(float upper_threshold, vcl_vector
     if (!train_patch_vec)  // this model patch does not qualify as it does not have any matches
       continue;
     
-    //vcl_cout << "id1: " << id1 << " matches: ";
+    //std::cout << "id1: " << id1 << " matches: ";
     for (unsigned j = 0; j < train_patch_vec->size(); j++) {
       //: check all the pairs with cost less than upper_threshold
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
-      //vcl_cout << p.second->final_norm_cost() << " ";
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
+      //std::cout << p.second->final_norm_cost() << " ";
       if (p.second->final_norm_cost() > upper_threshold)  // this model patch's j th match does not satisfy 
         break;
       //find index of this patch using its id
-      vcl_map<int, unsigned>::iterator it = map2_dummy.find(p.first);
+      std::map<int, unsigned>::iterator it = map2_dummy.find(p.first);
       if (it == map2_dummy.end())
         continue;
       unsigned ind = it->second;
       valid[cnt][ind] = p.second->final_norm_cost();
       valid_cnt++;
     }
-    //vcl_cout << "\n";
+    //std::cout << "\n";
   }
 }
 
 //: takes in the list of valid pairs and generates a list of consistent quads
 //  the consistancy measure is very simple: compute the geometric transformation induced by each matching pair
 //                                          and compute the Lie distance between the matrices
-bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<float> >& valid, 
-             vcl_map<vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> >, bool>& cons_quads, 
+bool dbskr_shock_patch_match::find_geom_consistent_quads(std::vector<std::vector<float> >& valid, 
+             std::map<std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> >, bool>& cons_quads, 
              float upper_threshold, float Lie_dist_threshold) {
                
   unsigned n1 = map1_.size();
@@ -1898,47 +1898,47 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
     return false;
 
   //: make a dummy map for indices
-  vcl_map<int, unsigned> map2_dummy;
+  std::map<int, unsigned> map2_dummy;
   unsigned cnt = 0;
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator it = map2_.begin(); it != map2_.end(); it++, cnt++) 
   {  map2_dummy[it->first] = cnt;  }
 
   //: first compute the similarity transformations
   //compute_similarity_transformations();
   cons_quads.clear();
 
-  vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
-  vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
+  std::vector<std::pair<int, dbskr_sm_cor_sptr> >* train_patch_vec = 0;
+  std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* >::iterator iter = patch_cor_map_.begin();
   cnt = 0; unsigned valid_cnt = 0; 
-  vcl_map<vcl_pair<unsigned, unsigned>, vnl_matrix<double> > sim_map;
+  std::map<std::pair<unsigned, unsigned>, vnl_matrix<double> > sim_map;
   for ( ; iter != patch_cor_map_.end(); iter++, cnt++) {
     int id1 = iter->first;
     train_patch_vec = iter->second;  // this vector is sorted with respect to the costs so check directly
     if (!train_patch_vec)  // this model patch does not qualify as it does not have any matches
       continue;
 
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it1 = map1_.find(id1);
+    std::map<int, dbskr_shock_patch_sptr>::iterator it1 = map1_.find(id1);
     if (it1 == map1_.end()) {
-      vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+      std::cout << " set the id to shock patch sptr maps in the match instance\n";
       return false;
     }
     dbskr_shock_patch_sptr sp1 = it1->second;
     
-    //vcl_cout << "id1: " << id1 << " matches: ";
+    //std::cout << "id1: " << id1 << " matches: ";
     for (unsigned j = 0; j < train_patch_vec->size(); j++) {
       //: check all the pairs with cost less than upper_threshold
-      vcl_pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
-      //vcl_cout << p.second->final_norm_cost() << " ";
+      std::pair<int, dbskr_sm_cor_sptr> p = (*train_patch_vec)[j];
+      //std::cout << p.second->final_norm_cost() << " ";
       if (p.second->final_norm_cost() > upper_threshold)  // this model patch's j th match does not satisfy 
         break;
       //find index of this patch using its id
-      vcl_map<int, unsigned>::iterator it = map2_dummy.find(p.first);
+      std::map<int, unsigned>::iterator it = map2_dummy.find(p.first);
       if (it == map2_dummy.end())
         continue;
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2 = map2_.find(p.first);
       if (it2 == map2_.end()) {
-        vcl_cout << " set the id to shock patch sptr maps in the match instance\n";
+        std::cout << " set the id to shock patch sptr maps in the match instance\n";
         return false;
       }
       dbskr_shock_patch_sptr sp2 = it2->second;
@@ -1954,26 +1954,26 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
       valid[cnt][ind] = p.second->final_norm_cost();
       valid_cnt++;
 
-      vcl_pair<unsigned, unsigned> pair(cnt, ind);
+      std::pair<unsigned, unsigned> pair(cnt, ind);
       sim_map[pair] = p.second->get_similarity_trans();
     }
-    //vcl_cout << "\n";
+    //std::cout << "\n";
   }
-  vcl_cout << "\t" << valid_cnt << " pairs < " << upper_threshold << " ";
+  std::cout << "\t" << valid_cnt << " pairs < " << upper_threshold << " ";
   
   int quad_cnt = 0;
-  vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
+  std::map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
   for (unsigned i = 0; it1_i != map1_.end(); it1_i++, i++) {
     dbskr_shock_patch_sptr p_1_i = it1_i->second;
 
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
+    std::map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
     it1_j++;
     for (unsigned j = i+1; it1_j != map1_.end(); it1_j++, j++) {
       dbskr_shock_patch_sptr p_1_j = it1_j->second;
       if (p_1_i->start_node_id() == p_1_j->start_node_id())  // put constraint that they have different root nodes
         continue;
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
       for (unsigned k = 0; it2_k != map2_.end(); it2_k++, k++) {  
 
         if (valid[i][k] > upper_threshold)
@@ -1981,10 +1981,10 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
 
         dbskr_shock_patch_sptr p_2_k = it2_k->second;
 
-        vcl_pair<unsigned, unsigned> pair(i, k);
+        std::pair<unsigned, unsigned> pair(i, k);
         vnl_matrix<double> M1 = sim_map[pair];
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
+        std::map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
         it2_m++;
         for (unsigned m = k+1; it2_m != map2_.end(); it2_m++, m++) {
           if (valid[j][m] > upper_threshold)
@@ -1992,13 +1992,13 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
 
           dbskr_shock_patch_sptr p_2_m = it2_m->second;
           if (p_2_k->start_node_id() == p_2_m->start_node_id()) {   // put constraint that they have different root nodes 
-            //vcl_cout << "p_2_k and p_2_m share same node skipping!\n";
+            //std::cout << "p_2_k and p_2_m share same node skipping!\n";
             continue;
           }
 
           quad_cnt++;
 
-          vcl_pair<unsigned, unsigned> pair2(j, m);
+          std::pair<unsigned, unsigned> pair2(j, m);
           vnl_matrix<double> M2 = sim_map[pair2];
 
           double dist;
@@ -2006,7 +2006,7 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
             continue;
           
           if (dist < Lie_dist_threshold) {
-            vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> > pp(pair, pair2);
+            std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> > pp(pair, pair2);
             cons_quads[pp] = true;
           }
           
@@ -2017,7 +2017,7 @@ bool dbskr_shock_patch_match::find_geom_consistent_quads(vcl_vector<vcl_vector<f
 
   sim_map.clear();
 
-  vcl_cout << "\t" << cons_quads.size() << " valid among " << quad_cnt << " quads\n";
+  std::cout << "\t" << cons_quads.size() << " valid among " << quad_cnt << " quads\n";
   clear_similarity_transformations();
 
   return true;
@@ -2030,7 +2030,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
     dbskr_shock_path_finder& f2, 
     float threshold, float upper_threshold, float interpolate_ds, float sample_ds, dbskr_tree_edit_params& edit_params, 
     bool normalize, bool use_approx_cost, bool impose_geom_consistency, float Lie_dist_threshold, float alpha,
-    vil_image_resource_sptr img1, vil_image_resource_sptr img2, vcl_string out_img)
+    vil_image_resource_sptr img1, vil_image_resource_sptr img2, std::string out_img)
 {
   
   unsigned n1 = map1_.size();
@@ -2056,10 +2056,10 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
   //: let n1 = size of storage 1
   //      n2 = size of storage 2
   //  prepare an n1xn2 size bool table that keeps track of valid pairs
-  vcl_vector<float> tmp(n2, 100000.0f);
-  vcl_vector<vcl_vector<float> > valid(n1, tmp);  unsigned valid_cnt = 0; 
+  std::vector<float> tmp(n2, 100000.0f);
+  std::vector<std::vector<float> > valid(n1, tmp);  unsigned valid_cnt = 0; 
   
-  vcl_map<vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> >, bool> cons_quads;
+  std::map<std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> >, bool> cons_quads;
   if (impose_geom_consistency) {
     find_geom_consistent_quads(valid, cons_quads, upper_threshold, Lie_dist_threshold);
     if (!cons_quads.size()) {
@@ -2068,7 +2068,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
     }
   } else {
     find_valid_pairs(upper_threshold, valid, valid_cnt);
-    vcl_cout << "\t" << valid_cnt << " pairs < " << upper_threshold << "\n";
+    std::cout << "\t" << valid_cnt << " pairs < " << upper_threshold << "\n";
     
     for (unsigned i = 0; i < n1; i++) {
       for (unsigned j = i+1; j < n1; j++) {
@@ -2076,18 +2076,18 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
 
           if (valid[i][k] > upper_threshold)
             continue;
-          vcl_pair<unsigned, unsigned> pair(i,k);
+          std::pair<unsigned, unsigned> pair(i,k);
 
           for (unsigned m = k+1; m < n2; m++) {
-            vcl_pair<unsigned, unsigned> pair2(j,m);
+            std::pair<unsigned, unsigned> pair2(j,m);
 
-            vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> > pp(pair, pair2);
+            std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> > pp(pair, pair2);
             cons_quads[pp] = true;
           }
         }
       }
     }
-    vcl_cout << " \tthere are " << cons_quads.size() << " quads\n";
+    std::cout << " \tthere are " << cons_quads.size() << " quads\n";
     if (!valid_cnt || !cons_quads.size()) {
       detection_box = 0;
       return true;
@@ -2098,16 +2098,16 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
   dbskr_scurve_sptr min_p_1_ij, min_p_2_km;
   dbskr_shock_patch_sptr min_p_1_i, min_p_1_j, min_p_2_k, min_p_2_m;
 
-  vcl_map<int, dbsk2d_shock_node_sptr> sg1_map, sg2_map;
+  std::map<int, dbsk2d_shock_node_sptr> sg1_map, sg2_map;
   get_node_map(sg1_map, sg1);
   get_node_map(sg2_map, sg2);
 
-  vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>*> > patch_map1; 
-  vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>*> > patch_map2; 
+  std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>*> > patch_map1; 
+  std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>*> > patch_map2; 
 
   unsigned quad_cnt = 0;
-  vcl_vector<bool> tried_on_sg1(n1, false);
-  vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
+  std::vector<bool> tried_on_sg1(n1, false);
+  std::map<int, dbskr_shock_patch_sptr>::iterator it1_i = map1_.begin();
   for (unsigned i = 0; it1_i != map1_.end(); it1_i++, i++) {
     dbskr_shock_patch_sptr p_1_i = it1_i->second;
 
@@ -2115,7 +2115,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
     if (!node_1_i)
       return false;
           
-    vcl_map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
+    std::map<int, dbskr_shock_patch_sptr>::iterator it1_j = it1_i;
     it1_j++;
     for (unsigned j = i+1; it1_j != map1_.end(); it1_j++, j++) {
 
@@ -2129,7 +2129,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
         return false;
 
 
-      vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
+      std::map<int, dbskr_shock_patch_sptr>::iterator it2_k = map2_.begin(); 
       for (unsigned k = 0; it2_k != map2_.end(); it2_k++, k++) {
         if (valid[i][k] > upper_threshold)
           continue;
@@ -2139,7 +2139,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
         if (!node_2_k)
           return false;
 
-        vcl_map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
+        std::map<int, dbskr_shock_patch_sptr>::iterator it2_m = it2_k;
         it2_m++;
         for (unsigned m = k+1; it2_m != map2_.end(); it2_m++, m++) {
           if (valid[j][m] > upper_threshold)
@@ -2148,47 +2148,47 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
           dbskr_shock_patch_sptr p_2_m = it2_m->second;
 
           //: now find the similarity of super-patches formed by this quad
-          //vcl_cout << "quad: i: " << p_1_i->id() << " matches k: " << p_2_k->id() << " j: " << p_1_j->id() << " matches m: " << p_2_m->id() << vcl_endl;
+          //std::cout << "quad: i: " << p_1_i->id() << " matches k: " << p_2_k->id() << " j: " << p_1_j->id() << " matches m: " << p_2_m->id() << std::endl;
  
           dbsk2d_shock_node_sptr node_2_m = sg2_map[p_2_m->start_node_id()];
           if (!node_2_m)
             return false;
 
           if (p_2_k->start_node_id() == p_2_m->start_node_id()) {   // put constraint that they have different root nodes 
-            //vcl_cout << "p_2_k and p_2_m share same node skipping!\n";
+            //std::cout << "p_2_k and p_2_m share same node skipping!\n";
             continue;
           }
  
-          vcl_pair<unsigned, unsigned> p_ij(i, j);
-          vcl_pair<unsigned, unsigned> p_km(k, m);
+          std::pair<unsigned, unsigned> p_ij(i, j);
+          std::pair<unsigned, unsigned> p_km(k, m);
 
-          vcl_pair<unsigned, unsigned> p_ik(i, k);
-          vcl_pair<unsigned, unsigned> p_jm(j, m);
+          std::pair<unsigned, unsigned> p_ik(i, k);
+          std::pair<unsigned, unsigned> p_jm(j, m);
           
-          vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> > pp(p_ik, p_jm);
+          std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> > pp(p_ik, p_jm);
           //: check if this is a consistent quad
-          vcl_map<vcl_pair<vcl_pair<unsigned, unsigned>, vcl_pair<unsigned, unsigned> >, bool>::iterator itq = cons_quads.find(pp);
+          std::map<std::pair<std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned> >, bool>::iterator itq = cons_quads.find(pp);
           if (itq == cons_quads.end()) {
             continue;
           }          
 
 
-          vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>*> >::iterator it = patch_map1.find(p_ij); 
-          vcl_vector<dbskr_scurve_sptr>* scurves1;
-          vcl_vector<float>* lengths1;
+          std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>*> >::iterator it = patch_map1.find(p_ij); 
+          std::vector<dbskr_scurve_sptr>* scurves1;
+          std::vector<float>* lengths1;
           if (it == patch_map1.end()) {
-            scurves1 = new vcl_vector<dbskr_scurve_sptr>();
-            lengths1 = new vcl_vector<float>();
+            scurves1 = new std::vector<dbskr_scurve_sptr>();
+            lengths1 = new std::vector<float>();
             f1.get_all_scurves(node_1_i, node_1_j, *scurves1, *lengths1, 1.0f, 100000.0f, interpolate_ds, sample_ds);
 
-            patch_map1[p_ij] = vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>* >(scurves1, lengths1);
+            patch_map1[p_ij] = std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>* >(scurves1, lengths1);
           } else {
             scurves1 = it->second.first;
             lengths1 = it->second.second;
           }
 
           if (!lengths1->size()) {
-            vcl_cout << "no patches1 for this quad!!\n";
+            std::cout << "no patches1 for this quad!!\n";
             continue;
           } 
 
@@ -2207,14 +2207,14 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
 
           
           it = patch_map2.find(p_km);
-          vcl_vector<dbskr_scurve_sptr>* scurves2;
-          vcl_vector<float>* lengths2;
+          std::vector<dbskr_scurve_sptr>* scurves2;
+          std::vector<float>* lengths2;
           if (it == patch_map2.end()) {
-            scurves2 = new vcl_vector<dbskr_scurve_sptr>();
-            lengths2 = new vcl_vector<float>();
+            scurves2 = new std::vector<dbskr_scurve_sptr>();
+            lengths2 = new std::vector<float>();
             f2.get_all_scurves(node_2_k, node_2_m, *scurves2, *lengths2, box2_perim, norm_thres, interpolate_ds, sample_ds);
             
-            patch_map2[p_km] = vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>* >(scurves2, lengths2);
+            patch_map2[p_km] = std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>* >(scurves2, lengths2);
           } else {
             scurves2 = it->second.first;
             lengths2 = it->second.second;
@@ -2224,8 +2224,8 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
           for (unsigned ii = 0; ii < scurves1->size(); ii++) {
             dbskr_scurve_sptr p_ii = (*scurves1)[ii];
 
-            //vcl_vector<dbskr_scurve_sptr> scurves2;
-            //vcl_vector<float> lengths2;       
+            //std::vector<dbskr_scurve_sptr> scurves2;
+            //std::vector<float> lengths2;       
             //float max_l = (*lengths1)[ii];
             //float norm_thres = 1.5f*max_l/box_perim;
             //f2.get_all_scurves(node_2_k, node_2_m, scurves2, lengths2, box2_perim, norm_thres, interpolate_ds, sample_ds);
@@ -2242,7 +2242,7 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
               if (use_approx_cost) {
                 // test if it is worth computing this match
                 double approx_cost = d.coarse_match();
-                //vcl_cout << "approx: " << approx_cost << " approx norm: " << approx_cost/norm_factor << " ";
+                //std::cout << "approx: " << approx_cost << " approx norm: " << approx_cost/norm_factor << " ";
                 match_val = normalize ? (float)approx_cost/norm_factor : (float)approx_cost;
               } else {
                 d.Match();
@@ -2250,11 +2250,11 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
                 float init_alp = d.init_phi();
                 float match_val = float(d.finalCost() + init_dr + init_alp);
                   
-                //vcl_cout << " cost: " << match_val << " " << " norm cost: " << match_val/norm_factor << " ";
+                //std::cout << " cost: " << match_val << " " << " norm cost: " << match_val/norm_factor << " ";
                 match_val = normalize ? match_val/norm_factor : match_val;
               }
 
-              //vcl_cout << " sim1: " << valid[i][k] << " sim2: " << valid[j][m] << "\n";
+              //std::cout << " sim1: " << valid[i][k] << " sim2: " << valid[j][m] << "\n";
               float final_sim = alpha*match_val + ((1.0f-alpha)/2.0f)*valid[i][k] + ((1.0f-alpha)/2.0f)*valid[j][m];
               d.clear();
               if (final_sim < min_sim) {
@@ -2275,34 +2275,34 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
     }
   }
   //: clear the maps
-  for (vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>*> >::iterator it = patch_map1.begin(); it != patch_map1.end(); it++) {
+  for (std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>*> >::iterator it = patch_map1.begin(); it != patch_map1.end(); it++) {
     it->second.first->clear();
     it->second.second->clear();
     delete it->second.first;
     delete it->second.second;
   }
 
-  for (vcl_map<vcl_pair<unsigned, unsigned>, vcl_pair<vcl_vector<dbskr_scurve_sptr>*, vcl_vector<float>*> >::iterator it = patch_map2.begin(); it != patch_map2.end(); it++) {
+  for (std::map<std::pair<unsigned, unsigned>, std::pair<std::vector<dbskr_scurve_sptr>*, std::vector<float>*> >::iterator it = patch_map2.begin(); it != patch_map2.end(); it++) {
     it->second.first->clear();
     it->second.second->clear();
     delete it->second.first;
     delete it->second.second;
   }
 
-  vcl_cout << quad_cnt << " quads\n";
+  std::cout << quad_cnt << " quads\n";
 
   if (!min_p_1_ij || !min_p_2_km) {  // no min found, no valid quads with distinct root nodes
     detection_box = 0;
     return true;
   }
 
-  vcl_cout << "\tmin_sim: " << min_sim << " sim i,k: " << min_sim_i_k << " sim j,m: " << min_sim_j_m << vcl_endl;
+  std::cout << "\tmin_sim: " << min_sim << " sim i,k: " << min_sim_i_k << " sim j,m: " << min_sim_j_m << std::endl;
 
   if (img1 != 0 && img2 != 0) {  // prepare output images
-    vcl_vector<dbskr_shock_patch_sptr> ps;  vcl_vector<vil_rgb<int> > colors;
+    std::vector<dbskr_shock_patch_sptr> ps;  std::vector<vil_rgb<int> > colors;
     ps.push_back(min_p_1_i);  colors.push_back(vil_rgb<int>(1,0,0));
     ps.push_back(min_p_1_j);  colors.push_back(vil_rgb<int>(0,1,0));
-    vcl_vector<vil_rgb<int> > curve_colors; 
+    std::vector<vil_rgb<int> > curve_colors; 
     curve_colors.push_back(vil_rgb<int>(0,0,1)); curve_colors.push_back(vil_rgb<int>(1,1,0)); curve_colors.push_back(vil_rgb<int>(1,0,1));
     create_ps_patches_with_scurve(out_img+"_with_curves_1.ps", ps, colors, min_p_1_ij, curve_colors, img1);
 
@@ -2317,29 +2317,29 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
     detection_box = new vsol_box_2d();
     vsol_box_2d_sptr box = min_p_2_m->shock_graph()->get_bounding_box(); 
     if (!box && !dbsk2d_compute_bounding_box(min_p_2_m->shock_graph())) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << std::endl;
       return false;
     }
     box = min_p_2_m->shock_graph()->get_bounding_box(); 
     if (!box) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_m->id() << " in the second storage " << std::endl;
       return false;
     }
     detection_box->grow_minmax_bounds(box);
 
     box = min_p_2_k->shock_graph()->get_bounding_box(); 
     if (!box && !dbsk2d_compute_bounding_box(min_p_2_k->shock_graph())) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << std::endl;
       return false;
     }
     box = min_p_2_k->shock_graph()->get_bounding_box(); 
     if (!box) {
-      vcl_cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << vcl_endl;
+      std::cout << "dbskr_shock_patch_match::detect_instance() - unable to compute shock graph bounding box of patch with id: " << min_p_2_k->id() << " in the second storage " << std::endl;
       return false;
     }
     detection_box->grow_minmax_bounds(box);
 
-    //vcl_cout << "box area: " << detection_box->area() << "\n";
+    //std::cout << "box area: " << detection_box->area() << "\n";
   } else {
     detection_box = 0;
   }
@@ -2351,28 +2351,28 @@ dbskr_shock_patch_match::detect_instance_using_paths(vsol_box_2d_sptr& detection
 
 bool 
 dbskr_shock_patch_match::
-create_match_ps_images(vcl_string image_dir, 
-                       vcl_string name1, 
+create_match_ps_images(std::string image_dir, 
+                       std::string name1, 
                        dbsk2d_shock_graph_sptr base_sg1, 
-                       vcl_string name2, 
+                       std::string name2, 
                        dbsk2d_shock_graph_sptr base_sg2)
 {
-  //vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > 
+  //std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > 
   patch_cor_map_iterator iter;
   for (iter = patch_cor_map_.begin(); iter != patch_cor_map_.end(); iter++) {
     dbskr_shock_patch_sptr msp = map1_[iter->first];
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
-    for (vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >::iterator it_m = match_vec->begin(); it_m != match_vec->end(); it_m++) {
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    for (std::vector<std::pair<int, dbskr_sm_cor_sptr> >::iterator it_m = match_vec->begin(); it_m != match_vec->end(); it_m++) {
       dbskr_shock_patch_sptr qsp = map2_[it_m->first];
-      vcl_ostringstream oss;
+      std::ostringstream oss;
       oss << qsp->id();
     
-      vcl_string match_image_file = image_dir + name1 + "_" + oss1.str() + "_" + name2 + "_" + oss.str() + ".ps";      
+      std::string match_image_file = image_dir + name1 + "_" + oss1.str() + "_" + name2 + "_" + oss.str() + ".ps";      
       if (!create_ps_shock_matching(match_image_file, base_sg1, msp->tree(), base_sg2, qsp->tree(), it_m->second)) {
-        vcl_cout << "In dbskr_shock_patch_match::create_match_ps_images() -- cannot create ps image: " << match_image_file << vcl_endl;
+        std::cout << "In dbskr_shock_patch_match::create_match_ps_images() -- cannot create ps image: " << match_image_file << std::endl;
         return false;
       }
     } 
@@ -2383,20 +2383,20 @@ create_match_ps_images(vcl_string image_dir,
 
 //: create the html table with similarities for this match
 //  image width is in pixels
-bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir, 
-                                                vcl_string name1, 
-                                                vcl_string name2, 
-                                                vcl_string out_html, 
-                                                vcl_string table_caption, 
-                                                vcl_string image_ext, int image_width, bool put_match_images)
+bool dbskr_shock_patch_match::create_html_table(std::string image_dir, 
+                                                std::string name1, 
+                                                std::string name2, 
+                                                std::string out_html, 
+                                                std::string table_caption, 
+                                                std::string image_ext, int image_width, bool put_match_images)
 {
-  vcl_ofstream tf(out_html.c_str(), vcl_ios::app);
+  std::ofstream tf(out_html.c_str(), std::ios::app);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " << out_html << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " << out_html << " for write " << std::endl;
     return false;
   }
-  vcl_stringstream wstr, wstr2;
+  std::stringstream wstr, wstr2;
   wstr << image_width;
   wstr2 << 2*image_width;
 
@@ -2409,20 +2409,20 @@ bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir,
     tf << "<TH> q patch " << i+1 << " ";
   tf << "</TH> </TR>\n";
   
-  //vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > 
+  //std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > 
   patch_cor_map_iterator iter;
   for (iter = patch_cor_map_.begin(); iter != patch_cor_map_.end(); iter++) {
     dbskr_shock_patch_sptr msp = map1_[iter->first];
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = image_dir + name1 + "_" + oss1.str() + image_ext;
-    vcl_cout << "putting model image: " << patch_image_file << vcl_endl;
+    std::string patch_image_file = image_dir + name1 + "_" + oss1.str() + image_ext;
+    std::cout << "putting model image: " << patch_image_file << std::endl;
     tf << "<TR> <TD> <img src=\"" << patch_image_file << "\" width=" << wstr.str() << "> ";
     tf << msp->id() << " </TD> "; 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
     //: find the similarity to all query patches using match_vec
-    for (vcl_map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); itq != map2_.end(); itq++) {
+    for (std::map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); itq != map2_.end(); itq++) {
       //: find the similarity of this query to the current model patch
       dbskr_sm_cor_sptr current_sm = 0;
       dbskr_shock_patch_sptr current_tsp = itq->second;
@@ -2435,9 +2435,9 @@ bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir,
       if (!current_sm)
        tf << "<TD> <img src=\"unknown\"> </TD> ";
       else {
-        vcl_ostringstream oss;
+        std::ostringstream oss;
         oss << current_tsp->id();
-        vcl_string patch_image_file = image_dir + name2 + "_" + oss.str() + image_ext;
+        std::string patch_image_file = image_dir + name2 + "_" + oss.str() + image_ext;
         tf << "<TD> <img src=\"" << patch_image_file << "\" width=" << wstr.str() << "> ";
         tf << current_tsp->id() << " sim: " << current_sm->final_norm_cost() << " </TD> ";
       }
@@ -2445,10 +2445,10 @@ bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir,
     tf << "</TR>\n";
     if (put_match_images) {
       tf << "<TR> <TD> </TD> "; 
-      vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+      std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
       //: find the similarity to all query patches using match_vec
-      for (vcl_map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); itq != map2_.end(); itq++) {
+      for (std::map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); itq != map2_.end(); itq++) {
         //: find the similarity of this query to the current model patch
         dbskr_sm_cor_sptr current_sm = 0;
         dbskr_shock_patch_sptr current_tsp = itq->second;
@@ -2461,9 +2461,9 @@ bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir,
         if (!current_sm)
           tf << "<TD> <img src=\"unknown\"> </TD> ";
         else {
-          vcl_ostringstream oss;
+          std::ostringstream oss;
           oss << current_tsp->id();
-          vcl_string patch_match_image_file = image_dir + name1 + "_" + oss1.str() + "_" + name2 + "_" + oss.str() + image_ext;
+          std::string patch_match_image_file = image_dir + name1 + "_" + oss1.str() + "_" + name2 + "_" + oss.str() + image_ext;
           tf << "<TD> <img src=\"" << patch_match_image_file << "\" width=" << wstr2.str() << "> </TD> ";
         }
       }
@@ -2479,19 +2479,19 @@ bool dbskr_shock_patch_match::create_html_table(vcl_string image_dir,
 //: create the html table with similarities for this match
 //  image width is in pixels
 bool dbskr_shock_patch_match::create_html_rank_order_table(
-    vcl_string image_dir, 
-    vcl_string name1, 
-    vcl_string name2, 
-    vcl_string out_html, 
-    vcl_string table_caption, 
-    vcl_string image_ext,  
+    std::string image_dir, 
+    std::string name1, 
+    std::string name2, 
+    std::string out_html, 
+    std::string table_caption, 
+    std::string image_ext,  
     bool put_match_images)
 {
-  vcl_ofstream tf(out_html.c_str(), vcl_ios::trunc);
+  std::ofstream tf(out_html.c_str(), std::ios::trunc);
   
   if (!tf) {
-    vcl_cout << "Unable to open output html file " 
-             << out_html << " for write " << vcl_endl;
+    std::cout << "Unable to open output html file " 
+             << out_html << " for write " << std::endl;
     return false;
   }
   
@@ -2506,21 +2506,21 @@ bool dbskr_shock_patch_match::create_html_rank_order_table(
   }
   tf << "</TH> </TR>\n";
   
-  //vcl_map<int, vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* > 
+  //std::map<int, std::vector<std::pair<int, dbskr_sm_cor_sptr> >* > 
   patch_cor_map_iterator iter;
   for (iter = patch_cor_map_.begin(); iter != patch_cor_map_.end(); iter++) 
   {
     dbskr_shock_patch_sptr msp = map1_[iter->first];
-    vcl_ostringstream oss1;
+    std::ostringstream oss1;
     oss1 << msp->id();
-    vcl_string patch_image_file = image_dir + name1 + "_" + oss1.str() 
+    std::string patch_image_file = image_dir + name1 + "_" + oss1.str() 
         + image_ext;
-    vcl_cout << "putting model image: " << patch_image_file << vcl_endl;  
+    std::cout << "putting model image: " << patch_image_file << std::endl;  
 
     tf << "<TR> <TD> <img src=\"" << patch_image_file 
        << "\" > ";
     tf << msp->id() << " </TD> "; 
-    vcl_vector<vcl_pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
+    std::vector<std::pair<int, dbskr_sm_cor_sptr> >* match_vec = iter->second;
 
     // Loop over the model patches that are sorted
     // and find the query patch in map 2 that has the same id
@@ -2532,7 +2532,7 @@ bool dbskr_shock_patch_match::create_html_rank_order_table(
          
         //: find the similarity to all query patches using match_vec
         for (
-            vcl_map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); 
+            std::map<int, dbskr_shock_patch_sptr>::iterator itq = map2_.begin(); 
             itq != map2_.end(); itq++
             ) 
         {
@@ -2554,9 +2554,9 @@ bool dbskr_shock_patch_match::create_html_rank_order_table(
         }
         else 
         {
-            vcl_ostringstream oss;
+            std::ostringstream oss;
             oss << current_tsp->id();
-            vcl_string patch_image_file = image_dir + name2 + "_" 
+            std::string patch_image_file = image_dir + name2 + "_" 
                 + oss.str() + image_ext;
 
             tf << "<TD> <img src=\"" 
@@ -2587,7 +2587,7 @@ bool dbskr_shock_patch_match::create_html_rank_order_table(
          
             //: find the similarity to all query patches using match_vec
             for (
-                vcl_map<int, dbskr_shock_patch_sptr>::iterator itq 
+                std::map<int, dbskr_shock_patch_sptr>::iterator itq 
                     = map2_.begin(); 
                 itq != map2_.end(); itq++
                 ) 
@@ -2610,9 +2610,9 @@ bool dbskr_shock_patch_match::create_html_rank_order_table(
             }
             else 
             {
-                vcl_ostringstream oss;
+                std::ostringstream oss;
                 oss << current_tsp->id();
-                vcl_string patch_match_image_file = image_dir + name1 + 
+                std::string patch_match_image_file = image_dir + name1 + 
                     "_" + oss1.str() + "_" + name2 + "_" + oss.str() 
                     + image_ext;
 

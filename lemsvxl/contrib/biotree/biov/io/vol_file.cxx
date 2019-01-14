@@ -6,8 +6,8 @@
 #endif
 #include <vil/vil_stream_fstream.h>
 #include <vil/vil_stream_write.h>
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 
 #if MY_BIG_ENDIAN
 void write_big_endian_uint_32(vil_stream *s, vxl_uint_32 w) {s->write((char *) (&w),4);}
@@ -50,7 +50,7 @@ bool vol_file :: write (const char *filename) {
   vil_stream* os = new vil_stream_fstream(filename, "w+b");
 
   if(!os->ok()){
-    vcl_cerr << "cannot open file to write \n";
+    std::cerr << "cannot open file to write \n";
     exit(1);
   }
 

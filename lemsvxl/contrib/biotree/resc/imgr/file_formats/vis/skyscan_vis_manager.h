@@ -8,7 +8,7 @@
 // \author H. Can Aras
 //
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgui/vgui_deck_tableau_sptr.h>
 #include <vgui/vgui_range_map_params_sptr.h>
 #include <vgui/vgui_wrapper_tableau.h>
@@ -17,7 +17,7 @@
 #include <vgui/vgui_image_tableau_sptr.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vpgl/algo/vpgl_project.h>
 #include <xscan/xscan_scan.h>
 
@@ -56,7 +56,7 @@ protected:
   //: Handle all events for this tableau.
   bool handle(vgui_event const &e);
   void get_pixel_info(const int x, const int y,vgui_event const &e, char* msg);
-  vcl_vector<vgl_homg_point_3d<double> > read_points(vcl_string filename, 
+  std::vector<vgl_homg_point_3d<double> > read_points(std::string filename, 
     vgl_box_3d<double> box, double resolution);
 private:
   //: needed for creating fake event during cine mode
@@ -66,12 +66,12 @@ private:
   double max_int_;
 
   //: a deck of image tableaux
-  vcl_vector<vgui_image_tableau_sptr> img_tabs_;
+  std::vector<vgui_image_tableau_sptr> img_tabs_;
   //: a deck of boxes
-  vcl_vector< vgl_box_2d<double> > img_box_;
-  vcl_vector< vgl_box_2d<double> > img_active_box_;
-  vcl_vector< vgl_box_2d<double> > img_filter_box_;
-  vcl_vector< vgl_point_2d<double> > centroids_2d_;
+  std::vector< vgl_box_2d<double> > img_box_;
+  std::vector< vgl_box_2d<double> > img_active_box_;
+  std::vector< vgl_box_2d<double> > img_filter_box_;
+  std::vector< vgl_point_2d<double> > centroids_2d_;
 
   //: scan
   xscan_scan scan_;

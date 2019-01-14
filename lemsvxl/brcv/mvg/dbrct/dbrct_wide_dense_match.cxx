@@ -122,7 +122,7 @@ bool dbrct_wide_dense_match::do_dense_matching()
             interp_correspondence(levelassignment,assignforlevel);
           
         }
-        vcl_cout<<" densematching for level no "<<i<<"\n";
+        std::cout<<" densematching for level no "<<i<<"\n";
       
         vsrl_image_correlation i_corr(scaledimgsl[i],scaledimgsr[i] );
                 i_corr.set_correlation_range(params.paramslist[i].correlation_range);
@@ -155,7 +155,7 @@ bool dbrct_wide_dense_match::do_dense_matching()
             vnl_vector<int> ri=assignforlevel.get_row(k);
                 raster->execute(ri);
                 raster_array_[k]=raster;
-                vcl_cout<<"\n row number "<<k;
+                std::cout<<"\n row number "<<k;
         }
         
                 //: get the assignment
@@ -166,9 +166,9 @@ bool dbrct_wide_dense_match::do_dense_matching()
             for(int k=0;k<i_corr.get_image1_width();k++)
           {
               buffer(k,j)=raster_array_[j]->get_assignment(k);
-              //vcl_cout<<buffer(k,j)<<" ";
+              //std::cout<<buffer(k,j)<<" ";
           }
-         // vcl_cout<<"\n";
+         // std::cout<<"\n";
         }
 
         for(int j=0;j<buffer.height();j++)
@@ -253,9 +253,9 @@ bool dbrct_wide_dense_match::interp_correspondence(vnl_matrix<int> iassignment,v
 //: to display any vnl matrix
  void dbrct_wide_dense_match::display_matrices(vnl_matrix<int> p)
  {
-    vcl_ostringstream os;
+    std::ostringstream os;
     p.print(os);
-    vcl_cout<<os.str();
+    std::cout<<os.str();
  }
 //: function to get the final corrrespondence in stereo images
  vnl_matrix<int> dbrct_wide_dense_match::get_correspondence()

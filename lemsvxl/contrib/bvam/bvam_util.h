@@ -12,8 +12,8 @@
 //                                   Assumes the float image is already scaled to [0,1] range
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vpgl/vpgl_camera.h>
 #include <vil/vil_image_view_base.h>
 #include <vil/vil_convert.h>
@@ -41,9 +41,9 @@ public:
   static void compute_plane_image_H(vpgl_camera_double_sptr const& cam, bvam_world_params_sptr world_params, unsigned grid_zval, vgl_h_matrix_2d<double> &H_plane_to_image, vgl_h_matrix_2d<double> &H_image_to_plane);
 
 
-  static bool read_cameras(const vcl_string filename, vcl_vector<vnl_double_3x3> &Ks, vcl_vector<vnl_double_3x3> &Rs, vcl_vector<vnl_double_3x1> &Ts);
+  static bool read_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts);
 
-  static bool write_cameras(const vcl_string filename, vcl_vector<vnl_double_3x3> &Ks, vcl_vector<vnl_double_3x3> &Rs, vcl_vector<vnl_double_3x1> &Ts);
+  static bool write_cameras(const std::string filename, std::vector<vnl_double_3x3> &Ks, std::vector<vnl_double_3x3> &Rs, std::vector<vnl_double_3x1> &Ts);
 
   template<class T>
   static void warp_slab_bilinear(bvam_voxel_slab<T> const& slab_in, vgl_h_matrix_2d<double> invH, bvam_voxel_slab<T> &slab_out);
@@ -73,10 +73,10 @@ public:
   static void smooth_gaussian(bvam_voxel_slab<T> &slab, float stdx, float stdy);
 
   template<class T>
-  static void write_slab_as_image(bvam_voxel_slab<T> const& slab_in,vcl_string filename);
+  static void write_slab_as_image(bvam_voxel_slab<T> const& slab_in,std::string filename);
 
   template<class T, unsigned N>
-  static void write_slab_as_image(bvam_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,vcl_string filename);
+  static void write_slab_as_image(bvam_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,std::string filename);
 
   template<class T>
   static T sum_slab(bvam_voxel_slab<T> const& slab);
@@ -115,7 +115,7 @@ void bvam_util::warp_slab_bilinear(bvam_voxel_slab<T> const& slab_in, vgl_h_matr
     if ( (ysize > 2.0) && (ysize < max_projection_size) )
       ystd = (float)ysize/2.0f;
 
-    //vcl_cout << "xsize = " << xsize << " ysize = " << ysize << vcl_endl;
+    //std::cout << "xsize = " << xsize << " ysize = " << ysize << std::endl;
     bvam_voxel_slab<T> slab_in_smooth;
     slab_in_smooth.deep_copy(slab_in);
     smooth_gaussian(slab_in_smooth, xstd, ystd);
@@ -144,12 +144,12 @@ void bvam_util::warp_slab_bilinear(bvam_voxel_slab<T> const& slab_in, vgl_h_matr
                 float pix_in_x = pix_in_homg[0] / pix_in_homg[2];
                 float pix_in_y = pix_in_homg[1] / pix_in_homg[2];
                 // calculate weights and pixel values
-                unsigned x0 = (unsigned)vcl_floor(pix_in_x);
-                unsigned x1 = (unsigned)vcl_ceil(pix_in_x);
+                unsigned x0 = (unsigned)std::floor(pix_in_x);
+                unsigned x1 = (unsigned)std::ceil(pix_in_x);
                 float x0_weight = (float)(x1 - pix_in_x);
                 float x1_weight = (float)(1.0f - x0_weight);
-                unsigned y0 = (unsigned)vcl_floor(pix_in_y);
-                unsigned y1 = (unsigned)vcl_ceil(pix_in_y);
+                unsigned y0 = (unsigned)std::floor(pix_in_y);
+                unsigned y1 = (unsigned)std::ceil(pix_in_y);
                 float y0_weight = (float)(y1 - pix_in_y);
                 float y1_weight = (float)(1.0f - y0_weight);
                 vnl_vector_fixed<unsigned,4>xvals(x0,x0,x1,x1);
@@ -182,7 +182,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
 {
   // check slab is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) ) {
-    vcl_cerr << "error: slab and image are different sizes." << vcl_endl;
+    std::cerr << "error: slab and image are different sizes." << std::endl;
     return false;
   }
 
@@ -190,7 +190,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
   if (image->pixel_format() == VIL_PIXEL_FORMAT_BYTE) {
     if (vil_image_view<unsigned char> *img_view = dynamic_cast<vil_image_view<unsigned char>*>(image.ptr())) {
       if (img_view->nplanes() == N) {
-        vcl_vector<vil_image_view<unsigned char>::const_iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<unsigned char>::const_iterator plane_it = img_view->begin() + (p*img_view->planestep());
           img_its.push_back(plane_it);
@@ -203,12 +203,12 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << std::endl;
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
   }
@@ -219,7 +219,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
       vil_image_view<vxl_byte> plane_view = vil_view_as_planes(*img_view);
 
       if (img_view->nplanes() == 1) {
-        vcl_vector<vil_image_view<unsigned char>::const_iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<unsigned char>::const_iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
           img_its.push_back(plane_it);
@@ -232,18 +232,18 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << std::endl;
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) {
     if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>* >(image.ptr())) {
       if (img_view->nplanes() == N) {
-        vcl_vector<vil_image_view<float>::const_iterator> img_its;
+        std::vector<vil_image_view<float>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<float>::const_iterator plane_it = img_view->begin() + (p*img_view->planestep());
           img_its.push_back(plane_it);
@@ -255,11 +255,11 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << N << std::endl;
         return false;
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_RGB_FLOAT) {
@@ -267,7 +267,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
       vil_image_view<float> plane_view = vil_view_as_planes(*img_view);
 
       if (img_view->nplanes() == 1) {
-        vcl_vector<vil_image_view<float>::const_iterator> img_its;
+        std::vector<vil_image_view<float>::const_iterator> img_its;
         for (unsigned p=0; p<N; ++p) {
           vil_image_view<float>::const_iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
           img_its.push_back(plane_it);
@@ -279,16 +279,16 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
           }
         }
       } else {
-        vcl_cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << vcl_endl;
+        std::cerr << "error: img_to_slab (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << std::endl;
         return false;
       }
     }
     else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
   } else {
-    vcl_cerr << "img_to_slab(scalar): unsupported pixel type " << vcl_endl;
+    std::cerr << "img_to_slab(scalar): unsupported pixel type " << std::endl;
   }
 
   return true;
@@ -300,7 +300,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
 {
   // check slab is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) ) {
-    vcl_cerr << "error: slab and image are different sizes." << vcl_endl;
+    std::cerr << "error: slab and image are different sizes." << std::endl;
     return false;
   }
 
@@ -325,7 +325,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         }
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
     }
   } 
   else if (image->pixel_format() == VIL_PIXEL_FORMAT_RGB_BYTE) {
@@ -337,7 +337,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         vil_convert_planes_to_grey(img_view_plane,img_view_grey);
 
       } else {
-        vcl_cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << vcl_endl;
+        std::cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << std::endl;
         return false;
       }
       vil_image_view<float>::const_iterator img_it = img_view_grey.begin();
@@ -346,7 +346,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         *slab_it = (T)(*img_it / 255.0);
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_FLOAT) {
     if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>* >(image.ptr())) {
@@ -356,7 +356,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         *slab_it = (T)(*img_it); // no divide by 255, we copy the image to the slab directly, assuming image is already scaled to [0,1] range
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
     }
   } else if (image->pixel_format() == VIL_PIXEL_FORMAT_RGB_FLOAT) {
     if (vil_image_view<vil_rgb<float> > *img_view_rgb = dynamic_cast<vil_image_view<vil_rgb<float> >* >(image.ptr())) {
@@ -366,7 +366,7 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         vil_convert_planes_to_grey(img_view_plane,img_view_grey);
 
       } else {
-        vcl_cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << vcl_endl;
+        std::cerr << "error: pixel format RGB, but nplanes = " << img_view_rgb->nplanes() << std::endl;
         return false;
       }
       vil_image_view<float>::const_iterator img_it = img_view_grey.begin();
@@ -375,10 +375,10 @@ bool bvam_util::img_to_slab(vil_image_view_base_sptr const image, bvam_voxel_sla
         *slab_it = (T)(*img_it); // no divide by 255, we copy the image to the slab directly, assuming image is already scaled to [0,1] range
       }
     } else {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
     }
   } else {
-    vcl_cerr << "img_to_slab(scalar): unsupported pixel type " << vcl_endl;
+    std::cerr << "img_to_slab(scalar): unsupported pixel type " << std::endl;
   }
 
   return true;
@@ -390,7 +390,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
   // check image is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) )
   {
-    vcl_cerr << "error: slab and image are different sizes." << vcl_endl;
+    std::cerr << "error: slab and image are different sizes." << std::endl;
     return false;
   }
 
@@ -402,7 +402,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
     {
       if (vil_image_view<unsigned char> *img_view = dynamic_cast<vil_image_view<unsigned char>*>(image.ptr())) {
 
-        vcl_vector<vil_image_view<unsigned char>::iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<unsigned char>::iterator plane_it = img_view->begin() + (p*img_view->planestep());
@@ -421,13 +421,13 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
       }
       else
       {
-        vcl_cerr << "error in slab_to_image: failed to cast image_view_base to image_view " << vcl_endl;
+        std::cerr << "error in slab_to_image: failed to cast image_view_base to image_view " << std::endl;
         return false;
       }
     }
     else
     {
-      vcl_cerr << "error in slab_to_image: incorrect number of image planes  " << vcl_endl;
+      std::cerr << "error in slab_to_image: incorrect number of image planes  " << std::endl;
       return false;
     }
     break;  
@@ -437,7 +437,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
     {
       if (vil_image_view<float> *img_view = dynamic_cast<vil_image_view<float>*>(image.ptr())) {
 
-        vcl_vector<vil_image_view<float>::iterator> img_its;
+        std::vector<vil_image_view<float>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<float>::iterator plane_it = img_view->begin() + (p*img_view->planestep());
@@ -456,13 +456,13 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
       }
       else
       {
-        vcl_cerr << "error in slab_to_image: failed to cast image_view_base to image_view " << vcl_endl;
+        std::cerr << "error in slab_to_image: failed to cast image_view_base to image_view " << std::endl;
         return false;
       }
     }
     else
     {
-      vcl_cerr << "error in slab_to_image: incorrect number of image planes  " << vcl_endl;
+      std::cerr << "error in slab_to_image: incorrect number of image planes  " << std::endl;
       return false;
     }
     break;  
@@ -476,7 +476,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
 
       if (img_view->nplanes() == 1)
       {
-        vcl_vector<vil_image_view<unsigned char>::iterator> img_its;
+        std::vector<vil_image_view<unsigned char>::iterator> img_its;
         for (unsigned p=0; p<N; ++p)
         {
           vil_image_view<unsigned char>::iterator plane_it = plane_view.begin() + (p*plane_view.planestep());
@@ -494,20 +494,20 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<vnl_vector_fixed<T,N> > const &slab,
       } 
       else 
       {
-        vcl_cerr << "error: slab_to_img (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << vcl_endl;
+        std::cerr << "error: slab_to_img (multi-dimensional): nplanes = " << img_view->nplanes() <<", but N = " << 1 << std::endl;
         return false;
       }
     }
     else 
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
 
     break;
 
   default:
-    vcl_cerr << "img_to_slab: unsupported pixel type " << vcl_endl;
+    std::cerr << "img_to_slab: unsupported pixel type " << std::endl;
     return false;
     break;
   }
@@ -522,7 +522,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<T> const& slab, vil_image_view_base_
   // check image is preallocated to correct size
   if ( (slab.nx() != image->ni()) || (slab.ny() != image->nj()) )
   {
-    vcl_cerr << "error: slab and image are different sizes." << vcl_endl;
+    std::cerr << "error: slab and image are different sizes." << std::endl;
     return false;
   }
 
@@ -540,7 +540,7 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<T> const& slab, vil_image_view_base_
     }
     else
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
     break;
@@ -556,13 +556,13 @@ bool bvam_util::slab_to_img(bvam_voxel_slab<T> const& slab, vil_image_view_base_
     }
     else
     {
-      vcl_cerr << "error: failed to cast image_view_base to image_view " << vcl_endl;
+      std::cerr << "error: failed to cast image_view_base to image_view " << std::endl;
       return false;
     }
     break;
 
   default:
-    vcl_cerr << "img_to_slab: unsupported pixel type " << vcl_endl;
+    std::cerr << "img_to_slab: unsupported pixel type " << std::endl;
     return false;
     break;
   }
@@ -588,7 +588,7 @@ static void bvam_util::add_slabs(bvam_voxel_slab<T> const& s1, bvam_voxel_slab<T
   if ( (sum.nx() != s1.nx()) || (sum.nx() != s2.nx()) ||
     (sum.ny() != s1.ny()) || (sum.ny() != s2.ny()) ||
     (sum.nz() != s1.nz()) || (sum.nz() != s2.nz()) ) {
-      vcl_cerr << "error: sizes of slabs to multiply do not match." << vcl_endl;
+      std::cerr << "error: sizes of slabs to multiply do not match." << std::endl;
       return;
   }
 
@@ -609,7 +609,7 @@ void bvam_util::multiply_slabs(bvam_voxel_slab<T> const& s1, bvam_voxel_slab<T> 
   if ( (product.nx() != s1.nx()) || (product.nx() != s2.nx()) ||
     (product.ny() != s1.ny()) || (product.ny() != s2.ny()) ||
     (product.nz() != s1.nz()) || (product.nz() != s2.nz()) ) {
-      vcl_cerr << "error: sizes of slabs to multiply do not match." << vcl_endl;
+      std::cerr << "error: sizes of slabs to multiply do not match." << std::endl;
       return;
   }
 
@@ -626,7 +626,7 @@ void bvam_util::threshold_slab_above(bvam_voxel_slab<T> const& slab, T const& th
 {
   // check sizes
   if ( (mask.nx() != slab.nx()) || (mask.ny() != slab.ny()) ) {
-    vcl_cerr << "error: sizes of slabs to multiply do not match." << vcl_endl;
+    std::cerr << "error: sizes of slabs to multiply do not match." << std::endl;
     return;
   }
 
@@ -643,8 +643,8 @@ template<class T>
 void bvam_util::smooth_gaussian(bvam_voxel_slab<T> &slab, float stdx, float stdy)
 {
   if ( (stdx < 0) || (stdy < 0) ) {
-    vcl_cerr << "error: smooth_gaussian called with negative std. deviation!" <<vcl_endl;
-    vcl_cerr << "stdx = " << stdx << "  " << "stdy = " << stdy << vcl_endl;
+    std::cerr << "error: smooth_gaussian called with negative std. deviation!" <<std::endl;
+    std::cerr << "stdx = " << stdx << "  " << "stdy = " << stdy << std::endl;
     return;
   }
 
@@ -658,7 +658,7 @@ void bvam_util::smooth_gaussian(bvam_voxel_slab<T> &slab, float stdx, float stdy
 
   // fill in kernel
   for (unsigned i=0; i<kernel_size_x; ++i) {
-    kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * vcl_exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
+    kernel_1dx[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdx) * std::exp(-((((float)i-kernel_radius_x)*((float)i-kernel_radius_x))/(2*stdx*stdx))));
   }
   // normalize kernel in case taps dont sum to exactly one
   kernel_1dx = kernel_1dx / kernel_1dx.sum();
@@ -668,7 +668,7 @@ void bvam_util::smooth_gaussian(bvam_voxel_slab<T> &slab, float stdx, float stdy
   vnl_vector<float> kernel_1dy(kernel_size_y);
   // fill in kernel
   for (unsigned i=0; i<kernel_size_y; ++i) {
-    kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * vcl_exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
+    kernel_1dy[i] = (float)(vnl_math::sqrt1_2 * vnl_math::two_over_sqrtpi * (0.5/stdy) * std::exp(-((((float)i-kernel_radius_y)*((float)i-kernel_radius_y))/(2*stdy*stdy))));
   }
   // normalize kernel in case taps dont sum to exactly one
   kernel_1dy = kernel_1dy / kernel_1dy.sum();
@@ -742,7 +742,7 @@ void bvam_util::smooth_gaussian(bvam_voxel_slab<T> &slab, float stdx, float stdy
 
 // used for debugging
 template<class T>
-void bvam_util::write_slab_as_image(bvam_voxel_slab<T> const& slab_in,vcl_string filename)
+void bvam_util::write_slab_as_image(bvam_voxel_slab<T> const& slab_in,std::string filename)
 {
   vil_image_view<T> img(slab_in.nx(),slab_in.ny(),1);
   vil_image_view<T>::iterator img_it = img.begin();
@@ -757,10 +757,10 @@ void bvam_util::write_slab_as_image(bvam_voxel_slab<T> const& slab_in,vcl_string
 
 // used for debugging
 template<class T, unsigned N>
-void bvam_util::write_slab_as_image(bvam_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,vcl_string filename)
+void bvam_util::write_slab_as_image(bvam_voxel_slab<vnl_vector_fixed<T,N> > const& slab_in,std::string filename)
 {
   vil_image_view<T> img(slab_in.nx(),slab_in.ny(),N);
-  vcl_vector<vil_image_view<T>::iterator> img_its;
+  std::vector<vil_image_view<T>::iterator> img_its;
   for (unsigned p=0; p < N; ++p) {
     vil_image_view<T>::iterator plane_it = img.begin() + (p*img.planestep());
     img_its.push_back(plane_it);

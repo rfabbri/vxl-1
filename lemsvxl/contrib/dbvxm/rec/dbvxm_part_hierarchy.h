@@ -29,27 +29,27 @@ public:
   
   dbvxm_part_base_sptr get_node(unsigned layer, unsigned type);
 
-  static void generate_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map, vil_image_view<unsigned>& type_map);
-  static void generate_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vcl_vector<vcl_vector<dbvxm_part_instance_sptr> >& map);
+  static void generate_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map, vil_image_view<unsigned>& type_map);
+  static void generate_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, std::vector<std::vector<dbvxm_part_instance_sptr> >& map);
   //: generate a float map with normalized strengths and receptive fields marked
-  static void generate_output_map(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map);
+  static void generate_output_map(std::vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<float>& map);
   //: output_img needs to have 3 planes
-  static void generate_output_img(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<vxl_byte>& input_img, vil_image_view<vxl_byte>& output_img);
+  static void generate_output_img(std::vector<dbvxm_part_instance_sptr>& extracted_parts, vil_image_view<vxl_byte>& input_img, vil_image_view<vxl_byte>& output_img);
 
   // check for existence of upper_p with central_p as its central part and map will tell if all the other parts exist
-  dbvxm_part_instance_sptr exists(dbvxm_part_base_sptr upper_p, dbvxm_part_instance_sptr central_p, vil_image_view<float>& map, vil_image_view<unsigned>& type_map, vcl_vector<vcl_vector<dbvxm_part_instance_sptr> >& part_map, float det_threshold);
+  dbvxm_part_instance_sptr exists(dbvxm_part_base_sptr upper_p, dbvxm_part_instance_sptr central_p, vil_image_view<float>& map, vil_image_view<unsigned>& type_map, std::vector<std::vector<dbvxm_part_instance_sptr> >& part_map, float det_threshold);
 
   //: given a set of detected lower level parts, create a set of instance detections for one layer above in the hierarchy
-  void extract_upper_layer(vcl_vector<dbvxm_part_instance_sptr>& extracted_parts, 
-    unsigned ni, unsigned nj, float detection_threshold, vcl_vector<dbvxm_part_instance_sptr>& extracted_upper_parts);
+  void extract_upper_layer(std::vector<dbvxm_part_instance_sptr>& extracted_parts, 
+    unsigned ni, unsigned nj, float detection_threshold, std::vector<dbvxm_part_instance_sptr>& extracted_upper_parts);
 
   void add_dummy_primitive_instance(dbvxm_part_instance_sptr p) { dummy_primitive_instances_.push_back(p); }
-  vcl_vector<dbvxm_part_instance_sptr>& get_dummy_primitive_instances() { return dummy_primitive_instances_; }
+  std::vector<dbvxm_part_instance_sptr>& get_dummy_primitive_instances() { return dummy_primitive_instances_; }
 
   unsigned highest_layer_id();
 
   //: a map to store dummy instances of primitive parts, so that they could be extracted properly for a constructed hierarchy
-  vcl_vector<dbvxm_part_instance_sptr> dummy_primitive_instances_;
+  std::vector<dbvxm_part_instance_sptr> dummy_primitive_instances_;
   
 };
 

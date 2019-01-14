@@ -29,6 +29,6 @@ template<class pixelT, class smT>
 void vsl_b_write(vsl_b_ostream &os, const dsm2_manager_pixels<pixelT, smT>* p);
 
 template<class pixelT, class smT>
-void vsl_print_summary(vcl_ostream& os, const dsm2_manager_pixels<pixelT, smT> *p);
+void vsl_print_summary(std::ostream& os, const dsm2_manager_pixels<pixelT, smT> *p);
 
 #endif //DSM2_IO_MANAGER_PIXELS_H_

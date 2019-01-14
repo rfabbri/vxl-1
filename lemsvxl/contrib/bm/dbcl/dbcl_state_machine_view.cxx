@@ -2,9 +2,9 @@
 
 #include"dbcl_state_machine_view.h"
 
-void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, dbcl_image_classifier& image_classifier )
+void dbcl_state_machine_view::save_change_maps( std::string result_dir, dbcl_image_classifier& image_classifier )
 {
-    vcl_cout << "Saving change maps..." << vcl_endl;
+    std::cout << "Saving change maps..." << std::endl;
 
     target_classifier_map_type target_classifier_map = image_classifier.target_classifier_map();
 
@@ -15,16 +15,16 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, dbcl_imag
     target_classifier_map_type::const_iterator target_map_itr;
     target_classifier_map_type::const_iterator target_map_end = target_classifier_map.end();
 
-	vcl_string change_map_delete_glob = result_dir + "\\*.jpg";
+	std::string change_map_delete_glob = result_dir + "\\*.jpg";
 	vul_file::delete_file_glob(change_map_delete_glob);
 
-    vcl_string base_filename = result_dir + "\\change_map_";
+    std::string base_filename = result_dir + "\\change_map_";
     
     for( unsigned t = 0; t < nframes; ++t )
     {
-        vcl_cout << '\t' << t/double(nframes)*100 << "% complete..." << vcl_endl;
-        vcl_stringstream ss;
-        ss << base_filename << vcl_setfill('0') << vcl_setw(5) << t << ".jpg";
+        std::cout << '\t' << t/double(nframes)*100 << "% complete..." << std::endl;
+        std::stringstream ss;
+        ss << base_filename << std::setfill('0') << std::setw(5) << t << ".jpg";
 
         vil_image_view<vxl_byte> curr_change_map(ncols,nrows,1);
 
@@ -40,7 +40,7 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, dbcl_imag
                 {
                     dbcl_classifier_sptr classifier_sptr = target_map_itr->second;
                     dbcl_state_machine_classifier_sptr state_machine_classifier_sptr = dynamic_cast<dbcl_state_machine_classifier*>( classifier_sptr.as_pointer() );
-                    vcl_map<unsigned,bool> frame_change_map = state_machine_classifier_sptr->frame_change_map();
+                    std::map<unsigned,bool> frame_change_map = state_machine_classifier_sptr->frame_change_map();
                     if( frame_change_map[t] == 1 )
                         label = 255;
                     else
@@ -50,7 +50,7 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, dbcl_imag
             }
         }//end pixel iteration
 
-        vcl_string curr_filename = ss.str();
+        std::string curr_filename = ss.str();
 
         vil_save(curr_change_map,curr_filename.c_str());
         
@@ -61,11 +61,11 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, dbcl_imag
 
 }//end dbcl_state_machine_view::dbcl_state_machine_view
 
-void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_string video_glob, dbcl_image_classifier& image_classifier )
+void dbcl_state_machine_view::save_change_maps( std::string result_dir, std::string video_glob, dbcl_image_classifier& image_classifier )
 {
 	vidl_image_list_istream video_stream(video_glob);
 
-	vcl_cout << "Saving change maps..." << vcl_endl;
+	std::cout << "Saving change maps..." << std::endl;
 
 	target_classifier_map_type target_classifier_map = image_classifier.target_classifier_map();
 
@@ -73,7 +73,7 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_strin
 	unsigned nrows = image_classifier.rows();
 	unsigned nframes = image_classifier.nframes();
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> > change_map_seq;
+	std::map<unsigned, vil_image_view<vxl_byte> > change_map_seq;
 
 		for( unsigned t = 0; t < nframes; ++t )
 		{
@@ -89,9 +89,9 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_strin
 		target_classifier_map_type::iterator classifier_itr;
 		target_classifier_map_type::iterator classifier_end = target_classifier_map.end();
 
-		vcl_string coord_dat = result_dir + "\\coors.dat";
+		std::string coord_dat = result_dir + "\\coors.dat";
 		unsigned nclassifiers = target_classifier_map.size();
-		vcl_ofstream of(coord_dat.c_str(),vcl_ios::out);
+		std::ofstream of(coord_dat.c_str(),std::ios::out);
 		of << "x = zeros(" << nclassifiers << ",1);\n";
 		of << "y = zeros(" << nclassifiers << ",2);\n";
 
@@ -100,7 +100,7 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_strin
 		for( classifier_itr = target_classifier_map.begin(); classifier_itr != classifier_end; ++classifier_itr, ++indx )
 		{
 			dbcl_state_machine_classifier_sptr curr_classifier = dynamic_cast<dbcl_state_machine_classifier*>(classifier_itr->second.as_pointer());
-			vcl_map<unsigned, bool> frame_change_map = curr_classifier->frame_change_map();
+			std::map<unsigned, bool> frame_change_map = curr_classifier->frame_change_map();
 			vgl_point_2d<unsigned> target = classifier_itr->first;
 
 			of << "x(" << indx << ") = " << target.x() << ";\n";
@@ -117,13 +117,13 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_strin
 			}
 		}
 
-		vcl_string base_filename = result_dir + "\\change_map_";
+		std::string base_filename = result_dir + "\\change_map_";
 
 		for( unsigned t = 0; t < nframes; ++t )
 		{
-			vcl_stringstream ss;
-			ss << base_filename << vcl_setfill('0') << vcl_setw(5) << t << ".jpg";
-			vcl_string curr_filename = ss.str();
+			std::stringstream ss;
+			ss << base_filename << std::setfill('0') << std::setw(5) << t << ".jpg";
+			std::string curr_filename = ss.str();
 			vil_save(change_map_seq[t],curr_filename.c_str());
 
 		}
@@ -132,11 +132,11 @@ void dbcl_state_machine_view::save_change_maps( vcl_string result_dir, vcl_strin
 }//end dbcl_state_machine_view::save_change_maps
 
 
-void dbcl_state_machine_view::save_change_maps(vcl_string result_dir, vcl_string video_glob, dbcl_state_machine_image_classifier& image_classifier)
+void dbcl_state_machine_view::save_change_maps(std::string result_dir, std::string video_glob, dbcl_state_machine_image_classifier& image_classifier)
 {
 	vidl_image_list_istream video_stream(video_glob);
 
-	vcl_cout << "Saving change maps..." << vcl_endl;
+	std::cout << "Saving change maps..." << std::endl;
 
 	dbcl_state_machine_image_classifier::classifier_map_type classifier_map = image_classifier.classifier_map();
 
@@ -144,7 +144,7 @@ void dbcl_state_machine_view::save_change_maps(vcl_string result_dir, vcl_string
 	unsigned nrows = image_classifier.nrows();
 	unsigned nframes = image_classifier.nframes();
 
-	vcl_map<unsigned, vil_image_view<vxl_byte> > change_map_seq;
+	std::map<unsigned, vil_image_view<vxl_byte> > change_map_seq;
 
 	for( unsigned t = 0; t < nframes; ++t)
 	{
@@ -163,7 +163,7 @@ void dbcl_state_machine_view::save_change_maps(vcl_string result_dir, vcl_string
 	{
 		unsigned indx = classifier_itr->first;
 		dbcl_state_machine_classifier_sptr curr_classifier_sptr = classifier_itr->second;
-		vcl_map<unsigned,bool> frame_change_map = curr_classifier_sptr->frame_change_map();
+		std::map<unsigned,bool> frame_change_map = curr_classifier_sptr->frame_change_map();
 		vgl_point_2d<unsigned> target = image_classifier.linear_to_cartesian(indx);
 		
 		for( unsigned t = 0; t < nframes; ++t )
@@ -178,27 +178,27 @@ void dbcl_state_machine_view::save_change_maps(vcl_string result_dir, vcl_string
 
 
 
-	vcl_string base_filename = result_dir + "\\change_maps";
-	//vcl_stringstream s1;
+	std::string base_filename = result_dir + "\\change_maps";
+	//std::stringstream s1;
 	//s1 << base_filename << image_classifier.prob_thresh();
-	//vcl_string new_directory = s1.str();
+	//std::string new_directory = s1.str();
 	vul_file::make_directory(base_filename.c_str());
 	
 
 	for( unsigned t = 0; t < nframes; ++t )
 	{
-		vcl_stringstream ss;
-		ss << base_filename << "\\" << "frame_" << vcl_setfill('0') << vcl_setw(5) << t << ".jpg";
-		vcl_string curr_filename = ss.str();
+		std::stringstream ss;
+		ss << base_filename << "\\" << "frame_" << std::setfill('0') << std::setw(5) << t << ".jpg";
+		std::string curr_filename = ss.str();
 		vil_save(change_map_seq[t],curr_filename.c_str());
 	}//end frame iteration
 
 }//end dbcl_state_machine_view::save_change_maps
 
-void dbcl_state_machine_view::save_target_temporal_prob_dist( vcl_string result_dir, dbcl_state_machine_classifier_sptr& classifier_sptr )
+void dbcl_state_machine_view::save_target_temporal_prob_dist( std::string result_dir, dbcl_state_machine_classifier_sptr& classifier_sptr )
 {
 
-	vcl_cout << "Saving Probability Distribution Mfile..." << vcl_endl;
+	std::cout << "Saving Probability Distribution Mfile..." << std::endl;
 
 	frame_mean_map_type frame_mean_map = classifier_sptr->frame_mean_map();
 	frame_covar_map_type frame_covar_map = classifier_sptr->frame_covar_map();
@@ -217,7 +217,7 @@ void dbcl_state_machine_view::save_target_temporal_prob_dist( vcl_string result_
 	feature_map_type::iterator test_feature_end = test_feature_map.end();
 	unsigned ndims = test_feature_map.begin()->second->feature_dim();
 
-	vcl_ofstream of( result_dir.c_str(), vcl_ios::out );
+	std::ofstream of( result_dir.c_str(), std::ios::out );
 
 	time_t rawtime;
 	struct tm * timeinfo;

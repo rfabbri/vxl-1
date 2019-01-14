@@ -24,7 +24,7 @@ bvam_normalize_image_process::bvam_normalize_image_process()
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "bvam_voxel_world_sptr";
-  input_types_[3] = "vcl_string";
+  input_types_[3] = std::string";
   input_types_[4] = "unsigned";
 
   //output
@@ -71,10 +71,10 @@ bool bvam_normalize_image_process::execute()
 
   bvam_voxel_world_sptr world = input2->value();
 
-   brdb_value_t<vcl_string>* input3 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
+   brdb_value_t<std::string>* input3 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
 
-  vcl_string voxel_type = input3->value();
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -113,14 +113,14 @@ bool bvam_normalize_image_process::execute()
   parameters()->get_value("b_end", b_end);
   
   if (verbose) {
-    vcl_cout << "normalization parameters to be used in this run:\n";
-    vcl_cout << "a_start: " << a_start << " a_end: " << a_end << " a_inc: " << a_inc << vcl_endl;
-    vcl_cout << "b_start: " << b_start << " b_end: " << b_end << " b_ratio: " << b_ratio << vcl_endl;
+    std::cout << "normalization parameters to be used in this run:\n";
+    std::cout << "a_start: " << a_start << " a_end: " << a_end << " a_inc: " << a_inc << std::endl;
+    std::cout << "b_start: " << b_start << " b_end: " << b_end << " b_ratio: " << b_ratio << std::endl;
   }
   
   //: CAUTION: Assumption: Input image is of type vxl_byte
   if (input_img->pixel_format() != VIL_PIXEL_FORMAT_BYTE) {
-    vcl_cout << "Input image pixel format is not VIL_PIXEL_FORMAT_BYTE!\n";
+    std::cout << "Input image pixel format is not VIL_PIXEL_FORMAT_BYTE!\n";
     return false;
   }
   
@@ -196,18 +196,18 @@ bool bvam_normalize_image_process::execute()
           bvam_util::multiply_slabs(prob, weights, product);
           float this_prob = bvam_util::sum_slab(product);
 
-          //vcl_cerr << this_prob << ' ';
+          //std::cerr << this_prob << ' ';
           if( this_prob < 0 ) {
-            vcl_cout << "In bvam_normalize_image_process::execute() -- prob is negative, Exiting!\n";
+            std::cout << "In bvam_normalize_image_process::execute() -- prob is negative, Exiting!\n";
             return false;
           }
 
           if( this_prob > sb_best_prob ){ sb_best_prob = this_prob; sb_best = sb; }
           if( this_prob > best_prob ){ best_prob = this_prob; a = sa; b = sb; }
         }
-        //vcl_cerr << '\n';
+        //std::cerr << '\n';
       }
-      //vcl_cerr << '\n';
+      //std::cerr << '\n';
     }
     
   } else if (voxel_type == "apm_mog_grey") {  
@@ -261,28 +261,28 @@ bool bvam_normalize_image_process::execute()
           bvam_util::multiply_slabs(prob, weights, product);
           float this_prob = bvam_util::sum_slab(product);
 
-          //vcl_cerr << this_prob << ' ';
+          //std::cerr << this_prob << ' ';
           if( this_prob < 0 ) {
-            vcl_cout << "In bvam_normalize_image_process::execute() -- prob is negative, Exiting!\n";
+            std::cout << "In bvam_normalize_image_process::execute() -- prob is negative, Exiting!\n";
             return false;
           }
 
           if( this_prob > sb_best_prob ){ sb_best_prob = this_prob; sb_best = sb; }
           if( this_prob > best_prob ){ best_prob = this_prob; a = sa; b = sb; }
         }
-        //vcl_cerr << '\n';
+        //std::cerr << '\n';
       }
-      //vcl_cerr << '\n';
+      //std::cerr << '\n';
     }
 
   } else {
-    vcl_cout << "In bvam_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
+    std::cout << "In bvam_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
     return false;
   }
 
   
   if (verbose) {
-    vcl_cout << "\noptimum a: " << a << "  b: " << b*255.0f << " best prob: " << best_prob << "\n";
+    std::cout << "\noptimum a: " << a << "  b: " << b*255.0f << " best prob: " << best_prob << "\n";
   }
 
   // Normalize the image with the best a and b.

@@ -20,7 +20,7 @@
 #include <vimt/vimt_image_2d_of.h>
 
 #include <dbvrl/dbvrl_region_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 
 
@@ -40,7 +40,7 @@ public:
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -64,8 +64,8 @@ protected:
   vimt_transform_2d curr_xform_;
   dbvrl_region_sptr curr_region_;
 
-  vcl_vector< vgl_point_2d<double> > vertices_;
-  vcl_vector< vgl_point_2d<double> > new_corners_;
+  std::vector< vgl_point_2d<double> > vertices_;
+  std::vector< vgl_point_2d<double> > new_corners_;
   vgl_point_2d<double> min_bound_;
   vgl_point_2d<double> max_bound_;
   dbvrl_region_tableau_sptr active_tableau_;
@@ -87,7 +87,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -96,7 +96,7 @@ public:
 protected:
 
   //: Registered images
-  vcl_vector<vimt_image_2d_of<vxl_byte> > images_; 
+  std::vector<vimt_image_2d_of<vxl_byte> > images_; 
 
   //: The region (defines the size of the resolved image)
   dbvrl_region_sptr region_;

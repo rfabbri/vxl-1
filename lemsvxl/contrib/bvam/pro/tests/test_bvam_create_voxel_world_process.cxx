@@ -9,9 +9,9 @@
 #include <bvam/bvam_world_params.h>
 #include <bvam/bvam_voxel_world.h>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <vector>
+#include <iostream>
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -38,13 +38,13 @@ MAIN( test_bvam_create_voxel_world_process )
   brdb_query_aptr Q = brdb_query_comp_new("id", brdb_query::EQ, id);
   brdb_selection_sptr S = DATABASE->select("bvam_voxel_world_sptr_data", Q);
   if(S->size()!=1){
-    vcl_cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
+    std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
     << " no selections\n";
   }
 
   brdb_value_sptr value;
-  if (!S->get_value(vcl_string("value"), value)) {
-    vcl_cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
+  if (!S->get_value(std::string("value"), value)) {
+    std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
      << " didn't get value\n";
   }
   bool non_null = (value != 0);
@@ -56,7 +56,7 @@ MAIN( test_bvam_create_voxel_world_process )
   // compare the values with the params given
   bvam_voxel_world_sptr voxel_world = result->value();
   bvam_world_params_sptr params = voxel_world->get_params();
-  vcl_string dir = params->model_dir();
+  std::string dir = params->model_dir();
   
   bool comp = (!dir.compare("C:\\"));
   comp = comp && (params->corner() == vgl_point_3d<float>(0,0,0));

@@ -8,10 +8,10 @@
 #ifndef SceneHandler_h_
 #define SceneHandler_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <Inventor/SbLinear.h>
-#include <vcl_vector.h>
-#include <vcl_queue.h>
+#include <vector>
+#include <queue>
 
 class SoSeparator;
 class SoCamera;
@@ -40,20 +40,20 @@ public:
 
   void clearAll();       
 
-  void openIV( vcl_string filename );
-  void openFS( vcl_string filename );
-  void openP3D( vcl_string filename );
-  void saveP3D( vcl_string filename );
-  void saveIV( vcl_string filename, bool saveNodes, bool saveLinks, bool saveFaces );
+  void openIV( std::string filename );
+  void openFS( std::string filename );
+  void openP3D( std::string filename );
+  void saveP3D( std::string filename );
+  void saveIV( std::string filename, bool saveNodes, bool saveLinks, bool saveFaces );
 
   dbmsh_vis_node* addNode( SbVec3f pos, float nodeSize );
   dbmsh_vis_node* addNode( SoSeparator* group, SbVec3f pos, float nodeSize );
   void addNodeByDragger( float nodeSize );
   dbmsh_vis_link* addLink( dbmsh_vis_node* node1, dbmsh_vis_node* node2 );
   dbmsh_vis_link* addLink( SoSeparator* group, dbmsh_vis_node* node1, dbmsh_vis_node* node2 );
-  dbmsh_vis_face* addFace( vcl_vector<dbmsh_vis_node*> nodes );
-  dbmsh_vis_face* addFace( SoSeparator* group, vcl_vector<dbmsh_vis_node*> nodes );
-  dbmsh_vis_face* addFace( vcl_queue<dbmsh_vis_node*> nodes );
+  dbmsh_vis_face* addFace( std::vector<dbmsh_vis_node*> nodes );
+  dbmsh_vis_face* addFace( SoSeparator* group, std::vector<dbmsh_vis_node*> nodes );
+  dbmsh_vis_face* addFace( std::queue<dbmsh_vis_node*> nodes );
 
   void removeNode( dbmsh_vis_node* node );
   void removeLink( dbmsh_vis_link* link );
@@ -69,8 +69,8 @@ public:
   void changeColor( SoSeparator* root, int color );
   static SbColor colorFromNumber( int colorNumber );
   
-  static vcl_vector<dbmsh_face*> commonFaces( dbmsh_vis_node* node1, dbmsh_vis_node* node2 );
-  static vcl_vector<dbmsh_link*> commonLinks( vcl_vector<dbmsh_vis_node*> );  
+  static std::vector<dbmsh_face*> commonFaces( dbmsh_vis_node* node1, dbmsh_vis_node* node2 );
+  static std::vector<dbmsh_link*> commonLinks( std::vector<dbmsh_vis_node*> );  
 
 
 protected:
@@ -84,9 +84,9 @@ private:
   SoSeparator* _links;
   SoSeparator* _faces;
 
-  vcl_vector<dbmsh_node*> _meshNodes;
-  vcl_vector<dbmsh_link*> _meshLinks;
-  vcl_vector<dbmsh_face*> _meshFaces;
+  std::vector<dbmsh_node*> _meshNodes;
+  std::vector<dbmsh_link*> _meshLinks;
+  std::vector<dbmsh_face*> _meshFaces;
 
 
 };

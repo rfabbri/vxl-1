@@ -53,7 +53,7 @@ public:
 
 
     //: Returns the string name of this tool
-    vcl_string name() const;
+    std::string name() const;
 
     //: Set the tableau to work with
     virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -80,8 +80,8 @@ private:
     bool four_pts();
     bool Ransac_all_pts_in_image();
     bool Ransac_selected_pts_in_image();
-    void putative_correspondences(vcl_vector<vsol_point_2d_sptr > & ,vcl_vector<vsol_point_2d_sptr > & , vil_image_resource_sptr& ,
-        vil_image_resource_sptr& , vcl_vector< vsol_point_2d_sptr >&, vcl_vector< vsol_point_2d_sptr > & );
+    void putative_correspondences(std::vector<vsol_point_2d_sptr > & ,std::vector<vsol_point_2d_sptr > & , vil_image_resource_sptr& ,
+        vil_image_resource_sptr& , std::vector< vsol_point_2d_sptr >&, std::vector< vsol_point_2d_sptr > & );
     double thresh_;
     bool active_;
     vgui_soview2D * object_;
@@ -89,17 +89,17 @@ private:
     vgui_easy2D_tableau_sptr tableau_im;
     float last_x, last_y ;
     float left_cornerx_, left_cornery_;
-    vcl_vector < vgui_tableau_sptr > tableaus_vsol_;
-    vcl_vector < vgui_tableau_sptr > tableaus_im_;
-    vcl_vector < vcl_vector < vsol_point_2d_sptr > > pts_;
+    std::vector < vgui_tableau_sptr > tableaus_vsol_;
+    std::vector < vgui_tableau_sptr > tableaus_im_;
+    std::vector < std::vector < vsol_point_2d_sptr > > pts_;
     vidpro1_vsol2D_storage_sptr storage_,storage2_;
     vidpro1_vsol2D_storage_sptr linestorage_,linestorage2_,linestorage3_,linestorage4_;
-    vcl_vector < bpro1_storage_sptr > images_;
-    vcl_vector < vsol_point_2d_sptr > drawnpt;
-    vcl_vector <vcl_vector< vsol_line_2d_sptr > > epilines;
+    std::vector < bpro1_storage_sptr > images_;
+    std::vector < vsol_point_2d_sptr > drawnpt;
+    std::vector <std::vector< vsol_line_2d_sptr > > epilines;
 
     
-    vcl_vector<vgl_homg_point_2d<double> > epip;
+    std::vector<vgl_homg_point_2d<double> > epip;
     int num_pop;
 
 

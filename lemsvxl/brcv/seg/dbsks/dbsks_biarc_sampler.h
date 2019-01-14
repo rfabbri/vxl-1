@@ -122,30 +122,30 @@ public:
   //: Compute samples - floating-point precision
   bool compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
     const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-    vcl_vector<double >& x_vec, vcl_vector<double >& y_vec, 
-    vcl_vector<double >& tx_vec, vcl_vector<double >& ty_vec);
+    std::vector<double >& x_vec, std::vector<double >& y_vec, 
+    std::vector<double >& tx_vec, std::vector<double >& ty_vec);
 
   //: Compute samples - floating-point precision
   bool compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
                        const vgl_point_2d<double >& end,   const vgl_vector_2d<double >& end_tangent,
-                       vcl_vector<vgl_point_2d<double > >&  pts,  
-                       vcl_vector<vgl_vector_2d<double > >& tangents); 
+                       std::vector<vgl_point_2d<double > >&  pts,  
+                       std::vector<vgl_vector_2d<double > >& tangents); 
 
   //: Compute samples of a biarc - integral precision
   bool compute_samples(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
     const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-    vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins, double& angle_step) const;
+    std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins, double& angle_step) const;
 
   //: Compute samples of a biarc using cache data
   // Required: cache data have been computed
   bool compute_samples_using_cache(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
     const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-    vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const;
+    std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const;
 
   //: Compute samples of a biarc - not using cache regarless of whether cache data are available
   bool compute_samples_not_using_cache(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& start_tangent,
     const vgl_point_2d<double >& end, const vgl_vector_2d<double >& end_tangent,
-    vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const;
+    std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const;
 
 
 
@@ -158,7 +158,7 @@ public:
             
 
   //: Print grid information
-  vcl_ostream& print(vcl_ostream& os) const {return os;}
+  std::ostream& print(std::ostream& os) const {return os;}
 
   
 protected:
@@ -186,7 +186,7 @@ protected:
   //: Compute (retrieve) samples from valid biarc index
   void retrieve_samples_from_valid_biarc_index(int i_dx, int i_dy, int i_profile,
     int start_x, int start_y,
-    vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const;
+    std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const;
 
   //: Compute (retrieve) samples from valid biarc index
   // These sample points are scaled up and then translated before assigning to 
@@ -194,7 +194,7 @@ protected:
   void retrieve_and_scale_samples_from_valid_biarc_index(int i_dx, int i_dy, int i_profile,
     double scaled_up,
     const vgl_point_2d<double >& start,
-    vcl_vector<int >& xs, vcl_vector<int >& ys, vcl_vector<int >& angle_bins) const;
+    std::vector<int >& xs, std::vector<int >& ys, std::vector<int >& angle_bins) const;
 
   //: (Literatally) compute samples of a biarc uniformly
   bool compute_uniform_biarc_samples(const vgl_point_2d<double >& start, 
@@ -202,11 +202,11 @@ protected:
     const vgl_point_2d<double >& end, 
     const vgl_vector_2d<double >& end_tangent,
     double ds,
-    vcl_vector<double >& x_vec, 
-    vcl_vector<double >& y_vec, 
-    vcl_vector<double >& tx_vec,
-    vcl_vector<double >& ty_vec,
-    vcl_vector<double >& angle_vec) const;
+    std::vector<double >& x_vec, 
+    std::vector<double >& y_vec, 
+    std::vector<double >& tx_vec,
+    std::vector<double >& ty_vec,
+    std::vector<double >& angle_vec) const;
 
   // Member variables ----------------------------------------------------------
 

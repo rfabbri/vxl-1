@@ -2,10 +2,10 @@
 //: MingChing Chang
 //  Nov. 14, 2004        Creation
 
-#include <vcl_utility.h>
-#include <vcl_cstdio.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <utility>
+#include <cstdio>
+#include <sstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <vgl/vgl_distance.h>
@@ -43,9 +43,9 @@ bool dbsk3d_fs_vertex::is_valid_finite_via_FF ()
 }
 
 //: get the set of associated generators via FE_set
-vcl_set<dbmsh3d_vertex*> dbsk3d_fs_vertex::get_Gs_from_FFs ()
+std::set<dbmsh3d_vertex*> dbsk3d_fs_vertex::get_Gs_from_FFs ()
 {
-  vcl_set<dbmsh3d_vertex*> gene_set;
+  std::set<dbmsh3d_vertex*> gene_set;
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) cur->ptr();
     dbmsh3d_halfedge* HE = FE->halfedge();
@@ -64,7 +64,7 @@ vcl_set<dbmsh3d_vertex*> dbsk3d_fs_vertex::get_Gs_from_FFs ()
 
 int dbsk3d_fs_vertex::n_Gs_from_FFs()
 {
-  vcl_set<dbmsh3d_vertex*> gene_set = get_Gs_from_FFs();
+  std::set<dbmsh3d_vertex*> gene_set = get_Gs_from_FFs();
   return gene_set.size();
 }
 
@@ -81,11 +81,11 @@ unsigned int dbsk3d_fs_vertex::count_valid_FEs () const
 
 unsigned int dbsk3d_fs_vertex::count_valid_FFs () const
 {
-  vcl_set<dbsk3d_fs_face*> Pset;
+  std::set<dbsk3d_fs_face*> Pset;
   return count_valid_FFs (Pset);
 }
 
-unsigned int dbsk3d_fs_vertex::count_valid_FFs (vcl_set<dbsk3d_fs_face*>& Pset) const
+unsigned int dbsk3d_fs_vertex::count_valid_FFs (std::set<dbsk3d_fs_face*>& Pset) const
 {
   Pset.clear();
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
@@ -201,7 +201,7 @@ FV_FLOW_TYPE dbsk3d_fs_vertex::detect_flow_type_A14 ()
   assert (n_incident_Es() == 4);
   dbsk3d_fs_face *FF1, *FF2, *FF3;
   
-  vcl_set<dbmsh3d_face*> FF_set;
+  std::set<dbmsh3d_face*> FF_set;
   get_incident_Fs (FF_set);
 
   int s1 = compute_s1 (FF_set);
@@ -260,7 +260,7 @@ FV_FLOW_TYPE dbsk3d_fs_vertex::detect_flow_type_A14 ()
   else {
     ///assert (0);
     flow_type_ = FV_FT_UNCLASSIFIED;
-    ///vul_printf (vcl_cout, "  FV %d flow type unclassified. s1 %d, s2 %d.\n", id_, s1, s2);
+    ///vul_printf (std::cout, "  FV %d flow type unclassified. s1 %d, s2 %d.\n", id_, s1, s2);
   }
 
   return flow_type_;
@@ -274,10 +274,10 @@ FV_FLOW_TYPE dbsk3d_fs_vertex::detect_flow_type_A1n ()
 }
 
 //: Compute s1: # shock sheets containing A12-2 sources
-int dbsk3d_fs_vertex::compute_s1 (vcl_set<dbmsh3d_face*>& face_set)
+int dbsk3d_fs_vertex::compute_s1 (std::set<dbmsh3d_face*>& face_set)
 {
   int s1 = 0;
-  vcl_set<dbmsh3d_face*>::iterator it = face_set.begin();
+  std::set<dbmsh3d_face*>::iterator it = face_set.begin();
   for (; it != face_set.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     if (FF->flow_type() == FF_FT_I_A12_2)
@@ -300,11 +300,11 @@ int dbsk3d_fs_vertex::compute_s2 ()
 }
 
 //: Return the two first found Gabriel edges (represented as fs_faces) of the A14 shock node.
-bool dbsk3d_fs_vertex::get_2_non_Gabriel_FFs (vcl_set<dbmsh3d_face*>& FF_set,
+bool dbsk3d_fs_vertex::get_2_non_Gabriel_FFs (std::set<dbmsh3d_face*>& FF_set,
                                               dbsk3d_fs_face*& FF1, dbsk3d_fs_face*& FF2)
 {
   int count = 0;
-  vcl_set<dbmsh3d_face*>::iterator it = FF_set.begin();
+  std::set<dbmsh3d_face*>::iterator it = FF_set.begin();
   for (; it != FF_set.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     if (FF->flow_type() != FF_FT_I_A12_2) { //found non-Gabriel edge
@@ -322,11 +322,11 @@ bool dbsk3d_fs_vertex::get_2_non_Gabriel_FFs (vcl_set<dbmsh3d_face*>& FF_set,
   return false;
 }
 
-bool dbsk3d_fs_vertex::get_3_Gabriel_edges (vcl_set<dbmsh3d_face*>& FF_set, dbsk3d_fs_face*& FF1, 
+bool dbsk3d_fs_vertex::get_3_Gabriel_edges (std::set<dbmsh3d_face*>& FF_set, dbsk3d_fs_face*& FF1, 
                                             dbsk3d_fs_face*& FF2, dbsk3d_fs_face*& FF3)
 {
   int count = 0;
-  vcl_set<dbmsh3d_face*>::iterator it = FF_set.begin();
+  std::set<dbmsh3d_face*>::iterator it = FF_set.begin();
   for (; it != FF_set.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     if (FF->flow_type() == FF_FT_I_A12_2) { //found Gabriel edge
@@ -352,7 +352,7 @@ bool dbsk3d_fs_vertex::get_3_Gabriel_edges (vcl_set<dbmsh3d_face*>& FF_set, dbsk
 
 //: Get all current associated G's excluding the inputFE and FF's incident ot FE.
 void dbsk3d_fs_vertex::get_asso_Gs_excld_FE (const dbsk3d_fs_edge* inputFE, 
-                                             vcl_map<int, dbmsh3d_vertex*>& asso_genes)
+                                             std::map<int, dbmsh3d_vertex*>& asso_genes)
 {
   //Loop through all incident FE of this FV (except inputFE), add FE's asso_genes.
   assert (inputFE);
@@ -366,7 +366,7 @@ void dbsk3d_fs_vertex::get_asso_Gs_excld_FE (const dbsk3d_fs_edge* inputFE,
   //Add all assigned genes of this fs_vertex.
   for (dbmsh3d_ptr_node* cur = asgn_G_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-    asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (G->id(), G));
+    asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (G->id(), G));
   }
 }
 
@@ -389,7 +389,7 @@ void dbsk3d_fs_vertex::del_asgn_G_of_FE (const dbsk3d_fs_edge* FE)
 bool dbsk3d_fs_vertex::valid_after_gap_xform_FE (const dbsk3d_fs_edge* inputFE)
 {
   //Loop through all incident fs_edges (except inputFE) and look for valid FF.  
-  vcl_set<dbmsh3d_face*> valid_Fset;
+  std::set<dbmsh3d_face*> valid_Fset;
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) cur->ptr();
     if (FE==inputFE)
@@ -430,7 +430,7 @@ dbmsh3d_vertex* dbsk3d_fs_vertex::clone () const
 void dbsk3d_fs_vertex::_clone_FV_G_conn (dbsk3d_fs_vertex* FV2, dbmsh3d_pt_set* BND2) const
 {
   //deep-copy the gene_list to FV2.
-  vcl_vector<dbmsh3d_vertex*> G_list;
+  std::vector<dbmsh3d_vertex*> G_list;
   for (dbmsh3d_ptr_node* cur = asgn_G_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
     dbmsh3d_vertex* G2 = BND2->vertexmap (G->id());
@@ -447,86 +447,86 @@ dbsk3d_fs_vertex* dbsk3d_fs_vertex::clone (dbmsh3d_pt_set* BND2) const
   return FV2;
 }
 
-void dbsk3d_fs_vertex::getInfo (vcl_ostringstream& ostrm)
+void dbsk3d_fs_vertex::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbsk3d_fs_vertex id: %d (%.16f %.16f %.16f), Time: %lf\n", id_,
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbsk3d_fs_vertex id: %d (%.16f %.16f %.16f), Time: %lf\n", id_,
                pt_.x(), pt_.y(), pt_.z(), compute_time()); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
   char shock_type[128] = "";
   V_TYPE vtype = compute_v_type ();
   switch (vtype) {
-  case V_TYPE_MANIFOLD: vcl_sprintf (shock_type, "A12");
-  case V_TYPE_RIB_END: vcl_sprintf (shock_type, "A1A3");
-  case V_TYPE_AXIAL_END: vcl_sprintf (shock_type, "A14");
-  case V_TYPE_RIB: vcl_sprintf (shock_type, "A3");
-  case V_TYPE_AXIAL: vcl_sprintf (shock_type, "A13");
-  case V_TYPE_DEGE_RIB_END: vcl_sprintf (shock_type, "Dege_Rib_End");
-  case V_TYPE_DEGE_AXIAL_END: vcl_sprintf (shock_type, "Dege_Axial_End");
+  case V_TYPE_MANIFOLD: std::sprintf (shock_type, "A12");
+  case V_TYPE_RIB_END: std::sprintf (shock_type, "A1A3");
+  case V_TYPE_AXIAL_END: std::sprintf (shock_type, "A14");
+  case V_TYPE_RIB: std::sprintf (shock_type, "A3");
+  case V_TYPE_AXIAL: std::sprintf (shock_type, "A13");
+  case V_TYPE_DEGE_RIB_END: std::sprintf (shock_type, "Dege_Rib_End");
+  case V_TYPE_DEGE_AXIAL_END: std::sprintf (shock_type, "Dege_Axial_End");
   }
-  vcl_set<dbmsh3d_vertex*> geneset = get_Gs_from_FFs ();
-  vcl_sprintf (s, "# G: %d, shock tpye: %s\n", geneset.size(), shock_type); ostrm<<s;
+  std::set<dbmsh3d_vertex*> geneset = get_Gs_from_FFs ();
+  std::sprintf (s, "# G: %d, shock tpye: %s\n", geneset.size(), shock_type); ostrm<<s;
   
   //point_genes
-  vcl_sprintf (s, "%u asgn. genes.:\n", n_asgn_Gs()); ostrm<<s;
-  vcl_set<void*> asgn_genes;
+  std::sprintf (s, "%u asgn. genes.:\n", n_asgn_Gs()); ostrm<<s;
+  std::set<void*> asgn_genes;
   get_asgn_Gs (asgn_genes);
-  vcl_set<void*>::iterator ait = asgn_genes.begin();
+  std::set<void*>::iterator ait = asgn_genes.begin();
   for (; ait != asgn_genes.end(); ait++) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) (*ait);
-    vcl_sprintf (s, " %d", G->id()); ostrm<<s;
+    std::sprintf (s, " %d", G->id()); ostrm<<s;
   }
 
   //point_genes
-  vcl_sprintf (s, "\n%u genes. from fs_faces:\n", geneset.size()); ostrm<<s;
-  vcl_set<dbmsh3d_vertex*>::iterator git = geneset.begin();
+  std::sprintf (s, "\n%u genes. from fs_faces:\n", geneset.size()); ostrm<<s;
+  std::set<dbmsh3d_vertex*>::iterator git = geneset.begin();
   for (; git != geneset.end(); git++) {
-    vcl_sprintf (s, " %d", (*git)->id()); ostrm<<s;
+    std::sprintf (s, " %d", (*git)->id()); ostrm<<s;
   }
 
   //fs_edges
-  vcl_set<void*> incident_Es;
+  std::set<void*> incident_Es;
   get_incident_Es (incident_Es);
-  vcl_sprintf (s, "\n%u fs_edges:", incident_Es.size()); ostrm<<s;
-  vcl_set<void*>::iterator eit = incident_Es.begin();
+  std::sprintf (s, "\n%u fs_edges:", incident_Es.size()); ostrm<<s;
+  std::set<void*>::iterator eit = incident_Es.begin();
   for (; eit != incident_Es.end(); eit++) {  
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*eit);
 
-    vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+    std::sprintf (s, " %d", FE->id()); ostrm<<s;
     if (FE->is_valid_via_F())
       ostrm<<"v";
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //fs_faces
-  vcl_set<dbmsh3d_face*> incident_faces;
+  std::set<dbmsh3d_face*> incident_faces;
   get_incident_Fs (incident_faces);
 
-  vcl_sprintf (s, "%u fs_faces:", (unsigned int) incident_faces.size()); ostrm<<s;
+  std::sprintf (s, "%u fs_faces:", (unsigned int) incident_faces.size()); ostrm<<s;
 
-  vcl_set<dbmsh3d_face*>::iterator pit = incident_faces.begin();
+  std::set<dbmsh3d_face*>::iterator pit = incident_faces.begin();
   for (; pit != incident_faces.end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit);
-    vcl_sprintf (s, " %d", FF->id()); ostrm<<s;
+    std::sprintf (s, " %d", FF->id()); ostrm<<s;
     if (FF->b_valid())
       ostrm<<"v";
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //: A12, A13, A3, A14, or A1A3 node
   vtype = get_v_type ();
-  vcl_sprintf (s, "Shock Type: %c\n", vtype); ostrm<<s;
+  std::sprintf (s, "Shock Type: %c\n", vtype); ostrm<<s;
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //: Old: need to re-write!!
-void dbsk3d_fs_vertex::get_incident_elms (vcl_set<dbsk3d_fs_edge*>& FE_set,
-                                          vcl_set<dbsk3d_fs_face*>& FF_set)
+void dbsk3d_fs_vertex::get_incident_elms (std::set<dbsk3d_fs_edge*>& FE_set,
+                                          std::set<dbsk3d_fs_face*>& FF_set)
 {
   FE_set.clear();
   FF_set.clear();
@@ -549,65 +549,65 @@ void dbsk3d_fs_vertex::get_incident_elms (vcl_set<dbsk3d_fs_edge*>& FE_set,
 //####### dbsk3d_fs_vertex TEXT FILE I/O FUNCTIONS #######
 //###############################################################
 
-void fv_save_text_file (vcl_FILE* fp, const dbsk3d_fs_vertex* FV)
+void fv_save_text_file (std::FILE* fp, const dbsk3d_fs_vertex* FV)
 {
-  vcl_fprintf (fp, "v %d (%.16f %.16f %.16f) %c\n", FV->id(), 
+  std::fprintf (fp, "v %d (%.16f %.16f %.16f) %c\n", FV->id(), 
                FV->pt().x(), FV->pt().y(), FV->pt().z(),
                (char) FV->v_type());
 
   //Assigned genes
   unsigned int nG = FV->n_asgn_Gs();
   if (nG == 0) {
-    vcl_fprintf (fp, "\t0:");
+    std::fprintf (fp, "\t0:");
   }
   else {
-    vcl_fprintf (fp, "\t%u:", nG);
+    std::fprintf (fp, "\t%u:", nG);
     for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
       dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-      vcl_fprintf (fp, " %d", G->id());
+      std::fprintf (fp, " %d", G->id());
     }
   }
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
 }
 
-void fv_load_text_file (vcl_FILE* fp, dbsk3d_fs_vertex* FV, 
-                        vcl_map <int, dbmsh3d_vertex*>& genemap)
+void fv_load_text_file (std::FILE* fp, dbsk3d_fs_vertex* FV, 
+                        std::map <int, dbmsh3d_vertex*>& genemap)
 {
   int id;
   double x, y, z;
   V_TYPE type;
-  vcl_fscanf (fp, "v %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
+  std::fscanf (fp, "v %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
   FV->set_id (id);
   FV->get_pt().set (x, y, z);
   FV->set_v_type (type);
 
   //Read associated genes  
   unsigned int nG;
-  vcl_vector<dbmsh3d_vertex*> asgn_G;
-  vcl_fscanf (fp, "\t%u:", &nG);
+  std::vector<dbmsh3d_vertex*> asgn_G;
+  std::fscanf (fp, "\t%u:", &nG);
   for (unsigned int j=0; j<nG; j++) {
     int gid;
-    vcl_fscanf (fp, " %d", &gid);
+    std::fscanf (fp, " %d", &gid);
     dbmsh3d_vertex* G = NULL;
-    vcl_map <int, dbmsh3d_vertex*>::iterator git = genemap.find (gid);
+    std::map <int, dbmsh3d_vertex*>::iterator git = genemap.find (gid);
     if (git != genemap.end()) {
       G = (*git).second;    
       asgn_G.push_back (G);
     }
   }
-  vcl_fscanf(fp, "\n");
+  std::fscanf(fp, "\n");
 
   //Note that the adding order of FV.asgn_G_ is inversed.
   for (int j=int(asgn_G.size()-1); j>=0; j--)
     FV->add_asgn_G (asgn_G[j]); //Assign generator G to shock node FV
 }
 
-void fv_load_text_file_sg (vcl_FILE* fp, dbsk3d_fs_vertex* FV)
+void fv_load_text_file_sg (std::FILE* fp, dbsk3d_fs_vertex* FV)
 {
   int id;
   double x, y, z;
   V_TYPE type;
-  vcl_fscanf (fp, "v %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
+  std::fscanf (fp, "v %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
   FV->set_id (id);
   FV->get_pt().set (x, y, z);
   FV->set_v_type (type);
@@ -615,18 +615,18 @@ void fv_load_text_file_sg (vcl_FILE* fp, dbsk3d_fs_vertex* FV)
   //Read associated genes and ignore them.
   unsigned int nG;
   int gid;
-  vcl_fscanf (fp, "\t%u:", &nG);
+  std::fscanf (fp, "\t%u:", &nG);
   for (unsigned int j=0; j<nG; j++)    
-    vcl_fscanf (fp, " %d", &gid);
-  vcl_fscanf(fp, "\n");
+    std::fscanf (fp, " %d", &gid);
+  std::fscanf(fp, "\n");
 }
 
-void fv_load_text_file_sg_old (vcl_FILE* fp, dbsk3d_fs_vertex* FV)
+void fv_load_text_file_sg_old (std::FILE* fp, dbsk3d_fs_vertex* FV)
 {
   int id;
   double x, y, z;
   V_TYPE type;
-  vcl_fscanf (fp, "n %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
+  std::fscanf (fp, "n %d (%lf %lf %lf) %c\n", &id, &x, &y, &z, &type);
   FV->set_id (id);
   FV->get_pt().set (x, y, z);
   FV->set_v_type (type);

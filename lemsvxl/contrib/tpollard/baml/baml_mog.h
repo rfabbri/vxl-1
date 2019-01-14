@@ -8,9 +8,9 @@
 // \date 7/31/07
 
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 
 #include "baml_appearance.h"
@@ -50,7 +50,7 @@ public:
     const vnl_vector<float>& light);
 
   void draw_x3d(
-    vcl_ofstream& x3d_stream );
+    std::ofstream& x3d_stream );
 
   float best_color(){ return components_[0][1]; }
   bool is_untrained(){ return num_used_mixtures() == 0; }

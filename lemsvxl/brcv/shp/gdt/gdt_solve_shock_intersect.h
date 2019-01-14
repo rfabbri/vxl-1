@@ -4,9 +4,9 @@
 #ifndef gdt_solve_shock_intersect_h_
 #define gdt_solve_shock_intersect_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <cmath>
+#include <utility>
+#include <map>
 
 #include <gdt/gdt_shock.h>
 

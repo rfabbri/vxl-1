@@ -9,7 +9,7 @@
 #include "dbmrf_bmrf_storage.h"
 
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
 
 #include <vil/vil_image_resource.h>
@@ -27,7 +27,7 @@ dbmrf_evaluate_process::dbmrf_evaluate_process()
 {
   if( !parameters()->add( "scale" ,     "-scale" ,    1.0f ) ||
       !parameters()->add( "compare depths" ,    "-depth" ,    true ) ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -53,7 +53,7 @@ dbmrf_evaluate_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_evaluate_process::name()
 {
   return "BMRF Evaluate";
@@ -61,9 +61,9 @@ dbmrf_evaluate_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_evaluate_process::get_input_type()
+std::vector< std::string > dbmrf_evaluate_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   to_return.push_back( "image" );
   return to_return;
@@ -71,9 +71,9 @@ vcl_vector< vcl_string > dbmrf_evaluate_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_evaluate_process::get_output_type()
+std::vector< std::string > dbmrf_evaluate_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   //to_return.push_back( "vsol" );
   return to_return;
 }
@@ -98,10 +98,10 @@ namespace {
 
 inline double safe_interp(vil_image_view< double >& image, double x, double y)
 {
-  int x1 = static_cast<int>(vcl_floor(x)), x2 = x1+1;
-  int y1 = static_cast<int>(vcl_floor(y)), y2 = y1+1;
+  int x1 = static_cast<int>(std::floor(x)), x2 = x1+1;
+  int y1 = static_cast<int>(std::floor(y)), y2 = y1+1;
   if(x1<0 || x2 >= image.ni() || y1<0 || y2 >= image.nj())
-    return  vcl_numeric_limits<double>::infinity();
+    return  std::numeric_limits<double>::infinity();
 
   double v11 = image(x1,y1), v21 = image(x2,y1),
          v12 = image(x1,y2), v22 = image(x2,y2);
@@ -118,7 +118,7 @@ inline double safe_interp(vil_image_view< double >& image, double x, double y)
   if(vnl_math_isfinite(v21)) return v21;
   if(vnl_math_isfinite(v22)) return v22;
 
-  return vcl_numeric_limits<double>::infinity();
+  return std::numeric_limits<double>::infinity();
 }
 
 };
@@ -129,7 +129,7 @@ bool
 dbmrf_evaluate_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
 
@@ -163,7 +163,7 @@ dbmrf_evaluate_process::execute()
       bmrf_node_sptr node = n->second;
       bmrf_gamma_func_sptr gamma_func = node->gamma();
       if(!gamma_func){
-        //vcl_cout << "skipped\n" <<vcl_endl;
+        //std::cout << "skipped\n" <<std::endl;
         continue;
       }
 
@@ -172,28 +172,28 @@ dbmrf_evaluate_process::execute()
       if( gamma_func->mean() < .02 )
         continue;
 
-      for(vcl_vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
+      for(std::vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
           pi != n->first->end(); ++pi)
       {
         vgl_point_2d<double> pt((*pi)->p());
         double di = vil_bilin_interp(image,pt.x(),pt.y());
         double dc = scale / (*gamma_func)((*pi)->alpha());
         if(vnl_math_isfinite(di) && vnl_math_isfinite(dc)){
-          //vcl_cout << di << " \t"<< dc<< " \t" << vcl_endl;
-          error += vcl_abs(di-dc);
+          //std::cout << di << " \t"<< dc<< " \t" << std::endl;
+          error += std::abs(di-dc);
           error2 += (di-dc)*(di-dc);
           ++count;
         }
         
         if(vnl_math_isfinite(dc)){
-          vcl_cout << pt.x()<<" "<<pt.y()<<" "<<dc<<vcl_endl;
+          std::cout << pt.x()<<" "<<pt.y()<<" "<<dc<<std::endl;
         }
         
       }
     }
-    //vcl_cout << "count: "<< count <<'\n'
+    //std::cout << "count: "<< count <<'\n'
     //         << "mean: " << error/count << '\n'
-    //         << "mean2: "<< error2/count <<vcl_endl;
+    //         << "mean2: "<< error2/count <<std::endl;
   }
   else{
     
@@ -207,11 +207,11 @@ dbmrf_evaluate_process::execute()
     bmrf_node_sptr node = n->second;
     bmrf_gamma_func_sptr gamma_func = node->gamma();
     if(!gamma_func){
-      //vcl_cout << "skipped\n" <<vcl_endl;
+      //std::cout << "skipped\n" <<std::endl;
       continue;
     } 
 
-    for(vcl_vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
+    for(std::vector<bmrf_epi_point_sptr>::const_iterator pi = n->first->begin();
         pi != n->first->end(); ++pi)
     {
       vgl_point_2d<double> pt((*pi)->p());
@@ -221,15 +221,15 @@ dbmrf_evaluate_process::execute()
       ++count;
     }
   }
-  double rms = vcl_sqrt(error/count);
+  double rms = std::sqrt(error/count);
 
   if(rms < last_error){
     last_error = rms;
   }else{
-    vcl_cout <<"min: "<< s<<" \t" << rms << vcl_endl;
+    std::cout <<"min: "<< s<<" \t" << rms << std::endl;
     break;
   }
-  //vcl_cout << s<<" \t" << rms << vcl_endl;
+  //std::cout << s<<" \t" << rms << std::endl;
   }
   }
   

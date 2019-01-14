@@ -18,9 +18,9 @@
 //  Modifications <none>
 // \endverbatim
 
-#include <vcl_iosfwd.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <iosfwd>
+#include <string>
+#include <cassert>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_pixel_format.h>
 

@@ -4,7 +4,7 @@
 #define CENTERING_SCALE 50
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 
 #include <vnl/vnl_math.h>
@@ -18,14 +18,14 @@
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_2.h>
 #include <vul/vul_file.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-//#include <vcl_ifstream.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+//#include <std::ifstream.h>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vgl/algo/vgl_convex_hull_2d.h>
 #include <vgl/vgl_point_3d.h>
@@ -34,9 +34,9 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 
-#include <vcl_cstring.h>
-#include <vcl_string.h>
-//#include <vcl_fstream.h>
+#include <cstring>
+#include <string>
+//#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_reg_exp.h>
@@ -56,7 +56,7 @@ double add_0_,add_1_;
 int ni_,nj_;
 double bottom_;
 ///////////
-int ps_histogram_write(vcl_string filename,  vcl_vector< vnl_double_2 >p0, vcl_vector< vnl_double_2 >p1)
+int ps_histogram_write(std::string filename,  std::vector< vnl_double_2 >p0, std::vector< vnl_double_2 >p1)
 {
 
   
@@ -70,15 +70,15 @@ int ps_histogram_write(vcl_string filename,  vcl_vector< vnl_double_2 >p0, vcl_v
   vul_psfile psfile1(filename.c_str(), false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << filename<< vcl_endl;
+    std::cout << " Error opening file  " << filename<< std::endl;
     return false;
   }
 
 
 
-  vcl_cout << " Opened file " << filename << " for writing!\n";
-  vcl_cout << " Image dimensions are, width: " << ni;
-  vcl_cout << " height: " << nj << "\n";
+  std::cout << " Opened file " << filename << " for writing!\n";
+  std::cout << " Image dimensions are, width: " << ni;
+  std::cout << " height: " << nj << "\n";
 
   //unsigned char * data= new unsigned char[loaded_image.ni()*loaded_image.nj()];
   //for( unsigned i=0;i<loaded_image.ni()*loaded_image.nj();i++)
@@ -109,21 +109,21 @@ int ps_histogram_write(vcl_string filename,  vcl_vector< vnl_double_2 >p0, vcl_v
 
 //////////////
 
-void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,vcl_vector< vnl_double_2 >&points1)
+void water_fill(std::vector< vnl_double_2 >p,std::vector< vnl_double_2 >&points0,std::vector< vnl_double_2 >&points1)
 {
 
   int index;
   double max=-1.0,min=1000000000000000000.0;
   for (unsigned i=1;i<p.size(); i++) 
   {
-    double a=vcl_fabs(p[i][1]-p[i-1][1]);
+    double a=std::fabs(p[i][1]-p[i-1][1]);
     if (a>max) {
       index=i;
       max=a;
     }
   }
-  vcl_cout<<"separating points to 2 groups: "<<max<<" "<<index<<vcl_endl;
-  vcl_vector<vgl_point_2d <double> >g0,g1;
+  std::cout<<"separating points to 2 groups: "<<max<<" "<<index<<std::endl;
+  std::vector<vgl_point_2d <double> >g0,g1;
 
   double max_z0=-10000000000.0,max_z1=-1000000000.0;
   for (unsigned i=0;i<index;i++)
@@ -146,7 +146,7 @@ void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,v
 
   /////////////// separation done.
 
-  vcl_vector <vgl_point_2d<double> > p0l,p1l;
+  std::vector <vgl_point_2d<double> > p0l,p1l;
   for (double water_level=bottom_;water_level<15.0&&water_level<max_z0&&water_level<max_z1; water_level+=.1) {
     vgl_line_2d<double> l;
 
@@ -173,7 +173,7 @@ void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,v
    vgl_point_2d <double> p0 = vgl_closest_point(l,g0[index0]);
    vgl_point_2d <double> p1 = vgl_closest_point(l,g1[index1]);
     
-    vcl_cout<<water_level<<" "<<p0.x()-p1.x()<<vcl_endl;
+    std::cout<<water_level<<" "<<p0.x()-p1.x()<<std::endl;
    p0l.push_back(p0);
    p1l.push_back(p1);
   }
@@ -207,7 +207,7 @@ void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,v
 
     vnl_double_2 a(p0l[i].x(),p0l[i].y());
     points0.push_back(a);
-    //vcl_cout<<ll2[i]<<vcl_endl;
+    //std::cout<<ll2[i]<<std::endl;
   }
 
    for (unsigned i=0;i<p1l.size();i++)
@@ -217,7 +217,7 @@ void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,v
 
     vnl_double_2 a(p1l[i].x(),p1l[i].y());
     points1.push_back(a);
-    //vcl_cout<<ll2[i]<<vcl_endl;
+    //std::cout<<ll2[i]<<std::endl;
   }
 
 
@@ -227,7 +227,7 @@ void water_fill(vcl_vector< vnl_double_2 >p,vcl_vector< vnl_double_2 >&points0,v
 ////////
 ////////
 /////////
-int ps_write(vcl_string filename,  vcl_vector< vnl_double_2 >points, int divide)
+int ps_write(std::string filename,  std::vector< vnl_double_2 >points, int divide)
 {
  int  ni=1000;
  int nj=800;
@@ -250,15 +250,15 @@ int ps_write(vcl_string filename,  vcl_vector< vnl_double_2 >points, int divide)
   vul_psfile psfile1(filename.c_str(), false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << filename<< vcl_endl;
+    std::cout << " Error opening file  " << filename<< std::endl;
     return false;
   }
 
 
 
-  vcl_cout << " Opened file " << filename << " for writing!\n";
-  vcl_cout << " Image dimensions are, width: " << ni;
-  vcl_cout << " height: " << nj << "\n";
+  std::cout << " Opened file " << filename << " for writing!\n";
+  std::cout << " Image dimensions are, width: " << ni;
+  std::cout << " height: " << nj << "\n";
 
   //unsigned char * data= new unsigned char[loaded_image.ni()*loaded_image.nj()];
   //for( unsigned i=0;i<loaded_image.ni()*loaded_image.nj();i++)
@@ -282,14 +282,14 @@ int ps_write(vcl_string filename,  vcl_vector< vnl_double_2 >points, int divide)
     //vsol_point_2d_sptr p1 = points[i-1];
     //vsol_point_2d_sptr p2 = points[i];
     //psfile1.line(p1->x(), p1->y(), p2->x(), p2->y());
-   // vcl_cout<<"ps*: "<<points[i-1]<<vcl_endl;
+   // std::cout<<"ps*: "<<points[i-1]<<std::endl;
     float a=points[i-1][0];
     float b=points[i-1][1];
     float c=points[i][0];
     float d=points[i][1];
     //psfile1.line(points[i-1][0], points[i-1][1], points[i][0], points[i][1]);
     psfile1.line(a,b,c,d);
-    //vcl_cout<<"ps*: "<<points[i-1]<<vcl_endl;
+    //std::cout<<"ps*: "<<points[i-1]<<std::endl;
    // psfile1.circle(points[i-1][0],points[i-1][1],1.0);
   }
 
@@ -323,7 +323,7 @@ int ps_write(vcl_string filename,  vcl_vector< vnl_double_2 >points, int divide)
   strtemp1[i]= 0;
   sprintf(strtemp2, "%s.con", strtemp1);
 
-  vcl_vector<vgl_point_2d<double> > curve;
+  std::vector<vgl_point_2d<double> > curve;
   curve.clear();
 
   for (i=0; i<points.size();i++){
@@ -359,49 +359,49 @@ int ps_write(vcl_string filename,  vcl_vector< vnl_double_2 >points, int divide)
 
 
 //get from the reading line_in
-vnl_vector<double>  get_number( vcl_string line_in,
+vnl_vector<double>  get_number( std::string line_in,
                                int ix0,int ix1, int ix2)
 {
 
-  vcl_string hhh="f1";
+  std::string hhh="f1";
   vnl_double_3  vs;
 
   float combination_counter=0.0;
 
-  //vcl_cout<<ix0<<" "<<ix1<<" "<<ix2<<vcl_endl;
-  //vcl_cout<< "~"<<line_in<<vcl_endl;
+  //std::cout<<ix0<<" "<<ix1<<" "<<ix2<<std::endl;
+  //std::cout<< "~"<<line_in<<std::endl;
 
   char * cstr;
   cstr = new char [line_in.size()+1];
-  vcl_strcpy (cstr, line_in.c_str());
+  std::strcpy (cstr, line_in.c_str());
   vul_string_c_trim(cstr,"(error/count):"); 
 
 
 
   /*  if (hhh!=type) {
 
-  vcl_cout<<"no type"<<vcl_endl; 
+  std::cout<<"no type"<<std::endl; 
   return vs;
   }
-  //vcl_cout<<hhh<<vcl_endl;
+  //std::cout<<hhh<<std::endl;
   if (hhh==type) {
   */
 
   int index=0;
   char * pcha;
-  pcha=vcl_strtok(cstr," (error/count)");  
+  pcha=std::strtok(cstr," (error/count)");  
 
-  //vcl_cout<<pcha<<vcl_endl;
+  //std::cout<<pcha<<std::endl;
   while (pcha != NULL)
   {
 
-   // vcl_cout<<index<<" "<<vul_string_atof(pcha)<<vcl_endl;
+   // std::cout<<index<<" "<<vul_string_atof(pcha)<<std::endl;
     if (index==ix0) vs[0]=(vul_string_atof(pcha));
     if (index==ix1) vs[1]=(vul_string_atof(pcha));
     if (index==ix2) vs[2]=(vul_string_atof(pcha));
-   // vcl_cout<<pcha<<vcl_endl;
+   // std::cout<<pcha<<std::endl;
 
-    pcha=vcl_strtok(NULL," ");
+    pcha=std::strtok(NULL," ");
 
 
 
@@ -409,7 +409,7 @@ vnl_vector<double>  get_number( vcl_string line_in,
 
 
   }
-  // vcl_cout<< vs<<vcl_endl;
+  // std::cout<< vs<<std::endl;
   /*}*/
   delete []cstr;
   return vs;
@@ -419,21 +419,21 @@ vnl_vector<double>  get_number( vcl_string line_in,
 
 // divide number vy ','
 //get from the reading line_in
-vnl_vector<double>  get_number_comma( vcl_string line_in,
+vnl_vector<double>  get_number_comma( std::string line_in,
                                int ix0,int ix1, int ix2)
 {
 
-  vcl_string hhh="f1";
+  std::string hhh="f1";
   vnl_double_3  vs;
 
   float combination_counter=0.0;
 
-  //vcl_cout<<ix0<<" "<<ix1<<" "<<ix2<<vcl_endl;
-  //vcl_cout<< "~"<<line_in<<vcl_endl;
+  //std::cout<<ix0<<" "<<ix1<<" "<<ix2<<std::endl;
+  //std::cout<< "~"<<line_in<<std::endl;
 
   char * cstr;
   cstr = new char [line_in.size()+1];
-  vcl_strcpy (cstr, line_in.c_str());
+  std::strcpy (cstr, line_in.c_str());
   vul_string_c_trim(cstr,">");  /// insert '>' 5-7-07
 
 
@@ -441,19 +441,19 @@ vnl_vector<double>  get_number_comma( vcl_string line_in,
 
   int index=0;
   char * pcha;
-  pcha=vcl_strtok(cstr,",");  /// insert ',' 5-7-07
+  pcha=std::strtok(cstr,",");  /// insert ',' 5-7-07
 
-  //vcl_cout<<pcha<<vcl_endl;
+  //std::cout<<pcha<<std::endl;
   while (pcha != NULL)
   {
 
-   // vcl_cout<<index<<" "<<vul_string_atof(pcha)<<vcl_endl;
+   // std::cout<<index<<" "<<vul_string_atof(pcha)<<std::endl;
     if (index==ix0) vs[0]=(vul_string_atof(pcha));
     if (index==ix1) vs[1]=(vul_string_atof(pcha));
     if (index==ix2) vs[2]=(vul_string_atof(pcha));
-  //  vcl_cout<<pcha<<vcl_endl;
+  //  std::cout<<pcha<<std::endl;
 
-    pcha=vcl_strtok(NULL,",");
+    pcha=std::strtok(NULL,",");
 
 
 
@@ -461,14 +461,14 @@ vnl_vector<double>  get_number_comma( vcl_string line_in,
 
 
   }
-  // vcl_cout<< vs<<vcl_endl;
+  // std::cout<< vs<<std::endl;
   /*}*/
   delete []cstr;
   return vs;
 }
 
 
-int centering(vcl_vector <vnl_double_2> &ll2,int ni=1024,int nj=768) 
+int centering(std::vector <vnl_double_2> &ll2,int ni=1024,int nj=768) 
 {
   //double min_0=vnl_numeric::max
   double min_0 =  vnl_numeric_traits<double>::maxval;
@@ -533,7 +533,7 @@ int centering(vcl_vector <vnl_double_2> &ll2,int ni=1024,int nj=768)
     ll2[i][0]=+add_0+ll2[i][0]+ni/2.0;
     ll2[i][1]=+add_1+ll2[i][1]+nj/2.0;
 
-    vcl_cout<<ll2[i]<<vcl_endl;
+    std::cout<<ll2[i]<<std::endl;
   }
 
   add_0_=add_0; add_1_=add_1; ni_=ni; nj_=nj;
@@ -541,32 +541,32 @@ int centering(vcl_vector <vnl_double_2> &ll2,int ni=1024,int nj=768)
 
 }
 
-int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,float rev,vcl_vector <vgl_point_3d<double> > & ptl,bool rotation=false){
-  //vcl_ifstream in(res_txt.c_str());
-  vcl_ifstream in(res_txt.c_str());
+int read_result_txt_file(std::string res_txt, bool flag, std::string what) {//,float rev,std::vector <vgl_point_3d<double> > & ptl,bool rotation=false){
+  //std::ifstream in(res_txt.c_str());
+  std::ifstream in(res_txt.c_str());
 
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<res_txt << vcl_endl;
+    std::cerr << "Failed to read file "<<res_txt << std::endl;
     exit(-4);
     return -1;
   }
 
   // in
-  vcl_string hhh="";
-  vcl_string dummy="";
-  vcl_string st="";
+  std::string hhh="";
+  std::string dummy="";
+  std::string st="";
 
   float combination_counter=0.0;
   double x,y,z;z=0.0;
   double epi_x,epi_y;
-  vcl_vector <double> v,w;
+  std::vector <double> v,w;
   double sum_z=0.0;double sum_z_norm=0.0;
 
 
 
   vnl_vector <double> ddd;
-  vcl_vector <vnl_vector <double> >lll;
-  vcl_vector <vnl_double_2> ll2;
+  std::vector <vnl_vector <double> >lll;
+  std::vector <vnl_double_2> ll2;
 
 
   int ps_counter=0;
@@ -574,7 +574,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
   while (!in.eof()) {
     in>>hhh;
     char stch[256];
-    vcl_string ss;
+    std::string ss;
     //char temp[256];
     if (hhh==what) {
       //in.unget();
@@ -584,7 +584,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
     else {
 
       if (lll.size()!=0) { 
-        vcl_cout<<lll.size()<<vcl_endl;
+        std::cout<<lll.size()<<std::endl;
         
         for (unsigned i=0;i<lll.size();i++)
         {
@@ -601,7 +601,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
 
         }
 
-        vcl_string filename="ps_"+what;
+        std::string filename="ps_"+what;
         if (flag==true) filename+="_yz_";
         if (flag==false) filename+="_xz_";
         
@@ -614,7 +614,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
         centering(ll2);
         
        
-        vcl_cout<<ll2.size()<<" ---------------=="<<vcl_endl;
+        std::cout<<ll2.size()<<" ---------------=="<<std::endl;
         ps_write(filename,  ll2,ll2.size());
         ll2.clear();
         ps_counter++;
@@ -629,7 +629,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
     /* 
     char * cstr;
     cstr = new char [ss.size()+1];
-    vcl_strcpy (cstr, ss.c_str());
+    std::strcpy (cstr, ss.c_str());
     */
 
 
@@ -637,30 +637,30 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
 
 
     //ss=stch;
-    vcl_string  epos("e+"),eneg("e-"),ind("#");
+    std::string  epos("e+"),eneg("e-"),ind("#");
 
     //get rid of the lines containing exponential part
     int    found=ss.find(epos);
-    if (found!=vcl_string::npos) {
-      vcl_cout<<ss<<vcl_endl;
+    if (found!=std::string::npos) {
+      std::cout<<ss<<std::endl;
       continue;
     }
 
     found =ss.find(eneg);
-    if (found!=vcl_string::npos) continue;
+    if (found!=std::string::npos) continue;
 
     found =ss.find(ind);
-    if (found!=vcl_string::npos) continue;
-    //vcl_cout<<stch<<vcl_endl;
+    if (found!=std::string::npos) continue;
+    //std::cout<<stch<<std::endl;
 
     if (ss.size()==0) continue;
     //if (i>38) {
     ddd=get_number(stch,3,4,5);
-    //vcl_cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    //vcl_cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    vcl_cout<<lll.size()<<vcl_endl;
+    std::cout<<lll.size()<<std::endl;
     lll.push_back(ddd);
     //}
   }
@@ -668,15 +668,15 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
 
   /**
   if (data.size() <3) {
-  vcl_cout<<"too short list of epi search"<<vcl_endl;
+  std::cout<<"too short list of epi search"<<std::endl;
   exit(5);
   }
 
 
-  vcl_vector <vcl_vector <vnl_vector <double > > >subdata_all;
-  vcl_vector <vnl_vector <double > >subdata;
+  std::vector <std::vector <vnl_vector <double > > >subdata_all;
+  std::vector <vnl_vector <double > >subdata;
   for (unsigned i=0;i<data.size()-1;i++) {
-  //vcl_cout<<"--"<<data[i][0]<<" "<<data[i][1]<<vcl_endl;
+  //std::cout<<"--"<<data[i][0]<<" "<<data[i][1]<<std::endl;
   if (data[i][0]==0&&data[i][1]==0) {
 
   float sub_max=0.0;
@@ -689,7 +689,7 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
   sub_max_index=j;
   }
   }
-  vcl_cout<< "**sub max** "<<subdata[sub_max_index]<<vcl_endl;
+  std::cout<< "**sub max** "<<subdata[sub_max_index]<<std::endl;
   subdata_all.push_back(subdata);
   subdata.clear();
   }
@@ -713,12 +713,12 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
   }
 
 
-  vcl_cout<<"data size: "<<data.size()<<" combination counter "<<combination_counter<<vcl_endl;
+  std::cout<<"data size: "<<data.size()<<" combination counter "<<combination_counter<<std::endl;
   in.close();
 
 
 
-  vcl_vector <double> data1,data0;
+  std::vector <double> data1,data0;
   for (unsigned i=0;i<data.size();i++){
   data0.push_back(data[i][0]);
   data1.push_back(data[i][1]);
@@ -728,24 +728,24 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
   mbl_stats_1d stats1(data1);
   if (show) for (unsigned i=0;i<data.size();i++)
   {
-  if (stats0.max()==data[i][0]) vcl_cout<<"!! "<<data[i]<<vcl_endl;
-  else vcl_cout<<"*  "<<data[i]<<vcl_endl;
+  if (stats0.max()==data[i][0]) std::cout<<"!! "<<data[i]<<std::endl;
+  else std::cout<<"*  "<<data[i]<<std::endl;
 
   }
-  //vcl_cout<<stats1.mean()<<" "<<stats1.max()<<" "<<stats1.min()<<" "<<stats1.variance()<<vcl_endl;
+  //std::cout<<stats1.mean()<<" "<<stats1.max()<<" "<<stats1.min()<<" "<<stats1.variance()<<std::endl;
 
-  //vcl_cout<<stats0.mean()<<" "<<stats0.max()<<" "<<stats0.min()<<" "<<stats0.variance()<<vcl_endl;
-  vcl_cout<<"------------------------------"<<vcl_endl;
-  //vcl_cout<<stats0.variance()<<" "<<stats1.variance()<<" "<<stats1.max()<<" "<<stats1.min()<<vcl_endl;
-  vcl_cout<<stats0.variance()<<" "<<stats0.max()<<" "<<stats0.min()<<vcl_endl;
-  vcl_cout<<"=============================="<<vcl_endl<<vcl_endl;
+  //std::cout<<stats0.mean()<<" "<<stats0.max()<<" "<<stats0.min()<<" "<<stats0.variance()<<std::endl;
+  std::cout<<"------------------------------"<<std::endl;
+  //std::cout<<stats0.variance()<<" "<<stats1.variance()<<" "<<stats1.max()<<" "<<stats1.min()<<std::endl;
+  std::cout<<stats0.variance()<<" "<<stats0.max()<<" "<<stats0.min()<<std::endl;
+  std::cout<<"=============================="<<std::endl<<std::endl;
 
 
   for (unsigned b=0;b<subdata_all.size();b++) 
   {
-  vcl_vector <double> d0,d1;
+  std::vector <double> d0,d1;
   for (unsigned i=0;i<subdata_all[b].size();i++){
-  if (subdata_all[b][i][0]==0&&subdata_all[b][i][1]==0) vcl_cout<<"0 0 skip "<<b<<vcl_endl;
+  if (subdata_all[b][i][0]==0&&subdata_all[b][i][1]==0) std::cout<<"0 0 skip "<<b<<std::endl;
   else {
   d0.push_back(subdata_all[b][i][0]);
   d1.push_back(subdata_all[b][i][1]);
@@ -755,42 +755,42 @@ int read_result_txt_file(vcl_string res_txt, bool flag, vcl_string what) {//,flo
   mbl_stats_1d s0(d0);
   mbl_stats_1d s1(d1);
 
-  vcl_cout<<"^^*^^ "<<s0<<" "<<s1<<vcl_endl;
+  std::cout<<"^^*^^ "<<s0<<" "<<s1<<std::endl;
 
   }
-  // vcl_cout<<stats1<<vcl_endl;
+  // std::cout<<stats1<<std::endl;
   //exit(1);
   return 1;**/
 }
 
 /// both f1 and r1 together
 
-int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_vector <vgl_point_3d<double> > & ptl,bool rotation=false){
-  //vcl_ifstream in(res_txt.c_str());
-  vcl_ifstream in(res_txt.c_str());
+int read_result_txt_file_both(std::string res_txt, bool flag) {//,float rev,std::vector <vgl_point_3d<double> > & ptl,bool rotation=false){
+  //std::ifstream in(res_txt.c_str());
+  std::ifstream in(res_txt.c_str());
 
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<res_txt << vcl_endl;
+    std::cerr << "Failed to read file "<<res_txt << std::endl;
     exit(-4);
     return -1;
   }
 
   // in
-  vcl_string hhh="";
-  vcl_string dummy="";
-  vcl_string st="";
+  std::string hhh="";
+  std::string dummy="";
+  std::string st="";
 
   float combination_counter=0.0;
   double x,y,z;z=0.0;
   double epi_x,epi_y;
-  vcl_vector <double> v,w;
+  std::vector <double> v,w;
   double sum_z=0.0;double sum_z_norm=0.0;
 
 
 
   vnl_vector <double> ddd;
-  vcl_vector <vnl_vector <double> >lll;
-  vcl_vector <vnl_double_2> ll2;
+  std::vector <vnl_vector <double> >lll;
+  std::vector <vnl_double_2> ll2;
   int f1_counter=0;
 
   int ps_counter=0;
@@ -798,7 +798,7 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
   while (!in.eof()) {
     in>>hhh;
     char stch[256];
-    vcl_string ss;
+    std::string ss;
     //char temp[256];
     if (hhh=="f1"||hhh=="r1") {
       //in.unget();
@@ -809,7 +809,7 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
     else {
 
       if (lll.size()!=0&& lll.size()>f1_counter) { 
-        vcl_cout<<lll.size()<<vcl_endl;
+        std::cout<<lll.size()<<std::endl;
         
         for (unsigned i=0;i<lll.size();i++)
         {
@@ -826,7 +826,7 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
 
         }
 
-        vcl_string filename="ps_f1_and_r1";
+        std::string filename="ps_f1_and_r1";
         if (flag==true) filename+="_yz_";
         if (flag==false) filename+="_xz_";
 
@@ -836,7 +836,7 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
         centering(ll2);
         
        
-        vcl_cout<<ll2.size()<<" ---------------=="<<vcl_endl;
+        std::cout<<ll2.size()<<" ---------------=="<<std::endl;
         ps_write(filename,  ll2,f1_counter);
         ll2.clear();
         lll.clear();
@@ -853,32 +853,32 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
 
 
 
-    vcl_string  epos("e+"),eneg("e-"),ind("#");
+    std::string  epos("e+"),eneg("e-"),ind("#");
 
     //get rid of the lines containing exponential part
     int    found=ss.find(epos);
-    if (found!=vcl_string::npos) {
-      vcl_cout<<ss<<vcl_endl;
+    if (found!=std::string::npos) {
+      std::cout<<ss<<std::endl;
       continue;
     }
 
     found =ss.find(eneg);
-    if (found!=vcl_string::npos) continue;
+    if (found!=std::string::npos) continue;
 
     found =ss.find(ind);
-    if (found!=vcl_string::npos) continue;
-    //vcl_cout<<stch<<vcl_endl;
+    if (found!=std::string::npos) continue;
+    //std::cout<<stch<<std::endl;
 
     if (ss.size()==0) continue;
     //if (i>38) {
 
     if (hhh=="f1") f1_counter++;
     ddd=get_number(stch,3,4,5);
-    //vcl_cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    //vcl_cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    vcl_cout<<lll.size()<<vcl_endl;
+    std::cout<<lll.size()<<std::endl;
     lll.push_back(ddd);
     //}
   }
@@ -903,32 +903,32 @@ int read_result_txt_file_both(vcl_string res_txt, bool flag) {//,float rev,vcl_v
 
 /// both f1 and r1 together
 
-int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_bottom=0.5) {//,float rev,vcl_vector <vgl_point_3d<double> > & ptl,bool rotation=false){
-  //vcl_ifstream in(res_txt.c_str());
-  vcl_ifstream in(res_txt.c_str());
+int read_result_txt_file_vgl_point_3d(std::string res_txt, bool flag, double cut_bottom=0.5) {//,float rev,std::vector <vgl_point_3d<double> > & ptl,bool rotation=false){
+  //std::ifstream in(res_txt.c_str());
+  std::ifstream in(res_txt.c_str());
 
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<res_txt << vcl_endl;
+    std::cerr << "Failed to read file "<<res_txt << std::endl;
     exit(-4);
     return -1;
   }
 
   // in
-  vcl_string hhh="";
-  vcl_string dummy="";
-  vcl_string st="";
+  std::string hhh="";
+  std::string dummy="";
+  std::string st="";
 
   float combination_counter=0.0;
   double x,y,z;z=0.0;
   double epi_x,epi_y;
-  vcl_vector <double> v,w;
+  std::vector <double> v,w;
   double sum_z=0.0;double sum_z_norm=0.0;
 
 
 
   vnl_vector <double> ddd;
-  vcl_vector <vnl_vector <double> >lll;
-  vcl_vector <vnl_double_2> ll2;
+  std::vector <vnl_vector <double> >lll;
+  std::vector <vnl_double_2> ll2;
   int vgl_counter=0;
 
   int ps_counter=0;
@@ -938,7 +938,7 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
     
     in>>hhh;
     char stch[256];
-    vcl_string ss;
+    std::string ss;
     //char temp[256];
     
     if (hhh=="front") {  // when marker is 3 or 6, write ps file.
@@ -956,45 +956,45 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
 
         in.getline(stch,256);
         ss=stch;
-        vcl_string  epos("e+"),eneg("e-"),ind("#");
+        std::string  epos("e+"),eneg("e-"),ind("#");
 
         //get rid of the lines containing exponential part
         int    found=ss.find(epos);
-        if (found!=vcl_string::npos) {
-          vcl_cout<<"*e+ skip"<<ss<<vcl_endl;
+        if (found!=std::string::npos) {
+          std::cout<<"*e+ skip"<<ss<<std::endl;
           in>>hhh;
           continue;
         }
         found =ss.find(eneg);
-        if (found!=vcl_string::npos){
-          vcl_cout<<"*e- skip"<<ss<<vcl_endl;
+        if (found!=std::string::npos){
+          std::cout<<"*e- skip"<<ss<<std::endl;
           in>>hhh;
           continue;
         }
         found =ss.find(ind);
-        if (found!=vcl_string::npos){
-          vcl_cout<<"*ind skip"<<ss<<vcl_endl;
+        if (found!=std::string::npos){
+          std::cout<<"*ind skip"<<ss<<std::endl;
           in>>hhh;
           continue;
         }
-        //vcl_cout<<stch<<vcl_endl;
+        //std::cout<<stch<<std::endl;
 
         if (ss.size()==0) continue;
         //if (i>38) {
 
        // if (hhh=="f1") f1_counter++;
         ddd=get_number_comma(stch,0,1,2);
-        //vcl_cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+        //std::cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-        vcl_cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+        std::cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-        //vcl_cout<<lll.size()<<vcl_endl;
+        //std::cout<<lll.size()<<std::endl;
         lll.push_back(ddd);
         in>>hhh;
       }
 
 
-      vcl_cout<<lll.size()<<vcl_endl;
+      std::cout<<lll.size()<<std::endl;
 
       for (unsigned i=0;i<lll.size();i++)
       {
@@ -1012,7 +1012,7 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
 
       }
 
-      vcl_string filename="ps_vgl";
+      std::string filename="ps_vgl";
      
       if (flag==false) filename+="_xz_";
       if (flag==true) filename+="_yz_";
@@ -1021,34 +1021,34 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
       filename+=itoa(ps_counter,buffer,10);
       //filename+="_";
      
-      //vcl_cout<<cut_bottom<<" cut_at_"<<buffer<<vcl_endl;
+      //std::cout<<cut_bottom<<" cut_at_"<<buffer<<std::endl;
       sprintf(buffer,"_cut_at_%4.1f",cut_bottom);
       filename+=buffer;
       filename+="_";
       //filename+=".ps";
 
-      vcl_cout<<cut_bottom<<" "<<buffer<<vcl_endl;
+      std::cout<<cut_bottom<<" "<<buffer<<std::endl;
 
-      vcl_vector <vnl_double_2> ll2_copy;
+      std::vector <vnl_double_2> ll2_copy;
       for (unsigned i=0;i<ll2.size();i++)
         ll2_copy.push_back(ll2[i]);
 
       centering(ll2);
 
 
-      vcl_vector< vnl_double_2 >p0,p1;
+      std::vector< vnl_double_2 >p0,p1;
       water_fill(ll2_copy,p0,p1);
 
       for (unsigned i=0;i<ll2.size();i++)
-        vcl_cout<<ll2[i]<<vcl_endl;
+        std::cout<<ll2[i]<<std::endl;
 
-      vcl_cout<<ll2.size()<<" ------vgl_point_3d---------=="<<vcl_endl;
+      std::cout<<ll2.size()<<" ------vgl_point_3d---------=="<<std::endl;
 
       
       ps_write(filename,  ll2,vgl_counter);
 
       for (unsigned i=0;i<p0.size();i++)
-        vcl_cout<<p0[i]<<" "<<p1[i]<<vcl_endl;
+        std::cout<<p0[i]<<" "<<p1[i]<<std::endl;
 
       ps_histogram_write( filename, p0, p1);
 
@@ -1065,7 +1065,7 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
     else {
 
       /*if (lll.size()!=0&& lll.size()>f1_counter) { 
-        vcl_cout<<lll.size()<<vcl_endl;
+        std::cout<<lll.size()<<std::endl;
 
         for (unsigned i=0;i<lll.size();i++)
         {
@@ -1082,7 +1082,7 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
 
         }
 
-        vcl_string filename="ps_f1_and_r1";
+        std::string filename="ps_f1_and_r1";
         if (flag==true) filename+="_yz_";
         if (flag==false) filename+="_xz_";
 
@@ -1092,7 +1092,7 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
         centering(ll2);
 
 
-        vcl_cout<<ll2.size()<<" ---------------=="<<vcl_endl;
+        std::cout<<ll2.size()<<" ---------------=="<<std::endl;
         ps_write(filename,  ll2,f1_counter);
         ll2.clear();
         lll.clear();
@@ -1110,32 +1110,32 @@ int read_result_txt_file_vgl_point_3d(vcl_string res_txt, bool flag, double cut_
 
 
 
-    vcl_string  epos("e+"),eneg("e-"),ind("#");
+    std::string  epos("e+"),eneg("e-"),ind("#");
 
     //get rid of the lines containing exponential part
     int    found=ss.find(epos);
-    if (found!=vcl_string::npos) {
-      vcl_cout<<ss<<vcl_endl;
+    if (found!=std::string::npos) {
+      std::cout<<ss<<std::endl;
       continue;
     }
 
     found =ss.find(eneg);
-    if (found!=vcl_string::npos) continue;
+    if (found!=std::string::npos) continue;
 
     found =ss.find(ind);
-    if (found!=vcl_string::npos) continue;
-    //vcl_cout<<stch<<vcl_endl;
+    if (found!=std::string::npos) continue;
+    //std::cout<<stch<<std::endl;
 
     if (ss.size()==0) continue;
     //if (i>38) {
 
     if (hhh=="f1") f1_counter++;
     ddd=get_number(stch,3,4,5);
-    //vcl_cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd.size()<<" "<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    //vcl_cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<vcl_endl;
+    //std::cout<<ddd[0]<<" "<<ddd[1]<<" "<<ddd[2]<<std::endl;
 
-    vcl_cout<<lll.size()<<vcl_endl;
+    std::cout<<lll.size()<<std::endl;
     lll.push_back(ddd);
     //}
     */

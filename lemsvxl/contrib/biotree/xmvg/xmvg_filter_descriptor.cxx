@@ -7,7 +7,7 @@
 #include <vnl/xio/vnl_xio_vector_fixed.h>
 //#include <proc/io/proc_io_xml_parser.h>
 
-void x_write(vcl_ostream & os, xmvg_filter_descriptor f)
+void x_write(std::ostream & os, xmvg_filter_descriptor f)
 {
   // child will write the descriptors opening tag
 

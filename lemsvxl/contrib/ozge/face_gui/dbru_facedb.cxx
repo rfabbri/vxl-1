@@ -1,9 +1,9 @@
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <dbinfo/dbinfo_observation.h>
 #include <ozge/face_gui/dbru_facedb.h>
 
@@ -28,13 +28,13 @@ void dbru_facedb::clear()
 }
 
 void dbru_facedb::
-add_subject(vcl_vector<vil_image_resource_sptr> subject)
+add_subject(std::vector<vil_image_resource_sptr> subject)
 {
   facedb_.push_back(subject);
 }
 
 void dbru_facedb::
-add_subject(vcl_vector<vil_image_resource_sptr> subject, unsigned i)
+add_subject(std::vector<vil_image_resource_sptr> subject, unsigned i)
 {
   if (i < facedb_.size()) {
     for (unsigned j = 0; j < subject.size(); j++)
@@ -43,7 +43,7 @@ add_subject(vcl_vector<vil_image_resource_sptr> subject, unsigned i)
 }
 
 //: get a particular subject
-vcl_vector<vil_image_resource_sptr>& dbru_facedb::
+std::vector<vil_image_resource_sptr>& dbru_facedb::
 get_subject(unsigned i)
 {
   assert(i < facedb_.size());
@@ -63,7 +63,7 @@ get_face(unsigned i, unsigned j)
     return 0;
 }
 
-void dbru_facedb::print(vcl_ostream& os) const
+void dbru_facedb::print(std::ostream& os) const
 {
   unsigned nsubjects = this->n_subjects();
   os << this->is_a() << " [\n"
@@ -115,7 +115,7 @@ void dbru_facedb::b_write(vsl_b_ostream &os) const
                 break;
               }    
             default:
-              vcl_cerr << "I/O ERROR: This pixel format is not supported\n";
+              std::cerr << "I/O ERROR: This pixel format is not supported\n";
               return; 
             }
           }
@@ -149,7 +149,7 @@ void dbru_facedb::b_read(vsl_b_istream &is)
             if (flagi) {
               unsigned sizei;
               vsl_b_read(is, sizei);
-              vcl_vector<vil_image_resource_sptr > subj;
+              std::vector<vil_image_resource_sptr > subj;
               for (unsigned j = 0; i<sizei; j++) {
                 vil_image_resource_sptr image_;
                 bool is_valid;
@@ -182,8 +182,8 @@ void dbru_facedb::b_read(vsl_b_istream &is)
                         break;
                       }      
                     default:
-                      vcl_cerr << "I/O ERROR: This pixel format is not supported\n";
-                      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+                      std::cerr << "I/O ERROR: This pixel format is not supported\n";
+                      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
                       return; 
                     }
                     

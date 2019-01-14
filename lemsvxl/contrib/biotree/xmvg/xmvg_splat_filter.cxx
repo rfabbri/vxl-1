@@ -13,11 +13,11 @@ kernel_size_(kernel_size), cutoff_freq_(cutoff_freq)
     for(int i=-kernel_size_; i<=kernel_size_; i++)
     {
       if(i == 0)
-        kernel_[index] = vcl_pow(cutoff_freq_,2.0);
+        kernel_[index] = std::pow(cutoff_freq_,2.0);
       else if(i % 2 == 0)
         kernel_[index] = 0.0;
       else
-        kernel_[index] = -4*vcl_pow(cutoff_freq_,2.0) / (vcl_pow((vnl_math::pi  * i), 2.0));
+        kernel_[index] = -4*std::pow(cutoff_freq_,2.0) / (std::pow((vnl_math::pi  * i), 2.0));
       index++;
     }
   }

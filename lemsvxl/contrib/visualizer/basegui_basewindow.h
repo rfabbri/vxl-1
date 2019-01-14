@@ -3,8 +3,8 @@
 
 #include <wx/wx.h>
 #include <wx/mdi.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 class BasePlugin;
 class MainGUIWindow;
@@ -31,7 +31,7 @@ class BaseWindow: public wxMDIChildFrame
     bool      _autoHighlight;
 
     //list of accelerator entries 
-    vcl_vector<wxAcceleratorEntry >accelEntries;
+    std::vector<wxAcceleratorEntry >accelEntries;
 
     //command list
     //std::deque<GfxCommand*> _undo_commands, _redo_commands;
@@ -50,7 +50,7 @@ class BaseWindow: public wxMDIChildFrame
     MainGUIWindow   *_mainGUI;
 
   public:
-    BaseWindow(MainGUIWindow *parent, const vcl_string& title, 
+    BaseWindow(MainGUIWindow *parent, const std::string& title, 
          BasePlugin* plugin_=NULL);
     ~BaseWindow();
 
@@ -60,35 +60,35 @@ class BaseWindow: public wxMDIChildFrame
     void zoom(float);
     void Refresh();
     void RefreshNow();
-    void setTitle(vcl_string);
-    vcl_string getTitle(void);
+    void setTitle(std::string);
+    std::string getTitle(void);
     virtual int processCommandLine(int argc, const char * const *argv);
   
     SceneGraph* sg(){return _sg;}
     GLWindow* glw(){return _glw;}
     GraphicsView *view(){return _glw->view();}
 
-    vcl_vector<GraphicsNode*>     _prevHits;
-    int _hitTest (vcl_vector<HitRecord>& hits_, Point2D<double>& pos_);
+    std::vector<GraphicsNode*>     _prevHits;
+    int _hitTest (std::vector<HitRecord>& hits_, Point2D<double>& pos_);
 
-    int _hitTest(vcl_vector<HitRecord> &hits_,
+    int _hitTest(std::vector<HitRecord> &hits_,
     const Point2D<double> topLeft, const Point2D<double>bottomRight);
   
     //Message, COUT, and StatusOut
     virtual void ClearMessage (int winid=0)
       { GDebugDisplayer.clear(winid); }
 
-    vcl_ostringstream Message; //message to output
+    std::ostringstream Message; //message to output
     virtual void MessageOut (int winid=0)
     {
       Message.precision(16);
       GDebugDisplayer.disp (Message.str(), winid);
-      Message.str(vcl_string()); //clear vcl_string
+      Message.str(std::string()); //clear std::string
     }
     virtual void StatusOut (void)
     {
       GDebugDisplayer.status (Message.str());
-      Message.str(vcl_string()); //clear vcl_string
+      Message.str(std::string()); //clear std::string
     }        
 
     //tool operations
@@ -99,7 +99,7 @@ class BaseWindow: public wxMDIChildFrame
 
     // *** stuff to override...
     virtual void CompletelyCreated();
-    virtual void load(const vcl_string& filename);
+    virtual void load(const std::string& filename);
     virtual void load();
 
     virtual void HighlightSelected (wxMouseEvent &event_);

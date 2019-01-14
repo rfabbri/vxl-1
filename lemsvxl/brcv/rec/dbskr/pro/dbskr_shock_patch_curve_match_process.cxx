@@ -11,10 +11,10 @@
 #include <dbskr/algo/dbskr_shock_patch_match.h>
 #include <dbskr/algo/dbskr_shock_patch_curve_match.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
-#include <vcl_ctime.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <ctime>
 
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -55,7 +55,7 @@ dbskr_shock_patch_curve_match_process::dbskr_shock_patch_curve_match_process() :
        
                            )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -66,9 +66,9 @@ dbskr_shock_patch_curve_match_process::clone() const
   return new dbskr_shock_patch_curve_match_process(*this);
 }
 
-vcl_vector< vcl_string > dbskr_shock_patch_curve_match_process::get_input_type()
+std::vector< std::string > dbskr_shock_patch_curve_match_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   //to_return.push_back( "shock" );
   //to_return.push_back( "shock" );
   to_return.push_back( "shock_patch" );
@@ -78,9 +78,9 @@ vcl_vector< vcl_string > dbskr_shock_patch_curve_match_process::get_input_type()
   return to_return;
 }
 
-vcl_vector< vcl_string > dbskr_shock_patch_curve_match_process::get_output_type()
+std::vector< std::string > dbskr_shock_patch_curve_match_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock_patch_match");
   return to_return;
 }
@@ -100,7 +100,7 @@ bool dbskr_shock_patch_curve_match_process::execute()
     shock1 = dbskr_shock_patch_storage_new();
     bpro1_filepath input_path;
     parameters()->get_value( "-st1f" , input_path);
-    vcl_string st_file1 = input_path.path;
+    std::string st_file1 = input_path.path;
 
     vsl_b_ifstream ifs(st_file1.c_str());
     shock1->b_read(ifs);
@@ -113,7 +113,7 @@ bool dbskr_shock_patch_curve_match_process::execute()
     shock2 = dbskr_shock_patch_storage_new();
     bpro1_filepath input_path;
     parameters()->get_value( "-st2f" , input_path);
-    vcl_string st_file2 = input_path.path;
+    std::string st_file2 = input_path.path;
 
     vsl_b_ifstream ifs(st_file2.c_str());
     shock2->b_read(ifs);
@@ -138,7 +138,7 @@ bool dbskr_shock_patch_curve_match_process::execute()
   if (match_available) {
     bpro1_filepath input_path;
     parameters()->get_value( "-smf" , input_path);
-    vcl_string m_file = input_path.path;
+    std::string m_file = input_path.path;
     
     vsl_b_ifstream imfs(m_file.c_str());
     match->b_read(imfs);
@@ -147,17 +147,17 @@ bool dbskr_shock_patch_curve_match_process::execute()
 
     // only creates the shock match storage
     //dbskr_shock_patch_match_sptr match = find_all_patch_correspondences(shock1->get_patches(), shock2->get_patches(), scurve_sample_ds, elastic_splice);
-    vcl_cout << "match was not available, use the tool to match\n";
+    std::cout << "match was not available, use the tool to match\n";
   }
   
-  vcl_vector<dbskr_shock_patch_sptr>& patch_set2 = match->get_patch_set2();
+  std::vector<dbskr_shock_patch_sptr>& patch_set2 = match->get_patch_set2();
 
-  vcl_map<int, dbskr_shock_patch_sptr> map1;
+  std::map<int, dbskr_shock_patch_sptr> map1;
   for (unsigned i = 0; i < shock1->get_patches().size(); i++) {
     dbskr_shock_patch_sptr sp = shock1->get_patches()[i];
     map1[sp->id()] = sp;
   }
-  vcl_map<int, dbskr_shock_patch_sptr> map2;
+  std::map<int, dbskr_shock_patch_sptr> map2;
   for (unsigned i = 0; i < shock2->get_patches().size(); i++) {
     dbskr_shock_patch_sptr sp = shock2->get_patches()[i];
     map2[sp->id()] = sp;
@@ -174,7 +174,7 @@ bool dbskr_shock_patch_curve_match_process::execute()
   output->set_image2(image_stg2->get_image());
 
   output_data_.clear();
-  output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,output));
+  output_data_.push_back(std::vector< bpro1_storage_sptr > (1,output));
 
   return true;
 }

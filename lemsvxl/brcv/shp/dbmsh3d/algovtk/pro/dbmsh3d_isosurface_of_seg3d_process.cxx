@@ -41,7 +41,7 @@ dbmsh3d_isosurface_of_seg3d_process() : bpro1_process()
     !parameters()->add( "Data spacing dy"   , "-dy" , 1.0f ) ||
     !parameters()->add( "Data spacing dz"   , "-dz" , 1.0f ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -63,7 +63,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbmsh3d_isosurface_of_seg3d_process::
+std::string dbmsh3d_isosurface_of_seg3d_process::
 name()
 {
   return "isosurface of seg3d_info";
@@ -91,10 +91,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmsh3d_isosurface_of_seg3d_process::
+std::vector< std::string > dbmsh3d_isosurface_of_seg3d_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -102,10 +102,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmsh3d_isosurface_of_seg3d_process::
+std::vector< std::string > dbmsh3d_isosurface_of_seg3d_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -124,11 +124,11 @@ execute()
   // xml filename
   bpro1_filepath xml_path;
   this->parameters()->get_value( "-xml_filename" , xml_path );    
-  vcl_string xml_filename = xml_path.path;
+  std::string xml_filename = xml_path.path;
 
   // mesh filename
   this->parameters()->get_value( "-mesh_filename" , xml_path );    
-  vcl_string mesh_filename = xml_path.path;
+  std::string mesh_filename = xml_path.path;
   
   // data spacing
   float dx, dy, dz;
@@ -146,20 +146,20 @@ execute()
   unsigned int ni_max = 0;
   unsigned int nj_max = 0;
 
-  vcl_cout << "Load the image resources to get image dimension\n";
+  std::cout << "Load the image resources to get image dimension\n";
   for (int i=0; i<seg3d->num_frames(); ++i)
   {
     sdetd_seg3d_info_frame frame = seg3d->frame(i);
 
     // 1) load image
-    vcl_string image_filename = seg3d->image_folder() + 
+    std::string image_filename = seg3d->image_folder() + 
       "/" + frame.image_file;
 
     vil_image_resource_sptr loaded_image = 
       vil_load_image_resource( image_filename.c_str() );
     if( !loaded_image ) 
     {
-      vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+      std::cerr << "Failed to load image file" << image_filename << std::endl;
       return false;
     }
 
@@ -169,12 +169,12 @@ execute()
 
 
 
-  vcl_cout << "Loading the contours and convert to 3D image.\n";
+  std::cout << "Loading the contours and convert to 3D image.\n";
   vil3d_image_view<vxl_byte > img3d;
   img3d.set_size(ni_max, nj_max, seg3d->num_frames());
   for (int i=0; i<seg3d->num_frames(); ++i)
   {
-    vcl_cout<< "Loading contours for slice 1 ... ";
+    std::cout<< "Loading contours for slice 1 ... ";
     vil_image_view<bool > mask;
     mask.set_size(ni_max, nj_max);
     mask.fill(false);
@@ -184,7 +184,7 @@ execute()
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
-      vcl_string contour_filename = seg3d->contour_folder() + 
+      std::string contour_filename = seg3d->contour_folder() + 
         "/" + frame.contour_file_list[k];
 
       // load the contour
@@ -193,7 +193,7 @@ execute()
 
       if (! contour)
       {
-        vcl_cerr << "Failed to load contour file" << contour_filename << vcl_endl;
+        std::cerr << "Failed to load contour file" << contour_filename << std::endl;
         return false;
       }
 
@@ -208,7 +208,7 @@ execute()
       {
         assert (contour->cast_to_curve()->cast_to_polyline());
         vsol_polyline_2d_sptr loaded_polyline = contour->cast_to_curve()->cast_to_polyline();
-        vcl_vector<vsol_point_2d_sptr > points;
+        std::vector<vsol_point_2d_sptr > points;
         for (unsigned int i=0; i<loaded_polyline->size(); ++i)
         {
           points.push_back(loaded_polyline->vertex(i));
@@ -217,7 +217,7 @@ execute()
       }
 
       // turn into a vgl_polygon
-      vcl_vector<vgl_point_2d<double > > pts;
+      std::vector<vgl_point_2d<double > > pts;
       for (unsigned m=0; m<poly->size(); ++m)
       {
         pts.push_back(poly->vertex(m)->get_p());
@@ -237,7 +237,7 @@ execute()
         img3d(wi, wj, i) = mask(wi, wj) ? 255 : 0 ;
       }
     }
-    vcl_cout << "Done. \n";
+    std::cout << "Done. \n";
     int count = 0;
     for (unsigned int wi=0; wi<mask.ni(); ++wi)
     {
@@ -246,7 +246,7 @@ execute()
         count += (mask(wi, wj) ? 1 : 0);
       }
     }
-    vcl_cout << "Number of non-zero pixels is = " << count << " .\n";
+    std::cout << "Number of non-zero pixels is = " << count << " .\n";
     
   }
 

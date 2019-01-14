@@ -10,7 +10,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_func_process.h>
 #include <bprb/bprb_parameters.h>
 #include <bseg3d/algo/bseg3d_explore_mixtures.h>
@@ -23,10 +23,10 @@
 bool bseg3d_crop_grid_process_cons(bprb_func_process& pro)
 {
   //This process has no inputs nor outputs only parameters
-  vcl_vector<vcl_string> input_types_(0);
+  std::vector<std::string> input_types_(0);
 
   // No outputs to the database. The resulting grid is stored on disk
-  vcl_vector<vcl_string> output_types_(0);
+  std::vector<std::string> output_types_(0);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -44,29 +44,29 @@ bool bseg3d_crop_grid_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != 0)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " <<0 << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " <<0 << std::endl;
     return false;
   }
 
-  vcl_string input_path;
+  std::string input_path;
   pro.parameters()->get_value("input_path", input_path);
   if (vul_file::is_directory(input_path) || !vul_file::exists(input_path)) {
-    vcl_cerr << "In bseg3d_crop_grid_process -- input directory "<< vul_file::get_cwd() << '/' << input_path<< "is not valid!\n";
+    std::cerr << "In bseg3d_crop_grid_process -- input directory "<< vul_file::get_cwd() << '/' << input_path<< "is not valid!\n";
     return false;
   }
-  vcl_cout << "In bseg3d_crop_grid_process( -- input directory is: " <<  vul_file::get_cwd() << input_path << vcl_endl;
+  std::cout << "In bseg3d_crop_grid_process( -- input directory is: " <<  vul_file::get_cwd() << input_path << std::endl;
 
-  vcl_string output_path;
+  std::string output_path;
   pro.parameters()->get_value("output_path", output_path);
   if (vul_file::is_directory(output_path)) {
-    vcl_cerr << "In bseg3d_crop_grid_process -- output directory "<< vul_file::get_cwd() << '/' << output_path<< "is not valid!\n";
+    std::cerr << "In bseg3d_crop_grid_process -- output directory "<< vul_file::get_cwd() << '/' << output_path<< "is not valid!\n";
     return false;
   }
   // if the output file exits, delete it
   if(vul_file::exists(output_path))
     vul_file::delete_file_glob(output_path);
 
-  vcl_cout << "In bseg3d_crop_grid_process( -- output directory is: " <<  vul_file::get_cwd() << output_path << vcl_endl;
+  std::cout << "In bseg3d_crop_grid_process( -- output directory is: " <<  vul_file::get_cwd() << output_path << std::endl;
 
   unsigned corner_x = 0;
   pro.parameters()->get_value("corner_x", corner_x);

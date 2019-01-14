@@ -41,15 +41,15 @@ modrec_pca_vehicle::modrec_pca_vehicle(const imesh_mesh& mesh,
 
 
 //: Constructor - compute the pca from a joint collection of meshes and parts
-modrec_pca_vehicle::modrec_pca_vehicle(const vcl_vector<imesh_mesh>& meshes,
-                                       const vcl_vector<vcl_map<vcl_string,
+modrec_pca_vehicle::modrec_pca_vehicle(const std::vector<imesh_mesh>& meshes,
+                                       const std::vector<std::map<std::string,
                                                vgl_polygon<double> > >& part_groups)
   : imesh_pca_mesh(meshes[0])
 {
   assert(meshes.size() == part_groups.size());
   
   // Create a sum of all the part points
-  vcl_map<vcl_string, unsigned int > part_count;
+  std::map<std::string, unsigned int > part_count;
   unsigned int num_pts = 0;
   const unsigned num_training = meshes.size();
 
@@ -134,7 +134,7 @@ modrec_pca_vehicle::modrec_pca_vehicle(const vcl_vector<imesh_mesh>& meshes,
   std_devs_ = vnl_vector<double>(A.W().diagonal().data_block(), A.rank());
   vnl_matrix<double> PC(A.rank(),Vc.rows());
   A.U().transpose().extract(PC);
-  vcl_cout << "pc matrix is "<<PC.rows()<<" x "<<PC.columns()<<vcl_endl;
+  std::cout << "pc matrix is "<<PC.rows()<<" x "<<PC.columns()<<std::endl;
   
   pc_ = PC.extract(A.rank(),V.rows());
   parts_pc_ = PC.extract(A.rank(),M.rows(),0,V.rows());
@@ -185,7 +185,7 @@ void modrec_pca_vehicle::init(const vnl_vector<double>& mean,
   // set the mean parts with the mean data
   for(part_map::iterator itr=mean_parts_.begin(); itr!=mean_parts_.end(); ++itr)
   {
-    vcl_vector<vgl_point_2d<double> >& pts = itr->second[0];
+    std::vector<vgl_point_2d<double> >& pts = itr->second[0];
     for(unsigned int j=0; j<pts.size(); ++j)
     {
       assert(pidx+1 < mean.size());
@@ -270,8 +270,8 @@ void modrec_pca_vehicle::set_params(const vnl_vector<double>& p)
   unsigned int pidx = 0;
   part_map::const_iterator mitr=mean_parts_.begin();
   for(part_map::iterator itr=parts_.begin(); itr!=parts_.end(); ++itr, ++mitr){
-    vcl_vector<vgl_point_2d<double> >& part = itr->second[0];
-    const vcl_vector<vgl_point_2d<double> >& mpart = mitr->second[0];
+    std::vector<vgl_point_2d<double> >& part = itr->second[0];
+    const std::vector<vgl_point_2d<double> >& mpart = mitr->second[0];
     for(unsigned int i=0; i<part.size(); ++i, pidx+=2){
       part[i] = mpart[i]; // copy from the mean
       for(unsigned j=0; j<sp.size(); ++j){
@@ -301,7 +301,7 @@ void modrec_pca_vehicle::set_param(unsigned int idx, double param)
     
   unsigned int pidx = 0;
   for(part_map::iterator itr=parts_.begin(); itr!=parts_.end(); ++itr){
-    vcl_vector<vgl_point_2d<double> >& part = itr->second[0];
+    std::vector<vgl_point_2d<double> >& part = itr->second[0];
     for(unsigned int i=0; i<part.size(); ++i){
       part[i].x() += parts_pc_(idx, pidx++)*diff;
       part[i].y() += parts_pc_(idx, pidx++)*diff;
@@ -361,15 +361,15 @@ void modrec_pca_vehicle::project_tex_to_bary()
   parts_uv_.clear();
   for(part_map::const_iterator itr=parts_.begin(); itr!=parts_.end(); ++itr)
   {
-    const vcl_vector<vgl_point_2d<double> >& poly = itr->second[0];
-    vcl_vector<vgl_point_2d<double> > pts_uv;
-    vcl_vector<unsigned long> idx;
-    vcl_vector<int> map_back;
+    const std::vector<vgl_point_2d<double> >& poly = itr->second[0];
+    std::vector<vgl_point_2d<double> > pts_uv;
+    std::vector<unsigned long> idx;
+    std::vector<int> map_back;
     imesh_project_texture_to_barycentric(*this,poly,pts_uv,idx,map_back);
     
     const unsigned int num_s = map_back.size(); 
 
-    parts_uv_.push_back(vcl_vector<uv_point>());
+    parts_uv_.push_back(std::vector<uv_point>());
     int first_pt = pts_uv.size();
     int first_idx = -1;
     for(unsigned int i=0; first_pt>0 && i<map_back.size(); ++i)
@@ -416,8 +416,8 @@ void modrec_pca_vehicle::project_bary_to_3d()
   parts_3d_.clear();
   for(unsigned int i=0; i<parts_uv_.size(); ++i)
   {
-    const vcl_vector<uv_point>& uv_points = parts_uv_[i];
-    parts_3d_.push_back( vcl_vector<vgl_point_3d<double> >() );
+    const std::vector<uv_point>& uv_points = parts_uv_[i];
+    parts_3d_.push_back( std::vector<vgl_point_3d<double> >() );
     for(unsigned int j=0; j<uv_points.size(); ++j)
     {
       const uv_point& pt = uv_points[j];
@@ -448,9 +448,9 @@ void modrec_pca_vehicle::init_part_idx_offsets()
 
 
 //: Write the mean mesh, mean parts, and PCA file
-void modrec_write_pca_vehicle(const vcl_string& mesh_file,
-                              const vcl_string& parts_file,
-                              const vcl_string& pca_file,
+void modrec_write_pca_vehicle(const std::string& mesh_file,
+                              const std::string& parts_file,
+                              const std::string& pca_file,
                               const modrec_pca_vehicle& pmesh)
 {
   const vnl_vector<double>& std_dev = pmesh.std_devs();
@@ -469,7 +469,7 @@ void modrec_write_pca_vehicle(const vcl_string& mesh_file,
   unsigned int pidx=num_mesh_pts;
   for(modrec_pca_vehicle::part_map::const_iterator pitr=mparts.begin(); 
       pitr!=mparts.end(); ++pitr){
-    const vcl_vector<vgl_point_2d<double> >& pts = pitr->second[0];
+    const std::vector<vgl_point_2d<double> >& pts = pitr->second[0];
     for(unsigned int i=0; i<pts.size(); ++i){
       mean[pidx++] = pts[i].x();
       mean[pidx++] = pts[i].y();
@@ -480,8 +480,8 @@ void modrec_write_pca_vehicle(const vcl_string& mesh_file,
   pc.update(mesh_pc);
   pc.update(parts_pc,0,num_mesh_pts);
   
-  vcl_auto_ptr<imesh_vertex_array_base> verts(mverts.clone());
-  vcl_auto_ptr<imesh_face_array_base> faces(pmesh.faces().clone());
+  std::auto_ptr<imesh_vertex_array_base> verts(mverts.clone());
+  std::auto_ptr<imesh_face_array_base> faces(pmesh.faces().clone());
   imesh_mesh mean_mesh(verts,faces);
   
   imesh_write_pca(pca_file,mean,std_dev,pc);

@@ -1,4 +1,4 @@
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include "error_functions.h"
 

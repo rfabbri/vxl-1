@@ -41,15 +41,15 @@ bool dts_pixel_time_series_pca_process_cons( bprb_func_process& pro )
 {
 	using namespace dts_pixel_time_series_pca_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
     unsigned i = 0;
 
 	input_types_[i++] = "dts_pixel_time_series_base_sptr";
-	input_types_[i++] = "vcl_string";//pixel_type
-	input_types_[i++] = "vcl_string";//time_type
-    input_types_[i++] = "vcl_string";//math_type
+	input_types_[i++] = vcl_string";//pixel_type
+	input_types_[i++] = vcl_string";//time_type
+    input_types_[i++] = vcl_string";//math_type
     input_types_[i++] = "unsigned";//original dimension
     input_types_[i++] = "unsigned";//reduced dimension
 
@@ -70,13 +70,13 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 
     if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cerr << "----ERROR---- " 
+        std::cerr << "----ERROR---- " 
                  << pro.name() << '\n'
                  << "\tdts_pixel_time_series_pca_process: The input number should be: "
                  << n_inputs_ << '\n'
                  << "\tFILE: " << __FILE__ << '\n'
                  << "\tLINE: " << __LINE__ << '\n'
-                 << vcl_flush;
+                 << std::flush;
     }
 
 	//get inputs
@@ -84,14 +84,14 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
     dts_pixel_time_series_base_sptr pts_sptr = 
         pro.get_input<dts_pixel_time_series_base_sptr>(i++);
 
-	vcl_string pixel_type = 
-		pro.get_input<vcl_string>(i++);
+	std::string pixel_type = 
+		pro.get_input<std::string>(i++);
 
-    vcl_string time_type =
-        pro.get_input<vcl_string>(i++);
+    std::string time_type =
+        pro.get_input<std::string>(i++);
 
-    vcl_string element_type = 
-        pro.get_input<vcl_string>(i++);
+    std::string element_type = 
+        pro.get_input<std::string>(i++);
 
     unsigned src_dim = 
         pro.get_input<unsigned>(i++);
@@ -116,7 +116,7 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 				//check successful cast
 				if( !pts_ptr )
 				{
-					vcl_cerr << "----ERROR---- "
+					std::cerr << "----ERROR---- "
                          << "dts_pca_process: Could not cast from base to child."
 						 << "\tpixel_type = " << pixel_type << '\n'
 						 << "\ttime_type = " << time_type << '\n'
@@ -124,7 +124,7 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 						 << "\tsrc_dim = " << src_dim << '\n'
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                         << vcl_flush;
+                         << std::flush;
 					return false;
 				}// end null check
 
@@ -144,12 +144,12 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 					}//end case 3
 				default:
 					{
-						vcl_cerr << "----ERROR---- "
+						std::cerr << "----ERROR---- "
 								 << "dts_pixel_time_series_pca_process: Unknown destination dimension, "
 								 << " please augment.\n"
 								 << "\tFILE: " << __FILE__ << '\n'
 								 << "\tLINE: " << __LINE__ << '\n'
-								 << vcl_flush;
+								 << std::flush;
 						return false;
 					}//end default
 
@@ -158,12 +158,12 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 			}//end case 128
 		default:
 			{
-				vcl_cerr << "----ERROR---- "
+				std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series_pca_process: Unknown Source dimension, "
                          << " please augment.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                         << vcl_flush;
+                         << std::flush;
                 return false;
 			}//end default
 		}//end swtich(src_dim)
@@ -172,11 +172,11 @@ bool dts_pixel_time_series_pca_process( bprb_func_process& pro )
 		return true;
 	}//end if pixel_type == unsigned && time_type == unsigned && element_type == double
 
-	vcl_cerr << "----ERROR---- "
+	std::cerr << "----ERROR---- "
 		<< "dts_pixel_time_series_pca_process:"
 		<< " you shouldn't be here given conditionals.\n"
 		<< "\tFILE: " << __FILE__ << '\n'
 		<< "\tLINE: " << __LINE__ << '\n'
-		<< vcl_flush;
+		<< std::flush;
 	return false;
 }//end dts_pixel_time_series_pca_process

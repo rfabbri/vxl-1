@@ -1,6 +1,6 @@
 #include <dbinfo/dbinfo_feature_format.h>
 
-vcl_ostream & operator << (vcl_ostream &os, dbinfo_feature_format f)
+std::ostream & operator << (std::ostream &os, dbinfo_feature_format f)
 {
   switch (f)
     {

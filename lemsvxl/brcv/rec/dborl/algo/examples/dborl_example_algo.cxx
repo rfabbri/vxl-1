@@ -10,7 +10,7 @@
 #include "dborl_example_algo_params.h"
 #include <dborl/algo/dborl_utilities.h>
 #include <borld/borld_evaluation.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 
 //: read the files etc
@@ -21,7 +21,7 @@ bool dborl_example_algo::initialize()
     if (!parse_strings_from_file(params_->filename_string_(), names_))
       return false;
 
-    vcl_cout << "read " << names_.size() << " names as follows\n";
+    std::cout << "read " << names_.size() << " names as follows\n";
   }
 
   return true;
@@ -46,7 +46,7 @@ bool dborl_example_algo::process()
 
     //: increment the status parameter
     params_->percent_completed = ((float)i/params_->an_int_())*100.0f;
-    vcl_cout << params_->percent_completed() << " ";
+    std::cout << params_->percent_completed() << " ";
     params_->status_param_ = params_->status_param_() + 1;
     params_->print_status_xml();
   }
@@ -66,7 +66,7 @@ bool dborl_example_algo::finalize()
   params_->perf_plot_set_type(borld_evaluation_plot_type::ROC);
   params_->print_perf_xml("ROC plot: TPR vs FPR");
 
-  vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
+  std::map<std::string, buld_exp_stat_sptr> category_statistics;
   buld_exp_stat_sptr stat = new buld_exp_stat();
   stat->increment_TP();
   stat->increment_FP();

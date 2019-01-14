@@ -3,11 +3,11 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
-#include <vcl_cstdio.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <cstdio>
+#include <limits>
 
 #include <gl2ps/gl2ps.h>
 
@@ -91,10 +91,10 @@
 
               if(temporal_tab->cur_edgel)
               {
-                  vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter=temporal_tab->tmap_->map_[temporal_tab->cur_edgel->id]->st_options_.begin();
+                  std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter=temporal_tab->tmap_->map_[temporal_tab->cur_edgel->id]->st_options_.begin();
                   for(;iter!=temporal_tab->tmap_->map_[temporal_tab->cur_edgel->id]->st_options_.end();iter++)
                   {
-                      vcl_list<dbdet_temporal_bundle>::iterator biter=iter->second->st_bundles_.begin();
+                      std::list<dbdet_temporal_bundle>::iterator biter=iter->second->st_bundles_.begin();
                       for(;biter!=iter->second->st_bundles_.end();biter++)
                       {
 
@@ -141,10 +141,10 @@
           }
       }
       dbdet_temporal_map_tableau *temporal_tab;
-      vcl_vector<float> x1;
-      vcl_vector<float> y1;
-      vcl_vector<float> x2;
-      vcl_vector<float> y2;
+      std::vector<float> x1;
+      std::vector<float> y1;
+      std::vector<float> x2;
+      std::vector<float> y2;
 
   };
 dbdet_temporal_map_tableau::dbdet_temporal_map_tableau(dbdet_temporal_map_storage_sptr tmap_storage): gesture0_(vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true))
@@ -229,7 +229,7 @@ bool dbdet_temporal_map_tableau::handle( const vgui_event & e )
      if(neighbor_relations_)
           draw_neighbor_relations(cur_edgel);
 
-     vcl_cout<< " Contour id :"<<tmap_->edge_to_one_chain[cur_edgel->id];
+     std::cout<< " Contour id :"<<tmap_->edge_to_one_chain[cur_edgel->id];
       post_overlay_redraw(); //for drawing the curvelets
     }
   }
@@ -265,8 +265,8 @@ bool dbdet_temporal_map_tableau::handle( const vgui_event & e )
       if(draw_dynmaic_fragment_ && cur_edgel)
           if(tmap_->map_[cur_edgel->id]->st_options_.size()>0)
           {
-              vcl_list<dbdet_temporal_bundle> * listbundles=& tmap_->map_[cur_edgel->id]->st_options_.begin()->second->list_options_;
-              vcl_list<dbdet_temporal_bundle>::iterator listiter;
+              std::list<dbdet_temporal_bundle> * listbundles=& tmap_->map_[cur_edgel->id]->st_options_.begin()->second->list_options_;
+              std::list<dbdet_temporal_bundle>::iterator listiter;
               int k=listbundles->size();
               if(k>0)
               {
@@ -279,7 +279,7 @@ bool dbdet_temporal_map_tableau::handle( const vgui_event & e )
                       listiter=listbundles->begin();
                       //for(unsigned t=0;t<randn && listiter!=listbundles.end();t++)
                       //    listiter++;
-                      vcl_list<dbdet_temporal_bundle>::iterator founditer;
+                      std::list<dbdet_temporal_bundle>::iterator founditer;
                       if(randn <listbundles->size())
                       {
                           std::advance(listiter, randn);
@@ -335,7 +335,7 @@ void
 dbdet_temporal_map_tableau::get_popup(const vgui_popup_params& /*params*/, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add("Display edges of neighboring frames", 
       new dbdet_temporal_map_tableau_set_int_command(this,"Frame number", &frame_number_));
@@ -424,11 +424,11 @@ dbdet_temporal_map_tableau::draw_edges()
                 dbdet_edgel * cur_edgel=EM_->edgels[i]; 
                 vgl_point_2d<double> p=cur_edgel->pt;
                 glBegin( GL_LINE_STRIP );
-                glVertex2d(cur_edgel->pt.x() - 0.25*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() - 0.25*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() - 0.25*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() - 0.25*std::sin(cur_edgel->tangent));
 
-                glVertex2d(cur_edgel->pt.x() + 0.25*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() + 0.25*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() + 0.25*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() + 0.25*std::sin(cur_edgel->tangent));
                 glEnd();
             }
             glColor3f( 0.0 , 0.0 , 1.0 );
@@ -446,7 +446,7 @@ dbdet_temporal_map_tableau::draw_edges()
         }
     }
     else{
-        vcl_cout<<"Temproal map is unavalaible \n";
+        std::cout<<"Temproal map is unavalaible \n";
     }
 }
 //: draw the neigboring edgemap one at a time .
@@ -466,17 +466,17 @@ dbdet_temporal_map_tableau::draw_neighbor_edges()
                 dbdet_edgel * cur_edgel=nmap->edgels[i]; 
                 vgl_point_2d<double> p=cur_edgel->pt;
                 glBegin( GL_LINE_STRIP );
-                glVertex2d(cur_edgel->pt.x() - 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() - 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() - 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() - 0.5*std::sin(cur_edgel->tangent));
 
-                glVertex2d(cur_edgel->pt.x() + 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() + 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() + 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() + 0.5*std::sin(cur_edgel->tangent));
                 glEnd();
             }
         }
     }
     else{
-        vcl_cout<<"Neigboring Temproal map is unavalaible \n";
+        std::cout<<"Neigboring Temproal map is unavalaible \n";
     }
 }
 //: draw the neigboring edgemap all  at the same time .
@@ -486,7 +486,7 @@ dbdet_temporal_map_tableau::draw_all_neighbor_edges()
 
     if(tmap_.ptr())
     {
-        vcl_map<int, dbdet_edgemap_sptr>::iterator iter=tmap_->neighbor_emap_.begin();
+        std::map<int, dbdet_edgemap_sptr>::iterator iter=tmap_->neighbor_emap_.begin();
 
         vnl_random rand;
         for(;iter!=tmap_->neighbor_emap_.end();iter++)       
@@ -499,17 +499,17 @@ dbdet_temporal_map_tableau::draw_all_neighbor_edges()
                 dbdet_edgel * cur_edgel=nmap->edgels[i]; 
                 vgl_point_2d<double> p=cur_edgel->pt;
                 glBegin( GL_LINE_STRIP );
-                glVertex2d(cur_edgel->pt.x() - 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() - 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() - 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() - 0.5*std::sin(cur_edgel->tangent));
 
-                glVertex2d(cur_edgel->pt.x() + 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() + 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() + 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() + 0.5*std::sin(cur_edgel->tangent));
                 glEnd();
             }
         }
     }
     else{
-        vcl_cout<<"Neigboring Temproal map is unavalaible \n";
+        std::cout<<"Neigboring Temproal map is unavalaible \n";
     }
 }
 dbdet_edgel* dbdet_temporal_map_tableau::find_closest_edgel(float ix, float iy)
@@ -518,7 +518,7 @@ dbdet_edgel* dbdet_temporal_map_tableau::find_closest_edgel(float ix, float iy)
   unsigned row_cell = (unsigned)iy;
   unsigned col_cell = (unsigned)ix;
 
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   unsigned jcell_min = 0, icell_min = 0;
   unsigned imin = 0;
 
@@ -542,7 +542,7 @@ dbdet_edgel* dbdet_temporal_map_tableau::find_closest_edgel(float ix, float iy)
     }
   }
 
-  if (dmin == vcl_numeric_limits<double>::infinity())
+  if (dmin == std::numeric_limits<double>::infinity())
     return 0;
   else
     return EM_->edge_cells[icell_min][jcell_min][imin];
@@ -553,12 +553,12 @@ dbdet_edgel* dbdet_temporal_map_tableau::find_closest_edgel(float ix, float iy)
 void
 dbdet_temporal_map_tableau::print_edgel_stats(dbdet_edgel * e)
 {
-  vcl_cout << "========= EDGEL =========\n";
-  vcl_cout << "id: " << e->id;
+  std::cout << "========= EDGEL =========\n";
+  std::cout << "id: " << e->id;
 
     //first determine the max number of edgels before the ref edgel in all of the curvelets
     unsigned num = 0;
-    //vcl_map<dbdet_curvelet*,dbdet_temporal_options* >::iterator cv_it = tmap_->map_[e->id]->st_options_.begin();
+    //std::map<dbdet_curvelet*,dbdet_temporal_options* >::iterator cv_it = tmap_->map_[e->id]->st_options_.begin();
     //for ( ; cv_it!= tmap_->map_[e->id]->st_options_.end(); cv_it++){
     //  dbdet_curvelet* cvlet = cv_it->first;
     //  for (unsigned k=0; k<cvlet->edgel_chain.size(); k++){
@@ -568,8 +568,8 @@ dbdet_temporal_map_tableau::print_edgel_stats(dbdet_edgel * e)
     //}
 
     ////print the marker for the ref edge column
-    //for (int i=0; i<=num; i++) vcl_cout << "\t";
-    //vcl_cout << "***" << vcl_endl;
+    //for (int i=0; i<=num; i++) std::cout << "\t";
+    //std::cout << "***" << std::endl;
 
  
 
@@ -579,11 +579,11 @@ void dbdet_temporal_map_tableau::print_cvlet_info(dbdet_curvelet* cvlet)
 {
   //pos refers to the position of the ref edgel
   if(dbdet_CC_curve_model * ccmodel1=dynamic_cast<dbdet_CC_curve_model *> (cvlet->curve_model))
-      vcl_cout<<" Anchor Curvature: "<<ccmodel1->k;
+      std::cout<<" Anchor Curvature: "<<ccmodel1->k;
     if(dbdet_CC_curve_model_3d * ccmodel1=dynamic_cast<dbdet_CC_curve_model_3d *> (cvlet->curve_model))
-      vcl_cout<<" Anchor Curvature: "<<ccmodel1->k;
+      std::cout<<" Anchor Curvature: "<<ccmodel1->k;
 
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 }
 
 void dbdet_temporal_map_tableau::draw_curvelet(dbdet_curvelet* cvlet, float r, float g, float b)
@@ -604,14 +604,14 @@ void dbdet_temporal_map_tableau::draw_edgel(dbdet_edgel* e, float r, float g, fl
     glLineWidth (2.0);
     //gl2psLineWidth(2.0);
     glBegin( GL_LINES );
-    glVertex2d(e->pt.x() - 0.5*vcl_cos(e->tangent),e->pt.y() - 0.5*vcl_sin(e->tangent));
-    glVertex2d(e->pt.x() + 0.5*vcl_cos(e->tangent),e->pt.y() + 0.5*vcl_sin(e->tangent));
+    glVertex2d(e->pt.x() - 0.5*std::cos(e->tangent),e->pt.y() - 0.5*std::sin(e->tangent));
+    glVertex2d(e->pt.x() + 0.5*std::cos(e->tangent),e->pt.y() + 0.5*std::sin(e->tangent));
     glEnd();
 
 }
 void dbdet_temporal_map_tableau::draw_current_curvlets(dbdet_edgel * e)
 {
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
     for(cv_iter=tmap_->map_[e->id]->st_options_.begin();cv_iter!=tmap_->map_[e->id]->st_options_.end();cv_iter++)
     {
         vnl_random rand;
@@ -633,20 +633,20 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
     for(unsigned k=0;k<tmap_->derivatives_map_[e]->models_.size();k++)
     {
         tmap_->derivatives_map_[e]->models_[k].print_model();
-        vcl_cout<<e->pt<<","<<e->tangent<<"\n";
+        std::cout<<e->pt<<","<<e->tangent<<"\n";
         if(dbdet_second_order_velocity_model * m=dynamic_cast<dbdet_second_order_velocity_model * >(&(tmap_->derivatives_map_[e]->models_[k])))
         {
             //m->computeV(e)->print();
             double b=m->b_;
             double vmax=4.00;
-            double amax=vcl_sqrt(vmax*vmax-b*b);
+            double amax=std::sqrt(vmax*vmax-b*b);
             for(double a=-amax;a<=amax;)
             {
                 double alphas=m->alphas(a);
                 double alphat=m->alphat(a);
-                vcl_cout<<"Alpha ="<<a<<"\n";
+                std::cout<<"Alpha ="<<a<<"\n";
                 dbdet_curvelet * refc=tmap_->derivatives_map_[e]->refcs_[0];
-                vcl_cout<<m->compute_V_by_rho(e,320,a)<<"\n";
+                std::cout<<m->compute_V_by_rho(e,320,a)<<"\n";
                 for(unsigned i=0;i<refc->edgel_chain.size();i++)
                 {
                     dbdet_edgel * e1=refc->edgel_chain[i];
@@ -654,7 +654,7 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
                     double ai=a+alphas*ds;
                     if(dbdet_second_order_velocity_model * m1=dynamic_cast<dbdet_second_order_velocity_model * >(&(tmap_->derivatives_map_[e1]->models_[0])))
                     {
-                        vcl_cout<<m1->compute_V_by_rho(e1,320,ai)<<"\n";
+                        std::cout<<m1->compute_V_by_rho(e1,320,ai)<<"\n";
                     }
                 }
                 int frame=bvis1_manager::instance()->repository()->current_frame();
@@ -665,8 +665,8 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
                      continue;
                         
                     double at=a+alphat*t;
-                    double newx=e->pt.x()+(at*vcl_cos(e->tangent)-b*vcl_sin(e->tangent))*t;
-                    double newy=e->pt.y()+(at*vcl_sin(e->tangent)+b*vcl_cos(e->tangent))*t;
+                    double newx=e->pt.x()+(at*std::cos(e->tangent)-b*std::sin(e->tangent))*t;
+                    double newy=e->pt.y()+(at*std::sin(e->tangent)+b*std::cos(e->tangent))*t;
 
 
                     dbdet_temporal_map_storage_sptr p;
@@ -688,7 +688,7 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
                         if(tmapt->derivatives_map_[e1t]->models_.size()>0)
                         if(dbdet_second_order_velocity_model * m1=dynamic_cast<dbdet_second_order_velocity_model * >(&(tmapt->derivatives_map_[e1t]->models_[0])))
                         {
-                            vcl_cout<<m1->compute_V_by_rho(e1t,320,ait)<<"\n";
+                            std::cout<<m1->compute_V_by_rho(e1t,320,ait)<<"\n";
                         }
                     }
                     }
@@ -698,9 +698,9 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
                 a+=0.1;
             }
             //if(region_id_!=-1)
-            //    vcl_cout<<"Error "<<tmap_->compute_geometric_error(tmap_->regions_[region_id_],m->computeV(e))<<"\n";
+            //    std::cout<<"Error "<<tmap_->compute_geometric_error(tmap_->regions_[region_id_],m->computeV(e))<<"\n";
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
     if(tri_id>=0)
     {
@@ -709,19 +709,19 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
             for(unsigned k=0;k<tmap_->regions_[i].triangles_.size();k++)
                 if(tmap_->regions_[i].triangles_[k]==tri_id)
                 {
-                    vcl_map<int, vnl_vector<float> >::iterator iter;
+                    std::map<int, vnl_vector<float> >::iterator iter;
 
                     tmap_->regions_[i].Vdist->print();
                     for(iter=tmap_->v_modes_.begin();iter!=tmap_->v_modes_.end();iter++)
                     {
-                        //vcl_cout<<tmap_->computer_error_per_region(tmap_->regions_[i],iter->second[0],iter->second[1],iter->second[2]);
-                        vcl_cout<<" ";
-                    }vcl_cout<<"\n error ";
+                        //std::cout<<tmap_->computer_error_per_region(tmap_->regions_[i],iter->second[0],iter->second[1],iter->second[2]);
+                        std::cout<<" ";
+                    }std::cout<<"\n error ";
                     if(compute_error_)
                     {
-                        vcl_vector<float> xs;
-                        vcl_vector<float> ys;
-                       //vcl_cout<<tmap_->computer_error_per_region(tmap_->regions_[i],Vx,Vy,V_z,xs,ys)<<"\n";
+                        std::vector<float> xs;
+                        std::vector<float> ys;
+                       //std::cout<<tmap_->computer_error_per_region(tmap_->regions_[i],Vx,Vy,V_z,xs,ys)<<"\n";
                         glBegin(GL_POINTS);
                         for(unsigned i=0;i<xs.size();i++)
                         {
@@ -734,7 +734,7 @@ void dbdet_temporal_map_tableau::draw_current_temporal_bundles(dbdet_edgel * e, 
         }                                                        
     }
 
-    vcl_cout<<"\n";
+    std::cout<<"\n";
 }
 
 
@@ -752,21 +752,21 @@ void dbdet_temporal_map_tableau::draw_max_temporal_bundles(dbdet_edgel * e, int 
 {
 
     
-      vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+      std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
       for(cv_iter=tmap_->map_[e->id]->st_options_.begin();cv_iter!=tmap_->map_[e->id]->st_options_.end();cv_iter++)
       {
 
           if(cv_iter->second->list_options_.size()>0)
           {
-              vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+              std::list<dbdet_temporal_bundle>::iterator list_iter;
 
               print_cvlet_info(cv_iter->first);
               //: iterating through all the bundles
               double max_weight=0;
-              vcl_list<dbdet_temporal_bundle>::iterator max_list_iter=cv_iter->second->list_options_.end();
+              std::list<dbdet_temporal_bundle>::iterator max_list_iter=cv_iter->second->list_options_.end();
               for(list_iter=cv_iter->second->list_options_.begin();list_iter!=cv_iter->second->list_options_.end();list_iter++)
               {
-                  vcl_map<int,dbdet_curvelet * > b=list_iter->bundle_;
+                  std::map<int,dbdet_curvelet * > b=list_iter->bundle_;
                   if(b.size()>thresh)
                   {
                       
@@ -783,19 +783,19 @@ void dbdet_temporal_map_tableau::draw_max_temporal_bundles(dbdet_edgel * e, int 
               max_list_iter->model_->print_model();
               draw_temporal_model(max_list_iter->model_,cv_iter->first->ref_edgel,0,0,1);
               //: iterating over edgels from different frames
-              vcl_map<int, dbdet_curvelet* >::iterator biter;
-              vcl_cout<<"Curvatures: ";
+              std::map<int, dbdet_curvelet* >::iterator biter;
+              std::cout<<"Curvatures: ";
               for (biter=max_list_iter->bundle_.begin();biter!=max_list_iter->bundle_.end();biter++)
               {
                   draw_curvelet(biter->second,col_pal[biter->first+2][0],col_pal[biter->first+2][1],col_pal[biter->first+2][2]);
                   if(dbdet_CC_curve_model * ccmodel1=dynamic_cast<dbdet_CC_curve_model *> (biter->second->curve_model))
-                      vcl_cout<<ccmodel1->k;
+                      std::cout<<ccmodel1->k;
                   if(dbdet_CC_curve_model_3d * ccmodel1=dynamic_cast<dbdet_CC_curve_model_3d *> (biter->second->curve_model))
-                      vcl_cout<<ccmodel1->k;
+                      std::cout<<ccmodel1->k;
 
-                  vcl_cout<<"\n Weight = "<<max_list_iter->weight_<<"\n";
+                  std::cout<<"\n Weight = "<<max_list_iter->weight_<<"\n";
               }
-              vcl_cout<<"\n";
+              std::cout<<"\n";
           }
           }
 
@@ -825,11 +825,11 @@ void dbdet_temporal_map_tableau::draw_temporal_model(dbdet_temporal_model * m, d
         double y0=refc->pt.y();
         double theta0=refc->tangent;
 
-        double nx=-vcl_sin(theta0);
-        double ny=vcl_cos(theta0);
+        double nx=-std::sin(theta0);
+        double ny=std::cos(theta0);
 
-        double tx=vcl_cos(theta0);
-        double ty=vcl_sin(theta0);
+        double tx=std::cos(theta0);
+        double ty=std::sin(theta0);
 
         glColor3f( 1, 0, 0 );
         glBegin( GL_LINE_STRIP );
@@ -853,7 +853,7 @@ void dbdet_temporal_map_tableau::draw_temporal_model(dbdet_temporal_model * m, d
 
 void dbdet_temporal_map_tableau::show_potential_seeds()
 {
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
     for(unsigned i=0;i<EM_->edgels.size();i++)
     {
         dbdet_edgel * e=EM_->edgels[i]; 
@@ -883,11 +883,11 @@ void dbdet_temporal_map_tableau::show_potential_seeds()
 
 void dbdet_temporal_map_tableau::draw_if_seed(dbdet_edgel * e)
 {
-        vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+        std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
         for(cv_iter=tmap_->map_[e->id]->st_options_.begin();cv_iter!=tmap_->map_[e->id]->st_options_.end();cv_iter++)
         {
                     draw_curvelet(cv_iter->first,0,0,0);
-                    vcl_vector<int> path=tmap_->find_path(cv_iter->first);
+                    std::vector<int> path=tmap_->find_path(cv_iter->first);
                     for(unsigned k=0;k<path.size();k++)
                         draw_edgel(tmap_->emap_->edgels[path[k]],0,0,1);
         }
@@ -909,7 +909,7 @@ void dbdet_temporal_map_tableau::draw_contour_fragments()
         double b=rand.drand32(0,1);
         draw_temporal_model(tmap_->cf_list[i].tb_->model_,tmap_->cf_list[i].tb_->refc->ref_edgel,r,g,b);
 
-        vcl_list<dbdet_temporal_bundle *>::iterator iterlist;
+        std::list<dbdet_temporal_bundle *>::iterator iterlist;
         glColor3f(r,g,b);
         double offset=rand.drand32(0,0.2);
         glBegin(GL_LINE_STRIP);
@@ -934,12 +934,12 @@ void dbdet_temporal_map_tableau::construct_contour_fragment(dbdet_curvelet * ref
             if(clinks.size()>0 && clinks.size()<=1)
             {
                 int edgeid=(*clinks.begin())->ce->id;
-                vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
+                std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
                 bool anymatch=false;
 
                 for(iter_hyp=tmap_->map_[edgeid]->st_options_.begin();iter_hyp!=tmap_->map_[edgeid]->st_options_.end();iter_hyp++)
                 {    
-                    vcl_list<dbdet_temporal_bundle>::iterator biter;
+                    std::list<dbdet_temporal_bundle>::iterator biter;
                     for(biter=iter_hyp->second->list_options_.begin();biter!=iter_hyp->second->list_options_.end();biter++)
                     {
                         if(dbdet_temporal_curvature_velocity_model * tmodel1
@@ -949,7 +949,7 @@ void dbdet_temporal_map_tableau::construct_contour_fragment(dbdet_curvelet * ref
                             {
                                 anymatch=true;
                                 //: draw the edges beloging to the dynamic curve fragment
-                                vcl_map<int, dbdet_curvelet*>::iterator belements;
+                                std::map<int, dbdet_curvelet*>::iterator belements;
                                 draw_edgel(iter_hyp->first->ref_edgel,col_pal[2][0],col_pal[2][1],col_pal[2][2]);
 
                                 for(belements=biter->bundle_.begin();belements!=biter->bundle_.end();belements++)
@@ -981,12 +981,12 @@ void dbdet_temporal_map_tableau::construct_contour_fragment(dbdet_curvelet * ref
             if(plinks.size()>0 && plinks.size()<=1)
             {
                 int edgeid=(*plinks.begin())->pe->id;
-                vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
+                std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
                                     bool anymatch=false;
 
                 for(iter_hyp=tmap_->map_[edgeid]->st_options_.begin();iter_hyp!=tmap_->map_[edgeid]->st_options_.end();iter_hyp++)
                 {    
-                    vcl_list<dbdet_temporal_bundle>::iterator biter;
+                    std::list<dbdet_temporal_bundle>::iterator biter;
                     for(biter=iter_hyp->second->list_options_.begin();biter!=iter_hyp->second->list_options_.end();biter++)
                     {
                         if(dbdet_temporal_curvature_velocity_model * tmodel1
@@ -996,7 +996,7 @@ void dbdet_temporal_map_tableau::construct_contour_fragment(dbdet_curvelet * ref
                             {
                                 anymatch=true;
                                 //: draw the edges beloging to the dynamic curve fragment
-                                vcl_map<int, dbdet_curvelet*>::iterator belements;
+                                std::map<int, dbdet_curvelet*>::iterator belements;
                                 draw_edgel(iter_hyp->first->ref_edgel,col_pal[2][0],col_pal[2][1],col_pal[2][2]);
                                 for(belements=biter->bundle_.begin();belements!=biter->bundle_.end();belements++)
                                 {
@@ -1026,12 +1026,12 @@ void dbdet_temporal_map_tableau::construct_contour_fragment(dbdet_curvelet * ref
 void dbdet_temporal_map_tableau::draw_one_sided_bundles()
 {
 
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
     for(unsigned i=0;i<tmap_->map_.size();i++)
     {
         for(cv_iter=tmap_->map_[i]->st_options_.begin();cv_iter!=tmap_->map_[i]->st_options_.end();cv_iter++)
         {
-                        vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+                        std::list<dbdet_temporal_bundle>::iterator list_iter;
             for(list_iter=cv_iter->second->list_options_.begin();list_iter!=cv_iter->second->list_options_.end();list_iter++)
             {   
                 if(!list_iter->used_ && list_iter->bundle_.size()>1 && list_iter->one_sided_)
@@ -1060,17 +1060,17 @@ if(tmap_.ptr() && tmap_->label_map_.size()>0)
                 dbdet_edgel * cur_edgel=EM_->edgels[i]; 
                 vgl_point_2d<double> p=cur_edgel->pt;
                 glBegin( GL_LINE_STRIP );
-                glVertex2d(cur_edgel->pt.x() - 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() - 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() - 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() - 0.5*std::sin(cur_edgel->tangent));
 
-                glVertex2d(cur_edgel->pt.x() + 0.5*vcl_cos(cur_edgel->tangent),
-                           cur_edgel->pt.y() + 0.5*vcl_sin(cur_edgel->tangent));
+                glVertex2d(cur_edgel->pt.x() + 0.5*std::cos(cur_edgel->tangent),
+                           cur_edgel->pt.y() + 0.5*std::sin(cur_edgel->tangent));
                 glEnd();
             }
         }
     }
     else{
-        vcl_cout<<"Temproal map is unavalaible \n";
+        std::cout<<"Temproal map is unavalaible \n";
     }
 }
 void dbdet_temporal_map_tableau::draw_delaunay()
@@ -1096,7 +1096,7 @@ void dbdet_temporal_map_tableau::draw_delaunay_valid()
 {
  for(unsigned i=0;i<tmap_->emap_->edgels.size();i++)
     {
-        vcl_vector<int> ids=tmap_->valid_neighbor_map_[i];
+        std::vector<int> ids=tmap_->valid_neighbor_map_[i];
         glColor3f(1,1,0);
         for(unsigned j=0;j<ids.size();j++)
         {
@@ -1114,7 +1114,7 @@ void dbdet_temporal_map_tableau::draw_current_longest_hypothesis(dbdet_edgel * e
     int max_length=0;
     for(unsigned i=0;i<tmap_->cf_list.size();i++)
     {
-        vcl_vector<int>::iterator iter=vcl_find(tmap_->cf_list[i].memids.begin(),tmap_->cf_list[i].memids.end(),e->id);
+        std::vector<int>::iterator iter=std::find(tmap_->cf_list[i].memids.begin(),tmap_->cf_list[i].memids.end(),e->id);
         if(iter!=tmap_->cf_list[i].memids.end())
         {
            if( tmap_->cf_list[i].memids.size()>max_length)
@@ -1134,7 +1134,7 @@ void dbdet_temporal_map_tableau::draw_current_longest_hypothesis(dbdet_edgel * e
         double b=rand.drand32(0,1);
         draw_temporal_model(tmap_->cf_list[max_length_index].tb_->model_,tmap_->cf_list[max_length_index].tb_->refc->ref_edgel,r,g,b);
 
-        vcl_list<dbdet_temporal_bundle *>::iterator iterlist;
+        std::list<dbdet_temporal_bundle *>::iterator iterlist;
         glColor3f(r,g,b);
         double offset=rand.drand32(0,0.2);
         glBegin(GL_LINE_STRIP);
@@ -1154,7 +1154,7 @@ void dbdet_temporal_map_tableau::draw_current_across_and_along_hypothesis(dbdet_
     for(unsigned i=0;i<tmap_->cf_list.size();i++)
     {
         //: found a segment for current edge and display all hypotheses.
-        vcl_vector<int>::iterator iter=vcl_find(tmap_->cf_list[i].memids.begin(),tmap_->cf_list[i].memids.end(),e->id);
+        std::vector<int>::iterator iter=std::find(tmap_->cf_list[i].memids.begin(),tmap_->cf_list[i].memids.end(),e->id);
         if(iter!=tmap_->cf_list[i].memids.end())
         {
             double r=rand.drand32(0,1);
@@ -1162,20 +1162,20 @@ void dbdet_temporal_map_tableau::draw_current_across_and_along_hypothesis(dbdet_
             double b=rand.drand32(0,1);
             double offset=rand.drand32(0,0.2);
             glColor3f(r,g,b);
-            vcl_vector<int>::iterator iterlist;
+            std::vector<int>::iterator iterlist;
             //: find the segements for the memberid.
             bool flag=false;
             for(unsigned j=0;j<tmap_->cf_list[i].memids.size();j++)
             {
                 //: get the delaunay neighbors
-                vcl_vector<int> nids=tmap_->dt_->neighbor_map_[tmap_->cf_list[i].memids[j]];
+                std::vector<int> nids=tmap_->dt_->neighbor_map_[tmap_->cf_list[i].memids[j]];
                 for(unsigned k=0;k<nids.size();k++)
                 {
                     for(unsigned l=0;l<tmap_->cf_list.size();l++)
                     {
                         if(i!=l)
                         {
-                            vcl_vector<int>::iterator sub_iter=vcl_find(tmap_->cf_list[l].memids.begin(),tmap_->cf_list[l].memids.end(),nids[k]);
+                            std::vector<int>::iterator sub_iter=std::find(tmap_->cf_list[l].memids.begin(),tmap_->cf_list[l].memids.end(),nids[k]);
                             if(sub_iter!=tmap_->cf_list[l].memids.end() && tmap_->bundles_intersect(*tmap_->cf_list[l].tb_,*tmap_->cf_list[i].tb_ ) )
                             {
                                 if(tmap_->cf_list[l].memids.size()>1)
@@ -1214,7 +1214,7 @@ void dbdet_temporal_map_tableau::draw_current_across_and_along_hypothesis(dbdet_
 void dbdet_temporal_map_tableau::list_hypothesis_by_nweight(dbdet_edgel * e)
 {
 
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
     for(cv_iter=tmap_->map_[e->id]->st_options_.begin();cv_iter!=tmap_->map_[e->id]->st_options_.end();cv_iter++)
         cv_iter->second->print();
 }
@@ -1223,19 +1223,19 @@ void dbdet_temporal_map_tableau::draw_neighbor_relations(dbdet_edgel *e)
 {
  if(tmap_->dt_)
  {
-     vcl_vector<int> nids=tmap_->dt_->get_neighbors(e->id);
-     vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
-     vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter2;
+     std::vector<int> nids=tmap_->dt_->get_neighbors(e->id);
+     std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+     std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter2;
      for(cv_iter=tmap_->map_[e->id]->st_options_.begin();cv_iter!=tmap_->map_[e->id]->st_options_.end();cv_iter++)
      {
-         vcl_list<dbdet_temporal_bundle>::iterator list_iter;
-         vcl_list<dbdet_temporal_bundle>::iterator list_iter2;
+         std::list<dbdet_temporal_bundle>::iterator list_iter;
+         std::list<dbdet_temporal_bundle>::iterator list_iter2;
          print_cvlet_info(cv_iter->first);
          //: iterating through all the bundles
          for(list_iter=cv_iter->second->list_options_.begin();list_iter!=cv_iter->second->list_options_.end();list_iter++)
          {
              int count_members=0;
-             vcl_map<int,dbdet_curvelet * > b=list_iter->bundle_;
+             std::map<int,dbdet_curvelet * > b=list_iter->bundle_;
              if(!list_iter->used_ && list_iter->weight_>0.05)
              {
                  list_iter->model_->print_model();
@@ -1253,13 +1253,13 @@ void dbdet_temporal_map_tableau::draw_neighbor_relations(dbdet_edgel *e)
                                  if(tmap_->bundles_intersect( *list_iter, *list_iter2))
                                  {
                                     list_iter2->model_->print_model();
-                                    vcl_cout<<"YES \n";
+                                    std::cout<<"YES \n";
                                  }
                              }
                          }
                      }
                  }
-                 vcl_cout<<" Weight = "<<list_iter->weight_<<"\n";
+                 std::cout<<" Weight = "<<list_iter->weight_<<"\n";
              }
          }
      }
@@ -1271,22 +1271,22 @@ dbdet_temporal_map_tableau::print_velocity_per_triangle(float ix, float iy)
     //int tri_id=point_inside(ix,iy);
     //if(tri_id<0)
     //{
-    //    vcl_cout<<"\n not locatd in any of triangles";return;
+    //    std::cout<<"\n not locatd in any of triangles";return;
     //}
-    //vcl_list<dbdet_3D_velocity_model>::iterator model_iter;
+    //std::list<dbdet_3D_velocity_model>::iterator model_iter;
     //for(model_iter=tmap_->motion_triangle_[tri_id].begin();
     //     model_iter!=tmap_->motion_triangle_[tri_id].end();model_iter++)
     //{
-    //    vcl_cout<<model_iter->theta<<","<<model_iter->phi<<"\t";
+    //    std::cout<<model_iter->theta<<","<<model_iter->phi<<"\t";
 
     //    if(model_iter==tmap_->motion_triangle_[tri_id].begin())
     //    {
-    //        vcl_cout<<"("<<model_iter->phi<<","<<model_iter->theta<<")\n";
+    //        std::cout<<"("<<model_iter->phi<<","<<model_iter->theta<<")\n";
     //        draw_edges_agreed_with_model(*model_iter);
     //    }
 
     //}
-    //vcl_cout<<"\n";
+    //std::cout<<"\n";
 
 }
 
@@ -1320,14 +1320,14 @@ dbdet_temporal_map_tableau::draw_edges_agreed_with_model(dbdet_3D_velocity_model
         glColor3f( 1.0 , 0.0 , 0.0 );
         glPointSize(5.0);
 
-        vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
-        vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator link_iter_hyp;
-        vcl_list<dbdet_temporal_bundle> ::iterator iter_options;
-        vcl_map<int,vcl_list<dbdet_temporal_bundle> >::iterator link_iter_options;
+        std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter_hyp;
+        std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator link_iter_hyp;
+        std::list<dbdet_temporal_bundle> ::iterator iter_options;
+        std::map<int,std::list<dbdet_temporal_bundle> >::iterator link_iter_options;
 
         for(iter_hyp=tmap_->map_[i]->st_options_.begin();iter_hyp!=tmap_->map_[i]->st_options_.end();iter_hyp++)
         {    
-            vcl_list<dbdet_temporal_bundle>::iterator biter;
+            std::list<dbdet_temporal_bundle>::iterator biter;
             //: any arbitrary starting edge
             for(biter=iter_hyp->second->st_bundles_.begin();biter!=iter_hyp->second->st_bundles_.end();biter++)
             {
@@ -1390,15 +1390,15 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
             for(unsigned k=0;k<tmap_->regions_[i].triangles_.size();k++)
                 if(tmap_->regions_[i].triangles_[k]==tri_id)
                 {
-                    vcl_vector<double> xs; 
-                    vcl_vector<double> ys;
-                    vcl_cout<<"\n";
-                    vcl_cout<<tmap_->regions_[i].Vdist;
-//                   vcl_cout<<"\nError "<<tmap_->compute_probabilistic_error(tmap_->regions_[i],Vx,Vy,V_z);
+                    std::vector<double> xs; 
+                    std::vector<double> ys;
+                    std::cout<<"\n";
+                    std::cout<<tmap_->regions_[i].Vdist;
+//                   std::cout<<"\nError "<<tmap_->compute_probabilistic_error(tmap_->regions_[i],Vx,Vy,V_z);
 //  
 //                    //: see which w gives least error
-//                    vcl_map<int,int>::iterator iter_option=tmap_->regions_[i].ids_ws.begin();
-//                    vcl_map<int,dbdet_temporal_model*>::iterator iter_model=tmap_->regions_[i].ids_model.begin();
+//                    std::map<int,int>::iterator iter_option=tmap_->regions_[i].ids_ws.begin();
+//                    std::map<int,dbdet_temporal_model*>::iterator iter_model=tmap_->regions_[i].ids_model.begin();
 //                    for(;iter_option!=tmap_->regions_[i].ids_ws.end();iter_option++,iter_model++)
 //                    {
 //                            if(dbdet_temporal_normal_velocity_model * m=dynamic_cast<dbdet_temporal_normal_velocity_model*>(iter_model->second))
@@ -1407,11 +1407,11 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
 //                                        double y0=m->ref_curvelet->ref_edgel->pt.y();
 //                                        double theta0=m->ref_curvelet->ref_edgel->tangent;
 //
-//                                        double nx=-vcl_sin(theta0);
-//                                        double ny=vcl_cos(theta0);
+//                                        double nx=-std::sin(theta0);
+//                                        double ny=std::cos(theta0);
 //
-//                                        double tx=vcl_cos(theta0);
-//                                        double ty=vcl_sin(theta0);
+//                                        double tx=std::cos(theta0);
+//                                        double ty=std::sin(theta0);
 //                                        
 //                                        glColor3f( 1, 0, 0 );
 //                                        glBegin( GL_LINE_STRIP );
@@ -1423,19 +1423,19 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
 //                                        glEnd();
 //                            }
 //                    }
-//                    vcl_cout<<"v1 ="<<tmap_->regions_[i].v1<<" v2="<<tmap_->regions_[i].v2<<"\n";
-//                    vcl_cout<<"("<<tmap_->regions_[i].l1<<","<<tmap_->regions_[i].l2<<","<<tmap_->regions_[i].l3<<")\n";
-//                    vcl_cout<<tmap_->regions_[i].v1v1<<","<<tmap_->regions_[i].v1v2<<","<<tmap_->regions_[i].v2v2<<"\n";
+//                    std::cout<<"v1 ="<<tmap_->regions_[i].v1<<" v2="<<tmap_->regions_[i].v2<<"\n";
+//                    std::cout<<"("<<tmap_->regions_[i].l1<<","<<tmap_->regions_[i].l2<<","<<tmap_->regions_[i].l3<<")\n";
+//                    std::cout<<tmap_->regions_[i].v1v1<<","<<tmap_->regions_[i].v1v2<<","<<tmap_->regions_[i].v2v2<<"\n";
 //
 //                    dbdet_region r=tmap_->regions_[i];
 ///*                    for(float phi=r.phi_min;phi<=r.phi_max;)
 //                    {
-//                                vnl_vector<float> vmean=r.v1*vcl_cos(phi)+r.v2*vcl_sin(phi);
+//                                vnl_vector<float> vmean=r.v1*std::cos(phi)+r.v2*std::sin(phi);
 //
 //                        vnl_matrix<float> cov(3,3);
-//                        cov=vcl_cos(phi)*vcl_cos(phi)*r.v1v1+
-//                            2*vcl_cos(phi)*vcl_sin(phi)*r.v1v2+
-//                            vcl_sin(phi)*vcl_sin(phi)*r.v2v2;
+//                        cov=std::cos(phi)*std::cos(phi)*r.v1v1+
+//                            2*std::cos(phi)*std::sin(phi)*r.v1v2+
+//                            std::sin(phi)*std::sin(phi)*r.v2v2;
 //
 //                        vnl_vector<float> lambdas(3);
 //                        vnl_matrix<float> Vs(3,3);
@@ -1443,20 +1443,20 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
 //                        if(!vnl_symmetric_eigensystem_compute(cov,Vs,lambdas))
 //                            return ;
 //
-//                        vcl_cout<<"phi ="<<phi<<" mean ="<<vmean<<" "<<Vs<<lambdas;
+//                        std::cout<<"phi ="<<phi<<" mean ="<<vmean<<" "<<Vs<<lambdas;
 //                        phi+=0.2;
 //                    }
-//  */                  vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter
+//  */                  std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter
 //                        =tmap_->map_[cur_edgel->id]->st_options_.begin();
 //                    for(;iter!=tmap_->map_[cur_edgel->id]->st_options_.end();iter++)
 //                    {
-//                        vcl_list<dbdet_temporal_bundle>::iterator biter=iter->second->st_bundles_.begin();
+//                        std::list<dbdet_temporal_bundle>::iterator biter=iter->second->st_bundles_.begin();
 //                        for(;biter!=iter->second->st_bundles_.end();biter++)
 //                        {
 //                            if(dbdet_temporal_normal_velocity_model * m=dynamic_cast<dbdet_temporal_normal_velocity_model*>(biter->model_))
 //                            {
 //                                if(m->iscomputed_){
-//                                    vcl_cout<<"\n the error is "<<tmap_->compute_geometric_error_for_family(tmap_->regions_[i],m->v1_1,m->v1_2,xs,ys,m->phi1_min,m->phi1_max)<<" ";
+//                                    std::cout<<"\n the error is "<<tmap_->compute_geometric_error_for_family(tmap_->regions_[i],m->v1_1,m->v1_2,xs,ys,m->phi1_min,m->phi1_max)<<" ";
 //
 //                                    glColor3f( 1, 0, 0 );
 //                                    glBegin(GL_POINTS);
@@ -1464,7 +1464,7 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
 //                                        glVertex2d(xs[l],ys[l]);
 //                                    glEnd();
 //                                    xs.clear();ys.clear();
-//                                    vcl_cout<<tmap_->compute_geometric_error_for_family(tmap_->regions_[i],m->v2_1,m->v2_2,xs,ys,m->phi2_min,m->phi2_max)<<"\n";
+//                                    std::cout<<tmap_->compute_geometric_error_for_family(tmap_->regions_[i],m->v2_1,m->v2_2,xs,ys,m->phi2_min,m->phi2_max)<<"\n";
 //                                    glColor3f( 0, 1, 0 );
 //                                    glBegin(GL_POINTS);
 //                                    for(unsigned l=0;l<xs.size();l++)
@@ -1487,9 +1487,9 @@ void dbdet_temporal_map_tableau::get_region(float ix, float iy)
 
 void dbdet_temporal_map_tableau::display_salient_regions()
 {
-    vcl_set<int>::iterator iter;
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
-    vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+    std::set<int>::iterator iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::list<dbdet_temporal_bundle>::iterator list_iter;
 
     for(unsigned i=0;i<tmap_->regions_.size();i++)
     {
@@ -1499,7 +1499,7 @@ void dbdet_temporal_map_tableau::display_salient_regions()
             {
                 if(dbdet_CC_curve_model_3d * ccmodel=dynamic_cast<dbdet_CC_curve_model_3d *> (cv_iter->first->curve_model))
                 {
-                    if(vcl_fabs(ccmodel->k)>kthresh_)
+                    if(std::fabs(ccmodel->k)>kthresh_)
                     {
                         for(list_iter=cv_iter->second->st_bundles_.begin();list_iter!=cv_iter->second->st_bundles_.end();list_iter++)
                         {
@@ -1532,15 +1532,15 @@ void dbdet_temporal_map_tableau::display_salient_regions()
 void dbdet_temporal_map_tableau::draw_betas()
 {
 
-    vcl_map<dbdet_edgel*,vcl_vector<float> >::iterator iter;
+    std::map<dbdet_edgel*,std::vector<float> >::iterator iter;
     for(iter=tmap_->beta_edge_map.begin();iter!=tmap_->beta_edge_map.end();iter++)
     {
         double x=iter->first->pt.x();
         double y=iter->first->pt.y();
         double theta=iter->first->tangent;
 
-        double nx=-vcl_sin(theta);
-        double ny=vcl_cos(theta);
+        double nx=-std::sin(theta);
+        double ny=std::cos(theta);
 
         for(unsigned i=0;i<iter->second.size();i++)
         {
@@ -1558,8 +1558,8 @@ void dbdet_temporal_map_tableau::draw_betas()
 void dbdet_temporal_map_tableau::draw_backward_betas()
 {
 
-    vcl_map<dbdet_edgel*,vcl_vector<float> >::iterator iter;
-    vcl_map<dbdet_edgel*, vcl_vector<vgl_vector_2d<double> > >::iterator iterv;
+    std::map<dbdet_edgel*,std::vector<float> >::iterator iter;
+    std::map<dbdet_edgel*, std::vector<vgl_vector_2d<double> > >::iterator iterv;
     iter=tmap_->backward_beta_edge_map.begin();
 
     for(iterv=tmap_->backward_vector_edge_map.begin();iterv!=tmap_->backward_vector_edge_map.end();iterv++,iter++)
@@ -1568,8 +1568,8 @@ void dbdet_temporal_map_tableau::draw_backward_betas()
         double y=iterv->first->pt.y();
         double theta=iterv->first->tangent;
 
-        double nx=-vcl_sin(theta);
-        double ny=vcl_cos(theta);
+        double nx=-std::sin(theta);
+        double ny=std::cos(theta);
 
         for(unsigned i=0;i<iterv->second.size();i++)
         {
@@ -1597,14 +1597,14 @@ dbdet_edgel* dbdet_temporal_map_tableau::compute_closes_edge(double x, double y,
     dbdet_edgel * min_edge=0;
     if(x<emap->ncols() && x>=0 && y<emap->nrows() && y>=0 )
     {
-        int indexi=vcl_floor(x);
-        int indexj=vcl_floor(y);
+        int indexi=std::floor(x);
+        int indexj=std::floor(y);
         double minerr=1e5;
-        for(unsigned k=vcl_max<int>(0,indexi-winsize);k<=vcl_min<int>(indexi+winsize, emap->ncols()-1);k++)
+        for(unsigned k=std::max<int>(0,indexi-winsize);k<=std::min<int>(indexi+winsize, emap->ncols()-1);k++)
         {
-            for(unsigned l=vcl_max<int>(0,indexj-winsize);l<=vcl_min<int>(indexj+winsize, emap->nrows()-1);l++)
+            for(unsigned l=std::max<int>(0,indexj-winsize);l<=std::min<int>(indexj+winsize, emap->nrows()-1);l++)
             {
-                vcl_vector<dbdet_edgel *> *es=&(emap->edge_cells(l,k));
+                std::vector<dbdet_edgel *> *es=&(emap->edge_cells(l,k));
                 if(es->size()>0)
                 {
                     dbdet_edgel * e=(*es)[0];

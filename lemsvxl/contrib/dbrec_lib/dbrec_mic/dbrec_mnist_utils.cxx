@@ -6,24 +6,24 @@
 //
 #include "dbrec_mnist_utils.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_save.h>
 #include <vil/vil_load.h>
 #include <vil/vil_flip.h>
 #include <vil/vil_rotate.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <bsta/vis/bsta_svg_tools.h>
 
-void convert_mnist_files(const vcl_string& path, int cnt, const vcl_string& label_filename, const vcl_string& out_path)
+void convert_mnist_files(const std::string& path, int cnt, const std::string& label_filename, const std::string& out_path)
 {
-  vcl_cout << "reading label file in " << path << vcl_endl;
-  vcl_vector<int> labels(cnt, 0);
-  vcl_vector<int> cnts(10, 0);
-  vcl_ifstream ifs(label_filename.c_str());
+  std::cout << "reading label file in " << path << std::endl;
+  std::vector<int> labels(cnt, 0);
+  std::vector<int> cnts(10, 0);
+  std::ifstream ifs(label_filename.c_str());
   for (int i = 0; i < cnt; i++) {
     int lbl;
     ifs >> lbl;
@@ -31,26 +31,26 @@ void convert_mnist_files(const vcl_string& path, int cnt, const vcl_string& labe
     labels[i] = lbl;
   }
   for (unsigned i = 0; i < 10; i++) 
-    vcl_cout << "class: " << i << " cnt: " << cnts[i] << vcl_endl;
-  vcl_vector<int> counters(10, 0);
+    std::cout << "class: " << i << " cnt: " << cnts[i] << std::endl;
+  std::vector<int> counters(10, 0);
   for (int i = 0; i < cnt; i++) {
-    vcl_stringstream ss; ss << i+1;
-    vcl_string name = path + "img_"+ss.str()+".png";
+    std::stringstream ss; ss << i+1;
+    std::string name = path + "img_"+ss.str()+".png";
     vil_image_view<vxl_byte> img = vil_load(name.c_str());
     //: flip the image
     vil_image_view<vxl_byte> img_new(img.nj(), img.ni(), img.nplanes());
     vil_rotate_image(img,img_new,90.0);
     vil_image_view<vxl_byte> img_new_flipped = vil_flip_lr(img_new);
-    vcl_stringstream sss; sss << labels[i] << "_" << counters[labels[i]] << ".png";
+    std::stringstream sss; sss << labels[i] << "_" << counters[labels[i]] << ".png";
     counters[labels[i]]++;
-    vcl_string out_name = out_path + "img_"+sss.str();
+    std::string out_name = out_path + "img_"+sss.str();
     vil_save(img_new_flipped, out_name.c_str());
   }
 }
 
-void read_stat_file_gamma(const vcl_string& file, int gamma_interval, int gamma_range, const vcl_string out_path)
+void read_stat_file_gamma(const std::string& file, int gamma_interval, int gamma_range, const std::string out_path)
 {
-  vcl_ifstream ifs(file.c_str());
+  std::ifstream ifs(file.c_str());
 
   //: prepare two gamma histograms [-gamma_interval/2, gamma_range-gamma_interval/2] and [0,gamma_range]
   int gamma_nbins = gamma_range/gamma_interval;
@@ -63,7 +63,7 @@ void read_stat_file_gamma(const vcl_string& file, int gamma_interval, int gamma_
     ifs >> d;    
     ifs >> rho; 
     ifs >> gamma; 
-    //vcl_cout << " read mag: " << mag << " d: " << d << " rho: " << rho << " gamma: " << gamma << vcl_endl;
+    //std::cout << " read mag: " << mag << " d: " << d << " rho: " << rho << " gamma: " << gamma << std::endl;
 
     h_gamma2.upcount(gamma, mag);
     if (gamma > gamma_range-gamma_interval/2.0f)
@@ -72,17 +72,17 @@ void read_stat_file_gamma(const vcl_string& file, int gamma_interval, int gamma_
       h_gamma1.upcount(gamma, mag);
 
   }
-  vcl_stringstream g_int_str; g_int_str << gamma_interval;
-  vcl_string name1 = out_path + "_gamma_interval_"+g_int_str.str()+"_hist1.svg";
+  std::stringstream g_int_str; g_int_str << gamma_interval;
+  std::string name1 = out_path + "_gamma_interval_"+g_int_str.str()+"_hist1.svg";
   write_svg<float>(h_gamma1, name1, 600.0f, 600.0f, 30.0f, 15.0f);
-  vcl_string name2 = out_path + "_gamma_interval_"+g_int_str.str()+"_hist2.svg";
+  std::string name2 = out_path + "_gamma_interval_"+g_int_str.str()+"_hist2.svg";
   write_svg<float>(h_gamma2, name2, 600.0f, 600.0f, 30.0f, 15.0f);
 
   ifs.close();
 }
-void read_stat_file_d_rho(const vcl_string& file, int gamma_min, int gamma_max, int gamma_range, int d_interval, int d_range, int rho_interval, int rho_range, const vcl_string out_path)
+void read_stat_file_d_rho(const std::string& file, int gamma_min, int gamma_max, int gamma_range, int d_interval, int d_range, int rho_interval, int rho_range, const std::string out_path)
 {
-  vcl_ifstream ifs(file.c_str());
+  std::ifstream ifs(file.c_str());
   
   int d_nbins = d_range/d_interval;
 
@@ -100,7 +100,7 @@ void read_stat_file_d_rho(const vcl_string& file, int gamma_min, int gamma_max, 
     ifs >> d;    
     ifs >> rho; 
     ifs >> gamma; 
-    //vcl_cout << " read mag: " << mag << " d: " << d << " rho: " << rho << " gamma: " << gamma << vcl_endl;
+    //std::cout << " read mag: " << mag << " d: " << d << " rho: " << rho << " gamma: " << gamma << std::endl;
 
     if (gamma_min < 0) {
       if ((gamma > gamma_range-gamma_interval/2.0f && gamma <= gamma_range) || (gamma > 0 && gamma <= gamma_max)) {
@@ -123,15 +123,15 @@ void read_stat_file_d_rho(const vcl_string& file, int gamma_min, int gamma_max, 
 
   ifs.close();
 
-  vcl_stringstream r_int_str; r_int_str << rho_interval;
-  vcl_stringstream g_min_str; g_min_str << gamma_min;
-  vcl_stringstream g_max_str; g_max_str << gamma_max;
-  vcl_string name1 = out_path + "_gamma_min_"+g_min_str.str()+"_max_"+g_max_str.str()+"_rho_interval_"+r_int_str.str()+"_hist1.vrml";
-  vcl_ofstream ofs(name1.c_str());
+  std::stringstream r_int_str; r_int_str << rho_interval;
+  std::stringstream g_min_str; g_min_str << gamma_min;
+  std::stringstream g_max_str; g_max_str << gamma_max;
+  std::string name1 = out_path + "_gamma_min_"+g_min_str.str()+"_max_"+g_max_str.str()+"_rho_interval_"+r_int_str.str()+"_hist1.vrml";
+  std::ofstream ofs(name1.c_str());
   h1.print_to_vrml(ofs);
   ofs.close();
-  vcl_string name2 = out_path + "_gamma_min_"+g_min_str.str()+"_max_"+g_max_str.str()+"_rho_interval_"+r_int_str.str()+"_hist2.vrml";
-  vcl_ofstream ofs2(name2.c_str());
+  std::string name2 = out_path + "_gamma_min_"+g_min_str.str()+"_max_"+g_max_str.str()+"_rho_interval_"+r_int_str.str()+"_hist2.vrml";
+  std::ofstream ofs2(name2.c_str());
   h2.print_to_vrml(ofs2);
   ofs2.close();
   

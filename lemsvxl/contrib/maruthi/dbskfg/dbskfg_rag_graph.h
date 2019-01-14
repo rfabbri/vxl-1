@@ -16,7 +16,7 @@
 #include <dbgrl/dbgrl_graph.h>
 #include <dbskfg/dbskfg_rag_node.h>
 #include <dbskfg/dbskfg_rag_link.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbskfg/algo/dbskfg_transform_descriptor_sptr.h>
 
 //: 
@@ -51,23 +51,23 @@ public:
   dbskfg_rag_node_sptr rag_node(unsigned int id);
 
   // Return the rag node for this id
-  dbskfg_rag_node_sptr rag_node(vcl_set<vcl_string>& wavefront);
+  dbskfg_rag_node_sptr rag_node(std::set<std::string>& wavefront);
 
   // Return the rag node for this id
   dbskfg_rag_node_sptr rag_node(unsigned int id,
-                                vcl_set<unsigned int>& rag_con_ids);
+                                std::set<unsigned int>& rag_con_ids);
 
   // Return the rag node for this id
-  void rag_node(vcl_set<unsigned int> rag_con_ids,
+  void rag_node(std::set<unsigned int> rag_con_ids,
                 dbskfg_transform_descriptor_sptr transform,
-                vcl_vector<dbskfg_rag_node_sptr>& rag_nodes);
+                std::vector<dbskfg_rag_node_sptr>& rag_nodes);
 
   // --------------------------------------------------------------------------
   // DATA ACCESS
   // --------------------------------------------------------------------------
 
   //: Return the type identifier string
-  vcl_string is_a() const {return "dbskfg_rag_graph"; }
+  std::string is_a() const {return "dbskfg_rag_graph"; }
 
   //: Keep track of rag ids being destroyed 
   void rag_ids_map(unsigned int deleted_id,unsigned int merged_region)
@@ -82,7 +82,7 @@ public:
 
   //: Find rag id based on outer shock nodes 
   dbskfg_rag_node_sptr find_region(
-      const vcl_map<unsigned int, vgl_point_2d<double> >& wavefront);
+      const std::map<unsigned int, vgl_point_2d<double> >& wavefront);
 
   //: return number of regular fragments()
   unsigned int numb_regular_fragments();
@@ -96,8 +96,8 @@ protected:
 
 private:
   
-  vcl_map<unsigned int, vcl_map<unsigned int,vcl_string> > region_tree_;
-  vcl_map<unsigned int, vcl_set<unsigned int> > contour_to_region_;
+  std::map<unsigned int, std::map<unsigned int,std::string> > region_tree_;
+  std::map<unsigned int, std::set<unsigned int> > contour_to_region_;
 
   unsigned int next_available_id_;
 

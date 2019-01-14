@@ -5,7 +5,7 @@
 #ifndef dbsk3d_fs_vertex_h_
 #define dbsk3d_fs_vertex_h_
 
-#include <vcl_map.h>
+#include <map>
 #include <dbmsh3d/dbmsh3d_node.h>
 
 class dbsk3d_fs_edge;
@@ -75,12 +75,12 @@ public:
   //: fs_vertex that belongs to finite (bounded) fs_face
   bool is_valid_finite_via_FF ();
 
-  vcl_set<dbmsh3d_vertex*> get_Gs_from_FFs ();
+  std::set<dbmsh3d_vertex*> get_Gs_from_FFs ();
   int n_Gs_from_FFs ();
   
   unsigned int count_valid_FEs () const;
   unsigned int count_valid_FFs () const;
-  unsigned int count_valid_FFs (vcl_set<dbsk3d_fs_face*>& Pset) const;
+  unsigned int count_valid_FFs (std::set<dbsk3d_fs_face*>& Pset) const;
 
   //####### Flow type computation functions #######
   double compute_time();
@@ -93,15 +93,15 @@ public:
   FV_FLOW_TYPE detect_flow_type_A14 ();
   FV_FLOW_TYPE detect_flow_type_A1n ();
 
-  int compute_s1 (vcl_set<dbmsh3d_face*>& face_set);
+  int compute_s1 (std::set<dbmsh3d_face*>& face_set);
   int compute_s2 ();
-  bool get_2_non_Gabriel_FFs (vcl_set<dbmsh3d_face*>& FF_set,
+  bool get_2_non_Gabriel_FFs (std::set<dbmsh3d_face*>& FF_set,
                               dbsk3d_fs_face*& FF1, dbsk3d_fs_face*& FF2);
-  bool get_3_Gabriel_edges (vcl_set<dbmsh3d_face*>& FF_set,
+  bool get_3_Gabriel_edges (std::set<dbmsh3d_face*>& FF_set,
                             dbsk3d_fs_face*& FF1, dbsk3d_fs_face*& FF2, dbsk3d_fs_face*& FF3);
 
   //###### Handle the assigned generators ######  
-  unsigned int get_asgn_Gs (vcl_set<void*>& asgn_genes) const {
+  unsigned int get_asgn_Gs (std::set<void*>& asgn_genes) const {
     return get_all_ptrs (asgn_G_list_, asgn_genes);
   }
   unsigned int n_asgn_Gs() const {
@@ -128,7 +128,7 @@ public:
 
   //: Get all current associated G's excluding the inputFE and FF's incident ot FE.
   void get_asso_Gs_excld_FE (const dbsk3d_fs_edge* inputFE, 
-                             vcl_map<int, dbmsh3d_vertex*>& asso_genes);
+                             std::map<int, dbmsh3d_vertex*>& asso_genes);
   
   //: After undoing a gap xform, need to delete genes asgn. to FF's valid FE's.
   void del_asgn_G_of_FE (const dbsk3d_fs_edge* FE);
@@ -144,19 +144,19 @@ public:
   void _clone_FV_G_conn (dbsk3d_fs_vertex* FV2, dbmsh3d_pt_set* BND2) const;
   virtual dbsk3d_fs_vertex* clone (dbmsh3d_pt_set* BND2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
   
-  void get_incident_elms (vcl_set<dbsk3d_fs_edge*>& FE_set,
-                          vcl_set<dbsk3d_fs_face*>& FF_set);
+  void get_incident_elms (std::set<dbsk3d_fs_edge*>& FE_set,
+                          std::set<dbsk3d_fs_face*>& FF_set);
 };
 
 //####### dbsk3d_fs_vertex TEXT FILE I/O FUNCTIONS #######
 
-void fv_save_text_file (vcl_FILE* fp, const dbsk3d_fs_vertex* FV);
-void fv_load_text_file (vcl_FILE* fp, dbsk3d_fs_vertex* FV, 
-                        vcl_map <int, dbmsh3d_vertex*>& genemap);
+void fv_save_text_file (std::FILE* fp, const dbsk3d_fs_vertex* FV);
+void fv_load_text_file (std::FILE* fp, dbsk3d_fs_vertex* FV, 
+                        std::map <int, dbmsh3d_vertex*>& genemap);
 
-void fv_load_text_file_sg (vcl_FILE* fp, dbsk3d_fs_vertex* FV);
-void fv_load_text_file_sg_old (vcl_FILE* fp, dbsk3d_fs_vertex* FV);
+void fv_load_text_file_sg (std::FILE* fp, dbsk3d_fs_vertex* FV);
+void fv_load_text_file_sg_old (std::FILE* fp, dbsk3d_fs_vertex* FV);
 
 #endif

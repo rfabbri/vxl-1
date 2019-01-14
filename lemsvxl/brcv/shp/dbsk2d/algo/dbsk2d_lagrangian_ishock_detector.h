@@ -130,9 +130,9 @@ protected:
 
   bool _bValid; ///> is this lagrangian cell still valid?
 
-  vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements_;
+  std::map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements_;
 
-  vcl_set<int> deleted_ishock_elements_;
+  std::set<int> deleted_ishock_elements_;
 
   bool local_shock_;
 
@@ -168,7 +168,7 @@ public:
   void set_right_bnd(dbsk2d_lagrangian_cell_bnd_sptr bnd) { _right_bnd = bnd; }
   void set_top_bnd(dbsk2d_lagrangian_cell_bnd_sptr bnd) { _top_bnd = bnd; }
   void set_bottom_bnd(dbsk2d_lagrangian_cell_bnd_sptr bnd) { _bottom_bnd = bnd; }
-  vcl_map<unsigned int,dbsk2d_ishock_belm*> get_deleted_bnd_elements()
+  std::map<unsigned int,dbsk2d_ishock_belm*> get_deleted_bnd_elements()
   {return deleted_bnd_elements_;}
 
   void clear_deleted_elements(){deleted_bnd_elements_.clear();}
@@ -226,7 +226,7 @@ public:
   //-------------------------------------------------------------------
   virtual void initialize_shocks ();
     void initialize_contacts_and_A3s();
-    void initialize_contacts_and_A3s(vcl_vector<dbsk2d_ishock_belm*> belm_list);
+    void initialize_contacts_and_A3s(std::vector<dbsk2d_ishock_belm*> belm_list);
     void initialize_contacts_and_A3s_recompute();
 
     void init_cand_src_between(dbsk2d_ishock_belm* belm1, dbsk2d_ishock_belm* belm2);

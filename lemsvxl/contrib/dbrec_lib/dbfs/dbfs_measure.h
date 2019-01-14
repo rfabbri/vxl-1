@@ -19,7 +19,7 @@
 #define _dbfs_measure_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: base class that does measurements for the selector, defines the interface for deriving classes which will be used by the selector
 class dbfs_measure : public vbl_ref_count
@@ -51,7 +51,7 @@ protected:
 class dbfs_measure_simple : public dbfs_measure
 {
 public:
-  dbfs_measure_simple(const vcl_vector<vcl_vector<int> >& counts) : counts_(counts), total_doc_count_(0) {}
+  dbfs_measure_simple(const std::vector<std::vector<int> >& counts) : counts_(counts), total_doc_count_(0) {}
 
   float prob(int class_id, int feature_id);
   float prob_class(int class_id);   // marginal prob of the class
@@ -61,11 +61,11 @@ public:
 protected:
   void cache_values();
 
-  vcl_vector<vcl_vector<int> > counts_;
+  std::vector<std::vector<int> > counts_;
   //: cache these for fast access
   int total_doc_count_;
-  vcl_vector<int> class_counts_;
-  vcl_vector<int> feature_counts_;
+  std::vector<int> class_counts_;
+  std::vector<int> feature_counts_;
   
 };
 

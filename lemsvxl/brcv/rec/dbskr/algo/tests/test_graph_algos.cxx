@@ -42,7 +42,7 @@ static void test_graph_algos(int argc, char* argv[])
   dbsk2d_shock_node_sptr final_node; 
   int d = find_min_full_depth(sg, final_node);
   TEST("min full depth", d, 4);
-  vcl_cout << "final_node: " << final_node->id() << vcl_endl;
+  std::cout << "final_node: " << final_node->id() << std::endl;
 
   dbskr_v_graph_sptr v = construct_v_graph(sg, final_node, d);
   print_v_graph(v);
@@ -50,67 +50,67 @@ static void test_graph_algos(int argc, char* argv[])
   dbskr_v_graph_sptr v2 = construct_v_graph(sg, final_node);
   print_v_graph(v2);
 */
-  vcl_cout << "node1: " << node1->id() << " graph: " << vcl_endl;
+  std::cout << "node1: " << node1->id() << " graph: " << std::endl;
   dbskr_v_graph_sptr v3 = construct_v_graph(sg, node1, 1);
   print_v_graph(v3);
 
-  vcl_cout << "node2: " << node2->id() << " graph: " << vcl_endl;
+  std::cout << "node2: " << node2->id() << " graph: " << std::endl;
   dbskr_v_graph_sptr v4 = construct_v_graph(sg, node2, 1);
   print_v_graph(v4);
 
-  vcl_vector<dbsk2d_shock_edge_sptr> edges;
+  std::vector<dbsk2d_shock_edge_sptr> edges;
   //shortest_first_path(sg, node1, node2, edges); 
 
   //for (unsigned k = 0; k < edges.size(); k++)
-  //  vcl_cout << "e id: " << edges[k]->id() << vcl_endl;
+  //  std::cout << "e id: " << edges[k]->id() << std::endl;
 
   dbskr_shock_path_finder f(sg);
   TEST("testing shock path finder", f.construct_v(), true);
-  vcl_vector<dbskr_v_node_sptr> path;
+  std::vector<dbskr_v_node_sptr> path;
   f.get_shortest_v_node_path(node1, node2, path);
-  vcl_cout << "shortest v_node path from node1 to node2: \n";
+  std::cout << "shortest v_node path from node1 to node2: \n";
   for (unsigned k = 0; k < path.size(); k++)
-    vcl_cout << "v node id: " << path[k]->id_ << vcl_endl;
+    std::cout << "v node id: " << path[k]->id_ << std::endl;
  
   f.get_edges_on_path(path, edges);
   for (unsigned k = 0; k < edges.size(); k++)
-    vcl_cout << "e id: " << edges[k]->id() << vcl_endl;
+    std::cout << "e id: " << edges[k]->id() << std::endl;
 
   //: test getting the shock paths
   //dbskr_scurve_sptr sc = dbskr_compute_scurve(node1, edges, false, true, true, 0.5f, 1.0f);
-  //vcl_cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << vcl_endl;
+  //std::cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << std::endl;
 
   path.clear();
   f.get_shortest_v_node_path(node1, node1, path);
   TEST("test find path from node1 to node1", path.size(), 1);
   for (unsigned k = 0; k < path.size(); k++)
-    vcl_cout << "v node id: " << path[k]->id_ << vcl_endl;
+    std::cout << "v node id: " << path[k]->id_ << std::endl;
 
-  vcl_vector<vcl_vector<dbskr_v_node_sptr> > paths;
-  vcl_vector<float> abs_lengths;
+  std::vector<std::vector<dbskr_v_node_sptr> > paths;
+  std::vector<float> abs_lengths;
   f.get_all_v_node_paths(node1, node2, paths, abs_lengths, 1.0f, 1000.0f);
   TEST_NEAR("test all v node paths", paths.size(), 4, 0.01);
   TEST_NEAR("test all v node paths lengths size", abs_lengths.size(), 4, 0.01);
   for (unsigned kk = 0; kk < paths.size(); kk++) {
-    vcl_cout << "\t path: " << kk << " length: " << abs_lengths[kk] << " ";
+    std::cout << "\t path: " << kk << " length: " << abs_lengths[kk] << " ";
     for (unsigned k = 0; k < paths[kk].size(); k++)
-      vcl_cout << paths[kk][k]->id_ << " ";
-    vcl_cout << vcl_endl << "\t\t";
+      std::cout << paths[kk][k]->id_ << " ";
+    std::cout << std::endl << "\t\t";
 
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
     f.get_edges_on_path(paths[kk], edges);
     for (unsigned k = 0; k < edges.size(); k++)
-      vcl_cout << edges[k]->id() << " "; 
-    vcl_cout << vcl_endl;
+      std::cout << edges[k]->id() << " "; 
+    std::cout << std::endl;
   }
 
-  vcl_vector<dbskr_v_graph_sptr> graphs;
+  std::vector<dbskr_v_graph_sptr> graphs;
   f.get_all_v_graphs(node1, node2, v3, v4, graphs, abs_lengths, 1.0f, 1000.0f);
-  vcl_cout << graphs.size() << " graphs between vg1 and vg2 of node1 and node2, lengths size: " << abs_lengths.size() << "\n";
+  std::cout << graphs.size() << " graphs between vg1 and vg2 of node1 and node2, lengths size: " << abs_lengths.size() << "\n";
   for (unsigned i = 0; i < graphs.size(); i++) {
-    vcl_cout << "graph " << i << vcl_endl;
+    std::cout << "graph " << i << std::endl;
     print_v_graph(graphs[i]);
-    vcl_cout << "--------\n";
+    std::cout << "--------\n";
   }
  
 #if 1  
@@ -147,49 +147,49 @@ static void test_graph_algos(int argc, char* argv[])
   path.clear();
   TEST("testing shock path finder shortest path", f2.get_shortest_v_node_path(node1, node2, path), true);
   for (unsigned k = 0; k < path.size(); k++)
-    vcl_cout << "v node id: " << path[k]->id_ << vcl_endl;
+    std::cout << "v node id: " << path[k]->id_ << std::endl;
  
   edges.clear();
   TEST("testing shock path finder get edges", f2.get_edges_on_path(path, edges), true);
   
   for (unsigned k = 0; k < edges.size(); k++)
-    vcl_cout << "e id: " << edges[k]->id() << vcl_endl;
+    std::cout << "e id: " << edges[k]->id() << std::endl;
 
   if (path.size() > 0 && edges.size() > 0) {
     //: test getting the shock paths
     dbskr_scurve_sptr sc = dbskr_compute_scurve(node1, edges, false, true, true, 0.5f, 1.0f);
-    vcl_cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << vcl_endl;
+    std::cout << "sc arclength: " << sc->arclength(sc->num_points()-1) << std::endl;
   }
 
-  //vcl_vector<dbskr_v_graph_sptr> graphs;
+  //std::vector<dbskr_v_graph_sptr> graphs;
   graphs.clear();
   dbskr_v_graph_sptr vg1 = construct_v_graph(sg2, node1, 1);
   print_v_graph(vg1);
   dbskr_v_graph_sptr vg2 = construct_v_graph(sg2, node2, 2);
   print_v_graph(vg2);
-  vcl_vector<float> abs_lengths2;
+  std::vector<float> abs_lengths2;
   f2.get_all_v_graphs(node1, node2, vg1, vg2, graphs, abs_lengths2, 1.0f, 1000.0f);
   TEST("graphs size: ", graphs.size(), 5);
 
   unsigned k =0;
   for (unsigned k = 0; k < graphs.size(); k++) {
     dbskr_v_graph_sptr vg = graphs[k];  
-    vcl_cout << "graph k: " << k << ": " << " length: " << abs_lengths2[k] << vcl_endl;
+    std::cout << "graph k: " << k << ": " << " length: " << abs_lengths2[k] << std::endl;
     print_v_graph(vg);
-    vcl_cout << "-----------\n";
-    vcl_cout.flush();
+    std::cout << "-----------\n";
+    std::cout.flush();
   
     dbskr_shock_patch_sptr p0 = extract_patch_from_v_graph(graphs[k], node1->id()*100000 + node2->id(), 0, 0.05);
-    vcl_vector<dbskr_v_edge_sptr> es;
+    std::vector<dbskr_v_edge_sptr> es;
     get_edges_on_outer_face(graphs[k], es);
-    vcl_cout << "edges on outer face of graph k: " << vcl_endl;
+    std::cout << "edges on outer face of graph k: " << std::endl;
     for (unsigned i = 0; i < es.size(); i++) {
-      vcl_cout << "i: " << i << " s: " << es[i]->source()->id_ << " t: " << es[i]->target()->id_ << vcl_endl;
+      std::cout << "i: " << i << " s: " << es[i]->source()->id_ << " t: " << es[i]->target()->id_ << std::endl;
     }
-    vcl_cout << "-----------------\n";
+    std::cout << "-----------------\n";
 
     TEST("trace outer boundary", p0->trace_outer_boundary(), true);
-    vcl_cout << "traced boundary length: " << p0->traced_boundary_length() << vcl_endl;
+    std::cout << "traced boundary length: " << p0->traced_boundary_length() << std::endl;
     p0->clear();
   }
 

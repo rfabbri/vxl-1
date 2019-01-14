@@ -104,7 +104,7 @@ void dbrec3d_scene_widget::init()
   setSceneBoundingBox(qglviewer::Vec(bbox.min_x(), bbox.min_y(), bbox.min_z()), qglviewer::Vec(bbox.max_x(), bbox.max_y(), bbox.max_z()));
   showEntireScene();
   setAxisIsDrawn();
-  vcl_cout << "Scene Radius: " << sceneRadius() << vcl_endl;
+  std::cout << "Scene Radius: " << sceneRadius() << std::endl;
   
   
   
@@ -258,7 +258,7 @@ QString dbrec3d_scene_widget::helpString() const
 //  glMatrixMode(GL_MODELVIEW);
 //  glLoadIdentity();
 //  //update camera
-//  vcl_cout << "cam: " <<cam_pos_ << " lines: " << line_sight_ + cam_pos_ << vcl_endl;
+//  std::cout << "cam: " <<cam_pos_ << " lines: " << line_sight_ + cam_pos_ << std::endl;
 //  gluLookAt(cam_pos_[0], cam_pos_[1], cam_pos_[2],  // eye position - gets mapped to the origing
 //            cam_pos_[0]+line_sight_[0], cam_pos_[1]+line_sight_[1], cam_pos_[2]+line_sight_[2], //reference point - center of the scene
 //            0.0f,1.0f,0.0f);//up vector
@@ -324,8 +324,8 @@ QString dbrec3d_scene_widget::helpString() const
 //    rotation_x_ += vnl_math::pi * dx;
 //    rotation_y_ += 180 * dx;
 //        
-//    line_sight_[0]= vcl_sin(angle);
-//    line_sight_[2]= line_sight_[2] - vcl_cos(angle) ;
+//    line_sight_[0]= std::sin(angle);
+//    line_sight_[2]= line_sight_[2] - std::cos(angle) ;
 //    
 //    
 //  

@@ -9,9 +9,9 @@
 
 #include<vbl/io/vbl_io_smart_ptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //#include<vsl/vsl_quick_file.h>
 
@@ -27,8 +27,8 @@ bool dsm_write_ncn_sptr_bin_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_write_ncn_sptr_bin_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	input_types_[0] = "vcl_string";
+	std::vector<std::string> input_types_(n_inputs_);
+	input_types_[0] = vcl_string";
 	input_types_[1] = "dsm_ncn_sptr";
 
 	if( !pro.set_input_types(input_types_) )
@@ -43,19 +43,19 @@ bool dsm_write_ncn_sptr_bin_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_write_ncn_sptr_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_write_ncn_sptr_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 	dsm_ncn_sptr ncn_sptr = pro.get_input<dsm_ncn_sptr>(i++);
 
-	vcl_cout << "Writing dsm_ncn_sptr to: " << filename;
-	//vcl_ofstream of(filename.c_str(), vcl_ios::out);
+	std::cout << "Writing dsm_ncn_sptr to: " << filename;
+	//std::ofstream of(filename.c_str(), std::ios::out);
 	//vsl_b_ostream os(&of);
-	vsl_b_ofstream os(filename.c_str(), vcl_ios::out|vcl_ios::binary);
+	vsl_b_ofstream os(filename.c_str(), std::ios::out|std::ios::binary);
 	vsl_b_write(os,ncn_sptr);
 
 	return true;

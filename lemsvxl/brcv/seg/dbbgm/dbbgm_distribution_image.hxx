@@ -5,8 +5,8 @@
 // \file
 
 #include "dbbgm_distribution_image.h"
-#include <vcl_typeinfo.h>
-#include <vcl_iostream.h>
+#include <typeinfo>
+#include <iostream>
 
 //: Constructor
 template <class T>
@@ -36,9 +36,9 @@ dbbgm_distribution_image<T>::~dbbgm_distribution_image()
  
 
 template <class T>
-vcl_string dbbgm_distribution_image<T>::is_a() const 
+std::string dbbgm_distribution_image<T>::is_a() const 
 {
-  return "dbbgm_distribution_image_"+vcl_string(typeid(T).name());
+  return "dbbgm_distribution_image_"+std::string(typeid(T).name());
 }
 
 
@@ -76,7 +76,7 @@ void dbbgm_distribution_image<T>::b_read(vsl_b_istream &is)
 
     break;
    default:
-    vcl_cerr << "dbbgm_distribution_image: unknown I/O version " << ver << '\n';
+    std::cerr << "dbbgm_distribution_image: unknown I/O version " << ver << '\n';
   }
 }
 

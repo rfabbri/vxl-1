@@ -31,7 +31,7 @@
 //#include <breg3d/breg3d_image_cost_function.h>
 #include <breg3d/breg3d_util.h>
 
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 
 
@@ -49,15 +49,15 @@ int main(int argc, char* argv[])
   //voxels.init_voxels();
   bool first_camera = false;
 
-  vcl_vector<vnl_double_3x3> Ks, Rs, Ks_opt, Rs_opt;
-  vcl_vector<vnl_double_3x1> Ts, Ts_opt;
+  std::vector<vnl_double_3x3> Ks, Rs, Ks_opt, Rs_opt;
+  std::vector<vnl_double_3x1> Ts, Ts_opt;
 #ifdef PC1
   if(!breg3d_util::read_cameras("d:/dec/matlab/reg3d/data/seq2_KRT_cameras_90interp.txt",Ks,Rs,Ts)) {
     //if (!breg3d_util::read_cameras("d:/dec/matlab/reg3d/data/seq1_KRT_cameras.txt",Ks,Rs,Ts)) {
 #else
   if(!breg3d_util::read_cameras("c:/project/registration/data/seq2/calib/seq2_KRT_cameras_90interp.txt",Ks,Rs,Ts)) {
 #endif
-    vcl_cerr << "error reading camera file." << vcl_endl;
+    std::cerr << "error reading camera file." << std::endl;
     return -1;
   }
 
@@ -86,18 +86,18 @@ int main(int argc, char* argv[])
   //{ unsigned camera_idx = 49; 
   for (unsigned camera_idx = 0; camera_idx < 100; camera_idx++) {
 
-    vcl_stringstream frame_fname;
+    std::stringstream frame_fname;
 #ifdef PC1
-    frame_fname << "d:/dec/matlab/reg3d/data/seq2/frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".png";
-    //frame_fname << "d:/dec/matlab/reg3d/data/seq1/vlcsnap-" << vcl_setw(2) << vcl_setfill('0') << (int)camera_idx << ".png";
+    frame_fname << "d:/dec/matlab/reg3d/data/seq2/frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".png";
+    //frame_fname << "d:/dec/matlab/reg3d/data/seq1/vlcsnap-" << std::setw(2) << std::setfill('0') << (int)camera_idx << ".png";
 #else
-    frame_fname << "c:/project/registration/data/seq2/frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".png";
+    frame_fname << "c:/project/registration/data/seq2/frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".png";
 #endif
-    vcl_cout << vcl_endl << "****  loading " << frame_fname.str() << "  ****" << vcl_endl << vcl_endl;
+    std::cout << std::endl << "****  loading " << frame_fname.str() << "  ****" << std::endl << std::endl;
 
     vil_image_view<float> frame_view = breg3d_util::load_image(frame_fname.str());
 
-    vcl_cout << "ni = " << frame_view.ni() << " nj = " << frame_view.nj() << vcl_endl;
+    std::cout << "ni = " << frame_view.ni() << " nj = " << frame_view.nj() << std::endl;
 
 #define OPTIMIZE_CAMERAS
 #ifdef  OPTIMIZE_CAMERAS
@@ -126,8 +126,8 @@ int main(int argc, char* argv[])
     vnl_double_3x3 Rinit = dR.as_matrix()*Rs[camera_idx];
     vnl_double_3x1 Tinit = -Rinit * camera_center;
 
-    vcl_cout << "perturbing camera center by < " << pos_offset.get_column(0) << " >  magnitude = " << pos_offset.get_column(0).magnitude() << vcl_endl;
-    vcl_cout << "perturbing Rotation by < " << dR_rodrigues << " >  magnitude = " << dR_rodrigues.magnitude() << vcl_endl << vcl_endl;
+    std::cout << "perturbing camera center by < " << pos_offset.get_column(0) << " >  magnitude = " << pos_offset.get_column(0).magnitude() << std::endl;
+    std::cout << "perturbing Rotation by < " << dR_rodrigues << " >  magnitude = " << dR_rodrigues.magnitude() << std::endl << std::endl;
 
     // optimize camera
 
@@ -169,16 +169,16 @@ int main(int argc, char* argv[])
         vimt_image_2d_of<float> curr_mask_img(mask, vimt_transform_2d());
 
         dbvrl_minimizer minimizer(curr_img, base_img, curr_mask_img, roi, true);
-        vcl_cout << " minimizing 2D image error..";
+        std::cout << " minimizing 2D image error..";
         minimizer.minimize(init_xform,true);
-        vcl_cout << "..done." << vcl_endl;
+        std::cout << "..done." << std::endl;
         curr_error = minimizer.get_end_error();
         // normalize by size of mask
         float mask_size;
         vil_math_sum(mask_size,mask,0);
         curr_error /= mask_size;
 
-        vcl_cout << init_xform << vcl_endl;
+        std::cout << init_xform << std::endl;
 
         vnl_vector<double> rigid_body_params(3);
         init_xform.params(rigid_body_params);
@@ -189,19 +189,19 @@ int main(int argc, char* argv[])
         double oy = expected_image.nj() / 2.0;
 
         double img_rot = rigid_body_params[0];
-        double img_tx = rigid_body_params[1] - ox + vcl_cos(img_rot)*ox - vcl_sin(img_rot)*oy;
-        double img_ty = rigid_body_params[2] - oy + vcl_sin(img_rot)*ox + vcl_cos(img_rot)*oy;
+        double img_tx = rigid_body_params[1] - ox + std::cos(img_rot)*ox - std::sin(img_rot)*oy;
+        double img_ty = rigid_body_params[2] - oy + std::sin(img_rot)*ox + std::cos(img_rot)*oy;
         
         // now we need to invert the rotation
         //double inv_rot = -img_rot;
-        //double inv_tx = -(vcl_cos(inv_rot)*img_tx + vcl_sin(inv_rot)*img_ty);
-        //double inv_ty = -(-vcl_sin(inv_rot)*img_tx + vcl_cos(inv_rot)*img_ty);
+        //double inv_tx = -(std::cos(inv_rot)*img_tx + std::sin(inv_rot)*img_ty);
+        //double inv_ty = -(-std::sin(inv_rot)*img_tx + std::cos(inv_rot)*img_ty);
 
         double rotz = img_rot;
         double roty = img_tx * K[2][2] / K[1][1];
         double rotx = -img_ty * K[2][2] / K[0][0];
 
-        vcl_cout << "init rotx, roty, rotz = " << rotx << " " << roty << " " << rotz << vcl_endl;
+        std::cout << "init rotx, roty, rotz = " << rotx << " " << roty << " " << rotz << std::endl;
 
         vgl_rotation_3d<double> rot(rotx,roty,rotz);
         Rinit = rot.as_matrix() * Rinit;
@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
         // now optimize camera parameters based on 2D image translation and rotation
 
         ++it_count;
-        vcl_cout << "after " << it_count <<" iterations: normalized error = " << curr_error << vcl_endl;
+        std::cout << "after " << it_count <<" iterations: normalized error = " << curr_error << std::endl;
       }while( (prev_error - curr_error) > tol);
     }
     first_camera = false;
@@ -238,8 +238,8 @@ int main(int argc, char* argv[])
     breg3d_util::write_cameras("c:/project/registration/results/seq2_KRT_cameras_optimized.txt",Ks_opt,Rs_opt,Ts_opt);
 #endif
 
-    vcl_cout << "optimized R = " << newR << vcl_endl;
-    vcl_cout << "optimized T = " << newT << vcl_endl;
+    std::cout << "optimized R = " << newR << std::endl;
+    std::cout << "optimized T = " << newT << std::endl;
 #else
     vnl_double_3x3 newR = Rs[camera_idx];
     vnl_double_3x1 newT = Ts[camera_idx];
@@ -266,15 +266,15 @@ int main(int argc, char* argv[])
     voxels.virtual_view(frame_view,&cam,&vcam,virtual_frame,vis_frame,height_map);
 
     // write virtual views
-    vcl_stringstream virtual_frame_fname, vis_frame_fname, height_map_fname;
+    std::stringstream virtual_frame_fname, vis_frame_fname, height_map_fname;
 #ifdef PC1
-    virtual_frame_fname << "d:/dec/matlab/reg3d/results/seq2/virtual_frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
-    vis_frame_fname << "d:/dec/matlab/reg3d/results/seq2/vis_frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
-    height_map_fname << "d:/dec/matlab/reg3d/results/seq2/height_map_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
+    virtual_frame_fname << "d:/dec/matlab/reg3d/results/seq2/virtual_frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
+    vis_frame_fname << "d:/dec/matlab/reg3d/results/seq2/vis_frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
+    height_map_fname << "d:/dec/matlab/reg3d/results/seq2/height_map_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
 #else
-    virtual_frame_fname << "c:/project/registration/results/seq2/virtual_frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
-    vis_frame_fname << "c:/project/registration/results/seq2/vis_frame_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
-    height_map_fname << "c:/project/registration/results/seq2/height_map_" << vcl_setw(5) << vcl_setfill('0') << (int)camera_idx << ".tiff";
+    virtual_frame_fname << "c:/project/registration/results/seq2/virtual_frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
+    vis_frame_fname << "c:/project/registration/results/seq2/vis_frame_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
+    height_map_fname << "c:/project/registration/results/seq2/height_map_" << std::setw(5) << std::setfill('0') << (int)camera_idx << ".tiff";
 #endif
 
     breg3d_util::save_image(virtual_frame,virtual_frame_fname.str());

@@ -1,9 +1,9 @@
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_iomanip.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 #include <dbbgm/algo/dbbgm_hmm_algo.h>
 #include <vil/vil_image_view.h>
@@ -25,7 +25,7 @@ void normalize_probs(vil_image_view<float>& img)
       for(unsigned int p=0; p<img.nplanes(); ++p){
         sum += img(i,j,p);
       }
-      if(sum > vcl_numeric_limits<float>::epsilon()){
+      if(sum > std::numeric_limits<float>::epsilon()){
         for(unsigned int p=0; p<img.nplanes(); ++p)
           img(i,j,p) /= sum;
       }
@@ -77,8 +77,8 @@ MAIN( test_hmm_algo )
 
     vil_convert_stretch_range_limited(probs,dimg,0.0f,1.0f,0.0,255.0);
     vil_convert_cast(dimg,bimg);
-    vcl_stringstream name;
-    name << "mean"<<vcl_setfill('0')<<vcl_setw(2)<<i<<".png";
+    std::stringstream name;
+    name << "mean"<<std::setfill('0')<<std::setw(2)<<i<<".png";
     //vil_save(bimg,name.str().c_str());
   }
 

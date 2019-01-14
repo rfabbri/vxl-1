@@ -9,7 +9,7 @@
 //
 //\endverbatim
 
-#include <vcl_map.h>
+#include <map>
 #include <vbl/vbl_ref_count.h>
 
 #include <dbdet/sel/dbdet_curvelet_map.h>
@@ -28,24 +28,24 @@ public:
     float x;
     float y;
     //: vector of beta
-    vcl_vector<float> b;
+    std::vector<float> b;
     //: for each beta there might be few bt's
-    vcl_map<float,vcl_vector<float> > bt;
+    std::map<float,std::vector<float> > bt;
     //: for each beta and curvature ther emight be few bs
-    vcl_map<float,vcl_map<float, vcl_vector<float> > > bs;
+    std::map<float,std::map<float, std::vector<float> > > bs;
     //: stores the curvelets on this edge
-    vcl_vector<dbdet_curvelet*> refcs_;
+    std::vector<dbdet_curvelet*> refcs_;
     
-    vcl_vector<dbdet_second_order_velocity_model> models_;
+    std::vector<dbdet_second_order_velocity_model> models_;
 
     //: function to compute the betas from forward beta map
-    bool compute_b(vcl_vector<float> & forwardmap);
+    bool compute_b(std::vector<float> & forwardmap);
 
     //: function to compute temporal derivatives of beta
-    bool compute_bt(vcl_vector<float>& backmap);
+    bool compute_bt(std::vector<float>& backmap);
 
     //: function to compute spatial derivatives of beta
-    bool compute_bs(vcl_map<dbdet_curvelet*,vcl_vector<float> > & k_bs,vcl_map<dbdet_curvelet*,float > & k_bs_ds, vcl_map<dbdet_curvelet*,dbdet_edgel* > & k_bs_edges);
+    bool compute_bs(std::map<dbdet_curvelet*,std::vector<float> > & k_bs,std::map<dbdet_curvelet*,float > & k_bs_ds, std::map<dbdet_curvelet*,dbdet_edgel* > & k_bs_edges);
 
     bool compute_models();
 

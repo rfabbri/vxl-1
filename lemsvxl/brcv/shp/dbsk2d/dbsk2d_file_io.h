@@ -14,7 +14,7 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
@@ -28,13 +28,13 @@ public:
 
   //: read a `.bnd' file and output vsol2D objects
   // return false if loading fails
-  static bool load_bnd_v3_0(const vcl_string& filename, 
-    vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list);
+  static bool load_bnd_v3_0(const std::string& filename, 
+    std::vector<vsol_spatial_object_2d_sptr >& vsol_list);
 
   //: saves a list of vsol2D objects into a .bnd file
   // Only handle points, lines, and arcs and ignore the rest
-  static bool save_bnd_v3_0(const vcl_string& filename, 
-    const vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list);
+  static bool save_bnd_v3_0(const std::string& filename, 
+    const std::vector<vsol_spatial_object_2d_sptr >& vsol_list);
 
 
   

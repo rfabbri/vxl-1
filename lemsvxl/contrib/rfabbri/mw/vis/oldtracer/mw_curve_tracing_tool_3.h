@@ -73,7 +73,7 @@ public:
   virtual ~mw_curve_tracing_tool_3() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -91,8 +91,8 @@ public:
 protected:
 
   vgui_event_condition gesture0;
-  vcl_vector<bdifd_camera> cam_; //: cameras for each view
-  vcl_vector<int> frame_v_;   //: frame number for each view
+  std::vector<bdifd_camera> cam_; //: cameras for each view
+  std::vector<int> frame_v_;   //: frame number for each view
   const unsigned nviews_;
 
   vpgl_fundamental_matrix<double> *fm_;
@@ -114,37 +114,37 @@ protected:
     float r,g,b;
   } color_p0_, color_pn_, color_aux_;
 
-  vcl_vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
+  std::vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
 
   //:< tableau containing original vsols in each view
-  vcl_vector<bgui_vsol2D_tableau_sptr> curve_tableau_;
+  std::vector<bgui_vsol2D_tableau_sptr> curve_tableau_;
   bgui_vsol2D_tableau_sptr curve_tableau_current_;
 
-  vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > vsols_; //:< set of polylines at each view
+  std::vector<std::vector< vsol_polyline_2d_sptr > > vsols_; //:< set of polylines at each view
 
-  vcl_list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
-  vcl_vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
-  vcl_vector<unsigned> crv_candidates_idx_;  //: v[i] == index into isets_.L_ of crv_candidates_[i]
+  std::list<unsigned> crv_candidates_; //: index into vsols_right_ of candidate (whole) curves
+  std::vector<vsol_polyline_2d_sptr> crv_candidates_ptrs_;
+  std::list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
+  std::vector<unsigned> crv_candidates_idx_;  //: v[i] == index into isets_.L_ of crv_candidates_[i]
   vgui_style_sptr cc_style_;  //:< style for curve segts
 
   
 
   bgui_vsol_soview2D_polyline *reproj_soview_;
-  vcl_vector<vcl_vector<bgui_vsol_soview2D_polyline *> > p_reproj_soviews_;
+  std::vector<std::vector<bgui_vsol_soview2D_polyline *> > p_reproj_soviews_;
 
 
-  vcl_list<vgui_soview2D_point *> intercept_pts_soviews_;
-  vcl_vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
+  std::list<vgui_soview2D_point *> intercept_pts_soviews_;
+  std::vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
   bool display_all_intersections_; 
 
 
   //: These store epip. lines for endponts only, from view 1 to each other view. (vector index
   // indicates view) 
-  vcl_vector<vgui_soview2D_infinite_line *> ep0_soview_;
-  vcl_vector<vgui_soview2D_infinite_line *> epn_soview_;
-  vcl_vector<vgl_homg_line_2d<double> > ep0_;
-  vcl_vector<vgl_homg_line_2d<double> > epn_;
+  std::vector<vgui_soview2D_infinite_line *> ep0_soview_;
+  std::vector<vgui_soview2D_infinite_line *> epn_soview_;
+  std::vector<vgl_homg_line_2d<double> > ep0_;
+  std::vector<vgl_homg_line_2d<double> > epn_;
 
   //: Same but for epipolar lines from view 2 to 3
   vgui_soview2D_infinite_line * ep0_soview_23_;
@@ -156,14 +156,14 @@ protected:
   //: Epipolar lines of curve segt points in image 1 in all other views.
   // index to vector designates other views; index 0 is 2nd view and index 1 is 3rd
   // view
-  vcl_vector<vcl_vector<vgl_homg_line_2d<double> > > ep_; 
-  vcl_vector<vcl_list<vgui_soview2D_infinite_line *> > ep_soviews_;
+  std::vector<std::vector<vgl_homg_line_2d<double> > > ep_; 
+  std::vector<std::list<vgui_soview2D_infinite_line *> > ep_soviews_;
 
-  vcl_vector<vgl_homg_line_2d<double> > ep_left_; 
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_left_;
+  std::vector<vgl_homg_line_2d<double> > ep_left_; 
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_left_;
 
-  vcl_vector<vgl_homg_line_2d<double> > ep_23_; 
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_23_;
+  std::vector<vgl_homg_line_2d<double> > ep_23_; 
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_23_;
 
 
   vgui_style_sptr ep_style_;
@@ -181,8 +181,8 @@ protected:
   vgui_style_sptr p_reproj_style_;  //:< style for perturbed reprojections
   
   // Best matches
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_best_matches_soviews_; 
-  vcl_vector<vgui_style_sptr> best_match_style_;  //:< style for curve segts
+  std::list<bgui_vsol_soview2D_polyline *> crv_best_matches_soviews_; 
+  std::vector<vgui_style_sptr> best_match_style_;  //:< style for curve segts
 
 private: 
   //: Some definitions are in mw_curve_tracing_tool_rec.cxx
@@ -198,46 +198,46 @@ private:
   bool get_index_of_candidate_curve(const vsol_polyline_2d_sptr & selected_crv, unsigned *jnz);
   void break_curves_into_episegs();
   void break_curves_into_episegs(
-    const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
+    const std::vector< vsol_polyline_2d_sptr >  &vsols,
     const vgl_homg_point_2d<double> &e, int frame, int view) const;
 
   void show_reprojections(unsigned jnz);
   void perturb_and_reproject( 
       unsigned jnz , 
-      vcl_vector<vsol_point_2d_sptr> &reproj , 
-      vcl_vector<vsol_point_2d_sptr> &crv1_ppts, 
-      vcl_vector<vsol_point_2d_sptr> &crv2_ppts,
+      std::vector<vsol_point_2d_sptr> &reproj , 
+      std::vector<vsol_point_2d_sptr> &crv1_ppts, 
+      std::vector<vsol_point_2d_sptr> &crv2_ppts,
       bdifd_rig &rig);
 
   void trinocular_candidates();
 
   void project(
       unsigned view, 
-      vcl_vector<vsol_point_2d_sptr> &proj, 
-      const vcl_vector<bmcsd_vector_3d> &crv3d, 
+      std::vector<vsol_point_2d_sptr> &proj, 
+      const std::vector<bmcsd_vector_3d> &crv3d, 
       bdifd_rig &/*rig*/) const;
 
   void reconstruct_and_reproject(
       unsigned jnz, 
       unsigned view, 
-      vcl_vector<vsol_point_2d_sptr> &reproj, 
+      std::vector<vsol_point_2d_sptr> &reproj, 
 
-      vcl_vector<bmcsd_vector_3d> &crv3d, 
-      vcl_vector<unsigned> &crv1_idx,
-      vcl_vector<unsigned> &crv2_idx,
+      std::vector<bmcsd_vector_3d> &crv3d, 
+      std::vector<unsigned> &crv1_idx,
+      std::vector<unsigned> &crv2_idx,
       bdifd_rig &rig) const;
 
   void reconstruct_one_candidate(
       unsigned jnz, 
-      vcl_vector<bmcsd_vector_3d> &crv3d, 
-      const vcl_vector<unsigned> &crv1_idx,
-      const vcl_vector<unsigned> &crv2_idx,
+      std::vector<bmcsd_vector_3d> &crv3d, 
+      const std::vector<unsigned> &crv1_idx,
+      const std::vector<unsigned> &crv2_idx,
       bdifd_rig &rig) const;
 
   bool trinocular_consistency(
       unsigned jnz, 
-      vcl_vector<vsol_point_2d_sptr> &reproj, 
-      vcl_vector<bmcsd_vector_3d> &crv3d, 
+      std::vector<vsol_point_2d_sptr> &reproj, 
+      std::vector<bmcsd_vector_3d> &crv3d, 
       mw_curves &curves_v3,
       bdifd_rig &rig,
       double *cost);
@@ -245,8 +245,8 @@ private:
   void 
   define_match_for_reconstruction(
       unsigned jnz,
-      vcl_vector<unsigned> &crv1_idx,
-      vcl_vector<unsigned> &crv2_idx,
+      std::vector<unsigned> &crv1_idx,
+      std::vector<unsigned> &crv2_idx,
       bdifd_rig &rig
       ) const;
 
@@ -256,9 +256,9 @@ private:
 
   void reproject_mvl_tritensor(
       unsigned jnz,
-      vcl_vector<vsol_point_2d_sptr> &reproj,
-      vcl_vector<unsigned> &crv1_idx,
-      vcl_vector<unsigned> &crv2_idx,
+      std::vector<vsol_point_2d_sptr> &reproj,
+      std::vector<unsigned> &crv1_idx,
+      std::vector<unsigned> &crv2_idx,
       bdifd_rig &rig
       ) const;
 

@@ -13,7 +13,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 #include <vgui/vgui.h>
@@ -87,9 +87,9 @@ int main (int argc, char** argv)
   root->ref();
 
   if (task == false) { //Print message if no command-line process executed.
-    vul_printf (vcl_cout, "\nERROR in main():\tNo process specified!\n");
-    vul_printf (vcl_cout, "\n\t Specify filename to view, or");
-    vul_printf (vcl_cout, "\n\t use -h for more help.\n");
+    vul_printf (std::cout, "\nERROR in main():\tNo process specified!\n");
+    vul_printf (std::cout, "\n\t Specify filename to view, or");
+    vul_printf (std::cout, "\n\t use -h for more help.\n");
     dbmsh3d_cmd_gui() = 0;
     result = PRO_RESULT_NO_PROCESS;
   }
@@ -102,15 +102,15 @@ int main (int argc, char** argv)
     root->addChild (dbsk3dr_cmdproc_execute (spvr));
   }
   if (dbmsh3d_cmd_verbose()) {
-    vcl_cerr << "\nTotal running time: " << total_timer.real() << " milliseconds.\n";
-    total_timer.print(vcl_cout);
+    std::cerr << "\nTotal running time: " << total_timer.real() << " milliseconds.\n";
+    total_timer.print(std::cout);
   }
   /////////////////////////////////////////////////////////////////////
 
   if (dbmsh3d_cmd_gui()) {
     //Run the specified cmd-line process with visualization in GUI Window.  
     //force option "--mfc-use-gl" to use gl in initializing vgui.    
-    vul_printf (vcl_cout, "\nStarting bgui3d window...\n");
+    vul_printf (std::cout, "\nStarting bgui3d window...\n");
     int my_argc = argc+1;
     char** my_argv = new char*[argc+1];
     for (int i=0; i<argc; i++)

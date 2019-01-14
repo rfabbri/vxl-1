@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_streambuf.h>
+#include <iostream>
+#include <streambuf>
 #include <math.h>
 #include <vgl/algo/vgl_homg_operators_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -26,20 +26,20 @@ void mymex(
       double *pts0,
       double *pts1,
       mwSize n,
-      const vcl_string &method,
+      const std::string &method,
       mxArray **p_fmatrix
       )
 {
-//  vcl_cout << "Method: " << method << vcl_endl;
+//  std::cout << "Method: " << method << std::endl;
 
-  vcl_vector<vsol_point_2d_sptr> p0(n),p1(n);
+  std::vector<vsol_point_2d_sptr> p0(n),p1(n);
   for (unsigned i=0; i < (unsigned)n; ++i) {
     p0[i] = new vsol_point_2d(pts0[i],pts0[i+n]);
     p1[i] = new vsol_point_2d(pts1[i],pts1[i+n]);
   }
 
-  vcl_vector<vgl_point_2d<double> > vp0(n),vp1(n);
-  vcl_vector<vgl_homg_point_2d<double> > vp0_homg(n),vp1_homg(n);
+  std::vector<vgl_point_2d<double> > vp0(n),vp1(n);
+  std::vector<vgl_homg_point_2d<double> > vp0_homg(n),vp1_homg(n);
 
   for (unsigned i=0; i < (unsigned)n; ++i) {
     vp0[i] = vgl_point_2d<double>(pts0[i],pts0[i+n]);
@@ -96,9 +96,9 @@ void mymex(
                    + vgl_homg_operators_2d<double>::perp_dist_squared( ll,
                        vp1_homg[i] );
     }
-//    vcl_cout << "Epipolar error = " << d << vcl_endl;
+//    std::cout << "Epipolar error = " << d << std::endl;
 
-//    vcl_cout << "Fundamental Matrix from VPGL \n" << fm.get_matrix() << vcl_endl;
+//    std::cout << "Fundamental Matrix from VPGL \n" << fm.get_matrix() << std::endl;
     // Write the fundamental matrix to matlab
     for (unsigned i=0; i < 9; ++i) {
       p_fm[i] = fm.get_matrix()(i%3,i/3);
@@ -116,7 +116,7 @@ void mymex(
         FMatrixComputeLinear computor(true,true);
         f = computor.compute(vp0_homg, vp1_homg);
 
-//        vcl_cout << "FMatrixComputeLinear:\nF = " << f << vcl_endl;
+//        std::cout << "FMatrixComputeLinear:\nF = " << f << std::endl;
       } else {
         if (method == "mvlransac") {
           // Perform the fit using Phil Torr's RANSAC estimation of Fmatrix
@@ -133,7 +133,7 @@ void mymex(
 //        d += f.image1_epipolar_distance_squared(vp0_homg[i], vp1_homg[i]);
 //        d += f.image2_epipolar_distance_squared(vp0_homg[i], vp1_homg[i]);
 //      }
-//      vcl_cout << "Epipolar error = " << d << vcl_endl;
+//      std::cout << "Epipolar error = " << d << std::endl;
 
       // Write the fundamental matrix to matlab
       for (unsigned i=0; i < 9; ++i) {
@@ -162,13 +162,13 @@ void mexFunction(
      const mxArray *prhs[]
      )
 {
-  vcl_string method;
+  std::string method;
   if (nrhs > 3) {
     mexErrMsgTxt("Too many inputs.\n");
   }
 
   if (nrhs == 2) {
-    method = vcl_string("vpglransac");
+    method = std::string("vpglransac");
   } else {
     if (nrhs > 2) {
       mxClassID category = mxGetClassID(prhs[2]);
@@ -182,7 +182,7 @@ void mexFunction(
       if (mxGetString(prhs[2], buf, buflen) != 0)
         mexErrMsgTxt("Could not convert string data.\n");
 
-      method = vcl_string(buf);
+      method = std::string(buf);
     } else
       mexErrMsgTxt("Inputs (pts0,pts1) are required.\n");
   }
@@ -215,16 +215,16 @@ void mexFunction(
 
 
   // Initialize buffering stuff for error messages
-  vcl_cout.sync_with_stdio(true);
-  vcl_cerr.sync_with_stdio(true);
+  std::cout.sync_with_stdio(true);
+  std::cerr.sync_with_stdio(true);
 
-  vcl_streambuf* cout_sbuf = vcl_cout.rdbuf();
-  vcl_stringbuf myout_sbuf;
-  vcl_cout.rdbuf(&myout_sbuf);
+  std::streambuf* cout_sbuf = std::cout.rdbuf();
+  std::stringbuf myout_sbuf;
+  std::cout.rdbuf(&myout_sbuf);
 
-  vcl_streambuf* cerr_sbuf = vcl_cerr.rdbuf();
-  vcl_stringbuf myerr_sbuf;
-  vcl_cerr.rdbuf(&myerr_sbuf);
+  std::streambuf* cerr_sbuf = std::cerr.rdbuf();
+  std::stringbuf myerr_sbuf;
+  std::cerr.rdbuf(&myerr_sbuf);
 
 
   // Main code
@@ -235,10 +235,10 @@ void mexFunction(
   mexPrintf("%s",myout_sbuf.str().c_str());
   mexPrintf("%s",myerr_sbuf.str().c_str());
 
-  vcl_cout.rdbuf(cout_sbuf);
-  vcl_cerr.rdbuf(cerr_sbuf);
-  vcl_flush(vcl_cout);
-  vcl_flush(vcl_cerr);
+  std::cout.rdbuf(cout_sbuf);
+  std::cerr.rdbuf(cerr_sbuf);
+  std::flush(std::cout);
+  std::flush(std::cerr);
 
   return;
 }

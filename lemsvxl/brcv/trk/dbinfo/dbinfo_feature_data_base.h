@@ -15,18 +15,18 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <vsl/vsl_fwd.h>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_pixel_format.h>
-#include <vcl_map.h>
-#include <vcl_cassert.h>
+#include <map>
+#include <cassert>
 #include <dbinfo/dbinfo_feature_format.h>
 class dbinfo_feature_data_base : public vbl_ref_count
 {
-  typedef vcl_map<unsigned, unsigned, vcl_less<unsigned> > map_type;
+  typedef std::map<unsigned, unsigned, std::less<unsigned> > map_type;
  public:
   //: Constructors/destructor
   dbinfo_feature_data_base(): pix_format_(VIL_PIXEL_FORMAT_UNKNOWN),
@@ -111,7 +111,7 @@ class dbinfo_feature_data_base : public vbl_ref_count
   inline bool fixed() const {return fixed_storage_;}
 
   //:Print information about self
-  virtual void print(vcl_ostream& os = vcl_cout) const = 0;
+  virtual void print(std::ostream& os = std::cout) const = 0;
 
   //
   //: virtual binary I/O methods
@@ -121,10 +121,10 @@ class dbinfo_feature_data_base : public vbl_ref_count
   virtual unsigned version() const {return 1;}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const = 0;
+  virtual std::string is_a() const = 0;
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const = 0;
+  virtual bool is_class(std::string const& cls) const = 0;
    
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const = 0;
@@ -138,9 +138,9 @@ class dbinfo_feature_data_base : public vbl_ref_count
   //:number of components
   unsigned nplanes_;
   dbinfo_feature_format format_;//!< Feature format that defines storage type
-  vcl_vector<unsigned> frame_from_index_;//!< the frame corresponding to index
+  std::vector<unsigned> frame_from_index_;//!< the frame corresponding to index
 map_type index_from_frame_;//!< the index corresponding to frame
- vcl_vector<float> weights_;//!< weighting of frames for info computation
+ std::vector<float> weights_;//!< weighting of frames for info computation
  bool fixed_storage_; //!< flag to specify if number of stored frames is fixed
 unsigned current_index_;//!< current pointer into frame array
 };

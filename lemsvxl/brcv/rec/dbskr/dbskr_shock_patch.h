@@ -51,14 +51,14 @@
 class dbskr_v_edge : public bgrld_edge<dbskr_v_node> 
 {
 public:
-  vcl_vector<dbsk2d_shock_edge_sptr> edges_;
+  std::vector<dbsk2d_shock_edge_sptr> edges_;
   int start_node_id_;
   int end_node_id_;
   float length_;
 
   dbskr_v_edge() : bgrld_edge<dbskr_v_node>(), start_node_id_(-1), end_node_id_(-1), length_(-1) {}
   dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt) : bgrld_edge<dbskr_v_node>(vs, vt),  start_node_id_(-1), end_node_id_(-1), length_(-1) {}
-  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt, vcl_vector<dbsk2d_shock_edge_sptr>& edges, int sid, int eid) : bgrld_edge<dbskr_v_node>(vs, vt), edges_(edges), start_node_id_(sid), end_node_id_(eid), length_(-1) {}
+  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt, std::vector<dbsk2d_shock_edge_sptr>& edges, int sid, int eid) : bgrld_edge<dbskr_v_node>(vs, vt), edges_(edges), start_node_id_(sid), end_node_id_(eid), length_(-1) {}
   dbskr_v_edge(const dbskr_v_edge& other);
 
   float length();
@@ -141,7 +141,7 @@ public:
   void clean_real_boundaries(vsol_box_2d_sptr bbox);
 
   void add_real_boundary(vsol_polyline_2d_sptr p) { real_boundaries_.push_back(p); }
-  vcl_vector<vsol_polyline_2d_sptr>& get_real_boundaries() { return real_boundaries_; }
+  std::vector<vsol_polyline_2d_sptr>& get_real_boundaries() { return real_boundaries_; }
 
   void clear() { 
     real_boundaries_.clear(); 
@@ -252,10 +252,10 @@ public:
                                                // version 2: writing real boundaries as well
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbskr_shock_patch";}
+  virtual std::string is_a() const {return "dbskr_shock_patch";}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -289,7 +289,7 @@ protected:
   vsol_polygon_2d_sptr poly_, traced_poly_;
   vgl_polygon<double> p_;
   vsol_box_2d_sptr bounding_box_, bounding_box_real_;
-  vcl_vector<vsol_polyline_2d_sptr> real_boundaries_;
+  std::vector<vsol_polyline_2d_sptr> real_boundaries_;
 
   //: this graph is the coarse subgraph of shock graph which is used to extract this patch
   //  it is onyl kept for temporary processing

@@ -18,7 +18,7 @@
 #include <vidpro/storage/vidpro_vsol2D_storage.h>
 #include <vidpro/storage/vidpro_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 class vidpro_smoothcem_process : public bpro_process
 {
@@ -26,15 +26,15 @@ public:
   vidpro_smoothcem_process();
   ~vidpro_smoothcem_process() {}
 
-  vcl_string name() {
+  std::string name() {
     return "Smooth Edges";
   }
 
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_vector<vcl_string> get_input_type();
-  vcl_vector<vcl_string> get_output_type();
+  std::vector<std::string> get_input_type();
+  std::vector<std::string> get_output_type();
 
   int input_frames() {
     return 1;

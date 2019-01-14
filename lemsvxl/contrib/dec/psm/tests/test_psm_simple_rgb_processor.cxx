@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_erf.h>
 
@@ -13,18 +13,18 @@ static void test_psm_simple_rgb_processor()
 {
   START("psm_simple_rgb_processor test");
 
-  vcl_cout << "test default model " << vcl_endl;
+  std::cout << "test default model " << std::endl;
   psm_apm_traits<PSM_APM_SIMPLE_RGB>::apm_datatype default_model;
   
   vil_rgb<float> default_mean = psm_simple_rgb_processor::expected_color(default_model);
   float default_prob = psm_simple_rgb_processor::prob_density(default_model,default_mean);
 
-  vcl_cout << "default_mean = " << default_mean << vcl_endl;
-  vcl_cout << "mean prob = " << default_prob << vcl_endl;
+  std::cout << "default_mean = " << default_mean << std::endl;
+  std::cout << "mean prob = " << default_prob << std::endl;
 
 
-  vcl_vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> obs_vec;
-  vcl_vector<float> vis_vec;
+  std::vector<psm_apm_traits<PSM_APM_SIMPLE_RGB>::obs_datatype> obs_vec;
+  std::vector<float> vis_vec;
 
   // generate a bunch of random samples with visibility probability 1
   unsigned int nsamples = 10000;
@@ -65,12 +65,12 @@ static void test_psm_simple_rgb_processor()
 
   vil_rgb<float> sample_point(0.30f, 0.80f, 0.40f);
   // compute probability density at sample point and compare to rgb_processor's result
-  double true_prob_density = vnl_math::one_over_sqrt2pi / true_sigma[0] * vcl_exp(-(sample_point.r - true_mean.r)*(sample_point.r - true_mean.r)/(2*true_sigma[0]*true_sigma[0]));
-  true_prob_density *= vnl_math::one_over_sqrt2pi / true_sigma[1] * vcl_exp(-(sample_point.g - true_mean.g)*(sample_point.g - true_mean.g)/(2*true_sigma[1]*true_sigma[1]));
-  true_prob_density *= vnl_math::one_over_sqrt2pi / true_sigma[2] * vcl_exp(-(sample_point.b - true_mean.b)*(sample_point.b - true_mean.b)/(2*true_sigma[2]*true_sigma[2]));
+  double true_prob_density = vnl_math::one_over_sqrt2pi / true_sigma[0] * std::exp(-(sample_point.r - true_mean.r)*(sample_point.r - true_mean.r)/(2*true_sigma[0]*true_sigma[0]));
+  true_prob_density *= vnl_math::one_over_sqrt2pi / true_sigma[1] * std::exp(-(sample_point.g - true_mean.g)*(sample_point.g - true_mean.g)/(2*true_sigma[1]*true_sigma[1]));
+  true_prob_density *= vnl_math::one_over_sqrt2pi / true_sigma[2] * std::exp(-(sample_point.b - true_mean.b)*(sample_point.b - true_mean.b)/(2*true_sigma[2]*true_sigma[2]));
 
   float prob_density = psm_simple_rgb_processor::prob_density(model, sample_point);
-  vcl_cout << "true_density = " << true_prob_density << "  total_prob = " << total_prob << "  prob_density = " << prob_density << vcl_endl;
+  std::cout << "true_density = " << true_prob_density << "  total_prob = " << total_prob << "  prob_density = " << prob_density << std::endl;
   TEST_NEAR_REL("Correct probability density", prob_density, true_prob_density/total_prob, 0.1);
 
   // compute probability of a range of values

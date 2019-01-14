@@ -1,18 +1,18 @@
 #include <proximity_graph/dborl_graph_wave_propagation.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_numeric.h>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <cmath>
+#include <algorithm>
+#include <numeric>
 #include <boost/graph/graphml.hpp>
 
 void dborl_graph_wave_propagation::find_nn(
-    vcl_string xml_graph_file,
-    vcl_string dataset_file,
-    vcl_string query_file,
-    vcl_string seed_file,
-    vcl_string stats_file,
+    std::string xml_graph_file,
+    std::string dataset_file,
+    std::string query_file,
+    std::string seed_file,
+    std::string stats_file,
     dborl_graph_wave_propagation::Search_type search_flag,
     double tau,
     bool verbose)
@@ -31,7 +31,7 @@ void dborl_graph_wave_propagation::find_nn(
     dp.property("category",get(dborl_proximity_graph::vertex_cat_t(),
                                proximity_graph_));
 
-    vcl_ifstream ifile(xml_graph_file.c_str());
+    std::ifstream ifile(xml_graph_file.c_str());
     read_graphml(ifile,proximity_graph_,dp);
     ifile.close();
 
@@ -68,9 +68,9 @@ void dborl_graph_wave_propagation::find_nn(
 
 
 void dborl_graph_wave_propagation::test_reachability(
-    vcl_string xml_graph_file,
-    vcl_string dataset_file,
-    vcl_string stats_file,
+    std::string xml_graph_file,
+    std::string dataset_file,
+    std::string stats_file,
     dborl_graph_wave_propagation::Search_type search_flag,
     double tau,
     bool verbose)
@@ -90,7 +90,7 @@ void dborl_graph_wave_propagation::test_reachability(
                                proximity_graph_));
 
 
-    vcl_ifstream ifile(xml_graph_file.c_str());
+    std::ifstream ifile(xml_graph_file.c_str());
     read_graphml(ifile,proximity_graph_,dp);
     ifile.close();
 
@@ -103,7 +103,7 @@ void dborl_graph_wave_propagation::test_reachability(
 
     // Rebind stream to data matrix
     // Create a file stream opener
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(dataset_file.c_str());
     
     // Set matrix size to number of shapes
@@ -126,11 +126,11 @@ void dborl_graph_wave_propagation::test_reachability(
     // Print out node information 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
         ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
-    vcl_pair<vertex_iter, vertex_iter> vp_seeds;
+    std::pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp_seeds;
 
     //Define a statistics data structure
-    vcl_vector<unsigned int> stats;
+    std::vector<unsigned int> stats;
 
     //Create a queries list
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
@@ -139,13 +139,13 @@ void dborl_graph_wave_propagation::test_reachability(
     }
 
     
-    vcl_ofstream stats_opener(stats_file_.c_str(),std::ios::app);
+    std::ofstream stats_opener(stats_file_.c_str(),std::ios::app);
 
     // Keep track of queries reached
     unsigned int queries_reached(0);
 
     // Keep track of query that reaches maximum reached
-    vcl_string max_node_string;
+    std::string max_node_string;
     unsigned int max_reached=queries_reached;
 
     //Loop over seeds and push back seed then loop over queries
@@ -205,13 +205,13 @@ void dborl_graph_wave_propagation::test_reachability(
 
     //Find number of nodes reached 
     unsigned int numb_nodes_reached=
-        static_cast<unsigned int>(vcl_count(stats.begin(),
+        static_cast<unsigned int>(std::count(stats.begin(),
                                             stats.end(),
                                             number_of_shapes_));
 
     //Find average nodes reached from any start node
     double average_reached=
-        vcl_accumulate(stats.begin(),stats.end(),0)/
+        std::accumulate(stats.begin(),stats.end(),0)/
         static_cast<double>(stats.size());
 
     stats_opener<<"total_queries_reached: "
@@ -226,16 +226,16 @@ void dborl_graph_wave_propagation::test_reachability(
                 << num_edges(proximity_graph_)
                 <<" vertices: "
                 << number_of_shapes_
-                <<vcl_endl;
+                <<std::endl;
     
 
     stats_opener.close();
 }
 
 void dborl_graph_wave_propagation::optimal_seed_selection(
-    vcl_string xml_graph_file,
-    vcl_string dataset_file,
-    vcl_string stats_file,
+    std::string xml_graph_file,
+    std::string dataset_file,
+    std::string stats_file,
     dborl_graph_wave_propagation::Search_type search_flag,
     double tau,
     bool verbose)
@@ -254,7 +254,7 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
     dp.property("category",get(dborl_proximity_graph::vertex_cat_t(),
                                proximity_graph_));
 
-    vcl_ifstream ifile(xml_graph_file.c_str());
+    std::ifstream ifile(xml_graph_file.c_str());
     read_graphml(ifile,proximity_graph_,dp);
     ifile.close();
 
@@ -267,7 +267,7 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
 
     // Rebind stream to data matrix
     // Create a file stream opener
-    vcl_ifstream file_opener;
+    std::ifstream file_opener;
     file_opener.open(dataset_file.c_str());
     
     // Set matrix size to number of shapes
@@ -290,18 +290,18 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
     // Print out node information 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
         ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
-    vcl_pair<vertex_iter, vertex_iter> vp_seeds;
+    std::pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp_seeds;
 
     //Keep track of neighbors reached by greatest
-    vcl_map< vcl_string,vcl_vector<vcl_string> > stats_neighbors_reached;
+    std::map< std::string,std::vector<std::string> > stats_neighbors_reached;
 
     // List of visit status
-    vcl_map<vcl_string,dborl_graph_wave_propagation::Visit_Status> 
+    std::map<std::string,dborl_graph_wave_propagation::Visit_Status> 
         queries_visitor_status;
 
     // Stats file to write results
-    vcl_ofstream stats_opener(stats_file_.c_str(),std::ios::app);
+    std::ofstream stats_opener(stats_file_.c_str(),std::ios::app);
 
     //Create a queries list
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
@@ -316,7 +316,7 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
     unsigned int queries_reached(0);
 
     // Keep track of query that reaches maximum reached
-    vcl_string max_node_string;
+    std::string max_node_string;
     unsigned int max_reached=queries_reached;
 
     // Visited
@@ -329,7 +329,7 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
         {
 
             // create seed name
-            vcl_string seed_name = queries_[i];
+            std::string seed_name = queries_[i];
 
             if ( queries_visitor_status[queries_[i]]
                  ==dborl_graph_wave_propagation::
@@ -395,13 +395,13 @@ void dborl_graph_wave_propagation::optimal_seed_selection(
         //remove elements out of query that have names
         // Grab maximum element
 
-        vcl_vector<vcl_string> max_node=stats_neighbors_reached
+        std::vector<std::string> max_node=stats_neighbors_reached
             [max_node_string];
    
-        vcl_cout<<"best node: "<<max_node_string<<" neighbors reached: "
-                <<max_node.size()<<vcl_endl;
+        std::cout<<"best node: "<<max_node_string<<" neighbors reached: "
+                <<max_node.size()<<std::endl;
    
-        stats_opener<<max_node_string<<vcl_endl;
+        stats_opener<<max_node_string<<std::endl;
 
     
         // Insert seeds
@@ -447,7 +447,7 @@ void dborl_graph_wave_propagation::initialize_visitor_status()
     // Print out node information 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
          ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
     for (vp = vertices(proximity_graph_); vp.first != vp.second; ++vp.first)
     {
@@ -462,13 +462,13 @@ void dborl_graph_wave_propagation::initialize_visitor_status()
 
 }
 
-void dborl_graph_wave_propagation::read_files(vcl_string dataset_file,
-                                              vcl_string query_file,
-                                              vcl_string seed_file)
+void dborl_graph_wave_propagation::read_files(std::string dataset_file,
+                                              std::string query_file,
+                                              std::string seed_file)
 {
     // Create a file stream opener
-    vcl_ifstream file_opener;
-    vcl_string temp;
+    std::ifstream file_opener;
+    std::string temp;
 
     //--------------------  Open queries ----------------------------------
 
@@ -503,7 +503,7 @@ void dborl_graph_wave_propagation::read_files(vcl_string dataset_file,
     //Delete last element
     seeds_.pop_back();
    
-    vcl_cout<<"Number of seeds: "<<seeds_.size()<<vcl_endl;
+    std::cout<<"Number of seeds: "<<seeds_.size()<<std::endl;
 
     //Close file
     file_opener.close();
@@ -544,9 +544,9 @@ void dborl_graph_wave_propagation::find_vertex_seeds()
     // Print out node information 
     typedef graph_traits<dborl_proximity_graph::Undirected_Graph>
          ::vertex_iterator vertex_iter;
-    vcl_pair<vertex_iter, vertex_iter> vp;
+    std::pair<vertex_iter, vertex_iter> vp;
 
-    vcl_string seed_name;
+    std::string seed_name;
     for ( unsigned int i(0) ; i < seeds_.size() ; ++i )
     {
         seed_name=seeds_[i];
@@ -574,7 +574,7 @@ void dborl_graph_wave_propagation::wave_propagate(unsigned int query_index)
         node_name = get(vertex_name, proximity_graph_);
  
     // Insert seeds
-    for(vcl_map<vcl_string,dborl_proximity_graph::Vertex>::const_iterator 
+    for(std::map<std::string,dborl_proximity_graph::Vertex>::const_iterator 
             it = vertex_seeds_.begin(); it != vertex_seeds_.end(); ++it)
     {
         wavefront_insert
@@ -611,7 +611,7 @@ void dborl_graph_wave_propagation::wave_propagate(unsigned int query_index)
         if ( verbose_ )
         {
 
-            vcl_cout<<"-------------"<<vcl_endl;
+            std::cout<<"-------------"<<std::endl;
             print_queue();
 
         }
@@ -637,8 +637,8 @@ void dborl_graph_wave_propagation::wave_propagate(unsigned int query_index)
     if ( verbose_ )
     {
 
-        vcl_cout<<"The nearest neighbor is "<<
-            node_name[nearest_neighbor_]<<vcl_endl;
+        std::cout<<"The nearest neighbor is "<<
+            node_name[nearest_neighbor_]<<std::endl;
 
     }
 }
@@ -700,7 +700,7 @@ void dborl_graph_wave_propagation::propagate_nodes(
 void dborl_graph_wave_propagation::gradient_descent(unsigned int query_index)
 {
 
-    vcl_string shape_name;
+    std::string shape_name;
 
     // Find seed of shape to start at
     shape_name = find_start_seed(query_index);
@@ -727,12 +727,12 @@ void dborl_graph_wave_propagation::gradient_descent(unsigned int query_index)
 
     if (verbose_ )
     {
-        vcl_cout<<"---------------------------------------------------"
-                <<vcl_endl;
-        vcl_cout<<"Finding nearest neighbor of "<<queries_[query_index]
-                <<vcl_endl;
-        vcl_cout<<"The start seed of the wave is "
-            <<node_name[prev_shape]<<" -------> " << next_distance <<vcl_endl;
+        std::cout<<"---------------------------------------------------"
+                <<std::endl;
+        std::cout<<"Finding nearest neighbor of "<<queries_[query_index]
+                <<std::endl;
+        std::cout<<"The start seed of the wave is "
+            <<node_name[prev_shape]<<" -------> " << next_distance <<std::endl;
     }
 
     // Seed computation
@@ -759,10 +759,10 @@ void dborl_graph_wave_propagation::gradient_descent(unsigned int query_index)
     if ( verbose_ )
     {
 
-        vcl_cout<<"The closest shape is "<< node_name[nearest_neighbor_]
-                <<vcl_endl;
-        vcl_cout<<"---------------------------------------------------"
-                <<vcl_endl;
+        std::cout<<"The closest shape is "<< node_name[nearest_neighbor_]
+                <<std::endl;
+        std::cout<<"---------------------------------------------------"
+                <<std::endl;
 
     }
 
@@ -789,7 +789,7 @@ dborl_graph_wave_propagation::closest_vertex_neighbor
     // Loop over all vertices of node
     // Save index
     unsigned int next_node_index=node_index[incoming_node];
-    vcl_string next_node_name=node_name[incoming_node];
+    std::string next_node_name=node_name[incoming_node];
 
     // Keep track of distances
     double distance_seed_query=5000;
@@ -820,17 +820,17 @@ dborl_graph_wave_propagation::closest_vertex_neighbor
 
     if ( verbose_)
     {
-        vcl_cout<<"The next node to visit is index "<<next_node_index<<
+        std::cout<<"The next node to visit is index "<<next_node_index<<
             " its name is "<<
             next_node_name<<" --------> distance "
-                <<distance_seed_query<<vcl_endl;
+                <<distance_seed_query<<std::endl;
     }
 
 
     return vertex(next_node_index,proximity_graph_);
 }
 
-vcl_string dborl_graph_wave_propagation::
+std::string dborl_graph_wave_propagation::
 find_start_seed(unsigned int query_index)
 {
 
@@ -844,9 +844,9 @@ find_start_seed(unsigned int query_index)
     double distance_seed_query=5000;
     
     // Keep track of shape name that is minimum
-    vcl_string start_seed;
+    std::string start_seed;
 
-    for(vcl_map<vcl_string,dborl_proximity_graph::Vertex>::const_iterator 
+    for(std::map<std::string,dborl_proximity_graph::Vertex>::const_iterator 
             it = vertex_seeds_.begin(); it != vertex_seeds_.end(); ++it)
     {
         double temp_distance = 
@@ -859,10 +859,10 @@ find_start_seed(unsigned int query_index)
         } 
         if ( verbose_ )
         {
-            vcl_cout<<"The distance from "
+            std::cout<<"The distance from "
                     << queries_[query_index]<<" to shape " 
                     << node_name[it->second]<< " is " 
-                    << temp_distance<<vcl_endl;
+                    << temp_distance<<std::endl;
         }
 
 
@@ -873,7 +873,7 @@ find_start_seed(unsigned int query_index)
     
     if ( verbose_ )
     {
-        vcl_cout<<"The start seed is "<<start_seed<<vcl_endl;
+        std::cout<<"The start seed is "<<start_seed<<std::endl;
     }
 
     return start_seed;
@@ -886,7 +886,7 @@ wavefront_insert(dborl_proximity_graph::Vertex element,
                  double distance_to_query)
 {
     //Define iterator of wavefront
-    vcl_list< vcl_pair<dborl_proximity_graph::Vertex,double> >::iterator iter 
+    std::list< std::pair<dborl_proximity_graph::Vertex,double> >::iterator iter 
         = wavefront_.begin();
 
     // Find place where to insert new vertex element
@@ -898,7 +898,7 @@ wavefront_insert(dborl_proximity_graph::Vertex element,
     // Insert ordered element
     wavefront_.insert
         (iter,
-         vcl_pair<dborl_proximity_graph::Vertex,double>
+         std::pair<dborl_proximity_graph::Vertex,double>
          (element,distance_to_query));
 
 }
@@ -911,15 +911,15 @@ void dborl_graph_wave_propagation::print_queue()
         node_name = get(vertex_name, proximity_graph_);
   
     //Define iterator to printstuff
-    vcl_list< vcl_pair<dborl_proximity_graph::Vertex,double> >::iterator iterp 
+    std::list< std::pair<dborl_proximity_graph::Vertex,double> >::iterator iterp 
         = wavefront_.begin();
  
     // Find place where to insert new vertex element
     while(iterp!=wavefront_.end())
     {
-        vcl_cout<<"The distance from query to shape " 
+        std::cout<<"The distance from query to shape " 
                 << node_name[iterp->first]<< " is " 
-                << iterp->second<<vcl_endl;
+                << iterp->second<<std::endl;
         
         iterp++;
     }
@@ -939,13 +939,13 @@ void dborl_graph_wave_propagation::print_statistics(unsigned int query_index)
         dborl_proximity_graph::vertex_cat_t>::type
         cat_name = get(dborl_proximity_graph::vertex_cat_t(),proximity_graph_);
 
-    vcl_ofstream stats_opener(stats_file_.c_str(),std::ios::app);
+    std::ofstream stats_opener(stats_file_.c_str(),std::ios::app);
 
     // Determine number of nodes visited
     unsigned int visit=0;
     unsigned int not_visit=0;
 
-    for(vcl_map<vcl_string,dborl_graph_wave_propagation::Visit_Status>
+    for(std::map<std::string,dborl_graph_wave_propagation::Visit_Status>
             ::const_iterator 
             it = visitor_status_.begin(); it != visitor_status_.end(); ++it)
     {
@@ -971,7 +971,7 @@ void dborl_graph_wave_propagation::print_statistics(unsigned int query_index)
                 <<" Visited: "
                 << visit
                 <<" Not Visited: "
-                << not_visit<<vcl_endl;
+                << not_visit<<std::endl;
 
 
     stats_opener.close();

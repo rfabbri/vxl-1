@@ -18,7 +18,7 @@
 #include <vgui/vgui_displaybase_tableau.h>
 
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <bvis/bvis_gl_codec.h>
 
@@ -30,7 +30,7 @@
 
 
 template <class T> T* bvis_manager< T >::instance_ = 0; 
-template <class T> vcl_map< vcl_string, bvis_displayer_sptr > bvis_manager< T >::displayers_;
+template <class T> std::map< std::string, bvis_displayer_sptr > bvis_manager< T >::displayers_;
 
 //: Constructor
 template <class T>
@@ -70,8 +70,8 @@ template <class T>
 void bvis_manager<T>::layer_per_view()
 {
   bvis_proc_selector_tableau_sptr selector_tab = active_selector();
-  const vcl_vector< vcl_string >& names = selector_tab->child_names();
-  vcl_vector<bvis_proc_selector_tableau_sptr> new_selectors;
+  const std::vector< std::string >& names = selector_tab->child_names();
+  std::vector<bvis_proc_selector_tableau_sptr> new_selectors;
   for(unsigned int i=0; i<names.size(); ++i){
     if(selector_tab->is_visible(names[i])){
       bvis_proc_selector_tableau_sptr new_selector_tab = bvis_proc_selector_tableau_new();
@@ -125,7 +125,7 @@ void bvis_manager<T>::remove_active_view()
     bvis_view_tableau_sptr rm_view;
     rm_view.vertical_cast( rm_viewer->child.child() );
 
-    for( vcl_vector<bvis_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
+    for( std::vector<bvis_view_tableau_sptr>::iterator v_itr = view_tabs_.begin();
       v_itr != view_tabs_.end(); ++v_itr){
         if( *v_itr == rm_view ){
           view_tabs_.erase(v_itr);
@@ -146,20 +146,20 @@ void bvis_manager<T>::get_info_on_active_tableau()
 
   if(!cur_active_tableau.ptr()) return;
 
-  vcl_cout << vcl_endl << "***** Active Tableau Info: **********" << vcl_endl;
-  vcl_cout << "TYPE: " << cur_active_tableau->type_name() << vcl_endl;
+  std::cout << std::endl << "***** Active Tableau Info: **********" << std::endl;
+  std::cout << "TYPE: " << cur_active_tableau->type_name() << std::endl;
 
   //temp hack
   if (cur_active_tableau->type_name()!="bgui_vsol2D_tableau")
     return;
 
-  vcl_vector< vcl_string > all_groups = cur_active_tableau->get_grouping_names();
-  vcl_cout << "Groups: ";
+  std::vector< std::string > all_groups = cur_active_tableau->get_grouping_names();
+  std::cout << "Groups: ";
   for (unsigned int i=0; i<all_groups.size(); i++)
-    vcl_cout << all_groups[i] << ", ";
+    std::cout << all_groups[i] << ", ";
 
-  vcl_cout << vcl_endl;
-  vcl_cout << "*************************************" << vcl_endl;
+  std::cout << std::endl;
+  std::cout << "*************************************" << std::endl;
 }
 
 
@@ -208,7 +208,7 @@ vgui_tableau_sptr bvis_manager<T>::active_tableau()
 
 //: Set the active tableau in the active view
 template <class T>
-void bvis_manager<T>::set_active_tableau(const vcl_string& name)
+void bvis_manager<T>::set_active_tableau(const std::string& name)
 {
   bvis_proc_selector_tableau_sptr active_selector = this->active_selector();
   if(!active_selector)
@@ -218,15 +218,15 @@ void bvis_manager<T>::set_active_tableau(const vcl_string& name)
 
 //: Find the names of the visible data in the active view
 template <class T>
-vcl_set<vcl_string> bvis_manager<T>::visible_storage()
+std::set<std::string> bvis_manager<T>::visible_storage()
 {
-  vcl_set<vcl_string> vis_names;
+  std::set<std::string> vis_names;
   bvis_proc_selector_tableau_sptr active_selector = this->active_selector();
   if( !active_selector )
     return vis_names;
 
-  vcl_vector<vcl_string> all_names = active_selector->child_names();
-  for( vcl_vector<vcl_string>::iterator itr = all_names.begin();
+  std::vector<std::string> all_names = active_selector->child_names();
+  for( std::vector<std::string>::iterator itr = all_names.begin();
     itr != all_names.end(); ++itr )
   {
     if(active_selector->is_visible(*itr))
@@ -241,7 +241,7 @@ vcl_set<vcl_string> bvis_manager<T>::visible_storage()
 template <class T>
 bpro_storage_sptr bvis_manager<T>::storage_from_tableau(const vgui_tableau_sptr& tab)
 {
-  vcl_map< bpro_storage*, vgui_tableau_sptr >::iterator itr;
+  std::map< bpro_storage*, vgui_tableau_sptr >::iterator itr;
   for( itr=tableau_map_.begin(); itr != tableau_map_.end(); ++itr ){
     if (itr->second == tab) break;
   }
@@ -275,14 +275,14 @@ bool bvis_manager<T>::recording_macro()
 template <class T>
 void bvis_manager<T>::start_recording_macro()
 {
-  vcl_cout << "Recording Process Macro Started..." << vcl_endl;
+  std::cout << "Recording Process Macro Started..." << std::endl;
   recording_macro_bool_ = true;
 }
 
 template <class T>
 void bvis_manager<T>::stop_recording_macro()
 {
-  vcl_cout << "Stopped Recording Process Macro." << vcl_endl;
+  std::cout << "Stopped Recording Process Macro." << std::endl;
   recording_macro_bool_ = false;
 }
 
@@ -317,7 +317,7 @@ void bvis_manager<T>::toggle_tableau_cache()
 template <class T>
 vgui_tableau_sptr bvis_manager<T>::make_tableau(const bpro_storage_sptr& storage, bool& cacheable ) const
 {
-  vcl_map< vcl_string , bvis_displayer_sptr >::const_iterator itr;
+  std::map< std::string , bvis_displayer_sptr >::const_iterator itr;
   itr = displayers_.find(storage->type());
   if( itr != displayers_.end() ){
     cacheable = itr->second->cacheable();
@@ -333,7 +333,7 @@ template <class T>
 bool bvis_manager<T>::update_tableau(const vgui_tableau_sptr& tableau, 
                               const bpro_storage_sptr& storage ) const
 {
-  vcl_map< vcl_string , bvis_displayer_sptr >::const_iterator itr;
+  std::map< std::string , bvis_displayer_sptr >::const_iterator itr;
   itr = displayers_.find(storage->type());
   if( itr != displayers_.end() )
     return itr->second->update_tableau( tableau, storage );
@@ -343,14 +343,14 @@ bool bvis_manager<T>::update_tableau(const vgui_tableau_sptr& tableau,
 //: Check if a storage class is stored on the database
 static bool is_stored(const bpro_storage_sptr& storage)
 {
-  vcl_set<vcl_string> types = bpro_storage_registry::types();
+  std::set<std::string> types = bpro_storage_registry::types();
   brdb_query_aptr Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
   brdb_selection_sptr selec = DATABASE->select("global_data", Q);
   if (!selec->empty()){
     return true;
   }
 
-  for ( vcl_set<vcl_string>::iterator type_itr = types.begin(); 
+  for ( std::set<std::string>::iterator type_itr = types.begin(); 
     type_itr != types.end();  ++type_itr){
       Q = brdb_query_comp_new("sptr", brdb_query::EQ, storage);
       selec = DATABASE->select(*type_itr, Q);
@@ -373,7 +373,7 @@ bool bvis_manager<T>::add_to_display(const bpro_storage_sptr& storage)
     return true;
   }
 
-  vcl_string name = storage->name();
+  std::string name = storage->name();
 
   bool cacheable = false;
   vgui_tableau_sptr new_tab = this->make_tableau( storage, cacheable );
@@ -386,19 +386,19 @@ bool bvis_manager<T>::add_to_display(const bpro_storage_sptr& storage)
 }
 
 template <class T>
-bvis_displayer_sptr bvis_manager<T>::displayer(  vcl_string const& type )
+bvis_displayer_sptr bvis_manager<T>::displayer(  std::string const& type )
 {
   return displayers_[type];
 }
 template <class T>
 
 bool bvis_manager<T>::
-parameter_dialog(vcl_vector< bpro_param* >& param_vector, vgui_dialog& param_dialog)
+parameter_dialog(std::vector< bpro_param* >& param_vector, vgui_dialog& param_dialog)
 {
     if(param_vector.empty())
       return false;
 
-    for( vcl_vector< bpro_param* >::iterator it = param_vector.begin();
+    for( std::vector< bpro_param* >::iterator it = param_vector.begin();
         it != param_vector.end();  ++it ) {
 
             if( bpro_param_type<int> * param = dynamic_cast<bpro_param_type<int> *>(*it) ) {
@@ -416,7 +416,7 @@ parameter_dialog(vcl_vector< bpro_param* >& param_vector, vgui_dialog& param_dia
             else if( bpro_param_type<double> * param = dynamic_cast<bpro_param_type<double> *>(*it) ) {
                 param_dialog.field( param->description().c_str() , param->temp_ref() );
             }
-            else if( bpro_param_type<vcl_string> * param = dynamic_cast<bpro_param_type<vcl_string> *>(*it) ) {
+            else if( bpro_param_type<std::string> * param = dynamic_cast<bpro_param_type<std::string> *>(*it) ) {
                 param_dialog.field( param->description().c_str() , param->temp_ref() );
             }
             else if( bpro_param_type<bool> * param = dynamic_cast<bpro_param_type<bool> *>(*it) ) {
@@ -426,7 +426,7 @@ parameter_dialog(vcl_vector< bpro_param* >& param_vector, vgui_dialog& param_dia
                 param_dialog.file( param->description().c_str(), param->temp_ref().ext, param->temp_ref().path );
             }
             else{
-                vcl_cerr << "No valid dialog interface for parameter: " << (*it)->name() << vcl_endl;
+                std::cerr << "No valid dialog interface for parameter: " << (*it)->name() << std::endl;
             }
     }
     return true;

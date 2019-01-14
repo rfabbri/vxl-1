@@ -1,8 +1,8 @@
 #include <extrautils/msgout.h>
 #include "ishock.h"
 
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <utility>
+#include <iostream>
 
 // This file contains all the basic functions to traverse 
 // the shock graph like a directed or undirected graph
@@ -501,7 +501,7 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
   //form an initial contour
   BContour* curCon = new BContour(boundary()->nextAvailableID());
   contourList.push_back(curCon);
-  vcl_cout <<"New contour"<<vcl_endl;
+  std::cout <<"New contour"<<std::endl;
 
   //start the tour from the dest node of this edge
   SINode* curNode = startNode;
@@ -533,7 +533,7 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
     //Allow repititions at the beginning and at the end of contours
     
     BElement* curBElm = getRightBElementFromEdge(curEdge, curNode);
-    vcl_cout << curBElm->id() << " ";
+    std::cout << curBElm->id() << " ";
 
     //do not put the element that is already in the list
     if (curBElm == lastBElm){
@@ -552,7 +552,7 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
         curCon = new BContour(boundary()->nextAvailableID());
         contourList.push_back(curCon);
         bStartOfContour = true;
-        vcl_cout << vcl_endl << "New contour: [ID:"<<curCon->id()<<"]"<<vcl_endl;
+        std::cout << std::endl << "New contour: [ID:"<<curCon->id()<<"]"<<std::endl;
       }
 
       //reset the count
@@ -560,7 +560,7 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
       
       //group this element into the current contour
       curCon->elms.push_back(curBElm);
-      vcl_cout <<"["<<curBElm->id()<<"] ";
+      std::cout <<"["<<curBElm->id()<<"] ";
     }
 
     //special treatment of semi-infinite edges
@@ -569,18 +569,18 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
       curCon = new BContour(boundary()->nextAvailableID());
       contourList.push_back(curCon);
       bStartOfContour = true;
-      vcl_cout << vcl_endl << "New contour: [ID:"<<curCon->id()<<"]"<<vcl_endl;
+      std::cout << std::endl << "New contour: [ID:"<<curCon->id()<<"]"<<std::endl;
 
       //reset the count
       semi_degenerate_count = 0;
 
       //is this always true?
       curBElm = curEdge->lBElement();
-      vcl_cout << "{"<< curBElm->id() << "} ";
+      std::cout << "{"<< curBElm->id() << "} ";
 
       //add this element to the current contour
       curCon->elms.push_back(curBElm);
-      vcl_cout <<"["<<curBElm->id()<<"] ";
+      std::cout <<"["<<curBElm->id()<<"] ";
     }
 
     lastBElm = curBElm;
@@ -595,7 +595,7 @@ BContourList IShock::CCWEulerTourAroundALoop(SILink* e)
 
   }
 
-  vcl_cout << vcl_endl << vcl_endl;
+  std::cout << std::endl << std::endl;
 
   //put these contours on to the boundary() contour list
   BContourListIterator curConPtr = contourList.begin();
@@ -626,7 +626,7 @@ BElementList IShock::CCWFollowABranch(SILink* e)
     //it depends on the way we are travervcl_sing the graph
     if (curNode == source(curEdge)){
       //don't push an element in twice
-      vcl_cout << curEdge->rBElement()->id() << " ";
+      std::cout << curEdge->rBElement()->id() << " ";
       if (belmList.size()>1){
         if (belmList.back()->id() != curEdge->rBElement()->id())
           belmList.push_back(curEdge->rBElement());
@@ -635,7 +635,7 @@ BElementList IShock::CCWFollowABranch(SILink* e)
         belmList.push_back(curEdge->rBElement());
     }
     else {
-      vcl_cout << curEdge->lBElement()->id() << " ";
+      std::cout << curEdge->lBElement()->id() << " ";
 
       //don't push an element in twice
       if (belmList.size()>1){
@@ -796,13 +796,13 @@ void IShock::CCWEulerTourToGroupIntoContours()
       //***********************************************************
 
       BElement* curBElm = getRightBElementFromEdge(curEdge, curNode);
-      //vcl_cout << curBElm->id() << " ";
+      //std::cout << curBElm->id() << " ";
 
       //do not put the element that is already in the list
       if (curBElm != lastBElm){
         //group this element into the current contour
         belmlist.push_back(curBElm);
-        //vcl_cout <<"["<<curBElm->id()<<"] ";
+        //std::cout <<"["<<curBElm->id()<<"] ";
       }
 
       //special treatment of semi-infinite edges
@@ -860,7 +860,7 @@ void IShock::CCWEulerTourToGroupIntoContours()
 
         curCon = new BContour(boundary()->nextAvailableID());
         boundary()->contourList.push_back(curCon);
-        //vcl_cout << vcl_endl << "New contour: [ID:"<<curCon->id()<<"]"<<vcl_endl;
+        //std::cout << std::endl << "New contour: [ID:"<<curCon->id()<<"]"<<std::endl;
 
         //add this element to the contour
         curCon->elms.push_back(curbelm);
@@ -888,13 +888,13 @@ void IShock::CCWEulerTourToGroupIntoContours()
       //its a simple closed contour
       curCon = new BContour(boundary()->nextAvailableID());
       boundary()->contourList.push_back(curCon);
-      //vcl_cout << vcl_endl << "New contour: [ID:"<<curCon->id()<<"]"<<vcl_endl;
+      //std::cout << std::endl << "New contour: [ID:"<<curCon->id()<<"]"<<std::endl;
 
       for (curB = belmlist.begin(); curB != belmlist.end(); curB++)
         curCon->elms.push_back(*curB);
     }
 
-    //vcl_cout << vcl_endl << vcl_endl;  
+    //std::cout << std::endl << std::endl;  
   }
 
   BContourList BConsToDel;
@@ -1021,7 +1021,7 @@ void IShock::FormShockGroups(bool DTbased)
   //make a list of all "valid" nodes
   //"valid" defined as degree 3 or higher nodes
   // And some Source nodes with "the special property"
-  vcl_cout << "Valid Nodes" << vcl_endl;
+  std::cout << "Valid Nodes" << std::endl;
   SINodeList validNodeList;
   SIElmListIterator curS = SIElmList.begin();
   for (; curS!=SIElmList.end(); curS++){
@@ -1035,7 +1035,7 @@ void IShock::FormShockGroups(bool DTbased)
     if (current->isASource()){
       SISource* curSrc = (SISource*)current;
       validNodeList.push_back((SINode*)current);
-      //vcl_cout << current->id() << " ";
+      //std::cout << current->id() << " ";
 
       /*
       //look into this login for points to rewrite it in a general fashion
@@ -1043,7 +1043,7 @@ void IShock::FormShockGroups(bool DTbased)
          !((BPoint*)curSrc->getBElement1())->_bSomething ||
          !((BPoint*)curSrc->getBElement2())->_bSomething){
         validNodeList.push_back((SINode*)current);
-        vcl_cout << current->id() << " ";
+        std::cout << current->id() << " ";
       }
       */
     }
@@ -1055,11 +1055,11 @@ void IShock::FormShockGroups(bool DTbased)
 
       if ( degree != 2){
         validNodeList.push_back((SINode*)current);
-        vcl_cout << current->id() << " ";
+        std::cout << current->id() << " ";
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   //*************************************************************
   
   //follow all the links from these nodes to next valid nodes
@@ -1134,7 +1134,7 @@ void IShock::FormShockGroups(bool DTbased)
         lCon, rCon, NULL, NULL, shockLinks);
 
       //for a shock Edge for this shock group
-      SIEdgesList.insert(vcl_pair<int, SIEdge*>(curEdge->id(), curEdge));
+      SIEdgesList.insert(std::pair<int, SIEdge*>(curEdge->id(), curEdge));
     }
   }
 }
@@ -1165,23 +1165,23 @@ void IShock::FormDirectedShockGroups(SILink* first_link)
     if (lCon->elms.size()>0){
       if (lCon->elms.back()->id() != lBElm->id()){
         lCon->elms.push_back(lBElm);
-        //vcl_cout <<"["<<lBElm->id()<<"] ";
+        //std::cout <<"["<<lBElm->id()<<"] ";
       }
     }
     else {
       lCon->elms.push_back(lBElm);
-      //vcl_cout <<"["<<lBElm->id()<<"] ";
+      //std::cout <<"["<<lBElm->id()<<"] ";
     }
 
     if (rCon->elms.size()>0){
       if (rCon->elms.front()->id() != rBElm->id()){
         rCon->elms.push_front(rBElm);
-        //vcl_cout <<"["<<rBElm->id()<<"] ";
+        //std::cout <<"["<<rBElm->id()<<"] ";
       }
     }
     else {
       rCon->elms.push_front(rBElm);
-      //vcl_cout <<"["<<rBElm->id()<<"] ";
+      //std::cout <<"["<<rBElm->id()<<"] ";
     }
 
     //set flag to traversed_forward
@@ -1195,9 +1195,9 @@ void IShock::FormDirectedShockGroups(SILink* first_link)
       lCon, rCon, first_link->pSNode(), last_link->cSNode(), shockLinks);
 
   //for a shock Edge for this shock group
-  SIEdgesList.insert(vcl_pair<int, SIEdge*>(curEdge->id(), curEdge));
+  SIEdgesList.insert(std::pair<int, SIEdge*>(curEdge->id(), curEdge));
 
-  //vcl_cout << vcl_endl << vcl_endl;
+  //std::cout << std::endl << std::endl;
 
 }
 
@@ -1211,7 +1211,7 @@ void IShock::FormUnDirectedShockGroups(SINode* first_node, SILink* first_link)
   BContour* rCon = new BContour(boundary()->nextAvailableID());
   boundary()->contourList.push_back(rCon);
 
-  //vcl_cout <<"New Contour Fragment: " << lCon->id() <<vcl_endl;
+  //std::cout <<"New Contour Fragment: " << lCon->id() <<std::endl;
 
   //keep a ordered list of the shock links in the group
   SILinksList shockLinks;
@@ -1327,7 +1327,7 @@ void IShock::FormUnDirectedShockGroups(SINode* first_node, SILink* first_link)
       lCon, rCon, first_node, last_node, shockLinks);
 
   //for a shock Edge for this shock group
-  SIEdgesList.insert(vcl_pair<int, SIEdge*>(curEdge->id(), curEdge));
+  SIEdgesList.insert(std::pair<int, SIEdge*>(curEdge->id(), curEdge));
   
 }
 
@@ -1357,7 +1357,7 @@ void IShock::FormVisualFragments()
     VisFrag* curFrag = new VisFrag(nextAvailableID(), cur_edge);
     VisFragsList.push_back(curFrag);
 
-    //vcl_cout <<"CurEdgeID: " << cur_edge->id()<< " VISFRAG L" <<vcl_endl;
+    //std::cout <<"CurEdgeID: " << cur_edge->id()<< " VISFRAG L" <<std::endl;
 
     Point fpt, lpt;
     
@@ -1371,24 +1371,24 @@ void IShock::FormVisualFragments()
     else
       lpt = cur_edge->lastLink()->getStartPt();//this should always work!!
 
-    //vcl_cout << "first point: (" << fpt.x <<", " << fpt.y <<")"<<vcl_endl; 
-    //vcl_cout << "last point: (" << lpt.x <<", " << lpt.y <<")"<<vcl_endl;
+    //std::cout << "first point: (" << fpt.x <<", " << fpt.y <<")"<<std::endl; 
+    //std::cout << "last point: (" << lpt.x <<", " << lpt.y <<")"<<std::endl;
 
     //last point
     curFrag->push_back( Point (fpt.x, fpt.y) );
-    //vcl_cout << "spt: (" << fpt.x <<", " <<fpt.y <<") "<< vcl_endl;
+    //std::cout << "spt: (" << fpt.x <<", " <<fpt.y <<") "<< std::endl;
 
     //go along left contour
     BElementListIterator curB =  cur_edge->lContour()->elms.begin();
     for (; curB != cur_edge->lContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "cpt: (" << bp->pt().x <<", " <<bp->pt().y <<")"<<vcl_endl;
+      //std::cout << "cpt: (" << bp->pt().x <<", " <<bp->pt().y <<")"<<std::endl;
     }
 
     //last point
     curFrag->push_back( Point (lpt.x, lpt.y) );
-    //vcl_cout << "spt: (" << lpt.x <<", " <<lpt.y <<") "<< vcl_endl;
+    //std::cout << "spt: (" << lpt.x <<", " <<lpt.y <<") "<< std::endl;
 
     SINode* curNode= cur_edge->cSNode();
     SILink* curLink = cur_edge->lastLink();
@@ -1399,7 +1399,7 @@ void IShock::FormVisualFragments()
       //stupid loop here for the sake of stupid polygon forming code
       if (curNode == cur_edge->pSNode()) break;
       curFrag->push_back( Point ( curNode->origin().x, curNode->origin().y));
-      //vcl_cout << "spt: (" << curNode->origin().x <<", " <<curNode->origin().y <<") "<< vcl_endl;
+      //std::cout << "spt: (" << curNode->origin().x <<", " <<curNode->origin().y <<") "<< std::endl;
       curLink = cyclic_adj_succ(curLink, curNode);
     }
 
@@ -1407,23 +1407,23 @@ void IShock::FormVisualFragments()
     curFrag = new VisFrag(nextAvailableID(), cur_edge);
     VisFragsList.push_back(curFrag);
 
-    //vcl_cout <<"CurEdgeID: " << cur_edge->id()<< " VISFRAG R" <<vcl_endl;
+    //std::cout <<"CurEdgeID: " << cur_edge->id()<< " VISFRAG R" <<std::endl;
 
     //last point
     curFrag->push_back( Point (lpt.x, lpt.y) );
-    //vcl_cout << "spt: (" << lpt.x <<", " <<lpt.y <<") "<< vcl_endl;
+    //std::cout << "spt: (" << lpt.x <<", " <<lpt.y <<") "<< std::endl;
 
     //go along right contour
     curB =  cur_edge->rContour()->elms.begin();
     for (; curB != cur_edge->rContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "cpt: (" << bp->pt().x <<", " <<bp->pt().y <<")"<<vcl_endl;
+      //std::cout << "cpt: (" << bp->pt().x <<", " <<bp->pt().y <<")"<<std::endl;
     }
 
     //first point
     curFrag->push_back( Point (fpt.x, fpt.y) );
-    //vcl_cout << "spt: (" << fpt.x <<", " <<fpt.y <<") "<< vcl_endl;
+    //std::cout << "spt: (" << fpt.x <<", " <<fpt.y <<") "<< std::endl;
 
     //now traverse along the shock edge for the final side of the visual fragment
     curNode= cur_edge->pSNode();
@@ -1435,7 +1435,7 @@ void IShock::FormVisualFragments()
       //stupid loop here for the sake of stupid polygon forming code
       if (curNode == cur_edge->cSNode()) break;
       curFrag->push_back( Point ( curNode->origin().x, curNode->origin().y));
-      //vcl_cout << "spt: (" << curNode->origin().x <<", " <<curNode->origin().y <<") "<< vcl_endl;
+      //std::cout << "spt: (" << curNode->origin().x <<", " <<curNode->origin().y <<") "<< std::endl;
       curLink = cyclic_adj_succ(curLink, curNode);
     }
     */
@@ -1456,8 +1456,8 @@ void IShock::FormVisualFragments()
     else
       lpt = cur_edge->lastLink()->getStartPt();//this should always work!!
 
-    //vcl_cout << "first point: (" << fpt.x <<", " << fpt.y <<")"<<vcl_endl; 
-    //vcl_cout << "last point: (" << lpt.x <<", " << lpt.y <<")"<<vcl_endl;
+    //std::cout << "first point: (" << fpt.x <<", " << fpt.y <<")"<<std::endl; 
+    //std::cout << "last point: (" << lpt.x <<", " << lpt.y <<")"<<std::endl;
 
     //first point
 
@@ -1472,10 +1472,10 @@ void IShock::FormVisualFragments()
       curFrag->push_back( cur_pt);
 
       double R = cur_edge->startLink()->startTime();
-      double startAngle = vcl_atan2(cur_pt.y - fpt.y, cur_pt.x - fpt.x);
+      double startAngle = std::atan2(cur_pt.y - fpt.y, cur_pt.x - fpt.x);
 
       cur_pt = cur_edge->startLink()->getLFootPt(cur_edge->startLink()->sTau());
-      double endAngle = vcl_atan2(cur_pt.y - fpt.y, cur_pt.x - fpt.x);
+      double endAngle = std::atan2(cur_pt.y - fpt.y, cur_pt.x - fpt.x);
 
       double dA = CCW(endAngle, startAngle);
       //four pieces
@@ -1508,7 +1508,7 @@ void IShock::FormVisualFragments()
     }
     else {
       curFrag->push_back( Point (fpt.x, fpt.y) );
-      //vcl_cout << "fpt: (" << fpt.x <<", " <<fpt.y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "fpt: (" << fpt.x <<", " <<fpt.y <<") Edge ID: "<< edge->id() <<std::endl;
     }
     
     //go along left contour
@@ -1554,7 +1554,7 @@ void IShock::FormVisualFragments()
     for (; curB != cur_edge->lContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<std::endl;
     }
 */
     //last point
@@ -1569,10 +1569,10 @@ void IShock::FormVisualFragments()
         curFrag->push_back( cur_pt);
 
         double R = cur_edge->lastLink()->endTime();
-        double startAngle = vcl_atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
+        double startAngle = std::atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
 
         cur_pt = cur_edge->lastLink()->getRFootPt(cur_edge->lastLink()->eTau());
-        double endAngle = vcl_atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
+        double endAngle = std::atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
 
         double dA = CCW(endAngle, startAngle);
         //four pieces
@@ -1588,10 +1588,10 @@ void IShock::FormVisualFragments()
         curFrag->push_back( cur_pt);
 
         double R = cur_edge->lastLink()->startTime();
-        double startAngle = vcl_atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
+        double startAngle = std::atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
 
         cur_pt = cur_edge->lastLink()->getLFootPt(cur_edge->lastLink()->sTau());
-        double endAngle = vcl_atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
+        double endAngle = std::atan2(cur_pt.y - lpt.y, cur_pt.x - lpt.x);
 
         double dA = CCW(endAngle, startAngle);
         //four pieces
@@ -1605,7 +1605,7 @@ void IShock::FormVisualFragments()
     else {
       if (!_BisEqPoint(lpt, curFrag->poly()->back()))
         curFrag->push_back( Point (lpt.x, lpt.y) );
-      //vcl_cout << "lpt: (" << lpt.x <<", " <<lpt.y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "lpt: (" << lpt.x <<", " <<lpt.y <<") Edge ID: "<< edge->id() <<std::endl;
     }
 
     //go along right contour
@@ -1655,7 +1655,7 @@ void IShock::FormVisualFragments()
     for (; curB != cur_edge->rContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<std::endl;
     }
 */
   }
@@ -1681,7 +1681,7 @@ void IShock::FormDTFragments()
     for (; curB != cur_edge->lContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<std::endl;
     }
 
     //go along right contour
@@ -1689,7 +1689,7 @@ void IShock::FormDTFragments()
     for (; curB != cur_edge->rContour()->elms.end(); curB++){
       BPoint* bp = (BPoint*)(*curB);
       curFrag->push_back( Point ( bp->pt().x, bp->pt().y));
-      //vcl_cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<vcl_endl;
+      //std::cout << "lcpt: (" << bp->pt().x <<", " <<bp->pt().y <<") Edge ID: "<< edge->id() <<std::endl;
     }
   }
 }

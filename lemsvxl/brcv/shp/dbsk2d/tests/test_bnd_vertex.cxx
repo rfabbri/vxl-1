@@ -17,14 +17,14 @@
 void test_bnd_vertex_functions()
 {
 
-  vcl_cout << "In test_bnd_vertex_functions()" << vcl_endl;
+  std::cout << "In test_bnd_vertex_functions()" << std::endl;
 
   // input points
   double x[] = { 0 , 1, 2, 3, 4};
   double y[] = { 0 , 0, 0, 2, 5};
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 5; ++i)
   {
     dbsk2d_ishock_bpoint* bp = new dbsk2d_ishock_bpoint(x[i], y[i]);
@@ -32,7 +32,7 @@ void test_bnd_vertex_functions()
   }
 
   // contruct list of edges
-  vcl_vector<dbsk2d_bnd_edge_sptr > edges;
+  std::vector<dbsk2d_bnd_edge_sptr > edges;
   for (unsigned int i = 0; i < 1; ++i)
   {
     dbsk2d_ishock_bpoint* bp1 = vertices[i]->bpoint();

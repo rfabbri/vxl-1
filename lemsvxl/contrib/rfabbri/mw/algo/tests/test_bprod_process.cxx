@@ -5,10 +5,10 @@
 //
 #include <testlib/testlib_test.h>
 #include <bprod/bprod_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bprod/bprod_observer.h>
 #include <bprod/tests/bprod_sample_processes.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: The simplest possible source; just returns what it holds. Each call to
 // execute just returns the same thing.
@@ -46,7 +46,7 @@ class bprod_concat : public bprod_sink
   }
 
   unsigned n_; 
-  vcl_vector<T> data;
+  std::vector<T> data;
 };
 
 static bprod_mutex print_mutex;
@@ -65,16 +65,16 @@ class bprod_sum_expensive : public bprod_filter
     T val2 = input<T>(1);
 
     print_mutex.lock();
-    vcl_cout << "Thread entered it = " << n_it_ << vcl_endl;
+    std::cout << "Thread entered it = " << n_it_ << std::endl;
     print_mutex.unlock();
     for (unsigned i=0; i < n_it_; ++i)
       for (unsigned j=0; j < 100; ++j)
         for (unsigned k=0; k < 100; ++k) {
-          double a = vcl_sin((double)i/(double)j* (double)k);
+          double a = std::sin((double)i/(double)j* (double)k);
           a++;
         }
     print_mutex.lock();
-    vcl_cout << "Thread exited it = " << n_it_ << vcl_endl;
+    std::cout << "Thread exited it = " << n_it_ << std::endl;
     print_mutex.unlock();
 
     output(0, T(val1+val2));
@@ -88,7 +88,7 @@ MAIN( test_bprod_process )
 {
   START ("ric's bprod process experiments");
 
-  vcl_vector<int> data;
+  std::vector<int> data;
   data.push_back(4);
   data.push_back(5);
   data.push_back(10);
@@ -97,10 +97,10 @@ MAIN( test_bprod_process )
 
 
   assert(!data.empty());
-  vcl_vector<bprod_process_sptr> sources;
+  std::vector<bprod_process_sptr> sources;
   sources.reserve(data.size());
 
-  vcl_vector<bprod_process_sptr> sums;
+  std::vector<bprod_process_sptr> sums;
   sums.reserve(data.size()-1);
 
   
@@ -124,10 +124,10 @@ MAIN( test_bprod_process )
 
   out->run(1);
 
-  vcl_cout << "Resulting data output\n";
+  std::cout << "Resulting data output\n";
   for(unsigned int i=0; i<out_ptr->data.size(); ++i)
-    vcl_cout << out_ptr->data[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << out_ptr->data[i] << " ";
+  std::cout << std::endl;
 
   SUMMARY();
 }

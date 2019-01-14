@@ -19,7 +19,7 @@
 #include <ozge/face_gui/dbru_facedb_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <ozge/face_gui/dbru_facedb_sptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Storage class for dbskr_edit_distance
 class dbru_facedb_storage : public bpro1_storage 
@@ -31,7 +31,7 @@ public:
   //: Destructor
   virtual ~dbru_facedb_storage();
 
-  virtual vcl_string type() const { return "dbru_facedb_storage"; }
+  virtual std::string type() const { return "dbru_facedb_storage"; }
 
   //: Return IO version number;
   short version() const;
@@ -47,7 +47,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbru_facedb_storage"; }
+  virtual std::string is_a() const { return "dbru_facedb_storage"; }
 
   //: set the facedb
   void set_facedb(dbru_facedb_sptr facedb) { facedb_ = facedb; }
@@ -59,7 +59,7 @@ public:
   unsigned int get_facedb_size(void);
 
   //: get a particular subject
-  vcl_vector<vil_image_resource_sptr>& get_subject(unsigned i);
+  std::vector<vil_image_resource_sptr>& get_subject(unsigned i);
 
   //: get a particular image of a particular object in facedb
   vil_image_resource_sptr get_face(unsigned i, unsigned j);

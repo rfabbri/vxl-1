@@ -24,7 +24,7 @@ bvam_world_params::~bvam_world_params()
 //---------------------------------------------------
 void 
 bvam_world_params::set_params(
-  const vcl_string& model_dir,
+  const std::string& model_dir,
   const vgl_point_3d<float>& corner,
   const vgl_vector_3d<unsigned int>& num_voxels,
   float voxel_length,
@@ -69,21 +69,21 @@ void bvam_world_params::b_read(vsl_b_istream & is)
 }
 
 //: output world_params to stream
-vcl_ostream&  operator << (vcl_ostream& os, bvam_world_params const& params)
+std::ostream&  operator << (std::ostream& os, bvam_world_params const& params)
 {
-  os << params.model_dir_ << vcl_endl;
-  os << params.corner_.x() << " " << params.corner_.y() << " " << params.corner_.z() << vcl_endl;
-  os << params.num_voxels_.x() << " " << params.num_voxels_.y() << " " << params.num_voxels_.z() << vcl_endl;
-  os << params.voxel_length_ << vcl_endl;
-  os << *(params.lvcs_) << vcl_endl;
-  os << params.min_occupancy_prob_ << vcl_endl;
-  os << params.max_occupancy_prob_ << vcl_endl;
+  os << params.model_dir_ << std::endl;
+  os << params.corner_.x() << " " << params.corner_.y() << " " << params.corner_.z() << std::endl;
+  os << params.num_voxels_.x() << " " << params.num_voxels_.y() << " " << params.num_voxels_.z() << std::endl;
+  os << params.voxel_length_ << std::endl;
+  os << *(params.lvcs_) << std::endl;
+  os << params.min_occupancy_prob_ << std::endl;
+  os << params.max_occupancy_prob_ << std::endl;
 
   return os;
 }
 
 //: input world_params from stream
-vcl_istream& operator >> (vcl_istream& is, bvam_world_params &params)
+std::istream& operator >> (std::istream& is, bvam_world_params &params)
 {
   is >> params.model_dir_;
   is >> params.corner_;

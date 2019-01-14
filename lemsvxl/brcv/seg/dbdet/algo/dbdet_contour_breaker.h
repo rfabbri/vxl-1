@@ -4,7 +4,7 @@
 
 #include <edge/dbdet_edgemap.h>
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_vector_fixed.h>
 #include <vil/vil_image_view.h>
 #include "dbdet_yuliang_features.h"
@@ -25,8 +25,8 @@ public:
     ref_end_pts(img.ni(), img.nj())
   {
     assert(em.ncols() == img.ni() && em.nrows() == img.nj() && tmap.rows() == img.ni() && tmap.cols() == img.nj() && tmap.max_value() < y_hist_size);
-    double diag = vcl_sqrt(ni() * ni() + nj() * nj());
-    nbr_num_edges = vcl_max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
+    double diag = std::sqrt(ni() * ni() + nj() * nj());
+    nbr_num_edges = std::max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
     diag_ratio = diag / dbdet_yuliang_const::diag_of_train;
   };
 
@@ -43,15 +43,15 @@ public:
 
 private:
 
-  void compute_break_point(vcl_vector<dbdet_edgel_chain*> & frags, unsigned frag_id, vcl_vector<int> & ids, vcl_set<unsigned> & unique_ids, bool front, vcl_vector<unsigned> & break_e_ids);
+  void compute_break_point(std::vector<dbdet_edgel_chain*> & frags, unsigned frag_id, std::vector<int> & ids, std::set<unsigned> & unique_ids, bool front, std::vector<unsigned> & break_e_ids);
 
-  void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, y_params_1_vector & beta, y_params_1_vector & fmean, vcl_vector<double> & prob);
+  void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, y_params_1_vector & beta, y_params_1_vector & fmean, std::vector<double> & prob);
 
-  void compute_merge_probability_semantic(dbdet_edgel_chain & chain, unsigned nbr_range_th, y_params_0_vector & beta, y_params_0_vector & fmean, vcl_vector<double> & prob);
+  void compute_merge_probability_semantic(dbdet_edgel_chain & chain, unsigned nbr_range_th, y_params_0_vector & beta, y_params_0_vector & fmean, std::vector<double> & prob);
 
-  void compute_edge_sparsity_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, unsigned nbr_width, vcl_vector<double> & edge_sparcity);
+  void compute_edge_sparsity_integral(dbdet_edgel_chain & chain, std::vector< vnl_vector_fixed<double, 2> > & n, unsigned nbr_width, std::vector<double> & edge_sparcity);
 
-  void compute_texture_hist_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, unsigned nbr_width, vcl_vector<y_hist_vector> & texton_hist_left, vcl_vector<y_hist_vector> & texton_hist_right);
+  void compute_texture_hist_integral(dbdet_edgel_chain & chain, std::vector< vnl_vector_fixed<double, 2> > & n, unsigned nbr_width, std::vector<y_hist_vector> & texton_hist_left, std::vector<y_hist_vector> & texton_hist_right);
 
   //Copy first level objects of CFG into newCFG
   void deep_copy_cfg(dbdet_curve_fragment_graph & CFG, dbdet_curve_fragment_graph & newCFG);

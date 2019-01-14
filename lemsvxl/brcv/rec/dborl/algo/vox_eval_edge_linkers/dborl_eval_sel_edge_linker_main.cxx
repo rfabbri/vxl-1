@@ -17,7 +17,7 @@
 #include "dborl_eval_sel_edge_linker_params.h"
 #include "dborl_eval_sel_edge_linker_params_sptr.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_load.h>
@@ -46,40 +46,40 @@ int main(int argc, char *argv[])
 {
   dborl_eval_sel_edge_linker_params_sptr params = new dborl_eval_sel_edge_linker_params("dborl_eval_sel_edge_linker");  // constructs with the default values;
   if (!params->parse_command_line_args(argc, argv)){
-    vcl_cout <<"WTF1";
+    std::cout <<"WTF1";
     return 0;
   }
 
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only()){
-    vcl_cout << "WTF2";
+    std::cout << "WTF2";
     return 0;
   }
 
   // always call this method to actually parse the input parameter file whose name is extracted from the command line
   if (!params->parse_input_xml()){
-    vcl_cout << "WTF3";
+    std::cout << "WTF3";
     return 0;
   }
 
   // 1) load the input image
-  vcl_string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
+  std::string input_img = params->input_object_dir_() + "/" + params->input_object_name_() + params->input_extension_();
   if (!vul_file::exists(input_img)) {
-    vcl_cout << "Cannot find image: " << input_img << "\n";
+    std::cout << "Cannot find image: " << input_img << "\n";
     return 0;
   }
 
   vil_image_view<vxl_byte> image  = vil_load(input_img.c_str());
   if (!image) {
-    vcl_cout << "Cannot load image: " << input_img << "\n";
+    std::cout << "Cannot load image: " << input_img << "\n";
     return 0;
   }
 
-  vcl_cout << "Got everything now onto business...\n";
-  vcl_cout.flush();
+  std::cout << "Got everything now onto business...\n";
+  std::cout.flush();
 
   // 2) detect edges
   int det_opt = params->edge_det_type_();        //detector option
@@ -99,16 +99,16 @@ int main(int argc, char *argv[])
       EM = dbdet_detect_third_order_edges(image, sigma, threshold, N, 0, 0, 0, adaptive_thresh, false, true);
       break;
     default:
-      vcl_cout << "invalid edge det type...";
+      std::cout << "invalid edge det type...";
       return 0;
   }
 
-  vcl_cout << "\n Done Edge Detection\n";
+  std::cout << "\n Done Edge Detection\n";
   
   // 3) save this edge map onto a file
   if (params->save_edges_()) 
   {
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -121,13 +121,13 @@ int main(int argc, char *argv[])
     output_file = output_file + params->input_object_name_() + params->edg_output_extension_();
 
     if (!dbdet_save_edg(output_file, EM)) {
-      vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving edge file: " << output_file << std::endl;
       return 0;
     }
   }
 
-  vcl_cout << "Now onto Linking...\n ";
-  vcl_cout.flush();
+  std::cout << "Now onto Linking...\n ";
+  std::cout.flush();
 
   // 4) call the sel linker to link the edge map into contour fragments
   dbdet_curvelet_map CM;          //the curvelet map (intermediate structure)
@@ -142,27 +142,27 @@ int main(int argc, char *argv[])
   case 0: //Anchor Centered
     bCentered_grouping = true;
     bBidirectional_grouping = false;
-    vcl_cout << "Cvlet type: Anchor centered \n";
+    std::cout << "Cvlet type: Anchor centered \n";
 
     break;
   case 1: //Anchor Centered/Bidirectional
     bCentered_grouping = true;
     bBidirectional_grouping = true;
-    vcl_cout << "Cvlet type: Anchor centered bidirectional\n";
+    std::cout << "Cvlet type: Anchor centered bidirectional\n";
     break;
   case 2: //Anchor Leading/Bidirectional
     bCentered_grouping = false;
     bBidirectional_grouping = true;
-    vcl_cout << "Cvlet type: Anchor Leading bidirectional \n";
+    std::cout << "Cvlet type: Anchor Leading bidirectional \n";
     break;
   case 3: //ENO Style around Anchor
     bCentered_grouping = false;
     bBidirectional_grouping = false;
-    vcl_cout << "Cvlet type: ENO style \n";
+    std::cout << "Cvlet type: ENO style \n";
     break;
   }
 
-  vcl_cout.flush();
+  std::cout.flush();
 
   //the params class for sel
   dbdet_curvelet_params cvlet_params(dbdet_curve_model::CC, 
@@ -171,8 +171,8 @@ int main(int argc, char *argv[])
                                      bCentered_grouping,
                                      bBidirectional_grouping);
 
-  vcl_cout << "Initialized params...\n";
-  vcl_cout.flush();
+  std::cout << "Initialized params...\n";
+  std::cout.flush();
 
   //construct the linker
   dbdet_sel_sptr edge_linker;
@@ -182,43 +182,43 @@ int main(int argc, char *argv[])
     case 0: //linear_model
       cvlet_params.C_type = dbdet_curve_model::LINEAR;
       edge_linker = new dbdet_sel<dbdet_linear_curve_model>(EM, CM, ELG, CFG, cvlet_params);
-      vcl_cout << "Curve Model: Linear \n";
+      std::cout << "Curve Model: Linear \n";
       break;
     case 1: //CC_model new
       cvlet_params.C_type = dbdet_curve_model::CC2;
       edge_linker = new dbdet_sel<dbdet_CC_curve_model_new>(EM, CM, ELG, CFG, cvlet_params);
-      vcl_cout << "Curve Model: Circular Arc 2d \n";
+      std::cout << "Curve Model: Circular Arc 2d \n";
       break;
     case 2: //CC_model 3d bundle
       cvlet_params.C_type = dbdet_curve_model::CC3d;
       edge_linker = new dbdet_sel<dbdet_CC_curve_model_3d>(EM, CM, ELG, CFG, cvlet_params);
-      vcl_cout << "Curve Model: Circular Arc 3d \n";
+      std::cout << "Curve Model: Circular Arc 3d \n";
       break;
     case 3: //ES_model
       cvlet_params.C_type = dbdet_curve_model::ES;
       edge_linker = new dbdet_sel<dbdet_ES_curve_model>(EM, CM, ELG, CFG, cvlet_params);
-      vcl_cout << "Curve Model: ES \n";
+      std::cout << "Curve Model: ES \n";
       break;
   }
 
-  vcl_cout << "\n Edge Linker Initialized...\n";
-  vcl_cout.flush();
+  std::cout << "\n Edge Linker Initialized...\n";
+  std::cout.flush();
 
   switch(params->hybrid_method_())
   {
     case 0: //standard SEL
     {
       //Extract the contours
-      vcl_cout << "Extracting contours: Standard SEL \n";
-      vcl_cout.flush();
+      std::cout << "Extracting contours: Standard SEL \n";
+      std::cout.flush();
 
       edge_linker->extract_image_contours();
       break;
     }
     case 1: //Hybrid method: first compute contours using GEL, then filter them by computing curvelets
     {
-      vcl_cout << "Extracting contours: Hybrid method \n";
-      vcl_cout.flush();
+      std::cout << "Extracting contours: Hybrid method \n";
+      std::cout.flush();
 
       // A) use the generic linker to compute contours first
       vbl_array_2d<bool>  EULM;//required data structures for the edge linker
@@ -250,8 +250,8 @@ int main(int argc, char *argv[])
     }
     case 2: //Hybrid method: also compute curvelets between contours
     {
-      vcl_cout << "Extracting contours: Hybrid Method + Close gaps \n";
-      vcl_cout.flush();
+      std::cout << "Extracting contours: Hybrid Method + Close gaps \n";
+      std::cout.flush();
 
       // A) use the generic linker to compute contours first
       vbl_array_2d<bool>  EULM;//required data structures for the edge linker
@@ -289,8 +289,8 @@ int main(int argc, char *argv[])
     }
   }
 
-  vcl_cout << "\n Done Edge Linking! \n";
-  vcl_cout.flush();
+  std::cout << "\n Done Edge Linking! \n";
+  std::cout.flush();
 
   //prune contours by length (prune the shortest of the contour fragments)
   prune_contours_by_length(CFG, params->len_thresh_());
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
   // 5) save the linked contour files
   if (params->save_contours_())
   {
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_()) 
       output_file = params->input_object_dir_() + "/";
     else {
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
 
     // Save the contour fragment graph as a .cem file
     if (!dbdet_save_cem(output_file, EM, CFG)) {
-      vcl_cout << "Problems in saving the contour file: " << output_file << vcl_endl;
+      std::cout << "Problems in saving the contour file: " << output_file << std::endl;
       return 0;
     }
   }
@@ -320,15 +320,15 @@ int main(int argc, char *argv[])
   // 6) Evaluate the results
   
   //first read in the GT image
-  vcl_string GT_img_filename = params->input_object_dir_() + "/" + params->input_object_name_() + params->GT_extension_();
+  std::string GT_img_filename = params->input_object_dir_() + "/" + params->input_object_name_() + params->GT_extension_();
   if (!vul_file::exists(GT_img_filename)) {
-    vcl_cout << "Cannot find image: " << GT_img_filename << "\n";
+    std::cout << "Cannot find image: " << GT_img_filename << "\n";
     return 0;
   }
 
   vil_image_view<vxl_byte> GT_img  = vil_load(GT_img_filename.c_str());
   if (!image) {
-    vcl_cout << "Cannot load image: " << GT_img_filename << "\n";
+    std::cout << "Cannot load image: " << GT_img_filename << "\n";
     return 0;
   }
 
@@ -346,7 +346,7 @@ int main(int argc, char *argv[])
   dbdet_eval_result res = dbdet_eval_edge_linking(eval_params, CFG, GT_img);
 
   // save the ROC information for this image
-  vcl_string ROC_file;
+  std::string ROC_file;
   if (params->save_to_object_folder_()) 
     ROC_file = params->input_object_dir_() + "/";
   else {

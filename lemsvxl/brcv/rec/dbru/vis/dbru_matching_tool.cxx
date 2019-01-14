@@ -22,8 +22,8 @@
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h> // for
+#include <iostream>
+#include <cstdio> // for
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -46,16 +46,16 @@ bool dbru_matching_tool::get_tree(dbskr_tree_sptr& tree1, vsol_polygon_2d_sptr p
     //  if this length halves, use 0.2/4
     //  if this length doubles use 0.2*4
     poly1->compute_bounding_box();
-    int w = (int)vcl_floor(poly1->get_max_x()-poly1->get_min_x()+0.5);
-    int h = (int)vcl_floor(poly1->get_max_y()-poly1->get_min_y()+0.5);
-    vcl_cout << "w: " << w << " h: " << h << vcl_endl;
-    pruning_threshold = float(vcl_pow((2*(w+h))/100.0f, 2)*base_thres_);
+    int w = (int)std::floor(poly1->get_max_x()-poly1->get_min_x()+0.5);
+    int h = (int)std::floor(poly1->get_max_y()-poly1->get_min_y()+0.5);
+    std::cout << "w: " << w << " h: " << h << std::endl;
+    pruning_threshold = float(std::pow((2*(w+h))/100.0f, 2)*base_thres_);
   }
 
   if (use_Amir_shock_extraction_)
     sg1 = dbsk2d_compute_shocks(poly1, pruning_threshold);
   else {  // do the ugly system call for now
-    vcl_ofstream of("tmp_con.con");
+    std::ofstream of("tmp_con.con");
     of << "CONTOUR\nCLOSE\n";  of << poly1->size() << "\n";
     for (unsigned int i = 0; i<poly1->size(); i++) {
       vgl_point_2d<double> p = poly1->vertex(i)->get_p();
@@ -64,16 +64,16 @@ bool dbru_matching_tool::get_tree(dbskr_tree_sptr& tree1, vsol_polygon_2d_sptr p
     of.close();
 
     char command[1000];       
-    vcl_sprintf(command, COMMAND, pruning_threshold);
-    vcl_cout << "command: " << command << vcl_endl;
+    std::sprintf(command, COMMAND, pruning_threshold);
+    std::cout << "command: " << command << std::endl;
     system(command);
 
     dbsk2d_xshock_graph_fileio loader;
     sg1 = loader.load_xshock_graph("tmp_esf.esf");
   }   
-  vcl_cout << "Number of vertices in shock graph1: " << sg1->number_of_vertices() << vcl_endl;
+  std::cout << "Number of vertices in shock graph1: " << sg1->number_of_vertices() << std::endl;
   if (sg1->number_of_vertices() == 0) {
-    vcl_cout << "shock graph has 0 vertices!! exiting\n";
+    std::cout << "shock graph has 0 vertices!! exiting\n";
     return false;
   }
   //: CAUTION: with the following flag, it is assumed that original edit distance of Sebastian et al. PAMI06 is being used for matching
@@ -102,7 +102,7 @@ dbru_matching_tool::dbru_matching_tool()
   gesture_left_arrow = vgui_event_condition(vgui_CURSOR_LEFT, vgui_MODIFIER_NULL, true);
 }
 
-vcl_string
+std::string
 dbru_matching_tool::name() const
 {
   return "Vehicle matching Tool";
@@ -128,12 +128,12 @@ void dbru_matching_tool::activate() {
  
   //: use the elastic splice cost while computing scurve splice costs of the tree leaves, if FALSE, it uses the theoretic value in Sebastian,Klein,Kimia,PAMI edit distance paper.
   elastic_splice_cost_ = true;
-  vcl_cout << "CAUTION: Elastic_splice_cost flag is set TRUE during tool activation\n";
+  std::cout << "CAUTION: Elastic_splice_cost flag is set TRUE during tool activation\n";
   
   //set up the views for optimal usage  
-  vcl_vector<bvis1_view_tableau_sptr> views = bvis1_manager::instance()->get_views();
+  std::vector<bvis1_view_tableau_sptr> views = bvis1_manager::instance()->get_views();
   if (views.size() < 2) {
-    vcl_cout << "Need two views for this tool, please add the second view!\n";
+    std::cout << "Need two views for this tool, please add the second view!\n";
     return;
   }
   //: assuming we have two views
@@ -161,26 +161,26 @@ void dbru_matching_tool::activate() {
   bvis1_manager::instance()->display_current_frame();
 
   vgui_dialog open_dl("Open file");
-  vcl_string poly_filename = "";
+  std::string poly_filename = "";
   poly_filename.append(".txt");
-  static vcl_string regexp = "*.*";
+  static std::string regexp = "*.*";
   open_dl.file("Video Object Polynoms Filename: ", regexp, poly_filename);
   //start_frame_ = 0;
   //end_frame_ = 1;
   //open_dl.field("Start frame ", start_frame_);
   //open_dl.field("End frame ", end_frame_);
   open_dl.ask();
-  vcl_ifstream fs(poly_filename.c_str());
+  std::ifstream fs(poly_filename.c_str());
   
   if (!fs) {
-    vcl_cout << "Problems in opening file: " << poly_filename << "\n";
+    std::cout << "Problems in opening file: " << poly_filename << "\n";
     activation_ok_ = false;
   } else {
-    vcl_string dummy;
+    std::string dummy;
 
     fs >> dummy; // VIDEOID:
     if (dummy != "VIDEOID:" && dummy != "FILEID:" && dummy != "VIDEOFILEID:") {
-      vcl_cout << "No video id specified in input file!\n";
+      std::cout << "No video id specified in input file!\n";
       video_id_ = 0;
       return;
     } else {
@@ -192,7 +192,7 @@ void dbru_matching_tool::activate() {
 
     //: initialize polygon vector
     for (int i = 0; i<frame_cnt_; i++) {
-      vcl_vector<vgui_soview2D_polygon*> tmp;
+      std::vector<vgui_soview2D_polygon*> tmp;
       polygons_.push_back(tmp);
     }
 
@@ -213,7 +213,7 @@ void dbru_matching_tool::activate() {
         fs >> dummy; // NVERTS: 
         int vertex_cnt;
         fs >> vertex_cnt;
-        vcl_vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
+        std::vector<float> x_corners(vertex_cnt), y_corners(vertex_cnt);
         
         fs >> dummy; // X: 
         for (int k = 0; k<vertex_cnt; k++) 
@@ -252,7 +252,7 @@ void dbru_matching_tool::activate() {
       float *y = (*polygons_[i][j]).y;
       int n = (*polygons_[i][j]).n;
 
-      vcl_vector<vsol_point_2d_sptr> vertices;
+      std::vector<vsol_point_2d_sptr> vertices;
       for (int k = 0; k<n; k++) 
         vertices.push_back(new vsol_point_2d(x[k], y[k]));
 
@@ -263,7 +263,7 @@ void dbru_matching_tool::activate() {
     }
   }
 
-  vcl_cout << "The tool is activated!!!\n";
+  std::cout << "The tool is activated!!!\n";
   frame_no_ = bvis1_manager::instance()->current_frame();
   active_polygon_no_ = 0;
 
@@ -281,11 +281,11 @@ dbru_matching_tool::set_tableau ( const vgui_tableau_sptr& tableau )
   }
 
   if (tableau.ptr() == NULL) {
-    vcl_cout << " tableau pointer is null, just returning\n";
+    std::cout << " tableau pointer is null, just returning\n";
     return false;
   }
 
-  vcl_cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
+  std::cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
   return false;
 }
 
@@ -316,8 +316,8 @@ dbru_matching_tool::handle( const vgui_event & e,
     }
 
     if (temp != active_polygon_no_) {
-      vcl_cout << "\n------- " << frame_no_ << " ---- " << active_polygon_no_ << "----\n";
-      vcl_cout << "-----------------------------------------\n";
+      std::cout << "\n------- " << frame_no_ << " ---- " << active_polygon_no_ << "----\n";
+      std::cout << "-----------------------------------------\n";
     }
 
     bvis1_manager::instance()->post_overlay_redraw();
@@ -351,8 +351,8 @@ dbru_matching_tool::handle( const vgui_event & e,
   {
     query_polygon_.first = frame_no_;
     query_polygon_.second = active_polygon_no_;
-    vcl_cout << "query polygon is set, frame_no: " << query_polygon_.first;
-    vcl_cout << " active_polygon_no: " << query_polygon_.second << vcl_endl; 
+    std::cout << "query polygon is set, frame_no: " << query_polygon_.first;
+    std::cout << " active_polygon_no: " << query_polygon_.second << std::endl; 
     return false;
   }
   
@@ -363,8 +363,8 @@ dbru_matching_tool::handle( const vgui_event & e,
   {
     database_polygon_.first = frame_no_;
     database_polygon_.second = active_polygon_no_;
-    vcl_cout << "database polygon is set, frame_no: " << database_polygon_.first;
-    vcl_cout << " active_polygon_no: " << database_polygon_.second << vcl_endl; 
+    std::cout << "database polygon is set, frame_no: " << database_polygon_.first;
+    std::cout << " active_polygon_no: " << database_polygon_.second << std::endl; 
     return false;
   }
 
@@ -372,8 +372,8 @@ dbru_matching_tool::handle( const vgui_event & e,
     //----------------------------------
     // create the observations
     //----------------------------------
-    vcl_cout << "matching query polygon frame no: " << query_polygon_.first << " polygon no: " << query_polygon_.second << vcl_endl;
-    vcl_cout << " with database polygon frame no: " << database_polygon_.first << " polygon no: " << database_polygon_.second << vcl_endl;
+    std::cout << "matching query polygon frame no: " << query_polygon_.first << " polygon no: " << query_polygon_.second << std::endl;
+    std::cout << " with database polygon frame no: " << database_polygon_.first << " polygon no: " << database_polygon_.second << std::endl;
     vsol_polygon_2d_sptr poly1 = (*normal_polygons_[query_polygon_.first])[query_polygon_.second];
     vsol_polygon_2d_sptr poly2 = (*normal_polygons_[database_polygon_.first])[database_polygon_.second];
     dbinfo_observation_sptr obs1 = (*observations_[query_polygon_.first])[query_polygon_.second];
@@ -446,7 +446,7 @@ dbru_matching_tool::handle( const vgui_event & e,
 
   if (gesture_open_dialog(e)) {
     get_matching_info();
-    vcl_cout << "algorithm: " << choices_[choice_] << " \n";
+    std::cout << "algorithm: " << choices_[choice_] << " \n";
     return false;
   }
   
@@ -466,7 +466,7 @@ dbru_matching_tool::handle( const vgui_event & e,
       }
       
     } else {
-      vcl_cout << "Current frame number is not valid!\n";
+      std::cout << "Current frame number is not valid!\n";
     }
      
     return false;

@@ -14,7 +14,7 @@
 #include <vil/vil_new.h>
 #include <dbrec/dbrec_visitor.h>
 #include <bxml/bsvg/bsvg_element.h>
-#include <vcl_limits.h>
+#include <limits>
 
 dbrec_gaussian::dbrec_gaussian(unsigned type, float lambda0, float lambda1, float theta, bool bright) : 
   dbrec_part(type), lambda0_(lambda0), lambda1_(lambda1), theta_(theta), bright_(bright), fast_(false), cutoff_percentage_(0.01f) 
@@ -25,10 +25,10 @@ dbrec_gaussian::dbrec_gaussian(unsigned type, float lambda0, float lambda1, floa
     initialize_mask(); 
   }
 
-vcl_string dbrec_gaussian::string_identifier(float angle) const 
+std::string dbrec_gaussian::string_identifier(float angle) const 
 { 
   float angle_r = brip_vil_float_ops::extrema_revert_angle(angle);
-  vcl_stringstream ss; ss << "gaussian_" << lambda0_ << "_" << lambda1_ << "_" << angle_r;
+  std::stringstream ss; ss << "gaussian_" << lambda0_ << "_" << lambda1_ << "_" << angle_r;
   if (bright_) ss << "_bright"; 
   else ss << "_dark"; 
   return ss.str(); 
@@ -88,7 +88,7 @@ void dbrec_gaussian::initialize_mask()
 
 
 
-vcl_ostream& dbrec_gaussian::print(vcl_ostream& out) const
+std::ostream& dbrec_gaussian::print(std::ostream& out) const
 {
   dbrec_part::print(out);
   out << "\t\tgaussian part " << lambda0_ << " " << lambda1_ << " " << theta_ << " ";
@@ -160,7 +160,7 @@ void dbrec_gaussian::mask_dilate(const vil_image_view<bool>& mask_img, vil_image
 float dbrec_gaussian::fg_prob_operator_rotational(const vil_image_view<float>& fg_prob_img, unsigned i, unsigned j, float angle)
 {
   //: locate the mask
-  vcl_map<float, vbl_array_2d<bool> >::iterator it = masks_.find(angle);
+  std::map<float, vbl_array_2d<bool> >::iterator it = masks_.find(angle);
   
   vbl_array_2d<bool>* mask;
   vbl_array_2d<bool> mask_g;
@@ -197,7 +197,7 @@ float dbrec_gaussian::fg_prob_operator_rotational(const vil_image_view<float>& f
 void dbrec_gaussian::get_mask(vbl_array_2d<bool>& mask, float theta)
 {
   //: locate the mask
-  vcl_map<float, vbl_array_2d<bool> >::iterator it = masks_.find(theta);
+  std::map<float, vbl_array_2d<bool> >::iterator it = masks_.find(theta);
   if (it == masks_.end()) {
     vbl_array_2d<float> fa;
     brip_vil_float_ops::extrema_kernel_mask(lambda0_, lambda1_, theta, fa, mask);
@@ -222,7 +222,7 @@ void dbrec_gaussian::accept(dbrec_visitor* v)
 { 
   v->visit_gaussian_primitive(this); 
 }
-void dbrec_gaussian::visualize(bsvg_document& doc, float x, float y, float vis_rad, const vcl_string& color) const
+void dbrec_gaussian::visualize(bsvg_document& doc, float x, float y, float vis_rad, const std::string& color) const
 {
   float rx = 0.0f, ry = 0.0f;
   if (lambda0_ < lambda1_) {
@@ -239,7 +239,7 @@ void dbrec_gaussian::visualize(bsvg_document& doc, float x, float y, float vis_r
   ell->set_stroke_color("yellow");
   doc.add_element(ell);
 
-  vcl_stringstream ss; ss << type_; 
+  std::stringstream ss; ss << type_; 
   bsvg_text* t = new bsvg_text(ss.str());
   t->set_location(x, y+3*vis_rad);
   t->set_fill_color(color);
@@ -250,8 +250,8 @@ void dbrec_gaussian::get_direction_vector(vnl_vector_fixed<float,2>& v) const
 {
   //: the constructor ensures that theta_ is in [-90,90]. 
   double theta_rad = theta_*vnl_math::pi/180.0;
-  float c = (float)vcl_cos(theta_rad);
-  float s = (float)vcl_sin(theta_rad);
+  float c = (float)std::cos(theta_rad);
+  float s = (float)std::sin(theta_rad);
   // prepare the clockwise rotation matrix
   vnl_matrix_fixed<float, 2, 2> rot_matrix;
   rot_matrix(0,0) = c; rot_matrix(0,1) = -s; rot_matrix(1,0) = s; rot_matrix(1,1) = c;
@@ -264,15 +264,15 @@ void dbrec_gaussian::get_direction_vector(vnl_vector_fixed<float,2>& v) const
   //: now rotate by theta
   v = rot_matrix*v;
   //: cast to zero if sufficiently small
-  if ((float)vcl_abs(v(0)) < vcl_numeric_limits<float>::epsilon()) v(0) = 0.0f;
-  if ((float)vcl_abs(v(1)) < vcl_numeric_limits<float>::epsilon()) v(1) = 0.0f;
+  if ((float)std::abs(v(0)) < std::numeric_limits<float>::epsilon()) v(0) = 0.0f;
+  if ((float)std::abs(v(1)) < std::numeric_limits<float>::epsilon()) v(1) = 0.0f;
 }
 //: a method to compute a direction vector for rotationally invariant parts given a particular absolute angle for its orientation
 void dbrec_gaussian::get_direction_vector(float abs_theta, vnl_vector_fixed<float, 2>& v) const
 {
   double theta_rad = abs_theta*vnl_math::pi/180.0;
-  float c = (float)vcl_cos(theta_rad);
-  float s = (float)vcl_sin(theta_rad);
+  float c = (float)std::cos(theta_rad);
+  float s = (float)std::sin(theta_rad);
   // prepare the clockwise rotation matrix
   vnl_matrix_fixed<float, 2, 2> rot_matrix;
   rot_matrix(0,0) = c; rot_matrix(0,1) = -s; rot_matrix(1,0) = s; rot_matrix(1,1) = c;
@@ -285,8 +285,8 @@ void dbrec_gaussian::get_direction_vector(float abs_theta, vnl_vector_fixed<floa
   //: now rotate by theta
   v = rot_matrix*v;
   //: cast to zero if sufficiently small
-  if ((float)vcl_abs(v(0)) < vcl_numeric_limits<float>::epsilon()) v(0) = 0.0f;
-  if ((float)vcl_abs(v(1)) < vcl_numeric_limits<float>::epsilon()) v(1) = 0.0f;
+  if ((float)std::abs(v(0)) < std::numeric_limits<float>::epsilon()) v(0) = 0.0f;
+  if ((float)std::abs(v(1)) < std::numeric_limits<float>::epsilon()) v(1) = 0.0f;
 }
 
 //: check the "true" part of the mask
@@ -439,7 +439,7 @@ void dbrec_gaussian_factory::populate_rot_inv(float lambda_min, float lambda_max
 {
   float theta = 0.0f;
   unsigned type_cnt = 0;
-  vcl_vector<float> lambdas;
+  std::vector<float> lambdas;
   for (float lambda = lambda_min; lambda <= lambda_max; lambda += lambda_inc) 
     lambdas.push_back(lambda);
   for (unsigned i = 0; i < lambdas.size(); i++) {

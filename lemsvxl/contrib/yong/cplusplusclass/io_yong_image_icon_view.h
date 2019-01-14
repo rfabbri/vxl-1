@@ -1,16 +1,16 @@
 #ifndef io_yong_image_icon_view_h_
 #define io_yong_image_icon_view_h_
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <utility>
 #include <vil/vil_image_view.h>
 #include <cplusplusclass/yong_image_icon_view_sptr.h>
 #include <vxl_config.h> // for vxl_byte
 #include <vbl/vbl_ref_count.h>
 #include <vil/io/vil_io_image_view.h>
-#include <vcl_cstddef.h>
-#include <vcl_iostream.h>
+#include <cstddef>
+#include <iostream>
 #include <vsl/vsl_binary_io.h>
 #include <cplusplusclass/yong_image_icon_view.h>
 
@@ -45,7 +45,7 @@ inline void vsl_b_read(vsl_b_istream &is, yong_image_icon_view& icon)
         vsl_b_read(is, icon.nplanes_);
         break;
     default:
-        vcl_cout << "unsupported binary IO version for yong_image_icon_view!" << vcl_endl;
+        std::cout << "unsupported binary IO version for yong_image_icon_view!" << std::endl;
         break;
     }
 
@@ -82,19 +82,19 @@ inline void vsl_b_read(vsl_b_istream &is, yong_image_icon_view_sptr& icon)
         vsl_b_read(is, icon->nplanes_);
         break;
     default:
-        vcl_cout << "unsupported binary IO version for yong_image_icon_view!" << vcl_endl;
+        std::cout << "unsupported binary IO version for yong_image_icon_view!" << std::endl;
         break;
     }
 
     return;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, yong_image_icon_view_sptr const icon)
+inline void vsl_print_summary(std::ostream& os, yong_image_icon_view_sptr const icon)
 {
    return;
 }
 
-inline void vsl_print_summary(vcl_ostream& os, yong_image_icon_view const icon)
+inline void vsl_print_summary(std::ostream& os, yong_image_icon_view const icon)
 {
    return;
 }

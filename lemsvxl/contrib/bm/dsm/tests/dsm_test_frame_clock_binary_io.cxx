@@ -5,11 +5,11 @@
 
 #include<vbl/io/vbl_io_smart_ptr.h>
 
-#include<vcl_string.h>
+#include<string>
 
 static void dsm_test_frame_clock_binary_io()
 {
-	vcl_string filename("fc_sptr.bin");
+	std::string filename("fc_sptr.bin");
 
 	dsm_frame_clock* fcp = dsm_frame_clock::instance();
 
@@ -17,13 +17,13 @@ static void dsm_test_frame_clock_binary_io()
 	fcp->increment_time();
 	fcp->increment_time();
 
-	vsl_b_ofstream os(filename.c_str(), vcl_ios::out|vcl_ios::binary);
+	vsl_b_ofstream os(filename.c_str(), std::ios::out|std::ios::binary);
 	vsl_b_write(os,fcp);
 	os.close();
 
 	dsm_frame_clock* fcp2;
 	//read the smart pointer
-	vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+	vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 	vsl_b_read(is,fcp2);
 	is.close();
 

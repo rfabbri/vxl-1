@@ -9,8 +9,8 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -32,7 +32,7 @@ dbdet_test_sel_circle_process::dbdet_test_sel_circle_process()
       !parameters()->add( "   perturb position" , "-dpos"     , 0.1) ||
       !parameters()->add( "   perturb tangents (deg)" , "-dtan"     , 5.0)
       ) {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -52,7 +52,7 @@ dbdet_test_sel_circle_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_test_sel_circle_process::name()
 {
   return "Test SEL Geometry - Circle";
@@ -76,17 +76,17 @@ dbdet_test_sel_circle_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_test_sel_circle_process::get_input_type()
+std::vector< std::string > dbdet_test_sel_circle_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_test_sel_circle_process::get_output_type()
+std::vector< std::string > dbdet_test_sel_circle_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -117,7 +117,7 @@ dbdet_test_sel_circle_process::execute()
 
 //  mw_test_sel_geometry::test_circle( rad_ini, rad_end, nrad, dx, dt, do_perturb, dpos, dtan);
 
-  vcl_cerr << "Function must be updated before attempting to test SEL\n";
+  std::cerr << "Function must be updated before attempting to test SEL\n";
   abort();
 
   return true;

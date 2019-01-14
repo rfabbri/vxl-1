@@ -6,7 +6,7 @@
 // \date    2005-04-05, modified 2005_06_27
 // 
 
-#include <vcl_ctime.h>
+#include <ctime>
 
 #include <xmvg/xmvg_no_noise_filter_3d.h>
 #include <xmvg/xmvg_composite_filter_3d.h>
@@ -14,7 +14,7 @@
 #include <proc/bioproc_splr_filtering_proc.h>
 #include <splr/splr_grid_worldpt_roster.h>
 #include <splr/splr_roster_to_grid_mapping.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
@@ -28,11 +28,11 @@
 #include <VolumeViz/nodes/SoVolumeRendering.h>
 #include <VolumeViz/nodes/SoTransferFunction.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 int main(int argc, char** argv)
 {
-  vcl_stringstream ss;
+  std::stringstream ss;
   ss << "F:/MyDocs/Temp/toy_data_tif/toy####.tif";
   // scan
     xscan_dummy_scan scan(10, 40, 160, vnl_int_2(200, 200), vnl_double_2(100, 100),
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
   xmvg_no_noise_filter_3d fy(fdy);
   xmvg_no_noise_filter_3d fz(fdz);
 
-  vcl_vector<xmvg_no_noise_filter_3d> filters;
+  std::vector<xmvg_no_noise_filter_3d> filters;
   //filters.push_back(fx);
   //filters.push_back(fy);
   filters.push_back(fz);
@@ -72,11 +72,11 @@ int main(int argc, char** argv)
   
   splr_grid_worldpt_roster grid(box, resolution);
   //place to store responses
-  vcl_vector<xmvg_filter_response<double> > field(grid.num_points());
+  std::vector<xmvg_filter_response<double> > field(grid.num_points());
   unsigned int current_voxel_position = 0;
 
   time_t t1, t2;
-  t1 = vcl_clock();
+  t1 = std::clock();
   for (double zcurrent = zmin; zcurrent <= zmax; zcurrent += resolution){
      vgl_box_3d<double> zslice(xmin, ymin, zcurrent, xmax, ymax, zcurrent);
       bioproc_splr_filtering_proc<double, xmvg_no_noise_filter_3d> proc(const_cast<xscan_scan&>(scan_ref), zslice, resolution, comp3d);
@@ -84,21 +84,21 @@ int main(int argc, char** argv)
       splr_grid_worldpt_roster zgrid(zslice, resolution);
       //for each point on the grid, find the nearest sample point.
       // if there is not one near enough, use sample point 0)
-      vcl_vector<biob_worldpt_index> which_sample;
+      std::vector<biob_worldpt_index> which_sample;
       splr_roster_to_grid_mapping(proc.sample_locations(), &zgrid, which_sample);
       //for grid point i, which_sample[i] identifies the closest point in proc->sample_locations()
       // compute filter responses at those sample locations given by which_sample
       proc.execute(&which_sample);
       //get responses
-      vcl_vector<xmvg_filter_response<double> > & zresponses = proc.responses();
+      std::vector<xmvg_filter_response<double> > & zresponses = proc.responses();
       //copy responses for this z slice into all_responses
       for (unsigned long int i = 0; i < zgrid.num_points(); ++i){
         field[current_voxel_position++] = zresponses[i];
       }
   }
-  t2 = vcl_clock();
-  vcl_cout << grid.num_points() << "points in " << double(t2-t1) / CLOCKS_PER_SEC << " seconds\n";
-  vcl_cout << double(t2-t1) / CLOCKS_PER_SEC / grid.num_points() << " seconds per point\n";
+  t2 = std::clock();
+  std::cout << grid.num_points() << "points in " << double(t2-t1) / CLOCKS_PER_SEC << " seconds\n";
+  std::cout << double(t2-t1) / CLOCKS_PER_SEC / grid.num_points() << " seconds per point\n";
 // initialize vgui
   vgui::init(argc, argv);
 
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 
   SoVolumeRendering::init();
 
-  //  vcl_vector<xmvg_filter_response<double> > field;
+  //  std::vector<xmvg_filter_response<double> > field;
   //indices of proc.responses() correspond to indices of which_sample
 
   unsigned angle_index = 0;
@@ -121,8 +121,8 @@ int main(int argc, char** argv)
 
   for (unsigned int i = 0; i < grid.num_points(); ++i){
         double intensity = field[i][angle_index];
-        max_intensity = vcl_max(max_intensity, intensity);
-        min_intensity = vcl_min(min_intensity, intensity);
+        max_intensity = std::max(max_intensity, intensity);
+        min_intensity = std::min(min_intensity, intensity);
   }
  
   const size_t blocksize = grid.num_points();

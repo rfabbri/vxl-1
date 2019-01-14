@@ -6,7 +6,7 @@
 #include <wx/sashwin.h>
 #include <wx/laywin.h>
 #include <wx/notebook.h>
-#include <vcl_vector.h>
+#include <vector>
 
 #include "basegui_basewindow.h"
 #include "basegui_baseplugin.h"
@@ -44,18 +44,18 @@ private:
   wxMenuBar *mainMenuBar;
   wxMenu *fileMenu, *helpMenu, *pluginsMenu;
   wxToolBar *mainToolbar;
-  vcl_vector<wxAcceleratorEntry >_accEntries;
+  std::vector<wxAcceleratorEntry >_accEntries;
 
 public:
     MainGUIWindow(wxWindow *parent, const wxWindowID id, const wxString& title,
             const wxPoint& pos, const wxSize& size, const long style);
 
-    void loadFile(vcl_string filename);
+    void loadFile(std::string filename);
 
 
     void createStdMenus(wxMenu *file, wxMenu *plugins, wxMenu *help,
       wxToolBar *toolBar,
-      vcl_vector<wxAcceleratorEntry> &accelerators);
+      std::vector<wxAcceleratorEntry> &accelerators);
 
    wxToolBar* mainToolBar() {return mainToolbar;}
 
@@ -69,14 +69,14 @@ public:
     void OnClose(wxCloseEvent& event);
 
     BaseWindow* getPlugin(wxCommandEvent &event);
-    BaseWindow* getPluginFromName(vcl_string name);
+    BaseWindow* getPluginFromName(std::string name);
     int         getPluginCount() ;
-    vcl_string      getUniquePluginName();
+    std::string      getUniquePluginName();
     void printPluginList();
  private:
     void _newWindow(BaseWindow*win);
     void InitToolBar(wxToolBar* toolBar);
-    void InitAccelerators(vcl_vector<wxAcceleratorEntry> &entries);
+    void InitAccelerators(std::vector<wxAcceleratorEntry> &entries);
     void InitMenus(wxMenu *file, wxMenu *plugins, wxMenu *help);
     
     // adjusts the window layout to appropriate sizes
@@ -89,7 +89,7 @@ public:
   enum {_NumDebugWins=3 };
   wxTextCtrl* _debugTexts[_NumDebugWins]; 
   wxSashLayoutWindow* _sash;
-  vcl_vector<BaseWindow*> _subframes;
+  std::vector<BaseWindow*> _subframes;
 };
 
 //! Enumerator for event-id.

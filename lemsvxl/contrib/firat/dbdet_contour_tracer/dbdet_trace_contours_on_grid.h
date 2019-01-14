@@ -10,7 +10,7 @@
 #include "dbdet_contour_tracer_grid.h"
 #include <vsol/vsol_point_2d_sptr.h>
 
-void dbdet_trace_all_contours_on_grid(dbdet_contour_tracer_grid& grid, vcl_vector<vcl_vector<vsol_point_2d_sptr> >& contours);
-dbdet_contour_tracer_xing* dbdet_trace_contour_given_first_two_points(dbdet_contour_tracer_grid& grid, dbdet_contour_tracer_xing* prev, dbdet_contour_tracer_xing* curr, vcl_vector<vsol_point_2d_sptr>& contour);
+void dbdet_trace_all_contours_on_grid(dbdet_contour_tracer_grid& grid, std::vector<std::vector<vsol_point_2d_sptr> >& contours);
+dbdet_contour_tracer_xing* dbdet_trace_contour_given_first_two_points(dbdet_contour_tracer_grid& grid, dbdet_contour_tracer_xing* prev, dbdet_contour_tracer_xing* curr, std::vector<vsol_point_2d_sptr>& contour);
 
 #endif /* DBDET_TRACE_CONTOURS_ON_GRID_H_ */

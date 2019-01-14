@@ -53,7 +53,7 @@ bvis1_correspond_line_tool::~bvis1_correspond_line_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 bvis1_correspond_line_tool::name() const
 {
   return "Correspond Lines";
@@ -176,13 +176,13 @@ bvis1_correspond_line_tool::handle( const vgui_event & e,
 //  - corresponding points are in the same order in each vector
 //  - one vector is returned for each tableau in \p tabs in the same order
 //  - NULL points are returned for missing correspondences
-vcl_vector<vcl_vector<vsol_line_2d_sptr> >
+std::vector<std::vector<vsol_line_2d_sptr> >
 bvis1_correspond_line_tool::correspondences(
-                          const vcl_vector<vgui_displaylist2D_tableau_sptr>& tabs) const
+                          const std::vector<vgui_displaylist2D_tableau_sptr>& tabs) const
 {
-  vcl_vector<vcl_vector<vsol_line_2d_sptr> > result(tabs.size());
+  std::vector<std::vector<vsol_line_2d_sptr> > result(tabs.size());
 
-  for ( vcl_set<corr_map>::const_iterator citr = correspondences_.begin();
+  for ( std::set<corr_map>::const_iterator citr = correspondences_.begin();
         citr != correspondences_.end();  ++citr )
   {
     for ( unsigned int i=0; i<tabs.size(); ++i )
@@ -202,7 +202,7 @@ bvis1_correspond_line_tool::correspondences(
 bool
 bvis1_correspond_line_tool::set_curr_corr(const bgui_vsol_soview2D_line_seg* pt)
 {
-  for ( vcl_set<corr_map>::iterator itr = correspondences_.begin();
+  for ( std::set<corr_map>::iterator itr = correspondences_.begin();
         itr != correspondences_.end();  ++itr )
   {
     corr_map::const_iterator itr2 = itr->find(this->tableau_);
@@ -222,8 +222,8 @@ bool
 bvis1_correspond_line_tool::is_visible_child( const vgui_selector_tableau_sptr& selector,
                                               const vgui_tableau_sptr& tableau ) const
 {
-  vcl_vector<vcl_string> names(selector->child_names());
-  for ( vcl_vector<vcl_string>::const_iterator itr = names.begin();
+  std::vector<std::string> names(selector->child_names());
+  for ( std::vector<std::string>::const_iterator itr = names.begin();
         itr != names.end();  ++itr )
   {
     if ( tableau == selector->get_tableau(*itr) ){
@@ -245,10 +245,10 @@ class bvis1_corr_io_command : public vgui_command
   bvis1_corr_io_command(bvis1_correspond_line_tool* tool) : tool_(tool) {}
   void execute()
   {
-    vcl_set<vgui_displaylist2D_tableau_sptr> tab_set(tool_->tableaux());
-    vcl_vector<vgui_displaylist2D_tableau_sptr> tabs;
-    vcl_vector<vcl_string> choices;
-    for ( vcl_set<vgui_displaylist2D_tableau_sptr>::iterator itr = tab_set.begin();
+    std::set<vgui_displaylist2D_tableau_sptr> tab_set(tool_->tableaux());
+    std::vector<vgui_displaylist2D_tableau_sptr> tabs;
+    std::vector<std::string> choices;
+    for ( std::set<vgui_displaylist2D_tableau_sptr>::iterator itr = tab_set.begin();
           itr != tab_set.end();  ++itr )
     {
       tabs.push_back(*itr);
@@ -265,8 +265,8 @@ class bvis1_corr_io_command : public vgui_command
     tab_dlg.choice("View 1", choices, val1);
     tab_dlg.choice("View 2", choices, val2);
 
-    static vcl_string filename="";
-    static vcl_string ext="*.*";
+    static std::string filename="";
+    static std::string ext="*.*";
     tab_dlg.file("Output Filename",ext,filename);
     //static bool is_skew = false;
     //tab_dlg.checkbox("Translation only", is_skew);
@@ -274,21 +274,21 @@ class bvis1_corr_io_command : public vgui_command
       return; // cancelled
 
 
-    vcl_ofstream ofile;
+    std::ofstream ofile;
 
     if(vul_file::exists(filename))
-        ofile.open(filename.c_str(),vcl_ios::app);
+        ofile.open(filename.c_str(),std::ios::app);
     else
     {
         ofile.open(filename.c_str());
         ofile<<"// edges from "<<choices[val1]<<"to  "<<choices[val2]<<"\n";
     }
 
-    vcl_vector<vgui_displaylist2D_tableau_sptr> selected(2);
+    std::vector<vgui_displaylist2D_tableau_sptr> selected(2);
     selected[0] = tabs[val1];
     selected[1] = tabs[val2];
 
-    vcl_vector<vcl_vector<vsol_line_2d_sptr> > corr_lines =
+    std::vector<std::vector<vsol_line_2d_sptr> > corr_lines =
       tool_->correspondences(selected);
 
 

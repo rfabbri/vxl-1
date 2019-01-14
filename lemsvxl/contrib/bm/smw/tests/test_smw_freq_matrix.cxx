@@ -1,7 +1,7 @@
 //this is contrib/bm/smw/tests/test_smw_freq_matrix.cxx
 #include"smw_freq_matrix.h"
 #include<testlib/testlib_test.h>
-#include<vcl_iostream.h>
+#include<iostream>
 static void test_smw_freq_matrix()
 {
     //create a freq_matrix
@@ -14,47 +14,47 @@ static void test_smw_freq_matrix()
       
 
     //output original matrix
-    vcl_cout << "Original Matrix: " << vcl_endl;
-    a.print(vcl_cout);
+    std::cout << "Original Matrix: " << std::endl;
+    a.print(std::cout);
     
     //add a row and print
-    vcl_cout << '\n' << "Matrix with row added" << vcl_endl;
+    std::cout << '\n' << "Matrix with row added" << std::endl;
     a.add_row();
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //add a column and print
-    vcl_cout << '\n' << "Matrix with column added" << vcl_endl;
+    std::cout << '\n' << "Matrix with column added" << std::endl;
     a.add_column();
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //remove the third column (index 2)
-    vcl_cout << '\n' << "Matrix with third column deleted" << vcl_endl;
+    std::cout << '\n' << "Matrix with third column deleted" << std::endl;
     a.remove_col(2);
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //try to delete a column past the last in the current matrix
-    vcl_cout << '\n' << "Attempt to remove a column past" 
-             << " the last in the matrix. " << vcl_endl;
+    std::cout << '\n' << "Attempt to remove a column past" 
+             << " the last in the matrix. " << std::endl;
     a.remove_col(10);
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //remove a row 4 (index 3)
-    vcl_cout << '\n' << "Matrix with 4th row deleted" << vcl_endl;
+    std::cout << '\n' << "Matrix with 4th row deleted" << std::endl;
     a.remove_row(3);
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //try to delete a row past the last
-    vcl_cout << '\n';
+    std::cout << '\n';
     a.remove_row(20);
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //test assignment operator
-    vcl_cout << '\n' << "Assign 9 to bottom right corner" << vcl_endl;
+    std::cout << '\n' << "Assign 9 to bottom right corner" << std::endl;
     a[4][4] = 9;
-    a.print(vcl_cout);
+    a.print(std::cout);
 
     //try assigning out of bounds
-    vcl_cout << '\n' << "Try assigning element out of bounds" << vcl_endl;
+    std::cout << '\n' << "Try assigning element out of bounds" << std::endl;
     a[5][3] = 10;
 
     

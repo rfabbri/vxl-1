@@ -17,7 +17,7 @@
 
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
-#include <vcl_map.h>
+#include <map>
 
 //: a class to match between two meshes
 class dbmsh3d_match_mesh
@@ -76,11 +76,11 @@ public:
 
   // ============ Data access ===================================
   //: Return matching results
-  const vcl_map<int, int >& correspondence_map()
+  const std::map<int, int >& correspondence_map()
   { return this->correspondence_map_; }
 
   //: Return deviation map
-  const vcl_map<int, double >& distance_map()
+  const std::map<int, double >& distance_map()
   { return this->distance_map_; };
 
 protected:
@@ -88,11 +88,11 @@ protected:
   double max_distance_;
 
   // map between id's of data mesh and id's of reference map
-  vcl_map<int, int > correspondence_map_;
+  std::map<int, int > correspondence_map_;
 
   // distance between matched pairs of vertices, key is the id's of 
   // vertices on data mesh
-  vcl_map<int, double > distance_map_;
+  std::map<int, double > distance_map_;
 };
 
 

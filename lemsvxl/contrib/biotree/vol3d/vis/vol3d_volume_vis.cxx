@@ -90,52 +90,52 @@ int main(int argc, char** argv)
   // initialize bgui_3d
   bgui3d_init();
 
-  vcl_string fname="", box_fname="", scan_fname="", log_fname="";
+  std::string fname="", box_fname="", scan_fname="", log_fname="";
   double max_intensity = -1e23;
   double min_intensity = 1e23;
   double intensity=0;
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
+    std::string arg (argv[i]);
 
     // this argument can be a volume data file like *.gipl or a path with wild characters to the 
     // reconstructed images like: C:\\test_images\\filters\\newcast35um2_orig\\scan35um_rec####.bmp
-    if (arg == vcl_string ("-x")) { fname = vcl_string(argv[++i]);}
+    if (arg == std::string ("-x")) { fname = std::string(argv[++i]);}
 
-    else if (arg == vcl_string ("-b")) {box_fname = vcl_string(argv[++i]);}
+    else if (arg == std::string ("-b")) {box_fname = std::string(argv[++i]);}
 
-    else if (arg == vcl_string ("-s")) {scan_fname = vcl_string(argv[++i]);}
+    else if (arg == std::string ("-s")) {scan_fname = std::string(argv[++i]);}
 
-    else if (arg == vcl_string ("-l")) {log_fname = vcl_string(argv[++i]);}
+    else if (arg == std::string ("-l")) {log_fname = std::string(argv[++i]);}
 
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-x 3D data file(s)][-b box][-s scan][-l log] " << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-x 3D data file(s)][-b box][-s scan][-l log] " << std::endl;
       throw -1;
     }
   }
   
   if (  fname == ""){
-    vcl_cout << "Data File not specified" << vcl_endl; 
+    std::cout << "Data File not specified" << std::endl; 
     return(1);
   }
 
   vgl_box_3d<double> box;
   if (box_fname == "") {
     // visualize the whole area
-    vcl_cout << "BOX is empty, will show the whole 3D data" << vcl_endl;
+    std::cout << "BOX is empty, will show the whole 3D data" << std::endl;
     box.empty();
 
   } else {
-    vcl_ifstream box_file(box_fname.c_str());
+    std::ifstream box_file(box_fname.c_str());
     box.read(box_file);
     box_file.close();
-    vcl_cout << "BOX\n" << box << vcl_endl;
+    std::cout << "BOX\n" << box << std::endl;
     xscan_scan scan;
 
     if ((scan_fname != "") && (log_fname != "")){
-      vcl_ifstream scan_file(scan_fname.data());
+      std::ifstream scan_file(scan_fname.data());
       scan_file >> scan;
       scan_file.close();
       imgr_skyscan_reconlog header(log_fname.data(), scan);
@@ -151,16 +151,16 @@ int main(int argc, char** argv)
   vgl_box_3d<int> recon_box(box.min_x(), box.min_y(), box.min_z(), box.max_x(), 
     box.max_y(), box.max_z());
 
-  vcl_vector<double> field;
-  //vcl_ofstream fs("C:\\test_images\\filters\\mercox\\recon_experiments\\vol.txt");
-  vcl_ofstream fs("C:\\test_images\\filters\\newcast35um_reconstructed\\vol.txt");
+  std::vector<double> field;
+  //std::ofstream fs("C:\\test_images\\filters\\mercox\\recon_experiments\\vol.txt");
+  std::ofstream fs("C:\\test_images\\filters\\newcast35um_reconstructed\\vol.txt");
 
   vol3d_reader reader(fname, recon_box);
   vil3d_image_resource_sptr img_res_sptr = reader.vil_3d_image_resource();
   vil3d_image_view_base_sptr view_3d = img_res_sptr->get_view();
 
   for (unsigned k = 0; k < img_res_sptr->nk(); k++) {
-    fs << "z=" << img_res_sptr->nk() << vcl_endl;
+    fs << "z=" << img_res_sptr->nk() << std::endl;
     for (unsigned j = 0; j < img_res_sptr->nj(); j++) {
       for (unsigned i = 0; i < img_res_sptr->ni(); i++) {  
         if (view_3d->pixel_format() == VIL_PIXEL_FORMAT_BYTE) {
@@ -204,7 +204,7 @@ int main(int argc, char** argv)
             intensity = voxel_val;
             fs << intensity << " ";
         } else {
-          vcl_cerr << "Pixel Format " << view_3d->pixel_format() << " is not supported" ;
+          std::cerr << "Pixel Format " << view_3d->pixel_format() << " is not supported" ;
         }
 
         if(max_intensity < intensity)
@@ -213,9 +213,9 @@ int main(int argc, char** argv)
             min_intensity = intensity;
           field.push_back(intensity);
         }
-        fs << vcl_endl;
+        fs << std::endl;
       }
-      fs << vcl_endl;
+      fs << std::endl;
     }
 
   const size_t blocksize = field.size(); 
@@ -223,7 +223,7 @@ int main(int argc, char** argv)
 
   (void)memset(voxels, 0, blocksize);
 
-  vcl_cout << field.size() << vcl_endl;
+  std::cout << field.size() << std::endl;
   for(unsigned long i = 0; i < blocksize; i++) {
     voxels[i] = static_cast<uint8_t>((field[i] - min_intensity)*255/(max_intensity - min_intensity));
   }

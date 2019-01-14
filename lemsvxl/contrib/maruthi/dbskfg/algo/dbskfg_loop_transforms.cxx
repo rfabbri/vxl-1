@@ -27,7 +27,7 @@
 // bil headers
 #include <bil/algo/bil_color_conversions.h>
 // vcl headers
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 
 dbskfg_loop_transforms::dbskfg_loop_transforms
@@ -60,13 +60,13 @@ dbskfg_loop_transforms::~dbskfg_loop_transforms()
 }
 
 void dbskfg_loop_transforms::detect_loops(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects)
 {
 
     // Reset longest contour
     longest_contour_=1.0;
 
-    vcl_map<unsigned int,vcl_string> visited_links;
+    std::map<unsigned int,std::string> visited_links;
 
     for (dbskfg_composite_graph::edge_iterator eit =
              composite_graph_->edges_begin();
@@ -107,14 +107,14 @@ void dbskfg_loop_transforms::detect_loops(
 }
 
 void dbskfg_loop_transforms::detect_loops(
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
-    vcl_vector<dbskfg_composite_node_sptr>& con_endpoints)
+    std::vector<dbskfg_transform_descriptor_sptr>& objects,
+    std::vector<dbskfg_composite_node_sptr>& con_endpoints)
 {
    
     // Reset longest contour
     longest_contour_=1.0;
 
-    vcl_map<unsigned int,vcl_string> visited_links;
+    std::map<unsigned int,std::string> visited_links;
 
     for (unsigned int c=0; c <con_endpoints.size() ; ++c)
     {
@@ -179,19 +179,19 @@ void dbskfg_loop_transforms::detect_loops(
 
     // Create two maps to hold everything
     // Holds all shocks affected
-    vcl_map<unsigned int, dbskfg_shock_link*> shock_map;
-    vcl_map<unsigned int, vcl_string> visited_nodes;
-    vcl_map<unsigned int, vcl_string> contour_map;
-    vcl_map<unsigned int, vcl_string> contour_node_map;
-    vcl_map<unsigned int,dbskfg_composite_link_sptr> loop_segment_map;
+    std::map<unsigned int, dbskfg_shock_link*> shock_map;
+    std::map<unsigned int, std::string> visited_nodes;
+    std::map<unsigned int, std::string> contour_map;
+    std::map<unsigned int, std::string> contour_node_map;
+    std::map<unsigned int,dbskfg_composite_link_sptr> loop_segment_map;
 
 
     // Need to move over to original set
 
     // Define node/link iteraros for printing
-    vcl_vector<dbskfg_composite_link_sptr>::iterator lit;
+    std::vector<dbskfg_composite_link_sptr>::iterator lit;
 
-    vcl_map<unsigned int, unsigned int> local_map;
+    std::map<unsigned int, unsigned int> local_map;
 
 
     // loop endpoints
@@ -213,7 +213,7 @@ void dbskfg_loop_transforms::detect_loops(
         
     }
 
-    vcl_map<unsigned int, unsigned int>::iterator sit;
+    std::map<unsigned int, unsigned int>::iterator sit;
     for ( sit = local_map.begin() ; sit != local_map.end() ; ++sit)
     {
         transform->loop_endpoints_.erase(transform->loop_endpoints_.begin()+
@@ -279,7 +279,7 @@ void dbskfg_loop_transforms::detect_loops(
         if ( source_cnode->get_composite_degree() < 3 )
         {
             
-            vcl_vector<dbskfg_shock_link*> shocks_n = 
+            std::vector<dbskfg_shock_link*> shocks_n = 
                 source_cnode->shocks_affected();
             for ( unsigned int i(0); i < shocks_n.size() ; ++i)
             {
@@ -292,7 +292,7 @@ void dbskfg_loop_transforms::detect_loops(
         if ( target_cnode->get_composite_degree() < 3 )
         {
             
-            vcl_vector<dbskfg_shock_link*> shocks_n = 
+            std::vector<dbskfg_shock_link*> shocks_n = 
                 target_cnode->shocks_affected();
             for ( unsigned int i(0); i < shocks_n.size() ; ++i)
             {
@@ -303,7 +303,7 @@ void dbskfg_loop_transforms::detect_loops(
         }
 
 
-        vcl_vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
+        std::vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
         for ( unsigned int i(0); i < shocks_l.size() ; ++i)
         {
             
@@ -320,13 +320,13 @@ void dbskfg_loop_transforms::detect_loops(
 
 
     // Populate shock links affected
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator kit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator kit;
     for ( kit = shock_map.begin() ; kit != shock_map.end() ; ++kit)
     {   
         transform->shock_links_affected_.push_back((*kit).second);
     }
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
 
     //***************** Determine Contours Affected **************************
     for ( it = shock_map.begin() ; it != shock_map.end() ; ++it)
@@ -338,9 +338,9 @@ void dbskfg_loop_transforms::detect_loops(
              dbskfg_utilities::LL )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 lclinks = shock_link->left_contour_links();
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 rclinks = shock_link->right_contour_links();
                         
             for ( unsigned int i=0; i<lclinks.size() ; ++i)
@@ -376,7 +376,7 @@ void dbskfg_loop_transforms::detect_loops(
              dbskfg_utilities::RLLP )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 clinks = shock_link->right_contour_links();
                         
             for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -398,7 +398,7 @@ void dbskfg_loop_transforms::detect_loops(
              dbskfg_utilities::LLRP )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 clinks = shock_link->left_contour_links();
                         
             for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -425,17 +425,17 @@ void dbskfg_loop_transforms::detect_loops(
     // the local context and those on the border of the local context
     // Those on the outside will not have both source and target within
     // the merged local context
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         inner_shock_nodes;
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit1;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator snit1;
 
     for ( snit1 = shock_map.begin() ; snit1 != shock_map.end() ; ++snit1)
     {
         // Grab current shock link
         dbskfg_shock_link* shock_link = (*snit1).second;
 
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit2;
-        vcl_map<unsigned int,unsigned int> local_map;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator snit2;
+        std::map<unsigned int,unsigned int> local_map;
 
         for ( snit2 = shock_map.begin() ; snit2 != shock_map.end() ; ++snit2)
         {
@@ -468,7 +468,7 @@ void dbskfg_loop_transforms::detect_loops(
 
     // Now we need to filter out shock nodes that do not equal composite 
     // degree
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         ::iterator bit;
     
     for ( bit = inner_shock_nodes.begin() ; bit != inner_shock_nodes.end() 
@@ -594,7 +594,7 @@ void dbskfg_loop_transforms::detect_loops(
     //Loop over all shocks affected and compose polygon
     if ( shock_map.size() )
     {
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator pit;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator pit;
         pit=shock_map.begin();
 
         // Lets start with the first polygon for filling up local context
@@ -679,8 +679,8 @@ void dbskfg_loop_transforms::detect_loops(
 
 void dbskfg_loop_transforms::
 expand_link(dbskfg_composite_link_sptr link,
-            vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
-            vcl_map<unsigned int,vcl_string>& visited_links)
+            std::vector<dbskfg_transform_descriptor_sptr>& objects,
+            std::map<unsigned int,std::string>& visited_links)
 {
 
 
@@ -693,14 +693,14 @@ expand_link(dbskfg_composite_link_sptr link,
 
     // Create two maps to hold everything
     // Holds all shocks affected
-    vcl_map<unsigned int, dbskfg_shock_link*> shock_map;
-    vcl_map<unsigned int, vcl_string> visited_nodes;
-    vcl_map<unsigned int, vcl_string> contour_map;
-    vcl_map<unsigned int, vcl_string> contour_node_map;
+    std::map<unsigned int, dbskfg_shock_link*> shock_map;
+    std::map<unsigned int, std::string> visited_nodes;
+    std::map<unsigned int, std::string> contour_map;
+    std::map<unsigned int, std::string> contour_node_map;
 
     // Push back source and target to start of stack
     // Keep a stack for everything
-    vcl_vector<dbskfg_composite_node_sptr> stack;
+    std::vector<dbskfg_composite_node_sptr> stack;
 
     stack.push_back(link->source());
     stack.push_back(link->target());
@@ -774,14 +774,14 @@ expand_link(dbskfg_composite_link_sptr link,
     }
 
     // Populate shock links affected
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it = shock_map.begin() ; it != shock_map.end() ; ++it)
     {   
         transform->shock_links_affected_.push_back((*it).second);
     }
 
     //***************** Determine Contour Links to Remove *********************
-    vcl_map<unsigned int,dbskfg_composite_link_sptr> loop_segment_map;
+    std::map<unsigned int,dbskfg_composite_link_sptr> loop_segment_map;
 
     for ( unsigned int d=0; d < transform->
               contours_to_remove_.size(); ++d)
@@ -881,7 +881,7 @@ expand_link(dbskfg_composite_link_sptr link,
 
     }
 
-    vcl_map<unsigned int,dbskfg_composite_link_sptr>::iterator sit;
+    std::map<unsigned int,dbskfg_composite_link_sptr>::iterator sit;
     for ( sit = loop_segment_map.begin() ; sit != loop_segment_map.end() ; 
           ++sit)
     {
@@ -899,9 +899,9 @@ expand_link(dbskfg_composite_link_sptr link,
              dbskfg_utilities::LL )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 lclinks = shock_link->left_contour_links();
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 rclinks = shock_link->right_contour_links();
                         
             for ( unsigned int i=0; i<lclinks.size() ; ++i)
@@ -937,7 +937,7 @@ expand_link(dbskfg_composite_link_sptr link,
              dbskfg_utilities::RLLP )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 clinks = shock_link->right_contour_links();
                         
             for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -959,7 +959,7 @@ expand_link(dbskfg_composite_link_sptr link,
              dbskfg_utilities::LLRP )
         {
 
-            vcl_vector<dbskfg_composite_link_sptr>
+            std::vector<dbskfg_composite_link_sptr>
                 clinks = shock_link->left_contour_links();
                         
             for ( unsigned int i=0; i<clinks.size() ; ++i)
@@ -986,17 +986,17 @@ expand_link(dbskfg_composite_link_sptr link,
     // the local context and those on the border of the local context
     // Those on the outside will not have both source and target within
     // the merged local context
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         inner_shock_nodes;
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit1;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator snit1;
 
     for ( snit1 = shock_map.begin() ; snit1 != shock_map.end() ; ++snit1)
     {
         // Grab current shock link
         dbskfg_shock_link* shock_link = (*snit1).second;
 
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit2;
-        vcl_map<unsigned int,unsigned int> local_map;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator snit2;
+        std::map<unsigned int,unsigned int> local_map;
 
         for ( snit2 = shock_map.begin() ; snit2 != shock_map.end() ; ++snit2)
         {
@@ -1029,7 +1029,7 @@ expand_link(dbskfg_composite_link_sptr link,
 
     // Now we need to filter out shock nodes that do not equal composite 
     // degree
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         ::iterator bit;
     
     for ( bit = inner_shock_nodes.begin() ; bit != inner_shock_nodes.end() 
@@ -1155,7 +1155,7 @@ expand_link(dbskfg_composite_link_sptr link,
     //Loop over all shocks affected and compose polygon
     if ( shock_map.size() )
     {
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator pit;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator pit;
         pit=shock_map.begin();
 
         // Lets start with the first polygon for filling up local context
@@ -1279,7 +1279,7 @@ bool dbskfg_loop_transforms::determine_contour_cost
 
     // keep a bsol curve
     bsol_intrinsic_curve_2d contour;
-    vcl_vector<vgl_point_2d<double> > contour_points;
+    std::vector<vgl_point_2d<double> > contour_points;
     double contour_length(0.0);
 
     // Keep a vector of points
@@ -1362,13 +1362,13 @@ bool dbskfg_loop_transforms::determine_contour_cost
     // Find closest points to polygon
     vgl_point_2d<double> p1 = vgl_closest_point(transform->poly_,
                                                 ep1);
-    vcl_stringstream p1_stream;
+    std::stringstream p1_stream;
     p1_stream<<p1;
 
     // Find closest points to polygon
     vgl_point_2d<double> p2 = vgl_closest_point(transform->poly_,
                                                 ep2);
-    vcl_stringstream p2_stream;
+    std::stringstream p2_stream;
     p2_stream<<p2;
 
     // Determine index for p1 and p2
@@ -1378,7 +1378,7 @@ bool dbskfg_loop_transforms::determine_contour_cost
     {
         vgl_point_2d<double> c0(transform->poly_[0][b].x(),
                                 transform->poly_[0][b].y());        
-        vcl_stringstream temp;
+        std::stringstream temp;
         temp<<c0;
         
         if ( c0 == p1 || p1_stream.str() == temp.str())
@@ -1393,13 +1393,13 @@ bool dbskfg_loop_transforms::determine_contour_cost
 
     }
 
-    unsigned int start=vcl_min(index_p1,index_p2);
-    unsigned int stop =vcl_max(index_p1,index_p2);
+    unsigned int start=std::min(index_p1,index_p2);
+    unsigned int stop =std::max(index_p1,index_p2);
 
     // Means the start of the curve is closer 
     if ( index_p1 < index_p2 )
     {
-        vcl_vector<vgl_point_2d<double> >::reverse_iterator it;
+        std::vector<vgl_point_2d<double> >::reverse_iterator it;
         for ( it = contour_points.rbegin() ; 
               it != contour_points.rend() ; ++it)
         {
@@ -1417,7 +1417,7 @@ bool dbskfg_loop_transforms::determine_contour_cost
     }
     else
     {
-        vcl_vector<vgl_point_2d<double> >::iterator it;
+        std::vector<vgl_point_2d<double> >::iterator it;
         for ( it = contour_points.begin() ; 
               it != contour_points.end() ; ++it)
         {
@@ -1438,7 +1438,7 @@ bool dbskfg_loop_transforms::determine_contour_cost
     // Means the start of the curve is closer 
     if ( index_p1 < index_p2 )
     {
-        vcl_vector<vgl_point_2d<double> >::reverse_iterator it;
+        std::vector<vgl_point_2d<double> >::reverse_iterator it;
         for ( it = contour_points.rbegin() ; 
               it != contour_points.rend() ; ++it)
         {
@@ -1469,7 +1469,7 @@ bool dbskfg_loop_transforms::determine_contour_cost
     }
     else
     {
-        vcl_vector<vgl_point_2d<double> >::iterator it;
+        std::vector<vgl_point_2d<double> >::iterator it;
         for ( it = contour_points.begin() ; 
               it != contour_points.end() ; ++it)
         {
@@ -1507,8 +1507,8 @@ double dbskfg_loop_transforms::determine_app_cost(
 {
 
     // Create a vector of all the points in the scanline
-    vcl_vector<vgl_point_2d<double> > poly1_points;
-    vcl_vector<vgl_point_2d<double> > poly2_points;
+    std::vector<vgl_point_2d<double> > poly1_points;
+    std::vector<vgl_point_2d<double> > poly2_points;
 
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly1, false);  
@@ -1613,16 +1613,16 @@ double dbskfg_loop_transforms::determine_app_cost(
 
 void dbskfg_loop_transforms::expand_node(
     dbskfg_composite_node_sptr node,
-    vcl_vector<dbskfg_composite_node_sptr>& stack,
-    vcl_map<unsigned int,vcl_string>& visited_nodes,
-    vcl_map<unsigned int,vcl_string>& visited_links,
-    vcl_map<unsigned int,dbskfg_shock_link*>& shock_map)
+    std::vector<dbskfg_composite_node_sptr>& stack,
+    std::map<unsigned int,std::string>& visited_nodes,
+    std::map<unsigned int,std::string>& visited_links,
+    std::map<unsigned int,dbskfg_shock_link*>& shock_map)
 {
 
     // Grab all shocks affected for this node
     dbskfg_contour_node* cnode = dynamic_cast<dbskfg_contour_node*>(&(*node));
 
-    vcl_vector<dbskfg_shock_link*> shocks = cnode->shocks_affected();
+    std::vector<dbskfg_shock_link*> shocks = cnode->shocks_affected();
     for ( unsigned int i(0); i < shocks.size() ; ++i)
     {
 
@@ -1646,7 +1646,7 @@ void dbskfg_loop_transforms::expand_node(
            
             if ( cnode->get_composite_degree() < 3 )
             {
-                vcl_vector<dbskfg_shock_link*> shocks_n = 
+                std::vector<dbskfg_shock_link*> shocks_n = 
                     cnode->shocks_affected();
                 for ( unsigned int i(0); i < shocks_n.size() ; ++i)
                 {
@@ -1666,7 +1666,7 @@ void dbskfg_loop_transforms::expand_node(
             dbskfg_contour_link* clink = 
                 dynamic_cast<dbskfg_contour_link*>(&(*link));
 
-            vcl_vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
+            std::vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
             for ( unsigned int i(0); i < shocks_l.size() ; ++i)
             {
 
@@ -1695,7 +1695,7 @@ void dbskfg_loop_transforms::expand_node(
             if ( cnode->get_composite_degree() < 3 )
             {
 
-                vcl_vector<dbskfg_shock_link*> shocks_n = 
+                std::vector<dbskfg_shock_link*> shocks_n = 
                     cnode->shocks_affected();
                 for ( unsigned int i(0); i < shocks_n.size() ; ++i)
                 {
@@ -1715,7 +1715,7 @@ void dbskfg_loop_transforms::expand_node(
             dbskfg_contour_link* clink = 
                 dynamic_cast<dbskfg_contour_link*>(&(*link));
 
-            vcl_vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
+            std::vector<dbskfg_shock_link*> shocks_l = clink->shocks_affected();
             for ( unsigned int i(0); i < shocks_l.size() ; ++i)
             {
 

@@ -1,7 +1,7 @@
 // This is mleotta/cmd/cluster2vrml.cxx
 
 #include <vul/vul_arg.h>
-#include <vcl_iomanip.h>
+#include <iomanip>
 #include <vbl/vbl_triple.h>
 
 #include <modrec/modrec_feature_3d.h>
@@ -10,11 +10,11 @@
 #include "cluster_io.h"
 
 
-void write_vrml_feature(vcl_ostream& os, const modrec_feature_3d& f, unsigned view)
+void write_vrml_feature(std::ostream& os, const modrec_feature_3d& f, unsigned view)
 {
   double colors[][3] = {{1,0,0}, {.5,0,0}, {1,1,0}, {1,.5, 0}, {.5, 1, 0}, {.5, .5, 0},
     {0,1,0}, {0,.5,0}, {0,0,1}, {0,0,.5}, {.5,0,.5}, {0, .5, .5}, {.5, 0, 1}};
-  //vcl_cout << "Z = " << f.orientation() * vgl_vector_3d<double>(0,0,1) << vcl_endl;
+  //std::cout << "Z = " << f.orientation() * vgl_vector_3d<double>(0,0,1) << std::endl;
   vgl_point_3d<double> pos = f.position();
   vnl_vector_fixed<double, 3> axis = f.orientation().axis();
   double angle = f.orientation().angle();
@@ -78,25 +78,25 @@ void write_vrml_feature(vcl_ostream& os, const modrec_feature_3d& f, unsigned vi
 
 
 template <unsigned dim>
-void write_vrml(const vcl_string& feat_file,
-                const vcl_string& clust_file, int min, int max)
+void write_vrml(const std::string& feat_file,
+                const std::string& clust_file, int min, int max)
 {
-  vcl_vector<modrec_desc_feature_3d<dim> > features;
+  std::vector<modrec_desc_feature_3d<dim> > features;
   typedef vbl_triple<unsigned,unsigned,unsigned> utriple;
-  vcl_vector<utriple> idx_array;  
+  std::vector<utriple> idx_array;  
   read_features(feat_file, features, idx_array);
 
-  vcl_cout << "read " << features.size() << vcl_endl;
+  std::cout << "read " << features.size() << std::endl;
 
-  vcl_vector<vcl_vector<unsigned> > clusters_idx;
+  std::vector<std::vector<unsigned> > clusters_idx;
   read_clusters(clust_file, clusters_idx);
 
 
   for(unsigned n=min; n<=max; ++n){
-    vcl_stringstream name;
-    name << "features" << vcl_setfill('0') << vcl_setw(2) << n << ".wrl";
-    vcl_ofstream ofs(name.str().c_str());
-    vcl_vector<unsigned> c = *(clusters_idx.end()-n);
+    std::stringstream name;
+    name << "features" << std::setfill('0') << std::setw(2) << n << ".wrl";
+    std::ofstream ofs(name.str().c_str());
+    std::vector<unsigned> c = *(clusters_idx.end()-n);
     ofs << "#VRML V2.0 utf8\n\n";
     for(unsigned i=0; i<c.size(); ++i){
       write_vrml_feature(ofs, features[c[i]], idx_array[c[i]].first);
@@ -109,8 +109,8 @@ void write_vrml(const vcl_string& feat_file,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_feat_file("-feat3d", "path to 3d features", "");
-  vul_arg<vcl_string>  a_clust_file("-clusters", "path to clusters index file", "");
+  vul_arg<std::string>  a_feat_file("-feat3d", "path to 3d features", "");
+  vul_arg<std::string>  a_clust_file("-clusters", "path to clusters index file", "");
   vul_arg<int>         a_range_min("-min", "minimum cluster index", 1);
   vul_arg<int>         a_range_max("-max", "minimum cluster index", 20);
   vul_arg<unsigned>    a_dim("-dim", "feature descriptor dimension", 128);
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
     }
     break;
   default:
-      vcl_cerr << "features with dimension "<<a_dim()<<" not supported" << vcl_endl;
+      std::cerr << "features with dimension "<<a_dim()<<" not supported" << std::endl;
   }
 
 

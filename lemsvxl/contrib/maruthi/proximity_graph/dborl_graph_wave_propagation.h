@@ -15,9 +15,9 @@
 // \endverbatim
 
 #include <proximity_graph/dborl_proximity_graph.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_list.h>
+#include <map>
+#include <utility>
+#include <list>
 
 //: This process is for matching extrinsic shock graphs
 class dborl_graph_wave_propagation
@@ -49,25 +49,25 @@ public:
     ~dborl_graph_wave_propagation(){};
 
     // Read Graph
-    void find_nn(vcl_string xml_graph_file,
-                 vcl_string dataset_file,
-                 vcl_string query_file,
-                 vcl_string seed_file,
-                 vcl_string stats_file,
+    void find_nn(std::string xml_graph_file,
+                 std::string dataset_file,
+                 std::string query_file,
+                 std::string seed_file,
+                 std::string stats_file,
                  Search_type search_flag,
                  double tau,
                  bool verbose);
 
-    void test_reachability(vcl_string xml_graph_file,
-                           vcl_string dataset_file,
-                           vcl_string stats_file,
+    void test_reachability(std::string xml_graph_file,
+                           std::string dataset_file,
+                           std::string stats_file,
                            Search_type search_flag,
                            double tau,
                            bool verbose);
 
-    void optimal_seed_selection(vcl_string xml_graph_file,
-                                vcl_string dataset_file,
-                                vcl_string stats_file,
+    void optimal_seed_selection(std::string xml_graph_file,
+                                std::string dataset_file,
+                                std::string stats_file,
                                 Search_type search_flag,
                                 double tau,
                                 bool verbose);
@@ -79,9 +79,9 @@ private:
 
     // Read in datafiles
     // Helper method to read in datafiles
-    void read_files(vcl_string dataset_file, 
-                    vcl_string query_file,
-                    vcl_string seed_file);
+    void read_files(std::string dataset_file, 
+                    std::string query_file,
+                    std::string seed_file);
 
     void find_vertex_seeds();
 
@@ -98,7 +98,7 @@ private:
         closest_vertex_neighbor(dborl_proximity_graph::Vertex incoming_node, 
                                 unsigned int query_index);
 
-    vcl_string find_start_seed(unsigned int query_index);
+    std::string find_start_seed(unsigned int query_index);
 
     void wavefront_insert(dborl_proximity_graph::Vertex element,
                           double distance_to_query);
@@ -119,16 +119,16 @@ private:
     bool verbose_;
 
     // List of query names
-    vcl_vector<vcl_string> queries_;
+    std::vector<std::string> queries_;
 
     // List of seed names
-    vcl_map<vcl_string,dborl_proximity_graph::Vertex> vertex_seeds_;
+    std::map<std::string,dborl_proximity_graph::Vertex> vertex_seeds_;
 
     // List of visit status
-    vcl_map<vcl_string,Visit_Status> visitor_status_;
+    std::map<std::string,Visit_Status> visitor_status_;
 
     // List of seed names
-    vcl_vector<vcl_string> seeds_;
+    std::vector<std::string> seeds_;
 
     // List of similarity matrices
     vnl_matrix<double> query_sim_matrix_;
@@ -143,10 +143,10 @@ private:
     unsigned int number_of_queries_;
 
     // Output statistics file
-    vcl_string stats_file_;
+    std::string stats_file_;
 
     // Define wavefront
-    vcl_list< vcl_pair<dborl_proximity_graph::Vertex,double> > wavefront_;
+    std::list< std::pair<dborl_proximity_graph::Vertex,double> > wavefront_;
 
     // Define proximity graph
     dborl_proximity_graph::Undirected_Graph proximity_graph_;

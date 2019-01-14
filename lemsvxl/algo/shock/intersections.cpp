@@ -5,9 +5,9 @@
 //MSGOUT
 #include <extrautils/msgout.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 //using namespace std;
-#include <vcl_cmath.h>
+#include <cmath>
 //#include <stdio.h>
 
 #include "ishock-common.h"
@@ -33,20 +33,20 @@ bool solveTrig (double A, double B, double C,
   if (A==0)
     return false;
    if (A>=0)
-      alpha = vcl_atan(B/A);
+      alpha = std::atan(B/A);
    else
-      alpha = vcl_atan(B/A) + M_PI;
+      alpha = std::atan(B/A) + M_PI;
 
-  //If vcl_acos(cos_value) not correct, return false.
-  double cos_value = C/vcl_sqrt(A*A + B*B);
+  //If std::acos(cos_value) not correct, return false.
+  double cos_value = C/std::sqrt(A*A + B*B);
   if (cos_value>1 || cos_value<-1)
     return false;
 
   //two possible solutions
-   ////tau1 = angle0To2Pi(vcl_acos(C/vcl_sqrt(A*A + B*B)) + alpha);
-   ////tau2 = angle0To2Pi(-vcl_acos(C/vcl_sqrt(A*A + B*B)) + alpha);
-   tau1 = tau02Pi(vcl_acos(C/vcl_sqrt(A*A + B*B)) + alpha);
-   tau2 = tau02Pi(-vcl_acos(C/vcl_sqrt(A*A + B*B)) + alpha);
+   ////tau1 = angle0To2Pi(std::acos(C/std::sqrt(A*A + B*B)) + alpha);
+   ////tau2 = angle0To2Pi(-std::acos(C/std::sqrt(A*A + B*B)) + alpha);
+   tau1 = tau02Pi(std::acos(C/std::sqrt(A*A + B*B)) + alpha);
+   tau2 = tau02Pi(-std::acos(C/std::sqrt(A*A + B*B)) + alpha);
 
   //these are predefined relationships
   ////tau1t = angle0To2Pi(tau1 - theta);
@@ -96,8 +96,8 @@ bool solveEq (double A, double B, double C,
     sol2 = 0;
    }
   else {
-    sol1 = ( -B + vcl_sqrt(delta) )/(2*A);
-    sol2 = ( -B - vcl_sqrt(delta) )/(2*A);
+    sol1 = ( -B + std::sqrt(delta) )/(2*A);
+    sol2 = ( -B - std::sqrt(delta) )/(2*A);
   }
 
   //compute the other tau
@@ -359,11 +359,11 @@ IntrinsicIntersection ComputeIntersection
   }
 
   //2)Compute tau, taut, and R
-  TAU_TYPE tau = vcl_atan((vcl_cos(theta)- ct/c)/-vcl_sin(theta));
+  TAU_TYPE tau = std::atan((std::cos(theta)- ct/c)/-std::sin(theta));
   TAU_TYPE taut = tau02Pi (tau - theta);
 
    //3)Set intersection parameters
-  intersection.R = c/vcl_cos(tau);
+  intersection.R = c/std::cos(tau);
   assert (intersection.R >=0);
 
    intersection.LSLtau = shL->LTau(taut);
@@ -416,7 +416,7 @@ IntrinsicIntersection ComputeIntersection
     return intersection;
 
   //3)Successful intersection
-  intersection.R = ct/vcl_cos(taut);
+  intersection.R = ct/std::cos(taut);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -458,11 +458,11 @@ IntrinsicIntersection ComputeIntersection
     return intersection;
 
   //2)extreme case.
-  if (AisEq(vcl_cos(taut), 0))
+  if (AisEq(std::cos(taut), 0))
     return intersection;
 
   //3)Successful intersection
-  intersection.R = ct/vcl_cos(taut);
+  intersection.R = ct/std::cos(taut);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -486,8 +486,8 @@ IntrinsicIntersection ComputeIntersection
   //ddtheta is more than the Point Case
    ANGLE_TYPE theta = CCW (shR->u(), shL->u()+M_PI);
 
-   double A = vcl_cos(theta) - ct/(2*c);
-   double B = vcl_sin(theta);
+   double A = std::cos(theta) - ct/(2*c);
+   double B = std::sin(theta);
    double C = ct/(2*c);
 
    TAU_TYPE taut_max = shL->maxRTau();
@@ -528,13 +528,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
    if (s>0){
-     A = ct*c/b2 - vcl_cos(theta);
-    B = -vcl_sin(theta);
+     A = ct*c/b2 - std::cos(theta);
+    B = -std::sin(theta);
     C = a*ct/b2;
   }
   else {
-    A = ct*c/b2 + vcl_cos(theta);
-    B = vcl_sin(theta);
+    A = ct*c/b2 + std::cos(theta);
+    B = std::sin(theta);
     C = a*ct/b2;
   }
 
@@ -599,7 +599,7 @@ IntrinsicIntersection ComputeIntersection
     return intersection;
 
   //3)Successful intersection
-  intersection.R = c/vcl_cos(tau);
+  intersection.R = c/std::cos(tau);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -878,11 +878,11 @@ IntrinsicIntersection ComputeIntersection
     return intersection;
 
   //2)extreme case
-  if (AisEq(vcl_cos(tau), 0))
+  if (AisEq(std::cos(tau), 0))
     return intersection;
 
   //3)Successful intersection
-  intersection.R = c/vcl_cos(tau);
+  intersection.R = c/std::cos(tau);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -1113,8 +1113,8 @@ IntrinsicIntersection ComputeIntersection
 
    ANGLE_TYPE theta = CCW(shR->u(), shL->u());
 
-   double A = 2*ct/c - vcl_cos(theta);
-   double B = -vcl_sin(theta);
+   double A = 2*ct/c - std::cos(theta);
+   double B = -std::sin(theta);
    double C = 1;
 
    TAU_TYPE taut_max = shL->maxRTau();
@@ -1293,8 +1293,8 @@ IntrinsicIntersection ComputeIntersection
 
       ANGLE_TYPE theta = CCW(shR->u(), shL->u());
 
-      double A = vcl_cos(theta) - ct/c;
-      double B = vcl_sin(theta);
+      double A = std::cos(theta) - ct/c;
+      double B = std::sin(theta);
       double C = ct/c - 1;
 
      TAU_TYPE taut_max = shL->maxRTau();
@@ -1351,13 +1351,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (s>0){
-    A = vcl_cos(theta) - 2*c*ct/b2;
-    B = vcl_sin(theta);
+    A = std::cos(theta) - 2*c*ct/b2;
+    B = std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {
-    A = vcl_cos(theta) + 2*c*ct/b2;
-    B = vcl_sin(theta);
+    A = std::cos(theta) + 2*c*ct/b2;
+    B = std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -1396,7 +1396,7 @@ IntrinsicIntersection ComputeIntersection
    IntrinsicIntersection intersection;
 
    //if LINE-LINE shock is not parallel
-   if (vcl_fabs(shR->sigma())<1){
+   if (std::fabs(shR->sigma())<1){
 
     int nut = shL->nu();
 
@@ -1531,13 +1531,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (st>0) {
-    A = ct*c*vcl_cos(theta) - bt2;
-    B = ct*c*vcl_sin(theta);
+    A = ct*c*std::cos(theta) - bt2;
+    B = ct*c*std::sin(theta);
     C = -at*c;
   }
   else {
-    A = ct*c*vcl_cos(theta) + bt2;
-    B = ct*c*vcl_sin(theta);
+    A = ct*c*std::cos(theta) + bt2;
+    B = ct*c*std::sin(theta);
     C = at*c;  // (s<0, nu<0) old:at*c ???
   }
 
@@ -1660,13 +1660,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {
-    A = -ct*vcl_cos(theta) - bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 
@@ -1815,13 +1815,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {
-    A = -ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 
@@ -1928,7 +1928,7 @@ IntrinsicIntersection ComputeIntersection
    IntrinsicIntersection intersection;
 
    //if LINE-LINE shock is not parallel
-   if (vcl_fabs(shL->sigma())<1) {
+   if (std::fabs(shL->sigma())<1) {
 
     int nu = shR->nu();
 
@@ -2005,9 +2005,9 @@ IntrinsicIntersection ComputeIntersection
    intersection.RSRtau = shR->RTau(tau);
 
   //if (shR->lltype==NEAR_PARALLEL)
-  //  intersection.R = vcl_fabs(shR->r(intersection.RSLtau));
+  //  intersection.R = std::fabs(shR->r(intersection.RSLtau));
   //else
-    intersection.R = vcl_fabs(shL->r(intersection.LSLtau));
+    intersection.R = std::fabs(shL->r(intersection.LSLtau));
 
    intersection.newLtau = intersection.LSLtau;
    intersection.newRtau = intersection.RSRtau;
@@ -2028,7 +2028,7 @@ IntrinsicIntersection ComputeIntersection
    IntrinsicIntersection intersection;
 
    //if LINE-LINE shock is not parallel
-   if (vcl_fabs(shL->sigma())<1) {
+   if (std::fabs(shL->sigma())<1) {
 
     int s = shR->s();
     int nud = shR->nud();
@@ -2213,13 +2213,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (s>0){
-    A = (st*nudt)*vcl_cos(theta) - 2*c*ct/b2;
-    B = (st*nudt)*vcl_sin(theta);
+    A = (st*nudt)*std::cos(theta) - 2*c*ct/b2;
+    B = (st*nudt)*std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {
-    A = (st*nudt)*vcl_cos(theta) + 2*c*ct/b2;
-    B = (st*nudt)*vcl_sin(theta);
+    A = (st*nudt)*std::cos(theta) + 2*c*ct/b2;
+    B = (st*nudt)*std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -2259,7 +2259,7 @@ IntrinsicIntersection ComputeIntersection
   IntrinsicIntersection intersection;
 
   //if LINE-LINE shock is not parallel
-  if (vcl_fabs(shR->sigma())<1) {
+  if (std::fabs(shR->sigma())<1) {
 
     int st = shL->s();
     int nudt = shL->nud();
@@ -2440,8 +2440,8 @@ IntrinsicIntersection ComputeIntersection
 
       ANGLE_TYPE theta = CCW(shR->u(), shL->u());
 
-      double A = D1t*vcl_cos(theta) - D1*ct/c;
-      double B = D1t*vcl_sin(theta);
+      double A = D1t*std::cos(theta) - D1*ct/c;
+      double B = D1t*std::sin(theta);
       double C = ct/c - 1;
 
      TAU_TYPE taut_max = shL->maxRTau();
@@ -2503,13 +2503,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (s>0){
-    A = (st*nud)*vcl_cos(theta) - 2*c*ct/b2;
-    B = (st*nud)*vcl_sin(theta);
+    A = (st*nud)*std::cos(theta) - 2*c*ct/b2;
+    B = (st*nud)*std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {
-    A = (st*nud)*vcl_cos(theta) + 2*c*ct/b2;
-    B = (st*nud)*vcl_sin(theta);
+    A = (st*nud)*std::cos(theta) + 2*c*ct/b2;
+    B = (st*nud)*std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -2644,13 +2644,13 @@ IntrinsicIntersection ComputeIntersection
 
    double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {
-    A = -ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 
@@ -2807,25 +2807,25 @@ void set_AAA_PAA_APA_PAP_AAP_ABCs (int s, int st, ANGLE_TYPE theta,
 {
   if (st==1) {
     if (s==1) {
-      A = bt2*c - b2*ct*vcl_cos(theta);
-      B = -b2*ct*vcl_sin(theta);
+      A = bt2*c - b2*ct*std::cos(theta);
+      B = -b2*ct*std::sin(theta);
       C = b2*at + bt2*a;
     }
     else {
-      A = bt2*c + b2*ct*vcl_cos(theta);
-      B = b2*ct*vcl_sin(theta);
+      A = bt2*c + b2*ct*std::cos(theta);
+      B = b2*ct*std::sin(theta);
       C = -b2*at + bt2*a;
     }
   }
   else {
     if (s==1) {
-      A = bt2*c + b2*ct*vcl_cos(theta);
-      B = b2*ct*vcl_sin(theta);
+      A = bt2*c + b2*ct*std::cos(theta);
+      B = b2*ct*std::sin(theta);
       C = b2*at + bt2*a;
     }
     else {
-      A = bt2*c - b2*ct*vcl_cos(theta);
-      B = -b2*ct*vcl_sin(theta);
+      A = bt2*c - b2*ct*std::cos(theta);
+      B = -b2*ct*std::sin(theta);
       C = bt2*a - b2*at;
     }
   }

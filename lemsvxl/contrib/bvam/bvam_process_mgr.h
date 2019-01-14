@@ -10,8 +10,8 @@ public:
   static bvam_process_mgr* instance();
   virtual ~bvam_process_mgr();
 
-  //void register_process(vcl_string appear_model, bvam_processor_interf* processor);
-  bool init(vcl_string config_XML);
+  //void register_process(std::string appear_model, bvam_processor_interf* processor);
+  bool init(std::string config_XML);
   bool run();
 protected:
   bvam_process_mgr();
@@ -20,7 +20,7 @@ protected:
   bvam_io_config_parser* parser_;
 
 private:
-  bvam_io_config_parser* parse_config(vcl_string fname);
+  bvam_io_config_parser* parse_config(std::string fname);
   bool schedule(bvam_io_schedule schedule, bvam_image_schedule& s);
 };
 

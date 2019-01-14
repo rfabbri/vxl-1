@@ -5,9 +5,9 @@
 #ifndef dbsk3d_sg_sa_h_
 #define dbsk3d_sg_sa_h_
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_graph.h>
 #include <dbsk3d/dbsk3d_fs_vertex.h>
@@ -20,7 +20,7 @@ class dbsk3d_sg_sa : public dbmsh3d_graph
 {
 protected:
   //: Datastructure for each fs_vertex
-  vcl_map<int, dbsk3d_fs_vertex*> FV_map_;
+  std::map<int, dbsk3d_fs_vertex*> FV_map_;
 
   int     FV_id_counter_;
   float   median_edge_len_;
@@ -35,7 +35,7 @@ public:
   void clear () {
     _clear_edgemap ();
 
-    vcl_map<int, dbsk3d_fs_vertex*>::iterator it = FV_map_.begin();
+    std::map<int, dbsk3d_fs_vertex*>::iterator it = FV_map_.begin();
     for (; it != FV_map_.end(); it++) {
       dbsk3d_fs_vertex* FV = (*it).second;
 
@@ -69,7 +69,7 @@ public:
     return median_edge_len_;
   }
 
-  vcl_map<int, dbsk3d_fs_vertex*>& FV_map () {
+  std::map<int, dbsk3d_fs_vertex*>& FV_map () {
     return FV_map_;
   }
 
@@ -100,7 +100,7 @@ public:
   }
 
   dbsk3d_fs_vertex* FV_map (const int i) {
-    vcl_map<int, dbsk3d_fs_vertex*>::iterator it = FV_map_.find (i);
+    std::map<int, dbsk3d_fs_vertex*>::iterator it = FV_map_.find (i);
     if (it == FV_map_.end())
       return NULL;    
     return (*it).second;
@@ -117,9 +117,9 @@ public:
   void _add_FV (const dbsk3d_fs_vertex* FV) {
     int id = FV->id();
     ///assert (FV_map(id) == NULL); //Make sure there is no duplicate in the map. !!!
-    FV_map_.insert (vcl_pair<int, dbsk3d_fs_vertex*> (FV->id(), (dbsk3d_fs_vertex*) FV));
+    FV_map_.insert (std::pair<int, dbsk3d_fs_vertex*> (FV->id(), (dbsk3d_fs_vertex*) FV));
 
-    vcl_map<int, dbsk3d_fs_vertex*>::reverse_iterator rit = FV_map_.rbegin();
+    std::map<int, dbsk3d_fs_vertex*>::reverse_iterator rit = FV_map_.rbegin();
     int rid = (*rit).second->id();
     assert (id <= rid);
     if (FV_id_counter_ <= rid)

@@ -18,7 +18,7 @@
 mleotta_video_slice_process::mleotta_video_slice_process()
 {  
   if( !parameters()->add( "Slice Row" ,      "-row" ,  (unsigned int)0   ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -30,7 +30,7 @@ mleotta_video_slice_process::~mleotta_video_slice_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 mleotta_video_slice_process::name()
 {
   return "Video Slice";
@@ -54,18 +54,18 @@ mleotta_video_slice_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > mleotta_video_slice_process::get_input_type()
+std::vector< std::string > mleotta_video_slice_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > mleotta_video_slice_process::get_output_type()
+std::vector< std::string > mleotta_video_slice_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -84,7 +84,7 @@ bool
 mleotta_video_slice_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In mleotta_video_slice_process::execute() - "
+    std::cout << "In mleotta_video_slice_process::execute() - "
              << "not exactly one input frame\n";
     return false;
   }

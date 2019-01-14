@@ -32,7 +32,7 @@ dbbgm_hmm_train_process::dbbgm_hmm_train_process()
 {
   if( !parameters()->add( "Use Epipolar Map" ,     "-epimap" ,  false     )  ||
       !parameters()->add( "Num Epipolar Bins" ,    "-num_epi_bins" ,  (unsigned int)256 )){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -52,7 +52,7 @@ dbbgm_hmm_train_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_hmm_train_process::name()
 {
   return "HMM Train Model";
@@ -76,9 +76,9 @@ dbbgm_hmm_train_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_hmm_train_process::get_input_type()
+std::vector< std::string > dbbgm_hmm_train_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
@@ -89,9 +89,9 @@ vcl_vector< vcl_string > dbbgm_hmm_train_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_hmm_train_process::get_output_type()
+std::vector< std::string > dbbgm_hmm_train_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -101,7 +101,7 @@ bool
 dbbgm_hmm_train_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_hmm_train_process::execute() - "
+    std::cout << "In dbbgm_hmm_train_process::execute() - "
              << "not exactly one input image \n";
     return false;
   }
@@ -268,7 +268,7 @@ dbbgm_hmm_train_process::finish()
       break;
   }
   if(valid_ind >= input_data_.size()){
-    vcl_cerr << "Error: couldn't find data in dbbgm_hmm_train_process::finish()"<<vcl_endl;
+    std::cerr << "Error: couldn't find data in dbbgm_hmm_train_process::finish()"<<std::endl;
     return false;
   }
 

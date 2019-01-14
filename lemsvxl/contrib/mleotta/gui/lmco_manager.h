@@ -12,7 +12,7 @@
 //  Modifications:
 // \endverbatim
 //-----------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 #include <vgui/vgui_range_map_params_sptr.h>
@@ -55,10 +55,10 @@ class lmco_manager : public vgui_wrapper_tableau
   void set_options();
   
   //: compute mutual info of the data using the active method
-  double compute_mi(const vcl_vector<vcl_vector<double> >& d1_ir,
-                    const vcl_vector<vcl_vector<double> >& d2_ir,
-                    const vcl_vector<vcl_vector<double> >& d1_eo,
-                    const vcl_vector<vcl_vector<double> >& d2_eo);
+  double compute_mi(const std::vector<std::vector<double> >& d1_ir,
+                    const std::vector<std::vector<double> >& d2_ir,
+                    const std::vector<std::vector<double> >& d1_eo,
+                    const std::vector<std::vector<double> >& d2_eo);
   
   enum mi_method {EO, IR, SUM, POLAR};
 

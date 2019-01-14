@@ -164,10 +164,10 @@ merge_with(dbsk2d_bnd_vertex_sptr other)
 //: print
 // inherited. Need rewrite.
 void dbsk2d_bnd_vertex::
-print(vcl_ostream & os) const
+print(std::ostream & os) const
 {
   os << "<" << this->is_a() << " " << (void const *)this <<
-    "> with id " << this->get_id() << vcl_endl;
+    "> with id " << this->get_id() << std::endl;
   os << "- bpoint (" << this->bpoint()->is_a() <<
     "  " << (void const*)(this->bpoint()) << 
     ") with id "<< this->bpoint()->id() << '\n';

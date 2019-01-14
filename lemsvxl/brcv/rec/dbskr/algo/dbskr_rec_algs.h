@@ -12,9 +12,9 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <map>
+#include <vector>
+#include <utility>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -56,22 +56,22 @@ dbsk2d_shock_node_sptr& get_node_sptr(dbsk2d_shock_graph_sptr g, int id);
 //  check the id of the returned pointer if not sure that a node with a given id exists in g
 dbskr_v_node_sptr& get_node_sptr(dbskr_v_graph_sptr g, int id);
 
-void get_node_map(vcl_map<int, dbsk2d_shock_node_sptr>& map, dbsk2d_shock_graph_sptr g);
-void get_node_map(vcl_map<int, dbskr_v_node_sptr>& map, dbskr_v_graph_sptr g);
+void get_node_map(std::map<int, dbsk2d_shock_node_sptr>& map, dbsk2d_shock_graph_sptr g);
+void get_node_map(std::map<int, dbskr_v_node_sptr>& map, dbskr_v_graph_sptr g);
 
 //: method that traverses a shock graph starting from a given node in a breadth first manner
 //  visiting each edge (degree two nodes are merged) only once and saving the edges
 //  visited_node_depth_map is used to visit each node once
 //  node_edges_map keeps starting node of a vector of shock edges (degree twos are merged)
 void visit_and_keep_edges(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node, 
-                             vcl_map<dbsk2d_shock_node_sptr, int>& visited_node_depth_map,
-                             vcl_map<vcl_pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, vcl_vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
-                             vcl_vector<vcl_pair<dbsk2d_shock_node_sptr, int> >& to_visit,
+                             std::map<dbsk2d_shock_node_sptr, int>& visited_node_depth_map,
+                             std::map<std::pair<dbsk2d_shock_node_sptr, dbsk2d_shock_node_sptr>, std::vector<dbsk2d_shock_edge_sptr> >& node_edges_map,
+                             std::vector<std::pair<dbsk2d_shock_node_sptr, int> >& to_visit,
                              int depth = 1);
 
 void get_scurves(dbsk2d_shock_graph_sptr sg, dbsk2d_shock_node_sptr start_node, 
-                 vcl_vector<dbskr_scurve_sptr>& cur_scurves, 
-                 vcl_vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds);
+                 std::vector<dbskr_scurve_sptr>& cur_scurves, 
+                 std::vector<bool>& end_scurve, int depth, bool binterpolate, bool subsample, double interpolate_ds, double subsample_ds);
 
 vsol_polygon_2d_sptr trace_boundary_from_subgraph(dbsk2d_shock_graph_sptr sg, 
                                                   dbsk2d_shock_node_sptr start_node, 
@@ -89,7 +89,7 @@ dbskr_shock_patch_sptr extract_patch_from_subgraph(dbsk2d_shock_graph_sptr sg,
                                                   int depth, double area_threshold, bool circular_ends = false,
                                                   bool binterpolate = true, bool subsample = 1.0f, double interpolate_ds = 1.0f, double subsample_ds = 1.0f);
 
-void get_edges_on_outer_face(dbskr_v_graph_sptr vg, vcl_vector<dbskr_v_edge_sptr> &edges);
+void get_edges_on_outer_face(dbskr_v_graph_sptr vg, std::vector<dbskr_v_edge_sptr> &edges);
 
 //: the following methods is doind exact same thing as trace_boundary_from_subgraph, but creating a patch instance
 dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr v, int id, int depth,
@@ -106,72 +106,72 @@ dbskr_shock_patch_sptr extract_patch_from_v_graph(dbskr_v_graph_sptr v, int id, 
 
 //: set the matching parameters like shock_pruning_threshold, scurve_sample_ds and bool elastic_splice_cost ahead of time for each patch
 bool find_patch_correspondences(dbskr_shock_patch_sptr s1, 
-                                vcl_vector<dbskr_shock_patch_sptr>& s2, 
+                                std::vector<dbskr_shock_patch_sptr>& s2, 
                                 patch_cor_map_type& match_map, dbskr_tree_edit_params& edit_params);
 
 //: set the matching parameters like shock_pruning_threshold, scurve_sample_ds and bool elastic_splice_cost ahead of time for each patch
-dbskr_shock_patch_match_sptr find_all_patch_correspondences(vcl_vector<dbskr_shock_patch_sptr>& s1, 
-                                                            vcl_vector<dbskr_shock_patch_sptr>& s2, dbskr_tree_edit_params& edit_params);
+dbskr_shock_patch_match_sptr find_all_patch_correspondences(std::vector<dbskr_shock_patch_sptr>& s1, 
+                                                            std::vector<dbskr_shock_patch_sptr>& s2, dbskr_tree_edit_params& edit_params);
 
 //: set the matching parameters like shock_pruning_threshold, scurve_sample_ds and bool elastic_splice_cost ahead of time for each patch
 bool find_patch_correspondences_coarse_edit(dbskr_shock_patch_sptr s1, 
-                                vcl_vector<dbskr_shock_patch_sptr>& s2, 
+                                std::vector<dbskr_shock_patch_sptr>& s2, 
                                 patch_cor_map_type& match_map, dbskr_tree_edit_params& edit_params);
 
 //: find the corresondences using elastic curve matching between sets of real contours of patches
 bool find_patch_correspondences_curve(dbskr_shock_patch_sptr s1, 
-                                vcl_vector<dbskr_shock_patch_sptr>& s2, 
-                                vcl_map<int, vcl_vector<vcl_pair<int, vcl_vector<dbcvr_cv_cor_sptr> > >* >& match_map, int n);
+                                std::vector<dbskr_shock_patch_sptr>& s2, 
+                                std::map<int, std::vector<std::pair<int, std::vector<dbcvr_cv_cor_sptr> > >* >& match_map, int n);
 
 //: given an image (patch set) find its best match among a set of matches, votes are weighted by similarity measure
-bool best_match_norm(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vector<dbskr_shock_patch_match_sptr>& mv, int& best_id);
+bool best_match_norm(std::vector<dbskr_shock_patch_sptr>& pv, std::vector<dbskr_shock_patch_match_sptr>& mv, int& best_id);
 
 //: given an image (patch set) find its best match among a set of matches
 //  use top n best patch matches between the patch set matches of two images
-bool best_match_norm_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vector<dbskr_shock_patch_match_sptr>& mv, int n, int& best_id);
+bool best_match_norm_top_n(std::vector<dbskr_shock_patch_sptr>& pv, std::vector<dbskr_shock_patch_match_sptr>& mv, int n, int& best_id);
 
 
-bool match_strat1_simple_voting_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, 
-                                      vcl_vector<vcl_vector<dbskr_shock_patch_match_sptr> >& mv, 
+bool match_strat1_simple_voting_top_n(std::vector<dbskr_shock_patch_sptr>& pv, 
+                                      std::vector<std::vector<dbskr_shock_patch_match_sptr> >& mv, 
                                       int& best_cat_id, int n, int visualization_n, 
-                                      vcl_vector<vcl_vector<vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > > >& best_category_instance_ids);
+                                      std::vector<std::vector<std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > > >& best_category_instance_ids);
 
-bool create_html_top_n(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_string pv_patch_images_dir,
-                       vcl_vector<vcl_vector<vcl_pair< vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> >, float > > >& best_category_instance_ids,
-                       vcl_vector<vcl_vector<vcl_string> > ins_names, 
-                       int visualization_n, vcl_string file_name, 
-                       vcl_string table_caption, 
-                       vcl_vector<vcl_vector<vcl_string> > patch_image_dirs);
+bool create_html_top_n(std::vector<dbskr_shock_patch_sptr>& pv, std::string pv_patch_images_dir,
+                       std::vector<std::vector<std::pair< std::pair<std::pair<int, int>, std::pair<int, int> >, float > > >& best_category_instance_ids,
+                       std::vector<std::vector<std::string> > ins_names, 
+                       int visualization_n, std::string file_name, 
+                       std::string table_caption, 
+                       std::vector<std::vector<std::string> > patch_image_dirs);
 
 // WARNING: for the trees: assuming tree parameters are already set properly depending on the match parameters
 bool create_html_top_n_placements(dbskr_shock_patch_match_sptr new_match, 
                                   vil_image_resource_sptr img_test, 
                                   vil_image_resource_sptr img_model, 
-                                  vcl_string model_patch_images_dir,
-                                  int N, vcl_string out_html_images_dir, vcl_string out_html, vcl_string table_caption);
+                                  std::string model_patch_images_dir,
+                                  int N, std::string out_html_images_dir, std::string out_html, std::string table_caption);
 
 
 //: given an image (patch set), for each patch find its best patch and vote for the category of the best match
-bool match_strat1_simple_voting(vcl_vector<dbskr_shock_patch_sptr>& pv, vcl_vector<vcl_vector<dbskr_shock_patch_match_sptr> >& mv, int& best_id, bool use_info = false);
+bool match_strat1_simple_voting(std::vector<dbskr_shock_patch_sptr>& pv, std::vector<std::vector<dbskr_shock_patch_match_sptr> >& mv, int& best_id, bool use_info = false);
 
 //: create a white ps image, draw a base shock as black, draw a second shock graph with branches colored wrt a given dbskr_sm_cor
-bool create_ps_shock_matching(vcl_string ps_file_name, dbsk2d_shock_graph_sptr base_sg1, dbskr_tree_sptr main_tree1, dbsk2d_shock_graph_sptr base_sg2, dbskr_tree_sptr main_tree2, dbskr_sm_cor_sptr sm);
+bool create_ps_shock_matching(std::string ps_file_name, dbsk2d_shock_graph_sptr base_sg1, dbskr_tree_sptr main_tree1, dbsk2d_shock_graph_sptr base_sg2, dbskr_tree_sptr main_tree2, dbskr_sm_cor_sptr sm);
 
-bool create_ps_shock(vcl_string ps_file_name, dbsk2d_shock_graph_sptr base_sg1);
+bool create_ps_shock(std::string ps_file_name, dbsk2d_shock_graph_sptr base_sg1);
 
 //: create image with traced boundaries
 //: put white background of the img pointer is zero
-bool create_ps_patches(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_sptr>& patches, vcl_vector<vil_rgb<int> >& colors, 
+bool create_ps_patches(std::string ps_file_name, std::vector<dbskr_shock_patch_sptr>& patches, std::vector<vil_rgb<int> >& colors, 
                        vil_image_resource_sptr background_img = 0);
 
-bool create_ps_patches_with_scurve(vcl_string ps_file_name, vcl_vector<dbskr_shock_patch_sptr>& patches, vcl_vector<vil_rgb<int> >& colors,
-                       dbskr_scurve_sptr& curve, vcl_vector<vil_rgb<int> >& curve_colors,
+bool create_ps_patches_with_scurve(std::string ps_file_name, std::vector<dbskr_shock_patch_sptr>& patches, std::vector<vil_rgb<int> >& colors,
+                       dbskr_scurve_sptr& curve, std::vector<vil_rgb<int> >& curve_colors,
                        vil_image_resource_sptr background_img = 0);
 
 
 //: create image with real boundaries
 //  real boundaries are often not saved so the patches need to be reconstructed from the original shock graphs
-//bool create_ps_patches_real(vcl_string ps_file_name, dbsk2d_shock_graph_sptr sg, vcl_vector<dbskr_shock_patch_sptr>& patches, vcl_vector<vil_rgb<int> >& colors);
+//bool create_ps_patches_real(std::string ps_file_name, dbsk2d_shock_graph_sptr sg, std::vector<dbskr_shock_patch_sptr>& patches, std::vector<vil_rgb<int> >& colors);
 
 //: tests whether the shock graph is created ok for recognition purposes 
 bool test_shock_graph_for_rec(dbsk2d_shock_graph_sptr sg);

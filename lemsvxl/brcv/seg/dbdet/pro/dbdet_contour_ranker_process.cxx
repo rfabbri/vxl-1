@@ -15,8 +15,8 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -37,9 +37,9 @@
 #include <vil/vil_convert.h>
 #include <dbdet/algo/dbdet_yuliang_features.h>
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
-bool my_comp(const vcl_pair<double, unsigned> & a, const vcl_pair<double, unsigned> & b)
+bool my_comp(const std::pair<double, unsigned> & a, const std::pair<double, unsigned> & b)
 {
   return a.first > b.first;
 }
@@ -79,7 +79,7 @@ dbdet_contour_ranker_process::dbdet_contour_ranker_process()
       !parameters()->add( "beta[8]"   , "-beta_8" , 1.5311652e-02)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -98,7 +98,7 @@ dbdet_contour_ranker_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_contour_ranker_process::name()
 {
   return "Contour Ranker";
@@ -121,9 +121,9 @@ dbdet_contour_ranker_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_contour_ranker_process::get_input_type()
+std::vector< std::string > dbdet_contour_ranker_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "edge_map" );
   to_return.push_back( "sel" );
@@ -132,9 +132,9 @@ vcl_vector< vcl_string > dbdet_contour_ranker_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_contour_ranker_process::get_output_type()
+std::vector< std::string > dbdet_contour_ranker_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "sel" );
   return to_return;
 }
@@ -145,14 +145,14 @@ bool
 dbdet_contour_ranker_process::execute()
 {
   if ( input_data_.size() != 3 ){
-    vcl_cout << "In dbdet_contour_ranker_process::execute() - not exactly three"
+    std::cout << "In dbdet_contour_ranker_process::execute() - not exactly three"
              << " inputs\n";
     return false;
   }
   clear_output(1);
 
-  vcl_cout << "Contour ranker...\n";
-  vcl_cout.flush();
+  std::cout << "Contour ranker...\n";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -164,7 +164,7 @@ dbdet_contour_ranker_process::execute()
   input_sel.vertical_cast(input_data_[0][2]);
   dbdet_curve_fragment_graph& CFG = input_sel->CFG();
 
-  vcl_cout << "Input #fragments: " << CFG.frags.size() << vcl_endl;
+  std::cout << "Input #fragments: " << CFG.frags.size() << std::endl;
 
   dbdet_edgemap_storage_sptr input_edgemap;
   input_edgemap.vertical_cast(input_data_[0][1]);
@@ -216,22 +216,22 @@ dbdet_contour_ranker_process::execute()
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(CFG.frags, EM, image_view, param, &rank);
 
-  vcl_vector<vcl_pair<double, unsigned> > ri(rank.size());
+  std::vector<std::pair<double, unsigned> > ri(rank.size());
   for(int i=0; i<ri.size(); ++i)
   {
     ri[i].first = rank[i];
     ri[i].second = i;
   }
 
-  vcl_sort(ri.begin(), ri.end(), my_comp);
+  std::sort(ri.begin(), ri.end(), my_comp);
 
   nfrags = nfrags == 0 ? rank.size() : nfrags;
 
-  vcl_vector<bool> disp(rank.size(), false);
-  for(int i=0; i< vcl_min(nfrags, (int)rank.size()); ++i)
+  std::vector<bool> disp(rank.size(), false);
+  for(int i=0; i< std::min(nfrags, (int)rank.size()); ++i)
     disp[ri[i].second] = (ri[i].first >= thresh) ? true : false;
 
-  vcl_cout << "Max rank: (" << ri[0].first << ", " << ri[0].second << ") Min rank: (" << ri[ri.size()-1].first << ", " << ri[ri.size()-1].second << ")" << vcl_endl;
+  std::cout << "Max rank: (" << ri[0].first << ", " << ri[0].second << ") Min rank: (" << ri[ri.size()-1].first << ", " << ri[ri.size()-1].second << ")" << std::endl;
 
   newCFG.clear();
   newCFG.resize(CFG.cFrags.size());
@@ -243,10 +243,10 @@ dbdet_contour_ranker_process::execute()
       newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
   }
   // create the output storage class
-  vcl_cout << "Output #fragments: " << newCFG.frags.size() << vcl_endl;
+  std::cout << "Output #fragments: " << newCFG.frags.size() << std::endl;
   output_data_[0].push_back(output_sel);
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout.flush();
+  std::cout << "done!" << std::endl;
+  std::cout.flush();
 
   return true;
 }

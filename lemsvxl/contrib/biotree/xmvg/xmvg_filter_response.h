@@ -11,7 +11,7 @@
 // 
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_string.h>
+#include <string>
 
 template <class T>
 class xmvg_filter_response : public vbl_ref_count
@@ -24,7 +24,7 @@ class xmvg_filter_response : public vbl_ref_count
       : res_(res) {}
     
     //: RTTI
-    vcl_string class_id() {return "xmvg_filter_response";}
+    std::string class_id() {return "xmvg_filter_response";}
 
     T& operator[](unsigned i) { return res_[i];}
     const T& operator[](unsigned i) const { return res_[i];}
@@ -70,8 +70,8 @@ class xmvg_filter_response : public vbl_ref_count
 };
 
 template <class T>
-void x_write(vcl_ostream& os, xmvg_filter_response<T> res);
+void x_write(std::ostream& os, xmvg_filter_response<T> res);
 
 template <class T>
-vcl_ostream& operator << ( vcl_ostream& stream, const xmvg_filter_response<T> & resp);
+std::ostream& operator << ( std::ostream& stream, const xmvg_filter_response<T> & resp);
 #endif

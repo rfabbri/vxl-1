@@ -26,7 +26,7 @@ dbsks_load_dp_results_process()
     !parameters()->add("Create new shapematch_storage?: " , "-new_shapematch_storage", false)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,17 +46,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_load_dp_results_process::
+std::string dbsks_load_dp_results_process::
 name()
 { 
   return "Load DP results"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_load_dp_results_process::
+std::vector< std::string > dbsks_load_dp_results_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("image");
 
   bool new_shapematch_storage = false;
@@ -68,10 +68,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_load_dp_results_process::
+std::vector< std::string > dbsks_load_dp_results_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   to_return.push_back("dbsksp_shock");
   
@@ -103,8 +103,8 @@ bool dbsks_load_dp_results_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_load_dp_results_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_load_dp_results_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -143,20 +143,20 @@ execute()
 
   //// PROCESS DATA -------------------------------------------------------------
 
-  vcl_string file_path = dp_file.path;
+  std::string file_path = dp_file.path;
   
-  vcl_string new_file_path = file_path;
+  std::string new_file_path = file_path;
   if (add_frame_number == true)
   {
-    vcl_string base_name = 
+    std::string base_name = 
       vul_file::strip_directory(vul_file::strip_extension(file_path));
-    vcl_string file_dir = vul_file::dirname(file_path);
-    vcl_string file_ext = vul_file::extension(file_path);
+    std::string file_dir = vul_file::dirname(file_path);
+    std::string file_ext = vul_file::extension(file_path);
 
     int frame_number = image_storage->frame();
     
     // construct a new filename
-    vcl_string new_base_name = vul_sprintf("%03d", frame_number) + "_" +
+    std::string new_base_name = vul_sprintf("%03d", frame_number) + "_" +
       base_name;
     
     new_file_path = file_dir + "\\" + new_base_name + file_ext;

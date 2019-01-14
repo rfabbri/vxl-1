@@ -7,16 +7,16 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_iostream.h>
-#include<vcl_map.h>
-#include<vcl_utility.h>
+#include<iostream>
+#include<map>
+#include<utility>
 
 #include<vgl/vgl_point_2d.h>
 
 class dncn_target_2d: public vbl_ref_count
 {
 public:
-    typedef vcl_map<unsigned, dncn_feature_sptr> feature_map_type;
+    typedef std::map<unsigned, dncn_feature_sptr> feature_map_type;
 
     dncn_target_2d(){}
 
@@ -74,11 +74,11 @@ public:
 
 	//bapl_lowe_keypoint_sptr keypoint(unsigned const& frame){return frame_keypoint_map_[frame];}
 
-	//vcl_map<unsigned,bapl_lowe_keypoint_sptr> frame_keypoint_map(){return frame_keypoint_map_;}
+	//std::map<unsigned,bapl_lowe_keypoint_sptr> frame_keypoint_map(){return frame_keypoint_map_;}
 
 	//void set_target_frame_keypoint(unsigned const& frame, bapl_lowe_keypoint_sptr kp_sptr){this->frame_keypoint_map_[frame] = kp_sptr;}
 
-	//void set_keypoint_map( vcl_map<unsigned,bapl_lowe_keypoint_sptr> const& f_kp_map){frame_keypoint_map_ = f_kp_map;}
+	//void set_keypoint_map( std::map<unsigned,bapl_lowe_keypoint_sptr> const& f_kp_map){frame_keypoint_map_ = f_kp_map;}
 
 	//void set_frame_neighbor_keypoint(unsigned const& frame, vgl_point_2d<unsigned>& neighbor, bapl_lowe_keypoint_sptr kp)
 	//{ frame_neighborhood_keypoint_map_[frame][neighbor] = kp; }
@@ -86,10 +86,10 @@ public:
 	//bapl_lowe_keypoint_sptr neighbor_keypoint(unsigned const& frame, vgl_point_2d<unsigned>& neighbor)
 	//{//return frame_neighborhood_keypoint_map_[frame][neighbor];}
 
-	//vcl_map<unsigned,vcl_map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > frame_neighborhood_keypoint_map()
+	//std::map<unsigned,std::map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > frame_neighborhood_keypoint_map()
 	//{return this->frame_neighborhood_keypoint_map_;}
 
-	//void set_frame_neighborhood_keypoint_map( vcl_map<unsigned,vcl_map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > & fnkp )
+	//void set_frame_neighborhood_keypoint_map( std::map<unsigned,std::map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > & fnkp )
 	//{this->frame_neighborhood_keypoint_map_ = fnkp; }
 
 protected:
@@ -100,8 +100,8 @@ protected:
 	feature_map_type target_map_;
 
 	//the keypoint of the target at each frame
-	//vcl_map<unsigned,bapl_lowe_keypoint_sptr> frame_keypoint_map_;
-	//vcl_map<unsigned,vcl_map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > frame_neighborhood_keypoint_map_;
+	//std::map<unsigned,bapl_lowe_keypoint_sptr> frame_keypoint_map_;
+	//std::map<unsigned,std::map<vgl_point_2d<unsigned>,bapl_lowe_keypoint_sptr> > frame_neighborhood_keypoint_map_;
 };
 
 #endif //dncn_target_2d_h_

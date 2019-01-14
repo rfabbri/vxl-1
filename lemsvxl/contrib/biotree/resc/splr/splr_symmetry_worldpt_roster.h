@@ -3,7 +3,7 @@
 
 #include <biob/biob_worldpt_roster_sptr.h>
 #include <splr/splr_symmetry.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 /* Here and in symmetry_splat_collection we adopt a convention concerning the numbering of the points.
@@ -23,7 +23,7 @@ class splr_symmetry_worldpt_roster : public biob_worldpt_roster {
   public:
     splr_symmetry_worldpt_roster(splr_symmetry *symmetry, biob_worldpt_roster_sptr representatives) 
       : symmetry_(symmetry), representatives_(representatives) {}
-    vcl_string class_id() { return "splr_symmetry_worldpt_roster"; }
+    std::string class_id() { return "splr_symmetry_worldpt_roster"; }
     unsigned long num_points() const;
     worldpt point(biob_worldpt_index pti) const;
 };

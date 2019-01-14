@@ -27,7 +27,7 @@ public:
   bool handle( const vgui_event & e, 
                const bvis1_view_tableau_sptr& view );
 
-  vcl_string name() const;
+  std::string name() const;
 
 protected:
   dbsk2d_base_gui_geometry* cur_geom_;

@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
@@ -29,7 +29,7 @@ class brct_plane_calibrator
   //Accessors
 
   int n_points(int plane) const {return pts_3d_[plane].size();}
-  vcl_vector<vgl_homg_point_2d<double> >
+  std::vector<vgl_homg_point_2d<double> >
     points_3d(int plane) const {return pts_3d_[plane];}
   vgl_homg_point_2d<double> p3d(const int plane, const int i)
     {return pts_3d_[plane][i];}
@@ -38,7 +38,7 @@ class brct_plane_calibrator
   //Mutators
 
   //: read the visible marker points on a set of 3-d world planes
-  void read_data(vcl_string const& point3d_file);
+  void read_data(std::string const& point3d_file);
   //: set the image size for a given view
   bool set_image_size(const int cam, const int width, const int height);
 
@@ -46,12 +46,12 @@ class brct_plane_calibrator
 
   bool compute_initial_homographies();
   bool compute_homographies();
-  bool write_corrs(vcl_string const& corrs_file);
-  bool read_corrs(vcl_string const& corrs_file);
-  bool write_homographies(vcl_string const& homography_file);
-  vcl_vector<vgl_point_2d<double> >
+  bool write_corrs(std::string const& corrs_file);
+  bool read_corrs(std::string const& corrs_file);
+  bool write_homographies(std::string const& homography_file);
+  std::vector<vgl_point_2d<double> >
     projected_3d_points_initial(const int plane, const int cam);
-  vcl_vector<vgl_point_2d<double> >
+  std::vector<vgl_point_2d<double> >
     projected_3d_points(const int plane, const int cam);
  protected:
   //local utility functions
@@ -61,15 +61,15 @@ class brct_plane_calibrator
   //members
 
   //:camera info
-  vcl_vector<int> cam_width_;
-  vcl_vector<int> cam_height_;
+  std::vector<int> cam_width_;
+  std::vector<int> cam_height_;
 
   //world plane      points
-  vcl_vector<vcl_vector<vgl_homg_point_2d<double> > > pts_3d_;//points on 3-d planes
+  std::vector<std::vector<vgl_homg_point_2d<double> > > pts_3d_;//points on 3-d planes
 
   //: correspondence data
   //world plane  image correspondences
-  vcl_vector<vcl_vector<brct_plane_corr_sptr> > corrs_;
+  std::vector<std::vector<brct_plane_corr_sptr> > corrs_;
 
   //: 3-d loaded flag
   bool points_3d_valid_;
@@ -81,8 +81,8 @@ class brct_plane_calibrator
   double z_back_;
   double z_front_;
   //world plane       camera
-  vcl_vector< vcl_vector<vgl_h_matrix_2d<double> > > initial_homographies_;
-  vcl_vector< vcl_vector<vgl_h_matrix_2d<double> > > current_homographies_;
+  std::vector< std::vector<vgl_h_matrix_2d<double> > > initial_homographies_;
+  std::vector< std::vector<vgl_h_matrix_2d<double> > > current_homographies_;
 };
 
 #endif // brct_plane_calibrator_h_

@@ -123,7 +123,7 @@ public:
   virtual void local_non_maxima_suppression()
   {
 #if 0 // this is non-maxima suppression using a region as oposed to a kernel. Region finding seems too slow.
-    vcl_cout << " Appling local non-maxima supression with radius: " << part_->radius() << vcl_endl;
+    std::cout << " Appling local non-maxima supression with radius: " << part_->radius() << std::endl;
     bvpl_scene_neighborhood_operator neighborhood_operator;
     dbrec3d_local_max_functor<T_instance> functor;
     vgl_box_3d<double> receptive_field(vgl_point_3d<double>(0.0,0.0,0.0), part_->radius()[0], part_->radius()[1], part_->radius()[2], vgl_box_3d<double>::centre);
@@ -144,7 +144,7 @@ public:
   virtual void clean_memory() { parts_scene_.unload_active_blocks(); }
   
   //: Requests all part instances within a region
-  void query(vgl_box_3d<double> const &search_box, vcl_vector<T_instance> &parts);
+  void query(vgl_box_3d<double> const &search_box, std::vector<T_instance> &parts);
 
   vgl_box_3d<double> bounding_box() { return parts_scene_.get_world_bbox(); }
   
@@ -152,7 +152,7 @@ public:
   T_instance first()
   {
     if (!iterator_)
-      vcl_cerr<<"Error in dbrec3d_octree_context::first(): iterator_ is NULL" << vcl_endl;
+      std::cerr<<"Error in dbrec3d_octree_context::first(): iterator_ is NULL" << std::endl;
     
     iterator_->begin();
     
@@ -166,7 +166,7 @@ public:
   T_instance next()
   {
     if (!iterator_)
-      vcl_cerr<<"Error in dbrec3d_octree_context::next(): iterator_ is NULL" << vcl_endl;
+      std::cerr<<"Error in dbrec3d_octree_context::next(): iterator_ is NULL" << std::endl;
     
     ++(*iterator_);
     
@@ -215,10 +215,10 @@ protected:
 
 //: Requests all part instances within a region. The region must be specified in global-scene coordinates
 template<class T_instance>
-void dbrec3d_octree_context<T_instance>::query(const vgl_box_3d<double>  &search_box, vcl_vector<T_instance> &parts)
+void dbrec3d_octree_context<T_instance>::query(const vgl_box_3d<double>  &search_box, std::vector<T_instance> &parts)
 {
   // get all leaf cells in a region
-  vcl_vector<boct_tree_cell<short, T_instance>* > cells;
+  std::vector<boct_tree_cell<short, T_instance>* > cells;
   parts_scene_.leaves_in_region(search_box,cells);
   
   // get the parts  
@@ -248,7 +248,7 @@ void dbrec3d_octree_context<T_instance>::add_part_instance( T_instance const &pi
     parts_scene_.write_active_block();
     if(!parts_scene_.load_block(index))
     {
-      vcl_cerr<< "Error on dbrec3d_octree_context::add_part_instance failed to load block" << vcl_endl;
+      std::cerr<< "Error on dbrec3d_octree_context::add_part_instance failed to load block" << std::endl;
       return;
     }
   }
@@ -314,6 +314,6 @@ void vsl_b_read(vsl_b_istream & is, dbrec3d_context &c);
 void vsl_b_read(vsl_b_istream & is, dbrec3d_context *c);
 
 
-vcl_ostream& operator << (vcl_ostream& os, const dbrec3d_context &c);
+std::ostream& operator << (std::ostream& os, const dbrec3d_context &c);
 
 #endif  //_dbrec3d_part_context_h_

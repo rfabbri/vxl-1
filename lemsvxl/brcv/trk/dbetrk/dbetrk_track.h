@@ -1,14 +1,14 @@
 #ifndef _dbetrk_track_h_
 #define _dbetrk_track_h_
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <dbetrk/dbetrk_edge_sptr.h>
 #include <vtol/vtol_edge_2d_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_2d.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 class cells{
@@ -17,7 +17,7 @@ public:
     cells(){}
     ~cells(){}
     int xmin,ymin,xmax,ymax;
-    vcl_vector<dbetrk_edge_sptr> points;
+    std::vector<dbetrk_edge_sptr> points;
 };
 
 
@@ -30,7 +30,7 @@ public:
     bool fill_dbetrk_edges(int frame);
 
   
-    void intialize(vcl_vector<dbetrk_edge_sptr>  tracked_dbetrk_edges_);
+    void intialize(std::vector<dbetrk_edge_sptr>  tracked_dbetrk_edges_);
     double smooth(vil_image_view<float> in,vbl_array_2d<float> g2d);
     void assign_rgb_values(vil_image_view<float> p0,
                            vil_image_view<float> p1,
@@ -53,22 +53,22 @@ public:
 
 
     void compute_particles(int frameno,
-                           vcl_vector<vcl_pair<double,vcl_vector<dbetrk_edge_sptr> > > &particledata, 
+                           std::vector<std::pair<double,std::vector<dbetrk_edge_sptr> > > &particledata, 
                            int particleno=500);
 
     
-    vcl_vector<vcl_vector<cells> >  cell_matrix;
-    vcl_vector<dbetrk_edge_sptr> dbetrk_edges;
-    vcl_vector<vcl_vector<dbetrk_edge_sptr> > tracked_dbetrk_edges;
-    vcl_vector<vtol_edge_2d_sptr >  input_curves_;
+    std::vector<std::vector<cells> >  cell_matrix;
+    std::vector<dbetrk_edge_sptr> dbetrk_edges;
+    std::vector<std::vector<dbetrk_edge_sptr> > tracked_dbetrk_edges;
+    std::vector<vtol_edge_2d_sptr >  input_curves_;
 
 
 
-    vcl_vector<vil_image_view<float> > plane0;
-    vcl_vector<vil_image_view<float> > plane1;
-    vcl_vector<vil_image_view<float> > plane2;
+    std::vector<vil_image_view<float> > plane0;
+    std::vector<vil_image_view<float> > plane1;
+    std::vector<vil_image_view<float> > plane2;
 
-    vcl_vector<vcl_vector<vcl_pair<double,vcl_vector<vcl_pair<dbetrk_edge_sptr,dbetrk_edge_sptr> > > > > particlemap;
+    std::vector<std::vector<std::pair<double,std::vector<std::pair<dbetrk_edge_sptr,dbetrk_edge_sptr> > > > > particlemap;
 
     float std_x;
     float std_y;
@@ -80,7 +80,7 @@ public:
 protected:
     bool track();
     int motion_;
-    vgl_point_2d<double> mean_point(vcl_vector<dbetrk_edge_sptr> listofedges);
+    vgl_point_2d<double> mean_point(std::vector<dbetrk_edge_sptr> listofedges);
 
     
     

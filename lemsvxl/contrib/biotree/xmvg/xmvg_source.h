@@ -12,8 +12,8 @@
 // \Modifications 
 //          Gamze Tunali 12/23/2005 added x_write method and also public getters
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 
 class xmvg_source
 {
@@ -32,6 +32,6 @@ class xmvg_source
     double poisson_lambda_;
 };
 
-void x_write(vcl_ostream& os, xmvg_source source);
+void x_write(std::ostream& os, xmvg_source source);
 
 #endif

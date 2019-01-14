@@ -71,9 +71,9 @@ extern double SMOOTH_EDGE_BONUS;
 extern unsigned CLOSEST_POINT_NEIGHBORHOOD;
 extern bool APPLY_COMBO_MATCH;
 // global matches, all states use this
-extern vcl_vector< pairwiseMatch > _matches;//vector of points.
+extern std::vector< pairwiseMatch > _matches;//vector of points.
 // global rotated curves, used for search states
-extern vcl_vector<bfrag_curve> _cList;
+extern std::vector<bfrag_curve> _cList;
 // original contours
-extern vcl_vector<bfrag_curve> _Contours;
-extern vcl_vector<bfrag_curve> _BotContours;
+extern std::vector<bfrag_curve> _Contours;
+extern std::vector<bfrag_curve> _BotContours;

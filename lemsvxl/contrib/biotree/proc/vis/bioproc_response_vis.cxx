@@ -27,7 +27,7 @@
 int main(int argc, char** argv)
 {
   if(argc < 5){
-    vcl_cout << "Usage: "<< argv[0] << "fname xmargin ymargin zmargin filter_num";
+    std::cout << "Usage: "<< argv[0] << "fname xmargin ymargin zmargin filter_num";
     return 1;
   }
 
@@ -60,9 +60,9 @@ int main(int argc, char** argv)
 
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
   dimx = parser.dim_x();
@@ -71,10 +71,10 @@ int main(int argc, char** argv)
   int filters_size = parser.filter_num();
   assert (filter_num <= filters_size);
 
-  vcl_vector<xmvg_filter_response<double> > responses = parser.responses();
+  std::vector<xmvg_filter_response<double> > responses = parser.responses();
   assert(dimx > 2*marginx && dimy > 2*marginy && dimz > 2*marginz);
 
-  vcl_vector<double> field;
+  std::vector<double> field;
           
   int index=0;
   for(int k=0;k<dimz;k++) {
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 
   (void)memset(voxels, 0, blocksize);
 
-  vcl_cout << field.size() << vcl_endl;
+  std::cout << field.size() << std::endl;
   for(unsigned long i = 0; i < blocksize; i++)
     voxels[i] = static_cast<uint8_t>((field[i] - min_intensity)*255/(max_intensity - min_intensity));
 

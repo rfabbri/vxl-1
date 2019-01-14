@@ -36,7 +36,7 @@
 #include <dborl/dborl_index_node_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
-class dborl_categorization_simple : public dborl_dataset_processor<vcl_string, float>
+class dborl_categorization_simple : public dborl_dataset_processor<std::string, float>
 {
 public:
 
@@ -44,10 +44,10 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: parse the index file
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
@@ -58,15 +58,15 @@ public:
 
   //: this method is run on each processor
   //  initialize the input vector with names of input esfs in the current node of the index file
-  virtual bool initialize(vcl_vector<vcl_string>& t);
+  virtual bool initialize(std::vector<std::string>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
-  virtual bool process(vcl_string name, float& f);
+  virtual bool process(std::string name, float& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
   //  this method decides to make another round of process distribution or not
   //  and if so picks the next job grouping by updating the current index node pointer
-  virtual bool finalize(vcl_vector<float>& results);
+  virtual bool finalize(std::vector<float>& results);
 
 #ifdef MPI_CPP_BINDING
   virtual MPI::Datatype create_datatype_for_R();
@@ -84,8 +84,8 @@ protected:
   vsol_polygon_2d_sptr input_poly_;   // used in the case of curve matching
   vsol_polygon_2d_sptr input_poly_flipped_;   // used in the case of curve matching
 
-  vcl_string current_category_;
-  vcl_string input_gt_category_;
+  std::string current_category_;
+  std::string input_gt_category_;
 };
 
 #endif  //_dborl_categorization_simple_h

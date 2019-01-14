@@ -23,8 +23,8 @@
 #define _dbcvr_interp_cvmatch_h
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <assert.h>
 
 #include <vsol/vsol_point_2d_sptr.h>
@@ -34,7 +34,7 @@
 struct dpt_cell
 {
   double cost;
-  vcl_pair<int, int> prev_cell_coord;  // to trace back alignment curve when finished
+  std::pair<int, int> prev_cell_coord;  // to trace back alignment curve when finished
   double s1;
   double s2;
   double theta1;   // store tangent angle of first curve at this cell, required for fast computation of bending cost
@@ -56,8 +56,8 @@ protected:
   //  cells down for negative eta,  we need two cost arrays since we cannot use negative indices.
   //  CU[i][j]  i runs along diogonal
   //            j runs along axis perpendicular to the diagonal
-  vcl_vector< vcl_vector<dpt_cell> > CU; //cells up, cost array, positive indices
-  vcl_vector< vcl_vector<dpt_cell> > CD; //cells down, cost array, negative indices
+  std::vector< std::vector<dpt_cell> > CU; //cells up, cost array, positive indices
+  std::vector< std::vector<dpt_cell> > CD; //cells down, cost array, negative indices
   
   double _delta;              // step size along the min length alignment curve
   double _delta_eta;          // step size along the axis orthogonal to min length alignment curve axis
@@ -76,9 +76,9 @@ protected:
   double L1; 
   double L2;
 
-  // to construct bsol_intrinsic_curve_2d(const vcl_vector<vsol_point_2d_sptr> &new_vertices);
-  vcl_vector<vsol_point_2d_sptr> out_curve1_;   // best alignment's points along 1st curve
-  vcl_vector<vsol_point_2d_sptr> out_curve2_;   // best alignment's points along 2nd curve
+  // to construct bsol_intrinsic_curve_2d(const std::vector<vsol_point_2d_sptr> &new_vertices);
+  std::vector<vsol_point_2d_sptr> out_curve1_;   // best alignment's points along 1st curve
+  std::vector<vsol_point_2d_sptr> out_curve2_;   // best alignment's points along 2nd curve
   
   //Functions
   //: construct the grid 
@@ -108,8 +108,8 @@ public:
   bsold_interp_curve_2d_sptr curve1() { return _curve1; }
   bsold_interp_curve_2d_sptr curve2() { return _curve2; }
 
-  vcl_vector<vsol_point_2d_sptr> output_curve1() { return out_curve1_; }
-  vcl_vector<vsol_point_2d_sptr> output_curve2() { return out_curve2_; }
+  std::vector<vsol_point_2d_sptr> output_curve1() { return out_curve1_; }
+  std::vector<vsol_point_2d_sptr> output_curve2() { return out_curve2_; }
 };
 
 #endif // _dbcvr_interp_cvmatch_h

@@ -21,10 +21,10 @@
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform_sptr.h>
 
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
-#include <vcl_iterator.h>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <iterator>
 
 class dbsk2d_lagrangian_ishock_detector;
 class dbsk2d_ishock_belm;
@@ -77,7 +77,7 @@ public:
     void get_region_stats(
         unsigned int index,
         vgl_polygon<double>& poly,
-        vcl_vector<double>& region_stats);
+        std::vector<double>& region_stats);
 
     //: contour_ratio
     double real_contour_length(unsigned int index);
@@ -90,10 +90,10 @@ public:
     void polygon_fragment(unsigned int,vgl_polygon<double>& poly);
 
     //: write out output polygon
-    void write_out_polygons(vcl_string filename);
+    void write_out_polygons(std::string filename);
 
     //: write out output polygon
-    void write_out_polygons(vcl_string filename,
+    void write_out_polygons(std::string filename,
                             dbsk2d_ishock_transform& transform);
 
     // sort dbsk2d ishock edges
@@ -103,45 +103,45 @@ public:
 
 
     // get region nodes
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >&
         get_region_nodes(){return region_nodes_;}
 
     // get outer_shock nodes
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >&
         get_outer_shock_nodes(){return outer_shock_nodes_;}
 
     // get region belms ids
-    vcl_map<unsigned int,vcl_set<int> >&
+    std::map<unsigned int,std::set<int> >&
         get_region_belms_ids(){return region_belms_ids_;}
 
     // get region belm contour ids
-    vcl_map<unsigned int,vcl_set<int> >&
+    std::map<unsigned int,std::set<int> >&
         get_region_belms_contour_ids(){return region_belms_contour_ids_;}
 
     // get region belms
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >&
         get_region_belms(){return region_belms_;}
 
 
     // get region belm contour ids
-    vcl_map<unsigned int,vcl_set<int> >&
+    std::map<unsigned int,std::set<int> >&
         get_degree_three_node_ids(){return degree_three_node_ids_;}
 
     // get region belms
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >&
         get_degree_three_nodes(){return degree_three_nodes_;}
    
     // See if region has matching with rag graph
-    void inline rag_nodes(vcl_vector<dbsk2d_ishock_belm*> region_elements,
-                          vcl_set<int> region_contour_ids,
+    void inline rag_nodes(std::vector<dbsk2d_ishock_belm*> region_elements,
+                          std::set<int> region_contour_ids,
                           dbsk2d_ishock_transform_sptr transform,
-                          vcl_set<unsigned int>& rag_nodes_matched,
+                          std::set<unsigned int>& rag_nodes_matched,
                           int compare)
     {
         /* if ( region_contour_ids.size() == 1 ) */
         /* { */
-        /*     vcl_vector<unsigned int> matching_regions; */
-        /*     vcl_map<unsigned int,vcl_set<int> >::iterator it; */
+        /*     std::vector<unsigned int> matching_regions; */
+        /*     std::map<unsigned int,std::set<int> >::iterator it; */
         /*     for ( it = region_belms_contour_ids_.begin() ;  */
         /*           it != region_belms_contour_ids_.end(); */
         /*           ++it) */
@@ -150,17 +150,17 @@ public:
                 
         /*         if ( flag ) */
         /*         { */
-        /*             vcl_cout<<"Found Region affected by transform"<<vcl_endl; */
-        /*             vcl_set<int> contour_ids=(*it).second; */
+        /*             std::cout<<"Found Region affected by transform"<<std::endl; */
+        /*             std::set<int> contour_ids=(*it).second; */
                     
-        /*             bool flag2 = vcl_includes(contour_ids.begin(), */
+        /*             bool flag2 = std::includes(contour_ids.begin(), */
         /*                                       contour_ids.end(), */
         /*                                       region_contour_ids.begin(), */
         /*                                       region_contour_ids.end()); */
         /*             if ( flag2 == true) */
         /*             { */
         /*                 rag_nodes_matched.insert((*it).first); */
-        /*             vcl_cout<<"Found Region has this contour"<<vcl_endl; */
+        /*             std::cout<<"Found Region has this contour"<<std::endl; */
         /*             }    */
         /*         } */
         /*     } */
@@ -170,23 +170,23 @@ public:
         /* else if ( region_contour_ids.size() > 1 ) */
         /* { */
 
-        vcl_set<int> test_set;
+        std::set<int> test_set;
         for ( unsigned int i=0; i < region_elements.size() ; ++i)
         {
             test_set.insert(region_elements[i]->id());
         }
 
-        vcl_map<unsigned int,vcl_set<int> >::iterator it;
+        std::map<unsigned int,std::set<int> >::iterator it;
         for ( it = region_belms_ids_.begin() ; 
               it != region_belms_ids_.end();
               ++it)
         {
 
-            vcl_set<int> intersection;
-            vcl_insert_iterator<vcl_set<int> > 
+            std::set<int> intersection;
+            std::insert_iterator<std::set<int> > 
                 inserter(intersection,intersection.begin());
             
-            vcl_set_intersection(test_set.begin(),
+            std::set_intersection(test_set.begin(),
                                  test_set.end(),
                                  (*it).second.begin(),
                                  (*it).second.end(),
@@ -217,14 +217,14 @@ public:
                     }
                 }
 
-                vcl_set<int> contour_ids=
+                std::set<int> contour_ids=
                     region_belms_contour_ids_[(*it).first];
                 
-                vcl_set<int> cont;
-                vcl_insert_iterator<vcl_set<int> > 
+                std::set<int> cont;
+                std::insert_iterator<std::set<int> > 
                     con_insert(cont,cont.begin());
                 
-                vcl_set_intersection(contour_ids.begin(),
+                std::set_intersection(contour_ids.begin(),
                                      contour_ids.end(),
                                      region_contour_ids.begin(),
                                      region_contour_ids.end(),
@@ -260,13 +260,13 @@ public:
     }
 
 
-    void write_out_file(vcl_string filename);
+    void write_out_file(std::string filename);
 
 private:
 
     // Method test if node is still expandable
     void inline node_expandable(dbsk2d_ishock_node* node,
-                                vcl_vector<dbsk2d_ishock_edge*>& edges,
+                                std::vector<dbsk2d_ishock_edge*>& edges,
                                 bool& insert)
     {
 
@@ -302,7 +302,7 @@ private:
 
     // Method test if node is still expandable
     void inline node_coarse_expandable(dbsk2d_ishock_node* node,
-                                       vcl_vector<dbsk2d_ishock_edge*>& edges,
+                                       std::vector<dbsk2d_ishock_edge*>& edges,
                                        bool& insert)
     {
 
@@ -346,7 +346,7 @@ private:
     void expand_wavefront_coarse(dbsk2d_ishock_node* node,
                                  dbsk2d_ishock_edge* ic_edge,
                                  unsigned int map_key,
-                                 vcl_set<int>& ids);
+                                 std::set<int>& ids);
  
     // Private intrinsinc shock graph
     dbsk2d_ishock_graph_sptr ishock_graph_;
@@ -355,29 +355,29 @@ private:
     dbsk2d_boundary_sptr boundary_;
 
     // Store visited edges
-    vcl_map<unsigned int,vcl_string> visited_edges_;
+    std::map<unsigned int,std::string> visited_edges_;
 
     // Store rag nodes
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> > region_nodes_;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> > region_nodes_;
 
     // Store outer shock nodes
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_node*> > outer_shock_nodes_;
+    std::map<unsigned int, std::vector<dbsk2d_ishock_node*> > outer_shock_nodes_;
 
     // Store belms
-    vcl_map<unsigned int, vcl_set<int> > region_belms_ids_;
+    std::map<unsigned int, std::set<int> > region_belms_ids_;
     
     // Store belms contour ids
-    vcl_map<unsigned int, vcl_set<int> > region_belms_contour_ids_;
+    std::map<unsigned int, std::set<int> > region_belms_contour_ids_;
 
     // Store belms of all regions
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
         region_belms_;
 
     // Store alll degree three nodes
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> >
+    std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> >
         degree_three_nodes_;
 
-    vcl_map<unsigned int,vcl_set<int> > degree_three_node_ids_;
+    std::map<unsigned int,std::set<int> > degree_three_node_ids_;
 
     // Make copy ctor private
     dbsk2d_ishock_grouping_transform(const dbsk2d_ishock_grouping_transform&);

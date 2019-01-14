@@ -4,10 +4,10 @@
 
 
 bool mw_rig::
-read(vcl_string img_name1, vcl_string img_name2)
+read(std::string img_name1, std::string img_name2)
 {
    if (!read_cam(img_name1,img_name2,&Pr1,&Pr2)) {
-      vcl_cerr << "mw_rig: error reading cam\n";
+      std::cerr << "mw_rig: error reading cam\n";
       return false;
    }
 

@@ -15,7 +15,7 @@ class spatemp_display_edge_maps_process:public bpro1_process
         spatemp_display_edge_maps_process();
         virtual ~spatemp_display_edge_maps_process();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process * clone() const;
@@ -25,8 +25,8 @@ class spatemp_display_edge_maps_process:public bpro1_process
         void set_forward_input_frames();
 
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
   virtual bool non_causal() const { return true; }
 
         bool execute();

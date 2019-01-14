@@ -21,7 +21,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vsl/vsl_binary_io.h>
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -39,7 +39,7 @@ public:
 protected:
   int w_;
   int h_;
-  vcl_vector<vxl_byte> f_;
+  std::vector<vxl_byte> f_;
 };
 
 class dbfs_rect_feature_set : public vbl_ref_count
@@ -52,7 +52,7 @@ public:
   dbfs_rect_feature_sptr get_feature(unsigned i) { return s_[i]; }
 
 protected:
-  vcl_vector<dbfs_rect_feature_sptr> s_;
+  std::vector<dbfs_rect_feature_sptr> s_;
 };
 
 // Binary io, NOT IMPLEMENTED, signatures defined to use dbfs_rect_feature_set as a brdb_value

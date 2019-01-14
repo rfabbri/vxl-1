@@ -107,7 +107,7 @@ dbvis1_triangularblob_tool::set_storage ( const bpro1_storage_sptr& storage_sptr
 }
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbvis1_triangularblob_tool::name() const
 {
   return "Triangular blob";
@@ -149,26 +149,26 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
   if (change_parameters(e)){
     SS_ERROR error = stb->compute_shockbranch_params(stb->cur_scenario(), true);
     if (error == ERROR_FREE)
-      vcl_cout << "Valid Triangular blob " << vcl_endl;
+      std::cout << "Valid Triangular blob " << std::endl;
     else
-      vcl_cout << "Invalid Triangular blob " << vcl_endl;
-      vcl_cout << "Error code = " << error;
+      std::cout << "Invalid Triangular blob " << std::endl;
+      std::cout << "Error code = " << error;
 
     int num_steps = 25;
     tableau()->clear();
     tableau()->add_vsol_point_2d(new vsol_point_2d(0.0, 0.0));
     for (int j = 0; j<3; j++){
       shockbranch_sptr sb = stb->a3branch(j);
-      /*vcl_cout << vcl_endl << " End Point " << j << vcl_endl;
-      stb->a13point(j)->print(vcl_cout);*/
+      /*std::cout << std::endl << " End Point " << j << std::endl;
+      stb->a13point(j)->print(std::cout);*/
 
-      vcl_cout << vcl_endl << "Branch " << j << vcl_endl;
-      stb->a3branch(j)->print(vcl_cout);
+      std::cout << std::endl << "Branch " << j << std::endl;
+      stb->a3branch(j)->print(std::cout);
 
       // compute the polyline along the shock and boundaries
-      vcl_vector< vsol_point_2d_sptr > shock_points;
-      vcl_vector< vsol_point_2d_sptr > bnd_left_pts;
-      vcl_vector< vsol_point_2d_sptr > bnd_right_pts;
+      std::vector< vsol_point_2d_sptr > shock_points;
+      std::vector< vsol_point_2d_sptr > bnd_left_pts;
+      std::vector< vsol_point_2d_sptr > bnd_right_pts;
     
       double step = sb->length() / num_steps;
       for (int i = 0; i <= num_steps; i++){
@@ -181,7 +181,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view )
         bnd_right_pts.push_back(new vsol_point_2d(right));
         shock_points.push_back(new vsol_point_2d(center));
         
-        vcl_vector<vsol_point_2d_sptr > triple;
+        std::vector<vsol_point_2d_sptr > triple;
         triple.push_back(bnd_left_pts.back());
         triple.push_back(shock_points.back());
         triple.push_back(bnd_right_pts.back());
@@ -221,19 +221,19 @@ change_parameters(const vgui_event& e){
   
   // compute again
   if (compute_again(e) ){
-    vcl_cout << "Command: Compute all parameters again" << vcl_endl;  
+    std::cout << "Command: Compute all parameters again" << std::endl;  
     return true;
   }
   
   // reset to current default values
   if (reset(e)){
-    vcl_cout << "Command: Reset all parameters" << vcl_endl;  
+    std::cout << "Command: Reset all parameters" << std::endl;  
     stb->init();
     return true;
   }
   
   if (change_scenario(e) ){
-    vcl_cout << "Command: Change scenario" << vcl_endl;  
+    std::cout << "Command: Change scenario" << std::endl;  
     
     vgui_dialog scenario_dialog("Choose triangular blob scenario");
     int dialog_choice;
@@ -248,7 +248,7 @@ change_parameters(const vgui_event& e){
         stb->set_cur_scenario(PSI_LENGTH_RADIUS) ;
         break;
     }
-    vcl_cout << "New scenario: " << stb->cur_scenario() << vcl_endl;
+    std::cout << "New scenario: " << stb->cur_scenario() << std::endl;
     return true;
   }
   
@@ -261,19 +261,19 @@ change_parameters(const vgui_event& e){
 
 //: check if any parameters has changed 
 void dbvis1_triangularblob_tool::
-change_params_message(int direction, vcl_string param_name, double old_value, double new_value){
-  vcl_cout << vcl_endl << "Command: ";
-  if (direction == 0) vcl_cout << "increase ";
-  else vcl_cout << "decrease ";
-  vcl_cout << param_name << vcl_endl;
-  vcl_cout << "Old value is " << old_value << vcl_endl;
-  vcl_cout << "New value is " << new_value << vcl_endl;
+change_params_message(int direction, std::string param_name, double old_value, double new_value){
+  std::cout << std::endl << "Command: ";
+  if (direction == 0) std::cout << "increase ";
+  else std::cout << "decrease ";
+  std::cout << param_name << std::endl;
+  std::cout << "Old value is " << old_value << std::endl;
+  std::cout << "New value is " << new_value << std::endl;
 }
 
 //: check change parameters in complete_A13_scenario
 bool dbvis1_triangularblob_tool::
 change_complete_A13_params(const vgui_event & e){
-  vcl_string str[3];
+  std::string str[3];
   // change r
   for (int i = 0; i<2; i++){
     if (change_r[i](e)){
@@ -337,7 +337,7 @@ change_complete_A13_params(const vgui_event & e){
 // check for parameter change in PSI_LENGTH_RADIUS scenario
 bool dbvis1_triangularblob_tool::
 change_psi_length_radius_params(const vgui_event & e){
-  vcl_string str[3];
+  std::string str[3];
   // change r
   for (int i = 0; i<2; i++){
     if (change_r[i](e)){

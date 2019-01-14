@@ -43,7 +43,7 @@ dbbgm_fgdetect_edges_process::dbbgm_fgdetect_edges_process() : bpro1_process()
         !parameters()->add( "Radius of Uncertainity" ,    "-rad" ,    (int)2       ) 
         )  
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -71,10 +71,10 @@ dbbgm_fgdetect_edges_process::clone() const
 /*************************************************************************
 * Function Name: dbbgm_fgdetect_edges_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbbgm_fgdetect_edges_process::name()
 {
     return "Fg Detection of Edges";
@@ -84,12 +84,12 @@ dbbgm_fgdetect_edges_process::name()
 /*************************************************************************
 * Function Name: ddbil_osl_canny_edges_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbbgm_fgdetect_edges_process::get_input_type()
+std::vector< std::string > dbbgm_fgdetect_edges_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "edge_map" );
     to_return.push_back( "dbbgm_image" );
     return to_return;
@@ -99,12 +99,12 @@ vcl_vector< vcl_string > dbbgm_fgdetect_edges_process::get_input_type()
 /*************************************************************************
 * Function Name: dbbgm_fgdetect_edges_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbbgm_fgdetect_edges_process::get_output_type()
+std::vector< std::string > dbbgm_fgdetect_edges_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
         to_return.push_back( "image" );
     to_return.push_back( "edge_map" );
@@ -136,7 +136,7 @@ bool
 dbbgm_fgdetect_edges_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbbgm_fgdetect_edges_process::execute() - not exactly one"
+        std::cout << "In dbbgm_fgdetect_edges_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -146,7 +146,7 @@ dbbgm_fgdetect_edges_process::execute()
     input_edgemap.vertical_cast(input_data_[0][0]);
 
     dbdet_edgemap_sptr edgemap=input_edgemap->get_edgemap();
-    vcl_cout<<" .. # Edges : "<<edgemap->num_edgels<<"\n";
+    std::cout<<" .. # Edges : "<<edgemap->num_edgels<<"\n";
 
 
     dbdet_edgemap_sptr fgmap=fg_detect(edgemap);
@@ -197,21 +197,21 @@ dbbgm_fgdetect_edges_process::fg_detect(dbdet_edgemap_sptr edgemap)
     //dir_img.fill(-100.0);
     //vil_image_view<bool> mask_img(image_sptr->ni(),image_sptr->nj(),1);
     //mask_img.fill(false);
-    ////vcl_vector<dbrl_id_point_2d_sptr> pointids;
+    ////std::vector<dbrl_id_point_2d_sptr> pointids;
 
-    //vcl_vector<vsol_point_2d_sptr> edges=ns.get_points();
-    ////vcl_vector<double> tangents=det.get_tangents();
-    //vcl_vector<vgl_vector_2d<double> > dirs=ns.get_directions();
+    //std::vector<vsol_point_2d_sptr> edges=ns.get_points();
+    ////std::vector<double> tangents=det.get_tangents();
+    //std::vector<vgl_vector_2d<double> > dirs=ns.get_directions();
     //for(unsigned i=0;i<edges.size();i++)
     //    {
-    //    dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),0)=edges[i]->x();
-    //    dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),1)=edges[i]->y();
-    //    double dir=vcl_atan2(dirs[i].y(),dirs[i].x());
-    //    dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),2)=dir;
-    //    mask_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()))=true;
+    //    dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),0)=edges[i]->x();
+    //    dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),1)=edges[i]->y();
+    //    double dir=std::atan2(dirs[i].y(),dirs[i].x());
+    //    dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),2)=dir;
+    //    mask_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()))=true;
     //    }
 
-    //vcl_cout<<"Computed Edges for "<<frame_image->frame()<<" .. # Edges : "<<edges.size()<<"\n";
+    //std::cout<<"Computed Edges for "<<frame_image->frame()<<" .. # Edges : "<<edges.size()<<"\n";
 
     //vil_image_view<float> directionplane=vil_plane(dir_img,2);
 
@@ -241,7 +241,7 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
     parameters()->get_value( "-minweightthresh" ,   minweightthresh);
     parameters()->get_value( "-rad" ,   rad);
 
-    vcl_vector<dbdet_edgel*> fgedges;
+    std::vector<dbdet_edgel*> fgedges;
     vil_image_view<double> edgemapimage(edgemap->edge_cells.cols(),edgemap->edge_cells.rows());
     edgemapimage.fill(-10.0);
     vil_image_view<double> fgedgemapimage(edgemap->edge_cells.cols(),edgemap->edge_cells.rows());
@@ -270,20 +270,20 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
     {
         for(unsigned j=0;j<cols;j++)
         {
-            vcl_vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
+            std::vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
             for(unsigned k=0;k<es.size();k++)
             {
                 vgl_point_2d<double> pt=es[k]->pt;
                 double angle=es[k]->tangent;
 
-                edgemapimage(vcl_floor(pt.x()),vcl_floor(pt.y()))=255;
+                edgemapimage(std::floor(pt.x()),std::floor(pt.y()))=255;
                 bool flag=false;
                 for(int m=-rad;m<=rad;m++)
                 {
                     for(int n=-rad;n<=rad;n++)
                     {
-                        int m_index=vcl_floor(pt.x())+m;
-                        int n_index=vcl_floor(pt.y())+n;
+                        int m_index=std::floor(pt.x())+m;
+                        int n_index=std::floor(pt.y())+n;
 
                         if(m_index>=0 && n_index>=0 && m_index<cols && n_index<rows)
                         {
@@ -305,7 +305,7 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
                 if(!flag)
                 {
                     fgedges.push_back(new dbdet_edgel(pt,angle));
-                    fgedgemapimage(vcl_floor(pt.x()),vcl_floor(pt.y()))=255;
+                    fgedgemapimage(std::floor(pt.x()),std::floor(pt.y()))=255;
 
 
 
@@ -345,7 +345,7 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
     {
         for(unsigned j=0;j<cols;j++)
         {
-            vcl_vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
+            std::vector<dbdet_edgel*> es=edgemap->edge_cells(i,j);
             for(unsigned k=0;k<es.size();k++)
             {
                 vgl_point_2d<double> pt=es[k]->pt;
@@ -361,8 +361,8 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
                 //{
                 //    for(int n=-rad;n<=rad;n++)
                 //    {
-                //        int m_index=vcl_floor(pt.x())+m;
-                //        int n_index=vcl_floor(pt.y())+n;
+                //        int m_index=std::floor(pt.x())+m;
+                //        int n_index=std::floor(pt.y())+n;
 
                 //        if(m_index>=0 && n_index>=0 && m_index<cols && n_index<rows)
                 //        {
@@ -383,25 +383,25 @@ vidpro_image_storage_sptr output_fgedgemap = vidpro_image_storage_new();
                 //        }
                 //    }
                 //}
-                //mix_gauss_type_3d * dist1=&(*model)(vcl_floor(pt.x()),vcl_floor(pt.y()));
+                //mix_gauss_type_3d * dist1=&(*model)(std::floor(pt.x()),std::floor(pt.y()));
 
                 bool result=false;
-                detector_top_3d((*emodel)(vcl_floor(pt.x()),vcl_floor(pt.y())),data,result);//,final_covariance);
+                detector_top_3d((*emodel)(std::floor(pt.x()),std::floor(pt.y())),data,result);//,final_covariance);
                 flag=flag || result;                
                 result=false;
 
-                // mix_gauss_type_3d * dist2=&(*model)(vcl_ceil(pt.x()),vcl_floor(pt.y()));
-                detector_top_3d((*emodel)(vcl_ceil(pt.x()),vcl_floor(pt.y())),data,result);//,final_covariance);
+                // mix_gauss_type_3d * dist2=&(*model)(std::ceil(pt.x()),std::floor(pt.y()));
+                detector_top_3d((*emodel)(std::ceil(pt.x()),std::floor(pt.y())),data,result);//,final_covariance);
                 flag=flag || result;
                 result=false;
 
-                // mix_gauss_type_3d * dist3=&(*model)(vcl_floor(pt.x()),vcl_ceil(pt.y()));
-                detector_top_3d((*emodel)(vcl_floor(pt.x()),vcl_ceil(pt.y())),data,result);//,final_covariance);
+                // mix_gauss_type_3d * dist3=&(*model)(std::floor(pt.x()),std::ceil(pt.y()));
+                detector_top_3d((*emodel)(std::floor(pt.x()),std::ceil(pt.y())),data,result);//,final_covariance);
                 flag=flag || result;
                 result=false;
 
-                // mix_gauss_type_3d * dist4=&(*model)(vcl_ceil(pt.x()),vcl_ceil(pt.y()));
-                detector_top_3d((*emodel)(vcl_ceil(pt.x()),vcl_ceil(pt.y())),data,result);//,final_covariance);
+                // mix_gauss_type_3d * dist4=&(*model)(std::ceil(pt.x()),std::ceil(pt.y()));
+                detector_top_3d((*emodel)(std::ceil(pt.x()),std::ceil(pt.y())),data,result);//,final_covariance);
                 flag=flag || result;
                 if(!flag)
                     fgedges.push_back(new dbdet_edgel(pt,angle));

@@ -1,6 +1,6 @@
 //: 050805 MingChing Chang
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_vector_2d.h>
 
 #include <mesh_tri/mesh_tri.h>
@@ -80,7 +80,7 @@ static bool _compare_vertex_distance (dbmsh3d_fmm_vertex_3d* pVert1, dbmsh3d_fmm
 
 void dbmsh3d_fmm_mesh::setup_fast_marching ()
 {
-  vcl_make_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
+  std::make_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
 }
 
 void dbmsh3d_fmm_mesh::add_source_vertex (dbmsh3d_fmm_vertex_3d* input_vertex)
@@ -101,7 +101,7 @@ bool dbmsh3d_fmm_mesh::perform_fmm_one_step()
   
   dbmsh3d_fmm_vertex_3d* pCurVert = active_vertex_heap_.front();
   assert (pCurVert!=NULL);
-  vcl_pop_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
+  std::pop_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
   active_vertex_heap_.pop_back();
   pCurVert->set_state (dbmsh3d_fmm_vertex_3d::STATE_DEAD);
 
@@ -117,10 +117,10 @@ bool dbmsh3d_fmm_mesh::perform_fmm_one_step()
     float rNewDistance = GW_INFINITE;
 
     //: iterate through pNewVert's incident faces
-    vcl_set<dbmsh3d_face*> incident_faces;
+    std::set<dbmsh3d_face*> incident_faces;
     pNewVert->get_incident_Fs (incident_faces);
 
-    vcl_set<dbmsh3d_face*>::iterator fit =incident_faces.begin();
+    std::set<dbmsh3d_face*>::iterator fit =incident_faces.begin();
     for (; fit != incident_faces.end(); fit++) {
       dbmsh3d_face* pFace = (*fit);
 
@@ -138,7 +138,7 @@ bool dbmsh3d_fmm_mesh::perform_fmm_one_step()
       }
 
       float cur_distance = compute_vertex_distance (pFace, pNewVert, pVert1, pVert2, pCurVert->source_of_front());
-      rNewDistance = vcl_min (rNewDistance, cur_distance);
+      rNewDistance = std::min (rNewDistance, cur_distance);
     }
 
     switch (pNewVert->state()) {
@@ -146,7 +146,7 @@ bool dbmsh3d_fmm_mesh::perform_fmm_one_step()
       pNewVert->set_dist (rNewDistance);
       /* add the vertex to the heap */
       active_vertex_heap_.push_back (pNewVert);
-      vcl_push_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
+      std::push_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
       /* this one can be added to the heap */
       pNewVert->set_state (dbmsh3d_fmm_vertex_3d::STATE_ALIVE);
       pNewVert->set_source_of_front (pCurVert->source_of_front());
@@ -160,7 +160,7 @@ bool dbmsh3d_fmm_mesh::perform_fmm_one_step()
         pNewVert->set_dist (rNewDistance);
         pNewVert->set_source_of_front (pCurVert->source_of_front());
         // hum, check if we can correct this (avoid recomputing the whole heap).
-        vcl_make_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
+        std::make_heap (active_vertex_heap_.begin(), active_vertex_heap_.end(), _compare_vertex_distance);
       }
       else {
         /* possible overlap with new value */
@@ -239,7 +239,7 @@ float dbmsh3d_fmm_mesh::compute_vertex_distance (dbmsh3d_face* CurrentFace,
           float t;    // newly computed value
           /* use the unfolded value */
           t = compute_update_sethian_method (d1, d3, c, b, dot1);
-          t = vcl_min( t, compute_update_sethian_method (d3, d2, a, c, dot2) );
+          t = std::min( t, compute_update_sethian_method (d3, d2, a, c, dot2) );
 
           return t;
         }
@@ -271,7 +271,7 @@ float dbmsh3d_fmm_mesh::compute_update_sethian_method (float d1, float d2, float
   float t = GW_INFINITE;
 
   float rCosAngle = dot;
-  float rSinAngle = vcl_sqrt( 1-dot*dot );
+  float rSinAngle = std::sqrt( 1-dot*dot );
 
   // Sethian method
   float u = d2-d1;    // T(B)-T(A)
@@ -283,14 +283,14 @@ float dbmsh3d_fmm_mesh::compute_update_sethian_method (float d1, float d2, float
   float delta = f1*f1 - f0*f2;
 
   if (delta>=0) {
-    if (vcl_fabs(f2)>GW_EPSILON) {
+    if (std::fabs(f2)>GW_EPSILON) {
       // there is a solution
-      t = (-f1 - vcl_sqrt(delta) )/f2;
+      t = (-f1 - std::sqrt(delta) )/f2;
       // test if we must must choose the other solution
       if (t<u || 
           b*(t-u)/t < a*rCosAngle ||
           a/rCosAngle < b*(t-u)/t) {
-        t = (-f1 + vcl_sqrt(delta) ) / f2;
+        t = (-f1 + std::sqrt(delta) ) / f2;
       }
     }
     else {
@@ -312,7 +312,7 @@ float dbmsh3d_fmm_mesh::compute_update_sethian_method (float d1, float d2, float
     return t+d1;
   }
   else {
-    return vcl_min(b*WAVESPEEDF+d1,a*WAVESPEEDF+d2);
+    return std::min(b*WAVESPEEDF+d1,a*WAVESPEEDF+d2);
   }
 }
 
@@ -356,7 +356,7 @@ dbmsh3d_fmm_vertex_3d* dbmsh3d_fmm_mesh::unfold_triangle (dbmsh3d_face* CurFace,
   assert (dot<0);
 
   // the equation of the lines defining the unfolding region [e.g. line 1 : {x ; <x,eq1>=0} ]
-  vgl_vector_2d<double> eq1 = vgl_vector_2d<double>( dot, vcl_sqrt(1-dot*dot) );
+  vgl_vector_2d<double> eq1 = vgl_vector_2d<double>( dot, std::sqrt(1-dot*dot) );
   vgl_vector_2d<double> eq2 = vgl_vector_2d<double>(1,0);
 
   // position of the 2 points on the unfolding plane
@@ -456,7 +456,7 @@ void fmm_track_geodesic::back_track_geodesic (dbmsh3d_vertex* ending_vertex)
   }
 }
 
-void fmm_track_geodesic::get_geodesic_polyline (vcl_vector<vgl_point_3d<double> >& geodesic_points)
+void fmm_track_geodesic::get_geodesic_polyline (std::vector<vgl_point_3d<double> >& geodesic_points)
 {
   //: put the geodesic points to return
   for (unsigned int i=0; i<geodesic_path_.size(); i++) {
@@ -585,7 +585,7 @@ int fmm_track_geodesic::add_new_geodesic_point ()
     float l, a;
     // Try each kind of possible crossing. 
     // The barycentric coords of the point is (x-l*dx/l1,y-l*dy/l2,z+l*(dx/l1+dy/l2)) 
-    if (vcl_fabs(dx) > GW_EPSILON) {
+    if (std::fabs(dx) > GW_EPSILON) {
       l = l1*x/dx;    // position along the line
       a = y-l*dy/l2;    // coordonate with respect to v2
       if (l>0 && l<=STEP_SIZE && 0<=a && a<=1)  {
@@ -621,7 +621,7 @@ int fmm_track_geodesic::add_new_geodesic_point ()
         }        
       }
     }
-    if (vcl_fabs(dy)>GW_EPSILON!=0)  {
+    if (std::fabs(dy)>GW_EPSILON!=0)  {
       l = l2*y/dy;    // position along the line
       a = x-l*dx/l1;    // coordonate with respect to v1
       if (l>0 && l<=STEP_SIZE && 0<=a && a<=1)  {
@@ -656,7 +656,7 @@ int fmm_track_geodesic::add_new_geodesic_point ()
         }
       }
     }
-    if (vcl_fabs(dx/l1+dy/l2)>GW_EPSILON)  {
+    if (std::fabs(dx/l1+dy/l2)>GW_EPSILON)  {
       l = -z/(dx/l1+dy/l2);    // position along the line
       a = x-l*dx/l1;    // coordonate with respect to v1
       if (l>0 && l<=STEP_SIZE && 0<=a && a<=1)  {
@@ -692,7 +692,7 @@ int fmm_track_geodesic::add_new_geodesic_point ()
       }
     }
 
-    if (vcl_fabs(dx)<GW_EPSILON && vcl_fabs(dx)<GW_EPSILON)  {
+    if (std::fabs(dx)<GW_EPSILON && std::fabs(dx)<GW_EPSILON)  {
       /* special case : we must follow the E. */
       dbmsh3d_fmm_vertex_3d* pSelectedVert = pVert1;
       if (pVert2->dist() < pSelectedVert->dist())
@@ -780,7 +780,7 @@ dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh)
   dbmsh3d_fmm_mesh* fmm_tri_mesh = new dbmsh3d_fmm_mesh;
 
   //: put all existing vertices into the new tri_mesh
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = mesh->vertexmap().begin();
   for (; vit != mesh->vertexmap().end(); vit++) {
     dbmsh3d_vertex* vertex = (*vit).second;
 
@@ -792,7 +792,7 @@ dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh)
 
   //: triangulate each face of the mesh
   int count = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = mesh->facemap().begin();
   for (; it != mesh->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     
@@ -817,11 +817,11 @@ dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh)
 
       //triangulate the F
       Vector2dVector a;
-      ///vul_printf (vcl_cout, "Input Polygon %d => \n", count);
+      ///vul_printf (std::cout, "Input Polygon %d => \n", count);
 
       //: need to project the 3d coord of each vertex onto a reference plane
       //  to get its 2d coord.
-      vcl_vector<dbmsh3d_vertex*> vertices;
+      std::vector<dbmsh3d_vertex*> vertices;
       vgl_vector_3d<double> normal = compute_normal_ifs (F->vertices());
 
       //: use V[0] as origin O, use V[1]-V[0] as e1, e2 = N * e1
@@ -849,7 +849,7 @@ dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh)
         //  Should compute normal and project to the polygon plane!
         a.push_back (Vector2d(u, v, vertex->id()));
 
-        ///vul_printf (vcl_cout, "\t (%lf, %lf) \n", x, y);
+        ///vul_printf (std::cout, "\t (%lf, %lf) \n", x, y);
       }
     
       // allocate an STL vector to hold the answer.
@@ -867,9 +867,9 @@ dbmsh3d_fmm_mesh* generate_fmm_tri_mesh (dbmsh3d_mesh* mesh)
         const Vector2d &p2 = result[i*3+1];
         const Vector2d &p3 = result[i*3+2];
 
-        ///vul_printf (vcl_cout, "Triangle %d => (%lf, %lf) (%lf, %lf) (%lf, %lf)\n",
+        ///vul_printf (std::cout, "Triangle %d => (%lf, %lf) (%lf, %lf) (%lf, %lf)\n",
         //              i+1,p1.GetX(),p1.GetY(),p2.GetX(),p2.GetY(),p3.GetX(),p3.GetY());
-        ///vul_printf (vcl_cout, "Triangle %d => v[%d], v[%d], v[%d]\n", i+1, p1.id_, p2.id_, p3.id_);
+        ///vul_printf (std::cout, "Triangle %d => v[%d], v[%d], v[%d]\n", i+1, p1.id_, p2.id_, p3.id_);
 
         //: for each triangle, add as a new F
         dbmsh3d_face* tri_face = fmm_tri_mesh->_new_face ();

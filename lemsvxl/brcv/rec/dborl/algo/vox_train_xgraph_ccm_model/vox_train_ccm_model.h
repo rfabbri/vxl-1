@@ -19,9 +19,9 @@
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 
 #include <vgl/vgl_box_2d.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 
 
 //: Parameters to train a ccm model for xgraph
@@ -48,25 +48,25 @@ struct vox_train_ccm_model_params
   double perturb_delta_x;
   double perturb_delta_y;
 
-  vcl_string index_file_name;
+  std::string index_file_name;
 
   // specifying positive and negative images
-  vcl_string list_pos_objs;
-  vcl_string list_neg_objs;
-  vcl_string image_ext;
+  std::string list_pos_objs;
+  std::string list_neg_objs;
+  std::string image_ext;
 
-  vcl_string edgemap_ext;
-  vcl_string edgeorient_ext;
-  vcl_string edgemap_orient_vox_label;
+  std::string edgemap_ext;
+  std::string edgeorient_ext;
+  std::string edgemap_orient_vox_label;
 
   // list of available groundtruth xgraph
-  vcl_string list_gt_xgraph_objs;
-  vcl_string gt_xgraph_vox_label;
-  vcl_string prototype_xgraph_file_obj;
+  std::string list_gt_xgraph_objs;
+  std::string gt_xgraph_vox_label;
+  std::string prototype_xgraph_file_obj;
 
   // Output file
-  vcl_string pos_output_file;
-  vcl_string neg_output_file;
+  std::string pos_output_file;
+  std::string neg_output_file;
 };
 
 
@@ -104,35 +104,35 @@ public:
   // Support functions ---------------------------------------------------------
 protected:
   //: Form a list of boundary fragment labels from the prototype graph
-  bool form_prototype_bnd_frag_labels(vcl_vector<vcl_string >& prototype_bnd_frag_labels, vcl_vector<unsigned >& list_prototype_eid);
+  bool form_prototype_bnd_frag_labels(std::vector<std::string >& prototype_bnd_frag_labels, std::vector<unsigned >& list_prototype_eid);
 
   //: Gather list of groundtruth xgraph file names
   bool build_grouping_of_gt_xgraph_fnames(
-    vcl_map<vcl_string, vcl_vector<vcl_string > >& map_image_name_to_xgraph_fname);
+    std::map<std::string, std::vector<std::string > >& map_image_name_to_xgraph_fname);
 
   //: Build a biarc sampler to sample fragment boundaries
   bool build_biarc_sampler(dbsks_biarc_sampler& biarc_sampler);
 
   
   //: Collect info about an edgemap pyramid (name and width)
-  bool gather_edgemap_pyramid_info(const vcl_string& image_name, 
-    vcl_vector<vcl_string >& list_edgemap_names,
-    vcl_vector<vgl_box_2d<int > >& list_edgemap_bboxes);
+  bool gather_edgemap_pyramid_info(const std::string& image_name, 
+    std::vector<std::string >& list_edgemap_names,
+    std::vector<vgl_box_2d<int > >& list_edgemap_bboxes);
 
   //: Construct a CCM cost calculator for a given edgemap.
   // If "Region of Interest" roi = 0, the whole edge map is computed
-  bool build_subpix_ccm(const vcl_string& image_name, const vcl_string& edgemap_name,
+  bool build_subpix_ccm(const std::string& image_name, const std::string& edgemap_name,
     dbsks_subpix_ccm& ccm, const vgl_box_2d<int >* roi = 0 );
 
   //: Compute ccm cost for each boundary fragment of an xgraph
   bool compute_xgraph_ccm_cost(const dbsks_subpix_ccm& ccm, 
     const dbsks_biarc_sampler& biarc_sampler,
     const dbsksp_xshock_graph_sptr& xgraph,
-    const vcl_vector<unsigned >& list_prototype_eid,
+    const std::vector<unsigned >& list_prototype_eid,
     vnl_vector<float >& bnd_frag_ccm_cost);
 
   //: Print header info in XML format
-  vcl_ostream& print_xml_header(vcl_ostream& os);
+  std::ostream& print_xml_header(std::ostream& os);
 
   // Member variables ----------------------------------------------------------
 
@@ -144,8 +144,8 @@ public:
 
 
   // list of filenames of positive and negative images
-  vcl_vector<vcl_string > pos_image_fnames;
-  vcl_vector<vcl_string > neg_image_fnames;
+  std::vector<std::string > pos_image_fnames;
+  std::vector<std::string > neg_image_fnames;
 protected:
 
 

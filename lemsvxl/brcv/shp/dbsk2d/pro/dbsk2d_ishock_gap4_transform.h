@@ -16,8 +16,8 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_line_segment_2d.h>
@@ -33,7 +33,7 @@ public:
     //: Constructor
     dbsk2d_ishock_gap4_transform(
         dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
         dbsk2d_ishock_bpoint* anchor_pt,
         int euler_spiral_id_=-2);
 
@@ -48,8 +48,8 @@ public:
 
     //: Get contour pair
     /* virtual */
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> get_contour_pair()
-    {return vcl_make_pair(gap_line_pair_.first,anchor_pt_);}
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> get_contour_pair()
+    {return std::make_pair(gap_line_pair_.first,anchor_pt_);}
     
     //: Test if valid transform, outside image
     /* virtual */ bool valid_transform();
@@ -61,7 +61,7 @@ public:
         return vgl_distance(line,gap_line_pair_.first->pt());}
 
     //: Grap belms that euler spiral connects
-    /* virtual*/ void get_belms(vcl_set<int>& set){
+    /* virtual*/ void get_belms(std::set<int>& set){
         set.insert(gap_line_pair_.first->id());
         set.insert(anchor_pt_->id());}
 
@@ -73,13 +73,13 @@ private:
 
 
     // Stores new gap that it is working on
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> gap_line_pair_;
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> gap_line_pair_;
 
     // Hold new contour
-    vcl_vector<dbsk2d_ishock_belm*> local_belm_list_;
+    std::vector<dbsk2d_ishock_belm*> local_belm_list_;
 
     // Holds two opposing contours that were met
-    vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> contour_pair_;
+    std::pair<dbsk2d_ishock_belm*,dbsk2d_ishock_belm*> contour_pair_;
 
     // Holds contour dbsk2d contour
     dbsk2d_bnd_contour_sptr contour_;

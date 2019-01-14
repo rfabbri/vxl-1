@@ -6,7 +6,7 @@
 #include "dbknee_tibia_cs.h"
 
 
-//#include <vcl_iostream.h>
+//#include <iostream>
 //#include <vnl/vnl_least_squares_function.h>
 //#include <vnl/algo/vnl_levenberg_marquardt.h>
 //#include <vnl/vnl_math.h>
@@ -49,15 +49,15 @@
 // cylinder_length 66.2678
 // fitting_error 2.21707
 bool dbknee_tibia_cs::
-load_from_cs_file(const vcl_string& cs_file)
+load_from_cs_file(const std::string& cs_file)
 {
-//  vcl_map<vcl_string, double > param_list;
+//  std::map<std::string, double > param_list;
 //  dbknee_read_coord_param_file(cs_file, param_list);
 //
 //  
 //  
 //  // if any param is specified then overwrite it
-//  vcl_map< vcl_string, double >::const_iterator itr;
+//  std::map< std::string, double >::const_iterator itr;
 //
 //  // 1. origin
 //  double origin_x = 0;
@@ -193,17 +193,17 @@ void dbknee_tibia_cs::
 build()
 {
   // Treat each face as a weighted point. Compute their centroid
-  vcl_vector<vgl_point_3d<double > > face_centers;
+  std::vector<vgl_point_3d<double > > face_centers;
   face_centers.reserve(this->mesh()->facemap().size());
 
-  vcl_vector<double > face_weights;
+  std::vector<double > face_weights;
   face_weights.reserve(this->mesh()->facemap().size());
 
   this->mesh()->reset_face_traversal();
   for (dbmsh3d_face* face=0; this->mesh()->next_face(face);)
   {
     // compute center and area of the face
-    vcl_vector<dbmsh3d_vertex* > face_vertices;
+    std::vector<dbmsh3d_vertex* > face_vertices;
     
     face->get_bnd_Vs(face_vertices);
     assert(face_vertices.size() >= 3);
@@ -304,7 +304,7 @@ build()
 // ----------------------------------------------------------------------------
 //: write info of the coordinate system to an output stream
 void dbknee_tibia_cs::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "origin_x" << " " << this->origin().x() << "\n"
     << "origin_y" << " " << this->origin().y() << "\n"
@@ -374,7 +374,7 @@ wc_to_local(dbmsh3d_mesh* mesh) const
 //// ----------------------------------------------------------------------------
 //dbknee_tibia_cs_params::
 //dbknee_tibia_cs_params(const vgl_box_3d<double >& bounding_box,
-//                                   const vcl_map<vcl_string, double >& param_list)
+//                                   const std::map<std::string, double >& param_list)
 //{
 //  // default: take 1/2 of x-axis as the cropping box
 //  this->cropping_box = bounding_box;
@@ -384,7 +384,7 @@ wc_to_local(dbmsh3d_mesh* mesh) const
 //
 //
 //  // if any param is specified then overwrite it
-//  vcl_map< vcl_string, double >::const_iterator itr;
+//  std::map< std::string, double >::const_iterator itr;
 //
 //  // fraction of the object's width will be kept in cropping
 //  double crop_width_start = 0.0;

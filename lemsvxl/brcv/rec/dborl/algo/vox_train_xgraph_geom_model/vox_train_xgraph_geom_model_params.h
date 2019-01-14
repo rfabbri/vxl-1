@@ -20,21 +20,21 @@ class vox_train_xgraph_geom_model_params : public dborl_algo_params
 public:
 
     //: Constructor
-    vox_train_xgraph_geom_model_params(vcl_string algo_name);
+    vox_train_xgraph_geom_model_params(std::string algo_name);
 
     // MEMBER VARIABLES
 
     //parameter for the index file
     //Is a flat image database
-    dborl_parameter<vcl_string> index_filename_;
+    dborl_parameter<std::string> index_filename_;
 
-    dborl_parameter<vcl_string> input_gt_objects_file_;
+    dborl_parameter<std::string> input_gt_objects_file_;
 
-    dborl_parameter<vcl_string> xgraph_assoc_label_;
+    dborl_parameter<std::string> xgraph_assoc_label_;
 
-    dborl_parameter<vcl_string> temp_dir_;
+    dborl_parameter<std::string> temp_dir_;
 
-    dborl_parameter<vcl_string> output_geom_dir_;
+    dborl_parameter<std::string> output_geom_dir_;
 };
 
 #endif /* VOX_TRAIN_XGRAPH_geom_MODEL_PARAMS_H_ */

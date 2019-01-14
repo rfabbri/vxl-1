@@ -30,7 +30,7 @@ dbmsh3d_isosurface_process() : bpro1_process()
     !parameters()->add( "Data spacing dy"   , "-dy" , 1.0f ) ||
     !parameters()->add( "Data spacing dz"   , "-dz" , 1.0f ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 //
@@ -52,7 +52,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbmsh3d_isosurface_process::
+std::string dbmsh3d_isosurface_process::
 name()
 {
   return "Isosurface";
@@ -67,7 +67,7 @@ input_frames()
   int num_frames = -1;
   this->parameters()->get_value( "-num_frames" , num_frames );
   if (num_frames < 0)
-    vcl_cout << "ERROR: number of frames is non-negative.\n";
+    std::cout << "ERROR: number of frames is non-negative.\n";
   return num_frames;
 }
 
@@ -84,10 +84,10 @@ output_frames()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmsh3d_isosurface_process::
+std::vector< std::string > dbmsh3d_isosurface_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("image");
   return to_return;
 }
@@ -96,10 +96,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmsh3d_isosurface_process::
+std::vector< std::string > dbmsh3d_isosurface_process::
 get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -115,7 +115,7 @@ execute()
   // mesh filename
    bpro1_filepath mesh_path;
   this->parameters()->get_value( "-mesh_filename" , mesh_path );    
-  vcl_string mesh_filename = mesh_path.path;
+  std::string mesh_filename = mesh_path.path;
   
   // data spacing
   float dx, dy, dz;
@@ -129,7 +129,7 @@ execute()
 
   if (num_frames <= 0)
   {
-    vcl_cerr << "In dbmsh3d_isosurface_process::execute() - number of frames " 
+    std::cerr << "In dbmsh3d_isosurface_process::execute() - number of frames " 
       << "must be a positive integer number.\n";
     return false;
   
@@ -137,12 +137,12 @@ execute()
 
   if ((int)(this->input_data_.size()) < num_frames)
   {
-    vcl_cerr << "In dbmsh3d_isosurface_process::execute() - not exactly " << num_frames
+    std::cerr << "In dbmsh3d_isosurface_process::execute() - not exactly " << num_frames
              << " input images \n";
     return false;
   }
 
-  vcl_cout << "Grouping the images into volumetric data.\n";
+  std::cout << "Grouping the images into volumetric data.\n";
   vil3d_image_view<vxl_byte > img3d;
 
   // determine size of the image
@@ -189,7 +189,7 @@ execute()
     }
   }
 
-  vcl_cout << "Build mesh of isosurface.\n";
+  std::cout << "Build mesh of isosurface.\n";
   dbmsh3d_mesh mesh;
   dbmsh3d_isosurface(mesh, img3d, 127, dx, dy, dz);
 
@@ -198,12 +198,12 @@ execute()
   h.set_identity();
   h.set_translation(0, 0, dz* (top_frame->frame()-num_frames));
   
-  vcl_cout << "Translate mesh to match with its frame number.\n";
+  std::cout << "Translate mesh to match with its frame number.\n";
   dbmsh3d_apply_xform (&mesh, h);
   
-  vcl_cout << "Save mesh.\n";
+  std::cout << "Save mesh.\n";
   dbmsh3d_save_ply(&mesh, mesh_filename.c_str(), false);
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   
 
   return true;

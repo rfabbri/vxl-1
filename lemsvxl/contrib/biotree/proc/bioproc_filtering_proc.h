@@ -6,7 +6,7 @@
 // \author    Kongbin Kang
 // \date        2005-03-18
 //
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_smart_ptr.h>
 #include <biob/biob_grid_worldpt_roster.h>
 #include <biob/biob_worldpt_field.h>
@@ -29,7 +29,7 @@ class  bioproc_filtering_proc
                            double resolution,
                            vgl_box_3d<double> &outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file="",
+                           std::string bin_scan_file="",
                            biob_worldpt_roster_sptr sample_roster = 0);
 
     bioproc_filtering_proc(imgr_scan_images_resource const & scan_image,
@@ -37,13 +37,13 @@ class  bioproc_filtering_proc
                            double resoultion,
                            vgl_box_3d<double> &outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file="",
+                           std::string bin_scan_file="",
                            biob_worldpt_roster_sptr sample_roster = 0);
 
     ~bioproc_filtering_proc();
   
     //: the control process
-    void execute(const vcl_vector<biob_worldpt_index> * which_samples = 0);
+    void execute(const std::vector<biob_worldpt_index> * which_samples = 0);
 
     biob_worldpt_field<xmvg_filter_response<T> > & worldpt_field() {
       return *field_;
@@ -96,6 +96,6 @@ class  bioproc_filtering_proc
 };
 
 template< class T, class F>
-void x_write(vcl_ostream& os, bioproc_filtering_proc<T, F> &proc);
+void x_write(std::ostream& os, bioproc_filtering_proc<T, F> &proc);
 
 #endif

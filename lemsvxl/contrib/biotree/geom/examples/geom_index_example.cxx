@@ -19,9 +19,9 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_cross.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include <vnl/vnl_quaternion.h>
 
 vnl_quaternion<double> findRot(vnl_vector<double> & from, vnl_vector<double> & to)
@@ -69,12 +69,12 @@ vnl_quaternion<double> findRot(vnl_vector<double> & from, vnl_vector<double> & t
   }
 }
 
-vcl_vector<vsol_cylinder> read_cylinders(vcl_string file_name, int& num)
+std::vector<vsol_cylinder> read_cylinders(std::string file_name, int& num)
 {
   int ver;
   double strength;
   vsol_cylinder cylinder;
-  vcl_vector<vsol_cylinder> cylinders;
+  std::vector<vsol_cylinder> cylinders;
 
   vsl_b_ifstream istream(file_name.c_str());
   vsl_b_read(istream, ver);
@@ -87,15 +87,15 @@ vcl_vector<vsol_cylinder> read_cylinders(vcl_string file_name, int& num)
     if (max_strength < strength)
       max_strength = strength;*/
 
-    //vcl_cout << strength << " min=" << min_strength << " max=" << max_strength << vcl_endl;
+    //std::cout << strength << " min=" << min_strength << " max=" << max_strength << std::endl;
     cylinder.b_read(istream);
-    cylinders.push_back(cylinder);//(vcl_pair<vsol_cylinder, double> (cylinder,strength));
-    vcl_cout << cylinder << vcl_endl;
+    cylinders.push_back(cylinder);//(std::pair<vsol_cylinder, double> (cylinder,strength));
+    std::cout << cylinder << std::endl;
   }
   return cylinders;
 }
 
-void write_cylinders(vcl_string o_file, vcl_vector<vsol_cylinder_sptr> cylinders)
+void write_cylinders(std::string o_file, std::vector<vsol_cylinder_sptr> cylinders)
 {
   vsl_b_ofstream stream(o_file);
   // write the version number
@@ -116,20 +116,20 @@ void write_cylinders(vcl_string o_file, vcl_vector<vsol_cylinder_sptr> cylinders
 using namespace std;
 int main(int argc, char* argv[]) {
 
-  vcl_string edge_file=  "";
-  vcl_string centerline_file = "";
-  vcl_string output_file = "";
+  std::string edge_file=  "";
+  std::string centerline_file = "";
+  std::string output_file = "";
 
   // Parse arguments
   for (int i = 1; i < argc; i++) {
-    vcl_string arg (argv[i]);
-    vcl_cout << arg << vcl_endl;
-    if (arg == vcl_string ("-c")) { centerline_file = vcl_string(argv[++i]);}
-    else if (arg == vcl_string ("-e")) { edge_file = vcl_string (argv[++i]); }
-    else if (arg == vcl_string ("-o")) { output_file = vcl_string (argv[++i]); }
+    std::string arg (argv[i]);
+    std::cout << arg << std::endl;
+    if (arg == std::string ("-c")) { centerline_file = std::string(argv[++i]);}
+    else if (arg == std::string ("-e")) { edge_file = std::string (argv[++i]); }
+    else if (arg == std::string ("-o")) { output_file = std::string (argv[++i]); }
     else
     {
-      vcl_cout << "Usage: " << argv[0] << "[-c centerline] [-e edge] [-o output]" << vcl_endl;
+      std::cout << "Usage: " << argv[0] << "[-c centerline] [-e edge] [-o output]" << std::endl;
       throw -1;
     }
   }
@@ -138,24 +138,24 @@ int main(int argc, char* argv[]) {
   biob_explicit_worldpt_roster * roster = new biob_explicit_worldpt_roster();
   
   int edge_num, cyl_num;
-  vcl_vector<vsol_cylinder> edge_cylinders = read_cylinders(edge_file, edge_num);
-  vcl_vector<vsol_cylinder> center_cylinders = read_cylinders(centerline_file, cyl_num);
+  std::vector<vsol_cylinder> edge_cylinders = read_cylinders(edge_file, edge_num);
+  std::vector<vsol_cylinder> center_cylinders = read_cylinders(centerline_file, cyl_num);
   vgl_box_3d<double> edge_box;
 
   for (unsigned int i=0; i<edge_cylinders.size(); i++) {
-    vcl_cout << edge_cylinders[i] << vcl_endl;
+    std::cout << edge_cylinders[i] << std::endl;
     roster->add_point(edge_cylinders[i].center());
     edge_box.add(edge_cylinders[i].center());
   }
 
-  vcl_cout << edge_box << vcl_endl;
+  std::cout << edge_box << std::endl;
 
   // add the points out of edge detection
   geom_index_structure index_structure(roster, 1.);
 
-  vcl_vector<vsol_cylinder_sptr> final_cylinders;
+  std::vector<vsol_cylinder_sptr> final_cylinders;
   for (unsigned int i=0; i<center_cylinders.size(); i++) {
-    vcl_cout << center_cylinders[i] << vcl_endl;
+    std::cout << center_cylinders[i] << std::endl;
     vsol_cylinder cylinder = center_cylinders[i];
     vnl_vector<double> from(3);
     from[0] = 0; from[1] = 0; from[2]=1;
@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
     vsol_volume_3d_sptr v = new vsol_orient_box_3d(obb);
     geom_probe_volume_sptr volume = new geom_volume(v);
     biob_worldpt_index_enumerator_sptr list = index_structure.enclosed_by(volume);
-    vcl_vector<double> dist;
+    std::vector<double> dist;
     double min=1e29, max=-1e29;
     int c=0;
     while (list->has_next()) {
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
       dist.push_back(d);
     }
     bsta_histogram<double> h(min, max, dist);
-    vcl_cout << "min=" << h.min() << " max=" <<  h.max() << vcl_endl;
+    std::cout << "min=" << h.min() << " max=" <<  h.max() << std::endl;
     double h_max =-1e29;
     double max_index = -1;
     for (unsigned int h_i=0; h_i<h.nbins(); h_i++) {

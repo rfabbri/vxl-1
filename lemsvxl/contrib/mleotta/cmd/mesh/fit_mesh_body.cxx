@@ -1,8 +1,8 @@
 // This is mleotta/cmd/mesh/fit_mesh_body.cxx
 
 
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
 #include <vul/vul_sprintf.h>
@@ -17,7 +17,7 @@
 #include <modrec/modrec_vehicle_mesh.h>
 
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vnl/vnl_matlab_filewrite.h>
 #include <vnl/vnl_matrix.h>
 
@@ -34,7 +34,7 @@ class mesh_to_surface_lsq_func : public vnl_least_squares_function
   public:
     mesh_to_surface_lsq_func(const imesh_imls_surface& surf,
                              const imesh_half_edge_set& half_edges,
-                             const vcl_vector<vgl_point_3d<double> >& orig_verts,
+                             const std::vector<vgl_point_3d<double> >& orig_verts,
                              unsigned int num_edge_samples = 3,
                              double orig_weight = 1.0)
     : vnl_least_squares_function(3*half_edges.num_verts(),
@@ -113,7 +113,7 @@ class mesh_to_surface_lsq_func : public vnl_least_squares_function
 
   private:
     imesh_half_edge_set half_edges_;
-    vcl_vector<vgl_point_3d<double> > orig_verts_;
+    std::vector<vgl_point_3d<double> > orig_verts_;
     imesh_imls_surface surf_;
     unsigned int num_edge_samples_;
     double orig_weight_;
@@ -139,16 +139,16 @@ void snap_to_surface_assign_normals(const imesh_imls_surface& f, imesh_mesh& mes
 
 
 void snap_faces_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
-                           const vcl_set<unsigned int>& faces)
+                           const std::set<unsigned int>& faces)
 {
   if(!mesh.faces().has_normals())
     mesh.compute_face_normals();
-  typedef vcl_map<unsigned int, vgl_plane_3d<double> > plane_map;
+  typedef std::map<unsigned int, vgl_plane_3d<double> > plane_map;
   plane_map planes;
-  for(vcl_set<unsigned int>::const_iterator fi = faces.begin();
+  for(std::set<unsigned int>::const_iterator fi = faces.begin();
       fi != faces.end(); ++fi){
     const unsigned int num_verts = mesh.faces().num_verts(*fi);
-    vcl_vector<vgl_point_3d<double> > pts;
+    std::vector<vgl_point_3d<double> > pts;
     for(unsigned int j=0; j<num_verts; ++j)
     {
       unsigned int v = mesh.faces()(*fi,j);
@@ -162,7 +162,7 @@ void snap_faces_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
       vgl_vector_3d<double> dc;
       f.deriv(c,dc);
       normalize(dc);
-      vcl_cout << "dot_prod norm = "<<dot_product(dc,mesh.faces().normal(*fi))<<vcl_endl;
+      std::cout << "dot_prod norm = "<<dot_product(dc,mesh.faces().normal(*fi))<<std::endl;
       if(dot_product(dc,mesh.faces().normal(*fi)) > 0.98)
         planes[*fi] = vgl_plane_3d<double>(dc,c);
       else
@@ -177,7 +177,7 @@ void snap_faces_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
   const unsigned int num_verts = mesh.num_verts();
   for(unsigned int i=0; i<num_verts; ++i)
   {
-    vcl_vector<vgl_plane_3d<double> > local_planes;
+    std::vector<vgl_plane_3d<double> > local_planes;
     const imesh_vertex<3>& p0 = mesh.vertices<3>()[i];
     vgl_vector_3d<double> v0(p0[0],p0[1],p0[2]);
     typedef imesh_half_edge_set::v_const_iterator vitr;
@@ -218,9 +218,9 @@ void snap_faces_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
 
 
 void snap_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
-                     const vcl_set<unsigned int>& verts)
+                     const std::set<unsigned int>& verts)
 {
-  for(vcl_set<unsigned int>::const_iterator vi = verts.begin();
+  for(std::set<unsigned int>::const_iterator vi = verts.begin();
       vi != verts.end(); ++vi){
     vgl_point_3d<double> p(mesh.vertices<3>()[*vi]);
     vgl_point_3d<double> last_p(p);
@@ -230,12 +230,12 @@ void snap_to_surface(const imesh_imls_surface& f, imesh_mesh& mesh,
     double dir = dot_product(dp,n);
     unsigned int i=0;
     for(; i<10 && dir < 0.0; ++i){
-      vcl_cout << "backward point " << dir << vcl_endl;
+      std::cout << "backward point " << dir << std::endl;
       p += -dir * n;
       val = f.deriv(p,dp);
       dir = dot_product(dp,n);
       if(dir >= 0.0)
-        vcl_cout << "-----------------"<<vcl_endl;
+        std::cout << "-----------------"<<std::endl;
     }
     if(i == 2)
       continue;
@@ -259,7 +259,7 @@ void snap_to_surface_lm(const imesh_imls_surface& f, imesh_mesh& mesh)
 {
   if(!mesh.has_half_edges())
     mesh.build_edge_graph();
-  vcl_vector<vgl_point_3d<double> > orig_verts;
+  std::vector<vgl_point_3d<double> > orig_verts;
   for(unsigned int i=0; i<mesh.num_verts(); ++i){
     orig_verts.push_back(mesh.vertices<3>()[i]);
   }
@@ -275,7 +275,7 @@ void snap_to_surface_lm(const imesh_imls_surface& f, imesh_mesh& mesh)
 
   lm.set_trace(true);
   lm.minimize(x);
-  lm.diagnose_outcome(vcl_cout);
+  lm.diagnose_outcome(std::cout);
 
   for(unsigned int i=0; i<mesh.num_verts(); ++i){
     mesh.vertices<3>()[i][0] = x[3*i];
@@ -286,8 +286,8 @@ void snap_to_surface_lm(const imesh_imls_surface& f, imesh_mesh& mesh)
 
 
 
-void get_verts(const imesh_mesh& mesh, const vcl_set<unsigned int>& faces,
-               vcl_set<unsigned int>& in_verts, vcl_set<unsigned int>& bound_verts)
+void get_verts(const imesh_mesh& mesh, const std::set<unsigned int>& faces,
+               std::set<unsigned int>& in_verts, std::set<unsigned int>& bound_verts)
 {
   in_verts.clear();
   bound_verts.clear();
@@ -332,7 +332,7 @@ void partial_snap(imesh_mesh& model, const imesh_mesh& target,
     pt += (1.0+(dist-1.0)*amount)*dir;
   }
   else{
-    vcl_cout << vert<<" not intersected"<<vcl_endl;
+    std::cout << vert<<" not intersected"<<std::endl;
     pt += 1.0*dir;
   }
   model.vertices<3>()[vert] = pt;
@@ -350,9 +350,9 @@ void partial_snap(imesh_mesh& model, const imesh_mesh& target, double amount)
 
 
 void partial_snap(imesh_mesh& model, const imesh_mesh& target,
-                  double amount, const vcl_set<unsigned int>& verts)
+                  double amount, const std::set<unsigned int>& verts)
 {
-  for(vcl_set<unsigned int>::const_iterator vi = verts.begin();
+  for(std::set<unsigned int>::const_iterator vi = verts.begin();
       vi != verts.end(); ++vi){
     partial_snap(model, target, amount, *vi);
   }
@@ -373,7 +373,7 @@ void closest_point(imesh_mesh& model, const imesh_mesh& target,
     pt = cp;
   }
   else{
-    vcl_cout << vert<<" no closest point found"<<vcl_endl;
+    std::cout << vert<<" no closest point found"<<std::endl;
     //pt += 0.1*dir;
   }
   model.vertices<3>()[vert] = pt;
@@ -381,9 +381,9 @@ void closest_point(imesh_mesh& model, const imesh_mesh& target,
 }
 
 void closest_point(imesh_mesh& model, const imesh_mesh& target,
-                   const vcl_set<unsigned int>& verts)
+                   const std::set<unsigned int>& verts)
 {
-  for(vcl_set<unsigned int>::const_iterator vi = verts.begin();
+  for(std::set<unsigned int>::const_iterator vi = verts.begin();
       vi != verts.end(); ++vi){
     closest_point(model, target, *vi);
   }
@@ -393,20 +393,20 @@ void closest_point(imesh_mesh& model, const imesh_mesh& target,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_in_file("-i", "input mesh file", "");
-  vul_arg<vcl_string>  a_body_file("-b", "input mesh body file", "");
-  vul_arg<vcl_string>  a_out_file("-o", "output mesh file", "");
+  vul_arg<std::string>  a_in_file("-i", "input mesh file", "");
+  vul_arg<std::string>  a_body_file("-b", "input mesh body file", "");
+  vul_arg<std::string>  a_out_file("-o", "output mesh file", "");
   vul_arg<int>         a_num_subdiv("-subdiv", "number of subdivisions", 0);
   vul_arg_parse(argc, argv);
 
   if(!a_out_file.set()){
-    vcl_cerr << "output file required" << vcl_endl;
+    std::cerr << "output file required" << std::endl;
     return -1;
   }
 
 
 #if 0
-  vcl_map<vcl_string,double> params;
+  std::map<std::string,double> params;
   modrec_read_vehicle_params(a_in_file(),params);
 
   double r1 = params["wheel_rad"];
@@ -414,8 +414,8 @@ int main(int argc, char** argv)
   double ww = params["wheel_width"];
   double so = params["susp_offset"];
 
-  vcl_auto_ptr<imesh_vertex_array_base> verts(modrec_generate_vehicle_body_verts(params));
-  vcl_auto_ptr<imesh_face_array_base> faces(modrec_generate_vehicle_body_faces());
+  std::auto_ptr<imesh_vertex_array_base> verts(modrec_generate_vehicle_body_verts(params));
+  std::auto_ptr<imesh_face_array_base> faces(modrec_generate_vehicle_body_faces());
 
   imesh_mesh model_mesh(verts,faces);
   imesh_transform_inplace(model_mesh,vgl_vector_3d<double>(0,0,r2+so));
@@ -427,12 +427,12 @@ int main(int argc, char** argv)
 
   model_mesh.compute_vertex_normals_from_faces();
 
-  vcl_set<unsigned int> body_faces = model_mesh.faces().group_face_set("body");
+  std::set<unsigned int> body_faces = model_mesh.faces().group_face_set("body");
 
-  vcl_set<unsigned int> uc_faces = model_mesh.faces().group_face_set("undercarriage");
+  std::set<unsigned int> uc_faces = model_mesh.faces().group_face_set("undercarriage");
   body_faces.insert(uc_faces.begin(), uc_faces.end());
 
-  vcl_set<unsigned int> body_verts_contained, body_verts_boundary;
+  std::set<unsigned int> body_verts_contained, body_verts_boundary;
   get_verts(model_mesh, body_faces, body_verts_contained, body_verts_boundary);
 #endif
 
@@ -441,14 +441,14 @@ int main(int argc, char** argv)
   imesh_triangulate(body_mesh);
   body_mesh.compute_face_normals();
 
-  vcl_set<unsigned int> ext_faces;
-  vcl_set<unsigned int> ext_backfaces;
-  vcl_set<unsigned int> ext_bifaces;
+  std::set<unsigned int> ext_faces;
+  std::set<unsigned int> ext_backfaces;
+  std::set<unsigned int> ext_bifaces;
   imesh_detect_exterior_faces(body_mesh, ext_faces,
                               ext_backfaces, ext_bifaces);
-  vcl_cout << "exterior:\n  front: "<<ext_faces.size()
+  std::cout << "exterior:\n  front: "<<ext_faces.size()
            <<"\n  back: "<<ext_backfaces.size()
-           <<"\n  both: "<<ext_bifaces.size()<<vcl_endl;
+           <<"\n  both: "<<ext_bifaces.size()<<std::endl;
 
   imesh_flip_faces(body_mesh, ext_backfaces);
   ext_faces.insert(ext_backfaces.begin(),ext_backfaces.end());
@@ -458,8 +458,8 @@ int main(int argc, char** argv)
   imesh_mesh ext_mesh = imesh_submesh_from_faces(body_mesh,ext_faces);
   // find new indices of bifacing faces
   unsigned int new_fi = 0;
-  vcl_set<unsigned int> new_bifaces;
-  for(vcl_set<unsigned int>::const_iterator fi=ext_faces.begin();
+  std::set<unsigned int> new_bifaces;
+  for(std::set<unsigned int>::const_iterator fi=ext_faces.begin();
       fi!=ext_faces.end(); ++fi, ++new_fi)
   {
     if(ext_bifaces.find(*fi) != ext_bifaces.end())
@@ -473,7 +473,7 @@ int main(int argc, char** argv)
 
   vgl_box_3d<double> bbox = body_imp.bounding_box();
   bbox.scale_about_centroid(1.5);
-  double msize = vcl_max(bbox.width(),bbox.depth());
+  double msize = std::max(bbox.width(),bbox.depth());
   unsigned res = 400;
   unsigned ni = res*bbox.width()/msize;
   unsigned nj = res*bbox.depth()/msize;
@@ -485,7 +485,7 @@ int main(int argc, char** argv)
 
   vnl_matrix<double> M(nj,ni);
   for(int i=0; i<ni; ++i){
-    vcl_cout << "row "<< i<<vcl_endl;
+    std::cout << "row "<< i<<std::endl;
     for(int j=0; j<nj; ++j){
       M(j,i) = body_imp(scale*i + ishift, 0.0, scale*j+jshift);
     }
@@ -499,7 +499,7 @@ int main(int argc, char** argv)
   //snap_to_surface(body_imp, model_mesh_sub);
   //imesh_quad_subdivide(model_mesh_sub);
   //snap_to_surface_lm(body_imp, model_mesh_sub);
-  //vcl_string fname = vul_sprintf(a_out_file().c_str(),1);
+  //std::string fname = vul_sprintf(a_out_file().c_str(),1);
   //imesh_write_obj(fname, model_mesh_sub);
   //return 0;
 
@@ -512,7 +512,7 @@ int main(int argc, char** argv)
 
   snap_to_surface(body_imp, model_mesh, body_verts_contained);
 
-  vcl_string fname = vul_sprintf(a_out_file().c_str(),1);
+  std::string fname = vul_sprintf(a_out_file().c_str(),1);
   imesh_write_obj(fname, model_mesh);
 
   for(unsigned int i=0; i<a_num_subdiv(); ++i){
@@ -529,14 +529,14 @@ int main(int argc, char** argv)
 
     snap_to_surface(body_imp, model_mesh, body_verts_contained);
 
-    vcl_string fname = vul_sprintf(a_out_file().c_str(),i+2);
+    std::string fname = vul_sprintf(a_out_file().c_str(),i+2);
     imesh_write_obj(fname, model_mesh);
   }
 
 
 
 #if 0
-  body_mesh.set_faces(vcl_auto_ptr<imesh_face_array_base>(imesh_triangulate(body_mesh.faces())));
+  body_mesh.set_faces(std::auto_ptr<imesh_face_array_base>(imesh_triangulate(body_mesh.faces())));
   body_mesh.compute_face_normals(false);
 
   partial_snap(model_mesh, body_mesh, 1.0, body_verts_contained);
@@ -550,7 +550,7 @@ int main(int argc, char** argv)
     model_mesh.compute_vertex_normals_from_faces();
 
     body_faces = model_mesh.faces().group_face_set("body");
-    vcl_set<unsigned int> new_body_verts_contained, new_body_verts_boundary;
+    std::set<unsigned int> new_body_verts_contained, new_body_verts_boundary;
     get_verts(model_mesh, body_faces, new_body_verts_contained, new_body_verts_boundary);
     //set_difference()
 

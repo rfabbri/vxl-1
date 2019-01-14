@@ -1,7 +1,7 @@
 #include "biosim_deformed_torus.h"
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/vnl_math.h>
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_random.h>
 
 biosim_deformed_torus::biosim_deformed_torus(int xdim, int ydim, int zdim,
@@ -26,8 +26,8 @@ biosim_deformed_torus::biosim_deformed_torus(int xdim, int ydim, int zdim,
               y = j - ydim/2.0;
               z = k - zdim/2.0;
              
-              quant1 = vcl_sqrt(z*z + vcl_pow((vcl_sqrt(x*x + y*y) - c),2.0));
-              quant2 = a + (b * x)/vcl_sqrt(x*x + y*y);
+              quant1 = std::sqrt(z*z + std::pow((std::sqrt(x*x + y*y) - c),2.0));
+              quant2 = a + (b * x)/std::sqrt(x*x + y*y);
 
               if (quant1 <= quant2 + 0.5)
                   {

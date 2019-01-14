@@ -36,7 +36,7 @@ void vsl_b_write(vsl_b_ostream &os, const dsm_state_machine_base* p)
 	}
 }
 
-void vsl_print_summary(vcl_ostream& os, const dsm_state_machine_base *p)
+void vsl_print_summary(std::ostream& os, const dsm_state_machine_base *p)
 {
 	os << "dsm_io_manager -- vsl_print_summary not implemented.\n";
 }

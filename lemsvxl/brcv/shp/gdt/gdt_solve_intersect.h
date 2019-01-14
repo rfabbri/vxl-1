@@ -3,8 +3,8 @@
 #ifndef gdt_solve_intersect_h_
 #define gdt_solve_intersect_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <utility>
 #include <gdt/gdt_numerical.h>
 
 class dbmsh3d_gdt_edge;
@@ -18,7 +18,7 @@ inline double _tau_from_theta (const double& L, const double& H,
 {
   assert (H != 0);
   //: be careful that tan(theta)=0
-  double tan_theta = vcl_tan (input_theta);
+  double tan_theta = std::tan (input_theta);
   if (tan_theta==0)
     return GDT_NEG_HUGE;
 
@@ -30,7 +30,7 @@ inline double _theta_from_tau (const double& L, const double& H,
                                const double input_tau) 
 {
   assert (H != 0);
-  return vcl_atan2 (H, L-input_tau);
+  return std::atan2 (H, L-input_tau);
 }
 
 inline void _get_next_left_L_H (const double& L, const double& H,
@@ -42,8 +42,8 @@ inline void _get_next_left_L_H (const double& L, const double& H,
     left_nL_nofix = -H;
   }
   else { // 0 < alpha_l < pi/2 or pi/2 < alpha_l < pi
-    const double cos_alpha_l = vcl_cos(alpha_l);
-    const double tan_alpha_l = vcl_tan(alpha_l);
+    const double cos_alpha_l = std::cos(alpha_l);
+    const double tan_alpha_l = std::tan(alpha_l);
     left_nH       = (H + L*tan_alpha_l) * cos_alpha_l;
     left_nL_nofix = L/cos_alpha_l - left_nH*tan_alpha_l;
   }
@@ -61,8 +61,8 @@ inline void _get_next_right_L_H (const double& L, const double& H,
     right_nL_nofix  = lenR + H;
   }
   else { // 0 < alpha_r < pi/2 or pi/2 < alpha_r < pi
-    double cos_alpha_r = vcl_cos(alpha_r);
-    double tan_alpha_r = vcl_tan(alpha_r);
+    double cos_alpha_r = std::cos(alpha_r);
+    double tan_alpha_r = std::tan(alpha_r);
     right_nH        = (H + (lenC-L)*tan_alpha_r) * cos_alpha_r;
     right_nL_nofix  = lenR - (lenC-L)/cos_alpha_r + right_nH*tan_alpha_r;
   }

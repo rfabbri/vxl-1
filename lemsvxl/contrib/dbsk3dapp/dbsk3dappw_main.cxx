@@ -15,7 +15,7 @@
 //
 // \endverbatim.
  
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 
@@ -61,7 +61,7 @@ void deselect_callback (void* data, SoPath* path)
 
 void click_to_delete (void* data, SoPath* path)
 {
-  vcl_string name = path->getTail()->getTypeId().getName().getString();
+  std::string name = path->getTail()->getTypeId().getName().getString();
   //Remove the visualization of this hitObject.
   SoShape* hitObject = (SoShape*) path->getTail();
   path->truncate (path->getLength() - 1);
@@ -72,7 +72,7 @@ void click_to_delete (void* data, SoPath* path)
 void click_to_delete_shocks (void* data, SoPath* path)
 {
   SoShape* hitObject = (SoShape*) path->getTail();
-  //vcl_string name = hitObject->getTypeId().getName().getString();
+  //std::string name = hitObject->getTypeId().getName().getString();
 
   if (hitObject->getTypeId() == ms_sheet_SoIndexedFaceSet::getClassTypeId()) {
     //Click to delete a ms_sheet MS.
@@ -80,18 +80,18 @@ void click_to_delete_shocks (void* data, SoPath* path)
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) MS_vis->element();
 
     if (MS->have_icurve_chain() == false)
-      vul_printf (vcl_cout, "\tWarning: Deleting MS %d with icurve_chain!!\n", MS->id());
+      vul_printf (std::cout, "\tWarning: Deleting MS %d with icurve_chain!!\n", MS->id());
 
     //Mark all FF of this MS invalid and delete them.
     //Need to handle the shared_F of MS.
-    vcl_set<dbmsh3d_face*> FF_to_trim;
+    std::set<dbmsh3d_face*> FF_to_trim;
     MS->get_F_set (FF_to_trim, true);
 
     //Remove the ms_sheet.
     _spv_->ms_hypg()->remove_S_complete_hypg (MS);
 
     perform_trim_xform (_spv_->fs_mesh(), FF_to_trim);
-    /*vcl_set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
+    /*std::set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
     for (; it != FF_to_trim.end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
       FF_prune_pass_Gs (FF);
@@ -108,7 +108,7 @@ void click_to_delete_shocks (void* data, SoPath* path)
     fs_face_SoFaceSet* FF_vis = (fs_face_SoFaceSet*) hitObject;
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) FF_vis->element();
 
-    vul_printf (vcl_cout, "\tDelete FF %d and isolated FE's and FV's.\n", FF->id());
+    vul_printf (std::cout, "\tDelete FF %d and isolated FE's and FV's.\n", FF->id());
     FF_prune_pass_Gs (FF);
     _spv_->fs_mesh()->remove_F_complete (FF);
 
@@ -132,13 +132,13 @@ void click_to_del_shocks_save_files ()
       assert (r);
     }
 
-    vcl_string cms_file;
+    std::string cms_file;
     if (dbsk3d_cmd_cms_ofile())
       cms_file = dbul_get_dir_file (dbsk3d_cmd_cms_ofile());
     else
       cms_file = _spv_->dir_file() + "-dels";
 
-    vul_printf (vcl_cout, "Writing CMS and FS files %s...\n", cms_file.c_str());
+    vul_printf (std::cout, "Writing CMS and FS files %s...\n", cms_file.c_str());
     save_to_cms (_spv_->ms_hypg(), (cms_file + ".cms").c_str());
     save_to_fs (_spv_->ms_hypg()->fs_mesh(), (cms_file + ".fs").c_str());
 
@@ -151,13 +151,13 @@ void click_to_del_shocks_save_files ()
     //Re-compute fs_edge and fs_vertex types.
     _spv_->fs_mesh()->compute_all_FEs_FVs_type(); 
 
-    vcl_string fs_file;
+    std::string fs_file;
     if (dbsk3d_cmd_fs_ofile())
       fs_file = dbul_get_dir_file (dbsk3d_cmd_fs_ofile());
     else
       fs_file = _spv_->dir_file() + "-dels";
 
-    vul_printf (vcl_cout, "Writing FS file %s...\n", fs_file.c_str());
+    vul_printf (std::cout, "Writing FS file %s...\n", fs_file.c_str());
     save_to_fs (_spv_->fs_mesh(), (fs_file + ".fs").c_str());
   }
 }
@@ -263,9 +263,9 @@ int main (int argc, char **argv)
   
   //Print message if no command-line process executed.
   if (task == false) {
-    vul_printf (vcl_cout, "ERROR in main():\tNo process specified!\n");
-    vul_printf (vcl_cout, "\n\t Specify filename to view, or");
-    vul_printf (vcl_cout, "\n\t use -h for more help.\n");
+    vul_printf (std::cout, "ERROR in main():\tNo process specified!\n");
+    vul_printf (std::cout, "\n\t Specify filename to view, or");
+    vul_printf (std::cout, "\n\t use -h for more help.\n");
     dbmsh3d_cmd_gui() = 0;
     result = PRO_RESULT_NO_PROCESS;
   }
@@ -278,9 +278,9 @@ int main (int argc, char **argv)
     _root->addChild (dbsk3dr_cmdproc_execute (spvr));
   }
   if (dbmsh3d_cmd_verbose()) {
-    vcl_cerr << "\nTotal running time: " << total_timer.real() << " milliseconds. ";
-    total_timer.print(vcl_cout);
-    vcl_cout << vcl_endl;
+    std::cerr << "\nTotal running time: " << total_timer.real() << " milliseconds. ";
+    total_timer.print(std::cout);
+    std::cout << std::endl;
   }
   /////////////////////////////////////////////////////////////////////
 

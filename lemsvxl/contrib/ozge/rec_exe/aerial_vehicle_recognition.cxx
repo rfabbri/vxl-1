@@ -14,7 +14,7 @@
 // \endverbatim
 // 
 //---------------------------------------------------------------------
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vgl/vgl_point_2d.h>
@@ -86,24 +86,24 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
 { 
 #if 0 // version that creates the osl from command line in the deliveries before Dec 04, 06
       // not necessary anymore, because OSL is created via GUI utilities
-  vcl_ofstream ofile("log.txt");
-  vcl_ifstream fp(video_list_file_name);
+  std::ofstream ofile("log.txt");
+  std::ifstream fp(video_list_file_name);
   if (!fp) {
     ofile << "Problems in opening video directory list file!\n";
     return 1;
   }
 
-  vcl_map<int, vidl1_movie_sptr> video_directories;
+  std::map<int, vidl1_movie_sptr> video_directories;
   int id = -1;
   fp >> id;
   while (!fp.eof()) {
-    vcl_string dir;
+    std::string dir;
     fp >> dir;
     vidl1_movie_sptr my_movie = vidl1_io::load_movie(dir.c_str());
     
     if (!my_movie) {
-      vcl_cout << "problems in loading video ";
-      vcl_cout << " with video file name: " << dir << vcl_endl;
+      std::cout << "problems in loading video ";
+      std::cout << " with video file name: " << dir << std::endl;
       return 2;
     }
     video_directories[id] = my_movie;
@@ -117,7 +117,7 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
   vbl_array_1d<dbru_object_sptr> *database_objects = new vbl_array_1d<dbru_object_sptr>();
   database_objects->clear();
 
-  vcl_ifstream dbfp(db_object_list_filename);
+  std::ifstream dbfp(db_object_list_filename);
   if (!dbfp) {
     ofile << "Problems in opening db object list file!\n";
     return 3;
@@ -127,7 +127,7 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
   
   char buffer[1000]; 
   dbfp.getline(buffer, 1000);  // comment 
-  vcl_string dummy;
+  std::string dummy;
   dbfp >> dummy;   // <contour_segmentation   
   dbfp >> dummy; // object_cnt="23">
   unsigned int size;
@@ -137,14 +137,14 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
     ofile << "reading database object: " << i << "...\n";
     dbru_object_sptr obj = new dbru_object();
     if (!obj->read_xml(dbfp)) { 
-      ofile << "problems in reading database object number: " << i << vcl_endl;
+      ofile << "problems in reading database object number: " << i << std::endl;
       return 4;
     }
 
     //: get video file for this database object
     vidl1_movie_sptr my_movie = video_directories[obj->video_id_];
     
-    ofile << "read: " << obj << " extracting observations assuming 1 polygon per frame" << vcl_endl;
+    ofile << "read: " << obj << " extracting observations assuming 1 polygon per frame" << std::endl;
     
     for (int j = obj->start_frame_; j<=obj->end_frame_; j++) {
       vidl1_frame_sptr frame = my_movie->get_frame(j);
@@ -155,19 +155,19 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
 
         // get convex hull and use that
         ofile << "!!!creating convex hulled observations\n";
-        vcl_vector<vgl_point_2d<double> > ps;
+        std::vector<vgl_point_2d<double> > ps;
         for(unsigned int pj=0;pj<poly->size();pj++)
         {
           vgl_point_2d<double> p(poly->vertex(pj)->x(),poly->vertex(pj)->y());
           ps.push_back(p);
         }
-        vcl_vector<vsol_point_2d_sptr> cps;
+        std::vector<vsol_point_2d_sptr> cps;
         vgl_convex_hull_2d<double> hullp(ps);
         vgl_polygon<double> psg=hullp.hull();
         for(unsigned int k=0;k<psg[0].size();k++)
           cps.push_back(new vsol_point_2d(psg[0][k].x(),psg[0][k].y()));
         vsol_polygon_2d_sptr c_poly = new vsol_polygon_2d(cps);
-        ofile << "size before hull: " << s << " size after hull: " << c_poly->size() << vcl_endl;
+        ofile << "size before hull: " << s << " size after hull: " << c_poly->size() << std::endl;
         //dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly, true, true, false);
         dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, c_poly, true, true, false);
         obs->scan(0, imgr);
@@ -175,29 +175,29 @@ int createosl(char *db_object_list_filename, char *video_list_file_name, char *o
         // output the images
         ofile << " try to save output image into ./v<videoid>_objimages directory\n";
         char buffer[1000];
-        vcl_sprintf(buffer, "./v%d_objimages/image_obj%d-poly%d.png",obj->video_id_, i, j-obj->start_frame_);
-        vcl_string filename = buffer;
+        std::sprintf(buffer, "./v%d_objimages/image_obj%d-poly%d.png",obj->video_id_, i, j-obj->start_frame_);
+        std::string filename = buffer;
 
-        vcl_ofstream dummy_f(filename.c_str());
+        std::ofstream dummy_f(filename.c_str());
         bool create = false;
         if (dummy_f.is_open()) {
           dummy_f.close();
           create = true;
         } else {
-          ofile << " cannot create the image file: " << filename << " (directory does not exist) " <<vcl_endl;
+          ofile << " cannot create the image file: " << filename << " (directory does not exist) " <<std::endl;
         }
 
         if (create) {
         
           poly->compute_bounding_box();
 
-          int w = (int)vcl_floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
-          int h = (int)vcl_floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
+          int w = (int)std::floor(poly->get_max_x()-poly->get_min_x()+10+0.5);
+          int h = (int)std::floor(poly->get_max_y()-poly->get_min_y()+10+0.5);
 
-          int mx = (int)vcl_floor(poly->get_min_x());
-          int my = (int)vcl_floor(poly->get_min_y());
-          int maxx = (int)vcl_ceil(poly->get_max_x());
-          int maxy = (int)vcl_ceil(poly->get_max_y());
+          int mx = (int)std::floor(poly->get_min_x());
+          int my = (int)std::floor(poly->get_min_y());
+          int maxx = (int)std::ceil(poly->get_max_x());
+          int maxy = (int)std::ceil(poly->get_max_y());
 
           dbinfo_region_geometry_sptr geo = obs->geometry();
           vil1_memory_image_of<float> image_out(w,h);
@@ -287,9 +287,9 @@ unsigned int loadosl(char *osl_file_name)
   dbru_osl_storage_sptr osl_storage = dbru_osl_storage_new();
   osl_storage->b_read(obfile);
   obfile.close();
-  vcl_cout << "---------------------------------\nTHIS OSL has ";
-  vcl_cout << osl_storage->get_osl_size() << " objects\n";
-  vcl_cout << "---------------------------------\n";
+  std::cout << "---------------------------------\nTHIS OSL has ";
+  std::cout << osl_storage->get_osl_size() << " objects\n";
+  std::cout << "---------------------------------\n";
 #if 0 // version that uses vbl_array_1d<dbru_object_sptr> * in the deliveries before Dec 04, 06
   for (unsigned i = 0; i<osl_storage->get_osl_size(); i++) {
     dbru_object_sptr objs = osl_storage->get_object(i);
@@ -322,7 +322,7 @@ unsigned int loadosl(char *osl_file_name)
 //: create a database from selected observations in the database
 unsigned int createdb(unsigned int osl_handle, char *selected_obs_list_file_name) 
 {
-  vcl_ofstream ofile("log.txt");
+  std::ofstream ofile("log.txt");
 
   if (!osl_handle) {
     ofile << "OSL pointer is zero, exiting!\n";
@@ -341,17 +341,17 @@ unsigned int createdb(unsigned int osl_handle, char *selected_obs_list_file_name
     ofile << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vcl_ifstream fp2(selected_obs_list_file_name);
+  std::ifstream fp2(selected_obs_list_file_name);
   if (!fp2) {
     ofile << "Problems in opening selected frames database list file!\n";
     return 0;
   }
  
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = new vbl_array_1d<vcl_pair<int, int> >();
+  vbl_array_1d<std::pair<int, int> > *database_pairs = new vbl_array_1d<std::pair<int, int> >();
   int database_size = 0;
   fp2 >> database_size;
   for (int i = 0; i<database_size; i++) {  // 1 line for each object, first cnt then frame nos
-    vcl_pair<int, int> obj_pair;
+    std::pair<int, int> obj_pair;
     fp2 >> obj_pair.first;
     fp2 >> obj_pair.second;
     database_pairs->push_back(obj_pair);
@@ -368,7 +368,7 @@ unsigned int createdb(unsigned int osl_handle, char *selected_obs_list_file_name
 //  n  : the number of top matches to be considered to be used in score generation
 //       typical value is 2 or 3 depending on database size, and the number of instances from each category
 int run_object_dt(unsigned int osl_handle, unsigned int db_handle, int i0, int p0, double *output_list, float rms, int n) {
-  vcl_ofstream ofile("log.txt");
+  std::ofstream ofile("log.txt");
 
   if (!osl_handle) {
     ofile << "OSL pointer is zero, exiting!\n";
@@ -391,10 +391,10 @@ int run_object_dt(unsigned int osl_handle, unsigned int db_handle, int i0, int p
     return -1;
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -497,7 +497,7 @@ int run_object_dt(unsigned int osl_handle, unsigned int db_handle, int i0, int p
 //             min value is 1, the densest and best results
 //             typical 5 to 20, the higher the value, the faster the algorithm runs, but the worse the correspondence gets
 int run_object_line(unsigned int osl_handle, unsigned int db_handle, int i0, int p0, double *output_list, float rms, int n, int increment) {
-  vcl_ofstream ofile("log.txt");
+  std::ofstream ofile("log.txt");
 
   if (!osl_handle) {
     ofile << "OSL pointer (osl_handle) is zero, exiting!\n";
@@ -521,10 +521,10 @@ int run_object_line(unsigned int osl_handle, unsigned int db_handle, int i0, int
     return -1;
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -620,7 +620,7 @@ int run_object_line(unsigned int osl_handle, unsigned int db_handle, int i0, int
 
 int run_object_opt(unsigned int osl_handle, unsigned int db_handle, int i0, int p0, double *output_list, int n, float ratio, float dx, float dr, float ds)
 {
-vcl_ofstream ofile("log.txt");
+std::ofstream ofile("log.txt");
 
   if (!osl_handle) {
     ofile << "OSL pointer (osl_handle) is zero, exiting!\n";
@@ -644,10 +644,10 @@ vcl_ofstream ofile("log.txt");
     return -1;
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -742,15 +742,15 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -760,16 +760,16 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -787,12 +787,12 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -818,12 +818,12 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
     dbcvr_cv_cor_sptr sil_cor = dbru_object_matcher::compute_curve_alignment(obs0, obsi, curve_matching_cost, 10.0f, rms, 0.25f, false);
     dbru_rcor_sptr rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs0, obsi, sil_cor, false);
     
-    vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+    std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
     float info = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, false);
 
-    //vcl_cout << "matching t: "<< (t.real()/1000.0f) << " seconds, info: " << info <<vcl_endl;
+    //std::cout << "matching t: "<< (t.real()/1000.0f) << " seconds, info: " << info <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -834,7 +834,7 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
   }
 
   if (verbose)
-    vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+    std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -851,10 +851,10 @@ int run_observation_dt(unsigned int osl_handle, unsigned int db_handle, unsigned
       output_list[class_id] = 0.0f;
 
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
   
   return 0;
@@ -867,15 +867,15 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -885,16 +885,16 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -914,12 +914,12 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -945,12 +945,12 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
     dbcvr_cv_cor_sptr sil_cor = dbru_object_matcher::compute_curve_alignment(obs0, obsi, curve_matching_cost, 10.0f, rms, 0.25f, false);
     dbru_rcor_sptr rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs0, obsi, sil_cor, false);
     
-    vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+    std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
     float info = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, false);
 
-    //vcl_cout << "matching t: "<< (t.real()/1000.0f) << " seconds, info: " << info <<vcl_endl;
+    //std::cout << "matching t: "<< (t.real()/1000.0f) << " seconds, info: " << info <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -960,7 +960,7 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
     }
   }
 
-  vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+  std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -970,10 +970,10 @@ int run_observation_dt2(unsigned int osl_handle, unsigned int db_handle, unsigne
     output_list[class_id] = max_info_class[class_id];
     
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
 
   return 0;
@@ -983,15 +983,15 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -1001,16 +1001,16 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -1028,13 +1028,13 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
   // find nearest neighbor from each class
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -1060,12 +1060,12 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
     dbcvr_cv_cor_sptr sil_cor = dbru_object_matcher::compute_curve_alignment(obs0, obsi, curve_matching_cost, 10.0f, rms, 0.25f, false);
     dbru_rcor_sptr rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs0, obsi, sil_cor, increment, false, false);
     
-    vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+    std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
     float info = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, false);
 
-    //vcl_cout << "match t: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    //std::cout << "match t: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -1075,7 +1075,7 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
     }
   }
 
-  //vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+  //std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -1092,10 +1092,10 @@ int run_observation_line(unsigned int osl_handle, unsigned int db_handle, unsign
       output_list[class_id] = 0.0f;
 
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
   
   return 0;
@@ -1109,15 +1109,15 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -1127,16 +1127,16 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -1154,13 +1154,13 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
   // find nearest neighbor from each class
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -1186,12 +1186,12 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
     dbcvr_cv_cor_sptr sil_cor = dbru_object_matcher::compute_curve_alignment(obs0, obsi, curve_matching_cost, 10.0f, rms, 0.25f, false);
     dbru_rcor_sptr rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs0, obsi, sil_cor, increment, false, false);
     
-    vcl_vector <vcl_pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
+    std::vector <std::pair< unsigned, unsigned > >& corrs = rcor->get_correspondences();
     float info = dbinfo_observation_matcher::minfo(obs0, obsi, corrs, false);
 
-    //vcl_cout << "match t: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    //std::cout << "match t: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -1201,7 +1201,7 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
     }
   }
 
-  //vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+  //std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -1212,10 +1212,10 @@ int run_observation_line2(unsigned int osl_handle, unsigned int db_handle, unsig
     output_list[class_id] = max_info_class[class_id];
 
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
   
   return 0;
@@ -1229,15 +1229,15 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -1247,16 +1247,16 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -1274,13 +1274,13 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
   // find nearest neighbor from each class
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -1302,9 +1302,9 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
     
     vul_timer t;
     float info = dbru_object_matcher::minfo_rigid_alignment_search(obs0, obsi, dx, dr, ds, ratio);
-    //vcl_cout << "osl id: " << i << " pid: " << pi << " info: " << info << " t: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    //std::cout << "osl id: " << i << " pid: " << pi << " info: " << info << " t: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -1314,7 +1314,7 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
     }
   }
 
-  //vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+  //std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -1333,10 +1333,10 @@ int run_observation_opt(unsigned int osl_handle, unsigned int db_handle, unsigne
   }
 
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
   
   return 0;
@@ -1353,15 +1353,15 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
   vul_timer t2;
 
   if (!osl_handle) {
-    vcl_cout << "OSL pointer (osl_handle) is zero, exiting!\n";
+    std::cout << "OSL pointer (osl_handle) is zero, exiting!\n";
     return -1;
   }
   if (!db_handle) {
-    vcl_cout << "Database pointer (db_handle) is zero, exiting!\n";
+    std::cout << "Database pointer (db_handle) is zero, exiting!\n";
     return -1;
   }
   if (!observationhandle) {
-    vcl_cout << "Observation pointer (observationhandle) is zero, exiting!\n";
+    std::cout << "Observation pointer (observationhandle) is zero, exiting!\n";
     return -1;
   }
 
@@ -1371,16 +1371,16 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
   dbru_osl * osl = reinterpret_cast<dbru_osl *>(osl_handle);
 
   if (osl->size() <= 0) {
-    vcl_cout << "Problems in getting osl\n";
+    std::cout << "Problems in getting osl\n";
     return -1;
   } else if (verbose) {
-    vcl_cout << "OSL loaded, number of objects: " << osl->size() << "\n";
+    std::cout << "OSL loaded, number of objects: " << osl->size() << "\n";
   }
 
-  vbl_array_1d<vcl_pair<int, int> > *database_pairs = 
-    reinterpret_cast<vbl_array_1d<vcl_pair<int, int> > *>(db_handle);
+  vbl_array_1d<std::pair<int, int> > *database_pairs = 
+    reinterpret_cast<vbl_array_1d<std::pair<int, int> > *>(db_handle);
 
-  vcl_map<vcl_string, int>& category_id_map = osl->get_category_id_map();
+  std::map<std::string, int>& category_id_map = osl->get_category_id_map();
 #if 0 // version that uses a fixed category_id_map in the deliveries before Dec 04, 06
   category_id_map["minivan"] = 0;
   category_id_map["suv"] = 0;
@@ -1398,13 +1398,13 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
   dbinfo_observation * obs0 = reinterpret_cast<dbinfo_observation *>(observationhandle);
 
   if ((obs0->geometry()->poly(0))->size() <= 0) {
-    vcl_cout << "Query object's polygon's size is 0\n";
+    std::cout << "Query object's polygon's size is 0\n";
     return -2;
   }
    
   //: we have no control to match against itself
   // find nearest neighbor from each class
-  vcl_vector<double> max_info_class(category_id_map.size(), 0);
+  std::vector<double> max_info_class(category_id_map.size(), 0);
   float max_info = 0;
   int max_osl_id = (*database_pairs)[0].first;
   int max_osl_pid = (*database_pairs)[0].second;
@@ -1426,9 +1426,9 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
     
     vul_timer t;
     float info = dbru_object_matcher::minfo_rigid_alignment_search(obs0, obsi, dx, dr, ds, ratio);
-    //vcl_cout << "osl id: " << i << " pid: " << pi << " info: " << info << " t: "<< (t.real()/1000.0f) << " seconds " <<vcl_endl;
+    //std::cout << "osl id: " << i << " pid: " << pi << " info: " << info << " t: "<< (t.real()/1000.0f) << " seconds " <<std::endl;
     infos[d] = info;    
-    double dummy = vcl_pow(double(2.0f), double(info));  
+    double dummy = std::pow(double(2.0f), double(info));  
     if (dummy > max_info_class[category_id_map[obji->category_]])
       max_info_class[category_id_map[obji->category_]] = dummy;
     if (info > max_info) {
@@ -1438,7 +1438,7 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
     }
   }
 
-  //vcl_cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << vcl_endl;
+  //std::cout << "Nearest neighbor from osl id: " << max_osl_id << ", poly id: " << max_osl_pid << " category: " << (*osl)[max_osl_id]->category_ << std::endl;
   // find the likelihood for each class
   // probability(class|query) = sum_{i=1}^{all class}( 2^{info(query, class_{i})} ) / 
   //                           (# of class prototypes * sum_{j=1}^{all database} ( 2^{info(query, database_{j}) ))
@@ -1449,10 +1449,10 @@ int run_observation_opt2(unsigned int osl_handle, unsigned int db_handle, unsign
    output_list[class_id] = max_info_class[class_id];
 
   if (verbose) {
-    for (vcl_map<vcl_string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
-      vcl_cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << vcl_endl;
+    for (std::map<std::string, int>::iterator iter = category_id_map.begin(); iter != category_id_map.end(); iter++) {
+      std::cout << "max " << iter->first << " info: " << max_info_class[iter->second] << " mutual info score: " << output_list[iter->second] << std::endl;
     }
-    vcl_cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<vcl_endl;
+    std::cout << "overall t2: "<< (t2.real()/1000.0f) << " seconds.\n<------------------------------------------------>" <<std::endl;
   }
   
   return 0;

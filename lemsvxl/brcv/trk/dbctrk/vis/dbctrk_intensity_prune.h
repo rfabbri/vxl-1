@@ -45,7 +45,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -54,14 +54,14 @@ public:
                        const bvis1_view_tableau_sptr& view );
   bool disjoint(vbl_bounding_box<double,3> const &a,
     vbl_bounding_box<double,3> const &b);
-  bool norm3dhist(vcl_vector<double> dim1,vcl_vector<double> dim2,vcl_vector<double> dim3, vbl_array_3d<double> & hist, int numbin);
+  bool norm3dhist(std::vector<double> dim1,std::vector<double> dim2,std::vector<double> dim3, vbl_array_3d<double> & hist, int numbin);
   double dist3pdf(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2, int numbins);
-  bool norm2dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_vector<double> & dim3, vbl_array_2d<double> &polarhist,int thetabins,int rbins,double r1);
+  bool norm2dpolar(std::vector<double> & dim1,std::vector<double> & dim2,std::vector<double> & dim3, vbl_array_2d<double> &polarhist,int thetabins,int rbins,double r1);
   bool hist2img(vbl_array_2d<double> hist, int thetabins,int satbins, double r1, vil_image_view<vil_rgb<vxl_byte> > &polarimg, int offx, int offy,float h,float s);
   bool displayIHSchart(vil_image_view<vil_rgb<vxl_byte> > & histimg,int radius);
   double dist3pdf_bhat(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2, int xbins,int ybins,int zbins);
   double dist3pdf_chi_square(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2, int xbins,int ybins,int zbins);
-  bool norm3dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1);
+  bool norm3dpolar(std::vector<double> & dim1,std::vector<double> & dim2,std::vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1);
   double dist3pdf_poly(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2, int xbins,int ybins,int zbins,double tau,int n);
   double dist3pdf_KL(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2, int xbins,int ybins,int zbins);
   bool buildprior(vbl_array_3d<double> hist1,vbl_array_3d<double> hist2,vbl_array_2d<double> pxy);
@@ -76,8 +76,8 @@ protected:
 
   vgui_style_sptr neighbor_style_;
   vgui_event_condition gesture_info_;
-  vcl_vector<dbctrk_tracker_curve_sptr> tc1,tc2;
-  vcl_vector<bgui_vsol_soview2D_digital_curve*> dcs_;
+  std::vector<dbctrk_tracker_curve_sptr> tc1,tc2;
+  std::vector<bgui_vsol_soview2D_digital_curve*> dcs_;
   dbctrk_soview2D* object_;
   bgui_vsol2D_tableau_sptr curr_tableau_;
   dbctrk_tracker_curve_sptr curr_curve_;
@@ -90,6 +90,6 @@ protected:
   Engine *ep;
 };
 
-vcl_vector<int> find_matching_ids(int query,vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > > gmatches);
+std::vector<int> find_matching_ids(int query,std::vector<std::pair<std::vector<int>,std::vector<int> > > gmatches);
 
 #endif

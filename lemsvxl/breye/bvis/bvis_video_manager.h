@@ -112,7 +112,7 @@ public:
 
   void display_current_frame(bool clear_old = false);
 
-  void redraw(const vidl_istream_sptr &vistream, vcl_string const &istream_name="");
+  void redraw(const vidl_istream_sptr &vistream, std::string const &istream_name="");
   void redraw();
 
   void start_recording_macro();

@@ -30,7 +30,7 @@ inline double _dot (double x1, double y1, double x2, double y2)
 inline double _angle_vector_dot (double vector1, double vector2)
 {
   //!!!SLOW
-   return vcl_cos(vector1)*vcl_cos(vector2) + vcl_sin(vector1)*vcl_sin(vector2);
+   return std::cos(vector1)*std::cos(vector2) + std::sin(vector1)*std::sin(vector2);
 }
 
 //##########################################################
@@ -47,9 +47,9 @@ inline double angle0To2Pi (double angle)
   return angle;
 #else
   if (angle>2*M_PI)
-      return  vcl_fmod (angle,M_PI*2);
+      return  std::fmod (angle,M_PI*2);
    else if (angle < 0)
-      return (2*M_PI+ vcl_fmod (angle,M_PI*2));
+      return (2*M_PI+ std::fmod (angle,M_PI*2));
    else return angle;
 #endif
 }

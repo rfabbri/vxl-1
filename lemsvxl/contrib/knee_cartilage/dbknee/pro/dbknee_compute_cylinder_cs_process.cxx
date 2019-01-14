@@ -10,7 +10,7 @@
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbknee/dbknee_coord.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 //: Constructor
 dbknee_compute_cylinder_cs_process::
@@ -28,7 +28,7 @@ dbknee_compute_cylinder_cs_process()
     "-show_gui", false)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -50,19 +50,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_compute_cylinder_cs_process::
+std::vector< std::string > dbknee_compute_cylinder_cs_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_compute_cylinder_cs_process::
+std::vector< std::string > dbknee_compute_cylinder_cs_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -109,16 +109,16 @@ execute()
   {
     if (show_gui)
     {
-      vcl_stringstream str;
+      std::stringstream str;
       str << "dbknee_coord_cmd"
         << " -view_mesh " << data_file.path
         << " -view_cs " << cs_file.path;
-      vcl_system(str.str().c_str());
+      std::system(str.str().c_str());
     }
   }
   else
   {
-    vcl_cout << "ERROR: Computing coordinate system failed.\n";
+    std::cout << "ERROR: Computing coordinate system failed.\n";
   }
 
 
@@ -137,12 +137,12 @@ finish()
 
 //: Take in the data (mesh file, param file) and execute
 bool dbknee_compute_cylinder_cs_process::
-compute_cylinder_cs(const vcl_string& data_file,
-                    const vcl_string& param_file, 
-                    const vcl_string& cs_file,
-                    const vcl_string& cropped_mesh_file)
+compute_cylinder_cs(const std::string& data_file,
+                    const std::string& param_file, 
+                    const std::string& cs_file,
+                    const std::string& cropped_mesh_file)
 {
-  vcl_cout << "Compute cylinder coordinate system from a knee cartilage mesh.\n";
+  std::cout << "Compute cylinder coordinate system from a knee cartilage mesh.\n";
   
   // i. Load input mesh file
   // --------------
@@ -150,15 +150,15 @@ compute_cylinder_cs(const vcl_string& data_file,
   // determine file name
   if (data_file == "")
   {
-    vcl_cerr << "An input data file is required to proceed."
+    std::cerr << "An input data file is required to proceed."
       << "Use '-data_file' option for input data file.\n";
     return false;
   }
 
-  vcl_cout << "Input data file = " << data_file << vcl_endl;
+  std::cout << "Input data file = " << data_file << std::endl;
 
   // determine the file format
-  vcl_string data_file_format = vul_file::extension(data_file);
+  std::string data_file_format = vul_file::extension(data_file);
 
   
   dbmsh3d_pro bndvis;
@@ -168,7 +168,7 @@ compute_cylinder_cs(const vcl_string& data_file,
   {
     if ( !bndvis.load_p3d(data_file) )
     {
-      vcl_cerr << "ERROR: Could not load .p3d file " 
+      std::cerr << "ERROR: Could not load .p3d file " 
         << data_file << ".\n";
       return false;
     }
@@ -177,14 +177,14 @@ compute_cylinder_cs(const vcl_string& data_file,
   {
     if ( !bndvis.load_ply(data_file) )
     {
-      vcl_cerr << "ERROR: Could not load .ply file " 
+      std::cerr << "ERROR: Could not load .ply file " 
         << data_file << ".\n";
       return false;
     }
   }
   else // Unknow format --> Stop the program
   {
-    vcl_cerr << "ERROR: Invalid file format. Quit now.\n";
+    std::cerr << "ERROR: Invalid file format. Quit now.\n";
     return false;
   } 
 
@@ -195,19 +195,19 @@ compute_cylinder_cs(const vcl_string& data_file,
   
   if (param_file == "")
   {
-    vcl_cerr << "ERROR: No parameter file specified.\n";
+    std::cerr << "ERROR: No parameter file specified.\n";
     return false;
   }
-  vcl_cout << "Parameter file = " << param_file << vcl_endl;
+  std::cout << "Parameter file = " << param_file << std::endl;
 
 
   /////////////////////////////////////////////////////////////
-  vcl_map<vcl_string, double > param_map;
+  std::map<std::string, double > param_map;
   dbknee_read_coord_param_file(param_file, param_map);
 
   if (param_map.empty())
   {
-    vcl_cerr << "ERROR: parameter file is either non-existent or empty.\n";
+    std::cerr << "ERROR: parameter file is either non-existent or empty.\n";
     return false;
   }
 
@@ -220,10 +220,10 @@ compute_cylinder_cs(const vcl_string& data_file,
   
   dbknee_cylinder_based_coord coord;
   coord.set_point_set(bndvis.mesh());
-  vcl_cout << "Cropping box = " << coord_params.cropping_box << vcl_endl;
+  std::cout << "Cropping box = " << coord_params.cropping_box << std::endl;
   coord.set_cropping_box(coord_params.cropping_box);
 
-  vcl_cout << "Notch point = " << coord_params.notch_point << vcl_endl;
+  std::cout << "Notch point = " << coord_params.notch_point << std::endl;
   coord.set_notch_point(coord_params.notch_point);
 
 
@@ -235,14 +235,14 @@ compute_cylinder_cs(const vcl_string& data_file,
   // iv. Save results
   // -----------------
 
-  vcl_string outfile = cs_file;
+  std::string outfile = cs_file;
   if (outfile == "")
   {
     outfile = vul_file::strip_extension(data_file + "_cs.txt");
   }
 
   // open file for writing
-  vcl_ofstream outfp(outfile.c_str(), vcl_ios_out);
+  std::ofstream outfp(outfile.c_str(), std::ios::out);
   coord.print(outfp);
   outfp.close();  
 
@@ -250,13 +250,13 @@ compute_cylinder_cs(const vcl_string& data_file,
   // v. Save output mesh
   if (!cropped_mesh_file.empty())
   {
-    vcl_cout << "Save cropped_mesh_file ... \n";
+    std::cout << "Save cropped_mesh_file ... \n";
     dbmsh3d_save_ply(&coord.cropped_mesh(), cropped_mesh_file.c_str(), false);
-    vcl_cout << "Done.\n";
+    std::cout << "Done.\n";
   }
 
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return true;
 }
 

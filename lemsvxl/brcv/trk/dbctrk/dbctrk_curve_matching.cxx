@@ -1,13 +1,13 @@
 #include "dbctrk_curve_matching.h"
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
-#include <vcl_utility.h>
-#include <vcl_ostream.h>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <ostream>
 #include <dbctrk/dbctrk_tracker_curve_sptr.h>
 #include <dbctrk/dbctrk_algs.h>
 #include <dbctrk/dbctrk_tracker_curve.h>
@@ -59,7 +59,7 @@ isintensity_=true;
     
  }
 //external functions
-vcl_ostream& operator<<(vcl_ostream& s, dbctrk_curve_matching_params const& params)
+std::ostream& operator<<(std::ostream& s, dbctrk_curve_matching_params const& params)
 {
   s <<"Motion radius = "<<params.motion_in_pixels
     <<"\n Top Coarse matching Candidates ="<<params.no_of_top_choices
@@ -77,14 +77,14 @@ vcl_ostream& operator<<(vcl_ostream& s, dbctrk_curve_matching_params const& para
 
   return s;
 }
-void dbctrk_curve_matching_params::print_summary(vcl_ostream &os) const
+void dbctrk_curve_matching_params::print_summary(std::ostream &os) const
 {
   os << *this;
 }
 struct less_val
 {
-  bool operator()(vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > x, 
-          vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > y)
+  bool operator()(std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > x, 
+          std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > y)
   { return x.second < y.second; }
 };
 
@@ -96,8 +96,8 @@ dbctrk_curve_matching ::dbctrk_curve_matching()
 
 
 
-void dbctrk_curve_matching :: initialize_matrix(vcl_vector<dbctrk_tracker_curve> new_curves,
-                                              vcl_vector<dbctrk_tracker_curve> old_curves)
+void dbctrk_curve_matching :: initialize_matrix(std::vector<dbctrk_tracker_curve> new_curves,
+                                              std::vector<dbctrk_tracker_curve> old_curves)
 {
   for (unsigned int i=0;i<new_curves.size();++i)
   {
@@ -116,7 +116,7 @@ void dbctrk_curve_matching :: initialize_matrix(vcl_vector<dbctrk_tracker_curve>
 
 void dbctrk_curve_matching :: match_prev_tail_curve(dbctrk_tracker_curve_sptr parent_curve,
                                                   dbctrk_tracker_curve_sptr &tail_curve,
-                                                  vcl_vector<dbctrk_tracker_curve_sptr> * new_curves)
+                                                  std::vector<dbctrk_tracker_curve_sptr> * new_curves)
 {
   
   for (unsigned int i=0;i<(*new_curves).size();++i)
@@ -135,8 +135,8 @@ void dbctrk_curve_matching :: match_prev_tail_curve(dbctrk_tracker_curve_sptr pa
   for (unsigned int i=0;i<tail_curve->next_.size();++i)
     {
     double euc,scale;
-    vcl_map<int,int> mapping;
-    vcl_vector<int> tail1,tail2;
+    std::map<int,int> mapping;
+    std::vector<int> tail1,tail2;
     vnl_matrix<double> R1,T1,Tbar;
     vgl_point_2d<double> e;
     double matching_cost=match_DP(tail_curve->desc,
@@ -154,13 +154,13 @@ void dbctrk_curve_matching :: match_prev_tail_curve(dbctrk_tracker_curve_sptr pa
     tail_curve->next_[i]->tail1_=tail1;
     tail_curve->next_[i]->tail2_=tail2;
   }
-  vcl_sort(tail_curve->next_.begin(),tail_curve->next_.end(),less_cost());
+  std::sort(tail_curve->next_.begin(),tail_curve->next_.end(),less_cost());
 
 }
 
 void dbctrk_curve_matching :: match_next_tail_curve(dbctrk_tracker_curve_sptr parent_curve,
                                                   dbctrk_tracker_curve_sptr &tail_curve,
-                                                  vcl_vector<dbctrk_tracker_curve_sptr> * old_curves)
+                                                  std::vector<dbctrk_tracker_curve_sptr> * old_curves)
 {
   for (unsigned int i=0;i<(*old_curves).size();++i)
     {
@@ -176,8 +176,8 @@ void dbctrk_curve_matching :: match_next_tail_curve(dbctrk_tracker_curve_sptr pa
   for (unsigned int i=0;i<tail_curve->prev_.size();i++)
     {
       double scale=1.0;
-      vcl_map<int,int> mapping;
-      vcl_vector<int> tail1,tail2;
+      std::map<int,int> mapping;
+      std::vector<int> tail1,tail2;
       vnl_matrix<double> R1,T1,Tbar;
       double matching_cost;
       if(tail_curve->desc->curve_->numPoints()>0)
@@ -196,7 +196,7 @@ void dbctrk_curve_matching :: match_next_tail_curve(dbctrk_tracker_curve_sptr pa
     tail_curve->prev_[i]->energy_=matching_cost;
   }
     }
-  vcl_sort(tail_curve->prev_.begin(),tail_curve->prev_.end(),less_cost());
+  std::sort(tail_curve->prev_.begin(),tail_curve->prev_.end(),less_cost());
 }
 
 double dbctrk_curve_matching :: coarse_match_DP(dbctrk_curve_description * desc1,
@@ -205,7 +205,7 @@ double dbctrk_curve_matching :: coarse_match_DP(dbctrk_curve_description * desc1
   
 {
   
-  vcl_vector<vgl_point_2d<double> > v1,v2;
+  std::vector<vgl_point_2d<double> > v1,v2;
 
 
   for (int i=0;i<desc1->curve_->numPoints(); i+=5)
@@ -215,12 +215,12 @@ double dbctrk_curve_matching :: coarse_match_DP(dbctrk_curve_description * desc1
 
   match_data_sptr mp=new match_data();
   vnl_matrix<double> R,T,Tbar,R1,T1,Tbar1;
-  vcl_vector<int> tail_old, tail_new;
-  vcl_map<int,int> alignment;
+  std::vector<int> tail_old, tail_new;
+  std::map<int,int> alignment;
   //vgl_point_2d<double>ep1,ep2;
   //ep[1]=0;ep[2]=0;
   double dist1=curveMatch(v1,v2,mp,epipole_);
-  vcl_reverse(v2.begin(),v2.end());
+  std::reverse(v2.begin(),v2.end());
   double dist2=curveMatch(v1,v2,mp,epipole_);
   
   return dist1<dist2 ? dist1 : dist2;
@@ -229,13 +229,13 @@ double dbctrk_curve_matching :: coarse_match_DP(dbctrk_curve_description * desc1
 
 //: function to observe the top n closures
 bool dbctrk_curve_matching :: best_topn_matches(int n,
-                vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                vcl_vector<dbctrk_tracker_curve_sptr> * old_curves,
-                vcl_map<int,vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > &transitives_)
+                std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                std::vector<dbctrk_tracker_curve_sptr> * old_curves,
+                std::map<int,std::vector<std::pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > &transitives_)
 {
-  vcl_vector<match_data_sptr>::iterator minpiter;
-  vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-  vcl_vector<match_data_sptr>::iterator iter_old;
+  std::vector<match_data_sptr>::iterator minpiter;
+  std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+  std::vector<match_data_sptr>::iterator iter_old;
   transitives_.clear();
   // simply choosing best corresponding matches
   // giving preference to low cost matches
@@ -253,14 +253,14 @@ bool dbctrk_curve_matching :: best_topn_matches(int n,
     (*old_curves)[i]->isnextclosure_=-1;
   }
   
-  vcl_vector<vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >  matchlist;
-  vcl_vector<vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >::iterator iterlist;
+  std::vector<std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >  matchlist;
+  std::vector<std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >::iterator iterlist;
   
   bool selection=true;
   while (selection)
     {
       double min_cost=1e6;
-      vcl_vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
+      std::vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
       dbctrk_tracker_curve_sptr min_iter_old;
       for (iter_new=(*new_curves).begin();iter_new!=(*new_curves).end();iter_new++)
      {
@@ -286,12 +286,12 @@ bool dbctrk_curve_matching :: best_topn_matches(int n,
     
           (*min_iter_new)->isprevclosure_=1;
     min_iter_old->isnextclosure_=1;
-    matchlist.push_back(vcl_make_pair(vcl_make_pair((*min_iter_new),min_iter_old),min_cost));
+    matchlist.push_back(std::make_pair(std::make_pair((*min_iter_new),min_iter_old),min_cost));
     
   }
     }
   
-  vcl_sort(matchlist.begin(),matchlist.end(),less_val());
+  std::sort(matchlist.begin(),matchlist.end(),less_val());
   
   for(int k=0;k<n;k++)
   {
@@ -305,7 +305,7 @@ bool dbctrk_curve_matching :: best_topn_matches(int n,
       if(c1->prev_[i]->match_curve_set[0]->get_id()==c2->get_id())
         {
     flag=1;
-    transitives_[k].push_back(vcl_make_pair(c1,c2));
+    transitives_[k].push_back(std::make_pair(c1,c2));
         }
        
     }
@@ -320,13 +320,13 @@ bool dbctrk_curve_matching :: best_topn_matches(int n,
   
 }
 bool dbctrk_curve_matching :: greedy_and_closure(int n,
-                 vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                 vcl_vector<dbctrk_tracker_curve_sptr> * old_curves)
+                 std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                 std::vector<dbctrk_tracker_curve_sptr> * old_curves)
 {
   
   //: code to find the assignment using greedy and closure propoerty among pair of curves
-  vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-  vcl_vector<match_data_sptr>::iterator iter_old;
+  std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+  std::vector<match_data_sptr>::iterator iter_old;
   
   if(n<0)
     return false;
@@ -339,24 +339,24 @@ bool dbctrk_curve_matching :: greedy_and_closure(int n,
   {
    (*old_curves)[i]->isnextclosure_=-1;
   }
-  vcl_vector<vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >  matchlist;
-  vcl_vector<vcl_pair<vcl_pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >::iterator iterlist;
+  std::vector<std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >  matchlist;
+  std::vector<std::pair<std::pair<dbctrk_tracker_curve_sptr,dbctrk_tracker_curve_sptr>, double > >::iterator iterlist;
 
   for (iter_new=(*new_curves).begin();iter_new!=(*new_curves).end();iter_new++)
      {
          for (iter_old=(*iter_new)->prev_.begin();iter_old!=(*iter_new)->prev_.end();iter_old++)
          {
-        matchlist.push_back(vcl_make_pair(vcl_make_pair((*iter_new),(*iter_old)->match_curve_set[0]),(*iter_old)->cost_));
+        matchlist.push_back(std::make_pair(std::make_pair((*iter_new),(*iter_old)->match_curve_set[0]),(*iter_old)->cost_));
          }
      }
 
 
-  vcl_sort(matchlist.begin(),matchlist.end(),less_val());
+  std::sort(matchlist.begin(),matchlist.end(),less_val());
 
 
   for(int k=0;k<n;k++)
   {
-      vcl_cout<<"\n step "<<k;
+      std::cout<<"\n step "<<k;
 
     for(iterlist=matchlist.begin();iterlist!=matchlist.end();)
      {
@@ -425,13 +425,13 @@ bool dbctrk_curve_matching :: greedy_and_closure(int n,
 }
 //: function to observe the top n closures
 bool dbctrk_curve_matching :: best_n_matches(int n,
-                       vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                       vcl_vector<dbctrk_tracker_curve_sptr> * old_curves,
-                       vcl_map<int,vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > &transitives_)
+                       std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                       std::vector<dbctrk_tracker_curve_sptr> * old_curves,
+                       std::map<int,std::vector<std::pair<dbctrk_tracker_curve_sptr, dbctrk_tracker_curve_sptr> > > &transitives_)
 {
-  vcl_vector<match_data_sptr>::iterator minpiter;
-  vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-  vcl_vector<match_data_sptr>::iterator iter_old;
+  std::vector<match_data_sptr>::iterator minpiter;
+  std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+  std::vector<match_data_sptr>::iterator iter_old;
   transitives_.clear();
   // simply choosing best corresponding matches
   // giving preference to low cost matches
@@ -453,7 +453,7 @@ bool dbctrk_curve_matching :: best_n_matches(int n,
    while (selection)
    {
      double min_cost=1e6;
-     vcl_vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
+     std::vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
      dbctrk_tracker_curve_sptr min_iter_old;
      for (iter_new=(*new_curves).begin();iter_new!=(*new_curves).end();iter_new++)
      {
@@ -484,7 +484,7 @@ bool dbctrk_curve_matching :: best_n_matches(int n,
        {
         (*min_iter_new)->isprevclosure_=k;
         min_iter_old->isnextclosure_=k;
-        transitives_[k].push_back(vcl_make_pair((*min_iter_new),min_iter_old));
+        transitives_[k].push_back(std::make_pair((*min_iter_new),min_iter_old));
         flag=true;
        }
       
@@ -503,26 +503,26 @@ bool dbctrk_curve_matching :: best_n_matches(int n,
  
 }
 double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
-                                       dbctrk_curve_description * desc2,vcl_map<int,int> &alignment,
+                                       dbctrk_curve_description * desc2,std::map<int,int> &alignment,
                                        double & cost, vnl_matrix<double> &R,vnl_matrix<double> &T,
-                                       vnl_matrix<double> & Tbar,double & scale,vcl_vector<int> & tail1,
-                                       vcl_vector<int> & tail2,vgl_point_2d<double> & e)
+                                       vnl_matrix<double> & Tbar,double & scale,std::vector<int> & tail1,
+                                       std::vector<int> & tail2,vgl_point_2d<double> & e)
 {
   double dist = -1; // dummy initialisation, to avoid compiler warning
   
-  vcl_vector<vcl_pair<double,double> > v1,v2;
+  std::vector<std::pair<double,double> > v1,v2;
 
   // getting points from curves into vectors
   for (int i=0;i<desc1->curve_->numPoints();++i)
   {
-    vcl_pair<double,double> coordinate;
+    std::pair<double,double> coordinate;
     coordinate.first=desc1->curve_->point(i).x();
     coordinate.second=desc1->curve_->point(i).y();
     v1.push_back(coordinate);
   }
   for (int i=0;i<desc2->curve_->numPoints();++i)
   {
-    vcl_pair<double,double> coordinate;
+    std::pair<double,double> coordinate;
     coordinate.first=desc2->curve_->point(i).x();
     coordinate.second=desc2->curve_->point(i).y();
     v2.push_back(coordinate);
@@ -534,24 +534,24 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
     double dx1=v1[1].first-v1[0].first;
     double dy1=v1[1].second-v1[0].second;
     double theta1=desc1->angles_[0]*vnl_math::pi/180;
-    sign11=dx1*vcl_sin(theta1)-dy1*vcl_cos(theta1);
+    sign11=dx1*std::sin(theta1)-dy1*std::cos(theta1);
 
     double dx2=v1[v1.size()-2].first-v1[v1.size()-1].first;
     double dy2=v1[v1.size()-2].second-v1[v1.size()-1].second;
     double theta2=desc1->angles_[v1.size()-1]*vnl_math::pi/180;
-    sign12=dx2*vcl_sin(theta2)-dy2*vcl_cos(theta2);
+    sign12=dx2*std::sin(theta2)-dy2*std::cos(theta2);
   }
   if (v2.size()>3)
   {
     double dx1=v2[1].first-v2[0].first;
     double dy1=v2[1].second-v2[0].second;
     double theta1=desc2->angles_[0]*vnl_math::pi/180;
-    sign21=dx1*vcl_sin(theta1)-dy1*vcl_cos(theta1);
+    sign21=dx1*std::sin(theta1)-dy1*std::cos(theta1);
 
     double dx2=v2[v2.size()-2].first-v2[v2.size()-1].first;
     double dy2=v2[v2.size()-2].second-v2[v2.size()-1].second;
     double theta2=desc2->angles_[v2.size()-1]*vnl_math::pi/180;
-    sign22=dx2*vcl_sin(theta2)-dy2*vcl_cos(theta2);
+    sign22=dx2*std::sin(theta2)-dy2*std::cos(theta2);
  }
   if (sign11*sign12<0 && sign21*sign22<0)
   {
@@ -562,12 +562,12 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
     }
     else // i.e., sign11*sign22>0 && sign12*sign21>0
     {
-      vcl_reverse(v2.begin(),v2.end());
-      vcl_map<int,int> alignment2;
-      vcl_vector<int> tail_reversed;
+      std::reverse(v2.begin(),v2.end());
+      std::map<int,int> alignment2;
+      std::vector<int> tail_reversed;
       dist = curveMatch(cost,v1,v2,alignment2,R,T,Tbar,tail1,tail_reversed,scale,epipole_);
       unsigned int sizeofv2=v2.size();
-      vcl_map<int,int>::iterator iter;
+      std::map<int,int>::iterator iter;
       alignment.clear();
       for (iter=alignment2.begin();iter!=alignment2.end();iter++)
       {
@@ -583,13 +583,13 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
   else
   {
     double             euc1,             euc2;
-    vcl_map<int,int>   alignment1,       alignment2;
+    std::map<int,int>   alignment1,       alignment2;
     double             scale1,           scale2;
     vnl_matrix<double> R1,T1,Tbar1,      R2,T2,Tbar2;
-    vcl_vector<int> tail_old1,tail_new1, tail_old2,tail_new2;
+    std::vector<int> tail_old1,tail_new1, tail_old2,tail_new2;
 
     double dist1 = curveMatch(euc1,v1,v2,alignment1,R1,T1,Tbar1,tail_old1,tail_new1,scale1,epipole_);
-    vcl_reverse(v2.begin(),v2.end());
+    std::reverse(v2.begin(),v2.end());
     double dist2 = curveMatch(euc2,v1,v2,alignment2,R2,T2,Tbar2,tail_old2,tail_new2,scale2,epipole_);
 
     if (dist1<dist2)
@@ -610,7 +610,7 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
       cost=euc2;
       dist=dist2;
       unsigned int sizeofv2=v2.size();
-      vcl_map<int,int>::iterator iter;
+      std::map<int,int>::iterator iter;
       alignment.clear();
       alignment.clear();
       for (iter=alignment2.begin();iter!=alignment2.end();iter++)
@@ -628,7 +628,7 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
       scale=scale2;
     }
   }
-  vcl_cout<<". ";
+  std::cout<<". ";
   return dist;
 }
 
@@ -702,26 +702,26 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
 */
 
 double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
-                                       dbctrk_curve_description * desc2,vcl_map<int,int> &alignment,
+                                       dbctrk_curve_description * desc2,std::map<int,int> &alignment,
                                        double & cost, vnl_matrix<double> &R,vnl_matrix<double> &T,
-                                       vnl_matrix<double> & Tbar,double & scale,vcl_vector<int> & tail1,
-                                       vcl_vector<int> & tail2,FMatrix F)
+                                       vnl_matrix<double> & Tbar,double & scale,std::vector<int> & tail1,
+                                       std::vector<int> & tail2,FMatrix F)
 {
   double dist = -1; // dummy initialisation, to avoid compiler warning
   
-  vcl_vector<vcl_pair<double,double> > v1,v2;
+  std::vector<std::pair<double,double> > v1,v2;
 
   // getting points from curves into vectors
   for (int i=0;i<desc1->curve_->numPoints();++i)
   {
-    vcl_pair<double,double> coordinate;
+    std::pair<double,double> coordinate;
     coordinate.first=desc1->curve_->point(i).x();
     coordinate.second=desc1->curve_->point(i).y();
     v1.push_back(coordinate);
   }
   for (int i=0;i<desc2->curve_->numPoints();++i)
   {
-    vcl_pair<double,double> coordinate;
+    std::pair<double,double> coordinate;
     coordinate.first=desc2->curve_->point(i).x();
     coordinate.second=desc2->curve_->point(i).y();
     v2.push_back(coordinate);
@@ -733,24 +733,24 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
     double dx1=v1[1].first-v1[0].first;
     double dy1=v1[1].second-v1[0].second;
     double theta1=desc1->angles_[0]*vnl_math::pi/180;
-    sign11=dx1*vcl_sin(theta1)-dy1*vcl_cos(theta1);
+    sign11=dx1*std::sin(theta1)-dy1*std::cos(theta1);
 
     double dx2=v1[v1.size()-2].first-v1[v1.size()-1].first;
     double dy2=v1[v1.size()-2].second-v1[v1.size()-1].second;
     double theta2=desc1->angles_[v1.size()-1]*vnl_math::pi/180;
-    sign12=dx2*vcl_sin(theta2)-dy2*vcl_cos(theta2);
+    sign12=dx2*std::sin(theta2)-dy2*std::cos(theta2);
   }
   if (v2.size()>3)
   {
     double dx1=v2[1].first-v2[0].first;
     double dy1=v2[1].second-v2[0].second;
     double theta1=desc2->angles_[0]*vnl_math::pi/180;
-    sign21=dx1*vcl_sin(theta1)-dy1*vcl_cos(theta1);
+    sign21=dx1*std::sin(theta1)-dy1*std::cos(theta1);
 
     double dx2=v2[v2.size()-2].first-v2[v2.size()-1].first;
     double dy2=v2[v2.size()-2].second-v2[v2.size()-1].second;
     double theta2=desc2->angles_[v2.size()-1]*vnl_math::pi/180;
-    sign22=dx2*vcl_sin(theta2)-dy2*vcl_cos(theta2);
+    sign22=dx2*std::sin(theta2)-dy2*std::cos(theta2);
  }
   if (sign11*sign12<0 && sign21*sign22<0)
   {
@@ -761,12 +761,12 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
     }
     else // i.e., sign11*sign22>0 && sign12*sign21>0
     {
-      vcl_reverse(v2.begin(),v2.end());
-      vcl_map<int,int> alignment2;
-      vcl_vector<int> tail_reversed;
+      std::reverse(v2.begin(),v2.end());
+      std::map<int,int> alignment2;
+      std::vector<int> tail_reversed;
       dist = FcurveMatch(cost,v1,v2,alignment2,R,T,Tbar,tail1,tail_reversed,scale,F);
       unsigned int sizeofv2=v2.size();
-      vcl_map<int,int>::iterator iter;
+      std::map<int,int>::iterator iter;
       alignment.clear();
       for (iter=alignment2.begin();iter!=alignment2.end();iter++)
       {
@@ -782,13 +782,13 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
   else
   {
     double             euc1,             euc2;
-    vcl_map<int,int>   alignment1,       alignment2;
+    std::map<int,int>   alignment1,       alignment2;
     double             scale1,           scale2;
     vnl_matrix<double> R1,T1,Tbar1,      R2,T2,Tbar2;
-    vcl_vector<int> tail_old1,tail_new1, tail_old2,tail_new2;
+    std::vector<int> tail_old1,tail_new1, tail_old2,tail_new2;
 
     double dist1 = FcurveMatch(euc1,v1,v2,alignment1,R1,T1,Tbar1,tail_old1,tail_new1,scale1,F);
-    vcl_reverse(v2.begin(),v2.end());
+    std::reverse(v2.begin(),v2.end());
     double dist2 = FcurveMatch(euc2,v1,v2,alignment2,R2,T2,Tbar2,tail_old2,tail_new2,scale2,F);
 
     if (dist1<dist2)
@@ -809,7 +809,7 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
       cost=euc2;
       dist=dist2;
       unsigned int sizeofv2=v2.size();
-      vcl_map<int,int>::iterator iter;
+      std::map<int,int>::iterator iter;
       alignment.clear();
       alignment.clear();
       for (iter=alignment2.begin();iter!=alignment2.end();iter++)
@@ -827,7 +827,7 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
       scale=scale2;
     }
   }
-  vcl_cout<<". ";
+  std::cout<<". ";
   return dist;
 }
 /*///double dbctrk_curve_matching :: match_stat(dbctrk_curve_description * desc1,
@@ -838,7 +838,7 @@ double dbctrk_curve_matching :: match_DP(dbctrk_curve_description * desc1,
   double angle_scale=.31416;
   double grad_scale=10.0;
 
-  dist = 1.0*vcl_sqrt( vnl_math_sqr( (desc1->center_.x()-desc2->center_.x())/image_scale )
+  dist = 1.0*std::sqrt( vnl_math_sqr( (desc1->center_.x()-desc2->center_.x())/image_scale )
                      +vnl_math_sqr( (desc1->center_.y()-desc2->center_.y())/image_scale ) );
   dist+= 0.5*vnl_math_abs( (desc1->length_-desc2->length_)/image_scale );
   dist+= 0.5*vnl_math_abs( (desc1->curvature_-desc2->curvature_)/image_scale );
@@ -878,8 +878,8 @@ bool dbctrk_curve_matching :: bounding_box_intersection(vsol_box_2d_sptr box1,
          box2->get_max_y()>=(box1->get_min_y()-mp_.motion_in_pixels);
 }
 
-void dbctrk_curve_matching :: match(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                                  vcl_vector<dbctrk_tracker_curve_sptr> * old_curves)
+void dbctrk_curve_matching :: match(std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                                  std::vector<dbctrk_tracker_curve_sptr> * old_curves)
 {
   for (unsigned int i=0;i<(*new_curves).size();++i)
   {
@@ -901,7 +901,7 @@ void dbctrk_curve_matching :: match(vcl_vector<dbctrk_tracker_curve_sptr> * new_
           double costnp=utils::dist3pdf_bhat((*new_curves)[i]->desc->chistn,(*old_curves)[j]->desc->chistp,xbins,ybins,zbins);
           double costpn=utils::dist3pdf_bhat((*new_curves)[i]->desc->chistp,(*old_curves)[j]->desc->chistn,xbins,ybins,zbins);
 
-          double prunedistIHS=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+          double prunedistIHS=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
    
           if(prunedistIHS<mp_.tauihs_)
           {
@@ -927,10 +927,10 @@ void dbctrk_curve_matching :: match(vcl_vector<dbctrk_tracker_curve_sptr> * new_
     }
     
     // sorting the matches w.r.t elastic energy cost
-    vcl_sort((*new_curves)[i]->prev_.begin(),(*new_curves)[i]->prev_.end(),less_cost());
+    std::sort((*new_curves)[i]->prev_.begin(),(*new_curves)[i]->prev_.end(),less_cost());
     if (no_of_top_choices_>0)
     {
-      vcl_vector<match_data_sptr>::iterator piter=(*new_curves)[i]->prev_.begin();
+      std::vector<match_data_sptr>::iterator piter=(*new_curves)[i]->prev_.begin();
       if ((*new_curves)[i]->prev_.size()>=(unsigned int)no_of_top_choices_)
       {
         piter+=no_of_top_choices_;
@@ -943,14 +943,14 @@ void dbctrk_curve_matching :: match(vcl_vector<dbctrk_tracker_curve_sptr> * new_
 
   for (unsigned int i=0;i<(*new_curves).size();++i)
   {
-    vcl_map<int,int> mapping;
-    vcl_vector<int> tail_old;
-    vcl_vector<int> tail_new;
-    //vcl_cout<<"\n curve no "<<(*new_curves)[i]->get_id();
+    std::map<int,int> mapping;
+    std::vector<int> tail_old;
+    std::vector<int> tail_new;
+    //std::cout<<"\n curve no "<<(*new_curves)[i]->get_id();
     if ((*new_curves)[i]->prev_.size()> 0)
     {
 
-      vcl_vector<match_data_sptr>::iterator piter=(*new_curves)[i]->prev_.begin();
+      std::vector<match_data_sptr>::iterator piter=(*new_curves)[i]->prev_.begin();
       for (unsigned int j=0;j<(*new_curves)[i]->prev_.size(); ++j,++piter)
       {
           
@@ -974,32 +974,32 @@ void dbctrk_curve_matching :: match(vcl_vector<dbctrk_tracker_curve_sptr> * new_
         (*piter)->match_curve_set[0]->next_.push_back(temp);
       }
 
-    vcl_sort((*new_curves)[i]->prev_.begin(),(*new_curves)[i]->prev_.end(),less_cost());
+    std::sort((*new_curves)[i]->prev_.begin(),(*new_curves)[i]->prev_.end(),less_cost());
     }
   }
   // sorting the next matches of the curves
   for (unsigned int i=0;i<(*old_curves).size();++i)
   {
-    vcl_sort((*old_curves)[i]->next_.begin(),(*old_curves)[i]->next_.end(),less_cost());
+    std::sort((*old_curves)[i]->next_.begin(),(*old_curves)[i]->next_.end(),less_cost());
   }
-  vcl_cout<<"\n fine curve matching done";
+  std::cout<<"\n fine curve matching done";
   // computing the first best match
   //best_matches(new_curves,old_curves);
 }
 
-void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                                       vcl_vector<dbctrk_tracker_curve_sptr> * old_curves)
+void dbctrk_curve_matching::best_matches(std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                                       std::vector<dbctrk_tracker_curve_sptr> * old_curves)
 {
-  vcl_vector<match_data_sptr>::iterator minpiter;
-  vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-  vcl_vector<match_data_sptr>::iterator iter_old;
+  std::vector<match_data_sptr>::iterator minpiter;
+  std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+  std::vector<match_data_sptr>::iterator iter_old;
   // simply choosing best corresponding matches
   // giving preference to low cost matches
   bool selection=true;
   while (selection)
   {
     double min_cost=1e6;
-    vcl_vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
+    std::vector<dbctrk_tracker_curve_sptr>::iterator min_iter_new;
     bool min_iter_new_flag=false;
     dbctrk_tracker_curve_sptr min_iter_old;
     for (iter_new=(*new_curves).begin();iter_new!=(*new_curves).end();iter_new++)
@@ -1060,7 +1060,7 @@ void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> *
                 {
                   R1=(*minpiter)->R_;
                   T1=(*minpiter)->Tbar;
-                  //vcl_cout<<"\n "<<T1(0,0)<<"\t"<<T1(1,0);
+                  //std::cout<<"\n "<<T1(0,0)<<"\t"<<T1(1,0);
                   s=(*minpiter)->scale_;
                   prev_tail_curve->set_best_match_next(best_match_for_tail);
                   double tail_euc_dist=dbctrk_curve_algs::compute_transformed_euclidean_distance(prev_tail_curve,
@@ -1069,7 +1069,7 @@ void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> *
                   // confirm it using transformation
                   R1=best_match_for_tail->R_;
                   T1=best_match_for_tail->T_;
-                  //vcl_cout<<"\n "<<T1(0,0)<<"\t"<<T1(1,0);
+                  //std::cout<<"\n "<<T1(0,0)<<"\t"<<T1(1,0);
                   s=best_match_for_tail->scale_;
                   // to compute the euc dist
                   double parent_euc_dist=dbctrk_curve_algs::
@@ -1077,7 +1077,7 @@ void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> *
                       ((*minpiter)->match_curve_set[0],(*min_iter_new),R1,T1,s,
                       (*minpiter)->mapping_);
                   // join the two curves and add it to the new curves;
-                  if (vcl_fabs(2*(tail_euc_dist-parent_euc_dist)/(tail_euc_dist+parent_euc_dist))<1.0
+                  if (std::fabs(2*(tail_euc_dist-parent_euc_dist)/(tail_euc_dist+parent_euc_dist))<1.0
                      && (tail_euc_dist+parent_euc_dist)/2<10)
                   {
                     //merged two curves to form a virtual curve
@@ -1116,7 +1116,7 @@ void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> *
                     temp->mapping_=(*minpiter)->mapping_;
                     (*min_iter_new)->set_best_match_prev((*minpiter));
                     // obtaining the original mapping for tail
-                    vcl_map<int,int>::iterator itermap;vcl_map<int,int> tailmap;
+                    std::map<int,int>::iterator itermap;std::map<int,int> tailmap;
                     for(itermap=best_match_for_tail->mapping_.begin();
                         itermap!=best_match_for_tail->mapping_.end();
                         itermap++)
@@ -1190,13 +1190,13 @@ void dbctrk_curve_matching::best_matches(vcl_vector<dbctrk_tracker_curve_sptr> *
                   //computing parent eulidean distance
                   R2=best_match_for_tail->R_;
                   T2=best_match_for_tail->Tbar;
-                  //vcl_cout<<"\n"<<best_match_for_tail->Tbar(0,0)
+                  //std::cout<<"\n"<<best_match_for_tail->Tbar(0,0)
                 //          <<"\t"<<best_match_for_tail->Tbar(1,0);
                   s=best_match_for_tail->scale_;
                   double parent_euc_dist=dbctrk_curve_algs::
                       compute_transformed_euclidean_distance((*minpiter)->match_curve_set[0],(*min_iter_new),R2,T2,s,(*minpiter)->mapping_);
                   // join the two curves and add it to the new curves;
-                  if (vcl_fabs(2*(tail_euc_dist-parent_euc_dist)/(tail_euc_dist+parent_euc_dist))<1.0
+                  if (std::fabs(2*(tail_euc_dist-parent_euc_dist)/(tail_euc_dist+parent_euc_dist))<1.0
                      && (tail_euc_dist+parent_euc_dist)/2<10)
                   {
                     //merged two curves to form a virtual curve
@@ -1299,7 +1299,7 @@ double dbctrk_curve_matching::compute_euc_dist(dbctrk_tracker_curve_sptr a,
   vnl_matrix<double> Ri,Ti;
   double x2,y2;
   double cost=0;
-  vcl_map<int,int>::iterator iter;
+  std::map<int,int>::iterator iter;
   for (iter=a->get_best_match_prev()->mapping_.begin();
        iter!=a->get_best_match_prev()->mapping_.end();
        iter++)
@@ -1317,7 +1317,7 @@ double dbctrk_curve_matching::compute_euc_dist(dbctrk_tracker_curve_sptr a,
     x2=a->desc->curve_->point((*iter).second).x();
     y2=a->desc->curve_->point((*iter).second).y();
 
-    cost+=vcl_sqrt((Q(0,0)-x2)*(Q(0,0)-x2)+(Q(1,0)-y2)*(Q(1,0)-y2));
+    cost+=std::sqrt((Q(0,0)-x2)*(Q(0,0)-x2)+(Q(1,0)-y2)*(Q(1,0)-y2));
   }
   cost/=a->get_best_match_prev()->mapping_.size();
   return cost;
@@ -1335,8 +1335,8 @@ void dbctrk_curve_matching::merge_curves(dbctrk_tracker_curve_sptr cs1,
   unsigned int s1=cs1->desc->curve_->numPoints();
   unsigned int s2=cs2->desc->curve_->numPoints();
 
-  vcl_vector<vgl_point_2d<double> > f;
-  vcl_vector<vgl_point_2d<double> > s;
+  std::vector<vgl_point_2d<double> > f;
+  std::vector<vgl_point_2d<double> > s;
 
   for (unsigned int i=0;i<s1;++i)
     f.push_back(cs1->desc->curve_->point(i));
@@ -1354,24 +1354,24 @@ void dbctrk_curve_matching::merge_curves(dbctrk_tracker_curve_sptr cs1,
   double x22=cs2->desc->curve_->point(s2-1).x();
   double y22=cs2->desc->curve_->point(s2-1).y();
 
-  vcl_pair<int,int> p;
+  std::pair<int,int> p;
 
-  vcl_map<double,vcl_pair<int,int> > dist;
+  std::map<double,std::pair<int,int> > dist;
 
   p.first=0;p.second=0;
-  double e11=vcl_sqrt((x11-x21)*(x11-x21)+(y11-y21)*(y11-y21));
+  double e11=std::sqrt((x11-x21)*(x11-x21)+(y11-y21)*(y11-y21));
   dist[e11]=p;
 
   p.first=0;p.second=s2-1;
-  double e12=vcl_sqrt((x11-x22)*(x11-x22)+(y11-y22)*(y11-y22));
+  double e12=std::sqrt((x11-x22)*(x11-x22)+(y11-y22)*(y11-y22));
   dist[e12]=p;
 
   p.first=s1-1;p.second=s2-1;
-  double e22=vcl_sqrt((x12-x22)*(x12-x22)+(y12-y22)*(y12-y22));
+  double e22=std::sqrt((x12-x22)*(x12-x22)+(y12-y22)*(y12-y22));
   dist[e22]=p;
 
   p.first=s1-1;p.second=0;
-  double e21=vcl_sqrt((x12-x21)*(x12-x21)+(y12-y21)*(y12-y21));
+  double e21=std::sqrt((x12-x21)*(x12-x21)+(y12-y21)*(y12-y21));
   dist[e21]=p;
 
 
@@ -1380,7 +1380,7 @@ void dbctrk_curve_matching::merge_curves(dbctrk_tracker_curve_sptr cs1,
   {
     if (p.second>0)
       {
-        vcl_reverse(s.begin(),s.end());
+        std::reverse(s.begin(),s.end());
         f.insert(f.end(),s.begin(),s.end());
       }
     else
@@ -1396,7 +1396,7 @@ void dbctrk_curve_matching::merge_curves(dbctrk_tracker_curve_sptr cs1,
     }
     else
     {
-      vcl_reverse(s.begin(),s.end());
+      std::reverse(s.begin(),s.end());
       f.insert(f.begin(),s.begin(),s.end());
     }
   }
@@ -1404,7 +1404,7 @@ void dbctrk_curve_matching::merge_curves(dbctrk_tracker_curve_sptr cs1,
 }
 
 
-double dbctrk_curve_matching::compute_mean(vcl_vector<double> t)
+double dbctrk_curve_matching::compute_mean(std::vector<double> t)
 {
   double sum=0;
   for (unsigned int i=0;i<t.size();++i)
@@ -1413,21 +1413,21 @@ double dbctrk_curve_matching::compute_mean(vcl_vector<double> t)
 }
 
 
-double dbctrk_curve_matching::compute_std(vcl_vector<double> t)
+double dbctrk_curve_matching::compute_std(std::vector<double> t)
 {
   double sum=compute_mean(t);
   double std=0;
   for (unsigned int i=0;i<t.size();++i)
     std+=(t[i]-sum)*(t[i]-sum);
-  return vcl_sqrt(std/t.size());
+  return std::sqrt(std/t.size());
 }
 //: function to match the curves with transitive closure over a given window size assuming all matches have been done
-//bool dbctrk_curve_matching::best_matches_tc(vcl_vector< vcl_vector<dbctrk_tracker_curve_sptr> > curve_set ,int winsize )
+//bool dbctrk_curve_matching::best_matches_tc(std::vector< std::vector<dbctrk_tracker_curve_sptr> > curve_set ,int winsize )
 //{
 // if(curve_set.size()<=winsize || curve_set.size()<=0)
 //   return false;
 //
-// vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter,min_iter_current;
+// std::vector<dbctrk_tracker_curve_sptr>::iterator iter,min_iter_current;
 // match_data_sptr min_i_data;
 // match_data_sptr min_k_data;
 // double dji,djk,dki;
@@ -1443,12 +1443,12 @@ double dbctrk_curve_matching::compute_std(vcl_vector<double> t)
 // 
 //
 //}
-void dbctrk_curve_matching::best_matches_tc(vcl_vector<dbctrk_tracker_curve_sptr> * current_curves,
-                                          vcl_vector<dbctrk_tracker_curve_sptr> * past_curves,
-                                          vcl_vector<dbctrk_tracker_curve_sptr> * future_curves)
+void dbctrk_curve_matching::best_matches_tc(std::vector<dbctrk_tracker_curve_sptr> * current_curves,
+                                          std::vector<dbctrk_tracker_curve_sptr> * past_curves,
+                                          std::vector<dbctrk_tracker_curve_sptr> * future_curves)
 
 {
-    vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter,min_iter_current;
+    std::vector<dbctrk_tracker_curve_sptr>::iterator iter,min_iter_current;
     match_data_sptr min_i_data;
     match_data_sptr min_k_data;
     double dji,djk,dki;
@@ -1495,7 +1495,7 @@ void dbctrk_curve_matching::best_matches_tc(vcl_vector<dbctrk_tracker_curve_sptr
                         }
                         if(dji>0 && djk>0 && dki > 0)
                         {
-                            double cost=vcl_max(dji,vcl_max(djk,dki));
+                            double cost=std::max(dji,std::max(djk,dki));
                             if(min_cost>cost)
                             {
                                 min_cost=cost;
@@ -1535,8 +1535,8 @@ void dbctrk_curve_matching::best_matches_tc(vcl_vector<dbctrk_tracker_curve_sptr
 
 
 
-void dbctrk_curve_matching::softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves,
-                                  vcl_vector<dbctrk_tracker_curve_sptr> * old_curves)
+void dbctrk_curve_matching::softmax(std::vector<dbctrk_tracker_curve_sptr> * new_curves,
+                                  std::vector<dbctrk_tracker_curve_sptr> * old_curves)
 {
 
     double * X=new double[(new_curves->size()+1)*(old_curves->size()+1)];// adding 1 for slack variables
@@ -1562,11 +1562,11 @@ void dbctrk_curve_matching::softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_
 
         }
     }
-    //vcl_cout<<"\n ....................";
-    vcl_vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
-    vcl_vector<match_data_sptr>::iterator iter_old;
+    //std::cout<<"\n ....................";
+    std::vector<dbctrk_tracker_curve_sptr>::iterator iter_new;
+    std::vector<match_data_sptr>::iterator iter_old;
 
-    vcl_ofstream of("c:\\similarity_matrix.txt");
+    std::ofstream of("c:\\similarity_matrix.txt");
     // initialize X(data) matrix
     for (iter_new=(*new_curves).begin(),i=0 ;iter_new!=(*new_curves).end();iter_new++,i++)
     {
@@ -1626,9 +1626,9 @@ void dbctrk_curve_matching::softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_
     {
         for(int a=0;a<A;a++)
         {
-        //    vcl_cout<<" "<<M[i*A+a];
+        //    std::cout<<" "<<M[i*A+a];
         }
-    //    vcl_cout<<"\n";
+    //    std::cout<<"\n";
     }
     while(error>0.05)
     {
@@ -1668,7 +1668,7 @@ void dbctrk_curve_matching::softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_
         {
             for( a=0;a<A;a++)
             {
-                error+=vcl_fabs(Mo[i*A+a]-M[i*A+a]);
+                error+=std::fabs(Mo[i*A+a]-M[i*A+a]);
                 Mo[i*A+a]=M[i*A+a];
             }
         }
@@ -1698,35 +1698,35 @@ void dbctrk_curve_matching::softmax(vcl_vector<dbctrk_tracker_curve_sptr> * new_
                     (*new_curves)[i]->set_best_match_prev(*iter_old);
                     (*new_curves)[i]->match_id_=(*iter_old)->match_curve_set[0]->match_id_;
             }
-            //vcl_cout<<" "<<M[i*A+a];
+            //std::cout<<" "<<M[i*A+a];
         }
         }
-    //vcl_cout<<"\n";
+    //std::cout<<"\n";
     }
 
 /*    for(int i=0;i<I;i++)
     {
         for(int a=0;a<A;a++)
         {
-            vcl_cout<<" "<<X[i*A+a];
+            std::cout<<" "<<X[i*A+a];
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
 */
 /*    for(int i=0;i<I;i++)
     {
         for(int a=0;a<A;a++)
         {
-            vcl_cout<<" "<<M[i*A+a];
+            std::cout<<" "<<M[i*A+a];
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
 
 */
 
 
 }
-void dbctrk_curve_matching::write_transformations(vcl_vector<dbctrk_tracker_curve_sptr> * new_curves)
+void dbctrk_curve_matching::write_transformations(std::vector<dbctrk_tracker_curve_sptr> * new_curves)
 {
 
 
@@ -1747,15 +1747,15 @@ double dbctrk_curve_matching::spatial_euclidean_dist(dbctrk_tracker_curve_sptr c
 
     return min;
 }
-void dbctrk_curve_matching::compute_spatial_distance(vcl_vector<dbctrk_tracker_curve_sptr> curves,
-                                                vcl_map<vcl_pair<int,int>, double > & spatiald)
+void dbctrk_curve_matching::compute_spatial_distance(std::vector<dbctrk_tracker_curve_sptr> curves,
+                                                std::map<std::pair<int,int>, double > & spatiald)
 {
   spatiald.clear();
   for(unsigned int i=0;i<curves.size()-1;i++)
   {
     for(unsigned int j=i+1;j<curves.size();j++)
     {
-      spatiald[vcl_make_pair(i,j)]=spatial_euclidean_dist(curves[i],curves[j]);
+      spatiald[std::make_pair(i,j)]=spatial_euclidean_dist(curves[i],curves[j]);
 
     }
   }                        

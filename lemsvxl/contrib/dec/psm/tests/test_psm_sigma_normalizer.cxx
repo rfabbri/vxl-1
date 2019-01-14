@@ -25,7 +25,7 @@ static void test_psm_sigma_normalizer()
   psm_sigma_normalizer normalizer(under_estimation_prob);
 
   for (unsigned int t=0; t<n_trials; ++t) {
-   vcl_vector<float> samples;
+   std::vector<float> samples;
    for (unsigned int n=0; n<n_observations; ++n) {
      float sample = true_mean + true_sigma*(float)rand_gen.normal();
      samples.push_back(sample);

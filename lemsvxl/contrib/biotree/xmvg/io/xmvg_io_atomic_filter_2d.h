@@ -11,7 +11,7 @@
 
 #include <vsl/vsl_fwd.h>
 #include <xmvg/xmvg_atomic_filter_2d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 //: Binary save
 template<class T>
@@ -23,5 +23,5 @@ void vsl_b_read(vsl_b_istream & is, xmvg_atomic_filter_2d<T>& f);
 
 //: print
 template<class T>
-void vsl_print_summary(vcl_ostream& os, const xmvg_atomic_filter_2d<T> &f);
+void vsl_print_summary(std::ostream& os, const xmvg_atomic_filter_2d<T> &f);
 #endif

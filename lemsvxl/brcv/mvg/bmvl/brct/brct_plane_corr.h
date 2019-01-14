@@ -13,7 +13,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <brct/brct_corr.h>
 
 class brct_plane_corr : public brct_corr
@@ -29,7 +29,7 @@ class brct_plane_corr : public brct_corr
               // --- Mutators ---
 
   //: Utility functions
-  friend vcl_ostream&  operator<<(vcl_ostream& s, brct_plane_corr const& c);
+  friend std::ostream&  operator<<(std::ostream& s, brct_plane_corr const& c);
 
  protected:
   brct_plane_corr();//shouldn't use this constructor

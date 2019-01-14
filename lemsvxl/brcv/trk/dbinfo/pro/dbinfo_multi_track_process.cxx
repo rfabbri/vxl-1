@@ -54,7 +54,7 @@ dbinfo_multi_track_process::dbinfo_multi_track_process()
                            bpro1_filepath("","*.*")) ||
       !parameters()->add( "Verbose",            "-v", 
                           tracker_.verbose_) )
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 } 
 
 
@@ -98,9 +98,9 @@ dbinfo_multi_track_process::clone() const
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbinfo_multi_track_process::get_input_type()
+std::vector< std::string > dbinfo_multi_track_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -108,9 +108,9 @@ vcl_vector< vcl_string > dbinfo_multi_track_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbinfo_multi_track_process::get_output_type()
+std::vector< std::string > dbinfo_multi_track_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -137,7 +137,7 @@ bool
 dbinfo_multi_track_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << __FILE__ << " - not exactly one input frame" << vcl_endl;
+    std::cerr << __FILE__ << " - not exactly one input frame" << std::endl;
     return false;
   }
   this->set_tracker_parameters();  
@@ -149,7 +149,7 @@ dbinfo_multi_track_process::execute()
     return false;
 
   unsigned frame = input_data_[0][0]->frame();
-  vcl_cout << "MultiTrack: " << frame << '\n';
+  std::cout << "MultiTrack: " << frame << '\n';
 
   //Set current frame image on the tracker
   tracker_.set_image(frame, frame_image->get_image());
@@ -167,25 +167,25 @@ dbinfo_multi_track_process::execute()
   if(first_frame_)
     {
       name_ = detection_storage->name();
-      vcl_cout << "MultiTrack: Executing First Frame\n";
-      vcl_cout << (dbinfo_multi_tracker_params)tracker_ << '\n';
-      vcl_vector< vsol_spatial_object_2d_sptr > detections = 
+      std::cout << "MultiTrack: Executing First Frame\n";
+      std::cout << (dbinfo_multi_tracker_params)tracker_ << '\n';
+      std::vector< vsol_spatial_object_2d_sptr > detections = 
         detection_storage->all_data(); 
       if(!detections.size())
         {
-          vcl_cout << "In dbinfo_multi_track_process::execute() -"
+          std::cout << "In dbinfo_multi_track_process::execute() -"
                    << " no detections in first frame\n";
           return false;
         }
       //Get each polygon and treat as a track initiation (for now)
-      for(vcl_vector< vsol_spatial_object_2d_sptr >::iterator dit =
+      for(std::vector< vsol_spatial_object_2d_sptr >::iterator dit =
             detections.begin(); dit != detections.end(); ++dit)
         {
           vsol_spatial_object_2d* so = (*dit).ptr();
           assert(so);
           vsol_polygon_2d_sptr poly = so->cast_to_region()->cast_to_polygon();
           assert(poly);
-          vcl_vector<vsol_polygon_2d_sptr> polys; polys.push_back(poly);
+          std::vector<vsol_polygon_2d_sptr> polys; polys.push_back(poly);
           tracker_.initiate_track(polys);
         }
       first_frame_ = false;
@@ -195,7 +195,7 @@ dbinfo_multi_track_process::execute()
   tracker_.extend_tracks_from_seeds();
 
   //create the storage for display
-  vcl_vector<vsol_spatial_object_2d_sptr> polygons;
+  std::vector<vsol_spatial_object_2d_sptr> polygons;
   unsigned n_trks = tracker_.n_tracks();
   for(unsigned i = 0; i<n_trks; ++i)
     {
@@ -214,8 +214,8 @@ dbinfo_multi_track_process::execute()
       vsol_point_2d_sptr cog = geo->cog();
       polygons.push_back(cog->cast_to_spatial_object()); 
 #if 0
-      vcl_vector<dbinfo_observation_sptr> seeds = tr->seeds();
-      for(vcl_vector<dbinfo_observation_sptr>::iterator sit = seeds.begin();
+      std::vector<dbinfo_observation_sptr> seeds = tr->seeds();
+      for(std::vector<dbinfo_observation_sptr>::iterator sit = seeds.begin();
           sit != seeds.end(); ++sit)
         {
           dbinfo_region_geometry_sptr geo = (*sit)->geometry();
@@ -240,13 +240,13 @@ dbinfo_multi_track_process::finish()
   first_frame_ = true;
   if(tracker_.save_tracks_)
     {
-      vcl_string path = track_storage_filepath_.path;
+      std::string path = track_storage_filepath_.path;
       // create the track storage class
       dbinfo_track_storage_sptr output_dbinfo = dbinfo_track_storage_new();
-      vcl_vector<dbinfo_mi_track_sptr> mi_tracks = tracker_.tracks();
+      std::vector<dbinfo_mi_track_sptr> mi_tracks = tracker_.tracks();
 
-      vcl_vector<dbinfo_track_sptr> tracks;
-      for(vcl_vector<dbinfo_mi_track_sptr>::iterator trit = mi_tracks.begin();
+      std::vector<dbinfo_track_sptr> tracks;
+      for(std::vector<dbinfo_mi_track_sptr>::iterator trit = mi_tracks.begin();
           trit != mi_tracks.end(); ++trit)
         tracks.push_back((dbinfo_track*)((dbinfo_mi_track*)(*trit).ptr()));
       

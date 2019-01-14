@@ -76,7 +76,7 @@ dbctrk_get_info_tool::handle( const vgui_event & e,
   }
   if ( gesture_info_(e) ) {
 
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
     for (unsigned int i = 0; i<all_objects.size(); i++) {
@@ -85,16 +85,16 @@ dbctrk_get_info_tool::handle( const vgui_event & e,
       if(tableau_->is_selected(all_objects[i]->get_id()))
             {
             dbctrk_tracker_curve_sptr testcurve=((dbctrk_soview2D*)all_objects[i])->dbctrk_sptr();
-      vcl_cout<<"\n the id is "<<testcurve->get_id()
+      std::cout<<"\n the id is "<<testcurve->get_id()
           <<"\n the match id is "<<testcurve->match_id_;
       if(testcurve->get_best_match_next().ptr())
       {  
-        vcl_cout<<"\n id of the best match is"<<testcurve->get_best_match_next()->match_curve_set[0]->get_id();
+        std::cout<<"\n id of the best match is"<<testcurve->get_best_match_next()->match_curve_set[0]->get_id();
       }
       for(unsigned int i=0;i<testcurve->next_.size();i++)
-        vcl_cout<<"\n"<<testcurve->next_[i]->match_curve_set[0]->frame_number;
-      vcl_cout<<"\n the size of the prev vector is"<<testcurve->next_.size();
-      vcl_cout<<"\n the number of neighbors in Dt graoh is "<<testcurve->neighbors_.size();
+        std::cout<<"\n"<<testcurve->next_[i]->match_curve_set[0]->frame_number;
+      std::cout<<"\n the size of the prev vector is"<<testcurve->next_.size();
+      std::cout<<"\n the number of neighbors in Dt graoh is "<<testcurve->neighbors_.size();
       }
     }  
    }
@@ -119,7 +119,7 @@ dbctrk_get_info_tool::handle( const vgui_event & e,
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_get_info_tool::name() const
 
 {

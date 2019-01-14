@@ -10,7 +10,7 @@
 
 //: Constructor
 vox_match_composite_fragments_params::
-vox_match_composite_fragments_params(vcl_string algo_name) : 
+vox_match_composite_fragments_params(std::string algo_name) : 
     dborl_algo_params(algo_name),
     edit_params_(),
     tag_match_composite_fragments_("Match_Composite_Fragments")
@@ -35,7 +35,7 @@ vox_match_composite_fragments_params(vcl_string algo_name) :
 
   // add the parameters of the extract shock patches process
   dbskfg_match_bag_of_fragments_process pro1;
-  vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+  std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
   for (unsigned i = 0; i < pars.size(); i++) 
   {
       this->param_list_.push_back(convert_parameter_from_bpro1

@@ -15,8 +15,8 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -42,8 +42,8 @@
 dbdet_graphical_model_contour_merge_process::dbdet_graphical_model_contour_merge_process()
 {
 
-  vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/tests/test_data";
+  std::string root = dbtest_root_dir();
+  std::string base_path = root + "/brcv/seg/dbdet/tests/test_data";
 
   fb = new dbdet_filter_bank(base_path);
   tex = new dbdet_texton_classifier((base_path + "/tex/tex.txt").c_str());
@@ -88,7 +88,7 @@ dbdet_graphical_model_contour_merge_process::dbdet_graphical_model_contour_merge
       !parameters()->add( "beta_g[1]"   , "-beta_g_1" , 1.0618483e+00)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -109,7 +109,7 @@ dbdet_graphical_model_contour_merge_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_graphical_model_contour_merge_process::name()
 {
   return "Graphical Model Contour Merge";
@@ -132,9 +132,9 @@ dbdet_graphical_model_contour_merge_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_graphical_model_contour_merge_process::get_input_type()
+std::vector< std::string > dbdet_graphical_model_contour_merge_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "edge_map" );
   to_return.push_back( "sel" );
@@ -143,9 +143,9 @@ vcl_vector< vcl_string > dbdet_graphical_model_contour_merge_process::get_input_
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_graphical_model_contour_merge_process::get_output_type()
+std::vector< std::string > dbdet_graphical_model_contour_merge_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "sel" );
   return to_return;
 }
@@ -156,14 +156,14 @@ bool
 dbdet_graphical_model_contour_merge_process::execute()
 {
   if ( input_data_.size() != 3 ){
-    vcl_cout << "In dbdet_graphical_model_contour_merge_process::execute() - not exactly three"
+    std::cout << "In dbdet_graphical_model_contour_merge_process::execute() - not exactly three"
              << " inputs\n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Graphical model contour merge...\n";
-  vcl_cout.flush();
+  std::cout << "Graphical model contour merge...\n";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -175,7 +175,7 @@ dbdet_graphical_model_contour_merge_process::execute()
   input_sel.vertical_cast(input_data_[0][2]);
   dbdet_curve_fragment_graph& CFG = input_sel->CFG();
 
-  vcl_cout << "Input #fragments: " << CFG.frags.size() << vcl_endl;
+  std::cout << "Input #fragments: " << CFG.frags.size() << std::endl;
 
   dbdet_edgemap_storage_sptr input_edgemap;
   input_edgemap.vertical_cast(input_data_[0][1]);
@@ -232,10 +232,10 @@ dbdet_graphical_model_contour_merge_process::execute()
   for (unsigned i = 0; i < y_params_1_size; ++i)
     beta_geom[i] /= fstd_geom[i];
 
-  vcl_vector<vil_image_view<double> > decomposed = fb->decompose(image_view);
+  std::vector<vil_image_view<double> > decomposed = fb->decompose(image_view);
 	vnl_matrix<unsigned> tmap = tex->classify(decomposed);
 
-  vcl_cout << "Merging contours...\n"; 
+  std::cout << "Merging contours...\n"; 
   // perfrom third-order edge detection with these parameters
   dbdet_graphical_model_contour_merge cm(image_view, *EM, tmap);
 
@@ -246,9 +246,9 @@ dbdet_graphical_model_contour_merge_process::execute()
   
   output_data_[0].push_back(output_sel);
 
-  vcl_cout << "Output #fragments: " << newCFG.frags.size() << vcl_endl;
-  vcl_cout << "done!" << vcl_endl;
-  vcl_cout.flush();
+  std::cout << "Output #fragments: " << newCFG.frags.size() << std::endl;
+  std::cout << "done!" << std::endl;
+  std::cout.flush();
 
   return true;
 }

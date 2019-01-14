@@ -25,21 +25,21 @@ public:
 
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
 
-  /*void save_to_wrl(vcl_string inp_file_path, vnl_matrix<double>& points_colors);*/
+  /*void save_to_wrl(std::string inp_file_path, vnl_matrix<double>& points_colors);*/
 
 protected:
-  vcl_string input_path;
+  std::string input_path;
 };
 
 #endif

@@ -100,18 +100,18 @@ void dts_pixel_time_series<pixelType,timeType,elementType,n>::
             vsl_b_read(is,d);
             if(d != this->dim)
             {
-                vcl_cerr << "----ERROR---- "
+                std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::b_read()\n"
                          << "\tPixel Time Series Instance Dimension" 
                          << " and Written File dimension do not match.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
             }
 
             //read the size of the pixel time series map
-            vcl_size_t npix = 0;
+            std::size_t npix = 0;
             vsl_b_read(is, npix);
 
             for(unsigned pix_idx = 0;
@@ -140,12 +140,12 @@ void dts_pixel_time_series<pixelType,timeType,elementType,n>::
         break;
     default:
         {
-            vcl_cerr << "----ERROR---- "
+            std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::b_read()\n"
                          << "\tUnknown version number.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
         }
     }//end switch(v)
@@ -157,7 +157,7 @@ void dts_pixel_time_series<pixelType,timeType,elementType,n>::
 template<class pixelType, class timeType,
             class elementType, unsigned n >
 bool dts_pixel_time_series<pixelType,timeType,elementType,n>::
-    write_txt( vcl_string const& filename,
+    write_txt( std::string const& filename,
 					vgl_point_2d<unsigned> const& pt )
 {
     typename pixel_time_series_map_type::const_iterator
@@ -165,7 +165,7 @@ bool dts_pixel_time_series<pixelType,timeType,elementType,n>::
 
     if( pts_itr == this->pixel_time_series_map.end() )
     {
-        vcl_cout << "----WARNING----\n"
+        std::cout << "----WARNING----\n"
                  << "\tTime Series at pixel: ("
                  << pts_itr->first.x() << ", " 
                  << pts_itr->first.y() << ") not found.\n";
@@ -183,7 +183,7 @@ bool dts_pixel_time_series<pixelType,timeType,elementType,n>::
 template<class pixelType, class timeType,
             class elementType >
 bool dts_pixel_time_series<pixelType,timeType,elementType,1>::
-    write_txt( vcl_string const& filename,
+    write_txt( std::string const& filename,
 				vgl_point_2d<unsigned> const& pt)
 {
     typename pixel_time_series_map_type::const_iterator
@@ -191,7 +191,7 @@ bool dts_pixel_time_series<pixelType,timeType,elementType,1>::
 
     if( pts_itr == this->pixel_time_series_map.end() )
     {
-        vcl_cout << "----WARNING----\n"
+        std::cout << "----WARNING----\n"
                  << "\tTime Series at pixel: ("
                  << pts_itr->first.x() << ", " 
                  << pts_itr->first.y() << ") not found.\n";
@@ -226,18 +226,18 @@ void dts_pixel_time_series<pixelType,timeType,elementType,1>::
             vsl_b_read(is,d);
             if(d != this->dim)
             {
-                vcl_cerr << "----ERROR---- "
+                std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::b_read()\n"
                          << "\tPixel Time Series Instance Dimension" 
                          << " and Written File dimension do not match.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
             }
 
             //read the size of the pixel time series map
-            vcl_size_t npix = 0;
+            std::size_t npix = 0;
             vsl_b_read(is, npix);
 
             for(unsigned pix_idx = 0;
@@ -265,12 +265,12 @@ void dts_pixel_time_series<pixelType,timeType,elementType,1>::
         break;
     default:
         {
-            vcl_cerr << "----ERROR---- "
+            std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::b_read()\n"
                          << "\tUnknown version number.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
         }
     }//end switch(v)
@@ -303,13 +303,13 @@ void dts_pixel_time_series<pixelType,timeType,elementType,n>::
 			static_cast<dts_time_series<timeType,elementType,n>*>(ts_base_sptr.as_pointer());
 		if(!ts_ptr)
 		{
-			vcl_cerr << "----ERROR---- "
+			std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::insert(...)\n"
                          << "\tFailed to cast time series base pointer to"
 						 << " time series pointer.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
 		}
 
@@ -343,13 +343,13 @@ void dts_pixel_time_series<pixelType,timeType,elementType,1>::
 			static_cast<dts_time_series<timeType,elementType,1>*>(ts_base_sptr.as_pointer());
 		if(!ts_ptr)
 		{
-			vcl_cerr << "----ERROR---- "
+			std::cerr << "----ERROR---- "
                          << "dts_pixel_time_series::insert(...)\n"
                          << "\tFailed to cast time series base pointer to"
 						 << " time series pointer.\n"
                          << "\tFILE: " << __FILE__ << '\n'
                          << "\tLINE: " << __LINE__ << '\n'
-                     << vcl_flush;
+                     << std::flush;
             return;
 		}
 

@@ -18,7 +18,7 @@
 #include <vsol/vsol_conic_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <vcl_cstring.h>
+#include <cstring>
 #include <dbsk2d/dbsk2d_geometry_utils.h>
 
 
@@ -26,16 +26,16 @@
 ////: read a `.bnd' file and output vsol2D objects
 //// return false if loading fails
 //bool dbsk2d_file_io::
-//load_bnd_v3_0(const vcl_string& filename, 
-//         vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list)
+//load_bnd_v3_0(const std::string& filename, 
+//         std::vector<vsol_spatial_object_2d_sptr >& vsol_list)
 //{
 //  vsol_list.clear();
 //
 //  //1)If file open fails, return.
-//  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+//  std::ifstream infp(filename.c_str(), std::ios::in);
 //
 //  if (!infp) {
-//    vcl_cerr << "In " __FILE__ << " Error opening file " << filename << vcl_endl;
+//    std::cerr << "In " __FILE__ << " Error opening file " << filename << std::endl;
 //    return false;
 //  }
 //
@@ -52,13 +52,13 @@
 //  //2)Read in each line until EOF.
 //  while (infp.getline(buffer,2000)) {
 //
-//    if (!vcl_strncmp(buffer, "Boundary File v2.0", sizeof("Boundary File v2.0")-1))
+//    if (!std::strncmp(buffer, "Boundary File v2.0", sizeof("Boundary File v2.0")-1))
 //      version = 2;
-//    else if (!vcl_strncmp(buffer, "Boundary File v3.0", sizeof("Boundary File v2.0")-1))
+//    else if (!std::strncmp(buffer, "Boundary File v3.0", sizeof("Boundary File v2.0")-1))
 //      version = 3;
 //
 //    //BPOINT with tangent
-//    else if (!vcl_strncmp(buffer, "point-tangent-at", sizeof("point-tangent-at")-1)) {
+//    else if (!std::strncmp(buffer, "point-tangent-at", sizeof("point-tangent-at")-1)) {
 //      sscanf(buffer,"point-tangent-at: (%f %f) (%f)",&(x), &(y), &(dir));
 //      
 //      vsol_point_2d_sptr new_pt = new vsol_point_2d (x,y);
@@ -67,7 +67,7 @@
 //    }
 //
 //    //BPOINT
-//    else if (!vcl_strncmp(buffer, "point-at", sizeof("point-at")-1)) {
+//    else if (!std::strncmp(buffer, "point-at", sizeof("point-at")-1)) {
 //      sscanf(buffer,"point-at: (%f %f)",&(x), &(y));
 //      
 //      vsol_point_2d_sptr new_pt = new vsol_point_2d (x,y);
@@ -76,7 +76,7 @@
 //    }
 //
 //    //BLINE
-//    else if (!vcl_strncmp(buffer, "line-from-to", sizeof("line-from-to")-1)) {
+//    else if (!std::strncmp(buffer, "line-from-to", sizeof("line-from-to")-1)) {
 //      sscanf(buffer,"line-from-to: (%f %f) (%f %f)", &(sx), &(sy), &(ex), &(ey));
 //      
 //      vsol_point_2d_sptr p0 = new vsol_point_2d (sx,sy);
@@ -87,7 +87,7 @@
 //    }
 //
 //    //BARC
-//    else if (!vcl_strncmp(buffer, "arc-from-to", sizeof("arc-from-to")-1)) {
+//    else if (!std::strncmp(buffer, "arc-from-to", sizeof("arc-from-to")-1)) {
 //      nus = ARC_NUS_SMALL;
 //      nud = ARC_NUD_CCW;
 //      if (version ==1)
@@ -173,16 +173,16 @@
 //: read a `.bnd' file and output vsol2D objects
 // return false if loading fails
 bool dbsk2d_file_io::
-load_bnd_v3_0(const vcl_string& filename, 
-         vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list)
+load_bnd_v3_0(const std::string& filename, 
+         std::vector<vsol_spatial_object_2d_sptr >& vsol_list)
 {
   vsol_list.clear();
 
   //1)If file open fails, return.
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
 
   if (!infp) {
-    vcl_cerr << "In " __FILE__ << " Error opening file " << filename << vcl_endl;
+    std::cerr << "In " __FILE__ << " Error opening file " << filename << std::endl;
     return false;
   }
 
@@ -197,13 +197,13 @@ load_bnd_v3_0(const vcl_string& filename,
   //2)Read in each line until EOF.
   while (infp.getline(buffer,2000)) {
 
-    if (!vcl_strncmp(buffer, "Boundary File v2.0", sizeof("Boundary File v2.0")-1))
+    if (!std::strncmp(buffer, "Boundary File v2.0", sizeof("Boundary File v2.0")-1))
       version = 2;
-    else if (!vcl_strncmp(buffer, "Boundary File v3.0", sizeof("Boundary File v2.0")-1))
+    else if (!std::strncmp(buffer, "Boundary File v3.0", sizeof("Boundary File v2.0")-1))
       version = 3;
 
     //BPOINT with tangent
-    else if (!vcl_strncmp(buffer, "point-tangent-at", sizeof("point-tangent-at")-1)) {
+    else if (!std::strncmp(buffer, "point-tangent-at", sizeof("point-tangent-at")-1)) {
       sscanf(buffer,"point-tangent-at: (%lf %lf) (%lf)",&(x), &(y), &(dir));
       
       vsol_point_2d_sptr new_pt = new vsol_point_2d (x,y);
@@ -212,7 +212,7 @@ load_bnd_v3_0(const vcl_string& filename,
     }
 
     //BPOINT
-    else if (!vcl_strncmp(buffer, "point-at", sizeof("point-at")-1)) {
+    else if (!std::strncmp(buffer, "point-at", sizeof("point-at")-1)) {
       sscanf(buffer,"point-at: (%lf %lf)",&(x), &(y));
       
       vsol_point_2d_sptr new_pt = new vsol_point_2d (x,y);
@@ -221,7 +221,7 @@ load_bnd_v3_0(const vcl_string& filename,
     }
 
     //BLINE
-    else if (!vcl_strncmp(buffer, "line-from-to", sizeof("line-from-to")-1)) {
+    else if (!std::strncmp(buffer, "line-from-to", sizeof("line-from-to")-1)) {
       sscanf(buffer,"line-from-to: (%lf %lf) (%lf %lf)", &(sx), &(sy), &(ex), &(ey));
       
       vsol_point_2d_sptr p0 = new vsol_point_2d (sx,sy);
@@ -232,7 +232,7 @@ load_bnd_v3_0(const vcl_string& filename,
     }
 
     //BARC
-    else if (!vcl_strncmp(buffer, "arc-from-to", sizeof("arc-from-to")-1)) {
+    else if (!std::strncmp(buffer, "arc-from-to", sizeof("arc-from-to")-1)) {
       nus = ARC_NUS_SMALL;
       nud = ARC_NUD_CCW;
       if (version ==1)
@@ -318,14 +318,14 @@ load_bnd_v3_0(const vcl_string& filename,
 //: saves a list of vsol2D objects into a .bnd file
 // Only handle points, lines, and arcs and ignore the rest
 bool dbsk2d_file_io::
-save_bnd_v3_0(const vcl_string& filename, 
-              const vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list)
+save_bnd_v3_0(const std::string& filename, 
+              const std::vector<vsol_spatial_object_2d_sptr >& vsol_list)
 {
   //1)If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cerr << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cerr << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -335,10 +335,10 @@ save_bnd_v3_0(const vcl_string& filename,
   int width= -1;
 
   // output header information
-  outfp <<"Boundary File v3.0"<<vcl_endl;
-  outfp <<"width: "<< width <<vcl_endl;
-  outfp <<"height: "<< height <<vcl_endl;
-  outfp <<"number-of-elements: "<< -1 <<vcl_endl; //: \todo this is not correct
+  outfp <<"Boundary File v3.0"<<std::endl;
+  outfp <<"width: "<< width <<std::endl;
+  outfp <<"height: "<< height <<std::endl;
+  outfp <<"number-of-elements: "<< -1 <<std::endl; //: \todo this is not correct
 
   outfp.precision (15);
 
@@ -350,7 +350,7 @@ save_bnd_v3_0(const vcl_string& filename,
     if( vsol_list[b]->cast_to_point() )
     {
       vsol_point_2d_sptr pt = vsol_list[b]->cast_to_point();
-      outfp << "point-at: (" << pt->x() << " " << pt->y() << ")" << vcl_endl;
+      outfp << "point-at: (" << pt->x() << " " << pt->y() << ")" << std::endl;
     }
     else if( vsol_list[b]->cast_to_curve())
     {
@@ -362,7 +362,7 @@ save_bnd_v3_0(const vcl_string& filename,
         vsol_point_2d_sptr p1 = curve2d->cast_to_line()->p1();
 
         outfp <<"line-from-to: (" << p0->x() << " " << p0->y() << ") (" << 
-          p1->x() << " " << p1->y() << ")" << vcl_endl;
+          p1->x() << " " << p1->y() << ")" << std::endl;
       }
       // POLYLINE
       else if( curve2d->cast_to_polyline() )
@@ -374,7 +374,7 @@ save_bnd_v3_0(const vcl_string& filename,
         for (unsigned int i=1; i<polyline->size(); ++i)
         {
           vsol_point_2d_sptr cpt = polyline->vertex(i);
-          outfp <<"line-from-to: (" << lpt->x() << " " << lpt->y() << ") (" << cpt->x() << " " << cpt->y() << ")" << vcl_endl;
+          outfp <<"line-from-to: (" << lpt->x() << " " << lpt->y() << ") (" << cpt->x() << " " << cpt->y() << ")" << std::endl;
           lpt = cpt;
         }
       }
@@ -399,7 +399,7 @@ save_bnd_v3_0(const vcl_string& filename,
           }
           outfp <<"arc-from-to: (" << p1->x() << " " << p1->y() << ") (" << 
             p2->x() << " " << p2->y() << ") (" << major_axis << ") (" <<
-            nud << "  " << 1 << ")" << vcl_endl;
+            nud << "  " << 1 << ")" << std::endl;
         }
       }
     }
@@ -422,13 +422,13 @@ save_bnd_v3_0(const vcl_string& filename,
         {
           vsol_point_2d_sptr cpt = polygon->vertex(i);
           outfp <<"line-from-to: (" << lpt->x() << " " << lpt->y() << ") (" <<
-            cpt->x() << " " << cpt->y() << ")" << vcl_endl;
+            cpt->x() << " " << cpt->y() << ")" << std::endl;
           lpt = cpt;
         }
         //last line
         vsol_point_2d_sptr cpt = polygon->vertex(len-1);
         outfp <<"line-from-to: (" << cpt->x() << " " << cpt->y() << ") (" << 
-          fpt->x() << " " << fpt->y() << ")" << vcl_endl;
+          fpt->x() << " " << fpt->y() << ")" << std::endl;
       }
     }
   }

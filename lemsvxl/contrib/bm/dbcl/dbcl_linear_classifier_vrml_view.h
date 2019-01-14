@@ -19,7 +19,7 @@
 #include"dvrml.h"
 
 #include<vnl/vnl_math.h>
-#include<vcl_ostream.h>
+#include<ostream>
 
 #include<vgl/vgl_box_2d.h>
 #include<vgl/vgl_line_segment_3d.h>
@@ -44,10 +44,10 @@ public:
 class dbcl_linear_classifier_vrml_view
 {
 public:
-    static void vrml_view(vcl_ofstream& os, dbcl_classifier_sptr classifier_sptr);
+    static void vrml_view(std::ofstream& os, dbcl_classifier_sptr classifier_sptr);
 
     //this is a helper function, call vrml_view regardless
-    //static void vrml_view_3d( vcl_ofstream& os, dbcl_classifier_sptr classifier_sptr);
+    //static void vrml_view_3d( std::ofstream& os, dbcl_classifier_sptr classifier_sptr);
 
     ~dbcl_linear_classifier_vrml_view(){}
 private:

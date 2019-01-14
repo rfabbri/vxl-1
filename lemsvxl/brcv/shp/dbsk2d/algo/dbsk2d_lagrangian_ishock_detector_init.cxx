@@ -73,13 +73,13 @@ void dbsk2d_lagrangian_ishock_detector::initialize_shocks ()
     delete []BElmArray;
 
     #ifdef DEBUG_SHOCK_VERBOSE
-      vcl_cout << candidate_src_list.size() << " cand. srcs!" << vcl_endl;
+      std::cout << candidate_src_list.size() << " cand. srcs!" << std::endl;
     #endif
   }
 
   catch (const dbsk2d_exception_topology_error &e)
   {
-    vcl_cout << e.what() << vcl_endl;
+    std::cout << e.what() << std::endl;
     
     //this shock is no longer valid so delete the shock graph completely
     clear();
@@ -196,7 +196,7 @@ void dbsk2d_lagrangian_ishock_detector::initialize_contacts_and_A3s()
 //: Initialize all contact shocks and A3 shock nodes
 //  EPSILONISSUE (in determining is lines are collinear)
 void dbsk2d_lagrangian_ishock_detector::initialize_contacts_and_A3s(
-    vcl_vector<dbsk2d_ishock_belm*> belm_list)
+    std::vector<dbsk2d_ishock_belm*> belm_list)
 {
   //go through all the line segments and arc segments
   //Initialize A3s if there is a corner (tangent discontinuity is negative)
@@ -209,7 +209,7 @@ void dbsk2d_lagrangian_ishock_detector::initialize_contacts_and_A3s(
   //   Hence the 2 pass initialization (RIGHT side first)
 
   // 1) First pass (right side)
-  vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
+  std::vector<dbsk2d_ishock_belm*>::iterator bit;
   bit = belm_list.begin();
   for ( ; bit != belm_list.end() ; ++bit)
   {
@@ -488,8 +488,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bpoint* b
                                       start_time, midPoint);
 
   //3) put the boundary elements into the list
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, bp1));
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, bp2));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, bp1));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, bp2));
 
   //4) insert the candidate source into the list
   candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -641,8 +641,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bpoint* b
                   start_time, midPoint);
   
   //3-b) put the boundary elements into the list
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, belm1));
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, belm2));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, belm1));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, belm2));
   
   //4) insert the candidate source into the list
   candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -702,8 +702,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bpoint* b
                     start_time, midPoint);
     
     //1D-c) put the boundary elements into the list
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, bp));
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, ha));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, bp));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, ha));
     
     //1D-d) insert the candidate source into the list
     candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -753,8 +753,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bpoint* b
                     start_time, midPoint);
     
     //2-1-b) put the boundary elements into the list
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, belm1));
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, belm2));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, belm1));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, belm2));
     
     //2-1-c) insert the candidate source into the list
     candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -848,8 +848,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bline* bl
                     start_time, midPoint);
     
     //4-b) put the boundary elements into the list
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, hl1));
-    cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, hl2));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, hl1));
+    cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, hl2));
     
     //4-c) insert the candidate source into the list
     candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -927,8 +927,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_bline* bl
                   start_time, midPoint);
   
   //4b) put the boundary elements into the list
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, ha));
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, hl));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, ha));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, hl));
   
   //5) insert the candidate source into the list
   candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -986,7 +986,7 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_barc* ba1
   }
 
   //2b) circles are not intersecting, but one is completely and well inside the other
-  else if (LisL(H,vcl_fabs(ba1->R()-ba2->R())))
+  else if (LisL(H,std::fabs(ba1->R()-ba2->R())))
   {
     //make ha1 is the outer circle(inner half arc) and ha2 is the inner circle (outer half arc)
     if (ba1->R()>ba2->R()) { 
@@ -1023,8 +1023,8 @@ dbsk2d_lagrangian_ishock_detector::init_cand_src_between(dbsk2d_ishock_barc* ba1
                   start_time, midPoint);
   
   //3b) put the boundary elements into the list
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta1, ha1));
-  cand_src->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(eta2, ha2));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta1, ha1));
+  cand_src->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(eta2, ha2));
   
   //4) insert the candidate source into the list
   candidate_src_list.insert(time_src_pair(start_time, cand_src));
@@ -1283,8 +1283,8 @@ dbsk2d_lagrangian_ishock_detector::form_a_corner_a3(dbsk2d_ishock_bcurve* lbcurv
   double rsEta = rbcurve->min_eta();
 
   //add the belements to the bnd list
-  newA3->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(lsEta, lbcurve));
-  newA3->bndList().push_back(vcl_pair<double, dbsk2d_ishock_belm*>(rsEta, rbcurve));
+  newA3->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(lsEta, lbcurve));
+  newA3->bndList().push_back(std::pair<double, dbsk2d_ishock_belm*>(rsEta, rbcurve));
 
   //add this A3 node to the shock graph
   add_an_ishock_node (newA3);

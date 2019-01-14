@@ -19,10 +19,10 @@ bool dsm_target_neighborhood_map_read_bin_process_cons( bprb_func_process& pro )
 	//set input/output types
 	using namespace dsm_target_neighborhood_map_read_bin_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
-	input_types_[0] = "vcl_string";//the filename to read 
+	input_types_[0] = vcl_string";//the filename to read 
 	output_types_[0] = "dsm_target_neighborhood_map_sptr";//output a dsm_target_neighborhood_map_sptr
 
 	if(!pro.set_input_types(input_types_))
@@ -40,16 +40,16 @@ bool dsm_target_neighborhood_map_read_bin_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() != n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_target_neighborhood_map_write_bin_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_target_neighborhood_map_write_bin_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get input
-	vcl_string filename = pro.get_input<vcl_string>(0);
+	std::string filename = pro.get_input<std::string>(0);
 
 	dsm_target_neighborhood_map_sptr target_neighborhood_map_sptr = new dsm_target_neighborhood_map();
 
-	vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+	vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 
 	vsl_b_read(is,target_neighborhood_map_sptr);
 

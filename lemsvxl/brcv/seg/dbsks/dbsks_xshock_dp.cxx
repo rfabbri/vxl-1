@@ -19,8 +19,8 @@
 #include <vul/vul_sprintf.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
+#include <utility>
+#include <iostream>
 
 // ============================================================================
 // dbsks_xshock_dp
@@ -40,7 +40,7 @@
 void dbsks_xshock_dp::
 compute_node_visit_schedule(const dbsksp_xshock_graph_sptr& xgraph,
                             unsigned root_vid,
-                            vcl_vector<dbsksp_xshock_node_sptr >& node_visit_schedule)
+                            std::vector<dbsksp_xshock_node_sptr >& node_visit_schedule)
 {
   node_visit_schedule.clear();
 
@@ -83,12 +83,12 @@ optimize()
 
 
   //> Determine a visiting schedule that minimize that number of max "active nodes"
-  vcl_vector<dbsksp_xshock_node_sptr > node_visit_schedule;
+  std::vector<dbsksp_xshock_node_sptr > node_visit_schedule;
   this->compute_node_visit_schedule(this->graph(), this->root_vid_, node_visit_schedule);
 
   if (node_visit_schedule.empty())
   {
-    vcl_cout << "\nERROR: node visit schedule is empty.\n";
+    std::cout << "\nERROR: node visit schedule is empty.\n";
     return false;
   }
   // the last node should be root node
@@ -110,10 +110,10 @@ optimize()
       dbsksp_xshock_edge_sptr parent_xe = v_p->parent_edge();
       dbsksp_xshock_edge_sptr child_edge = this->graph()->cyclic_adj_succ(parent_xe, v_p);
       
-      vcl_cout 
+      std::cout 
         << "\nOptimizing degree-2 node, parent_vid = " << v_p->id() 
         << "\n                          child vid  = " << child_edge->opposite(v_p)->id() 
-        << "\n                          child eid  = " << child_edge->id() << vcl_endl;
+        << "\n                          child eid  = " << child_edge->id() << std::endl;
       timer.mark();
 
       ////////////////////////////////////////////////////////////////////////
@@ -123,9 +123,9 @@ optimize()
       double real_time = double(timer.real()) / 100;
       total_time += real_time;
 
-      vcl_cout 
+      std::cout 
         << "\n    Real time spent  = " << vul_sprintf("%6.8g", real_time) 
-        << "\n    Total time spent = " << vul_sprintf("%6.8g", total_time) << vcl_endl;
+        << "\n    Total time spent = " << vul_sprintf("%6.8g", total_time) << std::endl;
     }
     else if (v_p->degree() == 3)
     {
@@ -136,12 +136,12 @@ optimize()
       dbsksp_xshock_edge_sptr child_edge1 = this->graph()->cyclic_adj_succ(parent_edge, v_p);
       dbsksp_xshock_edge_sptr child_edge2 = this->graph()->cyclic_adj_succ(child_edge1, v_p);
 
-      vcl_cout 
+      std::cout 
         << "\nOptimizing degree-3 node, parent_vid = " << v_p->id() 
         << "\n                          child_vid1 = " << child_edge1->opposite(v_p)->id()
         << "\n                          child_eid1 = " << child_edge1->id()
         << "\n                          child_vid2 = " << child_edge2->opposite(v_p)->id() 
-        << "\n                          child_eid2 = " << child_edge2->id() << vcl_endl;
+        << "\n                          child_eid2 = " << child_edge2->id() << std::endl;
 
       timer.mark();
 
@@ -151,20 +151,20 @@ optimize()
 
       double real_time = double(timer.real()) / 100;
       total_time += real_time;
-      vcl_cout 
+      std::cout 
         << "\n    Real time spent = " << vul_sprintf("%6.8g", real_time)
-        << "\n    Total time spent= " << vul_sprintf("%6.8g", total_time) << vcl_endl;
+        << "\n    Total time spent= " << vul_sprintf("%6.8g", total_time) << std::endl;
     }
     else
     {
-      vcl_cout << "ERROR: Can't handle nodes with degree > 3 now.\n";
+      std::cout << "ERROR: Can't handle nodes with degree > 3 now.\n";
       return false;
     }
   } // for kk
 
 
   // Optimize the cost for each state of the root node
-  vcl_cout << "\nOptimizing root-node, root_vid = " << this->root_vid_ << vcl_endl;
+  std::cout << "\nOptimizing root-node, root_vid = " << this->root_vid_ << std::endl;
   timer.mark();
 
   //////////////////////////////////////////////////////////////////////////////
@@ -172,20 +172,20 @@ optimize()
   //////////////////////////////////////////////////////////////////////////////
 
   double real_time = double(timer.real()) / 100;
-  vcl_cout << "    Real time spent = " << vul_sprintf("%6.8g", real_time) << vcl_endl;
+  std::cout << "    Real time spent = " << vul_sprintf("%6.8g", real_time) << std::endl;
   total_time += real_time;
-  vcl_cout << "    Total time spent= " << vul_sprintf("%6.8g", total_time) << vcl_endl;
+  std::cout << "    Total time spent= " << vul_sprintf("%6.8g", total_time) << std::endl;
 
 
   //> Compute local optimum solutions
   timer.mark();
-  vcl_cout << "\n> Compute locally optimized solutions and their costs \n";
+  std::cout << "\n> Compute locally optimized solutions and their costs \n";
   this->find_xgraph_state_local_optimum(this->root_vid_, this->list_opt_xgraph_state, this->list_opt_cost); 
   
   real_time = double(timer.real()) / 1000;
-  vcl_cout << "    Real time spent = " << vul_sprintf("%6.8g", real_time) << vcl_endl;
+  std::cout << "    Real time spent = " << vul_sprintf("%6.8g", real_time) << std::endl;
   total_time += real_time;
-  vcl_cout << "    Total time spent= " << vul_sprintf("%6.8g", total_time) << vcl_endl;
+  std::cout << "    Total time spent= " << vul_sprintf("%6.8g", total_time) << std::endl;
 
   return true;
 }
@@ -220,7 +220,7 @@ void dbsks_xshock_dp::
 set_graph(const dbsksp_xshock_graph_sptr& graph) 
 { 
   this->graph_ = graph; 
-  this->graph_size_ = vcl_sqrt(graph->area());
+  this->graph_size_ = std::sqrt(graph->area());
 }
 
 
@@ -246,7 +246,7 @@ init_cost_grids()
 
 
   // construct optimal cost and optimal child grids for each node that has a set of states
-  for (vcl_map<unsigned, dbsks_xnode_grid>::iterator git = this->map_xnode_grid->begin();
+  for (std::map<unsigned, dbsks_xnode_grid>::iterator git = this->map_xnode_grid->begin();
     git != this->map_xnode_grid->end(); ++git)
   {
     dbsksp_xshock_node_sptr xv = this->graph()->node_from_id(git->first);
@@ -302,7 +302,7 @@ init_cost_grids()
 void dbsks_xshock_dp::
 compute_subtree_node_visit_schedule_recursive(
   const dbsksp_xshock_node_sptr& subtree_root,
-  vcl_vector<dbsksp_xshock_node_sptr >& node_visit_schedule)
+  std::vector<dbsksp_xshock_node_sptr >& node_visit_schedule)
 {
   // first add the children. Then add itself
   for (dbsksp_xshock_node::edge_iterator eit = subtree_root->edges_begin(); eit !=
@@ -344,7 +344,7 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
   dbsksp_xshock_node_sptr xv_c = xe->opposite(xv_p);
 
 
-  vcl_cout << "  Max acceptable subtree cost = " << max_acceptable_subtree_cost << vcl_endl;
+  std::cout << "  Max acceptable subtree cost = " << max_acceptable_subtree_cost << std::endl;
   
   // base descriptors for the child and parent nodes
   dbsksp_xshock_node_descriptor xdesc_p = *xv_p->descriptor(xe);
@@ -371,10 +371,10 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
   }
 
   // grid of states for the parent node
-  vcl_vector<double > x_vec, y_vec;
-  vcl_vector<int > index_x_vec, index_y_vec;
-  vcl_vector<double > psi_vec, phi0_vec, r_vec;
-  vcl_vector<int > index_psi_vec, index_phi0_vec, index_r_vec;
+  std::vector<double > x_vec, y_vec;
+  std::vector<int > index_x_vec, index_y_vec;
+  std::vector<double > psi_vec, phi0_vec, r_vec;
+  std::vector<int > index_psi_vec, index_phi0_vec, index_r_vec;
 
   {
     // all x's
@@ -409,11 +409,11 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
   unsigned size_phi0_vec = phi0_vec.size();
   unsigned size_r_vec = r_vec.size();
 
-  vcl_cout << "  size x_vec = " << size_x_vec << vcl_endl;
-  vcl_cout << "  size y_vec = " << size_y_vec << vcl_endl;
-  vcl_cout << "  size psi_vec = " << size_psi_vec << vcl_endl;
-  vcl_cout << "  size phi0_vec = " << size_phi0_vec << vcl_endl;
-  vcl_cout << "  size r_vec = " << size_r_vec << vcl_endl;
+  std::cout << "  size x_vec = " << size_x_vec << std::endl;
+  std::cout << "  size y_vec = " << size_y_vec << std::endl;
+  std::cout << "  size psi_vec = " << size_psi_vec << std::endl;
+  std::cout << "  size phi0_vec = " << size_phi0_vec << std::endl;
+  std::cout << "  size r_vec = " << size_r_vec << std::endl;
 
 
   //// Propagate min-cost from the child node to the parent node using constraint on
@@ -429,7 +429,7 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
   int count_pos_skipped = 0;
   int count_test = 0;
 
-  vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
+  std::vector<dbsksp_xshock_node_descriptor > edesc_list;
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
   {
     int ip_x = index_x_vec[k1];
@@ -456,7 +456,7 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
           for (unsigned k5 =0; k5 < size_r_vec; ++k5)
           {
 			count_test ++;
-			//vcl_cout << count_test << vcl_endl;
+			//std::cout << count_test << std::endl;
             int ip_r = index_r_vec[k5];
             int ip_desc = grid_p.cell_grid_to_linear(ip_psi, ip_phi0, ip_r);
 
@@ -483,7 +483,7 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
     } // k2
   } // k1
 
-  vcl_cout << "\nNumer of position skipped: " << count_pos_skipped 
+  std::cout << "\nNumer of position skipped: " << count_pos_skipped 
     << "/" << size_x_vec * size_y_vec << "\n";
 
   return;
@@ -528,7 +528,7 @@ optimize_degree_2_node(const dbsksp_xshock_node_sptr& xv_p,
 
   // Compute min cost of the subtree rooted at xv_P
   float min_cost_p = this->compute_min_value(opt_cost_p);
-  vcl_cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ") is: " << min_cost_p << "\n";
+  std::cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ") is: " << min_cost_p << "\n";
 
   // modify the cost map
   this->map_node_to_min_cost_.erase(xv_c->id());
@@ -564,8 +564,8 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
   float max_acceptable_subtree2_cost = 
     this->compute_max_acceptable_subtree_cost(xv_c2->id(), xv_p->id());
 
-  vcl_cout << "  Max acceptable subtree cost = " << max_acceptable_subtree_cost << "\n"
-    << "  Max acceptable subtree1 cost = " << max_acceptable_subtree1_cost << vcl_endl;
+  std::cout << "  Max acceptable subtree cost = " << max_acceptable_subtree_cost << "\n"
+    << "  Max acceptable subtree1 cost = " << max_acceptable_subtree1_cost << std::endl;
 
   // base descriptors
 
@@ -619,7 +619,7 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
     double range_psi = angle_padding_ratio * (max_psi_start - min_psi_start);
     double mean_psi = (max_psi_start+min_psi_start) / 2;
     
-    vcl_cout 
+    std::cout 
       << "\n  Old range for psi_start: [" << min_psi_start << ", " << max_psi_start << "]"
       << "\n  New range for psi_start: [" << (mean_psi-range_psi/2) << ", " << (mean_psi+range_psi/2) << "]\n";
 
@@ -627,7 +627,7 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
     double mean_phi0 = (max_phi_start + min_phi_start) / 2;
 
     
-    vcl_cout 
+    std::cout 
       << "\n  Old range for phi0: [" << min_phi_start << ", " << max_phi_start << "]"
       << "\n  New range for phi0: [" << (mean_phi0-range_phi0/2) << ", " << (mean_phi0+range_phi0/2) << "]\n";
 
@@ -645,7 +645,7 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
   {
     // Compute min cost of the subtree
     float min_cost_p1 = this->compute_min_value(opt_cost_p1);
-    vcl_cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ", xe= " << child_edge1->id() << ") is: " << min_cost_p1 << "\n";
+    std::cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ", xe= " << child_edge1->id() << ") is: " << min_cost_p1 << "\n";
   }
 
 
@@ -663,14 +663,14 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
     double range_psi = angle_padding_ratio * (max_psi_start - min_psi_start);
     double mean_psi = (max_psi_start+min_psi_start) / 2;
 
-    vcl_cout 
+    std::cout 
       << "\n  Old range for psi_start: [" << min_psi_start << ", " << max_psi_start << "]"
       << "\n  New range for psi_start: [" << (mean_psi-range_psi/2) << ", " << (mean_psi+range_psi/2) << "]\n";
 
     double range_phi0 = angle_padding_ratio * (max_phi_start - min_phi_start);
     double mean_phi0 = (max_phi_start + min_phi_start) / 2;
 
-    vcl_cout 
+    std::cout 
       << "\n  Old range for phi0: [" << min_phi_start << ", " << max_phi_start << "]"
       << "\n  New range for phi0: [" << (mean_phi0-range_phi0/2) << ", " << (mean_phi0+range_phi0/2) << "]\n";
 
@@ -692,7 +692,7 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
   {
     // Compute min cost of the subtree
     float min_cost_p2 = this->compute_min_value(opt_cost_p2);
-    vcl_cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ", xe= " << child_edge2->id() << ") is: " << min_cost_p2 << "\n";
+    std::cout << "\nMin cost for for subtree (xv= "<< xv_p->id() << ", xe= " << child_edge2->id() << ") is: " << min_cost_p2 << "\n";
   }
 
 
@@ -716,8 +716,8 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
   //>> sample the parent node
 
   // index vectors
-  vcl_vector<int > index_x_vec, index_y_vec, index_psi_vec, index_phi0_vec, index_r_vec, index_phi1_vec;
-  vcl_vector<double > x_vec, y_vec, psi_vec, phi0_vec, r_vec, phi1_vec;
+  std::vector<int > index_x_vec, index_y_vec, index_psi_vec, index_phi0_vec, index_r_vec, index_phi1_vec;
+  std::vector<double > x_vec, y_vec, psi_vec, phi0_vec, r_vec, phi1_vec;
   {
     // we cover every point spatially
     int num_x_backward = grid_p.x_.size()/2;
@@ -755,12 +755,12 @@ optimize_degree_3_node(const dbsksp_xshock_node_sptr xv_p,
   unsigned size_r_vec = index_r_vec.size();
   unsigned size_phi1_vec = index_phi1_vec.size();
 
-  vcl_cout << "  size x_vec = " << size_x_vec << vcl_endl;
-  vcl_cout << "  size y_vec = " << size_y_vec << vcl_endl;
-  vcl_cout << "  size psi_vec = " << size_psi_vec << vcl_endl;
-  vcl_cout << "  size phi0_vec = " << size_phi0_vec << vcl_endl;
-  vcl_cout << "  size r_vec = " << size_r_vec << vcl_endl;
-  vcl_cout << "  size phi1_vec = " << size_phi1_vec << vcl_endl;
+  std::cout << "  size x_vec = " << size_x_vec << std::endl;
+  std::cout << "  size y_vec = " << size_y_vec << std::endl;
+  std::cout << "  size psi_vec = " << size_psi_vec << std::endl;
+  std::cout << "  size phi0_vec = " << size_phi0_vec << std::endl;
+  std::cout << "  size r_vec = " << size_r_vec << std::endl;
+  std::cout << "  size phi1_vec = " << size_phi1_vec << std::endl;
 
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
   {
@@ -1033,10 +1033,10 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
   }
 
   // grid of states for the parent node
-  vcl_vector<double > x_vec, y_vec;
-  vcl_vector<int > index_x_vec, index_y_vec;
-  vcl_vector<double > psi_vec, phi0_vec, r_vec;
-  vcl_vector<int > index_psi_vec, index_phi0_vec, index_r_vec;
+  std::vector<double > x_vec, y_vec;
+  std::vector<int > index_x_vec, index_y_vec;
+  std::vector<double > psi_vec, phi0_vec, r_vec;
+  std::vector<int > index_psi_vec, index_phi0_vec, index_r_vec;
   {
     // all x's
     int num_x_backward = grid_p.x_.size()/2;
@@ -1070,16 +1070,16 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
   unsigned size_phi0_vec = phi0_vec.size();
   unsigned size_r_vec = r_vec.size();
 
-  vcl_cout << "\n>> Optimizing degree-2 root node, vid= " << xv_root->id() << vcl_endl;
-  vcl_cout << "  major_child_eid = " << this->major_child_eid_ << vcl_endl;
-  vcl_cout << "  size x_vec = " << size_x_vec << vcl_endl;
-  vcl_cout << "  size y_vec = " << size_y_vec << vcl_endl;
-  vcl_cout << "  size psi_vec = " << size_psi_vec << vcl_endl;
-  vcl_cout << "  size phi0_vec = " << size_phi0_vec << vcl_endl;
-  vcl_cout << "  size r_vec = " << size_r_vec << vcl_endl;
+  std::cout << "\n>> Optimizing degree-2 root node, vid= " << xv_root->id() << std::endl;
+  std::cout << "  major_child_eid = " << this->major_child_eid_ << std::endl;
+  std::cout << "  size x_vec = " << size_x_vec << std::endl;
+  std::cout << "  size y_vec = " << size_y_vec << std::endl;
+  std::cout << "  size psi_vec = " << size_psi_vec << std::endl;
+  std::cout << "  size phi0_vec = " << size_phi0_vec << std::endl;
+  std::cout << "  size r_vec = " << size_r_vec << std::endl;
     
   // THE BIG LOOP
-  vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
+  std::vector<dbsksp_xshock_node_descriptor > edesc_list;
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
   {
     int ip_x = index_x_vec[k1];
@@ -1138,7 +1138,7 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
   // modify the cost map
   float min_cost_p = this->compute_min_value(opt_cost_p);
   
-  vcl_cout << "\nMin cost for the whole graph (xv_root= "<< xv_root->id() << ") is: " << min_cost_p << "\n";
+  std::cout << "\nMin cost for the whole graph (xv_root= "<< xv_root->id() << ") is: " << min_cost_p << "\n";
 
   this->map_node_to_min_cost_.erase(xv_c1->id());
   this->map_node_to_min_cost_.erase(xv_c2->id());
@@ -1287,7 +1287,7 @@ optimize_degree3_root_node_use_all_branches(unsigned root_vid, unsigned major_ch
   {
     // Compute min cost of the subtree
     float min_cost_p1 = this->compute_min_value(opt_cost_p1);
-    vcl_cout << "\nMin cost for for subtree (xv= "<< xv_root->id() << ", xe= " << child_edge1->id() << ") is: " << min_cost_p1 << "\n";
+    std::cout << "\nMin cost for for subtree (xv= "<< xv_root->id() << ", xe= " << child_edge1->id() << ") is: " << min_cost_p1 << "\n";
   }
 
 
@@ -1320,7 +1320,7 @@ optimize_degree3_root_node_use_all_branches(unsigned root_vid, unsigned major_ch
   {
     // Compute min cost of the subtree
     float min_cost_p2 = this->compute_min_value(opt_cost_p2);
-    vcl_cout << "\nMin cost for for subtree (xv= "<< xv_root->id() << ", xe= " << child_edge2->id() << ") is: " << min_cost_p2 << "\n";
+    std::cout << "\nMin cost for for subtree (xv= "<< xv_root->id() << ", xe= " << child_edge2->id() << ") is: " << min_cost_p2 << "\n";
   }
 
 
@@ -1346,8 +1346,8 @@ optimize_degree3_root_node_use_all_branches(unsigned root_vid, unsigned major_ch
 
 
   // index vectors
-  vcl_vector<int > index_x_vec, index_y_vec, index_psi_vec, index_phi0_vec, index_r_vec, index_phi1_vec;
-  vcl_vector<double > x_vec, y_vec, psi_vec, phi0_vec, r_vec, phi1_vec;
+  std::vector<int > index_x_vec, index_y_vec, index_psi_vec, index_phi0_vec, index_r_vec, index_phi1_vec;
+  std::vector<double > x_vec, y_vec, psi_vec, phi0_vec, r_vec, phi1_vec;
   {
     // we cover every point spatially
     int num_x_backward = grid_root.x_.size()/2;
@@ -1571,7 +1571,7 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
   child_state_at_min_branch_cost = -1; // non-existing or dependent (for degree-1 node)
 
   //>> place holder to store sample states for the child node
-  static vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
+  static std::vector<dbsksp_xshock_node_descriptor > edesc_list;
 
   // Strategy:
   // for child with degree==1, there is only possible state
@@ -1630,7 +1630,7 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
       int ic_x, ic_y, ic_psi, ic_phi0, ic_r;
       if (!grid_c.xdesc_to_grid(xd_c, ic_x, ic_y, ic_psi, ic_phi0, ic_r))
         continue;
-	  //vcl_cout << "xdesc to grid" << vcl_endl;
+	  //std::cout << "xdesc to grid" << std::endl;
 
       float subtree_cost = opt_cost_c(ic_x, ic_y)[grid_c.cell_grid_to_linear(ic_psi, ic_phi0, ic_r)];
 
@@ -1655,7 +1655,7 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
 
 	  //if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag))
 		//continue;
-	  //vcl_cout << "satisfy nkdiff constraint" << vcl_endl;
+	  //std::cout << "satisfy nkdiff constraint" << std::endl;
 
       ++count_legal_samples;
 
@@ -1672,7 +1672,7 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
   } // if degree != 1
 
   //>> reset the output values
-  //vcl_cout << "min cost " << min_cost << vcl_endl;
+  //std::cout << "min cost " << min_cost << std::endl;
   min_branch_cost = min_cost;
   child_state_at_min_branch_cost = min_cost_idx;
 
@@ -1754,7 +1754,7 @@ compute_root_state_global_optimum_(unsigned root_vid,
     }
   }
 
-  vcl_cout << "Global min cost = " << opt_cost << vcl_endl;
+  std::cout << "Global min cost = " << opt_cost << std::endl;
   int i_psi, i_phi0, i_r;
   grid_root.cell_linear_to_grid(cell_opt_idx(min_idx_x, min_idx_y), i_psi, i_phi0, i_r);
   opt_root_state = grid_root.grid_to_linear(min_idx_x, min_idx_y, i_psi, i_phi0, i_r);
@@ -1770,8 +1770,8 @@ compute_root_state_global_optimum_(unsigned root_vid,
 //: Trace the states of the root node that correspond to optima with a spatial cell grid
 bool dbsks_xshock_dp::
 compute_root_state_local_optimum_(unsigned root_vid, 
-                                 vcl_vector<int >& opt_state, 
-                                 vcl_vector<float >& opt_cost)
+                                 std::vector<int >& opt_state, 
+                                 std::vector<float >& opt_cost)
 {
   int radius = 1;
 
@@ -1838,8 +1838,8 @@ compute_root_state_local_optimum_(unsigned root_vid,
 //------------------------------------------------------------------------------
 //: Find the root node's states that are local optimum wrt to all params of the root node
 bool dbsks_xshock_dp::
-compute_root_state_of_local_min_all_root_params(vcl_vector<int >& list_root_state, 
-                                                vcl_vector<float >& list_graph_cost,
+compute_root_state_of_local_min_all_root_params(std::vector<int >& list_root_state, 
+                                                std::vector<float >& list_graph_cost,
                                                 int kernel_radius)
 {
   list_root_state.clear();
@@ -1934,13 +1934,13 @@ compute_root_state_of_local_min_all_root_params(vcl_vector<int >& list_root_stat
 //-------------------------------------------------------------------------------
 //: Trace the graph configuration given specific state of the root node
 bool dbsks_xshock_dp::
-trace_solution_from_root_state(int root_state, vcl_map<unsigned, int >& sol_node2state)
+trace_solution_from_root_state(int root_state, std::map<unsigned, int >& sol_node2state)
 {
   sol_node2state.clear();
 
 
   // temporary storage for the optimap states of the nodes
-  vcl_map<unsigned, int > map_node2state;
+  std::map<unsigned, int > map_node2state;
   map_node2state.clear();
 
   // preliminary check
@@ -1960,7 +1960,7 @@ trace_solution_from_root_state(int root_state, vcl_map<unsigned, int >& sol_node
   // record state of the root
   if (xv_root->degree() == 2)
   {
-    map_node2state.insert(vcl_make_pair(xv_root->id(), root_state));
+    map_node2state.insert(std::make_pair(xv_root->id(), root_state));
   }
   else if (xv_root->degree() == 3)
   {
@@ -1972,7 +1972,7 @@ trace_solution_from_root_state(int root_state, vcl_map<unsigned, int >& sol_node
     int global_state = root_grid.grid_to_linear(i_x, i_y, i_psi, i_phi0, i_r, i_phi1);
     
     // now we know the root state is legal. Append the node's state
-    map_node2state.insert(vcl_make_pair(xv_root->id(), global_state));  
+    map_node2state.insert(std::make_pair(xv_root->id(), global_state));  
   }
 
   // recursively trace the solution for each child node of root
@@ -2016,7 +2016,7 @@ trace_solution_from_root_state(int root_state, vcl_map<unsigned, int >& sol_node
 bool dbsks_xshock_dp::
 trace_optimal_child_state_recursive(const dbsksp_xshock_node_sptr& xv_root,
                                     const dbsksp_xshock_edge_sptr& xe_parent, int root_state,
-                                    vcl_map<unsigned, int >& map_node2state)
+                                    std::map<unsigned, int >& map_node2state)
 {
   if (!xv_root)
     return false;
@@ -2038,7 +2038,7 @@ trace_optimal_child_state_recursive(const dbsksp_xshock_node_sptr& xv_root,
     }
 
     // record state of the root
-    map_node2state.insert(vcl_make_pair(xv_root->id(), root_state));
+    map_node2state.insert(std::make_pair(xv_root->id(), root_state));
 
     // identify the child edge and child node
     dbsksp_xshock_edge_sptr xe_c = this->graph()->cyclic_adj_succ(xe_parent, xv_root);
@@ -2072,7 +2072,7 @@ trace_optimal_child_state_recursive(const dbsksp_xshock_node_sptr& xv_root,
     int global_state = root_grid.grid_to_linear(i_x, i_y, i_psi, i_phi0, i_r, i_phi1);
     
     // now we know the root state is legal. Append the node's state
-    map_node2state.insert(vcl_make_pair(xv_root->id(), global_state));
+    map_node2state.insert(std::make_pair(xv_root->id(), global_state));
 
     // identify the two children
     dbsksp_xshock_edge_sptr child_edge1, child_edge2; // counter-clockwise ordering
@@ -2214,7 +2214,7 @@ compute_max_acceptable_subtree_cost(unsigned except_vid0,
   // Constrain: the sum of current sub-tree's cost and the costs of sub-trees
   // that have been computed must be less than the global max_acceptable_xgraph_cost_
   float max_cost = this->max_acceptable_xgraph_cost_;
-  for (vcl_map<unsigned, float >::iterator iter = this->map_node_to_min_cost_.begin();
+  for (std::map<unsigned, float >::iterator iter = this->map_node_to_min_cost_.begin();
     iter != this->map_node_to_min_cost_.end(); ++iter)
   {
     unsigned vid = iter->first;
@@ -2251,7 +2251,7 @@ compute_max_acceptable_subtree_cost(unsigned except_vid0,
 //: compute globally optimal graph
 bool dbsks_xshock_dp::
 find_xgraph_state_global_optimum(unsigned root_vid, 
-                                 vcl_map<unsigned, int>& opt_xgraph_state, 
+                                 std::map<unsigned, int>& opt_xgraph_state, 
                                  float& opt_cost)
 {
   // state of the root node corresponding to the global optimal cost
@@ -2273,12 +2273,12 @@ find_xgraph_state_global_optimum(unsigned root_vid,
 //: Compute locally optimal xgraphs
 bool dbsks_xshock_dp::
 find_xgraph_state_local_optimum(unsigned root_vid, 
-                                vcl_vector<vcl_map<unsigned, int> >& list_xgraph_state,
-                                vcl_vector<float >& list_cost)
+                                std::vector<std::map<unsigned, int> >& list_xgraph_state,
+                                std::vector<float >& list_cost)
 {
   // state of the root node corresponding to local optimal costs
-  vcl_vector<int > opt_state;
-  vcl_vector<float > opt_cost;
+  std::vector<int > opt_state;
+  std::vector<float > opt_cost;
   this->compute_root_state_local_optimum_(root_vid, opt_state, opt_cost);
 
   // trace out the states of every node corresponding to these solutions
@@ -2294,7 +2294,7 @@ find_xgraph_state_local_optimum(unsigned root_vid,
   // we only accept a solution if we can successfully trace back the states of all of its nodes
   for (unsigned i =0; i < num_sols; ++i)
   {
-    vcl_map<unsigned, int> map_node2state;    
+    std::map<unsigned, int> map_node2state;    
     if (this->trace_solution_from_root_state(opt_state[i], map_node2state))
     {
       list_xgraph_state.push_back(map_node2state);
@@ -2314,7 +2314,7 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //propagate_min_cost_from_children_to_parent_node(vnl_matrix<float >& min_cost,
 //                                                unsigned parent_id)
 //{
-//  //vcl_map<unsigned, vnl_matrix<float > >::iterator iter = this->map_node_to_min_cost_matrix_.find(xv_c->id());
+//  //std::map<unsigned, vnl_matrix<float > >::iterator iter = this->map_node_to_min_cost_matrix_.find(xv_c->id());
 //
 //  //// if there is not cost info for the child (probably degree-1 node) then there is no restriction on parent
 //  //if (iter == this->map_node_to_min_cost_matrix_.end())
@@ -2344,8 +2344,8 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //  //  // chord angle
 //  //  double min_theta = min_psi_start - max_alpha_start;
 //  //  double max_theta = max_psi_start - min_alpha_start;
-//  //  vgl_vector_2d<double > min_theta_vec(vcl_cos(min_theta), vcl_sin(min_theta));
-//  //  vgl_vector_2d<double > max_theta_vec(vcl_cos(max_theta), vcl_sin(max_theta));
+//  //  vgl_vector_2d<double > min_theta_vec(std::cos(min_theta), std::sin(min_theta));
+//  //  vgl_vector_2d<double > max_theta_vec(std::cos(max_theta), std::sin(max_theta));
 //
 //  //  double x0_p = grid_p.x_[0];
 //  //  double y0_p = grid_p.y_[0];
@@ -2367,7 +2367,7 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //
 //  //  // x- and y- indices of parent node (grid_p) which will be affected
 //  //  int max_npts_affected = (max_x_idx-min_x_idx+1) * (max_y_idx-min_x_idx+1);
-//  //  vcl_vector<int > x_idx_p, y_idx_p;
+//  //  std::vector<int > x_idx_p, y_idx_p;
 //  //  x_idx_p.reserve(max_npts_affected);
 //  //  y_idx_p.reserve(max_npts_affected);
 //

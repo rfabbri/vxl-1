@@ -3,7 +3,7 @@
 #include <dboxm/opt/open_cl/boxm_ray_trace_manager.h>
 #include <boct/boct_tree_cell.h>
 #include <boct/boct_loc_code.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vil/vil_save.h>
 
 void open_cl_test_data::
@@ -24,7 +24,7 @@ test_rays(vbl_array_2d<vnl_vector_fixed<float, 3> >& ray_origin,
     }
 }
 
-void open_cl_test_data::save_expected_image(vcl_string const& image_path,
+void open_cl_test_data::save_expected_image(std::string const& image_path,
                                             unsigned cols, unsigned rows,
                                             float* expected_img)
 {

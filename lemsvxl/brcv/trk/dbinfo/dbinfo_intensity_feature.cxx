@@ -3,7 +3,7 @@
 #include <vil/vil_new.h>
 #include <vil/vil_convert.h>
 #include <vbl/vbl_array_1d.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include <brip/brip_vil_float_ops.h>
 #include <dbinfo/dbinfo_feature_data.h>
 #include <dbinfo/dbinfo_feature_format.h>
@@ -12,8 +12,8 @@
 //:scan intensity data from the current frame into the current data store
 bool 
 dbinfo_intensity_feature::scan(const unsigned frame,
-                             vcl_vector<vgl_point_2d<unsigned> > const& points,
-                             vcl_vector<bool> const& valid,
+                             std::vector<vgl_point_2d<unsigned> > const& points,
+                             std::vector<bool> const& valid,
                              vil_image_resource_sptr const& image)
 {
 
@@ -55,8 +55,8 @@ dbinfo_intensity_feature::scan(const unsigned frame,
   return true;
 }
 vil_image_resource_sptr dbinfo_intensity_feature::
-image(vcl_vector<vgl_point_2d<float> > const& points,
-      vcl_vector<bool> const& valid,
+image(std::vector<vgl_point_2d<float> > const& points,
+      std::vector<bool> const& valid,
       unsigned n_i, unsigned n_j, float i0, float j0, bool background_noise)
 {
   if(!data_)
@@ -74,7 +74,7 @@ image(vcl_vector<vgl_point_2d<float> > const& points,
   if (background_noise) {
     for (unsigned j = 0; j<n_j; j++ ) 
       for (unsigned i = 0; i<n_i; i++) 
-        image_out(i,j) = 255*float(vcl_rand()/(RAND_MAX+1.0));     
+        image_out(i,j) = 255*float(std::rand()/(RAND_MAX+1.0));     
   } else {
     for (unsigned j = 0; j<n_j; j++ ) 
       for (unsigned i = 0; i<n_i; i++) 
@@ -90,8 +90,8 @@ image(vcl_vector<vgl_point_2d<float> > const& points,
           float pfj = j0 + points[k].y();
           if(pfi<0||pfj<0)
             continue;
-          unsigned pi = static_cast<unsigned>(vcl_floor(pfi+0.5f));
-          unsigned pj = static_cast<unsigned>(vcl_floor(pfj+0.5f));
+          unsigned pi = static_cast<unsigned>(std::floor(pfi+0.5f));
+          unsigned pj = static_cast<unsigned>(std::floor(pfj+0.5f));
           if(pi>=n_i||pj>=n_j)
             continue;
           float v = idata[k];
@@ -118,7 +118,7 @@ image(vcl_vector<vgl_point_2d<float> > const& points,
       return vil_new_image_resource_of_view(image_out);
     }
   default:
-    vcl_cout << "Unknown format in image(..)\n";
+    std::cout << "Unknown format in image(..)\n";
     return 0;
   }
 }

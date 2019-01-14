@@ -43,7 +43,7 @@ dbdet_combine_curves_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_combine_curves_process::name()
 {
   return "Combine VSOL from Frames";
@@ -67,18 +67,18 @@ dbdet_combine_curves_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_combine_curves_process::get_input_type()
+std::vector< std::string > dbdet_combine_curves_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_combine_curves_process::get_output_type()
+std::vector< std::string > dbdet_combine_curves_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
 
 
@@ -98,7 +98,7 @@ dbdet_combine_curves_process::finish()
 {
 
   // new vector to store the resulting contours
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
 
 
@@ -108,11 +108,11 @@ dbdet_combine_curves_process::finish()
 
     input_vsol.vertical_cast(input_data_[i][0]);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
     for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
     {
-      vcl_vector<vsol_point_2d_sptr> pts; //:< not really used right now
+      std::vector<vsol_point_2d_sptr> pts; //:< not really used right now
       bool closed = false;
       //POINT
       if( vsol_list[b]->cast_to_point() ) {
@@ -137,7 +137,7 @@ dbdet_combine_curves_process::finish()
         // CIRCULAR ARC
         else if (vsol_list[b]->cast_to_curve()->cast_to_conic())
         {
-          vcl_cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
+          std::cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
           continue;
         }
       }

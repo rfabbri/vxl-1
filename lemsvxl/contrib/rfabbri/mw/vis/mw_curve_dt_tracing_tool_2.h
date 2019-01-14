@@ -28,7 +28,7 @@ public:
                const bvis1_view_tableau_sptr& view );
  
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   void activate();
   void deactivate();
@@ -58,7 +58,7 @@ private:
 
   //: Compute tangent edgels to the selected curves and reprojections
   // tgts[iview][isample]
-  bool compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts) const;
+  bool compute_selected_tangents(std::vector<std::vector<vsol_line_2d_sptr> > *tgts) const;
 
   //: Compute & display tangent edgels to the selected curves and reprojections.
   void display_selected_tangents();
@@ -71,7 +71,7 @@ private:
   bgui_vsol_soview2D_polyline *best_match_soview_;
 
   //: Display objects of tangents to each selected curve and their reprojections
-  vcl_vector<vcl_vector<bgui_vsol_soview2D_line_seg* > > tgts_soview_; 
+  std::vector<std::vector<bgui_vsol_soview2D_line_seg* > > tgts_soview_; 
 
   //: see bmcsd_dt_curve_stereo::set_distance_thresh(); this is not squared.
   double tau_distance_;

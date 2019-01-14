@@ -51,7 +51,7 @@ protected:
   vimt_image_pyramid to_pyramid_;
   vimt_image_pyramid from_mask_pyramid_;
   vimt_image_pyramid to_mask_pyramid_;
-  vcl_vector<dbvrl_world_roi> roi_pyramid_;
+  std::vector<dbvrl_world_roi> roi_pyramid_;
 
   static const unsigned min_level_size_ = 256;
   double end_error_; 

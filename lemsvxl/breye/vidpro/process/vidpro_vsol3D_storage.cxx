@@ -4,8 +4,8 @@
 // \file
 
 #include "vidpro_vsol3D_storage.h"
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
+#include <utility>
+#include <algorithm>
 #include <vsl/vsl_map_io.h>
 #include <vsol/vsol_point_3d.h>
 #include <vsol/vsol_line_3d.h>
@@ -105,9 +105,9 @@ vidpro_vsol3D_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro_vsol3D_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro_vsol3D_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -125,17 +125,17 @@ vidpro_vsol3D_storage::clear_all()
 
 //: Add a vector of vsol3D objects to the group named \p which
 void
-vidpro_vsol3D_storage::add_objects( const vcl_vector< vsol_spatial_object_3d_sptr >& objects,  
-                                    const vcl_string& which)
+vidpro_vsol3D_storage::add_objects( const std::vector< vsol_spatial_object_3d_sptr >& objects,  
+                                    const std::string& which)
 {
   data_map::iterator result = vsol_map_.find( which );
 
   if( result == vsol_map_.end() ) {
-    typedef vcl_pair<vcl_string, vcl_vector<vsol_spatial_object_3d_sptr> > data_pair;
+    typedef std::pair<std::string, std::vector<vsol_spatial_object_3d_sptr> > data_pair;
     vsol_map_.insert( data_pair( which, objects ) );
   }
   else {
-    for( vcl_vector<vsol_spatial_object_3d_sptr>::const_iterator 
+    for( std::vector<vsol_spatial_object_3d_sptr>::const_iterator 
          it = objects.begin();  it != objects.end();  ++it )
       result->second.push_back( *it );
   }
@@ -145,7 +145,7 @@ vidpro_vsol3D_storage::add_objects( const vcl_vector< vsol_spatial_object_3d_spt
 //: Add an object to the group named \p which
 void
 vidpro_vsol3D_storage::add_object( const vsol_spatial_object_3d_sptr& object,  
-                                   const vcl_string& which )
+                                   const std::string& which )
 {
   vsol_map_[which].push_back(object);
 }
@@ -153,7 +153,7 @@ vidpro_vsol3D_storage::add_object( const vsol_spatial_object_3d_sptr& object,
 
 //: Search for the object in all groups and remove it
 // \retval The name of the group removed from of the empty string if not found
-vcl_string 
+std::string 
 vidpro_vsol3D_storage::remove_object( const vsol_spatial_object_3d_sptr& object )
 {
   for( data_map::const_iterator it = vsol_map_.begin();
@@ -170,14 +170,14 @@ vidpro_vsol3D_storage::remove_object( const vsol_spatial_object_3d_sptr& object 
 // \return false if the object was not found
 bool 
 vidpro_vsol3D_storage::remove_object( const vsol_spatial_object_3d_sptr& object, 
-                                      const vcl_string& group )
+                                      const std::string& group )
 {
   data_map::iterator it =vsol_map_.find(group);
   if( it == vsol_map_.end() ) 
     return false;
   
-  vcl_vector<vsol_spatial_object_3d_sptr>::iterator 
-    itv = vcl_find(it->second.begin(), it->second.end(), object);
+  std::vector<vsol_spatial_object_3d_sptr>::iterator 
+    itv = std::find(it->second.begin(), it->second.end(), object);
   if( itv == it->second.end() ) 
     return false;
 
@@ -187,13 +187,13 @@ vidpro_vsol3D_storage::remove_object( const vsol_spatial_object_3d_sptr& object,
 
 
 //: Return a vector of all vsol objects in the group named \p which
-vcl_vector< vsol_spatial_object_3d_sptr > 
-vidpro_vsol3D_storage::data_named( const vcl_string& which) const
+std::vector< vsol_spatial_object_3d_sptr > 
+vidpro_vsol3D_storage::data_named( const std::string& which) const
 {
   data_map::const_iterator it = vsol_map_.find( which );
 
   if( it == vsol_map_.end() ) {
-    return vcl_vector< vsol_spatial_object_3d_sptr >();
+    return std::vector< vsol_spatial_object_3d_sptr >();
   }
 
   return it->second;
@@ -201,14 +201,14 @@ vidpro_vsol3D_storage::data_named( const vcl_string& which) const
 
 
 //: Return a vector of all vsol objects in all groups
-vcl_vector< vsol_spatial_object_3d_sptr > 
+std::vector< vsol_spatial_object_3d_sptr > 
 vidpro_vsol3D_storage::all_data() const
 {
-  vcl_vector<vsol_spatial_object_3d_sptr> all_data;
+  std::vector<vsol_spatial_object_3d_sptr> all_data;
   for( data_map::const_iterator it = vsol_map_.begin();
        it != vsol_map_.end();  ++it ) 
   {
-    for( vcl_vector<vsol_spatial_object_3d_sptr>::const_iterator 
+    for( std::vector<vsol_spatial_object_3d_sptr>::const_iterator 
          it2 = it->second.begin();  it2 != it->second.end();  ++it2 )
     { 
       all_data.push_back( *it2 );
@@ -219,10 +219,10 @@ vidpro_vsol3D_storage::all_data() const
 
 
 //: Return the names of all groups 
-vcl_vector< vcl_string >
+std::vector< std::string >
 vidpro_vsol3D_storage::groups() const
 {
-  vcl_vector<vcl_string> name_list;
+  std::vector<std::string> name_list;
   for( data_map::const_iterator it = vsol_map_.begin();
        it != vsol_map_.end();  ++it ) {
     name_list.push_back( it->first );

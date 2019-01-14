@@ -1,8 +1,8 @@
 #include "mw_cvmatch_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -36,7 +36,7 @@ mw_cvmatch_process::mw_cvmatch_process()
       !parameters()->add( "Max epipolar error:" , "-epipolar_error_threshold" , 10) 
       ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in mw_cvmatch_process::mw_cvmatch_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in mw_cvmatch_process::mw_cvmatch_process()" << std::endl;
   }
 }
 
@@ -50,14 +50,14 @@ mw_cvmatch_process::clone() const
 
 bool mw_cvmatch_process::execute()
 {
-  vcl_ofstream cdebug;
+  std::ofstream cdebug;
   cdebug.open("debug");
 
   bool delta_given=false;
   parameters()->get_value( "-deltagiven" , delta_given );
   float deltag=0;
   parameters()->get_value( "-delta" , deltag );
-  vcl_cout << "delta given is: " << deltag << vcl_endl;\
+  std::cout << "delta given is: " << deltag << std::endl;\
   int template_size=0;
   parameters()->get_value( "-template_size" , template_size );
   int NN=0;
@@ -86,11 +86,11 @@ bool mw_cvmatch_process::execute()
 
 
 
-  vcl_vector<vsol_point_2d_sptr> inp1;
-  vcl_vector<vsol_point_2d_sptr> inp2;
+  std::vector<vsol_point_2d_sptr> inp1;
+  std::vector<vsol_point_2d_sptr> inp2;
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   bool closed1 = false;
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
@@ -116,11 +116,11 @@ bool mw_cvmatch_process::execute()
           inp1.push_back(pt);
   } } } }
 
-  vcl_cout << "Original curve1 size: " << inp1.size() << vcl_endl;
+  std::cout << "Original curve1 size: " << inp1.size() << std::endl;
   if (closed1)
-    vcl_cout << "Original curve1 is a polygon, i.e. a closed curve\n";
+    std::cout << "Original curve1 is a polygon, i.e. a closed curve\n";
   else
-    vcl_cout << "Original curve1 is a polyline, i.e. an open curve\n";
+    std::cout << "Original curve1 is a polyline, i.e. an open curve\n";
 
   vsol_list = input_vsol2->all_data();
   bool closed2 = false;
@@ -148,11 +148,11 @@ bool mw_cvmatch_process::execute()
           inp2.push_back(pt);
   } } } }
 
-  vcl_cout << "Original curve2 size: " << inp2.size() << vcl_endl;
+  std::cout << "Original curve2 size: " << inp2.size() << std::endl;
   if (closed2)
-    vcl_cout << "Original curve2 is a polygon, i.e. a closed curve\n";
+    std::cout << "Original curve2 is a polygon, i.e. a closed curve\n";
   else
-    vcl_cout << "Original curve2 is a polyline, i.e. an open curve\n";
+    std::cout << "Original curve2 is a polyline, i.e. an open curve\n";
 
   //bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
   //bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
@@ -160,7 +160,7 @@ bool mw_cvmatch_process::execute()
   cdebug << "Camera1: \n" << input_cam1->get_camera();
   cdebug << "Camera2: \n" << input_cam2->get_camera();
   if (!input_cam1->get_camera()->cast_to_perspective_camera() || !input_cam2->get_camera()->cast_to_perspective_camera()) {
-    vcl_cerr << "Error: input cams are not perspective\n";
+    std::cerr << "Error: input cams are not perspective\n";
   }
 
   bdifd_rig rig(
@@ -191,12 +191,12 @@ bool mw_cvmatch_process::execute()
       
   double len1 = curve1->length();
   double len2 = curve2->length();
-  vcl_cout << "length 1: " << len1 << vcl_endl; vcl_cout << "length 2: " << len2 << vcl_endl;
+  std::cout << "length 1: " << len1 << std::endl; std::cout << "length 2: " << len2 << std::endl;
       
-  double min_alignment_length = vcl_sqrt(vcl_pow(len1, 2)+vcl_pow(len2, 2));
+  double min_alignment_length = std::sqrt(std::pow(len1, 2)+std::pow(len2, 2));
   double max_alignment_length = len1+len2;
-  vcl_cout << "min alignment curve length: " << min_alignment_length << vcl_endl;
-  vcl_cout << "max alignment curve length: " << max_alignment_length << vcl_endl;
+  std::cout << "min alignment curve length: " << min_alignment_length << std::endl;
+  std::cout << "max alignment curve length: " << max_alignment_length << std::endl;
       
   double delta = max_alignment_length/(n1+n2);  // for now
   //double delta = min_alignment_length/(n1>n2?n1:n2);  // for now
@@ -205,11 +205,11 @@ bool mw_cvmatch_process::execute()
   //int max_n = (n1>n2?n1:n2);
   //delta = min_alignment_length/max_n;  // for now
       
-      /*vcl_cout << "min_alignment/max(n1, n2): " << delta << vcl_endl;
+      /*std::cout << "min_alignment/max(n1, n2): " << delta << std::endl;
       delta = min_alignment_length/((float)max_n/2.0);
-      vcl_cout << "min_alignment_length/((float)max_n/2.0: " << delta << vcl_endl;
+      std::cout << "min_alignment_length/((float)max_n/2.0: " << delta << std::endl;
       delta = min_alignment_length/((float)(n1+n2)/2.0);
-      vcl_cout << "min_alignment_length/((float)(n1+n2)/2.0: " << delta << vcl_endl;
+      std::cout << "min_alignment_length/((float)(n1+n2)/2.0: " << delta << std::endl;
       */
       
   double delta_s1 = len1/inp1.size();
@@ -222,16 +222,16 @@ bool mw_cvmatch_process::execute()
   }
 
   //delta = max_alignment_length/(n1+n2); 
-  vcl_cout << "delta: " << delta << vcl_endl;
+  std::cout << "delta: " << delta << std::endl;
 
   
   {
-    vcl_cout << "In closed MULTIVIEW interpolated curve matching!!\n";
+    std::cout << "In closed MULTIVIEW interpolated curve matching!!\n";
     
     int n1 = (int)(len1/delta+0.5);   // round to nearest integer
     int n2 = (int)(len2/delta+0.5);
 
-    vcl_cout << "n1: " << n1 << " n2: " << n2 << vcl_endl;
+    std::cout << "n1: " << n1 << " n2: " << n2 << std::endl;
     mw_cvmatch_sptr clsdp = new mw_cvmatch (
         curve1, curve2, n1, n2, (double)r1, template_size, epipolar_error_threshold);
 
@@ -263,29 +263,29 @@ bool mw_cvmatch_process::execute()
     int minIndex = 0;
     double minCost=clsdp->finalCost(0);
 
-    vcl_vector<vsol_point_2d_sptr> out_curve1;
-    vcl_vector<vsol_point_2d_sptr> out_curve2;
+    std::vector<vsol_point_2d_sptr> out_curve1;
+    std::vector<vsol_point_2d_sptr> out_curve2;
 
-    vcl_vector< vcl_pair <int,int> > map = clsdp->finalMap(minIndex);
-    vcl_cout << "Map size: " << map.size() << vcl_endl;
-    vcl_vector< vcl_pair <int,int> > map2;
+    std::vector< std::pair <int,int> > map = clsdp->finalMap(minIndex);
+    std::cout << "Map size: " << map.size() << std::endl;
+    std::vector< std::pair <int,int> > map2;
     for (unsigned k = 0; k<map.size(); k++) {
       int i = map[k].first;
       int j = map[k].second;
-      vcl_cout << "maps: " << i << " to " << j << vcl_endl;
-      vcl_cout << "len1: " << vcl_fmod(i*delta_s1, len1) << " to " << vcl_fmod(j*delta_s2, len2) << vcl_endl;
-      out_curve1.push_back(curve1->point_at(vcl_fmod(i*delta_s1, len1)));
-      out_curve2.push_back(curve2->point_at(vcl_fmod(j*delta_s2, len2)));
+      std::cout << "maps: " << i << " to " << j << std::endl;
+      std::cout << "len1: " << std::fmod(i*delta_s1, len1) << " to " << std::fmod(j*delta_s2, len2) << std::endl;
+      out_curve1.push_back(curve1->point_at(std::fmod(i*delta_s1, len1)));
+      out_curve2.push_back(curve2->point_at(std::fmod(j*delta_s2, len2)));
       
     }
 
-    vcl_vector<bmcsd_vector_3d> C3d;
+    std::vector<bmcsd_vector_3d> C3d;
     rig.reconstruct_3d_curve(&C3d, out_curve1, out_curve2);
     // output to file
-    vcl_ofstream prec;
+    std::ofstream prec;
     prec.open("reconstr.dat");
     for (unsigned i=0; i< C3d.size(); ++i) {
-      prec << C3d[i][0] << " " << C3d[i][1] << " " << C3d[i][2] << vcl_endl;
+      prec << C3d[i][0] << " " << C3d[i][1] << " " << C3d[i][2] << std::endl;
     }
     prec.close();
 
@@ -299,14 +299,14 @@ bool mw_cvmatch_process::execute()
     curveMatch->setCurve1 (c1);
     curveMatch->setCurve2 (c2);
 
-    //vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<vcl_endl;
-    vcl_cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+    //std::cout<< std::endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<std::endl;
+    std::cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
     assert(c1->size() == c2->size());
 
     map.clear();
     for (int i = 0; i<c1->size(); i+=NN) {
-      vcl_pair<int, int> p(i,i);
+      std::pair<int, int> p(i,i);
       map.push_back(p);
     }
     

@@ -14,7 +14,7 @@
 template <psm_apm_type APM >
 void psm_scene<APM>::set_block(vgl_point_3d<int> block_idx, psm_sample<APM>  data)
 {
-  vcl_cerr << "not implemented yet";
+  std::cerr << "not implemented yet";
 }
 
 
@@ -63,20 +63,20 @@ void psm_scene<APM>::init_block(vgl_point_3d<int> block_idx, unsigned int block_
 template<psm_apm_type APM>
 void psm_scene<APM>::discover_blocks()
 {
-  vcl_string storage_directory = block_storage_->storage_directory();
+  std::string storage_directory = block_storage_->storage_directory();
 
-  vcl_stringstream block_glob;
-  vcl_string fname_prefix = "block_";
+  std::stringstream block_glob;
+  std::string fname_prefix = "block_";
   block_glob << storage_directory << '/' << fname_prefix << "*.fd3";
 
   // traverse glob entries and parse filename
   for (vul_file_iterator file_it = block_glob.str().c_str(); file_it; ++file_it)
   {
     int x_idx, y_idx, z_idx;
-    vcl_stringstream x_idx_str, y_idx_str, z_idx_str;
+    std::stringstream x_idx_str, y_idx_str, z_idx_str;
 
     // parse x index
-    vcl_string match_str = file_it.filename();
+    std::string match_str = file_it.filename();
     unsigned x_idx_start = match_str.find("_",0) + 1;
     unsigned x_idx_end = match_str.find("_",x_idx_start);
     x_idx_str << match_str.substr(x_idx_start,x_idx_end - x_idx_start);
@@ -92,7 +92,7 @@ void psm_scene<APM>::discover_blocks()
     z_idx_str << match_str.substr(z_idx_start,z_idx_end - z_idx_start);
     z_idx_str >> z_idx;
 
-    vcl_cout << "found block " << x_idx << ", " << y_idx << ", " << z_idx << vcl_endl;
+    std::cout << "found block " << x_idx << ", " << y_idx << ", " << z_idx << std::endl;
     set_block_valid(vgl_point_3d<int>(x_idx,y_idx,z_idx),true);
 
   }
@@ -103,7 +103,7 @@ template<psm_apm_type APM>
 unsigned int psm_scene<APM>::num_cells()
 {
   unsigned int total_size = 0;
-  vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator block_it = valid_blocks_.begin();
+  std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator block_it = valid_blocks_.begin();
   for (; block_it != valid_blocks_.end(); ++block_it) {
     total_size += num_cells(*block_it);
   }
@@ -120,7 +120,7 @@ unsigned int psm_scene<APM>::num_cells(vgl_point_3d<int> block_idx)
 
 //: save the occlusion density in a format readable by Drishti volume renderer
 template<psm_apm_type APM>
-void psm_scene<APM>::save_alpha_raw(vcl_string filename, vgl_point_3d<int> block_idx, unsigned int resolution_level)
+void psm_scene<APM>::save_alpha_raw(std::string filename, vgl_point_3d<int> block_idx, unsigned int resolution_level)
 {
   hsds_fd_tree<psm_sample<APM>,3> &block = get_block(block_idx);
   vbl_bounding_box<double,3> block_bb = block.bounding_box();
@@ -135,9 +135,9 @@ void psm_scene<APM>::save_alpha_raw(vcl_string filename, vgl_point_3d<int> block
   // origin should specify center of first cell
   vnl_vector_fixed<double,3> data_og = block_og + (step_len/2.0);
 
-  vcl_ofstream ofs(filename.c_str(),vcl_ios::binary);
+  std::ofstream ofs(filename.c_str(),std::ios::binary);
   if (!ofs.good()) {
-    vcl_cerr << "error opening " << filename << " for write! " << vcl_endl;
+    std::cerr << "error opening " << filename << " for write! " << std::endl;
     return;
   }
 
@@ -191,8 +191,8 @@ void psm_scene<APM>::save_alpha_raw(vcl_string filename, vgl_point_3d<int> block
   unsigned char *byte_data = new unsigned char[ncells*ncells*ncells];
   float* dp = data;
   for (unsigned char* bdp = byte_data; dp < data + ncells*ncells*ncells; ++dp, ++bdp) {
-    double P = 1.0 - vcl_exp(-*dp*step_len);
-    *bdp = (unsigned char)(vcl_floor((255.0 * P) + 0.5)); // always positive so this is an ok way to round
+    double P = 1.0 - std::exp(-*dp*step_len);
+    *bdp = (unsigned char)(std::floor((255.0 * P) + 0.5)); // always positive so this is an ok way to round
   }
   delete[] data;
 

@@ -34,10 +34,10 @@
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
 bool mpi_compute_ishock_processor::
-parse_command_line(vcl_vector<vcl_string>& argv)
+parse_command_line(std::vector<std::string>& argv)
 {
   vul_arg_info_list arg_list;
-  vul_arg<vcl_string> input_xml_file(arg_list, "-x", 
+  vul_arg<std::string> input_xml_file(arg_list, "-x", 
     "the input file in xml format that sets parameters of the algorithm","");
   vul_arg<bool> print_usage_only(arg_list, "-usage", "print usage info and exit", false);
   vul_arg<bool> print_help(arg_list, "-help", "print usage info and exit", false);
@@ -48,20 +48,20 @@ parse_command_line(vcl_vector<vcl_string>& argv)
 
   for (unsigned i = 1; i < argv.size(); ++i) 
   {
-    vcl_string arg = argv[i];
-    if (arg == vcl_string ("-x")) 
+    std::string arg = argv[i];
+    if (arg == std::string ("-x")) 
     { 
       input_xml_file.value_ = argv[++i]; 
     } 
-    else if (arg == vcl_string ("-usage")) 
+    else if (arg == std::string ("-usage")) 
     { 
       print_usage_only.value_ = true; 
     }
-    else if (arg == vcl_string ("-help")) 
+    else if (arg == std::string ("-help")) 
     { 
       print_help.value_ = true; 
     }
-    else if (arg == vcl_string ("-print-def-xml")) 
+    else if (arg == std::string ("-print-def-xml")) 
     { 
       print_def_xml.value_ = true; 
     }
@@ -75,7 +75,7 @@ parse_command_line(vcl_vector<vcl_string>& argv)
 
   if (print_def_xml()) 
   {
-    vcl_string input = "input.xml";
+    std::string input = "input.xml";
     mpi_compute_ishock_processor::print_default_file(input.c_str());
     return false;  // --> to exit
   }
@@ -83,7 +83,7 @@ parse_command_line(vcl_vector<vcl_string>& argv)
   if (input_xml_file().compare("") == 0) 
   {
     arg_list.display_help();
-    vcl_cout << "XML filename is empty \n";
+    std::cout << "XML filename is empty \n";
     return false;  // --> to exit
   }
 
@@ -103,15 +103,15 @@ parse(const char* param_file)
   //
   if (!param_doc_.root_element())
   {
-    vcl_cout << "ERROR reading parameter XML file: "
+    std::cout << "ERROR reading parameter XML file: "
       << param_file << "\n";
-    vcl_cout << "root = " << param_doc_.root_element() << "\n";
+    std::cout << "root = " << param_doc_.root_element() << "\n";
     return false;
   }
   
   if (param_doc_.root_element()->type() != bxml_data::ELEMENT) 
   {
-    vcl_cout << "params root is not ELEMENT\n";
+    std::cout << "params root is not ELEMENT\n";
     return false;
   }
 
@@ -134,25 +134,25 @@ print_default_file(const char* def_file)
   root->append_data(data1);
   root->append_text("\n");
   
-  bxml_write(vcl_string(def_file), doc);
+  bxml_write(std::string(def_file), doc);
 }
 
 
 // -----------------------------------------------------------------------------
 //: this method is run on each processor
 bool mpi_compute_ishock_processor::initialize(
-  vcl_vector<mpi_compute_ishock_processor_input>& t)
+  std::vector<mpi_compute_ishock_processor_input>& t)
 {
   t_.mark();
 
-  vcl_string file_list = this->params_.file_list();
-  vcl_string out_dir = this->params_.out_dir();
+  std::string file_list = this->params_.file_list();
+  std::string out_dir = this->params_.out_dir();
   
-  vcl_vector<vcl_string> image_names;
+  std::vector<std::string> image_names;
  
   if (!parse_strings_from_file(file_list, image_names)) 
   {
-    vcl_cout << "Unable to open list file! " << file_list << "!\n";
+    std::cout << "Unable to open list file! " << file_list << "!\n";
     return false;
   }
 
@@ -180,15 +180,15 @@ bool mpi_compute_ishock_processor::initialize(
 bool mpi_compute_ishock_processor::
 process(mpi_compute_ishock_processor_input input, float& f)
 {
-  vcl_cout << "processing: " << input.image_name_ << " ";
+  std::cout << "processing: " << input.image_name_ << " ";
 
   // we will put all the data in one folder, including the original image
-  vcl_string object_dir = this->params_.out_dir() + "/" + input.image_name_;
+  std::string object_dir = this->params_.out_dir() + "/" + input.image_name_;
   
   // if the folder already exists, clean it up
   if (vul_file::exists(object_dir))
   {
-    vcl_string all_files = object_dir + "/*";
+    std::string all_files = object_dir + "/*";
     //vul_file::delete_file_glob(all_files.c_str());
   }
   // otherwise create it
@@ -197,41 +197,41 @@ process(mpi_compute_ishock_processor_input input, float& f)
   }
 
   // copy the image to the object folder
-  vcl_string source_image_file = this->params_.file_dir() + "/" + 
+  std::string source_image_file = this->params_.file_dir() + "/" + 
     input.image_name_ + this->params_.extension();
 
   
   // Proces 0
   // save to the object folder
-  vcl_string image_file = object_dir + "/" + input.image_name_ + this->params_.extension();
+  std::string image_file = object_dir + "/" + input.image_name_ + this->params_.extension();
   if (!this->copy_image(source_image_file, image_file))
   {
-    vcl_cout << "ERROR: didn't finish copy_image()\n";
+    std::cout << "ERROR: didn't finish copy_image()\n";
     return false;
   }
 
 
   // Process I
-  vcl_string edgemap_file = object_dir + "/" + input.image_name_ + ".edg";
+  std::string edgemap_file = object_dir + "/" + input.image_name_ + ".edg";
   if (!this->compute_edgemap_color(image_file, edgemap_file))
   {
-    vcl_cout << "ERROR: didn't finish compute_edgemap()\n";
+    std::cout << "ERROR: didn't finish compute_edgemap()\n";
     return false;
   }
 
   // Process II
-  vcl_string cem_file = object_dir + "/" + input.image_name_ + ".cem";
+  std::string cem_file = object_dir + "/" + input.image_name_ + ".cem";
   if (! this->link_edges(edgemap_file, cem_file))
   {
-    vcl_cout << "ERROR: didn't finish link_edges()\n";
+    std::cout << "ERROR: didn't finish link_edges()\n";
     return false;
   }
 
   // Process III
-  vcl_string esf_file = object_dir + "/" + input.image_name_ + ".esf";
+  std::string esf_file = object_dir + "/" + input.image_name_ + ".esf";
   if (! this->compute_ishock(cem_file, esf_file))
   {
-    vcl_cout << "ERROR: didn't finish compute_ishock()\n";
+    std::cout << "ERROR: didn't finish compute_ishock()\n";
     return false;
   }
 
@@ -244,7 +244,7 @@ process(mpi_compute_ishock_processor_input input, float& f)
 // -----------------------------------------------------------------------------
 //: 
 bool mpi_compute_ishock_processor::
-copy_image(const vcl_string& input_file, const vcl_string& output_file)
+copy_image(const std::string& input_file, const std::string& output_file)
 {
   vil_image_resource_sptr image = vil_load_image_resource(input_file.c_str());
   if (!vil_save_image_resource(image, output_file.c_str()))
@@ -258,7 +258,7 @@ copy_image(const vcl_string& input_file, const vcl_string& output_file)
 // -----------------------------------------------------------------------------
 //: 
 bool mpi_compute_ishock_processor::
-compute_edgemap(const vcl_string& input_file, const vcl_string& output_file)
+compute_edgemap(const std::string& input_file, const std::string& output_file)
 {
   // Process I : Third order edge detection
   dbdet_third_order_edge_detector_process toe_process;
@@ -269,14 +269,14 @@ compute_edgemap(const vcl_string& input_file, const vcl_string& output_file)
 
   if (!vul_file::exists(input_file)) 
   {
-    vcl_cout << "Cannot find image file: " << input_file << "\n";
+    std::cout << "Cannot find image file: " << input_file << "\n";
     return false;
   }
 
   vil_image_resource_sptr img = vil_load_image_resource(input_file.c_str());
   if (!img) 
   {
-    vcl_cout << "Cannot load image: " << input_file << "\n";
+    std::cout << "Cannot load image: " << input_file << "\n";
     return false;
   }
   vidpro1_image_storage_sptr input_image_storage = new vidpro1_image_storage();
@@ -286,11 +286,11 @@ compute_edgemap(const vcl_string& input_file, const vcl_string& output_file)
 
   // >> execute
   toe_process.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
 
   // >> finish
   toe_process.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   // >> output
   //save this edge map onto a file
@@ -299,14 +299,14 @@ compute_edgemap(const vcl_string& input_file, const vcl_string& output_file)
   
   if (!edgemap_storage) 
   {
-    vcl_cout << "Process output cannot be cast to an edge_map\n";
+    std::cout << "Process output cannot be cast to an edge_map\n";
     return false;
   }
   dbdet_edgemap_sptr edgemap = edgemap_storage->get_edgemap();
 
   if (!dbdet_save_edg(output_file, edgemap)) 
   {
-    vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+    std::cout << "Problems in saving edge file: " << output_file << std::endl;
     return false;
   }
   return true;
@@ -317,7 +317,7 @@ compute_edgemap(const vcl_string& input_file, const vcl_string& output_file)
 // -----------------------------------------------------------------------------
 //: 
 bool mpi_compute_ishock_processor::
-compute_edgemap_color(const vcl_string& input_file, const vcl_string& output_file)
+compute_edgemap_color(const std::string& input_file, const std::string& output_file)
 {
   // Process I : Third order edge detection
   dbdet_third_order_color_edge_detector_process toce_process;
@@ -331,14 +331,14 @@ compute_edgemap_color(const vcl_string& input_file, const vcl_string& output_fil
 
   if (!vul_file::exists(input_file)) 
   {
-    vcl_cout << "Cannot find image file: " << input_file << "\n";
+    std::cout << "Cannot find image file: " << input_file << "\n";
     return false;
   }
 
   vil_image_resource_sptr img = vil_load_image_resource(input_file.c_str());
   if (!img) 
   {
-    vcl_cout << "Cannot load image: " << input_file << "\n";
+    std::cout << "Cannot load image: " << input_file << "\n";
     return false;
   }
   vidpro1_image_storage_sptr input_image_storage = new vidpro1_image_storage();
@@ -348,11 +348,11 @@ compute_edgemap_color(const vcl_string& input_file, const vcl_string& output_fil
 
   // >> execute
   toce_process.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
 
   // >> finish
   toce_process.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   // >> output
   //save this edge map onto a file
@@ -361,14 +361,14 @@ compute_edgemap_color(const vcl_string& input_file, const vcl_string& output_fil
   
   if (!edgemap_storage) 
   {
-    vcl_cout << "Process output cannot be cast to an edge_map\n";
+    std::cout << "Process output cannot be cast to an edge_map\n";
     return false;
   }
   dbdet_edgemap_sptr edgemap = edgemap_storage->get_edgemap();
 
   if (!dbdet_save_edg(output_file, edgemap)) 
   {
-    vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+    std::cout << "Problems in saving edge file: " << output_file << std::endl;
     return false;
   }
   return true;
@@ -378,7 +378,7 @@ compute_edgemap_color(const vcl_string& input_file, const vcl_string& output_fil
 //: ----------------------------------------------------------------------------
 //: 
 bool mpi_compute_ishock_processor::
-link_edges(const vcl_string& input_file, const vcl_string& output_file)
+link_edges(const std::string& input_file, const std::string& output_file)
 {
   // Edge linking
   // >> Initialize process
@@ -390,14 +390,14 @@ link_edges(const vcl_string& input_file, const vcl_string& output_file)
   //load the input edge map
   if (!vul_file::exists(input_file)) 
   {
-    vcl_cout << "Cannot find edg file: " << input_file << "\n";
+    std::cout << "Cannot find edg file: " << input_file << "\n";
     return false;
   }
 
   dbdet_edgemap_sptr edge_map;
   if (!dbdet_load_edg(input_file, true, 1.0, edge_map)) 
   {
-    vcl_cout << "Cannot load edg file: " << input_file << "\n";
+    std::cout << "Cannot load edg file: " << input_file << "\n";
     return false;
   }
 
@@ -406,15 +406,15 @@ link_edges(const vcl_string& input_file, const vcl_string& output_file)
 
   pro.add_input(edgemap_sto);
   pro.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
   pro.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   //:get the output
-  vcl_vector<bpro1_storage_sptr> out = pro.get_output();
+  std::vector<bpro1_storage_sptr> out = pro.get_output();
   if (out.size() != 1) 
   {
-    vcl_cout << "Process output does not contain a boundary map\n";
+    std::cout << "Process output does not contain a boundary map\n";
     return false;
   }
 
@@ -424,14 +424,14 @@ link_edges(const vcl_string& input_file, const vcl_string& output_file)
   output_vsol.vertical_cast(out[0]);
   if (!output_vsol) 
   {
-    vcl_cout << "Process output cannot be cast to a vsol storage\n";
+    std::cout << "Process output cannot be cast to a vsol storage\n";
     return false;
   }
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
   if (!bsold_save_cem(vsol_list, output_file)) 
   {
-    vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
+    std::cout << "Problems in saving edge file: " << output_file << std::endl;
     return false;
   }
   return true;
@@ -441,7 +441,7 @@ link_edges(const vcl_string& input_file, const vcl_string& output_file)
 // -----------------------------------------------------------------------------
 //: Compute intrinsic shocks 
 bool mpi_compute_ishock_processor::
-compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
+compute_ishock(const std::string& input_file, const std::string& output_file)
 {
 
   // Edge linking
@@ -452,16 +452,16 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
   //load the input edge map
   if (!vul_file::exists(input_file)) 
   {
-    vcl_cout << "Cannot find .cem file: " << input_file << "\n";
+    std::cout << "Cannot find .cem file: " << input_file << "\n";
     return false;
   }
 
 
   // Load the boundary from the boundary file
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list;
   if (!bsold_load_cem(vsol_list, input_file))
   {
-    vcl_cout << "Cannot load the boundary .cem file " << input_file;
+    std::cout << "Cannot load the boundary .cem file " << input_file;
     return false;
   }
 
@@ -479,18 +479,18 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
   
   // Execute
   pro.execute();
-  vcl_cout << " processed..";
+  std::cout << " processed..";
 
   // Finalize
   pro.finish();
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
 
   // Output: extract the output shock storage
-  vcl_vector<bpro1_storage_sptr> out = pro.get_output();
+  std::vector<bpro1_storage_sptr> out = pro.get_output();
   if (out.size() != 1) 
   {
-    vcl_cout << "ERROR: size of process output is not 1.\n";
+    std::cout << "ERROR: size of process output is not 1.\n";
     return false;
   }
 
@@ -499,7 +499,7 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
   output_shock_storage.vertical_cast(out[0]);
   if (!output_shock_storage) 
   {
-    vcl_cout << "Process output cannot be cast to a dbsk2d_shock_storage\n";
+    std::cout << "Process output cannot be cast to a dbsk2d_shock_storage\n";
     return false;
   }
   
@@ -527,7 +527,7 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
   dbsk2d_xshock_graph_fileio xshock_io;
   if (!xshock_io.save_xshock_graph(ishock_sampler.extrinsic_shock_graph(), output_file))
   {
-    vcl_cout << "ERROR: Problems in saving esf file: " << output_file 
+    std::cout << "ERROR: Problems in saving esf file: " << output_file 
       << ".Quit now.\n";
     return false;
   }
@@ -542,21 +542,21 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
 void mpi_compute_ishock_processor::
 print_time()
 {
-  vcl_cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
-  vcl_cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
+  std::cout << "\t\t\t total time: " << (t_.real()/1000.0f) << " secs.\n";
+  std::cout << "\t\t\t total time: " << ((t_.real()/1000.0f)/60.0f) << " mins.\n";
 }
 
 
 // -----------------------------------------------------------------------------
 //: this method is run on the lead processor once after results are collected from each processor
 bool mpi_compute_ishock_processor::
-finalize(vcl_vector<float>& results)
+finalize(std::vector<float>& results)
 {
-  vcl_cout << "results size: " << results.size() << " not doing anything with them\n";
+  std::cout << "results size: " << results.size() << " not doing anything with them\n";
   for (unsigned i = 0; i < results.size(); i++) {
-    vcl_cout << results[i];
+    std::cout << results[i];
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
   return true;
 }
 

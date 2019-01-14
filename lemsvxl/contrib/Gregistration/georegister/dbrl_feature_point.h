@@ -8,8 +8,8 @@
 #include "dbrl_feature.h"
 #include "dbrl_feature_sptr.h"
 
-#include <vcl_iosfwd.h>
-#include <vcl_iostream.h>
+#include <iosfwd>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vsl/vsl_binary_io.h>
 
@@ -34,11 +34,11 @@ class dbrl_feature_point  : public dbrl_feature
 
   //: read a feature
   virtual
-  bool read( vcl_istream& is);
+  bool read( std::istream& is);
 
   //: write a feature
   virtual
-  void write( vcl_ostream& os ) const;
+  void write( std::ostream& os ) const;
 
   vnl_vector<double>  location() const{return location_;}
 
@@ -46,7 +46,7 @@ class dbrl_feature_point  : public dbrl_feature
 
   vnl_vector<double>  location_homg() const;
 
-  virtual void print_feature(vcl_ostream &os);
+  virtual void print_feature(std::ostream &os);
 
   // ==== Binary IO methods ======
 
@@ -60,10 +60,10 @@ class dbrl_feature_point  : public dbrl_feature
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_feature_point";}
+  virtual std::string is_a() const {return "dbrl_feature_point";}
 
   virtual dbrl_feature * clone() const;
  protected:

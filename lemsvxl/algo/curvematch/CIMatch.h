@@ -17,7 +17,7 @@ typedef enum {
 } CIM_TEMPLATE_SIZE;
 
 //#include "rgbimage.h"
-#include "vcl_vector.h"
+#include "vector"
 
 #define min2(x,y)   ((x)>(y)?(y):(x))
 #define max2(x,y)   ((x)>(y)?(x):(y))
@@ -66,7 +66,7 @@ protected:
   bsol_intrinsic_curve_2d*    _outputCurve;
 
 public:
-  vcl_string        _curveFileName, _imageFileName, _dirName;
+  std::string        _curveFileName, _imageFileName, _dirName;
   bsol_intrinsic_curve_2d_sptr  inputCurve() { return _inputCurve; }
   void setInputCurve (bsol_intrinsic_curve_2d_sptr c1) { _inputCurve = c1; }
 
@@ -178,7 +178,7 @@ void ResampleCurve (RESAMPLE_CURVE_TYPE resample_type, bsol_intrinsic_curve_2d* 
 class NCMatch
 {
 public:
-  vcl_string  _patternFileName, _searchFileName;
+  std::string  _patternFileName, _searchFileName;
   double  _MatchingScore;
   int    _MatchingX, _MatchingY;
   double  _SubpixelMatchingX, _SubpixelMatchingY;

@@ -39,9 +39,9 @@ bool SINode::validate (Boundary *bnd)
     //In many cases, RisEq is too strict!
     //if ( !RisEq (_startTime, dist) ) {
     if ( !_isEq (_startTime, dist, R_EPSILON*10) ) {
-      vcl_cout<< "SINode linked-boundary distance validation fails. sid=" << _id << ".\n";
+      std::cout<< "SINode linked-boundary distance validation fails. sid=" << _id << ".\n";
       //if (MessageOption>=MSG_NORMAL)
-      vcl_cout<< "Error= " << _startTime-dist << ", Epsilon= "<< _epsilon(_startTime, dist, R_EPSILON*10) << vcl_endl;
+      std::cout<< "Error= " << _startTime-dist << ", Epsilon= "<< _epsilon(_startTime, dist, R_EPSILON*10) << std::endl;
       return false;
     }
   }
@@ -120,9 +120,9 @@ __next_belm:
   //relative error 1E-5, abs error 1E-5*5000=0.05. Too strict for far away shocks!
   //So we use RisG here!
   if (RisG(_startTime, minDist)) { //RisGEq
-    vcl_cout<< "SINode other-boundary distance validation fails. sid=" << _id << ".\n";
+    std::cout<< "SINode other-boundary distance validation fails. sid=" << _id << ".\n";
     //if (MessageOption>=MSG_NORMAL)
-    vcl_cout<< " Error= "  << _startTime-minDist << ", Epsilon= "<< _epsilon(_startTime, minDist, R_EPSILON) << vcl_endl;
+    std::cout<< " Error= "  << _startTime-minDist << ", Epsilon= "<< _epsilon(_startTime, minDist, R_EPSILON) << std::endl;
     return false;
   }
 
@@ -147,7 +147,7 @@ bool SILink::validate (Boundary *bnd, bool bPropagationCompleted)
     //We know it's there, but never mind.
     if (!_bPropagated) {
       if (_bActive && _label!=CONTACT) {
-        vcl_cout<< "ERROR! SILink not propagated! sid = " << _id <<vcl_endl;
+        std::cout<< "ERROR! SILink not propagated! sid = " << _id <<std::endl;
         bValid = false;
       }
     }
@@ -242,7 +242,7 @@ bool SISource::validate (Boundary *bnd, bool bPropagationCompleted)
   //1)Structure Validation: Check propagated sources...
   if ( bPropagationCompleted ) {
     if (_bActive || !_bPropagated) {
-      vcl_cout<< "ERROR! Source not propagated! sid = " << _id <<vcl_endl;
+      std::cout<< "ERROR! Source not propagated! sid = " << _id <<std::endl;
       return false;
     }
     assert (_cSLink->pSNode() == this);
@@ -333,7 +333,7 @@ bool SIPointPoint::validate (Boundary *bnd)
   if ( !RisEq(_startTime, distL) || !RisEq(_startTime, distR) ) {
     bValid = false;
     //if (MessageOption>=MSG_NORMAL)
-    //  vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<vcl_endl;
+    //  std::cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<std::endl;
   }
 
   //2)If not Active (has child)
@@ -345,7 +345,7 @@ bool SIPointPoint::validate (Boundary *bnd)
     if ( !RisEq(_endTime, distL) || !RisEq(_endTime, distR) ) {
       bValid = false;
       //if (MessageOption>=MSG_NORMAL)
-      //  vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<vcl_endl;
+      //  std::cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<std::endl;
     }
   }
   else {
@@ -383,7 +383,7 @@ bool SIPointLineContact::validate (Boundary *bnd)
   //Disvcl_tance Validation: The endTime vs Ending distances to two boundary elements: SKIP
 
   if (!bValid)
-    vcl_cout<< "\n validate SIPointPoint Fail!! sid= "<< _id <<" !!\n";
+    std::cout<< "\n validate SIPointPoint Fail!! sid= "<< _id <<" !!\n";
 
   return bValid;
 }
@@ -459,7 +459,7 @@ bool SIPointLine::validate (Boundary *bnd)
   if ( !RisEq(_startTime, distL) || !RisEq(_startTime, distR) ) {
     bValid = false;
     //if (MessageOption>=MSG_NORMAL)
-    //  vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<vcl_endl;
+    //  std::cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<std::endl;
   }
 
   //2)If not Active (has child)
@@ -472,7 +472,7 @@ bool SIPointLine::validate (Boundary *bnd)
                : _distPointPoint (endPt, rBPoint()->pt());
     if ( !RisEq(_endTime, distL) || !RisEq(_endTime, distR) ) {
       bValid = false;
-      vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<vcl_endl;
+      std::cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<std::endl;
     }
   }
   else {
@@ -519,7 +519,7 @@ bool SIPointArc::validate (Boundary *bnd)
                   : _distPointPoint (startPt, rBPoint()->pt());
   if ( !RisEq(_startTime, distL) || !RisEq(_startTime, distR) ) {
     bValid = false;
-    vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<vcl_endl;
+    std::cout<< "Disvcl_tance validation fails! SIPointPoint Starting distances." <<std::endl;
   }
 
   //2)If not Active (has child)
@@ -532,7 +532,7 @@ bool SIPointArc::validate (Boundary *bnd)
                : _distPointPoint (endPt, rBPoint()->pt());
     if ( !RisEq(_endTime, distL) || !RisEq(_endTime, distR) ) {
       bValid = false;
-      vcl_cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<vcl_endl;
+      std::cout<< "Disvcl_tance validation fails! SIPointPoint Ending distances." <<std::endl;
     }
   }
   else {
@@ -754,7 +754,7 @@ void SILineLine::getInfo (ostream& ostrm)
   s.Printf ("_N2L: %f\n", _N2L); buf+=s;
   s.Printf ("_N2R: %f\n\n", _N2R); buf+=s;
 
-  s.Printf ("v (1/vcl_cos(M_PI/4 - _thetaL/2)): %f\n\n", v(_LeTau)); buf+=s;
+  s.Printf ("v (1/std::cos(M_PI/4 - _thetaL/2)): %f\n\n", v(_LeTau)); buf+=s;
 
   s.Printf ("bIO: %s\n", bIO ? "Inside" : "Outside"); buf+=s;
   s.Printf ("bIOVisited: %s\n", bIOVisited ? "yes" : "no"); buf+=s;

@@ -6,7 +6,7 @@
 // \date 10/30/04
 // \brief  See dbgui_shockshape_tableau.h for a description of this file.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_gl.h>
 
@@ -24,7 +24,7 @@ dbgui_shockshape_tableau::~dbgui_shockshape_tableau()
 }
 
 //: return name
-vcl_string dbgui_shockshape_tableau::type_name() const
+std::string dbgui_shockshape_tableau::type_name() const
 {
   return "dbgui_shockshape_tableau";
 }
@@ -32,7 +32,7 @@ vcl_string dbgui_shockshape_tableau::type_name() const
 
 ////: draw the grid for the given transformation
 //void 
-//dbgui_bvrl_tableau::draw_grid(const vcl_vector<vgl_point_2d<double> >& verts, 
+//dbgui_bvrl_tableau::draw_grid(const std::vector<vgl_point_2d<double> >& verts, 
 //                              unsigned int nx, unsigned int ny)
 //{
 //  if(verts.size() != 4 )

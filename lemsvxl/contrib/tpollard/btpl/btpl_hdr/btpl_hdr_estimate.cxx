@@ -1,9 +1,9 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include<vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
+#include<cstdio>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -15,8 +15,8 @@
 // Estimate the transfer function from a stacked png image.
 int main( int argc, char* argv[] )
 { 
-  vcl_vector<vcl_string> image_files;
-  vcl_vector<vcl_string> g_files;
+  std::vector<std::string> image_files;
+  std::vector<std::string> g_files;
 
   image_files.push_back("E:\\dome_images\\00_calibration\\cropped_imgs\\png_11108\\11108_1_16.png");
   //image_files.push_back("E:\\dome_images\\00_calibration\\cropped_imgs\\png_11108\\11108_1_02.png");
@@ -60,8 +60,8 @@ int main( int argc, char* argv[] )
   //g_files.push_back("E:\\dome_images\\response_curves\\trian_11108\\lambda_2\\cam15_g.txt");
   //g_files.push_back("E:\\dome_images\\response_curves\\trian_11108\\lambda_2\\cam16_g.txt");
 
-  vcl_vector<vcl_string> shutter_files;
-  //vcl_string shutter_file = "E:\\dome_images\\shutter_speed\\shutter_speeds32.txt";
+  std::vector<std::string> shutter_files;
+  //std::string shutter_file = "E:\\dome_images\\shutter_speed\\shutter_speeds32.txt";
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds.txt");
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds05.txt");
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds07.txt");
@@ -72,23 +72,23 @@ int main( int argc, char* argv[] )
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds16.txt");
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds32.txt");
  
-  vcl_string debug_file = "E:\\dome_images\\debug.txt";
+  std::string debug_file = "E:\\dome_images\\debug.txt";
   int zmin = 30, zmax = 230;
 
   /*for (unsigned i = 0 ; i<image_files.size(); i++)*/
   for (unsigned i = 0 ; i<9; i++)
   {
-    vcl_string  image_file = image_files[0];
-    vcl_string  g_file = g_files[i];
-    vcl_string  shutter_file = shutter_files[i];
+    std::string  image_file = image_files[0];
+    std::string  g_file = g_files[i];
+    std::string  shutter_file = shutter_files[i];
     // Parse the png image into sub images.
     
     vil_image_view<vxl_byte> stacked_image = vil_load( image_file.c_str() );
     int image_width = stacked_image.ni();
     int image_height = stacked_image.nj()/12;
-    vcl_vector< vil_image_view<vxl_byte> > imgs;
-    vcl_vector<float> shutter_speeds;
-    vcl_ifstream ssif( shutter_file.c_str() );
+    std::vector< vil_image_view<vxl_byte> > imgs;
+    std::vector<float> shutter_speeds;
+    std::ifstream ssif( shutter_file.c_str() );
     for( int img = 0; img < 12; img++ ){
 
       float new_shutter; ssif >> new_shutter;
@@ -114,6 +114,6 @@ int main( int argc, char* argv[] )
     hdr_converter.inspection_file = debug_file;
     hdr_converter.estimate_g( imgs, shutter_speeds );
     hdr_converter.save_g( g_file );
-    vcl_cout<< g_file<< vcl_endl;
+    std::cout<< g_file<< std::endl;
   }
 };

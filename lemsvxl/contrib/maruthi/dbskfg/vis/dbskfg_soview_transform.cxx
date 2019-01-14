@@ -144,8 +144,8 @@ get_centroid(float* x, float* y) const
 
 
 //: Print details about this vsol object to the given stream.
-vcl_ostream& dbskfg_soview_transform::
-print(vcl_ostream& os) const
+std::ostream& dbskfg_soview_transform::
+print(std::ostream& os) const
 {
     transform_->print(os);
     return os;

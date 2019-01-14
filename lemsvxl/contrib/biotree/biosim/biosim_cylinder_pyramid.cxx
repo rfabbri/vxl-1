@@ -1,8 +1,8 @@
 #include "biosim_cylinder_pyramid.h"
-#include <vcl_limits.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
+#include <limits>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_random.h>
 
@@ -36,7 +36,7 @@ biosim_cylinder_pyramid::biosim_cylinder_pyramid(double density,double gaussian_
           vol[i][j][k] = density;
 
  
-  vcl_cout << "volume size " << volume_.size();
+  std::cout << "volume size " << volume_.size();
 
   vnl_random v_rand;
 
@@ -48,7 +48,7 @@ for (int k = 0;k < 80;k++)
    for (int j = 0;j<80;j++)
        {
        volume_[i][j][k] = vol[i][j][k] + gaussian_sigma*v_rand.normal();
-    //   vcl_cout << "points " << volume_[i][j][k] <<vcl_endl;
+    //   std::cout << "points " << volume_[i][j][k] <<std::endl;
        }
      }
     }
@@ -58,10 +58,10 @@ for (int k = 0;k < 80;k++)
 
 void biosim_cylinder_pyramid::radii_range(double &min_radius,double &max_radius)
 {
-min_radius = vcl_numeric_limits<float >::max();
-max_radius = vcl_numeric_limits<float >::min();
+min_radius = std::numeric_limits<float >::max();
+max_radius = std::numeric_limits<float >::min();
 
-for (vcl_vector<double>::iterator it = radii_.begin();it != radii_.end();it++)
+for (std::vector<double>::iterator it = radii_.begin();it != radii_.end();it++)
     {
     if (*it < min_radius)
         min_radius = *it;

@@ -1,9 +1,9 @@
 #ifndef _CEDT_H
 #define _CEDT_H
 
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <utility>
+#include <vector>
+#include <map>
 
 //CEDT: Curvature-based Euclidean Disvcl_tance Transform
 class CEDT;
@@ -15,15 +15,15 @@ class WaveFront;
 //data structure for the entire grid
   //every location has to be accessible by its coordinates
 
-typedef vcl_vector<vcl_vector<DiscreteGridPoint*> > DiscreteGrid;
+typedef std::vector<std::vector<DiscreteGridPoint*> > DiscreteGrid;
 
 //data structure to order the wavefronts by time(distance)
   //time ordered list of active wavefronts only
   //need id to discriminate the ones with the same distance
 
-typedef vcl_pair<double, int> T_ID_pair;
-typedef vcl_map<T_ID_pair, WaveFront*> OrderedWFList;
-typedef vcl_pair<T_ID_pair, WaveFront*> T_ID_WF_pair;
+typedef std::pair<double, int> T_ID_pair;
+typedef std::map<T_ID_pair, WaveFront*> OrderedWFList;
+typedef std::pair<T_ID_pair, WaveFront*> T_ID_WF_pair;
 
 typedef enum 
 {
@@ -78,7 +78,7 @@ public:
   CEDT (Boundary* bnd, Point2D<int> topLeft, int width, int height);
   ~CEDT ();
 
-  vcl_map<int, WaveFront*> update_list; //keeps the elements that need to be updated
+  std::map<int, WaveFront*> update_list; //keeps the elements that need to be updated
 
   //general accessibility functions
   Boundary* BND(){return _boundary;}
@@ -119,7 +119,7 @@ class DiscreteGridPoint
 {
 protected:
   Point2D<int>    _loc; //extrinsic location
-  vcl_vector<WaveFront*> _fronts;
+  std::vector<WaveFront*> _fronts;
 public:
   DiscreteGridPoint(); //default constructor
   DiscreteGridPoint(int x, int y);
@@ -128,7 +128,7 @@ public:
   //accesibility functions
   int numofWaveFronts(){return _fronts.size();}
   WaveFront* getWaveFront(int i){return _fronts[i];}
-  vcl_vector<WaveFront*>* Fronts(){return &_fronts;}
+  std::vector<WaveFront*>* Fronts(){return &_fronts;}
 
   //methods
   WaveFront* AddAWaveFront(int id, int src_label, double d, int dir, bool _init_prop=false);
@@ -169,7 +169,7 @@ public:
   void Deactivate(){_active = false;}
   void Reactivate(){_active = true;}
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif

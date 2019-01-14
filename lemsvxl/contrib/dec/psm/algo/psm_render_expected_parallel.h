@@ -1,7 +1,7 @@
 #ifndef psm_render_expected_parallel_h_
 #define psm_render_expected_parallel_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -43,7 +43,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> &block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> &block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
 
@@ -61,7 +61,7 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     for (; cell_it != cells.end(); ++cell_it) {
       psm_sample<APM> const& cell_value = block[*cell_it];
       if (cell_value.alpha > 0.001) {
@@ -75,13 +75,13 @@ public:
           psm_apm_traits<APM>::apm_processor::expected_color(cell_value.appearance);
 
 #ifdef USE_AA
-        //vcl_cout << "1" << vcl_endl;
+        //std::cout << "1" << std::endl;
         // get ray lengths * alpha
         alpha_seg_len_aa(xverts_2d, yverts_2d, alpha_vert_distances, visible_faces, alpha_img_);       
         // fill expected value image
-        //vcl_cout << "2" << vcl_endl;
+        //std::cout << "2" << std::endl;
         cube_fill_value_aa(xverts_2d, yverts_2d, visible_faces, cell_expected_img_, color_aa_weights_, cell_expected);
-        //vcl_cout << "3" << vcl_endl;
+        //std::cout << "3" << std::endl;
 #else
         // get ray lengths
         cube_camera_distance(cell_bb, cam_, cell_front_dist_img_, cell_back_dist_img_);
@@ -95,9 +95,9 @@ public:
 
 #ifdef USE_AA
     // normalize cell_expected_img based on sum of antialiasing weight
-    //vcl_cout << "transforming image " << vcl_endl;
+    //std::cout << "transforming image " << std::endl;
      vil_transform2(color_aa_weights_, cell_expected_img_, normalize_cell_expected_func_);
-     //vcl_cout <<"done transforming. " << vcl_endl;
+     //std::cout <<"done transforming. " << std::endl;
 #endif
 
 #ifndef USE_AA
@@ -121,7 +121,7 @@ public:
 #if 0
     // DEBUG
     if (step_count_ == 100) {
-      vcl_cout << vcl_endl << "writing debug images " << vcl_endl;
+      std::cout << std::endl << "writing debug images " << std::endl;
       vil_save(vis_end_,"c:/research/psm/output/vis.tiff");
       vil_save(alpha_img_,"c:/research/psm/output/alpha_img.tiff");
       vil_save(color_aa_weights_,"c:/research/psm/output/pix_weights.tiff");
@@ -178,7 +178,7 @@ private:
   class image_exp_functor
   {
   public:
-    float operator()(float x)       const { return x<0?vcl_exp(x):1.0f; }
+    float operator()(float x)       const { return x<0?std::exp(x):1.0f; }
   };
 
 

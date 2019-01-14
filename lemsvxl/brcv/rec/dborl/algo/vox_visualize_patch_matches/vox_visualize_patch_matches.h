@@ -19,7 +19,7 @@
 
 #include "vox_visualize_patch_matches_params_sptr.h"
 #include <dbskr/algo/dbskr_shock_patch_match_sptr.h>
-#include <vcl_string.h>
+#include <string>
 
 class vox_visualize_patch_matches
 {
@@ -55,7 +55,7 @@ private:
     dbskr_shock_patch_match_sptr match_;
 
     // Holds the output html file
-    vcl_string output_html_;
+    std::string output_html_;
 
     // Good practice make copy ctor and assign operator private
 

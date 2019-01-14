@@ -14,9 +14,9 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_matrix.h>
-#include <vcl_string.h>
+#include <string>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 
@@ -42,8 +42,8 @@ public:
     typedef property<vertex_index2_t, int> VertexIndexProperty;
 
     // Define properities for names of shape for each vertex
-    typedef property<vertex_name_t, vcl_string, 
-        property< vertex_cat_t, vcl_string,VertexIndexProperty 
+    typedef property<vertex_name_t, std::string, 
+        property< vertex_cat_t, std::string,VertexIndexProperty 
         > >VertexProperties;
 
     // Define undirected graph
@@ -60,10 +60,10 @@ public:
     ~dborl_proximity_graph(){};
 
     // Construct Graph
-    void construct_graph(vcl_string exemplar_dataset_file, 
-                         vcl_string exemplar_label_file, 
-                         vcl_string exemplar_category_file,
-                         vcl_string output_graph,
+    void construct_graph(std::string exemplar_dataset_file, 
+                         std::string exemplar_label_file, 
+                         std::string exemplar_category_file,
+                         std::string output_graph,
                          double beta,
                          bool verbose,
                          bool wilson_edit,
@@ -76,9 +76,9 @@ private:
 
     // Read in datafiles
     // Helper method to read in datafiles
-    void read_files(vcl_string dataset_file, 
-                    vcl_string node_name_file,
-                    vcl_string category_name_file);
+    void read_files(std::string dataset_file, 
+                    std::string node_name_file,
+                    std::string category_name_file);
 
     // Preprocess graph
     void preprocess_graph();
@@ -93,10 +93,10 @@ private:
     void thinning();
     
     // Write graph out
-    void write_graph(vcl_string output_graph);
+    void write_graph(std::string output_graph);
 
     // Deletes a node with a certain string in the graph
-    void delete_node(vcl_string node_name);
+    void delete_node(std::string node_name);
 
     // Print graph out to std out
     void print_graph();
@@ -104,10 +104,10 @@ private:
     // Attributes
 
     // List of exemplars names
-    vcl_vector<vcl_string> exemplars_;
+    std::vector<std::string> exemplars_;
     
     // List of category names
-    vcl_vector<vcl_string> categories_;
+    std::vector<std::string> categories_;
 
     // List of similarity matrices
     vnl_matrix<double> exemplars_sim_matrix_;
@@ -122,7 +122,7 @@ private:
     Undirected_Graph proximity_graph_;
 
     // Define a vector of vertex objects
-    vcl_vector<Vertex> vertex_objects_;
+    std::vector<Vertex> vertex_objects_;
 
     // Make copy constructor private
     dborl_proximity_graph(const dborl_proximity_graph&);

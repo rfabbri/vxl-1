@@ -43,7 +43,7 @@ imgr_dummy_scan::imgr_dummy_scan()
   vpgl_calibration_matrix<double> K(m);
   
   // image path
-  vcl_string path="c:/images/CAD/MouseSmall/18_al05_1770_####.tif";
+  std::string path="c:/images/CAD/MouseSmall/18_al05_1770_####.tif";
 
   // numer of views
   const int nviews = 600;

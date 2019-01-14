@@ -18,7 +18,7 @@ dbsksp_normalize_xgraph_process()
   if( !parameters()->add("Normalized shape size (square root of shape area): " , "-norm_shape_size" , 100.0f)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -43,7 +43,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_normalize_xgraph_process::
+std::string dbsksp_normalize_xgraph_process::
 name()
 { 
   return "Normalize an xgraph"; 
@@ -54,10 +54,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_normalize_xgraph_process::
+std::vector< std::string > dbsksp_normalize_xgraph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   return to_return;
 }
@@ -66,10 +66,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_normalize_xgraph_process::
+std::vector< std::string > dbsksp_normalize_xgraph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
 }
@@ -102,7 +102,7 @@ execute()
   float norm_shape_size = 100.0f;
   this->parameters()->get_value("-norm_shape_size", norm_shape_size);
 
-  vcl_cout << "\nNormalize xgraph around bounding box center.\n";
+  std::cout << "\nNormalize xgraph around bounding box center.\n";
   
   // input xgraph
   dbsksp_xgraph_storage_sptr input_storage;
@@ -111,7 +111,7 @@ execute()
   dbsksp_xshock_graph_sptr xgraph = input_storage->xgraph();
   if (!xgraph)
   {
-    vcl_cout << "Input xgraph non-existing. Process failed.\n";
+    std::cout << "Input xgraph non-existing. Process failed.\n";
     return false;
   }
 
@@ -120,12 +120,12 @@ execute()
   vsol_box_2d_sptr bbox = xgraph->bounding_box();
   double center_x = (bbox->get_min_x() + bbox->get_max_x()) / 2;
   double center_y = (bbox->get_min_y() + bbox->get_max_y()) / 2;
-  vcl_cout << "Bounding box center: (x,y) = (" << center_x << " , " << center_y << ")\n";
+  std::cout << "Bounding box center: (x,y) = (" << center_x << " , " << center_y << ")\n";
 
   // Current size
-  double cur_size = vcl_sqrt(xgraph->area());
-  vcl_cout << "Old shape size = " << cur_size << "\n";
-  vcl_cout << "New shape size = " << norm_shape_size << "\n";
+  double cur_size = std::sqrt(xgraph->area());
+  std::cout << "Old shape size = " << cur_size << "\n";
+  std::cout << "New shape size = " << norm_shape_size << "\n";
   
   // Create a duplicate xgraph and scale it around bounding box center
   dbsksp_xshock_graph_sptr norm_xgraph = new dbsksp_xshock_graph(*xgraph);
@@ -138,7 +138,7 @@ execute()
     dbsksp_xgraph_storage_sptr output_storage = dbsksp_xgraph_storage_new();
     output_data_[0].push_back(output_storage);
     output_storage->set_xgraph(norm_xgraph);
-    vcl_cout << "XGraph normalization completed.\n";
+    std::cout << "XGraph normalization completed.\n";
     return true;
   }
 

@@ -15,13 +15,13 @@
 // \endverbatim
 //
 //---------------------------------------------------------------------
-#include <vcl_map.h>
+#include <map>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 
-typedef vcl_map<unsigned, vsol_point_2d_sptr, vcl_less<unsigned> > track_map;
+typedef std::map<unsigned, vsol_point_2d_sptr, std::less<unsigned> > track_map;
 
 class dbinfo_track_geometry : public vbl_ref_count
 {

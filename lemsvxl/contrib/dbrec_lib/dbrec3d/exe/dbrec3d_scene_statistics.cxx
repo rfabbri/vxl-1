@@ -7,7 +7,7 @@
 #include <QApplication>
 #include <QWidget>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbrec3d/gui/dbrec3d_scene_model.h>
 #include <dbrec3d/gui/dbrec3d_histogram_widgets.h>
@@ -17,7 +17,7 @@
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string> scene_file("-scene", "scene filename", "");
+  vul_arg<std::string> scene_file("-scene", "scene filename", "");
   vul_arg_parse(argc, argv);
   
   // Create the scene

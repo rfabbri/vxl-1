@@ -4,7 +4,7 @@
 // \author    Kongbin Kang
 // \date        2005-07-11
 // 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/vbl_array_3d.h>
 #include <testlib/testlib_test.h>
 #include <vol3d/vol3d_radius_filter.h>

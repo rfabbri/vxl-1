@@ -8,9 +8,9 @@
 
 
 #include "dbsks_cmdline_utils.h"
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 //: Command line programs for the sks class
 int main(int argc, char *argv[]) 
@@ -58,38 +58,38 @@ int main(int argc, char *argv[])
 
   //============================================================================
   // Supporting arguments for the functions above
-  vul_arg<vcl_string > shapematch_extension(arg_list, "-shapematch-extension", 
+  vul_arg<std::string > shapematch_extension(arg_list, "-shapematch-extension", 
     "Extension of shapematch output file (to concatenate with image name)", "_shapematch_out.txt");
-  vul_arg<vcl_string> input_folder(arg_list,"-input-folder","the input folder","");
+  vul_arg<std::string> input_folder(arg_list,"-input-folder","the input folder","");
   
-  vul_arg<vcl_string> output_folder(arg_list,"-output-folder","the output folder","");
-  vul_arg<vcl_string> output_file(arg_list,"-output-file","the output file","");
+  vul_arg<std::string> output_folder(arg_list,"-output-folder","the output folder","");
+  vul_arg<std::string> output_file(arg_list,"-output-file","the output file","");
 
-  vul_arg<vcl_string> xshock_folder(arg_list,"-xshock-folder","the folder containing extrinsic shock","");
-  vul_arg<vcl_string > xshock_list_file(arg_list, "-xshock-list-file",
+  vul_arg<std::string> xshock_folder(arg_list,"-xshock-folder","the folder containing extrinsic shock","");
+  vul_arg<std::string > xshock_list_file(arg_list, "-xshock-list-file",
     "file containing list of extrinsic shock XML files", "");
   
-  vul_arg<vcl_string> image_folder(arg_list,"-image-folder","the folder containing images","");
-  vul_arg<vcl_string > image_list_file(arg_list, "-image-list-file", "file containing list of image file names", "");
+  vul_arg<std::string> image_folder(arg_list,"-image-folder","the folder containing images","");
+  vul_arg<std::string > image_list_file(arg_list, "-image-list-file", "file containing list of image file names", "");
   
   vul_arg<unsigned > edge_id(arg_list, "-edge-id", "ID of the edge of interest", 0);
   vul_arg<unsigned > root_vid(arg_list, "-root-vid", "ID of the root node", 0);
 
 
-  vul_arg <vcl_string > libsvm_xfrag_bhog_model_file(arg_list, "-libsvm-xfrag-bhog-model-file",
+  vul_arg <std::string > libsvm_xfrag_bhog_model_file(arg_list, "-libsvm-xfrag-bhog-model-file",
     "Model for boundary histogram of orientation gradient (BHOG) of a xfragment in LIBSVM format", "");
 
-  vul_arg <vcl_string > xfrag_geom_file(arg_list, "-xfrag-geom-file", 
+  vul_arg <std::string > xfrag_geom_file(arg_list, "-xfrag-geom-file", 
     "A file containing the geometry information of training extrinsic fragments", "");
 
-  vul_arg<vcl_string > xshock_extension(arg_list, "-xshock-extension", "extension of the xshock files", ".xml");
-  vul_arg<vcl_string > image_extension(arg_list, "-image-extension", "extension of the image files", ".png");
-  vul_arg<vcl_string > edgemap_folder(arg_list, "-edgemap-folder", "path to the edgemap folder", ""); 
-  vul_arg<vcl_string > edgemap_extension(arg_list, "-edgemap-extension", "extension of the edgemap files", ".edges.tif");
-  vul_arg<vcl_string > edgeorient_folder(arg_list, "-edgeorient-folder", "path to edge orientation folder", ""); 
-  vul_arg<vcl_string > edgeorient_extension(arg_list, "-edgeorient-extension", "extension of the edgemap files", ".orient.txt");
-  vul_arg<vcl_string > cemv_folder(arg_list, "-cemv-folder", "path to contour-edge-map folder (cem files)", ""); 
-  vul_arg<vcl_string > cemv_extension(arg_list, "-cemv-extension", "extension of contour-edge-map files", ".cemv");
+  vul_arg<std::string > xshock_extension(arg_list, "-xshock-extension", "extension of the xshock files", ".xml");
+  vul_arg<std::string > image_extension(arg_list, "-image-extension", "extension of the image files", ".png");
+  vul_arg<std::string > edgemap_folder(arg_list, "-edgemap-folder", "path to the edgemap folder", ""); 
+  vul_arg<std::string > edgemap_extension(arg_list, "-edgemap-extension", "extension of the edgemap files", ".edges.tif");
+  vul_arg<std::string > edgeorient_folder(arg_list, "-edgeorient-folder", "path to edge orientation folder", ""); 
+  vul_arg<std::string > edgeorient_extension(arg_list, "-edgeorient-extension", "extension of the edgemap files", ".orient.txt");
+  vul_arg<std::string > cemv_folder(arg_list, "-cemv-folder", "path to contour-edge-map folder (cem files)", ""); 
+  vul_arg<std::string > cemv_extension(arg_list, "-cemv-extension", "extension of contour-edge-map files", ".cemv");
 
 
   // print help
@@ -107,14 +107,14 @@ int main(int argc, char *argv[])
   {
     if (print_help())
     {
-      vcl_cout << "Usage with -ps-to-jpeg option:\n"
+      std::cout << "Usage with -ps-to-jpeg option:\n"
       << input_folder.option() << " " << input_folder.help() << "\n"
       << output_folder.option() << " " << output_folder.help() << "\n";
       return EXIT_SUCCESS;
     }
     else
     {
-      vcl_cout << "input folder = " << input_folder() << "\n"
+      std::cout << "input folder = " << input_folder() << "\n"
         << "output_folder = " << output_folder() << "\n";
       dbsks_batch_ps_to_jpeg(input_folder(), output_folder());
       return EXIT_SUCCESS;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
   {
     if (print_help())
     {
-      vcl_cout << "Usage with -create-shapematch-summary-xml option:\n"
+      std::cout << "Usage with -create-shapematch-summary-xml option:\n"
         << input_folder.option() << " " << input_folder.help() << "\n"
         << image_list_file.option() << " " << image_list_file.help() << "\n"
         << shapematch_extension.option() << " " << shapematch_extension.help() << "\n"
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-      vcl_cout << "input folder = " << input_folder() << "\n"
+      std::cout << "input folder = " << input_folder() << "\n"
         << "image list file = " << image_list_file() << "\n"
         << "shapematch_extension = " << shapematch_extension() << "\n"
         << "output file = " << output_file() << "\n";
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
   {
     if (print_help())
     {
-      vcl_cout << "Usage with -extract-xfrag-geom option:\n"
+      std::cout << "Usage with -extract-xfrag-geom option:\n"
         << xshock_folder.option() << " " << xshock_folder.help() << "\n"
         << xshock_list_file.option() << " " << xshock_list_file.help() << "\n"
         << edge_id.option() << " " << edge_id.help() << "\n"
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
     {
       if ( xshock_folder() == "" || xshock_list_file() == "" || edge_id() == 0 || output_file() == "")
       {
-        vcl_cout << "ERROR: invalid input arguments. Use -help-extract-xfrag-geom to see necessary arguments.\n";
+        std::cout << "ERROR: invalid input arguments. Use -help-extract-xfrag-geom to see necessary arguments.\n";
         return EXIT_FAILURE;
       }
 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
       if (success)
       {
-        vcl_cout << "Geometry of fragment extracted sucessfully.\n";
+        std::cout << "Geometry of fragment extracted sucessfully.\n";
       }
     }
   }
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
     if (print_help())
     {
       
-      vcl_cout << "This option first extract a list of corresponding fragments from an edge-id and a list of shock graphs.\n"
+      std::cout << "This option first extract a list of corresponding fragments from an edge-id and a list of shock graphs.\n"
         << "Then for each fragment, the program generates various rigidly-transformed version of the fragment and extract"
         << " the boundary histogram of gradient (BHOG) in all negative images (identified by an image folder and an image list" 
         << "Usage with -extract-negative-xfrag-bhog option:\n"
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
     if ( xshock_folder() == "" || xshock_list_file() == "" || edge_id() == 0 || 
       image_folder() == "" || image_list_file()== "" || output_file() == "")
     {
-      vcl_cout << "ERROR: invalid input arguments. Use -help-extract-negative-xfrag-bhog to see necessary arguments.\n";
+      std::cout << "ERROR: invalid input arguments. Use -help-extract-negative-xfrag-bhog to see necessary arguments.\n";
       return EXIT_FAILURE;
     }
 
@@ -211,12 +211,12 @@ int main(int argc, char *argv[])
 
     if (success)
     {
-      vcl_cout << "Extracted boundary HOG of negative images sucessfully.\n";
+      std::cout << "Extracted boundary HOG of negative images sucessfully.\n";
       return EXIT_SUCCESS;
     }
     else
     {
-      vcl_cout << "ERROR: operation " << extract_negative_xfrag_bhog.option() << " failed.\n";
+      std::cout << "ERROR: operation " << extract_negative_xfrag_bhog.option() << " failed.\n";
       return 1;
     }  
   }
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
   {
     if (print_help())
     {
-      vcl_cout << "Usage with -extract-positive-xfrag-bhog option:\n"
+      std::cout << "Usage with -extract-positive-xfrag-bhog option:\n"
         << image_folder.option() << " " << image_folder.help() << "\n"
         << xshock_folder.option() << " " << xshock_folder.help() << "\n"
         << xshock_list_file.option() << " " << xshock_list_file.help() << "\n"
@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
       if ( image_folder() == "" || xshock_folder() == "" || xshock_list_file() == "" 
         || edge_id() == 0 || output_file() == "")
       {
-        vcl_cout << "ERROR: invalid input arguments. Use -help-extract-positive-xfrag-bhog to see necessary arguments.\n";
+        std::cout << "ERROR: invalid input arguments. Use -help-extract-positive-xfrag-bhog to see necessary arguments.\n";
         return -1;
       }
       //bool success = dbsks_extract_xfrag_properties(xshock_folder(), image_folder(), xshock_list_file(), edge_id(), output_file());
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
 
       if (success)
       {
-        vcl_cout << "Shape fragment properties extracted sucessfully.\n";
+        std::cout << "Shape fragment properties extracted sucessfully.\n";
       }
     }
   }
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
   {
     if (print_help())
     {
-      vcl_cout << "Usage with " << detect_xfrag_using_bhog_model.option() << " option:\n"
+      std::cout << "Usage with " << detect_xfrag_using_bhog_model.option() << " option:\n"
       << image_folder.option() << " : " << image_folder.help() << "\n"
       << image_list_file.option() << " : " << image_list_file.help() << "\n"
       << libsvm_xfrag_bhog_model_file.option() << " : " << libsvm_xfrag_bhog_model_file.help() << "\n"
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
       if ( image_folder() == "" || image_list_file() == "" || libsvm_xfrag_bhog_model_file() == "" ||
         xfrag_geom_file() == "" || output_file() == "")
       {
-        vcl_cout << "ERROR: invalid input arguments. \n";
+        std::cout << "ERROR: invalid input arguments. \n";
         return EXIT_SUCCESS;
       }
 
@@ -292,11 +292,11 @@ int main(int argc, char *argv[])
 
       if (success)
       {
-        vcl_cout << "Finished xfrag detection.\n";
+        std::cout << "Finished xfrag detection.\n";
       }
       else
       {
-        vcl_cout << "Xfrag detection failed.\n";
+        std::cout << "Xfrag detection failed.\n";
       }
       return 0;
     }

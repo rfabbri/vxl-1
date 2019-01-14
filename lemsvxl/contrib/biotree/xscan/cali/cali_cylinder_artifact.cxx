@@ -2,7 +2,7 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_box_3d.h>
 #include <dbgl/algo/dbgl_intersect.h>
-#include <vcl_string.h>
+#include <string>
 
 
 cali_cylinder_artifact::~cali_cylinder_artifact(void) { 
@@ -26,10 +26,10 @@ cali_cylinder_artifact::cali_cylinder_artifact(vgl_point_3d<double> center,cali_
 
 cali_cylinder_artifact::cali_cylinder_artifact(vgl_point_3d<double> center,
                                                cali_param par,
-                                               vcl_vector<double> x_coord_tol, 
-                                               vcl_vector<double> y_coord_tol,
-                                               vcl_vector<double> z_coord_tol,
-                                               vcl_vector<double> rad_tol) :par_(par),
+                                               std::vector<double> x_coord_tol, 
+                                               std::vector<double> y_coord_tol,
+                                               std::vector<double> z_coord_tol,
+                                               std::vector<double> rad_tol) :par_(par),
                                                                             center_(center),
                                                                             bounding_box_(0)
 
@@ -66,11 +66,11 @@ bounding_box_(artf.bounding_box_)
 
 void cali_cylinder_artifact::create_balls() {
 
-        vcl_string txt_file = par_.CMMINFO;
-        vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
+        std::string txt_file = par_.CMMINFO;
+        std::ifstream fstream(txt_file.c_str(),std::ios::in);
 
         int data_size = 5*par_.BALL_NUMBER;
-        vcl_vector<double>values(data_size);
+        std::vector<double>values(data_size);
         char val_string[256];
         int j = 0;
         while (j < data_size && !fstream.eof()) {
@@ -81,9 +81,9 @@ void cali_cylinder_artifact::create_balls() {
         fstream.close();
 
         if(j < data_size){
-                vcl_cerr << "ERROR Read " << j << " values from " << par_.CMMINFO << "\n";
-                vcl_cerr << "Expected " << data_size << "\n";
-                vcl_exit(1);
+                std::cerr << "ERROR Read " << j << " values from " << par_.CMMINFO << "\n";
+                std::cerr << "Expected " << data_size << "\n";
+                std::exit(1);
         }
 
         int k = 0;
@@ -100,18 +100,18 @@ void cali_cylinder_artifact::create_balls() {
         }
 }
 
-void cali_cylinder_artifact::create_balls_with_tolerance(const vcl_vector<double>& x_coord_tol,
-                                                         const vcl_vector<double>& y_coord_tol,
-                                                         const vcl_vector<double>& z_coord_tol,
-                                                         const vcl_vector<double>& rad_tol) 
+void cali_cylinder_artifact::create_balls_with_tolerance(const std::vector<double>& x_coord_tol,
+                                                         const std::vector<double>& y_coord_tol,
+                                                         const std::vector<double>& z_coord_tol,
+                                                         const std::vector<double>& rad_tol) 
     
 {
-        vcl_string txt_file = par_.CMMINFO;
-        vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
+        std::string txt_file = par_.CMMINFO;
+        std::ifstream fstream(txt_file.c_str(),std::ios::in);
 
         char val_string[256];
         int data_size = 5*par_.BALL_NUMBER;
-        vcl_vector<double>values(data_size);
+        std::vector<double>values(data_size);
         int j = 0;
         while (j < data_size && !fstream.eof()) {
                 fstream.getline(val_string, 256,':');
@@ -121,9 +121,9 @@ void cali_cylinder_artifact::create_balls_with_tolerance(const vcl_vector<double
         fstream.close();
 
         if(j < data_size){
-                vcl_cerr << "ERROR Read " << j << " values from " << par_.CMMINFO << "\n";
-                vcl_cerr << "Expected " << data_size << "\n";
-                vcl_exit(1);
+                std::cerr << "ERROR Read " << j << " values from " << par_.CMMINFO << "\n";
+                std::cerr << "Expected " << data_size << "\n";
+                std::exit(1);
         }
 
         int k = 0;
@@ -240,10 +240,10 @@ cali_cylinder_artifact::change_position(vnl_quaternion<double> const& rot,
   bounding_box_->set_height(bounding_box_->height() + 2*par_.BALL_RADIUS_BIG);
 }
 
-vcl_vector<vgl_point_3d<double> > 
+std::vector<vgl_point_3d<double> > 
 cali_cylinder_artifact::ball_centers(void)
 {
-  vcl_vector<vgl_point_3d<double> > list;
+  std::vector<vgl_point_3d<double> > list;
   for (int i=0; i<par_.BALL_NUMBER; i++) { 
     vgl_point_3d<double> center = balls[i].centre();
     list.push_back(center);
@@ -251,9 +251,9 @@ cali_cylinder_artifact::ball_centers(void)
   return list;
 }
 
-vcl_vector<double> cali_cylinder_artifact::ball_radii(void)
+std::vector<double> cali_cylinder_artifact::ball_radii(void)
 {
-  vcl_vector<double>radii;
+  std::vector<double>radii;
   for (int i=0; i<par_.BALL_NUMBER; i++) { 
 //    double radius = balls[i]->radius();
     double radius = balls[i].radius();
@@ -290,9 +290,9 @@ cali_cylinder_artifact::ray_artifact_intersect(vgl_homg_line_3d_2_points<double>
 }
 
 void
-cali_cylinder_artifact::print(vcl_ostream &s) {
+cali_cylinder_artifact::print(std::ostream &s) {
   for (int i=0; i < par_.BALL_NUMBER; i++) {
-    s << "Cylinder Center=" <<  center_ << vcl_endl;
+    s << "Cylinder Center=" <<  center_ << std::endl;
     //s << i << " Centre=" << balls[i]->centre() << " radius=" << balls[i]->radius() << "\n"; 
     s << i << " Centre=" << balls[i].centre() << " radius=" << balls[i].radius() << "\n"; 
   }

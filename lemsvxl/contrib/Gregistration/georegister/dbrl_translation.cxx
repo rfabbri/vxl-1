@@ -50,7 +50,7 @@ void dbrl_translation::b_read(vsl_b_istream &is)
             vsl_b_read(is, T_);
             break;
         default:
-            vcl_cerr << "dbrl_translation: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_translation: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -58,7 +58,7 @@ short dbrl_translation::version() const
     {
     return 1;
     }
-void dbrl_translation::print_summary(vcl_ostream &os) const
+void dbrl_translation::print_summary(std::ostream &os) const
 {
   
 }

@@ -31,7 +31,7 @@ class vox_third_order_edge_det_params : public dborl_algo_params
 public:
 
   //: Constructor
-    vox_third_order_edge_det_params(vcl_string algo_name);
+    vox_third_order_edge_det_params(std::string algo_name);
 
   // MEMBER VARIABLES
 
@@ -45,51 +45,51 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
 
   //: Name of input object
-  dborl_parameter<vcl_string> input_object_name_;
+  dborl_parameter<std::string> input_object_name_;
   
   //: passes the folder of the input object
-  dborl_parameter<vcl_string> input_object_dir_;    
+  dborl_parameter<std::string> input_object_dir_;    
 
   //: extension of the input image
-  dborl_parameter<vcl_string> input_extension_;       
+  dborl_parameter<std::string> input_extension_;       
 
   //: extension of edge file if saving
-  dborl_parameter<vcl_string> edge_extension_;
+  dborl_parameter<std::string> edge_extension_;
 
   //: extension of edge file if saving
-  dborl_parameter<vcl_string > output_edgeorient_extension_;
+  dborl_parameter<std::string > output_edgeorient_extension_;
 
-  dborl_parameter<vcl_string> output_edgemap_extension_;
+  dborl_parameter<std::string> output_edgemap_extension_;
 
-  dborl_parameter<vcl_string > output_cemv_tag_;
+  dborl_parameter<std::string > output_cemv_tag_;
 
   //: extension of output file
-  dborl_parameter<vcl_string> output_extension_;
+  dborl_parameter<std::string> output_extension_;
 
   // if written to this folder as opposed to object folder then the shock graph 
   // gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_edge_link_folder_; 
+  dborl_parameter<std::string> output_edge_link_folder_; 
 
   //: Prune contours after edge linking
   dborl_parameter<bool> prune_contours_;  
 
-  dborl_parameter<vcl_string> pyramid_folder_;
+  dborl_parameter<std::string> pyramid_folder_;
 
   //: Tag for edge_detection
-  vcl_string tag_gray_edge_detection_;
+  std::string tag_gray_edge_detection_;
 
   //: Tag for edge_detection
-  vcl_string tag_color_edge_detection_;
+  std::string tag_color_edge_detection_;
 
   //: Tag for edge_linking
-  vcl_string tag_edge_linking_;
+  std::string tag_edge_linking_;
 
   //: Tag for extract_contours
-  vcl_string tag_extract_contours_;
+  std::string tag_extract_contours_;
 
   //: Tag for prune_contours
-  vcl_string tag_prune_contours_;
+  std::string tag_prune_contours_;
 
 };
 

@@ -37,9 +37,9 @@ void dsm_frame_clock::b_read(vsl_b_istream& is)
 		}
 	default:
 		{
-			vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_frame_clock frame_clock)\n"
+			std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, dsm_frame_clock frame_clock)\n"
 				     << "				UNKNOWN VERSION NUMBER " << v << "\n";
-			is.is().clear(vcl_ios::badbit); //set an unrecoverable IO error on stream
+			is.is().clear(std::ios::badbit); //set an unrecoverable IO error on stream
 			return;
 		}
 	}

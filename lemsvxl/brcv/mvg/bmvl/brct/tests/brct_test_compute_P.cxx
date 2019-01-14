@@ -1,6 +1,6 @@
 // This is brl/bmvl/brct/tests/brct_test_compute_P.cxx
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <brct/brct_algos.h>
 #include <vnl/vnl_double_3.h>
 #include <vnl/vnl_double_4.h>
@@ -48,8 +48,8 @@ static void brct_test_compute_P()
   pw[8] = vnl_double_4(100.0, 0.0, 0, 1.0);
   pw[9] = vnl_double_4(0.0, 100.0, 0, 1.0);
   pw[10] = vnl_double_4(0.0, 0.0, 100.0, 1.0);
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_vector<vgl_point_3d<double> > world_points;
+  std::vector<vgl_point_2d<double> > image_points;
+  std::vector<vgl_point_3d<double> > world_points;
   //project the points
   vnl_double_3 pi[11];
   for (unsigned int i = 0; i<n; i++)
@@ -57,23 +57,23 @@ static void brct_test_compute_P()
     pi[i]=P*pw[i];
     double u = pi[i][0]/pi[i][2], v = pi[i][1]/pi[i][2];
     vgl_point_2d<double> gp(u, v);
-    vcl_cout << "Pw" << pw[i] << "->  pi(" << gp.x()
+    std::cout << "Pw" << pw[i] << "->  pi(" << gp.x()
              << ' ' << gp.y() << ")\n";
     image_points.push_back(gp);
     world_points.push_back(vgl_point_3d<double>(pw[i][0], pw[i][1], pw[i][2]));
   }
   vnl_double_3x4 Pout;
   brct_algos::compute_euclidean_camera(image_points, world_points, K, Pout);
-  vcl_cout << "Projecting points From reconstituted camera\n";
+  std::cout << "Projecting points From reconstituted camera\n";
   vnl_double_3 prp;
   for (unsigned int i = 0; i<n; i++)
   {
     prp = Pout*pw[i];
-    vcl_cout << "Pw" << pw[i] << "->  prp(" << prp[0]/prp[2]
+    std::cout << "Pw" << pw[i] << "->  prp(" << prp[0]/prp[2]
              << ' ' << prp[1]/prp[2] << ")\n";
   }
-  vcl_cout << "Original P\n" << P << '\n';
-  vcl_cout << "P in real world and image coordinates\n" << 120.82*Pout << '\n';
+  std::cout << "Original P\n" << P << '\n';
+  std::cout << "P in real world and image coordinates\n" << 120.82*Pout << '\n';
 }
 
 TESTMAIN(brct_test_compute_P);

@@ -32,7 +32,7 @@ class dbsksp_soview_shock_node : public vgui_soview2D
   virtual ~dbsksp_soview_shock_node() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_shock_node"; }
+  virtual std::string type_name() const {return "dbsksp_soview_shock_node"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -47,7 +47,7 @@ class dbsksp_soview_shock_node : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_shock_node_sptr node() const {return this->node_; }
@@ -71,7 +71,7 @@ class dbsksp_soview_shock_edge_chord : public vgui_soview2D
   virtual ~dbsksp_soview_shock_edge_chord() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_shock_edge_chord"; }
+  virtual std::string type_name() const {return "dbsksp_soview_shock_edge_chord"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -86,7 +86,7 @@ class dbsksp_soview_shock_edge_chord : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_shock_edge_sptr edge() const {return this->edge_; }
@@ -110,7 +110,7 @@ class dbsksp_soview_shock_geom : public vgui_soview2D
   virtual ~dbsksp_soview_shock_geom() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_shock_geom"; }
+  virtual std::string type_name() const {return "dbsksp_soview_shock_geom"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -125,7 +125,7 @@ class dbsksp_soview_shock_geom : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_shock_edge_sptr edge() const {return this->edge_; }
@@ -157,7 +157,7 @@ class dbsksp_soview_contact_shock : public vgui_soview2D
   virtual ~dbsksp_soview_contact_shock() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const 
+  virtual std::string type_name() const 
   {return "dbsksp_soview_contact_shock"; }
 
   //: Render this node on the display.
@@ -173,7 +173,7 @@ class dbsksp_soview_contact_shock : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
 
   //: Return a smart pointer to the node
@@ -202,7 +202,7 @@ class dbsksp_soview_bnd_arc : public vgui_soview2D
   virtual ~dbsksp_soview_bnd_arc() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_bnd_arc"; }
+  virtual std::string type_name() const {return "dbsksp_soview_bnd_arc"; }
 
   //: Render this node on the display.
   virtual void draw() const;
@@ -217,7 +217,7 @@ class dbsksp_soview_bnd_arc : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
   //: Return a smart pointer to the node
   dbsksp_bnd_arc_sptr bnd_arc() const {return this->bnd_arc_; }
@@ -246,7 +246,7 @@ class dbsksp_soview_shapelet : public vgui_soview2D
   virtual ~dbsksp_soview_shapelet() {}
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const {return "dbsksp_soview_shapelet"; }
+  virtual std::string type_name() const {return "dbsksp_soview_shapelet"; }
 
   //: Render this shapelet on the display.
   virtual void draw() const;
@@ -261,7 +261,7 @@ class dbsksp_soview_shapelet : public vgui_soview2D
   virtual void get_centroid(float* x, float* y) const;
 
   //: Print details about this object to the given stream.
-  virtual vcl_ostream& print(vcl_ostream& os) const;
+  virtual std::ostream& print(std::ostream& os) const;
 
 
   //: Return a smart pointer to the node

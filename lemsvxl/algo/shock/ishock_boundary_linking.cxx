@@ -19,7 +19,7 @@
 
 #include "ishock.h"
 
-// Name: vcl_vector < SINode_BCoor_Pair > IShock::find_BCoor_of_cvt_xtrema_nodes()
+// Name: std::vector < SINode_BCoor_Pair > IShock::find_BCoor_of_cvt_xtrema_nodes()
 // Return: a list of SINode_BCoor_Pair which contains all the A3 nodes and 
 // its projection on the boundary (coresponding belements, tangent, distance).
 //
@@ -27,7 +27,7 @@
 // Date: Jul 26 2004
 // Last modified : Aug 7 2004
 // status: working, tested with polygon boundary
-vcl_list < A3node_bnd_link* > 
+std::list < A3node_bnd_link* > 
 
 IShock::find_BCoor_of_cvt_xtrema_nodes()
 {
@@ -35,7 +35,7 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
   // curvature extrema points on the boundary
   // If yes, project the SINode to the boundary.
 
-  vcl_list < A3node_bnd_link* > A3node_bnd_link_list;
+  std::list < A3node_bnd_link* > A3node_bnd_link_list;
   A3node_bnd_link_list.clear();
 
 
@@ -52,8 +52,8 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
     }
   
     if (cur_node->neighbor_links().size() != 1){
-      vcl_cout << "ERROR in find_BCoor_of_cvt_xtrema_nodes()" << vcl_endl;
-      vcl_cout << "A3 node id = " << cur_node->id() << " size(neighbor_links) != 1" << vcl_endl;
+      std::cout << "ERROR in find_BCoor_of_cvt_xtrema_nodes()" << std::endl;
+      std::cout << "A3 node id = " << cur_node->id() << " size(neighbor_links) != 1" << std::endl;
       continue;
     }
     cur_link = cur_node->neighbor_links().front();
@@ -73,7 +73,7 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
     SINode* node_temp = opposite(cur_node, cur_link);
     nblink->belm_list = CCWTraceContourBetween(node_temp, cur_link, cur_node, cur_link);
     if ((nblink->belm_list).size() < 2){
-      vcl_cout << "ERROR: bcoor.belm_list.size() < 2 " << vcl_endl;
+      std::cout << "ERROR: bcoor.belm_list.size() < 2 " << std::endl;
       continue;
     }
 
@@ -96,10 +96,10 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
       if (v >= 100000) rp = 0;
       else rp = 1/v;
       
-      if (vcl_abs(rp) <= 1)
-        nblink->arc_angle = 2*(-vcl_acos(-rp) + M_PI);
+      if (std::abs(rp) <= 1)
+        nblink->arc_angle = 2*(-std::acos(-rp) + M_PI);
       else{
-        vcl_cout << "abs(rp) > 1";
+        std::cout << "abs(rp) > 1";
         continue;
       }
     }
@@ -111,10 +111,10 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
       else rp = 1/v;
       
       // double rp = cur_link->rp(cur_link->eTau());
-      if (vcl_abs(rp) <= 1)
-        nblink->arc_angle = 2*vcl_acos(-rp);
+      if (std::abs(rp) <= 1)
+        nblink->arc_angle = 2*std::acos(-rp);
       else{
-        vcl_cout << "abs(rp) > 1";
+        std::cout << "abs(rp) > 1";
         continue;
       }
     }
@@ -129,13 +129,13 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
     center_axis = angle0To2Pi(nblink->node_tangent - angle_offset);
     left_axis = center_axis + nblink->arc_angle / 2;
     if ((0 > left_axis)|| (left_axis > 2 * M_PI))
-      vcl_cout << "left axis is out of range" << vcl_endl;
+      std::cout << "left axis is out of range" << std::endl;
     
     right_axis = center_axis - nblink->arc_angle / 2;
     if ((0 > right_axis)|| (right_axis > 2 * M_PI))
-      vcl_cout << "right axis is out of range" << vcl_endl;
+      std::cout << "right axis is out of range" << std::endl;
 
-  //  vcl_cout << " center = " << center_axis << " , right = " << right_axis << " , left = " << left_axis << vcl_endl;
+  //  std::cout << " center = " << center_axis << " , right = " << right_axis << " , left = " << left_axis << std::endl;
     
     // now loop through all belement in belm_list and compute their start_angle
     // and end_angle and compare with angles of the axes
@@ -178,7 +178,7 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
     }
     
     if (!(is_right_found && is_center_found && is_left_found)){
-      vcl_cout << "could not find all three proj point" << vcl_endl;
+      std::cout << "could not find all three proj point" << std::endl;
       continue;
     }
     A3node_bnd_link_list.push_back(nblink);
@@ -192,9 +192,9 @@ IShock::find_BCoor_of_cvt_xtrema_nodes()
 // last modified: Aug 7 2004
 // status: coding
 void 
-IShock::update_boundary_with_A3_node_info(vcl_list < A3node_bnd_link* >& nblink_list)
+IShock::update_boundary_with_A3_node_info(std::list < A3node_bnd_link* >& nblink_list)
 {
-  for ( vcl_list < A3node_bnd_link* >::iterator nblink_it = nblink_list.begin();
+  for ( std::list < A3node_bnd_link* >::iterator nblink_it = nblink_list.begin();
     nblink_it != nblink_list.end(); nblink_it ++)
   {
     for (int i = 0; i <3; i++){

@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -66,13 +66,13 @@ int main(int argc, char *argv[])
     //Determine which input object we are going to use
     //Either from the input_object_dir or the associated file
     //The associated file always takes precendence
-    vcl_string input_vsol_fn;
+    std::string input_vsol_fn;
 
     // Use associated file
     if ( vul_file::exists(params->input_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params->input_assoc_dir_()+"/*");
@@ -98,14 +98,14 @@ int main(int argc, char *argv[])
 
     if (!vul_file::exists(input_vsol_fn)) 
     {
-        vcl_cerr << "Cannot find contour file: " << input_vsol_fn << vcl_endl;
+        std::cerr << "Cannot find contour file: " << input_vsol_fn << std::endl;
         return 1;
     }
 
-    vcl_string input_contour_extension = vul_file::extension(input_vsol_fn);
+    std::string input_contour_extension = vul_file::extension(input_vsol_fn);
 
     // Create output storage
-    vcl_vector<bpro1_storage_sptr> vsol_contour;
+    std::vector<bpro1_storage_sptr> vsol_contour;
 
     //Call appropriate process to load file
     if ( input_contour_extension == ".cem" ||
@@ -197,8 +197,8 @@ int main(int argc, char *argv[])
     else
     {
 
-        vcl_cerr << "Unknown input type: " << 
-            input_contour_extension << " Quit now" <<vcl_endl;
+        std::cerr << "Unknown input type: " << 
+            input_contour_extension << " Quit now" <<std::endl;
         return 1;
 
     }
@@ -206,8 +206,8 @@ int main(int argc, char *argv[])
 
     if ( vsol_contour.size() != 1)
     {
-        vcl_cerr<<"Problem loading file, "<<input_vsol_fn<<
-            "Could not get vsol data structure"<<vcl_endl;
+        std::cerr<<"Problem loading file, "<<input_vsol_fn<<
+            "Could not get vsol data structure"<<std::endl;
         
         return 1;
     }
@@ -219,12 +219,12 @@ int main(int argc, char *argv[])
     vsol_contour_storage.vertical_cast(vsol_contour[0]);
 
     //Make sure the input image exists
-    vcl_string input_image_fn = params->input_object_dir_() + "/" 
+    std::string input_image_fn = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_image_extension_();
     
     if (!vul_file::exists(input_image_fn)) 
     {
-        vcl_cerr << "Cannot find image file: " << input_image_fn << vcl_endl;
+        std::cerr << "Cannot find image file: " << input_image_fn << std::endl;
         return 1;
     }
 
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
         vil_load_image_resource(input_image_fn.c_str());
     if (!img_sptr) 
     {
-        vcl_cerr << "Cannot load image: " << input_image_fn << vcl_endl;
+        std::cerr << "Cannot load image: " << input_image_fn << std::endl;
         return 1;
     }
 
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     inp->set_image(img_sptr);
 
     // Lets create directory of where output composite graph fragments will go
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_())
     { 
         output_file = params->output_cgraph_fragments_folder_();
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
     else
     {
         //Delete curent directory and start over
-        vcl_string file_glob = "-r " + output_file;
+        std::string file_glob = "-r " + output_file;
         vul_file::delete_file_glob(file_glob);
         
         // Now remake directory
@@ -271,9 +271,9 @@ int main(int argc, char *argv[])
     }
 
     //******************** Load in Training data  ******************************
-    vcl_cout<<"************  Loading Training Data  *************"<<vcl_endl;
+    std::cout<<"************  Loading Training Data  *************"<<std::endl;
 
-    vcl_string training_directory = params->training_path_();
+    std::string training_directory = params->training_path_();
 
     dbskfg_transform_manager::Instance().
         read_in_training_data(training_directory);
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 
   
     //******************** Extract Cgraph Fragments ****************************
-    vcl_cout<<"************  Extract Cgraph Fragments  *************"<<vcl_endl;
+    std::cout<<"************  Extract Cgraph Fragments  *************"<<std::endl;
     
     dbskfg_form_containment_graph_region_process cg_pro;
     set_process_parameters_of_bpro1(*params, 
@@ -321,8 +321,8 @@ int main(int argc, char *argv[])
 
     if (!cg_status) 
     {
-        vcl_cerr << "Extracting of composite graph fragments failed !"
-                 << vcl_endl;
+        std::cerr << "Extracting of composite graph fragments failed !"
+                 << std::endl;
         return 1;
     }
 
@@ -330,8 +330,8 @@ int main(int argc, char *argv[])
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

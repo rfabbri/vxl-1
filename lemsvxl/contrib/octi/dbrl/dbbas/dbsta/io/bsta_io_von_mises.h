@@ -44,7 +44,7 @@ vsl_b_read(vsl_b_istream &is, bsta_von_mises<T,n>& vm)
 //: Print summary
 template <class T, unsigned n>
 void
-vsl_print_summary(vcl_ostream &os, const bsta_von_mises<T,n>& vm)
+vsl_print_summary(std::ostream &os, const bsta_von_mises<T,n>& vm)
 {
   os << "von_mises  mean:"<<vm.mean()<<" n_samples"<<vm.size();
 }

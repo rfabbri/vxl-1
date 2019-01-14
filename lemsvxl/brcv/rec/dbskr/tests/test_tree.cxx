@@ -1,8 +1,8 @@
 #include <testlib/testlib_test.h>
 #include <dbskr/dbskr_tree.h>
 #include <dbskr/dbskr_tree_sptr.h>
-#include <vcl_iostream.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+//#include <cmath>
 
 #include <dbskr/dbskr_scurve_sptr.h>
 #include <dbskr/dbskr_scurve.h>
@@ -13,7 +13,7 @@
 MAIN_ARGS(test_tree)
 {
 
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -26,8 +26,8 @@ MAIN_ARGS(test_tree)
 
   testlib_test_start("testing tree class ");
 
-  vcl_string data_file1 = "data/brk001.shg";
-  vcl_string data_file2 = "data/pln006.shg";
+  std::string data_file1 = "data/brk001.shg";
+  std::string data_file2 = "data/pln006.shg";
   
   dbskr_tree_sptr tree1 = new dbskr_tree();
   TEST("test constructor ", tree1->size(), 0);
@@ -39,23 +39,23 @@ MAIN_ARGS(test_tree)
   TEST("prev() brk001.shg 0", tree1->prev(0), 13);
   TEST("head() & tail() brk001.shg ", tree1->head(0), tree1->tail(tree1->mate(0)));
   TEST("head() & tail() brk001.shg ", tree1->head(9), tree1->tail(tree1->mate(9)));
-  vcl_vector<int> test;
+  std::vector<int> test;
   test.push_back(11);
   test.push_back(1);
-  vcl_vector<int> &test_ch0 = tree1->children(0);
-  vcl_vector<int> test_ch02 = tree1->children(0);
+  std::vector<int> &test_ch0 = tree1->children(0);
+  std::vector<int> test_ch02 = tree1->children(0);
   TEST("children brk001.shg 0 ", tree1->children(0), test);
   TEST("children brk001.shg 0 ", test_ch0, test);
   TEST("children brk001.shg 0 ", test_ch02, test);
-  vcl_cout << "size of ch: " << test_ch0.size() << vcl_endl;
+  std::cout << "size of ch: " << test_ch0.size() << std::endl;
   for (unsigned int i = 0; i<test_ch0.size(); i++)
-    vcl_cout << "ch[" << i << "]: " << test_ch0.at(i) << " ";
-  vcl_cout << vcl_endl;
+    std::cout << "ch[" << i << "]: " << test_ch0.at(i) << " ";
+  std::cout << std::endl;
 
   test.clear();
   test.push_back(9);
   test.push_back(7);
-  vcl_vector<int> test_ch6(tree1->children(6));
+  std::vector<int> test_ch6(tree1->children(6));
   TEST("children() brk001.shg 6 ", tree1->children(6), test);
   TEST("children() brk001.shg 6 ", test_ch6, test);
   TEST_NEAR("subtree_delete_cost() brk001.shg 0 ", tree1->subtree_delete_cost(0), 222.77, 0.001);
@@ -93,7 +93,7 @@ MAIN_ARGS(test_tree)
   test.push_back(4);
   test.push_back(6);
   test.push_back(10);
-  //vcl_vector<int> tmp = tree1->order_subproblems();
+  //std::vector<int> tmp = tree1->order_subproblems();
   TEST("order_subproblems() brk001.shg ", tree1->order_subproblems(), test);
 
   test.clear();
@@ -177,26 +177,26 @@ MAIN_ARGS(test_tree)
   test.push_back(29);
   test.push_back(32);
   test.push_back(15);
-  vcl_vector<int> tmp = tree2->find_special_darts(tree2->out_darts(root2));
+  std::vector<int> tmp = tree2->find_special_darts(tree2->out_darts(root2));
   TEST("find_special_darts() pln006.shg ", tmp, test);
 #if 0
   for (int i = 0; i<tmp.size(); i++)
-    vcl_cout << "tmp[" << i << "]: " << tmp[i] << " ";
-  vcl_cout << vcl_endl;
+    std::cout << "tmp[" << i << "]: " << tmp[i] << " ";
+  std::cout << std::endl;
 #endif
 
  
   //: testing new version of tree class which includes a smart pointer to a dbsk2d_shock_graph instance
-  vcl_string data_file3 = "data/brk001.esf";
-  vcl_string data_file4 = "data/pln006.esf";
+  std::string data_file3 = "data/brk001.esf";
+  std::string data_file4 = "data/pln006.esf";
   
   dbskr_tree_sptr tree3 = new dbskr_tree();
   dbsk2d_xshock_graph_fileio loader;
   dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(dir_base+data_file3);
   TEST("shock graph load() vertices ", sg->number_of_vertices(), 21);
-  vcl_cout << " number of vertices: " << sg->number_of_vertices() << vcl_endl;
+  std::cout << " number of vertices: " << sg->number_of_vertices() << std::endl;
   TEST("shock graph load() edges ", sg->number_of_edges(), 20);
-  vcl_cout << " number of edges: " << sg->number_of_edges() << vcl_endl;
+  std::cout << " number of edges: " << sg->number_of_edges() << std::endl;
   tree3->acquire(sg, true, true, true);
 
   // Test acquire tree from .esf file 
@@ -229,10 +229,10 @@ MAIN_ARGS(test_tree)
   TEST("out_darts() brk001.esf 0 ", tree3->out_darts(0), test);
   test.clear();
   test.push_back(6);
-  vcl_vector<int> &tmpv = tree3->out_darts(5);
-  vcl_cout << "printing tmpv out darts of node 5\n";
+  std::vector<int> &tmpv = tree3->out_darts(5);
+  std::cout << "printing tmpv out darts of node 5\n";
   for (unsigned int i = 0; i<tmpv.size(); i++)
-    vcl_cout << tmpv[i] << "\n";
+    std::cout << tmpv[i] << "\n";
   TEST("out_darts() brk001.esf 5 ", tree3->out_darts(5), test);
 
   TEST("parent_dart() brk001.esf 8 ", tree3->parent_dart(8), 4);
@@ -260,7 +260,7 @@ MAIN_ARGS(test_tree)
   test.push_back(4);
   test.push_back(6);
   test.push_back(10);
-  //vcl_vector<int> tmp = tree1->order_subproblems();
+  //std::vector<int> tmp = tree1->order_subproblems();
   TEST("order_subproblems() brk001.esf ", tree3->order_subproblems(), test);
 
   test.clear();
@@ -287,7 +287,7 @@ MAIN_ARGS(test_tree)
   TEST("get_dart_path() brk001.esf ", tree3->get_dart_path(1,1), test);
 
   dbsk2d_shock_node_sptr start_node;
-  vcl_vector<dbsk2d_shock_edge_sptr> path;
+  std::vector<dbsk2d_shock_edge_sptr> path;
   tree3->edge_list(test, start_node, path);
   TEST("edge_list() path size brk001.esf ", path.size(), 14);
   TEST("edge_list() start node id brk001.esf ", start_node->id(), 1203);
@@ -322,9 +322,9 @@ MAIN_ARGS(test_tree)
 
   dbsk2d_shock_graph_sptr sg2 = loader.load_xshock_graph(dir_base+data_file4);
   TEST("shock graph load() pln006.esf vertices ", sg2->number_of_vertices(), 32);
-  vcl_cout << " number of vertices: " << sg2->number_of_vertices() << vcl_endl;
+  std::cout << " number of vertices: " << sg2->number_of_vertices() << std::endl;
   TEST("shock graph load() pln006.esf edges ", sg2->number_of_edges(), 31);
-  vcl_cout << " number of edges: " << sg2->number_of_edges() << vcl_endl;
+  std::cout << " number of edges: " << sg2->number_of_edges() << std::endl;
   tree4->acquire(sg2, true, true, true);
 
   TEST("acquire pln006.esf size ", tree4->size(), 42);
@@ -408,7 +408,7 @@ MAIN_ARGS(test_tree)
   test.push_back(29);
   test.push_back(32);
   test.push_back(15);
-  vcl_vector<int> tmp2 = tree4->find_special_darts(tree4->out_darts(root2));
+  std::vector<int> tmp2 = tree4->find_special_darts(tree4->out_darts(root2));
   TEST("find_special_darts() pln006.esf ", tmp2, test);
 
 

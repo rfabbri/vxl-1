@@ -30,11 +30,11 @@ class dbskr_match_patch_params
   dbskr_extract_patch_params model_patch_params_;  // --> will only use patch_data part
 
   bool save_matches_;
-  vcl_string match_folder_;
+  std::string match_folder_;
 
   bool orl_format_folders_;
-  vcl_string output_file_postfix_;
-  vcl_string train_dir_, train_list_, db_dir_, db_list_;
+  std::string output_file_postfix_;
+  std::string train_dir_, train_list_, db_dir_, db_list_;
 
   bool parse_from_data(bxml_data_sptr root);
   bxml_element *create_default_document_data();

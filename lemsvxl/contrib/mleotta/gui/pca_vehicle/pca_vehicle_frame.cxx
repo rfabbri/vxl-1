@@ -69,9 +69,9 @@ pca_vehicle_frame::pca_vehicle_frame(wxWindow* parent,
 
 #define FIND_WIDGET(V,T,N) \
   { wxWindow* w = this->FindWindow(wxT( N )); \
-  if(!w) { vcl_cout << "Could not find " N << vcl_endl; exit(-1); }\
+  if(!w) { std::cout << "Could not find " N << std::endl; exit(-1); }\
   if(!(V = dynamic_cast<T*>(w))) \
-  { vcl_cout << "Invalid widget type for " N << vcl_endl; exit(-1); } }
+  { std::cout << "Invalid widget type for " N << std::endl; exit(-1); } }
 
   FIND_WIDGET(canvas_tex_,vgui_wx_adaptor,"vgui_adaptor1");
   FIND_WIDGET(canvas_3d_,vgui_wx_adaptor,"vgui_adaptor2");
@@ -227,7 +227,7 @@ void pca_vehicle_frame::load_image(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
 
   if(!manager_.load_image(filename))
   {
@@ -288,7 +288,7 @@ void pca_vehicle_frame::load_camera(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
 
   if(!manager_.load_camera(filename))
   {
@@ -317,7 +317,7 @@ void pca_vehicle_frame::save_camera(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
   
   wxMessageDialog norm_dialog( this,
                              wxT("Write normalized camera file?"),
@@ -344,7 +344,7 @@ void pca_vehicle_frame::save_3d_parts(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
   manager_.save_3d_parts(filename);
 }
 
@@ -363,7 +363,7 @@ void pca_vehicle_frame::save_svg(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
   manager_.save_svg(filename);
 }
 
@@ -386,7 +386,7 @@ void pca_vehicle_frame::save_edge_image(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
   manager_.save_edge_image(filename);
 }
 
@@ -409,7 +409,7 @@ void pca_vehicle_frame::save_video_frame(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));  
   manager_.save_video_frame(filename);
 }
 
@@ -436,10 +436,10 @@ void pca_vehicle_frame::load_mesh(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string meshfile = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string meshfile = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
   
   // if the current model includes parts we must open a parts file at the same time
-  vcl_string partsfile = "";
+  std::string partsfile = "";
   if(!manager_.mesh().parts().empty()){
     wxString wildcard2 = wxT("Parts File (*.parts)|*.parts");
     wxFileDialog file_dialog2(this, wxT("Select Parts for the Mesh"),
@@ -466,7 +466,7 @@ void pca_vehicle_frame::load_mesh(wxCommandEvent& event)
   if(!manager_.mesh().params().empty())
   {
     const vnl_vector<double>& params = manager_.mesh().params();
-    vcl_vector<double> vals(params.size());
+    std::vector<double> vals(params.size());
     for(unsigned int i=0; i<vals.size(); ++i)
     {
       vals[i] = params[i];
@@ -489,7 +489,7 @@ void pca_vehicle_frame::load_truth_mesh(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
   
   
   if(!manager_.load_truth_mesh(filename)){
@@ -517,7 +517,7 @@ void pca_vehicle_frame::load_parts(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
 
   if(!manager_.load_parts(filename)){
     wxMessageDialog err_dialog( this,
@@ -565,7 +565,7 @@ void pca_vehicle_frame::load_pca(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
 
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
 
   if(!manager_.load_pca(filename)){
     wxMessageDialog err_dialog( this,
@@ -589,7 +589,7 @@ void pca_vehicle_frame::init_sliders()
   const vnl_vector<double>& params = manager_.mesh().params();
   const vnl_vector<double>& std_devs = manager_.mesh().std_devs();
   unsigned int num = params.size();
-  vcl_vector<double> min_vals(num,-1), max_vals(num,1), vals(num);
+  std::vector<double> min_vals(num,-1), max_vals(num,1), vals(num);
   for(unsigned int i=0; i<num; ++i)
   {
     vals[i] = params[i];
@@ -770,11 +770,11 @@ void pca_vehicle_frame::run_animation(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
   
   manager_.run_animation(filename);
   const vnl_vector<double>& params = manager_.mesh().params();
-  vcl_vector<double> vals(params.size());
+  std::vector<double> vals(params.size());
   for(unsigned int i=0; i<vals.size(); ++i)
     vals[i] = params[i];
   
@@ -801,16 +801,16 @@ void pca_vehicle_frame::run_track_results(wxCommandEvent& event)
   if(file_dialog.ShowModal() != wxID_OK)
     return;
   
-  vcl_string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
+  std::string filename = static_cast<const char*>(file_dialog.GetPath().mb_str(wxConvUTF8));
   
-  vcl_string vid_file, cam_file, model_type;
-  vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> > state_map;
+  std::string vid_file, cam_file, model_type;
+  std::map<unsigned int,std::vector<modrec_vehicle_state> > state_map;
   unsigned int start_frame = modrec_read_track_file(filename,vid_file,cam_file,model_type,state_map);
   
   // load video file
   vidl_istream_sptr is = new vidl_ffmpeg_istream(vid_file);
   if(!is){
-    vcl_cerr<< "could not open video file: "<<vid_file<<vcl_endl;
+    std::cerr<< "could not open video file: "<<vid_file<<std::endl;
     return;
   }
   manager_.set_fit_mode(true);
@@ -858,7 +858,7 @@ void pca_vehicle_frame::run_track_results(wxCommandEvent& event)
   else if(model_type == "Detailed3")
     manager_.set_vehicle_model(pca_vehicle_manager::DETAILED3);
   else{
-    vcl_cerr << "unknown model type: "<<model_type<<vcl_endl;
+    std::cerr << "unknown model type: "<<model_type<<std::endl;
     return;
   }
   
@@ -878,7 +878,7 @@ void pca_vehicle_frame::clear_pca(wxCommandEvent& event)
   if(num == 0)
     return;
 
-  vcl_vector<double> vals(num,0.0);
+  std::vector<double> vals(num,0.0);
 
   wxSpinCtrl* sc = dynamic_cast<wxSpinCtrl*>(this->FindWindow(wxT("num_to_save_spin")));
   if(sc)
@@ -905,7 +905,7 @@ void pca_vehicle_frame::fit_model(wxCommandEvent& event)
   
   vul_timer t;
   manager_.fit_model(num_itr);
-  vcl_cout << "fit time "<< t.user() << vcl_endl;
+  std::cout << "fit time "<< t.user() << std::endl;
   t.mark();
   
   // refresh all the values
@@ -914,7 +914,7 @@ void pca_vehicle_frame::fit_model(wxCommandEvent& event)
   
   manager_.update_all_displays();
   
-  vcl_cout << "redraw time "<< t.user() << vcl_endl;
+  std::cout << "redraw time "<< t.user() << std::endl;
 }
 
 
@@ -951,7 +951,7 @@ void pca_vehicle_frame::handle_message(const vgui_message& m)
     manager_.update_mesh_param(i,p->data()[i]);
   }
   else if(m.user == wxVideoControl::m_seek){
-    vcl_cout << "video control seek " << i << vcl_endl;
+    std::cout << "video control seek " << i << std::endl;
     manager_.video_seek(i);
     if(wxCheckBox* ckbox = dynamic_cast<wxCheckBox*>(this->FindWindow(wxT("video_frame_active"))))
     {
@@ -959,10 +959,10 @@ void pca_vehicle_frame::handle_message(const vgui_message& m)
     }
   }
   else if(m.user == wxVideoControl::m_preview){
-    vcl_cout << "video control preview " << i << vcl_endl;
+    std::cout << "video control preview " << i << std::endl;
   }
   else if(m.user == wxVideoControl::m_next){
-    vcl_cout << "video control next " << i << vcl_endl;
+    std::cout << "video control next " << i << std::endl;
     manager_.video_seek(i);
     if(wxCheckBox* ckbox = dynamic_cast<wxCheckBox*>(this->FindWindow(wxT("video_frame_active"))))
     {
@@ -970,7 +970,7 @@ void pca_vehicle_frame::handle_message(const vgui_message& m)
     }
   }
   else if(m.user == wxVideoControl::m_prev){
-    vcl_cout << "video control prev " << i << vcl_endl;
+    std::cout << "video control prev " << i << std::endl;
     manager_.video_seek(i);
     if(wxCheckBox* ckbox = dynamic_cast<wxCheckBox*>(this->FindWindow(wxT("video_frame_active"))))
     {
@@ -978,7 +978,7 @@ void pca_vehicle_frame::handle_message(const vgui_message& m)
     }
   }
   else if(m.user == wxVideoControl::m_play){
-    vcl_cout << "video control play " << i << vcl_endl;
+    std::cout << "video control play " << i << std::endl;
     bool video_valid = true;
     while(video_control_->is_playing() && (video_valid = manager_.advance_video())){
       video_control_->set_frame(manager_.current_frame(),false);
@@ -988,7 +988,7 @@ void pca_vehicle_frame::handle_message(const vgui_message& m)
       video_control_->pause();
   }
   else if(m.user == wxVideoControl::m_pause){
-    vcl_cout << "video control pause " << i << vcl_endl;
+    std::cout << "video control pause " << i << std::endl;
   }
 }
 
@@ -1016,7 +1016,7 @@ void pca_vehicle_frame::interaction_mode_changed()
 void pca_vehicle_frame::refresh_values()
 {
   const vnl_vector<double>& params = manager_.mesh().params();
-  vcl_vector<double> vals(params.size());
+  std::vector<double> vals(params.size());
   for(unsigned int i=0; i<vals.size(); ++i)
     vals[i] = params[i];
   
@@ -1047,7 +1047,7 @@ void pca_vehicle_frame::update_fit_options()
 {
   // determine which parameters are enabled for optimization
   wxCheckBox* cb;
-  vcl_vector<bool> options(7,false);
+  std::vector<bool> options(7,false);
   cb = dynamic_cast<wxCheckBox*>(this->FindWindow(wxT("pca_checkbox")));
   assert(cb);
   options[0] = cb->IsChecked();
@@ -1102,14 +1102,14 @@ void pca_vehicle_frame::active_frame(wxCommandEvent& event)
 //=========================================================================
 void pca_vehicle_frame::keyboard_commands(wxKeyEvent& event)
 {
-  vcl_cout << "Found key pressed"<<vcl_endl;
+  std::cout << "Found key pressed"<<std::endl;
   switch(event.GetKeyCode())
   {
     case WXK_LEFT:
-      vcl_cout << "Left key pressed"<<vcl_endl;
+      std::cout << "Left key pressed"<<std::endl;
       break;
     case WXK_RIGHT:
-      vcl_cout << "Right key pressed"<<vcl_endl;
+      std::cout << "Right key pressed"<<std::endl;
       break;
     defualt:
       event.Skip();

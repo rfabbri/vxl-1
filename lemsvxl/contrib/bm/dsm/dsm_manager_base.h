@@ -24,8 +24,8 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_utility.h>
+#include<map>
+#include<utility>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -43,9 +43,9 @@ public:
 	virtual ~dsm_manager_base(){}
 
 	//:insert a state machine for a given target
-	vcl_pair<vcl_map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator, bool>
+	std::pair<std::map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> >::iterator, bool>
 		insert_state_machine( vgl_point_2d<unsigned> const& target, dsm_state_machine_base_sptr state_machine_base_sptr )
-	{return this->target_stateMachine_map_.insert(vcl_pair<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr>(target,state_machine_base_sptr));}
+	{return this->target_stateMachine_map_.insert(std::pair<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr>(target,state_machine_base_sptr));}
 
 	bool remove_state_machine( vgl_point_2d<unsigned> const& target ){return this->target_stateMachine_map_.erase(target);}
 
@@ -58,7 +58,7 @@ public:
 	//:accessors
 	dsm_state_machine_base_sptr state_machine( vgl_point_2d<unsigned> const& target ){ return this->target_stateMachine_map_[target]; }
 
-	vcl_map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > target_stateMachine_map()
+	std::map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > target_stateMachine_map()
 	{return this->target_stateMachine_map_;}
 
 	virtual unsigned ndims() const { return 0; }
@@ -71,7 +71,7 @@ public:
 
 	dsm_frame_clock* frame_clock_ptr_;
 
-	vcl_map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > target_stateMachine_map_;
+	std::map<vgl_point_2d<unsigned>, dsm_state_machine_base_sptr, dsm_vgl_point_2d_coord_compare<unsigned> > target_stateMachine_map_;
 };
 
 #endif //DSM_MANAGER_BASE_H_

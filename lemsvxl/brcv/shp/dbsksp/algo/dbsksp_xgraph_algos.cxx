@@ -11,7 +11,7 @@
 #include <bnld/bnld_math.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
-//#include <vcl_utility.h>
+//#include <utility>
 
 
 
@@ -171,8 +171,8 @@ update_degree3_node(const dbsksp_xshock_node_sptr& xv,
 //: Compute a list of shapelet to fit in a chain of shock edges
 bool dbsksp_xgraph_algos::
 fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
-    const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-    vcl_vector<dbsksp_shapelet_sptr >& list_shapelet)
+    const std::vector<dbsksp_xshock_edge_sptr>& path,
+    std::vector<dbsksp_shapelet_sptr >& list_shapelet)
 {
   list_shapelet.clear();
   list_shapelet.reserve(2* path.size());
@@ -181,7 +181,7 @@ fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
   if (path.empty())
     return true;
 
-  vcl_vector<dbsksp_xshock_node_descriptor > list_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_xdesc;
   list_xdesc.reserve(path.size() + 1);
   
   // move along the edge path and add record descriptors at the break points
@@ -193,7 +193,7 @@ fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
 
     if (!cur_xe->is_vertex(cur_xv))
     {
-      vcl_cerr << "\nERROR: The edge path is not a connected chain.\n";
+      std::cerr << "\nERROR: The edge path is not a connected chain.\n";
       return false;
     }
 
@@ -296,7 +296,7 @@ fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
     else
     {
       // Fit shapelets to this fragment
-      vcl_vector<dbsksp_shapelet_sptr > temp;
+      std::vector<dbsksp_shapelet_sptr > temp;
       dbsksp_interp_xfrag_with_max_three_shapelets(list_xdesc[k-1], list_xdesc[k], temp);
       list_shapelet.insert(list_shapelet.end(), temp.begin(), temp.end());
     }
@@ -313,9 +313,9 @@ fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
 // sample_ds is the sampling rate along the chordal curve
 void dbsksp_xgraph_algos::
 compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
-                 const vcl_vector<dbsksp_xshock_edge_sptr>& path,
+                 const std::vector<dbsksp_xshock_edge_sptr>& path,
                  double sample_ds,
-                 vcl_vector<dbsksp_xshock_node_descriptor >& list_sample_xdesc)
+                 std::vector<dbsksp_xshock_node_descriptor >& list_sample_xdesc)
 {
   // sanitize old data
   list_sample_xdesc.clear();
@@ -413,8 +413,8 @@ compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
 // may be less that requested.
 void dbsksp_xgraph_algos::
 compute_xsamples(int num_intervals, const dbsksp_xshock_node_sptr& start_node,
-                 const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-                 vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                 const std::vector<dbsksp_xshock_edge_sptr>& path,
+                 std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 {
   ////
   //dbsksp_xgraph_algos::compute_xsamples_by_fitting_shapelets(num_intervals,
@@ -433,8 +433,8 @@ compute_xsamples(int num_intervals, const dbsksp_xshock_node_sptr& start_node,
 void dbsksp_xgraph_algos::
 compute_xsamples_by_fitting_shapelets(int num_intervals,
                                       const dbsksp_xshock_node_sptr& start_node,
-                                      const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-                                      vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                                      const std::vector<dbsksp_xshock_edge_sptr>& path,
+                                      std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 
 {
   // sanitize old data
@@ -445,23 +445,23 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
 
 
   //traverse through the path, compute the shapelets for each edge
-  vcl_vector<dbsksp_shapelet_sptr > list_shapelet;
+  std::vector<dbsksp_shapelet_sptr > list_shapelet;
   dbsksp_xgraph_algos::fit_shapelet_chain(start_node, path, list_shapelet);
 
   // Compute a coarse sampling of the shapelets to have an estimate of t vs. arc length
   // Uniform sampling of t in [0, 1]
   int num_coarse_intervals = 50;
-  vcl_vector<double > list_t_per_shapelet(num_coarse_intervals+1, 0);
+  std::vector<double > list_t_per_shapelet(num_coarse_intervals+1, 0);
   for (int i =0; i <= num_coarse_intervals; ++i)
   {
     list_t_per_shapelet[i] = double (i) / num_coarse_intervals;
   }
 
-  vcl_vector<dbsksp_xshock_node_descriptor > list_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_xdesc;
   list_xdesc.reserve(list_shapelet.size() * list_t_per_shapelet.size());
   for (unsigned k =0; k < list_shapelet.size(); ++k)
   {
-    vcl_vector<dbsksp_xshock_node_descriptor > temp;
+    std::vector<dbsksp_xshock_node_descriptor > temp;
     list_shapelet[k]->compute_xshock_samples(list_t_per_shapelet, temp);
     list_xdesc.insert(list_xdesc.end(), temp.begin(), temp.end());
   }
@@ -469,7 +469,7 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
 
 
   // Construct a chordal line of the fragments via the samples
-  vcl_vector<vgl_point_2d<double > > chordal_line;
+  std::vector<vgl_point_2d<double > > chordal_line;
   chordal_line.reserve(list_xdesc.size());
   for (unsigned i =0; i < list_xdesc.size(); ++i)
   {
@@ -565,7 +565,7 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
   list_xsample.reserve(list_sample_t.size());
 
   // Group the 't' by their integer parts. Each group corresponds to a shapelet
-  vcl_vector<vcl_vector<double > > list_t_group(list_shapelet.size());
+  std::vector<std::vector<double > > list_t_group(list_shapelet.size());
   for (unsigned k =0; k < list_sample_t.size(); ++k)
   {
     double t = list_sample_t[k];
@@ -585,7 +585,7 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
   // Compute the samples
   for (unsigned k =0; k < list_t_group.size(); ++k)
   {
-    vcl_vector<dbsksp_xshock_node_descriptor > temp;
+    std::vector<dbsksp_xshock_node_descriptor > temp;
     list_shapelet[k]->compute_xshock_samples(list_t_group[k], temp);
     list_xsample.insert(list_xsample.end(), temp.begin(), temp.end());
   }
@@ -606,18 +606,18 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
 void dbsksp_xgraph_algos::
 compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
                                             const dbsksp_xshock_node_sptr& start_node,
-                                            const vcl_vector<dbsksp_xshock_edge_sptr>& path,
-                                            vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample)
+                                            const std::vector<dbsksp_xshock_edge_sptr>& path,
+                                            std::vector<dbsksp_xshock_node_descriptor >& list_xsample)
 {
   list_xsample.clear();
 
   if (path.empty())
     return;
 
-  vcl_vector<dbsksp_xshock_node_descriptor > list_xdesc;
+  std::vector<dbsksp_xshock_node_descriptor > list_xdesc;
   list_xdesc.reserve(path.size() + 1);
 
-  vcl_vector<dbsksp_xshock_node_sptr > node_list;
+  std::vector<dbsksp_xshock_node_sptr > node_list;
   node_list.reserve(path.size() + 1);
 
   
@@ -630,7 +630,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
 
     if (!cur_xe->is_vertex(cur_xv))
     {
-      vcl_cerr << "\nERROR: The edge path is not a connected chain.\n";
+      std::cerr << "\nERROR: The edge path is not a connected chain.\n";
       return;
     }
 
@@ -685,7 +685,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
 
   // remove descriptors corresponding to degree-1 node
   {
-    vcl_vector<dbsksp_xshock_node_descriptor > temp = list_xdesc;
+    std::vector<dbsksp_xshock_node_descriptor > temp = list_xdesc;
     list_xdesc.clear();
     for (unsigned i =0; i < node_list.size(); ++i)
     {
@@ -735,7 +735,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
   
   // sum up the chordal length
   double total_length = 0;
-  vcl_vector<double > run_lengths;
+  std::vector<double > run_lengths;
   run_lengths.reserve(list_xdesc.size());
   run_lengths.push_back(total_length);
 
@@ -776,7 +776,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
     num_segments = vnl_math::max(1, num_segments);
 
     // temp_xsamples only contains middle-samples, not the samples at the two end points
-    vcl_vector<dbsksp_xshock_node_descriptor > temp_xsamples;
+    std::vector<dbsksp_xshock_node_descriptor > temp_xsamples;
     dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(num_segments, start, end, temp_xsamples);
 
     list_xsample.push_back(start);

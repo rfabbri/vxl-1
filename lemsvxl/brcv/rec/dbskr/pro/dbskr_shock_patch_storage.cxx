@@ -27,7 +27,7 @@ dbskr_shock_patch_storage::~dbskr_shock_patch_storage()
 
 void dbskr_shock_patch_storage::clear() 
 { 
-  for (vcl_map<int, dbskr_shock_patch_sptr>::iterator iter = id_sptr_map_.begin(); iter != id_sptr_map_.end(); iter++) {
+  for (std::map<int, dbskr_shock_patch_sptr>::iterator iter = id_sptr_map_.begin(); iter != id_sptr_map_.end(); iter++) {
     iter->second = 0;
   }
     
@@ -90,7 +90,7 @@ void dbskr_shock_patch_storage::b_read(vsl_b_istream &is)
   }
 }
 
-bool dbskr_shock_patch_storage::load_patch_shocks_and_create_trees(vcl_string storage_name, vcl_string st_postfix, 
+bool dbskr_shock_patch_storage::load_patch_shocks_and_create_trees(std::string storage_name, std::string st_postfix, 
   bool elastic_splice_cost, bool construct_circular_ends, bool combined_edit,
   float scurve_sample_ds, float scurve_interp_ds)
 {
@@ -99,14 +99,14 @@ bool dbskr_shock_patch_storage::load_patch_shocks_and_create_trees(vcl_string st
   //: load esfs for each patch
   for (unsigned iii = 0; iii < patches_.size(); iii++) {
     dbskr_shock_patch_sptr sp = patches_[iii];
-    vcl_string patch_esf_name = storage_name.substr(0, storage_name.length()-st_postfix.size());
-    vcl_ostringstream oss;
+    std::string patch_esf_name = storage_name.substr(0, storage_name.length()-st_postfix.size());
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
     if (!test_shock_graph_for_rec(sg))
     {
-      vcl_cout << patch_esf_name << " shock graph has ZERO nodes or edges!!!!!!!!!\n";
+      std::cout << patch_esf_name << " shock graph has ZERO nodes or edges!!!!!!!!!\n";
       sg = 0;
       //return false;
     }
@@ -118,23 +118,23 @@ bool dbskr_shock_patch_storage::load_patch_shocks_and_create_trees(vcl_string st
 }
 
 bool dbskr_shock_patch_storage::load_patch_shocks(
-    vcl_string storage_name, vcl_string st_postfix)
+    std::string storage_name, std::string st_postfix)
 {
   dbsk2d_xshock_graph_fileio loader;
 
   //: load esfs for each patch
   for (unsigned iii = 0; iii < patches_.size(); iii++) {
     dbskr_shock_patch_sptr sp = patches_[iii];
-    vcl_string patch_esf_name = 
+    std::string patch_esf_name = 
         storage_name.substr(0, 
                             storage_name.length()-st_postfix.size());
-    vcl_ostringstream oss;
+    std::ostringstream oss;
     oss << sp->id();
     patch_esf_name = patch_esf_name+oss.str()+".esf";
     dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(patch_esf_name);
     if (!test_shock_graph_for_rec(sg))
     {
-      vcl_cout << patch_esf_name 
+      std::cout << patch_esf_name 
                << " shock graph has ZERO nodes or edges!!!!!!!!!\n";
       sg = 0;
       //return false;
@@ -156,17 +156,17 @@ void dbskr_shock_patch_storage::set_tree_params_for_matching(bool elastic_splice
 
 
 bool dbskr_shock_patch_storage::create_ps_images(vil_image_resource_sptr background_img, 
-                                                 vcl_string filename_base, bool outer_poly, vil_rgb<int>& color)
+                                                 std::string filename_base, bool outer_poly, vil_rgb<int>& color)
 {
   for (unsigned i = 0; i < patches_.size(); i++) {
-    vcl_stringstream app;
+    std::stringstream app;
     app << patches_[i]->id();
 
     //1)If file open fails, return.
     vul_psfile psfile1((filename_base+ "_" + app.str() + ".ps").c_str(), false);
 
     if (!psfile1) {
-      vcl_cout << " Error opening file  " << (filename_base+ "_" + app.str() + ".ps").c_str() << vcl_endl;
+      std::cout << " Error opening file  " << (filename_base+ "_" + app.str() + ".ps").c_str() << std::endl;
       return false;
     }
 
@@ -177,7 +177,7 @@ bool dbskr_shock_patch_storage::create_ps_images(vil_image_resource_sptr backgro
 
     unsigned char *buf = new unsigned char[sizex*sizey*3];
     if (planes == 3) {
-      vcl_cout << "processing color image\n";
+      std::cout << "processing color image\n";
       for (int x=0; x<sizex; ++x) 
         for (int y=0; y<sizey; ++y) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);
@@ -187,7 +187,7 @@ bool dbskr_shock_patch_storage::create_ps_images(vil_image_resource_sptr backgro
       
       
     } else if (planes == 1) {
-      vcl_cout << "processing grey image\n";
+      std::cout << "processing grey image\n";
       for (int x=0; x<sizex; ++x) 
         for (int y=0; y<sizey; ++y) {
           buf[3*(x+sizex*y)  ] = image(x,y,0);

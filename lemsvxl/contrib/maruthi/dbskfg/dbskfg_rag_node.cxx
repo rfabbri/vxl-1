@@ -14,7 +14,7 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_intersection.h>
 #include <bsol/bsol_algs.h>
-#include <vcl_numeric.h>
+#include <numeric>
 
 dbskfg_rag_node::dbskfg_rag_node
 ( 
@@ -31,7 +31,7 @@ dbskfg_rag_node::dbskfg_rag_node
 dbskfg_rag_node::~dbskfg_rag_node()
 {
     // Set all pointers to null
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
     {
         (*it).second=0;
@@ -42,7 +42,7 @@ dbskfg_rag_node::~dbskfg_rag_node()
     shock_links_.clear();
     
     // Set all points to null
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator sit;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator sit;
     for ( sit=wavefront_.begin() ; sit != wavefront_.end() ; ++sit)
     {
         (*sit).second=0;
@@ -124,7 +124,7 @@ void dbskfg_rag_node::add_shock_link(dbskfg_shock_link* shock)
              shock->source()->get_composite_degree() > 1)
         {
           
-            vcl_map<unsigned int,dbskfg_shock_node*>::iterator sit
+            std::map<unsigned int,dbskfg_shock_node*>::iterator sit
                 = wavefront_.find(shock->source()->id());
             if ( sit != wavefront_.end())
             {
@@ -166,7 +166,7 @@ void dbskfg_rag_node::add_shock_link(dbskfg_shock_link* shock)
              shock->target()->get_composite_degree() > 1)
         {
           
-            vcl_map<unsigned int,dbskfg_shock_node*>::iterator sit
+            std::map<unsigned int,dbskfg_shock_node*>::iterator sit
                 = wavefront_.find(shock->target()->id());
             if ( sit != wavefront_.end())
             {
@@ -241,7 +241,7 @@ void dbskfg_rag_node::delete_shock(unsigned int shock_id)
 
 void dbskfg_rag_node::update_outer_shock_nodes()
 {
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator sit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator sit;
 
     for  (sit = shock_links_.begin(); sit != shock_links_.end(); ++sit)
     {
@@ -331,8 +331,8 @@ void dbskfg_rag_node::update_outer_shock_nodes()
 void dbskfg_rag_node::prune_wavefront_nodes()
 {
     
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator srit;
-    vcl_vector<unsigned int> nodes_to_delete;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator srit;
+    std::vector<unsigned int> nodes_to_delete;
     for ( srit=wavefront_.begin() ; srit != wavefront_.end() ; ++srit)
     {
         dbskfg_shock_node* shock_node = (*srit).second;
@@ -382,7 +382,7 @@ void dbskfg_rag_node::fragment_boundary(vgl_polygon<double>& poly)
 {
     //***************** Compute Polygon ************************
     //Loop over all shock links
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator pit;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator pit;
     pit=shock_links_.begin();
     
     // Start polygon
@@ -548,7 +548,7 @@ double dbskfg_rag_node::contour_ratio()
     length += vgl_distance(first_point,last_point);
 
     // Keep a vector all shock rays
-    vcl_vector< vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+    std::vector< std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
         shock_rays = determine_shock_rays(polygon);
     
     // Keep a running sum of distances
@@ -563,25 +563,25 @@ double dbskfg_rag_node::contour_ratio()
 }
 
 //: determine all shock rays
-vcl_vector< vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+std::vector< std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
 dbskfg_rag_node::determine_shock_rays(vgl_polygon<double>& polygon)
 {
-    vcl_vector< vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+    std::vector< std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
         shock_rays;
 
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator srit;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator srit;
     for ( srit=wavefront_.begin() ; srit != wavefront_.end() ; ++srit)
     {
         bool found=false;
         vgl_point_2d<double> snode = (*srit).second->pt();
-        vcl_stringstream outer_shock_node;
+        std::stringstream outer_shock_node;
         outer_shock_node<<(*srit).second->pt();
         unsigned int index=0;
 
         for ( unsigned int b=0; b <= polygon[0].size() ; ++b)
         {
             vgl_point_2d<double> c0(polygon[0][b]);        
-            vcl_stringstream temp;
+            std::stringstream temp;
             temp<<c0;
   
             if (c0 == snode || outer_shock_node.str() == temp.str())
@@ -597,26 +597,26 @@ dbskfg_rag_node::determine_shock_rays(vgl_polygon<double>& polygon)
             // Take account of two special cases
             if ( index == 0 )
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0]
+                shock_rays.push_back(std::make_pair(polygon[0]
                                                    [polygon[0].size()-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][index+1]));
 
             }
             else if ( index == polygon[0].size()-1 )
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0][index-1],
+                shock_rays.push_back(std::make_pair(polygon[0][index-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][0]));
 
             }
             else
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0][index-1],
+                shock_rays.push_back(std::make_pair(polygon[0][index-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][index+1]));
             }
         }
@@ -626,14 +626,14 @@ dbskfg_rag_node::determine_shock_rays(vgl_polygon<double>& polygon)
     {
         bool found=false;
         vgl_point_2d<double> snode = (*srit).second->pt();
-        vcl_stringstream outer_shock_node;
+        std::stringstream outer_shock_node;
         outer_shock_node<<(*srit).second->pt();
         unsigned int index=0;
 
         for ( unsigned int b=0; b <= polygon[0].size() ; ++b)
         {
             vgl_point_2d<double> c0(polygon[0][b]);        
-            vcl_stringstream temp;
+            std::stringstream temp;
             temp<<c0;
   
             if (c0 == snode || outer_shock_node.str() == temp.str())
@@ -649,26 +649,26 @@ dbskfg_rag_node::determine_shock_rays(vgl_polygon<double>& polygon)
             // Take account of two special cases
             if ( index == 0 )
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0]
+                shock_rays.push_back(std::make_pair(polygon[0]
                                                    [polygon[0].size()-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][index+1]));
 
             }
             else if ( index == polygon[0].size()-1 )
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0][index-1],
+                shock_rays.push_back(std::make_pair(polygon[0][index-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][0]));
 
             }
             else
             {
-                shock_rays.push_back(vcl_make_pair(polygon[0][index-1],
+                shock_rays.push_back(std::make_pair(polygon[0][index-1],
                                                    polygon[0][index]));
-                shock_rays.push_back(vcl_make_pair(polygon[0][index],
+                shock_rays.push_back(std::make_pair(polygon[0][index],
                                                    polygon[0][index+1]));
             }
 
@@ -716,7 +716,7 @@ bool dbskfg_rag_node::is_rag_node_within_image(int ni,int nj)
 bool dbskfg_rag_node::endpoint_spawned_node()
 {
     bool flag=true;
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
     {
         if ( !(*it).second->endpoint_spawned())
@@ -736,7 +736,7 @@ bool dbskfg_rag_node::endpoint_spawned_node()
 bool dbskfg_rag_node::endpoint_spawned_node_exclude_endpoints()
 {
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
     {
         dbskfg_shock_link* this_slink=(*it).second;
@@ -761,20 +761,20 @@ bool dbskfg_rag_node::endpoint_spawned_node_exclude_endpoints()
 
 }
 
-void dbskfg_rag_node::print(vcl_ostream& os)
+void dbskfg_rag_node::print(std::ostream& os)
 {
-    os<<"Rag Id: "<<id_<<vcl_endl;
+    os<<"Rag Id: "<<id_<<std::endl;
     os<<"Shock Links: ";
     // Set all pointers to null
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
     {
         os<<(*it).second->id()<<" ";
     }
-    os<<vcl_endl;
+    os<<std::endl;
     os<<"Wavefront: ";
 
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator sit;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator sit;
     for ( sit=wavefront_.begin() ; sit != wavefront_.end() ; ++sit)
     {
         os<<(*sit).second->id()<<" ";
@@ -782,7 +782,7 @@ void dbskfg_rag_node::print(vcl_ostream& os)
     }
 
 
-    os<<vcl_endl;
+    os<<std::endl;
 
     os<<"Degree 1 nodes: ";
 
@@ -794,14 +794,14 @@ void dbskfg_rag_node::print(vcl_ostream& os)
     }
 
 
-    os<<vcl_endl;
+    os<<std::endl;
  
-    os<<"Polygon: "<<vcl_endl;
+    os<<"Polygon: "<<std::endl;
     vgl_polygon<double> temp;
     fragment_boundary(temp);
     temp.print(os);
-    os<<"Contour Ratio: "<<contour_ratio()<<vcl_endl;
-    os<<vcl_endl;
+    os<<"Contour Ratio: "<<contour_ratio()<<std::endl;
+    os<<std::endl;
 
 }
 
@@ -825,9 +825,9 @@ bool dbskfg_rag_node::node_within_rag(unsigned int id)
     // the local context and those on the border of the local context
     // Those on the outside will not have both source and target within
     // the merged local context
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         inner_shock_nodes;
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit1;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator snit1;
 
     for ( snit1 = shock_links_.begin() ; 
           snit1 != shock_links_.end() ; ++snit1)
@@ -835,7 +835,7 @@ bool dbskfg_rag_node::node_within_rag(unsigned int id)
         // Grab current shock link
         dbskfg_shock_link* shock_link = (*snit1).second;
 
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator snit2;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator snit2;
         for ( snit2 = shock_links_.begin() ; 
               snit2 != shock_links_.end() ; ++snit2)
         {
@@ -863,7 +863,7 @@ bool dbskfg_rag_node::node_within_rag(unsigned int id)
 
     // Now we need to filter out shock nodes that do not equal composite 
     // degree
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         ::iterator bit;
     
     for ( bit = inner_shock_nodes.begin() ; bit != inner_shock_nodes.end() 
@@ -889,11 +889,11 @@ bool dbskfg_rag_node::node_within_rag(unsigned int id)
 
 //: determine contour endpoints
 void dbskfg_rag_node::determine_contour_points(
-    vcl_vector<dbskfg_composite_node_sptr>&
+    std::vector<dbskfg_composite_node_sptr>&
     con_endpoints)
 {
 
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator mit;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator mit;
     for ( mit = wavefront_.begin() ; mit != wavefront_.end() ; ++mit)
     {
         dbskfg_shock_node* shock_node = (*mit).second;
@@ -1015,27 +1015,27 @@ void dbskfg_rag_node::determine_contour_points(
 }
 
 
-void dbskfg_rag_node::rag_contour_ids(vcl_set<unsigned int>& con_id)
+void dbskfg_rag_node::rag_contour_ids(std::set<unsigned int>& con_id)
 {
 
-    vcl_map<unsigned int,bool> contour_ids;
+    std::map<unsigned int,bool> contour_ids;
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
     {
         // For each shock link grab its contours
         // Get contour pair
-        vcl_set<unsigned int> link_ids =
+        std::set<unsigned int> link_ids =
             (*it).second->get_contour_pair();
 
-        vcl_set<unsigned int>::iterator sit;
+        std::set<unsigned int>::iterator sit;
         for ( sit = link_ids.begin() ; sit != link_ids.end() ; ++sit)
         {
             contour_ids[*sit]=true;
         }
     }
 
-    vcl_map<unsigned int,bool>::iterator mit;
+    std::map<unsigned int,bool>::iterator mit;
     for ( mit = contour_ids.begin() ; mit != contour_ids.end() ; ++mit)
     {
         con_id.insert((*mit).first);
@@ -1046,15 +1046,15 @@ void dbskfg_rag_node::rag_contour_ids(vcl_set<unsigned int>& con_id)
 }
 
 bool dbskfg_rag_node::wavefront_exists( 
-const vcl_map<unsigned int, vgl_point_2d<double> >& wavefront)
+const std::map<unsigned int, vgl_point_2d<double> >& wavefront)
 {
     
-    vcl_map<unsigned int, vgl_point_2d<double> >::const_iterator wit;
+    std::map<unsigned int, vgl_point_2d<double> >::const_iterator wit;
     for (wit = wavefront.begin() ; wit != wavefront.end() ; ++wit)
     {
     
         bool flag=false;
-        vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+        std::map<unsigned int,dbskfg_shock_link*>::iterator it;
         for ( it=shock_links_.begin() ; it != shock_links_.end() ; ++it)
         {
             if ( (*it).second->source()->id() == (*wit).first ||
@@ -1086,7 +1086,7 @@ bool dbskfg_rag_node::transform_local_context(
     dbskfg_transform_descriptor_sptr transform)
 {
 
-    vcl_map<unsigned int,dbskfg_shock_node*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_node*>::iterator it;
     for ( it = wavefront_.begin() ; it != wavefront_.end() ; ++it)
     {
     
@@ -1109,16 +1109,16 @@ bool dbskfg_rag_node::transform_local_context(
 }
 
 // Return a string representing wavefront based on contour end points
-void dbskfg_rag_node::wavefront_string(vcl_set<vcl_string>& wavefront)
+void dbskfg_rag_node::wavefront_string(std::set<std::string>& wavefront)
 {
 
-    vcl_vector<dbskfg_composite_node_sptr> con_points;
+    std::vector<dbskfg_composite_node_sptr> con_points;
     this->determine_contour_points(con_points);
 
     for ( unsigned int i=0; i < con_points.size(); ++i)
     {
         vgl_point_2d<double> point = con_points[i]->pt();
-        vcl_stringstream streamer;
+        std::stringstream streamer;
         streamer<<point;
         wavefront.insert(streamer.str());
     }

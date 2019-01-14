@@ -63,7 +63,7 @@ public:
   dbrec3d_context_sptr get_context_by_level(int hierachy_level);
   
   //: Returns all contexts registered in the database
-  vcl_vector<dbrec3d_context_sptr> get_all_contexts();
+  std::vector<dbrec3d_context_sptr> get_all_contexts();
   
   //: Number of registered contexts
   int size(){ return current_context_id_; }
@@ -102,15 +102,15 @@ public:
   int register_context( boxm_scene<boct_tree<short, bvpl_octree_sample<T_data> > > *scene_in,
                         T_model primitive_model,
                         bvpl_kernel_vector_sptr kernel_vector,boxm_scene<boct_tree<short, T_instance > > *parts_scene,
-                        vcl_map<int,int> &parts_id_map)
+                        std::map<int,int> &parts_id_map)
   {
     //register the vector of kernels, retieve a map <kernel_id, part_id>
     parts_id_map = PARTS_MANAGER->register_kernels(kernel_vector);
     
-    vcl_map<int,int>::iterator map_it;
+    std::map<int,int>::iterator map_it;
     for(map_it=parts_id_map.begin(); map_it!=parts_id_map.end(); map_it++)
     {
-      vcl_cout << (*map_it).first << ',' << (*map_it).second << vcl_endl;
+      std::cout << (*map_it).first << ',' << (*map_it).second << std::endl;
       
     }
     
@@ -118,7 +118,7 @@ public:
     
     for(map_it=parts_id_map.begin(); map_it!=parts_id_map.end(); map_it++)
     {
-      vcl_cout << (*map_it).first << ',' << (*map_it).second << vcl_endl;
+      std::cout << (*map_it).first << ',' << (*map_it).second << std::endl;
       
     }
     
@@ -129,10 +129,10 @@ public:
   bool clear_contexts();
   
   // : write all contexts and parts associated with them to as an xml file
-  bool xml_write(vcl_string name) const;
+  bool xml_write(std::string name) const;
   
   // : Parse an xml file, registering all contexts and parts into the database
-  bool xml_parse(const vcl_string &name);
+  bool xml_parse(const std::string &name);
   
   template<class T_instance>
   boxm_scene<boct_tree<short,float> >* response_scene(int context_id);
@@ -154,7 +154,7 @@ protected:
   template<class T_instance, class T_data, class T_model>
   void convert_response_to_parts_scene(boxm_scene<boct_tree<short, bvpl_octree_sample<T_data> > > *scene_in,
                                        T_model primitive_model,
-                                       const vcl_map<int, int> &id_map, 
+                                       const std::map<int, int> &id_map, 
                                        boxm_scene<boct_tree<short, T_instance > > *scene_out);
 
 protected:
@@ -169,10 +169,10 @@ protected:
   static dbrec3d_context_manager_sptr instance_;  
   
   //: The name of database table where contexts are stored
-  vcl_string context_table_name_;
+  std::string context_table_name_;
   
   //: Vector to hold names for "columns" of context's table
-  vcl_vector<vcl_string> names_;
+  std::vector<std::string> names_;
 
   //: Variable to keep a count of contexts
   unsigned current_context_id_;
@@ -186,7 +186,7 @@ int dbrec3d_context_manager::reg( boxm_scene<boct_tree<short, T_instance > > &sc
 {
   //sanity check
   if(level<0){
-    vcl_cerr << " Error in dbrec3d_context_manager,  context at negative level" << vcl_cout;
+    std::cerr << " Error in dbrec3d_context_manager,  context at negative level" << std::cout;
     return NULL;
   }
   
@@ -209,7 +209,7 @@ int dbrec3d_context_manager::reg( boxm_scene<boct_tree<short, T_instance > > &sc
   if(DATABASE->add_tuple(context_table_name_, new_tuple))
     current_context_id_++;
   else {
-    vcl_cerr << "in dbrec3d_context_manager :could not add context to database\n";
+    std::cerr << "in dbrec3d_context_manager :could not add context to database\n";
     return -1;
   }
   
@@ -244,8 +244,8 @@ void dbrec3d_context_manager::convert_response_to_parts_scene(boxm_scene<boct_tr
     tree_out->init_cells(dbrec3d_part_instance());
     
     //at each tree, iterate through all cells, converting them to dbrec3d_primitives
-    vcl_vector<boct_tree_cell<short,T_data >* > cells_in = tree_in->leaf_cells_at_level(finest_level);
-    vcl_vector<boct_tree_cell<short,dbrec3d_part_instance >* > cells_out = tree_out->leaf_cells_at_level(finest_level);
+    std::vector<boct_tree_cell<short,T_data >* > cells_in = tree_in->leaf_cells_at_level(finest_level);
+    std::vector<boct_tree_cell<short,dbrec3d_part_instance >* > cells_out = tree_out->leaf_cells_at_level(finest_level);
     
     
     for (unsigned i = 0; i <  cells_in.size();i++)
@@ -272,7 +272,7 @@ void dbrec3d_context_manager::convert_response_to_parts_scene(boxm_scene<boct_tr
 template <class T_instance, class T_data, class T_model>
 void dbrec3d_context_manager::convert_response_to_parts_scene(boxm_scene<boct_tree<short, bvpl_octree_sample<T_data> > > *scene_in,
                                                               T_model primitive_model,
-                                                              const vcl_map<int, int> &id_map, 
+                                                              const std::map<int, int> &id_map, 
                                                               boxm_scene<boct_tree<short, T_instance > > *scene_out)
 {
   // Main Goal: To traverse the input octree conveting bvpl_octree_samples to dbrec3d_part_instances
@@ -280,7 +280,7 @@ void dbrec3d_context_manager::convert_response_to_parts_scene(boxm_scene<boct_tr
   // Iterate through the scene
   boxm_block_iterator<boct_tree<short, bvpl_octree_sample<T_data> > > iter_in = scene_in->iterator();
   boxm_block_iterator<boct_tree<short, dbrec3d_part_instance > > iter_out = scene_out->iterator();
-  vcl_map<int, int>::const_iterator map_it;
+  std::map<int, int>::const_iterator map_it;
   iter_in.begin();
   iter_out.begin();
   
@@ -293,8 +293,8 @@ void dbrec3d_context_manager::convert_response_to_parts_scene(boxm_scene<boct_tr
     
     //at each tree, iterate through all cells, converting them to dbrec3d_primitives
     short level = 0;
-    vcl_vector<boct_tree_cell<short,bvpl_octree_sample<T_data> >* > cells_in = tree_in->leaf_cells_at_level(level);
-    vcl_vector<boct_tree_cell<short,dbrec3d_part_instance >* > cells_out = tree_out->leaf_cells_at_level(level);
+    std::vector<boct_tree_cell<short,bvpl_octree_sample<T_data> >* > cells_in = tree_in->leaf_cells_at_level(level);
+    std::vector<boct_tree_cell<short,dbrec3d_part_instance >* > cells_out = tree_out->leaf_cells_at_level(level);
     
     
     for (unsigned i = 0; i <  cells_in.size();i++)
@@ -357,8 +357,8 @@ boxm_scene<boct_tree<short, float> >* dbrec3d_context_manager::response_scene(in
     
     //at each tree, iterate through all cells, converting them to dbrec3d_primitives
     short level = 0;
-    vcl_vector<boct_tree_cell<short,float>* > res_cells = res_tree->leaf_cells_at_level(level);
-    vcl_vector<boct_tree_cell<short,T_instance > * > cells = tree->leaf_cells_at_level(level);
+    std::vector<boct_tree_cell<short,float>* > res_cells = res_tree->leaf_cells_at_level(level);
+    std::vector<boct_tree_cell<short,T_instance > * > cells = tree->leaf_cells_at_level(level);
     
     
     for (unsigned i = 0; i <  cells.size();i++){

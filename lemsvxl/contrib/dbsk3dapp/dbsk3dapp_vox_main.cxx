@@ -17,7 +17,7 @@
 // dbsk3dappvox -x input_defaults.xml
 //
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 
 #include "dborl_shock3d_match_params.h"
@@ -34,7 +34,7 @@ int main (int argc, char *argv[])
 
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -44,16 +44,16 @@ int main (int argc, char *argv[])
     return 0;
 
   // 1) load the input shock3d file 1 (a pair of .cms and .fs files)
-  vcl_string input_shock3d_1 = params->input_1_dir_() + "/" + params->input_1_name_() + params->input_extension_();
+  std::string input_shock3d_1 = params->input_1_dir_() + "/" + params->input_1_name_() + params->input_extension_();
   if (!vul_file::exists(input_shock3d_1)) {
-    vcl_cout << "Cannot find shock3d (.cms and .fs) files: " << input_shock3d_1 << "\n";
+    std::cout << "Cannot find shock3d (.cms and .fs) files: " << input_shock3d_1 << "\n";
     return 0;
   }
   
   // 2) load the input shock3d file 2 (a pair of .cms and .fs files)
-  vcl_string input_shock3d_2 = params->input_2_dir_() + "/" + params->input_2_name_() + params->input_extension_();
+  std::string input_shock3d_2 = params->input_2_dir_() + "/" + params->input_2_name_() + params->input_extension_();
   if (!vul_file::exists(input_shock3d_2)) {
-    vcl_cout << "Cannot find shock3d (.cms and .fs) files: " << input_shock3d_2 << "\n";
+    std::cout << "Cannot find shock3d (.cms and .fs) files: " << input_shock3d_2 << "\n";
     return 0;
   }
 
@@ -64,7 +64,7 @@ int main (int argc, char *argv[])
   spr->p0()->set_dir_file (input_shock3d_1);
   bool f0_load_success = spr->p0()->load_cms ();  
   if (!f0_load_success) {
-    vcl_cout << "Cannot load shock3d (.cms and .fs) files: " << input_shock3d_1 << "\n";
+    std::cout << "Cannot load shock3d (.cms and .fs) files: " << input_shock3d_1 << "\n";
     return 0;
   }
   //Try read the xform file with the same filename and apply it.
@@ -74,7 +74,7 @@ int main (int argc, char *argv[])
   spr->p1()->set_dir_file (input_shock3d_2);
   bool f1_load_success = spr->p1()->load_cms ();  
   if (!f1_load_success) {
-    vcl_cout << "Cannot load shock3d (.cms and .fs) files: " << input_shock3d_2 << "\n";
+    std::cout << "Cannot load shock3d (.cms and .fs) files: " << input_shock3d_2 << "\n";
     return 0;
   }  
   //Try read the xform file with the same filename and apply it.
@@ -98,11 +98,11 @@ int main (int argc, char *argv[])
   spr->run_shock_match (params->smatch_(), params->regrd_()!=0, 
                         match_subset_of_curves, max_ms_curves);
 
-  vul_printf (vcl_cout, "\nMatching %s (N%d C%d S%d) to ", spr->p0()->dir_file().c_str(), 
+  vul_printf (std::cout, "\nMatching %s (N%d C%d S%d) to ", spr->p0()->dir_file().c_str(), 
               spr->p0()->ms_hypg()->vertexmap().size(), 
               spr->p0()->ms_hypg()->edgemap().size(),
               spr->p0()->ms_hypg()->sheetmap().size());
-  vul_printf (vcl_cout, "\n         %s (N%d C%d S%d).\n", spr->p1()->dir_file().c_str(),
+  vul_printf (std::cout, "\n         %s (N%d C%d S%d).\n", spr->p1()->dir_file().c_str(),
               spr->p1()->ms_hypg()->vertexmap().size(), 
               spr->p1()->ms_hypg()->edgemap().size(),
               spr->p1()->ms_hypg()->sheetmap().size());
@@ -114,20 +114,20 @@ int main (int argc, char *argv[])
   }*/
 
   //output the final matching score into a file.
-  vcl_string smatch_match_result_file  = "sk3dr_";
+  std::string smatch_match_result_file  = "sk3dr_";
   smatch_match_result_file += params->input_1_name_();
   smatch_match_result_file += "__";
   smatch_match_result_file += params->input_2_name_();
   smatch_match_result_file += ".txt";
   spr->save_shock_match_result_file (params->output_dir_()+smatch_match_result_file);
 
-  vul_printf (vcl_cout, "Matching ");  
-  vul_printf (vcl_cout, "%s", params->input_1_name_().c_str());
-  vul_printf (vcl_cout, " to ");
-  vul_printf (vcl_cout, "%s\n", params->input_2_name_().c_str());
-  vul_printf (vcl_cout, "similarity: %f  ", 
+  vul_printf (std::cout, "Matching ");  
+  vul_printf (std::cout, "%s", params->input_1_name_().c_str());
+  vul_printf (std::cout, " to ");
+  vul_printf (std::cout, "%s\n", params->input_2_name_().c_str());
+  vul_printf (std::cout, "similarity: %f  ", 
               spr->shock_match()->ga_match()->similarity());
-  vul_printf (vcl_cout, "normalized similarity: %f\n", 
+  vul_printf (std::cout, "normalized similarity: %f\n", 
               spr->shock_match()->ga_match()->norm_similarity ());
 
 

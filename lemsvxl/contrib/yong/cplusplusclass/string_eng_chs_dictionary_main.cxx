@@ -1,43 +1,43 @@
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <map>
 #include <string.h>
-#include <vcl_cstring.h>
+#include <cstring>
 
 #define MAX_BUF_SIZE 10000
 
 
 struct vcl_string_ltstr
 {
-  bool operator()(vcl_string s1, vcl_string s2) const
+  bool operator()(std::string s1, std::string s2) const
   {
-      return vcl_strcmp(s1.c_str(), s2.c_str()) < 0;
+      return std::strcmp(s1.c_str(), s2.c_str()) < 0;
   }
 };
 
-bool load_dictionary(vcl_map<vcl_string, vcl_string, vcl_string_ltstr> &dictionary, const char* dicstionary_filename)
+bool load_dictionary(std::map<std::string, std::string, vcl_string_ltstr> &dictionary, const char* dicstionary_filename)
 {
-    vcl_ifstream dictionary_file_istr;
-    vcl_stringstream dictionary_SS;
+    std::ifstream dictionary_file_istr;
+    std::stringstream dictionary_SS;
     long fsize;
     char* buffer;
-    vcl_string CH_word;
-    vcl_string EN_word;
+    std::string CH_word;
+    std::string EN_word;
     char* line_buffer;
 
     // open dictionary file in BINARY format;
-    dictionary_file_istr.open("dictionary.txt", vcl_ifstream::binary | vcl_ifstream::in);
+    dictionary_file_istr.open("dictionary.txt", std::ifstream::binary | std::ifstream::in);
     if(!dictionary_file_istr.good())
     {
-        vcl_cerr << "Can not load dictionary data. " << vcl_endl;
+        std::cerr << "Can not load dictionary data. " << std::endl;
         return false;
     }
 
     // load dictionary into a buffer then to a stringstream;
-    dictionary_file_istr.seekg(0, vcl_ifstream::end);
+    dictionary_file_istr.seekg(0, std::ifstream::end);
     fsize = dictionary_file_istr.tellg();
-    dictionary_file_istr.seekg(0, vcl_ifstream::beg);
+    dictionary_file_istr.seekg(0, std::ifstream::beg);
 
     buffer = new char[fsize];
     
@@ -56,7 +56,7 @@ bool load_dictionary(vcl_map<vcl_string, vcl_string, vcl_string_ltstr> &dictiona
     {
         dictionary_SS >> CH_word;
         dictionary_SS.getline(line_buffer, 300);
-        EN_word_len = vcl_strlen(line_buffer);
+        EN_word_len = std::strlen(line_buffer);
         line_buffer[EN_word_len-1] = '\0';
 
         EN_word.assign(line_buffer);
@@ -74,48 +74,48 @@ bool load_dictionary(vcl_map<vcl_string, vcl_string, vcl_string_ltstr> &dictiona
 
 int main(int argc, char **argv)
 {
-    vcl_string dictionary_filename, input_filename, output_filename;
-    vcl_ofstream ostr;
-    vcl_ifstream istr;
-    vcl_stringstream input_SS, output_SS;
-    vcl_map<vcl_string, vcl_string, vcl_string_ltstr> CH_EN_dictionary;
-    vcl_map<vcl_string, vcl_string, vcl_string_ltstr>::iterator cur;
+    std::string dictionary_filename, input_filename, output_filename;
+    std::ofstream ostr;
+    std::ifstream istr;
+    std::stringstream input_SS, output_SS;
+    std::map<std::string, std::string, vcl_string_ltstr> CH_EN_dictionary;
+    std::map<std::string, std::string, vcl_string_ltstr>::iterator cur;
     long input_fsize, output_fsize;
     char* buffer;
 
 
     if(argc != 3)
     {
-        vcl_cerr << "Incorrect number of arguments! " << vcl_endl;
+        std::cerr << "Incorrect number of arguments! " << std::endl;
         return -1;
     }
 
     if(!load_dictionary(CH_EN_dictionary, "dictionary.txt"))
     {
-        vcl_cerr << "Failed to load disctionary. " << vcl_endl;
+        std::cerr << "Failed to load disctionary. " << std::endl;
         return -1;
     };
 
 /*
     for( cur = CH_EN_dictionary.begin(); cur != CH_EN_dictionary.end(); cur++)
     {
-        vcl_cout << (*cur).first << vcl_endl;
-        vcl_cout << CH_EN_dictionary[(*cur).first] << vcl_endl;
+        std::cout << (*cur).first << std::endl;
+        std::cout << CH_EN_dictionary[(*cur).first] << std::endl;
     }
 */
     
 
     // open input files;
-    istr.open(argv[1], vcl_ifstream::binary | vcl_ifstream::in);
+    istr.open(argv[1], std::ifstream::binary | std::ifstream::in);
     if(!istr.good())
     {
-        vcl_cerr << "Can not load dictionary data. " << vcl_endl;
+        std::cerr << "Can not load dictionary data. " << std::endl;
         return false;
     }
     // load input file into a buffer then to a stringstream;
-    istr.seekg(0, vcl_ifstream::end);
+    istr.seekg(0, std::ifstream::end);
     input_fsize = istr.tellg();
-    istr.seekg(0, vcl_ifstream::beg);
+    istr.seekg(0, std::ifstream::beg);
 
     buffer = new char[input_fsize];
     
@@ -125,16 +125,16 @@ int main(int argc, char **argv)
 
 
     // open output files;
-    ostr.open(argv[2], vcl_ofstream::binary | vcl_ofstream::out);
+    ostr.open(argv[2], std::ofstream::binary | std::ofstream::out);
     if(!ostr.good())
     {
-        vcl_cerr << "Can not load dictionary data. " << vcl_endl;
+        std::cerr << "Can not load dictionary data. " << std::endl;
         istr.close();
         return false;
     }
 
     
-    vcl_string CH_word, EN_words, input_sentence;
+    std::string CH_word, EN_words, input_sentence;
     char* CH_word_buffer = new char[1000];
 
 
@@ -142,18 +142,18 @@ int main(int argc, char **argv)
     while(input_SS.tellg() < input_fsize)
     {
         input_SS >> input_sentence;
-        vcl_cout << input_sentence << vcl_endl;
+        std::cout << input_sentence << std::endl;
 
         output_SS << input_sentence;
         output_SS << "--->";
 
         unsigned cur_CH_char = 0;
-        unsigned input_sentence_len = vcl_strlen(input_sentence.c_str());
+        unsigned input_sentence_len = std::strlen(input_sentence.c_str());
 
         // searching the CH word through the whole sentence;
         while(cur_CH_char < input_sentence_len)
         {
-            vcl_strcpy(CH_word_buffer, input_sentence.c_str()+cur_CH_char);
+            std::strcpy(CH_word_buffer, input_sentence.c_str()+cur_CH_char);
             
             unsigned CH_word_len = input_sentence_len;
             while(CH_word_len)
@@ -174,8 +174,8 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    vcl_cout << "translation: " << CH_word << "--->" << CH_EN_dictionary[CH_word] << vcl_endl;
-                    cur_CH_char += vcl_strlen(CH_word.c_str());
+                    std::cout << "translation: " << CH_word << "--->" << CH_EN_dictionary[CH_word] << std::endl;
+                    cur_CH_char += std::strlen(CH_word.c_str());
                     output_SS << CH_EN_dictionary[CH_word];
                     break;
                 }

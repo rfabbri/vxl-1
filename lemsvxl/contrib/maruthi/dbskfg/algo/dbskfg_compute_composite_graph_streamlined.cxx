@@ -21,8 +21,8 @@
 #include <dbsk2d/dbsk2d_ishock_belm.h>
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 // vcl headers
-#include <vcl_sstream.h>
-#include <vcl_limits.h>
+#include <sstream>
+#include <limits>
 // vsol headers
 #include <vsol/vsol_point_2d_sptr.h>
 // vgl headers
@@ -51,7 +51,7 @@ dbskfg_compute_composite_graph_streamlined::
     ishock_graph_=0;
     rag_graph_=0;
 
-    vcl_map<int,dbskfg_composite_link_sptr>::iterator it;
+    std::map<int,dbskfg_composite_link_sptr>::iterator it;
     for ( it = boundary_link_mapping_.begin() ; 
           it != boundary_link_mapping_.end()
               ; ++it )
@@ -62,7 +62,7 @@ dbskfg_compute_composite_graph_streamlined::
 
     boundary_link_mapping_.clear();
     
-    vcl_map<int,dbskfg_composite_node_sptr>::iterator nit;
+    std::map<int,dbskfg_composite_node_sptr>::iterator nit;
     for (nit = boundary_node_mapping_.begin(); 
          nit != boundary_node_mapping_.end(); ++nit)
     {
@@ -91,7 +91,7 @@ dbsk2d_boundary_sptr boundary)
     compile_shock_elements();
 
     // Clear everything out right now
-    vcl_map<int,dbskfg_composite_link_sptr>::iterator it;
+    std::map<int,dbskfg_composite_link_sptr>::iterator it;
     for ( it = boundary_link_mapping_.begin() ; 
           it != boundary_link_mapping_.end()
               ; ++it )
@@ -102,7 +102,7 @@ dbsk2d_boundary_sptr boundary)
 
     boundary_link_mapping_.clear();
     
-    vcl_map<int,dbskfg_composite_node_sptr>::iterator nit;
+    std::map<int,dbskfg_composite_node_sptr>::iterator nit;
     for (nit = boundary_node_mapping_.begin(); 
          nit != boundary_node_mapping_.end(); ++nit)
     {
@@ -114,7 +114,7 @@ dbsk2d_boundary_sptr boundary)
     //3: Lets classify nodes
     classify_nodes();
 
-    vcl_cout<<"Finished classifying nodes"<<vcl_endl;
+    std::cout<<"Finished classifying nodes"<<std::endl;
 
     //4. Lets compile all shock fragments
     compile_shock_fragments();
@@ -123,14 +123,14 @@ dbsk2d_boundary_sptr boundary)
     region_growing.set_adjacency(adjacency_flag_);
     region_growing.grow_regions();
 
-    vcl_cout<<"Printing out vertices: "<<
-        composite_graph_->number_of_vertices()<<vcl_endl;
+    std::cout<<"Printing out vertices: "<<
+        composite_graph_->number_of_vertices()<<std::endl;
 
-    vcl_cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
-            <<vcl_endl;
+    std::cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
+            <<std::endl;
 
-    vcl_cout<<"Number of regions: "<<rag_graph_->number_of_vertices()
-            <<vcl_endl;
+    std::cout<<"Number of regions: "<<rag_graph_->number_of_vertices()
+            <<std::endl;
 
    
     return status_flag;
@@ -140,11 +140,11 @@ void dbskfg_compute_composite_graph_streamlined::compile_contour_elements(
     dbsk2d_boundary_sptr boundary)
 {
     // Grap all boundary elements
-    vcl_vector<dbsk2d_ishock_belm* > belm_list = boundary->belm_list();
+    std::vector<dbsk2d_ishock_belm* > belm_list = boundary->belm_list();
 
     // Keep a local reference of all line ids seen
-    vcl_map<unsigned int, unsigned int> lines_visited;
-    vcl_map<int,dbskfg_composite_node_sptr> nodes_visited;
+    std::map<unsigned int, unsigned int> lines_visited;
+    std::map<int,dbskfg_composite_node_sptr> nodes_visited;
 
     for ( unsigned int i=0; i < belm_list.size() ; ++i)
     {
@@ -155,7 +155,7 @@ void dbskfg_compute_composite_graph_streamlined::compile_contour_elements(
             unsigned int line_id      = line_element->id();
             unsigned int twin_line_id = line_element->twinLine()->id();
             
-            const vcl_list<vtol_topology_object*>* contour_list= 
+            const std::list<vtol_topology_object*>* contour_list= 
             line_element->bnd_edge()->superiors_list();
             unsigned int conid=contour_list->front()->get_id();
          
@@ -262,7 +262,7 @@ void dbskfg_compute_composite_graph_streamlined::compile_shock_elements()
 {
 
     // Keep a local map of ids encountered
-    vcl_map<int,dbskfg_composite_node_sptr> temp_shock_node_map;
+    std::map<int,dbskfg_composite_node_sptr> temp_shock_node_map;
 
     // Iterate thru all edges
     dbsk2d_ishock_graph::edge_iterator eit;
@@ -579,7 +579,7 @@ void dbskfg_compute_composite_graph_streamlined::classify_nodes()
             unsigned int contour_degree(0);
             dbskfg_composite_node::edge_iterator eit;
 
-            vcl_vector<dbskfg_composite_link_sptr> edges;
+            std::vector<dbskfg_composite_link_sptr> edges;
 
             for (eit = (*vit)->out_edges_begin(); 
                  eit != (*vit)->out_edges_end() ; ++eit)

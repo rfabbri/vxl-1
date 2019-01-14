@@ -1,6 +1,6 @@
 #include "dbrl_support.h"
 #include <vnl/vnl_math.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <dbgl/algo/dbgl_eulerspiral.h>
 
 double dbrl_support::support(int i,int j,double angledeg)
@@ -40,20 +40,20 @@ double dbrl_support::support(int i,int j,double angledeg)
 
 double dbrl_support::compute_lambdap(int i,int j,int i0,int j0,double angle)
     {
-        double lambdap=vcl_acos((-(double)(j0-j)*vcl_sin(angle)+((double)(i0-i))*vcl_cos(angle))/vcl_sqrt((double)(j-j0)*(double)(j-j0)+(double)(i-i0)*(double)(i-i0)));
+        double lambdap=std::acos((-(double)(j0-j)*std::sin(angle)+((double)(i0-i))*std::cos(angle))/std::sqrt((double)(j-j0)*(double)(j-j0)+(double)(i-i0)*(double)(i-i0)));
         return lambdap;
     }
 double dbrl_support::compute_lambda0(int i,int j,int i0,int j0)
     {
         double angle=2*(double)img_(i0,j0)*vnl_math::pi/180.0;
-        double lambda0= vcl_acos((-(double)(j-j0)*vcl_sin(angle)+(double)(i-i0)*vcl_cos(angle))/vcl_sqrt(((double)(j-j0))*((double)(j-j0))+((double)(i-i0))*((double)(i-i0))));
+        double lambda0= std::acos((-(double)(j-j0)*std::sin(angle)+(double)(i-i0)*std::cos(angle))/std::sqrt(((double)(j-j0))*((double)(j-j0))+((double)(i-i0))*((double)(i-i0))));
         return lambda0;
     }
 
 double dbrl_support::cocircularity(double lambdap,double lambda0)
     {
-    double del=vcl_fabs(lambdap+lambda0-vnl_math::pi);
-    double c=(1-del*del/(vnl_math::pi*vnl_math::pi))*vcl_exp(-del*del/(2*(vnl_math::pi/4)*(vnl_math::pi/4)));
+    double del=std::fabs(lambdap+lambda0-vnl_math::pi);
+    double c=(1-del*del/(vnl_math::pi*vnl_math::pi))*std::exp(-del*del/(2*(vnl_math::pi/4)*(vnl_math::pi/4)));
     return c;
     }
 double dbrl_support::smoothness(double lambdap,double lambda0)
@@ -64,7 +64,7 @@ double dbrl_support::smoothness(double lambdap,double lambda0)
 double dbrl_support::proximity(int i,int j, int i0,int j0)
     {
         double d2=((double)(j-j0))*((double)(j-j0))+((double)(i-i0))*((double)(i-i0));
-        return vcl_exp(-d2/((double)radius_*radius_));
+        return std::exp(-d2/((double)radius_*radius_));
     }
 
 
@@ -74,19 +74,19 @@ double compute_support(double x0,double y0,double theta0,double x1,double y1,dou
         //: compute lambda1 and lambda0
         double a=0.75;
         double angle0=theta0;//*vnl_math::pi/180.0;
-        double lambda0=vcl_acos(((y1-y0)*vcl_sin(angle0)+(x1-x0)*vcl_cos(angle0))/vcl_sqrt((y0-y1)*(y0-y1)+(x0-x1)*(x0-x1)));
+        double lambda0=std::acos(((y1-y0)*std::sin(angle0)+(x1-x0)*std::cos(angle0))/std::sqrt((y0-y1)*(y0-y1)+(x0-x1)*(x0-x1)));
 
         double angle1=theta1;//*vnl_math::pi/180.0;
-        double lambda1=vcl_acos(((y0-y1)*vcl_sin(angle1)+(x0-x1)*vcl_cos(angle1))/vcl_sqrt((y0-y1)*(y0-y1)+(x0-x1)*(x0-x1)));
+        double lambda1=std::acos(((y0-y1)*std::sin(angle1)+(x0-x1)*std::cos(angle1))/std::sqrt((y0-y1)*(y0-y1)+(x0-x1)*(x0-x1)));
 
-        double del=vcl_fabs(lambda1+lambda0-vnl_math::pi);
-        double c=(1-del*del/(vnl_math::pi*vnl_math::pi));//*vcl_exp(-del*del/(2*(vnl_math::pi/8)*(vnl_math::pi/8)));
+        double del=std::fabs(lambda1+lambda0-vnl_math::pi);
+        double c=(1-del*del/(vnl_math::pi*vnl_math::pi));//*std::exp(-del*del/(2*(vnl_math::pi/8)*(vnl_math::pi/8)));
 
         //double csmooth=(1-lambda1*(vnl_math::pi-lambda1)/(vnl_math::pi*vnl_math::pi))*(1-lambda0*(vnl_math::pi-lambda0)/(vnl_math::pi*vnl_math::pi));
 
-        double csmooth=vcl_fabs(1-lambda1/(vnl_math::pi/2))*vcl_fabs(1-lambda0/(vnl_math::pi/2));
+        double csmooth=std::fabs(1-lambda1/(vnl_math::pi/2))*std::fabs(1-lambda0/(vnl_math::pi/2));
         double dist=(y0-y1)*(y0-y1)+(x0-x1)*(x0-x1);
-        double d2=vcl_exp(-(dist)/(2*(stdrad_*stdrad_)));
+        double d2=std::exp(-(dist)/(2*(stdrad_*stdrad_)));
 
         //: to exclude very close edges 
         //if(dist<a*a)
@@ -104,7 +104,7 @@ double compute_euler_spiral(double x0,double y0,double theta0,double x1,double y
     //    double d = v.length();
   
     //    // psi is the angle of line from start point to end point
-    //    double psi = vcl_atan2(v.y(), v.x());
+    //    double psi = std::atan2(v.y(), v.x());
     //    if (psi < 0)
     //        psi += vnl_math::pi * 2;
 
@@ -157,7 +157,7 @@ double compute_euler_spiral(double x0,double y0,double theta0,double x1,double y
             double kavg1=(e1.curvature_at(1.0)+e1.curvature_at(0))/2;
             double gamma1=e1.gamma();
             energy1=(gamma1*gamma1*len1*len1+kavg1*kavg1*len1*len1+1)*len1;
-            vcl_cout<<e1.curvature_at(1.0)<<"\t"<<e1.curvature_at(0.0)<<"\t"<<energy1<<"\n";
+            std::cout<<e1.curvature_at(1.0)<<"\t"<<e1.curvature_at(0.0)<<"\t"<<energy1<<"\n";
         }
         else
             energy1=10000;
@@ -172,7 +172,7 @@ double compute_euler_spiral(double x0,double y0,double theta0,double x1,double y
             double kavg2=(e2.curvature_at(1)+e2.curvature_at(0))/2;
             double gamma2=e2.gamma();
             energy2=(gamma2*gamma2*len2*len2+kavg2*kavg2*len2*len2+1)*len2;
-            vcl_cout<<e2.curvature_at(1.0)<<"\t"<<e2.curvature_at(0.0)<<"\t"<<energy2<<"\n";
+            std::cout<<e2.curvature_at(1.0)<<"\t"<<e2.curvature_at(0.0)<<"\t"<<energy2<<"\n";
         }
         else
         {
@@ -182,12 +182,12 @@ double compute_euler_spiral(double x0,double y0,double theta0,double x1,double y
 
         if(energy1<energy2)
         {
-            vcl_cout<<"En1= "<<vcl_exp(-energy1/60)<<"\n";
-            return vcl_exp(-energy1/100);
+            std::cout<<"En1= "<<std::exp(-energy1/60)<<"\n";
+            return std::exp(-energy1/100);
         }
         else{
-            vcl_cout<<"En2= "<<vcl_exp(-energy2/60)<<"\n";
-            return vcl_exp(-energy2/100);
+            std::cout<<"En2= "<<std::exp(-energy2/60)<<"\n";
+            return std::exp(-energy2/100);
         }
         
     }

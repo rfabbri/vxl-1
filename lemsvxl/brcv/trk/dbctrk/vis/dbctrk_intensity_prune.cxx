@@ -7,7 +7,7 @@
 #include <bvis1/bvis1_view_tableau.h>
 #include <dbctrk/vis/dbctrk_displayer.h>
 #include <vgui/vgui_projection_inspector.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -90,20 +90,20 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
   */
   if( e.type == vgui_KEY_PRESS && e.key == 's' && vgui_SHIFT)
     {
-      vcl_vector<vgui_soview*> all_objects;
+      std::vector<vgui_soview*> all_objects;
       all_objects = tableau_->get_selected_soviews();
       
       if(all_objects.size()<=0)
   return false;
       engEvalString(ep, "figure;"); 
       
-      vcl_cout<<"\n no of selected ojects are "<<all_objects.size();
-      vcl_cout<<"\n the type of the object is"<<((dbctrk_soview2D*)all_objects[0])->type_name();
+      std::cout<<"\n no of selected ojects are "<<all_objects.size();
+      std::cout<<"\n the type of the object is"<<((dbctrk_soview2D*)all_objects[0])->type_name();
        if(((dbctrk_soview2D*)all_objects[0])->type_name() == "dbctrk_soview2D") 
    {
-     vcl_cout<<"\n the types matched";
+     std::cout<<"\n the types matched";
      dbctrk_tracker_curve_sptr c=((dbctrk_soview2D*)all_objects[0])->dbctrk_sptr();
-     vcl_cout<<"\n the number of curves are "<<c->prev_.size();
+     std::cout<<"\n the number of curves are "<<c->prev_.size();
      for(int i=0;i<c->prev_.size();i++)
        {
          double *meanp,*meann,*stdp,*stdn;
@@ -117,7 +117,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
        meann[j]=c->prev_[i]->match_curve_set[0]->desc->meann[j];
        stdp[j]=c->prev_[i]->match_curve_set[0]->desc->stdp[j];
        stdn[j]=c->prev_[i]->match_curve_set[0]->desc->stdn[j];
-       vcl_cout<<meanp[j]<<" ";
+       std::cout<<meanp[j]<<" ";
        
      }
          prepare_vector("meanp",meanp,3,ep);
@@ -125,8 +125,8 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
          prepare_vector("stdp",stdp,3,ep);
          prepare_vector("stdn",stdn,3,ep);
          engEvalString(ep, "hold on;");
-         vcl_cout<<engEvalString(ep, "ellipsoid(meanp(1),meanp(2),meanp(3),stdp(1),stdp(2),stdp(3))")<<"\n";
-         vcl_cout<<engEvalString(ep, "ellipsoid(meann(1),meann(2),meann(3),stdn(1),stdn(2),stdn(3))")<<"\n";
+         std::cout<<engEvalString(ep, "ellipsoid(meanp(1),meanp(2),meanp(3),stdp(1),stdp(2),stdp(3))")<<"\n";
+         std::cout<<engEvalString(ep, "ellipsoid(meann(1),meann(2),meann(3),stdn(1),stdn(2),stdn(3))")<<"\n";
        }
    }
        
@@ -146,7 +146,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
       return true;
       
       int framen=view->frame();
-      vcl_vector<vgui_soview*> all_objects;
+      std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
     dbctrk_storage_sptr p1,p2;
@@ -181,25 +181,25 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     {
 
       dbctrk_tracker_curve_sptr c2=tc1[k]->prev_[l]->match_curve_set[0];
-      vcl_vector<double> hist1pr=normhist(c1->desc->Prcolor,0,255,20);
-      vcl_vector<double> hist1pg=normhist(c1->desc->Pgcolor,0,255,20);
-      vcl_vector<double> hist1pb=normhist(c1->desc->Pbcolor,0,255,20);
-      vcl_vector<double> hist1nr=normhist(c1->desc->Nrcolor,0,255,20);
-      vcl_vector<double> hist1ng=normhist(c1->desc->Ngcolor,0,255,20);
-      vcl_vector<double> hist1nb=normhist(c1->desc->Nbcolor,0,255,20);
+      std::vector<double> hist1pr=normhist(c1->desc->Prcolor,0,255,20);
+      std::vector<double> hist1pg=normhist(c1->desc->Pgcolor,0,255,20);
+      std::vector<double> hist1pb=normhist(c1->desc->Pbcolor,0,255,20);
+      std::vector<double> hist1nr=normhist(c1->desc->Nrcolor,0,255,20);
+      std::vector<double> hist1ng=normhist(c1->desc->Ngcolor,0,255,20);
+      std::vector<double> hist1nb=normhist(c1->desc->Nbcolor,0,255,20);
       
-      vcl_vector<double> hist2pr=normhist(c2->desc->Prcolor,0,255,20);
-      vcl_vector<double> hist2pg=normhist(c2->desc->Pgcolor,0,255,20);
-      vcl_vector<double> hist2pb=normhist(c2->desc->Pbcolor,0,255,20);
-      vcl_vector<double> hist2nr=normhist(c2->desc->Nrcolor,0,255,20);
-      vcl_vector<double> hist2ng=normhist(c2->desc->Ngcolor,0,255,20);
-      vcl_vector<double> hist2nb=normhist(c2->desc->Nbcolor,0,255,20);
+      std::vector<double> hist2pr=normhist(c2->desc->Prcolor,0,255,20);
+      std::vector<double> hist2pg=normhist(c2->desc->Pgcolor,0,255,20);
+      std::vector<double> hist2pb=normhist(c2->desc->Pbcolor,0,255,20);
+      std::vector<double> hist2nr=normhist(c2->desc->Nrcolor,0,255,20);
+      std::vector<double> hist2ng=normhist(c2->desc->Ngcolor,0,255,20);
+      std::vector<double> hist2nb=normhist(c2->desc->Nbcolor,0,255,20);
       
-      double costpp=vcl_sqrt(dist2pdf(hist1pr,hist2pr)+dist2pdf(hist1pg,hist2pg)+dist2pdf(hist1pb,hist2pb));
-      double costnn=vcl_sqrt(dist2pdf(hist1nr,hist2nr)+dist2pdf(hist1ng,hist2ng)+dist2pdf(hist1nb,hist2nb));
-      double costpn=vcl_sqrt(dist2pdf(hist1pr,hist2nr)+dist2pdf(hist1pg,hist2ng)+dist2pdf(hist1pb,hist2nb));
-      double costnp=vcl_sqrt(dist2pdf(hist1nr,hist2pr)+dist2pdf(hist1ng,hist2pg)+dist2pdf(hist1nb,hist2pb));
-      double prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+      double costpp=std::sqrt(dist2pdf(hist1pr,hist2pr)+dist2pdf(hist1pg,hist2pg)+dist2pdf(hist1pb,hist2pb));
+      double costnn=std::sqrt(dist2pdf(hist1nr,hist2nr)+dist2pdf(hist1ng,hist2ng)+dist2pdf(hist1nb,hist2nb));
+      double costpn=std::sqrt(dist2pdf(hist1pr,hist2nr)+dist2pdf(hist1pg,hist2ng)+dist2pdf(hist1pb,hist2nb));
+      double costnp=std::sqrt(dist2pdf(hist1nr,hist2pr)+dist2pdf(hist1ng,hist2pg)+dist2pdf(hist1nb,hist2pb));
+      double prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
       if(prunecost<tau)
         {
     c1->next_.push_back(tc1[k]->prev_[l]);
@@ -221,12 +221,12 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
       motion_input.field("R1",r1);
       if(!motion_input.ask())
   return true;
-      satbins=(int)vcl_ceil(1/vcl_pow(r1,2));
-      vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
-      vcl_map<vcl_string, vgui_tableau_sptr>::iterator iter;
-      vcl_vector<vgui_soview*>  all_objects;
-      vcl_vector<vgui_soview*>  selected_objects;
-      vcl_map<int,vcl_vector<dbctrk_soview2D* > >::iterator curveiter;
+      satbins=(int)std::ceil(1/std::pow(r1,2));
+      std::vector< std::map<std::string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
+      std::map<std::string, vgui_tableau_sptr>::iterator iter;
+      std::vector<vgui_soview*>  all_objects;
+      std::vector<vgui_soview*>  selected_objects;
+      std::map<int,std::vector<dbctrk_soview2D* > >::iterator curveiter;
       curr_tableau_=tableau_;
       for(unsigned int j=0;j<seq.size();j++)
   {    
@@ -264,14 +264,14 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
       dbctrk_tracker_curve_sptr c=((dbctrk_soview2D*)selected_objects[i])->dbctrk_sptr();
       float r,g,b;
       utils::set_changing_colors(c->get_id(),r,g,b);
-      vil_rgb<vxl_byte> color_of_hist((unsigned char)vcl_floor(r*255.f),
-              (unsigned char)vcl_floor(g*255.f),
-              (unsigned char)vcl_floor(b*255.f));
+      vil_rgb<vxl_byte> color_of_hist((unsigned char)std::floor(r*255.f),
+              (unsigned char)std::floor(g*255.f),
+              (unsigned char)std::floor(b*255.f));
       float I,h,s;
       brip_vil_float_ops::rgb_to_ihs(color_of_hist,I,h,s);
       vbl_array_2d<double> chistp(thetabins,satbins,0.0);
       vbl_array_2d<double> chistn(thetabins,satbins,0.0);
-      vcl_vector<vsol_spatial_object_2d_sptr > lines;
+      std::vector<vsol_spatial_object_2d_sptr > lines;
       norm2dpolar(c->desc->Prcolor,c->desc->Pgcolor,c->desc->Pbcolor,chistp,thetabins,satbins,r1);
       norm2dpolar(c->desc->Nrcolor,c->desc->Ngcolor,c->desc->Nbcolor,chistn,thetabins,satbins,r1);
       int offx,offy;
@@ -301,9 +301,9 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     motion_input.field("R1",r1);
     if(!motion_input.ask())
       return true;
-    satbins=(int)vcl_ceil(1/vcl_pow(r1,2));
+    satbins=(int)std::ceil(1/std::pow(r1,2));
     int framen=view->frame();
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
 
@@ -330,8 +330,8 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         }
     }
       }
-    vcl_cout<<"\n motion thresholding done";
-    vcl_cout<<"\n motion thresholding done";
+    std::cout<<"\n motion thresholding done";
+    std::cout<<"\n motion thresholding done";
     for(int k=0;k<tc1.size();k++)
       {
   dbctrk_tracker_curve_sptr c1=tc1[k];
@@ -346,9 +346,9 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     {
       for(int j=0;j<satbins;j++)
         {
-    vcl_cout<<c1histp[i][j]<<" ";
+    std::cout<<c1histp[i][j]<<" ";
         }
-      vcl_cout<<"\n";
+      std::cout<<"\n";
     }
 
   for(int l=0;l<tc1[k]->prev_.size();l++)
@@ -357,7 +357,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
       dbctrk_tracker_curve_sptr c2=tc1[k]->prev_[l]->match_curve_set[0];
       if(c2.ptr())
         {
-    vcl_cout<<"\n id is "<<c2->get_id();
+    std::cout<<"\n id is "<<c2->get_id();
     vbl_array_2d<double> c2histp(thetabins,satbins,0.0);
     vbl_array_2d<double> c2histn(thetabins,satbins,0.0);
     
@@ -366,20 +366,20 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     norm2dpolar(c2->desc->Nrcolor,c2->desc->Ngcolor,c2->desc->Nbcolor,c2histn,thetabins,satbins,r1);
     
         }
-      /*vcl_cout<<"\n histograms computed";
-      vcl_cout<<"\n";
+      /*std::cout<<"\n histograms computed";
+      std::cout<<"\n";
       double costpp=dist3pdf(c1histp,c2histp,no_of_bins);
-      vcl_cout<<"\n step1";
+      std::cout<<"\n step1";
       double costnp=dist3pdf(c1histn,c2histp,no_of_bins);
-      vcl_cout<<"\n step1";
+      std::cout<<"\n step1";
       double costnn=dist3pdf(c1histn,c2histn,no_of_bins);
-      vcl_cout<<"\n step1";
+      std::cout<<"\n step1";
       double costpn=dist3pdf(c1histp,c2histn,no_of_bins);
-      vcl_cout<<"\n step1";
+      std::cout<<"\n step1";
       
-      double prunecost=vcl_max(vcl_max(vcl_max(costpp,costnn),costpn),costnp);
-      vcl_cout<<"\n The prune cost is "<<prunecost;
-      vcl_cout<<"\n";
+      double prunecost=std::max(std::max(std::max(costpp,costnn),costpn),costnp);
+      std::cout<<"\n The prune cost is "<<prunecost;
+      std::cout<<"\n";
       if(prunecost>tau)
         {
     c1->next_.push_back(tc1[k]->prev_[l]);
@@ -399,7 +399,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
   return true;
 
       int framen=view->frame();
-      vcl_vector<vgui_soview*> all_objects;
+      std::vector<vgui_soview*> all_objects;
       all_objects = tableau_->get_all();
 
       
@@ -426,7 +426,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     
       }
   }
-      vcl_cout<<"\n the number of possible matches are"<<cnt;
+      std::cout<<"\n the number of possible matches are"<<cnt;
     }
     //: pruning using euclidean 3d histogram matching    
     if( e.type == vgui_KEY_PRESS && e.key == 'k' && vgui_SHIFT)
@@ -453,7 +453,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     motion_input.field("Theta Bins(polar)",thetabins);
     motion_input.field("R1(polar)",r1);
     motion_input.field("V1(polar)",v1);
-    vcl_vector<vcl_string> choices;
+    std::vector<std::string> choices;
     choices.push_back("Bhat");
     choices.push_back("Chi Square");
     choices.push_back("polynomial");
@@ -463,11 +463,11 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     motion_input.choice("Histogram","Cartesian","Polar",Hchoice);
     if(!motion_input.ask())
       return true;
-    satbins=(int)vcl_ceil(1/vcl_pow(r1,2));
-    int valuebins=(int)vcl_ceil(1/vcl_pow(v1,3));
+    satbins=(int)std::ceil(1/std::pow(r1,2));
+    int valuebins=(int)std::ceil(1/std::pow(v1,3));
    
     int framen=view->frame();
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
 
@@ -478,8 +478,8 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     tc2.clear();
     p1->get_tracked_curves(tc1);
     p2->get_tracked_curves(tc2);
-    vcl_cout<<"\n curves extracted ";
-    vcl_cout<<"\n curves extracted ";
+    std::cout<<"\n curves extracted ";
+    std::cout<<"\n curves extracted ";
     /*    for(int k=0;k<tc1.size();k++)
       {
   tc1[k]->prev_.clear();
@@ -496,7 +496,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         }
     }
       }
-    vcl_cout<<"\n motion thresholding done";
+    std::cout<<"\n motion thresholding done";
     */
     for(int k=0;k<tc1.size();k++)
       {
@@ -557,7 +557,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         double costnp=dist3pdf_bhat(c1histn,c2histp,xbins,ybins,zbins);
         double costnn=dist3pdf_bhat(c1histn,c2histn,xbins,ybins,zbins);
         double costpn=dist3pdf_bhat(c1histp,c2histn,xbins,ybins,zbins);
-        prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+        prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
       }
       else if(Lchoice==1)
         {
@@ -565,7 +565,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         double costnp=dist3pdf_chi_square(c1histn,c2histp,xbins,ybins,zbins);
         double costnn=dist3pdf_chi_square(c1histn,c2histn,xbins,ybins,zbins);
         double costpn=dist3pdf_chi_square(c1histp,c2histn,xbins,ybins,zbins);
-        prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+        prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
         }
       else if(Lchoice==2)
         {
@@ -573,7 +573,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         double costnp=dist3pdf_poly(c1histn,c2histp,xbins,ybins,zbins,t,npow);
         double costnn=dist3pdf_poly(c1histn,c2histn,xbins,ybins,zbins,t,npow);
         double costpn=dist3pdf_poly(c1histp,c2histn,xbins,ybins,zbins,t,npow);
-        prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+        prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
         }
       else if(Lchoice==3)
         {
@@ -582,9 +582,9 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     double costnn=dist3pdf_KL(c1histn,c2histn,xbins,ybins,zbins);
     double costpn=dist3pdf_KL(c1histp,c2histn,xbins,ybins,zbins);
     
-    prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+    prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
         }
-      vcl_cout<<"\n the prune cost is "<<prunecost;
+      std::cout<<"\n the prune cost is "<<prunecost;
       if(prunecost<tau)
         {
     c1->next_.push_back(tc1[k]->prev_[l]);
@@ -616,12 +616,12 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
 
     if(!motion_input.ask())
   return true;
-    vcl_cout<<"\n Lchoice ="<<Lchoice;
-    satbins=(int)vcl_ceil(1/vcl_pow(r1,2));
-    int valuebins=(int)vcl_ceil(1/vcl_pow(v1,3));
+    std::cout<<"\n Lchoice ="<<Lchoice;
+    satbins=(int)std::ceil(1/std::pow(r1,2));
+    int valuebins=(int)std::ceil(1/std::pow(v1,3));
 
     int framen=view->frame();
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
 
@@ -649,8 +649,8 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         }
     }
       }
-    vcl_cout<<"\n motion thresholding done";
-    vcl_cout<<"\n motion thresholding done";
+    std::cout<<"\n motion thresholding done";
+    std::cout<<"\n motion thresholding done";
     for(int k=0;k<tc1.size();k++)
       {
   dbctrk_tracker_curve_sptr c1=tc1[k];
@@ -679,7 +679,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
         double costnp=dist3pdf_bhat(c1histn,c2histp,thetabins,satbins,valuebins);
         double costnn=dist3pdf_bhat(c1histn,c2histn,thetabins,satbins,valuebins);
         double costpn=dist3pdf_bhat(c1histp,c2histn,thetabins,satbins,valuebins);
-        prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+        prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
       }
       else if(Lchoice==1)
         {
@@ -687,9 +687,9 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     double costnp=dist3pdf_chi_square(c1histn,c2histp,thetabins,satbins,valuebins);
     double costnn=dist3pdf_chi_square(c1histn,c2histn,thetabins,satbins,valuebins);
     double costpn=dist3pdf_chi_square(c1histp,c2histn,thetabins,satbins,valuebins);
-    prunecost=vcl_min(vcl_min(vcl_min(costpp,costnn),costpn),costnp);
+    prunecost=std::min(std::min(std::min(costpp,costnn),costpn),costnp);
         }
-      vcl_cout<<"\n the prune cost is "<<prunecost;
+      std::cout<<"\n the prune cost is "<<prunecost;
 
       if(prunecost<tau)
         {
@@ -704,24 +704,24 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     //: to cpmpare it against ground truth 
     if( e.type == vgui_KEY_PRESS && e.key == 'j' && vgui_SHIFT)
     {
-      static vcl_string filename="";
-      static vcl_string ext="*.*";
+      static std::string filename="";
+      static std::string ext="*.*";
 
       vgui_dialog inputfile("Load Ground Truth");
       inputfile.file("Ground Truth File Name",ext,filename);
       if(!inputfile.ask())
   return true;
 
-      vcl_cout<<"\n reading ground truth file .... ";
-      vcl_cout<<"\n reading ground truth file .... ";
-      vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > >gmatches;
+      std::cout<<"\n reading ground truth file .... ";
+      std::cout<<"\n reading ground truth file .... ";
+      std::vector<std::pair<std::vector<int>,std::vector<int> > >gmatches;
       readcorrespondence(filename,gmatches);
 
       int counter=0;
       for(int i=0;i<tc1.size();i++)
   {
     int queryid=tc1[i]->get_id();
-    vcl_vector<int> corr_id=find_matching_ids(queryid,gmatches);
+    std::vector<int> corr_id=find_matching_ids(queryid,gmatches);
     bool outerflag=true;
     for(int k=0;k<corr_id.size();k++)
       {
@@ -738,12 +738,12 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
       counter++;
     else
       {
-        //vcl_cout<<"\n the error curve is "<<queryid;
+        //std::cout<<"\n the error curve is "<<queryid;
         
       }
 
   }
-      vcl_cout<<"\n the counter is "<<counter<<" out of"<<tc1.size();
+      std::cout<<"\n the counter is "<<counter<<" out of"<<tc1.size();
       int sumcandidi=0;
       int sumcandidm=0;
       
@@ -752,8 +752,8 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
     sumcandidi+=tc1[i]->next_.size();
     sumcandidm+=tc1[i]->prev_.size();
   }
-      vcl_cout<<"\n the sum of candids intensity are "<<sumcandidi;
-      vcl_cout<<"\n the sum of candids intensity are "<<sumcandidm;
+      std::cout<<"\n the sum of candids intensity are "<<sumcandidi;
+      std::cout<<"\n the sum of candids intensity are "<<sumcandidm;
       
     }
   if( e.type == vgui_MOTION){
@@ -821,7 +821,7 @@ dbctrk_intensity_prune_tool::handle( const vgui_event & e,
   
         }
 //: Return the name of this tool
-vcl_string
+std::string
 dbctrk_intensity_prune_tool::name() const
 {
   return "Intensity pruner"; 
@@ -835,7 +835,7 @@ bool dbctrk_intensity_prune_tool::disjoint(vbl_bounding_box<double,3> const &a,
       return true;
   return false;
 }
-bool dbctrk_intensity_prune_tool::norm2dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_vector<double> & dim3, vbl_array_2d<double> &polarhist,int thetabins,int rbins,double r1)
+bool dbctrk_intensity_prune_tool::norm2dpolar(std::vector<double> & dim1,std::vector<double> & dim2,std::vector<double> & dim3, vbl_array_2d<double> &polarhist,int thetabins,int rbins,double r1)
 {
   if(dim1.size()!=dim2.size() && dim1.size()!=dim3.size() && dim1.size()>0)
     return false;
@@ -853,8 +853,8 @@ bool dbctrk_intensity_prune_tool::norm2dpolar(vcl_vector<double> & dim1,vcl_vect
   s=(float)dim3[i];
 
 
-      int thetaindex=(int)vcl_floor((h*360/255)/(360/thetabins));
-      int satindex=(int)vcl_floor(vcl_pow((s/255)/r1,2));
+      int thetaindex=(int)std::floor((h*360/255)/(360/thetabins));
+      int satindex=(int)std::floor(std::pow((s/255)/r1,2));
 
       polarhist[thetaindex][satindex]=polarhist[thetaindex][satindex]+1;
     }
@@ -867,11 +867,11 @@ bool dbctrk_intensity_prune_tool::norm2dpolar(vcl_vector<double> & dim1,vcl_vect
   }
       
     }/*
-      vcl_cout<<"\n";
-      vcl_cout<<"\n";*/
+      std::cout<<"\n";
+      std::cout<<"\n";*/
   return true;
 }
-bool dbctrk_intensity_prune_tool::norm3dpolar(vcl_vector<double> & dim1,vcl_vector<double> & dim2,vcl_vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1)
+bool dbctrk_intensity_prune_tool::norm3dpolar(std::vector<double> & dim1,std::vector<double> & dim2,std::vector<double> & dim3, vbl_array_3d<double> &polarhist,int thetabins,int rbins,int valuebins,double r1,double v1)
 {
    if(dim1.size()!=dim2.size() && dim1.size()!=dim3.size() && dim1.size()>0)
     return false;
@@ -893,9 +893,9 @@ bool dbctrk_intensity_prune_tool::norm3dpolar(vcl_vector<double> & dim1,vcl_vect
   s=(float)dim3[i];
 
 
-      int thetaindex=(int)vcl_floor((h*360/255)/(360/thetabins));
-      int satindex=(int)vcl_floor(vcl_pow((s/255)/r1,2));
-      int valindex=(int)vcl_floor(vcl_pow((v/255)/v1,3));
+      int thetaindex=(int)std::floor((h*360/255)/(360/thetabins));
+      int satindex=(int)std::floor(std::pow((s/255)/r1,2));
+      int valindex=(int)std::floor(std::pow((v/255)/v1,3));
       if(thetaindex>=thetabins)
   thetaindex=thetabins-1;
       if(satindex>=rbins)
@@ -920,18 +920,18 @@ bool dbctrk_intensity_prune_tool::hist2img(vbl_array_2d<double> hist, int thetab
 {
   
   int R=50;
-  vcl_cout<<"\n entering the hist2img";
+  std::cout<<"\n entering the hist2img";
   for(int i=0;i<hist.rows();i++)
     {
       for(int j=0;j<hist.cols();j++)
   {
-    vcl_cout<<255.0*hist(i,j)<<" ";
+    std::cout<<255.0*hist(i,j)<<" ";
     for(double theta=(i*2*vnl_math::pi)/hist.rows();theta<((i+1)*2*vnl_math::pi)/hist.rows();)
       {
-        for(double rad=vcl_sqrt((double)j)*r1;rad < vcl_sqrt((double)j+1)*r1 && rad<1.0;)
+        for(double rad=std::sqrt((double)j)*r1;rad < std::sqrt((double)j+1)*r1 && rad<1.0;)
     {
-      int index_i=(int)vcl_floor((rad*vcl_cos(theta))*(double)R)+offx;
-      int index_j=(int)vcl_floor((rad*vcl_sin(theta))*(double)R)+offy;
+      int index_i=(int)std::floor((rad*std::cos(theta))*(double)R)+offx;
+      int index_j=(int)std::floor((rad*std::sin(theta))*(double)R)+offy;
       if(index_j>=offy+R)
         index_j=offy+R-1;
       if(index_i>=offx+R)
@@ -940,10 +940,10 @@ bool dbctrk_intensity_prune_tool::hist2img(vbl_array_2d<double> hist, int thetab
         index_j=offy-R;
       if(index_i<offx-R)
         index_i=offx-R;
-      vil_rgb<vxl_byte> pixel((unsigned char)vcl_floor(255.0*hist(i,j)),
-            (unsigned char)vcl_floor(255.0*hist(i,j)),
-            (unsigned char)vcl_floor(255.0*hist(i,j)));
-      brip_vil_float_ops::ihs_to_rgb(pixel,(unsigned char)vcl_floor(255.0*hist(i,j)),h,s);
+      vil_rgb<vxl_byte> pixel((unsigned char)std::floor(255.0*hist(i,j)),
+            (unsigned char)std::floor(255.0*hist(i,j)),
+            (unsigned char)std::floor(255.0*hist(i,j)));
+      brip_vil_float_ops::ihs_to_rgb(pixel,(unsigned char)std::floor(255.0*hist(i,j)),h,s);
       polarimg(index_i,index_j)=pixel;
       rad+=0.01;
     }
@@ -953,7 +953,7 @@ bool dbctrk_intensity_prune_tool::hist2img(vbl_array_2d<double> hist, int thetab
     }
  return true;
 }
-bool dbctrk_intensity_prune_tool::norm3dhist(vcl_vector<double> dim1,vcl_vector<double> dim2,vcl_vector<double> dim3, vbl_array_3d<double> & hist, int numbins)
+bool dbctrk_intensity_prune_tool::norm3dhist(std::vector<double> dim1,std::vector<double> dim2,std::vector<double> dim3, vbl_array_3d<double> & hist, int numbins)
 {
 
   if(dim1.size()!=dim2.size() && dim1.size()!=dim3.size() && dim1.size()>0)
@@ -968,10 +968,10 @@ bool dbctrk_intensity_prune_tool::norm3dhist(vcl_vector<double> dim1,vcl_vector<
       if(dim3[i]<0.0 || dim3[i]>255.0)
   dim3[i]=0;
       
-      double range=vcl_ceil(255.0/(double)numbins);
-      int ind1=(int)vcl_floor(dim1[i]/range);
-      int ind2=(int)vcl_floor(dim2[i]/range);
-      int ind3=(int)vcl_floor(dim3[i]/range);
+      double range=std::ceil(255.0/(double)numbins);
+      int ind1=(int)std::floor(dim1[i]/range);
+      int ind2=(int)std::floor(dim2[i]/range);
+      int ind3=(int)std::floor(dim3[i]/range);
       if(ind1>=numbins)
   ind1=numbins-1;
       if(ind2>=numbins)
@@ -1007,7 +1007,7 @@ double dbctrk_intensity_prune_tool::dist3pdf(vbl_array_3d<double> hist1,vbl_arra
       for(int j=0;j<numbins;j++)
   for(int k=0;k<numbins;k++)
     {
-      dist+=vcl_sqrt(hist1[i][j][k]*hist2[i][j][k]);
+      dist+=std::sqrt(hist1[i][j][k]*hist2[i][j][k]);
     }
   return dist;
 }
@@ -1018,10 +1018,10 @@ double dbctrk_intensity_prune_tool::dist3pdf_bhat(vbl_array_3d<double> hist1,vbl
       for(int j=0;j<ybins;j++)
   for(int k=0;k<zbins;k++)
     {
-      dist+=vcl_sqrt(hist1[i][j][k]*hist2[i][j][k]);
+      dist+=std::sqrt(hist1[i][j][k]*hist2[i][j][k]);
     }
   if(dist!=0.0)
-    return (-vcl_log(dist));
+    return (-std::log(dist));
   else
     return 1e6;
 
@@ -1034,8 +1034,8 @@ double dbctrk_intensity_prune_tool::dist3pdf_KL(vbl_array_3d<double> hist1,vbl_a
   for(int k=0;k<zbins;k++)
     {
       if(hist2[i][j][k]>0 && hist1[i][j][k]>0)
-        dist+=hist1[i][j][k]*vcl_log(hist1[i][j][k]/hist2[i][j][k])+
-        hist2[i][j][k]*vcl_log(hist2[i][j][k]/hist1[i][j][k]);
+        dist+=hist1[i][j][k]*std::log(hist1[i][j][k]/hist2[i][j][k])+
+        hist2[i][j][k]*std::log(hist2[i][j][k]/hist1[i][j][k]);
       else
         dist+=hist1[i][j][k]+hist2[i][j][k];
     }
@@ -1049,7 +1049,7 @@ double dbctrk_intensity_prune_tool::dist3pdf_chi_square(vbl_array_3d<double> his
   for(int k=0;k<zbins;k++)
     {
       if((hist1[i][j][k]+hist2[i][j][k])>0)
-        dist+=vcl_pow((hist1[i][j][k]-hist2[i][j][k]),2)/(hist1[i][j][k]+hist2[i][j][k]);
+        dist+=std::pow((hist1[i][j][k]-hist2[i][j][k]),2)/(hist1[i][j][k]+hist2[i][j][k]);
     }
   return dist;
 }
@@ -1065,7 +1065,7 @@ double dbctrk_intensity_prune_tool::dist3pdf_poly(vbl_array_3d<double> hist1,vbl
       double f2=hist2[i][j][k];
       if(f1>0.0 && f2 >0.0)  
         {
-    dist+=(vcl_pow((f1-f2),n+1)-vcl_pow(tau,n+1))/(vcl_pow((f1-f2),n)+vcl_pow(tau,n));
+    dist+=(std::pow((f1-f2),n+1)-std::pow(tau,n+1))/(std::pow((f1-f2),n)+std::pow(tau,n));
     ++cnt;
         }
       
@@ -1091,10 +1091,10 @@ void dbctrk_intensity_prune_tool::prepare_vector(char matlab_name[], double data
 }
 
 //: function to return the corresponding ids to an id from ground truth data
-vcl_vector<int> find_matching_ids(int query,vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > > gmatches)
+std::vector<int> find_matching_ids(int query,std::vector<std::pair<std::vector<int>,std::vector<int> > > gmatches)
 {
   bool flag=false;
-  vcl_vector<int> ids;
+  std::vector<int> ids;
   ids.clear();
  for(int i=0;i<gmatches.size();i++)
     {
@@ -1109,7 +1109,7 @@ vcl_vector<int> find_matching_ids(int query,vcl_vector<vcl_pair<vcl_vector<int>,
    for(int j=0;j<gmatches[i].second.size();j++)
    {
      if(query==302)
-       vcl_cout<<" the "<<gmatches[i].second[j];
+       std::cout<<" the "<<gmatches[i].second[j];
      if(gmatches[i].second[j]>=0)
        ids.push_back(gmatches[i].second[j]);
    }
@@ -1126,8 +1126,8 @@ bool dbctrk_intensity_prune_tool::displayIHSchart(vil_image_view<vil_rgb<vxl_byt
         for(double theta=0;theta<2*vnl_math::pi;)
     {
 
-      int index_i=(int)vcl_floor(r*vcl_cos(theta)*radius) + radius;
-      int index_j=(int)vcl_floor(r*vcl_sin(theta)*radius) + radius;
+      int index_i=(int)std::floor(r*std::cos(theta)*radius) + radius;
+      int index_j=(int)std::floor(r*std::sin(theta)*radius) + radius;
       if(index_j>=2*radius)
         index_j=2*radius-1;
       if(index_i>=2*radius)

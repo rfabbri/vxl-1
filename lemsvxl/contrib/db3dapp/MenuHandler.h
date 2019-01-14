@@ -46,8 +46,8 @@ public:
 
 private:
   static MenuHandler* instance_;
-  vcl_string ext;
-  vcl_string _fileToOpen;
+  std::string ext;
+  std::string _fileToOpen;
   bool _isFileOpen;
 
   float _nodeSize;

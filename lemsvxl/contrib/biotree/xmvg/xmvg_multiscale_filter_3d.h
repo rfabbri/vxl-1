@@ -14,7 +14,7 @@ class xmvg_multiscale_filter_3d : public xmvg_composite_filter_3d<T, F>
 {
 
   public:
-    xmvg_multiscale_filter_3d(vcl_vector<F > & filters) 
+    xmvg_multiscale_filter_3d(std::vector<F > & filters) 
       : xmvg_composite_filter_3d<T, F>(filters)
       {
         num_filters_a_scale_ = filters_.size();

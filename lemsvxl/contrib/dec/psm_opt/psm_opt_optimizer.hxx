@@ -1,10 +1,10 @@
 #ifndef psm_opt_optimizer_txx_
 #define psm_opt_optimizer_txx_
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <set>
+#include <map>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_vector_fixed.h>
@@ -26,7 +26,7 @@
 #include "psm_opt_optimizer.h"
 
 template <psm_apm_type APM, psm_aux_type AUX>
-psm_opt_optimizer<APM,AUX>::psm_opt_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_string> const& image_ids, double min_sigma)
+psm_opt_optimizer<APM,AUX>::psm_opt_optimizer(psm_scene<APM> &scene, std::vector<std::string> const& image_ids, double min_sigma)
 : scene_(scene), image_ids_(image_ids), min_sigma_(min_sigma)
 {
 
@@ -40,20 +40,20 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
    unsigned int c = 0;
   const unsigned int debug_c = 1509732;
   // get auxillary scenes associated with each imput image
-  vcl_vector<psm_aux_scene_base_sptr> aux_scenes;
+  std::vector<psm_aux_scene_base_sptr> aux_scenes;
   for (unsigned int i=0; i<image_ids_.size(); ++i) {
     psm_aux_scene_base_sptr aux_scene_base = scene_.template get_aux_scene<AUX>(image_ids_[i]);
     aux_scenes.push_back(aux_scene_base);
   }
 
-  vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > aux_samples;
+  std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > aux_samples;
 
   // for each block
   typename psm_scene<APM>::block_index_iterator block_it = scene_.block_index_begin();
   for (; block_it != scene_.block_index_end(); ++block_it) {
     hsds_fd_tree<psm_sample<APM>,3> &block = scene_.get_block(*block_it);
     // get a vector of incremental readers for each aux scene.
-    vcl_vector<hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>*> aux_readers(aux_scenes.size());
+    std::vector<hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>*> aux_readers(aux_scenes.size());
     for(unsigned int i=0; i<aux_scenes.size(); ++i) {
       aux_readers[i] = new hsds_fd_tree_incremental_reader<typename psm_aux_traits<AUX>::sample_datatype,3>();
       psm_aux_scene<AUX> *aux_scene_ptr = static_cast<psm_aux_scene<AUX>*>(aux_scenes[i].ptr());
@@ -69,11 +69,11 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
         psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> aux_cell;
         hsds_fd_tree_node_index<3> aux_idx;
         if (!aux_readers[i]->next(aux_idx, aux_cell)) {
-          vcl_cerr << "error: incremental reader returned false." << vcl_endl;
+          std::cerr << "error: incremental reader returned false." << std::endl;
           return false;
         }
         if (aux_idx != cell_it->first) {
-          vcl_cerr << "error: aux_cell idx does not match cell idx." << vcl_endl;
+          std::cerr << "error: aux_cell idx does not match cell idx." << std::endl;
           return false;
         }
         if (aux_cell.seg_len_ > 0.0f) {
@@ -84,20 +84,20 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
       psm_sample<APM> &cell = cell_it->second;
 
 
-      vcl_vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
-      vcl_vector<float> vis_vector;
+      std::vector<typename psm_apm_traits<APM>::obs_datatype> obs_vector;
+      std::vector<float> vis_vector;
 
       for (unsigned int e=0; e<aux_samples.size(); ++e) {
 #define PSM_OPT_DEBUG
 #ifdef PSM_OPT_DEBUG
         if (c == debug_c) {
-          vcl_cout << "edge " << e << ": " << vcl_endl;
-          vcl_cout << "   vis = " << aux_samples[e].vis_ << vcl_endl;
-          vcl_cout << "   pre = " << aux_samples[e].pre_ << vcl_endl;
-          vcl_cout << "   post = " << aux_samples[e].post_ << vcl_endl;
-          vcl_cout << "   obs = " << aux_samples[e].obs_ << vcl_endl;
-          vcl_cout << "   PI = " << aux_samples[e].PI_ << vcl_endl;
-          vcl_cout << "   seg_len = " << aux_samples[e].seg_len_ << vcl_endl;
+          std::cout << "edge " << e << ": " << std::endl;
+          std::cout << "   vis = " << aux_samples[e].vis_ << std::endl;
+          std::cout << "   pre = " << aux_samples[e].pre_ << std::endl;
+          std::cout << "   post = " << aux_samples[e].post_ << std::endl;
+          std::cout << "   obs = " << aux_samples[e].obs_ << std::endl;
+          std::cout << "   PI = " << aux_samples[e].PI_ << std::endl;
+          std::cout << "   seg_len = " << aux_samples[e].seg_len_ << std::endl;
         }
 #endif
         obs_vector.push_back(aux_samples[e].obs_);
@@ -108,7 +108,7 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
         // not enough samples to perform optimization
 
       } else {
-        //vcl_cout << "c = " << c << vcl_endl;
+        //std::cout << "c = " << c << std::endl;
         // perform optimization
 
         // estimate alpha
@@ -118,7 +118,7 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
 
         if (c==debug_c) {
 
-          vcl_cout << " building alpha cost vector" << vcl_endl;
+          std::cout << " building alpha cost vector" << std::endl;
           // debug: evaluate cost function for a regular grid and write in matlab format
           unsigned int test_alpha_res = 500;
           float test_max_alpha = 8.0f;
@@ -132,7 +132,7 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
             test_cost_vector[test_i] = float(test_fx.magnitude());
           }
 
-          vcl_ofstream ofs("c:/research/psm/output/alpha_cost_vector.txt");
+          std::ofstream ofs("c:/research/psm/output/alpha_cost_vector.txt");
           vnl_matlab_print(ofs,test_cost_vector,"alpha_cost_vector");
           ofs.close();
         }
@@ -151,24 +151,24 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
         if (c==debug_c) {
           lm_a.set_verbose(true);
           lm_a.set_trace(true);
-          vcl_cout << "x initial = " << xa << vcl_endl;
+          std::cout << "x initial = " << xa << std::endl;
         } 
 #endif
-        //vcl_cout << "minimizing alpha " << vcl_endl;
+        //std::cout << "minimizing alpha " << std::endl;
         lm_a.minimize(xa);
 
 #ifdef PSM_OPT_DEBUG
         if (c==debug_c) {
           lm_a.diagnose_outcome();
-          vcl_cout << "x optimized = " << xa << vcl_endl;
-          vcl_cout << "color = " << cell.appearance << vcl_endl;
+          std::cout << "x optimized = " << xa << std::endl;
+          std::cout << "color = " << cell.appearance << std::endl;
           //vnl_matrix<double> J(cost_fun.get_number_of_residuals(),cost_fun.get_number_of_unknowns());
           //cost_fun.gradf(x,J);
-          //vcl_cout << "J(x) = " << vcl_endl << J << vcl_endl;
+          //std::cout << "J(x) = " << std::endl << J << std::endl;
         }
 #endif
         //if (xa[0] >= 1.0) {
-        //  vcl_cout << "c = " << c << " xa = " << xa[0] << vcl_endl;
+        //  std::cout << "c = " << c << " xa = " << xa[0] << std::endl;
         //}
         alpha_cost_fun.x_to_cell(xa, cell);
     
@@ -181,7 +181,7 @@ bool psm_opt_optimizer<APM,AUX>::optimize_cells()
     }
   }
 
-  vcl_cout << "done with all cells" << vcl_endl;
+  std::cout << "done with all cells" << std::endl;
 
   return true;
 }

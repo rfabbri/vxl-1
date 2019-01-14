@@ -17,7 +17,7 @@ dbskfg_apply_transforms_process::dbskfg_apply_transforms_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -34,25 +34,25 @@ dbskfg_apply_transforms_process::clone() const
   return new dbskfg_apply_transforms_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_apply_transforms_process::name()
 {
   return "Apply Composite Transforms";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_apply_transforms_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "composite_graph" );
   return to_return;
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_apply_transforms_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }

@@ -12,10 +12,10 @@
 #include"dsm_node_base_sptr.h"
 #include"dsm_map_utilities.h"
 
-#include<vcl_cassert.h>
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<cassert>
+#include<map>
+#include<set>
+#include<utility>
 
 #include<vnl/vnl_matrix_fixed.h>
 #include<vnl/io/vnl_io_matrix_fixed.h>

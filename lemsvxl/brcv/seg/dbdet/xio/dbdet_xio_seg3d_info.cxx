@@ -3,28 +3,28 @@
 
 #include "dbdet_xio_seg3d_info.h"
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vsl/vsl_basic_xml_element.h>
 
 #include <dbdet/xio/dbdet_xio_seg3d_info_parser.h>
 
 // ============================================================================
 //: parse an xml file
-bool x_read(vcl_string fname, 
+bool x_read(std::string fname, 
            const dbdet_seg3d_info_sptr& s) 
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
 
   if (fname.size() == 0)
   {
-    vcl_cout << "File not specified" << vcl_endl;
+    std::cout << "File not specified" << std::endl;
     return false;
   }
 
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (!xmlFile)
   {
-    vcl_cout << fname << "-- error on opening" << vcl_endl;
+    std::cout << fname << "-- error on opening" << std::endl;
     return false;
   }
 
@@ -33,8 +33,8 @@ bool x_read(vcl_string fname,
 
   if (!parser.parseFile(xmlFile)) 
   {
-    vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+    std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return false;
   }
   return true;
@@ -44,7 +44,7 @@ bool x_read(vcl_string fname,
 
 // ============================================================================
 //: write xml file
-void x_write(vcl_ostream& os, 
+void x_write(std::ostream& os, 
              const dbdet_seg3d_info_sptr& s)
 {
   vsl_basic_xml_element xml_element("volume_segmentation");

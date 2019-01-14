@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 #include <dbgdt3d/dbgdt3d_interval.h>
 #include <dbgdt3d/dbgdt3d_vertex.h>
@@ -190,7 +190,7 @@ bool gdt_interval::detect_project_to_L_dege (const double& alphaCL) const
   if (stau_ != 0)
     return false;
 
-  //: test if the sum of angles vcl_greater than M_PI
+  //: test if the sum of angles std::greater than M_PI
   double thetaL = theta_from_tau (0);
 
   if (_leqM (vnl_math::pi, alphaCL + thetaL))
@@ -209,7 +209,7 @@ bool gdt_interval::detect_project_to_R_dege (const double& alphaCR) const
   if (etau_ != c)
     return false;
 
-  //: test if the sum of angles vcl_greater than M_PI
+  //: test if the sum of angles std::greater than M_PI
   double thetaR = theta_from_tau (c);
   thetaR = vnl_math::pi - thetaR;
 
@@ -264,8 +264,8 @@ bool gdt_interval::do_L_projections (const double& alphaCL,
   if (_lessT (nStau, nEtau))
     return true;
   else {
-    double taumin = vcl_min (nStau, nEtau);
-    double taumax = vcl_max (nStau, nEtau);
+    double taumin = std::min (nStau, nEtau);
+    double taumax = std::max (nStau, nEtau);
     nStau = taumin;
     nEtau = taumax;
     return false;
@@ -431,8 +431,8 @@ bool gdt_interval::do_R_projections (const double& alphaCR,
   if (_lessT (nStau, nEtau))
     return true;
   else {
-    double taumin = vcl_min (nStau, nEtau);
-    double taumax = vcl_max (nStau, nEtau);
+    double taumin = std::min (nStau, nEtau);
+    double taumax = std::max (nStau, nEtau);
     nStau = taumin;
     nEtau = taumax;
     return false;
@@ -632,7 +632,7 @@ double gdt_interval::_prev_alpha () const
   double d1 = edge()->len();
   double d2 = prev_edge->len();
   double d = vgl_distance (v1->pt(), v2->pt());
-  double alpha = vcl_acos ( (d1*d1 + d2*d2 - d*d)/(2*d1*d2) );
+  double alpha = std::acos ( (d1*d1 + d2*d2 - d*d)/(2*d1*d2) );
 
   return alpha;
 }
@@ -729,8 +729,8 @@ void gdt_interval::get_min_max_dist (double& min_dist, double& max_dist) const
 {
   double ds = get_dist_at_tau (stau_);
   double de = get_dist_at_tau (etau_);
-  min_dist = vcl_min (ds, de);
-  max_dist = vcl_max (ds, de);
+  min_dist = std::min (ds, de);
+  max_dist = std::max (ds, de);
 
   //: if the shortest footpoint is in
   if (!is_dege())
@@ -745,7 +745,7 @@ void gdt_interval::get_min_max_dist_I_face (double& min_dist, double& max_dist) 
   //: The max_dist is its own max distance
   double ds = get_dist_at_tau (stau_);
   double de = get_dist_at_tau (etau_);
-  max_dist = vcl_max (ds, de);
+  max_dist = std::max (ds, de);
 
   //: Compute the min_dist
   if (prevI_== NULL) { //The rarefaction one
@@ -784,7 +784,7 @@ void gdt_interval::query_taus_from_dist (const double gdt_dist,
     if (local_dist < H_)
       return;
 
-    double theta1 = vcl_asin (H_/local_dist);
+    double theta1 = std::asin (H_/local_dist);
     double theta2 = vnl_math::pi - theta1;
 
     // !! should compute t1 and t2 directly from geometry, don't use asin()
@@ -900,7 +900,7 @@ void gdt_interval::I_get_prev_path_till_psource (const double input_tau,
   if (is_dege()) {
     if (psrc_->is_real_source ()) {
       //: the intrinsic representation is from the query_point to psrc
-      vcl_pair<gdt_interval*, double> cur_point;
+      std::pair<gdt_interval*, double> cur_point;
       if (psrc_ == edge()->sV())
         gdt_path->_add_point ((gdt_interval*)this, 0);
       else
@@ -1002,7 +1002,7 @@ void gdt_interval::transfer_nextI (gdt_interval** IL, gdt_interval** IR,
 void gdt_interval::_transfer_nextI_eLIL_eRIR (gdt_interval** IL, gdt_interval** IR)
 {
   //Go through nextI[], transfer each nextI on eL to WL, eR to WR.
-  vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+  std::vector<gdt_interval*>::iterator it = nextIs_.begin();
   while (it != nextIs_.end()) {
     gdt_interval* nI = (*it);
     untie_prevI_nextI (this, nI);
@@ -1034,7 +1034,7 @@ void gdt_interval::_transfer_nextI_eRIR (gdt_interval** IR)
 
 bool gdt_interval::_transfer_1_nextI_on_eL_to_IL (gdt_interval** IL)
 {
-  vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+  std::vector<gdt_interval*>::iterator it = nextIs_.begin();
   for (; it != nextIs_.end(); it++) {
     gdt_interval* nI = (*it);
     if (nI->edge()->is_V_incident (sV())) { //nI on eL
@@ -1049,7 +1049,7 @@ bool gdt_interval::_transfer_1_nextI_on_eL_to_IL (gdt_interval** IL)
 
 bool gdt_interval::_transfer_1_nextI_on_eR_to_IR (gdt_interval** IR)
 {
-  vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+  std::vector<gdt_interval*>::iterator it = nextIs_.begin();
   for (; it != nextIs_.end(); it++) {
     gdt_interval* nI = (*it);
     if (nI->edge()->is_V_incident (eV())) { //nI on eR
@@ -1064,12 +1064,12 @@ bool gdt_interval::_transfer_1_nextI_on_eR_to_IR (gdt_interval** IR)
 
 // ###################################################################
 
-void gdt_interval::getInfo (vcl_ostringstream& ostrm)
+void gdt_interval::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
   char tmp[64];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
   switch (type_) {
   case ITYPE_PSRC: sprintf (tmp, "PSRC"); break;
   case ITYPE_DEGE: sprintf (tmp, "DEGE"); break;
@@ -1078,34 +1078,34 @@ void gdt_interval::getInfo (vcl_ostringstream& ostrm)
   default:
     break;
   }
-  vcl_sprintf (s, "gdt_interval %s e %d (%f, %f) on face %d\n", 
+  std::sprintf (s, "gdt_interval %s e %d (%f, %f) on face %d\n", 
                tmp, edge()->id(), stau_, etau_, _face()->id()); ostrm<<s;
-  vcl_sprintf (s, " psrc %d, mu: %f, L: %f, H: %f\n", 
+  std::sprintf (s, " psrc %d, mu: %f, L: %f, H: %f\n", 
                psrc()->id(), mu(), L_, H_); ostrm<<s;
 
   if (prevI_)
-    vcl_sprintf (tmp, "%d (%.3f, %.3f)", prevI_->edge()->id(), 
+    std::sprintf (tmp, "%d (%.3f, %.3f)", prevI_->edge()->id(), 
                  prevI_->stau(), prevI_->etau());
   else
-    vcl_sprintf (tmp, "NULL");
-  vcl_sprintf (s, " prevI: %s, ", tmp); ostrm<<s;
+    std::sprintf (tmp, "NULL");
+  std::sprintf (s, " prevI: %s, ", tmp); ostrm<<s;
 
   //Print nextIs_[]
   if (nextIs_.size() == 0) {
-    vcl_sprintf (s, " nextIs[]: NULL.\n"); ostrm<<s;
+    std::sprintf (s, " nextIs[]: NULL.\n"); ostrm<<s;
   }
   else {
-    vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+    std::vector<gdt_interval*>::iterator it = nextIs_.begin();
     for (unsigned int i=0; it != nextIs_.end(); it++, i++) {
       //unused gdt_interval* nI = (*it);
 
-      vcl_sprintf (tmp, "%d (%.3f, %.3f)", nextIs_[0]->edge()->id(), 
+      std::sprintf (tmp, "%d (%.3f, %.3f)", nextIs_[0]->edge()->id(), 
                    nextIs_[0]->stau(), nextIs_[0]->etau());
-      vcl_sprintf (s, "nI[%d]: %s, ", i, tmp); ostrm<<s;
+      std::sprintf (s, "nI[%d]: %s, ", i, tmp); ostrm<<s;
     }
   }
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 // ################################################################
@@ -1141,8 +1141,8 @@ void untie_psrcV_nextI (dbmsh3d_gdt_vertex_3d* v, gdt_interval* nI)
 vgl_point_2d<double> Ib_coord_to_Ia (const gdt_interval* Ia, const gdt_interval* Ib,
                                      const double& thetav, const vgl_point_2d<double>& Pb)
 {
-  const double cos_theta = vcl_cos (thetav);
-  const double sin_theta = vcl_sin (thetav);
+  const double cos_theta = std::cos (thetav);
+  const double sin_theta = std::sin (thetav);
   double xa, ya, xb, yb;
 
   if (Ib->edge()->is_V_incident (Ia->sV())) { //Ia->sV is the commmon vertex

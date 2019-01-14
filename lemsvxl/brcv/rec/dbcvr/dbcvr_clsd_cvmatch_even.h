@@ -18,7 +18,7 @@
 #ifndef _dbcvr_clsd_cvmatch_even_h
 #define _dbcvr_clsd_cvmatch_even_h
 
-#include <vcl_ctime.h>
+#include <ctime>
 #include <bsold/bsold_interp_curve_2d_sptr.h>
 
 #include "dbcvr_cvmatch.h"
@@ -32,27 +32,27 @@ protected:
   bsold_interp_curve_2d_sptr _curve2;
 
   DPCostType _cost; //Temporary array for each match (2_n x _m)
-  vcl_vector<int> _leftMask;
-  vcl_vector<int> _rightMask;
+  std::vector<int> _leftMask;
+  std::vector<int> _rightMask;
 
   DPMapType _map; //Temporary array for each match (2_n x _m)
   DPMapType _finalMap; //Shortest Path for each start point (_n+1 x 1)
-  vcl_vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
+  std::vector<double> _finalCost; //Final cost for each start point (_n+1 x 1)
 
   //: compute tangents and arclengths at each sample on the curves
-  vcl_vector<double>  _tangents_curve1;
-  vcl_vector<double>  _tangents_curve2;
+  std::vector<double>  _tangents_curve1;
+  std::vector<double>  _tangents_curve2;
 
-  vcl_vector<double>  _lengths_curve1;
-  vcl_vector<double>  _lengths_curve2;
+  std::vector<double>  _lengths_curve1;
+  std::vector<double>  _lengths_curve2;
 
   int _n1;
   int _n2;
   double _R;
   bool _normalized_stretch_cost;
   int _template_size;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 
   double L1, L2;
   double _delta_s1, _delta_s2;
@@ -83,7 +83,7 @@ public:
   
   //access functions
   double finalCost(int index){return _finalCost[index];};
-  vcl_vector<double> finalCost(){return _finalCost;};
+  std::vector<double> finalCost(){return _finalCost;};
   FinalMapType finalMap(int index){return _finalMap[index];};
   int n1(){return _n1;};
   int n2(){return _n2;};
@@ -95,7 +95,7 @@ public:
 
   //display functions (debug)
   void printCost();
-  void writeCost(vcl_string f);
+  void writeCost(std::string f);
   void printMap();
   
   // Match() corresponds to closedCurveDPMatch(ClosedDPMatch *d) in original source code

@@ -52,11 +52,11 @@ vimt_transform_2d breg3d_lm_direct_homography_generator::compute_homography()
     minimizer = new dbvrl_minimizer(from_img, to_img, from_mask, to_mask, roi);
   }
 
-  vcl_cout << " minimizing image error..";
+  std::cout << " minimizing image error..";
   minimizer->minimize(init_xform);
-  vcl_cout << "..done." << vcl_endl;
+  std::cout << "..done." << std::endl;
   double curr_error = minimizer->get_end_error();
-  vcl_cout << "end error = " << curr_error << vcl_endl;
+  std::cout << "end error = " << curr_error << std::endl;
   // computed homography maps pixels in current image to pixels in base image
   //vnl_matrix<double> H = init_xform.inverse().matrix();
 

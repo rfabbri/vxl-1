@@ -2,9 +2,9 @@
 //  Apr 26, 2006 MingChing Chang
 //  
 
-#include <vcl_algorithm.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
+#include <algorithm>
+#include <sstream>
+#include <string>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -508,10 +508,10 @@ void _determine_min_max_tau (const double& A_min, const double& A_max,
                              const double& e_len,
                              double& tau_min, double& tau_max)
 {
-  tau_min = vcl_max (A_min, B_min);
-  tau_max = vcl_min (A_max, B_max);
-  tau_min = vcl_max (tau_min, 0.0);
-  tau_max = vcl_min (tau_max, e_len);
+  tau_min = std::max (A_min, B_min);
+  tau_max = std::min (A_max, B_max);
+  tau_min = std::max (tau_min, 0.0);
+  tau_max = std::min (tau_max, e_len);
   if (_eqT (tau_min, 0))
     tau_min = 0;
   if (_eqT (tau_max, e_len))

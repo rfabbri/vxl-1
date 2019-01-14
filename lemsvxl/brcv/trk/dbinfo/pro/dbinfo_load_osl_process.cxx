@@ -4,7 +4,7 @@
 // \file
 
 #include <dbinfo/pro/dbinfo_load_osl_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bpro1/bpro1_storage.h>
 #include <bpro1/bpro1_parameters.h>
 #include <bvis1/bvis1_manager.h>
@@ -18,7 +18,7 @@ dbinfo_load_osl_process::dbinfo_load_osl_process() : bpro1_process(), osl_storag
 {
   if( !parameters()->add( "Osl file <filename...>" , "-osl_filename", bpro1_filepath("","*") ))
     {
-      vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -38,7 +38,7 @@ dbinfo_load_osl_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbinfo_load_osl_process::name()
+std::string dbinfo_load_osl_process::name()
 {
   return "Load OSL";
 }
@@ -54,10 +54,10 @@ dbinfo_load_osl_process::clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_load_osl_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
 
@@ -66,10 +66,10 @@ dbinfo_load_osl_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbinfo_load_osl_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   //no output type required
   to_return.clear();
   return to_return;
@@ -99,7 +99,7 @@ dbinfo_load_osl_process::execute()
   // read the osls from the storage file  
   bpro1_filepath osl_path;
   parameters()->get_value( "-osl_filename" , osl_path );
-  vcl_string path = osl_path.path;
+  std::string path = osl_path.path;
   vsl_b_ifstream is(path);
   osl_storage_ = new dbinfo_osl_storage();
   osl_storage_->b_read(is);
@@ -123,7 +123,7 @@ dbinfo_load_osl_process::finish()
    //Old way of enforcing global
    if(!res->store_data(osl_storage_))
     {
-      vcl_cout << "In dbinfo_osl_display_tool::display_osl() "
+      std::cout << "In dbinfo_osl_display_tool::display_osl() "
                << "store to repository failed\n";
       return false;
     }

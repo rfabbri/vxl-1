@@ -77,14 +77,14 @@ void dsm_node<T>::b_write(vsl_b_ostream& os) const
 
 	//4. write this node's node/time/frequency map
 	vsl_b_write(os, this->transition_table_);
-	//vcl_map<unsigned, vcl_map<unsigned, unsigned> >::const_iterator ntf_itr, ntf_end = this->transition_table_.end();
+	//std::map<unsigned, std::map<unsigned, unsigned> >::const_iterator ntf_itr, ntf_end = this->transition_table_.end();
 
 	//for( ntf_itr = this->transition_table_.begin(); ntf_itr != ntf_end; ++ntf_itr )
 	//{
 	//	unsigned node_id = ntf_itr->first;
 	//	vsl_b_write(os, node_id);
 
-	//	vcl_map<unsigned, unsigned>::const_iterator tf_itr, tf_end = ntf_itr->second.end();
+	//	std::map<unsigned, unsigned>::const_iterator tf_itr, tf_end = ntf_itr->second.end();
 
 	//	for( tf_itr = ntf_itr->second.begin(); tf_itr != tf_end; ++tf_itr )
 	//	{
@@ -98,7 +98,7 @@ void dsm_node<T>::b_write(vsl_b_ostream& os) const
 
 	//5. write the set of time stamps
 	vsl_b_write(os, this->relative_time_set_);
-	//vcl_set<unsigned>::const_iterator rts_itr, rts_end=this->relative_time_set_.end();
+	//std::set<unsigned>::const_iterator rts_itr, rts_end=this->relative_time_set_.end();
 	//for( rts_itr = this->relative_time_set_.begin(); rts_itr != rts_end; ++rts_itr )
 	//	vsl_b_write(os,*rts_itr);
 
@@ -129,7 +129,7 @@ void dsm_node<T>::b_read(vsl_b_istream& is)
 		}//end case1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm_node::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm_node::b_read() -- unknown version number." << std::flush;
 			return;
 		}
 	}

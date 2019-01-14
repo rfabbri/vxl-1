@@ -5,7 +5,7 @@
 
 #include "dbsk2d_bnd_cell.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vtol/vtol_list_functions.h>
 
 #include <dbsk2d/dbsk2d_bnd_edge.h>
@@ -59,7 +59,7 @@ clear_all()
 void dbsk2d_bnd_cell::
 add_bnd_edge(const dbsk2d_bnd_edge_sptr& edge)
 {
-  if (vcl_find(this->edges_.begin(), this->edges_.end(), edge)==
+  if (std::find(this->edges_.begin(), this->edges_.end(), edge)==
     this->edges_.end())
   {
     this->edges_.push_back(edge);
@@ -75,8 +75,8 @@ add_bnd_edge(const dbsk2d_bnd_edge_sptr& edge)
 void dbsk2d_bnd_cell::
 remove_bnd_edge(const dbsk2d_bnd_edge_sptr& edge )
 {
-  vcl_list<dbsk2d_bnd_edge_sptr >::iterator eit =
-    vcl_find(this->edges_.begin(), this->edges_.end(), edge);
+  std::list<dbsk2d_bnd_edge_sptr >::iterator eit =
+    std::find(this->edges_.begin(), this->edges_.end(), edge);
   if ( eit != this->edges_.end() )
   {
     edge->remove_cell(this);
@@ -89,7 +89,7 @@ remove_bnd_edge(const dbsk2d_bnd_edge_sptr& edge )
 
 //-------------------------------------------------
 //: Return reference to the belm list
-const vcl_vector<dbsk2d_ishock_belm* >& dbsk2d_bnd_cell::
+const std::vector<dbsk2d_ishock_belm* >& dbsk2d_bnd_cell::
 belms() const
 {
   if (this->belms_.older(this))
@@ -110,8 +110,8 @@ update_belms() const
   
   //// create a list of vertices of the edges
   //// and insert the dbsk2d_ishock_bcurves to the `belms' list
-  //vcl_vector<dbsk2d_bnd_vertex_sptr > all_vertices;
-  //for (vcl_list<dbsk2d_bnd_edge_sptr >::const_iterator eit = 
+  //std::vector<dbsk2d_bnd_vertex_sptr > all_vertices;
+  //for (std::list<dbsk2d_bnd_edge_sptr >::const_iterator eit = 
   //  this->edges_.begin(); eit != this->edges_.end(); ++eit)
   //{
   //  all_vertices.push_back((*eit)->bnd_v1());

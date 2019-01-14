@@ -13,8 +13,8 @@ dbrkf_simplerect::dbrkf_simplerect()
 {
 
 }
-dbrkf_simplerect::dbrkf_simplerect(vcl_vector<vsol_point_2d_sptr > pointsl,
-               vcl_vector<vsol_point_2d_sptr > pointsr,
+dbrkf_simplerect::dbrkf_simplerect(std::vector<vsol_point_2d_sptr > pointsl,
+               std::vector<vsol_point_2d_sptr > pointsr,
                vil_image_view<vxl_byte> imagel,
                vil_image_view<vxl_byte> imager)
     
@@ -37,13 +37,13 @@ dbrkf_simplerect::~dbrkf_simplerect()
 
 }
 
-bool dbrkf_simplerect::compute_fundamental_matrix(vcl_vector<vsol_point_2d_sptr > pointsl,
-                                        vcl_vector<vsol_point_2d_sptr > pointsr)
+bool dbrkf_simplerect::compute_fundamental_matrix(std::vector<vsol_point_2d_sptr > pointsl,
+                                        std::vector<vsol_point_2d_sptr > pointsr)
 {
     assert(pointsl.size()==pointsr.size());
     assert(pointsl.size()>8);
     
-    vcl_vector<vgl_homg_point_2d<double> > homgpl,homgpr;
+    std::vector<vgl_homg_point_2d<double> > homgpl,homgpr;
 
     //: convert points into homogeneous points
     for(unsigned int i=0;i<pointsl.size();i++)
@@ -85,7 +85,7 @@ bool dbrkf_simplerect::rect_step2()
     assert(pointsl_.size()==pointsr_.size());
     assert(pointsl_.size()>5);
     
-    vcl_vector<vsol_point_2d_sptr >  ptsl,ptsr;
+    std::vector<vsol_point_2d_sptr >  ptsl,ptsr;
     //: transforming set of corresponding points using the Homography computed in step1
     for(unsigned int i=0;i<pointsl_.size();i++)
     {
@@ -100,9 +100,9 @@ bool dbrkf_simplerect::rect_step2()
         ptsr.push_back(tr);
     }
 
-    vcl_vector<vgl_homg_point_2d<double> > homgp0,homgp1;
-    vcl_vector<vgl_homg_line_2d<double> > homgl0,homgl1,homgl,homglr;
-    vcl_vector<vgl_homg_point_1d<double> > pl,pr,p;
+    std::vector<vgl_homg_point_2d<double> > homgp0,homgp1;
+    std::vector<vgl_homg_line_2d<double> > homgl0,homgl1,homgl,homglr;
+    std::vector<vgl_homg_point_1d<double> > pl,pr,p;
 
     for(int i=0;i<ptsl.size();i++)
     {
@@ -141,14 +141,14 @@ bool dbrkf_simplerect::map_epipoles_infinity(vnl_double_3x3 &H0,vgl_homg_point_2
   // Make sure that the epipole is not at the origin
   if (epv[0] == 0.0 && epv[1] == 0.0)
   {
-    vcl_cerr<<"Error : Epipole is at image center\n";
+    std::cerr<<"Error : Epipole is at image center\n";
     return 0;
   }
 
   // Next determine a rotation that will send the epipole to (1, 0, x)
-  double theta = -vcl_atan2(epv[1],epv[0]) + vnl_math::pi;
-  double c = vcl_cos (theta);
-  double s = vcl_sin (theta);
+  double theta = -std::atan2(epv[1],epv[0]) + vnl_math::pi;
+  double c = std::cos (theta);
+  double s = std::sin (theta);
 
   vnl_double_3x3 T;
 
@@ -171,7 +171,7 @@ bool dbrkf_simplerect::map_epipoles_infinity(vnl_double_3x3 &H0,vgl_homg_point_2
   // Multiply things out.  Put the result in H0
   H0 = E * H0;
   epv= E*epv;
-  vcl_cout<<"\n"<<epv;
+  std::cout<<"\n"<<epv;
   return true;
 }
 
@@ -361,7 +361,7 @@ void dbrkf_simplerect::resample(vnl_double_2x2 &Hfl,vnl_double_2x2 &Hfr,vil_imag
 
 
 
-vgl_point_2d<double> dbrkf_simplerect::undo_steps(vgl_point_2d<double> p,vcl_string tag)
+vgl_point_2d<double> dbrkf_simplerect::undo_steps(vgl_point_2d<double> p,std::string tag)
 {
 
        vnl_double_2 point(p.y(),1.0);

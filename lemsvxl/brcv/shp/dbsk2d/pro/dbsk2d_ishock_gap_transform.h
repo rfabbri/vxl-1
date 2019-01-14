@@ -16,8 +16,8 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
-#include <vcl_string.h>
+#include <map>
+#include <string>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 
 class dbsk2d_ishock_bpoint;
@@ -31,7 +31,7 @@ public:
     //: Constructor
     dbsk2d_ishock_gap_transform(
         dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>& pair,
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>& pair,
         int euler_spiral_id=-2);
 
     //: Destructor
@@ -43,7 +43,7 @@ public:
     /*virtual */ bool execute_transform();
 
     //: Grap belms that euler spiral connects
-    /* virtual*/ void get_belms(vcl_set<int>& set){
+    /* virtual*/ void get_belms(std::set<int>& set){
         set.insert(gap_endpoint_.first->id());
         set.insert(gap_endpoint_.second->id());}
 
@@ -53,10 +53,10 @@ public:
     //: return likelihood of transform
     /* virtual */ double likelihood(){return likelihood_;}
 
-    /*virtual */ vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
+    /*virtual */ std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
         get_contour_pair(){return gap_endpoint_;}
 
-    vcl_vector<vgl_point_2d<double> >& get_es_samples()
+    std::vector<vgl_point_2d<double> >& get_es_samples()
     {return init_samples_;}
 
 private: 
@@ -69,17 +69,17 @@ private:
     void determine_likelihood();
 
     // Determine tangent pairs
-    vcl_pair<double,double> get_tangent_pairs(dbsk2d_ishock_bpoint* bp1,
+    std::pair<double,double> get_tangent_pairs(dbsk2d_ishock_bpoint* bp1,
                                               dbsk2d_ishock_bpoint* bp2);
 
     // Stores new gap that it is working on
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_endpoint_;
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap_endpoint_;
 
     // Hold new contour
-    vcl_vector<dbsk2d_ishock_belm*> local_belm_list_;
+    std::vector<dbsk2d_ishock_belm*> local_belm_list_;
 
     // Holds euler spiral samples
-    vcl_vector<vgl_point_2d<double> > init_samples_;
+    std::vector<vgl_point_2d<double> > init_samples_;
 
     // Holds likelihood
     double likelihood_;

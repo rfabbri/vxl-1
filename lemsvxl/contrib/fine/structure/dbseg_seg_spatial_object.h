@@ -27,8 +27,8 @@
 
 
 #include <fstream>
-#include <vcl_ostream.h>
-//#include <vcl_vector.h>
+#include <ostream>
+//#include <vector>
 using namespace std;
 
 template <class T>
@@ -95,7 +95,7 @@ public:
     bool surrounds(int o);
 
     //returns the text to put into the save file
-    vcl_ostream& save_text(vcl_ostream & = vcl_cerr);
+    std::ostream& save_text(std::ostream & = std::cerr);
     
 protected:
     //unique identification number for this object

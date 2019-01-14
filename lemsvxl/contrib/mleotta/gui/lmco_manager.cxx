@@ -5,7 +5,7 @@
 // \author Matt Leotta
 
 #include "lmco_compute_mi.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <bgui/bgui_image_tableau.h>
 #include <bgui3d/bgui3d_project2d_tableau.h>
 #include <bgui3d/bgui3d_examiner_tableau.h>
@@ -41,7 +41,7 @@
 #include <Inventor/nodes/SoCoordinate3.h>
 #include <Inventor/nodes/SoIndexedFaceSet.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 class mesh_placer_tableau : public vgui_tableau
 {
@@ -99,7 +99,7 @@ class mesh_placer_tableau : public vgui_tableau
       y = view->pos_y();
       if(mode == ANGLE){
         double dx = gx - x, dy = gy - y;
-        view->set_angle(vcl_atan2(dy,dx));
+        view->set_angle(std::atan2(dy,dx));
       }
       post_redraw();
       a = view->angle();
@@ -533,11 +533,11 @@ void lmco_manager::quit()
 void lmco_manager::load_image()
 {
   unsigned int i = active_view();
-  vcl_stringstream title;
+  std::stringstream title;
   title << "Load Image " << i+1;
   vgui_dialog load_image_dlg(title.str().c_str());
-  static vcl_string image_filename = "";
-  static vcl_string ext = "*.*";
+  static std::string image_filename = "";
+  static std::string ext = "*.*";
   bool rgb_to_eo = false;
   double scale = v[i].data_scale();
   load_image_dlg.file("Image Filename:", ext, image_filename);
@@ -609,7 +609,7 @@ range_params(vil_image_view_base_sptr const& image)
     return  new vgui_range_map_params(min, max, gamma, invert,
                                       gl_map, cache);
   }
-vcl_cout << "Image pixel format not handled\n";
+std::cout << "Image pixel format not handled\n";
  return new vgui_range_map_params(0, 255, gamma, invert,
                                       gl_map, cache);
 }
@@ -620,8 +620,8 @@ vcl_cout << "Image pixel format not handled\n";
 void lmco_manager::load_mesh()
 {
   vgui_dialog load_mesh_dlg("Load Mesh");
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_mesh_dlg.file("Mesh Filename:", ext, filename);
   if (!load_mesh_dlg.ask())
     return;
@@ -646,17 +646,17 @@ void lmco_manager::load_mesh()
 void lmco_manager::load_camera()
 {
   unsigned int i = active_view();
-  vcl_stringstream title;
+  std::stringstream title;
   title << "Load Camera " << i+1;
   vgui_dialog load_camera_dlg(title.str().c_str());
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
   load_camera_dlg.file("Camera Filename:", ext, filename);
   if (!load_camera_dlg.ask())
     return;
 
   vnl_double_3x4 camera;
-  vcl_fstream fh(filename.c_str());
+  std::fstream fh(filename.c_str());
   fh >> camera;
   fh.close();
 
@@ -673,11 +673,11 @@ void lmco_manager::load_camera()
 void lmco_manager::set_scale()
 {
   unsigned int i = active_view();
-  vcl_stringstream title;
+  std::stringstream title;
   title << "Set Scale " << i+1;
   vgui_dialog scale_dlg(title.str().c_str());
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
 
   double scale = v[i].scale();
   scale_dlg.field("Scale", scale);
@@ -700,17 +700,17 @@ void lmco_manager::set_scale()
 void lmco_manager::set_style()
 {
   unsigned int i = active_view();
-  vcl_stringstream title;
+  std::stringstream title;
   title << "Set Style " << i+1;
   vgui_dialog scale_dlg(title.str().c_str());
-  static vcl_string filename = "";
-  static vcl_string ext = "*.*";
+  static std::string filename = "";
+  static std::string ext = "*.*";
 
   double r,g,b,a;
   v[i].get_style(r,g,b,a);
-  vcl_stringstream color_stm;
+  std::stringstream color_stm;
   color_stm << r<<' '<<g<<' '<<b<<' '<<a;
-  vcl_string color = color_stm.str();
+  std::string color = color_stm.str();
   scale_dlg.inline_color("Mesh Color", color);
   static bool all = true;
   scale_dlg.checkbox("Apply to all", all);
@@ -719,7 +719,7 @@ void lmco_manager::set_style()
   
   color_stm.str(color);
   color_stm >> r >> g >> b >> a;
-  vcl_cout << "R: "<<r<<" G: "<<g<<" B: "<<b<<" A: "<<a<<vcl_endl;
+  std::cout << "R: "<<r<<" G: "<<g<<" B: "<<b<<" A: "<<a<<std::endl;
   
   if(all){
     v[0].set_style(r,g,b,a);
@@ -736,11 +736,11 @@ void lmco_manager::set_style()
 void lmco_manager::adjust_view()
 {
   unsigned int i = active_view();
-  vcl_stringstream title;
+  std::stringstream title;
   title << "Display Options for View " << i+1;
   vgui_dialog view_dlg(title.str().c_str());
   
-  vcl_vector<vcl_string> mode_names(7);
+  std::vector<std::string> mode_names(7);
   mode_names[view::ORIG] = "Orginal Image";
   mode_names[view::EO_INT] = "EO Intensity";
   mode_names[view::EO_ORT] = "EO Gradient Orientation";
@@ -788,7 +788,7 @@ vgui_soview2D_image* lmco_manager::build_texture_image(const view* const vw, uns
   unsigned int nj = v[i2].image()->nj();
   double step = 1.0;
   
-  vcl_vector<vgl_point_2d<double> > img_pts1, img_pts2;
+  std::vector<vgl_point_2d<double> > img_pts1, img_pts2;
   compute_point_mapping(cam1, cam2, ni, nj, step, 
                         mesh_, mesh_.faces().normals(), img_pts1, img_pts2);
      
@@ -807,7 +807,7 @@ vgui_soview2D_image* lmco_manager::build_texture_image(const view* const vw, uns
   vil_image_view<vxl_byte> img(max_x - min_x+1, max_y - min_y+1, 4);
   img.fill(0);
   
-  vcl_vector<double> d_eo;
+  std::vector<double> d_eo;
   bilin_sample(img_pts2, v[i1].eo_data(), d_eo, mode);
   
   for(unsigned int k=0; k<d_eo.size(); ++k){
@@ -841,11 +841,11 @@ double lmco_manager::compute_mi()
   unsigned int nj = v[i1].eo_data().nj();
   double step = 1.0;
   
-  vcl_vector<vgl_point_2d<double> > img_pts1, img_pts2;
+  std::vector<vgl_point_2d<double> > img_pts1, img_pts2;
   compute_point_mapping(cam1, cam2, ni, nj, step, 
                         mesh_, mesh_.faces().normals(), img_pts1, img_pts2);
   
-  vcl_vector<vcl_vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
+  std::vector<std::vector<double> > d1_ir(3), d2_ir(3), d1_eo(3), d2_eo(3);
   for(unsigned i=0; i<3; ++i){
     bilin_sample(img_pts1, v[i1].ir_data(), d1_ir[i], i);
     bilin_sample(img_pts1, v[i1].eo_data(), d1_eo[i], i);
@@ -853,18 +853,18 @@ double lmco_manager::compute_mi()
     bilin_sample(img_pts2, v[i2].eo_data(), d2_eo[i], i);
   }
   
-  //vcl_cout << "MI_IR = "<<MI_IR<<"\nMI_EO = "<<MI_EO<<vcl_endl;
+  //std::cout << "MI_IR = "<<MI_IR<<"\nMI_EO = "<<MI_EO<<std::endl;
   
   double mi = compute_mi(d1_ir, d2_ir, d1_eo, d2_eo);
-  //vcl_cout << "MI = " << mi << vcl_endl;
+  //std::cout << "MI = " << mi << std::endl;
   return mi;
 }
 
 //: compute mutual info of the data using the active method
-double lmco_manager::compute_mi(const vcl_vector<vcl_vector<double> >& d1_ir, 
-                                const vcl_vector<vcl_vector<double> >& d2_ir, 
-                                const vcl_vector<vcl_vector<double> >& d1_eo, 
-                                const vcl_vector<vcl_vector<double> >& d2_eo)
+double lmco_manager::compute_mi(const std::vector<std::vector<double> >& d1_ir, 
+                                const std::vector<std::vector<double> >& d2_ir, 
+                                const std::vector<std::vector<double> >& d1_eo, 
+                                const std::vector<std::vector<double> >& d2_eo)
 {
   double mi = 0.0;
   switch(active_method_){
@@ -895,12 +895,12 @@ double lmco_manager::compute_mi(const vcl_vector<vcl_vector<double> >& d1_ir,
       break;
     case POLAR:
     {
-      vcl_vector<double> ang1, ang2, mag1, mag2;
+      std::vector<double> ang1, ang2, mag1, mag2;
       for(unsigned int i=0; i<d1_ir.size(); ++i){
-        ang1.push_back(vcl_atan2(d1_eo[0][i], d1_ir[0][i])/1.5707963);
-        ang2.push_back(vcl_atan2(d2_eo[0][i], d2_ir[0][i])/1.5707963);
-        mag1.push_back(vcl_sqrt(d1_eo[0][i]*d1_eo[0][i] + d1_ir[0][i]*d1_ir[0][i]));
-        mag2.push_back(vcl_sqrt(d2_eo[0][i]*d2_eo[0][i] + d2_ir[0][i]*d2_ir[0][i]));
+        ang1.push_back(std::atan2(d1_eo[0][i], d1_ir[0][i])/1.5707963);
+        ang2.push_back(std::atan2(d2_eo[0][i], d2_ir[0][i])/1.5707963);
+        mag1.push_back(std::sqrt(d1_eo[0][i]*d1_eo[0][i] + d1_ir[0][i]*d1_ir[0][i]));
+        mag2.push_back(std::sqrt(d2_eo[0][i]*d2_eo[0][i] + d2_ir[0][i]*d2_ir[0][i]));
       }
       mi = mutual_info_weighted(ang1, ang2, mag1, mag2);
     }
@@ -949,7 +949,7 @@ void lmco_manager::optimize_position()
     }
     vnl_amoeba::minimize(mi_func, x, dx);
     
-    vcl_cout << "min x = " << x << vcl_endl;
+    std::cout << "min x = " << x << std::endl;
     
     vgl_homg_point_3d<double> p = v[i1].homography()*vgl_homg_point_3d<double>(x[0],x[1],0);
     v[i1].set_pos(p.x()/p.w(), p.y()/p.w());
@@ -978,7 +978,7 @@ void lmco_manager::optimize_position()
     }
     vnl_amoeba::minimize(mi_func, x, dx);
     
-    vcl_cout << "min x = " << x << vcl_endl;
+    std::cout << "min x = " << x << std::endl;
     
     vgl_homg_point_3d<double> p = v[i1].homography()*vgl_homg_point_3d<double>(x[0],x[1],0);
     v[i1].set_pos(p.x()/p.w(), p.y()/p.w());
@@ -996,7 +996,7 @@ void lmco_manager::set_options()
 {
   vgui_dialog options_dlg("Options");
   unsigned int choice = static_cast<unsigned int>(active_method_);
-  vcl_vector<vcl_string> choices;
+  std::vector<std::string> choices;
   choices.push_back("EO only");
   choices.push_back("IR only");
   choices.push_back("Sum EO and IR");

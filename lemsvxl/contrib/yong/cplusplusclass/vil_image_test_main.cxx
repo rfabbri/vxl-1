@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vxl_config.h> // for vxl_byte
 #include <vil/vil_image_view.h>
 #include <vil/vil_print.h>
@@ -8,14 +8,14 @@
 #include <vil/vil_save.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <map>
 #include <string.h>
-#include <vcl_cstring.h>
-#include <vcl_bitset.h>
-#include <vcl_cassert.h>
+#include <cstring>
+#include <bitset>
+#include <cassert>
 #include <math.h>
 
 
@@ -103,8 +103,8 @@ int frame_croping_demo(vil_image_view<vxl_byte>& frame_buffer)
     static unsigned frame_len[3] = {80, 120, 70};
     static unsigned current_frame[3] = {0, 980, 1500};
 
-    vcl_stringstream input_SS;
-    vcl_string input_filename;
+    std::stringstream input_SS;
+    std::string input_filename;
     vil_image_view<vxl_byte> image;
 
     for(unsigned crop_cnt=0; crop_cnt<3; crop_cnt++)
@@ -134,7 +134,7 @@ int frame_croping_demo(vil_image_view<vxl_byte>& frame_buffer)
         input_filename.clear();
         input_SS << "input_sequence_" << current_frame[crop_cnt] << ".jpg";
         input_SS >> input_filename;
-        vcl_cout << input_filename << vcl_endl;
+        std::cout << input_filename << std::endl;
 
         vil_image_resource_sptr data = vil_load_image_resource(input_filename.c_str());
         if (!data) return 0;
@@ -174,8 +174,8 @@ int main(int argc, char **argv)
     if(!image_gamma_adjustment_demo(gamma, "wallpaper_gamma_3.jpg"))
         return 0;
 
-    vcl_string output_image_sequence_name;
-    vcl_stringstream output_name_SS;
+    std::string output_image_sequence_name;
+    std::stringstream output_name_SS;
 
     vil_image_view<vxl_byte> frame_buffer(1280, 720, 3);
 

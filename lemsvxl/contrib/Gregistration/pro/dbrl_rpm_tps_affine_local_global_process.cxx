@@ -54,7 +54,7 @@ dbrl_rpm_tps_affine_local_global_process::dbrl_rpm_tps_affine_local_global_proce
         !parameters()->add( "Expected motion in x", "-expm" , (int)20 )
         ) 
         {
-            vcl_cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_local_global_process::dbrl_rpm_tps_affine_local_global_process()" << vcl_endl;
+            std::cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_local_global_process::dbrl_rpm_tps_affine_local_global_process()" << std::endl;
         }
     point_set_list_.clear();
     id_point_set_list_.clear();
@@ -65,7 +65,7 @@ dbrl_rpm_tps_affine_local_global_process::~dbrl_rpm_tps_affine_local_global_proc
     {
     }
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_rpm_tps_affine_local_global_process::name()
     {
         return "Rpm TPS Local and Global affine Superimpose";
@@ -83,18 +83,18 @@ dbrl_rpm_tps_affine_local_global_process::output_frames()
         return 1;
     }
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_local_global_process::get_input_type()
+std::vector< std::string > dbrl_rpm_tps_affine_local_global_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_id_point_2d" );
     return to_return;
     }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_local_global_process::get_output_type()
+std::vector< std::string > dbrl_rpm_tps_affine_local_global_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //to_return.push_back( "image" );
     to_return.push_back( "dbrl_match_set" );
     //to_return.push_back( "dbrl_match_set" );
@@ -110,7 +110,7 @@ bool
 dbrl_rpm_tps_affine_local_global_process::execute()
     {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_rpm_tps_affine_local_global_process::execute() - "
+        std::cout << "In dbrl_rpm_tps_affine_local_global_process::execute() - "
             << "not exactly two input images \n";
         return false;
         }
@@ -120,8 +120,8 @@ clear_output();
 dbrl_id_point_2d_storage_sptr frame_pts;
 frame_pts.vertical_cast(input_data_[0][0]);
 
-vcl_vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
-vcl_vector<dbrl_feature_sptr> feature_list;
+std::vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
+std::vector<dbrl_feature_sptr> feature_list;
 
 for(int i=0;i<static_cast<int>(list.size());i++)
     {
@@ -191,13 +191,13 @@ dbrl_rpm_tps_affine_local_global_process::finish()
     parameters()->get_value("-upscale",scale);
 
     float scaledmotion=(float)expm/scale;
-    vcl_vector<vcl_vector<vcl_vector<dbrl_feature_sptr> > > pointset_gridified;
+    std::vector<std::vector<std::vector<dbrl_feature_sptr> > > pointset_gridified;
     //: divide the pointsets into grid
-    vcl_vector<float> i0s;
-    vcl_vector<float> j0s;
+    std::vector<float> i0s;
+    std::vector<float> j0s;
     for(int k=0;k<static_cast<int>(point_set_list_.size());k++)
         {
-        vcl_vector<vcl_vector<dbrl_feature_sptr> > temp;
+        std::vector<std::vector<dbrl_feature_sptr> > temp;
         temp.clear();
         for(float i=0;i<1;)
             {
@@ -220,7 +220,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
             }
         pointset_gridified.push_back(temp);  
         }
-    vcl_vector<vcl_vector<vcl_vector<dbrl_feature_sptr> > > xformed_point_set_list=pointset_gridified;
+    std::vector<std::vector<std::vector<dbrl_feature_sptr> > > xformed_point_set_list=pointset_gridified;
     //: outer loop for computing TPS from each frame to pivot frame
     for(int i=0;i<static_cast<int>(point_set_list_.size());i++)
         {
@@ -232,7 +232,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
 
         if(i<pivot_frame_no)
             {
-            vcl_vector<dbrl_match_set_sptr> matchsets;
+            std::vector<dbrl_match_set_sptr> matchsets;
             for(int p=0;p<static_cast<int>(pointset_gridified[i].size());p++)
                 {
                 double T=Tinit;
@@ -260,14 +260,14 @@ dbrl_rpm_tps_affine_local_global_process::finish()
                             tpsrpm->rpm_at(T,*M,tps_est,tform,xformed_point_set_list[pivot_frame_no][p],xformed_point_set_list[i][p],tpsparams.initlambda1()*T,tpsparams.initlambda2()*T);
                             T*=tpsparams.annealrate();
                             }
-                        vcl_cout<<"\n Temparutre is "<<T;
+                        std::cout<<"\n Temparutre is "<<T;
                         }
                     //: in order to solve multiple effects.
                     //M->binarize(0.51);
                     //: retreiving final transform
                     tps_est->set_lambda1(0.0);
                     tps_est->set_lambda2(0.0);
-                    vcl_vector<dbrl_feature_sptr> f1xform=pointset_gridified[pivot_frame_no][p];
+                    std::vector<dbrl_feature_sptr> f1xform=pointset_gridified[pivot_frame_no][p];
                     tpsrpm->normalize_point_set(M->M(),f1xform );
                     tform=tps_est->estimate(f1xform,pointset_gridified[i][p],*M);
                     dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -279,7 +279,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
                     match_set=new dbrl_match_set(*M,tform,tps_est);
                     match_set->set_original_features(pointset_gridified[pivot_frame_no][p],pointset_gridified[i][p]);
                     match_set->set_mapped_features(xformed_point_set_list[pivot_frame_no][p],xformed_point_set_list[i][p]);
-                    tpstform->print_transformation(vcl_cout);   
+                    tpstform->print_transformation(std::cout);   
 
                     }
                 matchsets.push_back(match_set);
@@ -315,7 +315,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
             }
         else if(i>pivot_frame_no)
             {
-            vcl_vector<dbrl_match_set_sptr> matchsets;
+            std::vector<dbrl_match_set_sptr> matchsets;
             for(int p=0;p<static_cast<int>(pointset_gridified[i].size());p++)
                 {
                 double T=Tinit;
@@ -340,12 +340,12 @@ dbrl_rpm_tps_affine_local_global_process::finish()
                         tpsrpm->rpm_at(T,*M,tps_est,tform,xformed_point_set_list[pivot_frame_no][p],xformed_point_set_list[i][p],tpsparams.initlambda1()*T,tpsparams.initlambda2()*T);
                         T*=tpsparams.annealrate();
                         }
-                    vcl_cout<<"\n temperature is "<<T;
+                    std::cout<<"\n temperature is "<<T;
                     }
                 //M->binarize(0.51);
                 tps_est->set_lambda1(0.0);
                 tps_est->set_lambda2(0.0);
-                vcl_vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
+                std::vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
                 tpsrpm->normalize_point_set(M->M(),f1xform );
                 tform=tps_est->estimate(f1xform,point_set_list_[i],*M);
                 dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -357,7 +357,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
                 match_set=new dbrl_match_set(*M,tform,tps_est);
                 match_set->set_original_features(pointset_gridified[pivot_frame_no][p],pointset_gridified[i][p]);
                 match_set->set_mapped_features(xformed_point_set_list[pivot_frame_no][p],xformed_point_set_list[i][p]);
-                tpstform->print_transformation(vcl_cout);
+                tpstform->print_transformation(std::cout);
                 matchsets.push_back(match_set);
                 }
             //: initialize Mglobal
@@ -413,7 +413,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
         parameters()->get_value("-upscale",scale);
         vil_image_view<unsigned char> img((int)scale,(int)scale,1);
         img.fill(0);
-        vcl_vector<vsol_spatial_object_2d_sptr> xformedpoints;
+        std::vector<vsol_spatial_object_2d_sptr> xformedpoints;
         vidpro1_vsol2D_storage_sptr xformedpoints_storage=vidpro1_vsol2D_storage_new();
         
         for(int p=0;p<static_cast<int>(xformed_point_set_list[i].size());p++)
@@ -429,7 +429,7 @@ dbrl_rpm_tps_affine_local_global_process::finish()
                 xformedpoints.push_back(ptvsol->cast_to_spatial_object());
                 }
             }
-        vcl_string pointsetname=vul_sprintf("points%i",i);
+        std::string pointsetname=vul_sprintf("points%i",i);
         xformedpoints_storage->add_objects(xformedpoints,pointsetname);
         //vidpro1_image_storage_sptr img_storage = vidpro1_image_storage_new();
         //img_storage->set_image(vil_new_image_resource_of_view(img));
@@ -447,9 +447,9 @@ dbrl_rpm_tps_affine_local_global_process::finish()
     }
 
 
-vcl_vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_local_global_process::gridify_points(vcl_vector<dbrl_feature_sptr> points, float i0,float j0,float i1,float j1)
+std::vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_local_global_process::gridify_points(std::vector<dbrl_feature_sptr> points, float i0,float j0,float i1,float j1)
     {
-    vcl_vector<dbrl_feature_sptr> gpoints;
+    std::vector<dbrl_feature_sptr> gpoints;
     for(int i=0;i<static_cast<int>(points.size());i++)
         {
         if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(points[i].ptr()))
@@ -462,8 +462,8 @@ vcl_vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_local_global_process::gridify_
     }
 
 
-void dbrl_rpm_tps_affine_local_global_process::remove_points_on_the_border(vcl_vector<dbrl_feature_sptr> point1,
-                                                                           vcl_vector<dbrl_feature_sptr> point2,
+void dbrl_rpm_tps_affine_local_global_process::remove_points_on_the_border(std::vector<dbrl_feature_sptr> point1,
+                                                                           std::vector<dbrl_feature_sptr> point2,
                                                                            float i0,float j0,float i1,float j1,
                                                                            dbrl_correspondence *M)
     {

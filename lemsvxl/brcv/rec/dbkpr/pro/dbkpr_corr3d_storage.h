@@ -14,7 +14,7 @@
 // \endverbatim
 
 #include <bpro1/bpro1_storage.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <dbdet/dbdet_keypoint_corr3d_sptr.h>
 #include <dbkpr/pro/dbkpr_corr3d_storage_sptr.h>
 #include <dbkpr/dbkpr_view_span_tree_sptr.h>
@@ -31,12 +31,12 @@ public:
   //: Constructor
   dbkpr_corr3d_storage(){}
   //: Constructor
-  dbkpr_corr3d_storage( const vcl_vector< dbdet_keypoint_corr3d_sptr >& corr, int ni, int nj);
+  dbkpr_corr3d_storage( const std::vector< dbdet_keypoint_corr3d_sptr >& corr, int ni, int nj);
   //: Destructor
   virtual ~dbkpr_corr3d_storage() {}
 
   //: Returns the type string "keypoint_corr3d"
-  virtual vcl_string type() const { return "keypoints_corr3d"; }
+  virtual std::string type() const { return "keypoints_corr3d"; }
 
   //: Return IO version number;
   short version() const;
@@ -52,13 +52,13 @@ public:
   virtual bpro1_storage* clone() const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbkpr_corr3d_storage"; }
+  virtual std::string is_a() const { return "dbkpr_corr3d_storage"; }
 
   //: Set the correspondences storage vector
-  void set_correspondences( const vcl_vector< dbdet_keypoint_corr3d_sptr >& corr);
+  void set_correspondences( const std::vector< dbdet_keypoint_corr3d_sptr >& corr);
 
   //: Retrieve the correspondences storage vector
-  const vcl_vector< dbdet_keypoint_corr3d_sptr >& correspondences() const { return keypoints_3d_; }
+  const std::vector< dbdet_keypoint_corr3d_sptr >& correspondences() const { return keypoints_3d_; }
 
   //: Return the width
   int ni() const { return ni_; }
@@ -76,7 +76,7 @@ public:
 
 private:
   //: The vector of lowe keypoint smart pointers
-  vcl_vector< dbdet_keypoint_corr3d_sptr > keypoints_3d_;
+  std::vector< dbdet_keypoint_corr3d_sptr > keypoints_3d_;
 
   //: The width of the image that contains the keypoints
   int ni_;
@@ -96,7 +96,7 @@ struct dbkpr_corr3d_storage_new : public dbkpr_corr3d_storage_sptr
   dbkpr_corr3d_storage_new() : base(new dbkpr_corr3d_storage()) { }
 
   //: Constructor - creates a dbkpr_corr3d_storage_sptr with keypoints.
-  dbkpr_corr3d_storage_new(const vcl_vector< dbdet_keypoint_corr3d_sptr >& corr, int ni, int nj)
+  dbkpr_corr3d_storage_new(const std::vector< dbdet_keypoint_corr3d_sptr >& corr, int ni, int nj)
    : base(new dbkpr_corr3d_storage( corr, ni, nj )) { }
 };
 

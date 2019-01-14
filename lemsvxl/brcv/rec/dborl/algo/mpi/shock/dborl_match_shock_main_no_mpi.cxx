@@ -23,7 +23,7 @@
 
 #include "dborl_match_shock_processor.h"
 //#include <dborl/algo/mpi/dborl_cluster.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
 #include <vul/vul_timer.h>
 
@@ -34,9 +34,9 @@ int main(int argc, char *argv[]) {
 
   dborl_match_shock_processor e;
   //dborl_cluster<dborl_match_shock_processor_input, dborl_match_shock_processor, float> cluster(&e);
-  vcl_vector<vcl_string> argv_str;
+  std::vector<std::string> argv_str;
   for (int i = 0; i < argc; i++)
-    argv_str.push_back(vcl_string(argv[i]));
+    argv_str.push_back(std::string(argv[i]));
 
   if (!e.parse_command_line(argv_str))
     return false;
@@ -44,23 +44,23 @@ int main(int argc, char *argv[]) {
   if (!e.parse(e.param_file_.c_str()))
     return false;
 
-  vcl_vector<dborl_match_shock_processor_input> things;
+  std::vector<dborl_match_shock_processor_input> things;
   if (!e.initialize(things)) {
-    vcl_cout << "Initialization failed\n";
+    std::cout << "Initialization failed\n";
     return -1;
   } else 
-    vcl_cout << "initialized..";
+    std::cout << "initialized..";
   
-  vcl_vector<float> results;
+  std::vector<float> results;
   for (unsigned i = 0; i < things.size(); i++) {
     float f;
     e.process(things[i], f);
     results.push_back(f);
   }
 
-  vcl_cout << " processed..";
+  std::cout << " processed..";
   e.finalize(results);
-  vcl_cout << " finalized..\n";
+  std::cout << " finalized..\n";
 
   return 0;
 }

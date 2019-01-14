@@ -32,10 +32,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -44,13 +44,13 @@ public:
   bool finish();
 
   bool process_frame(vil_image_resource_sptr image_sptr, 
-                     vcl_vector<float> inp_x, vcl_vector<float> inp_y,
-                     vcl_vector<vsol_spatial_object_2d_sptr> &out_pts_smt,
-                     vcl_vector<vsol_spatial_object_2d_sptr> &out_pts, float sigma);
+                     std::vector<float> inp_x, std::vector<float> inp_y,
+                     std::vector<vsol_spatial_object_2d_sptr> &out_pts_smt,
+                     std::vector<vsol_spatial_object_2d_sptr> &out_pts, float sigma);
 
   
 protected:
-  vcl_string input_file;
+  std::string input_file;
   float sigma;
 
   osl_canny_ox_params canny_params;

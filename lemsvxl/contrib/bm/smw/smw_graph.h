@@ -5,15 +5,15 @@
 #include"smw/smw_frame_clock.h"
 #include"smw/smw_node.h"
 
-#include<vcl_vector.h>
+#include<vector>
 
-#include<vcl_iostream.h>
-#include<vcl_iomanip.h>
+#include<iostream>
+#include<iomanip>
 
 namespace graph_typedefs{
     typedef smw_node node;
 
-    typedef vcl_map<unsigned,smw_node> graph;
+    typedef std::map<unsigned,smw_node> graph;
 };
 
 using namespace graph_typedefs;
@@ -36,11 +36,11 @@ public:
     unsigned size(){return graph_.size();}
 
     //print a summary of the graph.
-    friend vcl_ostream& operator<<(vcl_ostream& os, smw_graph&);
+    friend std::ostream& operator<<(std::ostream& os, smw_graph&);
 
-    bool write_dot_file(vcl_ostream& os);
+    bool write_dot_file(std::ostream& os);
 
-    bool write_dot_file_full(vcl_ostream& os);
+    bool write_dot_file_full(std::ostream& os);
 
     float max_prob() const {return max_prob_;}
 

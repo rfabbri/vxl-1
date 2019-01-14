@@ -27,7 +27,7 @@ public:
   static boxm_scene<boct_tree<short, bsta_num_obs<bsta_gauss_sf1> > >* create_scene();
   
   //: creates a scene, runs a kernel and returns the id of the context containing non-maximally suppressed parts
-  static int find_primitive_parts(bvpl_kernel_sptr kernel_sptr=NULL, vcl_string part_scene_path = vcl_string("parts_scene"));
+  static int find_primitive_parts(bvpl_kernel_sptr kernel_sptr=NULL, std::string part_scene_path = std::string("parts_scene"));
   
   //: composes primitives into pairs, returns the id of composition context
   static int find_primitive_pairs();

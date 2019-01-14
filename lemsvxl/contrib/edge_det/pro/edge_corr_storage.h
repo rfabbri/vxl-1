@@ -28,7 +28,7 @@ public:
   virtual ~edge_corr_storage(){}
 
   //: Returns the type string "edge_map_corr"
-  virtual vcl_string type() const { return "edge_map_corr"; }
+  virtual std::string type() const { return "edge_map_corr"; }
 
   //: Return IO version number;
   short version() const;
@@ -38,7 +38,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "edge_corr_storage"; }
+  virtual std::string is_a() const { return "edge_corr_storage"; }
 
 public:
 
@@ -49,8 +49,8 @@ public:
   dbdet_edgemap_sptr edge_map2_;
 
   //: mapping between the two edgemaps
-  vcl_vector<int> match1;
-  vcl_vector<int> match2;
+  std::vector<int> match1;
+  std::vector<int> match2;
 
 };
 

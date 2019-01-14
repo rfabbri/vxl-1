@@ -6,7 +6,7 @@
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vidpro1/vidpro1_repository.h>
 
 #include <georegister/dbrl_rpm_tps.h>
@@ -89,10 +89,10 @@ dbrl_select_id_point_process_tool::handle( const vgui_event & e,
           vidpro1_vsol2D_storage_sptr vsolpcurr;
           vsolpcurr.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("vsol2D",frame));    
 
-          vcl_vector<vsol_spatial_object_2d_sptr> p=vsolpcurr->all_data();
-          vcl_vector<dbrl_id_point_2d_sptr> pt=pcurr->points();
+          std::vector<vsol_spatial_object_2d_sptr> p=vsolpcurr->all_data();
+          std::vector<dbrl_id_point_2d_sptr> pt=pcurr->points();
 
-          vcl_vector<dbrl_id_point_2d_sptr> sel_pts;
+          std::vector<dbrl_id_point_2d_sptr> sel_pts;
 
           if(p.size()==1)
               if(vsol_polygon_2d_sptr poly=p[0]->cast_to_region()->cast_to_polygon())
@@ -131,7 +131,7 @@ return false;
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbrl_select_id_point_process_tool::name() const
     {
 

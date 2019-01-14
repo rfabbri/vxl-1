@@ -12,8 +12,8 @@
 #include <dbsk2d/pro/dbsk2d_ishock_loop_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
 
-#include <vcl_sstream.h>
-#include <vcl_algorithm.h>
+#include <sstream>
+#include <algorithm>
 
 #include <vil/vil_image_resource.h>
 
@@ -60,18 +60,18 @@ void dbsk2d_containment_graph::construct_graph()
     dbsk2d_ishock_grouping_transform grouper(ishock_graph_);
     grouper.grow_regions();
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >
         fragments = grouper.get_outer_shock_nodes();
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
         frag_edges = grouper.get_region_nodes();
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
         frag_belms = grouper.get_region_belms();
-    vcl_map<unsigned int,vcl_set<int> >
+    std::map<unsigned int,std::set<int> >
         region_belms_ids=grouper.get_region_belms_ids();
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
         degree_three_nodes = grouper.get_degree_three_nodes();
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
     {
         // Grab polygon fragment
@@ -95,23 +95,23 @@ void dbsk2d_containment_graph::construct_graph()
             cgraph_nodes_[0].push_back(root_node);
 
             // Create local map
-            vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> > local_map;
+            std::map<unsigned int,std::vector<dbsk2d_ishock_node*> > local_map;
         
-            vcl_vector<dbsk2d_ishock_node*> nodes=fragments[(*it).first];
+            std::vector<dbsk2d_ishock_node*> nodes=fragments[(*it).first];
 
             for ( unsigned int j=0; j < nodes.size() ; ++j)
             {
                 local_map[0].push_back(nodes[j]);
             }
 
-            vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+            std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
                 degree_three_links;
 
             // Find links to consider for degree three
             {
-                vcl_vector<dbsk2d_ishock_belm*> d3_nodes=
+                std::vector<dbsk2d_ishock_belm*> d3_nodes=
                     degree_three_nodes[(*it).first];
-                vcl_set<int> id_set=region_belms_ids[(*it).first];
+                std::set<int> id_set=region_belms_ids[(*it).first];
 
                 for ( unsigned int d=0; d < d3_nodes.size() ; ++d)
                 {
@@ -134,12 +134,12 @@ void dbsk2d_containment_graph::construct_graph()
             expand_node(root_node,local_map,degree_three_nodes,
                         degree_three_links);
 
-            vcl_vector<dbsk2d_ishock_belm*> root_node_belms=
+            std::vector<dbsk2d_ishock_belm*> root_node_belms=
                 frag_belms[(*it).first];
             unsigned int outer_shock_nodes_size =
                 fragments[(*it).first].size();
             
-            vcl_vector<dbsk2d_containment_node_sptr> children=
+            std::vector<dbsk2d_containment_node_sptr> children=
                 root_node->get_children();
             for ( unsigned int c=0; c < children.size(); ++c)
             {
@@ -156,9 +156,9 @@ void dbsk2d_containment_graph::construct_graph()
 		     ishock_graph_,
 		     dbsk2d_ishock_transform::GAP);
 		
-		vcl_vector<vgl_polygon<double> > foobar; 
+		std::vector<vgl_polygon<double> > foobar; 
 		foobar.push_back(poly);
-		vcl_stringstream stream;
+		std::stringstream stream;
 		stream<<"Node_"<<root_node->get_id()<<".ps";
 		temp_trans.write_state(stream.str(),foobar,
 				       show_shock_);
@@ -171,9 +171,9 @@ void dbsk2d_containment_graph::construct_graph()
              (expand_outside_
 	      || grouper.region_within_image((*it).first,quad_)))  
         {
-            vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
-            vcl_set<int> key;
-            vcl_set<int> closed_region_key;
+            std::map<int,dbsk2d_ishock_bline*> extra_belms;
+            std::set<int> key;
+            std::set<int> closed_region_key;
             dbsk2d_transform_manager::Instance().get_extra_belms(
                 frag_belms[(*it).first],key,closed_region_key,extra_belms);
             
@@ -187,7 +187,7 @@ void dbsk2d_containment_graph::construct_graph()
                 
                 if ( train_ )
                 {
-                    vcl_vector<dbsk2d_ishock_belm*> belms=
+                    std::vector<dbsk2d_ishock_belm*> belms=
                         frag_belms[(*it).first];
                     for ( unsigned int b=0; b < belms.size() ; ++b)
                     {
@@ -197,7 +197,7 @@ void dbsk2d_containment_graph::construct_graph()
                 }
                 else
                 {
-                    vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
+                    std::map<int, dbsk2d_ishock_bline* >::iterator oit;
                     for (oit = extra_belms.begin() ; 
                          oit != extra_belms.end() ; ++oit)
                     {
@@ -210,7 +210,7 @@ void dbsk2d_containment_graph::construct_graph()
                 if ( closed_region && grouper.region_within_image
                      ((*it).first,quad_))
                 {
-                    vcl_vector<dbsk2d_ishock_belm*> belms=
+                    std::vector<dbsk2d_ishock_belm*> belms=
                         frag_belms[(*it).first];
                     for ( unsigned int b=0; b < belms.size() ; ++b)
                     {
@@ -226,7 +226,7 @@ void dbsk2d_containment_graph::construct_graph()
                     region_stats_[key].push_back(1.0);       //region gap cost
 
                     // get polygon stats
-                    vcl_vector<double> region_stats;
+                    std::vector<double> region_stats;
                     grouper.get_region_stats((*it).first,
                                              poly,region_stats);
 
@@ -235,7 +235,7 @@ void dbsk2d_containment_graph::construct_graph()
                         region_stats_[key].push_back(region_stats[p]);
                     }
 
-                    vcl_vector<double> app_stats;
+                    std::vector<double> app_stats;
                     
                     dbsk2d_transform_manager::Instance().get_appearance_stats
                         (frag_edges[(*it).first],
@@ -269,7 +269,7 @@ void dbsk2d_containment_graph::construct_graph()
         {
             if ( node->get_depth() == 1 )
             {
-                vcl_cout<<"Finished with Node id: "<<node->get_id()<<vcl_endl;
+                std::cout<<"Finished with Node id: "<<node->get_id()<<std::endl;
             }
             
             if ( error_flag == false )
@@ -308,14 +308,14 @@ void dbsk2d_containment_graph::construct_graph()
         error_flag = node->execute_transform();
         if ( error_flag == false )
         {
-            // vcl_stringstream error_stream;
+            // std::stringstream error_stream;
             // error_stream<<"Node_Error_"<<node->get_id()<<"_"<<
             //     node->get_parent_transform()->get_transform_type()<<".ps";
-            // vcl_vector<vgl_polygon<double> > temp;
+            // std::vector<vgl_polygon<double> > temp;
             // node->get_parent_transform()
             // ->write_state(error_stream.str(),temp);
 
-            vcl_cout<<"Error at Node id: "<<node->get_id()<<vcl_endl;
+            std::cout<<"Error at Node id: "<<node->get_id()<<std::endl;
             continue;
         }
 
@@ -323,27 +323,27 @@ void dbsk2d_containment_graph::construct_graph()
         dbsk2d_ishock_grouping_transform grouper(ishock_graph_);
         grouper.grow_transformed_regions(orig_id);
 
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
             parent_regions = node->get_parent_regions();
-        vcl_vector<vgl_polygon<double> > polys;
+        std::vector<vgl_polygon<double> > polys;
 
-        vcl_set<unsigned int> rag_matched_nodes;
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::
+        std::set<unsigned int> rag_matched_nodes;
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::
             iterator pit;
         for ( pit = parent_regions.begin() ; 
               pit != parent_regions.end() ; ++pit)
         {
-            vcl_vector<dbsk2d_ishock_belm*> parent_belms = (*pit).second;
+            std::vector<dbsk2d_ishock_belm*> parent_belms = (*pit).second;
            
-            vcl_set<int> transform_belms;
+            std::set<int> transform_belms;
             node->get_parent_transform()->get_belms(transform_belms);
 
-            vcl_map<unsigned int,unsigned int> 
+            std::map<unsigned int,unsigned int> 
                 parent_os_nodes=node->get_parent_regions_outer_shock_nodes();
             int compare=parent_os_nodes[(*pit).first];
 
             bool flag=false;
-            vcl_set<int> frag_belms_contour_ids;
+            std::set<int> frag_belms_contour_ids;
             for ( unsigned int r=0; r < parent_belms.size() ; ++r)
             {
                 if ( !transform_belms.count(parent_belms[r]->id()))
@@ -379,22 +379,22 @@ void dbsk2d_containment_graph::construct_graph()
                               compare);
         }
 
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >
             region_outer_nodes = grouper.get_outer_shock_nodes();
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
             frag_edges = grouper.get_region_nodes();
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
             frag_belms = grouper.get_region_belms();
-        vcl_map<unsigned int,vcl_set<int> >
+        std::map<unsigned int,std::set<int> >
             frag_belms_ids=grouper.get_region_belms_ids();
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
             frag_extra_belms = grouper.get_region_belms();
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
             degree_three_nodes = grouper.get_degree_three_nodes();
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >
             degree_three_links;
        
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+        std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
         for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
         {
             // Grab polygon fragment
@@ -418,9 +418,9 @@ void dbsk2d_containment_graph::construct_graph()
 
                 
                 // Find links to consider for degree three
-                vcl_vector<dbsk2d_ishock_belm*> d3_nodes=
+                std::vector<dbsk2d_ishock_belm*> d3_nodes=
                     degree_three_nodes[(*it).first];
-                vcl_set<int> id_set=frag_belms_ids[(*it).first];
+                std::set<int> id_set=frag_belms_ids[(*it).first];
 
                 for ( unsigned int d=0; d < d3_nodes.size() ; ++d)
                 {
@@ -450,16 +450,16 @@ void dbsk2d_containment_graph::construct_graph()
                  (expand_outside_ || grouper.region_within_image((*it).first
                                                                  ,quad_)))
             {
-                // vcl_stringstream filename;
+                // std::stringstream filename;
                 // filename<<"Depth_"<<depth<<"_id_"<<
                 //     dbsk2d_transform_manager::Instance().
                 //     nextAvailableID()<<".png";
                 
                 // dbsk2d_transform_manager::Instance().save_image_poly(
                 //     poly,filename.str());
-                vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
-                vcl_set<int> key;
-                vcl_set<int> closed_region_key;
+                std::map<int,dbsk2d_ishock_bline*> extra_belms;
+                std::set<int> key;
+                std::set<int> closed_region_key;
                 dbsk2d_transform_manager::Instance().get_extra_belms(
                     frag_extra_belms[(*it).first],key,closed_region_key,
                     extra_belms);
@@ -474,7 +474,7 @@ void dbsk2d_containment_graph::construct_graph()
                     
                     if ( train_ )
                     {
-                        vcl_vector<dbsk2d_ishock_belm*> belms=
+                        std::vector<dbsk2d_ishock_belm*> belms=
                             frag_belms[(*it).first];
                         for ( unsigned int b=0; b < belms.size() ; ++b)
                         {
@@ -484,7 +484,7 @@ void dbsk2d_containment_graph::construct_graph()
                     }
                     else
                     {
-                        vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
+                        std::map<int, dbsk2d_ishock_bline* >::iterator oit;
                         for (oit = extra_belms.begin() ; 
                              oit != extra_belms.end() ; ++oit)
                         {
@@ -498,7 +498,7 @@ void dbsk2d_containment_graph::construct_graph()
                          ((*it).first,quad_))
                     {
 
-                        vcl_vector<dbsk2d_ishock_belm*> belms=
+                        std::vector<dbsk2d_ishock_belm*> belms=
                             frag_belms[(*it).first];
                         for ( unsigned int b=0; b < belms.size() ; ++b)
                         {
@@ -516,7 +516,7 @@ void dbsk2d_containment_graph::construct_graph()
                         region_stats_[key].push_back(node->get_gap_prob());
                         
                         // get polygon stats
-                        vcl_vector<double> region_stats;
+                        std::vector<double> region_stats;
                         grouper.get_region_stats((*it).first,
                                                  poly,region_stats);
                         
@@ -525,7 +525,7 @@ void dbsk2d_containment_graph::construct_graph()
                             region_stats_[key].push_back(region_stats[p]);
                         }
                         
-                        vcl_vector<double> app_stats;
+                        std::vector<double> app_stats;
                     
                         dbsk2d_transform_manager::Instance().
                             get_appearance_stats
@@ -548,7 +548,7 @@ void dbsk2d_containment_graph::construct_graph()
 
 	if ( debug_ )
 	{
-	    vcl_stringstream stream;
+	    std::stringstream stream;
 	    stream<<"Node_"<<node->get_id()<<".ps";
 	    node->get_parent_transform()->write_state(stream.str(),polys,
 						      show_shock_);
@@ -561,13 +561,13 @@ void dbsk2d_containment_graph::construct_graph()
                 degree_three_links);
         }
 
-        vcl_vector<dbsk2d_containment_node_sptr> children=
+        std::vector<dbsk2d_containment_node_sptr> children=
             node->get_children();
 
         for ( unsigned int c=0; c < children.size(); ++c)
         {
 
-            vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator 
+            std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::iterator 
                 fit;
             for ( fit = frag_belms.begin() ; fit != frag_belms.end() ; ++fit)
             {
@@ -589,15 +589,15 @@ void dbsk2d_containment_graph::construct_graph()
     // else
     {
         
-        vcl_cout<<"Writing out "<<all_region_belms_.size()
-                <<" Fragments"<<vcl_endl;
+        std::cout<<"Writing out "<<all_region_belms_.size()
+                <<" Fragments"<<std::endl;
 
         if ( train_ )
         {
-            vcl_cout<<"Writing out training data"<<vcl_endl;
+            std::cout<<"Writing out training data"<<std::endl;
         }
 
-        vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
+        std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator mit;
         for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
               ++mit)
         {
@@ -654,9 +654,9 @@ void dbsk2d_containment_graph::construct_graph()
 //:construct graph
 void dbsk2d_containment_graph::expand_node(
     dbsk2d_containment_node_sptr& node,
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& outer_shock_nodes,
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >& degree_three_nodes,
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >& degree_three_links
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& outer_shock_nodes,
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >& degree_three_nodes,
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >& degree_three_links
 )
 {
 
@@ -666,9 +666,9 @@ void dbsk2d_containment_graph::expand_node(
     }
 
     // Detect transforms from new regions
-    vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >
+    std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >
         gap_pairs;
-    vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >
+    std::vector<std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >
         gap4_pairs;
 
     dbsk2d_ishock_gap_detector detector(ishock_graph_);
@@ -678,21 +678,21 @@ void dbsk2d_containment_graph::expand_node(
     unsigned int current_depth = node->get_depth()+1;
     dbsk2d_ishock_transform_sptr transform=
         node->get_parent_transform();
-    vcl_set<int> belms_key;
+    std::set<int> belms_key;
 
-    vcl_map<int,dbsk2d_ishock_bpoint*> gap_endpoints;
+    std::map<int,dbsk2d_ishock_bpoint*> gap_endpoints;
 
     if ( transform )
     {       
         belms_key=node->get_key();
     }
 
-    vcl_map<unsigned int,vcl_vector<double> > gap_costs;
+    std::map<unsigned int,std::vector<double> > gap_costs;
   
     // Add new child nodes for gaps
     for ( unsigned int i=0 ; i < gap_pairs.size() ; ++i)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> gap
             = gap_pairs[i];
 
         belms_key.insert(gap.first->id());
@@ -748,7 +748,7 @@ void dbsk2d_containment_graph::expand_node(
     // Add new child nodes for gap4s
     for ( unsigned int i=0 ; i < gap4_pairs.size() ; ++i)
     {
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> gap4
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> gap4
             = gap4_pairs[i];
 
         dbsk2d_ishock_bpoint* anchor_pt = dbsk2d_transform_manager::Instance()
@@ -806,7 +806,7 @@ void dbsk2d_containment_graph::expand_node(
 
     }
 
-    vcl_vector<dbsk2d_ishock_bpoint*> endpoints;
+    std::vector<dbsk2d_ishock_bpoint*> endpoints;
     determine_endpoints(outer_shock_nodes,endpoints);
 
     for ( unsigned int e=0; e < endpoints.size() ; ++e )
@@ -817,28 +817,28 @@ void dbsk2d_containment_graph::expand_node(
         } 
     }
 
-    vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
+    std::map<int,dbsk2d_ishock_bpoint*>::iterator mit;
     for ( mit = gap_endpoints.begin() ; mit != gap_endpoints.end() ; ++mit)
     {
         endpoints.push_back((*mit).second);
     }
 
-    vcl_set<vcl_pair<int,int> > loop_pairs;
+    std::set<std::pair<int,int> > loop_pairs;
 
     for ( unsigned int e=0; e < endpoints.size() ; ++e )
     {
-        vcl_set<int> local_copy(belms_key);
+        std::set<int> local_copy(belms_key);
         
         dbsk2d_ishock_transform_sptr trans_loop1 = new 
             dbsk2d_ishock_loop_transform(ishock_graph_,
                                          endpoints[e]);
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
             contour_pair=trans_loop1->get_contour_pair();
 
-        vcl_pair<int,int> lp1(contour_pair.first->id(),
+        std::pair<int,int> lp1(contour_pair.first->id(),
                              contour_pair.second->id());
 
-        vcl_pair<int,int> lp2(contour_pair.second->id(),
+        std::pair<int,int> lp2(contour_pair.second->id(),
                              contour_pair.first->id());
         
         if ( loop_pairs.count(lp1) || loop_pairs.count(lp2))
@@ -858,7 +858,7 @@ void dbsk2d_containment_graph::expand_node(
             if ( gap_costs.count(contour_pair.first->id()) && 
                  !gap_costs.count(contour_pair.second->id()) )
             {
-                double c1 = *vcl_min_element(
+                double c1 = *std::min_element(
                     gap_costs[contour_pair.first->id()].begin(),
                     gap_costs[contour_pair.first->id()].end());
 
@@ -867,7 +867,7 @@ void dbsk2d_containment_graph::expand_node(
             else if ( gap_costs.count(contour_pair.second->id()) &&
                       !gap_costs.count(contour_pair.first->id()))
             {
-                double c1 = *vcl_min_element(
+                double c1 = *std::min_element(
                     gap_costs[contour_pair.second->id()].begin(),
                     gap_costs[contour_pair.second->id()].end());
                     
@@ -876,15 +876,15 @@ void dbsk2d_containment_graph::expand_node(
             else if ( gap_costs.count(contour_pair.first->id()) &&
                       gap_costs.count(contour_pair.second->id()))
             {
-                double c1 = *vcl_min_element(
+                double c1 = *std::min_element(
                     gap_costs[contour_pair.first->id()].begin(),
                     gap_costs[contour_pair.first->id()].end());
-                double c2 = *vcl_min_element(
+                double c2 = *std::min_element(
                     gap_costs[contour_pair.second->id()].begin(),
                     gap_costs[contour_pair.second->id()].end());
 
                      
-                prob = 1.0-vcl_min(c1,c2);
+                prob = 1.0-std::min(c1,c2);
 
             }
             else
@@ -924,13 +924,13 @@ void dbsk2d_containment_graph::expand_node(
         }
     }       
 
-    vcl_map<vcl_set<int>,int> deg_three_loops;
+    std::map<std::set<int>,int> deg_three_loops;
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator dit;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::iterator dit;
     for ( dit = degree_three_nodes.begin() ; dit != degree_three_nodes.end();
           ++dit)
     {
-        vcl_vector<dbsk2d_ishock_belm*> d3_nodes=(*dit).second;
+        std::vector<dbsk2d_ishock_belm*> d3_nodes=(*dit).second;
 
         for ( unsigned int d=0; d < d3_nodes.size() ; ++d)
         {
@@ -939,7 +939,7 @@ void dbsk2d_containment_graph::expand_node(
 
             if ( degree_three_links.count((*dit).first))
             {
-                vcl_vector<dbsk2d_ishock_belm*> links=
+                std::vector<dbsk2d_ishock_belm*> links=
                     degree_three_links[(*dit).first];
 
                 for ( unsigned int l=0; l < links.size() ; ++l)
@@ -952,7 +952,7 @@ void dbsk2d_containment_graph::expand_node(
                         continue;
                     }
                     
-                    vcl_set<int> local_copy(belms_key);
+                    std::set<int> local_copy(belms_key);
                     
                     dbsk2d_ishock_transform_sptr trans_loop1 = new 
                         dbsk2d_ishock_loop_transform(ishock_graph_,
@@ -1009,12 +1009,12 @@ void dbsk2d_containment_graph::expand_node(
 bool dbsk2d_containment_graph::find_node_in_cgraph(
     unsigned int current_depth,
     dbsk2d_containment_node_sptr& node,
-    vcl_set<int>& belms_key)
+    std::set<int>& belms_key)
 {
 
     bool flag=false;
 
-    vcl_vector<dbsk2d_containment_node_sptr> nodes_at_depth;
+    std::vector<dbsk2d_containment_node_sptr> nodes_at_depth;
     if ( cgraph_nodes_.count(current_depth))
     {
         nodes_at_depth = cgraph_nodes_[current_depth];
@@ -1029,7 +1029,7 @@ bool dbsk2d_containment_graph::find_node_in_cgraph(
                 nodes_at_depth[n];
             if ( child->get_id() != node->get_id() )
             {
-                vcl_set<int> prev_key=child->get_key();
+                std::set<int> prev_key=child->get_key();
                 if ( prev_key == belms_key)
                 {
                     node->set_child_node(child);
@@ -1048,21 +1048,21 @@ bool dbsk2d_containment_graph::find_node_in_cgraph(
 
 // node already exists
 void dbsk2d_containment_graph::determine_endpoints(
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& region_outer_nodes,
-    vcl_vector<dbsk2d_ishock_bpoint*>& endpoints)
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >& region_outer_nodes,
+    std::vector<dbsk2d_ishock_bpoint*>& endpoints)
 {
 
-    vcl_map< int,vcl_string> local_endpoints;
-    vcl_map< int,vcl_string> local_contours;
+    std::map< int,std::string> local_endpoints;
+    std::map< int,std::string> local_contours;
 
     // Loop thru new regions and determine new transforms
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >::iterator it;
 
     for ( it = region_outer_nodes.begin() ; it != region_outer_nodes.end(); 
           ++it)
     {
         // Detect transforms
-        vcl_vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
+        std::vector<dbsk2d_ishock_node*> outer_shock_nodes = (*it).second;
         for ( unsigned int i=0; i < outer_shock_nodes.size() ; ++i)
         {
             ishock_edge_list adj_edges = outer_shock_nodes[i]->adj_edges();
@@ -1091,7 +1091,7 @@ void dbsk2d_containment_graph::determine_endpoints(
                         }
 
                         dbsk2d_bnd_edge* edge=(dbsk2d_bnd_edge*)elist[0].ptr();
-                        const vcl_list< vtol_topology_object * > * 
+                        const std::list< vtol_topology_object * > * 
                            superiors  = edge->superiors_list();
 
                         int key1 = bpoint->id();
@@ -1128,7 +1128,7 @@ void dbsk2d_containment_graph::determine_endpoints(
                         }
 
                         dbsk2d_bnd_edge* edge=(dbsk2d_bnd_edge*)elist[0].ptr();
-                        const vcl_list< vtol_topology_object * > * 
+                        const std::list< vtol_topology_object * > * 
                             superiors  = edge->superiors_list();
 
                         int key1 = bpoint->id();
@@ -1149,23 +1149,23 @@ void dbsk2d_containment_graph::determine_endpoints(
 
 }
 
-void dbsk2d_containment_graph::write_graph(vcl_string filename)
+void dbsk2d_containment_graph::write_graph(std::string filename)
 {
 
-    vcl_ofstream output_ascii_file;
+    std::ofstream output_ascii_file;
     output_ascii_file.open(filename.c_str(),
-                          vcl_ios::out | 
-                          vcl_ios::app );
+                          std::ios::out | 
+                          std::ios::app );
 
-    output_ascii_file<<"digraph G {"<<vcl_endl;
-    vcl_map<unsigned int,vcl_vector<dbsk2d_containment_node_sptr> > ::iterator 
+    output_ascii_file<<"digraph G {"<<std::endl;
+    std::map<unsigned int,std::vector<dbsk2d_containment_node_sptr> > ::iterator 
         it;
     for ( it = cgraph_nodes_.begin() ; it != cgraph_nodes_.end() ; ++it)
     {
-        vcl_vector<dbsk2d_containment_node_sptr> nodes=(*it).second;
+        std::vector<dbsk2d_containment_node_sptr> nodes=(*it).second;
         for ( unsigned int i=0; i < nodes.size() ; ++i)
         {
-            vcl_vector<dbsk2d_containment_node_sptr> children
+            std::vector<dbsk2d_containment_node_sptr> children
                 = nodes[i]->get_children();
 
                 
@@ -1175,7 +1175,7 @@ void dbsk2d_containment_graph::write_graph(vcl_string filename)
                     children[j]->get_parent_transform();
                 dbsk2d_ishock_transform::TransformType ttype=
                     transform->get_transform_type();
-                vcl_string prefix;
+                std::string prefix;
                 if ( ttype == dbsk2d_ishock_transform::GAP)
                 {
                     prefix=" [ label=\"G={";
@@ -1189,10 +1189,10 @@ void dbsk2d_containment_graph::write_graph(vcl_string filename)
                     prefix=" [ label=\"L={";
 
                 }
-                vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
+                std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
                     pair=transform->get_contour_pair();
                 
-                vcl_stringstream body;
+                std::stringstream body;
                 body<<pair.first->id()<<","<<pair.second->id();
             
                 output_ascii_file<<"\t"<<nodes[i]->get_id()
@@ -1201,7 +1201,7 @@ void dbsk2d_containment_graph::write_graph(vcl_string filename)
                                  <<prefix
                                  <<body.str()
                                  <<"}\" ];"
-                                 <<vcl_endl;
+                                 <<std::endl;
 
             }
            
@@ -1210,31 +1210,31 @@ void dbsk2d_containment_graph::write_graph(vcl_string filename)
     }
 
 
-    output_ascii_file<<"}"<<vcl_endl;
+    output_ascii_file<<"}"<<std::endl;
     output_ascii_file.close();
 
 }
 
 
-void dbsk2d_containment_graph::write_stats(vcl_ofstream& ofstream)
+void dbsk2d_containment_graph::write_stats(std::ofstream& ofstream)
 {
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_containment_node_sptr> > ::iterator 
+    std::map<unsigned int,std::vector<dbsk2d_containment_node_sptr> > ::iterator 
         it;
     for ( it = cgraph_nodes_.begin() ; it != cgraph_nodes_.end() ; ++it)
     {
-        vcl_vector<dbsk2d_containment_node_sptr> nodes=(*it).second;
+        std::vector<dbsk2d_containment_node_sptr> nodes=(*it).second;
         ofstream<<"Depth: "
                 <<(*it).first
                 <<" Node: "
                 <<nodes.size()
-                <<vcl_endl;
+                <<std::endl;
        
         
     }
 
-    ofstream<<vcl_endl;
-    ofstream<<"Number of Regions: "<<all_region_belms_.size()<<vcl_endl;
+    ofstream<<std::endl;
+    ofstream<<"Number of Regions: "<<all_region_belms_.size()<<std::endl;
 }
 
 void dbsk2d_containment_graph::cluster_fragments()
@@ -1243,14 +1243,14 @@ void dbsk2d_containment_graph::cluster_fragments()
 
     unsigned int i=0;
     unsigned int j=0;
-    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
-    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator qit;
+    std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator mit;
+    std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator qit;
 
     for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
           ++mit)
     {
         
-        vcl_set<int> model_set=(*mit).first;
+        std::set<int> model_set=(*mit).first;
         qit=mit;
         ++qit;
 
@@ -1261,14 +1261,14 @@ void dbsk2d_containment_graph::cluster_fragments()
         {
             double jaccard_index=0.0;
 
-            vcl_set<int> query_set=(*qit).first;
-            vcl_set<int> intersection;
-            vcl_set<int> union_set;
+            std::set<int> query_set=(*qit).first;
+            std::set<int> intersection;
+            std::set<int> union_set;
             {
-                vcl_insert_iterator<vcl_set<int> > 
+                std::insert_iterator<std::set<int> > 
                     inserter(intersection,intersection.begin());
                 
-                vcl_set_intersection(model_set.begin(),
+                std::set_intersection(model_set.begin(),
                                      model_set.end(),
                                      query_set.begin(),
                                      query_set.end(),
@@ -1277,10 +1277,10 @@ void dbsk2d_containment_graph::cluster_fragments()
             
             if ( intersection.size())
             {
-                vcl_insert_iterator<vcl_set<int> > 
+                std::insert_iterator<std::set<int> > 
                     inserter(union_set,union_set.begin());
 
-                vcl_set_union(model_set.begin(),
+                std::set_union(model_set.begin(),
                               model_set.end(),
                               query_set.begin(),
                               query_set.end(),
@@ -1303,9 +1303,9 @@ void dbsk2d_containment_graph::cluster_fragments()
     for ( unsigned int i=0; i < cluster_centers_ ; ++i)
     {
         unsigned int index=cluster.medoid(i);
-        vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator ait
+        std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator ait
             =all_region_belms_.begin();
-        vcl_advance(ait,index);
+        std::advance(ait,index);
         dbsk2d_transform_manager::Instance().write_output_region
             ((*ait).second);
         dbsk2d_transform_manager::Instance().write_output_polygon
@@ -1318,18 +1318,18 @@ void dbsk2d_containment_graph::cluster_fragments()
 
 void dbsk2d_containment_graph::merge_closed_regions()
 {
-    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> > final_merged_belms;
-    vcl_map<vcl_set<int>,vgl_polygon<double> > final_merged_polys;
+    std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> > final_merged_belms;
+    std::map<std::set<int>,vgl_polygon<double> > final_merged_polys;
 
-    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
+    std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator mit;
     for ( mit = closed_regions_.begin() ; mit != closed_regions_.end();
           ++mit)
     {
-        vcl_set<int> closed_region_key;
-        vcl_set<int> closed_region_key_orig;
+        std::set<int> closed_region_key;
+        std::set<int> closed_region_key_orig;
         vgl_polygon<double> poly;
 
-        vcl_vector<dbsk2d_ishock_belm*> belms=(*mit).second;
+        std::vector<dbsk2d_ishock_belm*> belms=(*mit).second;
         closed_region_key_orig=(*mit).first;
         for ( unsigned int i=0; i < belms.size() ; ++i)
         {
@@ -1339,18 +1339,18 @@ void dbsk2d_containment_graph::merge_closed_regions()
         poly=all_region_polys_[(*mit).first];
         
         
-        vcl_map<int,dbsk2d_ishock_bline*> lines;
-        vcl_set<int> final_key;
+        std::map<int,dbsk2d_ishock_bline*> lines;
+        std::set<int> final_key;
         bool write_out=false;
-        vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator nit;
+        std::map<std::set<int>,std::vector<dbsk2d_ishock_belm*> >::iterator nit;
         for ( nit = closed_regions_.begin() ; nit != closed_regions_.end();
               ++nit)
         {
 
-            vcl_set<int> test_region_key=(*nit).first;
-            vcl_map<int,int> mapping_twinline;
+            std::set<int> test_region_key=(*nit).first;
+            std::map<int,int> mapping_twinline;
             
-            vcl_vector<dbsk2d_ishock_belm*> belms=(*nit).second;
+            std::vector<dbsk2d_ishock_belm*> belms=(*nit).second;
             for ( unsigned int i=0; i < belms.size() ; ++i)
             {
                 dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
@@ -1360,11 +1360,11 @@ void dbsk2d_containment_graph::merge_closed_regions()
             vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];
             if ( test_region_key != closed_region_key_orig)
             {
-                vcl_set<int> intersection;
-                vcl_insert_iterator<vcl_set<int> > 
+                std::set<int> intersection;
+                std::insert_iterator<std::set<int> > 
                     inserter(intersection,intersection.begin());
                 
-                vcl_set_intersection(closed_region_key.begin(),
+                std::set_intersection(closed_region_key.begin(),
                                      closed_region_key.end(),
                                      test_region_key.begin(),
                                      test_region_key.end(),
@@ -1386,17 +1386,17 @@ void dbsk2d_containment_graph::merge_closed_regions()
                     write_out=true;
                     
                     
-                    vcl_set<int> difference;
-                    vcl_insert_iterator<vcl_set<int> > 
+                    std::set<int> difference;
+                    std::insert_iterator<std::set<int> > 
                         insert_diff(difference,difference.begin());
                     
-                    vcl_set_difference(test_region_key.begin(),
+                    std::set_difference(test_region_key.begin(),
                                        test_region_key.end(),
                                        closed_region_key.begin(),
                                        closed_region_key.end(),
                                        insert_diff);
                     
-                    vcl_set<int>::iterator sit;
+                    std::set<int>::iterator sit;
                     for ( sit=difference.begin() ; sit != difference.end()
                               ;++sit)
                     {
@@ -1406,7 +1406,7 @@ void dbsk2d_containment_graph::merge_closed_regions()
                     if ( lines.size() == 0 )
                     {
                         
-                        vcl_vector<dbsk2d_ishock_belm*> closed_region_belms
+                        std::vector<dbsk2d_ishock_belm*> closed_region_belms
                             = (*mit).second;
                         
                         for ( unsigned int c=0; 
@@ -1434,7 +1434,7 @@ void dbsk2d_containment_graph::merge_closed_regions()
                     }
                     else
                     {
-                        vcl_vector<dbsk2d_ishock_belm*> closed_region_belms
+                        std::vector<dbsk2d_ishock_belm*> closed_region_belms
                             = (*mit).second;
 
                         for ( unsigned int c=0; 
@@ -1459,7 +1459,7 @@ void dbsk2d_containment_graph::merge_closed_regions()
                     
                     {
                         
-                        vcl_vector<dbsk2d_ishock_belm*> test_region_belms
+                        std::vector<dbsk2d_ishock_belm*> test_region_belms
                             = (*nit).second;
                         
                         for ( unsigned int b=0; 
@@ -1495,7 +1495,7 @@ void dbsk2d_containment_graph::merge_closed_regions()
         if ( write_out )
         {
            
-            vcl_map<int,dbsk2d_ishock_bline*>::iterator lit;
+            std::map<int,dbsk2d_ishock_bline*>::iterator lit;
             for ( lit=lines.begin() ; lit != lines.end() ; ++lit)
             {
                 final_key.insert((*lit).second->s_pt()->id());
@@ -1503,7 +1503,7 @@ void dbsk2d_containment_graph::merge_closed_regions()
             }
             
             final_merged_polys[final_key]=poly;
-            vcl_map<int,dbsk2d_ishock_bline*>::iterator kit;
+            std::map<int,dbsk2d_ishock_bline*>::iterator kit;
             for ( kit=lines.begin() ; kit != lines.end() ; ++kit)
             {
                 final_merged_belms[final_key].push_back((*kit).second);
@@ -1511,8 +1511,8 @@ void dbsk2d_containment_graph::merge_closed_regions()
         }
     }
 
-    vcl_cout<<"Final merged size: "<<final_merged_polys.size()<<vcl_endl;
-    vcl_map<vcl_set<int>,vgl_polygon<double> >::iterator bit;
+    std::cout<<"Final merged size: "<<final_merged_polys.size()<<std::endl;
+    std::map<std::set<int>,vgl_polygon<double> >::iterator bit;
     for ( bit = final_merged_polys.begin() ; bit != final_merged_polys.end();
           ++bit)
     {

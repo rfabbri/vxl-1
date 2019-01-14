@@ -2,7 +2,7 @@
 // Ian Scott, Feb 2004.
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 
 #include <vnl/vnl_math.h>
@@ -15,13 +15,13 @@
 
 #include <vnl/vnl_double_3.h>
 #include <vul/vul_file.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vgl/algo/vgl_convex_hull_2d.h>
 #include <vgl/vgl_point_3d.h>
@@ -33,7 +33,7 @@ vnl_double_3x3 R(0.0);
 double scale_=1.0;
 float mean_x1_,mean_x2;
 /////////////////////////////////////////////////////////////////////
-vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
+vnl_vector <int> min_max(std::vector <vgl_point_3d<double> > pts) {
 
   int max_z_index,min_z_index,max_x_index,min_x_index;
   double max_z=-10000.0,min_z=10000.0,max_x=-100000.0,min_x=100000.0;
@@ -54,7 +54,7 @@ vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
 }
 
 /////////////////////////////////////////////////////////////////////
-int find_near_point(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
+int find_near_point(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
                              int start_i,int end_i,bool y_flag=true)
 {
 
@@ -83,16 +83,16 @@ int find_near_point(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double>
 struct p_list_set 
 {
    int probe_number;
-   vcl_vector <vnl_matrix <float>  >p_list;
+   std::vector <vnl_matrix <float>  >p_list;
    int class_id;
    float scale;
 };
 
 /////////////////////////////////////////////////////////////////////
-void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_set_)
+void save_points(std::string save_filename,std::vector <struct p_list_set> p_list_set_)
 {
   
-  vcl_ofstream out(save_filename.c_str());
+  std::ofstream out(save_filename.c_str());
 
   if(!out.is_open()){
     std::cerr<<"Cannot open the write selected probes file.\n";
@@ -102,64 +102,64 @@ void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_
 
   out<<p_list_set_.size()<<"\n";
   for (unsigned i=0;i<p_list_set_.size();i++) {
-    out<<i<<" "<<p_list_set_[i].p_list.size()<<vcl_endl;
+    out<<i<<" "<<p_list_set_[i].p_list.size()<<std::endl;
     for( unsigned j=0;j<p_list_set_[i].p_list.size();j++){
-      out<<p_list_set_[i].p_list[j]<< vcl_endl ;
+      out<<p_list_set_[i].p_list[j]<< std::endl ;
     }
   }
-  out<<"from 3d detection"<<vcl_endl;
+  out<<"from 3d detection"<<std::endl;
   out.close();
   
 }
 
 ////////////////////////////////////////////////////////////////////
-read_wrl_file(float rev,vcl_vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
-  vcl_ifstream in(argv);
+read_wrl_file(float rev,std::vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
+  std::ifstream in(argv);
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     exit(-4);
     return -1;
   }
   
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
   while (!in.eof()) {
 
     in>>hhh;
     if (hhh=="translation") {
       in>>x>>y>>z;
-      //vcl_cout<<x<<" "<<rev*x<<vcl_endl;
+      //std::cout<<x<<" "<<rev*x<<std::endl;
       vgl_point_3d<double> p3d(rev*x,y,z);
       ptl.push_back(p3d);
-      //vcl_cout<<p3d<<vcl_endl;
+      //std::cout<<p3d<<std::endl;
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
 
   return 1;
   if (!rotation) return 1;
 
-  vcl_vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_z;
   for (unsigned i=0;i<ptl.size();i++) {
     vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
     pts_z.push_back(R*p);
-   // vcl_cout<<R*p<<vcl_endl;
+   // std::cout<<R*p<<std::endl;
   }
 
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   ptl.clear();
 
   for (unsigned i=0;i<pts_z.size();i++) {
     vgl_point_3d <double> p(pts_z[i](0),pts_z[i](1),pts_z[i](2));
 
     ptl.push_back(p);
-    //vcl_cout<<p<<vcl_endl;
+    //std::cout<<p<<std::endl;
   }
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   in.close();
 
 return 1;
@@ -167,11 +167,11 @@ return 1;
 
 
 
-void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
-                vcl_vector<vgl_point_3d<double> > pts_3d)
+void write_vrml_2(std::ofstream& out,//const std::string& filename,
+                std::vector<vgl_point_3d<double> > pts_3d)
 {
 
-//  vcl_ofstream out(filename.c_str());
+//  std::ofstream out(filename.c_str());
 //    if(!out.is_open()){
 //      std::cerr<<"Cannot open the input file.\n";
 //      return;
@@ -216,7 +216,7 @@ void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
 
   for (unsigned i=0;i <pts_3d.size();i++) {
     //point_3d_mean_pts[i].set(scale_*point_3d_mean_pts[i].x(),scale_*point_3d_mean_pts[i].y(),scale_*point_3d_mean_pts[i].z());
-    //vcl_cout<<point_3d_mean_pts[i]<<vcl_endl;
+    //std::cout<<point_3d_mean_pts[i]<<std::endl;
 
 
 
@@ -244,18 +244,18 @@ void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
   }
 
 
-  vcl_cout<<"#### write_vrml_2 end ####"<<vcl_endl;
+  std::cout<<"#### write_vrml_2 end ####"<<std::endl;
 }
 
 
 
 /////////////////////////////////////////////////////////////////////
-pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
-                     vcl_vector <vgl_point_3d<double> > &pts_r,
-                     vcl_vector <vgl_point_3d<double> > const &pts,
+pts_f_and_r_from_pts(std::vector <vgl_point_3d<double> > &pts_f,
+                     std::vector <vgl_point_3d<double> > &pts_r,
+                     std::vector <vgl_point_3d<double> > const &pts,
                      char choice)
 {
-  vcl_cout<<choice<<vcl_endl;
+  std::cout<<choice<<std::endl;
   //exit(1);
   float max_y=-100000,min_y=100000;
   float max_x=-100000,min_x=100000;
@@ -294,40 +294,40 @@ pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
       flag_r=false; flag_f=true;
     }
     else {
-      vcl_cout<<"pts dividing error\n"<<vcl_endl;
+      std::cout<<"pts dividing error\n"<<std::endl;
       exit (-2);
     }
     if (pre_flag_r!=flag_r) 
-    {vcl_cout<<"***** switched"<<vcl_endl;
-    vcl_cerr<<"***** switched"<<vcl_endl;}
+    {std::cout<<"***** switched"<<std::endl;
+    std::cerr<<"***** switched"<<std::endl;}
 
     pre_flag_r=flag_r;
-    //vcl_cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<vcl_endl;
+    //std::cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<std::endl;
   }
 
 
-  vcl_cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<vcl_endl;
+  std::cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<std::endl;
   //exit(1);
 }
 
 /////////////////////////////////////////////////////////////////////
-read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
-  vcl_ifstream in(argv);
+read_bb_box_file(std::vector <vgl_point_3d<double> > & ptl,char* argv){
+  std::ifstream in(argv);
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     return -1;
   }
 
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
   double dummy;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
 
   for (unsigned j=0;j<3;j++) {
     in >>hhh;
-    vcl_cout<<hhh<<vcl_endl;
+    std::cout<<hhh<<std::endl;
   }
 
   double temp;
@@ -346,7 +346,7 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
   R[2][0]=RT[2][0];R[2][1]=RT[2][1];R[2][2]=RT[2][2];
 
   R.normalize_columns();
-  vcl_cout<<R<<vcl_endl;
+  std::cout<<R<<std::endl;
 
   while (!in.eof()) {
 
@@ -361,11 +361,11 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
       in>>y>>z;
       vgl_point_3d<double> p3d(x,y,z);
       ptl.push_back(p3d);
-      vcl_cout<<p3d<<vcl_endl; 
+      std::cout<<p3d<<std::endl; 
       //exit(1);
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
   in.close();
   //exit(0);
   return 1;
@@ -375,7 +375,7 @@ read_bb_box_file(vcl_vector <vgl_point_3d<double> > & ptl,char* argv){
 //
 //find nearest point
 //
-float fnp(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
+float fnp(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
                              bool y_flag=false)
 {
 
@@ -402,9 +402,9 @@ float fnp(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float 
 }
 
 
-float shift_error(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                     vcl_vector <vgl_point_3d<double> > &pts_move,
-                     //vcl_vector <vgl_point_3d<double> > const &pts,
+float shift_error(std::vector <vgl_point_3d<double> > &pts_fix,
+                     std::vector <vgl_point_3d<double> > &pts_move,
+                     //std::vector <vgl_point_3d<double> > const &pts,
                      float shift)
 {
     float error=0;
@@ -419,8 +419,8 @@ float shift_error(vcl_vector <vgl_point_3d<double> > &pts_fix,
     return error;
 }
 
-float mean_shift(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                 vcl_vector <vgl_point_3d<double> > &pts_move)
+float mean_shift(std::vector <vgl_point_3d<double> > &pts_fix,
+                 std::vector <vgl_point_3d<double> > &pts_move)
 {
     float mean_x1=0.0,mean_x2=0.0;
     for (unsigned i=0;i<pts_fix.size();i++) {
@@ -433,26 +433,26 @@ float mean_shift(vcl_vector <vgl_point_3d<double> > &pts_fix,
     float shift=mean_x1/(float)pts_fix.size()-mean_x2/(float)pts_move.size();
    
 
-    vcl_cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<vcl_endl; 
+    std::cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<std::endl; 
     return shift;
 }
  
 
 
-void rot_pts(vcl_vector <vgl_point_3d<double> > &ptl,float rev=1.0) 
+void rot_pts(std::vector <vgl_point_3d<double> > &ptl,float rev=1.0) 
 {
 
     vnl_double_3x3 rot=R;
-    vcl_cout<<rot<<vcl_endl;
+    std::cout<<rot<<std::endl;
     //vnl_double_3x3 inv_rot = rot.transpose();
     vnl_double_3x3 inv_rot = vnl_inverse(rot);
-    vcl_vector<vnl_double_3> pts_z;
+    std::vector<vnl_double_3> pts_z;
     for (unsigned i=0;i<ptl.size();i++) {
       vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
-      vcl_cout<<ptl[i]<<vcl_endl;
+      std::cout<<ptl[i]<<std::endl;
       pts_z.push_back(inv_rot*p);
-      vcl_cout<<rot*p<<vcl_endl;
+      std::cout<<rot*p<<std::endl;
       ptl[i].set(rev*pts_z[i][0],pts_z[i][1],pts_z[i][2]);
     }
 }
@@ -463,8 +463,8 @@ int main(int argc, char* argv[])
 
   
   if(argc!=4){
-    //vcl_cout << "Usage: "<< argv[0] << " <wrl_file>"<< vcl_endl;
-   // vcl_cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< vcl_endl;
+    //std::cout << "Usage: "<< argv[0] << " <wrl_file>"<< std::endl;
+   // std::cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< std::endl;
     //exit(0);
   }
 
@@ -472,20 +472,20 @@ int main(int argc, char* argv[])
 
   /////////////////////////////////////////
   /////////////////////////////////////////
-  vcl_vector<vgl_point_3d<double> >ptl0;
-  vcl_vector<vgl_point_3d<double> >pts_f0;
-  vcl_vector<vgl_point_3d<double> >pts_r0;
-  vcl_vector<vgl_point_3d<double> >ptl1;
-  vcl_vector<vgl_point_3d<double> >pts_f1;
-  vcl_vector<vgl_point_3d<double> >pts_r1;
-  vcl_vector<vgl_point_3d<double> >ptl2;
-  vcl_vector<vgl_point_3d<double> >pts_f2;
-  vcl_vector<vgl_point_3d<double> >pts_r2;
+  std::vector<vgl_point_3d<double> >ptl0;
+  std::vector<vgl_point_3d<double> >pts_f0;
+  std::vector<vgl_point_3d<double> >pts_r0;
+  std::vector<vgl_point_3d<double> >ptl1;
+  std::vector<vgl_point_3d<double> >pts_f1;
+  std::vector<vgl_point_3d<double> >pts_r1;
+  std::vector<vgl_point_3d<double> >ptl2;
+  std::vector<vgl_point_3d<double> >pts_f2;
+  std::vector<vgl_point_3d<double> >pts_r2;
  
   read_wrl_file(1.0,ptl0,  "C:/CBB_/A3900-3999/3903/sel/correct_1_10-31-2006-03PM/del-AEC-all-1.wrl");
   read_wrl_file(1.0,pts_f0,"C:/CBB_/A3900-3999/3903/sel/correct_1_10-31-2006-03PM/delf-AEC-1.wrl");
   read_wrl_file(1.0,pts_r0,"C:/CBB_/A3900-3999/3903/sel/correct_1_10-31-2006-03PM/delr-AEC-1.wrl");
-  vcl_vector <vgl_point_3d<double> >  ppp;
+  std::vector <vgl_point_3d<double> >  ppp;
 
 
   
@@ -520,7 +520,7 @@ int main(int argc, char* argv[])
           min_err=err;
           min_sh=sh;
       }
-      vcl_cout<<sh<<": "<<err<<vcl_endl;
+      std::cout<<sh<<": "<<err<<std::endl;
   }
                      
   
@@ -534,17 +534,17 @@ int main(int argc, char* argv[])
   }
 
 
-  vcl_string vrml_file ="a.wrl";
-      //vcl_string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
-      //vcl_string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
-      //vcl_string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
+  std::string vrml_file ="a.wrl";
+      //std::string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
+      //std::string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
+      //std::string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
 
-      vcl_ofstream vrml(vrml_file.c_str());
+      std::ofstream vrml(vrml_file.c_str());
   write_vrml_2(vrml,ptl2);
 
 
 
-  //vcl_vector <vgl_point_3d<double> >  pt07;
+  //std::vector <vgl_point_3d<double> >  pt07;
  // read_bb_box_file(pt07,"bbox_cam_my.txt");
   
  

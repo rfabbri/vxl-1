@@ -1,10 +1,10 @@
 #ifndef PUZZLESOLVING_H
 #define PUZZLESOLVING_H
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 #include <bxml/bxml_document.h>
 
 #include "bfrag_curve.h"
@@ -15,22 +15,22 @@
 #include "utils.h"
 #include "extern_params.h"
 
-typedef vcl_vector<vcl_pair<int,int> > intMap;
-typedef vcl_pair<double,vcl_vector<vcl_pair<int,int> > > map_with_cost;
-typedef vcl_vector<vcl_pair<double, int> > indexedMeasures;
+typedef std::vector<std::pair<int,int> > intMap;
+typedef std::pair<double,std::vector<std::pair<int,int> > > map_with_cost;
+typedef std::vector<std::pair<double, int> > indexedMeasures;
 
 class map_cost_less
 {
 public:
-  bool operator() (vcl_pair<double,vcl_vector<vcl_pair<int,int> > > map1, 
-                   vcl_pair<double,vcl_vector<vcl_pair<int,int> > > map2) 
+  bool operator() (std::pair<double,std::vector<std::pair<int,int> > > map1, 
+                   std::pair<double,std::vector<std::pair<int,int> > > map2) 
   { return map1.first < map2.first; }
 };
 
 class cost_ind_less 
 {
 public:
-  bool operator()(vcl_pair<double,int> c1, vcl_pair<double,int> c2){ return c1.first<c2.first; }
+  bool operator()(std::pair<double,int> c1, std::pair<double,int> c2){ return c1.first<c2.first; }
 };
 
 //essentially a struct, but i need to define operator(s) on it
@@ -42,10 +42,10 @@ public:
   int                  myIndex;      //old  INT   from cost vector (which numMatch am i)
   intMap               pointMap;     //old _maps
   XForm3x3             xForm;        //old _xForms
-  vcl_pair<int,int>    whichCurves;  //old _pairs
+  std::pair<int,int>    whichCurves;  //old _pairs
 
-  void write_out(vcl_ofstream &out);
-  void read_in(vcl_ifstream &in);
+  void write_out(std::ofstream &out);
+  void read_in(std::ifstream &in);
     
   pairwiseMatch(){};
   //i use this operator explicity in sort b/c otherwise it seems sort will compare
@@ -63,7 +63,7 @@ class pairwiseMatchSort
 {
 public:
 //  bool operator()(pairwiseMatch a, pairwiseMatch b) { return a.cost < b.cost; }
-  bool operator()(vcl_pair <int, double> a, vcl_pair <int, double> b) { return a.second < b.second; }
+  bool operator()(std::pair <int, double> a, std::pair <int, double> b) { return a.second < b.second; }
 };
 
 class searchState
@@ -72,46 +72,46 @@ public:
   // Added for helping with visualizing issue, has nothing to do with the algorithm
   // -1 is not assigned
   int state_id_;
-//  vcl_vector<bfrag_curve> _cList;
+//  std::vector<bfrag_curve> _cList;
 
   //pointer style
-//  vcl_vector< pairwiseMatch* > _matches;
+//  std::vector< pairwiseMatch* > _matches;
   //non pointer style
-//  vcl_vector< pairwiseMatch > _matches;
+//  std::vector< pairwiseMatch > _matches;
 
   // transformation applied to the global curves in this state so far
-  vcl_vector< vnl_matrix_fixed<double, 3, 3> > transform_list_;
+  std::vector< vnl_matrix_fixed<double, 3, 3> > transform_list_;
   // rotation angle applied to the global curves in this state so far
-  vcl_vector<double> rot_ang_list_;
+  std::vector<double> rot_ang_list_;
 
   // the first element is the match index
   // the second element is the cost
   // this is done for efficiency
-  vcl_vector< vcl_pair <int, double> > matches_ez_list_;
+  std::vector< std::pair <int, double> > matches_ez_list_;
   
   int _numMatch;
   int _num_new;
   bfrag_curve _merged;
-  vcl_vector<bfrag_curve> _constr;
+  std::vector<bfrag_curve> _constr;
 
   void sortPairwiseMatches();
 
   bool active;
 
   //List of the indices of the pieces added to the puzzle.
-  vcl_vector<int> process;
+  std::vector<int> process;
 
   int nProcess;
   double tCost;
   double sCost;
-  vcl_vector<vcl_pair<vcl_vector<int>,vgl_point_2d<double> > > open_junc;
-  vcl_vector<vcl_pair<vcl_vector<int>,vgl_point_2d<double> > > closed_junc;
-  vcl_vector<vcl_pair<int,int> > old_edges;
-  vcl_vector<vcl_pair<int,int> > new_edges;
-  vcl_pair<int,int> new_edge;
+  std::vector<std::pair<std::vector<int>,vgl_point_2d<double> > > open_junc;
+  std::vector<std::pair<std::vector<int>,vgl_point_2d<double> > > closed_junc;
+  std::vector<std::pair<int,int> > old_edges;
+  std::vector<std::pair<int,int> > new_edges;
+  std::pair<int,int> new_edge;
 
   searchState(){ state_id_ = -1; };
-  searchState(vcl_vector<bfrag_curve> contours);
+  searchState(std::vector<bfrag_curve> contours);
   ~searchState()
   {
 //    _cList.clear();
@@ -129,7 +129,7 @@ public:
   void updateCost();
   void structure();
   void comboMatch();
-  void addMatch(vcl_vector<vcl_pair<int,int> > map, double cst, int c1, int c2);
+  void addMatch(std::vector<std::pair<int,int> > map, double cst, int c1, int c2);
   void purge(); 
 
   bfrag_curve *piece(int index){return &_cList[index];} //keeper
@@ -148,9 +148,9 @@ public:
   unsigned numCon(){return _constr.size();}
 
   // for the web system
-  void write_out(vcl_string fname);
-  void read_in(vcl_string fname);
-  void write_frag_pairs_in_xml(vcl_string fname);
+  void write_out(std::string fname);
+  void read_in(std::string fname);
+  void write_frag_pairs_in_xml(std::string fname);
 
   void load_state_curves_list();
 };
@@ -165,7 +165,7 @@ public:
 class PuzzleSolving
 {
 public:
-  vcl_vector<vcl_vector<int> > _pairMatchesByPiece;
+  std::vector<std::vector<int> > _pairMatchesByPiece;
 
   //my new, do nothing constructor
   PuzzleSolving() 
@@ -177,16 +177,16 @@ public:
   ~PuzzleSolving() {};
 
   //--spinner
-  void setContours(const vcl_vector<bfrag_curve> &contoursIN );
+  void setContours(const std::vector<bfrag_curve> &contoursIN );
   void preProcessCurves();
   //--spinner
 
   searchState pairMatch();
-  vcl_vector<searchState> search(vcl_vector<searchState> states);
-  vcl_vector<searchState> iterateSearch(searchState this_state, int f);
+  std::vector<searchState> search(std::vector<searchState> states);
+  std::vector<searchState> iterateSearch(searchState this_state, int f);
 
-  void write_experiment_search_state_and_puzzle_solving_objects(vcl_string fname, vcl_vector<searchState> &states, bool write_matches);
-  void read_experiment_search_state_and_puzzle_solving_objects(vcl_string fname, vcl_vector<searchState> &states, bool read_matches);
+  void write_experiment_search_state_and_puzzle_solving_objects(std::string fname, std::vector<searchState> &states, bool write_matches);
+  void read_experiment_search_state_and_puzzle_solving_objects(std::string fname, std::vector<searchState> &states, bool read_matches);
   // Here is how the parameter system works when separate web executables for pairwise matching(PWM) and puzzle solving
   // iteration (PSI) are run
   // The user specifies values for parameters used for PWM and then executes the program
@@ -202,20 +202,20 @@ public:
 public:
   int _nPieces;
 
-  void write_out(vcl_string fname);
-  void write_out_matches(vcl_string fname);
-  void write_out_frags(vcl_string fname);
-  void read_in(vcl_string fname);
-  void read_in_matches(vcl_string fname);
-  void read_in_frags(vcl_string fname);
+  void write_out(std::string fname);
+  void write_out_matches(std::string fname);
+  void write_out_frags(std::string fname);
+  void read_in(std::string fname);
+  void read_in_matches(std::string fname);
+  void read_in_frags(std::string fname);
 
-  void write_frag_assemblies_in_xml(vcl_string fname, vcl_vector<searchState> &states);
+  void write_frag_assemblies_in_xml(std::string fname, std::vector<searchState> &states);
   unsigned tot_num_iters_;
 };
 
 // Global Functions
-vcl_vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2);
-map_with_cost fineScaleMatch(bfrag_curve c1i, bfrag_curve c2, vcl_vector<vcl_pair<int,int> > fmap);
+std::vector<map_with_cost> testDP(bfrag_curve &c1, bfrag_curve &c2);
+map_with_cost fineScaleMatch(bfrag_curve c1i, bfrag_curve c2, std::vector<std::pair<int,int> > fmap);
 intMap localReg(bfrag_curve *cv, bfrag_curve *mg, double* dis,double* len, double* dgn, int num_iter);
 
 int edgeCheck(bfrag_curve *c1, bfrag_curve *c2, intMap map);
@@ -223,11 +223,11 @@ bool distanceCheck(bfrag_curve *c1, bfrag_curve *c2, int checkIndex1, int checkI
 //Returns true if angles are close to one another
 bool anglesAreClose(double angle1, double angle2);
 bool inPolygon(double x, double y, bfrag_curve *c);
-vcl_pair<double,int> ptDist(double x, double y, bfrag_curve *c);
-vcl_pair<double,int> new_ptDist(double x, double y, bfrag_curve *c, unsigned index);
+std::pair<double,int> ptDist(double x, double y, bfrag_curve *c);
+std::pair<double,int> new_ptDist(double x, double y, bfrag_curve *c, unsigned index);
 double detectOverlap(bfrag_curve *c1, bfrag_curve *c2);
-XForm3x3 regContour(bfrag_curve *c1, bfrag_curve *c2, vcl_vector<vcl_pair<int,int> > map, bool flip=0, XForm3x3 *out = 0);
+XForm3x3 regContour(bfrag_curve *c1, bfrag_curve *c2, std::vector<std::pair<int,int> > map, bool flip=0, XForm3x3 *out = 0);
 double flat(bfrag_curve *c);
-vcl_pair<double,double> center(bfrag_curve *c);
+std::pair<double,double> center(bfrag_curve *c);
 
 #endif  /*  PUZZLESOLVING_H */

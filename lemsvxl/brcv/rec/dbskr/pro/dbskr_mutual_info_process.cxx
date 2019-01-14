@@ -1,9 +1,9 @@
 #include "dbskr_mutual_info_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdio.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <cstdio>
 
 
 #include <vsol/vsol_polyline_2d.h>
@@ -80,7 +80,7 @@ dbskr_mutual_info_process::dbskr_mutual_info_process()
       //!parameters()->add( "Use line intersections for region correspondence?:" , "-disttrans" , false )  ||
       //!parameters()->add( "lamda for dt: " , "-lambda" , 1.0f ) 
       ) {
-    vcl_cerr << "ERROR: Adding parameters in dbskr_mutual_info_process::dbskr_mutual_info_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbskr_mutual_info_process::dbskr_mutual_info_process()" << std::endl;
   }
 
   total_info_ = 0;
@@ -114,12 +114,12 @@ bool dbskr_mutual_info_process::execute()
   parameters()->get_value("-lambda", lambda);
   int increment;
   parameters()->get_value("-increment", increment);
-  //vcl_cout << "increment value is: " << increment << vcl_endl;
+  //std::cout << "increment value is: " << increment << std::endl;
 */
 
   int image_bits;
   parameters()->get_value("-imagebits", image_bits);
-  float max_value = float(vcl_pow(double(2.0), double(image_bits))-1);
+  float max_value = float(std::pow(double(2.0), double(image_bits))-1);
 
   clear_output();
   clock_t time1, time2;
@@ -129,11 +129,11 @@ bool dbskr_mutual_info_process::execute()
   parameters()->get_value( "-load2" , load2);
   bpro1_filepath input_path;
   parameters()->get_value( "-esf1" , input_path);
-  vcl_string esf_file1 = input_path.path;
+  std::string esf_file1 = input_path.path;
   parameters()->get_value( "-esf2" , input_path);
-  vcl_string esf_file2 = input_path.path;  
+  std::string esf_file2 = input_path.path;  
   parameters()->get_value( "-shgm" , input_path);
-  vcl_string shgm_file = input_path.path;
+  std::string shgm_file = input_path.path;
 
   dbsk2d_xshock_graph_fileio loader;
 
@@ -159,7 +159,7 @@ bool dbskr_mutual_info_process::execute()
   
   if (!sg1 || !sg2)
   {
-    vcl_cout << "Problems in getting shock graphs!\n";
+    std::cout << "Problems in getting shock graphs!\n";
     return false;
   }
 
@@ -174,25 +174,25 @@ bool dbskr_mutual_info_process::execute()
   bool exists;
   parameters()->get_value( "-fileexists" , exists);
 
-  vcl_vector<pathtable_key> path_map;
-  vcl_vector<dbskr_scurve_sptr> curve_list1, curve_list2;
-  vcl_vector< vcl_vector< vcl_pair<int, int> > > map_list;
+  std::vector<pathtable_key> path_map;
+  std::vector<dbskr_scurve_sptr> curve_list1, curve_list2;
+  std::vector< std::vector< std::pair<int, int> > > map_list;
   if (exists) { // no need for matching
     path_map = read_shgm(tree1, tree2, shgm_file);
     get_correspondence(tree1, tree2, path_map, curve_list1, curve_list2, map_list);
   } else {  // do the matching
-    vcl_cout << "matching shock graphs...\n";
+    std::cout << "matching shock graphs...\n";
     clock_t time1, time2;
     time1 = clock();
     
     edit.save_path(true);
     if (!edit.edit()) {
-      vcl_cout << "Problems in editing trees\n";
+      std::cout << "Problems in editing trees\n";
       return false;
     }
     time2 = clock();
     float val = edit.final_cost();
-    vcl_cout << " cost: " << val << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
+    std::cout << " cost: " << val << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << "\n";
     edit.write_shgm(shgm_file);
     path_map = read_shgm(tree1, tree2, shgm_file);
     edit.get_correspondence(curve_list1, curve_list2, map_list);
@@ -207,11 +207,11 @@ bool dbskr_mutual_info_process::execute()
   //input_vsol2.vertical_cast(input_data_[1][0]);
   input_vsol2.vertical_cast(input_data_[0][3]);
 
-  vcl_vector<vsol_point_2d_sptr> inp1, inp2;
+  std::vector<vsol_point_2d_sptr> inp1, inp2;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
     if( vsol_list[b]->cast_to_curve())
@@ -288,20 +288,20 @@ bool dbskr_mutual_info_process::execute()
   grey_image_sptr = vil_new_image_resource_of_view( *vil_convert_to_grey_using_rgb_weighting ( image1_sptr->get_view() ) );
   if (grey_image_sptr->ni()==0)
   {
-    vcl_cout<<"Failed to load image 1."<<vcl_endl;
+    std::cout<<"Failed to load image 1."<<std::endl;
     return false;
   }
   image1_sptr = grey_image_sptr;
   grey_image_sptr = vil_new_image_resource_of_view( *vil_convert_to_grey_using_rgb_weighting ( image2_sptr->get_view() ) );
   if (grey_image_sptr->ni()==0)
   {
-    vcl_cout<<"Failed to load image 2."<<vcl_endl;
+    std::cout<<"Failed to load image 2."<<std::endl;
     return false;
   }
   image2_sptr = grey_image_sptr;
 
   if (image1_sptr->nplanes() > 1 || image2_sptr->nplanes() > 1) {
-    vcl_cout << "Failed to load images!\n";
+    std::cout << "Failed to load images!\n";
     return false;
   }
   
@@ -311,10 +311,10 @@ bool dbskr_mutual_info_process::execute()
   lenx1 = (topx1+lenx1+2*MARGIN) > w ? (w-topx1-1) : (lenx1+2*MARGIN);
   leny1 = (topy1+leny1+2*MARGIN) > h ? (h-topy1-1) : (leny1+2*MARGIN);
   vil_image_resource_sptr crop_img1=vil_crop(image1_sptr,
-                                             (unsigned int)vcl_floor(topx1+0.5),
-                                             (unsigned int)vcl_floor(lenx1+0.5),
-                                             (unsigned int)vcl_floor(topy1+0.5),
-                                             (unsigned int)vcl_floor(leny1+0.5));
+                                             (unsigned int)std::floor(topx1+0.5),
+                                             (unsigned int)std::floor(lenx1+0.5),
+                                             (unsigned int)std::floor(topy1+0.5),
+                                             (unsigned int)std::floor(leny1+0.5));
   
   
   w = image2_sptr->ni(); h = image2_sptr->nj();
@@ -323,10 +323,10 @@ bool dbskr_mutual_info_process::execute()
   lenx2 = (topx2+lenx2+2*MARGIN) > w ? (w-topx2-1) : (lenx2+2*MARGIN);
   leny2 = (topy2+leny2+2*MARGIN) > h ? (h-topy2-1) : (leny2+2*MARGIN);
   vil_image_resource_sptr crop_img2 = vil_crop(image2_sptr, 
-                                               (unsigned int)vcl_floor(topx2+0.5), 
-                                               (unsigned int)vcl_floor(lenx2+0.5), 
-                                               (unsigned int)vcl_floor(topy2+0.5), 
-                                               (unsigned int)vcl_floor(leny2+0.5));
+                                               (unsigned int)std::floor(topx2+0.5), 
+                                               (unsigned int)std::floor(lenx2+0.5), 
+                                               (unsigned int)std::floor(topy2+0.5), 
+                                               (unsigned int)std::floor(leny2+0.5));
 
   
   vil_image_view<float> float_image1, float_image2;
@@ -344,7 +344,7 @@ bool dbskr_mutual_info_process::execute()
   w = img1.width(), h = img1.height(); 
   
   //: create vtol_face_2d instances from vertices of vsol input
-  vcl_vector<vtol_vertex_sptr> vert1, vert2;
+  std::vector<vtol_vertex_sptr> vert1, vert2;
   
   vgl_vector_2d<double> origin(-topx1, -topy1);
   for (unsigned int i = 0; i<inp1.size(); i++) {
@@ -381,11 +381,11 @@ bool dbskr_mutual_info_process::execute()
 
   dbru_rcor rcor(face1, face2);
   if (!rcor.find_correspondence_shock(curve_list1, curve_list2, map_list, topx1, topy1, topx2, topy2)) {
-      vcl_cout << "Region correspondence based on shock matching could not be found!\n";
+      std::cout << "Region correspondence based on shock matching could not be found!\n";
       return false;
   }
 
-  vcl_vector <vcl_vector< vgl_point_2d<int> > > region1_map_output = rcor.get_map();
+  std::vector <std::vector< vgl_point_2d<int> > > region1_map_output = rcor.get_map();
   int min_x = rcor.get_min_x();
   int min_y = rcor.get_min_y();
 
@@ -421,7 +421,7 @@ bool dbskr_mutual_info_process::execute()
 
   //: using region correspondence to compute mutual information
   if (!tf->compute_mutual_information(region1_map_output, min_x, min_y, image_1_, Ix_1_, Iy_1_, hue_1_, sat_1_)) {
-      vcl_cout << "Problem in mutual information computation!\n";
+      std::cout << "Problem in mutual information computation!\n";
     return false;
   }
   
@@ -432,11 +432,11 @@ bool dbskr_mutual_info_process::execute()
 
   time2 = clock();
 
-  vcl_cout << "Total Inf = " << total_info_
+  std::cout << "Total Inf = " << total_info_
              << " = IntInfo(" <<  int_mutual_info_
              << ") + GradInfo(" <<  grad_mutual_info_
              << ") + ColorInfo(" <<  color_mutual_info_
-             << ") total time: " << ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds " << vcl_endl;
+             << ") total time: " << ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds " << std::endl;
 
   
   for (unsigned int i = 0; i<region1_map_output.size(); i++) {
@@ -470,32 +470,32 @@ bool dbskr_mutual_info_process::execute()
 }
 
 
-vcl_vector<pathtable_key> 
-dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2, vcl_string fname) 
+std::vector<pathtable_key> 
+dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2, std::string fname) 
 {
   
-  vcl_vector<pathtable_key> out;
+  std::vector<pathtable_key> out;
 
-  vcl_ifstream tf(fname.c_str());
+  std::ifstream tf(fname.c_str());
   
   if (!tf) {
-    vcl_cout << "Unable to open file " << fname << " for write " << vcl_endl;
+    std::cout << "Unable to open file " << fname << " for write " << std::endl;
     return out;
   }
 
   char buffer[1000];
   tf.getline(buffer, 1000);  // version
   tf.getline(buffer, 1000);  // name 1
-  vcl_string line = buffer;
+  std::string line = buffer;
   tf.getline(buffer, 1000);  // name 2
   line = buffer;
 
   float cost;
   tf >> cost;
-  vcl_cout << "matching cost: " << cost << "\n";
+  std::cout << "matching cost: " << cost << "\n";
   
-  vcl_map<vcl_string, vcl_string> paths;
-  vcl_string line2;
+  std::map<std::string, std::string> paths;
+  std::string line2;
 
   while (!tf.eof()) {
     tf.getline(buffer, 1000);
@@ -506,13 +506,13 @@ dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree
     tf.getline(buffer, 1000);
     line2 = buffer;
     if (line2.length() < 2) {  // something is wrong with this file
-      vcl_cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
+      std::cout << "T1 and T2 corresponding paths are not on consecutive lines in this file\n!!";
       return out;  // return as it is
     }
 
     char * pch;
     char tmp[1000];
-    vcl_sprintf(tmp, "%s", line.c_str());
+    std::sprintf(tmp, "%s", line.c_str());
     //pch = strtok (line.c_str()," ");
     pch = strtok(tmp," ");
     int first = atoi(pch);
@@ -527,7 +527,7 @@ dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree
     key.first.first = first;
     key.first.second = id;
 
-    vcl_sprintf(tmp, "%s", line2.c_str());
+    std::sprintf(tmp, "%s", line2.c_str());
     pch = strtok(tmp," ");
     first = atoi(pch);
     
@@ -545,11 +545,11 @@ dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree
   tf.close();
 
   //: currently out has keys with node ids on the tree, we need to turn them into dart ids on the tree
-  //  using vcl_vector<int>& get_dart_path_from_nodes(int node1, int node2) method of tree
+  //  using std::vector<int>& get_dart_path_from_nodes(int node1, int node2) method of tree
 
   for (unsigned int i = 0; i<out.size(); i++) {
-    vcl_vector<int> dart_path1 = tree1->get_dart_path_from_nodes(out[i].first.first, out[i].first.second);
-    vcl_vector<int> dart_path2 = tree2->get_dart_path_from_nodes(out[i].second.first, out[i].second.second);
+    std::vector<int> dart_path1 = tree1->get_dart_path_from_nodes(out[i].first.first, out[i].first.second);
+    std::vector<int> dart_path2 = tree2->get_dart_path_from_nodes(out[i].second.first, out[i].second.second);
     
     out[i].first.first = dart_path1[0];
     out[i].first.second = dart_path1[dart_path1.size()-1];
@@ -563,10 +563,10 @@ dbskr_mutual_info_process::read_shgm(dbskr_tree_sptr tree1, dbskr_tree_sptr tree
 
 void
 dbskr_mutual_info_process::get_correspondence(dbskr_tree_sptr tree1, dbskr_tree_sptr tree2,
-                                              vcl_vector<pathtable_key>& path_map, 
-                                              vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                                              vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                                              vcl_vector<vcl_vector<vcl_pair<int, int> > >& map_list)
+                                              std::vector<pathtable_key>& path_map, 
+                                              std::vector<dbskr_scurve_sptr>& curve_list1, 
+                                              std::vector<dbskr_scurve_sptr>& curve_list2, 
+                                              std::vector<std::vector<std::pair<int, int> > >& map_list)
 {
   curve_list1.clear();
   curve_list2.clear();
@@ -587,7 +587,7 @@ dbskr_mutual_info_process::get_correspondence(dbskr_tree_sptr tree1, dbskr_tree_
    
     dbskr_dpmatch d(sc1, sc2);
     d.Match();
-    vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+    std::vector<std::pair<int,int> > fmap=*(d.finalMap());
     dbskr_localize_match lmatch(sc1, sc2, 
                                 curve_pair1->dense, curve_pair2->dense, 
                                 curve_pair1->c_d_map, curve_pair2->c_d_map, 

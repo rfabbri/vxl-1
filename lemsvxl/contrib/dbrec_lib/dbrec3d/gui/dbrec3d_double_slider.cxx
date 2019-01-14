@@ -10,7 +10,7 @@
 #include "dbrec3d_double_slider.h"
 
 
-dbrec3d_double_slider::dbrec3d_double_slider(float min_val, float max_val, vcl_string label)
+dbrec3d_double_slider::dbrec3d_double_slider(float min_val, float max_val, std::string label)
 {
   //floating-point correspondant values
   min_val_ = min_val;
@@ -54,7 +54,7 @@ void dbrec3d_double_slider::init_slider(QSlider *slider, QLabel *label, int init
   label->setNum((float)init_val*range_val_/100.0f);
 }
 
-QWidget* dbrec3d_double_slider::assemble_slider_widget(QSlider *slider, QLabel *value_label, vcl_string name)
+QWidget* dbrec3d_double_slider::assemble_slider_widget(QSlider *slider, QLabel *value_label, std::string name)
 {
   QHBoxLayout *label_layout = new QHBoxLayout();
   label_layout->setSpacing(0);

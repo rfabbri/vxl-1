@@ -18,7 +18,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <bvis1/bvis1_manager.h>
 #include <vidpro1/vidpro1_repository.h>
 
@@ -32,9 +32,9 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_string name();
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::string name();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames();
 
@@ -49,7 +49,7 @@ public:
   
 protected:
 
-vcl_vector<int> framenums_;
+std::vector<int> framenums_;
 
 };
 

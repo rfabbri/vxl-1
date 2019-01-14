@@ -80,12 +80,12 @@ public:
 
   // used in get_scurve(...)
   //: return a vector of pointers to the edges in underlying shock graph for the given dart list
-  void get_edge_list(const vcl_vector<int>& dart_list,  
+  void get_edge_list(const std::vector<int>& dart_list,  
                  dbsksp_xshock_node_sptr& start_node,  
-                 vcl_vector<dbsksp_xshock_edge_sptr>& path);
+                 std::vector<dbsksp_xshock_edge_sptr>& path);
 
   ////: get the list of shock edges that are part of a particular dart
-  //void get_edge_list(int dart_id, vcl_vector<dbsksp_xshock_edge_sptr>& path)
+  //void get_edge_list(int dart_id, std::vector<dbsksp_xshock_edge_sptr>& path)
   //{ path = shock_edges_[dart_id]; return; }
 
   // Utilities------------------------------------------------------------------
@@ -134,17 +134,17 @@ protected:
 
   //: each dart has a list of pointers to the actual edges 
   //  on the corresponding shock branch of the graph (in the correct order)
-  vcl_vector<vcl_vector<dbsksp_xshock_edge_sptr> > shock_edges_;
+  std::vector<std::vector<dbsksp_xshock_edge_sptr> > shock_edges_;
 
   //: each dart also has a list of start nodes for the underlying edge to determine direction 
-  vcl_vector<dbsksp_xshock_node_sptr> starting_nodes_;
+  std::vector<dbsksp_xshock_node_sptr> starting_nodes_;
 
 
   // Cache data////////////////////////////////////////////////////////////
 
   //: cache the shock curves for future use for each path of darts
-  //vcl_map<vcl_pair<int, int>, dbskr_scurve_sptr> dart_path_scurve_map_;
-  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
+  //std::map<std::pair<int, int>, dbskr_scurve_sptr> dart_path_scurve_map_;
+  std::map<std::pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
 
 
   // Cost-related parameters /////////////////////////////////////////////
@@ -152,7 +152,7 @@ protected:
 
   
   // in get_curve we call the curve computation like this:
-  // dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min(scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+  // dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, std::min(scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
   // hence the interpolate_ds is passed as given by interpolate_ds_ as long as scurve_sample_ds_ (i.e. subsample_ds) >= interpolate_ds_
   float scurve_sample_ds_;
   float interpolate_ds_;  // made this into a parameter as well, default is 0.5

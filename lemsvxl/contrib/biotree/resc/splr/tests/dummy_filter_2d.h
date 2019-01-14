@@ -2,7 +2,7 @@
 #define DUMMY_FILTER_2D_H_
 
 #include <vsl/vsl_binary_io.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 struct dummy_filter_2d {
   double x_;
@@ -16,7 +16,7 @@ struct dummy_filter_2d {
 void vsl_b_write(vsl_b_ostream& os, const 
    dummy_filter_2d& filter);
 
-void vsl_print_summary(vcl_ostream& os, const dummy_filter_2d & filter);
+void vsl_print_summary(std::ostream& os, const dummy_filter_2d & filter);
 
 void vsl_b_read(vsl_b_istream& is,
    dummy_filter_2d& filter);

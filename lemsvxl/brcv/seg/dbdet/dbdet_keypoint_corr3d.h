@@ -16,8 +16,8 @@
 #include <vbl/vbl_ref_count.h>
 #include <dbdet/dbdet_keypoint_sptr.h>
 #include <vsl/vsl_fwd.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <string>
+#include <map>
 
 
 //: A 3D point corresponding to multiple 2D keypoint from several views
@@ -54,7 +54,7 @@ class dbdet_keypoint_corr3d : public vbl_ref_count, public vgl_point_3d<double>
  
   //=============== Binary I/O Methods ========================
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_keypoint_corr3d"; }
+  virtual std::string is_a() const { return "dbdet_keypoint_corr3d"; }
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -70,18 +70,18 @@ class dbdet_keypoint_corr3d : public vbl_ref_count, public vgl_point_3d<double>
   short version() const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
 
  private:
 
   //: The map from each view (index) to the keypoint in that view
-  vcl_map<int, dbdet_keypoint_sptr> view_map_;
+  std::map<int, dbdet_keypoint_sptr> view_map_;
 
 };
 
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const dbdet_keypoint_corr3d* k);
+void vsl_print_summary(std::ostream &os, const dbdet_keypoint_corr3d* k);
 
 //: Read a dbdet_keypoint_corr3d point from the stream
 void vsl_b_read(vsl_b_istream &is, dbdet_keypoint_corr3d* &k);

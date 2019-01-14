@@ -23,8 +23,8 @@
 #include <vgl/vgl_box_2d.h>
 #include <vnl/vnl_matrix_fixed.h>
 
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
+#include <vector>
+#include <algorithm>
 
 #ifndef SAME_CURVE_DISTANCE_THRESHOLD
 #define SAME_CURVE_DISTANCE_THRESHOLD 10.0
@@ -44,12 +44,12 @@ public:
   //: destructor
   virtual ~bfrag_curve();
   //: constructor from a vector of vgl points
-  bfrag_curve(vcl_vector<vgl_point_2d<double> > &points, bool is_open);
+  bfrag_curve(std::vector<vgl_point_2d<double> > &points, bool is_open);
 
   // output to stream
-  void write_out(vcl_ofstream &out);
+  void write_out(std::ofstream &out);
   // input from stream
-  void read_in(vcl_ifstream &in);
+  void read_in(std::ifstream &in);
 
   // append a point to the end of the level3_ point list
   void append(vgl_point_2d<double> &p);
@@ -125,7 +125,7 @@ public:
   double max_x() { return box_.max_x(); }
   double max_y() { return box_.max_y(); }
 
-  bool is_corner(int index){ return vcl_find(level1_.begin(), level1_.end(), index) != level1_.end(); }
+  bool is_corner(int index){ return std::find(level1_.begin(), level1_.end(), index) != level1_.end(); }
 
   // Finds the length from level3_[ip] to level3_[i]
   double total_length(int ip, int i);
@@ -171,14 +171,14 @@ public:
   void compute_box();
 
   // debugging files
-  void dump_object_to_file(vcl_string fname);
-  void write_level1(vcl_string fname);
-  void write_level2(vcl_string fname);
-  void write_level3(vcl_string fname);
-  void write_level4(vcl_string fname);
-  void write_coarse_fine_correspondence(vcl_string fname);
-  void write_arclengths(vcl_string fname);
-  void write_angles(vcl_string fname);
+  void dump_object_to_file(std::string fname);
+  void write_level1(std::string fname);
+  void write_level2(std::string fname);
+  void write_level3(std::string fname);
+  void write_level4(std::string fname);
+  void write_coarse_fine_correspondence(std::string fname);
+  void write_arclengths(std::string fname);
+  void write_angles(std::string fname);
 
 protected:
   // Computes the interpolated curve representation from the level-3 point set
@@ -211,7 +211,7 @@ protected:
   // depending on where we are in the progrma, replaces extrema_ variable
   // It would be wise to have level-2 and level-3 correspondences separately
   // in two different strcutures for avoiding confusion
-  vcl_vector<int> level1_;
+  std::vector<int> level1_;
 
   // Although all levels represent closed point sets, the start point is not repeated at the end of the list,
   // however, the user should be aware that in the interpolated curve representation, the last segment represents
@@ -219,25 +219,25 @@ protected:
 
   public:
   // evenly and coarsely sampled pointset
-  vcl_vector<vgl_point_2d<double> > level2_;
+  std::vector<vgl_point_2d<double> > level2_;
   // given a level-2(coarsely-sampled) point, this vector holds the corresponding index of the 
   // level-3 (finely-sampled) point
-  vcl_vector<int> coarse_fine_corr_;
+  std::vector<int> coarse_fine_corr_;
   // evenly and finely sampled pointset
-  vcl_vector<vgl_point_2d<double> > level3_;
+  std::vector<vgl_point_2d<double> > level3_;
   // original pointset
-  vcl_vector<vgl_point_2d<double> > level4_;
+  std::vector<vgl_point_2d<double> > level4_;
 
   protected:
   // i'th element holds the arclength of the (i-1)'th segment
   // 0th element holds the arclength of the segment from the end point to the start point
   // if the curve is closed. Otherwise, 0th element's value is 0.
-  vcl_vector<double> arclength_;
+  std::vector<double> arclength_;
   // i'th element holds the arclength from the starting point to the i'th point
-  vcl_vector<double> cum_arclength_;
+  std::vector<double> cum_arclength_;
   // i'th element holds the tangent angle at the i'th sample point
   // value is between [-PI, PI]
-  vcl_vector<double> angle_;
+  std::vector<double> angle_;
 
   double length_;
 

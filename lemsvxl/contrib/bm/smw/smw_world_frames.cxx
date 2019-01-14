@@ -12,8 +12,8 @@ smw_world::smw_world(vil_image_view<vxl_byte> const& img)
 {
     this->set_size(img.ni(),img.nj());
     if(!this->update(img))
-        vcl_cerr << "Error: smw_world constructor"
-                 << " update unsuccessful." << vcl_flush;
+        std::cerr << "Error: smw_world constructor"
+                 << " update unsuccessful." << std::flush;
 }
 
 bool smw_world::set_size(unsigned const& ni, unsigned const& nj)
@@ -22,7 +22,7 @@ bool smw_world::set_size(unsigned const& ni, unsigned const& nj)
         world_.clear(); //erase all elements of the world
     ni_ = ni;
     nj_ = nj;
-    vcl_vector<smw_graph_gaussian_frames> cols(ni_);
+    std::vector<smw_graph_gaussian_frames> cols(ni_);
     
     for(unsigned row = 0; row < nj_; ++row)
         world_.push_back(cols);
@@ -44,9 +44,9 @@ bool smw_world::update(vil_image_view<vxl_byte> const& img)
     }
     else
     {
-        vcl_cerr << "Error in updating world." << '\n'
+        std::cerr << "Error in updating world." << '\n'
                  << "Image size and world size not equal."
-                 << vcl_flush;
+                 << std::flush;
         return false;
     }
 }
@@ -73,9 +73,9 @@ void smw_world::size(unsigned& rows, unsigned& cols)
     cols = world_[0].size();
 }
 
-// void print_log_file(vcl_string const& file_full_path)
+// void print_log_file(std::string const& file_full_path)
 // {
-//     vcl_fstream
+//     std::fstream
 
 // }
 

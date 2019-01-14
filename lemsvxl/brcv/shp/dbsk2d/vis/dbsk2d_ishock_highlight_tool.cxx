@@ -68,7 +68,7 @@ dbsk2d_ishock_highlight_tool::handle( const vgui_event & e,
   return false;
 }
 
-vcl_string
+std::string
 dbsk2d_ishock_highlight_tool::name() const
 {
   return "Highlight Shocks";

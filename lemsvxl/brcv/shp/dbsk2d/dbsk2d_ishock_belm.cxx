@@ -60,7 +60,7 @@ void dbsk2d_ishock_belm::add_shock (dbsk2d_ishock_edge* shock)
   THROW_TOPOLOGY_EXCEPTION(AisBetween(start_eta, min_eta(), max_eta()), "Add shock: invalid eta");
 
   //insert it into the map
-  bnd_ishock_map_iter it = shock_map_.insert(vcl_pair<dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*>(
+  bnd_ishock_map_iter it = shock_map_.insert(std::pair<dbsk2d_ishock_bnd_key, dbsk2d_ishock_edge*>(
     dbsk2d_ishock_bnd_key(start_eta, Stype, dbsk2d_ishock_bnd_key::ANGLE), shock)); 
 
   //if this shock is left-type the element to the left is the neighbor

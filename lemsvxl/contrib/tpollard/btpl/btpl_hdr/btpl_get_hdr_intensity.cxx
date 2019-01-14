@@ -3,12 +3,12 @@
 // @author : Isa Restrepo
 
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <vector>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_svd.h>
@@ -24,14 +24,14 @@
 #include <vul/vul_file_iterator.h>
 
 
-void get_max_int(vcl_string ofile,
-                 vcl_string file,  
-                 const vcl_vector< vgl_point_2d<int> >& region_bounds,
-                 vcl_string debug_file = "NONE" )
+void get_max_int(std::string ofile,
+                 std::string file,  
+                 const std::vector< vgl_point_2d<int> >& region_bounds,
+                 std::string debug_file = "NONE" )
 {
 
 
-  vcl_ofstream ofs( ofile.c_str() );
+  std::ofstream ofs( ofile.c_str() );
   vil_image_view<float> img = vil_load(file.c_str() ) ;
 
   float x[4], y[4];
@@ -79,13 +79,13 @@ void get_max_int(vcl_string ofile,
 
 // Get all intensities in a region.
 bool get_intensity(bool is_hdr, 
-                   vcl_string ofile,
-                   vcl_string file,             
-                   const vcl_vector< vgl_point_2d<int> >& region_bounds,
-                   vcl_string debug_file = "NONE" )
+                   std::string ofile,
+                   std::string file,             
+                   const std::vector< vgl_point_2d<int> >& region_bounds,
+                   std::string debug_file = "NONE" )
 {
 
-  vcl_ofstream ofs( ofile.c_str() );
+  std::ofstream ofs( ofile.c_str() );
   vil_image_view<float> img(640,480);
   bool is_missing = true;
 
@@ -150,13 +150,13 @@ bool get_intensity(bool is_hdr,
 
 // Get regions from a file.
 void get_regions(
-                 vcl_string file,
-                 vcl_vector< vcl_vector< vgl_point_2d<int> > >& regions )
+                 std::string file,
+                 std::vector< std::vector< vgl_point_2d<int> > >& regions )
 {
   regions.clear();
-  vcl_ifstream ifs( file.c_str() );
+  std::ifstream ifs( file.c_str() );
   for( int c = 0; c < 16; c++ ){
-    vcl_vector< vgl_point_2d<int> > new_region;
+    std::vector< vgl_point_2d<int> > new_region;
     for( int p = 0; p < 4; p++ ){
       int x, y;
       ifs >> x; ifs >> y;
@@ -174,10 +174,10 @@ int main( int argc, char* argv[] )
   bool is_hdr = true;
   bool sphere = false;
 
-  //for(vcl_vector<vcl_string>.iterator it; 
-  vcl_string debug_dir = "c:\\debug";
+  //for(std::vector<std::string>.iterator it; 
+  std::string debug_dir = "c:\\debug";
 
-  vcl_vector<vcl_string> img_dirs;
+  std::vector<std::string> img_dirs;
   img_dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_207");
   img_dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_208");
   img_dirs.push_back("E:\\dome_images\\08_macadam\\cropped_images\\png_209");
@@ -195,100 +195,100 @@ int main( int argc, char* argv[] )
 
 
   
-  vcl_vector< float > region_times;
-  vcl_vector< vcl_vector< vcl_vector< vgl_point_2d<int> > > > regions;
+  std::vector< float > region_times;
+  std::vector< std::vector< std::vector< vgl_point_2d<int> > > > regions;
   for( int i = 0; i < 14; i++ )
-    regions.push_back( vcl_vector< vcl_vector< vgl_point_2d<int> > >() );
+    regions.push_back( std::vector< std::vector< vgl_point_2d<int> > >() );
 
 if(!sphere)
 {
   region_times.push_back( 7.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\7am.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\7am.txt" ),
     regions[0] );
   region_times.push_back( 8.05 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\745am.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\745am.txt" ),
     regions[1] );
   region_times.push_back( 8.75);
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\830am.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\830am.txt" ),
     regions[2] );
   region_times.push_back( 9.55 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\930.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\930.txt" ),
     regions[3] );
   region_times.push_back( 10.30 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\10.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\10.txt" ),
     regions[4] );
   region_times.push_back( 11.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\11.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\11.txt" ),
     regions[5] );
   region_times.push_back( 12.45 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\12.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\12.txt" ),
     regions[6] );
   region_times.push_back( 13.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\1.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\1.txt" ),
     regions[7] );
   region_times.push_back( 14.25 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\2.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\2.txt" ),
     regions[8] );
   region_times.push_back( 15.25 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\3.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\3.txt" ),
     regions[9] );
   region_times.push_back( 16.40);
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\4.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\4.txt" ),
     regions[10] );
   region_times.push_back( 17.40 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\5.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\5.txt" ),
     regions[11] );
   region_times.push_back( 18.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\6.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\6.txt" ),
     regions[12] );
   region_times.push_back( 19 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\macadam\\7.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\macadam\\7.txt" ),
     regions[13] );
 }
 
 if(sphere)
 {
     region_times.push_back( 7.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[0] );
   region_times.push_back( 8.05 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[1] );
   region_times.push_back( 8.75);
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[2] );
   region_times.push_back( 9.55 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[3] );
   region_times.push_back( 10.30 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[4] );
   region_times.push_back( 11.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[5] );
   region_times.push_back( 12.45 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[6] );
   region_times.push_back( 13.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[7] );
   region_times.push_back( 14.25 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[8] );
   region_times.push_back( 15.25 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[9] );
   region_times.push_back( 16.40);
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[10] );
   region_times.push_back( 17.40 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[11] );
   region_times.push_back( 18.35 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[12] );
   region_times.push_back( 19 );
-  get_regions( vcl_string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
+  get_regions( std::string( "E:\\dome_images\\regions\\lam_cropped\\sphere.txt" ),
     regions[13] );
 
 }
@@ -298,14 +298,14 @@ if(sphere)
  for(unsigned curr_index = 11; curr_index< 12; curr_index++)
   {
 
-    vcl_string main_dir = img_dirs[curr_index];
+    std::string main_dir = img_dirs[curr_index];
 
     for( vul_file_iterator f= (main_dir+"\\*").c_str(); f; ++f ){
 
       // Extract information from the filename.
-      vcl_string current_file( f() );
+      std::string current_file( f() );
       int cf_ext_index = current_file.size()-4;
-      vcl_string cf_ext;
+      std::string cf_ext;
       cf_ext+=current_file[cf_ext_index]; cf_ext+=current_file[cf_ext_index+1];
       cf_ext+=current_file[cf_ext_index+2]; cf_ext+=current_file[cf_ext_index+3];
 
@@ -317,7 +317,7 @@ if(sphere)
       if ( cf_ext != ".png" ) continue;
       break;
     default:
-      vcl_cerr<<"unsopported extension" << vcl_endl;
+      std::cerr<<"unsopported extension" << std::endl;
 
       }
 
@@ -326,7 +326,7 @@ if(sphere)
       for( int i = 0; i < current_file.size(); i++ )
         if( current_file[i] == '\\' ) last_slash_loc = i;
 
-      vcl_stringstream camera_string, rotation_string, hour_string, minute_string, 
+      std::stringstream camera_string, rotation_string, hour_string, minute_string, 
         day_string, debug_file_string;
       day_string << current_file[last_slash_loc+1];
       hour_string << current_file[last_slash_loc+2] << current_file[last_slash_loc+3];
@@ -370,16 +370,16 @@ if(sphere)
 
       // Print the file with intensities within the region.
 
-      vcl_stringstream out_file;
+      std::stringstream out_file;
       out_file.clear();
       out_file << "E:\\dome_images\\all_intensities\\macadam\\";
       out_file<<region_times[curr_index]<<'\\'<<rotation<<'_'<<camera<<".txt";
 
-      vcl_string  ofile;
+      std::string  ofile;
       ofile = out_file.str();
-      vcl_cout<< "Writing" <<ofile<<"\n";
+      std::cout<< "Writing" <<ofile<<"\n";
      
-      vcl_vector<float> intensity;
+      std::vector<float> intensity;
       //if working with sphere, we can find the max int, check it lies inside sphere and
       //use it as maximum radiance
       if (sphere)

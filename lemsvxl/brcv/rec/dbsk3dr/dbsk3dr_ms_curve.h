@@ -12,10 +12,10 @@
 
 #include <vgl/vgl_fwd.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
+#include <vector>
+#include <iostream>
+#include <cassert>
+#include <string>
 
 #include <dbsk3d/dbsk3d_ms_curve.h>
 
@@ -30,46 +30,46 @@ class dbsk3dr_ms_curve
   // Data members
 
   //: Pointer to list of vgl_point_3d<double> smart pointers
-  vcl_vector<vgl_point_3d<double>*> *storage_;
+  std::vector<vgl_point_3d<double>*> *storage_;
   //: First point of the curve
   vgl_point_3d<double>* p0_;
   //: Last point of the curve
   vgl_point_3d<double>* p1_;
   //: Arclength measured from the p0_
-  vcl_vector<double> arcLength_;
+  std::vector<double> arcLength_;
   //: Arclength of the current segment i to i+1
-  vcl_vector<double> s_;
+  std::vector<double> s_;
   //: The z angle of the intrinsic curve
-  vcl_vector<double> phi_;
+  std::vector<double> phi_;
   //: First derivative of the z angle of the intrinsic curve
-  vcl_vector<double> phis_;
+  std::vector<double> phis_;
   //: Second derivative of the z angle of the intrinsic curve
-  vcl_vector<double> phiss_;
+  std::vector<double> phiss_;
   //: The xy angle of the intrinsic curve
-  vcl_vector<double> theta_;
+  std::vector<double> theta_;
   //: First derivative of the xy angle of the intrinsic curve
-  vcl_vector<double> thetas_;
+  std::vector<double> thetas_;
   //: Second derivative of the xy angle of the intrinsic curve
-  vcl_vector<double> thetass_;
+  std::vector<double> thetass_;
   //: Turning angle of the intrinsic curve
-  vcl_vector<double> angle_;
+  std::vector<double> angle_;
   //: Curvature of the intrinsic curve
-  vcl_vector<double> curvature_;
+  std::vector<double> curvature_;
   //: Torsion of the intrinsic curve
-  vcl_vector<double> torsion_;
+  std::vector<double> torsion_;
   //: Total curvature of the intrinsic curve
   double totalCurvature_;
   //: Total angle change of the intrinsic curve
   double totalAngleChange_;
 
   //: Tangent vector for each point
-  vcl_vector<vgl_vector_3d<double>*> Tangent_;
+  std::vector<vgl_vector_3d<double>*> Tangent_;
   //: Normal vector for each point
-  vcl_vector<vgl_vector_3d<double>*> Normal_;
+  std::vector<vgl_vector_3d<double>*> Normal_;
   //: Binormal vector for each point
-  vcl_vector<vgl_vector_3d<double>*> Binormal_;
+  std::vector<vgl_vector_3d<double>*> Binormal_;
 
-  vcl_vector<double> radius_;
+  std::vector<double> radius_;
 
   bool isOpen_; // true - open, false - closed
 
@@ -80,8 +80,8 @@ class dbsk3dr_ms_curve
   //: Default Constructor
   dbsk3dr_ms_curve();
 
-  //: Constructor from a vcl_vector of points
-  dbsk3dr_ms_curve(const vcl_vector<vgl_point_3d<double>*> &new_vertices);
+  //: Constructor from a std::vector of points
+  dbsk3dr_ms_curve(const std::vector<vgl_point_3d<double>*> &new_vertices);
   
   //: Constructor from a dbmsh3d_curve
   dbsk3dr_ms_curve (dbsk3d_ms_curve* MC, const bool flip = false);
@@ -214,10 +214,10 @@ public:
   //  Note that it insert the vertex into `i-1'
   void insert_vertex (int i, double x, double y, double z, bool bRecomputeProterties=false);
 
-  void read_con3_file (vcl_string fileName);
+  void read_con3_file (std::string fileName);
 
   //: output description to stream
-  inline void describe(vcl_ostream &strm, int blanking=0) const {
+  inline void describe(std::ostream &strm, int blanking=0) const {
     if (blanking < 0) blanking = 0; while (blanking--) strm << ' ';
     strm << "<dbsk3dr_ms_curve "
          << "p0 = " << *p0_ << ", p1 = " << *p1_ << " >\n";

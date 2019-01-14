@@ -7,8 +7,8 @@
 // \date Feb 16, 2010
 
 #include <bild/algo/bild_octave.h>
-#include <vcl_ctime.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <iostream>
 
 #include "dbdet_pb_edge_detector.h"
 #include "dbdet_pb_edge_detector_embedded_files.h"
@@ -38,7 +38,7 @@ dbdet_edgemap_sptr dbdet_convert_pb_outputs_to_edgemap(buld_octave_double_array&
     return edgemap_ptr;
 }
 
-dbdet_pb_edge_detector::dbdet_pb_edge_detector(const vcl_string& temp_dir)
+dbdet_pb_edge_detector::dbdet_pb_edge_detector(const std::string& temp_dir)
 {
     temp_dir_ = temp_dir;
     dbdet_extract_embedded_pb_files(temp_dir_.c_str());
@@ -162,7 +162,7 @@ dbdet_edgemap_sptr dbdet_pb_edge_detector::detect_tg(vil_image_view<vxl_byte>& i
     return dbdet_convert_pb_outputs_to_edgemap(pb_array, theta_array);
 }
 
-dbdet_edgemap_sptr dbdet_pb_edge_detector::detect_bgtg(vil_image_view<vxl_byte>& image, const vcl_string& pres, double radius[], int norient)
+dbdet_edgemap_sptr dbdet_pb_edge_detector::detect_bgtg(vil_image_view<vxl_byte>& image, const std::string& pres, double radius[], int norient)
 {
     buld_octave_argument_list conversion_inargs;
     buld_octave_argument_list inargs;
@@ -175,7 +175,7 @@ dbdet_edgemap_sptr dbdet_pb_edge_detector::detect_bgtg(vil_image_view<vxl_byte>&
 
     inargs(0) = buld_octave_value_to_octave_double_array(conversion_outargs(0));
     inargs(1) = pres.c_str();
-    vcl_vector<int> sizes(2);
+    std::vector<int> sizes(2);
     sizes[0] = 1; sizes[1] = 2;
     buld_octave_double_array radius_array = buld_octave_get_empty_double_array(sizes);
     radius_array(0,0) = radius[0]; radius_array(0,1) = radius[1];
@@ -202,7 +202,7 @@ dbdet_edgemap_sptr dbdet_pb_edge_detector::detect_cgtg(vil_image_view<vxl_byte>&
     buld_octave.run("","im2double", conversion_inargs, conversion_outargs);
 
     inargs(0) = buld_octave_value_to_octave_double_array(conversion_outargs(0));
-    vcl_vector<int> sizes(2);
+    std::vector<int> sizes(2);
     sizes[0] = 1; sizes[1] = 4;
     buld_octave_double_array radius_array = buld_octave_get_empty_double_array(sizes);
     radius_array(0,0) = radius[0]; radius_array(0,1) = radius[1]; radius_array(0,2) = radius[2]; radius_array(0,3) = radius[3];

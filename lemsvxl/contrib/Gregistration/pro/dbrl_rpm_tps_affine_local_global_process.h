@@ -17,7 +17,7 @@ class dbrl_rpm_tps_affine_local_global_process:public bpro1_process
         dbrl_rpm_tps_affine_local_global_process();
         ~dbrl_rpm_tps_affine_local_global_process();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process* clone() const;
@@ -25,21 +25,21 @@ class dbrl_rpm_tps_affine_local_global_process:public bpro1_process
         int input_frames();
         int output_frames();
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
 
         bool execute();
         bool finish();
 
     private:
-      vcl_vector<dbrl_feature_sptr> gridify_points(vcl_vector<dbrl_feature_sptr> points, float i0,float j0,float i1,float j1);
-      void remove_points_on_the_border(vcl_vector<dbrl_feature_sptr> point1,vcl_vector<dbrl_feature_sptr> point2,
+      std::vector<dbrl_feature_sptr> gridify_points(std::vector<dbrl_feature_sptr> points, float i0,float j0,float i1,float j1);
+      void remove_points_on_the_border(std::vector<dbrl_feature_sptr> point1,std::vector<dbrl_feature_sptr> point2,
                                        float i0,float j0,float i1,float j1,dbrl_correspondence *M);
 
-      vcl_vector<vcl_vector<dbrl_id_point_2d_sptr> >   id_point_set_list_;
-      vcl_vector<vcl_vector<dbrl_feature_sptr> >   point_set_list_;
+      std::vector<std::vector<dbrl_id_point_2d_sptr> >   id_point_set_list_;
+      std::vector<std::vector<dbrl_feature_sptr> >   point_set_list_;
 
-      vcl_vector<int> framenums_;
+      std::vector<int> framenums_;
 
     };
 #endif

@@ -1,7 +1,7 @@
 #ifndef psm_ray_probe_h_
 #define psm_ray_probe_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <psm/psm_scene.h>
 #include <psm/psm_cell_id.h>
 #include <psm/psm_sample.h>
@@ -28,7 +28,7 @@ class psm_ray_probe_functor
 public:
 
   //: default constructor
-  psm_ray_probe_functor(vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, vgl_point_3d<double> camera_center, vcl_vector<float> &depth_vals, vcl_vector<float> &alpha_vals, vcl_vector<float> &appearance_prob_vals, vcl_vector<psm_cell_id> &cell_ids) : depth_vals_(depth_vals), alpha_vals_(alpha_vals), appearance_prob_vals_(appearance_prob_vals), cell_ids_(cell_ids), camera_center_(camera_center), img_(img)
+  psm_ray_probe_functor(vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, vgl_point_3d<double> camera_center, std::vector<float> &depth_vals, std::vector<float> &alpha_vals, std::vector<float> &appearance_prob_vals, std::vector<psm_cell_id> &cell_ids) : depth_vals_(depth_vals), alpha_vals_(alpha_vals), appearance_prob_vals_(appearance_prob_vals), cell_ids_(cell_ids), camera_center_(camera_center), img_(img)
   {
     appearance_prob_vals_.clear();
     alpha_vals_.clear();
@@ -48,8 +48,8 @@ public:
     appearance_prob_vals_.push_back(cell_PI);
     cell_ids_.push_back(cell_index);
 
-    //vcl_cout << "s0 = " << s0 << vcl_endl;
-    //vcl_cout << "s1 = " << (float)(camera_center_ - p1).length() << vcl_endl;
+    //std::cout << "s0 = " << s0 << std::endl;
+    //std::cout << "s1 = " << (float)(camera_center_ - p1).length() << std::endl;
 
     return true;
   }
@@ -59,24 +59,24 @@ private:
   vgl_point_3d<double> camera_center_;
   vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img_;
 
-  vcl_vector<float> &alpha_vals_;
-  vcl_vector<float> &depth_vals_;
-  vcl_vector<float> &appearance_prob_vals_;
-  vcl_vector<psm_cell_id> &cell_ids_;
+  std::vector<float> &alpha_vals_;
+  std::vector<float> &depth_vals_;
+  std::vector<float> &appearance_prob_vals_;
+  std::vector<psm_cell_id> &cell_ids_;
 
 
 };
 
 
 template <psm_apm_type APM>
-void psm_ray_probe(psm_scene<APM> &scene, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, const vpgl_camera<double>* cam, float i, float j, vcl_vector<float> &depth_vals, vcl_vector<float> &alpha_vals, vcl_vector<float> &appearance_prob_vals, vcl_vector<psm_cell_id> &cell_ids)
+void psm_ray_probe(psm_scene<APM> &scene, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> const& img, const vpgl_camera<double>* cam, float i, float j, std::vector<float> &depth_vals, std::vector<float> &alpha_vals, std::vector<float> &appearance_prob_vals, std::vector<psm_cell_id> &cell_ids)
 {
   if (i < 0.0f) {
-    vcl_cerr << " error psm_ray_probe: i = " << i << vcl_endl;
+    std::cerr << " error psm_ray_probe: i = " << i << std::endl;
     return;
   }
   if (j < 0.0f) {
-    vcl_cerr << " error: psm_ray_probe: j = " << j << vcl_endl;
+    std::cerr << " error: psm_ray_probe: j = " << j << std::endl;
     return;
   }
 
@@ -87,7 +87,7 @@ void psm_ray_probe(psm_scene<APM> &scene, vil_image_view<typename psm_apm_traits
     raytrace_fn.run_single(functor,i,j);
   }
   else {
-    vcl_cerr << "ERROR: only perspective cameras supported at this time!" << vcl_endl;
+    std::cerr << "ERROR: only perspective cameras supported at this time!" << std::endl;
   }
 
   return;

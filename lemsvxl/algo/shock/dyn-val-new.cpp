@@ -1,13 +1,13 @@
 // DYN-VAL-NEW.CPP
 //Dynamic Validation for Shock Detection usingdistance measures only
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
+#include <cassert>
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
 
 //#include <stdio.h>
 #include <stdlib.h>
@@ -90,7 +90,7 @@ bool IShock::validateCandidateSource (SISource* candSource)
         //if (curDist==ISHOCK_DIST_HUGE)
         //  continue;
         curDist = bl->initDistSqPointGUI (candPt);
-        curDist = vcl_sqrt (curDist);
+        curDist = std::sqrt (curDist);
         break;
       case BARC:
         ba = (BArc*)candbElm;
@@ -103,7 +103,7 @@ bool IShock::validateCandidateSource (SISource* candSource)
         //if (curDist==ISHOCK_DIST_HUGE)
         //  continue;
         curDist = ba->initDistSqPointGUI (candPt);
-        curDist = vcl_sqrt (curDist);
+        curDist = std::sqrt (curDist);
         break;
         default: break;
     }
@@ -159,7 +159,7 @@ bool IShock::validateCandidateSource (SISource* candSource)
         //if (curDist==ISHOCK_DIST_HUGE)
         //  continue;
         curDist = bl->initDistSqPointGUI (candPt);
-        curDist = vcl_sqrt (curDist);
+        curDist = std::sqrt (curDist);
         break;
       case BARC:
         ba = (BArc*)candbElm;
@@ -172,7 +172,7 @@ bool IShock::validateCandidateSource (SISource* candSource)
         //if (curDist==ISHOCK_DIST_HUGE)
         //  continue;
         curDist = ba->initDistSqPointGUI (candPt);
-        curDist = vcl_sqrt (curDist);
+        curDist = std::sqrt (curDist);
         break;
         default: break;
     }

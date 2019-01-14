@@ -1,7 +1,7 @@
 #if !defined(SPLR_EXPLICIT_SPLAT_COLLECTION_H_)
 #define SPLR_EXPLICIT_SPLAT_COLLECTION_H_
 
-//#include <emulation/vcl_pair.h>
+//#include <emulation/std::pair.h>
 #include <xscan/xscan_scan.h>
 #include <xmvg/xmvg_composite_filter_2d.h>
 #include <xmvg/xmvg_composite_filter_3d.h>
@@ -10,7 +10,7 @@
 #include <biob/biob_worldpt_index_enumerator_sptr.h>
 #include <splr/splr_map.h>
 #include <splr/splr_splat_collection.h>
-#include <vcl_utility.h>
+#include <utility>
 
 /*: \brief stores every splat explicitly
     \author P. N. Klein
@@ -30,7 +30,7 @@ template<class T, class F,
 class splr_explicit_splat_collection : public splr_splat_collection<T, filter_2d_class>, splr_populator {
 
    private: //maybe needs to be public?
-    typedef vcl_pair<orbit_index, biob_worldpt_index> key;
+    typedef std::pair<orbit_index, biob_worldpt_index> key;
     typedef splr_map<key, filter_2d_class > map;
     map map_;
     

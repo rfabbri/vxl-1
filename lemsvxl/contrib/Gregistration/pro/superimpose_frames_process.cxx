@@ -27,7 +27,7 @@
 #include <vgl/vgl_line_segment_2d.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_sprintf.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 
@@ -55,7 +55,7 @@
 
 superimpose_frames_process::superimpose_frames_process() : bpro1_process()
 {
-    vcl_vector<vcl_string> data_input_choices;
+    std::vector<std::string> data_input_choices;
     data_input_choices.push_back("Edges from image");
     data_input_choices.push_back("vsol lines as input");
     data_input_choices.push_back("edge map");
@@ -73,7 +73,7 @@ superimpose_frames_process::superimpose_frames_process() : bpro1_process()
          !parameters()->add( "Radius of Neighborhood", "-radius"           , (float)5)||
          !parameters()->add( "Std Dev for proximity"                 , "-std" , (float)4)||
          !parameters()->add( "Threshold" , "-thresh"                 , (float)1.8)||
-         !parameters()->add( "Euclidean or Projected " ,    "-disttype" ,     (vcl_string)"Projected"     )||
+         !parameters()->add( "Euclidean or Projected " ,    "-disttype" ,     (std::string)"Projected"     )||
          !parameters()->add( "Crop it from Polygon " , "-ispoly" , (bool)false)||
          !parameters()->add( "    Grid #cols" , "-ncols" , 300 ) ||
          !parameters()->add( "    Grid #rows" , "-nrows" , 300 ) ||
@@ -114,10 +114,10 @@ superimpose_frames_process::clone() const
 /*************************************************************************
 * Function Name: superimpose_frames_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 superimpose_frames_process::name()
 {
     return "Superimpose Registered Frames";
@@ -127,12 +127,12 @@ superimpose_frames_process::name()
 /*************************************************************************
 * Function Name: dsuperimpose_frames_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > superimpose_frames_process::get_input_type()
+std::vector< std::string > superimpose_frames_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     static bool ispoly=true;
     parameters()->get_value("-ispoly",ispoly);
     unsigned data_choice=0;
@@ -159,12 +159,12 @@ vcl_vector< vcl_string > superimpose_frames_process::get_input_type()
 /*************************************************************************
 * Function Name: superimpose_frames_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > superimpose_frames_process::get_output_type()
+std::vector< std::string > superimpose_frames_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     static int numframes=0;
     unsigned data_choice=0;
     parameters()->get_value("-numframes",numframes);
@@ -223,7 +223,7 @@ superimpose_frames_process::execute()
     unsigned data_choice=0;
     parameters()->get_value("-input_choice",data_choice);
 
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+    std::vector<std::vector<dbrl_feature_sptr> > alledges;
 
     if(data_choice==0)
         alledges=get_features_from_image();
@@ -236,14 +236,14 @@ superimpose_frames_process::execute()
 
 
     vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-    vcl_string datatype=vul_sprintf("edges%d",0);
+    std::string datatype=vul_sprintf("edges%d",0);
     output_vsol->add_objects(feature_to_vsol(alledges[0]),datatype);
     
     for(unsigned i=1;i<alledges.size();i++)
     {
-        vcl_vector<dbrl_transformation_sptr> xforms;
-        vcl_vector<dbrl_feature_sptr> xformed=registeredges(alledges[0],alledges[i],xforms);
-        vcl_string datatype=vul_sprintf("edges%d",i);
+        std::vector<dbrl_transformation_sptr> xforms;
+        std::vector<dbrl_feature_sptr> xformed=registeredges(alledges[0],alledges[i],xforms);
+        std::string datatype=vul_sprintf("edges%d",i);
         output_vsol->add_objects(feature_to_vsol(xformed),datatype);
 
     }
@@ -262,15 +262,15 @@ superimpose_frames_process::finish()
 return true;
 }
 
-vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vector<dbrl_feature_sptr> tgt_orig,
-                                                                        vcl_vector<dbrl_feature_sptr> src_orig,
-                                                                        vcl_vector<dbrl_transformation_sptr>& xforms)
+std::vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(std::vector<dbrl_feature_sptr> tgt_orig,
+                                                                        std::vector<dbrl_feature_sptr> src_orig,
+                                                                        std::vector<dbrl_transformation_sptr>& xforms)
 {
     
-    vcl_vector<dbrl_feature_sptr> tgt=copy_features(tgt_orig);
-    vcl_vector<dbrl_feature_sptr> src=copy_features(src_orig);
+    std::vector<dbrl_feature_sptr> tgt=copy_features(tgt_orig);
+    std::vector<dbrl_feature_sptr> src=copy_features(src_orig);
 
-    double lambdainit=vcl_max(tgt.size(),src.size());
+    double lambdainit=std::max(tgt.size(),src.size());
 
     vgl_point_2d<double> cm=center_of_mass(tgt);
     vgl_point_2d<double> cm_src=center_of_mass(src);
@@ -282,7 +282,7 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vect
     static float mconvg=0.1;
     static float moutlier=1e-5;
     static float lambda1=0.1;
-    vcl_string disttype="Euclidean";
+    std::string disttype="Euclidean";
 
     parameters()->get_value("-initT",Tinit);
     parameters()->get_value("-finalT",Tfinal);
@@ -299,30 +299,30 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vect
     dbrl_match_set_sptr match_set=match_affinely.rpm(disttype);
     ////: binarize the match matrix
     dbrl_correspondence M=match_set->get_correspondence();
-    ////M.print_summary(vcl_cout);
+    ////M.print_summary(std::cout);
     //M.setinitialoutlier(affineparams.outlier());
 
     //dbrl_estimator_point_affine* final_affine_est= new dbrl_estimator_point_affine();
     //final_affine_est->set_lambda(0.0);
-    vcl_vector<dbrl_feature_sptr> affinef1xform=tgt;
+    std::vector<dbrl_feature_sptr> affinef1xform=tgt;
     //match_set->normalize_point_set(M.M(),affinef1xform );
     dbrl_transformation_sptr affine_tform=match_set->get_transformation();;
     dbrl_affine_transformation * final_affine_form=dynamic_cast<dbrl_affine_transformation *> (affine_tform.ptr());
     final_affine_form->set_from_features(src);
     final_affine_form->transform();
-    vcl_vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
+    std::vector<dbrl_feature_sptr> affinef2xformed=final_affine_form->get_to_features();
 
     dbrl_estimator_point_thin_plate_spline* tps_est= new dbrl_estimator_point_thin_plate_spline();
     tps_est->set_lambda1(lambda1);
     tps_est->set_lambda2(0.0001);
 
-    vcl_vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
+    std::vector<dbrl_feature_sptr> f1xform=match_set->get_feature_set1();
     match_set->normalize_point_set(M.M(),f1xform );
     dbrl_transformation_sptr tform=tps_est->estimate(f1xform,affinef2xformed,M);
     dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
     tpstform->set_from_features(affinef2xformed);
     tpstform->transform();
-    vcl_vector<dbrl_feature_sptr> f2xformed=tpstform->get_to_features();
+    std::vector<dbrl_feature_sptr> f2xformed=tpstform->get_to_features();
 
 
 
@@ -336,7 +336,7 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vect
     output_data_[0].push_back(dms);
 
 
-    //vcl_vector<vsol_spatial_object_2d_sptr> obs=feature_to_vsol(f1xform);
+    //std::vector<vsol_spatial_object_2d_sptr> obs=feature_to_vsol(f1xform);
     //vidpro1_vsol2D_storage_sptr output_vsol1 = vidpro1_vsol2D_storage_new();
     //output_vsol1->add_objects(obs,"xformed f1");
 
@@ -352,16 +352,16 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vect
         int xmin=0,ymin=0,xmax=0,ymax=0;
         get_box(src,xmin,ymin,xmax,ymax);
 
-        vcl_vector<dbrl_feature_sptr> src_gridpoints=get_grid_points(xmin,xmax,ymin,ymax);
+        std::vector<dbrl_feature_sptr> src_gridpoints=get_grid_points(xmin,xmax,ymin,ymax);
         //normalize_cm(curr_gridpoints,-cm_curr.x(),-cm_curr.y());
 
         final_affine_form->set_from_features(src_gridpoints);
         final_affine_form->transform();
-        vcl_vector<dbrl_feature_sptr> affine_xformed_src_gridpoints=final_affine_form->get_to_features();
+        std::vector<dbrl_feature_sptr> affine_xformed_src_gridpoints=final_affine_form->get_to_features();
 
         tpstform->set_from_features(affine_xformed_src_gridpoints);
         tpstform->transform();
-        vcl_vector<dbrl_feature_sptr> final_xformed_src_gridpoints=tpstform->get_to_features();
+        std::vector<dbrl_feature_sptr> final_xformed_src_gridpoints=tpstform->get_to_features();
 
         normalize_cm(final_xformed_src_gridpoints,cm.x(),cm.y());
         normalize_cm(src_gridpoints,cm_src.x(),cm_src.y());
@@ -383,9 +383,9 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::registeredges(vcl_vect
 
 }
 
-vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::feature_to_vsol(vcl_vector<dbrl_feature_sptr> & f)
+std::vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::feature_to_vsol(std::vector<dbrl_feature_sptr> & f)
      {
-     vcl_vector<vsol_spatial_object_2d_sptr> vpts;
+     std::vector<vsol_spatial_object_2d_sptr> vpts;
      for(unsigned i=0;i<f.size();i++)
      {
          if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f[i].ptr()))
@@ -396,8 +396,8 @@ vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::feature_to_v
           if(dbrl_feature_point_tangent* pt=dynamic_cast<dbrl_feature_point_tangent*>(f[i].ptr()))
              {
                  vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0],pt->location()[1]);
-                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                  vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                  vpts.push_back(p->cast_to_spatial_object());
@@ -406,8 +406,8 @@ vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::feature_to_v
            if(dbrl_feature_point_tangent_curvature* pt=dynamic_cast<dbrl_feature_point_tangent_curvature*>(f[i].ptr()))
              {
                  vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0],pt->location()[1]);
-                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*vcl_cos(pt->dir()),p->y()+0.2*vcl_sin(pt->dir()));
-                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*vcl_cos(pt->dir()),p->y()-0.2*vcl_sin(pt->dir()));
+                 vsol_point_2d_sptr p0=new vsol_point_2d(p->x()+0.2*std::cos(pt->dir()),p->y()+0.2*std::sin(pt->dir()));
+                 vsol_point_2d_sptr p1=new vsol_point_2d(p->x()-0.2*std::cos(pt->dir()),p->y()-0.2*std::sin(pt->dir()));
 
                  vsol_line_2d_sptr l=new vsol_line_2d(p0,p1);
                  vpts.push_back(p->cast_to_spatial_object());
@@ -418,15 +418,15 @@ vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::feature_to_v
      }
 
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_image()
+std::vector<std::vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_image()
 {
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+    std::vector<std::vector<dbrl_feature_sptr> > alledges;
     //static int numframes=0;
     //parameters()->get_value("-numframes",numframes);
     //static bool ispoly=true;
     //parameters()->get_value("-ispoly",ispoly);
     //if ( input_data_.size() != numframes ){
-    //    vcl_cout << "In superimpose_frames_process::execute() - not exactly one"
+    //    std::cout << "In superimpose_frames_process::execute() - not exactly one"
     //        << " input image \n";
     //    return alledges;
     //}
@@ -477,16 +477,16 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
     //    nsp.pfit_type_ = parabola_fit;
     //    sdet_nonmax_suppression ns(nsp, grad_x, grad_y);
     //    ns.apply();
-    //    vcl_vector< vsol_spatial_object_2d_sptr > detections;
+    //    std::vector< vsol_spatial_object_2d_sptr > detections;
     //    vgl_polygon<double> * contour;
 
-    //    vcl_vector<vsol_line_2d_sptr> lines=ns.get_lines();
-    //    vcl_vector<dbdet_edgel* > all_edgels;
+    //    std::vector<vsol_line_2d_sptr> lines=ns.get_lines();
+    //    std::vector<dbdet_edgel* > all_edgels;
     //    if(ispoly)
     //    {
     //        detections=frame_poly->all_data();
     //        vsol_polygon_2d_sptr poly = detections[0]->cast_to_region()->cast_to_polygon();
-    //        vcl_vector<vgl_point_2d<double> > pts;
+    //        std::vector<vgl_point_2d<double> > pts;
     //        for (unsigned k=0; k<poly->size(); k++)
     //        {
     //            pts.push_back(vgl_point_2d<double>(poly->vertex(k)->x(),poly->vertex(k)->y()));
@@ -523,18 +523,18 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
     //    unsigned max_size_to_group=7;
 
     //    edge_linker->build_curvelets_greedy(max_size_to_group);
-    //    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    //    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
 
     //    dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
     //    output_sel->set_sel(edge_linker);
     //    output_data_[0].push_back(output_sel);
 
-    //vcl_vector<dbrl_feature_sptr> edges;
+    //std::vector<dbrl_feature_sptr> edges;
     //for(unsigned i=0;i<edgels.size();i++)
     //{
     //    dbrl_feature_point_tangent_curvature_groupings * pt;
-    //    vcl_vector<unsigned> neighbors_id_vec;
+    //    std::vector<unsigned> neighbors_id_vec;
     //    for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
     //    {
     //        for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -588,14 +588,14 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
 
 
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_vsol()
+std::vector<std::vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_vsol()
 {
   
-    vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+    std::vector<std::vector<dbrl_feature_sptr> > alledges;
     static int numframes=0;
     parameters()->get_value("-numframes",numframes);
     if ( input_data_.size() != numframes ){
-        vcl_cout << "In superimpose_frames_process::execute() - not exactly one"
+        std::cout << "In superimpose_frames_process::execute() - not exactly one"
             << " input image \n";
         return alledges;
     }
@@ -615,13 +615,13 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
     // get image from the storage class
     for(int i=0;i<numframes;i++)
    { 
-        vcl_vector<dbrl_feature_sptr>   edges;       
+        std::vector<dbrl_feature_sptr>   edges;       
         vidpro1_vsol2D_storage_sptr frame_edges;
         frame_edges.vertical_cast(input_data_[i][0]);
-        vcl_vector< vsol_spatial_object_2d_sptr > lines=frame_edges->all_data();
+        std::vector< vsol_spatial_object_2d_sptr > lines=frame_edges->all_data();
 
-    vcl_vector<dbdet_edgel* > all_edgels;
-    vcl_vector<dbrl_feature_sptr> features;
+    std::vector<dbdet_edgel* > all_edgels;
+    std::vector<dbrl_feature_sptr> features;
     for (unsigned k=0; k<lines.size(); k++)
     {
         if(lines[k]->cast_to_curve())
@@ -650,9 +650,9 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
     //unsigned max_size_to_group=7;
 
     //edge_linker->build_curvelets_greedy(max_size_to_group);
-    //vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    //std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
 
-    //vcl_vector<dbrl_feature_sptr> features;
+    //std::vector<dbrl_feature_sptr> features;
 
     //dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
@@ -662,7 +662,7 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
     //for(unsigned i=0;i<edgels.size();i++)
     //{
     //    dbrl_feature_point_tangent_curvature_groupings * pt;
-    //    vcl_vector<unsigned> neighbors_id_vec;
+    //    std::vector<unsigned> neighbors_id_vec;
     //    for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
     //    {
     //        for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -688,14 +688,14 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
 
 
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_edge_map()
+std::vector<std::vector<dbrl_feature_sptr> > superimpose_frames_process::get_features_from_edge_map()
 {
   
-   // vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+   // std::vector<std::vector<dbrl_feature_sptr> > alledges;
    // static int numframes=0;
    // parameters()->get_value("-numframes",numframes);
    // if ( input_data_.size() != numframes ){
-   //     vcl_cout << "In superimpose_frames_process::execute() - not exactly one"
+   //     std::cout << "In superimpose_frames_process::execute() - not exactly one"
    //         << " input image \n";
    //     return alledges;
    // }
@@ -715,7 +715,7 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
    // // get image from the storage class
    // for(int i=0;i<numframes;i++)
    //{ 
-   //     vcl_vector<dbrl_feature_sptr>   edges;       
+   //     std::vector<dbrl_feature_sptr>   edges;       
    //     dbdet_edgemap_storage_sptr input_edgemap;
    //     input_edgemap.vertical_cast(input_data_[i][0]);
 
@@ -728,9 +728,9 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
    // unsigned max_size_to_group=7;
 
    // edge_linker->build_curvelets_greedy(max_size_to_group);
-   // vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+   // std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
 
-   // vcl_vector<dbrl_feature_sptr> features;
+   // std::vector<dbrl_feature_sptr> features;
 
    // dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
@@ -740,7 +740,7 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
    // for(unsigned i=0;i<edgels.size();i++)
    // {
    //     dbrl_feature_point_tangent_curvature_groupings * pt;
-   //     vcl_vector<unsigned> neighbors_id_vec;
+   //     std::vector<unsigned> neighbors_id_vec;
    //     for(unsigned j=0;j<edgels[i]->curvelets.size();j++)
    //     {
    //         for(curvelet_list_iter iter=edgels[i]->curvelets.begin();
@@ -766,7 +766,7 @@ vcl_vector<vcl_vector<dbrl_feature_sptr> > superimpose_frames_process::get_featu
      int numframes=0;
      parameters()->get_value("-numframes",numframes);
 
-vcl_vector<vcl_vector<dbrl_feature_sptr> > alledges;
+std::vector<std::vector<dbrl_feature_sptr> > alledges;
 for(int i=0;i<numframes;i++)
    { 
        dbdet_edgemap_storage_sptr input_edgemap;
@@ -774,7 +774,7 @@ for(int i=0;i<numframes;i++)
 
        dbdet_edgemap_sptr edgemap=input_edgemap->get_edgemap();
        dbdet_edgemap_iter iter=edgemap->edge_cells.begin();
-       vcl_vector<dbrl_feature_sptr> features;
+       std::vector<dbrl_feature_sptr> features;
        for(;iter!=edgemap->edge_cells.end();iter++)
        {
            for(unsigned i=0;i<iter->size();i++)
@@ -794,7 +794,7 @@ return alledges;
 
 
 
-vgl_point_2d<double> superimpose_frames_process::center_of_mass(vcl_vector<dbrl_feature_sptr> & f)
+vgl_point_2d<double> superimpose_frames_process::center_of_mass(std::vector<dbrl_feature_sptr> & f)
 {
     double cx=0.0;
     double cy=0.0;
@@ -827,7 +827,7 @@ vgl_point_2d<double> superimpose_frames_process::center_of_mass(vcl_vector<dbrl_
 }
 
 
-void superimpose_frames_process::normalize_cm(vcl_vector<dbrl_feature_sptr> & f,double xref,double yref)
+void superimpose_frames_process::normalize_cm(std::vector<dbrl_feature_sptr> & f,double xref,double yref)
 {
     for(unsigned i=0;i<f.size();i++)
     {
@@ -843,9 +843,9 @@ void superimpose_frames_process::normalize_cm(vcl_vector<dbrl_feature_sptr> & f,
 }
 
 
-vcl_vector<dbrl_feature_sptr> superimpose_frames_process::copy_features(vcl_vector<dbrl_feature_sptr> f)
+std::vector<dbrl_feature_sptr> superimpose_frames_process::copy_features(std::vector<dbrl_feature_sptr> f)
 {
-    vcl_vector<dbrl_feature_sptr> fout;
+    std::vector<dbrl_feature_sptr> fout;
     for(unsigned i=0;i<f.size();i++)
     {
         if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f[i].ptr()))
@@ -872,13 +872,13 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::copy_features(vcl_vect
 
 
 
-vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::make_grid_from_points(vcl_vector<dbrl_feature_sptr> features,int xmin,int xmax,int ymin,int ymax)
+std::vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::make_grid_from_points(std::vector<dbrl_feature_sptr> features,int xmin,int xmax,int ymin,int ymax)
 {
     int cnt=0;
-    vcl_vector<vsol_spatial_object_2d_sptr> toreturn;
+    std::vector<vsol_spatial_object_2d_sptr> toreturn;
     for(int i=xmin;i<xmax;i++)
     {
-        vcl_vector<vsol_point_2d_sptr> pts;
+        std::vector<vsol_point_2d_sptr> pts;
         for(int j=ymin;j<ymax;j++)
         {
             if(dbrl_feature_point *pt=dynamic_cast<dbrl_feature_point*> (features[cnt].ptr()))
@@ -897,7 +897,7 @@ vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::make_grid_fr
     cnt=0;
     for(int j=ymin;j<ymax;j++)
     {
-        vcl_vector<vsol_point_2d_sptr> pts;
+        std::vector<vsol_point_2d_sptr> pts;
         for(int i=xmin;i<xmax;i++)
         {
             if(dbrl_feature_point *pt=dynamic_cast<dbrl_feature_point*> (features[cnt+(i-xmin)*(ymax-ymin)].ptr()))
@@ -918,9 +918,9 @@ vcl_vector<vsol_spatial_object_2d_sptr> superimpose_frames_process::make_grid_fr
     return toreturn;
 }
 
-vcl_vector<dbrl_feature_sptr> superimpose_frames_process::get_grid_points(int xmin,int xmax,int ymin,int ymax)
+std::vector<dbrl_feature_sptr> superimpose_frames_process::get_grid_points(int xmin,int xmax,int ymin,int ymax)
 {
-    vcl_vector<dbrl_feature_sptr> features;
+    std::vector<dbrl_feature_sptr> features;
     for(int i=xmin;i<xmax;i++)
     {
         for(int j=ymin;j<ymax;j++)
@@ -933,9 +933,9 @@ vcl_vector<dbrl_feature_sptr> superimpose_frames_process::get_grid_points(int xm
     return features;
 }
 
-void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & xmin,int &ymin,int &xmax,int &ymax)
+void  superimpose_frames_process::get_box(std::vector<dbrl_feature_sptr> f,int & xmin,int &ymin,int &xmax,int &ymax)
 {
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
 
     vgl_box_2d<double> box;
 
@@ -949,16 +949,16 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
             box.add(vgl_point_2d<double>(pt->location()[0],pt->location()[1]));
     }
 
-    xmin=vcl_floor(box.min_x());
-    ymin=vcl_floor(box.min_y());
-    xmax=vcl_ceil(box.max_x());
-    ymax=vcl_ceil(box.max_y());
+    xmin=std::floor(box.min_x());
+    ymin=std::floor(box.min_y());
+    xmax=std::ceil(box.max_x());
+    ymax=std::ceil(box.max_y());
 
 
 }
 
-//dbrl_superresolution_multiple_objects::super_resolute(vcl_map<dbrl_feature_sptr,unsigned char> fmap,
-//                                                      dbinfo_observation_sptr obs,vcl_string superimgname)
+//dbrl_superresolution_multiple_objects::super_resolute(std::map<dbrl_feature_sptr,unsigned char> fmap,
+//                                                      dbinfo_observation_sptr obs,std::string superimgname)
 //{
 //    vil_image_resource_sptr img=obs->obs_snippet();
 //    //vil_image_view<double> superimg(img->ni(),img->nj(),1);
@@ -968,8 +968,8 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
 //    int miny=obs->ex_roi()->rmin(0);
 //    int maxy=obs->ex_roi()->rmax(0);
 //
-//    vcl_map<dbrl_feature_sptr,unsigned char>::iterator iter;
-//    vcl_map<dbrl_feature_sptr,unsigned char> filtered_samples;
+//    std::map<dbrl_feature_sptr,unsigned char>::iterator iter;
+//    std::map<dbrl_feature_sptr,unsigned char> filtered_samples;
 //    for(iter=fmap.begin();iter!=fmap.end();iter++)
 //    {
 //        if( dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(iter->first.ptr()))
@@ -995,7 +995,7 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
 //        }
 //    }
 //    dbrl_estimator_cubic_patch * cpatch=new dbrl_estimator_cubic_patch();
-//    vcl_vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
+//    std::vector<dbrl_clough_tocher_patch> patches=cpatch->estimate_cubic(pts,zs);
 //
 //    vil_image_view<unsigned char> superimg(img->ni()*4,img->nj()*4);
 //
@@ -1009,8 +1009,8 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
 //                if(patches[i].intriangle(p))
 //                {
 //                    double newz=patches[i].interpolate(p);
-//                    unsigned char intensity=(unsigned char)vcl_floor(newz+0.5);
-//                    superimg(vcl_floor((is-minx)*4),vcl_floor((js-miny)*4))=intensity;
+//                    unsigned char intensity=(unsigned char)std::floor(newz+0.5);
+//                    superimg(std::floor((is-minx)*4),std::floor((js-miny)*4))=intensity;
 //                    continue;
 //                }
 //            }
@@ -1021,10 +1021,10 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
 //    vil_save(superimg,superimgname.c_str());
 //}
 //
-//vcl_vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(vcl_vector<dbrl_feature_sptr> f2,
+//std::vector<dbrl_feature_sptr> dbrl_superresolution_multiple_objects::get_grid_points(std::vector<dbrl_feature_sptr> f2,
 //                                                                                     double spacing)
 //{
-//    vcl_vector<vgl_point_2d<double> > pts;
+//    std::vector<vgl_point_2d<double> > pts;
 //
 //    vgl_box_2d<double> box;
 //
@@ -1039,12 +1039,12 @@ void  superimpose_frames_process::get_box(vcl_vector<dbrl_feature_sptr> f,int & 
 //
 //    }
 //
-//    double xmin=vcl_floor(box.min_x());
-//    double ymin=vcl_floor(box.min_y());
-//    double xmax=vcl_ceil(box.max_x());
-//    double ymax=vcl_ceil(box.max_y());
+//    double xmin=std::floor(box.min_x());
+//    double ymin=std::floor(box.min_y());
+//    double xmax=std::ceil(box.max_x());
+//    double ymax=std::ceil(box.max_y());
 //
-//    vcl_vector<dbrl_feature_sptr> fs;
+//    std::vector<dbrl_feature_sptr> fs;
 //    for(double x=xmin;x<=xmax;)
 //    {   
 //        for(double y=ymin;y<=ymax;)

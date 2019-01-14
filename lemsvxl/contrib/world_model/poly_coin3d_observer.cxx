@@ -54,21 +54,21 @@
 #include <Inventor/details/SoDetail.h>
 #include <Inventor/details/SoFaceDetail.h>
 
-vcl_vector<SoNode*> poly_coin3d_observer::selected_nodes = vcl_vector<SoNode*> (0);
-vcl_vector<const SoPickedPoint*> poly_coin3d_observer::picked_points = vcl_vector<const SoPickedPoint*> (0);
+std::vector<SoNode*> poly_coin3d_observer::selected_nodes = std::vector<SoNode*> (0);
+std::vector<const SoPickedPoint*> poly_coin3d_observer::picked_points = std::vector<const SoPickedPoint*> (0);
 
 void selectionCallback(void *userData, SoEventCallback *eventCB)
 {
   SoSelection *selection = (SoSelection *) userData;
   const SoEvent *ev =  eventCB->getEvent();
   if (SO_MOUSE_PRESS_EVENT(ev, BUTTON1)) {
-    vcl_cout << "Selected!" << vcl_endl;
-    vcl_cout << "Num Selected " << selection->getNumSelected() << vcl_endl;
+    std::cout << "Selected!" << std::endl;
+    std::cout << "Num Selected " << selection->getNumSelected() << std::endl;
     if (selection->getNumSelected() > 0) {
       SoPath* path = selection->getPath(0);
       SoNode* node = path->getTail();
       if (node->isOfType(SoIndexedFaceSet::getClassTypeId())) {
-        vcl_cout << "Found a MESH!" << vcl_endl;
+        std::cout << "Found a MESH!" << std::endl;
         SoIndexedFaceSet* ifs = (SoIndexedFaceSet*)node;
         const SoPickedPoint *pp = eventCB->getPickedPoint();
 
@@ -113,7 +113,7 @@ void poly_coin3d_observer::update (vgui_message const& msg)
   vgui_message m = const_cast <vgui_message const& > (msg);
   const observable* o = static_cast<const observable*> (m.from);
   observable* o2= const_cast<observable*> (o);
-  vcl_string type = o2->type_name();
+  std::string type = o2->type_name();
   if (strcmp(type.data(),"obj_observable") == 0)
   {
     const obj_observable* o = static_cast<const obj_observable*> (m.from);
@@ -125,7 +125,7 @@ void poly_coin3d_observer::update (vgui_message const& msg)
 void poly_coin3d_observer::handle_update(vgui_message const& msg, 
                                   obj_observable* observable) 
 {
-  const vcl_string* str = static_cast<const vcl_string*> (msg.data);
+  const std::string* str = static_cast<const std::string*> (msg.data);
   dbmsh3d_mesh_mc* M = observable->get_object();
 
   SbVec3f v;
@@ -133,7 +133,7 @@ void poly_coin3d_observer::handle_update(vgui_message const& msg,
 ////////////////////////////////////
   dbmsh3d_mesh_mc* M_copy = M->clone();
   // tranform the mesh by the rational camera norm_trans()
-  vcl_map<int, dbmsh3d_vertex*> vertices = M_copy->vertexmap();
+  std::map<int, dbmsh3d_vertex*> vertices = M_copy->vertexmap();
   for(unsigned i=0; i<vertices.size(); i++) {
     dbmsh3d_vertex* v = vertices[i]; 
     vgl_point_3d<double> p = v->get_pt();
@@ -152,7 +152,7 @@ void poly_coin3d_observer::handle_update(vgui_message const& msg,
     M->build_face_IFS ();
     SoSeparator* mesh = draw_M (M, false, 0.0, COLOR_BLUE);
     mesh->ref();
-    vcl_string name = create_mesh_name();
+    std::string name = create_mesh_name();
     mesh->setName(SbName(name.data()));
 
     SoTransform *myTransform = new SoTransform;
@@ -189,7 +189,7 @@ void poly_coin3d_observer::handle_update(vgui_message const& msg,
     double x = p2.x() - p1.x();
     double y = p2.y() - p1.y();
     double z = p2.z() - p1.z();
-    //vcl_cout << "X=" << x << " Y=" << y << " Z=" << z << vcl_endl;
+    //std::cout << "X=" << x << " Y=" << y << " Z=" << z << std::endl;
     float x1, y1, z1;
     tr.getValue(x1, y1, z1);
     myTransform->translation.setValue(x1+x, y1+y, z1+z);
@@ -201,11 +201,11 @@ void poly_coin3d_observer::handle_update(vgui_message const& msg,
   } else if (str->compare("update") == 0) {
     SoSeparator *m = objects[observable];
     dbmsh3d_mesh_mc* prev_mesh = meshes[observable];
-    ///M->print_summary(vcl_cout);
+    ///M->print_summary(std::cout);
     //M->print_topo_summary();
     SoSeparator* group = (SoSeparator*)this->user_scene_root();
     SbName n = m->getName();
-    vcl_cout << n.getString() << vcl_endl;
+    std::cout << n.getString() << std::endl;
     SoSeparator* node = (SoSeparator *) SoNode::getByName(m->getName());
     root_sel_->removeChild(node);
     //M->IFS_to_MHE();
@@ -239,9 +239,9 @@ void poly_coin3d_observer::handle_update(vgui_message const& msg,
 }
 bool poly_coin3d_observer::handle(const vgui_event& e)
 {
-  //vcl_cout << "poly_coin3d_observer::handle " << e.type << " " << e.button << " " << e.modifier << vcl_endl;
+  //std::cout << "poly_coin3d_observer::handle " << e.type << " " << e.button << " " << e.modifier << std::endl;
   if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == vgui_CTRL) {
-    //vcl_cout << "1" << vcl_endl;
+    //std::cout << "1" << std::endl;
     SoRayPickAction rp( this->get_viewport_region());
     rp.setPoint(SbVec2s(e.wx, e.wy));
     rp.setRadius(10);
@@ -251,7 +251,7 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
       SbVec3f point = point_picked_->getPoint();
       float x,y,z;
       point.getValue(x,y,z);
-      vcl_cout << "[" << x << "," << y << "," << z << "]" << vcl_endl;
+      std::cout << "[" << x << "," << y << "," << z << "]" << std::endl;
       if (divide_mode_) {
         div_pts_[div_idx_++] = vgl_point_3d<double> (x,y,z);
         if (div_idx_ > 1) {
@@ -266,18 +266,18 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
         SoPath* path =  point_picked_->getPath();
         SoNode* node = path->getTail();
         if (node->isOfType(SoIndexedFaceSet::getClassTypeId())) {
-         vcl_cout << "Found a MESH!" << vcl_endl;
+         std::cout << "Found a MESH!" << std::endl;
           //SoIndexedFaceSet* ifs = (SoIndexedFaceSet*)node;
           node_selected_ = path->getNodeFromTail(1);
           //point_picked_ = pp;
         }
       }
     } else 
-      vcl_cout << "PICKED POINT IS O" << vcl_endl;
+      std::cout << "PICKED POINT IS O" << std::endl;
   }
   if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == vgui_SHIFT) {
-    //vcl_cout << "2" << vcl_endl;
-    //vcl_cout << "left mouse" << vcl_endl;
+    //std::cout << "2" << std::endl;
+    //std::cout << "left mouse" << std::endl;
     start_x_ = e.wx;
     start_y_ = e.wy;
     left_button_down_ = true;
@@ -288,19 +288,19 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
     return true;
   
   } else if (e.type == vgui_MOTION && /*left_button_down_*/e.button == vgui_LEFT && e.modifier == vgui_SHIFT) {
-    //vcl_cout << "3" << vcl_endl;
+    //std::cout << "3" << std::endl;
     // first make sure that an object is selected from scene graph
     if (node_selected_) {//(selected_nodes.size() > 0) {
       double x = e.wx;
       double y = e.wy;
-      //double dist = vcl_sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/60;
+      //double dist = std::sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/60;
       double dist = (y-start_y_)/2;
       //if (y > start_y_)
       //  dist *= -1;
-      //vcl_cout << "dist=" << dist << vcl_endl;
+      //std::cout << "dist=" << dist << std::endl;
 
       //SoNode* node = selected_nodes[0];
-      vcl_map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
+      std::map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
       while (iter != objects.end()) {
         SoSeparator* sep = iter->second;
         if (node_selected_ == sep) {
@@ -314,13 +314,13 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
     
     return true;
   } else if (e.type == vgui_BUTTON_DOWN && e.button == vgui_RIGHT && e.modifier == vgui_SHIFT) {
-      //vcl_cout << "4" << vcl_endl;
+      //std::cout << "4" << std::endl;
       middle_button_down_ = true;
       start_x_ = e.wx;
       start_y_ = e.wy;
       
   } else if (e.type == vgui_MOTION && e.button == vgui_RIGHT /*middle_button_down_ == true*/ && e.modifier == vgui_SHIFT) {
-      //vcl_cout << "5" << vcl_endl;
+      //std::cout << "5" << std::endl;
       // update these only if there is motion event
       float wx = e.wx;
       float wy = e.wy;
@@ -329,13 +329,13 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
       if (node_selected_){//(selected_nodes.size() > 0) {
         double x = e.wx;
         double y = e.wy;
-        //double dist = vcl_sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/20;
+        //double dist = std::sqrt((x-start_x_)*(x-start_x_) + (y-start_y_)*(y-start_y_))/20;
         double dist = (y-start_y_)/2;
-        vcl_cout << dist << vcl_endl;
+        std::cout << dist << std::endl;
         start_y_ = y;
         //if (y > start_y_)
         //  dist *= -1;
-        vcl_cout << "dist=" << dist << "= " << y << " - " << start_y_ << vcl_endl;
+        std::cout << "dist=" << dist << "= " << y << " - " << start_y_ << std::endl;
 
         //obj_observable *obs = find_selected_obs(face_id);
         if (obs_picked_)
@@ -344,17 +344,17 @@ bool poly_coin3d_observer::handle(const vgui_event& e)
       return true;
     } 
     else if (e.type == vgui_BUTTON_UP && e.button == vgui_RIGHT && e.modifier == vgui_SHIFT){
-      ///vcl_cout << "6" << vcl_endl;
+      ///std::cout << "6" << std::endl;
       middle_button_down_ = false;
       return true;
     }
-  //vcl_cout << "7" << vcl_endl;
+  //std::cout << "7" << std::endl;
   return bgui3d_examiner_tableau::handle(e);
 }
 
 obj_observable* poly_coin3d_observer::find_selected_obs(int &fid)
 { 
-  vcl_map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
+  std::map<obj_observable *, SoSeparator*>::iterator iter = objects.begin();
   while (iter != objects.end()) {
     SoSeparator* sep = iter->second;
     if (node_selected_ == sep) {
@@ -363,9 +363,9 @@ obj_observable* poly_coin3d_observer::find_selected_obs(int &fid)
       //SbVec3f point = point_picked_->getPoint();
       //float x,y,z;
       //point.getValue(x,y,z);
-      //vcl_cout << "[" << point_3d_.x() << "," << point_3d_.y() << "," << point_3d_.z() << "]" << vcl_endl;
+      //std::cout << "[" << point_3d_.x() << "," << point_3d_.y() << "," << point_3d_.z() << "]" << std::endl;
       fid = obs->find_closest_face(point_3d_/*vgl_point_3d<double> (x,y,z)*/);
-      //vcl_cout << "CLOSEST FACE=" << fid << vcl_endl;
+      //std::cout << "CLOSEST FACE=" << fid << std::endl;
       return obs;
     }
     iter++;
@@ -397,7 +397,7 @@ bool poly_coin3d_observer::find_intersection_points(int id,
       i2.x(), i2.y(), i2.z());
 
   if (edge_index1 == edge_index2) {
-    vcl_cerr << "poly_coin3d_observer::find_intersection_points() -- Both points are on the same edge!!!" << vcl_endl;
+    std::cerr << "poly_coin3d_observer::find_intersection_points() -- Both points are on the same edge!!!" << std::endl;
     return false;
   }
 
@@ -416,13 +416,13 @@ bool poly_coin3d_observer::find_intersection_points(int id,
     return true;
 }
 
-vcl_string poly_coin3d_observer::create_mesh_name()
+std::string poly_coin3d_observer::create_mesh_name()
 {
-   vcl_string base = "mesh";
+   std::string base = "mesh";
 
-   vcl_stringstream strm;
-   strm << vcl_fixed << num_meshes_;
-   vcl_string str(strm.str());
+   std::stringstream strm;
+   strm << std::fixed << num_meshes_;
+   std::string str(strm.str());
    num_meshes_++;
    return (base+str);
 }
@@ -437,6 +437,6 @@ void poly_coin3d_observer::get_vertices_xyz(vsol_polygon_3d_sptr poly3d,
     (*x)[i] = poly3d->vertex(i)->x();
     (*y)[i] = poly3d->vertex(i)->y();
     (*z)[i] = poly3d->vertex(i)->z();
-    //vcl_cout << i << " " << *(poly3d->vertex(i)) << vcl_endl;
+    //std::cout << i << " " << *(poly3d->vertex(i)) << std::endl;
   }
 }

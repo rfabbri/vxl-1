@@ -19,7 +19,7 @@ dbsksp_mirror_xgraph_process()
   if( !parameters()->add("Mirror around y-axis going thru bbox center?" , "-mirror_y_axis_bbox_center", true)
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -44,7 +44,7 @@ clone() const
 
 // ----------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsksp_mirror_xgraph_process::
+std::string dbsksp_mirror_xgraph_process::
 name()
 { 
   return "Mirror an xgraph"; 
@@ -53,10 +53,10 @@ name()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_mirror_xgraph_process::
+std::vector< std::string > dbsksp_mirror_xgraph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back("dbsksp_xgraph");
   return to_return;
 }
@@ -65,10 +65,10 @@ get_input_type()
 
 // ----------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_mirror_xgraph_process::
+std::vector< std::string > dbsksp_mirror_xgraph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "dbsksp_xgraph" );  
   return to_return;
 }
@@ -103,11 +103,11 @@ execute()
 
   if (!mirror_y_axis_centroid)
   {
-    vcl_cout << "No mirroring. Done.\n";
+    std::cout << "No mirroring. Done.\n";
     return false;
   }
 
-  vcl_cout << "\nMirror xgraph around y-axis going through bbox center.\n";
+  std::cout << "\nMirror xgraph around y-axis going through bbox center.\n";
   
   // input xgraph
   dbsksp_xgraph_storage_sptr input_storage;
@@ -116,7 +116,7 @@ execute()
   dbsksp_xshock_graph_sptr xgraph = input_storage->xgraph();
   if (!xgraph)
   {
-    vcl_cout << "Input xgraph non-existing. Process failed.\n";
+    std::cout << "Input xgraph non-existing. Process failed.\n";
     return false;
   }
 
@@ -125,7 +125,7 @@ execute()
   vsol_box_2d_sptr bbox = xgraph->bounding_box();
   double center_x = (bbox->get_min_x() + bbox->get_max_x()) / 2;
   double center_y = (bbox->get_min_y() + bbox->get_max_y()) / 2;
-  vcl_cout << "Bounding box center: (x,y) = (" << center_x << " , " << center_y << ")\n";
+  std::cout << "Bounding box center: (x,y) = (" << center_x << " , " << center_y << ")\n";
   
   
   // Create a duplicate xgraph and mirror it around y-axis
@@ -139,7 +139,7 @@ execute()
     dbsksp_xgraph_storage_sptr output_storage = dbsksp_xgraph_storage_new();
     output_data_[0].push_back(output_storage);
     output_storage->set_xgraph(mirror_xgraph);
-    vcl_cout << "XGraph mirroring completed.\n";
+    std::cout << "XGraph mirroring completed.\n";
     return true;
   }
 

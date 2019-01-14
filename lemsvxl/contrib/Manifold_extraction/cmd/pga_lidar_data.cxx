@@ -10,21 +10,21 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_box_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vehicle_model.h>
 #include <vehicle_model_3d.h>
 #include <Lie_group_operations.h>
 #include <vsol/vsol_rectangle_2d_sptr.h>
 #include <vul/vul_file_iterator.h>
 
-void read_box(vcl_istream &s,vgl_box_3d<double>& b_box)
+void read_box(std::istream &s,vgl_box_3d<double>& b_box)
 {
-vcl_string str;
+std::string str;
 char ch;
 double min_x,min_y,min_z,max_x,max_y,max_z;
 
@@ -42,23 +42,23 @@ double min_x,min_y,min_z,max_x,max_y,max_z;
 }
 
 
-vcl_vector<vehicle_model_3d> read_3d_models(vcl_string bounding_boxes_info,vcl_string file_ext)
+std::vector<vehicle_model_3d> read_3d_models(std::string bounding_boxes_info,std::string file_ext)
     {
-    vcl_string b_box_type_part1,b_box_type_part2,b_box_type_part3,f_name;
-    vcl_vector<vehicle_model_3d> vehic_mod_vec;
+    std::string b_box_type_part1,b_box_type_part2,b_box_type_part3,f_name;
+    std::vector<vehicle_model_3d> vehic_mod_vec;
 
     vgl_box_3d<double> b_box,b_box_hood,b_box_cab, b_box_bed;
    
     for (vul_file_iterator fn= bounding_boxes_info + file_ext; fn; ++fn) {
        f_name =  fn();
-        vcl_ifstream ifstr(f_name.c_str());
+        std::ifstream ifstr(f_name.c_str());
 
         for (unsigned int i = 0;i<3;i++)
             {
          ifstr >> b_box_type_part1 >> b_box_type_part2 >> b_box_type_part3;
       /* read_box(ifstr,b_box);
 
-        vcl_cout << b_box << vcl_endl; */
+        std::cout << b_box << std::endl; */
       
 
         if (strcmp(b_box_type_part3.c_str(),"hood:") == 0)
@@ -72,9 +72,9 @@ vcl_vector<vehicle_model_3d> read_3d_models(vcl_string bounding_boxes_info,vcl_s
             read_box(ifstr,b_box_bed);
             }
 
-        vcl_cout << "b_box_hood" <<b_box_hood << vcl_endl;
-        vcl_cout << "b_box_cab" <<b_box_cab << vcl_endl;
-        vcl_cout << "b_box_bed" <<b_box_bed << vcl_endl;
+        std::cout << "b_box_hood" <<b_box_hood << std::endl;
+        std::cout << "b_box_cab" <<b_box_cab << std::endl;
+        std::cout << "b_box_bed" <<b_box_bed << std::endl;
 
         if (!(b_box_hood.is_empty()) && !(b_box_cab.is_empty()) && !(b_box_hood.is_empty()))
             {
@@ -87,9 +87,9 @@ return vehic_mod_vec;
 
 
 
- void print_models(vcl_vector<vehicle_model_3d> M,vcl_string bounding_boxes_info)
+ void print_models(std::vector<vehicle_model_3d> M,std::string bounding_boxes_info)
     {
-    vcl_ofstream ofstr(bounding_boxes_info.c_str());
+    std::ofstream ofstr(bounding_boxes_info.c_str());
 
    for (unsigned int i = 0;i<M.size();i++)
        {
@@ -99,24 +99,24 @@ return vehic_mod_vec;
 
 
 
-      ofstr << hood.min_point() << vcl_endl;
-      ofstr << hood.max_point() << vcl_endl;
+      ofstr << hood.min_point() << std::endl;
+      ofstr << hood.max_point() << std::endl;
 
-       ofstr << cab.min_point() << vcl_endl;
-      ofstr << cab.max_point() << vcl_endl;
+       ofstr << cab.min_point() << std::endl;
+      ofstr << cab.max_point() << std::endl;
 
-       ofstr << bed.min_point() << vcl_endl;
-      ofstr << bed.max_point() << vcl_endl;
+       ofstr << bed.min_point() << std::endl;
+      ofstr << bed.max_point() << std::endl;
        }
     }
 
-vnl_matrix<double> get_transformation(const vgl_box_3d<double>& bb_1,const vgl_box_3d<double>& bb_2,vcl_ostream &s)
+vnl_matrix<double> get_transformation(const vgl_box_3d<double>& bb_1,const vgl_box_3d<double>& bb_2,std::ostream &s)
     {
     vnl_matrix<double> from_points(4,8,1);
     vnl_matrix<double> to_points(4,8,1);
 
-    vcl_vector<double> p1_x,p1_y,p1_z;
-    vcl_vector<double> p2_x,p2_y,p2_z;
+    std::vector<double> p1_x,p1_y,p1_z;
+    std::vector<double> p2_x,p2_y,p2_z;
 
     vgl_point_3d<double> min_pt_1 = bb_1.min_point();
     vgl_point_3d<double> max_pt_1 = bb_1.max_point();
@@ -205,8 +205,8 @@ to_points.put(2,i,p2_z[i]);
 to_points.put(3,i,1);
         }
 
-    /*s << "from_points" << from_points << vcl_endl;
-    s << "to_points" << to_points << vcl_endl;*/
+    /*s << "from_points" << from_points << std::endl;
+    s << "to_points" << to_points << std::endl;*/
 
     // vnl_matrix<double> transformation_matrix = (to_points*from_points.transpose())* vnl_matrix_inverse<double>(from_points*from_points.transpose());
 
@@ -220,7 +220,7 @@ to_points.put(3,i,1);
 
     }
 void get_transformation_matrices(const vehicle_model_3d & M1,const vehicle_model_3d & M2,vnl_matrix<double> &G1,vnl_matrix<double> &G2,
-                                 vnl_matrix<double> &G3,vcl_ostream &s)
+                                 vnl_matrix<double> &G3,std::ostream &s)
     {
 
    G1 = get_transformation(M1.hood(),M2.hood(),s);
@@ -230,30 +230,30 @@ void get_transformation_matrices(const vehicle_model_3d & M1,const vehicle_model
 
 int main(int argc,char **argv)
     {
-    vcl_string vehicle_model_info = argv[1];
-    vcl_string debug_info_file = argv[2];
-    vcl_string mean_info_file = argv[3];
+    std::string vehicle_model_info = argv[1];
+    std::string debug_info_file = argv[2];
+    std::string mean_info_file = argv[3];
     
-    vcl_ofstream ofstr(debug_info_file.c_str());
-     vcl_ofstream ofstr_mean(mean_info_file.c_str());
+    std::ofstream ofstr(debug_info_file.c_str());
+     std::ofstream ofstr_mean(mean_info_file.c_str());
 
-    vcl_vector<vehicle_model_3d> model_vec = read_3d_models(vehicle_model_info,"\\*.txt");
+    std::vector<vehicle_model_3d> model_vec = read_3d_models(vehicle_model_info,"\\*.txt");
 
     vnl_matrix<double>G1,G2,G3,I_mean_hood,I_mean_cab,I_mean_bed;
 
-    vcl_vector<vnl_matrix<double> > G1_vec,G2_vec,G3_vec;
+    std::vector<vnl_matrix<double> > G1_vec,G2_vec,G3_vec;
 
     for (unsigned int i = 1;i<model_vec.size();i++)
         {
-        vcl_cout << model_vec[i].hood() << vcl_endl;
-        vcl_cout << model_vec[i].cab() << vcl_endl;
-        vcl_cout << model_vec[i].bed() << vcl_endl;
+        std::cout << model_vec[i].hood() << std::endl;
+        std::cout << model_vec[i].cab() << std::endl;
+        std::cout << model_vec[i].bed() << std::endl;
 
          get_transformation_matrices(model_vec[0],model_vec[i],G1,G2,G3,ofstr);
-         // ofstr << "transformation: " << i << vcl_endl;
-         ofstr << G1 << vcl_endl;
-         ofstr << G2 << vcl_endl;
-         ofstr << G3 << vcl_endl;
+         // ofstr << "transformation: " << i << std::endl;
+         ofstr << G1 << std::endl;
+         ofstr << G2 << std::endl;
+         ofstr << G3 << std::endl;
          G1_vec.push_back(G1);
          G2_vec.push_back(G2);
          G3_vec.push_back(G3);
@@ -263,11 +263,11 @@ int main(int argc,char **argv)
     I_mean_cab = calculate_intrinsic_mean_3d(G2_vec);
     I_mean_bed = calculate_intrinsic_mean_3d(G3_vec);
 
-    ofstr_mean << "hood:" << vcl_endl;
+    ofstr_mean << "hood:" << std::endl;
     ofstr_mean << I_mean_hood;
-    ofstr_mean << "cab:" << vcl_endl;
+    ofstr_mean << "cab:" << std::endl;
     ofstr_mean << I_mean_cab;
-    ofstr_mean << "bed:" << vcl_endl;
+    ofstr_mean << "bed:" << std::endl;
     ofstr_mean << I_mean_bed;
 
 

@@ -1,13 +1,13 @@
 #ifndef  _BOUNDARY_H
 #define  _BOUNDARY_H
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 //using namespace std;
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_map.h>
+#include <vector>
+#include <list>
+#include <map>
 
 #include "ishock-common.h"
 #include "belements.h"
@@ -33,13 +33,13 @@ class Boundary;
 #include "CEDT.h"
 
 //iterator type to use for going through the boundary elements
-typedef vcl_vector<BElement* > BElmVectorType;
-typedef vcl_map<int, BElement* > BElmListType;
-typedef vcl_map<int, BElement* >::iterator BElmListIterator;
-typedef vcl_map<int, BElement* >::reverse_iterator RBElmListIterator;
-typedef vcl_pair<int, BElement*> ID_BElm_pair;
-typedef vcl_list<BContour*> BContourList;
-typedef vcl_list<BContour*>::iterator BContourListIterator;
+typedef std::vector<BElement* > BElmVectorType;
+typedef std::map<int, BElement* > BElmListType;
+typedef std::map<int, BElement* >::iterator BElmListIterator;
+typedef std::map<int, BElement* >::reverse_iterator RBElmListIterator;
+typedef std::pair<int, BElement*> ID_BElm_pair;
+typedef std::list<BContour*> BContourList;
+typedef std::list<BContour*>::iterator BContourListIterator;
 
 class Boundary 
 {
@@ -51,10 +51,10 @@ public:
   IShock* shock;              //shock object created by the current boundary object
   CEDT*   _CEDT;              //structure for CEDT on current boundary
 
-  vcl_map<int, BElement*> BElmList;        //vcl_list of all the boundary elements
-  vcl_map<int, BElement*> taintedBElmList;  //some  operation has affected these elements
+  std::map<int, BElement*> BElmList;        //std::list of all the boundary elements
+  std::map<int, BElement*> taintedBElmList;  //some  operation has affected these elements
                             //so shocks need to be recomputed from them
-  vcl_map<int, BElement*> update_list;      //to store all boundary elements
+  std::map<int, BElement*> update_list;      //to store all boundary elements
                             //that need to be redrawn
 
   BContourList contourList;
@@ -80,7 +80,7 @@ public:
   void delBElement (BElement* elm);
   //BElmListIterator delBElement (BElmListIterator it);
 
-  void delBElementList ();    //delete all the BElements in the vcl_list
+  void delBElementList ();    //delete all the BElements in the std::list
   //delete all the shocks caused by a boundary element
   void delBElementShockList (BElement* belm);
 
@@ -110,7 +110,7 @@ public:
   BElement* addGUILine (Point start_pt, Point end_pt);
   BElement* addGUILineBetween (Point start_pt, BPoint* ept, BPoint** newStartPt);
   
-  virtual void addPolyLineBetween (BPoint* spt, BPoint* ept, vcl_vector<Point> pts, int id);
+  virtual void addPolyLineBetween (BPoint* spt, BPoint* ept, std::vector<Point> pts, int id);
 
   //Add a GUIArc, return the BArc object
   virtual BElement* addGUIArc (COORD_TYPE sx, COORD_TYPE sy, COORD_TYPE ex, COORD_TYPE ey,

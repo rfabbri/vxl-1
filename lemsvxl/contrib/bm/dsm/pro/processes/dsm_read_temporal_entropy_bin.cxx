@@ -6,9 +6,9 @@
 
 #include<dsm/dsm_ncn_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //Process takes 2 inputs, the binary file path and the dsm_ncn_sptr from the data base
 //and reads the temporal entropy into the desired sptr.
@@ -26,8 +26,8 @@ bool dsm_read_temporal_entropy_bin_process_cons(bprb_func_process& pro)
 	//set input/output types
 	using namespace dsm_read_temporal_entropy_bin_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	input_types_[0] = "vcl_string";
+	std::vector<std::string> input_types_(n_inputs_);
+	input_types_[0] = vcl_string";
 	input_types_[1] = "dsm_ncn_sptr";
 
 	if( !pro.set_input_types(input_types_) )
@@ -42,16 +42,16 @@ bool dsm_read_temporal_entropy_bin_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_read_temporal_entropy_bin_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_read_temporal_entropy_bin_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 	dsm_ncn_sptr ncn_sptr = pro.get_input<dsm_ncn_sptr>(i++);
 
-	vcl_cout << "Reading Temporal Entropy Binary File: " << filename << vcl_endl;
+	std::cout << "Reading Temporal Entropy Binary File: " << filename << std::endl;
 	ncn_sptr->load_entropy_bin(filename);
 
 	return true;

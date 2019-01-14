@@ -9,7 +9,7 @@
 
 void test_bioproj_io()
 {
-  vcl_cout << "---testing constructor---" << vcl_endl;
+  std::cout << "---testing constructor---" << std::endl;
   bioproj_io proj_io("G:\\newcast35um2\\newcast35um2_neg\\process\\newcastfragment35um2.scn", 
                      "G:\\newcast35um2\\newcast35um2_neg\\process\\newcast35um2_straighter_reg_box.bx3",
                      20.0, 46.8, 261.5, 345.712, vnl_int_2(590, 524), 0.9,
@@ -27,9 +27,9 @@ void test_bioproj_io()
   TEST("sigma r extent", proj_io.sigma_r_extent_, 10);
   TEST("sigma z extent", proj_io.sigma_z_extent_, 5);
 
-  vcl_cout << proj_io.scan_ << vcl_endl;
-  vcl_cout << proj_io.box_ << vcl_endl;
-  vcl_cout << proj_io.file_path_ << vcl_endl;
+  std::cout << proj_io.scan_ << std::endl;
+  std::cout << proj_io.box_ << std::endl;
+  std::cout << proj_io.file_path_ << std::endl;
 }
 
 TESTMAIN(test_bioproj_io);

@@ -45,8 +45,8 @@
 #include <vnl/vnl_file_matrix.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_utility.h>
-#include <vcl_cstdlib.h>
+#include <utility>
+#include <cstdlib>
 
 //: Convert an xshock_fragment and its corresponding graph's area into a 
 // vnl_vector to save to a file
@@ -63,43 +63,43 @@ bool dbsks_convert_from_vector(const vnl_vector<double >& x,
 // -----------------------------------------------------------------------------
 //: Convert all postscript files (typically with extension .ps) in "input_folder"
 // to .png format and save to "output_folder"
-bool dbsks_batch_ps_to_jpeg(const vcl_string& input_folder, const vcl_string& output_folder, 
-                        const vcl_string& ps_file_extension)
+bool dbsks_batch_ps_to_jpeg(const std::string& input_folder, const std::string& output_folder, 
+                        const std::string& ps_file_extension)
 {
   // set of ps files
-  vcl_string file_set = input_folder + "/*" + ps_file_extension;
+  std::string file_set = input_folder + "/*" + ps_file_extension;
   
 
-  vcl_cout << "iterating over the files: " << file_set << vcl_endl;
+  std::cout << "iterating over the files: " << file_set << std::endl;
   for (vul_file_iterator fi(file_set); fi; ++fi)
   {
-    vcl_cout << fi() << "\n";
+    std::cout << fi() << "\n";
     if (!vul_file::exists(fi()))
       continue;
     
     // 1. convert from PS to ppm
 
     // find the object name
-    vcl_string command1 = "C:\\cygwin\\bin\\pstopnm -portrait -xborder 0 -yborder 0 -ppm ";
-    command1 = command1 + "\"" + vcl_string(fi()) + "\"" ;
-    vcl_cout << "\tcommand: " << command1 << vcl_endl;
-    vcl_system(command1.c_str());
+    std::string command1 = "C:\\cygwin\\bin\\pstopnm -portrait -xborder 0 -yborder 0 -ppm ";
+    command1 = command1 + "\"" + std::string(fi()) + "\"" ;
+    std::cout << "\tcommand: " << command1 << std::endl;
+    std::system(command1.c_str());
 
     // 2. convert from ppm to png
-    vcl_string pnm_file = "\"" + vul_file::strip_extension(fi()) + "001.ppm" + "\"";
-    vcl_string jpeg_file = "\"" + output_folder + "\\" +
+    std::string pnm_file = "\"" + vul_file::strip_extension(fi()) + "001.ppm" + "\"";
+    std::string jpeg_file = "\"" + output_folder + "\\" +
       vul_file::strip_extension(vul_file::strip_directory(fi())) + ".jpg" + "\"";
-    vcl_string command2 = "C:\\cygwin\\bin\\pnmtojpeg ";
+    std::string command2 = "C:\\cygwin\\bin\\pnmtojpeg ";
     command2 = command2 +  pnm_file + " > " + jpeg_file;
-    vcl_cout << "\tcommand: " << command2 << vcl_endl;
-    vcl_system(command2.c_str());
+    std::cout << "\tcommand: " << command2 << std::endl;
+    std::system(command2.c_str());
 
     // 3. Delete the ppm file
-    vcl_cout << "\tDelete: " << pnm_file << vcl_endl;
+    std::cout << "\tDelete: " << pnm_file << std::endl;
     vul_file::delete_file_glob(pnm_file.c_str());
   }
 
-  vcl_cout << " done!\n";
+  std::cout << " done!\n";
   return true;
 }
 
@@ -107,19 +107,19 @@ bool dbsks_batch_ps_to_jpeg(const vcl_string& input_folder, const vcl_string& ou
 
 // -----------------------------------------------------------------------------
 //: Create a summary XML file from
-bool dbsks_create_shapematch_summary_xml(const vcl_string& output_xml,
-                                         const vcl_string& input_folder,
-                                         const vcl_string& image_list,
-                                         const vcl_string& shapematch_extension
+bool dbsks_create_shapematch_summary_xml(const std::string& output_xml,
+                                         const std::string& input_folder,
+                                         const std::string& image_list,
+                                         const std::string& shapematch_extension
                                          )
 {
   // get the image list
-  vcl_vector<vcl_string > image_names;
+  std::vector<std::string > image_names;
   buld_parse_string_list(image_list, image_names);
   for (unsigned i =0; i < image_names.size(); ++i)
   {
-    vcl_string image_name = image_names[i];
-    vcl_string shapematch_file = input_folder + "/" + 
+    std::string image_name = image_names[i];
+    std::string shapematch_file = input_folder + "/" + 
       vul_file::strip_extension(image_name) + shapematch_extension;
 
     // create an xml element from this shapematch file
@@ -133,32 +133,32 @@ bool dbsks_create_shapematch_summary_xml(const vcl_string& output_xml,
 
 // -----------------------------------------------------------------------------
 //: Extract properties of an extrinsic fragment in a list of extrinsic shock graphs
-bool dbsks_extract_xfrag_geom(const vcl_string& xshock_folder,
-                              const vcl_string& xshock_list_file,
+bool dbsks_extract_xfrag_geom(const std::string& xshock_folder,
+                              const std::string& xshock_list_file,
                               unsigned xedge_id,
-                              const vcl_string& output_file)
+                              const std::string& output_file)
 {
   // parse input file
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Process data
   // Go thru each shock graph and extract geometry of the fragment of interest
-  vcl_vector<vnl_vector<double > > frag_geom_list;
+  std::vector<vnl_vector<double > > frag_geom_list;
   for (unsigned index =0; index < xml_filenames.size(); ++index)
   {
     // Load the shock graph 
-    vcl_string xml_file = xshock_folder + "/" + xml_filenames[index];
+    std::string xml_file = xshock_folder + "/" + xml_filenames[index];
     dbsksp_xshock_graph_sptr xg = 0;
 
-    vcl_cout << "Loading xshock_graph XML file: " << xml_file << "...";
+    std::cout << "Loading xshock_graph XML file: " << xml_file << "...";
     if ( x_read(xml_file, xg) )
     {
-      vcl_cout << "Succeeded.\n";
+      std::cout << "Succeeded.\n";
     }
     else
     {
-      vcl_cout << "Failed.\n";
+      std::cout << "Failed.\n";
       continue;
     }
 
@@ -183,10 +183,10 @@ bool dbsks_extract_xfrag_geom(const vcl_string& xshock_folder,
   // Writing data to output file
 
   // open output file for writing
-  vcl_ofstream os(output_file.c_str(), vcl_ios_out);
+  std::ofstream os(output_file.c_str(), std::ios::out);
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
+    std::cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
     return false;
   }
 
@@ -251,11 +251,11 @@ bool dbsks_convert_from_vector(const vnl_vector<double >& in,
 
 // -----------------------------------------------------------------------------
 //: Extract positive examples of boundary histogram of gradient of extrinsic shock graphs
-bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
-                                    const vcl_string& image_folder,
-                                    const vcl_string& xshock_list_file,
+bool dbsks_extract_positive_xfrag_bhog(const std::string& xshock_folder,
+                                    const std::string& image_folder,
+                                    const std::string& xshock_list_file,
                                     unsigned xedge_id,
-                                    const vcl_string& output_file)
+                                    const std::string& output_file)
 {
   // random number generator
   vnl_random rand_engine(1010293);
@@ -265,28 +265,28 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
   int num_bins = 9;
 
   // place holder for the feature vectors
-  vcl_vector<vnl_vector<double > > bhog_list;
+  std::vector<vnl_vector<double > > bhog_list;
 
   // parse input file
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // collect the fragments and their repsected scales
-  vcl_vector<dbsksp_xshock_fragment > xfrag_list;
-  vcl_vector<double > xfrag_scales;
-  vcl_vector<vcl_string > image_file_list;
+  std::vector<dbsksp_xshock_fragment > xfrag_list;
+  std::vector<double > xfrag_scales;
+  std::vector<std::string > image_file_list;
   for (unsigned i_file =0; i_file < xml_filenames.size(); ++i_file)
   {
     // Load the shock graph 
-    vcl_string xml_file = xshock_folder + "/" + xml_filenames[i_file];
+    std::string xml_file = xshock_folder + "/" + xml_filenames[i_file];
     dbsksp_xshock_graph_sptr xg = 0;
     if ( x_read(xml_file, xg) )
     {
-      vcl_cout << "Loaded xshock_graph XML file: " << xml_file << ".\n";
+      std::cout << "Loaded xshock_graph XML file: " << xml_file << ".\n";
     }
     else
     {
-      vcl_cout << "Couldn't load xshock_graph XML file: " << xml_file << ".\n";
+      std::cout << "Couldn't load xshock_graph XML file: " << xml_file << ".\n";
       continue;
     }
 
@@ -299,10 +299,10 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
     dbsksp_xshock_node_descriptor xdesc1 = xv1->descriptor(xe)->opposite_xnode();
 
     xfrag_list.push_back(dbsksp_xshock_fragment(xdesc0, xdesc1));
-    xfrag_scales.push_back(vcl_sqrt(xg->area()));
+    xfrag_scales.push_back(std::sqrt(xg->area()));
 
     // determine the corresponding image file name
-    vcl_string image_file = image_folder + "/" + 
+    std::string image_file = image_folder + "/" + 
       vul_file::strip_extension(xml_filenames[i_file]) + ".jpg";
 
     image_file_list.push_back(image_file);
@@ -313,9 +313,9 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
   double sum_logscale = 0;
   for (unsigned i =0; i < xfrag_scales.size(); ++i)
   {
-    sum_logscale += vcl_log(xfrag_scales[i]);
+    sum_logscale += std::log(xfrag_scales[i]);
   }
-  double avg_scale = vcl_exp(sum_logscale / xfrag_scales.size());
+  double avg_scale = std::exp(sum_logscale / xfrag_scales.size());
   
 
   // go thru each xfrag and collect boundary HOG
@@ -325,11 +325,11 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
     double xfrag_scale = xfrag_scales[i_frag];
     
     // load the image
-    vcl_string image_file = image_file_list[i_frag]; 
+    std::string image_file = image_file_list[i_frag]; 
     vil_image_view<double > image_view = *vil_convert_cast(double(), vil_load(image_file.c_str()));
     if (image_view.nplanes() != 3)
     {
-      vcl_cout << "ERROR: expected a color image but didn't get it.\n";
+      std::cout << "ERROR: expected a color image but didn't get it.\n";
       return false;
     }
 
@@ -384,7 +384,7 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
       vnl_vector<double > bhog;
       if (!dbsks_hog_boundary(bhog, Gx, Gy, xfrag, num_segments_per_bnd_side, patch_width, num_bins))
       {
-        vcl_cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
+        std::cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
         continue;
       }
 
@@ -394,10 +394,10 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
 
 
   // open output file for writing
-  vcl_ofstream os(output_file.c_str(), vcl_ios_out);
+  std::ofstream os(output_file.c_str(), std::ios::out);
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
+    std::cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
     return false;
   }
 
@@ -419,12 +419,12 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
 
 
 //: Extract negative examples of boundary histogram of gradient of extrinsic shock graphs
-bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
-                              const vcl_string& xshock_list_file,
+bool dbsks_extract_negative_xfrag_bhog(const std::string& xshock_folder,
+                              const std::string& xshock_list_file,
                               unsigned xedge_id,
-                              const vcl_string& image_folder,
-                              const vcl_string& image_list_file,
-                              const vcl_string& output_file)
+                              const std::string& image_folder,
+                              const std::string& image_list_file,
+                              const std::string& output_file)
 {
   int num_segments = 4;
   double patch_width = 8; // width the arc patch
@@ -432,24 +432,24 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
   vnl_random rand_engine(9667566);
 
   // parse input file
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Extract a list of fragment from list of shock files
-  vcl_vector<dbsksp_xshock_fragment > xfrag_list;
+  std::vector<dbsksp_xshock_fragment > xfrag_list;
   for (unsigned i_file =0; i_file < xml_filenames.size(); ++i_file)
   {
     // Load the shock graph 
-    vcl_string xml_file = xshock_folder + "/" + xml_filenames[i_file];
-    vcl_cout << "Loading xshock_graph XML file: " << xml_file << " ...";
+    std::string xml_file = xshock_folder + "/" + xml_filenames[i_file];
+    std::cout << "Loading xshock_graph XML file: " << xml_file << " ...";
     dbsksp_xshock_graph_sptr xg = 0;
     if ( x_read(xml_file, xg) ) 
     {
-      vcl_cout << "Suceeded.\n";
+      std::cout << "Suceeded.\n";
     }
     else 
     {
-      vcl_cout << "Failed.\n";
+      std::cout << "Failed.\n";
       continue;
     }
 
@@ -466,29 +466,29 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
 
     
 
-  vcl_vector<vnl_vector<double > > bhog_list;
+  std::vector<vnl_vector<double > > bhog_list;
 
   // For each negative image, extract BHOG corresponding to all extracted xfragments
   // To handling different image sizes, the fragments are located at the center of image
   // parse input file
-  vcl_vector<vcl_string > image_filenames;
+  std::vector<std::string > image_filenames;
   buld_parse_string_list(image_list_file, image_filenames);
   for (unsigned i_file =0; i_file < image_filenames.size(); ++i_file)
   {
     // load the image
-    vcl_string image_file = image_folder + "/" + 
+    std::string image_file = image_folder + "/" + 
       vul_file::strip_extension(image_filenames[i_file]) + ".jpg";
 
-    vcl_cout << "Loading image: " << image_file << " ... ";
+    std::cout << "Loading image: " << image_file << " ... ";
     vil_image_view<double > image_src = *vil_convert_cast(double(), vil_load(image_file.c_str()));
 
     if (!image_src)
     {
-      vcl_cout << "Failed.\n";
+      std::cout << "Failed.\n";
     }
     else
     {
-      vcl_cout << "Succeeded.\n";
+      std::cout << "Succeeded.\n";
     }
 
     // Compute gradient of color image by taking strongest component of the three color planes
@@ -545,7 +545,7 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
       vgl_box_2d<double > bbox = xfrag.compute_bounding_box();
 
       // compute a list of locations to put the fragment at
-      vcl_vector<vgl_vector_2d<double > > frag_loc_list;
+      std::vector<vgl_vector_2d<double > > frag_loc_list;
 
       // use random translation
       {
@@ -579,7 +579,7 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
         vnl_vector<double > bhog;
         if (!dbsks_hog_boundary(bhog, Gx, Gy, xfrag0, 4, 8, 9))
         {
-          vcl_cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
+          std::cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
           continue;
         }
 
@@ -625,18 +625,18 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
     } // i_frag
     
     // save the image
-    vcl_string output_folder = vul_file::dirname(output_file);
-    vcl_string out_image_file = output_folder + "/" + 
+    std::string output_folder = vul_file::dirname(output_file);
+    std::string out_image_file = output_folder + "/" + 
       vul_file::strip_extension(image_filenames[i_file]) + "+fragments.png";
     vil_save(frags_on_image, out_image_file.c_str());
   } // i_file
 
 
   // open output file for writing
-  vcl_ofstream os(output_file.c_str(), vcl_ios_out);
+  std::ofstream os(output_file.c_str(), std::ios::out);
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
+    std::cout << " ERROR: Couldn't open for writing file: " << output_file << ".\n";
     return false;
   }
 
@@ -653,46 +653,46 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
 
 // -----------------------------------------------------------------------------
 //: Use a shape fragment's BHOG model and apply it to an image to detect the positive fragments
-bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_model_file,
-                                         const vcl_string& xfrag_geom_file,
-                                         const vcl_string& image_folder,
-                                         const vcl_string& image_list_file,
-                                         const vcl_string& output_file)
+bool dbsks_detect_xfrag_using_bhog_model(const std::string& libsvm_xfrag_bhog_model_file,
+                                         const std::string& xfrag_geom_file,
+                                         const std::string& image_folder,
+                                         const std::string& image_list_file,
+                                         const std::string& output_file)
 {
   // load svm model
   dbsks_xfrag_bhog_model bhog_model;
   if ( !bhog_model.load_from_file(libsvm_xfrag_bhog_model_file))
   {
-    vcl_cout << "ERROR: couldn't load LIBSVM model file: " << libsvm_xfrag_bhog_model_file << "\n";
+    std::cout << "ERROR: couldn't load LIBSVM model file: " << libsvm_xfrag_bhog_model_file << "\n";
     return false;
   }
   
   // Load fragment geometry file
-  vcl_vector<dbsksp_xshock_fragment > xfrag_list;
+  std::vector<dbsksp_xshock_fragment > xfrag_list;
   vnl_file_matrix<double > geom_data(xfrag_geom_file.c_str());
   if (!geom_data)
   {
-    vcl_cout << "ERROR: couldn't load xfrag_geom_file: " << xfrag_geom_file << "\n";
+    std::cout << "ERROR: couldn't load xfrag_geom_file: " << xfrag_geom_file << "\n";
   }
 
 
   //vnl_random rand_engine(1010892);
-  //vcl_vector<vnl_vector<double > > pos_xfrags;
+  //std::vector<vnl_vector<double > > pos_xfrags;
 
   // Parse the image names and process each imag separately
-  vcl_vector<vcl_string > image_filenames;
+  std::vector<std::string > image_filenames;
   buld_parse_string_list(image_list_file, image_filenames);
   //for (unsigned i_file =0; i_file < image_filenames.size(); ++i_file)
   for (unsigned i_file =0; i_file < 1; ++i_file)
   {
     // load the image
-    vcl_string image_file = image_folder + "/" + image_filenames[i_file];
+    std::string image_file = image_folder + "/" + image_filenames[i_file];
 
-    vcl_cout << "Loading image: " << image_file << " ... ";
+    std::cout << "Loading image: " << image_file << " ... ";
     vil_image_view<double > image_src = *vil_convert_cast(double(), vil_load(image_file.c_str()));
     
-    if (!image_src) vcl_cout << "Failed.\n";
-    else vcl_cout << "Succeeded.\n";
+    if (!image_src) std::cout << "Failed.\n";
+    else std::cout << "Succeeded.\n";
 
     // Compute gradient of color image by taking strongest component of the three color planes
     vil_image_view<double > Gx, Gy;
@@ -704,14 +704,14 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 
     // All bhog for a fragment is saved in a long vector
     int num_bhog_per_pos_xfrag = 9;
-    vcl_vector<vnl_vector<double > > bhog_list;
-    vcl_vector<vnl_vector<double > > xfrag_list;
+    std::vector<vnl_vector<double > > bhog_list;
+    std::vector<vnl_vector<double > > xfrag_list;
 
     //int count = 0;
 
     for (unsigned i_frag =0; i_frag < geom_data.rows(); ++i_frag)
     {
-      vcl_cout << "i_frag = " << i_frag << vcl_endl;
+      std::cout << "i_frag = " << i_frag << std::endl;
 
       dbsksp_xshock_fragment orig_xfrag;
       double graph_area;
@@ -769,7 +769,7 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
             bhog_list.push_back(vnl_vector<double >());
             if (!dbsks_hog_boundary(bhog_list.back(), Gx, Gy, xfrag, num_segments_per_bnd_side, patch_width, num_bins))
             {
-              vcl_cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
+              std::cerr << "ERROR: failed to compute HOG of fragment boundary.\n";
               bhog_list.pop_back();
               continue;
             }
@@ -828,23 +828,23 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
     } // i_frag
 
     // Compute all the score at the same time
-    vcl_vector<double > score_list;
+    std::vector<double > score_list;
     bhog_model.compute_score(bhog_list, score_list);
     
     // Print out results
-    vcl_string output_basename = output_file + "+" +
+    std::string output_basename = output_file + "+" +
       vul_file::strip_extension(image_filenames[i_file]);
 
     // print the bhog matrix to file
-    vcl_string bhog_file = output_basename + ".bhog";
+    std::string bhog_file = output_basename + ".bhog";
     dbsks_write_to_file(bhog_file, bhog_list);
 
     // print the fragment geometry to file
-    vcl_string xfrag_file = output_basename + ".xfrag";
+    std::string xfrag_file = output_basename + ".xfrag";
     dbsks_write_to_file(xfrag_file, xfrag_list);
 
     // print the prediction to a file
-    vcl_string predict_file = output_basename + ".predict";
+    std::string predict_file = output_basename + ".predict";
     dbsks_write_to_file(predict_file, score_list);
   } // i_file
 
@@ -857,17 +857,17 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 
 //// -----------------------------------------------------------------------------
 ////: Extract OCM cost
-//bool dbsks_extract_xgraph_gray_ocm_cost(const vcl_string& image_list_file,
-//                                   const vcl_string& xshock_folder,
-//                                   const vcl_string& xshock_extension,
-//                                   const vcl_string& image_folder,
-//                                   const vcl_string& image_extension,
-//                                   const vcl_string& edgemap_folder,
-//                                   const vcl_string& edgemap_extension,
+//bool dbsks_extract_xgraph_gray_ocm_cost(const std::string& image_list_file,
+//                                   const std::string& xshock_folder,
+//                                   const std::string& xshock_extension,
+//                                   const std::string& image_folder,
+//                                   const std::string& image_extension,
+//                                   const std::string& edgemap_folder,
+//                                   const std::string& edgemap_extension,
 //                                   int root_vid, 
 //                                   int major_child_eid,
 //                                   float ocm_tol_near_zero,
-//                                   const vcl_string& output_file)
+//                                   const std::string& output_file)
 //{
 //  // parameters
 //  float ocm_edge_threshold = 15;
@@ -881,74 +881,74 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //
 //
 //  // >>> parse input file containing list of xshock graphs
-//  vcl_vector<vcl_string > image_filenames;
+//  std::vector<std::string > image_filenames;
 //  if (!buld_parse_string_list(image_list_file, image_filenames))
 //  {
-//    vcl_cout << "ERROR: couldn't load image list file:" << image_list_file << vcl_endl;
+//    std::cout << "ERROR: couldn't load image list file:" << image_list_file << std::endl;
 //    return false;
 //  }
 //
 //  // Place holder for collected cost - each vector element is ocm cost of a xgraph
-//  vcl_vector<vnl_vector<float > > list_ocm_cost;
+//  std::vector<vnl_vector<float > > list_ocm_cost;
 //
 //  for (unsigned index =0; index < image_filenames.size(); ++index)
 //  {
-//    vcl_string object_name = vul_file::strip_extension(image_filenames[index]);
+//    std::string object_name = vul_file::strip_extension(image_filenames[index]);
 //
 //    //////////////////////////////////////////////////////////////////////////////
 //    // Load the shock graph 
-//    vcl_string xgraph_file = xshock_folder + "/" + object_name + xshock_extension;
+//    std::string xgraph_file = xshock_folder + "/" + object_name + xshock_extension;
 //    dbsksp_xshock_graph_sptr xgraph = 0;
 //
-//    vcl_cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
+//    std::cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
 //    if ( x_read(xgraph_file, xgraph) )
 //    {
-//      vcl_cout << "Succeeded.\n";
+//      std::cout << "Succeeded.\n";
 //      xgraph->compute_vertex_depths(root_vid);
 //    }
 //    else
 //    {
-//      vcl_cout << "Failed.\n";
+//      std::cout << "Failed.\n";
 //      continue;
 //    }
 //
 //    //////////////////////////////////////////////////////////////////////////////
 //    // Load the image
-//    vcl_string image_file = image_folder +"/"+ object_name + image_extension;
-//    vcl_cout << "Loading image file: " << image_file << "...";
+//    std::string image_file = image_folder +"/"+ object_name + image_extension;
+//    std::cout << "Loading image file: " << image_file << "...";
 //
 //    vil_image_resource_sptr image_resource = vil_load_image_resource(image_file.c_str());
 //    if (image_resource)
 //    {
-//      vcl_cout << " Succeeded.\n";
+//      std::cout << " Succeeded.\n";
 //    }
 //    else
 //    {
-//      vcl_cout << " Failed.\n";
+//      std::cout << " Failed.\n";
 //      continue;
 //    }
 //    vil_image_view<float > image_view = *vil_convert_cast(float(), image_resource->get_view());
 //
 //    //////////////////////////////////////////////////////////////////////////////
 //    // Load the edgemap
-//    vcl_string edgemap_file = edgemap_folder + "/" + object_name + edgemap_extension;
-//    vcl_cout << "Loading edgemap file: " << image_file << "...";
+//    std::string edgemap_file = edgemap_folder + "/" + object_name + edgemap_extension;
+//    std::cout << "Loading edgemap file: " << image_file << "...";
 //
 //    vil_image_resource_sptr edgemap_resource = vil_load_image_resource(edgemap_file.c_str());
 //    if (edgemap_resource)
 //    {
-//      vcl_cout << " Succeeded.\n";
+//      std::cout << " Succeeded.\n";
 //    }
 //    else
 //    {
-//      vcl_cout << " Failed.\n";
+//      std::cout << " Failed.\n";
 //      continue;
 //    }
 //    vil_image_view<float > edgemap_view = *vil_convert_cast(float(), edgemap_resource->get_view());
 //
 //    //////////////////////////////////////////////////////////////////////////////
 //    // Collect OCM cost for the shock graph
-//    vcl_cout << "Prepare gray-OCM cost grid: ...";
+//    std::cout << "Prepare gray-OCM cost grid: ...";
 //
 //    dbsks_gray_ocm gray_ocm;
 //    gray_ocm.set_image(image_view);
@@ -956,10 +956,10 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //    gray_ocm.set_lambda(ocm_lambda);
 //    gray_ocm.set_ocm_params(ocm_distance_threshold, ocm_tol_near_zero, nchannel);
 //    gray_ocm.compute();
-//    vcl_cout << "Done." << vcl_endl;
+//    std::cout << "Done." << std::endl;
 //
 //    //////////////////////////////////////////////////////////////////////////////
-//    vcl_cout << "\nConstructing a biarc sampler ...";
+//    std::cout << "\nConstructing a biarc sampler ...";
 //
 //    // Set parameters of biarc sampler
 //    dbsks_biarc_sampler_params bsp;
@@ -990,11 +990,11 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //    int num_bins = 36;
 //    biarc_sampler.set_sampling_params(num_bins, ds);
 //    biarc_sampler.compute_cache_sample_points();
-//    vcl_cout << "Done" << vcl_endl;
+//    std::cout << "Done" << std::endl;
 //
 //
 //    //////////////////////////////////////////////////////////////////////////////
-//    vcl_cout << "\nCompute gray-OCM cost of each fragment of the xgraph...";
+//    std::cout << "\nCompute gray-OCM cost of each fragment of the xgraph...";
 //
 //    // create a record
 //    list_ocm_cost.push_back(vnl_vector<float >());
@@ -1002,7 +1002,7 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //    ocm_cost.set_size(xgraph->number_of_edges()*2);
 //    vnl_vector<float >::iterator ocm_iter = ocm_cost.begin();
 //
-//    vcl_vector<int > x_vec, y_vec, angle_vec;
+//    std::vector<int > x_vec, y_vec, angle_vec;
 //    for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit !=
 //      xgraph->edges_end(); ++eit)
 //    {
@@ -1038,8 +1038,8 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //  }
 //
 //  // Save the result to a file
-//  vcl_string gray_ocm_output_file = output_file + "_gray_ocm.txt";
-//  vcl_ofstream os(gray_ocm_output_file.c_str(), vcl_ios::out);
+//  std::string gray_ocm_output_file = output_file + "_gray_ocm.txt";
+//  std::ofstream os(gray_ocm_output_file.c_str(), std::ios::out);
 //  os << "#Gray-OCM cost\n"
 //    << "#tol_near_zero " << ocm_tol_near_zero << "\n"
 //    << "#edge_threshold " << ocm_edge_threshold << "\n"
@@ -1079,13 +1079,13 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 
 // -----------------------------------------------------------------------------
 //: Save a list of features to a file
-bool dbsks_write_to_file(const vcl_string& filename, const vcl_vector<vnl_vector<double > >& data)
+bool dbsks_write_to_file(const std::string& filename, const std::vector<vnl_vector<double > >& data)
 {
   // open output file for writing
-  vcl_ofstream os(filename.c_str(), vcl_ios_out);
+  std::ofstream os(filename.c_str(), std::ios::out);
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " << filename << "\n";
+    std::cout << " ERROR: Couldn't open for writing file: " << filename << "\n";
     return false;
   }
 
@@ -1104,13 +1104,13 @@ bool dbsks_write_to_file(const vcl_string& filename, const vcl_vector<vnl_vector
 
 
 //: Save a list of numbers to a file
-bool dbsks_write_to_file(const vcl_string& filename, const vcl_vector<double >& data)
+bool dbsks_write_to_file(const std::string& filename, const std::vector<double >& data)
 {
   // open output file for writing
-  vcl_ofstream os(filename.c_str(), vcl_ios_out);
+  std::ofstream os(filename.c_str(), std::ios::out);
   if (!os)
   {
-    vcl_cout << " ERROR: Couldn't open for writing file: " << filename << "\n";
+    std::cout << " ERROR: Couldn't open for writing file: " << filename << "\n";
     return false;
   }
 
@@ -1151,37 +1151,37 @@ bool dbsks_extend_giraffe_legs()
   //>> input data
 
   // original folder for giraffe model
-  vcl_string old_giraffe_xgraph_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/giraffes-xgraph";
+  std::string old_giraffe_xgraph_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/giraffes-xgraph";
   
   // new folder for giraffe model
-  vcl_string new_giraffe_xgraph_folder = "D:/vision/data/ETHZ-shape/giraffe-xgraph-extended-legs";
+  std::string new_giraffe_xgraph_folder = "D:/vision/data/ETHZ-shape/giraffe-xgraph-extended-legs";
 
   // list of xshock files
-  vcl_string xshock_list_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/list_giraffes_xml.txt";
+  std::string xshock_list_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/list_giraffes_xml.txt";
 
 
   //>> Process
 
   // parse input file
-  vcl_vector<vcl_string > xml_filenames;
+  std::vector<std::string > xml_filenames;
   buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Go thru each shock graph and add front and rear legs to it
-  vcl_vector<vnl_vector<double > > frag_geom_list;
+  std::vector<vnl_vector<double > > frag_geom_list;
   for (unsigned index =0; index < xml_filenames.size(); ++index)
   {
     // Load the shock graph 
-    vcl_string old_xml_file = old_giraffe_xgraph_folder + "/" + xml_filenames[index];
+    std::string old_xml_file = old_giraffe_xgraph_folder + "/" + xml_filenames[index];
     dbsksp_xshock_graph_sptr xgraph = 0;
 
-    vcl_cout << "Loading xshock_graph XML file: " << old_xml_file << "...";
+    std::cout << "Loading xshock_graph XML file: " << old_xml_file << "...";
     if ( x_read(old_xml_file, xgraph) )
     {
-      vcl_cout << "Succeeded.\n";
+      std::cout << "Succeeded.\n";
     }
     else
     {
-      vcl_cout << "Failed.\n";
+      std::cout << "Failed.\n";
       continue;
     }
 
@@ -1209,7 +1209,7 @@ bool dbsks_extend_giraffe_legs()
     xgraph->update_all_degree_1_nodes();
 
     // save new xgraph
-    vcl_string new_xml_file = new_giraffe_xgraph_folder + "/" + xml_filenames[index];
+    std::string new_xml_file = new_giraffe_xgraph_folder + "/" + xml_filenames[index];
     x_write(new_xml_file, xgraph);
   }
   return true;
@@ -1238,29 +1238,29 @@ bool dbsks_extend_giraffe_legs()
 bool dbsks_recompute_detection_bbox()
 {
   // input data
-  vcl_string xml_header_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_header.txt";
-  vcl_string xml_footer_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_footer.txt";
+  std::string xml_header_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_header.txt";
+  std::string xml_footer_file = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments/xml_det_footer.txt";
 
-  //vcl_string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
-  //vcl_string orig_exp_folder = "D:/vision/projects/symseg/xshock/vox-output/2009-feb-23-0222pm-dragon";
-  vcl_string orig_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
+  //std::string orig_exp_folder = "V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-experiments";
+  //std::string orig_exp_folder = "D:/vision/projects/symseg/xshock/vox-output/2009-feb-23-0222pm-dragon";
+  std::string orig_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
   
-  vcl_string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
-  //vcl_string exp_name = "xgraph-scale-80";
-  //vcl_string exp_name = "exp_36-all_giraffes-v0_69-fixed-log0-I_15-len_10";
-  vcl_string exp_name = "exp_40-all_images-v0_69-fixed-log0-I_15-len_10";
+  std::string dest_exp_folder = "D:/vision/projects/symseg/xshock/xshock-experiments";
+  //std::string exp_name = "xgraph-scale-80";
+  //std::string exp_name = "exp_36-all_giraffes-v0_69-fixed-log0-I_15-len_10";
+  std::string exp_name = "exp_40-all_images-v0_69-fixed-log0-I_15-len_10";
 
   //////////////////////////////////////////////////////////////////////////////
 
   //>> some announcement
-  vcl_cout << "\n>> Original experiment folder = " << orig_exp_folder << vcl_endl;
-  vcl_cout << "\n>> Destination experiment folder = " << dest_exp_folder << vcl_endl;
-  vcl_cout << "\n>> Experiment name = " << exp_name << vcl_endl;
-  vcl_cout << "\n-------------------------------------------------------------\n\n";
+  std::cout << "\n>> Original experiment folder = " << orig_exp_folder << std::endl;
+  std::cout << "\n>> Destination experiment folder = " << dest_exp_folder << std::endl;
+  std::cout << "\n>> Experiment name = " << exp_name << std::endl;
+  std::cout << "\n-------------------------------------------------------------\n\n";
 
   //>> Create folder for output, if necessary
-  vcl_string orig_exp_path = orig_exp_folder + "/" + exp_name;
-  vcl_string dest_exp_path = dest_exp_folder + "/" + exp_name;
+  std::string orig_exp_path = orig_exp_folder + "/" + exp_name;
+  std::string dest_exp_path = dest_exp_folder + "/" + exp_name;
 
   if (!vul_file::is_directory(dest_exp_path))
   {
@@ -1269,45 +1269,45 @@ bool dbsks_recompute_detection_bbox()
 
   // process each file in original experiment folder
   
-  vcl_vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
+  std::vector<dbsks_xshock_det_record_sptr > all_xshock_dets;
   for (vul_file_iterator fn= (orig_exp_path + "/xml_det_record+*"); fn; ++fn) 
   {
-    vcl_string xml_record_file = fn();
-    vcl_cout << "\n>> Processing xml_record_file = " << xml_record_file << vcl_endl;
+    std::string xml_record_file = fn();
+    std::cout << "\n>> Processing xml_record_file = " << xml_record_file << std::endl;
 
     // Add a header and footer to this xml file to make it complete. Output to a temp file
-    vcl_string temp_xml_file = orig_exp_folder + "/" + "temp_det.xml";
-    vcl_ofstream os(temp_xml_file.c_str());
+    std::string temp_xml_file = orig_exp_folder + "/" + "temp_det.xml";
+    std::ofstream os(temp_xml_file.c_str());
     dbsks_append_text_file(os, xml_header_file);
     dbsks_append_text_file(os, xml_record_file);
     dbsks_append_text_file(os, xml_footer_file);
     os.close();
 
     // Load the temp file to get the list of detection
-    vcl_vector<dbsks_xshock_det_record_sptr > xshock_det_list;
+    std::vector<dbsks_xshock_det_record_sptr > xshock_det_list;
     x_read(temp_xml_file, xshock_det_list);
     vul_file::delete_file_glob(temp_xml_file.c_str());
 
     all_xshock_dets.insert(all_xshock_dets.end(), xshock_det_list.begin(), xshock_det_list.end());
 
     //// write the detection record back out
-    //vcl_string output_xml_record_file = dest_exp_path + "/" +
+    //std::string output_xml_record_file = dest_exp_path + "/" +
     //  vul_file::strip_directory(xml_record_file);
   }
 
-  vcl_cout << "\n>> Recomputing bounding boxes of xgraph detections ...\n";
+  std::cout << "\n>> Recomputing bounding boxes of xgraph detections ...\n";
   // Update the bounding boxes and scale in each detection record
   for (unsigned m =0; m < all_xshock_dets.size(); ++m)
   {
-    vcl_cout << " " << m;
+    std::cout << " " << m;
     dbsks_xshock_det_record_sptr det_record = all_xshock_dets[m];
 
     // filename of the xgraph xml
-    vcl_string xgraph_filename = "";
+    std::string xgraph_filename = "";
     det_record->get_value("xgraph_xml", xgraph_filename);
 
     // full path to the xgraph file
-    vcl_string xgraph_file = orig_exp_path + "/" + xgraph_filename;
+    std::string xgraph_file = orig_exp_path + "/" + xgraph_filename;
 
     // Load the xgraph
     dbsksp_xshock_graph_sptr xgraph = 0;
@@ -1315,11 +1315,11 @@ bool dbsks_recompute_detection_bbox()
 
     if (!xgraph)
     {
-      vcl_cout << "\nERROR: couldn't load xgraph file " << xgraph_file << vcl_endl;
+      std::cout << "\nERROR: couldn't load xgraph file " << xgraph_file << std::endl;
       continue;
     }
 
-    double xgraph_scale = vcl_sqrt(xgraph->area());
+    double xgraph_scale = std::sqrt(xgraph->area());
     vsol_box_2d_sptr bbox = xgraph->bounding_box();
     
     det_record->set_value("xgraph_scale", xgraph_scale);
@@ -1328,21 +1328,21 @@ bool dbsks_recompute_detection_bbox()
     det_record->set_value("bbox_xmax", bbox->get_max_x());
     det_record->set_value("bbox_ymax", bbox->get_max_y());  
   }
-  vcl_cout << ".Done.\n";
+  std::cout << ".Done.\n";
 
   
 
   // output file
-  vcl_string output_xml_file = dest_exp_path + "/" + "xml_det.xml";
+  std::string output_xml_file = dest_exp_path + "/" + "xml_det.xml";
 
-  vcl_cout << "\n>> Saving final detection-record file to " << output_xml_file << " ... ";
+  std::cout << "\n>> Saving final detection-record file to " << output_xml_file << " ... ";
   if (x_write(output_xml_file, all_xshock_dets))
   {
-    vcl_cout << "Succeeded.\n";
+    std::cout << "Succeeded.\n";
   }
   else
   {
-    vcl_cout << "Failed.\n";
+    std::cout << "Failed.\n";
   }
   
   return true;

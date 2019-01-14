@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <dbinfo/pro/dbinfo_osl_storage.h>
 #include <dbinfo/dbinfo_osl.h>
@@ -73,9 +73,9 @@ dbinfo_osl_storage::b_read(vsl_b_istream &is)
     break;
   }
   default:
-    vcl_cerr << "I/O ERROR: dbinfo_osl_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbinfo_osl_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

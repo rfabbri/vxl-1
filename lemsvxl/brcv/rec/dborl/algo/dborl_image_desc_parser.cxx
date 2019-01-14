@@ -6,12 +6,12 @@
 #include "dborl_image_desc_parser.h"
 
 //#include <stdio.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <cstring>
+#include <cstdio>
+#include <cassert>
+#include <iostream>
+#include <sstream>
 
 #include <borld/borld_image_description.h>
 #include <borld/borld_image_bbox_description.h>
@@ -29,20 +29,20 @@
 template <typename T>
 void convert(const char* t, T& d)
 {
-  vcl_stringstream strm(t);
+  std::stringstream strm(t);
 
   strm >> d;
 
 }
 
 void 
-dborl_image_desc_parser::cdataHandler(vcl_string name, vcl_string data)
+dborl_image_desc_parser::cdataHandler(std::string name, std::string data)
 {
   // create a vector of tokens out of cdata and convert them later
-  vcl_vector<vcl_string> tokens;
+  std::vector<std::string> tokens;
   int length = data.size();
   const char * str = data.c_str();
-  vcl_string token = "";
+  std::string token = "";
   for (int i=0; i<length; i++) {
     if ((str[i] == ' ') || (str[i] == '\n')) {
       if (token.size() > 0) {
@@ -58,15 +58,15 @@ dborl_image_desc_parser::cdataHandler(vcl_string name, vcl_string data)
     tokens.push_back(token);
       
   // read the filter responses
-  //vcl_cout << "\t\tname:" << name << ":data:" << data << ":tokens:";
+  //std::cout << "\t\tname:" << name << ":data:" << data << ":tokens:";
   //for (unsigned i = 0; i < tokens.size(); i++)
-  //  vcl_cout << tokens[i] << ":";
-  //vcl_cout << "\n";
+  //  std::cout << tokens[i] << ":";
+  //std::cout << "\n";
 
   // read the filter responses
   float resp;
   if (name.compare(polygon_tag_) == 0) {
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     
     //: assuming <polygon>x y x y x y x y</polygon>  --> so each token is either x or y  (similar to a .con file)
     vsol_point_2d_sptr current = new vsol_point_2d();
@@ -111,24 +111,24 @@ dborl_image_desc_parser::cdataHandler(vcl_string name, vcl_string data)
 void 
 dborl_image_desc_parser::startElement(const char* name, const char** atts)
 {
-  //vcl_cout<< "element=" << name << vcl_endl; 
+  //std::cout<< "element=" << name << std::endl; 
 
   // our tags are category_tag_, instance_tag_, box_tag_, polygon_tag_
   // we do nothing when a new instance starts, 
-  if (vcl_strcmp(name, "type") == 0) {
+  if (std::strcmp(name, "type") == 0) {
 
     for (int i=0; atts[i]; i+=2) {
-      if (vcl_strcmp(atts[i], "name") == 0) {
-        if (!(vcl_strcmp(atts[i+1], "image") == 0))
-          vcl_cout << "WARNING: dborl_image_desc_parser expects attribute name: image, but the name is: " << atts[i+1] << vcl_endl;
+      if (std::strcmp(atts[i], "name") == 0) {
+        if (!(std::strcmp(atts[i+1], "image") == 0))
+          std::cout << "WARNING: dborl_image_desc_parser expects attribute name: image, but the name is: " << atts[i+1] << std::endl;
       }
     }
 
-  } else if (vcl_strcmp(name,category_tag_.c_str())== 0) {
+  } else if (std::strcmp(name,category_tag_.c_str())== 0) {
     current_cat_ = "";
-  } else if (vcl_strcmp(name,box_tag_.c_str())== 0) {
+  } else if (std::strcmp(name,box_tag_.c_str())== 0) {
     reset_box();
-  } else if (vcl_strcmp(name,polygon_tag_.c_str())== 0) {
+  } else if (std::strcmp(name,polygon_tag_.c_str())== 0) {
     reset_poly();
   }
   
@@ -140,10 +140,10 @@ dborl_image_desc_parser::startElement(const char* name, const char** atts)
 void 
 dborl_image_desc_parser::endElement(const char* name)
 {
-  //vcl_cout << "end element=" << name << vcl_endl;
+  //std::cout << "end element=" << name << std::endl;
   // our tags are category_tag_, instance_tag_, box_tag_, polygon_tag_
   // when an instance ends we add it to bbox description or polygon description
-  if (vcl_strcmp(name,instance_tag_.c_str())== 0) {
+  if (std::strcmp(name,instance_tag_.c_str())== 0) {
     cats_.push_back(current_cat_);  // save all the categories encountered
     if (current_box_) {
       if (!box_desc_) 
@@ -156,12 +156,12 @@ dborl_image_desc_parser::endElement(const char* name)
       poly_desc_->add_polygon(current_cat_, current_poly_);
     } 
 
-  } else if (vcl_strcmp(name,box_tag_.c_str())== 0) {
+  } else if (std::strcmp(name,box_tag_.c_str())== 0) {
       current_box_ = new vsol_box_2d();
       current_box_->add_point(current_minx_, current_miny_);
       current_box_->add_point(current_maxx_, current_maxy_);
 
-  } else if (vcl_strcmp(name,description_tag_.c_str())== 0) {
+  } else if (std::strcmp(name,description_tag_.c_str())== 0) {
     if (box_desc_)
       idesc_ = new borld_image_description(box_desc_);
     else if (poly_desc_)
@@ -189,12 +189,12 @@ void dborl_image_desc_parser::charData(const XML_Char* s, int len)
   cdata_.append(s, len);
 }
 
-borld_image_description_sptr borld_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser) 
+borld_image_description_sptr borld_image_description_parse(std::string fname, dborl_image_desc_parser& parser) 
 {
-  vcl_FILE *xmlFile;
+  std::FILE *xmlFile;
 
   if (fname.size() == 0){
-    vcl_cout << "File not specified" << vcl_endl;
+    std::cout << "File not specified" << std::endl;
     return 0;
   }
 
@@ -202,38 +202,38 @@ borld_image_description_sptr borld_image_description_parse(vcl_string fname, dbo
 
   //if ( (err = fopen_s(&xmlFile, fname.c_str(), "r") ) != 0 ) {
   //xmlFile = vcl_fopen_s(fname.c_str(), "r");
-  xmlFile = vcl_fopen(fname.c_str(), "r");
+  xmlFile = std::fopen(fname.c_str(), "r");
   if (xmlFile == NULL){
-    vcl_cout << fname << "-- error on opening" << vcl_endl;
+    std::cout << fname << "-- error on opening" << std::endl;
     return 0;
   }
 
   if (!parser.parseFile(xmlFile)) {
-     vcl_cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
-        parser.XML_GetCurrentLineNumber() << vcl_endl;
+     std::cout << XML_ErrorString(parser.XML_GetErrorCode()) << " at line " <<
+        parser.XML_GetCurrentLineNumber() << std::endl;
      return 0;
    }
-   //vcl_cout << "finished parsing!" << vcl_endl;
+   //std::cout << "finished parsing!" << std::endl;
 
   fclose(xmlFile);
   return parser.get_image_desc();
 }
 
-void parse_pascal_write_default_xml(vcl_string input_fname, vcl_string output_fname)
+void parse_pascal_write_default_xml(std::string input_fname, std::string output_fname)
 {
   dborl_image_desc_parser parser;
   parser.set_pascal_tags();
   borld_image_description_sptr id = borld_image_description_parse(input_fname, parser);
 
-  vcl_ofstream os;
-  os.open(output_fname.c_str(), vcl_ios_out);
+  std::ofstream os;
+  os.open(output_fname.c_str(), std::ios::out);
   id->write_xml(os);
   os.close();
 }
 
-bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string category, vcl_string output_fname)
+bool read_con_write_image_description_xml(std::string input_fname, std::string category, std::string output_fname)
 {
-  vcl_vector<vsol_point_2d_sptr > points;
+  std::vector<vsol_point_2d_sptr > points;
   bool is_closed;
   if (bsold_load_con_file(input_fname.c_str(), points, is_closed)) {
     vsol_polygon_2d_sptr poly = new vsol_polygon_2d(points);
@@ -241,8 +241,8 @@ bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string cat
     ip->add_polygon(category, poly);
     borld_image_description_sptr id = new borld_image_description(ip);
     
-    vcl_ofstream os;
-    os.open(output_fname.c_str(), vcl_ios_out);
+    std::ofstream os;
+    os.open(output_fname.c_str(), std::ios::out);
     id->write_xml(os);
     os.close();
     return true;

@@ -3,8 +3,8 @@
 
 #include "poly_observer.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_easy2D_tableau_sptr.h>
@@ -61,7 +61,7 @@ private:
   int num_meshes_;
 
   //obj_observable* find_selected_obs();
-  //vcl_string create_mesh_name();
+  //std::string create_mesh_name();
 };
 
 //: Create a smart-pointer to a vgui_easy2D_tableau tableau.

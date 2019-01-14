@@ -13,8 +13,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -31,7 +31,7 @@
 //: Constructor
 dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Sobel (1x3)");    //0
   gradient_operator_choices.push_back("Sobel (3x3)");    //1
   gradient_operator_choices.push_back("Gaussian");       //2
@@ -40,11 +40,11 @@ dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
   gradient_operator_choices.push_back("F-operator");     //5
   gradient_operator_choices.push_back("R-operator");     //6
 
-  vcl_vector<vcl_string> convolution_choices;
+  std::vector<std::string> convolution_choices;
   convolution_choices.push_back("2-D");            //0
   convolution_choices.push_back("1-D");            //1
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -56,7 +56,7 @@ dbdet_pb_edge_detector_process::dbdet_pb_edge_detector_process()
       !parameters()->add( "Subpixel Edges"  , "-bsubpix_edges" , true ) ||
       !parameters()->add( "Parabola Fit type"   , "-parabola_fit" , parabola_fit_type, 0)) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -76,7 +76,7 @@ dbdet_pb_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_pb_edge_detector_process::name()
 {
   return "Pb Edge Detector";
@@ -100,18 +100,18 @@ dbdet_pb_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_pb_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_pb_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_pb_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_pb_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -122,14 +122,14 @@ bool
 dbdet_pb_edge_detector_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbdet_pb_edge_detector_process::execute()" 
+        std::cout << "In dbdet_pb_edge_detector_process::execute()" 
                  << " not exactly one input images \n ";
         return false;
     }
     clear_output();
 
-    vcl_cout << "Pb edge detection...";
-    vcl_cout.flush();
+    std::cout << "Pb edge detection...";
+    std::cout.flush();
 
     // get image from the storage class
     vidpro1_image_storage_sptr frame_image;
@@ -152,10 +152,10 @@ dbdet_pb_edge_detector_process::execute()
     output_edgemap->set_edgemap(edge_map);
     output_data_[0].push_back(output_edgemap);
 
-    vcl_cout << "done!" << vcl_endl;
-    vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+    std::cout << "done!" << std::endl;
+    std::cout << "#edgels = " << edge_map->num_edgels() << std::endl;
 
-    vcl_cout.flush();
+    std::cout.flush();
 
     return true;
  

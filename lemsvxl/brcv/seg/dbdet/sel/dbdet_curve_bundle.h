@@ -14,11 +14,11 @@
 //\endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
+#include <utility>
 
 #include <vnl/vnl_math.h>
 
@@ -45,7 +45,7 @@ public:
   dbdet_curve_bundle();
 
   //: constructor 1" construct this curve bundle from a set of edgels
-  dbdet_curve_bundle(vcl_vector<dbdet_edgel*> edgels, dbdet_edgel* ref_edgel)=0;
+  dbdet_curve_bundle(std::vector<dbdet_edgel*> edgels, dbdet_edgel* ref_edgel)=0;
 
   //: constructor 2: construct a curve bundle from the intersection of two curve bundles
   dbdet_curve_bundle(dbdet_curve_bundle* cb1, dbdet_curve_bundle* cb2)=0;
@@ -68,7 +68,7 @@ public:
   dbdet_linear_curve_bundle(){};
 
   //: constructor 1" construct this curve bundle from a set of edgels
-  dbdet_linear_curve_bundle(vcl_vector<dbdet_edgel*> edgels){};
+  dbdet_linear_curve_bundle(std::vector<dbdet_edgel*> edgels){};
 
   //: constructor 2: construct a curve bundle from the intersection of two curve bundles
   dbdet_linear_curve_bundle(dbdet_curve_bundle* cb1, dbdet_curve_bundle* cb2){};
@@ -85,7 +85,7 @@ public:
   dbdet_CC_curve_bundle(){};
 
   //: constructor 1" construct this curve bundle from a set of edgels
-  dbdet_CC_curve_bundle(vcl_vector<dbdet_edgel*> edgels){};
+  dbdet_CC_curve_bundle(std::vector<dbdet_edgel*> edgels){};
 
   //: constructor 2: construct a curve bundle from the intersection of two curve bundles
   dbdet_CC_curve_bundle(dbdet_curve_bundle* cb1, dbdet_curve_bundle* cb2){};
@@ -103,7 +103,7 @@ public:
   dbdet_ES_curve_bundle(){};
 
   //: constructor 1" construct this curve bundle from a set of edgels
-  dbdet_ES_curve_bundle(vcl_vector<dbdet_edgel*> edgels){};
+  dbdet_ES_curve_bundle(std::vector<dbdet_edgel*> edgels){};
 
   //: constructor 2: construct a curve bundle from the intersection of two curve bundles
   dbdet_ES_curve_bundle(dbdet_curve_bundle* cb1, dbdet_curve_bundle* cb2){};

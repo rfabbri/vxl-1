@@ -9,7 +9,7 @@ smw_graph_gauss_f1::smw_graph_gauss_f1(float const& first_obs,
     node new_node(first_obs);
     
     //add the new node to the graph
-    graph_.insert(vcl_make_pair(new_node.id(),new_node));
+    graph_.insert(std::make_pair(new_node.id(),new_node));
 
     this->curr_node_ = new_node.id();
 
@@ -26,7 +26,7 @@ bool smw_graph_gauss_f1::add_node(float const& obs)
     unsigned new_node_id = new_node.id();
     
     //add the new node to the graph
-    graph_.insert(vcl_make_pair(new_node.id(),new_node));
+    graph_.insert(std::make_pair(new_node.id(),new_node));
    
     //fix the transition tree
     //add to each table the node in question
@@ -63,19 +63,19 @@ bool smw_graph_gauss_f1::add_node(float const& obs)
     //         if( first_time )
     //         {
     //             if( table_id == curr_node_ && time == time_on_curr_ )
-    //                 temp.insert(vcl_make_pair(time,1));
+    //                 temp.insert(std::make_pair(time,1));
     //             else
     //                 temp.insert_pair(time,0);
     //             transition_tree_[table_id].insert(
-    //                 vcl_make_pair(new_node_id,temp));
+    //                 std::make_pair(new_node_id,temp));
     //             first_time = false;
     //         }
     //         else
     //         {
     //             if( table_id == curr_node_ && time == time_on_curr_ )
-    //                 temp.insert(vcl_make_pair(time,1));
+    //                 temp.insert(std::make_pair(time,1));
     //             else
-    //                 temp.insert(vcl_make_pair(time,0));
+    //                 temp.insert(std::make_pair(time,0));
 
     //             transition_tree_[table_id][new_node_id].insert(temp);
                             

@@ -28,10 +28,10 @@ extern "C" {
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 
-#include <vcl_string.h>
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <string>
+#include <map>
+#include <vector>
+#include <utility>
 
 //: Form Composite Graph algorithm
 class dbskr_test_routines
@@ -64,12 +64,12 @@ public:
 
     //: Constructor
     dbskr_test_routines(
-        vcl_string query_esf_file,
-        vcl_string query_dc_file,
-        vcl_string model_filename,
-        vcl_string gmm_file,
-        vcl_string pca_M_file,
-        vcl_string pca_mean_file,
+        std::string query_esf_file,
+        std::string query_dc_file,
+        std::string model_filename,
+        std::string gmm_file,
+        std::string pca_M_file,
+        std::string pca_mean_file,
         DescriptorType descr_type,
         ColorSpace color_space,
         int stride,
@@ -99,25 +99,25 @@ private:
     // Bool writeout
     bool write_out_;
 
-    vcl_string output_filename_;
+    std::string output_filename_;
 
     // Keep track of masks per image
-    vcl_vector<vgl_polygon<double> > query_masks_;
+    std::vector<vgl_polygon<double> > query_masks_;
 
     // Keep track of original files
-    vcl_vector<vil_image_view<double> > model_chan_1_;
-    vcl_vector<vil_image_view<double> > model_chan_2_;
-    vcl_vector<vil_image_view<double> > model_chan_3_;
+    std::vector<vil_image_view<double> > model_chan_1_;
+    std::vector<vil_image_view<double> > model_chan_2_;
+    std::vector<vil_image_view<double> > model_chan_3_;
 
     // Keep track of original files
-    vcl_vector<vil_image_view<double> > query_chan_1_;
-    vcl_vector<vil_image_view<double> > query_chan_2_;
-    vcl_vector<vil_image_view<double> > query_chan_3_;
+    std::vector<vil_image_view<double> > query_chan_1_;
+    std::vector<vil_image_view<double> > query_chan_2_;
+    std::vector<vil_image_view<double> > query_chan_3_;
     
     // Keep track of gradients
-    vcl_vector<vl_sift_pix* > query_grad_chan_1_;
-    vcl_vector<vl_sift_pix* > query_grad_chan_2_;
-    vcl_vector<vl_sift_pix* > query_grad_chan_3_;
+    std::vector<vl_sift_pix* > query_grad_chan_1_;
+    std::vector<vl_sift_pix* > query_grad_chan_2_;
+    std::vector<vl_sift_pix* > query_grad_chan_3_;
 
     // Keep all descriptors
     vnl_matrix<vl_sift_pix> descriptor_matrix_;
@@ -127,7 +127,7 @@ private:
     vnl_vector<vl_sift_pix> PCA_mean_;
 
     // Keep track of background value
-    vcl_vector<double> bg_color_;
+    std::vector<double> bg_color_;
 
     // Keep track of gmm data
     float* means_cg_;
@@ -135,13 +135,13 @@ private:
     float* priors_cg_;
 
     // Keep track of dense correspondence
-    vcl_vector<vcl_vector<vcl_pair<float,float> > > query_points_;
+    std::vector<std::vector<std::pair<float,float> > > query_points_;
    
     // Keep track of query test points
-    vcl_vector<vcl_vector<vgl_point_2d<double> > > query_test_points_;
+    std::vector<std::vector<vgl_point_2d<double> > > query_test_points_;
 
     // Keep track of model points
-    vcl_vector< vcl_vector< vcl_vector<vcl_pair<float,float> > > >
+    std::vector< std::vector< std::vector<std::pair<float,float> > > >
         model_points_;
 
     // Keep track of stride
@@ -151,11 +151,11 @@ private:
     double powernorm_;
 
     // Load model file and train data
-    void load_dc_file(vcl_string& filename);
-    void load_query_file(vcl_string& filename);
-    void load_model_file(vcl_string& filename);
-    void load_pca_data(vcl_string& M_filename,vcl_string& mean_filename);
-    void load_gmm_data(vcl_string& gmm_filename);
+    void load_dc_file(std::string& filename);
+    void load_query_file(std::string& filename);
+    void load_model_file(std::string& filename);
+    void load_pca_data(std::string& M_filename,std::string& mean_filename);
+    void load_gmm_data(std::string& gmm_filename);
     void mask_image(vil_image_view<vxl_byte>& image,
                     vgl_polygon<double>& poly);
 
@@ -170,8 +170,8 @@ private:
     }
 
     void explicit_alignment(
-        vcl_vector<vcl_pair<float,float> >& q_pts, 
-        vcl_vector<vcl_pair<float,float> >& m_pts,
+        std::vector<std::pair<float,float> >& q_pts, 
+        std::vector<std::pair<float,float> >& m_pts,
         vil_image_view<double>& model_chan_1,
         vil_image_view<double>& model_chan_2,
         vil_image_view<double>& model_chan_3,
@@ -193,7 +193,7 @@ private:
     void compute_query_test_points();
 
     void compute_fvs(
-        vcl_vector<vgl_point_2d<double> >& stride_points,
+        std::vector<vgl_point_2d<double> >& stride_points,
         vl_sift_pix* chan1_grad_data,
         vl_sift_pix* chan2_grad_data,
         vl_sift_pix* chan3_grad_data,

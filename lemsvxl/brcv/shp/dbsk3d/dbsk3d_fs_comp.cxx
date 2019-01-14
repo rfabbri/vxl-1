@@ -9,7 +9,7 @@
 void dbsk3d_fs_comp::compute_cost ()
 {
   //Go through each shock sheet and count their assigned genes.
-  vcl_set<const dbmsh3d_vertex*> genes;
+  std::set<const dbmsh3d_vertex*> genes;
   for (unsigned int i=0; i<fs_sheets_.size(); i++) {
     dbsk3d_fs_sheet* S = fs_sheets_[i];
 

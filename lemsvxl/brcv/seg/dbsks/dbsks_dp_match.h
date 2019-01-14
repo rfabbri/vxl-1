@@ -15,7 +15,7 @@
 
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
+#include <map>
 #include <vil/vil_image_view.h>
 #include <vbl/vbl_array_1d.h>
 #include <vnl/vnl_matrix.h>
@@ -64,11 +64,11 @@ public:
   void compute_arc_image_cost();
 
   // New saving format. There is a version number at the beginning
-  void save_circ_arc_costs(const vcl_string& filename);
+  void save_circ_arc_costs(const std::string& filename);
 
   //: Load computed circular arc costs from a file with NEW format, which has
   // a version number at the beginning
-  void load_circ_arc_costs(const vcl_string& filename);
+  void load_circ_arc_costs(const std::string& filename);
 
   //: Clear arc_grid and arc_grid costs 
   void clear_arc_cost_data();
@@ -80,8 +80,8 @@ public:
   //: Set parameters necessary to run DP given a "working graph" and arc costs
   void set_dp_params(const dbsks_shapelet_grid_params& grid_params,
     double sigma_deform,
-    const vcl_string& temp_file_prefix,
-    const vcl_string& temp_data_folder);
+    const std::string& temp_file_prefix,
+    const std::string& temp_data_folder);
 
   //: Set statistics of a shock graph
   // REQUIREMENT: shock graph inside "stats" must have the same topology as the
@@ -98,13 +98,13 @@ public:
   void refine_grid_centers_and_run_opt();
 
   //: Save optimization results (the shapelet grids and the optimal states)
-  void save_dp_optim_results(const vcl_string& filename);
+  void save_dp_optim_results(const std::string& filename);
 
   //: Save optimization results (the shapelet grids and the optimal states)
-  bool load_dp_optim_results(const vcl_string& filename);
+  bool load_dp_optim_results(const std::string& filename);
 
   //: Trace the boundary of the optimal shock graph
-  void trace_opt_graph_bnd(vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list);
+  void trace_opt_graph_bnd(std::vector<vsol_spatial_object_2d_sptr >& vsol_list);
 
 
 
@@ -225,7 +225,7 @@ public:
   // discretization of this DP
   // Results are saved in the form of a map from edge ID --> approximated shapelet
   bool compute_closest_approx(const dbsksp_shock_graph_sptr& test_graph,
-    vcl_map<unsigned int, dbsksp_shapelet_sptr > approx_frags);
+    std::map<unsigned int, dbsksp_shapelet_sptr > approx_frags);
 
   bool compute_frag_cost(unsigned int edge_id, const dbsksp_shapelet_sptr& test_frag,
     float& total_cost,
@@ -254,8 +254,8 @@ public:
   void allocate_sxnode(grid_int& f, const dbsks_shapelet_grid& grid, int value);
 
   //: Release all memory inside the matrices of the grid, keep the matrices (for reuse)
-  void release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_float >& grid_map);
-  void release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_int >& grid_map);
+  void release_matrix_memory(std::map<dbsksp_shock_edge_sptr, grid_float >& grid_map);
+  void release_matrix_memory(std::map<dbsksp_shock_edge_sptr, grid_int >& grid_map);
 
   //: Save the optimal gridplane of an edge to a file
   void save_opt_gridplane_to_file(const dbsksp_shock_edge_sptr& e, 
@@ -296,27 +296,27 @@ public:
   //: retrieve optimal states for all the nodes
   void trace_opt_state(const dbsksp_shock_edge_sptr& e_root, 
     vgl_point_2d<int > opt_i_state_root, 
-    vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_opt_i_state_map);
+    std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_opt_i_state_map);
 
   //: Convert from a map of state index of the edges to a map of shapelet of the edges
   void convert_i_state_map_to_shapelet_map(
-    const vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& i_state_map,
-    vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > & shapelet_map);
+    const std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& i_state_map,
+    std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > & shapelet_map);
 
   //: Given a list of states for each edge, construct the graph
   void construct_graph(
-    vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map,
-    vcl_vector<dbsksp_shapelet_sptr >& fragment_list);
+    std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map,
+    std::vector<dbsksp_shapelet_sptr >& fragment_list);
 
   //: Given a list of states for each edge, construct the graph
   void construct_graph(
-    vcl_map<unsigned int, vgl_point_2d<int > >& graph_i_state_map,
-    vcl_vector<dbsksp_shapelet_sptr >& fragment_list);
+    std::map<unsigned int, vgl_point_2d<int > >& graph_i_state_map,
+    std::vector<dbsksp_shapelet_sptr >& fragment_list);
 
   //: Adjust the centers of the shapelet grids to the center of the starting points
   // of the shapelets in the provided maps
   void adjust_shapelet_grid_center(
-    const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map);
+    const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map);
 
   //: Adjust the number of points used for the shapelet grids by changing the
   // numbers of xA and yA
@@ -330,23 +330,23 @@ public:
   void build_shapelet_grids(const dbsks_shapelet_grid_params& params, 
     const dbsks_shock_graph_stats& stats,
     double graph_size,
-    vcl_map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >& shapelet_grid_map);
+    std::map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >& shapelet_grid_map);
 
 
   // MISCELLANEOUS functions -------------------------------------------------
 
   //: Print Optimization results to a stream
-  void print_summary(vcl_ostream& str) const;
+  void print_summary(std::ostream& str) const;
 
   // display real cost of the edges, given their states
   void display_real_cost(
-    vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map, 
-    vcl_ostream& os = vcl_cout);
+    std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map, 
+    std::ostream& os = std::cout);
 
   //: Trace the boundary of a graph given the states of its edges
   // - for visualization purpose
-  vcl_vector<vsol_spatial_object_2d_sptr > trace_graph_boundary(
-    const vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map);
+  std::vector<vsol_spatial_object_2d_sptr > trace_graph_boundary(
+    const std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map);
 
 
 
@@ -356,32 +356,32 @@ public:
   // parameters to determine structure of the shapelet grid
   dbsks_shapelet_grid_params shapelet_grid_params_;
 
-  vcl_map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid > shapelet_grid_map_;
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > ref_shapelet_map_;
+  std::map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid > shapelet_grid_map_;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > ref_shapelet_map_;
   
   // the size of grid is number possible shapelets for 'key' edge
-  vcl_map<dbsksp_shock_edge_sptr, grid_float > matchcost_map_;
+  std::map<dbsksp_shock_edge_sptr, grid_float > matchcost_map_;
 
   // the size of grid is number of possible shapelets for parent of 'key' edge
-  vcl_map<dbsksp_shock_edge_sptr, grid_float > sum_bc_map_;
+  std::map<dbsksp_shock_edge_sptr, grid_float > sum_bc_map_;
 
   // Prefix of filenames used to save temporary data
-  vcl_string temp_file_prefix_;
-  vcl_string temp_data_folder_;
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string > gridplane_filepath_map_;
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string > sum_bc_filepath_map_;
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string > matchcost_filepath_map_;
+  std::string temp_file_prefix_;
+  std::string temp_data_folder_;
+  std::map<dbsksp_shock_edge_sptr, std::string > gridplane_filepath_map_;
+  std::map<dbsksp_shock_edge_sptr, std::string > sum_bc_filepath_map_;
+  std::map<dbsksp_shock_edge_sptr, std::string > matchcost_filepath_map_;
 
 
   // Computed optimized results --------------------------------------
 
   //: map each edge to the plane of its optimal state, given the state of the 
   // 'key' edge's parent (specified by the grid)
-  vcl_map<dbsksp_shock_edge_sptr, grid_int > opt_e_gridplane_map_;
+  std::map<dbsksp_shock_edge_sptr, grid_int > opt_e_gridplane_map_;
 
   // map each edge to the linear index of the (x,y) coordinate of its optimal 
   // state, given the state of the 'key' edge's parent (specified by the grid)
-  vcl_map<dbsksp_shock_edge_sptr, grid_int > opt_e_gridxy_map_;
+  std::map<dbsksp_shock_edge_sptr, grid_int > opt_e_gridxy_map_;
 
   
   
@@ -398,13 +398,13 @@ public:
   
   //: list of indices of optimal states for each edge. To retrieve the extrinsic
   // states, need the shapelet_grid_map_
-  vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_opt_i_state_;
+  std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_opt_i_state_;
 
   //: Computed optimal shapelets for each edge 
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map_;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map_;
 
   //: list of shapelets to display
-  vcl_vector<dbsksp_shapelet_sptr > shapelet_list;
+  std::vector<dbsksp_shapelet_sptr > shapelet_list;
 
   //: Cost of current DP
   float model_height_; // model height
@@ -415,8 +415,8 @@ public:
 
 
   // List of sub-optimal states for the edges
-  vcl_vector<vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > > list_graph_opt_i_state_;
-  vcl_vector<vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > > list_opt_shapelet_map_;
+  std::vector<std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > > list_graph_opt_i_state_;
+  std::vector<std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > > list_opt_shapelet_map_;
 
 
 

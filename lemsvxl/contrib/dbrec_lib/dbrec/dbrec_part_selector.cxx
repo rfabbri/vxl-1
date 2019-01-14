@@ -8,20 +8,20 @@
 #include "dbrec_part_context.h"
 #include "dbrec_image_visitors.h"
 #include <dbfs/dbfs_selector.h>
-#include <vcl_cmath.h>
-#include <vcl_limits.h> 
+#include <cmath>
+#include <limits> 
 
-dbrec_part_selection_measure::dbrec_part_selection_measure(const vcl_vector<dbrec_part_sptr>& parts, int class_cnt) : class_cnt_(class_cnt), total_training_area_(0.0f), parts_(parts)
+dbrec_part_selection_measure::dbrec_part_selection_measure(const std::vector<dbrec_part_sptr>& parts, int class_cnt) : class_cnt_(class_cnt), total_training_area_(0.0f), parts_(parts)
 {
-  vcl_map<int, vcl_pair<float, float> > feature_map;
+  std::map<int, std::pair<float, float> > feature_map;
   for (unsigned i = 0; i < parts_.size(); i++) {
-    vcl_pair<float, float> empty_pair(0.0f, 0.0f);
+    std::pair<float, float> empty_pair(0.0f, 0.0f);
     feature_map[parts_[i]->type()] = empty_pair;
   }
   // for each class and for each part, initialize the area measures to zero
   for (int i = 0; i < class_cnt_; i++) {
     areas_.push_back(feature_map);
-    vcl_pair<float, float> empty_pair(0.0f, 0.0f);
+    std::pair<float, float> empty_pair(0.0f, 0.0f);
     class_areas_.push_back(empty_pair);
   }
 }
@@ -53,14 +53,14 @@ void dbrec_part_selection_measure::measure_training_image(dbrec_context_factory_
     //: create the receptive field map for this part
     dbrec_part_context_sptr pc = cf->get_context(p->type());
     if (!pc) {
-      vcl_cout << "In dbrec_part_selection_measure::measure_training_image() -- Problems in retrieving context of type: " << p->type() << "!\n";
+      std::cout << "In dbrec_part_selection_measure::measure_training_image() -- Problems in retrieving context of type: " << p->type() << "!\n";
       throw 0;
     }
 
     vil_image_resource_sptr cfm = pc->get_posterior_map(0, obj_map.ni(), obj_map.nj());
 
     if (!cfm) {
-      //vcl_cout << "In dbrec_part_selection_measure::measure_training_image() -- No parts detected for part: " << p->type() << " no measurements!\n";
+      //std::cout << "In dbrec_part_selection_measure::measure_training_image() -- No parts detected for part: " << p->type() << " no measurements!\n";
       continue;
     }
     
@@ -85,7 +85,7 @@ void dbrec_part_selection_measure::measure_training_image(dbrec_context_factory_
         }
       }
     }
-    vcl_map<int, vcl_pair<float, float> >::iterator it = (areas_[class_id]).find(p->type());
+    std::map<int, std::pair<float, float> >::iterator it = (areas_[class_id]).find(p->type());
     it->second.first += obj_area;
     it->second.second += total_area;
   }
@@ -100,11 +100,11 @@ void dbrec_part_selection_measure::measure_training_image(dbrec_context_factory_
 //  the feature_id here is the type id of the part
 float dbrec_part_selection_measure::prob(int class_id, int feature_id)
 {
-  vcl_map<int, vcl_pair<float, float> >::iterator it = (areas_[class_id]).find(feature_id);
+  std::map<int, std::pair<float, float> >::iterator it = (areas_[class_id]).find(feature_id);
   if (it == areas_[class_id].end())
     throw 0;
   if (it->second.first < float(1.0e-5))
-    return vcl_numeric_limits<float>::epsilon();  // don't return zero!
+    return std::numeric_limits<float>::epsilon();  // don't return zero!
   return it->second.first/total_training_area_;
 }
 
@@ -114,7 +114,7 @@ float dbrec_part_selection_measure::prob_class(int class_id)   // marginal prob 
   if (class_id >= (int)class_areas_.size())
     throw 0;
   if (class_areas_[class_id].first < float(1.0e-5))
-    return vcl_numeric_limits<float>::epsilon();  // don't return zero!
+    return std::numeric_limits<float>::epsilon();  // don't return zero!
   return class_areas_[class_id].first/total_training_area_;
 }
 //: the total area of the feature in each class over total area of the training set
@@ -123,13 +123,13 @@ float dbrec_part_selection_measure::prob_feature(int feature_id)   // marginal p
   float total_feature_area = 0.0f;
   //: sum up the areas of the feature in all classes
   for (unsigned i = 0; i < class_areas_.size(); i++) {
-    vcl_map<int, vcl_pair<float, float> >::iterator it = (areas_[i]).find(feature_id);
+    std::map<int, std::pair<float, float> >::iterator it = (areas_[i]).find(feature_id);
     if (it == areas_[i].end())
       throw 0;
     total_feature_area += it->second.second;
   }
   if (total_feature_area < float(1.0e-5))
-    return vcl_numeric_limits<float>::epsilon();  // don't return zero!
+    return std::numeric_limits<float>::epsilon();  // don't return zero!
   return total_feature_area/total_training_area_;
 }
 float dbrec_part_selection_measure::mutual_info_class_average(int feature_id)  // I(C, F=f)
@@ -141,9 +141,9 @@ float dbrec_part_selection_measure::mutual_info_class_average(int feature_id)  /
   return sum;
 }
 
-dbrec_part_selector::dbrec_part_selector(dbrec_part_selection_measure_sptr sm, unsigned selection_algo_type, vcl_vector<dbrec_part_sptr>& parts, dbrec_hierarchy_sptr h, int class_cnt) : h_(h)
+dbrec_part_selector::dbrec_part_selector(dbrec_part_selection_measure_sptr sm, unsigned selection_algo_type, std::vector<dbrec_part_sptr>& parts, dbrec_hierarchy_sptr h, int class_cnt) : h_(h)
 {
-  vcl_vector<int> part_ids;
+  std::vector<int> part_ids;
   for (unsigned i = 0; i < parts.size(); i++) {
     int type = parts[i]->type();
     part_ids.push_back(type);
@@ -153,13 +153,13 @@ dbrec_part_selector::dbrec_part_selector(dbrec_part_selection_measure_sptr sm, u
   switch(selection_algo_type) {
     case dbrec_part_selector_algos::max_class_mutual_info : { sel_ = new dbfs_selector(smm, part_ids, class_cnt); break; }
     case dbrec_part_selector_algos::max_class_min_non_class_mutual_info : { sel_ = new dbfs_selector_max_class_min_non_class(smm, part_ids, class_cnt); break; }
-    default: { vcl_cout << "In dbrec_part_selector() -- no such selection algo!\n"; throw 0; }
+    default: { std::cout << "In dbrec_part_selector() -- no such selection algo!\n"; throw 0; }
   }
 }
 
 //: return the top k features in the set, just a wrapper around the selector's corresponding method
 //  check if the parts are the same (if they are compositional parts are the ids equal if not are the children the same?)
-void dbrec_part_selector::get_top_features(int class_id, int k, vcl_vector<dbrec_part_sptr>& best_features)
+void dbrec_part_selector::get_top_features(int class_id, int k, std::vector<dbrec_part_sptr>& best_features)
 {
   best_features.clear();
   
@@ -190,13 +190,13 @@ void dbrec_part_selector::get_top_features(int class_id, int k, vcl_vector<dbrec
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_part_selection_measure as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbrec_part_selection_measure const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbrec_part_selection_measure &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use brec_part_hierarchy as a brdb_value\n";
   return;
 }
 
@@ -207,7 +207,7 @@ void vsl_b_read(vsl_b_istream& is, dbrec_part_selection_measure* ph)
   vsl_b_read(is, not_null_ptr);
   if (not_null_ptr)
   {
-    vcl_vector<dbrec_part_sptr> parts;
+    std::vector<dbrec_part_sptr> parts;
     ph = new dbrec_part_selection_measure(parts, 0);
     vsl_b_read(is, *ph);
   }

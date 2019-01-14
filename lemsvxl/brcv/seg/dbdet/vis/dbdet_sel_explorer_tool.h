@@ -47,7 +47,7 @@ public:
   ~dbdet_sel_explorer_tool() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -68,7 +68,7 @@ public:
 protected:
 
   vgui_event_condition gesture0_;
-  vcl_vector<int> frame_v_;   //: frame number for each view
+  std::vector<int> frame_v_;   //: frame number for each view
   const unsigned nviews_;
   dbdet_sel_storage_sptr sel_storage_;
 
@@ -80,13 +80,13 @@ protected:
   unsigned min_order_to_display_; //minimum length of grouping to display
   bool display_immediate_links_only_; 
 
-  vcl_vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
+  std::vector<bgui_vsol2D_tableau_sptr> tab_; //:< tableaux used to draw in each view 
 
   void print_sel_stats() const;
   void print_complete_edgel_stats(dbdet_edgel * e) const;
   void print_edgel_stats(dbdet_edgel * e) const;
   void print_curvelets_around_edgel(dbdet_edgel *e) const;
-  bool differential_geometry_at(dbdet_edgel *e1, vcl_vector<double> &k, vcl_vector<double> &kdot) const;
+  bool differential_geometry_at(dbdet_edgel *e1, std::vector<double> &k, std::vector<double> &kdot) const;
 };
 
 

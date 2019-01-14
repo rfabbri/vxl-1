@@ -1,32 +1,32 @@
 #include "bmvrec_functions.h"
 
-vcl_map<vcl_string,vil_image_view<float> > bmvrec_functions::load_image_map_float(const vcl_string& fullImgDirectory)
+std::map<std::string,vil_image_view<float> > bmvrec_functions::load_image_map_float(const std::string& fullImgDirectory)
 {
-    vcl_map<vcl_string,vil_image_view<float> > img;
-    vcl_string imgDir = fullImgDirectory + "*.png";
+    std::map<std::string,vil_image_view<float> > img;
+    std::string imgDir = fullImgDirectory + "*.png";
 
     for(vul_file_iterator fn = imgDir; fn; ++fn)
     {
-        vcl_string filename = vul_file::strip_directory(fn());
+        std::string filename = vul_file::strip_directory(fn());
         filename = vul_file::strip_extension(filename);
-        vcl_cout << "Loading Image: " << filename << '\n';
-        img.insert(vcl_make_pair(filename,vil_convert_cast(float(),vil_load(fn()))));
+        std::cout << "Loading Image: " << filename << '\n';
+        img.insert(std::make_pair(filename,vil_convert_cast(float(),vil_load(fn()))));
     }
 
     return img;    
 }
 
-vcl_map<vcl_string,vil_image_view<bool> > bmvrec_functions::load_image_map_bool(const vcl_string& fullImgDirectory)
+std::map<std::string,vil_image_view<bool> > bmvrec_functions::load_image_map_bool(const std::string& fullImgDirectory)
 {
-    vcl_map<vcl_string,vil_image_view<bool> > gt;
-    vcl_string gtDir = fullImgDirectory + "*.png";
+    std::map<std::string,vil_image_view<bool> > gt;
+    std::string gtDir = fullImgDirectory + "*.png";
     
     for(vul_file_iterator fn = gtDir; fn; ++fn)
     {
-        vcl_string filename = vul_file::strip_directory(fn());
+        std::string filename = vul_file::strip_directory(fn());
         filename = vul_file::strip_extension(filename);
-        vcl_cout << "Loading Image: " << filename << '\n';
-        gt.insert(vcl_make_pair(filename,vil_convert_cast(bool(),vil_load(fn()))));
+        std::cout << "Loading Image: " << filename << '\n';
+        gt.insert(std::make_pair(filename,vil_convert_cast(bool(),vil_load(fn()))));
     }
     return gt;
 }
@@ -51,7 +51,7 @@ vil_image_view<float> bmvrec_functions::apply_extrema(vil_image_view<float>& img
 
     vil_image_view<float> output;
 
-    vcl_cout << "Applying Extrema Operator to image..." << vcl_endl;
+    std::cout << "Applying Extrema Operator to image..." << std::endl;
     float lambda0 = 2.0f, lambda1 = 1.0f, theta = -45.0f;
     bool bright = true, output_response_mask = false, unclipped_response = false;
     
@@ -60,14 +60,14 @@ vil_image_view<float> bmvrec_functions::apply_extrema(vil_image_view<float>& img
     return output;
 }
 
-void bmvrec_functions::write_op_m(vcl_ofstream& os, const vil_image_view<float>& opRep, const vcl_string& imgName)
+void bmvrec_functions::write_op_m(std::ofstream& os, const vil_image_view<float>& opRep, const std::string& imgName)
 {
     vil_image_view<float>::const_iterator vit = opRep.begin();
     vil_image_view<float>::const_iterator itEnd = opRep.end();
 
-    vcl_cout << "Writing " << imgName << " to disk..." << vcl_endl;
+    std::cout << "Writing " << imgName << " to disk..." << std::endl;
 
-    vcl_string varName = imgName + "_opRep";
+    std::string varName = imgName + "_opRep";
 
     os << '\n';
     os << varName << " = [";
@@ -77,12 +77,12 @@ void bmvrec_functions::write_op_m(vcl_ofstream& os, const vil_image_view<float>&
     os << "];\n";
 }
 
-bool bmvrec_functions::check_gt(const vcl_string& currImg)
+bool bmvrec_functions::check_gt(const std::string& currImg)
 {
     if(currImg=="normalized0"||currImg=="normalized1"||currImg=="normalized3"||currImg=="normalized4"||
           currImg=="normalized6"||currImg=="normalized10"||currImg=="normalized16")
     {
-        vcl_cout << currImg << " has a ground truth..." << vcl_endl;
+        std::cout << currImg << " has a ground truth..." << std::endl;
         return true;
     }
     else
@@ -90,14 +90,14 @@ bool bmvrec_functions::check_gt(const vcl_string& currImg)
 }
 
 void bmvrec_functions::extract_fg_opRep(const vil_image_view<float>& opRep, const vil_image_view<bool>& gt,
-                                        const vcl_string& currImg, vcl_ofstream& os)
+                                        const std::string& currImg, std::ofstream& os)
 {
 
     unsigned ni = gt.ni(), nj = gt.nj(), repPlane = 0;
     float thresh = 1.0e-3f;
-    vcl_string varName = currImg+"_fgOpRep";
+    std::string varName = currImg+"_fgOpRep";
     
-    vcl_cout << "Writing foreground operator response to disk..." << vcl_endl;
+    std::cout << "Writing foreground operator response to disk..." << std::endl;
 
     os << '\n';
     os << varName << " = [";

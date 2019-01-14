@@ -12,7 +12,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
 
-//#include <vcl_utility.h>
+//#include <utility>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
 //#include <bnld/bnld_angle.h>
@@ -41,7 +41,7 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
   }
 
   // list of terminal nodes to remove 
-  vcl_vector<dbsksp_xshock_node_sptr > terminal_nodes_to_remove;
+  std::vector<dbsksp_xshock_node_sptr > terminal_nodes_to_remove;
 
   // locate the A12_Ainfty nodes and check each of them separately
   for (dbsksp_xshock_graph::vertex_iterator vit = xgraph->vertices_begin(); 
@@ -54,7 +54,7 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
 
 
     // an A12_Ainfty has one branch which is simply a terminal edge
-    vcl_vector<dbsksp_xshock_edge_sptr > terminal_edges;
+    std::vector<dbsksp_xshock_edge_sptr > terminal_edges;
     for (dbsksp_xshock_node::edge_iterator eit = xv->edges_begin(); eit != 
       xv->edges_end(); ++eit)
     {
@@ -108,7 +108,7 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
     bgld_biarc new_bnd_right2 = new_xfrag2->bnd_right_as_biarc();
 
     // sample the two new boundary contours with ds = 1 (chosen arbitrarily)
-    vcl_vector<vgl_point_2d<double > > new_bnd_pts;
+    std::vector<vgl_point_2d<double > > new_bnd_pts;
     
     double bnd_len0 = new_bnd_right0.len();
     double bnd_len2 = new_bnd_right2.len();

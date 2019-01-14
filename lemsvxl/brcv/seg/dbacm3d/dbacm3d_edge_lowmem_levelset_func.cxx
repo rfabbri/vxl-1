@@ -5,7 +5,7 @@
 #include "dbacm3d_edge_lowmem_levelset_func.h"
 
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbil3d/algo/dbil3d_finite_differences.h>
 #include <dbil3d/algo/dbil3d_finite_second_differences.h>
@@ -24,7 +24,7 @@ const float dbacm3d_min_grad_phi = float(1e-10);
 void dbacm3d_edge_lowmem_levelset_func::
 reinitialize_levelset_surf()
 {
-        //        vcl_cerr << "reinitializing levelset surface" << "\n" ;
+        //        std::cerr << "reinitializing levelset surface" << "\n" ;
         //        vil3d_image_view<bool> thresholded; 
         //        vil3d_threshold_below(phi_,thresholded,0.f);
         //        vil3d_signed_distance_transform(thresholded,
@@ -57,10 +57,10 @@ reinitialize_levelset_surf()
 }
 
 inline vnl_vector<float> dbacm3d_edge_lowmem_levelset_func::closest_edge(const float * pixel_edges,
-                const  vcl_ptrdiff_t & pstep_edges,
-                const  vcl_ptrdiff_t & kstep_edges,
-                const  vcl_ptrdiff_t & jstep_edges,
-                const  vcl_ptrdiff_t & istep_edges)
+                const  std::ptrdiff_t & pstep_edges,
+                const  std::ptrdiff_t & kstep_edges,
+                const  std::ptrdiff_t & jstep_edges,
+                const  std::ptrdiff_t & istep_edges)
 {
         vnl_vector<float> closest_edge_offset(3,-1.0f);
         float min_magnitude = -1;
@@ -121,13 +121,13 @@ evolve_one_timestep(float timestep)
                  nk=this->phi_.nk(), 
                  np=this->phi_.nplanes();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_phi=this->phi_.istep(), 
                 jstep_phi=this->phi_.jstep(),
                 kstep_phi=this->phi_.kstep(),
                 pstep_phi=this->phi_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_phi2=this->phi2_.istep(), 
                 jstep_phi2=this->phi2_.jstep(),
                 kstep_phi2=this->phi2_.kstep(),
@@ -135,13 +135,13 @@ evolve_one_timestep(float timestep)
 
 
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_edges=this->edges_.istep(), 
                 jstep_edges=this->edges_.jstep(),
                 kstep_edges=this->edges_.kstep(),
                 pstep_edges=this->edges_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_no_go_image=this->no_go_image_.istep(), 
                 jstep_no_go_image=this->no_go_image_.jstep(),
                 kstep_no_go_image=this->no_go_image_.kstep(),
@@ -212,7 +212,7 @@ evolve_one_timestep(float timestep)
                                         speed = (inflation_weight_*inflation_term 
                                                         + curvature_weight_*curvature_term);
 
-                                        if(vcl_fabs(*pixel_phi) < 1){
+                                        if(std::fabs(*pixel_phi) < 1){
                                                 if(i >=1 && i < ni-1 
                                                                 && j >=1 && j < nj-1 
                                                                 && (( k >=1 && k < nk-1)|| this->twoD_hack_))
@@ -224,28 +224,28 @@ evolve_one_timestep(float timestep)
                                                                         istep_edges);
                                                         if(edgevec[0] > -1){
                                                                 bool debug = 0;
-                                                                if(debug) vcl_cerr <<"\n" <<  i << " " << j << " " << k << "\n" ;
-                                                                if(debug) vcl_cerr << *pixel_phi << "\n";
-                                                                if(debug) vcl_cerr << "edge is at : ";
-                                                                if(debug) vcl_cerr << edgevec[0] << " " << edgevec[1] << " " <<edgevec[2] << "\n" ;
+                                                                if(debug) std::cerr <<"\n" <<  i << " " << j << " " << k << "\n" ;
+                                                                if(debug) std::cerr << *pixel_phi << "\n";
+                                                                if(debug) std::cerr << "edge is at : ";
+                                                                if(debug) std::cerr << edgevec[0] << " " << edgevec[1] << " " <<edgevec[2] << "\n" ;
                                                                 vnl_vector<float> normal(3,0.0f);
                                                                 normal.put(0,dxc);
                                                                 normal.put(1,dyc);
                                                                 normal.put(2,dzc);
                                                                 normal.normalize();
 
-                                                                if(debug) vcl_cerr << "normal is  : ";
-                                                                if(debug) vcl_cerr << normal[0] << " " << normal[1] << " " <<normal[2] << "\n" ;
-                                                                if(debug) vcl_cerr << "dot is  : " << dot_product(normal,edgevec) << "\n";
-                                                                float dist = dot_product(normal,edgevec) - vcl_fabs(*pixel_phi);
+                                                                if(debug) std::cerr << "normal is  : ";
+                                                                if(debug) std::cerr << normal[0] << " " << normal[1] << " " <<normal[2] << "\n" ;
+                                                                if(debug) std::cerr << "dot is  : " << dot_product(normal,edgevec) << "\n";
+                                                                float dist = dot_product(normal,edgevec) - std::fabs(*pixel_phi);
 
-                                                                if(debug) vcl_cerr << "dist is  : " << dist << "\n";
-                                                                if(debug) vcl_cerr << "speed was  : " << speed << "\n";
+                                                                if(debug) std::cerr << "dist is  : " << dist << "\n";
+                                                                if(debug) std::cerr << "speed was  : " << speed << "\n";
                                                                 speed *= dist*dist/(dist*dist + edgeT_*edgeT_);
-                                                                if(debug) vcl_cerr << "multiplied by  : " << dist*dist/(dist*dist + edgeT_*edgeT_) << "\n";
-                                                                if(debug) vcl_cerr << "new speed is  : " << speed << "\n";
+                                                                if(debug) std::cerr << "multiplied by  : " << dist*dist/(dist*dist + edgeT_*edgeT_) << "\n";
+                                                                if(debug) std::cerr << "new speed is  : " << speed << "\n";
                                                                 //                                                char g;
-                                                                //                                                vcl_cin >> g;
+                                                                //                                                std::cin >> g;
                                                                 speed *= (float)*pixel_no_go_image;
                                                         }
 
@@ -264,21 +264,21 @@ evolve_one_timestep(float timestep)
 
 
 void dbacm3d_edge_lowmem_levelset_func::compute_measures(float* pixel_phi,
-                const vcl_ptrdiff_t& istep, const vcl_ptrdiff_t& jstep, const vcl_ptrdiff_t& kstep,
+                const std::ptrdiff_t& istep, const std::ptrdiff_t& jstep, const std::ptrdiff_t& kstep,
                 const unsigned& i, const unsigned& j, const unsigned& k,
                 const unsigned& ni, const unsigned& nj, const unsigned& nk, 
                 float& hj_flux, float& curvature,
                 float& dxc, float& dyc, float& dzc)
 {
 
-      vcl_ptrdiff_t safe_istep_plus = i > ni-2 ? 0 : istep;
-      vcl_ptrdiff_t safe_istep_minus = i < 1 ? 0 : -istep;
+      std::ptrdiff_t safe_istep_plus = i > ni-2 ? 0 : istep;
+      std::ptrdiff_t safe_istep_minus = i < 1 ? 0 : -istep;
 
-      vcl_ptrdiff_t safe_jstep_plus= j > nj-2 ? 0 : jstep;
-      vcl_ptrdiff_t safe_jstep_minus = j < 1 ? 0 : -jstep; 
+      std::ptrdiff_t safe_jstep_plus= j > nj-2 ? 0 : jstep;
+      std::ptrdiff_t safe_jstep_minus = j < 1 ? 0 : -jstep; 
 
-      vcl_ptrdiff_t safe_kstep_plus= k > nk-2 ? 0 : kstep;
-      vcl_ptrdiff_t safe_kstep_minus = k < 1 ? 0 : -kstep; 
+      std::ptrdiff_t safe_kstep_plus= k > nk-2 ? 0 : kstep;
+      std::ptrdiff_t safe_kstep_minus = k < 1 ? 0 : -kstep; 
 
 
       float dxp = *(pixel_phi+safe_istep_plus) - *pixel_phi;
@@ -300,7 +300,7 @@ void dbacm3d_edge_lowmem_levelset_func::compute_measures(float* pixel_phi,
       dzp = direction_*(dzp) > 0 ? 0 : dzp;
       dzm = direction_*(dzm) < 0 ? 0 : dzm;
 
-      hj_flux =  vcl_sqrt( dxp*dxp 
+      hj_flux =  std::sqrt( dxp*dxp 
                       +dxm*dxm 
                       +dyp*dyp 
                       +dym*dym
@@ -339,7 +339,7 @@ void dbacm3d_edge_lowmem_levelset_func::compute_measures(float* pixel_phi,
                               + dyy*(xc_2 + zc_2) 
                               + dzz*(xc_2 + yc_2)
                               - 2*(dxc*dyc*dxy + dyc*dzc*dyz + dxc*dzc*dxz))
-                      /(2*vcl_sqrt(grad_square*grad_square*grad_square));
+                      /(2*std::sqrt(grad_square*grad_square*grad_square));
 
 
               float G =((xc_2)*(dyy*dzz - dyz*dyz) +            
@@ -354,7 +354,7 @@ void dbacm3d_edge_lowmem_levelset_func::compute_measures(float* pixel_phi,
                       curvature = 0;
               }
               else{
-                      curvature =  SIGN(H)*vcl_sqrt(G);
+                      curvature =  SIGN(H)*std::sqrt(G);
               }
       }    
 
@@ -378,7 +378,7 @@ compute_internal_data()
            vil3d_image_view<float> dzp;
            vil3d_image_view<float> dzm;
 
-        //vcl_cerr << "dbil3d_finite_differences..." ;
+        //std::cerr << "dbil3d_finite_differences..." ;
         dbil3d_finite_differences(phi_,
         dxp,dxm,this->dxc_,
         dyp,dym,this->dyc_,

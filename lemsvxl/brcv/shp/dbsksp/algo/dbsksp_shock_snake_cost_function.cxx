@@ -58,7 +58,7 @@
 //  double len1 = this->len1_;
 //  double phi2 = x[3];
 //
-//  double alpha0 = vcl_asin(m0 * vcl_sin(phi0));
+//  double alpha0 = std::asin(m0 * std::sin(phi0));
 //  double theta0  = this->psi0_ - alpha0;;
 //
 //  return new dbsksp_twoshapelet( x0,  y0,  theta0,  r0, 
@@ -142,7 +142,7 @@
 ////    bnd_length += shapelet->bnd_arc(0).length() + shapelet->bnd_arc(1).length();
 ////    double chord = shapelet->chord_length();
 ////    double phi_mean = (shapelet->phi_start()+(vnl_math::pi -shapelet->phi_end()))/2;
-////    expected_length += 2*chord*vcl_sin(phi_mean);
+////    expected_length += 2*chord*std::sin(phi_mean);
 ////  }
 ////
 ////  double normalized_length = vnl_math_max(bnd_length,expected_length);
@@ -172,7 +172,7 @@
 //      bnd_energy(frag_index, bnd_side) = this->external_energy_function()->f(shapelet, bnd_side);
 //      bnd_length(frag_index, bnd_side) = shapelet->bnd_arc(bnd_side).length();
 //      double phi_mean = (shapelet->phi_start()+ shapelet->phi_end())/2;
-//      expected_length(frag_index, bnd_side) = shapelet->chord_length()*vcl_sin(phi_mean);
+//      expected_length(frag_index, bnd_side) = shapelet->chord_length()*std::sin(phi_mean);
 //    }
 //  }
 //
@@ -259,7 +259,7 @@
 //  double m0 = x[1];
 //  double phi1 = x[2];
 //
-//  double alpha0 = vcl_asin(m0 * vcl_sin(phi0));
+//  double alpha0 = std::asin(m0 * std::sin(phi0));
 //  double theta0  = this->psi0_ - alpha0;
 //  // make sure the angle is within [-pi ... pi]
 //
@@ -267,10 +267,10 @@
 //  // then add 2pi to make it positive,
 //  // Note that fmod(x, y) returns a number with the same sign as x
 //  // and with absolute value less than |y|
-//  theta0 = vcl_fmod(theta0, vnl_math::pi*2) + vnl_math::pi*2;
+//  theta0 = std::fmod(theta0, vnl_math::pi*2) + vnl_math::pi*2;
 //
 //  // now convert it to [-pi, pi] range by the "add and subtract" trick
-//  theta0 = vcl_fmod(theta0+vnl_math::pi, vnl_math::pi*2) - vnl_math::pi;
+//  theta0 = std::fmod(theta0+vnl_math::pi, vnl_math::pi*2) - vnl_math::pi;
 //  return new dbsksp_shapelet(x0, y0, theta0, r0, phi0, phi1, m0, len0);
 //}
 //
@@ -294,7 +294,7 @@
 //  double len1 = 0;
 //  double phi2 = vnl_math::pi;
 //
-//  double alpha0 = vcl_asin(m0 * vcl_sin(phi0));
+//  double alpha0 = std::asin(m0 * std::sin(phi0));
 //  double theta0  = this->psi0_ - alpha0;;
 //
 //  return new dbsksp_twoshapelet( x0,  y0,  theta0,  r0, 
@@ -404,7 +404,7 @@
 //  double x0 = p0.x();
 //  double y0 = p0.y();
 //  vgl_vector_2d<double > t0 = s[0]->shock_geom().tangent_at(1);
-//  double theta0 = vcl_atan2(t0.y(), t0.x());
+//  double theta0 = std::atan2(t0.y(), t0.x());
 //  double r0 = s[0]->radius_end();
 //  double phi0 = s[0]->phi_end();
 //  double phi1 = 0;
@@ -421,7 +421,7 @@
 //      bnd_energy(frag_index, bnd_side) = this->external_energy_function()->f(shapelet, bnd_side);
 //      bnd_length(frag_index, bnd_side) = shapelet->bnd_arc(bnd_side).length();
 //      double phi_mean = (shapelet->phi_start()+ shapelet->phi_end())/2;
-//      expected_length(frag_index, bnd_side) = shapelet->chord_length()*vcl_sin(phi_mean);
+//      expected_length(frag_index, bnd_side) = shapelet->chord_length()*std::sin(phi_mean);
 //    }
 //  }
 //

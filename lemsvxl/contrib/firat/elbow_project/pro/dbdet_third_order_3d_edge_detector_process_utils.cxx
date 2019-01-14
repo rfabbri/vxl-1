@@ -39,7 +39,7 @@ void dbdet_compute_effective_block_size_and_number(int n, int bs, int& num, int*
 	delete[] ebs_vec;
 }
 
-bool dbdet_compute_rois(const vil3d_image_view<double>& image, vcl_vector<vcl_vector<int> >& rois, int block_size)
+bool dbdet_compute_rois(const vil3d_image_view<double>& image, std::vector<std::vector<int> >& rois, int block_size)
 {
 	int ni = image.ni(), nj = image.nj(), nk = image.nk();
 	int num_i, *vec_i;
@@ -61,7 +61,7 @@ bool dbdet_compute_rois(const vil3d_image_view<double>& image, vcl_vector<vcl_ve
 			{
 				int k0 = vec_k[k];
 				int nk_roi = vec_k[k+1]-vec_k[k];
-				vcl_vector<int> temp(6);
+				std::vector<int> temp(6);
 				temp[0] = i0; temp[1] = j0; temp[2] = k0;
 				temp[3] = ni_roi; temp[4] = nj_roi; temp[5] = nk_roi;
 				rois.push_back(temp);

@@ -20,7 +20,7 @@
 
 #include <bvpl/kernels/bvpl_kernel.h>
 
-#include <vcl_map.h>
+#include <map>
 
 #include <vsl/vsl_binary_io.h>
 
@@ -55,7 +55,7 @@ public:
   }
   
   //: Create parts from a vector of bvpl_kernels and return an map of <kernel_id , part_id>
-  vcl_map<int,int> register_kernels( bvpl_kernel_vector_sptr kernels);
+  std::map<int,int> register_kernels( bvpl_kernel_vector_sptr kernels);
   
   //: Create a part from a bvpl_kernels and return its part id
   int register_kernel(bvpl_kernel_sptr kernel);
@@ -63,7 +63,7 @@ public:
   //: Creates a new part and returns the part id
   template<class T_compositor>
   int new_composite_part(const T_compositor &compositor, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, bool symmetric, bool rot_invar, 
-                         const vcl_vector<int>& children, vnl_float_3 radius, float max_azimuthal, float min_azimuthal, float max_polar, float min_polar); 
+                         const std::vector<int>& children, vnl_float_3 radius, float max_azimuthal, float min_azimuthal, float max_polar, float min_polar); 
   
   //: Get part by type_id
   dbrec3d_part_sptr get_part(int part_id);
@@ -72,7 +72,7 @@ public:
   bool exists(int part_id) {return ((part_id >=0) && (part_id < current_part_id_)); } 
   
   //: Returns all parts registered in the database
-  vcl_vector<dbrec3d_part_sptr> get_all_parts();
+  std::vector<dbrec3d_part_sptr> get_all_parts();
   
   //: The xml parser - needs to be a friend to register parts with pre-existing ids
   friend class dbrec3d_parse_xml_visitor;
@@ -88,10 +88,10 @@ protected:
   unsigned current_part_id_;
   
   //: Variable to hold name of database table where parts are stored
-  vcl_string parts_table_name_;
+  std::string parts_table_name_;
   
   //: Vector to hold names for "columns" of parts' table
-  vcl_vector<vcl_string> names_; 
+  std::vector<std::string> names_; 
   
 private:
   //: A function to register a general part.
@@ -105,7 +105,7 @@ private:
 //: Creates a new part and returns the part id
 template<class T_compositor>
 int dbrec3d_parts_manager::new_composite_part(const T_compositor &compositor, vnl_float_3 axis, vnl_float_3 aux_axis, float angle, vnl_float_3 scale, bool symmetric, bool rot_invar, 
-                                              const vcl_vector<int>& children, vnl_float_3 radius,
+                                              const std::vector<int>& children, vnl_float_3 radius,
                                               float max_azimuthal, float min_azimuthal, float max_polar, float min_polar) 
 {
   //new database id
@@ -120,7 +120,7 @@ int dbrec3d_parts_manager::new_composite_part(const T_compositor &compositor, vn
     current_part_id_++;
   }
   else 
-    vcl_cerr << "in dbrec3d_parts_manager :could not add part to database\n";
+    std::cerr << "in dbrec3d_parts_manager :could not add part to database\n";
   
  
   return current_part_id_ - 1;

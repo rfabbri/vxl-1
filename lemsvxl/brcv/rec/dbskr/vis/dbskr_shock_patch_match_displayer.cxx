@@ -34,7 +34,7 @@ dbskr_shock_patch_match_displayer::make_tableau( bpro1_storage_sptr storage) con
     left->set_display_curve_match(true);
     left->set_display_shocks(false);
   } else 
-    vcl_cout << "None of the matches (neither curve nor edit matches) are available in the storage!!\n";
+    std::cout << "None of the matches (neither curve nor edit matches) are available in the storage!!\n";
 
   left->set_display_left(true);
   left->set_display_right(true);

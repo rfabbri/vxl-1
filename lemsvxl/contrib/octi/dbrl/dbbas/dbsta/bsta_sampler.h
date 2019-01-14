@@ -12,8 +12,8 @@
 //   Ozge C. Ozcanli - Dec 09, 2008 - Added an algorithm to sample from a "set of samples with given probabilities"
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <dbsta/bsta_joint_histogram.h>
 
 template <class T>
@@ -22,17 +22,17 @@ class bsta_sampler
  public:
   //: put cnt samples into output vector wrt given probabilities
   //  The sum of probabilities should sum to 1 otherwise return false
-  static bool sample(vcl_vector<T>& samples, vcl_vector<float>& p,
-                     unsigned cnt, vcl_vector<T>& out);
+  static bool sample(std::vector<T>& samples, std::vector<float>& p,
+                     unsigned cnt, std::vector<T>& out);
 
   //: sample from a joint histogram treating it as a discrete prob distribution
-  static bool sample(const bsta_joint_histogram<float>& jh, unsigned cnt, vcl_vector<vcl_pair<float, float> >& out);
+  static bool sample(const bsta_joint_histogram<float>& jh, unsigned cnt, std::vector<std::pair<float, float> >& out);
   
   //: sample in the decreasing order of likelihood (i.e. the most likely bin will be returned as the first sample)
-  static bool sample_in_likelihood_order(const bsta_joint_histogram<float>& jh, unsigned cnt, vcl_vector<vcl_pair<float, float> >& out);
+  static bool sample_in_likelihood_order(const bsta_joint_histogram<float>& jh, unsigned cnt, std::vector<std::pair<float, float> >& out);
 
   //: sample in the decreasing order of likelihood (i.e. the most likely bin will be returned as the first sample)
-  static bool sample_in_likelihood_order(const bsta_joint_histogram<float>& jh, unsigned cnt, vcl_vector<vcl_pair<unsigned, unsigned> >& out_indices);
+  static bool sample_in_likelihood_order(const bsta_joint_histogram<float>& jh, unsigned cnt, std::vector<std::pair<unsigned, unsigned> >& out_indices);
 
 };
 

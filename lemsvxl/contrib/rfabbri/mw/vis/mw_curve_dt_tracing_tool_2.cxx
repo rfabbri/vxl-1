@@ -35,7 +35,7 @@ init()
   best_match_soview_ = NULL;
 }
 
-vcl_string
+std::string
 mw_curve_dt_tracing_tool_2::name() const
 {
   return "Dist. Tr. Curve Tracing v.2";
@@ -44,7 +44,7 @@ mw_curve_dt_tracing_tool_2::name() const
 void mw_curve_dt_tracing_tool_2::
 activate()
 {
-  vcl_cout << "mw_curve_dt_tracing_tool_2 ON\n";
+  std::cout << "mw_curve_dt_tracing_tool_2 ON\n";
   mw_curve_tracing_tool_2::activate();
   get_images();
   get_edgemaps();
@@ -55,14 +55,14 @@ void mw_curve_dt_tracing_tool_2::
 deactivate ()
 {
   mw_curve_tracing_tool_2::deactivate();
-  vcl_cout << "mw_curve_dt_tracing_tool_2 OFF\n";
+  std::cout << "mw_curve_dt_tracing_tool_2 OFF\n";
 }
 
 void mw_curve_dt_tracing_tool_2::
 get_images()
 {
-  vcl_vector<vil_image_view<vxl_uint_32> > dts(nviews());
-  vcl_vector<vil_image_view<unsigned> > labels(nviews());
+  std::vector<vil_image_view<vxl_uint_32> > dts(nviews());
+  std::vector<vil_image_view<unsigned> > labels(nviews());
 
   for (unsigned i=0; i<nviews(); ++i) {
     bpro1_storage_sptr
@@ -73,8 +73,8 @@ get_images()
     dt_storage.vertical_cast(p);
 
     if(!dt_storage) { 
-      vcl_cerr << "Error: tool requires distance map image storage " <<
-       "(from Distance Transform process) in all frames" << vcl_endl;
+      std::cerr << "Error: tool requires distance map image storage " <<
+       "(from Distance Transform process) in all frames" << std::endl;
       return;
     }
 
@@ -84,7 +84,7 @@ get_images()
     dts[i] = vil_image_view<vxl_uint_32>(bview);
     assert(dts[i]);
 
-    vcl_cout << "DT: " << dts[i] << vcl_endl;
+    std::cout << "DT: " << dts[i] << std::endl;
     }
 
     // Get label image
@@ -95,8 +95,8 @@ get_images()
     label_storage.vertical_cast(p);
 
     if(!label_storage) {
-      vcl_cerr << "Error: tool requires Label image storage "
-        << "(from Distance Transform process) in all frames" << vcl_endl;
+      std::cerr << "Error: tool requires Label image storage "
+        << "(from Distance Transform process) in all frames" << std::endl;
       return;
     }
 
@@ -106,7 +106,7 @@ get_images()
     labels[i] = vil_image_view<unsigned>(bview);
     assert(labels[i]);
 
-    vcl_cout << "Label: " << labels[i] << vcl_endl;
+    std::cout << "Label: " << labels[i] << std::endl;
     }
   }
 
@@ -116,23 +116,23 @@ get_images()
 void mw_curve_dt_tracing_tool_2::
 get_edgemaps()
 {
-  vcl_vector<sdet_edgemap_sptr> em;
+  std::vector<sdet_edgemap_sptr> em;
   
   em.reserve(nviews());
 
   for (unsigned i=0; i < nviews(); ++i) {
 
-    vcl_vector<vcl_string> edgemap_storages 
+    std::vector<std::string> edgemap_storages 
       = MANAGER->repository()->get_all_storage_class_names("edge_map", 
           frame_v_[i]);
 
     if (!edgemap_storages.size()) {
-      vcl_cerr << "Tool did not find an edgemap storage in view[" << i << 
+      std::cerr << "Tool did not find an edgemap storage in view[" << i << 
         "],\n which is ok if you don't need orientation-based matching.\n";
       return;
     }
 
-    vcl_cout << "Reading edgemap storage " << edgemap_storages.back()
+    std::cout << "Reading edgemap storage " << edgemap_storages.back()
       << " from view[" << i << "].\n";
 
     bpro1_storage_sptr p 
@@ -142,8 +142,8 @@ get_edgemaps()
     sdetd_edgemap_storage_sptr edgemap_storage = NULL;
     edgemap_storage.vertical_cast(p);
     if(!edgemap_storage->get_edgemap()) {
-      vcl_cerr << "The edgemap storage in view[" << i << "] is NULL (Ok as long\n"
-        "as this is not used." << vcl_endl;
+      std::cerr << "The edgemap storage in view[" << i << "] is NULL (Ok as long\n"
+        "as this is not used." << std::endl;
       return;
     }
     em.push_back(edgemap_storage->get_edgemap());
@@ -154,14 +154,14 @@ get_edgemaps()
 void mw_curve_dt_tracing_tool_2::
 get_tangents()
 {
-  vcl_vector<vcl_vector<vcl_vector<double> > > tangents(nviews());
+  std::vector<std::vector<std::vector<double> > > tangents(nviews());
 
   if (sels_.size() < 2) {
-    vcl_cerr << 
+    std::cerr << 
       "Warning: no SEL found in views[0,1], which is ok if you don't use\n" <<
       "this information.\n";
 
-    vcl_cout << "Computing tangents by interpolating vsol.\n";
+    std::cout << "Computing tangents by interpolating vsol.\n";
 
     // Set the tangents from interpolating vsol
 
@@ -185,7 +185,7 @@ get_tangents()
     // tangents for the first two, this will cause undefined behavior.
     for (unsigned v=0; v < 2; ++v) {
       if (!sels_[v]) {
-        vcl_cerr << 
+        std::cerr << 
           "Warning: no SEL found in view[v], which is ok if you don't use\n" <<
           "this information.\n";
         return;
@@ -226,7 +226,7 @@ match_using_dt(stereo_matcher_type matcher)
 
   switch (matcher) {
     case MW_ORIENTED_DT: {
-      vcl_vector<unsigned long> votes;
+      std::vector<unsigned long> votes;
       if (!s_dt_->ready_for_oriented_matching() || 
           !s_dt_->match_using_orientation_dt(&i_best, &votes))
         return false;
@@ -234,7 +234,7 @@ match_using_dt(stereo_matcher_type matcher)
     }
     break;
     case MW_ORIENTED_DT_EXTRAS: {
-      vcl_vector<unsigned long> votes;
+      std::vector<unsigned long> votes;
       if (!s_dt_->ready_for_oriented_matching() || 
           !s_dt_->match_using_orientation_dt_extras(&i_best, &votes))
         return false;
@@ -271,18 +271,18 @@ handle( const vgui_event & e,
   if (e.type == vgui_KEY_PRESS) {
     switch (e.key) {
       case 'p': {
-        vcl_cout << "Matching views using _oriented_ reprojection distance to edgels\n";
+        std::cout << "Matching views using _oriented_ reprojection distance to edgels\n";
         vgui::out << "Matching views using _oriented_ reprojection distance to edgels\n";
-        vcl_vector<bdifd_1st_order_curve_3d> crv3d;
+        std::vector<bdifd_1st_order_curve_3d> crv3d;
         bmcsd_discrete_corresp corresp;
         if (!bmcsd_match_and_reconstruct_all_curves(*s_dt_, &crv3d, &corresp)) {
-          vcl_cerr << "Error: while matching all views.\n";
+          std::cerr << "Error: while matching all views.\n";
           return false;
         }
 
         bool retval = mywritev("dat/reconstr_curves_workdir/crv3d", ".dat", crv3d);
         if(!retval) {
-          vcl_cerr << "Error while trying to write file.\n";
+          std::cerr << "Error while trying to write file.\n";
           abort();
         }
 
@@ -300,29 +300,29 @@ handle( const vgui_event & e,
     if (p0_) {
       switch (e.key) {
         case 'm': {
-          vcl_cout << "Matching selected curve using reprojection distance to edgels\n";
+          std::cout << "Matching selected curve using reprojection distance to edgels\n";
           vgui::out << "Matching selectec curve using reprojection distance to edgels\n";
           if(!match_using_dt())
-            vcl_cerr << "Error: Something went wrong during matching.\n";
+            std::cerr << "Error: Something went wrong during matching.\n";
           return true;
         }
         case 'o': {
-          vcl_cout << "Matching selected curve using _oriented_ reprojection distance to edgels\n";
+          std::cout << "Matching selected curve using _oriented_ reprojection distance to edgels\n";
           vgui::out << "Matching selected curve using _oriented_ reprojection distance to edgels\n";
           if (!match_using_dt(MW_ORIENTED_DT))
-            vcl_cerr << "Error: Something went wrong during matching.\n";
+            std::cerr << "Error: Something went wrong during matching.\n";
 
           return true;
         }
         case '6': {
-          vcl_cout << "Matching selected curve using oriented reprojection and _extras_.\n";
+          std::cout << "Matching selected curve using oriented reprojection and _extras_.\n";
           vgui::out << "Matching selected curve using _oriented_ reprojection and _extras_.\n";
           if (!match_using_dt(MW_ORIENTED_DT_EXTRAS))
-            vcl_cerr << "Error: Something went wrong during matching.\n";
+            std::cerr << "Error: Something went wrong during matching.\n";
           return true;
         }
         case '5': {
-          vcl_cout << "Displaying tgts\n";
+          std::cout << "Displaying tgts\n";
           vgui::out << "Displaying tgts\n";
           display_selected_tangents();
           return true;
@@ -340,10 +340,10 @@ handle( const vgui_event & e,
 void mw_curve_dt_tracing_tool_2::
 display_selected_tangents()
 {
-  vcl_vector<vcl_vector<vsol_line_2d_sptr> > tgts; //:< tgts[iview][isample]
+  std::vector<std::vector<vsol_line_2d_sptr> > tgts; //:< tgts[iview][isample]
   bool retval  = compute_selected_tangents(&tgts);
   if (!retval) {
-    vcl_cerr << "Warning: something wrong when asked to display tangents\n";
+    std::cerr << "Warning: something wrong when asked to display tangents\n";
     return;
   }
 
@@ -369,15 +369,15 @@ display_selected_tangents()
 }
 
 bool mw_curve_dt_tracing_tool_2::
-compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) const
+compute_selected_tangents(std::vector<std::vector<vsol_line_2d_sptr> > *tgts_ptr) const
 {
   if (!s_dt_->has_curve_tangents()) {
-    vcl_cerr << "ERROR: we have no curve tangents\n";
+    std::cerr << "ERROR: we have no curve tangents\n";
     return false;
   }
 
   // tgts[iview][isample]
-  vcl_vector<vcl_vector<vsol_line_2d_sptr> > &tgts = *tgts_ptr;
+  std::vector<std::vector<vsol_line_2d_sptr> > &tgts = *tgts_ptr;
 
   tgts.resize(nviews());
 
@@ -387,8 +387,8 @@ compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) 
       tgts[v].resize(s_->selected_crv(v)->size());
       for (unsigned i=0; i < s_->selected_crv(v)->size(); ++i) {
         double dir = s_dt_->curve_tangents(v, s_->selected_crv_id(v), i);
-        tgts[v][i] = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(dir)/2.0, 
-          vcl_sin(dir)/2.0), s_->selected_crv(v)->vertex(i)->get_p());
+        tgts[v][i] = new vsol_line_2d(vgl_vector_2d<double>(std::cos(dir)/2.0, 
+          std::sin(dir)/2.0), s_->selected_crv(v)->vertex(i)->get_p());
       }
     }
   }
@@ -396,7 +396,7 @@ compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) 
   //: Do the reprojections
 
   if (!s_dt_->has_reprojection_crv()) {
-    vcl_cerr << "Warning: we have no reprojections\n";
+    std::cerr << "Warning: we have no reprojections\n";
   } else {
     //: Find id of the selected curve in view 2 amongst the candidate curves
     unsigned id_candidate;
@@ -405,7 +405,7 @@ compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) 
     s_->get_index_of_candidate_curve(s_->selected_crv(1), &id_candidate);
 
     if (!retval) {
-      vcl_cerr << "Warning: selected curve is not within candidates.\n";
+      std::cerr << "Warning: selected curve is not within candidates.\n";
       return false;
     }
    
@@ -415,8 +415,8 @@ compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) 
       tgts[v].resize(n);
       for (unsigned i=0; i < n; ++i) {
         sdet_edgel edg = s_dt_->reprojection_crv(id_candidate, v, i);
-        tgts[v][i] = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(edg.tangent)/2.0, 
-          vcl_sin(edg.tangent)/2.0), new vsol_point_2d(edg.pt));
+        tgts[v][i] = new vsol_line_2d(vgl_vector_2d<double>(std::cos(edg.tangent)/2.0, 
+          std::sin(edg.tangent)/2.0), new vsol_point_2d(edg.pt));
       }
     }
   }

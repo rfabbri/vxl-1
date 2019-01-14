@@ -11,7 +11,7 @@
 // \date        2006-02-15
 // 
 
-#include <vcl_string.h>
+#include <string>
 #include <imgr/imgr_reconstructed_images_resource.h>
 #include <xscan/xscan_scan.h>
 //

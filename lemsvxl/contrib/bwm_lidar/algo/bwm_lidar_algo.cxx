@@ -54,8 +54,8 @@ dbmsh3d_mesh* lidar_to_mesh (vil_image_view<vxl_byte>& img1,
   dbmsh3d_save_ply2 (M, "ground.ply2");
 
   //disp('extracting horizontal surfaces');
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > polys;
-  vcl_vector<double> heights;
+  std::vector<std::vector<vgl_point_2d<double> > > polys;
+  std::vector<double> heights;
   vil_image_view<int> plane_mask (bld.ni(), bld.nj(), 1);
   extract_horizontal_polygons (img1, bld, polys, heights, plane_mask);
 
@@ -188,7 +188,7 @@ void convert_label_image (vil_image_view<vxl_byte>& label_img,
 bool median_image_value (vil_image_view<vxl_byte>& img, double& median)
 {
   int np = img.nplanes();
-  vcl_vector<double> tmp;
+  std::vector<double> tmp;
   for (unsigned int j=0; j<img.nj(); j++)
     for (unsigned int i=0; i<img.ni(); i++) {
       if (img(i,j,0)) {
@@ -202,7 +202,7 @@ bool median_image_value (vil_image_view<vxl_byte>& img, double& median)
   if (tmp.size() == 0)
     return false;
 
-  vcl_nth_element (tmp.begin(),
+  std::nth_element (tmp.begin(),
                    tmp.begin() + int(tmp.size()/2), 
                    tmp.end());
   median = *(tmp.begin() + int(tmp.size()/2));
@@ -216,8 +216,8 @@ bool median_image_value (vil_image_view<vxl_byte>& img, double& median)
 //    plane_mask: vil_image
 void extract_horizontal_polygons (vil_image_view<vxl_byte>& img1, 
                                   vil_image_view<bool>& bld,
-                                  vcl_vector<vcl_vector<vgl_point_2d<double> > >& polys,
-                                  vcl_vector<double>& plane_heights,
+                                  std::vector<std::vector<vgl_point_2d<double> > >& polys,
+                                  std::vector<double>& plane_heights,
                                   vil_image_view<int>& plane_mask)
 {
   //plane_mask = zeros(size(mask));
@@ -238,7 +238,7 @@ void extract_horizontal_polygons (vil_image_view<vxl_byte>& img1,
 
   for (int b=1; b<=nregions; b++) {
     vil_image_view<bool> planes (bld.ni(), bld.nj(), 1);
-    vcl_vector<double> heights;
+    std::vector<double> heights;
     segment_horizontal_planes (img1, labeled, b, planes, heights);
 
     //Update the plane_mask image.
@@ -260,12 +260,12 @@ void extract_horizontal_polygons (vil_image_view<vxl_byte>& img1,
     for (unsigned int i=0; i<heights.size(); i++) {
       //For each extracted plane, create polygon contour.
       ///polyline_big = extract_region_perimeter(planes == i);
-      vcl_vector<vgl_point_2d<double> > poly_big;
+      std::vector<vgl_point_2d<double> > poly_big;
       extract_region_perimeter (planes, i, poly_big);
 
       //push the current reduced polygon contour into the vector of polys[]
       ///polys{end+1} = reduce_verts(polyline_big,1);
-      vcl_vector<vgl_point_2d<double> > poly;
+      std::vector<vgl_point_2d<double> > poly;
       reduce_verts (poly_big, poly);
       polys.push_back (poly);
 
@@ -304,19 +304,19 @@ unsigned int conn_label (vil_image_view<bool>&bld,
           label = labeled(i,j,0);
           if (i>0) //top
             if (labeled(i-1,j,0) != 0)
-              label = vcl_min (label, labeled(i-1,j,0));
+              label = std::min (label, labeled(i-1,j,0));
           if (j>0) //left
             if (labeled(i,j-1,0) != 0)
-              label = vcl_min (labeled(i,j-1,0), label);
+              label = std::min (labeled(i,j-1,0), label);
           if (i>0 && j>0) //top-left
             if (labeled(i-1,j-1,0) != 0)
-              label = vcl_min (labeled(i-1,j-1,0), label);
+              label = std::min (labeled(i-1,j-1,0), label);
           if (i>0 && j<bld.nj()-1) //top-right
             if (labeled(i-1,j+1,0) != 0)
-              label = vcl_min (labeled(i-1,j+1,0), label);
+              label = std::min (labeled(i-1,j+1,0), label);
           if (i<bld.ni()-1 && j>0) //bottom-left
             if (labeled(i+1,j-1,0) != 0)
-              label = vcl_min (labeled(i+1,j-1,0), label);
+              label = std::min (labeled(i+1,j-1,0), label);
 
           if (label != labeled(i,j,0)) {
             change = true;
@@ -332,19 +332,19 @@ unsigned int conn_label (vil_image_view<bool>&bld,
           label = labeled(i,j,0);
           if (i<bld.ni()-1) //bottom
             if (labeled(i+1,j,0) != 0)
-              label = vcl_min (labeled(i+1,j,0), label);
+              label = std::min (labeled(i+1,j,0), label);
           if (j<bld.nj()-1) //right
             if (labeled(i,j+1,0) != 0)
-              label = vcl_min (labeled(i,j+1,0), label);
+              label = std::min (labeled(i,j+1,0), label);
           if (i<bld.ni()-1 && j<bld.nj()-1) //bottom-right
             if (labeled(i+1,j+1,0) != 0)
-              label = vcl_min (labeled(i+1,j+1,0), label);
+              label = std::min (labeled(i+1,j+1,0), label);
           if (i>0 && j<bld.nj()-1) //top-right
             if (labeled(i-1,j+1,0) != 0)
-              label = vcl_min (labeled(i-1,j+1,0), label);
+              label = std::min (labeled(i-1,j+1,0), label);
           if (i<bld.ni()-1 && j>0) //bottom-left
             if (labeled(i+1,j-1,0) != 0)
-              label = vcl_min (labeled(i+1,j-1,0), label);
+              label = std::min (labeled(i+1,j-1,0), label);
 
           if (label != labeled(i,j,0)) {
             change = true;
@@ -354,10 +354,10 @@ unsigned int conn_label (vil_image_view<bool>&bld,
       }
   }
   while (change);
-  vcl_cout << "total iterations in c-c labelling: " << iter << vcl_endl;
+  std::cout << "total iterations in c-c labelling: " << iter << std::endl;
 
   //need to re-order all nregions into 1, 2, 3, ...
-  vcl_set<int> region_labels;
+  std::set<int> region_labels;
   for (unsigned int j=0; j<labeled.nj(); j++)
     for (unsigned int i=0; i<labeled.ni(); i++) {
       if (labeled(i,j,0) !=0) {
@@ -370,7 +370,7 @@ unsigned int conn_label (vil_image_view<bool>&bld,
   int reset_l = 0;
   
   while (region_labels.size() != 0) {
-    vcl_set<int>::iterator it = region_labels.begin();
+    std::set<int>::iterator it = region_labels.begin();
     int l = *it;
     region_labels.erase (it);
     reset_l++;
@@ -384,12 +384,12 @@ unsigned int conn_label (vil_image_view<bool>&bld,
       }
   }
 
-  vcl_cout << "total regions (from label 1, 2, ... to n): " << reset_l << vcl_endl;
+  std::cout << "total regions (from label 1, 2, ... to n): " << reset_l << std::endl;
 
   return reset_l;
 }
 
-bool save_int_image (vil_image_view<int>& img, vcl_string filename)
+bool save_int_image (vil_image_view<int>& img, std::string filename)
 {
   vil_image_view<vxl_byte> tmp (img.ni(), img.nj(), 1);
   for (unsigned int j=0; j<img.nj(); j++)
@@ -398,7 +398,7 @@ bool save_int_image (vil_image_view<int>& img, vcl_string filename)
   return vil_save (tmp, filename.c_str());
 }
 
-bool save_bw_image (vil_image_view<bool>& img, vcl_string filename)
+bool save_bw_image (vil_image_view<bool>& img, std::string filename)
 {
   vil_image_view<vxl_byte> tmp (img.ni(), img.nj(), 1);
   for (unsigned int j=0; j<img.nj(); j++)
@@ -418,7 +418,7 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
                                 vil_image_view<int>& labeled, 
                                 const unsigned int b,
                                 vil_image_view<bool>& planes, 
-                                vcl_vector<double>& heights)
+                                std::vector<double>& heights)
 {
   
   double bin_size = 1.5;
@@ -431,7 +431,7 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
   //create a histogram and search for peaks corresponding to horizontal planes
   //lidar_v = lidar(mask(:));
   //bins = [min(lidar_v)-0.01:bin_size:max(lidar_v)+0.01];
-  vcl_vector<vxl_byte> lidar_v;
+  std::vector<vxl_byte> lidar_v;
   double min = DBL_MAX;
   double max = 0;
   for (unsigned int j=0; j<img1.nj(); j++)
@@ -444,7 +444,7 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
           max = img1(i,j,0);
       }
 
-  vcl_vector<double> bins;
+  std::vector<double> bins;
   for (double d=min-0.01; d<=max+0.01; d+=bin_size) {
     bins.push_back (d);
   }
@@ -461,7 +461,7 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
   //h = hist(lidar_v,bins);    
   //N = HIST(Y,X), where X is a vector, returns the distribution of Y
   //among bins with centers specified by X.
-  vcl_vector<int> h;
+  std::vector<int> h;
   hist (lidar_v, bins, h);
 
   //[max_val, max_i] = max(h);
@@ -472,20 +472,20 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
 
   //find peaks
   //h_prev = [0 h(1:end-1)];
-  vcl_vector<int> h_prev;
+  std::vector<int> h_prev;
   h_prev.push_back (0);
   for (unsigned int i=0; i<h.size()-1; i++)
     h_prev.push_back (h[i]);
 
   //h_next = [h(2:end) 0];
-  vcl_vector<int> h_next;  
+  std::vector<int> h_next;  
   for (unsigned int i=1; i<h.size(); i++)
     h_next.push_back (h[i]);
   h_next.push_back (0);
 
   //peaks = find((h > h_prev) & (h > h_next));
   //npeaks = length(peaks);
-  vcl_vector<int> peaks;
+  std::vector<int> peaks;
   for (unsigned int i=0; i<h.size(); i++) {
     if (h[i] > h_prev[i] && h[i] > h_next[i])
       peaks.push_back (i);
@@ -500,13 +500,13 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
   
   for (int i=0; i<peaks.size(); i++) {
     double bin_center = bins[peaks[i]];
-    ///in_range = (vcl_fabs(lidar - bin_center) < bin_size/2) & mask;
+    ///in_range = (std::fabs(lidar - bin_center) < bin_size/2) & mask;
     //find all pixel value of this building (masked by labeled[b] == b) that is in the bin range to in_range.
     for (unsigned int j=0; j<planes.nj(); j++)
       for (unsigned int i=0; i<planes.ni(); i++) {
         double tmp = double(img1(i,j,0)) - bin_center;
         if (labeled(i,j,0) == b)
-          if (vcl_fabs(tmp) < bin_size/2)
+          if (std::fabs(tmp) < bin_size/2)
             in_range(i,j,0) = img1(i,j,0);
       }
 
@@ -521,7 +521,7 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
       for (unsigned int i=0; i<planes.ni(); i++) {
         double tmp = double(img1(i,j,0)) - med_height;
         if (labeled(i,j,0) == b)
-          if (vcl_fabs(tmp) <= max_height_range)
+          if (std::fabs(tmp) <= max_height_range)
             planes(i,j,0) = true;
       }
     
@@ -547,9 +547,9 @@ void segment_horizontal_planes (vil_image_view<vxl_byte>& img1,
 //: histogram
 //  input: value, bins.
 //  output: h.
-void hist (vcl_vector<vxl_byte>& value, 
-           vcl_vector<double>& bins, 
-           vcl_vector<int>& h)
+void hist (std::vector<vxl_byte>& value, 
+           std::vector<double>& bins, 
+           std::vector<int>& h)
 {
   const int sz = bins.size(); 
   assert (sz >=2);
@@ -562,7 +562,7 @@ void hist (vcl_vector<vxl_byte>& value,
   //2) if value[i] >= bin[sz-1]
   //3) if bin[j] <= value[i] < bin[j+1]
 
-  vcl_vector<int> th;
+  std::vector<int> th;
   for (int j=0; j<bins.size()-1; j++) {
     double t = (bins[j] + bins[j+1])/2;
     th.push_back (t);
@@ -588,12 +588,12 @@ void hist (vcl_vector<vxl_byte>& value,
 
 void extract_region_perimeter (vil_image_view<bool>& planes, 
                                const unsigned int i,
-                               vcl_vector<vgl_point_2d<double> >& poly_big)
+                               std::vector<vgl_point_2d<double> >& poly_big)
 {
   //bw = imdilate(bw,ones(3));  
   vil_structuring_element disk;
   disk.set_to_disk(1.5);
-  vcl_cout << "str" << disk << vcl_endl;
+  std::cout << "str" << disk << std::endl;
   vil_image_view<bool> planes2;
   vil_binary_dilate (planes, planes2, disk);
   
@@ -740,7 +740,7 @@ void bw_fill_holes (vil_image_view<bool>& img)
       }
   }
   while (change);
-  vcl_cout << "total iterations in background labelling: " << iter << vcl_endl;
+  std::cout << "total iterations in background labelling: " << iter << std::endl;
 
   //look for all non-bg pixels and fill it.
   int count = 0;
@@ -755,7 +755,7 @@ void bw_fill_holes (vil_image_view<bool>& img)
   //debug: save image for a specific building.
   save_bw_image (bg, "bg.png");
 
-  vcl_cout << "number of hole pixels filled: " << count << vcl_endl;
+  std::cout << "number of hole pixels filled: " << count << std::endl;
 }
 
 void get_bw_perim (vil_image_view<bool>& img, vil_image_view<bool>& perim)
@@ -790,8 +790,8 @@ bool non_zero (vil_image_view<bool>& img)
 }
 
 //push the current reduced polygon contour into the vector of polys[]
-void reduce_verts (vcl_vector<vgl_point_2d<double> >& poly_big,
-                   vcl_vector<vgl_point_2d<double> >& poly)
+void reduce_verts (std::vector<vgl_point_2d<double> >& poly_big,
+                   std::vector<vgl_point_2d<double> >& poly)
 {
   poly.clear();
 

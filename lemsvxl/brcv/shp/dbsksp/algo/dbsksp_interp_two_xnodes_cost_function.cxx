@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include "dbsksp_interp_two_xnodes_cost_function.h"
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
@@ -18,7 +18,7 @@
 // Otherwise, return sinh(x) ( sinh(0) = 1 and sinh'(x) = 0)
 double dbsksp_interp_two_xnodes_f0(double x)
 {
-  return (x >=0) ? 1 : 2 / (vcl_exp(x) + vcl_exp(-x));
+  return (x >=0) ? 1 : 2 / (std::exp(x) + std::exp(-x));
 }
 
 
@@ -54,7 +54,7 @@ f(const vnl_vector<double >& x)
     }
   default:
     {
-      vcl_cerr << "Unknown estimation type\n";
+      std::cerr << "Unknown estimation type\n";
       assert(false);
     }
   }
@@ -76,7 +76,7 @@ f(const vnl_vector<double >& x)
       return g.discrepancy_of_ignored_param();
     };
   default:
-    vcl_cerr << "Wrong property type.\n";
+    std::cerr << "Wrong property type.\n";
     return vnl_numeric_traits<double >::maxval;
   }
 };
@@ -213,7 +213,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
 
   if (print_debug_table)
   {
-    vcl_string filename = "D:/vision/temp/fitcost.txt";
+    std::string filename = "D:/vision/temp/fitcost.txt";
     vnl_matrix<double > fitcost(200, 5, 0); // x fitcost len0 len1
     for (unsigned j=0; j<200; ++j)
     {
@@ -232,7 +232,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
       fitcost(j, 3) = ss0->len1();
       fitcost(j, 4) = estimator.det_A();
     }
-    vcl_ofstream outstr(filename.c_str(), vcl_ios_out);
+    std::ofstream outstr(filename.c_str(), std::ios::out);
     outstr << "x fitcost len0 len1 det_A\n";
     outstr << fitcost;
     outstr.close(); 
@@ -306,7 +306,7 @@ compute_twoshapelet_via_radius_discrepancy(double alpha0, double& fit_error)
 
   if (print_debug_table)
   {
-    vcl_string filename = "D:/vision/temp/fitcost.txt";
+    std::string filename = "D:/vision/temp/fitcost.txt";
     vnl_matrix<double > fitcost(200, 5, 0); // x fitcost len0 len1
     for (unsigned j=1; j<200; ++j)
     {
@@ -325,7 +325,7 @@ compute_twoshapelet_via_radius_discrepancy(double alpha0, double& fit_error)
       fitcost(j, 3) = ss0->len1();
       fitcost(j, 4) = estimator.det_A();
     }
-    vcl_ofstream outstr(filename.c_str(), vcl_ios_out);
+    std::ofstream outstr(filename.c_str(), std::ios::out);
     outstr << "x fitcost len0 len1 det_A\n";
     outstr << fitcost;
     outstr.close(); 
@@ -368,8 +368,8 @@ alpha0_estimate(double t)
     this->shock_estimate_.point_at(t * this->shock_estimate_.len());
   
   // compute alpha0 given t
-  vgl_vector_2d<double > tA(vcl_cos(this->start_xnode().psi_), 
-    vcl_sin(this->start_xnode().psi_));
+  vgl_vector_2d<double > tA(std::cos(this->start_xnode().psi_), 
+    std::sin(this->start_xnode().psi_));
   vgl_vector_2d<double > vAC = pt - this->start_xnode().pt_;
   return signed_angle(vAC, tA);
 }
@@ -519,8 +519,8 @@ alpha0_estimate(double t)
     this->shock_estimate_.point_at(t * this->shock_estimate_.len());
   
   // compute alpha0 given t
-  vgl_vector_2d<double > tA(vcl_cos(this->start_xnode().psi_), 
-    vcl_sin(this->start_xnode().psi_));
+  vgl_vector_2d<double > tA(std::cos(this->start_xnode().psi_), 
+    std::sin(this->start_xnode().psi_));
   vgl_vector_2d<double > vAC = pt - this->start_xnode().pt_;
   return signed_angle(vAC, tA);
 }
@@ -551,7 +551,7 @@ f(vnl_vector<double> const& x)
       double len = (this->end_xnode().pt_ - this->start_xnode().pt_).length();
 
       // fitting cost: do end point radius match?
-      //double fitting_cost = 1 - vcl_exp(- vnl_math::sqr(fit_error/10));
+      //double fitting_cost = 1 - std::exp(- vnl_math::sqr(fit_error/10));
       fitting_cost = 1 - dbsksp_interp_two_xnodes_f0(fit_error/10);
 
       // legality: how illegal is the twoshapelet?
@@ -561,7 +561,7 @@ f(vnl_vector<double> const& x)
       //{
       //  double a = ss->len0() * ss->len1() / (len*len);
       //  a = (a>0) ? 0 : a;
-      //  legality_cost = 1 - vcl_exp(a/10);
+      //  legality_cost = 1 - std::exp(a/10);
       //}
 
       
@@ -585,7 +585,7 @@ f(vnl_vector<double> const& x)
           dbsksp_shapelet_sptr s1 = ss->shapelet_end();
           double kdiff0 = s0->bnd_arc_left().k() - s1->bnd_arc_left().k();
           double kdiff1 = s0->bnd_arc_right().k() - s1->bnd_arc_right().k();
-          kdiff_cost = 1 - vcl_exp(- (kdiff0 * kdiff0 + kdiff1 * kdiff1) * len);
+          kdiff_cost = 1 - std::exp(- (kdiff0 * kdiff0 + kdiff1 * kdiff1) * len);
         }
       }
     }

@@ -37,7 +37,7 @@ class dbseg_seg_drawing_tableau : public vgui_easy2D_tableau
   bool handle(const vgui_event &e);
 
   //: Returns the type of this tableau ('dbseg_seg_drawing_tableau').
-  vcl_string type_name() const { return "dbseg_seg_drawing_tableau";}
+  std::string type_name() const { return "dbseg_seg_drawing_tableau";}
 
  protected:
     //pointer to the parent tableau    

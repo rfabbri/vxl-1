@@ -25,7 +25,7 @@ protected:
   float         length_;
 
   //: temp: the underlie supporting curves of a virtual curve
-  vcl_vector<dbmsh3d_curve*> sup_curves_;
+  std::vector<dbmsh3d_curve*> sup_curves_;
   
   bool          selected_;
 
@@ -69,7 +69,7 @@ public:
   
   const bool self_loop_on_LV () const;
 
-  vcl_vector<dbmsh3d_curve*>& sup_curves () {
+  std::vector<dbmsh3d_curve*>& sup_curves () {
     return sup_curves_;
   }
   dbmsh3d_curve* sup_curves (const int i) {
@@ -92,8 +92,8 @@ public:
   }
 
   //####### Generator handling functions #######
-  void get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs) const;  
-  void get_asso_Gs_incld_FFs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs) const;
+  void get_asso_Gs (std::map<int, dbmsh3d_vertex*>& asso_Gs) const;  
+  void get_asso_Gs_incld_FFs (std::map<int, dbmsh3d_vertex*>& asso_Gs) const;
 
   //###### Other functions ######
   virtual bool check_integrity ();
@@ -103,7 +103,7 @@ public:
   virtual dbmsh3d_edge* clone () const;
   virtual dbsk3d_ms_curve* clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2) const;
 
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
 
   //: if length_ != 0, no need to re-compute.
   double get_length ();
@@ -132,8 +132,8 @@ double closest_MC_MC (dbsk3d_ms_curve* A13_curve, dbsk3d_ms_curve* A3_curve,
 //###############################################################
 
 //: File I/O for FS/SHG
-void mc_save_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC);
-void mc_load_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC, 
+void mc_save_text_file (std::FILE* fp, dbsk3d_ms_curve* MC);
+void mc_load_text_file (std::FILE* fp, dbsk3d_ms_curve* MC, 
                         dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_hypg* ms_hypg);
 
 #endif

@@ -3,19 +3,19 @@
 
 #include "biob_worldpt_roster_sptr.h"
 #include "biob_worldpt_index.h"
-#include <vcl_vector.h>
+#include <vector>
 
 class biob_subset_worldpt_roster : public biob_worldpt_roster {
  public:
   ~biob_subset_worldpt_roster();
-  typedef vcl_vector<biob_worldpt_index> which_points_t;
+  typedef std::vector<biob_worldpt_index> which_points_t;
   typedef const which_points_t const_which_points_t;
   biob_subset_worldpt_roster(const biob_worldpt_roster_sptr subroster_ptr)
     : subroster_ptr_(subroster_ptr) {}
-    vcl_vector<biob_worldpt_index> & which_points() {
+    std::vector<biob_worldpt_index> & which_points() {
       return which_points_;
     }
-    const vcl_vector<biob_worldpt_index> & const_which_points() const{
+    const std::vector<biob_worldpt_index> & const_which_points() const{
       return which_points_;
     }
     unsigned long int num_points() const {return which_points_.size();}

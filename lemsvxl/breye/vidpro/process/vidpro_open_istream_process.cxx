@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_open_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 
@@ -66,16 +66,16 @@ vidpro_open_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_open_istream_process::name()
+std::string vidpro_open_istream_process::name()
 {
     return "Open Video Istream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_open_istream_process::get_input_type()
+std::vector< std::string > vidpro_open_istream_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // no input type required
     to_return.clear();
@@ -85,9 +85,9 @@ vcl_vector< vcl_string > vidpro_open_istream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_open_istream_process::get_output_type()
+std::vector< std::string > vidpro_open_istream_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // output type
     to_return.push_back( "istream" );
@@ -114,7 +114,7 @@ vidpro_open_istream_process::execute()
     if(!vis_storage)
     {
         return false;
-        vcl_cerr<<"Error: Opening the input stream\n";
+        std::cerr<<"Error: Opening the input stream\n";
     }
    
     
@@ -125,7 +125,7 @@ vidpro_open_istream_process::execute()
     output_data_[0].push_back(vis_storage);
     return true;
 
-    vcl_cerr<<"Error in Open Istream process: Not able to open the istream\n";
+    std::cerr<<"Error in Open Istream process: Not able to open the istream\n";
     return false;
 }
 
@@ -173,18 +173,18 @@ vidpro_open_istream_process::add_parameters()
     if( !parameters()->add( "Select an Input Stream Type" , "-istream_type" , choices_, 0 )||
         !parameters()->add( "Filename" , "-istream_filename" ,bpro_filepath("","*") ) )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 
 }
 
 vidpro_istream_storage_sptr
-vidpro_open_istream_process::open_istream(int type, vcl_string const& filename)
+vidpro_open_istream_process::open_istream(int type, std::string const& filename)
 {
     switch(choice_codes_[type]){
     case IMAGE_LIST:{
-          vcl_string directory = vul_file::dirname(filename); // Strips away "/filename.ext" of the path
+          std::string directory = vul_file::dirname(filename); // Strips away "/filename.ext" of the path
           return image_list_istream(directory.c_str());}
        
 #ifdef HAS_FFMPEG
@@ -214,15 +214,15 @@ vidpro_open_istream_process::open_istream(int type, vcl_string const& filename)
 //: Use vgui dialogs to open an image list istream
 //-----------------------------------------------------------------------------
 vidpro_istream_storage_sptr
-vidpro_open_istream_process::image_list_istream(vcl_string const& glob)
+vidpro_open_istream_process::image_list_istream(std::string const& glob)
 {
 
    
-    vcl_string s(glob.c_str());
+    std::string s(glob.c_str());
     s += "/*";
     vidl_image_list_istream* vis = new vidl_image_list_istream(s);
     if (!vis|| !vis->is_open()) {
-        vcl_cerr <<"Failed to open the input stream\n";
+        std::cerr <<"Failed to open the input stream\n";
         delete vis;
         return NULL;
     }
@@ -245,13 +245,13 @@ vidpro_open_istream_process::image_list_istream(vcl_string const& glob)
 //: Use vgui dialogs to open a FFMPEG istream
 //-----------------------------------------------------------------------------
 vidpro_istream_storage_sptr
-vidpro_open_istream_process::ffmpeg_istream(vcl_string const& filename)
+vidpro_open_istream_process::ffmpeg_istream(std::string const& filename)
 {
 #ifdef HAS_FFMPEG
 
     vidl_ffmpeg_istream* vis = new vidl_ffmpeg_istream(image_filename);
     if (!vis || !vis->is_open()) {
-        vcl_cerr<<"Failed to open the input stream\n";
+        std::cerr<<"Failed to open the input stream\n";
         delete vis;
         return NULL;
     }
@@ -264,7 +264,7 @@ vidpro_open_istream_process::ffmpeg_istream(vcl_string const& filename)
 
     return vis_storage;
 #else // HAS_FFMPEG
-    vcl_cerr <<"FFMPEG support not compiled in\n";
+    std::cerr <<"FFMPEG support not compiled in\n";
     return NULL;
 #endif // HAS_FFMPEG
 }
@@ -273,13 +273,13 @@ vidpro_open_istream_process::ffmpeg_istream(vcl_string const& filename)
 //: Use vgui dialogs to open a DSHOW_FILE istream
 //-----------------------------------------------------------------------------
 vidpro_istream_storage_sptr
-vidpro_open_istream_process::dshow_file_istream(vcl_string const& filename)
+vidpro_open_istream_process::dshow_file_istream(std::string const& filename)
 {
 #ifdef HAS_DSHOW
 
     vidl_dshow_file_istream *vis = new vidl_dshow_file_istream(filename);
     if (!vis || !vis->is_open()) {
-        vcl_cerr<<"Failed to open the input stream\n";
+        std::cerr<<"Failed to open the input stream\n";
         delete vis;
         return NULL;
     }
@@ -294,7 +294,7 @@ vidpro_open_istream_process::dshow_file_istream(vcl_string const& filename)
     ;
 
 #else // HAS_DSHOW
-    vcl_cerr <<"DSHOW support not compiled in\n";
+    std::cerr <<"DSHOW support not compiled in\n";
     return NULL;
 #endif // HAS_DSHOW
 

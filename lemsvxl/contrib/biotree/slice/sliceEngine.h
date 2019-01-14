@@ -2,13 +2,13 @@
 #define SLICE_ENGINE_H_ 
 
 #include "sliceProcessor.h"
-#include <vcl_vector.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <vector>
+#include <fstream>
+#include <string>
 
 template <class T> class sliceEngine{
   public:
-    sliceEngine(vcl_vector<vcl_ifstream*> streams) 
+    sliceEngine(std::vector<std::ifstream*> streams) 
       :save_to_mem_(0),save_to_disk_(0)
       { streamlist_ = streams;
       memlocs_.clear();
@@ -22,14 +22,14 @@ template <class T> class sliceEngine{
       outnames_.clear();
       }
 
-    void setStreamlist(vcl_vector<vcl_string> files) {innames_ = files;}
-    void addStream(vcl_string f){innames_.push_back(f);}
+    void setStreamlist(std::vector<std::string> files) {innames_ = files;}
+    void addStream(std::string f){innames_.push_back(f);}
 
     inline void clearStreams();
     int nstreams() { return innames_.size();}
-    void setSaveToMemory(vcl_vector<T*> memlocs)
+    void setSaveToMemory(std::vector<T*> memlocs)
     { save_to_mem_ = 1; save_to_disk_ = 0; memlocs_ = memlocs; outnames_.clear();}
-    void setSaveToDisk(vcl_vector<vcl_string> fnames)
+    void setSaveToDisk(std::vector<std::string> fnames)
     { save_to_mem_ = 0; save_to_disk_ = 1; outnames_ = fnames; memlocs_.clear();}
 
     bool processWith(sliceProcessor<T>* proc);
@@ -40,9 +40,9 @@ template <class T> class sliceEngine{
     void cleanup();
     bool save_to_mem_;
     bool save_to_disk_;
-    vcl_vector<T*> memlocs_;
-    vcl_vector<vcl_string> outnames_;
-    vcl_vector<vcl_string> innames_;
-    vcl_vector<vcl_ifstream*> streamlist_;
+    std::vector<T*> memlocs_;
+    std::vector<std::string> outnames_;
+    std::vector<std::string> innames_;
+    std::vector<std::ifstream*> streamlist_;
 };
 #endif 

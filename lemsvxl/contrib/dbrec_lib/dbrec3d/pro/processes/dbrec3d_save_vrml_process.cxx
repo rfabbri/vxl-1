@@ -27,10 +27,10 @@ bool dbrec3d_save_vrml_process_cons(bprb_func_process& pro)
 {
   using namespace dbrec3d_save_vrml_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
   input_types_[i++] = "int";        //context_id
-  input_types_[i++] = "vcl_string"; //path for the vrml file to be written
+  input_types_[i++] = vcl_string"; //path for the vrml file to be written
   
   input_types_[i++] = "double";   // roi min point
   input_types_[i++] = "double";
@@ -41,7 +41,7 @@ bool dbrec3d_save_vrml_process_cons(bprb_func_process& pro)
   input_types_[i++] = "double";
   
     
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -54,7 +54,7 @@ bool dbrec3d_save_vrml_process(bprb_func_process& pro)
   
   //get inputs
   int context_id = pro.get_input<int>(0);
-  vcl_string fname = pro.get_input<vcl_string>(1);
+  std::string fname = pro.get_input<std::string>(1);
   double min_x =pro.get_input<double>(2);
   double min_y =pro.get_input<double>(3);
   double min_z =pro.get_input<double>(4);
@@ -66,7 +66,7 @@ bool dbrec3d_save_vrml_process(bprb_func_process& pro)
   
   dbrec3d_context_sptr context_ptr = CONTEXT_MANAGER->get_context(context_id);
   double cell_length = context_ptr->finest_cell_length();
-  vcl_ofstream os(fname.c_str());
+  std::ofstream os(fname.c_str());
   dbrec3d_vrml_visitor vrml_vis(os, cell_length);
   
   

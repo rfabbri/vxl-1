@@ -23,9 +23,9 @@
 #include <bprb/bprb_parameters.h>
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -50,7 +50,7 @@ bool psm_mog_to_simple_process_cons(bprb_func_process& pro)
   // input[0]: The mog scene
   // input[1]: The simple scene
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
   input_types_[1] = "psm_scene_base_sptr";
   
@@ -69,7 +69,7 @@ bool psm_mog_to_simple_process(bprb_func_process &pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -79,24 +79,24 @@ bool psm_mog_to_simple_process(bprb_func_process &pro)
  
   psm_apm_type apm_type = scene_base_mog->appearance_model_type();
 
-  vcl_cout << "apm_type = " << apm_type << vcl_endl;
+  std::cout << "apm_type = " << apm_type << std::endl;
   switch (apm_type) {
     case PSM_APM_MOG_GREY:
       {
         psm_scene<PSM_APM_MOG_GREY> *scene_mog = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base_mog.ptr());
         if (!scene_mog) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         // make sure other scene is SIMPLE_GREY
         apm_type = scene_base_simple->appearance_model_type();
         if (apm_type != PSM_APM_SIMPLE_GREY) {
-          vcl_cerr << "Error: appearance model type of second input should be SIMPLE_GREY" << vcl_endl;
+          std::cerr << "Error: appearance model type of second input should be SIMPLE_GREY" << std::endl;
           return false;
         }
         psm_scene<PSM_APM_SIMPLE_GREY> *scene_simple = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base_simple.ptr());
         if (!scene_simple) {
-          vcl_cerr << "error casting scene base to scene (second input)" << vcl_endl;
+          std::cerr << "error casting scene base to scene (second input)" << std::endl;
           return false;
         }
         // do the conversion one cell at a time
@@ -123,12 +123,12 @@ bool psm_mog_to_simple_process(bprb_func_process &pro)
     case PSM_APM_MOG_RGB:
       {
         // TODO
-        vcl_cout << "conversion not implemented for rgb yet" << vcl_endl;
+        std::cout << "conversion not implemented for rgb yet" << std::endl;
         break;
       }
    
     default:
-      vcl_cerr << "error - psm_mog_to_simple_process: unexpected appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_mog_to_simple_process: unexpected appearance model type " << apm_type << std::endl;
       return false;
   }
 

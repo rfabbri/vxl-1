@@ -8,7 +8,7 @@
 #include <vnl/vnl_double_4.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class  planar_curve_reconst_problem : public vnl_least_squares_function
 

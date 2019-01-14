@@ -7,7 +7,7 @@
 // 8/03/09
 
 #include "dbcfg_cfg_constructor.h"
-#include <vcl_deque.h>
+#include <deque>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_distance.h>
 
@@ -53,7 +53,7 @@ void dbcfg_cfg_constructor<T>::transform(dbcfg_contour_fragment_graph<T>& cfg) {
   cfg.reset(xsize_, ysize_);
 
   // forge lines
-  vcl_vector<lines_t> final_lines;
+  std::vector<lines_t> final_lines;
   forge_transform(final_lines);
 
   // And end with the 'proper' list of lines : final_lines
@@ -69,14 +69,14 @@ void dbcfg_cfg_constructor<T>::transform(dbcfg_contour_fragment_graph<T>& cfg) {
 
 // creates a depth sorted collection of transformed lines
 template <class T>
-void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines) {
+void dbcfg_cfg_constructor<T>::forge_transform(std::vector<lines_t>& final_lines) {
 
-  vcl_vector<lines_t> merged_lines(_lines.size());
+  std::vector<lines_t> merged_lines(_lines.size());
 
   // Merge lines for each depth
   for (unsigned depth = _lines.size() - 1; depth >= 0; depth--) {
     lines_t& lines = _lines[depth];
-    vcl_vector<lines_t> clusters;
+    std::vector<lines_t> clusters;
 
     // Cluster duplicate lines
     for (unsigned lnum = 0; lnum < lines.size(); lnum++) {
@@ -146,8 +146,8 @@ void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines)
 
   // Find all approx. junctions (line pair's intersection location)
   points_t raw_intersects;
-  vcl_vector<vcl_vector<unsigned> > raw_line_depths;
-  vcl_vector<vcl_vector<unsigned> > raw_line_nums;
+  std::vector<std::vector<unsigned> > raw_line_depths;
+  std::vector<std::vector<unsigned> > raw_line_nums;
   for (unsigned depth1 = 0; depth1 < merged_lines.size(); depth1++) {
     for (unsigned num1 = 0; num1 < merged_lines[depth1].size(); num1++) {
       line_t& line1 = merged_lines[depth1][num1];
@@ -159,10 +159,10 @@ void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines)
           if (line1.is_duplicate(line2, epsilon_)) continue;
           if (line1.intersects(line2, epsilon_)) {
             raw_intersects.push_back(line1.get_intersection(line2, epsilon_));
-            raw_line_depths.push_back(vcl_vector<unsigned>());
+            raw_line_depths.push_back(std::vector<unsigned>());
             raw_line_depths[raw_intersects.size()].push_back(depth1);
             raw_line_depths[raw_intersects.size()].push_back(depth2);
-            raw_line_nums.push_back(vcl_vector<unsigned>());
+            raw_line_nums.push_back(std::vector<unsigned>());
             raw_line_nums[raw_intersects.size()].push_back(num1);
             raw_line_nums[raw_intersects.size()].push_back(num2);
           }
@@ -172,12 +172,12 @@ void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines)
   }
 
   // Cluster raw junctions
-  vcl_vector<vcl_vector<unsigned> > junction_clusters;
+  std::vector<std::vector<unsigned> > junction_clusters;
   for (unsigned junc_num = 0; junc_num < raw_intersects.size(); junc_num++) {
     unsigned cluster_num = 0;
     for (; cluster_num < junction_clusters.size(); cluster_num++) {
       unsigned cluster_member = 0;
-      vcl_vector<unsigned>& cluster = junction_clusters[cluster_num];
+      std::vector<unsigned>& cluster = junction_clusters[cluster_num];
       for (; cluster_member < cluster.size(); cluster_member++) {
         if (vgl_distance(raw_intersects[junc_num], raw_intersects[cluster[cluster_member]]) <= epsilon_) {
           cluster.push_back(junc_num);
@@ -189,22 +189,22 @@ void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines)
       }
     }
     if (cluster_num == junction_clusters.size()) {
-      junction_clusters.push_back(vcl_vector<unsigned>());
+      junction_clusters.push_back(std::vector<unsigned>());
       junction_clusters[cluster_num].push_back(junc_num);
     }
   }
 
   // Merge clusters
   points_t intersects;
-  vcl_vector<vcl_vector<unsigned> > line_depths;
-  vcl_vector<vcl_vector<unsigned> > line_nums;
+  std::vector<std::vector<unsigned> > line_depths;
+  std::vector<std::vector<unsigned> > line_nums;
   for (unsigned cluster_num = 0; cluster_num < junction_clusters.size(); cluster_num++) {
-    vcl_vector<unsigned>& cluster = junction_clusters[cluster_num];
+    std::vector<unsigned>& cluster = junction_clusters[cluster_num];
 
     T xtotal = 0;
     T ytotal = 0;
-    vcl_vector<unsigned> member_line_depths;
-    vcl_vector<unsigned> member_line_nums;
+    std::vector<unsigned> member_line_depths;
+    std::vector<unsigned> member_line_nums;
     for (unsigned cluster_member = 0; cluster_member < cluster.size(); cluster_member++) {
       unsigned junc_num = cluster[cluster_member];
 
@@ -234,11 +234,11 @@ void dbcfg_cfg_constructor<T>::forge_transform(vcl_vector<lines_t>& final_lines)
   final_lines.clear();
 
   // First, compile intersections for each line
-  vcl_vector<vcl_vector<vcl_vector<unsigned> > > juncs_by_line;
+  std::vector<std::vector<std::vector<unsigned> > > juncs_by_line;
   for (unsigned depth = 0; depth < merged_lines.size(); depth++) {
-    juncs_by_line.push_back(vcl_vector<vcl_vector<unsigned> >());
+    juncs_by_line.push_back(std::vector<std::vector<unsigned> >());
     for (unsigned num = 0; num < merged_lines[depth].size(); num++) {
-      juncs_by_line[depth].push_back(vcl_vector<unsigned>());
+      juncs_by_line[depth].push_back(std::vector<unsigned>());
     }
   }
   for (unsigned junc = 0; junc < intersects.size(); junc++) {

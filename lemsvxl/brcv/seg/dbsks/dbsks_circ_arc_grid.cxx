@@ -255,7 +255,7 @@ i_theta(double theta) const
   double diff = theta - this->min_theta_;
 
   // convert this to [0, 2pi] range
-  diff = vcl_fmod(diff, 2*vnl_math::pi);
+  diff = std::fmod(diff, 2*vnl_math::pi);
   diff = (diff < 0) ? (diff + 2*vnl_math::pi) : diff;
   
   int ind = vnl_math::rnd(diff / this->step_theta_);
@@ -290,7 +290,7 @@ arc_to_grid(const bgld_circ_arc& arc, int& i_x, int& i_y,
   // indices of left arc
   vgl_point_2d<double > pt = arc.point_at(0.5);
   vgl_vector_2d<double > tangent = arc.chord_dir();
-  double theta = vcl_atan2(tangent.y(), tangent.x());
+  double theta = std::atan2(tangent.y(), tangent.x());
   double chord = arc.chord_len();
   double height = arc.height() * vnl_math::sgn0(arc.k());
 
@@ -308,7 +308,7 @@ arc_to_grid(const bgld_circ_arc& arc, int& i_x, int& i_y,
 // ----------------------------------------------------------------------------
 //: Print grid information
 void dbsks_circ_arc_grid::
-print(vcl_ostream& str) const
+print(std::ostream& str) const
 {
   str << "Circular arc grid info: \n"
     << "  num_x = " << this->num_x_ << "\n"

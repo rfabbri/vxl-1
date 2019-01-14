@@ -2,20 +2,20 @@
 
 #include"dbcl_linear_classifier_vrml_view.h"
 
-void draw_decision_boundaries(dvrml& dvrml_out ,vcl_vector<dbcl_decision_boundary>& decision_boundary_list)
+void draw_decision_boundaries(dvrml& dvrml_out ,std::vector<dbcl_decision_boundary>& decision_boundary_list)
 {
-            vcl_vector<dbcl_decision_boundary>::iterator dbl_itr;
-            vcl_vector<dbcl_decision_boundary>::iterator dbl_end = decision_boundary_list.end();
+            std::vector<dbcl_decision_boundary>::iterator dbl_itr;
+            std::vector<dbcl_decision_boundary>::iterator dbl_end = decision_boundary_list.end();
 
-            vcl_vector<vgl_point_3d<double> > point_list;
-            vcl_vector< vcl_vector<unsigned> > connection_list;
+            std::vector<vgl_point_3d<double> > point_list;
+            std::vector< std::vector<unsigned> > connection_list;
 
             unsigned cnt = 0;
             for( dbl_itr = decision_boundary_list.begin(); dbl_itr != dbl_end; ++dbl_itr )
             {
                 point_list.push_back(dbl_itr->line.point1());
                 point_list.push_back(dbl_itr->line.point2());
-                vcl_vector<unsigned> inner_list;
+                std::vector<unsigned> inner_list;
                 vgl_point_3d<double> endpt1(dbl_itr->line.point1());
                 inner_list.push_back(cnt);
                 ++cnt;
@@ -29,7 +29,7 @@ void draw_decision_boundaries(dvrml& dvrml_out ,vcl_vector<dbcl_decision_boundar
             dvrml_out.draw(lineset_sptr.as_pointer());
 }//end draw decision boundaries
 
-void dbcl_linear_classifier_vrml_view::vrml_view(vcl_ofstream& os, dbcl_classifier_sptr classifier_sptr)
+void dbcl_linear_classifier_vrml_view::vrml_view(std::ofstream& os, dbcl_classifier_sptr classifier_sptr)
 {
     dvrml dvrml_out(os);
 
@@ -53,7 +53,7 @@ void dbcl_linear_classifier_vrml_view::vrml_view(vcl_ofstream& os, dbcl_classifi
         dbcl_classifier::feature_map_type::iterator training_data_end = training_data.end();
         dbcl_classifier::feature_map_type::iterator test_data_end = test_data.end();
 
-        vcl_map<unsigned, dvrml_appearance_sptr> class_appearance_map;
+        std::map<unsigned, dvrml_appearance_sptr> class_appearance_map;
         for( unsigned i = 0; i < num_classes; ++i )
         {
             vnl_vector_fixed<double,3> color = dvrml::color_map(double(i)/num_classes);
@@ -105,7 +105,7 @@ void dbcl_linear_classifier_vrml_view::vrml_view(vcl_ofstream& os, dbcl_classifi
 
         vgl_box_2d<double> view(xmin,xmax,ymin,ymax);
 
-        vcl_vector<dbcl_decision_boundary > decision_boundary_list;
+        std::vector<dbcl_decision_boundary > decision_boundary_list;
 
         //DRAW DECISION BOUNDARIES there will be a decision boundary between every class ==> num_classes(num_classes-1)/2 boundaries
         for( unsigned i = 0; i < num_classes - 1; ++i )
@@ -175,13 +175,13 @@ void dbcl_linear_classifier_vrml_view::vrml_view(vcl_ofstream& os, dbcl_classifi
 
             dbcl_classifier::feature_map_type training_data = classifier_sptr->training_data();
             
-            vcl_vector<dbcl_decision_boundary> pruned_decision_boundary_list;
+            std::vector<dbcl_decision_boundary> pruned_decision_boundary_list;
 
-            vcl_vector<vgl_point_3d<double> > point_list;
-            vcl_vector<vcl_vector<unsigned> > connection_list;
+            std::vector<vgl_point_3d<double> > point_list;
+            std::vector<std::vector<unsigned> > connection_list;
 
-            vcl_vector<dbcl_decision_boundary>::iterator dbl_itr;
-            vcl_vector<dbcl_decision_boundary>::iterator dbl_end = decision_boundary_list.end();
+            std::vector<dbcl_decision_boundary>::iterator dbl_itr;
+            std::vector<dbcl_decision_boundary>::iterator dbl_end = decision_boundary_list.end();
 
             // need to break every line in half and connect to the intersection point
             // intersection point will be the locus from which boundaries eminate.

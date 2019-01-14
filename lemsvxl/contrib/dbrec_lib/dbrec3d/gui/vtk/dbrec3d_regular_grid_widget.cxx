@@ -9,7 +9,7 @@
 #include<vtkVolumeRayCastCompositeFunction.h>
 #include <QKeyEvent>
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include <vnl/vnl_matrix_fixed.h>
 
@@ -102,7 +102,7 @@ dbrec3d_regular_grid_widget::dbrec3d_regular_grid_widget(vtkRenderWindow *window
 dbrec3d_regular_grid_widget::dbrec3d_regular_grid_widget( vtkRenderWindow *window, 
                                                           vgl_box_3d<double> const &bbox,
                                                           double cell_length,
-                                                          vcl_vector<boct_cell_data<short, float> > const &cell_data,
+                                                          std::vector<boct_cell_data<short, float> > const &cell_data,
                                                           float min_val, float max_val, unsigned resolution_level)
 {
   tf_min_ = 0;
@@ -292,7 +292,7 @@ void dbrec3d_regular_grid_widget::init_volume_data(vnl_vector_fixed<float,5> fil
 }
 
 void dbrec3d_regular_grid_widget::init_volume_data(vgl_box_3d<double> const &bbox,
-                                                   double cell_length, vcl_vector<boct_cell_data<short, float> > const &cell_data, unsigned resolution_level)
+                                                   double cell_length, std::vector<boct_cell_data<short, float> > const &cell_data, unsigned resolution_level)
 {
   volume_data_ = vtkImageData::New();
   volume_data_->SetScalarTypeToUnsignedChar();
@@ -309,7 +309,7 @@ void dbrec3d_regular_grid_widget::init_volume_data(vgl_box_3d<double> const &bbo
   volume_data_->AllocateScalars();
   
   // Fill in volume_data with the data in the vector
-  vcl_vector<boct_cell_data<short, float> >::const_iterator it = cell_data.begin();
+  std::vector<boct_cell_data<short, float> >::const_iterator it = cell_data.begin();
   
  
   for (unsigned z= 0; z<=dim_z; z++) 
@@ -331,9 +331,9 @@ void dbrec3d_regular_grid_widget::init_volume_data(vgl_box_3d<double> const &bbo
     if (level == resolution_level) {
       
       // just copy value to output array
-      int x_index = vcl_floor(node.x()/cell_length);
-      int y_index = vcl_floor(node.y()/cell_length);
-      int z_index = vcl_floor(node.z()/cell_length);
+      int x_index = std::floor(node.x()/cell_length);
+      int y_index = std::floor(node.y()/cell_length);
+      int z_index = std::floor(node.z()/cell_length);
       
       //int out_index=static_cast<int>(ncells-1-(node.z()/step_len) + (node.y()/step_len)*ncells + (node.x()/step_len)*ncells*ncells);
       
@@ -467,7 +467,7 @@ void dbrec3d_regular_grid_widget::update_volume_data(vnl_vector_fixed<float,5> f
   {
     vnl_vector_fixed<float, 5> filter_yx_col = filter_yx.get_column(i);
     vnl_matrix_fixed<float, 5, 5> filter_zyx_2d = outer_product(filter_z, filter_yx_col);
-    //vcl_cout << filter_zyx_2d << vcl_endl;
+    //std::cout << filter_zyx_2d << std::endl;
     for (unsigned j = 0; j < filter_zyx_2d.columns() ; j++) {
       for (unsigned k = 0; k < filter_zyx_2d.rows() ; k++){
         *((unsigned char *)volume_data_->GetScalarPointer(i-2, j-2, k-2)) = (unsigned char)((filter_zyx_2d[k][j] -min_val_)/range_val_ *255.0f);
@@ -477,13 +477,13 @@ void dbrec3d_regular_grid_widget::update_volume_data(vnl_vector_fixed<float,5> f
     }
   }
   
-  vcl_cout << area << vcl_endl;
+  std::cout << area << std::endl;
   update();
 }
 
 
 void dbrec3d_regular_grid_widget::update_volume_data(vgl_box_3d<double> const &bbox,
-                                                    double cell_length, vcl_vector<boct_cell_data<short, float> > const &cell_data, unsigned resolution_level)
+                                                    double cell_length, std::vector<boct_cell_data<short, float> > const &cell_data, unsigned resolution_level)
 {
   const int dim_x = (int)((bbox.max_x() - bbox.min_x())/(cell_length));
   const int dim_y = (int)((bbox.max_y() - bbox.min_y())/(cell_length));
@@ -503,7 +503,7 @@ void dbrec3d_regular_grid_widget::update_volume_data(vgl_box_3d<double> const &b
   
   
   // Fill in volume_data with the data in the vector
-  vcl_vector<boct_cell_data<short, float> >::const_iterator it = cell_data.begin();
+  std::vector<boct_cell_data<short, float> >::const_iterator it = cell_data.begin();
   
   for (; it!=cell_data.end(); it++)
   {   
@@ -517,9 +517,9 @@ void dbrec3d_regular_grid_widget::update_volume_data(vgl_box_3d<double> const &b
     if (level == resolution_level) {
       
       // just copy value to output array
-      int x_index = vcl_floor(node.x()/cell_length);
-      int y_index = vcl_floor(node.y()/cell_length);
-      int z_index = vcl_floor(node.z()/cell_length);
+      int x_index = std::floor(node.x()/cell_length);
+      int y_index = std::floor(node.y()/cell_length);
+      int z_index = std::floor(node.z()/cell_length);
       
       //int out_index=static_cast<int>(ncells-1-(node.z()/step_len) + (node.y()/step_len)*ncells + (node.x()/step_len)*ncells*ncells);
       

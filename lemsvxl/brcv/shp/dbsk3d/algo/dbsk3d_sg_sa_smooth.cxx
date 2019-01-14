@@ -2,9 +2,9 @@
 //  MingChing Chang 040227
 //  3D ShockGraph Smoothing
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <string>
+#include <iostream>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vul/vul_printf.h>
 
@@ -18,7 +18,7 @@
 //  Note that the position of sample start and sample end should be fixed.
 void gaussian_sm_SC (dbsk3d_ms_curve* MC, int start, int end, int iters)
 {
-   vcl_vector<vgl_point_3d<double> > curve;
+   std::vector<vgl_point_3d<double> > curve;
    curve.clear();
 
    assert (start < end);
@@ -46,11 +46,11 @@ void gaussian_sm_SC (dbsk3d_ms_curve* MC, int start, int end, int iters)
 //  This function smooth the curve segment by segment to prevent the shifting effect.
 void gaussian_sm_sg_sa (dbsk3d_sg_sa* sg_sa, const unsigned int iters)
 {
-  vul_printf (vcl_cout, "\ngaussian_sm_sg_sa(): %d iterations on %u ms_curves.\n", 
+  vul_printf (std::cout, "\ngaussian_sm_sg_sa(): %d iterations on %u ms_curves.\n", 
               iters, sg_sa->edgemap().size());
 
   //Smooth all scaffold_curves...
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = sg_sa->edgemap().begin();
   for (; SC_it != sg_sa->edgemap().end(); SC_it++) {
       dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*SC_it).second;
 

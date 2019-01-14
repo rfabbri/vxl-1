@@ -123,7 +123,7 @@ class DirectSelection : public Selection{
       GraphicsNode *selectedGeom_, Group* handleGroup_);
   ~DirectSelection();
   
-  vcl_vector<HandleGeom*> handles;
+  std::vector<HandleGeom*> handles;
   void setFlag(bool flag,const HandleGeom* hg_=NULL);
   bool selected();
   void moveHandles(const Point2D<double>& offset_);

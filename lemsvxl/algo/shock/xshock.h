@@ -1,11 +1,11 @@
 #ifndef _XSHOCK_H
 #define _XSHOCK_H
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <cassert>
 
 #include <extrautils/common.h>
 #include <extrautils/points.h>
@@ -59,7 +59,7 @@ class ExEdge
     ExNode* _toNode;
     int _bIO;        //inside/outside info
 
-    vcl_vector<ExSample* > _EdgeSamples;
+    std::vector<ExSample* > _EdgeSamples;
 
     ExEdge(int newid, ExNode* FNode, ExNode* TNode, int newbIO):
       _id(newid), _fromNode(FNode), _toNode(TNode), _bIO(newbIO){}
@@ -81,9 +81,9 @@ public:
     //the following vectors have information that are sensitive to their indices
     //the same index corresponds to an ExEdge, the sample of the node corresponding to 
     //the edge and the ExNode at the other end of the edge
-    vcl_vector<ExEdge*> _edges;        // list of edges it belongs to
-    vcl_vector<ExSample*> _samples;    // list of samples of this ExNode
-    vcl_vector<ExNode*> _connectedNodes;  // list of nodes it is connected to
+    std::vector<ExEdge*> _edges;        // list of edges it belongs to
+    std::vector<ExSample*> _samples;    // list of samples of this ExNode
+    std::vector<ExNode*> _connectedNodes;  // list of nodes it is connected to
 
       ExNode (int newid, SHOCKNODETYPE newtype, int newbIO): 
       _id(newid), _bIO(newbIO), _type(newtype)
@@ -128,17 +128,17 @@ public:
 
 };
 
-typedef vcl_vector <ExNode* >::iterator ExNodeListIterator;
-typedef vcl_vector <ExEdge* >::iterator ExEdgeListIterator;
-typedef vcl_vector <ExSample* >::iterator ExSampleListIterator;
-typedef vcl_vector <ExSample* > ExSampleListVector;
+typedef std::vector <ExNode* >::iterator ExNodeListIterator;
+typedef std::vector <ExEdge* >::iterator ExEdgeListIterator;
+typedef std::vector <ExSample* >::iterator ExSampleListIterator;
+typedef std::vector <ExSample* > ExSampleListVector;
 
 class XShock
 {
 public:
-  vcl_vector <ExNode* >    ExNodeList;  //list of Extrinsic Shock Nodes
-  vcl_vector <ExEdge* >    ExEdgeList;  //list of Extrinsic Shock Edges
-  vcl_vector <ExSample* >  ExSampleList;//list of Extrinsic Sample Points
+  std::vector <ExNode* >    ExNodeList;  //list of Extrinsic Shock Nodes
+  std::vector <ExEdge* >    ExEdgeList;  //list of Extrinsic Shock Edges
+  std::vector <ExSample* >  ExSampleList;//list of Extrinsic Sample Points
 
   // to keep count of the ids
   int nodeIDcnt;
@@ -157,13 +157,13 @@ public:
 
   void cropESF(Point2D<double>topLeft, Point2D<double>bottomRight);
 
-  void OutputXShockToFile(const char* filename, vcl_vector<const char *> miscInfo);
-  void OutputHeaderToFile(const char* filename, vcl_ofstream & fp, vcl_vector<const char *> miscInfo);
-  void OutputNodeSectionToFile(vcl_ofstream & fp);
-  void OutputNodeSamplesToFile(vcl_ofstream & fp);
-  void OutputEdgeSectionToFile(vcl_ofstream & fp);
-  void OutputEdgeSamplesToFile(vcl_ofstream & fp);
-  void OutputSample (vcl_ofstream & fp, ExSample* sample);
+  void OutputXShockToFile(const char* filename, std::vector<const char *> miscInfo);
+  void OutputHeaderToFile(const char* filename, std::ofstream & fp, std::vector<const char *> miscInfo);
+  void OutputNodeSectionToFile(std::ofstream & fp);
+  void OutputNodeSamplesToFile(std::ofstream & fp);
+  void OutputEdgeSectionToFile(std::ofstream & fp);
+  void OutputEdgeSamplesToFile(std::ofstream & fp);
+  void OutputSample (std::ofstream & fp, ExSample* sample);
 
 };
 

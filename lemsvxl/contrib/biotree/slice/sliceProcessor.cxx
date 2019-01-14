@@ -1,13 +1,13 @@
 #include "sliceProcessor.h"
-#include <vcl_vector.h>
+#include <vector>
 
-vcl_vector<float*> dummySliceProcessor::process(const vcl_vector< vcl_vector<float*> >& slice_sets, int w, int h,int slice)
+std::vector<float*> dummySliceProcessor::process(const std::vector< std::vector<float*> >& slice_sets, int w, int h,int slice)
 {
         //dummyProcessor expects only 1 input set of slices
-        vcl_vector<float*> slices = slice_sets[0];
+        std::vector<float*> slices = slice_sets[0];
 
         float* res = new float[w*h];
-        vcl_vector<float*> toreturn;
+        std::vector<float*> toreturn;
         toreturn.push_back(res);
 
         //calculate the average (along Z) of the 3 slices

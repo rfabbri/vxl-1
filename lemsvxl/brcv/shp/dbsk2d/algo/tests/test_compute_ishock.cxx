@@ -1,8 +1,8 @@
 // This is brcv/shp/dbsk2d/algo/tests/test_compute_ishock.cxx
 
 #include <testlib/testlib_test.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 #include <vnl/vnl_random.h>
 #include <vsol/vsol_line_2d.h>
 
@@ -41,7 +41,7 @@ bool test_PL_near_degen_1()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -56,9 +56,9 @@ bool test_PL_near_degen_1()
     vgl_point_2d<double> p4 = _translatePoint(e, th-vnl_math::pi_over_2, 50*rnd_pos_num) + rnd_perturb;
 
     #ifdef OFFLINE_TESTING
-    vcl_cout << "PL_near_degen_1 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] ";
-    vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+    std::cout << "PL_near_degen_1 ::: Test #" << i << " : ";
+    std::cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] ";
+    std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
     #endif
 
     vsol_point_2d_sptr sp = new vsol_point_2d(s);
@@ -95,10 +95,10 @@ bool test_PL_near_degen_1()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "PL_near_degen_1 :: " ;
-      vcl_cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] ";
-      vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+      std::cout.precision(10);
+      std::cout << "PL_near_degen_1 :: " ;
+      std::cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] ";
+      std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
     }
     successful = successful && cur_successful;
   }
@@ -112,7 +112,7 @@ bool test_PL_near_degen_2()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -131,12 +131,12 @@ bool test_PL_near_degen_2()
     vgl_point_2d<double> p6 = _translatePoint(e2, th2-vnl_math::pi_over_2, 50*rnd_pos_num) + rnd_perturb;
 
     #ifdef OFFLINE_TESTING
-    vcl_cout << "PL_near_degen_2 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<e1.x()<<", "<<e1.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-    vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")";
-    vcl_cout << "("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")";
-    vcl_cout << "("<<p5.x()<<", "<<p5.y()<<")("<<p6.x()<<", "<<p6.y()<<")\n";
+    std::cout << "PL_near_degen_2 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<e1.x()<<", "<<e1.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+    std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")";
+    std::cout << "("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")";
+    std::cout << "("<<p5.x()<<", "<<p5.y()<<")("<<p6.x()<<", "<<p6.y()<<")\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -180,13 +180,13 @@ bool test_PL_near_degen_2()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "PL_near_degen_2 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<e1.x()<<", "<<e1.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-      vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")";
-      vcl_cout << "("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")";
-      vcl_cout << "("<<p5.x()<<", "<<p5.y()<<")("<<p6.x()<<", "<<p6.y()<<")\n";
+      std::cout.precision(10);
+      std::cout << "PL_near_degen_2 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<e1.x()<<", "<<e1.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+      std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")";
+      std::cout << "("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")";
+      std::cout << "("<<p5.x()<<", "<<p5.y()<<")("<<p6.x()<<", "<<p6.y()<<")\n";
     }
     successful = successful && cur_successful;
   }
@@ -200,7 +200,7 @@ bool test_PL_near_degen_3()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -224,10 +224,10 @@ bool test_PL_near_degen_3()
     //vgl_point_2d<double> p8 = _translatePoint(e, th-vnl_math::pi_over_2, 50*rnd_pos_num) + rnd_perturb;
 
     #ifdef OFFLINE_TESTING
-    vcl_cout << "PL_near_degen_3 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] \n";
-    vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
-    //vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+    std::cout << "PL_near_degen_3 ::: Test #" << i << " : ";
+    std::cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] \n";
+    std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+    //std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
     #endif
 
     vsol_point_2d_sptr sp = new vsol_point_2d(s);
@@ -267,11 +267,11 @@ bool test_PL_near_degen_3()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "PL_near_degen_3 :: ";
-      vcl_cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] \n";
-      vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
-      //vcl_cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+      std::cout.precision(10);
+      std::cout << "PL_near_degen_3 :: ";
+      std::cout << "[("<<s.x()<<", "<<s.y()<<")-("<<e.x()<<", "<<e.y()<<")] \n";
+      std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
+      //std::cout << "("<<p1.x()<<", "<<p1.y()<<")("<<p2.x()<<", "<<p2.y()<<")("<<p3.x()<<", "<<p3.y()<<")("<<p4.x()<<", "<<p4.y()<<")\n";
     }
     successful = successful && cur_successful;
   }
@@ -286,7 +286,7 @@ bool test_LL_near_degen_1()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -306,9 +306,9 @@ bool test_LL_near_degen_1()
     vgl_point_2d<double> e2 = _translatePoint(mp2, th2+vnl_math::pi, 0.5+100*rnd_pos_num);
     
     #ifdef OFFLINE_TESTING
-    vcl_cout << "LL_near_degen_1 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+    std::cout << "LL_near_degen_1 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -340,10 +340,10 @@ bool test_LL_near_degen_1()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "LL_near_degen_1 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+      std::cout.precision(10);
+      std::cout << "LL_near_degen_1 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     }
     successful = successful && cur_successful;
   }
@@ -358,7 +358,7 @@ bool test_LL_near_degen_2()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -373,9 +373,9 @@ bool test_LL_near_degen_2()
     vgl_point_2d<double> e2 = _translatePoint(s2, th2, l+D_EPSILON*rnd_num);
     
     #ifdef OFFLINE_TESTING
-    vcl_cout << "LL_near_degen_2 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+    std::cout << "LL_near_degen_2 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -407,10 +407,10 @@ bool test_LL_near_degen_2()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "LL_near_degen_2 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+      std::cout.precision(10);
+      std::cout << "LL_near_degen_2 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     }
     successful = successful && cur_successful;
   }
@@ -425,7 +425,7 @@ bool test_LL_near_degen_3()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -440,9 +440,9 @@ bool test_LL_near_degen_3()
     vgl_point_2d<double> e2 = _translatePoint(s2, th2, l);
     
     #ifdef OFFLINE_TESTING
-    vcl_cout << "LL_near_degen_3 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+    std::cout << "LL_near_degen_3 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -474,10 +474,10 @@ bool test_LL_near_degen_3()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "LL_near_degen_3 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
+      std::cout.precision(10);
+      std::cout << "LL_near_degen_3 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")]\n";
     }
     successful = successful && cur_successful;
   }
@@ -492,7 +492,7 @@ bool test_LL_near_degen_4()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -513,10 +513,10 @@ bool test_LL_near_degen_4()
     vgl_point_2d<double> e3 = _translatePoint(s3, th3+vnl_math::pi, l+D_EPSILON*rnd_num);
     
     #ifdef OFFLINE_TESTING
-    vcl_cout << "LL_near_degen_4 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-    vcl_cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")]\n";
+    std::cout << "LL_near_degen_4 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+    std::cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")]\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -552,11 +552,11 @@ bool test_LL_near_degen_4()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "LL_near_degen_4 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-      vcl_cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")]\n";
+      std::cout.precision(10);
+      std::cout << "LL_near_degen_4 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+      std::cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")]\n";
     }
     successful = successful && cur_successful;
   }
@@ -571,7 +571,7 @@ bool test_LL_near_degen_5()
   //generate 50 near degenerate boundaries and compute shocks on them
   for (int i=0; i<500; i++)
   {
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list;
     vsol_list.clear();
 
     //define a line of a random length at a random orientation
@@ -597,11 +597,11 @@ bool test_LL_near_degen_5()
     vgl_point_2d<double> e4 = _translatePoint(s4, th4, l+D_EPSILON*rnd_num);
     
     #ifdef OFFLINE_TESTING
-    vcl_cout << "LL_near_degen_5 ::: Test #" << i << " : ";
-    vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-    vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-    vcl_cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")] ";
-    vcl_cout << "[("<<s4.x()<<", "<<s4.y()<<")-("<<e4.x()<<", "<<e4.y()<<")]\n";
+    std::cout << "LL_near_degen_5 ::: Test #" << i << " : ";
+    std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+    std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+    std::cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")] ";
+    std::cout << "[("<<s4.x()<<", "<<s4.y()<<")-("<<e4.x()<<", "<<e4.y()<<")]\n";
     #endif
 
     vsol_point_2d_sptr sp1 = new vsol_point_2d(s1);
@@ -641,12 +641,12 @@ bool test_LL_near_degen_5()
     bool cur_successful = test_compute_shocks(bnd);
 
     if (!cur_successful){
-      vcl_cout.precision(10);
-      vcl_cout << "LL_near_degen_5 :: ";
-      vcl_cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
-      vcl_cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
-      vcl_cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")] ";
-      vcl_cout << "[("<<s4.x()<<", "<<s4.y()<<")-("<<e4.x()<<", "<<e4.y()<<")]\n";
+      std::cout.precision(10);
+      std::cout << "LL_near_degen_5 :: ";
+      std::cout << "[("<<s1.x()<<", "<<s1.y()<<")-("<<e1.x()<<", "<<e1.y()<<")] ";
+      std::cout << "[("<<s2.x()<<", "<<s2.y()<<")-("<<e2.x()<<", "<<e2.y()<<")] ";
+      std::cout << "[("<<s3.x()<<", "<<s3.y()<<")-("<<e3.x()<<", "<<e3.y()<<")] ";
+      std::cout << "[("<<s4.x()<<", "<<s4.y()<<")-("<<e4.x()<<", "<<e4.y()<<")]\n";
     }
     successful = successful && cur_successful;
   }
@@ -657,7 +657,7 @@ bool test_LL_near_degen_5()
 bool test_shock_computation_on_degeneracies()
 {
   // initialize random generator
-  better_rand.reseed(vcl_time(0));
+  better_rand.reseed(std::time(0));
 
   bool successful = true;
 
@@ -675,7 +675,7 @@ bool test_shock_computation_on_degeneracies()
   return successful;
 }
 
-vcl_string file_base;
+std::string file_base;
 
 // Compare the results of loading different files with the true data
 // that's supposed to be in those files.
@@ -691,7 +691,7 @@ bool load_bnd_and_compute_shock()
 
   dbsk2d_boundary_sptr bnd = new dbsk2d_boundary();
 
-  vcl_string filename = file_base + "test_bnd_files/test_file2.bnd";
+  std::string filename = file_base + "test_bnd_files/test_file2.bnd";
   //bnd->LoadFile(filename.c_str());
 
   //now compute shocks on it

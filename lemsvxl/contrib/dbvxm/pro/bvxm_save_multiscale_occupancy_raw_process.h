@@ -13,7 +13,7 @@
 //   <none yet>
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 class bvxm_save_multiscale_occupancy_raw_process : public bprb_process
@@ -30,7 +30,7 @@ class bvxm_save_multiscale_occupancy_raw_process : public bprb_process
   //: Clone the process
   virtual bvxm_save_multiscale_occupancy_raw_process* clone() const {return new bvxm_save_multiscale_occupancy_raw_process(*this);}
 
-  vcl_string name(){return "bvxmSaveMultiScaleOccupancyRaw";}
+  std::string name(){return "bvxmSaveMultiScaleOccupancyRaw";}
 
   bool init() { return true; }
   bool execute();

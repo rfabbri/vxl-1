@@ -30,7 +30,7 @@ public:
   virtual ~bvis_translate_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -41,11 +41,11 @@ public:
 
   virtual bpro_storage_sptr active_storage() {return 0;} //FIX LATER JLM
 
-  virtual vcl_vector< vcl_string > get_input_type()//FIX LATER JLM
-    {return vcl_vector< vcl_string >();}
+  virtual std::vector< std::string > get_input_type()//FIX LATER JLM
+    {return std::vector< std::string >();}
   
-  virtual vcl_vector< vcl_string > get_output_type()//FIX LATER JLM
-    {return vcl_vector< vcl_string >();}
+  virtual std::vector< std::string > get_output_type()//FIX LATER JLM
+    {return std::vector< std::string >();}
 
 protected:
   vgui_event_condition gesture_lift_;
@@ -70,7 +70,7 @@ public:
   virtual ~bvis_style_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -80,11 +80,11 @@ public:
                const bvis_view_tableau_sptr& view );
 
   virtual bpro_storage_sptr active_storage() {return 0;} //FIX LATER JLM
-  virtual vcl_vector< vcl_string > get_input_type()//FIX LATER JLM
-    {return vcl_vector< vcl_string >();}
+  virtual std::vector< std::string > get_input_type()//FIX LATER JLM
+    {return std::vector< std::string >();}
   
-  virtual vcl_vector< vcl_string > get_output_type()//FIX LATER JLM
-    {return vcl_vector< vcl_string >();}
+  virtual std::vector< std::string > get_output_type()//FIX LATER JLM
+    {return std::vector< std::string >();}
 
 protected:
   vgui_event_condition gesture_select_;

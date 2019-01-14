@@ -24,7 +24,7 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
                      int min_no_of_pixels,int max_no_of_pixels,float erosionrad,float postdilationerosionrad,float dilationrad, char *polyfile)
 {
 
-    vcl_string fname(inputdir);
+    std::string fname(inputdir);
     //: setting up the repository and process manager
     vidpro1_process_manager process_manager;
     process_manager.get_repository_sptr()->initialize(1);
@@ -35,7 +35,7 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
     //: loading the video 
     bpro1_process_sptr load_video_proc = new vidpro1_load_video_process;
     process_manager.register_process(load_video_proc);
-    load_video_proc->set_output_names(vcl_vector<vcl_string>(1,"video"));
+    load_video_proc->set_output_names(std::vector<std::string>(1,"video"));
 
     load_video_proc->parameters()->set_value("-video_filename",bpro1_filepath(fname));
     process_manager.run_process_on_current_frame(load_video_proc);
@@ -48,15 +48,15 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
 
     // Make each process and add it to the list of program args
     bpro1_process_sptr bgbuilder(new dbbgm_aerial_bg_model_process());
-    bgbuilder->set_input_names(vcl_vector<vcl_string>(1,"video"));
-    bgbuilder->set_output_names(vcl_vector<vcl_string>(1,"bgmodel"));
+    bgbuilder->set_input_names(std::vector<std::string>(1,"video"));
+    bgbuilder->set_output_names(std::vector<std::string>(1,"bgmodel"));
     
     process_manager.register_process(bgbuilder);
     bgbuilder->parameters()->set_value("-maxcmp",maxComp);
     bgbuilder->parameters()->set_value("-initv",initialstd);
     bgbuilder->parameters()->set_value("-initw",intialweight);
 
-    vcl_ofstream ofile("temp.txt");
+    std::ofstream ofile("temp.txt");
     ofile<<"No of frames loaded "<<last_frame_;
     ofile.close();
 
@@ -68,12 +68,12 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
 
     //: foreground detection code
   bpro1_process_sptr fgdetector(new dbbgm_aerial_fg_uncertainity_detect_process());
-  vcl_vector<vcl_string> inputnames;
+  std::vector<std::string> inputnames;
   inputnames.push_back("video");
   inputnames.push_back("bgmodel");
 
   fgdetector->set_input_names(inputnames);
-  fgdetector->set_output_names(vcl_vector<vcl_string>(1,"fgimage"));
+  fgdetector->set_output_names(std::vector<std::string>(1,"fgimage"));
 
   process_manager.register_process(fgdetector);
   fgdetector->parameters()->set_value("-dist",sigmathresh);
@@ -81,8 +81,8 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
 
   //: blob finder
   bpro1_process_sptr  blobfinder(new dbdet_blob_finder_process());
-  blobfinder->set_input_names(vcl_vector<vcl_string>(1,"fgimage"));
-  blobfinder->set_output_names(vcl_vector<vcl_string>(1,"blobs"));
+  blobfinder->set_input_names(std::vector<std::string>(1,"fgimage"));
+  blobfinder->set_output_names(std::vector<std::string>(1,"blobs"));
   process_manager.register_process(blobfinder);
 
   blobfinder->parameters()->set_value("-maxregion",max_no_of_pixels);
@@ -90,7 +90,7 @@ void detectvehicle(char *inputdir,unsigned int maxComp, float initialstd,float i
   blobfinder->parameters()->set_value("-rerode",erosionrad);
   blobfinder->parameters()->set_value("-rdilate",dilationrad);
   blobfinder->parameters()->set_value("-secerode",postdilationerosionrad);
-  blobfinder->parameters()->set_value("-polyfile",bpro1_filepath(vcl_string(polyfile)));
+  blobfinder->parameters()->set_value("-polyfile",bpro1_filepath(std::string(polyfile)));
 
 
    do {

@@ -1,21 +1,21 @@
 //this is /contrib/bm/dsm2_observable_base.cxx
 #include<dsm2/dsm2_subject_base.h>
 
-#include<vcl_utility.h>
+#include<utility>
 
-void dsm2_subject_base::notify( vcl_string const& interest )
+void dsm2_subject_base::notify( std::string const& interest )
 {
-	vcl_map<vcl_string,vcl_list<dsm2_observer_base_sptr> >::iterator 
+	std::map<std::string,std::list<dsm2_observer_base_sptr> >::iterator 
 		o_itr = this->observers_.find(interest);
 
 	if( o_itr == this->observers_.end() )
 	{
-		vcl_cerr << "Observer interest: " << interest 
-			     << " not found.\n" << vcl_flush;
+		std::cerr << "Observer interest: " << interest 
+			     << " not found.\n" << std::flush;
 		return;
 	}
 
-	vcl_list<dsm2_observer_base_sptr>::iterator 
+	std::list<dsm2_observer_base_sptr>::iterator 
 		l_itr, l_end = o_itr->second.end();
 
 	for( l_itr = o_itr->second.begin(); l_itr != l_end; ++l_itr )
@@ -25,16 +25,16 @@ void dsm2_subject_base::notify( vcl_string const& interest )
 
 }//end notify
 
-void dsm2_subject_base::attatch( dsm2_observer_base_sptr const& o, vcl_string const& interest )
+void dsm2_subject_base::attatch( dsm2_observer_base_sptr const& o, std::string const& interest )
 {
-	vcl_map<vcl_string,vcl_list<dsm2_observer_base_sptr> >::iterator
+	std::map<std::string,std::list<dsm2_observer_base_sptr> >::iterator
 		o_itr = this->observers_.find(interest);
 
 	if( o_itr == this->observers_.end() )
 	{
-		vcl_list<dsm2_observer_base_sptr> temp(1,o);
+		std::list<dsm2_observer_base_sptr> temp(1,o);
 
-		this->observers_.insert(vcl_make_pair(interest,temp));
+		this->observers_.insert(std::make_pair(interest,temp));
 	}
 	else
 	{
@@ -43,9 +43,9 @@ void dsm2_subject_base::attatch( dsm2_observer_base_sptr const& o, vcl_string co
 }//end attactch
 
 void dsm2_subject_base::attatch( dsm2_observer_base_sptr const& o, 
-	vcl_vector<vcl_string> const& interests )
+	std::vector<std::string> const& interests )
 {
-	vcl_vector<vcl_string>::const_iterator 
+	std::vector<std::string>::const_iterator 
 		interests_itr, interests_end = interests.end();
 
 	for(interests_itr = interests.begin(); interests_itr != interests_end; ++interests_itr )
@@ -54,7 +54,7 @@ void dsm2_subject_base::attatch( dsm2_observer_base_sptr const& o,
 
 void dsm2_subject_base::remove( dsm2_observer_base_sptr& o )
 {
-	vcl_map<vcl_string,vcl_list<dsm2_observer_base_sptr> >::iterator
+	std::map<std::string,std::list<dsm2_observer_base_sptr> >::iterator
 		o_itr, o_end = this->observers_.end();
 
 	unsigned id = o->id();
@@ -62,7 +62,7 @@ void dsm2_subject_base::remove( dsm2_observer_base_sptr& o )
 	for(o_itr = this->observers_.begin();
 			o_itr != o_end; ++o_itr )
 	{
-		vcl_list<dsm2_observer_base_sptr>::iterator 
+		std::list<dsm2_observer_base_sptr>::iterator 
 			l_itr, l_end = o_itr->second.end();
 
 		for( l_itr = o_itr->second.begin(); 

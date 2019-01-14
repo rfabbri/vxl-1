@@ -14,7 +14,7 @@
 // \endverbatim
 
 
-#include <vcl_map.h>
+#include <map>
 #include <dbsksp/dbsksp_shock_graph_sptr.h>
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>

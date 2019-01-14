@@ -31,7 +31,7 @@ class dbbgm_dist_image_base : public vbl_ref_count
   //: Binary load self from stream.
   virtual void b_read(vsl_b_istream &is)=0;
 
-  virtual vcl_string is_a() const=0;
+  virtual std::string is_a() const=0;
   
   virtual dbbgm_dist_image_base* clone() const = 0;
 
@@ -71,7 +71,7 @@ class dbbgm_distribution_image : public dbbgm_dist_image_base
   void set(unsigned int i, unsigned int j, const dbsta_distribution<T >& d)
   { data_(i,j) = d.clone(); }
 
-  virtual vcl_string is_a() const ;
+  virtual std::string is_a() const ;
 
   virtual dbbgm_dist_image_base* clone() const;
 

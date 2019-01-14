@@ -20,11 +20,11 @@ void gradient_descent(
 
 void 
 gradient_descent_positional(
-    vcl_vector<vsol_point_2d_sptr> &pts,
+    std::vector<vsol_point_2d_sptr> &pts,
     const bsold_geno_curve_2d &c,
     double delta_norm,
     double psi,
-    vcl_vector<double> &grad
+    std::vector<double> &grad
     );
 
 void

@@ -15,8 +15,8 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <bpro/bpro_process.h>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vnl/vnl_double_3x3.h>
@@ -56,11 +56,11 @@ private:
   int combination_;
   double epi_x_,epi_y_;
   double epi_x_WC_,epi_y_WC_;
-  vcl_vector <vsol_digital_curve_2d_sptr> dcl_;
-  vcl_vector <vcl_vector <vsol_digital_curve_2d_sptr> >dcl_edge_;
+  std::vector <vsol_digital_curve_2d_sptr> dcl_;
+  std::vector <std::vector <vsol_digital_curve_2d_sptr> >dcl_edge_;
 
-  vcl_vector <vgl_point_2d <double> > left_pts_;
-  vcl_vector <vgl_point_2d <double> > right_pts_;
+  std::vector <vgl_point_2d <double> > left_pts_;
+  std::vector <vgl_point_2d <double> > right_pts_;
 
   vgl_line_2d <double> line_upper_;
   vgl_line_2d <double> line_lower_;
@@ -69,28 +69,28 @@ private:
   double first_minus_second_;
   bool display_0_frame_, display_n_frame_;
 
-  vcl_vector < vcl_vector <dbecl_episeg_sptr> >episeglist;
-  vcl_vector < vcl_vector <dbecl_episeg_sptr> >episeglist_edge_;
-  vcl_vector <bool> angle_f_flag_,angle_r_flag_;
+  std::vector < std::vector <dbecl_episeg_sptr> >episeglist;
+  std::vector < std::vector <dbecl_episeg_sptr> >episeglist_edge_;
+  std::vector <bool> angle_f_flag_,angle_r_flag_;
 
   double scale_;
-  vcl_vector <vgl_point_3d <double> > pts_3d_;
-  vcl_vector <vgl_point_3d <double> > pts_3d_front_,pts_3d_rear_;
+  std::vector <vgl_point_3d <double> > pts_3d_;
+  std::vector <vgl_point_3d <double> > pts_3d_front_,pts_3d_rear_;
   vnl_double_3 min_point_,max_point_;
   vnl_double_3x3 rot_ ;
   vnl_double_3x3 inv_rot_ ;
   vnl_double_4x4 bb_xform_;
 
  
-  vcl_vector <vsol_polygon_2d_sptr > polys_;
-  vcl_vector <vgl_polygon<double> > veh_cons_;
-  vcl_vector <vgl_point_3d<double> > probe_list_;
+  std::vector <vsol_polygon_2d_sptr > polys_;
+  std::vector <vgl_polygon<double> > veh_cons_;
+  std::vector <vgl_point_3d<double> > probe_list_;
 
   vnl_double_3 p0_,p7_;
   bool cluster_flag_;
   double mean_y_1_,mean_y_2_;
-  vcl_vector <vgl_point_2d <double> >pts_upper_line_;
-  vcl_vector <vgl_point_2d <double> >pts_lower_line_;
+  std::vector <vgl_point_2d <double> >pts_upper_line_;
+  std::vector <vgl_point_2d <double> >pts_lower_line_;
   double ang_;
 
 
@@ -104,9 +104,9 @@ private:
   vnl_double_3x4 E1, E2, E3, E_intpl;
 
   // camera parameters..
-  vcl_vector <vnl_double_3x4> PL_;
-  vcl_vector<vnl_double_3x4 > Cam_List_;
-  vcl_vector <vcl_vector <vnl_vector_fixed <double, 6 > > >blob_image_list_;
+  std::vector <vnl_double_3x4> PL_;
+  std::vector<vnl_double_3x4 > Cam_List_;
+  std::vector <std::vector <vnl_vector_fixed <double, 6 > > >blob_image_list_;
 protected:
   int nframes_; 
   //: Camera intrinsic parameters
@@ -114,8 +114,8 @@ protected:
   vnl_double_3x4 C_;
   vnl_double_3x4 cam_;
   //: Map from frame numbers to cameras
-  //vcl_map<int,vnl_double_3x4> cameras_;
-  vcl_vector<vnl_double_3x4> cameras_;
+  //std::map<int,vnl_double_3x4> cameras_;
+  std::vector<vnl_double_3x4> cameras_;
 
   vnl_vector <double> tnew_;
   sdet_detector_params dp;
@@ -129,14 +129,14 @@ public:
   //: Clone the process
   virtual bpro_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   bool execute();
   bool finish();
 

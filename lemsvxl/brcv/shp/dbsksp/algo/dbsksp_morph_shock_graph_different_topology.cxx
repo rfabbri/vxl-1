@@ -8,7 +8,7 @@
 #include <dbsksp/dbsksp_shock_edge.h>
 #include <dbsksp/dbsksp_shock_node.h>
 #include <dbsksp/dbsksp_shock_model.h>
-#include <vcl_utility.h>
+#include <utility>
 
 #include <dbskr/dbskr_sm_cor.h>
 #include <dbskr/dbskr_compute_scurve.h>
@@ -78,7 +78,7 @@ compute_surviving_darts()
   this->used_darts_tree2_.resize(this->sm_cor()->get_tree2()->size(), false);
 
   // retrieve the final mapping between two trees
-  vcl_vector<pathtable_key> dart_path_map = this->sm_cor()->get_map();
+  std::vector<pathtable_key> dart_path_map = this->sm_cor()->get_map();
 
   // for convenenience
   dbskr_tree_sptr tree1 = this->sm_cor()->get_tree1();
@@ -96,14 +96,14 @@ compute_surviving_darts()
     // get the dart list associated with this path
     // These are the surviving darts
     // Tree 1
-    vcl_vector<int > sub_list1 = tree1->get_dart_path(tree1_start_dart, tree1_end_dart);
+    std::vector<int > sub_list1 = tree1->get_dart_path(tree1_start_dart, tree1_end_dart);
     for (unsigned i=0; i < sub_list1.size(); ++i)
     {
       this->used_darts_tree1_[sub_list1.at(i)] = true;
     }
     
     // Tree 2
-    vcl_vector<int > sub_list2 = tree2->get_dart_path(tree2_start_dart, tree2_end_dart);
+    std::vector<int > sub_list2 = tree2->get_dart_path(tree2_start_dart, tree2_end_dart);
     for (unsigned i=0; i < sub_list2.size(); ++i)
     {
       this->used_darts_tree2_[sub_list2.at(i)] = true;
@@ -132,9 +132,9 @@ compute_surviving_darts()
 void dbsksp_morph_shock_graph_different_topology::
 generate_intermediate_graphs(const dbskr_tree_sptr& tree,
                              int ref_dart,
-                             const vcl_vector<bool > used_darts,
-                             const vcl_vector<int >& num_segments_to_interpolate,
-  vcl_vector<dbsksp_shock_graph_sptr > & transition_graphs)
+                             const std::vector<bool > used_darts,
+                             const std::vector<int >& num_segments_to_interpolate,
+  std::vector<dbsksp_shock_graph_sptr > & transition_graphs)
 {
   transition_graphs.clear();
 
@@ -148,7 +148,7 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
     num_segments_to_interpolate);
 
   // set the reference node and edge properly
-  vcl_vector<dbsksp_shock_edge_sptr > elist = builder.get_shock_edges_of_dart(ref_dart);
+  std::vector<dbsksp_shock_edge_sptr > elist = builder.get_shock_edges_of_dart(ref_dart);
   if (!elist.empty())
   {
     dbsksp_shock_edge_sptr ref_edge = elist.front();
@@ -187,14 +187,14 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
     
 
     // find out which edges need to be removed
-    vcl_vector<dbsksp_shock_edge_sptr > edges_to_remove = 
+    std::vector<dbsksp_shock_edge_sptr > edges_to_remove = 
       builder.get_shock_edges_of_dart(dart);
-    vcl_vector<dbsksp_shock_node_sptr > nodes_to_remove = 
+    std::vector<dbsksp_shock_node_sptr > nodes_to_remove = 
       builder.get_shock_nodes_of_dart(dart);
 
     if (edges_to_remove.empty())
     {
-      vcl_cerr << "ERROR: No edges correspond to dart = " << dart << vcl_endl;  
+      std::cerr << "ERROR: No edges correspond to dart = " << dart << std::endl;  
     }
 
     assert(!edges_to_remove.empty());
@@ -277,14 +277,14 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
       dbsksp_shock_node_sptr v0 = 0;
       if (need_reverse_order)
       {
-        for (vcl_vector<dbsksp_shock_edge_sptr >::reverse_iterator itr = 
+        for (std::vector<dbsksp_shock_edge_sptr >::reverse_iterator itr = 
           edges_to_remove.rbegin(); itr != edges_to_remove.rend(); ++itr)
         {
           dbsksp_shock_edge_sptr e = *itr;
           v0 = graph->remove_leaf_A_1_2_edge(e);
           if (!v0)
           {
-            vcl_cerr << "ERROR: could not remove leaf edge.\n";
+            std::cerr << "ERROR: could not remove leaf edge.\n";
           }
         }
       }
@@ -296,13 +296,13 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
           v0 = graph->remove_leaf_A_1_2_edge(e);
           if (!v0)
           {
-            vcl_cerr << "ERROR: could not remove leaf edge.\n";
+            std::cerr << "ERROR: could not remove leaf edge.\n";
           }
         }
       }
 
       // find the terminal edge and remove it
-      for (vcl_list<dbsksp_shock_edge_sptr >::const_iterator itr = v0->edge_list().begin();
+      for (std::list<dbsksp_shock_edge_sptr >::const_iterator itr = v0->edge_list().begin();
         itr != v0->edge_list().end(); ++itr)
       {
         dbsksp_shock_edge_sptr e = *itr;
@@ -323,7 +323,7 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
         bool ok = graph->remove_internal_edge(e);
         if (!ok)
         {
-          vcl_cerr << "ERROR: could not remove internal edge.\n";
+          std::cerr << "ERROR: could not remove internal edge.\n";
         }
       }
     }
@@ -345,9 +345,9 @@ generate_intermediate_graphs(const dbskr_tree_sptr& tree,
 void dbsksp_morph_shock_graph_different_topology::
 generate_morph_sequence(const dbskr_tree_sptr& tree,
   int ref_dart,
-  const vcl_vector<bool > used_darts,
-  const vcl_vector<int >& num_segments_to_interpolate,
-  vcl_vector<dbsksp_morph_segment >& morph_sequence)
+  const std::vector<bool > used_darts,
+  const std::vector<int >& num_segments_to_interpolate,
+  std::vector<dbsksp_morph_segment >& morph_sequence)
 {
   
 
@@ -380,7 +380,7 @@ generate_final_common_graph()
   dbskr_tree_sptr tree2 = this->sm_cor()->get_tree2();
 
   // Get two reference darts from the two trees
-  vcl_vector<pathtable_key > key_map = this->sm_cor()->get_map();
+  std::vector<pathtable_key > key_map = this->sm_cor()->get_map();
 
   // something in the middle should approximate the size better
   pathtable_key ref_key = key_map[key_map.size()/2];
@@ -390,7 +390,7 @@ generate_final_common_graph()
   // Generate transition table for each tree
   dbsksp_shock_graph_sptr tree1_start1;
   dbsksp_shock_graph_sptr tree1_end1;
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end1_to_start1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end1_to_start1;
   
   this->generate_edited_graph( tree1, ref_dart_tree1, this->used_darts_tree1_,
     this->num_segments_tree1_,
@@ -405,7 +405,7 @@ generate_final_common_graph()
   
   dbsksp_shock_graph_sptr tree1_start2;
   dbsksp_shock_graph_sptr tree1_end2;
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end2_to_start2;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end2_to_start2;
   
   this->generate_edited_graph( tree1, ref_dart_tree1, this->used_darts_tree1_,
     this->num_segments_tree1_,
@@ -425,7 +425,7 @@ generate_final_common_graph()
   bool ok = morpher.compute_correspondence();
   assert(ok);
   morpher.morph();
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_start2_to_start1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_start2_to_start1;
   tree1_start2_to_start1 = morpher.edge_map();
 
 
@@ -434,19 +434,19 @@ generate_final_common_graph()
   morpher.set_target_graph(tree1_end1);
   ok = morpher.compute_correspondence();
   assert(ok);
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_start1_to_end1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_start1_to_end1;
   tree1_start1_to_end1 = morpher.edge_map();
 
   // Now we are ready to compute end2_to_end1
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end2_to_end1;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree1_end2_to_end1;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
     tree1_end2_to_start2.begin(); itr != tree1_end2_to_start2.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e0 = itr->first;
     dbsksp_shock_edge_sptr e1 = itr->second;
     dbsksp_shock_edge_sptr e2 = tree1_start2_to_start1.find(e1)->second;
     dbsksp_shock_edge_sptr e3 = tree1_start1_to_end1.find(e2)->second;
-    tree1_end2_to_end1.insert(vcl_make_pair(e0, e3));  
+    tree1_end2_to_end1.insert(std::make_pair(e0, e3));  
   }
 
 
@@ -459,7 +459,7 @@ generate_final_common_graph()
   // Generate transition table for each tree
   dbsksp_shock_graph_sptr tree2_start1;
   dbsksp_shock_graph_sptr tree2_end1;
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end1_to_start1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end1_to_start1;
   
   this->generate_edited_graph( tree2, ref_dart_tree2, this->used_darts_tree2_,
     this->num_segments_tree2_,
@@ -475,7 +475,7 @@ generate_final_common_graph()
   
   dbsksp_shock_graph_sptr tree2_start2;
   dbsksp_shock_graph_sptr tree2_end2;
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end2_to_start2;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end2_to_start2;
   
   this->generate_edited_graph( tree2, ref_dart_tree2, this->used_darts_tree2_,
     this->num_segments_tree2_,
@@ -495,7 +495,7 @@ generate_final_common_graph()
   ok = morpher.compute_correspondence();
   assert(ok);
   morpher.morph();
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_start2_to_start1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_start2_to_start1;
   tree2_start2_to_start1 = morpher.edge_map();
 
 
@@ -504,19 +504,19 @@ generate_final_common_graph()
   morpher.set_target_graph(tree2_end1);
   ok = morpher.compute_correspondence();
   assert(ok);
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_start1_to_end1;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_start1_to_end1;
   tree2_start1_to_end1 = morpher.edge_map();
 
   // Now we are ready to compute end2_to_end1
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end2_to_end1;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> tree2_end2_to_end1;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
     tree2_end2_to_start2.begin(); itr != tree2_end2_to_start2.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e0 = itr->first;
     dbsksp_shock_edge_sptr e1 = itr->second;
     dbsksp_shock_edge_sptr e2 = tree2_start2_to_start1.find(e1)->second;
     dbsksp_shock_edge_sptr e3 = tree2_start1_to_end1.find(e2)->second;
-    tree2_end2_to_end1.insert(vcl_make_pair(e0, e3));  
+    tree2_end2_to_end1.insert(std::make_pair(e0, e3));  
   }
 
 
@@ -527,7 +527,7 @@ generate_final_common_graph()
   ok = morpher.compute_correspondence();
   if (!ok)
   {
-    vcl_cerr << "ERROR: end graphs do not have a common topology.\n";
+    std::cerr << "ERROR: end graphs do not have a common topology.\n";
     return;
   }
 
@@ -543,7 +543,7 @@ generate_final_common_graph()
   ok = morpher.compute_correspondence();
   if (!ok)
   {
-    vcl_cerr << "ERROR: end graphs do not have a common topology.\n";
+    std::cerr << "ERROR: end graphs do not have a common topology.\n";
     return;
   }
 
@@ -563,18 +563,18 @@ generate_final_common_graph()
   morpher.set_target_graph(tree1_end2);
   ok = morpher.compute_correspondence();
   assert(ok);
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree1_end2;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree1_end2;
   mean_to_tree1_end2 = morpher.edge_map();
 
   // compute map from mean graph to tree1_end1
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree1_end1;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree1_end1;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
     mean_to_tree1_end2.begin(); itr != mean_to_tree1_end2.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e0 = itr->first;
     dbsksp_shock_edge_sptr e1 = itr->second;
     dbsksp_shock_edge_sptr e2 = tree1_end2_to_end1.find(e1)->second;
-    mean_to_tree1_end1.insert(vcl_make_pair(e0, e2));  
+    mean_to_tree1_end1.insert(std::make_pair(e0, e2));  
   }
   this->propagate_data(mean_graph_1, tree1_end1, mean_to_tree1_end1);
   tree1_end1->compute_all_dependent_params();
@@ -588,18 +588,18 @@ generate_final_common_graph()
   morpher.set_target_graph(tree2_end2);
   ok = morpher.compute_correspondence();
   assert(ok);
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree2_end2;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree2_end2;
   mean_to_tree2_end2 = morpher.edge_map();
 
   // compute map from mean graph to tree1_end1
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree2_end1;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr> mean_to_tree2_end1;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::iterator itr =
     mean_to_tree2_end2.begin(); itr != mean_to_tree2_end2.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e0 = itr->first;
     dbsksp_shock_edge_sptr e1 = itr->second;
     dbsksp_shock_edge_sptr e2 = tree2_end2_to_end1.find(e1)->second;
-    mean_to_tree2_end1.insert(vcl_make_pair(e0, e2));  
+    mean_to_tree2_end1.insert(std::make_pair(e0, e2));  
   }
 
   this->propagate_data(mean_graph_2, tree2_end1, mean_to_tree2_end1);
@@ -619,10 +619,10 @@ generate_final_common_graph()
 void dbsksp_morph_shock_graph_different_topology::
 propagate_data(const dbsksp_shock_graph_sptr& child,
                const dbsksp_shock_graph_sptr& parent,
-  const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& child_to_parent)
+  const std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& child_to_parent)
 {
   // First propagate the edge properties
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::const_iterator itr =
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>::const_iterator itr =
     child_to_parent.begin(); itr != child_to_parent.end(); ++itr)
   {
     dbsksp_shock_edge_sptr e_child = itr->first;
@@ -708,12 +708,12 @@ propagate_data(const dbsksp_shock_graph_sptr& child,
 void dbsksp_morph_shock_graph_different_topology::
 generate_edited_graph(const dbskr_tree_sptr& tree,
   int ref_dart,
-  const vcl_vector<bool > used_darts,
-  const vcl_vector<int >& num_segments_to_interpolate,
+  const std::vector<bool > used_darts,
+  const std::vector<int >& num_segments_to_interpolate,
   bool real_edge_deletion,
   dbsksp_shock_graph_sptr& start_graph,
   dbsksp_shock_graph_sptr& final_graph,
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& final_to_start_edge_map)
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& final_to_start_edge_map)
 {
   // >> Build the initial shock graph
   dbsksp_build_from_xshock_graph builder;
@@ -729,7 +729,7 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
 
 
   // set the reference node and edge properly
-  vcl_vector<dbsksp_shock_edge_sptr > elist = builder.get_shock_edges_of_dart(ref_dart);
+  std::vector<dbsksp_shock_edge_sptr > elist = builder.get_shock_edges_of_dart(ref_dart);
   if (!elist.empty())
   {
     dbsksp_shock_edge_sptr ref_edge = elist.front();
@@ -788,9 +788,9 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
     
 
     // find out which edges need to be removed
-    vcl_vector<dbsksp_shock_edge_sptr > edges_to_remove = 
+    std::vector<dbsksp_shock_edge_sptr > edges_to_remove = 
       builder.get_shock_edges_of_dart(dart);
-    vcl_vector<dbsksp_shock_node_sptr > nodes_to_remove;
+    std::vector<dbsksp_shock_node_sptr > nodes_to_remove;
       //builder.get_shock_nodes_of_dart(dart);
     // get nodes_to_remove from the edges rather than from the builder
     // because some of the nodes may not exist
@@ -806,7 +806,7 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
 
     if (edges_to_remove.empty())
     {
-      vcl_cerr << "ERROR: No edges correspond to dart = " << dart << vcl_endl;  
+      std::cerr << "ERROR: No edges correspond to dart = " << dart << std::endl;  
     }
 
     assert(!edges_to_remove.empty());
@@ -887,14 +887,14 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
         dbsksp_shock_node_sptr v0 = 0;
         if (need_reverse_order)
         {
-          for (vcl_vector<dbsksp_shock_edge_sptr >::reverse_iterator itr = 
+          for (std::vector<dbsksp_shock_edge_sptr >::reverse_iterator itr = 
             edges_to_remove.rbegin(); itr != edges_to_remove.rend(); ++itr)
           {
             dbsksp_shock_edge_sptr e = *itr;
             v0 = graph->remove_leaf_A_1_2_edge(e);
             if (!v0)
             {
-              vcl_cerr << "ERROR: could not remove leaf edge.\n";
+              std::cerr << "ERROR: could not remove leaf edge.\n";
             }
           }
         }
@@ -906,13 +906,13 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
             v0 = graph->remove_leaf_A_1_2_edge(e);
             if (!v0)
             {
-              vcl_cerr << "ERROR: could not remove leaf edge.\n";
+              std::cerr << "ERROR: could not remove leaf edge.\n";
             }
           }
         }
 
         // find the terminal edge and remove it
-        for (vcl_list<dbsksp_shock_edge_sptr >::const_iterator itr = v0->edge_list().begin();
+        for (std::list<dbsksp_shock_edge_sptr >::const_iterator itr = v0->edge_list().begin();
           itr != v0->edge_list().end(); ++itr)
         {
           dbsksp_shock_edge_sptr e = *itr;
@@ -933,7 +933,7 @@ generate_edited_graph(const dbskr_tree_sptr& tree,
           bool ok = graph->remove_internal_edge(e);
           if (!ok)
           {
-            vcl_cerr << "ERROR: could not remove internal edge.\n";
+            std::cerr << "ERROR: could not remove internal edge.\n";
           }
         }
       }
@@ -990,7 +990,7 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
   // for each pair of matching dart paths
 
   // retrieve the final mapping between two trees
-  vcl_vector<pathtable_key> dart_path_map = this->sm_cor()->get_map();
+  std::vector<pathtable_key> dart_path_map = this->sm_cor()->get_map();
 
   
   for (unsigned int path_id = 0; path_id < dart_path_map.size(); path_id++) 
@@ -1004,14 +1004,14 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
 
     // Retrieve the darts involved in this matching
     // Tree 1
-    vcl_vector<int > dart_list_1 = tree1->get_dart_path(tree1_start_dart, tree1_end_dart);
+    std::vector<int > dart_list_1 = tree1->get_dart_path(tree1_start_dart, tree1_end_dart);
       
     // Tree 2
-    vcl_vector<int > dart_list_2 = tree2->get_dart_path(tree2_start_dart, tree2_end_dart);
+    std::vector<int > dart_list_2 = tree2->get_dart_path(tree2_start_dart, tree2_end_dart);
 
     // Now we compute the arclength associated with each path
-    vcl_vector<double > dart_lengths_1;
-    vcl_vector<double > dart_lengths_2;
+    std::vector<double > dart_lengths_1;
+    std::vector<double > dart_lengths_2;
 
     this->compute_dart_lengths(tree1, dart_list_1, dart_lengths_1);
     this->compute_dart_lengths(tree2, dart_list_2, dart_lengths_2);
@@ -1048,7 +1048,7 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
     {
       int dart = dart_list_1[i];
       double len = dart_lengths_1[i];
-      int n = (int)vcl_floor(num_segments_path * len / total_length_1);
+      int n = (int)std::floor(num_segments_path * len / total_length_1);
       n = vnl_math::max(n, 1);
       num_segments_tree1_[dart] = n;
       num_segments_tree1_[tree1->mate(dart)] = n;
@@ -1068,7 +1068,7 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
     {
       int dart = dart_list_2[i];
       double len = dart_lengths_2[i];
-      int n = (int)vcl_floor(num_segments_path * len / total_length_2);
+      int n = (int)std::floor(num_segments_path * len / total_length_2);
       n = vnl_math::max(n, 1);
       num_segments_tree2_[dart] = n;
       num_segments_tree2_[tree2->mate(dart)] = n;
@@ -1089,8 +1089,8 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
 //: Compute the lengths of the darts for a tree
 void dbsksp_morph_shock_graph_different_topology::
 compute_dart_lengths(const dbskr_tree_sptr& tree,
-                     const vcl_vector<int >& query_dart_list,
-                     vcl_vector<double >& dart_lengths)
+                     const std::vector<int >& query_dart_list,
+                     std::vector<double >& dart_lengths)
 {
   dart_lengths.resize(query_dart_list.size(), 0);
   for (unsigned i=0; i < query_dart_list.size(); ++i)
@@ -1099,8 +1099,8 @@ compute_dart_lengths(const dbskr_tree_sptr& tree,
 
     //temp data structures
     dbsk2d_shock_node_sptr start_node;
-    vcl_vector<dbsk2d_shock_edge_sptr> edges;
-    vcl_vector<int> dart_list;
+    std::vector<dbsk2d_shock_edge_sptr> edges;
+    std::vector<int> dart_list;
 
     //get shock edge list from this path
     dart_list.clear();

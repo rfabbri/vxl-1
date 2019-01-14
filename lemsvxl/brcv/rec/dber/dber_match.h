@@ -17,7 +17,7 @@
 #ifndef _dber_match_h
 #define _dber_match_h
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -40,13 +40,13 @@ class dber_match
   dber_match();
   virtual ~dber_match(){};
     
-  vcl_vector<vsol_line_2d_sptr>& get_lines1() { return lines1_; }
-  vcl_vector<vsol_line_2d_sptr>& get_lines2() { return lines2_; }
+  std::vector<vsol_line_2d_sptr>& get_lines1() { return lines1_; }
+  std::vector<vsol_line_2d_sptr>& get_lines2() { return lines2_; }
 
-  void set_lines1(const vcl_vector<vsol_line_2d_sptr>& l);// { lines1_ = l; }
-  void set_lines2(const vcl_vector<vsol_line_2d_sptr>& l);// { lines2_ = l; }
+  void set_lines1(const std::vector<vsol_line_2d_sptr>& l);// { lines1_ = l; }
+  void set_lines2(const std::vector<vsol_line_2d_sptr>& l);// { lines2_ = l; }
 
-  vcl_vector<unsigned>& get_assignment() { return assign_; }
+  std::vector<unsigned>& get_assignment() { return assign_; }
 
   void clear_assignment();
   void clear_lines2();
@@ -56,7 +56,7 @@ class dber_match
   void set_poly2(vsol_polygon_2d_sptr p) { poly2_ = p; }
 
   //: match the current edgel-image pairs, uses mutual information based edgel similaity and hungarian matching
-  double match(vcl_vector<vil_image_view<vxl_byte> >&set1, vcl_vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma, float width_radius, float radius);
+  double match(std::vector<vil_image_view<vxl_byte> >&set1, std::vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma, float width_radius, float radius);
 
   //: match the current edgel-image pairs, use greedy matching algorithm
   //  if cost is greater than the threshold, those matches are eliminated
@@ -88,10 +88,10 @@ class dber_match
   vgl_norm_trans_2d<double> trans1_;
   vgl_norm_trans_2d<double> trans2_;
 
-  vcl_vector<vsol_line_2d_sptr> lines1_, lines2_;
+  std::vector<vsol_line_2d_sptr> lines1_, lines2_;
   
   // vector that holds the assigment of edgels
-  vcl_vector<unsigned> assign_;
+  std::vector<unsigned> assign_;
  // int num_cost_elems_;
   double sigma_square_;
 

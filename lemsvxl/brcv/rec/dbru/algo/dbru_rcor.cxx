@@ -24,7 +24,7 @@
 #include <dbinfo/dbinfo_region_geometry.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <bsol/bsol_algs.h>
-#include <vcl_algorithm.h> 
+#include <algorithm> 
 
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
@@ -61,10 +61,10 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
   for (unsigned i = 0; i<geo1->n_polys(); i++) {
       vsol_polygon_2d_sptr p = geo1->poly(i);
       p->compute_bounding_box();
-      int min_x = p->get_min_x()-5 < 0.0f ? 0 : (int)vcl_floor(p->get_min_x()-5.0f);
-      int min_y = p->get_min_y()-5 < 0.0f ? 0 : (int)vcl_floor(p->get_min_y()-5.0f);
-      int max_x = (int)vcl_ceil(p->get_max_x()+5.0f);
-      int max_y = (int)vcl_ceil(p->get_max_y()+5.0f);
+      int min_x = p->get_min_x()-5 < 0.0f ? 0 : (int)std::floor(p->get_min_x()-5.0f);
+      int min_y = p->get_min_y()-5 < 0.0f ? 0 : (int)std::floor(p->get_min_y()-5.0f);
+      int max_x = (int)std::ceil(p->get_max_x()+5.0f);
+      int max_y = (int)std::ceil(p->get_max_y()+5.0f);
       if (min_x < min1_x_)
         min1_x_ = min_x;
       if (min_y < min1_y_)
@@ -78,7 +78,7 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
   upper_x_ = max1_x_-min1_x_+1; 
   upper_y_ = max1_y_-min1_y_+1; 
   for (int i = 0; i<upper_x_; i++) {
-    vcl_vector<int> tmp(upper_y_, -1);
+    std::vector<int> tmp(upper_y_, -1);
     region1_.push_back(tmp);
   }
 
@@ -91,7 +91,7 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
 
   if (!cnt2_)
   {
-    vcl_cout << "No pixels in region 1\n";
+    std::cout << "No pixels in region 1\n";
     halt_ = true;
   }
 
@@ -105,10 +105,10 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
   for (unsigned i = 0; i<geo2->n_polys(); i++) {
       vsol_polygon_2d_sptr p = geo2->poly(i);
       p->compute_bounding_box();
-      int min_x = p->get_min_x()-5 < 0.0f ? 0 : (int)vcl_floor(p->get_min_x()-5.0f);
-      int min_y = p->get_min_y()-5 < 0.0f ? 0 : (int)vcl_floor(p->get_min_y()-5.0f);
-      int max_x = (int)vcl_ceil(p->get_max_x()+5.0f);
-      int max_y = (int)vcl_ceil(p->get_max_y()+5.0f);
+      int min_x = p->get_min_x()-5 < 0.0f ? 0 : (int)std::floor(p->get_min_x()-5.0f);
+      int min_y = p->get_min_y()-5 < 0.0f ? 0 : (int)std::floor(p->get_min_y()-5.0f);
+      int max_x = (int)std::ceil(p->get_max_x()+5.0f);
+      int max_y = (int)std::ceil(p->get_max_y()+5.0f);
       if (min_x < min2_x_)
         min2_x_ = min_x;
       if (min_y < min2_y_)
@@ -122,7 +122,7 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
   upper2_x_ = max2_x_-min2_x_+1;
   upper2_y_ = max2_y_-min2_y_+1;
   for (int i = 0; i<upper2_x_; i++) {
-    vcl_vector<int> tmp(upper2_y_, -1);
+    std::vector<int> tmp(upper2_y_, -1);
     region2_.push_back(tmp);
   }
 
@@ -135,7 +135,7 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
 
   if (!n2)
   {
-    vcl_cout << "No pixels in region 2\n";
+    std::cout << "No pixels in region 2\n";
     halt_ = true;
   }
   
@@ -156,12 +156,12 @@ dbru_rcor::dbru_rcor(dbinfo_observation_sptr obs1, dbinfo_observation_sptr obs2,
 // algorithms, other algorithms are not using this data structure
 void dbru_rcor::initialize_region1_histograms() {
   region1_histograms_.resize(upper_x_, upper_y_);
-  vcl_vector< vcl_pair< vgl_point_2d<int>, int > > tmp;
+  std::vector< std::pair< vgl_point_2d<int>, int > > tmp;
   region1_histograms_.fill(tmp);
 
   if (save_float_) {
     region1_histograms_float_.resize(upper_x_, upper_y_);
-    vcl_vector< vcl_pair< vgl_point_2d<float>, int > > tmp2;
+    std::vector< std::pair< vgl_point_2d<float>, int > > tmp2;
     region1_histograms_float_.fill(tmp2);
   }
 }
@@ -198,10 +198,10 @@ vil_image_resource_sptr dbru_rcor::get_used_pixels1() {
   vsol_polygon_2d_sptr poly = geo->poly(0);
   poly->compute_bounding_box();
   //unused int s = poly->size();
-  int mx = (int)vcl_floor(poly->get_min_x()+0.5);
-  int my = (int)vcl_floor(poly->get_min_y()+0.5);
-  int maxx = (int)vcl_floor(poly->get_max_x()+0.5);
-  int maxy = (int)vcl_floor(poly->get_max_y()+0.5);
+  int mx = (int)std::floor(poly->get_min_x()+0.5);
+  int my = (int)std::floor(poly->get_min_y()+0.5);
+  int maxx = (int)std::floor(poly->get_max_x()+0.5);
+  int maxy = (int)std::floor(poly->get_max_y()+0.5);
   int w = maxx-mx+10;
   int h = maxy-my+10;
   
@@ -241,10 +241,10 @@ vil_image_resource_sptr dbru_rcor::get_used_pixels2() {
   vsol_polygon_2d_sptr poly = geo->poly(0);
   poly->compute_bounding_box();
   //unused int s = poly->size();
-  int mx = (int)vcl_floor(poly->get_min_x()+0.5);
-  int my = (int)vcl_floor(poly->get_min_y()+0.5);
-  int maxx = (int)vcl_floor(poly->get_max_x()+0.5);
-  int maxy = (int)vcl_floor(poly->get_max_y()+0.5);
+  int mx = (int)std::floor(poly->get_min_x()+0.5);
+  int my = (int)std::floor(poly->get_min_y()+0.5);
+  int maxx = (int)std::floor(poly->get_max_x()+0.5);
+  int maxy = (int)std::floor(poly->get_max_y()+0.5);
   int w = maxx-mx+10;
   int h = maxy-my+10;
   
@@ -284,10 +284,10 @@ vil_image_resource_sptr dbru_rcor::get_appearance2_on_pixels1() {
   vsol_polygon_2d_sptr poly1 = geo1->poly(0);
   poly1->compute_bounding_box();
   //unused int s = poly1->size();
-  int mx = (int)vcl_floor(poly1->get_min_x()+0.5);
-  int my = (int)vcl_floor(poly1->get_min_y()+0.5);
-  int maxx = (int)vcl_floor(poly1->get_max_x()+0.5);
-  int maxy = (int)vcl_floor(poly1->get_max_y()+0.5);
+  int mx = (int)std::floor(poly1->get_min_x()+0.5);
+  int my = (int)std::floor(poly1->get_min_y()+0.5);
+  int maxx = (int)std::floor(poly1->get_max_x()+0.5);
+  int maxy = (int)std::floor(poly1->get_max_y()+0.5);
   int w = maxx-mx+10;
   int h = maxy-my+10;
   

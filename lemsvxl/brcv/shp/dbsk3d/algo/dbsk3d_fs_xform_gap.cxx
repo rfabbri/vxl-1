@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  May 01, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_fs_vertex.h>
@@ -26,19 +26,19 @@ dbmsh3d_face* L_3d_gap_xform (dbmsh3d_mesh* BM, dbsk3d_fs_edge* FE)
   //1) Collect the order set of bnd_edges surrounding FE in edges_of_F[]
   //   If any shock_patch FF is still valid, prune FF and create bnd_edge E.
   //   Assign 2 genes of FF if necessary.
-  vcl_vector<dbmsh3d_edge*> edges_of_F;
+  std::vector<dbmsh3d_edge*> edges_of_F;
   dbmsh3d_halfedge* he = FE->halfedge();
   dbsk3d_fs_face* FF = (dbsk3d_fs_face*) he->face();
   dbmsh3d_vertex* startG = FF->genes(0);  
   dbmsh3d_vertex* G = startG;
   
   //set of all generators that will be passed to the two A14 nodes.
-  vcl_map<int, dbmsh3d_vertex*> asso_genes;
+  std::map<int, dbmsh3d_vertex*> asso_genes;
   do {
     dbmsh3d_vertex* nG = FF->other_G (G);
-    asso_genes.insert (vcl_pair<int, dbmsh3d_vertex*> (nG->id(), nG));
+    asso_genes.insert (std::pair<int, dbmsh3d_vertex*> (nG->id(), nG));
     #if DBMSH3D_DEBUG > 4
-    vul_printf (vcl_cout, "FE %d gap xform: add G %d to asso_genes.\n", FE->id(), nG->id());
+    vul_printf (std::cout, "FE %d gap xform: add G %d to asso_genes.\n", FE->id(), nG->id());
     #endif
 
     //If the patch FF is valid, prune it and create the bnd_edge.
@@ -79,7 +79,7 @@ dbmsh3d_face* L_3d_gap_xform (dbmsh3d_mesh* BM, dbsk3d_fs_edge* FE)
   
   //3) Initialize the bnd_face's indexed-face-set (IFS) vertices.
   //   set the link's generators to be meshed.
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   bool result = FE->get_ordered_Gs_via_FF (genes);
   assert (result);
 
@@ -97,7 +97,7 @@ dbmsh3d_face* L_add_Delaunay_facet (dbmsh3d_mesh* BM, dbsk3d_fs_edge* FE)
   //1) Collect the order set of bnd_edges surrounding FE in edges_of_F[]
   //   If any shock_patch FF is still valid, prune FF and create bnd_edge E.
   //   Assign 2 genes of FF if necessary.
-  vcl_vector<dbmsh3d_edge*> edges_of_F;
+  std::vector<dbmsh3d_edge*> edges_of_F;
   dbmsh3d_halfedge* he = FE->halfedge();
   dbsk3d_fs_face* FF = (dbsk3d_fs_face*) he->face();
   dbmsh3d_vertex* startG = FF->genes(0);  
@@ -134,7 +134,7 @@ dbmsh3d_face* L_add_Delaunay_facet (dbmsh3d_mesh* BM, dbsk3d_fs_edge* FE)
   
   //3) Initialize the bnd_face's indexed-face-set (IFS) vertices.
   //   set the link's generators to be meshed.
-  vcl_vector<dbmsh3d_vertex*> genes;
+  std::vector<dbmsh3d_vertex*> genes;
   bool result = FE->get_ordered_Gs_via_FF (genes);
   assert (result);
 

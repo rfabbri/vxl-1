@@ -10,19 +10,19 @@
 
 #include <vgl/vgl_fwd.h>
 #include <mex.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class bgld_circ_arc;
 
 void matlab_to_vgl(const double *pts, 
-    vcl_vector<vgl_point_2d<double> > *pts_vxl_ptr);
+    std::vector<vgl_point_2d<double> > *pts_vxl_ptr);
 
-mxArray *vgl_to_matlab(const vcl_vector<vgl_point_2d<double> > &pts_vxl);
+mxArray *vgl_to_matlab(const std::vector<vgl_point_2d<double> > &pts_vxl);
 
 mxArray *vgl_to_matlab(
-    const vcl_vector<vgl_conic_segment_2d<double> > &pts_vxl);
+    const std::vector<vgl_conic_segment_2d<double> > &pts_vxl);
 
-mxArray *vgl_to_matlab(const vcl_vector<bgld_circ_arc> &pts_vxl);
+mxArray *vgl_to_matlab(const std::vector<bgld_circ_arc> &pts_vxl);
 
 
 #endif // vxl_mex_utils_h

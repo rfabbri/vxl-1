@@ -15,7 +15,7 @@
 #ifndef _dber_utilities_h
 #define _dber_utilities_h
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
@@ -38,22 +38,22 @@ class dber_utilities
 
   dber_utilities() {};
   //dber_match(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2);
-  //dber_match(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2, double R1, vcl_vector<double>& lambda, int num_cost_elems);
+  //dber_match(dbskr_scurve_sptr c1,dbskr_scurve_sptr c2, double R1, std::vector<double>& lambda, int num_cost_elems);
   virtual ~dber_utilities(){};
 
   //:  scale all edgels in lines2 so that widhts are equal
-  static void scale_lines(vcl_vector<vsol_line_2d_sptr>& l, double scale_factor);
-  static void translate_lines(vcl_vector<vsol_line_2d_sptr>& l, double x, double y);
-  static vsol_box_2d_sptr get_box(vcl_vector<vsol_line_2d_sptr>& l);
+  static void scale_lines(std::vector<vsol_line_2d_sptr>& l, double scale_factor);
+  static void translate_lines(std::vector<vsol_line_2d_sptr>& l, double x, double y);
+  static vsol_box_2d_sptr get_box(std::vector<vsol_line_2d_sptr>& l);
 
   //: rotate the lines about the given center point
-  static void rotate_lines(vcl_vector<vsol_line_2d_sptr>& l, vgl_h_matrix_2d<double> H, double cent_x, double cent_y);
+  static void rotate_lines(std::vector<vsol_line_2d_sptr>& l, vgl_h_matrix_2d<double> H, double cent_x, double cent_y);
 
   //: translate lines so that translation is optimal
-  static void optimize_translation(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square);
+  static void optimize_translation(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square);
 
   //: find center of gravity of edgels
-  static vsol_point_2d_sptr center_of_gravity(vcl_vector<vsol_line_2d_sptr>& l1);
+  static vsol_point_2d_sptr center_of_gravity(std::vector<vsol_line_2d_sptr>& l1);
 
   //: find the dominant direction of a polygon by fitting a line via linear regression
   static vgl_line_2d<double> find_dominant_dir(vsol_polygon_2d_sptr poly, double x, double y);
@@ -66,7 +66,7 @@ class dber_cost_func : public vnl_cost_function
 public:
   //: Constructors/Destructor
 
-  dber_cost_func(unsigned number_of_parameters, vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2);
+  dber_cost_func(unsigned number_of_parameters, std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2);
   ~dber_cost_func(){}
   
   //: The main function.
@@ -81,8 +81,8 @@ protected:
   //: number of transform parameters
   unsigned no_params_;
 
-  vcl_vector<vsol_line_2d_sptr> lines1_;
-  vcl_vector<vsol_line_2d_sptr> lines2_;
+  std::vector<vsol_line_2d_sptr> lines1_;
+  std::vector<vsol_line_2d_sptr> lines2_;
 
   double maxval_;
   double sigma_square_;

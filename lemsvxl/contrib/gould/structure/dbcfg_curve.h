@@ -24,7 +24,7 @@
 ++==========================================================
 */
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbdet/sel/dbdet_edgel.h>
 
 // For quick powerful access on an essentially static structure, use cyclic
@@ -58,7 +58,7 @@ public:
   dbcfg_junction(T x, T y);
 
   // create a junction connected to a vector of curves
-  dbcfg_junction(T x, T y, vcl_vector<dbcfg_curve<T> * > curves);
+  dbcfg_junction(T x, T y, std::vector<dbcfg_curve<T> * > curves);
 
   // destruct the junction
   ~dbcfg_junction();
@@ -70,10 +70,10 @@ public:
   T y() const;
 
   // returns the curves in the junction
-  vcl_vector<dbcfg_curve<T> * > get_curves();
+  std::vector<dbcfg_curve<T> * > get_curves();
 
   // returns the curves in the junction that exist at the given depth
-  vcl_vector<dbcfg_curve<T> * > get_curves(int depth);
+  std::vector<dbcfg_curve<T> * > get_curves(int depth);
 
   // returns true if the junction exists (connects to more than one curve) at the given depth
   bool exists_at(int depth);
@@ -100,7 +100,7 @@ private:
   T _y;
 
   // stored connected curves
-  vcl_vector<dbcfg_curve<T> * > _curves;
+  std::vector<dbcfg_curve<T> * > _curves;
 };
 
 
@@ -118,7 +118,7 @@ public:
 
   // create a parent curve from other curves
   // given curves should be in order joining
-  dbcfg_curve(vcl_vector<dbcfg_curve<T> * > children, int depth = 1);
+  dbcfg_curve(std::vector<dbcfg_curve<T> * > children, int depth = 1);
 
   // destruct the curve
   ~dbcfg_curve();
@@ -144,10 +144,10 @@ public:
   dbdet_edgel_chain* get_edgel_chain();
 
   // returns the junctions that connect with this curve
-  vcl_vector<dbcfg_junction<T> * > get_junctions();
+  std::vector<dbcfg_junction<T> * > get_junctions();
 
   // returns the junctions that connect with this curve at the given depth
-  vcl_vector<dbcfg_junction<T> * > get_junctions(int depth);
+  std::vector<dbcfg_junction<T> * > get_junctions(int depth);
 
   // returns a junction of this curve at the given point, or null
   dbcfg_junction<T>* find_junction(T x, T y);
@@ -169,10 +169,10 @@ private:
   dbcfg_curve<T> * _parent;
 
   // children of the curve
-  vcl_vector<dbcfg_curve<T> * > _children;
+  std::vector<dbcfg_curve<T> * > _children;
 
   // junctions that this curve is part of
-  vcl_vector<dbcfg_junction<T> * > _junctions;
+  std::vector<dbcfg_junction<T> * > _junctions;
 
   // edgel chain
   dbdet_edgel_chain* _chain;

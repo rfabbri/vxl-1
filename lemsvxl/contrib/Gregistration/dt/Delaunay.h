@@ -1,7 +1,7 @@
 #ifndef Delaunay_H
 #define Delaunay_H
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <stdlib.h> // for C qsort 
 #include <cmath>
 #include <time.h> // for random
@@ -13,7 +13,7 @@ const double EPSILON = 0.000001;
 struct XYZ{
   double x, y, z,fx,fy;
   void out(){
-    vcl_cout<<"("<<x<<","<<y<<","<<z<<") "<<"("<<fx<<","<<fy<<")";
+    std::cout<<"("<<x<<","<<y<<","<<z<<") "<<"("<<fx<<","<<fy<<")";
   }
 };
 

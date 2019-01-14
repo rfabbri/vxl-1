@@ -8,7 +8,7 @@
 // \author  Kongbin Kang and H. Can Aras
 // \date    2005-02-15
 //
-#include <vcl_vector.h>
+#include <vector>
 #include <vsl/vsl_basic_xml_element.h>
 #include "xmvg_perspective_camera.h"
 #include "xmvg_composite_filter_2d.h"
@@ -24,7 +24,7 @@ public:
   xmvg_composite_filter_3d() {}
   
   //: 
-  xmvg_composite_filter_3d(vcl_vector<F > & filters) 
+  xmvg_composite_filter_3d(std::vector<F > & filters) 
     : filters_(filters) {}
   
   //: generate splats from 3d filter at location (x,y,z) 
@@ -32,7 +32,7 @@ public:
                                          const vgl_point_3d<double>& c)
   {
     unsigned size = filters_.size();
-    vcl_vector<xmvg_atomic_filter_2d<T> > splats(size);
+    std::vector<xmvg_atomic_filter_2d<T> > splats(size);
 
     for(unsigned i = 0; i < size; i++){
       splats[i] = filters_[i].splat(c, camera);
@@ -53,7 +53,7 @@ public:
   
   unsigned size() { return filters_.size();}
 
-  friend void x_write(vcl_ostream& os, xmvg_composite_filter_3d<T, F>  f)
+  friend void x_write(std::ostream& os, xmvg_composite_filter_3d<T, F>  f)
   {
     vsl_basic_xml_element element("xmvg_composite_filter_3d");
     element.x_write_open(os);
@@ -62,7 +62,7 @@ public:
     element.x_write_close(os);
   }
 protected:
-  vcl_vector<F >  filters_;
+  std::vector<F >  filters_;
 };
 
 #endif

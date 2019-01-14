@@ -19,6 +19,6 @@ template<class T1, class T2, class T3>
 void vsl_b_write(vsl_b_ostream &os, const dsm2_transition_map<T1,T2,T3>* p);
 
 template<class T1, class T2, class T3>
-void vsl_print_summary(vcl_ostream& os, const dsm2_transition_map<T1,T2,T3> *p);
+void vsl_print_summary(std::ostream& os, const dsm2_transition_map<T1,T2,T3> *p);
 
 #endif //DSM2_IO_TRANSITION_MAP_H_

@@ -7,12 +7,12 @@
 //
 
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <iostream>
+#include <vector>
+#include <list>
 #include <dbsksp/pro/dbsksp_load_xgraph_xml_process.h>
 #include <bpro1/bpro1_parameters.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbsksp/pro/dbsksp_xgraph_storage.h>
 #include <dbsksp/pro/dbsksp_xgraph_storage_sptr.h>
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
@@ -25,9 +25,9 @@
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_new.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h>
-#include <vcl_stack.h>
+#include <cmath>
+#include <cstdlib>
+#include <stack>
 
 // ARGS
 // 1: xgraph geom file
@@ -82,7 +82,7 @@ bool dbsksp_draw_binary_map(const dbsksp_xshock_graph_sptr& xgraph,
             }
         }
     }
-    vcl_stack<int> xs, ys;
+    std::stack<int> xs, ys;
     xs.push(screenshot.ni()/2);
     ys.push(screenshot.nj()/2);
     while(!xs.empty())
@@ -116,7 +116,7 @@ bool dbsksp_draw_binary_map(const dbsksp_xshock_graph_sptr& xgraph,
     return true;
 }
 
-void save_xgraph_as_image(dbsksp_xgraph_storage_sptr& shock_storage, vil_image_view<vxl_byte >& bg_image, const vcl_string& file_path)
+void save_xgraph_as_image(dbsksp_xgraph_storage_sptr& shock_storage, vil_image_view<vxl_byte >& bg_image, const std::string& file_path)
 {
     dbsksp_xshock_graph_sptr xg = shock_storage->xgraph();
     //vil_image_view<vxl_byte > screenshot_image;
@@ -129,18 +129,18 @@ void save_xgraph_as_image(dbsksp_xgraph_storage_sptr& shock_storage, vil_image_v
 
 int main(int argn, char* args[])
 {
-    vcl_cout << "Number of input arguments: " << argn <<vcl_endl;
+    std::cout << "Number of input arguments: " << argn <<std::endl;
     if(argn != 7)
     {
-        vcl_cout << "Not enough inputs!" <<vcl_endl;
+        std::cout << "Not enough inputs!" <<std::endl;
         return 0;
     }
 
-    vcl_cout << "Xgraph geom file path: " << args[1] << vcl_endl;
-    vcl_cout << "Xgraph file path: " << args[2] << vcl_endl;
+    std::cout << "Xgraph geom file path: " << args[1] << std::endl;
+    std::cout << "Xgraph file path: " << args[2] << std::endl;
 
-    vcl_string xgraph_geom_file = args[1];
-    vcl_string xgraph_file = args[2];
+    std::string xgraph_geom_file = args[1];
+    std::string xgraph_file = args[2];
     int width = atoi(args[3]);
     int height = atoi(args[4]);
     int selected_node_id = atoi(args[5]);
@@ -151,7 +151,7 @@ int main(int argn, char* args[])
     x_read(xgraph_file, xg);
     dbsksp_xgraph_storage_sptr shock_storage = dbsksp_xgraph_storage_new();
     shock_storage->set_xgraph(xg);
-    vcl_cout << "Loading xshock_graph XML file completed.\n";
+    std::cout << "Loading xshock_graph XML file completed.\n";
     dbsksp_xshock_design_tool dt;
     dt.set_storage(shock_storage);
 
@@ -165,14 +165,14 @@ int main(int argn, char* args[])
     dbsksp_xshock_node_sptr selected_node = xg->node_from_id(selected_node_id);
     double x_coor = selected_node->pt().x();
     double y_coor = selected_node->pt().y();
-    vcl_cout << "Selected node position: " << x_coor << " " << y_coor << vcl_endl;
+    std::cout << "Selected node position: " << x_coor << " " << y_coor << std::endl;
     dt.set_selected_xnode(selected_node);
     dt.handle_similarity_transform(-x_coor+width/2, -y_coor+height/2, 0, scale_factor);
 
     int num_nodes = xg->number_of_vertices();
-    vcl_cout << "Number of nodes: " << num_nodes << vcl_endl;
+    std::cout << "Number of nodes: " << num_nodes << std::endl;
     int num_edges = xg->number_of_edges();
-    vcl_cout << "Number of edges: " << num_edges << vcl_endl;
+    std::cout << "Number of edges: " << num_edges << std::endl;
 
 
     /*int* vertex_ids = new int[num_nodes];

@@ -5,8 +5,8 @@
 
 #include "dbdet_sel_extract_contours_process.h"
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 
 #include <dbdet/pro/dbdet_sel_storage.h>
@@ -50,7 +50,7 @@ dbdet_sel_extract_contours_process::dbdet_sel_extract_contours_process()
        !parameters()->add( "Apply curvature Threshold" , "-apply_k_thresh", (bool) false ) ||
        !parameters()->add( "  Curvature Threshold", "-k_thresh", 0.2f ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -70,7 +70,7 @@ dbdet_sel_extract_contours_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_sel_extract_contours_process::name()
 {
   return "Extract Linked Curves";
@@ -94,9 +94,9 @@ dbdet_sel_extract_contours_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_sel_extract_contours_process::get_input_type()
+std::vector< std::string > dbdet_sel_extract_contours_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel" );
 
   return to_return;
@@ -104,9 +104,9 @@ vcl_vector< vcl_string > dbdet_sel_extract_contours_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_sel_extract_contours_process::get_output_type()
+std::vector< std::string > dbdet_sel_extract_contours_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
 
   return to_return;
@@ -117,7 +117,7 @@ vcl_vector< vcl_string > dbdet_sel_extract_contours_process::get_output_type()
 bool dbdet_sel_extract_contours_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_sel_extract_contours_process::execute() - not exactly one input \n";
+    std::cout << "In dbdet_sel_extract_contours_process::execute() - not exactly one input \n";
     return false;
   }
   clear_output();
@@ -144,7 +144,7 @@ bool dbdet_sel_extract_contours_process::execute()
   dbdet_curve_fragment_graph& CFG = input_sel->CFG();
 
   //form vsol curves from the edgel chains in the linker
-  vcl_vector< vsol_spatial_object_2d_sptr > image_curves;
+  std::vector< vsol_spatial_object_2d_sptr > image_curves;
 
   dbdet_edgel_chain_list_iter f_it = CFG.frags.begin();
   for (; f_it != CFG.frags.end(); f_it++)
@@ -179,11 +179,11 @@ bool dbdet_sel_extract_contours_process::execute()
     double Lstd = Ldata.sd(); double Rstd = Rdata.sd(); 
 
     // C) Apply mean contrast threshold
-    if (apply_contrast_thresh && vcl_fabs(Lmean-Rmean)<contrast_thresh)
+    if (apply_contrast_thresh && std::fabs(Lmean-Rmean)<contrast_thresh)
       continue;
 
     // D) apply adaptive contrast threshold
-    if (apply_adap_thresh && vcl_fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)) //saliency test
+    if (apply_adap_thresh && std::fabs(Lmean-Rmean)<adap_thresh_fac*(Lstd+Rstd)) //saliency test
         continue;
 
     // 3) compute average d2f for the contour fragment
@@ -194,12 +194,12 @@ bool dbdet_sel_extract_contours_process::execute()
     double d2f_mean = Ldata.mean();
 
     // E) apply peakiness threshold
-    if (apply_d2f_thresh && vcl_fabs(d2f_mean)<d2f_thresh)
+    if (apply_d2f_thresh && std::fabs(d2f_mean)<d2f_thresh)
         continue;
 
     //-------------------------------------------------------------------
     //create a polyline out of the edgel chain
-    vcl_vector<vgl_point_2d<double> > pts;
+    std::vector<vgl_point_2d<double> > pts;
     pts.reserve(chain->edgels.size());
     for (unsigned j=0; j<chain->edgels.size(); j++)
       pts.push_back(chain->edgels[j]->pt);
@@ -211,7 +211,7 @@ bool dbdet_sel_extract_contours_process::execute()
     // F) Apply curvature threshold
     if (apply_k_thresh)
     {
-      vcl_vector<double> ks;
+      std::vector<double> ks;
       ks.resize(pts.size());
 
       for (unsigned j=0; j<pts.size(); j++)
@@ -236,12 +236,12 @@ bool dbdet_sel_extract_contours_process::execute()
       for (unsigned j=0; j<ks.size(); j++)
         Ldata.obs(ks[j]);
 
-      if (vcl_fabs(Ldata.mean())<k_thresh) 
+      if (std::fabs(Ldata.mean())<k_thresh) 
         continue;
     }
 
     //finally construct vsol curves out of the remaining segments
-    vcl_vector<vsol_point_2d_sptr> vsol_pts;
+    std::vector<vsol_point_2d_sptr> vsol_pts;
     for (unsigned i=0; i<pts.size(); ++i)
       vsol_pts.push_back(new vsol_point_2d(pts[i]));
 

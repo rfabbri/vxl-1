@@ -13,8 +13,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_list.h>
-#include <vcl_iostream.h>
+#include <list>
+#include <iostream>
 #include <vbl/vbl_ref_count.h>
 
 #include <dbsk2d/dbsk2d_utils.h>
@@ -29,21 +29,21 @@
 class dbsk2d_ishock_graph : public vbl_ref_count
 {
 public:
-  typedef vcl_list<dbsk2d_ishock_node*>::iterator vertex_iterator;
-  typedef vcl_list<dbsk2d_ishock_edge*>::iterator edge_iterator;
+  typedef std::list<dbsk2d_ishock_node*>::iterator vertex_iterator;
+  typedef std::list<dbsk2d_ishock_edge*>::iterator edge_iterator;
 
 protected:
   dbsk2d_boundary_sptr _boundary;  ///< pointer to associated boundary
   int _nextAvailableID;  ///< keeps the next available id, always increases
 
   //: The vector of vertices
-  vcl_list<dbsk2d_ishock_node* > vertices_;
+  std::list<dbsk2d_ishock_node* > vertices_;
 
   //: The vector of edges
-  vcl_list<dbsk2d_ishock_edge* > edges_;
+  std::list<dbsk2d_ishock_edge* > edges_;
 
   //: ob edges
-  vcl_map<int,dbsk2d_ishock_edge*> ob_edges_;
+  std::map<int,dbsk2d_ishock_edge*> ob_edges_;
 
 public:
 
@@ -81,10 +81,10 @@ public:
   int degree(dbsk2d_ishock_node* v, bool exclude_hidden=true);  ///< returns outdeg(v) + indeg(v).
 
   //: returns the list V of all nodes of the shock graph
-  vcl_list<dbsk2d_ishock_node*>& all_nodes() { return vertices_; } 
+  std::list<dbsk2d_ishock_node*>& all_nodes() { return vertices_; } 
 
   //:  returns the list E of all edges of the shock graph.  
-  vcl_list<dbsk2d_ishock_edge*>& all_edges() { return edges_; }
+  std::list<dbsk2d_ishock_edge*>& all_edges() { return edges_; }
 
   ishock_edge_list adj_edges(dbsk2d_ishock_node* v); ///<  returns adj_edges(v). 
   ishock_node_list adj_nodes(dbsk2d_ishock_node* v); ///<  returns the list of all nodes adjacent to v. 
@@ -142,7 +142,7 @@ public:
   dbsk2d_ishock_edge* cyclic_adj_pred(dbsk2d_ishock_edge* e, dbsk2d_ishock_node* v, bool exclude_hidden = true); ///<  returns the cyclic predecessor of edge e in the adjacency list of v.
 
   // Returns all invalid shocks
-  void invalid_shocks(vcl_vector<dbsk2d_ishock_edge*>& shocks);
+  void invalid_shocks(std::vector<dbsk2d_ishock_edge*>& shocks);
  
   //: Checks whether shock is valid
   bool valid_shock_graph(bool ignore_ob_shocks=false);
@@ -151,7 +151,7 @@ public:
   void update_shocks();
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os);
+  void print_summary(std::ostream &os);
 
   //: Determine out of bound shocks
   void ob_shocks();

@@ -16,11 +16,11 @@ bool dsm_ncn_write_neighborhood_dat_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_ncn_write_neighborhood_dat_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_ncn_sptr";
-	input_types_[i++] = "vcl_string";//the filename
+	input_types_[i++] = vcl_string";//the filename
 
 	if(!pro.set_input_types(input_types_))
 		return false;
@@ -34,14 +34,14 @@ bool dsm_ncn_write_neighborhood_dat_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_ncn_add_target_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_ncn_add_target_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
 	dsm_ncn_sptr ncn_sptr = pro.get_input<dsm_ncn_sptr>(i++);
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 
 	return ncn_sptr->write_neighborhood_txt(filename);
 }

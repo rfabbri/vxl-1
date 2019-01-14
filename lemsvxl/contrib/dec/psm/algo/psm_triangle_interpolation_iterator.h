@@ -1,7 +1,7 @@
 #ifndef psm_triangle_interpolation_iterator_h_
 #define psm_triangle_interpolation_iterator_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/vgl_region_scan_iterator.h>
 #include <vgl/vgl_triangle_scan_iterator.h>

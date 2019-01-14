@@ -9,8 +9,8 @@
 //
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vnl/vnl_fwd.h>
 #include <vgl/vgl_fwd.h>
 #include <dbdet/dbdet_keypoint_corr3d.h>
@@ -23,7 +23,7 @@
 class dbkpr_projective_reconstruct_process : public bpro1_process {
 
 public:
-//  typedef vcl_vector<int> t_corr_set; // XXX
+//  typedef std::vector<int> t_corr_set; // XXX
 
   dbkpr_projective_reconstruct_process();
   virtual ~dbkpr_projective_reconstruct_process();
@@ -31,13 +31,13 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
@@ -62,17 +62,17 @@ private:
   get_initial_reconstruction(
       unsigned v1, unsigned v2, 
       vpgl_proj_camera<double> &Pr1, vpgl_proj_camera<double> &Pr2,
-      vcl_vector<dbdet_keypoint_corr3d_sptr> &corr3d);
+      std::vector<dbdet_keypoint_corr3d_sptr> &corr3d);
 
-  unsigned pick_new_view(const vcl_vector<unsigned> &view_set);
+  unsigned pick_new_view(const std::vector<unsigned> &view_set);
 
   void add_new_view_to_reconstruction(unsigned v3, 
-      vcl_vector<unsigned> &view_set, 
-      vcl_vector<vpgl_proj_camera<double> > &cam_set,
+      std::vector<unsigned> &view_set, 
+      std::vector<vpgl_proj_camera<double> > &cam_set,
       t_corr_set corr_set);
 
   void dbkpr_projective_reconstruct_process::
-  projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_set &corr_set);
+  projective_bundle_adjust(std::vector<vpgl_proj_camera<double> > &cameras, t_corr_set &corr_set);
   */
 
 };

@@ -8,9 +8,9 @@
 // the appropriate concrete child.
 //
 // Inputs: 
-//         1. pixel type (vcl_string)
-//         2. time type (vcl_string)
-//         3. element type (vcl_string)
+//         1. pixel type (std::string)
+//         2. time type (std::string)
+//         3. element type (std::string)
 //         4. dimension (unsigned)
 //
 // Outputs:
@@ -36,13 +36,13 @@ bool dts_pixel_time_series_create_sptr_process_cons( bprb_func_process& pro )
 {
     using namespace dts_pixel_time_series_create_sptr_process_globals;
 
-    vcl_vector<vcl_string> input_types_(n_inputs_);
-    vcl_vector<vcl_string> output_types_(n_outputs_);
+    std::vector<std::string> input_types_(n_inputs_);
+    std::vector<std::string> output_types_(n_outputs_);
 
     unsigned i = 0;
-    input_types_[i++] = "vcl_string";//pixel type
-    input_types_[i++] = "vcl_string";//time type
-    input_types_[i++] = "vcl_string";//element type
+    input_types_[i++] = vcl_string";//pixel type
+    input_types_[i++] = vcl_string";//time type
+    input_types_[i++] = vcl_string";//element type
     input_types_[i++] = "unsigned"; //dimension
 
     output_types_[0] = "dts_pixel_time_series_base_sptr";
@@ -62,18 +62,18 @@ bool dts_pixel_time_series_create_sptr_process( bprb_func_process& pro )
 
     if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cout << pro.name()
+        std::cout << pro.name()
                  << " dts_pixel_time_series_write_bin_process: "
                  << " The input number should be: "
-                 << n_inputs_ << vcl_endl;
+                 << n_inputs_ << std::endl;
         return false;
     }
 
     //get inputs
     unsigned i = 0;
-    vcl_string pixel_type = pro.get_input<vcl_string>(i++);
-    vcl_string time_type = pro.get_input<vcl_string>(i++);
-    vcl_string element_type = pro.get_input<vcl_string>(i++);
+    std::string pixel_type = pro.get_input<std::string>(i++);
+    std::string time_type = pro.get_input<std::string>(i++);
+    std::string element_type = pro.get_input<std::string>(i++);
     unsigned dim = pro.get_input<unsigned>(i++);
     
     dts_pixel_time_series_base_sptr dts_sptr;
@@ -116,20 +116,20 @@ bool dts_pixel_time_series_create_sptr_process( bprb_func_process& pro )
             break;
         default:
             {
-                vcl_cout << "Unhandled dimension. Please augment."
-                         << vcl_endl
-                         << "FILE: " << __FILE__ << vcl_endl
-                         << "LINE: " << __LINE__ << vcl_endl;
+                std::cout << "Unhandled dimension. Please augment."
+                         << std::endl
+                         << "FILE: " << __FILE__ << std::endl
+                         << "LINE: " << __LINE__ << std::endl;
                 return false;
             }//end default
         }//end switch(dim)
     }
     else
     {
-        vcl_cout << "Unknown pixel/time/element types. Please augment." 
-                 << vcl_endl
-                 << "FILE: " << __FILE__ << vcl_endl
-                 << "LINE: " << __LINE__ << vcl_endl;
+        std::cout << "Unknown pixel/time/element types. Please augment." 
+                 << std::endl
+                 << "FILE: " << __FILE__ << std::endl
+                 << "LINE: " << __LINE__ << std::endl;
         return false;
     }
 

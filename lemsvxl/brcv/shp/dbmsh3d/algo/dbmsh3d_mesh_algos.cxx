@@ -4,11 +4,11 @@
 
 #include "dbmsh3d_mesh_algos.h"
 
-#include <vcl_list.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
-#include <vcl_utility.h>
-#include <vcl_queue.h>
+#include <list>
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <queue>
 #include <vul/vul_printf.h>
 
 #include <rsdl/rsdl_kd_tree.h>
@@ -23,7 +23,7 @@
 bool remove_erroneous_Fs_IFS (dbmsh3d_mesh* M)
 {
   unsigned int n_face_del = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   while (fit != M->facemap().end()) {
     dbmsh3d_face* F = (*fit).second;
     fit++;
@@ -39,11 +39,11 @@ bool remove_erroneous_Fs_IFS (dbmsh3d_mesh* M)
 //: Merge all faces that are co-planar and sharing a common edge.
 void merge_mesh_coplanar_faces (dbmsh3d_mesh* M)
 {
-  vcl_cout << "merge_mesh_coplanar_faces():" << vcl_endl;
+  std::cout << "merge_mesh_coplanar_faces():" << std::endl;
 
   //Add all the edges that have exactly 2 halfedges to the queue for processing.
-  vcl_queue<dbmsh3d_edge*> e_queue;
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = M->edgemap().begin();
+  std::queue<dbmsh3d_edge*> e_queue;
+  std::map<int, dbmsh3d_edge*>::iterator eit = M->edgemap().begin();
   for (; eit != M->edgemap().end(); eit++) {
     dbmsh3d_edge* E = (*eit).second;
     if (E->n_incident_Fs() == 2) 
@@ -65,27 +65,27 @@ void merge_mesh_coplanar_faces (dbmsh3d_mesh* M)
     }
   }
  
-  vcl_cout << "  # merge operation(s) done: " << count << vcl_endl; 
+  std::cout << "  # merge operation(s) done: " << count << std::endl; 
 }
 
-void add_mesh_faces_IFS (dbmsh3d_mesh* M, vcl_vector<vcl_vector<int> >& IFS_faces)
+void add_mesh_faces_IFS (dbmsh3d_mesh* M, std::vector<std::vector<int> >& IFS_faces)
 {
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
 
     F->_ifs_track_ordered_vertices();
-    vcl_vector<int> vids;
+    std::vector<int> vids;
     for (unsigned int i=0; i<F->vertices().size(); i++)
       vids.push_back (F->vertices(i)->id());
     IFS_faces.push_back (vids);
   }
 }
 
-void get_faces_intersect_box (const vcl_vector<vcl_vector<int> >& input_faces, 
-                              const vcl_vector<vgl_point_3d<double> >& input_pts, 
+void get_faces_intersect_box (const std::vector<std::vector<int> >& input_faces, 
+                              const std::vector<vgl_point_3d<double> >& input_pts, 
                               const vgl_box_3d<double>& box,
-                              vcl_vector<vcl_vector<int> >& in_faces)
+                              std::vector<std::vector<int> >& in_faces)
 {
   for (unsigned int i=0; i<input_faces.size(); i++) {
     //Brute-forcely check each IFS face.
@@ -111,8 +111,8 @@ int erode_mesh_boundary (dbmsh3d_mesh* M, const int steps)
     bnd_chain_set->detect_bnd_chains ();
 
     //Get all boundary triangles of chain >= 10 triangles.
-    vcl_set<dbmsh3d_face*> faces_to_del;
-    vcl_vector<dbmsh3d_bnd_chain*>::iterator bit = bnd_chain_set->chainset().begin();
+    std::set<dbmsh3d_face*> faces_to_del;
+    std::vector<dbmsh3d_bnd_chain*>::iterator bit = bnd_chain_set->chainset().begin();
     for (; bit != bnd_chain_set->chainset().end(); bit++) {
       dbmsh3d_bnd_chain* BC = (*bit);
       if (BC->HE_list().size() < 10)
@@ -124,7 +124,7 @@ int erode_mesh_boundary (dbmsh3d_mesh* M, const int steps)
     }
 
     //Delete all faces_to_del
-    vcl_set<dbmsh3d_face*>::iterator it = faces_to_del.begin();
+    std::set<dbmsh3d_face*>::iterator it = faces_to_del.begin();
     for (; it != faces_to_del.end(); it++) {      
       M->remove_F_del_isolated_Es (*it);
       count++;
@@ -137,21 +137,21 @@ int erode_mesh_boundary (dbmsh3d_mesh* M, const int steps)
   return count;
 }
 
-dbmsh3d_mesh* build_mesh_from_IFS (const vcl_vector<vgl_point_3d<double> >& input_pts,
-                                   const vcl_vector<vcl_vector<int> >& input_faces)
+dbmsh3d_mesh* build_mesh_from_IFS (const std::vector<vgl_point_3d<double> >& input_pts,
+                                   const std::vector<std::vector<int> >& input_faces)
 {
   unsigned int i, j;
   dbmsh3d_mesh* M = new dbmsh3d_mesh;
 
   //Put all IFS points into a set
-  vcl_set<int> pt_ids;
+  std::set<int> pt_ids;
   for (i=0; i<input_faces.size(); i++) {
     for (j=0; j<input_faces[i].size(); j++)
       pt_ids.insert (input_faces[i][j]);
   }
 
   //Create all mesh vertices.
-  vcl_set<int>::iterator it = pt_ids.begin();
+  std::set<int>::iterator it = pt_ids.begin();
   for (; it != pt_ids.end(); it++) {
     int id = (*it);
     dbmsh3d_vertex* V = M->_new_vertex (id);
@@ -178,7 +178,7 @@ dbmsh3d_mesh* build_mesh_from_IFS (const vcl_vector<vgl_point_3d<double> >& inpu
 
 //: Check if introducing a face of vector<vids> to mesh M violates 2-manifold topology.
 //  return true if no topological conflict is found.
-bool check_F_M_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M)
+bool check_F_M_topo (std::vector<int>& vids, dbmsh3d_mesh* M)
 {
   //Note that the last element of vids[] = vids[0]
   assert (vids[0] == vids[vids.size()-1]);
@@ -186,7 +186,7 @@ bool check_F_M_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M)
   //Check if the vids[] coincides with any existing mesh face.
   //This only happens at the 'interior boundary' triangles.
   //Should avoid this to improve speed!!
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   for (unsigned int i=0; i<vids.size()-1; i++)
     vertices.push_back (M->vertexmap(i));
   dbmsh3d_face* F = find_F_sharing_Vs (vertices);
@@ -217,10 +217,10 @@ bool check_F_M_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M)
 }
 
 //Label mesh components and save large components to various mesh files.
-bool cclabel_save_mesh (dbmsh3d_mesh* M, const vcl_string& prefix,
+bool cclabel_save_mesh (dbmsh3d_mesh* M, const std::string& prefix,
                         const int th_n, const int option)
 {
-  vul_printf (vcl_cout, "cclabel_save_mesh(): M %d vertices %d faces, th_n %d.\n",
+  vul_printf (std::cout, "cclabel_save_mesh(): M %d vertices %d faces, th_n %d.\n",
               M->vertexmap().size(), M->facemap().size(), th_n);
 
   //option 1: use IFS_to_MHE().
@@ -235,7 +235,7 @@ bool cclabel_save_mesh (dbmsh3d_mesh* M, const vcl_string& prefix,
   int count = 0;
   while (M->facemap().size()) {
     //Use the first face F as seed.
-    vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
     dbmsh3d_face* F = (*it).second;
     label = M->init_traverse();
     int nF = label_mesh_component (M, F, label);
@@ -243,7 +243,7 @@ bool cclabel_save_mesh (dbmsh3d_mesh* M, const vcl_string& prefix,
     //Save the labelled mesh faces into file, if nF > th_n
     if (nF > th_n) {
       char file[256];
-      vcl_sprintf (file, "%s-%02d.ply2", prefix.c_str(), count);
+      std::sprintf (file, "%s-%02d.ply2", prefix.c_str(), count);
       dbmsh3d_save_label_faces_ply2 (M, label, file);
       count++;
     }
@@ -252,7 +252,7 @@ bool cclabel_save_mesh (dbmsh3d_mesh* M, const vcl_string& prefix,
     dbmsh3d_del_label_faces (M, label);
   }
 
-  vul_printf (vcl_cout, "%d components created, %d mesh files saved.\n", 
+  vul_printf (std::cout, "%d components created, %d mesh files saved.\n", 
               label, count);
 
   return true;
@@ -262,7 +262,7 @@ int label_mesh_component (dbmsh3d_mesh* M, dbmsh3d_face* seedF, const int label)
 {
   //Initialize the face_queue with seedF.
   assert (seedF->is_visited (label) == false);  
-  vcl_queue<dbmsh3d_face*> face_queue;
+  std::queue<dbmsh3d_face*> face_queue;
   face_queue.push (seedF);
   int n_label = 0;
   
@@ -302,13 +302,13 @@ int dbmsh3d_del_label_faces (dbmsh3d_mesh* M, const int label)
 {
   int n_label = 0;
   
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   while (it != M->facemap().end()) {
     dbmsh3d_face* F = (*it).second;
 
     if (F->is_visited (label)) {
       //delete F
-      vcl_map<int, dbmsh3d_face*>::iterator tmp = it;
+      std::map<int, dbmsh3d_face*>::iterator tmp = it;
       it++;
       M->remove_F_del_isolated_Es (F);
       n_label++;
@@ -323,16 +323,16 @@ int dbmsh3d_del_label_faces (dbmsh3d_mesh* M, const int label)
 int remove_extraneous_faces (dbmsh3d_mesh* M)
 {
   assert (M->is_MHE());
-  vul_printf (vcl_cout, "remove_extraneous_faces: %d faces, %d edges.\n",
+  vul_printf (std::cout, "remove_extraneous_faces: %d faces, %d edges.\n",
               M->facemap().size(), M->edgemap().size());
   unsigned int n_edge_del = 0;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = M->facemap().begin();
   while (it != M->facemap().end()) {
     dbmsh3d_face* F = (*it).second;
     if (is_F_extraneous (F)) {
       //delete F
-      vcl_map<int, dbmsh3d_face*>::iterator tmp = it;
+      std::map<int, dbmsh3d_face*>::iterator tmp = it;
       it++;
       M->remove_F_del_isolated_Es (F);
       n_edge_del++;
@@ -341,16 +341,16 @@ int remove_extraneous_faces (dbmsh3d_mesh* M)
       it++;
   }
 
-  vul_printf (vcl_cout, "\t%d extraneous faces removed.\n\n", n_edge_del);
+  vul_printf (std::cout, "\t%d extraneous faces removed.\n\n", n_edge_del);
   return n_edge_del;
 }
 
 //: Compute the centroid of all mesh vertices.
 vgl_point_3d<double> compute_centroid (dbmsh3d_mesh* M)
 {
-  vul_printf (vcl_cout, "compute_centroid of %d points.\n", M->vertexmap().size());
+  vul_printf (std::cout, "compute_centroid of %d points.\n", M->vertexmap().size());
   double x=0, y=0, z=0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     x += V->pt().x();
@@ -368,9 +368,9 @@ vgl_point_3d<double> compute_centroid (dbmsh3d_mesh* M)
 //  varance ~= avg. dist. of points.
 double compute_var (dbmsh3d_mesh* M, vgl_point_3d<double>& C)
 {  
-  vul_printf (vcl_cout, "compute_var of %d points.\n", M->vertexmap().size());
+  vul_printf (std::cout, "compute_var of %d points.\n", M->vertexmap().size());
   double sum_d = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) {
     dbmsh3d_vertex* V = (*it).second;
     sum_d += vgl_distance (V->pt(), C);
@@ -392,11 +392,11 @@ double compute_cen_var (dbmsh3d_mesh* M, vgl_point_3d<double>& C)
 
 //: Collect the set of faces given a seedF and a bounding curve (links).
 //  Assume M->reset_traverse_f() is already done.
-void collect_Fs_given_seed_bnd (dbmsh3d_face* seedF, vcl_set<dbmsh3d_edge*>& bnd_E_set, 
-                                dbmsh3d_mesh* M, vcl_set<dbmsh3d_face*>& Fset)
+void collect_Fs_given_seed_bnd (dbmsh3d_face* seedF, std::set<dbmsh3d_edge*>& bnd_E_set, 
+                                dbmsh3d_mesh* M, std::set<dbmsh3d_face*>& Fset)
 {
   //Start propagate form seedF until any edge in bnd_E_set is reached.
-  vcl_queue<dbmsh3d_face*> FQ;
+  std::queue<dbmsh3d_face*> FQ;
   FQ.push (seedF);
   while (FQ.size() > 0) {
     dbmsh3d_face* frontF = FQ.front();
@@ -452,8 +452,8 @@ dbmsh3d_mesh* create_twist_cross ()
       px = x;
 
       //Rotate the generated point by theta.
-      px = vcl_cos(t) * x;
-      py = vcl_sin(t) * x;
+      px = std::cos(t) * x;
+      py = std::sin(t) * x;
 
       //add point
       vgl_point_3d<double> p = vgl_point_3d<double> (px, py, z);
@@ -465,8 +465,8 @@ dbmsh3d_mesh* create_twist_cross ()
       py = y;
 
       //Rotate the generated point by theta.
-      px = - vcl_sin(t) * y;
-      py = vcl_cos(t) * y;
+      px = - std::sin(t) * y;
+      py = std::cos(t) * y;
 
       //add point
       vgl_point_3d<double> p = vgl_point_3d<double> (px, py, z);
@@ -482,7 +482,7 @@ dbmsh3d_mesh* create_twist_cross ()
 
 //: Extract boundary of vertices of a manifold mesh
 bool dbmsh3d_mesh_algos::find_boundary(dbmsh3d_mesh& mesh, 
-              vcl_vector< vcl_vector< dbmsh3d_vertex* > >& boundary_list)
+              std::vector< std::vector< dbmsh3d_vertex* > >& boundary_list)
 {
   // preliminary clean-up
   boundary_list.clear();
@@ -507,7 +507,7 @@ bool dbmsh3d_mesh_algos::find_boundary(dbmsh3d_mesh& mesh,
     
 
     // when hitting a boundary edge, trace out the boundary
-    vcl_list<dbmsh3d_vertex* > boundary;
+    std::list<dbmsh3d_vertex* > boundary;
     dbmsh3d_edge* start_bnd_edge = i_edge;
     dbmsh3d_vertex* start_bnd_vertex = i_edge->sV();
 
@@ -549,7 +549,7 @@ bool dbmsh3d_mesh_algos::find_boundary(dbmsh3d_mesh& mesh,
     while (cur_bnd_vertex != start_bnd_vertex);
 
     // convert list to vector and insert to the boundary list
-    vcl_vector<dbmsh3d_vertex* > vertex_vector(boundary.begin(), boundary.end());
+    std::vector<dbmsh3d_vertex* > vertex_vector(boundary.begin(), boundary.end());
 
     boundary_list.push_back(vertex_vector);
   }
@@ -562,12 +562,12 @@ bool dbmsh3d_mesh_algos::find_boundary(dbmsh3d_mesh& mesh,
 
 //: Triangulate two "parallel" curves in space and create a "band-like" mesh
 bool dbmsh3d_mesh_algos::
-make_band_trimesh(const vcl_vector<dbmsh3d_vertex* >& poly1,
-               const vcl_vector<dbmsh3d_vertex* >& poly2,
-               vcl_vector<dbmsh3d_face* >& new_faces)
+make_band_trimesh(const std::vector<dbmsh3d_vertex* >& poly1,
+               const std::vector<dbmsh3d_vertex* >& poly2,
+               std::vector<dbmsh3d_face* >& new_faces)
 {
   // 1. Use poly1 as reference, re-arrange poly2 so that its first vertex matches with the first vertex of poly1 and the two orientations match
-  vcl_cout << "This function has not been implemented.\n";
+  std::cout << "This function has not been implemented.\n";
   return false;
 }
 
@@ -586,7 +586,7 @@ double dbmsh3d_mesh_algos::polyhedron_volume(dbmsh3d_mesh& mesh)
     return -1;
 
   // check closeness (watertight)
-  vcl_vector< vcl_vector< dbmsh3d_vertex* > > boundary_list;
+  std::vector< std::vector< dbmsh3d_vertex* > > boundary_list;
   dbmsh3d_mesh_algos::find_boundary(mesh, boundary_list);
   if (! boundary_list.empty()) 
     return -1;
@@ -678,7 +678,7 @@ vgl_point_3d<double > dbmsh3d_mesh_algos::compute_centroid(dbmsh3d_mesh* mesh)
 // Assumption: all faces in the face_list belong to ``mesh"
 bool dbmsh3d_mesh_algos::
 submesh(dbmsh3d_mesh& mesh, 
-        const vcl_vector<dbmsh3d_face* >& face_list,
+        const std::vector<dbmsh3d_face* >& face_list,
         dbmsh3d_mesh& new_mesh)
 {
   // Iterate thru the faces
@@ -720,7 +720,7 @@ bool dbmsh3d_mesh_algos::crop_mesh (dbmsh3d_mesh& source_mesh,
                                     const vgl_box_3d<double >& box,
                                     dbmsh3d_mesh& new_mesh)
 {
-  vcl_vector<dbmsh3d_face* > face_list;
+  std::vector<dbmsh3d_face* > face_list;
   source_mesh.reset_face_traversal();
   for ( dbmsh3d_face* face = 0; source_mesh.next_face(face); )
   {
@@ -772,14 +772,14 @@ mesh2mesh_distance_map(dbmsh3d_richmesh& ref_mesh,
     if (percent_processed_vertices > (current_percentage + 5))
     {
       current_percentage += 5;
-      vcl_cout << current_percentage << "%  ";
+      std::cout << current_percentage << "%  ";
     }
 
 
 
     if (vb->is_a() != "dbmsh3d_richvertex")
     {
-      vcl_cerr << "Found vertex of ref_mesh not of type 'dbmsh3d_richvertex'."
+      std::cerr << "Found vertex of ref_mesh not of type 'dbmsh3d_richvertex'."
         << " Computing mesh2mesh distance stopped.\n";
       return false;
     }
@@ -803,15 +803,15 @@ mesh2mesh_distance_map(dbmsh3d_richmesh& ref_mesh,
 //: re-arrange a 3D polyline/polygon so that it initial vertex and its
 // orientation match with a reference 3D polyline/polygon
 // Return re-arranged copy of moving_poly
-vcl_vector<dbmsh3d_vertex* > dbmsh3d_mesh_algos::
-align_2_polys(const vcl_vector<dbmsh3d_vertex* >& ref_poly,
-              const vcl_vector<dbmsh3d_vertex* >& moving_poly)
+std::vector<dbmsh3d_vertex* > dbmsh3d_mesh_algos::
+align_2_polys(const std::vector<dbmsh3d_vertex* >& ref_poly,
+              const std::vector<dbmsh3d_vertex* >& moving_poly)
 {
   // 1. Align initial vertices
   dbmsh3d_vertex* ref_vertex = ref_poly[0];
   double min_distance = 1e10;
-  vcl_vector<dbmsh3d_vertex* >::const_iterator min_distance_iter;
-  for (vcl_vector<dbmsh3d_vertex* >::const_iterator vit = moving_poly.begin();
+  std::vector<dbmsh3d_vertex* >::const_iterator min_distance_iter;
+  for (std::vector<dbmsh3d_vertex* >::const_iterator vit = moving_poly.begin();
     vit != moving_poly.end(); ++vit)
   {
     dbmsh3d_vertex* i_vertex = *vit;
@@ -824,10 +824,10 @@ align_2_polys(const vcl_vector<dbmsh3d_vertex* >& ref_poly,
 
   // create a copy of moving_poly so that its initial vertex matches with that 
   // of ref_poly
-  vcl_vector<dbmsh3d_vertex* > aligned_poly;
+  std::vector<dbmsh3d_vertex* > aligned_poly;
   aligned_poly.reserve(ref_poly.size());
-  vcl_copy(min_distance_iter, ref_poly.end(), aligned_poly.begin());
-  vcl_copy(ref_poly.begin(), min_distance_iter, aligned_poly.end());
+  std::copy(min_distance_iter, ref_poly.end(), aligned_poly.begin());
+  std::copy(ref_poly.begin(), min_distance_iter, aligned_poly.end());
 
   // 2. Align orientation
   
@@ -849,7 +849,7 @@ align_2_polys(const vcl_vector<dbmsh3d_vertex* >& ref_poly,
     return aligned_poly;
   // otherwise, reverse, then return
   else 
-    return vcl_vector<dbmsh3d_vertex* >(aligned_poly.rbegin(), 
+    return std::vector<dbmsh3d_vertex* >(aligned_poly.rbegin(), 
     aligned_poly.rend());
 }
 

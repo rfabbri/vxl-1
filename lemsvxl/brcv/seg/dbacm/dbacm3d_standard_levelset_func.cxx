@@ -20,7 +20,7 @@ const float dbacm3d_min_grad_phi = float(1e-10);
 void dbacm3d_standard_levelset_func::
 reinitialize_levelset_surf()
 {
-        vcl_cerr << "Not yet implemented" << vcl_endl;
+        std::cerr << "Not yet implemented" << std::endl;
         /*
         // get binary image
         vil_image_view<bool > mask_binary;
@@ -57,60 +57,60 @@ evolve_one_timestep(float timestep)
                 nk=this->phi_.nk(), 
                 np=this->phi_.nplanes();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_phi=this->phi_.istep(), 
                 jstep_phi=this->phi_.jstep(),
                 kstep_phi=this->phi_.kstep(),
                 pstep_phi=this->phi_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_hj=this->hj_flux_.istep(), 
                 jstep_hj=this->hj_flux_.jstep(),
                 kstep_hj=this->hj_flux_.kstep(),
                 pstep_hj=this->hj_flux_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_k=this->curvature_.istep(), 
                 jstep_k=this->curvature_.jstep(),
                 kstep_k=this->curvature_.kstep(),
                 pstep_k=this->curvature_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dxc=this->dxc_.istep(), 
                 jstep_dxc=this->dxc_.jstep(),
                 kstep_dxc=this->dxc_.kstep(),
                 pstep_dxc=this->dxc_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dyc=this->dyc_.istep(), 
                 jstep_dyc=this->dyc_.jstep(),
                 kstep_dyc=this->dyc_.kstep(),
                 pstep_dyc=this->dyc_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dzc=this->dzc_.istep(), 
                 jstep_dzc=this->dzc_.jstep(),
                 kstep_dzc=this->dzc_.kstep(),
                 pstep_dzc=this->dzc_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_gmap=this->gmap_.istep(), 
                 jstep_gmap=this->gmap_.jstep(),
                 kstep_gmap=this->gmap_.kstep(),
                 pstep_gmap=this->gmap_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_gx=this->gx_.istep(), 
                 jstep_gx=this->gx_.jstep(),
                 kstep_gx=this->gx_.kstep(),
                 pstep_gx=this->gx_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_gy=this->gy_.istep(), 
                 jstep_gy=this->gy_.jstep(),
                 kstep_gy=this->gy_.kstep(),
                 pstep_gy=this->gy_.planestep();
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_gz=this->gy_.istep(), 
                 jstep_gz=this->gy_.jstep(),
                 kstep_gz=this->gy_.kstep(),
@@ -118,7 +118,7 @@ evolve_one_timestep(float timestep)
 
 
         /*
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_kmap=this->kmap_.istep(), 
                 jstep_kmap=this->kmap_.jstep(),
                 kstep_kmap=this->kmap_.kstep(),
@@ -222,7 +222,7 @@ evolve_one_timestep(float timestep)
                                                 pixel_gz += istep_gz)
                                 {
                                         float advection_term, inflation_term, curvature_term, speed;
-                                        float grad_phi_mag = vcl_sqrt((*pixel_dxc)*(*pixel_dxc) +
+                                        float grad_phi_mag = std::sqrt((*pixel_dxc)*(*pixel_dxc) +
                                                                       (*pixel_dyc)*(*pixel_dyc) +
                                                                       (*pixel_dzc)*(*pixel_dzc) );
 
@@ -265,7 +265,7 @@ evolve_one_timestep(float timestep)
                         vil3d_image_view<float> dzp;
                         vil3d_image_view<float> dzm;
 
-                        //vcl_cerr << "bild3d_finite_differences..." ;
+                        //std::cerr << "bild3d_finite_differences..." ;
                         bild3d_finite_differences(phi_,
                                         dxp,dxm,this->dxc_,
                                         dyp,dym,this->dyc_,

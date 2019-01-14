@@ -26,7 +26,7 @@ public:
   
   inline dborl_image_object() : dborl_object_base(), image_(0) {}
   inline dborl_image_object(vil_image_resource_sptr img) : dborl_object_base(), image_(img) {}
-  inline dborl_image_object(vcl_string name, vil_image_resource_sptr img) : dborl_object_base(name), image_(img) {}
+  inline dborl_image_object(std::string name, vil_image_resource_sptr img) : dborl_object_base(name), image_(img) {}
   dborl_image_object(dborl_image_object& rhs);
 
   virtual unsigned get_object_type() { return borld_object_type::image; }

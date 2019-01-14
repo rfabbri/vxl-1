@@ -16,7 +16,7 @@
 #include <dbsks/dbsks_utils.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>
-#include <vcl_utility.h>
+#include <utility>
 
 #include <bgld/algo/bgld_biarc.h>
 
@@ -62,7 +62,7 @@ set_graph(const dbsksp_shock_graph_sptr& graph)
       graph_dim += 9;
       break;
     default:
-      vcl_cout << "ERROR: Invalid vertex degree.\n";
+      std::cout << "ERROR: Invalid vertex degree.\n";
       assert(false);
     }
   }
@@ -75,11 +75,11 @@ set_graph(const dbsksp_shock_graph_sptr& graph)
 //: Convert a set of fragments for each edge to a configuration vector for the graph
 vnl_vector<double > dbsks_local_match_cost::
 convert_to_graph_params(
-  const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
+  const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
 {
   
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator it = 
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator it = 
     shapelet_map.begin(); it != shapelet_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it ->first;
@@ -90,9 +90,9 @@ convert_to_graph_params(
     vgl_vector_2d<double > t_parent = s_e->tangent_start();
     dbsksp_xshock_node_descriptor xnode_parent(
       s_e->start().x(), s_e->start().y(), 
-      vcl_atan2(t_parent.y(), t_parent.x()),
+      std::atan2(t_parent.y(), t_parent.x()),
       s_e->phi_start(), s_e->radius_start());
-    xnode_map.insert(vcl_make_pair(v_parent, xnode_parent));
+    xnode_map.insert(std::make_pair(v_parent, xnode_parent));
 
     // if the child node is connected to a terminal edge, then it is not
     // the parent node in any edge (for non-branching graphs). It xnode is thus
@@ -103,9 +103,9 @@ convert_to_graph_params(
       vgl_vector_2d<double > t_child = s_e->tangent_end();
       dbsksp_xshock_node_descriptor xnode_child(
         s_e->end().x(), s_e->end().y(), 
-        vcl_atan2(t_child.y(), t_child.x()),
+        std::atan2(t_child.y(), t_child.x()),
         s_e->phi_end(), s_e->radius_end());
-      xnode_map.insert(vcl_make_pair(v_child, xnode_child));
+      xnode_map.insert(std::make_pair(v_child, xnode_child));
     }
   }
 
@@ -122,7 +122,7 @@ convert_to_graph_params(
     // can't handle graph with junction yet
     if (v->degree() != 2)
     {
-      vcl_cout << "ERROR: can't handle graph with junctions yet.\n";
+      std::cout << "ERROR: can't handle graph with junctions yet.\n";
       assert(false);
     }
 
@@ -144,11 +144,11 @@ convert_to_graph_params(
 //: Convert a configuration vector to a list of twoshapelets associated with the edges
 void dbsks_local_match_cost::
 convert_to_twoshapelet_map(const vnl_vector<double >& x, 
-   vcl_map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map)
+   std::map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map)
 {
   twoshapelet_map.clear();
 
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
   this->convert_to_xnode_map(x, xnode_map);
   
   // Compute the cost by summing the cost of all fragments
@@ -170,7 +170,7 @@ convert_to_twoshapelet_map(const vnl_vector<double >& x,
     dbsksp_optimal_interp_two_xnodes interpolator(xnode_parent, xnode_child);
     ss_e = interpolator.optimize();
 
-    twoshapelet_map.insert(vcl_make_pair(e, ss_e));
+    twoshapelet_map.insert(std::make_pair(e, ss_e));
   }
 
 
@@ -182,10 +182,10 @@ convert_to_twoshapelet_map(const vnl_vector<double >& x,
 //: Convert a configuration vector to a list of xnodes associated with the vertices
 void dbsks_local_match_cost::
 convert_to_xnode_map(const vnl_vector<double >& x,
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 {
   // Translate components of x into a configuration for the graph
-  //vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+  //std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
   xnode_map.clear();
   int ind = 0;
   for (dbsksp_shock_graph::vertex_iterator vit = this->graph()->vertices_begin();
@@ -197,7 +197,7 @@ convert_to_xnode_map(const vnl_vector<double >& x,
 
     if (v->degree() > 2)
     {
-      vcl_cout << "ERROR: Can't handle degree-3 nodes.\n";
+      std::cout << "ERROR: Can't handle degree-3 nodes.\n";
       assert(false);
     }
 
@@ -206,7 +206,7 @@ convert_to_xnode_map(const vnl_vector<double >& x,
     ind += 5;
 
     dbsksp_xshock_node_descriptor xnode = dbsks_convert_to_xnode(xnode_params);
-    xnode_map.insert(vcl_make_pair(v, xnode));
+    xnode_map.insert(std::make_pair(v, xnode));
   }
   return;
 }
@@ -217,10 +217,10 @@ convert_to_xnode_map(const vnl_vector<double >& x,
 //: Convert a configuration vector to a list of xnodes associated with the vertices
 void dbsks_local_match_cost::
 convert_to_circ_arc_list(const vnl_vector<double >& x,
-                         vcl_vector<bgld_circ_arc >& arc_list)
+                         std::vector<bgld_circ_arc >& arc_list)
 {
   arc_list.clear();
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
   this->convert_to_xnode_map(x, xnode_map);
 
   // Compute the cost by summing the cost of all fragments
@@ -244,9 +244,9 @@ convert_to_circ_arc_list(const vnl_vector<double >& x,
     bgld_biarc biarc_left;
     if ( biarc_left.compute_biarc_params(
       xnode_parent.bnd_pt_left(), 
-      vcl_atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
+      std::atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
       xnode_child.bnd_pt_left(), 
-      vcl_atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
+      std::atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
     {
       bgld_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
       bgld_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
@@ -256,9 +256,9 @@ convert_to_circ_arc_list(const vnl_vector<double >& x,
 
     bgld_biarc biarc_right;
     if (biarc_right.compute_biarc_params(xnode_parent.bnd_pt_right(), 
-      vcl_atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
+      std::atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
       xnode_child.bnd_pt_right(), 
-      vcl_atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
+      std::atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
     {
       bgld_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
       bgld_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
@@ -296,7 +296,7 @@ f(const vnl_vector<double>& x)
   double total_len = 0;
   double total_cost = 0;
 
-  vcl_vector<bgld_circ_arc > arc_list;
+  std::vector<bgld_circ_arc > arc_list;
   this->convert_to_circ_arc_list(x, arc_list);
 
   // When some biarc interpolation failed ...
@@ -315,8 +315,8 @@ f(const vnl_vector<double>& x)
     // length of the arc
     double len = arc.length();
 
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
     for (double s = 0; s < len; s += ds)
     {
       pts.push_back(arc.point_at(s));
@@ -374,7 +374,7 @@ vnl_vector<double > dbsks_convert_to_vector_1(const dbsksp_xshock_node_descripto
   params(1) = xnode.bnd_pt_left().y();
   params(2) = xnode.bnd_pt_right().x();
   params(3) = xnode.bnd_pt_right().y();
-  params(4) = -xnode.radius_ * vcl_cos(xnode.phi_);
+  params(4) = -xnode.radius_ * std::cos(xnode.phi_);
   return params;
 }
 
@@ -410,7 +410,7 @@ vnl_vector<double > dbsks_convert_to_vector_2(const dbsksp_xshock_node_descripto
   vgl_point_2d<double > pt_left = xnode.bnd_pt_left();
   vgl_point_2d<double > pt_right = xnode.bnd_pt_right();
   vgl_point_2d<double > mid_pt = centre(pt_left, pt_right);
-  double len = xnode.radius_ * vcl_sin(xnode.phi_);
+  double len = xnode.radius_ * std::sin(xnode.phi_);
 
   params(0) = mid_pt.x();
   params(1) = mid_pt.y();
@@ -535,8 +535,8 @@ f_regularized_using_len(const vnl_vector<double>& x)
   for (unsigned i =0; i <4; ++i)
   {
     double biarc_len = biarc[i].len();
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
 
     if (biarc_len < this->ds())
     {
@@ -678,7 +678,7 @@ f_regularized_using_len(const vnl_vector<double>& x)
     !biarc[2].is_consistent()
     )
   {
-    vcl_cout << "ERROR: something wrong with biarc interpolation.\n";
+    std::cout << "ERROR: something wrong with biarc interpolation.\n";
     return 1e20;
   }
 
@@ -688,8 +688,8 @@ f_regularized_using_len(const vnl_vector<double>& x)
   for (unsigned i =0; i <3; ++i)
   {
     double biarc_len = biarc[i].len();
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
 
     if (biarc_len < this->ds())
     {
@@ -798,7 +798,7 @@ f_regularized_using_len(const dbsksp_xshock_node_descriptor& terminal_xnode)
     !biarc.is_consistent()
     )
   {
-    vcl_cout << "ERROR: something wrong with biarc interpolation.\n";
+    std::cout << "ERROR: something wrong with biarc interpolation.\n";
     return 1e20;
   }
   double frag_len = biarc.len();
@@ -854,8 +854,8 @@ f_image(const dbsksp_xshock_node_descriptor& xnode_parent,
   for (unsigned i =0; i <2; ++i)
   {
     double biarc_len = biarc[i].len();
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
 
     if (biarc_len < this->ds())
     {
@@ -895,14 +895,14 @@ f_image(const dbsksp_xshock_node_descriptor& terminal_xnode)
     !biarc.is_consistent()
     )
   {
-    vcl_cout << "ERROR: something wrong with biarc interpolation.\n";
+    std::cout << "ERROR: something wrong with biarc interpolation.\n";
     return 1e20;
   }
 
 
   double biarc_len = biarc.len();
-  vcl_vector<vgl_point_2d<double > > pts;
-  vcl_vector<vgl_vector_2d<double > > tangents;
+  std::vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_vector_2d<double > > tangents;
 
   if (biarc_len < this->ds())
   {

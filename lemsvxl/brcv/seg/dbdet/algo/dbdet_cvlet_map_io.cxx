@@ -1,5 +1,5 @@
 #include "dbdet_cvlet_map_io.h"
-#include <vcl_cstring.h>
+#include <cstring>
 #include <dbdet/dbdet_config.h>
 #include <vul/vul_file.h>
 
@@ -11,38 +11,38 @@
 
 
 #ifdef HAS_BOOST
-static bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map);
-static bool dbdet_save_cvlet_map_gzip(vcl_string filename, dbdet_curvelet_map &cvlet_map);
+static bool dbdet_load_cvlet_map_gzip(std::string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map);
+static bool dbdet_save_cvlet_map_gzip(std::string filename, dbdet_curvelet_map &cvlet_map);
 #endif
 
-static bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map);
+static bool dbdet_load_cvlet_map_ascii(std::string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map);
 
-static bool dbdet_save_cvlet_map_ascii(vcl_string filename, dbdet_curvelet_map &cvlet_map);
+static bool dbdet_save_cvlet_map_ascii(std::string filename, dbdet_curvelet_map &cvlet_map);
 
-bool dbdet_load_cvlet_map(vcl_string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
+bool dbdet_load_cvlet_map(std::string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
 {
-  vcl_string ext = vul_file::extension(filename);
+  std::string ext = vul_file::extension(filename);
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
     return dbdet_load_cvlet_map_gzip(filename, edge_map, cvlet_map);
 #else
-    vcl_cerr << "Error: .gz compressed cvlet file was provided, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed cvlet file was provided, but boost wasn't found\n";
     return false;
 #endif
   } else
     return dbdet_load_cvlet_map_ascii(filename, edge_map, cvlet_map);
 }
 
-bool dbdet_save_cvlet_map(vcl_string filename, dbdet_curvelet_map &cvlet_map)
+bool dbdet_save_cvlet_map(std::string filename, dbdet_curvelet_map &cvlet_map)
 {
-  vcl_string ext = vul_file::extension(filename);
+  std::string ext = vul_file::extension(filename);
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
     return dbdet_save_cvlet_map_gzip(filename, cvlet_map);
 #else
-    vcl_cerr << "Error: .gz compressed output cvlet file requested, but boost wasn't found\n";
+    std::cerr << "Error: .gz compressed output cvlet file requested, but boost wasn't found\n";
     return false;
 #endif
   } else
@@ -50,77 +50,77 @@ bool dbdet_save_cvlet_map(vcl_string filename, dbdet_curvelet_map &cvlet_map)
 }
 
 //: Save a curvelet map as a .cvlet file
-bool dbdet_save_cvlet_map_ascii(vcl_string filename, dbdet_curvelet_map &cvlet_map)
+bool dbdet_save_cvlet_map_ascii(std::string filename, dbdet_curvelet_map &cvlet_map)
 {
   //1) If file open fails, return.
-  vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+  std::ofstream outfp(filename.c_str(), std::ios::out);
 
   if (!outfp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
   outfp.precision(5);
 
   //2) write out the header block
-  outfp << "CVLET_MAP v2.0" << vcl_endl << vcl_endl;
+  outfp << "CVLET_MAP v2.0" << std::endl << std::endl;
 
-  outfp << "[BEGIN HEADER]" << vcl_endl;
-  outfp << "WIDTH=" << cvlet_map.EM_->width() << vcl_endl;
-  outfp << "HEIGHT=" << cvlet_map.EM_->height() << vcl_endl;
-  outfp << "EDGE_COUNT=" << cvlet_map.EM_->num_edgels()  << vcl_endl;
+  outfp << "[BEGIN HEADER]" << std::endl;
+  outfp << "WIDTH=" << cvlet_map.EM_->width() << std::endl;
+  outfp << "HEIGHT=" << cvlet_map.EM_->height() << std::endl;
+  outfp << "EDGE_COUNT=" << cvlet_map.EM_->num_edgels()  << std::endl;
 
-  outfp << "CM TYPE=CC2" << vcl_endl;
-  outfp << "N_RADIUS=" << cvlet_map.params_.rad_ << vcl_endl;
-  outfp << "DX=" << cvlet_map.params_.dpos_ << vcl_endl;
-  outfp << "DT=" << cvlet_map.params_.dtheta_ << vcl_endl;
-  outfp << "TOKEN_LENGTH=" << cvlet_map.params_.token_len_ << vcl_endl;
+  outfp << "CM TYPE=CC2" << std::endl;
+  outfp << "N_RADIUS=" << cvlet_map.params_.rad_ << std::endl;
+  outfp << "DX=" << cvlet_map.params_.dpos_ << std::endl;
+  outfp << "DT=" << cvlet_map.params_.dtheta_ << std::endl;
+  outfp << "TOKEN_LENGTH=" << cvlet_map.params_.token_len_ << std::endl;
 
-  outfp << "[END HEADER]" << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "[END HEADER]" << std::endl;
+  outfp << std::endl << std::endl;
 
   //1) next save the edgemap
-  outfp << "[BEGIN EDGEMAP]" << vcl_endl;
-  outfp << "# Format :  [EID] [Sub_Pixel_Pos] Sub_Pixel_Dir Strength" << vcl_endl;
+  outfp << "[BEGIN EDGEMAP]" << std::endl;
+  outfp << "# Format :  [EID] [Sub_Pixel_Pos] Sub_Pixel_Dir Strength" << std::endl;
   
   for (unsigned i=0; i<cvlet_map.EM_->edgels.size(); i++){
     dbdet_edgel* e = cvlet_map.EM_->edgels[i];
-    outfp << "[" << e->id << "] " << "[" << e->pt.x() << ", " << e->pt.y() << "]   " << e->tangent << " " << e->strength << " " << vcl_endl;
+    outfp << "[" << e->id << "] " << "[" << e->pt.x() << ", " << e->pt.y() << "]   " << e->tangent << " " << e->strength << " " << std::endl;
   }
-  outfp << "[END EDGEMAP]" << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "[END EDGEMAP]" << std::endl;
+  outfp << std::endl << std::endl;
 
   //2) Then save the cvlet map
-  outfp << "[BEGIN CVLETMAP]" << vcl_endl;
-  outfp << "# Format :  [EID] (number of curvelets)" << vcl_endl;
-  outfp << "            [edgels id] (forward) [ref_pt.x()] [ref_pt.y()] [ref_theta] [pt.x()] [pt.y()] [theta k] length property" << vcl_endl;
+  outfp << "[BEGIN CVLETMAP]" << std::endl;
+  outfp << "# Format :  [EID] (number of curvelets)" << std::endl;
+  outfp << "            [edgels id] (forward) [ref_pt.x()] [ref_pt.y()] [ref_theta] [pt.x()] [pt.y()] [theta k] length property" << std::endl;
   for (unsigned i=0; i<cvlet_map.EM_->edgels.size(); i++){
-    outfp << "<" << vcl_endl;
+    outfp << "<" << std::endl;
     outfp << "[" << i << "] ";
 
     //get the list curvelets anchored at this edge
     cvlet_list& cvlets = cvlet_map.curvelets(i);
-    outfp << "(" << cvlets.size() << ")" << vcl_endl;
+    outfp << "(" << cvlets.size() << ")" << std::endl;
 
     cvlet_list_iter cvit = cvlets.begin();
     for (; cvit != cvlets.end(); cvit++){
       (*cvit)->print(outfp); 
     }
-    outfp << ">" << vcl_endl;
+    outfp << ">" << std::endl;
   }
-  outfp << "[END CVLETMAP]" << vcl_endl;
+  outfp << "[END CVLETMAP]" << std::endl;
 
   return true;
 }
 
 #ifdef HAS_BOOST
 //: Save a curvelet map as a .cvlet file
-bool dbdet_save_cvlet_map_gzip(vcl_string filename, dbdet_curvelet_map &cvlet_map)
+bool dbdet_save_cvlet_map_gzip(std::string filename, dbdet_curvelet_map &cvlet_map)
 {
   //1) If file open fails, return.
-  vcl_ofstream outfp_orig(filename.c_str(), vcl_ios::out | vcl_ios::binary);
+  std::ofstream outfp_orig(filename.c_str(), std::ios::out | std::ios::binary);
 
   if (!outfp_orig){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
   outfp_orig.precision(5);
@@ -130,73 +130,73 @@ bool dbdet_save_cvlet_map_gzip(vcl_string filename, dbdet_curvelet_map &cvlet_ma
   outfp.push(outfp_orig);
 
   //2) write out the header block
-  outfp << "CVLET_MAP v1.0" << vcl_endl << vcl_endl;
+  outfp << "CVLET_MAP v1.0" << std::endl << std::endl;
 
-  outfp << "[BEGIN HEADER]" << vcl_endl;
-  outfp << "WIDTH=" << cvlet_map.EM_->width() << vcl_endl;
-  outfp << "HEIGHT=" << cvlet_map.EM_->height() << vcl_endl;
-  outfp << "EDGE_COUNT=" << cvlet_map.EM_->num_edgels()  << vcl_endl;
+  outfp << "[BEGIN HEADER]" << std::endl;
+  outfp << "WIDTH=" << cvlet_map.EM_->width() << std::endl;
+  outfp << "HEIGHT=" << cvlet_map.EM_->height() << std::endl;
+  outfp << "EDGE_COUNT=" << cvlet_map.EM_->num_edgels()  << std::endl;
 
-  outfp << "CM TYPE=CC2" << vcl_endl;
-  outfp << "N_RADIUS=" << cvlet_map.params_.rad_ << vcl_endl;
-  outfp << "DX=" << cvlet_map.params_.dpos_ << vcl_endl;
-  outfp << "DT=" << cvlet_map.params_.dtheta_ << vcl_endl;
-  outfp << "TOKEN_LENGTH=" << cvlet_map.params_.token_len_ << vcl_endl;
+  outfp << "CM TYPE=CC2" << std::endl;
+  outfp << "N_RADIUS=" << cvlet_map.params_.rad_ << std::endl;
+  outfp << "DX=" << cvlet_map.params_.dpos_ << std::endl;
+  outfp << "DT=" << cvlet_map.params_.dtheta_ << std::endl;
+  outfp << "TOKEN_LENGTH=" << cvlet_map.params_.token_len_ << std::endl;
 
-  outfp << "[END HEADER]" << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "[END HEADER]" << std::endl;
+  outfp << std::endl << std::endl;
 
   //1) next save the edgemap
-  outfp << "[BEGIN EDGEMAP]" << vcl_endl;
-  outfp << "# Format :  [EID] [Sub_Pixel_Pos] Sub_Pixel_Dir Strength" << vcl_endl;
+  outfp << "[BEGIN EDGEMAP]" << std::endl;
+  outfp << "# Format :  [EID] [Sub_Pixel_Pos] Sub_Pixel_Dir Strength" << std::endl;
   
   for (unsigned i=0; i<cvlet_map.EM_->edgels.size(); i++){
     dbdet_edgel* e = cvlet_map.EM_->edgels[i];
-    outfp << "[" << e->id << "] " << "[" << e->pt.x() << ", " << e->pt.y() << "]   " << e->tangent << " " << e->strength << " " << vcl_endl;
+    outfp << "[" << e->id << "] " << "[" << e->pt.x() << ", " << e->pt.y() << "]   " << e->tangent << " " << e->strength << " " << std::endl;
   }
-  outfp << "[END EDGEMAP]" << vcl_endl;
-  outfp << vcl_endl << vcl_endl;
+  outfp << "[END EDGEMAP]" << std::endl;
+  outfp << std::endl << std::endl;
 
   //2) Then save the cvlet map
-  outfp << "[BEGIN CVLETMAP]" << vcl_endl;
-  outfp << "# Format :  [EID] (number of curvelets)" << vcl_endl;
-  outfp << "            [edgels id] (forward) [ref_pt.x() ref_pt.y() ref_theta pt.x() pt.y() theta k] length property" << vcl_endl;
+  outfp << "[BEGIN CVLETMAP]" << std::endl;
+  outfp << "# Format :  [EID] (number of curvelets)" << std::endl;
+  outfp << "            [edgels id] (forward) [ref_pt.x() ref_pt.y() ref_theta pt.x() pt.y() theta k] length property" << std::endl;
   for (unsigned i=0; i<cvlet_map.EM_->edgels.size(); i++){
-    outfp << "<" << vcl_endl;
+    outfp << "<" << std::endl;
     outfp << "[" << i << "] ";
 
     //get the list curvelets anchored at this edge
     cvlet_list& cvlets = cvlet_map.curvelets(i);
-    outfp << "(" << cvlets.size() << ")" << vcl_endl;
+    outfp << "(" << cvlets.size() << ")" << std::endl;
 
     cvlet_list_iter cvit = cvlets.begin();
     for (; cvit != cvlets.end(); cvit++){
       (*cvit)->print(outfp); 
     }
-    outfp << ">" << vcl_endl;
+    outfp << ">" << std::endl;
   }
-  outfp << "[END CVLETMAP]" << vcl_endl;
+  outfp << "[END CVLETMAP]" << std::endl;
 
   return true;
 }
 #endif
 
 //: Loads an ascii file containing a curvelet map as well as the edgemap on which it is defined.
-bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
+bool dbdet_load_cvlet_map_ascii(std::string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
 {
   //Note: The cvlet map is defined on an existing edgemap so the cvlet map also contains the edgemap
   char buffer[2048];
 
   //1)If file open fails, return.
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
   if (!infp){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
   //check the first line for file type
   infp.getline(buffer,2000);
-  if (vcl_strncmp(buffer, "CVLET_MAP v2.0", sizeof("CVLET_MAP v2.0")-1))
+  if (std::strncmp(buffer, "CVLET_MAP v2.0", sizeof("CVLET_MAP v2.0")-1))
     return false; 
 
   //2) read the header block
@@ -212,33 +212,33 @@ bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_ma
     //read next line
     infp.getline(buffer,2000);
 
-    //if (!vcl_strncmp(buffer, "[BEGIN HEADER]", sizeof("[BEGIN HEADER]")-1))
+    //if (!std::strncmp(buffer, "[BEGIN HEADER]", sizeof("[BEGIN HEADER]")-1))
 
-    if (!vcl_strncmp(buffer, "WIDTH", sizeof("WIDTH")-1))
+    if (!std::strncmp(buffer, "WIDTH", sizeof("WIDTH")-1))
       sscanf(buffer,"WIDTH=%d", &w);
 
-    else if (!vcl_strncmp(buffer, "HEIGHT", sizeof("HEIGHT")-1))
+    else if (!std::strncmp(buffer, "HEIGHT", sizeof("HEIGHT")-1))
       sscanf(buffer,"HEIGHT=%d", &h);
 
-    else if (!vcl_strncmp(buffer, "EDGE_COUNT", sizeof("EDGE_COUNT")-1))
+    else if (!std::strncmp(buffer, "EDGE_COUNT", sizeof("EDGE_COUNT")-1))
       sscanf(buffer,"EDGE_COUNT=%d", &num_edges);
 
-    //else if (!vcl_strncmp(buffer, "CM TYPE", sizeof("CM TYPE")-1))
+    //else if (!std::strncmp(buffer, "CM TYPE", sizeof("CM TYPE")-1))
     //  sscanf(buffer,"CM TYPE=%d", &CM_type);
 
-    else if (!vcl_strncmp(buffer, "N_RADIUS", sizeof("N_RADIUS")-1))
+    else if (!std::strncmp(buffer, "N_RADIUS", sizeof("N_RADIUS")-1))
       sscanf(buffer,"N_RADIUS=%lf", &(rad));
 
-    else if (!vcl_strncmp(buffer, "DX", sizeof("DX")-1))
+    else if (!std::strncmp(buffer, "DX", sizeof("DX")-1))
       sscanf(buffer,"DX=%lf", &(dpos));
 
-    else if (!vcl_strncmp(buffer, "DT", sizeof("DT")-1))
+    else if (!std::strncmp(buffer, "DT", sizeof("DT")-1))
       sscanf(buffer,"DT=%lf", &(dtheta));
 
-    else if (!vcl_strncmp(buffer, "TOKEN_LENGTH", sizeof("TOKEN_LENGTH")-1))
+    else if (!std::strncmp(buffer, "TOKEN_LENGTH", sizeof("TOKEN_LENGTH")-1))
       sscanf(buffer,"TOKEN_LENGTH=%lf", &(token_len));
 
-    else if (!vcl_strncmp(buffer, "[END HEADER]", sizeof("[END HEADER]")-1))
+    else if (!std::strncmp(buffer, "[END HEADER]", sizeof("[END HEADER]")-1))
       end_of_header = true;
   }
 
@@ -264,13 +264,13 @@ bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_ma
     //read next line
     infp.getline(buffer,2000);
 
-    if (vcl_strlen(buffer)<2 || buffer[0]=='#')
+    if (std::strlen(buffer)<2 || buffer[0]=='#')
       continue;
 
-    else if (!vcl_strncmp(buffer, "[BEGIN EDGEMAP]", sizeof("[BEGIN EDGEMAP]")-1))
+    else if (!std::strncmp(buffer, "[BEGIN EDGEMAP]", sizeof("[BEGIN EDGEMAP]")-1))
       continue;
     
-    else if (!vcl_strncmp(buffer, "[END EDGEMAP]", sizeof("[END EDGEMAP]")-1)){
+    else if (!std::strncmp(buffer, "[END EDGEMAP]", sizeof("[END EDGEMAP]")-1)){
       end_of_edge_block = true;
       continue;
     }
@@ -300,10 +300,10 @@ bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_ma
     //read next line
     infp.getline(buffer,2000);
 
-    if (vcl_strlen(buffer)==0 || buffer[0]=='#')
+    if (std::strlen(buffer)==0 || buffer[0]=='#')
       continue;
 
-    //if (!vcl_strncmp(buffer, "[BEGIN CVLETMAP]", sizeof("[BEGIN CVLETMAP]")-1))
+    //if (!std::strncmp(buffer, "[BEGIN CVLETMAP]", sizeof("[BEGIN CVLETMAP]")-1))
 
     //cvlet block
     if (buffer[0]=='<')
@@ -361,7 +361,7 @@ bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_ma
 
     }
 
-    else if (!vcl_strncmp(buffer, "[END CVLETMAP]", sizeof("[END CVLETMAP]")-1))
+    else if (!std::strncmp(buffer, "[END CVLETMAP]", sizeof("[END CVLETMAP]")-1))
       end_of_cvlet_block = true;
   }
 
@@ -370,15 +370,15 @@ bool dbdet_load_cvlet_map_ascii(vcl_string filename, dbdet_edgemap_sptr &edge_ma
 
 #ifdef HAS_BOOST
 //: Loads an ascii file containing a curvelet map as well as the edgemap on which it is defined.
-bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
+bool dbdet_load_cvlet_map_gzip(std::string filename, dbdet_edgemap_sptr &edge_map, dbdet_curvelet_map &cvlet_map)
 {
   //Note: The cvlet map is defined on an existing edgemap so the cvlet map also contains the edgemap
   char buffer[2048];
 
   //1)If file open fails, return.
-  vcl_ifstream infp_orig(filename.c_str(), vcl_ios::in | vcl_ios::binary);
+  std::ifstream infp_orig(filename.c_str(), std::ios::in | std::ios::binary);
   if (!infp_orig){
-    vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << filename.c_str() << std::endl;
     return false;
   }
 
@@ -388,7 +388,7 @@ bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map
 
   //check the first line for file type
   infp.getline(buffer,2000);
-  if (vcl_strncmp(buffer, "CVLET_MAP v1.0", sizeof("CVLET_MAP v1.0")-1))
+  if (std::strncmp(buffer, "CVLET_MAP v1.0", sizeof("CVLET_MAP v1.0")-1))
     return false; 
 
   //2) read the header block
@@ -404,33 +404,33 @@ bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map
     //read next line
     infp.getline(buffer,2000);
 
-    //if (!vcl_strncmp(buffer, "[BEGIN HEADER]", sizeof("[BEGIN HEADER]")-1))
+    //if (!std::strncmp(buffer, "[BEGIN HEADER]", sizeof("[BEGIN HEADER]")-1))
 
-    if (!vcl_strncmp(buffer, "WIDTH", sizeof("WIDTH")-1))
+    if (!std::strncmp(buffer, "WIDTH", sizeof("WIDTH")-1))
       sscanf(buffer,"WIDTH=%d", &w);
 
-    else if (!vcl_strncmp(buffer, "HEIGHT", sizeof("HEIGHT")-1))
+    else if (!std::strncmp(buffer, "HEIGHT", sizeof("HEIGHT")-1))
       sscanf(buffer,"HEIGHT=%d", &h);
 
-    else if (!vcl_strncmp(buffer, "EDGE_COUNT", sizeof("EDGE_COUNT")-1))
+    else if (!std::strncmp(buffer, "EDGE_COUNT", sizeof("EDGE_COUNT")-1))
       sscanf(buffer,"EDGE_COUNT=%d", &num_edges);
 
-    //else if (!vcl_strncmp(buffer, "CM TYPE", sizeof("CM TYPE")-1))
+    //else if (!std::strncmp(buffer, "CM TYPE", sizeof("CM TYPE")-1))
     //  sscanf(buffer,"CM TYPE=%d", &CM_type);
 
-    else if (!vcl_strncmp(buffer, "N_RADIUS", sizeof("N_RADIUS")-1))
+    else if (!std::strncmp(buffer, "N_RADIUS", sizeof("N_RADIUS")-1))
       sscanf(buffer,"N_RADIUS=%lf", &(rad));
 
-    else if (!vcl_strncmp(buffer, "DX", sizeof("DX")-1))
+    else if (!std::strncmp(buffer, "DX", sizeof("DX")-1))
       sscanf(buffer,"DX=%lf", &(dpos));
 
-    else if (!vcl_strncmp(buffer, "DT", sizeof("DT")-1))
+    else if (!std::strncmp(buffer, "DT", sizeof("DT")-1))
       sscanf(buffer,"DT=%lf", &(dtheta));
 
-    else if (!vcl_strncmp(buffer, "TOKEN_LENGTH", sizeof("TOKEN_LENGTH")-1))
+    else if (!std::strncmp(buffer, "TOKEN_LENGTH", sizeof("TOKEN_LENGTH")-1))
       sscanf(buffer,"TOKEN_LENGTH=%lf", &(token_len));
 
-    else if (!vcl_strncmp(buffer, "[END HEADER]", sizeof("[END HEADER]")-1))
+    else if (!std::strncmp(buffer, "[END HEADER]", sizeof("[END HEADER]")-1))
       end_of_header = true;
   }
 
@@ -456,13 +456,13 @@ bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map
     //read next line
     infp.getline(buffer,2000);
 
-    if (vcl_strlen(buffer)<2 || buffer[0]=='#')
+    if (std::strlen(buffer)<2 || buffer[0]=='#')
       continue;
 
-    else if (!vcl_strncmp(buffer, "[BEGIN EDGEMAP]", sizeof("[BEGIN EDGEMAP]")-1))
+    else if (!std::strncmp(buffer, "[BEGIN EDGEMAP]", sizeof("[BEGIN EDGEMAP]")-1))
       continue;
     
-    else if (!vcl_strncmp(buffer, "[END EDGEMAP]", sizeof("[END EDGEMAP]")-1)){
+    else if (!std::strncmp(buffer, "[END EDGEMAP]", sizeof("[END EDGEMAP]")-1)){
       end_of_edge_block = true;
       continue;
     }
@@ -492,10 +492,10 @@ bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map
     //read next line
     infp.getline(buffer,2000);
 
-    if (vcl_strlen(buffer)==0 || buffer[0]=='#')
+    if (std::strlen(buffer)==0 || buffer[0]=='#')
       continue;
 
-    //if (!vcl_strncmp(buffer, "[BEGIN CVLETMAP]", sizeof("[BEGIN CVLETMAP]")-1))
+    //if (!std::strncmp(buffer, "[BEGIN CVLETMAP]", sizeof("[BEGIN CVLETMAP]")-1))
 
     //cvlet block
     if (buffer[0]=='<')
@@ -553,7 +553,7 @@ bool dbdet_load_cvlet_map_gzip(vcl_string filename, dbdet_edgemap_sptr &edge_map
 
     }
 
-    else if (!vcl_strncmp(buffer, "[END CVLETMAP]", sizeof("[END CVLETMAP]")-1))
+    else if (!std::strncmp(buffer, "[END CVLETMAP]", sizeof("[END CVLETMAP]")-1))
       end_of_cvlet_block = true;
   }
 

@@ -17,7 +17,7 @@ bool dsm_ncn_sptr_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_ncn_sptr_process_globals;
 
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	output_types_[0] = "dsm_ncn_sptr";
 

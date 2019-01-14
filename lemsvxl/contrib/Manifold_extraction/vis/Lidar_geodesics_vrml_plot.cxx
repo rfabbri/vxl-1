@@ -4,12 +4,12 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -27,9 +27,9 @@
 #include <vehicle_model_3d.h>
 #include <vul/vul_file_iterator.h>
 
-void read_box(vcl_istream &s,vgl_box_3d<double>& b_box)
+void read_box(std::istream &s,vgl_box_3d<double>& b_box)
     {
-    vcl_string str;
+    std::string str;
     char ch;
     double min_x,min_y,min_z,max_x,max_y,max_z;
 
@@ -47,23 +47,23 @@ void read_box(vcl_istream &s,vgl_box_3d<double>& b_box)
     }
 
 
-vcl_vector<vehicle_model_3d> read_3d_models(vcl_string bounding_boxes_info,vcl_string file_ext)
+std::vector<vehicle_model_3d> read_3d_models(std::string bounding_boxes_info,std::string file_ext)
     {
-    vcl_string b_box_type_part1,b_box_type_part2,b_box_type_part3,f_name;
-    vcl_vector<vehicle_model_3d> vehic_mod_vec;
+    std::string b_box_type_part1,b_box_type_part2,b_box_type_part3,f_name;
+    std::vector<vehicle_model_3d> vehic_mod_vec;
 
     vgl_box_3d<double> b_box,b_box_hood,b_box_cab, b_box_bed;
 
     for (vul_file_iterator fn= bounding_boxes_info + file_ext; fn; ++fn) {
         f_name =  fn();
-        vcl_ifstream ifstr(f_name.c_str());
+        std::ifstream ifstr(f_name.c_str());
 
         for (unsigned int i = 0;i<3;i++)
             {
             ifstr >> b_box_type_part1 >> b_box_type_part2 >> b_box_type_part3;
             /* read_box(ifstr,b_box);
 
-            vcl_cout << b_box << vcl_endl; */
+            std::cout << b_box << std::endl; */
 
 
             if (strcmp(b_box_type_part3.c_str(),"hood:") == 0)
@@ -95,14 +95,14 @@ int main(int argc,char **argv)
 
 vgui_dialog load_dlg("load the files");
 
-  static vcl_string car_info = "", ext_car = " ";
-  static vcl_string new_car_info = "", ext_new_car = " ";
-  static vcl_string truck_info = "", ext_truck = " ";
+  static std::string car_info = "", ext_car = " ";
+  static std::string new_car_info = "", ext_new_car = " ";
+  static std::string truck_info = "", ext_truck = " ";
 
-  static vcl_string intrinsic_mean_info = "", ext_mn = "*.mn";
-  static vcl_string generator_coeffs_category_one = "", ext_gc_1 = "*.gc";
-  static vcl_string generator_coeffs_category_two = "", ext_gc_2 = "*.gc";
-  static vcl_string vrml_file = "", ext_wrl = "*.wrl";
+  static std::string intrinsic_mean_info = "", ext_mn = "*.mn";
+  static std::string generator_coeffs_category_one = "", ext_gc_1 = "*.gc";
+  static std::string generator_coeffs_category_two = "", ext_gc_2 = "*.gc";
+  static std::string vrml_file = "", ext_wrl = "*.wrl";
 
   load_dlg.file("car info",ext_car,car_info);
   load_dlg.file("New cars info",ext_new_car,new_car_info);
@@ -115,15 +115,15 @@ vgui_dialog load_dlg("load the files");
     return 0;
 
 
-  /*  vcl_string vehicle_model_info = argv[1];
-    vcl_string intrinsic_mean_info = argv[2];
-    vcl_string generator_coeffs = argv[3];
-    vcl_string vrml_file = argv[4];*/
+  /*  std::string vehicle_model_info = argv[1];
+    std::string intrinsic_mean_info = argv[2];
+    std::string generator_coeffs = argv[3];
+    std::string vrml_file = argv[4];*/
 
 
-    // vcl_string three_box_geodesics = argv[5];
+    // std::string three_box_geodesics = argv[5];
 
-    // vcl_ifstream ifst_box(three_box_geodesics.c_str());
+    // std::ifstream ifst_box(three_box_geodesics.c_str());
 
     //usage: 
 
@@ -139,17 +139,17 @@ vgui_dialog load_dlg("load the files");
     //vrml_file is the output vrml file which has the vehicles plotted as spheres in 3d and the
     //curves in 3d representing the principal geodesics
 
-    vcl_string part;
+    std::string part;
     double diag_hood_mean,diag_cab_mean,diag_bed_mean;
     double diag_hood,diag_cab,diag_bed;
     double val1,val2,val3,val4,val5,val6,val7,val8,val9,num_geodesics = 10;
 
-    vcl_vector<vehicle_model_3d> car_vec = read_3d_models(car_info,"\\*.txt");
-    vcl_vector<vehicle_model_3d> new_car_vec = read_3d_models(new_car_info,"\\*.txt");
-    vcl_vector<vehicle_model_3d> truck_vec = read_3d_models(truck_info,"\\*.txt");
+    std::vector<vehicle_model_3d> car_vec = read_3d_models(car_info,"\\*.txt");
+    std::vector<vehicle_model_3d> new_car_vec = read_3d_models(new_car_info,"\\*.txt");
+    std::vector<vehicle_model_3d> truck_vec = read_3d_models(truck_info,"\\*.txt");
 
 
-    vcl_ifstream ifstr(intrinsic_mean_info.c_str());
+    std::ifstream ifstr(intrinsic_mean_info.c_str());
 
     vnl_matrix<double > mean_hood_tr(4,4,0.0),mean_cab_tr(4,4,0.0),mean_bed_tr(4,4,0.0);
 
@@ -160,15 +160,15 @@ vgui_dialog load_dlg("load the files");
     ifstr >> part;
     ifstr >> mean_bed_tr;
 
-    vcl_cout << mean_hood_tr << vcl_endl;
-    vcl_cout << mean_cab_tr << vcl_endl;
-    vcl_cout << mean_bed_tr << vcl_endl;
+    std::cout << mean_hood_tr << std::endl;
+    std::cout << mean_cab_tr << std::endl;
+    std::cout << mean_bed_tr << std::endl;
 
     ifstr.close();
 
-    vcl_vector<double>sx_hood,sy_hood,sz_hood,sx_cab,sy_cab,sz_cab,sx_bed,sy_bed,sz_bed;
+    std::vector<double>sx_hood,sy_hood,sz_hood,sx_cab,sy_cab,sz_cab,sx_bed,sy_bed,sz_bed;
 
-    vcl_ifstream geo_str(generator_coeffs_category_one.c_str());
+    std::ifstream geo_str(generator_coeffs_category_one.c_str());
 
     for (unsigned int i = 0;i<num_geodesics;i++)
         {
@@ -187,7 +187,7 @@ vgui_dialog load_dlg("load the files");
         sz_bed.push_back(val9);
         }
 
-    vcl_vector<vnl_matrix<double> >gen_hood_vec,gen_cab_vec,gen_bed_vec;
+    std::vector<vnl_matrix<double> >gen_hood_vec,gen_cab_vec,gen_bed_vec;
 
     for (unsigned int i = 0;i<num_geodesics;i++)
         {
@@ -221,26 +221,26 @@ vgui_dialog load_dlg("load the files");
 
     mean_model.transform_model(mean_hood_tr,mean_cab_tr,mean_bed_tr);
 
-    diag_hood_mean = vcl_pow((mean_model.hood().height()),2) + vcl_pow((mean_model.hood().width()),2) + vcl_pow((mean_model.hood().depth()),2);
-    diag_cab_mean = vcl_pow((mean_model.cab().height()),2) + vcl_pow((mean_model.cab().width()),2) + vcl_pow((mean_model.cab().depth()),2);
-    diag_bed_mean = vcl_pow((mean_model.bed().height()),2) + vcl_pow((mean_model.bed().width()),2) + vcl_pow((mean_model.bed().depth()),2);
+    diag_hood_mean = std::pow((mean_model.hood().height()),2) + std::pow((mean_model.hood().width()),2) + std::pow((mean_model.hood().depth()),2);
+    diag_cab_mean = std::pow((mean_model.cab().height()),2) + std::pow((mean_model.cab().width()),2) + std::pow((mean_model.cab().depth()),2);
+    diag_bed_mean = std::pow((mean_model.bed().height()),2) + std::pow((mean_model.bed().width()),2) + std::pow((mean_model.bed().depth()),2);
 
     int num_car_models = car_vec.size();
     int num_new_car_models = new_car_vec.size();
     int num_truck_models = truck_vec.size();
 
-    vcl_vector<double> s1,s2,s3,ns1,ns2,ns3,ts1,ts2,ts3;
+    std::vector<double> s1,s2,s3,ns1,ns2,ns3,ts1,ts2,ts3;
 
     for (unsigned int i = 0;i<num_car_models;i++)
         {
-        diag_hood = vcl_pow((car_vec[i].hood().height()),2) + vcl_pow((car_vec[i].hood().width()),2)+
-            vcl_pow((car_vec[i].hood().depth()),2);
+        diag_hood = std::pow((car_vec[i].hood().height()),2) + std::pow((car_vec[i].hood().width()),2)+
+            std::pow((car_vec[i].hood().depth()),2);
 
-        diag_cab = vcl_pow((car_vec[i].cab().height()),2) + vcl_pow((car_vec[i].cab().width()),2)+
-            vcl_pow((car_vec[i].cab().depth()),2);
+        diag_cab = std::pow((car_vec[i].cab().height()),2) + std::pow((car_vec[i].cab().width()),2)+
+            std::pow((car_vec[i].cab().depth()),2);
 
-        diag_bed = vcl_pow((car_vec[i].bed().height()),2) + vcl_pow((car_vec[i].bed().width()),2)+
-            vcl_pow((car_vec[i].bed().depth()),2);
+        diag_bed = std::pow((car_vec[i].bed().height()),2) + std::pow((car_vec[i].bed().width()),2)+
+            std::pow((car_vec[i].bed().depth()),2);
 
         s1.push_back(diag_hood/diag_hood_mean);
         s2.push_back(diag_cab/diag_cab_mean);
@@ -249,14 +249,14 @@ vgui_dialog load_dlg("load the files");
 
        for (unsigned int i = 0;i<num_new_car_models;i++)
         {
-        diag_hood = vcl_pow((new_car_vec[i].hood().height()),2) + vcl_pow((new_car_vec[i].hood().width()),2)+
-            vcl_pow((new_car_vec[i].hood().depth()),2);
+        diag_hood = std::pow((new_car_vec[i].hood().height()),2) + std::pow((new_car_vec[i].hood().width()),2)+
+            std::pow((new_car_vec[i].hood().depth()),2);
 
-        diag_cab = vcl_pow((new_car_vec[i].cab().height()),2) + vcl_pow((new_car_vec[i].cab().width()),2)+
-            vcl_pow((new_car_vec[i].cab().depth()),2);
+        diag_cab = std::pow((new_car_vec[i].cab().height()),2) + std::pow((new_car_vec[i].cab().width()),2)+
+            std::pow((new_car_vec[i].cab().depth()),2);
 
-        diag_bed = vcl_pow((new_car_vec[i].bed().height()),2) + vcl_pow((new_car_vec[i].bed().width()),2)+
-            vcl_pow((new_car_vec[i].bed().depth()),2);
+        diag_bed = std::pow((new_car_vec[i].bed().height()),2) + std::pow((new_car_vec[i].bed().width()),2)+
+            std::pow((new_car_vec[i].bed().depth()),2);
 
         ns1.push_back(diag_hood/diag_hood_mean);
         ns2.push_back(diag_cab/diag_cab_mean);
@@ -265,20 +265,20 @@ vgui_dialog load_dlg("load the files");
 
        for (unsigned int i = 0;i<num_truck_models;i++)
         {
-        diag_hood = vcl_pow((truck_vec[i].hood().height()),2) + vcl_pow((truck_vec[i].hood().width()),2)+
-            vcl_pow((truck_vec[i].hood().depth()),2);
+        diag_hood = std::pow((truck_vec[i].hood().height()),2) + std::pow((truck_vec[i].hood().width()),2)+
+            std::pow((truck_vec[i].hood().depth()),2);
 
-        diag_cab = vcl_pow((truck_vec[i].cab().height()),2) + vcl_pow((truck_vec[i].cab().width()),2)+
-            vcl_pow((truck_vec[i].cab().depth()),2);
+        diag_cab = std::pow((truck_vec[i].cab().height()),2) + std::pow((truck_vec[i].cab().width()),2)+
+            std::pow((truck_vec[i].cab().depth()),2);
 
-        diag_bed = vcl_pow((truck_vec[i].bed().height()),2) + vcl_pow((truck_vec[i].bed().width()),2)+
-            vcl_pow((truck_vec[i].bed().depth()),2);
+        diag_bed = std::pow((truck_vec[i].bed().height()),2) + std::pow((truck_vec[i].bed().width()),2)+
+            std::pow((truck_vec[i].bed().depth()),2);
 
         ts1.push_back(diag_hood/diag_hood_mean);
         ts2.push_back(diag_cab/diag_cab_mean);
         ts3.push_back(diag_bed/diag_bed_mean);
         }
-    vcl_ofstream out(vrml_file.c_str());
+    std::ofstream out(vrml_file.c_str());
 
     out <<      "#VRML V2.0 utf8\n";
     out <<      "Background { \n";
@@ -376,7 +376,7 @@ vgui_dialog load_dlg("load the files");
     //generate sample points along the geodesics and write them down
     for (unsigned int it = 0;it<5;it++)
         {
-         vcl_vector<double> pt1,pt2,pt3;
+         std::vector<double> pt1,pt2,pt3;
     double diag_hood_M,diag_cab_M,diag_bed_M,t;
     vnl_matrix<double> S_hood,S_cab,S_bed;
 
@@ -389,11 +389,11 @@ vgui_dialog load_dlg("load the files");
             vehicle_model_3d M(car_vec[0].hood(),car_vec[0].cab(),car_vec[0].bed());
             M.transform_model(S_hood,S_cab,S_bed);
 
-           // ifst_box << print_vrml(M) << vcl_endl;
+           // ifst_box << print_vrml(M) << std::endl;
 
-            diag_hood_M = vcl_pow((M.hood().height()),2) + vcl_pow((M.hood().width()),2) + vcl_pow((M.hood().depth()),2);
-            diag_cab_M = vcl_pow((M.cab().height()),2) + vcl_pow((M.cab().width()),2) + vcl_pow((M.cab().depth()),2);
-            diag_bed_M = vcl_pow((M.bed().height()),2) + vcl_pow((M.bed().width()),2) + vcl_pow((M.bed().depth()),2);
+            diag_hood_M = std::pow((M.hood().height()),2) + std::pow((M.hood().width()),2) + std::pow((M.hood().depth()),2);
+            diag_cab_M = std::pow((M.cab().height()),2) + std::pow((M.cab().width()),2) + std::pow((M.cab().depth()),2);
+            diag_bed_M = std::pow((M.bed().height()),2) + std::pow((M.bed().width()),2) + std::pow((M.bed().depth()),2);
 
 
             pt1.push_back(diag_hood_M/diag_hood_mean);
@@ -423,7 +423,7 @@ vgui_dialog load_dlg("load the files");
         for (unsigned int k=0;k<pt1.size();k++)
             {   
 
-            out <<" " << pt1[k] <<" " << pt2[k]  << " " <<pt3[k]  << vcl_endl;
+            out <<" " << pt1[k] <<" " << pt2[k]  << " " <<pt3[k]  << std::endl;
             }
 
         out <<"    ] \n";

@@ -20,7 +20,7 @@
 // \endverbatim
 //--------------------------------------------------------------------------------
 
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vdgl/vdgl_digital_curve_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vsol/vsol_line_2d_sptr.h>
@@ -41,10 +41,10 @@ class bgui_vsol_soview2D_new : public vgui_soview2D
   ~bgui_vsol_soview2D_new() {}
 
   //: Print details about this vsol object to the given stream.
-  vcl_ostream& print(vcl_ostream&) const;
+  std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class
-  virtual vcl_string type_name() const=0;
+  virtual std::string type_name() const=0;
 
   //: Render this 2D digital_curve on the display.
   virtual void draw() const=0;
@@ -69,8 +69,8 @@ class bgui_vsol_soview2D_new_point : public bgui_vsol_soview2D_new
   ~bgui_vsol_soview2D_new_point() {}
 
   //: Returns the type of this class ('bgui_vsol_soview2D_new_point').
-  static vcl_string type_name_() { return "bgui_vsol_soview2D_new_point"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bgui_vsol_soview2D_new_point"; }
+  std::string type_name() const { return type_name_(); }
 
   //: Render this 2D digital_curve on the display.
   void draw() const;
@@ -100,8 +100,8 @@ class bgui_vsol_soview2D_new_line_seg : public bgui_vsol_soview2D_new
   ~bgui_vsol_soview2D_new_line_seg() {}
 
   //: Returns the type of this class ('bgui_vsol_soview2D_new_line_seg').
-  static vcl_string type_name_() { return "bgui_vsol_soview2D_new_line_seg"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bgui_vsol_soview2D_new_line_seg"; }
+  std::string type_name() const { return type_name_(); }
 
   //: Render this 2D digital_curve on the display.
   virtual void draw() const;
@@ -132,8 +132,8 @@ class bgui_vsol_soview2D_new_polyline : public bgui_vsol_soview2D_new
   ~bgui_vsol_soview2D_new_polyline() {}
 
   //: Returns the type of this class ('bgui_vsol_soview2D_new_polyline').
-  static vcl_string type_name_() { return "bgui_vsol_soview2D_new_polyline"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bgui_vsol_soview2D_new_polyline"; }
+  std::string type_name() const { return type_name_(); }
 
   //: Render this 2D digital_curve on the display.
   void draw() const;
@@ -164,8 +164,8 @@ class bgui_vsol_soview2D_new_polygon : public bgui_vsol_soview2D_new
   ~bgui_vsol_soview2D_new_polygon() {}
 
   //: Returns the type of this class ('bgui_vsol_soview2D_new_polygon').
-  static vcl_string type_name_() { return "bgui_vsol_soview2D_new_polygon"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bgui_vsol_soview2D_new_polygon"; }
+  std::string type_name() const { return type_name_(); }
 
   // Returns a smart pointer to the polygon
   // \note cast from a vsol_spatial_object_2d_sptr in the base class
@@ -198,11 +198,11 @@ class bgui_vsol_soview2D_new_digital_curve : public vgui_soview2D
   ~bgui_vsol_soview2D_new_digital_curve() {}
 
   //: Print details about this vdgl_digital_curve to the given stream.
-  virtual vcl_ostream& print(vcl_ostream&) const;
+  virtual std::ostream& print(std::ostream&) const;
 
   //: Returns the type of this class ('bgui_vsol_soview2D_new_digital_curve').
-  static vcl_string type_name_() { return "bgui_vsol_soview2D_new_digital_curve"; }
-  vcl_string type_name() const { return type_name_(); }
+  static std::string type_name_() { return "bgui_vsol_soview2D_new_digital_curve"; }
+  std::string type_name() const { return type_name_(); }
 
   //: Render this 2D digital_curve on the display.
   void draw() const;

@@ -5,9 +5,9 @@
 #include<dsm2/dsm2_feature.h>
 #include<dsm2/dsm2_feature_base_sptr.h>
 
-#include<vcl_cstddef.h>
-#include<vcl_cstdlib.h>
-#include<vcl_iterator.h>
+#include<cstddef>
+#include<cstdlib>
+#include<iterator>
 
 #include<vnl/vnl_matrix.h>
 #include<vnl/algo/vnl_svd.h>
@@ -19,28 +19,28 @@ dsm2_time_series_base_sptr dsm2_time_series_pca<tsT>::
 {
     if( ndims_to_keep >= ts_original.ndims() )
     {
-        vcl_cerr << "---- ERROR ---- dsm2_time_series_pca::reduce_time_series\n"
+        std::cerr << "---- ERROR ---- dsm2_time_series_pca::reduce_time_series\n"
                  << "\tOriginal dimensionality: "
                  << ts_original.ndims() << " must be less than "
                  << "the reduced dimensionality: "
-                 << ndims_to_keep << vcl_flush;
+                 << ndims_to_keep << std::flush;
         exit(1);
     }
 
     
 
-    vcl_size_t nobs = ts_original.size();
+    std::size_t nobs = ts_original.size();
 
     vnl_matrix<double> observations(static_cast<unsigned>(nobs),
                                     ts_original.ndims());
 
-    typename vcl_map< time_type,
+    typename std::map< time_type,
         dsm2_feature_base_sptr>::const_iterator
             ts_itr, ts_end = ts_original.time_series.end();
 
     for( ts_itr = ts_original.time_series.begin(); ts_itr != ts_end; ++ts_itr )
     {
-        vcl_size_t row = nobs - vcl_distance(ts_itr,ts_end);
+        std::size_t row = nobs - std::distance(ts_itr,ts_end);
         
         feature_type* feature_ptr =
             static_cast<feature_type*>
@@ -69,7 +69,7 @@ dsm2_time_series_base_sptr dsm2_time_series_pca<tsT>::
     //set the output time series point with the reduced observations
     for( ts_itr = ts_original.time_series.begin(); ts_itr != ts_end; ++ts_itr )
     {
-        vcl_size_t row = nobs - vcl_distance(ts_itr,ts_end);
+        std::size_t row = nobs - std::distance(ts_itr,ts_end);
         feature_type* feature_ptr = new feature_type;
         feature_ptr->v = reduced_features.get_row(static_cast<unsigned>(row));
         dsm2_feature_base_sptr feature_base_sptr(feature_ptr);

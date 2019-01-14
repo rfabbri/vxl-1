@@ -124,7 +124,7 @@ public:
   }
 
   //: form an edgel grouping from an ordered list of edgemap_->edgels
-  virtual dbdet_curvelet* form_an_edgel_grouping(dbdet_edgel* ref_e, vcl_deque<dbdet_edgel*> &edgel_chain, 
+  virtual dbdet_curvelet* form_an_edgel_grouping(dbdet_edgel* ref_e, std::deque<dbdet_edgel*> &edgel_chain, 
       bool forward=true,  bool centered=true, bool leading=true);
 };
 

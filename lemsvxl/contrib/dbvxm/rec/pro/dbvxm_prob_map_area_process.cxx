@@ -4,9 +4,9 @@
 // \file
 
 #include <bprb/bprb_parameters.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <brdb/brdb_value.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vbl/vbl_array_2d.h>
@@ -41,7 +41,7 @@ dbvxm_prob_map_area_process::execute()
 {
   // Sanity check
   if (!this->verify_inputs()){
-    vcl_cerr << "In dbvxm_prob_map_area_process::execute() -"
+    std::cerr << "In dbvxm_prob_map_area_process::execute() -"
              << " invalid inputs\n";
     return false;
   }
@@ -62,10 +62,10 @@ dbvxm_prob_map_area_process::execute()
   vil_image_view<float> out(ni, nj, 1);
   out.fill(0);
 
-  vcl_vector<vcl_pair<int, int> > neighborhood;
+  std::vector<std::pair<int, int> > neighborhood;
   for (int l = -2; l < 3; l++)
     for (int m = -2; m < 3; m++)
-      neighborhood.push_back(vcl_pair<int, int>(l,m));
+      neighborhood.push_back(std::pair<int, int>(l,m));
 
   int count = 0;
   for(unsigned j = 0; j<nj; ++j)
@@ -86,7 +86,7 @@ dbvxm_prob_map_area_process::execute()
    vil_image_view<vxl_byte> out_byte(ni, nj, 1);
   float min, max;
   vil_math_value_range(out, min, max);
-  vcl_cout << "\t area map min: " << min << " max: " << max << vcl_endl;
+  std::cout << "\t area map min: " << min << " max: " << max << std::endl;
   vil_convert_stretch_range_limited(out, out_byte, 0.0f, max);
   
   //vil_image_view<float> dummy(ni, nj, 1), dummy2(ni, nj, 1);

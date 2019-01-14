@@ -153,8 +153,8 @@ bool vgui_bfrag2D_tableau::handle(vgui_event const& e) {
         image_slot.handle(e);
 
     if( e.type == vgui_MOUSE_UP && e.button == vgui_LEFT && e.modifier == vgui_MODIFIER_NULL ){
-        //vcl_cout << "___________________________________________________" << vcl_endl;
-        //vcl_cout << "highlighted is: " << highlighted << " @ (" << e.wx << "," << e.wy << ")" << vcl_endl;
+        //std::cout << "___________________________________________________" << std::endl;
+        //std::cout << "highlighted is: " << highlighted << " @ (" << e.wx << "," << e.wy << ")" << std::endl;
         
         /*
         vgui_soview2D_bfrag2D *sel =  (vgui_soview2D_bfrag2D*)(get_highlighted_soview());
@@ -189,7 +189,7 @@ vil_image_view_base const& img )
     return obj;
 }
 
-vcl_string vgui_bfrag2D_tableau::type_name() const {
+std::string vgui_bfrag2D_tableau::type_name() const {
    return "vgui_bfrag2D_tableau";
 }
 
@@ -208,7 +208,7 @@ void vgui_bfrag2D_tableau::addCurve( Curve<double,double>* theCurve, const vgui_
     //bool a;
     //curvesFrag->popupInfo(a,a,a);
 
-    vcl_vector< vsol_point_2d_sptr > points;
+    std::vector< vsol_point_2d_sptr > points;
     PuzPoint<double> curPoint;
     for (int i=0; i < theCurve->numPoints(); i++) {
         curPoint = theCurve->point(i);
@@ -248,17 +248,17 @@ vgui_soview2D_bfrag2D *vgui_bfrag2D_tableau::addbfrag2D( bfrag2D *theFrag, XForm
 
     bool hasX = false;
     if ( !(*theXform == XForm3x3()) ){
-        vcl_cout << "HAS X FORM" << vcl_endl;
-        vcl_cout << "rot: " << theXform->rotAngle << " transx: " << theXform->transx << " transy: " << theXform->transy << vcl_endl;
+        std::cout << "HAS X FORM" << std::endl;
+        std::cout << "rot: " << theXform->rotAngle << " transx: " << theXform->transx << " transy: " << theXform->transy << std::endl;
 
         hasX = true;
     } else {
-        vcl_cout << "no x FORM" << vcl_endl;
+        std::cout << "no x FORM" << std::endl;
     }
     
 
 
-    //vcl_cout << "BFRAG2D_TABLEAU Adding bfrag index [" << theFrag->getIndex() << "]" << vcl_endl;
+    //std::cout << "BFRAG2D_TABLEAU Adding bfrag index [" << theFrag->getIndex() << "]" << std::endl;
 
     /*******************************************************************************************
      * i suppose it's pretty hacky to use ADD to get the soviews and then remove them,
@@ -270,12 +270,12 @@ vgui_soview2D_bfrag2D *vgui_bfrag2D_tableau::addbfrag2D( bfrag2D *theFrag, XForm
     if( !hasX && theFrag->getTopPolygon() ){
          topCurve = add_new_vsol_polygon_2d( theFrag->getTopPolygon() );
          remove( topCurve );
-         //vcl_cout << "ADDED TOP POLYGON" << vcl_endl;
+         //std::cout << "ADDED TOP POLYGON" << std::endl;
     }
     if( !hasX && theFrag->getBotPolygon() ){
         botCurve = add_new_vsol_polygon_2d( theFrag->getBotPolygon() );
         remove( botCurve );
-        //vcl_cout << "ADDED BOT POLYGON" << vcl_endl;
+        //std::cout << "ADDED BOT POLYGON" << std::endl;
     }
     if( theFrag->getTopRGBImage() ){
         //DO ROTATION
@@ -291,7 +291,7 @@ vgui_soview2D_bfrag2D *vgui_bfrag2D_tableau::addbfrag2D( bfrag2D *theFrag, XForm
         }
 
         remove( topImage );
-        //vcl_cout << "ADDED TOP IMAGE" << vcl_endl;
+        //std::cout << "ADDED TOP IMAGE" << std::endl;
     }
     if( theFrag->getBotRGBImage() ){
         //DO ROTATION
@@ -307,7 +307,7 @@ vgui_soview2D_bfrag2D *vgui_bfrag2D_tableau::addbfrag2D( bfrag2D *theFrag, XForm
         }
 
         remove( botImage );
-        //vcl_cout << "ADDED BOT IMAGE" << vcl_endl;
+        //std::cout << "ADDED BOT IMAGE" << std::endl;
     }
 
     vgui_soview2D_bfrag2D *theView = new vgui_soview2D_bfrag2D( topCurve, botCurve,
@@ -321,7 +321,7 @@ vgui_soview2D_bfrag2D *vgui_bfrag2D_tableau::addbfrag2D( bfrag2D *theFrag, XForm
 
 }
 
-vgui_soview2D_bfrag2D_assembly *vgui_bfrag2D_tableau::addbfrag2D_assembly( bfrag2D_assembly *theAssembly, vcl_vector<vgui_soview2D_bfrag2D*> *views ){
+vgui_soview2D_bfrag2D_assembly *vgui_bfrag2D_tableau::addbfrag2D_assembly( bfrag2D_assembly *theAssembly, std::vector<vgui_soview2D_bfrag2D*> *views ){
 
 
     vgui_soview2D_bfrag2D_assembly *theAssemblyView = new vgui_soview2D_bfrag2D_assembly();
@@ -332,8 +332,8 @@ vgui_soview2D_bfrag2D_assembly *vgui_bfrag2D_tableau::addbfrag2D_assembly( bfrag
     // new soview_assembly
     //finally we add the assemblyview and return it
 
-    vcl_vector< bfrag2D* > assemblyFrags = theAssembly->getFrags();
-    vcl_vector< double* > assemblyMatrices = theAssembly->getMatrices();
+    std::vector< bfrag2D* > assemblyFrags = theAssembly->getFrags();
+    std::vector< double* > assemblyMatrices = theAssembly->getMatrices();
 
     for( unsigned i = 0; i < assemblyFrags.size(); i++){
         

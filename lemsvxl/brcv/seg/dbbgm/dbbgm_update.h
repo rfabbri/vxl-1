@@ -17,7 +17,7 @@
 #include <vil/vil_image_view.h>
 #include <dbsta/dbsta_updater.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 #include <dbsta/algo/dbsta_adaptive_updater.h>
 
 
@@ -47,9 +47,9 @@ void update_masked(dbbgm_distribution_image<T>& dimg,
   const unsigned nj = mask.nj();
   const unsigned nplanes = mask.nplanes();
 
-  const vcl_ptrdiff_t planestep = mask.planestep();
-  const vcl_ptrdiff_t istep = mask.istep();
-  const vcl_ptrdiff_t jstep = mask.jstep();
+  const std::ptrdiff_t planestep = mask.planestep();
+  const std::ptrdiff_t istep = mask.istep();
+  const std::ptrdiff_t jstep = mask.jstep();
 
   typename dbbgm_distribution_image<T>::iterator itr = dimg.begin();
   const bool* col = mask.top_left_ptr();
@@ -76,9 +76,9 @@ void update(dbbgm_distribution_image<T>& dimg,
   const unsigned nj = image.nj();
   const unsigned nplanes = image.nplanes();
 
-  const vcl_ptrdiff_t planestep = image.planestep();
-  const vcl_ptrdiff_t istep = image.istep();
-  const vcl_ptrdiff_t jstep = image.jstep();
+  const std::ptrdiff_t planestep = image.planestep();
+  const std::ptrdiff_t istep = image.istep();
+  const std::ptrdiff_t jstep = image.jstep();
 
   typename dbbgm_distribution_image<T>::iterator itr = dimg.begin();
   const T* col = image.top_left_ptr();
@@ -113,11 +113,11 @@ void update_masked(dbbgm_distribution_image<T>& dimg,
   const unsigned nj = image.nj();
   const unsigned nplanes = image.nplanes();
 
-  const vcl_ptrdiff_t planestep = image.planestep();
-  const vcl_ptrdiff_t istep = image.istep();
-  const vcl_ptrdiff_t jstep = image.jstep();
-  const vcl_ptrdiff_t m_istep = mask.istep();
-  const vcl_ptrdiff_t m_jstep = mask.jstep();
+  const std::ptrdiff_t planestep = image.planestep();
+  const std::ptrdiff_t istep = image.istep();
+  const std::ptrdiff_t jstep = image.jstep();
+  const std::ptrdiff_t m_istep = mask.istep();
+  const std::ptrdiff_t m_jstep = mask.jstep();
 
   typename dbbgm_distribution_image<T>::iterator itr = dimg.begin();
   const bool* m_col = mask.top_left_ptr();

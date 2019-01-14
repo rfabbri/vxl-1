@@ -56,13 +56,13 @@ protected:
   void compute_internal_data();
 
   inline vnl_vector<float> closest_edge(const float * pixel_edges,
-    const  vcl_ptrdiff_t & pstep_edges,
-    const  vcl_ptrdiff_t & kstep_edges,
-    const  vcl_ptrdiff_t & jstep_edges,
-    const  vcl_ptrdiff_t & istep_edges);
+    const  std::ptrdiff_t & pstep_edges,
+    const  std::ptrdiff_t & kstep_edges,
+    const  std::ptrdiff_t & jstep_edges,
+    const  std::ptrdiff_t & istep_edges);
 
   void compute_measures(float* pixel_phi,
-                const vcl_ptrdiff_t& istep, const vcl_ptrdiff_t& jstep, const vcl_ptrdiff_t& kstep,
+                const std::ptrdiff_t& istep, const std::ptrdiff_t& jstep, const std::ptrdiff_t& kstep,
                 const unsigned& i, const unsigned& j, const unsigned& k,
                 const unsigned& ni, const unsigned& nj, const unsigned& nk, 
                 float& hj_flux, float& curvature,

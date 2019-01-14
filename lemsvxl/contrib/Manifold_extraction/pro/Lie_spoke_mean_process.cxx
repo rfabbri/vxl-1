@@ -9,7 +9,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -42,7 +42,7 @@ Lie_spoke_mean_process::Lie_spoke_mean_process()
         !parameters()->add("mean shapes ","-mean_shapes_file",bpro1_filepath("","*"))||
         !parameters()->add("refined shapes ","-refined_shapes_file",bpro1_filepath("","*")))*/
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_spoke_mean_process::Lie_spoke_mean_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_spoke_mean_process::Lie_spoke_mean_process()" << std::endl;
         }
 
     }
@@ -56,7 +56,7 @@ Lie_spoke_mean_process::clone() const
 
 
 
-double Lie_spoke_mean_process::compute_lie_cost(vcl_vector<vsol_point_2d_sptr> curve1_samples,vcl_vector<vsol_point_2d_sptr> curve2_samples )
+double Lie_spoke_mean_process::compute_lie_cost(std::vector<vsol_point_2d_sptr> curve1_samples,std::vector<vsol_point_2d_sptr> curve2_samples )
     {
     double lie_cost = 0,length_1,length_2,angle_1,angle_2,scale_comp,angle_comp;
 
@@ -65,35 +65,35 @@ double Lie_spoke_mean_process::compute_lie_cost(vcl_vector<vsol_point_2d_sptr> c
         length_1 = curve1_samples[i]->distance(curve1_samples[i+1]);
         length_2 = curve2_samples[i]->distance(curve2_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
-        angle_2 = vcl_atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
+        angle_1 = std::atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
+        angle_2 = std::atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
 
-        length_1 = (vcl_fabs(length_1) < 1e-10) ? 1:length_1;
-        length_2 = (vcl_fabs(length_2) < 1e-10) ? 1:length_2;
+        length_1 = (std::fabs(length_1) < 1e-10) ? 1:length_1;
+        length_2 = (std::fabs(length_2) < 1e-10) ? 1:length_2;
 
-        scale_comp = vcl_log(length_2/length_1);
+        scale_comp = std::log(length_2/length_1);
         angle_comp = angle_2 - angle_1;
         lie_cost = lie_cost +  scale_comp*scale_comp + (angle_comp*angle_comp);
         }
-    lie_cost = vcl_sqrt(lie_cost);
+    lie_cost = std::sqrt(lie_cost);
 
     return lie_cost;
     }
 
-void Lie_spoke_mean_process::angles_scales(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2,
-                                             vcl_vector<double> &angles,vcl_vector<double> &scales)
+void Lie_spoke_mean_process::angles_scales(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2,
+                                             std::vector<double> &angles,std::vector<double> &scales)
     {
     double length_1,length_2,angle_1,angle_2,Lie_cost,min_lie_cost = 1e100;
     unsigned int min_lie_index;
-    vcl_vector <double> Lie_cost_vec;
+    std::vector <double> Lie_cost_vec;
 
-    vcl_vector<vsol_point_2d_sptr> curve2_augmented;
+    std::vector<vsol_point_2d_sptr> curve2_augmented;
 
     for (unsigned int j = 0;j<2;j++)
         for (unsigned int i = 0;i<curve2.size();i++)
             curve2_augmented.push_back(curve2[i]);
 
-    vcl_vector<vsol_point_2d_sptr> curve2_open_samples;
+    std::vector<vsol_point_2d_sptr> curve2_open_samples;
 
     for (unsigned int k = 0;k<curve2.size();k++)
         {
@@ -130,21 +130,21 @@ void Lie_spoke_mean_process::angles_scales(vcl_vector<vsol_point_2d_sptr> curve1
         length_1 = curve1[i]->distance(curve1[i+1]);
         length_2 = curve2_open_samples[i]->distance(curve2_open_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
-        angle_2 = vcl_atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
+        angle_1 = std::atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
+        angle_2 = std::atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
 
 
 
         scales.push_back(length_2/length_1);
         angles.push_back( angle_2 - angle_1 );
-       // vcl_cout << "angles: " << angle_2 - angle_1 << vcl_endl;
+       // std::cout << "angles: " << angle_2 - angle_1 << std::endl;
         }
     }
 
-vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::transform_shape(vcl_vector<vsol_point_2d_sptr> curve,
-                                             vcl_vector<double> angles,vcl_vector<double> scales)
+std::vector<vsol_point_2d_sptr> Lie_spoke_mean_process::transform_shape(std::vector<vsol_point_2d_sptr> curve,
+                                             std::vector<double> angles,std::vector<double> scales)
     {
-    vcl_vector<vsol_point_2d_sptr> curve1,new_shape;
+    std::vector<vsol_point_2d_sptr> curve1,new_shape;
 
     for (unsigned int i = 0;i<curve.size();i++)
         {
@@ -212,8 +212,8 @@ for (unsigned int i = 0;i < angles.size();i++)
         pt1_x = curve1[i]->x() - pivot_x;
         pt1_y = curve1[i]->y() - pivot_y;
 
-        pt2_x = pt1_x*vcl_cos(thet) - pt1_y*vcl_sin(thet) + pivot_x;
-        pt2_y = pt1_x*vcl_sin(thet) + pt1_y*vcl_cos(thet) + pivot_y;
+        pt2_x = pt1_x*std::cos(thet) - pt1_y*std::sin(thet) + pivot_x;
+        pt2_y = pt1_x*std::sin(thet) + pt1_y*std::cos(thet) + pivot_y;
 
         vsol_point_2d_sptr pt = new vsol_point_2d(pt2_x,pt2_y);
         new_shape.push_back(pt);
@@ -225,30 +225,30 @@ for (unsigned int i = 0;i < angles.size();i++)
             x_val = curve1[j]->x() - pivot_x;
             y_val = curve1[j]->y() - pivot_y;
 
-            curve1[j]->set_x(x_val*vcl_cos(thet) - y_val*vcl_sin(thet) + pivot_x);
-            curve1[j]->set_y(x_val*vcl_sin(thet) + y_val*vcl_cos(thet) + pivot_y);
+            curve1[j]->set_x(x_val*std::cos(thet) - y_val*std::sin(thet) + pivot_x);
+            curve1[j]->set_y(x_val*std::sin(thet) + y_val*std::cos(thet) + pivot_y);
             }
         }
 
     return new_shape;
     }
 
-//void Lie_spoke_mean_process::generate_values_along_geodesic(vcl_vector<double> angles,vcl_vector<double> scales,vcl_vector<double> &sample_angles,
-//                                                                          vcl_vector<double> &sample_scales,double t)                                      
+//void Lie_spoke_mean_process::generate_values_along_geodesic(std::vector<double> angles,std::vector<double> scales,std::vector<double> &sample_angles,
+//                                                                          std::vector<double> &sample_scales,double t)                                      
 //    {
 //    for (unsigned int i = 0;i<angles.size();i++)
 //        sample_angles.push_back(t*angles[i]);
 //   
 //
 //    for (unsigned int i = 0;i<scales.size();i++)
-//        sample_scales.push_back(vcl_exp(t*vcl_log(scales[i])));
+//        sample_scales.push_back(std::exp(t*std::log(scales[i])));
 //
 //    }
 
-vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_structure(vcl_vector<vsol_point_2d_sptr> final_points)
+std::vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_structure(std::vector<vsol_point_2d_sptr> final_points)
                                                                                         
     {
-    vcl_vector<vsol_point_2d_sptr> closed_form;
+    std::vector<vsol_point_2d_sptr> closed_form;
 
     for (unsigned int i = 0;i<final_points.size();i++)
         {
@@ -256,7 +256,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
         closed_form.push_back(pt);
         }
 
-    vcl_vector<double> angle_2_vec,length_2_vec;
+    std::vector<double> angle_2_vec,length_2_vec;
     unsigned int num_points = final_points.size(),start_point;
     double initial_curve_length = 0,final_curve_length = 0,scale,angle_2,diff_angle,gap_length,gap_x_comp,gap_y_comp;
     double length_2,pivot_x,pivot_y,scale_x,scale_y,thet;
@@ -264,7 +264,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
     double x_comp_r1_lb,x_comp_r1_ub,x_comp_r2_lb,x_comp_r2_ub,y_comp_lb,y_comp_ub;
 
   
-    ref_angle = vcl_atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
+    ref_angle = std::atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
 
     if ((ref_angle > 0 )&& (ref_angle < vnl_math::pi/2))
         {
@@ -320,7 +320,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
 
     for (unsigned int i = 0;i<num_points-1;i++)
         {
-        angle_2 = vcl_atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
+        angle_2 = std::atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
         length_2 = closed_form[i]->distance(closed_form[i+1]);
         angle_2_vec.push_back(angle_2);
         length_2_vec.push_back(length_2);
@@ -330,23 +330,23 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
                     num_x++;
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
                     num_y++;
                 }
             }
         }
 
     gap_length = closed_form[num_points-1]->distance(closed_form[0]);
-    gap_x_comp = gap_length*vcl_cos(ref_angle);
-    gap_y_comp = gap_length*vcl_sin(ref_angle);
+    gap_x_comp = gap_length*std::cos(ref_angle);
+    gap_y_comp = gap_length*std::sin(ref_angle);
 
-    length_add_x_comp = vcl_fabs(gap_x_comp)/num_x;
-    length_add_y_comp = vcl_fabs(gap_y_comp)/num_y;
+    length_add_x_comp = std::fabs(gap_x_comp)/num_x;
+    length_add_y_comp = std::fabs(gap_y_comp)/num_y;
 
 
 
@@ -359,17 +359,17 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
-                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*vcl_fabs(vcl_cos(angle_2)));
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
+                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*std::fabs(std::cos(angle_2)));
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
-                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*vcl_fabs(vcl_sin(angle_2)));
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
+                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*std::fabs(std::sin(angle_2)));
                 }
             }
 
-     // scale = vcl_sqrt(scale_x*scale_x*vcl_cos(angle_2)*vcl_cos(angle_2) + scale_y*scale_y*vcl_sin(angle_2)*vcl_sin(angle_2));
+     // scale = std::sqrt(scale_x*scale_x*std::cos(angle_2)*std::cos(angle_2) + scale_y*scale_y*std::sin(angle_2)*std::sin(angle_2));
 
       pivot_x = closed_form[i-1]->x();
       pivot_y = closed_form[i-1]->y();
@@ -395,32 +395,32 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::closed_articulated_struct
     return closed_form;
     }
 
-void Lie_spoke_mean_process::save_shape(vcl_vector<vsol_point_2d_sptr> new_shape,vcl_string new_shapes_path,unsigned int i)
+void Lie_spoke_mean_process::save_shape(std::vector<vsol_point_2d_sptr> new_shape,std::string new_shapes_path,unsigned int i)
     {
     char* num = new char[4];
     num[0] = num[1] = num[2] = num[3] = '0';
     sprintf (num, "%d", i);
-    vcl_string num_str = num;
+    std::string num_str = num;
 
-    vcl_string fileName = new_shapes_path + num_str + ".txt";
+    std::string fileName = new_shapes_path + num_str + ".txt";
 
-  vcl_ofstream outfp(fileName.c_str());
+  std::ofstream outfp(fileName.c_str());
 
   assert(outfp != NULL);
-  outfp << "CONTOUR" << vcl_endl;
-  outfp << "OPEN" << vcl_endl;
-  outfp << new_shape.size() << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
+  outfp << "OPEN" << std::endl;
+  outfp << new_shape.size() << std::endl;
 
 
   for(int i=0; i<new_shape.size(); i++)
   {
-    outfp <<new_shape[i]->x() << " " << new_shape[i]->y() << " " << vcl_endl;
+    outfp <<new_shape[i]->x() << " " << new_shape[i]->y() << " " << std::endl;
   }
   outfp.close();
 
     }
 
-void Lie_spoke_mean_process::save_shape_as_image(vcl_vector<vsol_point_2d_sptr> new_shape,vcl_string new_shapes_path,unsigned int i)
+void Lie_spoke_mean_process::save_shape_as_image(std::vector<vsol_point_2d_sptr> new_shape,std::string new_shapes_path,unsigned int i)
     {
 
     double min_x= 1e100,max_x= -1e100,min_y= 1e100,max_y= -1e100;
@@ -447,11 +447,11 @@ void Lie_spoke_mean_process::save_shape_as_image(vcl_vector<vsol_point_2d_sptr> 
     char* num = new char[4];
     num[0] = num[1] = num[2] = num[3] = '0';
     sprintf (num, "%d", i);
-    vcl_string num_str = num;
+    std::string num_str = num;
     unsigned int rows = max_x-min_x+1,cols = max_y-min_y+1;
     double x,y;
 
-    vcl_string fileName = new_shapes_path + num_str + ".jpg";
+    std::string fileName = new_shapes_path + num_str + ".jpg";
 
     vil_image_resource_sptr res = vil_new_image_resource(rows,cols,1,VIL_PIXEL_FORMAT_BYTE);
     
@@ -470,7 +470,7 @@ void Lie_spoke_mean_process::save_shape_as_image(vcl_vector<vsol_point_2d_sptr> 
   vil_save_image_resource(res,fileName.c_str());
     }
 
-vsol_point_2d_sptr Lie_spoke_mean_process::compute_centroid(vcl_vector<vsol_point_2d_sptr> contour)
+vsol_point_2d_sptr Lie_spoke_mean_process::compute_centroid(std::vector<vsol_point_2d_sptr> contour)
     {
     double cx = 0,cy = 0;
     unsigned int num_points = contour.size();
@@ -487,8 +487,8 @@ vsol_point_2d_sptr Lie_spoke_mean_process::compute_centroid(vcl_vector<vsol_poin
      return cp;
     }
 
-void Lie_spoke_mean_process::get_spoke_scales_angles(vcl_vector<vsol_point_2d_sptr> contour,vcl_vector<vsol_point_2d_sptr> ref_contour,
-                                                       vcl_vector<double> &scales,vcl_vector<double> &angles)
+void Lie_spoke_mean_process::get_spoke_scales_angles(std::vector<vsol_point_2d_sptr> contour,std::vector<vsol_point_2d_sptr> ref_contour,
+                                                       std::vector<double> &scales,std::vector<double> &angles)
      {
      double cx = 0,cy = 0,ref_cx = 0,ref_cy = 0,dist,ref_dist,angle,ref_angle;
      //contour and ref_contour must have the same number of points
@@ -505,21 +505,21 @@ void Lie_spoke_mean_process::get_spoke_scales_angles(vcl_vector<vsol_point_2d_sp
          dist = contour[i]->distance(cp);
          ref_dist = ref_contour[i]->distance(ref_cp);
 
-         angle = vcl_atan2(contour[i]->y() - cp->y(),contour[i]->x() - cp->x());
-         ref_angle = vcl_atan2(ref_contour[i]->y() - ref_cp->y(),ref_contour[i]->x() - ref_cp->x());
+         angle = std::atan2(contour[i]->y() - cp->y(),contour[i]->x() - cp->x());
+         ref_angle = std::atan2(ref_contour[i]->y() - ref_cp->y(),ref_contour[i]->x() - ref_cp->x());
 
-         scales.push_back(vcl_log(dist/ref_dist));
+         scales.push_back(std::log(dist/ref_dist));
          
          angles.push_back(curve_fixAngleMPiPi(angle - ref_angle));
          }
 
      }
 
-vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::generate_spoke_configuration(vcl_vector<vsol_point_2d_sptr> contour)
+std::vector<vsol_point_2d_sptr> Lie_spoke_mean_process::generate_spoke_configuration(std::vector<vsol_point_2d_sptr> contour)
     {
     vsol_point_2d_sptr cp = compute_centroid(contour);
 
-    vcl_vector<vsol_point_2d_sptr> spoke_config;
+    std::vector<vsol_point_2d_sptr> spoke_config;
 
     for (unsigned int i=0;i<contour.size();i++)
         {
@@ -529,8 +529,8 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::generate_spoke_configurat
     return spoke_config;
     }
 
-void Lie_spoke_mean_process::find_mean_scales_angles(vcl_vector<vcl_vector<double> > scales_vec,vcl_vector<vcl_vector<double> > angles_vec,
-                             vcl_vector<double> &mean_scales,vcl_vector<double> &mean_angles)
+void Lie_spoke_mean_process::find_mean_scales_angles(std::vector<std::vector<double> > scales_vec,std::vector<std::vector<double> > angles_vec,
+                             std::vector<double> &mean_scales,std::vector<double> &mean_angles)
     {
     double angle,scale;
 
@@ -551,17 +551,17 @@ void Lie_spoke_mean_process::find_mean_scales_angles(vcl_vector<vcl_vector<doubl
             scale = scale + scales_vec[i][j];
 
         scale = scale/scales_vec.size();
-        scale = vcl_exp(scale);
+        scale = std::exp(scale);
         mean_scales.push_back(scale);
         }
     }
 
- vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::transform_spoke_shape(vcl_vector<vsol_point_2d_sptr> contour,vcl_vector<double> mean_scales,
-                                                      vcl_vector<double> mean_angles)
+ std::vector<vsol_point_2d_sptr> Lie_spoke_mean_process::transform_spoke_shape(std::vector<vsol_point_2d_sptr> contour,std::vector<double> mean_scales,
+                                                      std::vector<double> mean_angles)
     {
     double x,y,cx=0,cy=0,stretched_x,stretched_y,rotated_x,rotated_y;
 
-    vcl_vector<vsol_point_2d_sptr> mean_shape;
+    std::vector<vsol_point_2d_sptr> mean_shape;
     unsigned int num_points = contour.size();
 
     for (unsigned int i=0;i<num_points;i++)
@@ -581,8 +581,8 @@ void Lie_spoke_mean_process::find_mean_scales_angles(vcl_vector<vcl_vector<doubl
          stretched_x = mean_scales[i]*x;
          stretched_y = mean_scales[i]*y;
 
-         rotated_x = stretched_x*vcl_cos(mean_angles[i]) - stretched_y*vcl_sin(mean_angles[i]);
-         rotated_y = stretched_x*vcl_sin(mean_angles[i]) + stretched_y*vcl_cos(mean_angles[i]);
+         rotated_x = stretched_x*std::cos(mean_angles[i]) - stretched_y*std::sin(mean_angles[i]);
+         rotated_y = stretched_x*std::sin(mean_angles[i]) + stretched_y*std::cos(mean_angles[i]);
 
          rotated_x += cx;
          rotated_y += cy;
@@ -594,20 +594,20 @@ void Lie_spoke_mean_process::find_mean_scales_angles(vcl_vector<vcl_vector<doubl
     return mean_shape;
     }
 
-vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::find_mean_shape(vcl_vector<vcl_vector<vsol_point_2d_sptr> > given_shapes,
-                                                                        vcl_string file_name)
+std::vector<vsol_point_2d_sptr> Lie_spoke_mean_process::find_mean_shape(std::vector<std::vector<vsol_point_2d_sptr> > given_shapes,
+                                                                        std::string file_name)
                                                                     
     {
-    vcl_string outfile = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\sea_animal_stuff\\debug_stuff.txt";
+    std::string outfile = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\sea_animal_stuff\\debug_stuff.txt";
 
-    vcl_ofstream outfp(outfile.c_str());
-    vcl_vector<vcl_vector<double> > scales_vec,angles_vec;
+    std::ofstream outfp(outfile.c_str());
+    std::vector<std::vector<double> > scales_vec,angles_vec;
 
     // get the scales and angles of spokes of all shapes wrt spokes of first shape
     for (unsigned int i=1;i<given_shapes.size();i++)
         {
-        vcl_vector<vsol_point_2d_sptr> contour = given_shapes[i];
-        vcl_vector<double> scales,angles;
+        std::vector<vsol_point_2d_sptr> contour = given_shapes[i];
+        std::vector<double> scales,angles;
 
         get_spoke_scales_angles(contour,given_shapes[0],scales,angles);
         scales_vec.push_back(scales);
@@ -616,39 +616,39 @@ vcl_vector<vsol_point_2d_sptr> Lie_spoke_mean_process::find_mean_shape(vcl_vecto
 
     for (unsigned int j = 0;j<scales_vec.size();j++)
         {
-        outfp << "scale vec values: " << vcl_endl;
+        outfp << "scale vec values: " << std::endl;
         for (unsigned int i = 0;i<scales_vec[j].size();i++)
             {
-            outfp << scales_vec[j][i] << vcl_endl;
+            outfp << scales_vec[j][i] << std::endl;
             }
 
-        outfp << "angle vec values: " << vcl_endl;
+        outfp << "angle vec values: " << std::endl;
 
         for (unsigned int i = 0;i<angles_vec[j].size();i++)
             {
-            outfp << angles_vec[j][i] << vcl_endl;
+            outfp << angles_vec[j][i] << std::endl;
             }
         }
 
-    vcl_vector<double> mean_scales,mean_angles;
+    std::vector<double> mean_scales,mean_angles;
 
     find_mean_scales_angles(scales_vec,angles_vec,mean_scales,mean_angles);
 
-     outfp << "mean scale values: " << vcl_endl;
+     outfp << "mean scale values: " << std::endl;
 
     for (unsigned int i = 0;i<mean_scales.size();i++)
         {
-        outfp << mean_scales[i] << vcl_endl;
+        outfp << mean_scales[i] << std::endl;
         }
 
-    outfp << "mean angle values: " << vcl_endl;
+    outfp << "mean angle values: " << std::endl;
 
     for (unsigned int i = 0;i<mean_angles.size();i++)
         {
-        outfp << mean_angles[i] << vcl_endl;
+        outfp << mean_angles[i] << std::endl;
         }
 
-    vcl_vector<vsol_point_2d_sptr> mean_contour = transform_spoke_shape(given_shapes[0],mean_scales,mean_angles);
+    std::vector<vsol_point_2d_sptr> mean_contour = transform_spoke_shape(given_shapes[0],mean_scales,mean_angles);
     return mean_contour;
     }
 
@@ -666,7 +666,7 @@ bool Lie_spoke_mean_process::execute()
     clear_output();
 
     bpro1_filepath input_file,output_file,new_shapes,bpro1_mean_file,bpro1_refined_mean_file;
-    vcl_string file_path,inp1,out,new_shapes_path,starting_mean_file,refined_mean_file; 
+    std::string file_path,inp1,out,new_shapes_path,starting_mean_file,refined_mean_file; 
     bool use_eno;
 
     int num_samples_c1,num_samples_c2;
@@ -692,22 +692,22 @@ bool Lie_spoke_mean_process::execute()
     starting_mean_file = bpro1_mean_file.path;
     refined_mean_file = bpro1_refined_mean_file.path;
 
-    vcl_ifstream infp(file_path.c_str());
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > curve_points;
+    std::ifstream infp(file_path.c_str());
+    std::vector<std::vector<vsol_point_2d_sptr> > curve_points;
 
     //get all the contour files residing in the input directory
-    vcl_vector<vcl_string> file_names = get_all_files(file_path);
+    std::vector<std::string> file_names = get_all_files(file_path);
 
     for (unsigned int file_num = 0;file_num <file_names.size();file_num++)
         {
-        /*vcl_string inp1;
+        /*std::string inp1;
         infp >> inp1;*/
-        vcl_string inp1 = file_names[file_num];
+        std::string inp1 = file_names[file_num];
 
         if(inp1.size() == 0)
             break;
 
-        vcl_vector<vsol_point_2d_sptr> points1;
+        std::vector<vsol_point_2d_sptr> points1;
         loadCON(inp1, points1);
         
         // points1.push_back(new vsol_point_2d(points1[0]->x(), points1[0]->y()));
@@ -718,7 +718,7 @@ bool Lie_spoke_mean_process::execute()
        
         double s;
 
-         vcl_vector<vsol_point_2d_sptr> curve1_samples,spoke_config;
+         std::vector<vsol_point_2d_sptr> curve1_samples,spoke_config;
 
 
          if (use_eno)
@@ -743,7 +743,7 @@ bool Lie_spoke_mean_process::execute()
         
         /*spoke_config = generate_spoke_configuration(curve1_samples);
         inp1.erase(inp1.size()-4,inp1.size());
-        vcl_string ext = "_spoke.con";
+        std::string ext = "_spoke.con";
         inp1.append(ext);
         writeCON(inp1,spoke_config);*/
 
@@ -752,11 +752,11 @@ bool Lie_spoke_mean_process::execute()
         }
 
     double min_cost;
-    vcl_vector<vsol_point_2d_sptr> mean = find_mean_shape(curve_points,starting_mean_file);
-    vcl_vector<vsol_point_2d_sptr> mean_spokes = generate_spoke_configuration(mean);
+    std::vector<vsol_point_2d_sptr> mean = find_mean_shape(curve_points,starting_mean_file);
+    std::vector<vsol_point_2d_sptr> mean_spokes = generate_spoke_configuration(mean);
     writeCON(out,mean);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > new_contour;
+    std::vector< vsol_spatial_object_2d_sptr > new_contour;
     vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (mean);
     vsol_polyline_2d_sptr polyline_1 = new vsol_polyline_2d (mean_spokes);
     new_contour.push_back(newpolyline->cast_to_spatial_object());

@@ -5,7 +5,7 @@
 //:
 
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -18,7 +18,7 @@ public:
   dbdet_temporal_map_displayer(){}
 
   //: Return type string "sel"
-  virtual vcl_string type() const { return "temporalmap"; }
+  virtual std::string type() const { return "temporalmap"; }
 
   //: Create a tableau if the storage object is of type "temporalmap"
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

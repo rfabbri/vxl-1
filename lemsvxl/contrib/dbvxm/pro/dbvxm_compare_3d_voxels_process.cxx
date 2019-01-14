@@ -74,7 +74,7 @@ bool dbvxm_compare_3d_voxels_process::execute()
   bsta_histogram<double> hist(0.0, 1.0, 10, 0.0);
   bvxm_voxel_grid<ocp_datatype>::const_iterator m_ocp_slab_it = multi_ocp_grid->begin();
 
-  int factor=vcl_pow((float)2,(float)input_scale);
+  int factor=std::pow((float)2,(float)input_scale);
 
   for (unsigned k_idx = 0; k_idx < (unsigned)grid_size.z(); ++k_idx, ++m_ocp_slab_it) {
       bvxm_voxel_slab<float> m_slab = *m_ocp_slab_it;
@@ -83,14 +83,14 @@ bool dbvxm_compare_3d_voxels_process::execute()
 
       for (unsigned i=0; i<grid_size.x(); i++) {
           for (unsigned j=0; j<grid_size.y(); j++) {
-              hist.upcount(vcl_fabs(m_slab(i,j)-l_slab(i*factor,j*factor)), 1);
+              hist.upcount(std::fabs(m_slab(i,j)-l_slab(i*factor,j*factor)), 1);
               
-              //vcl_cout<<m_slab(i,j)<<" "<<l_slab(i*factor,j*factor)<< ":";
+              //std::cout<<m_slab(i,j)<<" "<<l_slab(i*factor,j*factor)<< ":";
           }
       }
   }
 
-  hist.print(vcl_cout);
+  hist.print(std::cout);
 
   return true;
 }

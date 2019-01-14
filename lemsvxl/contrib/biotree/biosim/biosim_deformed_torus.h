@@ -9,7 +9,7 @@
 
 #include <vbl/vbl_array_3d.h>
 #include <vil3d/vil3d_image_view.h>
-#include <vcl_vector.h>
+#include <vector>
 
 class biosim_deformed_torus
 

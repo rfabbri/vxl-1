@@ -14,9 +14,9 @@
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string> scene_file("-scene_file", "scene filename", "");
+  vul_arg<std::string> scene_file("-scene_file", "scene filename", "");
   vul_arg<int> scene_id("-scene_id", "scene id", 0);
-  vul_arg<vcl_string> bof_dir("-bof_dir", "Bag Of Features xml path", "");
+  vul_arg<std::string> bof_dir("-bof_dir", "Bag Of Features xml path", "");
   vul_arg<float> tf_min("-tf_min", "minimum value of opacity function", 0.0);
   vul_arg<float> tf_max("-tf_max", "maximum value of opacity function", 1.0);
   vul_arg<unsigned> resolution_level("-resolution_level", "resolution level", 0);
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     scene_ptr = scene;
     
     
-    vcl_vector<vgl_box_3d<double> > bboxes;
+    std::vector<vgl_box_3d<double> > bboxes;
     bof_scene_categories category_info(bof_dir());
     category_info.load_objects(scene_id(), bboxes);
     

@@ -1,12 +1,12 @@
 //this is /contrib/bm/dsm/tests/dsm_test_node_binary_io.cxx
 #include<testlib/testlib_test.h>
 #include"../dsm_node.h"
-#include<vcl_string.h>
+#include<string>
 
 template<int T>
 void test_node_binary_io()
 {
-    vcl_string filename("test_dsm_node_binary_io.bin");
+    std::string filename("test_dsm_node_binary_io.bin");
     const unsigned id = 26;
     vnl_vector_fixed<double,T> mean;
     vnl_matrix_fixed<double,T,T> covar;
@@ -28,7 +28,7 @@ void test_node_binary_io()
         mean = node_ptr->mean();
         covar = node_ptr->covariance();
 
-        vsl_b_ofstream os(filename.c_str(), vcl_ios::out|vcl_ios::binary);
+        vsl_b_ofstream os(filename.c_str(), std::ios::out|std::ios::binary);
         node_sptr->b_write(os);
         //vsl_b_write(os,node_sptr);
         os.close();
@@ -36,12 +36,12 @@ void test_node_binary_io()
 
     dsm_node_base_sptr node_sptr2 = new dsm_node<T>(unsigned(0));
     dsm_node<T>* node_ptr2 = static_cast<dsm_node<T>*>(node_sptr2.as_pointer());
-    vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+    vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
     node_sptr2->b_read(is);
     is.close();
 
-    vcl_cout << vcl_endl << "Value of id = " << id << vcl_endl;
-    vcl_cout << vcl_endl << "Value of node_sptr2->id() = " << node_sptr2->id() << vcl_endl;
+    std::cout << std::endl << "Value of id = " << id << std::endl;
+    std::cout << std::endl << "Value of node_sptr2->id() = " << node_sptr2->id() << std::endl;
     TEST_NEAR("TEST WRITTEN ID IS THE SAME AS READ", id, node_sptr2->id(),1);
 
     for(unsigned i = 0; i < T; ++i)

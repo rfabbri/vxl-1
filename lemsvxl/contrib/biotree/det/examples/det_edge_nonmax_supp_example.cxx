@@ -4,9 +4,9 @@
 // \author  Can Aras (can@lems.brown.edu)
 // \date    2006-01-26
 // 
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cassert>
+#include <cstdio>
 
 #include <xmvg/xmvg_composite_filter_descriptor.h>
 #include <det/det_cylinder_map.h>
@@ -32,7 +32,7 @@ const double CYL_LENGTH = 0.1;
 int main(int argc, char *argv[])
 {
   if(argc < 6){
-    vcl_cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin out_file\n";
+    std::cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin out_file\n";
     return 1;
   }
 
@@ -62,38 +62,38 @@ int main(int argc, char *argv[])
   double intensity;
 
   // create the parser and read the responses
-  vcl_string fbase = argv[1];
+  std::string fbase = argv[1];
   // read x edge responses
-  vcl_string fname = fbase + "_x_res.xml";
+  std::string fname = fbase + "_x_res.xml";
   proc_io_filter_xml_parser parser_x;
   if (!parse(fname, parser_x)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
+  std::vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
   // read y edge responses
   fname = fbase + "_y_res.xml";
   proc_io_filter_xml_parser parser_y;
   if (!parse(fname, parser_y)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
+  std::vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
   // read z edge responses
   fname = fbase + "_z_res.xml";
   proc_io_filter_xml_parser parser_z;
   if (!parse(fname, parser_z)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
+  std::vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
 
   int dimx = parser_x.dim_x();
   int dimy = parser_x.dim_y();
   int dimz = parser_x.dim_z();
-  vcl_cout << "dimx: " << dimx << vcl_endl;
-  vcl_cout << "dimy: " << dimy << vcl_endl;
-  vcl_cout << "dimz: " << dimz << vcl_endl;
+  std::cout << "dimx: " << dimx << std::endl;
+  std::cout << "dimy: " << dimy << std::endl;
+  std::cout << "dimz: " << dimz << std::endl;
 
   det_edge_map cm(dimx, dimy, dimz, responses_x, responses_y, responses_z, 1.0);
   cm = cm.nonmaxium_suppression_for_edge_detection();
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
   }
 
   // for visualization below this point
-  vcl_vector<double> field;
+  std::vector<double> field;
   for(int k=0;k<dimz;k++)
   {
     for(int j=0;j<dimy;j++)
@@ -146,8 +146,8 @@ int main(int argc, char *argv[])
   }
 
   // create cylinder and write to binary stream
-  vcl_vector<vsol_cylinder_sptr> cylinders;
-  vcl_vector<double> strengths;
+  std::vector<vsol_cylinder_sptr> cylinders;
+  std::vector<double> strengths;
   vsl_b_ofstream stream(o_file);
 
   int index = 0;
@@ -160,8 +160,8 @@ int main(int argc, char *argv[])
         double x, y, z;
         if (cm[i][j][k].location_ != vgl_point_3d<double> (0.,0.,0.) && cm[i][j][k].strength_ > (max_intensity/5))
         {
-          vcl_cout << cm[i][j][k].location_ << vcl_endl;
-          vcl_cout << cm[i][j][k].strength_ << vcl_endl;
+          std::cout << cm[i][j][k].location_ << std::endl;
+          std::cout << cm[i][j][k].strength_ << std::endl;
 
           x = i + cm[i][j][k].location_.x();
           y = j + cm[i][j][k].location_.y();

@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   edge_corr_displayer(){}
 
   //: Return type string "edge_map_corr"
-  virtual vcl_string type() const { return "edge_map_corr"; }
+  virtual std::string type() const { return "edge_map_corr"; }
 
   //: Create a tableau if the storage object is of type "edge_map_corr"
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

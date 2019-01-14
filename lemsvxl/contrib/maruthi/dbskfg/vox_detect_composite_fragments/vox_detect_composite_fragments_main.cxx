@@ -23,7 +23,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 int main(int argc, char *argv[]) 
 {
@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
     // interface
     if (!params->print_params_xml(params->print_params_file()))
     {
-        vcl_cerr << "problems in writing params file to: " 
-                 << params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " 
+                 << params->print_params_file() << std::endl;
     }
 
     // exit if there is nothing else to do
@@ -64,13 +64,13 @@ int main(int argc, char *argv[])
     //Determine which input object we are going to use
     //Either from the input_object_dir or the associated file
     //The associated file always takes precendence
-    vcl_string match_file;
+    std::string match_file;
 
     // Use associated file
     if ( vul_file::exists(params->input_assoc_dir_()))
     {
         // associated filename
-        vcl_string assoc_filename;
+        std::string assoc_filename;
 
         // Iterate over all files in directory
         vul_file_iterator fn(params->input_assoc_dir_()+"/*");
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     {
         // Use the database entries
         // Create a vul file iterator to find .bin file
-        vcl_string glob=params->query_object_dir_()+"/"+"*"+
+        std::string glob=params->query_object_dir_()+"/"+"*"+
             params->query_object_name_()+
             params->input_cgraph_match_file_extension_();
         vul_file_iterator fn(glob);
@@ -101,14 +101,14 @@ int main(int argc, char *argv[])
     bool match_status = vul_file::exists(match_file);
     if (!match_status ) 
     {
-        vcl_cerr << "Cannot find match (.xml) file: " << 
-            match_file << vcl_endl;
+        std::cerr << "Cannot find match (.xml) file: " << 
+            match_file << std::endl;
 
         return 1;
     }
 
     // Lets create directory of where output detection results will go
-    vcl_string output_file;
+    std::string output_file;
     if (params->save_to_object_folder_())
     { 
         output_file = params->output_cgraph_fragment_detect_folder_() + "/";
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     output_file += params->query_object_name_() + "_detect_results.xml";
 
     //******************** Detecting Fragments ****************************
-    vcl_cout<<"***********  Detecting Cgraph Fragments  ***********"<<vcl_endl;
+    std::cout<<"***********  Detecting Cgraph Fragments  ***********"<<std::endl;
     
     // Set up process
     dbskfg_detect_fragments_process detect_pro;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     double long  threshold_comp=    
         ((params->max_threshold_() - params->min_threshold_())/
          params->threshold_inc_())+1.0f;
-    vcl_stringstream conv_stream;
+    std::stringstream conv_stream;
     conv_stream<<threshold_comp;
 
     unsigned int num_thresholds;
@@ -154,10 +154,10 @@ int main(int argc, char *argv[])
     
     // create storage for all results
     // create a vector of vector of results
-    vcl_vector< vcl_vector<bpro1_storage_sptr> > detect_results;
+    std::vector< std::vector<bpro1_storage_sptr> > detect_results;
 
     // Store off thresholds
-    vcl_vector<vcl_string> threshold_vec;
+    std::vector<std::string> threshold_vec;
 
     unsigned int thresh_index(0);
     for ( ; thresh_index < num_thresholds ; ++thresh_index )
@@ -184,12 +184,12 @@ int main(int argc, char *argv[])
   
         if ( !detect_status )
         {
-            vcl_cerr<<" Error in cgraph fragment detection!"<<vcl_endl;
+            std::cerr<<" Error in cgraph fragment detection!"<<std::endl;
 
         }
         
         // Push back a string
-        vcl_stringstream str_stream;
+        std::stringstream str_stream;
         str_stream<<threshold;
         threshold_vec.push_back(str_stream.str());
 
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
     }
  
     //******************** Write Detection Results ****************************
-    vcl_cout<<"************  Write Detection Results  *************"<<vcl_endl;
+    std::cout<<"************  Write Detection Results  *************"<<std::endl;
    
     // Xml Tree: detect_results->query->threshold->bbox
 
@@ -218,10 +218,10 @@ int main(int argc, char *argv[])
     query_elm->append_text("\n      ");
 
     // Set up coordinates
-    vcl_string xmincoord("0");
-    vcl_string ymincoord("0");
-    vcl_string xmaxcoord("0");
-    vcl_string ymaxcoord("0");
+    std::string xmincoord("0");
+    std::string ymincoord("0");
+    std::string xmaxcoord("0");
+    std::string ymaxcoord("0");
     
     // Loop over vector of bounding boxes
     unsigned int i(0);
@@ -252,25 +252,25 @@ int main(int argc, char *argv[])
 
             // parse through all the vsol classes and save only polygons
             // again we know the result will only be polygon 2d
-            vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+            std::vector< vsol_spatial_object_2d_sptr > vsol_list = 
                 bbox_vsol->all_data();
 
             // Update this later to deal with mulitple detections
             // For now just pick the first element in the vector
             // Now grab each coordinate and convert to string stream
-            vcl_stringstream xminstream;
+            std::stringstream xminstream;
             xminstream<<vsol_list[0]->get_min_x();
             xmincoord=xminstream.str();
 
-            vcl_stringstream yminstream;
+            std::stringstream yminstream;
             yminstream<<vsol_list[0]->get_min_y();
             ymincoord=yminstream.str();
 
-            vcl_stringstream xmaxstream;
+            std::stringstream xmaxstream;
             xmaxstream<<vsol_list[0]->get_max_x();
             xmaxcoord=xmaxstream.str();
 
-            vcl_stringstream ymaxstream;
+            std::stringstream ymaxstream;
             ymaxstream<<vsol_list[0]->get_max_y();
             ymaxcoord=ymaxstream.str();
         }
@@ -312,8 +312,8 @@ int main(int argc, char *argv[])
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
 
     return 0;

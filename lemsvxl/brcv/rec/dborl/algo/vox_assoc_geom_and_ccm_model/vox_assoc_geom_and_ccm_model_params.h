@@ -21,7 +21,7 @@ class vox_assoc_geom_and_ccm_model_params : public dborl_algo_params
 public:
 
     //: Constructor
-    vox_assoc_geom_and_ccm_model_params(vcl_string algo_name);
+    vox_assoc_geom_and_ccm_model_params(std::string algo_name);
 
     // MEMBER VARIABLES
 
@@ -29,10 +29,10 @@ public:
     // if written to this folder as opposed to object folder then the shock graph
     // gets associated to the input object.
     // if nothing is written here, nothing gets associated
-    dborl_parameter<vcl_string> output_ccm_dir_;
-    dborl_parameter<vcl_string> output_geom_dir_;
-    dborl_parameter<vcl_string> input_ccm_;
-    dborl_parameter<vcl_string> input_geom_;
+    dborl_parameter<std::string> output_ccm_dir_;
+    dborl_parameter<std::string> output_geom_dir_;
+    dborl_parameter<std::string> input_ccm_;
+    dborl_parameter<std::string> input_geom_;
 
 };
 

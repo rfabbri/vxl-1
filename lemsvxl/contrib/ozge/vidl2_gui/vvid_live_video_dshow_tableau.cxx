@@ -1,7 +1,7 @@
 // This is brl/vvid/vvid_live_video_dshow_tableau.cxx
 #include "vvid_live_video_dshow_tableau.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdlib.h> // for vcl_exit()
+#include <iostream>
+#include <cstdlib> // for std::exit()
 #include <vgui/vgui.h>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_style.h>
@@ -41,7 +41,7 @@ vvid_live_video_dshow_tableau::~vvid_live_video_dshow_tableau()
     delete istream_;
 }
 
-vcl_string vvid_live_video_dshow_tableau::type_name() const
+std::string vvid_live_video_dshow_tableau::type_name() const
 {
   return "xcv_image_tableau";//this name is hard coded in the vgui_viewer_tab
                              //bad arrangement but shouldn't cause problems
@@ -58,7 +58,7 @@ bool vvid_live_video_dshow_tableau::handle(vgui_event const &e)
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
     //vgl_homg_point_2d<double> pt(double(ix), double(iy));
     img_pts_.push_back(vgl_homg_point_2d<double> (double(ix), double(iy)));
-    vcl_cout << "pushed: " << int(vcl_floor(ix+0.5)) << " " << int(vcl_floor(iy+0.5)) << vcl_endl;
+    std::cout << "pushed: " << int(std::floor(ix+0.5)) << " " << int(std::floor(iy+0.5)) << std::endl;
     vvid_live_video_dshow_manager::instance()->post_overlay_redraw();
   }
 
@@ -82,7 +82,7 @@ void vvid_live_video_dshow_tableau::set_camera_params(const vidl_dshow_istream_p
 {
   if (!cam_.get_camera_present())
     {
-      vcl_cout << "In vvid_live_video_dshow_tableau::set_camera_params() - warning, "
+      std::cout << "In vvid_live_video_dshow_tableau::set_camera_params() - warning, "
                << "no camera present, but param values were reassigned\n";
       return;
     }
@@ -101,13 +101,13 @@ bool vvid_live_video_dshow_tableau::attach_live_video()
 {
   if (!cam_.get_camera_present())
     {
-      vcl_cout << "In vvid_live_video_dshow_tableau::attach_live_video() - "
+      std::cout << "In vvid_live_video_dshow_tableau::attach_live_video() - "
                << "no camera present\n";
       return false;
     }
   cam_.m_cameraInitialized = false;
   cam_.init(node_);
-  vcl_cout << "The Camera Attributes: \n" << cam_ << " \n";
+  std::cout << "The Camera Attributes: \n" << cam_ << " \n";
   return true;
 }*/
 
@@ -115,14 +115,14 @@ bool vvid_live_video_dshow_tableau::start_live_video()
 {
   if (!istream_)
     {
-      vcl_cout << "In vvid_live_video_dshow_tableau::startlive_video() - "
+      std::cout << "In vvid_live_video_dshow_tableau::startlive_video() - "
                << "no camera present\n";
       live_ = false;
       return false;
     }
     if(!istream_->is_open())
     {
-      vcl_cout << "In vvid_live_video_dshow_tableau::startlive_video() - "
+      std::cout << "In vvid_live_video_dshow_tableau::startlive_video() - "
                << "failed to start camera\n";
       live_ = false;
       return false;
@@ -137,9 +137,9 @@ bool vvid_live_video_dshow_tableau::start_live_video()
 //    }
 //  else
 //    {
-      //vcl_cout << "get image\n";
+      //std::cout << "get image\n";
       get_camera_image(rgb_frame_, mono_frame_, pixel_sample_interval_);
-      //vcl_cout << "got image\n";
+      //std::cout << "got image\n";
       this->set_image(mono_frame_);
  //   }
   return true;
@@ -162,7 +162,7 @@ void vvid_live_video_dshow_tableau::stop_live_video()
 {
   if (!istream_)
     {
-      vcl_cout << "In vvid_live_video_dshow_tableau::stop_live_video() - "
+      std::cout << "In vvid_live_video_dshow_tableau::stop_live_video() - "
                << "no camera present\n";
       return;
     }
@@ -175,7 +175,7 @@ get_camera_rgb_image(vil_image_view<vxl_byte>& im,
 {
   vil_image_view<vxl_byte> img;
   
-  vcl_cout << "frame number: " << istream_->frame_number() << vcl_endl;
+  std::cout << "frame number: " << istream_->frame_number() << std::endl;
   vidl_frame_sptr frame = istream_->read_frame();
   
   if(frame && vidl_convert_to_view(*frame,img))

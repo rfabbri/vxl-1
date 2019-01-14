@@ -3,7 +3,7 @@
 
 #include "baml_appearance.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 //--------------------------------------------

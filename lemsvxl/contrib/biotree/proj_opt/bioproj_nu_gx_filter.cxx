@@ -1,14 +1,14 @@
 #include "bioproj_nu_gx_filter.h"
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
 #include "bioproj_filter_integrant.h"
 
 bioproj_nu_gx_filter::bioproj_nu_gx_filter(double sigma, double theta, unsigned extent, double increment)
 {
-  double half_extent = int(vcl_ceil(extent * sigma));
-  half_kernel_size_ = int(vcl_ceil(extent * sigma) / increment);
+  double half_extent = int(std::ceil(extent * sigma));
+  half_kernel_size_ = int(std::ceil(extent * sigma) / increment);
   full_kernel_size_ = 2*half_kernel_size_ + 1;
   filter_ = new double[full_kernel_size_];
   int index = 0;
@@ -21,7 +21,7 @@ bioproj_nu_gx_filter::bioproj_nu_gx_filter(double sigma, double theta, unsigned 
       vnl_adaptsimpson_integral simpson_integral;
       integral_val = simpson_integral.integral(&f, 0.0, double(xi), 1e-06);
     }
-    double term1 = -vcl_cos(theta) / (vnl_math::pi*(sigma*sigma*sigma*sigma));
+    double term1 = -std::cos(theta) / (vnl_math::pi*(sigma*sigma*sigma*sigma));
     double term2 = (1-(xi*xi)/(sigma*sigma)) * integral_val;
     filter_[index++] = term1 * (xi + term2);
   }

@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -27,7 +27,7 @@ Lie_contour_principal_geodesic_shapes::Lie_contour_principal_geodesic_shapes()
         !parameters()->add( "Geodesics file <filename...>" , "-geodesics_file", bpro1_filepath("","*"))||
         !parameters()->add( "Geodesics storage <filename...>" , "-storage_geodesic_shapes", bpro1_filepath("","*")))
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_contour_principal_geodesic_shapes::Lie_contour_principal_geodesic_shapes()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_contour_principal_geodesic_shapes::Lie_contour_principal_geodesic_shapes()" << std::endl;
         }
 
     }
@@ -52,8 +52,8 @@ bool Lie_contour_principal_geodesic_shapes::execute()
     clear_output();
 
     bpro1_filepath input_mean_file,geodesics_file,bpro1_storage_geodesics;
-    vcl_string mean_path,geodesics_info,storage_path;
-    //vcl_string storage_path = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\geodesic_shapes\\fish_princp_geodesics";
+    std::string mean_path,geodesics_info,storage_path;
+    //std::string storage_path = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\geodesic_shapes\\fish_princp_geodesics";
 
     int num_samples_c1,num_samples_c2;
 
@@ -66,22 +66,22 @@ bool Lie_contour_principal_geodesic_shapes::execute()
     storage_path = bpro1_storage_geodesics.path;
 
     // construct the first curve
-    vcl_vector<vsol_point_2d_sptr> mean_points;
+    std::vector<vsol_point_2d_sptr> mean_points;
     loadCON(mean_path,mean_points);
     double t;
     unsigned int count = 0;
 
-     vcl_vector<double> angles,scales;
+     std::vector<double> angles,scales;
     read_geodesic_info(geodesics_info,angles,scales);
    
     for (t = -100;t<=100;t += 1)
         {
-        vcl_vector<double> sample_angles,sample_scales;
+        std::vector<double> sample_angles,sample_scales;
 
    generate_values_along_geodesic(angles,scales,sample_angles,sample_scales,t);
 
-   vcl_vector<vsol_point_2d_sptr> new_shape = transform_shape(mean_points,sample_angles,sample_scales);
-   vcl_vector<vsol_point_2d_sptr> closed_shape = closed_articulated_structure(new_shape);
+   std::vector<vsol_point_2d_sptr> new_shape = transform_shape(mean_points,sample_angles,sample_scales);
+   std::vector<vsol_point_2d_sptr> closed_shape = closed_articulated_structure(new_shape);
    save_shape_as_image(closed_shape,storage_path,count);
    count++;
         }

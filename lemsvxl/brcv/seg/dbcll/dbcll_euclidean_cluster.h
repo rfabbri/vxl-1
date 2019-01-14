@@ -14,7 +14,7 @@
 
 
 #include "dbcll_cluster.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_vector_fixed.h>
 
 #include "dbcll_cluster_sptr.h"
@@ -36,7 +36,7 @@ class dbcll_euclidean_cluster : public dbcll_cluster
 
   //: Constructor
   dbcll_euclidean_cluster(const vnl_vector_fixed<double,dim>& m, 
-                          double v, const vcl_vector<unsigned>& idxs)
+                          double v, const std::vector<unsigned>& idxs)
     : dbcll_cluster(idxs), mean_(m), var_(v) {}
 
   //: Destructor
@@ -100,10 +100,10 @@ class dbcll_euclidean_cluster : public dbcll_cluster
 
 //: Generate a vector of single element Euclidean clusters from vnl points
 template <unsigned d>
-vcl_vector<dbcll_cluster_sptr> 
-dbcll_init_euclidean_clusters(const vcl_vector<vnl_vector_fixed<double,d> >& pts)
+std::vector<dbcll_cluster_sptr> 
+dbcll_init_euclidean_clusters(const std::vector<vnl_vector_fixed<double,d> >& pts)
 {
-  vcl_vector<dbcll_cluster_sptr> results;
+  std::vector<dbcll_cluster_sptr> results;
   for(unsigned i=0; i<pts.size(); ++i)
     results.push_back(new dbcll_euclidean_cluster<d>(pts[i],i));
   return results;

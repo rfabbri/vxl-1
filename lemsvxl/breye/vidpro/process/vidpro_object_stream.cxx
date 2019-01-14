@@ -1,9 +1,9 @@
 
 #include "vidpro_object_stream.h"
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <cassert>
+#include <utility>
+#include <iostream>
+#include <sstream>
 
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
@@ -27,8 +27,8 @@ name_format_()
 
 //: Constructor - opens a stream
 vidpro_object_stream::
-vidpro_object_stream(const vcl_string& directory,
-                      const vcl_string& name_format,
+vidpro_object_stream(const std::string& directory,
+                      const std::string& name_format,
                       const unsigned int init_index)
 {
   open(directory, name_format, init_index);
@@ -37,13 +37,13 @@ vidpro_object_stream(const vcl_string& directory,
 //: Open the stream
 bool
 vidpro_object_stream::
-open(const vcl_string& directory,
-     const vcl_string& name_format,
+open(const std::string& directory,
+     const std::string& name_format,
      const unsigned int init_index)
 {
   if (!vul_file::is_directory(directory)) {
     close();
-    vcl_cerr << __FILE__ ": Directory does not exist\n   "<<directory<<vcl_endl;
+    std::cerr << __FILE__ ": Directory does not exist\n   "<<directory<<std::endl;
     return false;
   }
 
@@ -73,7 +73,7 @@ vidpro_object_stream::read_frame(int frame)
 {
   bpro_storage_sptr obj_storage;
 
-  for ( vcl_map<int, vcl_string>::iterator mit =paths_.begin(); mit!= paths_.end(); mit++)
+  for ( std::map<int, std::string>::iterator mit =paths_.begin(); mit!= paths_.end(); mit++)
   {
     if (!(mit->first == frame))
       continue;
@@ -81,9 +81,9 @@ vidpro_object_stream::read_frame(int frame)
     vsl_b_ifstream in_stream(mit->second);
 
     if (!in_stream){
-      vcl_cerr<<"Failed to open " << mit->second << " for binary IO input." << vcl_endl;
+      std::cerr<<"Failed to open " << mit->second << " for binary IO input." << std::endl;
     }
-    vcl_cout << "Opened binary IO file " << mit->second << " successfully." << vcl_endl;
+    std::cout << "Opened binary IO file " << mit->second << " successfully." << std::endl;
 
     vsl_b_read(in_stream,obj_storage);
     in_stream.close();
@@ -96,7 +96,7 @@ vidpro_object_stream::read_frame(int frame)
 bool 
 vidpro_object_stream::write_frame(const bpro_storage_sptr& obj_storage, int frame)
 {
-  vcl_string file_name = next_file_name();
+  std::string file_name = next_file_name();
   ++index_;
 
   vsl_b_ofstream out_stream(file_name.c_str());
@@ -106,7 +106,7 @@ vidpro_object_stream::write_frame(const bpro_storage_sptr& obj_storage, int fram
   }
   //write the object
   vsl_b_write(out_stream, obj_storage);
-  paths_.insert(vcl_pair<int, vcl_string>(frame, file_name));
+  paths_.insert(std::pair<int, std::string>(frame, file_name));
   return true;
 }
 
@@ -132,7 +132,7 @@ vidpro_object_stream::seek_frame(unsigned int frame_number)
 
 
 //: Return the next file name to be written to
-vcl_string
+std::string
 vidpro_object_stream::
 next_file_name() const
 {

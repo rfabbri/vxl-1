@@ -42,7 +42,7 @@ dbsksp_xgraph_model(xgraph)
   // 3 for each degree-3 node
   {
     unsigned sum = 0;
-    for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
+    for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
       this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
     {
       dbsksp_xshock_node_sptr xv = iter->first;
@@ -80,7 +80,7 @@ get_xgraph_state(vnl_vector<double >& x)
   // copy parameter values to x
 
   // a) paremters at the nodes
-  for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
     this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
   {
     node_params& p = iter->second;
@@ -93,7 +93,7 @@ get_xgraph_state(vnl_vector<double >& x)
   }
 
   // b) parameters at the edges
-  for (vcl_map<dbsksp_xshock_edge_sptr, edge_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_edge_sptr, edge_params >::iterator iter = 
     this->map_xe_to_params_.begin(); iter != this->map_xe_to_params_.end(); ++iter)
   {
     edge_params& p = iter->second;
@@ -115,7 +115,7 @@ set_xgraph_state(const vnl_vector<double >& x)
   vnl_vector<double >::const_iterator ix = x.begin();
 
   // a) paremters at the nodes
-  for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
     this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
   {
     node_params& p = iter->second;
@@ -128,7 +128,7 @@ set_xgraph_state(const vnl_vector<double >& x)
   }
 
   // b) parameters at the edges
-  for (vcl_map<dbsksp_xshock_edge_sptr, edge_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_edge_sptr, edge_params >::iterator iter = 
     this->map_xe_to_params_.begin(); iter != this->map_xe_to_params_.end(); ++iter)
   {
     edge_params& p = iter->second;
@@ -147,11 +147,11 @@ set_xgraph_state(const vnl_vector<double >& x)
 // The parameters will be packed in 'x' using the order in 'active_nodes' followed
 // by 'active_edges'
 void dbsksp_xgraph_model_using_L_alpha_phi_radius::
-get_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-                     const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+get_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+                     const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
                      vnl_vector<double >& x)
 {
-  vcl_vector<double* > x_ptr;
+  std::vector<double* > x_ptr;
   this->get_intrinsic_params_ptr(active_nodes, active_edges, x_ptr);
 
   this->update_param_maps_from_xgraph();
@@ -167,17 +167,17 @@ get_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
 //: Get pointers for direct access to intrinsic parameters of a set of nodes and edges
   // The parameters will be packed using the order of 'active_nodes' followed by 'active_edges'
 void dbsksp_xgraph_model_using_L_alpha_phi_radius::
-get_intrinsic_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-    const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
-    vcl_vector<double* >& x_ptr)
+get_intrinsic_params_ptr(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+    const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
+    std::vector<double* >& x_ptr)
 {
   x_ptr.resize(this->get_num_intrinsic_params(active_nodes, active_edges));
 
   // copy parameter pointers to x_ptr
-  vcl_vector<double* >::iterator ix = x_ptr.begin();
+  std::vector<double* >::iterator ix = x_ptr.begin();
 
   // a) paremters at the nodes
-  for (vcl_vector<dbsksp_xshock_node_sptr >::const_iterator iter = active_nodes.begin();
+  for (std::vector<dbsksp_xshock_node_sptr >::const_iterator iter = active_nodes.begin();
     iter != active_nodes.end(); ++iter)
   {
     dbsksp_xshock_node_sptr xv = *iter;
@@ -196,7 +196,7 @@ get_intrinsic_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_node
   }
 
   // b) parameters at the edges
-  for (vcl_vector<dbsksp_xshock_edge_sptr >::const_iterator iter = active_edges.begin(); 
+  for (std::vector<dbsksp_xshock_edge_sptr >::const_iterator iter = active_edges.begin(); 
     iter != active_edges.end(); ++iter)
   {
     dbsksp_xshock_edge_sptr xe = *iter;
@@ -221,8 +221,8 @@ get_intrinsic_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_node
 //// The parameters will be retrieved from 'x' using the order in 'active_nodes' followed
 //// by 'active_edges'
 //void dbsksp_xgraph_model_using_L_alpha_phi_radius::
-//set_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-//                     const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges,
+//set_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+//                     const std::vector<dbsksp_xshock_edge_sptr >& active_edges,
 //                     vnl_vector<double >& x)
 //{
 //
@@ -235,8 +235,8 @@ get_intrinsic_params_ptr(const vcl_vector<dbsksp_xshock_node_sptr >& active_node
 //------------------------------------------------------------------------------
 //: Count number of free parameters corresponding to a list of nodes and edges
 unsigned dbsksp_xgraph_model_using_L_alpha_phi_radius::
-get_num_intrinsic_params(const vcl_vector<dbsksp_xshock_node_sptr >& active_nodes,
-                         const vcl_vector<dbsksp_xshock_edge_sptr >& active_edges)
+get_num_intrinsic_params(const std::vector<dbsksp_xshock_node_sptr >& active_nodes,
+                         const std::vector<dbsksp_xshock_edge_sptr >& active_edges)
 {
   // determine dimension of the cost function;
   unsigned sum = 0;
@@ -341,7 +341,7 @@ void dbsksp_xgraph_model_using_L_alpha_phi_radius::
 update_xgraph_from_param_maps()
 {
   // First compute the phi angles and radius at the nodes
-  for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
+  for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
     this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
   {
     dbsksp_xshock_node_sptr xv = iter->first;
@@ -372,7 +372,7 @@ update_xgraph_from_param_maps()
   }
 
   // Next, set position of the nodes and tangents of the shock edges
-  vcl_vector<dbsksp_xshock_node_sptr > stack;
+  std::vector<dbsksp_xshock_node_sptr > stack;
   stack.reserve(this->xgraph()->number_of_vertices());
   stack.push_back(this->root_node_);
 
@@ -483,7 +483,7 @@ dbsksp_xgraph_model(xgraph)
   // 6 for each degree-3 node
   {
     unsigned sum = 0;
-    for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
+    for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter =
       this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
     {
       dbsksp_xshock_node_sptr xv = iter->first;
@@ -518,7 +518,7 @@ get_xgraph_state(vnl_vector<double >& x)
   // copy parameter values to x
 
   // paremters at the nodes
-  for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
     this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
   {
     node_params& p = iter->second;
@@ -546,7 +546,7 @@ set_xgraph_state(const vnl_vector<double >& x)
   vnl_vector<double >::const_iterator ix = x.begin();
 
   // a) paremters at the nodes
-  for (vcl_map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
+  for (std::map<dbsksp_xshock_node_sptr, node_params >::iterator iter = 
     this->map_xv_to_params_.begin(); iter != this->map_xv_to_params_.end(); ++iter)
   {
     node_params& p = iter->second;

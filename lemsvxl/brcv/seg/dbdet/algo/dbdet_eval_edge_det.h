@@ -13,9 +13,9 @@
 //
 // \endverbatim
 
-#include <vcl_fstream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <fstream>
+#include <vector>
+#include <string>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -31,7 +31,7 @@ public:
 
   int T_match;      //tolerance for corresponding edgels
 
-  vcl_vector<double> thresh; //vector of threshold values
+  std::vector<double> thresh; //vector of threshold values
 
   //: constructor
   dbdet_eval_edge_det_params(int tol=2): edge_label(0), no_edge_label(5), dont_care_label(255), T_match(tol){}
@@ -48,28 +48,28 @@ public:
 class dbdet_eval_result
 {
 public:
-  vcl_vector<double> params; //vector of parameter values
-  vcl_vector<int> TP;        //vector of TP count at each param value
-  vcl_vector<int> FP;
-  vcl_vector<int> TN;
-  vcl_vector<int> FN;
+  std::vector<double> params; //vector of parameter values
+  std::vector<int> TP;        //vector of TP count at each param value
+  std::vector<int> FP;
+  std::vector<int> TN;
+  std::vector<int> FN;
 
   dbdet_eval_result(unsigned size=0): params(size), TP(size), FP(size), TN(size), FN(size) {}
   ~dbdet_eval_result(){}
 
-  bool save_ROC(vcl_string filename)
+  bool save_ROC(std::string filename)
   {
     //1)If file open fails, return.
-    vcl_ofstream outfp(filename.c_str(), vcl_ios::out);
+    std::ofstream outfp(filename.c_str(), std::ios::out);
 
     if (!outfp){
-      vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
+      std::cout << " Error opening file  " << filename.c_str() << std::endl;
       return false;
     }
 
     // output ROC table
     for (unsigned i=0; i<params.size(); i++)
-      outfp << TP[i] << " " << FP[i] << " " << TN[i] << " " << FN[i] << " " << params[i] << vcl_endl;
+      outfp << TP[i] << " " << FP[i] << " " << TN[i] << " " << FN[i] << " " << params[i] << std::endl;
 
     //close file
     outfp.close();

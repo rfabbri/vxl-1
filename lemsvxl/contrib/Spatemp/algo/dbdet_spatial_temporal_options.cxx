@@ -5,8 +5,8 @@ void
 dbdet_spatial_temporal_options::normalize_weights()
 {
     double tot_weight_=0;
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
-    vcl_list<dbdet_temporal_bundle>::iterator list_iter;
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator cv_iter;
+    std::list<dbdet_temporal_bundle>::iterator list_iter;
 
     for(cv_iter=st_options_.begin();cv_iter!=st_options_.end();cv_iter++)
     {
@@ -36,14 +36,14 @@ dbdet_spatial_temporal_options::normalize_weights()
 
 bool dbdet_spatial_temporal_options::compute_max_k()
 {
-    vcl_map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter=st_options_.begin();
+    std::map<dbdet_curvelet*, dbdet_temporal_options* >::iterator iter=st_options_.begin();
     max_k_=0.0;
     for(;iter!=st_options_.end();iter++)
     {
         if(dbdet_CC_curve_model_3d * ccmodel=dynamic_cast<dbdet_CC_curve_model_3d *> (iter->first->curve_model))
         {    
-            if(vcl_fabs(ccmodel->k)>max_k_)
-                max_k_=vcl_fabs(ccmodel->k);
+            if(std::fabs(ccmodel->k)>max_k_)
+                max_k_=std::fabs(ccmodel->k);
         }
     }
     return true;

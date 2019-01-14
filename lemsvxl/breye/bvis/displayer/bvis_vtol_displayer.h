@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis/bvis_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -26,7 +26,7 @@ public:
   bvis_vtol_displayer(){}
 
   //: Return type string "vtol"
-  virtual vcl_string type() const { return "vtol"; }
+  virtual std::string type() const { return "vtol"; }
 
   //: Create a tableau if the storage object is of type vtol
   virtual vgui_tableau_sptr make_tableau( bpro_storage_sptr ) const;

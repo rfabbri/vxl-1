@@ -5,8 +5,8 @@
 
 #include "bpro_process_manager.h"
 
-#include <vcl_cassert.h>
-#include <vcl_utility.h>
+#include <cassert>
+#include <utility>
 #include <vul/vul_arg.h>
 
 #include <bpro/bpro_storage.h>
@@ -14,7 +14,7 @@
 
 
 template <class T> T* bpro_process_manager< T >::instance_ = 0;
-template <class T> vcl_multimap< vcl_string , bpro_process_sptr > bpro_process_manager< T >::process_map;
+template <class T> std::multimap< std::string , bpro_process_sptr > bpro_process_manager< T >::process_map;
 
 //: Constructor
 template <class T>
@@ -53,9 +53,9 @@ bpro_process_manager<T>::~bpro_process_manager()
 //: Return a process with the given name
 template <class T>
 bpro_process_sptr
-bpro_process_manager<T>::get_process_by_name( const vcl_string& name ) const
+bpro_process_manager<T>::get_process_by_name( const std::string& name ) const
 {
-  vcl_multimap< vcl_string , bpro_process_sptr >::const_iterator it = process_map.find( name );
+  std::multimap< std::string , bpro_process_sptr >::const_iterator it = process_map.find( name );
   if( it == process_map.end() ) {
     return NULL ;
   }
@@ -85,11 +85,11 @@ bpro_process_manager<T>::clear_process_queue()
 }
 
 template <class T>
-vcl_vector <vcl_string>
+std::vector <std::string>
 bpro_process_manager<T>::get_process_queue_list() const
 {
-  vcl_vector <vcl_string> list;
-  vcl_vector< bpro_process_sptr >::const_iterator i = process_queue.begin();
+  std::vector <std::string> list;
+  std::vector< bpro_process_sptr >::const_iterator i = process_queue.begin();
   for (; i!= process_queue.end(); i++)
   {
     list.push_back( (*i)->name() );
@@ -103,7 +103,7 @@ void
 bpro_process_manager<T>::register_process( const bpro_process_sptr& sptr )
 {
 
-  process_map.insert( vcl_pair< vcl_string , bpro_process_sptr >( sptr->name() , sptr ) );
+  process_map.insert( std::pair< std::string , bpro_process_sptr >( sptr->name() , sptr ) );
 
 }
 

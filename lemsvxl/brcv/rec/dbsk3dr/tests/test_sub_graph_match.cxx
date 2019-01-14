@@ -10,12 +10,12 @@
 //
 
 #include <testlib/testlib_test.h>
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <fstream>
+#include <ctime>
+#include <cstdlib>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 
@@ -34,7 +34,7 @@
 #define NOISY_GRAPH_R_V    0.1
 #define NOISY_GRAPH_R_C   0.15
 
-dbsk3dr_ms_gradasn_graph* read_sg_file (const vcl_string& input_file);
+dbsk3dr_ms_gradasn_graph* read_sg_file (const std::string& input_file);
 dbsk3dr_ms_gradasn_graph* make_noisy_sub_graph (dbsk3dr_ms_gradasn_graph* inputSG, 
                                                 const float R, const bool keep_isolated_vertex,
                                                 const float nrv, const float nrc);
@@ -44,7 +44,7 @@ MAIN_ARGS (test_sub_graph_match)
 {
   testlib_test_start("test_sub_graph_match()");
   //Setup the execution directory from command line parameter.
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32
@@ -54,7 +54,7 @@ MAIN_ARGS (test_sub_graph_match)
       #endif
   }
   //Input file:
-  vcl_string input_file = dir_base;
+  std::string input_file = dir_base;
   if (argc >= 3)
     input_file += argv[2];
   else //Use default input_file.
@@ -62,7 +62,7 @@ MAIN_ARGS (test_sub_graph_match)
   //n_repeat
   int n_repeat = REPEAT_N;
   if (argc >= 4)
-    n_repeat = vcl_atoi (argv[3]);
+    n_repeat = std::atoi (argv[3]);
 
   dbsk3dr_match SM;  
   dbasn_params GAparams;
@@ -91,14 +91,14 @@ MAIN_ARGS (test_sub_graph_match)
     delete SG0, SG1;
     SM._free_mem ();
   }
-  vul_printf (vcl_cout, "\n===========================================\n");
-  vul_printf (vcl_cout, "Final test result: sub-graph matching success: %d (out of total %d).\n", n_test_success, n_repeat);
+  vul_printf (std::cout, "\n===========================================\n");
+  vul_printf (std::cout, "Final test result: sub-graph matching success: %d (out of total %d).\n", n_test_success, n_repeat);
   TEST("# of incorrect matches (should be 0) ", n_repeat-n_test_success, 0);
   
   return testlib_test_summary();
 }
 
-dbsk3dr_ms_gradasn_graph* read_sg_file (const vcl_string& input_file)
+dbsk3dr_ms_gradasn_graph* read_sg_file (const std::string& input_file)
 {
   dbsk3dr_ms_gradasn_graph* SG = new dbsk3dr_ms_gradasn_graph;
   SG->setup_from_sg (input_file.c_str());
@@ -157,9 +157,9 @@ bool test_sub_graph_match (dbsk3dr_match& SM, dbasn_params& GAparams)
     }
   }
 
-  vul_printf (vcl_cout, "-------------------------------------\n");
-  vul_printf (vcl_cout, "  %d incorrect matches (should be 0) out of %d.\n", incorrect, SM.M_row()-1);
-  vul_printf (vcl_cout, "-------------------------------------\n");
+  vul_printf (std::cout, "-------------------------------------\n");
+  vul_printf (std::cout, "  %d incorrect matches (should be 0) out of %d.\n", incorrect, SM.M_row()-1);
+  vul_printf (std::cout, "-------------------------------------\n");
 
   return incorrect == 0;
 }

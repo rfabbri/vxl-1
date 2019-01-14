@@ -23,7 +23,7 @@ dbsks_train_xshock_geom_model_process()
     !parameters()->add("Output file:" , "-output-file", bpro1_filepath(""))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -47,7 +47,7 @@ clone() const
 
 //------------------------------------------------------------------------------
 //: Returns the name of this process
-vcl_string dbsks_train_xshock_geom_model_process::
+std::string dbsks_train_xshock_geom_model_process::
 name()
 { 
   return "Train xshock geometry model"; 
@@ -56,10 +56,10 @@ name()
 
 //------------------------------------------------------------------------------
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_train_xshock_geom_model_process::
+std::vector< std::string > dbsks_train_xshock_geom_model_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -68,10 +68,10 @@ get_input_type()
 
 //------------------------------------------------------------------------------
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_train_xshock_geom_model_process::
+std::vector< std::string > dbsks_train_xshock_geom_model_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }

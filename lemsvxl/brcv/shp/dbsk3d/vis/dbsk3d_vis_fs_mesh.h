@@ -22,20 +22,20 @@ SoSeparator* draw_fs_mesh (dbsk3d_fs_mesh* fs_mesh,
                    const float cube_size, const float transp = 0.0f,
                    const bool user_defined_class = true);
 
-SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches, 
+SoSeparator* draw_fs_mesh_patches (std::map<int, dbmsh3d_face*>& patches, 
                                    const bool draw_valid,
                                    const bool draw_invalid, const bool draw_unbounded,
                                    const bool draw_unvisited = true,
                                    const bool user_defined_class = true);
 
-SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links, 
+SoSeparator* draw_fs_mesh_links (std::map<int, dbmsh3d_edge*>& links, 
                                  const float th1, const float th2,
                                  const bool draw_invalid, const bool draw_unbounded,
                                  const int draw_option,
                                  const bool draw_unvisited = true,
                                  const bool user_defined_class = true);
 
-SoSeparator* draw_fs_mesh_nodes (vcl_map<int, dbmsh3d_vertex*>& nodes, 
+SoSeparator* draw_fs_mesh_nodes (std::map<int, dbmsh3d_vertex*>& nodes, 
                                  const bool draw_invalid, 
                                  const SbColor color, const float size,
                                  const bool user_defined_class = true);

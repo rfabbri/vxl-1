@@ -6,8 +6,8 @@
 // 
 #include <testlib/testlib_test.h>
 #include <proj/bioproj_nu_g_filter.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <fstream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 #include <proj/error_functions.h>
 

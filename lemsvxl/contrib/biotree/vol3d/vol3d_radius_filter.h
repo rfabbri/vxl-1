@@ -11,8 +11,8 @@
 //   Pradeep aug 28, 2006    added support for vil3d_image_view
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_valarray.h>
+#include <vector>
+#include <valarray>
 #include <vbl/vbl_array_3d.h>
 #include <vil3d/vil3d_image_view.h>
 
@@ -26,17 +26,17 @@ class vol3d_radius_filter
     ~vol3d_radius_filter();
 
     // return densities on each shell at point (i,j,k)
-    vcl_valarray<double> densities(vbl_array_3d<double> const & vol, 
+    std::valarray<double> densities(vbl_array_3d<double> const & vol, 
         int i, int j, int k);
 
     // densities on each shell with radus specified in rprobes
-    vcl_valarray<double> densities(vbl_array_3d<double> const & vol,
-        vcl_valarray<double> const &rprobes, 
+    std::valarray<double> densities(vbl_array_3d<double> const & vol,
+        std::valarray<double> const &rprobes, 
         int i, int j, int k);
 
     // calculating densities for a vil3d_image_view
-    vcl_valarray<double> densities(vil3d_image_view<vxl_uint_16> const & vol_view,
-        vcl_valarray<double> const &rprobes,
+    std::valarray<double> densities(vil3d_image_view<vxl_uint_16> const & vol_view,
+        std::valarray<double> const &rprobes,
         int i,int j,int k);
 
     //: computer density inside the a sphere of radius r
@@ -56,8 +56,8 @@ class vol3d_radius_filter
     
     vbl_array_3d<double> shells_;
    
-    typedef vcl_vector<quadret > voxels_t; 
-    vcl_vector< voxels_t* > lookup_;
+    typedef std::vector<quadret > voxels_t; 
+    std::vector< voxels_t* > lookup_;
 
     //: diameter of the sphere size
     int dim_;

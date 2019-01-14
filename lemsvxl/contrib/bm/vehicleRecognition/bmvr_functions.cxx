@@ -1,10 +1,10 @@
 #include"bmvr_functions.h"
 
 
-void bmvr_functions::checkBinary(vcl_ostream &os, vil_image_view<vxl_byte>& img)
+void bmvr_functions::checkBinary(std::ostream &os, vil_image_view<vxl_byte>& img)
 {
     bool check = true;
-    os << "Checking if vxl_byte Image is Binary..." << vcl_endl;
+    os << "Checking if vxl_byte Image is Binary..." << std::endl;
     vil_image_view<vxl_byte>::iterator vit = img.begin();
     vil_image_view<vxl_byte>::iterator endIt = img.end();
     for( ; vit!=endIt; ++vit)
@@ -15,9 +15,9 @@ void bmvr_functions::checkBinary(vcl_ostream &os, vil_image_view<vxl_byte>& img)
             check = false;
     }
     if(check == false)
-        os << "Image is not Binary!" << vcl_endl;
+        os << "Image is not Binary!" << std::endl;
     else
-        os << "It is Binary!" << vcl_endl;
+        os << "It is Binary!" << std::endl;
 
     
 }
@@ -50,16 +50,16 @@ void bmvr_functions::convertBool_Byte(const vil_image_view<bool>& in, vil_image_
 
 bool bmvr_functions::fit_dist_to_response_hist(bsta_histogram<float>& hist, float& k, float& lambda)
 {
-    float mean = hist.mean(); float std_dev = (float)vcl_sqrt(hist.variance());
+    float mean = hist.mean(); float std_dev = (float)std::sqrt(hist.variance());
     bsta_weibull_cost_function wcf(mean,std_dev);
     bsta_fit_weibull<float> fw(&wcf);
     k = 1.0f;
     
     if( fw.init(k) ) {
         fw.solve(k);
-        vcl_cout << "Weibull k fit with residual " << fw.residual() << '\n';
+        std::cout << "Weibull k fit with residual " << fw.residual() << '\n';
         lambda = fw.lambda(k);
-        vcl_cout << "k = " << k << " lambda = " << lambda << '\n';
+        std::cout << "k = " << k << " lambda = " << lambda << '\n';
     }
     else
     { //weibull cannot be fit!
@@ -68,7 +68,7 @@ bool bmvr_functions::fit_dist_to_response_hist(bsta_histogram<float>& hist, floa
     return true;
 }
 
-void bmvr_functions::write_prob_dist_to_m(bsta_histogram<float>& hist, vcl_ofstream& os)
+void bmvr_functions::write_prob_dist_to_m(bsta_histogram<float>& hist, std::ofstream& os)
 {
     float delta = hist.delta(), area = hist.area()*delta, min = hist.min(), max = hist.max(),
           nbins = hist.nbins();
@@ -85,7 +85,7 @@ void bmvr_functions::write_prob_dist_to_m(bsta_histogram<float>& hist, vcl_ofstr
     os << "bar(x,y,'r')\n";
 }
 
-void bmvr_functions::write_prob_dist_weibull_m(bsta_histogram<float>& hist,vcl_ofstream& os,float& scale, float& shape)
+void bmvr_functions::write_prob_dist_weibull_m(bsta_histogram<float>& hist,std::ofstream& os,float& scale, float& shape)
 {
         float delta = hist.delta(), area = hist.area()*delta, min = hist.min(), max = hist.max(),
               nbins = hist.nbins(), weiWidth = 200;
@@ -110,7 +110,7 @@ void bmvr_functions::write_prob_dist_weibull_m(bsta_histogram<float>& hist,vcl_o
     
 }
 
-// void bmvr_functions::write_prob_bin_weibull_m(bsta_histogram<float>& hist,vcl_ofstream& os, float& scale, float& shape, float& minW, float& maxW)
+// void bmvr_functions::write_prob_bin_weibull_m(bsta_histogram<float>& hist,std::ofstream& os, float& scale, float& shape, float& minW, float& maxW)
 // {
 //     bsta_weibull<float>(minW
 // }

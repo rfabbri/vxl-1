@@ -12,11 +12,11 @@
 #include <vil/vil_save.h>
 int main()
 {
-    vcl_string filename="d:\\data\\stereo\\stereo-pair\\pp-aug16.tmp";
-    vcl_string imgl="d:\\data\\stereo\\stereo-pair\\camera0-00000.png";
-    vcl_string imgr="d:\\data\\stereo\\stereo-pair\\camera1-00000.png";
+    std::string filename="d:\\data\\stereo\\stereo-pair\\pp-aug16.tmp";
+    std::string imgl="d:\\data\\stereo\\stereo-pair\\camera0-00000.png";
+    std::string imgr="d:\\data\\stereo\\stereo-pair\\camera1-00000.png";
 
-    vcl_vector<vsol_point_2d_sptr > pointsl_,pointsr_;
+    std::vector<vsol_point_2d_sptr > pointsl_,pointsr_;
     vsl_b_ifstream bfs(filename);
     short ver;
     vsl_b_read(bfs, ver);
@@ -38,7 +38,7 @@ int main()
     else if ( imagel.nplanes() == 1 ) {
       grey_imgl = imagel;
      } else {
-    vcl_cerr << "Returning false. imagel.nplanes(): " << imagel.nplanes() << vcl_endl;
+    std::cerr << "Returning false. imagel.nplanes(): " << imagel.nplanes() << std::endl;
     return false;
     }
 
@@ -48,7 +48,7 @@ int main()
   else if ( imager.nplanes() == 1 ) {
     grey_imgr = imager;
   } else {
-    vcl_cerr << "Returning false. imager.nplanes(): " << imager.nplanes() << vcl_endl;
+    std::cerr << "Returning false. imager.nplanes(): " << imager.nplanes() << std::endl;
     return false;
   } 
 

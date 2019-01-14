@@ -11,7 +11,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -24,7 +24,7 @@ public:
   Lie_contour_match_displayer(){}
 
   //: Return type string "Lie_contour_matching"
-  virtual vcl_string type() const { return "Lie contour matching"; }
+  virtual std::string type() const { return "Lie contour matching"; }
 
   //: Create a tableau if the storage object is of type image
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

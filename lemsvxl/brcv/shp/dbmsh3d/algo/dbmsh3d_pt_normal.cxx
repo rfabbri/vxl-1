@@ -2,8 +2,8 @@
 // This is brcv/shp/dbmsh3d/dbmsh3d_pt_normal.cxx
 //-------------------------------------------------------------------------
 
-#include <vcl_fstream.h>
-#include <vcl_iostream.h>
+#include <fstream>
+#include <iostream>
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/algo/vnl_scatter_3x3.h>
 
@@ -14,9 +14,9 @@
 
 
 //: Compute point normal and store in the vectors.
-void compute_point_normal (vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& oripts)
+void compute_point_normal (std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& oripts)
 {
-  vcl_vector<vnl_vector_fixed<double,3> > pts;
+  std::vector<vnl_vector_fixed<double,3> > pts;
   for (unsigned int i=0; i<oripts.size(); i++) {
     vnl_vector_fixed<double, 3> v;
     v.put (0, oripts[i].first.x());
@@ -25,7 +25,7 @@ void compute_point_normal (vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_
     pts.push_back (v);
   }
 
-  vcl_vector<vnl_vector_fixed<double,3> > normals;
+  std::vector<vnl_vector_fixed<double,3> > normals;
   estimate_point_normal (pts, normals);
 
   assert (normals.size() == oripts.size());
@@ -36,7 +36,7 @@ void compute_point_normal (vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_
 
 }
 
-vnl_vector_fixed<double,3> approximate_normal (const vcl_vector<vnl_vector_fixed<double,3> >& points)
+vnl_vector_fixed<double,3> approximate_normal (const std::vector<vnl_vector_fixed<double,3> >& points)
 {
   // Compute the center of the points
   //
@@ -65,14 +65,14 @@ vnl_vector_fixed<double,3> approximate_normal (const vcl_vector<vnl_vector_fixed
 
 //: Estimate the normal of a point set via the rgrl code using Lagrange Multiplier.
 //  The normal of the fitted plane corresponds to the eigenvector of the least eigenvalue.
-void estimate_point_normal (const vcl_vector<vnl_vector_fixed<double,3> >& pts,
-                            vcl_vector<vnl_vector_fixed<double,3> >& normals)
+void estimate_point_normal (const std::vector<vnl_vector_fixed<double,3> >& pts,
+                            std::vector<vnl_vector_fixed<double,3> >& normals)
 {
   // Store all the points in the kd-tree
   //
   int total = pts.size();
   const unsigned int nc = 3, na = 0;
-  vcl_vector<rsdl_point> search_pts (total);
+  std::vector<rsdl_point> search_pts (total);
   for (int i = 0; i<total; ++i) {
     search_pts[i].resize( nc, na );
     search_pts[i].set_cartesian (pts[i]);
@@ -84,9 +84,9 @@ void estimate_point_normal (const vcl_vector<vnl_vector_fixed<double,3> >& pts,
   // the best plane using the set of points. The normal to the plane
   // is taken as the normal to the data point.
   //
-  vcl_vector< vnl_vector_fixed<double,3> > near_neighbors;
-  vcl_vector<rsdl_point> near_neighbor_pts;
-  vcl_vector<int> near_neighbor_indices;
+  std::vector< vnl_vector_fixed<double,3> > near_neighbors;
+  std::vector<rsdl_point> near_neighbor_pts;
+  std::vector<int> near_neighbor_indices;
   int num_nb = 4;
   for (int i = 0; i<total; ++i) {
     rsdl_point query_pt (3, 0);
@@ -97,7 +97,7 @@ void estimate_point_normal (const vcl_vector<vnl_vector_fixed<double,3> >& pts,
       near_neighbors.push_back(pts[near_neighbor_indices[j]]);
 
     vnl_vector_fixed<double,3> normal = approximate_normal (near_neighbors);
-    ///ostr<<points[i]<<' '<<normal<<vcl_endl;
+    ///ostr<<points[i]<<' '<<normal<<std::endl;
     normals.push_back (normal);
   }
 }

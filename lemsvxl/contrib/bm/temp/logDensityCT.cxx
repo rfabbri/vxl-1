@@ -1,11 +1,11 @@
 #include <vnl/vnl_matrix.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 int main()
 {
 
 vnl_matrix<double> P(20,20);
-vcl_cout<<P<<vcl_endl;
+std::cout<<P<<std::endl;
 
 return 0;
 }

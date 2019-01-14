@@ -45,7 +45,7 @@ public:
   virtual ~dbkpr_keypoint_inspector_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 

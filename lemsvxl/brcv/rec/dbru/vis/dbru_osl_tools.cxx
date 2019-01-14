@@ -3,7 +3,7 @@
 // \file
 
 #include "dbru_osl_tools.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -53,13 +53,13 @@ public:
   dbru_add_objects_command(dbru_osl_add_objects_tool* tool) : tool_(tool) {}
   void execute()
   {
-    static vcl_string objects_file ="/home/dec/objects/*";
-    static vcl_string video_file ="/home/dec/images/";
+    static std::string objects_file ="/home/dec/objects/*";
+    static std::string video_file ="/home/dec/images/";
     static int start_frame = 0;
-    static vcl_string ext = "*.xml";
-    static vcl_string ext2 = "*.*";
-    //static vcl_string cls = "";
-    //static vcl_string doc = "";
+    static std::string ext = "*.xml";
+    static std::string ext2 = "*.*";
+    //static std::string cls = "";
+    //static std::string doc = "";
     static int videoid = 0;
     vgui_dialog param_dlg("Add Objects");
     param_dlg.file("Objects File", ext, objects_file);
@@ -69,7 +69,7 @@ public:
     if(!param_dlg.ask())
       return;
     if(!tool_->add_objects(objects_file, videoid, video_file, videoid, start_frame))
-      vcl_cout << "objects not successfully added\n";
+      std::cout << "objects not successfully added\n";
   }
   dbru_osl_add_objects_tool* tool_;
 };
@@ -82,16 +82,16 @@ public:
   dbru_add_object_ins_command(dbru_osl_add_objects_tool* tool) : tool_(tool) {}
   void execute()
   {
-    static vcl_string objects_file ="/home/dec/objects/*";
-    static vcl_string video_file ="/home/dec/images/";
-    static vcl_string poly_file ="/home/dec/";
-    static vcl_string ins_file ="/home/dec/";
-    static vcl_string ext = "*.xml";
-    static vcl_string ext2 = "*.*";
-    static vcl_string ext3 = "*.txt";
-    static vcl_string ext4 = "*.bin";
-    //static vcl_string cls = "";
-    //static vcl_string doc = "";
+    static std::string objects_file ="/home/dec/objects/*";
+    static std::string video_file ="/home/dec/images/";
+    static std::string poly_file ="/home/dec/";
+    static std::string ins_file ="/home/dec/";
+    static std::string ext = "*.xml";
+    static std::string ext2 = "*.*";
+    static std::string ext3 = "*.txt";
+    static std::string ext4 = "*.bin";
+    //static std::string cls = "";
+    //static std::string doc = "";
     static int videoid = 0;
     static int offset = 0;
     static int start_frame = 0;
@@ -119,7 +119,7 @@ public:
     if(!param_dlg.ask())
       return;
     if(!tool_->add_objects_with_ins(objects_file, videoid, video_file, poly_file, ins_file, offset, start_frame, ratio, add_refined_polys))
-      vcl_cout << "objects not successfully added\n";
+      std::cout << "objects not successfully added\n";
   }
   dbru_osl_add_objects_tool* tool_;
 };
@@ -159,7 +159,7 @@ static vil_image_resource_sptr get_image()
   bpro1_storage_sptr sto = res->get_data("image");
   if(!sto)
     return (vil_image_resource*)0;
-  vcl_cout << "Image Storage Name " << sto->name() << '\n';
+  std::cout << "Image Storage Name " << sto->name() << '\n';
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(sto);
   if(!image_storage)
@@ -167,30 +167,30 @@ static vil_image_resource_sptr get_image()
   return image_storage->get_image();
 }
 
-static bool get_current_database(dbru_osl_sptr osl, vcl_vector<vcl_pair<unsigned, unsigned> >* db, vgui_grid_tableau_sptr tableau)
+static bool get_current_database(dbru_osl_sptr osl, std::vector<std::pair<unsigned, unsigned> >* db, vgui_grid_tableau_sptr tableau)
 {
   if (!tableau) {
-    vcl_cout << " get_current_database() - tableau_ is not set in dbru_osl_add_objects_tool\n";
+    std::cout << " get_current_database() - tableau_ is not set in dbru_osl_add_objects_tool\n";
     return false;
   }
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau->get_selected_positions(col_pos, row_pos, times);
 
   for (unsigned i = 0; i<col_pos->size(); i++) {
     if ((*col_pos)[i] < 0 || (*row_pos)[i] < 0)
       continue;
     
-    vcl_pair<unsigned, unsigned> p;
+    std::pair<unsigned, unsigned> p;
     p.first = unsigned((*row_pos)[i]/2);
     dbru_object_sptr obj = osl->get_object(p.first);
     unsigned k;
     obj->get_non_null_polygon((*col_pos)[i], k);
     p.second = k;
     bool exists = false;
-    for (vcl_vector<vcl_pair<unsigned, unsigned> >::iterator iter = db->begin(); iter != db->end(); iter++)
+    for (std::vector<std::pair<unsigned, unsigned> >::iterator iter = db->begin(); iter != db->end(); iter++)
       if (p.first == iter->first && p.second == iter->second)
         exists = true;
     if (!exists)
@@ -222,7 +222,7 @@ dbru_osl_add_objects_tool::~dbru_osl_add_objects_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_osl_add_objects_tool::name() const
+std::string dbru_osl_add_objects_tool::name() const
 {
   return "Add objects to dbru_OSL";
 }
@@ -263,19 +263,19 @@ dbru_osl_add_objects_tool::handle( const vgui_event & e,
         unsigned i;
         obj->get_non_null_polygon(col_pos, i);
         if (i < obj->n_polygons()) {
-          vcl_cout << "----------------------------------------------------------\n";
-          vcl_cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
+          std::cout << "----------------------------------------------------------\n";
+          std::cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
           dbru_label_sptr lbl = osl_->get_label(row_pos/2, i);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
           if (!obj->get_instance(i))
-            vcl_cout << "\t multiple instance:\t none\n";
+            std::cout << "\t multiple instance:\t none\n";
           else
-            vcl_cout << "\t multiple instance:\t exists\n";
+            std::cout << "\t multiple instance:\t exists\n";
           if (!obj->get_observation(i))
-            vcl_cout << "\t observation:\t none\n";
+            std::cout << "\t observation:\t none\n";
           else
-            vcl_cout << "\t observation:\t exists\n";
-          vcl_cout << "----------------------------------------------------------\n";
+            std::cout << "\t observation:\t exists\n";
+          std::cout << "----------------------------------------------------------\n";
         }
       }
       
@@ -291,11 +291,11 @@ void dbru_osl_add_objects_tool::activate()
 }
 //------------------  OSL edit tool methods ---------------------------
 
-bool dbru_osl_add_objects_tool::add_objects(vcl_string const& objects_file, int const videoid, vcl_string const& image_file, int movie_id, int start_frame)
+bool dbru_osl_add_objects_tool::add_objects(std::string const& objects_file, int const videoid, std::string const& image_file, int movie_id, int start_frame)
 {
   //need an osl to add the prototype
   if(!osl_) {
-    vcl_cout << "dbru_osl_add_objects_tool::add_objects() - OSL problems, load an OSL or create a new OSL, objects are not added!\n";
+    std::cout << "dbru_osl_add_objects_tool::add_objects() - OSL problems, load an OSL or create a new OSL, objects are not added!\n";
     return false;
   }
 
@@ -308,40 +308,40 @@ bool dbru_osl_add_objects_tool::add_objects(vcl_string const& objects_file, int 
 
   movie_id_ = movie_id;
   if (!my_movie_) {
-    vcl_cout << "problems in loading video with video file name: " << image_file << vcl_endl;
+    std::cout << "problems in loading video with video file name: " << image_file << std::endl;
     return false;
   }
   
-  vcl_ifstream dbfp(objects_file.c_str());
+  std::ifstream dbfp(objects_file.c_str());
   if (!dbfp) {
-    vcl_cout << "Problems in opening db object list file!\n";
+    std::cout << "Problems in opening db object list file!\n";
     return false;
   }
 
-  vcl_cout << "reading database objects...\n";
-  vcl_vector<dbru_object_sptr> objects;
+  std::cout << "reading database objects...\n";
+  std::vector<dbru_object_sptr> objects;
   read_objects_from_file(objects_file.c_str(), objects);
-  vcl_cout << objects.size() << " objects in the file\n";
+  std::cout << objects.size() << " objects in the file\n";
  
   unsigned size = objects.size();
   // first read and extract all objects in this file, if there is no problem add to OSL
   for (unsigned i = 0; i<size; i++) {
     dbru_object_sptr obj = objects[i];
     
-    vcl_cout << "read obj: " << i << " extracting observations assuming 1 polygon per frame" << vcl_endl;
+    std::cout << "read obj: " << i << " extracting observations assuming 1 polygon per frame" << std::endl;
     
     //for (int j = obj->start_frame_; j<=obj->end_frame_; j++) {
     for (unsigned int j = obj->start_frame_, k = 0; k<obj->n_polygons(); j++, k++) {
       if (int(j) > obj->end_frame_)
-        vcl_cout << "WARNING: object end frame is less than number of labeled polygons, will try to access the next frame anyways!!\n";
+        std::cout << "WARNING: object end frame is less than number of labeled polygons, will try to access the next frame anyways!!\n";
       vidl1_frame_sptr frame = my_movie_->get_frame(j-start_frame);
       if (!frame) {
-        vcl_cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
+        std::cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
         return false;
       }
       vil_image_resource_sptr imgr = frame->get_resource();
       if (!imgr) {
-        vcl_cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
+        std::cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
         return false;
       }
       vsol_polygon_2d_sptr poly = obj->get_polygon(k);
@@ -351,7 +351,7 @@ bool dbru_osl_add_objects_tool::add_objects(vcl_string const& objects_file, int 
         if (obs->scan(0, imgr))
           obj->add_observation(obs);
         else {
-          vcl_cout << "problems in scaning object " << *(obj) << " with id: " << i << " in the file. None of the objects are added to the OSL!\n";
+          std::cout << "problems in scaning object " << *(obj) << " with id: " << i << " in the file. None of the objects are added to the OSL!\n";
           return false;
         }
       } else {
@@ -362,7 +362,7 @@ bool dbru_osl_add_objects_tool::add_objects(vcl_string const& objects_file, int 
     if (obj->n_observations() == obj->n_polygons())
       objects.push_back(obj);
     else {
-      vcl_cout << "Polygon number is different than frame numberproblems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
+      std::cout << "Polygon number is different than frame numberproblems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
       return false;
     }
   }
@@ -390,11 +390,11 @@ bool dbru_osl_add_objects_tool::add_objects(vcl_string const& objects_file, int 
 //  offset: the number of frames that is skipped in multiple_ins_file with respect to polygon file
 //          i.e. all the polygons in "offset" many frames in the polygon file are ignored while multiple instances are
 //               created, so begin process after skipping them here as well 
-bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_file, 
+bool dbru_osl_add_objects_tool::add_objects_with_ins(std::string const& objects_file, 
                                                       int const movie_id, 
-                                                      vcl_string const& video_file, 
-                                                      vcl_string const& poly_file, 
-                                                      vcl_string const& multiple_ins_file,
+                                                      std::string const& video_file, 
+                                                      std::string const& poly_file, 
+                                                      std::string const& multiple_ins_file,
                                                       int offset,
                                                       int start_frame,
                                                       double ratio,
@@ -402,7 +402,7 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
 {
   //need an osl to add the prototype
   if(!osl_) {
-    vcl_cout << "dbru_osl_add_objects_tool::add_objects_with_ins() - OSL problems, load an OSL or create a new OSL, objects are not added!\n";
+    std::cout << "dbru_osl_add_objects_tool::add_objects_with_ins() - OSL problems, load an OSL or create a new OSL, objects are not added!\n";
     return false;
   }
 
@@ -416,34 +416,34 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
 
   movie_id_ = movie_id;
   if (!my_movie_) {
-    vcl_cout << "problems in loading video with video file name: " << video_file << vcl_endl;
+    std::cout << "problems in loading video with video file name: " << video_file << std::endl;
     return false;
   }
 
-  vcl_vector<vcl_vector< vsol_polygon_2d_sptr > > frame_polys;
+  std::vector<std::vector< vsol_polygon_2d_sptr > > frame_polys;
   int videoid = read_poly_file(poly_file.c_str(), frame_polys);
   if (videoid != movie_id) {
-    vcl_cout << "Polygon file's video id does not match the id of the given video sequence\n";
+    std::cout << "Polygon file's video id does not match the id of the given video sequence\n";
     return false;
   }
 
-  vcl_vector<vcl_vector<dbru_multiple_instance_object_sptr> > frame_ins;
+  std::vector<std::vector<dbru_multiple_instance_object_sptr> > frame_ins;
   read_ins_file(multiple_ins_file.c_str(), frame_ins);
 
-  vcl_cout << "number of frames in poly file: " << frame_polys.size() << "\n";
-  vcl_cout << "number of frames in instance file: " << frame_ins.size() << "\n";
-  vcl_cout << "will start to use from the frame " << offset << " in poly file to associate multiple instances to polygons\n";
+  std::cout << "number of frames in poly file: " << frame_polys.size() << "\n";
+  std::cout << "number of frames in instance file: " << frame_ins.size() << "\n";
+  std::cout << "will start to use from the frame " << offset << " in poly file to associate multiple instances to polygons\n";
   
-  vcl_ifstream dbfp(objects_file.c_str());
+  std::ifstream dbfp(objects_file.c_str());
   if (!dbfp) {
-    vcl_cout << "Problems in opening db object list file!\n";
+    std::cout << "Problems in opening db object list file!\n";
     return false;
   }
 
-  vcl_cout << "reading database objects... ";
-  vcl_vector<dbru_object_sptr> objects;
+  std::cout << "reading database objects... ";
+  std::vector<dbru_object_sptr> objects;
   read_objects_from_file(objects_file.c_str(), objects);
-  vcl_cout << objects.size() << " objects in the file\n";
+  std::cout << objects.size() << " objects in the file\n";
   
   // extract objects from images, if they can be located in poly file and a multiple instance exists then add to OSL
   for (unsigned i = 0; i<objects.size(); i++) {
@@ -453,7 +453,7 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
     if (obj->video_id_ != movie_id)
       continue;
     
-    vcl_cout << "extracting obj: " << i << " assuming 1 polygon per frame" << vcl_endl;
+    std::cout << "extracting obj: " << i << " assuming 1 polygon per frame" << std::endl;
     
     int last_ins_in_poly = offset + frame_ins.size();
 
@@ -463,13 +463,13 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
       int s = poly->size();
 
       if (s > 0) {
-        vcl_cout << "checking all polygons in all frames in the polygon file... ";
+        std::cout << "checking all polygons in all frames in the polygon file... ";
         bool same = false;
         int kk; unsigned kkk;
         for (kk = offset; kk < last_ins_in_poly; kk++) {
           for (kkk = 0; kkk < frame_polys[kk].size(); kkk++) {
             vsol_polygon_2d_sptr poly2 = frame_polys[kk][kkk];
-            //vcl_cout << "to: \n\t\t" << *(poly2->vertex(0)) << "\n"; 
+            //std::cout << "to: \n\t\t" << *(poly2->vertex(0)) << "\n"; 
             if (*poly2 == *poly) {
               same = true;
               break;
@@ -480,7 +480,7 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
         }
         if (same) {  // we located objects polygon in poly file, this means we can find its multiple instance
         
-          //vcl_cout << " FOUND!\n";
+          //std::cout << " FOUND!\n";
           poly->compute_bounding_box();
           vsol_box_2d_sptr poly_box = poly->get_bounding_box();
           vgl_point_2d<double> cent_poly(poly->get_min_x()+(poly->get_max_x()-poly->get_min_x())/2.0f, 
@@ -501,14 +501,14 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
                 if (!ins)
                   ins = frame_ins[kk-offset][m];
                 else {
-                  vcl_cout << "Second attempt to write an instance.. OSL WAS NOT SAVED, LOWER THE THRESHOLD ratio\n";
+                  std::cout << "Second attempt to write an instance.. OSL WAS NOT SAVED, LOWER THE THRESHOLD ratio\n";
                   return false;
                 }
               }
             }
           }
           if (!ins) 
-            vcl_cout << "instance was not located properly, or it was empty in the instance file\n";
+            std::cout << "instance was not located properly, or it was empty in the instance file\n";
           else {
             //: we're changing object polygons optionally if the user wants to run outline based recognition 
             //  algorithms on this OSL
@@ -520,20 +520,20 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
           obj->add_instance(ins);
         
         } else {  // we could not locate the object!!
-          vcl_cout << "WARNING: Object polygon could not be located in the foreground polygon file!!!\n Check object and polygon files!\n";
+          std::cout << "WARNING: Object polygon could not be located in the foreground polygon file!!!\n Check object and polygon files!\n";
           obj->add_instance(0);  // add null pointer as instance
         }
 
         if (int(j) > obj->end_frame_)
-          vcl_cout << "WARNING: object end frame is less than number of labeled polygons, will try to access the next frame anyways!!\n";
+          std::cout << "WARNING: object end frame is less than number of labeled polygons, will try to access the next frame anyways!!\n";
         vidl1_frame_sptr frame = my_movie_->get_frame(j-start_frame);
         if (!frame) {
-          vcl_cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
+          std::cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
           return false;
         }
         vil_image_resource_sptr imgr = frame->get_resource();
         if (!imgr) {
-          vcl_cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
+          std::cout << "Frame is not accesible!! None of the objects are added, exiting!\n";
           return false;
         }
 
@@ -542,7 +542,7 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
         if (obs->scan(0, imgr))
           obj->add_observation(obs);
         else {
-          vcl_cout << "problems in scaning object " << *(obj) << " with id: " << i << " in the file. None of the objects are added to the OSL!\n";
+          std::cout << "problems in scaning object " << *(obj) << " with id: " << i << " in the file. None of the objects are added to the OSL!\n";
           return false;
         }
 
@@ -554,20 +554,20 @@ bool dbru_osl_add_objects_tool::add_objects_with_ins(vcl_string const& objects_f
     }
 
     if (obj->n_instances() != obj->n_polygons()) {
-      vcl_cout << "Polygon number is different than instance number, problems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
+      std::cout << "Polygon number is different than instance number, problems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
       return false;
     }
 
     if (obj->n_observations() != obj->n_polygons()) {
-      vcl_cout << "Polygon number is different than observation number, problems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
+      std::cout << "Polygon number is different than observation number, problems in object with id: " << i << " in the file. None of the objects are added to the OSL!\n";
       return false;
     }
 
   }
 
   osl_->add_objects(objects);
-  vcl_cout << "WARNING: A multiple instance may not exist for each prototype\n";
-  vcl_cout << "         Such prototypes should not be included in databases to compare edgel based recognition algorithms to outline based algorithms\n";
+  std::cout << "WARNING: A multiple instance may not exist for each prototype\n";
+  std::cout << "         Such prototypes should not be included in databases to compare edgel based recognition algorithms to outline based algorithms\n";
   
   //display the frame
   bvis1_manager::instance()->display_current_frame(true);
@@ -590,8 +590,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    //static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    //static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float dx = 1.0f;
     static float dr = 0.2f;
     static float ds = 0.1f;
@@ -622,28 +622,28 @@ public:
       return;
     if(!use_int&&!use_grad)
       {
-        vcl_cout << "must use at least one information channel\n";
+        std::cout << "must use at least one information channel\n";
         return;
       }
-    //vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    //std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     //if(tool_->load_query(image_file, expand, coef))
     if(tool_->query_set())  
       if(!tool_->match_query(dx, dr, ds, da, ratio, thresh, Nobs,
                              use_int, use_grad, forward_and_reverse,
                              match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     unsigned i = 0;
-    vcl_cout << "--- Scores ---\n";
-    //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    std::cout << "--- Scores ---\n";
+    //for(std::vector<std::string>::iterator cit = classes.begin();
     //    cit != classes.end(); ++cit, ++i)
     for ( i = 0; i<match_scores.size(); i++)
-      vcl_cout << "(" << i << " = " << match_scores[i] << ") " << vcl_flush;
-    vcl_cout << "\n";
+      std::cout << "(" << i << " = " << match_scores[i] << ") " << std::flush;
+    std::cout << "\n";
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -680,8 +680,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    //static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    //static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float dx = 1.0f;
     static float dr = 0.2f;
     static float ds = 0.1f;
@@ -694,19 +694,19 @@ public:
     if(!param_dlg.ask())
       return;
    
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     if(tool_->query_set())  
       if(!tool_->match_query_opt(dx, dr, ds, ratio, match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     unsigned i = 0;
-    vcl_cout << "--- Scores ---\n";
+    std::cout << "--- Scores ---\n";
     for ( i = 0; i<match_scores.size(); i++)
-      vcl_cout << "(" << i << " = " << match_scores[i] << ") " << vcl_flush;
-    vcl_cout << "\n";
+      std::cout << "(" << i << " = " << match_scores[i] << ") " << std::flush;
+    std::cout << "\n";
     /*unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -744,8 +744,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    //static vcl_string image_file ="c:/images/*";
-    //static vcl_string ext = "*.*";
+    //static std::string image_file ="c:/images/*";
+    //static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -780,9 +780,9 @@ public:
     param_dlg.checkbox("Forward and Reverse ", forward_and_reverse);
     if(!param_dlg.ask())
       return;
-    //vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    //std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     //if(tool_->load_query(image_file, expand, coef))
     if(tool_->query_set()) {
       if(!tool_->match_query_interval(xmin, xmax, ymin, ymax,
@@ -793,20 +793,20 @@ public:
                                       forward_and_reverse,
                                       match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     } else {
-      vcl_cout << "query observation is not picked, press p on the query prototype to select it.\n";
+      std::cout << "query observation is not picked, press p on the query prototype to select it.\n";
     }
     unsigned i = 0;
-    //vcl_cout << "---Class Scores ---\n";
-    //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    //std::cout << "---Class Scores ---\n";
+    //for(std::vector<std::string>::iterator cit = classes.begin();
     //    cit != classes.end(); ++cit, ++i)
-    //  vcl_cout << *cit << " = " << match_scores[i] << '\n'<< vcl_flush;
+    //  std::cout << *cit << " = " << match_scores[i] << '\n'<< std::flush;
     for ( ; i < match_scores.size(); i++)
-      vcl_cout << "(" << i << " = " << match_scores[i] << ") " << vcl_flush;
-    vcl_cout << "\n";
+      std::cout << "(" << i << " = " << match_scores[i] << ") " << std::flush;
+    std::cout << "\n";
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -852,7 +852,7 @@ dbru_osl_match_tool::~dbru_osl_match_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_osl_match_tool::name() const
+std::string dbru_osl_match_tool::name() const
 {
   return "Match dbru_OSL";
 }
@@ -887,15 +887,15 @@ dbru_osl_match_tool::handle( const vgui_event & e,
 {
   if (gesture_set_query_(e)) {
     if (!tableau_) {
-      vcl_cout << "tableau_ is not set in dbru_osl_match_tool\n";
+      std::cout << "tableau_ is not set in dbru_osl_match_tool\n";
       return false;
     }
-    vcl_pair<unsigned, unsigned> query_obs_ids_;
+    std::pair<unsigned, unsigned> query_obs_ids_;
     unsigned int col_pos, row_pos;
     tableau_->get_active_position(&col_pos, &row_pos);
     query_obs_ids_.first = row_pos/2;
     query_obs_ids_.second = col_pos;
-    vcl_cout << "query is set with col_pos: " << col_pos << " row_pos: " << row_pos << vcl_endl;
+    std::cout << "query is set with col_pos: " << col_pos << " row_pos: " << row_pos << std::endl;
     query_set_ = true;
     return false;
   }
@@ -909,19 +909,19 @@ dbru_osl_match_tool::handle( const vgui_event & e,
         unsigned i;
         obj->get_non_null_polygon(col_pos, i);
         if (i < obj->n_polygons()) {
-          vcl_cout << "----------------------------------------------------------\n";
-          vcl_cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
+          std::cout << "----------------------------------------------------------\n";
+          std::cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
           dbru_label_sptr lbl = osl_->get_label(row_pos/2, i);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
           if (!obj->get_instance(i))
-            vcl_cout << "\t multiple instance:\t none\n";
+            std::cout << "\t multiple instance:\t none\n";
           else
-            vcl_cout << "\t multiple instance:\t exists\n";
+            std::cout << "\t multiple instance:\t exists\n";
           if (!obj->get_observation(i))
-            vcl_cout << "\t observation:\t none\n";
+            std::cout << "\t observation:\t none\n";
           else
-            vcl_cout << "\t observation:\t exists\n";
-          vcl_cout << "----------------------------------------------------------\n";
+            std::cout << "\t observation:\t exists\n";
+          std::cout << "----------------------------------------------------------\n";
         }
       }
       
@@ -937,10 +937,10 @@ void dbru_osl_match_tool::activate()
   if(osl_storage_)
     osl_ = osl_storage_->osl();
   else
-    vcl_cout << "Failed to activate osl_tools\n";
+    std::cout << "Failed to activate osl_tools\n";
 }
 //------------------  OSL match tool methods ---------------------------
-/*bool dbru_osl_match_tool::load_query(vcl_string const& path,
+/*bool dbru_osl_match_tool::load_query(std::string const& path,
                                        const bool expand,
                                        const float coef)
 {
@@ -963,9 +963,9 @@ bool dbru_osl_match_tool::match_query(const float dx, const float dr,
                                         const unsigned Nob, 
                                         bool use_int, bool use_grad, 
                                         bool forward_and_reverse,
-                                        //vcl_vector<vcl_string>& classes,
-                                        vcl_vector<float>& match_scores,
-                                        vcl_vector<vil_image_resource_sptr>& match_images){
+                                        //std::vector<std::string>& classes,
+                                        std::vector<float>& match_scores,
+                                        std::vector<vil_image_resource_sptr>& match_images){
   //need a osl to add the prototype
   if(!osl_)
     return false;
@@ -974,23 +974,23 @@ bool dbru_osl_match_tool::match_query(const float dx, const float dr,
   dbinfo_observation_sptr obsq = osl_->get_prototype(query_obs_ids_.first, query_obs_ids_.second);
 
   if (!obsq) {
-    vcl_cout << "Query observation is not appropriately set!\n";
+    std::cout << "Query observation is not appropriately set!\n";
     return false;
   }
 
   //for now use only the first prototype in each class (FIXME)
   //classes = osl_->classes();
-  //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  //for(std::vector<std::string>::iterator cit = classes.begin();
   //    cit != classes.end(); ++cit)
   //  {
   //    dbinfo_observation_sptr obsdb = osl_->prototype(*cit, 0);
-  vcl_vector<vcl_pair<unsigned, unsigned> > *db = new vcl_vector<vcl_pair<unsigned, unsigned> >();
+  std::vector<std::pair<unsigned, unsigned> > *db = new std::vector<std::pair<unsigned, unsigned> >();
   if (!get_current_database(osl_, db, tableau_)) {
-    vcl_cout << "Problems in getting db!\n";
+    std::cout << "Problems in getting db!\n";
     return false;
   }
 
-  vcl_pair<unsigned, unsigned> p;
+  std::pair<unsigned, unsigned> p;
   for (unsigned i = 0; i<db->size(); i++) 
   {
     p = (*db)[i];
@@ -1044,9 +1044,9 @@ bool dbru_osl_match_tool::match_query_interval(const float xmin, const float xma
                                                  const unsigned n_intervals,
                                                  const float valid_thresh,
                                                  bool forward_and_reverse,
-                                                 //vcl_vector<vcl_string>& classes,
-                                                 vcl_vector<float>& match_scores,
-                                                 vcl_vector<vil_image_resource_sptr>& match_images)
+                                                 //std::vector<std::string>& classes,
+                                                 std::vector<float>& match_scores,
+                                                 std::vector<vil_image_resource_sptr>& match_images)
 {
   //need a osl to add the prototype
   if(!osl_)
@@ -1056,22 +1056,22 @@ bool dbru_osl_match_tool::match_query_interval(const float xmin, const float xma
   dbinfo_observation_sptr obsq = osl_->get_prototype(query_obs_ids_.first, query_obs_ids_.second);
 
   if (!obsq) {
-    vcl_cout << "Query observation is not appropriately set!\n";
+    std::cout << "Query observation is not appropriately set!\n";
     return false;
   }
 
   //for now use only the first prototype in each class (FIXME)
   //classes = osl_->classes();
-  //for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  //for(std::vector<std::string>::iterator cit = classes.begin();
    //   cit != classes.end(); ++cit)
    // {
-  vcl_vector<vcl_pair<unsigned, unsigned> > *db = new vcl_vector<vcl_pair<unsigned, unsigned> >();
+  std::vector<std::pair<unsigned, unsigned> > *db = new std::vector<std::pair<unsigned, unsigned> >();
   if (!get_current_database(osl_, db, tableau_)) {
-    vcl_cout << "Problems in getting db!\n";
+    std::cout << "Problems in getting db!\n";
     return false;
   }
 
-  vcl_pair<unsigned, unsigned> p;
+  std::pair<unsigned, unsigned> p;
   for (unsigned i = 0; i<db->size(); i++) 
   {
       p = (*db)[i];
@@ -1121,8 +1121,8 @@ bool dbru_osl_match_tool::match_query_interval(const float xmin, const float xma
 bool dbru_osl_match_tool::match_query_opt(const float dx, const float dr,
                                           const float ds,
                                           const float ratio, 
-                                          vcl_vector<float>& match_scores,
-                                          vcl_vector<vil_image_resource_sptr>& match_images) {
+                                          std::vector<float>& match_scores,
+                                          std::vector<vil_image_resource_sptr>& match_images) {
   //need a osl to add the prototype
   if(!osl_)
     return false;
@@ -1131,17 +1131,17 @@ bool dbru_osl_match_tool::match_query_opt(const float dx, const float dr,
   dbinfo_observation_sptr obsq = osl_->get_prototype(query_obs_ids_.first, query_obs_ids_.second);
 
   if (!obsq) {
-    vcl_cout << "Query observation is not appropriately set!\n";
+    std::cout << "Query observation is not appropriately set!\n";
     return false;
   }
 
-  vcl_vector<vcl_pair<unsigned, unsigned> > *db = new vcl_vector<vcl_pair<unsigned, unsigned> >();
+  std::vector<std::pair<unsigned, unsigned> > *db = new std::vector<std::pair<unsigned, unsigned> >();
   if (!get_current_database(osl_, db, tableau_)) {
-    vcl_cout << "Problems in getting db!\n";
+    std::cout << "Problems in getting db!\n";
     return false;
   }
 
-  vcl_pair<unsigned, unsigned> p;
+  std::pair<unsigned, unsigned> p;
   for (unsigned i = 0; i<db->size(); i++) 
   {
     p = (*db)[i];
@@ -1176,7 +1176,7 @@ dbru_osl_delete_observations_tool::~dbru_osl_delete_observations_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_osl_delete_observations_tool::name() const
+std::string dbru_osl_delete_observations_tool::name() const
 {
   return "Delete Selected Observations from OSL";
 }
@@ -1206,19 +1206,19 @@ dbru_osl_delete_observations_tool::handle( const vgui_event & e,
         unsigned i;
         obj->get_non_null_polygon(col_pos, i);
         if (i < obj->n_polygons()) {
-          vcl_cout << "----------------------------------------------------------\n";
-          vcl_cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
+          std::cout << "----------------------------------------------------------\n";
+          std::cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
           dbru_label_sptr lbl = osl_->get_label(row_pos/2, i);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
           if (!obj->get_instance(i))
-            vcl_cout << "\t multiple instance:\t none\n";
+            std::cout << "\t multiple instance:\t none\n";
           else
-            vcl_cout << "\t multiple instance:\t exists\n";
+            std::cout << "\t multiple instance:\t exists\n";
           if (!obj->get_observation(i))
-            vcl_cout << "\t observation:\t none\n";
+            std::cout << "\t observation:\t none\n";
           else
-            vcl_cout << "\t observation:\t exists\n";
-          vcl_cout << "----------------------------------------------------------\n";
+            std::cout << "\t observation:\t exists\n";
+          std::cout << "----------------------------------------------------------\n";
         }
       }
       
@@ -1234,21 +1234,21 @@ void dbru_osl_delete_observations_tool::activate()
   if(osl_storage_)
     osl_ = osl_storage_->osl();
   else {
-    vcl_cout << "Failed to activate osl_tools\n";
+    std::cout << "Failed to activate osl_tools\n";
     return;
   }
 
-  vcl_cout << "delete_observations tool active\n";
-  vcl_cout << "USAGE: Selected observations will be deleted, if all observations of an object are deleted then its removed completely\n";
+  std::cout << "delete_observations tool active\n";
+  std::cout << "USAGE: Selected observations will be deleted, if all observations of an object are deleted then its removed completely\n";
 
   if (!tableau_) {
-    vcl_cout << " dbru_osl_delete_observations_tool::activate() - tableau_ is not set in dbru_osl_add_objects_tool\n";
+    std::cout << " dbru_osl_delete_observations_tool::activate() - tableau_ is not set in dbru_osl_add_objects_tool\n";
     return;
   }
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau_->get_selected_positions(col_pos, row_pos, times);
 
   //remove the row 2n+1 if row 2n is already in row_pos
@@ -1290,7 +1290,7 @@ void dbru_osl_delete_observations_tool::activate()
       }
     if (remove)
       if (!osl_->remove_object(i))
-        vcl_cout << "problems in removing object in row: " << i << vcl_endl;
+        std::cout << "problems in removing object in row: " << i << std::endl;
   }
 
   col_pos->clear();
@@ -1348,7 +1348,7 @@ dbru_osl_save_db_file_tool::~dbru_osl_save_db_file_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_osl_save_db_file_tool::name() const
+std::string dbru_osl_save_db_file_tool::name() const
 {
   return "Save current selected database into a TXT file";
 }
@@ -1389,19 +1389,19 @@ dbru_osl_save_db_file_tool::handle( const vgui_event & e,
         unsigned i;
         obj->get_non_null_polygon(col_pos, i);
         if (i < obj->n_polygons()) {
-          vcl_cout << "----------------------------------------------------------\n";
-          vcl_cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
+          std::cout << "----------------------------------------------------------\n";
+          std::cout << "OSL object id: " << row_pos/2 << " prototype id: " << i << "\n";
           dbru_label_sptr lbl = osl_->get_label(row_pos/2, i);
-          vcl_cout << *lbl;
+          std::cout << *lbl;
           if (!obj->get_instance(i))
-            vcl_cout << "\t multiple instance:\t none\n";
+            std::cout << "\t multiple instance:\t none\n";
           else
-            vcl_cout << "\t multiple instance:\t exists\n";
+            std::cout << "\t multiple instance:\t exists\n";
           if (!obj->get_observation(i))
-            vcl_cout << "\t observation:\t none\n";
+            std::cout << "\t observation:\t none\n";
           else
-            vcl_cout << "\t observation:\t exists\n";
-          vcl_cout << "----------------------------------------------------------\n";
+            std::cout << "\t observation:\t exists\n";
+          std::cout << "----------------------------------------------------------\n";
         }
       }
       
@@ -1411,8 +1411,8 @@ dbru_osl_save_db_file_tool::handle( const vgui_event & e,
 }
 void dbru_osl_save_db_file_tool::save_selected_prototypes()
 {
-  static vcl_string db_file ="/home/dec/";
-  static vcl_string ext = "*.txt";
+  static std::string db_file ="/home/dec/";
+  static std::string ext = "*.txt";
   static bool check_obs = true;
   vgui_dialog param_dlg("Save Database File");
   param_dlg.file("Database File", ext, db_file);
@@ -1420,14 +1420,14 @@ void dbru_osl_save_db_file_tool::save_selected_prototypes()
   if(!param_dlg.ask())
     return;
 
-  vcl_vector<int> *col_pos = new vcl_vector<int>();
-  vcl_vector<int> *row_pos = new vcl_vector<int>();
-  vcl_vector<int> *times = new vcl_vector<int>();
+  std::vector<int> *col_pos = new std::vector<int>();
+  std::vector<int> *row_pos = new std::vector<int>();
+  std::vector<int> *times = new std::vector<int>();
   tableau_->get_selected_positions(col_pos, row_pos, times);
 
-  vcl_ofstream of(db_file.c_str());
+  std::ofstream of(db_file.c_str());
   if (!of) {
-    vcl_cout << "dbru_osl_save_db_file_tool::save_selected_prototypes() - file not opened\n";
+    std::cout << "dbru_osl_save_db_file_tool::save_selected_prototypes() - file not opened\n";
     return;
   }
 
@@ -1446,7 +1446,7 @@ void dbru_osl_save_db_file_tool::save_selected_prototypes()
     }
   }
 
-  vcl_vector<unsigned> temp1, temp2;
+  std::vector<unsigned> temp1, temp2;
   
   for (unsigned i = 0; i<col_pos->size(); i++) {
     unsigned osi = (*col_pos)[i];
@@ -1476,13 +1476,13 @@ void dbru_osl_save_db_file_tool::save_selected_prototypes()
     }
   }
 
-  of << temp1.size() << vcl_endl;
+  of << temp1.size() << std::endl;
   for (unsigned i = 0; i < temp1.size(); i++) {
     of << temp1[i] << " " << temp2[i] << "\n";
   }
   of.close();
   
-  vcl_cout << "selected observations are saved to: " << db_file << "\n";
+  std::cout << "selected observations are saved to: " << db_file << "\n";
   col_pos->clear();
   row_pos->clear();
   times->clear();
@@ -1498,14 +1498,14 @@ void dbru_osl_save_db_file_tool::activate()
   if(osl_storage_)
     osl_ = osl_storage_->osl();
   else {
-    vcl_cout << "Failed to activate osl_tools\n";
+    std::cout << "Failed to activate osl_tools\n";
     return;
   }
 
-  vcl_cout << "save_db_file tool active\n";
+  std::cout << "save_db_file tool active\n";
 
   if (!tableau_) {
-    vcl_cout << " dbru_osl_delete_observations_tool::activate() - tableau_ is not set in dbru_osl_add_objects_tool\n";
+    std::cout << " dbru_osl_delete_observations_tool::activate() - tableau_ is not set in dbru_osl_add_objects_tool\n";
     return;
   }
 
@@ -1514,8 +1514,8 @@ void dbru_osl_save_db_file_tool::activate()
 
 void dbru_osl_save_db_file_tool::save_based_on_bins()
 {
-  static vcl_string db_file ="/home/dec/";
-  static vcl_string ext = "*.txt";
+  static std::string db_file ="/home/dec/";
+  static std::string ext = "*.txt";
   vgui_dialog param_dlg("Save Database File");
   static int motion_bin = -1;
   static int view_bin = -1;
@@ -1531,13 +1531,13 @@ void dbru_osl_save_db_file_tool::save_based_on_bins()
   if(!param_dlg.ask())
     return;
 
-  vcl_ofstream of(db_file.c_str());
+  std::ofstream of(db_file.c_str());
   if (!of) {
-    vcl_cout << "dbru_osl_save_db_file_tool::save_based_on_bins() - file not opened\n";
+    std::cout << "dbru_osl_save_db_file_tool::save_based_on_bins() - file not opened\n";
     return;
   }
 
-  vcl_vector<unsigned> temp1, temp2;
+  std::vector<unsigned> temp1, temp2;
 
   for (unsigned i = 0; i < osl_->size(); i++) {
     dbru_object_sptr obj = (*osl_)[i];
@@ -1545,9 +1545,9 @@ void dbru_osl_save_db_file_tool::save_based_on_bins()
 
     if (check_obs) {
       if (lbl_cnt != obj->n_observations())
-        vcl_cout << "CAUTION: number of observations does not equal to number of labels in this object!!\n";
+        std::cout << "CAUTION: number of observations does not equal to number of labels in this object!!\n";
       else
-        vcl_cout << "Checking non-null observations and collecting ones with the right label...\n";
+        std::cout << "Checking non-null observations and collecting ones with the right label...\n";
       for (unsigned j = 0; j < obj->n_observations(); j++) {
         if (obj->get_observation(j) && j < lbl_cnt && obj->get_label(j)) {
           dbru_label_sptr lbl = obj->get_label(j);
@@ -1565,9 +1565,9 @@ void dbru_osl_save_db_file_tool::save_based_on_bins()
       }
     } else {
       if (lbl_cnt != obj->n_instances())
-        vcl_cout << "CAUTION: number of instances does not equal to number of labels in this object!!\n";
+        std::cout << "CAUTION: number of instances does not equal to number of labels in this object!!\n";
       else
-        vcl_cout << "Checking non-null instances and collecting ones with the right label...\n";
+        std::cout << "Checking non-null instances and collecting ones with the right label...\n";
       for (unsigned j = 0; j < obj->n_instances(); j++) {
         if (obj->get_instance(j) && j < lbl_cnt && obj->get_label(j)) {
           dbru_label_sptr lbl = obj->get_label(j);
@@ -1586,13 +1586,13 @@ void dbru_osl_save_db_file_tool::save_based_on_bins()
     }
   }
 
-  of << temp1.size() << vcl_endl;
+  of << temp1.size() << std::endl;
   for (unsigned i = 0; i < temp1.size(); i++) {
     of << temp1[i] << " " << temp2[i] << "\n";
   }
   of.close();
   
-  vcl_cout << "Selections are saved to: " << db_file << "\n";
+  std::cout << "Selections are saved to: " << db_file << "\n";
 }
 
 /*
@@ -1608,8 +1608,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static bool query = true;
     static bool expand = false;
     static float coef=0.6f;
@@ -1621,7 +1621,7 @@ public:
     if (!param_dlg.ask())
       return;
     if(!tool_->load(image_file, query, expand, coef))
-      vcl_cout << "Image not sucessfully loaded\n";
+      std::cout << "Image not sucessfully loaded\n";
   }
   dbru_osl_transform_tool* tool_;
 };
@@ -1633,8 +1633,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -1672,7 +1672,7 @@ public:
                                max_info,
                                match_image))
       {
-        vcl_cout << "query not successfully transformed\n";
+        std::cout << "query not successfully transformed\n";
         return;
       }
 
@@ -1707,7 +1707,7 @@ dbru_osl_transform_tool::~dbru_osl_transform_tool()
 
 
 //: Return the name of this tool
-vcl_string dbru_osl_transform_tool::name() const
+std::string dbru_osl_transform_tool::name() const
 {
   return "Transform OSL";
 }
@@ -1744,10 +1744,10 @@ dbru_osl_transform_tool::handle( const vgui_event & e,
 
 void dbru_osl_transform_tool::activate()
 {
-  vcl_cout << "Transform tool active\n";
+  std::cout << "Transform tool active\n";
 }
 //------------------  OSL transform tool methods ---------------------------
-bool dbru_osl_transform_tool::load(vcl_string const& path,
+bool dbru_osl_transform_tool::load(std::string const& path,
                                      const bool query,
                                      const bool expand,
                                      const float coef)
@@ -1781,7 +1781,7 @@ transform_query(const float xmin, const float xmax,
 {
   if(!query_||!proto_)
     {
-      vcl_cout << "Missing image data \n";
+      std::cout << "Missing image data \n";
       return false;
     }
   // create a query observation from the image

@@ -11,15 +11,15 @@
 #endif
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 #include <imgr/file_formats/imgr_skyscan_log.h>
-#include <vcl_cstddef.h>
-#include <vcl_cstdio.h>
-#include <vcl_iostream.h>
+#include <cstddef>
+#include <cstdio>
+#include <iostream>
 
 
 static void test_imgr_skyscan_header(int argc, char* argv[] )
 {
 
-   vcl_FILE *fp = vcl_fopen(argv[1],"r");
+   std::FILE *fp = std::fopen(argv[1],"r");
    assert(fp != NULL);
    imgr_skyscan_log_header skyscan_log_header(fp);
 
@@ -35,7 +35,7 @@ static void test_imgr_skyscan_header(int argc, char* argv[] )
     TEST_NEAR("Rotation Step Angle",skyscan_log_header.rotation_step_,0.340,1e-6);
     TEST_NEAR("Relative Angular Position of Reconstructed Volume and Scanner Coordinate System",skyscan_log_header.cs_static_rotation_,0,1e-6);
 
-    vcl_fclose(fp);
+    std::fclose(fp);
 
 }
 

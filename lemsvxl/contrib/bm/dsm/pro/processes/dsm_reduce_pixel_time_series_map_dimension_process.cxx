@@ -5,7 +5,7 @@
 
 #include"dsm/dsm_pixel_time_series_map_sptr.h"
 
-#include<vcl_iterator.h> //for distance function
+#include<iterator> //for distance function
 
 #include<vnl/algo/vnl_svd.h>
 
@@ -19,8 +19,8 @@ bool dsm_reduce_pixel_time_series_map_dimension_process_cons( bprb_func_process&
 {
 	using namespace dsm_reduce_pixel_time_series_map_dimension_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_pixel_time_series_map_sptr";//the time series sptr
@@ -43,7 +43,7 @@ bool dsm_reduce_pixel_time_series_map_dimension_process( bprb_func_process& pro 
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_reduce_pixel_time_series_map_dimension_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_reduce_pixel_time_series_map_dimension_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -60,14 +60,14 @@ bool dsm_reduce_pixel_time_series_map_dimension_process( bprb_func_process& pro 
 
 	for( map_itr = map_sptr->pixel_time_series_map.begin(); map_itr != map_end; ++map_itr )
 	{
-		unsigned indx = map_sptr->pixel_time_series_map.size() - vcl_distance(map_itr,map_end);	
-		vcl_cout << "Conducting PCA " << indx << " out of " << map_sptr->pixel_time_series_map.size() << vcl_endl;
+		unsigned indx = map_sptr->pixel_time_series_map.size() - std::distance(map_itr,map_end);	
+		std::cout << "Conducting PCA " << indx << " out of " << map_sptr->pixel_time_series_map.size() << std::endl;
 
 		dsm_time_series_sptr ts_sptr = map_itr->second;
 		unsigned number_of_observations = ts_sptr->time_series.size();
 		vnl_matrix<double> observations(number_of_observations, original_dimension);
 
-		vcl_map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end = ts_sptr->time_series.end();
+		std::map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end = ts_sptr->time_series.end();
 
 		unsigned row = 0;
 		for(ts_itr = ts_sptr->time_series.begin(); ts_itr != ts_end; ++ts_itr, ++row )

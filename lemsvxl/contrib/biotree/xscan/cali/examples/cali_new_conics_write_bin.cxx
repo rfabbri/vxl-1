@@ -1,11 +1,11 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vsol/vsol_conic_2d_sptr.h>
 #include <vsol/vsol_conic_2d.h>
 #include <vil/vil_load.h>
 #include <vul/vul_file.h>
 #include <vil/vil_crop.h>
 #include <vil/vil_convert.h>
-#include <vcl_cstddef.h>
+#include <cstddef>
 #include <cali/cali_artf_corresponder.h>
 #include <cali/cali_param.h>
 
@@ -142,19 +142,19 @@ conic_vector_set new_fit_conics(const cali_artf_corresponder& corresp, vil_image
 
         double link_time = t.real() / 1000.0;
 
-        vcl_cout << "Time taken to form groups: " << group_time << " sec" << vcl_endl;
-        vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
+        std::cout << "Time taken to form groups: " << group_time << " sec" << std::endl;
+        std::cout << "Time taken to link: " << link_time << " sec" << std::endl;
 
         //report stats
         edge_linker->report_stats();
         //edge_linker->determine_accuracy_of_measurements();
 
-        vcl_vector< vsol_polyline_2d_sptr > image_curves;
+        std::vector< vsol_polyline_2d_sptr > image_curves;
 
         for (unsigned i=0; i<edge_linker->edgel_chains().size(); i++){
                 //only keep the longer contours
                 if (edge_linker->edgel_chains()[i]->edgels.size() >= min_size_to_keep){
-                        vcl_vector<vsol_point_2d_sptr> pts;
+                        std::vector<vsol_point_2d_sptr> pts;
                         for (unsigned j=0; j<edge_linker->edgel_chains()[i]->edgels.size(); j++)
                                 pts.push_back(new vsol_point_2d(edge_linker->edgel_chains()[i]->edgels[j]->pt));
                         vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);
@@ -162,19 +162,19 @@ conic_vector_set new_fit_conics(const cali_artf_corresponder& corresp, vil_image
                 }
         }
 
-        vcl_cerr << "image curves.size() = " << image_curves.size() << "\n";
+        std::cerr << "image curves.size() = " << image_curves.size() << "\n";
 
         //end  symbolic edge linking
         //---------------------------------------------------------------------------------------------- 
         //conic fitting
-        vcl_vector<vsol_conic_2d_sptr> conic_segs; 
+        std::vector<vsol_conic_2d_sptr> conic_segs; 
         double aspect_ratio = 4;
         int min_fit_length = 40;
         vgl_fit_conics_2d<double> fitter;//the fitting class
         fitter.set_min_fit_length(min_fit_length);
         fitter.set_rms_error_tol(1);
 
-        for (vcl_vector<vsol_polyline_2d_sptr>::iterator curve = image_curves.begin();
+        for (std::vector<vsol_polyline_2d_sptr>::iterator curve = image_curves.begin();
                         curve != image_curves.end(); ++curve)
         {
                 fitter.clear();
@@ -190,13 +190,13 @@ conic_vector_set new_fit_conics(const cali_artf_corresponder& corresp, vil_image
                 }
 
                 fitter.fit();
-                vcl_vector<vgl_conic_segment_2d<double> >& segs = fitter.get_conic_segs();
+                std::vector<vgl_conic_segment_2d<double> >& segs = fitter.get_conic_segs();
 
-                for (vcl_vector<vgl_conic_segment_2d<double> >::iterator sit=segs.begin();
+                for (std::vector<vgl_conic_segment_2d<double> >::iterator sit=segs.begin();
                                 sit != segs.end(); sit++)
                 {
                         vsol_conic_2d_sptr conic = new vsol_conic_2d(*sit);
-                        vcl_cout << "Fitted a conic of type " << conic->real_type() << '\n';
+                        std::cout << "Fitted a conic of type " << conic->real_type() << '\n';
                         //adding a condition on aspect ratio
                         if(conic->is_real_ellipse()){
                                 if (conic->real_type() != 1)
@@ -224,33 +224,33 @@ conic_vector_set new_fit_conics(const cali_artf_corresponder& corresp, vil_image
 int main(int argc, char* argv[]) {
 
         if(argc < 2 ) {
-                vcl_cerr << "Usage: " << argv[0] << " <parameter file>\n";
+                std::cerr << "Usage: " << argv[0] << " <parameter file>\n";
                 exit(1);
         }
-        vcl_string path = argv[1];
+        std::string path = argv[1];
         cali_param par(path);
-        vcl_string fname = par.LOGFILE;
+        std::string fname = par.LOGFILE;
         cali_artf_corresponder corresp(par);
         int start=par.START, end=par.END;
 
-        vcl_string txt_file =  corresp.gen_write_fname(fname, 0);
-        vcl_string dir = vul_file::dirname(txt_file);
-        vcl_string ext = vul_file::extension(txt_file);
-        vcl_string base = vul_file::basename(txt_file,ext.c_str());
+        std::string txt_file =  corresp.gen_write_fname(fname, 0);
+        std::string dir = vul_file::dirname(txt_file);
+        std::string ext = vul_file::extension(txt_file);
+        std::string base = vul_file::basename(txt_file,ext.c_str());
 
         #if defined(VCL_WIN32)
         txt_file = dir + "\\" +  base + ".log";
         #else
         txt_file = dir + "/" + base + ".log";
         #endif
-        vcl_cout << "txt_file is " << txt_file << "\n";
+        std::cout << "txt_file is " << txt_file << "\n";
 
-        vcl_ofstream fstream(txt_file.c_str());
+        std::ofstream fstream(txt_file.c_str());
 
 
 
         for (int i=start; i <=end; i+=par.INTERVAL) {
-                vcl_string outname = corresp.gen_write_fname(fname, i);
+                std::string outname = corresp.gen_write_fname(fname, i);
                 dir = vul_file::dirname(outname);
                 ext = vul_file::extension(outname);
                 base = vul_file::basename(outname,ext.c_str());
@@ -261,7 +261,7 @@ int main(int argc, char* argv[]) {
                 fname = dir + "/" + base + ".tif";
                 #endif
 
-                vcl_cout << "loading " << fname << "\n";
+                std::cout << "loading " << fname << "\n";
                 vil_image_resource_sptr img = vil_load_image_resource(fname.c_str());
 
 //                conic_vector_set conics = corresp.fit_conics(img);
@@ -269,7 +269,7 @@ int main(int argc, char* argv[]) {
 
                 // generate file name with .bin extension
 
-                vcl_cout << "writing " << outname << "\n";
+                std::cout << "writing " << outname << "\n";
                 corresp.save_conics_bin(conics, outname);
 
                 // also save into a txt file

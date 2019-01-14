@@ -7,7 +7,7 @@
 #include <vil/vil_load.h>
 #include <vil/vil_bilin_interp.h>
 #include <vil3d/vil3d_tricub_interp.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 #include <vil/vil_plane.h>
 #include <vil/vil_save.h>
@@ -19,7 +19,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <bsol/bsol_algs.h>
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -78,17 +78,17 @@ void dbsk2d_transform_manager::destroy_singleton()
     image_=0;
 }
 
-void dbsk2d_transform_manager::read_in_training_data(vcl_string filename)
+void dbsk2d_transform_manager::read_in_training_data(std::string filename)
 {
 
-    vcl_ifstream file (filename.c_str(), 
-                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream file (filename.c_str(), 
+                       std::ios::in|std::ios::binary|std::ios::ate);
     double* memblock(0);
     if (file.is_open())
     {
-        vcl_ifstream::pos_type size = file.tellg();
+        std::ifstream::pos_type size = file.tellg();
         memblock = new double[size/sizeof(double)];
-        file.seekg (0, vcl_ios::beg);
+        file.seekg (0, std::ios::beg);
         file.read ((char *) memblock, size);
         file.close();
 
@@ -97,9 +97,9 @@ void dbsk2d_transform_manager::read_in_training_data(vcl_string filename)
         unsigned int nj=memblock[1];
         unsigned int nk=memblock[2];
 
-        vcl_cout<<"Reading in a "<<ni<<" by "<<nj<<" by "<< nk 
+        std::cout<<"Reading in a "<<ni<<" by "<<nj<<" by "<< nk 
                 <<" volume of distances"
-                <<vcl_endl;
+                <<std::endl;
 
         dist_volume_.set_size(ni,nj,nk,1);
         unsigned int index=3;
@@ -124,18 +124,18 @@ void dbsk2d_transform_manager::read_in_training_data(vcl_string filename)
     
 }
 
-void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
+void dbsk2d_transform_manager::read_in_gpb_data(std::string filename)
 {
 
-    vcl_ifstream file (filename.c_str(), 
-                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream file (filename.c_str(), 
+                       std::ios::in|std::ios::binary|std::ios::ate);
     double* memblock(0);
     double max_gPb_value=0.0;
     if (file.is_open())
     {
-        vcl_ifstream::pos_type size = file.tellg();
+        std::ifstream::pos_type size = file.tellg();
         memblock = new double[size/sizeof(double)];
-        file.seekg (0, vcl_ios::beg);
+        file.seekg (0, std::ios::beg);
         file.read ((char *) memblock, size);
         file.close();
 
@@ -143,8 +143,8 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
         unsigned int ni=memblock[0];
         unsigned int nj=memblock[1];
 
-        vcl_cout<<"Reading in a "<<ni<<" by "<<nj<<" gPb values"
-                <<vcl_endl;
+        std::cout<<"Reading in a "<<ni<<" by "<<nj<<" gPb values"
+                <<std::endl;
 
         gPb_image_.set_size(ni,nj);
         unsigned int index=2;
@@ -171,18 +171,18 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
     normalization_=max_gPb_value;
 }
 
-void dbsk2d_transform_manager::read_in_texton_data(vcl_string filename)
+void dbsk2d_transform_manager::read_in_texton_data(std::string filename)
 {
 
-    vcl_ifstream file (filename.c_str(), 
-                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    std::ifstream file (filename.c_str(), 
+                       std::ios::in|std::ios::binary|std::ios::ate);
     double* memblock(0);
 
     if (file.is_open())
     {
-        vcl_ifstream::pos_type size = file.tellg();
+        std::ifstream::pos_type size = file.tellg();
         memblock = new double[size/sizeof(double)];
-        file.seekg (0, vcl_ios::beg);
+        file.seekg (0, std::ios::beg);
         file.read ((char *) memblock, size);
         file.close();
 
@@ -190,8 +190,8 @@ void dbsk2d_transform_manager::read_in_texton_data(vcl_string filename)
         unsigned int ni=memblock[0];
         unsigned int nj=memblock[1];
 
-        vcl_cout<<"Reading in a "<<ni<<" by "<<nj<<" texton values"
-                <<vcl_endl;
+        std::cout<<"Reading in a "<<ni<<" by "<<nj<<" texton values"
+                <<std::endl;
 
         texton_image_.set_size(ni,nj);
         unsigned int index=2;
@@ -214,12 +214,12 @@ void dbsk2d_transform_manager::read_in_texton_data(vcl_string filename)
 }
 
 double dbsk2d_transform_manager::contour_gpb_value(
-    vcl_vector<dbsk2d_ishock_belm*>& belms)
+    std::vector<dbsk2d_ishock_belm*>& belms)
 {
-    vcl_map<int, vgl_point_2d<double> > output_points;
+    std::map<int, vgl_point_2d<double> > output_points;
   
     double perimeter=0.0;
-    vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
+    std::vector<dbsk2d_ishock_belm*>::iterator lit;  
     for (lit = belms.begin() ; lit != belms.end() ; ++lit)
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
@@ -234,7 +234,7 @@ double dbsk2d_transform_manager::contour_gpb_value(
 
 
     double summation=0.0;
-    vcl_map<int,vgl_point_2d<double> >::iterator it;
+    std::map<int,vgl_point_2d<double> >::iterator it;
     for ( it = output_points.begin() ; it != output_points.end(); ++it)
     {
         double x=(*it).second.x();
@@ -254,7 +254,7 @@ double dbsk2d_transform_manager::contour_gpb_value(
 
 
 double dbsk2d_transform_manager::region_gpb_value(
-    vcl_vector<vgl_point_2d<double> >& grid)
+    std::vector<vgl_point_2d<double> >& grid)
 {
 
     double summation=0.0;
@@ -325,7 +325,7 @@ void dbsk2d_transform_manager::write_stats_closed(
 
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     bool status=false;
     {
         // 3) Create shock pro process and assign inputs 
@@ -357,9 +357,9 @@ void dbsk2d_transform_manager::write_stats_closed(
             
             for ( ; i < num_iterations; ++i)
             {
-                vcl_cout<<vcl_endl;
-                vcl_cout<<"************ Retry Compute Shock,iter: "
-                        <<i+1<<" *************"<<vcl_endl;
+                std::cout<<std::endl;
+                std::cout<<"************ Retry Compute Shock,iter: "
+                        <<i+1<<" *************"<<std::endl;
                 
                 // Add inputs
                 shock_pro.add_input(0);
@@ -404,14 +404,14 @@ void dbsk2d_transform_manager::write_stats_closed(
     grouper.grow_regions();
 
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >
         fragments = grouper.get_outer_shock_nodes();
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
         frag_edges = grouper.get_region_nodes();
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
         frag_belms = grouper.get_region_belms();
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
     {
 
@@ -424,8 +424,8 @@ void dbsk2d_transform_manager::write_stats_closed(
         }
     }
 
-    vcl_vector<double> region_stats;
-    vcl_vector<double> app_stats;
+    std::vector<double> region_stats;
+    std::vector<double> app_stats;
 
     // get polygon stats
     grouper.get_region_stats((*it).first,
@@ -436,7 +436,7 @@ void dbsk2d_transform_manager::write_stats_closed(
                                vgl_area(model_poly),
                                app_stats);
 
-    vcl_vector<double> total_stats;
+    std::vector<double> total_stats;
     total_stats.push_back(0.0); //depth , look at this again
     total_stats.push_back(1.0); //path prob
     total_stats.push_back(1.0); //region gap cost
@@ -457,7 +457,7 @@ void dbsk2d_transform_manager::write_stats_closed(
 
 
 void dbsk2d_transform_manager::write_stats_closed(
-    vcl_vector<dbsk2d_ishock_belm*>& belms)
+    std::vector<dbsk2d_ishock_belm*>& belms)
 {
 
     vidpro1_vsol2D_storage_sptr input_vsol = 
@@ -499,7 +499,7 @@ void dbsk2d_transform_manager::write_stats_closed(
 
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     bool status=false;
     {
         // 3) Create shock pro process and assign inputs 
@@ -531,9 +531,9 @@ void dbsk2d_transform_manager::write_stats_closed(
             
             for ( ; i < num_iterations; ++i)
             {
-                vcl_cout<<vcl_endl;
-                vcl_cout<<"************ Retry Compute Shock,iter: "
-                        <<i+1<<" *************"<<vcl_endl;
+                std::cout<<std::endl;
+                std::cout<<"************ Retry Compute Shock,iter: "
+                        <<i+1<<" *************"<<std::endl;
                 
                 // Add inputs
                 shock_pro.add_input(0);
@@ -578,15 +578,15 @@ void dbsk2d_transform_manager::write_stats_closed(
     grouper.grow_regions();
 
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_node*> >
         fragments = grouper.get_outer_shock_nodes();
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >
         frag_edges = grouper.get_region_nodes();
-    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    std::map<unsigned int, std::vector<dbsk2d_ishock_belm*> > 
         frag_belms = grouper.get_region_belms();
 
     vgl_polygon<double> model_poly;
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    std::map<unsigned int,std::vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
     {
 
@@ -602,8 +602,8 @@ void dbsk2d_transform_manager::write_stats_closed(
         }
     }
 
-    vcl_vector<double> region_stats;
-    vcl_vector<double> app_stats;
+    std::vector<double> region_stats;
+    std::vector<double> app_stats;
 
     // get polygon stats
     grouper.get_region_stats((*it).first,
@@ -614,7 +614,7 @@ void dbsk2d_transform_manager::write_stats_closed(
                                vgl_area(model_poly),
                                app_stats);
 
-    vcl_vector<double> total_stats;
+    std::vector<double> total_stats;
     total_stats.push_back(0.0); //depth , look at this again
     total_stats.push_back(1.0); //path prob
     total_stats.push_back(1.0); //region gap cost
@@ -635,7 +635,7 @@ void dbsk2d_transform_manager::write_stats_closed(
 
 // : get closest point
 dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
-    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair )
+    std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair )
 {
 
     dbsk2d_ishock_bpoint* anchor_pt(0);
@@ -649,7 +649,7 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
     double angle1=_vPointPoint(bp1->pt(),bl1->s_pt()->pt());
     double angle2=_vPointPoint(bp1->pt(),bl1->e_pt()->pt());
 
-    vgl_vector_2d<double> vec(vcl_sin(bp1->tangent()),-vcl_cos(bp1->tangent()));
+    vgl_vector_2d<double> vec(std::sin(bp1->tangent()),-std::cos(bp1->tangent()));
     vgl_line_2d<double> line(bp1->pt(),vec);
     vgl_box_2d<double> box(vgl_point_2d<double>(0,0),vgl_point_2d<double>
                            (image_->ni(),image_->nj()));
@@ -657,12 +657,12 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
     bool flag=vgl_intersection(box,line,lstart,lend);
 
     // convert the pts into bnd_vertex and put into a list
-    vcl_vector<vgl_point_2d<double> > bv_list;
+    std::vector<vgl_point_2d<double> > bv_list;
 
-    vcl_set<int> local_map;
+    std::set<int> local_map;
 
-    vcl_map<int,dbsk2d_ishock_node*> outer_wavefront;
-    vcl_map<int,dbsk2d_ishock_node*> source_node;
+    std::map<int,dbsk2d_ishock_node*> outer_wavefront;
+    std::map<int,dbsk2d_ishock_node*> source_node;
 
     // Loop over shock map
     bnd_ishock_map_iter curS = bp1->shock_map().begin();
@@ -704,7 +704,7 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
 
     
 
-    vcl_map<int,dbsk2d_ishock_node*>::iterator it;
+    std::map<int,dbsk2d_ishock_node*>::iterator it;
     while ( outer_wavefront.size() > 0 )
     {
         it = outer_wavefront.begin();
@@ -827,8 +827,8 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
 
 // chi squared distance
 double dbsk2d_transform_manager::chi_squared_color_distance(
-    vcl_vector<vgl_point_2d<double> >& foreground,
-    vcl_vector<vgl_point_2d<double> >& background,
+    std::vector<vgl_point_2d<double> >& foreground,
+    std::vector<vgl_point_2d<double> >& background,
     vil_image_view<double>& channel,
     double min, double max,unsigned int nbins,bool flip)
 {
@@ -887,8 +887,8 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
 
 // chi squared distance
 double dbsk2d_transform_manager::mean_LAB_distance(
-    vcl_vector<vgl_point_2d<double> >& foreground,
-    vcl_vector<vgl_point_2d<double> >& background)
+    std::vector<vgl_point_2d<double> >& foreground,
+    std::vector<vgl_point_2d<double> >& background)
 {
     
     vnl_vector_fixed<double,3> foreground_mean(0.0); 
@@ -967,8 +967,8 @@ bool dbsk2d_transform_manager::gap_endpoint(dbsk2d_ishock_bpoint* bp)
 
 // chi squared distance
 void dbsk2d_transform_manager::ellipse_fitting(
-    vcl_vector<vgl_point_2d<double> >& foreground,
-    vcl_vector<double>& ellipse_stats)
+    std::vector<vgl_point_2d<double> >& foreground,
+    std::vector<double>& ellipse_stats)
 {
     double xo=0.0;
     double yo=0.0;
@@ -1014,18 +1014,18 @@ void dbsk2d_transform_manager::ellipse_fitting(
 
     vnl_svd<double> svd(Si);
     
-    double major_axis_radius = 2.0*vcl_sqrt(vcl_fabs(svd.W(0)));
-    double minor_axis_radius = 2.0*vcl_sqrt(vcl_fabs(svd.W(1)));
+    double major_axis_radius = 2.0*std::sqrt(std::fabs(svd.W(0)));
+    double minor_axis_radius = 2.0*std::sqrt(std::fabs(svd.W(1)));
 
     vnl_matrix<double> v=svd.V();
 
     double orientation(0.0);
 
-    double angle=vcl_fabs(vcl_atan2(v(1,0),v(0,0)));
+    double angle=std::fabs(std::atan2(v(1,0),v(0,0)));
     
     if ( angle > vnl_math::pi_over_2 )
     {
-        orientation=vcl_fmod(vnl_math::pi,angle);
+        orientation=std::fmod(vnl_math::pi,angle);
     }
     else
     {
@@ -1041,10 +1041,10 @@ void dbsk2d_transform_manager::ellipse_fitting(
 
 
 void dbsk2d_transform_manager::grid_points(
-    vcl_vector<dbsk2d_ishock_edge*>& region,
-    vcl_vector<dbsk2d_ishock_belm*>& belms,
-    vcl_vector<vgl_point_2d<double> >& foreground_grid,
-    vcl_vector<vgl_point_2d<double> >& background_grid)
+    std::vector<dbsk2d_ishock_edge*>& region,
+    std::vector<dbsk2d_ishock_belm*>& belms,
+    std::vector<vgl_point_2d<double> >& foreground_grid,
+    std::vector<vgl_point_2d<double> >& background_grid)
 {
  
     // Make a dummy coarse shock graph
@@ -1053,7 +1053,7 @@ void dbsk2d_transform_manager::grid_points(
     sampler.set_sample_resolution(0.5);
     double step_size=1.0;
     
-    vcl_set<int> foreground_shocks;
+    std::set<int> foreground_shocks;
 
     // Deal with foreground first
     {
@@ -1102,7 +1102,7 @@ void dbsk2d_transform_manager::grid_points(
 
                 if (sample->speed != 0 && sample->speed < 99990)
                 {
-                    phi=vcl_acos(-1.0/sample->speed);
+                    phi=std::acos(-1.0/sample->speed);
                 }
                 else
                 {
@@ -1138,7 +1138,7 @@ void dbsk2d_transform_manager::grid_points(
     // Deal with Background second
     {
         // get outer shocks
-        vcl_map<int,dbsk2d_ishock_edge*> outer_shocks;
+        std::map<int,dbsk2d_ishock_edge*> outer_shocks;
 
         for ( unsigned int b=0; b < belms.size() ; ++b)
         {
@@ -1189,7 +1189,7 @@ void dbsk2d_transform_manager::grid_points(
         }
 
 
-        vcl_map<int,dbsk2d_ishock_edge*>::iterator it;
+        std::map<int,dbsk2d_ishock_edge*>::iterator it;
         for ( it = outer_shocks.begin() ; it != outer_shocks.end() ; ++it)
         {
             dbsk2d_ishock_edge* cur_iedge=(*it).second;
@@ -1233,7 +1233,7 @@ void dbsk2d_transform_manager::grid_points(
 
                 if (sample->speed != 0 && sample->speed < 99990)
                 {
-                    phi=vcl_acos(-1.0/sample->speed);
+                    phi=std::acos(-1.0/sample->speed);
                 }
                 else
                 {
@@ -1295,8 +1295,8 @@ double dbsk2d_transform_manager::color_gradient(bsold_interp_curve_2d_sptr c,
     double distance=0.0;
     double delta=0.3;
     double length_threshold=c->length();
-    vcl_vector<double> tangents;
-    vcl_vector<vsol_point_2d_sptr> curve_pts;
+    std::vector<double> tangents;
+    std::vector<vsol_point_2d_sptr> curve_pts;
     bsold_curve_algs::sample(*c, delta, curve_pts, tangents, 
                              length_threshold);  
 
@@ -1349,10 +1349,10 @@ double dbsk2d_transform_manager::color_gradient(bsold_interp_curve_2d_sptr c,
 }
 
 double dbsk2d_transform_manager::likelihood(
-    vcl_vector<vgl_point_2d<double> >& curve)
+    std::vector<vgl_point_2d<double> >& curve)
 {
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
 
     for ( int i=0; i < curve.size() ; ++i)
     {
@@ -1360,7 +1360,7 @@ double dbsk2d_transform_manager::likelihood(
         pts.push_back(pt );
     }
 
-    vcl_vector<vsol_point_2d_sptr > region_pts;                 
+    std::vector<vsol_point_2d_sptr > region_pts;                 
     bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
     bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
     bsold_curve_algs::sample_region_along_curve(*c, 
@@ -1370,8 +1370,8 @@ double dbsk2d_transform_manager::likelihood(
                                                 5.0, 
                                                 false);
 
-    vcl_vector<vgl_point_2d<double> > foreground_grid;
-    vcl_vector<vgl_point_2d<double> > background_grid;
+    std::vector<vgl_point_2d<double> > foreground_grid;
+    std::vector<vgl_point_2d<double> > background_grid;
 
     for(unsigned i = 0; i < region_pts.size()/2; ++i)
     {
@@ -1426,7 +1426,7 @@ double dbsk2d_transform_manager::likelihood(
     double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
         texton_chi2*weight5;
 
-    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+    double sigmoid=1/(1+std::exp(-1.0*modulus));
 
     return sigmoid;
 
@@ -1436,14 +1436,14 @@ double dbsk2d_transform_manager::likelihood(
     vsol_polyline_2d_sptr& curve)
 {
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
 
     for ( int i=0; i < curve->size() ; ++i)
     {
         pts.push_back(curve->vertex(i));
     }
 
-    vcl_vector<vsol_point_2d_sptr > region_pts;                 
+    std::vector<vsol_point_2d_sptr > region_pts;                 
     bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
     bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
     bsold_curve_algs::sample_region_along_curve(*c, 
@@ -1453,8 +1453,8 @@ double dbsk2d_transform_manager::likelihood(
                                                 5.0, 
                                                 false);
 
-    vcl_vector<vgl_point_2d<double> > foreground_grid;
-    vcl_vector<vgl_point_2d<double> > background_grid;
+    std::vector<vgl_point_2d<double> > foreground_grid;
+    std::vector<vgl_point_2d<double> > background_grid;
 
     for(unsigned i = 0; i < region_pts.size()/2; ++i)
     {
@@ -1510,16 +1510,16 @@ double dbsk2d_transform_manager::likelihood(
     double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
         texton_chi2*weight5;
 
-    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+    double sigmoid=1/(1+std::exp(-1.0*modulus));
 
     return sigmoid;
 
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vcl_vector<vgl_point_2d<double> >& 
+    std::vector<vgl_point_2d<double> >& 
     foreground_grid,
-    vcl_vector<vgl_point_2d<double> >&
+    std::vector<vgl_point_2d<double> >&
     background_grid)
 {
 
@@ -1578,10 +1578,10 @@ double dbsk2d_transform_manager::transform_probability(
     double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
         texton_chi2*weight5;
 
-    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+    double sigmoid=1/(1+std::exp(-1.0*modulus));
 
-    // vcl_cout<<L_chi2<<" "<<a_chi2<<" "<<b_chi2<<" "<<texton_chi2<<" "<<
-    //     sigmoid<<vcl_endl;
+    // std::cout<<L_chi2<<" "<<a_chi2<<" "<<b_chi2<<" "<<texton_chi2<<" "<<
+    //     sigmoid<<std::endl;
     return sigmoid;
 }
 double dbsk2d_transform_manager::transform_probability(
@@ -1609,20 +1609,20 @@ double dbsk2d_transform_manager::transform_probability(
                                                dist_volume_.jstep(),
                                                dist_volume_.kstep());
  
-    double prob = 1.0-(1.0/(1.0+vcl_exp(distance*logistic_beta0_+
+    double prob = 1.0-(1.0/(1.0+std::exp(distance*logistic_beta0_+
                                     logistic_beta1_)));
     
     return prob;
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vcl_vector<vgl_point_2d<double> >& input,
+    std::vector<vgl_point_2d<double> >& input,
     bool use_length)
 {
 
     // resample curve to always 100 samples
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
 
     for ( int i=0; i < input.size() ; ++i)
     {
@@ -1652,7 +1652,7 @@ double dbsk2d_transform_manager::transform_probability(
         summation = summation + gPb;
     }
     
-    double average_gPb = vcl_min(summation/pts.size(),1.0);
+    double average_gPb = std::min(summation/pts.size(),1.0);
     double length = c->length()/diag_;
     double sigmoid=0.0;
 
@@ -1662,7 +1662,7 @@ double dbsk2d_transform_manager::transform_probability(
         double weight2(10.2010);
         double weight3(0.6022);
         double modulus=1*weight1+average_gPb*weight2+length*weight3;
-        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+        sigmoid=1/(1+std::exp(-1.0*modulus));
 
     }
     else
@@ -1670,7 +1670,7 @@ double dbsk2d_transform_manager::transform_probability(
         double weight1(-3.0470);
         double weight2(10.5959);
         double modulus=1*weight1+average_gPb*weight2;
-        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+        sigmoid=1/(1+std::exp(-1.0*modulus));
 
     }
 
@@ -1683,7 +1683,7 @@ double dbsk2d_transform_manager::transform_probability(
 {
     // resample curve to always 100 samples
 
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
 
     for ( int i=0; i < input->size() ; ++i)
     {
@@ -1712,7 +1712,7 @@ double dbsk2d_transform_manager::transform_probability(
         summation = summation + gPb;
     }
     
-    double average_gPb = vcl_min(summation/pts.size(),1.0);
+    double average_gPb = std::min(summation/pts.size(),1.0);
     double length = c->length()/diag_;
     double sigmoid=0.0;
 
@@ -1722,7 +1722,7 @@ double dbsk2d_transform_manager::transform_probability(
         double weight2(10.2010);
         double weight3(0.6022);
         double modulus=1*weight1+average_gPb*weight2+length*weight3;
-        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+        sigmoid=1/(1+std::exp(-1.0*modulus));
 
     }
     else
@@ -1730,22 +1730,22 @@ double dbsk2d_transform_manager::transform_probability(
         double weight1(-3.0470);
         double weight2(10.5959);
         double modulus=1*weight1+average_gPb*weight2;
-        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+        sigmoid=1/(1+std::exp(-1.0*modulus));
 
     }
     return sigmoid;
 
 }
 
-void dbsk2d_transform_manager::start_binary_file(vcl_string binary_file_output)
+void dbsk2d_transform_manager::start_binary_file(std::string binary_file_output)
 {
     output_binary_file_ = binary_file_output;
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_binary_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double size_x = image_->ni();
     double size_y = image_->nj();
@@ -1760,15 +1760,15 @@ void dbsk2d_transform_manager::start_binary_file(vcl_string binary_file_output)
 
 }
 
-void dbsk2d_transform_manager::start_region_file(vcl_string binary_file_output)
+void dbsk2d_transform_manager::start_region_file(std::string binary_file_output)
 {
     output_region_file_ = binary_file_output;
 
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
 
     double size_x = image_->ni();
     double size_y = image_->nj();
@@ -1787,11 +1787,11 @@ void dbsk2d_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 {
 
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_binary_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
     double num_sheets=poly.num_sheets();
     output_binary_file.write(reinterpret_cast<char *>(&num_sheets),
@@ -1823,15 +1823,15 @@ void dbsk2d_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 }
 
 void dbsk2d_transform_manager::write_output_region_stats(
-    vcl_vector<double>& region_stats)
+    std::vector<double>& region_stats)
 {
 
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_region_stats_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
 
     for ( unsigned int f=0; f < region_stats.size() ; ++f)
@@ -1854,11 +1854,11 @@ void dbsk2d_transform_manager::write_output_region(vgl_polygon<double>& poly)
 {
 
 
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
     double num_contours= (poly[0].size()-1)*4.0+(poly[0].size()-1);
     output_region_file.write(reinterpret_cast<char *>(&num_contours),
@@ -1894,13 +1894,13 @@ void dbsk2d_transform_manager::write_output_region(vgl_polygon<double>& poly)
 }
 
 void dbsk2d_transform_manager::get_appearance_stats(
-    vcl_vector<dbsk2d_ishock_edge*>& region,
-    vcl_vector<dbsk2d_ishock_belm*>& belms,
+    std::vector<dbsk2d_ishock_edge*>& region,
+    std::vector<dbsk2d_ishock_belm*>& belms,
     double area,
-    vcl_vector<double>& app_stats)
+    std::vector<double>& app_stats)
 {
-    vcl_vector<vgl_point_2d<double> > foreground_grid;
-    vcl_vector<vgl_point_2d<double> > background_grid;
+    std::vector<vgl_point_2d<double> > foreground_grid;
+    std::vector<vgl_point_2d<double> > background_grid;
     
     this->grid_points(region,
                       belms,
@@ -1950,7 +1950,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
                                         background_grid);
 
     // 7) Do ellipse fitting
-    vcl_vector<double> ellipse_stats;
+    std::vector<double> ellipse_stats;
     ellipse_fitting(foreground_grid,
                     ellipse_stats);
 
@@ -1970,12 +1970,12 @@ void dbsk2d_transform_manager::get_appearance_stats(
 }
 
 void dbsk2d_transform_manager::get_extra_belms(
-    vcl_vector<dbsk2d_ishock_belm*>& region_belms,
-    vcl_set<int>& key,
-    vcl_set<int>& closed_region_key,
-    vcl_map<int,dbsk2d_ishock_bline*>& output_lines)
+    std::vector<dbsk2d_ishock_belm*>& region_belms,
+    std::set<int>& key,
+    std::set<int>& closed_region_key,
+    std::map<int,dbsk2d_ishock_bline*>& output_lines)
 {
-    vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
+    std::vector<dbsk2d_ishock_belm*>::iterator lit;  
     for (lit = region_belms.begin() ; lit != region_belms.end() ; ++lit)
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
@@ -2048,7 +2048,7 @@ void dbsk2d_transform_manager::get_extra_belms(
    
     }
 
-    // vcl_map<int, dbsk2d_ishock_bline*>::iterator oit;
+    // std::map<int, dbsk2d_ishock_bline*>::iterator oit;
     // for (oit = output_lines.begin() ; oit != output_lines.end() ; ++oit)
     // {
     //     key.insert((*oit).first);
@@ -2056,19 +2056,19 @@ void dbsk2d_transform_manager::get_extra_belms(
 }
 
 void dbsk2d_transform_manager::write_output_region(
-    vcl_vector<dbsk2d_ishock_belm*>& region_belms)
+    std::vector<dbsk2d_ishock_belm*>& region_belms)
 {
 
 
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
-    vcl_map<int, dbsk2d_ishock_bline*> output_lines;
+    std::map<int, dbsk2d_ishock_bline*> output_lines;
   
-    vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
+    std::vector<dbsk2d_ishock_belm*>::iterator lit;  
     for (lit = region_belms.begin() ; lit != region_belms.end() ; ++lit)
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
@@ -2120,7 +2120,7 @@ void dbsk2d_transform_manager::write_output_region(
     output_region_file.write(reinterpret_cast<char *>(&num_contours),
                               sizeof(double));
   
-    vcl_map<int, dbsk2d_ishock_bline*>::iterator oit;
+    std::map<int, dbsk2d_ishock_bline*>::iterator oit;
     for (oit = output_lines.begin() ; oit != output_lines.end() ; ++oit)
     {
 
@@ -2156,8 +2156,8 @@ void dbsk2d_transform_manager::write_output_region(
 
 
 void dbsk2d_transform_manager::write_output_region(
-    vcl_vector<dbsk2d_bnd_contour_sptr>& contours,
-    vcl_vector<vgl_point_2d<double> >& gap_filler)
+    std::vector<dbsk2d_bnd_contour_sptr>& contours,
+    std::vector<vgl_point_2d<double> >& gap_filler)
 {
 
 
@@ -2167,16 +2167,16 @@ void dbsk2d_transform_manager::write_output_region(
     fitter.add_curve(gap_filler);
     fitter.fit();
 
-    vcl_vector<vgl_line_segment_2d<double> > segs;
+    std::vector<vgl_line_segment_2d<double> > segs;
     segs= fitter.get_line_segs();
     
-    vcl_ofstream output_region_file;
+    std::ofstream output_region_file;
     output_region_file.open(output_region_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
-    vcl_map<int,dbsk2d_bnd_edge_sptr> output_edges;
+    std::map<int,dbsk2d_bnd_edge_sptr> output_edges;
     double contour_id_orig=contours[0]->get_id();
 
     for ( unsigned int c=0; c < contours.size() ; ++c)
@@ -2195,7 +2195,7 @@ void dbsk2d_transform_manager::write_output_region(
     output_region_file.write(reinterpret_cast<char *>(&num_contours),
                               sizeof(double));
   
-    vcl_map<int, dbsk2d_bnd_edge_sptr>::iterator oit;
+    std::map<int, dbsk2d_bnd_edge_sptr>::iterator oit;
     for (oit = output_edges.begin() ; oit != output_edges.end() ; ++oit)
     {
 
@@ -2256,13 +2256,13 @@ void dbsk2d_transform_manager::write_output_region(
 }
 
 void dbsk2d_transform_manager::write_output_polygon(
-    vcl_vector<dbsk2d_bnd_contour_sptr>& contours,
-    vcl_vector<vgl_point_2d<double> >& gap_filler)
+    std::vector<dbsk2d_bnd_contour_sptr>& contours,
+    std::vector<vgl_point_2d<double> >& gap_filler)
 {
 
 
    
-    vcl_vector<vgl_point_2d<double> > hull_points;
+    std::vector<vgl_point_2d<double> > hull_points;
 
     for (unsigned int k=0; k < gap_filler.size() ; ++k)
     {
@@ -2283,11 +2283,11 @@ void dbsk2d_transform_manager::write_output_polygon(
     vgl_convex_hull_2d<double> convex_hull(hull_points);
     vgl_polygon<double> poly=convex_hull.hull();
 
-    vcl_ofstream output_binary_file;
+    std::ofstream output_binary_file;
     output_binary_file.open(output_binary_file_.c_str(),
-                            vcl_ios::out | 
-                            vcl_ios::app | 
-                            vcl_ios::binary);
+                            std::ios::out | 
+                            std::ios::app | 
+                            std::ios::binary);
     
     double num_vertices= poly[0].size();
     output_binary_file.write(reinterpret_cast<char *>(&num_vertices),
@@ -2313,7 +2313,7 @@ void dbsk2d_transform_manager::write_output_polygon(
 
 void dbsk2d_transform_manager::save_image_poly(
     vgl_polygon<double>& vgl_poly,
-    vcl_string filename)
+    std::string filename)
 {
     
     vil_image_resource_sptr img_r = vil_plane(image_, 0);
@@ -2328,8 +2328,8 @@ void dbsk2d_transform_manager::save_image_poly(
     double miny = bbox->get_min_y()-5 < 0 ? 0 : bbox->get_min_y()-5;
 
     vil_image_view<vil_rgb<vxl_byte> > 
-        temp((int)vcl_ceil(bbox->width() + 10), 
-             (int)vcl_ceil(bbox->height() + 10), 1); 
+        temp((int)std::ceil(bbox->width() + 10), 
+             (int)std::ceil(bbox->height() + 10), 1); 
     vil_rgb<vxl_byte> bg_col(255, 255, 255);
     temp.fill(bg_col);
 
@@ -2352,8 +2352,8 @@ void dbsk2d_transform_manager::save_image_poly(
             { 
                 continue;
             }
-            int xx = (int)vcl_floor(x - minx + 0.5); 
-            int yy = (int)vcl_floor(y - miny + 0.5);
+            int xx = (int)std::floor(x - minx + 0.5); 
+            int yy = (int)std::floor(y - miny + 0.5);
             if (xx < 0 || yy < 0)
             {
                 continue;

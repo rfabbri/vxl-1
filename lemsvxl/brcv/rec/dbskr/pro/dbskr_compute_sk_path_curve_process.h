@@ -32,10 +32,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -44,15 +44,15 @@ public:
   bool finish();
 
 private:
-  vcl_vector<int> parseLineForNumbers(vcl_string s);
+  std::vector<int> parseLineForNumbers(std::string s);
 
   void get_path_from_ids (dbsk2d_shock_graph_sptr shock_graph,
                           dbsk2d_shock_node_sptr & start_node,
-                          vcl_vector<dbsk2d_shock_edge_sptr> & path1, 
-                          int start_node_id, vcl_string sh_path);
+                          std::vector<dbsk2d_shock_edge_sptr> & path1, 
+                          int start_node_id, std::string sh_path);
 
   dbskr_scurve_sptr dbskr_compute_scurve_Thomas(dbsk2d_shock_node_sptr start_node,
-                            vcl_vector<dbsk2d_shock_edge_sptr> path,
+                            std::vector<dbsk2d_shock_edge_sptr> path,
                             bool binterpolate, bool bsub_sample);
 
   

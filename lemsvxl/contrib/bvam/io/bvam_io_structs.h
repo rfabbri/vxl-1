@@ -1,7 +1,7 @@
 #ifndef bvam_io_structs_h_
 #define bvam_io_structs_h_
 
-#include <vcl_string.h>
+#include <string>
 
 // Parameter TAGS
 #define BVAM_MODEL_DIR_TAG "model_dir"
@@ -32,11 +32,11 @@
 
 class bvam_io_process {
 public:
-  bvam_io_process(vcl_string type, vcl_string path) 
+  bvam_io_process(std::string type, std::string path) 
     : process_type(type), output_path(path) {}
   virtual ~bvam_io_process() {}
-  vcl_string process_type;
-  vcl_string output_path;
+  std::string process_type;
+  std::string output_path;
 };
 
 class bvam_io_schedule {
@@ -57,62 +57,62 @@ public:
 };
 
 struct bvam_io_process_train : public bvam_io_process {
-  bvam_io_process_train(vcl_string images, vcl_string cameras, 
-    vcl_string light, bvam_io_schedule seq, vcl_string output_path) 
+  bvam_io_process_train(std::string images, std::string cameras, 
+    std::string light, bvam_io_schedule seq, std::string output_path) 
     : bvam_io_process(BVAM_PROCESS_TRAIN_TAG, output_path), 
     image_path(images), camera_path(cameras), light_path(light), schedule(seq) {}
 
-  vcl_string image_path;
-  vcl_string camera_path;
-  vcl_string light_path;
+  std::string image_path;
+  std::string camera_path;
+  std::string light_path;
   bvam_io_schedule schedule;
 };
 
 struct bvam_io_process_detect : public bvam_io_process {
-  bvam_io_process_detect(vcl_string images, vcl_string cameras, 
-    vcl_string light, bvam_io_schedule seq, vcl_string output_path) 
+  bvam_io_process_detect(std::string images, std::string cameras, 
+    std::string light, bvam_io_schedule seq, std::string output_path) 
     : bvam_io_process(BVAM_PROCESS_DETECT_CHANGE_TAG, output_path), 
     image_path(images), camera_path(cameras), light_path(light), schedule(seq) {}
 
-  vcl_string image_path;
-  vcl_string camera_path;
-  vcl_string light_path;
+  std::string image_path;
+  std::string camera_path;
+  std::string light_path;
   bvam_io_schedule schedule;
 };
 
 struct bvam_io_process_render_expected : public bvam_io_process {
-  bvam_io_process_render_expected(int dimx, int dimy, vcl_string camera, 
-    vcl_string light, bvam_io_schedule seq, vcl_string output_path) 
+  bvam_io_process_render_expected(int dimx, int dimy, std::string camera, 
+    std::string light, bvam_io_schedule seq, std::string output_path) 
     : bvam_io_process(BVAM_PROCESS_RENDER_EXP_TAG, output_path), 
     x(dimx), y(dimy), camera_path(camera), light_path(light), schedule(seq) {}
 
   int x, y;
-  vcl_string camera_path;
-  vcl_string light_path;
+  std::string camera_path;
+  std::string light_path;
   bvam_io_schedule schedule;
 };
 
 struct bvam_io_process_render_from_view : public bvam_io_process {
   bvam_io_process_render_from_view(int dimx, int dimy, 
-    vcl_string images, vcl_string cameras, 
-    vcl_string view_camera, int view_camera_idx, 
-    bvam_io_schedule sch, bvam_io_schedule view_sch, vcl_string output_path) 
+    std::string images, std::string cameras, 
+    std::string view_camera, int view_camera_idx, 
+    bvam_io_schedule sch, bvam_io_schedule view_sch, std::string output_path) 
     : bvam_io_process(BVAM_PROCESS_RENDER_VIEW_TAG, output_path), 
     x(dimx), y(dimy), image_path(images), 
     camera_path(cameras), view_camera_path(view_camera), 
     view_camera_index(view_camera_idx), schedule(sch), view_schedule(sch) {}
 
   int x, y;
-  vcl_string image_path;
-  vcl_string camera_path;
-  vcl_string view_camera_path;
+  std::string image_path;
+  std::string camera_path;
+  std::string view_camera_path;
   int view_camera_index;
   bvam_io_schedule schedule;
   bvam_io_schedule view_schedule;
 };
 
 struct bvam_io_process_write_raw : public bvam_io_process {
-  bvam_io_process_write_raw(vcl_string output_path) 
+  bvam_io_process_write_raw(std::string output_path) 
     : bvam_io_process(BVAM_PROCESS_WRITE_RAW_TAG, output_path) {}
 };
 

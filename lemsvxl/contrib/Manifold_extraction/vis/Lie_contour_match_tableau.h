@@ -11,7 +11,7 @@
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_utils.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_tool_sptr.h>
 #include <bvis1/bvis1_tool.h>
 #include <vgl/vgl_distance.h>
@@ -52,9 +52,9 @@ public:
   void set_curvematch (Lie_contour_match_sptr new_curvematch) {
     curvematch_ = new_curvematch;
    
-    vcl_vector<double> cost_vec = curvematch_->finalCost();
+    std::vector<double> cost_vec = curvematch_->finalCost();
 
-   // curvematch_->curve1()->print(vcl_cout);
+   // curvematch_->curve1()->print(std::cout);
 
     double min_cost = 1e20;
         int min_idx = -1; // infinity
@@ -88,7 +88,7 @@ public:
   void get_popup(const vgui_popup_params& params, vgui_menu &menu);
 
 protected:
-  void DrawPointMatching(vcl_vector<vgl_point_2d<double> >& pts1, vcl_vector<vgl_point_2d<double> >& pts2, 
+  void DrawPointMatching(std::vector<vgl_point_2d<double> >& pts1, std::vector<vgl_point_2d<double> >& pts2, 
                         double OffsetX1, double OffsetY1, double OffsetX2, double OffsetY2, bool show_matching_lines);
   void DrawCurveMatching (dbsol_interp_curve_2d_sptr curve1, 
                 dbsol_interp_curve_2d_sptr curve2, FinalMapType* fmap, 

@@ -9,7 +9,7 @@
 #include <boxm/boxm_simple_grey_processor.h>
 #include <vil/vil_math.h>
 #include <vil/vil_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <class T, class T_aux>
 class boxm_generate_edge_sample_functor
@@ -46,18 +46,18 @@ template <class T_loc, class T_data>
 void boxm_generate_edge_sample_rt(boxm_scene<boct_tree<T_loc, T_data > > &scene,
                                   vpgl_camera_double_sptr cam,
                                   vil_image_view<float> &obs,
-                                  vcl_string iname)
+                                  std::string iname)
 {
     typedef boxm_aux_edge_sample<float> aux_datatype;
     boxm_aux_scene<T_loc, T_data, aux_datatype> aux_scene(&scene,iname, boxm_aux_scene<T_loc,T_data,aux_datatype>::CLONE);
     typedef boxm_generate_edge_sample_functor<boxm_edge_sample<float>,aux_datatype> func;
     boxm_raytrace_function<func,T_loc, T_data, aux_datatype> raytracer(scene,aux_scene,cam.ptr(),obs.ni(),obs.nj());
-    vcl_cout<<"PROCESSING EDGE IMAGE"<<vcl_endl;
+    std::cout<<"PROCESSING EDGE IMAGE"<<std::endl;
     func functor(obs,obs.ni(),obs.nj());
     raytracer.run(functor);
 
     //aux_scene.clean_scene();
-    vcl_cout<<"DONE."<<vcl_endl;
+    std::cout<<"DONE."<<std::endl;
 }
 
 #endif // boxm_generate_edge_sample_functor_h

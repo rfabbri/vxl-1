@@ -47,11 +47,11 @@
 #include <vul/vul_timer.h>
 #include <vul/vul_sprintf.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
-static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbdet_edgel*> edgels);
+static bool is_edges_covered_in_window (vgl_box_2d<int > window, std::vector<dbdet_edgel*> edgels);
 
 static bool b_rank_order_results = false;
 static bool is_initial = false;
@@ -65,7 +65,7 @@ static double w_ranking_weights_initial[] = {0.1121, 0.0089, 0, 0};
 static double compute_real_conf(double edge_confidence, double appearance_cost, double appearance_cost2, double shape_trans_cost )
 {
 
-	vcl_vector<double> ranking_weights;
+	std::vector<double> ranking_weights;
 	if(is_initial && is_Black)
 		ranking_weights.assign(b_ranking_weights_initial, b_ranking_weights_initial+4);
 	if(is_initial && !is_Black)
@@ -82,7 +82,7 @@ static double compute_real_conf(double edge_confidence, double appearance_cost, 
 bool dbsks_detect_xgraph_using_edgemap::
 execute()
 {
-  vcl_cout << "\n|========================================================|"
+  std::cout << "\n|========================================================|"
            << "\n|   Xgraph detection using Contour-Chamfer-Matching      |"
            << "\n|========================================================|\n\n";
 
@@ -109,28 +109,28 @@ execute()
   //////////////////////////////////////////////////////////////////////////////////////
 
   //> List of detection records from all scales
-  vcl_vector<dbsks_det_desc_xgraph_sptr > raw_dets_all_scales;
+  std::vector<dbsks_det_desc_xgraph_sptr > raw_dets_all_scales;
 
   // Iterate thru all possible sizes of prototype xgraph
 //  for (unsigned i_scale =0; i_scale < xgraph_scales.size(); ++i_scale)
 //  {
 	unsigned i_scale = 0;
-    vcl_cout
+    std::cout
       << "\n\n-------------------------------------------------------------------"
       << "\nProcessing xgraph size = " << xgraph_scales[i_scale] << "\n\n";
 
     //> Name of folder to store detect records from this scale
-//    vcl_string storage_foldername = "scale_" + vul_sprintf("%d", vnl_math::rnd(xgraph_scales[i_scale]));
-	vcl_string storage_foldername = "base_scale";
-    vcl_string storage_folder = work_folder + "/" + storage_foldername;
-	vcl_string prev_storage_folder = prev_folder + "/" + storage_foldername;
+//    std::string storage_foldername = "scale_" + vul_sprintf("%d", vnl_math::rnd(xgraph_scales[i_scale]));
+	std::string storage_foldername = "base_scale";
+    std::string storage_folder = work_folder + "/" + storage_foldername;
+	std::string prev_storage_folder = prev_folder + "/" + storage_foldername;
 
     //> create the directory if not yet done
     if (!vul_file::is_directory(storage_folder))
     {
       if (!vul_file::make_directory(storage_folder))
       {
-        vcl_cout << "\nERROR: cannot create work_folder to save detections.\n";
+        std::cout << "\nERROR: cannot create work_folder to save detections.\n";
         //continue;
 		return true;
       }
@@ -153,11 +153,11 @@ execute()
 	if(!this ->load_initial_edgemap(actual_edgemap, actual_xgraph))
 		this ->load_edgemap_singe_scale(actual_edgemap, actual_xgraph);
     //> If a scale has been processed, simply load the results back
-    vcl_vector<dbsks_det_desc_xgraph_sptr > dets; //> List of detections for this scale
-    vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets; //> List of detections for this scale in prev frame
+    std::vector<dbsks_det_desc_xgraph_sptr > dets; //> List of detections for this scale
+    std::vector<dbsks_det_desc_xgraph_sptr > prev_dets; //> List of detections for this scale in prev frame
 
     if (!dbsks_load_detections_from_folder(prev_storage_folder, prev_dets))
-		vcl_cout << "\n [Fail] loading previous dets \n";
+		std::cout << "\n [Fail] loading previous dets \n";
 //	else
 //		is_initial = true;
 
@@ -166,20 +166,20 @@ execute()
 
     if (dets.size()>0 && is_xgraph_in_BB(dets))
     {
-        vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
+        std::cout << "\nThis image has been processed. All records are loaded back.\n";
 	    if(b_rank_order_results)
 		    this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, 
         storage_folder, dets, prev_dets);
 
 	    this->output_det_list = dets;
 		//> Dump the detections to a folder for backing up
-		vcl_cout << "\n> Saving detections of selected scale to dump folder = " 
+		std::cout << "\n> Saving detections of selected scale to dump folder = " 
 		<< storage_folder << "\n";
      
 		// form a unique id for this group of detections
-		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
-		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
-		vcl_string model_category = "";
+		std::string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
+		std::string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
+		std::string model_category = "";
 
 		// create a binary image from the edgemap
 		vil_image_view<vxl_byte > bg_view;
@@ -199,13 +199,13 @@ execute()
 		storage_folder, dets, prev_dets);
 
 		//> Dump the detections to a folder for backing up
-		vcl_cout << "\n> Saving detections of selected scale to dump folder = " 
+		std::cout << "\n> Saving detections of selected scale to dump folder = " 
 		<< storage_folder << "\n";
      
 		// form a unique id for this group of detections
-		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
-		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
-		vcl_string model_category = "";
+		std::string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
+		std::string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
+		std::string model_category = "";
 
 		// create a binary image from the edgemap
 		vil_image_view<vxl_byte > bg_view;
@@ -231,37 +231,37 @@ execute()
 
 
     // Some report on results
-    vcl_cout 
+    std::cout 
       << "> Detection results for selected scale:\n"
       //<< "\n  xgraph size:   " << target_xgraph_size
       << "\n  # detections:  " << dets.size() << "\n";
 
     // Save detections to the global list
     raw_dets_all_scales.insert(raw_dets_all_scales.end(), dets.begin(), dets.end());
-    vcl_cout
+    std::cout
       << "\n-------------------------------------------------------------------\n";
 
 
 //  }
 
   //> Summarize detections for all scales
-  vcl_cout << "\n> Total # raw detections across all scales: " << raw_dets_all_scales.size() << "\n";
+  std::cout << "\n> Total # raw detections across all scales: " << raw_dets_all_scales.size() << "\n";
 
   //> Non-max suppression across detection results form different scales
   if (run_nms_based_on_overlap)
   {
-    vcl_cout 
+    std::cout 
       << "\n> Running non-max-suppression based on overlap ..."
       << "\n    min_overlap_ratio_for_rejection: " << min_overlap_ratio_for_rejection << "\n";
     dbsks_det_nms_using_polygon(raw_dets_all_scales, this->output_det_list, min_overlap_ratio_for_rejection);
   }
   else
   {
-    vcl_cout << "\n> NO non-max-suppression. All detections are accepted.\n";
+    std::cout << "\n> NO non-max-suppression. All detections are accepted.\n";
     this->output_det_list = raw_dets_all_scales;
   }
 
-  vcl_cout << "\n> Final # detections = " << this->output_det_list.size() 
+  std::cout << "\n> Final # detections = " << this->output_det_list.size() 
     << "\n------------------------------------------------------------------\n";
 
   return true;
@@ -292,7 +292,7 @@ load_params_and_models()
 	}
 	else
 	{
-		vcl_cout << "No Prev Image Found...\n";
+		std::cout << "No Prev Image Found...\n";
 	}	
 
 
@@ -312,7 +312,7 @@ load_params_and_models()
 
 
   // geometric model L
-  vcl_string xgraph_geom_file_L = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-left.xml";
+  std::string xgraph_geom_file_L = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-left.xml";
   if (!dbsks_load_xgraph_geom_model(xgraph_geom_file_L, xgraph_geom_param_file, xgraph_geom_L))
   {
     return false;
@@ -320,7 +320,7 @@ load_params_and_models()
   xgraph_geom_L->compute_attribute_constraints();
 
   // geometric model R
-  vcl_string xgraph_geom_file_R = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-right.xml";
+  std::string xgraph_geom_file_R = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-right.xml";
   if (!dbsks_load_xgraph_geom_model(xgraph_geom_file_R, xgraph_geom_param_file, xgraph_geom_R))
   {
     return false;
@@ -328,42 +328,42 @@ load_params_and_models()
   xgraph_geom_R->compute_attribute_constraints();
 
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
-  vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
+  std::cout << "\n>> Checking compatibility between geometric model and xgraph...";
   if (!xgraph_geom->is_compatible(xgraph_prototype_))
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
   // ccm model
   dbsks_load_xgraph_ccm_model(xgraph_ccm_file, xgraph_ccm_param_file, xgraph_ccm);
 
   // Check compatibility between Contour Chamfer Matching model and xgraph (are all edges covered)
-  vcl_cout << ">> Checking compatibility between CCM model and xgraph...";
+  std::cout << ">> Checking compatibility between CCM model and xgraph...";
   if (!xgraph_ccm->is_compatible(xgraph_prototype_))
   {
-    vcl_cout << "Failed\n." << vcl_endl;
+    std::cout << "Failed\n." << std::endl;
     return false;
   }
   else
   {
-    vcl_cout << "Passed\n." << vcl_endl;
+    std::cout << "Passed\n." << std::endl;
   }
 
   // Set distributions of user-selected boundary fragments to constant
-  vcl_cout << "\n>> Overriding 'ignored' edges with constant distribution...";
+  std::cout << "\n>> Overriding 'ignored' edges with constant distribution...";
   if (!xgraph_ccm->override_cfrag_with_constant_distribution(cfrag_list_to_ignore))
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;
   }
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
   }
 
   //: Compute cache values for ccm models
@@ -375,15 +375,15 @@ load_params_and_models()
   this->biarc_sampler.compute_cache_nkdiff();
   
 
-  vcl_cout << "\n>> loading prototype appearance model...";
+  std::cout << "\n>> loading prototype appearance model...";
   if(!load_appearance_model())
   {
-    vcl_cout << "[ Failed ]\n";
+    std::cout << "[ Failed ]\n";
     return false;	
   }	
   else
   {
-    vcl_cout << "[ OK ]\n";
+    std::cout << "[ OK ]\n";
 	if(appearance_model_node_value.back()>100)
 		is_Black = false;
   }
@@ -394,13 +394,13 @@ load_params_and_models()
 bool dbsks_detect_xgraph_using_edgemap::
 load_bb_file()
 {
-	vcl_ifstream myfile (this->bb_file.c_str());
-	vcl_cout << "Loading BB:"<< this->bb_file << vcl_endl;
-	vcl_string line;
+	std::ifstream myfile (this->bb_file.c_str());
+	std::cout << "Loading BB:"<< this->bb_file << std::endl;
+	std::string line;
 	if (myfile.is_open())
 	{
 		getline (myfile,line);
-		vcl_istringstream is( line );
+		std::istringstream is( line );
    		double n;
    		while( is >> n ) 
 		{
@@ -410,26 +410,26 @@ load_bb_file()
 	}
 	else
 	{ 
-		vcl_cout << "Unable to open BB file" <<vcl_endl;
+		std::cout << "Unable to open BB file" <<std::endl;
 		return false;
 	}
-	vcl_cout << "Done Loading BB file\n";
-	vcl_cout << "BB coordinates: "<< bb_coordinates[0]<< " "<< bb_coordinates[1]<< " "<< bb_coordinates[2]<< " "<< bb_coordinates[3]<< vcl_endl;
+	std::cout << "Done Loading BB file\n";
+	std::cout << "BB coordinates: "<< bb_coordinates[0]<< " "<< bb_coordinates[1]<< " "<< bb_coordinates[2]<< " "<< bb_coordinates[3]<< std::endl;
 	return true;
 }
 
 bool dbsks_detect_xgraph_using_edgemap::
 load_appearance_model()
 {
-	vcl_vector<int> ids;
-    vcl_vector<int> values;
-	vcl_ifstream myfile (this->xgraph_appearance_file.c_str());
-	vcl_cout << this->xgraph_appearance_file << vcl_endl;
-	vcl_string line;
+	std::vector<int> ids;
+    std::vector<int> values;
+	std::ifstream myfile (this->xgraph_appearance_file.c_str());
+	std::cout << this->xgraph_appearance_file << std::endl;
+	std::string line;
 	if (myfile.is_open())
 	{
 		getline (myfile,line);
-		vcl_istringstream is( line );
+		std::istringstream is( line );
    		double n;
    		while( is >> n ) 
 		{
@@ -437,7 +437,7 @@ load_appearance_model()
 		}
 
 		getline (myfile,line);
-		vcl_istringstream is_2( line );
+		std::istringstream is_2( line );
    		while( is_2 >> n ) 
 		{
 			values.push_back(int(n));
@@ -450,14 +450,14 @@ load_appearance_model()
 			{
 				this->appearance_model_node_id.push_back(ids[i]);
 				this->appearance_model_node_value.push_back(values[i]);
-				vcl_cout << " id: " << ids[i] << " value: " << values[i];
+				std::cout << " id: " << ids[i] << " value: " << values[i];
 			}
 		}
-		vcl_cout << vcl_endl;
+		std::cout << std::endl;
 	}
   	else
 	{ 
-		vcl_cout << "Unable to open appearance model file" <<vcl_endl;
+		std::cout << "Unable to open appearance model file" <<std::endl;
 		return false;
 	}
 	return true;
@@ -468,7 +468,7 @@ load_appearance_model()
 // local data structure to facilitate sorting the edgemap by their width
 struct edgemap_level_info
 {
-  vcl_string base_name;
+  std::string base_name;
   int width;
   double scale;
 };
@@ -480,10 +480,10 @@ bool dbsks_detect_xgraph_using_edgemap::
 load_edgemap_pyramid()
 {
   //>> Load all edgemaps in the pyramid ........................................
-  vcl_cout << "\n>> Loading all edgemap images in the pyramid ... ";
+  std::cout << "\n>> Loading all edgemap images in the pyramid ... ";
 
   // regular expression to iterate thru edgemap files
-  vcl_string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
+  std::string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
   
   // clean up any existing data
   this->list_edgemap_base_name.clear();
@@ -494,7 +494,7 @@ load_edgemap_pyramid()
   
 
   // sort the edgemaps by their width, decreasing order
-  vcl_map<int, edgemap_level_info> map_width2info;
+  std::map<int, edgemap_level_info> map_width2info;
   for (vul_file_iterator fn = edgemap_regexp; fn; ++fn)
   {
     vil_image_resource_sptr img = vil_load_image_resource(fn());
@@ -507,14 +507,14 @@ load_edgemap_pyramid()
       // note that "vul_file::strip_extension(...) will not work because 
       // "edgemap_ext" may containt a dot ".", which will confuse the 
       // vul_file::strip_extension(...) function
-      vcl_string fname = vul_file::strip_directory(fn());
+      std::string fname = vul_file::strip_directory(fn());
       info.base_name = fname.substr(0, fname.size()-edgemap_ext.size());
-      map_width2info.insert(vcl_make_pair(-info.width, info));
+      map_width2info.insert(std::make_pair(-info.width, info));
     }
   }
 
   // put the info back in the form we're familiar with
-  for (vcl_map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
+  for (std::map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
     iter != map_width2info.end(); ++iter)
   {
     edgemap_level_info info = iter->second;
@@ -539,27 +539,27 @@ compute_list_model_graph_size()
     !(this->prototype_xgraph_log2_increment_step > 0) ||
     !(this->prototype_xgraph_ratio_max_size_to_min_size >= 1))
   {
-    vcl_cout << "\nERROR: Invalid graph size parameters.\n";
+    std::cout << "\nERROR: Invalid graph size parameters.\n";
     return false;
   }
 
   //>> Compute list of xgraph scales to detect
   double image_width = this->source_image.ni();
   double image_height = this->source_image.nj();
-  double image_size = vcl_sqrt(image_width * image_height);
+  double image_size = std::sqrt(image_width * image_height);
 
   // Maximum xgraph scale is bounded above by image size
   this->prototype_xgraph_max_size = vnl_math::min(image_size, this->prototype_xgraph_max_size);
 
   xgraph_scales.clear();
   for (double s = this->prototype_xgraph_min_size; s <= this->prototype_xgraph_max_size; 
-    s *= vcl_pow(2, this->prototype_xgraph_log2_increment_step))
+    s *= std::pow(2, this->prototype_xgraph_log2_increment_step))
   {
     xgraph_scales.push_back(vnl_math::rnd(s)); // rounding simply for good-looking numbers
   }
 
   // reverse the order - process large size first
-  vcl_reverse(xgraph_scales.begin(), xgraph_scales.end());
+  std::reverse(xgraph_scales.begin(), xgraph_scales.end());
 
   // Remove graph size that are too small (compared to the maximum size)
   double min_allowed_xgraph_size = xgraph_scales.front() / this->prototype_xgraph_ratio_max_size_to_min_size;
@@ -573,8 +573,8 @@ compute_list_model_graph_size()
   
   //////////////////////////////////////////////////////////////////////////////
   //>> Detect xgraphs ..........................................................
-  vcl_cout << "\n>> Computing the xgraph scales to run.\n";
-  vcl_cout << "\n   - Image size (W x H) = " << image_width << " x " << image_height 
+  std::cout << "\n>> Computing the xgraph scales to run.\n";
+  std::cout << "\n   - Image size (W x H) = " << image_width << " x " << image_height 
     << "\n   - Image scale (sqrt of area) = " << image_size
     << "\n   - Min xgraph scale = " << this->prototype_xgraph_min_size
     << "\n   - Log2 of scale step = " << this->prototype_xgraph_log2_increment_step
@@ -582,13 +582,13 @@ compute_list_model_graph_size()
     << "\n   - List of scales = [ ";
   for (unsigned i =0; i < xgraph_scales.size(); ++i)
   {
-    vcl_cout << xgraph_scales[i] << ", ";
+    std::cout << xgraph_scales[i] << ", ";
   }
-  vcl_cout << "]\n";
+  std::cout << "]\n";
 
   if (xgraph_scales.empty())
   {
-    vcl_cout << "\nERROR: There is no xgraph scale. Please check params again.\n";
+    std::cout << "\nERROR: There is no xgraph scale. Please check params again.\n";
     return false;
   }
   return true;
@@ -600,14 +600,14 @@ load_edgemap_from_curve_fragments(  dbdet_sel_storage_sptr& actual_sel,
 									dbdet_edgemap_sptr& actual_edgemap,
 									dbsksp_xshock_graph_sptr& actual_xgraph)
 {
-    vcl_cout<<"************ Load CEM file ************"<<vcl_endl;
-    vcl_string cem_file_1;
+    std::cout<<"************ Load CEM file ************"<<std::endl;
+    std::string cem_file_1;
     
     //params->output_image_extension_() == ".bmp";
     cem_file_1 = edgemap_folder + "/" + object_id + "/" + object_id + input_cemv_extension;
 
     bpro1_filepath cem_path_1(cem_file_1, ".cem");
-    vcl_vector<bpro1_storage_sptr> load_cem_results_1;
+    std::vector<bpro1_storage_sptr> load_cem_results_1;
     dbdet_load_cem_process load_cem_pro_1;
     load_cem_pro_1.parameters()->set_value("-cem_filename",cem_path_1);
     // Before we start the process lets clean input output
@@ -628,8 +628,8 @@ load_edgemap_from_curve_fragments(  dbdet_sel_storage_sptr& actual_sel,
 
     if ( !load_cem_status_1 )
     {
-        vcl_cerr << "Problems in loading GT cem file" 
-                 << cem_file_1 << vcl_endl;
+        std::cerr << "Problems in loading GT cem file" 
+                 << cem_file_1 << std::endl;
         return 1;
 
     }
@@ -640,7 +640,7 @@ load_edgemap_from_curve_fragments(  dbdet_sel_storage_sptr& actual_sel,
     //dbdet_curve_fragment_graph& CFG_0 = actual_sel->CFG();
 
     actual_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
-	//double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+	//double cur_xgraph_size = std::sqrt(actual_xgraph->area());
 	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
     return true;
 }
@@ -648,19 +648,19 @@ load_edgemap_from_curve_fragments(  dbdet_sel_storage_sptr& actual_sel,
 bool dbsks_detect_xgraph_using_edgemap::
 load_edgemap_singe_scale(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph)
 {
-	vcl_cout<<"************ Load Edge Map Single Scale ************"<<vcl_endl;
-	vcl_string edgemap_fname = object_id + edgemap_ext;
-	vcl_string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
+	std::cout<<"************ Load Edge Map Single Scale ************"<<std::endl;
+	std::string edgemap_fname = object_id + edgemap_ext;
+	std::string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
 
 	// Name of edge orientation file
-	vcl_string edgeorient_fname = object_id + edgeorient_ext;
-	vcl_string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
+	std::string edgeorient_fname = object_id + edgeorient_ext;
+	std::string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
 
 	// Load the edgel map/////////////////////////////////////////////////////////
 	actual_edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
 
     actual_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
-	//double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+	//double cur_xgraph_size = std::sqrt(actual_xgraph->area());
 	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
     return true;
 }
@@ -668,15 +668,15 @@ load_edgemap_singe_scale(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_
 bool dbsks_detect_xgraph_using_edgemap::
 load_initial_edgemap(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph)
 {
-	vcl_cout<<"************ Load Initial Frame Edge Map ************"<<vcl_endl;
-	vcl_string edgemap_fname = object_id + edgemap_ext;
-	vcl_string edgemap_file = initial_edge_folder + "/"  + edgemap_fname;
+	std::cout<<"************ Load Initial Frame Edge Map ************"<<std::endl;
+	std::string edgemap_fname = object_id + edgemap_ext;
+	std::string edgemap_file = initial_edge_folder + "/"  + edgemap_fname;
 	if(!std::ifstream(edgemap_file.c_str()))
 		return false;
 
 	// Name of edge orientation file
-	vcl_string edgeorient_fname = object_id + edgeorient_ext;
-	vcl_string edgeorient_file = initial_edge_folder + "/" + edgeorient_fname;
+	std::string edgeorient_fname = object_id + edgeorient_ext;
+	std::string edgeorient_file = initial_edge_folder + "/" + edgeorient_fname;
 
 	if(!std::ifstream(edgeorient_file.c_str()))
 		return false;
@@ -684,7 +684,7 @@ load_initial_edgemap(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr
 	actual_edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
 
     actual_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
-	//double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+	//double cur_xgraph_size = std::sqrt(actual_xgraph->area());
 	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
 
 	return true;
@@ -710,14 +710,14 @@ load_edgemap_in_pyramid_keeping_graph_size_fixed(double target_xgraph_size,
   double actual_edgemap_scale;
   {
     // scale of the "edgemap" which is different from the "image" scale by "edgemap_log2_scale_ratio"
-    double scale_ratio = vcl_pow(2.0, this->edgemap_log2_scale_ratio);
+    double scale_ratio = std::pow(2.0, this->edgemap_log2_scale_ratio);
     double target_edgemap_scale = target_pyramid_scale * scale_ratio;
 
     // find the edgemap closest to this scale
     vnl_vector<double > scale_diff(this->list_edgemap_scale.size(), vnl_numeric_traits<double >::maxval);
     for (unsigned k =0; k < scale_diff.size(); ++k)
     {
-      scale_diff[k] = vnl_math::abs(vcl_log(this->list_edgemap_scale[k] / target_edgemap_scale));
+      scale_diff[k] = vnl_math::abs(std::log(this->list_edgemap_scale[k] / target_edgemap_scale));
     }
     actual_edgemap_level = scale_diff.arg_min();
     actual_edgemap_scale = this->list_edgemap_scale[actual_edgemap_level];
@@ -728,15 +728,15 @@ load_edgemap_in_pyramid_keeping_graph_size_fixed(double target_xgraph_size,
   }
 
   // base-name for edge-related files
-  vcl_string base_name = this->list_edgemap_base_name[actual_edgemap_level];
+  std::string base_name = this->list_edgemap_base_name[actual_edgemap_level];
 
   // edgemap file
-  vcl_string edgemap_fname = base_name + edgemap_ext;
-  vcl_string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
+  std::string edgemap_fname = base_name + edgemap_ext;
+  std::string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
 
   // Name of edge orientation file
-  vcl_string edgeorient_fname = base_name + edgeorient_ext;
-  vcl_string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
+  std::string edgeorient_fname = base_name + edgeorient_ext;
+  std::string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
 
   // Load the edgel map/////////////////////////////////////////////////////////
   actual_edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
@@ -759,7 +759,7 @@ load_edgemap_in_pyramid_keeping_graph_size_fixed(double target_xgraph_size,
   //////////////////////////////////////////////////////////////////////////////
   actual_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
   double adjusted_xgraph_size = target_xgraph_size * actual_pyramid_scale;
-  double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+  double cur_xgraph_size = std::sqrt(actual_xgraph->area());
   actual_xgraph->scale_up(0, 0, adjusted_xgraph_size / cur_xgraph_size);
   //////////////////////////////////////////////////////////////////////////////
 
@@ -776,37 +776,37 @@ bool dbsks_detect_xgraph_using_edgemap::
 run_detection_on(const dbdet_edgemap_sptr& edgemap, 
     const dbsksp_xshock_graph_sptr& xgraph,
     double confidence_lower_threshold,
-    const vcl_string& work_dir,
-    vcl_vector<dbsks_det_desc_xgraph_sptr >& dets,
-    vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets)
+    const std::string& work_dir,
+    std::vector<dbsks_det_desc_xgraph_sptr >& dets,
+    std::vector<dbsks_det_desc_xgraph_sptr > prev_dets)
 {
   vul_timer timer;
   timer.mark();
 
   //> Contour-Chamfer-Matching cost function...................................
-  vcl_cout << "\n> Constructing a likelihood function based on CCM cost ...";
+  std::cout << "\n> Constructing a likelihood function based on CCM cost ...";
 
   dbsks_xshock_ccm_likelihood ccm_like;
   ccm_like.set_edgemap(edgemap);
   ccm_like.set_biarc_sampler(&this->biarc_sampler);
   ccm_like.set_ccm_model(xgraph_ccm);
-  vcl_cout << " [ OK ]\n";
+  std::cout << " [ OK ]\n";
   
-  vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
+  std::vector<vgl_box_2d<int > > windows; // list of detection windows
 
   bool is_target_valid = true;
   if(prev_dets.empty())
   {
 
 	  //> Compute window (rectangular boxes) from input bounding box
-	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
-	  //vcl_vector<vgl_box_2d<int > > all_windows;
+	  std::cout << "\n> Computing (rectangular) window from input bounding box...";
+	  //std::vector<vgl_box_2d<int > > all_windows;
 	  //dbsks_algos::compute_detection_windows(det_window_width, det_window_height, edgemap->ncols(), edgemap->nrows(), all_windows);
 	  // Print out list of windows
-	  vcl_cout << "\n> detect window: \n";
+	  std::cout << "\n> detect window: \n";
 
 		vgl_box_2d<int > window(bb_coordinates[0], bb_coordinates[2], bb_coordinates[1], bb_coordinates[3]);
-		vcl_cout
+		std::cout
 		  << "  [xmin ymin xmax ymax] = "
 		  << "[" << window.min_x() 
 		  << " " << window.min_y() 
@@ -814,8 +814,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		  << " " << window.max_y() << "]\n";
 		windows.push_back(window);
 	  
-	  vcl_cout << " [ OK ]\n";
-	  vcl_cout.flush();
+	  std::cout << " [ OK ]\n";
+	  std::cout.flush();
 
   }
   else
@@ -828,7 +828,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  int w_min_y = edgemap->nrows()-1;
 	  int w_max_y = 0;
 
-	  for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
+	  for (int id = 0; id< std::min(int(prev_dets.size()), 2); id++)
 	  {
 		if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
 			w_min_x = prev_dets[id]->bbox()->get_min_x();
@@ -839,8 +839,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
 			w_max_y = prev_dets[id]->bbox()->get_max_y();
 	  }
-  	  //vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
-	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
+  	  //std::cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << std::endl;
+	  vgl_box_2d<int> wd_0(std::max(w_min_x-60, 0), std::min(w_max_x+60, int(edgemap->ncols()-1)), std::max(0, w_min_y-60), std::min(int(edgemap->nrows()-1),w_max_y+60));
 
 	  // just save this window.
 	  windows.push_back(wd_0);
@@ -849,14 +849,14 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
   //>> Detect objects within each window
-  vcl_cout << "\n> Detecting objects in all computed windows ...";
-  vcl_vector<dbsks_det_desc_xgraph_sptr > raw_dets_all_windows;
+  std::cout << "\n> Detecting objects in all computed windows ...";
+  std::vector<dbsks_det_desc_xgraph_sptr > raw_dets_all_windows;
   raw_dets_all_windows.clear();
 
   for (unsigned iw =0; iw < windows.size(); ++iw)
   {
     vgl_box_2d<int > window = windows[iw];
-    vcl_cout 
+    std::cout 
       << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
       << "\n> Window index = " << iw 
       << "\n    [xmin ymin xmax ymax] = "
@@ -865,13 +865,13 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       << " " << window.max_x()
       << " " << window.max_y() << "]\n";
 
-    vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
+    std::vector<dbsks_det_desc_xgraph_sptr > dets_window;
 
     //> Compute ccm for a region of interest only
     bool cid_status = ccm_like.compute_internal_data(window);
     if(!cid_status)
     {
-        vcl_cout << "CCM Likelihood Error in this window. Skip..." << vcl_endl;
+        std::cout << "CCM Likelihood Error in this window. Skip..." << std::endl;
         continue;
     }
 
@@ -879,7 +879,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 	vil_image_view<vxl_byte> L_, prev_L_;
 	vil_convert_planes_to_grey(this->source_image, L_);
-	vcl_vector<double> graph_size_vector;
+	std::vector<double> graph_size_vector;
 	graph_size_vector.push_back(45);
 	graph_size_vector.push_back(55);
 	graph_size_vector.push_back(70);
@@ -891,7 +891,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 		for (int s = 0; s< graph_size_vector.size(); s++)
 		{
-			vcl_cout << "\nDetecting on the scale of graph size: " << graph_size_vector[s] << vcl_endl;
+			std::cout << "\nDetecting on the scale of graph size: " << graph_size_vector[s] << std::endl;
 			//vil_convert_planes_to_grey(this->source_image, prev_L_);
 
 
@@ -903,7 +903,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			engine.xgraph_geom_ = xgraph_geom;
 
   			dbsksp_xshock_graph_sptr target_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
-  			double cur_xgraph_size = vcl_sqrt(target_xgraph->area());
+  			double cur_xgraph_size = std::sqrt(target_xgraph->area());
   			target_xgraph->scale_up(0, 0, graph_size_vector[s] / cur_xgraph_size);
 			
 			engine.set_xgraph(target_xgraph);
@@ -920,7 +920,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				dets_window.reserve(engine.list_solutions_.size());
 
 				//if(!update_appearance_model(prev_dets, prev_L_))
-				//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+				//	std::cout<< "Fail in updaing appearance model" << std::endl;
 
 				for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
 				{
@@ -931,11 +931,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 					// for detection with enough edge support, add appearance confidence into it.
 					// edge matching cost term
-					vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+					std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 					// appearance term
 					double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-					vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+					std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 					double appearance_cost2 = 0;
 
@@ -944,7 +944,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 					// only consider the dets which is not too diff in bg as prototype
 					double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
-					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+					std::cout << " real confidence: " << real_confidence << std::endl;
 					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 					det->compute_bbox();
 					dets_window.push_back(det);
@@ -957,7 +957,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			// for the mean size, perform detection of left and right turning model
 			if(s==1)	
 			{
-				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+				std::cout << "\n Detecting based on Left-Turnning Geom Model" << std::endl;
 				engine.xgraph_geom_ = xgraph_geom_L;
 
 				//--------------------------------------------------------------------------
@@ -971,7 +971,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
 					//if(!update_appearance_model(prev_dets, prev_L_))
-					//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+					//	std::cout<< "Fail in updaing appearance model" << std::endl;
 
 					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
 					{
@@ -982,11 +982,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 						// for detection with enough edge support, add appearance confidence into it.
 						// edge matching cost term
-						vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+						std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 						// appearance term
 						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+						std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 						double appearance_cost2 = 0;
 
@@ -996,7 +996,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						// only consider the dets which is not too diff in bg as prototype
 						double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 						//real_confidence *= 0.9;
-						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						std::cout << " real confidence: " << real_confidence << std::endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 						det->compute_bbox();
 						dets_window.push_back(det);
@@ -1007,7 +1007,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				}
 
 			//////////////////////////////// detect based on geom model right  ///////////////////////////////////////////////////////////////
-				vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+				std::cout << "\n Detecting based on Right-Turnning Geom Model" << std::endl;
 				engine.xgraph_geom_ = xgraph_geom_R;
 
 				//--------------------------------------------------------------------------
@@ -1020,7 +1020,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					dets_window.reserve(engine.list_solutions_.size());
 
 					//if(!update_appearance_model(prev_dets, prev_L_))
-					//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+					//	std::cout<< "Fail in updaing appearance model" << std::endl;
 
 					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
 					{
@@ -1031,11 +1031,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 						// for detection with enough edge support, add appearance confidence into it.
 						// edge matching cost term
-						vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+						std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 						// appearance term
 						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+						std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 						double appearance_cost2 = 0;
 
@@ -1045,7 +1045,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						// only consider the dets which is not too diff in bg as prototype
 						double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 						//real_confidence *= 0.9;
-						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						std::cout << " real confidence: " << real_confidence << std::endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 						det->compute_bbox();
 						dets_window.push_back(det);
@@ -1056,7 +1056,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				}				
 			}
 		}
-		vcl_sort(prev_dets.begin(), prev_dets.end(), dbsks_decreasing_confidence);
+		std::sort(prev_dets.begin(), prev_dets.end(), dbsks_decreasing_confidence);
 		raw_dets_all_windows.insert(raw_dets_all_windows.end(), prev_dets.begin(), prev_dets.end());
 	}
 	else
@@ -1079,7 +1079,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
 		dbsksp_xshock_graph_sptr target_xgraph = new dbsksp_xshock_graph(*(prev_dets[prev_i]->xgraph()));
-		double cur_xgraph_size = vcl_sqrt(target_xgraph->area());
+		double cur_xgraph_size = std::sqrt(target_xgraph->area());
 
 		if(cur_xgraph_size < graph_size_vector[0])
 			target_xgraph->scale_up(0, 0, graph_size_vector[0] / cur_xgraph_size);
@@ -1090,7 +1090,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		engine.prev_dets_.push_back(prev_dets[prev_i]);
 		engine.compute_vertices_para_range();
 
-		vcl_cout << "\n Detecting based on Geom Model" << vcl_endl;
+		std::cout << "\n Detecting based on Geom Model" << std::endl;
 		//--------------------------------------------------------------------------
 		engine.detect(window, float(confidence_lower_threshold));
 		//--------------------------------------------------------------------------
@@ -1101,7 +1101,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
 		//if(!update_appearance_model(prev_dets, prev_L_))
-		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		//	std::cout<< "Fail in updaing appearance model" << std::endl;
 		if(engine.list_solutions_.size()!=0)
 		{
 			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
@@ -1113,26 +1113,26 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+				std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+				std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 				double appearance_cost2 = 0;
 				if(!is_initial)
 					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
-				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+				std::cout <<"appearance_cost2:" << appearance_cost2 << std::endl;
 
 				// shape change term,
 				double shape_trans_cost = 0;
 				if(!is_initial)
 					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				std::cout <<"shape_cost:" << shape_trans_cost << std::endl;
 
 				// only consider the dets which is not too diff in bg as prototype
 				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				std::cout << " real confidence: " << real_confidence << std::endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
 				dets_window.push_back(det);
@@ -1142,7 +1142,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		}
 
 		//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
-		vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+		std::cout << "\n Detecting based on Left-Turnning Geom Model" << std::endl;
 		engine.xgraph_geom_ = xgraph_geom_L;
 
 		//--------------------------------------------------------------------------
@@ -1154,7 +1154,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		dets_window.reserve(engine.list_solutions_.size());
 
 		//if(!update_appearance_model(prev_dets, prev_L_))
-		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		//	std::cout<< "Fail in updaing appearance model" << std::endl;
 		if(engine.list_solutions_.size()!=0)
 		{
 			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
@@ -1166,28 +1166,28 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+				std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+				std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 				double appearance_cost2 = 0;
 				if(!is_initial)
 					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
-				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+				std::cout <<"appearance_cost2:" << appearance_cost2 << std::endl;
 
 				// shape change term,
 				double shape_trans_cost = 0;
 				if(!is_initial)
 					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				std::cout <<"shape_cost:" << shape_trans_cost << std::endl;
 
 				// only consider the dets which is not too diff in bg as prototype
 				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 				if(!is_initial)
 					real_confidence *= 0.9;
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				std::cout << " real confidence: " << real_confidence << std::endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
 				dets_window.push_back(det);
@@ -1197,7 +1197,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 		//////////////////// detect based on geom model right  //////////////////////////////////////////
 
-		vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+		std::cout << "\n Detecting based on Right-Turnning Geom Model" << std::endl;
 		engine.xgraph_geom_ = xgraph_geom_R;
 
 		//--------------------------------------------------------------------------
@@ -1210,7 +1210,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
 		//if(!update_appearance_model(prev_dets, prev_L_))
-		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		//	std::cout<< "Fail in updaing appearance model" << std::endl;
 		if(engine.list_solutions_.size()!=0)
 		{
 			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
@@ -1222,29 +1222,29 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
+				std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+				std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 				double appearance_cost2 = 0;
 				if(!is_initial)
 					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
-				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+				std::cout <<"appearance_cost2:" << appearance_cost2 << std::endl;
 
 				// shape change term,
 				double shape_trans_cost = 0;
 				if(!is_initial)
 					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				std::cout <<"shape_cost:" << shape_trans_cost << std::endl;
 
 				// only consider the dets which is not too diff in bg as prototype
 				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 
 				if(!is_initial)
 					real_confidence *= 0.9;
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				std::cout << " real confidence: " << real_confidence << std::endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
 				dets_window.push_back(det);
@@ -1253,9 +1253,9 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		}
 	}
 
-    vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+    std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
   } // iw
-  vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+  std::sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
 
 
 
@@ -1265,7 +1265,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
   //if(raw_dets_all_windows.size()>10)
 		//raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
 
-  vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
+  std::cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << std::endl;
 
   if(raw_dets_all_windows.size()==0)
 	  raw_dets_all_windows.push_back(prev_dets[0]); // only add the top
@@ -1273,13 +1273,13 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
   //> Non-max supression on the boundary polygon
   if (run_nms_based_on_overlap)
   {
-    vcl_cout << "\n> Non-max suppression (NMS) based on boundary polygon box: ...";
+    std::cout << "\n> Non-max suppression (NMS) based on boundary polygon box: ...";
     dbsks_det_nms_using_polygon(raw_dets_all_windows, dets, min_overlap_ratio_for_rejection);
-    vcl_cout << "\n  # detections after NMS: " << dets.size() << "\n"; 
+    std::cout << "\n  # detections after NMS: " << dets.size() << "\n"; 
   }
   else
   {
-    vcl_cout << "\n> No non-max suppression (NMS). All detections accepted.\n";
+    std::cout << "\n> No non-max suppression (NMS). All detections accepted.\n";
 	// delete the duplicated detections, and only save the top 10
 	dets.push_back(raw_dets_all_windows[0]);
 	int max_size = vnl_math::min(int(raw_dets_all_windows.size()), 10);
@@ -1299,19 +1299,19 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 }
 
 
-vcl_vector<double> dbsks_detect_xgraph_using_edgemap::
+std::vector<double> dbsks_detect_xgraph_using_edgemap::
 compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& L)
 {
 	int ni = L.ni();
 	int nj = L.nj();
-	vcl_vector<double> bg_vec;
+	std::vector<double> bg_vec;
 
 	for (dbsksp_xshock_graph::vertex_iterator vit = sol_xgraph->vertices_begin();
 		vit != sol_xgraph->vertices_end(); ++vit)
 	{
 		dbsksp_xshock_node_sptr xv = *vit;
 		double x, y, psi, phi, radius;
-		//vcl_cout<< "read para" <<vcl_endl;
+		//std::cout<< "read para" <<std::endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
 		int id = xv->id();
@@ -1321,7 +1321,7 @@ compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& 
 
 		if (pos < this->appearance_model_node_id.size())
 		{
-			//vcl_cout << " pos: " << pos;
+			//std::cout << " pos: " << pos;
 			// compute the average brightness in a 9 X 9 window centered at the nodes which are included in appearance model
 			int cnt = 0;
 			int sum_bg = 0;
@@ -1341,13 +1341,13 @@ compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& 
 }
 
 bool dbsks_detect_xgraph_using_edgemap::
-update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<vxl_byte>& L)
+update_appearance_model(std::vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<vxl_byte>& L)
 {
 	int num_dets = 2; 
 	if(prev_dets.size()==0)
 		return false;
-	vcl_vector<vcl_vector<double> > bg_vec;
-	for (int i = 0; i< vcl_min(int(prev_dets.size()),num_dets); i++)
+	std::vector<std::vector<double> > bg_vec;
+	for (int i = 0; i< std::min(int(prev_dets.size()),num_dets); i++)
 	{
 		dbsksp_xshock_graph_sptr prev_xgraph = prev_dets[i]->xgraph();
 		bg_vec.push_back(compute_bg_vec (prev_xgraph,  L));
@@ -1355,19 +1355,19 @@ update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_i
 			
 	}
 
-	vcl_cout << " updated appearnce: ";
+	std::cout << " updated appearnce: ";
 	for (int j =0 ;j< bg_vec[0].size();j++)
 	{
 		double bg_1 = 0;
-		for (int i = 0; i< vcl_min(int(prev_dets.size()),num_dets); i++)
+		for (int i = 0; i< std::min(int(prev_dets.size()),num_dets); i++)
 		{
 			bg_1 += bg_vec[i][j];
 		}
-		bg_1 = bg_1/vcl_min(int(prev_dets.size()),num_dets);
+		bg_1 = bg_1/std::min(int(prev_dets.size()),num_dets);
 		this->appearance_model_node_value[j] = bg_1;
-		vcl_cout << bg_1 << " ";
+		std::cout << bg_1 << " ";
 	}	
-	vcl_cout << vcl_endl;
+	std::cout << std::endl;
 	
 	return true;
 }
@@ -1380,14 +1380,14 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl
 	int nj = L.nj();
 	double bg_sum = 0;
 	double cost = 0;
-	vcl_vector<double> bg_vec;
+	std::vector<double> bg_vec;
 
 	for (dbsksp_xshock_graph::vertex_iterator vit = sol_xgraph->vertices_begin();
 		vit != sol_xgraph->vertices_end(); ++vit)
 	{
 		dbsksp_xshock_node_sptr xv = *vit;
 		double x, y, psi, phi, radius;
-		//vcl_cout<< "read para" <<vcl_endl;
+		//std::cout<< "read para" <<std::endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
 		int id = xv->id();
@@ -1397,7 +1397,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl
 
 		if (pos < this->appearance_model_node_id.size())
 		{
-			//vcl_cout << " pos: " << pos;
+			//std::cout << " pos: " << pos;
 			// compute the average brightness in a 9 X 9 window centered at the nodes which are included in appearance model
 			int cnt = 0;
 			int sum_bg = 0;
@@ -1411,10 +1411,10 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl
 			}
 			double avg_bg = double(sum_bg)/double(cnt);
 
-			//vcl_cout << " bg: " << avg_bg;
+			//std::cout << " bg: " << avg_bg;
 			bg_vec.push_back(avg_bg);
 			bg_sum += avg_bg;
-			cost+= vcl_sqrt((avg_bg - this->appearance_model_node_value[pos])*(avg_bg - this->appearance_model_node_value[pos]));
+			cost+= std::sqrt((avg_bg - this->appearance_model_node_value[pos])*(avg_bg - this->appearance_model_node_value[pos]));
 		}
 	}
 
@@ -1428,7 +1428,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl
 
 //	double appearance_cost = (var + cost)/bg_vec.size();
 	double appearance_cost = cost/bg_vec.size();
-	//vcl_cout << " appearance cost: "<< appearance_cost << vcl_endl;
+	//std::cout << " appearance cost: "<< appearance_cost << std::endl;
 	if(appearance_model_node_value.back()>100)
 		appearance_cost /= 2.5;
 	return 0.3*appearance_cost;
@@ -1438,22 +1438,22 @@ double dbsks_detect_xgraph_using_edgemap::
 compute_appearance_cost_v2(dbsksp_xshock_graph_sptr& cur_xgraph, vil_image_view<vxl_byte>& cur_image, dbsksp_xshock_graph_sptr prev_xgraph, vil_image_view<vxl_byte>& prev_image)
 {
 	vil_image_view<vxl_byte > cur_screenshot_binary;
-	vcl_vector<vgl_point_2d<int > > cur_region_pts;
+	std::vector<vgl_point_2d<int > > cur_region_pts;
     if(!dbsks_fill_in_silhouette(cur_xgraph, cur_image, cur_region_pts, cur_screenshot_binary))
-		vcl_cout << "failed in fill the silhouette of current xgraph.\n";
+		std::cout << "failed in fill the silhouette of current xgraph.\n";
 	//else
-		//vcl_cout << "Done: fill the silhouette of current xgraph.\n";
+		//std::cout << "Done: fill the silhouette of current xgraph.\n";
 	// compute the appearance id matrix
-	vcl_vector<vnl_matrix<double> > cur_appearance_id_matrix = dbsks_compute_appearance_id_matrix( cur_region_pts, cur_image);
+	std::vector<vnl_matrix<double> > cur_appearance_id_matrix = dbsks_compute_appearance_id_matrix( cur_region_pts, cur_image);
 
 	vil_image_view<vxl_byte > prev_screenshot_binary;
-	vcl_vector<vgl_point_2d<int > > prev_region_pts;
+	std::vector<vgl_point_2d<int > > prev_region_pts;
     if(!dbsks_fill_in_silhouette(prev_xgraph, prev_image, prev_region_pts, prev_screenshot_binary))
-		vcl_cout << "failed in fill the silhouette of previous xgraph.\n";
+		std::cout << "failed in fill the silhouette of previous xgraph.\n";
 	//else
-		//vcl_cout << "Done: fill the silhouette of previous xgraph.\n";
+		//std::cout << "Done: fill the silhouette of previous xgraph.\n";
 	// compute the appearance id matrix
-	vcl_vector<vnl_matrix<double> > prev_appearance_id_matrix = dbsks_compute_appearance_id_matrix( prev_region_pts, prev_image);
+	std::vector<vnl_matrix<double> > prev_appearance_id_matrix = dbsks_compute_appearance_id_matrix( prev_region_pts, prev_image);
 
 	vnl_matrix<double> diff_matrix_0 =  cur_appearance_id_matrix[0] - prev_appearance_id_matrix[0];
 	vnl_matrix<double> diff_matrix_1 =  cur_appearance_id_matrix[1] - prev_appearance_id_matrix[1];
@@ -1488,7 +1488,7 @@ convert_edgemap_to_bw(const dbdet_edgemap_sptr& edgemap,
   return true;
 }
 
-static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbdet_edgel*> edgels)
+static bool is_edges_covered_in_window (vgl_box_2d<int > window, std::vector<dbdet_edgel*> edgels)
 {
 	int cover_cnt = 0;
 	for (int i = 0; i< edgels.size(); i++)
@@ -1508,13 +1508,13 @@ double dbsks_detect_xgraph_using_edgemap::
 compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_graph_sptr prev_xgraph)
 {
 
-	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec, prev_psi_vec, prev_phi_vec;
+	std::vector<double> prev_x_vec, prev_y_vec, prev_r_vec, prev_psi_vec, prev_phi_vec;
 	for (dbsksp_xshock_graph::vertex_iterator vit = prev_xgraph->vertices_begin();
 		vit != prev_xgraph->vertices_end(); ++vit)
 	{
 		dbsksp_xshock_node_sptr xv = *vit;
 		double x, y, psi, phi, radius;
-		//vcl_cout<< "read para" <<vcl_endl;
+		//std::cout<< "read para" <<std::endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
 		prev_x_vec.push_back(x);
@@ -1523,7 +1523,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_psi_vec.push_back(psi);
 		prev_phi_vec.push_back(phi);		
 	}
-	vcl_vector<double> prev_chord_vec;
+	std::vector<double> prev_chord_vec;
 	for (dbsksp_xshock_graph::edge_iterator eit = prev_xgraph->edges_begin(); eit !=prev_xgraph->edges_end(); ++eit)
 	{
 		dbsksp_xshock_edge_sptr xe = *eit;
@@ -1538,14 +1538,14 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_chord_vec.push_back(chord_len);
 	}
 
-	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec, cur_psi_vec, cur_phi_vec;
+	std::vector<double> cur_x_vec, cur_y_vec, cur_r_vec, cur_psi_vec, cur_phi_vec;
 	double cur_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
 		vit != cur_xgraph->vertices_end(); ++vit)
 	{
 		dbsksp_xshock_node_sptr xv = *vit;
 		double x, y, psi, phi, radius;
-		//vcl_cout<< "read para" <<vcl_endl;
+		//std::cout<< "read para" <<std::endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 		if(unsigned(xv->id()) == cur_xgraph->root_vertex_id())
 			cur_root_r = radius;
@@ -1556,7 +1556,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		cur_phi_vec.push_back(phi);
 	}
 
-	vcl_vector<double> cur_chord_vec;
+	std::vector<double> cur_chord_vec;
 	for (dbsksp_xshock_graph::edge_iterator eit = cur_xgraph->edges_begin(); eit !=cur_xgraph->edges_end(); ++eit)
 	{
 		dbsksp_xshock_edge_sptr xe = *eit;
@@ -1587,7 +1587,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		diff_chord += (cur_chord_vec[i]-prev_chord_vec[i])*(cur_chord_vec[i]-prev_chord_vec[i])/prev_chord_vec[i]/prev_chord_vec[i];
 	}
 
-	double cost = vcl_sqrt(diff_r_2) + vcl_sqrt(diff_chord) + vcl_sqrt(diff_psi) + vcl_sqrt(diff_phi);
+	double cost = std::sqrt(diff_r_2) + std::sqrt(diff_chord) + std::sqrt(diff_psi) + std::sqrt(diff_phi);
 
 	return cost;
 
@@ -1598,36 +1598,36 @@ bool dbsks_detect_xgraph_using_edgemap::
 	rank_detection_results(const dbdet_edgemap_sptr& edgemap, 
 							const dbsksp_xshock_graph_sptr& xgraph,
 							double confidence_lower_threshold,
-							const vcl_string& work_dir,
-							vcl_vector<dbsks_det_desc_xgraph_sptr >& dets,
-							vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets)
+							const std::string& work_dir,
+							std::vector<dbsks_det_desc_xgraph_sptr >& dets,
+							std::vector<dbsks_det_desc_xgraph_sptr > prev_dets)
 {
 
 	//> Contour-Chamfer-Matching cost function...................................
-	vcl_cout << "\n> Constructing a likelihood function based on CCM cost ...";
+	std::cout << "\n> Constructing a likelihood function based on CCM cost ...";
 
 	dbsks_xshock_ccm_likelihood ccm_like;
 	ccm_like.set_edgemap(edgemap);
 	ccm_like.set_biarc_sampler(&this->biarc_sampler);
 	ccm_like.set_ccm_model(xgraph_ccm);
-	vcl_cout << " [ OK ]\n";
+	std::cout << " [ OK ]\n";
 
 
   
-    vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
+    std::vector<vgl_box_2d<int > > windows; // list of detection windows
 
   if(prev_dets.empty())
   {
 
 	  //> Compute window (rectangular boxes) from input bounding box
-	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
-	  //vcl_vector<vgl_box_2d<int > > all_windows;
+	  std::cout << "\n> Computing (rectangular) window from input bounding box...";
+	  //std::vector<vgl_box_2d<int > > all_windows;
 	  //dbsks_algos::compute_detection_windows(det_window_width, det_window_height, edgemap->ncols(), edgemap->nrows(), all_windows);
 	  // Print out list of windows
-	  vcl_cout << "\n> detect window: \n";
+	  std::cout << "\n> detect window: \n";
 
 		vgl_box_2d<int > window(bb_coordinates[0], bb_coordinates[2], bb_coordinates[1], bb_coordinates[3]);
-		vcl_cout
+		std::cout
 		  << "  [xmin ymin xmax ymax] = "
 		  << "[" << window.min_x() 
 		  << " " << window.min_y() 
@@ -1635,8 +1635,8 @@ bool dbsks_detect_xgraph_using_edgemap::
 		  << " " << window.max_y() << "]\n";
 		windows.push_back(window);
 	  
-	  vcl_cout << " [ OK ]\n";
-	  vcl_cout.flush();
+	  std::cout << " [ OK ]\n";
+	  std::cout.flush();
 
   }
   else
@@ -1648,7 +1648,7 @@ bool dbsks_detect_xgraph_using_edgemap::
 	  int w_min_y = edgemap->nrows()-1;
 	  int w_max_y = 0;
 
-	  for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
+	  for (int id = 0; id< std::min(int(prev_dets.size()), 2); id++)
 	  {
 		if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
 			w_min_x = prev_dets[id]->bbox()->get_min_x();
@@ -1659,23 +1659,23 @@ bool dbsks_detect_xgraph_using_edgemap::
 		if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
 			w_max_y = prev_dets[id]->bbox()->get_max_y();
 	  }
-  	  vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
-	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
+  	  std::cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << std::endl;
+	  vgl_box_2d<int> wd_0(std::max(w_min_x-60, 0), std::min(w_max_x+60, int(edgemap->ncols()-1)), std::max(0, w_min_y-60), std::min(int(edgemap->nrows()-1),w_max_y+60));
 
 	  // just save this window.
 	  windows.push_back(wd_0);
   }
 
 
-	vcl_ofstream myfile;
-	vcl_string out_conf_file = work_folder + "_conf.txt";
-   	vcl_cout << "\nSaving conficence of detections in " << out_conf_file << vcl_endl;
+	std::ofstream myfile;
+	std::string out_conf_file = work_folder + "_conf.txt";
+   	std::cout << "\nSaving conficence of detections in " << out_conf_file << std::endl;
     myfile.open (out_conf_file.c_str());
 
     for (unsigned iw =0; iw < windows.size(); ++iw)
     {
 		vgl_box_2d<int > window = windows[iw];
-		vcl_cout 
+		std::cout 
 		  << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 		  << "\n> Window index = " << iw 
 		  << "\n    [xmin ymin xmax ymax] = "
@@ -1684,13 +1684,13 @@ bool dbsks_detect_xgraph_using_edgemap::
 		  << " " << window.max_x()
 		  << " " << window.max_y() << "]\n";
 
-		vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
+		std::vector<dbsks_det_desc_xgraph_sptr > dets_window;
 
 		//> Compute ccm for a region of interest only
 		bool cid_status = ccm_like.compute_internal_data(window);
 		if(!cid_status)
 		{
-		    vcl_cout << "CCM Likelihood Error in this window. Skip..." << vcl_endl;
+		    std::cout << "CCM Likelihood Error in this window. Skip..." << std::endl;
 		    continue;
 		}
 
@@ -1705,12 +1705,12 @@ bool dbsks_detect_xgraph_using_edgemap::
 
 			// for detection with enough edge support, add appearance confidence into it.
 			// edge matching cost term
-			double edge_confidence = float(ccm_like.loglike_xgraph(sol_xgraph, vcl_vector<unsigned >(), false));
-			vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;	
+			double edge_confidence = float(ccm_like.loglike_xgraph(sol_xgraph, std::vector<unsigned >(), false));
+			std::cout <<"\nedge_confidence:" << edge_confidence << std::endl;	
 
 			// appearance term
 			double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-			vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+			std::cout <<"appearance_cost:" << appearance_cost << std::endl;
 
 			// appearance term2
 			double appearance_cost2 = 0;
@@ -1720,7 +1720,7 @@ bool dbsks_detect_xgraph_using_edgemap::
 				appearance_cost2 = vnl_math::min(compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_), compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[1]->xgraph(), prev_L_));
 
 
-			vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+			std::cout <<"appearance_cost2:" << appearance_cost2 << std::endl;
 
 			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
 			double shape_trans_cost = 0;
@@ -1729,16 +1729,16 @@ bool dbsks_detect_xgraph_using_edgemap::
 			if(prev_dets.size()>1)
 				shape_trans_cost = vnl_math::min(compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph()), compute_shape_trans_cost(sol_xgraph, prev_dets[1]->xgraph()));
 
-			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+			std::cout <<"shape_cost:" << shape_trans_cost << std::endl;
 
 			double real_confidence = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
-			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+			std::cout << " real confidence: " << real_confidence << std::endl;
 
 			//dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 			//det->compute_bbox();
 			//dets_window.push_back(det);
 
-			vcl_vector<double> conf_vector(4, 0);
+			std::vector<double> conf_vector(4, 0);
 			conf_vector[0] = edge_confidence;
 			conf_vector[1] = -appearance_cost;
 			conf_vector[2] = -appearance_cost2;
@@ -1749,7 +1749,7 @@ bool dbsks_detect_xgraph_using_edgemap::
 		
 		}
 		
-		vcl_sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
+		std::sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
 		
 		for (unsigned i =0; i < dets.size(); ++i)
 		{
@@ -1761,13 +1761,13 @@ bool dbsks_detect_xgraph_using_edgemap::
 }
 
 bool dbsks_detect_xgraph_using_edgemap::
-	 is_xgraph_in_BB(vcl_vector<dbsks_det_desc_xgraph_sptr > dets)
+	 is_xgraph_in_BB(std::vector<dbsks_det_desc_xgraph_sptr > dets)
 
 {
 
 	if(dets.size()==0)
 		return false;
-	vcl_cout << "\n Checking BB and Traget Location \n"; 
+	std::cout << "\n Checking BB and Traget Location \n"; 
 	int root_id = xgraph_geom->root_vid();
 
 	dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom->map_node2geom()[root_id];
@@ -1779,7 +1779,7 @@ bool dbsks_detect_xgraph_using_edgemap::
     xnode_geom->get_param_range(min_psi, max_psi, min_radius, max_radius, 
       min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
 
-	vcl_cout << "valid radius range: [" << min_radius <<", " << max_radius << "]\n";
+	std::cout << "valid radius range: [" << min_radius <<", " << max_radius << "]\n";
 
 	int max_num = vnl_math::min(int(dets.size()), 3);
 	double center_x = (bb_coordinates[0] + bb_coordinates[2]) /2 ,  center_y = (bb_coordinates[1] + bb_coordinates[3]) /2;
@@ -1791,14 +1791,14 @@ bool dbsks_detect_xgraph_using_edgemap::
 		double x, y, psi, phi, radius;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
-		double cur_xgraph_size = vcl_sqrt(dets[i]->xgraph()->area());
+		double cur_xgraph_size = std::sqrt(dets[i]->xgraph()->area());
 	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
 		radius *= (graph_size/cur_xgraph_size);
 
-		if(x > min_x && x < max_x && y > min_y && y < max_y && vcl_sqrt((center_x - x)*(center_x - x) + (center_y - y)*(center_y - y))<40  && radius > min_radius-2 && radius < max_radius+2)
+		if(x > min_x && x < max_x && y > min_y && y < max_y && std::sqrt((center_x - x)*(center_x - x) + (center_y - y)*(center_y - y))<40  && radius > min_radius-2 && radius < max_radius+2)
 			return true;
 		else
-			vcl_cout << "\nDetection invalid: x = " << x << " y = "<< y << " cannonical radius = "<< radius <<" \n"; 
+			std::cout << "\nDetection invalid: x = " << x << " y = "<< y << " cannonical radius = "<< radius <<" \n"; 
 	}
 
 	return false;

@@ -10,7 +10,7 @@
 //#include <QVTKWidget.h>
 
 #include <vul/vul_arg.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_vector.h>
 
 #include <dbrec3d/gui/dbrec3d_line_plot.h>
@@ -19,7 +19,7 @@
 //void init_tree(boct_tree<short,float> *tree, unsigned i)
 //{
 //  tree-> split(); //now we have 8 cells
-//  vcl_vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
+//  std::vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
 //  leaves[i]->set_data(0.8f);
 //  leaves[i]->split();
 //}
@@ -39,7 +39,7 @@
 //  vgl_vector_3d<unsigned> world_dim(world_dimx,world_dimy,world_dimz);
 //  
 //  boxm_scene<boct_tree<short, float> > *scene = new boxm_scene<boct_tree<short, float> >(lvcs, origin, block_dim, world_dim);
-//  vcl_string scene_path("./");
+//  std::string scene_path("./");
 //  scene->set_paths(scene_path, "test_scene");
 //  
 //  unsigned cell_index = 7;

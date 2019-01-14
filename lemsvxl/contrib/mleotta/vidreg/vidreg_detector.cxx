@@ -4,13 +4,13 @@
 // \file
 
 
-#include <vcl_algorithm.h>
-#include <vcl_set.h>
+#include <algorithm>
+#include <set>
 #include "vidreg_detector.h"
 #include <vidreg/vidreg_feature_pt_desc.h>
 #include <vidreg/vidreg_feature_edgel.h>
-#include <vcl_cassert.h>
-#include <vcl_algorithm.h>
+#include <cassert>
+#include <algorithm>
 #include <vbl/vbl_array_2d.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_math.h>
@@ -87,8 +87,8 @@ inline void corner_function(const vil_image_view<inT>& in,
   assert(in.nplanes() == 3);
   out.set_size(ni,nj,1);
 
-  vcl_ptrdiff_t istep_in=in.istep(), jstep_in=in.jstep(), pstep_in = in.planestep();
-  vcl_ptrdiff_t istep_out=out.istep(), jstep_out=out.jstep();
+  std::ptrdiff_t istep_in=in.istep(), jstep_in=in.jstep(), pstep_in = in.planestep();
+  std::ptrdiff_t istep_out=out.istep(), jstep_out=out.jstep();
   const inT* row_in = in.top_left_ptr();
         outT* row_out = out.top_left_ptr();
   for (unsigned j=0; j<nj; ++j, row_in += jstep_in, row_out += jstep_out)
@@ -107,7 +107,7 @@ inline void corner_function(const vil_image_view<inT>& in,
 
 template<class T>
 bool interpolate_center(const T* pixel,
-                        vcl_ptrdiff_t istep, vcl_ptrdiff_t jstep,
+                        std::ptrdiff_t istep, std::ptrdiff_t jstep,
                         double& dx, double& dy, double& val)
 {
   dx = 0; dy=0;
@@ -169,7 +169,7 @@ bool interpolate_center(const T* pixel,
   dx = (Iy*Ixy - Ix*Iyy) / det;
   dy = (Ix*Ixy - Iy*Ixx) / det;
   // more than one pixel away
-  if (vcl_fabs(dx) > 1.0 || vcl_fabs(dy) > 1.0)
+  if (std::fabs(dx) > 1.0 || std::fabs(dy) > 1.0)
     return false;
 
   double Io =(p00+p01+p02 +p10+p11+p12 +p20+p21+p22)/9.0;
@@ -184,7 +184,7 @@ unsigned trace_order[][2] = { {2,1}, {2,3}, {0,1}, {0,3},
 
 
 inline vidreg_feature_edgel** find_next(vidreg_feature_edgel** curr,
-                                        vcl_ptrdiff_t d1, vcl_ptrdiff_t d2)
+                                        std::ptrdiff_t d1, std::ptrdiff_t d2)
 {
   vidreg_feature_edgel** next = NULL;
   if( !(*(next = curr + d1)) )                // first choice (4-con)
@@ -198,7 +198,7 @@ inline vidreg_feature_edgel** find_next(vidreg_feature_edgel** curr,
 
 
 inline vidreg_feature_edgel** find_prev(vidreg_feature_edgel** curr,
-                                        vcl_ptrdiff_t d1, vcl_ptrdiff_t d2)
+                                        std::ptrdiff_t d1, std::ptrdiff_t d2)
 {
   vidreg_feature_edgel** next = NULL;
   if( !(*(next = curr - d1)) )                // first choice (4-con)
@@ -212,10 +212,10 @@ inline vidreg_feature_edgel** find_prev(vidreg_feature_edgel** curr,
 
 
 void link_edgels(vbl_array_2d<vidreg_feature_edgel*>& edgel_grid,
-                 vcl_vector<rgrl_feature_sptr>& features)
+                 std::vector<rgrl_feature_sptr>& features)
 {
-  vcl_sort(features.begin(), features.end(), vidreg_feature_edgel::dec_mag_order);
-  typedef vcl_vector<rgrl_feature_sptr>::iterator Fitr;
+  std::sort(features.begin(), features.end(), vidreg_feature_edgel::dec_mag_order);
+  typedef std::vector<rgrl_feature_sptr>::iterator Fitr;
 
   //the neighborhood pointer offsets
   // +----+----+----+
@@ -225,7 +225,7 @@ void link_edgels(vbl_array_2d<vidreg_feature_edgel*>& edgel_grid,
   // +----+----+----+
   // |    | d1 |    |
   // +----+----+----+
-  vcl_ptrdiff_t d[] = {1, edgel_grid.cols(), -1, -edgel_grid.cols()};
+  std::ptrdiff_t d[] = {1, edgel_grid.cols(), -1, -edgel_grid.cols()};
 
 
   vidreg_feature_edgel **seed = NULL, **curr = NULL;
@@ -247,7 +247,7 @@ void link_edgels(vbl_array_2d<vidreg_feature_edgel*>& edgel_grid,
     curr = seed;
     for(vidreg_feature_edgel **next = NULL; !((*curr)->next()); curr = next){
       const vnl_vector<double>& n = (*curr)->normal();
-      unsigned order = (n[0]>0) + ((n[1]>0)<<1) + ((vcl_abs(n[0])>vcl_abs(n[1]))<<2);
+      unsigned order = (n[0]>0) + ((n[1]>0)<<1) + ((std::abs(n[0])>std::abs(n[1]))<<2);
       assert( order >=0 && order <8);
       unsigned *t_ord = &trace_order[0][0] + order*2;
       if( !(next = find_next(curr,d[t_ord[0]],d[t_ord[1]])) )
@@ -275,7 +275,7 @@ void link_edgels(vbl_array_2d<vidreg_feature_edgel*>& edgel_grid,
     curr = seed;
     for(vidreg_feature_edgel **prev = NULL; !((*curr)->prev()); curr = prev){
       const vnl_vector<double>& n = (*curr)->normal();
-      unsigned order = (n[0]>0) + ((n[1]>0)<<1) + ((vcl_abs(n[0])>vcl_abs(n[1]))<<2);
+      unsigned order = (n[0]>0) + ((n[1]>0)<<1) + ((std::abs(n[0])>std::abs(n[1]))<<2);
       assert( order >=0 && order <8);
       unsigned *t_ord = &trace_order[0][0] + order*2;
       if( !(prev = find_prev(curr,d[t_ord[0]],d[t_ord[1]])) )
@@ -304,15 +304,15 @@ void link_edgels(vbl_array_2d<vidreg_feature_edgel*>& edgel_grid,
 }
 
 
-void find_edges(vcl_vector<rgrl_feature_sptr>& features,
-                vcl_vector<vidreg_edge>& edges)
+void find_edges(std::vector<rgrl_feature_sptr>& features,
+                std::vector<vidreg_edge>& edges)
 {
-  vcl_set<vidreg_feature_edgel*> edgels;
-  for(vcl_vector<rgrl_feature_sptr>::const_iterator i=features.begin(); i!=features.end(); ++i)
+  std::set<vidreg_feature_edgel*> edgels;
+  for(std::vector<rgrl_feature_sptr>::const_iterator i=features.begin(); i!=features.end(); ++i)
     if(vidreg_feature_edgel* e = dynamic_cast<vidreg_feature_edgel*>(i->ptr()))
       edgels.insert(e);
 
-  vcl_vector<rgrl_feature_sptr> new_features;
+  std::vector<rgrl_feature_sptr> new_features;
 
   while(!edgels.empty()){
     vidreg_feature_edgel* e = *edgels.begin();
@@ -321,7 +321,7 @@ void find_edges(vcl_vector<rgrl_feature_sptr>& features,
     vidreg_feature_edgel* head = e;
     unsigned count = 0;
     for(; e; e=e->next(), ++count){
-      vcl_set<vidreg_feature_edgel*>::iterator eit = edgels.find(e);
+      std::set<vidreg_feature_edgel*>::iterator eit = edgels.find(e);
       if(eit != edgels.end())
         edgels.erase(eit);
       else
@@ -397,11 +397,11 @@ bool vidreg_detector::detect_edgels(const vil_image_resource_sptr& image)
       }
     }
   }
-  vcl_cout << "number of edgels: "<< features_->edgels.size() << vcl_endl;
+  std::cout << "number of edgels: "<< features_->edgels.size() << std::endl;
 
   link_edgels(edgel_grid, features_->edgels);
   find_edges(features_->edgels, features_->edges);
-  vcl_cout << "number of edges: "<< features_->edges.size() << vcl_endl;
+  std::cout << "number of edges: "<< features_->edges.size() << std::endl;
 
   return true;
 }
@@ -432,7 +432,7 @@ bool vidreg_detector::detect_corners(const vil_image_resource_sptr& image)
   float threshold = 8.0;
   double pdx,pdy,val;
   vnl_vector<double> pt(2);
-  vcl_ptrdiff_t istep = work.istep(),jstep=work.jstep();
+  std::ptrdiff_t istep = work.istep(),jstep=work.jstep();
   const float* row = work.top_left_ptr()+istep+jstep;
   for (unsigned j=1; j<nj-1; ++j, row+=jstep)
   {
@@ -444,7 +444,7 @@ bool vidreg_detector::detect_corners(const vil_image_resource_sptr& image)
           interpolate_center(pixel,istep,jstep,pdx,pdy,val)){
         pt[0] = i+pdx;
         pt[1] = j+pdy;
-        //vcl_vector<double> angles = orient_point(pt[0],pt[1]);
+        //std::vector<double> angles = orient_point(pt[0],pt[1]);
         features_->corners.push_back(new vidreg_feature_pt_desc(pt,val));
       }
     }
@@ -452,10 +452,10 @@ bool vidreg_detector::detect_corners(const vil_image_resource_sptr& image)
 
   // compute descriptors for the top 300 corners
   vnl_vector<double> desc(128,0.0);
-  typedef vcl_vector<rgrl_feature_sptr>::iterator Fitr;
-  const unsigned int desc_size = vcl_min(max_pts_to_describe_,unsigned(features_->corners.size()));
+  typedef std::vector<rgrl_feature_sptr>::iterator Fitr;
+  const unsigned int desc_size = std::min(max_pts_to_describe_,unsigned(features_->corners.size()));
   Fitr middle = features_->corners.begin()+desc_size;
-  vcl_partial_sort(features_->corners.begin(), middle, features_->corners.end(),
+  std::partial_sort(features_->corners.begin(), middle, features_->corners.end(),
                    vidreg_feature_pt_desc::dec_mag_order);
   for(Fitr i = features_->corners.begin(); i!=middle; ++i){
     vidreg_feature_pt_desc* curr_pt = rgrl_cast<vidreg_feature_pt_desc*>(*i);
@@ -463,12 +463,12 @@ bool vidreg_detector::detect_corners(const vil_image_resource_sptr& image)
     curr_pt->set_descriptor(desc);
   }
 
-  vcl_cout << "number of corners: "<< features_->corners.size() << vcl_endl;
+  std::cout << "number of corners: "<< features_->corners.size() << std::endl;
   return true;
 }
 
 
-vcl_vector<double> vidreg_detector::orient_point(double x, double y)
+std::vector<double> vidreg_detector::orient_point(double x, double y)
 {
   const int x_int = static_cast<int>(x+0.5);
   const int y_int = static_cast<int>(y+0.5);
@@ -478,7 +478,7 @@ vcl_vector<double> vidreg_detector::orient_point(double x, double y)
   const double inv_sig_2 = 1.0/(point_sigma_*point_sigma_);
 
   // the orientation histogram
-  vcl_vector<double> histogram(num_bins_, 0.0);
+  std::vector<double> histogram(num_bins_, 0.0);
 
   // compute the orientation histogram in a size-by-size box around the point
   const int i_min = x_int-size,  i_max = x_int+size;
@@ -495,7 +495,7 @@ vcl_vector<double> vidreg_detector::orient_point(double x, double y)
         // ignore pixels outside a radius of 3 sigma
         if( dist_2_norm <= 9.0 ){
           // compute the weight of the contribution
-          double weight = vmag(i,j)*vcl_exp(-0.5*dist_2_norm);
+          double weight = vmag(i,j)*std::exp(-0.5*dist_2_norm);
           // add to the bin
           histogram[vorient(i,j)] += weight;
         }
@@ -505,7 +505,7 @@ vcl_vector<double> vidreg_detector::orient_point(double x, double y)
 
 
   double max = 0.0;
-  vcl_vector<vxl_byte> peaks;
+  std::vector<vxl_byte> peaks;
 
   // find the maximum peak
   for (vxl_byte i=0; i<num_bins_; ++i){
@@ -520,7 +520,7 @@ vcl_vector<double> vidreg_detector::orient_point(double x, double y)
   assert(!peaks.empty());
 
   // the vector of values to return
-  vcl_vector<double> orientations;
+  std::vector<double> orientations;
 
   // find all peaks within peak_thresh of the max peak
   // and use parabolic interpolation to compute the peak orientation
@@ -553,8 +553,8 @@ vidreg_detector::make_descriptor(double x, double y,
   const double x_offset = x+0.5-x_int,  y_offset = y+0.5-y_int;
 
   const double inv_sig_2 = 1.0/128.0;
-  const int i_min = vcl_max(0,x_int-8),  i_max = vcl_min(int(vorient.ni()),x_int+9);
-  const int j_min = vcl_max(0,y_int-8),  j_max = vcl_min(int(vorient.nj()),y_int+9);
+  const int i_min = std::max(0,x_int-8),  i_max = std::min(int(vorient.ni()),x_int+9);
+  const int j_min = std::max(0,y_int-8),  j_max = std::min(int(vorient.nj()),y_int+9);
   for (int i=i_min; i<i_max; ++i){
     double x_dist = i-x;
     int i1 = i-x_int+7,  i2 = i-x_int+8;
@@ -566,7 +566,7 @@ vidreg_detector::make_descriptor(double x, double y,
 
       double dist_2_norm = x_dist*x_dist + y_dist*y_dist;
       dist_2_norm *= inv_sig_2;
-      double weight = vmag(i,j) * vcl_exp(-dist_2_norm);
+      double weight = vmag(i,j) * std::exp(-dist_2_norm);
       vxl_byte o = vorient(i,j);
 
 

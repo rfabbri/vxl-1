@@ -31,8 +31,8 @@ bool dbmsh3d_isosurface(dbmsh3d_mesh& mesh,
 
   if (! data.is_contiguous())
   {
-    vcl_cerr << "In " << __FILE__ 
-      << " : Could not create an contiguous image." << vcl_endl;
+    std::cerr << "In " << __FILE__ 
+      << " : Could not create an contiguous image." << std::endl;
     return false;
   }
 

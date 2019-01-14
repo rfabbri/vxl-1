@@ -28,21 +28,21 @@ bpro1_process* dbsk2d_compile_rich_map_process::clone() const
 }
 
 
-vcl_string dbsk2d_compile_rich_map_process::name()
+std::string dbsk2d_compile_rich_map_process::name()
 {
   return "Compile Rich Map";
 }
 
-vcl_vector< vcl_string > dbsk2d_compile_rich_map_process::get_input_type()
+std::vector< std::string > dbsk2d_compile_rich_map_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "shock" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbsk2d_compile_rich_map_process::get_output_type()
+std::vector< std::string > dbsk2d_compile_rich_map_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
@@ -69,18 +69,18 @@ dbsk2d_compile_rich_map_process::execute()
   if (shock->get_shock_graph()){
     vsol_box_2d_sptr bounding_box = shock->get_boundary()->get_bounding_box();
 
-    int width  = (int)(vcl_floor(bounding_box->get_max_x()) - 
-                       vcl_floor(bounding_box->get_min_x()) + 
+    int width  = (int)(std::floor(bounding_box->get_max_x()) - 
+                       std::floor(bounding_box->get_min_x()) + 
                        10);
 
-    int height = (int)(vcl_floor(bounding_box->get_max_y()) - 
-                       vcl_floor(bounding_box->get_min_y()) + 
+    int height = (int)(std::floor(bounding_box->get_max_y()) - 
+                       std::floor(bounding_box->get_min_y()) + 
                        10);
 
     shock->set_rich_map(new dbsk2d_rich_map(shock->get_shock_graph(), 
                                             width, height,
-                                            (int)(vcl_floor(bounding_box->get_min_x())-5.0), 
-                                            (int)(vcl_floor(bounding_box->get_min_y())-5.0)));
+                                            (int)(std::floor(bounding_box->get_min_x())-5.0), 
+                                            (int)(std::floor(bounding_box->get_min_y())-5.0)));
   }
 
   return true;

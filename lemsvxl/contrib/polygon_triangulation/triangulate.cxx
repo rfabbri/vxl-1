@@ -14,10 +14,10 @@
 
 
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cassert>
 
 #include "triangulate.h"
 

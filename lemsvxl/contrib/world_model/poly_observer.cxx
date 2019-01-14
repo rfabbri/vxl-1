@@ -1,5 +1,5 @@
 #include "poly_observer.h"
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_homg_plane_3d.h> 
 #include <vgl/vgl_plane_3d.h>
 #include <vgl/vgl_point_3d.h>
@@ -31,7 +31,7 @@ void poly_observer::update (vgui_message const& msg)
   vgui_message m = const_cast <vgui_message const& > (msg);
   const observable* o = static_cast<const observable*> (m.from);
   observable* o2= const_cast<observable*> (o);
-  vcl_string type = o2->type_name();
+  std::string type = o2->type_name();
   if (strcmp(type.data(),"obj_observable") == 0)
   {
     const obj_observable* o = static_cast<const obj_observable*> (m.from);
@@ -43,16 +43,16 @@ void poly_observer::update (vgui_message const& msg)
 void poly_observer::handle_update(vgui_message const& msg, 
                                   obj_observable* observable) 
 {
-  const vcl_string* str = static_cast<const vcl_string*> (msg.data);
+  const std::string* str = static_cast<const std::string*> (msg.data);
 
-  vcl_vector<vgui_soview2D_polygon* > poly_list;
+  std::vector<vgui_soview2D_polygon* > poly_list;
   if (str->compare("delete") == 0) {
-    vcl_vector<vgui_soview2D_polygon* > p = objects[observable];
-    vcl_vector<vcl_vector<vgui_soview2D_circle*> > ov = object_verts[observable];
+    std::vector<vgui_soview2D_polygon* > p = objects[observable];
+    std::vector<std::vector<vgui_soview2D_circle*> > ov = object_verts[observable];
     objects.erase(observable);
 #if 0 //JLM
     if (p.size() == 0)
-      vcl_cerr << "Unknown observable" << vcl_endl;
+      std::cerr << "Unknown observable" << std::endl;
 #endif
     for (unsigned i=0; i<p.size(); i++) 
       {
@@ -62,9 +62,9 @@ void poly_observer::handle_update(vgui_message const& msg,
       }
   } else {
 
-  vcl_map<int, vsol_polygon_3d_sptr> faces = observable->extract_faces();
-  vcl_map<int, vsol_polygon_3d_sptr>::iterator iter = faces.begin();
-  vcl_vector<vcl_vector<vgui_soview2D_circle*> >poly_verts;  
+  std::map<int, vsol_polygon_3d_sptr> faces = observable->extract_faces();
+  std::map<int, vsol_polygon_3d_sptr>::iterator iter = faces.begin();
+  std::vector<std::vector<vgui_soview2D_circle*> >poly_verts;  
 
   while (iter != faces.end()) {
     // project the new object with the given camera
@@ -74,7 +74,7 @@ void poly_observer::handle_update(vgui_message const& msg,
     float *x, *y;
     this->get_vertices_xy(poly_2d, &x, &y);
     unsigned nverts = poly_2d->size();
-    vcl_vector<vgui_soview2D_circle*> verts;
+    std::vector<vgui_soview2D_circle*> verts;
     this->set_foreground(0,1,0);
     for(unsigned i = 0; i<nverts; ++i)
       {
@@ -100,7 +100,7 @@ void poly_observer::handle_update(vgui_message const& msg,
     p1->set_z(p->z() + v.z());
     vsol_point_3d_sptr p2(p);
   
-    vcl_vector<vsol_point_3d_sptr> ver(3);
+    std::vector<vsol_point_3d_sptr> ver(3);
     ver[0] = p;
     ver[1] = p1;
     ver[2] = p2;
@@ -113,9 +113,9 @@ void poly_observer::handle_update(vgui_message const& msg,
 
     // get the inner faces connected to this face
     int face_id = iter->first;
-    //vcl_cout << "extracting face=" << face_id << vcl_endl;
-    vcl_map<int, vsol_polygon_3d_sptr> inner_faces = observable->extract_inner_faces(face_id);
-    vcl_map<int, vsol_polygon_3d_sptr>::iterator inner_iter= inner_faces.begin();
+    //std::cout << "extracting face=" << face_id << std::endl;
+    std::map<int, vsol_polygon_3d_sptr> inner_faces = observable->extract_inner_faces(face_id);
+    std::map<int, vsol_polygon_3d_sptr>::iterator inner_iter= inner_faces.begin();
     while (inner_iter != inner_faces.end()) {
       vsol_polygon_3d_sptr poly = inner_iter->second;
       vsol_polygon_2d_sptr poly_2d;
@@ -134,8 +134,8 @@ void poly_observer::handle_update(vgui_message const& msg,
       objects[observable] = poly_list;
       object_verts[observable] = poly_verts;
     } else if (str->compare("update") == 0) {
-      vcl_vector<vgui_soview2D_polygon* > p = objects[observable];
-      vcl_vector<vcl_vector<vgui_soview2D_circle* > > ov = 
+      std::vector<vgui_soview2D_polygon* > p = objects[observable];
+      std::vector<std::vector<vgui_soview2D_circle* > > ov = 
         object_verts[observable];
       for (unsigned i=0; i<p.size(); i++) {
         this->remove(p[i]);
@@ -145,8 +145,8 @@ void poly_observer::handle_update(vgui_message const& msg,
       objects[observable] = poly_list;
       object_verts[observable] = poly_verts;
     } else if (str->compare("move") == 0) {
-      vcl_vector<vgui_soview2D_polygon* > p = objects[observable];
-      vcl_vector<vcl_vector<vgui_soview2D_circle* > > ov = 
+      std::vector<vgui_soview2D_polygon* > p = objects[observable];
+      std::vector<std::vector<vgui_soview2D_circle* > > ov = 
         object_verts[observable];
       for (unsigned i=0; i<p.size(); i++) {
         this->remove(p[i]);
@@ -171,7 +171,7 @@ void poly_observer::get_vertices_xy(vsol_polygon_2d_sptr poly2d,
   for (int i=0; i<n; i++) {
     (*x)[i] = poly2d->vertex(i)->x();
     (*y)[i] = poly2d->vertex(i)->y();
-   //vcl_cout << "X=" << poly2d->vertex(i)->x() << " Y=" << poly2d->vertex(i)->y() << vcl_endl;
+   //std::cout << "X=" << poly2d->vertex(i)->x() << " Y=" << poly2d->vertex(i)->y() << std::endl;
   }
 }
 
@@ -186,7 +186,7 @@ void poly_observer::get_vertices_xyz(vsol_polygon_3d_sptr poly3d,
     (*x)[i] = poly3d->vertex(i)->x();
     (*y)[i] = poly3d->vertex(i)->y();
     (*z)[i] = poly3d->vertex(i)->z();
-    //vcl_cout << i << " " << *(poly3d->vertex(i)) << vcl_endl;
+    //std::cout << i << " " << *(poly3d->vertex(i)) << std::endl;
   }
 }
 
@@ -196,7 +196,7 @@ poly_observer::get_vsol_polygon_2d(vgui_soview2D_polygon* polygon)
   float* x = polygon->x;
   float* y = polygon->y;
   unsigned n = polygon->n;
-  vcl_vector<vsol_point_2d_sptr> vertices;
+  std::vector<vsol_point_2d_sptr> vertices;
   for (unsigned i=0; i<n; i++) {
     vsol_point_2d_sptr v = new vsol_point_2d(x[i], y[i]);
     vertices.push_back(v);
@@ -223,11 +223,11 @@ unsigned poly_observer::get_selected_3d_vertex_index(unsigned poly_id)
 {
   obj_observable * found_obj = 0;
   unsigned found_poly_index = 0;
-  for(vcl_map<obj_observable *, vcl_vector<vgui_soview2D_polygon* > >::iterator oit = objects.begin(); oit != objects.end(); ++oit)
+  for(std::map<obj_observable *, std::vector<vgui_soview2D_polygon* > >::iterator oit = objects.begin(); oit != objects.end(); ++oit)
     {
       unsigned pindex = 0;
-      vcl_vector<vgui_soview2D_polygon* > polys = oit->second;
-      for(vcl_vector<vgui_soview2D_polygon* >::iterator pit = polys.begin();
+      std::vector<vgui_soview2D_polygon* > polys = oit->second;
+      for(std::vector<vgui_soview2D_polygon* >::iterator pit = polys.begin();
           pit != polys.end(); ++pit, ++pindex)
         if(*pit && (*pit)->get_id() == poly_id)
           {
@@ -237,10 +237,10 @@ unsigned poly_observer::get_selected_3d_vertex_index(unsigned poly_id)
     }
   if(!found_obj)
     return 0;
-  vcl_vector<vgui_soview2D_circle* > verts = 
+  std::vector<vgui_soview2D_circle* > verts = 
     object_verts[found_obj][found_poly_index];
   unsigned found_vert_index = 0;
-  for(vcl_vector<vgui_soview2D_circle* >::iterator vit = verts.begin();
+  for(std::vector<vgui_soview2D_circle* >::iterator vit = verts.begin();
       vit != verts.end(); ++vit, found_vert_index++)
     if(this->is_selected((*vit)->get_id()))
       return found_vert_index;

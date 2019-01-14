@@ -2,7 +2,7 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_math.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_utils.h>
@@ -160,7 +160,7 @@ SbColor get_color_tone (float cvalue)
 }
 
 void generate_random_color_table (unsigned long seed, unsigned int size, 
-                                  vcl_vector<SbColor>& color_table)
+                                  std::vector<SbColor>& color_table)
 {
   color_table.clear();
 
@@ -318,7 +318,7 @@ SoSeparator* draw_cylinder(float x1, float y1, float z1,
 
   SoCylinder* cylinder = new SoCylinder();
   cylinder->radius = radius;
-  cylinder->height = vcl_sqrt(vnl_math_sqr(x2-x1) + 
+  cylinder->height = std::sqrt(vnl_math_sqr(x2-x1) + 
     vnl_math_sqr(y2-y1) + 
     vnl_math_sqr(z2-z1));
 
@@ -346,7 +346,7 @@ SoSeparator* draw_cylinder(const vgl_point_3d<double>& centerline_start,
 //  Should use the draw_geometry to draw group of things for 
 //  better performance.
 
-SoSeparator* draw_polyline (vcl_vector<vgl_point_3d<double> >& vertices, 
+SoSeparator* draw_polyline (std::vector<vgl_point_3d<double> >& vertices, 
                             const float& width, const SbColor& color)
 {   
   SoSeparator* root = new SoSeparator;
@@ -365,7 +365,7 @@ SoSeparator* draw_polyline (vcl_vector<vgl_point_3d<double> >& vertices,
   return root;
 }
 
-void draw_polyline_geom (SoGroup *root, vcl_vector<vgl_point_3d<double> >& vertices)
+void draw_polyline_geom (SoGroup *root, std::vector<vgl_point_3d<double> >& vertices)
 {  
   unsigned int nVertices = vertices.size();
   SbVec3f* verts = new SbVec3f[nVertices];
@@ -423,7 +423,7 @@ void draw_polyline_geom (SoGroup* root, SbVec3f* vertices, const unsigned int nV
 }
 
 
-void draw_filled_polygon_geom (SoGroup* root, const vcl_vector<dbmsh3d_vertex*>& vertices)
+void draw_filled_polygon_geom (SoGroup* root, const std::vector<dbmsh3d_vertex*>& vertices)
 {
   SbVec3f* verts = new SbVec3f[vertices.size()];
   for (unsigned int i=0; i<vertices.size(); i++)
@@ -492,7 +492,7 @@ void _draw_filled_polygon_geom (SoGroup* root, SbVec3f* vertices, const unsigned
   root->addChild (faceSet);
 }
 
-SoSeparator* draw_line_set (const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > >& lines,
+SoSeparator* draw_line_set (const std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > >& lines,
                             const SbColor& color)
 {
   SoSeparator* root = new SoSeparator;
@@ -508,7 +508,7 @@ SoSeparator* draw_line_set (const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_
 
 //: draw the whole set of lines in a single SoIndexedLineSet.
 void draw_line_set_geom (SoSeparator* root, 
-        const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > >& lines)
+        const std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > >& lines)
 {
   unsigned int nVertices = lines.size() * 2;
   float (*xyz)[3] = new float[nVertices][3];
@@ -749,7 +749,7 @@ double dist_rms_color (const float r1, const float g1, const float b1,
                        const float r2, const float g2, const float b2)
 {
   double rms = (r1-r2)*(r1-r2) + (g1-g2)*(g1-g2) + (b1-b2)*(b1-b2);
-  rms = vcl_sqrt (rms / 3);
+  rms = std::sqrt (rms / 3);
   return rms;
 }
 

@@ -6,7 +6,7 @@
 
 /*
 splr_symmetry_splat_collection_enumerator::splr_symmetry_splat_collection_enumerator(biob_subset_worldpt_roster::const_which_points_t & which_points,
-                                                                                     const vcl_vector<representees_t> & representees_vector, 
+                                                                                     const std::vector<representees_t> & representees_vector, 
                                                                                      biob_worldpt_index_enumerator_sptr subsplat_enumerator)
   : representees_vector_(representees_vector), subsplat_enumerator_(subsplat_enumerator) {
   conditional_advance();
@@ -65,8 +65,8 @@ const filter_2d_class & splr_symmetry_splat_collection<T, filter_2d_class>::spla
 
 template<class T, class filter_2d_class>
 biob_worldpt_index_enumerator_sptr splr_symmetry_splat_collection<T, filter_2d_class>::enumerator(biob_subset_worldpt_roster::const_which_points_t & which_points){
-typedef vcl_list<biob_worldpt_index> representees_t;// list of members of sample_points() 
-  vcl_vector<representees_t > representees_vector(num_representatives_);
+typedef std::list<biob_worldpt_index> representees_t;// list of members of sample_points() 
+  std::vector<representees_t > representees_vector(num_representatives_);
   biob_subset_worldpt_roster::which_points_t which_representatives;
   for (unsigned int i = 0; i < which_points.size(); i++){
     biob_worldpt_index pti = which_points[i];
@@ -82,7 +82,7 @@ typedef vcl_list<biob_worldpt_index> representees_t;// list of members of sample
 
 template<class T, class filter_2d_class>
 biob_worldpt_index_enumerator_sptr splr_symmetry_splat_collection<T, filter_2d_class>::enumerator(){
-  vcl_cout << "(splr_symmetry_splat_collection.hxx) no-args enumerator() method NOT IMPLEMENTED\n";
+  std::cout << "(splr_symmetry_splat_collection.hxx) no-args enumerator() method NOT IMPLEMENTED\n";
   assert(false);
   return 0;
 }

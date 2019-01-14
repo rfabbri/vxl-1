@@ -10,7 +10,7 @@ dbcl_linear_classifier::dbcl_linear_classifier( feature_map_type& training_data,
     feature_map_type::const_iterator training_data_itr;
     feature_map_type::const_iterator training_data_end = this->training_data_.end();
 
-    vcl_set<unsigned> training_labels;
+    std::set<unsigned> training_labels;
 
     //find the number of unique training labels
     for( training_data_itr = training_data_.begin(); training_data_itr != training_data_end; ++training_data_itr )
@@ -83,7 +83,7 @@ void dbcl_linear_classifier::classify()
         vnl_vector<double> augmented_feature_vector(current_test_feature->feature_dim()+1,1);
         augmented_feature_vector.update(current_test_feature->feature_vector(),1);
 
-        //vcl_cout << "augmented_feature_vector = " << augmented_feature_vector << '\n';
+        //std::cout << "augmented_feature_vector = " << augmented_feature_vector << '\n';
 
         vnl_vector<double> y = this->W_.transpose()*augmented_feature_vector;
             

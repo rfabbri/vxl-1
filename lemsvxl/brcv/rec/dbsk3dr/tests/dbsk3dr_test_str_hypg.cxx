@@ -18,10 +18,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
@@ -261,7 +261,7 @@ MAIN( dbsk3dr_test_str_hypg )
     GA.get_assignment(); //Run Graduated Assignment
 
     int bad = GA.compare_to_gtruth (str_labelgG, G_N_NODES);    
-    vcl_string s;
+    std::string s;
     switch (t) {
     case 0: 
       s = vul_sprintf ("exactly identical: %d bad matches.", bad);
@@ -331,7 +331,7 @@ MAIN( dbsk3dr_test_str_hypg )
       assert (0);
     break;
     }       
-    vul_printf (vcl_cout,"\n");
+    vul_printf (std::cout,"\n");
 
     delete G;
     delete g;

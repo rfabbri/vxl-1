@@ -8,10 +8,10 @@
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_math.h>
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <map>
 
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_homg_line_2d.h>
@@ -133,30 +133,30 @@ public:
 // 11/25/2002: Amir
 // I decided that since the problem is arising because of the fact that
 // in the ordering process active shocks are going before inactive ones
-// we should also use the active, inactive property in the shock vcl_list
+// we should also use the active, inactive property in the shock std::list
 
 //typedefs for SIElmList
-typedef vcl_pair<RADIUS_TYPE, int> R_IDpair;//Radius=simTime and ID vcl_pair
-typedef vcl_pair<bool, R_IDpair> A_R_IDpair; //active/inactive and R_ID vcl_pair
-typedef vcl_pair<A_R_IDpair, SIElement*> SIElmPair;
-typedef vcl_map<A_R_IDpair, SIElement*>::iterator SIElmListIterator;
-typedef vcl_map<A_R_IDpair, SIElement*>::reverse_iterator R_SIElmIterator;
+typedef std::pair<RADIUS_TYPE, int> R_IDpair;//Radius=simTime and ID std::pair
+typedef std::pair<bool, R_IDpair> A_R_IDpair; //active/inactive and R_ID std::pair
+typedef std::pair<A_R_IDpair, SIElement*> SIElmPair;
+typedef std::map<A_R_IDpair, SIElement*>::iterator SIElmListIterator;
+typedef std::map<A_R_IDpair, SIElement*>::reverse_iterator R_SIElmIterator;
 
-typedef vcl_pair<int, SIElement*> ID_SIElm_pair;
+typedef std::pair<int, SIElement*> ID_SIElm_pair;
 
-// typedefs for saliency vcl_list
-typedef vcl_pair<double, int> Sal_IDpair;
-typedef vcl_pair<Sal_IDpair, SIElement*> Sal_SIElmPair;
-typedef vcl_map<Sal_IDpair, SIElement*>::iterator GDListIterator;
+// typedefs for saliency std::list
+typedef std::pair<double, int> Sal_IDpair;
+typedef std::pair<Sal_IDpair, SIElement*> Sal_SIElmPair;
+typedef std::map<Sal_IDpair, SIElement*>::iterator GDListIterator;
 
-typedef vcl_map<int, SIEdge*> SIEdgeList;
-typedef vcl_map<int, SIEdge*>::iterator SIEdgeListIterator;
+typedef std::map<int, SIEdge*> SIEdgeList;
+typedef std::map<int, SIEdge*>::iterator SIEdgeListIterator;
 
-typedef vcl_list<SINode*> SINodeList;
-typedef vcl_list<SINode*>::iterator SINodeListIterator;
+typedef std::list<SINode*> SINodeList;
+typedef std::list<SINode*>::iterator SINodeListIterator;
 
-typedef vcl_list<VisFrag*> VisFragList;
-typedef vcl_list<VisFrag*>::iterator VisFragListIterator;
+typedef std::list<VisFrag*> VisFragList;
+typedef std::list<VisFrag*>::iterator VisFragListIterator;
 
 class IShock : public vbl_ref_count
 {
@@ -181,16 +181,16 @@ public:
   Boundary* _boundary;  //Pointer to associated boundary
   Boundary* boundary() { return _boundary; }
 
-  vcl_map<int, SIElement*> update_list; //vcl_list of elements that need to be redrawn
+  std::map<int, SIElement*> update_list; //std::list of elements that need to be redrawn
 
-  // vcl_map data structure to contain all the shock elements ordered by time
-  vcl_map<A_R_IDpair, SIElement*> SIElmList;
+  // std::map data structure to contain all the shock elements ordered by time
+  std::map<A_R_IDpair, SIElement*> SIElmList;
 
-  //vcl_map data structure to keep track of the saliencies for Symmetry transforms
-  vcl_map<Sal_IDpair, SIElement*> GDList;
+  //std::map data structure to keep track of the saliencies for Symmetry transforms
+  std::map<Sal_IDpair, SIElement*> GDList;
 
   //This is the structure that maintains the pruned graph structure.
-  //it is a vcl_list of all the shockgraph edges. The node information is
+  //it is a std::list of all the shockgraph edges. The node information is
   //contained within it. The nodes themselves are the same as the original
   //nodes for now. But new ones need to be created with the proper
   //adjacency information in order for it to be a complete graph structure!
@@ -387,23 +387,23 @@ public:
   SINode* dest(SILink* e); //returns the dest node of edge e. 
   SINode* opposite(SINode* v, SILink* e); // returns dest(e) if v = source(e) and source(e) otherwise. 
  
-  SINodesList all_nodes(); // returns the vcl_list V of all nodes of the graph
-  SILinksList all_edges(); // returns the vcl_list E of all edges of the graph
+  SINodesList all_nodes(); // returns the std::list V of all nodes of the graph
+  SILinksList all_edges(); // returns the std::list E of all edges of the graph
   SILinksList adj_edges(SINode* v); // returns adj_edges(v). 
-  SILinksList out_edges(SINode* v); // returns adj_edges(v) if IShock is directed and the empty vcl_list otherwise. 
-  SILinksList in_edges(SINode* v); // returns in_edges(v) if IShock is directed and the empty vcl_list otherwise. 
-  SINodesList adj_nodes(SINode* v); // returns the vcl_list of all nodes adjacent to v. 
+  SILinksList out_edges(SINode* v); // returns adj_edges(v) if IShock is directed and the empty std::list otherwise. 
+  SILinksList in_edges(SINode* v); // returns in_edges(v) if IShock is directed and the empty std::list otherwise. 
+  SINodesList adj_nodes(SINode* v); // returns the std::list of all nodes adjacent to v. 
 
   // graph operations assuming that this is a directed graph
 
-  SILink* first_adj_edge(SINode* v); // returns the first edge in the adjacency vcl_list of v (nil if this vcl_list is empty). 
-  SILink* last_adj_edge(SINode* v); // returns the last edge in the adjacency vcl_list of v (nil if this vcl_list is empty). 
-  SILink* adj_succ(SILink* e); // returns the successor of edge e in the adjacency vcl_list of node source(e) (nil if it does not exist). 
-  SILink* adj_pred(SILink* e); // returns the predecessor of edge e in the adjacency vcl_list of node source(e) (nil if it does not exist). 
-  SILink* cyclic_adj_succ(SILink* e); // returns the cyclic successor of edge e in the adjacency vcl_list of node source(e). 
-  SILink* cyclic_adj_pred(SILink* e); // returns the cyclic predecessor of edge e in the adjacency vcl_list of node source(e). 
-  SILink* first_in_edge(SINode* v); // returns the first edge of in_edges(v) (nil if this vcl_list is empty). 
-  SILink* last_in_edge(SINode* v); // returns the last edge of in_edges(v) (nil if this vcl_list is empty). 
+  SILink* first_adj_edge(SINode* v); // returns the first edge in the adjacency std::list of v (nil if this std::list is empty). 
+  SILink* last_adj_edge(SINode* v); // returns the last edge in the adjacency std::list of v (nil if this std::list is empty). 
+  SILink* adj_succ(SILink* e); // returns the successor of edge e in the adjacency std::list of node source(e) (nil if it does not exist). 
+  SILink* adj_pred(SILink* e); // returns the predecessor of edge e in the adjacency std::list of node source(e) (nil if it does not exist). 
+  SILink* cyclic_adj_succ(SILink* e); // returns the cyclic successor of edge e in the adjacency std::list of node source(e). 
+  SILink* cyclic_adj_pred(SILink* e); // returns the cyclic predecessor of edge e in the adjacency std::list of node source(e). 
+  SILink* first_in_edge(SINode* v); // returns the first edge of in_edges(v) (nil if this std::list is empty). 
+  SILink* last_in_edge(SINode* v); // returns the last edge of in_edges(v) (nil if this std::list is empty). 
   SILink* in_succ(SILink* e); // returns the successor of edge e in in_edges(target(e)) (nil if it does not exist). 
   SILink* in_pred(SILink* e); // returns the predecessor of edge e in in_edges(target(e)) (nil if it does not exist). 
   SILink* cyclic_in_succ(SILink* e); // returns the cyclic successor of edge e in in_edges(target(e)) (nil if it does not exist). 
@@ -411,10 +411,10 @@ public:
 
   // Operations for undirected graphs 
   
-  SILink* adj_succ(SILink* e, SINode* v); // returns the successor of edge e in the adjacency vcl_list of v.
-  SILink* adj_pred(SILink* e, SINode* v);// returns the predecessor of edge e in the adjacency vcl_list of v.
-  SILink* cyclic_adj_succ(SILink* e, SINode* v, bool include_hidden_SILinks = false); // finished.// returns the cyclic successor of edge e in the adjacency vcl_list of v. 
-  SILink* cyclic_adj_pred(SILink* e, SINode* v, bool include_hidden_SILinks = false); // returns the cyclic predecessor of edge e in the adjacency vcl_list of v.
+  SILink* adj_succ(SILink* e, SINode* v); // returns the successor of edge e in the adjacency std::list of v.
+  SILink* adj_pred(SILink* e, SINode* v);// returns the predecessor of edge e in the adjacency std::list of v.
+  SILink* cyclic_adj_succ(SILink* e, SINode* v, bool include_hidden_SILinks = false); // finished.// returns the cyclic successor of edge e in the adjacency std::list of v. 
+  SILink* cyclic_adj_pred(SILink* e, SINode* v, bool include_hidden_SILinks = false); // returns the cyclic predecessor of edge e in the adjacency std::list of v.
 
   BElementList node_projection_cone(SILink* e, SINode *v); // unfinished// return the belements in the "back" of v, forward direction is the edge e.
 
@@ -452,8 +452,8 @@ public:
 
   
   // **************** PROJECTIONS of ISHOCK on BOUNDARY *********
-  vcl_list < A3node_bnd_link* > find_BCoor_of_cvt_xtrema_nodes(); 
-  void update_boundary_with_A3_node_info(vcl_list < A3node_bnd_link* > &A3_bcoor_list);
+  std::list < A3node_bnd_link* > find_BCoor_of_cvt_xtrema_nodes(); 
+  void update_boundary_with_A3_node_info(std::list < A3node_bnd_link* > &A3_bcoor_list);
   
 
   //**** DEBUG ROUTINES ***

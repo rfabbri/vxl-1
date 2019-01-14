@@ -4,7 +4,7 @@
 
 #include "dbdet_scale_space_peaks.h"
 #include <vil/vil_image_view.h>
-#include <vcl_cstddef.h>
+#include <cstddef>
 
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_3x3.h>
@@ -17,7 +17,7 @@ static const float pi = 3.1415927f;
 
 // compute (r+1)^2/r where r is the ratio of pricipal curvatures
 static inline float
-curvature_ratio(const float *center, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
+curvature_ratio(const float *center, std::ptrdiff_t i_step, std::ptrdiff_t j_step)
 {
   float n_m1_m1 = center[-i_step-j_step];
   float n_m1_0  = center[-i_step];
@@ -100,7 +100,7 @@ refine_peak( const vil_image_view<float> & neighbors, vnl_double_3& delta)
 
 //: DoG Peak finding helper function
 static inline bool
-is_max_3x3(const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
+is_max_3x3(const float* im, std::ptrdiff_t i_step, std::ptrdiff_t j_step)
 {
    if (*im <= im[i_step]) return false;
    if (*im <= im[-i_step]) return false;
@@ -116,7 +116,7 @@ is_max_3x3(const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
 
 //: DoG Peak finding helper function
 static inline bool
-is_min_3x3(const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
+is_min_3x3(const float* im, std::ptrdiff_t i_step, std::ptrdiff_t j_step)
 {
    if (*im >= im[i_step]) return false;
    if (*im >= im[-i_step]) return false;
@@ -132,7 +132,7 @@ is_min_3x3(const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
 
 //: DoG Peak finding helper function
 static inline bool
-is_more_3x3(const float value, const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
+is_more_3x3(const float value, const float* im, std::ptrdiff_t i_step, std::ptrdiff_t j_step)
 {
    if (value <= im[0]) return false;
    if (value <= im[i_step]) return false;
@@ -149,7 +149,7 @@ is_more_3x3(const float value, const float* im, vcl_ptrdiff_t i_step, vcl_ptrdif
 
 //: DoG Peak finding helper function
 static inline bool
-is_less_3x3(const float value, const float* im, vcl_ptrdiff_t i_step, vcl_ptrdiff_t j_step)
+is_less_3x3(const float value, const float* im, std::ptrdiff_t i_step, std::ptrdiff_t j_step)
 {
    if (value >= im[0]) return false;
    if (value >= im[i_step]) return false;
@@ -167,7 +167,7 @@ is_less_3x3(const float value, const float* im, vcl_ptrdiff_t i_step, vcl_ptrdif
 
 //: Find the peaks in the scale space
 void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
-                             vcl_vector<vgl_point_3d<float> >& peak_pts,
+                             std::vector<vgl_point_3d<float> >& peak_pts,
                              float curve_ratio,
                              float contrast_thresh)
 {
@@ -178,7 +178,7 @@ void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
 
   for(int oct=first_oct; oct<=last_oct; ++oct){
     for(unsigned int lvl=1; lvl<=num_lvl; ++lvl){
-      vcl_cout << "oct = "<<oct << " lvl = "<<lvl<<vcl_endl;    
+      std::cout << "oct = "<<oct << " lvl = "<<lvl<<std::endl;    
       const vil_image_view<float> & above = scale_image(oct,lvl+1);
       const vil_image_view<float> & image = scale_image(oct,lvl);
       const vil_image_view<float> & below = scale_image(oct,lvl-1);
@@ -187,7 +187,7 @@ void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
       float ps = scale_image.image_scale(oct);
 
       unsigned int ni = image.ni(), nj = image.nj();
-      vcl_ptrdiff_t istep=image.istep(), jstep=image.jstep();
+      std::ptrdiff_t istep=image.istep(), jstep=image.jstep();
       const float* row = image.top_left_ptr() + istep + jstep;
       for (unsigned j=1; j<nj-1; ++j,row+=jstep){
         const float* pixel = row;
@@ -224,9 +224,9 @@ void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
           int cnt=0;        
           for(; cnt<5&&peak_valid; ++cnt){ 
             // if not within a pixel
-            if(vcl_fabs(offset(0)) >= 0.5 || 
-               vcl_fabs(offset(1)) >= 0.5 || 
-               vcl_fabs(offset(2)) >= 0.5 ){
+            if(std::fabs(offset(0)) >= 0.5 || 
+               std::fabs(offset(1)) >= 0.5 || 
+               std::fabs(offset(2)) >= 0.5 ){
               // compute the new pixel
               ri = (unsigned int)(double(ri)+offset(0)+0.5);
               rj = (unsigned int)(double(rj)+offset(1)+0.5);
@@ -247,9 +247,9 @@ void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
           
           // if we oscillated for a while between neighboring points 
           // that's close enough, otherwise reject
-          if(cnt >= 5 && (vcl_fabs(offset(0)) >= 1.0 || 
-                          vcl_fabs(offset(1)) >= 1.0 || 
-                          vcl_fabs(offset(2)) >= 1.0 ) ) continue;
+          if(cnt >= 5 && (std::fabs(offset(0)) >= 1.0 || 
+                          std::fabs(offset(1)) >= 1.0 || 
+                          std::fabs(offset(2)) >= 1.0 ) ) continue;
                     
           // peaks in the images at the most course scale image are ignored
           // because later code round up into the next octave which does not exist
@@ -266,7 +266,7 @@ void dbdet_scale_space_peaks(const bil_scale_image<float>& scale_image,
           
           peak_pts.push_back(vgl_point_3d<float>(float(ri+offset(0))*ps, float(rj+offset(1))*ps,
                                                  float(scale_image.init_scale()
-                                                       *vcl_pow(2.0, oct + double(rlvl+offset(2))/(num_lvl))) ));
+                                                       *std::pow(2.0, oct + double(rlvl+offset(2))/(num_lvl))) ));
         }
       }
     }
@@ -299,7 +299,7 @@ dbdet_ssp_orientation_params::dbdet_ssp_orientation_params(
 
 
 //: Compute the peak orientations of a scale space point
-vcl_vector<float>
+std::vector<float>
 dbdet_ssp_orientations(vgl_point_3d<float> ssp,
                        const dbdet_ssp_orientation_params& params)
 {
@@ -308,7 +308,7 @@ dbdet_ssp_orientations(vgl_point_3d<float> ssp,
   unsigned int num_lvl = params.scale_grad_dir.levels();
   int first_oct = params.scale_grad_dir.first_octave();
   
-  double log2_scale = vcl_log(ssp.z()/init_scale)/vcl_log(2.0)-first_oct;
+  double log2_scale = std::log(ssp.z()/init_scale)/std::log(2.0)-first_oct;
   unsigned int index = (unsigned int)(log2_scale*num_lvl +0.5);
   int oct = index/num_lvl;
   unsigned int lvl = index%num_lvl;
@@ -334,7 +334,7 @@ dbdet_ssp_orientations(vgl_point_3d<float> ssp,
 
   
   // the orientation histogram
-  vcl_vector<float> histogram(params.num_bins, 0.0);
+  std::vector<float> histogram(params.num_bins, 0.0);
 
   // compute the orientation histogram in a size-by-size box around the point
   for (int i=x_int-size; i<=x_int+size; ++i){
@@ -349,7 +349,7 @@ dbdet_ssp_orientations(vgl_point_3d<float> ssp,
         // ignore pixels outside a radius of 3 sigma
         if( dist_2 <= 9.0*sig_2 ){
           // compute the weight of the contribution
-          float weight = grad_mag(i,j)*vcl_exp(-dist_2/(2.0f*sig_2));
+          float weight = grad_mag(i,j)*std::exp(-dist_2/(2.0f*sig_2));
           // compute the bin number
           int bin = ((int((grad_orient(i,j)+pi)*bin_scale)+1)/2) % params.num_bins;
           // add to the bin
@@ -361,7 +361,7 @@ dbdet_ssp_orientations(vgl_point_3d<float> ssp,
 
   
   float max = 0.0;
-  vcl_vector<unsigned int> peaks;
+  std::vector<unsigned int> peaks;
   
   // find the maximum peak
   for (unsigned int i=0; i<params.num_bins; ++i){
@@ -376,7 +376,7 @@ dbdet_ssp_orientations(vgl_point_3d<float> ssp,
   assert(!peaks.empty());
 
   // the vector of values to return
-  vcl_vector<float> orientations;
+  std::vector<float> orientations;
   
   // find all peaks within peak_thresh of the max peak
   // and use parabolic interpolation to compute the peak orientation

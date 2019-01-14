@@ -86,7 +86,7 @@ bool bcri_calib::handle(const vgui_event &e)
 void bcri_calib::quit()
 {
    //clean_up();
-   vcl_exit(1);
+   std::exit(1);
 }
 
 void bcri_calib::clean_up()
@@ -98,8 +98,8 @@ void bcri_calib::load_image()
 {
    static bool greyscale = true;
    vgui_dialog load_image_dlg("Load Image");
-   static vcl_string image_filename = "";
-   static vcl_string ext = "*.*";
+   static std::string image_filename = "";
+   static std::string ext = "*.*";
    load_image_dlg.file("Image Filename:", ext, image_filename);
    load_image_dlg.checkbox("greyscale ", greyscale);
    if (!load_image_dlg.ask())
@@ -118,13 +118,13 @@ void bcri_calib::load_image()
    if (btab)
    {
       vgui_image_tableau_sptr itab = btab->get_image_tableau();
-      vcl_cout<<"\n";
+      std::cout<<"\n";
       itab->set_image(img_);
       
       itab->post_redraw();
       return;
    }
-   vcl_cout << "In load_image() - null tableau\n";
+   std::cout << "In load_image() - null tableau\n";
    
    
 }
@@ -136,7 +136,7 @@ void bcri_calib::clear_display()
    if (btab)
       btab->clear();
    else
-      vcl_cout << "In bcri_calib::clear_display() - null tableau\n";
+      std::cout << "In bcri_calib::clear_display() - null tableau\n";
 }
 
 void bcri_calib::select_correspond()
@@ -155,12 +155,12 @@ void bcri_calib::select_correspond()
    float x1=0, y1=0;// x2=0, y2=0;
    vgl_homg_point_2d<double> mp_left,mp_right;
    //l_;
-   vcl_vector<vgl_homg_line_2d<double> > lines;
+   std::vector<vgl_homg_line_2d<double> > lines;
    for (int i=0;i<5;i++) {
-      vcl_cout<<"# "<<i<<" :";
-      vcl_cout<<"pick :";
+      std::cout<<"# "<<i<<" :";
+      std::cout<<"pick :";
       tabs_picker_[0]->pick_point(&x1, &y1);
-      vcl_cout<<x1<<" "<<y1<<vcl_endl;
+      std::cout<<x1<<" "<<y1<<std::endl;
       if (i<4) {
         x_[i]=x1;
         y_[i]=y1;
@@ -202,12 +202,12 @@ void bcri_calib::select_correspond_all()
    float x1=0, y1=0; // x2=0, y2=0;
    vgl_homg_point_2d<double> mp_left,mp_right;
    //l_;
-   vcl_vector<vgl_homg_line_2d<double> > lines;
+   std::vector<vgl_homg_line_2d<double> > lines;
    for (int i=0;i<26;i++) {
-                 vcl_cout<<"# "<<i<<" :";
-                 vcl_cout<<"pick :";
+                 std::cout<<"# "<<i<<" :";
+                 std::cout<<"pick :";
                  tabs_picker_[0]->pick_point(&x1, &y1);
-                 vcl_cout<<x1<<" "<<y1<<vcl_endl;
+                 std::cout<<x1<<" "<<y1<<std::endl;
                  
                  if (i<25) {
                  xall_[i]=x1;
@@ -279,7 +279,7 @@ void bcri_calib::solve()
     if (image_xy1>=0 && image_xy2>=0 && image_xy3>=0 && image_xy4>=0 && 
       image_xy1<25 && image_xy2<25 && image_xy3<25 && image_xy4<25 )
       correct_choice=true;
-    else vcl_cout<<"choose again!"<<vcl_endl;
+    else std::cout<<"choose again!"<<std::endl;
     
   }
   
@@ -305,7 +305,7 @@ void bcri_calib::solve()
 
 
 
-  vcl_cout <<"A matrix is: \n"<<A<<vcl_endl;
+  std::cout <<"A matrix is: \n"<<A<<std::endl;
   
   //vnl_inverse(A);
   
@@ -314,15 +314,15 @@ void bcri_calib::solve()
 //  vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
 
-  vcl_cout<<"x_:"<<"\n"<<x_<<vcl_endl;
-  vcl_cout<<"y_:"<<"\n"<<y_<<vcl_endl;
-  vcl_cout<<"ones_:"<<"\n"<<ones_<<vcl_endl;
+  std::cout<<"x_:"<<"\n"<<x_<<std::endl;
+  std::cout<<"y_:"<<"\n"<<y_<<std::endl;
+  std::cout<<"ones_:"<<"\n"<<ones_<<std::endl;
 
   vnl_vector <double> h0=vnl_inverse(A.transpose()*A)*A.transpose()*x_;
   vnl_vector <double> h1=vnl_inverse(A.transpose()*A)*A.transpose()*y_;
   vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
-  vcl_cout<<h0<<"\n"<<h1<<"\n"<<h2<<vcl_endl;
+  std::cout<<h0<<"\n"<<h1<<"\n"<<h2<<std::endl;
 
 
   double Z;
@@ -343,19 +343,19 @@ void bcri_calib::solve()
   
   //P_[1][2]=y_post_/Z;
 
-  vcl_cout<<"post: "<<Post<<vcl_endl;
+  std::cout<<"post: "<<Post<<std::endl;
 
   P_[0][0]=h0[0];P_[0][1]=h0[1];P_[0][2]=0;P_[0][3]=h0[2]; 
   P_[1][0]=h1[0];P_[1][1]=h1[1];P_[1][2]=0;P_[1][3]=h1[2]; 
   P_[2][0]=h2[0];P_[2][1]=h2[1];P_[2][2]=0;P_[2][3]=h2[2]; 
 
-  vcl_cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<vcl_endl;
+  std::cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<std::endl;
   if (!road_only_) P_[1][2]=(y_post_-(P_*Post)[1])/Z;
 
   //P_[0][2]=(x_post_-(P_*Post)[0])/Z;
 
   
-  vcl_cout<<"\n"<<P_<<vcl_endl;
+  std::cout<<"\n"<<P_<<std::endl;
   if (mundy) {
   P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
   P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
@@ -367,9 +367,9 @@ void bcri_calib::solve()
         HomgPoint2D xh1(x_[0],y_[0],1.0);
         HomgPoint2D xh2(x_[0],y_[0],1.0);
         HomgPoint2D xh3(x_[0],y_[0],1.0);
-        //vcl_vector <HomgPoint2D> HA;
+        //std::vector <HomgPoint2D> HA;
         //
-        vcl_vector<HomgPoint2D>  PA,PB;
+        std::vector<HomgPoint2D>  PA,PB;
         PA.push_back(xh0);PA.push_back(xh1);PA.push_back(xh2);PA.push_back(xh3);
         
         for (unsigned i=0;i<4;i++)
@@ -379,8 +379,8 @@ void bcri_calib::solve()
                 }
         
         
-         vcl_vector<HomgPoint2D> four1_homg(4);
-         vcl_vector<HomgPoint2D> four2_homg(4);
+         std::vector<HomgPoint2D> four1_homg(4);
+         std::vector<HomgPoint2D> four2_homg(4);
          for (int j = 0; j < 4; j++)
          {
                  
@@ -396,10 +396,10 @@ void bcri_calib::solve()
          //HMatrix2DCompute::compute_p(PA,PA,H);
          /*  HMatrix2DCompute4Point pp;
          if (!pp.compute(PA,PB,&H))
-         vcl_cerr << "HMatrix2DCompute4Point - failure!\n";
-         vcl_cout<<H<<vcl_endl;
+         std::cerr << "HMatrix2DCompute4Point - failure!\n";
+         std::cout<<H<<std::endl;
          vnl_double_3x3 H1=H.get_matrix();
-         vcl_cout<<H1<<vcl_endl;
+         std::cout<<H1<<std::endl;
          */     
          HMatrix2D Hs;
           HMatrix2DCompute4Point Computor;
@@ -409,28 +409,28 @@ void bcri_calib::solve()
                 //  HMatrix2D* H_temp = new HMatrix2D();
                 
     if (!Computor.compute(four2_homg, four1_homg, &Hs))
-      vcl_cerr << "HMatrix2DCompute4Point - failure!\n";
+      std::cerr << "HMatrix2DCompute4Point - failure!\n";
                 
                 vnl_double_3x3 H2=Hs.get_matrix();
-                vcl_cout<<H2<<vcl_endl;
+                std::cout<<H2<<std::endl;
                 // HMatrix2DComputeMLESAC Calc(std_);
                 //      H_=Calc.compute(ptlist1_,ptlist2_);
                 //      findplaneparams(H_,K1_,K2_,R_,t_);
                 
                 P_.fill(0.0);
                 
-                vcl_cout<<P_<<vcl_endl;
+                std::cout<<P_<<std::endl;
                 
                 for (unsigned i=0;i<3;i++)
                         for (unsigned j=0; j<2; j++) {
                                 P_[i][j]=H2[i][j];
                         }
-                        vcl_cout<<P_<<vcl_endl;
+                        std::cout<<P_<<std::endl;
                         
                         for (unsigned i=0;i<3;i++)
                                 P_[i][3]=H2[i][2];
                         
-                        vcl_cout<<P_<<vcl_endl;
+                        std::cout<<P_<<std::endl;
                         
                         if (!road_only_) {
                                 //P_[1][2]=(y_post_-(P_*Post)[1])/Z;
@@ -438,14 +438,14 @@ void bcri_calib::solve()
                 }
                 
 
- vcl_cout<<P_<<vcl_endl;
+ std::cout<<P_<<std::endl;
  if (mundy) {
   P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
   P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
   P_[2][0]=-0.00355026; P_[2][1]=0.00194195; P_[2][2]=0.0; P_[2][3]=0.217277;
 
   }
- vcl_cout<<P_<<vcl_endl;
+ std::cout<<P_<<std::endl;
 }
 
 ///////////////
@@ -526,7 +526,7 @@ void bcri_calib::solve_reverse()
     if (image_xy1>=0 && image_xy2>=0 && image_xy3>=0 && image_xy4>=0 && 
       image_xy1<25 && image_xy2<25 && image_xy3<25 && image_xy4<25 )
       correct_choice=true;
-    else vcl_cout<<"choose again!"<<vcl_endl;
+    else std::cout<<"choose again!"<<std::endl;
     
   }
   
@@ -557,7 +557,7 @@ void bcri_calib::solve_reverse()
 
 
 
-  vcl_cout <<"A matrix is: \n"<<A<<vcl_endl;
+  std::cout <<"A matrix is: \n"<<A<<std::endl;
   
   //vnl_inverse(A);
   
@@ -566,15 +566,15 @@ void bcri_calib::solve_reverse()
 //  vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
 
-  vcl_cout<<"x_:"<<"\n"<<x_<<vcl_endl;
-  vcl_cout<<"y_:"<<"\n"<<y_<<vcl_endl;
-  vcl_cout<<"ones_:"<<"\n"<<ones_<<vcl_endl;
+  std::cout<<"x_:"<<"\n"<<x_<<std::endl;
+  std::cout<<"y_:"<<"\n"<<y_<<std::endl;
+  std::cout<<"ones_:"<<"\n"<<ones_<<std::endl;
 
   vnl_vector <double> h0=vnl_inverse(A.transpose()*A)*A.transpose()*x_;
   vnl_vector <double> h1=vnl_inverse(A.transpose()*A)*A.transpose()*y_;
   vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
-  vcl_cout<<h0<<"\n"<<h1<<"\n"<<h2<<vcl_endl;
+  std::cout<<h0<<"\n"<<h1<<"\n"<<h2<<std::endl;
 
 
   double Z;
@@ -596,19 +596,19 @@ void bcri_calib::solve_reverse()
   
   //P_[1][2]=y_post_/Z;
 
-  vcl_cout<<"post: "<<Post<<vcl_endl;
+  std::cout<<"post: "<<Post<<std::endl;
 
   P_[0][0]=h0[0];P_[0][1]=h0[1];P_[0][2]=0;P_[0][3]=h0[2]; 
   P_[1][0]=h1[0];P_[1][1]=h1[1];P_[1][2]=0;P_[1][3]=h1[2]; 
   P_[2][0]=h2[0];P_[2][1]=h2[1];P_[2][2]=0;P_[2][3]=h2[2]; 
 
-  vcl_cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<vcl_endl;
+  std::cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<std::endl;
   if (!road_only_) P_[1][2]=(y_post_-(P_*Post)[1])/Z;
 
   //P_[0][2]=(x_post_-(P_*Post)[0])/Z;
 
   
-  vcl_cout<<"\n"<<P_<<vcl_endl;
+  std::cout<<"\n"<<P_<<std::endl;
   if (mundy) {
   P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
   P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
@@ -620,9 +620,9 @@ void bcri_calib::solve_reverse()
         HomgPoint2D xh1(x_[0],y_[0],1.0);
         HomgPoint2D xh2(x_[0],y_[0],1.0);
         HomgPoint2D xh3(x_[0],y_[0],1.0);
-        //vcl_vector <HomgPoint2D> HA;
+        //std::vector <HomgPoint2D> HA;
         //
-        vcl_vector<HomgPoint2D>  PA,PB;
+        std::vector<HomgPoint2D>  PA,PB;
         PA.push_back(xh0);PA.push_back(xh1);PA.push_back(xh2);PA.push_back(xh3);
         
         for (unsigned i=0;i<4;i++)
@@ -632,8 +632,8 @@ void bcri_calib::solve_reverse()
                 }
         
         
-         vcl_vector<HomgPoint2D> four1_homg(4);
-         vcl_vector<HomgPoint2D> four2_homg(4);
+         std::vector<HomgPoint2D> four1_homg(4);
+         std::vector<HomgPoint2D> four2_homg(4);
          for (int j = 0; j < 4; j++)
          {
                  
@@ -649,10 +649,10 @@ void bcri_calib::solve_reverse()
          //HMatrix2DCompute::compute_p(PA,PA,H);
          /*  HMatrix2DCompute4Point pp;
          if (!pp.compute(PA,PB,&H))
-         vcl_cerr << "HMatrix2DCompute4Point - failure!\n";
-         vcl_cout<<H<<vcl_endl;
+         std::cerr << "HMatrix2DCompute4Point - failure!\n";
+         std::cout<<H<<std::endl;
          vnl_double_3x3 H1=H.get_matrix();
-         vcl_cout<<H1<<vcl_endl;
+         std::cout<<H1<<std::endl;
          */     
          HMatrix2D Hs;
           HMatrix2DCompute4Point Computor;
@@ -662,28 +662,28 @@ void bcri_calib::solve_reverse()
                 //  HMatrix2D* H_temp = new HMatrix2D();
                 
     if (!Computor.compute(four2_homg, four1_homg, &Hs))
-      vcl_cerr << "HMatrix2DCompute4Point - failure!\n";
+      std::cerr << "HMatrix2DCompute4Point - failure!\n";
                 
                 vnl_double_3x3 H2=Hs.get_matrix();
-                vcl_cout<<H2<<vcl_endl;
+                std::cout<<H2<<std::endl;
                 // HMatrix2DComputeMLESAC Calc(std_);
                 //      H_=Calc.compute(ptlist1_,ptlist2_);
                 //      findplaneparams(H_,K1_,K2_,R_,t_);
                 
                 P_.fill(0.0);
                 
-                vcl_cout<<P_<<vcl_endl;
+                std::cout<<P_<<std::endl;
                 
                 for (unsigned i=0;i<3;i++)
                         for (unsigned j=0; j<2; j++) {
                                 P_[i][j]=H2[i][j];
                         }
-                        vcl_cout<<P_<<vcl_endl;
+                        std::cout<<P_<<std::endl;
                         
                         for (unsigned i=0;i<3;i++)
                                 P_[i][3]=H2[i][2];
                         
-                        vcl_cout<<P_<<vcl_endl;
+                        std::cout<<P_<<std::endl;
                         
                         if (!road_only_) {
                                 //P_[1][2]=(y_post_-(P_*Post)[1])/Z;
@@ -691,14 +691,14 @@ void bcri_calib::solve_reverse()
                 }
                 
 
- vcl_cout<<P_<<vcl_endl;
+ std::cout<<P_<<std::endl;
  if (mundy) {
   P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
   P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
   P_[2][0]=-0.00355026; P_[2][1]=0.00194195; P_[2][2]=0.0; P_[2][3]=0.217277;
 
   }
- vcl_cout<<P_<<vcl_endl;
+ std::cout<<P_<<std::endl;
 }
 
 
@@ -708,9 +708,9 @@ void bcri_calib::solve_reverse()
 void bcri_calib::solve_robust() 
 {
         
-        vcl_vector<vgl_homg_point_2d<double> > points1;
+        std::vector<vgl_homg_point_2d<double> > points1;
         
-        vcl_vector<vgl_homg_point_2d<double> > points2;
+        std::vector<vgl_homg_point_2d<double> > points2;
         
         
         
@@ -820,10 +820,10 @@ void bcri_calib::select_pts1_pts2()
                          S_selected_.push_back(S_[i]);
                          
                          for (int i=0;i<26;i++) {
-                                 vcl_cout<<"# "<<i<<" :";
-                                 vcl_cout<<"pick :";
+                                 std::cout<<"# "<<i<<" :";
+                                 std::cout<<"pick :";
                                  tabs_picker_[0]->pick_point(&x1, &y1);
-                                 vcl_cout<<x1<<" "<<y1<<vcl_endl;
+                                 std::cout<<x1<<" "<<y1<<std::endl;
                                  
                                  
                                  if (i<25) {
@@ -868,19 +868,19 @@ void bcri_calib::solve_quiet()
         
         
 
-  vcl_cout <<"A matrix is: \n"<<A<<vcl_endl;
+  std::cout <<"A matrix is: \n"<<A<<std::endl;
   
 
 
-  vcl_cout<<"x_:"<<"\n"<<x_<<vcl_endl;
-  vcl_cout<<"y_:"<<"\n"<<y_<<vcl_endl;
-  vcl_cout<<"ones_:"<<"\n"<<ones_<<vcl_endl;
+  std::cout<<"x_:"<<"\n"<<x_<<std::endl;
+  std::cout<<"y_:"<<"\n"<<y_<<std::endl;
+  std::cout<<"ones_:"<<"\n"<<ones_<<std::endl;
 
   vnl_vector <double> h0=vnl_inverse(A.transpose()*A)*A.transpose()*x_;
   vnl_vector <double> h1=vnl_inverse(A.transpose()*A)*A.transpose()*y_;
   vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
-  vcl_cout<<h0<<"\n"<<h1<<"\n"<<h2<<vcl_endl;
+  std::cout<<h0<<"\n"<<h1<<"\n"<<h2<<std::endl;
 
 
   double Z;
@@ -901,20 +901,20 @@ void bcri_calib::solve_quiet()
   
   //P_[1][2]=y_post_/Z;
 
-  vcl_cout<<"post: "<<Post<<vcl_endl;
+  std::cout<<"post: "<<Post<<std::endl;
 
   P_[0][0]=h0[0];P_[0][1]=h0[1];P_[0][2]=0;P_[0][3]=h0[2]; 
   P_[1][0]=h1[0];P_[1][1]=h1[1];P_[1][2]=0;P_[1][3]=h1[2]; 
   //P_[2][0]=h2[0];P_[2][1]=h2[1];P_[2][2]=0;P_[2][3]=h2[2]; 
         P_[2][0]=0;P_[2][1]=0;P_[2][2]=0;P_[2][3]=1 ;
 
-  vcl_cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<vcl_endl;
+  std::cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<std::endl;
   if (!road_only_) P_[1][2]=(y_post_-(P_*Post)[1])/Z;
 
   //P_[0][2]=(x_post_-(P_*Post)[0])/Z;
 
   
-  vcl_cout<<"\n"<<P_<<vcl_endl;
+  std::cout<<"\n"<<P_<<std::endl;
  //if (mundy) {
  // P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
  // P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
@@ -922,8 +922,8 @@ void bcri_calib::solve_quiet()
 
  // }
 
-         vcl_vector<HomgPoint2D> four1_homg(4);
-    vcl_vector<HomgPoint2D> four2_homg(4);
+         std::vector<HomgPoint2D> four1_homg(4);
+    std::vector<HomgPoint2D> four2_homg(4);
     for (int j = 0; j < 4; j++)
     {
       
@@ -938,10 +938,10 @@ void bcri_calib::solve_quiet()
 
   
     if (!Computor.compute(four2_homg, four1_homg, &Hs))
-      vcl_cerr << "HMatrix2DCompute4Point - failure!\n";
+      std::cerr << "HMatrix2DCompute4Point - failure!\n";
 
                  vnl_double_3x3 H2=Hs.get_matrix();
-         vcl_cout<<H2<<vcl_endl;
+         std::cout<<H2<<std::endl;
         
          P_.fill(0.0);
          for (unsigned i=0;i<3;i++)
@@ -958,7 +958,7 @@ void bcri_calib::solve_quiet()
                 
                 
 
- vcl_cout<<P_<<vcl_endl;
+ std::cout<<P_<<std::endl;
 }
 
 
@@ -976,25 +976,25 @@ clear_display();
    float x1=0, y1=0; // x2=0, y2=0;
    vgl_homg_point_2d<double> mp_left,mp_right;
    //l_;
-   vcl_vector<vgl_homg_line_2d<double> > lines;
+   std::vector<vgl_homg_line_2d<double> > lines;
          
          
-         vcl_cout<<"pick"<<vcl_endl;
+         std::cout<<"pick"<<std::endl;
          tabs_picker_[0]->pick_point(&x1, &y1);
-   vcl_cout<<x1<<" "<<y1<<vcl_endl;
+   std::cout<<x1<<" "<<y1<<std::endl;
          int i_sel=0;
          float min=10000.0;
    for (int i=0;i<4;i++) {
                  
-                 //vcl_cout<<"# "<<i<<" :";
-                 //vcl_cout<<"pick :";
+                 //std::cout<<"# "<<i<<" :";
+                 //std::cout<<"pick :";
                  //tabs_picker_[0]->pick_point(&x1, &y1);
-                 //vcl_cout<<x1<<" "<<y1<<vcl_endl;
+                 //std::cout<<x1<<" "<<y1<<std::endl;
                 
                  
                  float d;
                  d=(x_[i]-x1)*(x_[i]-x1)+(y_[i]-y1)*(y_[i]-y1);
-                 vcl_cout<<"i&d: "<<i<<" "<<d<<vcl_endl;
+                 std::cout<<"i&d: "<<i<<" "<<d<<std::endl;
                  if (d<min) {
                          min=d; i_sel=i;
                  }
@@ -1184,7 +1184,7 @@ void bcri_calib::solve_all()
 
 
 
-  vcl_cout <<"A matrix is: \n"<<A<<vcl_endl;
+  std::cout <<"A matrix is: \n"<<A<<std::endl;
   
   //vnl_inverse(A);
   
@@ -1193,15 +1193,15 @@ void bcri_calib::solve_all()
 //  vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
 
-  vcl_cout<<"x_:"<<"\n"<<x_<<vcl_endl;
-  vcl_cout<<"y_:"<<"\n"<<y_<<vcl_endl;
-  vcl_cout<<"ones_:"<<"\n"<<ones_<<vcl_endl;
+  std::cout<<"x_:"<<"\n"<<x_<<std::endl;
+  std::cout<<"y_:"<<"\n"<<y_<<std::endl;
+  std::cout<<"ones_:"<<"\n"<<ones_<<std::endl;
 
   vnl_vector <double> h0=vnl_inverse(A.transpose()*A)*A.transpose()*x_;
   vnl_vector <double> h1=vnl_inverse(A.transpose()*A)*A.transpose()*y_;
   vnl_vector <double> h2=vnl_inverse(A.transpose()*A)*A.transpose()*ones_;
 
-  vcl_cout<<h0<<"\n"<<h1<<"\n"<<h2<<vcl_endl;
+  std::cout<<h0<<"\n"<<h1<<"\n"<<h2<<std::endl;
 
 
   double Z;
@@ -1221,19 +1221,19 @@ void bcri_calib::solve_all()
   
   //P_[1][2]=y_post_/Z;
 
-  //vcl_cout<<"post: "<<Post<<vcl_endl;
+  //std::cout<<"post: "<<Post<<std::endl;
 
   P_[0][0]=h0[0];P_[0][1]=h0[1];P_[0][2]=0;P_[0][3]=h0[2]; 
   P_[1][0]=h1[0];P_[1][1]=h1[1];P_[1][2]=0;P_[1][3]=h1[2]; 
   P_[2][0]=h2[0];P_[2][1]=h2[1];P_[2][2]=0;P_[2][3]=h2[2]; 
 
-  //vcl_cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<vcl_endl;
+  //std::cout<<P_*Post<<"\n"<<(P_*Post)[1]<<"\n"<<std::endl;
   //P_[1][2]=(y_post_-(P_*Post)[1])/Z;
 
   //P_[0][2]=(x_post_-(P_*Post)[0])/Z;
 
   
-  vcl_cout<<"\n"<<P_<<vcl_endl;
+  std::cout<<"\n"<<P_<<std::endl;
   if (mundy) {
   P_[0][0]=2.2107;P_[0][1]=7.67681; P_[0][2]=0.0; P_[0][3]=23.3704;
   P_[1][0]=-0.872506; P_[1][1]=.394777; P_[1][2]=-8.20182; P_[1][3]=105.119; 
@@ -1276,7 +1276,7 @@ P_[2][0]= 0.00431944;P_[2][1]= -0.00534274; P_[2][2]=0; P_[2][3]=-0.4032;
   vgui_style_sptr red_dots = vgui_style::new_style(1,0.2,0.0,7, 1);
         vgui_style_sptr y_dots = vgui_style::new_style(1,1.0,0.0,8, 1);
   for (unsigned i=0;i<25;i++) {
-    //vcl_cout<<S_[i]<<vcl_endl;
+    //std::cout<<S_[i]<<std::endl;
     //vgl_point_2d<double> p = brct_algos::projection_3d_point( S_[i],P_);
     vnl_double_4 X;
     X[0]=S_[i].x();
@@ -1288,7 +1288,7 @@ P_[2][0]= 0.00431944;P_[2][1]= -0.00534274; P_[2][2]=0; P_[2][3]=-0.4032;
     //t0[1][i] = p.y();  
     vnl_double_3 p = P_*X;
 
-    //vcl_cout<<i<<": "<<p<<" "<<p[0]/p[2] <<" "<<p[1]/p[2] <<vcl_endl;
+    //std::cout<<i<<": "<<p<<" "<<p[0]/p[2] <<" "<<p[1]/p[2] <<std::endl;
     vtol_vertex_2d_sptr v1=
       new vtol_vertex_2d(p[0]/p[2],p[1]/p[2]);
     
@@ -1344,7 +1344,7 @@ P_[2][0]= 0.00431944;P_[2][1]= -0.00534274; P_[2][2]=0; P_[2][3]=-0.4032;
   vgui_style_sptr red_dots = vgui_style::new_style(1,0.2,0.0,7, 1);
         vgui_style_sptr y_dots = vgui_style::new_style(1,1.0,0.0,8, 1);
   for (unsigned i=0;i<6;i++) {
-    //vcl_cout<<S_[i]<<vcl_endl;
+    //std::cout<<S_[i]<<std::endl;
     //vgl_point_2d<double> p = brct_algos::projection_3d_point( S_[i],P_);
     //if (i!=0&i!=1||i!=2||i!=3||i!=4||i!=14) continue;
     vnl_double_4 X;
@@ -1357,7 +1357,7 @@ P_[2][0]= 0.00431944;P_[2][1]= -0.00534274; P_[2][2]=0; P_[2][3]=-0.4032;
     //t0[1][i] = p.y();  
     vnl_double_3 p = P_*X;
 
-    vcl_cout<<i<<": "<<p<<" "<<p[0]/p[2] <<" "<<p[1]/p[2] <<vcl_endl;
+    std::cout<<i<<": "<<p<<" "<<p[0]/p[2] <<" "<<p[1]/p[2] <<std::endl;
     vtol_vertex_2d_sptr v1=
       new vtol_vertex_2d(p[0]/p[2],p[1]/p[2]);
     
@@ -1419,7 +1419,7 @@ bcri_calib::get_picker_tableau_at(unsigned col, unsigned row)
     {
       bgui_picker_tableau_sptr tt;
       tt.vertical_cast(vgui_find_below_by_type_name(top_tab,
-         vcl_string("bgui_picker_tableau")));
+         std::string("bgui_picker_tableau")));
       if (tt)
          return tt;
     }

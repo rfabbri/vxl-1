@@ -25,12 +25,12 @@ SoSeparator* gdt_draw_welms (dbmsh3d_gdt_mesh* gdt_mesh, int nSamples, float lin
   vis->addChild(ds);
 
   //Loop through each welm on each mesh edge.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = gdt_mesh->edgemap().begin();
   for (; it != gdt_mesh->edgemap().end(); it++) {
     dbmsh3d_gdt_edge* E = (dbmsh3d_gdt_edge*) (*it).second;
 
     //For each E, loop through each W associated with it.
-    vcl_map<double, gdt_ibase*>::iterator it = E->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = E->interval_section()->I_map()->begin();
     for (; it != E->interval_section()->I_map()->end(); it++) {
       gdt_welm* W = (gdt_welm*) (*it).second;
       if (W->is_dege())
@@ -42,12 +42,12 @@ SoSeparator* gdt_draw_welms (dbmsh3d_gdt_mesh* gdt_mesh, int nSamples, float lin
   }
 
   //Loop through each welm on each mesh vertex (pseudo-source).
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = gdt_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = gdt_mesh->vertexmap().begin();
   for (; vit != gdt_mesh->vertexmap().end(); vit++) {
     dbmsh3d_gdt_vertex_3d* V = (dbmsh3d_gdt_vertex_3d*) (*vit).second;
 
     //For each V, loop through each RF from it.
-    vcl_set<gdt_interval*>::iterator it = V->childIs().begin();
+    std::set<gdt_interval*>::iterator it = V->childIs().begin();
     while (it != V->childIs().end()) {
       gdt_welm* RF = (gdt_welm*) (*it);
       //Only draw if the RF is finalized.

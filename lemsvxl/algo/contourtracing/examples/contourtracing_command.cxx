@@ -29,20 +29,20 @@ int main( int argc, char* argv[] )
   char strtemp2[100];
 
   if (argc != 4) {
-    vcl_cout << "USAGE: contourtracing_command.exe <image file name> <smoothing sigma> <number of times to be smoothed>\n";
+    std::cout << "USAGE: contourtracing_command.exe <image file name> <smoothing sigma> <number of times to be smoothed>\n";
     exit(-1);
   }
 
-  vcl_string image_filename(argv[1]);
+  std::string image_filename(argv[1]);
   float s = atof(argv[2]);
   int cnt = atoi(argv[3]);
 
   vil_image_resource_sptr loaded_image = vil_load_image_resource( image_filename.c_str() );
   if( !loaded_image ) {
-    vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+    std::cerr << "Failed to load image file" << image_filename << std::endl;
     return false;
   } else 
-    vcl_cout << "loaded image "<<image_filename.c_str()<<vcl_endl;
+    std::cout << "loaded image "<<image_filename.c_str()<<std::endl;
 
   ContourTracing* contourTracing = new ContourTracing;
   contourTracing->setSigma (s);
@@ -51,9 +51,9 @@ int main( int argc, char* argv[] )
 
   contourTracing->detectContour();
 
-  vcl_vector<vsol_point_2d_sptr>& points = contourTracing->getResult ();
+  std::vector<vsol_point_2d_sptr>& points = contourTracing->getResult ();
 
-  vcl_cout << "number of points: " << points.size() << vcl_endl;
+  std::cout << "number of points: " << points.size() << std::endl;
   
   strcpy(strtemp1, image_filename.c_str());    
   for ( i=0; strtemp1[i] != '.'; i++ ){}
@@ -64,13 +64,13 @@ int main( int argc, char* argv[] )
   vul_psfile psfile1(strtemp2, false);
 
   if (!psfile1){
-    vcl_cout << " Error opening file  " << strtemp2 << vcl_endl;
+    std::cout << " Error opening file  " << strtemp2 << std::endl;
     return false;
   }
 
-  vcl_cout << " Opened file " << strtemp2 << " for writing!\n";
-  vcl_cout << " Image dimensions are, width: " << loaded_image->ni();
-  vcl_cout << " height: " << loaded_image->nj() << "\n";
+  std::cout << " Opened file " << strtemp2 << " for writing!\n";
+  std::cout << " Image dimensions are, width: " << loaded_image->ni();
+  std::cout << " height: " << loaded_image->nj() << "\n";
 
   unsigned char * data= new unsigned char[loaded_image->ni()*loaded_image->nj()];
   for( i=0;i<loaded_image->ni()*loaded_image->nj();i++)
@@ -99,7 +99,7 @@ int main( int argc, char* argv[] )
     strtemp1[i]= 0;
     sprintf(strtemp2, "%s.con", strtemp1);
 
-    vcl_vector<vgl_point_2d<double> > curve;
+    std::vector<vgl_point_2d<double> > curve;
     curve.clear();
 
     for (i=0; i<points.size();i++){

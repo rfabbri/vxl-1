@@ -2,7 +2,7 @@
 
 #include <vul/vul_arg.h>
 #include <vbl/vbl_triple.h>
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 #include <modrec/modrec_feature_3d.h>
 
@@ -15,24 +15,24 @@
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_feat_file("-feat3d", "path to 3d features", "");
-  vul_arg<vcl_string>  a_clust_file("-clusters", "path to clusters index file", "");
+  vul_arg<std::string>  a_feat_file("-feat3d", "path to 3d features", "");
+  vul_arg<std::string>  a_clust_file("-clusters", "path to clusters index file", "");
   vul_arg_parse(argc, argv);
 
-  vcl_vector<modrec_desc_feature_3d<128> > features;
+  std::vector<modrec_desc_feature_3d<128> > features;
   typedef vbl_triple<unsigned,unsigned,unsigned> utriple;
-  vcl_vector<utriple> idx_array;  
+  std::vector<utriple> idx_array;  
   read_features(a_feat_file(), features, idx_array);
 
-  vcl_cout << "read " << features.size() << vcl_endl;
+  std::cout << "read " << features.size() << std::endl;
 
-  vcl_vector<vcl_vector<unsigned> > clusters_idx;
+  std::vector<std::vector<unsigned> > clusters_idx;
   read_clusters(a_clust_file(), clusters_idx);
 
   for(unsigned n=1; n<=20; ++n){
-    vcl_vector<unsigned> c = *(clusters_idx.end()-n);
-    vcl_stringstream name;
-    name <<"features" << vcl_setfill('0') << vcl_setw(2) <<  n << ".mat";
+    std::vector<unsigned> c = *(clusters_idx.end()-n);
+    std::stringstream name;
+    name <<"features" << std::setfill('0') << std::setw(2) <<  n << ".mat";
     vnl_matlab_filewrite mfs(name.str().c_str());
     vnl_matrix<double> desc_M(c.size(),128);
     vnl_matrix<double> pos_M(c.size(),3);

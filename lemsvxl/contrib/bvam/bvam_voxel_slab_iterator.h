@@ -1,8 +1,8 @@
 #ifndef bvam_voxel_slab_iterator_h_
 #define bvam_voxel_slab_iterator_h_
 
-#include <vcl_iterator.h>
-#include <vcl_string.h>
+#include <iterator>
+#include <string>
 
 #include <vgl/vgl_vector_3d.h>
 
@@ -33,7 +33,7 @@ protected:
 };
 
 template <class T>
-class bvam_voxel_slab_iterator : public bvam_voxel_slab_iterator_base<T>, public vcl_iterator<vcl_bidirectional_iterator_tag, T>
+class bvam_voxel_slab_iterator : public bvam_voxel_slab_iterator_base<T>, public std::iterator<std::bidirectional_iterator_tag, T>
 {
 public:
   bvam_voxel_slab_iterator() : bvam_voxel_slab_iterator_base() {};
@@ -65,7 +65,7 @@ private:
 
 
 template <class T>
-class bvam_voxel_slab_const_iterator : public bvam_voxel_slab_iterator_base<T>, public vcl_iterator<vcl_bidirectional_iterator_tag, T>
+class bvam_voxel_slab_const_iterator : public bvam_voxel_slab_iterator_base<T>, public std::iterator<std::bidirectional_iterator_tag, T>
 {
 public:
   bvam_voxel_slab_const_iterator() : bvam_voxel_slab_iterator_base(){};

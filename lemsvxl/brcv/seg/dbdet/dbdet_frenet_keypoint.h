@@ -52,12 +52,12 @@ class dbdet_frenet_keypoint : public dbdet_keypoint
   
   virtual bool has_orientation() const { return true; }
   //: result between -PI and PI (inclusive)
-  virtual double orientation() const { return vcl_atan2(ty_,tx_); }
+  virtual double orientation() const { return std::atan2(ty_,tx_); }
   virtual bool set_orientation(double /*o*/) { return true; }
   
   //=============== Binary I/O Methods ========================
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbdet_frenet_keypoint"; }
+  virtual std::string is_a() const { return "dbdet_frenet_keypoint"; }
 
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -73,7 +73,7 @@ class dbdet_frenet_keypoint : public dbdet_keypoint
   short version() const;
 
   //: Print an ascii summary to the stream
-  virtual void print_summary(vcl_ostream &os) const;
+  virtual void print_summary(std::ostream &os) const;
   
 public:
    double tx_;

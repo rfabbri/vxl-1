@@ -14,8 +14,8 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <fstream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_random.h>
 
@@ -33,7 +33,7 @@ void generate_random_hypg (dbasnh_hypg* G, const float corner_con)
 
   //Setup the corner table by the parameter corner_con.
   vnl_random mzr;
-  int nC = vcl_floor (max_corners * corner_con);
+  int nC = std::floor (max_corners * corner_con);
   int i, j, k;
 
   for (int n = 0; n<nC; n++) {
@@ -100,12 +100,12 @@ void generate_noisy_subhypg (dbasnh_hypg* g, dbasnh_hypg*
   assert (g->n_corners() <= inputG->n_corners());
 }
 
-int  load_GA_hypg_file (dbasnh_hypg* G, const vcl_string& filename)
+int  load_GA_hypg_file (dbasnh_hypg* G, const std::string& filename)
 {
   return 0;
 }
 
-void save_GA_hypg_file (dbasnh_hypg* G, const vcl_string& filename)
+void save_GA_hypg_file (dbasnh_hypg* G, const std::string& filename)
 {
 }
 

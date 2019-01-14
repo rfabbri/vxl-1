@@ -19,7 +19,7 @@ bool dbskr_match_shock_params::parse_from_match_data(bxml_data_sptr result)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_match_shock_params::parse_from_match_data() - could not find the node match_data\n";
+    std::cout << "dbskr_match_shock_params::parse_from_match_data() - could not find the node match_data\n";
     return false;
   }
    
@@ -28,14 +28,14 @@ bool dbskr_match_shock_params::parse_from_match_data(bxml_data_sptr result)
     return false;
 
   data1->get_attribute("scurve_sample_ds", edit_params_.scurve_sample_ds_);
-  vcl_string sample_ds_str, interp_ds_str, R_str;
+  std::string sample_ds_str, interp_ds_str, R_str;
   data1->get_attribute("scurve_sample_ds", sample_ds_str);
   data1->get_attribute("scurve_interpolate_ds", edit_params_.scurve_interpolate_ds_); 
   data1->get_attribute("scurve_interpolate_ds", interp_ds_str);
   data1->get_attribute("scurve_matching_R", edit_params_.curve_matching_R_); 
   data1->get_attribute("scurve_matching_R", R_str);
 
-  vcl_string val;
+  std::string val;
   data1->get_attribute("localized_edit", val);
   edit_params_.localized_edit_ = val.compare("off") == 0 ? false: true; // if val = off then localize_edit = false
 
@@ -64,7 +64,7 @@ bool dbskr_match_shock_params::parse_from_match_data(bxml_data_sptr result)
     edit_params_.output_file_postfix_ = edit_params_.output_file_postfix_ + "-localized";
 
   edit_params_.output_file_postfix_ = edit_params_.output_file_postfix_ + "-s-" + sample_ds_str + "-i-" + interp_ds_str + "-R-" + R_str;
-  //vcl_cout << "output_file_postfix: " << edit_params_.output_file_postfix_ << vcl_endl;
+  //std::cout << "output_file_postfix: " << edit_params_.output_file_postfix_ << std::endl;
 
   return true;
 }
@@ -72,13 +72,13 @@ bool dbskr_match_shock_params::parse_from_match_data(bxml_data_sptr result)
 
 bool dbskr_match_shock_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "dbskr_match_shock_params\n";
+  //std::cout << "dbskr_match_shock_params\n";
 
   bxml_element query("dbskr_match_shock_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_match_shock_params::parse_from_data() - could not find the node dbskr_match_shock_params\n";
+    std::cout << "dbskr_match_shock_params::parse_from_data() - could not find the node dbskr_match_shock_params\n";
     return false;
   }
 
@@ -100,7 +100,7 @@ bool dbskr_match_shock_params::parse_from_data(bxml_data_sptr root)
   data2->get_attribute("dbdir", db_dir_);
   data2->get_attribute("dblist", db_list_);
 
-  vcl_string val;
+  std::string val;
 
   data2->get_attribute("saveshgms", val);
   save_shgms_ = val.compare("off") == 0 ? false: true; 
@@ -136,22 +136,22 @@ bxml_element *dbskr_match_shock_params::create_default_document_match_data() {
 bxml_element *dbskr_match_shock_params::create_document_match_data()
 {
   bxml_element * data1 = new bxml_element("match_data");
-  vcl_ostringstream oss;
-  oss.setf(vcl_ios::fixed, vcl_ios::floatfield);
+  std::ostringstream oss;
+  oss.setf(std::ios::fixed, std::ios::floatfield);
   oss.precision(1);
   oss << edit_params_.scurve_sample_ds_;
 
   //data1->set_attribute("scurve_sample_ds",edit_params_.scurve_sample_ds_);
   data1->set_attribute("scurve_sample_ds",oss.str());
-  vcl_ostringstream oss2;
-  oss2.setf(vcl_ios::fixed, vcl_ios::floatfield);
+  std::ostringstream oss2;
+  oss2.setf(std::ios::fixed, std::ios::floatfield);
   oss2.precision(1);
   oss2 << edit_params_.scurve_interpolate_ds_;
   data1->set_attribute("scurve_interpolate_ds",oss2.str());
   data1->set_attribute("localized_edit",edit_params_.localized_edit_ ? "on" : "off");
   data1->set_attribute("elastic_splice_cost",edit_params_.elastic_splice_cost_ ? "on" : "off");
-  vcl_ostringstream oss3;
-  oss3.setf(vcl_ios::fixed, vcl_ios::floatfield);
+  std::ostringstream oss3;
+  oss3.setf(std::ios::fixed, std::ios::floatfield);
   oss3.precision(1);
   oss3 << edit_params_.curve_matching_R_;
   data1->set_attribute("scurve_matching_R",oss3.str());

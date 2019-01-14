@@ -5,7 +5,7 @@
 #include "dbacm3d_edge_trough_levelset_func.h"
 
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbil3d/algo/dbil3d_finite_differences.h>
 #include <dbil3d/algo/dbil3d_finite_second_differences.h>
@@ -24,7 +24,7 @@ const float dbacm3d_min_grad_phi = float(1e-10);
 void dbacm3d_edge_trough_levelset_func::
 reinitialize_levelset_surf()
 {
-//        vcl_cerr << "reinitializing levelset surface" << "\n" ;
+//        std::cerr << "reinitializing levelset surface" << "\n" ;
 //        vil3d_image_view<bool> thresholded; 
 //        vil3d_threshold_below(phi_,thresholded,0.f);
 //        vil3d_signed_distance_transform(thresholded,
@@ -57,10 +57,10 @@ reinitialize_levelset_surf()
 }
 
 inline vnl_vector<float> dbacm3d_edge_trough_levelset_func::closest_edge(const float * pixel_edges,
-                                      const  vcl_ptrdiff_t & pstep_edges,
-                                      const  vcl_ptrdiff_t & kstep_edges,
-                                      const  vcl_ptrdiff_t & jstep_edges,
-                                      const  vcl_ptrdiff_t & istep_edges)
+                                      const  std::ptrdiff_t & pstep_edges,
+                                      const  std::ptrdiff_t & kstep_edges,
+                                      const  std::ptrdiff_t & jstep_edges,
+                                      const  std::ptrdiff_t & istep_edges)
 {
     vnl_vector<float> closest_edge_offset(3,-1.0f);
     float min_magnitude = -1;
@@ -120,56 +120,56 @@ evolve_one_timestep(float timestep)
                 nk=this->phi_.nk(), 
                 np=this->phi_.nplanes();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_phi=this->phi_.istep(), 
                 jstep_phi=this->phi_.jstep(),
                 kstep_phi=this->phi_.kstep(),
                 pstep_phi=this->phi_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_hj=this->hj_flux_.istep(), 
                 jstep_hj=this->hj_flux_.jstep(),
                 kstep_hj=this->hj_flux_.kstep(),
                 pstep_hj=this->hj_flux_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dxc=this->dxc_.istep(), 
                 jstep_dxc=this->dxc_.jstep(),
                 kstep_dxc=this->dxc_.kstep(),
                 pstep_dxc=this->dxc_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dyc=this->dyc_.istep(), 
                 jstep_dyc=this->dyc_.jstep(),
                 kstep_dyc=this->dyc_.kstep(),
                 pstep_dyc=this->dyc_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_dzc=this->dzc_.istep(), 
                 jstep_dzc=this->dzc_.jstep(),
                 kstep_dzc=this->dzc_.kstep(),
                 pstep_dzc=this->dzc_.planestep();
 
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_k=this->curvature_.istep(), 
                 jstep_k=this->curvature_.jstep(),
                 kstep_k=this->curvature_.kstep(),
                 pstep_k=this->curvature_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_edges=this->edges_.istep(), 
                 jstep_edges=this->edges_.jstep(),
                 kstep_edges=this->edges_.kstep(),
                 pstep_edges=this->edges_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_troughs=this->troughs_.istep(), 
                 jstep_troughs=this->troughs_.jstep(),
                 kstep_troughs=this->troughs_.kstep(),
                 pstep_troughs=this->troughs_.planestep();
 
-        vcl_ptrdiff_t 
+        std::ptrdiff_t 
                 istep_no_go_image=this->no_go_image_.istep(), 
                 jstep_no_go_image=this->no_go_image_.jstep(),
                 kstep_no_go_image=this->no_go_image_.kstep(),
@@ -272,7 +272,7 @@ evolve_one_timestep(float timestep)
                                         speed = (inflation_weight_*inflation_term 
                                                + curvature_weight_*curvature_term);
 
-                                        if(vcl_fabs(*pixel_phi) < 1){
+                                        if(std::fabs(*pixel_phi) < 1){
                                         //modulate by trough value
                                         //(slow to zero as levelset approaches the
                                         //trough)
@@ -289,28 +289,28 @@ evolve_one_timestep(float timestep)
                                                                                       istep_edges);
                                                 if(edgevec[0] > -1){
                                                         bool debug = 0;
-                                                if(debug) vcl_cerr <<"\n" <<  i << " " << j << " " << k << "\n" ;
-                                                if(debug) vcl_cerr << *pixel_phi << "\n";
-                                                if(debug) vcl_cerr << "edge is at : ";
-                                                if(debug) vcl_cerr << edgevec[0] << " " << edgevec[1] << " " <<edgevec[2] << "\n" ;
+                                                if(debug) std::cerr <<"\n" <<  i << " " << j << " " << k << "\n" ;
+                                                if(debug) std::cerr << *pixel_phi << "\n";
+                                                if(debug) std::cerr << "edge is at : ";
+                                                if(debug) std::cerr << edgevec[0] << " " << edgevec[1] << " " <<edgevec[2] << "\n" ;
                                                 vnl_vector<float> normal(3,0.0f);
                                                 normal.put(0,*pixel_dxc);
                                                 normal.put(1,*pixel_dyc);
                                                 normal.put(2,*pixel_dzc);
                                                 normal.normalize();
 
-                                                if(debug) vcl_cerr << "normal is  : ";
-                                                if(debug) vcl_cerr << normal[0] << " " << normal[1] << " " <<normal[2] << "\n" ;
-                                                if(debug) vcl_cerr << "dot is  : " << dot_product(normal,edgevec) << "\n";
-                                                float dist = dot_product(normal,edgevec) - vcl_fabs(*pixel_phi);
+                                                if(debug) std::cerr << "normal is  : ";
+                                                if(debug) std::cerr << normal[0] << " " << normal[1] << " " <<normal[2] << "\n" ;
+                                                if(debug) std::cerr << "dot is  : " << dot_product(normal,edgevec) << "\n";
+                                                float dist = dot_product(normal,edgevec) - std::fabs(*pixel_phi);
 
-                                                if(debug) vcl_cerr << "dist is  : " << dist << "\n";
-                                                if(debug) vcl_cerr << "speed was  : " << speed << "\n";
+                                                if(debug) std::cerr << "dist is  : " << dist << "\n";
+                                                if(debug) std::cerr << "speed was  : " << speed << "\n";
                                                 speed *= dist*dist/(dist*dist + edgeT_*edgeT_);
-                                                if(debug) vcl_cerr << "multiplied by  : " << dist*dist/(dist*dist + edgeT_*edgeT_) << "\n";
-                                                if(debug) vcl_cerr << "new speed is  : " << speed << "\n";
+                                                if(debug) std::cerr << "multiplied by  : " << dist*dist/(dist*dist + edgeT_*edgeT_) << "\n";
+                                                if(debug) std::cerr << "new speed is  : " << speed << "\n";
 //                                                char g;
-//                                                vcl_cin >> g;
+//                                                std::cin >> g;
                                                 speed *= (float)*pixel_no_go_image;
                                                 }
 
@@ -342,7 +342,7 @@ evolve_one_timestep(float timestep)
                         vil3d_image_view<float> dzp;
                         vil3d_image_view<float> dzm;
 
-                        //vcl_cerr << "dbil3d_finite_differences..." ;
+                        //std::cerr << "dbil3d_finite_differences..." ;
                         dbil3d_finite_differences(phi_,
                                         dxp,dxm,this->dxc_,
                                         dyp,dym,this->dyc_,

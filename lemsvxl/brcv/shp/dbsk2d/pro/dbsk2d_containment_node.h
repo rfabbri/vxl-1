@@ -20,9 +20,9 @@
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_vector.h>
+#include <map>
+#include <set>
+#include <vector>
 
 
 class dbsk2d_ishock_transform;
@@ -48,18 +48,18 @@ public:
 
     bool get_visited(){return visited_;}
 
-    vcl_set<int> get_key(){return key_;}
+    std::set<int> get_key(){return key_;}
 
-    vcl_vector<dbsk2d_containment_node_sptr>& 
+    std::vector<dbsk2d_containment_node_sptr>& 
         get_children(){return children_;}
 
     dbsk2d_ishock_transform_sptr& get_parent_transform()
     {return parent_transform_;}
 
-    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
+    std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >&
         get_parent_regions(){return parent_regions_;}
 
-    vcl_map<unsigned int,unsigned int >&
+    std::map<unsigned int,unsigned int >&
         get_parent_regions_outer_shock_nodes()
     {return parent_regions_outer_shock_nodes_;}
         
@@ -83,7 +83,7 @@ public:
 
     void set_visited(bool flag){visited_=flag;}
 
-    void set_key(vcl_set<int> key){key_=key;}
+    void set_key(std::set<int> key){key_=key;}
 
     void set_child_node(dbsk2d_containment_node_sptr& child_node)
     {
@@ -94,7 +94,7 @@ public:
 
     void set_gap_prob(double gap_prob){gap_prob_=gap_prob;}
 
-    void set_parent_regions(vcl_vector<dbsk2d_ishock_belm*> region_belms,
+    void set_parent_regions(std::vector<dbsk2d_ishock_belm*> region_belms,
                             unsigned int outer_shock_nodes)
     {
         unsigned int index=parent_regions_.size();
@@ -119,35 +119,35 @@ public:
     void print_node()
     {
         unsigned int i=1;
-        vcl_cout<<"Node "
+        std::cout<<"Node "
                 <<id_
                 <<" "
                 <<parent_regions_.size()
-                <<" Regions"<<vcl_endl;
+                <<" Regions"<<std::endl;
 
-        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator it;
+        std::map<unsigned int,std::vector<dbsk2d_ishock_belm*> >::iterator it;
         for ( it = parent_regions_.begin() ; it != parent_regions_.end(); ++it)
         {
-            vcl_vector<dbsk2d_ishock_belm*> belms = (*it).second;
-            vcl_vector<dbsk2d_ishock_belm*>::iterator sit;
-            vcl_cout<<"Region "<<(*it).first<<": ";
+            std::vector<dbsk2d_ishock_belm*> belms = (*it).second;
+            std::vector<dbsk2d_ishock_belm*>::iterator sit;
+            std::cout<<"Region "<<(*it).first<<": ";
             for ( sit = belms.begin() ; sit != belms.end() ; ++sit)
             {
-                vcl_cout<<"("
+                std::cout<<"("
                         <<(*sit)->id()
                         <<","
                         <<(*sit)->get_contour_id()
                         <<") ";
                 
             }
-            vcl_cout<<vcl_endl;
+            std::cout<<std::endl;
         }
 
     }
 private: 
 
     // Keep a set of children
-    vcl_vector<dbsk2d_containment_node_sptr> children_;
+    std::vector<dbsk2d_containment_node_sptr> children_;
 
     // Keep transform that caused this node
     dbsk2d_ishock_transform_sptr parent_transform_;
@@ -162,7 +162,7 @@ private:
     unsigned int id_;
 
     // Keep a unique key describing this node
-    vcl_set<int> key_;
+    std::set<int> key_;
 
     // Keep track of probability of this node
     double prob_;
@@ -171,10 +171,10 @@ private:
     double gap_prob_;
 
     // Keep track of regions that spawned this node
-    vcl_map< unsigned int,vcl_vector<dbsk2d_ishock_belm*> > parent_regions_;
+    std::map< unsigned int,std::vector<dbsk2d_ishock_belm*> > parent_regions_;
 
     // Keep track of regions that spawned this node
-    vcl_map< unsigned int,unsigned int > parent_regions_outer_shock_nodes_;
+    std::map< unsigned int,unsigned int > parent_regions_outer_shock_nodes_;
 
     // Make copy ctor private
     dbsk2d_containment_node(const dbsk2d_containment_node&);

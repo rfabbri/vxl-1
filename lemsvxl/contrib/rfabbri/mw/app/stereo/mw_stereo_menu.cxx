@@ -42,7 +42,7 @@
 //#include <mw/vis/mw_sel_geometry_tool.h>
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 mw_stereo_menu::mw_stereo_menu()
 {

@@ -1,7 +1,7 @@
 #ifndef psm_update_vis_implicit_aa_h_
 #define psm_update_vis_implicit_aa_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -36,7 +36,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_vis_implicit_sample,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_vis_implicit_sample,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
 
@@ -47,7 +47,7 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     for (; cell_it != cells.end(); ++cell_it) {
       psm_sample<APM> const& cell_value = block[*cell_it];
       psm_vis_implicit_sample &vis_implicit_sample = aux_block[*cell_it];
@@ -60,7 +60,7 @@ public:
       float mean_vis = 1.0f;
       if (cube_mean_aa(xverts_2d, yverts_2d, vert_distances, visible_faces, vis_, mean_vis)) {
         if (!((mean_vis >= -0.01f) && (mean_vis <= 1.01f)) ) {
-          vcl_cerr  << "error: mean_vis = " << mean_vis << vcl_endl;
+          std::cerr  << "error: mean_vis = " << mean_vis << std::endl;
           continue;
         }
         if (mean_vis > 1.0f) {
@@ -70,7 +70,7 @@ public:
           mean_vis = 0.0f;
         }
         if (!((vis_implicit_sample.max_vis >= 0.0f) && (vis_implicit_sample.max_vis <= 1.01f)) ) {
-          vcl_cerr << "error: cell.max_vis = " << vis_implicit_sample.max_vis << vcl_endl;
+          std::cerr << "error: cell.max_vis = " << vis_implicit_sample.max_vis << std::endl;
           continue;
         }
         // update max vis for cell in aux_sample

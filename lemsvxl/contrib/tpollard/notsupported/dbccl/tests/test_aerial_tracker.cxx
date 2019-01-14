@@ -1,5 +1,5 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include "../dbccl_aerial_tracker.h"
 
@@ -45,13 +45,13 @@ static void test_aerial_tracker()
     K.set_focal_length( 200 );
     P1.set_calibration( K ); P2.set_calibration( K );
     P2.set_camera_center( vgl_point_3d<double>(.1,.2,0) );
-    vcl_vector< vgl_homg_point_3d<double> > world_points;
+    std::vector< vgl_homg_point_3d<double> > world_points;
     world_points.push_back( vgl_homg_point_3d<double>(-.5,-.3,1) );
     world_points.push_back( vgl_homg_point_3d<double>(-.4,-.1,2) );
     world_points.push_back( vgl_homg_point_3d<double>(.5,-.2,1) );
     world_points.push_back( vgl_homg_point_3d<double>(-.3,.3,3) );
     world_points.push_back( vgl_homg_point_3d<double>(.2,.3,1.5) );
-    vcl_vector< vgl_point_2d<int> > img1_points, img2_points, empty_points;
+    std::vector< vgl_point_2d<int> > img1_points, img2_points, empty_points;
     for( int i = 0; i < world_points.size(); i++ ){
       vgl_homg_point_2d<double> img1_point = P1.project( world_points[i] );
       vgl_homg_point_2d<double> img2_point = P2.project( world_points[i] );
@@ -71,9 +71,9 @@ static void test_aerial_tracker()
     
     tracker.track_frame( img2, img1_points );
     tracker.track_frame( img2, empty_points );
-    vcl_vector< vgl_point_2d<int> > img2_points_comp = tracker.get_tracks();
+    std::vector< vgl_point_2d<int> > img2_points_comp = tracker.get_tracks();
     for( int i = 0; i < img2_points.size(); i++ )
-      vcl_cerr << img1_points[i] << img2_points[i] << img2_points_comp[i] << '\n';
+      std::cerr << img1_points[i] << img2_points[i] << img2_points_comp[i] << '\n';
 
   }
 }

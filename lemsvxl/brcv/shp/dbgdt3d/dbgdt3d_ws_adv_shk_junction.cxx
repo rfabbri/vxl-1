@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbgdt3d/dbgdt3d_manager.h>
 
@@ -16,8 +16,8 @@ void gdt_ws_manager::Advance_shock_to_junction (gdt_shock* S)
   // advance all adjacent intervals to this simtime
   // try to create a child shock for non-sink case
 
-  vcl_vector<gdt_shock*> SList, SaList, SbList;
-  vcl_vector<gdt_welm*> WList, WaList, WbList;
+  std::vector<gdt_shock*> SList, SaList, SbList;
+  std::vector<gdt_welm*> WList, WaList, WbList;
   bool sinkA, sinkB;
 
   if (S->Sa()) {
@@ -89,8 +89,8 @@ void gdt_ws_manager::Advance_shock_to_junction (gdt_shock* S)
 }
 
 bool gdt_ws_manager::get_all_intersected_S_via_Wa (const gdt_shock* S,
-                                                   vcl_vector<gdt_shock*>& SaList,
-                                                   vcl_vector<gdt_welm*>& WaList)
+                                                   std::vector<gdt_shock*>& SaList,
+                                                   std::vector<gdt_welm*>& WaList)
 {
   bool sinkA = false;
 
@@ -128,8 +128,8 @@ bool gdt_ws_manager::get_all_intersected_S_via_Wa (const gdt_shock* S,
 }
 
 bool gdt_ws_manager::get_all_intersected_S_via_Wb (const gdt_shock* S,
-                                                   vcl_vector<gdt_shock*>& SbList,
-                                                   vcl_vector<gdt_welm*>& WbList)
+                                                   std::vector<gdt_shock*>& SbList,
+                                                   std::vector<gdt_welm*>& WbList)
 {
   bool sinkB = false;
 
@@ -167,12 +167,12 @@ bool gdt_ws_manager::get_all_intersected_S_via_Wb (const gdt_shock* S,
 }
 
 void gdt_ws_manager::merge_all_intersected_S (const gdt_shock* S,
-                                              vcl_vector<gdt_shock*>& SaList,
-                                              vcl_vector<gdt_welm*>& WaList,
-                                              vcl_vector<gdt_shock*>& SbList,
-                                              vcl_vector<gdt_welm*>& WbList,                                              
-                                              vcl_vector<gdt_shock*>& SList,
-                                              vcl_vector<gdt_welm*>& WList)
+                                              std::vector<gdt_shock*>& SaList,
+                                              std::vector<gdt_welm*>& WaList,
+                                              std::vector<gdt_shock*>& SbList,
+                                              std::vector<gdt_welm*>& WbList,                                              
+                                              std::vector<gdt_shock*>& SList,
+                                              std::vector<gdt_welm*>& WList)
 {
   assert (SaList.size() == WaList.size());
   assert (SbList.size() == WbList.size());
@@ -219,8 +219,8 @@ void gdt_ws_manager::merge_all_intersected_S (const gdt_shock* S,
 //     shocks. The two wavefront arcs of the chilid shock is the 
 //     leftmost and rightmost wavefront arcs.   
 //
-void gdt_ws_manager::advance_3_more_shocks_to_junction (vcl_vector<gdt_shock*>& SList,
-                                                        vcl_vector<gdt_welm*>& WList,
+void gdt_ws_manager::advance_3_more_shocks_to_junction (std::vector<gdt_shock*>& SList,
+                                                        std::vector<gdt_welm*>& WList,
                                                         const gdt_shock* S)
 {
   unsigned int i;
@@ -286,13 +286,13 @@ void gdt_ws_manager::advance_3_more_shocks_to_junction (vcl_vector<gdt_shock*>& 
   add_snode (junct);
 
 #if GDT_DEBUG_MSG
-  vul_printf (vcl_cout, "\n ==> Intersect shocks ");
+  vul_printf (std::cout, "\n ==> Intersect shocks ");
   for (i=0; i<SList.size(); i++) {
     Si = SList[i];
-    vul_printf (vcl_cout, "%d ", Si->id());
+    vul_printf (std::cout, "%d ", Si->id());
   }
   
-  vul_printf (vcl_cout, "at junction %d, simtime %f.\n", junct->id(), Sl->simT());
+  vul_printf (std::cout, "at junction %d, simtime %f.\n", junct->id(), Sl->simT());
 #endif
 
   //Go through WList and finalize except WLL and WRR.
@@ -359,8 +359,8 @@ void gdt_ws_manager::advance_3_more_shocks_to_junction (vcl_vector<gdt_shock*>& 
   add_to_Qs (childS);  
 }
 
-void gdt_ws_manager::terminate_shocks_to_sink (vcl_vector<gdt_shock*>& SList,
-                                               vcl_vector<gdt_welm*>& WList,
+void gdt_ws_manager::terminate_shocks_to_sink (std::vector<gdt_shock*>& SList,
+                                               std::vector<gdt_welm*>& WList,
                                                const gdt_shock* S)
 {
   assert (SList.size() == WList.size());
@@ -393,13 +393,13 @@ void gdt_ws_manager::terminate_shocks_to_sink (vcl_vector<gdt_shock*>& SList,
   add_snode (sink);
 
 #if GDT_DEBUG_MSG
-  vul_printf (vcl_cout, "\n ==> Terminate shocks ");
+  vul_printf (std::cout, "\n ==> Terminate shocks ");
   for (i=0; i<SList.size(); i++) {
     Si = SList[i];
-    vul_printf (vcl_cout, "%d ", Si->id());
+    vul_printf (std::cout, "%d ", Si->id());
   }
   
-  vul_printf (vcl_cout, "at sink %d, simtime %f.\n", sink->id(), Sl->simT());
+  vul_printf (std::cout, "at sink %d, simtime %f.\n", sink->id(), Sl->simT());
 #endif
 
   //Go through WList and finalize each of them.
@@ -457,41 +457,41 @@ void gdt_ws_manager::advance_2_shocks_to_junction (gdt_shock* Sl, gdt_welm* Wc, 
     char lstring[64], rstring[64], cstring[4];
 
     if (Sl->b2() == 0)
-      vcl_sprintf (lstring, "contact");
+      std::sprintf (lstring, "contact");
     else if (Sl->a() == 0)
-      vcl_sprintf (lstring, "line tau: %.3f", Sl->tau());
+      std::sprintf (lstring, "line tau: %.3f", Sl->tau());
     else
-      vcl_sprintf (lstring, "hypb tau: %.3f", Sl->tau());
+      std::sprintf (lstring, "hypb tau: %.3f", Sl->tau());
 
     if (Sr->b2() == 0)
-      vcl_sprintf (rstring, "contact");
+      std::sprintf (rstring, "contact");
     else if (Sr->a() == 0)
-      vcl_sprintf (rstring, "line tau: %.3f", Sr->tau());
+      std::sprintf (rstring, "line tau: %.3f", Sr->tau());
     else
-      vcl_sprintf (rstring, "hypb tau: %.3f", Sr->tau());
+      std::sprintf (rstring, "hypb tau: %.3f", Sr->tau());
 
     assert (Sl->simT() == Sr->simT());
-    vul_printf (vcl_cout, "\n ==> Advance Sl %d (v %d %s) and Sr %d (v %d %s) \n",
+    vul_printf (std::cout, "\n ==> Advance Sl %d (v %d %s) and Sr %d (v %d %s) \n",
                  Sl->id(), Sl->Snode()->id(), lstring, 
                  Sr->id(), Sr->Snode()->id(), rstring);
-    vul_printf (vcl_cout, "       to intersection: simtime %f.\n", Sl->simT());
+    vul_printf (std::cout, "       to intersection: simtime %f.\n", Sl->simT());
 
     if (Wll->_is_RF())
-      vcl_sprintf (lstring, "RF ");
+      std::sprintf (lstring, "RF ");
     else
-      vcl_sprintf (lstring, " ");
+      std::sprintf (lstring, " ");
     
     if (Wrr->_is_RF())
-      vcl_sprintf (rstring, "RF ");
+      std::sprintf (rstring, "RF ");
     else
-      vcl_sprintf (rstring, " ");
+      std::sprintf (rstring, " ");
 
     if (Wc->_is_RF())
-      vcl_sprintf (cstring, "RF ");
+      std::sprintf (cstring, "RF ");
     else
-      vcl_sprintf (cstring, " ");
+      std::sprintf (cstring, " ");
 
-    vul_printf (vcl_cout, "  WL %s%d (%.3f, %.3f), WC %s%d (%.3f, %.3f), WR %s%d (%.3f, %.3f).\n",
+    vul_printf (std::cout, "  WL %s%d (%.3f, %.3f), WC %s%d (%.3f, %.3f), WR %s%d (%.3f, %.3f).\n",
                  lstring, Wll->edge()->id(), Wll->stau(), Wll->etau(),
                  cstring, Wc->edge()->id(), Wc->stau(), Wc->etau(),
                  rstring, Wrr->edge()->id(), Wrr->stau(), Wrr->etau());
@@ -516,10 +516,10 @@ void gdt_ws_manager::advance_2_shocks_to_junction (gdt_shock* Sl, gdt_welm* Wc, 
   if (n_verbose_>1) {
     char wc[4];
     if (Wc->_is_RF())
-      vcl_sprintf (wc, "RF ");
+      std::sprintf (wc, "RF ");
     else
-      vcl_sprintf (wc, " ");
-    vul_printf (vcl_cout, "  WC %d (%.3f, %.3f) finalized.\n",
+      std::sprintf (wc, " ");
+    vul_printf (std::cout, "  WC %d (%.3f, %.3f) finalized.\n",
                  Wc->edge()->id(), Wc->stau(), Wc->etau());
   }
   #endif
@@ -671,17 +671,17 @@ gdt_shock* gdt_ws_manager::_create_childS (gdt_welm* Wa, gdt_welm* Wb,
     char cstring[32], pe[32];
       
     if (childS->b2() == 0)
-      vcl_sprintf (cstring, "contact");
+      std::sprintf (cstring, "contact");
     else if (childS->a() == 0)
-      vcl_sprintf (cstring, "line");
+      std::sprintf (cstring, "line");
     else
-      vcl_sprintf (cstring, "hypb");
+      std::sprintf (cstring, "hypb");
 
     if (childS->prjE())
-      vcl_sprintf (pe, "%d tau %f", childS->prjE()->id(), childS->tauE());
+      std::sprintf (pe, "%d tau %f", childS->prjE()->id(), childS->tauE());
     else
-      vcl_sprintf (pe, "NULL");
-    vul_printf (vcl_cout, "\n  Create childS %s %d, prjE %s, endtime %f, SVE %s.\n", 
+      std::sprintf (pe, "NULL");
+    vul_printf (std::cout, "\n  Create childS %s %d, prjE %s, endtime %f, SVE %s.\n", 
                  cstring, childS->id(), pe, childS->endT(),
                  childS->bSVE() ? "true" : "false");
   }

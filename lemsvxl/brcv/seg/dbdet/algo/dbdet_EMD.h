@@ -11,8 +11,8 @@
 //  Modifications
 //\endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 #include "dbdet_BS.h"
 

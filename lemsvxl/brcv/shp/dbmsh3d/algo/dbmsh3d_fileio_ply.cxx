@@ -16,13 +16,13 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_cstring.h>
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <string>
+#include <cstring>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vul/vul_file.h>
 #include <vul/vul_string.h>
@@ -41,7 +41,7 @@ class dbmsh3d_fileio_parsed_mesh_
 public:
   dbmsh3d_mesh* mesh;
   double p[3];
-  vcl_vector<int > vertex_indices;
+  std::vector<int > vertex_indices;
 };
 
 int dbmsh3d_fileio_vertex_cb_(p_ply_argument argument);
@@ -77,7 +77,7 @@ bool dbmsh3d_load_ply (dbmsh3d_mesh* M, const char* file)
   ntriangles = ply_set_read_cb(ply, "face", "vertex_indices",
     dbmsh3d_fileio_face_cb_, (void*) (&parsed_mesh), 0);
   
-  vul_printf (vcl_cout, "  loading %s : \n\t%d points, %d faces ...\n", 
+  vul_printf (std::cout, "  loading %s : \n\t%d points, %d faces ...\n", 
                file, nvertices, ntriangles);
 
   // Read DATA
@@ -86,7 +86,7 @@ bool dbmsh3d_load_ply (dbmsh3d_mesh* M, const char* file)
   // CLOSE file
   ply_close(ply);
 
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 
@@ -118,7 +118,7 @@ bool dbmsh3d_load_ply_v (dbmsh3d_mesh* M, const char* file)
   ntriangles = ply_set_read_cb(ply, "face", "vertex_indices",
     dbmsh3d_fileio_face_cb_, (void*) (&parsed_mesh), 0);
   
-  vul_printf (vcl_cout, "  loading %s : \n\t%d points, %d faces ...\n", 
+  vul_printf (std::cout, "  loading %s : \n\t%d points, %d faces ...\n", 
                file, nvertices, ntriangles);
 
   // Read DATA
@@ -128,7 +128,7 @@ bool dbmsh3d_load_ply_v (dbmsh3d_mesh* M, const char* file)
   // CLOSE file
   ply_close(ply);
 
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 
@@ -140,7 +140,7 @@ bool dbmsh3d_load_ply_f (dbmsh3d_mesh* M, const char* file)
     return false;
   
   //Copy faces from tmpM to M.
-  vcl_map <int, dbmsh3d_face*>::iterator it = tmpM->facemap().begin();
+  std::map <int, dbmsh3d_face*>::iterator it = tmpM->facemap().begin();
   for (; it != tmpM->facemap().end(); it++) {
     int id = (*it).first;
     dbmsh3d_face* tmpF = (*it).second;
@@ -156,7 +156,7 @@ bool dbmsh3d_load_ply_f (dbmsh3d_mesh* M, const char* file)
     M->_add_face (F);
   }
 
-  vul_printf (vcl_cout, "  dbmsh3d_load_ply_f(): %d faces added to M.\n", 
+  vul_printf (std::cout, "  dbmsh3d_load_ply_f(): %d faces added to M.\n", 
               M->facemap().size());
   delete tmpM;
   return true;
@@ -246,7 +246,7 @@ bool dbmsh3d_save_ply (dbmsh3d_mesh* M, const char* file, bool ascii_mode)
   // OPEN FILE
   p_ply oply = ply_create(file, storage_mode, NULL, 0, NULL);
 
-  vul_printf (vcl_cout, "  saving %s : \n\t%d points, %d faces ...\n", 
+  vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
                file, M->vertexmap().size(), M->facemap().size());
 
   // HEADER SECTION
@@ -278,7 +278,7 @@ bool dbmsh3d_save_ply (dbmsh3d_mesh* M, const char* file, bool ascii_mode)
   M->assign_IFS_vertex_vid_by_vertex_order();
 
   // traverse thru all vertices and write to ply file
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = M->vertexmap().begin();
   for (; it != M->vertexmap().end(); it++) 
   {
     dbmsh3d_vertex* v = (*it).second;
@@ -291,7 +291,7 @@ bool dbmsh3d_save_ply (dbmsh3d_mesh* M, const char* file, bool ascii_mode)
   }
 
   // faces
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) 
   {
     dbmsh3d_face* f = (*fit).second;
@@ -314,7 +314,7 @@ bool dbmsh3d_save_ply (dbmsh3d_mesh* M, const char* file, bool ascii_mode)
 
   // CLOSE PLY FILE
   ply_close(oply);
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
   return true;
 }
 
@@ -326,13 +326,13 @@ class dbmsh3d_fileio_parsed_richmesh_: public dbmsh3d_fileio_parsed_mesh_
 {
 public:
   // for use on vertices
-  vcl_vector<vcl_string > vertex_property_list;
-  vcl_vector<double > vertex_property_values;
+  std::vector<std::string > vertex_property_list;
+  std::vector<double > vertex_property_values;
   int num_vertex_values_read;
 
 
-  vcl_vector<vcl_string > face_property_list;
-  vcl_vector<double > face_property_values;
+  std::vector<std::string > face_property_list;
+  std::vector<double > face_property_values;
   int num_face_values_read;
   bool all_vertex_indices_of_face_read;
 };
@@ -482,12 +482,12 @@ int dbmsh3d_fileio_richface_cb_ (p_ply_argument argument)
 // Limitation: CAN only load vertex properties, CANNOT load face properties
 bool dbmsh3d_load_ply(dbmsh3d_richmesh* M, 
                       const char* file, 
-                      const vcl_vector<vcl_string >& vertex_property_list,
-                      const vcl_vector<vcl_string >& face_property_list)
+                      const std::vector<std::string >& vertex_property_list,
+                      const std::vector<std::string >& face_property_list)
 {
   if (!face_property_list.empty())
   {
-    vcl_cerr << "\nWARNING: The current implementation cannot load face properties."
+    std::cerr << "\nWARNING: The current implementation cannot load face properties."
       << " None of the specified face properties will be loaded.\n";
   }
 
@@ -558,13 +558,13 @@ bool dbmsh3d_load_ply(dbmsh3d_richmesh* M,
 //: Save a rich mesh given a list of vertex properties and face properties to read
 bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh, 
                        const char* file, 
-                       const vcl_vector<vcl_string >& vertex_property_list,
-                       const vcl_vector<vcl_string >& face_property_list,
+                       const std::vector<std::string >& vertex_property_list,
+                       const std::vector<std::string >& face_property_list,
                        dbmsh3d_storage_mode mode)
 {
   if (!face_property_list.empty())
   {
-    vcl_cerr << "\nWARNING: The current implementation cannot save face properties."
+    std::cerr << "\nWARNING: The current implementation cannot save face properties."
       << " None of the specified face properties will be saved.\n";
   }
 
@@ -574,7 +574,7 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
   // OPEN FILE
   p_ply oply = ply_create(file, storage_mode, NULL, 0, NULL);
 
-  vul_printf (vcl_cout, "  saving %s : \n\t%d points, %d faces ...\n", 
+  vul_printf (std::cout, "  saving %s : \n\t%d points, %d faces ...\n", 
                file, mesh->vertexmap().size(), mesh->facemap().size());
 
   // HEADER SECTION
@@ -615,7 +615,7 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
   mesh->assign_IFS_vertex_vid_by_vertex_order();
 
   // traverse thru all vertices and write to ply file
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = mesh->vertexmap().begin();
   for (; it != mesh->vertexmap().end(); it++) {
     dbmsh3d_richvertex* v = (dbmsh3d_richvertex*) (*it).second;
     vgl_point_3d<double > pt = v->pt();
@@ -627,7 +627,7 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
     // extra properties to save
     for (unsigned i=0; i<vertex_property_list.size(); ++i)
     {
-      vcl_string tag = vertex_property_list[i];
+      std::string tag = vertex_property_list[i];
       double value;
 
       // if can't find the value, save it with max value possible for double
@@ -640,7 +640,7 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
   }
 
   // faces
-  vcl_map<int, dbmsh3d_face*>::iterator fit = mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = mesh->facemap().begin();
   for (; fit != mesh->facemap().end(); fit++) {
     //dbmsh3d_face* f = (*fit).second;
 
@@ -662,7 +662,7 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
 
     // c. write extra properties of the rich face
     for (unsigned i=0; i<face_property_list.size(); ++i) {
-      vcl_string tag = face_property_list[i];
+      std::string tag = face_property_list[i];
       double value;
 
       // if can't find the value, save it with max value possible for double
@@ -676,6 +676,6 @@ bool dbmsh3d_save_ply (dbmsh3d_richmesh* mesh,
 
   // CLOSE PLY FILE
   ply_close(oply);
-  vul_printf (vcl_cout, "  done.\n");
+  vul_printf (std::cout, "  done.\n");
   return true;
 }

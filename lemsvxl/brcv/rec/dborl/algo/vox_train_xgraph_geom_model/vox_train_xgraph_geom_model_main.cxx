@@ -12,9 +12,9 @@
 #include "vox_train_xgraph_geom_model_params.h"
 #include "vox_train_xgraph_geom_model_params_sptr.h"
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -25,9 +25,9 @@
 #include <buld/buld_random.h>
 #include <vpl/vpl.h>
 
-bool create_temporary_gt_list(vcl_vector<vcl_string> assoc_files, const vcl_string& temp_gt_file)
+bool create_temporary_gt_list(std::vector<std::string> assoc_files, const std::string& temp_gt_file)
 {
-    vcl_ofstream outs(temp_gt_file.c_str());
+    std::ofstream outs(temp_gt_file.c_str());
     if(!outs.is_open())
     {
         return false;
@@ -37,7 +37,7 @@ bool create_temporary_gt_list(vcl_vector<vcl_string> assoc_files, const vcl_stri
         vul_file_iterator fit(assoc_files[i] + "/*.xml");
         if(!fit)
         {
-            vcl_cerr << "ERROR: xgraph xml file cannot be found under " << assoc_files[i] << vcl_endl;
+            std::cerr << "ERROR: xgraph xml file cannot be found under " << assoc_files[i] << std::endl;
             outs.close();
             vpl_unlink(temp_gt_file.c_str());
             return false;
@@ -45,7 +45,7 @@ bool create_temporary_gt_list(vcl_vector<vcl_string> assoc_files, const vcl_stri
         outs << assoc_files[i] + "/" + fit.filename();
         if(i != assoc_files.size()-1)
         {
-            outs << vcl_endl;
+            outs << std::endl;
         }
     }
     outs.close();
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
     //: always print the params file if an executable to work with ORL web
     // interface
     if (!params->print_params_xml(params->print_params_file()))
-        vcl_cerr << "problems in writing params file to: " <<
-        params->print_params_file() << vcl_endl;
+        std::cerr << "problems in writing params file to: " <<
+        params->print_params_file() << std::endl;
 
     if (params->exit_with_no_processing() || params->print_params_only())
         return 0;
@@ -82,12 +82,12 @@ int main(int argc, char *argv[]) {
     index_query.add_assoc_file_label(params->xgraph_assoc_label_());
     index_query.add_assoc_file_type("groundtruth_xgraph_directory");
 
-    vcl_string gt_object_list_file = params->input_gt_objects_file_();
+    std::string gt_object_list_file = params->input_gt_objects_file_();
 
-    vcl_cout << "Groundtruth object list file: " << gt_object_list_file << vcl_endl;
+    std::cout << "Groundtruth object list file: " << gt_object_list_file << std::endl;
 
-    vcl_ifstream xlists(gt_object_list_file.c_str());
-    vcl_string line;
+    std::ifstream xlists(gt_object_list_file.c_str());
+    std::string line;
 
     if(xlists.is_open())
     {
@@ -99,31 +99,31 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-        vcl_cerr << "Error: cannot open file: " << gt_object_list_file << vcl_endl;
+        std::cerr << "Error: cannot open file: " << gt_object_list_file << std::endl;
         return 1;
     }
 
-    vcl_vector<vcl_string> assoc_files = dborl_get_assoc_file_paths(params->index_filename_(), index_query);
+    std::vector<std::string> assoc_files = dborl_get_assoc_file_paths(params->index_filename_(), index_query);
 
     int number_of_gt = assoc_files.size();
 
-    vcl_cout << "Number of groundtruth objects is " << number_of_gt << vcl_endl;
+    std::cout << "Number of groundtruth objects is " << number_of_gt << std::endl;
 
-    vcl_string temp_gt_file = params->temp_dir_() + "/temp_" + buld_get_random_alphanumeric_string(10) + ".txt";
+    std::string temp_gt_file = params->temp_dir_() + "/temp_" + buld_get_random_alphanumeric_string(10) + ".txt";
     bool create_status = create_temporary_gt_list(assoc_files, temp_gt_file);
 
     if(!create_status)
     {
-        vcl_cerr << "ERROR: Temporary file " << temp_gt_file << " cannot be created!" << vcl_endl;
+        std::cerr << "ERROR: Temporary file " << temp_gt_file << " cannot be created!" << std::endl;
         return 1;
     }
 
-    vcl_cout << "Temporary file " << temp_gt_file << " has been created!" << vcl_endl;
+    std::cout << "Temporary file " << temp_gt_file << " has been created!" << std::endl;
 
-    vcl_string output_dir = params->output_geom_dir_();
-    vcl_string output_model_file = output_dir + "/object_geom_model.xml";
+    std::string output_dir = params->output_geom_dir_();
+    std::string output_model_file = output_dir + "/object_geom_model.xml";
 
-    vcl_cout << "Output geometry model file: " << output_model_file << vcl_endl;
+    std::cout << "Output geometry model file: " << output_model_file << std::endl;
 
     if(!vul_file_exists(output_dir))
     {
@@ -143,21 +143,21 @@ int main(int argc, char *argv[]) {
 
     if(!pro_status)
     {
-        vcl_cerr << "Problem occurred while training geometry model!" << vcl_endl;
+        std::cerr << "Problem occurred while training geometry model!" << std::endl;
         return 1;
     }
 
     vpl_unlink(temp_gt_file.c_str());
-    vcl_cout << "Temporary file " << temp_gt_file << " has been deleted!" << vcl_endl;
+    std::cout << "Temporary file " << temp_gt_file << " has been deleted!" << std::endl;
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"************ Time taken: "<<vox_time<<" sec"<<std::endl;
 
     // Just to be safe lets flush everything
-    vcl_cerr.flush();
-    vcl_cout.flush();
+    std::cerr.flush();
+    std::cout.flush();
 
     //Success we made it this far
     return 0;

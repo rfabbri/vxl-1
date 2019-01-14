@@ -1,10 +1,10 @@
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_image_tableau.h>
 #include <vgui/vgui_composite_tableau.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 #include <bgui3d/bgui3d.h>
 #include <bgui3d/bgui3d_project2d_tableau.h>
@@ -18,7 +18,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbul/dbul_dir_file.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -69,9 +69,9 @@ void buildScene(SoGroup *root)
 int main(int argc, char** argv)
 {
   if (argc != 4) {
-    vcl_cout << vcl_endl 
+    std::cout << std::endl 
              << " Usage: mesh_project_real mesh.ply2 imagefile camerafile " 
-             << vcl_endl;
+             << std::endl;
     return 0;
   }
 
@@ -109,8 +109,8 @@ int main(int argc, char** argv)
   myTransform->unref();
 
 
-  //  float c = vcl_cos(0.03744f), s = vcl_sin(0.03744f);
-  float c = vcl_cos(-0.01f), s = vcl_sin(-0.01f);
+  //  float c = std::cos(0.03744f), s = std::sin(0.03744f);
+  float c = std::cos(-0.01f), s = std::sin(-0.01f);
   SbMatrix S,R,T;
   S[0][0] = 1.0f;  S[0][1] = 0.0f; S[0][2] = 0.0f; S[0][3] = 0.0f;
   S[1][0] = 0.0f;  S[1][1] = 1.0; S[1][2] = 0.0f; S[1][3] = 0.0f;
@@ -142,8 +142,8 @@ int main(int argc, char** argv)
   // #################################################
   // Load and display a .PLY2 mesh file
   dbmsh3d_mesh_mc M;
-  vcl_string input_file = argv[1];
-  vcl_string suffix = dbul_get_suffix (input_file);
+  std::string input_file = argv[1];
+  std::string suffix = dbul_get_suffix (input_file);
   if (suffix == ".ply2")
     dbmsh3d_load_ply2 (&M, input_file.c_str());
   else if (suffix == ".ply")
@@ -181,19 +181,19 @@ int main(int argc, char** argv)
 #endif
   // ################################################
   // Load the image
- vcl_string image_file = argv[2];
+ std::string image_file = argv[2];
     vil_image_resource_sptr image = vil_load_image_resource(image_file.c_str());
     if(!image)
       {
-        vcl_cout << "couldn't load image\n";
+        std::cout << "couldn't load image\n";
         return 0;
       }
 
   // ################################################
   // Load the camera
     vnl_double_3x4 camera;
- vcl_string cam_file = argv[3];
-    vcl_ifstream cam_istr(cam_file.c_str());
+ std::string cam_file = argv[3];
+    std::ifstream cam_istr(cam_file.c_str());
     cam_istr >> camera;
 
   // wrap the scene graph in a bgui3d tableau

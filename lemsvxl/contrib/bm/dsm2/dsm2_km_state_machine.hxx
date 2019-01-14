@@ -16,8 +16,8 @@ dsm2_km_state_machine<nodeT>::graph_type::iterator
 {
     dsm2_node_base_sptr node_base_sptr = new dsm2_num_obs<nodeT>;
 
-    vcl_pair<graph_type::iterator,bool> ret = 
-        this->graph.insert(vcl_pair<unsigned,dsm2_node_base_sptr>
+    std::pair<graph_type::iterator,bool> ret = 
+        this->graph.insert(std::pair<unsigned,dsm2_node_base_sptr>
             (this->next_node_id++,node_base_sptr) );
 
     //add an empty dummy map for the new node
@@ -45,7 +45,7 @@ double dsm2_km_state_machine<nodeT>::transition_probability(
     unsigned const& node2,
     unsigned const& rel_time )
 {  
-    vcl_size_t num_states = this->graph.size();
+    std::size_t num_states = this->graph.size();
     unsigned frequency = this->transition_map.frequency(node1,node2,rel_time);
     unsigned transition_sum =
         this->transition_map.frequency_sum(node1,rel_time);
@@ -67,21 +67,21 @@ inc_transition_freq( unsigned const& node1,
 
     if( !this->graph.count(node1) )
     {
-        vcl_cerr << "----ERROR----"
+        std::cerr << "----ERROR----"
                  << " dsm2_km_state_machine<nodeT>::inc_transition_freq.\n"
                  << "Node 1: " << node1 << " is not in the graph.\n"
                  << "FILE: " << __FILE__ << '\n'
-                 << "LINE: " << __LINE__ << vcl_flush;
+                 << "LINE: " << __LINE__ << std::flush;
         exit(1);
     }
 
     if( !this->graph.count(node2) )
     {
-        vcl_cerr << "----ERROR---- "
+        std::cerr << "----ERROR---- "
                  << "dsm2_km_state_machine<nodeT>::inc_transition_freq.\n"
                  << "Node 2: " << node2 << " is not in the graph.\n"
                  << "FILE: " << __FILE__ << '\n'
-                 << "LINE: " << __LINE__ << vcl_flush;
+                 << "LINE: " << __LINE__ << std::flush;
         exit(1);
     }
 
@@ -155,19 +155,19 @@ void dsm2_km_state_machine<nodeT>::b_read( vsl_b_istream& is )
 
     if( dim != this->dimension )
     {
-        vcl_cerr << "----Error---- "
+        std::cerr << "----Error---- "
                  << "dsm2_km_state_machine<nodeT>::b_read failed.\n"
                  << "\tDimension Mismatch\n"
                  << __FILE__ << '\n'
-                 << __LINE__ << vcl_flush;
+                 << __LINE__ << std::flush;
         return;
     }
 
     //read the number of nodes in the graph
-    vcl_size_t nnodes;
+    std::size_t nnodes;
     vsl_b_read(is,nnodes);
 
-    for( vcl_size_t n = 0; n < nnodes; ++n )
+    for( std::size_t n = 0; n < nnodes; ++n )
     {
         //read the node id
         unsigned id;
@@ -191,7 +191,7 @@ void dsm2_km_state_machine<nodeT>::b_read( vsl_b_istream& is )
         dsm2_node_base_sptr node_base_sptr = node_ptr;
 
         this->graph.insert(
-            vcl_pair<unsigned,dsm2_node_base_sptr>
+            std::pair<unsigned,dsm2_node_base_sptr>
                 (id,node_base_sptr));
     }//end graph iteration
 

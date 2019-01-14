@@ -1,7 +1,7 @@
 #include "vehicle_model_vis_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
 #include <vgui/vgui_tableau.h>
@@ -67,7 +67,7 @@ void vehicle_model_vis_manager::init()
 
 void vehicle_model_vis_manager::quit()
     {
-    vcl_exit(1);
+    std::exit(1);
     }
 
 void vehicle_model_vis_manager::load_image()
@@ -76,8 +76,8 @@ void vehicle_model_vis_manager::load_image()
     load_dlg.set_ok_button("LOAD");
     load_dlg.set_cancel_button("CANCEL");
 
-    static vcl_string image_filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\256x256\\Acura_NSX_92_068-000-no_sun.png";
-    static vcl_string ext = "*.*";
+    static std::string image_filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\256x256\\Acura_NSX_92_068-000-no_sun.png";
+    static std::string ext = "*.*";
 
     load_dlg.file("File name:", ext,image_filename);
 
@@ -88,7 +88,7 @@ void vehicle_model_vis_manager::load_image()
 
     if (!img_)
         {
-        vcl_cout << "Null image resource - couldn't load from "
+        std::cout << "Null image resource - couldn't load from "
             << image_filename << '\n';
         return;
         }
@@ -101,7 +101,7 @@ void vehicle_model_vis_manager::load_image()
         return;
         }
 
-    vcl_cout << "In bmvv_cal_manager::load_image_file() - null tableau\n";
+    std::cout << "In bmvv_cal_manager::load_image_file() - null tableau\n";
 
     }
 
@@ -135,7 +135,7 @@ range_params(vil_image_resource_sptr const& image)
         return  new vgui_range_map_params(min, max, gamma, invert,
             gl_map, cache);
         }
-    vcl_cout << "Image pixel format not handled\n";
+    std::cout << "Image pixel format not handled\n";
     return new vgui_range_map_params(0, 255, gamma, invert,
         gl_map, cache);
     }
@@ -217,8 +217,8 @@ void vehicle_model_vis_manager::pick_model()
 
     ref_model_.set_model(engine,body,rear);
 
-    vcl_cout << M << vcl_endl;
-    vcl_cout << ref_model_ << vcl_endl;
+    std::cout << M << std::endl;
+    std::cout << ref_model_ << std::endl;
 
     btab_->clear();
 
@@ -261,8 +261,8 @@ void vehicle_model_vis_manager::adjust_model()
 
     new_model.transform_model(M1,M2,M3);
 
-    vcl_cout << ref_model_ << vcl_endl;
-    vcl_cout << new_model << vcl_endl;
+    std::cout << ref_model_ << std::endl;
+    std::cout << new_model << std::endl;
 
     vgui_style_sptr style = vgui_style::new_style(1.0f, 1.0f, 1.0f, 1, 3);
     btab_->clear();
@@ -313,8 +313,8 @@ void vehicle_model_vis_manager::translate_model()
 
     new_model.transform_model(M1,M2,M3);
 
-    vcl_cout << ref_model_ << vcl_endl;
-    vcl_cout << new_model << vcl_endl;
+    std::cout << ref_model_ << std::endl;
+    std::cout << new_model << std::endl;
 
     vgui_style_sptr style = vgui_style::new_style(1.0f, 1.0f, 1.0f, 1, 3);
     btab_->clear();
@@ -331,18 +331,18 @@ void vehicle_model_vis_manager::save_ref_model()
     save_dlg.set_ok_button("SAVE");
     save_dlg.set_cancel_button("CANCEL");
 
-    static vcl_string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\ref_model.txt";
+    static std::string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\ref_model.txt";
 
-    static vcl_string ext = "*.*";
+    static std::string ext = "*.*";
     save_dlg.file("File name:", ext,fname);
 
     if (!save_dlg.ask())
         return;
 
-    vcl_cout << ref_model_ << vcl_endl;
+    std::cout << ref_model_ << std::endl;
 
-    vcl_ofstream ofst(fname.c_str());
-    ofst << ref_model_ << vcl_endl;
+    std::ofstream ofst(fname.c_str());
+    ofst << ref_model_ << std::endl;
 
     ofst.close();
     }
@@ -353,18 +353,18 @@ void vehicle_model_vis_manager::save_adjusted_model()
     save_dlg.set_ok_button("SAVE");
     save_dlg.set_cancel_button("CANCEL");
 
-    static vcl_string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\adjusted_model.txt";
+    static std::string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\adjusted_model.txt";
 
-    static vcl_string ext = "*.*";
+    static std::string ext = "*.*";
     save_dlg.file("File name:", ext,fname);
 
     if (!save_dlg.ask())
         return;
 
-    vcl_cout << adjusted_model_ << vcl_endl;
+    std::cout << adjusted_model_ << std::endl;
 
-    vcl_ofstream ofst(fname.c_str());
-    ofst << adjusted_model_ << vcl_endl;
+    std::ofstream ofst(fname.c_str());
+    ofst << adjusted_model_ << std::endl;
 
     ofst.close();
     }
@@ -375,18 +375,18 @@ void vehicle_model_vis_manager::load_ref_model()
     load_dlg.set_ok_button("LOAD");
     load_dlg.set_cancel_button("CANCEL");
 
-    static vcl_string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\ref_model.txt";
+    static std::string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\ref_model.txt";
 
-    static vcl_string ext = "*.*";
+    static std::string ext = "*.*";
     load_dlg.file("File name:", ext,fname);
 
     if (!load_dlg.ask())
         return;
 
-    vcl_ifstream ifst(fname.c_str());
+    std::ifstream ifst(fname.c_str());
     ifst >> ref_model_ ;
 
-    vcl_cout << ref_model_ ;
+    std::cout << ref_model_ ;
 
     vgui_style_sptr style = vgui_style::new_style(1.0f, 0.0f, 1.0f, 1, 3);
 
@@ -408,11 +408,11 @@ void vehicle_model_vis_manager::load_intrinsic_mean_model()
     load_dlg.set_ok_button("LOAD");
     load_dlg.set_cancel_button("CANCEL");
 
-    static vcl_string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\intrinsic_mean_model.txt";
+    static std::string fname = "C:\\pradeep\\Manifold_extraction\\3_box_model\\intrinsic_mean_model.txt";
     static double sx = 1,sy = 1;
     int i;
 
-    static vcl_string ext = "*.*";
+    static std::string ext = "*.*";
     load_dlg.file("File name:", ext,fname);
     load_dlg.field("sx",sx);
     load_dlg.field("sy",sy);
@@ -420,10 +420,10 @@ void vehicle_model_vis_manager::load_intrinsic_mean_model()
     if (!load_dlg.ask())
         return;
 
-    vcl_ifstream ifst(fname.c_str());
+    std::ifstream ifst(fname.c_str());
     ifst >> intrinsic_mean_model_ ;
 
-    vcl_cout << intrinsic_mean_model_;
+    std::cout << intrinsic_mean_model_;
 
     vnl_matrix<double> M1(3,3,0.0),M2(3,3,0.0),M3(3,3,0.0);
 

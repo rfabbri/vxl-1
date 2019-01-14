@@ -66,7 +66,7 @@ if(!parameters()->add( "No of frames on each side to register" , "-winsize" , (i
    !parameters()->add( "Minimum Weight Threshold" ,    "-minweightthresh" ,    0.3f        )||
    !parameters()->add( "Radius of uncertainity" ,    "-rad" ,    (int)2        ))
     {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_superimpose_2ndtier::dbrl_superimpose_2ndtier()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_superimpose_2ndtier::dbrl_superimpose_2ndtier()" << std::endl;
      }
     
 }
@@ -79,7 +79,7 @@ dbrl_superimpose_2ndtier::~dbrl_superimpose_2ndtier()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_superimpose_2ndtier::name()
 {
   return "2nd tier Superimpose";
@@ -103,9 +103,9 @@ dbrl_superimpose_2ndtier::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_superimpose_2ndtier::get_input_type()
+std::vector< std::string > dbrl_superimpose_2ndtier::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbinfo_track_storage" );
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_distribution_image" );
@@ -115,9 +115,9 @@ vcl_vector< vcl_string > dbrl_superimpose_2ndtier::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_superimpose_2ndtier::get_output_type()
+std::vector< std::string > dbrl_superimpose_2ndtier::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -128,7 +128,7 @@ bool
 dbrl_superimpose_2ndtier::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbrl_superimpose_2ndtier::execute() - "
+    std::cout << "In dbrl_superimpose_2ndtier::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -180,25 +180,25 @@ dbrl_superimpose_2ndtier::execute()
   /*dbbgm_distribution_image<float> *model = 
     dynamic_cast<dbbgm_distribution_image<float>*>(frame_model->dist_image().ptr());*/
 
-  vcl_vector<dbinfo_track_sptr> tracks=track_storage->tracks();
+  std::vector<dbinfo_track_sptr> tracks=track_storage->tracks();
   unsigned  frame_no=image_storage->frame();
   vidpro1_vsol2D_storage_sptr output_vsol_subpixel = vidpro1_vsol2D_storage_new();
   vidpro1_vsol2D_storage_sptr output_vsol_superimposed = vidpro1_vsol2D_storage_new();
   dbrl_id_point_2d_storage_sptr output_id_points=dbrl_id_point_2d_storage_new();
 
-  vcl_vector<dbrl_id_point_2d_sptr> all_pivot_pointedges;
-  vcl_vector<dbrl_id_point_2d_sptr> xformed_all_pivot_pointedges;
-  vcl_vector<dbrl_id_point_2d_sptr> idpointssupport;
+  std::vector<dbrl_id_point_2d_sptr> all_pivot_pointedges;
+  std::vector<dbrl_id_point_2d_sptr> xformed_all_pivot_pointedges;
+  std::vector<dbrl_id_point_2d_sptr> idpointssupport;
 
   int cnt=0;
-  for(vcl_vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
+  for(std::vector<dbinfo_track_sptr>::iterator trit = tracks.begin();
       trit != tracks.end(); trit++)
       {
       dbinfo_observation_sptr ref_obs=(*trit)->observ(frame_no); //: observation in the current frame
-      vcl_vector<vsol_point_2d_sptr>  pivot_pointedges;//=ref_obs->get_edges();
-      vcl_vector<dbrl_feature_sptr> f1;
-      vcl_vector<vsol_spatial_object_2d_sptr> f1pts;
-      vcl_vector<dbrl_id_point_2d_sptr> pivot_id_points;
+      std::vector<vsol_point_2d_sptr>  pivot_pointedges;//=ref_obs->get_edges();
+      std::vector<dbrl_feature_sptr> f1;
+      std::vector<vsol_spatial_object_2d_sptr> f1pts;
+      std::vector<dbrl_id_point_2d_sptr> pivot_id_points;
 
       for(int k=0;k<static_cast<int>(pivot_pointedges.size());k++)
           {
@@ -211,7 +211,7 @@ dbrl_superimpose_2ndtier::execute()
           }
       if(ref_obs.ptr())
           {
-          vcl_vector<vcl_vector< vsol_spatial_object_2d_sptr > > xpoints; 
+          std::vector<std::vector< vsol_spatial_object_2d_sptr > > xpoints; 
           output_vsol_superimposed->add_objects(f1pts,"curr_points");
           for(int i=static_cast<int>(frame_no)-static_cast<int>(winsize);i<=static_cast<int>(frame_no)+static_cast<int>(winsize);i++)
               if(i!=static_cast<int>(frame_no))
@@ -219,8 +219,8 @@ dbrl_superimpose_2ndtier::execute()
                   dbinfo_observation_sptr temp_obs=(*trit)->observ(i);
                   if(temp_obs.ptr())
                       {
-                      vcl_vector<vsol_point_2d_sptr>  curr_pointedges;//=temp_obs->get_edges();
-                      vcl_vector<dbrl_feature_sptr> f2;
+                      std::vector<vsol_point_2d_sptr>  curr_pointedges;//=temp_obs->get_edges();
+                      std::vector<dbrl_feature_sptr> f2;
                       for(int k=0;k<static_cast<int>(curr_pointedges.size());k++)
                           {
                           vnl_vector_fixed<double,2> pt(curr_pointedges[k]->x()/scale,curr_pointedges[k]->y()/scale);
@@ -246,16 +246,16 @@ dbrl_superimpose_2ndtier::execute()
                       affinetform->set_from_features(match_set->get_feature_set2());
                       affinetform->transform();
 
-                      vcl_vector<dbrl_feature_sptr> f2xformed=affinetform->get_to_features();
-                      vcl_vector<dbrl_id_point_2d_sptr> f2xid;
-                      vcl_vector<vsol_spatial_object_2d_sptr> f2pts;
+                      std::vector<dbrl_feature_sptr> f2xformed=affinetform->get_to_features();
+                      std::vector<dbrl_id_point_2d_sptr> f2xid;
+                      std::vector<vsol_spatial_object_2d_sptr> f2pts;
                       for(unsigned m=0;m<f2xformed.size();m++)
                           if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f2xformed[m].ptr()))
                               {
                               vsol_point_2d_sptr p=new vsol_point_2d(pt->location()[0]*scale,pt->location()[1]*scale);
                               f2pts.push_back(p->cast_to_spatial_object());
                               }
-                          vcl_string namepoints=vul_sprintf("points%d",i);
+                          std::string namepoints=vul_sprintf("points%d",i);
                           output_vsol_superimposed->add_objects(f2pts,namepoints);
                           //xformed_all_pivot_pointedges.insert(xformed_all_pivot_pointedges.begin(),f2xid.begin(),f2xid.end());
                       }

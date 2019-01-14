@@ -219,7 +219,7 @@ contours(contoursL)
 
 
 template <class T>
-vcl_ostream& dbseg_seg_spatial_object<T>::save_text(vcl_ostream &os) {
+std::ostream& dbseg_seg_spatial_object<T>::save_text(std::ostream &os) {
    /*        depth bottom top left right r g b
             (n points in outer contour) (n pairs of x y)
             n (n IDs that are contained)
@@ -229,20 +229,20 @@ vcl_ostream& dbseg_seg_spatial_object<T>::save_text(vcl_ostream &os) {
     int r2 = static_cast<int>(data_[0]);
     int g2 = static_cast<int>(data_[1]);
     int b2 = static_cast<int>(data_[2]);
-    os << depth << " " << bottom << " " << top << " " << left << " " << right << " " << r2 << " " << g2 << " " << b2 << vcl_endl;
+    os << depth << " " << bottom << " " << top << " " << left << " " << right << " " << r2 << " " << g2 << " " << b2 << std::endl;
     
     os << (*contours.front())[0].size();
     for (int j = 0; j < (*contours.front())[0].size(); j++) {
         os << " " << (*contours.front())[0][j].x() << " " << (*contours.front())[0][j].y();
     }
-    os << vcl_endl;
+    os << std::endl;
 
     os << contained.size();
     set<int>::iterator i;
     for (i = contained.begin(); i != contained.end(); ++i) {
         os << " " << *i;
     }
-    os << vcl_endl;
+    os << std::endl;
 
     list<vgl_polygon<double>*>::iterator k;
     k = contours.begin();
@@ -252,7 +252,7 @@ vcl_ostream& dbseg_seg_spatial_object<T>::save_text(vcl_ostream &os) {
         for (int j = 0; j < (**k)[0].size(); j++) {
             os << " " << (**k)[0][j].x() << " " << (**k)[0][j].y();
         }
-        os << vcl_endl;
+        os << std::endl;
     }
     
    return os;

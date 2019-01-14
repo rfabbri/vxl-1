@@ -43,8 +43,8 @@ bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_fragment& xfrag,
                             float& cost,
-                            vcl_vector<vgl_point_2d<double > >& pts,
-                            vcl_vector<vgl_vector_2d<double > >& tangents);
+                            std::vector<vgl_point_2d<double > >& pts,
+                            std::vector<vgl_vector_2d<double > >& tangents);
 
 //: Compute shotton ocm cost using a biarc sampler
 bool dbsks_compute_ocm_cost(dbsks_shotton_ocm* shotton_ocm,
@@ -81,7 +81,7 @@ bool dbsks_compute_ocm_cost(dbsks_gray_ocm* gray_ocm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
                             float& cost,
-                            const vcl_vector<unsigned >& ignored_edges,
+                            const std::vector<unsigned >& ignored_edges,
                             bool verbose = false);
 
 
@@ -119,7 +119,7 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* gray_ocm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
                             float& cost,
-                            const vcl_vector<unsigned >& ignored_edges,
+                            const std::vector<unsigned >& ignored_edges,
                             bool verbose = false);
 
 
@@ -131,8 +131,8 @@ bool dbsks_compute_ocm_cost(dbsks_ccm* gray_ocm,
 bool dbsks_compute_ccm_of_xgraph(dbsks_ccm* ccm,
                             dbsks_biarc_sampler* biarc_sampler,
                             const dbsksp_xshock_graph_sptr& xgraph,
-                            vcl_vector<vcl_string >& cfrag_labels, 
-                            vcl_vector<float >& cfrag_ccm_costs);
+                            std::vector<std::string >& cfrag_labels, 
+                            std::vector<float >& cfrag_ccm_costs);
 
 
 

@@ -8,18 +8,18 @@ class dbrl_thin_plate_spline_transformation:public dbrl_transformation
     {
     public:
         dbrl_thin_plate_spline_transformation(){};
-        dbrl_thin_plate_spline_transformation(vnl_matrix<double> A,vnl_matrix<double> warp_coeffs, vnl_matrix<double> tps_kernel, vcl_vector<dbrl_feature_sptr> fs);
+        dbrl_thin_plate_spline_transformation(vnl_matrix<double> A,vnl_matrix<double> warp_coeffs, vnl_matrix<double> tps_kernel, std::vector<dbrl_feature_sptr> fs);
         ~dbrl_thin_plate_spline_transformation(){};
 
         virtual bool transform();
         
         double warp_frobenius_norm();
         double affine_frobenius_norm();
-        virtual void print_transformation(vcl_ostream &os);
+        virtual void print_transformation(std::ostream &os);
 
         vnl_matrix<double> get_warp_coeffs(){return warp_coeffs_;}
         vnl_matrix<double> get_affine(){return A_;}
-        void build_K(vcl_vector<dbrl_feature_sptr> &x ) ;
+        void build_K(std::vector<dbrl_feature_sptr> &x ) ;
 
 
         void set_lambda1(double lambda1){lambda1_=lambda1;}
@@ -37,10 +37,10 @@ class dbrl_thin_plate_spline_transformation:public dbrl_transformation
         short version() const;
 
         //: Print an ascii summary to the stream
-        void print_summary(vcl_ostream &os) const;
+        void print_summary(std::ostream &os) const;
 
         //: Return a platform independent string identifying the class
-        virtual vcl_string is_a() const {return "dbrl_thin_plate_spline_transformation";}
+        virtual std::string is_a() const {return "dbrl_thin_plate_spline_transformation";}
 
     virtual dbrl_transformation * clone() const;
     protected:
@@ -54,7 +54,7 @@ class dbrl_thin_plate_spline_transformation:public dbrl_transformation
 
         vnl_vector<double> map_location(vnl_vector<double> pt,int index);
 
-        vcl_vector<dbrl_feature_sptr> fs_;
+        std::vector<dbrl_feature_sptr> fs_;
 vnl_matrix<double> base_pts;
         double lambda1_;
         double lambda2_;

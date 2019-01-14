@@ -1,11 +1,11 @@
 #ifndef  _BELEMENTS_H
 #define  _BELEMENTS_H
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 
-#include <vcl_list.h>
-#include <vcl_vector.h>
+#include <list>
+#include <vector>
 
 #include "BaseGUIGeometry.h"
 #include "ishock-common.h"
@@ -42,7 +42,7 @@ typedef enum{
 } PROJ_BELEMENT_TYPE;
 
 //some useful type definitions
-typedef vcl_list<BElement* > BElementList;
+typedef std::list<BElement* > BElementList;
 typedef BElementList::iterator BElementListIterator;
 
 /*****************************************************************
@@ -89,8 +89,8 @@ typedef BElementList::iterator BElementListIterator;
     double tangent;
   }point_tangent;
 
-typedef vcl_list<SIElement* >SIElementList;
-typedef vcl_list<A3_node_proj*> A3_node_proj_list;
+typedef std::list<SIElement* >SIElementList;
+typedef std::list<A3_node_proj*> A3_node_proj_list;
 
 class BElement : public BaseGUIGeometry
 {
@@ -102,7 +102,7 @@ protected:
 
 public:
 
-  SIElementList shockList;    //vcl_list of shocks formed by this boundary
+  SIElementList shockList;    //std::list of shocks formed by this boundary
   // added by Nhon Jul 29 2004. contains info of A3 node projection on the boundary
   A3_node_proj_list A3_node_list;
   //
@@ -140,7 +140,7 @@ public:
   void addBnd2ShockLink (SIElement* elm) { shockList.push_back(elm); }
   void delBnd2ShockLink (SIElement* elm) { shockList.remove(elm); }
 
-  virtual void getInfo (vcl_ostream& ostrm) {}
+  virtual void getInfo (std::ostream& ostrm) {}
 
   //return the neighboring Boundary Element linked via this shock
   BElement* getNeighboringBElementFromSILink (SILink* silink);
@@ -190,8 +190,8 @@ public:
     return _pt;
   }
 
-  //vcl_list of pointers to elements this point is connected to 
-  //this vcl_list is always maintained at a CCW order
+  //std::list of pointers to elements this point is connected to 
+  //this std::list is always maintained at a CCW order
   BElementList LinkedBElmList;
 
   BPoint (COORD_TYPE x, COORD_TYPE y, int id, bool bGUI=false, 
@@ -254,7 +254,7 @@ public:
   double conf() {return _conf;}
   void set_conf(double conf){_conf = conf;}
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -347,7 +347,7 @@ public:
 
   virtual void reconnect(BPoint* oldPt, BPoint* newPt);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -429,7 +429,7 @@ public:
 
   DIST_TYPE distPoint (Point pt) {  //geometry distance
     DIST_TYPE d = _distPointPoint(_center, pt);
-    return vcl_fabs (d-_R);
+    return std::fabs (d-_R);
   }
   //first check validation, then return geometry distance. return ISHOCK_DIST_HUGE if not valid
   DIST_TYPE validDistPoint (Point pt);
@@ -448,7 +448,7 @@ public:
 
   virtual void reconnect(BPoint* oldPt, BPoint* newPt);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus();
@@ -476,7 +476,7 @@ public:
   virtual double TangentAlongCurveAtPoint (Point pt){return 0;}
   virtual double TangentAgainstCurveAtPoint (Point pt){return 0;}
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 
   //for fast drawing purposes :REQ. FOR TRANSITION TO VXL
   virtual void compute_extrinsic_locus(){}

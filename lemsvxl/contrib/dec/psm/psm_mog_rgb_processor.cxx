@@ -9,7 +9,7 @@
 #include <bsta/bsta_gaussian_indep.h>
 
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Return probability density of observing pixel values
 float psm_mog_rgb_processor::prob_density(apm_datatype const& appear, obs_datatype const& obs)
@@ -97,9 +97,9 @@ psm_mog_rgb_processor::obs_datatype psm_mog_rgb_processor::most_probable_color(a
   return obs_datatype(color[0],color[1],color[2]);
 }
 
-void psm_mog_rgb_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
+void psm_mog_rgb_processor::compute_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
 {
-  vcl_cerr << "ERROR: psm_mog_rgb_processor::compute_appearance NOT IMPLEMENTED YET" << vcl_endl;
+  std::cerr << "ERROR: psm_mog_rgb_processor::compute_appearance NOT IMPLEMENTED YET" << std::endl;
   //update_appearance(obs,weights,model,min_sigma);
   //finalize_appearance(obs,weights,model,min_sigma);
 
@@ -107,7 +107,7 @@ void psm_mog_rgb_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_APM
 }
 
 
-void psm_mog_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
+void psm_mog_rgb_processor::update_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
 {
   static const unsigned int nmodes = psm_apm_traits<PSM_APM_MOG_RGB>::n_gaussian_modes_;
   const float min_var = min_sigma*min_sigma;
@@ -117,9 +117,9 @@ void psm_mog_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_
   model = bsta_num_obs<bsta_mixture_fixed<bsta_num_obs<bsta_gauss_if3>, nmodes> >();
 
   // convert vil_rgb observations to vnl_vector_fixed
-  vcl_vector<vnl_vector_fixed<float,3> > vnl_obs(obs.size());
-  vcl_vector<vnl_vector_fixed<float,3> >::iterator vnl_obs_it = vnl_obs.begin();
-  vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype>::const_iterator obs_it = obs.begin();
+  std::vector<vnl_vector_fixed<float,3> > vnl_obs(obs.size());
+  std::vector<vnl_vector_fixed<float,3> >::iterator vnl_obs_it = vnl_obs.begin();
+  std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype>::const_iterator obs_it = obs.begin();
   for (; vnl_obs_it != vnl_obs.end(); ++vnl_obs_it, ++obs_it) {
     *vnl_obs_it = vnl_vector_fixed<float,3>(obs_it->r, obs_it->g, obs_it->b);
   }
@@ -150,7 +150,7 @@ void psm_mog_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_
     float max_parameter_change = 0.0f; // to determine if we have converged
     // EXPECTATION
     // compute probabilities of the data points belonging to each mode
-    vcl_vector<vcl_vector<float> > mode_probs(obs.size());
+    std::vector<std::vector<float> > mode_probs(obs.size());
     for (unsigned int n=0; n<obs.size(); ++n) {
       float total_prob = 0.0f;
       for (unsigned int m=0; m<nmodes; ++m) {
@@ -173,10 +173,10 @@ void psm_mog_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_
     // MAXIMIZATION
     // compute the weighted means and variances for each mode based on the probabilities
     float total_weight_sum = 0.0f;
-    vcl_vector<float> mode_weight_sum(nmodes,0.0f);
+    std::vector<float> mode_weight_sum(nmodes,0.0f);
     // update the mode parameters
     for (unsigned int m=0; m<nmodes; ++m) {
-      vcl_vector<float> post_weights(obs.size());
+      std::vector<float> post_weights(obs.size());
       for (unsigned int n=0; n<obs.size(); ++n) {
         post_weights[n] = mode_probs[n][m] * weights[n];
         mode_weight_sum[m] += post_weights[n];
@@ -220,10 +220,10 @@ void psm_mog_rgb_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_
       }
     }
     // check for convergence
-    //vcl_cout << "max parameter change = " << max_parameter_change << vcl_endl;
+    //std::cout << "max parameter change = " << max_parameter_change << std::endl;
 
     if (max_parameter_change <= max_converged_parameter_change) {
-      //vcl_cout << "converged after " << i << " iterations." << vcl_endl;
+      //std::cout << "converged after " << i << " iterations." << std::endl;
       break;
     }
   }
@@ -244,7 +244,7 @@ void psm_mog_rgb_processor::init_appearance(psm_apm_traits<PSM_APM_MOG_RGB>::obs
   return;
 }
 
-void psm_mog_rgb_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
+void psm_mog_rgb_processor::finalize_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma)
 {
   static const unsigned int nmodes = psm_apm_traits<PSM_APM_MOG_RGB>::n_gaussian_modes_;
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
@@ -252,7 +252,7 @@ void psm_mog_rgb_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_AP
 
   const unsigned int nobs = obs.size();
   float expected_nobs = 0.0f;
-  vcl_vector<float>::const_iterator wit = weights.begin();
+  std::vector<float>::const_iterator wit = weights.begin();
   for (; wit != weights.end(); ++wit) {
     expected_nobs += *wit;
   }
@@ -275,7 +275,7 @@ void psm_mog_rgb_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_AP
 
 
 
-void psm_mog_rgb_processor::compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &covar)
+void psm_mog_rgb_processor::compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &covar)
 {
   const unsigned int nobs = obs.size();
   double w_sum = 0.0;
@@ -324,8 +324,8 @@ float psm_mog_rgb_processor::sigma_norm_factor(float nobs)
   }
 
   // linearly interpolate between integer values
-  float nobs_floor = vcl_floor(nobs);
-  float nobs_ceil = vcl_ceil(nobs);
+  float nobs_floor = std::floor(nobs);
+  float nobs_ceil = std::ceil(nobs);
   float floor_weight = nobs_ceil - nobs;
   float norm_factor = (sigma_norm_factor((unsigned int)nobs_floor) * floor_weight) + (sigma_norm_factor((unsigned int)nobs_ceil) * (1.0f - floor_weight));
 

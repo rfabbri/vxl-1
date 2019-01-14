@@ -5,7 +5,7 @@
 #include <mvl/PMatrix.h>
 #include <mvl/TriTensor.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <bgld/algo/bgld_intersect.h>
 #include <vpgld/algo/vpgld_triangulation.h>
 
@@ -36,7 +36,7 @@ reconstruct_trinocular()
   //    curve in view[2]
 
   if (!crv_v2_ || !crv_v3_) {
-    vcl_cout << "Error: You must first select a curve in view 2 and 3 by clicking on it\n";
+    std::cout << "Error: You must first select a curve in view 2 and 3 by clicking on it\n";
     return;
   }
 
@@ -54,46 +54,46 @@ reconstruct_trinocular()
     end_idx = p0_idx_;
   }
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d_v01, 
     fcrv_3d_v02, 
     fcrv_3d_linear, 
     fcrv_3d, 
     fcrv_2d;
 
-  vcl_string prefix("dat/reconstr-tracer-tri"); 
-  vcl_string prefix2("dat/curve2d-view0-tracer-tri");
-  vcl_string ext(".dat");
+  std::string prefix("dat/reconstr-tracer-tri"); 
+  std::string prefix2("dat/curve2d-view0-tracer-tri");
+  std::string ext(".dat");
 
-  vcl_string cmd;
-  cmd = vcl_string("rm -f ") + prefix + vcl_string("*dat  ") + prefix2 + vcl_string("*dat");
+  std::string cmd;
+  cmd = std::string("rm -f ") + prefix + std::string("*dat  ") + prefix2 + std::string("*dat");
 
   if (system(cmd.c_str()) == -1)
-    vcl_cout << "Error removing old reconstructions\n";
+    std::cout << "Error removing old reconstructions\n";
 
-  vcl_string // notice string to distinguish this and the files from 'r' option
+  std::string // notice string to distinguish this and the files from 'r' option
     fname=prefix + ext;
 
-  fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-v01") + ext;
-  fcrv_3d_v01.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-v01") + ext;
+  fcrv_3d_v01.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-v02") + ext;
-  fcrv_3d_v02.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-v02") + ext;
+  fcrv_3d_v02.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
-  fname = prefix + vcl_string("-linear") + ext;
-  fcrv_3d_linear.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+  fname = prefix + std::string("-linear") + ext;
+  fcrv_3d_linear.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 3d curve: " << fname << std::endl;
 
   fname = prefix2 + ext;
 
   // write corresp curve in view 2
-  fcrv_2d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-  vcl_cout << "Writing 2d curve of 2nd view: " << fname << vcl_endl;
+  fcrv_2d.open(fname.c_str(),std::ios::out | std::ios::binary);
+  std::cout << "Writing 2d curve of 2nd view: " << fname << std::endl;
 
   for (unsigned k=0; k < crv_v2_->size(); ++k) {
     const vsol_point_2d_sptr pt = crv_v2_->vertex(k);
@@ -119,7 +119,7 @@ reconstruct_trinocular()
 
       { // determine point of this iset minimizing epipolar distance (assume accurate calib)
         // this is just to get the segment with which to intersect.
-        double cost_min = vcl_numeric_limits<double>::infinity(); 
+        double cost_min = std::numeric_limits<double>::infinity(); 
         double cost;
 
         for (unsigned l=0; l< crv_v2_->size(); ++l) {
@@ -175,7 +175,7 @@ reconstruct_trinocular()
 
       { // determine point of this iset minimizing epipolar distance (assume accurate calib)
         // this is just to get the segment with which to intersect.
-        double cost_min = vcl_numeric_limits<double>::infinity(); 
+        double cost_min = std::numeric_limits<double>::infinity(); 
         double cost;
 
         for (unsigned l=0; l< crv_v3_->size(); ++l) {
@@ -229,12 +229,12 @@ reconstruct_trinocular()
     rig02.reconstruct_point_lsqr(pt_img0,pt_img2,&pt_3D_02);
 
     {
-      vcl_vector<vnl_double_2> pts;
+      std::vector<vnl_double_2> pts;
       pts.push_back(vnl_double_2(pt_img0->x(),pt_img0->y()));
       pts.push_back(vnl_double_2(pt_img1->x(),pt_img1->y()));
       pts.push_back(vnl_double_2(pt_img2->x(),pt_img2->y()));
 
-      vcl_vector<vnl_double_3x4> projs;
+      std::vector<vnl_double_3x4> projs;
       projs.push_back(cam_[0].Pr_.get_matrix());
       projs.push_back(cam_[1].Pr_.get_matrix());
       projs.push_back(cam_[2].Pr_.get_matrix());
@@ -249,12 +249,12 @@ reconstruct_trinocular()
     {
       vpgl_ray_intersect<double> isect(3);
 
-      vcl_vector<vgl_point_2d<double> > pts;
+      std::vector<vgl_point_2d<double> > pts;
       pts.push_back(pt_img0->get_p());
       pts.push_back(pt_img1->get_p());
       pts.push_back(pt_img2->get_p());
 
-      vcl_vector<const vpgl_camera<double> * > projs;
+      std::vector<const vpgl_camera<double> * > projs;
       projs.push_back(&(cam_[0].Pr_));
       projs.push_back(&(cam_[1].Pr_));
       projs.push_back(&(cam_[2].Pr_));
@@ -311,20 +311,20 @@ reconstruct_possible_matches()
 
   assert(isets_.n_intersecting_curves() == crv_candidates_ptrs_.size());
 
-  vcl_cout << "# candidate curves: " << crv_candidates_ptrs_.size() << vcl_endl;
+  std::cout << "# candidate curves: " << crv_candidates_ptrs_.size() << std::endl;
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d, fcrv_2d;
 
-  vcl_string prefix("dat/reconstr-tracer-");
-  vcl_string prefix2("dat/curve2d-tracer-");
-  vcl_string ext(".dat");
+  std::string prefix("dat/reconstr-tracer-");
+  std::string prefix2("dat/curve2d-tracer-");
+  std::string ext(".dat");
 
-  vcl_string cmd;
-  cmd = vcl_string("rm -f ") + prefix + vcl_string("*dat  ") + prefix2 + vcl_string("*dat");
+  std::string cmd;
+  cmd = std::string("rm -f ") + prefix + std::string("*dat  ") + prefix2 + std::string("*dat");
 
   if (system(cmd.c_str()) == -1)
-    vcl_cout << "Error removing old reconstructions\n";
+    std::cout << "Error removing old reconstructions\n";
 
 
   jnz = (unsigned)-1;
@@ -334,20 +334,20 @@ reconstruct_possible_matches()
 
     ++jnz;
 
-    vcl_ostringstream j_str; //:< number of first or central image
+    std::ostringstream j_str; //:< number of first or central image
     j_str << jnz;
 
-    vcl_string 
+    std::string 
       fname=prefix + j_str.str() + ext;
 
-    fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-    vcl_cout << "Writing 3d curve: " << fname << vcl_endl;
+    fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
+    std::cout << "Writing 3d curve: " << fname << std::endl;
 
     fname = prefix2 + j_str.str() + ext;
 
     // write candidate curve jnz
-    fcrv_2d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
-    vcl_cout << "Writing 2d curve: " << fname << vcl_endl;
+    fcrv_2d.open(fname.c_str(),std::ios::out | std::ios::binary);
+    std::cout << "Writing 2d curve: " << fname << std::endl;
 
     for (unsigned k=0; k < crv_candidates_ptrs_[jnz]->size(); ++k) {
       const vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(k);
@@ -360,7 +360,7 @@ reconstruct_possible_matches()
 
 
     // traverse L_[j] 
-    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
+    std::list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
     for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
       unsigned k = ptr->ep_number;
@@ -369,7 +369,7 @@ reconstruct_possible_matches()
       unsigned lmin=0;
 
       { // determine point of this iset minimizing epipolar distance (assume accurate calib)
-        double cost_min = vcl_numeric_limits<double>::infinity(); 
+        double cost_min = std::numeric_limits<double>::infinity(); 
         double cost;
 
         assert(ptr->index.size() > 0);
@@ -444,9 +444,9 @@ show_reprojections(unsigned jnz)
     unsigned const n_perturb_reproject = 50;
 
     for (unsigned i=0; i < n_perturb_reproject; ++i) {
-      vcl_vector<vsol_point_2d_sptr> reproj;
-      vcl_vector<vsol_point_2d_sptr> crv1_ppts;
-      vcl_vector<vsol_point_2d_sptr> crv2_ppts;
+      std::vector<vsol_point_2d_sptr> reproj;
+      std::vector<vsol_point_2d_sptr> crv1_ppts;
+      std::vector<vsol_point_2d_sptr> crv2_ppts;
 
       perturb_and_reproject(jnz, reproj, crv1_ppts, crv2_ppts, rig);
 
@@ -462,11 +462,11 @@ show_reprojections(unsigned jnz)
   }
 
 
-  vcl_vector<vsol_point_2d_sptr> reproj; 
+  std::vector<vsol_point_2d_sptr> reproj; 
 
-  vcl_vector<unsigned> crv1_idx, crv2_idx;
+  std::vector<unsigned> crv1_idx, crv2_idx;
 
-  vcl_vector<bmcsd_vector_3d> crv3d; 
+  std::vector<bmcsd_vector_3d> crv3d; 
   reconstruct_and_reproject(jnz, 2 /*view*/, reproj, crv3d,crv1_idx, crv2_idx, rig);
 
 //  reproject_mvl_tritensor( jnz, reproj, crv1_idx, crv2_idx, rig);
@@ -503,7 +503,7 @@ show_reprojections(unsigned jnz)
     }
 
     // II: Soviews
-    vcl_list<vgui_soview2D_infinite_line *>::const_iterator itr;
+    std::list<vgui_soview2D_infinite_line *>::const_iterator itr;
     for (itr = ep_soviews_23_.begin(); itr != ep_soviews_23_.end(); ++itr) {
       tab_[2]->remove(*itr);
     }
@@ -533,22 +533,22 @@ trinocular_candidates()
 
   mw_curves curves_v3 ( mw_curves::new_curvepts(vsols_[2]) );
 
-  vcl_vector<my_lst_elt> best_matches; 
+  std::vector<my_lst_elt> best_matches; 
 
-  vcl_cout << "Curves (numbers) passing trinocular constraints:\n";
+  std::cout << "Curves (numbers) passing trinocular constraints:\n";
   for (unsigned j=0; j < crv_candidates_ptrs_.size(); ++j) {
-    vcl_vector<vsol_point_2d_sptr> reproj; 
-    vcl_vector<bmcsd_vector_3d> crv3d; 
+    std::vector<vsol_point_2d_sptr> reproj; 
+    std::vector<bmcsd_vector_3d> crv3d; 
     double d;
     if (trinocular_consistency(j, reproj, crv3d, curves_v3, rig, &d)) {
-      vcl_cout << " (" << j+1 << ")" ;
+      std::cout << " (" << j+1 << ")" ;
       best_matches.push_back(my_lst_elt(j,d));
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
   // Sort (increasing dist) best_matches in terms of cost & display
-  vcl_sort(best_matches.begin(), best_matches.end(), my_least_cost());
+  std::sort(best_matches.begin(), best_matches.end(), my_least_cost());
 
   for (unsigned i=0; i < best_matches.size(); ++i) {
     unsigned ncolors = best_match_style_.size();
@@ -573,8 +573,8 @@ trinocular_candidates()
 bool mw_curve_tracing_tool_3::
 trinocular_consistency(
     unsigned jnz, 
-    vcl_vector<vsol_point_2d_sptr> &reproj, 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<vsol_point_2d_sptr> &reproj, 
+    std::vector<bmcsd_vector_3d> &crv3d, 
     mw_curves &curves_v3,
     bdifd_rig &rig,
     double *cost)
@@ -584,14 +584,14 @@ trinocular_consistency(
 
   static const double dmax_thresh = 2*2; //: distance squared
 
-  vcl_vector<unsigned> crv1_idx, crv2_idx;
+  std::vector<unsigned> crv1_idx, crv2_idx;
   reconstruct_and_reproject(jnz, 2 /*view*/, reproj, crv3d, crv1_idx, crv2_idx, rig);
 
   // - Compute d = hausdorff(reproj, curves_image2)
 
 
   // - if  d > thresh, return false else true
-  double dmax  = -vcl_numeric_limits<double>::infinity();
+  double dmax  = -std::numeric_limits<double>::infinity();
   double dmean = 0;
   unsigned npts = reproj.size();
   double sum_thresh = dmax_thresh*npts;
@@ -625,9 +625,9 @@ trinocular_consistency(
 void mw_curve_tracing_tool_3::
 reproject_mvl_tritensor(
     unsigned jnz,
-    vcl_vector<vsol_point_2d_sptr> &reproj,
-    vcl_vector<unsigned> &crv1_idx,
-    vcl_vector<unsigned> &crv2_idx,
+    std::vector<vsol_point_2d_sptr> &reproj,
+    std::vector<unsigned> &crv1_idx,
+    std::vector<unsigned> &crv2_idx,
     bdifd_rig &rig
     ) const
 {
@@ -659,13 +659,13 @@ reproject_mvl_tritensor(
     bool stat = ptr.get_nonhomogeneous(ex,ey);
     assert(stat);
 
-    vcl_cout << "pt_img1: " << pt_img1->x() << "  " << pt_img1->y() << vcl_endl; 
-    vcl_cout << "pt_img2: " << pt_img2->x() << "  " << pt_img2->y() << vcl_endl; 
-    vcl_cout << "p1hmg: " << p1hmg << vcl_endl;
-    vcl_cout << "p2hmg: " << p2hmg << vcl_endl;
-    vcl_cout << "corrected1: " << corrected[0] << vcl_endl;
-    vcl_cout << "corrected2: " << corrected[1] << vcl_endl;
-    vcl_cout << "ex: " << ex << " ey: " << ey << vcl_endl; 
+    std::cout << "pt_img1: " << pt_img1->x() << "  " << pt_img1->y() << std::endl; 
+    std::cout << "pt_img2: " << pt_img2->x() << "  " << pt_img2->y() << std::endl; 
+    std::cout << "p1hmg: " << p1hmg << std::endl;
+    std::cout << "p2hmg: " << p2hmg << std::endl;
+    std::cout << "corrected1: " << corrected[0] << std::endl;
+    std::cout << "corrected2: " << corrected[1] << std::endl;
+    std::cout << "ex: " << ex << " ey: " << ey << std::endl; 
 
     reproj[i] = new vsol_point_2d(ex,ey);
   }
@@ -686,11 +686,11 @@ void mw_curve_tracing_tool_3::
 reconstruct_and_reproject(
     unsigned jnz, 
     unsigned view, 
-    vcl_vector<vsol_point_2d_sptr> &reproj, 
+    std::vector<vsol_point_2d_sptr> &reproj, 
 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    vcl_vector<unsigned> &crv1_idx,
-    vcl_vector<unsigned> &crv2_idx,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<unsigned> &crv1_idx,
+    std::vector<unsigned> &crv2_idx,
     bdifd_rig &rig) const
 {
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
@@ -701,8 +701,8 @@ reconstruct_and_reproject(
 void mw_curve_tracing_tool_3::
 project(
     unsigned view, 
-    vcl_vector<vsol_point_2d_sptr> &proj, 
-    const vcl_vector<bmcsd_vector_3d> &crv3d, 
+    std::vector<vsol_point_2d_sptr> &proj, 
+    const std::vector<bmcsd_vector_3d> &crv3d, 
     bdifd_rig &/*rig*/) const
 {
   assert (view < nviews_);
@@ -730,8 +730,8 @@ project(
 void mw_curve_tracing_tool_3::
 define_match_for_reconstruction(
     unsigned jnz,
-    vcl_vector<unsigned> &crv1_idx,
-    vcl_vector<unsigned> &crv2_idx,
+    std::vector<unsigned> &crv1_idx,
+    std::vector<unsigned> &crv2_idx,
     bdifd_rig &/*rig*/
     ) const
 {
@@ -753,7 +753,7 @@ define_match_for_reconstruction(
   j = crv_candidates_idx_[jnz];
 
   // traverse L_[j] 
-  vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
+  std::list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
   for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
     unsigned k = ptr->ep_number;
@@ -763,7 +763,7 @@ define_match_for_reconstruction(
     unsigned lmin=0;
 
     { // determine point of this iset minimizing epipolar distance (assume accurate calib)
-      double cost_min = vcl_numeric_limits<double>::infinity(); 
+      double cost_min = std::numeric_limits<double>::infinity(); 
       double cost;
 
       assert(ptr->index.size() > 0);
@@ -808,9 +808,9 @@ define_match_for_reconstruction(
 void mw_curve_tracing_tool_3::
 reconstruct_one_candidate(
     unsigned jnz, 
-    vcl_vector<bmcsd_vector_3d> &crv3d, 
-    const vcl_vector<unsigned> &crv1_idx,
-    const vcl_vector<unsigned> &crv2_idx,
+    std::vector<bmcsd_vector_3d> &crv3d, 
+    const std::vector<unsigned> &crv1_idx,
+    const std::vector<unsigned> &crv2_idx,
     bdifd_rig &rig) const
 {
 
@@ -871,9 +871,9 @@ perturb(vsol_point_2d_sptr &pt, double max_radius) const
 void mw_curve_tracing_tool_3::
 perturb_and_reproject( 
     unsigned jnz, 
-    vcl_vector<vsol_point_2d_sptr> &reproj, 
-    vcl_vector<vsol_point_2d_sptr> &crv1_ppts, //: crv_'s perturbed points used for reprojection
-    vcl_vector<vsol_point_2d_sptr> &crv2_ppts, //: crv_candidates_ptrs_'s perturbed points used for reprojection
+    std::vector<vsol_point_2d_sptr> &reproj, 
+    std::vector<vsol_point_2d_sptr> &crv1_ppts, //: crv_'s perturbed points used for reprojection
+    std::vector<vsol_point_2d_sptr> &crv2_ppts, //: crv_candidates_ptrs_'s perturbed points used for reprojection
     bdifd_rig &rig)
 {
   // 1 - get a hold of the points in curve 2 and its correspondents in curve 1,
@@ -881,15 +881,15 @@ perturb_and_reproject(
 
   const double perturb_maxradius = 5; //:< in pixels
 
-  vcl_vector<unsigned> crv1_idx;
-  vcl_vector<unsigned> crv2_idx;
+  std::vector<unsigned> crv1_idx;
+  std::vector<unsigned> crv2_idx;
 
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
 
   // 2 - perturb points of curve 2 and points of curve 1
 
   // 2a - perturb points of crv_ and perturb points of crv_candidate[jnz]
-  vcl_vector<vsol_point_2d_sptr> crv1_p, crv2_p;
+  std::vector<vsol_point_2d_sptr> crv1_p, crv2_p;
 
   crv1_p.resize(crv_->size());
   for (unsigned i=0; i<crv1_p.size(); ++i) {
@@ -905,7 +905,7 @@ perturb_and_reproject(
 
   // 3 - Reconstruct based on the perturbed data
 
-  vcl_vector<bmcsd_vector_3d> crv3d;
+  std::vector<bmcsd_vector_3d> crv3d;
 
   crv3d.resize(crv1_idx.size());
   crv1_ppts.resize(crv1_idx.size());

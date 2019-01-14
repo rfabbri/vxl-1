@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <fstream>
+#include <cstdio>
 
 
 #include <algo_euler.h>

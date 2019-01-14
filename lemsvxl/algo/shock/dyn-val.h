@@ -4,8 +4,8 @@
 #ifndef _DYNVAL_H
 #define _DYNVAL_H
 
-#include <vcl_set.h>
-#include <vcl_cassert.h>
+#include <set>
+#include <cassert>
 #include "ishock-common.h"
 
 //using namespace std;
@@ -51,14 +51,14 @@ class IVRegion
 protected:
   VECTOR_TYPE _region_start;
   VECTOR_TYPE _region_end;
-  vcl_set<IVS* > _ivsList;    //list of IVS formed by this BLine
+  std::set<IVS* > _ivsList;    //list of IVS formed by this BLine
 
   void addIVS (VECTOR_TYPE newstart, VECTOR_TYPE newend);
 
 public:
 
-  vcl_set<IVS* >* ivsList() { return &_ivsList; }
-  typedef vcl_set<IVS* >::iterator ivsListIterator;
+  std::set<IVS* >* ivsList() { return &_ivsList; }
+  typedef std::set<IVS* >::iterator ivsListIterator;
 
   VECTOR_TYPE regionStart() { return _region_start; }
   VECTOR_TYPE regionEnd() { return _region_end; }

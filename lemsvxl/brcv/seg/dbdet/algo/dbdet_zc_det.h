@@ -35,7 +35,7 @@
 //\endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_2d.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -94,7 +94,7 @@ public:
   vbl_array_2d<double>& mag(){ return mag_; } 
 
   //: apply NMS to the given data
-  void apply(bool collect_tokens, vcl_vector<vgl_point_2d<double> > &loc, vcl_vector<double> &orientation, vcl_vector<double> &mag);
+  void apply(bool collect_tokens, std::vector<vgl_point_2d<double> > &loc, std::vector<double> &orientation, std::vector<double> &mag);
 
   void clear();
 

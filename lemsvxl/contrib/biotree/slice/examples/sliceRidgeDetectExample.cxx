@@ -1,16 +1,16 @@
 #include <slice/algo/sliceRidgeDetectProcessor.h>
 #include <slice/sliceEngine.h>
 #include <slice/sliceFileManager.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/io/vil3d_io_image_view.h>
 #include <vil3d/algo/vil3d_grad_1x3.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/vil3d_transform.h>
 #include <basic/dbil3d/algo/dbil3d_gauss_filter.h> 
-#include <vcl_cmath.h>
+#include <cmath>
 
-void saveout(vcl_string fname, const vil3d_image_view<float> & img){
+void saveout(std::string fname, const vil3d_image_view<float> & img){
         vsl_b_ofstream bfs_out(fname.c_str());
         vsl_b_write(bfs_out, img);
         bfs_out.close();
@@ -19,27 +19,27 @@ void saveout(vcl_string fname, const vil3d_image_view<float> & img){
 class vil_math_abs_functor
 {
  public:
-  vxl_byte operator()(vxl_byte x) const { return vcl_abs(x); }
+  vxl_byte operator()(vxl_byte x) const { return std::abs(x); }
   unsigned operator()(unsigned x) const { return x; }
-  int operator()(int x)           const { return vcl_abs(x); }
-  short operator()(short x)       const { return vcl_abs(x); }
-  float operator()(float x)       const { return vcl_fabs(x); }
-  double operator()(double x)     const { return vcl_fabs(x); }
+  int operator()(int x)           const { return std::abs(x); }
+  short operator()(short x)       const { return std::abs(x); }
+  float operator()(float x)       const { return std::fabs(x); }
+  double operator()(double x)     const { return std::fabs(x); }
 };
 
 int main(int argc, char* argv[])
 {        
         if(argc < 2){
-                vcl_cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
+                std::cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
                 return 1;
         }
         else if(argc < 4){
-                vcl_cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
+                std::cerr << "usage : " << argv[0]  << " <vil3d binary image file> | <gx slice file> <gy slice file> <gz slice file>\n";
                 return 1;
         }
 
 
-        vcl_string gx_file,gy_file,gz_file;
+        std::string gx_file,gy_file,gz_file;
         if(argc == 2)
         {
           vil3d_image_view<float> volume;
@@ -85,13 +85,13 @@ int main(int argc, char* argv[])
         lambda2.fill(0);
         rho.fill(0);
 
-        vcl_vector<float*> outputs;
+        std::vector<float*> outputs;
         outputs.push_back(rho.origin_ptr());
         outputs.push_back(lambda1.origin_ptr());
         outputs.push_back(lambda2.origin_ptr());
         engine.setSaveToMemory(outputs);
         */
-        vcl_vector<vcl_string> outputs;
+        std::vector<std::string> outputs;
         outputs.push_back("rho.out");
         outputs.push_back("lambda1.out");
         outputs.push_back("lambda2.out");
@@ -118,17 +118,17 @@ int main(int argc, char* argv[])
         float avg_lambda_min,avg_lambda_max;
         vil3d_math_value_range(arithmetic_mean,avg_lambda_min,avg_lambda_max);
 
-        vcl_cerr << "avg_lambda_min " << avg_lambda_min << " avg_lambda_max " << avg_lambda_max << "\n";
+        std::cerr << "avg_lambda_min " << avg_lambda_min << " avg_lambda_max " << avg_lambda_max << "\n";
         vil3d_image_view<float> test(rho.ni(),rho.nj(),rho.nk());
         test.fill(0);
 
-        vcl_cerr << "setting cutoff to avg_lambda_max * 0.8\n" ;
+        std::cerr << "setting cutoff to avg_lambda_max * 0.8\n" ;
         double cutoff = 0.08*avg_lambda_max;
 
         for(int k = 0; k < rho.nk(); k++){
         for(int j = 0; j < rho.nj(); j++){
         for(int i = 0; i < rho.ni(); i++){
-                double diff = vcl_fabs(lambda1(i,j,k) - lambda2(i,j,k));
+                double diff = std::fabs(lambda1(i,j,k) - lambda2(i,j,k));
                 float mean = arithmetic_mean(i,j,k); 
                 double ratio = diff/mean;
     
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
         }
         }
       
-        vcl_cerr << " Writing out to test.float ... \n";
+        std::cerr << " Writing out to test.float ... \n";
         saveout("test.float" , test);
         return 0;
 }

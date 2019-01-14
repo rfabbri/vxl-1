@@ -28,7 +28,7 @@
 #include <vnl/vnl_math.h>
 #include <vul/vul_file.h>
 #include <vul/vul_temp_filename.h>
-#include <vcl_sstream.h>
+#include <sstream>
 
 
 // clipping functions
@@ -98,9 +98,9 @@ compute_arc_image_cost()
 // ----------------------------------------------------------------------------
 // New saving format. There is a version number at the beginning
 void dbsks_dp_match::
-save_circ_arc_costs(const vcl_string& filename)
+save_circ_arc_costs(const std::string& filename)
 { 
-  vcl_cout << "Save image cost of an arc grid\n";
+  std::cout << "Save image cost of an arc grid\n";
   vsl_b_ofstream os(filename);
 
   // >> >> save version number
@@ -137,14 +137,14 @@ save_circ_arc_costs(const vcl_string& filename)
 //: Load computed circular arc costs from a file with NEW format, which has
 // a version number at the beginning
 void dbsks_dp_match::
-load_circ_arc_costs(const vcl_string& filename)
+load_circ_arc_costs(const std::string& filename)
 {
-  vcl_cout << "Loading arc_grid image cost: \n";
+  std::cout << "Loading arc_grid image cost: \n";
 
   vsl_b_ifstream is(filename);
   if (!is) 
   {
-    vcl_cout << "ERROR reading binary file " << filename 
+    std::cout << "ERROR reading binary file " << filename 
       << ". Quit now.\n";
     return;
   }
@@ -179,14 +179,14 @@ load_circ_arc_costs(const vcl_string& filename)
 
     break;
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
       << "         Unknown version number " << version << "\n";
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
 
   is.close();
     
-  vcl_cout << "succeeded: \n";
+  std::cout << "succeeded: \n";
   return;
 }
 
@@ -227,8 +227,8 @@ set_graph_params(const dbsksp_shock_graph_sptr& ref_graph,
 void dbsks_dp_match::
 set_dp_params(const dbsks_shapelet_grid_params& grid_params,
               double sigma_deform,
-              const vcl_string& temp_file_prefix,
-              const vcl_string& temp_data_folder)
+              const std::string& temp_file_prefix,
+              const std::string& temp_data_folder)
 {
   this->sigma_deform_ = sigma_deform;
   this->shapelet_grid_params_ = grid_params;
@@ -286,25 +286,25 @@ refine_grid_centers_and_run_opt()
 // ----------------------------------------------------------------------------
 //: Save optimization results (the shapelet grids and the optimal states)
 void dbsks_dp_match::
-save_dp_optim_results(const vcl_string& filename)
+save_dp_optim_results(const std::string& filename)
 {
   // >> Save the reference graph using the same file name
-  vcl_string graph_filename = vul_file::strip_extension(filename) + ".xml";
+  std::string graph_filename = vul_file::strip_extension(filename) + ".xml";
 
   if ( x_write(graph_filename, this->graph()) )
   {
-    vcl_cout << "Saving reference shock graph to XML file ... succeeded.\n";
+    std::cout << "Saving reference shock graph to XML file ... succeeded.\n";
   }
   else
   {
-    vcl_cout << "Saving shock graph XML file ... failed. Quit now.\n";
+    std::cout << "Saving shock graph XML file ... failed. Quit now.\n";
     return;
   };
 
   
   // >> Save optimized results data to a binary file
   
-  vcl_cout << "Save optimization results:\n";
+  std::cout << "Save optimization results:\n";
   vsl_b_ofstream os(filename);
 
   // >> >> save version number
@@ -322,7 +322,7 @@ save_dp_optim_results(const vcl_string& filename)
 
   // >> >> save shapelet grid map
   vsl_b_write(os, this->shapelet_grid_map_.size());
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >::iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >::iterator it = 
     this->shapelet_grid_map_.begin(); it != this->shapelet_grid_map_.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -334,7 +334,7 @@ save_dp_optim_results(const vcl_string& filename)
 
   // >> >> save opt_graph_i_state_map
   vsl_b_write(os, this->graph_opt_i_state_.size());
-  for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
+  for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
     this->graph_opt_i_state_.begin(); it != this->graph_opt_i_state_.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -346,7 +346,7 @@ save_dp_optim_results(const vcl_string& filename)
   }
   os.close();
 
-  vcl_cout << "Succeeded:\n";
+  std::cout << "Succeeded:\n";
   
   return;
 }
@@ -355,32 +355,32 @@ save_dp_optim_results(const vcl_string& filename)
 // ----------------------------------------------------------------------------
 //: Save optimization results (the shapelet grids and the optimal states)
 bool dbsks_dp_match::
-load_dp_optim_results(const vcl_string& filename)
+load_dp_optim_results(const std::string& filename)
 {
   // >> First load the reference graph from the filename but with extension .xml
-  vcl_string graph_filename = vul_file::strip_extension(filename) + ".xml";
+  std::string graph_filename = vul_file::strip_extension(filename) + ".xml";
   
   dbsksp_shock_graph_sptr ref_graph = 0;
   if ( x_read(graph_filename, ref_graph ) )
   {
-    vcl_cout << "Loading shock graph XML file... completed.\n";
+    std::cout << "Loading shock graph XML file... completed.\n";
     ref_graph->compute_all_dependent_params();
   }
   else
   {
-    vcl_cout << "Loading shock graph XML file ... failed. Quit now.\n";
+    std::cout << "Loading shock graph XML file ... failed. Quit now.\n";
     return false;
   };
   this->set_ref_graph(ref_graph);
 
   
 
-  vcl_cout << "Loading binary file of optimization results...\n";
+  std::cout << "Loading binary file of optimization results...\n";
 
   vsl_b_ifstream is(filename);
   if (!is) 
   {
-    vcl_cout << "ERROR reading binary file " << filename 
+    std::cout << "ERROR reading binary file " << filename 
       << ". Quit now.\n";
     return false;
   }
@@ -435,13 +435,13 @@ load_dp_optim_results(const vcl_string& filename)
       vgl_point_2d<int > i_state(i_xy, i_plane);
 
       dbsksp_shock_edge_sptr e = this->graph()->edge_from_id(id_e);
-      this->graph_opt_i_state_.insert(vcl_make_pair(e, i_state));    
+      this->graph_opt_i_state_.insert(std::make_pair(e, i_state));    
     }
     break;
   default:
-    vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
+    std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream & is, const dbsks_shapelet_grid& arc_grid) \n"
       << "         Unknown version number " << version << "\n";
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
   }
   is.close();
 
@@ -453,7 +453,7 @@ load_dp_optim_results(const vcl_string& filename)
 // -----------------------------------------------------------------------------
 //: Trace the boundary of the optimal shock graph
 void dbsks_dp_match::
-trace_opt_graph_bnd(vcl_vector<vsol_spatial_object_2d_sptr >& vsol_list)
+trace_opt_graph_bnd(std::vector<vsol_spatial_object_2d_sptr >& vsol_list)
 {
   vsol_list = this->trace_graph_boundary(this->graph_opt_i_state_);
   return;
@@ -498,7 +498,7 @@ optimize_edge_based()
   // Make sure the arc costs have been computed.
   if (this->arc_image_cost_.empty())
   {
-    vcl_cout << "ERROR: Need to compute arc costs before doing DP optimization.\n";
+    std::cout << "ERROR: Need to compute arc costs before doing DP optimization.\n";
     return;
   }
 
@@ -506,7 +506,7 @@ optimize_edge_based()
 
   // --------------------------------------------------------------------------
   // >> Collect all the vertices of the same depths
-  vcl_vector<vcl_vector<dbsksp_shock_node_sptr > > vertex_bins;
+  std::vector<std::vector<dbsksp_shock_node_sptr > > vertex_bins;
   dbsks_collect_shock_nodes_by_depth(this->graph(), vertex_bins);
   int max_depth = vertex_bins.size()-1;
 
@@ -561,7 +561,7 @@ optimize_edge_based()
       }
       else
       {
-        vcl_cout << "ERROR: Can't handle nodes with degree > 3 now.\n";
+        std::cout << "ERROR: Can't handle nodes with degree > 3 now.\n";
         continue;
       }
     } // i_v
@@ -586,14 +586,14 @@ optimize_edge_based()
   grid_float& sum_bc_root = this->sum_bc_map_.find(e_root)->second;
 
   
-  vcl_cout << "load_sum_bc_from_file of e_root \n";
+  std::cout << "load_sum_bc_from_file of e_root \n";
   if (!this->load_sum_bc_from_file(e_root, sum_bc_root))
   {
     assert(sum_bc_root.empty());
     this->allocate(sum_bc_root, grid_r, 0.0f);
   }
 
-  vcl_cout << "compute_matching_cost for root node \n";
+  std::cout << "compute_matching_cost for root node \n";
   grid_float& matchcost_root = this->matchcost_map_.find(e_root)->second;
   this->compute_matching_cost(grid_r, sref_r, matchcost_root);
   
@@ -610,7 +610,7 @@ optimize_edge_based()
   matchcost_root.clear();
 
   // save sum_bc to file
-  vcl_cout << "Save_sum_bc_root_to_file...\n";
+  std::cout << "Save_sum_bc_root_to_file...\n";
   this->save_sum_bc_to_file(e_root, sum_bc_root);
   sum_bc_root.clear();
 
@@ -632,15 +632,15 @@ optimize_edge_based()
   /////////////////////////////////////////////////////////////////////////////
 
 
-  //vcl_cout << "4 \n";
+  //std::cout << "4 \n";
   this->release_matrix_memory(this->matchcost_map_);
   this->release_matrix_memory(this->opt_e_gridplane_map_);
   this->release_matrix_memory(this->opt_e_gridxy_map_);
   this->release_matrix_memory(this->sum_bc_map_);
 
-  //vcl_cout << "5 \n";
+  //std::cout << "5 \n";
   this->clear_all_temp_files();
-  //vcl_cout << "6 \n";
+  //std::cout << "6 \n";
 }
 
 
@@ -690,12 +690,12 @@ trace_global_solution(const dbsksp_shock_edge_sptr& e_root)
 
 
   // save sum_bc to file
-  vcl_cout << "Save_sum_bc_root_to_file...\n";
+  std::cout << "Save_sum_bc_root_to_file...\n";
   this->save_sum_bc_to_file(e_root, sum_bc_root);
   sum_bc_root.clear();
 
   
-  vcl_cout << "Optimal graph: \n"
+  std::cout << "Optimal graph: \n"
     << "  Min graph energy = " << min_root_energy << "\n"
     << "  opt_i_plane_root = " << opt_i_plane_root << "\n"
     << "  opt_i_xy_root = " << opt_i_xy_root << "\n";
@@ -704,16 +704,16 @@ trace_global_solution(const dbsksp_shock_edge_sptr& e_root)
   this->min_dp_cost_ = min_root_energy;
   this->min_real_cost_ = -1; // indicate this has not been evaluated
 
-  vcl_cout << "Trace back to construct optimal graph\n";
+  std::cout << "Trace back to construct optimal graph\n";
   this->graph_opt_i_state_.clear();
 
   // debug texts
-  vcl_cout << "    1 ";
+  std::cout << "    1 ";
   vgl_point_2d<int > opt_i_state_root(opt_i_xy_root, opt_i_plane_root);
   this->trace_opt_state(e_root, opt_i_state_root, this->graph_opt_i_state_); 
 
   // construct a graph corresponding to the optimal states
-  vcl_cout << " 2 ";
+  std::cout << " 2 ";
   this->convert_i_state_map_to_shapelet_map(this->graph_opt_i_state_,
     this->opt_shapelet_map_);
 
@@ -722,7 +722,7 @@ trace_global_solution(const dbsksp_shock_edge_sptr& e_root)
   //this->construct_graph(this->graph_opt_i_state_);
 
   // Compute a bounding box for this result
-  vcl_cout << " 3 ";
+  std::cout << " 3 ";
   vsol_box_2d_sptr bbox = dbsks_compute_bounding_box(this->shapelet_list);
   this->bbox_.set_size(4);
   this->bbox_[0] = float(bbox->get_min_x());
@@ -767,12 +767,12 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
   float num_xA_per_cell = float(grid_r.num_xA_) / ni_cell;
   float num_yA_per_cell = float(grid_r.num_yA_) / nj_cell;
 
-  vcl_map<float, vgl_point_2d<int > > cell_energy_state_map;
+  std::map<float, vgl_point_2d<int > > cell_energy_state_map;
   for (int i_cell =0; i_cell < ni_cell; ++i_cell)
   {
     for (int j_cell =0; j_cell < nj_cell; ++j_cell)
     {
-      vcl_cout << "i_cell [ " << i_cell << " ] j_cell [ " << j_cell << " ]\n";
+      std::cout << "i_cell [ " << i_cell << " ] j_cell [ " << j_cell << " ]\n";
       // compute the boundary of the cell
       int cell_xA_start = vnl_math::rnd( i_cell    * num_xA_per_cell);
       int cell_xA_end   = vnl_math::rnd((i_cell+1)* num_xA_per_cell);
@@ -806,27 +806,27 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
       } // ir_plane
 
 
-      vcl_cout << "  optimal cell energy: \n"
+      std::cout << "  optimal cell energy: \n"
         << "  min_energy_cr = " << min_energy_cr << "\n"
         << "  opt_i_plane_cr = " << opt_i_plane_cr << "\n"
         << "  opt_i_xy_cr = " << opt_i_xy_cr << "\n";
       
       // combined two params into a cpoint
       vgl_point_2d<int > opt_i_state_cr(opt_i_xy_cr, opt_i_plane_cr);
-      cell_energy_state_map.insert(vcl_make_pair(min_energy_cr, opt_i_state_cr));
+      cell_energy_state_map.insert(std::make_pair(min_energy_cr, opt_i_state_cr));
     }
   }
 
   // save sum_bc to file
-  vcl_cout << "Save_sum_bc_root_to_file...\n";
+  std::cout << "Save_sum_bc_root_to_file...\n";
   this->save_sum_bc_to_file(e_root, sum_bc_root);
   sum_bc_root.clear();
 
   
   // We take only ``num_top_picks'' top solutions
-  vcl_cout << "Number of top picks = " << num_top_picks << "\n";
+  std::cout << "Number of top picks = " << num_top_picks << "\n";
   int cell_count = 0;
-  for (vcl_map<float, vgl_point_2d<int > >::iterator it = 
+  for (std::map<float, vgl_point_2d<int > >::iterator it = 
     cell_energy_state_map.begin(); it != cell_energy_state_map.end(); ++it)
   {
     ++cell_count;
@@ -836,17 +836,17 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
       break;
     }
 
-    vcl_cout << "Cell count = " << cell_count << "\n";
+    std::cout << "Cell count = " << cell_count << "\n";
 
-    vcl_cout << "  optimal cell energy: \n"
+    std::cout << "  optimal cell energy: \n"
       << "  min_energy_cr = " << it->first << "\n"
       << "  opt_i_plane_cr = " << it->second.y() << "\n"
       << "  opt_i_xy_cr = " << it->second.x() << "\n";
 
     // trace out the states and the optimal graphs
-    vcl_cout << "Trace back to construct optimal graph\n";
+    std::cout << "Trace back to construct optimal graph\n";
     vgl_point_2d<int > opt_i_state_cr = it->second;
-    vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_opt_i_state;
+    std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_opt_i_state;
 
     ///////////////////////-----------------
     this->trace_opt_state(e_root, opt_i_state_cr, graph_opt_i_state); 
@@ -858,15 +858,15 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
 
 
 
-  vcl_cout << "Reconstruct shapelets of the edges from their sub-optimal states: \n";
+  std::cout << "Reconstruct shapelets of the edges from their sub-optimal states: \n";
   for (unsigned i =0; i < this->list_graph_opt_i_state_.size(); ++i)
   {
-    vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_i_state_map = 
+    std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > graph_i_state_map = 
       this->list_graph_opt_i_state_[i];
 
     // shapelets of the edges for this sub-optimal solution
-    vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map;
-    for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
+    std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > opt_shapelet_map;
+    for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
       graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
     {
       dbsksp_shock_edge_sptr e = it->first;
@@ -879,7 +879,7 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
       dbsksp_shapelet_sptr shapelet_e = grid_e.shapelet(i_xy_e, i_plane_e);
 
       // ------------------
-      opt_shapelet_map.insert(vcl_make_pair(e, shapelet_e));
+      opt_shapelet_map.insert(std::make_pair(e, shapelet_e));
       // ------------------
 
       //// for visualization purpose
@@ -956,7 +956,7 @@ init_dp_vars(float model_height)
       sref = sref->reversed_dir();
     }
     // save it for future use
-    this->ref_shapelet_map_.insert(vcl_make_pair(e, sref));
+    this->ref_shapelet_map_.insert(std::make_pair(e, sref));
 
 
     // build shapelet_grid - set of all possible configurations for an edge
@@ -982,15 +982,15 @@ init_dp_vars(float model_height)
 
     dbsks_shapelet_grid grid;
     grid.set_grid(sref, has_front_arc, has_rear_arc, this->shapelet_grid_params_);
-    this->shapelet_grid_map_.insert(vcl_make_pair(e, grid));
+    this->shapelet_grid_map_.insert(std::make_pair(e, grid));
 
     // compute matching costs for each of the shapelet
-    vcl_map<dbsksp_shock_edge_sptr, grid_float >::iterator i_matchcost = 
-      this->matchcost_map_.insert(vcl_make_pair(e, grid_float())).first;
+    std::map<dbsksp_shock_edge_sptr, grid_float >::iterator i_matchcost = 
+      this->matchcost_map_.insert(std::make_pair(e, grid_float())).first;
 
     // allocate and fill sum_bc
-    vcl_map<dbsksp_shock_edge_sptr, grid_float >::iterator i_sum_bc = 
-      this->sum_bc_map_.insert(vcl_make_pair(e, grid_float())).first;
+    std::map<dbsksp_shock_edge_sptr, grid_float >::iterator i_sum_bc = 
+      this->sum_bc_map_.insert(std::make_pair(e, grid_float())).first;
   }
 
 
@@ -1025,12 +1025,12 @@ init_dp_vars(float model_height)
     dbsks_shapelet_grid& grid_p = this->shapelet_grid_map_.find(e_p)->second;
 
     // gridplane
-    vcl_map<dbsksp_shock_edge_sptr, grid_int >::iterator i_gridplane = 
-      this->opt_e_gridplane_map_.insert(vcl_make_pair(e, grid_int())).first;
+    std::map<dbsksp_shock_edge_sptr, grid_int >::iterator i_gridplane = 
+      this->opt_e_gridplane_map_.insert(std::make_pair(e, grid_int())).first;
     
     // gridxy
-    vcl_map<dbsksp_shock_edge_sptr, grid_int >::iterator i_gridxy = 
-      this->opt_e_gridxy_map_.insert(vcl_make_pair(e, grid_int())).first;
+    std::map<dbsksp_shock_edge_sptr, grid_int >::iterator i_gridxy = 
+      this->opt_e_gridxy_map_.insert(std::make_pair(e, grid_int())).first;
   }
   return;
 }
@@ -1087,10 +1087,10 @@ init_dp_vars_using_stats(float model_size)
       continue;
 
     // compute matching costs for each of the shapelet
-    this->matchcost_map_.insert(vcl_make_pair(e, grid_float())).first;
+    this->matchcost_map_.insert(std::make_pair(e, grid_float())).first;
 
     // allocate sum_bc
-    this->sum_bc_map_.insert(vcl_make_pair(e, grid_float())).first;
+    this->sum_bc_map_.insert(std::make_pair(e, grid_float())).first;
 
     // Allocate space for each fragment to store its optimal state given its 
     // parent fragment's state
@@ -1113,10 +1113,10 @@ init_dp_vars_using_stats(float model_size)
       continue;
 
     // gridplane
-    this->opt_e_gridplane_map_.insert(vcl_make_pair(e, grid_int())).first;
+    this->opt_e_gridplane_map_.insert(std::make_pair(e, grid_int())).first;
     
     // gridxy
-    this->opt_e_gridxy_map_.insert(vcl_make_pair(e, grid_int())).first;
+    this->opt_e_gridxy_map_.insert(std::make_pair(e, grid_int())).first;
   }
   return;
 }
@@ -1138,7 +1138,7 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
 {
   assert (v_p->degree() == 2);
 
-  vcl_cout << "Optimize degree-2 node ID = " << v_p->id() << "\n";
+  std::cout << "Optimize degree-2 node ID = " << v_p->id() << "\n";
 
   // the "parent" edge
   dbsksp_shock_edge_sptr e_p = v_p->parent_edge();
@@ -1208,21 +1208,21 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
 
 
   // child wrt to parent    
-  vcl_cout << "Allocate space for opt_gridplane_c...\n";
+  std::cout << "Allocate space for opt_gridplane_c...\n";
   grid_int& opt_gridplane_c = this->opt_e_gridplane_map_.find(e_c)->second;
   this->allocate(opt_gridplane_c, grid_p, -1);
 
   // parent wrt to parent
-  vcl_cout << "Allocate space for sum_bc_p...\n";
+  std::cout << "Allocate space for sum_bc_p...\n";
   grid_float& sum_bc_p = this->sum_bc_map_.find(e_p)->second;
   this->allocate(sum_bc_p, grid_p, 1e10);
   
   // The BIG LOOPS
-  vcl_cout << "THE BIG LOOPS ... \n";
-  vcl_cout << "ip_phiA = ";
+  std::cout << "THE BIG LOOPS ... \n";
+  std::cout << "ip_phiA = ";
   for (int ip_phiA =0; ip_phiA < grid_p.num_phiA_; ++ip_phiA)
   {
-    vcl_cout << " " << ip_phiA;
+    std::cout << " " << ip_phiA;
     double phiA_p = grid_p.phiA_[ip_phiA];
     for (int ip_phiB =0; ip_phiB < grid_p.num_phiB_; ++ip_phiB)
     {
@@ -1243,7 +1243,7 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
             double psi0_p = grid_p.psiA_[0];
 
             vgl_point_2d<double > pt0_p(x0_p, y0_p);
-            vgl_vector_2d<double > t0_p(vcl_cos(psi0_p), vcl_sin(psi0_p));
+            vgl_vector_2d<double > t0_p(std::cos(psi0_p), std::sin(psi0_p));
 
             dbsksp_shapelet_sptr s0_p = new dbsksp_shapelet;
             if (!s0_p->set_from(pt0_p, rA_p, t0_p, phiA_p, m_p, len_p, phiB_p) ||
@@ -1283,7 +1283,7 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
               
 
               // convert to [-pi, pi] range
-              theta_p = vcl_fmod(theta_p, 2*vnl_math::pi);
+              theta_p = std::fmod(theta_p, 2*vnl_math::pi);
               theta_p = (theta_p > vnl_math::pi) ? (theta_p-2*vnl_math::pi) : theta_p;
 
               // rotate the original shapelet
@@ -1297,7 +1297,7 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
               // the xnode of child fragment
               vgl_point_2d<double > pt0_c = srot_p->end();
               vgl_vector_2d<double > tA_c = srot_p->shock_geom().tangent_at(1);
-              double psiA_c = vcl_atan2(tA_c.y(), tA_c.x());
+              double psiA_c = std::atan2(tA_c.y(), tA_c.x());
 
               // compute their associated parameters
               int ic_psiA = grid_c.i_psiA(psiA_c);
@@ -1361,19 +1361,19 @@ optimize_degree_2_node(const dbsksp_shock_node_sptr& v_p)
       } // ip_m
     } // ip_phiB      
   } //ip_phiA
-  vcl_cout << "\n";
+  std::cout << "\n";
 
   // save sum_bc to file
-  vcl_cout << "Save_sum_bc_to_file...\n";
+  std::cout << "Save_sum_bc_to_file...\n";
   this->save_sum_bc_to_file(e_p, sum_bc_p);
   sum_bc_p.clear();
 
   // save opt_gridplane to file and clear the function's memory
-  vcl_cout << "Save_opt_gridplane_to_file...\n";
+  std::cout << "Save_opt_gridplane_to_file...\n";
   this->save_opt_gridplane_to_file(e_c, opt_gridplane_c);
   opt_gridplane_c.clear();
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return;
 }
 
@@ -1504,11 +1504,11 @@ optimize_degree_3_node(const dbsksp_shock_node_sptr& v_p)
   int edge_id_p = e_p->id();
 
   // The BIG LOOPS
-  vcl_cout << "THE BIG LOOPS ... \n";
-  vcl_cout << "ip_phiA = ";
+  std::cout << "THE BIG LOOPS ... \n";
+  std::cout << "ip_phiA = ";
   for (int ip_phiA =0; ip_phiA < grid_p.num_phiA_; ++ip_phiA)
   {
-    vcl_cout << " " << ip_phiA;
+    std::cout << " " << ip_phiA;
     double phiA_p = grid_p.phiA_[ip_phiA];
     for (int ip_phiB =0; ip_phiB < grid_p.num_phiB_; ++ip_phiB)
     {
@@ -1529,7 +1529,7 @@ optimize_degree_3_node(const dbsksp_shock_node_sptr& v_p)
             double psi0_p = grid_p.psiA_[0];
 
             vgl_point_2d<double > pt0_p(x0_p, y0_p);
-            vgl_vector_2d<double > t0_p(vcl_cos(psi0_p), vcl_sin(psi0_p));
+            vgl_vector_2d<double > t0_p(std::cos(psi0_p), std::sin(psi0_p));
 
             dbsksp_shapelet_sptr s0_p = new dbsksp_shapelet;
             if (!s0_p->set_from(pt0_p, rA_p, t0_p, phiA_p, m_p, len_p, phiB_p) ||
@@ -1567,7 +1567,7 @@ optimize_degree_3_node(const dbsksp_shock_node_sptr& v_p)
               double theta_p = theta0 + (psiA_p - psi0_p);
 
               // convert to [-pi, pi] range
-              theta_p = vcl_fmod(theta_p, 2*vnl_math::pi);
+              theta_p = std::fmod(theta_p, 2*vnl_math::pi);
               theta_p = (theta_p > vnl_math::pi) ? (theta_p-2*vnl_math::pi) : theta_p;
 
               // rotate the original shapelet
@@ -1580,7 +1580,7 @@ optimize_degree_3_node(const dbsksp_shock_node_sptr& v_p)
               // the xnode of child fragment
               vgl_point_2d<double > ptB_p = srot_p->end();
               vgl_vector_2d<double > tB_p = srot_p->shock_geom().tangent_at(1);
-              double psiB_p = vcl_atan2(tB_p.y(), tB_p.x());
+              double psiB_p = std::atan2(tB_p.y(), tB_p.x());
 
               // translate the parent shapelet around and find the optimal child
               // shapelet for position of the parent
@@ -1701,12 +1701,12 @@ optimize_degree_3_node(const dbsksp_shock_node_sptr& v_p)
       } // ip_m
     } // ip_phiB      
   } //ip_phiA
-  vcl_cout << "\n";
+  std::cout << "\n";
 
 
   if (!flag_has_legal)
   {
-    vcl_cout << "ERROR: There is no legal configuration at this step.\n";
+    std::cout << "ERROR: There is no legal configuration at this step.\n";
   }
 
   // save sum_bc to file
@@ -1745,11 +1745,11 @@ compute_min_cost_wrt_sxnode(const dbsks_shapelet_grid& grid, const grid_float& s
   this->allocate_sxnode(opt_cost_sxnode, grid, vnl_numeric_traits<float >::maxval);
   this->allocate_sxnode(opt_gridplane_sxnode, grid, -1);
  
-  vcl_cout << "Find minimum energy for each starting xnode configuration\n";
-  vcl_cout << "  i_phiA = ";
+  std::cout << "Find minimum energy for each starting xnode configuration\n";
+  std::cout << "  i_phiA = ";
   for (int i_phiA =0; i_phiA < grid.num_phiA_; ++i_phiA)
   {
-    vcl_cout << " " << i_phiA;
+    std::cout << " " << i_phiA;
     for (int i_rA =0; i_rA < grid.num_rA_; ++i_rA)
     {      
       for (int i_psiA =0; i_psiA < grid.num_psiA_; ++i_psiA)
@@ -1796,7 +1796,7 @@ compute_min_cost_wrt_sxnode(const dbsks_shapelet_grid& grid, const grid_float& s
       }
     }
   }
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 }
 
 
@@ -1840,7 +1840,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
   if (arc_image_cost.size() != arc_grid.num_planes() ||
     arc_image_cost[0].size() != (arc_grid.num_x_*arc_grid.num_y_) )
   {
-    vcl_cout << "ERROR in compute_image_cost_using_arc_cost: \n" 
+    std::cout << "ERROR in compute_image_cost_using_arc_cost: \n" 
       << "  arc_image_cost has not been computed.\n";
     return;
   }
@@ -1849,7 +1849,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
   float ratio_step_y = float(grid.step_yA_ / arc_grid.step_y_);
 
   // compute image costs for all the arcs in the image
-  vcl_cout << "Compute image costs for the shapelet grid\n";
+  std::cout << "Compute image costs for the shapelet grid\n";
   
   // allocate memory to save result
   // we organize the result as an array of a 2D matrices (planes)
@@ -1860,10 +1860,10 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
   int frag_count = 0;
   int legal_count = 0; // count the number of legal shapelets
 
-  vcl_cout << "i_phiA = ";
+  std::cout << "i_phiA = ";
   for (int i_phiA=0; i_phiA < grid.num_phiA_; ++i_phiA)
   {
-    vcl_cout << "  " << i_phiA;
+    std::cout << "  " << i_phiA;
     
     double phiA = grid.phiA_[i_phiA];
     for (int i_phiB=0; i_phiB < grid.num_phiB_; ++i_phiB)
@@ -1883,7 +1883,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
             double psi0 = grid.psiA_[0];
 
             vgl_point_2d<double > origin(x0, y0);
-            vgl_vector_2d<double> t0(vcl_cos(psi0), vcl_sin(psi0));
+            vgl_vector_2d<double> t0(std::cos(psi0), std::sin(psi0));
             dbsksp_shapelet_sptr frag = new dbsksp_shapelet;
             
             // skip all the rotation if the fragment is illegal
@@ -2032,9 +2032,9 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
       } // i_m
     } // i_phiB
   } // i_phiA
-  vcl_cout << "\n";
+  std::cout << "\n";
 
-  vcl_cout << "Number of legal configuration = " << legal_count << vcl_endl;
+  std::cout << "Number of legal configuration = " << legal_count << std::endl;
   return;
 }
 
@@ -2048,20 +2048,20 @@ add_deform_cost(const dbsks_shapelet_grid& grid,
                 const dbsksp_shapelet_sptr& ref_s0,
                 vbl_array_1d<vnl_matrix<float > >& existing_cost)
 {
-  vcl_cout << "Compute deformation cost and add to existing cost: \n";
+  std::cout << "Compute deformation cost and add to existing cost: \n";
 
-  vcl_cout << "  Loop thru all shapelets configs and compute the deformation cost.\n";
-  vcl_cout << "    sigma_deform = " << this->sigma_deform_ << "\n";
+  std::cout << "  Loop thru all shapelets configs and compute the deformation cost.\n";
+  std::cout << "    sigma_deform = " << this->sigma_deform_ << "\n";
 
   int frag_count = 0;
-  vcl_cout << "i_phiA = ";
+  std::cout << "i_phiA = ";
   for (int i_phiA=0; i_phiA < grid.num_phiA_; ++i_phiA)
   {
-    vcl_cout << " " << i_phiA;
+    std::cout << " " << i_phiA;
     double phiA = grid.phiA_[i_phiA];
     for (int i_phiB=0; i_phiB < grid.num_phiB_; ++i_phiB)
     {
-      //vcl_cout << " " << i_phiB;
+      //std::cout << " " << i_phiB;
       double phiB = grid.phiB_[i_phiB];
       for (int i_m=0; i_m < grid.num_m_; ++i_m)
       {
@@ -2077,7 +2077,7 @@ add_deform_cost(const dbsks_shapelet_grid& grid,
             double psi0 = grid.psiA_[0];
 
             vgl_point_2d<double > origin(x0, y0);
-            vgl_vector_2d<double> t0(vcl_cos(psi0), vcl_sin(psi0));
+            vgl_vector_2d<double> t0(std::cos(psi0), std::sin(psi0));
             dbsksp_shapelet_sptr frag = new dbsksp_shapelet;
             
             // skip all the rotation if the fragment is illegal
@@ -2110,7 +2110,7 @@ add_deform_cost(const dbsks_shapelet_grid& grid,
       } // m
     } // phiB
   } // phiA
-  vcl_cout << "\n";
+  std::cout << "\n";
   return;
 }
 
@@ -2252,9 +2252,9 @@ allocate_sxnode(grid_int& f, const dbsks_shapelet_grid& grid , int value)
 // ----------------------------------------------------------------------------
 //: Release all memory inside the matrices of the grid, keep the matrices (for reuse)
 void dbsks_dp_match::
-release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_float >& grid_map)
+release_matrix_memory(std::map<dbsksp_shock_edge_sptr, grid_float >& grid_map)
 {
-  for (vcl_map<dbsksp_shock_edge_sptr, grid_float >::iterator git = 
+  for (std::map<dbsksp_shock_edge_sptr, grid_float >::iterator git = 
     grid_map.begin(); git != grid_map.end(); ++git)
   {
     grid_float& f = git->second;
@@ -2272,9 +2272,9 @@ release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_float >& grid_map)
 // ----------------------------------------------------------------------------
 //:
 void dbsks_dp_match::
-release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_int >& grid_map)
+release_matrix_memory(std::map<dbsksp_shock_edge_sptr, grid_int >& grid_map)
 {
-  for (vcl_map<dbsksp_shock_edge_sptr, grid_int >::iterator git = 
+  for (std::map<dbsksp_shock_edge_sptr, grid_int >::iterator git = 
     grid_map.begin(); git != grid_map.end(); ++git)
   {
     grid_int& f = git->second;
@@ -2300,16 +2300,16 @@ release_matrix_memory(vcl_map<dbsksp_shock_edge_sptr, grid_int >& grid_map)
 void dbsks_dp_match::
 trace_opt_state(const dbsksp_shock_edge_sptr& e_root, 
                 vgl_point_2d<int > opt_i_state_root, 
-                vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_opt_i_state)
+                std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_opt_i_state)
 {
-  vcl_cout << " aaa ";
-  graph_opt_i_state.insert(vcl_make_pair(e_root, opt_i_state_root));
+  std::cout << " aaa ";
+  graph_opt_i_state.insert(std::make_pair(e_root, opt_i_state_root));
 
-  vcl_cout << " aa ";
+  std::cout << " aa ";
   dbsksp_shock_node_sptr v_c = (e_root->source()->parent_edge() == e_root) ?
     e_root->source() : e_root->target();
 
-  vcl_cout << " a ";
+  std::cout << " a ";
 
   // More details optimal state of the root
   int opt_i_xy_root = opt_i_state_root.x();
@@ -2319,13 +2319,13 @@ trace_opt_state(const dbsksp_shock_edge_sptr& e_root,
   int opt_i_xA_root, opt_i_yA_root;
   grid_root.linear_to_grid(opt_i_xy_root, opt_i_xA_root, opt_i_yA_root);
   
-  vcl_cout << " b ";
+  std::cout << " b ";
 
 
   dbsksp_shapelet_sptr s_root = grid_root.shapelet(opt_i_xy_root, opt_i_plane_root);
   vgl_point_2d<double > ptB_root = s_root->end();
 
-  vcl_cout << " c ";
+  std::cout << " c ";
 
   // Recurve on all the child fragments
   for (dbsksp_shock_node::edge_iterator eit = v_c->edges_begin(); 
@@ -2342,34 +2342,34 @@ trace_opt_state(const dbsksp_shock_edge_sptr& e_root,
       continue;
 
     // retrieve optimal state for v given the state of root
-    vcl_cout << " d" << e->id() << "d ";
+    std::cout << " d" << e->id() << "d ";
 
     // plane
     grid_int& opt_gridplane_e = this->opt_e_gridplane_map_.find(e)->second;
-    vcl_cout << " e ";
+    std::cout << " e ";
 
     // load the gridplane from a file
     this->load_opt_gridplane_from_file(e, opt_gridplane_e);
-    vcl_cout << " f ";
+    std::cout << " f ";
 
     int opt_i_plane_e = opt_gridplane_e[opt_i_plane_root](opt_i_xA_root, opt_i_yA_root);
-    vcl_cout << " g ";
+    std::cout << " g ";
 
     opt_gridplane_e.clear();
 
     // x and y
     dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
-    vcl_cout << " h ";
+    std::cout << " h ";
     
     int opt_i_xA_e = grid_e.i_xA(ptB_root.x());
     int opt_i_yA_e = grid_e.i_yA(ptB_root.y());
     int opt_i_xy_e = grid_e.grid_to_linear(opt_i_xA_e, opt_i_yA_e);
-    vcl_cout << " i ";
+    std::cout << " i ";
 
     vgl_point_2d<int > opt_i_state_e(opt_i_xy_e, opt_i_plane_e);
     
     this->trace_opt_state(e, opt_i_state_e, graph_opt_i_state);
-    vcl_cout << " j ";
+    std::cout << " j ";
   }
   return;
 }
@@ -2378,12 +2378,12 @@ trace_opt_state(const dbsksp_shock_edge_sptr& e_root,
 //: ----------------------------------------------------------------------------
 void dbsks_dp_match::
 convert_i_state_map_to_shapelet_map(
-  const vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& i_state_map,
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > & shapelet_map)
+  const std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& i_state_map,
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > & shapelet_map)
 {
   shapelet_map.clear();
   
-  for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::const_iterator it =
+  for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::const_iterator it =
     i_state_map.begin(); it != i_state_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -2395,7 +2395,7 @@ convert_i_state_map_to_shapelet_map(
     dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
     dbsksp_shapelet_sptr shapelet_e = grid_e.shapelet(i_xy_e, i_plane_e);
 
-    shapelet_map.insert(vcl_make_pair(e, shapelet_e));
+    shapelet_map.insert(std::make_pair(e, shapelet_e));
   }
   return;
 }
@@ -2405,12 +2405,12 @@ convert_i_state_map_to_shapelet_map(
 // -----------------------------------------------------------------------------
 //: Given a list of states for each edge, construct the graph
 void dbsks_dp_match::
-construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map,
-                vcl_vector<dbsksp_shapelet_sptr >& fragment_list)
+construct_graph(std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map,
+                std::vector<dbsksp_shapelet_sptr >& fragment_list)
 {
   fragment_list.clear();
 
-  for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
+  for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
     graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -2446,7 +2446,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 
   //fragment_list.clear();
 
-  //for (vcl_map<unsigned int, vgl_point_2d<int > >::iterator it =
+  //for (std::map<unsigned int, vgl_point_2d<int > >::iterator it =
   //  graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   //{
   //  dbsksp_shock_edge_sptr e = this->graph()->edge_from_id(it->first);
@@ -2483,11 +2483,11 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 
 
 
-  ////vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  ////std::vector<vsol_spatial_object_2d_sptr > vsol_list;
 
   ////// First construct the shapelets corresponding to the states of the graph
-  ////vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
-  ////for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::const_iterator it =
+  ////std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
+  ////for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::const_iterator it =
   ////  graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   ////{
   ////  dbsksp_shock_edge_sptr e = it->first;
@@ -2497,10 +2497,10 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 
   ////  // compute the shapelet associated with this state
   ////  dbsksp_shapelet_sptr s_e = grid.shapelet(i_xy, i_plane);
-  ////  shapelet_map.insert(vcl_make_pair(e, s_e));
+  ////  shapelet_map.insert(std::make_pair(e, s_e));
   ////}
 
-  ////for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
+  ////for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
   ////  shapelet_map.begin(); it != shapelet_map.end(); ++it)
   ////{
   ////  dbsksp_shock_edge_sptr e = it->first;
@@ -2508,8 +2508,8 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////  dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
 
   ////  // collect all the circular arcs we need to draw
-  ////  vcl_vector<bgld_circ_arc > bnd_arc_list;
-  ////  vcl_vector<bgld_conic_arc > shock_conic_list;
+  ////  std::vector<bgld_circ_arc > bnd_arc_list;
+  ////  std::vector<bgld_conic_arc > shock_conic_list;
 
   ////  // left and right
   ////  dbsksp_shock_node_sptr v_child = e->child_node();
@@ -2583,7 +2583,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////    bgld_circ_arc arc = bnd_arc_list[i];
   ////    
   ////    // an arc as a 11-vertex polyline
-  ////    vcl_vector<vsol_point_2d_sptr > pt_list;
+  ////    std::vector<vsol_point_2d_sptr > pt_list;
   ////    for (double t=0; t<1; t = t+0.1)
   ////    {
   ////      vgl_point_2d<double > pt = arc.point_at(t);
@@ -2598,7 +2598,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////    bgld_conic_arc conic = shock_conic_list[i];
   ////    
   ////    // an conic as a 11-vertex polyline
-  ////    vcl_vector<vsol_point_2d_sptr > pt_list;
+  ////    std::vector<vsol_point_2d_sptr > pt_list;
   ////    for (double t=0; t<1; t = t+0.1)
   ////    {
   ////      vgl_point_2d<double > pt = conic.point_at(t);
@@ -2609,7 +2609,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 
   ////  // add the contact shocks
   ////  // front
-  ////  vcl_vector<vsol_point_2d_sptr > pts_front;
+  ////  std::vector<vsol_point_2d_sptr > pts_front;
   ////  pts_front.push_back(new vsol_point_2d(s_e->bnd_start(0)));
   ////  pts_front.push_back(new vsol_point_2d(s_e->start()));
   ////  pts_front.push_back(new vsol_point_2d(s_e->bnd_start(1)));
@@ -2619,7 +2619,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////  // only add if this is the terminal fragment
   ////  if (grid_e.has_rear_arc_)
   ////  {
-  ////    vcl_vector<vsol_point_2d_sptr > pts_rear;
+  ////    std::vector<vsol_point_2d_sptr > pts_rear;
   ////    pts_rear.push_back(new vsol_point_2d(s_e->bnd_end(0)));
   ////    pts_rear.push_back(new vsol_point_2d(s_e->end()));
   ////    pts_rear.push_back(new vsol_point_2d(s_e->bnd_end(1)));
@@ -2637,16 +2637,16 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 // -----------------------------------------------------------------------------
 //: Given a list of states for each edge, construct the graph
 void dbsks_dp_match::
-construct_graph(vcl_map<unsigned int, vgl_point_2d<int > >& graph_i_state_map,
-                vcl_vector<dbsksp_shapelet_sptr >& fragment_list)
+construct_graph(std::map<unsigned int, vgl_point_2d<int > >& graph_i_state_map,
+                std::vector<dbsksp_shapelet_sptr >& fragment_list)
 {
   // convert from map<unsigned, vgl_point_2d > to map<shock_edge_sptr, vgl_point_2d >
-  vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > edge_state_map;
-  for (vcl_map<unsigned int, vgl_point_2d<int > >::iterator it =
+  std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > > edge_state_map;
+  for (std::map<unsigned int, vgl_point_2d<int > >::iterator it =
     graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = this->graph()->edge_from_id(it->first);
-    edge_state_map.insert(vcl_make_pair(e, it->second));
+    edge_state_map.insert(std::make_pair(e, it->second));
   }
   this->construct_graph(edge_state_map, fragment_list);
   return;
@@ -2661,23 +2661,23 @@ construct_graph(vcl_map<unsigned int, vgl_point_2d<int > >& graph_i_state_map,
 void dbsks_dp_match::
 save_opt_gridplane_to_file(const dbsksp_shock_edge_sptr& e, const grid_int& opt_gridplane)
 {
-  vcl_ostringstream oss;
+  std::ostringstream oss;
   oss << this->temp_file_prefix_
     << "_opt_gridplane_edgeid_"
     << e->id()
     << ".tmp";
-  vcl_string filepath = oss.str();
+  std::string filepath = oss.str();
 
   // we will use the system temp_file command to get a temporary filename
   // filepath will only save the file name of the temp file
-  //vcl_string data_file = vul_temp_filename();
+  //std::string data_file = vul_temp_filename();
 
-  vcl_string data_file = this->temp_data_folder_ + 
+  std::string data_file = this->temp_data_folder_ + 
     vul_file::strip_extension(vul_file::strip_directory(filepath));
 
   
   // save the filename
-  vcl_ofstream os(filepath.c_str());
+  std::ofstream os(filepath.c_str());
   os << data_file;
   os.close();
 
@@ -2693,7 +2693,7 @@ save_opt_gridplane_to_file(const dbsksp_shock_edge_sptr& e, const grid_int& opt_
   //  grid_size += opt_gridplane[i].size();
   //}
 
-  vcl_cout << "filepath = " << filepath << "\n"
+  std::cout << "filepath = " << filepath << "\n"
     << "   data_file = " << data_file << "\n"
     << "   Size of data file " << vul_file::size(data_file) << "\n";
     //<< "   Size of the grid  " << grid_size << "\n";
@@ -2702,7 +2702,7 @@ save_opt_gridplane_to_file(const dbsksp_shock_edge_sptr& e, const grid_int& opt_
   
 
   // save the filename for future retrieval
-  this->gridplane_filepath_map_.insert(vcl_make_pair(e, filepath));
+  this->gridplane_filepath_map_.insert(std::make_pair(e, filepath));
   
   return;
 }
@@ -2714,19 +2714,19 @@ bool dbsks_dp_match::
 load_opt_gridplane_from_file(const dbsksp_shock_edge_sptr& e,grid_int& opt_gridplane)
 {
   // check whether the file has been saved
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = this->gridplane_filepath_map_.find(e);
+  std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = this->gridplane_filepath_map_.find(e);
   if (it == this->gridplane_filepath_map_.end())
     return false;
 
-  vcl_string filepath = it->second;
+  std::string filepath = it->second;
   if (!vul_file::exists(filepath))
   {
     return false;
   }
   
   // load the name of the datafile from filepath
-  vcl_string data_file;
-  vcl_ifstream is(filepath.c_str());
+  std::string data_file;
+  std::ifstream is(filepath.c_str());
   is >> data_file;
   is.close();
 
@@ -2762,22 +2762,22 @@ load_opt_gridplane_from_file(const dbsksp_shock_edge_sptr& e,grid_int& opt_gridp
 void dbsks_dp_match::
 save_sum_bc_to_file(const dbsksp_shock_edge_sptr& e, const grid_float& sum_bc)
 {
-  vcl_ostringstream oss;
+  std::ostringstream oss;
   oss << this->temp_file_prefix_
     << "_sum_bc_edgeid_"
     << e->id()
     << ".tmp";
-  vcl_string filepath = oss.str();
+  std::string filepath = oss.str();
 
   // we will use the system temp_file command to get a temporary filename
   // filepath will only save the file name of the temp file
-  //vcl_string data_file = vul_temp_filename();
+  //std::string data_file = vul_temp_filename();
 
-  vcl_string data_file = this->temp_data_folder_ + 
+  std::string data_file = this->temp_data_folder_ + 
     vul_file::strip_extension(vul_file::strip_directory(filepath));
   
   // save the filename
-  vcl_ofstream os(filepath.c_str());
+  std::ofstream os(filepath.c_str());
   os << data_file;
   os.close();
 
@@ -2786,12 +2786,12 @@ save_sum_bc_to_file(const dbsksp_shock_edge_sptr& e, const grid_float& sum_bc)
   vsl_b_write(bos, sum_bc);
   bos.close();
 
-  vcl_cout << "filepath = " << filepath << "\n"
+  std::cout << "filepath = " << filepath << "\n"
     << "    data_file = " << data_file << "\n"
     << "    Size of data file " << vul_file::size(data_file) << "\n";
 
   // save the filename for future retrieval
-  this->sum_bc_filepath_map_.insert(vcl_make_pair(e, filepath));
+  this->sum_bc_filepath_map_.insert(std::make_pair(e, filepath));
  
   return;
 }
@@ -2803,21 +2803,21 @@ bool dbsks_dp_match::
 load_sum_bc_from_file(const dbsksp_shock_edge_sptr& e, grid_float& sum_bc )
 {
   // check whether the file has been saved
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = 
+  std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = 
     this->sum_bc_filepath_map_.find(e);
   
   if (it == this->sum_bc_filepath_map_.end())
     return false;
 
-  vcl_string filepath = it->second;
+  std::string filepath = it->second;
   if (!vul_file::exists(filepath))
   {
     return false;
   }
   
   // load the name of the datafile from filepath
-  vcl_string data_file;
-  vcl_ifstream is(filepath.c_str());
+  std::string data_file;
+  std::ifstream is(filepath.c_str());
   is >> data_file;
   is.close();
 
@@ -2857,22 +2857,22 @@ save_matchcost_to_file(const dbsksp_shock_edge_sptr& e,
                         const grid_float& matchcost)
 {
 
-  vcl_ostringstream oss;
+  std::ostringstream oss;
   oss << this->temp_file_prefix_
     << "_match_cost_edgeid_"
     << e->id()
     << ".tmp";
-  vcl_string filepath = oss.str();
+  std::string filepath = oss.str();
 
   // we will use the system temp_file command to get a temporary filename
   // filepath will only save the file name of the temp file
-  //vcl_string data_file = vul_temp_filename();
+  //std::string data_file = vul_temp_filename();
 
-  vcl_string data_file = this->temp_data_folder_ + 
+  std::string data_file = this->temp_data_folder_ + 
     vul_file::strip_extension(vul_file::strip_directory(filepath));
   
   // save the filename
-  vcl_ofstream os(filepath.c_str());
+  std::ofstream os(filepath.c_str());
   os << data_file;
   os.close();
 
@@ -2881,7 +2881,7 @@ save_matchcost_to_file(const dbsksp_shock_edge_sptr& e,
   vsl_b_write(bos, matchcost);
   bos.close();
 
-  vcl_cout << "filepath = " << filepath << "\n"
+  std::cout << "filepath = " << filepath << "\n"
     << "    data_file = " << data_file << "\n"
     << "    Size of data file " << vul_file::size(data_file) << "\n";
 
@@ -2889,7 +2889,7 @@ save_matchcost_to_file(const dbsksp_shock_edge_sptr& e,
   assert(this->matchcost_filepath_map_.find(e) == this->matchcost_filepath_map_.end());
 
   // save the filename for future retrieval
-  this->matchcost_filepath_map_.insert(vcl_make_pair(e, filepath));
+  this->matchcost_filepath_map_.insert(std::make_pair(e, filepath));
  
   return;
 
@@ -2903,31 +2903,31 @@ load_matchcost_from_file(const dbsksp_shock_edge_sptr& e,
                           grid_float& matchcost )
 {
   // check whether the file has been saved
-  vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = 
+  std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = 
     this->matchcost_filepath_map_.find(e);
   
   if (it == this->matchcost_filepath_map_.end())
   {
-    vcl_cout << "Matchcost for edge id = " << e->id() << "does not exist.";
+    std::cout << "Matchcost for edge id = " << e->id() << "does not exist.";
     return false;
   }
 
-  vcl_string filepath = it->second;
+  std::string filepath = it->second;
   if (!vul_file::exists(filepath))
   {
-    vcl_cout << "Could not load filepath for matchcost of edge id = " << e->id() << "\n.";
+    std::cout << "Could not load filepath for matchcost of edge id = " << e->id() << "\n.";
     return false;
   }
   
   // load the name of the datafile from filepath
-  vcl_string data_file;
-  vcl_ifstream is(filepath.c_str());
+  std::string data_file;
+  std::ifstream is(filepath.c_str());
   is >> data_file;
   is.close();
 
   if (!vul_file::exists(data_file))
   {
-    vcl_cout << "Could not datafile for matchcost of edge id = " << e->id() << "\n.";
+    std::cout << "Could not datafile for matchcost of edge id = " << e->id() << "\n.";
     return false;
   }
 
@@ -2971,19 +2971,19 @@ void dbsks_dp_match::
 clear_all_temp_files()
 {
   // go thru each filename and delete the files
-  for (vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = 
     this->gridplane_filepath_map_.begin(); 
     it != this->gridplane_filepath_map_.end(); ++it)
   {
-    vcl_string filepath = it->second;
+    std::string filepath = it->second;
     if (!vul_file::exists(filepath.c_str()))
     {
       continue;
     }
 
     // load the name of the datafile from filepath
-    vcl_string data_file;
-    vcl_ifstream is(filepath.c_str());
+    std::string data_file;
+    std::ifstream is(filepath.c_str());
     is >> data_file;
     is.close();
     vul_file::delete_file_glob(filepath.c_str());
@@ -2996,19 +2996,19 @@ clear_all_temp_files()
   }
 
   // go thru each filename and delete the files
-  for (vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = 
     this->sum_bc_filepath_map_.begin(); 
     it != this->sum_bc_filepath_map_.end(); ++it)
   {
-    vcl_string filepath = it->second;
+    std::string filepath = it->second;
     if (!vul_file::exists(filepath.c_str()))
     {
       continue;
     }
 
     // load the name of the datafile from filepath
-    vcl_string data_file;
-    vcl_ifstream is(filepath.c_str());
+    std::string data_file;
+    std::ifstream is(filepath.c_str());
     is >> data_file;
     is.close();
     vul_file::delete_file_glob(filepath.c_str());
@@ -3023,19 +3023,19 @@ clear_all_temp_files()
 
 
   // go thru each filename and delete the files
-  for (vcl_map<dbsksp_shock_edge_sptr, vcl_string >::iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, std::string >::iterator it = 
     this->matchcost_filepath_map_.begin(); 
     it != this->matchcost_filepath_map_.end(); ++it)
   {
-    vcl_string filepath = it->second;
+    std::string filepath = it->second;
     if (!vul_file::exists(filepath.c_str()))
     {
       continue;
     }
 
     // load the name of the datafile from filepath
-    vcl_string data_file;
-    vcl_ifstream is(filepath.c_str());
+    std::string data_file;
+    std::ifstream is(filepath.c_str());
     is >> data_file;
     is.close();
     vul_file::delete_file_glob(filepath.c_str());
@@ -3117,7 +3117,7 @@ compute_graph_cost(const dbsksp_shock_graph_sptr& test_graph,
 // Results are saved in the form of a map from edge ID --> approximated shapelet
 bool dbsks_dp_match::
 compute_closest_approx(const dbsksp_shock_graph_sptr& test_graph,
-                       vcl_map<unsigned int, dbsksp_shapelet_sptr > approx_frags)
+                       std::map<unsigned int, dbsksp_shapelet_sptr > approx_frags)
 {
   for (dbsksp_shock_graph::edge_iterator eit = test_graph->edges_begin();
     eit != test_graph->edges_end(); ++eit)
@@ -3151,7 +3151,7 @@ compute_closest_approx(const dbsksp_shock_graph_sptr& test_graph,
     int i_xy = grid_e.grid_to_linear(i_xA, i_yA);
     int i_plane = grid_e.grid_to_linear(i_phiA, i_phiB, i_m, i_rA, i_len, i_psiA);
 
-    approx_frags.insert(vcl_make_pair(e->id(), grid_e.shapelet(i_xy, i_plane)));
+    approx_frags.insert(std::make_pair(e->id(), grid_e.shapelet(i_xy, i_plane)));
   }
   return true;
 }
@@ -3425,9 +3425,9 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
 // of the shapelets in the provided maps
 void dbsks_dp_match::
 adjust_shapelet_grid_center(
-     const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
+     const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map)
 {
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator mit =
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::const_iterator mit =
     shapelet_map.begin(); mit != shapelet_map.end(); ++mit)
   {
     dbsksp_shock_edge_sptr e = mit->first;
@@ -3449,7 +3449,7 @@ adjust_shapelet_grid_center(
 void dbsks_dp_match::
 change_shapelet_grids_num_xy(double ratio_xA, double ratio_yA)
 {
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >::iterator it =
+  for (std::map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >::iterator it =
     this->shapelet_grid_map_.begin(); it != this->shapelet_grid_map_.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -3482,7 +3482,7 @@ void dbsks_dp_match::
 build_shapelet_grids(const dbsks_shapelet_grid_params& params, 
                      const dbsks_shock_graph_stats& stats,
                      double graph_size,
-      vcl_map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >& shapelet_grid_map)
+      std::map<dbsksp_shock_edge_sptr, dbsks_shapelet_grid >& shapelet_grid_map)
 {
   //// build shapelet_grid - set of all possible configurations for an edge
 
@@ -3524,13 +3524,13 @@ build_shapelet_grids(const dbsks_shapelet_grid_params& params,
       sref = sref->reversed_dir();
     }
     // save it for future use
-    this->ref_shapelet_map_.insert(vcl_make_pair(e, sref));
+    this->ref_shapelet_map_.insert(std::make_pair(e, sref));
 
     ////////////////////////////////////////////////////////////////////////////
     // build shapelet grids from statistics!!!!!!!!!!!
 
     dbsks_shapelet_grid grid = stats.build_shapelet_grid(e->id(), sampling_params, graph_size);
-    shapelet_grid_map.insert(vcl_make_pair(e, grid));
+    shapelet_grid_map.insert(std::make_pair(e, grid));
   }
   return;
 }
@@ -3552,7 +3552,7 @@ build_shapelet_grids(const dbsks_shapelet_grid_params& params,
 
 //: Print Optimization results to a stream
 void dbsks_dp_match::
-print_summary(vcl_ostream& str) const
+print_summary(std::ostream& str) const
 {
   str << "dbsks_dp_match_summary 0\n"
     << "image_ni " << this->image_ni_ << "\n"
@@ -3627,7 +3627,7 @@ print_summary(vcl_ostream& str) const
 //compute_histogram(const grid_float& grid_val, vnl_vector<float >& hist)
 //{
 //
-//  //vcl_cout << "Number of legal configuration = " << legal_count << vcl_endl;
+//  //std::cout << "Number of legal configuration = " << legal_count << std::endl;
 //
 //  //// compute the histogram of this image cost grid
 //  //// put everything into a 100 bins, range [0..9]
@@ -3643,7 +3643,7 @@ print_summary(vcl_ostream& str) const
 //  //      if (cost > 9.0f) continue;
 //
 //  //      assert(cost >=0);
-//  //      int bin = (int)vcl_floor(cost / 0.09);
+//  //      int bin = (int)std::floor(cost / 0.09);
 //  //      ++image_cost_hist[bin];
 //  //    }
 //  //  }
@@ -3659,15 +3659,15 @@ print_summary(vcl_ostream& str) const
 // ----------------------------------------------------------------------------
 //: display real cost of the edges, given their states
 void dbsks_dp_match::
-display_real_cost(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map, 
-                  vcl_ostream& os)
+display_real_cost(std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map, 
+                  std::ostream& os)
 {
-  vcl_cout << "Compare real and stored cost for the graph\n";
+  std::cout << "Compare real and stored cost for the graph\n";
   float total_stored_cost = 0;
   float total_real_cost = 0;
 
   // iterature thru all the edges
-  for (vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
+  for (std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >::iterator it =
     graph_i_state_map.begin(); it != graph_i_state_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -3706,7 +3706,7 @@ display_real_cost(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_
     matchcost_e.clear();
     
 
-    vcl_cout << "  Fragment ID = " << e->id() << "\n"
+    std::cout << "  Fragment ID = " << e->id() << "\n"
       << "    Stored cost = " << stored_cost_e << "\n"
       << "    Real cost = " << real_cost_e << "\n"
       << "    Image cost = " << image_cost_e << "\n"
@@ -3734,7 +3734,7 @@ display_real_cost(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_
 
 
 
-  vcl_cout 
+  std::cout 
     << "  Total stored cost = " << total_stored_cost << "\n"
     << "  Total real cost = " << total_real_cost << "\n";
 
@@ -3752,17 +3752,17 @@ display_real_cost(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_
 
 // -----------------------------------------------------------------------------
 //: Trace the boundary of a graph given the states of its edges
-vcl_vector<vsol_spatial_object_2d_sptr > dbsks_dp_match::
+std::vector<vsol_spatial_object_2d_sptr > dbsks_dp_match::
 trace_graph_boundary(  
-  const vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map)
+  const std::map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_state_map)
 {
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list;
 
   // First construct the shapelets corresponding to the states of the graph
-  vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
+  std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr > shapelet_map;
   this->convert_i_state_map_to_shapelet_map(graph_i_state_map, shapelet_map);
 
-  for (vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
+  for (std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >::iterator it = 
     shapelet_map.begin(); it != shapelet_map.end(); ++it)
   {
     dbsksp_shock_edge_sptr e = it->first;
@@ -3770,8 +3770,8 @@ trace_graph_boundary(
     dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
 
     // collect all the circular arcs we need to draw
-    vcl_vector<bgld_circ_arc > bnd_arc_list;
-    vcl_vector<bgld_conic_arc > shock_conic_list;
+    std::vector<bgld_circ_arc > bnd_arc_list;
+    std::vector<bgld_conic_arc > shock_conic_list;
 
     // left and right
     dbsksp_shock_node_sptr v_child = e->child_node();
@@ -3842,7 +3842,7 @@ trace_graph_boundary(
       bgld_circ_arc arc = bnd_arc_list[i];
       
       // an arc as a 11-vertex polyline
-      vcl_vector<vsol_point_2d_sptr > pt_list;
+      std::vector<vsol_point_2d_sptr > pt_list;
       for (double t=0; t<1; t = t+0.1)
       {
         vgl_point_2d<double > pt = arc.point_at(t);
@@ -3857,7 +3857,7 @@ trace_graph_boundary(
       bgld_conic_arc conic = shock_conic_list[i];
       
       // an conic as a 11-vertex polyline
-      vcl_vector<vsol_point_2d_sptr > pt_list;
+      std::vector<vsol_point_2d_sptr > pt_list;
       for (double t=0; t<1; t = t+0.1)
       {
         vgl_point_2d<double > pt = conic.point_at(t);
@@ -3868,7 +3868,7 @@ trace_graph_boundary(
 
     // add the contact shocks
     // front
-    vcl_vector<vsol_point_2d_sptr > pts_front;
+    std::vector<vsol_point_2d_sptr > pts_front;
     pts_front.push_back(new vsol_point_2d(s_e->bnd_start(0)));
     pts_front.push_back(new vsol_point_2d(s_e->start()));
     pts_front.push_back(new vsol_point_2d(s_e->bnd_start(1)));
@@ -3878,7 +3878,7 @@ trace_graph_boundary(
     // only add if this is the terminal fragment
     if (grid_e.has_rear_arc_)
     {
-      vcl_vector<vsol_point_2d_sptr > pts_rear;
+      std::vector<vsol_point_2d_sptr > pts_rear;
       pts_rear.push_back(new vsol_point_2d(s_e->bnd_end(0)));
       pts_rear.push_back(new vsol_point_2d(s_e->end()));
       pts_rear.push_back(new vsol_point_2d(s_e->bnd_end(1)));

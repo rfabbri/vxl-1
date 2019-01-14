@@ -45,7 +45,7 @@ dbgrl_graph<dbskfg_composite_node, dbskfg_composite_link>()
     this->construct_locus_ = that.construct_locus_;
 
     // Keep track of all nodes
-    vcl_map<unsigned int,dbskfg_composite_node_sptr> all_nodes;
+    std::map<unsigned int,dbskfg_composite_node_sptr> all_nodes;
    
     for (dbskfg_composite_graph::vertex_iterator vit = that.vertices_begin(); 
          vit != that.vertices_end(); ++vit)
@@ -89,7 +89,7 @@ dbgrl_graph<dbskfg_composite_node, dbskfg_composite_link>()
     }
 
     // Compile all contour elements
-    vcl_map<unsigned int,dbskfg_composite_link_sptr> all_contour_links;
+    std::map<unsigned int,dbskfg_composite_link_sptr> all_contour_links;
 
     for (dbskfg_composite_graph::edge_iterator eit = that.edges_begin(); 
          eit != that.edges_end(); ++eit)
@@ -176,7 +176,7 @@ dbgrl_graph<dbskfg_composite_node, dbskfg_composite_link>()
                           
             }
 
-            vcl_vector<dbskfg_composite_link_sptr>& left_links =
+            std::vector<dbskfg_composite_link_sptr>& left_links =
                 that_shock->left_contour_links();
             
             for ( unsigned int i=0; i < left_links.size() ; ++i)
@@ -188,7 +188,7 @@ dbgrl_graph<dbskfg_composite_node, dbskfg_composite_link>()
                 this_shock_edge->add_to_left_contour(this_clink);
             }
 
-            vcl_vector<dbskfg_composite_link_sptr>& right_links =
+            std::vector<dbskfg_composite_link_sptr>& right_links =
                 that_shock->right_contour_links();
 
             for ( unsigned int i=0; i < right_links.size() ; ++i)

@@ -1,7 +1,7 @@
 #include "skyscan_roi_pick_manager.h"
-#include <vcl_cstdlib.h> // for vcl_exit()
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cstdlib> // for std::exit()
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_matlab_read.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_find.h>
@@ -90,7 +90,7 @@ void skyscan_roi_pick_manager::init()
 
 void skyscan_roi_pick_manager::quit()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void skyscan_roi_pick_manager::cine_mode()
@@ -128,18 +128,18 @@ void skyscan_roi_pick_manager::load_bx3(){
   vgui_dialog load_bx3_dlg("Load BX3 File");
   load_bx3_dlg.set_ok_button("Load");
   load_bx3_dlg.set_cancel_button("Cancel");
-  static vcl_string bx3_fname;
-  static vcl_string ext = "*.*";
+  static std::string bx3_fname;
+  static std::string ext = "*.*";
   load_bx3_dlg.file("BX3 Filename:", ext, bx3_fname);
   if (!load_bx3_dlg.ask())
     return;
-  vcl_ifstream in(bx3_fname.c_str());
+  std::ifstream in(bx3_fname.c_str());
   if(in.good()){
      roi_.read(in);
      this->box_projection();
   }
   else{
-    vcl_cerr << "Bad in file " << bx3_fname << "\n";
+    std::cerr << "Bad in file " << bx3_fname << "\n";
   }
   return;
 
@@ -150,18 +150,18 @@ void skyscan_roi_pick_manager::save_bx3()
   vgui_dialog save_bx3_dlg("Save BX3 File");
   save_bx3_dlg.set_ok_button("Save");
   save_bx3_dlg.set_cancel_button("Cancel");
-  static vcl_string bx3_fname;
-  static vcl_string ext = "*.*";
+  static std::string bx3_fname;
+  static std::string ext = "*.*";
   save_bx3_dlg.file("BX3 Filename:", ext, bx3_fname);
   if (!save_bx3_dlg.ask())
     return;
 
-  vcl_ofstream out(bx3_fname.c_str());
+  std::ofstream out(bx3_fname.c_str());
   if(out.good()){
      roi_.write(out);
   }
   else{
-    vcl_cerr << "Bad out file " << bx3_fname << "\n";
+    std::cerr << "Bad out file " << bx3_fname << "\n";
   }
   return;
 }
@@ -171,23 +171,23 @@ void skyscan_roi_pick_manager::load_view_3d()
   load_view_3d_dlg.set_ok_button("LOAD");
   load_view_3d_dlg.set_cancel_button("CANCEL");
   
-  static vcl_string log_fname = "specimen.log";
-  static vcl_string scan_fname = "cali.scan";
+  static std::string log_fname = "specimen.log";
+  static std::string scan_fname = "cali.scan";
 
-  static vcl_string ext = "*.*";
+  static std::string ext = "*.*";
   load_view_3d_dlg.file("Log Filename:", ext, log_fname);
   load_view_3d_dlg.file("Scan Filename:", ext, scan_fname);
 
   if (!load_view_3d_dlg.ask())
     return;
 
-  vcl_ifstream scan_file(scan_fname.c_str());
+  std::ifstream scan_file(scan_fname.c_str());
   scan_file >> scan_;
   scan_file.close();
 
 
   // first, read the log file and create the xscan_scan object
-  vcl_FILE *fp = vcl_fopen(log_fname.data(), "r");
+  std::FILE *fp = std::fopen(log_fname.data(), "r");
   imgr_skyscan_log_header skyscan_log_header(fp);
   imgr_skyscan_log skyscan_log(log_fname);
 
@@ -197,11 +197,11 @@ void skyscan_roi_pick_manager::load_view_3d()
 
   // second, read the images
   /*
-  vcl_vector<vil_image_resource_sptr> img_res_sptrs;
+  std::vector<vil_image_resource_sptr> img_res_sptrs;
   img_res_sptrs = skyscan_log.get_images();
   unsigned nk = img_res_sptrs.size();
   */
-  vcl_vector<vcl_string> img_names;
+  std::vector<std::string> img_names;
   img_names = skyscan_log.get_imagenames();
 
   unsigned nk = img_names.size(); 
@@ -213,9 +213,9 @@ void skyscan_roi_pick_manager::load_view_3d()
 
     vil_image_view<vxl_uint_16> v = vil_load(img_names[k].c_str());
     /*
-    vcl_cout <<"enter the " << k <<"th resource "<< vcl_flush;
+    std::cout <<"enter the " << k <<"th resource "<< std::flush;
     vil_image_view<unsigned short> v(img_res_sptrs[k]->get_copy_view());
-    vcl_cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
+    std::cout << "open view [ " << k <<"] " << v.ni() << ' ' << v.nj() << '\n';
     */
     //vgui_image_tableau_sptr itab = vgui_image_tableau_new(v, range_params_ );
     ///img_tabs_.push_back(itab);
@@ -241,12 +241,12 @@ void skyscan_roi_pick_manager::load_view_3d()
 void skyscan_roi_pick_manager::box_projection()
 {
   if(img_tabs_.size() == 0)
-    vcl_cout << "No images loaded yet!" << vcl_endl;
+    std::cout << "No images loaded yet!" << std::endl;
   else
   {
     // compute the active box
     vgl_box_3d<double> active_roi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    //vcl_cout << roi_.centroid() << vcl_endl;
+    //std::cout << roi_.centroid() << std::endl;
     active_roi.set_centroid(roi_.centroid());
     active_roi.set_width(roi_.width());
     active_roi.set_height(roi_.height());
@@ -304,7 +304,7 @@ void skyscan_roi_pick_manager::box_projection()
 void skyscan_roi_pick_manager::box_projection()
 {
   if(img_tabs_.size() == 0)
-    vcl_cout << "No images loaded yet!" << vcl_endl;
+    std::cout << "No images loaded yet!" << std::endl;
   else
   {
     static double scale_x=0.5;
@@ -313,7 +313,7 @@ void skyscan_roi_pick_manager::box_projection()
 
     // compute the active box
     vgl_box_3d<double> active_roi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    //vcl_cout << roi_.centroid() << vcl_endl;
+    //std::cout << roi_.centroid() << std::endl;
     active_roi.set_centroid(roi_.centroid());
     active_roi.set_width(roi_.width()*scale_x);
     active_roi.set_height(roi_.height()*scale_y);
@@ -396,21 +396,21 @@ void skyscan_roi_pick_manager::get_pixel_info(const int x, const int y,vgui_even
     {
       vil_image_view<unsigned short> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
     }
     else if(pix_type == VIL_PIXEL_FORMAT_DOUBLE)
     {
       vil_image_view<double> vim(*v);
       if(x < 0 || x >= static_cast<int>(vim.ni()) || y < 0 || y >= static_cast<int>(vim.nj()))
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%d view:%d", start_x_ + x, start_y_ + y, -1, index);
       else
-        vcl_sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
+        std::sprintf(msg, "pixel:(%d, %d) value:%lf view:%d", start_x_ + x, start_y_ + y, vim(x,y), index);
     }
   }
   else
-    vcl_sprintf(msg, "No images loaded...");
+    std::sprintf(msg, "No images loaded...");
 
   return;
 }
@@ -434,13 +434,13 @@ bool skyscan_roi_pick_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
     */
   }
   else if(e.type == vgui_KEY_UP)
@@ -450,13 +450,13 @@ bool skyscan_roi_pick_manager::handle(vgui_event const &e)
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(wx_, wy_, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     char msg[100];
 
     this->get_pixel_info(intx, inty,e, msg);
 
     // Display on status bar:
-    vgui::out << msg << vcl_endl;
+    vgui::out << msg << std::endl;
     */
   }
   else if (e.key == vgui_PAGE_UP){

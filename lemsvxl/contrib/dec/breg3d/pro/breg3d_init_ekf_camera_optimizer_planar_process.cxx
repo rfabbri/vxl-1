@@ -51,15 +51,15 @@ breg3d_init_ekf_camera_optimizer_planar_process::breg3d_init_ekf_camera_optimize
   // parameters
   // default corresponds to roughly 1 degree std deviation
   if (!parameters()->add("Translation Scale Factor", "translation_scale", 0.005))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   // default corresponds to roughly 1 degree std deviation
   if (!parameters()->add("Rotation Measurement Variance", "rotation_measurement_variance", 3e-4))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   // default corresponds to roughly 0.5 meter std deviation
   if (!parameters()->add("Position Measurement Variance", "position_measurement_variance", 0.25))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
 }
 
@@ -88,7 +88,7 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   // get first camera
   vpgl_perspective_camera<double> *cam0;
   if (!(cam0 = dynamic_cast<vpgl_perspective_camera<double>*>(input0->value().ptr()))) {
-       vcl_cerr << "error: process expects camera to be a vpgl_perspective_camera." << vcl_endl;
+       std::cerr << "error: process expects camera to be a vpgl_perspective_camera." << std::endl;
       return false;
   }
 
@@ -100,17 +100,17 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
 
   // get parameters
   double rot_var, pos_var, t_scale;
-  if (!parameters()->get_value(vcl_string("position_measurement_variance"), rot_var)) {
-    vcl_cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter rotation_variance\n";
+  if (!parameters()->get_value(std::string("position_measurement_variance"), rot_var)) {
+    std::cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter rotation_variance\n";
     return false;
   }
-  if (!parameters()->get_value(vcl_string("position_measurement_variance"), pos_var)) {
-    vcl_cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter position_variance\n";
+  if (!parameters()->get_value(std::string("position_measurement_variance"), pos_var)) {
+    std::cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter position_variance\n";
     return false;
   }
   
-  if (!parameters()->get_value(vcl_string("translation_scale"), t_scale)) {
-    vcl_cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter translation_scale\n";
+  if (!parameters()->get_value(std::string("translation_scale"), t_scale)) {
+    std::cout << "breg3d_init_ekf_camera_optimizer_planar_process::execute() -- problem in retrieving parameter translation_scale\n";
     return false;
   }
 
@@ -126,7 +126,7 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   h_gen->set_image1(img1_float);
   vimt_transform_2d H = h_gen->compute_homography();
 
-  vcl_cout << "H = " << vcl_endl << H.matrix() << vcl_endl;
+  std::cout << "H = " << std::endl << H.matrix() << std::endl;
 
   // TEMP
   vpgl_perspective_camera<double> *cam1 = new vpgl_perspective_camera<double>(cam0->get_calibration(),cam0->get_camera_center(),cam0->get_rotation());
@@ -134,7 +134,7 @@ bool breg3d_init_ekf_camera_optimizer_planar_process::execute()
   // compute position of plane and camera1
   vgl_plane_3d<double> plane_est = vox_world->fit_plane();
 
-  vcl_cout << "plane est = " << plane_est << vcl_endl;
+  std::cout << "plane est = " << plane_est << std::endl;
 
   breg3d_ekf_camera_optimizer_state init_state(t_scale,cam0->camera_center(),cam0->get_rotation(),pos_var,rot_var);
 

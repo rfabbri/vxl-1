@@ -7,7 +7,7 @@
 #include <biob/biob_explicit_worldpt_roster_sptr.h>
 #include <xscan/xscan_uniform_orbit.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 class splr_pizza_slice_symmetry : public splr_symmetry {
  private:
@@ -16,7 +16,7 @@ class splr_pizza_slice_symmetry : public splr_symmetry {
  public:
   splr_pizza_slice_symmetry(vnl_quaternion<double> camera0_to_camera1);
   splr_symmetry_struct apply(orbit_index t, unsigned int coset) const;
-  vcl_string class_id() { return "splr_pizza_slice_symmetry"; }
+  std::string class_id() { return "splr_pizza_slice_symmetry"; }
   //: number of cosets
   unsigned int size();
   //  vnl_quaternion<double> camera0_to_camera1() { return camera0_to_camera1_; }
@@ -24,5 +24,5 @@ class splr_pizza_slice_symmetry : public splr_symmetry {
 };
 
 
-//void x_write(vcl_ostream &os, splr_pizza_slice_symmetry sym);
+//void x_write(std::ostream &os, splr_pizza_slice_symmetry sym);
 #endif

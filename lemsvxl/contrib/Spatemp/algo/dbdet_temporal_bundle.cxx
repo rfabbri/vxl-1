@@ -12,7 +12,7 @@ dbdet_temporal_bundle::dbdet_temporal_bundle(const dbdet_temporal_bundle & c)
     one_sided_=false;
 
 }
-dbdet_temporal_bundle::dbdet_temporal_bundle(vcl_map<int, dbdet_curvelet*>  bundle, dbdet_temporal_model *model):model_(model)
+dbdet_temporal_bundle::dbdet_temporal_bundle(std::map<int, dbdet_curvelet*>  bundle, dbdet_temporal_model *model):model_(model)
 {
     bundle_=bundle;
     //if(dbdet_temporal_normal_velocity_model * m=dynamic_cast<dbdet_temporal_normal_velocity_model*> (model))

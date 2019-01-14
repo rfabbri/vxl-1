@@ -20,7 +20,7 @@
 
 #include <dbinfo/dbinfo_track_geometry.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 
@@ -33,14 +33,14 @@ public:
 
   bool 
   compute_affine( 
-    vcl_vector< dbinfo_track_geometry_sptr >& tracks, //const 
-    vcl_vector< vgl_h_matrix_2d<double> >& homographies,
+    std::vector< dbinfo_track_geometry_sptr >& tracks, //const 
+    std::vector< vgl_h_matrix_2d<double> >& homographies,
     int ground_frame );
 
   bool 
   compute_similarity( 
-    vcl_vector< dbinfo_track_geometry_sptr >& tracks, //const 
-    vcl_vector< vgl_h_matrix_2d<double> >& homographies,
+    std::vector< dbinfo_track_geometry_sptr >& tracks, //const 
+    std::vector< vgl_h_matrix_2d<double> >& homographies,
     int ground_frame );
 
 };

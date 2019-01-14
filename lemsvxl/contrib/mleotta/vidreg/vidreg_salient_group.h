@@ -22,8 +22,8 @@
 #include <vidreg/vidreg_feature_group.h>
 #include <vidreg/vidreg_salient_group_sptr.h>
 #include <vnl/vnl_vector.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 
 //: A salient group of matched feature and related transformation
 class vidreg_salient_group: public rgrl_object
@@ -31,8 +31,8 @@ class vidreg_salient_group: public rgrl_object
   public:
     //: Constructor
     vidreg_salient_group(const rgrl_view_sptr& view,
-                         const vcl_vector<rgrl_match_set_sptr>& matches,
-                         const vcl_vector<rgrl_scale_sptr>& scales,
+                         const std::vector<rgrl_match_set_sptr>& matches,
+                         const std::vector<rgrl_scale_sptr>& scales,
                          const rgrl_converge_status_sptr& status);
 
     //: Constructor
@@ -46,9 +46,9 @@ class vidreg_salient_group: public rgrl_object
 
     rgrl_view_sptr view() const;
 
-    const vcl_vector<rgrl_match_set_sptr>& matches() const;
+    const std::vector<rgrl_match_set_sptr>& matches() const;
 
-    const vcl_vector<rgrl_scale_sptr>& scales() const;
+    const std::vector<rgrl_scale_sptr>& scales() const;
 
     rgrl_converge_status_sptr status() const;
 
@@ -64,7 +64,7 @@ class vidreg_salient_group: public rgrl_object
 
     void assign_weight(const rgrl_feature_sptr& feature, double weight);
 
-    const vcl_map<rgrl_feature_sptr, double>& weight_map() const;
+    const std::map<rgrl_feature_sptr, double>& weight_map() const;
 
     vidreg_salient_group_sptr previous_group() const { return prev_group_; }
 
@@ -72,11 +72,11 @@ class vidreg_salient_group: public rgrl_object
 
   private:
     rgrl_view_sptr                      view_;
-    vcl_vector<rgrl_match_set_sptr>     matches_;
-    vcl_vector<rgrl_scale_sptr>         scales_;
+    std::vector<rgrl_match_set_sptr>     matches_;
+    std::vector<rgrl_scale_sptr>         scales_;
     rgrl_converge_status_sptr           status_;
     vnl_vector<double>                  growth_center_;
-    vcl_map<rgrl_feature_sptr, double>  weight_map_;
+    std::map<rgrl_feature_sptr, double>  weight_map_;
     vidreg_salient_group_sptr           prev_group_;
 };
 

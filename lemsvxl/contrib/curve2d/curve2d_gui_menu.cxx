@@ -27,7 +27,7 @@
 #include <dbru/vis/dbru_labeling_tool.h>
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 curve2d_gui_menu::curve2d_gui_menu()
 {

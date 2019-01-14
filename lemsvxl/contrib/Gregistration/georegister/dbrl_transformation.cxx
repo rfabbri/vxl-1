@@ -7,7 +7,7 @@ void vsl_add_to_binary_loader(dbrl_transformation const& b)
     
 
 
-void dbrl_transformation::set_from_features(const vcl_vector<dbrl_feature_sptr> & from_features)
+void dbrl_transformation::set_from_features(const std::vector<dbrl_feature_sptr> & from_features)
     {
         //if(from_features_.size()>0)
             from_features_.clear();

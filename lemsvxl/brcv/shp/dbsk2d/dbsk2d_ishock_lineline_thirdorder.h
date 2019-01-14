@@ -20,7 +20,7 @@
 class dbsk2d_ishock_lineline_thirdorder : public  dbsk2d_ishock_edge 
 {
 protected:
-  VECTOR_TYPE _nl;  ///< angle of unit vcl_vector along left line
+  VECTOR_TYPE _nl;  ///< angle of unit std::vector along left line
   VECTOR_TYPE _ul;  ///< nl - Pi/2
   double  _lL;      ///<  length of the left line segment
   double  _lR;      ///<  length of the right line segment
@@ -134,7 +134,7 @@ public:
 
   virtual void compute_extrinsic_locus();
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif // dbsk2d_ishock_lineline_thirdorder_h_

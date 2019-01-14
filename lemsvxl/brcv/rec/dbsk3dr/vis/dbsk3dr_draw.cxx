@@ -15,8 +15,8 @@
 
 void generate_match_vertices_ctable (unsigned long seed, 
                                      dbsk3dr_match* smatch, 
-                                     vcl_vector<SbColor>& v_color_table1,
-                                     vcl_vector<SbColor>& v_color_table2)
+                                     std::vector<SbColor>& v_color_table1,
+                                     std::vector<SbColor>& v_color_table2)
 {
   SbColor UNMATCHED_COLOR = SbColor (0.5f, 0.5f, 0.5f); //Gray
   //: v_color_table1 size = vertex_id_counter-1
@@ -49,8 +49,8 @@ void generate_match_vertices_ctable (unsigned long seed,
 }
 
 void generate_match_curves_ctable (unsigned long seed, dbsk3dr_match* smatch, 
-                                   vcl_vector<SbColor>& v_color_table1,
-                                   vcl_vector<SbColor>& v_color_table2)
+                                   std::vector<SbColor>& v_color_table1,
+                                   std::vector<SbColor>& v_color_table2)
 {
   //v_color_table1 size = # edgemap
   //  initialize to Gray
@@ -69,7 +69,7 @@ void generate_match_curves_ctable (unsigned long seed, dbsk3dr_match* smatch,
   //initialize the random color by given seed
   init_rand_color (seed);  
 
-  vcl_map<int, dbmsh3d_edge*>::iterator SC_it = smatch->ms_hypg_G()->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator SC_it = smatch->ms_hypg_G()->edgemap().begin();
   for (; SC_it != smatch->ms_hypg_G()->edgemap().end(); SC_it++) {
     dbsk3d_ms_curve* GMC = (dbsk3d_ms_curve*) (*SC_it).second;
     if (GMC->selected() == false)
@@ -95,10 +95,10 @@ void generate_match_curves_ctable (unsigned long seed, dbsk3dr_match* smatch,
 SoSeparator* draw_sg_match (dbsk3dr_match* smatch, 
                             const float radius, const float width,
                             const bool showid, const float shift, 
-                            const vcl_vector<SbColor>& v_color_table1,
-                            const vcl_vector<SbColor>& v_color_table2, 
-                            const vcl_vector<SbColor>& c_color_table1,
-                            const vcl_vector<SbColor>& c_color_table2)
+                            const std::vector<SbColor>& v_color_table1,
+                            const std::vector<SbColor>& v_color_table2, 
+                            const std::vector<SbColor>& c_color_table1,
+                            const std::vector<SbColor>& c_color_table2)
 {  
   SoSeparator* root = new SoSeparator;
 
@@ -146,14 +146,14 @@ SoSeparator* draw_sg_match (dbsk3dr_match* smatch,
 }
 
 SoSeparator* draw_match_MC_alignment (dbsk3d_ms_curve* MC1, dbsk3d_ms_curve* MC2, 
-                                      vcl_vector< vcl_pair<int,int> >& alignment)
+                                      std::vector< std::pair<int,int> >& alignment)
 {
   SoSeparator* root = new SoSeparator;
   
   SoDrawStyle*  drawStyle = new SoDrawStyle ();
   drawStyle->lineWidth = 1;
 
-  vcl_vector<dbmsh3d_vertex*> MC1_V_vec, MC2_V_vec;
+  std::vector<dbmsh3d_vertex*> MC1_V_vec, MC2_V_vec;
   MC1->get_V_vec (MC1_V_vec);
   MC2->get_V_vec (MC2_V_vec);
 

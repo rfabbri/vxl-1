@@ -21,7 +21,7 @@
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <dbsksp/algo/dbsksp_xshock_directed_tree_sptr.h>
 #include <dbsksp/algo/dbsksp_edit_distance.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //==============================================================================
 // dbsksp_weighted_average_two_xgraphs
@@ -46,7 +46,7 @@ public:
     float scurve_sample_ds = 3.0f,
     float fit_xgraph_tol = 0.5,
     double relative_error_tol = 0.01,
-    const vcl_string& debug_base_name = "");
+    const std::string& debug_base_name = "");
 
 
   //: Destructor
@@ -120,14 +120,14 @@ public:
   }
 
   //: Set base name to save intermediate data
-  void set_base_name(const vcl_string& base_name)
+  void set_base_name(const std::string& base_name)
   { this->base_name_ = base_name; }
 
   //: Flag to print intermediate results
   bool debugging() const {return this->base_name_ != ""; }
 
   //: Print debug info to a file
-  void print_debug_info(const vcl_string& str) const;
+  void print_debug_info(const std::string& str) const;
 
   // UTILITIES------------------------------------------------------------------
 
@@ -187,11 +187,11 @@ protected:
   //// Assumption: the two trees have EXACT same topology
   //bool compute_vertex_and_edge_correspondence(const dbsksp_xshock_directed_tree_sptr& tree1,
   //  const dbsksp_xshock_directed_tree_sptr& tree2,
-  //  const vcl_vector<pathtable_key >& dart_correspondence_tree1_to_tree2,
-  //  vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph1_to_xgraph2,
-  //  vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph2_to_xgraph1,
-  //  vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph1_to_xgraph2,
-  //  vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph2_to_xgraph1);
+  //  const std::vector<pathtable_key >& dart_correspondence_tree1_to_tree2,
+  //  std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph1_to_xgraph2,
+  //  std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr >& node_map_xgraph2_to_xgraph1,
+  //  std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph1_to_xgraph2,
+  //  std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr >& edge_map_xgraph2_to_xgraph1);
 
   //: Compute root node and edge for a given xgraph tree
   bool compute_xgraph_root_node(const dbsksp_xshock_directed_tree_sptr& tree,
@@ -199,7 +199,7 @@ protected:
 
   //: Compute coarse Euler tour for an xgraph (ignore degree-2 nodes)
   bool compute_coarse_euler_tour(const dbsksp_xshock_graph_sptr& xgraph, 
-    vcl_vector<dbsksp_xshock_node_sptr >& coarse_euler_tour) const;
+    std::vector<dbsksp_xshock_node_sptr >& coarse_euler_tour) const;
 
   //: Update distance values between model and common_xgraph (topology-matching xgraph)
   bool update_relative_error();
@@ -208,7 +208,7 @@ protected:
   //: Compute deformation cost of between two trees
   double compute_deform_cost(const dbsksp_xshock_directed_tree_sptr& tree1,
     const dbsksp_xshock_directed_tree_sptr& tree2,
-    const vcl_vector<pathtable_key >& correspondence);
+    const std::vector<pathtable_key >& correspondence);
 
 
   // Member variables
@@ -249,7 +249,7 @@ protected:
   // Intermediate results-------------------------------------------------------
 
   // base filename to save relevant data (mostly for debugging purpose)
-  vcl_string base_name_;
+  std::string base_name_;
 
 
   //: Distance between the two original xgraphs
@@ -264,7 +264,7 @@ protected:
   unsigned model_pseudo_parent_eid_;
 
   // dart-correspondence between common_xgraph and model tree
-  //vcl_vector<pathtable_key > corr_common_xgraph_to_model_[2];
+  //std::vector<pathtable_key > corr_common_xgraph_to_model_[2];
 
   double distance_common_xgraph_to_model_[2];
   //double distance_parent_to_common_xgraph_[2];
@@ -272,10 +272,10 @@ protected:
   //double distance_btw_common_xgraphs_;
 
   ////
-  //vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > node_map_common_xgraph_to_model_[2];
-  //vcl_map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > node_map_model_to_common_xgraph_[2];
-  //vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map_common_xgraph_to_model_[2];
-  //vcl_map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map_model_to_common_xgraph_[2];
+  //std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > node_map_common_xgraph_to_model_[2];
+  //std::map<dbsksp_xshock_node_sptr, dbsksp_xshock_node_sptr > node_map_model_to_common_xgraph_[2];
+  //std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map_common_xgraph_to_model_[2];
+  //std::map<dbsksp_xshock_edge_sptr, dbsksp_xshock_edge_sptr > edge_map_model_to_common_xgraph_[2];
 
 
 
@@ -284,7 +284,7 @@ protected:
   // New variables
 
   // correspondence
-  vcl_vector<pathtable_key > corr_trimmed_to_model_[2];
+  std::vector<pathtable_key > corr_trimmed_to_model_[2];
   
   // contract cost
   double contract_cost_trimmed_to_model_[2];

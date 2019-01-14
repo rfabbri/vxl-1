@@ -7,7 +7,7 @@
 // 7/16/09
 
 #include "dbcfg_curve.h"
-#include <vcl_deque.h>
+#include <deque>
 #include <vgl/vgl_point_2d.h>
 
 // create a base curve from an edgel chain
@@ -22,13 +22,13 @@ _child_depth(INT_MAX) {
 // create a parent curve from other curves
 // given curves should be in order joining
 template <class T>
-dbcfg_curve<T>::dbcfg_curve(vcl_vector<dbcfg_curve<T> * > children, int depth) :
+dbcfg_curve<T>::dbcfg_curve(std::vector<dbcfg_curve<T> * > children, int depth) :
 _parent(false),
 _children(children),
 _depth(depth) {
-  vcl_deque<dbdet_edgel * > edgels;
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = children.begin(); iter < children.end(); iter++) {
-    vcl_deque<dbdet_edgel * > newedgels = (*iter)->get_edgel_chain()->edgels;
+  std::deque<dbdet_edgel * > edgels;
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = children.begin(); iter < children.end(); iter++) {
+    std::deque<dbdet_edgel * > newedgels = (*iter)->get_edgel_chain()->edgels;
     bool reverse_edgels = false;
     bool reverse_newedgels = false;
     if (!edgels.empty()) {
@@ -65,7 +65,7 @@ _depth(depth) {
       }
     }
 
-    vcl_deque<dbdet_edgel * >::iterator eiter;
+    std::deque<dbdet_edgel * >::iterator eiter;
     if (reverse_newedgels) eiter = newedgels.end() - 1;
     else eiter = newedgels.begin();
     while ((!reverse_newedgels && eiter < newedgels.end()) || (reverse_newedgels && eiter >= newedgels.begin())) {
@@ -79,7 +79,7 @@ _depth(depth) {
   _chain->edgels = edgels;
 
   _child_depth = INT_MAX;
-  for (vcl_vector<dbcfg_curve<T> * >::iterator iter = _children.begin(); iter < _children.end(); iter++) {
+  for (std::vector<dbcfg_curve<T> * >::iterator iter = _children.begin(); iter < _children.end(); iter++) {
     if ((*iter)->_depth < _child_depth) {
       _child_depth = (*iter)->_depth;
     }
@@ -139,16 +139,16 @@ dbdet_edgel_chain* dbcfg_curve<T>::get_edgel_chain() {
 // returns the junctions that connect with this curve
 template <class T>
 inline
-vcl_vector<dbcfg_junction<T> * > dbcfg_curve<T>::get_junctions() {
+std::vector<dbcfg_junction<T> * > dbcfg_curve<T>::get_junctions() {
   return _junctions;
 }
 
 // returns the junctions that connect with this curve at the given depth
 template <class T>
-vcl_vector<dbcfg_junction<T> * > dbcfg_curve<T>::get_junctions(int depth) {
-  vcl_vector<dbcfg_junction<T> * > junctions;
+std::vector<dbcfg_junction<T> * > dbcfg_curve<T>::get_junctions(int depth) {
+  std::vector<dbcfg_junction<T> * > junctions;
   if (!this->exists_at(depth)) return junctions;
-  for (vcl_vector<dbcfg_junction<T> * >::iterator iter = _junctions.begin(); iter < _junctions.end(); iter++) {
+  for (std::vector<dbcfg_junction<T> * >::iterator iter = _junctions.begin(); iter < _junctions.end(); iter++) {
     if ((*iter)->exists_at(depth)) {
       junctions.push_back(*iter);
     }
@@ -159,8 +159,8 @@ vcl_vector<dbcfg_junction<T> * > dbcfg_curve<T>::get_junctions(int depth) {
 // returns a junction of this curve at the given point, or null
 template <class T>
 dbcfg_junction<T>* dbcfg_curve<T>::find_junction(T x, T y) {
-  vcl_vector<dbcfg_junction<T> * > junctions = this->get_junctions();
-  for (vcl_vector<dbcfg_junction<T> * >::iterator iter = junctions.begin(); iter < junctions.end(); iter++) {
+  std::vector<dbcfg_junction<T> * > junctions = this->get_junctions();
+  for (std::vector<dbcfg_junction<T> * >::iterator iter = junctions.begin(); iter < junctions.end(); iter++) {
     dbcfg_junction<T>* junction = (*iter);
     if (junction->x() == x && junction->y() == y) {
       return junction;

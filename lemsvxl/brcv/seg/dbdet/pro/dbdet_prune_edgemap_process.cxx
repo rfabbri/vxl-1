@@ -4,8 +4,8 @@
 // \file
 
 #include "dbdet_prune_edgemap_process.h"
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
@@ -19,7 +19,7 @@ dbdet_prune_edgemap_process::dbdet_prune_edgemap_process()
   if( !parameters()->add( "Edge Strength Threshold", "-strength_thresh",  4.0 ) ||
       !parameters()->add( "d2f Threshold", "-d2f thresh",  1.0 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -38,7 +38,7 @@ dbdet_prune_edgemap_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_prune_edgemap_process::name()
 {
   return "Prune Edgemap";
@@ -61,18 +61,18 @@ dbdet_prune_edgemap_process::output_frames()
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_prune_edgemap_process::get_input_type()
+std::vector< std::string > dbdet_prune_edgemap_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_prune_edgemap_process::get_output_type()
+std::vector< std::string > dbdet_prune_edgemap_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "edge_map" );
   return to_return;
 }
@@ -83,7 +83,7 @@ bool
 dbdet_prune_edgemap_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_prune_edgemap_process::execute() - not exactly one"
+    std::cout << "In dbdet_prune_edgemap_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
@@ -105,11 +105,11 @@ dbdet_prune_edgemap_process::execute()
   for (unsigned x = 0; x < old_edge_map->width(); x++){
     for (unsigned y = 0; y < old_edge_map->height(); y++)
     {
-      vcl_vector<dbdet_edgel*> cur_cell = old_edge_map->cell(x,y);
+      std::vector<dbdet_edgel*> cur_cell = old_edge_map->cell(x,y);
 
       for (unsigned i=0; i<cur_cell.size(); i++){
         if (cur_cell[i]->strength > strength_thresh &&
-            vcl_fabs(cur_cell[i]->deriv) > d2f_thresh)
+            std::fabs(cur_cell[i]->deriv) > d2f_thresh)
         {
           dbdet_edgel* e = new dbdet_edgel(*cur_cell[i]);
           new_edge_map->insert(e);
@@ -123,7 +123,7 @@ dbdet_prune_edgemap_process::execute()
   output_edgemap->set_edgemap(new_edge_map);
   output_data_[0].push_back(output_edgemap);
 
-  vcl_cout << "#edgels remaining = " << new_edge_map->num_edgels() << vcl_endl;
+  std::cout << "#edgels remaining = " << new_edge_map->num_edgels() << std::endl;
 
   return true;
 }

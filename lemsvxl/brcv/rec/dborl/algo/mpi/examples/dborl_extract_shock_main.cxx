@@ -15,7 +15,7 @@
 #include "dborl_extract_shock.h"
 #include "dborl_extract_shock_params.h"
 #include <dborl/algo/mpi/dborl_cluster.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
 
@@ -30,13 +30,13 @@ int main(int argc, char *argv[]) {
   {
     //: must call this to initialize the MPI interface
     if (!cluster.mpi_initialize(argc, argv)) { // --> calls e.parse_commanline() and e.parse() 
-      vcl_cout << "problems in cluster.mpi_initialize(), parameter parsing and broadcasting\n";
+      std::cout << "problems in cluster.mpi_initialize(), parameter parsing and broadcasting\n";
       throw dborl_cluster_exception (dborl_cluster_exception::MPIError, "MPI initialization failed", 0, 0);
     }
 
-    vcl_vector<int> things; 
+    std::vector<int> things; 
     e.initialize(things);
-    vcl_cout << "initialized " << things.size() << " things\n";
+    std::cout << "initialized " << things.size() << " things\n";
 
     cluster.distribute(things);  // throws an exception if processing is Incomplete
                                  // this method calls finalize method of the process once results are collected from each processor   
@@ -50,10 +50,10 @@ int main(int argc, char *argv[]) {
         // Error thrown by dborl_cluster class
         if (e.get_error() != e.Incomplete)
         {
-            vcl_cout << "dborl_cluster_exception: " << e.get_message()
+            std::cout << "dborl_cluster_exception: " << e.get_message()
             << " err: " << e.get_error() << " mpi: " 
             << e.get_MPI_error() << " sys: " 
-            << e.get_syserror() << vcl_endl;
+            << e.get_syserror() << std::endl;
 
             return_status = e.get_error();
         }

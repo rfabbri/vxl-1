@@ -48,7 +48,7 @@ i_traverse_flag_(0)
 {
   // 1. Create the nodes
   // iterate thru the nodes in the node list and create the nodes
-  vcl_map<unsigned int, dbsksp_shock_node_sptr > node_list;
+  std::map<unsigned int, dbsksp_shock_node_sptr > node_list;
   for(dbsksp_shock_graph::vertex_iterator itr = that.vertices_begin();
     itr != that.vertices_end(); ++itr)
   {
@@ -56,12 +56,12 @@ i_traverse_flag_(0)
     
     // create the node
     dbsksp_shock_node_sptr v = new dbsksp_shock_node(id);
-    node_list.insert(vcl_make_pair(id, v));
+    node_list.insert(std::make_pair(id, v));
   }
 
   // 2. Create the edges
   // iterate thru the edges in the edge list and create the edges
-  vcl_map<unsigned int, dbsksp_shock_edge_sptr > edge_list;
+  std::map<unsigned int, dbsksp_shock_edge_sptr > edge_list;
   for(dbsksp_shock_graph::edge_iterator itr = that.edges_begin();
     itr != that.edges_end();  ++itr)
   {
@@ -75,11 +75,11 @@ i_traverse_flag_(0)
     int target_id = that_e->target()->id();
 
 
-    vcl_map<unsigned int, dbsksp_shock_node_sptr >::iterator vit = node_list.find(source_id);
+    std::map<unsigned int, dbsksp_shock_node_sptr >::iterator vit = node_list.find(source_id);
     if (vit == node_list.end())
     {
-      vcl_cerr << "ERROR: cannot find source of edge, source_id=" << source_id 
-        << vcl_endl;
+      std::cerr << "ERROR: cannot find source of edge, source_id=" << source_id 
+        << std::endl;
       assert(false);
     }
     dbsksp_shock_node_sptr source_sptr = vit->second;
@@ -87,15 +87,15 @@ i_traverse_flag_(0)
     vit = node_list.find(target_id);
     if (vit == node_list.end())
     {
-      vcl_cerr << "ERROR: cannot find target of edge, target_id=" << target_id 
-        << vcl_endl;
+      std::cerr << "ERROR: cannot find target of edge, target_id=" << target_id 
+        << std::endl;
       assert(false);
     }
     dbsksp_shock_node_sptr target_sptr = vit->second;
 
     // create the edge
     dbsksp_shock_edge_sptr this_e = new dbsksp_shock_edge(source_sptr, target_sptr, id);
-    edge_list.insert(vcl_make_pair(id, this_e));
+    edge_list.insert(std::make_pair(id, this_e));
 
     // free parameters
     this_e->set_param_m(that_e->param_m());
@@ -127,10 +127,10 @@ i_traverse_flag_(0)
 
 
     // iv. Descriptor list
-    vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = that_v->descriptor_list();
+    std::list<dbsksp_shock_node_descriptor_sptr > desc_list = that_v->descriptor_list();
 
     // parse the descriptor list
-    for(vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator itr = 
+    for(std::list<dbsksp_shock_node_descriptor_sptr >::iterator itr = 
       desc_list.begin(); itr != desc_list.end(); ++itr)
     {
       dbsksp_shock_node_descriptor_sptr that_descriptor = *itr;
@@ -158,13 +158,13 @@ i_traverse_flag_(0)
   }
 
   // insert all the nodes and edges to the shock graph
-  for (vcl_map<unsigned int, dbsksp_shock_node_sptr >::iterator itr = node_list.begin();
+  for (std::map<unsigned int, dbsksp_shock_node_sptr >::iterator itr = node_list.begin();
     itr != node_list.end(); ++itr)
   {
     this->add_vertex(itr->second);
   }
 
-  for (vcl_map<unsigned int, dbsksp_shock_edge_sptr >::iterator itr = edge_list.begin();
+  for (std::map<unsigned int, dbsksp_shock_edge_sptr >::iterator itr = edge_list.begin();
     itr != edge_list.end(); ++itr)
   {
     this->add_edge(itr->second);
@@ -212,7 +212,7 @@ bool dbsksp_shock_graph::
 init(vsol_polyline_2d_sptr polyline)
 {
   // create a list of nodes associated with vertices of the polyline
-  vcl_vector<dbsksp_shock_node_sptr > node_list;
+  std::vector<dbsksp_shock_node_sptr > node_list;
   node_list.push_back(new dbsksp_shock_node(this->next_available_id()));
   for (unsigned int i=0; i<polyline->size(); ++i)
   {
@@ -221,7 +221,7 @@ init(vsol_polyline_2d_sptr polyline)
   node_list.push_back(new dbsksp_shock_node(this->next_available_id()));
 
   // list of edges
-  vcl_vector<dbsksp_shock_edge_sptr > edge_list;
+  std::vector<dbsksp_shock_edge_sptr > edge_list;
 
   for (unsigned int i=0; i<node_list.size()-1; ++i)
   {
@@ -314,13 +314,13 @@ init(vsol_polyline_2d_sptr polyline)
       t0 = normalized(v0->get_p() - v1->get_p());
     }
     
-    double theta = vcl_atan2(cross_product(t0, t2), dot_product(t0, t2));
+    double theta = std::atan2(cross_product(t0, t2), dot_product(t0, t2));
 
     // solve for alpha2
     // we have
     // angle (t0, t2) = pi = -alpha0 + theta +  alpha2, therefore
     alpha2 = alpha0 - theta + vnl_math::pi;
-    edge->set_param_m(vcl_sin(alpha2), node_list[i]);
+    edge->set_param_m(std::sin(alpha2), node_list[i]);
 
     // update alpha0 for next edge
     alpha0 = -alpha2;
@@ -496,7 +496,7 @@ bool dbsksp_shock_graph::
 init_default()
 {
   // create a list of nodes associated with vertices of the polyline
-  vcl_vector<dbsksp_shock_node_sptr > node_list;
+  std::vector<dbsksp_shock_node_sptr > node_list;
   for (unsigned int i=0; i<3; ++i)
   {
     node_list.push_back(new dbsksp_shock_node(this->next_available_id()));
@@ -504,7 +504,7 @@ init_default()
 
   // list of edges
   // end-nodes have source the same as target
-  vcl_vector<dbsksp_shock_edge_sptr > edge_list;
+  std::vector<dbsksp_shock_edge_sptr > edge_list;
   edge_list.push_back(new dbsksp_shock_edge(node_list[0], node_list[0], this->next_available_id()));
   edge_list.push_back(new dbsksp_shock_edge(node_list[0], node_list[1], this->next_available_id()));
   edge_list.push_back(new dbsksp_shock_edge(node_list[1], node_list[2], this->next_available_id()));
@@ -721,7 +721,7 @@ remove_shock_edge(const E_sptr& e)
 {
   if (!e) return false;
 
-  for (vcl_list<E_sptr >::iterator itr = this->edges_begin(); 
+  for (std::list<E_sptr >::iterator itr = this->edges_begin(); 
       itr != this->edges_end(); ++itr)
   {
     if ((*itr) == e)
@@ -782,12 +782,12 @@ insert_shock_node(const dbsksp_shock_edge_sptr& e, double t)
   // param_m for e1
   vgl_vector_2d<double > shock_dir_v0 = rotated(e->chord_dir(v0), v0->descriptor(e)->alpha);
   double sin_alpha0 = cross_product(e1->chord_dir(v0), shock_dir_v0);
-  e1->set_param_m(sin_alpha0 / vcl_sin(v0->descriptor(e)->phi), v0);
+  e1->set_param_m(sin_alpha0 / std::sin(v0->descriptor(e)->phi), v0);
 
   // param_m for e2
   vgl_vector_2d<double > shock_dir_v2 = rotated(e->chord_dir(v2), v2->descriptor(e)->alpha);
   double sin_alpha2 = cross_product(e2->chord_dir(v2), shock_dir_v2);
-  e2->set_param_m(sin_alpha2 / vcl_sin(v2->descriptor(e)->phi), v2);
+  e2->set_param_m(sin_alpha2 / std::sin(v2->descriptor(e)->phi), v2);
 
   // phi for v1
   // There need to be a better place to do this
@@ -986,7 +986,7 @@ insert_A_infty_branch(const dbsksp_shock_node_sptr& node,
   // only handle degree-2 node right now
   if (node->degree() != 2) 
   {
-    vcl_cerr << 
+    std::cerr << 
       "ERROR: add_A_infty_branch currently can only handle degree-2 nodes.\n";
     return false;
   }
@@ -1150,7 +1150,7 @@ squeeze_shock_edge(const dbsksp_shock_edge_sptr& e,
   // left terminal edge
   if (!source->insert_shock_edge(e_left, front_edge))
   {
-    vcl_cout << "ERROR: Could not insert left terminal edge.\n";
+    std::cout << "ERROR: Could not insert left terminal edge.\n";
     return false;
   };
   
@@ -1166,7 +1166,7 @@ squeeze_shock_edge(const dbsksp_shock_edge_sptr& e,
   front_edge = e_left;
       
   // list of edges taken from target node which will be added to source node
-  vcl_list<dbsksp_shock_edge_sptr > tomove_edges;
+  std::list<dbsksp_shock_edge_sptr > tomove_edges;
   dbsksp_shock_edge_sptr e2 = this->cyclic_adj_succ(e, target);
   while (e2 != e)
   {
@@ -1175,7 +1175,7 @@ squeeze_shock_edge(const dbsksp_shock_edge_sptr& e,
   }
 
   // insert them to source
-  for (vcl_list<dbsksp_shock_edge_sptr >::reverse_iterator itr = tomove_edges.rbegin();
+  for (std::list<dbsksp_shock_edge_sptr >::reverse_iterator itr = tomove_edges.rbegin();
     itr != tomove_edges.rend(); ++itr)
   {
     source->insert_shock_edge(*itr, front_edge);
@@ -1201,7 +1201,7 @@ squeeze_shock_edge(const dbsksp_shock_edge_sptr& e,
 
 
   // replace 'target' with source in the edges
-  for (vcl_list<dbsksp_shock_edge_sptr >::reverse_iterator itr = tomove_edges.rbegin();
+  for (std::list<dbsksp_shock_edge_sptr >::reverse_iterator itr = tomove_edges.rbegin();
     itr != tomove_edges.rend(); ++itr)
   {
     if (target == (*itr)->source())
@@ -1290,7 +1290,7 @@ remove_leaf_A_1_2_edge(const dbsksp_shock_edge_sptr& leaf_edge)
 
   if (!non_leaf_node)
   {
-    vcl_cout << "ERROR: in " __FILE__ " error squeezing the leaf edge.\n";
+    std::cout << "ERROR: in " __FILE__ " error squeezing the leaf edge.\n";
   }
 
   // 4) remove the degenerate terminal edge
@@ -1338,7 +1338,7 @@ remove_internal_edge(const dbsksp_shock_edge_sptr& e)
 
   if (!node)
   {
-    vcl_cout << "ERROR: in " __FILE__ " error squeezing the leaf edge.\n";
+    std::cout << "ERROR: in " __FILE__ " error squeezing the leaf edge.\n";
   }
 
   // 4) remove the degenerate terminal edge
@@ -1374,7 +1374,7 @@ split_shock_node(const dbsksp_shock_node_sptr& node,
     return 0;
 
   // Determine the groups
-  vcl_vector<dbsksp_shock_edge_sptr > edge_group_1;
+  std::vector<dbsksp_shock_edge_sptr > edge_group_1;
   dbsksp_shock_edge_sptr start_group_2 = this->cyclic_adj_succ(end_edge, node);
 
   for ( dbsksp_shock_edge_sptr e = start_edge; e != start_group_2;
@@ -1383,7 +1383,7 @@ split_shock_node(const dbsksp_shock_node_sptr& node,
     edge_group_1.push_back(e);
   }
 
-  vcl_vector<dbsksp_shock_edge_sptr > edge_group_2;
+  std::vector<dbsksp_shock_edge_sptr > edge_group_2;
   for ( dbsksp_shock_edge_sptr e = start_group_2; e != start_edge;
     e = this->cyclic_adj_succ(e, node) )
   {
@@ -1392,7 +1392,7 @@ split_shock_node(const dbsksp_shock_node_sptr& node,
 
   if (edge_group_1.size() < 2 || edge_group_2.size() < 2)
   {
-    vcl_cerr << "One of the two groups has less than 2 edges.\n";
+    std::cerr << "One of the two groups has less than 2 edges.\n";
     return 0;
   }
 
@@ -1481,8 +1481,8 @@ is_legal()
     vit != this->vertices_end(); ++vit)
   {
     min_radius_check = min_radius_check && ((*vit)->radius() > 0);
-    vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = (*vit)->descriptor_list();
-    for (vcl_list<dbsksp_shock_node_descriptor_sptr >::iterator it = desc_list.begin();
+    std::list<dbsksp_shock_node_descriptor_sptr > desc_list = (*vit)->descriptor_list();
+    for (std::list<dbsksp_shock_node_descriptor_sptr >::iterator it = desc_list.begin();
       it != desc_list.end(); ++it)
     {
       shock_flow_check = shock_flow_check &&
@@ -1508,8 +1508,8 @@ is_legal()
 
     // m * sin(phi) >= 0
     sin_alpha_check = sin_alpha_check &&
-      (vnl_math::abs(e->param_m()* vcl_sin(e->source()->descriptor(e)->phi)) <= 1) && 
-      (vnl_math::abs(e->param_m()* vcl_sin(e->target()->descriptor(e)->phi)) <= 1);
+      (vnl_math::abs(e->param_m()* std::sin(e->source()->descriptor(e)->phi)) <= 1) && 
+      (vnl_math::abs(e->param_m()* std::sin(e->target()->descriptor(e)->phi)) <= 1);
 
     // max radius check
     dbsksp_shock_node_descriptor_sptr desc_start = e->source()->descriptor(e);
@@ -1520,15 +1520,15 @@ is_legal()
     double theta_midpt_left = vnl_math::pi - theta_start_left - theta_end_left;
     
     // R1 * sin(pi - theta1 - theta2) < d * sin(theta2)
-    bool left_side_check = (e->source()->radius()*vcl_sin(theta_midpt_left) <= 
-      e->chord_length() * vcl_sin(theta_end_left));
+    bool left_side_check = (e->source()->radius()*std::sin(theta_midpt_left) <= 
+      e->chord_length() * std::sin(theta_end_left));
 
     double theta_start_right = desc_start->phi - desc_start->alpha;
     double theta_end_right = desc_end->phi + desc_end->alpha;
     double theta_midpt_right = vnl_math::pi - theta_start_right - theta_end_right;
     
-    bool right_side_check = e->source()->radius()*vcl_sin(theta_midpt_right) <=
-      e->chord_length() * vcl_sin(theta_end_right);
+    bool right_side_check = e->source()->radius()*std::sin(theta_midpt_right) <=
+      e->chord_length() * std::sin(theta_end_right);
 
     max_radius_check = max_radius_check && left_side_check && right_side_check;
   }
@@ -1713,7 +1713,7 @@ compute_all_dependent_params()
 // ---------------------------------------------------------------------------- 
 //: print info of the shock graph to an output stream
 void dbsksp_shock_graph::
-print(vcl_ostream & os)
+print(std::ostream & os)
 {
   os << "Type< " << this->is_a() << ">\n"
     << "# nodes< " << this->number_of_vertices() << " >\n";
@@ -1747,10 +1747,10 @@ print(vcl_ostream & os)
 //: Trace out the boundary of the shock graph
 // For now, represented as a vector of polyline, each polyline
 // is a circular arc segment
-vcl_vector<vsol_spatial_object_2d_sptr > dbsksp_shock_graph::
+std::vector<vsol_spatial_object_2d_sptr > dbsksp_shock_graph::
 trace_boundary()
 {
-  vcl_vector<vsol_point_2d_sptr > pt_list;
+  std::vector<vsol_point_2d_sptr > pt_list;
 
   // Euler tour on the shock graph
   dbsksp_shock_node_sptr v0 = *(this->vertices_begin());
@@ -1789,7 +1789,7 @@ trace_boundary()
   }
   while (cur_node != v0 || cur_edge != e0);
 
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_list;
   vsol_list.push_back(new vsol_polygon_2d(pt_list));
   return vsol_list;
 }

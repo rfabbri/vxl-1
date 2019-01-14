@@ -60,8 +60,8 @@ max_cost() const
 // -----------------------------------------------------------------------------
 //: (Normalized) Oriented Chamfer Matching of a set of (point-tangent)s
 float dbsks_ocm_image_cost::
-f(const vcl_vector<vgl_point_2d<double > >& pts,
-  const vcl_vector<vgl_vector_2d<double > >& tangents) const
+f(const std::vector<vgl_point_2d<double > >& pts,
+  const std::vector<vgl_vector_2d<double > >& tangents) const
 {
   switch (this->ocm_type_in_use())
   {
@@ -70,7 +70,7 @@ f(const vcl_vector<vgl_point_2d<double > >& pts,
   case SHOTTON_OCM:
     return this->f_shotton_ocm(pts, tangents);
   default:
-    vcl_cout << "ERROR: Unknown OCM (oriented chamfer matching type).\n";
+    std::cout << "ERROR: Unknown OCM (oriented chamfer matching type).\n";
     assert(false);
     return vnl_numeric_traits<float >::maxval;
   }
@@ -104,10 +104,10 @@ f(const dbsks_circ_arc_grid& grid, float ds,
     image_cost[i].fill(default_value);
   }
 
-  vcl_cout << "i_chord = ";
+  std::cout << "i_chord = ";
   for (int i_chord=0; i_chord < grid.num_chord_; ++i_chord)
   {
-    vcl_cout << " " << i_chord;
+    std::cout << " " << i_chord;
     double chord = grid.chord_[i_chord];
     for (int i_height=0; i_height < grid.num_height_; ++i_height)
     {
@@ -119,7 +119,7 @@ f(const dbsks_circ_arc_grid& grid, float ds,
       double theta0 = grid.theta_[0];
 
       vgl_point_2d<double > pt0(x0, y0);
-      vgl_vector_2d<double > t0(vcl_cos(theta0), vcl_sin(theta0));
+      vgl_vector_2d<double > t0(std::cos(theta0), std::sin(theta0));
 
       if (vnl_math::abs(height) > chord/3)
       {
@@ -133,17 +133,17 @@ f(const dbsks_circ_arc_grid& grid, float ds,
       }
      
       // compute the point set that will used to compute energy
-      vcl_vector<vgl_point_2d<double > > pts_ref;
-      vcl_vector<vgl_vector_2d<double > > tangents_ref;
+      std::vector<vgl_point_2d<double > > pts_ref;
+      std::vector<vgl_vector_2d<double > > tangents_ref;
       arc.compute_samples(ds, pts_ref, tangents_ref);
       
       // Rotated points
-      vcl_vector<vgl_point_2d<double > > pts_rot = pts_ref;
-      vcl_vector<vgl_vector_2d<double > > tangents_rot = tangents_ref;
+      std::vector<vgl_point_2d<double > > pts_rot = pts_ref;
+      std::vector<vgl_vector_2d<double > > tangents_rot = tangents_ref;
 
       // Rotated-then-translated points
-      vcl_vector<vgl_point_2d<double > > pts = pts_ref;
-      vcl_vector<vgl_vector_2d<double > > tangents = tangents_ref;
+      std::vector<vgl_point_2d<double > > pts = pts_ref;
+      std::vector<vgl_vector_2d<double > > tangents = tangents_ref;
 
       // iterate thru rotation and translation
       // we only have to compute for half of the rotation angles
@@ -181,15 +181,15 @@ f(const dbsks_circ_arc_grid& grid, float ds,
       } // i_theta
     } // height
   } // chord
-  vcl_cout << "\n";
+  std::cout << "\n";
 
 
 
   // Mirrored the second half from the first half
-  vcl_cout << "Mirroring: i_chord =";
+  std::cout << "Mirroring: i_chord =";
   for (int i_chord=0; i_chord < grid.num_chord_; ++i_chord)
   {
-    vcl_cout << " " << i_chord;
+    std::cout << " " << i_chord;
     double chord = grid.chord_[i_chord];
     for (int i_height=0; i_height < grid.num_height_; ++i_height)
     { 
@@ -218,7 +218,7 @@ f(const dbsks_circ_arc_grid& grid, float ds,
       } // i_theta
     } // height
   } // chord  
-  vcl_cout << "\n";
+  std::cout << "\n";
   return;
 }
 
@@ -234,8 +234,8 @@ f(const dbsksp_shapelet_sptr& s,
   double total_cost = 0;
   double total_len = 0;
 
-  vcl_vector<vgl_point_2d<double > > s_pts;
-  vcl_vector<vgl_vector_2d<double > > s_tangents;
+  std::vector<vgl_point_2d<double > > s_pts;
+  std::vector<vgl_vector_2d<double > > s_tangents;
   this->compute_boundary_samples_uniform(s, ds, s_pts, s_tangents);
 
   
@@ -249,8 +249,8 @@ f(const dbsksp_shapelet_sptr& s,
   if (include_front_arc)
   {
     dbsksp_shapelet_sptr s_front = s->terminal_shapelet_front();
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
     this->compute_boundary_samples_uniform(s_front, ds, pts, tangents);
 
     float avg_cost = this->f(pts, tangents);
@@ -262,8 +262,8 @@ f(const dbsksp_shapelet_sptr& s,
   if (include_rear_arc)
   {
     dbsksp_shapelet_sptr s_rear = s->terminal_shapelet_rear();
-    vcl_vector<vgl_point_2d<double > > pts;
-    vcl_vector<vgl_vector_2d<double > > tangents;
+    std::vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_vector_2d<double > > tangents;
     this->compute_boundary_samples_uniform(s_rear, ds, pts, tangents);
 
     float avg_cost = this->f(pts, tangents);
@@ -285,8 +285,8 @@ f(const dbsksp_shapelet_sptr& s,
 // ----------------------------------------------------------------------------
 //: (Normalized) Oriented Chamfer Matching of a set of (point-tangent)s
 float dbsks_ocm_image_cost::
-f_L2(const vcl_vector<vgl_point_2d<double > >& pts,
-     const vcl_vector<vgl_vector_2d<double > >& tangents) const
+f_L2(const std::vector<vgl_point_2d<double > >& pts,
+     const std::vector<vgl_vector_2d<double > >& tangents) const
 {
   // clip the values at 3 standard deviations ////////////////
   const float max_value = 9.0f;
@@ -338,8 +338,8 @@ f_L2(const vcl_vector<vgl_point_2d<double > >& pts,
 // -----------------------------------------------------------------------------
 //: (Normalized) L^1 - Oriented Chamfer Matching of a set of (point-tangent)s
 float dbsks_ocm_image_cost::
-f_shotton_ocm(const vcl_vector<vgl_point_2d<double > >& pts,
-              const vcl_vector<vgl_vector_2d<double > >& tangents) const
+f_shotton_ocm(const std::vector<vgl_point_2d<double > >& pts,
+              const std::vector<vgl_vector_2d<double > >& tangents) const
 {
   if (pts.empty()) return 0;
 
@@ -464,7 +464,7 @@ compute_gradient(vil_image_view<float >& dt,
   //compute the gradient magnitude
   for(unsigned long i=0; i<dt_grad_mag.size(); i++)
   {
-    g_mag[i] = vcl_sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
+    g_mag[i] = std::sqrt(gx[i]*gx[i] + gy[i]*gy[i]);
   }
   return;
 }
@@ -539,8 +539,8 @@ chamfer_cost_w_near_zero_tolerance(float distance,
 //: Compute point-tangent samples of the shapelet, given sampling rate "ds"
 void dbsks_ocm_image_cost::
 compute_boundary_samples_uniform(const dbsksp_shapelet_sptr& sh, double ds, 
-                                 vcl_vector<vgl_point_2d<double > >& pts,
-                                 vcl_vector<vgl_vector_2d<double > >& tangents)
+                                 std::vector<vgl_point_2d<double > >& pts,
+                                 std::vector<vgl_vector_2d<double > >& tangents)
 {
   for (int i=0; i<2; ++i)
   {

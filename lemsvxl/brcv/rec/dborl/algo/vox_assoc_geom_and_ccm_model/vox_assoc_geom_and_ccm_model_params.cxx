@@ -16,7 +16,7 @@
 #include <dborl/algo/dborl_utilities.h>
 
 //: Constructor
-vox_assoc_geom_and_ccm_model_params::vox_assoc_geom_and_ccm_model_params(vcl_string algo_name) : dborl_algo_params(algo_name)
+vox_assoc_geom_and_ccm_model_params::vox_assoc_geom_and_ccm_model_params(std::string algo_name) : dborl_algo_params(algo_name)
 {
     // Output directory (if not object folder)
     this->output_ccm_dir_.set_values(this->param_list_, "io",

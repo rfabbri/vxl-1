@@ -26,15 +26,15 @@ public:
   // This version uses epipolar band (2D thin cone with vertex at epipole) and
   // performs tests symmetrically.
   mw_match_tangent_band (
-    const vcl_vector<vcl_vector< vsol_point_2d_sptr> > &points,
-    const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &dg_points,
+    const std::vector<std::vector< vsol_point_2d_sptr> > &points,
+    const std::vector<std::vector< bdifd_3rd_order_point_2d > > &dg_points,
     bmcsd_discrete_corresp_n *corr,
     // --- the following params may be provided by the user if efficiency is
     // needed. However, they make this function implementation-dependent.
     //: fm[i][k] = fundamental matrix from view i to view k
-    const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
-    const vcl_vector< bdifd_camera > &cam,
-    const vcl_vector<mw_subpixel_point_set *> &sp,
+    const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm,
+    const std::vector< bdifd_camera > &cam,
+    const std::vector<mw_subpixel_point_set *> &sp,
     double err_pos,
     double err_t,
     bool debug_synthetic
@@ -46,23 +46,23 @@ public:
   void consider(unsigned vn);
 
 public:
-  const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_;
-  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &dg_points_;
+  const std::vector<std::vector< vsol_point_2d_sptr > > &points_;
+  const std::vector<std::vector< bdifd_3rd_order_point_2d > > &dg_points_;
   bmcsd_discrete_corresp_n *corr_;
-  const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm_;
-  const vcl_vector< bdifd_camera > &cam_;
-  const vcl_vector<mw_subpixel_point_set *> &sp_;
+  const std::vector< std::vector<vpgl_fundamental_matrix<double> > > &fm_;
+  const std::vector< bdifd_camera > &cam_;
+  const std::vector<mw_subpixel_point_set *> &sp_;
   double err_pos_;
   double err_t_;
   //----
   unsigned nviews_;
-  vcl_vector<unsigned> npts_;
-  vcl_vector<bool> is_specified_;
-  vcl_vector< vcl_vector<becld_epiband *> > epband_;
+  std::vector<unsigned> npts_;
+  std::vector<bool> is_specified_;
+  std::vector< std::vector<becld_epiband *> > epband_;
   bmcsd_ntuplet tup_;
-  vcl_vector<vsol_point_2d_sptr> specified_pts_;
-  vcl_vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all points
-  vcl_vector<becld_grid_cover_window*> w_;
+  std::vector<vsol_point_2d_sptr> specified_pts_;
+  std::vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all points
+  std::vector<becld_grid_cover_window*> w_;
 
   bool  tangent_constraint_3views() const;
   bool  tangent_constraint(unsigned vn) const;

@@ -30,7 +30,7 @@ dbvxm_update_multiscale_process::dbvxm_update_multiscale_process()
   input_types_[0] = "vil_image_view_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "dbvxm_multi_scale_voxel_world_sptr";
-  input_types_[3] = "vcl_string";
+  input_types_[3] = vcl_string";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";
   input_types_[6] = "unsigned";
@@ -70,9 +70,9 @@ bool dbvxm_update_multiscale_process::execute()
     static_cast<brdb_value_t<dbvxm_multi_scale_voxel_world_sptr>* >(input_data_[2].ptr());
   dbvxm_multi_scale_voxel_world_sptr world = input2->value();
 
-  brdb_value_t<vcl_string>* input3 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
-  vcl_string voxel_type = input3->value();
+  brdb_value_t<std::string>* input3 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -95,8 +95,8 @@ bool dbvxm_update_multiscale_process::execute()
   if (voxel_type == "apm_mog_rgb")
   typedef bvxm_voxel_traits<APM_MOG_RGB>::obs_datatype obs_datatype;
  
-  vcl_vector<vil_image_view<float> > prob_map_vec;
-  vcl_vector<vil_image_view<bool> >mask_vec;
+  std::vector<vil_image_view<float> > prob_map_vec;
+  std::vector<vil_image_view<bool> >mask_vec;
 
 
   for (unsigned scale = curr_scale;scale < max_scale;scale++)
@@ -104,7 +104,7 @@ bool dbvxm_update_multiscale_process::execute()
       //bvxm_voxel_slab<obs_datatype> image_slab(img->ni(),img->nj(), 1);
       //dbvxm_util::img_to_slab(img,image_slab);
 
-      //dbvxm_util::smooth_gaussian(image_slab,vcl_sqrt(vcl_pow(2.0,scale)),vcl_sqrt(vcl_pow(2.0,scale)));
+      //dbvxm_util::smooth_gaussian(image_slab,std::sqrt(std::pow(2.0,scale)),std::sqrt(std::pow(2.0,scale)));
 
       //vil_image_view_base_sptr scale_img = img;
 
@@ -112,8 +112,8 @@ bool dbvxm_update_multiscale_process::execute()
       vil_image_view<float> prob_map(img->ni(),img->nj(),1);
       vil_image_view<bool> mask(img->ni(),img->nj(),1);
       
-      vcl_cout<<"Scale is  "<<scale<<vcl_endl;
-      vcl_cout.flush();
+      std::cout<<"Scale is  "<<scale<<std::endl;
+      std::cout.flush();
       if(scale!=curr_scale)
       {
           vil_save(*img.as_pointer(),"d:/scaledown.tiff");
@@ -135,13 +135,13 @@ bool dbvxm_update_multiscale_process::execute()
       else
           result = world->update<APM_MOG_GREY>(observation, prob_map, mask, bin_index,scale);
 
-      vcl_cout<<"update done ";
-      vcl_cout.flush();
+      std::cout<<"update done ";
+      std::cout.flush();
 
       prob_map_vec.push_back(prob_map);
       mask_vec.push_back(mask);
       if(!result){
-          vcl_cerr << "error dbvxm_update_multiscale_process: failed to update observation" << vcl_endl;
+          std::cerr << "error dbvxm_update_multiscale_process: failed to update observation" << std::endl;
           return false;
       }
   }

@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/tests/test_tracking_face_2d.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <dbinfo/dbinfo_region_geometry.h>
 #include <vbl/vbl_array_2d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -33,7 +33,7 @@ vsol_polygon_2d_sptr gen_poly()
   vsol_point_2d_sptr p2 = new vsol_point_2d(96, 96);
   vsol_point_2d_sptr p3 = new vsol_point_2d(96, 32);
 
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   verts.push_back(p3); 
   vsol_polygon_2d_sptr poly = new vsol_polygon_2d(verts);
@@ -46,7 +46,7 @@ dbinfo_observation_sptr gen_observ(unsigned frame, vsol_polygon_2d_sptr const& p
   dbinfo_observation_sptr obs = new dbinfo_observation(frame, imgr, poly);
   dbinfo_feature_base_sptr intf = new dbinfo_intensity_feature();
   dbinfo_feature_base_sptr gradf = new dbinfo_gradient_feature();
-  vcl_vector<dbinfo_feature_base_sptr> features;
+  std::vector<dbinfo_feature_base_sptr> features;
   features.push_back(intf);   features.push_back(gradf);
   obs->set_features(features);
   obs->scan(0, imgr);
@@ -80,7 +80,7 @@ void info_scan(vil_image_resource_sptr imgr)
     {
       dbinfo_observation_sptr seed = gen_observ(1, obs0, imgr, dx, dx, theta);
       float mi = dbinfo_observation_matcher::minfo(obs0, seed);
-      vcl_cout << "InitialCost[" << dx << ' ' << theta << "]= " << 10.0 - mi << '\n';
+      std::cout << "InitialCost[" << dx << ' ' << theta << "]= " << 10.0 - mi << '\n';
       dbinfo_match_optimizer opt(10, 1.0f, 1.0f, 0.05f);
       opt.set_debug_level(0);
       opt.set_frame(1);
@@ -89,15 +89,15 @@ void info_scan(vil_image_resource_sptr imgr)
       opt.set_best_seed(seed);
       if(!opt.optimize())
         {
-          vcl_cout << "Optimize failed \n";
+          std::cout << "Optimize failed \n";
           return;
         }
       dbinfo_observation_sptr final = opt.optimized_obs();
       dbinfo_region_geometry_sptr reg = final->geometry();
-      vcl_vector<double> p = opt.current_params();
-      vcl_cout << "Parameters (" << p[0] << ' ' << p[1] << ' ' << p[2] <<")\n";
-      vcl_cout << "Final Cost " << opt.current_cost() << '\n';
-      vcl_cout << "optimized cog " << *(reg->cog()) << '\n';
+      std::vector<double> p = opt.current_params();
+      std::cout << "Parameters (" << p[0] << ' ' << p[1] << ' ' << p[2] <<")\n";
+      std::cout << "Final Cost " << opt.current_cost() << '\n';
+      std::cout << "optimized cog " << *(reg->cog()) << '\n';
     }      
 }
 
@@ -129,9 +129,9 @@ static void test_match_optimizer(int argc, char* argv[])
  dbinfo_observation_sptr obs0 = gen_observ(0,poly0, imgr);
   dbinfo_observation_sptr seed = gen_observ(1, obs0, imgr, 3, 4, theta);
   
-  vcl_cout << "master geometry " << *(obs0->geometry()) << '\n';
-  vcl_cout << "seed geometry " << *(seed->geometry()) << '\n';
-  vcl_cout << "radius " << (obs0->geometry()->diameter())/2.0 << '\n';  
+  std::cout << "master geometry " << *(obs0->geometry()) << '\n';
+  std::cout << "seed geometry " << *(seed->geometry()) << '\n';
+  std::cout << "radius " << (obs0->geometry()->diameter())/2.0 << '\n';  
   dbinfo_match_optimizer opt(10, 1.0f, 0.05f);
   opt.set_debug_level(3);
   opt.set_frame(1);
@@ -140,13 +140,13 @@ static void test_match_optimizer(int argc, char* argv[])
   opt.set_best_seed(seed);
   if(!opt.optimize())
     {
-      vcl_cout << "Optimize failed \n";
+      std::cout << "Optimize failed \n";
       return;
     }
-  vcl_cout << "Number of parameters " << opt.no_of_parameters() << '\n';
+  std::cout << "Number of parameters " << opt.no_of_parameters() << '\n';
   dbinfo_observation_sptr final = opt.optimized_obs();
   dbinfo_region_geometry_sptr reg = final->geometry();
-  vcl_cout << "optimized cog " << *(reg->cog()) << '\n';
+  std::cout << "optimized cog " << *(reg->cog()) << '\n';
   //Now test for final cost
 
   TEST_NEAR("Final Cost ", opt.current_cost(),  4.28882 , 1.0e-4);

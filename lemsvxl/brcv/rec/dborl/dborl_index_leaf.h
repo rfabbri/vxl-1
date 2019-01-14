@@ -20,13 +20,13 @@ class dborl_index_leaf : public dborl_index_node_base
 public:
   //float certainty_;
   dborl_index_leaf() : dborl_index_node_base() {};
-  dborl_index_leaf(vcl_string name) : dborl_index_node_base(name) {}
+  dborl_index_leaf(std::string name) : dborl_index_node_base(name) {}
 
   virtual bool is_leaf() { return true; }
 
   virtual void b_read();
   virtual void b_write();
-  virtual void write_xml(vcl_ostream& os);
+  virtual void write_xml(std::ostream& os);
   //void set_certainty(float c);
   //float get_certainty();
 

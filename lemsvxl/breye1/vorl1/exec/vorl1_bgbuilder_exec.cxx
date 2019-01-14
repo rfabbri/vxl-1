@@ -17,7 +17,7 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vbl/vbl_bounding_box.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -32,11 +32,11 @@ int main(int argc, char** argv)
 
 
   //bpro1_process_sptr regimg(new dbvrl_register_images_process()); 
-  //regimg->set_input_names(vcl_vector<vcl_string>(1,"video"));
-  //regimg->set_output_names(vcl_vector<vcl_string>(1,"RegImg"));
+  //regimg->set_input_names(std::vector<std::string>(1,"video"));
+  //regimg->set_output_names(std::vector<std::string>(1,"RegImg"));
   //vorl1_manager::instance()->add_process_to_args(regimg); 
 
-    vcl_vector<vcl_string> input_names_bg;
+    std::vector<std::string> input_names_bg;
     input_names_bg.push_back("video");
     input_names_bg.push_back("bgmodel");
     bpro1_process_sptr bgbuilder(new dbbgm_aerial_bg_model_process1()); //dbbgm_distribution_image
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
 
   bpro1_process_sptr savebgmodel(new dbbgm_save_bg_model_process1()); 
-  savebgmodel->set_input_names(vcl_vector<vcl_string>(1,"bgmodel"));
+  savebgmodel->set_input_names(std::vector<std::string>(1,"bgmodel"));
   vorl1_manager::instance()->add_process_to_args(savebgmodel);
 
   
@@ -56,8 +56,8 @@ int main(int argc, char** argv)
   // building background model
   vorl1_manager::instance()->add_process_to_queue(bgbuilder);
 
-  vcl_cout<<"\n building background model";
-  vcl_cout.flush();
+  std::cout<<"\n building background model";
+  std::cout.flush();
 
   int n=vorl1_manager::instance()->get_no_skip_frames();
   do {

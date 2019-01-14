@@ -26,7 +26,7 @@
 //   10-sep-2004 Peter Vanroose Added copy ctor with explicit vbl_ref_count init
 // \endverbatim
 //-----------------------------------------------------------------------------
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vbl/vbl_ref_count.h>
 
 class btom_gauss_cylinder : public vbl_ref_count
@@ -73,7 +73,7 @@ class btom_gauss_cylinder : public vbl_ref_count
   float radon_transform(float theta, float t);
   // print params
   friend
-    vcl_ostream& operator<<(vcl_ostream& os, const btom_gauss_cylinder& gc);
+    std::ostream& operator<<(std::ostream& os, const btom_gauss_cylinder& gc);
 
  protected:
   // Data Members--------------------------------------------------------------

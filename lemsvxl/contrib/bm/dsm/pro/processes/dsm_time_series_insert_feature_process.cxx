@@ -24,7 +24,7 @@ bool dsm_time_series_insert_feature_process_cons(bprb_func_process& pro)
 {
 	//set input/output types
 	using namespace dsm_time_series_insert_feature_process_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
+	std::vector<std::string> input_types_(n_inputs_);
 	unsigned i = 0;
 	input_types_[i++] = "dsm_time_series_sptr";
 	input_types_[i++] = "unsigned";
@@ -43,7 +43,7 @@ bool dsm_time_series_insert_feature_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_time_series_insert_feature_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_time_series_insert_feature_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -53,7 +53,7 @@ bool dsm_time_series_insert_feature_process(bprb_func_process& pro)
 	unsigned time = pro.get_input<unsigned>(i++);
 	dsm_feature_sptr f_sptr = pro.get_input<dsm_feature_sptr>(i++);
 
-	vcl_map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = ts_sptr->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = ts_sptr->time_series.end();
 
 	ts_itr = ts_sptr->time_series.find(time);
 

@@ -35,7 +35,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = videx_dshow_menus::get_menu();
   unsigned w = 400, h = 340;
 
-  vcl_string title = "VIDEX_DSHOW";
+  std::string title = "VIDEX_DSHOW";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(vvid_live_video_dshow_manager::instance());
   win->set_statusbar(true);

@@ -11,9 +11,9 @@
 //\endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
-#include <vcl_list.h>
+#include <vector>
+#include <deque>
+#include <list>
 
 #include <vgl/vgl_point_2d.h>
 #include <dbdet/dbdet_edgel.h>
@@ -23,13 +23,13 @@ class dbdet_spatemp_edgel;
 class dbdet_curvelet;
 
 //useful type definitions
-typedef vcl_list<dbdet_spatemp_edgel* > edgel_list;
-typedef vcl_list<dbdet_spatemp_edgel* >::iterator edgel_list_iter;
-typedef vcl_list<dbdet_spatemp_edgel* >::const_iterator edgel_list_const_iter;
+typedef std::list<dbdet_spatemp_edgel* > edgel_list;
+typedef std::list<dbdet_spatemp_edgel* >::iterator edgel_list_iter;
+typedef std::list<dbdet_spatemp_edgel* >::const_iterator edgel_list_const_iter;
 
-typedef vcl_list<dbdet_curvelet* > t_curvelet_list;
-typedef vcl_list<dbdet_curvelet* >::iterator curvelet_list_iter;
-typedef vcl_list<dbdet_curvelet* >::const_iterator curvelet_list_const_iter;
+typedef std::list<dbdet_curvelet* > t_curvelet_list;
+typedef std::list<dbdet_curvelet* >::iterator curvelet_list_iter;
+typedef std::list<dbdet_curvelet* >::const_iterator curvelet_list_const_iter;
 
 //: edgel class: contains pt, tangent and collection of all the groupings around it
 class dbdet_spatemp_edgel:public dbdet_edgel

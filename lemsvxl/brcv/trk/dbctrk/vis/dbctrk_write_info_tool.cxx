@@ -70,23 +70,23 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
     if ( gesture_info_(e) ) {
 
         vgui_dialog dt_dlg("Output file for writing clusters");
-        static vcl_string file_name = "";
-        static vcl_string ext = "*.*";
+        static std::string file_name = "";
+        static std::string ext = "*.*";
         dt_dlg.file("File:", ext, file_name);
         if( !dt_dlg.ask())
             return true;
 
-        vcl_map<double,int>::iterator iter;
-        vcl_map<int,double>::iterator siter;
-        vcl_vector<dbctrk_tracker_curve_sptr> tc;
+        std::map<double,int>::iterator iter;
+        std::map<int,double>::iterator siter;
+        std::vector<dbctrk_tracker_curve_sptr> tc;
         storage_->get_tracked_curves(tc);
-        vcl_ofstream ofile(file_name.c_str());
+        std::ofstream ofile(file_name.c_str());
         for(unsigned int i=0;i<tc.size();i++)
         {
             if(tc[i]->get_best_match_prev().ptr() )
             {
-                vcl_cout<<"\n "<<tc[i]->get_id();
-                vcl_map<int,double> temp;    
+                std::cout<<"\n "<<tc[i]->get_id();
+                std::map<int,double> temp;    
                 for(iter=tc[i]->neighbors_.begin();iter!=tc[i]->neighbors_.end();iter++)
                 {
                     temp[(*iter).second]=(*iter).first;
@@ -109,18 +109,18 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
 
 
         vgui_dialog dt_dlg("Output file for writing clusters");
-        static vcl_string file_name = "";
-        static vcl_string ext = "*.*";
+        static std::string file_name = "";
+        static std::string ext = "*.*";
         dt_dlg.file("File:", ext, file_name);
         if( !dt_dlg.ask())
             return true;
 
-        vcl_map<double,int>::iterator iter;
-        vcl_map<int,double>::iterator siter;
-        vcl_vector<dbctrk_tracker_curve_sptr> tc;
+        std::map<double,int>::iterator iter;
+        std::map<int,double>::iterator siter;
+        std::vector<dbctrk_tracker_curve_sptr> tc;
 
-        vcl_ofstream ofile(file_name.c_str());
-        vcl_vector<vgui_soview*> all_objects;
+        std::ofstream ofile(file_name.c_str());
+        std::vector<vgui_soview*> all_objects;
         all_objects = tableau_->get_selected_soviews();
 
 
@@ -135,7 +135,7 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
 
             for(unsigned int i=0;i<tc.size();i++)
             {
-                vcl_map<int,double> temp;
+                std::map<int,double> temp;
                 for(iter=tc[i]->neighbors_.begin();iter!=tc[i]->neighbors_.end();iter++)
                 {
                     temp[(*iter).second]=(*iter).first;
@@ -156,24 +156,24 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
     }
     if (e.type == vgui_KEY_PRESS && e.key == 'p' && vgui_SHIFT ) {
         vgui_dialog dt_dlg("Load Ncut clusters");
-        static vcl_string file_name = "";
-        static vcl_string ext = "*.*";
+        static std::string file_name = "";
+        static std::string ext = "*.*";
         static int num_of_clusters=3;
         dt_dlg.file("File:", ext, file_name);
         dt_dlg.field("No of clusters", num_of_clusters);
         if( !dt_dlg.ask())
             return true;
 
-        vcl_ifstream ifile(file_name.c_str());
+        std::ifstream ifile(file_name.c_str());
         if(!ifile)
             return false;
         else
         {
-            vcl_vector<dbctrk_tracker_curve_sptr> tc;
+            std::vector<dbctrk_tracker_curve_sptr> tc;
             storage_->get_tracked_curves(tc);
 
             double num;
-            vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr,int> > clusters;
+            std::vector<std::pair<dbctrk_tracker_curve_sptr,int> > clusters;
             for(unsigned int i=0;i<tc.size();i++)
             {
                 if(tc[i]->get_best_match_prev().ptr() )
@@ -183,14 +183,14 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
                         ifile>>num;
                         if(num>0.5)
                         {
-                            clusters.push_back(vcl_make_pair(tc[i],k));  
+                            clusters.push_back(std::make_pair(tc[i],k));  
                         }
                     }
                 }
             }
 
             /*
-            vcl_vector<vcl_pair<dbctrk_tracker_curve_sptr,int> >::iterator iter;
+            std::vector<std::pair<dbctrk_tracker_curve_sptr,int> >::iterator iter;
             for(iter=clusters.begin();iter!=clusters.end();iter++)
             {
             vdgl_digital_curve_sptr dc1=dbctrk_algs::create_digital_curves((*iter).first->desc->points_);
@@ -211,7 +211,7 @@ dbctrk_write_info_tool::handle( const vgui_event & e,
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_write_info_tool::name() const
 {
     return "write dt graph";

@@ -10,8 +10,8 @@
 #include<bsta/bsta_weibull.h>
 #include<bsta/algo/bsta_fit_weibull.h>
 
-#include<vcl_iostream.h>
-#include<vcl_fstream.h>
+#include<iostream>
+#include<fstream>
 
 #include<vil/vil_image_view.h>
 
@@ -22,7 +22,7 @@ public:
 // to quickly iterate through an image and output to error stream if
 // there is a number other than 0 or 1. This is to check if loading a
 // binary image worked.
-    static void checkBinary(vcl_ostream &os, vil_image_view<vxl_byte>& img);
+    static void checkBinary(std::ostream &os, vil_image_view<vxl_byte>& img);
 
     static void convertByte_Bool(const vil_image_view<vxl_byte>& in, vil_image_view<bool>& out);
 
@@ -36,13 +36,13 @@ public:
     // (number of counts in a specific bin)/{(total number of counts)*binWidth}
     // in this way we may compare our observations with the weibull pdf. Otherwise, this comparison
     // is invalid.
-    static void write_prob_dist_to_m(bsta_histogram<float>& hist, vcl_ofstream& os);
+    static void write_prob_dist_to_m(bsta_histogram<float>& hist, std::ofstream& os);
 
-    static void write_prob_dist_weibull_m(bsta_histogram<float>& hist,vcl_ofstream& os,float& scale, float& shape); 
+    static void write_prob_dist_weibull_m(bsta_histogram<float>& hist,std::ofstream& os,float& scale, float& shape); 
 
     //this will integrate the fitted weibull distribution to the bin width, therefore describing bin probability via weibull
     //instead of describing a weibull pdf.
-    /* static void write_prob_bin_weibull_m(bsta_histogram<float>& hist,vcl_ofstream& os, float& scale, float& shape, float& minW, float& maxW); */
+    /* static void write_prob_bin_weibull_m(bsta_histogram<float>& hist,std::ofstream& os, float& scale, float& shape, float& minW, float& maxW); */
         
 };
 #endif //bmvr_functions_h_

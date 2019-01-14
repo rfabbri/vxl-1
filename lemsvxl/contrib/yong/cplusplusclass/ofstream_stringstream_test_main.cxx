@@ -1,40 +1,40 @@
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 #if 0
 
 int main(int argc, char **argv)
 {
-    vcl_string filename;
-    vcl_stringstream SS;
-    vcl_ofstream ostr;
-    vcl_ifstream istr;
+    std::string filename;
+    std::stringstream SS;
+    std::ofstream ostr;
+    std::ifstream istr;
     double my_number;
-    vcl_string my_string;
+    std::string my_string;
     char option = 'w';
 
     
     while(option != 'e')
     {
-        vcl_cout << "Please input your option (w: write file; r: read file; e: exit): ";
-        vcl_cin >> option;
+        std::cout << "Please input your option (w: write file; r: read file; e: exit): ";
+        std::cin >> option;
         switch(option)
         {
         case 'w':
-            vcl_cout << "Please type filename: ";
-            vcl_cin >> filename;
-            vcl_cout << "Pleast type a number: ";
-            vcl_cin >> my_number;
+            std::cout << "Please type filename: ";
+            std::cin >> filename;
+            std::cout << "Pleast type a number: ";
+            std::cin >> my_number;
 
             // create 3 files for write;
             for(double i=1; i<=3; i++)
             {
-                vcl_string fullname;
+                std::string fullname;
 
                 SS << filename << "_" << i << ".txt";
                 SS >> fullname;
-                vcl_cout << "Open file: " << fullname << vcl_endl;
+                std::cout << "Open file: " << fullname << std::endl;
                 SS.clear();
                 
 
@@ -49,21 +49,21 @@ int main(int argc, char **argv)
             break;
         case 'r':
 
-            vcl_cout << "Pleast type the filename: ";
-            vcl_cin >> filename;
-            vcl_cout << "filename is " << filename << vcl_endl;
+            std::cout << "Pleast type the filename: ";
+            std::cin >> filename;
+            std::cout << "filename is " << filename << std::endl;
             istr.open(filename.c_str());
             istr.clear();
             if(!istr.is_open())
             {
-                vcl_cout << "can not open " << filename << "!" << vcl_endl;
+                std::cout << "can not open " << filename << "!" << std::endl;
                 break;
             }
 
             istr >> my_number;
             istr >> my_string;
-            vcl_cout << "The number read from file: "<< my_number << vcl_endl;
-            vcl_cout << "The string read from file: "<< my_string << vcl_endl;
+            std::cout << "The number read from file: "<< my_number << std::endl;
+            std::cout << "The string read from file: "<< my_string << std::endl;
             istr.clear();
             istr.close();
 
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
         case 'e':
             return 1;
         default:
-            vcl_cout << "not a valid option!" << vcl_endl;
+            std::cout << "not a valid option!" << std::endl;
             break;
         }
 

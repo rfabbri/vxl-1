@@ -39,20 +39,20 @@
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
 #include <dbskr/algo/io/dbskr_detect_patch_params.h>
 
-#include <vcl_utility.h> // --> for vcl_pair class
+#include <utility> // --> for std::pair class
 #include <vul/vul_timer.h>
 
 class dborl_detect_patch_processor_input
 { public:
     dborl_detect_patch_processor_input(dbskr_shock_patch_storage_sptr model_s, 
                                       dbskr_shock_patch_storage_sptr query_s, 
-                                      vcl_string model_n, vcl_string query_n, float t, borld_image_description_sptr query_d) :
+                                      std::string model_n, std::string query_n, float t, borld_image_description_sptr query_d) :
                                       model_st(model_s), query_st(query_s), model_name(model_n), query_name(query_n), 
                                       threshold(t), query_desc(query_d) {}
     dbskr_shock_patch_storage_sptr model_st;  // model storage
     dbskr_shock_patch_storage_sptr query_st;  // query storage
-    vcl_string model_name;  // model's name
-    vcl_string query_name;  // query's name
+    std::string model_name;  // model's name
+    std::string query_name;  // query's name
     float threshold;
     borld_image_description_sptr query_desc;
 };
@@ -82,27 +82,27 @@ public:
 
   //: this method is run on each processor after lead processor broadcasts its command
   //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
-  virtual bool parse_command_line(vcl_vector<vcl_string>& argv);
+  virtual bool parse_command_line(std::vector<std::string>& argv);
 
   //: this method is run on each processor
   //  parse the input file into a bxml document and extract each parameter
   virtual bool parse(const char* param_file);
 
   //: parse the index file
-  virtual bool parse_index(vcl_string index_file);
+  virtual bool parse_index(std::string index_file);
 
   //: this method prints an xml input file setting all the parameters to defaults
   //  run the algorithm to generate this file, then modify it
   void print_default_file(const char* default_file);
 
   //: this method is run on each processor
-  virtual bool initialize(vcl_vector<dborl_detect_patch_processor_input>& t);
+  virtual bool initialize(std::vector<dborl_detect_patch_processor_input>& t);
 
   //: this method is run in a distributed mode on each processor on the cluster
   virtual bool process(dborl_detect_patch_processor_input i, dborl_detect_patch_processor_output& f);
 
   //: this method is run on the lead processor once after results are collected from each processor
-  virtual bool finalize(vcl_vector<dborl_detect_patch_processor_output>& results);
+  virtual bool finalize(std::vector<dborl_detect_patch_processor_output>& results);
 
   void print_time();
 
@@ -118,7 +118,7 @@ protected:
   dbskr_detect_patch_params params_;
   unsigned size_t_;  // number of thresholds for this experiment
   unsigned query_set_size_;
-  vcl_string model_category_;
+  std::string model_category_;
   int positive_cnt_, negative_cnt_;
 
   vul_timer t_;

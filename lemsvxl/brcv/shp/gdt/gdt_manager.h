@@ -4,8 +4,8 @@
 #ifndef gdt_manager_h_
 #define gdt_manager_h_
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 #include <vgl/vgl_point_2d.h>
 
 #include <gdt/gdt_mesh.h>
@@ -45,10 +45,10 @@ protected:
   int            n_verbose_;
 
   //: the list of source vertices
-  vcl_vector<dbmsh3d_gdt_vertex_3d*>  source_vertices_;
+  std::vector<dbmsh3d_gdt_vertex_3d*>  source_vertices_;
 
   //: the list of line sources
-  vcl_vector<dbmsh3d_gdt_edge*>       source_edges_;
+  std::vector<dbmsh3d_gdt_edge*>       source_edges_;
 
   //: Variables for current computation
   dbmsh3d_halfedge *cur_he_, *left_he_, *right_he_;
@@ -109,18 +109,18 @@ public:
   //  find the closet immediate intersection on the other 2 edges of the cur_face.
   void get_iso_contour_s_e_gdt_points (vgl_point_3d<double>* start_pt,
                                        dbmsh3d_face* cur_face, double query_dist,
-                                       vcl_vector<vcl_pair<gdt_interval*, double> >* iso_contour_points,
+                                       std::vector<std::pair<gdt_interval*, double> >* iso_contour_points,
                                        dbmsh3d_gdt_edge** iso_contour_s_edge,
-                                       vcl_pair<gdt_interval*, double>& iso_contour_s_gdt_point, 
+                                       std::pair<gdt_interval*, double>& iso_contour_s_gdt_point, 
                                        dbmsh3d_gdt_edge** iso_contour_e_edge,
-                                       vcl_pair<gdt_interval*, double>& iso_contour_e_gdt_point);
+                                       std::pair<gdt_interval*, double>& iso_contour_e_gdt_point);
 
   void next_iso_contour_point (double query_dist,
                                dbmsh3d_gdt_edge* eC, 
-                               vcl_pair<gdt_interval*, double>& cur_point,
+                               std::pair<gdt_interval*, double>& cur_point,
                                dbmsh3d_face* nextF, 
                                dbmsh3d_gdt_edge** nextE, 
-                               vcl_pair<gdt_interval*, double>& next_point);
+                               std::pair<gdt_interval*, double>& next_point);
 };
 
 class gdt_manager_i_based : public gdt_manager
@@ -160,7 +160,7 @@ public:
 
   //: ====== Retraction of Propagation ======
   void _get_intervals_subtree (gdt_interval* input_I, 
-                               vcl_set<gdt_interval*>* intervals_subtree);
+                               std::set<gdt_interval*>* intervals_subtree);
 
 };
 
@@ -174,7 +174,7 @@ public:
 class gdt_i_manager : public gdt_manager_i_based
 {
 protected:
-  vcl_multimap<double, gdt_interval*>  interval_queue_;
+  std::multimap<double, gdt_interval*>  interval_queue_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -183,7 +183,7 @@ public:
   {}
   virtual ~gdt_i_manager () {
     //: before clean up the queue, mark all intervals in it to be 'not on front'.
-    vcl_multimap<double, gdt_interval*>::iterator it = interval_queue_.begin();
+    std::multimap<double, gdt_interval*>::iterator it = interval_queue_.begin();
     for (; it != interval_queue_.end(); it++) {
       //unused gdt_interval* I = (*it).second;
 
@@ -215,17 +215,17 @@ public:
     I->set_invalid_on_front (1);
 #endif
 
-    interval_queue_.insert (vcl_pair<double, gdt_interval*> (dist, I));
+    interval_queue_.insert (std::pair<double, gdt_interval*> (dist, I));
   }
 
   //: be careful on the multimap
   //  find the iterator to the first matching interval
   //  if not found, return interval_queue_.end();
-  vcl_multimap<double, gdt_interval*>::iterator _find_interval_in_queue (gdt_interval* I) {
+  std::multimap<double, gdt_interval*>::iterator _find_interval_in_queue (gdt_interval* I) {
     double key = I->_get_min_dist ();
-    vcl_multimap<double, gdt_interval*>::iterator lower = interval_queue_.lower_bound(key);
-    vcl_multimap<double, gdt_interval*>::iterator upper = interval_queue_.upper_bound(key);
-    vcl_multimap<double, gdt_interval*>::iterator wit = lower;
+    std::multimap<double, gdt_interval*>::iterator lower = interval_queue_.lower_bound(key);
+    std::multimap<double, gdt_interval*>::iterator upper = interval_queue_.upper_bound(key);
+    std::multimap<double, gdt_interval*>::iterator wit = lower;
     for (; wit != upper; wit++) {
       if ((*wit).second == I)
         return wit;
@@ -251,7 +251,7 @@ public:
 
   void _delete_propagated_interval (gdt_interval* I) {
     //detach I's nextI_[]
-    vcl_vector<gdt_interval*>::iterator it = I->nextIs().begin();
+    std::vector<gdt_interval*>::iterator it = I->nextIs().begin();
     while (it != I->nextIs().end()) {
       gdt_interval* nI = (*it);
       assert (nI->prev_flag()==true);
@@ -344,7 +344,7 @@ class gdt_f_manager_base : public gdt_manager_i_based
 {
 protected:
   //: the wavefront is a priority queue of <dist, edge>'s.
-  vcl_multimap<double, dbmsh3d_halfedge*>  wavefront_;
+  std::multimap<double, dbmsh3d_halfedge*>  wavefront_;
 
 public:
   //: ====== Constructor/Destructor ======
@@ -362,12 +362,12 @@ public:
   //: be careful on the multimap
   //  find the iterator to the first matching edge
   //  if not found, return wavefront_.end();
-  vcl_multimap<double, dbmsh3d_halfedge*>::iterator _find_in_wavefront (dbmsh3d_halfedge* he) {
+  std::multimap<double, dbmsh3d_halfedge*>::iterator _find_in_wavefront (dbmsh3d_halfedge* he) {
     dbmsh3d_gdt_edge* edge = (dbmsh3d_gdt_edge*) he->edge();
     double key = edge->dist();
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator lower = wavefront_.lower_bound(key);
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator upper = wavefront_.upper_bound(key);
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator it = lower;
+    std::multimap<double, dbmsh3d_halfedge*>::iterator lower = wavefront_.lower_bound(key);
+    std::multimap<double, dbmsh3d_halfedge*>::iterator upper = wavefront_.upper_bound(key);
+    std::multimap<double, dbmsh3d_halfedge*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == he)
         return it;
@@ -375,8 +375,8 @@ public:
     return wavefront_.end();
   }
 
-  vcl_multimap<double, dbmsh3d_halfedge*>::iterator _brute_force_find_in_wavefront (dbmsh3d_halfedge* input_he) {
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator it = wavefront_.begin();
+  std::multimap<double, dbmsh3d_halfedge*>::iterator _brute_force_find_in_wavefront (dbmsh3d_halfedge* input_he) {
+    std::multimap<double, dbmsh3d_halfedge*>::iterator it = wavefront_.begin();
     for (; it != wavefront_.end(); it++) {
       dbmsh3d_halfedge* cur_he = (*it).second;
       if (cur_he == input_he)
@@ -533,9 +533,9 @@ public:
 
     //: For a given interval I, go through all intervals of I's edge e,
     //  get the set of edges of the subtree of intervals, including e itself.
-    void _get_edges_subtree (gdt_interval* input_I, vcl_set<dbmsh3d_gdt_edge*>* edges_of_subtree);
+    void _get_edges_subtree (gdt_interval* input_I, std::set<dbmsh3d_gdt_edge*>* edges_of_subtree);
 
-    void _remove_intervals_on_edgeset (vcl_set<dbmsh3d_gdt_edge*>* edges_to_remove_prop);
+    void _remove_intervals_on_edgeset (std::set<dbmsh3d_gdt_edge*>* edges_to_remove_prop);
 
   //: Retract one step of propagation, error correction.
   //  The input_halfedge corresponds to the cur_face that decides the retraction.
@@ -717,20 +717,20 @@ protected:
   int   snode_id_counter_;
 
   //: ====== 4 Queues for propagtion ======
-  vcl_multimap<double, gdt_welm*>             Qw_;
-  vcl_multimap<double, gdt_active_vertex*>    Qv_;
-  vcl_multimap<double, gdt_2nd_shock_source*> Qs2_;
-  vcl_multimap<double, gdt_shock*>            Qs_;
+  std::multimap<double, gdt_welm*>             Qw_;
+  std::multimap<double, gdt_active_vertex*>    Qv_;
+  std::multimap<double, gdt_2nd_shock_source*> Qs2_;
+  std::multimap<double, gdt_shock*>            Qs_;
 
   //: Variable to store the computation results
   double L_nH_, L_nL_, R_nH_, R_nL_, C_nH_, C_nL_;
 
   vgl_point_2d<double> OL_, OC_, OR_;
 
-  vcl_map<int, gdt_shock*> shockmap_;
+  std::map<int, gdt_shock*> shockmap_;
 
   //: use negative id for the shock nodes other then mesh vertices.
-  vcl_map<int, dbmsh3d_gdt_vertex_3d*> snodemap_;
+  std::map<int, dbmsh3d_gdt_vertex_3d*> snodemap_;
 
   //: ====== Summary of Statistics ======
 #if GDT_DEBUG_MSG
@@ -780,13 +780,13 @@ public:
 
   virtual ~gdt_ws_manager () {
     // Need to delete all gdt_active_vertex* in Qv_ and gdt_2nd_shock_source* in Qs_.
-    vcl_multimap<double, gdt_active_vertex*>::iterator vit = Qv_.begin();
+    std::multimap<double, gdt_active_vertex*>::iterator vit = Qv_.begin();
     while (vit != Qv_.end()) {
       gdt_active_vertex* va = (*vit).second;
       delete va;
       vit++;
     }
-    vcl_multimap<double, gdt_2nd_shock_source*>::iterator s2it = Qs2_.begin();
+    std::multimap<double, gdt_2nd_shock_source*>::iterator s2it = Qs2_.begin();
     while (s2it != Qs2_.end()) {
       gdt_2nd_shock_source* s2 = (*s2it).second;
       delete s2;
@@ -794,47 +794,47 @@ public:
     }
 
     // Release memeory of the shocks
-    vcl_map<int, gdt_shock*>::iterator it = shockmap_.begin();
+    std::map<int, gdt_shock*>::iterator it = shockmap_.begin();
     for (; it != shockmap_.end(); it++)
       delete (*it).second;
     shockmap_.clear();
 
     // Release memeory of the shock nodes
-    vcl_map<int, dbmsh3d_gdt_vertex_3d*>::iterator nit = snodemap_.begin();
+    std::map<int, dbmsh3d_gdt_vertex_3d*>::iterator nit = snodemap_.begin();
     for (; nit != snodemap_.end(); nit++)
       delete (*nit).second;
     snodemap_.clear();
   }
 
   //: ====== Data access functions ======
-  vcl_multimap<double, gdt_welm*>* Qw() {
+  std::multimap<double, gdt_welm*>* Qw() {
     return &Qw_;
   }
 
-  vcl_map<int, gdt_shock*>& shockmap() {
+  std::map<int, gdt_shock*>& shockmap() {
     return shockmap_;
   }
   gdt_shock* shockmap (const int i) {
-    vcl_map<int, gdt_shock*>::iterator it = shockmap_.find (i);
+    std::map<int, gdt_shock*>::iterator it = shockmap_.find (i);
     if (it == shockmap_.end())
       return NULL;
     return (*it).second;
   }
   void add_shock (gdt_shock* S) {
-    shockmap_.insert (vcl_pair<int, gdt_shock*>(S->id(), S));
+    shockmap_.insert (std::pair<int, gdt_shock*>(S->id(), S));
   }
 
-  vcl_map<int, dbmsh3d_gdt_vertex_3d*>& snodemap() {
+  std::map<int, dbmsh3d_gdt_vertex_3d*>& snodemap() {
     return snodemap_;
   }
   dbmsh3d_gdt_vertex_3d* snodemap (const int i) {
-    vcl_map<int, dbmsh3d_gdt_vertex_3d*>::iterator it = snodemap_.find (i);
+    std::map<int, dbmsh3d_gdt_vertex_3d*>::iterator it = snodemap_.find (i);
     if (it == snodemap_.end())
       return NULL;
     return (*it).second;
   }
   void add_snode (dbmsh3d_gdt_vertex_3d* N) {
-    snodemap_.insert (vcl_pair<int, dbmsh3d_gdt_vertex_3d*>(N->id(), N));
+    snodemap_.insert (std::pair<int, dbmsh3d_gdt_vertex_3d*>(N->id(), N));
   }
 
   dbmsh3d_gdt_vertex_3d* new_snode (const vgl_point_3d<double>& pt, 
@@ -874,28 +874,28 @@ public:
 
   //: ====== Queue Handling Functions ======
   //: Qw
-  vcl_multimap<double, gdt_welm*>::iterator _find_in_Qw (gdt_welm* W) {
+  std::multimap<double, gdt_welm*>::iterator _find_in_Qw (gdt_welm* W) {
     double key = W->simT();
-    vcl_multimap<double, gdt_welm*>::iterator lower = Qw_.lower_bound(key);
-    vcl_multimap<double, gdt_welm*>::iterator upper = Qw_.upper_bound(key);
-    vcl_multimap<double, gdt_welm*>::iterator it = lower;
+    std::multimap<double, gdt_welm*>::iterator lower = Qw_.lower_bound(key);
+    std::multimap<double, gdt_welm*>::iterator upper = Qw_.upper_bound(key);
+    std::multimap<double, gdt_welm*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == W)
         return it;
     }
     return Qw_.end();
   }
-  vcl_multimap<double, gdt_welm*>::iterator _brute_force_find_in_Qw (gdt_welm* W);
+  std::multimap<double, gdt_welm*>::iterator _brute_force_find_in_Qw (gdt_welm* W);
   void add_to_Qw (gdt_welm* W);
   void remove_from_Qw (gdt_welm* W);
   bool try_remove_from_Qw (gdt_welm* W); 
   
   //: Qv
-  vcl_multimap<double, gdt_active_vertex*>::iterator _find_in_Qv (const dbmsh3d_gdt_vertex_3d* v) {
+  std::multimap<double, gdt_active_vertex*>::iterator _find_in_Qv (const dbmsh3d_gdt_vertex_3d* v) {
     double key = v->dist();
-    vcl_multimap<double, gdt_active_vertex*>::iterator lower = Qv_.lower_bound(key);
-    vcl_multimap<double, gdt_active_vertex*>::iterator upper = Qv_.upper_bound(key);
-    vcl_multimap<double, gdt_active_vertex*>::iterator it = lower;
+    std::multimap<double, gdt_active_vertex*>::iterator lower = Qv_.lower_bound(key);
+    std::multimap<double, gdt_active_vertex*>::iterator upper = Qv_.upper_bound(key);
+    std::multimap<double, gdt_active_vertex*>::iterator it = lower;
     for (; it != upper; it++) {
       gdt_active_vertex* va = (*it).second;
       if (va->v_ == v)
@@ -903,7 +903,7 @@ public:
     }
     return Qv_.end();
   }
-  vcl_multimap<double, gdt_active_vertex*>::iterator _brute_force_find_in_Qv (const dbmsh3d_gdt_vertex_3d* v);
+  std::multimap<double, gdt_active_vertex*>::iterator _brute_force_find_in_Qv (const dbmsh3d_gdt_vertex_3d* v);
   void add_to_Qv (gdt_active_vertex* av);
 
   //: Qs2
@@ -911,18 +911,18 @@ public:
   bool _brute_force_remove_from_Qs2 (gdt_interval* I);
 
   //: Qs
-  vcl_multimap<double, gdt_shock*>::iterator _find_in_Qs (gdt_shock* S) {
+  std::multimap<double, gdt_shock*>::iterator _find_in_Qs (gdt_shock* S) {
     double key = S->simT();
-    vcl_multimap<double, gdt_shock*>::iterator lower = Qs_.lower_bound(key);
-    vcl_multimap<double, gdt_shock*>::iterator upper = Qs_.upper_bound(key);
-    vcl_multimap<double, gdt_shock*>::iterator it = lower;
+    std::multimap<double, gdt_shock*>::iterator lower = Qs_.lower_bound(key);
+    std::multimap<double, gdt_shock*>::iterator upper = Qs_.upper_bound(key);
+    std::multimap<double, gdt_shock*>::iterator it = lower;
     for (; it != upper; it++) {
       if ((*it).second == S)
         return it;
     }
     return Qs_.end();
   }
-  vcl_multimap<double, gdt_shock*>::iterator _brute_force_find_in_Qs (gdt_shock* S);
+  std::multimap<double, gdt_shock*>::iterator _brute_force_find_in_Qs (gdt_shock* S);
   void add_to_Qs (gdt_shock* S);
   bool remove_from_Qs (gdt_shock* S);
 
@@ -1101,25 +1101,25 @@ public:
   void Advance_shock_to_junction (gdt_shock* S);
     //: return true for a sink.
     bool get_all_intersected_S_via_Wa (const gdt_shock* S,
-                                       vcl_vector<gdt_shock*>& SaList,
-                                       vcl_vector<gdt_welm*>& WaList);
+                                       std::vector<gdt_shock*>& SaList,
+                                       std::vector<gdt_welm*>& WaList);
     //: return true for a sink.
     bool get_all_intersected_S_via_Wb (const gdt_shock* S,
-                                       vcl_vector<gdt_shock*>& SbList,
-                                       vcl_vector<gdt_welm*>& WbList);
+                                       std::vector<gdt_shock*>& SbList,
+                                       std::vector<gdt_welm*>& WbList);
     void merge_all_intersected_S (const gdt_shock* S,
-                                  vcl_vector<gdt_shock*>& SaList,
-                                  vcl_vector<gdt_welm*>& WaList,
-                                  vcl_vector<gdt_shock*>& SbList,
-                                  vcl_vector<gdt_welm*>& WbList,                                              
-                                  vcl_vector<gdt_shock*>& SList,
-                                  vcl_vector<gdt_welm*>& WList);
+                                  std::vector<gdt_shock*>& SaList,
+                                  std::vector<gdt_welm*>& WaList,
+                                  std::vector<gdt_shock*>& SbList,
+                                  std::vector<gdt_welm*>& WbList,                                              
+                                  std::vector<gdt_shock*>& SList,
+                                  std::vector<gdt_welm*>& WList);
 
-    void advance_3_more_shocks_to_junction (vcl_vector<gdt_shock*>& SList,
-                                            vcl_vector<gdt_welm*>& WList,
+    void advance_3_more_shocks_to_junction (std::vector<gdt_shock*>& SList,
+                                            std::vector<gdt_welm*>& WList,
                                             const gdt_shock* S);
-    void terminate_shocks_to_sink (vcl_vector<gdt_shock*>& SList,
-                                   vcl_vector<gdt_welm*>& WList,
+    void terminate_shocks_to_sink (std::vector<gdt_shock*>& SList,
+                                   std::vector<gdt_welm*>& WList,
                                    const gdt_shock* S);
     void advance_2_shocks_to_junction (gdt_shock* leftS, gdt_welm* commonI, gdt_shock* rightS);
       vgl_point_3d<double> compute_snode_pt (const gdt_shock* Sl, const gdt_welm* Wc, const gdt_shock* Sr,

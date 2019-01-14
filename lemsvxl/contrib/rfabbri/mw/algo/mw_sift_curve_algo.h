@@ -8,8 +8,8 @@
 //\date 11/30/08 20:48:48 EST
 //
 
-#include <vcl_cmath.h>
-#include <vcl_limits.h>
+#include <cmath>
+#include <limits>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <sdet/sdet_edgel.h>
@@ -56,11 +56,11 @@ typedef VL::float_t t_descriptor_float;
           MW_SIGMAN,  //< sigman
           1.6 * powf(2.0f, 1.0f / MW_LEVELS), //< Base smoothing level as I use in matlab
           1,
-  //          vcl_max
+  //          std::max
   //          (int
-  //           (vcl_floor
+  //           (std::floor
   //            (log2
-  //             (vcl_min(image_view.ni(),image_view.nj()))) - MW_OMIN -3), 1), //< O, downsample up to 8x8 images
+  //             (std::min(image_view.ni(),image_view.nj()))) - MW_OMIN -3), 1), //< O, downsample up to 8x8 images
           MW_LEVELS, //< S
           MW_OMIN, //< omin
           -1, // smin as I use in matlab
@@ -76,32 +76,32 @@ typedef VL::float_t t_descriptor_float;
   {}
 
   // returns the sigma values for each scale
-  void get_sigmas(vcl_vector<double> *sigmas) const;
+  void get_sigmas(std::vector<double> *sigmas) const;
  
   void print_sigmas() const {
-    vcl_cout << "sigmas: " ;
-    vcl_vector<double> sigmas;
+    std::cout << "sigmas: " ;
+    std::vector<double> sigmas;
     get_sigmas(&sigmas);
     if (sigmas.size()) {
       unsigned i=0;
       for (; i+1 < sigmas.size(); ++i)
-        vcl_cout << sigmas[i] << ", ";
-      vcl_cout << sigmas[i] << ";\n";
+        std::cout << sigmas[i] << ", ";
+      std::cout << sigmas[i] << ";\n";
     } else {
-      vcl_cout << "empty\n";
+      std::cout << "empty\n";
     }
   }
 
   void compute( const sdet_edgel_chain &crv, bmcsd_sift_curve *s_crv);
 
-  void compute_many(const vcl_vector<sdet_edgel_chain> &ec_v, vcl_vector<bmcsd_sift_curve> *ptr_sc_v);
+  void compute_many(const std::vector<sdet_edgel_chain> &ec_v, std::vector<bmcsd_sift_curve> *ptr_sc_v);
 
   static t_descriptor_float unambigous_nneighbor(
       const bmcsd_sift_curve &sc, 
       const vnl_vector_fixed <t_descriptor_float, BMCSD_SIFT_CURVE_NUM_DIMS> &descr) 
   {
-    t_descriptor_float dbest = vcl_numeric_limits<t_descriptor_float>::infinity();
-    t_descriptor_float dsecond_best = vcl_numeric_limits<t_descriptor_float>::infinity();
+    t_descriptor_float dbest = std::numeric_limits<t_descriptor_float>::infinity();
+    t_descriptor_float dsecond_best = std::numeric_limits<t_descriptor_float>::infinity();
     for (unsigned s=0; s < sc.num_scales(); ++s) {
       for (unsigned i=0; i < sc.num_samples(); ++i) {
         // compute the distance of this descriptor to the other
@@ -118,8 +118,8 @@ typedef VL::float_t t_descriptor_float;
     }
     // Lowe's criterion: accept the match only if unique
     t_descriptor_float thresh=1.5;
-    if(dbest != vcl_numeric_limits<t_descriptor_float>::infinity() && thresh * dbest > dsecond_best)
-      return vcl_numeric_limits<t_descriptor_float>::infinity();
+    if(dbest != std::numeric_limits<t_descriptor_float>::infinity() && thresh * dbest > dsecond_best)
+      return std::numeric_limits<t_descriptor_float>::infinity();
     return dbest;
   }
 

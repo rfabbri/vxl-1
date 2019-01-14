@@ -25,13 +25,13 @@
 class dborl_archaeology_algo_params : public dborl_algo_params
 {
 public:
-  vcl_string algo_abbreviation_;
+  std::string algo_abbreviation_;
  
   //io parameters  
-  dborl_parameter<vcl_string> input_dir_;    // passes the folder of the input object
-  dborl_parameter<vcl_string> input_name_;
-  dborl_parameter<vcl_string> input_extension_;     // extension of the input file
-  dborl_parameter<vcl_string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
+  dborl_parameter<std::string> input_dir_;    // passes the folder of the input object
+  dborl_parameter<std::string> input_name_;
+  dborl_parameter<std::string> input_extension_;     // extension of the input file
+  dborl_parameter<std::string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
                                                     // if nothing is written here, nothing gets associated
 
   //optional parameters
@@ -45,7 +45,7 @@ public:
   //dborl_parameter<double> c_ds_; 
 
   //: constructor
-  dborl_archaeology_algo_params (vcl_string algo_name) : dborl_algo_params(algo_name) 
+  dborl_archaeology_algo_params (std::string algo_name) : dborl_algo_params(algo_name) 
   { 
     algo_abbreviation_ = "dborl_archaeology_algo";
 

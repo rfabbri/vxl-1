@@ -6,16 +6,16 @@
 //#include "PluginManager.h"
 //#include "DrawingWindow.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include "points.h"
 #include "EdgeDetection.h"
 #include "LogicalLinear.h"
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 //#include <fstream>
 //#include <sstream>
-#include <vcl_map.h>
-#include <vcl_cmath.h>
+#include <map>
+#include <cmath>
 
 //#include <wx/wx.h>
 
@@ -55,9 +55,9 @@ class EdgeDetector
 
         void operator()(string input_filename, string output_filename, int image_elem, bool only_pixel, int half_max_tan_partitions)
           {
-            vcl_vector<EdgePoint> edge_list;
-            vcl_vector<EdgePoint> pline_list;
-            vcl_vector<EdgePoint> nline_list;
+            std::vector<EdgePoint> edge_list;
+            std::vector<EdgePoint> pline_list;
+            std::vector<EdgePoint> nline_list;
 
             EdgeWriter writer;
 
@@ -87,17 +87,17 @@ class EdgeDetector
             string header = _edgeDetector.getName()+"\n";
             header +=_edgeDetector.getOptions().printOptions("#");
 
-            vcl_ostringstream ostrm;
-            ostrm<<"# \t Half Tangential Partitions  : "<<half_max_tan_partitions<<vcl_endl;
+            std::ostringstream ostrm;
+            ostrm<<"# \t Half Tangential Partitions  : "<<half_max_tan_partitions<<std::endl;
             if (only_pixel)
-                ostrm<<"# \t Convergence                 : ONLY_PIXEL"<<vcl_endl;
+                ostrm<<"# \t Convergence                 : ONLY_PIXEL"<<std::endl;
             else
-                ostrm<<"# \t Convergence                 : SUB_PIXEL"<<vcl_endl;
+                ostrm<<"# \t Convergence                 : SUB_PIXEL"<<std::endl;
 
-            ostrm    <<"# Input Image Width              : "<<image->width()<<vcl_endl;
-            ostrm    <<"# Input Image Height             : "<<image->height()<<vcl_endl;
-            ostrm    <<"# Input File                     : "<<input_filename<<vcl_endl;
-            ostrm    <<"# Output File                    : "<<output_filename<<vcl_endl;
+            ostrm    <<"# Input Image Width              : "<<image->width()<<std::endl;
+            ostrm    <<"# Input Image Height             : "<<image->height()<<std::endl;
+            ostrm    <<"# Input File                     : "<<input_filename<<std::endl;
+            ostrm    <<"# Output File                    : "<<output_filename<<std::endl;
            
             header +=ostrm.str();
             
@@ -110,7 +110,7 @@ class EdgeDetector
            }
 
 
-        int detectEdges(vcl_vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
+        int detectEdges(std::vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
           {
             
             /**
@@ -164,7 +164,7 @@ class EdgeDetector
             return 0; 
            };
 
-        int detectPLines(vcl_vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
+        int detectPLines(std::vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
           {
             
             /**
@@ -218,7 +218,7 @@ class EdgeDetector
             return 0; 
            }
 
-        int detectNLines(vcl_vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
+        int detectNLines(std::vector<EdgePoint> &edge_list, bool only_pixel, int half_max_tan_partitions)
           {
             
             /**
@@ -298,12 +298,12 @@ class EdgeDetector
             FilterUtilType::FilterFunctionType filter_function(ops,M_PI,0,0);
             FilterUtilType::type               filter(ops.getFilterRows(), ops.getFilterCols(), ops.getStepSize(),filter_function);
 
-            cout<<filter.dumpFilter()<<vcl_endl;
+            cout<<filter.dumpFilter()<<std::endl;
            }
 
         void readAnlFile(string input_filename)
           {
-            vcl_vector<AnlObject> obj_list;
+            std::vector<AnlObject> obj_list;
             AnlFileParser parser;
             parser(obj_list, input_filename);
 

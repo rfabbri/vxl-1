@@ -4,9 +4,9 @@
 // \file
 
 #include "biocts_Volume3D.h"
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <fstream>
+#include <cmath>
 
 biocts_Volume3D::biocts_Volume3D(int _xdim, int _ydim, int _zdim):
   xdim(_xdim), ydim(_ydim), zdim(_zdim)
@@ -53,11 +53,11 @@ biocts_Volume3D::~biocts_Volume3D()
   delete []data;
 }
 
-biocts_Volume3D::biocts_Volume3D(vcl_string volumedatafile)
+biocts_Volume3D::biocts_Volume3D(std::string volumedatafile)
 {
   int i,j,k;
 
-  vcl_ifstream Instream(volumedatafile.c_str(), vcl_ios::in);
+  std::ifstream Instream(volumedatafile.c_str(), std::ios::in);
 
   Instream >> xdim >> ydim >> zdim;
 
@@ -95,11 +95,11 @@ biocts_Volume3D::biocts_Volume3D(vcl_string volumedatafile)
 }
 
 
-void biocts_Volume3D::saveVolumeInFile(vcl_string filename)
+void biocts_Volume3D::saveVolumeInFile(std::string filename)
 {
   int i,j,k;
 
-  vcl_ofstream Ostream(filename.c_str(), vcl_ios::out);
+  std::ofstream Ostream(filename.c_str(), std::ios::out);
 
   //volume file size header info
   Ostream << Dia << " " << Dia << " " << zdim << " ";

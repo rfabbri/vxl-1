@@ -5,9 +5,9 @@
 
 #include<dsm/dsm_features_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 //INPUTS: (1) the path the neighborhood xml file which should have the vido glob in it and
 //Output: (1) dsm_features_sptr
@@ -24,9 +24,9 @@ bool dsm_extract_dsift_features_process_cons(bprb_func_process& pro)
 	//set input/output types
 	using namespace dsm_extract_dsift_features_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
-	input_types_[0] = "vcl_string";
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
+	input_types_[0] = vcl_string";
 	output_types_[0] = "dsm_features_sptr";
 
 	if(!pro.set_input_types(input_types_))
@@ -45,13 +45,13 @@ bool dsm_extract_dsift_features_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_extract_dsift_features: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_extract_dsift_features: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 
 	dsm_features_sptr features_sptr = new dsm_features(filename);
 

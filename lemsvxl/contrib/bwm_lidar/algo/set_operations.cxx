@@ -17,7 +17,7 @@ set_operations::set_operations(){
 
 //: Add a free element (i.e., the insertion will create a new set)
 void set_operations::add(int element){
-  vcl_vector<int> new_set;
+  std::vector<int> new_set;
   new_set.push_back(element);
   this->sets.push_back(new_set);
 }
@@ -67,13 +67,13 @@ void set_operations::join(int element1, int element2){
 //: Print all existing sets
 void set_operations::print(){
   for(unsigned i=0; i<this->sets.size(); i++){
-    vcl_cout << "Set " << i << ": ";
+    std::cout << "Set " << i << ": ";
     for(unsigned j=0; j<this->sets[i].size(); j++){
-      vcl_cout << this->sets[i][j] << " ";
+      std::cout << this->sets[i][j] << " ";
     }
-    vcl_cout << "\n";
+    std::cout << "\n";
   }
-  vcl_cout << "\n";
+  std::cout << "\n";
 }
 
 //: Get the set index for the given element

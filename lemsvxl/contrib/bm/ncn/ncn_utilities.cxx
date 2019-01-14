@@ -1,6 +1,6 @@
 #include "ncn_utilities.h"
 
-void ncn_utilities::vnl_matrix2dat(vcl_ofstream& ofs, vnl_matrix<float> const& mat)
+void ncn_utilities::vnl_matrix2dat(std::ofstream& ofs, vnl_matrix<float> const& mat)
 {
     unsigned nrows = mat.rows();
     unsigned ncols = mat.cols();
@@ -14,7 +14,7 @@ void ncn_utilities::vnl_matrix2dat(vcl_ofstream& ofs, vnl_matrix<float> const& m
     }
 }//end vnl_matrix2dat
 
-void ncn_utilities::vnl_matrix2dat(vcl_ofstream& ofs,vnl_matrix<unsigned> const& mat)
+void ncn_utilities::vnl_matrix2dat(std::ofstream& ofs,vnl_matrix<unsigned> const& mat)
 {
     unsigned nrows = mat.rows();
     unsigned ncols = mat.cols();
@@ -28,7 +28,7 @@ void ncn_utilities::vnl_matrix2dat(vcl_ofstream& ofs,vnl_matrix<unsigned> const&
     }
 }//end vnl_matrix2dat
 
-void ncn_utilities::vnl_vector2dat(vcl_ofstream& ofs, vnl_vector<float> const& vec)
+void ncn_utilities::vnl_vector2dat(std::ofstream& ofs, vnl_vector<float> const& vec)
 {
     vnl_vector<float>::const_iterator vec_itr = vec.begin();
     vnl_vector<float>::const_iterator vec_end = vec.end();
@@ -40,7 +40,7 @@ void ncn_utilities::vnl_vector2dat(vcl_ofstream& ofs, vnl_vector<float> const& v
 
 //calculate_temporal_entropy can be parallelized with opencl
 //return normalized entropy_matrix
-vnl_matrix<float> ncn_utilities::calculate_temporal_entropy(vcl_map<unsigned, vil_image_view<float> >& img_sequence, unsigned const& nbins)
+vnl_matrix<float> ncn_utilities::calculate_temporal_entropy(std::map<unsigned, vil_image_view<float> >& img_sequence, unsigned const& nbins)
 {
     unsigned nrows = img_sequence[1].nj();
     unsigned ncols = img_sequence[1].ni();
@@ -66,24 +66,24 @@ vnl_matrix<float> ncn_utilities::calculate_temporal_entropy(vcl_map<unsigned, vi
     return output;
 }//end calculate_temporal_entropy
 
-vcl_map<unsigned, vil_image_view<float> > ncn_utilities::load_image_sequence(vcl_string const& img_directory)
+std::map<unsigned, vil_image_view<float> > ncn_utilities::load_image_sequence(std::string const& img_directory)
 {
-    vcl_map<unsigned, vil_image_view<float> > output;
-    vcl_vector<vcl_string> filenames;
+    std::map<unsigned, vil_image_view<float> > output;
+    std::vector<std::string> filenames;
 
     for(vul_file_iterator file_itr = img_directory + "\\*.jpg"; file_itr; ++file_itr)
         filenames.push_back(vul_file::strip_extension(file_itr.filename()));
 
-    vcl_vector<vcl_string>::iterator filename_itr = filenames.begin();
+    std::vector<std::string>::iterator filename_itr = filenames.begin();
 
     //sort filenames into correct order
-    vcl_sort(filenames.begin(),filenames.end());
+    std::sort(filenames.begin(),filenames.end());
 
     for(unsigned i = 0; filename_itr != filenames.end(); ++filename_itr, ++i)
     {
-        vcl_string curr_filename = img_directory + "\\" + *filename_itr + ".jpg";
+        std::string curr_filename = img_directory + "\\" + *filename_itr + ".jpg";
 
-        vcl_cout << "Loading Image: " << *filename_itr << vcl_endl;
+        std::cout << "Loading Image: " << *filename_itr << std::endl;
 
         //convert to grey scale image
         vil_convert_planes_to_grey<vxl_byte,float>
@@ -99,8 +99,8 @@ bool ncn_utilities::normalize_entropy_matrix(vnl_matrix<float>& entropy_matrix)
     // Check if this is a valid entropy matrix. Entropy must be positive.
     if(entropy_matrix.min_value() < 0)
     {
-        vcl_cout << "Error ncn:utilities::normalize_entropy_matrix:\n"
-                 << '\t' << "Matrix contains negative entropy value" << vcl_flush;
+        std::cout << "Error ncn:utilities::normalize_entropy_matrix:\n"
+                 << '\t' << "Matrix contains negative entropy value" << std::flush;
         return false;
     }
     
@@ -124,10 +124,10 @@ bool ncn_utilities::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix,
     vnl_matrix<float>::const_iterator ent_mat_itr = entropy_matrix.begin();
     unsigned npix = entropy_matrix.size();
 
-    vcl_vector<unsigned> index(npix);
-    vcl_vector<float> p(npix);
-    vcl_vector<float>::iterator p_itr;
-    vcl_vector<unsigned> loc;
+    std::vector<unsigned> index(npix);
+    std::vector<float> p(npix);
+    std::vector<float>::iterator p_itr;
+    std::vector<unsigned> loc;
     
     for(unsigned i = 0; ent_mat_itr < entropy_matrix.end(); ++ent_mat_itr, ++i)
     {
@@ -137,7 +137,7 @@ bool ncn_utilities::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix,
 
     for(unsigned i = 0; i < num_piv_pix; ++i)
     {
-        vcl_cout << vcl_setprecision(2) << vcl_fixed << (float(i)/float(num_piv_pix))*100.0f << "% pivot pixels sampled." << vcl_endl;
+        std::cout << std::setprecision(2) << std::fixed << (float(i)/float(num_piv_pix))*100.0f << "% pivot pixels sampled." << std::endl;
         loc.clear();
         if(bsta_sampler<unsigned>::sample(index,p,1,loc))
         {
@@ -159,7 +159,7 @@ bool ncn_utilities::sample_pivot_pixels(vnl_matrix<float> const& entropy_matrix,
         }
         else
         {
-            vcl_cout << "Error ncn_utilities::sample_pivot_pixels, bsta_sampler returned false." << vcl_endl;
+            std::cout << "Error ncn_utilities::sample_pivot_pixels, bsta_sampler returned false." << std::endl;
             return false;
         }
     }
@@ -175,14 +175,14 @@ bool ncn_utilities::sample_pivot_pixels_fast(vnl_matrix<float> const& entropy_ma
     output.set_size(num_piv_pix,2);
     unsigned nrows = entropy_matrix.rows();
 
-    vcl_vector<unsigned> index;
-    vcl_vector<float> p;
+    std::vector<unsigned> index;
+    std::vector<float> p;
     vnl_matrix<float>::const_iterator ent_itr = entropy_matrix.begin();
-    vcl_vector<float>::iterator p_itr;
-    vcl_vector<unsigned> linear_index;
+    std::vector<float>::iterator p_itr;
+    std::vector<unsigned> linear_index;
 
     //the key will be the linear index, the value will be the index into the p vector.
-    vcl_map<unsigned,unsigned> category_index_map;
+    std::map<unsigned,unsigned> category_index_map;
     
     for(unsigned i=0;ent_itr < entropy_matrix.end(); ent_itr = ent_itr + down_sample_factor,i++)
     {
@@ -201,14 +201,14 @@ bool ncn_utilities::sample_pivot_pixels_fast(vnl_matrix<float> const& entropy_ma
     //check there are more pixels to sample from then desired pivot pixels.
     if(p.size() < num_piv_pix)
     {
-        vcl_cout << "Error ncn_utilities::sample_pivot_pixels_fast \n"
-                 << "\t The number of pixels to sample from is less than the required number of pivot pixels." << vcl_endl;
+        std::cout << "Error ncn_utilities::sample_pivot_pixels_fast \n"
+                 << "\t The number of pixels to sample from is less than the required number of pivot pixels." << std::endl;
         return false;
     }
     //now sample without replacement
     for(unsigned i = 0; i < num_piv_pix; ++i)
     {
-        vcl_cout << vcl_setprecision(2) << vcl_fixed << (float(i)/float(num_piv_pix))*100.0f << "% pivot pixels sampled" << vcl_endl;
+        std::cout << std::setprecision(2) << std::fixed << (float(i)/float(num_piv_pix))*100.0f << "% pivot pixels sampled" << std::endl;
         linear_index.clear();
         if(bsta_sampler<unsigned>::sample(index,p,1,linear_index))
         {
@@ -230,7 +230,7 @@ bool ncn_utilities::sample_pivot_pixels_fast(vnl_matrix<float> const& entropy_ma
         }
         else
         {
-            vcl_cout << "Error ncn_utilities::sample_pivot_pixels_fast, bsta_sampler returned false." << vcl_endl;
+            std::cout << "Error ncn_utilities::sample_pivot_pixels_fast, bsta_sampler returned false." << std::endl;
             return false;
         }
 
@@ -247,8 +247,8 @@ bool ncn_utilities::sample_pivot_pixels_rejection(vnl_matrix<float> const& norma
     //check entropy_matrix is a valid pdf
     if(normalized_entropy_matrix.min_value() < 0 || normalized_entropy_matrix.absolute_value_sum() > 1)
     {
-        vcl_cerr << "Error ncn_utilities::sample_pivot_pixels_rejection,\n"
-                 << "\t normalized_entropy_matrix is not a valid probability density" << vcl_flush;
+        std::cerr << "Error ncn_utilities::sample_pivot_pixels_rejection,\n"
+                 << "\t normalized_entropy_matrix is not a valid probability density" << std::flush;
         return false;
     }
 
@@ -269,17 +269,17 @@ bool ncn_utilities::sample_pivot_pixels_rejection(vnl_matrix<float> const& norma
 
     cdf[cdf.size()-1] = 1.0f;
 
-    //vcl_ofstream of_cdf("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\cdf.dat",vcl_ios::out);
+    //std::ofstream of_cdf("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\cdf.dat",std::ios::out);
     //ncn_utilities::vnl_vector2dat(of_cdf,cdf);
     //of_cdf.close();
 
-    vcl_set<unsigned> sample_set;
+    std::set<unsigned> sample_set;
     //sample until number of unique samples is sufficient
     unsigned first;
     unsigned last;
     unsigned mid;
     bool bin_found;
-    vcl_pair<vcl_set<unsigned>::iterator, bool> ret;
+    std::pair<std::set<unsigned>::iterator, bool> ret;
     while(sample_set.size() < num_piv_pix)
     {
         
@@ -309,15 +309,15 @@ bool ncn_utilities::sample_pivot_pixels_rejection(vnl_matrix<float> const& norma
         {
             ret = sample_set.insert(mid);
             if(ret.second == true)
-                vcl_cout << vcl_setprecision(2) << vcl_fixed 
+                std::cout << std::setprecision(2) << std::fixed 
                          << (float(sample_set.size())/float(num_piv_pix)) * 100 
-                         << "% pivot pixels sampled." << vcl_endl;
+                         << "% pivot pixels sampled." << std::endl;
 
         }
         else
         {
-            vcl_cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
-                     << "this should not be the case." << vcl_flush;
+            std::cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
+                     << "this should not be the case." << std::flush;
             return false;
         }
 
@@ -325,8 +325,8 @@ bool ncn_utilities::sample_pivot_pixels_rejection(vnl_matrix<float> const& norma
     }//end while sample_set.size() < num_pix_pix
 
     //now the set is full must convert the samples from linear indicies to matrix coordinates and store in output
-    vcl_set<unsigned>::iterator sample_set_itr;
-    vcl_set<unsigned>::iterator sample_set_end = sample_set.end();
+    std::set<unsigned>::iterator sample_set_itr;
+    std::set<unsigned>::iterator sample_set_end = sample_set.end();
 
 
     for(sample_set_itr = sample_set.begin(),i=0;sample_set_itr!=sample_set_end;++sample_set_itr,i++)
@@ -345,14 +345,14 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
     vnl_random rand;
     unsigned npix = entropy_matrix.size();
     unsigned nrows = entropy_matrix.rows();
-    vcl_pair<vcl_set<unsigned>::iterator,bool> ret;
-    vcl_map<unsigned,float> sample_particle_map;
+    std::pair<std::set<unsigned>::iterator,bool> ret;
+    std::map<unsigned,float> sample_particle_map;
     vnl_vector<float> p(entropy_matrix.data_block(),entropy_matrix.size());
     output.set_size(num_piv_pix,2);
 
     //1. Select a random subset of unique pixels and associate with the corresponding probability.
     // Also cache the sum of the particle weights...we'll need these later for normalization.
-    vcl_ofstream of_samp_part("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_particles.dat");
+    std::ofstream of_samp_part("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_particles.dat");
     float wsum = 0;
     while(sample_particle_map.size() < nparticles)
     {
@@ -363,10 +363,10 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
 
     
     //2. Reweight each sample and simultaneously construct the cdf
-    vcl_map<unsigned,float>::iterator sample_particle_map_itr;
-    vcl_map<unsigned,float>::iterator sample_particle_map_end = sample_particle_map.end();
-    vcl_vector<float> cdf(nparticles);
-    vcl_vector<unsigned> particle_vector;//for ease of indexing
+    std::map<unsigned,float>::iterator sample_particle_map_itr;
+    std::map<unsigned,float>::iterator sample_particle_map_end = sample_particle_map.end();
+    std::vector<float> cdf(nparticles);
+    std::vector<unsigned> particle_vector;//for ease of indexing
     float cdf_tot = 0.0f;
     unsigned i;
     for(sample_particle_map_itr = sample_particle_map.begin(),i=0;sample_particle_map_itr!=sample_particle_map_end;++sample_particle_map_itr,++i)
@@ -380,7 +380,7 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
     cdf[cdf.size()-1]=1.0f;
 
     //3. Sample a unique set of size num_piv_pix via inverse cdf method.
-    vcl_set<unsigned> sample_set; 
+    std::set<unsigned> sample_set; 
     unsigned first = 0;
     unsigned last = cdf.size()-1;
     unsigned mid;
@@ -424,38 +424,38 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
         {
             ret = sample_set.insert(mid);
             if(ret.second == true)
-                vcl_cout << vcl_setprecision(2) << vcl_fixed 
+                std::cout << std::setprecision(2) << std::fixed 
                          << (float(sample_set.size())/float(num_piv_pix)) * 100 
-                         << "% pivot pixels sampled." << vcl_endl;
+                         << "% pivot pixels sampled." << std::endl;
 
         }
         else
         {
-            vcl_cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
-                     << "this should not be the case." << vcl_flush;
+            std::cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
+                     << "this should not be the case." << std::flush;
             return false;
         }
     }//end while(sample_set.size() < num_piv_pix)
 
-    vcl_ofstream of_samp_set("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_set.dat");
+    std::ofstream of_samp_set("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_set.dat");
     
 
     //sample_set is an offset from sample_particle_map.beginning()
     //use the sampled set to index into the particle set and convert the linear index to matrix coordinates.
-    vcl_set<unsigned>::iterator sample_set_itr;
-    vcl_set<unsigned>::iterator sample_set_end = sample_set.end();
+    std::set<unsigned>::iterator sample_set_itr;
+    std::set<unsigned>::iterator sample_set_end = sample_set.end();
     for( i=0,sample_set_itr = sample_set.begin(); sample_set_itr != sample_set_end; ++sample_set_itr,++i)
     {
         //if(*sample_set_itr > (particle_vector.size()-1))
         //{
-        //    vcl_cerr << "Error: ncn_utilities::sample_pivot_pixels_importance, Indexing incorrectly" << vcl_endl;
+        //    std::cerr << "Error: ncn_utilities::sample_pivot_pixels_importance, Indexing incorrectly" << std::endl;
         //    return false;
         //}
         of_samp_set << *sample_set_itr << '\n';
         output(i,0) = particle_vector[*sample_set_itr]/nrows;
         output(i,1) = particle_vector[*sample_set_itr]%nrows;
-        //vcl_cout << "particle_vector[*sample_set_itr] = " << particle_vector[*sample_set_itr] << vcl_endl;
-        /*vcl_cout << "*sample_set_itr = " <<  *sample_set_itr << vcl_endl;*/
+        //std::cout << "particle_vector[*sample_set_itr] = " << particle_vector[*sample_set_itr] << std::endl;
+        /*std::cout << "*sample_set_itr = " <<  *sample_set_itr << std::endl;*/
     }
 
     
@@ -464,19 +464,19 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
 }//end sample_pivot_pixels_importance
 
 bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entropy_matrix, unsigned const& num_piv_pix,
-                    vcl_set<ncn_image_point>& pivot_pixel_candidates, unsigned const& nparticles)
+                    std::set<ncn_image_point>& pivot_pixel_candidates, unsigned const& nparticles)
 {
     vnl_random rand;
     unsigned npix = entropy_matrix.size();
     unsigned nrows = entropy_matrix.rows();
-    vcl_pair<vcl_set<ncn_image_point>::iterator,bool> ret;
-    vcl_map<unsigned,float> sample_particle_map;
+    std::pair<std::set<ncn_image_point>::iterator,bool> ret;
+    std::map<unsigned,float> sample_particle_map;
     vnl_vector<float> p(entropy_matrix.data_block(),entropy_matrix.size());
 
 
     //1. Select a random subset of unique pixels and associate with the corresponding probability.
     // Also cache the sum of the particle weights...we'll need these later for normalization.
-    vcl_ofstream of_samp_part("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_particles.dat");
+    std::ofstream of_samp_part("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_particles.dat");
     float wsum = 0;
     while(sample_particle_map.size() < nparticles)
     {
@@ -487,10 +487,10 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
 
     
     //2. Reweight each sample and simultaneously construct the cdf
-    vcl_map<unsigned,float>::iterator sample_particle_map_itr;
-    vcl_map<unsigned,float>::iterator sample_particle_map_end = sample_particle_map.end();
-    vcl_vector<float> cdf(nparticles);
-    vcl_vector<unsigned> particle_vector;//for ease of indexing
+    std::map<unsigned,float>::iterator sample_particle_map_itr;
+    std::map<unsigned,float>::iterator sample_particle_map_end = sample_particle_map.end();
+    std::vector<float> cdf(nparticles);
+    std::vector<unsigned> particle_vector;//for ease of indexing
     float cdf_tot = 0.0f;
     unsigned i;
     for(sample_particle_map_itr = sample_particle_map.begin(),i=0;sample_particle_map_itr!=sample_particle_map_end;++sample_particle_map_itr,++i)
@@ -504,7 +504,7 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
     cdf[cdf.size()-1]=1.0f;
 
     //3. Sample a unique set of size num_piv_pix via inverse cdf method.
-    vcl_set<unsigned> sample_set; 
+    std::set<unsigned> sample_set; 
     unsigned first = 0;
     unsigned last = cdf.size()-1;
     unsigned mid;
@@ -551,37 +551,37 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
             ncn_image_point sample_pt(particle_vector[mid]/nrows,particle_vector[mid]%nrows);
             ret = pivot_pixel_candidates.insert(sample_pt);
             if(ret.second == true)
-                vcl_cout << vcl_setprecision(2) << vcl_fixed 
+                std::cout << std::setprecision(2) << std::fixed 
                          << (float(pivot_pixel_candidates.size())/float(num_piv_pix)) * 100 
-                         << "% pivot pixels sampled." << vcl_endl;
+                         << "% pivot pixels sampled." << std::endl;
 
         }
         else
         {
-            vcl_cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
-                     << "this should not be the case." << vcl_flush;
+            std::cerr << "Error ncn_utilities::sample_pivot_pixels_rejection a bin was not found in the cdf,"
+                     << "this should not be the case." << std::flush;
             return false;
         }
     }//end while(sample_set.size() < num_piv_pix)
 
     
-    // vcl_ofstream of_samp_set("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_set.dat");
+    // std::ofstream of_samp_set("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\sample_set.dat");
 
     ////sample_set is an offset from sample_particle_map.beginning()
     ////use the sampled set to index into the particle set and convert the linear index to matrix coordinates.
-    //vcl_set<ncn_image_point>::iterator pivot_pixel_candidates_itr;
-    //vcl_set<ncn_image_point>::iterator pivot_pixel_candidates_end = pivot_pixel_candidates.end();
+    //std::set<ncn_image_point>::iterator pivot_pixel_candidates_itr;
+    //std::set<ncn_image_point>::iterator pivot_pixel_candidates_end = pivot_pixel_candidates.end();
     //for( i=0,pivot_pixel_candidates_itr = pivot_pixel_candidates.begin(); pivot_pixel_candidates_itr != pivot_pixel_candidates_end; 
     //        ++pivot_pixel_candidates_itr,++i)
     //{
     //    //if(*sample_set_itr > (particle_vector.size()-1))
     //    //{
-    //    //    vcl_cerr << "Error: ncn_utilities::sample_pivot_pixels_importance, Indexing incorrectly" << vcl_endl;
+    //    //    std::cerr << "Error: ncn_utilities::sample_pivot_pixels_importance, Indexing incorrectly" << std::endl;
     //    //    return false;
     //    //}
     //    of_samp_set << *pivot_pixel_candidates_itr << '\n';
-    //    //vcl_cout << "particle_vector[*sample_set_itr] = " << particle_vector[*sample_set_itr] << vcl_endl;
-    //    /*vcl_cout << "*sample_set_itr = " <<  *sample_set_itr << vcl_endl;*/
+    //    //std::cout << "particle_vector[*sample_set_itr] = " << particle_vector[*sample_set_itr] << std::endl;
+    //    /*std::cout << "*sample_set_itr = " <<  *sample_set_itr << std::endl;*/
     //}
 
     //
@@ -589,7 +589,7 @@ bool ncn_utilities::sample_pivot_pixels_importance(vnl_matrix<float> const& entr
     return true;
 }//end sample_pivot_pixels_importance SET
 
-unsigned ncn_utilities::find_bin(vcl_vector<float> const& cdf, float const& target)
+unsigned ncn_utilities::find_bin(std::vector<float> const& cdf, float const& target)
 {
     unsigned first = 0;
     unsigned last = cdf.size()-1;
@@ -626,7 +626,7 @@ unsigned ncn_utilities::find_bin(vcl_vector<float> const& cdf, float const& targ
 
     if( !bin_found )
     {
-        vcl_cerr << "Error: ncn_utilities::find_bin bin was not found." << vcl_flush;
+        std::cerr << "Error: ncn_utilities::find_bin bin was not found." << std::flush;
     }
 
     return mid;
@@ -642,9 +642,9 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
     vnl_random rand;
     output.set_size(entropy_matrix.size(),2);
     unsigned nrows = entropy_matrix.rows();
-    vcl_vector<unsigned> linear_indicies;
-    vcl_vector<float> p;
-    vcl_vector<float> cdf;
+    std::vector<unsigned> linear_indicies;
+    std::vector<float> p;
+    std::vector<float> cdf;
     float u;
 
     vnl_matrix<float>::const_iterator ent_mat_itr = entropy_matrix.begin();
@@ -657,12 +657,12 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
 
     for(unsigned i = 0; i < num_piv_pix; ++i)
     {
-        vcl_cout << vcl_setprecision(2) << vcl_fixed << float(i)/float(num_piv_pix)*100.0f << "% pivot pixels sampled." << vcl_endl;
+        std::cout << std::setprecision(2) << std::fixed << float(i)/float(num_piv_pix)*100.0f << "% pivot pixels sampled." << std::endl;
         //1. create the cdf;
         cdf.clear();
         float cdf_tot = 0.0f;
-        vcl_vector<float>::iterator p_itr = p.begin();
-        vcl_vector<float>::iterator p_end = p.end();
+        std::vector<float>::iterator p_itr = p.begin();
+        std::vector<float>::iterator p_end = p.end();
         for(;p_itr!=p_end;++p_itr)
         {
             cdf_tot += *p_itr;
@@ -691,7 +691,7 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
 }//end sample_pivot_pixels_dc
 
 //bool ncn_utilities::get_neighborhood(unsigned x_tl, unsigned y_tl, unsigned x_br, unsigned y_br,
-//                                        vcl_map<unsigned, vil_image_view<float> >& img_seq, unsigned const& num_neighbors, 
+//                                        std::map<unsigned, vil_image_view<float> >& img_seq, unsigned const& num_neighbors, 
 //                                        vnl_matrix<unsigned> pivot_pixel_candidates,vnl_matrix<unsigned> non_compact_neighborhood)
 //{
 //    unsigned n_bins_joint_histogram = 16;
@@ -702,16 +702,16 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
 //
 //    unsigned ncols_cropped = x_br - x_tl;
 //    unsigned nrows_cropped = y_br - y_tl;
-//    vcl_cout << "nrows_cropped: " << nrows_cropped << vcl_endl; 
-//    vcl_cout << "ncols_cropped: " << ncols_cropped << vcl_endl;
-//    vcl_vector<unsigned> linear_index;
+//    std::cout << "nrows_cropped: " << nrows_cropped << std::endl; 
+//    std::cout << "ncols_cropped: " << ncols_cropped << std::endl;
+//    std::vector<unsigned> linear_index;
 //    ////1.find the linear index of every point in the rio
 //    //for(unsigned i = x_tl; i < x_br; ++i) //columns
 //    //    for(unsigned j = y_tl; j < y_br; ++j)//rows
 //    //        linear_index.push_back(i*nrows + j);
 //
 //    ////Sanity check write out indecies and display in matlab.
-//    //vcl_ofstream of_check("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\roi.dat",vcl_ios::out);
+//    //std::ofstream of_check("C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\westin1\\roi.dat",std::ios::out);
 //    //for(unsigned i = 0; i < linear_index.size(); ++i)
 //    //     of_check << linear_index[i]/nrows << '\t' << linear_index[i]%nrows << '\n';
 //
@@ -721,7 +721,7 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
 //    vnl_vector<float> mutual_information;
 //    bsta_joint_histogram<double> joint_histogram(double(255),n_bins_joint_histogram);
 //    unsigned num_pivot_pixel_candidates = pivot_pixel_candidates.rows();
-//    vcl_set<ncn_mutual_information> smi;
+//    std::set<ncn_mutual_information> smi;
 //
 //
 //    for(unsigned target_r = y_tl; target_r < y_br; ++target_r)//rows
@@ -754,39 +754,39 @@ bool ncn_utilities::sample_pivot_pixels_dc(vnl_matrix<float> const& entropy_matr
         
 //}//end get_neighborhood
 
-bool ncn_utilities::pointSet2dat(vcl_ostream& os, vcl_set<ncn_image_point> const& point_set)
+bool ncn_utilities::pointSet2dat(std::ostream& os, std::set<ncn_image_point> const& point_set)
 {
-    vcl_set<ncn_image_point>::const_iterator sit;
-    vcl_set<ncn_image_point>::const_iterator send = point_set.end();
+    std::set<ncn_image_point>::const_iterator sit;
+    std::set<ncn_image_point>::const_iterator send = point_set.end();
 
     for(sit=point_set.begin(); sit != send; ++sit)
-        os << *sit << vcl_endl;
+        os << *sit << std::endl;
 
     return true;
 }
 
-bool ncn_utilities::pointVect2dat(vcl_ostream& os, vcl_vector<ncn_image_point> const& point_vector)
+bool ncn_utilities::pointVect2dat(std::ostream& os, std::vector<ncn_image_point> const& point_vector)
 {
-    vcl_vector<ncn_image_point>::const_iterator vit;
-    vcl_vector<ncn_image_point>::const_iterator vend = point_vector.end();
+    std::vector<ncn_image_point>::const_iterator vit;
+    std::vector<ncn_image_point>::const_iterator vend = point_vector.end();
 
     for(vit=point_vector.begin();vit!=vend;++vit)
-        os << *vit << vcl_endl;
+        os << *vit << std::endl;
 
     return true;
 }
 
-bool ncn_utilities::pointVect2dat(vcl_ostream& os, vcl_vector<vgl_point_2d<unsigned> > const& point_vector)
+bool ncn_utilities::pointVect2dat(std::ostream& os, std::vector<vgl_point_2d<unsigned> > const& point_vector)
 {
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator vit;
-    vcl_vector<vgl_point_2d<unsigned> >::const_iterator vend = point_vector.end();
+    std::vector<vgl_point_2d<unsigned> >::const_iterator vit;
+    std::vector<vgl_point_2d<unsigned> >::const_iterator vend = point_vector.end();
     for(vit=point_vector.begin(); vit!=vend; ++vit)
         os << vit->x() << '\t' << vit->y() << '\n';
 
     return true;
 }
 
-bool ncn_utilities::get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, vcl_vector<ncn_image_point>& roi)
+bool ncn_utilities::get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, std::vector<ncn_image_point>& roi)
 {
     for(unsigned y = y_tl; y <= y_lr; ++y)
         for(unsigned x = x_tl; x <= x_lr; ++x)
@@ -798,7 +798,7 @@ bool ncn_utilities::get_region(unsigned const& x_tl, unsigned const& y_tl, unsig
     return true;
 }//end get_region
 
-bool ncn_utilities::get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, vcl_vector<vgl_point_2d<unsigned> >&roi)
+bool ncn_utilities::get_region(unsigned const& x_tl, unsigned const& y_tl, unsigned const& x_lr, unsigned const& y_lr, std::vector<vgl_point_2d<unsigned> >&roi)
 {
     for(unsigned y = y_tl; y <= y_lr; ++y)
         for(unsigned x=x_tl; x<= x_lr; ++x)

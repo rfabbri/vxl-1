@@ -4,7 +4,7 @@
 // \file
 
 #include <biotree/biocts/pro/biocts_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -27,7 +27,7 @@ biocts_process::biocts_process() : bpro1_process(), num_frames_(0)
       !parameters()->add( "Noise" ,   "-noise" ,   (int)0 ) ||
       !parameters()->add( "Gain" ,   "-gain" ,   (int)40 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -46,7 +46,7 @@ biocts_process::clone() const
 
 
 //: Return the name of the process
-vcl_string biocts_process::name()
+std::string biocts_process::name()
 {
   return "CTsim";
 }
@@ -62,10 +62,10 @@ biocts_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 biocts_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   
@@ -74,10 +74,10 @@ biocts_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 biocts_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
 
   return to_return;
@@ -114,22 +114,22 @@ biocts_process::execute()
   parameters()->get_value( "-gain" , gain );
 
   //read the volume data from file
-  vcl_cout << "Loading volume data: " << volume_filename.path.c_str() << "..." << vcl_endl;
+  std::cout << "Loading volume data: " << volume_filename.path.c_str() << "..." << std::endl;
   biocts_Volume3D vol(volume_filename.path);
 
-  vcl_cout << "Volume data loaded!" << vcl_endl;
+  std::cout << "Volume data loaded!" << std::endl;
 
   //compute CT here
   biocts_ctsim CTvolume(lambda, noise, gain, num_views, &vol);
 
-  vcl_cout << "CT simulation done!" << vcl_endl;
+  std::cout << "CT simulation done!" << std::endl;
 
   output_data_.clear();
   for (int i=0; i<num_views; i++){
     vil_image_resource_sptr loaded_image = vil_new_image_resource_of_view( CTvolume.screens[i]);
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
     image_storage->set_image( loaded_image );
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr > (1,image_storage));
+    output_data_.push_back(std::vector< bpro1_storage_sptr > (1,image_storage));
   }
   num_frames_ = num_views;
 

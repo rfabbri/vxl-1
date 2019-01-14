@@ -74,7 +74,7 @@
 #include <dbinfo/pro/dbinfo_save_tracks_process.h>
 
 #include <dbinfo/pro/dbinfo_multi_track_process.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 {
 
 #if defined(VCL_WIN32)
-    vcl_cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
+    std::cout << '\n'<< "Max number of open files has been reset from " << _getmaxstdio();
     _setmaxstdio(2048);
 #endif
     vgui::init(argc, argv);
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
     vehicleseg_gui_menu menubar;
     vgui_menu menu_holder = menubar.setup_menu(); 
     unsigned w = 800, h = 500;
-    vcl_string title = "VEHICLE SEGMENTATION 1.3";
+    std::string title = "VEHICLE SEGMENTATION 1.3";
     vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
     win->get_adaptor()->set_tableau( bvis1_manager::instance() );
 

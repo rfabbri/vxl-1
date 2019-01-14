@@ -19,9 +19,9 @@
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_string.h>
+#include <string>
 #include <dbsksp/dbsksp_xshock_node.h>
-#include <vcl_vector.h>
+#include <vector>
 class dbsks_detect_symmetry : public vbl_ref_count
 {
 public:
@@ -37,7 +37,7 @@ public:
   void analyze();
 
   //: write the distribution to a file
-  void write_sym_score_distribution_to_file(const vcl_string& filename);
+  void write_sym_score_distribution_to_file(const std::string& filename);
 
   // Support functions --------------------------------------------------------
 
@@ -63,7 +63,7 @@ public:
   vnl_vector<double > sym_score_distr_;
 
   // list of symmetry points computed from the edges
-  vcl_vector<dbsksp_xshock_node_descriptor > medial_pts_;
+  std::vector<dbsksp_xshock_node_descriptor > medial_pts_;
 
 };
 

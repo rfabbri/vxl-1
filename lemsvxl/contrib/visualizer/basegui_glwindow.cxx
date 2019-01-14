@@ -107,8 +107,8 @@ void GLWindow::OnChar(wxKeyEvent &event)             { _win->charUp(event); }
 void GLWindow::Refresh(bool eraseBackground, const wxRect *rect) {
   wxGLCanvas::Refresh(eraseBackground, rect);
   if(eraseBackground)
-    vcl_cerr << "Warning: GLWindow::Refresh was called with eraseBackground = true\n"
-      << "This may cause the display to flicker; use Refresh(false)" << vcl_endl;
+    std::cerr << "Warning: GLWindow::Refresh was called with eraseBackground = true\n"
+      << "This may cause the display to flicker; use Refresh(false)" << std::endl;
 }
 
 void GLWindow::OnEraseBackground(wxEraseEvent& event)

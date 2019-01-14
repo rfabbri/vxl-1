@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbsksp_morph_shock_graph_process : public bpro1_process 
@@ -31,14 +31,14 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name();
+  std::string name();
 
 
     //: Clear output
   virtual void clear_output(int resize);
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -51,7 +51,7 @@ public:
 
 
 protected:
-  vcl_vector<vcl_string > morph_type_descriptions_;
+  std::vector<std::string > morph_type_descriptions_;
   int num_frames_;
 
 };

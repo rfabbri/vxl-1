@@ -11,7 +11,7 @@
 #include <dbgl/algo/dbgl_fit_circ_arc_spline.h>
 #include <dbgl/algo/dbgl_closest_point.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
-#include <vcl_iostream.h>
+#include <iostream>
 //
 #include <dbgui/dbgui_soview2D.h>
 #include <dbgui/dbgui_utils.h>
@@ -36,17 +36,17 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
   // ptA
   double angleA = vnl_math::pi_over_2 * 0.7;
   vgl_point_2d<double > ptA = circle_pt(center, radius, angleA);
-  vgl_vector_2d<double > nA (-vcl_cos(angleA), -vcl_sin(angleA));
+  vgl_vector_2d<double > nA (-std::cos(angleA), -std::sin(angleA));
 
   // ptB
   double angleB = vnl_math::pi * 7/6;
   vgl_point_2d<double > ptB = circle_pt(center, radius, angleB);
-  vgl_vector_2d<double > nB (-vcl_cos(angleB), -vcl_sin(angleB));
+  vgl_vector_2d<double > nB (-std::cos(angleB), -std::sin(angleB));
 
   // ptC
   double angleC = vnl_math::pi * 11/6;
   vgl_point_2d<double > ptC = circle_pt(center, radius, angleC);
-  vgl_vector_2d<double > nC (-vcl_cos(angleC), -vcl_sin(angleC));
+  vgl_vector_2d<double > nC (-std::cos(angleC), -std::sin(angleC));
 
   // display the three points
   easy2D->set_point_radius(4);
@@ -162,8 +162,8 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
   double m0 = 0.5;
   double len = 200;
   double phi1 = vnl_math::pi * 2/3;
-  vgl_vector_2d<double > bisect_AB ( vcl_cos( (angleA+angleB)/2), 
-    vcl_sin( (angleA+angleB)/2 ));
+  vgl_vector_2d<double > bisect_AB ( std::cos( (angleA+angleB)/2), 
+    std::sin( (angleA+angleB)/2 ));
   
   fragment_AB->set_from(center, radius, bisect_AB, (angleB-angleA)/2, m0, len, phi1);
 
@@ -276,7 +276,7 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
 
 
   // Intersection of the two arcs
-  vcl_vector<double > ratio_AB, ratio_BC;
+  std::vector<double > ratio_AB, ratio_BC;
   dbgl_closest_point::circular_arc_to_circular_arc(
     arc_C_mAB.start(), arc_C_mAB.end(), arc_C_mAB.k(),
     arc_A_mBC.start(), arc_A_mBC.end(), arc_A_mBC.k(),
@@ -286,7 +286,7 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
 
   if (ratio_AB.size() != 1)
   {
-    vcl_cout << "ERROR: number of intersection points is not 1.\n";
+    std::cout << "ERROR: number of intersection points is not 1.\n";
   }
   else
   {
@@ -302,7 +302,7 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
     easy2D->add(new dbgui_soview2D_circ_arc(arc_B1));
 
 
-    vcl_vector<double > ratio_CA, ratio_B;
+    std::vector<double > ratio_CA, ratio_B;
     double d = dbgl_closest_point::circular_arc_to_circular_arc(
       arc_CA.start(), arc_CA.end(), arc_CA.k(),
       arc_B1.start(), arc_B1.end(), arc_B1.k(),
@@ -310,7 +310,7 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
 
     if (d != 0)
     {
-      vcl_cout << "ERROR: the two arcs don't intersect\n";
+      std::cout << "ERROR: the two arcs don't intersect\n";
     }
     else
     {
@@ -318,7 +318,7 @@ void draw_fragment_grid_curves(vgui_easy2D_tableau_sptr& easy2D)
       vgl_point_2d<double > pt_CA = arc_CA.point_at(tCA);
       easy2D->add_point(pt_CA.x(), pt_CA.y());
 
-      vcl_cout << "tCA = " << tCA << "\n";
+      std::cout << "tCA = " << tCA << "\n";
     }
     
 
@@ -336,12 +336,12 @@ void draw_interp_circ_arc_spline(vgui_easy2D_tableau_sptr& easy2D)
   // y = 100* sin(2*pi * t);
   // t = x / 100;
 
-  vcl_vector<vgl_point_2d<double > > pts;
+  std::vector<vgl_point_2d<double > > pts;
   for (unsigned i =0; i <= 50; ++i)
   {
     double t = i * (1.0/50);
     double x = 100 * t;
-    double y = 100 * vcl_sin(2 * vnl_math::pi * t);
+    double y = 100 * std::sin(2 * vnl_math::pi * t);
     pts.push_back(vgl_point_2d<double > (x, y));
   }
 
@@ -355,7 +355,7 @@ void draw_interp_circ_arc_spline(vgui_easy2D_tableau_sptr& easy2D)
   // Interpolate these curves with a polyarc
   
   //: Interpolate a set of points with a circular arc spline
-  vcl_vector<dbgl_circ_arc > arc_list;
+  std::vector<dbgl_circ_arc > arc_list;
   double tol = 2;
   bool success = dbgl_fit_circ_arc_spline_to_polyline(arc_list, pts, tol);
   
@@ -398,7 +398,7 @@ void draw_shape_frags(const vgui_easy2D_tableau_sptr& easy2D)
 
 
   // extract boundary points
-  vcl_vector<vgl_point_2d<double > > source_pts;
+  std::vector<vgl_point_2d<double > > source_pts;
   dbsksp_shape_frag_bnd_pts(source_frag, source_pts);
 
   // display the points
@@ -413,12 +413,12 @@ void draw_shape_frags(const vgui_easy2D_tableau_sptr& easy2D)
   vgl_point_2d<double > circle_center(600, 400);
   double circle_radius = 100;
 
-  vcl_vector<vgl_point_2d<double > > circle_pts;
+  std::vector<vgl_point_2d<double > > circle_pts;
   for (int i = 0; i < 100; ++i)
   {
     double t = i * (1.0/ 100) * (2*vnl_math::pi);
     vgl_point_2d<double > pt = circle_center + circle_radius * 
-      vgl_vector_2d<double >(vcl_cos(t), vcl_sin(t));
+      vgl_vector_2d<double >(std::cos(t), std::sin(t));
     circle_pts.push_back(pt);
   }
 
@@ -435,7 +435,7 @@ void draw_shape_frags(const vgui_easy2D_tableau_sptr& easy2D)
     chord_length, phi_B + vnl_math::pi / 24);
 
   // Collect the boundary points of deformed_fragment
-  vcl_vector<vgl_point_2d<double > > deformed_pts;
+  std::vector<vgl_point_2d<double > > deformed_pts;
   dbsksp_shape_frag_bnd_pts(deformed_frag, deformed_pts);
 
   
@@ -447,10 +447,10 @@ void draw_shape_frags(const vgui_easy2D_tableau_sptr& easy2D)
   dbsksp_draw_points(easy2D, deformed_pts);
  
   // output the pts to a text file
-  vcl_string output_folder = "D:/vision/data/interp-image/";
-  vcl_string source_frag_file = "source_frag.txt";
-  vcl_string deformed_frag_file = "deformed_frag.txt";
-  vcl_string circle_file = "circle.txt";
+  std::string output_folder = "D:/vision/data/interp-image/";
+  std::string source_frag_file = "source_frag.txt";
+  std::string deformed_frag_file = "deformed_frag.txt";
+  std::string circle_file = "circle.txt";
 
 
   // write
@@ -505,11 +505,11 @@ void draw_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   easy2D->add(new dbgui_soview2D_circ_arc(bnd_arc_back));
 
   // draw the horizontal grid curves. They are Euler spirals
-  vcl_vector<dbgl_eulerspiral > horz_grid_curves;
+  std::vector<dbgl_eulerspiral > horz_grid_curves;
   int num_horz_segs = 100;
 
   int num_vert_segs = 100;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > vert_grid_curves;
+  std::vector<std::vector<vgl_point_2d<double > > > vert_grid_curves;
 
   dbsksp_compute_grid_curves(source_frag, num_horz_segs, num_vert_segs, 
     horz_grid_curves, vert_grid_curves);
@@ -527,8 +527,8 @@ void draw_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   // v = 0.5*u - 0.25;
 
   // make this a curve of 51 points
-  vcl_vector<int > u_index_list;
-  vcl_vector<int > v_index_list;
+  std::vector<int > u_index_list;
+  std::vector<int > v_index_list;
   int num_curve_segs = 50;
   for (int i = 0; i <= 50; ++i)
   {
@@ -539,7 +539,7 @@ void draw_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     v_index_list.push_back(v_index);
   }
 
-  vcl_vector<vgl_point_2d<double > > source_curve;
+  std::vector<vgl_point_2d<double > > source_curve;
   for (int i =0; i <= num_curve_segs; ++i)
   {
     int u_index = u_index_list[i];
@@ -561,8 +561,8 @@ void draw_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
 
 
   // draw the horizontal grid curves. They are Euler spirals
-  vcl_vector<dbgl_eulerspiral > deformed_horz_grid_curves;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > deformed_vert_grid_curves;
+  std::vector<dbgl_eulerspiral > deformed_horz_grid_curves;
+  std::vector<std::vector<vgl_point_2d<double > > > deformed_vert_grid_curves;
 
   dbsksp_compute_grid_curves(deformed_frag, num_horz_segs, num_vert_segs, 
     deformed_horz_grid_curves, deformed_vert_grid_curves);
@@ -572,7 +572,7 @@ void draw_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   //  deformed_horz_grid_curves, deformed_vert_grid_curves);
 
   // compute the deformed curve
-  vcl_vector<vgl_point_2d<double > > deformed_curve;
+  std::vector<vgl_point_2d<double > > deformed_curve;
   for (int i =0; i <= num_curve_segs; ++i)
   {
     int u_index = u_index_list[i];
@@ -642,7 +642,7 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   if (!source_frag_B->set_from(source_frag_A->end(), source_frag_A->radius_end(), 
     source_frag_A->tangent_end(), source_frag_A->phi_end(), m_B, len_B, phi_C))
   {
-    vcl_cout << "ERROR: could not construct source_frag_B.\n";
+    std::cout << "ERROR: could not construct source_frag_B.\n";
   }
 
 
@@ -654,8 +654,8 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   int num_skip_vert = 10;
 
 
-  vcl_vector<dbgl_eulerspiral > horz_grid_curves_A;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > vert_grid_curves_A;
+  std::vector<dbgl_eulerspiral > horz_grid_curves_A;
+  std::vector<std::vector<vgl_point_2d<double > > > vert_grid_curves_A;
 
   dbsksp_compute_grid_curves(source_frag_A, num_horz_segs, num_vert_segs, 
     horz_grid_curves_A, vert_grid_curves_A);
@@ -665,8 +665,8 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     horz_grid_curves_A, vert_grid_curves_A);
 
   // second fragment
-  vcl_vector<dbgl_eulerspiral > horz_grid_curves_B;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > vert_grid_curves_B;
+  std::vector<dbgl_eulerspiral > horz_grid_curves_B;
+  std::vector<std::vector<vgl_point_2d<double > > > vert_grid_curves_B;
 
   dbsksp_compute_grid_curves(source_frag_B, num_horz_segs, num_vert_segs, 
     horz_grid_curves_B, vert_grid_curves_B);
@@ -685,8 +685,8 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   // v = 0.5*u - 0.25;
 
   // make this a curve of 51 points
-  vcl_vector<int > u_index_list_A;
-  vcl_vector<int > v_index_list_A;
+  std::vector<int > u_index_list_A;
+  std::vector<int > v_index_list_A;
   int num_curve_segs_A = 50;
   for (int i = 0; i <= 50; ++i)
   {
@@ -697,7 +697,7 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     v_index_list_A.push_back(v_index);
   }
 
-  vcl_vector<vgl_point_2d<double > > source_curve_A;
+  std::vector<vgl_point_2d<double > > source_curve_A;
   for (unsigned i =0; i < u_index_list_A.size(); ++i)
   {
     int u_index = u_index_list_A[i];
@@ -715,8 +715,8 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   // the curve on the second fragment
 
   // make this a curve of 51 points
-  vcl_vector<int > u_index_list_B;
-  vcl_vector<int > v_index_list_B;
+  std::vector<int > u_index_list_B;
+  std::vector<int > v_index_list_B;
   int num_curve_segs_B = 25;
   for (int i = 0; i <= 25; ++i)
   {
@@ -727,7 +727,7 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     v_index_list_B.push_back(v_index);
   }
 
-  vcl_vector<vgl_point_2d<double > > source_curve_B;
+  std::vector<vgl_point_2d<double > > source_curve_B;
   for (unsigned i =0; i < u_index_list_B.size(); ++i)
   {
     int u_index = u_index_list_B[i];
@@ -750,8 +750,8 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
 
 
   // draw the horizontal grid curves. They are Euler spirals
-  vcl_vector<dbgl_eulerspiral > deformed_horz_grid_curves_A;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > deformed_vert_grid_curves_A;
+  std::vector<dbgl_eulerspiral > deformed_horz_grid_curves_A;
+  std::vector<std::vector<vgl_point_2d<double > > > deformed_vert_grid_curves_A;
 
   dbsksp_compute_grid_curves(deformed_frag_A, num_horz_segs, num_vert_segs, 
     deformed_horz_grid_curves_A, deformed_vert_grid_curves_A);
@@ -789,12 +789,12 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     deformed_frag_A->tangent_end(), deformed_frag_A->phi_end(), 
     m_B + 0.3, len_B + 400, phi_C - vnl_math::pi / 12))
   {
-    vcl_cout << "ERROR: could not construct source_frag_B.\n";
+    std::cout << "ERROR: could not construct source_frag_B.\n";
   }
 
   // grid curves for the second fragment
-  vcl_vector<dbgl_eulerspiral > deformed_horz_grid_curves_B;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > deformed_vert_grid_curves_B;
+  std::vector<dbgl_eulerspiral > deformed_horz_grid_curves_B;
+  std::vector<std::vector<vgl_point_2d<double > > > deformed_vert_grid_curves_B;
 
   dbsksp_compute_grid_curves(deformed_frag_B, num_horz_segs, num_vert_segs, 
     deformed_horz_grid_curves_B, deformed_vert_grid_curves_B);
@@ -809,7 +809,7 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   
 
   // compute the deformed curve
-  vcl_vector<vgl_point_2d<double > > deformed_curve_A;
+  std::vector<vgl_point_2d<double > > deformed_curve_A;
   for (int i =0; i <= num_curve_segs_A; ++i)
   {
     int u_index = u_index_list_A[i];
@@ -825,7 +825,7 @@ void draw_two_attached_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
 
   // deformed curve for second fragment
   // compute the deformed curve
-  vcl_vector<vgl_point_2d<double > > deformed_curve_B;
+  std::vector<vgl_point_2d<double > > deformed_curve_B;
   for (int i =0; i <= num_curve_segs_B; ++i)
   {
     int u_index = u_index_list_B[i];
@@ -885,7 +885,7 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   easy2D->add(new dbgui_soview2D_circ_arc(bnd_arc_back));
 
   // the front is a polyline
-  vcl_vector<vgl_point_2d<double > > bnd_poly_front;
+  std::vector<vgl_point_2d<double > > bnd_poly_front;
   bnd_poly_front.push_back(bnd_arc_right.start());
   bnd_poly_front.push_back(source_frag->start());
   bnd_poly_front.push_back(bnd_arc_left.start());
@@ -894,11 +894,11 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   
 
   // draw the horizontal grid curves. They are Euler spirals
-  vcl_vector<dbgl_eulerspiral > horz_grid_curves;
+  std::vector<dbgl_eulerspiral > horz_grid_curves;
   int num_horz_segs = 100;
 
   int num_vert_segs = 100;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > vert_grid_curves;
+  std::vector<std::vector<vgl_point_2d<double > > > vert_grid_curves;
 
   dbsksp_compute_A13_frag_grid_curves(source_frag, num_horz_segs, num_vert_segs, 
     horz_grid_curves, vert_grid_curves);
@@ -916,8 +916,8 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
   // v = 0.5*u - 0.25;
 
   // make this a curve of 51 points
-  vcl_vector<int > u_index_list;
-  vcl_vector<int > v_index_list;
+  std::vector<int > u_index_list;
+  std::vector<int > v_index_list;
   int num_curve_segs = 50;
   for (int i = 0; i <= 50; ++i)
   {
@@ -928,7 +928,7 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     v_index_list.push_back(v_index);
   }
 
-  vcl_vector<vgl_point_2d<double > > source_curve;
+  std::vector<vgl_point_2d<double > > source_curve;
   for (int i =0; i <= num_curve_segs; ++i)
   {
     int u_index = u_index_list[i];
@@ -950,8 +950,8 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
 
 
   // draw the horizontal grid curves. They are Euler spirals
-  vcl_vector<dbgl_eulerspiral > deformed_horz_grid_curves;
-  vcl_vector<vcl_vector<vgl_point_2d<double > > > deformed_vert_grid_curves;
+  std::vector<dbgl_eulerspiral > deformed_horz_grid_curves;
+  std::vector<std::vector<vgl_point_2d<double > > > deformed_vert_grid_curves;
 
   dbsksp_compute_A13_frag_grid_curves(deformed_frag, num_horz_segs, num_vert_segs, 
     deformed_horz_grid_curves, deformed_vert_grid_curves);
@@ -961,7 +961,7 @@ void draw_A13_frag_coord_system(const vgui_easy2D_tableau_sptr& easy2D)
     deformed_horz_grid_curves, deformed_vert_grid_curves);
 
   // compute the deformed curve
-  vcl_vector<vgl_point_2d<double > > deformed_curve;
+  std::vector<vgl_point_2d<double > > deformed_curve;
   for (int i =0; i <= num_curve_segs; ++i)
   {
     int u_index = u_index_list[i];

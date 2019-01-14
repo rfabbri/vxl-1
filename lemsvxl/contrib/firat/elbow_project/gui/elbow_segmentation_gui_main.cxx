@@ -176,7 +176,7 @@ int main(int argc, char** argv)
   elbow_segmentation_gui_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 512, h = 512;
-  vcl_string title = "Elbow Segmentation GUI - LEMS - Brown University - 2011";
+  std::string title = "Elbow Segmentation GUI - LEMS - Brown University - 2011";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->set_statusbar(true);

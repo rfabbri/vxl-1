@@ -2,9 +2,9 @@
 //  MingChing Chang
 //  Nov 23, 2004.
 
-#include <vcl_cstdio.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <sstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_ms_node.h>
@@ -45,7 +45,7 @@ double dbsk3d_ms_curve::get_sum_node_radius () const
 //####### Generator handling functions #######
 //##########################################################
 
-void dbsk3d_ms_curve::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs) const
+void dbsk3d_ms_curve::get_asso_Gs (std::map<int, dbmsh3d_vertex*>& asso_Gs) const
 {
   assert (data_type_ == C_DATA_TYPE_EDGE);
 
@@ -55,7 +55,7 @@ void dbsk3d_ms_curve::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs) const
   }
 }
 
-void dbsk3d_ms_curve::get_asso_Gs_incld_FFs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs) const
+void dbsk3d_ms_curve::get_asso_Gs_incld_FFs (std::map<int, dbmsh3d_vertex*>& asso_Gs) const
 {
   assert (data_type_ == C_DATA_TYPE_EDGE);
 
@@ -178,11 +178,11 @@ dbsk3d_ms_curve* dbsk3d_ms_curve::clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2) co
 
 #define MAX_ELMS_INFO  10
 
-void dbsk3d_ms_curve::getInfo (vcl_ostringstream& ostrm)
+void dbsk3d_ms_curve::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
 
-  vcl_string type;
+  std::string type;
   switch (c_type_) {
   case C_TYPE_RIB:
      type = "A3";
@@ -197,78 +197,78 @@ void dbsk3d_ms_curve::getInfo (vcl_ostringstream& ostrm)
   break;
   }
 
-  vcl_sprintf (s, "==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "Medial Curve (%s) %d (s_MN %d -> e_MN %d) ", 
+  std::sprintf (s, "==============================\n"); ostrm<<s;
+  std::sprintf (s, "Medial Curve (%s) %d (s_MN %d -> e_MN %d) ", 
                type.c_str(), id_, sV()->id(), eV()->id()); ostrm<<s;
   compute_length ();
-  vcl_sprintf (s, "length: %f\n", length_); ostrm<<s;  
+  std::sprintf (s, "length: %f\n", length_); ostrm<<s;  
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
   
   //: Incident Shock Sheets
   unsigned int n_incidence = n_incident_Fs();
-  vcl_sprintf (s, "# incident ms_sheet %u:", n_incidence); ostrm<<s;
+  std::sprintf (s, "# incident ms_sheet %u:", n_incidence); ostrm<<s;
   if (n_incidence == 0) {
   }
   else if (n_incidence == 1) {
-    vcl_sprintf (s, " %d", halfedge_->face()->id()); ostrm<<s;
+    std::sprintf (s, " %d", halfedge_->face()->id()); ostrm<<s;
   }
   else {
     dbmsh3d_halfedge* he = halfedge_;
     do {
-      vcl_sprintf (s, " %d", he->face()->id()); ostrm<<s;
+      std::sprintf (s, " %d", he->face()->id()); ostrm<<s;
       he = he->pair();
     }
     while (he != halfedge_);
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
   //fs_edges
-  vcl_sprintf (s, "# E_vec %u:", E_vec_.size()); ostrm<<s;
+  std::sprintf (s, "# E_vec %u:", E_vec_.size()); ostrm<<s;
   if (E_vec_.size() < MAX_ELMS_INFO*2) {
     for (unsigned int i=0; i<E_vec_.size(); i++) {
       const dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) E_vec_[i];
-      vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+      std::sprintf (s, " %d", FE->id()); ostrm<<s;
     }
   }
   else {
     for (int i=0; i<MAX_ELMS_INFO; i++) {
       const dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) E_vec_[i];
-      vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+      std::sprintf (s, " %d", FE->id()); ostrm<<s;
     }
-    vcl_sprintf (s, " ..."); ostrm<<s;
+    std::sprintf (s, " ..."); ostrm<<s;
     for (int i=int(E_vec_.size())-1-MAX_ELMS_INFO; i<int(E_vec_.size()); i++) {
       const dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) E_vec_[i];
-      vcl_sprintf (s, " %d", FE->id()); ostrm<<s;
+      std::sprintf (s, " %d", FE->id()); ostrm<<s;
     }
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 
   //V_vec
-  vcl_vector<dbmsh3d_vertex*> V_vec;
+  std::vector<dbmsh3d_vertex*> V_vec;
   get_V_vec (V_vec);
 
-  vcl_sprintf (s, "# V_vec %u:", V_vec.size()); ostrm<<s;
+  std::sprintf (s, "# V_vec %u:", V_vec.size()); ostrm<<s;
   if (V_vec.size() < MAX_ELMS_INFO*2) {
     for (unsigned int i=0; i<V_vec.size(); i++) {
       const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) V_vec[i];
-      vcl_sprintf (s, " %d", FV->id()); ostrm<<s;
+      std::sprintf (s, " %d", FV->id()); ostrm<<s;
     }
   }
   else {
     for (int i=0; i<MAX_ELMS_INFO; i++) {
       const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) V_vec[i];
-      vcl_sprintf (s, " %d", FV->id()); ostrm<<s;
+      std::sprintf (s, " %d", FV->id()); ostrm<<s;
     }
-    vcl_sprintf (s, " ..."); ostrm<<s;
+    std::sprintf (s, " ..."); ostrm<<s;
     for (int i=int(V_vec.size())-1-MAX_ELMS_INFO; i<int(V_vec.size()); i++) {
       const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) V_vec[i];
-      vcl_sprintf (s, " %d", FV->id()); ostrm<<s;
+      std::sprintf (s, " %d", FV->id()); ostrm<<s;
     }
   }
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 }
 
 //###############################################################
@@ -361,7 +361,7 @@ dbsk3d_fs_vertex* closest_MN_MC (dbsk3d_ms_node* MN, dbsk3d_ms_curve* MC)
 {
   double min_dist = HUGE;
   dbsk3d_fs_vertex* closestN = NULL;
-  vcl_vector<dbmsh3d_vertex*> N_vec;
+  std::vector<dbmsh3d_vertex*> N_vec;
   MC->get_V_vec (N_vec);
   assert (N_vec.size() > 1);
 
@@ -384,10 +384,10 @@ double closest_MC_MC (dbsk3d_ms_curve* SC1, dbsk3d_ms_curve* SC2,
                       dbsk3d_fs_vertex* & closestN1, dbsk3d_fs_vertex* & closestN2)
 {
   double min_dist = HUGE;  
-  vcl_vector<dbmsh3d_vertex*> SC1_FVs;
+  std::vector<dbmsh3d_vertex*> SC1_FVs;
   SC1->get_V_vec (SC1_FVs);
   assert (SC1_FVs.size() > 1);
-  vcl_vector<dbmsh3d_vertex*> SC2_FVs;
+  std::vector<dbmsh3d_vertex*> SC2_FVs;
   SC2->get_V_vec (SC2_FVs);
   assert (SC2_FVs.size() > 1);
 
@@ -411,72 +411,72 @@ double closest_MC_MC (dbsk3d_ms_curve* SC1, dbsk3d_ms_curve* SC2,
 //       dbsk3d_ms_curve TEXT FILE I/O FUNCTIONS
 //###############################################################
 
-void mc_save_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC)
+void mc_save_text_file (std::FILE* fp, dbsk3d_ms_curve* MC)
 {
   //For each dbsk3d_ms_curve
   switch (MC->c_type()) {
   case C_TYPE_RIB:
-    vcl_fprintf(fp, "A3");
+    std::fprintf(fp, "A3");
   break;
   case C_TYPE_AXIAL:
-    vcl_fprintf(fp, "A13");
+    std::fprintf(fp, "A13");
   break;
   case C_TYPE_DEGE_AXIAL:
-    vcl_fprintf(fp, "Dege");
+    std::fprintf(fp, "Dege");
   break;
   case C_TYPE_VIRTUAL:
-    vcl_fprintf(fp, "Virtual");
+    std::fprintf(fp, "Virtual");
   break;
   default:
     assert (0);
   break;
   }
 
-  vcl_fprintf (fp, " %d: (%d, %d)\n", MC->id(), MC->sV()->id(), MC->eV()->id());
+  std::fprintf (fp, " %d: (%d, %d)\n", MC->id(), MC->sV()->id(), MC->eV()->id());
 
   //for virtual curve only
   if (MC->c_type() == C_TYPE_VIRTUAL) {
-    vcl_fprintf (fp, "\tsup_curves %u:", MC->sup_curves().size());
+    std::fprintf (fp, "\tsup_curves %u:", MC->sup_curves().size());
     for (unsigned int j=0; j<MC->sup_curves().size(); j++) {
       dbmsh3d_curve* C = MC->sup_curves(j);
-      vcl_fprintf (fp, " %d", C->id());
+      std::fprintf (fp, " %d", C->id());
     }
-    vcl_fprintf (fp, "\n");
+    std::fprintf (fp, "\n");
   }
 
   //fine-scale edge elements.
-  vcl_fprintf (fp, "\tE %u:", MC->E_vec().size());
+  std::fprintf (fp, "\tE %u:", MC->E_vec().size());
   for (unsigned int j=0; j<MC->E_vec().size(); j++) {
     dbmsh3d_edge* E = MC->E_vec(j);
-    vcl_fprintf (fp, " %d", E->id());
+    std::fprintf (fp, " %d", E->id());
   }
-  vcl_fprintf (fp, "\n");
+  std::fprintf (fp, "\n");
 
   //shared edge elements.
   int n_shared_Es = MC->n_shared_Es();
-  vcl_fprintf (fp, "\tshared_E %d:", n_shared_Es);
+  std::fprintf (fp, "\tshared_E %d:", n_shared_Es);
   for (dbmsh3d_ptr_node* cur = MC->shared_E_list(); cur != NULL; cur = cur->next()) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
-    vcl_fprintf (fp, " %d", E->id());
+    std::fprintf (fp, " %d", E->id());
   }
-  vcl_fprintf (fp, "\n");
+  std::fprintf (fp, "\n");
 
   //fine-scale vertex elements.
-  vcl_fprintf (fp, "\tV %u:", MC->V_vec().size());
+  std::fprintf (fp, "\tV %u:", MC->V_vec().size());
   for (unsigned int j=0; j<MC->V_vec().size(); j++) {
     const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) MC->V_vec(j);
-    vcl_fprintf (fp, " %d", FV->id());
+    std::fprintf (fp, " %d", FV->id());
   }
-  vcl_fprintf (fp, "\n");
+  std::fprintf (fp, "\n");
 
 }
 
-void mc_load_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC, 
+void mc_load_text_file (std::FILE* fp, dbsk3d_ms_curve* MC, 
                         dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_hypg* ms_hypg)
 {
   char c_type[128];
-  vcl_fscanf(fp, "%s", c_type);
-  vcl_string type (c_type);
+  std::fscanf(fp, "%s", c_type);
+  std::string type (c_type);
   if (type == "A3")
     MC->set_c_type (C_TYPE_RIB);
   else if (type == "A13")
@@ -491,7 +491,7 @@ void mc_load_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC,
   //For each dbsk3d_ms_curve
   int id;
   int svid, evid;
-  vcl_fscanf (fp, " %d: (%d, %d)\n", &id, &svid, &evid);    
+  std::fscanf (fp, " %d: (%d, %d)\n", &id, &svid, &evid);    
   MC->set_id (id); //Use the id from the file
 
   //Recover the connectivity.
@@ -507,44 +507,44 @@ void mc_load_text_file (vcl_FILE* fp, dbsk3d_ms_curve* MC,
   //for virtual curve only
   if (MC->c_type() == C_TYPE_VIRTUAL) {
     int nC;
-    vcl_fscanf (fp, "\tsup_curves %d:", &nC);
+    std::fscanf (fp, "\tsup_curves %d:", &nC);
     for (int j=0; j<nC; j++) {
-      vcl_fscanf (fp, " %d", &id);
+      std::fscanf (fp, " %d", &id);
       dbmsh3d_curve* C = (dbmsh3d_curve*) ms_hypg->edgemap (id);
       MC->add_sup_curve (C);
     }  
-    vcl_fscanf (fp, "\n");
+    std::fscanf (fp, "\n");
   }
 
   //fine-scale edge elements.
   int nE;
-  vcl_fscanf (fp, "\tE %d:", &nE);
+  std::fscanf (fp, "\tE %d:", &nE);
   for (int j=0; j<nE; j++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) fs_mesh->edgemap(id);
     MC->add_E_to_back (FE);
   }  
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
 
   //shared edge elements.
   int n_shared_Es;
-  vcl_fscanf (fp, "\tshared_E %d:", &n_shared_Es);
+  std::fscanf (fp, "\tshared_E %d:", &n_shared_Es);
   for (int j=0; j<n_shared_Es; j++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) fs_mesh->edgemap(id);
     MC->add_shared_E (FE);
   }  
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
 
   //fine-scale vertex elements.
   int nV;
-  vcl_fscanf (fp, "\tV %d:", &nV);
+  std::fscanf (fp, "\tV %d:", &nV);
   for (int j=0; j<nV; j++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
     const dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) fs_mesh->vertexmap(id);
     MC->add_V_to_back (FV);
   }  
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
 }
 
 

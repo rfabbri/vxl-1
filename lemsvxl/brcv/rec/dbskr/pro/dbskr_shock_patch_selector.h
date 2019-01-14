@@ -21,10 +21,10 @@
 // \endverbatim 
 //-----------------------------------------------------------------------------
 
-#include <vcl_map.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <map>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
@@ -94,7 +94,7 @@ public:
   bool add_discarded_to_storage(int depth, dbskr_shock_patch_storage_sptr str);
 
   //: return the patch set pruned due to a given patch
-  vcl_vector<dbskr_shock_patch_sptr>* pruned_set(dbskr_shock_patch_sptr sp);
+  std::vector<dbskr_shock_patch_sptr>* pruned_set(dbskr_shock_patch_sptr sp);
 
   //: this parameter is set when the patches are extracted 
   void set_area_threshold(float val) { area_threshold_ = val; } 
@@ -104,21 +104,21 @@ protected:
   dbsk2d_shock_graph_sptr sg_;
 
   //: keep sets of patches at various depths
-  vcl_vector<vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >*> patch_sets_;
+  std::vector<std::vector<std::pair<float, dbskr_shock_patch_sptr> >*> patch_sets_;
 
   //: keep the ids for easy access
-  vcl_vector<vcl_map<int, vcl_pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >*> patch_set_id_maps_;
+  std::vector<std::map<int, std::pair<dbskr_shock_patch_sptr, dbsk2d_shock_node_sptr> >*> patch_set_id_maps_;
 
   //: keep the depth to vector index map for quick access
-  vcl_map<int, int> depth_index_map_;
+  std::map<int, int> depth_index_map_;
 
   // keep the following lists for visualization
 
   //: discarded patches at various depths
-  vcl_vector<vcl_vector<vcl_pair<float, dbskr_shock_patch_sptr> >*> disc_patch_sets_;
+  std::vector<std::vector<std::pair<float, dbskr_shock_patch_sptr> >*> disc_patch_sets_;
 
   //: discarded patches for a given patch
-  vcl_map<dbskr_shock_patch_sptr, vcl_vector<dbskr_shock_patch_sptr>*> disc_patch_map_;
+  std::map<dbskr_shock_patch_sptr, std::vector<dbskr_shock_patch_sptr>*> disc_patch_map_;
   
   float area_threshold_;
 
@@ -130,7 +130,7 @@ protected:
   bool color_image_, image_set_;
 };
 
-dbsk2d_shock_graph_sptr read_esf_from_file(vcl_string fname);
+dbsk2d_shock_graph_sptr read_esf_from_file(std::string fname);
 void set_images(vil_image_resource_sptr img_sptr,
                 vil_image_view<vxl_byte> & I_, 
                 vil_image_view<float> & L_, 
@@ -140,16 +140,16 @@ void set_images(vil_image_resource_sptr img_sptr,
                 vil_image_resource_sptr& img_g, 
                 vil_image_resource_sptr& img_b);
 void save_image_poly(dbskr_shock_patch_sptr sp, 
-                     vcl_string name_initial, 
+                     std::string name_initial, 
                      vil_image_resource_sptr img_r, 
                      vil_image_resource_sptr img_g, 
                      vil_image_resource_sptr img_b);
-void extract_subgraph_and_find_shock_patches(vcl_string image_file, 
-                                             vcl_string esf_file, 
-                                             vcl_string boundary_file,
-                                             vcl_string kept_dir_name, 
-                                             vcl_string discarded_dir_name, 
-                                             vcl_string output_name,
+void extract_subgraph_and_find_shock_patches(std::string image_file, 
+                                             std::string esf_file, 
+                                             std::string boundary_file,
+                                             std::string kept_dir_name, 
+                                             std::string discarded_dir_name, 
+                                             std::string output_name,
                                              bool contour_ratio,
                                              bool circular_ends, 
                                              float area_threshold_ratio,
@@ -159,12 +159,12 @@ void extract_subgraph_and_find_shock_patches(vcl_string image_file,
                                              bool save_images, 
                                              bool save_discarded_images);
 
-bool find_shock_patches(vcl_string image_file, 
+bool find_shock_patches(std::string image_file, 
                                              dbsk2d_shock_graph_sptr sg, 
                                              vsol_box_2d_sptr bbox,
-                                             vcl_string kept_dir_name, 
-                                             vcl_string discarded_dir_name, 
-                                             vcl_string output_name,
+                                             std::string kept_dir_name, 
+                                             std::string discarded_dir_name, 
+                                             std::string output_name,
                                              bool contour_ratio,
                                              bool circular_ends, 
                                              float area_threshold_ratio,

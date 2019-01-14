@@ -31,9 +31,9 @@ void IShock_Bucketing::InitializeShocks (SHOCK_INIT_TYPE InitType)
     if (boundary()->bucketing)
       delete boundary()->bucketing;
 
-    vcl_cout<< "Bucketing:\n";
-    vcl_cout<< "Total BElements= " << boundary()->nBElement() <<vcl_endl;
-    vcl_cout<< "nElmsPerBucket= " << 12 <<vcl_endl;
+    std::cout<< "Bucketing:\n";
+    std::cout<< "Total BElements= " << boundary()->nBElement() <<std::endl;
+    std::cout<< "nElmsPerBucket= " << 12 <<std::endl;
 
     //2)
     boundary()->bucketing = new Bucketing (&boundary()->BElmList, 12, boundary(), this,

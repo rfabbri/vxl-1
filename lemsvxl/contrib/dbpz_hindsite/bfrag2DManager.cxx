@@ -5,7 +5,7 @@
  *************************************************************************/
 
 #include "bfrag2DManager.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 bfrag2DManager::bfrag2DManager()
@@ -25,14 +25,14 @@ void bfrag2DManager::displayCurve( Curve<double,double> *theCurve ){
 
 }
 
-int bfrag2DManager::getSelected( vcl_vector<int> &cols, vcl_vector<int> &rows ){
-    vcl_vector<int> whoCares;
+int bfrag2DManager::getSelected( std::vector<int> &cols, std::vector<int> &rows ){
+    std::vector<int> whoCares;
     return theGrid->get_selected_positions( &cols, &rows, &whoCares );
 }
 
 void bfrag2DManager::newGrid( int w, int h, int numPairs, int numPuzzles ){
-    //vcl_cout << "creating new grid w/ numpairs: " << numPairs << vcl_endl;
-    //vcl_cout << "2d manager creating a new grid: " << w << "x" << h << vcl_endl;
+    //std::cout << "creating new grid w/ numpairs: " << numPairs << std::endl;
+    //std::cout << "2d manager creating a new grid: " << w << "x" << h << std::endl;
 
     //the views will all leak if not deleted now
     clearTheViews();
@@ -75,7 +75,7 @@ void bfrag2DManager::addPointAt( float x, float y, int gridIndex, const vgui_sty
 
 void bfrag2DManager::addCurveAt( Curve<double,double> *theCurve, int gridIndex, const vgui_style_sptr& style ){
 
-    //vcl_cout << "adding curve at pos: " << gridIndex << vcl_endl;
+    //std::cout << "adding curve at pos: " << gridIndex << std::endl;
     gridBfrag2DTableaux[gridIndex]->addCurve( theCurve, style );
 
 }
@@ -86,10 +86,10 @@ void bfrag2DManager::displayBfragAt( int which, int gridIndex, XForm3x3 *theXFor
 
 }
 
-vcl_vector<Curve<double,double> > bfrag2DManager::getTopContoursForPuzzleSolving()
+std::vector<Curve<double,double> > bfrag2DManager::getTopContoursForPuzzleSolving()
 {
-    //vcl_cout << "bfrag2DManager: creating Curve<double,double> of top contours for use in PuzzleSolving" << vcl_endl;
-    vcl_vector<Curve<double,double> > topContours;
+    //std::cout << "bfrag2DManager: creating Curve<double,double> of top contours for use in PuzzleSolving" << std::endl;
+    std::vector<Curve<double,double> > topContours;
 
     //make sure we have at least 2 curves loaded
     if( theFrags.size() < 2 ){
@@ -111,22 +111,22 @@ vcl_vector<Curve<double,double> > bfrag2DManager::getTopContoursForPuzzleSolving
         topContours.push_back( newCurve );
     } 
 
-    //vcl_cout << "bfrag2DManager returning Curve list of " << topContours.size() << " curves." << vcl_endl;
+    //std::cout << "bfrag2DManager returning Curve list of " << topContours.size() << " curves." << std::endl;
     return topContours;
 }
 
-void bfrag2DManager::getBfragNameList( vcl_vector<vcl_string> &outList ){
+void bfrag2DManager::getBfragNameList( std::vector<std::string> &outList ){
     
     char indexCHAR[128];
-    vcl_string cur;
+    std::string cur;
 
-    for( vcl_vector< bfrag2D* >::iterator it = theFrags.begin();
+    for( std::vector< bfrag2D* >::iterator it = theFrags.begin();
           it != theFrags.end();
           ++it ) {
 
               sprintf( indexCHAR, "%i", (*it)->getIndex() );
 
-              cur = vcl_string(vcl_string(indexCHAR) + ": \"" + (*it)->getName() + "\" ");
+              cur = std::string(std::string(indexCHAR) + ": \"" + (*it)->getName() + "\" ");
               if( (*it)->getTopCurveFn().size() != 0 ){
                   cur += " [X]";
               } else {
@@ -149,7 +149,7 @@ void bfrag2DManager::getBfragNameList( vcl_vector<vcl_string> &outList ){
               }
 
               
-              outList.push_back(vcl_string(cur));
+              outList.push_back(std::string(cur));
               
 
           }
@@ -164,21 +164,21 @@ void bfrag2DManager::display( int which ){
 }
 */
 
-void bfrag2DManager::displayAssembly( vcl_vector< bool > whichFrags ){
+void bfrag2DManager::displayAssembly( std::vector< bool > whichFrags ){
     clearAssemblies();
     bool assemblyExists = false;
-    //vcl_cout << "bfrag2DManager: creating NEW ASSEMBLY - whichFrags size: " << whichFrags.size() << vcl_endl;
+    //std::cout << "bfrag2DManager: creating NEW ASSEMBLY - whichFrags size: " << whichFrags.size() << std::endl;
 
     double d[16];
 
     bfrag2D_assembly *newAssembly = new bfrag2D_assembly();
 
     for( unsigned i = 0; i < whichFrags.size(); i++ ){
-        //vcl_cout << "which frags is: " << whichFrags[i] << vcl_endl;
+        //std::cout << "which frags is: " << whichFrags[i] << std::endl;
         if(whichFrags[i]){
             assemblyExists = true;
 
-            //vcl_cout << "Adding piece [" << i << "] to assembly" << vcl_endl;
+            //std::cout << "Adding piece [" << i << "] to assembly" << std::endl;
 
             //XXX HACK: d is not a matrix yet!
             newAssembly->addPiece( theFrags[i], d );                
@@ -195,15 +195,15 @@ void bfrag2DManager::displayAssembly( vcl_vector< bool > whichFrags ){
 }
 
 //creates a new PZ2 file using the currently loaded items
-int bfrag2DManager::savePZ2as( vcl_string fn ){
+int bfrag2DManager::savePZ2as( std::string fn ){
 
-    //vcl_cout << "saving puzzle as: " << fn << "." << vcl_endl;
-    //vcl_cout << "-------------------------------------------------" << vcl_endl;
+    //std::cout << "saving puzzle as: " << fn << "." << std::endl;
+    //std::cout << "-------------------------------------------------" << std::endl;
 
 
     //try to open file, w/o creating
-    //vcl_ifstream check( fn.c_str(), ios::nocreate );
-    vcl_ifstream check( fn.c_str(), vcl_ios_in );
+    //std::ifstream check( fn.c_str(), ios::nocreate );
+    std::ifstream check( fn.c_str(), std::ios::in );
 
     if( check.good() ){
         check.close();
@@ -221,7 +221,7 @@ int bfrag2DManager::savePZ2as( vcl_string fn ){
     }
 
     //they either want to overwrite, or its new, so here goes
-    vcl_ofstream output( fn.c_str() );
+    std::ofstream output( fn.c_str() );
 
     //make sure it opened for writing
     if( !output.good() ){
@@ -252,7 +252,7 @@ int bfrag2DManager::savePZ2as( vcl_string fn ){
         output << "</Note>\n\n";
     }
 
-    for( vcl_vector< bfrag2D* >::iterator it = theFrags.begin();
+    for( std::vector< bfrag2D* >::iterator it = theFrags.begin();
          it != theFrags.end();
          ++it ) {
         output << "<" << (*it)->getIndex() << ">\n";
@@ -281,8 +281,8 @@ int bfrag2DManager::savePZ2as( vcl_string fn ){
 }
 
 //add a piece to the current puzzle
-int bfrag2DManager::addPiece( vcl_string topConFn, vcl_string botConFn, 
-                              vcl_string topImageFn, vcl_string botImageFn, vcl_string name ){
+int bfrag2DManager::addPiece( std::string topConFn, std::string botConFn, 
+                              std::string topImageFn, std::string botImageFn, std::string name ){
 
     //we are assured by bfrag_Manager topConFn is not null
     assert( topConFn.size() > 4 );
@@ -293,22 +293,22 @@ int bfrag2DManager::addPiece( vcl_string topConFn, vcl_string botConFn,
 
     if( (errnum = newFrag->loadContour( topConFn, 1 )) != 0 ){
         char errstr[256];
-        vcl_sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, topConFn.c_str());
+        std::sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, topConFn.c_str());
         return parseFail( errstr );
     }
     if( (errnum = newFrag->loadImage( topImageFn, 1 )) != 0 ){
         char errstr[256];
-        vcl_sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, topImageFn.c_str());
+        std::sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, topImageFn.c_str());
         return parseFail( errstr );
     }
     if( (errnum = newFrag->loadContour( botConFn, 0 )) != 0 ){
         char errstr[256];
-        vcl_sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, botConFn.c_str());
+        std::sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, botConFn.c_str());
         return parseFail( errstr );
     }
     if( (errnum = newFrag->loadImage( botImageFn, 0 )) != 0 ){
         char errstr[256];
-        vcl_sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, botImageFn.c_str());
+        std::sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, botImageFn.c_str());
         return parseFail( errstr );
     }
 
@@ -316,16 +316,16 @@ int bfrag2DManager::addPiece( vcl_string topConFn, vcl_string botConFn,
 
     //increment numPieces and make sure its teh same as the vector size
     if( ++numPieces == static_cast<int>(theFrags.size()) ){
-        //vcl_cout << "---Completed Successfull Piece Addition of piece [" << numPieces << "]." << vcl_endl;
+        //std::cout << "---Completed Successfull Piece Addition of piece [" << numPieces << "]." << std::endl;
     } else {
-        //vcl_cout << "NOT GOOD vectorsize: " << theFrags.size() << "!= numPieces: " << numPieces << vcl_endl;
+        //std::cout << "NOT GOOD vectorsize: " << theFrags.size() << "!= numPieces: " << numPieces << std::endl;
     }
 
     return numPieces;
 
 }
 
-int bfrag2DManager::loadPuzzle( vcl_string fn ){
+int bfrag2DManager::loadPuzzle( std::string fn ){
     //out with the old, in with the new...
     //bfrag2DManager::clearTheFrags deletes them too
     clearTheFrags();
@@ -338,18 +338,18 @@ int bfrag2DManager::loadPuzzle( vcl_string fn ){
 
 
 //load a .pz2 version 1.0 file (different spec from .puz files)
-int bfrag2DManager::addPuzzle( vcl_string fn ){
+int bfrag2DManager::addPuzzle( std::string fn ){
 
-    //vcl_cout << "adding puzzle: " << fn << "." << vcl_endl;
-    //vcl_cout << "-------------------------------------------------" << vcl_endl;
+    //std::cout << "adding puzzle: " << fn << "." << std::endl;
+    //std::cout << "-------------------------------------------------" << std::endl;
 
     //open file, make sure it opened
-    vcl_ifstream input( fn.c_str(), vcl_ios_in );
+    std::ifstream input( fn.c_str(), std::ios::in );
 
     if( !input.good() ){
         //could not open file
 
-        vcl_cout << vcl_endl << "FILE DNE or BAD PERMISSIONS:" << fn.c_str() << vcl_endl;
+        std::cout << std::endl << "FILE DNE or BAD PERMISSIONS:" << fn.c_str() << std::endl;
 
         vgui_dialog ok_dl("Sorry");
         //ok_dl.set_modal(true);
@@ -375,28 +375,28 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
     //this works fine so long as there is whitespace between everything
     input >> token;
 
-    //vcl_cout << "cur token: " << token << vcl_endl;
+    //std::cout << "cur token: " << token << std::endl;
 
     while( strcmp( token, "<PZ2>" ) && !input.eof() ){ 
         input >> token; 
-        //vcl_cout << "waiting for PZ2, cur token: " << token << vcl_endl;
+        //std::cout << "waiting for PZ2, cur token: " << token << std::endl;
     }
 
-    //vcl_cout << "found PZ2 tag: " << token << vcl_endl;
+    //std::cout << "found PZ2 tag: " << token << std::endl;
 
 
     while( !input.eof() ){
         input >> token;
 
-        //vcl_cout << "Processing token: " << token << vcl_endl;
+        //std::cout << "Processing token: " << token << std::endl;
         if( strcmp( token, "<Note>" ) == 0 ){
             //parse note
             //input >> token;
             //_noteString += token;
 
-            vcl_string curString = vcl_string();
+            std::string curString = std::string();
             
-            //vcl_cout << "NOTE[";
+            //std::cout << "NOTE[";
 
             while( 1 ){
                 if( input.eof() ){
@@ -405,22 +405,22 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
 
                 input >> token;
 
-                //vcl_cout << token;
+                //std::cout << token;
 
                 if( !strcmp( token, "</Note>" ) ) break;
 
                 if( input.peek() == 10 ){       //newline
-                    //vcl_cout << vcl_endl;
+                    //std::cout << std::endl;
 
-                    curString += vcl_string(token);
+                    curString += std::string(token);
                     _noteStrings.push_back( curString );
-                    curString = vcl_string();
+                    curString = std::string();
                 } else if( input.peek() == 32 ){ //space                    
                     curString += token;
                     curString += " ";
                 }                 
             }
-            //vcl_cout << "]END NOTE" << vcl_endl;
+            //std::cout << "]END NOTE" << std::endl;
 
             _noteStrings.push_back( curString );
             
@@ -428,12 +428,12 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
             if( !curFrag) return parseFail( "No Current Piece: Expected <N> to begin new bfrag" );
             if( extractFileName( input, pieceName ) == -1)
                 return parseFail( "Error: Unbalanced \" " );
-            curFrag->setName( vcl_string(pieceName) );
+            curFrag->setName( std::string(pieceName) );
         } else if( strcmp( token, "<TopCurve>") == 0 ) {
             if( !curFrag ) return parseFail( "No Current Piece: Expected <N> to begin new bfrag" );
             if( extractFileName( input, topCurveFn ) == -1)
                 return parseFail( "Error: Unbalanced \" " );
-            //vcl_cout << "Top Curve for frag " << curFrag->getIndex() << " is: " << topCurveFn << vcl_endl;
+            //std::cout << "Top Curve for frag " << curFrag->getIndex() << " is: " << topCurveFn << std::endl;
             if( (errnum = curFrag->loadContour( topCurveFn, 1 )) != 0 ){
                 char errstr[256];
                 sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, topCurveFn);
@@ -445,7 +445,7 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
             if( !curFrag ) return parseFail( "No Current Piece: Expected <N> to begin new bfrag" );
             if( extractFileName( input, topImageFn ) == -1)
                 return parseFail( "Error: Unbalanced \" " );
-            //vcl_cout << "Top Image for frag " << curFrag->getIndex() << " is: " << topImageFn << vcl_endl;
+            //std::cout << "Top Image for frag " << curFrag->getIndex() << " is: " << topImageFn << std::endl;
             if( (errnum = curFrag->loadImage( topImageFn, 1 )) != 0 ){
                 char errstr[256];
                 sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, topImageFn);
@@ -457,7 +457,7 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
             if( !curFrag ) return parseFail( "No Current Piece: Expected <N> to begin new bfrag" );
             if( extractFileName( input, botCurveFn ) == -1)
                 return parseFail( "Error: Unbalanced \" " );
-            //vcl_cout << "Bot Curve for frag " << curFrag->getIndex() << " is: " << botCurveFn << vcl_endl;
+            //std::cout << "Bot Curve for frag " << curFrag->getIndex() << " is: " << botCurveFn << std::endl;
             if( (errnum = curFrag->loadContour( botCurveFn, 0 )) != 0 ){
                 char errstr[256];
                 sprintf(errstr, "Error (%i): Contour -%s- Could Not Be Loaded! Aborting.", errnum, botCurveFn);
@@ -469,7 +469,7 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
             if( !curFrag ) return parseFail( "No Current Piece: Expected <N> to begin new bfrag" );
             if( extractFileName( input, botImageFn ) == -1)
                 return parseFail( "Error: Unbalanced \" " );
-            //vcl_cout << "Bot Image for frag " << curFrag->getIndex() << " is: " << botImageFn << vcl_endl;
+            //std::cout << "Bot Image for frag " << curFrag->getIndex() << " is: " << botImageFn << std::endl;
             if( (errnum = curFrag->loadImage( botImageFn, 0 )) != 0 ){
                 char errstr[256];
                 sprintf(errstr, "Error (%i): Image -%s- Could Not Be Loaded! Aborting.", errnum, botImageFn);
@@ -482,7 +482,7 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
             if( curFrag ){
                 return parseFail( "Reached puzzle closing </PZ2> tag but there is still a fragment open. Aborting" );
             }
-            //vcl_cout << "REACHED END OF PZ2" << vcl_endl;
+            //std::cout << "REACHED END OF PZ2" << std::endl;
             break;
         
 
@@ -522,11 +522,11 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
                 char indexASCII[128];
                 strncpy( indexASCII, token + 1, strlen(token) - 2 );
                 indexASCII[strlen(token)-2] = 0;
-                //vcl_cout << "GRABBED " << indexASCII << " AS NEW INDEX " << vcl_endl;
+                //std::cout << "GRABBED " << indexASCII << " AS NEW INDEX " << std::endl;
 
 
                 curFrag = new bfrag2D( atoi(indexASCII) );
-                //vcl_cout << "NEW FRAG: index: " << curFrag->getIndex() << vcl_endl;
+                //std::cout << "NEW FRAG: index: " << curFrag->getIndex() << std::endl;
 
 
                 *topCurveFn = 0;
@@ -550,17 +550,17 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
     }
 
     if( numPieces == static_cast<int>(theFrags.size()) ){
-        //vcl_cout << "---Completed Successfull PZ2 loading of (" << numPieces << ") pieces." << vcl_endl;
+        //std::cout << "---Completed Successfull PZ2 loading of (" << numPieces << ") pieces." << std::endl;
     } else {
-        //vcl_cout << "NOT GOOD vectorsize: " << theFrags.size() << "!= numPieces: " << numPieces << vcl_endl;
+        //std::cout << "NOT GOOD vectorsize: " << theFrags.size() << "!= numPieces: " << numPieces << std::endl;
     }
 
     //give user the note
     if( _noteStrings.size() > 0 ){
         vgui_dialog ok_dl("Puzzle Note");
-        //vcl_cout << "Note: ";
+        //std::cout << "Note: ";
         for( unsigned i = 0; i < _noteStrings.size(); i++ ){
-            //vcl_cout << _noteStrings[i] << vcl_endl;
+            //std::cout << _noteStrings[i] << std::endl;
             ok_dl.message( _noteStrings[i].c_str() );
         }
         ok_dl.set_cancel_button( 0 );
@@ -578,7 +578,7 @@ int bfrag2DManager::addPuzzle( vcl_string fn ){
  * the ifstream until if finds the trailing " character and returns what
  * was within the " " 's in outFn.  IF EOF is reached -1 is returned
  *****************************************************************/
-int bfrag2DManager::extractFileName( vcl_ifstream &input, char* outFn ){
+int bfrag2DManager::extractFileName( std::ifstream &input, char* outFn ){
     char token[512];
     input >> token;
     int len;
@@ -587,16 +587,16 @@ int bfrag2DManager::extractFileName( vcl_ifstream &input, char* outFn ){
 
     //look for beginning "
     if( strncmp( token, "\"", 1 ) == 0 ){
-        //vcl_cout << "extracting File Name within \" \" \'s" << vcl_endl;
+        //std::cout << "extracting File Name within \" \" \'s" << std::endl;
 
-        //vcl_cout << "token currently is [" << token << "]" << vcl_endl;
+        //std::cout << "token currently is [" << token << "]" << std::endl;
         while( strncmp( token + strlen(token) - 1, "\"", 1 ) != 0 ){
             if( input.eof() ) return -1;
 
             len = strlen(token);
             strncpy(token+len, " ", 1);
             input >> (token + len+1);
-            //vcl_cout << "token currently is [" << token << "]" << vcl_endl;
+            //std::cout << "token currently is [" << token << "]" << std::endl;
         }
 
         //copy after the first " into outFn
@@ -613,9 +613,9 @@ int bfrag2DManager::extractFileName( vcl_ifstream &input, char* outFn ){
 
 }
 
-int bfrag2DManager::parseFail( vcl_string errmsg ){
+int bfrag2DManager::parseFail( std::string errmsg ){
 
-    vcl_cout << "PARSER FAILURE: " << errmsg << vcl_endl;
+    std::cout << "PARSER FAILURE: " << errmsg << std::endl;
 
     vgui_dialog ok_dl("Parser Failure");
     //ok_dl.set_modal(true);
@@ -652,9 +652,9 @@ void bfrag2DManager::clearTheViews(){
 
 void bfrag2DManager::displayAllTopImages( bool show ){
 
-    //vcl_cout << "top image settings chaning..." << vcl_endl;
+    //std::cout << "top image settings chaning..." << std::endl;
     for(unsigned i = 0; i < theViews.size(); i++){
-        //vcl_cout << "for view [" <<  i << "] changing draw top image to: " << show << vcl_endl;
+        //std::cout << "for view [" <<  i << "] changing draw top image to: " << show << std::endl;
         theViews[i]->drawTopImage = show;
     }
     post_redraw();
@@ -704,7 +704,7 @@ int bfrag2DManager::removeBfrag( int where ){
     return -1;
 }
 
-void bfrag2DManager::generatePuzzle( vcl_string fconDir, vcl_string bconDir, vcl_string fimageDir, vcl_string bimageDir )
+void bfrag2DManager::generatePuzzle( std::string fconDir, std::string bconDir, std::string fimageDir, std::string bimageDir )
 {
 
 //Ming: need a cross platform solution
@@ -715,7 +715,7 @@ void bfrag2DManager::generatePuzzle( vcl_string fconDir, vcl_string bconDir, vcl
 
     WIN32_FIND_DATA lpffd;
 
-    vcl_string strTmp;
+    std::string strTmp;
     HANDLE hFind;
     int rc, bRet = true;
  
@@ -728,17 +728,17 @@ void bfrag2DManager::generatePuzzle( vcl_string fconDir, vcl_string bconDir, vcl
         printf ("Invalid file handle. Error is %u\n", GetLastError());
     }
 
-    vcl_cout << "fist file is: " << lpffd.cFileName << vcl_endl;
+    std::cout << "fist file is: " << lpffd.cFileName << std::endl;
 
     while( FindNextFile(hFind, &lpffd) != 0){
-        vcl_cout << "next file: " << lpffd.cFileName << vcl_endl;
+        std::cout << "next file: " << lpffd.cFileName << std::endl;
     }
 
     FindClose(hFind);
 
     /*
-    int addPiece( vcl_string topConFn, vcl_string botConFn, 
-                  vcl_string topImageFn, vcl_string botImageFn, vcl_string name );
+    int addPiece( std::string topConFn, std::string botConFn, 
+                  std::string topImageFn, std::string botImageFn, std::string name );
                   */
 #endif
 }

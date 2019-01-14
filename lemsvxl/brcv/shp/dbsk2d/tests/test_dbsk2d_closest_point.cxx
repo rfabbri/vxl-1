@@ -14,14 +14,14 @@
 void test_dbsk2d_closest_point_functions()
 {
 
-  vcl_cout << "This is test_dbsk2d_closest_point_functions()" << vcl_endl;
+  std::cout << "This is test_dbsk2d_closest_point_functions()" << std::endl;
   
   // input points
   double x[] = { 0 , 1, 2, 3};
   double y[] = { 0 , 0, 0, 2};
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 4; ++i)
   {
     dbsk2d_ishock_bpoint* bp = new dbsk2d_ishock_bpoint(x[i], y[i]);
@@ -29,7 +29,7 @@ void test_dbsk2d_closest_point_functions()
   }
 
   // contruct list of edges
-  vcl_vector<dbsk2d_bnd_edge_sptr > edges;
+  std::vector<dbsk2d_bnd_edge_sptr > edges;
   for (unsigned int i = 0; i < 3; ++i)
   {
     dbsk2d_ishock_bpoint* bp1 = vertices[i]->bpoint();

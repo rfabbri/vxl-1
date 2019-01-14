@@ -3,9 +3,9 @@
 
 #include "bvaml_ray.h"
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <cmath>
+#include <vector>
 
 
 //------------------------------------------
@@ -42,7 +42,7 @@ bvaml_ray::update(
   const vnl_vector<float>& light )
 {
   int num_voxels = voxels.size();
-  vcl_vector<float> color_prob; color_prob.reserve( num_voxels );
+  std::vector<float> color_prob; color_prob.reserve( num_voxels );
 
   // Pass 1: Get the color probabilities and compute total color and
   // weight probabilities.

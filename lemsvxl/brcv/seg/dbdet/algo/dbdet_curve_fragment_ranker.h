@@ -10,7 +10,7 @@
 //
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <vnl/vnl_matrix_fixed.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 // TODO Possibly class it
 //class dbdet_curve_fragment_ranker {

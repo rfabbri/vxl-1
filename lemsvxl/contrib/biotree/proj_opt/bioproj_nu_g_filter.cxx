@@ -1,14 +1,14 @@
 #include "bioproj_nu_g_filter.h"
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_adaptsimpson_integral.h>
 #include "bioproj_filter_integrant.h"
 
 bioproj_nu_g_filter::bioproj_nu_g_filter(double sigma, unsigned extent, double increment)
 {
-  double half_extent = int(vcl_ceil(extent * sigma));
-  half_kernel_size_ = int(vcl_ceil(extent * sigma) / increment);
+  double half_extent = int(std::ceil(extent * sigma));
+  half_kernel_size_ = int(std::ceil(extent * sigma) / increment);
   full_kernel_size_ = 2*half_kernel_size_ + 1;
   filter_ = new double[full_kernel_size_];
   int index = 0;

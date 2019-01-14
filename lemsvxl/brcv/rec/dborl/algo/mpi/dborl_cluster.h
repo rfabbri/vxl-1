@@ -38,10 +38,10 @@
 
 //#define MPI_CPP_BINDING
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 //using namespace std;
 
 // Exception class definition
@@ -54,7 +54,7 @@ private:
     // Bioproc error type
     cluster_error m_error;
     // Exception message
-    vcl_string m_message;
+    std::string m_message;
     // MPI specific error.
     int m_mpierror;
     // System specific error code.
@@ -64,10 +64,10 @@ public:
     // Default is thrown when a container tries to fetch the filter response on non-LeadProcessor
     dborl_cluster_exception() : m_error (Incomplete), m_message ("Response field is only complete on processor 0"), m_mpierror (0), m_syserror (0) {}
     // Customizable exception instance
-    dborl_cluster_exception(cluster_error err, vcl_string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
+    dborl_cluster_exception(cluster_error err, std::string msg, int mpierr, int syserr) : m_error (err), m_message (msg), m_mpierror (mpierr), m_syserror (syserr) {}
 
     // Property accessors
-    const vcl_string get_message() { return m_message.data (); }
+    const std::string get_message() { return m_message.data (); }
     int get_error() { return m_error; }
     int get_MPI_error() { return m_mpierror; }
     int get_syserror() { return m_syserror; }
@@ -83,7 +83,7 @@ public:
   bool mpi_initialize(int argc, char *argv[]);
   
   //: collects results and calls finalize() method of p_ on the lead processor (i.e. once)
-  bool distribute(vcl_vector<T>& t);
+  bool distribute(std::vector<T>& t);
   //bool distribute(T *t, int cnt_t, R *r, int& cnt_r);
 
   //: must call this to properly finalize the MPI interface
@@ -95,12 +95,12 @@ public:
   // Whether this processor is the lead processor
   bool lead_processor() { return my_rank_ == 0; }
   unsigned total_processors() { return total_processors_; }
-  vcl_string processor_name() const {return processor_name_; }
+  std::string processor_name() const {return processor_name_; }
 
 protected:
   int my_rank_;
   int total_processors_;
-  vcl_string processor_name_;
+  std::string processor_name_;
 
   R *send_buf_;  // each processor will have a send buf 
   R *recv_buf_;  // lead processor will have a receive buf to collect results from each process
@@ -114,7 +114,7 @@ protected:
   unsigned points_left_over(unsigned npts) { return (npts % total_processors_); }
 
   // Return the start point and number of points for a given point count and processor rank
-  unsigned get_start_point(unsigned npts, unsigned rank) { return (rank * points_per_processor(npts) + vcl_min (rank, points_left_over(npts))); }
+  unsigned get_start_point(unsigned npts, unsigned rank) { return (rank * points_per_processor(npts) + std::min (rank, points_left_over(npts))); }
   unsigned get_number_points(unsigned npts, unsigned rank) { return (points_per_processor(npts) + (rank < points_left_over (npts) ? 1 : 0)); }
 
 };

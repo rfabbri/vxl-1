@@ -8,17 +8,17 @@
 #include <vil/vil_math.h>
 #include <dkdu/apps/kdu_compress/compress_local.h>
 #include <vil/vil_save.h>
-//static bool stringToArgv(vcl_vector<char*>& args,vcl_istringstream& iss,int &argc);
-bool stringToArgv(vcl_vector<char*>& args,vcl_istringstream& iss,int &argc);
+//static bool stringToArgv(std::vector<char*>& args,std::istringstream& iss,int &argc);
+bool stringToArgv(std::vector<char*>& args,std::istringstream& iss,int &argc);
 bool bbgm_thresh_and_KDU_encode_process_cons(bprb_func_process& pro)
 {
-    vcl_vector<vcl_string> in_types(6);
+    std::vector<std::string> in_types(6);
   in_types[0]="vil_image_view_base_sptr";//input image
   in_types[1]="vil_image_view_base_sptr";//input image
   in_types[2]="float";//bg thresh
-  in_types[3]="vcl_string";//argv
+  in_types[3]=vcl_string";//argv
   in_types[4]="int";//roi coding
-  in_types[5]="vcl_string";// kdu args for frame
+  in_types[5]=vcl_string";// kdu args for frame
   pro.set_input_types(in_types);
   return true;
 
@@ -28,14 +28,14 @@ bool bbgm_thresh_and_KDU_encode_process(bprb_func_process& pro)
 {
    
    if (!pro.verify_inputs()) {
-    vcl_cerr << "In bbgm_thresh_and_compress_process::execute() -"
+    std::cerr << "In bbgm_thresh_and_compress_process::execute() -"
              << " invalid inputs\n";
     return false;
   }	
   vil_image_view_base_sptr truth_img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(0);
   if (!truth_img_ptr) {
-    vcl_cerr << "In bbgm_thresh_and_compress_process::execute() -"
+    std::cerr << "In bbgm_thresh_and_compress_process::execute() -"
              << " null probability map\n";
     return false;
   }
@@ -43,7 +43,7 @@ bool bbgm_thresh_and_KDU_encode_process(bprb_func_process& pro)
    vil_image_view_base_sptr input_img_ptr = 
     pro.get_input<vil_image_view_base_sptr>(1);
   if (!input_img_ptr) {
-    vcl_cerr << "In bbgm_thresh_and_compress_process::execute() -"
+    std::cerr << "In bbgm_thresh_and_compress_process::execute() -"
              << " null measurement input image\n";
     return false;
   }
@@ -68,11 +68,11 @@ bool bbgm_thresh_and_KDU_encode_process(bprb_func_process& pro)
 	vil_save(mask,"C:\\Temp\\roi.pgm");
 	vil_save(mask,"C:\\Temp\\roi.bmp"); 
   }
-  vcl_string argv=pro.get_input<vcl_string>(3);
-  vcl_string argv_f=pro.get_input<vcl_string>(5);
-  vcl_istringstream istr(argv), istr_m(argv_f);
+  std::string argv=pro.get_input<std::string>(3);
+  std::string argv_f=pro.get_input<std::string>(5);
+  std::istringstream istr(argv), istr_m(argv_f);
   
-  vcl_vector<char*> args,mask_args;	  
+  std::vector<char*> args,mask_args;	  
   int argc,argc_m;
   bool success=stringToArgv(args,istr,argc);
   bool suc2=stringToArgv(mask_args,istr_m,argc_m);

@@ -21,10 +21,10 @@
 
 //#include <vgl/vgl_point_2d.h>
 //#include <vgl/vgl_vector_3d.h>
-//#include <vcl_string.h>
+//#include <string>
 
-//#include <vcl_vector.h>
-//#include <vcl_map.h>
+//#include <vector>
+//#include <map>
 //#include <vsol/vsol_box_2d_sptr.h>
 //#include <vsol/vsol_spatial_object_2d_sptr.h>
 //#include <bgld/algo/bgld_circ_arc.h>

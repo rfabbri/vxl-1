@@ -5,9 +5,9 @@
 
 #include<dsm/dsm_features_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 namespace dsm_extract_intensity_features_globals
 {
@@ -19,9 +19,9 @@ bool dsm_extract_intensity_features_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_extract_intensity_features_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
-	input_types_[0] = "vcl_string";
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
+	input_types_[0] = vcl_string";
 
 	output_types_[0] = "dsm_features_sptr";
 
@@ -40,13 +40,13 @@ bool dsm_extract_intensity_features_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << "dsm_extract_intensity_features: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << "dsm_extract_intensity_features: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 
 	dsm_features_sptr features_sptr = new dsm_features(filename);
 

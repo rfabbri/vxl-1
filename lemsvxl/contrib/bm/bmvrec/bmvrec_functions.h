@@ -13,10 +13,10 @@
 //#include "/home/brandon/vxl/contrib/brl/bbas/bsta/bsta_histogram.h" //histogram class
 //#include<bsta/bsta_gauss_id3.h>
 
-#include<vcl_fstream.h> //file io
-#include<vcl_map.h> //for the stl map container, (key,value) pair
-#include<vcl_string.h> // std:string class
-#include<vcl_utility.h> //for vcl_pair::make_pair
+#include<fstream> //file io
+#include<map> //for the stl map container, (key,value) pair
+#include<string> // std:string class
+#include<utility> //for std::pair::make_pair
 
 
 #include<vil/vil_convert.h> //to convert image types
@@ -34,11 +34,11 @@ public:
 
     //loading the images
     //parse given directory for *.png files
-    static vcl_map<vcl_string,vil_image_view<float> > load_image_map_float(const vcl_string& fullImgDirectory);
+    static std::map<std::string,vil_image_view<float> > load_image_map_float(const std::string& fullImgDirectory);
 
     //load the ground truths
     //parse given directory for *.png files
-    static vcl_map<vcl_string,vil_image_view<bool> > load_image_map_bool(const vcl_string& fullImgDirectory);
+    static std::map<std::string,vil_image_view<bool> > load_image_map_bool(const std::string& fullImgDirectory);
 
     //scale float image to be within range 0 and 1
     static void scale_float(vil_image_view<float>& img, const float& max);
@@ -47,14 +47,14 @@ public:
     static vil_image_view<float> apply_extrema(vil_image_view<float>& img);
 
     //write operator response to disk
-    static void write_op_m(vcl_ofstream& os, const vil_image_view<float>& opRep,const vcl_string& imgName);
+    static void write_op_m(std::ofstream& os, const vil_image_view<float>& opRep,const std::string& imgName);
     
     //check if the current image has a ground truth mask
-    static bool check_gt(const vcl_string& currImg);
+    static bool check_gt(const std::string& currImg);
 
     //extract foreground operator response histogram and write data to disk to disk
-    static void extract_fg_opRep(const vil_image_view<float>& opRep, const vil_image_view<bool>& gt,const vcl_string& currImg,
-                                 vcl_ofstream& os);
+    static void extract_fg_opRep(const vil_image_view<float>& opRep, const vil_image_view<bool>& gt,const std::string& currImg,
+                                 std::ofstream& os);
     
     
 };

@@ -114,7 +114,7 @@ SoSeparator* dbmsh3dr_pro_vis::vis_min_dist_pt_color_SoPoint (const float size,
   drawstyle->pointSize = size;
   root->addChild(drawstyle);
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
   for (int i=0; it != pro_[1]->mesh()->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
     SoSeparator* sep = new SoSeparator;
@@ -155,7 +155,7 @@ SoSeparator* dbmsh3dr_pro_vis::vis_min_dist_pt_color_SoCube (const float size)
   SbColor color;
   int id;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
   for (int i=0; it != pro_[1]->mesh()->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* V2 = (*it).second;
     color = pv1()->mesh_vertex_color_set_[i];
@@ -178,7 +178,7 @@ SoSeparator* dbmsh3dr_pro_vis::vis_matching_vector ()
   //Get the vertex color of the 2nd mesh.
   pv1()->compute_mesh_vertex_color_set (min_dists_);
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pro_[1]->mesh()->vertexmap().begin();
   for (int i=0; it != pro_[1]->mesh()->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* V2 = (*it).second;
     SbColor color = pv1()->mesh_vertex_color_set_[i];

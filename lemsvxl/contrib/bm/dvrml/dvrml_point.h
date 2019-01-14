@@ -25,9 +25,9 @@ public:
 
     ~dvrml_point(){}
 
-    virtual void draw( vcl_ostream& os );
+    virtual void draw( std::ostream& os );
 
-    vcl_string shape(){ return "point"; }
+    std::string shape(){ return "point"; }
 
     double radius;
     

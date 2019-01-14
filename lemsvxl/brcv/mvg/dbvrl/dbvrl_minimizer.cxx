@@ -12,7 +12,7 @@
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vil/vil_math.h>
 #include <vimt/vimt_gaussian_pyramid_builder_2d.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 #include <vnl/vnl_matlab_filewrite.h>
@@ -37,7 +37,7 @@ dbvrl_minimizer::dbvrl_minimizer( const vimt_image_2d_of<float>& image1,
     roi_L.set_origin(p);
     ++levels;
   }
-  vcl_cout << "LEVELS = "<<levels<<"\n";
+  std::cout << "LEVELS = "<<levels<<"\n";
 
   if(levels == 0){
     levels = 1;
@@ -132,16 +132,16 @@ dbvrl_minimizer::minimize(vimt_transform_2d& xform)
 
   vnl_vector<double> param, fx;
   xform.params(param);
-  double init_scale = vcl_pow(0.5,from_pyramid_.hi()+1);
+  double init_scale = std::pow(0.5,from_pyramid_.hi()+1);
 
   vimt_transform_2d undo_xform;
   undo_xform.set_zoom_only(1.0/init_scale,1.0/init_scale,0.0,0.0);
   vimt_transform_2d undo_step;
   undo_step.set_zoom_only(0.5,0.5,0.0,0.0);
-  vcl_cout << "xform.origin = "<<xform.origin()<<"\n";
+  std::cout << "xform.origin = "<<xform.origin()<<"\n";
   xform.set_origin( vgl_point_2d<double>(xform.origin().x()*init_scale, 
                                      xform.origin().y()*init_scale) );
-  vcl_cout << "new xform.origin = "<<xform.origin()<<"\n";
+  std::cout << "new xform.origin = "<<xform.origin()<<"\n";
 
   //vnl_matlab_filewrite matlab("C:/MATLAB/work/vxl.mat");
   //vnl_matrix<double> result(50,50);

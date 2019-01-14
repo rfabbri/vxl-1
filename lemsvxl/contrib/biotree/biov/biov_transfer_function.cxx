@@ -16,7 +16,7 @@ void biov_transfer_function::execute()
     vgui_dialog transfer_dialog("Transfer Function");
     transfer_dialog.field("MIN", min);
     transfer_dialog.field("MAX", max);
-    vcl_vector <vcl_string> color_map_labels(8);
+    std::vector <std::string> color_map_labels(8);
     color_map_labels[0] = "NONE";
     color_map_labels[1] = "GREY";
     color_map_labels[2] = "TEMPERATURE";

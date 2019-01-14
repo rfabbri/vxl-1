@@ -7,21 +7,21 @@
 #include <dbetrk/dbetrk_edge.h>
 
 //: Constructor
-dbetrk_storage::dbetrk_storage( const vcl_vector<dbetrk_edge_sptr>& dbetrk_edges):dbetrk_edges_ (dbetrk_edges)
+dbetrk_storage::dbetrk_storage( const std::vector<dbetrk_edge_sptr>& dbetrk_edges):dbetrk_edges_ (dbetrk_edges)
 {
 }
 
 
 //: Set the edgetracking storage vector
 void
-dbetrk_storage::set_dbetrk_edges( const vcl_vector<dbetrk_edge_sptr >& dbetrk_edges)
+dbetrk_storage::set_dbetrk_edges( const std::vector<dbetrk_edge_sptr >& dbetrk_edges)
 {
   dbetrk_edges_=  dbetrk_edges;
 }
 
 //: Retrieve the edgetracking storage vector
 void
-dbetrk_storage::get_dbetrk_edges( vcl_vector<dbetrk_edge_sptr>& dbetrk_edges) const
+dbetrk_storage::get_dbetrk_edges( std::vector<dbetrk_edge_sptr>& dbetrk_edges) const
 {
   dbetrk_edges=  dbetrk_edges_;
 }
@@ -70,9 +70,9 @@ dbetrk_storage::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: vidpro1_ctrk_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: vidpro1_ctrk_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

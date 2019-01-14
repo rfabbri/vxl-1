@@ -12,7 +12,7 @@
 
 #include <bprb/bprb_func_process.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <boxm/boxm_scene_base.h>
 #include <boxm/boxm_scene.h>
 #include <boxm/boxm_render_image.h>
@@ -37,7 +37,7 @@ bool boxm_render_expected_process_cons(bprb_func_process& pro)
   //input[2]: ni of the expected image
   //input[3]: nj of the expected image
   //input[4]: bin number
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "boxm_scene_base_sptr";
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "unsigned";
@@ -49,7 +49,7 @@ bool boxm_render_expected_process_cons(bprb_func_process& pro)
   // process has 1 output:
   // output[0]: rendered image
   // output[0]: mask
-  vcl_vector<vcl_string>  output_types_(n_outputs_);
+  std::vector<std::string>  output_types_(n_outputs_);
   output_types_[0] = "vil_image_view_base_sptr";
   output_types_[1] = "vil_image_view_base_sptr";
   if (!pro.set_output_types(output_types_))
@@ -63,7 +63,7 @@ bool boxm_render_expected_process(bprb_func_process& pro)
   using namespace boxm_render_expected_process_globals;
 
   if ( pro.n_inputs() < n_inputs_ ){
-    vcl_cout << pro.name() << ": The input number should be " << n_inputs_<< vcl_endl;
+    std::cout << pro.name() << ": The input number should be " << n_inputs_<< std::endl;
     return false;
   }
 
@@ -90,7 +90,7 @@ bool boxm_render_expected_process(bprb_func_process& pro)
     else
     {
       unsigned bin = pro.get_input<unsigned>(i++);
-      vcl_cout<<"Multi Bin"<<vcl_endl;
+      std::cout<<"Multi Bin"<<std::endl;
       typedef boct_tree<short, boxm_sample_multi_bin<BOXM_APM_MOG_GREY> > type;
       boxm_scene<type>* scene = dynamic_cast<boxm_scene<type>*> (scene_ptr.as_pointer());
       boxm_render_image_splatting_triangle<short, boxm_sample_multi_bin<BOXM_APM_MOG_GREY> >(*scene, camera, expected, mask,bin,true);
@@ -104,7 +104,7 @@ bool boxm_render_expected_process(bprb_func_process& pro)
     img = expected_byte;
   }
   else {
-    vcl_cout << "boxm_render_expected_process: undefined APM type" << vcl_endl;
+    std::cout << "boxm_render_expected_process: undefined APM type" << std::endl;
     return false;
   }
 

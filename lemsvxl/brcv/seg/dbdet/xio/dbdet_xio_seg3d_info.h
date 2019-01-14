@@ -9,17 +9,17 @@
 // \author   Nhon Trinh (ntrinh@lems.brown.edu)
 // \date     June 2, 2006
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <dbdet/dbdet_seg3d_info.h>
 #include <dbdet/dbdet_seg3d_info_sptr.h>
 
 
 //: parse an xml file
-bool x_read(vcl_string fname, const dbdet_seg3d_info_sptr& s);
+bool x_read(std::string fname, const dbdet_seg3d_info_sptr& s);
 
 //: write xml file
-void x_write(vcl_ostream& os, const dbdet_seg3d_info_sptr& s);
+void x_write(std::ostream& os, const dbdet_seg3d_info_sptr& s);
 
 
 

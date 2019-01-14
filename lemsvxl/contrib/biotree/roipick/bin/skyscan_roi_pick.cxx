@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   vgui_menu menubar = skyscan_roi_pick_menus::get_menu();
   unsigned w = 1024, h = 768;
 
-  vcl_string title = "Simple Box ROI picker";
+  std::string title = "Simple Box ROI picker";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   win->get_adaptor()->set_tableau(skyscan_roi_pick_manager::instance());
   win->set_statusbar(true);

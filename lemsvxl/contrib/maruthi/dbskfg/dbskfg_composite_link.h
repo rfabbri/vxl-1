@@ -15,7 +15,7 @@
 
 #include <dbgrl/dbgrl_edge.h>
 #include <dbskfg/dbskfg_composite_node_sptr.h>
-#include <vcl_ostream.h>
+#include <ostream>
 
 class dbskfg_composite_link : public dbgrl_edge< dbskfg_composite_node >
 {
@@ -40,7 +40,7 @@ public:
     virtual ~dbskfg_composite_link(){}
 
     // Print out information about this node
-    virtual void print(vcl_ostream &os);
+    virtual void print(std::ostream &os);
 
     //: Return type of link
     //: inline function

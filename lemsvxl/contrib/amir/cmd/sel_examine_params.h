@@ -11,8 +11,8 @@
 //  Modifications
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <vil/vil_image_view.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
@@ -20,8 +20,8 @@
 #include <dbdet/sel/dbdet_edgel.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
-bool saveEDG(vcl_string filename, dbdet_edgemap_sptr edgemap);
+bool saveEDG(std::string filename, dbdet_edgemap_sptr edgemap);
 
-bool saveCEM (vcl_string filename, vcl_vector< vsol_spatial_object_2d_sptr > & vsol_list);
+bool saveCEM (std::string filename, std::vector< vsol_spatial_object_2d_sptr > & vsol_list);
 
 #endif // sel_examine_params_h

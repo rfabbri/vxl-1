@@ -54,7 +54,7 @@ public:
 class image_exp_functor
 {
 public:
-  float operator()(float x)       const { return x<0?vcl_exp(x):1.0f; }
+  float operator()(float x)       const { return x<0?std::exp(x):1.0f; }
 };
 
 //: Functor class to compute inverse of image
@@ -115,8 +115,8 @@ bool tri_interpolated_weighted_sum(tri_it_t &tri_it, vil_image_view<T1> const& w
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)values.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)values.ni(),tri_it.endx());
 
     if (subtract) {
       for (unsigned int x = startx; x < endx; ++x) {
@@ -156,8 +156,8 @@ bool tri_interpolated_weighted_sum(tri_int_it_t &tri_it, vil_image_view<T> const
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)values.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)values.ni(),tri_it.endx());
 
     if (subtract) {
       for (unsigned int x = startx; x < endx; ++x) {
@@ -196,8 +196,8 @@ void tri_interpolate_values(tri_it_t &tri_it, vil_image_view<T> &img, bool subtr
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)img.ni(),tri_it.endx());
 
     if (subtract) {
       for (unsigned int x = startx; x < endx; ++x) {
@@ -248,8 +248,8 @@ void tri_interpolate_values(tri_it_T &tri_it, double* xvals, double* yvals, T* v
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)img.ni(),tri_it.endx());
 
     for (unsigned int x = startx; x < endx; ++x) {
       T interp_val = (T)(s0*x + s1*y + s2);
@@ -299,8 +299,8 @@ void tri_interpolate_min_max(tri_it_T &tri_it, double* xvals, double* yvals, T* 
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)max_img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)max_img.ni(),tri_it.endx());
 
     for (unsigned int x = startx; x < endx; ++x) {
       T interp_val = (T)(s0*x + s1*y + s2);
@@ -334,8 +334,8 @@ void tri_weighted_sum(vgl_triangle_scan_iterator<double> &tri_it, vil_image_view
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)img.ni(),tri_it.endx());
 
     for (unsigned int x = startx; x < endx; ++x) {
       val_sum += img(x,yu)*weights(x,yu);
@@ -365,8 +365,8 @@ void tri_fill_value(tri_it_T &tri_it, vil_image_view<T> &img, T val)
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)img.ni(),tri_it.endx());
 
     for (unsigned int x = startx; x < endx; ++x) {
       img(x,yu) = val;
@@ -394,13 +394,13 @@ void tri_fill_value_aa(psm_triangle_scan_iterator_aa &tri_it, vil_image_view<T> 
       // no part of this scanline is within the image bounds. go to next scanline.
       continue;
     }
-    unsigned int startx = (unsigned int)vcl_max((int)0,tri_it.startx());
-    unsigned int endx = (unsigned int)vcl_min((int)img.ni(),tri_it.endx());
+    unsigned int startx = (unsigned int)std::max((int)0,tri_it.startx());
+    unsigned int endx = (unsigned int)std::min((int)img.ni(),tri_it.endx());
 
     for (unsigned int x = startx; x < endx; ++x) {
       float pix_cov = tri_it.pix_coverage(x);
       if ((pix_cov < 0.0f) || (pix_cov > 1.0f)) {
-        vcl_cerr << " error: pix_cov = " << pix_cov << vcl_endl;
+        std::cerr << " error: pix_cov = " << pix_cov << std::endl;
       }
       aa_weights(x,yu) += tri_it.pix_coverage(x);
       img(x,yu) += val * pix_cov;
@@ -513,7 +513,7 @@ bool cube_mean_aa(double* xverts_2d, double* yverts_2d, float* vert_dists, psm_c
   else
     tri_interpolated_weighted_sum(tri_it, values, value_sum, weight_sum, false);
 
-  if (vcl_fabs(weight_sum) > 1e-6)  {
+  if (std::fabs(weight_sum) > 1e-6)  {
     mean = value_sum / weight_sum;
   }
   else {
@@ -620,7 +620,7 @@ bool cube_mean(double* xverts_2d, double* yverts_2d, float* vert_dists, psm_cube
   else
     tri_interpolated_weighted_sum(tri_it, values, value_sum, weight_sum, false);
 
-  if (vcl_fabs(weight_sum) > 1e-6)  {
+  if (std::fabs(weight_sum) > 1e-6)  {
     mean = value_sum / weight_sum;
   }
   else {
@@ -728,7 +728,7 @@ bool cube_weighted_mean_aa(double* xverts_2d, double* yverts_2d, float* vert_dis
   else
     tri_interpolated_weighted_sum(tri_it, weights, img, value_sum, weight_sum, false);
 
-  if (vcl_fabs(weight_sum) > 1e-6) 
+  if (std::fabs(weight_sum) > 1e-6) 
     weighted_mean = value_sum / weight_sum;
   else {
     weighted_mean = T1(0);
@@ -812,7 +812,7 @@ bool cube_weighted_mean(vbl_bounding_box<double,3> const& cube, vpgl_perspective
     init_triangle_scan_iterator(tri_it, xverts_2d, yverts_2d, 5, 7, 6);
     tri_weighted_sum(tri_it, img, weights, val_sum, weight_sum);
   }  
-  if (vcl_fabs(weight_sum) > weight_tol) {
+  if (std::fabs(weight_sum) > weight_tol) {
     weighted_mean = val_sum / weight_sum;
     return true;
   }
@@ -1103,10 +1103,10 @@ typename psm_apm_traits<APM>::obs_datatype mean_cell_observation(vbl_bounding_bo
       }
     }
   }
-  unsigned int xmin = vcl_max((unsigned int)0, (unsigned int)vcl_floor(cell_proj_bb.xmin()));
-  unsigned int xmax = vcl_min(img.ni()-1, (unsigned int)vcl_ceil(cell_proj_bb.xmax()));
-  unsigned int ymin = vcl_max((unsigned int)0, (unsigned int)vcl_floor(cell_proj_bb.ymin()));
-  unsigned int ymax = vcl_min(img.nj()-1, (unsigned int)vcl_ceil(cell_proj_bb.ymax()));
+  unsigned int xmin = std::max((unsigned int)0, (unsigned int)std::floor(cell_proj_bb.xmin()));
+  unsigned int xmax = std::min(img.ni()-1, (unsigned int)std::ceil(cell_proj_bb.xmax()));
+  unsigned int ymin = std::max((unsigned int)0, (unsigned int)std::floor(cell_proj_bb.ymin()));
+  unsigned int ymax = std::min(img.nj()-1, (unsigned int)std::ceil(cell_proj_bb.ymax()));
 
   typename psm_apm_traits<APM>::obs_mathtype mean_obs(0);
   unsigned int nobs = 0;

@@ -9,7 +9,7 @@
 // 
 //   This is....
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_line_segment_2d.h>
@@ -27,9 +27,9 @@ public:
   // Primary Operations:------------------------
 
  bool compute(
-   const vcl_vector< vgl_point_3d<double> >& world_points,
-   const vcl_vector< vgl_point_2d<double> >& image_points,
-   const vcl_vector< vgl_line_segment_2d<double> >& up_lines,
+   const std::vector< vgl_point_3d<double> >& world_points,
+   const std::vector< vgl_point_2d<double> >& image_points,
+   const std::vector< vgl_line_segment_2d<double> >& up_lines,
    vpgl_proj_camera<double>& camera );
 
 };

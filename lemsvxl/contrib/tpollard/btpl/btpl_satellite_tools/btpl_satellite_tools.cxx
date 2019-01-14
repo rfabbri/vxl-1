@@ -1,11 +1,11 @@
 #ifndef btpl_satellite_tools_cxx_
 #define btpl_satellite_tools_cxx_
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <vector>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
@@ -55,7 +55,7 @@ btpl_satellite_tools::btpl_satellite_tools()
 
 //--------------------------------------------------------
 void btpl_satellite_tools::set_scene(
-  vcl_string scene_name )
+  std::string scene_name )
 {
   scene_desc_ = scene_name;
   camera_cal_pts_ = raw_dir_; camera_cal_pts_ += scene_name; camera_cal_pts_ += "_camera_cal_points.txt";
@@ -106,13 +106,13 @@ void btpl_satellite_tools::set_scene(
 void 
 btpl_satellite_tools::compute_coverage()
 {  
-  vcl_vector< vcl_vector< vgl_point_2d<double> > > regions;
+  std::vector< std::vector< vgl_point_2d<double> > > regions;
 
   // Parse every IMD file.
-  vcl_string main_dir = raw_dir_; main_dir += "/*.*";
+  std::string main_dir = raw_dir_; main_dir += "/*.*";
   for( vul_file_iterator f = main_dir; f; ++f ){
-    vcl_string file_name = f();
-    vcl_cerr << file_name << '\n';
+    std::string file_name = f();
+    std::cerr << file_name << '\n';
     if( vul_file::is_directory(f()) ) continue;
     if( vul_file::extension( file_name ) != ".IMD" ) continue;
 
@@ -126,7 +126,7 @@ btpl_satellite_tools::compute_coverage()
     for( int j = 0; j < lidar_ref_nj_; j++ )
       region_counter(i,j) = 0;
   for( unsigned r = 0; r < regions.size(); r++ ){
-    vcl_cerr << r << ' ';
+    std::cerr << r << ' ';
     vgl_polygon<double> p( regions[r] );
     for( int i = 0; i < lidar_ref_ni_; i++ ){
       for( int j = 0; j < lidar_ref_nj_; j++ ){
@@ -169,7 +169,7 @@ btpl_satellite_tools::compute_coverage()
   float dx = max_x-min_x, dy = max_y-min_y;
 
   vil_image_view<vxl_byte> regions_img( regions_file_size, regions_file_size, 3 );
-  vcl_vector< vgl_point_2d<float> > lidar_bounds;
+  std::vector< vgl_point_2d<float> > lidar_bounds;
   lidar_bounds.push_back( vgl_point_2d<float>( 44.3320, 33.3445 ) );
   lidar_bounds.push_back( vgl_point_2d<float>( 44.4045, 33.3445 ) );
   lidar_bounds.push_back( vgl_point_2d<float>( 44.4045, 33.2867 ) );
@@ -207,13 +207,13 @@ btpl_satellite_tools::compute_coverage()
 void 
 btpl_satellite_tools::plot_directions()
 {
-  vcl_vector< vgl_vector_3d<double> > camera_dir, light_dir;
+  std::vector< vgl_vector_3d<double> > camera_dir, light_dir;
 
   // Parse every IMD file.
-  vcl_string main_dir = raw_dir_; main_dir += "/*.*";
+  std::string main_dir = raw_dir_; main_dir += "/*.*";
   for( vul_file_iterator f = main_dir; f; ++f ){
-    vcl_string file_name = f();
-    vcl_cerr << file_name << '\n';
+    std::string file_name = f();
+    std::cerr << file_name << '\n';
     if( vul_file::is_directory(f()) ) continue;
     if( vul_file::extension( file_name ) != ".IMD" ) continue;
 
@@ -223,7 +223,7 @@ btpl_satellite_tools::plot_directions()
   }
 
   // Draw the camera and sun directions.
-  vcl_ofstream ofs( directions_file_.c_str() );
+  std::ofstream ofs( directions_file_.c_str() );
   ofs << "<X3D version='3.0' profile='Immersive'>\n\n"
     << "<Scene>\n"
     << "<Background skyColor='1 1 1'/>\n\n";
@@ -258,13 +258,13 @@ btpl_satellite_tools::plot_directions()
 void 
 btpl_satellite_tools::get_coverage_list()
 {
-  vcl_ofstream ofs( img_coverage_list_.c_str() );
-  vcl_string main_dir = raw_dir_; main_dir += "/*.*";
+  std::ofstream ofs( img_coverage_list_.c_str() );
+  std::string main_dir = raw_dir_; main_dir += "/*.*";
   int img_counter = 0;
   for( vul_file_iterator f = main_dir; f; ++f ){
-    vcl_string file_name = f();
+    std::string file_name = f();
     if( vul_file::is_directory(f()) ) continue;
-    vcl_string file_ext = vul_file::extension( file_name );
+    std::string file_ext = vul_file::extension( file_name );
     if( file_ext != ".IMD" ) continue;
 
     imd_parser imdp( file_name );
@@ -272,7 +272,7 @@ btpl_satellite_tools::get_coverage_list()
     if( !poly_region.contains( vgl_point_2d<double>(
       scene_coord_.x(), scene_coord_.y() ) ) ) continue;
 
-    vcl_string img_file_name = vul_file::strip_extension( file_name );
+    std::string img_file_name = vul_file::strip_extension( file_name );
     img_file_name += ".NTF";
     vpgl_nitf_rational_camera P( img_file_name );
     vgl_point_2d<double> ip = P.project( scene_coord_ );
@@ -280,7 +280,7 @@ btpl_satellite_tools::get_coverage_list()
      // << ' ' << imdp.camera_dir.x() << ' ' << imdp.camera_dir.y() << '\n';
     img_counter++;
   }
-  vcl_cerr << img_counter << " images containing the point";
+  std::cerr << img_counter << " images containing the point";
   return;
 };
 
@@ -292,15 +292,15 @@ btpl_satellite_tools::refine_rational_cameras()
   double max_offset = 100;
 
   // Adjust all cameras in the points file.
-  vcl_ifstream pifs( camera_cal_pts_.c_str() );
+  std::ifstream pifs( camera_cal_pts_.c_str() );
   vul_awk pawk( pifs );
   while( pawk ){
     if( pawk.NF() < 3 ){++pawk; continue;}
 
     // Get the image name and set up camera name.
-    vcl_string img_file_name( pawk[0] );
+    std::string img_file_name( pawk[0] );
     vpgl_nitf_rational_camera P( img_file_name );
-    vcl_stringstream new_camera_name; 
+    std::stringstream new_camera_name; 
     new_camera_name << vul_file::strip_extension( img_file_name ) << '_' << scene_desc_ << ".cam";
 
     // Calculate the offset.
@@ -308,7 +308,7 @@ btpl_satellite_tools::refine_rational_cameras()
     vgl_point_2d<double> target_proj = P.project( scene_coord_ );
     vgl_vector_2d<double> offset = true_target_proj - target_proj;
     if( fabs(offset.x()) > max_offset || fabs(offset.x()) > max_offset )
-      vcl_cerr << "WARNING: high offset " << offset.x() << ' ' << offset.y() << '\n';
+      std::cerr << "WARNING: high offset " << offset.x() << ' ' << offset.y() << '\n';
     double old_img_u_off, old_img_v_off;
     P.image_offset( old_img_u_off, old_img_v_off );
     P.set_image_offset( old_img_u_off + offset.x(), old_img_v_off + offset.y() );
@@ -317,7 +317,7 @@ btpl_satellite_tools::refine_rational_cameras()
     vgl_point_2d<double> test_proj =P.project( scene_coord_ );
     vgl_vector_2d<double> test_offset = true_target_proj - test_proj;
     if( abs(test_offset.x())+abs(test_offset.y()) > .1 ) 
-      vcl_cerr << "ERROR: bad reprojection\n";
+      std::cerr << "ERROR: bad reprojection\n";
     P.save( new_camera_name.str() );
     ++pawk;
   }
@@ -331,21 +331,21 @@ btpl_satellite_tools::get_subimages()
   double max_intensity = 1500;
 
   // Get names for new images;
-  vcl_vector< vcl_string > camera_names, img_names;
+  std::vector< std::string > camera_names, img_names;
   filenames_for_scene( &img_names, &camera_names, NULL );
-  vcl_vector< vcl_string > subimg_names;
+  std::vector< std::string > subimg_names;
   for( unsigned img = 0; img < img_names.size(); img++ ){
-    vcl_string subimg_namebase = vul_file::strip_extension( vul_file::strip_directory( camera_names[img] ) );
-    vcl_string subimg_name = subimg_dir_; subimg_name += '/';
+    std::string subimg_namebase = vul_file::strip_extension( vul_file::strip_directory( camera_names[img] ) );
+    std::string subimg_name = subimg_dir_; subimg_name += '/';
     subimg_name += subimg_namebase; subimg_name += ".png";
     subimg_names.push_back( subimg_name );
   }
 
   // Save a subimage of each image, and record new cameras.
-  vcl_ofstream camstream( subimg_cameras_.c_str() );
+  std::ofstream camstream( subimg_cameras_.c_str() );
   for( unsigned img = 0; img < img_names.size(); img++ ){
 
-    vcl_cerr << img_names[img] << '\n';
+    std::cerr << img_names[img] << '\n';
     vil_image_view<unsigned short> subimg_raw;
     vpgl_proj_camera<double> subimg_cam;
     get_projective_subimg(
@@ -376,8 +376,8 @@ btpl_satellite_tools::get_img_cal_obs()
   int region_diam = 1+2*region_rad;
 
   // Read the calibration point file.
-  vcl_vector< vgl_point_3d<double> > region_centers;
-  vcl_ifstream cf( img_cal_pts_.c_str() );
+  std::vector< vgl_point_3d<double> > region_centers;
+  std::ifstream cf( img_cal_pts_.c_str() );
   vul_awk cfawk( cf );
   while( cfawk ){
     if( cfawk.NF() == 0 ){ ++cfawk; continue; }
@@ -386,17 +386,17 @@ btpl_satellite_tools::get_img_cal_obs()
     ++cfawk;
   }
 
-  vcl_vector< vcl_string > camera_names, img_names;
+  std::vector< std::string > camera_names, img_names;
   filenames_for_scene( &img_names, &camera_names, NULL );
 
-  vcl_vector< vcl_vector<double> > region_averages;
+  std::vector< std::vector<double> > region_averages;
   for( unsigned img = 0; img < img_names.size(); img++ ){
     vil_image_resource_sptr img_rsc = vil_load_image_resource( img_names[img].c_str() );
     vpgl_rational_camera<double>* P = read_rational_camera<double>( camera_names[img] );
-    vcl_cerr << img_names[img] << '\n';
+    std::cerr << img_names[img] << '\n';
 
     // Project each point into the image and take an average in a neighborhood
-    vcl_vector<double> img_averages;
+    std::vector<double> img_averages;
     for( unsigned r = 0; r < region_centers.size(); r++ ){
       vgl_point_2d<double> ip = P->project( region_centers[r] );
       vgl_point_2d<int> ip1( (int)ip.x()-region_rad, (int)ip.y()-region_rad );
@@ -428,7 +428,7 @@ btpl_satellite_tools::get_img_cal_obs()
   }
 
   // Write to file.
-  vcl_ofstream obs_fs( img_cal_obs_list_.c_str() );
+  std::ofstream obs_fs( img_cal_obs_list_.c_str() );
   for( unsigned img = 0; img < img_names.size(); img++ ){
     for( unsigned rg = 0; rg < region_centers.size(); rg++ ){
       obs_fs << region_averages[img][rg] << '\t';
@@ -446,8 +446,8 @@ btpl_satellite_tools::normalize_images()
   double max_intensity = 1500;
 
   // Read the calibration point file.
-  vcl_vector< vgl_point_3d<double> > cal_points;
-  vcl_ifstream cf( img_cal_pts_.c_str() ); vul_awk cfawk( cf );
+  std::vector< vgl_point_3d<double> > cal_points;
+  std::ifstream cf( img_cal_pts_.c_str() ); vul_awk cfawk( cf );
   while( cfawk ){
     if( cfawk.NF() == 0 ){ ++cfawk; continue; }
     cal_points.push_back(
@@ -456,8 +456,8 @@ btpl_satellite_tools::normalize_images()
   }
 
   // Read the test points file.
-  vcl_vector< vgl_point_3d<double> > test_points;
-  vcl_ifstream tf( test_pts_.c_str() ); vul_awk tfawk( tf );
+  std::vector< vgl_point_3d<double> > test_points;
+  std::ifstream tf( test_pts_.c_str() ); vul_awk tfawk( tf );
   while( tfawk ){
     if( tfawk.NF() == 0 ){ ++tfawk; continue; }
     test_points.push_back(
@@ -466,11 +466,11 @@ btpl_satellite_tools::normalize_images()
   }
 
   // Read the observations file.
-  vcl_vector< vcl_vector<double> > obs;
-  vcl_ifstream of( img_cal_obs_list_.c_str() ); vul_awk ofawk( of );
+  std::vector< std::vector<double> > obs;
+  std::ifstream of( img_cal_obs_list_.c_str() ); vul_awk ofawk( of );
   while( ofawk ){
     if( ofawk.NF() == 0 ){ ++ofawk; continue; }
-    vcl_vector<double> new_obs;
+    std::vector<double> new_obs;
     for( int i = 0; i < ofawk.NF(); i++ )
       new_obs.push_back( atof(ofawk[i]) );
     obs.push_back( new_obs );
@@ -479,9 +479,9 @@ btpl_satellite_tools::normalize_images()
   int num_obs = obs[0].size();
 
   // Compute least squares fit to reference image.
-  vcl_vector< vcl_string > camera_names, img_names;
+  std::vector< std::string > camera_names, img_names;
   filenames_for_scene( &img_names, &camera_names, NULL );
-  vcl_vector< vnl_vector<double> > norm_coeffs;
+  std::vector< vnl_vector<double> > norm_coeffs;
   for( unsigned img = 0; img < img_names.size(); img++ ){
     int num_cor = 0;
     for( unsigned r = 0; r < obs[img].size(); r++ )
@@ -501,17 +501,17 @@ btpl_satellite_tools::normalize_images()
 
     vnl_svd<double> Asvd(A);
     norm_coeffs.push_back( Asvd.solve( b ) );
-    vcl_cerr << norm_coeffs[img] << '\n';
+    std::cerr << norm_coeffs[img] << '\n';
   }
 
   // Get names for new images;
-  vcl_vector< vcl_string > subimg_names, ref_subimg_names;
+  std::vector< std::string > subimg_names, ref_subimg_names;
   for( unsigned img = 0; img < img_names.size(); img++ ){
-    vcl_string subimg_namebase = vul_file::strip_extension( vul_file::strip_directory( camera_names[img] ) );
-    vcl_string subimg_name = subimg_dir_; subimg_name += '/';
+    std::string subimg_namebase = vul_file::strip_extension( vul_file::strip_directory( camera_names[img] ) );
+    std::string subimg_name = subimg_dir_; subimg_name += '/';
     subimg_name += subimg_namebase; subimg_name += ".tif";
     subimg_names.push_back( subimg_name );
-    vcl_string ref_subimg_name = ref_subimg_dir_; ref_subimg_name += '/';
+    std::string ref_subimg_name = ref_subimg_dir_; ref_subimg_name += '/';
     ref_subimg_name += subimg_namebase; ref_subimg_name += ".png";
     ref_subimg_names.push_back( ref_subimg_name );
   }
@@ -526,10 +526,10 @@ btpl_satellite_tools::normalize_images()
     .5*(subimg_vol_.min_z()+subimg_vol_.max_z()), bgeo_lvcs::wgs84, bgeo_lvcs::DEG );
 
   // Save normalized and reference subimages of each image, and record new cameras.
-  vcl_ofstream camstream( subimg_cameras_.c_str() );
+  std::ofstream camstream( subimg_cameras_.c_str() );
   for( unsigned img = 0; img < img_names.size(); img++ ){
 
-    vcl_cerr << img_names[img] << '\n';
+    std::cerr << img_names[img] << '\n';
     vil_image_view<unsigned short> subimg_raw;
     vpgl_proj_camera<double> subimg_cam;
     get_projective_subimg(
@@ -625,8 +625,8 @@ btpl_satellite_tools::scene_bounds()
       }
     }
   }
-  vcl_cerr << min_lx << ' ' << min_ly << ' ' << min_lz << '\n';
-  vcl_cerr << max_lx << ' ' << max_ly << ' ' << max_lz << '\n';
+  std::cerr << min_lx << ' ' << min_ly << ' ' << min_lz << '\n';
+  std::cerr << max_lx << ' ' << max_ly << ' ' << max_lz << '\n';
 };
 
 
@@ -652,9 +652,9 @@ btpl_satellite_tools::transform_wp(
 void 
 btpl_satellite_tools::get_lighting_list()
 {
-  vcl_vector< vcl_string > imd_names;
+  std::vector< std::string > imd_names;
   filenames_for_scene( NULL, NULL, &imd_names );
-  vcl_ofstream ofs( subimg_lights_.c_str() );
+  std::ofstream ofs( subimg_lights_.c_str() );
   for( unsigned f = 0; f < imd_names.size(); f++ ){
     imd_parser imdp( imd_names[f].c_str() );
     ofs << imdp.sun_dir.x() << ' ' << imdp.sun_dir.y() << ' ' << imdp.sun_dir.z() << '\n';
@@ -670,26 +670,26 @@ btpl_satellite_tools::get_lighting_list()
 //-----------------------------------------------------------------
 void 
 btpl_satellite_tools::filenames_for_scene(
-  vcl_vector< vcl_string >* img_names,
-  vcl_vector< vcl_string >* cam_names,
-  vcl_vector< vcl_string >* imd_names )
+  std::vector< std::string >* img_names,
+  std::vector< std::string >* cam_names,
+  std::vector< std::string >* imd_names )
 {
-  vcl_string main_dir = raw_dir_;
+  std::string main_dir = raw_dir_;
   if( img_names != NULL ) img_names->clear(); 
   if( cam_names != NULL ) cam_names->clear(); 
   if( imd_names != NULL ) imd_names->clear();
   main_dir += "/*"; main_dir += scene_desc_; main_dir +=".cam";   
   for( vul_file_iterator f = main_dir; f; ++f ){
-    vcl_string file_name = f();
+    std::string file_name = f();
     int last_us;
     for( unsigned c = file_name.size()-1; c >= 0; c-- )
       if( file_name[c] == '_' ){ last_us = c; break; }
-    vcl_stringstream file_base;
+    std::stringstream file_base;
     for( int c = 0; c < last_us; c++ )
       file_base << file_name[c];
 
-    vcl_string img_name = file_base.str(); img_name+= ".NTF";
-    vcl_string imd_name = file_base.str(); imd_name+= ".IMD";
+    std::string img_name = file_base.str(); img_name+= ".NTF";
+    std::string imd_name = file_base.str(); imd_name+= ".IMD";
         
     if( cam_names != NULL ) cam_names->push_back( file_name );
     if( img_names != NULL ) img_names->push_back( img_name );
@@ -701,8 +701,8 @@ btpl_satellite_tools::filenames_for_scene(
 //---------------------------------------------------------
 void 
 btpl_satellite_tools::get_projective_subimg(
-  vcl_string img_file,
-  vcl_string cam_file,
+  std::string img_file,
+  std::string cam_file,
   const vgl_box_3d<double>& vol,
   vil_image_view<unsigned short>& subimg,
   vpgl_proj_camera<double>& subimg_cam )
@@ -753,9 +753,9 @@ btpl_satellite_tools::get_projective_subimg(
 //-------------------------------------------------------
 void inspect_ray()
 {
-  vcl_string main_dir = "D:\\images_multiview\\baghdad\\images";
-  vcl_string x3d_file = "D:\\results\\baghdad.x3d";
-  vcl_string target_desc = "hiafa";
+  std::string main_dir = "D:\\images_multiview\\baghdad\\images";
+  std::string x3d_file = "D:\\results\\baghdad.x3d";
+  std::string target_desc = "hiafa";
 
   vgl_point_2d<double> ray_base_coord( 44.382362-.000317, 33.335917+.000138 );
   double min_elv = 0, max_elv = 100;
@@ -766,35 +766,35 @@ void inspect_ray()
   vgl_point_3d<double> min_insp( ray_base_coord.x(), ray_base_coord.y(), min_elv );
   vgl_point_3d<double> max_insp( ray_base_coord.x(), ray_base_coord.y(), max_elv );
 
-  vcl_vector< vgl_vector_3d<double> > light_dirs;
-  vcl_vector< vcl_vector<double> > ray_vals;
+  std::vector< vgl_vector_3d<double> > light_dirs;
+  std::vector< std::vector<double> > ray_vals;
 
   // Get all cameras, images, and IMD files with the target_desc.
   main_dir += "/*.cam"; target_desc += ".cam";
   int img_counter = 0;
   for( vul_file_iterator f = main_dir; f; ++f ){
-    vcl_string file_name = f();
+    std::string file_name = f();
     int last_us;
     for( unsigned c = file_name.size()-1; c >= 0; c-- )
       if( file_name[c] == '_' ){ last_us = c; break; }
-    vcl_stringstream file_desc;
+    std::stringstream file_desc;
     for( unsigned c = last_us+1; c < file_name.size(); c++ )
       file_desc << file_name[c];
     if( file_desc.str() != target_desc ) continue;
 
-    vcl_stringstream img_file_name;
+    std::stringstream img_file_name;
     for( int c = 0; c < last_us; c++ )
       img_file_name << file_name[c];
     img_file_name << ".NTF";
 
-    vcl_stringstream imd_file_name;
+    std::stringstream imd_file_name;
     for( int c = 0; c < last_us; c++ )
       imd_file_name << file_name[c];
     imd_file_name << ".IMD";
     imd_parser imdp( imd_file_name.str() );
     light_dirs.push_back( imdp.sun_dir );
 
-    vcl_cerr << img_file_name.str() << '\n';
+    std::cerr << img_file_name.str() << '\n';
 
     // Find an image region containing the whole ray and load it.
     vpgl_rational_camera<double> P( file_name );
@@ -825,7 +825,7 @@ void inspect_ray()
     }
 
     // Record the pixel value of every voxel on the ray.
-    vcl_vector<double> these_ray_vals;
+    std::vector<double> these_ray_vals;
     for( int i = 0; i < num_insp_inc; i++ ){
       vgl_point_3d<double> insp_voxel = min_insp + 
         vgl_vector_3d<double>( 0, 0, min_elv+insp_inc*i );
@@ -841,7 +841,7 @@ void inspect_ray()
   }
 
   // Write the x3d file.
-  vcl_ofstream ofs( x3d_file.c_str() );
+  std::ofstream ofs( x3d_file.c_str() );
   ofs << "<X3D version='3.0' profile='Immersive'>\n\n"
     << "<Scene>\n"
     << "<Background skyColor='0 0 1'/>\n\n";

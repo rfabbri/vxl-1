@@ -16,7 +16,7 @@
 
 #include <boxm/boxm_scene.h>
 
-boxm_scene_base_sptr dbrec3d_load_scene(vcl_string filename);
+boxm_scene_base_sptr dbrec3d_load_scene(std::string filename);
 
 
 #endif

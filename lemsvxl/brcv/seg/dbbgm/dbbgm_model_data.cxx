@@ -32,7 +32,7 @@ void dbbgm_model_data::initialize(int no_of_modes,int ni,int nj)
     usedmodels.fill(0);
     isobserved.fill(false);
 }
-void dbbgm_model_data::print_summary(vcl_ostream &os) const
+void dbbgm_model_data::print_summary(std::ostream &os) const
 {
 
 }
@@ -92,9 +92,9 @@ void dbbgm_model_data::b_read(vsl_b_istream &is)
 
         break;
     default:
-        vcl_cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
+        std::cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
             << "           Unknown version number "<< ver << '\n';
-        is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+        is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
         return;
     }
 

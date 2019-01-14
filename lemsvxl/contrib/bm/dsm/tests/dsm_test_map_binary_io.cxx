@@ -9,15 +9,15 @@
 template<class T1, class T2, class T3, class Compare1, class Compare2>
 void test_map_map_binary_io()
 {
-    vcl_string filename("test_map_map_binary_io.bin");
+    std::string filename("test_map_map_binary_io.bin");
     unsigned n = 5;
 
     {
-        vcl_map<T1, vcl_map<T2,T3,Compare2>,Compare1> outer_map;
+        std::map<T1, std::map<T2,T3,Compare2>,Compare1> outer_map;
 
         for( unsigned i = 0; i < n; ++i )
         {
-            vcl_map<T2,T3,Compare2> inner_map;
+            std::map<T2,T3,Compare2> inner_map;
             for( unsigned j = 0; j < n; ++j )
             {
                 inner_map[j] = n*i+j;
@@ -26,14 +26,14 @@ void test_map_map_binary_io()
         }//end outer map iteration
 
         //write the file
-        vsl_b_ofstream os(filename, vcl_ios::out|vcl_ios::binary);
+        vsl_b_ofstream os(filename, std::ios::out|std::ios::binary);
         vsl_b_write(os,outer_map);
         os.close();
     }//temporary local scope
 
     //read from file
-    vsl_b_ifstream is(filename, vcl_ios::in|vcl_ios::binary);
-    vcl_map<T1, vcl_map<T2, T3, Compare2>, Compare1> outer_map2;
+    vsl_b_ifstream is(filename, std::ios::in|std::ios::binary);
+    std::map<T1, std::map<T2, T3, Compare2>, Compare1> outer_map2;
     vsl_b_read(is,outer_map2);
     is.close();
     
@@ -46,18 +46,18 @@ void test_map_map_binary_io()
 template<class T1, class T2, class T3, class T4, class Compare1, class Compare2, class Compare3>
 void test_map_map_map_binary_io()
 {
-    vcl_string filename("test_map_map_map_binary_io.bin");
+    std::string filename("test_map_map_map_binary_io.bin");
     unsigned n = 5;
 
     {
-        vcl_map<T1, vcl_map<T2, vcl_map<T3, T4, Compare3>, Compare2>, Compare1> outer_map;
+        std::map<T1, std::map<T2, std::map<T3, T4, Compare3>, Compare2>, Compare1> outer_map;
 
         for( unsigned i = 0; i < n; ++i )
         {
-            vcl_map<T2, vcl_map<T3, T4, Compare3>,Compare2> inner_map;
+            std::map<T2, std::map<T3, T4, Compare3>,Compare2> inner_map;
             for( unsigned j = 0; j < n; ++j )
             {
-                vcl_map<T3, T4, Compare3> inner_map2;
+                std::map<T3, T4, Compare3> inner_map2;
                 for( unsigned k = 0; k < n; ++k )
                 {
                     inner_map2[k] = n*i*j+k;
@@ -68,14 +68,14 @@ void test_map_map_map_binary_io()
         }//end outer map iteration
 
         //write the file
-        vsl_b_ofstream os(filename, vcl_ios::out|vcl_ios::binary);
+        vsl_b_ofstream os(filename, std::ios::out|std::ios::binary);
         vsl_b_write(os,outer_map);
         os.close();
     }//temporary local scope
 
     //read from file
-    vsl_b_ifstream is(filename, vcl_ios::in|vcl_ios::binary);
-    vcl_map<T1, vcl_map<T2, vcl_map<T3, T4, Compare3>, Compare2>, Compare1> outer_map2;
+    vsl_b_ifstream is(filename, std::ios::in|std::ios::binary);
+    std::map<T1, std::map<T2, std::map<T3, T4, Compare3>, Compare2>, Compare1> outer_map2;
     vsl_b_read(is, outer_map2);
     is.close();
 
@@ -88,10 +88,10 @@ void test_map_map_map_binary_io()
 
 static void dsm_test_map_binary_io()
 {
-    test_map_map_binary_io<unsigned,unsigned,unsigned,vcl_less<unsigned>,vcl_less<unsigned> >();
-    test_map_map_binary_io<unsigned,unsigned,double,vcl_less<unsigned>,vcl_less<unsigned> >();
-    test_map_map_map_binary_io<unsigned,unsigned,unsigned,unsigned,vcl_less<unsigned>,vcl_less<unsigned>,vcl_less<unsigned> >();
-    test_map_map_map_binary_io<unsigned,unsigned,unsigned,double,vcl_less<unsigned>,vcl_less<unsigned>,vcl_less<unsigned> >();
+    test_map_map_binary_io<unsigned,unsigned,unsigned,std::less<unsigned>,std::less<unsigned> >();
+    test_map_map_binary_io<unsigned,unsigned,double,std::less<unsigned>,std::less<unsigned> >();
+    test_map_map_map_binary_io<unsigned,unsigned,unsigned,unsigned,std::less<unsigned>,std::less<unsigned>,std::less<unsigned> >();
+    test_map_map_map_binary_io<unsigned,unsigned,unsigned,double,std::less<unsigned>,std::less<unsigned>,std::less<unsigned> >();
     return;
 }
 

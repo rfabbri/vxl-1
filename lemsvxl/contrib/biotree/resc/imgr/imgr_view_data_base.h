@@ -15,7 +15,7 @@
 // raw memory.  vil_image_view_base is used to abstract away template type
 // dependency.
 //
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_ref_count.h>
 #include <vil/vil_pixel_format.h>
 #include <vil/vil_image_view_base.h>
@@ -23,11 +23,11 @@
 class imgr_view_data_base : public vbl_ref_count
 {
  protected:
-  vcl_vector<vil_image_view_base_sptr > views_2d_;
+  std::vector<vil_image_view_base_sptr > views_2d_;
  public:
   //:constructors
   imgr_view_data_base(){}
-  imgr_view_data_base(vcl_vector<vil_image_view_base_sptr> const& views)
+  imgr_view_data_base(std::vector<vil_image_view_base_sptr> const& views)
     : views_2d_(views){}
 
   virtual ~imgr_view_data_base(){}

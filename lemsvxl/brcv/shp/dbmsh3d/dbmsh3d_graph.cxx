@@ -15,7 +15,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_graph.h>
@@ -32,7 +32,7 @@ bool dbmsh3d_graph::check_integrity ()
   if (dbmsh3d_pt_set::check_integrity() == false)
     return false;
   
-  vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
   for (; it != edgemap_.end(); it++) {
     dbmsh3d_edge* E = (*it).second;
     if (E->id() != (*it).first)
@@ -51,14 +51,14 @@ void dbmsh3d_graph::summary_report ()
 //: Remove all loops of the input graph G.
 void remove_graph_loops (dbmsh3d_graph* G)
 {
-  vul_printf (vcl_cout, "remove_graph_loops():\n");
+  vul_printf (std::cout, "remove_graph_loops():\n");
   unsigned int count = 0;
-  vcl_map<int, dbmsh3d_edge*>::iterator it = G->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = G->edgemap().begin();
   while (it != G->edgemap().end()) { 
     dbmsh3d_edge* E = (*it).second;    
     if (E->is_self_loop()) {
-      vul_printf (vcl_cout, "\tremoving graph edge %d.\n", E->id());
-      vcl_map<int, dbmsh3d_edge*>::iterator tmp = it;
+      vul_printf (std::cout, "\tremoving graph edge %d.\n", E->id());
+      std::map<int, dbmsh3d_edge*>::iterator tmp = it;
       tmp++;
       count++;
       G->remove_edge (E);
@@ -67,7 +67,7 @@ void remove_graph_loops (dbmsh3d_graph* G)
     else
       it++;
   }
-  vul_printf (vcl_cout, "\tdone. %u loop(s) removed.\n", count);
+  vul_printf (std::cout, "\tdone. %u loop(s) removed.\n", count);
 }
 
 void clone_graph (dbmsh3d_graph* targetG, dbmsh3d_graph* inputG)
@@ -75,7 +75,7 @@ void clone_graph (dbmsh3d_graph* targetG, dbmsh3d_graph* inputG)
   clone_ptset (targetG, inputG);
 
   //Clone all graph edges.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = inputG->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = inputG->edgemap().begin();
   for (; it != inputG->edgemap().end(); it++) {
     dbmsh3d_edge* E = (*it).second;
     dbmsh3d_vertex* sV = E->vertices(0);

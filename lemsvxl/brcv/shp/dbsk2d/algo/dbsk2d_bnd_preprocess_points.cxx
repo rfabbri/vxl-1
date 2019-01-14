@@ -20,7 +20,7 @@
 //: Remove unreal stand-alone points in the list of edges.
 // This operation should not affect the vertex list
 void dbsk2d_bnd_preprocess::
-remove_unreal_stand_alone_points(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
+remove_unreal_stand_alone_points(std::list<dbsk2d_bnd_edge_sptr >& edges)
 {
   bnd_edge_list::iterator eit = edges.begin();
   while (eit != edges.end())
@@ -59,7 +59,7 @@ remove_unreal_stand_alone_points(vcl_list<dbsk2d_bnd_edge_sptr >& edges)
 // coordinates of the points are not chaged. (should they?)
 // Require: all bnd_edges in `bnd_pts' are degenerate, i.e. points
 void dbsk2d_bnd_preprocess::
-merge_close_points(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
+merge_close_points(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts)
 {
   // scan through all pairs of points in the list
   for (bnd_edge_list::iterator pit1 = bnd_pts.begin(); 
@@ -118,8 +118,8 @@ merge_close_points(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
 //---------------------------------------------------------
 //: Remove stand-alone points if they are too close to a line
 void dbsk2d_bnd_preprocess::
-remove_points_close_to_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
-  const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
+remove_points_close_to_lines(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts,
+  const std::list<dbsk2d_bnd_edge_sptr >& bnd_lines)
 {
   bnd_edge_list::iterator pt_it = bnd_pts.begin();
   while (pt_it != bnd_pts.end())
@@ -161,8 +161,8 @@ remove_points_close_to_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
 
 //: Remove stand-alone points if they are too close to an arc
 void dbsk2d_bnd_preprocess::
-remove_points_close_to_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
-  const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
+remove_points_close_to_arcs(std::list<dbsk2d_bnd_edge_sptr >& bnd_pts,
+  const std::list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
 {
   bnd_edge_list::iterator pt_it = bnd_pts.begin();
   while (pt_it != bnd_pts.end())

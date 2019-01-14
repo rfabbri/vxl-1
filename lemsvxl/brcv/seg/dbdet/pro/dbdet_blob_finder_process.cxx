@@ -61,7 +61,7 @@ dbdet_blob_finder_process::dbdet_blob_finder_process(void): bpro1_process()
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in dbdet_blob_finder_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbdet_blob_finder_process()" << std::endl;
     }
 
 }
@@ -74,7 +74,7 @@ dbdet_blob_finder_process::~dbdet_blob_finder_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_blob_finder_process::name()
 {
     return "Blob Finder";
@@ -98,9 +98,9 @@ dbdet_blob_finder_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_blob_finder_process::get_input_type()
+std::vector< std::string > dbdet_blob_finder_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -108,9 +108,9 @@ vcl_vector< vcl_string > dbdet_blob_finder_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_blob_finder_process::get_output_type()
+std::vector< std::string > dbdet_blob_finder_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "vsol2D" );
     to_return.push_back( "image" );
     return to_return;
@@ -122,7 +122,7 @@ bool
 dbdet_blob_finder_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbdet_blob_finder_process::execute() - "
+        std::cout << "In dbdet_blob_finder_process::execute() - "
             << "not exactly one input images \n";
         return false;
     }
@@ -164,7 +164,7 @@ dbdet_blob_finder_process::execute()
     else if ( inputimage.nplanes() == 1 ) {
         grey_img = inputimage;
     } else {
-        vcl_cerr << "Returning false. inputimage.nplanes(): " << inputimage.nplanes() << vcl_endl;
+        std::cerr << "Returning false. inputimage.nplanes(): " << inputimage.nplanes() << std::endl;
         return false;
     }
 
@@ -198,26 +198,26 @@ dbdet_blob_finder_process::execute()
     parameters()->get_value( "-_sigma" , sigma );
     parameters()->get_value( "-n_smooth" , n_smooth );
     parameters()->get_value( "-thresh" , threshold );
-    vcl_vector<vsol_spatial_object_2d_sptr> polygons;
+    std::vector<vsol_spatial_object_2d_sptr> polygons;
 
-        vcl_vector<vsol_polygon_2d_sptr> polys;
+        std::vector<vsol_polygon_2d_sptr> polys;
     if(ispixeltracer)
         {
         vil_image_view<unsigned char> outimage(boolimage.ni(),boolimage.nj());
         outimage.fill(0);
-        vcl_vector<int> bi,bj;
+        std::vector<int> bi,bj;
         bil_blob_finder finder(temp);
         
 
-        vcl_cout<<"\nProcessing Frame No: "<<input_data_[0][0]->frame();
+        std::cout<<"\nProcessing Frame No: "<<input_data_[0][0]->frame();
 
         while (finder.next_4con_region(bi,bj))
             {
             if(bi.size()> static_cast<unsigned>(minregion) && bi.size()<static_cast<unsigned>(maxregion))
                 {
 
-                vcl_vector<vsol_point_2d_sptr> points; 
-                vcl_vector<vgl_point_2d<double> > pts; 
+                std::vector<vsol_point_2d_sptr> points; 
+                std::vector<vgl_point_2d<double> > pts; 
                 for(unsigned i=0;i<bi.size();i++)
                     {
                     outimage(bi[i],bj[i])=255;
@@ -228,7 +228,7 @@ dbdet_blob_finder_process::execute()
                     {
                     vgl_convex_hull_2d<double> hullp(pts);
                     vgl_polygon<double> psg=hullp.hull();
-                    vcl_vector<vsol_point_2d_sptr> contour;
+                    std::vector<vsol_point_2d_sptr> contour;
                     for(int k=0;k<static_cast<int>(psg[0].size());k++)
                         {
                         vsol_point_2d_sptr p =new vsol_point_2d(psg[0][k].x(),psg[0][k].y());
@@ -259,7 +259,7 @@ dbdet_blob_finder_process::execute()
         ctracer.trace(temp);
 
         //get the interesting contours
-        vcl_vector< vsol_spatial_object_2d_sptr > contours;
+        std::vector< vsol_spatial_object_2d_sptr > contours;
         for (unsigned i=0; i<ctracer.contours().size(); i++)
             {
             if (ctracer.contours()[i].size()>=static_cast<unsigned>(minregion) && ctracer.contours()[i].size()<=static_cast<unsigned>(maxregion))
@@ -268,7 +268,7 @@ dbdet_blob_finder_process::execute()
 
                 if(isconvexhull)
                     {
-                vcl_vector<vgl_point_2d<double> > ps;
+                std::vector<vgl_point_2d<double> > ps;
                 for(unsigned j=0;j<ctracer.contours()[i].size();j++)
                     {
                         vgl_point_2d<double> p(ctracer.contours()[i][j]->x(),ctracer.contours()[i][j]->y());
@@ -277,7 +277,7 @@ dbdet_blob_finder_process::execute()
 
                 vgl_convex_hull_2d<double> hullp(ps);
                 vgl_polygon<double> psg=hullp.hull();
-                vcl_vector<vsol_point_2d_sptr> contour;
+                std::vector<vsol_point_2d_sptr> contour;
                 for(int k=0;k<static_cast<int>(psg[0].size());k++)
                     {
                     vsol_point_2d_sptr p =new vsol_point_2d(psg[0][k].x(),psg[0][k].y());
@@ -325,12 +325,12 @@ dbdet_blob_finder_process::finish()
 }
 
 void 
-dbdet_blob_finder_process::write_polygons(vcl_string filename)
+dbdet_blob_finder_process::write_polygons(std::string filename)
 {
 
         int vidid=333;
         parameters()->get_value( "-vidid" , vidid );
-        vcl_ofstream ofile(filename.c_str());
+        std::ofstream ofile(filename.c_str());
         ofile<<"VIDEOID: "<<vidid<<"\n";
         ofile<<"NFRAMES: "<<frame_polygons_.size()<<"\n";
         for(unsigned i=0;i<frame_polygons_.size();i++)
@@ -356,14 +356,14 @@ dbdet_blob_finder_process::write_polygons(vcl_string filename)
         ofile.close();
 }
 
-vcl_vector< vcl_vector < vsol_polygon_2d_sptr > > 
+std::vector< std::vector < vsol_polygon_2d_sptr > > 
 dbdet_blob_finder_process::getpolygons()
 {
   return frame_polygons_;
 }
 
 double
-dbdet_blob_finder_process::compute_aspect_ratio(vcl_vector<vgl_point_2d<double> > pts)
+dbdet_blob_finder_process::compute_aspect_ratio(std::vector<vgl_point_2d<double> > pts)
 {
     double x=0.0;
     double y=0.0;
@@ -397,7 +397,7 @@ dbdet_blob_finder_process::compute_aspect_ratio(vcl_vector<vgl_point_2d<double> 
     vnl_svd<double> svd(a);
     vnl_vector<double> temp=svd.nullvector();
 
-    double t=vcl_fabs(temp[0]/temp[1]);
+    double t=std::fabs(temp[0]/temp[1]);
 
     if(t>1)
         return 1/t;

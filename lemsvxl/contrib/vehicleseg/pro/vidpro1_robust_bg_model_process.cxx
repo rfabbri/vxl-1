@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include<vcl_cstdio.h>
+#include<cstdio>
 #include "vidpro1_robust_bg_model_process.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
@@ -47,7 +47,7 @@ vidpro1_robust_bg_model_process::vidpro1_robust_bg_model_process(void): bpro1_pr
         //!parameters()->add( "Save model filename ... " ,   "-smodel" ,  bpro1_filepath("bgmodel.dat","*.*"))
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in vidpro1_robust_bg_model_process::vidpro1_kl_affine_register_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in vidpro1_robust_bg_model_process::vidpro1_kl_affine_register_process()" << std::endl;
     }
     else
     {
@@ -64,7 +64,7 @@ vidpro1_robust_bg_model_process::~vidpro1_robust_bg_model_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_robust_bg_model_process::name()
 {
     return "BG model builder";
@@ -88,9 +88,9 @@ vidpro1_robust_bg_model_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_robust_bg_model_process::get_input_type()
+std::vector< std::string > vidpro1_robust_bg_model_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
 
     return to_return;
@@ -98,9 +98,9 @@ vcl_vector< vcl_string > vidpro1_robust_bg_model_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_robust_bg_model_process::get_output_type()
+std::vector< std::string > vidpro1_robust_bg_model_process::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "dbbgm" );
     return to_return;
 }
@@ -111,7 +111,7 @@ bool
 vidpro1_robust_bg_model_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In vidpro1_robust_bg_model_process::execute() - "
+        std::cout << "In vidpro1_robust_bg_model_process::execute() - "
             << "not exactly one input images \n";
         return false;
     }
@@ -138,12 +138,12 @@ vidpro1_robust_bg_model_process::execute()
         parameters()->get_value( "-istd" , intialstd );
         bgM->setintialstddev(intialstd);
 
-        vcl_cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
+        std::cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
 
         dbbgm_storage_sptr bgmstorage = new dbbgm_storage();
         bgmstorage->set_model(bgM);
         output_data_[0].push_back(bgmstorage);
-  vcl_cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
+  std::cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
         return true;
     }
     // get image from the storage class
@@ -154,7 +154,7 @@ vidpro1_robust_bg_model_process::execute()
     vil_image_view<float> float_curr_view= brip_vil_float_ops::convert_to_float(*img_sptr);
 
 
-    vcl_cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
+    std::cout<<"\nBuilding Background Model, Frame No: "<<input_data_[0][0]->frame();
 
     static bool frozen;
     parameters()->get_value( "-bgisfrozen" , frozen );
@@ -169,7 +169,7 @@ vidpro1_robust_bg_model_process::execute()
     dbbgm_storage_sptr bgmstorage = new dbbgm_storage();
     bgmstorage->set_model(bgM);
     output_data_[0].push_back(bgmstorage);
-    /*vcl_string currentname = vul_sprintf("bg%05d.%s", 
+    /*std::string currentname = vul_sprintf("bg%05d.%s", 
                                           input_data_[0][0]->frame(),
                                            "tif");  
              vil_save(brip_vil_float_ops::convert_to_byte(bgM->writebackground(0)),currentname.c_str());*/

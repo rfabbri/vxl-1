@@ -20,7 +20,7 @@
 
 
 struct timed_vector_of_double: public vul_timestamp,
-                              public vcl_vector<double >
+                              public std::vector<double >
 {};
 
 //: Boundary contour for shock
@@ -49,13 +49,13 @@ public:
 
   //: Constructor - from a list of edges without directions
   // require: the edges are connected
-  dbsk2d_bnd_contour( const vcl_vector<dbsk2d_bnd_edge_sptr >& bnd_edges, int id = -1 );
+  dbsk2d_bnd_contour( const std::vector<dbsk2d_bnd_edge_sptr >& bnd_edges, int id = -1 );
 
   //: Constructor - from a list of edges with known directions
   // require: the edges are connected
   // no connectivity check
-  dbsk2d_bnd_contour(const vcl_vector<dbsk2d_bnd_edge_sptr >& edges,
-    const vcl_vector<signed char >& directions, int id=-1);
+  dbsk2d_bnd_contour(const std::vector<dbsk2d_bnd_edge_sptr >& edges,
+    const std::vector<signed char >& directions, int id=-1);
 
 
   //: Constructor - from an edge
@@ -72,12 +72,12 @@ public:
 
   //: Return a platform independent string identifying the class
   // inherited. 
-  virtual vcl_string is_a() const 
-  { return vcl_string("dbsk2d_bnd_contour"); };
+  virtual std::string is_a() const 
+  { return std::string("dbsk2d_bnd_contour"); };
 
   //: Return true if the argument matches the string identifying the class or any parent class
   // inherited.
-  virtual bool is_class(const vcl_string& cls) const
+  virtual bool is_class(const std::string& cls) const
   { return cls==is_a() || vtol_one_chain::is_class(cls); }
   
   //: Is `inferior' type valid for `this' ?
@@ -128,7 +128,7 @@ public:
   //----------------------------------------------
   //: Return pointer to the cached cumulated-length vector 
   // if `recompute' = true, the cache vector will be cleared and then recomputed
-  const vcl_vector< double >& len_cache() const;
+  const std::vector< double >& len_cache() const;
 
 
   //: Recompute the cached cumulated-length vector
@@ -180,15 +180,15 @@ public:
   //// Require: `new_edges' need to be connected together and to
   //// edges before and after the replace edge
   //bool replace_edge(const vtol_edge_sptr& old_edge, 
-  //  const vcl_vector<dbsk2d_bnd_edge_sptr >& new_edges);
+  //  const std::vector<dbsk2d_bnd_edge_sptr >& new_edges);
 
   // replace a group of edges with a group of new edges
   // Require: `new_edges' need to be connected together and to
   // edges before and after the replaced edges
   // if `end_edge' == 0, it is assumed = `start_edge'
   // No connectivity check in this function
-  bool replace_edges(const vcl_vector<dbsk2d_bnd_edge_sptr >& new_edges,
-    const vcl_vector<signed char >& directions,
+  bool replace_edges(const std::vector<dbsk2d_bnd_edge_sptr >& new_edges,
+    const std::vector<signed char >& directions,
     const dbsk2d_bnd_edge_sptr& start_edge,
     const dbsk2d_bnd_edge_sptr& end_edge = 0);
 
@@ -203,9 +203,9 @@ public:
 
 public:
   //: very brief description of the class
-  virtual void print(vcl_ostream &strm=vcl_cout) const;
+  virtual void print(std::ostream &strm=std::cout) const;
 
-  // virtual void describe(vcl_ostream &strm=vcl_cout, int blanking=0) const{}
+  // virtual void describe(std::ostream &strm=std::cout, int blanking=0) const{}
 
   //*********************************************
   // DEPRECIATED FUNCTIONS

@@ -2,14 +2,14 @@
 #include <dbcll/dbcll_euclidean_cluster.h>
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_3.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 
 MAIN( test_euclidean_cluster )
 {
   {
-    vcl_vector<dbcll_euclidean_cluster<2> > c(4);
+    std::vector<dbcll_euclidean_cluster<2> > c(4);
   
     c[0] = dbcll_euclidean_cluster<2>(vnl_double_2(0.0, 0.0),0);
     c[1] = dbcll_euclidean_cluster<2>(vnl_double_2(1.0, 1.0),1);
@@ -46,7 +46,7 @@ MAIN( test_euclidean_cluster )
       valid_members = false;
     TEST("Merged members", valid_members, true);
     
-    vcl_vector<dbcll_euclidean_cluster<2> > c2(4);
+    std::vector<dbcll_euclidean_cluster<2> > c2(4);
     
     c2[0] = dbcll_euclidean_cluster<2>(vnl_double_2(2.0, 2.0),4);
     c2[1] = dbcll_euclidean_cluster<2>(vnl_double_2(3.0, 1.0),5);

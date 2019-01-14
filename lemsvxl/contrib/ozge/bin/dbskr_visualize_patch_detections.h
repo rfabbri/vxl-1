@@ -21,13 +21,13 @@
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
 #include <dbskr/algo/dbskr_shock_patch_match_sptr.h>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 class dbskr_visualize_patch_detections 
 {
 public:
-  dbskr_visualize_patch_detections(dbskr_detect_patch_params& params, vcl_string query_path, vcl_string query_name, vcl_string ext, vcl_string html_img_ext) : 
+  dbskr_visualize_patch_detections(dbskr_detect_patch_params& params, std::string query_path, std::string query_name, std::string ext, std::string html_img_ext) : 
       params_(params), query_path_(query_path), query_name_(query_name), ext_(ext), html_image_ext_(html_img_ext), html_image_width_(10), create_only_html_(false), show_match_images_(false) {}
   bool initialize();
   bool process();
@@ -39,10 +39,10 @@ public:
 
 protected:
   dbskr_detect_patch_params params_;
-  vcl_string query_name_;
-  vcl_string query_path_;
-  vcl_string ext_;
-  vcl_string html_image_ext_;
+  std::string query_name_;
+  std::string query_path_;
+  std::string ext_;
+  std::string html_image_ext_;
 
   dbskr_shock_patch_storage_sptr model_st;
   dbskr_shock_patch_storage_sptr query_st;

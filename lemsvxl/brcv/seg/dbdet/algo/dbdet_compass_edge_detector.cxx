@@ -8,10 +8,10 @@
 #include "dbdet_savitzky_golay_filter_2d.h"
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_utility.h>
-#include <vcl_vector.h>
-#include <vcl_deque.h>
-#include <vcl_list.h>
+#include <utility>
+#include <vector>
+#include <deque>
+#include <list>
 
 #include <vgl/vgl_point_2d.h>
 
@@ -30,8 +30,8 @@
 // is included so that the area below Y is ignored.
 double CArea(double Xhigh, double Xlow, double Y, double r)
 {
-  return (0.5 * ((Xhigh * vcl_sqrt(r*r - Xhigh * Xhigh) + r*r * vcl_asin(Xhigh / r)) -
-                 (Xlow  * vcl_sqrt(r*r - Xlow * Xlow)   + r*r * vcl_asin(Xlow  / r))   ) 
+  return (0.5 * ((Xhigh * std::sqrt(r*r - Xhigh * Xhigh) + r*r * std::asin(Xhigh / r)) -
+                 (Xlow  * std::sqrt(r*r - Xlow * Xlow)   + r*r * std::asin(Xlow  / r))   ) 
           - Y * (Xhigh - Xlow));
 }
 
@@ -51,7 +51,7 @@ double CArea(double Xhigh, double Xlow, double Y, double r)
 double* MakeQtrMask(double r, int n_wedges)
 {
   //size of the quadrant
-  int R = (int) vcl_ceil(r);
+  int R = (int) std::ceil(r);
 
   //allocate the array to hold the mask
   double* mask = new double[R*R*n_wedges];
@@ -273,7 +273,7 @@ double* MakeQtrMask(double r, int n_wedges)
           continue;
         } 
         else {
-          //vcl_cout << "Big nasty horrible bug just happened\n";
+          //std::cout << "Big nasty horrible bug just happened\n";
           mask[i * R*R + x * R + R - 1 - y] = 0.0;
         }
       }
@@ -297,13 +297,13 @@ double CreateMask(double sigma, int n_wedges, int masksz, int weight_type, doubl
   for (int i = 0; i < masksz; i++){
     for (int j = 0; j < masksz; j++) 
     {
-      double r = vcl_sqrt((masksz-i-0.5) * (masksz-i-0.5) + (j+0.5) * (j+0.5));
+      double r = std::sqrt((masksz-i-0.5) * (masksz-i-0.5) + (j+0.5) * (j+0.5));
 
       // Various pixel weighting masks
       if (weight_type==1)
-        gauss[j*masksz+i] = r * vcl_exp(-(r*r)/(2*sigma*sigma));  //RAYLEIGH
+        gauss[j*masksz+i] = r * std::exp(-(r*r)/(2*sigma*sigma));  //RAYLEIGH
       else if (weight_type==2)
-        gauss[j*masksz+i] = vcl_exp(-(r*r)/(2*sigma*sigma)); //GAUSSIAN
+        gauss[j*masksz+i] = std::exp(-(r*r)/(2*sigma*sigma)); //GAUSSIAN
 
       // gauss[j*masksz+i] = 1 - r / masksz;  // LINEAR
     }
@@ -343,7 +343,7 @@ void AddWeight(vil_image_view<vxl_byte>& image, double weight,
   vxl_byte intensity = image(col, row);
 
   //quantize this intensity value to the specified bins
-  int min_index = (int) vcl_floor(intensity*(NBINS - 1)/MAX_VAL);
+  int min_index = (int) std::floor(intensity*(NBINS - 1)/MAX_VAL);
 
   //accumulate it at the correct bin
   hist[min_index].weight += weight;
@@ -419,10 +419,10 @@ void compute_strength_and_orient(double* dist, int n_orient, double& strength, d
   double c = dist[(strindex+n_orient+1) % n_orient];
 
   double d = (b + c - 2 * a);
-  if (vcl_fabs(d) > 1e-3) { //not degenerate
+  if (std::fabs(d) > 1e-3) { //not degenerate
     double x = (wedgesize/2)*(b - c)/d;
     strength = a + x*(c - b)/(2*wedgesize) + x*x*d/(2*wedgesize*wedgesize);
-    orientation = vcl_fmod(maxEMDori + x + 2*vnl_math::pi, vnl_math::pi);
+    orientation = std::fmod(maxEMDori + x + 2*vnl_math::pi, vnl_math::pi);
   } 
   else { // Uncertainty abounds
     strength = a;
@@ -448,10 +448,10 @@ void dbdet_compute_compass_gradient( vil_image_view<vxl_byte>& image, int spacin
 
   // determine some relevant parameters
   int n_orient = 2*n_wedges; //number of orientations
-  int masksz = (int) vcl_ceil(3 * sigma); //mask size
+  int masksz = (int) std::ceil(3 * sigma); //mask size
 
   // allocate space for histogram gradients at various orientations
-  vcl_vector<vil_image_view<double> > hist_dist(n_orient);
+  std::vector<vil_image_view<double> > hist_dist(n_orient);
   for (int i=0; i<n_orient; i++){
     hist_dist[i].set_size(img.ni(), img.nj());
     hist_dist[i].fill(0.0);
@@ -562,7 +562,7 @@ void dbdet_compute_compass_gradient( vil_image_view<vxl_byte>& image, int spacin
 
   //Filter the responses at each orientation using Savistzky-Golay filtering
   //  Allocate space for the filtered responses
-  vcl_vector<vil_image_view<double> > filt_hist_dist(n_orient);
+  std::vector<vil_image_view<double> > filt_hist_dist(n_orient);
 
   if (SG_filter){
     for (int i=0; i<n_orient; i++){
@@ -617,16 +617,16 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
 
   // determine some relevant parameters
   int n_orient = 2*n_wedges; //number of orientations
-  int masksz = (int) vcl_ceil(3 * sigma); //mask size
+  int masksz = (int) std::ceil(3 * sigma); //mask size
 
   // allocate space for the histograms at various orientations
-  vcl_vector<vbl_array_2d<vcl_pair<dbdet_signature, dbdet_signature> > > compass_sigs(n_orient); 
+  std::vector<vbl_array_2d<std::pair<dbdet_signature, dbdet_signature> > > compass_sigs(n_orient); 
   for (int i=0; i<n_orient; i++){
     compass_sigs[i].resize(img.ni(), img.nj());
   }
 
   // allocate space for histogram gradients at various orientations
-  vcl_vector<vil_image_view<double> > hist_dist(n_orient);
+  std::vector<vil_image_view<double> > hist_dist(n_orient);
   for (int i=0; i<n_orient; i++){
     hist_dist[i].set_size(img.ni(), img.nj());
     hist_dist[i].fill(0.0);
@@ -736,10 +736,10 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
         }
 
         //record the normalized histograms at the current pixel
-        //compass_sigs[i](x,y) = vcl_pair<dbdet_signature, dbdet_signature>(hist1norm, hist2norm);
+        //compass_sigs[i](x,y) = std::pair<dbdet_signature, dbdet_signature>(hist1norm, hist2norm);
 
         //record the normalized quarter histograms at the current pixel
-        compass_sigs[i](x,y) = vcl_pair<dbdet_signature, dbdet_signature>(qhist2_norm, qhist3_norm);
+        compass_sigs[i](x,y) = std::pair<dbdet_signature, dbdet_signature>(qhist2_norm, qhist3_norm);
 
         //compute distance between the normalized histograms
         double d = 0.0;
@@ -820,7 +820,7 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
 
   //Filter the responses at each orientation using Savistzky-Golay filtering
   //  Allocate space for the filtered responses
-  vcl_vector<vil_image_view<double> > filt_hist_dist(n_orient);
+  std::vector<vil_image_view<double> > filt_hist_dist(n_orient);
 
   if (SG_filter){
     for (int i=0; i<n_orient; i++){
@@ -865,8 +865,8 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
   double* Gy = dy.top_left_ptr();
 
   for(unsigned long i=0; i<hist_ori.size(); i++){
-    Gx[i] = vcl_sin(Ori[i]);
-    Gy[i] = vcl_cos(Ori[i]);
+    Gx[i] = std::sin(Ori[i]);
+    Gy[i] = std::cos(Ori[i]);
   }
 
   //the edgemap
@@ -882,8 +882,8 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
   }
   else {
     //Now call the NMS code to get the subpixel edge tokens
-    vcl_vector<vgl_point_2d<double> > loc;
-    vcl_vector<double> orientation, mag, d2f;
+    std::vector<vgl_point_2d<double> > loc;
+    std::vector<double> orientation, mag, d2f;
 
     //TODO: when spacing>1, the NMS has to be done on the coarser grid
 
@@ -891,7 +891,7 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
     NMS.apply(true, loc, orientation, mag, d2f);
     
     //compute third-order orientation
-    vcl_vector<double> TO_orientation(loc.size());
+    std::vector<double> TO_orientation(loc.size());
 
     if (third_order)
     {
@@ -906,12 +906,12 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
       double* ddy = Dy.top_left_ptr();
 
       for(unsigned long i=0; i<hist_ori.size(); i++){
-        ddx[i] = H[i]*vcl_sin(vcl_fmod(Ori[i]+vnl_math::pi_over_2, vnl_math::pi));
-        ddy[i] = H[i]*vcl_cos(vcl_fmod(Ori[i]+vnl_math::pi_over_2, vnl_math::pi));
+        ddx[i] = H[i]*std::sin(std::fmod(Ori[i]+vnl_math::pi_over_2, vnl_math::pi));
+        ddy[i] = H[i]*std::cos(std::fmod(Ori[i]+vnl_math::pi_over_2, vnl_math::pi));
       }
 
       //for each edge, compute all the gradients to compute the new orientation
-      vcl_vector<double> Hx, Hy, Hxx, Hxy, Hyy, Ix, Iy, Ixx, Ixy, Iyy;
+      std::vector<double> Hx, Hy, Hxx, Hxy, Hyy, Ix, Iy, Ixx, Ixy, Iyy;
 
       dbdet_subpix_convolve_2d(hist_grad, loc, Hx,  dbdet_Gx_kernel(0.7),  double(), 0);
       dbdet_subpix_convolve_2d(hist_grad, loc, Hy,  dbdet_Gy_kernel(0.7),  double(), 0);
@@ -932,10 +932,10 @@ dbdet_edgemap_sptr dbdet_detect_compass_edges(vil_image_view<vxl_byte>& image, i
         double Fx = Hx[i]*Ixx[i] + Hxx[i]*Ix[i] + Hy[i]*Ixy[i] + Hxy[i]*Iy[i];
         double Fy = Hx[i]*Ixy[i] + Hxy[i]*Ix[i] + Hy[i]*Iyy[i] + Hyy[i]*Iy[i];
 
-        double F_mag = vcl_sqrt(Fx*Fx + Fy*Fy);
+        double F_mag = std::sqrt(Fx*Fx + Fy*Fy);
 
         //save new orientation (tangent to the level set) is orthogonal to the gradient
-        TO_orientation[i] = dbdet_angle0To2Pi(vcl_atan2(Fx/F_mag, -Fy/F_mag));
+        TO_orientation[i] = dbdet_angle0To2Pi(std::atan2(Fx/F_mag, -Fy/F_mag));
       }
     }
 

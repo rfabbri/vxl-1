@@ -5,8 +5,8 @@
 // See btom_slice_simulator_params.h
 //
 //-----------------------------------------------------------------------------
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 
 //------------------------------------------------------------------------
 // Constructors
@@ -44,10 +44,10 @@ void btom_slice_simulator_params::InitParams(int ncyl,
 //:   Checks that parameters are within acceptable bounds
 //    Note that msg << ends seems to restart the string and erase the
 //    previous string. We should only use it as the last call, use
-//    vcl_endl otherwise.
+//    std::endl otherwise.
 bool btom_slice_simulator_params::SanityCheck()
 {
-  vcl_stringstream msg;
+  std::stringstream msg;
   bool valid = true;
 
   if (ncyl_<=0)
@@ -68,13 +68,13 @@ bool btom_slice_simulator_params::SanityCheck()
     valid = false;
   }
 
-  msg << vcl_ends;
+  msg << std::ends;
 
   SetErrorMsg(msg.str().c_str());
   return valid;
 }
 
-vcl_ostream& operator<<(vcl_ostream& os, const btom_slice_simulator_params& ssp)
+std::ostream& operator<<(std::ostream& os, const btom_slice_simulator_params& ssp)
 {
   os << "btom_slice_simulator_params:\n[---\n"
      << "n cylinders " << ssp.ncyl_ << '\n'

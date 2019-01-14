@@ -4,8 +4,8 @@
 
 #include"ncn1_classifier.h"
 
-#include<vcl_string.h>
-#include<vcl_vector.h>
+#include<string>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -22,7 +22,7 @@ public:
     ~ncn1_linear_classifier(){}
 
     //load training and test data from xml file
-    bool parse_data_file( vcl_string const& filename ) { return true;}   
+    bool parse_data_file( std::string const& filename ) { return true;}   
 
     //calculate parameters of the model using the training data then classify the test data
     void classify(){}
@@ -33,9 +33,9 @@ public:
 
     vnl_matrix<bool> T(){ return T_; }
 
-    vcl_vector<double> y();
+    std::vector<double> y();
 
-    bool classify_point( vcl_vector<double> x );
+    bool classify_point( std::vector<double> x );
 
 
 private:

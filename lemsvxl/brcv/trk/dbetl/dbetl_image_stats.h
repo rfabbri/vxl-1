@@ -10,7 +10,7 @@
 
 
 #include <vil/vil_rgb.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 
@@ -69,7 +69,7 @@ public:
   {
     double error = val - this->int_mean();
     double var = 0.001;//this->int_var();
-    return error*error/var + vcl_log(2*vnl_math::pi*var)/2.0;
+    return error*error/var + std::log(2*vnl_math::pi*var)/2.0;
   }
 
   //: Addition operator for updating statistics

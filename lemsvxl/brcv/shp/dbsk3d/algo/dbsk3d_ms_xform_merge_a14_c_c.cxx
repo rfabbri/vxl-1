@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Jan. 29, 2008
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_curve.h>
@@ -22,7 +22,7 @@
 bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest_MC2, 
                            dbsk3d_ms_sheet*& baseMS, 
                            dbmsh3d_vertex*& closest_V1, dbmsh3d_vertex*& closest_V2, 
-                           vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                           std::vector<dbmsh3d_edge*>& shortest_Evec,
                            const int cmxth)
 {
   //The resulting MC2 (at cloeset_V2) and the shortest path.
@@ -41,9 +41,9 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
     return false;
     
   //Use the interior fine-scale elements {Vi} of MC1 
-  vcl_vector<dbmsh3d_vertex*> Vvec;
+  std::vector<dbmsh3d_vertex*> Vvec;
   MC1->get_V_vec (Vvec);
-  vcl_set<dbmsh3d_vertex*> srcV_set;
+  std::set<dbmsh3d_vertex*> srcV_set;
   //Skip the starting/ending cmxth ones.
   for (int i=cmxth; i<int(Vvec.size())-cmxth; i++) { 
     dbmsh3d_vertex* V = Vvec[i];
@@ -63,7 +63,7 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
     //   where MN2's incident A13 (or A1n) MC2 is an i-curve of the MS.
 
     //Put all MS's other A13/A1n bnd or icurve (except 3-incidence and MC1) as candidate MC2_set.
-    vcl_set<dbmsh3d_edge*> MC2_set;
+    std::set<dbmsh3d_edge*> MC2_set;
     MS->get_axial_nonsw (MC2_set);
     MC2_set.erase ((dbsk3d_ms_curve*) MC1);
     if (MC2_set.empty()) {
@@ -72,9 +72,9 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
     }
 
     //Collect the candidate fine-scale V's of MN2's in V2_set.
-    vcl_set<dbmsh3d_vertex*> V2_set;
+    std::set<dbmsh3d_vertex*> V2_set;
 
-    vcl_set<dbmsh3d_edge*>::iterator eit = MC2_set.begin();
+    std::set<dbmsh3d_edge*>::iterator eit = MC2_set.begin();
     for (; eit != MC2_set.end(); eit++) {
       dbsk3d_ms_curve* MC2 = (dbsk3d_ms_curve*) (*eit);
       assert (MC2->c_type() == C_TYPE_AXIAL || MC2->c_type() == C_TYPE_DEGE_AXIAL);
@@ -85,7 +85,7 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
         continue;
 
       //Add the interior fine-scale V's of MC2 to V2_set.      
-      vcl_vector<dbmsh3d_vertex*> Vvec;
+      std::vector<dbmsh3d_vertex*> Vvec;
       MC2->get_V_vec (Vvec);
       //Skip the starting/ending cmxth ones.
       for (int i=cmxth; i<int(Vvec.size())-cmxth; i++) { 
@@ -105,19 +105,19 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
     //Only search for MS's interior fine-scale A12 edge-elements 
     //  - exclude all bordering A3 and A13 curves (and their end points).
     //  - exclude all interior anchor curves (and their end points).
-    vcl_set<dbmsh3d_edge*> MS_incident_FE_set;
-    vcl_set<dbmsh3d_vertex*> MS_incident_FV_set;
+    std::set<dbmsh3d_edge*> MS_incident_FE_set;
+    std::set<dbmsh3d_vertex*> MS_incident_FV_set;
     MS->get_incident_FEs (MS_incident_FE_set);
     MS->get_incident_FVs (MS_incident_FV_set);
 
     //Dijkstra search for the closetV in V2_set.
     MSM->reset_face_traversal ();
-    vcl_set<dbmsh3d_edge*> avoid_Eset;
+    std::set<dbmsh3d_edge*> avoid_Eset;
     avoid_Eset.insert (MS_incident_FE_set.begin(), MS_incident_FE_set.end());
-    vcl_set<dbmsh3d_vertex*> avoid_Vset;
+    std::set<dbmsh3d_vertex*> avoid_Vset;
     avoid_Vset.insert (MS_incident_FV_set.begin(), MS_incident_FV_set.end());
 
-    vcl_set<dbmsh3d_vertex*>::iterator vit = srcV_set.begin();
+    std::set<dbmsh3d_vertex*>::iterator vit = srcV_set.begin();
     for (; vit != srcV_set.end(); vit++) {
       dbmsh3d_vertex* V = (*vit);
       avoid_Vset.erase (V);
@@ -129,7 +129,7 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC1, dbsk3d_ms_curve*& closest
     }
 
     //Find the the shortest path from MN1 for the cloeset_V (in the V2_set).
-    vcl_vector<dbmsh3d_edge*> Evec_path;
+    std::vector<dbmsh3d_edge*> Evec_path;
     dbmsh3d_vertex *srcV, *destV;
     bool result = find_shortest_Es_on_M_restrained_targets (MSM, srcV_set, V2_set,
                                                             avoid_Eset, avoid_Vset, 

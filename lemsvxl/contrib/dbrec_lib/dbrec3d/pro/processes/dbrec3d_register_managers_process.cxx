@@ -26,9 +26,9 @@ bool dbrec3d_register_managers_process_cons(bprb_func_process& pro)
 {
   using namespace dbrec3d_register_managers_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
  
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "dbrec3d_parts_manager_sptr";
   output_types_[1] = "dbrec3d_context_manager_sptr";
   

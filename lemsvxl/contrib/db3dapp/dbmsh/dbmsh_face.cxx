@@ -38,10 +38,10 @@ dbmsh_face::~dbmsh_face()
  *************************************************************************/
 void dbmsh_face::remove()
 {
-  vcl_set<dbmsh_link*>::iterator linkIter;
+  std::set<dbmsh_link*>::iterator linkIter;
   for( linkIter = _links.begin(); linkIter!=_links.end(); linkIter++ )
     (*linkIter)->removeFace( this );
-  vcl_set<dbmsh_node*>::iterator nodeIter;
+  std::set<dbmsh_node*>::iterator nodeIter;
   for( nodeIter = _nodes.begin(); nodeIter!=_nodes.end(); nodeIter++ )
     (*nodeIter)->removeFace( this );
 

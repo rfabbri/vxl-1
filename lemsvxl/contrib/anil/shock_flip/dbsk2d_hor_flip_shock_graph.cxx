@@ -16,8 +16,8 @@ bool dbsk2d_hor_flip_shock_graph(dbsk2d_shock_graph_sptr shock)
     // Compute bounding box for the given shock file
     if(!dbsk2d_compute_bounding_box(shock))
     {
-        vcl_cout << "Cannot compute bounding box for the given shock graph!" << vcl_endl;
-        vcl_cout << "Exiting" << vcl_endl;
+        std::cout << "Cannot compute bounding box for the given shock graph!" << std::endl;
+        std::cout << "Exiting" << std::endl;
         return false;
     }
 
@@ -26,8 +26,8 @@ bool dbsk2d_hor_flip_shock_graph(dbsk2d_shock_graph_sptr shock)
     double min_x = bbox->get_min_x();
     double max_x = bbox->get_max_x();
 
-    vcl_cout << "min x: " << min_x << vcl_endl;
-    vcl_cout << "max x: " << max_x << vcl_endl;
+    std::cout << "min x: " << min_x << std::endl;
+    std::cout << "max x: " << max_x << std::endl;
 
     //Iterate through all edges
     dbsk2d_shock_graph::edge_iterator e_it = shock->edges_begin();

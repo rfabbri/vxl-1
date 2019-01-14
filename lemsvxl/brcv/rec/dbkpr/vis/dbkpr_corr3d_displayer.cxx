@@ -15,7 +15,7 @@
 
 static SoSeparator* make_scene(const dbkpr_corr3d_storage_sptr& storage)
 {
-  const vcl_vector<dbdet_keypoint_corr3d_sptr>& points = storage->correspondences();
+  const std::vector<dbdet_keypoint_corr3d_sptr>& points = storage->correspondences();
     
   if(points.empty())
     return NULL;
@@ -34,7 +34,7 @@ static SoSeparator* make_scene(const dbkpr_corr3d_storage_sptr& storage)
   material_bind->value = SoMaterialBinding::OVERALL; //PER_VERTEX;
   
   int coord_num = 0;  
-  for ( vcl_vector<dbdet_keypoint_corr3d_sptr>::const_iterator p_itr = points.begin();
+  for ( std::vector<dbdet_keypoint_corr3d_sptr>::const_iterator p_itr = points.begin();
         p_itr != points.end();  ++p_itr, ++coord_num ) {
     point_coords->point.set1Value(coord_num, (*p_itr)->x(), (*p_itr)->y(), (*p_itr)->z());
     //myMaterial->diffuseColor.set1Value(coord_num, R, G, B);
@@ -66,7 +66,7 @@ dbkpr_corr3d_displayer::make_tableau( bpro1_storage_sptr storage) const
   static SoSeparator* scene_root = NULL;
   
   // Extract the points
-  const vcl_vector<dbdet_keypoint_corr3d_sptr>& points = corr3d_storage->correspondences();
+  const std::vector<dbdet_keypoint_corr3d_sptr>& points = corr3d_storage->correspondences();
   long int sum = 0;
   for(unsigned int i=0; i<points.size(); ++i)
     sum += reinterpret_cast<long int>(points[i].ptr());

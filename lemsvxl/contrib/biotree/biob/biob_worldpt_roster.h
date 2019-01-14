@@ -16,11 +16,11 @@
 class biob_worldpt_roster : public vbl_ref_count{
   public:
   ~biob_worldpt_roster();
-   virtual vcl_string class_id() { return "biob_worldpt_roster"; }
+   virtual std::string class_id() { return "biob_worldpt_roster"; }
    //: How many points in the roster? (points indexed from 0 to num_points - 1)
     virtual unsigned long int num_points() const = 0;
    //:retrieve the point, given its index
     virtual worldpt point(biob_worldpt_index pti) const = 0;
-    virtual void x_write_this(vcl_ostream& os);
+    virtual void x_write_this(std::ostream& os);
 };
 #endif

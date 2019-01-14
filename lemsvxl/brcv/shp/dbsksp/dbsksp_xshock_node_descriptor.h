@@ -13,10 +13,10 @@
 // \endverbatim
 
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 // ============================================================================
 // dbsksp_xshock_node_descriptor
@@ -97,7 +97,7 @@ public:
   //: Chordal width (distance between two boundary points)
   double chordal_radius() const
   {
-    return this->radius() * vcl_sin(this->phi());
+    return this->radius() * std::sin(this->phi());
   }
 
   
@@ -156,7 +156,7 @@ public:
   dbsksp_xshock_node_descriptor opposite_xnode() const;
 
   //: Print description of the xnode to an output stream
-  void print(vcl_ostream& os) const;
+  void print(std::ostream& os) const;
 };
 
 #endif // shp/dbsksp/dbsksp_xshock_node_descriptor.h

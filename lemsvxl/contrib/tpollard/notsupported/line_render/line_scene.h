@@ -13,7 +13,7 @@
 // first two pixels p1, p2 in each row determine the angle of that view by the forumla:
 // angle = p1*10 + p2/10 which will give the angle in degrees to 1 decimal place.
 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_point_2d.h>
 
 
@@ -34,14 +34,14 @@ public:
 
   // Render the scene in an arc around the origin.
   bool render_arc( 
-    vcl_string image_file,
+    std::string image_file,
     int starting_angle,
     int end_angle,
     int num_frames );
 
   // Render the whole 2d scene, for viewing purposes.
   bool render_2d_scene(
-    vcl_string image_file );
+    std::string image_file );
 
   // Rendering parameters:
   int num_pixels_;
@@ -51,8 +51,8 @@ public:
 
 private:
 
-  vcl_vector< vgl_point_2d<float> > start_points, end_points;
-  vcl_vector< float > colors;
+  std::vector< vgl_point_2d<float> > start_points, end_points;
+  std::vector< float > colors;
 
 };
 

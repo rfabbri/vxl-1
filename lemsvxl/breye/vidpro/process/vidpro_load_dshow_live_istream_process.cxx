@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_load_dshow_live_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 #include <vidpro/storage/vidpro_istream_storage.h>
@@ -17,10 +17,10 @@
 //: Constructor
 vidpro_load_dshow_live_istream_process::vidpro_load_dshow_live_istream_process() : bpro_process()
 {
- if( !parameters()->add( "Device name" , "-device_name", vcl_string()) ||
-     !parameters()->add( "Configuration file" , "-config_file", vcl_string()))
+ if( !parameters()->add( "Device name" , "-device_name", std::string()) ||
+     !parameters()->add( "Configuration file" , "-config_file", std::string()))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -40,16 +40,16 @@ vidpro_load_dshow_live_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_load_dshow_live_istream_process::name()
+std::string vidpro_load_dshow_live_istream_process::name()
 {
   return "Load Input Stream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_load_dshow_live_istream_process::get_input_type()
+std::vector< std::string > vidpro_load_dshow_live_istream_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -59,9 +59,9 @@ vcl_vector< vcl_string > vidpro_load_dshow_live_istream_process::get_input_type(
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_load_dshow_live_istream_process::get_output_type()
+std::vector< std::string > vidpro_load_dshow_live_istream_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "istream" );
@@ -74,8 +74,8 @@ vcl_vector< vcl_string > vidpro_load_dshow_live_istream_process::get_output_type
 bool
 vidpro_load_dshow_live_istream_process::execute()
 {
-  vcl_string device_name;
-  vcl_string config_file;
+  std::string device_name;
+  std::string config_file;
   
   parameters()->get_value( "-device_name" , device_name );
   parameters()->get_value( "-config_file" , config_file);
@@ -83,7 +83,7 @@ vidpro_load_dshow_live_istream_process::execute()
    vidl_dshow_live_istream<vidl_dshow_istream_params> *istream =  new vidl_dshow_live_istream<vidl_dshow_istream_params>(
     vidl_dshow_istream_params()
     .set_device_name(device_name.c_str())
-    .set_properties(mbl_read_props(vcl_ifstream(config_file.c_str())))
+    .set_properties(mbl_read_props(std::ifstream(config_file.c_str())))
     );
   
    

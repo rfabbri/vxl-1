@@ -10,13 +10,13 @@
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbknee/dbknee_coord.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 //: Constructor
 dbknee_crop_mesh_process::
 dbknee_crop_mesh_process()
 {
-  vcl_vector<vcl_string > crop_direction;
+  std::vector<std::string > crop_direction;
   crop_direction.push_back("x");
   crop_direction.push_back("y");
   crop_direction.push_back("z");
@@ -33,7 +33,7 @@ dbknee_crop_mesh_process()
     "-cropped_mesh_2", bpro1_filepath("",".ply"))
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -55,19 +55,19 @@ clone() const
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbknee_crop_mesh_process::
+std::vector< std::string > dbknee_crop_mesh_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbknee_crop_mesh_process::
+std::vector< std::string > dbknee_crop_mesh_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -105,7 +105,7 @@ execute()
   bpro1_filepath cropped_mesh_2;
   parameters()->get_value( "-cropped_mesh_2" , cropped_mesh_2 );
   
-  vcl_string dir = "";
+  std::string dir = "";
   switch (crop_direction)
   {
   case 0:
@@ -136,11 +136,11 @@ finish()
 
 // Support function
 bool dbknee_crop_mesh_process::
-crop_mesh(const vcl_string& data_file,
-                const vcl_string& crop_direction,
+crop_mesh(const std::string& data_file,
+                const std::string& crop_direction,
                 float crop_ratio,
-                const vcl_string& cropped_mesh_1,
-                const vcl_string& cropped_mesh_2)
+                const std::string& cropped_mesh_1,
+                const std::string& cropped_mesh_2)
 {
 
 
@@ -150,15 +150,15 @@ crop_mesh(const vcl_string& data_file,
   // determine file name
   if (data_file == "")
   {
-    vcl_cerr << "An input data file is required to proceed."
+    std::cerr << "An input data file is required to proceed."
       << "Use '-data_file' option for input data file.\n";
     return false;
   }
 
-  vcl_cout << "Input data file = " << data_file << vcl_endl;
+  std::cout << "Input data file = " << data_file << std::endl;
 
   // determine the file format
-  vcl_string data_file_format = vul_file::extension(data_file);
+  std::string data_file_format = vul_file::extension(data_file);
 
   
   dbmsh3d_pro bndvis;
@@ -167,14 +167,14 @@ crop_mesh(const vcl_string& data_file,
   {
     if ( !bndvis.load_ply(data_file) )
     {
-      vcl_cerr << "ERROR: Could not load .ply file " 
+      std::cerr << "ERROR: Could not load .ply file " 
         << data_file << ".\n";
       return false;
     }
   }
   else // Unknow format --> Stop the program
   {
-    vcl_cerr << "ERROR: Invalid file format. Quit now.\n";
+    std::cerr << "ERROR: Invalid file format. Quit now.\n";
     return false;
   } 
 
@@ -205,27 +205,27 @@ crop_mesh(const vcl_string& data_file,
   }
   else
   {
-    vcl_cout << "Unknown cropping direction.\n";
+    std::cout << "Unknown cropping direction.\n";
   }
 
   // crop the meshes
   dbmsh3d_mesh mesh1;
   dbmsh3d_mesh mesh2;
 
-  vcl_cout << "Cropping the meshes...";
+  std::cout << "Cropping the meshes...";
   //bndvis.mesh()->IFS_to_MHE();
   dbmsh3d_mesh_algos::crop_mesh(*bndvis.mesh(), bbox1, mesh1);
   dbmsh3d_mesh_algos::crop_mesh(*bndvis.mesh(), bbox2, mesh2);
-  vcl_cout << "done.\n";
+  std::cout << "done.\n";
 
   // v. Save output mesh
-  vcl_cout << "Save cropped_mesh_file ... \n";
+  std::cout << "Save cropped_mesh_file ... \n";
   dbmsh3d_save_ply(&mesh1, cropped_mesh_1.c_str(), false);
   dbmsh3d_save_ply(&mesh2, cropped_mesh_2.c_str(), false);
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
 
 
-  vcl_cout << "Done.\n";
+  std::cout << "Done.\n";
   return true;
 }
 

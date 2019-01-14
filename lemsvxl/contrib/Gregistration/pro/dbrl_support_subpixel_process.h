@@ -13,7 +13,7 @@ class dbrl_support_subpixel_process:public bpro1_process
         dbrl_support_subpixel_process();
         ~dbrl_support_subpixel_process();
 
-        vcl_string name();
+        std::string name();
 
         //: Clone the process
         virtual bpro1_process* clone() const;
@@ -21,21 +21,21 @@ class dbrl_support_subpixel_process:public bpro1_process
         int input_frames();
         int output_frames();
 
-        vcl_vector< vcl_string > get_input_type();
-        vcl_vector< vcl_string > get_output_type();
+        std::vector< std::string > get_input_type();
+        std::vector< std::string > get_output_type();
 
         bool execute();
         bool finish();
 
-bool compute_temporal_support(double sigma_d, double sigma_a,double thresh,vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > >pts);
-        bool compute_spatial_support(double sigma_d,double thresh,vcl_vector< vcl_vector< dbrl_id_point_2d_sptr > > pts);
+bool compute_temporal_support(double sigma_d, double sigma_a,double thresh,std::vector< std::vector< dbrl_id_point_2d_sptr > >pts);
+        bool compute_spatial_support(double sigma_d,double thresh,std::vector< std::vector< dbrl_id_point_2d_sptr > > pts);
 
 
     private:
 
-        vcl_vector<vil_image_view<unsigned char> >  image_list_;
-        vcl_vector<vcl_vector<dbrl_id_point_2d_sptr> > points_list_;
-        vcl_vector<int> framenums_;
+        std::vector<vil_image_view<unsigned char> >  image_list_;
+        std::vector<std::vector<dbrl_id_point_2d_sptr> > points_list_;
+        std::vector<int> framenums_;
 
     };
 #endif

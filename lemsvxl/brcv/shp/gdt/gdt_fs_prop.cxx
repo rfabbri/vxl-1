@@ -12,12 +12,12 @@ void gdt_fs_manager::gdt_propagate_one_step ()
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>1) {
-    vul_printf (vcl_cerr, "Front %d: ", wavefront_.size());
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator wit =  wavefront_.begin();
+    vul_printf (std::cerr, "Front %d: ", wavefront_.size());
+    std::multimap<double, dbmsh3d_halfedge*>::iterator wit =  wavefront_.begin();
     if (n_verbose_>2) {
       for (; wit != wavefront_.end(); wit++) {
         dbmsh3d_halfedge* cur_from_he = (*wit).second;
-        vul_printf (vcl_cerr, "%d(%f) ", cur_from_he->edge()->id(), (float)(*wit).first);
+        vul_printf (std::cerr, "%d(%f) ", cur_from_he->edge()->id(), (float)(*wit).first);
       }
     }
   }
@@ -25,7 +25,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
 
   ///////////////////////////////////////////////////////////////////
   //: Get the wavefront segment (edge) with minimal distance from the wavefront_
-  vcl_multimap<double, dbmsh3d_halfedge*>::iterator wit = wavefront_.begin();
+  std::multimap<double, dbmsh3d_halfedge*>::iterator wit = wavefront_.begin();
   dbmsh3d_halfedge* cur_from_he = (*wit).second;
   wavefront_.erase (wit); //: remove wit from the wavefront_
 
@@ -43,7 +43,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     cur_he_ = dege_cur_I->dege_get_he_to_propagate (cur_from_he);
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cerr, "\n==> Propagate degenerate edge %d.\n", cur_edge_->id());
+      vul_printf (std::cerr, "\n==> Propagate degenerate edge %d.\n", cur_edge_->id());
 #endif
   }
   else
@@ -54,7 +54,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
   if (cur_he_==NULL) {
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cerr, "\n==> Skip. No unpropagated face for edge %d.\n", cur_edge_->id());
+      vul_printf (std::cerr, "\n==> Skip. No unpropagated face for edge %d.\n", cur_edge_->id());
 #endif
     return;
   }
@@ -62,7 +62,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cerr, "\n==> Propagating edge %d to face %d.\n", cur_edge_->id(), cur_face->id());
+    vul_printf (std::cerr, "\n==> Propagating edge %d to face %d.\n", cur_edge_->id(), cur_face->id());
 #endif
 
   //: left: the edge incident with the sV of the current front
@@ -116,7 +116,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
   if (shocks_to_left_edge_.size() > 0) { //: propagate intervals via shocks
     
 #if 0
-  vcl_map<double, gdt_shock*>::iterator ssit = shocks_to_left_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator ssit = shocks_to_left_edge_.S_map()->begin();
   for (; ssit != shocks_to_left_edge_.S_map()->end(); ssit++) {
     gdt_shock* SS = (*ssit).second;
     double tau = (*ssit).first;
@@ -134,7 +134,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     propagate_to_left_edge_last_I ();
 
     //: update each shock's leftI and rightI from the temporary value.
-    vcl_map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
+    std::map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
     for (; sit != shocks_to_left_edge_.S_map()->end(); sit++) {
       gdt_shock* SS = (*sit).second;
       SS->update_I_less_greater ();
@@ -148,7 +148,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
   if (shocks_to_right_edge_.size() > 0) {
     
 #if 0
-  vcl_map<double, gdt_shock*>::iterator ssit = shocks_to_right_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator ssit = shocks_to_right_edge_.S_map()->begin();
   for (; ssit != shocks_to_right_edge_.S_map()->end(); ssit++) {
     gdt_shock* SS = (*ssit).second;
     assert (SS->cur_edge() == right_edge_);
@@ -165,7 +165,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     propagate_to_right_edge_last_I ();
 
     //: update each shock's leftI and rightI from the temporary value.
-    vcl_map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
+    std::map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
     for (; sit != shocks_to_right_edge_.S_map()->end(); sit++) {
       gdt_shock* SS = (*sit).second;
       SS->update_I_less_greater ();
@@ -179,7 +179,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
   if (shocks_to_cur_edge_.size() > 0) {
 
 #if 0
-  vcl_map<double, gdt_shock*>::iterator ssit = shocks_to_cur_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator ssit = shocks_to_cur_edge_.S_map()->begin();
   for (; ssit != shocks_to_cur_edge_.S_map()->end(); ssit++) {
     gdt_shock* SS = (*ssit).second;
     assert (SS->cur_edge() == cur_edge_);
@@ -196,7 +196,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     propagate_to_cur_edge_all_middle_Is ();
 
     //: update each shock's leftI and rightI from the temporary value.
-    vcl_map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
+    std::map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
     for (; sit != shocks_to_cur_edge_.S_map()->end(); sit++) {
       gdt_shock* SS = (*sit).second;
       SS->update_I_less_greater ();
@@ -212,7 +212,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     assert (shocks_to_cur_edge_.size() == 0);
 
     //: propagate the first interval of C to L
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
     gdt_ibase* II = (*it).second;
     assert (II->is_dege() == false);
 
@@ -229,7 +229,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
     assert (shocks_to_cur_edge_.size() == 0);
 
     //: propagate the last interval of C to R
-    vcl_map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
+    std::map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
     gdt_ibase* II = (*it).second;
     assert (II->is_dege() == false);
 
@@ -245,7 +245,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
   /*if (shocks_to_left_edge_.size() == 0 &&
       shocks_to_right_edge_.size() == 0 &&
       shocks_to_cur_edge_.size() == 0) {
-    vcl_map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
+    std::map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
     gdt_ibase* II = (*it).second;
     assert (II->is_dege() == false);
 
@@ -283,7 +283,7 @@ void gdt_fs_manager::gdt_propagate_one_step ()
 void gdt_fs_manager::propagate_to_left_edge_first_I ()
 {
 #if GDT_ALGO_FS
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
   gdt_shock* S_first = (*sit).second;
   gdt_interval* prop_I;
 
@@ -339,7 +339,7 @@ void gdt_fs_manager::propagate_to_left_edge_first_I ()
 
           //: create degenerate interval on C
           //the prev is the last interval of right_edge_
-          vcl_map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, false, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -350,7 +350,7 @@ void gdt_fs_manager::propagate_to_left_edge_first_I ()
 
           //: create degenerate interval on C
           //the prev is the first interval of right_edge_
-          vcl_map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, true, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -376,7 +376,7 @@ void gdt_fs_manager::propagate_to_left_edge_first_I ()
         //: create degenerate interval on R
         gdt_interval* dege_I;
         //the prev is the last interval of cur_edge_
-        vcl_map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
+        std::map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (right_he_, cur_edge_->eV() == right_edge_->sV(), prev);
         right_edge_->_attach_interval (dege_I);
@@ -398,7 +398,7 @@ void gdt_fs_manager::propagate_to_left_edge_first_I ()
 //: Propagate the last interval by case which can be a rarefaction or a regular interval.
 void gdt_fs_manager::propagate_to_left_edge_last_I ()
 {
-  vcl_map<double, gdt_shock*>::reverse_iterator srit = shocks_to_left_edge_.S_map()->rbegin();
+  std::map<double, gdt_shock*>::reverse_iterator srit = shocks_to_left_edge_.S_map()->rbegin();
   gdt_shock* S_last = (*srit).second;
   gdt_interval* prop_I;
   double len = left_edge_->len();
@@ -455,7 +455,7 @@ void gdt_fs_manager::propagate_to_left_edge_last_I ()
 
           //: create degenerate interval on C
           //the prev is the last interval of right_edge_
-          vcl_map<double, gdt_ibase*>::reverse_iterator it = right_edge_->interval_section()->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator it = right_edge_->interval_section()->I_map()->rbegin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, false, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -466,7 +466,7 @@ void gdt_fs_manager::propagate_to_left_edge_last_I ()
 
           //: create degenerate interval on C
           //the prev is the first interval of right_edge_
-          vcl_map<double, gdt_ibase*>::iterator it = right_edge_->interval_section()->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = right_edge_->interval_section()->I_map()->begin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, false, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -492,7 +492,7 @@ void gdt_fs_manager::propagate_to_left_edge_last_I ()
         //: create degenerate interval on R
         gdt_interval* dege_I;
         //the prev is the last interval of cur_edge_
-        vcl_map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
+        std::map<double, gdt_ibase*>::reverse_iterator it = cur_edge_->interval_section()->I_map()->rbegin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (right_he_, cur_edge_->eV() == right_edge_->sV(), prev);
         right_edge_->_attach_interval (dege_I);
@@ -514,13 +514,13 @@ void gdt_fs_manager::propagate_to_left_edge_last_I ()
 //  Also do the rarefaction for the saddle case.
 void gdt_fs_manager::propagate_to_left_edge_all_middle_Is ()
 {
-  vcl_map<double, gdt_shock*>::iterator sit_last = shocks_to_left_edge_.S_map()->end();
+  std::map<double, gdt_shock*>::iterator sit_last = shocks_to_left_edge_.S_map()->end();
   sit_last--;
 
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_left_edge_.S_map()->begin();
   for (; sit != sit_last; sit++) {
     gdt_shock* S = (*sit).second;
-    vcl_map<double, gdt_shock*>::iterator sit_next = sit;
+    std::map<double, gdt_shock*>::iterator sit_next = sit;
     sit_next++;
     gdt_shock* nextS = (*sit_next).second;
     gdt_interval* prop_I;
@@ -601,7 +601,7 @@ void gdt_fs_manager::propagate_to_left_edge_all_middle_Is ()
 //: Propagate the first interval by case which can be a rarefaction or a regular interval.
 void gdt_fs_manager::propagate_to_right_edge_first_I ()
 {
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
   gdt_shock* S_first = (*sit).second;
   gdt_interval* prop_I;
 
@@ -658,7 +658,7 @@ void gdt_fs_manager::propagate_to_right_edge_first_I ()
 
           //: create degenerate interval on C
           //the prev is the last interval of left_edge_
-          vcl_map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, true, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -669,7 +669,7 @@ void gdt_fs_manager::propagate_to_right_edge_first_I ()
 
           //: create degenerate interval on C
           //the prev is the first interval of left_edge_
-          vcl_map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, true, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -695,7 +695,7 @@ void gdt_fs_manager::propagate_to_right_edge_first_I ()
         //: create degenerate interval on L
         gdt_interval* dege_I;
         //the prev is the first interval of cur_edge_
-        vcl_map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
+        std::map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (left_he_, cur_edge_->sV() == left_edge_->sV(), prev);
         left_edge_->_attach_interval (dege_I);
@@ -716,7 +716,7 @@ void gdt_fs_manager::propagate_to_right_edge_first_I ()
 //: Propagate the last interval by case which can be a rarefaction or a regular interval.
 void gdt_fs_manager::propagate_to_right_edge_last_I ()
 {
-  vcl_map<double, gdt_shock*>::reverse_iterator srit = shocks_to_right_edge_.S_map()->rbegin();
+  std::map<double, gdt_shock*>::reverse_iterator srit = shocks_to_right_edge_.S_map()->rbegin();
   gdt_shock* S_last = (*srit).second;
   gdt_interval* prop_I;
   double len = right_edge_->len();
@@ -773,7 +773,7 @@ void gdt_fs_manager::propagate_to_right_edge_last_I ()
 
           //: create degenerate interval on C
           //the prev is the first interval of left_edge_
-          vcl_map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
+          std::map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, true, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -784,7 +784,7 @@ void gdt_fs_manager::propagate_to_right_edge_last_I ()
 
           //: create degenerate interval on C
           //the prev is the last interval of left_edge_
-          vcl_map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
+          std::map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
           gdt_interval* prev = (gdt_interval*) (*it).second;
           gdt_interval* dege_I = create_dege_I (cur_he_, true, prev);
           cur_edge_->_attach_interval (dege_I);
@@ -810,7 +810,7 @@ void gdt_fs_manager::propagate_to_right_edge_last_I ()
         //: create degenerate interval on L
         gdt_interval* dege_I;
         //the prev is the first interval of cur_edge_
-        vcl_map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
+        std::map<double, gdt_ibase*>::iterator it = cur_edge_->interval_section()->I_map()->begin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (left_he_, cur_edge_->sV() == left_edge_->sV(), prev);
         left_edge_->_attach_interval (dege_I);
@@ -832,13 +832,13 @@ void gdt_fs_manager::propagate_to_right_edge_last_I ()
 //  Also do the rarefaction for the saddle case.
 void gdt_fs_manager::propagate_to_right_edge_all_middle_Is ()
 {
-  vcl_map<double, gdt_shock*>::iterator sit_last = shocks_to_right_edge_.S_map()->end();
+  std::map<double, gdt_shock*>::iterator sit_last = shocks_to_right_edge_.S_map()->end();
   sit_last--;
 
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_right_edge_.S_map()->begin();
   for (; sit != sit_last; sit++) {
     gdt_shock* S = (*sit).second;
-    vcl_map<double, gdt_shock*>::iterator sit_next = sit;
+    std::map<double, gdt_shock*>::iterator sit_next = sit;
     sit_next++;
     gdt_shock* nextS = (*sit_next).second;
     gdt_interval* prop_I;
@@ -918,7 +918,7 @@ void gdt_fs_manager::propagate_to_right_edge_all_middle_Is ()
 //: Propagate the first interval by case which can be a rarefaction or a regular interval.
 void gdt_fs_manager::propagate_to_cur_edge_first_I ()
 {
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
   gdt_shock* S_first = (*sit).second;
   gdt_interval* prop_I;
 
@@ -966,7 +966,7 @@ void gdt_fs_manager::propagate_to_cur_edge_first_I ()
         //: create degenerate interval on L
         gdt_interval* dege_I;
         //the prev is the last interval of right_edge_
-        vcl_map<double, gdt_ibase*>::reverse_iterator it = right_edge_->interval_section()->I_map()->rbegin();
+        std::map<double, gdt_ibase*>::reverse_iterator it = right_edge_->interval_section()->I_map()->rbegin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (left_he_, cur_edge_->sV() != left_edge_->sV(), prev);
         left_edge_->_attach_interval (dege_I);
@@ -978,7 +978,7 @@ void gdt_fs_manager::propagate_to_cur_edge_first_I ()
         //: create degenerate interval on L
         gdt_interval* dege_I;
         //the prev is the first interval of right_edge_
-        vcl_map<double, gdt_ibase*>::iterator it = right_edge_->interval_section()->I_map()->begin();
+        std::map<double, gdt_ibase*>::iterator it = right_edge_->interval_section()->I_map()->begin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (left_he_, cur_edge_->sV() != left_edge_->sV(), prev);
         left_edge_->_attach_interval (dege_I);
@@ -995,7 +995,7 @@ void gdt_fs_manager::propagate_to_cur_edge_first_I ()
 //: Propagate the last interval by case which can be a rarefaction or a regular interval.
 void gdt_fs_manager::propagate_to_cur_edge_last_I ()
 {
-  vcl_map<double, gdt_shock*>::reverse_iterator srit = shocks_to_cur_edge_.S_map()->rbegin();
+  std::map<double, gdt_shock*>::reverse_iterator srit = shocks_to_cur_edge_.S_map()->rbegin();
   gdt_shock* S_last = (*srit).second;
   gdt_interval* prop_I;
   double len = cur_edge_->len();
@@ -1044,7 +1044,7 @@ void gdt_fs_manager::propagate_to_cur_edge_last_I ()
         //: create degenerate interval on R
         gdt_interval* dege_I;
         //the prev is the last interval of left_edge_
-        vcl_map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
+        std::map<double, gdt_ibase*>::reverse_iterator it = left_edge_->interval_section()->I_map()->rbegin();
         gdt_interval* prev = (gdt_interval*) (*it).second;        
         dege_I = create_dege_I (right_he_, cur_edge_->sV() == left_edge_->sV(), prev);
         right_edge_->_attach_interval (dege_I);
@@ -1055,7 +1055,7 @@ void gdt_fs_manager::propagate_to_cur_edge_last_I ()
         //: create degenerate interval on R
         gdt_interval* dege_I;
         //the prev is the first interval of left_edge_
-        vcl_map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
+        std::map<double, gdt_ibase*>::iterator it = left_edge_->interval_section()->I_map()->begin();
         gdt_interval* prev = (gdt_interval*) (*it).second;
         dege_I = create_dege_I (right_he_, cur_edge_->eV() == right_edge_->eV(), prev);
         right_edge_->_attach_interval (dege_I);
@@ -1073,13 +1073,13 @@ void gdt_fs_manager::propagate_to_cur_edge_last_I ()
 //  Also do the rarefaction for the saddle case.
 void gdt_fs_manager::propagate_to_cur_edge_all_middle_Is ()
 {
-  vcl_map<double, gdt_shock*>::iterator sit_last = shocks_to_cur_edge_.S_map()->end();
+  std::map<double, gdt_shock*>::iterator sit_last = shocks_to_cur_edge_.S_map()->end();
   sit_last--;
 
-  vcl_map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
+  std::map<double, gdt_shock*>::iterator sit = shocks_to_cur_edge_.S_map()->begin();
   for (; sit != sit_last; sit++) {
     gdt_shock* S = (*sit).second;
-    vcl_map<double, gdt_shock*>::iterator sit_next = sit;
+    std::map<double, gdt_shock*>::iterator sit_next = sit;
     sit_next++;
     gdt_shock* nextS = (*sit_next).second;
     gdt_interval* prop_I;

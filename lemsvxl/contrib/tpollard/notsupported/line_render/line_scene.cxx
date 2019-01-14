@@ -30,7 +30,7 @@ line_scene::add_line(
 //--------------------------------------------
 bool 
 line_scene::render_arc( 
-  vcl_string image_file,
+  std::string image_file,
   int start_angle,
   int end_angle,
   int num_frames )
@@ -99,7 +99,7 @@ line_scene::render_arc(
 //--------------------------------------------------
 bool 
 line_scene::render_2d_scene(
-  vcl_string image_file )
+  std::string image_file )
 {
   float image_rad = 200;
   vil_image_view<vxl_byte> new_image( 2*image_rad, 2*image_rad );

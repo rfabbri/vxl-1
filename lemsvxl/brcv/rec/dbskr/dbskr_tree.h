@@ -57,10 +57,10 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <utility>
 #include <assert.h>
 
 
@@ -92,7 +92,7 @@ public:
 
 
   //: acquire tree from the given input file
-  bool acquire(vcl_string filename);
+  bool acquire(std::string filename);
 
   //: acquire tree topology assumes sg set
   bool acquire_tree_topology();
@@ -155,12 +155,12 @@ public:
 
   // used in get_scurve(...)
   //: return a vector of pointers to the edges in underlying shock graph for the given dart list
-  void edge_list(const vcl_vector<int>& dart_list,  
+  void edge_list(const std::vector<int>& dart_list,  
                  dbsk2d_shock_node_sptr& start_node,  
-                 vcl_vector<dbsk2d_shock_edge_sptr>& path);
+                 std::vector<dbsk2d_shock_edge_sptr>& path);
 
   //: get the list of shock edges that are part of a particular dart
-  vcl_vector<dbsk2d_shock_edge_sptr>& get_shock_edges(int dart_id)
+  std::vector<dbsk2d_shock_edge_sptr>& get_shock_edges(int dart_id)
   { return shock_edges_[dart_id]; }
 
 
@@ -190,11 +190,11 @@ public:
 
   //Amir added this function for debug
   //: create and write .shg file to debug splice and contract costs
-  bool create_shg(vcl_string fname);
+  bool create_shg(std::string fname);
 
   //Amir added this function for debug
   //: create and write .shgesg file to hold the correspondences between shock node ids and tree node ids
-  bool create_shgesg(vcl_string fname);
+  bool create_shgesg(std::string fname);
 
 
 
@@ -229,14 +229,14 @@ protected:
 
   //: each dart has a list of pointers to the actual edges 
   //  on the corresponding shock branch of the graph (in the correct order)
-  vcl_vector<vcl_vector<dbsk2d_shock_edge_sptr> > shock_edges_;
+  std::vector<std::vector<dbsk2d_shock_edge_sptr> > shock_edges_;
 
   //: each dart also has a list of start nodes for the underlying edge to determine direction 
-  vcl_vector<dbsk2d_shock_node_sptr> starting_nodes_;
+  std::vector<dbsk2d_shock_node_sptr> starting_nodes_;
 
   //: cache the shock curves for future use for each path of darts
-  //vcl_map<vcl_pair<int, int>, dbskr_scurve_sptr> dart_path_scurve_map_;
-  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
+  //std::map<std::pair<int, int>, dbskr_scurve_sptr> dart_path_scurve_map_;
+  std::map<std::pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
 
 
   // Cost-related parameters /////////////////////////////////////////////
@@ -248,7 +248,7 @@ public:
   // this parameter corresponds to subsample_ds_ in dbskr_scurve, the default is 5.0
   // there is also interpolate_ds_ in dbskr_scurve for which the default was 1.0 but made to 0.5 by Amir Tamrakar
   // in get_curve we call the curve computation like this:
-  // dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min(scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+  // dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, std::min(scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
   // hence the interpolate_ds is passed as given by interpolate_ds_ as long as scurve_sample_ds_ (i.e. subsample_ds) >= interpolate_ds_
   float scurve_sample_ds_;
   float interpolate_ds_;  // made this into a parameter as well, default is 0.5

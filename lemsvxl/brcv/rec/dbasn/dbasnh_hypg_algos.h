@@ -32,7 +32,7 @@ void generate_noisy_subhypg (dbasnh_hypg* g, dbasnh_hypg* inputG,
                              int *labels, double dNoise,
                              float percent_remove_C); 
 
-int  load_GA_hypg_file (dbasnh_hypg* G, const vcl_string& filename);
-void save_GA_hypg_file (dbasnh_hypg* G, const vcl_string& filename);
+int  load_GA_hypg_file (dbasnh_hypg* G, const std::string& filename);
+void save_GA_hypg_file (dbasnh_hypg* G, const std::string& filename);
 
 #endif

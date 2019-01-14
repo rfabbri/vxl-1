@@ -2,7 +2,7 @@
 //: MingChing Chang
 //  Oct 4, 2007
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
@@ -18,7 +18,7 @@
 
 //: Check if the input vector of fs_edges on a geodesic path bounding a trimmable region or not.
 //  Return true if all the fs_edges are on the Rb on MC, thus not bounding a trimmable region.
-bool FEs_all_on_rib (const vcl_vector<dbmsh3d_edge*>& Evec)
+bool FEs_all_on_rib (const std::vector<dbmsh3d_edge*>& Evec)
 {
   for (unsigned int i=0; i<Evec.size(); i++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) Evec[i];
@@ -30,7 +30,7 @@ bool FEs_all_on_rib (const vcl_vector<dbmsh3d_edge*>& Evec)
 }
 
 void get_rib_trim_Evec (const dbsk3d_ms_node* MN, const dbsk3d_ms_curve* MC, 
-                        const dbmsh3d_vertex* U, vcl_vector<dbmsh3d_edge*>& Evec)
+                        const dbmsh3d_vertex* U, std::vector<dbmsh3d_edge*>& Evec)
 {
   Evec.clear();
 
@@ -57,14 +57,14 @@ void get_rib_trim_Evec (const dbsk3d_ms_node* MN, const dbsk3d_ms_curve* MC,
   }
 }
 
-bool get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
-                          const vcl_vector<dbmsh3d_edge*>& bnd_Evec,
-                          vcl_vector<dbsk3d_fs_face*>& seedFF_vec)
+bool get_rib_trim_seedFF (const std::vector<dbmsh3d_edge*>& rib_Evec,
+                          const std::vector<dbmsh3d_edge*>& bnd_Evec,
+                          std::vector<dbsk3d_fs_face*>& seedFF_vec)
 {
   if (bnd_Evec.size() == 0)
     return false; //the degenerate single_trimming case.
 
-  vcl_set<dbmsh3d_edge*> bnd_Eset;
+  std::set<dbmsh3d_edge*> bnd_Eset;
   for (unsigned int i=0; i<bnd_Evec.size(); i++)
     bnd_Eset.insert (bnd_Evec[i]);
   assert (bnd_Eset.size() == bnd_Evec.size());
@@ -85,12 +85,12 @@ bool get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
   return seedFF_vec.size() != 0;
 }
 
-bool A12A3I_get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
-                                 const vcl_vector<dbmsh3d_edge*>& bnd_Evec,
+bool A12A3I_get_rib_trim_seedFF (const std::vector<dbmsh3d_edge*>& rib_Evec,
+                                 const std::vector<dbmsh3d_edge*>& bnd_Evec,
                                  const dbmsh3d_face* F_M,
-                                 vcl_vector<dbsk3d_fs_face*>& seedFF_vec)
+                                 std::vector<dbsk3d_fs_face*>& seedFF_vec)
 {
-  vcl_set<dbmsh3d_edge*> bnd_Eset;
+  std::set<dbmsh3d_edge*> bnd_Eset;
   for (unsigned int i=0; i<bnd_Evec.size(); i++)
     bnd_Eset.insert (bnd_Evec[i]);
   assert (bnd_Eset.size() == bnd_Evec.size());
@@ -114,12 +114,12 @@ bool A12A3I_get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
 
 //: Perform trim xform on the fine-scale shock elements.
 void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_sheet* MS, 
-                         vcl_set<dbmsh3d_face*>& FF_to_trim)
+                         std::set<dbmsh3d_face*>& FF_to_trim)
 {
   //1) Use splice xform to prune the collected faces (ordered by max time).
   //Store all valid Ps in FF_to_trim in a map sorted by max_time.  
-  vcl_multimap<float, dbsk3d_fs_face*> FF_mmap;
-  vcl_set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
+  std::multimap<float, dbsk3d_fs_face*> FF_mmap;
+  std::set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
   for (; it != FF_to_trim.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     if (FF->b_valid() == false)
@@ -128,7 +128,7 @@ void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_sheet* MS,
     float min_time, max_time;
     ///FF->get_min_max_V_time (min_time, max_time);
     get_FF_min_max_time (FF, min_time, max_time);
-    FF_mmap.insert (vcl_pair<float, dbsk3d_fs_face*> (max_time, FF));
+    FF_mmap.insert (std::pair<float, dbsk3d_fs_face*> (max_time, FF));
     
     //Remove FF from MS.facemap.
     MS->facemap().erase (FF->id());
@@ -139,16 +139,16 @@ void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_sheet* MS,
   
   //3) After trimming, delete all invalid fs_faces and their incident Ls and Ns.
   fs_mesh->del_invalid_FFs_complete();
-  vul_printf (vcl_cout, "S%d has %dF. ", MS->id(), MS->facemap().size());
+  vul_printf (std::cout, "S%d has %dF. ", MS->id(), MS->facemap().size());
 }
 
 //: Perform trim xform on the fine-scale shock elements.
-void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, vcl_set<dbmsh3d_face*>& FF_to_trim)
+void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, std::set<dbmsh3d_face*>& FF_to_trim)
 {
   //1) Use splice xform to prune the collected faces (ordered by max time).
   //Store all valid Ps in FF_to_trim in a map sorted by max_time.  
-  vcl_multimap<float, dbsk3d_fs_face*> FF_mmap;
-  vcl_set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
+  std::multimap<float, dbsk3d_fs_face*> FF_mmap;
+  std::set<dbmsh3d_face*>::iterator it = FF_to_trim.begin();
   for (; it != FF_to_trim.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it);
     if (FF->b_valid() == false)
@@ -156,7 +156,7 @@ void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, vcl_set<dbmsh3d_face*>& FF_to_
 
     float min_time, max_time;
     FF->get_min_max_V_time (min_time, max_time);
-    FF_mmap.insert (vcl_pair<float, dbsk3d_fs_face*> (max_time, FF));
+    FF_mmap.insert (std::pair<float, dbsk3d_fs_face*> (max_time, FF));
   }
 
   //2) Perform splice xforms to trim labelled fs_faces in order.
@@ -186,7 +186,7 @@ void _del_MC_from_MS (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS, dbsk3d_ms_cu
 void _trace_rib_MC_FEs (dbsk3d_ms_curve* ribMC, const dbsk3d_ms_node* startMN, const dbmsh3d_vertex* endV)
 {
   #if DBMSH3D_DEBUG > 3
-  vul_printf (vcl_cout, "fs_edges: ");
+  vul_printf (std::cout, "fs_edges: ");
   #endif
 
   //Makes the fs_edges in ribMC ordered from startMN.
@@ -212,7 +212,7 @@ void _trace_rib_MC_FEs (dbsk3d_ms_curve* ribMC, const dbsk3d_ms_node* startMN, c
     assert (FE != NULL);
     ribMC->add_E_to_back (FE);
     #if DBMSH3D_DEBUG > 3
-    vul_printf (vcl_cout, "FE %d FV%d, ", FE->id(), FV->id());
+    vul_printf (std::cout, "FE %d FV%d, ", FE->id(), FV->id());
     #endif
     FE->set_e_type (E_TYPE_RIB);
     FV = FE->other_V (FV);
@@ -222,7 +222,7 @@ void _trace_rib_MC_FEs (dbsk3d_ms_curve* ribMC, const dbsk3d_ms_node* startMN, c
   while (FV != endV);
 
   #if DBMSH3D_DEBUG > 3
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
   #endif
 }
 
@@ -234,25 +234,25 @@ void _trace_rib_MC_FEs (dbsk3d_ms_curve* ribMC, const dbsk3d_ms_node* startMN, c
 //: The node-node merging operation
 void MN_MN_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_node* MN1, dbsk3d_ms_node* MN2,
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec)
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec)
 {
-  vul_printf (vcl_cout, "merge N%d to N%d, ", MN1->id(), MN2->id());
+  vul_printf (std::cout, "merge N%d to N%d, ", MN1->id(), MN2->id());
 
   //Make Evec_N1_N2 to be from MN1 to MN2 and Evec_N2_N1 to be from MN2 to MN1.
-  vcl_vector<dbmsh3d_edge*> Evec_N1_N2, Evec_N2_N1;
+  std::vector<dbmsh3d_edge*> Evec_N1_N2, Evec_N2_N1;
   Evec_N1_N2.insert (Evec_N1_N2.begin(), shortest_Evec.begin(), shortest_Evec.end());
   Evec_N2_N1.insert (Evec_N2_N1.begin(), shortest_Evec.begin(), shortest_Evec.end());
   assert (shortest_Evec[0]->is_V_incident (MN2->V()));
-  vcl_reverse (Evec_N1_N2.begin(), Evec_N1_N2.end());
+  std::reverse (Evec_N1_N2.begin(), Evec_N1_N2.end());
   assert (Evec_N1_N2[0]->is_V_incident(MN1->V()));
   assert (Evec_N2_N1[0]->is_V_incident(MN2->V()));
 
   //Extend all MN1's incident curves along the shortest_Evec to MN2.
-  vcl_set<void*> incident_Es;
+  std::set<void*> incident_Es;
   MN1->get_incident_Es (incident_Es);
   assert (incident_Es.size() == 2);
 
-  vcl_set<void*>::iterator it = incident_Es.begin();
+  std::set<void*>::iterator it = incident_Es.begin();
   for (; it != incident_Es.end(); it++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*it);
     if (MC->s_MN() == MN1) {
@@ -291,21 +291,21 @@ void MN_MN_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
 //: The node-curve merging operation
 void MN_MC_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_node* MN1, dbsk3d_ms_curve* MC2,                               
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec,
                   const dbmsh3d_vertex* closest_V, dbsk3d_ms_curve*& MC2n)
 {
-  vul_printf (vcl_cout, "merge N%d with C%d, ", MN1->id(), MC2->id());
+  vul_printf (std::cout, "merge N%d with C%d, ", MN1->id(), MC2->id());
   MC2n = NULL;
 
   //Make Evec_N_C to be from MN1 to MC2 (at closest_V)
   // and Evec_C_N to be from MC2 (at closest_V) to MN1.
-  vcl_vector<dbmsh3d_edge*> Evec_N_C, Evec_C_N;
+  std::vector<dbmsh3d_edge*> Evec_N_C, Evec_C_N;
   Evec_N_C.insert (Evec_N_C.begin(), shortest_Evec.begin(), shortest_Evec.end());
   Evec_C_N.insert (Evec_C_N.begin(), shortest_Evec.begin(), shortest_Evec.end());
   if (shortest_Evec[0]->is_V_incident (closest_V))
-    vcl_reverse (Evec_N_C.begin(), Evec_N_C.end());
+    std::reverse (Evec_N_C.begin(), Evec_N_C.end());
   else
-    vcl_reverse (Evec_C_N.begin(), Evec_C_N.end());
+    std::reverse (Evec_C_N.begin(), Evec_C_N.end());
   assert (Evec_N_C[0]->is_V_incident(MN1->V()));
   assert (Evec_C_N[0]->is_V_incident(closest_V));
 
@@ -351,14 +351,14 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
     MSH->remove_vertex (LN);
 
     //1-2) Rotate MC2.Evec to be starting with closest_V.
-    vcl_vector<dbmsh3d_edge*>::iterator eitV = MC2->E_vec().begin();
+    std::vector<dbmsh3d_edge*>::iterator eitV = MC2->E_vec().begin();
     for (; eitV != MC2->E_vec().end(); eitV++) {
       if ((*eitV)->is_V_incident (closest_V))
         break;
     }
     eitV++;
     //Move MC2.Evec[0 to eitV] to a temp, and move to the right place.
-    vcl_vector<dbmsh3d_edge*> tmp; 
+    std::vector<dbmsh3d_edge*> tmp; 
     tmp.insert (tmp.begin(), MC2->E_vec().begin(), eitV);
     MC2->E_vec().erase (MC2->E_vec().begin(), eitV);
     MC2->E_vec().insert (MC2->E_vec().end(), tmp.begin(), tmp.end());
@@ -379,7 +379,7 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
     //2-2) Break MC2 into two: make MC2 (MC2.s, MN1) and create MC2n (MN1, MC2.e).
     dbsk3d_ms_curve* MC2n = (dbsk3d_ms_curve*) MSH->_new_edge (MN1, MC2->e_MN());
     MSH->_add_edge (MC2n);
-    vul_printf (vcl_cout, "create C%d (out of C%d), ", MC2n->id(), MC2->id());
+    vul_printf (std::cout, "create C%d (out of C%d), ", MC2n->id(), MC2->id());
     MC2n->set_c_type (MC2->c_type());
     if (MC2->is_self_loop() == false)
       MC2->e_MN()->del_incident_E (MC2);
@@ -420,7 +420,7 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
       //2-3b) MC2 is an icurve-pair curve with halfedge HE2.
       assert (r == 2);
       //Loop through MC2's each halfedge in the pair loop.
-      vcl_vector<dbmsh3d_halfedge*> baseMS_IC_pair_vec;
+      std::vector<dbmsh3d_halfedge*> baseMS_IC_pair_vec;
       HE2 = MC2->halfedge();
       do {
         //Clone the halfedges of MC2 to MC2n and link each as a separate i-curve.
@@ -461,7 +461,7 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
     }    
 
     //2-4) Move MC2's Evec[] from closest_V to end to MC2n.
-    vcl_vector<dbmsh3d_edge*>::iterator eitV = MC2->E_vec().begin();
+    std::vector<dbmsh3d_edge*>::iterator eitV = MC2->E_vec().begin();
     for (; eitV != MC2->E_vec().end(); eitV++) {
       if ((*eitV)->is_V_incident (closest_V))
         break;
@@ -469,11 +469,11 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
     eitV++;
     
     //2-5) Also move relevant shareE from MC2 to MC2n.
-    vcl_set<void*> shared_Es;
+    std::set<void*> shared_Es;
     MC2->get_shared_Es (shared_Es);
 
     //Move MC2.Evec[i to end] to MC2n.
-    vcl_vector<dbmsh3d_edge*>::iterator eit = eitV;
+    std::vector<dbmsh3d_edge*>::iterator eit = eitV;
     for (; eit != MC2->E_vec().end(); eit++) {
       dbmsh3d_edge* E = (*eit);
       MC2n->add_E_to_back (E);
@@ -494,12 +494,12 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
 //: The curve-curve merging operation
 void MC_MC_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_curve* MC1, dbsk3d_ms_curve* MC2, 
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec,
                   const dbmsh3d_vertex* V1c, const dbmsh3d_vertex* V2c,
                   dbsk3d_ms_curve*& MC1n, dbsk3d_ms_curve*& MC2n,
                   dbsk3d_ms_node*& MNn)
 {
-  vul_printf (vcl_cout, "merge C%d to C%d, ", MC1->id(), MC2->id());
+  vul_printf (std::cout, "merge C%d to C%d, ", MC1->id(), MC2->id());
 
   //Create a new ms_node for MNn.
   MNn = (dbsk3d_ms_node*) MSH->_new_vertex ();
@@ -514,13 +514,13 @@ void MC_MC_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
 
   //Make Evec_C1_C2 to be from MC1 (at V1c) to MC2 (at V2c)
   // and Evec_C2_C1 to be from MC2 (at V2c) to MC1 (at V1c).
-  vcl_vector<dbmsh3d_edge*> Evec_C1_C2, Evec_C2_C1;
+  std::vector<dbmsh3d_edge*> Evec_C1_C2, Evec_C2_C1;
   Evec_C1_C2.insert (Evec_C1_C2.begin(), shortest_Evec.begin(), shortest_Evec.end());
   Evec_C2_C1.insert (Evec_C2_C1.begin(), shortest_Evec.begin(), shortest_Evec.end());
   if (shortest_Evec[0]->is_V_incident (V2c))
-    vcl_reverse (Evec_C1_C2.begin(), Evec_C1_C2.end());
+    std::reverse (Evec_C1_C2.begin(), Evec_C1_C2.end());
   else
-    vcl_reverse (Evec_C2_C1.begin(), Evec_C2_C1.end());
+    std::reverse (Evec_C2_C1.begin(), Evec_C2_C1.end());
   assert (Evec_C1_C2[0]->is_V_incident(V1c));
   assert (Evec_C2_C1[0]->is_V_incident(V2c));
 
@@ -545,12 +545,12 @@ dbsk3d_ms_sheet* MC_MC_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
                                         dbsk3d_ms_curve* MC1, dbsk3d_ms_curve* MC1n, 
                                         dbsk3d_ms_curve* MC2, dbsk3d_ms_curve* MC2n)
 {
-  vul_printf (vcl_cout, "divide S%d at N%d, ", MS->id(), MNn->id());
+  vul_printf (std::cout, "divide S%d at N%d, ", MS->id(), MNn->id());
 
   //Create a new ms_sheet MSn.
   dbsk3d_ms_sheet* MSn = (dbsk3d_ms_sheet*) MSH->_new_sheet ();
   MSH->_add_sheet (MSn);
-  vul_printf (vcl_cout, "create S%d, ", MSn->id());
+  vul_printf (std::cout, "create S%d, ", MSn->id());
 
   //Reset MS.halfedge to point to MC1.
   bool r = MS->_set_headHE_to_E (MC1);
@@ -599,7 +599,7 @@ dbsk3d_ms_sheet* MC_MC_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
   assert (MSn->facemap().size() > 0);
 
   //Remove all fs_faces of MSn from MS.
-  vcl_map<int, dbmsh3d_face*>::iterator it = MSn->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = MSn->facemap().begin();
   while (it != MSn->facemap().end()) {
     dbmsh3d_face* F = (*it).second;
     it++;
@@ -624,13 +624,13 @@ dbsk3d_ms_sheet* MN_MC_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
   dbmsh3d_face* seedF = MS->get_1st_F_incident_E (E);
 
   MS->reset_traverse_F ();
-  vcl_set<dbmsh3d_face*> Fset;
+  std::set<dbmsh3d_face*> Fset;
   _prop_label_Fs_e_conn (seedF, Fset);
   
   //Put all MS.faces not in Fset to Fset2.
-  vcl_set<dbmsh3d_face*> Fset2;
+  std::set<dbmsh3d_face*> Fset2;
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = MS->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = MS->facemap().begin();
   for (; fit != MS->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     if (Fset.find (F) == Fset.end())
@@ -641,20 +641,20 @@ dbsk3d_ms_sheet* MN_MC_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
     return NULL; //No division of MS is required.
 
   if (MCn == NULL) {
-    vul_printf (vcl_cout, " ERROR: MCn NULL but MS has 2 components!!\n");
+    vul_printf (std::cout, " ERROR: MCn NULL but MS has 2 components!!\n");
     return NULL;
   }
   
   ///////////////////////////////////////////////////////////////////
-  vul_printf (vcl_cout, "divide S%d at N%d C%d, ", MS->id(), MN->id(), tabMC->id());
+  vul_printf (std::cout, "divide S%d at N%d C%d, ", MS->id(), MN->id(), tabMC->id());
 
   //Create a new ms_sheet MSn.
   dbsk3d_ms_sheet* MSn = (dbsk3d_ms_sheet*) MSH->_new_sheet ();
   MSH->_add_sheet (MSn);
-  vul_printf (vcl_cout, "create S%d, ", MSn->id());
+  vul_printf (std::cout, "create S%d, ", MSn->id());
 
   //Put Fset2 to MSn and delete from MS.
-  vcl_set<dbmsh3d_face*>::iterator it = Fset2.begin();
+  std::set<dbmsh3d_face*>::iterator it = Fset2.begin();
   for (; it != Fset2.end(); it++) {
     dbmsh3d_face* F = (*it);
     MSn->add_F (F);
@@ -706,14 +706,14 @@ void update_bnd_HE_MS_MSn_icurve (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
                                   dbsk3d_ms_curve* MC, dbsk3d_ms_curve* MCn)
 {  
   //Determine the vector of icurve_otherN_N[].
-  vcl_vector<dbmsh3d_edge*> icurve_otherN_N;
+  std::vector<dbmsh3d_edge*> icurve_otherN_N;
   dbmsh3d_vertex* otherN;
   dbmsh3d_vertex* bndN;  
   get_S_icurve_vec_otherN (MS, MN, tabMC, icurve_otherN_N, otherN);
 
   //Determine the vector IC_pairs_bndN_N[][] in the general case.
-  vcl_vector<vcl_vector<dbmsh3d_edge*> > IC_pairs_bndN_N;
-  vcl_vector<dbmsh3d_edge*> IC_loop_E_heads;
+  std::vector<std::vector<dbmsh3d_edge*> > IC_pairs_bndN_N;
+  std::vector<dbmsh3d_edge*> IC_loop_E_heads;
   bool r = get_S_icurve_vec_bndN (MS, MN, tabMC, IC_pairs_bndN_N, IC_loop_E_heads, bndN);
   assert (r);
   
@@ -725,7 +725,7 @@ void update_bnd_HE_MS_MSn_icurve (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 }
 
 void update_HE_single_IC_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
-                                vcl_vector<dbmsh3d_edge*>& icurve_N_otherN,
+                                std::vector<dbmsh3d_edge*>& icurve_N_otherN,
                                 dbmsh3d_vertex* otherN)
 {
   //Determine the MCo1 and MCo2 incident to otherN.
@@ -735,17 +735,17 @@ void update_HE_single_IC_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
   assert (HEo->edge()->is_V_incident (otherN));
 
   //reverse icurve_vec[].
-  vcl_reverse (icurve_N_otherN.begin(), icurve_N_otherN.end());
+  std::reverse (icurve_N_otherN.begin(), icurve_N_otherN.end());
 
   //Prepare the vectors of halfedges MS_HEs[] and MSn_HEs[].
-  vcl_vector<dbmsh3d_halfedge*> MS_HEs, MSn_HEs;
+  std::vector<dbmsh3d_halfedge*> MS_HEs, MSn_HEs;
   for (unsigned int i=0; i<icurve_N_otherN.size(); i++) {
     dbmsh3d_edge* C = icurve_N_otherN[i];
     //Get the icurve C's 2 HE's incident to MS.
-    vcl_set<dbmsh3d_halfedge*> HEset;
+    std::set<dbmsh3d_halfedge*> HEset;
     C->get_HEset_of_F (MS, HEset);
     assert (HEset.size() == 2);
-    vcl_set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
+    std::set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
     dbmsh3d_halfedge* HE1 = (*it);
     it++;
     dbmsh3d_halfedge* HE2 = (*it);
@@ -783,8 +783,8 @@ void update_HE_single_IC_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 }
 
 void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
-                        vcl_vector<vcl_vector<dbmsh3d_edge*> >& IC_pairs_bndN_N,
-                        vcl_vector<dbmsh3d_edge*>& IC_loop_E_heads,
+                        std::vector<std::vector<dbmsh3d_edge*> >& IC_pairs_bndN_N,
+                        std::vector<dbmsh3d_edge*>& IC_loop_E_heads,
                         dbmsh3d_vertex* bndN, dbmsh3d_vertex* endN)
 {
   //Determine the MCo1 and MCo2 incident to otherN.
@@ -795,7 +795,7 @@ void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 
   //Prepare the the vectors of halfedges MS_HEs[] and MSn_HEs[].
   //These are chains of halfedges from bndN to N.
-  vcl_vector<dbmsh3d_halfedge*> MS_HEs, MSn_HEs;
+  std::vector<dbmsh3d_halfedge*> MS_HEs, MSn_HEs;
   
   //The Ne starts at the bndN.
   dbmsh3d_vertex* Ne = bndN;
@@ -819,10 +819,10 @@ void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
     Ne = C0->other_V (Ne);
 
     //Determine the halfedge of lsHE of IC_loop_E_heads[i].
-    vcl_set<dbmsh3d_halfedge*> HEset;
+    std::set<dbmsh3d_halfedge*> HEset;
     IC_loop_E_heads[0]->get_HEset_of_F (MS, HEset);
     assert (HEset.size() == 1);
-    vcl_set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
+    std::set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
     dbmsh3d_halfedge* lsHE = (*it);
     
     //Connect each IC_loop_E_heads[i] to MS_HEs[] and MSn_HEs[].    
@@ -841,10 +841,10 @@ void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
       dbmsh3d_edge* C = IC_pairs_bndN_N[i][j];
       Ne = C->other_V (Ne);
       //Get the icurve C's 2 HE's incident to MS.
-      vcl_set<dbmsh3d_halfedge*> HEset;
+      std::set<dbmsh3d_halfedge*> HEset;
       C->get_HEset_of_F (MS, HEset);
       assert (HEset.size() == 2);
-      vcl_set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
+      std::set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
       dbmsh3d_halfedge* HE1 = (*it);
       it++;
       dbmsh3d_halfedge* HE2 = (*it);
@@ -879,10 +879,10 @@ void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
     Ne = C0->other_V (Ne);
 
     //Determine the halfedge of lsHE of IC_loop_E_heads[i].
-    vcl_set<dbmsh3d_halfedge*> HEset;
+    std::set<dbmsh3d_halfedge*> HEset;
     IC_loop_E_heads[i]->get_HEset_of_F (MS, HEset);
     assert (HEset.size() == 1);
-    vcl_set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
+    std::set<dbmsh3d_halfedge*>::iterator it = HEset.begin();
     dbmsh3d_halfedge* lsHE = (*it);
     
     //Connect each IC_loop_E_heads[i] to MS_HEs[] and MSn_HEs[].    
@@ -915,12 +915,12 @@ void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 void connect_breaking_HE_loop (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
                                dbmsh3d_halfedge* loop_HE_start, 
                                dbmsh3d_vertex* Ns, dbmsh3d_vertex* Ne,
-                               vcl_vector<dbmsh3d_halfedge*>& MS_HEs, 
-                               vcl_vector<dbmsh3d_halfedge*>& MSn_HEs)
+                               std::vector<dbmsh3d_halfedge*>& MS_HEs, 
+                               std::vector<dbmsh3d_halfedge*>& MSn_HEs)
 {
   //Create a vector of halfedges of this loop and setup their face pointer.
   bool loop_head_removed_from_MS = false;
-  vcl_vector<dbmsh3d_halfedge*> HEvec;
+  std::vector<dbmsh3d_halfedge*> HEvec;
 
   dbmsh3d_halfedge* HE = loop_HE_start;
   do {
@@ -1059,23 +1059,23 @@ void update_bnd_HE_MS_MSn_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 }
 
 bool merge_test_divide_MS (dbsk3d_ms_sheet* baseMS,
-                           const vcl_vector<dbmsh3d_edge*>& shortest_Evec)
+                           const std::vector<dbmsh3d_edge*>& shortest_Evec)
 {
 
-  vcl_set<dbmsh3d_edge*> avoid_Eset;
+  std::set<dbmsh3d_edge*> avoid_Eset;
   for (unsigned int i=0; i<shortest_Evec.size(); i++) {
     dbmsh3d_edge* E = shortest_Evec[i];
     avoid_Eset.insert (E);
   }
 
-  vcl_set<dbmsh3d_face*> conn_Fset;
+  std::set<dbmsh3d_face*> conn_Fset;
 
   //Reset visit flag of each F.
   baseMS->reset_traverse_F ();
 
   dbmsh3d_face* seedF = baseMS->get_1st_non_shared_F ();
 
-  vcl_queue<dbmsh3d_face*> frontF_queue;
+  std::queue<dbmsh3d_face*> frontF_queue;
   frontF_queue.push (seedF);
 
   while (frontF_queue.size() > 0) {
@@ -1136,13 +1136,13 @@ dbsk3d_ms_sheet* MN_MN_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
   dbmsh3d_face* seedF = MS->get_1st_F_incident_E (E);
 
   MS->reset_traverse_F ();
-  vcl_set<dbmsh3d_face*> Fset;
+  std::set<dbmsh3d_face*> Fset;
   _prop_label_Fs_e_conn (seedF, Fset);
   
   //Put all MS.faces not in Fset to Fset2.
-  vcl_set<dbmsh3d_face*> Fset2;
+  std::set<dbmsh3d_face*> Fset2;
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = MS->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = MS->facemap().begin();
   for (; fit != MS->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     if (Fset.find (F) == Fset.end())
@@ -1153,15 +1153,15 @@ dbsk3d_ms_sheet* MN_MN_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
     return NULL; //No division of MS is required.
 
   ///////////////////////////////////////////////////////////////////
-  vul_printf (vcl_cout, "divide S%d at N%d and N%d, ", MS->id(), MN1->id(), MN2->id());
+  vul_printf (std::cout, "divide S%d at N%d and N%d, ", MS->id(), MN1->id(), MN2->id());
 
   //Create a new ms_sheet MSn.
   dbsk3d_ms_sheet* MSn = (dbsk3d_ms_sheet*) MSH->_new_sheet ();
   MSH->_add_sheet (MSn);
-  vul_printf (vcl_cout, "create S%d, ", MSn->id());
+  vul_printf (std::cout, "create S%d, ", MSn->id());
 
   //Put Fset2 to MSn and delete from MS.
-  vcl_set<dbmsh3d_face*>::iterator it = Fset2.begin();
+  std::set<dbmsh3d_face*>::iterator it = Fset2.begin();
   for (; it != Fset2.end(); it++) {
     dbmsh3d_face* F = (*it);
     MSn->add_F (F);
@@ -1177,7 +1177,7 @@ dbsk3d_ms_sheet* MN_MN_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
   //Update the halfedges of MS and MSn. Two cases.
   //1) tabMC is an i-curve of MS.
   //2) tabMC is a 3-incidence swallow-tail curve of MS.
-  vul_printf (vcl_cout, "\n\nSplitting baseMS in node-node is NOT implemented!\n\n");
+  vul_printf (std::cout, "\n\nSplitting baseMS in node-node is NOT implemented!\n\n");
   assert (0);
   
   //Reset MS.halfedge to pointing to MC.
@@ -1210,8 +1210,8 @@ dbsk3d_ms_sheet* MN_MN_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS
 //: Move i-curves (pairs and loops) not belonging to MS to MSn.
 void split_S_move_icurves (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn)
 {
-  vcl_set<dbmsh3d_halfedge*> icurve_head_to_move;
-  vcl_set<dbmsh3d_halfedge*> IC_pair_to_split;
+  std::set<dbmsh3d_halfedge*> icurve_head_to_move;
+  std::set<dbmsh3d_halfedge*> IC_pair_to_split;
 
   for (dbmsh3d_ptr_node* cur = MS->icurve_chain_list(); cur != NULL; cur = cur->next()) {
     dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
@@ -1240,7 +1240,7 @@ void split_S_move_icurves (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn)
   }
 
   //Move icurve in the icurve_head_to_move set to MSn.
-  vcl_set<dbmsh3d_halfedge*>::iterator it = icurve_head_to_move.begin();
+  std::set<dbmsh3d_halfedge*>::iterator it = icurve_head_to_move.begin();
   for (; it != icurve_head_to_move.end(); it++) {
     dbmsh3d_halfedge* headHE = (*it);
     MS->del_icurve_chain_HE (headHE);
@@ -1252,8 +1252,8 @@ void split_S_move_icurves (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn)
   while (IC_pair_to_split.empty() == false) {
     //Determine a valid chain to dispatch and the other curve-chain with (sV, eV).
     dbmsh3d_vertex *C_sV, *C_eV;
-    vcl_vector<dbmsh3d_halfedge*> C_HEvec;
-    vcl_vector<dbmsh3d_halfedge*> Co_HEvec;
+    std::vector<dbmsh3d_halfedge*> C_HEvec;
+    std::vector<dbmsh3d_halfedge*> Co_HEvec;
     get_dispatch_bnd_chain (MS, MSn, IC_pair_to_split, C_HEvec, Co_HEvec, C_sV, C_eV);
 
     dbmsh3d_halfedge* otherC_HE_next = Co_HEvec[0]->next();
@@ -1304,13 +1304,13 @@ void check_split_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, dbmsh3d_halfed
   assert (E);
 
   //Check if the three incident faces of E are all in MS or not.
-  vcl_vector<dbmsh3d_face*> incident_Fs;
+  std::vector<dbmsh3d_face*> incident_Fs;
   E->get_incident_Fs (incident_Fs);
 
   /*if (incident_Fs.size() != 3) {
     //In the dege case, there should be only 3 HE1's incident to MS.
     //Remove non-MS halfedges.
-    vcl_vector<dbmsh3d_face*>::iterator it = incident_Fs.begin();
+    std::vector<dbmsh3d_face*>::iterator it = incident_Fs.begin();
     while (it != incident_Fs.end()) {
       dbmsh3d_face* F = (*it);
       if (F != MS) { //delete it.
@@ -1319,7 +1319,7 @@ void check_split_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, dbmsh3d_halfed
           it = incident_Fs.begin();
         }
         else {
-          vcl_vector<dbmsh3d_face*>::iterator tmp = it;
+          std::vector<dbmsh3d_face*>::iterator tmp = it;
           tmp--;
           incident_Fs.erase (it);
           tmp++;
@@ -1334,7 +1334,7 @@ void check_split_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, dbmsh3d_halfed
   //In the dege case, there should be only 3 HE's incident to MS.
   // (or in the fine-scale, 3 HE's incident to E).
   //Remove non-MS halfedges.
-  vcl_vector<bool> FMS;
+  std::vector<bool> FMS;
   for (unsigned int i=0; i<incident_Fs.size(); i++) {
     dbmsh3d_face* F = incident_Fs[i];
     bool b = MS->contain_F (F->id());
@@ -1380,14 +1380,14 @@ void check_split_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, dbmsh3d_halfed
 
 //: Given a set of icurve-pairs to split, determine the chunk of chains from the topology of MS.
 void get_dispatch_bnd_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
-                             vcl_set<dbmsh3d_halfedge*>& IC_pair_to_split, 
-                             vcl_vector<dbmsh3d_halfedge*>& C_HEvec, 
-                             vcl_vector<dbmsh3d_halfedge*>& Co_HEvec, 
+                             std::set<dbmsh3d_halfedge*>& IC_pair_to_split, 
+                             std::vector<dbmsh3d_halfedge*>& C_HEvec, 
+                             std::vector<dbmsh3d_halfedge*>& Co_HEvec, 
                              dbmsh3d_vertex*& C_sV, dbmsh3d_vertex*& C_eV)
 {
   //For now only detect chunk of a single HE.
   //Chunk of multiple HE's should be able to handle in multiple iterations!
-  vcl_set<dbmsh3d_halfedge*>::iterator it = IC_pair_to_split.begin();
+  std::set<dbmsh3d_halfedge*>::iterator it = IC_pair_to_split.begin();
   dbmsh3d_halfedge* HE1 = (*it);
   assert (is_icurve_pair_HE (HE1));
   C_HEvec.push_back (HE1);
@@ -1413,8 +1413,8 @@ void get_dispatch_bnd_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
 }
 
 void update_bnd_chain (dbsk3d_ms_sheet* MS, 
-                       vcl_vector<dbmsh3d_halfedge*>& C_HEvec, 
-                       vcl_vector<dbmsh3d_halfedge*>& Co_HEvec,
+                       std::vector<dbmsh3d_halfedge*>& C_HEvec, 
+                       std::vector<dbmsh3d_halfedge*>& Co_HEvec,
                        dbmsh3d_halfedge* otherC_HE_next)
 {
   //Test if Co_HEvec belongs to MS.

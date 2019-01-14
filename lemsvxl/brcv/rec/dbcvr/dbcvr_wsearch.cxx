@@ -13,10 +13,10 @@
 //#pragma hdrstop
 
 #include "dbcvr_wsearch.h"
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vcl_cstring.h>
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <cstring>
  
 bool DPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, int sy2);
 bool RPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, int sy2);
@@ -146,7 +146,7 @@ bool DPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, int
    d = (unsigned char*) sim->imagedata;
    for (y=sy1; y<=sy2; y++) {
       s = B_PIX_REF(image, sx1, y);
-      vcl_memcpy (d, s, sw);
+      std::memcpy (d, s, sw);
       d += sw;
    }
 
@@ -165,7 +165,7 @@ bool DPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, int
       }
    }
    catch ( ... ) {
-      vcl_cout << "Memory not enough !"; exit(1);
+      std::cout << "Memory not enough !"; exit(1);
    }
    //First row and column set to zero...
    for (y=0; y<sh+1; y++) {
@@ -406,7 +406,7 @@ void CFSelSort (double minCF, int fN, int wcf, int hcf)
    //   CFmax = new CFstr[fN];
    //}
    //catch ( ... ){
-   //   //closegraph (); vcl_cout << "Memory not enough !"; exit(1);
+   //   //closegraph (); std::cout << "Memory not enough !"; exit(1);
    //}
    //
    // 2) selection sort, change swap to fill 0 in CF[][]
@@ -591,7 +591,7 @@ bool RPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, i
    d = (unsigned char*) subsim[0]->imagedata;
    for (y=sy1; y<=sy2; y++) {
       s = B_PIX_REF(image, sx1, y);
-      vcl_memcpy (d, s, sw);
+      std::memcpy (d, s, sw);
       d += sw;
    }
    //putimage (bx, by, subsim[0]->image, COPY_PUT);
@@ -626,7 +626,7 @@ bool RPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, i
       }
    }
    catch ( ... ) {
-      vcl_cout << "Memory not enough !"; exit(1);
+      std::cout << "Memory not enough !"; exit(1);
    }
    //First row and column set to zero...
    for (y=0; y<dpheight; y++) {
@@ -1085,7 +1085,7 @@ bool SRPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, 
   d = (unsigned char*) subsim[BASE]->imagedata;
   for (y=sy1; y<=sy2; y++) {
     s = B_PIX_REF(image, sx1, y);
-    vcl_memcpy (d, s, sw);
+    std::memcpy (d, s, sw);
     d += sw;
   }
   
@@ -1110,8 +1110,8 @@ bool SRPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, 
   //   dpwidth  = max(sw, (pw*2^BASE)+3),
   //   dpheight = max(sh, (ph*2^BASE)+3)
   //DPsim[y+1][x+1], DPSsim[y+1][x+1], CF[y+1][x+1]
-  dpwidth  = MAX(sw, (int)((pw*vcl_pow(2.0f,float(BASE)))+3.0f))+1;
-  dpheight = MAX(sh, (int)((ph*vcl_pow(2.0f,float(BASE)))+3.0f))+1;
+  dpwidth  = MAX(sw, (int)((pw*std::pow(2.0f,float(BASE)))+3.0f))+1;
+  dpheight = MAX(sh, (int)((ph*std::pow(2.0f,float(BASE)))+3.0f))+1;
 
   //showMsg (RED, "dpw=%d, dph=%d", dpwidth, dpheight); getch();
   //replace sh+1 with dpwidth
@@ -1127,7 +1127,7 @@ bool SRPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, 
     }
   }
   catch ( ... ) {
-    //closegraph (); vcl_cout << "Memory not enough !"; exit(1);
+    //closegraph (); std::cout << "Memory not enough !"; exit(1);
   }
   //First row and column set to zero...
   for (y=0; y<dpheight; y++) {
@@ -1297,8 +1297,8 @@ bool SRPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, 
       matchY = MAX(0,submtY); //submtY  avoid (0,0) (-1,-1) bug
       matchCF=submtCF;
 
-      smatchX = ((double)matchX)/vcl_pow(2.0f,float(BASE)); //subpixel
-      smatchY = ((double)matchY)/vcl_pow(2.0f,float(BASE));
+      smatchX = ((double)matchX)/std::pow(2.0f,float(BASE)); //subpixel
+      smatchY = ((double)matchY)/std::pow(2.0f,float(BASE));
 
       matchX = matchX >> BASE;
       matchY = matchY >> BASE;
@@ -1386,9 +1386,9 @@ bool SRPDPNCS (dbcvr_image* pim, dbcvr_image* image, int sx1, int sy1, int sx2, 
         CFmax[j].y   = MAX(0,submtY);
         CFmax[j].cf  = submtCF;
 
-        CFSmax[j].x  = CFmax[j].x/vcl_pow(2.0f,float(BASE));
-        CFSmax[j].y  = CFmax[j].y/vcl_pow(2.0f,float(BASE));
-        CFSmax[j].cf = CFmax[j].cf/vcl_pow(2.0f,float(BASE));
+        CFSmax[j].x  = CFmax[j].x/std::pow(2.0f,float(BASE));
+        CFSmax[j].y  = CFmax[j].y/std::pow(2.0f,float(BASE));
+        CFSmax[j].cf = CFmax[j].cf/std::pow(2.0f,float(BASE));
 
          CFmax[j].x   = CFmax[j].x >> BASE;
         CFmax[j].y   = CFmax[j].y >> BASE;
@@ -1564,7 +1564,7 @@ bool AutoModel (dbcvr_image* sim, int sx1, int sy1, int sx2, int sy2,
    d = (unsigned char*) subsim[0]->imagedata;
    for (y=sy1; y<=sy2; y++) {
       s = B_PIX_REF(sim, sx1, y);
-      vcl_memcpy(d, s, sw);
+      std::memcpy(d, s, sw);
       d += sw;
    }
    

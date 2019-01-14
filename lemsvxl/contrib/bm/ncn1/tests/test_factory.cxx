@@ -23,8 +23,8 @@ void test_find_bin()
 
 void test_factory_binary_io()
 {
-    vcl_string cwd = vul_file::get_cwd();
-    vcl_string binary_filename = cwd + "\\temporal_entropy.bin";
+    std::string cwd = vul_file::get_cwd();
+    std::string binary_filename = cwd + "\\temporal_entropy.bin";
 	vil_image_view<double> temporal_entropy;
     temporal_entropy.set_size(2,2,1);
     temporal_entropy(0,0,0) = 0.2; temporal_entropy(0,1,0) = 0.7;
@@ -64,10 +64,10 @@ void test_factory_binary_io()
 
 static void test_factory()
 {
-    vcl_cout << '\n';
-    vcl_cout << "Testing Find Bind function" << vcl_endl;
+    std::cout << '\n';
+    std::cout << "Testing Find Bind function" << std::endl;
 	test_find_bin();
-    vcl_cout << "Testing Factory binary io" << vcl_endl;
+    std::cout << "Testing Factory binary io" << std::endl;
     test_factory_binary_io();
 }
 

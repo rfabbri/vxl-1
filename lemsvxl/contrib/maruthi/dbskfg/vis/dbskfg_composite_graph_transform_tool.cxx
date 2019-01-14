@@ -104,7 +104,7 @@ set_storage ( const bpro1_storage_sptr& storage_sptr)
 
 // ----------------------------------------------------------------------------
 //: Return the name of this tool
-vcl_string dbskfg_composite_graph_transform_tool::
+std::string dbskfg_composite_graph_transform_tool::
 name() const 
 {
     return "Composite Graph Transformer";
@@ -117,7 +117,7 @@ void dbskfg_composite_graph_transform_tool::
 get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
     // Fill in later with stuff
-    vcl_string on = "[x] ", off = "[ ] ";
+    std::string on = "[x] ", off = "[ ] ";
 
     menu.add( "Training Mode",
               bvis1_tool_toggle, (void*)(&training_mode_));
@@ -162,7 +162,7 @@ handle_apply_transform()
     {
         if ( current_->type_name() == "dbskfg_soview_transform" )
         {
-            current_->print(vcl_cout);
+            current_->print(std::cout);
           
             dbskfg_soview_transform* trans = 
                 dynamic_cast<dbskfg_soview_transform*>(current_);
@@ -193,7 +193,7 @@ handle_apply_transform()
                                                     flag);
                 trans->transform()->hidden_ = true;
 
-                vcl_stringstream id;
+                std::stringstream id;
                 id<<trans->transform()->id_;
                 
                 dbskfg_composite_graph_fileio file;
@@ -215,7 +215,7 @@ handle_apply_transform()
         }
         else if ( current_->type_name() == "dbskfg_soview_rag_node" )
         {
-            current_->print(vcl_cout);
+            current_->print(std::cout);
             dbskfg_soview_rag_node* rag = dynamic_cast<dbskfg_soview_rag_node*>
             (current_);
 
@@ -229,7 +229,7 @@ handle_apply_transform()
         }
         else
         {
-            current_->print(vcl_cout);
+            current_->print(std::cout);
       }
     }
 

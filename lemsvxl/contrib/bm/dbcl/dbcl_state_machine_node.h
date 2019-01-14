@@ -19,10 +19,10 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_cassert.h>
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<cassert>
+#include<map>
+#include<set>
+#include<utility>
 
 #include<vnl/vnl_diag_matrix_fixed.h>
 
@@ -36,9 +36,9 @@ public:
     typedef unsigned node_id_type;
     typedef unsigned time_type;
     typedef unsigned frequency_type;
-    typedef vcl_map<time_type,frequency_type> time_frequency_map;
-    typedef vcl_map<node_id_type,time_frequency_map> transition_table_type;
-    typedef vcl_set<time_type> time_set_type;
+    typedef std::map<time_type,frequency_type> time_frequency_map;
+    typedef std::map<node_id_type,time_frequency_map> transition_table_type;
+    typedef std::set<time_type> time_set_type;
 
     dbcl_state_machine_node( node_id_type const& id, 
                              dbcl_state_machine_frame_clock_sptr clock_sptr,

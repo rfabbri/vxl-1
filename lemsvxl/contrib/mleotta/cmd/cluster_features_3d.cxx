@@ -19,8 +19,8 @@
 
 
 
-vul_arg<vcl_string>  a_feat_file("-feat3d", "path to 3d features", "");
-vul_arg<vcl_string>  a_out_file("-out", "path to output file (clusters indices or trace)", "");
+vul_arg<std::string>  a_feat_file("-feat3d", "path to 3d features", "");
+vul_arg<std::string>  a_out_file("-out", "path to output file (clusters indices or trace)", "");
 vul_arg<double>      a_cthresh("-thresh", "cluster similarity theshold", 0.0);
 vul_arg<unsigned>    a_dim("-dim", "feature descriptor dimension", 128);
 vul_arg<double>      a_sthresh("-sthresh", "use K-Means first and use this threshold in each group", 0.0);
@@ -37,7 +37,7 @@ bool less_num_members(const dbcll_cluster_sptr& c1,
 }
 
 template <unsigned dim>
-void cluster_with_threshold(vcl_vector<dbcll_cluster_sptr>& clusters, double thresh)
+void cluster_with_threshold(std::vector<dbcll_cluster_sptr>& clusters, double thresh)
 {
   // Cluster the features based on appearance
   dbcll_remainder_heap remain(clusters.begin(), clusters.end());
@@ -48,12 +48,12 @@ void cluster_with_threshold(vcl_vector<dbcll_cluster_sptr>& clusters, double thr
 }
 
 template <unsigned dim>
-void cluster_for_trace(vcl_vector<dbcll_cluster_sptr>& clusters)
+void cluster_for_trace(std::vector<dbcll_cluster_sptr>& clusters)
 {
   // Cluster the features based on appearance
   dbcll_remainder_heap remain(clusters.begin(), clusters.end());
 
-  vcl_vector<dbcll_trace_pt> trace;
+  std::vector<dbcll_trace_pt> trace;
   dbcll_rnn_agg_clustering(remain, trace);
 
   // write the trace file
@@ -64,36 +64,36 @@ void cluster_for_trace(vcl_vector<dbcll_cluster_sptr>& clusters)
 template <unsigned dim>
 void cluster_features()
 {
-  vcl_vector<modrec_desc_feature_3d<dim> > features;
+  std::vector<modrec_desc_feature_3d<dim> > features;
   typedef vbl_triple<unsigned,unsigned,unsigned> utriple;
-  vcl_vector<utriple> idx_array;
+  std::vector<utriple> idx_array;
   read_features(a_feat_file(), features, idx_array);
 
-  vcl_cout << "read " << features.size() << vcl_endl;
+  std::cout << "read " << features.size() << std::endl;
 
-  vcl_vector<dbcll_cluster_sptr> clusters;
+  std::vector<dbcll_cluster_sptr> clusters;
   for(unsigned i=0; i<features.size(); ++i)
     clusters.push_back(new dbcll_euclidean_cluster<dim>(features[i].descriptor(),i));
 
   // do k-means first
   if(a_sthresh.set()){
-    vcl_vector<vnl_vector_fixed<double,dim> > points;
+    std::vector<vnl_vector_fixed<double,dim> > points;
     for(unsigned i=0; i<features.size(); ++i)
       points.push_back(features[i].descriptor());
 
     unsigned k = points.size()/20000 + 1;
-    vcl_cout << "init k-means with k = " << k << vcl_endl;
-    vcl_vector<vnl_vector_fixed<double,dim> > means = dbcll_init_k_means_d2(points,k);
+    std::cout << "init k-means with k = " << k << std::endl;
+    std::vector<vnl_vector_fixed<double,dim> > means = dbcll_init_k_means_d2(points,k);
 
-    vcl_cout << "starting k-means" << vcl_endl;
-    vcl_vector<vcl_vector<unsigned> > groups;
+    std::cout << "starting k-means" << std::endl;
+    std::vector<std::vector<unsigned> > groups;
     unsigned n = dbcll_fast_k_means(points, groups, means, 25);
 
-    vcl_cout << "finished k-means" << vcl_endl;
+    std::cout << "finished k-means" << std::endl;
 
-    vcl_vector<dbcll_cluster_sptr> sub_clusters, new_clusters;
+    std::vector<dbcll_cluster_sptr> sub_clusters, new_clusters;
     for(unsigned i=0; i<groups.size(); ++i){
-      vcl_cout << "clustering group "<< i << vcl_endl;
+      std::cout << "clustering group "<< i << std::endl;
       sub_clusters.clear();
       for(unsigned j=0; j<groups[i].size(); ++j)
         sub_clusters.push_back(clusters[groups[i][j]]);
@@ -103,12 +103,12 @@ void cluster_features()
                           sub_clusters.begin(), sub_clusters.end());
     }
     clusters.swap(new_clusters);
-    vcl_cout << "clustering sub groups done" << vcl_endl;
+    std::cout << "clustering sub groups done" << std::endl;
   }
 
   if(a_cthresh.set()){
     cluster_with_threshold<dim>(clusters,a_cthresh());
-    vcl_sort(clusters.begin(), clusters.end(), less_num_members);
+    std::sort(clusters.begin(), clusters.end(), less_num_members);
 
     // write the cluster file
     write_clusters(a_out_file(),clusters);
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
     cluster_features<128>();
     break;
   default:
-      vcl_cerr << "features with dimension "<<a_dim()<<" not supported" << vcl_endl;
+      std::cerr << "features with dimension "<<a_dim()<<" not supported" << std::endl;
   }
 
   return 0;

@@ -6,14 +6,14 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_cylinder_map.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
+#include <cstdlib>
+#include <ctime>
 
 static void test_det_cylinder_map()
 {
-  vcl_cout << "---test set and read cylinder map---" << vcl_endl;
+  std::cout << "---test set and read cylinder map---" << std::endl;
 
   det_cylinder_map cm(5, 5, 5);
 

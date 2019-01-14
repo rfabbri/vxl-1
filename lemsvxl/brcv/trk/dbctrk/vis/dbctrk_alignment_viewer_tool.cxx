@@ -10,7 +10,7 @@
 #include <vdgl/vdgl_digital_curve.h>
 #include <vgui/vgui.h>
 #include <dbctrk/dbctrk_curve_clustering.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbctrk/dbctrk_utils.h> 
 #include <dbctrk/dbctrk_curveMatch.h> 
 #include <vgui/vgui_viewer2D_tableau.h>
@@ -82,13 +82,13 @@ dbctrk_alignment_viewer_tool::handle( const vgui_event & e,
 
     //: tool to plot a intensity profile of matched curves using matlab
     if (e.type == vgui_KEY_PRESS && e.key == 's' ) {
-        vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq;//=bvis1_manager::instance()->tableau_sequence();
-        vcl_map<vcl_string, vgui_tableau_sptr>::iterator iter;
-        vcl_vector<vgui_soview*>  all_objects;
-        vcl_vector<vgui_soview*>  selected_objects;
+        std::vector< std::map<std::string, vgui_tableau_sptr> > seq;//=bvis1_manager::instance()->tableau_sequence();
+        std::map<std::string, vgui_tableau_sptr>::iterator iter;
+        std::vector<vgui_soview*>  all_objects;
+        std::vector<vgui_soview*>  selected_objects;
 #if 0
         //this variable is not used in the code.  PLEASE FIX!  -MM
-        vcl_map<int,vcl_vector<dbctrk_soview2D* > >::iterator curveiter;
+        std::map<int,std::vector<dbctrk_soview2D* > >::iterator curveiter;
 #endif
         curr_tableau_=tableau_;
         //: getting the curves selected across all the tableau's
@@ -158,7 +158,7 @@ dbctrk_alignment_viewer_tool::handle( const vgui_event & e,
 
             vdgl_digital_curve_sptr dc1=dbctrk_algs::create_digital_curves(c1->desc->curve_);
             vdgl_digital_curve_sptr dc2=dbctrk_algs::create_digital_curves(c2->desc->curve_);
-            vcl_vector<vsol_point_2d_sptr> samples;
+            std::vector<vsol_point_2d_sptr> samples;
             for(int i=0;i<c2->desc->curve_->numPoints();i++)
             {
                 samples.push_back(new vsol_point_2d(c2->desc->curve_->x(i)+40,
@@ -175,15 +175,15 @@ dbctrk_alignment_viewer_tool::handle( const vgui_event & e,
 
             bvsolalignment->add_object(pcurve1.sptr()->cast_to_spatial_object());
             bvsolalignment->add_object(pcurve2.sptr()->cast_to_spatial_object());
-            vcl_map<int,int>::iterator iter;
-            vcl_vector<vsol_spatial_object_2d_sptr > lines;
-            vcl_vector<vsol_spatial_object_2d_sptr > Spoints;
+            std::map<int,int>::iterator iter;
+            std::vector<vsol_spatial_object_2d_sptr > lines;
+            std::vector<vsol_spatial_object_2d_sptr > Spoints;
             int cnt=0;
             for(iter=mapping.begin();iter!=mapping.end();iter++)
             {
                 vsol_point_2d_sptr p1=new vsol_point_2d(c1->desc->curve_->point((*iter).first));
                 vsol_point_2d_sptr p2=new vsol_point_2d(c2->desc->curve_->point((*iter).second));
-                vcl_cout<<(*p1)<<"\t"<<(*p2);
+                std::cout<<(*p1)<<"\t"<<(*p2);
 
                 vsol_point_2d_sptr p2_offsetted=new vsol_point_2d(p2->x()+40,p2->y()+40);
                 if(cnt==0)
@@ -237,7 +237,7 @@ dbctrk_alignment_viewer_tool::quit()
         vgui::quit();
 }
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_alignment_viewer_tool::name() const
 {
 

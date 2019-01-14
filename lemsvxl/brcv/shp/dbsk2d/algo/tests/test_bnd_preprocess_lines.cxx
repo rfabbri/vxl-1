@@ -6,7 +6,7 @@
 
 #include <testlib/testlib_test.h>
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vsol/vsol_polygon_2d.h>
 
 #include <dbsk2d/algo/dbsk2d_bnd_preprocess.h>
@@ -14,21 +14,21 @@
 
 void test_intersect_bnd_lines_1_pair()
 {
-  vcl_cout << "In test_intersect_bnd_lines_1_pair()" << vcl_endl;
+  std::cout << "In test_intersect_bnd_lines_1_pair()" << std::endl;
   // Test 1 - intersect two lines
   // coordinates of points
   double x[] = { 0 , 2, 1, 1};
   double y[] = { 0 , 1, 0, 3};
 
   // list of points
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   for (unsigned int i=0; i<4; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // list of vertices
-  vcl_vector<dbsk2d_bnd_vertex_sptr >vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr >vertices;
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(pts[i]));
@@ -37,7 +37,7 @@ void test_intersect_bnd_lines_1_pair()
   
 
   // list of line edges
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
   bnd_lines.push_back(
     dbsk2d_bnd_utils::new_line_between(vertices[0], vertices[1]));
   bnd_lines.push_back(
@@ -45,11 +45,11 @@ void test_intersect_bnd_lines_1_pair()
 
 
   //// print out lines coordinate before intersecting
-  //vcl_cout << "\nLines before intersecting = \n";
+  //std::cout << "\nLines before intersecting = \n";
   //for (bnd_edge_list::iterator eit = bnd_lines.begin();
   //  eit != bnd_lines.end(); ++eit)
   //{
-  //  vcl_cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
+  //  std::cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
   //}
 
   // intersecting the lines
@@ -58,13 +58,13 @@ void test_intersect_bnd_lines_1_pair()
   preprocessor.intersect_bnd_lines(&tainted_lines, &bnd_lines);
 
   // print out lines coordinate before intersecting
-  //vcl_cout << "\nLines after intersecting = \n";
+  //std::cout << "\nLines after intersecting = \n";
   //for (bnd_edge_list::iterator eit = bnd_lines.begin();
   //  eit != bnd_lines.end(); ++eit)
   //{
-  //  vcl_cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
+  //  std::cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
   //}
-  //vcl_cout << vcl_endl;
+  //std::cout << std::endl;
 
   bool intersect_success = bnd_lines.size()==4;
   TEST("Intersect lines - 1 pair" , intersect_success, true);
@@ -73,29 +73,29 @@ void test_intersect_bnd_lines_1_pair()
 // intersecting 3 pairs of lines
 void test_intersect_bnd_lines_3_pairs()
 {
-  vcl_cout << "In test_intersect_bnd_lines_3_pairs()" << vcl_endl;
+  std::cout << "In test_intersect_bnd_lines_3_pairs()" << std::endl;
   // Test 1 - intersect two lines
   // coordinates of points
   double x[] = { 0 , 4, 2, 2, 4, 1};
   double y[] = { 0 , 4, 0, 4, 2, 5};
 
   // list of points
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   for (unsigned int i=0; i<6; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // list of vertices
-  vcl_vector<dbsk2d_bnd_vertex_sptr >vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr >vertices;
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(pts[i]));
   }
 
   // list of 3 line edges
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
-  vcl_list<dbsk2d_bnd_contour_sptr > bnd_contours;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_contour_sptr > bnd_contours;
   for (unsigned int i=0; i<3; ++i)
   {
     dbsk2d_bnd_edge_sptr line = 
@@ -109,16 +109,16 @@ void test_intersect_bnd_lines_3_pairs()
 
   
   // Print out contours coordinates before intersecting
-  vcl_cout << "\n\nContours after intersecting\n";
+  std::cout << "\n\nContours after intersecting\n";
   for (bnd_contour_list::iterator cit = bnd_contours.begin();
     cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
 
@@ -132,16 +132,16 @@ void test_intersect_bnd_lines_3_pairs()
   bool intersect_success = bnd_lines.size()==9;
   
   // Print out contours coordinates after intersecting
-  vcl_cout << "\n\nContours after intersecting\n";
+  std::cout << "\n\nContours after intersecting\n";
   for (bnd_contour_list::iterator cit = bnd_contours.begin();
     cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
 
@@ -158,28 +158,28 @@ void test_intersect_bnd_lines_3_pairs()
 // test merging end-vertices into lines close to it
 void test_merge_vertices_into_lines_case1()
 {
-  vcl_cout << "In test_merge_vertices_into_lines_case1()" << vcl_endl;
+  std::cout << "In test_merge_vertices_into_lines_case1()" << std::endl;
   // Test 1 - intersect two lines
   // coordinates of points
   double x[] = { -1, 0 , 4, 2,      1, 1, 1};
   double y[] = { 1, 0 , 4, 2+1e-8, 3, -1, 1-1e-8};
 
   // list of points
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   for (unsigned int i=0; i<7; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // list of vertices
-  vcl_vector<dbsk2d_bnd_vertex_sptr >vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr >vertices;
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(pts[i]));
   }
 
   // overall list of edges
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
 
   // construct contour 1: (-1,1)-->(0,0)-->(4,4)
   dbsk2d_bnd_contour_sptr contour1 = 
@@ -214,7 +214,7 @@ void test_merge_vertices_into_lines_case1()
   bnd_lines.push_back(edge3);
   contour3->add_edge(edge3);
 
-  vcl_list<dbsk2d_bnd_contour_sptr >bnd_contours;
+  std::list<dbsk2d_bnd_contour_sptr >bnd_contours;
   bnd_contours.push_back(contour1);
   bnd_contours.push_back(contour2);
   bnd_contours.push_back(contour3);
@@ -230,21 +230,21 @@ void test_merge_vertices_into_lines_case1()
   //  vit != extracted_vertices.end(); ++vit)
   //{
   //  extract_success = extract_success &&
-  //    (vcl_find(vertices.begin(), vertices.end(), *vit) != vertices.end());
+  //    (std::find(vertices.begin(), vertices.end(), *vit) != vertices.end());
   //}
   //TEST("Extract vertex list from list of edges", extract_success, true);
 
 
-  vcl_cout << "\n\nContours before merging\n";
+  std::cout << "\n\nContours before merging\n";
   for (bnd_contour_list::iterator cit = bnd_contours.begin();
     cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
 
@@ -255,25 +255,25 @@ void test_merge_vertices_into_lines_case1()
   // ======================================================================
 
   //  //// print out lines coordinate after intersecting
-//  //vcl_cout << "\nLines after intersecting = \n";
+//  //std::cout << "\nLines after intersecting = \n";
 //  //for (bnd_edge_list::iterator eit = bnd_lines.begin();
 //  //  eit != bnd_lines.end(); ++eit)
 //  //{
-//  //  vcl_cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
+//  //  std::cout << "\nLine \np1=" << (*eit)->point1() << "\np2=" << (*eit)->point2();
 //  //}
-//  //vcl_cout << vcl_endl;
+//  //std::cout << std::endl;
 //
 //  bool intersect_success = bnd_lines.size()==9;
-  vcl_cout << "\n\nContours after merging\n";
+  std::cout << "\n\nContours after merging\n";
   for (bnd_contour_list::iterator cit = bnd_contours.begin();
     cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
   bool merging_success = (contour1->num_edges()==4) &&
@@ -288,21 +288,21 @@ void test_merge_vertices_into_lines_case1()
 // test merging end-vertices into lines close to it - case 2
 void test_merge_vertices_into_lines_case2()
 {
-  vcl_cout << "In test_merge_vertices_into_lines_case2()" << vcl_endl;
+  std::cout << "In test_merge_vertices_into_lines_case2()" << std::endl;
 
   // coordinates of points
   double x[] = { 0, 6 ,     1,     7,     2,     8,     3,    9,  4,    4};
   double y[] = { 0, 0 , -2e-6, -2e-6, -4e-6, -4e-6, -1.4e-5, -1.4e-5, 5e-6, 2};
 
   // list of points
-  vcl_vector< vgl_point_2d<double > > pts;
+  std::vector< vgl_point_2d<double > > pts;
   for (unsigned int i=0; i<10; ++i)
   {
     pts.push_back(vgl_point_2d<double >(x[i], y[i]));
   }
 
   // list of vertices
-  vcl_vector<dbsk2d_bnd_vertex_sptr >vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr >vertices;
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vertices.push_back(dbsk2d_bnd_utils::new_vertex(pts[i]));
@@ -310,8 +310,8 @@ void test_merge_vertices_into_lines_case2()
 
   
   // overall list of edges
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
-  vcl_vector<dbsk2d_bnd_contour_sptr > bnd_contours;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::vector<dbsk2d_bnd_contour_sptr > bnd_contours;
 
   for (unsigned int i=0; i<5; ++i)
   {
@@ -328,16 +328,16 @@ void test_merge_vertices_into_lines_case2()
   bnd_vertex_list extracted_vertices;
   dbsk2d_bnd_utils::extract_vertex_list(bnd_lines, extracted_vertices);
 
-    vcl_cout << "\n\nContours before merging\n";
-  for (vcl_vector<dbsk2d_bnd_contour_sptr >::iterator cit = 
+    std::cout << "\n\nContours before merging\n";
+  for (std::vector<dbsk2d_bnd_contour_sptr >::iterator cit = 
     bnd_contours.begin(); cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
 
@@ -348,16 +348,16 @@ void test_merge_vertices_into_lines_case2()
 
 ////  bool intersect_success = bnd_lines.size()==9;
 
-    vcl_cout << "\n\nContours after merging\n";
-  for (vcl_vector<dbsk2d_bnd_contour_sptr >::iterator cit = 
+    std::cout << "\n\nContours after merging\n";
+  for (std::vector<dbsk2d_bnd_contour_sptr >::iterator cit = 
     bnd_contours.begin(); cit != bnd_contours.end(); ++cit)
   {
     // Print out contour vertex coordinates
-    vcl_cout << "\nContour = \n";
+    std::cout << "\nContour = \n";
     for (int i=0; i<=(*cit)->num_edges(); ++i)
     {
-      vcl_cout << "Vertex( " << i << " )= " << 
-        (*cit)->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex( " << i << " )= " << 
+        (*cit)->bnd_vertex(i)->point() << std::endl;
     }
   }
 
@@ -380,15 +380,15 @@ void test_merge_vertices_into_lines_case2()
   dbsk2d_bnd_utils::extract_edge_list(con_list, elist1);
 
   //// print out number of edges before merging
-  //vcl_cout << "Number of edges before merging duplciate edges= " <<
-  //  elist1.size() << vcl_endl;
+  //std::cout << "Number of edges before merging duplciate edges= " <<
+  //  elist1.size() << std::endl;
 
   preprocessor.remove_duplicate_lines(elist1);
 
 
   //// print out number of edges after merging
-  //vcl_cout << "Number of edges after merging duplciate edges= " <<
-  //  elist1.size() << vcl_endl;
+  //std::cout << "Number of edges after merging duplciate edges= " <<
+  //  elist1.size() << std::endl;
 
   TEST ("Merge duplicate lines", elist1.size(), 9);
 }
@@ -397,14 +397,14 @@ void test_merge_vertices_into_lines_case2()
 //: preprocess two intersecting squares
 void test_two_squares()
 {
-  vcl_cout << "In test_two_squares()" << vcl_endl;
+  std::cout << "In test_two_squares()" << std::endl;
 
   // first square
   double x1[] = { 0 , 4, 4, 0};
   double y1[] = { 0 , 0, 4, 4};
 
   // list of points
-  vcl_vector< vsol_point_2d_sptr > pts1;
+  std::vector< vsol_point_2d_sptr > pts1;
   for (unsigned int i=0; i<4; ++i)
   {
     pts1.push_back(new vsol_point_2d(x1[i], y1[i]));
@@ -416,7 +416,7 @@ void test_two_squares()
   double y2[] = { 2 , 2, 6, 6};
 
   // list of points
-  vcl_vector< vsol_point_2d_sptr > pts2;
+  std::vector< vsol_point_2d_sptr > pts2;
   for (unsigned int i=0; i<4; ++i)
   {
     pts2.push_back(new vsol_point_2d(x2[i], y2[i]));
@@ -443,11 +443,11 @@ void test_two_squares()
   {
     
     dbsk2d_bnd_contour_sptr cur_con = *cit;
-    vcl_cout << "\n\nContour : " << cur_con->num_edges() << "edges\n";
+    std::cout << "\n\nContour : " << cur_con->num_edges() << "edges\n";
     for (int i=0; i<=cur_con->num_edges(); ++i)
     {
-      vcl_cout << "Vertex ( " << i << " )= " << 
-        cur_con->bnd_vertex(i)->point() << vcl_endl;
+      std::cout << "Vertex ( " << i << " )= " << 
+        cur_con->bnd_vertex(i)->point() << std::endl;
     }
   }
 }

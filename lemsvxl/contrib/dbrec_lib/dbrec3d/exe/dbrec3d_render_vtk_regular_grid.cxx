@@ -28,9 +28,9 @@ int main(int argc, char** argv)
   
   bvpl_gauss3D_steerable_filters filters;
   filters.assemble_basis_size_5();
-  vcl_vector<vcl_vector<vcl_string> > basis = filters.basis();
-  vcl_map<vcl_string, vnl_vector_fixed<float,5> > separable_taps = filters.separable_taps();
-  vcl_vector<vcl_string> basis_names = filters.basis_names();
+  std::vector<std::vector<std::string> > basis = filters.basis();
+  std::map<std::string, vnl_vector_fixed<float,5> > separable_taps = filters.separable_taps();
+  std::vector<std::string> basis_names = filters.basis_names();
   
   QApplication app(argc, argv);
   dbrec3d_steerable_basis_viewer* grid_widget = new dbrec3d_steerable_basis_viewer(basis, basis_names, separable_taps, -5.0, 5.0);

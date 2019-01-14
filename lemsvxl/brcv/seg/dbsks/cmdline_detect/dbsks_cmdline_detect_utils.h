@@ -17,7 +17,7 @@
 
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 

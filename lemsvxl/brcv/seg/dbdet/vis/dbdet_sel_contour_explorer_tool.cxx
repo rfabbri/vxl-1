@@ -1,7 +1,7 @@
 #include "dbdet_sel_contour_explorer_tool.h"
 
-#include <vcl_limits.h>
-#include <vcl_algorithm.h>
+#include <limits>
+#include <algorithm>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -22,7 +22,7 @@ class dbdet_sel_tableau_set_display_params_double_command : public vgui_command
 {
  public:
   dbdet_sel_tableau_set_display_params_double_command(dbdet_sel_tableau* tab, 
-    const vcl_string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
+    const std::string& name, const void* dref) : sel_tableau(tab),  dref_((double*)dref), name_(name) {}
 
   void execute() 
   { 
@@ -38,7 +38,7 @@ class dbdet_sel_tableau_set_display_params_double_command : public vgui_command
 
   dbdet_sel_tableau* sel_tableau;
   double* dref_;
-  vcl_string name_;
+  std::string name_;
 };
 
 dbdet_sel_contour_explorer_tool::dbdet_sel_contour_explorer_tool():  
@@ -50,7 +50,7 @@ dbdet_sel_contour_explorer_tool::dbdet_sel_contour_explorer_tool():
 }
 
 
-vcl_string dbdet_sel_contour_explorer_tool::name() const
+std::string dbdet_sel_contour_explorer_tool::name() const
 {
   return "SEL contour explorer";
 }
@@ -85,7 +85,7 @@ bool dbdet_sel_contour_explorer_tool::handle( const vgui_event & e,
   {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-    //vcl_cout << "ix,iy: " << ix << "," << iy << vcl_endl;
+    //std::cout << "ix,iy: " << ix << "," << iy << std::endl;
 
     // I) Find edgel closest to ix,iy
     cur_edgel = get_nearest_edgel(vgl_point_2d<double>(ix, iy));
@@ -123,11 +123,11 @@ bool dbdet_sel_contour_explorer_tool::handle( const vgui_event & e,
       draw_edgel_chain(cur_chain);   
 
       //output some information about this edgel
-      vcl_cout << "Selected edge Summary: " << vcl_endl;
-      vcl_cout << "------------------------" << vcl_endl;
-      vcl_cout << "L-int = " << cur_edgel->left_app->value() << ",  R-int = " << cur_edgel->right_app->value();
-      vcl_cout << ",  Local Contrast = " << vcl_fabs(cur_edgel->left_app->value()-cur_edgel->right_app->value());
-      vcl_cout << ",  Edge Strength = " << cur_edgel->strength << ", d2f = " << cur_edgel->deriv << vcl_endl;
+      std::cout << "Selected edge Summary: " << std::endl;
+      std::cout << "------------------------" << std::endl;
+      std::cout << "L-int = " << cur_edgel->left_app->value() << ",  R-int = " << cur_edgel->right_app->value();
+      std::cout << ",  Local Contrast = " << std::fabs(cur_edgel->left_app->value()-cur_edgel->right_app->value());
+      std::cout << ",  Edge Strength = " << cur_edgel->strength << ", d2f = " << cur_edgel->deriv << std::endl;
 
       graph_parameters_along_chain(cur_chain);
     }
@@ -149,7 +149,7 @@ dbdet_edgel* dbdet_sel_contour_explorer_tool::get_nearest_edgel(vgl_point_2d<dou
   dbdet_edgemap_sptr edgemap = sel_storage_->EM();
 
   // b) find the closest edgel in the neighboring cells
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   for (int xcell = xx-2; xcell <= xx+2; xcell++){
     for (int ycell = yy-2; ycell <= yy+2; ycell++){
       if (xcell < 0 || ycell < 0 || xcell >= (int)edgemap->width() || ycell >= (int)edgemap->height()) 
@@ -209,11 +209,11 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
   }
 
   //array to store the values being graphed
-  vcl_vector<double> lvals(chain->edgels.size());
-  vcl_vector<double> rvals(chain->edgels.size());
+  std::vector<double> lvals(chain->edgels.size());
+  std::vector<double> rvals(chain->edgels.size());
 
-  vcl_deque<double> Lwin;
-  vcl_deque<double> Rwin;
+  std::deque<double> Lwin;
+  std::deque<double> Rwin;
 
   //collect the appropriate data
   for (unsigned j=0; j<chain->edgels.size(); j++)
@@ -269,8 +269,8 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
             if (Rwin.size()>win_len) Rwin.pop_front();
             
             mbl_stats_1d Ldata, Rdata;
-            for (unsigned i=0; i< vcl_min(win_len, static_cast<unsigned>(Lwin.size())); i++) Ldata.obs(Lwin[i]);
-            for (unsigned i=0; i< vcl_min(win_len, static_cast<unsigned>(Rwin.size())); i++) Rdata.obs(Rwin[i]);
+            for (unsigned i=0; i< std::min(win_len, static_cast<unsigned>(Lwin.size())); i++) Ldata.obs(Lwin[i]);
+            for (unsigned i=0; i< std::min(win_len, static_cast<unsigned>(Rwin.size())); i++) Rdata.obs(Rwin[i]);
 
             lvals[j] = Ldata.mean();
             rvals[j] = Rdata.mean();
@@ -293,28 +293,28 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
   mbl_stats_1d Rdata(rvals);
 
   if (plot_curvature){
-    vcl_cout << "Curve fragment summary: " << vcl_endl;
-    vcl_cout << "------------------------" << vcl_endl;
-    vcl_cout << "Mean K = " << Ldata.mean() << vcl_endl;
+    std::cout << "Curve fragment summary: " << std::endl;
+    std::cout << "------------------------" << std::endl;
+    std::cout << "Mean K = " << Ldata.mean() << std::endl;
   }
 
   if (plot_intensity){
-    vcl_cout << "Curve fragment summary: " << vcl_endl;
-    vcl_cout << "------------------------" << vcl_endl;
-    vcl_cout << "L-mean = " << vcl_floor(Ldata.mean()) << ",  R-mean = " << vcl_floor(Rdata.mean()) << ",  Mean Contrast = " << vcl_floor(vcl_fabs(Ldata.mean()-Rdata.mean())) << vcl_endl;
-    vcl_cout << "L-std = " << vcl_floor(Ldata.sd()) << ",  R-std = " << vcl_floor(Rdata.sd()) << vcl_endl;
+    std::cout << "Curve fragment summary: " << std::endl;
+    std::cout << "------------------------" << std::endl;
+    std::cout << "L-mean = " << std::floor(Ldata.mean()) << ",  R-mean = " << std::floor(Rdata.mean()) << ",  Mean Contrast = " << std::floor(std::fabs(Ldata.mean()-Rdata.mean())) << std::endl;
+    std::cout << "L-std = " << std::floor(Ldata.sd()) << ",  R-std = " << std::floor(Rdata.sd()) << std::endl;
   }
 
   if (plot_d2f){
-    vcl_cout << "Curve fragment summary: " << vcl_endl;
-    vcl_cout << "------------------------" << vcl_endl;
-    vcl_cout << "Mean d2f = " << Ldata.mean() << vcl_endl;
+    std::cout << "Curve fragment summary: " << std::endl;
+    std::cout << "------------------------" << std::endl;
+    std::cout << "Mean d2f = " << Ldata.mean() << std::endl;
   }
 
   if (plot_strength){
-    vcl_cout << "Curve fragment summary: " << vcl_endl;
-    vcl_cout << "------------------------" << vcl_endl;
-    vcl_cout << "Mean Edge Strength = " << Ldata.mean() << vcl_endl;
+    std::cout << "Curve fragment summary: " << std::endl;
+    std::cout << "------------------------" << std::endl;
+    std::cout << "Mean Edge Strength = " << Ldata.mean() << std::endl;
   }
 
   //determine mins and maxes
@@ -328,10 +328,10 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
   }
 
   if (auto_scale_val){
-    vmin = vcl_min(lvmin, rvmin);
-    vmax = vcl_max(lvmax, rvmax);
+    vmin = std::min(lvmin, rvmin);
+    vmax = std::max(lvmax, rvmax);
 
-    vcl_cout << "scale : (" << vmin << " - " << vmax << ")" << vcl_endl;
+    std::cout << "scale : (" << vmin << " - " << vmax << ")" << std::endl;
   }
   else {
     //vmax = 255.0; comes from the dialog box now
@@ -380,7 +380,7 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
 void dbdet_sel_contour_explorer_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                 vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( ((plot_curvature)?on:off)+"Plot Curvature", 
             bvis1_tool_toggle, (void*)(&plot_curvature) );

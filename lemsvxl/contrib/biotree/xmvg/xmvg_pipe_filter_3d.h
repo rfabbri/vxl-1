@@ -28,7 +28,7 @@ class xmvg_pipe_filter_3d {
     descriptor_t descriptor_;
 };
 
-inline void x_write(vcl_ostream &os, xmvg_pipe_filter_3d pf)
+inline void x_write(std::ostream &os, xmvg_pipe_filter_3d pf)
 {
   xmvg_no_noise_filter_descriptor pfd = pf.descriptor();
   xmvg_no_noise_filter_descriptor &pfd_ref = pfd;

@@ -7,8 +7,8 @@
 #include <bvxm/bvxm_voxel_world.h>
 #include <bvxm/pro/bvxm_roi_init_process.h>
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 
 #include <brdb/brdb_value.h>
 #include <brdb/brdb_selection.h>
@@ -41,13 +41,13 @@ MAIN( test_dbvxm_detect_scale_process )
   REGISTER_DATATYPE(bvxm_voxel_world_sptr);
   REGISTER_DATATYPE(vil_image_view_base_sptr);
   REGISTER_DATATYPE(vpgl_camera_double_sptr);
-  REGISTER_DATATYPE(vcl_string);
+  REGISTER_DATATYPE(std::string);
   //REGISTER_DATATYPE(float);
   REGISTER_DATATYPE(unsigned);
 
-  vcl_string image_name="po_39928_pan_0000000_chip_700_700_noICHIPB.nitf";
-  //vcl_string image_name="W:/video/ieden/satellite_baghdad/005630620010_01/005630620010_01_P001_PAN/02AUG18074303-P1BS-005630620010_01_P001.NTF";
-  brdb_value_sptr imgname = new brdb_value_t<vcl_string>(image_name);
+  std::string image_name="po_39928_pan_0000000_chip_700_700_noICHIPB.nitf";
+  //std::string image_name="W:/video/ieden/satellite_baghdad/005630620010_01/005630620010_01_P001_PAN/02AUG18074303-P1BS-005630620010_01_P001.NTF";
+  brdb_value_sptr imgname = new brdb_value_t<std::string>(image_name);
 
   // extract the camera
   vil_image_resource_sptr img = vil_load_image_resource(image_name.c_str());
@@ -55,7 +55,7 @@ MAIN( test_dbvxm_detect_scale_process )
 
 
     //get NITF information
-     vcl_vector< vil_nitf2_image_subheader* > headers = nitf->get_image_headers();
+     std::vector< vil_nitf2_image_subheader* > headers = nitf->get_image_headers();
      vil_nitf2_image_subheader* hdr = headers[0];
 
      double sun_el;
@@ -104,8 +104,8 @@ MAIN( test_dbvxm_detect_scale_process )
   brdb_selection_sptr S_scale = DATABASE->select("unsigned_data", Q_scale);
 
         brdb_value_sptr value;
-      if (!S_scale->get_value(vcl_string("value"), value)) {
-        vcl_cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
+      if (!S_scale->get_value(std::string("value"), value)) {
+        std::cout << "in bprb_batch_process_manager::set_input_from_db(.) -"
                  << " didn't get value\n";
       }
       bool non_null = (value != 0);

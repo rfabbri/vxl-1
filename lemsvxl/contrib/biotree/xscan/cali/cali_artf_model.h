@@ -15,8 +15,8 @@ public:
     virtual double ray_artifact_intersect(vgl_homg_line_3d_2_points<double> const& line) = 0;
     virtual vgl_box_3d<double> bounding_box()=0;
     virtual double density()=0;
-    virtual vcl_vector<vgl_point_3d<double> > ball_centers(void)=0;
-    virtual vcl_vector<double> ball_radii(void)=0;
+    virtual std::vector<vgl_point_3d<double> > ball_centers(void)=0;
+    virtual std::vector<double> ball_radii(void)=0;
     virtual ~cali_artf_model(void) {};
 };
 

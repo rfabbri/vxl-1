@@ -246,7 +246,7 @@ class LogicalLinearFilter
 
           for (int i= 0;i<LogicalLinearTagType::NET_COMPONENTS;++i)
             {
-              scratch[i]=1.0/(vcl_sqrt(scratch[i])+TINY_VALUE);
+              scratch[i]=1.0/(std::sqrt(scratch[i])+TINY_VALUE);
              }
 
           filter_all=(_filterArray);
@@ -382,9 +382,9 @@ class LogicalLinearFilter
           return _function.getSigmaRatio();
          }
       
-      vcl_string dumpFilter() const
+      std::string dumpFilter() const
         {
-          vcl_ostringstream ostrm;
+          std::ostringstream ostrm;
 
           assert(_filterArray!=0);
           for (int comp=0;comp<LogicalLinearTagType::NET_COMPONENTS;comp++) 
@@ -408,7 +408,7 @@ class LogicalLinearFilter
            }
 
 
-        vcl_string getFilterName() const
+        std::string getFilterName() const
           {
             return _function.getFunctionName()+"-Filter";
            }
@@ -662,8 +662,8 @@ class ConvProductSumComputer
                 _LLCombinator(ops.getLLCombinatorRho()), 
         _maskNRows(mask.getNRows()),
         _maskNCols(mask.getNCols()),
-        _rowsMid((int)vcl_floor((double)_maskNRows/2)),
-        _colsMid((int)vcl_floor((double)_maskNCols/2)),
+        _rowsMid((int)std::floor((double)_maskNRows/2)),
+        _colsMid((int)std::floor((double)_maskNCols/2)),
         
         _imageWidth(img.ni()),
         _imageHeight(img.nj()),
@@ -724,8 +724,8 @@ class ConvProductSumComputer
        {
          assert(_maskNRows    == mask.getNRows());
          assert(_maskNCols    == mask.getNCols());
-         assert(_rowsMid      == (int)vcl_floor((double)_maskNRows/2));
-         assert(_colsMid      == (int)vcl_floor((double)_maskNCols/2));
+         assert(_rowsMid      == (int)std::floor((double)_maskNRows/2));
+         assert(_colsMid      == (int)std::floor((double)_maskNCols/2));
 
          //Ensure that this is SUBPIXEL
          //TODO Re-enable COMPILE_TIME_CHECK????
@@ -799,7 +799,7 @@ class ConvProductSumComputer
 
          for (int component=0;component<FilterTagType::NET_COMPONENTS;++component)
            {
-             _scratch2[component] /=vcl_sqrt(_scratch1[component]+TINY_VALUE);
+             _scratch2[component] /=std::sqrt(_scratch1[component]+TINY_VALUE);
             }
 
         
@@ -813,8 +813,8 @@ class ConvProductSumComputer
        {
          assert(_maskNRows      == mask.getNRows());
          assert(_maskNCols      == mask.getNCols());
-         assert(_rowsMid        == (int)vcl_floor((double)_maskNRows/2));
-         assert(_colsMid        == (int)vcl_floor((double)_maskNCols/2));
+         assert(_rowsMid        == (int)std::floor((double)_maskNRows/2));
+         assert(_colsMid        == (int)std::floor((double)_maskNCols/2));
 
          //COMPILE_TIME_CHECK(typename FilterUtilityClassType::PixelOnlyFilter *dummy; dummy=0;);
 

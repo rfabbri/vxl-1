@@ -6,7 +6,7 @@
 #include <vbl/io/vbl_io_array_2d.h>
 #include <vsl/vsl_vector_io.hxx>
 
-//SHOULDN'T THIS INCLUDE <vcl_iostream.h>?  PNK 4/23/05
+//SHOULDN'T THIS INCLUDE <iostream>?  PNK 4/23/05
 
 template<class T>
 void vsl_b_write(vsl_b_ostream & os, const xmvg_atomic_filter_2d<T> &f)
@@ -77,19 +77,19 @@ void vsl_b_read(vsl_b_istream & is, xmvg_atomic_filter_2d<T> &f)
       break;//added by pnk, 4/25/2005
 
     default:
-      vcl_cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, xmvg_atomic_filter_2d<T>&)\n"
+      std::cerr << "I/O ERROR: vsl_b_read(vsl_b_istream&, xmvg_atomic_filter_2d<T>&)\n"
              << "           Unknown version number "<< ver << '\n';
-      is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+      is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
       return;
   }
       
 }
 
 template<class T>
-void vsl_print_summary(vcl_ostream & os,const xmvg_atomic_filter_2d<T> & p)
+void vsl_print_summary(std::ostream & os,const xmvg_atomic_filter_2d<T> & p)
 {
-  os << "Offset: " << p.location() << vcl_endl
-     << "Size: " << p.size() << vcl_endl;
+  os << "Offset: " << p.location() << std::endl
+     << "Size: " << p.size() << std::endl;
 
   vbl_array_2d<T> v = p.weights();
   
@@ -99,7 +99,7 @@ void vsl_print_summary(vcl_ostream & os,const xmvg_atomic_filter_2d<T> & p)
 #define XMVG_IO_ATOMIC_FILTER_2D_INSTANTIATE(T) \
 template void vsl_b_write(vsl_b_ostream & , const xmvg_atomic_filter_2d<T> &); \
 template void vsl_b_read(vsl_b_istream & , xmvg_atomic_filter_2d<T> &); \
-template void vsl_print_summary(vcl_ostream & , const xmvg_atomic_filter_2d<T> & );
+template void vsl_print_summary(std::ostream & , const xmvg_atomic_filter_2d<T> & );
 
 #endif
 

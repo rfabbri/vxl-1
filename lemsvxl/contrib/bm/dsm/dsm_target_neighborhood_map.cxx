@@ -21,7 +21,7 @@ void dsm_target_neighborhood_map::b_write(vsl_b_ostream& os) const
 		unsigned nneighbors = titr->second.size();
 		vsl_b_write(os, nneighbors);
 
-		vcl_vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = titr->second.end();
+		std::vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = titr->second.end();
 		for(nitr=titr->second.begin(); nitr!=nend; ++nitr)
 			vsl_b_write(os, *nitr);
 	}
@@ -51,7 +51,7 @@ void dsm_target_neighborhood_map::b_read(vsl_b_istream& is)
 				unsigned nneighbors;
 				vsl_b_read(is,nneighbors);
 
-				vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+				std::vector<vgl_point_2d<unsigned> > neighborhood;
 				for(unsigned j = 0; j < nneighbors; ++j)
 				{
 					vgl_point_2d<unsigned> neighbor;
@@ -66,27 +66,27 @@ void dsm_target_neighborhood_map::b_read(vsl_b_istream& is)
 		break;
 	default:
 		{
-			vcl_cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
+			std::cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
 				     << "	 UNKNOWN VERSION NUMBER " << v << "\n";
-			is.is().clear(vcl_ios::badbit); //set an unrecoverable IO error on stream
+			is.is().clear(std::ios::badbit); //set an unrecoverable IO error on stream
 			return;
 		}//end default
 	}//end switch
 
 }//end b_read()
 
-bool dsm_target_neighborhood_map::write_txt(vcl_string const& filename) const
+bool dsm_target_neighborhood_map::write_txt(std::string const& filename) const
 {
 	if( this->target_neighborhood_map_.empty() )
 	{
-		vcl_cerr << "---------------- WARNING ----------------" <<'\n'
-				 << "dsm_target_neighborhood_map::write_txt( vcl_string const& " << filename << " )\n"
-				 << "\t The map is empty. Could not write txt file.\n" << vcl_flush;
+		std::cerr << "---------------- WARNING ----------------" <<'\n'
+				 << "dsm_target_neighborhood_map::write_txt( std::string const& " << filename << " )\n"
+				 << "\t The map is empty. Could not write txt file.\n" << std::flush;
 		return false;
 	}
 	else
 	{
-		vcl_ofstream of( filename.c_str(), vcl_ios::out );
+		std::ofstream of( filename.c_str(), std::ios::out );
 
 		dsm_target_neighborhood_map_type::const_iterator titr, tend = this->target_neighborhood_map_.end();
 
@@ -94,7 +94,7 @@ bool dsm_target_neighborhood_map::write_txt(vcl_string const& filename) const
 		{
 			of << titr->first.x() << '\t';
 
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = titr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = titr->second.end();
 
 			for( nitr = titr->second.begin(); nitr != nend; ++nitr)
 			{
@@ -119,7 +119,7 @@ bool dsm_target_neighborhood_map::write_txt(vcl_string const& filename) const
 }//end write_txt;
 
 
-void dsm_target_neighborhood_map::insert( vgl_point_2d<unsigned> const& target, vcl_vector<vgl_point_2d<unsigned> > const& neighborhood )
+void dsm_target_neighborhood_map::insert( vgl_point_2d<unsigned> const& target, std::vector<vgl_point_2d<unsigned> > const& neighborhood )
 {
 	dsm_target_neighborhood_map_type::iterator itr;
 
@@ -136,7 +136,7 @@ unsigned dsm_target_neighborhood_map::num_neighbors() const
 {
 	if( this->target_neighborhood_map_.empty() )
 	{
-		vcl_cerr << "Warning: target_neighborhood_map is empty, cannot calculate the number of neighbors." << vcl_flush;
+		std::cerr << "Warning: target_neighborhood_map is empty, cannot calculate the number of neighbors." << std::flush;
 		return 0;
 	}
 

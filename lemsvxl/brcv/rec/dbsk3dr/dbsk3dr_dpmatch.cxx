@@ -1,12 +1,12 @@
 #include <dbsk3dr/dbsk3dr_dpmatch.h>
 
-#include <vcl_cmath.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <utility>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
@@ -113,10 +113,10 @@ void dbsk3dr_dpmatch::initializeDPCosts()
   assert (_m>0);
 
   for (int i=0;i<_n;i++) {
-    vcl_vector<double> tmp1(_m,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(_m,DP_VERY_LARGE_COST);
     _DPCost.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector< vcl_pair <int,int> > tmp2(_m,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector< std::pair <int,int> > tmp2(_m,tmp3);
     _DPMap.push_back(tmp2);
   }
 
@@ -132,21 +132,21 @@ double dbsk3dr_dpmatch::computeIntervalCost (int i, int ip, int j, int jp)
   //1) The shock stretching cost.
   double ds1 = stretch_cost (_curve1, i, ip);
   double ds2 = stretch_cost (_curve2, j, jp);
-  ///double ds1 = vcl_fabs(stretch_cost (_curve1, i,ip));
-  ///double ds2 = vcl_fabs(stretch_cost (_curve2, j,jp));
-  double dF = vcl_fabs (ds1 - ds2);
+  ///double ds1 = std::fabs(stretch_cost (_curve1, i,ip));
+  ///double ds2 = std::fabs(stretch_cost (_curve2, j,jp));
+  double dF = std::fabs (ds1 - ds2);
 
   //2) The shock bending cost.
   double dt1 = bend_cost (_curve1, i, ip);
   double dt2 = bend_cost (_curve2, j, jp);
-  double dK = vcl_fabs (dt1 - dt2);
-  //double dK = vcl_fabs (dbsk3dr_angle_diff (dt1, dt2));
+  double dK = std::fabs (dt1 - dt2);
+  //double dK = std::fabs (dbsk3dr_angle_diff (dt1, dt2));
 
   //3) The shock radius cost.
   double dr1 = radius_cost (_curve1, i, ip);
   double dr2 = radius_cost (_curve2, j, jp);
-  double dR = vcl_fabs (dr1 - dr2);
-  //double dR = vcl_fabs (_curve1->radius() - _curve2->radius());
+  double dR = std::fabs (dr1 - dr2);
+  //double dR = std::fabs (_curve1->radius() - _curve2->radius());
 
   //For bones, WEIGHT_L = 10.
   double cost;
@@ -187,7 +187,7 @@ void dbsk3dr_dpmatch::computeDPCosts ()
     }
   }
   //Kai
-  ///vcl_cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
+  ///std::cout<<"computeDPCosts() Number of computation: "<<count<<" "<<"\n";
 }
 
 // ###########################################################
@@ -211,14 +211,14 @@ void dbsk3dr_dpmatch::findDPCorrespondence (void)
   i = _n-1;
   j = _m-1;
 
-  vcl_pair <int,int> p(ip,jp);
+  std::pair <int,int> p(ip,jp);
   _finalMap.push_back(p);
   _finalMapCost.push_back(_DPCost[p.first][p.second]);
 
   while (ip > 0 || jp > 0) { //Ming: should be &&
     ip=_DPMap[i][j].first;
     jp=_DPMap[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     _finalMap.push_back(p);
     _finalMapCost.push_back(_DPCost[p.first][p.second]);
   
@@ -429,14 +429,14 @@ void dbsk3dr_dpmatch::ListDPTable (void)
   int n = _curve1->size();
   int m = _curve2->size();
 
-  vcl_cout<< "\n===========  ListDPTable  ===========\n";
+  std::cout<< "\n===========  ListDPTable  ===========\n";
   for (int i=0; i<n; i++) {
     for (int j=0; j<m; j++) {
-      vul_printf (vcl_cout, "%3.0f ", (*DPCost())[i][j]);
+      vul_printf (std::cout, "%3.0f ", (*DPCost())[i][j]);
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 }
 
 void dbsk3dr_dpmatch::ListDPTable_full (void)
@@ -444,64 +444,64 @@ void dbsk3dr_dpmatch::ListDPTable_full (void)
   int n = _curve1->size();
   int m = _curve2->size();
 
-  vcl_cout<< "\n===========  ListDPTable_full  ===========\n";
-  vcl_cout<< "i j _map[i][j].first _map[i][j].second _cost[i][j]\n";  
+  std::cout<< "\n===========  ListDPTable_full  ===========\n";
+  std::cout<< "i j _map[i][j].first _map[i][j].second _cost[i][j]\n";  
   for (int i=0;i<=n-1; i++){
     for (int j=0;j<=m-1; j++){
-      vcl_cout<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";
+      std::cout<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";
     }
   }
 }
 
 void dbsk3dr_dpmatch::ListAlignCurve (void)
 {
-  vcl_cout<<"===========  ListAlignCurve  ===========\n";
-  vcl_cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
+  std::cout<<"===========  ListAlignCurve  ===========\n";
+  std::cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
   for (unsigned int i=0; i<finalMap()->size(); i++) {
-    vul_printf (vcl_cout, "(%d,%d):%.1f, ", 
+    vul_printf (std::cout, "(%d,%d):%.1f, ", 
                 (*finalMap())[i].first, (*finalMap())[i].second, (*finalMapCost())[i]);
   }
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 }
 
 void dbsk3dr_dpmatch::ListAlignCurve_full (void)
 {
-  vcl_cout<<"===========  ListAlignCurve_full  ===========\n";
-  vcl_cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
+  std::cout<<"===========  ListAlignCurve_full  ===========\n";
+  std::cout<<"i, finalMap[i].first, finalMap[i].second, finalMapCost[i]\n";
   for (unsigned int i=0;i<=finalMap()->size()-1; i++){
-    vcl_cout<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
+    std::cout<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
   }
 }
 
-void dbsk3dr_dpmatch::SaveDPTable (vcl_string& _fileName1, vcl_string& _fileName2)
+void dbsk3dr_dpmatch::SaveDPTable (std::string& _fileName1, std::string& _fileName2)
 {
-  vcl_string basefname1 = _fileName1;
-  vcl_string basefname2 = _fileName2;
-  vcl_string basefname=basefname1+'-'+basefname2;
+  std::string basefname1 = _fileName1;
+  std::string basefname2 = _fileName2;
+  std::string basefname=basefname1+'-'+basefname2;
 
   //Output AlignCurve File
-  vcl_string acfname = basefname;
+  std::string acfname = basefname;
   acfname += "-ACurve.txt";
-  vcl_ofstream outfp2(acfname.c_str());
+  std::ofstream outfp2(acfname.c_str());
   for (unsigned int i=0; i<(*finalMap()).size(); i++){
     outfp2<<i<<" "<<(*finalMap())[i].first<<" "<<(*finalMap())[i].second<<" "<<(*finalMapCost())[i]<<"\n";
   }
   outfp2.close();
 }
 
-void dbsk3dr_dpmatch::SaveAlignCurve (vcl_string& _fileName1, vcl_string& _fileName2)
+void dbsk3dr_dpmatch::SaveAlignCurve (std::string& _fileName1, std::string& _fileName2)
 {
   int n = _curve1->size();
   int m = _curve2->size();
 
-  vcl_string basefname1 = _fileName1;
-  vcl_string basefname2 = _fileName2;
-  vcl_string basefname=basefname1+'-'+basefname2;
+  std::string basefname1 = _fileName1;
+  std::string basefname2 = _fileName2;
+  std::string basefname=basefname1+'-'+basefname2;
 
   //Output DPTalbe File
-  vcl_string dpfname = basefname;
+  std::string dpfname = basefname;
   dpfname += "-DPMap.txt";
-  vcl_ofstream outfp3(dpfname.c_str());
+  std::ofstream outfp3(dpfname.c_str());
   for (int i=0;i<=n-1; i++){
     for (int j=0;j<=m-1; j++){
       outfp3<<i<<" "<<j<<" "<<(*DPMap())[i][j].first<<" "<<(*DPMap())[i][j].second<<" "<<(*DPCost())[i][j]<<"\n";

@@ -11,7 +11,7 @@ static void test_psm_cell_enumerator()
 {
   START("psm_cell_enumerator test");
 
-  vcl_string storage_dir("./test_blocks");
+  std::string storage_dir("./test_blocks");
   vul_file::make_directory(storage_dir);
   psm_scene<PSM_APM_SIMPLE_GREY> scene(vgl_point_3d<double>(0,0,0), 1.0, storage_dir, bgeo_lvcs_sptr());
   scene.init_block(vgl_point_3d<int>(0,0,0),2);

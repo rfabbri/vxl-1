@@ -24,7 +24,7 @@ public:
   virtual ~mw_sel_inliers_to_curve() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -38,7 +38,7 @@ public:
 
 protected:
   // ------ Data ------
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> > curves_;
+  std::vector<std::vector<vsol_point_2d_sptr> > curves_;
   unsigned current_curve_id_;
   double tau_distance_;
   double tau_dtheta_;

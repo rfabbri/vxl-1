@@ -24,7 +24,7 @@ static void test_part_selector()
   vil_image_resource_sptr img_r = vil_load_image_resource("./test_vehicle.png");
   vil_image_resource_sptr img_m = vil_load_image_resource("./test_vehicle_mask.png");
   if (!img_r || !img_m) {
-    vcl_cout << "problems loading test_vehicle.png";
+    std::cout << "problems loading test_vehicle.png";
     return;
   }
   vil_image_view_base_sptr inp_img = img_r->get_view();
@@ -54,13 +54,13 @@ static void test_part_selector()
 
   dbrec_gaussian_appearance_model_sptr m_class = new dbrec_gaussian_weibull_appearance_model(0.0159533f, 1.69568f);
   dbrec_gaussian_appearance_model_sptr m_non_class = new dbrec_gaussian_weibull_appearance_model(0.00759679f, 7.64067f);
-  vcl_vector<dbrec_gaussian_appearance_model_sptr> models;
+  std::vector<dbrec_gaussian_appearance_model_sptr> models;
   models.push_back(m_class); models.push_back(m_non_class);
   g1->set_models(models);
   
   //: we need a parse visitor here
   dbrec_hierarchy_sptr h = new dbrec_hierarchy; // just an empty dummy hierarchy to construct visitor instance
-  float class_prior = 0.15f; vcl_vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
+  float class_prior = 0.15f; std::vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
   dbrec_parse_image_visitor pv(h, img_scaled, class_prior, comp_priors, "");
   g1->accept(&pv);
 
@@ -71,7 +71,7 @@ static void test_part_selector()
 
   dbrec_gaussian_appearance_model_sptr m_class2 = new dbrec_gaussian_weibull_appearance_model(0.0537034f, 1.53269f);
   dbrec_gaussian_appearance_model_sptr m_non_class2 = new dbrec_gaussian_weibull_appearance_model(0.0320286f, 7.44504f);
-  vcl_vector<dbrec_gaussian_appearance_model_sptr> models2;
+  std::vector<dbrec_gaussian_appearance_model_sptr> models2;
   models2.push_back(m_class2); models2.push_back(m_non_class2);
   g2->set_models(models2);
 
@@ -101,23 +101,23 @@ static void test_part_selector()
   mrfv2.get_colored_img(inp_img, out_colored_img2);
   vil_save(out_colored_img2, "./test_vehicle_g2_out_map.png");
 
-  vcl_vector<dbrec_part_sptr> parts; parts.push_back(g1p); parts.push_back(g2p);
+  std::vector<dbrec_part_sptr> parts; parts.push_back(g1p); parts.push_back(g2p);
   dbrec_part_selection_measure_sptr sm = new dbrec_part_selection_measure(parts, 2);
 
   sm->measure_training_image(cf, valid_region_mask, gt_map, 0);
-  vcl_cout << "feature mutual info: " << sm->mutual_info(0, type_id) << vcl_endl;
-  vcl_cout << "feature, class prob: " << sm->prob(0, type_id) << vcl_endl;
-  vcl_cout << "feature prob: " << sm->prob_feature(type_id) << vcl_endl;
-  vcl_cout << "class prob: " << sm->prob_class(0) << vcl_endl;
+  std::cout << "feature mutual info: " << sm->mutual_info(0, type_id) << std::endl;
+  std::cout << "feature, class prob: " << sm->prob(0, type_id) << std::endl;
+  std::cout << "feature prob: " << sm->prob_feature(type_id) << std::endl;
+  std::cout << "class prob: " << sm->prob_class(0) << std::endl;
   
-  vcl_cout << "feature2 mutual info: " << sm->mutual_info(0, type_id2) << vcl_endl;
-  vcl_cout << "feature2, class prob: " << sm->prob(0, type_id2) << vcl_endl;
-  vcl_cout << "feature2 prob: " << sm->prob_feature(type_id2) << vcl_endl;
+  std::cout << "feature2 mutual info: " << sm->mutual_info(0, type_id2) << std::endl;
+  std::cout << "feature2, class prob: " << sm->prob(0, type_id2) << std::endl;
+  std::cout << "feature2 prob: " << sm->prob_feature(type_id2) << std::endl;
 
   dbfs_measure_sptr smm = (sm.ptr());
-  vcl_vector<int> features; features.push_back(type_id); features.push_back(type_id2);
+  std::vector<int> features; features.push_back(type_id); features.push_back(type_id2);
   dbfs_selector_sptr s = new dbfs_selector(smm, features, 2); // 3 features and 2 classes
-  vcl_vector<int> best_feature_ids;
+  std::vector<int> best_feature_ids;
   s->get_top_features(0, 1, best_feature_ids); 
   TEST("testing selector", best_feature_ids.size(), 1);
   TEST("testing selector", best_feature_ids[0], type_id);
@@ -129,14 +129,14 @@ static void test_part_selector()
   TEST("testing selector", best_feature_ids[1], type_id2);
 
   dbrec_hierarchy_sptr h2 = new dbrec_hierarchy();
-  vcl_vector<dbrec_part_sptr> ch1; ch1.push_back(g1p); ch1.push_back(g2p);
+  std::vector<dbrec_part_sptr> ch1; ch1.push_back(g1p); ch1.push_back(g2p);
   dbrec_part_sptr root1 = new dbrec_composition(200, ch1, new dbrec_or_compositor(), 10.0f);
   h2->add_root(root1);
   dbrec_part_sptr root2 = new dbrec_composition(201, ch1, new dbrec_or_compositor(), 10.0f);
   h2->add_root(root2);
   dbrec_part_selector ss(sm, dbrec_part_selector_algos::max_class_mutual_info, parts, h2, 2);
 
-  vcl_vector<dbrec_part_sptr> best_parts;
+  std::vector<dbrec_part_sptr> best_parts;
   ss.get_top_features(0, 1, best_parts);
   TEST("testing dbrec selector", best_parts.size(), 1);
   TEST("testing dbrec selector", best_parts[0]->type(), type_id);

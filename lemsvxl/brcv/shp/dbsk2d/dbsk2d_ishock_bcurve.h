@@ -61,7 +61,7 @@ public:
   //**************************************************************
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a () const { return vcl_string("dbsk2d_ishock_bcurve"); }  
+  virtual std::string is_a () const { return std::string("dbsk2d_ishock_bcurve"); }  
 
   //: starting boundary point of this curve segment. inherited from belm
   virtual dbsk2d_ishock_bpoint* s_pt() { return this->start_bpoint_; }

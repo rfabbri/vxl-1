@@ -3,7 +3,7 @@
 // \file
 
 #include "dbetl_reproject_lsqr_cost.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/vnl_vector_fixed.h>
 
 
@@ -21,8 +21,8 @@ dbetl_reproject_lsqr_cost::dbetl_reproject_lsqr_cost( const vnl_matrix<double>& 
 
 
 //: Constructor
-dbetl_reproject_lsqr_cost::dbetl_reproject_lsqr_cost( const vcl_vector<vnl_double_3x4>& cameras, 
-                                                    const vcl_vector<vgl_point_2d<double> >& pts)
+dbetl_reproject_lsqr_cost::dbetl_reproject_lsqr_cost( const std::vector<vnl_double_3x4>& cameras, 
+                                                    const std::vector<vgl_point_2d<double> >& pts)
  : vnl_least_squares_function(3,2*cameras.size(),use_gradient),
    E_(2*cameras.size(),4),
    P3_(cameras.size(),4)

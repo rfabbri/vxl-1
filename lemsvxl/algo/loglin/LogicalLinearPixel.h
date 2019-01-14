@@ -1,7 +1,7 @@
 #ifndef LOGICAL_LINEAR_PIXEL_H
 #define LOGICAL_LINEAR_PIXEL_H
 
-#include <vcl_vector.h>
+#include <vector>
 #include "LogicalLinearFilters.h"
 
 
@@ -49,7 +49,7 @@ class LogicalLinearPixelEdgeDetector
         template<typename OutputDS>
                 void getPixelNLines(OutputDS &nlines)
                   {
-                    vcl_cout<<" Getting NLINES "<<vcl_endl;
+                    std::cout<<" Getting NLINES "<<std::endl;
                     typedef LLPixelNLineFilter<HalfCount> FilterUtilType;
                     FilterUtilType *dummy=0;
 
@@ -94,20 +94,20 @@ class LogicalLinearPixelEdgeDetector
                     double *convolved_values_theta_plus_180 = new double [ndirs*size];
 
 
-                    vcl_cout<<" Convolving   :";
-                    vcl_cout.flush();
+                    std::cout<<" Convolving   :";
+                    std::cout.flush();
                     for (int i=0;i<ndirs;i++)
                       {
-                        vcl_cout<<".."<<i<<"..";
+                        std::cout<<".."<<i<<"..";
 
-                        vcl_cout.flush();
+                        std::cout.flush();
                         theta    = ((i*vnl_math::pi)/(ndirs*1.0));
                         filter_func.setParams(theta,0,0);
                         filter.setFunction(filter_func);
 
                         convolve(convolved_values_theta+i*size, convolved_values_theta_plus_180+i*size, filter , dummy);
                        }
-                    vcl_cout<<" Done" <<vcl_endl;
+                    std::cout<<" Done" <<std::endl;
 
 
                     //double *max_conf_theta          = max_element(convolved_values_theta,          convolved_values_theta+ndirs*size);
@@ -121,13 +121,13 @@ class LogicalLinearPixelEdgeDetector
                     double thresh_val=_options.getThreshold();
 
                     if( bool_nms && FilterTagType::getImageElementType()==IMAGE_ELEMENT_EDGE && ndirs > 1 ) {
-                      vcl_cout << " Thresholding with NMS :";
+                      std::cout << " Thresholding with NMS :";
 
                       NMS_VALUES * nms_values = new NMS_VALUES[ ndirs * size * 2 ];              
                       
                       for( int j = 0 ; j<ndirs; j++ )
                       {
-                        vcl_cout << ".." << j << "..";
+                        std::cout << ".." << j << "..";
 
                         theta    = ((j*vnl_math::pi)/(ndirs*1.0));
                         
@@ -142,22 +142,22 @@ class LogicalLinearPixelEdgeDetector
                       nms_across_pixel( nms_values );
                       nms_threshold( nms_values , thresh_val );
                       convert_nms_to_output( nms_values , vals , FilterTagType::getImageElementType() );
-                      vcl_cout<<" Done" <<vcl_endl;
+                      std::cout<<" Done" <<std::endl;
 
                       delete [] nms_values;
                       
                     } else {
-                      vcl_cout<<" Thresholding :"; 
+                      std::cout<<" Thresholding :"; 
                       for (int j=0;j<ndirs;j++)
                       {
-                        vcl_cout<<".."<<j<<"..";
+                        std::cout<<".."<<j<<"..";
 
                         theta    = ((j*vnl_math::pi)/(ndirs*1.0));
                         threshold(convolved_values_theta+j*size,          vals, theta,      thresh_val, FilterTagType::getImageElementType());
                         if (FilterTagType::getImageElementType()==IMAGE_ELEMENT_EDGE)
                           threshold(convolved_values_theta_plus_180+j*size, vals, theta+vnl_math::pi, thresh_val, FilterTagType::getImageElementType());
                       }
-                      vcl_cout<<" Done" <<vcl_endl;
+                      std::cout<<" Done" <<std::endl;
 
                     }
                     
@@ -199,7 +199,7 @@ class LogicalLinearPixelEdgeDetector
         template<typename OutputDS>
           void threshold(double *convolved_values, OutputDS &vals, double dir, double thresh_val, int image_element_type)
           {
-            //vcl_cout<<" Threshold ="<<thresh_val<<vcl_endl;
+            //std::cout<<" Threshold ="<<thresh_val<<std::endl;
             typedef typename OutputDS::value_type  value_type;
 
             assert((bool)_image);
@@ -374,11 +374,11 @@ class LogicalLinearPixelEdgeDetector
           }
           
           double phi = nms_values[ n*size + i*width + j ].angle_ - ( vnl_math::pi / 2.0 );
-          double sin_of_phi = vcl_sin( phi );
-          double cos_of_phi = vcl_cos( phi );
+          double sin_of_phi = std::sin( phi );
+          double cos_of_phi = std::cos( phi );
           
-          double abs_sin_of_phi = vcl_fabs( sin_of_phi );
-          double abs_cos_of_phi = vcl_fabs( cos_of_phi );
+          double abs_sin_of_phi = std::fabs( sin_of_phi );
+          double abs_cos_of_phi = std::fabs( cos_of_phi );
           
           if( abs_sin_of_phi < TINY_VALUE ) {
 
@@ -408,7 +408,7 @@ class LogicalLinearPixelEdgeDetector
             
             return;
 
-          } else if( vcl_fabs( abs_sin_of_phi - vcl_cos( vnl_math::pi / 4.0 ) ) < TINY_VALUE ) {
+          } else if( std::fabs( abs_sin_of_phi - std::cos( vnl_math::pi / 4.0 ) ) < TINY_VALUE ) {
 
             // do the case of diagonal comparison over all n directions -- must
             // check to see which diagonal is right.

@@ -34,10 +34,10 @@ class vehicle_model
     vsol_rectangle_2d   body(){return body_;}
 vsol_rectangle_2d   rear(){return rear_;}
 
-vcl_ostream& print(vcl_ostream& out) const;
-vcl_istream& read(vcl_istream& in) const;
+std::ostream& print(std::ostream& out) const;
+std::istream& read(std::istream& in) const;
 
-void vrml_print(vcl_ostream& out);
+void vrml_print(std::ostream& out);
 
 void transform_model(vnl_matrix<double>const& m1,vnl_matrix<double>const& m2,vnl_matrix<double>const& m3);
 void set_model(vsol_rectangle_2d engine,vsol_rectangle_2d  body,vsol_rectangle_2d  rear);
@@ -52,7 +52,7 @@ void set_model(vsol_rectangle_2d engine,vsol_rectangle_2d  body,vsol_rectangle_2
 
 void transform_component(vnl_matrix<double>const & m,vsol_rectangle_2d & box);
 
-vcl_ostream&  operator<<(vcl_ostream& out,vehicle_model const& M);
-vcl_istream&  operator>>(vcl_istream& in,vehicle_model &M);
+std::ostream&  operator<<(std::ostream& out,vehicle_model const& M);
+std::istream&  operator>>(std::istream& in,vehicle_model &M);
 #endif
 

@@ -15,15 +15,15 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cstdio.h>
-#include <vcl_list.h>
-#include <vcl_set.h>
-#include <vcl_map.h>
-#include <vcl_queue.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <list>
+#include <set>
+#include <map>
+#include <queue>
+#include <iostream>
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
@@ -37,7 +37,7 @@ double dbmsh3d_ifs_mesh::get_avg_edge_len_from_F ()
   assert (facemap_.size() != 0);
 
   //Loop through each mesh face and count bnd edge len.
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     int sz = F->vertices().size();
@@ -64,7 +64,7 @@ bool dbmsh3d_ifs_mesh::check_integrity ()
   if (dbmsh3d_pt_set::check_integrity() == false)
     return false;
 
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     if (F->id() != (*it).first)
@@ -88,7 +88,7 @@ dbmsh3d_pt_set* dbmsh3d_ifs_mesh::clone ()
 unsigned int dbmsh3d_ifs_mesh::_count_faces_indices_ifs() 
 {
   unsigned int totalVertices = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     assert (F->vertices().size() != 0);
@@ -104,13 +104,13 @@ unsigned int dbmsh3d_ifs_mesh::_count_faces_indices_ifs()
 unsigned int dbmsh3d_ifs_mesh::_count_visited_faces_indices_ifs() 
 {
   unsigned int totalVertices = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     if (F->b_visited() == false)
       continue; //skip the unmarked F.
 
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
     unsigned int nVer = vertices.size();
     nVer = nVer + 1; //the '-1' field
@@ -124,7 +124,7 @@ unsigned int dbmsh3d_ifs_mesh::_count_visited_faces_indices_ifs()
 //  where the indices of the vertices is known.
 void dbmsh3d_ifs_mesh::ifs_assign_Vs_vid_by_id ()
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     F->_ifs_assign_Vs_vid_by_id ();
@@ -149,14 +149,14 @@ void dbmsh3d_ifs_mesh::assign_IFS_vertex_vid_by_vertex_order()
 void dbmsh3d_ifs_mesh::mark_unmeshed_pts ()
 {
   //Reset the unmeshed flag of each point.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     V->set_meshed (false);
   }
 
   //Go through all mesh faces and mark incident points.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
 
@@ -172,7 +172,7 @@ void dbmsh3d_ifs_mesh::delete_unmeshed_pts ()
   mark_unmeshed_pts ();
 
   //Go through each point and delete unmeshed ones.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   while (vit != vertexmap_.end()) {
     dbmsh3d_vertex* V = (*vit).second;
     if (V->b_meshed() == false) {
@@ -196,7 +196,7 @@ double dbmsh3d_mesh::get_avg_edge_len_from_F ()
   assert (facemap_.size() != 0);
 
   //Loop through each mesh face and count bnd edge len.
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     assert (F->halfedge());
@@ -228,10 +228,10 @@ unsigned int dbmsh3d_mesh::count_faces_indices()
 unsigned int dbmsh3d_mesh::_count_faces_indices_mhe() 
 {
   unsigned int totalVertices = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     F->get_bnd_Vs (vertices);
     unsigned int nVer = vertices.size();
     nVer = nVer + 1; //the '-1' field
@@ -243,7 +243,7 @@ unsigned int dbmsh3d_mesh::_count_faces_indices_mhe()
 void dbmsh3d_mesh::remove_F_del_isolated_Es (dbmsh3d_face* F)
 { 
   //The list of edges to delete.
-  vcl_vector<dbmsh3d_edge*> edges_to_del;
+  std::vector<dbmsh3d_edge*> edges_to_del;
   dbmsh3d_halfedge* HE = F->halfedge();
   do {
     dbmsh3d_edge* E = HE->edge();
@@ -262,8 +262,8 @@ void dbmsh3d_mesh::remove_F_del_isolated_Es (dbmsh3d_face* F)
 
 void dbmsh3d_mesh::remove_F_complete (dbmsh3d_face* F)
 {  
-  vcl_vector<dbmsh3d_edge*> Evec_to_del;
-  vcl_set<dbmsh3d_vertex*> Vset_to_del;
+  std::vector<dbmsh3d_edge*> Evec_to_del;
+  std::set<dbmsh3d_vertex*> Vset_to_del;
 
   F->get_bnd_Es (Evec_to_del);
   //Add incident V's to Vset_to_del
@@ -282,7 +282,7 @@ void dbmsh3d_mesh::remove_F_complete (dbmsh3d_face* F)
   Evec_to_del.clear();
 
   //Go through all Vset_to_del and delete the ones without incident E's.
-  vcl_set<dbmsh3d_vertex*>::iterator vit = Vset_to_del.begin();
+  std::set<dbmsh3d_vertex*>::iterator vit = Vset_to_del.begin();
   while (vit != Vset_to_del.end()) {
     dbmsh3d_vertex* V = (*vit);
     Vset_to_del.erase (vit);
@@ -307,7 +307,7 @@ void dbmsh3d_mesh::remove_E_complete (dbmsh3d_edge* E)
 }
 
 //: Create and add a mesh face from a given set of ordered edges.
-dbmsh3d_face* dbmsh3d_mesh::add_new_face (const vcl_vector<dbmsh3d_edge*>& ordered_edges)
+dbmsh3d_face* dbmsh3d_mesh::add_new_face (const std::vector<dbmsh3d_edge*>& ordered_edges)
 {
   //Create and add the new face to the structure.
   dbmsh3d_face* F = _new_face();  
@@ -347,7 +347,7 @@ bool dbmsh3d_mesh::check_integrity ()
     return false;
   }
 
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbmsh3d_edge* E = (*eit).second;
     if (E->id() != (*eit).first) {
@@ -360,7 +360,7 @@ bool dbmsh3d_mesh::check_integrity ()
     }
   }
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     if (F->id() != (*fit).first) {
@@ -381,7 +381,7 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
   dbmsh3d_mesh* M2 = new dbmsh3d_mesh ();
 
   //deep-copy all vertices.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
   for (; vit != vertexmap_.end(); vit++) {
     dbmsh3d_vertex* V = (dbmsh3d_vertex*) (*vit).second;
     dbmsh3d_vertex* V2 = V->clone ();
@@ -391,7 +391,7 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
   assert (M2->vertexmap().size() == vertexmap_.size());
 
   //deep-copy all edges.
-  vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
   for (; eit != edgemap_.end(); eit++) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) (*eit).second;
     dbmsh3d_edge* E2 = E->clone (M2);
@@ -401,7 +401,7 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
   assert (M2->edgemap().size() == edgemap_.size());
 
   //deep-copy all faces.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbmsh3d_face* F = (dbmsh3d_face*) (*fit).second;
     dbmsh3d_face* F2 = F->clone (M2);
@@ -412,10 +412,10 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
 
   /*if (is_MHE()) { //1) deep-copy the MHE data structure.
     //First copy the IFS then convert to MHE.
-    vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
     for (; fit != facemap_.end(); fit++) {
       dbmsh3d_face* F = (dbmsh3d_face*) (*fit).second;  
-      vcl_vector<int> vids;
+      std::vector<int> vids;
       F->_get_bnd_V_ids_MHE (vids);
       dbmsh3d_face* F2 = M2->facemap (F->id());
       for (unsigned int i=0; i<vids.size(); i++) {
@@ -427,7 +427,7 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
     assert (M2->edgemap().size() == edgemap_.size());
   }
   else { //2) deep-copy the IFS data structure.
-    vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
     for (; fit != facemap_.end(); fit++) {
       dbmsh3d_face* F = (dbmsh3d_face*) (*fit).second;
       dbmsh3d_face* F2 = M2->facemap (F->id());
@@ -442,7 +442,7 @@ dbmsh3d_pt_set* dbmsh3d_mesh::clone ()
 }
 
 // Print a summary of mesh properties
-void dbmsh3d_mesh::print_summary(vcl_ostream& str)
+void dbmsh3d_mesh::print_summary(std::ostream& str)
 {
   str << "\n-------------------------------------------------\n";
   str << "Mesh info \n" ;
@@ -453,28 +453,28 @@ void dbmsh3d_mesh::print_summary(vcl_ostream& str)
 
 void dbmsh3d_mesh::print_topo_summary (void)
 { 
-  vul_printf (vcl_cout, "\nThe reconstructed surface mesh is:\n");
+  vul_printf (std::cout, "\nThe reconstructed surface mesh is:\n");
 
   bool b_2_manifold;
   unsigned int n_bnd_edges = count_bnd_edges (b_2_manifold);
 
   if (b_2_manifold)
-    vul_printf (vcl_cout, "\t- 2-manifold\n");
+    vul_printf (std::cout, "\t- 2-manifold\n");
   else
-    vul_printf (vcl_cout, "\t- non-2-manifold\n");
+    vul_printf (std::cout, "\t- non-2-manifold\n");
 
   int max_sides = count_max_polygon_sides ();
 
   if (max_sides == 3)
-    vul_printf (vcl_cout, "\t- triangular\n");
+    vul_printf (std::cout, "\t- triangular\n");
   else
-    vul_printf (vcl_cout, "\t- non-triangular, max %u polygon sides.\n", max_sides);
+    vul_printf (std::cout, "\t- non-triangular, max %u polygon sides.\n", max_sides);
 
 
   if (n_bnd_edges == 0)
-    vul_printf (vcl_cout, "\t- closed watertight surface.\n\n");
+    vul_printf (std::cout, "\t- closed watertight surface.\n\n");
   else
-    vul_printf (vcl_cout, "\t- non-watertight, %u boundary edges.\n\n", n_bnd_edges);
+    vul_printf (std::cout, "\t- non-watertight, %u boundary edges.\n\n", n_bnd_edges);
 }
 
 dbmsh3d_mesh* clone_mesh_ifs (dbmsh3d_mesh* M)
@@ -484,7 +484,7 @@ dbmsh3d_mesh* clone_mesh_ifs (dbmsh3d_mesh* M)
 
   //Clone all vertices of M.
   //Note: use _new_vertex() to create a new vertex.
-  vcl_map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator vit = M->vertexmap().begin();
   for (; vit != M->vertexmap().end(); vit++) {
     dbmsh3d_vertex* V = (*vit).second;
     dbmsh3d_vertex* newV = newM->_new_vertex (V->id());
@@ -494,7 +494,7 @@ dbmsh3d_mesh* clone_mesh_ifs (dbmsh3d_mesh* M)
   newM->set_vertex_id_counter (M->vertex_id_counter());
 
   //Clone all faces of M.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
     dbmsh3d_face* newF = newM->_new_face (F->id());
@@ -510,11 +510,11 @@ dbmsh3d_mesh* clone_mesh_ifs (dbmsh3d_mesh* M)
   return newM;
 }
 
-dbmsh3d_face* add_F_to_M (vcl_vector<int>& vids, dbmsh3d_mesh* M)
+dbmsh3d_face* add_F_to_M (std::vector<int>& vids, dbmsh3d_mesh* M)
 {  
   //First find or create the set of order edges of this face.
   //assumption: vids is ordered a circular way.
-  vcl_vector<dbmsh3d_edge*> ordered_edges;
+  std::vector<dbmsh3d_edge*> ordered_edges;
 
   //Add one more vertex to the end for circulation.
   vids.push_back (vids[0]);
@@ -542,11 +542,11 @@ dbmsh3d_face* add_F_to_M (vcl_vector<int>& vids, dbmsh3d_mesh* M)
   return newF;
 }
 
-dbmsh3d_face* add_F_to_M_check_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M)
+dbmsh3d_face* add_F_to_M_check_topo (std::vector<int>& vids, dbmsh3d_mesh* M)
 {
   //First find or create the set of order edges of this face.
   //assumption: vids is ordered a circular way.
-  vcl_vector<dbmsh3d_edge*> ordered_edges;
+  std::vector<dbmsh3d_edge*> ordered_edges;
 
   //Add one more vertex to the end for circulation.
   vids.push_back (vids[0]);
@@ -594,12 +594,12 @@ dbmsh3d_face* add_F_to_M_check_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M)
   return newF;
 }
 
-void add_M_faces_to_IFSset (dbmsh3d_mesh* M, vcl_vector<vcl_vector<int> >& faces)
+void add_M_faces_to_IFSset (dbmsh3d_mesh* M, std::vector<std::vector<int> >& faces)
 {
-  vcl_map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = M->facemap().begin();
   for (; fit != M->facemap().end(); fit++) {
     dbmsh3d_face* F = (*fit).second;
-    vcl_vector<int> vids;
+    std::vector<int> vids;
     F->get_bnd_V_ids (vids);
     faces.push_back (vids);
   }
@@ -608,36 +608,36 @@ void add_M_faces_to_IFSset (dbmsh3d_mesh* M, vcl_vector<vcl_vector<int> >& faces
 // ----------------------------------------------------------------------------
 void bmsh3d_mesh_print_object_size ()
 {
-  vul_printf (vcl_cout, "\n\n");
-  vcl_vector<dbmsh3d_edge*> tmp_vector;
-  vcl_cout << "size of vcl_vector: "<< sizeof(tmp_vector) << vcl_endl;  
-  vcl_list<dbmsh3d_edge*> tmp_list;
-  vcl_cout << "size of vcl_list: "<< sizeof(tmp_list) << vcl_endl;
-  vcl_set<dbmsh3d_edge*> tmp_set;
-  vcl_cout << "size of vcl_set: "<< sizeof(tmp_set) << vcl_endl;
-  vcl_set<dbmsh3d_edge*> tmp_map;
-  vcl_cout << "size of vcl_map: "<< sizeof(tmp_map) << vcl_endl;
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n\n");
+  std::vector<dbmsh3d_edge*> tmp_vector;
+  std::cout << "size of std::vector: "<< sizeof(tmp_vector) << std::endl;  
+  std::list<dbmsh3d_edge*> tmp_list;
+  std::cout << "size of std::list: "<< sizeof(tmp_list) << std::endl;
+  std::set<dbmsh3d_edge*> tmp_set;
+  std::cout << "size of std::set: "<< sizeof(tmp_set) << std::endl;
+  std::set<dbmsh3d_edge*> tmp_map;
+  std::cout << "size of std::map: "<< sizeof(tmp_map) << std::endl;
+  vul_printf (std::cout, "\n");
 
-  vul_printf (vcl_cout, "    Object          Size (bytes)\n");
-  vul_printf (vcl_cout, "------------------------------------\n");
-  vul_printf (vcl_cout, "vispt_elm                %3d\n", sizeof (vispt_elm));
-  vul_printf (vcl_cout, "dbmsh3d_vertex       --  %3d\n", sizeof (dbmsh3d_vertex));
-  vul_printf (vcl_cout, "\n");
-  vul_printf (vcl_cout, "dbmsh3d_halfedge     --  %3d\n", sizeof (dbmsh3d_halfedge));
-  vul_printf (vcl_cout, "dbmsh3d_edge         --  %3d\n", sizeof (dbmsh3d_edge));
-  vul_printf (vcl_cout, "\n");
-  vul_printf (vcl_cout, "dbmsh3d_face         --  %3d\n", sizeof (dbmsh3d_face));
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "    Object          Size (bytes)\n");
+  vul_printf (std::cout, "------------------------------------\n");
+  vul_printf (std::cout, "vispt_elm                %3d\n", sizeof (vispt_elm));
+  vul_printf (std::cout, "dbmsh3d_vertex       --  %3d\n", sizeof (dbmsh3d_vertex));
+  vul_printf (std::cout, "\n");
+  vul_printf (std::cout, "dbmsh3d_halfedge     --  %3d\n", sizeof (dbmsh3d_halfedge));
+  vul_printf (std::cout, "dbmsh3d_edge         --  %3d\n", sizeof (dbmsh3d_edge));
+  vul_printf (std::cout, "\n");
+  vul_printf (std::cout, "dbmsh3d_face         --  %3d\n", sizeof (dbmsh3d_face));
+  vul_printf (std::cout, "\n");
   
-  vul_printf (vcl_cout, "dbmsh3d_pt_set           %3d\n", sizeof (dbmsh3d_pt_set));
-  vul_printf (vcl_cout, "dbmsh3d_ifs_mesh         %3d\n", sizeof (dbmsh3d_ifs_mesh));
-  vul_printf (vcl_cout, "dbmsh3d_mesh             %3d\n", sizeof (dbmsh3d_mesh));
+  vul_printf (std::cout, "dbmsh3d_pt_set           %3d\n", sizeof (dbmsh3d_pt_set));
+  vul_printf (std::cout, "dbmsh3d_ifs_mesh         %3d\n", sizeof (dbmsh3d_ifs_mesh));
+  vul_printf (std::cout, "dbmsh3d_mesh             %3d\n", sizeof (dbmsh3d_mesh));
 }
 
 bool dbmsh3d_mesh::is_2_manifold ()
 {
-  vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
   for (; it != edgemap_.end(); it++) {
     dbmsh3d_edge* edge = (*it).second;
     if (edge->n_incident_Fs() > 2)
@@ -649,7 +649,7 @@ bool dbmsh3d_mesh::is_2_manifold ()
 unsigned int dbmsh3d_mesh::count_max_polygon_sides ()
 {
   unsigned int max_sides = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
 
@@ -666,7 +666,7 @@ unsigned int dbmsh3d_mesh::count_max_polygon_sides ()
 unsigned int dbmsh3d_mesh::count_ifs_dup_edges ()
 {
   unsigned int count = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbmsh3d_face* F = (*it).second;
     count += F->vertices().size();
@@ -681,7 +681,7 @@ unsigned int dbmsh3d_mesh::count_bnd_edges (bool& b_2_manifold)
   b_2_manifold = true;
   unsigned int bnd_edges = 0;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
   for (; it != edgemap_.end(); it++) {
     dbmsh3d_edge* edge = (*it).second;
 
@@ -701,7 +701,7 @@ double dbmsh3d_mesh::get_avg_edge_len ()
   double        sum_length = 0;
 
   assert (edgemap_.size() != 0);
-  vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
   for (; it != edgemap_.end(); it++) {
     dbmsh3d_edge* edge = (*it).second;
     
@@ -723,7 +723,7 @@ void dbmsh3d_mesh::m2_mesh_merge_face (dbmsh3d_face* F1, dbmsh3d_face* F2 ,dbmsh
 
 {
   assert (F1 != F2);
-  vcl_cout << "mesh_merge_faces " << F1->id() << " with " << F2->id() << vcl_endl;
+  std::cout << "mesh_merge_faces " << F1->id() << " with " << F2->id() << std::endl;
 
   dbmsh3d_vertex* Vs = E->sV();
   dbmsh3d_vertex* Ve = E->eV();
@@ -797,7 +797,7 @@ void manifold_fix_faces_orientation (dbmsh3d_mesh* mesh, int sfaceid, bool b_use
 
   //: propagation of the orientation to all other faces
   //  the front here is the halfedge with associated faces to propagate.
-  vcl_queue<dbmsh3d_halfedge*> he_queue;
+  std::queue<dbmsh3d_halfedge*> he_queue;
 
   //: put all adjacent faces into the queue
   dbmsh3d_halfedge* HE = startHE;

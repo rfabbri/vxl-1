@@ -27,31 +27,31 @@
 unsigned int gap_type=1;
 
 void prune_sample_shock(dbsk2d_shock_storage_sptr storage,
-                        vcl_string file_name);
+                        std::string file_name);
 
 bool loop_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                    output_shock,vcl_string input_extension,bool write_data,
+                    output_shock,std::string input_extension,bool write_data,
                     unsigned int& numb_transforms);
 
 bool loop_transform3(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                     output_shock,vcl_string input_extension,bool write_data,
+                     output_shock,std::string input_extension,bool write_data,
                      unsigned int& numb_transforms);
 
 bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                    output_shock,vcl_string input_extension,bool write_data,
+                    output_shock,std::string input_extension,bool write_data,
                     unsigned int& numb_transforms);
 
 bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                    output_shock,vcl_string input_extension,bool write_data,
+                    output_shock,std::string input_extension,bool write_data,
                     unsigned int& numb_transforms)
 {
 
     bool flag=true;
 
-    vcl_vector< vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >
+    std::vector< std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >
         gap_pairs;
 
-    vcl_vector< vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >
+    std::vector< std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >
         gap4_pairs;
 
     dbsk2d_ishock_gap_detector detector(output_shock->get_ishock_graph());
@@ -79,10 +79,10 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
                  continue;
              }
 
-            vcl_stringstream sstream;
+            std::stringstream sstream;
             sstream<<index;
-            vcl_string number=sstream.str();
-            vcl_string extension;
+            std::string number=sstream.str();
+            std::string extension;
             if ( number.size() == 1 )
             {
                 extension="000"+number;
@@ -106,15 +106,15 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
             flag = transformer.execute_transform();
 
             double preprocess_time = (double)(timer1.real())/1000;
-            vcl_cout << "Done. Time Local Shock taken= " << 
+            std::cout << "Done. Time Local Shock taken= " << 
                 preprocess_time << " seconds\n";
 
             if ( write_data)
             {
-                vcl_string filename = input_extension;
+                std::string filename = input_extension;
                 filename=filename+"_"+extension+"_shock_graph.bnd";
             
-                vcl_string filename2 =input_extension;
+                std::string filename2 =input_extension;
                 filename2=filename2+"_"+extension+".bnd";
             
                 if ( output_shock->get_shock_graph())
@@ -128,9 +128,9 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 
             if ( flag == false )
             {
-                vcl_cerr<<"Local Shock computation failed for "<<
+                std::cerr<<"Local Shock computation failed for "<<
                     input_extension
-                        <<vcl_endl;
+                        <<std::endl;
                 break;
             }            
             ++trans;
@@ -147,10 +147,10 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
         for (; index < gap4_pairs.size() ; ++index)
         {
             
-            vcl_stringstream sstream;
+            std::stringstream sstream;
             sstream<<index;
-            vcl_string number=sstream.str();
-            vcl_string extension;
+            std::string number=sstream.str();
+            std::string extension;
             if ( number.size() == 1 )
             {
                 extension="000"+number;
@@ -178,15 +178,15 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
             flag = transformer.execute_transform();
             
             double preprocess_time = (double)(timer1.real())/1000;
-            vcl_cout << "Done. Time Local Shock taken= " << 
+            std::cout << "Done. Time Local Shock taken= " << 
                 preprocess_time << " seconds\n";
         
             if ( write_data)
             {
-                vcl_string filename = input_extension;
+                std::string filename = input_extension;
                 filename=filename+"_"+extension+"_shock_graph.bnd";
                 
-                vcl_string filename2 =input_extension;
+                std::string filename2 =input_extension;
                 filename2=filename2+"_"+extension+".bnd";
                 
                 if ( output_shock->get_shock_graph())
@@ -200,9 +200,9 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 
             if ( flag == false )
             {
-                vcl_cerr<<"Local Shock computation failed for "<<
+                std::cerr<<"Local Shock computation failed for "<<
                     input_extension
-                        <<vcl_endl;
+                        <<std::endl;
                 break;
             }            
         
@@ -216,12 +216,12 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 }
 
 bool loop_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                    output_shock,vcl_string input_extension,bool write_data,
+                    output_shock,std::string input_extension,bool write_data,
                     unsigned int& numb_transforms)
 {
     bool flag=true;
     unsigned int index=0;
-    vcl_vector<dbsk2d_ishock_belm*> belm_list = boundary->belm_list();
+    std::vector<dbsk2d_ishock_belm*> belm_list = boundary->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_point() )
@@ -240,13 +240,13 @@ bool loop_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
                 timer1.mark();
                 flag = transformer.execute_transform();
                 double preprocess_time = (double)(timer1.real())/1000;
-                vcl_cout << "done. Time Local Shock taken= " << 
+                std::cout << "done. Time Local Shock taken= " << 
                     preprocess_time << "seconds\n";
   
-                vcl_stringstream sstream;
+                std::stringstream sstream;
                 sstream<<index;
-                vcl_string number=sstream.str();
-                vcl_string extension;
+                std::string number=sstream.str();
+                std::string extension;
                 if ( number.size() == 1 )
                 {
                     extension="000"+number;
@@ -261,17 +261,17 @@ bool loop_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
                     extension="0"+number;
                 }
 
-                vcl_string filename = input_extension;
+                std::string filename = input_extension;
                 filename=filename+"_"+extension+"_shock_graph.bnd";
-                vcl_string filename2 =input_extension;
+                std::string filename2 =input_extension;
                 filename2=filename2+"_"+extension+".bnd";
                 
                 if ( flag == false )
                 {
-                    bpoint->getInfo(vcl_cerr);
-                    vcl_cerr<<"Local Shock computation failed for "<<
+                    bpoint->getInfo(std::cerr);
+                    std::cerr<<"Local Shock computation failed for "<<
                         input_extension
-                            <<vcl_endl;
+                            <<std::endl;
                     break;
                 }
                 
@@ -299,12 +299,12 @@ bool loop_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 
 
 bool loop_transform3(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr 
-                    output_shock,vcl_string input_extension,bool write_data,
+                    output_shock,std::string input_extension,bool write_data,
                     unsigned int& numb_transforms)
 {
     bool flag=true;
     unsigned int index=0;
-    vcl_vector<dbsk2d_ishock_belm*> belm_list = boundary->belm_list();
+    std::vector<dbsk2d_ishock_belm*> belm_list = boundary->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
         if ( belm_list[i]->is_a_point() )
@@ -323,13 +323,13 @@ bool loop_transform3(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
                 timer1.mark();
                 flag = transformer.execute_transform();
                 double preprocess_time = (double)(timer1.real())/1000;
-                vcl_cout << "done. Time Local Shock taken= " << 
+                std::cout << "done. Time Local Shock taken= " << 
                     preprocess_time << "seconds\n";
   
-                vcl_stringstream sstream;
+                std::stringstream sstream;
                 sstream<<index;
-                vcl_string number=sstream.str();
-                vcl_string extension;
+                std::string number=sstream.str();
+                std::string extension;
                 if ( number.size() == 1 )
                 {
                     extension="000"+number;
@@ -344,17 +344,17 @@ bool loop_transform3(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
                     extension="0"+number;
                 }
 
-                vcl_string filename = input_extension;
+                std::string filename = input_extension;
                 filename=filename+"_"+extension+"_shock_graph.bnd";
-                vcl_string filename2 =input_extension;
+                std::string filename2 =input_extension;
                 filename2=filename2+"_"+extension+".bnd";
                 
                 if ( flag == false )
                 {
-                    bpoint->getInfo(vcl_cerr);
-                    vcl_cerr<<"Local Shock computation failed for "<<
+                    bpoint->getInfo(std::cerr);
+                    std::cerr<<"Local Shock computation failed for "<<
                         input_extension
-                            <<vcl_endl;
+                            <<std::endl;
                     break;
                 }
                 
@@ -380,9 +380,9 @@ bool loop_transform3(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 
 }
 
-void prune_sample_shock(dbsk2d_shock_storage_sptr storage,vcl_string file_name)
+void prune_sample_shock(dbsk2d_shock_storage_sptr storage,std::string file_name)
 {
-    //vcl_cout<<"Pruning "<<vcl_endl;
+    //std::cout<<"Pruning "<<std::endl;
     dbsk2d_prune_ishock_process process;
     // process.parameters()->set_value("-threshold",(float) 0.0);
     process.clear_input();
@@ -395,11 +395,11 @@ void prune_sample_shock(dbsk2d_shock_storage_sptr storage,vcl_string file_name)
     dbsk2d_shock_graph_sptr shock_graph = storage->get_shock_graph();
     dbsk2d_shock_graph::edge_iterator curE = shock_graph->edges_begin();
 
-    vcl_vector<vsol_spatial_object_2d_sptr> line_objects;
+    std::vector<vsol_spatial_object_2d_sptr> line_objects;
     for (; curE != shock_graph->edges_end(); curE++)
     {
         dbsk2d_shock_edge_sptr cur_edge = (*curE);
-        vcl_vector<vgl_point_2d<double> > ex_pts=cur_edge->ex_pts();
+        std::vector<vgl_point_2d<double> > ex_pts=cur_edge->ex_pts();
         for ( unsigned int i=0; i < ex_pts.size()-1 ; ++i)
         {
             // Add in contours for front 
@@ -412,7 +412,7 @@ void prune_sample_shock(dbsk2d_shock_storage_sptr storage,vcl_string file_name)
 
     dbsk2d_file_io::save_bnd_v3_0(file_name,line_objects);
 
-    // vcl_cout<<"Sampling "<<vcl_endl;
+    // std::cout<<"Sampling "<<std::endl;
     // dbsk2d_sample_ishock_process sample_sg_pro;
     // sample_sg_pro.clear_input();
     // sample_sg_pro.clear_output();
@@ -421,14 +421,14 @@ void prune_sample_shock(dbsk2d_shock_storage_sptr storage,vcl_string file_name)
     // sample_sg_pro.finish();
 
     // // Grab output from sampling
-    // vcl_vector<bpro1_storage_sptr> sample_shock_results;
+    // std::vector<bpro1_storage_sptr> sample_shock_results;
     // sample_shock_results   = sample_sg_pro.get_output();
 
     // //Clean up after ourselves
     // sample_sg_pro.clear_input();
     // sample_sg_pro.clear_output();
 
-    // vcl_cout<<"Saving "<<vcl_endl;
+    // std::cout<<"Saving "<<std::endl;
     // dbsk2d_save_esf_process save_sg_pro;           
     // bpro1_filepath output(file_name);
     // save_sg_pro.parameters()->set_value("-esfoutput",output);
@@ -447,20 +447,20 @@ void prune_sample_shock(dbsk2d_shock_storage_sptr storage,vcl_string file_name)
 int main( int argc, char *argv[] )
 {
 
-    vcl_stringstream stream(argv[1]);
-    vcl_string input_cem_file;
+    std::stringstream stream(argv[1]);
+    std::string input_cem_file;
     stream>>input_cem_file;
 
-    vcl_stringstream stream2(argv[2]);
+    std::stringstream stream2(argv[2]);
     unsigned int transform(0);
     stream2>>transform;
 
-    vcl_stringstream stream3(argv[3]);
+    std::stringstream stream3(argv[3]);
     unsigned int write_data(0);
     stream3>>write_data;
 
     // Create output storage
-    vcl_vector<bpro1_storage_sptr> vsol_contour;
+    std::vector<bpro1_storage_sptr> vsol_contour;
 
     {
         // Call vidpro load cem process
@@ -539,7 +539,7 @@ int main( int argc, char *argv[] )
     shock_pro.finish();
 
     // Grab output from symbolic edge linking
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
     shock_results = shock_pro.get_output();
 
     // Grab the underlying contours
@@ -597,26 +597,26 @@ int main( int argc, char *argv[] )
     {
         if ( transform == 0 )
         {
-            vcl_cerr<<"Shock computation passed for "<<input_cem_file
-                    <<" with "<<numb_transforms<<" Loop I Transforms"<<vcl_endl;
+            std::cerr<<"Shock computation passed for "<<input_cem_file
+                    <<" with "<<numb_transforms<<" Loop I Transforms"<<std::endl;
         }
         else if ( transform == 1)
         {
-            vcl_cerr<<"Shock computation passed for "<<input_cem_file
-                    <<" with "<<numb_transforms<<" Gap I Transforms"<<vcl_endl;
+            std::cerr<<"Shock computation passed for "<<input_cem_file
+                    <<" with "<<numb_transforms<<" Gap I Transforms"<<std::endl;
 
         }
         else if ( transform == 2 )
         {
-            vcl_cerr<<"Shock computation passed for "<<input_cem_file
-                    <<" with "<<numb_transforms<<" Gap IV Transforms"<<vcl_endl;
+            std::cerr<<"Shock computation passed for "<<input_cem_file
+                    <<" with "<<numb_transforms<<" Gap IV Transforms"<<std::endl;
 
         }
         else if ( transform == 3 )
         {
-            vcl_cerr<<"Shock computation passed for "<<input_cem_file
+            std::cerr<<"Shock computation passed for "<<input_cem_file
                     <<" with "<<numb_transforms<<" Loop III Transforms"
-                    <<vcl_endl;
+                    <<std::endl;
 
         }
     }

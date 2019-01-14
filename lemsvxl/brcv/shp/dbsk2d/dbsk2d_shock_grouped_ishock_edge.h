@@ -13,7 +13,7 @@
 //   Amir Tamrakar 06/20/2005    Initial version.
 // \endverbatim
 
-#include <vcl_list.h>
+#include <list>
 #include <dbsk2d/dbsk2d_shock_edge.h>
 #include <dbsk2d/dbsk2d_shock_ishock_node_sptr.h>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
@@ -27,7 +27,7 @@ public:
   //: Constructor
   dbsk2d_shock_grouped_ishock_edge(dbsk2d_shock_node_sptr src_node, 
                                    dbsk2d_shock_node_sptr tgt_node,
-                                   vcl_list<dbsk2d_ishock_edge*> shock_edges);
+                                   std::list<dbsk2d_ishock_edge*> shock_edges);
 
   //: Destructor
   virtual ~dbsk2d_shock_grouped_ishock_edge();
@@ -36,7 +36,7 @@ public:
   virtual void form_shock_fragment();
 
   //: return a reference to the intrinsic shock edges
-  vcl_list<dbsk2d_ishock_edge*>& edges() { return edges_; }
+  std::list<dbsk2d_ishock_edge*>& edges() { return edges_; }
 
   //: return the maximum intrinsic parameter
   virtual double psi_max() { return 0; }
@@ -58,7 +58,7 @@ public:
 
 protected:
 
-  vcl_list<dbsk2d_ishock_edge*> edges_;
+  std::list<dbsk2d_ishock_edge*> edges_;
 
 };
 

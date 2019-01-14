@@ -17,13 +17,13 @@ protected:
   SoSeparator*                              master_root_;
 
   //: the array of tableaus used
-  vcl_vector<bgui3d_examiner_tableau_sptr>  tableaus_;
+  std::vector<bgui3d_examiner_tableau_sptr>  tableaus_;
 
   //: the grid tableau, should be greater than the tableaus_.size()
   vgui_grid_tableau_sptr                    grid_tableau_;
 
   //: each view's scenegraph drawing root 
-  vcl_vector<SoSelection*>                  view_drawing_SoSelections_;
+  std::vector<SoSelection*>                  view_drawing_SoSelections_;
 
   SoCamera* _camera;
 
@@ -31,7 +31,7 @@ public:
   dbsk3dapp_view_manager();
   virtual ~dbsk3dapp_view_manager();
   
-  void set_active_tableau_text (const vcl_string& string);
+  void set_active_tableau_text (const std::string& string);
 
   SoSeparator* master_root() { return master_root_; }
 

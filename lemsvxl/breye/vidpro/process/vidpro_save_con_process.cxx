@@ -1,8 +1,8 @@
 // This is vidpro/process/vidpro_save_con_process.h
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 
 #include <vidpro/process/vidpro_save_con_process.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -22,7 +22,7 @@ vidpro_save_con_process::vidpro_save_con_process() : bpro_process(), first_frame
       !parameters()->add( "# of frames:", "-num_frames", (int) 1) ||
       !parameters()->add( "Output Poly file <filename...>", "-poly_filename", bpro_filepath("","*.txt")) )
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro_save_con_process::vidpro_save_con_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro_save_con_process::vidpro_save_con_process()" << std::endl;
   }
 }
 
@@ -33,16 +33,16 @@ vidpro_save_con_process::clone() const
   return new vidpro_save_con_process(*this);
 }
 
-vcl_vector< vcl_string > vidpro_save_con_process::get_input_type()
+std::vector< std::string > vidpro_save_con_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
-vcl_vector< vcl_string > vidpro_save_con_process::get_output_type()
+std::vector< std::string > vidpro_save_con_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -58,44 +58,44 @@ bool vidpro_save_con_process::execute()
   parameters()->get_value( "-num_frames" , num_frames);
   parameters()->get_value( "-poly_filename" , poly_output);
 
-  vcl_string con_file_root = con_output.path;
-  vcl_string poly_file = poly_output.path;
+  std::string con_file_root = con_output.path;
+  std::string poly_file = poly_output.path;
   
   return saveCON(con_file_root, b_output_poly, video_id, num_frames, poly_file );
 }
 
 bool 
-vidpro_save_con_process::saveCON (vcl_string con_file_rootname, 
+vidpro_save_con_process::saveCON (std::string con_file_rootname, 
                                   bool output_poly_file, int video_id, 
-                                  int num_frames, vcl_string poly_filename)
+                                  int num_frames, std::string poly_filename)
 {
   // get input storage class
   vidpro_vsol2D_storage_sptr input_vsol;
   input_vsol.vertical_cast(input_data_[0][0]);
 
   // parse through all the vsol classes and save curve objects only
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
 
-  vcl_ofstream polyf;
+  std::ofstream polyf;
   if (output_poly_file){
     //create a polyfile
     if (first_frame_)
     {
-      polyf.open(poly_filename.c_str(), vcl_ios_out);
-      polyf << "VIDEOFILEID: " << video_id << vcl_endl;
-      polyf << "NFRAMES: " << num_frames << vcl_endl;
-      polyf << "NOBJECTS: " << vsol_list.size() << vcl_endl;
-      polyf << "NPOLYS: " << vsol_list.size() << vcl_endl;
+      polyf.open(poly_filename.c_str(), std::ios::out);
+      polyf << "VIDEOFILEID: " << video_id << std::endl;
+      polyf << "NFRAMES: " << num_frames << std::endl;
+      polyf << "NOBJECTS: " << vsol_list.size() << std::endl;
+      polyf << "NPOLYS: " << vsol_list.size() << std::endl;
       first_frame_ = false;
     }
     else {
-      polyf.open(poly_filename.c_str(), vcl_ios_app);
-      polyf << "NOBJECTS: " << vsol_list.size() << vcl_endl;
-      polyf << "NPOLYS: " << vsol_list.size() << vcl_endl;
+      polyf.open(poly_filename.c_str(), std::ios::app);
+      polyf << "NOBJECTS: " << vsol_list.size() << std::endl;
+      polyf << "NPOLYS: " << vsol_list.size() << std::endl;
     }
 
     if (!polyf){
-      vcl_cout << " Error writing file  " << poly_filename << vcl_endl;
+      std::cout << " Error writing file  " << poly_filename << std::endl;
       return false;
     }
   }
@@ -103,24 +103,24 @@ vidpro_save_con_process::saveCON (vcl_string con_file_rootname,
   //unused bool first = true;
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
-    vcl_ofstream outfp;
+    std::ofstream outfp;
 
     if (!output_poly_file)//if we want to save .cons
     {
       //create a unique name for this contour based on the root filename
       char filename[200];
-      vcl_sprintf(filename, "%s_%d.con", con_file_rootname.c_str(), b);
+      std::sprintf(filename, "%s_%d.con", con_file_rootname.c_str(), b);
 
       //create the file
-      outfp.open(filename, vcl_ios_out);
+      outfp.open(filename, std::ios::out);
 
       if (!outfp){
-        vcl_cout << " Error writing file  " << filename << vcl_endl;
+        std::cout << " Error writing file  " << filename << std::endl;
         return false;
       }
 
       //2) start writing out the contour to the file
-      outfp << "CONTOUR" << vcl_endl;
+      outfp << "CONTOUR" << std::endl;
     }
 
     // The contour can either be a polyline producing an open contour 
@@ -130,13 +130,13 @@ vidpro_save_con_process::saveCON (vcl_string con_file_rootname,
       if( vsol_list[b]->cast_to_curve()->cast_to_polyline() )
       {
         if (!output_poly_file){
-          outfp << "OPEN" << vcl_endl;
-          outfp << vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<vcl_endl;
+          outfp << "OPEN" << std::endl;
+          outfp << vsol_list[b]->cast_to_curve()->cast_to_polyline()->size() <<std::endl;
         
           for (unsigned int i=0; i<vsol_list[b]->cast_to_curve()->cast_to_polyline()->size();i++)
           {
             vsol_point_2d_sptr pt = vsol_list[b]->cast_to_curve()->cast_to_polyline()->vertex(i);
-            outfp <<pt->x() << " " << pt->y() << vcl_endl;
+            outfp <<pt->x() << " " << pt->y() << std::endl;
           }
         }
       }
@@ -147,27 +147,27 @@ vidpro_save_con_process::saveCON (vcl_string con_file_rootname,
       if( vsol_list[b]->cast_to_region()->cast_to_polygon() )
       {
         if (!output_poly_file){
-          outfp << "CLOSE" << vcl_endl;
-          outfp << vsol_list[b]->cast_to_region()->cast_to_polygon()->size() << vcl_endl;
+          outfp << "CLOSE" << std::endl;
+          outfp << vsol_list[b]->cast_to_region()->cast_to_polygon()->size() << std::endl;
 
           for (unsigned int i=0; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
           {
             vsol_point_2d_sptr pt = vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i);
-            outfp << pt->x() << " " << pt->y() << vcl_endl;
+            outfp << pt->x() << " " << pt->y() << std::endl;
           }
         }
         else {
-          polyf << "NVERTS: " << vsol_list[b]->cast_to_region()->cast_to_polygon()->size() << vcl_endl;
+          polyf << "NVERTS: " << vsol_list[b]->cast_to_region()->cast_to_polygon()->size() << std::endl;
         
-          polyf << "X: " << vcl_endl;
+          polyf << "X: " << std::endl;
           for (unsigned int i=0; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
             polyf << vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i)->x() << " ";
-          polyf << vcl_endl;
+          polyf << std::endl;
           
-          polyf << "Y: " << vcl_endl;
+          polyf << "Y: " << std::endl;
           for (unsigned int i=0; i<vsol_list[b]->cast_to_region()->cast_to_polygon()->size();i++)
             polyf << vsol_list[b]->cast_to_region()->cast_to_polygon()->vertex(i)->y() << " ";
-          polyf << vcl_endl;
+          polyf << std::endl;
         }
       }
     }

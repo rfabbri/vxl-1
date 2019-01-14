@@ -16,7 +16,7 @@ mleotta_save_keypoints_process::mleotta_save_keypoints_process()
 {
   if( !parameters()->add( "Binary file <filename...>" , "-keypoints_filename", bpro1_filepath("","*") )  )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -36,7 +36,7 @@ mleotta_save_keypoints_process::clone() const
 
 
 //: Return the name of the process
-vcl_string mleotta_save_keypoints_process::name()
+std::string mleotta_save_keypoints_process::name()
 {
   return "Save Keypoints";
 }
@@ -51,10 +51,10 @@ mleotta_save_keypoints_process::clear_output()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 mleotta_save_keypoints_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // image type required
   to_return.push_back( "keypoints" );
 
@@ -63,10 +63,10 @@ mleotta_save_keypoints_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >
+std::vector< std::string >
 mleotta_save_keypoints_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.clear();
 
   return to_return;
@@ -94,7 +94,7 @@ bool
 mleotta_save_keypoints_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In mleotta_save_keypoints_process::execute() - "
+    std::cout << "In mleotta_save_keypoints_process::execute() - "
              << "not exactly one keypoints frame \n";
     return false;
   }
@@ -115,7 +115,7 @@ mleotta_save_keypoints_process::finish()
     
   bpro1_filepath path;
   parameters()->get_value( "-keypoints_filename" , path );
-  vcl_string filename = path.path;
+  std::string filename = path.path;
 
   vsl_b_ofstream bfs(filename);
   for(unsigned int i=0; i<all_keypoints_.size();  ++i)

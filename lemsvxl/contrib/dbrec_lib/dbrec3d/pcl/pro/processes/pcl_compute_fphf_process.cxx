@@ -23,17 +23,17 @@ namespace pcl_compute_fphf_process_globals
   const unsigned n_outputs_ = 0;
   
   
-  bool load_cloud (const vcl_string &filename, pcl::PointCloud<pcl::PointNormal>::Ptr cloud)
+  bool load_cloud (const std::string &filename, pcl::PointCloud<pcl::PointNormal>::Ptr cloud)
   {
-    vcl_cout << "Loading: " << filename <<vcl_endl;
+    std::cout << "Loading: " << filename <<std::endl;
     
     if (loadPCDFile (filename, *cloud) < 0)
       return (false);
-    vcl_cout << " Done:" <<  cloud->width * cloud->height << " points\n";
-    vcl_cout << "Available dimensions: " << getFieldsList(*cloud).c_str ();
+    std::cout << " Done:" <<  cloud->width * cloud->height << " points\n";
+    std::cout << "Available dimensions: " << getFieldsList(*cloud).c_str ();
     
     // Check if the dataset has normals
-    vcl_vector<pcl::traits::fieldList<PointNormal>::type > field_list;
+    std::vector<pcl::traits::fieldList<PointNormal>::type > field_list;
 
     return true;
   }
@@ -45,13 +45,13 @@ bool pcl_compute_fphf_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_compute_fphf_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
-  input_types_[i++] = "vcl_string"; //point cloud input path
+  input_types_[i++] = vcl_string"; //point cloud input path
   input_types_[i++] = "double";  //radius for neighborhood computation
-  input_types_[i++] = "vcl_string"; //point cloud output path
+  input_types_[i++] = vcl_string"; //point cloud output path
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -65,9 +65,9 @@ bool pcl_compute_fphf_process(bprb_func_process& pro)
 
   //get inputs
   unsigned i = 0;
-  vcl_string cloud_in_file = pro.get_input<vcl_string>(i++);
+  std::string cloud_in_file = pro.get_input<std::string>(i++);
   double radius = pro.get_input<double>(i++);
-  vcl_string cloud_out_file = pro.get_input<vcl_string>(i++);
+  std::string cloud_out_file = pro.get_input<std::string>(i++);
   
   //create and read from file the input poin cloud
   PointCloud<PointNormal>::Ptr cloud_in(new PointCloud<PointNormal>);

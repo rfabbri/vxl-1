@@ -22,7 +22,7 @@ float dbskr_tree_edit_coarse::get_cost(int td1, int d1, int td2, int d2) {
   key2.second.second = key.second.first;
 
   float match_cost;
-  vcl_map<pathtable_key, float>::iterator iter;
+  std::map<pathtable_key, float>::iterator iter;
   iter = pathtable_.find(key);   // searching for either key or key2 is enough
   if (iter == pathtable_.end()) {
 
@@ -49,7 +49,7 @@ float dbskr_tree_edit_coarse::get_cost(int td1, int d1, int td2, int d2) {
       if (cost1 < LARGE_COST_RATIO*tree1_->total_splice_cost() && cost2 < LARGE_COST_RATIO*tree2_->total_splice_cost()) {
         
         match_cost = d.coarse_match();  // (includes init_dr and init_phi)
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
 
         //: shock curve map is using darts as key
         pathtable_key key_scm;
@@ -87,10 +87,10 @@ dbskr_sm_cor_sptr dbskr_tree_edit_coarse::get_correspondence(bool save_pathtable
   else
     cor = new dbskr_sm_cor(tree1(), tree2());
 
-  vcl_vector<dbskr_scurve_sptr>& curve_list1 = cor->get_curve_list1();
-  vcl_vector<dbskr_scurve_sptr>& curve_list2 = cor->get_curve_list2();
-  vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list = cor->get_map_list();
-  vcl_vector< pathtable_key >& path_map = cor->get_map();
+  std::vector<dbskr_scurve_sptr>& curve_list1 = cor->get_curve_list1();
+  std::vector<dbskr_scurve_sptr>& curve_list2 = cor->get_curve_list2();
+  std::vector< std::vector < std::pair <int,int> > >& map_list = cor->get_map_list();
+  std::vector< pathtable_key >& path_map = cor->get_map();
   if (!get_correspondence(curve_list1, curve_list2, map_list, path_map))
     return 0;
   
@@ -104,11 +104,11 @@ dbskr_sm_cor_sptr dbskr_tree_edit_coarse::get_correspondence(bool save_pathtable
 }
 
 //: return the corresponding shock curves and their maps
-bool dbskr_tree_edit_coarse::get_correspondence_just_map_helper(vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                                   vcl_vector< pathtable_key >& path_map)
+bool dbskr_tree_edit_coarse::get_correspondence_just_map_helper(std::vector< std::vector < std::pair <int,int> > >& map_list,
+                                   std::vector< pathtable_key >& path_map)
 {
   if (final_a1_ < 0) {
-    vcl_cout << "Paths are not computed, call edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, call edit()!" << std::endl;
     return false;
   }
 
@@ -126,7 +126,7 @@ bool dbskr_tree_edit_coarse::get_correspondence_just_map_helper(vcl_vector< vcl_
       dbskr_dpmatch d(sc2, sc1);
 
       d.coarse_match();  // (includes init_dr and init_phi)
-      vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+      std::vector<std::pair<int,int> > fmap=*(d.finalMap());
 
       map_list.push_back(fmap);
 
@@ -141,14 +141,14 @@ bool dbskr_tree_edit_coarse::get_correspondence_just_map_helper(vcl_vector< vcl_
       
       path_map.push_back(key);
 
-      vcl_map<pathtable_key, vcl_vector < vcl_pair <int,int> > >::iterator iter;
+      std::map<pathtable_key, std::vector < std::pair <int,int> > >::iterator iter;
       //: shock_curve_map_ also uses darts as key (NOT NODES as in pathtable_)
       iter = shock_curve_map_.find(key);   // searching for either key or key2 is enough
       if (iter == shock_curve_map_.end()) {  // redo the matching, its not saved!!
-        //vcl_cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
+        //std::cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
         dbskr_dpmatch d(sc1, sc2);
         d.coarse_match();
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
         map_list.push_back(fmap);
 
       } else {
@@ -164,8 +164,8 @@ dbskr_sm_cor_sptr dbskr_tree_edit_coarse::get_correspondence_just_map()
 {
   dbskr_sm_cor_sptr cor = new dbskr_sm_cor();
   
-  vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list = cor->get_map_list();
-  vcl_vector< pathtable_key >& path_map = cor->get_map();
+  std::vector< std::vector < std::pair <int,int> > >& map_list = cor->get_map_list();
+  std::vector< pathtable_key >& path_map = cor->get_map();
   if (!get_correspondence_just_map_helper(map_list, path_map))
     return 0;
 
@@ -176,12 +176,12 @@ dbskr_sm_cor_sptr dbskr_tree_edit_coarse::get_correspondence_just_map()
   return cor;
 }
 //: return the corresponding shock curves and their maps
-bool dbskr_tree_edit_coarse::get_correspondence(vcl_vector<dbskr_scurve_sptr>& curve_list1, 
-                        vcl_vector<dbskr_scurve_sptr>& curve_list2, 
-                        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-                        vcl_vector< pathtable_key >& path_map) {
+bool dbskr_tree_edit_coarse::get_correspondence(std::vector<dbskr_scurve_sptr>& curve_list1, 
+                        std::vector<dbskr_scurve_sptr>& curve_list2, 
+                        std::vector< std::vector < std::pair <int,int> > >& map_list,
+                        std::vector< pathtable_key >& path_map) {
   if (final_a1_ < 0) {
-    vcl_cout << "Paths are not computed, call edit()!" << vcl_endl;
+    std::cout << "Paths are not computed, call edit()!" << std::endl;
     return false;
   }
 
@@ -202,7 +202,7 @@ bool dbskr_tree_edit_coarse::get_correspondence(vcl_vector<dbskr_scurve_sptr>& c
       //: redo the matching
       dbskr_dpmatch d(sc2, sc1);
       d.coarse_match();
-      vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+      std::vector<std::pair<int,int> > fmap=*(d.finalMap());
       map_list.push_back(fmap);
 
       pathtable_key k;
@@ -218,14 +218,14 @@ bool dbskr_tree_edit_coarse::get_correspondence(vcl_vector<dbskr_scurve_sptr>& c
 
       path_map.push_back(key);
 
-      vcl_map<pathtable_key, vcl_vector < vcl_pair <int,int> > >::iterator iter;
+      std::map<pathtable_key, std::vector < std::pair <int,int> > >::iterator iter;
       //: shock_curve_map_ also uses darts as key (NOT NODES as in pathtable_)
       iter = shock_curve_map_.find(key);   // searching for either key or key2 is enough
       if (iter == shock_curve_map_.end()) {  // redo the matching, its not saved!!
-        //vcl_cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
+        //std::cout << "!!!!!!!!!!!!1MISMATCH IN shock_curve_map_\n";
         dbskr_dpmatch d(sc1, sc2);
         d.coarse_match();
-        vcl_vector<vcl_pair<int,int> > fmap=*(d.finalMap());
+        std::vector<std::pair<int,int> > fmap=*(d.finalMap());
         map_list.push_back(fmap);
 
       } else {

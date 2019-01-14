@@ -1,10 +1,10 @@
 #ifndef hsds_fd_tree_incremental_reader_h_
 #define hsds_fd_tree_incremental_reader_h_
 
-#include <vcl_string.h>
+#include <string>
 
-#include <vcl_ios.h>
-#include <vcl_fstream.h>
+#include <ios>
+#include <fstream>
 
 #include <vbl/vbl_bounding_box.h>
 
@@ -17,7 +17,7 @@ class hsds_fd_tree_incremental_reader
 public:
   hsds_fd_tree_incremental_reader(){};
 
-  void init(vcl_string filename);
+  void init(std::string filename);
 
   ~hsds_fd_tree_incremental_reader();
 
@@ -33,8 +33,8 @@ protected:
   hsds_fd_tree_incremental_reader(hsds_fd_tree_incremental_reader<T,d> const& that);
 
   unsigned int nnodes_;
-  vcl_ifstream ifs_idx_;
-  vcl_ifstream ifs_data_;
+  std::ifstream ifs_idx_;
+  std::ifstream ifs_data_;
 
   unsigned int max_levels_;
   vbl_bounding_box<double,d>  bbox_;

@@ -17,8 +17,8 @@
 #define _dborl_example_algo_h
 
 #include "dborl_example_algo_params_sptr.h"
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 class dborl_example_algo 
 {
@@ -30,7 +30,7 @@ public:
 
 protected:
   dborl_example_algo_params_sptr params_;
-  vcl_vector<vcl_string> names_;
+  std::vector<std::string> names_;
 };
 
 #endif  //_dborl_example_algo_h

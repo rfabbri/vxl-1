@@ -7,13 +7,13 @@ namespace tagNameSpace{
 
     tag::tag(unsigned binWidth):binWidth_(binWidth){}
 
-    vcl_pair<tag_row::iterator,bool> tag::addNode(unsigned nodeID)
+    std::pair<tag_row::iterator,bool> tag::addNode(unsigned nodeID)
     {
-        vcl_pair<tag_row::iterator,bool> ret;
+        std::pair<tag_row::iterator,bool> ret;
         if(tag_.count(nodeID))
         {
-            vcl_cerr << "Error tag::addNode " << nodeID 
-                     << " already exists." << vcl_flush;
+            std::cerr << "Error tag::addNode " << nodeID 
+                     << " already exists." << std::flush;
             ret.first = tag_.end();
             ret.second = false;
             return ret;
@@ -25,8 +25,8 @@ namespace tagNameSpace{
         {
             if( tr_itr->second.count(nodeID) )
             {
-                vcl_cerr << "Error tag::addNode" << nodeID 
-                         << " exists in a column but not a row!" << vcl_flush;
+                std::cerr << "Error tag::addNode" << nodeID 
+                         << " exists in a column but not a row!" << std::flush;
                 ret.first =  tag_.end();
                 ret.second = false;
                 return ret;
@@ -45,8 +45,8 @@ namespace tagNameSpace{
     {
         if( !tag_.erase(nodeID) )
         {
-            vcl_cerr << "Error tag::deleteNode attempting to erase "
-                     << nodeID << " but does not exist in row." << vcl_flush;
+            std::cerr << "Error tag::deleteNode attempting to erase "
+                     << nodeID << " but does not exist in row." << std::flush;
             return false;
         }
 
@@ -55,9 +55,9 @@ namespace tagNameSpace{
         {
             if( !tr_itr->second.erase(nodeID) )
             {
-                vcl_cerr << "Error tag::deleteNode attempting to delete "
+                std::cerr << "Error tag::deleteNode attempting to delete "
                          << nodeID << " but does not exist in column." 
-                         << vcl_flush;
+                         << std::flush;
                 return false;
             }
         }
@@ -89,17 +89,17 @@ namespace tagNameSpace{
             }
             else
             {
-                vcl_cerr << "Error tag::incFreq SOMETHING VERY WRONG! "
+                std::cerr << "Error tag::incFreq SOMETHING VERY WRONG! "
                          << '\n' << " nodeID1 " << nodeID1 << "exists "
                          << "but " << "nodeID2" << nodeID2 << " does not."
-                         << vcl_flush;
+                         << std::flush;
                 return false;
             }
         }
         else
         {
-            vcl_cerr << "Error tag::incFreq nodeID1 " << nodeID1 
-                     << " does not exist." << vcl_flush;
+            std::cerr << "Error tag::incFreq nodeID1 " << nodeID1 
+                     << " does not exist." << std::flush;
             return false;
         }
         
@@ -129,8 +129,8 @@ namespace tagNameSpace{
         tag_col::iterator tc_itr;
         if( tr_itr == tag_.end() )
         {
-            vcl_cerr << "Error tag::sumFreq node id: " << nodeID1 
-                     << " not found. " << vcl_flush;
+            std::cerr << "Error tag::sumFreq node id: " << nodeID1 
+                     << " not found. " << std::flush;
         }
 
         tc_itr = tr_itr->second.begin();
@@ -146,7 +146,7 @@ namespace tagNameSpace{
         return retSum;
     }//end tag::sumFreq
     
-    bool tag::writeDotTrellis(vcl_ostream& os, time_type trelMin, 
+    bool tag::writeDotTrellis(std::ostream& os, time_type trelMin, 
                               time_type trelMax)
     {
         unsigned nRows = tag_.size();

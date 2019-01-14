@@ -21,8 +21,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_limits.h>
+#include <vector>
+#include <limits>
 #include <vnl/vnl_vector_fixed.h>
 
 
@@ -30,41 +30,41 @@
 //: Apply K-Means clustering to the points
 // means should be initialized with k points
 template <unsigned dim>
-unsigned dbcll_k_means(const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                       vcl_vector<vcl_vector<unsigned> >& clusters,
-                       vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                       const unsigned max_num_itr = vcl_numeric_limits<unsigned>::max());
+unsigned dbcll_k_means(const std::vector<vnl_vector_fixed<double,dim> >& points,
+                       std::vector<std::vector<unsigned> >& clusters,
+                       std::vector<vnl_vector_fixed<double,dim> >& means,
+                       const unsigned max_num_itr = std::numeric_limits<unsigned>::max());
 
 
 //: Apply Accelerated K-Means clustering to the points
 // means should be initialized with k points
 template <unsigned dim>
-unsigned dbcll_fast_k_means(const vcl_vector<vnl_vector_fixed<double,dim> >& points,
-                            vcl_vector<vcl_vector<unsigned> >& clusters,
-                            vcl_vector<vnl_vector_fixed<double,dim> >& means,
-                            const unsigned max_num_itr = vcl_numeric_limits<unsigned>::max());
+unsigned dbcll_fast_k_means(const std::vector<vnl_vector_fixed<double,dim> >& points,
+                            std::vector<std::vector<unsigned> >& clusters,
+                            std::vector<vnl_vector_fixed<double,dim> >& means,
+                            const unsigned max_num_itr = std::numeric_limits<unsigned>::max());
 
 
 //: Pick a new mean index using the K-Means++ D^2 weighing scheme
-unsigned dbcll_random_sample_d2(const vcl_vector<double >& min_dists);
+unsigned dbcll_random_sample_d2(const std::vector<double >& min_dists);
 
 
 //: Pick a new mean index using the D weighing scheme
 // equivalent to D^2 if min_dists is squared distance
-unsigned dbcll_random_sample_d(const vcl_vector<double >& min_dists);
+unsigned dbcll_random_sample_d(const std::vector<double >& min_dists);
 
 
 //: Randomly choose k points from the set to initialize K-Means
 template <unsigned dim>
-vcl_vector<vnl_vector_fixed<double,dim> >
-dbcll_init_k_means_rand(const vcl_vector<vnl_vector_fixed<double,dim> >& points, unsigned k);
+std::vector<vnl_vector_fixed<double,dim> >
+dbcll_init_k_means_rand(const std::vector<vnl_vector_fixed<double,dim> >& points, unsigned k);
 
 
 //: Randomly choose k points from the set to initialize K-Means
 //  using the d2 distribution (K-Means++)
 template <unsigned dim>
-vcl_vector<vnl_vector_fixed<double,dim> >
-dbcll_init_k_means_d2(const vcl_vector<vnl_vector_fixed<double,dim> >& points, unsigned k);
+std::vector<vnl_vector_fixed<double,dim> >
+dbcll_init_k_means_d2(const std::vector<vnl_vector_fixed<double,dim> >& points, unsigned k);
 
 
 #endif // dbcll_k_means_h_

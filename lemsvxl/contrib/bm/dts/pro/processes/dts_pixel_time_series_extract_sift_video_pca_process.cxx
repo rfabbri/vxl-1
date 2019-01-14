@@ -11,8 +11,8 @@
 //       xmin = xmax = ymin = ymax = 0
 //
 // Inputs: 
-//         1. video glob (vcl_string)
-//         2. time type (vcl_string)
+//         1. video glob (std::string)
+//         2. time type (std::string)
 //		   3. reduction dimension (unsigned)
 //         4. xmin (unsigned)
 //         5. xmax (unsigned)
@@ -55,12 +55,12 @@ bool dts_pixel_time_series_extract_sift_video_pca_process_cons( bprb_func_proces
 	using namespace
 		dts_pixel_time_series_extract_sift_video_pca_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-    vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+    std::vector<std::string> output_types_(n_outputs_);
 
     unsigned i = 0;
-    input_types_[i++] = "vcl_string";//video glob
-    input_types_[i++] = "vcl_string";//pixel type
+    input_types_[i++] = vcl_string";//video glob
+    input_types_[i++] = vcl_string";//pixel type
 	input_types_[i++] = "unsigned";//reduction dimension
     input_types_[i++] = "unsigned";//xmin
     input_types_[i++] = "unsigned";//xmax
@@ -85,19 +85,19 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 
 	if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cout << pro.name() 
+        std::cout << pro.name() 
             << " dts_pixel_time_series_extract_sift_video_pca_process: "
             << " The input number should be " 
             << n_inputs_ 
-			<< "FILE: " << __FILE__ << vcl_endl
-			<< "LINE: " << __LINE__ << vcl_endl;
+			<< "FILE: " << __FILE__ << std::endl
+			<< "LINE: " << __LINE__ << std::endl;
         return false;
     }
 
 	//get inputs
     unsigned i = 0;
-    vcl_string video_glob	= pro.get_input<vcl_string>(i++);
-    vcl_string pixel_type	= pro.get_input<vcl_string>(i++);
+    std::string video_glob	= pro.get_input<std::string>(i++);
+    std::string pixel_type	= pro.get_input<std::string>(i++);
 	unsigned ndims2keep     = pro.get_input<unsigned>(i++);
     unsigned xmin			= pro.get_input<unsigned>(i++);
     unsigned xmax			= pro.get_input<unsigned>(i++);
@@ -112,11 +112,11 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 
     if( nframes == 0 )
     {
-        vcl_cerr << "---- Error ---- "
+        std::cerr << "---- Error ---- "
             << "dts_pixel_time_series_extract_sift_video_pca_process:\n"
             << "\tThe video stream has no frames.\n" 
-			<< "FILE: " << __FILE__ << vcl_endl
-			<< "LINE: " << __LINE__ << vcl_flush;
+			<< "FILE: " << __FILE__ << std::endl
+			<< "LINE: " << __LINE__ << std::flush;
         return false;
     }
 
@@ -131,8 +131,8 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 		for( unsigned frame = 0; frame < nframes; ++frame )
 		{
 			//#ifdef _DEBUG
-			vcl_cout << "Extracting SIFT frame: " << frame
-				<< " of " << nframes << vcl_endl;
+			std::cout << "Extracting SIFT frame: " << frame
+				<< " of " << nframes << std::endl;
 			//#endif //_DEBUG
 
 			vil_image_view<vxl_byte> curr_img;
@@ -160,8 +160,8 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 				ymax == 0)
 			{
 #ifdef _DEBUG
-				vcl_cout << "Extracting SIFT at Every Pixel in the Frame "
-					<< "(" << frameWidth*frameHeight << "pixels)." << vcl_endl;
+				std::cout << "Extracting SIFT at Every Pixel in the Frame "
+					<< "(" << frameWidth*frameHeight << "pixels)." << std::endl;
 #endif //_DEBUG
 
 				for( unsigned x = 0; x < frameWidth; ++x )
@@ -174,19 +174,19 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 			else
 			{
 #ifdef _DEBUG
-				vcl_cout << "Extracting SIFT in box: "
+				std::cout << "Extracting SIFT in box: "
 					<< "(xmin = " << xmin << ","
 					<< "xmax = " << xmax << ","
 					<< "ymin = " << ymin << ","
-					<< "ymax = " << ymax << ")" << vcl_endl;
+					<< "ymax = " << ymax << ")" << std::endl;
 #endif //_DEBUG
 
 				for( unsigned x = xmin; x <= xmax; ++x )
 					for( unsigned y = ymin; y <= ymax; ++y )
 					{
 #if 0
-						vcl_cout << "\tExtracting SIFT at pixel: (" 
-							<< x << ',' << y << ")" << vcl_endl;
+						std::cout << "\tExtracting SIFT at pixel: (" 
+							<< x << ',' << y << ")" << std::endl;
 #endif //_DEBUG
 						vnl_vector_fixed<double,128> feature(dsift.vnl_dsift(x,y));
 						dts_ptr->insert(vgl_point_2d<unsigned>(x,y),frame,feature);
@@ -201,8 +201,8 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 		{
 		case 2:
 			{
-				vcl_cout << "dts_pixel_time_series_extract_sift_video_pca_process: "
-					     << "Reducing Dimensionality to 2"<< vcl_endl;
+				std::cout << "dts_pixel_time_series_extract_sift_video_pca_process: "
+					     << "Reducing Dimensionality to 2"<< std::endl;
 				pts_output_sptr = dts_pixel_time_series_pca_vnl_vector_fixed
 							<unsigned,unsigned,double,128,2>::pca_new_sptr(*dts_ptr);
 				break;
@@ -215,13 +215,13 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 			}//end case 3
 		default:
 			{
-				vcl_cerr << "----ERROR---- "
+				std::cerr << "----ERROR---- "
 					<< "dts_pixel_time_series_extract_sift_video_pca_process: "
 					<< "Unknown destination dimension, "
 					<< " please augment.\n"
 					<< "\tFILE: " << __FILE__ << '\n'
 					<< "\tLINE: " << __LINE__ << '\n'
-					<< vcl_flush;
+					<< std::flush;
 				return false;
 			}//end default
 		}//end switch(ndims2keep)
@@ -236,11 +236,11 @@ bool dts_pixel_time_series_extract_sift_video_pca_process( bprb_func_process& pr
 	}//end pixel_type=="unsigned"
 	else
 	{
-		vcl_cerr << "----ERROR----\n"
-			<< "\tdts_pixel_time_series_extract_sift_video_pca_process:" << vcl_endl
-			<< "\t\t Unknown pixel type, please augment." << vcl_endl
-			<< "FILE: " << __FILE__ << vcl_endl
-			<< "LINE: " << __LINE__ << vcl_flush;
+		std::cerr << "----ERROR----\n"
+			<< "\tdts_pixel_time_series_extract_sift_video_pca_process:" << std::endl
+			<< "\t\t Unknown pixel type, please augment." << std::endl
+			<< "FILE: " << __FILE__ << std::endl
+			<< "LINE: " << __LINE__ << std::flush;
 		return false;
 	}//end else pixel_type
 

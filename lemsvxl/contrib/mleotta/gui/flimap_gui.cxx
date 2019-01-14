@@ -8,7 +8,7 @@
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_projection_inspector.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_double_3.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -44,9 +44,9 @@ public:
   SoBaseColor* point_colors() const { return p_colors_; }
   SoCoordinate3* point_coords() const { return p_coords_; }
 
-  vcl_vector<unsigned int> selection() const { return selection_; }
+  std::vector<unsigned int> selection() const { return selection_; }
 
-  void set_selection(const vcl_vector<unsigned int>& s) { selection_ = s; }
+  void set_selection(const std::vector<unsigned int>& s) { selection_ = s; }
 
   void read_file();
 
@@ -60,7 +60,7 @@ private:
 
   SoBaseColor* p_colors_;
   SoCoordinate3* p_coords_;
-  vcl_vector<unsigned int> selection_;
+  std::vector<unsigned int> selection_;
 };
 
 
@@ -91,7 +91,7 @@ void data_manager::init()
 void data_manager::read_file()
 {
   vgui_dialog vrml_dlg("Load ASCII LIDAR file");
-  static vcl_string filename = "", ext = "*.xyz";
+  static std::string filename = "", ext = "*.xyz";
   static unsigned int start = 0;
   static unsigned int n_pts = 500000;
   vrml_dlg.file("LIDAR file",ext, filename);
@@ -100,7 +100,7 @@ void data_manager::read_file()
   if(!vrml_dlg.ask())
     return;
 
-  vcl_ifstream fh(filename.c_str());
+  std::ifstream fh(filename.c_str());
   if(fh.is_open()){
     //check for lvcs
     char c;
@@ -108,7 +108,7 @@ void data_manager::read_file()
     if(c=='#')
       {
         double lat=0, lon=0, elev=0;
-        vcl_string buf;
+        std::string buf;
         fh >> buf;//skip lvcs
         fh >> buf;
         if(buf=="lat:")
@@ -119,7 +119,7 @@ void data_manager::read_file()
         fh >> buf;
         if(buf=="elev:")
           fh >> elev;
-        vcl_cout << "\nGeographic Origin: lat:" << lat << " lon:" 
+        std::cout << "\nGeographic Origin: lat:" << lat << " lon:" 
                  << lon << " elev(meters):" << elev << '\n';
         fh.ignore(1024,'\n');
       }
@@ -160,7 +160,7 @@ void data_manager::read_file()
       colors[i][2] /= 255.0f;
       ++i;
     }
-    vcl_cout << "last point: "<<i<<vcl_endl;
+    std::cout << "last point: "<<i<<std::endl;
     p_coords_->point.setValues(0, i, coords);
     p_coords_->point.deleteValues(i);
     p_colors_->rgb.setValues(0, i, colors);
@@ -178,7 +178,7 @@ void data_manager::read_file()
 void data_manager::save_selection()
 {
   vgui_dialog save_dlg("Save Selection");
-  static vcl_string filename = "", ext = "*.xyz";
+  static std::string filename = "", ext = "*.xyz";
   static bool vrml = false, recenter=false;
   save_dlg.file("File",ext, filename);
   save_dlg.checkbox("Save as VRML",vrml);
@@ -230,7 +230,7 @@ void data_manager::save_selection()
     newroot->unref();
   }
   else{
-    vcl_ofstream fh(filename.c_str());
+    std::ofstream fh(filename.c_str());
     fh.precision(10);
     if(fh.is_open()){
       for(unsigned int i=0; i<selection_.size(); ++i){
@@ -315,10 +315,10 @@ public:
 
 
       SoCoordinate3 * coords = data_manager::instance()->point_coords();
-      vcl_auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
+      std::auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
       bool inverted_camera = (dynamic_cast<bgui3d_project2d_tableau*>(tab3d_.ptr()) == 0);
       vpgl_perspective_camera<double>* pcam = cam->cast_to_perspective_camera();
-      vcl_vector<unsigned int> selection = data_manager::instance()->selection();
+      std::vector<unsigned int> selection = data_manager::instance()->selection();
       int num_pts = selection.size();
 
       glColor3f(0,1,0);
@@ -341,7 +341,7 @@ public:
     }
 
 
-    //vgui_projection_inspector().print(vcl_cout);
+    //vgui_projection_inspector().print(std::cout);
 
     if(e.type == vgui_MOUSE_MOTION){
       float ix, iy;
@@ -364,7 +364,7 @@ public:
     }
     if(e.type == vgui_MOUSE_UP && draw_mode_){
       draw_mode_ = false;  
-      vcl_auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
+      std::auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
       bool inverted_camera = (dynamic_cast<bgui3d_project2d_tableau*>(tab3d_.ptr()) == 0);
 
       vpgl_perspective_camera<double>* pcam = cam->cast_to_perspective_camera();
@@ -377,8 +377,8 @@ public:
       vnl_double_4 P2 = P.get_row(1);
       vnl_double_4 P3 = P.get_row(2);
 
-      if(x1 > last_x) vcl_swap(x1,last_x);
-      if(y1 > last_y) vcl_swap(y1,last_y);
+      if(x1 > last_x) std::swap(x1,last_x);
+      if(y1 > last_y) std::swap(y1,last_y);
 
       vnl_double_4 B1 = P1 - double(x1)*P3;
       vnl_double_4 B2 = double(last_x)*P3 - P1;
@@ -387,7 +387,7 @@ public:
 
       SoCoordinate3 * coords = data_manager::instance()->point_coords();
       int num_pts = coords->point.getNum();
-      vcl_vector<unsigned int> selection;
+      std::vector<unsigned int> selection;
       for(int i=0; i<num_pts; ++i){
         const SbVec3f& pt = coords->point[i];
         vnl_double_4 X(pt[0],pt[1],pt[2],1);

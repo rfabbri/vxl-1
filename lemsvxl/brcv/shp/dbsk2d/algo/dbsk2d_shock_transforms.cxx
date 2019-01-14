@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_algorithm.h>
-#include <vcl_cmath.h>
+#include <algorithm>
+#include <cmath>
 
 #include <dbsk2d/dbsk2d_shock_graph.h>
 #include <dbsk2d/dbsk2d_ishock_graph.h>
@@ -63,7 +63,7 @@ bool dbsk2d_shock_transforms::gap_transform_only_hide(dbsk2d_ishock_edge* iedge)
     ishock_edge_list::iterator curS = inode->pShocks().begin();
     for(; curS!=inode->pShocks().end(); curS++) {
       dbsk2d_ishock_edge* parent = (*curS);
-      vcl_vector<dbsk2d_ishock_edge*> to_be_hidden;
+      std::vector<dbsk2d_ishock_edge*> to_be_hidden;
       to_be_hidden.push_back(parent);
       // hide all the nodes till a degree two source
       dbsk2d_ishock_node* current_node = parent->pSNode();
@@ -86,7 +86,7 @@ bool dbsk2d_shock_transforms::gap_transform_only_hide(dbsk2d_ishock_edge* iedge)
         dbsk2d_ishock_edge* parent_prev = parent;
         parent = ishock_graph->cyclic_adj_succ(parent, current_node, true); // exclude hiddens
         if (!parent) {
-          vcl_cout << "parent not found in DEGENERATEDEGTHREE GAP transform!\n"; break;
+          std::cout << "parent not found in DEGENERATEDEGTHREE GAP transform!\n"; break;
         }
         if (parent == parent_prev)  // if current_node is an end nodes
           break;
@@ -250,8 +250,8 @@ bool dbsk2d_shock_transforms::valid_gap_iedge(dbsk2d_ishock_edge *iedge) {
 
 //: For sorting pairs by their first element
 inline bool
-first_less( const vcl_pair<double,dbsk2d_ishock_edge*>& left,
-            const vcl_pair<double,dbsk2d_ishock_edge*>& right )
+first_less( const std::pair<double,dbsk2d_ishock_edge*>& left,
+            const std::pair<double,dbsk2d_ishock_edge*>& right )
 {
   return left.first < right.first;
 }
@@ -261,10 +261,10 @@ void dbsk2d_shock_transforms::perform_all_gap_transforms(double thres_contour, d
                                                          double alpha_contour, double alpha_app, bool keep_eulerspirals)
 {
   if (!image_set_) {
-    vcl_cout << "IMAGE is not set!!\n";
+    std::cout << "IMAGE is not set!!\n";
   }
 
-  vcl_vector<vcl_pair<double, dbsk2d_ishock_edge*> > gap_edges;
+  std::vector<std::pair<double, dbsk2d_ishock_edge*> > gap_edges;
   
   // traverse all coarse shock edges
   for (dbsk2d_shock_graph::edge_iterator curE = shock_graph->edges_begin(); curE != shock_graph->edges_end(); curE++)
@@ -273,7 +273,7 @@ void dbsk2d_shock_transforms::perform_all_gap_transforms(double thres_contour, d
     dbsk2d_shock_grouped_ishock_edge* cur_edge = (dbsk2d_shock_grouped_ishock_edge*)grouped_edge;
 
     dbsk2d_ishock_edge* iedge;  // find first nonzero iedge
-    for (vcl_list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin(); curIE != cur_edge->edges().end(); ++ curIE) {
+    for (std::list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin(); curIE != cur_edge->edges().end(); ++ curIE) {
       iedge = (*curIE);
       if (iedge == 0) continue;
       break;
@@ -286,28 +286,28 @@ void dbsk2d_shock_transforms::perform_all_gap_transforms(double thres_contour, d
       if (coarse_shock_graph_source_->id() != iedge->pSNode()->id())
         continue;   // Problem!!
       if (close_the_gap(thres_contour, thres_app, alpha_contour, alpha_app, cont_cost, app_cost)) {
-        gap_edges.push_back(vcl_pair<double, dbsk2d_ishock_edge*> (((alpha_contour*cont_cost)+(alpha_app*app_cost))/2.0f, iedge));
+        gap_edges.push_back(std::pair<double, dbsk2d_ishock_edge*> (((alpha_contour*cont_cost)+(alpha_app*app_cost))/2.0f, iedge));
       }
       clear_all();
     }
     
   }
     
-  //vcl_cout << "number of gap edges satisfying the thresholds: " << gap_edges.size() << " sorting... ";
-  vcl_sort( gap_edges.begin(), gap_edges.end(), first_less );
-  //vcl_cout << " DONE!\n";
+  //std::cout << "number of gap edges satisfying the thresholds: " << gap_edges.size() << " sorting... ";
+  std::sort( gap_edges.begin(), gap_edges.end(), first_less );
+  //std::cout << " DONE!\n";
 
-  vcl_vector<vcl_pair<double, dbsk2d_ishock_edge*> >::iterator iter;
+  std::vector<std::pair<double, dbsk2d_ishock_edge*> >::iterator iter;
   for (iter = gap_edges.begin(); iter != gap_edges.end(); iter++) {
     if (gap_transform_only_hide(iter->second)) {
-      //vcl_cout << "\nperformed on node with cost: " << iter->first << "\n";
+      //std::cout << "\nperformed on node with cost: " << iter->first << "\n";
       if (keep_eulerspirals) {
         gap_transform_contour_cost();
         if (es_)
           ess_.push_back(new bgld_eulerspiral(*es_));
       }
     } //else
-      //vcl_cout << "this transform had become OBSOLETE by a previous transform\n";
+      //std::cout << "this transform had become OBSOLETE by a previous transform\n";
   }
 
   shock_graph->clear();
@@ -316,11 +316,11 @@ void dbsk2d_shock_transforms::perform_all_gap_transforms(double thres_contour, d
 }
 
 void 
-dbsk2d_shock_transforms::get_eulerspirals(vcl_vector< vsol_spatial_object_2d_sptr >& contours)
+dbsk2d_shock_transforms::get_eulerspirals(std::vector< vsol_spatial_object_2d_sptr >& contours)
 {
   for (unsigned i = 0; i < ess_.size(); i++) {
-    vcl_vector<vgl_point_2d<double> > point_samples;
-    vcl_vector<vsol_point_2d_sptr> ps;
+    std::vector<vgl_point_2d<double> > point_samples;
+    std::vector<vsol_point_2d_sptr> ps;
     ess_[i]->compute_spiral(point_samples, 0.1);
     for (unsigned j = 0; j < point_samples.size(); j++)
       ps.push_back(new vsol_point_2d(point_samples[j]));
@@ -338,7 +338,7 @@ create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_no
   dbsk2d_shock_grouped_ishock_edge* cur_edge = (dbsk2d_shock_grouped_ishock_edge*)grouped_edge;
   // get the last nonzero intrinsic edge on sedge
   dbsk2d_ishock_edge *iedge;  
-  for (vcl_list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin(); curIE != cur_edge->edges().end(); ++ curIE) {
+  for (std::list<dbsk2d_ishock_edge*>::iterator curIE = cur_edge->edges().begin(); curIE != cur_edge->edges().end(); ++ curIE) {
     dbsk2d_ishock_edge* cur_iedge = (*curIE);
     if (cur_iedge == 0) continue;
     iedge = cur_iedge;
@@ -348,17 +348,17 @@ create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_no
   while (isedge && isedge->is_a_contact()) {
     isedge = ishock_graph->cyclic_adj_succ(isedge, iedge->target(), false); // using hidden edges as well
     if (isedge == iedge) {// not found!!!
-      vcl_cout << "PROBLEM!!! An eligible edge successor is not found!!\n";
+      std::cout << "PROBLEM!!! An eligible edge successor is not found!!\n";
       return -1;
     }
   }
 
   if (!isedge) {
-    vcl_cout << "PROBLEM!!! An eligible edge successor is not found!!\n";
+    std::cout << "PROBLEM!!! An eligible edge successor is not found!!\n";
     return -1;
   }
   
-  vcl_vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_point_2d<double> > pts;
   pts.push_back(tgtn->pt());
 
   vgl_point_2d<double> pt;
@@ -414,7 +414,7 @@ create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_no
 double dbsk2d_shock_transforms::
 create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, bsold_interp_curve_2d_sptr& c, dbsk2d_shock_edge_sptr& new_edge, dbsk2d_shock_node_sptr& new_node)
 {
-  vcl_vector<vgl_point_2d<double> > expts;
+  std::vector<vgl_point_2d<double> > expts;
 
   dbsk2d_shock_grouped_ishock_edge* sedgeptr = (dbsk2d_shock_grouped_ishock_edge*)sedge.ptr();
   expts.insert(expts.begin(), sedgeptr->ex_pts().begin(), sedgeptr->ex_pts().end());
@@ -479,13 +479,13 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
     es_ = new bgld_eulerspiral(start, dirs, end, dire);
 
     double len = es_->length();
-    //double len_power = len < 1.0f ? len : vcl_pow(es_->length(), double(3.0f));
-    //double E = (vcl_pow(es_->gamma(), double(2.0f))*len_power + vcl_pow(es_->average_curvature(), double(2.0f))*len_power);
-    //double E = (vcl_pow(es_->gamma(), double(2.0f)) + vcl_pow(es_->average_curvature(), double(4.0f)))*len;
-    double E_gc = (vcl_pow(es_->curvature_at_length(len), double(5.0f))-vcl_pow(es_->curvature_at_length(0.0f), double(5.0f)))/(5*es_->gamma());
-    E_gc = (E_gc + len*vcl_pow(es_->gamma(), double(2.0f)))*vcl_pow(len, double(3.0f));
+    //double len_power = len < 1.0f ? len : std::pow(es_->length(), double(3.0f));
+    //double E = (std::pow(es_->gamma(), double(2.0f))*len_power + std::pow(es_->average_curvature(), double(2.0f))*len_power);
+    //double E = (std::pow(es_->gamma(), double(2.0f)) + std::pow(es_->average_curvature(), double(4.0f)))*len;
+    double E_gc = (std::pow(es_->curvature_at_length(len), double(5.0f))-std::pow(es_->curvature_at_length(0.0f), double(5.0f)))/(5*es_->gamma());
+    E_gc = (E_gc + len*std::pow(es_->gamma(), double(2.0f)))*std::pow(len, double(3.0f));
     
-    double E_L = curve_offset_ + vcl_pow(len/curve_length_gamma_, curve_power_);
+    double E_L = curve_offset_ + std::pow(len/curve_length_gamma_, curve_power_);
     double E = 0;
     if (len < 1) { // less than 1 pixel
       E = E_L*curve_gamma_;  // I don't want scaling with curve_gamma_ if just using length
@@ -494,19 +494,19 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
     }
     
 #if 0
-    vcl_cout << "ES L: " << len << " ";
-    vcl_cout << "  gamma: " << es_->gamma() << "  K_0: " << es_->curvature_at_length(0.0f) << " K_f: " << es_->curvature_at_length(len) << "\n";
-    vcl_cout << "E_gc: " << E_gc << " E_L: " << E_L << " E: " << E << " "; 
-    vcl_cout << "[1-e^(-E/c_gamma)]: " << 1-vcl_exp(-E/curve_gamma_) << vcl_endl; 
+    std::cout << "ES L: " << len << " ";
+    std::cout << "  gamma: " << es_->gamma() << "  K_0: " << es_->curvature_at_length(0.0f) << " K_f: " << es_->curvature_at_length(len) << "\n";
+    std::cout << "E_gc: " << E_gc << " E_L: " << E_L << " E: " << E << " "; 
+    std::cout << "[1-e^(-E/c_gamma)]: " << 1-std::exp(-E/curve_gamma_) << std::endl; 
 #endif
 
-    return 1.0f - vcl_exp(-E/curve_gamma_); 
+    return 1.0f - std::exp(-E/curve_gamma_); 
   } else {
     // cost is only the radius of the node for now
     double len = valid_gap_node_radius_*2.0f;  // valid_gap_node_radius_ should have been set in valid_gap_node method 
-    double E_L = curve_offset_ + vcl_pow(len/curve_length_gamma_, curve_power_);
+    double E_L = curve_offset_ + std::pow(len/curve_length_gamma_, curve_power_);
 #if 0
-    vcl_cout << "2*radius: " << len << " E_L: " << E_L << " e^(-E_L): " << vcl_exp(-E_L) << " [1-e^(-E_L)]: " << 1-vcl_exp(-E_L) << vcl_endl; 
+    std::cout << "2*radius: " << len << " E_L: " << E_L << " e^(-E_L): " << std::exp(-E_L) << " [1-e^(-E_L)]: " << 1-std::exp(-E_L) << std::endl; 
 #endif
 
     if (bpoint1_) 
@@ -519,7 +519,7 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
     }
     
 
-    return 1.0f - vcl_exp(-E_L); // no dividing by curve_gamma_ since curve_gamma is scaling E_gc not E_L 
+    return 1.0f - std::exp(-E_L); // no dividing by curve_gamma_ since curve_gamma is scaling E_gc not E_L 
   }
 }
 
@@ -528,20 +528,20 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
 double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
     
   if (!coarse_shock_graph_source_) {
-    vcl_cout << "PROBLEM!!!!\n coarse shock graph source for this gap transform was not set!!!\n";
+    std::cout << "PROBLEM!!!!\n coarse shock graph source for this gap transform was not set!!!\n";
     return -1;
   }
 
   dbsk2d_shock_edge_sptr sedge, othersedge, othersedge2;
   if (gap_type_ == DEGENERATEDEGTHREE_GAP) {
     sedge = *(coarse_shock_graph_source_->out_edges().begin());
-    vcl_list<dbsk2d_shock_edge_sptr> in_edges = coarse_shock_graph_source_->in_edges();
+    std::list<dbsk2d_shock_edge_sptr> in_edges = coarse_shock_graph_source_->in_edges();
     if (in_edges.size() < 2) {
-      vcl_cout << "PROBLEM in DEGENERATE DEGREE THREE SOURCE\n";
+      std::cout << "PROBLEM in DEGENERATE DEGREE THREE SOURCE\n";
       return -1;
     }
-    vcl_list<dbsk2d_shock_edge_sptr>::iterator first_parent = (in_edges.begin());
-    vcl_list<dbsk2d_shock_edge_sptr>::iterator second_parent = first_parent++;
+    std::list<dbsk2d_shock_edge_sptr>::iterator first_parent = (in_edges.begin());
+    std::list<dbsk2d_shock_edge_sptr>::iterator second_parent = first_parent++;
     othersedge = shock_graph->cyclic_adj_succ(*first_parent, (*first_parent)->source());
     othersedge2 = shock_graph->cyclic_adj_succ(*second_parent, (*second_parent)->source());
   } else {
@@ -624,7 +624,7 @@ double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
       plus_mean /= region_plus_points_.size();
       minus_mean /= region_minus_points_.size();
   #if 0
-      vcl_cout << "APP plus_mean: (" << plus_mean << ") minus mean: (" << minus_mean << ")\n"; 
+      std::cout << "APP plus_mean: (" << plus_mean << ") minus mean: (" << minus_mean << ")\n"; 
   #endif
       return distance_intensity(plus_mean, minus_mean, color_gamma_);  // user should set the gamma accordingly if the image is grey!!
     } else {
@@ -651,7 +651,7 @@ double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
       plus_mean /= region_plus_points_.size();
       minus_mean /= region_minus_points_.size();
   #if 0
-      vcl_cout << "APP plus_mean: (" << plus_mean << ") minus mean: (" << minus_mean << ")\n"; 
+      std::cout << "APP plus_mean: (" << plus_mean << ") minus mean: (" << minus_mean << ")\n"; 
   #endif
       return distance_LAB(plus_mean, minus_mean, color_gamma_);
     }

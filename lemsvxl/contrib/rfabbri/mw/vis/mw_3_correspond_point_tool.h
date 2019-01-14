@@ -10,7 +10,7 @@
 
 #include <mw/vis/mw_correspond_point_tool_basic.h>
 
-#include <vcl_map.h>
+#include <map>
 
 #include <bmcsd/bmcsd_discrete_corresp_3.h>
 #include <bmcsd/pro/bmcsd_discrete_corresp_storage_3_sptr.h>
@@ -69,7 +69,7 @@ public:
   virtual ~mw_3_correspond_point_tool() {}
   
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events.
   virtual bool handle( const vgui_event & e, 
@@ -85,59 +85,59 @@ protected:
   // Data -----
   bmcsd_discrete_corresp_3 *corr_3_;
   bmcsd_discrete_corresp_storage_3_sptr p_sto_3_;
-  vcl_vector<vil_image_resource_sptr> images_;
+  std::vector<vil_image_resource_sptr> images_;
 
   bool lock_corresp_query_;
   vsol_line_2d_sptr selected_edgel_in_corresp_;
-  vcl_vector<unsigned> p_query_id_;
+  std::vector<unsigned> p_query_id_;
   bool query_is_corresp_;
-  vcl_vector<vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator > > correspondents_idx_;
+  std::vector<std::map<unsigned, std::list<bgui_vsol_soview2D_line_seg *>::iterator > > correspondents_idx_;
 
   // Styles -----
   vgui_style_sptr corresp_edges_style_;
   vgui_style_sptr wrongly_matched_edgels_style_;
-  vcl_vector<vgui_style_sptr> best_match_style_; 
-  vcl_string best_match_layer_; 
-  vcl_string corresp_edges_layer_; 
-  vcl_vector<vgui_style_sptr> p_query_style_;
-  vcl_vector<vcl_string> p_query_layer_; 
+  std::vector<vgui_style_sptr> best_match_style_; 
+  std::string best_match_layer_; 
+  std::string corresp_edges_layer_; 
+  std::vector<vgui_style_sptr> p_query_style_;
+  std::vector<std::string> p_query_layer_; 
 
   // Soviews -----
-  vcl_vector<vcl_list<bgui_vsol_soview2D_line_seg *> > correspondents_soview_;
-  vcl_vector<bgui_vsol_soview2D_line_seg *> p_query_soview_;
-  vcl_vector<vcl_vector<bgui_vsol_soview2D_line_seg *> > p_corresp_soview_;
+  std::vector<std::list<bgui_vsol_soview2D_line_seg *> > correspondents_soview_;
+  std::vector<bgui_vsol_soview2D_line_seg *> p_query_soview_;
+  std::vector<std::vector<bgui_vsol_soview2D_line_seg *> > p_corresp_soview_;
 
 
   // For manipulating ground-truth /  synthetic data ----------------------
   bool synthetic_;
   bool synthetic_olympus_;
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
   bmcsd_discrete_corresp_3 gt_3_; //:< ground-truth corresp.
-  vcl_vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
+  std::vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
   vgui_style_sptr es_style_;
-  vcl_string es_layer_; 
-  vcl_string srm_allcrvs_layer_; 
+  std::string es_layer_; 
+  std::string srm_allcrvs_layer_; 
   double srm_angle_;
   bdifd_camera srm_cam_;
   vnl_double_3x3 srm_K_;
   bdifd_3rd_order_point_3d srm_Prec_;
   bool  srm_display_full_; 
   bool  srm_display_es_; 
-  vcl_vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
+  std::vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
   vgui_style_sptr srm_allcrvs_style_;
 
-  vcl_vector<bgui_vsol_soview2D_polyline *> es_so_;
-  vcl_vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
+  std::vector<bgui_vsol_soview2D_polyline *> es_so_;
+  std::vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
 
-  vcl_vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
+  std::vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
 
   bgld_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
   vgui_style_sptr es_style_gt_;
-  vcl_string es_layer_gt_;
+  std::string es_layer_gt_;
   bgui_vsol_soview2D_polyline * es_so_gt_;
 
-  vcl_vector<mw_subpixel_point_set *> sp_;
+  std::vector<mw_subpixel_point_set *> sp_;
   bool has_sp_;
 
   bool 
@@ -188,8 +188,8 @@ protected:
 
   static void 
   build_point_tangents_from_edgels(
-      vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &pts2d_dg,
-      const vcl_vector<vcl_vector<vsol_line_2d_sptr> > &v
+      std::vector<std::vector<bdifd_3rd_order_point_2d> > &pts2d_dg,
+      const std::vector<std::vector<vsol_line_2d_sptr> > &v
       );
 
 
@@ -202,7 +202,7 @@ protected:
   void srm_draw_eulerspiral();
   void write_energies();
   static void 
-  get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l);
+  get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, std::list<unsigned> &p1_l, std::list<unsigned> &p2_l);
   void get_corresp();
   void get_images();
 };

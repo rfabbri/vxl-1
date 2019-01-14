@@ -25,9 +25,9 @@
 //#include <vil/vil_pyramid_image_resource_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <vector>
+#include <string>
+#include <map>
 
 //: Run xgraph detection based on pyramid edgemap
 class vox_detect_xgraph_using_pyramid_edgemap
@@ -60,21 +60,21 @@ public:
   bool run_detection_on(const dbdet_edgemap_sptr& edgemap, 
     const dbsksp_xshock_graph_sptr& xgraph,
     double confidence_lower_threshold,
-    const vcl_string& work_dir,
-    vcl_vector<dbsks_det_desc_xgraph_sptr >& dets);
+    const std::string& work_dir,
+    std::vector<dbsks_det_desc_xgraph_sptr >& dets);
 
 
 public:
-  vcl_string image_file;
-  vcl_string edgemap_folder;
-  vcl_string object_id; // string id of the image running detection on
-  vcl_string edgemap_ext;
-  vcl_string edgeorient_ext;
+  std::string image_file;
+  std::string edgemap_folder;
+  std::string object_id; // string id of the image running detection on
+  std::string edgemap_ext;
+  std::string edgeorient_ext;
   double edgemap_log2_scale_ratio;
-  vcl_string xgraph_file;
-  vcl_string xgraph_geom_file;
-  vcl_string xgraph_ccm_file;
-  vcl_vector<vcl_string > cfrag_list_to_ignore;
+  std::string xgraph_file;
+  std::string xgraph_geom_file;
+  std::string xgraph_ccm_file;
+  std::vector<std::string > cfrag_list_to_ignore;
 
   ////> Model graph sizes
   //double xgraph_base_scale;
@@ -102,34 +102,34 @@ public:
 
   int det_window_width;
   int det_window_height;
-  vcl_string work_folder;
+  std::string work_folder;
   double min_accepted_confidence;
   bool run_nms_based_on_overlap;
   double min_overlap_ratio_for_rejection;
 
-  vcl_vector<dbsks_det_desc_xgraph_sptr > output_det_list;
+  std::vector<dbsks_det_desc_xgraph_sptr > output_det_list;
 
 protected:
   // Intermediate data
   vil_image_view<vxl_byte > source_image;
 
-  vcl_vector<double > xgraph_scales;
+  std::vector<double > xgraph_scales;
 
   ////
   //vil_pyramid_image_resource_sptr edgemap_pyramid;
   //vnl_vector<double > pyramid_scales;
-  //vcl_map<unsigned, vcl_string > map_width2name;
+  //std::map<unsigned, std::string > map_width2name;
 
   //> edgemap pyramid -----------------------------------------------------------
   
   //: list of edgemap file names for each level
-  vcl_vector<vcl_string > list_edgemap_base_name;
+  std::vector<std::string > list_edgemap_base_name;
 
   //: list of edgemap width for each level
-  vcl_vector<unsigned > list_edgemap_width;
+  std::vector<unsigned > list_edgemap_width;
 
   //: list of edge map scale (compared to original image) for each level
-  vcl_vector<double > list_edgemap_scale;
+  std::vector<double > list_edgemap_scale;
 
   //> shock graph
   dbsksp_xshock_graph_sptr xgraph_prototype_;

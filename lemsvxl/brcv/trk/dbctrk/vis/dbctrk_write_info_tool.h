@@ -38,7 +38,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -55,7 +55,7 @@ protected:
   bgui_vsol2D_tableau_sptr tableau_;
   dbctrk_storage_sptr storage_;
 
-  vcl_vector<bgui_vsol_soview2D_edgel_curve*> dcs_;
+  std::vector<bgui_vsol_soview2D_edgel_curve*> dcs_;
 
   vgui_event_condition gesture_info_;
 

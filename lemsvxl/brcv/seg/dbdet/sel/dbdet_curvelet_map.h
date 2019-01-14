@@ -17,8 +17,8 @@
 //
 //\endverbatim
 
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 
 #include "dbdet_edgel.h"
 #include "dbdet_curvelet.h"
@@ -48,7 +48,7 @@ public:
                         double dpos=0.5, bool adap_uncer=true, double token_len=0.7, double max_k=0.5, double max_gamma=0.05,
                         bool centered=true, bool bidir=false): 
     C_type(ctype), rad_(rad),gap_(gap),dtheta_(dtheta), dpos_(dpos), badap_uncer_(adap_uncer), token_len_(token_len), 
-    max_k_(max_k), max_gamma_(max_gamma), nrad_((unsigned) vcl_ceil(rad)+1), maxN_(2*nrad_), 
+    max_k_(max_k), max_gamma_(max_gamma), nrad_((unsigned) std::ceil(rad)+1), maxN_(2*nrad_), 
     centered_(centered), bidirectional_(bidir)
   {}
 
@@ -68,10 +68,10 @@ public:
   dbdet_curvelet_params params_;
 
   //: The curvelet map, indexed by edgel IDs
-  vcl_vector<cvlet_list > map_;
+  std::vector<cvlet_list > map_;
 
   //: The curvelet map for the other direction (only for DHT mode)
-  vcl_vector<cvlet_list > map2_;
+  std::vector<cvlet_list > map2_;
 
   //: constructor
   dbdet_curvelet_map(dbdet_edgemap_sptr EM=0, dbdet_curvelet_params params=dbdet_curvelet_params());
@@ -113,7 +113,7 @@ public:
   void delete_all_curvelets(dbdet_edgel* e);
 
   //: does this curvelet exist at this edgel?
-  dbdet_curvelet* does_curvelet_exist(dbdet_edgel* e, vcl_deque<dbdet_edgel*> & chain);
+  dbdet_curvelet* does_curvelet_exist(dbdet_edgel* e, std::deque<dbdet_edgel*> & chain);
 
   //: does the given pair exist on the ref edgel?
   dbdet_curvelet* find_pair(dbdet_edgel* ref, dbdet_edgel* eA, dbdet_edgel* eB);

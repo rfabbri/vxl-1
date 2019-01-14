@@ -13,7 +13,7 @@
 #include <vil/vil_save.h>
 
 namespace world_typedefs{
-    typedef vcl_vector<vcl_vector< smw_graph > > world;
+    typedef std::vector<std::vector< smw_graph > > world;
 };
 
 using namespace world_typedefs;
@@ -54,17 +54,17 @@ public:
     //give the absolute coordinates, the coordinate of the pixel
     //relative to the image frame. The function will find the 
     //correct graph in the sub image, if we made a world on a sub image.
-    bool write_dot_file(vcl_ostream& os, unsigned const& col,
+    bool write_dot_file(std::ostream& os, unsigned const& col,
                         unsigned const& row);
 
-    bool write_dot_file_full(vcl_ostream& os, unsigned const& col,
+    bool write_dot_file_full(std::ostream& os, unsigned const& col,
                              unsigned const& row);
 
     vil_image_view<vxl_byte> max_prob_map();
 
-    bool write_max_prob_map(vcl_string const& prob_path);
+    bool write_max_prob_map(std::string const& prob_path);
 
-    // bool write_prob_map(vcl_string const& prob_path, 
+    // bool write_prob_map(std::string const& prob_path, 
     //                     vil_image_view<float> const& grey_img);
 
     //give fnc an image and it will highlight the area in which the world

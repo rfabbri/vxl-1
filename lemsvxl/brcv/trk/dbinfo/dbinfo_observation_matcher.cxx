@@ -1,4 +1,4 @@
-#include <vcl_cmath.h> // for log(), exp() ..
+#include <cmath> // for log(), exp() ..
 #include <vnl/vnl_math.h>
 #include <vbl/vbl_array_1d.h>
 #include <vsol/vsol_point_2d.h>
@@ -65,13 +65,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nIntensity Histogram 0\n";
+            std::cout << "\nIntensity Histogram 0\n";
             h0.print();
-            vcl_cout << "\nIntensity Histogram 1\n";
+            std::cout << "\nIntensity Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint Intensity Histogram 01\n";
+            std::cout << "\nJoint Intensity Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -100,10 +100,10 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
           {
             float Ix0 = v0[i][0], Iy0 = v0[i][1];
             float Ix1 = v1[i][0], Iy1 = v1[i][1];
-            float ang0 = deg_rad*vcl_atan2(Iy0, Ix0) + 180.0f;
-            float ang1 = deg_rad*vcl_atan2(Iy1, Ix1) + 180.0f;
-            float mag0 = vcl_abs(Ix0)+vcl_abs(Iy0);
-            float mag1 = vcl_abs(Ix1)+vcl_abs(Iy1);
+            float ang0 = deg_rad*std::atan2(Iy0, Ix0) + 180.0f;
+            float ang1 = deg_rad*std::atan2(Iy1, Ix1) + 180.0f;
+            float mag0 = std::abs(Ix0)+std::abs(Iy0);
+            float mag1 = std::abs(Ix1)+std::abs(Iy1);
             h0.upcount(ang0, mag0); h1.upcount(ang1, mag1);
             jh.upcount(ang0, mag0, ang1, mag1);
           }
@@ -113,13 +113,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nGradient Dir Histogram 0\n";
+            std::cout << "\nGradient Dir Histogram 0\n";
             h0.print();
-            vcl_cout << "\nGradient Dir Histogram 1\n";
+            std::cout << "\nGradient Dir Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint Gradient Dir Histogram 01\n";
+            std::cout << "\nJoint Gradient Dir Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -156,13 +156,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nHue Histogram 0\n";
+            std::cout << "\nHue Histogram 0\n";
             h0.print();
-            vcl_cout << "\nHue Histogram 1\n";
+            std::cout << "\nHue Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint hue Histogram 01\n";
+            std::cout << "\nJoint hue Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -183,8 +183,8 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
   if(!(obs0&&obsi))
     return 0;
 
-  vcl_vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
-  vcl_vector<dbinfo_feature_base_sptr> feati = obsi->features();
+  std::vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
+  std::vector<dbinfo_feature_base_sptr> feati = obsi->features();
   unsigned n0 = feat0.size(), ni = feati.size();
   if(n0!=ni)
     return 0;
@@ -192,7 +192,7 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
   for(unsigned i = 0; i<n0; ++i)
     {
       dbinfo_feature_base_sptr f0 = feat0[i];
-      vcl_string type = f0->is_a();
+      std::string type = f0->is_a();
       if(type == "dbinfo_intensity_feature"&&!use_intensity)
         continue;
       if(type == "dbinfo_gradient_feature"&&!use_gradient)
@@ -202,7 +202,7 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
       dbinfo_feature_data_base_sptr d0 = feat0[i]->data();
       dbinfo_feature_data_base_sptr di = feati[i]->data();
    if(!d0||!di)
-   {vcl_cout << "Warning- null feature data in dbinfo_observation_matcher::minfo(.)\n";
+   {std::cout << "Warning- null feature data in dbinfo_observation_matcher::minfo(.)\n";
    continue;}
     
       sum += dbinfo_observation_matcher::minfo(d0, di, verbose);
@@ -217,8 +217,8 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
   if(!(obs0&&obsi))
     return 0;
 
-  vcl_vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
-  vcl_vector<dbinfo_feature_base_sptr> feati = obsi->features();
+  std::vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
+  std::vector<dbinfo_feature_base_sptr> feati = obsi->features();
   unsigned n0 = feat0.size(), ni = feati.size();
   if(n0!=ni)
     return 0;
@@ -228,7 +228,7 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
       dbinfo_feature_data_base_sptr d0 = feat0[i]->data();
       dbinfo_feature_data_base_sptr di = feati[i]->data();
    if(!d0||!di)
-   {vcl_cout << "Warning- null feature data in dbinfo_observation_matcher::minfo(.)\n";
+   {std::cout << "Warning- null feature data in dbinfo_observation_matcher::minfo(.)\n";
    continue;}
       sum += dbinfo_observation_matcher::minfo(d0, di, verbose);
     }
@@ -237,7 +237,7 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
 
 float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
                                         dbinfo_feature_data_base_sptr const& d1,
-                                        vcl_vector<vcl_pair<unsigned, unsigned> > const& correspondences,
+                                        std::vector<std::pair<unsigned, unsigned> > const& correspondences,
                                         bool verbose, float max_value)
 {
   if(d0->format()!=d1->format())
@@ -286,13 +286,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nIntensity Histogram 0\n";
+            std::cout << "\nIntensity Histogram 0\n";
             h0.print();
-            vcl_cout << "\nIntensity Histogram 1\n";
+            std::cout << "\nIntensity Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint Intensity Histogram 01\n";
+            std::cout << "\nJoint Intensity Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -323,10 +323,10 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
             int region1_id = correspondences[i].second;
             float Ix0 = v0[region0_id][0], Iy0 = v0[region0_id][1];
             float Ix1 = v1[region1_id][0], Iy1 = v1[region1_id][1];
-            float ang0 = deg_rad*vcl_atan2(Iy0, Ix0) + 180.0f;
-            float ang1 = deg_rad*vcl_atan2(Iy1, Ix1) + 180.0f;
-            float mag0 = vcl_abs(Ix0)+vcl_abs(Iy0);
-            float mag1 = vcl_abs(Ix1)+vcl_abs(Iy1);
+            float ang0 = deg_rad*std::atan2(Iy0, Ix0) + 180.0f;
+            float ang1 = deg_rad*std::atan2(Iy1, Ix1) + 180.0f;
+            float mag0 = std::abs(Ix0)+std::abs(Iy0);
+            float mag1 = std::abs(Ix1)+std::abs(Iy1);
             h0.upcount(ang0, mag0); h1.upcount(ang1, mag1);
             jh.upcount(ang0, mag0, ang1, mag1);
           }
@@ -336,13 +336,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nGradient Dir Histogram 0\n";
+            std::cout << "\nGradient Dir Histogram 0\n";
             h0.print();
-            vcl_cout << "\nGradient Dir Histogram 1\n";
+            std::cout << "\nGradient Dir Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint Gradient Dir Histogram 01\n";
+            std::cout << "\nJoint Gradient Dir Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -381,13 +381,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
         float mi = H0 + H1 - H01;
         if(verbose)
           {
-            vcl_cout << "\nHue Histogram 0\n";
+            std::cout << "\nHue Histogram 0\n";
             h0.print();
-            vcl_cout << "\nHue Histogram 1\n";
+            std::cout << "\nHue Histogram 1\n";
             h1.print();
-            vcl_cout << "\nJoint hue Histogram 01\n";
+            std::cout << "\nJoint hue Histogram 01\n";
             jh.print();
-            vcl_cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
+            std::cout << "MI = " << mi << " = H0(" << H0 << ") + H1(" 
                      << H1 << ") - H01(" << H01 << ")\n";
           }
         return mi;
@@ -403,14 +403,14 @@ float dbinfo_observation_matcher::minfo(dbinfo_feature_data_base_sptr const& d0,
 //       is mapped to the region1 sample with id correspondences[i].second 
 float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
                                         dbinfo_observation_sptr const& obsi,
-                                        vcl_vector<vcl_pair<unsigned, unsigned> > const& correspondences,
+                                        std::vector<std::pair<unsigned, unsigned> > const& correspondences,
                                         bool verbose, float max_value)
 {
   if(!(obs0&&obsi))
     return 0;
 
-  vcl_vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
-  vcl_vector<dbinfo_feature_base_sptr> feati = obsi->features();
+  std::vector<dbinfo_feature_base_sptr> feat0 = obs0->features();
+  std::vector<dbinfo_feature_base_sptr> feati = obsi->features();
   unsigned n0 = feat0.size(), ni = feati.size();
   if(n0!=ni)
     return 0;
@@ -429,13 +429,13 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs0,
 // clusters.  The cluster distance is defined by the Euclidean distance
 // between centers of each observation.
 bool dbinfo_observation_matcher::
-cluster(vcl_vector<dbinfo_observation_sptr> const& obvs,
-        vcl_vector<vcl_vector<dbinfo_observation_sptr> >& clusters,
+cluster(std::vector<dbinfo_observation_sptr> const& obvs,
+        std::vector<std::vector<dbinfo_observation_sptr> >& clusters,
         bool verbose)
 {
   //Get the centers of each observation
-  vcl_vector<vsol_point_2d_sptr> cogs;
-  for(vcl_vector<dbinfo_observation_sptr>::const_iterator oit = obvs.begin();
+  std::vector<vsol_point_2d_sptr> cogs;
+  for(std::vector<dbinfo_observation_sptr>::const_iterator oit = obvs.begin();
       oit != obvs.end(); ++oit)
     cogs.push_back((*oit)->geometry()->cog());
   unsigned n = cogs.size();
@@ -449,10 +449,10 @@ cluster(vcl_vector<dbinfo_observation_sptr> const& obvs,
 
   for(unsigned k = 1; k<3; ++k)
     {
-      vcl_cout << "\nForming " << k << " clusters\n";
+      std::cout << "\nForming " << k << " clusters\n";
       km.do_clustering(k);
       for(unsigned j = 0; j<k;++j)
-        vcl_cout << "Clustering Observations  D[" << j << "] = " 
+        std::cout << "Clustering Observations  D[" << j << "] = " 
                  <<  km.total_distance(j) << '\n';
     }
   return true;
@@ -489,7 +489,7 @@ float dbinfo_observation_matcher::minfo(dbinfo_observation_sptr const& obs,
     ty = static_cast<float>(region_geom->y());
   tx -= static_cast<float>(obs_geom->x());
   ty -= static_cast<float>(obs_geom->y());
-  vcl_cout << "Cog Translation = (" << tx << ' ' << ty << ")\n";
+  std::cout << "Cog Translation = (" << tx << ' ' << ty << ")\n";
   vgl_h_matrix_2d<float> H;
   H.set_identity();
   H.set_translation(tx, ty);

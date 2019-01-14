@@ -80,7 +80,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -118,9 +118,9 @@ protected:
   vgui_event_condition gesture_delete_object;
   vgui_event_condition gesture_delete_object2;
 
-  vcl_vector<vcl_vector<vgui_soview2D_polygon*> > polygons_;  // the array that holds each object in each frame
-  //vcl_vector<vcl_vector<vgui_soview2D_polygon*> > lvwr_polygons_;  // the array that holds improved contours
-  vcl_vector<vcl_vector<dbru_label_sptr> > polygon_labels_;
+  std::vector<std::vector<vgui_soview2D_polygon*> > polygons_;  // the array that holds each object in each frame
+  //std::vector<std::vector<vgui_soview2D_polygon*> > lvwr_polygons_;  // the array that holds improved contours
+  std::vector<std::vector<dbru_label_sptr> > polygon_labels_;
   int frame_no_;
   int active_polygon_no_;
   bool activation_ok_;
@@ -137,17 +137,17 @@ protected:
 
   unsigned int start_frame_, end_frame_;
 
-  vcl_vector<vcl_string> choices_;
+  std::vector<std::string> choices_;
   int choice_;
   dbru_label_sptr latest_label_;
 
-  vcl_vector<dbru_object_sptr> objects_;
-  vcl_vector<vcl_vector<vgui_style_sptr> > object_polygon_styles_;
-  vcl_vector<vgui_style_sptr> object_styles_;
+  std::vector<dbru_object_sptr> objects_;
+  std::vector<std::vector<vgui_style_sptr> > object_polygon_styles_;
+  std::vector<vgui_style_sptr> object_styles_;
   int active_object_no_;
   //: create a map to handle styles better
   //     object_id                    frame_id  polygon_id in the frame
-  vcl_map<unsigned, vcl_map<unsigned, unsigned>* > object_polygon_map_; 
+  std::map<unsigned, std::map<unsigned, unsigned>* > object_polygon_map_; 
   vgui_style_sptr active_style_, normal_style_, lvwr_style_;
 
 private:

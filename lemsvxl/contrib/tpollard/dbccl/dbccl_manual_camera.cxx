@@ -17,9 +17,9 @@ dbccl_manual_camera::dbccl_manual_camera()
 //---------------------------------------------
 bool 
 dbccl_manual_camera::compute(
-  const vcl_vector< vgl_point_3d<double> >& world_points,
-  const vcl_vector< vgl_point_2d<double> >& image_points,
-  const vcl_vector< vgl_line_segment_2d<double> >& up_lines,
+  const std::vector< vgl_point_3d<double> >& world_points,
+  const std::vector< vgl_point_2d<double> >& image_points,
+  const std::vector< vgl_line_segment_2d<double> >& up_lines,
   vpgl_proj_camera<double>& camera )
 {
   if( image_points.size() < 5 ) return false;

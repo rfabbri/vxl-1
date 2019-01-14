@@ -134,7 +134,7 @@ int main(int argc, char** argv)
   sadali_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu();
   unsigned w = 1024, h = 768;
-  vcl_string title = "sadali GUI";
+  std::string title = "sadali GUI";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->set_statusbar(true);

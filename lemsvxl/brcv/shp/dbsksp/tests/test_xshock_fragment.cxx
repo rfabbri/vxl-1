@@ -10,8 +10,8 @@
 
 double angle_difference(double a, double b)
 {
-  vgl_vector_2d<double > va(vcl_cos(a), vcl_sin(a));
-  vgl_vector_2d<double > vb(vcl_cos(b), vcl_sin(b));
+  vgl_vector_2d<double > va(std::cos(a), std::sin(a));
+  vgl_vector_2d<double > vb(std::cos(b), std::sin(b));
   double diff = vnl_math_abs(signed_angle(va, vb));
   return diff;
 }
@@ -25,7 +25,7 @@ void test_xshock_fragment()
 
   // compute are of fragment formed by two line segments
   double computed_area = xfrag.area();
-  double true_area = 100 * 100 * vcl_sqrt(3.0) * 3/4;
+  double true_area = 100 * 100 * std::sqrt(3.0) * 3/4;
   TEST_NEAR("simple xshock_fragment area", (computed_area-true_area) / true_area, 0, 1e-2);
 
   // compute area of a terminal edge
@@ -37,7 +37,7 @@ void test_xshock_fragment()
   double computed_area2 = xfrag2.area();
   double true_area2 = 100 * 100 * vnl_math::pi / 3;
 
-  vcl_cout << "Computed area2 = " << computed_area2 << ".\n"
+  std::cout << "Computed area2 = " << computed_area2 << ".\n"
     << "True area2 = " << true_area2 << ".\n";
 
   TEST_NEAR("are of terminal xfragment", vnl_math_abs(computed_area2-true_area2) / true_area2, 0, 1e-2);

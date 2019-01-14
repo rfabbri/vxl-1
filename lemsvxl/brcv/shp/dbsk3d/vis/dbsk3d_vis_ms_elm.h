@@ -48,11 +48,11 @@ void draw_ms_sheet_geom (SoSeparator* root, dbsk3d_ms_sheet* MS,
                          const bool user_defined_class = true);
 
 void draw_SS_faces_geom (SoGroup* root, dbsk3d_ms_sheet* MS,
-                         vcl_map<int, dbmsh3d_vertex*>& V_map,
-                         vcl_map<int, dbmsh3d_face*>& F_map);
+                         std::map<int, dbmsh3d_vertex*>& V_map,
+                         std::map<int, dbmsh3d_face*>& F_map);
 
 void draw_SS_ifs_geom (SoGroup* root, dbsk3d_ms_sheet* MS,
-                       const vcl_vector<vgl_point_3d<double> >& pts,
-                       const vcl_vector<vcl_vector<int> >& faces);
+                       const std::vector<vgl_point_3d<double> >& pts,
+                       const std::vector<std::vector<int> >& faces);
 
 #endif

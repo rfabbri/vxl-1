@@ -2,14 +2,14 @@
 #define __TBS_CURVE_DEF__
 
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_utility.h>
-#include <vcl_cstdio.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <cstdio>
 #include <vnl/vnl_math.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <assert.h>
 
@@ -35,10 +35,10 @@ public:
     void setTop(bool b){ isTop = b; };
     
     // Read data from Raphael contour format file
-    void readDataFromFile(vcl_string fileName);
+    void readDataFromFile(std::string fileName);
     
     // Write to Raphael contour format file
-    void writeToFile(vcl_string fileName);
+    void writeToFile(std::string fileName);
     
     // Eroded Curve
     Curve<ptType,floatType> *eCurve;
@@ -47,12 +47,12 @@ public:
     floatType operator-(Curve<ptType,floatType> c2);
     
     // Member Access functions 
-    void writeExtrema(vcl_string fname); // Write the extrema to a CON file
-    void writeCon(vcl_string fname); // Write the curve to a CON file
-    void writeCoarseCon(vcl_string fname); // Write the coarse representation of the curve to a CON file
-    void writeAngles(vcl_string fname);
-    void writeCurvatures(vcl_string fname);
-    void writeTangents(vcl_string fname);
+    void writeExtrema(std::string fname); // Write the extrema to a CON file
+    void writeCon(std::string fname); // Write the curve to a CON file
+    void writeCoarseCon(std::string fname); // Write the coarse representation of the curve to a CON file
+    void writeAngles(std::string fname);
+    void writeCurvatures(std::string fname);
+    void writeTangents(std::string fname);
     void printElems(); // Print all points
     int numPoints(){return _numPoints;}
     int numExtrema(){return _extrema.size();}
@@ -108,7 +108,7 @@ public:
     int corners(int index){return _corners[index];}
     
     int coarseRef(int index){return _coarsePtArray[index].second;}
-    bool isCorner(int index){return vcl_find(_extrema.begin(),_extrema.end(),index)!=_extrema.end();}
+    bool isCorner(int index){return std::find(_extrema.begin(),_extrema.end(),index)!=_extrema.end();}
     
     //Functions to insert to the point list
     void append(PuzPoint<ptType> pt);
@@ -159,35 +159,35 @@ public:
 
 protected:
     //Data
-    vcl_vector<PuzPoint<ptType> > _ptArray;
+    std::vector<PuzPoint<ptType> > _ptArray;
     int                    _numPoints;
     floatType              _length;
     floatType              _angleRef;
-    vcl_vector<floatType>      _arcLength;
-    vcl_vector<floatType>      _normArcLength;
-    vcl_vector<floatType>      _dx;
-    vcl_vector<floatType>      _dy;
-    vcl_vector<floatType>      _curvature;
+    std::vector<floatType>      _arcLength;
+    std::vector<floatType>      _normArcLength;
+    std::vector<floatType>      _dx;
+    std::vector<floatType>      _dy;
+    std::vector<floatType>      _curvature;
     floatType              _totalCurvature;
-    vcl_vector<floatType>      _angle;
+    std::vector<floatType>      _angle;
     floatType              _totalAngleChange;
 
     // new stuff
-    vcl_vector<floatType>                   _tangent;
-    vcl_vector<vcl_pair<floatType,floatType> >  _aveTangent;
-    vcl_vector<int>                         _extrema;
+    std::vector<floatType>                   _tangent;
+    std::vector<std::pair<floatType,floatType> >  _aveTangent;
+    std::vector<int>                         _extrema;
 
     //Andrew
-    vcl_vector<int>                         _corners;
+    std::vector<int>                         _corners;
 
     // second element of the pair gives the index of this point
     // in the fine level representation
-    vcl_vector<vcl_pair<PuzPoint<ptType>,int> > _coarsePtArray;
+    std::vector<std::pair<PuzPoint<ptType>,int> > _coarsePtArray;
     int                                 _coarseNumPoints;
     int                                 _offset;
-    vcl_vector<floatType>                   _box;
-    vcl_vector<floatType>                   _luminance;
-    vcl_vector<vcl_pair<floatType,floatType> >  _gradient;
+    std::vector<floatType>                   _box;
+    std::vector<floatType>                   _luminance;
+    std::vector<std::pair<floatType,floatType> >  _gradient;
 
 private:
     //--spinner--//a pointer to the loins from whence this Curve was produced
@@ -209,9 +209,9 @@ private:
 // Default Constructor:
 template <class ptType,class floatType>
 Curve<ptType,floatType>::Curve(){
-  vcl_vector< PuzPoint<ptType> > a;
-  vcl_vector<floatType> b;
-  vcl_vector<int> c;
+  std::vector< PuzPoint<ptType> > a;
+  std::vector<floatType> b;
+  std::vector<int> c;
 
   _ptArray=a;
   _arcLength = b;
@@ -290,7 +290,7 @@ floatType Curve<ptType,floatType>::operator-(Curve<ptType,floatType> c2) {
   //Calculate d for each pair of points, keep track of the maximum distance and average distance
   for(int i=0;i<numPoints();i++) {
 //    d=pointDist(x(i),y(i),c2.x(i),c2.y(i));
-    d = vcl_sqrt(vcl_pow(x(i)-c2.x(i), 2.0) + vcl_pow(y(i)-c2.y(i), 2.0))
+    d = std::sqrt(std::pow(x(i)-c2.x(i), 2.0) + std::pow(y(i)-c2.y(i), 2.0))
     if(d>max_d) max_d=d;
     ave_d+=d;
   }
@@ -302,92 +302,92 @@ floatType Curve<ptType,floatType>::operator-(Curve<ptType,floatType> c2) {
 
 // Write extrema to a text file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeExtrema(vcl_string fname)
+void Curve<ptType,floatType>::writeExtrema(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  vcl_fprintf(fp, "%d\n", _extrema.size());
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  std::fprintf(fp, "%d\n", _extrema.size());
   for (unsigned i = 0; i < _extrema.size(); i++)
-    vcl_fprintf(fp,"%d\n", _extrema[i]);
-  vcl_fclose(fp);
+    std::fprintf(fp,"%d\n", _extrema[i]);
+  std::fclose(fp);
 }
 
 // Write the curve to a CON file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeCon(vcl_string fname)
+void Curve<ptType,floatType>::writeCon(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  vcl_fprintf(fp, "CONTOUR\nCLOSE\n%d\n", _numPoints);
-  typename vcl_vector< PuzPoint<ptType> >::iterator iter;
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  std::fprintf(fp, "CONTOUR\nCLOSE\n%d\n", _numPoints);
+  typename std::vector< PuzPoint<ptType> >::iterator iter;
   for (iter=_ptArray.begin();iter!=_ptArray.end();iter++)
-    vcl_fprintf(fp,"%8.3f %8.3f \n",iter->x(),iter->y());
-  vcl_fclose(fp);
+    std::fprintf(fp,"%8.3f %8.3f \n",iter->x(),iter->y());
+  std::fclose(fp);
 }
 
 // Write the curve to a CON file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeCoarseCon(vcl_string fname)
+void Curve<ptType,floatType>::writeCoarseCon(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  vcl_fprintf(fp, "CONTOUR\nCLOSE\n%d\n", this->_coarseNumPoints);
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  std::fprintf(fp, "CONTOUR\nCLOSE\n%d\n", this->_coarseNumPoints);
   for (int i=0; i < this->_coarseNumPoints; i++)
-    vcl_fprintf(fp,"%8.3f %8.3f \n", this->Cpoint(i).x(), this->Cpoint(i).y());
-  vcl_fclose(fp);
+    std::fprintf(fp,"%8.3f %8.3f \n", this->Cpoint(i).x(), this->Cpoint(i).y());
+  std::fclose(fp);
 }
 
 // Write the angles to a file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeAngles(vcl_string fname)
+void Curve<ptType,floatType>::writeAngles(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  //vcl_fprintf(fp, "%d\n", this->_angle.size());
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  //std::fprintf(fp, "%d\n", this->_angle.size());
   for (unsigned i=0; i < this->_angle.size(); i++)
-    vcl_fprintf(fp,"%8.3f\n", this->_angle[i]);
-  vcl_fclose(fp);
+    std::fprintf(fp,"%8.3f\n", this->_angle[i]);
+  std::fclose(fp);
 }
 
 // Write the curvatures to a file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeCurvatures(vcl_string fname)
+void Curve<ptType,floatType>::writeCurvatures(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  //vcl_fprintf(fp, "%d\n", this->_angle.size());
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  //std::fprintf(fp, "%d\n", this->_angle.size());
   for (unsigned i=0; i < this->_curvature.size(); i++)
-    vcl_fprintf(fp,"%8.3f\n", this->_curvature[i]);
-  vcl_fclose(fp);
+    std::fprintf(fp,"%8.3f\n", this->_curvature[i]);
+  std::fclose(fp);
 }
 
 // Write the tangents to a file
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeTangents(vcl_string fname)
+void Curve<ptType,floatType>::writeTangents(std::string fname)
 {
-  FILE *fp = vcl_fopen(fname.c_str(), "w");
-  vcl_fprintf(fp, "%d\n", this->_tangent.size());
+  FILE *fp = std::fopen(fname.c_str(), "w");
+  std::fprintf(fp, "%d\n", this->_tangent.size());
   for (int i=0; i < this->_tangent.size(); i++)
-    vcl_fprintf(fp,"%8.3f\n", this->_tangent[i]);
-  vcl_fclose(fp);
+    std::fprintf(fp,"%8.3f\n", this->_tangent[i]);
+  std::fclose(fp);
 }
 
 //Print x,y coordinates of all points.
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::printElems(){
-  vcl_cout << "Num Points " << _numPoints << vcl_endl;
+  std::cout << "Num Points " << _numPoints << std::endl;
   // CAN
-  //typename vcl_vector< PuzPoint<ptType> >::iterator iter;
+  //typename std::vector< PuzPoint<ptType> >::iterator iter;
   //for (iter=_ptArray.begin();iter!=_ptArray.end();iter++)
   //  printf("%8.3f %8.3f \n",iter->x(),iter->y());
-  //vcl_cout << iter->x() << " " << iter->y() <<vcl_endl;
+  //std::cout << iter->x() << " " << iter->y() <<std::endl;
 }
 
 //Insert a point to the list at location specified by iterator pt.
 //template <class ptType,class floatType>
-//void Curve<ptType,floatType>::insert(vcl_vector< PuzPoint<ptType> >::iterator iter,PuzPoint<ptType> pt){
+//void Curve<ptType,floatType>::insert(std::vector< PuzPoint<ptType> >::iterator iter,PuzPoint<ptType> pt){
 //  _ptArray.insert(iter,pt);
 //  _numPoints++;
 //}
 
 //Insert a point (x,y) to the list.
 //template <class ptType,class floatType>
-//void Curve<ptType,floatType>::insert(vcl_vector< PuzPoint<ptType> >::iterator iter,ptType x,ptType y){
+//void Curve<ptType,floatType>::insert(std::vector< PuzPoint<ptType> >::iterator iter,ptType x,ptType y){
 //  PuzPoint<ptType> pt(x,y);
 //  _ptArray.insert(iter,pt);
 //  _numPoints++;
@@ -413,9 +413,9 @@ void Curve<ptType,floatType>::append(ptType x,ptType y){
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::invert() {
   int i;
-  vcl_vector<PuzPoint<ptType> > temp = _ptArray;
-  vcl_vector<vcl_pair<PuzPoint<ptType>,int> > coarseTemp = _coarsePtArray;
-  vcl_vector<int> extTemp = _extrema;
+  std::vector<PuzPoint<ptType> > temp = _ptArray;
+  std::vector<std::pair<PuzPoint<ptType>,int> > coarseTemp = _coarsePtArray;
+  std::vector<int> extTemp = _extrema;
   
   for(i=0;i<_numPoints;i++)
     _ptArray[i]=temp[_numPoints-i-1];
@@ -433,7 +433,7 @@ void Curve<ptType,floatType>::invert() {
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::empty() 
 {
-  vcl_vector<PuzPoint<ptType> > a;
+  std::vector<PuzPoint<ptType> > a;
   _ptArray=a;
   _numPoints=0;
 }
@@ -442,8 +442,8 @@ void Curve<ptType,floatType>::empty()
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::rotateTranslate(floatType angle, floatType Tx, floatType Ty) {
 
-  vcl_vector<PuzPoint<ptType> > newPointsFine;
-  vcl_vector<PuzPoint<ptType> > newPointsCoarse;
+  std::vector<PuzPoint<ptType> > newPointsFine;
+  std::vector<PuzPoint<ptType> > newPointsCoarse;
   int i;
   floatType newX, newY;
 
@@ -477,8 +477,8 @@ void Curve<ptType,floatType>::rotateTranslate(floatType angle, floatType Tx, flo
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::translateRotate(floatType Tx, floatType Ty, floatType angle) {
 
-  vcl_vector<PuzPoint<ptType> > newPointsFine;
-  vcl_vector<PuzPoint<ptType> > newPointsCoarse;
+  std::vector<PuzPoint<ptType> > newPointsFine;
+  std::vector<PuzPoint<ptType> > newPointsCoarse;
   int i;
   floatType newX, newY;
   
@@ -517,7 +517,7 @@ void Curve<ptType,floatType>::smooth(floatType win)
   int rng=static_cast<int>(ceil(3.0*win));
   int num_extr=_extrema.size();
   ptType xc,yc,xT,yT;
-  vcl_vector<PuzPoint<ptType> > temp;
+  std::vector<PuzPoint<ptType> > temp;
   
   if(num_extr==0)
   {
@@ -587,7 +587,7 @@ PuzPoint<ptType> Curve<ptType,floatType>::ptInterp(floatType index) {
 
   p=floor(index);
   if(p>=_numPoints) {
-    vcl_cout << "Warning! Index out of Bounds" << vcl_endl;
+    std::cout << "Warning! Index out of Bounds" << std::endl;
     return nullpt;
   }
   n=p+1; 
@@ -778,7 +778,7 @@ void Curve<ptType,floatType>::computeCurvatures(){
       K=0;
     else
       K=(d2y*cdx-d2x*cdy)/pow((pow(cdx,2)+pow(cdy,2)),3/2);
-    //vcl_cout << d2x << " " << d2y << " " << dL << " " << cdx << " " << cdy << " " << K << vcl_endl;
+    //std::cout << d2x << " " << d2y << " " << dL << " " << cdx << " " << cdy << " " << K << std::endl;
     //printf("%6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n",d2x,d2y,dL,cdx,cdy,K);
     _curvature.push_back(K);
     _totalCurvature+=K;
@@ -924,15 +924,15 @@ OPEN (or CLOSE)
 x1 y1 x2 y2 x3 y3 ....
 */
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::readDataFromFile(vcl_string fileName){
+void Curve<ptType,floatType>::readDataFromFile(std::string fileName){
 
-  vcl_ifstream infp(fileName.c_str());
+  std::ifstream infp(fileName.c_str());
   char magicNum[200];
 
   infp.getline(magicNum,200);
   if (strncmp(magicNum,"CONTOUR",7)){
-    vcl_cout << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cout << "Should be CONTOUR " << magicNum << vcl_endl;
+    std::cout << "Invalid File " << fileName.c_str() << std::endl;
+    std::cout << "Should be CONTOUR " << magicNum << std::endl;
     exit(1);
   }
 
@@ -943,8 +943,8 @@ void Curve<ptType,floatType>::readDataFromFile(vcl_string fileName){
   else if (!strncmp(openFlag,"CLOSE",5))
     _isOpen = false;
   else{
-    vcl_cout << "Invalid File " << fileName.c_str() << vcl_endl;
-    vcl_cout << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cout << "Invalid File " << fileName.c_str() << std::endl;
+    std::cout << "Should be OPEN/CLOSE " << openFlag << std::endl;
     exit(1);
   }
   
@@ -962,22 +962,22 @@ void Curve<ptType,floatType>::readDataFromFile(vcl_string fileName){
 
 // Write the contour to a file using the Raphael Contour format
 template <class ptType,class floatType>
-void Curve<ptType,floatType>::writeToFile(vcl_string fileName) {
+void Curve<ptType,floatType>::writeToFile(std::string fileName) {
 
   if(_numPoints<1) {
-    vcl_cout << "Error! Null Contour - No File Written" << vcl_endl;
+    std::cout << "Error! Null Contour - No File Written" << std::endl;
     return;
   }
   
-  vcl_ofstream outfp(fileName.c_str());
+  std::ofstream outfp(fileName.c_str());
   
-  outfp << "CONTOUR" << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
   if(_isOpen==true)
-    outfp << "OPEN" << vcl_endl;
+    outfp << "OPEN" << std::endl;
   else
-    outfp << "CLOSE" << vcl_endl;
+    outfp << "CLOSE" << std::endl;
 
-  outfp << _numPoints << vcl_endl;
+  outfp << _numPoints << std::endl;
   
   for(int i=0;i<_numPoints;i++)
     outfp << point(i).x() << " " << point(i).y() << " ";
@@ -1010,7 +1010,7 @@ void Curve<ptType,floatType>::computeTangents()
 template <class ptType,class floatType>
 void Curve<ptType,floatType>::computeAveTangents()
 {  
-  vcl_pair<floatType,floatType> temp;
+  std::pair<floatType,floatType> temp;
   int tangent_size_int = static_cast<int>(_tangent.size());
   for (int i=0;i<tangent_size_int;i++)
   {
@@ -1030,14 +1030,14 @@ floatType Curve<ptType,floatType>::aveTangent(int start, int count)
 
   if ((start < 0)||(start >= size))
   {
-    vcl_cout<<" Error:<aveTangent> Parameters out of range "<<vcl_endl;
+    std::cout<<" Error:<aveTangent> Parameters out of range "<<std::endl;
     return 0;
   }
   
   int count_mag = abs(count);
   floatType prev_tangent = 0, tangent_sum = 0;
   
-  vcl_vector<floatType> tangent_list;
+  std::vector<floatType> tangent_list;
   int index = 0;
   floatType tangent = 0;
   floatType av_tangent = 0;
@@ -1085,7 +1085,7 @@ floatType Curve<ptType,floatType>::aveTangent(int start, int count)
   }
 
   // Sort the tangent list
-  vcl_sort(tangent_list.begin(), tangent_list.end());
+  std::sort(tangent_list.begin(), tangent_list.end());
 
   // Compute the average of tangent change
   for (unsigned i = 0; i < tangent_list.size(); i++) 
@@ -1104,8 +1104,8 @@ floatType Curve<ptType,floatType>::aveTangent(int start, int count)
           
     if (fabs(tangent-prev_tangent) > M_PI) 
     {
-      vcl_cout << " Warning : Angle diff > M_PI. Prev " << prev_tangent*(180/M_PI) 
-        << " Tangent = " << tangent*(180/M_PI) << vcl_endl;
+      std::cout << " Warning : Angle diff > M_PI. Prev " << prev_tangent*(180/M_PI) 
+        << " Tangent = " << tangent*(180/M_PI) << std::endl;
     }
     
     tangent_sum  += tangent;
@@ -1127,12 +1127,12 @@ void Curve<ptType,floatType>::findExtrema()
   // DELETE
 //  static int statk = 1;
 //  char fname[256];
-//  vcl_sprintf(fname, "D:/MyDocs/projects/PuzzleSolving/Temp/fragment%d.diff", statk);
-//  vcl_ofstream outfp(fname);
+//  std::sprintf(fname, "D:/MyDocs/projects/PuzzleSolving/Temp/fragment%d.diff", statk);
+//  std::ofstream outfp(fname);
 //  statk++;
 
   floatType diff=0;
-  vcl_vector<floatType> angle_diff;
+  std::vector<floatType> angle_diff;
   unsigned i;
   for (i=0;i<_aveTangent.size();i++)
   {
@@ -1152,7 +1152,7 @@ void Curve<ptType,floatType>::findExtrema()
     next = (i+1)%size;
 
     // DELETE
-//    outfp << i << " "  << _ptArray[i].x() << " " << _ptArray[i].y() << " " << angle_diff[i] << vcl_endl;
+//    outfp << i << " "  << _ptArray[i].x() << " " << _ptArray[i].y() << " " << angle_diff[i] << std::endl;
 
     if ((angle_diff[i]>angle_diff[prev])&&(angle_diff[i]>=angle_diff[next])) 
     {
@@ -1195,7 +1195,7 @@ template <class ptType,class floatType>
 void Curve<ptType,floatType>::resample(floatType dS)
 { 
   floatType length=0;
-  vcl_vector<PuzPoint<ptType> > new_points;
+  std::vector<PuzPoint<ptType> > new_points;
 
   new_points.push_back(point(0));
 
@@ -1233,13 +1233,13 @@ void Curve<ptType,floatType>::coarseResample(floatType dS)
 
 //  static int stati = 1;
 //  char fname[256];
-//  vcl_sprintf(fname, "D:/MyDocs/projects/PuzzleSolving/Temp/fragment%d.cor", stati);
+//  std::sprintf(fname, "D:/MyDocs/projects/PuzzleSolving/Temp/fragment%d.cor", stati);
 //  writeExtrema(fname);
-//  vcl_cout << "Do not forget to remove corner writing later!" << vcl_endl;
+//  std::cout << "Do not forget to remove corner writing later!" << std::endl;
 //  stati++;
 
   // shift points so that the first point is the first extrema
-  vcl_vector<PuzPoint<ptType> > temp_pts;
+  std::vector<PuzPoint<ptType> > temp_pts;
   int temp_size = _numPoints;
 
   for(i=_extrema[0];i<_numPoints;i++)
@@ -1267,7 +1267,7 @@ void Curve<ptType,floatType>::coarseResample(floatType dS)
   temp.smooth(dS);
 
   // Resample
-  vcl_pair<PuzPoint<ptType>,int> cPoint;
+  std::pair<PuzPoint<ptType>,int> cPoint;
   _coarseNumPoints=0;
 
   extrema_size_int = static_cast<int>(_extrema.size());

@@ -85,10 +85,10 @@ int dbrec3d_pairwise_compositor<T_model>::detect_instances(int composition_id, d
                                                            vgl_box_3d<double> search_box)
 {
 #ifdef DEBUG
-  vcl_cout << " Composition Scene has:\n"
+  std::cout << " Composition Scene has:\n"
   << "Finest level: " <<scene_out->finest_level()
   << "Max level: " << scene_out->max_level()
-  << "Init Level: " << scene_out->init_level() << vcl_endl;
+  << "Init Level: " << scene_out->init_level() << std::endl;
 #endif
   vul_timer t;
   t.mark();
@@ -134,13 +134,13 @@ int dbrec3d_pairwise_compositor<T_model>::detect_instances(int composition_id, d
 
     // query the parts within search box
     vgl_box_3d<double> global_box(min_point,max_point);
-    vcl_vector<T_instance > parts_c2;
+    std::vector<T_instance > parts_c2;
     part2_c->query(global_box, parts_c2);
-    //vcl_cout << "\t found " << out.size() << " part2 instances around it!\n";
+    //std::cout << "\t found " << out.size() << " part2 instances around it!\n";
     
     float best_posterior = 0.0f;
     int best_part_index = -1;
-    vcl_vector<dbrec3d_pair_composite_instance > compositions;
+    std::vector<dbrec3d_pair_composite_instance > compositions;
     
     // form new instances
     unsigned temp_idx=0;
@@ -164,7 +164,7 @@ int dbrec3d_pairwise_compositor<T_model>::detect_instances(int composition_id, d
     
     pi = part1_c->next();
   }
-  vcl_cout << "Time to detect pairwise compositions: " << t.all() << vcl_endl;
+  std::cout << "Time to detect pairwise compositions: " << t.all() << std::endl;
   out_c->save_to_disk();
   return out_c_id;
 }
@@ -214,14 +214,14 @@ dbrec3d_pair_composite_instance dbrec3d_pairwise_compositor<T_model>::compose(un
 
   r_align = align_aux_axes*r_align;
   
-  vcl_cout << r_align << vcl_endl;
+  std::cout << r_align << std::endl;
   
 #if 0 //this is noy checked in vgl_rotation_3d and it may be safe to remove
   //sanity check - the rotation of the frist instance should now be identical to the cannonical rotation angle
   if((vnl_cross_3d((r_align.as_matrix() * axis1), canonical_rotation_axis_).two_norm() <1e-2) && 
      (vnl_cross_3d((r_align.as_matrix() * aux_axis1), canonical_auxiliary_axis_).two_norm() <1e-2))
   {
-     vcl_cout << "Error computing rotation" << vcl_endl;
+     std::cout << "Error computing rotation" << std::endl;
     return vgl_rotation_3d<float>(); 
   }
 #endif

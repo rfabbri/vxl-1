@@ -12,7 +12,7 @@ void splr_per_orbit_index_roster::populate(orbit_index t){
      in the image rectangle.  If so, add the point to the hash table entry.
   */
 
-  vcl_vector<worldpt> points;
+  std::vector<worldpt> points;
   //get the camera from the scan
   xmvg_perspective_camera<double> * camera = scan_(t);
   //get bounds on the image coordinates

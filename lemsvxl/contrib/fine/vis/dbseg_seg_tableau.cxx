@@ -13,7 +13,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vdgl/vdgl_digital_curve.h>
 */
-#include <vcl_cassert.h>
+#include <cassert>
 
 
 
@@ -25,7 +25,7 @@ public:
     }
     void execute() {
         if (tab_->get_depth() != 1) {
-            vcl_cerr << "Error creating region - not at depth level 1" << vcl_endl;
+            std::cerr << "Error creating region - not at depth level 1" << std::endl;
             return;
         }
         list<int>::iterator i;
@@ -40,7 +40,7 @@ public:
             tab_->get_object()->create_region(childList);
         }
         else {
-            vcl_cerr << "Error creating region - fewer than 2 regions selected" << vcl_endl;
+            std::cerr << "Error creating region - fewer than 2 regions selected" << std::endl;
         }
 
         //tab_->post_redraw();
@@ -154,14 +154,14 @@ public:
     }
     void execute() {
         /*if (dep_ < 1) {
-            vcl_cerr << "Cannot decrease depth - already viewing shallowest level" << vcl_endl;
+            std::cerr << "Cannot decrease depth - already viewing shallowest level" << std::endl;
         }
         else if (dep_ > tab_->get_object()->get_max_depth()) {
-            vcl_cerr << "Cannot increase depth - already viewing deepest level" << vcl_endl;
+            std::cerr << "Cannot increase depth - already viewing deepest level" << std::endl;
         }
         else {
             tab_->set_depth(dep_);
-            vcl_cout << "Depth set to level: "<<dep_<<vcl_endl;
+            std::cout << "Depth set to level: "<<dep_<<std::endl;
             tab_->display_image(tab_->get_depth());
         }*/
         tab_->set_depth(dep_);
@@ -240,7 +240,7 @@ bool dbseg_seg_tableau::handle(const vgui_event &e) {
     float pointx, pointy;
     vgui_projection_inspector p_insp;
     p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     //if it's not inside the image then don't handle events relating to the image
     if (intx >= (object_->get_labeled_image()).ni() || intx < 0 || inty >= (object_->get_labeled_image()).nj() || inty < 0) {
         return vgui_composite_tableau::handle(e);//changed return vgui_image_tableau::handle(e);//changed return vgui_easy2D_tableau::handle(e);
@@ -261,19 +261,19 @@ bool dbseg_seg_tableau::handle(const vgui_event &e) {
         easy_tab_->add_circle(100, 100, 50);
         easy_tab_->post_redraw();
         post_redraw();*/
-        vcl_cout << "Query on Region " << id << vcl_endl;
-        vcl_cout << "    Area:     " << object_->get_area(id) << vcl_endl;
-        vcl_cout << "    Parent:   " << object_->get_tree()->get_parent(id) << vcl_endl;
-        vcl_cout << "    Children:";// << object_->get_children_list()[id] << vcl_endl;
+        std::cout << "Query on Region " << id << std::endl;
+        std::cout << "    Area:     " << object_->get_area(id) << std::endl;
+        std::cout << "    Parent:   " << object_->get_tree()->get_parent(id) << std::endl;
+        std::cout << "    Children:";// << object_->get_children_list()[id] << std::endl;
         list<int> tempList = object_->get_children_list()[id];
         list<int>::iterator i;
         for (i = tempList.begin(); i != tempList.end(); ++i) {
-            vcl_cout << " " << *i;
+            std::cout << " " << *i;
         }
-        vcl_cout << vcl_endl;
+        std::cout << std::endl;
         //temp show save text
         /*
-        vcl_cout << vcl_endl;
+        std::cout << std::endl;
         
         fstream out("test.txt", fstream::out);
         object_->save_text(out);//get_object_list()[id]->save_text(out);
@@ -291,14 +291,14 @@ bool dbseg_seg_tableau::handle(const vgui_event &e) {
         in >> g2;
         in >> b2;
         in >> size2;
-        vcl_cout << "Loaded: " << id2 << " " << depth2 << " " << bottom2 << " " << top2 << " " << left2 << " " << right2 << " " << r2 << " " << g2 << " " << b2 << " size: " << size2 << vcl_endl;
+        std::cout << "Loaded: " << id2 << " " << depth2 << " " << bottom2 << " " << top2 << " " << left2 << " " << right2 << " " << r2 << " " << g2 << " " << b2 << " size: " << size2 << std::endl;
         
 
         in.close();
         */
 
 
-        ///**/vcl_cout << "Area of Region #" << id << " is " << object_->get_area(id) << vcl_endl;
+        ///**/std::cout << "Area of Region #" << id << " is " << object_->get_area(id) << std::endl;
 
         return true;
     }
@@ -335,7 +335,7 @@ bool dbseg_seg_tableau::handle(const vgui_event &e) {
         }*/
 
         /*if (tempOutlined.size() > 1) {
-            vcl_cout << "Is contiuous region? " << object_->is_continuous(tempOutlined) << vcl_endl;
+            std::cout << "Is contiuous region? " << object_->is_continuous(tempOutlined) << std::endl;
         }*/
         drawing_tab_->post_overlay_redraw();
         //post_redraw();
@@ -360,7 +360,7 @@ bool dbseg_seg_tableau::handle(const vgui_event &e) {
 
 void dbseg_seg_tableau::display_image(int dep) {
     //changed img_tab_ = vgui_image_tableau_new(object_->get_display(dep, editing));
-    //vcl_cout << display_background << vcl_endl;
+    //std::cout << display_background << std::endl;
         vil_image_view<vxl_byte> temp = object_->get_image();
         
 
@@ -431,19 +431,19 @@ const int dbseg_seg_tableau::get_depth() {
 
 void dbseg_seg_tableau::set_depth(int d) {
     if (editing != 0) {
-        vcl_cerr << "Cannot change depth while editing a region" << vcl_endl;
+        std::cerr << "Cannot change depth while editing a region" << std::endl;
         return;
     }
     
     if (d < 1) {
-        vcl_cerr << "Cannot decrease depth - already viewing shallowest level" << vcl_endl;
+        std::cerr << "Cannot decrease depth - already viewing shallowest level" << std::endl;
     }
     else if (d > object_->get_max_depth()) {
-        vcl_cerr << "Cannot increase depth - already viewing deepest level" << vcl_endl;
+        std::cerr << "Cannot increase depth - already viewing deepest level" << std::endl;
     }
     else {
         depth = d;
-        vcl_cout << "Depth set to level: "<<d<<vcl_endl;
+        std::cout << "Depth set to level: "<<d<<std::endl;
         display_image(depth);
     }
 
@@ -458,7 +458,7 @@ dbseg_seg_object<vxl_byte>* dbseg_seg_tableau::get_object() {
 
 void dbseg_seg_tableau::get_popup(const vgui_popup_params &params, vgui_menu &menu) {
     vgui_menu submenu;
-    vcl_string on = "[x] ", off = "[ ] ";
+    std::string on = "[x] ", off = "[ ] ";
     submenu.add( "Clear all outlines", new dbseg_seg_tableau_clear_outlines_command(this));
     submenu.add( "Outline all regions", new dbseg_seg_tableau_outline_all_command(this));
     submenu.add( "Retrace outlined regions", new dbseg_seg_tableau_retrace_command(this));

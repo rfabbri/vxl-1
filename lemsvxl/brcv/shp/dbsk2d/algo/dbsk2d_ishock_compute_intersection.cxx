@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 
 #include <dbsk2d/dbsk2d_utils.h>
 #include <dbsk2d/algo/dbsk2d_ishock_compute_intersection.h>
@@ -21,18 +21,18 @@ bool solveTrig (double A, double B, double C,
   double tau1, tau2;
 
   if (A>=0)
-    alpha = vcl_atan(B/A);
+    alpha = std::atan(B/A);
   else
-    alpha = vcl_atan(B/A) + vnl_math::pi;
+    alpha = std::atan(B/A) + vnl_math::pi;
 
-  //If vcl_acos(cos_value) not correct, return false.
-  double cos_value = C/vcl_sqrt(A*A + B*B);
+  //If std::acos(cos_value) not correct, return false.
+  double cos_value = C/std::sqrt(A*A + B*B);
   if (cos_value>1 || cos_value<-1)
     return false;
 
   //two possible solutions
-  tau1 = angle0To2PiFuzzy(vcl_acos(cos_value) + alpha); //fuzzy because near degeneracy intersections are abundant
-  tau2 = angle0To2PiFuzzy(-vcl_acos(cos_value) + alpha);
+  tau1 = angle0To2PiFuzzy(std::acos(cos_value) + alpha); //fuzzy because near degeneracy intersections are abundant
+  tau2 = angle0To2PiFuzzy(-std::acos(cos_value) + alpha);
 
   if (AisBetween(tau1, min_tau, max_tau)){
     *tau = tau1;
@@ -66,18 +66,18 @@ bool solveTrig (double A, double B, double C,
   if (A==0)
     return false;
   if (A>=0)
-    alpha = vcl_atan(B/A);
+    alpha = std::atan(B/A);
   else
-    alpha = vcl_atan(B/A) + vnl_math::pi;
+    alpha = std::atan(B/A) + vnl_math::pi;
 
-  //If vcl_acos(cos_value) not correct, return false.
-  double cos_value = C/vcl_sqrt(A*A + B*B);
+  //If std::acos(cos_value) not correct, return false.
+  double cos_value = C/std::sqrt(A*A + B*B);
   if (cos_value>1 || cos_value<-1)
     return false;
 
   //two possible solutions
-  tau1 = angle0To2Pi(vcl_acos(cos_value) + alpha);
-  tau2 = angle0To2Pi(-vcl_acos(cos_value) + alpha);
+  tau1 = angle0To2Pi(std::acos(cos_value) + alpha);
+  tau2 = angle0To2Pi(-std::acos(cos_value) + alpha);
 
   //these are predefined relationships
   tau1t = angle0To2Pi(tau1 - theta);
@@ -126,8 +126,8 @@ bool solveEq (double A, double B, double C,
     sol2 = 0;
   }
   else {
-    sol1 = ( -B + vcl_sqrt(delta) )/(2*A);
-    sol2 = ( -B - vcl_sqrt(delta) )/(2*A);
+    sol1 = ( -B + std::sqrt(delta) )/(2*A);
+    sol2 = ( -B - std::sqrt(delta) )/(2*A);
   }
 
   //compute the other tau
@@ -161,25 +161,25 @@ void set_AAA_PAA_APA_PAP_AAP_ABCs (int s, int st, double theta,
 {
   if (st==1) {
     if (s==1) {
-      A = bt2*c - b2*ct*vcl_cos(theta);
-      B = -b2*ct*vcl_sin(theta);
+      A = bt2*c - b2*ct*std::cos(theta);
+      B = -b2*ct*std::sin(theta);
       C = b2*at + bt2*a;
     }
     else {
-      A = bt2*c + b2*ct*vcl_cos(theta);
-      B = b2*ct*vcl_sin(theta);
+      A = bt2*c + b2*ct*std::cos(theta);
+      B = b2*ct*std::sin(theta);
       C = -b2*at + bt2*a;
     }
   }
   else {
     if (s==1) {
-      A = bt2*c + b2*ct*vcl_cos(theta);
-      B = b2*ct*vcl_sin(theta);
+      A = bt2*c + b2*ct*std::cos(theta);
+      B = b2*ct*std::sin(theta);
       C = b2*at + bt2*a;
     }
     else {
-      A = bt2*c - b2*ct*vcl_cos(theta);
-      B = -b2*ct*vcl_sin(theta);
+      A = bt2*c - b2*ct*std::cos(theta);
+      B = -b2*ct*std::sin(theta);
       C = bt2*a - b2*at;
     }
   }
@@ -261,8 +261,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     D = bnd->loc() - sh->rBPoint()->pt().y(); //offset from the bnd to the right point y-coordinate
   }
 
-  double A = sh->H()*vcl_cos(theta) - 2*D;
-  double B = sh->H()*vcl_sin(theta);
+  double A = sh->H()*std::cos(theta) - 2*D;
+  double B = sh->H()*std::sin(theta);
   double C = 0;
 
   double tau_max = sh->maxLTau();
@@ -316,7 +316,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     _isEq(theta, 3*vnl_math::pi/2, DOUBLE_PRECISION))
     return intersection;
 
-  double d = D/vcl_cos(theta);
+  double d = D/std::cos(theta);
 
   //for shocks forming close to the bnd of the cell
   //make sure its heading in the right direction
@@ -380,8 +380,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     D = bnd->loc() - pt.y(); //offset from the bnd to the right point y-coordinate
   }
 
-  double A = sh->H()*vcl_cos(theta) - D;
-  double B = -sh->H()*vcl_sin(theta);
+  double A = sh->H()*std::cos(theta) - D;
+  double B = -sh->H()*std::sin(theta);
   double C = D;
 
   double tau_max, tau_min;
@@ -447,8 +447,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     D = bnd->loc() - pt.y(); //offset from the bnd to the right point y-coordinate
   }
 
-  double tauR = (D + sh->N2R()*vcl_sin(theta))/ 
-                (vcl_cos(theta) - sh->N1R()*vcl_sin(theta));
+  double tauR = (D + sh->N2R()*std::sin(theta))/ 
+                (std::cos(theta) - sh->N1R()*std::sin(theta));
 
   double tauL = sh->LTau(tauR);
 
@@ -495,8 +495,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   //  D = bnd->loc() - sh->rBPoint()->pt().y(); //offset from the bnd to the right point y-coordinate
   //}
 
-  //double A = sh->H()*vcl_cos(theta) - 2*D;
-  //double B = sh->H()*vcl_sin(theta);
+  //double A = sh->H()*std::cos(theta) - 2*D;
+  //double B = sh->H()*std::sin(theta);
   //double C = 0;
 
   //double tau_max = sh->maxLTau();
@@ -553,8 +553,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   //  D = bnd->loc() - pt.y(); //offset from the bnd to the right point y-coordinate
   //}
 
-  //double A = sh->H()*vcl_cos(theta) - D;
-  //double B = -sh->H()*vcl_sin(theta);
+  //double A = sh->H()*std::cos(theta) - D;
+  //double B = -sh->H()*std::sin(theta);
   //double C = D;
 
   //double tau_max, tau_min;
@@ -618,8 +618,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   //  D = bnd->loc() - sh->rBArc()->center().y(); //offset from the bnd to the right point y-coordinate
   //}
 
-  //double A = sh->H()*vcl_cos(theta) - 2*D;
-  //double B = sh->H()*vcl_sin(theta);
+  //double A = sh->H()*std::cos(theta) - 2*D;
+  //double B = sh->H()*std::sin(theta);
   //double C = 0;
 
   //double tau_max = sh->maxLTau();
@@ -954,7 +954,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   }
 
   //2)Compute tau, taut, and R
-  double tau = vcl_atan((vcl_cos(theta)- ct/c)/-vcl_sin(theta));
+  double tau = std::atan((std::cos(theta)- ct/c)/-std::sin(theta));
   double taut = angle0To2Pi (tau - theta);
 
   //3)Set intersection parameters
@@ -970,7 +970,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     return intersection;
 
   //5)Successful intersection
-  intersection.R = c/vcl_cos(tau);
+  intersection.R = c/std::cos(tau);
 
   return intersection;
 }
@@ -1004,7 +1004,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     return intersection;
 
   //3)Successful intersection
-  intersection.R = ct/vcl_cos(taut);
+  intersection.R = ct/std::cos(taut);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -1029,8 +1029,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   //ddtheta is more than the vgl_point_2d<double> Case
   double theta = CCW (shR->u(), shL->u()+vnl_math::pi);
 
-  double A = vcl_cos(theta) - ct/(2*c);
-  double B = vcl_sin(theta);
+  double A = std::cos(theta) - ct/(2*c);
+  double B = std::sin(theta);
   double C = ct/(2*c);
 
   double taut_max = shL->maxRTau();
@@ -1075,13 +1075,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (s>0){
-    A = ct*c/b2 - vcl_cos(theta);
-    B = -vcl_sin(theta);
+    A = ct*c/b2 - std::cos(theta);
+    B = -std::sin(theta);
     C = a*ct/b2;
   }
   else {
-    A = ct*c/b2 + vcl_cos(theta);
-    B = vcl_sin(theta);
+    A = ct*c/b2 + std::cos(theta);
+    B = std::sin(theta);
     C = a*ct/b2;
   }
 
@@ -1223,7 +1223,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
     return intersection;
 
   //3)Successful intersection
-  intersection.R = c/vcl_cos(tau);
+  intersection.R = c/std::cos(tau);
 
   //4)Is possible that taut>3/2*PI, but fuzzily valid, then R<0;
   if (intersection.R<0)
@@ -1469,8 +1469,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double theta = CCW(shR->u(), shL->u());
 
-  double A = 2*ct/c - vcl_cos(theta);
-  double B = -vcl_sin(theta);
+  double A = 2*ct/c - std::cos(theta);
+  double B = -std::sin(theta);
   double C = 1;
 
   double taut_max = shL->maxRTau();
@@ -1613,8 +1613,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
     double theta = CCW(shR->u(), shL->u());
 
-    double A = vcl_cos(theta) - ct/c;
-    double B = vcl_sin(theta);
+    double A = std::cos(theta) - ct/c;
+    double B = std::sin(theta);
     double C = ct/c - 1;
 
     double taut_max = shL->maxRTau();
@@ -1673,13 +1673,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (s>0){
-    A = vcl_cos(theta) - 2*c*ct/b2;
-    B = vcl_sin(theta);
+    A = std::cos(theta) - 2*c*ct/b2;
+    B = std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {//if (s<0)
-    A = vcl_cos(theta) + 2*c*ct/b2;
-    B = vcl_sin(theta);
+    A = std::cos(theta) + 2*c*ct/b2;
+    B = std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -1715,7 +1715,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   dbsk2d_ishock_intersection_data intersection;
 
   //if LINE-LINE shock is not parallel
-  if (vcl_fabs(shR->sigma())<1){
+  if (std::fabs(shR->sigma())<1){
 
     double ct = shL->H()/2;
     double N0t = 1/(4*ct);
@@ -1850,13 +1850,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (st>0) {
-    A = ct*c*vcl_cos(theta) - bt2;
-    B = ct*c*vcl_sin(theta);
+    A = ct*c*std::cos(theta) - bt2;
+    B = ct*c*std::sin(theta);
     C = -at*c;
   }
   else {
-    A = ct*c*vcl_cos(theta) + bt2;
-    B = ct*c*vcl_sin(theta);
+    A = ct*c*std::cos(theta) + bt2;
+    B = ct*c*std::sin(theta);
     C = at*c;  // (s<0, nu<0) old:at*c ???
   }
 
@@ -1938,13 +1938,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {//if (st<0)
-    A = -ct*vcl_cos(theta) - bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 
@@ -2090,13 +2090,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {//if (st<0)
-    A = -ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 
@@ -2267,7 +2267,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   dbsk2d_ishock_intersection_data intersection;
 
   //if LINE-LINE shock is not parallel
-  if (vcl_fabs(shL->sigma())<1) {
+  if (std::fabs(shL->sigma())<1) {
 
     int nu = shR->nu();
 
@@ -2365,7 +2365,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   if (!shL->isTauValid_MinMax(intersection.LSLtau, intersection.LSRtau))
     return intersection;
 
-  intersection.R = shR->endTime(); //vcl_fabs(shL->r(intersection.LSLtau));
+  intersection.R = shR->endTime(); //std::fabs(shL->r(intersection.LSLtau));
 
   return intersection;
 }
@@ -2377,7 +2377,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   dbsk2d_ishock_intersection_data intersection;
 
   //if LINE-LINE shock is not parallel
-  if (vcl_fabs(shL->sigma())<1) {
+  if (std::fabs(shL->sigma())<1) {
 
     //int s = shR->s();
     int nud = shR->nud();
@@ -2473,7 +2473,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   if (!shL->isTauValid_MinMax(intersection.LSLtau, intersection.LSRtau))
     return intersection;
 
-  intersection.R = shL->endTime(); //vcl_fabs(shR->r(intersection.RSLtau));
+  intersection.R = shL->endTime(); //std::fabs(shR->r(intersection.RSLtau));
 
   return intersection;
 }
@@ -2612,13 +2612,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (s>0){
-    A = (st*nudt)*vcl_cos(theta) - 2*c*ct/b2;
-    B = (st*nudt)*vcl_sin(theta);
+    A = (st*nudt)*std::cos(theta) - 2*c*ct/b2;
+    B = (st*nudt)*std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {//if (s<0)
-    A = (st*nudt)*vcl_cos(theta) + 2*c*ct/b2;
-    B = (st*nudt)*vcl_sin(theta);
+    A = (st*nudt)*std::cos(theta) + 2*c*ct/b2;
+    B = (st*nudt)*std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -2654,7 +2654,7 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
   dbsk2d_ishock_intersection_data intersection;
 
   //if LINE-LINE shock is not parallel
-  if (vcl_fabs(shR->sigma())<1) {
+  if (std::fabs(shR->sigma())<1) {
 
     int nudt = shL->nud();
     int nut = shL->nu();
@@ -2829,8 +2829,8 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
     double theta = CCW(shR->u(), shL->u());
 
-    double A = D1t*vcl_cos(theta) - D1*ct/c;
-    double B = D1t*vcl_sin(theta);
+    double A = D1t*std::cos(theta) - D1*ct/c;
+    double B = D1t*std::sin(theta);
     double C = ct/c - 1;
 
     double taut_max = shL->maxRTau();
@@ -2891,13 +2891,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (s>0){
-    A = (st*nud)*vcl_cos(theta) - 2*c*ct/b2;
-    B = (st*nud)*vcl_sin(theta);
+    A = (st*nud)*std::cos(theta) - 2*c*ct/b2;
+    B = (st*nud)*std::sin(theta);
     C = -2*a*ct/b2 -1;
   }
   else {
-    A = (st*nud)*vcl_cos(theta) + 2*c*ct/b2;
-    B = (st*nud)*vcl_sin(theta);
+    A = (st*nud)*std::cos(theta) + 2*c*ct/b2;
+    B = (st*nud)*std::sin(theta);
     C = 2*a*ct/b2 -1;
   }
 
@@ -3033,13 +3033,13 @@ dbsk2d_ishock_intersection_data dbsk2d_ishock_compute_intersection
 
   double A, B, C;
   if (st>0){
-    A = ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = ct*vcl_sin(theta);
+    A = ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = ct*std::sin(theta);
     C = bt2/(2*c) + at;
   }
   else {//if (st<0)
-    A = -ct*vcl_cos(theta) - (s*nud)*bt2/(2*c);
-    B = -ct*vcl_sin(theta);
+    A = -ct*std::cos(theta) - (s*nud)*bt2/(2*c);
+    B = -ct*std::sin(theta);
     C = bt2/(2*c) - at;
   }
 

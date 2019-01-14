@@ -1,11 +1,11 @@
 #ifndef dbrl_feature_h_
 #define dbrl_feature_h_
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
 #include "dbrl_feature_sptr.h"
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_binary_loader.h>
 
@@ -40,14 +40,14 @@ public:
     virtual short version() const=0;
 
     //: Print an ascii summary to the stream
-    virtual void print_summary(vcl_ostream &os) const=0;
+    virtual void print_summary(std::ostream &os) const=0;
 
     //: Return a platform independent string identifying the class
-    virtual vcl_string is_a() const =0;
+    virtual std::string is_a() const =0;
 
     virtual dbrl_feature * clone() const=0;
 
-    virtual void print_feature(vcl_ostream &os)=0;
+    virtual void print_feature(std::ostream &os)=0;
     vnl_vector<double> location_;
 
 protected:

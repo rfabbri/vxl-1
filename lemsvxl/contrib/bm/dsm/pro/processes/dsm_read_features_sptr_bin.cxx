@@ -18,9 +18,9 @@
 
 #include<dsm/dsm_features_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 #include<vbl/io/vbl_io_smart_ptr.h>
 
@@ -35,10 +35,10 @@ bool dsm_read_features_sptr_bin_process_cons(bprb_func_process& pro)
 {
 	//set input/output types
 	using namespace dsm_read_features_sptr_bin_globals;
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
-	input_types_[0] = "vcl_string";
+	input_types_[0] = vcl_string";
 	output_types_[0] = "dsm_features_sptr";
 
 	if(!pro.set_input_types(input_types_))
@@ -55,9 +55,9 @@ bool dsm_read_features_sptr_bin_process(bprb_func_process& pro)
 	using namespace dsm_read_features_sptr_bin_globals;
 
 	unsigned i = 0;
-	vcl_string filename = pro.get_input<vcl_string>(i++);
+	std::string filename = pro.get_input<std::string>(i++);
 
-	vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+	vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
 	dsm_features_sptr features_sptr = new dsm_features();
 
 	vsl_b_read(is, features_sptr);

@@ -123,11 +123,11 @@ evolve(bool verbose)
     {
       this->levelset_func()->reinitialize_levelset_surf();
       if (verbose)
-        vcl_cout << " \n- ";
+        std::cout << " \n- ";
     }
     if (verbose)
     {
-      vcl_cout << " " << i;
+      std::cout << " " << i;
     }
     this->levelset_func()->evolve_one_timestep(dt);
   }

@@ -27,16 +27,16 @@ bool pcl_k_means_learning_process_cons(bprb_func_process& pro)
 {
   using namespace pcl_k_means_learning_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
-  input_types_[i++] = "vcl_string"; //path to .pcd file
+  input_types_[i++] = vcl_string"; //path to .pcd file
   input_types_[i++] = "unsigned"; //K, number of means
   input_types_[i++] = "double"; //fraction of samples to use during initialization refinement
   input_types_[i++] = "unsigned"; //number of iterations to use during initialization refinement
   input_types_[i++] = "unsigned"; //max number of iterations during k-means
-  input_types_[i++] = "vcl_string"; //k-means dir/where results are saved to 
+  input_types_[i++] = vcl_string"; //k-means dir/where results are saved to 
  
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -51,32 +51,32 @@ bool pcl_k_means_learning_process(bprb_func_process& pro)
   
   //get inputs
   unsigned i =0;
-  vcl_string pcd_file = pro.get_input<vcl_string>(i++);
+  std::string pcd_file = pro.get_input<std::string>(i++);
   unsigned K = pro.get_input<unsigned>(i++);
   double fraction = pro.get_input<double>(i++);
   unsigned J = pro.get_input<unsigned>(i++);
   unsigned max_it = pro.get_input<unsigned>(i++);
-  vcl_string k_means_dir = pro.get_input<vcl_string>(i++);
+  std::string k_means_dir = pro.get_input<std::string>(i++);
    
   
   //read in the point cloud
-  vcl_cout << "Loading: " << pcd_file <<vcl_endl;
+  std::cout << "Loading: " << pcd_file <<std::endl;
   PointCloud<FPFHSignature33>::Ptr cloud(new PointCloud<FPFHSignature33>);
   if (pcl::io::loadPCDFile (pcd_file, *cloud) < 0)
     return (false);
-  vcl_cout << " Done:" <<  cloud->width * cloud->height << " points\n";
-  vcl_cout << "Available dimensions: " << getFieldsList(*cloud).c_str ();
+  std::cout << " Done:" <<  cloud->width * cloud->height << " points\n";
+  std::cout << "Available dimensions: " << getFieldsList(*cloud).c_str ();
   
   //run k-means clustering
-  vcl_vector<vnl_vector_fixed<double,33> > means;
-  vcl_vector<dbcll_euclidean_cluster_light<33> > all_clusters;
+  std::vector<vnl_vector_fixed<double,33> > means;
+  std::vector<dbcll_euclidean_cluster_light<33> > all_clusters;
   dbrec3d_pcl_codebook_utils::learn_codebook (K, fraction, J, max_it, cloud, means, all_clusters);
   
   //save clusters information to file
   dbcll_xml_write(all_clusters, k_means_dir + "/lowest_sse_means_info.xml");
   
   //save new means to file
-  vcl_ofstream means_ofs((k_means_dir + "/lowest_sse_means.txt").c_str());
+  std::ofstream means_ofs((k_means_dir + "/lowest_sse_means.txt").c_str());
   means_ofs.precision(15);
   means_ofs << means.size() << "\n";
   if(means_ofs.is_open())
@@ -85,7 +85,7 @@ bool pcl_k_means_learning_process(bprb_func_process& pro)
     }
   
   else
-    vcl_cerr << "Could not open file: " << (k_means_dir + "/lowest_sse_means.txt") << "\n";
+    std::cerr << "Could not open file: " << (k_means_dir + "/lowest_sse_means.txt") << "\n";
   
   means_ofs.close();
   

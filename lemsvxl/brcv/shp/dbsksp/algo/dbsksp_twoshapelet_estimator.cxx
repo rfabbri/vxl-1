@@ -64,14 +64,14 @@ compute(estimation_type type)
 
   double phi0 = start_xnode.phi_;
   double phi2 = end_xnode.phi_;
-  vgl_vector_2d<double > tA (vcl_cos(start_xnode.psi_), vcl_sin(start_xnode.psi_));
-  vgl_vector_2d<double > tC (vcl_cos(end_xnode.psi_), vcl_sin(end_xnode.psi_));
+  vgl_vector_2d<double > tA (std::cos(start_xnode.psi_), std::sin(start_xnode.psi_));
+  vgl_vector_2d<double > tC (std::cos(end_xnode.psi_), std::sin(end_xnode.psi_));
 
   // 1. 
-  double m0 = vcl_sin(alpha0) / vcl_sin(phi0);
+  double m0 = std::sin(alpha0) / std::sin(phi0);
 
   // 2. alpha10 = angle(AB, tB)
-  double alpha10 = vcl_asin(-m0 * vcl_sin(phi1));
+  double alpha10 = std::asin(-m0 * std::sin(phi1));
 
   // 3.
   double angle_tA_tB = -alpha0 + alpha10;
@@ -84,8 +84,8 @@ compute(estimation_type type)
   ////                   = (psi2 - theta0) - (alpha10)
 
   //// shock tangent at B
-  //vgl_vector_2d<double > tB(vcl_cos(ss->theta0()+alpha10), vcl_sin(ss->theta0()+alpha10));
-  //vgl_vector_2d<double > tC(vcl_cos(this->xnode_.psi_), vcl_sin(this->xnode_.psi_));
+  //vgl_vector_2d<double > tB(std::cos(ss->theta0()+alpha10), std::sin(ss->theta0()+alpha10));
+  //vgl_vector_2d<double > tC(std::cos(this->xnode_.psi_), std::sin(this->xnode_.psi_));
   //double angle_tB_tC = signed_angle(tB, tC);
 
 
@@ -94,10 +94,10 @@ compute(estimation_type type)
   //                      sin(phi2) + sin(phi1) * cos(angle_tB_tC)
   // alpha11 = angle (BC, tB)
   
-  double alpha11 = vcl_atan2(-vcl_sin(phi1)*vcl_sin(angle_tB_tC),  // y
-    vcl_sin(phi2)+ vcl_sin(phi1) * vcl_cos(angle_tB_tC)); // x
+  double alpha11 = std::atan2(-std::sin(phi1)*std::sin(angle_tB_tC),  // y
+    std::sin(phi2)+ std::sin(phi1) * std::cos(angle_tB_tC)); // x
 
-  double m1 = vcl_sin(alpha11) / vcl_sin(phi1);
+  double m1 = std::sin(alpha11) / std::sin(phi1);
 
 
   // compute the two normalized radius increment of the two fragments
@@ -118,7 +118,7 @@ compute(estimation_type type)
   // cos(angle(AC, AB)) * len0 + cos(angle(AC, BC') * len1 = L  // AC
   
   vgl_vector_2d<double > vAC = end_xnode.pt_ - start_xnode.pt_;
-  vgl_vector_2d<double > vAB(vcl_cos(theta0), vcl_sin(theta0));
+  vgl_vector_2d<double > vAB(std::cos(theta0), std::sin(theta0));
   double angle_AC_AB = signed_angle(vAC, vAB);
 
   //double cos_AC_AB = cos_angle(vAC, vAB);
@@ -138,8 +138,8 @@ compute(estimation_type type)
   case IGNORE_VERTICAL_DISCREPANCY:
     A(0, 0) = lambda0;
     A(0, 1) = lambda1;
-    A(1, 0) = vcl_cos(angle_AC_AB);
-    A(1, 1) = vcl_cos(angle_AC_BCprime);
+    A(1, 0) = std::cos(angle_AC_AB);
+    A(1, 1) = std::cos(angle_AC_BCprime);
 
     B(0) = end_xnode.radius_-start_xnode.radius_;
     B(1) = vAC.length();
@@ -167,8 +167,8 @@ compute(estimation_type type)
       else
       {
         vnl_matrix_fixed<double, 2, 2 > AA = A;
-        AA(1, 0) = vcl_sin(angle_AC_AB);
-        AA(1, 1) = vcl_sin(angle_AC_BCprime);
+        AA(1, 0) = std::sin(angle_AC_AB);
+        AA(1, 1) = std::sin(angle_AC_BCprime);
 
         vnl_vector_fixed<double, 2> BB = B;
         BB(0) = 0;
@@ -185,10 +185,10 @@ compute(estimation_type type)
     }
     break;
   case IGNORE_RADIUS_DISCREPANCY:
-    A(0, 0) = vcl_cos(angle_AC_AB);
-    A(0, 1) = vcl_cos(angle_AC_BCprime);
-    A(1, 0) = vcl_sin(angle_AC_AB);
-    A(1, 1) = vcl_sin(angle_AC_BCprime);
+    A(0, 0) = std::cos(angle_AC_AB);
+    A(0, 1) = std::cos(angle_AC_BCprime);
+    A(1, 0) = std::sin(angle_AC_AB);
+    A(1, 1) = std::sin(angle_AC_BCprime);
 
     B(0) = vAC.length();
     B(1) = 0;
@@ -235,7 +235,7 @@ compute(estimation_type type)
     break;
   default:
     A.set_identity();
-    vcl_cerr << "ERROR: In dbsksp_twoshapelet_estimator:compute(...)\n"
+    std::cerr << "ERROR: In dbsksp_twoshapelet_estimator:compute(...)\n"
       << "   Unknown estimation type.\n";
     break;  
   }
@@ -252,7 +252,7 @@ compute(estimation_type type)
   case IGNORE_VERTICAL_DISCREPANCY:
     {
       double vert_err = 
-        vcl_sin(angle_AC_AB)*len(0) + vcl_sin(angle_AC_BCprime) * len(1);
+        std::sin(angle_AC_AB)*len(0) + std::sin(angle_AC_BCprime) * len(1);
       this->discrepancy_of_ignored_param_ = vert_err / vAC.length();
       break;
     }
@@ -264,7 +264,7 @@ compute(estimation_type type)
       break;
     }
   default:
-    vcl_cerr << "ERROR: In dbsksp_twoshapelet_estimator:compute(...)\n"
+    std::cerr << "ERROR: In dbsksp_twoshapelet_estimator:compute(...)\n"
       << "   Unknown estimation type.\n";
     break;  
   }
@@ -301,10 +301,10 @@ det_A() const
 //  // C' (Cprime) : end shock point as the result of estimation
 //  double phi0 = start_xnode.phi_;
 //  double phi2 = end_xnode.phi_;
-//  vgl_vector_2d<double > tA(vcl_cos(start_xnode.psi_), vcl_sin(start_xnode.psi_));
-//  vgl_vector_2d<double > tC(vcl_cos(end_xnode.psi_), vcl_sin(end_xnode.psi_));
+//  vgl_vector_2d<double > tA(std::cos(start_xnode.psi_), std::sin(start_xnode.psi_));
+//  vgl_vector_2d<double > tC(std::cos(end_xnode.psi_), std::sin(end_xnode.psi_));
 //
-//  double m0 = vcl_sin(alpha0) / vcl_sin(phi0);
+//  double m0 = std::sin(alpha0) / std::sin(phi0);
 //
 //  vgl_vector_2d<double > vAC = normalized(end_xnode.pt_ - start_xnode.pt_);
 //  vgl_vector_2d<double > vAB = rotated(tA, -alpha0);
@@ -315,16 +315,16 @@ det_A() const
 //  vgl_vector_2d<double > vBCprime = rotated(vAB, -2*a);
 //  
 //  double alpha2 = signed_angle(vBCprime, tC);
-//  double m1 = - vcl_sin(alpha2) / vcl_sin(phi2);
+//  double m1 = - std::sin(alpha2) / std::sin(phi2);
 //
 //  // condition check to avoid denominator = 0;
 //  if ( vnl_math::abs(m1) < 1e-12 && vnl_math::abs(m0) < 1e-12 )
 //    return 1e-12;
 //
-//  double t_sqr = vnl_math::sqr(vcl_sin(2*a)) / 
-//    ( vnl_math::sqr(m1 * vcl_cos(2*a) + m0) + vnl_math::sqr(m1 * vcl_sin(2*a)) );
+//  double t_sqr = vnl_math::sqr(std::sin(2*a)) / 
+//    ( vnl_math::sqr(m1 * std::cos(2*a) + m0) + vnl_math::sqr(m1 * std::sin(2*a)) );
 //
-//  double phi1_discontinuity = vcl_asin(vcl_sqrt(t_sqr));
+//  double phi1_discontinuity = std::asin(std::sqrt(t_sqr));
 //  return phi1_discontinuity;
 //
 //  // TODO: validate this result on gui

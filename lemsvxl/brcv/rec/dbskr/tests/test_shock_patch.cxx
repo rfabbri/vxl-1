@@ -3,14 +3,14 @@
 #include <dbskr/dbskr_tree_sptr.h>
 #include <dbskr/dbskr_tree_edit.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
-//#include <vcl_cmath.h>
+#include <iostream>
+#include <ctime>
+//#include <cmath>
 
 MAIN_ARGS(test_tree_edit)
 {
 
-  vcl_string dir_base;
+  std::string dir_base;
 
   if ( argc >= 2 ) {
     dir_base = argv[1];
@@ -23,7 +23,7 @@ MAIN_ARGS(test_tree_edit)
 
   testlib_test_start("testing tree edit class ");
 
-  vcl_string data_file1, data_file2, pathtable_file, shgm_filename;
+  std::string data_file1, data_file2, pathtable_file, shgm_filename;
   data_file1 = "data/cat01.shg";
   data_file2 = "data/cat01.shg";
   pathtable_file = "data/cat01-cat01-table.txt";
@@ -43,7 +43,7 @@ MAIN_ARGS(test_tree_edit)
   val = edit0.final_cost();
   TEST_NEAR("final_cost() ", val, 0.0, 0.001);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
   data_file1 = "data/brk001.shg";
   data_file2 = "data/pln006.shg";
@@ -59,7 +59,7 @@ MAIN_ARGS(test_tree_edit)
   val = edit.final_cost();
   TEST_NEAR("final_cost() ", val, 566.2, 0.001);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 */
   //: NOW TESTING TO FIND PATHS TOGETHER WITH COSTS (essentially same methods but they also save 
   //  paths in the dynamic programming part
@@ -81,7 +81,7 @@ MAIN_ARGS(test_tree_edit)
   edit6.save_path(true);
   TEST("edit() ", edit6.edit(), true);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit6.compare_path(dir_base+shgm_filename, 0.001), true);
 
 
@@ -99,7 +99,7 @@ MAIN_ARGS(test_tree_edit)
   edit7.save_path(true);
   TEST("edit() ", edit7.edit(), true);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit7.compare_path(dir_base+shgm_filename, 0.001), true);
 
 
@@ -117,7 +117,7 @@ MAIN_ARGS(test_tree_edit)
   edit8.save_path(true);
   TEST("edit() ", edit8.edit(), true);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit8.compare_path(dir_base+shgm_filename, 0.001), true);
 
   data_file1 = "data/horse19.shg";
@@ -134,14 +134,14 @@ MAIN_ARGS(test_tree_edit)
   edit9.save_path(true);
   TEST("edit() ", edit9.edit(), true);
   time2 = clock();
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit9.compare_path(dir_base+shgm_filename, 0.001), true);
 
 
   data_file1 = "bon005.shg";
   data_file2 = "pln010.shg";
   pathtable_file = "bon005-pln010-table.txt";
-  vcl_string shgm_filename = "bon005-pln010.shgm";
+  std::string shgm_filename = "bon005-pln010.shgm";
 
   tree1 = new dbskr_tree();
   tree2 = new dbskr_tree();
@@ -154,8 +154,8 @@ MAIN_ARGS(test_tree_edit)
   float val = edit10.final_cost();
   //TEST_NEAR("final_cost() ", val, 644.57, 0.001);
   time2 = clock();
-  vcl_cout << "cost calculated: " << val << vcl_endl;
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "cost calculated: " << val << std::endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit10.compare_path(dir_base+shgm_filename, 0.001), true);
 
   
@@ -175,8 +175,8 @@ MAIN_ARGS(test_tree_edit)
   val = edit11.final_cost();
   //TEST_NEAR("final_cost() ", val, 644.57, 0.001);
   time2 = clock();
-  vcl_cout << "cost calculated: " << val << vcl_endl;
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "cost calculated: " << val << std::endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit11.compare_path(dir_base+shgm_filename, 0.001), true);
 */
 
@@ -196,7 +196,7 @@ MAIN_ARGS(test_tree_edit)
   dbsk2d_shock_graph_sptr sg2 = loader.load_xshock_graph(dir_base+data_file2);
   TEST("shock graph load() pln010.esf vertices ", sg2->number_of_vertices(), 32);
   TEST("shock graph load() pln010.esf edges ", sg2->number_of_edges(), 31);
-  vcl_cout << " number of edges: " << sg2->number_of_edges() << vcl_endl;
+  std::cout << " number of edges: " << sg2->number_of_edges() << std::endl;
   tree2->acquire(sg2, false, true, false);
 
   time1 = clock();
@@ -209,8 +209,8 @@ MAIN_ARGS(test_tree_edit)
   val = edit12.final_cost();
   //TEST_NEAR("final_cost() ", val, 644.57, 0.001);
   time2 = clock();
-  vcl_cout << "cost calculated: " << val << vcl_endl;
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "cost calculated: " << val << std::endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit12.compare_path(dir_base+shgm_filename, 50), true);
 
 /**
@@ -237,8 +237,8 @@ MAIN_ARGS(test_tree_edit)
   val = edit13.final_cost();
   //TEST_NEAR("final_cost() ", val, 644.57, 0.001);
   time2 = clock();
-  vcl_cout << "cost calculated: " << val << vcl_endl;
-  vcl_cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+  std::cout << "cost calculated: " << val << std::endl;
+  std::cout << "found in "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
   TEST("compare_path() ", edit13.compare_path(dir_base+shgm_filename, 50), true);
   */
   return testlib_test_summary();

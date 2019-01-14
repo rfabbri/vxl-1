@@ -4,8 +4,8 @@
 // \author  Kongbin Kang and H. Can Aras
 // \date    2005-03-03
 // 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <testlib/testlib_test.h>
 #include <xscan/xscan_uniform_orbit.h>
 #include <xscan/xscan_scan.h>
@@ -98,20 +98,20 @@ static void test_xscan_scan()
   TEST_NEAR("z of camera center at tick 90", pt.z(), 0, 1e-6);
 
   // test stream
-  vcl_ofstream ofile("test_scan.txt");
+  std::ofstream ofile("test_scan.txt");
   ofile << scan;
   ofile.close();
 
   xscan_scan scan_from_file;
-  vcl_ifstream ifile("test_scan.txt"); 
+  std::ifstream ifile("test_scan.txt"); 
   ifile >> scan_from_file;
-  vcl_cout << "Tests for input-output" << vcl_endl;
+  std::cout << "Tests for input-output" << std::endl;
   TEST("number of views", scan.n_views(), scan_from_file.n_views());
   TEST("image file path", scan.image_file_path(), scan_from_file.image_file_path());
   TEST("calibration matrix", scan.kk().get_matrix(), scan_from_file.kk().get_matrix());
 
-  vcl_cout << scan << vcl_endl;
-  vcl_cout << scan_from_file << vcl_endl;
+  std::cout << scan << std::endl;
+  std::cout << scan_from_file << std::endl;
 }
 
 TESTMAIN(test_xscan_scan)

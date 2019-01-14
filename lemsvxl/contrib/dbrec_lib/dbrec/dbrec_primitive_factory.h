@@ -18,15 +18,15 @@
 #define _DBREC_PRIMITIVE_FACTORY_H
 
 #include "dbrec_part_sptr.h"
-#include <vcl_map.h>
+#include <map>
 #include <vbl/vbl_ref_count.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 class dbrec_primitive_factory : public vbl_ref_count {
 
 public:
-  typedef vcl_map<unsigned, dbrec_part_sptr>::iterator part_iterator;
-  typedef vcl_map<unsigned, dbrec_part_sptr>::const_iterator part_const_iterator;
+  typedef std::map<unsigned, dbrec_part_sptr>::iterator part_iterator;
+  typedef std::map<unsigned, dbrec_part_sptr>::const_iterator part_const_iterator;
 
   dbrec_part_sptr get_primitive(unsigned type);
   void add_primitive(dbrec_part_sptr p);
@@ -38,13 +38,13 @@ public:
   part_const_iterator parts_const_end() const { return flyweights_.end(); }
   part_iterator parts_begin() { return flyweights_.begin(); }
   part_iterator parts_end() { return flyweights_.end(); }
-  virtual vcl_ostream& print(vcl_ostream& out) const;
+  virtual std::ostream& print(std::ostream& out) const;
 
 protected:
-  vcl_map<unsigned, dbrec_part_sptr> flyweights_;
+  std::map<unsigned, dbrec_part_sptr> flyweights_;
 
 };
 
-vcl_ostream & operator<<(vcl_ostream& out, const dbrec_primitive_factory& p);
+std::ostream & operator<<(std::ostream& out, const dbrec_primitive_factory& p);
 
 #endif  //_DBREC_PRIMITIVE_FACTORY_H

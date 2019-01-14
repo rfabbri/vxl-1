@@ -70,7 +70,7 @@ SoSeparator* draw_fs_edge (dbsk3d_fs_edge* FE,
   draw_fs_edge_geom (root, FE, user_defined_class);
 
   if (draw_dual) { //Draw the corresponding dual triangle (polygon).
-    vcl_vector<dbmsh3d_vertex*> genes;
+    std::vector<dbmsh3d_vertex*> genes;
     FE->get_ordered_Gs_via_FF (genes);
     draw_filled_polygon_geom (root, genes);
   }
@@ -87,7 +87,7 @@ SoSeparator* draw_fs_edge (dbsk3d_fs_edge* FE,
 
   draw_fs_edge_geom (root, FE, user_defined_class);
   if (draw_dual) { //Draw the corresponding dual triangle (polygon).
-    vcl_vector<dbmsh3d_vertex*> genes;
+    std::vector<dbmsh3d_vertex*> genes;
     FE->get_ordered_Gs_via_FF (genes);
     draw_filled_polygon_geom (root, genes);
   }

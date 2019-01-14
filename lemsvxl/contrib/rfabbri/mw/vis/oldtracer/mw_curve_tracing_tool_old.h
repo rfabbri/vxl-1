@@ -50,7 +50,7 @@ public:
   virtual ~mw_curve_tracing_tool_3() {}
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -79,7 +79,7 @@ protected:
   vgui_easy2D_tableau_sptr tab_r_;
 
   bgui_vsol2D_tableau_sptr curve_tableau_l_;
-  vcl_vector< vsol_polyline_2d_sptr > vsols_right_;
+  std::vector< vsol_polyline_2d_sptr > vsols_right_;
 
   const vpgl_perspective_camera<double> *p1_;
   const vpgl_perspective_camera<double> *p2_;

@@ -17,7 +17,7 @@
 #include <dbsksp/dbsksp_shapelet.h>
 //#include <dbgl/algo/dbgl_interp_arc_spline.h>
 //#include <dbgl/algo/dbgl_closest_point.h>
-//#include <vcl_iostream.h>
+//#include <iostream>
 //
 //#include <dbgui/dbgui_soview2D.h>
 #include <vnl/vnl_vector.h>
@@ -28,13 +28,13 @@ vgl_point_2d<double > circle_pt(const vgl_point_2d<double >& center,
                                 double radius,
                                 double angle)
 {
-  return center + radius * vgl_vector_2d<double >(vcl_cos(angle), vcl_sin(angle));
+  return center + radius * vgl_vector_2d<double >(std::cos(angle), std::sin(angle));
 }
 
 
 // plot a polyline on an easy2D tableau
 void dbsksp_draw_polyline(const vgui_easy2D_tableau_sptr& easy2D,
-                          const vcl_vector<vgl_point_2d<double > >& pts)
+                          const std::vector<vgl_point_2d<double > >& pts)
 {
   // draw the polyline with GL
   unsigned pt_list_size = pts.size();
@@ -55,7 +55,7 @@ void dbsksp_draw_polyline(const vgui_easy2D_tableau_sptr& easy2D,
 // -----------------------------------------------------------------------------
 // plot a polyline on an easy2D tableau
 void dbsksp_draw_points(const vgui_easy2D_tableau_sptr& easy2D,
-                          const vcl_vector<vgl_point_2d<double > >& pts)
+                          const std::vector<vgl_point_2d<double > >& pts)
 {
   // draw the polyline with GL
   for (unsigned i = 0; i < pts.size(); ++i)
@@ -69,14 +69,14 @@ void dbsksp_draw_points(const vgui_easy2D_tableau_sptr& easy2D,
 
 // -----------------------------------------------------------------------------
 // print a set of points to a file
-bool dbsksp_write_points(const vcl_string& filename, 
-                  const vcl_vector<vgl_point_2d<double > >& pts)
+bool dbsksp_write_points(const std::string& filename, 
+                  const std::vector<vgl_point_2d<double > >& pts)
 {
   // create the file
-  vcl_ofstream outfp(filename.c_str());
+  std::ofstream outfp(filename.c_str());
   if (!outfp)
   {
-    vcl_cout << " Error writing file  " << filename << vcl_endl;
+    std::cout << " Error writing file  " << filename << std::endl;
     return false;
   }
   
@@ -84,7 +84,7 @@ bool dbsksp_write_points(const vcl_string& filename,
   for (unsigned int i=0; i<pts.size(); ++i)
   {
     vgl_point_2d<double > pt = pts[i];
-    outfp <<pt.x() << " " << pt.y() << vcl_endl;
+    outfp <<pt.x() << " " << pt.y() << std::endl;
   }
 
   // 3) close the file
@@ -98,7 +98,7 @@ bool dbsksp_write_points(const vcl_string& filename,
 // --------------------------------------------------------------------
 //: Sample the boundary of a fragment
 void dbsksp_shape_frag_bnd_pts(const dbsksp_shapelet_sptr& source_frag, 
-                        vcl_vector<vgl_point_2d<double > >& source_pts)
+                        std::vector<vgl_point_2d<double > >& source_pts)
 {
   source_pts.clear();
 
@@ -132,8 +132,8 @@ void dbsksp_shape_frag_bnd_pts(const dbsksp_shapelet_sptr& source_frag,
 
 void dbsksp_compute_grid_curves(const dbsksp_shapelet_sptr& source_frag,
     int num_horz_segs, int num_vert_segs,
-    vcl_vector<dbgl_eulerspiral >& horz_grid_curves,
-    vcl_vector<vcl_vector<vgl_point_2d<double > > >& vert_grid_curves)
+    std::vector<dbgl_eulerspiral >& horz_grid_curves,
+    std::vector<std::vector<vgl_point_2d<double > > >& vert_grid_curves)
 {
   horz_grid_curves.clear();
   vert_grid_curves.clear();
@@ -169,8 +169,8 @@ void dbsksp_compute_grid_curves(const dbsksp_shapelet_sptr& source_frag,
     vgl_vector_2d<double > es_end_tangent = 
       rotated(bnd_arc_back.tangent_at(v+0.5), -vnl_math::pi_over_2);
 
-    dbgl_eulerspiral es(es_start, vcl_atan2(es_start_tangent.y(), es_start_tangent.x()),
-      es_end, vcl_atan2(es_end_tangent.y(), es_end_tangent.x()));
+    dbgl_eulerspiral es(es_start, std::atan2(es_start_tangent.y(), es_start_tangent.x()),
+      es_end, std::atan2(es_end_tangent.y(), es_end_tangent.x()));
 
     horz_grid_curves.push_back(es);
   }
@@ -182,7 +182,7 @@ void dbsksp_compute_grid_curves(const dbsksp_shapelet_sptr& source_frag,
   {
     double u = (1.0 / num_vert_segs) * i;
     
-    vcl_vector<vgl_point_2d<double > > vert_curve;
+    std::vector<vgl_point_2d<double > > vert_curve;
     for (int j =0; j <= num_horz_segs; ++j)
     {
       dbgl_eulerspiral es = horz_grid_curves[j];
@@ -214,15 +214,15 @@ void dbsksp_compute_grid_curves(const dbsksp_shapelet_sptr& source_frag,
 void dbsksp_draw_grid_curves(const vgui_easy2D_tableau_sptr& easy2D,
                              int num_skip_horz,
                              int num_skip_vert,
-  vcl_vector<dbgl_eulerspiral >& horz_grid_curves,
-  vcl_vector<vcl_vector<vgl_point_2d<double > > >& vert_grid_curves)
+  std::vector<dbgl_eulerspiral >& horz_grid_curves,
+  std::vector<std::vector<vgl_point_2d<double > > >& vert_grid_curves)
 {
   // draw the euler spirals
   easy2D->set_foreground(0, 1, 0);
   for (unsigned int i =0; i < horz_grid_curves.size(); i = i + num_skip_horz)
   {
     dbgl_eulerspiral es = horz_grid_curves[i];
-    vcl_vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_point_2d<double > > pts;
     
     double es_len = es.length();
     int num_es_segs = 100;
@@ -239,7 +239,7 @@ void dbsksp_draw_grid_curves(const vgui_easy2D_tableau_sptr& easy2D,
   easy2D->set_foreground(1, 0, 0.5);
   for (unsigned int i =0; i < vert_grid_curves.size(); i = i + num_skip_vert)
   {
-    vcl_vector<vgl_point_2d<double > > vert_curve = vert_grid_curves[i];
+    std::vector<vgl_point_2d<double > > vert_curve = vert_grid_curves[i];
     dbsksp_draw_polyline(easy2D, vert_curve);
   }
 
@@ -253,8 +253,8 @@ void dbsksp_draw_grid_curves(const vgui_easy2D_tableau_sptr& easy2D,
 void dbsksp_compute_A13_frag_grid_curves(
   const dbsksp_shapelet_sptr& source_frag,
     int num_horz_segs, int num_vert_segs,
-    vcl_vector<dbgl_eulerspiral >& horz_grid_curves,
-    vcl_vector<vcl_vector<vgl_point_2d<double > > >& vert_grid_curves)
+    std::vector<dbgl_eulerspiral >& horz_grid_curves,
+    std::vector<std::vector<vgl_point_2d<double > > >& vert_grid_curves)
 {
   horz_grid_curves.clear();
   vert_grid_curves.clear();
@@ -330,8 +330,8 @@ void dbsksp_compute_A13_frag_grid_curves(
     vgl_vector_2d<double > es_end_tangent = 
       rotated(bnd_arc_back.tangent_at(v+0.5), -vnl_math::pi_over_2);
 
-    dbgl_eulerspiral es(es_start, vcl_atan2(es_start_tangent.y(), es_start_tangent.x()),
-      es_end, vcl_atan2(es_end_tangent.y(), es_end_tangent.x()));
+    dbgl_eulerspiral es(es_start, std::atan2(es_start_tangent.y(), es_start_tangent.x()),
+      es_end, std::atan2(es_end_tangent.y(), es_end_tangent.x()));
 
     horz_grid_curves.push_back(es);
   }
@@ -343,7 +343,7 @@ void dbsksp_compute_A13_frag_grid_curves(
   {
     double u = (1.0 / num_vert_segs) * i;
     
-    vcl_vector<vgl_point_2d<double > > vert_curve;
+    std::vector<vgl_point_2d<double > > vert_curve;
     for (int j =0; j <= num_horz_segs; ++j)
     {
       dbgl_eulerspiral es = horz_grid_curves[j];

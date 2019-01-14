@@ -1,10 +1,10 @@
 #ifndef dbrl_support_h_
 #define dbrl_support_h_
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_image_view.h>
 

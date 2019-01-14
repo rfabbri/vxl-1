@@ -5,9 +5,9 @@
 
 #include<dsm/dsm_state_machine.h>
 
-#include<vcl_iostream.h>
-#include<vcl_vector.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<vector>
+#include<string>
 
 namespace dsm_update_state_machine_process_globals
 {
@@ -19,8 +19,8 @@ bool dsm_update_state_machine_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_update_state_machine_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
     input_types_[0] = "unsigned";
 

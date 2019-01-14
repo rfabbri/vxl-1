@@ -15,7 +15,7 @@
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
 #include <gevd/gevd_bufferxy.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_vector.h>
 #include <rgrl/rgrl_feature_sptr.h>
 
@@ -47,7 +47,7 @@ class vidreg_detector
     //  can not be called by itself, must follow detect_edgels
     bool detect_corners(const vil_image_resource_sptr& image);
 
-    vcl_vector<double> orient_point(double x, double y);
+    std::vector<double> orient_point(double x, double y);
 
     void make_descriptor(double x, double y, vnl_vector<double>& desc, double max_comp = 0.2);
 

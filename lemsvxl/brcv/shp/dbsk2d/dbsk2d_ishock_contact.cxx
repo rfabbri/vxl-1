@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_contact.h>
 #include <dbsk2d/dbsk2d_lagrangian_cell_bnd.h>
 
@@ -66,7 +66,7 @@ void dbsk2d_ishock_contact::compute_extrinsic_locus()
   //else 
     if (endTime() > MAX_RADIUS) {
     //compute projected End point
-    end = start + LARGE_DRAWLENGTH*vgl_vector_2d<double>(vcl_cos(_n), vcl_sin(_n));
+    end = start + LARGE_DRAWLENGTH*vgl_vector_2d<double>(std::cos(_n), std::sin(_n));
   } 
   else
     end = getEndPt();
@@ -75,66 +75,66 @@ void dbsk2d_ishock_contact::compute_extrinsic_locus()
   ex_pts_.push_back(end);
 }
 
-void dbsk2d_ishock_contact::getInfo (vcl_ostream& ostrm)
+void dbsk2d_ishock_contact::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   char endx[32], endy[32], simtime[32], endtime[32];
 
   ostrm << "\n==============================\n";
   ostrm << "C: [" << _id << "] " << "{ "  << (_bActive ? "A" : "nA" ) << ", ";
-  ostrm << (_bPropagated ? "Prop" : "nProp" ) << ", (C)  }" << vcl_endl;
+  ostrm << (_bPropagated ? "Prop" : "nProp" ) << ", (C)  }" << std::endl;
 
   vgl_point_2d<double> start = getStartPt ();
   vgl_point_2d<double> end = getEndPt ();
 
   if (_endTime==ISHOCK_DIST_HUGE) {
-    vcl_sprintf(endtime, "INF");
-    vcl_sprintf(endx, "INF");
-    vcl_sprintf(endy, "INF");
+    std::sprintf(endtime, "INF");
+    std::sprintf(endx, "INF");
+    std::sprintf(endy, "INF");
   }
   else {
-    vcl_sprintf(endtime, "%.7f", _endTime);
-    vcl_sprintf(endx, "%.3f", end.x());
-    vcl_sprintf(endy, "%.3f", end.y());
+    std::sprintf(endtime, "%.7f", _endTime);
+    std::sprintf(endx, "%.3f", end.x());
+    std::sprintf(endy, "%.3f", end.y());
   }
 
   if (_simTime==ISHOCK_DIST_HUGE) 
-    vcl_sprintf(simtime, "INF");
+    std::sprintf(simtime, "INF");
   else 
-    vcl_sprintf(simtime, "%.7f", _simTime);
+    std::sprintf(simtime, "%.7f", _simTime);
 
-  vcl_sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
-  vcl_sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
-  vcl_sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<vcl_endl;
+  std::sprintf(s, "Origin : (%.3f, %.3f)\n", _origin.x(), _origin.y()); ostrm << s;
+  std::sprintf(s, "Sta-End: (%.3f, %.3f)-(%s, %s)\n", start.x(), start.y(), endx, endy); ostrm << s;
+  std::sprintf(s, "{ ts=%.7f, te=%s, tsim=%s }\n", _startTime, endtime, simtime); ostrm << s <<std::endl;
 
-  ostrm << "lB: " << _lBElement->id(); vcl_sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
-  ostrm << "rB: " << _rBElement->id(); vcl_sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
+  ostrm << "lB: " << _lBElement->id(); std::sprintf(s, " (%f, %f)\n", LsEta(), LeEta()); ostrm <<s;
+  ostrm << "rB: " << _rBElement->id(); std::sprintf(s, " (%f, %f)\n", RsEta(), ReEta()); ostrm <<s;
   ostrm << "[ lS: " << (_lShock?_lShock->id():-1)  << ", rS: " << (_rShock?_rShock->id():-1) << "]\n";
   ostrm << "[ lN: " << (_lNeighbor?_lNeighbor->id():-1)  << ", rN: " << (_rNeighbor?_rNeighbor->id():-1);
-  ostrm << ", pN: -1" << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << vcl_endl;
+  ostrm << ", pN: -1" << ", cN: " << (_cSNode?_cSNode->id():-1) << " ]\n" << std::endl;
 
-  vcl_sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
-  vcl_sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
+  std::sprintf(s, "LTau: %f - %f (Tau range: %f - %f)\n", _LsTau, _LeTau, minLTau(), maxLTau()); ostrm << s;
+  std::sprintf(s, "RTau: %f - %f (Tau range: %f - %f)\n\n", _RsTau, _ReTau, minRTau(), maxRTau()); ostrm << s;
 
-  vcl_sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
-  vcl_sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "LEta: %f - %f (Eta range: %f - %f)\n", LsEta(), LeEta(), _lBElement->min_eta(), _lBElement->max_eta()); ostrm << s;
+  std::sprintf(s, "REta: %f - %f (Eta range: %f - %f)\n\n", RsEta(), ReEta(), _rBElement->min_eta(), _rBElement->max_eta()); ostrm << s;
 
-  vcl_sprintf(s, "H: %f\n", _H); ostrm << s;
-  vcl_sprintf(s, "n: %f\n", _n); ostrm << s;
+  std::sprintf(s, "H: %f\n", _H); ostrm << s;
+  std::sprintf(s, "n: %f\n", _n); ostrm << s;
 
   //boundary intersection
   ostrm << "Termination: ";
   if (_cSNode)
-    ostrm << "at intersection." << vcl_endl;
+    ostrm << "at intersection." << std::endl;
   else {
     if (this->cell_bnd()){
       if (this->cell_bnd()->is_vert())
-        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at vert. bnd; y=" << this->bnd_intersect_pos() << std::endl;
       else        
-        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << vcl_endl;
+        ostrm << "at horiz. bnd; x=" << this->bnd_intersect_pos() << std::endl;
     }
     else
-      ostrm << "in mid air." << vcl_endl;
+      ostrm << "in mid air." << std::endl;
   }
 }
 

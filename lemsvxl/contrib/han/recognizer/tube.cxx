@@ -1,5 +1,5 @@
 #include "tube.h"
-#include <vcl_cmath.h> // for vcl_sqrt()
+#include <cmath> // for std::sqrt()
 void tube::init()
 {
 //  
@@ -7,7 +7,7 @@ void tube::init()
 }
 
 
-vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d <double> p0) 
+vnl_vector<int> tube::search(std::vector<vgl_point_3d<double> > pts, vgl_point_3d <double> p0) 
 {
   //on the xz plane....
   e11_.set(p0.x(),0.0,p0.z());
@@ -39,8 +39,8 @@ vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d
   px[2]=e12_.x()+(-a1/2.0)*t1y; py[2]= e12_.z()+( a1/2.0)*t1x;
 
   for (unsigned j=0;j<4;j++)
-  ////vcl_cout<<px[j]<<" "<<py[j]<<vcl_endl;
-  ////vcl_cout<<vcl_endl;
+  ////std::cout<<px[j]<<" "<<py[j]<<std::endl;
+  ////std::cout<<std::endl;
   pol1_=vgl_polygon<double> ( px,py, 4);
 ///////////////////////////////////////////////////
 
@@ -58,8 +58,8 @@ vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d
 
   pol2_=vgl_polygon<double> ( px,py, 4);
   for (unsigned j=0;j<4;j++)
-  ////vcl_cout<<px[j]<<" "<<py[j]<<vcl_endl;
-  ////vcl_cout<<vcl_endl;
+  ////std::cout<<px[j]<<" "<<py[j]<<std::endl;
+  ////std::cout<<std::endl;
 ////////////////////////////////////////////////////
 
   double t3x=e31_.x()-e32_.x();
@@ -76,8 +76,8 @@ vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d
 
   pol3_=vgl_polygon<double> ( px,py, 4);
   for (unsigned j=0;j<4;j++)
-  ////vcl_cout<<px[j]<<" "<<py[j]<<vcl_endl;
-  ////vcl_cout<<vcl_endl;
+  ////std::cout<<px[j]<<" "<<py[j]<<std::endl;
+  ////std::cout<<std::endl;
 /////////////////////////////////////////////////////
 
   double t4x=e41_.x()-e42_.x();
@@ -94,14 +94,14 @@ vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d
 
   pol4_=vgl_polygon<double> ( px,py, 4);
  for (unsigned j=0;j<4;j++)
-  ////vcl_cout<<px[j]<<" "<<py[j]<<vcl_endl;
-  ////vcl_cout<<vcl_endl;
+  ////std::cout<<px[j]<<" "<<py[j]<<std::endl;
+  ////std::cout<<std::endl;
   ////////////////////////////////////////////////////
   
   int count1=0; int count2=0; int count3=0; int count4=0;
 
   for (unsigned i=0;i<pts.size();i++) {
-    ////vcl_cout<<pts[i].x()<<" "<<pts[i].z()<<vcl_endl;
+    ////std::cout<<pts[i].x()<<" "<<pts[i].z()<<std::endl;
     if (use1_ && pol1_.contains(pts[i].x(),pts[i].z()) )
     count1++;
     if (use2_ && pol2_.contains(pts[i].x(),pts[i].z()) )
@@ -127,13 +127,13 @@ vnl_vector<int> tube::search(vcl_vector<vgl_point_3d<double> > pts, vgl_point_3d
 }
 
 
-void tube::ranger(vcl_vector<vgl_point_3d<double> > pts)
+void tube::ranger(std::vector<vgl_point_3d<double> > pts)
 {
 
   for (unsigned i=0;i<pts.size();i++) {
-    ////vcl_cout<<pts[i]<<vcl_endl;
+    ////std::cout<<pts[i]<<std::endl;
     vnl_vector <int> ans=search(pts,pts[i]);
-    ////vcl_cout <<ans << vcl_endl;
+    ////std::cout <<ans << std::endl;
   }
 
 }
@@ -141,7 +141,7 @@ void tube::ranger(vcl_vector<vgl_point_3d<double> > pts)
 
 
 /*
-void tube::check(vcl_vector<vgl_point_3d<double> > pts)
+void tube::check(std::vector<vgl_point_3d<double> > pts)
 {
   vnl_vector <int> max_linear(5,0);
   vnl_vector <int> max_square(5,0);
@@ -150,9 +150,9 @@ void tube::check(vcl_vector<vgl_point_3d<double> > pts)
   int max_lin_index=-1,max_square_index=-1;
 
   for (unsigned i=0;i<pts.size();i++) {
-   // vcl_cout<<pts[i]<<vcl_endl;
+   // std::cout<<pts[i]<<std::endl;
     vnl_vector <int> ans=search(pts,pts[i]);
-   // vcl_cout <<ans << vcl_endl;
+   // std::cout <<ans << std::endl;
     if (ans[4]>max_linear[4]) {
       max_linear=ans;
       max_lin_index=i;
@@ -170,7 +170,7 @@ void tube::check(vcl_vector<vgl_point_3d<double> > pts)
 
   }
 
-  vcl_cout<<"max_lin"<<max_linear<<" "<<max_lin_point<<vcl_endl;
-  vcl_cout<<"max_sqr"<<max_square<<" "<<max_square_point<<vcl_endl;
+  std::cout<<"max_lin"<<max_linear<<" "<<max_lin_point<<std::endl;
+  std::cout<<"max_sqr"<<max_square<<" "<<max_square_point<<std::endl;
 }
 */

@@ -2,7 +2,7 @@
 #define psm_camera_opt_gdbicp_homography_generator_h_
 
 #include <vil/vil_image_view.h>
-#include <vcl_string.h>
+#include <string>
 #include <vimt/vimt_transform_2d.h>
 
 #include "psm_camera_opt_homography_generator.h"
@@ -17,7 +17,7 @@ public:
   virtual vimt_transform_2d compute_homography();
 
 private:
-  vimt_transform_2d parse_gdbicp_output(vcl_string filename);
+  vimt_transform_2d parse_gdbicp_output(std::string filename);
 
 
 };

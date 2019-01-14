@@ -23,8 +23,8 @@ bool less_num_members(const dbcll_cluster_sptr& c1,
   return c1->size() < c2->size();
 }
 
-bool less_size(const vcl_vector<unsigned>& v1,
-               const vcl_vector<unsigned>& v2)
+bool less_size(const std::vector<unsigned>& v1,
+               const std::vector<unsigned>& v2)
 {
   if(v1.size() == v2.size())
     return v1.front() < v2.front();
@@ -33,45 +33,45 @@ bool less_size(const vcl_vector<unsigned>& v1,
 
 
 template <unsigned dim>
-void recluster(const vcl_string& feat_file,
-               vcl_vector<vcl_vector<unsigned> >& clusters_idx,
+void recluster(const std::string& feat_file,
+               std::vector<std::vector<unsigned> >& clusters_idx,
                double thresh)
 {
-  vcl_vector<modrec_desc_feature_3d<dim> > features;
+  std::vector<modrec_desc_feature_3d<dim> > features;
   typedef vbl_triple<unsigned,unsigned,unsigned> utriple;
-  vcl_vector<utriple> idx_array;  
+  std::vector<utriple> idx_array;  
   read_features(feat_file, features, idx_array);
 
-  vcl_cout << "read " << features.size() << vcl_endl;
+  std::cout << "read " << features.size() << std::endl;
 
 
-  vcl_vector<vcl_vector<unsigned> > new_clusters;
+  std::vector<std::vector<unsigned> > new_clusters;
 
   for(unsigned i=0; i<clusters_idx.size(); ++i){
 
-    vcl_vector<dbgl_similarity_3d<double> > sims;
-    vcl_vector<unsigned> sim_idx;
-    vcl_vector<unsigned> ci = clusters_idx[i];
+    std::vector<dbgl_similarity_3d<double> > sims;
+    std::vector<unsigned> sim_idx;
+    std::vector<unsigned> ci = clusters_idx[i];
     for(unsigned j=0; j<ci.size(); ++j){
       const modrec_feature_3d& f = features[ci[j]];
       dbgl_similarity_3d<double> sim(f.scale(),f.orientation(),f.position()-vgl_point_3d<double>(0,0,0));
       sims.push_back(sim);
       sim_idx.push_back(ci[j]);
     }
-    vcl_vector<dbcll_cluster_sptr> clusters;
+    std::vector<dbcll_cluster_sptr> clusters;
     for(unsigned j=0; j<sims.size(); ++j){
       clusters.push_back(new dbcll_sim3d_cluster(sims,j));
     }
 
     // precompute distances
-    vcl_vector<dbcll_cluster_sptr> clusters2 = dbcll_precompute_similarity(clusters);
+    std::vector<dbcll_cluster_sptr> clusters2 = dbcll_precompute_similarity(clusters);
     dbcll_remainder_set remain(clusters2.begin(), clusters2.end());
     clusters2.clear();
     dbcll_rnn_agg_clustering(remain, clusters2,-thresh);
-    vcl_sort(clusters2.begin(), clusters2.end(), less_num_members);
+    std::sort(clusters2.begin(), clusters2.end(), less_num_members);
     for(unsigned j=0; j<clusters2.size(); ++j){
-      vcl_vector<unsigned> members = clusters2[j]->members();
-      vcl_vector<unsigned> new_members(members.size());
+      std::vector<unsigned> members = clusters2[j]->members();
+      std::vector<unsigned> new_members(members.size());
       for(unsigned k=0; k<members.size(); ++k){
         new_members[k] = sim_idx[members[k]];
       }
@@ -86,14 +86,14 @@ void recluster(const vcl_string& feat_file,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_feat_file("-feat3d", "path to 3d features", "");
-  vul_arg<vcl_string>  a_clust_file("-in", "path to input clusters index file", "");
-  vul_arg<vcl_string>  a_clust_file_out("-out", "path to output clusters index file", "");
+  vul_arg<std::string>  a_feat_file("-feat3d", "path to 3d features", "");
+  vul_arg<std::string>  a_clust_file("-in", "path to input clusters index file", "");
+  vul_arg<std::string>  a_clust_file_out("-out", "path to output clusters index file", "");
   vul_arg<double>      a_thresh("-thresh", "sim3d threshold", .1);
   vul_arg<unsigned>    a_dim("-dim", "feature descriptor dimension", 128);
   vul_arg_parse(argc, argv);
 
-  vcl_vector<vcl_vector<unsigned> > clusters_idx;
+  std::vector<std::vector<unsigned> > clusters_idx;
   read_clusters(a_clust_file(), clusters_idx);
 
   switch(a_dim()){
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
     }
     break;
   default:
-      vcl_cerr << "features with dimension "<<a_dim()<<" not supported" << vcl_endl;
+      std::cerr << "features with dimension "<<a_dim()<<" not supported" << std::endl;
   }
 
   // write the new cluster file

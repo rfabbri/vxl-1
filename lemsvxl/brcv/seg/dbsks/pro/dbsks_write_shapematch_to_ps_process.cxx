@@ -6,7 +6,7 @@
 #include "dbsks_write_shapematch_to_ps_process.h"
 
 #include <bpro1/bpro1_parameters.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vil/vil_load.h>
 #include <vul/vul_file.h>
 #include <dbsksp/pro/dbsksp_shock_storage.h>
@@ -18,7 +18,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <dbsksp/dbsksp_xshock_node.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 
 
@@ -26,7 +26,7 @@
 dbsks_write_shapematch_to_ps_process::
 dbsks_write_shapematch_to_ps_process()
 {
-  vcl_vector<vcl_string > opt_mode_desc;
+  std::vector<std::string > opt_mode_desc;
   if ( !parameters()->add("process file?" , "process_file", true) ||
     !parameters()->add("shapematch output file " , "shapematch_file", 
     bpro1_filepath("*.*", "")) ||
@@ -48,13 +48,13 @@ dbsks_write_shapematch_to_ps_process()
     !parameters()->add("image folder " , "image_folder", 
     bpro1_filepath("", "")) ||
 
-    !parameters()->add("image extension " , "image_ext", vcl_string(".jpg")) ||
+    !parameters()->add("image extension " , "image_ext", std::string(".jpg")) ||
     
     !parameters()->add("Output PS folder " , "out_ps_folder", 
     bpro1_filepath("", "") )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -74,27 +74,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_write_shapematch_to_ps_process::
+std::string dbsks_write_shapematch_to_ps_process::
 name()
 { 
   return "Write shapematch to PS"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_write_shapematch_to_ps_process::
+std::vector< std::string > dbsks_write_shapematch_to_ps_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsksp_shock" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_write_shapematch_to_ps_process::
+std::vector< std::string > dbsks_write_shapematch_to_ps_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -122,8 +122,8 @@ execute()
 {
   if ( input_data_.size() != 1 )
   {
-    vcl_cerr << "In dbsks_write_shapematch_to_ps_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_write_shapematch_to_ps_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -156,7 +156,7 @@ execute()
   bpro1_filepath image_folder;
   this->parameters()->get_value("image_folder", image_folder);
 
-  vcl_string image_ext;
+  std::string image_ext;
   this->parameters()->get_value("image_ext", image_ext);
 
   bpro1_filepath out_ps_folder;
@@ -175,14 +175,14 @@ execute()
 
   if (process_file)
   {
-    vcl_cout << "Processing image : " << vul_file::strip_directory(image_file.path) << "...\n";
+    std::cout << "Processing image : " << vul_file::strip_directory(image_file.path) << "...\n";
     if (this->save_ps_file(out_ps_file.path, shapematch_file.path, image_file.path, graph))
     {
-      vcl_cout << "  Saving PS file succeeded.\n";
+      std::cout << "  Saving PS file succeeded.\n";
     }
     else
     {
-      vcl_cout << "  Saving PS file failed.\n";
+      std::cout << "  Saving PS file failed.\n";
     }
   }
 
@@ -191,23 +191,23 @@ execute()
   if (process_folder)
   {
     // parse image list
-    vcl_vector<vcl_string > image_names;
+    std::vector<std::string > image_names;
 
-    vcl_ifstream ifs(image_list.path.c_str());
+    std::ifstream ifs(image_list.path.c_str());
     if (!ifs) 
     {
-      vcl_cout << "ERROR: Unable to open file list " << ifs << vcl_endl;
+      std::cout << "ERROR: Unable to open file list " << ifs << std::endl;
       return false;
     }
 
     // read the image names, one by one
     while (!ifs.eof()) 
     {
-      vcl_string name;
+      std::string name;
       ifs >> name;
       if (name.size() > 0) 
       {
-        vcl_string just_name = 
+        std::string just_name = 
           vul_file::strip_directory(vul_file::strip_extension(name));
         image_names.push_back(just_name);
       }
@@ -218,31 +218,31 @@ execute()
     // some how finished parsing
     for (unsigned i =0; i < image_names.size(); ++i)
     {
-      vcl_string image_name = image_names[i];
-      vcl_cout << "\nProcessing image : " << image_name << "...";
+      std::string image_name = image_names[i];
+      std::cout << "\nProcessing image : " << image_name << "...";
 
       // path to the file
-      vcl_string image_file = image_folder.path + "/" + image_name + image_ext;
+      std::string image_file = image_folder.path + "/" + image_name + image_ext;
 
       // path to shapematch file
-      vcl_string shapematch_file = shapematch_folder.path + "/" + image_name + 
+      std::string shapematch_file = shapematch_folder.path + "/" + image_name + 
         "_shapematch_out.txt";
 
       // path to ps file
-      vcl_string ps_file = out_ps_folder.path + "/" + image_name + "_shapematch_out.ps";
+      std::string ps_file = out_ps_folder.path + "/" + image_name + "_shapematch_out.ps";
 
       // Write out the file
       if (this->save_ps_file(ps_file, shapematch_file, image_file, graph))
       {
-        vcl_cout << "  succeeded.\n";
+        std::cout << "  succeeded.\n";
       }
       else
       {
-        vcl_cout << "  failed.\n";
+        std::cout << "  failed.\n";
       }
 
       //// debugging
-      //vcl_cout << "  image_file = " << image_file << "\n"
+      //std::cout << "  image_file = " << image_file << "\n"
       //  << "  shapematch_file = " << shapematch_file << "\n"
       //  << "  ps_file = " << ps_file << "\n";
     }
@@ -267,9 +267,9 @@ finish()
 
 // ----------------------------------------------------------------------------
 bool dbsks_write_shapematch_to_ps_process::
-save_ps_file(const vcl_string& out_ps_file,
-             const vcl_string& shapematch_file, 
-              const vcl_string& image_file,
+save_ps_file(const std::string& out_ps_file,
+             const std::string& shapematch_file, 
+              const std::string& image_file,
              const dbsksp_shock_graph_sptr& graph)
 {
   vil_image_resource_sptr image_resource = 
@@ -277,7 +277,7 @@ save_ps_file(const vcl_string& out_ps_file,
 
   if (!image_resource)
   {
-    vcl_cout << "ERROR: could not load image file.\n";
+    std::cout << "ERROR: could not load image file.\n";
     return false;
   }
 
@@ -289,7 +289,7 @@ save_ps_file(const vcl_string& out_ps_file,
   int num_nodes = -1;
 
   // parse the input data file
-  vcl_ifstream in_file(shapematch_file.c_str());
+  std::ifstream in_file(shapematch_file.c_str());
   while (!in_file.eof())
   {
     char buffer[1000];
@@ -297,12 +297,12 @@ save_ps_file(const vcl_string& out_ps_file,
 
     char tag[1000] = "";
     char data[1000];
-    vcl_sscanf(buffer, "%s %s\n", tag, data);
-    vcl_string tag_string(tag);
+    std::sscanf(buffer, "%s %s\n", tag, data);
+    std::string tag_string(tag);
 
-    //vcl_cout << "tag = " << tag_string << "\n  value = " << data << "\n";
+    //std::cout << "tag = " << tag_string << "\n  value = " << data << "\n";
 
-    vcl_stringstream str;
+    std::stringstream str;
     str << data;
 
     // determine action depending name of tag
@@ -342,16 +342,16 @@ save_ps_file(const vcl_string& out_ps_file,
   if (bbox_xmin < -1e10 || bbox_xmax < -1e10 || bbox_ymin < -1e10 || bbox_ymax < -1e10 
     || num_nodes < 0)
   {
-    vcl_cout << "ERROR: missing items in shapematch_file.\n";
+    std::cout << "ERROR: missing items in shapematch_file.\n";
     return false;
   }
 
   if (num_nodes > 100)
   {
-    vcl_cout << "WARNING: num_nodes is larger than 100. Is it correct?\n";
+    std::cout << "WARNING: num_nodes is larger than 100. Is it correct?\n";
   }
 
-  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
+  std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
   for (int i =0; i < num_nodes; ++i)
   {
     char buffer[1000];
@@ -359,24 +359,24 @@ save_ps_file(const vcl_string& out_ps_file,
 
     int id;
     double x[5];
-    vcl_sscanf(buffer, "%d %lf %lf %lf %lf %lf\n", &id, &x[0], &x[1], &x[2], &x[3], &x[4]);
+    std::sscanf(buffer, "%d %lf %lf %lf %lf %lf\n", &id, &x[0], &x[1], &x[2], &x[3], &x[4]);
     dbsksp_xshock_node_descriptor xnode(x[0], x[1], x[2], x[3], x[4]);
     dbsksp_shock_node_sptr node = graph->node_from_id(id);
-    xnode_map.insert(vcl_make_pair(node, xnode));
+    xnode_map.insert(std::make_pair(node, xnode));
     
-    //vcl_cout << "id = " << id << "\n";
-    //xnode.print(vcl_cout );
+    //std::cout << "id = " << id << "\n";
+    //xnode.print(std::cout );
   }
 
   // trace out the boundary and contact shocks
-  vcl_vector<vsol_spatial_object_2d_sptr > bnd_list = 
+  std::vector<vsol_spatial_object_2d_sptr > bnd_list = 
     dbsks_trace_boundary(graph, xnode_map);
-  vcl_vector<vsol_spatial_object_2d_sptr > contact_shock_list = 
+  std::vector<vsol_spatial_object_2d_sptr > contact_shock_list = 
     dbsks_trace_contact_shocks(graph, xnode_map);
 
 
   // trace out the bounding box
-  vcl_vector<vsol_point_2d_sptr > bbox_pts;
+  std::vector<vsol_point_2d_sptr > bbox_pts;
   bbox_pts.push_back(new vsol_point_2d(bbox_xmin, bbox_ymin));
   bbox_pts.push_back(new vsol_point_2d(bbox_xmax, bbox_ymin));
   bbox_pts.push_back(new vsol_point_2d(bbox_xmax, bbox_ymax));
@@ -387,9 +387,9 @@ save_ps_file(const vcl_string& out_ps_file,
 
 
   // combine the two and assign colors for each
-  vcl_vector<vsol_spatial_object_2d_sptr > vsol_data;
+  std::vector<vsol_spatial_object_2d_sptr > vsol_data;
   vsol_data.reserve(bnd_list.size() + contact_shock_list.size());
-  vcl_vector<vil_rgb<float > > colors;
+  std::vector<vil_rgb<float > > colors;
   colors.reserve(bnd_list.size() + contact_shock_list.size());
 
   // blue for boundary

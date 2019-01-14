@@ -27,7 +27,7 @@
 
 #include <bbas/bsol/bsol_algs.h>
 
-#include <vcl_sstream.h>
+#include <sstream>
 
 extern "C" {
 #include <vl/gmm.h>
@@ -36,7 +36,7 @@ extern "C" {
 
 //: Constructor
 dbskr_train_routines::dbskr_train_routines(
-    vcl_string model_list,
+    std::string model_list,
     DescriptorType descr_type,
     ColorSpace color_space,
     int keywords,
@@ -47,7 +47,7 @@ dbskr_train_routines::dbskr_train_routines(
 {
 
     // Write out centers
-    vcl_string d_type="";
+    std::string d_type="";
     if ( descr_type_ == dbskr_train_routines::GRADIENT )
     {
         d_type="gradient";
@@ -57,7 +57,7 @@ dbskr_train_routines::dbskr_train_routines(
         d_type="color";
     }
 
-    vcl_string c_type="";
+    std::string c_type="";
     if ( color_space_ == dbskr_train_routines::RGB )
     {
         c_type="rgb";
@@ -75,27 +75,27 @@ dbskr_train_routines::dbskr_train_routines(
         c_type="nopp";
     }
 
-    vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
-            <<vcl_endl;
+    std::cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
+            <<std::endl;
 
-    vcl_stringstream gmm_filename_stream;
+    std::stringstream gmm_filename_stream;
     gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<".txt";
 
-    vcl_stringstream pca_filename_stream;
+    std::stringstream pca_filename_stream;
     pca_filename_stream<<"pca_"<<d_type<<"_"<<c_type<<"_dim_"<<pca_;
     
-    vcl_string gmm_filename=gmm_filename_stream.str();
-    vcl_string M_filename=pca_filename_stream.str()+"_M.txt";
-    vcl_string mean_filename=pca_filename_stream.str()+"_mean.txt";
+    std::string gmm_filename=gmm_filename_stream.str();
+    std::string M_filename=pca_filename_stream.str()+"_M.txt";
+    std::string mean_filename=pca_filename_stream.str()+"_mean.txt";
     
     
     // Load model file first
-    vcl_cout<<"Loading model file"<<vcl_endl;
+    std::cout<<"Loading model file"<<std::endl;
     load_model_file(model_list);
 
     if ( descr_type_ == dbskr_train_routines::GRADIENT)
     {
-        vcl_cout<<"Computing Gradient Descriptors"<<vcl_endl;
+        std::cout<<"Computing Gradient Descriptors"<<std::endl;
         
         compute_gradients();
         compute_grad_descriptors();
@@ -136,20 +136,20 @@ void dbskr_train_routines::write_out()
 }
 
 //: Load model files and convert to color space if appropriate
-void dbskr_train_routines::load_model_file(vcl_string& filename)
+void dbskr_train_routines::load_model_file(std::string& filename)
 {
-    vcl_ifstream esf_file(filename.c_str());
+    std::ifstream esf_file(filename.c_str());
 
     if ( !esf_file.is_open() )
     {
-        vcl_cerr<<"Error opening "<<filename<<vcl_endl;
+        std::cerr<<"Error opening "<<filename<<std::endl;
         return;
     }
 
     dbsk2d_xshock_graph_fileio loader;
 
-    vcl_string line;
-    while ( vcl_getline (esf_file,line) )
+    std::string line;
+    while ( std::getline (esf_file,line) )
     {
 
         // Load in two of the same one for mirroring one for not
@@ -161,7 +161,7 @@ void dbskr_train_routines::load_model_file(vcl_string& filename)
         masks_.push_back(polygon);
 
         // Read in image file
-        vcl_string model_imagename=vul_file::strip_extension(line);
+        std::string model_imagename=vul_file::strip_extension(line);
         
         model_imagename=model_imagename+".jpg";
 
@@ -190,7 +190,7 @@ void dbskr_train_routines::load_model_file(vcl_string& filename)
 }
 
 //: Set up bin file
-void dbskr_train_routines::train(vcl_string& gmm_filename)
+void dbskr_train_routines::train(std::string& gmm_filename)
 {
 
     // Let time how long this takes
@@ -200,7 +200,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     // Run gmm
     // Map all descriptors to pca
 
-    vcl_vector<double> descriptors;
+    std::vector<double> descriptors;
 
     for ( int i =0; i < descriptor_matrix_.rows() ; ++i)
     { 
@@ -223,7 +223,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     double * priors ;
     double * posteriors ;
 
-    vcl_cout<<"GMM "<<numData<<" descriptors "<<vcl_endl;
+    std::cout<<"GMM "<<numData<<" descriptors "<<std::endl;
 
     // Let time how long this takes
     // Start timer
@@ -251,29 +251,29 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"Clustering Time: "<<vox_time2<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"Clustering Time: "<<vox_time2<<" sec"<<std::endl;
      
-    vcl_ofstream gmm_stream(gmm_filename.c_str());
+    std::ofstream gmm_stream(gmm_filename.c_str());
 
-    gmm_stream<<numCenters<<vcl_endl;
-    gmm_stream<<dimension<<vcl_endl;
+    gmm_stream<<numCenters<<std::endl;
+    gmm_stream<<dimension<<std::endl;
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        gmm_stream<<means[c]<<vcl_endl;
+        gmm_stream<<means[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters*dimension ; ++c)
     {
-        gmm_stream<<covariances[c]<<vcl_endl;
+        gmm_stream<<covariances[c]<<std::endl;
 
     }
 
     for ( unsigned int c=0; c < numCenters ; ++c)
     {
-        gmm_stream<<priors[c]<<vcl_endl;
+        gmm_stream<<priors[c]<<std::endl;
 
     }
 
@@ -283,9 +283,9 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
 
     double vox_time = t.real()/1000.0;
     t.mark();
-    vcl_cout<<vcl_endl;
-    vcl_cout<<"TrainTime: "
-            <<vox_time<<" sec"<<vcl_endl;
+    std::cout<<std::endl;
+    std::cout<<"TrainTime: "
+            <<vox_time<<" sec"<<std::endl;
 
 }
 
@@ -302,7 +302,7 @@ vgl_polygon<double> dbskr_train_routines::compute_boundary(
         sg,
         true,
         true,
-        vcl_min((float)scurve_sample_ds, scurve_interpolate_ds),
+        std::min((float)scurve_sample_ds, scurve_interpolate_ds),
         scurve_sample_ds,
         0);
 
@@ -340,13 +340,13 @@ void dbskr_train_routines::compute_grad_descriptors()
 
     double fixed_theta=0.0;
 
-    vcl_vector<vl_sift_pix> descriptors;
+    std::vector<vl_sift_pix> descriptors;
 
     VlSiftFilt* filter(0);
 
     for ( unsigned int i=0; i < masks_.size() ; ++i)
     {
-        vcl_cout<<"Working on mask: "<<i<<vcl_endl;
+        std::cout<<"Working on mask: "<<i<<std::endl;
 
         // Get grad data
         vl_sift_pix* model_chan1_grad_data = grad_chan_1_[i];
@@ -360,7 +360,7 @@ void dbskr_train_routines::compute_grad_descriptors()
         vl_sift_set_magnif(filter,1.0);
 
         vgl_box_2d<double> bbox;
-        vcl_set<vcl_pair<int,int> > in_bounds;
+        std::set<std::pair<int,int> > in_bounds;
 
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(masks_[i], false);  
@@ -371,7 +371,7 @@ void dbskr_train_routines::compute_grad_descriptors()
             {
                 vgl_point_2d<double> query_pt(x,y);
                 
-                vcl_pair<int,int> ib(x,y);
+                std::pair<int,int> ib(x,y);
                 in_bounds.insert(ib);
 
                 bbox.add(query_pt);
@@ -383,7 +383,7 @@ void dbskr_train_routines::compute_grad_descriptors()
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride_) 
             {
-                vcl_pair<int,int> key(x,y);
+                std::pair<int,int> key(x,y);
 
                 if ( !in_bounds.count(key) )
                 {
@@ -469,8 +469,8 @@ void dbskr_train_routines::compute_grad_descriptors()
 }
 
 
-void dbskr_train_routines::compute_pca(vcl_string& M_filename,
-                                       vcl_string& mean_filename)
+void dbskr_train_routines::compute_pca(std::string& M_filename,
+                                       std::string& mean_filename)
 {
     // Compute mean
     PCA_mean_.set_size(descriptor_matrix_.cols());
@@ -524,14 +524,14 @@ void dbskr_train_routines::compute_pca(vcl_string& M_filename,
     }
 
     {
-        vcl_ofstream M_stream(M_filename.c_str());
-        M_stream<<PCA_M_.rows()<<vcl_endl;
-        M_stream<<PCA_M_.cols()<<vcl_endl;
+        std::ofstream M_stream(M_filename.c_str());
+        M_stream<<PCA_M_.rows()<<std::endl;
+        M_stream<<PCA_M_.cols()<<std::endl;
         for ( int i=0; i < PCA_M_.rows() ; ++i )
         {
             for ( int j=0; j < PCA_M_.cols() ; ++j )
             {
-                M_stream<<PCA_M_[i][j]<<vcl_endl;
+                M_stream<<PCA_M_[i][j]<<std::endl;
             }
 
         }
@@ -540,11 +540,11 @@ void dbskr_train_routines::compute_pca(vcl_string& M_filename,
     }
 
     {
-        vcl_ofstream mean_stream(mean_filename.c_str());
-        mean_stream<<PCA_mean_.size()<<vcl_endl;
+        std::ofstream mean_stream(mean_filename.c_str());
+        mean_stream<<PCA_mean_.size()<<std::endl;
         for ( int i=0; i < PCA_mean_.size() ; ++i)
         {
-            mean_stream<<PCA_mean_[i]<<vcl_endl;
+            mean_stream<<PCA_mean_[i]<<std::endl;
         }
         mean_stream.close();
     }
@@ -770,9 +770,9 @@ void dbskr_train_routines::convert_to_color_space(
                 double red=image(c,r,0);
                 double green=image(c,r,1);
                 double blue=image(c,r,2);
-                o1(c,r) = (red-green)/vcl_sqrt(2);
-                o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
-                o3(c,r) = (red+green+blue)/vcl_sqrt(3);
+                o1(c,r) = (red-green)/std::sqrt(2);
+                o2(c,r) = (red+green-2*blue)/std::sqrt(6);
+                o3(c,r) = (red+green+blue)/std::sqrt(3);
                 if ( color_space == NOPP )
                 {
                     if ( o3(c,r) > 0.0 )

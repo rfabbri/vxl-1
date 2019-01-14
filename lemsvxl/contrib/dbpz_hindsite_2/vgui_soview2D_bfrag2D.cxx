@@ -65,11 +65,11 @@ void vgui_soview2D_bfrag2D::draw() const{
 void vgui_soview2D_bfrag2D::popupInfo(){
 
     /*
-    vcl_cout << "------------BFRAG [" << theFrag->getIndex() << "] " << theFrag->getName() << " INFO----------------------" << vcl_endl;
-    vcl_cout << "             topCurve: " << theFrag->getTopCurveFn() << vcl_endl;
-    vcl_cout << "             topImage: " << theFrag->getTopImageFn() << vcl_endl;
-    vcl_cout << "             botCurve: " << theFrag->getBotCurveFn() << vcl_endl;
-    vcl_cout << "             botImage: " << theFrag->getBotImageFn() << vcl_endl;
+    std::cout << "------------BFRAG [" << theFrag->getIndex() << "] " << theFrag->getName() << " INFO----------------------" << std::endl;
+    std::cout << "             topCurve: " << theFrag->getTopCurveFn() << std::endl;
+    std::cout << "             topImage: " << theFrag->getTopImageFn() << std::endl;
+    std::cout << "             botCurve: " << theFrag->getBotCurveFn() << std::endl;
+    std::cout << "             botImage: " << theFrag->getBotImageFn() << std::endl;
     */
 
     theFrag->popupInfo(drawTopImage, drawBotCurve, drawBotImage);
@@ -80,7 +80,7 @@ void vgui_soview2D_bfrag2D::popupInfo(){
 float vgui_soview2D_bfrag2D::distance_squared(float x, float y) const{
     
     //TODO : implement this
-    //vcl_cout << "SOVIEW BFRAG2D: [distance_squared] not yet implemented!" << vcl_endl;
+    //std::cout << "SOVIEW BFRAG2D: [distance_squared] not yet implemented!" << std::endl;
 
     return 0.0;
 
@@ -90,7 +90,7 @@ float vgui_soview2D_bfrag2D::distance_squared(float x, float y) const{
 void vgui_soview2D_bfrag2D::get_centroid(float* x, float* y) const{
 
     //TODO : implement this
-    vcl_cout << "SOVIEW BFRAG2D: [get_centroid] not yet implemented!" << vcl_endl;
+    std::cout << "SOVIEW BFRAG2D: [get_centroid] not yet implemented!" << std::endl;
 
 }
 
@@ -98,6 +98,6 @@ void vgui_soview2D_bfrag2D::get_centroid(float* x, float* y) const{
 void vgui_soview2D_bfrag2D::translate(float x, float y){
 
     //TODO : implement this
-    vcl_cout << "SOVIEW BFRAG2D: [translate] not yet implemented!" << vcl_endl;
+    std::cout << "SOVIEW BFRAG2D: [translate] not yet implemented!" << std::endl;
 
 }

@@ -7,7 +7,7 @@
 
 #include "mex.h"
 #include "polygon_distance_transform.h"
-#include <vcl_vector.h>
+#include <vector>
 /* MATLAB COUNTERPART
 function phi = polygon_distance_transform(contours, height, width, hx, hy)
 */
@@ -39,9 +39,9 @@ void mexFunction(int nlhs, mxArray *plhs[ ], int nrhs, const mxArray *prhs[ ])
 	}
 	else
 	{
-		vcl_vector<double*> xv;
-		vcl_vector<double*> yv;
-		vcl_vector<int> num_points;
+		std::vector<double*> xv;
+		std::vector<double*> yv;
+		std::vector<int> num_points;
 		for(int i = 0; i < num_contours; i++)
 		{
 			mxArray* contour = mxGetCell(contours, i);

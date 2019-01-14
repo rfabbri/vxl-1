@@ -2,7 +2,7 @@
 #ifndef _baml_multi_mog_cxx_
 #define _baml_multi_mog_cxx_
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 #include "baml_multi_mog.h"
 #include "baml_mog.h"
@@ -105,7 +105,7 @@ baml_multi_mog_local::expected_color(
 //--------------------------------------------------------------
 void 
 baml_multi_mog_local::draw_x3d(
-  vcl_ofstream& x3d_stream )
+  std::ofstream& x3d_stream )
 {
   
 };

@@ -15,8 +15,8 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <string>
+#include <algorithm>
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
@@ -35,7 +35,7 @@ class dbvxm_prob_map_area_process : public bprb_process
   //: Clone the process
   virtual dbvxm_prob_map_area_process* clone() const {return new dbvxm_prob_map_area_process(*this);}
 
-  vcl_string name(){return "dbvxmProbMapAreaProcess";}
+  std::string name(){return "dbvxmProbMapAreaProcess";}
 
   bool init() { return true; }
   bool execute();

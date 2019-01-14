@@ -1,11 +1,11 @@
 #include<dbctrk/dbctrk_curve.h>
-#include<vcl_string.h>
-#include<vcl_utility.h>
-#include<vcl_cmath.h>
-#include<vcl_fstream.h>
-#include<vcl_iostream.h>
-#include<vcl_cstring.h>
-#include<vcl_cstdlib.h> // for exit()
+#include<string>
+#include<utility>
+#include<cmath>
+#include<fstream>
+#include<iostream>
+#include<cstring>
+#include<cstdlib> // for exit()
 #include<vgl/vgl_point_2d.h>
 #include<vnl/vnl_double_2.h>
 #include<vgl/io/vgl_io_vector_2d.h>
@@ -15,8 +15,8 @@
 
 Curve ::Curve()
 {
-  vcl_vector< vgl_point_2d<double> > a;
-  vcl_vector<double> b;
+  std::vector< vgl_point_2d<double> > a;
+  std::vector<double> b;
 
   ptArray_=a;
   arcLength_ = b;
@@ -62,7 +62,7 @@ Curve::operator=(const Curve &rhs)
 {
   if (this != &rhs)
   {
-   //vcl_cout<<"\n the size is "<<rhs.ptArray_.size()<<"\n";
+   //std::cout<<"\n the size is "<<rhs.ptArray_.size()<<"\n";
    ptArray_ = rhs.ptArray_;
    arcLength_ = rhs.arcLength_;
    normArcLength_ = rhs.normArcLength_;
@@ -84,10 +84,10 @@ Curve::operator=(const Curve &rhs)
 //Print x,y coordinates of all points.
 void Curve::printElems()
 {
-  vcl_cout << "Num Points " << numPoints_ <<'\n';
-  vcl_vector<vgl_point_2d<double> >::iterator iter;
+  std::cout << "Num Points " << numPoints_ <<'\n';
+  std::vector<vgl_point_2d<double> >::iterator iter;
   for (iter=ptArray_.begin();iter!=ptArray_.end();iter++)
-    vcl_cout<<'\n'<<iter->x()<<'\t'<<iter->y();
+    std::cout<<'\n'<<iter->x()<<'\t'<<iter->y();
 }
 
 
@@ -126,7 +126,7 @@ void Curve::computeArcLength()
   {
     cx=ptArray_[i].x();
     cy=ptArray_[i].y();
-    dL=vcl_sqrt((float)(vcl_pow(cx-px,2)+vcl_pow(cy-py,2)));
+    dL=std::sqrt((float)(std::pow(cx-px,2)+std::pow(cy-py,2)));
     length_ += dL;
     arcLength_.push_back(length_);
     px=cx;
@@ -140,7 +140,7 @@ void Curve::computeArcLength()
     py=ptArray_[numPoints_-1].y();
     cx=ptArray_[0].x();
     cy=ptArray_[0].y();
-    dL=vcl_sqrt(vcl_pow(cx-px,2)+vcl_pow(cy-py,2));
+    dL=std::sqrt(std::pow(cx-px,2)+std::pow(cy-py,2));
     length_ += dL;
     arcLength_[0]=length_;
   }
@@ -179,10 +179,10 @@ void Curve::computeCurvatures()
     }
     else
       d2x=d2y=0;
-    if (vcl_fabs(cdx) < ZERO_TOLERANCE && vcl_fabs(cdy) < ZERO_TOLERANCE)
+    if (std::fabs(cdx) < ZERO_TOLERANCE && std::fabs(cdy) < ZERO_TOLERANCE)
       K=0;
     else
-      K=(d2y*cdx-d2x*cdy)/vcl_pow((vcl_pow(cdx,2)+vcl_pow(cdy,2)),3/2);
+      K=(d2y*cdx-d2x*cdy)/std::pow((std::pow(cdx,2)+std::pow(cdy,2)),3/2);
     curvature_.push_back(K);
     totalCurvature_+=K;
   }
@@ -202,10 +202,10 @@ void Curve::computeCurvatures()
     }
     else
       d2x=d2y=0;
-    if (vcl_fabs(cdx) < ZERO_TOLERANCE && vcl_fabs(cdy) < ZERO_TOLERANCE)
+    if (std::fabs(cdx) < ZERO_TOLERANCE && std::fabs(cdy) < ZERO_TOLERANCE)
       K=0;
     else
-      K=(d2y*cdx-d2x*cdy)/vcl_pow((vcl_pow(cdx,2)+vcl_pow(cdy,2)),3/2);
+      K=(d2y*cdx-d2x*cdy)/std::pow((std::pow(cdx,2)+std::pow(cdy,2)),3/2);
     curvature_[0]=K;
   }
 }
@@ -229,7 +229,7 @@ void Curve::computeDerivatives()
   {
     cx=ptArray_[i].x();
     cy=ptArray_[i].y();
-    dL=vcl_sqrt(vcl_pow(cx-px,2)+vcl_pow(cy-py,2));
+    dL=std::sqrt(std::pow(cx-px,2)+std::pow(cy-py,2));
     if (dL > ZERO_TOLERANCE)
     {
       dx_.push_back((cx-px)/dL);
@@ -250,7 +250,7 @@ void Curve::computeDerivatives()
     py=ptArray_[numPoints_-1].y();
     cx=ptArray_[0].x();
     cy=ptArray_[0].y();
-    dL=vcl_sqrt(vcl_pow(cx-px,2)+vcl_pow(cy-py,2));
+    dL=std::sqrt(std::pow(cx-px,2)+std::pow(cy-py,2));
     dx_[0]=(cx-px)/dL;
     dy_[0]=(cy-py)/dL;
   }
@@ -273,7 +273,7 @@ void Curve::computeAngles()
   {
     cx=ptArray_[i].x();
     cy=ptArray_[i].y();
-    theta=vcl_atan2(cy-py,cx-px);
+    theta=std::atan2(cy-py,cx-px);
     angle_.push_back(theta);
     px=cx;
     py=cy;
@@ -285,7 +285,7 @@ void Curve::computeAngles()
     py=ptArray_[numPoints_-1].y();
     cx=ptArray_[0].x();
     cy=ptArray_[0].y();
-    theta=vcl_atan2(cy-py,cx-px);
+    theta=std::atan2(cy-py,cx-px);
     angle_[0]=theta;
   }
 
@@ -293,7 +293,7 @@ void Curve::computeAngles()
   {
     angle_[0]=angle_[1];
     for (unsigned int i=1;i<angle_.size();i++)
-      totalAngleChange_+=vcl_fabs(angle_[i]-angle_[i-1]);
+      totalAngleChange_+=std::fabs(angle_[i]-angle_[i-1]);
   }
 }
 
@@ -315,35 +315,35 @@ OPEN (or CLOSE)
 20 (numPoints)
 x1 y1 x2 y2 x3 y3 ....
 */
-void Curve::readDataFromFile(vcl_string fileName)
+void Curve::readDataFromFile(std::string fileName)
 {
-  vcl_ifstream infp(fileName.c_str(),vcl_ios::in);
+  std::ifstream infp(fileName.c_str(),std::ios::in);
   if (!infp)
   {
-    vcl_cout << " Error opening file  " << fileName << '\n';
-    vcl_exit(1);
+    std::cout << " Error opening file  " << fileName << '\n';
+    std::exit(1);
   }
 
   char magicNum[200];
 
   infp.getline(magicNum,200);
-  if (vcl_strncmp(magicNum,"CONTOUR",7))
+  if (std::strncmp(magicNum,"CONTOUR",7))
   {
-    vcl_cerr << "Invalid File " << fileName.c_str() << '\n'
+    std::cerr << "Invalid File " << fileName.c_str() << '\n'
              << "Should be CONTOUR " << magicNum <<'\n';
-    vcl_exit(1);
+    std::exit(1);
   }
 
   char openFlag[200];
   infp.getline(openFlag,200);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     isOpen_ = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     isOpen_ = false;
   else{
-    vcl_cerr << "Invalid File " << fileName.c_str() << '\n'
+    std::cerr << "Invalid File " << fileName.c_str() << '\n'
              << "Should be OPEN/CLOSE " << openFlag << '\n';
-    vcl_exit(1);
+    std::exit(1);
   }
 
   int i,numOfPoints;
@@ -360,7 +360,7 @@ void Curve::readDataFromFile(vcl_string fileName)
 }
 
 
-void Curve::readDataFromVector(vcl_vector<vcl_pair<double,double> > v)
+void Curve::readDataFromVector(std::vector<std::pair<double,double> > v)
 {
   int numOfPoints=v.size();
   ptArray_.clear();
@@ -374,7 +374,7 @@ void Curve::readDataFromVector(vcl_vector<vcl_pair<double,double> > v)
   
   computeProperties();
 }
-void Curve::readDataFromVector(vcl_vector<vgl_point_2d<double> > v)
+void Curve::readDataFromVector(std::vector<vgl_point_2d<double> > v)
 {
   int numOfPoints=v.size();
   ptArray_.clear();
@@ -433,7 +433,7 @@ void Curve::b_read(vsl_b_istream &is)
 
   default:
 
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -441,12 +441,12 @@ short Curve::version() const
 {
   return (short)1;
 }
-vcl_string Curve::is_a() const
+std::string Curve::is_a() const
 {
-  return vcl_string("Curve");
+  return std::string("Curve");
 }
 
-bool Curve::is_class(vcl_string const& string) const
+bool Curve::is_class(std::string const& string) const
 {
   if(string==is_a())
     return true;

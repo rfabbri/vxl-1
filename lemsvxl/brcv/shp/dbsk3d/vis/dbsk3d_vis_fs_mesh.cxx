@@ -1,8 +1,8 @@
 // MingChing Chang 040226
 // VISUALIZATION OF THE fine-scale shocks
 
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgld/bgld_triangle.h>
@@ -53,7 +53,7 @@ SoSeparator* draw_fs_mesh_valid (dbsk3d_fs_mesh* fs_mesh)
 
   //Draw only valid and finite fs_faces (mark them here).
   unsigned int n_valid_finite = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
   for (; pit != fs_mesh->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
 
@@ -68,7 +68,7 @@ SoSeparator* draw_fs_mesh_valid (dbsk3d_fs_mesh* fs_mesh)
   //Draw only the valid faces as a single mesh object.
   draw_M_visited_ifs_geom (root, fs_mesh);
 
-  vul_printf (vcl_cout, "draw_fs_mesh_valid(): %d valid finite fs_faces (total %u).\n",
+  vul_printf (std::cout, "draw_fs_mesh_valid(): %d valid finite fs_faces (total %u).\n",
               n_valid_finite, fs_mesh->facemap().size());
   return root;
 }
@@ -124,14 +124,14 @@ SoSeparator* draw_fs_mesh (dbsk3d_fs_mesh* fs_mesh,
   return root;
 }
 
-SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches, 
+SoSeparator* draw_fs_mesh_patches (std::map<int, dbmsh3d_face*>& patches, 
                                    const bool draw_valid,
                                    const bool draw_invalid, const bool draw_unb,
                                    const bool draw_unvisited,
                                    const bool user_defined_class)
 { 
-  vul_printf (vcl_cout, "\ndraw_fs_mesh_patches():\n");
-  vul_printf (vcl_cout, "\tdraw_invalid: %s, draw_unb: %s, draw_unvisited: %s.\n",
+  vul_printf (std::cout, "\ndraw_fs_mesh_patches():\n");
+  vul_printf (std::cout, "\tdraw_invalid: %s, draw_unb: %s, draw_unvisited: %s.\n",
                draw_invalid ? "true" : "false", 
                draw_unb ? "true" : "false",
                draw_unvisited ? "true" : "false");
@@ -175,7 +175,7 @@ SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches,
   unsigned int n_V_IF = 0;
   unsigned int n_IV_IF = 0;
 
-  vcl_map<int, dbmsh3d_face*>::iterator pit = patches.begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = patches.begin();
   for (; pit != patches.end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
 
@@ -184,7 +184,7 @@ SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches,
 
     /*if (FF->id() != 2304)
       continue;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     FF->get_bnd_Vs (vertices);
     for (unsigned int j=0; j<vertices.size(); j++) {
       dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) vertices[j];
@@ -213,11 +213,11 @@ SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches,
     }
   }
 
-  vul_printf (vcl_cout, "\tAmong %d shock-sheet-elements,\n", patches.size());
-  vul_printf (vcl_cout, "\t  %d finite and valid sheet-elms drawn in Yellow.\n", n_V_F);
-  vul_printf (vcl_cout, "\t  %d finite but pruned sheet-elms drawn in Green.\n", n_IV_F);
-  vul_printf (vcl_cout, "\t  %d infinite but valid sheet-elms drawn in DarkGray.\n", n_V_IF);
-  vul_printf (vcl_cout, "\t  %d infinite and pruned sheet-elms drawn in Blue.\n", n_IV_IF);
+  vul_printf (std::cout, "\tAmong %d shock-sheet-elements,\n", patches.size());
+  vul_printf (std::cout, "\t  %d finite and valid sheet-elms drawn in Yellow.\n", n_V_F);
+  vul_printf (std::cout, "\t  %d finite but pruned sheet-elms drawn in Green.\n", n_IV_F);
+  vul_printf (std::cout, "\t  %d infinite but valid sheet-elms drawn in DarkGray.\n", n_V_IF);
+  vul_printf (std::cout, "\t  %d infinite and pruned sheet-elms drawn in Blue.\n", n_IV_IF);
 
   return root;
 }
@@ -226,7 +226,7 @@ SoSeparator* draw_fs_mesh_patches (vcl_map<int, dbmsh3d_face*>& patches,
 //  draw option == 1: draw only the shock link
 //  draw option == 2: draw only the surface triangle
 //  
-SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links, 
+SoSeparator* draw_fs_mesh_links (std::map<int, dbmsh3d_edge*>& links, 
                                  const float th1, const float th2,
                                  const bool draw_invalid, const bool draw_unb,   
                                  const int draw_option,
@@ -274,7 +274,7 @@ SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links,
 
   unsigned int n_link_drawn = 0;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = links.begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = links.begin();
   for (; lit != links.end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
 
@@ -318,7 +318,7 @@ SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links,
     }
 
     if (draw_option == -1 || draw_option == 2) {      
-      vcl_vector<dbmsh3d_vertex*> bnd_pts;
+      std::vector<dbmsh3d_vertex*> bnd_pts;
       bool result = FE->get_ordered_Gs_via_FF (bnd_pts);      
       assert (result);
 
@@ -334,11 +334,11 @@ SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links,
     }
   }
 
-  vul_printf (vcl_cout, "draw_fs_mesh_links(): %u shock links drawn.\n", n_link_drawn);
+  vul_printf (std::cout, "draw_fs_mesh_links(): %u shock links drawn.\n", n_link_drawn);
   return root;
 }
 
-SoSeparator* draw_fs_mesh_nodes (vcl_map<int, dbmsh3d_vertex*>& nodes, 
+SoSeparator* draw_fs_mesh_nodes (std::map<int, dbmsh3d_vertex*>& nodes, 
                                  const bool draw_invalid, 
                                  const SbColor color, const float size,
                                  const bool user_defined_class)
@@ -349,7 +349,7 @@ SoSeparator* draw_fs_mesh_nodes (vcl_map<int, dbmsh3d_vertex*>& nodes,
   baseColor->rgb.setValue( color );
   root->addChild( baseColor );    
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator nit = nodes.begin();
+  std::map<int, dbmsh3d_vertex*>::iterator nit = nodes.begin();
   for (; nit != nodes.end(); nit++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*nit).second;
 
@@ -368,20 +368,20 @@ SoSeparator* draw_fs_mesh_nodes (vcl_map<int, dbmsh3d_vertex*>& nodes,
 
 SoSeparator* draw_fs_patch_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
 {
-  vul_printf (vcl_cout, "\ndraw_fs_patch_to_gene():\n");
-  vul_printf (vcl_cout, "  Blue: Valid and finite FF-G.\n");
+  vul_printf (std::cout, "\ndraw_fs_patch_to_gene():\n");
+  vul_printf (std::cout, "  Blue: Valid and finite FF-G.\n");
   if (draw_unb)
-    vul_printf (vcl_cout, "  DarkGray: Valid and infinite FF-G.\n");
+    vul_printf (std::cout, "  DarkGray: Valid and infinite FF-G.\n");
   else
-    vul_printf (vcl_cout, "  Unbounded fs_faces are not shown.\n");
+    vul_printf (std::cout, "  Unbounded fs_faces are not shown.\n");
   SoSeparator* root = new SoSeparator;
 
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_PG;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_PG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_PG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_PG;
 
   unsigned int n_valid_finite_sheets = 0;
   unsigned int n_valid_unbounded_sheets = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator it = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = fs_mesh->facemap().begin();
   for (; it != fs_mesh->facemap().end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
     if (FF->b_valid() == false)
@@ -392,14 +392,14 @@ SoSeparator* draw_fs_patch_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb
 
     if (FF->b_finite()) {
       n_valid_finite_sheets++;    
-      valid_fin_PG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
-      valid_fin_PG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
+      valid_fin_PG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
+      valid_fin_PG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
     }
     else {
       n_valid_unbounded_sheets++;    
       if (draw_unb) {        
-        valid_unb_PG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
-        valid_unb_PG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
+        valid_unb_PG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(0)->pt()));
+        valid_unb_PG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, FF->genes(1)->pt()));
       }
     }
   }
@@ -408,32 +408,32 @@ SoSeparator* draw_fs_patch_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb
   if (draw_unb)
     root->addChild (draw_line_set (valid_fin_PG, SbColor(0.5f, 0.5f, 0.5f))); //DarkGray
 
-  vul_printf (vcl_cout, "  Among %u valid FF's (total %u), %u finite, %u unbounded,\n",
+  vul_printf (std::cout, "  Among %u valid FF's (total %u), %u finite, %u unbounded,\n",
               n_valid_finite_sheets + n_valid_unbounded_sheets, fs_mesh->facemap().size(),
               n_valid_finite_sheets, n_valid_unbounded_sheets);
-  vul_printf (vcl_cout, "\t%u FF-G asgn (%u finite FF-G asgn.).\n",
+  vul_printf (std::cout, "\t%u FF-G asgn (%u finite FF-G asgn.).\n",
               (n_valid_finite_sheets + n_valid_unbounded_sheets)*2, n_valid_finite_sheets*2);
   return root;
 }
 
 SoSeparator* draw_fs_link_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
 {
-  vul_printf (vcl_cout, "\ndraw_fs_link_to_gene():\n");
-  vul_printf (vcl_cout, "  Green: Valid and finite FE-G.\n");
+  vul_printf (std::cout, "\ndraw_fs_link_to_gene():\n");
+  vul_printf (std::cout, "  Green: Valid and finite FE-G.\n");
   if (draw_unb)
-    vul_printf (vcl_cout, "  Orange: Valid and infinite FE-G.\n");
+    vul_printf (std::cout, "  Orange: Valid and infinite FE-G.\n");
   else
-    vul_printf (vcl_cout, "  Unbounded fs_edges are not shown.\n");
+    vul_printf (std::cout, "  Unbounded fs_edges are not shown.\n");
   SoSeparator* root = new SoSeparator;
   
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_LG;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_LG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_LG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_LG;
 
   unsigned int n_valid_finite_links = 0;
   unsigned int n_valid_unbounded_links = 0;
   unsigned int n_finite_GL_asgn = 0;
   unsigned int n_unbounded_GL_asgn = 0;
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;
     if (FE->is_valid_via_F() == false)
@@ -447,7 +447,7 @@ SoSeparator* draw_fs_link_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
       for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
         dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
         ///dbmsh3d_vertex* G = (dbmsh3d_vertex*)(*vit);
-        valid_fin_LG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
+        valid_fin_LG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
         n_finite_GL_asgn++;
       }
     }
@@ -456,7 +456,7 @@ SoSeparator* draw_fs_link_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
       for (dbmsh3d_ptr_node* cur = FE->asgn_G_list(); cur != NULL; cur = cur->next()) {
         dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
         if (draw_unb)
-          valid_unb_LG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
+          valid_unb_LG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (C, G->pt()));
         n_unbounded_GL_asgn++;
       }
     }
@@ -466,32 +466,32 @@ SoSeparator* draw_fs_link_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
   if (draw_unb)
     root->addChild (draw_line_set (valid_unb_LG, SbColor(1.0f, 1.0f, 0.0f))); //Orange
 
-  vul_printf (vcl_cout, "  Among %u valid FE's (total %u), %u finite, %u unbounded,\n",
+  vul_printf (std::cout, "  Among %u valid FE's (total %u), %u finite, %u unbounded,\n",
               n_valid_finite_links + n_valid_unbounded_links, fs_mesh->edgemap().size(),
               n_valid_finite_links, n_valid_unbounded_links);
-  vul_printf (vcl_cout, "\t%u FE-G asgn (%u finite FE-G asgn.).\n",               
+  vul_printf (std::cout, "\t%u FE-G asgn (%u finite FE-G asgn.).\n",               
               n_finite_GL_asgn + n_unbounded_GL_asgn, n_finite_GL_asgn);
   return root;
 }
 
 SoSeparator* draw_fs_node_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
 {
-  vul_printf (vcl_cout, "\ndraw_fs_node_to_gene():\n");
-  vul_printf (vcl_cout, "  Red: Valid and finite FV-G.\n");
+  vul_printf (std::cout, "\ndraw_fs_node_to_gene():\n");
+  vul_printf (std::cout, "  Red: Valid and finite FV-G.\n");
   if (draw_unb)
-    vul_printf (vcl_cout, "  DarkRed: Valid and only belongs to unbounded objects.\n");
+    vul_printf (std::cout, "  DarkRed: Valid and only belongs to unbounded objects.\n");
   else
-    vul_printf (vcl_cout, "  fs_vertices only belongs to unbounded objects are not shown.\n");
+    vul_printf (std::cout, "  fs_vertices only belongs to unbounded objects are not shown.\n");
   SoSeparator* root = new SoSeparator;
   
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_NG;
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_NG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_fin_NG;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > valid_unb_NG;
 
   unsigned int n_valid_finite_nodes = 0;
   unsigned int n_valid_unbounded_nodes = 0;
   unsigned int n_finite_GN_asgn = 0;
   unsigned int n_unbounded_GN_asgn = 0;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
   for (; it != fs_mesh->vertexmap().end(); it++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*it).second;
     if (FV->is_valid_via_FF() == false)
@@ -502,7 +502,7 @@ SoSeparator* draw_fs_node_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
       n_valid_finite_nodes++;
       for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
         dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
-        valid_fin_NG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
+        valid_fin_NG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
         n_finite_GN_asgn++;
       }
     }
@@ -511,7 +511,7 @@ SoSeparator* draw_fs_node_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
       for (dbmsh3d_ptr_node* cur = FV->asgn_G_list(); cur != NULL; cur = cur->next()) {
         dbmsh3d_vertex* G = (dbmsh3d_vertex*) cur->ptr();
         if (draw_unb)
-          valid_unb_NG.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
+          valid_unb_NG.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FV->pt(), G->pt()));
         n_unbounded_GN_asgn++;
       }
     }
@@ -521,10 +521,10 @@ SoSeparator* draw_fs_node_to_gene (dbsk3d_fs_mesh* fs_mesh, const bool draw_unb)
   if (draw_unb)
     root->addChild (draw_line_set (valid_unb_NG, SbColor(0.5f, 0.0f, 0.0f))); //DarkRed
 
-  vul_printf (vcl_cout, "  Among %u valid and FV's (total %u), %u finite, %u unbounded,\n",
+  vul_printf (std::cout, "  Among %u valid and FV's (total %u), %u finite, %u unbounded,\n",
               n_valid_finite_nodes + n_valid_unbounded_nodes, fs_mesh->vertexmap().size(),
               n_valid_finite_nodes, n_valid_unbounded_nodes);
-  vul_printf (vcl_cout, "\t%u FV-G asgn (%u finite FV-G asgn.).\n", 
+  vul_printf (std::cout, "\t%u FV-G asgn (%u finite FV-G asgn.).\n", 
               n_finite_GN_asgn + n_unbounded_GN_asgn, n_finite_GN_asgn);
   return root;
 }
@@ -552,7 +552,7 @@ SoSeparator* draw_Ps_non1ring_Gs (dbsk3d_fs_mesh* fs_mesh, const int option,
   fs_mesh->reset_traverse_f ();
   vgl_point_3d<double> C;
 
-  vcl_map<int, dbmsh3d_face*>::iterator fit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = fs_mesh->facemap().begin();
   for (; fit != fs_mesh->facemap().end(); fit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*fit).second;
     if (FF->b_valid() == false)
@@ -615,7 +615,7 @@ SoSeparator* draw_fs_mesh_color_by_radius (dbsk3d_fs_mesh* fs_mesh, const float 
   //Color of fs_face as function of formation time of each mid_point.
   float min_time = FLT_MAX;
   float max_time = FLT_MIN;
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
   for (; pit != fs_mesh->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     float min_t, max_t;
@@ -628,7 +628,7 @@ SoSeparator* draw_fs_mesh_color_by_radius (dbsk3d_fs_mesh* fs_mesh, const float 
   }
 
   float range = max_time - min_time;
-  vul_printf (vcl_cout, "\tdraw_fs_mesh_color_by_radius(): min = %.2f , max = %.2f , range = %.2f\n",
+  vul_printf (std::cout, "\tdraw_fs_mesh_color_by_radius(): min = %.2f , max = %.2f , range = %.2f\n",
               min_time, max_time, range);
 
   pit = fs_mesh->facemap().begin();
@@ -655,7 +655,7 @@ SoSeparator* draw_fs_mesh_comp_links (dbsk3d_fs_mesh* fs_mesh,
   ds->lineWidth.setValue (lineWidth);
   root->addChild(ds);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator lit = fs_mesh->edgemap().begin();
   for (; lit != fs_mesh->edgemap().end(); lit++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*lit).second;
     if (!FE->is_valid_via_F())

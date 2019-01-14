@@ -21,7 +21,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
+#include <vector>
 
 //: constants of the algorithm
 //#define e_B (0.5)

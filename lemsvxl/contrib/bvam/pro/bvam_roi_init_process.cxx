@@ -27,7 +27,7 @@ bvam_roi_init_process::bvam_roi_init_process()
   input_types_.resize(3);
 
   int i=0;
-  input_types_[i++] = "vcl_string";             // NITF image path 
+  input_types_[i++] = std::string";             // NITF image path 
   input_types_[i++] = "vpgl_camera_double_sptr"; // rational camera 
   input_types_[i++] = "bvam_voxel_world_sptr"; // rational camera 
 
@@ -39,7 +39,7 @@ bvam_roi_init_process::bvam_roi_init_process()
   output_types_[j++]= "vil_image_view_base_sptr";   // image ROI
 
   if(!parameters()->add( "Uncertainty error" , "error" , (float) 10.0 ))
-    vcl_cerr << "ERROR: Adding parameters in bvam_roi_init_process" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in bvam_roi_init_process" << std::endl;
 
 }
 
@@ -52,9 +52,9 @@ bool bvam_roi_init_process::execute()
 
   // get the inputs
   // image
-  brdb_value_t<vcl_string>* input0 = 
-    static_cast<brdb_value_t< vcl_string>* >(input_data_[0].ptr());
-  vcl_string image_path = input0->value();
+  brdb_value_t<std::string>* input0 = 
+    static_cast<brdb_value_t< std::string>* >(input_data_[0].ptr());
+  std::string image_path = input0->value();
 
   // camera
   brdb_value_t<vpgl_camera_double_sptr >* input1 = 
@@ -77,7 +77,7 @@ bool bvam_roi_init_process::execute()
   vil_image_view<unsigned char>* img_ptr = new vil_image_view<unsigned char>();
   vpgl_rational_camera<double>* rat_camera = dynamic_cast<vpgl_rational_camera<double>*> (camera.as_pointer());
   if (!rat_camera) {
-    vcl_cerr << "The camera input is not a rational camera" << vcl_endl;
+    std::cerr << "The camera input is not a rational camera" << std::endl;
     return false;
   }
 
@@ -96,7 +96,7 @@ bool bvam_roi_init_process::execute()
   return true;
 }
 
-bool bvam_roi_init_process::roi_init(vcl_string const& image_path,
+bool bvam_roi_init_process::roi_init(std::string const& image_path,
                                      vpgl_rational_camera<double>* camera,
                                      bvam_world_params_sptr world_params,
                                      float error,
@@ -105,16 +105,16 @@ bool bvam_roi_init_process::roi_init(vcl_string const& image_path,
 {
  // read the image and extract the camera
   vil_image_resource_sptr img = vil_load_image_resource(image_path.c_str());
-  vcl_string format = img->file_format();
-  vcl_string prefix = format.substr(0,4);
+  std::string format = img->file_format();
+  std::string prefix = format.substr(0,4);
   if (prefix.compare("nitf") != 0) {
-    vcl_cout << "bvam_roi_init_process::execute - The image should be an NITF" << vcl_endl;
+    std::cout << "bvam_roi_init_process::execute - The image should be an NITF" << std::endl;
     return false;
   }
 
   vil_nitf2_image* nitf =  static_cast<vil_nitf2_image*> (img.ptr());
  /* if(!nitf->parse_headers()){
-      vcl_cerr << "bvam_roi_init_process::execute - NITF Image header not correct" << vcl_endl;
+      std::cerr << "bvam_roi_init_process::execute - NITF Image header not correct" << std::endl;
       return false;
   }
    
@@ -137,9 +137,9 @@ bool bvam_roi_init_process::roi_init(vcl_string const& image_path,
  
   bgeo_lvcs_sptr lvcs = world_params->lvcs();
   vgl_box_2d<double>* roi_box = project_box(camera, lvcs, box, error);
-  vcl_cout << *roi_box << vcl_endl;
+  std::cout << *roi_box << std::endl;
 
-  //vcl_cout << nitf->ni() << " " << nitf->nj() << vcl_endl;
+  //std::cout << nitf->ni() << " " << nitf->nj() << std::endl;
   brip_roi broi(nitf->ni(), nitf->nj());
   vsol_box_2d_sptr bb = new vsol_box_2d();
   bb->add_point(roi_box->min_x(), roi_box->min_y());
@@ -188,7 +188,7 @@ bool bvam_roi_init_process::roi_init(vcl_string const& image_path,
     *nitf_image_unsigned_char = vil_image_view<unsigned char>(roi);
     
   } else 
-    vcl_cout << "bvam_roi_init_process - Unsupported Pixel Format = " << roi->pixel_format() << vcl_endl;
+    std::cout << "bvam_roi_init_process - Unsupported Pixel Format = " << roi->pixel_format() << std::endl;
 
   double u, v;
   camera->image_offset(u, v);
@@ -221,8 +221,8 @@ bvam_roi_init_process::project_box(vpgl_rational_camera<double>* cam,
   
   // create a box with uncertainty
   vgl_box_3d<double> cam_box(center, 2*r, 2*r, 2*r, vgl_box_3d<double>::centre);
-  vcl_vector<vgl_point_3d<double> > cam_corners = corners_of_box_3d(cam_box);
-  vcl_vector<vgl_point_3d<double> > box_corners = corners_of_box_3d(box);
+  std::vector<vgl_point_3d<double> > cam_corners = corners_of_box_3d(cam_box);
+  std::vector<vgl_point_3d<double> > box_corners = corners_of_box_3d(box);
   vgl_box_2d<double>* roi = new vgl_box_2d<double>();
 
   double lon, lat, gz;
@@ -240,7 +240,7 @@ bvam_roi_init_process::project_box(vpgl_rational_camera<double>* cam,
       // convert the box corners to world coordinates
       lvcs->local_to_global(box_corners[j].x(), box_corners[j].y(), box_corners[j].z(), 
       bgeo_lvcs::wgs84, lon, lat, gz, bgeo_lvcs::DEG, bgeo_lvcs::METERS);
-      //vcl_cout << "BOX " << lat << "," << lon << "," << gz << "," << vcl_endl;
+      //std::cout << "BOX " << lat << "," << lon << "," << gz << "," << std::endl;
       vgl_point_2d<double> p2d = new_cam->project(vgl_point_3d<double>(lon, lat, gz));
       roi->add(p2d);
     }
@@ -248,10 +248,10 @@ bvam_roi_init_process::project_box(vpgl_rational_camera<double>* cam,
   return roi;
 }
 
-vcl_vector<vgl_point_3d<double> > 
+std::vector<vgl_point_3d<double> > 
 bvam_roi_init_process::corners_of_box_3d(vgl_box_3d<double> box)
 {
-  vcl_vector<vgl_point_3d<double> > corners;
+  std::vector<vgl_point_3d<double> > corners;
 
   corners.push_back(box.min_point());
   corners.push_back(vgl_point_3d<double> (box.min_x()+box.width(), box.min_y(), box.min_z()));

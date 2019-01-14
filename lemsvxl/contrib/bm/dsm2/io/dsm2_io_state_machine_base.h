@@ -24,6 +24,6 @@ void vsl_b_read(vsl_b_istream &is, dsm2_state_machine_base* &p);
 
 void vsl_b_write(vsl_b_ostream &os, const dsm2_state_machine_base* p);
 
-void vsl_print_summary(vcl_ostream& os, const dsm2_state_machine_base *p);
+void vsl_print_summary(std::ostream& os, const dsm2_state_machine_base *p);
 
 #endif //DSM2_IO_STATE_MACHINE_BASE_H_

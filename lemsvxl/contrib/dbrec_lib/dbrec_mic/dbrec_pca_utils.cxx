@@ -27,7 +27,7 @@ dbrec_pca::~dbrec_pca()
   data_transformed_.clear();
 }
 
-void dbrec_pca::add_image(const vil_image_view<float>& inp, const vcl_string& class_name)
+void dbrec_pca::add_image(const vil_image_view<float>& inp, const std::string& class_name)
 {
   unsigned ni = inp.ni();
   unsigned nj = inp.nj();
@@ -65,20 +65,20 @@ bool dbrec_pca::construct_basis_vectors(double variance_proportion)
   pca.set_var_prop(variance_proportion);
   pca.build_from_array(&data_[0],data_.size(),m_,EVecs_,evals_);
 
-  vcl_cout<<"evals: "<<evals_<<vcl_endl;
-  vcl_cout << "e vectors size rows: " << EVecs_.rows() << " cols: " << EVecs_.columns() << vcl_endl;
+  std::cout<<"evals: "<<evals_<<std::endl;
+  std::cout << "e vectors size rows: " << EVecs_.rows() << " cols: " << EVecs_.columns() << std::endl;
   //: now transform each data for fast access during classification
   // 16384x18 for 18 eigenvectors of an 128x128 = 16384 image
   for (unsigned i = 0; i < data_.size(); i++) {
     vnl_vector<double> new_v = EVecs_.transpose()*data_[i];
-    //vcl_cout << "multiplied and new size: " << new_v.size() << vcl_endl;
+    //std::cout << "multiplied and new size: " << new_v.size() << std::endl;
     data_transformed_.push_back(new_v);
   }
   return true;
 }
 
 //: return the class name of the instance in the dataset that's closes to the input image in the transformed space
-bool dbrec_pca::classify_nn(const vil_image_view<float>& inp, vcl_string& out_str)
+bool dbrec_pca::classify_nn(const vil_image_view<float>& inp, std::string& out_str)
 {
   unsigned ni = inp.ni();
   unsigned nj = inp.nj();
@@ -164,7 +164,7 @@ dbrec_random_binary_features_descriptor::dbrec_random_binary_features_descriptor
       }
     }
     if (!exists)
-      random_pixels_.push_back(vcl_pair<int, int>(pix1_id, pix2_id));
+      random_pixels_.push_back(std::pair<int, int>(pix1_id, pix2_id));
   }
 }
 vnl_vector<double> dbrec_random_binary_features_descriptor::extract(const vil_image_view<float>& img, int i_start, int j_start, int i_end, int j_end)
@@ -192,7 +192,7 @@ dbrec_single_scale_blob_descriptor::dbrec_single_scale_blob_descriptor(int windo
     int rj = (nrows-1)/2, ri = (ncols-1)/2;
     int larger = ri > rj ? ri : rj;
     if (window_size < larger) {
-      vcl_cout << "In dbrec_single_scale_blob_descriptor::dbrec_blob_descriptor() -- window size needs to be larger than all rotated versions of kernel!\n";
+      std::cout << "In dbrec_single_scale_blob_descriptor::dbrec_blob_descriptor() -- window size needs to be larger than all rotated versions of kernel!\n";
       throw 0;
     }
     vbl_array_2d<double> coef(nrows,ncols);
@@ -236,7 +236,7 @@ dbrec_bayesian_pca::dbrec_bayesian_pca(int window_size, unsigned desc_type_id) :
     case dbrec_descriptor_types::pca_sift_descriptor: { desc_ = new dbrec_pca_sift_descriptor(); break; }
     case dbrec_descriptor_types::random_binary_features_descriptor: { desc_ = new dbrec_random_binary_features_descriptor(window_size, rng_); break; }
     case dbrec_descriptor_types::single_scale_blob_descriptor: { desc_ = new dbrec_single_scale_blob_descriptor(window_size); break; }
-    default: { vcl_cerr<< "In dbrec_bayesian_pca::dbrec_bayesian_pca() - Unidentified descriptor type id: " << desc_type_id << "\n"; break; }
+    default: { std::cerr<< "In dbrec_bayesian_pca::dbrec_bayesian_pca() - Unidentified descriptor type id: " << desc_type_id << "\n"; break; }
   }
 }
 
@@ -249,14 +249,14 @@ dbrec_bayesian_pca::~dbrec_bayesian_pca()
 }
 
 //: add one data point of size nxn per polygon in the ground truth
-void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const vcl_string& ground_truth_type, char class_id)
+void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const std::string& ground_truth_type, char class_id)
 {
   unsigned ni = inp.ni();
   unsigned nj = inp.nj();
   int half_n = n/2;
   vgl_box_2d<int> image_box(0, ni-1, 0, nj-1); 
 
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of gt polygons: " << gt_polygons->size() << vcl_endl;
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of gt polygons: " << gt_polygons->size() << std::endl;
   int used_size = 0;
   for (unsigned i=0; i < gt_polygons->size(); i++)
   {
@@ -267,8 +267,8 @@ void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, 
     double x_cent = 0.0, y_cent = 0.0;
     gt_polygons->obj(i)->centroid(x_cent, y_cent);
 
-    int i_start = (int)vcl_floor(x_cent+0.5)-half_n; int i_end = i_start + n;
-    int j_start = (int)vcl_floor(y_cent+0.5)-half_n; int j_end = j_start + n;
+    int i_start = (int)std::floor(x_cent+0.5)-half_n; int i_end = i_start + n;
+    int j_start = (int)std::floor(y_cent+0.5)-half_n; int j_end = j_start + n;
     
     if (!image_box.contains(i_start, j_start) || !image_box.contains(i_end-1, j_end-1))
       continue;
@@ -287,7 +287,7 @@ void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, 
     data_.push_back(v);  
     data_class_ids_.push_back(class_id);
   }
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of type: " << ground_truth_type << " polygons: " << used_size << vcl_endl;
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of type: " << ground_truth_type << " polygons: " << used_size << std::endl;
   return;
 }
 //: the method adds cnt many new data vectors for a random selection of pixels in the map with given bool value 
@@ -298,11 +298,11 @@ void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, 
   int half_n = n/2;
   vgl_box_2d<int> image_box(0, ni-1, 0, nj-1); 
   if (class_map.ni() != ni || class_map.nj() != nj) {
-    vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() -- Input image size is inconsistent with the map size!\n";
+    std::cout << "In dbrec_bayesian_pca::add_image_rectangles() -- Input image size is inconsistent with the map size!\n";
     throw 0;
   }
 
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() -- generating: " << cnt << " random rectangles!\n";
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() -- generating: " << cnt << " random rectangles!\n";
 
   for (int k = 0; k < cnt; k++) {
     int i = rng_.lrand32(half_n+1, ni-1-half_n);
@@ -333,7 +333,7 @@ void dbrec_bayesian_pca::add_image_rectangles(const vil_image_view<float>& inp, 
   return;
 }
 //: should only be used for simplest image feature descriptor, the 1-d coded image itself: size*size equals v.size() for that case
-void dbrec_bayesian_pca::save_image_rectangles(const vcl_string& prefix, int size, char class_id)
+void dbrec_bayesian_pca::save_image_rectangles(const std::string& prefix, int size, char class_id)
 {
   for (unsigned i = 0; i < data_.size(); i++) {
     if (data_class_ids_[i] != class_id)
@@ -348,8 +348,8 @@ void dbrec_bayesian_pca::save_image_rectangles(const vcl_string& prefix, int siz
       vil_math_scale_values(img,255.0f);
       vil_image_view<vxl_byte> img_b(size, size);
       vil_convert_cast(img, img_b);
-      vcl_stringstream ids; ids << i;
-      vcl_string name = prefix + "img_" + ids.str() + ".png";
+      std::stringstream ids; ids << i;
+      std::string name = prefix + "img_" + ids.str() + ".png";
       vil_save(img_b, name.c_str());
     }
   }
@@ -368,14 +368,14 @@ bool dbrec_bayesian_pca::check_data()
   return true;
 }
 
-bool dbrec_bayesian_pca::construct_basis_vectors(double variance_proportion, int patch_size, const vcl_string& output_path)
+bool dbrec_bayesian_pca::construct_basis_vectors(double variance_proportion, int patch_size, const std::string& output_path)
 {
   mcal_pca pca;
   pca.set_var_prop(variance_proportion);
   pca.build_from_array(&data_[0],data_.size(),m_,EVecs_,evals_);
 
-  vcl_cout<<"evals: "<<evals_<<vcl_endl;
-  vcl_cout << "e vectors size rows: " << EVecs_.rows() << " cols: " << EVecs_.columns() << vcl_endl;
+  std::cout<<"evals: "<<evals_<<std::endl;
+  std::cout << "e vectors size rows: " << EVecs_.rows() << " cols: " << EVecs_.columns() << std::endl;
 
   if (patch_size*patch_size == EVecs_.rows()) { // for instance the simplest feature descriptor, 1-d coded image itself
     //: visualize the selected eigenvectors
@@ -388,8 +388,8 @@ bool dbrec_bayesian_pca::construct_basis_vectors(double variance_proportion, int
       vil_math_scale_values(img,255.0f);
       vil_image_view<vxl_byte> img_b(patch_size, patch_size);
       vil_convert_cast(img, img_b);
-      vcl_stringstream ids; ids << col;
-      vcl_string name = output_path + "eigen_img_" + ids.str() + ".png";
+      std::stringstream ids; ids << col;
+      std::string name = output_path + "eigen_img_" + ids.str() + ".png";
       vil_save(img_b, name.c_str());
     }
   }
@@ -399,27 +399,27 @@ bool dbrec_bayesian_pca::construct_basis_vectors(double variance_proportion, int
   // 49x21 for 21 eigenvectors of an 7x7 = 49 image
   for (unsigned i = 0; i < data_.size(); i++) {
     vnl_vector<double> new_v = EVecs_.transpose()*data_[i];
-    //vcl_cout << "multiplied and new size: " << new_v.size() << vcl_endl;
+    //std::cout << "multiplied and new size: " << new_v.size() << std::endl;
     data_transformed_.push_back(new_v);
     transformed_size_ = new_v.size();
   }
   //: find the number of classes
   for (unsigned i = 0; i < data_class_ids_.size(); i++) {
-    vcl_map<char,int>::iterator it = classes_.find(data_class_ids_[i]);
+    std::map<char,int>::iterator it = classes_.find(data_class_ids_[i]);
     if (it == classes_.end())
       classes_[data_class_ids_[i]] = 1;
     else
       it->second = it->second + 1;
   }
   
-  for (vcl_map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
+  for (std::map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
     int class_id = it->first;
     int class_cnt = it->second;
-    vcl_cout << "!!!! Class ID: " << class_id << " cnt: " << class_cnt << vcl_endl;
+    std::cout << "!!!! Class ID: " << class_id << " cnt: " << class_cnt << std::endl;
     
-    vcl_vector<double> means;
+    std::vector<double> means;
     means.insert(means.begin(), transformed_size_, 0.0);
-    vcl_vector<double> vars;
+    std::vector<double> vars;
     vars.insert(vars.begin(), transformed_size_, 0.0);
 
     for (unsigned i = 0; i < data_transformed_.size(); i++) {
@@ -448,10 +448,10 @@ bool dbrec_bayesian_pca::construct_basis_vectors(double variance_proportion, int
   }
   return true;
 }
-bool dbrec_bayesian_pca::visualize_transformed_distributions(const vcl_string& output_path, char class_id)
+bool dbrec_bayesian_pca::visualize_transformed_distributions(const std::string& output_path, char class_id)
 {
   if (!data_transformed_.size() || transformed_size_ < 0) {
-    vcl_cout << "In dbrec_bayesian_pca::visualize_transformed_distributions() - problems in data transformation!\n";
+    std::cout << "In dbrec_bayesian_pca::visualize_transformed_distributions() - problems in data transformation!\n";
     return false;
   }
   //: find the range in the transformed space
@@ -465,9 +465,9 @@ bool dbrec_bayesian_pca::visualize_transformed_distributions(const vcl_string& o
         max = data_transformed_[i][j];
     }
   }
-  vcl_cout << "In the transformed space, min value is: " << min << " max value is: " << max << vcl_endl;
+  std::cout << "In the transformed space, min value is: " << min << " max value is: " << max << std::endl;
   bsta_histogram<double> hist(-5.0, 5.0, 100);
-  vcl_vector<bsta_histogram<double> > hists(transformed_size_, hist);
+  std::vector<bsta_histogram<double> > hists(transformed_size_, hist);
 
   for (unsigned i = 0; i < data_transformed_.size(); i++) {
     if (data_class_ids_[i] != class_id)
@@ -479,7 +479,7 @@ bool dbrec_bayesian_pca::visualize_transformed_distributions(const vcl_string& o
   
   //: find the class in the order of classes_ map
   int classes_id = 0;
-  for (vcl_map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
+  for (std::map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
     if (class_id == it->first)
       break;
     classes_id++;
@@ -488,8 +488,8 @@ bool dbrec_bayesian_pca::visualize_transformed_distributions(const vcl_string& o
   float width = 600.0f, height = 600.0f, margin = 40.0f;
   int font_size = 30;
   for (unsigned j = 0; j < hists.size(); j++) {
-    vcl_stringstream ids; ids << j;
-    vcl_string name = output_path + "hist_" + ids.str() + ".svg";
+    std::stringstream ids; ids << j;
+    std::string name = output_path + "hist_" + ids.str() + ".svg";
     write_svg<double>(hists[j], name, width, height, margin, font_size);
     bsta_gaussian_sphere<double, 1> gd(means_[classes_id][j], vars_[classes_id][j]);
 
@@ -518,25 +518,25 @@ bool dbrec_bayesian_pca::classify_image_rectangles(const vil_image_view<float>& 
 
   //: assumes class and non_class
   if (classes_.size() != 2) {
-    vcl_cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- this method assumes there are two classes!\n";
+    std::cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- this method assumes there are two classes!\n";
     throw 0;
   }
 
   //: find the class id in the order of classes_ map
   int classes_id = 0;
-  for (vcl_map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
+  for (std::map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
     if (class_id == it->first)
       break;
     classes_id++;
   }
   int classes_non_class_id = 0;
-  for (vcl_map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
+  for (std::map<char,int>::iterator it = classes_.begin(); it != classes_.end(); it++) {
     if (class_id != it->first)
       break;
     classes_non_class_id++;
   }
   if (classes_id == classes_non_class_id) {
-    vcl_cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- problem in the class ids!\n";
+    std::cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- problem in the class ids!\n";
     throw 0;
   }
 
@@ -563,7 +563,7 @@ bool dbrec_bayesian_pca::classify_image_rectangles(const vil_image_view<float>& 
       //: now transform the vector
       vnl_vector<double> new_v = EVecs_.transpose()*v;
       if (new_v.size() != means_[classes_id].size()) {
-        vcl_cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- dimension mismatch!\n";
+        std::cout << "In dbrec_bayesian_pca::classify_image_rectangles() -- dimension mismatch!\n";
         throw 0;
       }
       
@@ -606,8 +606,8 @@ void dbrec_template_matching::standardize_vector(vnl_vector<double>& v) {
   mean /= v.size();
   double sd = 0.0;
   for (vi = 0; vi < v.size(); vi++) 
-    sd += vcl_pow(v[vi]-mean, 2.0);
-  sd = vcl_sqrt(sd/v.size());
+    sd += std::pow(v[vi]-mean, 2.0);
+  sd = std::sqrt(sd/v.size());
   if (sd != 0.0) {
     for (vi = 0; vi < v.size(); vi++)
       v[vi] = (v[vi]-mean)/sd;
@@ -617,14 +617,14 @@ void dbrec_template_matching::standardize_vector(vnl_vector<double>& v) {
   }
 }
 
-void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const vcl_string& ground_truth_type, char class_id)
+void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& inp, int n, bvgl_changes_sptr gt_polygons, const std::string& ground_truth_type, char class_id)
 {
   unsigned ni = inp.ni();
   unsigned nj = inp.nj();
   int half_n = n/2;
   vgl_box_2d<int> image_box(0, ni-1, 0, nj-1); 
 
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of gt polygons: " << gt_polygons->size() << vcl_endl;
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of gt polygons: " << gt_polygons->size() << std::endl;
   int used_size = 0;
   for (unsigned i=0; i < gt_polygons->size(); i++)
   {
@@ -635,8 +635,8 @@ void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& 
     double x_cent = 0.0, y_cent = 0.0;
     gt_polygons->obj(i)->centroid(x_cent, y_cent);
 
-    int i_start = (int)vcl_floor(x_cent+0.5)-half_n; int i_end = i_start + n;
-    int j_start = (int)vcl_floor(y_cent+0.5)-half_n; int j_end = j_start + n;
+    int i_start = (int)std::floor(x_cent+0.5)-half_n; int i_end = i_start + n;
+    int j_start = (int)std::floor(y_cent+0.5)-half_n; int j_end = j_start + n;
     
     if (!image_box.contains(i_start, j_start) || !image_box.contains(i_end-1, j_end-1))
       continue;
@@ -655,7 +655,7 @@ void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& 
     data_.push_back(v);  
     data_class_ids_.push_back(class_id);
   }
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of type: " << ground_truth_type << " polygons: " << used_size << vcl_endl;
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() - number of type: " << ground_truth_type << " polygons: " << used_size << std::endl;
   return;
 }
 //: the method adds cnt many new data vectors for a random selection of pixels in the map with given bool value 
@@ -666,11 +666,11 @@ void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& 
   int half_n = n/2;
   vgl_box_2d<int> image_box(0, ni-1, 0, nj-1); 
   if (class_map.ni() != ni || class_map.nj() != nj) {
-    vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() -- Input image size is inconsistent with the map size!\n";
+    std::cout << "In dbrec_bayesian_pca::add_image_rectangles() -- Input image size is inconsistent with the map size!\n";
     throw 0;
   }
 
-  vcl_cout << "In dbrec_bayesian_pca::add_image_rectangles() -- generating: " << cnt << " random rectangles!\n";
+  std::cout << "In dbrec_bayesian_pca::add_image_rectangles() -- generating: " << cnt << " random rectangles!\n";
 
   for (int k = 0; k < cnt; k++) {
     int i = rng_.lrand32(half_n+1, ni-1-half_n);
@@ -702,7 +702,7 @@ void dbrec_template_matching::add_image_rectangles(const vil_image_view<float>& 
   return;
 }
 
-void dbrec_template_matching::save_image_rectangles(const vcl_string& prefix, int size, char class_id)
+void dbrec_template_matching::save_image_rectangles(const std::string& prefix, int size, char class_id)
 {
   for (unsigned i = 0; i < data_.size(); i++) {
     if (data_class_ids_[i] != class_id)
@@ -717,8 +717,8 @@ void dbrec_template_matching::save_image_rectangles(const vcl_string& prefix, in
       vil_math_scale_values(img,255.0f);
       vil_image_view<vxl_byte> img_b(size, size);
       vil_convert_cast(img, img_b);
-      vcl_stringstream ids; ids << i;
-      vcl_string name = prefix + "img_" + ids.str() + ".png";
+      std::stringstream ids; ids << i;
+      std::string name = prefix + "img_" + ids.str() + ".png";
       vil_save(img_b, name.c_str());
     }
   }
@@ -780,7 +780,7 @@ bool dbrec_template_matching::classify_image_rectangles(const vil_image_view<flo
       unsigned max_kk = 0;
       for (unsigned kk = 0; kk < data_.size(); kk++) {
         if (v.size() != data_[kk].size()) {
-          vcl_cout << "In dbrec_template_matching::classify_image_rectangles() -- mismatching vector sizes!\n";
+          std::cout << "In dbrec_template_matching::classify_image_rectangles() -- mismatching vector sizes!\n";
           throw 0;
         }
         double norm_cross = normalized_cross_correlation(v, data_[kk]);
@@ -802,13 +802,13 @@ bool dbrec_template_matching::classify_image_rectangles(const vil_image_view<flo
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbrec_pca const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbrec_pca &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value\n";
   return;
 }
 
@@ -842,13 +842,13 @@ void vsl_b_write(vsl_b_ostream& os, const dbrec_pca* &ph)
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbrec_bayesian_pca const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_bayesian_pca as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_bayesian_pca as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbrec_bayesian_pca &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_bayesian_pca as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_bayesian_pca as a brdb_value\n";
   return;
 }
 
@@ -882,13 +882,13 @@ void vsl_b_write(vsl_b_ostream& os, const dbrec_bayesian_pca* &ph)
 //: Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_pca as a brdb_value
 void vsl_b_write(vsl_b_ostream & os, dbrec_template_matching const &ph)
 {
-  vcl_cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_template_matching as a brdb_value\n";
+  std::cerr << "vsl_b_write() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_template_matching as a brdb_value\n";
   return;
 }
 
 void vsl_b_read(vsl_b_istream & is, dbrec_template_matching &ph)
 {
-  vcl_cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_template_matching as a brdb_value\n";
+  std::cerr << "vsl_b_read() -- Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_template_matching as a brdb_value\n";
   return;
 }
 

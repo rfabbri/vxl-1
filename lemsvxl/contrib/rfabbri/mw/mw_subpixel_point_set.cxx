@@ -6,7 +6,7 @@
 //: this class is the one who unallocs the vectors of points
 // TODO: support open curves; add open/closed bool vector to input
 mw_subpixel_point_set::
-mw_subpixel_point_set(const vcl_vector<vsol_point_2d_sptr> &pts)
+mw_subpixel_point_set(const std::vector<vsol_point_2d_sptr> &pts)
    :
    pt_(pts),
    nrows_(0),
@@ -22,7 +22,7 @@ bool mw_subpixel_point_set::
 nearest_point(double x, double y,  unsigned *np, double *min_distance) const
 {
    if (npts() == 0) {
-      vcl_cerr << "Hey, no points!" << vcl_endl;
+      std::cerr << "Hey, no points!" << std::endl;
       assert(npts() > 0); //:< simply abort for now
       return false;
    }
@@ -49,7 +49,7 @@ build_bucketing_grid(unsigned nr, unsigned nc)
   nrows_ = nr; 
   ncols_ = nc; 
 
-  vcl_cout << "Building bucketing grid..." ;
+  std::cout << "Building bucketing grid..." ;
 
   cells_.clear();
 
@@ -77,7 +77,7 @@ build_bucketing_grid(unsigned nr, unsigned nc)
       cells_[gy][gx].push_back(id);
   }
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 }
 
 
@@ -91,7 +91,7 @@ nearest_point_by_bucketing(double x, double y,  unsigned *np, double *min_distan
   
   // loop in nhood
 
-  double dmin = vcl_numeric_limits<double>::infinity();
+  double dmin = std::numeric_limits<double>::infinity();
   unsigned jcell_min = 0, icell_min = 0;
   unsigned kmin = 0;
 
@@ -126,7 +126,7 @@ nearest_point_by_bucketing(double x, double y,  unsigned *np, double *min_distan
 
   *min_distance = dmin;
 
-  if (dmin == vcl_numeric_limits<double>::infinity())
+  if (dmin == std::numeric_limits<double>::infinity())
     return false;
 
   *np = cells_[icell_min][jcell_min][kmin];

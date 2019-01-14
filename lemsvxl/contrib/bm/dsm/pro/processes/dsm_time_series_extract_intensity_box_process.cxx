@@ -21,11 +21,11 @@ bool dsm_time_series_extract_intensity_box_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_time_series_extract_intensity_box_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
-	input_types_[i++] = "vcl_string";//image glob
+	input_types_[i++] = vcl_string";//image glob
 	input_types_[i++] = "unsigned"; //xmin
 	input_types_[i++] = "unsigned"; //xmax
 	input_types_[i++] = "unsigned"; //ymin
@@ -50,13 +50,13 @@ bool dsm_time_series_extract_intensity_box_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_time_series_extract_intensity_box_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_time_series_extract_intensity_box_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
 	//get inputs
 	unsigned i = 0;
-	vcl_string img_glob = pro.get_input<vcl_string>(i++);
+	std::string img_glob = pro.get_input<std::string>(i++);
 	unsigned xmin = pro.get_input<unsigned>(i++);
 	unsigned xmax = pro.get_input<unsigned>(i++);
 	unsigned ymin = pro.get_input<unsigned>(i++);
@@ -69,7 +69,7 @@ bool dsm_time_series_extract_intensity_box_process(bprb_func_process& pro)
 
 	if(nframes == 0)
 	{
-		vcl_cerr << "---- Error dsm_time_series_extract_intensity_box_process: The video stream is invalid. ----" << vcl_flush;
+		std::cerr << "---- Error dsm_time_series_extract_intensity_box_process: The video stream is invalid. ----" << std::flush;
 		return false;
 	}
 
@@ -77,7 +77,7 @@ bool dsm_time_series_extract_intensity_box_process(bprb_func_process& pro)
 
 	for( unsigned frame = 0; frame < nframes; ++frame ) 
 	{
-		vcl_cout << "Processing Frame: " << frame << vcl_endl;
+		std::cout << "Processing Frame: " << frame << std::endl;
 		vil_image_view<vxl_byte> curr_img;
 		video_stream.seek_frame(frame);
 		vidl_convert_to_view(*video_stream.current_frame(), curr_img);
@@ -93,7 +93,7 @@ bool dsm_time_series_extract_intensity_box_process(bprb_func_process& pro)
 			for( unsigned y = ymin; y <= ymax; ++y )
 			{
 #ifdef _DEBUG
-				vcl_cout << "\tExtracting Intensity at pixel: (" << x << "," << y << "," << frame << ")" << vcl_endl;
+				std::cout << "\tExtracting Intensity at pixel: (" << x << "," << y << "," << frame << ")" << std::endl;
 #endif //_DEBUG
 				dsm_feature_sptr feature_sptr;
 				if( normalize )

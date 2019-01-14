@@ -41,23 +41,23 @@ dbskfg_compute_scurve::~dbskfg_compute_scurve()
 // compute shock curve
 dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
     dbskfg_composite_node_sptr start_node,
-    vcl_vector<dbskfg_composite_link_sptr> path,
+    std::vector<dbskfg_composite_link_sptr> path,
     bool leaf_edge, 
     bool binterpolate, bool bsub_sample,
     double interpolate_ds, double subsample_ds,
     double scale_ratio,
     bool mirror)
 {
-    vcl_vector< vgl_point_2d<double> > sh_pt;
-    vcl_vector<double> time, theta, phi;
+    std::vector< vgl_point_2d<double> > sh_pt;
+    std::vector<double> time, theta, phi;
 
     dbskfg_composite_node_sptr cur_start_node = start_node;
 
-    vcl_pair<unsigned int,unsigned int> curve_id;
+    std::pair<unsigned int,unsigned int> curve_id;
     curve_id.first=cur_start_node->id();
 
     //traverse through the path, interpolating where necessary
-    vcl_vector<dbskfg_composite_link_sptr>::iterator e_it;
+    std::vector<dbskfg_composite_link_sptr>::iterator e_it;
 
     for (e_it = path.begin(); e_it != path.end(); e_it++)
     {
@@ -81,7 +81,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
                 {
-                    phi.push_back(vcl_acos(-1.0/sample->speed));
+                    phi.push_back(std::acos(-1.0/sample->speed));
                 }
                 else
                 {
@@ -106,7 +106,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
                 { 
-                    phi.push_back(vnl_math::pi - vcl_acos(-1.0/sample->speed));
+                    phi.push_back(vnl_math::pi - std::acos(-1.0/sample->speed));
                 }
                 else
                 {
@@ -134,7 +134,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
     if (leaf_edge)
     {
         double dphi = 0-phi[num_points-1]; //phi at the end is 0
-        double apprxds = vcl_abs(dphi)*time[num_points-1];
+        double apprxds = std::abs(dphi)*time[num_points-1];
     
         //num of extra samples
         int num = int(apprxds/interpolate_ds); 
@@ -175,7 +175,7 @@ void dbskfg_compute_scurve::sample_shock_link(dbskfg_composite_link_sptr link,
     dbsk2d_ishock_edge* cur_iedge = shock_link->ishock_edge();
 
     //: set extrinsinc points
-    // vcl_vector<dbsk2d_xshock_sample_sptr> samples= 
+    // std::vector<dbsk2d_xshock_sample_sptr> samples= 
     //     shock_link->get_sampled_shock_points();
 
     // for ( unsigned int s=0; s < samples.size() ; ++s)

@@ -22,7 +22,7 @@
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <dbsksp/algo/dbsksp_xshock_directed_tree_sptr.h>
 #include <dbsksp/algo/dbsksp_edit_distance.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //==============================================================================
 // dbsksp_average_n_xgraphs
@@ -49,8 +49,8 @@ public:
   }
 
   //: Set list of parent xgraphs
-  void set_parent_xgraphs(const vcl_vector<dbsksp_xshock_graph_sptr >& xgraphs,
-    const vcl_vector<vcl_string >& names = vcl_vector<vcl_string >(0) );
+  void set_parent_xgraphs(const std::vector<dbsksp_xshock_graph_sptr >& xgraphs,
+    const std::vector<std::string >& names = std::vector<std::string >(0) );
 
   //: Return scurve_matching_R
   float scurve_matching_R() const
@@ -79,7 +79,7 @@ public:
   }
 
   //: Set base name to save intermediate data
-  void set_base_name(const vcl_string& base_name)
+  void set_base_name(const std::string& base_name)
   { this->base_name_ = base_name; }
 
 
@@ -90,12 +90,12 @@ public:
   }
 
   //: Computed distance to parent shapes
-  void get_distance_parents_to_average(vcl_vector<double >& distance_parents_to_average) const
+  void get_distance_parents_to_average(std::vector<double >& distance_parents_to_average) const
   {
     distance_parents_to_average = this->distance_parent_to_avg_;
   }
 
-  void get_deform_cost_parents_to_average(vcl_vector<double >& deform_cost_parents_to_average) const
+  void get_deform_cost_parents_to_average(std::vector<double >& deform_cost_parents_to_average) const
   {
     deform_cost_parents_to_average = this->deform_cost_parent_to_avg_;
   }
@@ -110,7 +110,7 @@ public:
 
 
   //: Print debug info to a file
-  void print_debug_info(const vcl_string& str) const;
+  void print_debug_info(const std::string& str) const;
   
 
   // UTILITIES------------------------------------------------------------------
@@ -123,8 +123,8 @@ public:
     const dbsksp_xshock_graph_sptr xgraph2,
     double weight1,
     double weight2,
-    const vcl_string& name1,
-    const vcl_string& name2,
+    const std::string& name1,
+    const std::string& name2,
     dbsksp_xshock_graph_sptr& average_xgraph,
     double& relative_error);
   
@@ -143,10 +143,10 @@ protected:
   // User-input-----------------------------------------------------------------
 
   //: The two parent xgraphs
-  vcl_vector<dbsksp_xshock_graph_sptr > parent_xgraphs_;
+  std::vector<dbsksp_xshock_graph_sptr > parent_xgraphs_;
 
   //: Name of the parent objects
-  vcl_vector<vcl_string > parent_names_;
+  std::vector<std::string > parent_names_;
 
   //: sampling params
   float scurve_sample_ds_;
@@ -163,14 +163,14 @@ protected:
   dbsksp_xshock_graph_sptr average_xgraph_;
 
   //: Distance the two original xgraph
-  vcl_vector<double > distance_parent_to_avg_;
+  std::vector<double > distance_parent_to_avg_;
 
-  vcl_vector<double > deform_cost_parent_to_avg_;
+  std::vector<double > deform_cost_parent_to_avg_;
 
   // Intermediate results-------------------------------------------------------
 
   // base filename to save relevant data (mostly for debugging purpose)
-  vcl_string base_name_;
+  std::string base_name_;
 
 };
 
@@ -226,7 +226,7 @@ public:
   virtual bool compute();
 
   //: Generate a random permutation of the squence (0, 1, ..., n-1)
-  vcl_vector<unsigned > random_permutation(unsigned n);
+  std::vector<unsigned > random_permutation(unsigned n);
 
 
 };

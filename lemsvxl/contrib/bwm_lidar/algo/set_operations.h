@@ -23,7 +23,7 @@ public:
   void print();
   int get_set_id(int element);
 private:
-  vcl_vector<vcl_vector<int> > sets;
+  std::vector<std::vector<int> > sets;
 };
 
 #endif

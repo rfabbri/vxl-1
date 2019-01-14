@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QSlider>
 
-#include <vcl_string.h>
+#include <string>
 
 class dbrec3d_double_slider : public QWidget
 {
@@ -25,7 +25,7 @@ class dbrec3d_double_slider : public QWidget
   
 public:
   
-  dbrec3d_double_slider(float min_val, float max_val, vcl_string label);
+  dbrec3d_double_slider(float min_val, float max_val, std::string label);
   
 signals:
   
@@ -64,7 +64,7 @@ signals:
   }
   
 protected:
-  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value_label, vcl_string name);
+  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value_label, std::string name);
   void init_slider(QSlider *slider, QLabel *label, int init_val);
   
   

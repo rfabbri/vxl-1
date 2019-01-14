@@ -6,10 +6,10 @@
 
 int main()
 {
-	vcl_string img_dir = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\data\\westin1";
-	vcl_string out_dir = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\exp1\\";
+	std::string img_dir = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\data\\westin1";
+	std::string out_dir = "C:\\Users\\bm\\Documents\\vxl_src\\contrib\\brl\\lemsvxlsrc\\contrib\\bm\\results\\exp1\\";
 
-	vcl_vector< vgl_point_2d<unsigned> > target_pixel_list;
+	std::vector< vgl_point_2d<unsigned> > target_pixel_list;
 	vgl_point_2d<unsigned> pt1(271,346), pt2(316,604), pt3(235,655), pt4(233,589), pt5(597,192);
 	target_pixel_list.push_back(pt1);
 	target_pixel_list.push_back(pt2);
@@ -26,7 +26,7 @@ int main()
 	pivot_pixel_candidate_type pivot_pixel_candidates = neighborhood_sptr->pivot_pixel_candidates();
 	neighborhood_type neighborhood = neighborhood_sptr->neighborhood();
 
-	vcl_ofstream of((out_dir+"neighborhood.dat").c_str());
+	std::ofstream of((out_dir+"neighborhood.dat").c_str());
 	ncn_visualization::neighborhood2dat(target_pixels,pivot_pixel_candidates,neighborhood,of);
 
 	

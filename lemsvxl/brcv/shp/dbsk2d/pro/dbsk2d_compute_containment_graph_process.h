@@ -37,10 +37,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -51,10 +51,10 @@ public:
 private:
 
   void debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
-                  vcl_string filename);
+                  std::string filename);
 
   void debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
-                   vcl_string filename);
+                   std::string filename);
 
   void pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                             double preprocess_threshold,
@@ -66,7 +66,7 @@ private:
 
   dbsk2d_bnd_contour_sptr get_contour(dbsk2d_ishock_bpoint* bp);
 
-  void region_stats(vgl_polygon<double>& poly,vcl_vector<double>& stats,
+  void region_stats(vgl_polygon<double>& poly,std::vector<double>& stats,
                     dbsk2d_ishock_graph_sptr ishock_graph);
 
 };

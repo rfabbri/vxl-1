@@ -3,7 +3,7 @@
 
 #include "biob_worldpt_roster.h"
 #include "biob_worldpt_box.h"
-#include <vcl_list.h>
+#include <list>
 
 //:
 // \file
@@ -41,7 +41,7 @@ class biob_grid_worldpt_roster : public biob_worldpt_roster {
       unsigned long num_points_z,
       double x0, double y0, double z0);
 
-    vcl_string class_id() { return "biob_grid_worldpt_roster"; }
+    std::string class_id() { return "biob_grid_worldpt_roster"; }
 
     //number of worldpts stored
     unsigned long int num_points() const;
@@ -65,12 +65,12 @@ class biob_grid_worldpt_roster : public biob_worldpt_roster {
     bool conditional_index_3d_2_1d(long i, long j, long k, biob_worldpt_index & pti) const;
 
     //:return the list consisting of given index and indices of neighboring voxels
-    vcl_list<biob_worldpt_index> neighboring_voxels(biob_worldpt_index pti) const;
+    std::list<biob_worldpt_index> neighboring_voxels(biob_worldpt_index pti) const;
 
     //: if given worldpt is within a voxel, returns true and sets  the index of the containing voxel (else returns false)
     bool voxel(worldpt pt, biob_worldpt_index & pti) const;
 
-    void x_write_this(vcl_ostream& os);
+    void x_write_this(std::ostream& os);
 };
 
 #endif

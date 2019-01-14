@@ -11,9 +11,9 @@
 // \endverbatim
 
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <iostream>
+#include <fstream>
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_point_3d.h>
@@ -50,9 +50,9 @@ bool psm_convert_vis_implicit_process_cons(bprb_func_process& pro)
   //input[2]: The resolution level of the output
   //input[3]: The scale factor for the output data
 
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   input_types_[0] = "psm_scene_base_sptr";
-  input_types_[1] = "vcl_string";
+  input_types_[1] = vcl_string";
   input_types_[2] = "unsigned";
   input_types_[3] = "float";
 
@@ -71,7 +71,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
@@ -80,7 +80,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
 
   psm_apm_type apm_type = scene_base->appearance_model_type();
 
-  vcl_string filename = pro.get_input<vcl_string>(1);
+  std::string filename = pro.get_input<std::string>(1);
 
   unsigned resolution_level = pro.get_input<unsigned>(2);
 
@@ -92,7 +92,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_VIS_IMPLICIT>();
@@ -103,7 +103,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_GREY> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_GREY>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_VIS_IMPLICIT>();
@@ -114,7 +114,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_MOG_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_MOG_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_VIS_IMPLICIT>();
@@ -125,7 +125,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
       {
         psm_scene<PSM_APM_SIMPLE_RGB> *scene = dynamic_cast<psm_scene<PSM_APM_SIMPLE_RGB>*>(scene_base.ptr());
         if (!scene) {
-          vcl_cerr << "error casting scene_base to scene" << vcl_endl;
+          std::cerr << "error casting scene_base to scene" << std::endl;
           return false;
         }
         aux_scene_base = scene->get_aux_scene<PSM_AUX_VIS_IMPLICIT>();
@@ -133,15 +133,15 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
         break;
       }
     default:
-      vcl_cerr << "error - psm_convert_vis_implicit_process: unknown appearance model type " << apm_type << vcl_endl;
+      std::cerr << "error - psm_convert_vis_implicit_process: unknown appearance model type " << apm_type << std::endl;
       return false;
   }
   psm_aux_scene<PSM_AUX_VIS_IMPLICIT> *aux_scene = dynamic_cast<psm_aux_scene<PSM_AUX_VIS_IMPLICIT>*>(aux_scene_base.ptr());
   if (!aux_scene) {
-    vcl_cerr << "error casting aux_scene to appropriate type. " << vcl_endl;
+    std::cerr << "error casting aux_scene to appropriate type. " << std::endl;
     return false;
   }
-  vcl_cout << "converting scene.. resolution level = " << resolution_level << vcl_endl;
+  std::cout << "converting scene.. resolution level = " << resolution_level << std::endl;
 
   hsds_fd_tree<psm_vis_implicit_sample,3> &aux_block = aux_scene->get_block(vgl_point_3d<int>(0,0,0));
   vbl_bounding_box<double,3> block_bb = aux_block.bounding_box();
@@ -158,9 +158,9 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
   // origin should specify center of first cell
   vnl_vector_fixed<double,3> data_og = block_og + (step_len/2.0);
 
-  vcl_ofstream ofs(filename.c_str(),vcl_ios::binary);
+  std::ofstream ofs(filename.c_str(),std::ios::binary);
   if (!ofs.good()) {
-    vcl_cerr << "error opening " << filename << " for write! " << vcl_endl;
+    std::cerr << "error opening " << filename << " for write! " << std::endl;
     return false;
   }
 
@@ -238,7 +238,7 @@ bool psm_convert_vis_implicit_process(bprb_func_process& pro)
   unsigned char *byte_data = new unsigned char[ncells*ncells*ncells];
   float* dp = data;
   for (unsigned char* bdp = byte_data; dp < data + ncells*ncells*ncells; ++dp, ++bdp) {
-    *bdp = (unsigned char)(vcl_floor((255.0 * *dp) + 0.5)); // always positive so this is an ok way to round
+    *bdp = (unsigned char)(std::floor((255.0 * *dp) + 0.5)); // always positive so this is an ok way to round
   }
   delete[] data;
 

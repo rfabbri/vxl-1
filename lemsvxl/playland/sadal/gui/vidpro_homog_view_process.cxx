@@ -51,7 +51,7 @@ vidpro_homog_view_process::vidpro_homog_view_process()
           )
           
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro_homog_view_process::vidpro_homog_view_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro_homog_view_process::vidpro_homog_view_process()" << std::endl;
   }
 }
 
@@ -64,7 +64,7 @@ vidpro_homog_view_process::~vidpro_homog_view_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_homog_view_process::name()
 {
   return "Homography Test";
@@ -96,12 +96,12 @@ vidpro_homog_view_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_homog_view_process::get_input_type()
 {
   // this process looks for an image and vsol2D storage class
   // at each input frame
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   
   return to_return;
@@ -109,11 +109,11 @@ vidpro_homog_view_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_homog_view_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   
   return to_return;
@@ -126,8 +126,8 @@ vidpro_homog_view_process::execute()
 {
   // verify that the number of input frames is correct
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In vidpro_homog_view_process::execute() - not exactly two"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro_homog_view_process::execute() - not exactly two"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
@@ -174,7 +174,7 @@ vidpro_homog_view_process::execute()
   homog_mat[2][1]=(double)homparam8;
   homog_mat[2][2]=(double)homparam9;
   vgl_h_matrix_2d<double> test_homog_mat(homog_mat);
-  vcl_cout<<"Homog mat:"<<homog_mat<<"\n";
+  std::cout<<"Homog mat:"<<homog_mat<<"\n";
   
   
   
@@ -186,13 +186,13 @@ vidpro_homog_view_process::execute()
   vnl_random mz_random(param4);
  
 
-  vcl_vector<vcl_string> dataname = curr_frame_corn->groups();
-  vcl_vector<vsol_spatial_object_2d_sptr> transf_pts;
-  vcl_vector < vsol_spatial_object_2d_sptr > origpts;
+  std::vector<std::string> dataname = curr_frame_corn->groups();
+  std::vector<vsol_spatial_object_2d_sptr> transf_pts;
+  std::vector < vsol_spatial_object_2d_sptr > origpts;
   for (int nameindex=0; nameindex<dataname.size(); nameindex++)
   {
 
-          vcl_vector < vsol_spatial_object_2d_sptr > curr_group = curr_frame_corn->data_named(dataname[nameindex]);
+          std::vector < vsol_spatial_object_2d_sptr > curr_group = curr_frame_corn->data_named(dataname[nameindex]);
           for (int m = 0; m<curr_group.size(); m++)
           origpts.push_back(curr_group[m]);
  
@@ -216,11 +216,11 @@ vidpro_homog_view_process::execute()
                 }
 
           transf_pts.push_back(new vsol_point_2d(transf_pt));
-//        vcl_cout<< transf_pt.x()/transf_pt.w()<<"   "<<transf_pt.y()/transf_pt.w()<<"\n";
+//        std::cout<< transf_pt.x()/transf_pt.w()<<"   "<<transf_pt.y()/transf_pt.w()<<"\n";
   }
-  vcl_cout<<"pts  "<<transf_pts.size()<<" \n";
-  vcl_cout<<"Inliers:"<<inliers<<" \n";
-  vcl_cout<<"Outliers:"<<outliers<<" \n";
+  std::cout<<"pts  "<<transf_pts.size()<<" \n";
+  std::cout<<"Inliers:"<<inliers<<" \n";
+  std::cout<<"Outliers:"<<outliers<<" \n";
 
           
   

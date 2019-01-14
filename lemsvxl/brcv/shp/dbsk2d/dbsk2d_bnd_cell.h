@@ -33,7 +33,7 @@ public:
 };
 
 struct timed_bnd_edge_vector: public vul_timestamp,
-                              public vcl_vector<dbsk2d_ishock_belm* >
+                              public std::vector<dbsk2d_ishock_belm* >
 {};
 
 class dbsk2d_bnd_preprocess;
@@ -46,11 +46,11 @@ class dbsk2d_bnd_cell: public vul_timestamp,
 protected:
   dbsk2d_bnd_cell_index index_;
   vgl_box_2d<double > box_;
-  vcl_list<dbsk2d_bnd_edge_sptr > edges_;
+  std::list<dbsk2d_bnd_edge_sptr > edges_;
   mutable timed_bnd_edge_vector belms_;
 
 public:
-  typedef vcl_vector<dbsk2d_ishock_belm* >::const_iterator belm_iterator;
+  typedef std::vector<dbsk2d_ishock_belm* >::const_iterator belm_iterator;
 
   //*************************************************
   // Constructors/Destructors
@@ -86,7 +86,7 @@ public:
   { this->box_ = newbox; this->touch(); }
 
   //: Return reference to the edge list inside the box
-  const vcl_list<dbsk2d_bnd_edge_sptr >& edges() const {return this->edges_; }
+  const std::list<dbsk2d_bnd_edge_sptr >& edges() const {return this->edges_; }
   
   //: Return true when the cell contains no edges
   bool empty() const {return this->edges_.empty(); }
@@ -103,7 +103,7 @@ public:
   void remove_bnd_edge(const dbsk2d_bnd_edge_sptr& edge );
 
   //: Return reference to the belm list
-  const vcl_vector<dbsk2d_ishock_belm* >& belms() const;
+  const std::vector<dbsk2d_ishock_belm* >& belms() const;
 
   //: Update the belm list in the cell, by collecting them in the `edges_'
   void update_belms() const;

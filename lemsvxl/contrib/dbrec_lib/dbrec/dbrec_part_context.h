@@ -30,7 +30,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/algo/vgl_rtree.h>
 #include <vgl/algo/vgl_rtree_c.h>
-#include <vcl_map.h>
+#include <map>
 #include <vil/vil_image_resource.h>
 
 //: an instance of a part at a particular location in an image
@@ -54,7 +54,7 @@ public:
 protected:
   unsigned type_;
   vgl_point_2d<float> pt_;
-  vcl_vector<double> posteriors_;
+  std::vector<double> posteriors_;
 };
 
 //: a specialized instance that stores the rotation of the part in the image
@@ -73,24 +73,24 @@ protected:
 //: an instance of a composition at a particular location in an image
 class dbrec_composition_ins : public dbrec_part_ins {
 public:
-  dbrec_composition_ins(unsigned type, float x, float y, const vcl_vector<dbrec_part_ins_sptr>& children) : dbrec_part_ins(type, x, y), children_(children) {}
-  dbrec_composition_ins(unsigned type, const vgl_point_2d<float>& pt, const vcl_vector<dbrec_part_ins_sptr>& children) : dbrec_part_ins(type, pt), children_(children) {}
+  dbrec_composition_ins(unsigned type, float x, float y, const std::vector<dbrec_part_ins_sptr>& children) : dbrec_part_ins(type, x, y), children_(children) {}
+  dbrec_composition_ins(unsigned type, const vgl_point_2d<float>& pt, const std::vector<dbrec_part_ins_sptr>& children) : dbrec_part_ins(type, pt), children_(children) {}
 
   virtual ~dbrec_composition_ins() { children_.clear(); }
 
-  vcl_vector<dbrec_part_ins_sptr>& children() { return children_; }
+  std::vector<dbrec_part_ins_sptr>& children() { return children_; }
 protected:
-  vcl_vector<dbrec_part_ins_sptr> children_;
+  std::vector<dbrec_part_ins_sptr> children_;
 };
 
 class dbrec_rot_inv_composition_ins : public dbrec_rot_inv_part_ins {
 public:
-  dbrec_rot_inv_composition_ins(unsigned type, float x, float y, const vcl_vector<dbrec_part_ins_sptr>& children, vnl_vector_fixed<float, 2>& dir_vec) : dbrec_rot_inv_part_ins(type, x, y, 0.0f, dir_vec), children_(children) {}
-  dbrec_rot_inv_composition_ins(unsigned type, const vgl_point_2d<float>& pt, const vcl_vector<dbrec_part_ins_sptr>& children, vnl_vector_fixed<float, 2>& dir_vec) : dbrec_rot_inv_part_ins(type, pt, 0.0f, dir_vec), children_(children) {}
+  dbrec_rot_inv_composition_ins(unsigned type, float x, float y, const std::vector<dbrec_part_ins_sptr>& children, vnl_vector_fixed<float, 2>& dir_vec) : dbrec_rot_inv_part_ins(type, x, y, 0.0f, dir_vec), children_(children) {}
+  dbrec_rot_inv_composition_ins(unsigned type, const vgl_point_2d<float>& pt, const std::vector<dbrec_part_ins_sptr>& children, vnl_vector_fixed<float, 2>& dir_vec) : dbrec_rot_inv_part_ins(type, pt, 0.0f, dir_vec), children_(children) {}
   virtual ~dbrec_rot_inv_composition_ins() { children_.clear(); }
-  vcl_vector<dbrec_part_ins_sptr>& children() { return children_; }
+  std::vector<dbrec_part_ins_sptr>& children() { return children_; }
 protected:
-  vcl_vector<dbrec_part_ins_sptr> children_;
+  std::vector<dbrec_part_ins_sptr> children_;
 };
 
 //: helper class for vgl_rtree, this is class C
@@ -155,7 +155,7 @@ public:
   virtual void add_part(dbrec_part_ins_sptr p) = 0;
   virtual dbrec_part_ins_sptr first() = 0;  // iterator, if no parts yet return 0 
   virtual dbrec_part_ins_sptr next() = 0;   // iterator, if reached the end return 0
-  virtual void query(const vgl_box_2d<float>& box, vcl_vector<dbrec_part_ins_sptr>& out) = 0;
+  virtual void query(const vgl_box_2d<float>& box, std::vector<dbrec_part_ins_sptr>& out) = 0;
   virtual unsigned size() const = 0;
 
   void add_map(vil_image_resource_sptr m) { maps_.push_back(m); }
@@ -166,7 +166,7 @@ public:
   
 protected:
   //: get some space for some maps which various operators or compositions may wanna save
-  vcl_vector<vil_image_resource_sptr> maps_;
+  std::vector<vil_image_resource_sptr> maps_;
 };
 
 //: In this concrete context subclass, the context is basically an rtree for fast access during location-based queries (e.g. give me all the parts around this location) 
@@ -177,7 +177,7 @@ public:
   virtual void add_part(dbrec_part_ins_sptr p);
   virtual dbrec_part_ins_sptr first();  // iterator, if no parts yet return 0 
   virtual dbrec_part_ins_sptr next();   // iterator, if reached the end return 0
-  virtual void query(const vgl_box_2d<float>& box, vcl_vector<dbrec_part_ins_sptr>& out);
+  virtual void query(const vgl_box_2d<float>& box, std::vector<dbrec_part_ins_sptr>& out);
   virtual unsigned size() const;
 
 protected:
@@ -200,7 +200,7 @@ public:
   unsigned size() { return contexts_.size(); }
 
 protected:
-  vcl_map<unsigned, dbrec_part_context_sptr> contexts_;
+  std::map<unsigned, dbrec_part_context_sptr> contexts_;
 };
 
 class dbrec_rtree_context_factory : public dbrec_context_factory {

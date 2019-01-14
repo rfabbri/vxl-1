@@ -61,7 +61,7 @@ poly_hybrid_manager::~poly_hybrid_manager(void)
     delete my_polygon;
   if (my_polygon_copy != 0)
     delete my_polygon_copy;
-  vcl_list<obj_observable*>::iterator iter=objects.begin();
+  std::list<obj_observable*>::iterator iter=objects.begin();
   while (iter != objects.end()) {
     delete (*iter);
     iter++;
@@ -94,7 +94,7 @@ void poly_hybrid_manager::setup_scene (vgui_grid_tableau_sptr grid)
                                 invert, use_glPixelMap, cache_buffer);
  
 
-  vcl_string image_filename = "C:\\test_images\\BaghdadLIDAR\\dem_1m_a1_baghdad_tile39.tif";
+  std::string image_filename = "C:\\test_images\\BaghdadLIDAR\\dem_1m_a1_baghdad_tile39.tif";
   
   vil_image_resource_sptr res = vil_load_image_resource(image_filename.c_str());
   img_right_ = bgui_image_tableau_new(res, params);
@@ -113,13 +113,13 @@ void poly_hybrid_manager::setup_scene (vgui_grid_tableau_sptr grid)
   vgui_viewer2D_tableau_new l(left_);
   grid_tableau_->add_at(l, 1, 0);
 
-  vcl_string cam_path("C:\\test_images\\providence2\\06MAY28155032-S2AS-005580823010_01_P001.RPB");
+  std::string cam_path("C:\\test_images\\providence2\\06MAY28155032-S2AS-005580823010_01_P001.RPB");
   vpgl_rational_camera<double> cam = read_rational_camera(cam_path);
-  vcl_cout << "right camera offset = <"<<cam.offset(cam.X_INDX)<<", "<<cam.offset(cam.Y_INDX)<<", "<<cam.offset(cam.Z_INDX)<<"> "<<vcl_endl;
+  std::cout << "right camera offset = <"<<cam.offset(cam.X_INDX)<<", "<<cam.offset(cam.Y_INDX)<<", "<<cam.offset(cam.Z_INDX)<<"> "<<std::endl;
   observer_left_->set_camera(cam.clone());
   vgl_point_3d<double> cam_center;
   //observer_left_->camera_center(cam_center);
-  vcl_cout << "left camera center = "<<cam_center<<vcl_endl;
+  std::cout << "left camera center = "<<cam_center<<std::endl;
   
 #else
   //this->add_child(vgui_viewer2D_tableau_new(vgui_image_tableau_new("C:\\test_images\\mesh\\pollard\\shortseq2\\reg00010.tif")));
@@ -128,9 +128,9 @@ void poly_hybrid_manager::setup_scene (vgui_grid_tableau_sptr grid)
   observer_right_ = new poly_cam_observer(img_right);
   vgui_viewer2D_tableau_new r(static_cast<vgui_easy2D_tableau* const&> (observer_right_));
   grid_tableau_->add_at(r, 2, 0);
-  vcl_string cam_path("C:\\test_images\\mesh\\pollard\\cameras\\camera10.txt");
+  std::string cam_path("C:\\test_images\\mesh\\pollard\\cameras\\camera10.txt");
   vpgl_proj_camera<double> cam = read_projective_camera(cam_path);
-  //vcl_cout << cam << vcl_endl;
+  //std::cout << cam << std::endl;
   observer_right_->set_camera(cam.clone());
 
   vgui_image_tableau_sptr img_left = vgui_image_tableau_new("C:\\test_images\\mesh\\pollard\\shortseq2\\reg00019.tif");
@@ -139,7 +139,7 @@ void poly_hybrid_manager::setup_scene (vgui_grid_tableau_sptr grid)
   vgui_viewer2D_tableau_new l(left_);
   grid_tableau_->add_at(l, 1, 0);
 
-  vcl_string cam_path2("C:\\test_images\\mesh\\pollard\\cameras\\camera19.txt");
+  std::string cam_path2("C:\\test_images\\mesh\\pollard\\cameras\\camera19.txt");
   vpgl_proj_camera<double> cam2 = read_projective_camera(cam_path2);
 
   observer_left_->set_camera(cam2.clone());
@@ -148,7 +148,7 @@ void poly_hybrid_manager::setup_scene (vgui_grid_tableau_sptr grid)
 
 void poly_hybrid_manager::load_left_image()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   if (!filename.empty())
   {
     vil_image_view_base_sptr img = vil_load( filename.data() );
@@ -164,7 +164,7 @@ void poly_hybrid_manager::load_left_camera()
     
 void poly_hybrid_manager::load_right_image()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   if (!filename.empty())
   {
     vil_image_view_base_sptr img = vil_load( filename.data() );
@@ -214,83 +214,83 @@ void poly_hybrid_manager::set_range_params()
 
 void poly_hybrid_manager::load_images_and_cameras()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   if (filename.empty())
     {
-      vcl_cout << "Bad filename\n";
+      std::cout << "Bad filename\n";
       return;
     }
-  vcl_ifstream is(filename.data());
+  std::ifstream is(filename.data());
   if(!is.is_open())
     {
-      vcl_cout << "Can't open file\n";
+      std::cout << "Can't open file\n";
       return;
     }
-  vcl_string name;
+  std::string name;
   is >> name;
   if(name != "LEFT:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
   is >> name;
   if(name != "IMAGE:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string left_image_path;
+  std::string left_image_path;
   is >> left_image_path;
   is >> name;
   if(name != "CAMERA_TYPE:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string left_camera_type;
+  std::string left_camera_type;
   is >> left_camera_type;
   is >> name;
   if(name != "CAMERA_PATH:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string left_camera_path;
+  std::string left_camera_path;
   is >> left_camera_path;
   is >> name;
   if(name != "RIGHT:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
   is >> name;
   if(name != "IMAGE:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string right_image_path;
+  std::string right_image_path;
   is >> right_image_path;
   is >> name;
   if(name != "CAMERA_TYPE:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string right_camera_type;
+  std::string right_camera_type;
   is >> right_camera_type;
   is >> name;
   if(name != "CAMERA_PATH:")
     {
-      vcl_cout << "Bad file parse\n";
+      std::cout << "Bad file parse\n";
       return;
     }
-  vcl_string right_camera_path;
+  std::string right_camera_path;
   is >> right_camera_path;
   //parsing done
   //vil_image limg = vil_load( left_image_path.c_str() );
   vil_image_resource_sptr res = vil_load_image_resource(left_image_path.c_str());
-  //vcl_cout << limg.cols() << "  " << limg.rows();
+  //std::cout << limg.cols() << "  " << limg.rows();
   observer_left_->add_image(0, 0, *(res->get_view()));
   vpgl_camera<double> *left_camera;
   if(left_camera_type=="projective")
@@ -299,12 +299,12 @@ void poly_hybrid_manager::load_images_and_cameras()
     left_camera = (read_rational_camera(left_camera_path)).clone();
   else
     {
-      vcl_cout << "Unsupported camera type" << left_camera_type << '\n';
+      std::cout << "Unsupported camera type" << left_camera_type << '\n';
       return;
     }
   observer_left_->set_camera(left_camera);
   res = vil_load_image_resource( right_image_path.c_str() );
-  //vcl_cout << limg.cols() << "  " << limg.rows();
+  //std::cout << limg.cols() << "  " << limg.rows();
   observer_right_->add_image(0, 0, *(res->get_view()));
   /*vpgl_camera<double> *right_camera;
   if(right_camera_type=="projective")
@@ -313,7 +313,7 @@ void poly_hybrid_manager::load_images_and_cameras()
     right_camera = (read_rational_camera(right_camera_path)).clone();
   else
     {
-      vcl_cout << "Unsupported camera type" << right_camera_type << '\n';
+      std::cout << "Unsupported camera type" << right_camera_type << '\n';
       return;
     }
   observer_right_->set_camera(right_camera);*/
@@ -327,7 +327,7 @@ void poly_hybrid_manager::select_proj_plane()
     vgl_homg_plane_3d<double> plane = obs->get_plane_of_face(face_id);
     observer_left_->set_proj_plane(plane);
   } else {
-    vcl_cerr << "Selected plain is not valid" << vcl_endl;
+    std::cerr << "Selected plain is not valid" << std::endl;
   }
 }
 
@@ -336,14 +336,14 @@ void poly_hybrid_manager::define_proj_plane()
   // pick the ground truth line
   float x1, y1, x2, y2;
   left_->pick_line(&x1, &y1, &x2, &y2);
-  vcl_cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << vcl_endl;
+  std::cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << std::endl;
   //observer_left_->add_line(x1, y1, x2, y2);
   observer_left_->set_ground_plane(x1, y1, x2, y2);
 
   // pick the orthogonal line
   /*float x3, y3, x4, y4;
   left_->pick_line(&x3, &y3, &x4, &y4);
-  vcl_cout << "(" << x3 << "," << y3 << ")" << "(" << x4 << "," << y4 << ")" << vcl_endl;
+  std::cout << "(" << x3 << "," << y3 << ")" << "(" << x4 << "," << y4 << ")" << std::endl;
   observer_left_->add_line(x3,y3,x4,y4);*/
 }
 
@@ -352,7 +352,7 @@ void poly_hybrid_manager::define_ground_plane()
   // pick the ground truth line
   float x1, y1, x2, y2;
   right_->pick_line(&x1, &y1, &x2, &y2);
-  vcl_cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << vcl_endl;
+  std::cout << "(" << x1 << "," << y1 << ")" << "(" << x2 << "," << y2 << ")" << std::endl;
   observer_right_->add_line(x1, y1, x2, y2);
   observer_right_->set_ground_plane(x1, y1, x2, y2);
 }
@@ -393,7 +393,7 @@ void poly_hybrid_manager::define_xz_proj_plane()
 void poly_hybrid_manager::save()
 {
   vgui_dialog params("File Save");
-  vcl_string ext, file, empty="";
+  std::string ext, file, empty="";
 
   params.file ("Save...", ext, file);  
   bool use_lvcs = false;
@@ -408,7 +408,7 @@ void poly_hybrid_manager::save()
     return;
   }
 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     obj_observable* o = *it;
     dbmsh3d_mesh_mc* mesh = o->get_object();
@@ -420,7 +420,7 @@ void poly_hybrid_manager::save()
 void poly_hybrid_manager::save_all()
 {
   vgui_dialog params("File Save");
-  vcl_string ext, master_filename, empty="";
+  std::string ext, master_filename, empty="";
 
   params.file ("Save...", ext, master_filename);  
   bool use_lvcs = false;
@@ -435,21 +435,21 @@ void poly_hybrid_manager::save_all()
     return;
   }
 
-  vcl_ofstream list_out(master_filename.data());
+  std::ofstream list_out(master_filename.data());
   if (!list_out.good()) {
-    vcl_cerr << "error opening file "<<master_filename<<vcl_endl;
+    std::cerr << "error opening file "<<master_filename<<std::endl;
     return;
   }
 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   int mesh_idx = 0;
   while (it != objects.end()) {
-    vcl_ostringstream meshname;
-    vcl_ostringstream fullpath;
+    std::ostringstream meshname;
+    std::ostringstream fullpath;
     meshname << "mesh" << mesh_idx <<".ply2";
     fullpath << master_filename << "." << meshname.str();
 
-    list_out << meshname.str() << vcl_endl;
+    list_out << meshname.str() << std::endl;
     obj_observable* o = *it;
     dbmsh3d_mesh_mc* mesh = o->get_object();
     save_mesh(mesh,fullpath.str().data(),use_lvcs);
@@ -460,29 +460,29 @@ void poly_hybrid_manager::save_all()
 
 void poly_hybrid_manager::save_lvcs()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   // just save origin for now
-  vcl_ofstream os(filename.data());
+  std::ofstream os(filename.data());
   double lat,lon,elev;
   lvcs_->get_origin(lat,lon,elev);
   os.precision(12);
-  os << lat << " "<< lon << " " << elev << vcl_endl;
+  os << lat << " "<< lon << " " << elev << std::endl;
 
   return;
 }
 
 void poly_hybrid_manager::load_lvcs()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   // just load origin for now
-  vcl_ifstream is(filename.data());
+  std::ifstream is(filename.data());
   double lat, lon, elev;
   is >> lat;
   is >> lon;
   is >> elev;
 
   lvcs_ = new bgeo_lvcs(lat,lon,elev,bgeo_lvcs::wgs84,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
-  vcl_cout << "loaded lvcs with origin "<<lat<<", "<<lon<<", "<<elev<<vcl_endl;
+  std::cout << "loaded lvcs with origin "<<lat<<", "<<lon<<", "<<elev<<std::endl;
 
   return;
 }
@@ -490,14 +490,14 @@ void poly_hybrid_manager::load_lvcs()
 void poly_hybrid_manager::convert_file_to_lvcs()
 {
   if (!lvcs_) {
-    vcl_cerr << "error: lvcs is not defined!"<<vcl_endl;
+    std::cerr << "error: lvcs is not defined!"<<std::endl;
     return;
   }
   // expects simple text file with each line being of the form "lat lon z"
-  vcl_string filename_in = select_file();
-  vcl_string filename_out = filename_in + ".lvcs";
-  vcl_ifstream is(filename_in.data());
-  vcl_ofstream os(filename_out.data());
+  std::string filename_in = select_file();
+  std::string filename_out = filename_in + ".lvcs";
+  std::ifstream is(filename_in.data());
+  std::ofstream os(filename_out.data());
   
   double lat,lon,elev;
   double x,y,z;
@@ -507,7 +507,7 @@ void poly_hybrid_manager::convert_file_to_lvcs()
     is >> lon;
     is >> elev;
     lvcs_->global_to_local(lon,lat,elev,bgeo_lvcs::wgs84,x,y,z,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
-    os << x <<" "<<y<<" "<<z<<vcl_endl;
+    os << x <<" "<<y<<" "<<z<<std::endl;
   }
 
   return;
@@ -520,16 +520,16 @@ void poly_hybrid_manager::save_mesh(dbmsh3d_mesh_mc* mesh, const char* filename,
   dbmsh3d_mesh_mc* mesh2 = mesh->clone();
   if (use_lvcs) {
     if (!lvcs_){
-      vcl_cerr << "error: lvcs == null" <<vcl_endl;
+      std::cerr << "error: lvcs == null" <<std::endl;
       return;
     }
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = mesh2->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = mesh2->vertexmap().begin();
     for (; it != mesh2->vertexmap().end(); it++) {
       dbmsh3d_vertex* V = (dbmsh3d_vertex*) (*it).second;
       double x=0,y=0,z=0;
       lvcs_->global_to_local(V->pt().x(),V->pt().y(),V->pt().z(),bgeo_lvcs::wgs84,x,y,z,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
       vgl_point_3d<double> new_pt(x,y,z);
-      vcl_cout << "converted global <"<<V->pt().x() <<", "<< V->pt().y() <<", "<< V->pt().z() <<"> to <" <<x<< ", "<<y<<" ,"<<z<<"> "<<vcl_endl;
+      std::cout << "converted global <"<<V->pt().x() <<", "<< V->pt().y() <<", "<< V->pt().z() <<"> to <" <<x<< ", "<<y<<" ,"<<z<<"> "<<std::endl;
       V->set_pt(new_pt);
     }
   }
@@ -542,7 +542,7 @@ void poly_hybrid_manager::save_mesh(dbmsh3d_mesh_mc* mesh, const char* filename,
 
 void poly_hybrid_manager::load_mesh_single()
 {
-  vcl_string filename = select_file();
+  std::string filename = select_file();
   load_mesh(filename);
   return;
 }
@@ -550,16 +550,16 @@ void poly_hybrid_manager::load_mesh_single()
 void poly_hybrid_manager::load_mesh_multiple()
 {
   // read txt file
-  vcl_string master_filename = select_file();
-  vcl_ifstream file_inp(master_filename.data());
+  std::string master_filename = select_file();
+  std::ifstream file_inp(master_filename.data());
   if (!file_inp.good()) {
-    vcl_cerr << "error opening file "<< master_filename <<vcl_endl;
+    std::cerr << "error opening file "<< master_filename <<std::endl;
     return;
   }
 
   while(!file_inp.eof()){
-    vcl_ostringstream fullpath;
-    vcl_string mesh_fname;
+    std::ostringstream fullpath;
+    std::string mesh_fname;
     file_inp >> mesh_fname;
     if (!mesh_fname.empty() && (mesh_fname[0] != '#')) {
       fullpath << master_filename << "." << mesh_fname;
@@ -571,12 +571,12 @@ void poly_hybrid_manager::load_mesh_multiple()
   return;
 }
 
-void poly_hybrid_manager::load_mesh(vcl_string filename)
+void poly_hybrid_manager::load_mesh(std::string filename)
 {
   dbmsh3d_mesh_mc mesh_mc;
 
   if (!dbmsh3d_load_ply2(&mesh_mc,filename.data())) {
-    vcl_cerr << "Error loading mesh "<<filename<< vcl_endl;
+    std::cerr << "Error loading mesh "<<filename<< std::endl;
     return;
   }
 
@@ -600,8 +600,8 @@ void poly_hybrid_manager::define_lvcs()
   left_->pick_point(&x1,&y1);
   vsol_point_2d_sptr img_point = new vsol_point_2d(x1,y1);
 
-  vcl_vector<vsol_point_2d_sptr> points2d;
-  vcl_vector<vsol_point_3d_sptr> points3d;
+  std::vector<vsol_point_2d_sptr> points2d;
+  std::vector<vsol_point_3d_sptr> points3d;
   // push img_point 3x to create degenerate polygon
   for (int i=0;i<3;i++) {
     points2d.push_back(img_point);
@@ -616,7 +616,7 @@ void poly_hybrid_manager::define_lvcs()
   lvcs_ = new bgeo_lvcs(origin_poly3d->vertex(0)->y(),origin_poly3d->vertex(0)->x(),origin_poly3d->vertex(0)->z(),
                         bgeo_lvcs::wgs84,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
   observer_right_->set_lvcs(origin_poly3d->vertex(0)->y(),origin_poly3d->vertex(0)->x(),origin_poly3d->vertex(0)->z());
-  vcl_cout << "defining lvcs with origin = <"<<origin_poly3d->vertex(0)->x() <<", "<<origin_poly3d->vertex(0)->y() <<", "<<origin_poly3d->vertex(0)->z() <<">"<<vcl_endl;
+  std::cout << "defining lvcs with origin = <"<<origin_poly3d->vertex(0)->x() <<", "<<origin_poly3d->vertex(0)->y() <<", "<<origin_poly3d->vertex(0)->z() <<">"<<std::endl;
 }
 
  //: Define a local vertical coordinate system by choosing a single point as
@@ -627,8 +627,8 @@ void poly_hybrid_manager::define_lidar_lvcs()
   right_->pick_point(&x1,&y1);
   vsol_point_2d_sptr img_point = new vsol_point_2d(x1,y1);
 
-  vcl_vector<vsol_point_2d_sptr> points2d;
-  vcl_vector<vsol_point_3d_sptr> points3d;
+  std::vector<vsol_point_2d_sptr> points2d;
+  std::vector<vsol_point_3d_sptr> points3d;
   // push img_point 3x to create degenerate polygon
   for (int i=0;i<3;i++) {
     points2d.push_back(img_point);
@@ -643,7 +643,7 @@ void poly_hybrid_manager::define_lidar_lvcs()
   lvcs_ = new bgeo_lvcs(origin_poly3d->vertex(0)->y(),origin_poly3d->vertex(0)->x(),origin_poly3d->vertex(0)->z(),
                         bgeo_lvcs::wgs84,bgeo_lvcs::DEG,bgeo_lvcs::METERS);
   observer_right_->set_lvcs(origin_poly3d->vertex(0)->y(),origin_poly3d->vertex(0)->x(),origin_poly3d->vertex(0)->z());
-  vcl_cout << "defining lvcs with origin = <"<<origin_poly3d->vertex(0)->x() <<", "<<origin_poly3d->vertex(0)->y() <<", "<<origin_poly3d->vertex(0)->z() <<">"<<vcl_endl;
+  std::cout << "defining lvcs with origin = <"<<origin_poly3d->vertex(0)->x() <<", "<<origin_poly3d->vertex(0)->y() <<", "<<origin_poly3d->vertex(0)->z() <<">"<<std::endl;
 } 
 //: Combines the the first and the last points to create a polygon
 // on the screen
@@ -653,14 +653,14 @@ void poly_hybrid_manager::create_poly()
   left_->set_color(1, 0, 0);
   left_->pick_polygon(poly);
   if(!poly)
-  {vcl_cout << "Null polygon - no creation in world\n";
+  {std::cout << "Null polygon - no creation in world\n";
   return;
   }
   poly2d = poly->cast_to_polygon();
   unsigned n = poly2d->size();
   // make sure that the last two vertices of the polygon are not the same
   if (*(poly2d->vertex(n-1)) == *(poly2d->vertex(n-2))) {
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     // erase the last vertex
     for (unsigned i=0; i<poly2d->size()-1; i++) {
       vertices.push_back(poly2d->vertex(i));
@@ -691,7 +691,7 @@ void poly_hybrid_manager::create_lidar_poly()
   unsigned n = poly2d->size();
   // make sure that the last two vertices of the polygon are not the same
   if (*(poly2d->vertex(n-1)) == *(poly2d->vertex(n-2))) {
-    vcl_vector<vsol_point_2d_sptr> vertices;
+    std::vector<vsol_point_2d_sptr> vertices;
     // erase the last vertex
     for (unsigned i=0; i<poly2d->size()-1; i++) {
       vertices.push_back(poly2d->vertex(i));
@@ -780,9 +780,9 @@ void poly_hybrid_manager::create_interior()
 void poly_hybrid_manager::get_selection(obj_observable* &obs, unsigned &face_id)
 {
 
-  vcl_vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
+  std::vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
   if (select_list.size() == 0 || select_list.size() > 1) {
-    vcl_cerr << "Select only ONE face" << vcl_endl;
+    std::cerr << "Select only ONE face" << std::endl;
   } else {
     unsigned sel_id = select_list[0]->get_id();
     vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
@@ -802,18 +802,18 @@ bool poly_hybrid_manager::handle(const vgui_event &e)
   {
     
     vgui_projection_inspector pi;
-    //vcl_cout << "X=" << e.wx << " Y=" << e.wy << vcl_endl;
+    //std::cout << "X=" << e.wx << " Y=" << e.wy << std::endl;
     if (e.type == vgui_BUTTON_DOWN && e.button == vgui_LEFT && e.modifier == 0) {
       left_button_down = true;
       // take the position of the first point
       pi.window_to_image_coordinates(e.wx, e.wy, mouse_start_x, mouse_start_y);
-      //vcl_cout << "1............................... "  << mouse_start_x << " " << mouse_start_x << vcl_endl;
+      //std::cout << "1............................... "  << mouse_start_x << " " << mouse_start_x << std::endl;
 
-      vcl_vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
-      //vcl_cout << select_list.size();
+      std::vector<vgui_soview*> select_list = observer_left_->get_selected_soviews();
+      //std::cout << select_list.size();
       if (select_list.size() > 0) {
         // TODO: if there are more than one polygon, move all of them
-        //select_list[0]->print(vcl_cout);
+        //select_list[0]->print(std::cout);
         unsigned id = select_list[0]->get_id();
         vgui_soview2D_polygon* polygon = static_cast<vgui_soview2D_polygon *> (select_list[0]);
         observer_left_->deselect(id);
@@ -828,14 +828,14 @@ bool poly_hybrid_manager::handle(const vgui_event &e)
       }
     } 
     else if (e.type == vgui_MOTION && left_button_down == true) {
-      //vcl_cout << "3..............................." << vcl_endl;
+      //std::cout << "3..............................." << std::endl;
       // update these only if there is motion event
       if (my_polygon_copy != 0) {
         float wx = e.wx;
         float wy = e.wy;     
         pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
         double diff = -1 * (cur_pointy - mouse_start_y)/10.0;
-        vcl_cout << diff << vcl_endl;
+        std::cout << diff << std::endl;
         vsol_polygon_3d_sptr poly3d;
         observer_left_->backproj_poly(poly2d, poly3d, diff);
         my_polygon_copy->move(poly3d);
@@ -862,13 +862,13 @@ bool poly_hybrid_manager::handle(const vgui_event &e)
       
       pi.window_to_image_coordinates(e.wx, e.wy, cur_pointx, cur_pointy);
       double diff = (mouse_start_y - cur_pointy)/10.0;
-      vcl_cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << vcl_endl;
+      std::cout << mouse_start_y  << "-" << cur_pointy << "=" << diff << std::endl;
       mouse_start_y = cur_pointy;
       if (my_obj != 0)
         my_obj->move_extr_face(diff);
     } 
     else if (e.type == vgui_BUTTON_UP && e.button == vgui_MIDDLE && e.modifier == 0){
-      //vcl_cout << "2..............................." << vcl_endl;
+      //std::cout << "2..............................." << std::endl;
       middle_button_down = false;
     }
  
@@ -879,10 +879,10 @@ bool poly_hybrid_manager::handle(const vgui_event &e)
 
 //////////////////////////////////////////////////////////////////////////////////
 // Private Methods
-vcl_string poly_hybrid_manager::select_file()
+std::string poly_hybrid_manager::select_file()
 {
   vgui_dialog params ("File Open");
-  vcl_string ext, file, empty="";
+  std::string ext, file, empty="";
 
   params.file ("Open...", ext, file);  
   if (!params.ask())
@@ -900,8 +900,8 @@ vcl_string poly_hybrid_manager::select_file()
 vpgl_camera<double>* poly_hybrid_manager::select_camera()
 {
   vgui_dialog params ("Camera File Open");
-  vcl_string ext, file, empty="";
-  vcl_vector<vcl_string> camera_types;
+  std::string ext, file, empty="";
+  std::vector<std::string> camera_types;
   int camera_type = 0;
 
   vpgl_camera<double> *camera = (vpgl_camera<double>*)0;
@@ -931,20 +931,20 @@ vpgl_camera<double>* poly_hybrid_manager::select_camera()
     camera = (read_rational_camera(file)).clone();
     break;
   default:
-    vcl_cout << "Error: unknown camera type "<<camera_type<< vcl_endl;
+    std::cout << "Error: unknown camera type "<<camera_type<< std::endl;
   }
   return camera;
 }
 
-void poly_hybrid_manager::read_world_points(vcl_string fname)
+void poly_hybrid_manager::read_world_points(std::string fname)
 {
-  vcl_ifstream points_file(fname.data());
+  std::ifstream points_file(fname.data());
   int x, y, z;
   while (!points_file.eof()) {
     points_file >> x;
     points_file >> y;
     points_file >> z;
-    vcl_cout << x << " " << y << " " << z << vcl_endl;
+    std::cout << x << " " << y << " " << z << std::endl;
     vgl_point_3d<double> p(x, y, z);
     //world_points_.push_back(p);
   }
@@ -954,7 +954,7 @@ obj_observable* poly_hybrid_manager::find_polygon_in_3D(unsigned id,
                                                  vsol_polygon_3d_sptr& poly,
                                                  unsigned& index)
 { 
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     obj_observable* o = *it;
     if (o->is_poly_in(id, index)) {
@@ -970,7 +970,7 @@ obj_observable* poly_hybrid_manager::find_polygon_in_3D(unsigned id,
 
 void poly_hybrid_manager::delete_observable(observable* obs)
 {
-  vcl_list<obj_observable*>::iterator it = objects.begin();
+  std::list<obj_observable*>::iterator it = objects.begin();
   while (it != objects.end()) {
     if (*it == obs) {
       delete (*it);
@@ -1096,30 +1096,30 @@ void poly_hybrid_manager::divide_polygon(vgui_soview2D_polygon* poly2d,
     bbox_poly.push_back(xmin, ymax);
   }
 
-  vcl_cout << bbox_poly;
+  std::cout << bbox_poly;
 
   vgl_polygon<float> my_poly(poly2d->x, poly2d->y, poly2d->n);
-  vcl_cout << my_poly << vcl_endl;
+  std::cout << my_poly << std::endl;
 
   // intersect the two polygon
   vgl_polygon<float> new_poly1 = vgl_clip(my_poly, bbox_poly, vgl_clip_type_intersect);
   vgl_polygon<float> new_poly2 = vgl_clip(my_poly, new_poly1, vgl_clip_type_difference);
 
-  vcl_cout << new_poly1 << vcl_endl;
-  vcl_cout << new_poly2 << vcl_endl;
+  std::cout << new_poly1 << std::endl;
+  std::cout << new_poly2 << std::endl;
 
-  vcl_vector<vsol_point_2d_sptr> vlist1;
+  std::vector<vsol_point_2d_sptr> vlist1;
   if (new_poly1.num_sheets() > 1)
-    vcl_cerr << "More than one polygon found!!!!!!" << vcl_endl;
+    std::cerr << "More than one polygon found!!!!!!" << std::endl;
   //for (unsigned int s = 0; s < new_poly1.num_sheets(); ++s) {
     for (unsigned int p = 0; p < new_poly1[0].size(); ++p) {
       vlist1.push_back(new vsol_point_2d(new_poly1[0][p].x(), new_poly1[0][p].y())); 
   }
  // }
 
-  vcl_vector<vsol_point_2d_sptr> vlist2;
+  std::vector<vsol_point_2d_sptr> vlist2;
   if (new_poly2.num_sheets() > 1)
-    vcl_cerr << "More than one polygon found!!!!!!" << vcl_endl;
+    std::cerr << "More than one polygon found!!!!!!" << std::endl;
   //for (unsigned int s = 0; s < new_poly2.num_sheets(); ++s) {
     for (unsigned int p = 0; p < new_poly2[0].size(); ++p) {
       vlist2.push_back(new vsol_point_2d(new_poly2[0][p].x(), new_poly2[0][p].y())); 
@@ -1142,17 +1142,17 @@ void poly_hybrid_manager::divide_polygon(vgui_soview2D_polygon* poly2d,
 void poly_hybrid_manager::move_polygon(vsol_polygon_3d_sptr &polygon, double dist)
 {
   unsigned n = polygon->size();
-  vcl_vector<vsol_point_3d_sptr> vlist(n);
+  std::vector<vsol_point_3d_sptr> vlist(n);
   for(unsigned i=0; i<n; i++) {
     vsol_point_3d_sptr p = polygon->vertex(i);
-    vcl_cout << "point before: " << p << vcl_endl;
+    std::cout << "point before: " << p << std::endl;
     vgl_vector_3d<double> normal = polygon->normal_at_point(p);
-    vcl_cout << "Normal==>" << normal << vcl_endl;
+    std::cout << "Normal==>" << normal << std::endl;
     double fact = -1*dist;
     vsol_point_3d_sptr ptr = new vsol_point_3d(p->x() + fact*normal.x() , 
       p->y() + fact*normal.y(), 
       p->z() + fact*normal.z());
-    vcl_cout << "point after: ";
+    std::cout << "point after: ";
     ptr->print();
     vlist[i] = ptr;
   }
@@ -1161,33 +1161,33 @@ void poly_hybrid_manager::move_polygon(vsol_polygon_3d_sptr &polygon, double dis
 }
 
 vpgl_proj_camera<double>
-poly_hybrid_manager::read_projective_camera(vcl_string cam_path){
+poly_hybrid_manager::read_projective_camera(std::string cam_path){
 
-  vcl_ifstream cam_stream(cam_path.data());
+  std::ifstream cam_stream(cam_path.data());
   vpgl_proj_camera<double> cam;
   cam_stream >> cam;
-  vcl_cout << cam << vcl_endl;
+  std::cout << cam << std::endl;
   
   return cam;
 }
 
 vpgl_rational_camera<double>
-poly_hybrid_manager::read_rational_camera(vcl_string cam_path){
-  vcl_ifstream file_inp;
+poly_hybrid_manager::read_rational_camera(std::string cam_path){
+  std::ifstream file_inp;
   file_inp.open(cam_path.c_str());
   if (!file_inp.good()) {
-    vcl_cout << "error: bad filename: " << cam_path << vcl_endl;
+    std::cout << "error: bad filename: " << cam_path << std::endl;
     vpgl_rational_camera<double> dummy_camera;
     return dummy_camera;
   }
 
-  vcl_vector<double> neu_u;
-  vcl_vector<double> den_u;
-  vcl_vector<double> neu_v;
-  vcl_vector<double> den_v;
+  std::vector<double> neu_u;
+  std::vector<double> den_u;
+  std::vector<double> neu_v;
+  std::vector<double> den_v;
   double x_scale,x_off,y_scale,y_off,z_scale,z_off,u_scale,u_off,v_scale,v_off;
 
-  vcl_string input;
+  std::string input;
   char bulk[100];
 
   while(!file_inp.eof()){

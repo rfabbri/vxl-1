@@ -3,11 +3,11 @@
 //  To debug in Visual studio, put argument
 //  all D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbmsh3d\algo\tests\data
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cassert>
+#include <iostream>
 
 #include <testlib/testlib_test.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -70,7 +70,7 @@
   int iNumFaces =   M->facemap().size() ;*/
 
 
-void test_merge_faces (vcl_string ply2_file)
+void test_merge_faces (std::string ply2_file)
 {
   //Create the test mesh.
   dbmsh3d_mesh* M = new dbmsh3d_mesh;
@@ -84,8 +84,8 @@ void test_merge_faces (vcl_string ply2_file)
 
   merge_mesh_coplanar_faces (M);
 
-  vcl_cout << "\nBefore Merge " << iNumPoints << " points " << iNumFaces << " faces\n";
-  vcl_cout << "\nAfter Merge " <<  M->vertexmap().size() << " points " << M->facemap().size() << " faces\n";
+  std::cout << "\nBefore Merge " << iNumPoints << " points " << iNumFaces << " faces\n";
+  std::cout << "\nAfter Merge " <<  M->vertexmap().size() << " points " << M->facemap().size() << " faces\n";
 
   ///dbmsh3d_save_ply2 (M, "D:\\Projects\\BrownEyes\\lemsvxlsrc\\brcv\\shp\\dbmsh3d\\algo\\tests\\data\\cube12_mf.ply2");
 
@@ -95,7 +95,7 @@ void test_merge_faces (vcl_string ply2_file)
 
 MAIN_ARGS (test_mesh_merge_face)
 {
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32
@@ -105,7 +105,7 @@ MAIN_ARGS (test_mesh_merge_face)
       #endif
   }
 
-  vcl_string ply2_file = dir_base + "cube12.ply2";
+  std::string ply2_file = dir_base + "cube12.ply2";
 
   START ("Test mesh merge face");
   test_merge_faces (ply2_file);

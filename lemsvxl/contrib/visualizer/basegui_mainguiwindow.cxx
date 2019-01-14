@@ -8,12 +8,12 @@
 #include "basegui_messageprinter.h"
 #include <wx/image.h>
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include "commandoptions.h"
 int       MessagePrinter::_state=1;
 int       MessagePrinter::_priorityThreshold=1000;
-vcl_string    MessagePrinter::_outputFileName;
-vcl_ofstream  MessagePrinter::_fp;
+std::string    MessagePrinter::_outputFileName;
+std::ofstream  MessagePrinter::_fp;
 int       MessagePrinter::_count=0;
 
 MESSAGE_OPTION MessageOption = MSG_TERSE;
@@ -49,14 +49,14 @@ END_EVENT_TABLE()
 // VisApp
 // ---------------------------------------------------------------------------
 
-void _loadInitFile(vcl_string filename);
+void _loadInitFile(std::string filename);
 
 // Initialise this in OnInit, not statically
 bool VisApp::OnInit()
   {
     ::wxInitAllImageHandlers();
-    vcl_string init_file_name("");
-    vcl_string default_plugin("");
+    std::string init_file_name("");
+    std::string default_plugin("");
     bool list_plugins(false);
     bool print_compile_time(false);
   
@@ -103,7 +103,7 @@ bool VisApp::OnInit()
            }
 
         if (default_plugin.size()==0)
-            vcl_cerr << "Error: " << ex.what() << vcl_endl;
+            std::cerr << "Error: " << ex.what() << std::endl;
 
         //return 1;
        }
@@ -121,8 +121,8 @@ bool VisApp::OnInit()
 
     if (print_compile_time)
       {
-        vcl_cout<<" Time Of Compilation = "<<vcl_string(__TIME__)<<vcl_endl;
-        vcl_cout<<" Date Of Compilation = "<<vcl_string(__DATE__)<<vcl_endl;
+        std::cout<<" Time Of Compilation = "<<std::string(__TIME__)<<std::endl;
+        std::cout<<" Date Of Compilation = "<<std::string(__DATE__)<<std::endl;
         exit(0);
        }
     
@@ -157,56 +157,56 @@ bool VisApp::OnInit()
 
 void MainGUIWindow::printPluginList()
   {
-    vcl_vector<BasePlugin *> plugin_list = PluginManager::GetPluginList();
+    std::vector<BasePlugin *> plugin_list = PluginManager::GetPluginList();
 
-    vcl_vector<vcl_string> temp;
+    std::vector<std::string> temp;
     for (unsigned int i=0;i<plugin_list.size();i++)
       {
-        vcl_cout<<vcl_endl;
-        vcl_cout<<" Plugin-Name      : "<<plugin_list[i]->GetPluginName()<<vcl_endl;
-        vcl_cout<<" Plugin-Menu-Name : "<<plugin_list[i]->GetPluginMenuName()<<vcl_endl;
-        vcl_cout<<" Services         : ";
+        std::cout<<std::endl;
+        std::cout<<" Plugin-Name      : "<<plugin_list[i]->GetPluginName()<<std::endl;
+        std::cout<<" Plugin-Menu-Name : "<<plugin_list[i]->GetPluginMenuName()<<std::endl;
+        std::cout<<" Services         : ";
         temp = plugin_list[i]->GetPluginServices();
         for (unsigned int j=0;j<temp.size();j++)
           {
-            vcl_cout<<" "<<temp[j];
+            std::cout<<" "<<temp[j];
             if ((j+1)<(temp.size()))
-                vcl_cout<<", ";
+                std::cout<<", ";
             else
-                vcl_cout<<"  ";
+                std::cout<<"  ";
            }
-        vcl_cout<<vcl_endl;
-        vcl_cout<<" Description      : "<<plugin_list[i]->GetPluginDescription()<<vcl_endl;
-        vcl_cout<<vcl_endl;
+        std::cout<<std::endl;
+        std::cout<<" Description      : "<<plugin_list[i]->GetPluginDescription()<<std::endl;
+        std::cout<<std::endl;
        }
-    vcl_cout<<" Total-Plugins        : "<<plugin_list.size()<<vcl_endl;
+    std::cout<<" Total-Plugins        : "<<plugin_list.size()<<std::endl;
    }
 
 
-void _loadInitFile(vcl_string filename)
+void _loadInitFile(std::string filename)
 {
-  vcl_string defaultFilename("./visualizer.ini");
-  vcl_ifstream initFile;
+  std::string defaultFilename("./visualizer.ini");
+  std::ifstream initFile;
   if(filename.size()==0){
     filename = defaultFilename;
   }
-  initFile.open(filename.c_str(),vcl_ios::in);
+  initFile.open(filename.c_str(),std::ios::in);
   if(initFile.fail()){
     // Suppress the error message for now since most of people
     // dont have an init-file.
 #if 0
-    vcl_cerr<<"[Error]["<<__FILE__<<":"<<__LINE__<<"] "
-  <<" Failed to open the init file." << vcl_endl;
+    std::cerr<<"[Error]["<<__FILE__<<":"<<__LINE__<<"] "
+  <<" Failed to open the init file." << std::endl;
 #endif
     return;
   }
 
   while(!initFile.eof()){
-    vcl_string buf;
-    vcl_getline(initFile,buf);
+    std::string buf;
+    std::getline(initFile,buf);
     // Skip empty or comment lines.
     if(buf.length()>=2 && buf[0]!='#'){
-      vcl_string className,attrName,value;
+      std::string className,attrName,value;
       SStream2 strm(buf,".=");
       if(strm >> className >> Check(".") >> attrName >> Check("=")
    >> value) {
@@ -218,7 +218,7 @@ void _loadInitFile(vcl_string filename)
 }
 
 void MainGUIWindow::createStdMenus(wxMenu *file, wxMenu *plugins, wxMenu *help,
-        wxToolBar *toolBar, vcl_vector<wxAcceleratorEntry> &accelerators) {
+        wxToolBar *toolBar, std::vector<wxAcceleratorEntry> &accelerators) {
   InitMenus(file, plugins, help);
   if(toolBar)
     InitToolBar(toolBar);
@@ -233,7 +233,7 @@ void MainGUIWindow::InitMenus(wxMenu *file_menu, wxMenu *plugins_menu, wxMenu *h
   //
   //Add Plugins.
   //
-  vcl_vector<BasePlugin *> plugins = PluginManager::GetPluginList();
+  std::vector<BasePlugin *> plugins = PluginManager::GetPluginList();
   for (unsigned int i = 0;i<plugins.size();i++)
   {
     assert(plugins[i]->GetPluginID() < 50); // this will mess up our ID scheme
@@ -258,7 +258,7 @@ void MainGUIWindow::InitToolBar(wxToolBar* toolBar)
 
 }
 
-void MainGUIWindow::InitAccelerators(vcl_vector<wxAcceleratorEntry> &entries)
+void MainGUIWindow::InitAccelerators(std::vector<wxAcceleratorEntry> &entries)
 {
   entries.push_back(wxAcceleratorEntry(wxACCEL_ALT, (int) 'L', VIS_FILE_LOAD_FILE));
   entries.push_back(wxAcceleratorEntry(wxACCEL_ALT, (int) 'X', VIS_FILE_QUIT));
@@ -296,7 +296,7 @@ MainGUIWindow::MainGUIWindow(wxWindow *parent,
        wxDefaultPosition, wxDefaultSize, 
        wxTE_MULTILINE | wxTE_READONLY);
     _debugTexts[cnt]->SetMaxLength (1E10);
-    vcl_string name("Debug 0");
+    std::string name("Debug 0");
     name.at(6) = name.at(6) + cnt;
     _notebook->AddPage(_debugTexts[cnt], _T(name.c_str()));
   }
@@ -409,15 +409,15 @@ void MainGUIWindow::OnSashDrag(wxSashEvent& event)
 
 void MainGUIWindow::OnDisplayOptions(wxCommandEvent& WXUNUSED(event) )
 {
-  vcl_ostringstream istrm;
-  istrm << "[List of Options]" << vcl_endl;
+  std::ostringstream istrm;
+  istrm << "[List of Options]" << std::endl;
   for(Options::iterator itr=GOptions.begin();
       itr != GOptions.end() ; itr++){
-    istrm << vcl_endl << "Class=" << itr->first << vcl_endl;
-    for(vcl_map<vcl_string,vcl_string>::iterator itr2=itr->second.begin();
+    istrm << std::endl << "Class=" << itr->first << std::endl;
+    for(std::map<std::string,std::string>::iterator itr2=itr->second.begin();
   itr2 != itr->second.end() ; itr2++){
       istrm << "Attr=" << itr2->first << "," 
-      << "Value=" << itr2->second << vcl_endl;
+      << "Value=" << itr2->second << std::endl;
     }
   }
   // Display it on the debug-window #2 (for now).
@@ -461,10 +461,10 @@ void MainGUIWindow::OnLoadFile(wxCommandEvent& event)
   if (dialog.ShowModal() != wxID_OK){
     return;
   }
-  loadFile(vcl_string(dialog.GetPath().c_str()));
+  loadFile(std::string(dialog.GetPath().c_str()));
 }
 
-void MainGUIWindow::loadFile(vcl_string filename) 
+void MainGUIWindow::loadFile(std::string filename) 
   {
     if(filename.length()<=3)
       {
@@ -477,13 +477,13 @@ void MainGUIWindow::loadFile(vcl_string filename)
     //
     
   int pos = filename.rfind('.');
-  vcl_string extension = filename.substr(pos+1, filename.length());
+  std::string extension = filename.substr(pos+1, filename.length());
   for (unsigned int i=0;i<extension.size();i++) 
     {
       extension.at(i)=toupper(extension.at(i));
      }
   
-  vcl_cout<<" File Extension = "<<extension<<vcl_endl;
+  std::cout<<" File Extension = "<<extension<<std::endl;
   BasePlugin *plugin = PluginManager::GetPluginFromService(extension);
   if (plugin) 
     {
@@ -495,7 +495,7 @@ void MainGUIWindow::loadFile(vcl_string filename)
      }
   else
     {
-      vcl_cout<<" Error: <MainGUIWindow::load> Unable to load Plugin with Service: "<<extension<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+      std::cout<<" Error: <MainGUIWindow::load> Unable to load Plugin with Service: "<<extension<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
      }
   
    }
@@ -515,12 +515,12 @@ BaseWindow* MainGUIWindow::getPlugin(wxCommandEvent &event)
        }
     else
       {
-        vcl_cout<<" Error: <MainGUIWindow::getPlugin> Unable to load Plugin with ID: "<<id<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+        std::cout<<" Error: <MainGUIWindow::getPlugin> Unable to load Plugin with ID: "<<id<<" {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
        }
     return 0;
    }
 
-BaseWindow* MainGUIWindow::getPluginFromName(vcl_string name)
+BaseWindow* MainGUIWindow::getPluginFromName(std::string name)
   {
     BasePlugin *plugin = PluginManager::GetPluginFromName(name);
     if (plugin) 
@@ -532,7 +532,7 @@ BaseWindow* MainGUIWindow::getPluginFromName(vcl_string name)
        }
     else
       {
-        vcl_cout<<" Error: <MainGUIWindow::getPluginFromName> Unable to load Plugin with Name ["<<name<<"] {"<<__FILE__<<", "<<__LINE__<<"} "<<vcl_endl;
+        std::cout<<" Error: <MainGUIWindow::getPluginFromName> Unable to load Plugin with Name ["<<name<<"] {"<<__FILE__<<", "<<__LINE__<<"} "<<std::endl;
        }
     return 0;
    }
@@ -544,7 +544,7 @@ int MainGUIWindow::getPluginCount()
 /**
  * If there is only one plugin, get it's name else return "".
  * */
-vcl_string MainGUIWindow::getUniquePluginName()
+std::string MainGUIWindow::getUniquePluginName()
   {
     return PluginManager::GetUniquePluginName();
    }

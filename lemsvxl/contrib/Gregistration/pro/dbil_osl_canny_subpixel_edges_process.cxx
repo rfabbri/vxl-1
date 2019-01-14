@@ -46,7 +46,7 @@ dbil_osl_canny_subpixel_edges_process::dbil_osl_canny_subpixel_edges_process() :
         //!parameters()->add( "Min Edgel Intensity" ,      "-minintensity" ,       (int)60 )  
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
     
 }
@@ -75,10 +75,10 @@ dbil_osl_canny_subpixel_edges_process::clone() const
 /*************************************************************************
 * Function Name: dbil_osl_canny_subpixel_edges_process::name
 * Parameters: 
-* Returns: vcl_string
+* Returns: std::string
 * Effects: 
 *************************************************************************/
-vcl_string
+std::string
 dbil_osl_canny_subpixel_edges_process::name()
 {
     return "Binary Subpixel Tangent Osl Canny edges";
@@ -88,12 +88,12 @@ dbil_osl_canny_subpixel_edges_process::name()
 /*************************************************************************
 * Function Name: ddbil_osl_canny_edges_process::get_input_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbil_osl_canny_subpixel_edges_process::get_input_type()
+std::vector< std::string > dbil_osl_canny_subpixel_edges_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     return to_return;
 }
@@ -102,12 +102,12 @@ vcl_vector< vcl_string > dbil_osl_canny_subpixel_edges_process::get_input_type()
 /*************************************************************************
 * Function Name: dbil_osl_canny_subpixel_edges_process::get_output_type
 * Parameters: 
-* Returns: vcl_vector< vcl_string >
+* Returns: std::vector< std::string >
 * Effects: 
 *************************************************************************/
-vcl_vector< vcl_string > dbil_osl_canny_subpixel_edges_process::get_output_type()
+std::vector< std::string > dbil_osl_canny_subpixel_edges_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "dbrl_id_point_2d" );
     to_return.push_back( "vsol2D" );
@@ -139,7 +139,7 @@ bool
 dbil_osl_canny_subpixel_edges_process::execute()
 {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbil_osl_canny_subpixel_edges_process::execute() - not exactly one"
+        std::cout << "In dbil_osl_canny_subpixel_edges_process::execute() - not exactly one"
             << " input image \n";
         return false;
     }
@@ -169,22 +169,22 @@ dbil_osl_canny_subpixel_edges_process::execute()
     
     vil_image_view<float> dir_img(image_sptr->ni(),image_sptr->nj(),3);
     dir_img.fill(-100.0);
-    //vcl_vector<dbrl_id_point_2d_sptr> pointids;
+    //std::vector<dbrl_id_point_2d_sptr> pointids;
 
-    vcl_vector<vsol_point_2d_sptr> edges=det.get_points();
-    //vcl_vector<double> tangents=det.get_tangents();
-    vcl_vector<vgl_vector_2d<double> > dirs=det.get_directions();
+    std::vector<vsol_point_2d_sptr> edges=det.get_points();
+    //std::vector<double> tangents=det.get_tangents();
+    std::vector<vgl_vector_2d<double> > dirs=det.get_directions();
 
-    vcl_vector<vsol_spatial_object_2d_sptr> objs;
+    std::vector<vsol_spatial_object_2d_sptr> objs;
     for(unsigned i=0;i<edges.size();i++)
         {
-        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),0)=edges[i]->x();
-        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),1)=edges[i]->y();
-        double dir=vcl_atan2(dirs[i].y(),dirs[i].x());
-        dir_img((unsigned int)vcl_floor(edges[i]->x()),(unsigned int)vcl_floor(edges[i]->y()),2)=dir;
+        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),0)=edges[i]->x();
+        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),1)=edges[i]->y();
+        double dir=std::atan2(dirs[i].y(),dirs[i].x());
+        dir_img((unsigned int)std::floor(edges[i]->x()),(unsigned int)std::floor(edges[i]->y()),2)=dir;
         }
 
-vcl_cout<<"No fo Edges are "<<edges.size()<<"\n";
+std::cout<<"No fo Edges are "<<edges.size()<<"\n";
 vidpro1_image_storage_sptr output_img_storage = vidpro1_image_storage_new();
 output_img_storage->set_image(vil_new_image_resource_of_view(dir_img ) );
 output_data_[0].push_back(output_img_storage);

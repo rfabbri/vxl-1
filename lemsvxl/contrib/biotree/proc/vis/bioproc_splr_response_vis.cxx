@@ -24,14 +24,14 @@
 #include <VolumeViz/nodes/SoVolumeRendering.h>
 #include <VolumeViz/nodes/SoTransferFunction.h>
 #include <Inventor/nodes/SoCylinder.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <geom/geom_index_structure.h>
 #include <geom/geom_rectangular_probe_volume.h>
 #include <vgl/vgl_distance.h>
 
 double get_double(char* str){
   double x;
-  vcl_stringstream arg(str);
+  std::stringstream arg(str);
   arg >> x;
   return x;
 }
@@ -40,18 +40,18 @@ double get_double(char* str){
 int main(int argc, char** argv)
 {
   if(argc < 4){
-    vcl_cout << "Usage: "<< argv[0] << "fname resolution filter_num";
+    std::cout << "Usage: "<< argv[0] << "fname resolution filter_num";
     return 1;
   }
-  vcl_cout << "Note that the data are only valid for filters that are invariant under turntable rotations\n";
+  std::cout << "Note that the data are only valid for filters that are invariant under turntable rotations\n";
 
 
 
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "failed to load response file\n";
+    std::cout << "failed to load response file\n";
     return 1;
   }
   double resolution = get_double(argv[2]);
@@ -63,17 +63,17 @@ int main(int argc, char** argv)
 
 
   biob_worldpt_field<xmvg_filter_response<double> > response_field = parser.splr_response_field();
-  vcl_cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->num_points() << "\n";
-  vcl_cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->point(biob_worldpt_index(0)) << "\n";
+  std::cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->num_points() << "\n";
+  std::cout << "(bioproc_splr_response_vis.cxx)" <<  response_field.roster()->point(biob_worldpt_index(0)) << "\n";
   geom_index_structure geom(response_field.roster(), resolution);
     
-  /*    vcl_vector<biob_worldpt_index> roster_to_grid;
+  /*    std::vector<biob_worldpt_index> roster_to_grid;
   biob_roster_to_grid_mapping(response_field.roster(), grid, roster_to_grid);
   */
   int filters_size = parser.filter_num();
   assert (filter_num <= filters_size);
   biob_worldpt_index not_found = biob_worldpt_index(response_field.roster()->num_points());
-  vcl_vector<double> grid_response_values(grid.num_points());
+  std::vector<double> grid_response_values(grid.num_points());
   for (unsigned int i = 0; i < grid.num_points(); ++i){
     biob_worldpt_index closest_sample_pt = not_found;
     double best_distance = 9e9;//should use infinity

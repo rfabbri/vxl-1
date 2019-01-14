@@ -17,9 +17,9 @@
 #include <vul/vul_timer.h>
 #include <vul/vul_sprintf.h>
 #include <vul/vul_file.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 #include <vnl/vnl_random.h>
 
 
@@ -67,7 +67,7 @@ init()
     this->parent_names_.clear();
     for (unsigned i =0; i < this->parent_xgraphs_.size(); ++i)
     {
-      vcl_string object_name = vul_sprintf("object%d", i+1);
+      std::string object_name = vul_sprintf("object%d", i+1);
       this->parent_names_.push_back(object_name);
     }
   }
@@ -78,8 +78,8 @@ init()
 //------------------------------------------------------------------------------
 //: Set list of parent xgraphs
 void dbsksp_average_n_xgraphs::
-set_parent_xgraphs(const vcl_vector<dbsksp_xshock_graph_sptr >& xgraphs,
-                   const vcl_vector<vcl_string >& names)
+set_parent_xgraphs(const std::vector<dbsksp_xshock_graph_sptr >& xgraphs,
+                   const std::vector<std::string >& names)
 {
   this->parent_xgraphs_ = xgraphs;
   this->parent_names_   = names;
@@ -113,12 +113,12 @@ compute_average_xgraph(const dbsksp_xshock_graph_sptr& xgraph1,
     const dbsksp_xshock_graph_sptr xgraph2,
     double weight1,
     double weight2,
-    const vcl_string& name1,
-    const vcl_string& name2,
+    const std::string& name1,
+    const std::string& name2,
     dbsksp_xshock_graph_sptr& average_xgraph,
     double& relative_error)
 {
-  vcl_string pair_base_name = this->base_name_ + "+" + name1 + "+" + name2;
+  std::string pair_base_name = this->base_name_ + "+" + name1 + "+" + name2;
   dbsksp_weighted_average_two_xgraphs engine(xgraph1, xgraph2, weight1, weight2, 
     this->scurve_matching_R(), this->scurve_sample_ds(), 0.5,
     this->relative_error_tol_, pair_base_name);
@@ -155,12 +155,12 @@ compute_average_xgraph(const dbsksp_xshock_graph_sptr& xgraph1,
 //------------------------------------------------------------------------------
 //: Print debug info to a file
 void dbsksp_average_n_xgraphs::
-print_debug_info(const vcl_string& str) const
+print_debug_info(const std::string& str) const
 {
   if (this->debugging())
   {
-    vcl_string fname = this->base_name_ + "-debug.txt";
-    vcl_ofstream ofs(fname.c_str(), vcl_ofstream::app);
+    std::string fname = this->base_name_ + "-debug.txt";
+    std::ofstream ofs(fname.c_str(), std::ofstream::app);
     ofs << str;
     ofs.close();
   }
@@ -195,7 +195,7 @@ compute()
   //0) Initialize internal variables
   this->init();
 
-  vcl_cout 
+  std::cout 
     << "\nCompute average of N xgraphs"
     << "\n  base name for saving intermediate files= " << this->base_name_ << "\n";
 
@@ -204,7 +204,7 @@ compute()
   {
     for (unsigned i =0; i < this->parent_xgraphs_.size(); ++i)
     {
-      vcl_string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
+      std::string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
       x_write(fname, this->parent_xgraph(i));
     }
   }
@@ -214,9 +214,9 @@ compute()
     return false;
 
   // Iterative merge, increase weight every time
-  vcl_vector<dbsksp_xshock_graph_sptr > active_xgraphs = this->parent_xgraphs_;
-  vcl_vector<double > active_weights (active_xgraphs.size(), 1.0);
-  vcl_vector<vcl_string > active_names = this->parent_names_;
+  std::vector<dbsksp_xshock_graph_sptr > active_xgraphs = this->parent_xgraphs_;
+  std::vector<double > active_weights (active_xgraphs.size(), 1.0);
+  std::vector<std::string > active_names = this->parent_names_;
 
   while (active_xgraphs.size() > 1)
   {
@@ -226,7 +226,7 @@ compute()
     double w1 = active_weights.back();
     active_weights.pop_back();
 
-    vcl_string name1 = active_names.back();
+    std::string name1 = active_names.back();
     active_names.pop_back();
 
     // find the xgraph that is closest to xgraph1
@@ -246,10 +246,10 @@ compute()
     // merge xgraph1 and its closest xgraph, with proper weights
     dbsksp_xshock_graph_sptr xgraph2 = active_xgraphs[min_idx];
     double w2 = active_weights[min_idx];
-    vcl_string name2 = active_names[min_idx];
+    std::string name2 = active_names[min_idx];
 
     // some annoucement
-    vcl_cout << "\nCompute weighted average of:"
+    std::cout << "\nCompute weighted average of:"
       << "\n  Object1: " << name1
       << "\n  Object2: " << name2 << "\n";
 
@@ -257,9 +257,9 @@ compute()
     //// put the xgraph with more weight in front
     //if (w2 > w1)
     //{
-    //  vcl_swap(w1, w2);
-    //  vcl_swap(xgraph1, xgraph2);
-    //  vcl_swap(name1, name2);
+    //  std::swap(w1, w2);
+    //  std::swap(xgraph1, xgraph2);
+    //  std::swap(name1, name2);
     //}
     
 
@@ -279,7 +279,7 @@ compute()
 
     if (!average_xgraph)
     {
-      vcl_cout << "\nAveraging two xgraphs failed.\n";
+      std::cout << "\nAveraging two xgraphs failed.\n";
       return false;
     }
 
@@ -302,7 +302,7 @@ compute()
     double d = this->compute_edit_distance(this->parent_xgraphs_[i], this->average_xgraph_, work);
     this->distance_parent_to_avg_.push_back(d);
 
-    vcl_vector<pathtable_key > correspondence;
+    std::vector<pathtable_key > correspondence;
     double deform_cost = work.get_deform_cost(correspondence);
     this->deform_cost_parent_to_avg_.push_back(deform_cost);
   }
@@ -328,7 +328,7 @@ compute()
   //0) Initialize internal variables
   this->init();
 
-  vcl_cout 
+  std::cout 
     << "\nCompute average of N xgraphs by mid-point curve shortening"
     << "\n  base name for saving intermediate files= " << this->base_name_ << "\n";
 
@@ -337,7 +337,7 @@ compute()
   {
     for (unsigned i =0; i < this->parent_xgraphs_.size(); ++i)
     {
-      vcl_string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
+      std::string fname = this->base_name_ + vul_sprintf("-parent%d.xml", i+1); 
       x_write(fname, this->parent_xgraph(i));
     }
   }
@@ -349,8 +349,8 @@ compute()
   unsigned num_parents = this->parent_xgraphs_.size();
 
   // Deep copy the parent xgraphs
-  vcl_vector<dbsksp_xshock_graph_sptr > cur_xgraphs(num_parents, 0);
-  vcl_vector<vcl_string > cur_names(num_parents, "");
+  std::vector<dbsksp_xshock_graph_sptr > cur_xgraphs(num_parents, 0);
+  std::vector<std::string > cur_names(num_parents, "");
   for (unsigned i =0; i < num_parents; ++i)
   {
     cur_xgraphs[i] = new dbsksp_xshock_graph(*(this->parent_xgraphs_[i]));
@@ -358,7 +358,7 @@ compute()
   }
 
 
-  vcl_vector<double > trace_curve_length;
+  std::vector<double > trace_curve_length;
   int max_num_iters = 20;
   double curve_length_tol = 3 * num_parents; // we're happy if the shapes are on average distance 3 apart
  
@@ -369,7 +369,7 @@ compute()
     {
       for (unsigned i =0; i < num_parents; ++i)
       {
-        vcl_string fname = this->base_name_ + "-" + cur_names[i] + ".xml"; 
+        std::string fname = this->base_name_ + "-" + cur_names[i] + ".xml"; 
         x_write(fname, cur_xgraphs[i]);
       }
     }
@@ -386,7 +386,7 @@ compute()
     }
     trace_curve_length.push_back(sum_length);
 
-    vcl_cout << "\nCurrent curve_length = " << sum_length << "\n";
+    std::cout << "\nCurrent curve_length = " << sum_length << "\n";
     this->print_debug_info(vul_sprintf("curve_length=%f\n", sum_length));
     
     // check stopping criteria
@@ -397,19 +397,19 @@ compute()
 
 
     // random permutation of the cur_xgraph sequence
-    vcl_vector<unsigned > p = this->random_permutation(num_parents);
+    std::vector<unsigned > p = this->random_permutation(num_parents);
 
     // print out the permuation
-    vcl_cout << "\nPermutation sequence = ";
+    std::cout << "\nPermutation sequence = ";
     for (unsigned i =0; i < num_parents; ++i)
     {
-      vcl_cout << " " << p[i];
+      std::cout << " " << p[i];
     }
-    vcl_cout << "\n";
+    std::cout << "\n";
 
 
-    vcl_vector<dbsksp_xshock_graph_sptr > p_xgraphs(num_parents, 0);
-    vcl_vector<vcl_string > p_names(num_parents, "");
+    std::vector<dbsksp_xshock_graph_sptr > p_xgraphs(num_parents, 0);
+    std::vector<std::string > p_names(num_parents, "");
     
     for (unsigned i =0; i < num_parents; ++i)
     {
@@ -423,7 +423,7 @@ compute()
     {
       for (unsigned i =0; i < num_parents; ++i)
       {
-        vcl_string fname = this->base_name_ + "-" + p_names[i] + ".xml"; 
+        std::string fname = this->base_name_ + "-" + p_names[i] + ".xml"; 
         x_write(fname, p_xgraphs[i]);
       }
     }
@@ -438,11 +438,11 @@ compute()
       dbsksp_xshock_graph_sptr xgraph1 = p_xgraphs[i];
       dbsksp_xshock_graph_sptr xgraph2 = p_xgraphs[ip1];
 
-      vcl_string name1 = p_names[i];
-      vcl_string name2 = p_names[ip1];
+      std::string name1 = p_names[i];
+      std::string name2 = p_names[ip1];
     
       // some annoucement
-      vcl_cout << "\nCompute weighted average of:"
+      std::cout << "\nCompute weighted average of:"
         << "\n  Object1: " << name1
         << "\n  Object2: " << name2 << "\n";
 
@@ -465,7 +465,7 @@ compute()
 
       if (!average_xgraph)
       {
-        vcl_cout << "\nAveraging two xgraphs failed.\n";
+        std::cout << "\nAveraging two xgraphs failed.\n";
         return false;
       }
 
@@ -473,7 +473,7 @@ compute()
       cur_names.push_back(vul_sprintf("a%d_%d", k+1, i+1));
     }
 
-    vcl_cout << "Number of current xgrapsh = " << cur_xgraphs.size() << "\n";
+    std::cout << "Number of current xgrapsh = " << cur_xgraphs.size() << "\n";
   }
 
   this->average_xgraph_ = cur_xgraphs.front();
@@ -489,7 +489,7 @@ compute()
     double d = this->compute_edit_distance(this->parent_xgraphs_[i], this->average_xgraph_, work);
     this->distance_parent_to_avg_.push_back(d);
 
-    vcl_vector<pathtable_key > correspondence;
+    std::vector<pathtable_key > correspondence;
     double deform_cost = work.get_deform_cost(correspondence);
     this->deform_cost_parent_to_avg_.push_back(deform_cost);
   }
@@ -506,11 +506,11 @@ compute()
 
 //------------------------------------------------------------------------------
 //: Generate a random permutation of the squence (0, 1, ..., n-1)
-vcl_vector<unsigned > dbsksp_average_n_xgraphs_by_curve_shortening::
+std::vector<unsigned > dbsksp_average_n_xgraphs_by_curve_shortening::
 random_permutation(unsigned n)
 {
   // standard sequence
-  vcl_vector<unsigned > a(n, 0);
+  std::vector<unsigned > a(n, 0);
   for (unsigned i =0; i < n; ++i)
   {
     a[i] = i;
@@ -522,7 +522,7 @@ random_permutation(unsigned n)
   {
     // generate a random number between i and (n-1)
     int q = rand_engine.lrand32(i, n-1);
-    vcl_swap(a[i], a[q]);
+    std::swap(a[i], a[q]);
   }
   return a;
 }

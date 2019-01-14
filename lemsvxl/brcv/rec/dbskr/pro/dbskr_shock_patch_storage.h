@@ -32,14 +32,14 @@ public:
   //: Destructor
   virtual ~dbskr_shock_patch_storage();
 
-  virtual vcl_string type() const { return "shock_patch"; }
+  virtual std::string type() const { return "shock_patch"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbskr_shock_patch_storage"; }
+  virtual std::string is_a() const { return "dbskr_shock_patch_storage"; }
 
   unsigned size() { return patches_.size(); }
 
@@ -50,17 +50,17 @@ public:
   dbskr_shock_patch_sptr get_patch(unsigned i) { return patches_[i]; }
 
   //: get the shock matching correspondence
-  vcl_vector<dbskr_shock_patch_sptr>& get_patches(void) { return patches_; }
-  vcl_map<int, dbskr_shock_patch_sptr>& get_map(void) { return id_sptr_map_; }
+  std::vector<dbskr_shock_patch_sptr>& get_patches(void) { return patches_; }
+  std::map<int, dbskr_shock_patch_sptr>& get_map(void) { return id_sptr_map_; }
 
-  bool load_patch_shocks(vcl_string storage_name, vcl_string st_postfix );
-  bool load_patch_shocks_and_create_trees(vcl_string storage_name, vcl_string st_postfix, bool elastic_splice_cost, bool construct_circular_ends, bool combined_edit,
+  bool load_patch_shocks(std::string storage_name, std::string st_postfix );
+  bool load_patch_shocks_and_create_trees(std::string storage_name, std::string st_postfix, bool elastic_splice_cost, bool construct_circular_ends, bool combined_edit,
                                     float scurve_sample_ds, float scurve_interp_ds);
 
   void set_tree_params_for_matching(bool elastic_splice_cost, bool construct_circular_ends, bool combined_edit,
                                     float scurve_sample_ds, float scurve_interp_ds);
 
-  bool create_ps_images(vil_image_resource_sptr background_img, vcl_string filename_base, bool outer_poly, vil_rgb<int>& color);
+  bool create_ps_images(vil_image_resource_sptr background_img, std::string filename_base, bool outer_poly, vil_rgb<int>& color);
 
   
   //-----------------------
@@ -71,7 +71,7 @@ public:
   virtual unsigned version() const {return 1;}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
   //: Binary save self to stream.
@@ -84,8 +84,8 @@ public:
 
 private:
 
-  vcl_vector<dbskr_shock_patch_sptr> patches_;
-  vcl_map<int, dbskr_shock_patch_sptr> id_sptr_map_;
+  std::vector<dbskr_shock_patch_sptr> patches_;
+  std::map<int, dbskr_shock_patch_sptr> id_sptr_map_;
 };
 
 //: Create a smart-pointer to a dbskr_shock_match_storage.

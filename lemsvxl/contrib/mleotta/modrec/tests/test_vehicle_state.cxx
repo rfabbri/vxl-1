@@ -12,7 +12,7 @@ void test_vehicle_state()
   modrec_vehicle_state s1(p,r,t,vt,va);
   
   vnl_vector<double> sv = s1.state_vector();
-  vcl_cout << "state = "<<sv<<vcl_endl;
+  std::cout << "state = "<<sv<<std::endl;
   modrec_vehicle_state s2;
   s2.set_state(sv);
   
@@ -45,10 +45,10 @@ void test_state_predict()
     F(5,7) = t;
     double a1 = s1.rotation.as_rodrigues()[2];
     double a2 = a1+s1.a_velocity*t;
-    double s = (s1.a_velocity==0.0) ? vcl_cos(a1) : (vcl_sin(a2)-vcl_sin(a1))/(s1.a_velocity*t);
-    double c = (s1.a_velocity==0.0) ? -vcl_sin(a1) : (vcl_cos(a2)-vcl_cos(a1))/(s1.a_velocity*t);
-    double ds = (s1.a_velocity==0.0) ? -0.5*vcl_sin(a1)*t : (vcl_cos(a2)-s)/s1.a_velocity;
-    double dc = (s1.a_velocity==0.0) ? -0.5*vcl_cos(a1)*t : (-vcl_sin(a2)-c)/s1.a_velocity;
+    double s = (s1.a_velocity==0.0) ? std::cos(a1) : (std::sin(a2)-std::sin(a1))/(s1.a_velocity*t);
+    double c = (s1.a_velocity==0.0) ? -std::sin(a1) : (std::cos(a2)-std::cos(a1))/(s1.a_velocity*t);
+    double ds = (s1.a_velocity==0.0) ? -0.5*std::sin(a1)*t : (std::cos(a2)-s)/s1.a_velocity;
+    double dc = (s1.a_velocity==0.0) ? -0.5*std::cos(a1)*t : (-std::sin(a2)-c)/s1.a_velocity;
     F(0,5) = s1.t_velocity*t*c;
     F(0,6) = t*s;
     F(0,7) = s1.t_velocity*t*ds;
@@ -56,7 +56,7 @@ void test_state_predict()
     F(1,6) = -t*c;
     F(1,7) = -s1.t_velocity*t*dc;
     
-    vcl_cout << s <<' '<<c<<' '<<ds<<' '<<dc<<vcl_endl;
+    std::cout << s <<' '<<c<<' '<<ds<<' '<<dc<<std::endl;
   }
   vnl_matrix<double> P = F * s1.covar * F.transpose();
   P(2,2) += 0.01;
@@ -68,7 +68,7 @@ void test_state_predict()
   
 
   for(unsigned int i=0; i<10; ++i){
-    vcl_cout << s1.translation.x() <<" "<<s1.translation.y()<<" "<<s1.rotation.as_rodrigues()[2]<<vcl_endl;
+    std::cout << s1.translation.x() <<" "<<s1.translation.y()<<" "<<s1.rotation.as_rodrigues()[2]<<std::endl;
     s1 = modrec_circ_motion_predict(s1,t);
   }
 

@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgel/vgel_kl_params.h>
 #include <vgel/vgel_kl.h>
 #include <vgel/vgel_multi_view_data_vertex_sptr.h>
@@ -29,7 +29,7 @@ public:
   vidpro1_register_images_process();
   ~vidpro1_register_images_process();
 
-  vcl_string name();
+  std::string name();
 
   //: Clone the process
   virtual bpro1_process* clone() const;
@@ -37,8 +37,8 @@ public:
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
@@ -51,10 +51,10 @@ private:
     int ni_;
     int nj_;
 
-    vcl_vector<vnl_matrix<double> > homographies_;
-    vcl_vector<vimt_transform_2d > xforms_;
+    std::vector<vnl_matrix<double> > homographies_;
+    std::vector<vimt_transform_2d > xforms_;
 
-    bool read_homographies(vcl_string filename);
+    bool read_homographies(std::string filename);
 
     //: dimensions for mosaic
     vbl_bounding_box<double,2> box_;
@@ -66,7 +66,7 @@ private:
     int offset_j;
 
 
-    vcl_string outfilename;
+    std::string outfilename;
 
 
 

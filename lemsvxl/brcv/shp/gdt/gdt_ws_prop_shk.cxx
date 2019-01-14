@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <gdt/gdt_manager.h>
 #include <gdt/gdt_solve_intersect.h>
@@ -165,7 +165,7 @@ void gdt_ws_manager::intersect_Sl_Sr (gdt_shock* Sl, const gdt_welm* Wc, gdt_sho
     
     #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cerr, " Possible intersect. Sl %d Sl %d at %f (WC %d), tauL %.3f, tauR %.3f.\n",
+      vul_printf (std::cerr, " Possible intersect. Sl %d Sl %d at %f (WC %d), tauL %.3f, tauR %.3f.\n",
                   Sl->id(), Sr->id(), simtime, Wc->edge()->id(), tauL, tauR);
     #endif
   }
@@ -261,7 +261,7 @@ void gdt_ws_manager::update_S_to_prjE (gdt_shock* S)
   if (S->prjE()) {
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, " Update S %d (v %d) to prjE %d tauE %.3f, endtime %f.\n", 
+      vul_printf (std::cerr, " Update S %d (v %d) to prjE %d tauE %.3f, endtime %f.\n", 
                    S->id(), S->Snode()->id(), S->prjE()->id(), S->tauE(), S->endT());
     #endif
 
@@ -271,7 +271,7 @@ void gdt_ws_manager::update_S_to_prjE (gdt_shock* S)
   else {
     #if GDT_DEBUG_MSG
     if (n_verbose_>3)
-      vul_printf (vcl_cerr, " Update S %d (v %d) to infinity (NULL prjE).\n", 
+      vul_printf (std::cerr, " Update S %d (v %d) to infinity (NULL prjE).\n", 
                    S->id(), S->Snode()->id());
     #endif
     assert (S->edgeT() == GDT_HUGE);
@@ -291,39 +291,39 @@ void gdt_ws_manager::update_Sl_Sr_to_intersection (gdt_shock* Sl, const gdt_welm
     char lstring[64], rstring[64];
 
     if (Sl->b2() == 0)
-      vcl_sprintf (lstring, "contact");
+      std::sprintf (lstring, "contact");
     else if (Sl->a() == 0)
-      vcl_sprintf (lstring, "line");
+      std::sprintf (lstring, "line");
     else
-      vcl_sprintf (lstring, "hypb");
+      std::sprintf (lstring, "hypb");
 
     if (Sr->b2() == 0)
-      vcl_sprintf (rstring, "contact");
+      std::sprintf (rstring, "contact");
     else if (Sr->a() == 0)
-      vcl_sprintf (rstring, "line");
+      std::sprintf (rstring, "line");
     else
-      vcl_sprintf (rstring, "hypb");
+      std::sprintf (rstring, "hypb");
 
-    vul_printf (vcl_cerr, "\n Update Sl %d (%s) and Sr %d (%s) to intersection:\n",
+    vul_printf (std::cerr, "\n Update Sl %d (%s) and Sr %d (%s) to intersection:\n",
                  Sl->id(), lstring, Sr->id(), rstring);
-    vul_printf (vcl_cerr, "    tauL %.3f, tauR %.3f, simtime %f.\n", 
+    vul_printf (std::cerr, "    tauL %.3f, tauR %.3f, simtime %f.\n", 
                  tauL, tauR, simtime);
 
     gdt_welm* leftW = Sl->otherW (Wc);
     gdt_welm* rightW = Sr->otherW (Wc);
     if (leftW->_is_RF())
-      vcl_sprintf (lstring, "NULL");
+      std::sprintf (lstring, "NULL");
     else
-      vcl_sprintf (lstring, "%d (%.3f, %.3f)",
+      std::sprintf (lstring, "%d (%.3f, %.3f)",
                   leftW->edge()->id(), leftW->stau(), leftW->etau());
     
     if (rightW->_is_RF())
-      vcl_sprintf (rstring, "NULL");
+      std::sprintf (rstring, "NULL");
     else
-      vcl_sprintf (rstring, "%d (%.3f, %.3f)",
+      std::sprintf (rstring, "%d (%.3f, %.3f)",
                   rightW->edge()->id(), rightW->stau(), rightW->etau());
 
-    vul_printf (vcl_cerr, "  leftW %s, midI %d (%.3f, %.3f), rightW %s.\n",
+    vul_printf (std::cerr, "  leftW %s, midI %d (%.3f, %.3f), rightW %s.\n",
                 lstring,
                 Wc->edge()->id(), Wc->stau(), Wc->etau(),
                 rstring);

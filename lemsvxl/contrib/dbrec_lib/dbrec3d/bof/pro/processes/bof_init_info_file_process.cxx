@@ -24,11 +24,11 @@ bool bof_init_info_file_process_cons(bprb_func_process& pro)
 {
   using namespace bof_init_info_file_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; // path to pca_global_info/taylor_global_info file
-  input_types_[1] = "vcl_string"; // bof_info file
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; // path to pca_global_info/taylor_global_info file
+  input_types_[1] = vcl_string"; // bof_info file
 
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -40,8 +40,8 @@ bool bof_init_info_file_process(bprb_func_process& pro)
   using namespace bof_init_info_file_process_globals;
   
   //get inputs
-  vcl_string info_dir = pro.get_input<vcl_string>(0);
-  vcl_string bof_file = pro.get_input<vcl_string>(1);
+  std::string info_dir = pro.get_input<std::string>(0);
+  std::string bof_file = pro.get_input<std::string>(1);
 
   bof_info(info_dir, bof_file);  
   

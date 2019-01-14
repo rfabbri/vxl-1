@@ -39,7 +39,7 @@
 dbsksp_shock_snake_process::
 dbsksp_shock_snake_process()
 {
-  vcl_vector<vcl_string > param_type_choices;
+  std::vector<std::string > param_type_choices;
   param_type_choices.push_back("Extrinsic");
   param_type_choices.push_back("Intrinsic");
   param_type_choices.push_back("Both extrinsic and intrinsic");
@@ -47,7 +47,7 @@ dbsksp_shock_snake_process()
   param_type_choices.push_back("One active edge - 3 params");
   param_type_choices.push_back("Two active edges");
 
-  vcl_vector<vcl_string > energy_type_choices;
+  std::vector<std::string > energy_type_choices;
   energy_type_choices.push_back("With alignment");
   energy_type_choices.push_back("Without alignment");
 
@@ -63,7 +63,7 @@ dbsksp_shock_snake_process()
     !parameters()->add( "Internal-external energy ration: " , "-lambda" , 1.0f )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -83,17 +83,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsksp_shock_snake_process::
+std::string dbsksp_shock_snake_process::
 name()
 { 
   return "Shock snake"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsksp_shock_snake_process::
+std::vector< std::string > dbsksp_shock_snake_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "dbsksp_shock" );
   to_return.push_back( "image" );
   return to_return;
@@ -101,10 +101,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsksp_shock_snake_process::
+std::vector< std::string > dbsksp_shock_snake_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.clear();
   return to_return;
 }
@@ -129,8 +129,8 @@ bool dbsksp_shock_snake_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsksp_shock_snake_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsksp_shock_snake_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -278,9 +278,9 @@ execute()
     powell_minimizer.set_initial_step(init_step);
     powell_minimizer.set_linmin_xtol(linmin_xtol);
     powell_minimizer.minimize(x);
-    vcl_cout << "Start error = " << powell_minimizer.get_start_error() << vcl_endl;
-    vcl_cout << "End error = " << powell_minimizer.get_end_error() << vcl_endl;
-    vcl_cout << "Failure code = " << powell_minimizer.get_failure_code() << vcl_endl;
+    std::cout << "Start error = " << powell_minimizer.get_start_error() << std::endl;
+    std::cout << "End error = " << powell_minimizer.get_end_error() << std::endl;
+    std::cout << "Failure code = " << powell_minimizer.get_failure_code() << std::endl;
 
 
     //// non-linear minimizer
@@ -301,20 +301,20 @@ execute()
   }
   else if (param_type == 3 || param_type == 4)
   {
-    vcl_cout << "Snake on active edge";
+    std::cout << "Snake on active edge";
     
     dbsksp_shock_edge_sptr e = sksp_storage->active_edge();
     dbsksp_shock_node_sptr v = sksp_storage->active_node();
 
     if (!e || !v) 
     {
-      vcl_cerr << "ERROR: No active edge or node found. " << vcl_endl;
+      std::cerr << "ERROR: No active edge or node found. " << std::endl;
       return false;
     }
 
     if (v != e->source() && v != e->target()) 
     {
-      vcl_cerr << "ERROR: Active edge is not incident to active node.\n";
+      std::cerr << "ERROR: Active edge is not incident to active node.\n";
       return false;
     }
     
@@ -355,9 +355,9 @@ execute()
       ///////////////////////////////////////////////////
       
       
-      vcl_cout << "Start error = " << powell_minimizer.get_start_error() << vcl_endl;
-      vcl_cout << "End error = " << powell_minimizer.get_end_error() << vcl_endl;
-      vcl_cout << "Failure code = " << powell_minimizer.get_failure_code() << vcl_endl;
+      std::cout << "Start error = " << powell_minimizer.get_start_error() << std::endl;
+      std::cout << "End error = " << powell_minimizer.get_end_error() << std::endl;
+      std::cout << "Failure code = " << powell_minimizer.get_failure_code() << std::endl;
 
       // update the shape with the new shapelet params
       sksp_storage->set_active_shapelet(shapelet_cost.get_shapelet(x));
@@ -405,9 +405,9 @@ execute()
         ///////////////////////////////////////////////////
         
         
-        vcl_cout << "Start error = " << powell_minimizer.get_start_error() << vcl_endl;
-        vcl_cout << "End error = " << powell_minimizer.get_end_error() << vcl_endl;
-        vcl_cout << "Failure code = " << powell_minimizer.get_failure_code() << vcl_endl;
+        std::cout << "Start error = " << powell_minimizer.get_start_error() << std::endl;
+        std::cout << "End error = " << powell_minimizer.get_end_error() << std::endl;
+        std::cout << "Failure code = " << powell_minimizer.get_failure_code() << std::endl;
 
         dbsksp_shapelet_sptr sub_optim_shapelet = shapelet_cost.get_shapelet(x);
         // compute boundary length of this shapelet
@@ -417,7 +417,7 @@ execute()
           total_length += sub_optim_shapelet->bnd_arc(i).length();        
         }
 
-        //double sub_optim_cost = powell_minimizer.get_end_error() / (total_length * vcl_sqrt(t));
+        //double sub_optim_cost = powell_minimizer.get_end_error() / (total_length * std::sqrt(t));
         double sub_optim_cost = powell_minimizer.get_end_error() / (total_length);
 
         if ( sub_optim_cost < min_cost)
@@ -444,7 +444,7 @@ execute()
   }
   else if (param_type == 5)
   {
-    vcl_cout << "Snake on two shapelet";
+    std::cout << "Snake on two shapelet";
     
     dbsksp_shock_edge_sptr e0 = sksp_storage->edge0();
     dbsksp_shock_edge_sptr e1 = sksp_storage->edge1();
@@ -453,7 +453,7 @@ execute()
     dbsksp_twoshapelet_sptr twoshapelet = this->form_twoshapelet(e0, e1, v0);
     if (twoshapelet == 0)
     {
-      vcl_cout << "ERROR: Could not form two shapelet from the two edges;";
+      std::cout << "ERROR: Could not form two shapelet from the two edges;";
       return false;
     }
 
@@ -464,7 +464,7 @@ execute()
     // initial parameter !!!!!!
     vnl_vector<double > x_init = twoshapelet_cost.get_free_params(twoshapelet);
     
-    vcl_cout << "Starting cost = " << twoshapelet_cost.f(x_init) << vcl_endl;
+    std::cout << "Starting cost = " << twoshapelet_cost.f(x_init) << std::endl;
 
     // structure of free variables 'x'
     //double m0_;
@@ -506,7 +506,7 @@ execute()
     vpdfl_sampler_base* p_sampler = pdf.new_sampler();
 
     // Generate lots of samples
-    vcl_vector<vnl_vector<double> > data(n_samples);
+    std::vector<vnl_vector<double> > data(n_samples);
     for (int i=0;i<n_samples;++i)
       p_sampler->sample(data[i]);
 
@@ -542,7 +542,7 @@ execute()
     ///////////////////////////////////////////////////
 
     // update the shape with the new twoshapelet params
-    vcl_cout << "Min cost = " << twoshapelet_cost.f(x) << vcl_endl;
+    std::cout << "Min cost = " << twoshapelet_cost.f(x) << std::endl;
 
     dbsksp_twoshapelet_sptr final = twoshapelet_cost.get_twoshapelet(x);
 
@@ -560,7 +560,7 @@ execute()
 
   else
   {
-    vcl_cout << "Unknown option";
+    std::cout << "Unknown option";
     return false;
   }
 

@@ -29,7 +29,7 @@ class bvis_view_tableau : public vgui_tableau
   ~bvis_view_tableau();
 
   //: Returns the type of tableau ('bvis_view_tableau').
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //: Access the selector tableau
   bvis_proc_selector_tableau_sptr selector() const;

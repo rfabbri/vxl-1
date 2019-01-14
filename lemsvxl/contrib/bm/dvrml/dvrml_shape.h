@@ -16,9 +16,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_cassert.h>
-#include<vcl_ostream.h>
-#include<vcl_string.h>
+#include<cassert>
+#include<ostream>
+#include<string>
 
 #include<vgl/vgl_point_3d.h>
 
@@ -36,9 +36,9 @@ public:
 
     ~dvrml_shape(){}
 
-    virtual void draw( vcl_ostream& os ) = 0;
+    virtual void draw( std::ostream& os ) = 0;
 
-    virtual vcl_string shape() = 0;
+    virtual std::string shape() = 0;
 
     vgl_point_3d<double> center;
     dvrml_appearance_sptr appearance_sptr;

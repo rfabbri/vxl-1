@@ -37,7 +37,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
   //: handle events
 
   bool handle( const vgui_event & e, const bvis_view_tableau_sptr& view );
@@ -51,14 +51,14 @@ protected:
   vidpro_vsol2D_storage_sptr storage_;
   bool active;
   int current_id_;
-  vcl_string curvetype;
+  std::string curvetype;
 
   float last_x;
   float last_y;
   
-  vcl_map<int, vcl_map<vcl_string, vcl_vector<vsol_spatial_object_2d_sptr> > > curves_selected_;
-  vcl_vector<vgui_soview*> background_curves_;
-  vcl_vector<int> selected_ids;
+  std::map<int, std::map<std::string, std::vector<vsol_spatial_object_2d_sptr> > > curves_selected_;
+  std::vector<vgui_soview*> background_curves_;
+  std::vector<int> selected_ids;
   vgui_event_condition gesture_prune_;
   vgui_event_condition gesture0;   
   vgui_event_condition gesture1;

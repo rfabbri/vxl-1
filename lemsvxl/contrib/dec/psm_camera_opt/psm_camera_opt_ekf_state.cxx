@@ -50,11 +50,11 @@ void psm_camera_opt_ekf_state::set_error_covariance(double center_var, double ro
 
 
 //: output description of state to stream.
-vcl_ostream& operator << (vcl_ostream& os, psm_camera_opt_ekf_state const& ekf_state)
+std::ostream& operator << (std::ostream& os, psm_camera_opt_ekf_state const& ekf_state)
 {
-  os << "k = " << ekf_state.k_ << vcl_endl;
-  os << "Pk = " << ekf_state.Pk_ << vcl_endl;
-  os << "xk = " << ekf_state.xk_ << vcl_endl;
+  os << "k = " << ekf_state.k_ << std::endl;
+  os << "Pk = " << ekf_state.Pk_ << std::endl;
+  os << "xk = " << ekf_state.xk_ << std::endl;
   return os;
 }
 

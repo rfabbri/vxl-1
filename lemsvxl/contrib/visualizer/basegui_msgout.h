@@ -25,7 +25,7 @@ extern MESSAGE_OPTION MessageOption;
 //=======================================
 #else
 //========= VISUALIZER CMDLINE ==========
-#include <vcl_iostream.h>
+#include <iostream>
 #define COUT cout
 #define MSGOUT(x) cout.flush();
 //=======================================

@@ -14,7 +14,7 @@
 // \endverbatim
 #include"dsm_utilities.h"
 
-#include<vcl_map.h>
+#include<map>
 
 #include<vbl/vbl_ref_count.h>
 
@@ -27,27 +27,27 @@ class dsm_target_neighborhood_map: public vbl_ref_count
 {
 public:
 
-	typedef vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > 
+	typedef std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> > 
 		dsm_target_neighborhood_map_type;
 
 	dsm_target_neighborhood_map(){}
 
 	~dsm_target_neighborhood_map(){}
 
-	dsm_target_neighborhood_map( vgl_point_2d<unsigned> const& target, vcl_vector<vgl_point_2d<unsigned> > const& neighborhood )
+	dsm_target_neighborhood_map( vgl_point_2d<unsigned> const& target, std::vector<vgl_point_2d<unsigned> > const& neighborhood )
 	{ this->target_neighborhood_map_[target] = neighborhood; }
 
 	unsigned num_neighbors() const;
 	
 	//mutators
-	void insert(vgl_point_2d<unsigned> const& target, vcl_vector<vgl_point_2d<unsigned> > const& neighborhood);
+	void insert(vgl_point_2d<unsigned> const& target, std::vector<vgl_point_2d<unsigned> > const& neighborhood);
 
 	dsm_target_neighborhood_map_type::iterator neighborhood( vgl_point_2d<unsigned> const& target );
 
 	dsm_target_neighborhood_map_type::iterator neighborhood( unsigned const& x, unsigned const& y);
 
 	//i/o
-	bool write_txt( vcl_string const& filename) const;
+	bool write_txt( std::string const& filename) const;
 
 	void b_write(vsl_b_ostream& os) const;
 

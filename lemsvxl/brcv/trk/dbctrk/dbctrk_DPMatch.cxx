@@ -1,8 +1,8 @@
 #include <dbctrk/dbctrk_DPMatch.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_cmath.h> // for sqrt() and fabs()
-#include <vcl_algorithm.h> // for max(int,int)
+#include <iostream>
+#include <cstdio>
+#include <cmath> // for sqrt() and fabs()
+#include <algorithm> // for max(int,int)
 #include <vnl/vnl_double_2.h>
 #include <vnl/vnl_double_2x2.h>
 #include <vnl/algo/vnl_svd.h>
@@ -19,10 +19,10 @@ dbctrk_DPMatch::dbctrk_DPMatch()
 #if 0 // these are automatically initialised by the compiler
   curve1_ = Curve();
   curve2_ = Curve();
-  cost_ = vcl_vector<vcl_vector<double> >();
-  map_ = vcl_vector<vcl_vector<vcl_pair<int,int> > >();
-  finalMap_ = vcl_vector<vcl_pair<int,int> >();
-  finalMapCost_ = vcl_vector<double>();
+  cost_ = std::vector<std::vector<double> >();
+  map_ = std::vector<std::vector<std::pair<int,int> > >();
+  finalMap_ = std::vector<std::pair<int,int> >();
+  finalMapCost_ = std::vector<double>();
 #endif // 0
   finalCost_ = 0;
   m_ = 0;
@@ -34,17 +34,17 @@ dbctrk_DPMatch::dbctrk_DPMatch()
   zeta=0;
   Lchoice=1;
 }
-void dbctrk_DPMatch::detect_tail(vcl_vector<int> &tail1 , vcl_vector<int> &tail2)
+void dbctrk_DPMatch::detect_tail(std::vector<int> &tail1 , std::vector<int> &tail2)
 {
   int start1,start2;
   int end1,end2;
   tail2.clear();
   tail1.clear();
-  vcl_vector<int> tail_start;
-  vcl_vector<int> tail_end;
+  std::vector<int> tail_start;
+  std::vector<int> tail_end;
 
-  vcl_vector<int> tail_start1;
-  vcl_vector<int> tail_end1;
+  std::vector<int> tail_start1;
+  std::vector<int> tail_end1;
 
   start1=finalMap_[0].first;
   start2=finalMap_[0].second;
@@ -118,7 +118,7 @@ void dbctrk_DPMatch::detect_tail(vcl_vector<int> &tail1 , vcl_vector<int> &tail2
   s2=tail_start1.size();
   e2-=tail_end1.size();
   if(e2>0)
-  matched_len2=vcl_fabs(curve2_.arcLength(e2)-curve2_.arcLength(s2));
+  matched_len2=std::fabs(curve2_.arcLength(e2)-curve2_.arcLength(s2));
 
   if (ratio1>0 && ratio1>ratio2)
   {
@@ -139,23 +139,23 @@ double dbctrk_DPMatch::normfinalCost()
 {   
    double alpha =0;
   double R=0;
-  //vcl_cout<<"\n cost ="<<finalCost_<<" the lengths are "<<(double)matched_len1<<" "<<(double)matched_len2;
+  //std::cout<<"\n cost ="<<finalCost_<<" the lengths are "<<(double)matched_len1<<" "<<(double)matched_len2;
   if(curve1_.Tcurvature()>=curve2_.Tcurvature())
       alpha=curve2_.Tcurvature();
   if(curve1_.Tcurvature()<curve2_.Tcurvature())
       alpha=curve1_.Tcurvature();
   
-  //vcl_cout<<"\n the matching cost is "<<finalCost_;
-  //vcl_cout<<"\n the average len is "<<((double)matched_len1+(double)matched_len2)/2;
+  //std::cout<<"\n the matching cost is "<<finalCost_;
+  //std::cout<<"\n the average len is "<<((double)matched_len1+(double)matched_len2)/2;
 
   //return finalCost_/(((1+R*alpha)*((double)matched_len1+(double)matched_len2))/2);
   return finalCost_/(curve1_.length()+curve2_.length())/2;
 
 }
 
-vcl_map <int,int> dbctrk_DPMatch::refine_mapping()
+std::map <int,int> dbctrk_DPMatch::refine_mapping()
 {
-    vcl_map<int,int> one_to_one;
+    std::map<int,int> one_to_one;
   int hist1=0;
   int hist2=0;
 
@@ -182,8 +182,8 @@ vcl_map <int,int> dbctrk_DPMatch::refine_mapping()
 
 double dbctrk_DPMatch::euclidean_distance(vnl_matrix<double> R,vnl_matrix<double> T,double /* scale */)
 {
-  vcl_map<int,int>:: iterator iter1;
-  vcl_vector<double> x1,y1,x2,y2,x1t,y1t;
+  std::map<int,int>:: iterator iter1;
+  std::vector<double> x1,y1,x2,y2,x1t,y1t;
   double xcen1=0,xcen2=0,ycen1=0,ycen2=0;
   double H[2]={0,0};
   for (iter1 = alignment.begin(); iter1!=alignment.end(); iter1++)
@@ -222,7 +222,7 @@ double dbctrk_DPMatch::euclidean_distance(vnl_matrix<double> R,vnl_matrix<double
     vnl_matrix<double> X (H, 2, 1);
     vnl_matrix<double> Xt=R*X+T;
 
-    dist+=vcl_sqrt((Xt(0,0)+xcen1-x2[i]-xcen2)*(Xt(0,0)+xcen1-x2[i]-xcen2)+
+    dist+=std::sqrt((Xt(0,0)+xcen1-x2[i]-xcen2)*(Xt(0,0)+xcen1-x2[i]-xcen2)+
                    (Xt(1,0)+ycen1-y2[i]-ycen2)*(Xt(1,0)+ycen1-y2[i]-ycen2));
   }
 
@@ -242,10 +242,10 @@ dbctrk_DPMatch::dbctrk_DPMatch(Curve &c1, Curve &c2)
   m_=curve2_.numPoints();
   for (int n=0;n<n_;n++)
   {
-    vcl_vector<double> tmp1(m_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(m_,DP_VERY_LARGE_COST);
     cost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector<vcl_pair <int,int> > tmp2(m_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector<std::pair <int,int> > tmp2(m_,tmp3);
     map_.push_back(tmp2);
   }
   finalMap_.clear();
@@ -303,10 +303,10 @@ dbctrk_DPMatch::dbctrk_DPMatch(Curve &c1, Curve &c2,vgl_point_2d<double> & e)
   m_=curve2_.numPoints();
   for (int n=0;n<n_;n++)
   {
-    vcl_vector<double> tmp1(m_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(m_,DP_VERY_LARGE_COST);
     cost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector<vcl_pair <int,int> > tmp2(m_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector<std::pair <int,int> > tmp2(m_,tmp3);
     map_.push_back(tmp2);
   }
   finalMap_.clear();
@@ -341,10 +341,10 @@ dbctrk_DPMatch::dbctrk_DPMatch(Curve &c1, Curve &c2,FMatrix F)
   m_=curve2_.numPoints();
   for (int n=0;n<n_;n++)
   {
-    vcl_vector<double> tmp1(m_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(m_,DP_VERY_LARGE_COST);
     cost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector<vcl_pair <int,int> > tmp2(m_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector<std::pair <int,int> > tmp2(m_,tmp3);
     map_.push_back(tmp2);
   }
   finalMap_.clear();
@@ -358,13 +358,13 @@ dbctrk_DPMatch::dbctrk_DPMatch(Curve &c1, Curve &c2,FMatrix F)
   backward=false;
   delta=1;
   F_.set(F);
-  //vcl_cout<<F_.get(0,0)<<" "<<F_.get(0,1)<<" "<<F_.get(0,2)<<"\n";
-  //vcl_cout<<F_.get(1,0)<<" "<<F_.get(1,1)<<" "<<F_.get(1,2)<<"\n";
-  //vcl_cout<<F_.get(2,0)<<" "<<F_.get(2,1)<<" "<<F_.get(2,2)<<"\n";
+  //std::cout<<F_.get(0,0)<<" "<<F_.get(0,1)<<" "<<F_.get(0,2)<<"\n";
+  //std::cout<<F_.get(1,0)<<" "<<F_.get(1,1)<<" "<<F_.get(1,2)<<"\n";
+  //std::cout<<F_.get(2,0)<<" "<<F_.get(2,1)<<" "<<F_.get(2,2)<<"\n";
 }
 
-dbctrk_DPMatch::dbctrk_DPMatch(vcl_vector<vcl_pair<double,double> > v1,
-                  vcl_vector<vcl_pair<double,double> > v2,
+dbctrk_DPMatch::dbctrk_DPMatch(std::vector<std::pair<double,double> > v1,
+                  std::vector<std::pair<double,double> > v2,
                  vnl_double_2 & e)
 
 {
@@ -376,10 +376,10 @@ dbctrk_DPMatch::dbctrk_DPMatch(vcl_vector<vcl_pair<double,double> > v1,
   m_=curve2_.numPoints();
   for (int n=0;n<n_;n++)
   {
-    vcl_vector<double> tmp1(m_,DP_VERY_LARGE_COST);
+    std::vector<double> tmp1(m_,DP_VERY_LARGE_COST);
     cost_.push_back(tmp1);
-    vcl_pair <int,int> tmp3(0,0);
-    vcl_vector<vcl_pair <int,int> > tmp2(m_,tmp3);
+    std::pair <int,int> tmp3(0,0);
+    std::vector<std::pair <int,int> > tmp2(m_,tmp3);
     map_.push_back(tmp2);
   }
   finalMap_.clear();
@@ -399,12 +399,12 @@ Lchoice=1;
 
 void dbctrk_DPMatch::printCost()
 {
-  vcl_cout << "Cost Matrix\n";
+  std::cout << "Cost Matrix\n";
   for (int i = 0; i<n_; i++)
   {
     for (int j = 0; j<m_; j++)
-      vcl_printf(" %6.3f",cost_[i][j]);
-    vcl_printf("\n");
+      std::printf(" %6.3f",cost_[i][j]);
+    std::printf("\n");
   }
 }
 
@@ -427,15 +427,15 @@ else
 
 double dbctrk_DPMatch::transformed_euclidean_distance()
 {
-  vcl_vector<double> x1,y1,x2,y2;
+  std::vector<double> x1,y1,x2,y2;
   alignment=refine_mapping();
   for(unsigned i=0;i<finalMap_.size();i++)
   {
   alignment[finalMap_[i].first]=finalMap_[i].second;
   }
   // get the points from refined mapping
-  vcl_vector<vgl_homg_point_2d<double> > p1, p2;
-  for (vcl_map<int,int>::iterator iter=alignment.begin();iter!=alignment.end();iter++)
+  std::vector<vgl_homg_point_2d<double> > p1, p2;
+  for (std::map<int,int>::iterator iter=alignment.begin();iter!=alignment.end();iter++)
   {
     x1.push_back(curve1_.x((*iter).first));
     x2.push_back(curve2_.x((*iter).second));
@@ -482,7 +482,7 @@ double dbctrk_DPMatch::transformed_euclidean_distance()
   }
 #if 0
   HMatrix2D Tfn=HMatrix2DAffineCompute::compute(p1,p2);
-  vcl_cout<<'\n'<<Tfn.get(0,0)<<'\t'<<Tfn.get(0,1)<<'\t'<<Tfn.get(0,2)
+  std::cout<<'\n'<<Tfn.get(0,0)<<'\t'<<Tfn.get(0,1)<<'\t'<<Tfn.get(0,2)
           <<'\n'<<Tfn.get(1,0)<<'\t'<<Tfn.get(1,1)<<'\t'<<Tfn.get(1,2)
           <<'\n'<<Tfn.get(2,0)<<'\t'<<Tfn.get(2,1)<<'\t'<<Tfn.get(2,2);
 #endif // 0
@@ -506,7 +506,7 @@ double dbctrk_DPMatch::transformed_euclidean_distance()
   V=svd.V();
   Ut=U.transpose();
   R=V*Ut;
-  double tx=0,ty=0; // double theta=vcl_acos(R(0,0));
+  double tx=0,ty=0; // double theta=std::acos(R(0,0));
   double center1[2]={x1_centroid,y1_centroid};
   double center2[2]={x2_centroid,y2_centroid};
 
@@ -576,7 +576,7 @@ void dbctrk_DPMatch::computeDPCosts(bool reverse)
 
   //      for (int sum = 2; sum<n_+m_; ++sum)
   //      {
-  //          int start=vcl_max(0,sum-m_);
+  //          int start=std::max(0,sum-m_);
   //          for (int i=start; i<n_ && i<sum; ++i)
   //          {
   //              int j=sum-i-1;
@@ -609,7 +609,7 @@ void dbctrk_DPMatch::computeDPCosts(bool reverse)
 
     for (int sum = 2; sum<n_+m_; ++sum)
     {
-        int start=vcl_max(0,sum-m_);
+        int start=std::max(0,sum-m_);
         for (int i=start; i<n_ && i<sum; ++i)
         {
             int j=sum-i-1;
@@ -646,7 +646,7 @@ void dbctrk_DPMatch::computeDPCosts(bool reverse)
 
     for (int sum = 2; sum<n_+m_; ++sum)
     {
-        int start=vcl_max(0,sum-m_);
+        int start=std::max(0,sum-m_);
         for (int i=start; i<n_ && i<sum; ++i)
         {
             int j=sum-i-1;
@@ -683,12 +683,12 @@ void dbctrk_DPMatch::computeDPCosts()
   
   for (int sum = 2; sum<n_+m_; ++sum)
   {
-    int start=vcl_max(0,sum-m_);
+    int start=std::max(0,sum-m_);
     for (int i=start; i<n_ && i<sum; ++i)
       {
   int j=sum-i-1;
   
-  //vcl_cout<<"\n"<<n_-1-i<<"\t"<<j;
+  //std::cout<<"\n"<<n_-1-i<<"\t"<<j;
   for (int k=0;k<9;k++)
     {
       int ip=i+XOFFSET[k];
@@ -714,8 +714,8 @@ void dbctrk_DPMatch::computeDPCosts()
 
 void dbctrk_DPMatch::init()
 {
- vcl_vector<vgl_point_2d<double> > points1;
- vcl_vector<vgl_point_2d<double> > points2;
+ std::vector<vgl_point_2d<double> > points1;
+ std::vector<vgl_point_2d<double> > points2;
  vgl_point_2d<double> temp;
 
  for (int i=0;i<curve1_.numPoints();i++)
@@ -760,11 +760,11 @@ double dbctrk_DPMatch::computeEpipolarCost(int i, int /* ip */, int j, int /* jp
       else
       {
         double m=(p1.x()-p2.x())/(p2.y()-p1.y());
-        p1pos.set(p1.x()+sig_point*m/vcl_sqrt(m*m+1),p1.y()+sig_point/vcl_sqrt(m*m+1));
-        p1neg.set(p1.x()-sig_point*m/vcl_sqrt(m*m+1),p1.y()+sig_point/vcl_sqrt(m*m+1));
+        p1pos.set(p1.x()+sig_point*m/std::sqrt(m*m+1),p1.y()+sig_point/std::sqrt(m*m+1));
+        p1neg.set(p1.x()-sig_point*m/std::sqrt(m*m+1),p1.y()+sig_point/std::sqrt(m*m+1));
 
-        p2pos.set(p2.x()+sig_point*m/vcl_sqrt(m*m+1),p2.y()+sig_point/vcl_sqrt(m*m+1));
-        p2neg.set(p2.x()-sig_point*m/vcl_sqrt(m*m+1),p2.y()+sig_point/vcl_sqrt(m*m+1));
+        p2pos.set(p2.x()+sig_point*m/std::sqrt(m*m+1),p2.y()+sig_point/std::sqrt(m*m+1));
+        p2neg.set(p2.x()-sig_point*m/std::sqrt(m*m+1),p2.y()+sig_point/std::sqrt(m*m+1));
       }
       vgl_line_2d<double> l1(p1,p2);
       double dist1,dist2;
@@ -785,7 +785,7 @@ double dbctrk_DPMatch::computeEpipolarCost(int i, int /* ip */, int j, int /* jp
       vgl_homg_line_2d<double> hl1(l1);
       double dist=vgl_homg_operators_2d<double>::perp_dist_squared (e, hl1);
     if(dist1!=dist2)
-    return dist;///vcl_fabs(dist1+dist2);
+    return dist;///std::fabs(dist1+dist2);
     else
       return 1e3;
     }
@@ -810,14 +810,14 @@ double dbctrk_DPMatch::computeForwardEpipolarCost(int i, int /* ip */, int j, in
 //this variable is not used in the code.  PLEASE FIX!  -MM
   double thetaCurve2=utils::fixAngleMPiPibytwo(curve2_.angle(j));
   double thetaCurve1=utils::fixAngleMPiPibytwo(curve1_.angle(i));
-  double theta2=vcl_fabs(l1.slope_radians()-thetaCurve2);
-  double theta1=vcl_fabs(l1.slope_radians()-thetaCurve2);
+  double theta2=std::fabs(l1.slope_radians()-thetaCurve2);
+  double theta1=std::fabs(l1.slope_radians()-thetaCurve2);
 #endif
-  //dist1=dist1/vcl_sin(theta1);
+  //dist1=dist1/std::sin(theta1);
   
   dist2=vgl_homg_operators_2d<double>::perp_dist_squared (p1, l2);
 
-  //dist2=dist2/vcl_sin(theta2);  
+  //dist2=dist2/std::sin(theta2);  
   }
 
   if(dist1<dist2)
@@ -867,16 +867,16 @@ double dbctrk_DPMatch::ComputeFmatrixCost(int i, int ip, int j, int jp)
 double dbctrk_DPMatch::computeIntensityL1(int i,int ip,int j,int  jp)
 {
  
-      return (eta*(pos*vcl_fabs(I1pos[0][i]-I2pos[0][j])+neg*vcl_fabs(I1neg[0][i]-I2neg[0][j]))+
-        zeta*(pos*vcl_fabs(I1pos[1][i]-I2pos[1][j])+neg*vcl_fabs(I1neg[1][i]-I2neg[1][j]))+
-        theta*(pos*vcl_fabs(I1pos[2][i]-I2pos[2][j])+neg*vcl_fabs(I1neg[2][i]-I2neg[2][j])));
+      return (eta*(pos*std::fabs(I1pos[0][i]-I2pos[0][j])+neg*std::fabs(I1neg[0][i]-I2neg[0][j]))+
+        zeta*(pos*std::fabs(I1pos[1][i]-I2pos[1][j])+neg*std::fabs(I1neg[1][i]-I2neg[1][j]))+
+        theta*(pos*std::fabs(I1pos[2][i]-I2pos[2][j])+neg*std::fabs(I1neg[2][i]-I2neg[2][j])));
 }
 double dbctrk_DPMatch::computeIntensityL2(int i,int ip,int j,int  jp)
 {
-  return pos*vcl_sqrt(eta*(I1pos[0][i]-I2pos[0][j])*(I1pos[0][i]-I2pos[0][j])+
+  return pos*std::sqrt(eta*(I1pos[0][i]-I2pos[0][j])*(I1pos[0][i]-I2pos[0][j])+
       zeta*(I1pos[1][i]-I2pos[1][j])*(I1pos[1][i]-I2pos[1][j])+
       theta*(I1pos[2][i]-I2pos[2][j])*(I1pos[2][i]-I2pos[2][j]))+
-    neg*vcl_sqrt(eta*(I1neg[0][i]-I2neg[0][j])*(I1neg[0][i]-I2neg[0][j])+
+    neg*std::sqrt(eta*(I1neg[0][i]-I2neg[0][j])*(I1neg[0][i]-I2neg[0][j])+
        zeta*(I1neg[1][i]-I2neg[1][j])*(I1neg[1][i]-I2neg[1][j])+
        theta*(I1neg[2][i]-I2neg[2][j])*(I1neg[2][i]-I2neg[2][j]));
     
@@ -884,7 +884,7 @@ double dbctrk_DPMatch::computeIntensityL2(int i,int ip,int j,int  jp)
 }
 double dbctrk_DPMatch::computeIntensityLinf(int i,int ip,int j,int  jp)
 {
-  return vcl_max(vcl_max(eta*(pos*vcl_fabs(I1pos[0][i]-I2pos[0][j])+neg*vcl_fabs(I1neg[0][i]-I2neg[0][j])),zeta*(pos*vcl_fabs(I1pos[1][i]-I2pos[1][j])+neg*vcl_fabs(I1neg[1][i]-I2neg[1][j]))),        theta*(pos*vcl_fabs(I1pos[2][i]-I2pos[2][j])+neg*vcl_fabs(I1neg[2][i]-I2neg[2][j])));
+  return std::max(std::max(eta*(pos*std::fabs(I1pos[0][i]-I2pos[0][j])+neg*std::fabs(I1neg[0][i]-I2neg[0][j])),zeta*(pos*std::fabs(I1pos[1][i]-I2pos[1][j])+neg*std::fabs(I1neg[1][i]-I2neg[1][j]))),        theta*(pos*std::fabs(I1pos[2][i]-I2pos[2][j])+neg*std::fabs(I1neg[2][i]-I2neg[2][j])));
 }
 double dbctrk_DPMatch::computeIntervalCost(int i, int ip, int j, int jp)
 {
@@ -923,10 +923,10 @@ double dE=0;
     dE=computeForwardEpipolarCost(i,ip, j,  jp);
   }
               
-  double dF = vcl_fabs(ds1_ - ds2_);
-  double dK = vcl_fabs(dt1_ - dt2_);
+  double dF = std::fabs(ds1_ - ds2_);
+  double dK = std::fabs(dt1_ - dt2_);
   double cost = alpha*dF + beta*R1_*dK; //+gamma*C*pow(dE,5)/(1+pow(dE,5))+ delta*deltaF+ costI;//C*vcl_
-  //vcl_cout<<"\n cost computed is "<<cost;
+  //std::cout<<"\n cost computed is "<<cost;
   if (ip==0 || jp==0)
     cost*=w;
   if (i==n_-1|| j==m_-1)
@@ -976,10 +976,10 @@ double dE=0;
     dE=computeForwardEpipolarCost(i,ip, j,  jp);
   }
               
-  double dF = vcl_fabs(ds1_ - ds2_);
-  double dK = vcl_fabs(dt1_ - dt2_);
+  double dF = std::fabs(ds1_ - ds2_);
+  double dK = std::fabs(dt1_ - dt2_);
   double cost = alpha*dF + beta*R1_*dK; //+gamma*C*pow(dE,5)/(1+pow(dE,5))+ delta*deltaF+ costI;//C*vcl_
-  //vcl_cout<<"\n cost computed is "<<cost;
+  //std::cout<<"\n cost computed is "<<cost;
   if (ip==0 || jp==0)
     cost*=w;
   if (i==n_-1|| j==m_-1)
@@ -1002,14 +1002,14 @@ void dbctrk_DPMatch::findDPCorrespondence(bool reverse)
   //   int jp=m_-1;
   //   int i=0;
   //   int j=m_-1;
-  //   vcl_pair<int,int> p(ip,jp);
+  //   std::pair<int,int> p(ip,jp);
   //   finalMap_.push_back(p);
   //   finalMapCost_.push_back(cost_[p.first][p.second]);
   //   while (ip > 0 || jp > 0)
   //   {
   //     ip=map_[i][j].first;
   //     jp=map_[i][j].second;
-  //     vcl_pair<int,int> p(ip,jp);
+  //     std::pair<int,int> p(ip,jp);
   //     finalMap_.push_back(p);
   //     finalMapCost_.push_back(cost_[p.first][p.second]);
   //     i=ip;
@@ -1027,7 +1027,7 @@ void dbctrk_DPMatch::findDPCorrespondence(bool reverse)
       int jp=m_-1;
       int i=n_-1;
       int j=m_-1;
-      vcl_pair<int,int> p(ip,jp);
+      std::pair<int,int> p(ip,jp);
       finalMap_.push_back(p);
       finalMapCost_.push_back(cost_[p.first][p.second]);
       while (ip > 0 || jp > 0)
@@ -1036,14 +1036,14 @@ void dbctrk_DPMatch::findDPCorrespondence(bool reverse)
           jp=map_[i][j].second;
 
 #ifdef DEBUG
-          vcl_cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
-              << vcl_sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
+          std::cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
+              << std::sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
               << computeIntervalCost(i,ip,j,jp);
 #endif
 
-          vcl_pair<int,int> p(ip,jp);
+          std::pair<int,int> p(ip,jp);
 
-          finalMap_.push_back(vcl_pair<int,int>(n_-ip-1,jp));
+          finalMap_.push_back(std::pair<int,int>(n_-ip-1,jp));
           finalMapCost_.push_back(cost_[p.first][p.second]);
           i=ip;
           j=jp;
@@ -1061,7 +1061,7 @@ void dbctrk_DPMatch::findDPCorrespondence(bool reverse)
   int jp=m_-1;
   int i=n_-1;
   int j=m_-1;
-  vcl_pair<int,int> p(ip,jp);
+  std::pair<int,int> p(ip,jp);
   finalMap_.push_back(p);
   finalMapCost_.push_back(cost_[p.first][p.second]);
   while (ip > 0 || jp > 0)
@@ -1070,12 +1070,12 @@ void dbctrk_DPMatch::findDPCorrespondence(bool reverse)
     jp=map_[i][j].second;
 
 #ifdef DEBUG
-    vcl_cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
-            << vcl_sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
+    std::cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
+            << std::sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
             << computeIntervalCost(i,ip,j,jp);
 #endif
 
-    vcl_pair<int,int> p(ip,jp);
+    std::pair<int,int> p(ip,jp);
     finalMap_.push_back(p);
     finalMapCost_.push_back(cost_[p.first][p.second]);
     i=ip;
@@ -1096,7 +1096,7 @@ void dbctrk_DPMatch::findDPCorrespondence()
   int jp=m_-1;
   int i=n_-1;
   int j=m_-1;
-  vcl_pair<int,int> p(ip,jp);
+  std::pair<int,int> p(ip,jp);
   finalMap_.push_back(p);
   finalMapCost_.push_back(cost_[p.first][p.second]);
   while (ip > 0 || jp > 0)
@@ -1105,12 +1105,12 @@ void dbctrk_DPMatch::findDPCorrespondence()
     jp=map_[i][j].second;
 
 #ifdef DEBUG
-    vcl_cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
-            << vcl_sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
+    std::cout<< '\n' << i << '\t' << ip << '\t' << j << '\t' << jp << '\t'
+            << std::sqrt(computeEpipolarCost2(i,ip, j,  jp)) << '\t'
             << computeIntervalCost(i,ip,j,jp);
 #endif
 
-    vcl_pair<int,int> p(ip,jp);
+    std::pair<int,int> p(ip,jp);
     finalMap_.push_back(p);
     finalMapCost_.push_back(cost_[p.first][p.second]);
     i=ip;
@@ -1130,17 +1130,17 @@ void dbctrk_DPMatch::findDPCorrespondence(int n, int m)
   int jp=m;
   int i=n;
   int j=m;
-  vcl_pair<int,int> p1;
-  vcl_pair<int,int> p(ip,jp);
+  std::pair<int,int> p1;
+  std::pair<int,int> p(ip,jp);
   p1=p;
-  vcl_vector<double> pt;
+  std::vector<double> pt;
   finalMap_.push_back(p);
   finalMapCost_.push_back(cost_[p.first][p.second]);
   while (ip > 0 || jp > 0)
   {
     ip=map_[i][j].first;
     jp=map_[i][j].second;
-    vcl_pair <int,int> p(ip,jp);
+    std::pair <int,int> p(ip,jp);
     computeIntervalCost(p1.first,p1.second, p.first,p.second);
 
     finalMap_.push_back(p);
@@ -1152,7 +1152,7 @@ void dbctrk_DPMatch::findDPCorrespondence(int n, int m)
 
 void dbctrk_DPMatch::findEndPoint()
 {
-  vcl_cout << "In DP Endpoint\n";
+  std::cout << "In DP Endpoint\n";
 
   finalCost_=1E10;
   int endIndex = -1;
@@ -1160,7 +1160,7 @@ void dbctrk_DPMatch::findEndPoint()
   {
     if (cost_[n_-1][i] < finalCost_)
     {
-      vcl_cout << finalCost_ << ' ' << cost_[n_-1][i] << ' ' << i << '\n';
+      std::cout << finalCost_ << ' ' << cost_[n_-1][i] << ' ' << i << '\n';
       finalCost_=cost_[n_-1][i];
       endIndex=i;
     }
@@ -1171,11 +1171,11 @@ void dbctrk_DPMatch::findEndPoint()
 
 void dbctrk_DPMatch::match()
 {
-  //vcl_cout<<"\n match ";
+  //std::cout<<"\n match ";
   initializeDPCosts(reverse);
-  //vcl_cout << "initializeDPCosts done\n";
+  //std::cout << "initializeDPCosts done\n";
   computeDPCosts(reverse);
-  //vcl_cout << "computeDPCosts done\n";
+  //std::cout << "computeDPCosts done\n";
   findDPCorrespondence(reverse);
 }
 
@@ -1183,11 +1183,11 @@ void dbctrk_DPMatch::match()
 
 void dbctrk_DPMatch::endPointMatch()
 {
-  //vcl_cout << "in DP Match\n";
+  //std::cout << "in DP Match\n";
   initializeDPCosts(reverse);
-  //vcl_cout << "initializeDPCosts done\n";
+  //std::cout << "initializeDPCosts done\n";
   computeDPCosts();
-  //vcl_cout << "computeDPCosts done\n";
+  //std::cout << "computeDPCosts done\n";
   findEndPoint();
-  //vcl_cout << "corresp done\n";
+  //std::cout << "corresp done\n";
 }

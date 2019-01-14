@@ -28,7 +28,7 @@ dbccl_manual_camera_process::dbccl_manual_camera_process() : bpro1_process()
     "World points file" , "-dbcclwpf" , bpro1_filepath("","*") ) ||
     !parameters()->add( 
     "Camera file" , "-dbcclcf" , bpro1_filepath("","*") ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ dbccl_manual_camera_process::clone() const
 
 
 //------------------------------------------
-vcl_string
+std::string
 dbccl_manual_camera_process::name()
 {
   return "Manual Camera Computation";
@@ -56,18 +56,18 @@ dbccl_manual_camera_process::name()
 
 
 //-----------------------------------------------
-vcl_vector< vcl_string > dbccl_manual_camera_process::get_input_type()
+std::vector< std::string > dbccl_manual_camera_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
 
 
 //----------------------------------------------------
-vcl_vector< vcl_string > dbccl_manual_camera_process::get_output_type()
+std::vector< std::string > dbccl_manual_camera_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vpgl camera" );
   return to_return;
@@ -79,17 +79,17 @@ bool
 dbccl_manual_camera_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbccl_manual_camera_process::execute() - not exactly one"
+    std::cout << "In dbccl_manual_camera_process::execute() - not exactly one"
           << " input image \n";
     return false;
   }
 
   // Get the world points from file.
-  vcl_vector< vgl_point_3d<double> > all_world_points;
+  std::vector< vgl_point_3d<double> > all_world_points;
   bpro1_filepath wp_path;
   parameters()->get_value( "-dbcclwpf" , wp_path );
-  vcl_string world_point_file = wp_path.path;
-  vcl_ifstream wp_stream( world_point_file.c_str() );
+  std::string world_point_file = wp_path.path;
+  std::ifstream wp_stream( world_point_file.c_str() );
   vul_awk awk( wp_stream );
   while( awk ){
     vgl_point_3d<double> new_point( atof(awk[0]), atof(awk[1]), atof(awk[2]) );
@@ -99,10 +99,10 @@ dbccl_manual_camera_process::execute()
 
   // Get the image points from storage.
   vidpro1_vsol2D_storage_sptr image_points_storage;
-  vcl_vector< vgl_point_2d<double> > all_image_points;
-  vcl_vector< vgl_line_segment_2d<double> > up_lines;
+  std::vector< vgl_point_2d<double> > all_image_points;
+  std::vector< vgl_line_segment_2d<double> > up_lines;
   image_points_storage.vertical_cast(input_data_[0][0]);
-  vcl_vector< vsol_spatial_object_2d_sptr > image_points_vsol = 
+  std::vector< vsol_spatial_object_2d_sptr > image_points_vsol = 
     image_points_storage->all_data();
   for( int i = 0; i < all_world_points.size(); i++ ){
     all_image_points.push_back( vgl_point_2d<double>( 
@@ -111,8 +111,8 @@ dbccl_manual_camera_process::execute()
   }
 
   // Remove all unused world points.
-  vcl_vector< vgl_point_2d<double> > used_image_points;
-  vcl_vector< vgl_point_3d<double> > used_world_points;
+  std::vector< vgl_point_2d<double> > used_image_points;
+  std::vector< vgl_point_3d<double> > used_world_points;
   for( int i = 0; i < all_world_points.size(); i++ ){
     if( all_image_points[i].x() < 0 || all_image_points[i].y() < 0 ) continue;
     used_image_points.push_back( all_image_points[i] );
@@ -125,7 +125,7 @@ dbccl_manual_camera_process::execute()
   mc.compute( used_world_points, used_image_points, up_lines, this_camera );
 
   // Now project the world points using the computed camera.
-  vcl_vector< vsol_spatial_object_2d_sptr > proj_world_points;
+  std::vector< vsol_spatial_object_2d_sptr > proj_world_points;
   for( int p = 0; p < all_world_points.size(); p++ ){
     vgl_homg_point_2d<double> new_ip = this_camera.project( 
       vgl_homg_point_3d<double>( all_world_points[p] ) );
@@ -152,9 +152,9 @@ dbccl_manual_camera_process::finish()
 {
   bpro1_filepath camera_path;
   parameters()->get_value( "-dbcclcf" , camera_path );
-  vcl_string camera_file = camera_path.path;
+  std::string camera_file = camera_path.path;
 
-  vcl_ofstream camera_stream( camera_file.c_str() );
+  std::ofstream camera_stream( camera_file.c_str() );
   for( int i = 0; i < input_data_.size(); i++ ){
     dvpgl_camera_storage_sptr cam_storage;
     if( input_data_[i].size() == 3 ){

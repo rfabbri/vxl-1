@@ -28,7 +28,7 @@ dbrl_rpm_tps_process::dbrl_rpm_tps_process(void): bpro1_process()
         !parameters()->add( "Covergence Tolerance" , "-mconvg" , (float) 0.1 )||
         !parameters()->add( "Outlier value" , "-moutlier" , (float) 1e-5 )) 
         {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_rpm_tps_process::dbrl_rpm_tps_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_rpm_tps_process::dbrl_rpm_tps_process()" << std::endl;
         }
 
     }
@@ -41,7 +41,7 @@ dbrl_rpm_tps_process::~dbrl_rpm_tps_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_rpm_tps_process::name()
     {
     return "RPM THIN PLATE SPLINE";
@@ -65,9 +65,9 @@ dbrl_rpm_tps_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_rpm_tps_process::get_input_type()
+std::vector< std::string > dbrl_rpm_tps_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "dbrl_id_point_2d" );
     //to_return.push_back( "vsol2D" );
 
@@ -76,9 +76,9 @@ vcl_vector< vcl_string > dbrl_rpm_tps_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_rpm_tps_process::get_output_type()
+std::vector< std::string > dbrl_rpm_tps_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     to_return.push_back( "dbrl_match_set" );
     return to_return;
     }
@@ -89,7 +89,7 @@ bool
 dbrl_rpm_tps_process::execute()
     {
     if ( input_data_.size() != 2 ){
-        vcl_cout << "In dbrl_rpm_tps_process::execute() - "
+        std::cout << "In dbrl_rpm_tps_process::execute() - "
             << "not exactly two input images \n";
         return false;
         }
@@ -99,11 +99,11 @@ dbrl_id_point_2d_storage_sptr frame_pts1, frame_pts2;
 frame_pts1.vertical_cast(input_data_[1][0]);
 frame_pts2.vertical_cast(input_data_[0][0]);
 
-vcl_vector< dbrl_id_point_2d_sptr > list1 = frame_pts1->points();
-vcl_vector< dbrl_id_point_2d_sptr > list2 = frame_pts2->points();
+std::vector< dbrl_id_point_2d_sptr > list1 = frame_pts1->points();
+std::vector< dbrl_id_point_2d_sptr > list2 = frame_pts2->points();
 
-vcl_vector<dbrl_feature_sptr> feature_list1;
-vcl_vector<dbrl_feature_sptr> feature_list2;
+std::vector<dbrl_feature_sptr> feature_list1;
+std::vector<dbrl_feature_sptr> feature_list2;
 
 for(int i=0;i<static_cast<int>(list1.size());i++)
     {
@@ -153,7 +153,7 @@ for(int i=0;i<static_cast<int>(list1.size());i++)
         id2=list2[j]->id();
     else id2=-1;
 
-    vcl_cout<<"Match: "<<id1<<" "<<id2<<"\n";
+    std::cout<<"Match: "<<id1<<" "<<id2<<"\n";
 
     }
 dbrl_match_set_storage_sptr output_storage = dbrl_match_set_storage_new();

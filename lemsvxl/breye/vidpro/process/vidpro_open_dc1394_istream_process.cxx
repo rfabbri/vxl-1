@@ -4,7 +4,7 @@
 // \file
 
 #include <vidpro/process/vidpro_open_dc1394_istream_process.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro/bpro_parameters.h>
 
@@ -51,16 +51,16 @@ vidpro_open_dc1394_istream_process::clone() const
 
 
 //: Return the name of the process
-vcl_string vidpro_open_dc1394_istream_process::name()
+std::string vidpro_open_dc1394_istream_process::name()
 {
     return "Open Video Istream";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > vidpro_open_dc1394_istream_process::get_input_type()
+std::vector< std::string > vidpro_open_dc1394_istream_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // no input type required
     to_return.clear();
@@ -70,9 +70,9 @@ vcl_vector< vcl_string > vidpro_open_dc1394_istream_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > vidpro_open_dc1394_istream_process::get_output_type()
+std::vector< std::string > vidpro_open_dc1394_istream_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
 
     // output type
     to_return.push_back( "istream" );
@@ -93,7 +93,7 @@ vidpro_open_dc1394_istream_process::execute()
     if(!vis_storage)
     {
         return false;
-        vcl_cerr<<"Error: Opening the input stream\n";
+        std::cerr<<"Error: Opening the input stream\n";
     }
    
     
@@ -104,7 +104,7 @@ vidpro_open_dc1394_istream_process::execute()
     output_data_[0].push_back(vis_storage);
     return true;
 
-    vcl_cerr<<"Error in Open Istream process: Not able to open the istream\n";
+    std::cerr<<"Error in Open Istream process: Not able to open the istream\n";
     return false;
 }
 
@@ -152,22 +152,22 @@ vidpro_open_dc1394_istream_process:: dc1394_istream()
   }
 
 #ifndef NDEBUG
-  vcl_cout << "Detected " << options.cameras.size() << " cameras\n";
+  std::cout << "Detected " << options.cameras.size() << " cameras\n";
   for (unsigned int i=0; i<options.cameras.size(); ++i){
     const vidl_iidc1394_params::valid_options::camera& cam = options.cameras[i];
-    vcl_cout << "Camera "<<i<<": "<< cam.vendor << " : " << cam.model
+    std::cout << "Camera "<<i<<": "<< cam.vendor << " : " << cam.model
              << " : node "<< cam.node <<" : port "<<cam.port<< '\n';
     for (unsigned int j=0; j<cam.modes.size(); ++j){
       const vidl_iidc1394_params::valid_options::valid_mode& m = cam.modes[j];
-      vcl_cout << "\tmode "<<j<<" : "
+      std::cout << "\tmode "<<j<<" : "
                << vidl_iidc1394_params::video_mode_string(m.mode) << '\n';
       for (unsigned int k=0; k<m.frame_rates.size(); ++k){
-        vcl_cout << "\t\tframe rate : "
+        std::cout << "\t\tframe rate : "
                  << vidl_iidc1394_params::frame_rate_val(m.frame_rates[k]) << '\n';
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 #endif
 
   vidl_iidc1394_params params;
@@ -180,9 +180,9 @@ vidpro_open_dc1394_istream_process:: dc1394_istream()
 
   if (options.cameras.size() > 1){
     vgui_dialog dlg("Select an IIDC 1394 camera");
-    vcl_vector<vcl_string> camera_names;
+    std::vector<std::string> camera_names;
     for (unsigned int i=0; i<options.cameras.size(); ++i){
-      vcl_stringstream ss;
+      std::stringstream ss;
       ss << options.cameras[i].vendor << " "
          << options.cameras[i].model
          << " (node "<<options.cameras[i].node << ")";
@@ -207,7 +207,7 @@ vidpro_open_dc1394_istream_process:: dc1394_istream()
   bool use_1394b = cam.b_mode;
   if (cam.modes.size() > 1){
     vgui_dialog dlg("Select a capture mode");
-    vcl_vector<vcl_string> mode_names;
+    std::vector<std::string> mode_names;
     for (unsigned int i=0; i<cam.modes.size(); ++i){
       if(cam.modes[i].mode ==  cam.curr_mode)
         mode_id = i;
@@ -235,11 +235,11 @@ vidpro_open_dc1394_istream_process:: dc1394_istream()
     static unsigned int fr_id = 0;
     if (m.frame_rates.size() > 1){
       vgui_dialog dlg("Select a frame rate");
-      vcl_vector<vcl_string> rate_names;
+      std::vector<std::string> rate_names;
       for (unsigned int i=0; i<m.frame_rates.size(); ++i){
         if(m.frame_rates[i] == cam.curr_frame_rate)
           fr_id = i;
-        vcl_stringstream name;
+        std::stringstream name;
         name << vidl_iidc1394_params::frame_rate_val(m.frame_rates[i]) << " fps";
         rate_names.push_back(name.str());
       }
@@ -257,7 +257,7 @@ vidpro_open_dc1394_istream_process:: dc1394_istream()
     vgui_dialog dlg("Set feature values");
     for(unsigned int i=0; i<params.features_.size(); ++i){
       vidl_iidc1394_params::feature_options& f = params.features_[i];
-      vcl_stringstream ss;
+      std::stringstream ss;
       ss << vidl_iidc1394_params::feature_string(f.id) << " [" << f.min << " - "<<f.max<<"]";
       dlg.field(ss.str().c_str(), f.value);
     }

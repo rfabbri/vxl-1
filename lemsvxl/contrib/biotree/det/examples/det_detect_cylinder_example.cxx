@@ -14,8 +14,8 @@
 #include <vnl/algo/vnl_matrix_inverse.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 #include <det/det_cylinder_map.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 #include <util/proc_det_filter_utils.h>
 #include <io/proc_io_filter_xml_parser.h>
 
@@ -62,21 +62,21 @@ int main(int argc, char *argv[])
 
   proc_det_filter_utils utils;
 
-  vcl_string folder = "C:\\test_images\\filters\\aug8_straight_and_angled_hairs\\hair_negatives_XML\\";//; bigger_box20x20x20\\";
+  std::string folder = "C:\\test_images\\filters\\aug8_straight_and_angled_hairs\\hair_negatives_XML\\";//; bigger_box20x20x20\\";
 
   // create the parser and read the responses
   proc_io_filter_xml_parser parser;
-  vcl_string fname = argv[1];
+  std::string fname = argv[1];
   if (!parse(fname, parser)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
   dimx = parser.dim_x();
   dimy = parser.dim_y();
   dimz = parser.dim_z();
   filter_size = parser.filter_num();
-  vcl_vector<xmvg_filter_response<double> > responses = parser.responses();
-  vcl_vector<vgl_vector_3d<double> > orientations = parser.filter_orientations();
+  std::vector<xmvg_filter_response<double> > responses = parser.responses();
+  std::vector<vgl_vector_3d<double> > orientations = parser.filter_orientations();
 
 
   //responses = utils.read_responses(folder + "responses_zfilter_gauss_box1_bigger_rad40L160res10.txt",// "icosa_gaussian_parallel_r40_h160_res15.txt", 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
   fprintf(fp_cyl,"%d %d %d %d\n", dimx, dimy, dimz, filter_size);
   fprintf(fp,"%d %d %d %d\n", dimx, dimy, dimz, filter_size);
   fprintf(fp_nonmax,"%d %d %d %d\n", dimx, dimy, dimz, filter_size);
-  vcl_vector<int> counts(6, 0);
+  std::vector<int> counts(6, 0);
   det_cylinder_detect detector;
 
   double min_E = 1e29; //10000000000.0;
@@ -138,6 +138,6 @@ int main(int argc, char *argv[])
   }
   for (unsigned i=0; i<counts.size(); i++)
     fprintf(fp_cos,"%d: %d\n", i, counts[i]);
-  vcl_cout << "MIN E=" << min_E << vcl_endl;
+  std::cout << "MIN E=" << min_E << std::endl;
 
 }

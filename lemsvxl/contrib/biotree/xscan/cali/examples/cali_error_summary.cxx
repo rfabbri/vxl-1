@@ -8,20 +8,20 @@
 #include <cali/cali_vnl_least_squares_function.h>
 #include <cali/cali_param.h>
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
-#include <vcl_algorithm.h>
-#include <vcl_cstdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cstdlib>
 #include <imgr/file_formats/imgr_skyscan_log_header.h>
 #include <imgr/file_formats/imgr_skyscan_log.h>
 
-void newverbose_error_summary(vcl_ofstream& fstream,
+void newverbose_error_summary(std::ofstream& fstream,
                               cali_param par_,
-                              vcl_vector<vcl_vector<vsol_conic_2d> > first, 
+                              std::vector<std::vector<vsol_conic_2d> > first, 
                               conic_vector_set second, 
                               vnl_vector<double> &diff_vector,
-                              vcl_vector<vcl_vector<double> > &ball_diffs_center,
-                              vcl_vector<vcl_vector<double> > &ball_diffs_rad) 
+                              std::vector<std::vector<double> > &ball_diffs_center,
+                              std::vector<std::vector<double> > &ball_diffs_rad) 
 {
         ball_diffs_center.resize(par_.BALL_NUMBER); 
         ball_diffs_rad.resize(par_.BALL_NUMBER); 
@@ -34,15 +34,15 @@ void newverbose_error_summary(vcl_ofstream& fstream,
         else
                 t_size = first.size();
 
-        vcl_cout << "first.size() " <<first.size() << " images\n";
-        vcl_cout << "comparing " << t_size << " images\n";
+        std::cout << "first.size() " <<first.size() << " images\n";
+        std::cout << "comparing " << t_size << " images\n";
         for (i = 0;i<t_size;i++)
         {
                 if (i != 0)
                 {
                         int first_ball;
-                        vcl_cout << "first[" << i << "].size() " << first[i].size() << "\n";
-                        vcl_cout << "second[" << i << "].size() " << second[i].size() << "\n";
+                        std::cout << "first[" << i << "].size() " << first[i].size() << "\n";
+                        std::cout << "second[" << i << "].size() " << second[i].size() << "\n";
                         //number of conics found in each image.  
                         //might differ depending on fitting
                         if (first[i].size()>second[i].size())
@@ -50,29 +50,29 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                         else
                                 size = first[i].size();
 
-                        vcl_cout << "image  " << i << ", choosing smaller, using " << size << " conics\n";
+                        std::cout << "image  " << i << ", choosing smaller, using " << size << " conics\n";
                         if (size>par_.NUM_OF_CORRESP)
                                 size = par_.NUM_OF_CORRESP;
                         m = 0;
 
-                        //vcl_cout << "NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
-                        vcl_cout << "image " << i << ", using " << size << " conics\n";
+                        //std::cout << "NUM_OF_CORRESP is " << par_.NUM_OF_CORRESP << "\n";
+                        std::cout << "image " << i << ", using " << size << " conics\n";
                         for(int idx = 0; idx < first[i].size(); idx++){
                                         if (first[i][idx].is_real_ellipse()){
                                                 first[i][idx].ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                                                vcl_cout << "\tfirst[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                                                std::cout << "\tfirst[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                                         }
                                         else{
-                                                vcl_cout << "\tfirst[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
+                                                std::cout << "\tfirst[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
                                         }
                         }
                         for(int idx = 0; idx < second[i].size(); idx++){
                                 if(second[i][idx]->is_real_ellipse()){ 
                                         second[i][idx]->ellipse_parameters(cx1,cy1,phi1,width1,height1);
-                                        vcl_cout << "\tsecond[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
+                                        std::cout << "\tsecond[" << i <<  "][" << idx << "]  center " << cx1 << " " << cy1 << "\n"; 
                                 }
                                 else{
-                                        vcl_cout << "\tsecond[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
+                                        std::cout << "\tsecond[" << i <<  "][" << idx << "]  not a real ellipse\n"; 
 
                                 }
                         }
@@ -101,8 +101,8 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                 //why always  second[i][j+m][0]??
                                                 first[i][j+m].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                 second[i][j+m]->ellipse_parameters(cx2,cy2,phi2,width2,height2);
-                                                vcl_cout << "\tfirst list " << j+m << " center " << cx1 << " " << cy1 << "\n"; 
-                                                vcl_cout << "\tsecond list " << j+m << " center " << cx2 << " " << cy2 << "\n"; 
+                                                std::cout << "\tfirst list " << j+m << " center " << cx1 << " " << cy1 << "\n"; 
+                                                std::cout << "\tsecond list " << j+m << " center " << cx2 << " " << cy2 << "\n"; 
                                                 first_ball = j+m;
 
                                                 offset = 0;
@@ -119,8 +119,8 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                                 first[i][j+m+offset].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                                 first_ball = j+m+offset;
                                                         }
-                                                        vcl_cout << "\t\t mismatch...";
-                                                        vcl_cout << " first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
+                                                        std::cout << "\t\t mismatch...";
+                                                        std::cout << " first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
                                                         offset++;
                                                 }
 
@@ -129,14 +129,14 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                 //previous loop...
                                                 if (fabs(cy1 - cy2)>par_.Y_COORD_DIFF_RANGE)
                                                 {
-                                                        vcl_cout << "\t\t mismatch again...\n";
+                                                        std::cout << "\t\t mismatch again...\n";
                                                         //go back to checking
                                                         //against the first ball
                                                         //in the first list
                                                         offset = 0;
                                                         first[i][j+m].ellipse_parameters(cx1,cy1,phi1,width1,height1);
                                                         first_ball = j+m;
-                                                        vcl_cout << "\t\tnow on first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
+                                                        std::cout << "\t\tnow on first list " << j+m+offset << " center " << cx1 << " " << cy1 << "\n"; 
                                                         //search through the
                                                         //second list until you
                                                         //hit the end or find a
@@ -147,8 +147,8 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                         {
                                                                 second[i][j+m+offset]->ellipse_parameters(cx2,cy2,phi2,width2,height2);
 
-                                                                vcl_cout << "\t\t mismatch...";
-                                                                vcl_cout << " second list " << j+m+offset << " center " << cx2 << " " << cy2 << "\n"; 
+                                                                std::cout << "\t\t mismatch...";
+                                                                std::cout << " second list " << j+m+offset << " center " << cx2 << " " << cy2 << "\n"; 
                                                                 offset++;
                                                         }
                                                 }
@@ -161,7 +161,7 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                 //radius differnces
                                                 if ((fabs(cy1 - cy2)<par_.Y_COORD_DIFF_RANGE) && (fabs(cx1 - cx2)<par_.X_COORD_DIFF_RANGE))
                                                 { 
-                                                        vcl_cout << "\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
+                                                        std::cout << "\t match, centers " << cx1 << " " << cy1 << " and " << cx2 << " " << cy2 << "\n"; 
                                                         double diff = sqrt((cx2 - cx1)*(cx2 - cx1) + 
                                                                         (cy2 - cy1)*(cy2 - cy1));
                                                         fstream << k << " (" << cx1 << "," << cy1 << ") (" << cx2 << "," << cy2 << ")=" << diff << "--(" << (cx1-cx2) << "," << (cy1 - cy2) 
@@ -175,12 +175,12 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                                         fstream << k << " (" << width1 << "," << height1 << ") (" << width2 << "," << height2 << ")=" << rad_diff << "--(" << (width1-width2) << "," << (height1 - height2) << ") img: " << i << "(" << cx1 << "," << cy1 << ") RAD, ball " << first_ball +1<< "\n";
                                                         diff_vector[k++] = rad_diff; 
                                                         ball_diffs_rad[first_ball].push_back(rad_diff);
-                                                        vcl_cout << "\t" << k << " differences; new diffs: dcenter = " << diff << " drad = " << rad_diff << "\n";
+                                                        std::cout << "\t" << k << " differences; new diffs: dcenter = " << diff << " drad = " << rad_diff << "\n";
                                                 }
                                                 //otherwise, put zeroes
                                                 else
                                                 {
-                                                        vcl_cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<vcl_endl;
+                                                        std::cout<<" assigning zeroes to ignore the correspondence as it is a mismatch " <<std::endl;
                                                         fstream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" 
                                                         << ") img: " << i << "(" << cx1 << "," << cy1 << ")\n";
 
@@ -197,8 +197,8 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                         //when the first ball of the first list
                                         //is not a real ellipse, add zeroes and go to the next ball
                                         else {
-                                                vcl_cout << "Not a real ellipse!" << vcl_endl;
-                                                vcl_cout << first[i][j] << vcl_endl;
+                                                std::cout << "Not a real ellipse!" << std::endl;
+                                                std::cout << first[i][j] << std::endl;
                                                 // to ignore the correspondence, place 0 for the differences,
                                                 // one for the center difference, one for the width, height difference
                                                 diff_vector[k++] = 0;
@@ -216,7 +216,7 @@ void newverbose_error_summary(vcl_ofstream& fstream,
                                 diff_vector[k++] = 0;
                                 fstream << k << " (" << 0<< "," << 0 << ") (" << 0 << "," << 0 << ")=" << 0 << "--(" << 0 << "," << 0 << ")" "\n";
                                 diff_vector[k++] = 0;
-                                vcl_cout << "\t" << k << " differences; padding with zero for remaining correspondences\n";
+                                std::cout << "\t" << k << " differences; padding with zero for remaining correspondences\n";
 
                         }
                 }
@@ -224,29 +224,29 @@ void newverbose_error_summary(vcl_ofstream& fstream,
 }
 int main(int argc, char* argv[]) {
   if(argc < 2){
-    vcl_cerr << "usage " << argv[0] << " <parameter file>\n";
+    std::cerr << "usage " << argv[0] << " <parameter file>\n";
     exit(1);
   }
-  vcl_string path = argv[1];
+  std::string path = argv[1];
   cali_param par(path);
-  vcl_string fname = par.LOGFILE;
-  vcl_FILE *fp = vcl_fopen(fname.data(),"r");
+  std::string fname = par.LOGFILE;
+  std::FILE *fp = std::fopen(fname.data(),"r");
   assert(fp != NULL);
   imgr_skyscan_log_header skyscan_log_header(fp);
-  vcl_fclose(fp);
+  std::fclose(fp);
 
   imgr_skyscan_log skyscan_log(fname.data());
   xscan_scan scan;
   scan = skyscan_log.get_scan();
-  vcl_cout << scan << vcl_endl;
+  std::cout << scan << std::endl;
 
   scan.set_scan_size(par.END - par.START + 1);
 
   int nviews = scan.scan_size();
   // change the scan
   vpgl_calibration_matrix<double> kk(scan.kk());
-  vcl_cout << "scan SIZE---->" << nviews << vcl_endl;
-  vcl_vector<vil_image_resource_sptr> resources(nviews);
+  std::cout << "scan SIZE---->" << nviews << std::endl;
+  std::vector<vil_image_resource_sptr> resources(nviews);
   for (int i=0; i<nviews; i++) {
        resources[i] = vil_new_image_resource(skyscan_log_header.number_of_columns_,skyscan_log_header.number_of_rows_,1,  VIL_PIXEL_FORMAT_BYTE);
     }
@@ -265,9 +265,9 @@ int main(int argc, char* argv[]) {
 
 
   // read the x values from the text file
-  vcl_string txt_file = par.CONVERGEDVALUES;
-  vcl_cout << "reading in values from " <<  txt_file << "\n";
-  vcl_ifstream fstream(txt_file.c_str(),vcl_ios::in);
+  std::string txt_file = par.CONVERGEDVALUES;
+  std::cout << "reading in values from " <<  txt_file << "\n";
+  std::ifstream fstream(txt_file.c_str(),std::ios::in);
   vnl_vector<double> x(par.SIZE_OF_X);
 
   double val;
@@ -275,9 +275,9 @@ int main(int argc, char* argv[]) {
   int x_size=0;
   while (!fstream.eof()) {
     fstream.getline(val_string, 256);
-    val = vcl_atof(val_string);
+    val = std::atof(val_string);
     x[x_size++] = val;
-    vcl_cout << x_size << "=" << val << vcl_endl;
+    std::cout << x_size << "=" << val << std::endl;
   }
 
   cali_vnl_least_squares_function::gen_scan_lsqr_fn_params(x, artf_rot,
@@ -299,7 +299,7 @@ int main(int argc, char* argv[]) {
   scan.set_orbit(new_orbit);
 
 
-  vcl_vector<double>x_coord_tol;
+  std::vector<double>x_coord_tol;
 
   x_coord_tol.push_back(0);
   x_coord_tol.push_back(0);
@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
   x_coord_tol.push_back(0);
   x_coord_tol.push_back(0);
 
-  vcl_vector<double>y_coord_tol;
+  std::vector<double>y_coord_tol;
 
   y_coord_tol.push_back(0);
   y_coord_tol.push_back(0);
@@ -331,8 +331,8 @@ int main(int argc, char* argv[]) {
   y_coord_tol.push_back(0);
   y_coord_tol.push_back(0);
 
-  vcl_vector<double>z_coord_tol;
-  vcl_vector<double>rad_tol;
+  std::vector<double>z_coord_tol;
+  std::vector<double>rad_tol;
 
   for (int i = 0;i<13;i++)
   {
@@ -341,14 +341,14 @@ int main(int argc, char* argv[]) {
   }
 
   cali_artf_corresponder corr(par);
-  vcl_vector<conic_vector_set> real_img_conics;
-  vcl_string file_base = par.CONICS_BIN_FILE_BASE;
-  vcl_cout << "file_base " << file_base << "\n";
+  std::vector<conic_vector_set> real_img_conics;
+  std::string file_base = par.CONICS_BIN_FILE_BASE;
+  std::cout << "file_base " << file_base << "\n";
   for (unsigned i=0; i<scan.n_views(); i+=par.INTERVAL) {
-    vcl_string file_name = corr.gen_read_fname(file_base, i);
-    vcl_cout << "reading conic file " << file_name << "\n";
+    std::string file_name = corr.gen_read_fname(file_base, i);
+    std::cout << "reading conic file " << file_name << "\n";
     conic_vector_set saved_conics = corr.read_conics_bin(file_name);
-    vcl_cout << "read " << saved_conics.size() << " conics\n";
+    std::cout << "read " << saved_conics.size() << " conics\n";
     real_img_conics.push_back(saved_conics);
   }
 
@@ -357,29 +357,29 @@ int main(int argc, char* argv[]) {
   // cali_simulated_scan_resource scan_res = cali_simulated_scan_resource(scan,resources,par);
   cali_simulated_scan_resource scan_res = cali_simulated_scan_resource(scan,resources,par,x_coord_tol,y_coord_tol,z_coord_tol,rad_tol);
 
-  vcl_cout << "Rotation---------------------------->" << vcl_endl;
-  vcl_cout << artf_rot << vcl_endl;
-  vcl_cout << "Translation------------------------->" << vcl_endl;
-  vcl_cout << artf_trans << vcl_endl;
+  std::cout << "Rotation---------------------------->" << std::endl;
+  std::cout << artf_rot << std::endl;
+  std::cout << "Translation------------------------->" << std::endl;
+  std::cout << artf_trans << std::endl;
 
-  vcl_vector<vcl_vector<vsol_conic_2d> > centers = scan_res.gen_ball_projections(artf_rot, 
+  std::vector<std::vector<vsol_conic_2d> > centers = scan_res.gen_ball_projections(artf_rot, 
       artf_trans,
       par.INTERVAL);
 
-  vcl_vector<vcl_vector<vsol_conic_2d_sptr> > modified_real_conic_vector;
+  std::vector<std::vector<vsol_conic_2d_sptr> > modified_real_conic_vector;
   modified_real_conic_vector.resize(real_img_conics.size());
 
   for(int i = 0; i < real_img_conics.size(); i++) {
     for(int j = 0; j < real_img_conics[i].size(); j++){
       modified_real_conic_vector[i].push_back(real_img_conics[i][j][0]);
     }
-    vcl_sort(modified_real_conic_vector[i].begin(), 
+    std::sort(modified_real_conic_vector[i].begin(), 
         modified_real_conic_vector[i].end(), 
         cali_vnl_least_squares_function::y_coord_compare );
 
   }
   vnl_vector<double> fx(real_img_conics.size()*par.NUM_OF_CONICS*2,0);
-  vcl_cerr << "set residual size to " << fx.size() << "\n";
+  std::cerr << "set residual size to " << fx.size() << "\n";
   //fx is the vector of square-root of sum of squared differences between
   //center locations & width/heights.  quoted end error is the RMS of this
   //delta vector.  typically  of size near (num imgs)*(13 balls)*(2 measurements)
@@ -387,12 +387,12 @@ int main(int argc, char* argv[]) {
   //corr.verbose_error_summary(centers,modified_real_conic_vector,fx);
   //
 
-  vcl_cerr << " par.INTERVAL = " << par.INTERVAL << "\n";
-  vcl_cerr << "real_img_conics.size() =" << real_img_conics.size() << "\n";
-  vcl_cerr << "centers.size() =" << centers.size() << "\n";
-  vcl_ofstream out("diff.txt"); 
-  vcl_vector<vcl_vector<double> > ball_diffs_center;
-  vcl_vector<vcl_vector<double> > ball_diffs_rad;
+  std::cerr << " par.INTERVAL = " << par.INTERVAL << "\n";
+  std::cerr << "real_img_conics.size() =" << real_img_conics.size() << "\n";
+  std::cerr << "centers.size() =" << centers.size() << "\n";
+  std::ofstream out("diff.txt"); 
+  std::vector<std::vector<double> > ball_diffs_center;
+  std::vector<std::vector<double> > ball_diffs_rad;
  newverbose_error_summary(out,
                                par,
                               centers, 
@@ -402,11 +402,11 @@ int main(int argc, char* argv[]) {
                               ball_diffs_rad);
  out.close();
 
-  vcl_cout << "rms error of fx is " << fx.rms() << "\n";
+  std::cout << "rms error of fx is " << fx.rms() << "\n";
 
-  vcl_ofstream bdata("balldata.m"); 
+  std::ofstream bdata("balldata.m"); 
   for(int i = 0; i < ball_diffs_center.size(); i++){
-          vcl_cerr << "ball_diffs_center[" << i << "].size() = " << ball_diffs_center[i].size() << "\n";
+          std::cerr << "ball_diffs_center[" << i << "].size() = " << ball_diffs_center[i].size() << "\n";
           bdata << "ballc" << i+1 << " = ["; 
     for(int j = 0; j < ball_diffs_center[i].size(); j++){
     bdata << ball_diffs_center[i][j] << " ";
@@ -443,7 +443,7 @@ int main(int argc, char* argv[]) {
    bdata.close();
 
 
-  vcl_cerr << "rms error of fx is " << fx.rms() << "\n";
+  std::cerr << "rms error of fx is " << fx.rms() << "\n";
 
   exit(0);
 }

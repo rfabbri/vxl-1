@@ -15,21 +15,21 @@ BPoint_DynVal::~BPoint_DynVal ()
 
 }
 
-void BPoint_DynVal::getInfo (vcl_ostream& ostrm)
+void BPoint_DynVal::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   BPoint::getInfo (ostrm);
 
   //DYNVAL
-  vcl_sprintf (s, "Dynamic Validation\n"); ostrm<<s;
-   vcl_sprintf (s, "bInvalid: %s\n", pointIV()->isIVRegionCompleted() ? "Dead" : "Alive"); ostrm<<s;
-   vcl_sprintf (s, "nIVS: %d\n", pointIV()->ivsList()->size()); ostrm<<s;
-  vcl_sprintf (s, "IVS(es) of this BPoint: "); ostrm<<s;
+  std::sprintf (s, "Dynamic Validation\n"); ostrm<<s;
+   std::sprintf (s, "bInvalid: %s\n", pointIV()->isIVRegionCompleted() ? "Dead" : "Alive"); ostrm<<s;
+   std::sprintf (s, "nIVS: %d\n", pointIV()->ivsList()->size()); ostrm<<s;
+  std::sprintf (s, "IVS(es) of this BPoint: "); ostrm<<s;
   IVRegion::ivsListIterator cur = pointIV()->ivsList()->begin();
    for(; cur!=pointIV()->ivsList()->end(); ++cur) {
-      vcl_sprintf (s, "(%f - %f) ", (*cur)->start(), (*cur)->end()); ostrm<<s;
+      std::sprintf (s, "(%f - %f) ", (*cur)->start(), (*cur)->end()); ostrm<<s;
   }
-   vcl_sprintf (s, "\n \n"); ostrm<<s;
+   std::sprintf (s, "\n \n"); ostrm<<s;
 }
 
 //#############################################################
@@ -53,20 +53,20 @@ void BLine_DynVal::reconnect(BPoint* oldPt, BPoint* newPt)
   _lineIV.setRegionEnd (_l);
 }
 
-void BLine_DynVal::getInfo (vcl_ostream& ostrm)
+void BLine_DynVal::getInfo (std::ostream& ostrm)
 {
   char s[1024];
   BLine::getInfo (ostrm);
 
   //DYNVAL
-  vcl_sprintf (s, "Dynamic Validation\n"); ostrm<<s;
-   vcl_sprintf (s, "bInvalid: %s\n", lineIV()->isIVRegionCompleted() ? "Dead" : "Alive"); ostrm<<s;
-  vcl_sprintf (s, "IVRegion (0 - length): (%f - %f)\n", lineIV()->regionStart(), lineIV()->regionEnd()); ostrm<<s;
-   vcl_sprintf (s, "nIVS: %d\n", lineIV()->ivsList()->size()); ostrm<<s;
-  vcl_sprintf (s, "IVS(es) of this BLine: "); ostrm<<s;
+  std::sprintf (s, "Dynamic Validation\n"); ostrm<<s;
+   std::sprintf (s, "bInvalid: %s\n", lineIV()->isIVRegionCompleted() ? "Dead" : "Alive"); ostrm<<s;
+  std::sprintf (s, "IVRegion (0 - length): (%f - %f)\n", lineIV()->regionStart(), lineIV()->regionEnd()); ostrm<<s;
+   std::sprintf (s, "nIVS: %d\n", lineIV()->ivsList()->size()); ostrm<<s;
+  std::sprintf (s, "IVS(es) of this BLine: "); ostrm<<s;
   IVRegion::ivsListIterator cur = lineIV()->ivsList()->begin();
    for(; cur!=lineIV()->ivsList()->end(); ++cur) {
-      vcl_sprintf (s, "(%f - %f) ", (*cur)->start(), (*cur)->end()); ostrm<<s;
+      std::sprintf (s, "(%f - %f) ", (*cur)->start(), (*cur)->end()); ostrm<<s;
   }
 }
 

@@ -58,8 +58,8 @@ public:
   // Requirement: the number of intervals is one more than the number of init xnode descriptors
   dbsksp_fit_shock_branch_residual(const dbsksp_xshock_node_descriptor& start_desc, 
     const dbsksp_xshock_node_descriptor& end_desc, 
-    const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
-    const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+    const std::vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
+    const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
     double total_left_bnd_length, double total_right_bnd_length);
 
   //: Destructor
@@ -73,19 +73,19 @@ public:
 
   ////: Return a list of xshock nodes corresponding to a given value of the unknown "x"
   //bool compute_list_middle_xdesc(const vnl_vector<double >& x, 
-  //  vcl_vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc);
+  //  std::vector<dbsksp_xshock_node_descriptor >& list_middle_xdesc);
 
 
 protected:
 
   // list of xshock nodes, including the two ends
-  vcl_vector<dbsksp_xshock_node_descriptor > list_xdesc_;
+  std::vector<dbsksp_xshock_node_descriptor > list_xdesc_;
 
   ////: a matrix holding all info of the unknown xnodes
   //vnl_matrix<double > list_unknown_xdesc_;
 
   //: List of samples corresponding to the shock intervals
-  vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval_;
+  std::vector<std::vector<const dbsksp_xshock_node_descriptor* > > list_xsamples_per_interval_;
 
   double orig_bnd_lengths_[2];
 
@@ -109,8 +109,8 @@ public:
   // Requirement: the number of intervals is one more than the number of init xnode descriptors
   dbsksp_fit_one_shock_branch_cost_function(const dbsksp_xshock_node_descriptor& start_desc, 
     const dbsksp_xshock_node_descriptor& end_desc, 
-    const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
-    const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+    const std::vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
+    const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
     double total_left_bnd_length, double total_right_bnd_length);
 
   //: Destructor
@@ -124,7 +124,7 @@ public:
 
   //: Return a list of xshock nodes corresponding to a given value of the unknown "x"
   bool x_to_xsamples(const vnl_vector<double >& x, 
-    vcl_vector<dbsksp_xshock_node_descriptor >& xsamples);
+    std::vector<dbsksp_xshock_node_descriptor >& xsamples);
 
 
 protected:
@@ -150,8 +150,8 @@ public:
   // Requirement: the number of intervals is one more than the number of init xnode descriptors
   dbsksp_fit_shock_branch_with_fixed_shock_points_cost_function(const dbsksp_xshock_node_descriptor& start_desc, 
     const dbsksp_xshock_node_descriptor& end_desc, 
-    const vcl_vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
-    const vcl_vector<vcl_vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
+    const std::vector<dbsksp_xshock_node_descriptor >& list_init_middle_xdesc,
+    const std::vector<std::vector<const dbsksp_xshock_node_descriptor* > >& list_xsamples_per_interval,
     double total_left_bnd_length, double total_right_bnd_length);
 
   //: Destructor
@@ -165,7 +165,7 @@ public:
 
   //: Return a list of xshock nodes corresponding to a given value of the unknown "x"
   bool x_to_xsamples(const vnl_vector<double >& x, 
-    vcl_vector<dbsksp_xshock_node_descriptor >& xsamples) const;
+    std::vector<dbsksp_xshock_node_descriptor >& xsamples) const;
 
 protected:
   unsigned num_pts_;

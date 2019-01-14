@@ -14,7 +14,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -32,7 +32,7 @@ public:
 
   //: Return type string "dbskfg_composite_graph"
   /* virtual */ 
-  vcl_string type() const { return "composite_graph"; }
+  std::string type() const { return "composite_graph"; }
 
   //: Create a tableau if the storage object is of type "dbskfg_composite_graph"
   /* virtual */ 

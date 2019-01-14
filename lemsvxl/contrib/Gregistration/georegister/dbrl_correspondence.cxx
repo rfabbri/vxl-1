@@ -1,9 +1,9 @@
 
 #include "dbrl_correspondence.h"
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 #include <dbsta/algo/dbsta_sinkhorn.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/io/vnl_io_matrix.h>
 dbrl_correspondence::dbrl_correspondence()
@@ -13,7 +13,7 @@ dbrl_correspondence::dbrl_correspondence()
 dbrl_correspondence::dbrl_correspondence(vnl_matrix<double> M):M_(M)
     {
     assert(M_.rows()>0 && M_.cols()>0);
-    initm=1/(double)vcl_max(M_.rows(),M_.cols());
+    initm=1/(double)std::max(M_.rows(),M_.cols());
     moutlier=initm*initm;
 
     Mold_=M_;
@@ -23,7 +23,7 @@ dbrl_correspondence::dbrl_correspondence(vnl_matrix<double> M):M_(M)
 dbrl_correspondence::dbrl_correspondence(int m,int n):M_(m,n)
     {
         assert(m>0 && n>0);    
-        initm=1/(double)vcl_max(m,n);
+        initm=1/(double)std::max(m,n);
         moutlier=initm*initm;
         M_.fill(initm);
         Mold_=M_;
@@ -68,7 +68,7 @@ bool dbrl_correspondence::updateM(vnl_matrix<double> & M, double annealrate){
         Mold_=M_;
         M_=M;
         moutlier*=annealrate;
-        vcl_cout<<"\n outlier val is :"<<moutlier<<"\n";
+        std::cout<<"\n outlier val is :"<<moutlier<<"\n";
         return normalize();
     }
 
@@ -130,7 +130,7 @@ dbrl_correspondence::b_read(vsl_b_istream &is)
             vsl_b_read(is, moutlier);
             break;
         default:
-            vcl_cerr << "dbrl_feature_point: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_feature_point: unknown I/O version " << ver << '\n';
         }
     }
 short
@@ -138,7 +138,7 @@ dbrl_correspondence::version() const
     {
     return 1;
     }
-void dbrl_correspondence::print_summary(vcl_ostream &os) const
+void dbrl_correspondence::print_summary(std::ostream &os) const
 {
 for (unsigned i=0;i<M_.rows();i++)
     {

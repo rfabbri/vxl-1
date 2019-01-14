@@ -41,7 +41,7 @@ vsl_b_read(vsl_b_istream &is, bsta_beta<T>& g)
 //: Print summary
 template <class T>
 void
-vsl_print_summary(vcl_ostream &os, const bsta_beta<T>& g)
+vsl_print_summary(std::ostream &os, const bsta_beta<T>& g)
 {
   os << "Beta - alpha:"<<g.alpha()<<" beta:"<<g.beta();
 }

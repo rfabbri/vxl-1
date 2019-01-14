@@ -14,9 +14,9 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <iostream>
+#include <algorithm>
 #include <vgl/vgl_box_3d.h>
 #include <vul/vul_printf.h>
 
@@ -76,7 +76,7 @@ void dbasnh_hypg::normalize_corner_cost (const double max, const int verbose)
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_corner_cost() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_corner_cost() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   int count = 0;
@@ -103,19 +103,19 @@ void dbasnh_hypg::normalize_corner_cost (const double max, const int verbose)
 
 void dbasnh_hypg::print_corner_cost ()
 {
-  vul_printf (vcl_cout, "\n%s->print_corner_cost():\n", b_1st_graph_ ? "G" : "g");
+  vul_printf (std::cout, "\n%s->print_corner_cost():\n", b_1st_graph_ ? "G" : "g");
   int count = 0;
   const unsigned int nN = nodes_.size();
   for (unsigned int i=0; i<nN; i++)
     for (unsigned int j=0; j<nN; j++) {
       for (unsigned int k=0; k<nN; k++) {
         if (corners_[i][j][k] != 0) {
-          vul_printf (vcl_cout, "corners[%d][%d][%d]=%2.2f \n", i, j, k, corners_[i][j][k]);
+          vul_printf (std::cout, "corners[%d][%d][%d]=%2.2f \n", i, j, k, corners_[i][j][k]);
           count++;
         }
       }
     }
-  vul_printf (vcl_cout, "# of corners: %d.\n", count);
+  vul_printf (std::cout, "# of corners: %d.\n", count);
 }
 
 //##################################################################
@@ -193,7 +193,7 @@ void dbasnh_hypg_aug::normalize_node_grad_r_max (const float max, const int verb
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_node_grad_r_max() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_node_grad_r_max() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   for (unsigned int i=0; i<nodes_.size(); i++) {
@@ -207,7 +207,7 @@ void dbasnh_hypg_aug::normalize_node_grad_r_min (const float max, const int verb
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_node_grad_r_min() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_node_grad_r_min() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   for (unsigned int i=0; i<nodes_.size(); i++) {
@@ -221,7 +221,7 @@ void dbasnh_hypg_aug::normalize_node_corner_a_max (const float max, const int ve
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_node_corner_a_max() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_node_corner_a_max() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   for (unsigned int i=0; i<nodes_.size(); i++) {
@@ -235,7 +235,7 @@ void dbasnh_hypg_aug::normalize_node_corner_a_min (const float max, const int ve
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_node_corner_a_min() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_node_corner_a_min() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   for (unsigned int i=0; i<nodes_.size(); i++) {
@@ -251,10 +251,10 @@ void dbasnh_hypg_aug::normalize_corner_nf_cost (const float max, const int verbo
   }
 
   //Here we normalize the cost by first taking a log() and then normalized by max of log value!!
-  const double log_max = vcl_log (max);
+  const double log_max = std::log (max);
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_corner_nf_cost() max = %f, log_max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_corner_nf_cost() max = %f, log_max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max, log_max);
 
   const unsigned int nN = nodes_.size();
@@ -263,7 +263,7 @@ void dbasnh_hypg_aug::normalize_corner_nf_cost (const float max, const int verbo
       for (unsigned int k=0; k<nN; k++) {
         int nf = corner_nf_[i][j][k];        
         if (nf >= 1) { //Only proceed where there exists a ms_sheet.
-          const double log_nf = vcl_log (double(nf));
+          const double log_nf = std::log (double(nf));
           corner_nf_[i][j][k] = log_nf / log_max;
           assert (vnl_math_isnan(corner_nf_[i][j][k]) == false);
         }
@@ -280,7 +280,7 @@ void dbasnh_hypg_aug::normalize_corner_grad_r_cost (const float max, const int v
     return; //avoid divide by zero (can't happen).
 
   if (verbose)
-    vul_printf (vcl_cout, "  %s: normalize_corner_grad_r_cost() max = %lf.\n", 
+    vul_printf (std::cout, "  %s: normalize_corner_grad_r_cost() max = %lf.\n", 
                 b_1st_graph_ ? "G" : "g", max);
 
   const unsigned int nN = nodes_.size();
@@ -307,7 +307,7 @@ double dbasnh_hypg_aug::bound_box_radius_of_nodes ()
   double h = bbox.max_y() - bbox.min_y();
   double d = bbox.max_z() - bbox.min_z();
 
-  return vcl_max (vcl_max (w, h), d);
+  return std::max (std::max (w, h), d);
 }
 
 void dbasnh_hypg_aug::get_cen_N_aug (vgl_point_3d<double>& C)

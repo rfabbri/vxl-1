@@ -8,8 +8,8 @@
 // \author Michael Morgenstern
 // \date March 9, 2005
 //
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vxl_config.h>
 #include <vbl/vbl_array_3d.h>
 class vol_file {
@@ -24,7 +24,7 @@ class vol_file {
     vxl_uint_32 index_bits_;
     float scaleX_, scaleY_, scaleZ_;
     float rotX_, rotY_, rotZ_;
-    vcl_vector<vxl_uint_8> data_;
+    std::vector<vxl_uint_8> data_;
 
       
    public:

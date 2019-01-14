@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h> 
+#include <vector>
+#include <string> 
 
 //: Process that builds a shock graph from a vsol polyline 
 class dbknee_surface_mesh_process : public bpro1_process 
@@ -32,10 +32,10 @@ public:
   virtual bpro1_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name() {  return "Surface mesh from a point cloud"; }
+  std::string name() {  return "Surface mesh from a point cloud"; }
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -44,8 +44,8 @@ public:
   bool finish();
 
   // Support function
-  void surface_mesh(const vcl_string& input_p3d_file,
-    const vcl_string& output_ply_file);
+  void surface_mesh(const std::string& input_p3d_file,
+    const std::string& output_ply_file);
 
 };
 

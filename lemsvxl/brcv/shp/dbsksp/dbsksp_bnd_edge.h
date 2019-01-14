@@ -46,7 +46,7 @@ public:
   // =============== MISCELLANEOUS =====================================
 
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
   // ============= MEMBER VARIABLES =====================================
 protected:

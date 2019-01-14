@@ -110,7 +110,7 @@ protected:
   void init_slider(QSlider *slider, QLabel *label , int init_val, int max_val);
   
   //: Insert sliders and labels into layouts
-  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value, vcl_string name);
+  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value, std::string name);
   
   //: Initializes qwt histogram plot: look and feel
   void init_hist_plot();
@@ -233,7 +233,7 @@ protected:
   void init_slider(QSlider *slider, QLabel *label , int init_val, int max_val);
   
   //: Insert sliders and labels into layouts
-  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value, vcl_string name);
+  QWidget* assemble_slider_widget(QSlider *slider, QLabel *value, std::string name);
   
   //: Initializes qwt histogram plot: look and feel
   void init_hist_plot();

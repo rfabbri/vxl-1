@@ -11,14 +11,14 @@ class dbrl_estimator: public vbl_ref_count
     virtual ~dbrl_estimator(){};
 
     virtual
-    dbrl_transformation_sptr estimate( vcl_vector<dbrl_feature_sptr> f1,
-                                       vcl_vector<dbrl_feature_sptr> f2,
+    dbrl_transformation_sptr estimate( std::vector<dbrl_feature_sptr> f1,
+                                       std::vector<dbrl_feature_sptr> f2,
                                        dbrl_correspondence & M) const = 0;
 
 
     virtual
-    double residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                    const vcl_vector<dbrl_feature_sptr>& f2,
+    double residual(const std::vector<dbrl_feature_sptr>& f1,
+                    const std::vector<dbrl_feature_sptr>& f2,
                     const dbrl_correspondence &M,
                     const dbrl_transformation_sptr& tform) const = 0;
     //: Binary save self to stream.
@@ -31,10 +31,10 @@ class dbrl_estimator: public vbl_ref_count
     virtual short version() const=0;
 
     //: Print an ascii summary to the stream
-    virtual void print_summary(vcl_ostream &os) const=0;
+    virtual void print_summary(std::ostream &os) const=0;
 
     //: Return a platform independent string identifying the class
-    virtual vcl_string is_a() const =0;
+    virtual std::string is_a() const =0;
 
     virtual dbrl_estimator * clone() const=0;
 

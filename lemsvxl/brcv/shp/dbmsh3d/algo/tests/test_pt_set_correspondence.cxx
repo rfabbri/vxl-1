@@ -2,7 +2,7 @@
 // \author Nhon Trinh
 // \date August 14, 2006
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <testlib/testlib_test.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbmsh3d/algo/dbmsh3d_pt_set_correspondence.h>
@@ -12,14 +12,14 @@
 
 void test_pt_set_correspondence()
 {
-  vcl_string reference_ply = "P:/results/3d-scans/knee_1133RT/wc7_nc7/knee_1133RT_wc7_nc7_cartilage_nc_left.ply";
-  vcl_string data_ply = "P:/results/3d-scans/knee_1133RT/wc6_nc6/knee_1133RT_wc6_nc6_cartilage_nc_left.ply";
+  std::string reference_ply = "P:/results/3d-scans/knee_1133RT/wc7_nc7/knee_1133RT_wc7_nc7_cartilage_nc_left.ply";
+  std::string data_ply = "P:/results/3d-scans/knee_1133RT/wc6_nc6/knee_1133RT_wc6_nc6_cartilage_nc_left.ply";
 
   dbmsh3d_mesh reference_mesh;
   dbmsh3d_mesh data_mesh;
 
 
-  vcl_cout << "Starting loading 2 ply files ...\n";
+  std::cout << "Starting loading 2 ply files ...\n";
   vul_timer timer;
   timer.mark();
 
@@ -27,17 +27,17 @@ void test_pt_set_correspondence()
   dbmsh3d_load_ply(&reference_mesh, reference_ply.c_str());
   dbmsh3d_load_ply(&data_mesh, data_ply.c_str());
 
-  vcl_cout << "Done. Time taken = \n";
-  timer.print(vcl_cout);
+  std::cout << "Done. Time taken = \n";
+  timer.print(std::cout);
 
 
-  vcl_cout << "Starting performing correspondence\n";
+  std::cout << "Starting performing correspondence\n";
   timer.mark();
 
     //dbmsh3d_load_ply (&mesh, loaded_file.c_str());
 
-  vcl_map<int, int > cmap;
-  vcl_map<int, double > dmap;
+  std::map<int, int > cmap;
+  std::map<int, double > dmap;
   /*dbmsh3d_mesh_correspondence_using_shortest_distance(
     reference_mesh, 
     data_mesh,
@@ -49,8 +49,8 @@ void test_pt_set_correspondence()
   for (int i=0; i < 1000000; ++i)
   {}
 
-  vcl_cout << "Done. Time taken = \n";
-  timer.print(vcl_cout);
+  std::cout << "Done. Time taken = \n";
+  timer.print(std::cout);
 
 
 

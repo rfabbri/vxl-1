@@ -27,12 +27,12 @@ void BArc::compute_extrinsic_locus()
   if (endVector < startVector) endVector += 2*M_PI;
 
   const int NUM_ELLIPSE_SUBDIVISIONS = 100;
-  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*vcl_fabs(endVector-startVector)/(2*M_PI));
+  int n_line_segs = int(NUM_ELLIPSE_SUBDIVISIONS*std::fabs(endVector-startVector)/(2*M_PI));
   if(n_line_segs < 4) n_line_segs = 4;
 
   for(int i = 0; i < n_line_segs; ++i) {
     double v = startVector + (endVector-startVector)*i/double(n_line_segs-1);
-    ExPts.push_back(Point2D<double>(_center.x+_R*vcl_cos(v), _center.y+_R*vcl_sin(v)));
+    ExPts.push_back(Point2D<double>(_center.x+_R*std::cos(v), _center.y+_R*std::sin(v)));
   }
 }
 

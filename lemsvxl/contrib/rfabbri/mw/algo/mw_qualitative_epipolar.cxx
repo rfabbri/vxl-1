@@ -1,18 +1,18 @@
 #include "mw_qualitative_epipolar.h"
 
-#include <vcl_iomanip.h>
+#include <iomanip>
 #include <bmcsd/bmcsd_util.h>
 #include <vsol/vsol_box_2d.h>
 #include <vgl/vgl_distance.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_clip.h>
 #include <vgl/io/vgl_io_polygon.h>
 
 
 mw_qualitative_epipolar::
 mw_qualitative_epipolar(
-      const vcl_vector<vsol_point_2d_sptr> &p0,
-      const vcl_vector<vsol_point_2d_sptr> &p1,
+      const std::vector<vsol_point_2d_sptr> &p0,
+      const std::vector<vsol_point_2d_sptr> &p1,
       const vgl_box_2d<double> &bbox)
 : p0_(p0),p1_(p1),box_(bbox), have_computed_(false)
 {
@@ -55,7 +55,7 @@ compute_epipolar_region()
   polys1_.clear();
 
   unsigned selected = (unsigned)-1;
-  vcl_vector<unsigned> selected_sectors(npts_,(unsigned)-1);
+  std::vector<unsigned> selected_sectors(npts_,(unsigned)-1);
 
   return try_combination(selected, selected_sectors, isec0, isec1);
 }
@@ -65,7 +65,7 @@ compute_epipolar_region()
 bool mw_qualitative_epipolar::
 try_combination(
     unsigned selected, 
-    vcl_vector<unsigned> &selected_sectors, 
+    std::vector<unsigned> &selected_sectors, 
     const vgl_polygon<double> &isec_old0,
     const vgl_polygon<double> &isec_old1
     )
@@ -87,7 +87,7 @@ try_combination(
       isec1 = intersect_sectors(isec_old1,i0,s1,p1_,angles1_[i0],outwards1_[i0],box_,&retval1);
       if (retval0 == 0 || retval1 == 0) {
         return false;
-//        vcl_cout << "Degeneracy encountered -- some valid epipolar regions might be ignored\n";
+//        std::cout << "Degeneracy encountered -- some valid epipolar regions might be ignored\n";
 //        continue;
       }
 
@@ -97,29 +97,29 @@ try_combination(
           /*
       if (bmcsd_util::near_zero(vgl_area<double>(isec0),1e-7)) {
         if (bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7)) {
-//          vcl_cout << "One combination has failed\n";
-//          vcl_cout << "  Points: 0..." << i0;
-//          vcl_cout << "  Sectors: " ;
+//          std::cout << "One combination has failed\n";
+//          std::cout << "  Points: 0..." << i0;
+//          std::cout << "  Sectors: " ;
 //          for (unsigned kk=0; kk <= selected; ++kk) {
-//            vcl_cout << selected_sectors[kk] << " ";
+//            std::cout << selected_sectors[kk] << " ";
 //          }
-//          vcl_cout << s0;
-//          vcl_cout << vcl_endl;
+//          std::cout << s0;
+//          std::cout << std::endl;
         } else {
-          vcl_cout << "\n\nIsec 0 nearly empty but in image[1] it is non-empty!\n";
-          vcl_cout << "\tarea(isec0): " << vgl_area<double>(isec0) << vcl_endl 
-                   << "\t" << isec0 << vcl_endl;
-          vcl_cout << "\tarea(isec1): " <<vgl_area<double>(isec1) << vcl_endl 
-                   << "\t" << isec1 << vcl_endl << vcl_endl;
+          std::cout << "\n\nIsec 0 nearly empty but in image[1] it is non-empty!\n";
+          std::cout << "\tarea(isec0): " << vgl_area<double>(isec0) << std::endl 
+                   << "\t" << isec0 << std::endl;
+          std::cout << "\tarea(isec1): " <<vgl_area<double>(isec1) << std::endl 
+                   << "\t" << isec1 << std::endl << std::endl;
         }
         continue;
       } else {
         if (bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7)) {
-          vcl_cout << "\n\nIsec 1 nearly empty  but in image[0] it is non-empty!\n";
-          vcl_cout << "\tarea(isec0): " << vgl_area<double>(isec0) << vcl_endl 
-                   << "\t" << isec0 << vcl_endl;
-          vcl_cout << "\tarea(isec1): " << vgl_area<double>(isec1) << vcl_endl 
-                   << "\t" << isec1 << vcl_endl << vcl_endl;
+          std::cout << "\n\nIsec 1 nearly empty  but in image[0] it is non-empty!\n";
+          std::cout << "\tarea(isec0): " << vgl_area<double>(isec0) << std::endl 
+                   << "\t" << isec0 << std::endl;
+          std::cout << "\tarea(isec1): " << vgl_area<double>(isec1) << std::endl 
+                   << "\t" << isec1 << std::endl << std::endl;
           assert(!bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7));
         }
       }
@@ -130,13 +130,13 @@ try_combination(
       if (selected == p0_.size()-1) {
         polys0_.push_back(isec0);
         polys1_.push_back(isec1);
-//        vcl_cout << "Found solution!\n";
-//        vcl_cout << "  Points: 0..." << i0;
-//        vcl_cout << "  Sectors: " ;
+//        std::cout << "Found solution!\n";
+//        std::cout << "  Points: 0..." << i0;
+//        std::cout << "  Sectors: " ;
 //        for (unsigned kk=0; kk <= i0; ++kk) {
-//          vcl_cout << selected_sectors[kk] << " ";
+//          std::cout << selected_sectors[kk] << " ";
 //        }
-//        vcl_cout << vcl_endl;
+//        std::cout << std::endl;
       } else {
         bool final_retval = try_combination(selected,selected_sectors,isec0,isec1);
         if (!final_retval)
@@ -152,7 +152,7 @@ try_combination(
 //    - p0, p1 point sets
 //    - sectors for both point sets
 //    - point index i
-//    - index k0 of a sector around p0[i]; this index is relative to angles vcl_vector
+//    - index k0 of a sector around p0[i]; this index is relative to angles std::vector
 //
 // Output:
 //    - returns if sector k0 of point p0[i] is valid or not
@@ -170,14 +170,14 @@ valid_sector(unsigned i, unsigned k0, unsigned &k1) const
   double theta_k0 = (theta_end + theta_start)*0.5;
 
   
-  vcl_set<unsigned> l0, r0;
+  std::set<unsigned> l0, r0;
   mw_qualitative_epipolar::partition(p0_,i,theta_k0,true,l0,r0);
 
   //: TODO perhaps we can improve the performance of this. This function is currently O(n^2) 
   for (k1=0; k1 < n_sectors; ++k1) {
     get_sector_bounds(angles1_[i],k1,theta_start,theta_end);
     double theta_k1 = (theta_end + theta_start)*0.5;
-    vcl_set<unsigned> l1, r1;
+    std::set<unsigned> l1, r1;
     mw_qualitative_epipolar::partition(p1_,i,theta_k1,true,l1,r1);
 
     // We don't really have to check both sides; one is the complement of the other
@@ -192,7 +192,7 @@ valid_sector(unsigned i, unsigned k0, unsigned &k1) const
 
 void mw_qualitative_epipolar::
 get_sector_bounds(
-    const vcl_vector<double> &angle, 
+    const std::vector<double> &angle, 
     unsigned is, 
     double &theta_start,
     double &theta_end
@@ -207,10 +207,10 @@ get_sector_bounds(
     if (is == last_idx) {
       theta_start = angle[is];
       theta_end = angle[0] + vnl_math::pi;
-//      vcl_cout << "   Angle 0: " << angle[0]*180.0/vnl_math::pi << vcl_endl;
-//      vcl_cout << "   Angle last: " << angle[is]*180.0/vnl_math::pi << vcl_endl;
-//      vcl_cout << "   Angle start: " << theta_start << vcl_endl;
-//      vcl_cout << "   Angle end: " << theta_end << vcl_endl;
+//      std::cout << "   Angle 0: " << angle[0]*180.0/vnl_math::pi << std::endl;
+//      std::cout << "   Angle last: " << angle[is]*180.0/vnl_math::pi << std::endl;
+//      std::cout << "   Angle start: " << theta_start << std::endl;
+//      std::cout << "   Angle end: " << theta_end << std::endl;
     } else {
       abort();
     }
@@ -223,9 +223,9 @@ intersect_sectors(
     const vgl_polygon<double> &poly_a, 
     unsigned ip, 
     unsigned is, 
-    const vcl_vector<vsol_point_2d_sptr> & p, 
-    const vcl_vector<double> &angle, 
-    const vcl_vector <bool>  &outward,
+    const std::vector<vsol_point_2d_sptr> & p, 
+    const std::vector<double> &angle, 
+    const std::vector <bool>  &outward,
     const vgl_box_2d<double> &bbox,
     int *p_retval
     )
@@ -245,9 +245,9 @@ intersect_sectors(
   vsl_b_write(bfs_out, poly_b);
   bfs_out.close();
 
-//  vcl_cout << vcl_setprecision(20) << vcl_scientific;
-//  vcl_cout << "Poly A:\n" << poly_a << vcl_endl;
-//  vcl_cout << "Poly B:\n" << poly_b << vcl_endl;
+//  std::cout << std::setprecision(20) << std::scientific;
+//  std::cout << "Poly A:\n" << poly_a << std::endl;
+//  std::cout << "Poly B:\n" << poly_b << std::endl;
 
   int retval;
   vgl_polygon<double> result = vgl_clip(poly_a,poly_b, vgl_clip_type_intersect,&retval);
@@ -259,9 +259,9 @@ vgl_polygon<double> mw_qualitative_epipolar::
 form_sector_polygon(
     unsigned ip, 
     unsigned is, 
-    const vcl_vector<vsol_point_2d_sptr> & p, 
-    const vcl_vector<double> &angle, 
-    const vcl_vector <bool>  &/*outward*/,
+    const std::vector<vsol_point_2d_sptr> & p, 
+    const std::vector<double> &angle, 
+    const std::vector <bool>  &/*outward*/,
     const vgl_box_2d<double> &bbox
     )
 {
@@ -279,8 +279,8 @@ form_sector_polygon(
   double theta_end;
   get_sector_bounds(angle, is, theta_start,theta_end);
 
-  bmcsd_vector_2d t_start (vcl_cos(theta_start),vcl_sin(theta_start));
-  bmcsd_vector_2d t_end (vcl_cos(theta_end),vcl_sin(theta_end));
+  bmcsd_vector_2d t_start (std::cos(theta_start),std::sin(theta_start));
+  bmcsd_vector_2d t_end (std::cos(theta_end),std::sin(theta_end));
 
   bmcsd_vector_2d A = p_c + rho*t_start;
   bmcsd_vector_2d C = p_c - rho*t_start;
@@ -304,19 +304,19 @@ form_sector_polygon(
 //: Given a list of points, build the sectors around the i-th point such that no other point is
 // within the sectors. 
 //
-// \param[out] angle: angles around p indicating the lines of the sectors. This vcl_vector is
+// \param[out] angle: angles around p indicating the lines of the sectors. This std::vector is
 // ordered counter-clockwise. The angles range in [0,pi) and denote infinite lines around point p[i]
 //
 // \param[out] outward[i]: true if angle[i] represents line direction from p[i] to
-// p[i]+(vcl_cos(angle[i]),vcl_sin(angle[i])), ie, the actual data point is along such direction;
+// p[i]+(std::cos(angle[i]),std::sin(angle[i])), ie, the actual data point is along such direction;
 // false if angle[i] represents line direction from p[i] to
-// p[i]-(vcl_cos(angle[i]),vcl_sin(angle[i])).
+// p[i]-(std::cos(angle[i]),std::sin(angle[i])).
 //
 void mw_qualitative_epipolar::
-build_sectors(const vcl_vector<vsol_point_2d_sptr> &p, 
+build_sectors(const std::vector<vsol_point_2d_sptr> &p, 
               unsigned i,
-              vcl_vector <double> &angle,
-              vcl_vector <bool> &outward)
+              std::vector <double> &angle,
+              std::vector <bool> &outward)
 {
   angle.reserve(p.size()-1);
   outward.resize(p.size()-1);
@@ -334,7 +334,7 @@ build_sectors(const vcl_vector<vsol_point_2d_sptr> &p,
       // we might have to clip to bounds here
 
       if (angle.back() >= vnl_math::pi) {
-        assert(vcl_fabs(angle.back()-vnl_math::pi) < 1e-10);
+        assert(std::fabs(angle.back()-vnl_math::pi) < 1e-10);
         angle.back() = 0;
         outward[angle.size()-1] = false;
       } else
@@ -343,7 +343,7 @@ build_sectors(const vcl_vector<vsol_point_2d_sptr> &p,
   }
 
   // Sort
-  vcl_vector<vcl_pair<double,bool> > v;
+  std::vector<std::pair<double,bool> > v;
   v.resize(angle.size());
 
   for (unsigned k=0; k < angle.size(); ++k) {
@@ -351,7 +351,7 @@ build_sectors(const vcl_vector<vsol_point_2d_sptr> &p,
     v[k].second = outward[k];
   }
   
-  vcl_sort(v.begin(), v.end());
+  std::sort(v.begin(), v.end());
 
   for (unsigned k=0; k < angle.size(); ++k) {
     angle[k] = v[k].first;
@@ -362,17 +362,17 @@ build_sectors(const vcl_vector<vsol_point_2d_sptr> &p,
 //: Partition a given point set, given a line around a central point p[i_p].
 //
 void mw_qualitative_epipolar::
-partition(const vcl_vector<vsol_point_2d_sptr> &p,
+partition(const std::vector<vsol_point_2d_sptr> &p,
           unsigned p_i,
           double angle,
           bool outward,
-          vcl_set <unsigned> &left,
-          vcl_set <unsigned> &right
+          std::set <unsigned> &left,
+          std::set <unsigned> &right
           )
 {
   // for each point, test if its to the left or to the right
   
-  bmcsd_vector_2d v_c(vcl_cos(angle),vcl_sin(angle));
+  bmcsd_vector_2d v_c(std::cos(angle),std::sin(angle));
 
   if (!outward) {
     v_c = -v_c;
@@ -396,10 +396,10 @@ partition(const vcl_vector<vsol_point_2d_sptr> &p,
 void mw_qualitative_epipolar::
 print_polygons() const
 {
-  vcl_list< vgl_polygon<double> > :: const_iterator itr0=polys0_.begin();
-  vcl_list< vgl_polygon<double> > :: const_iterator itr1=polys1_.begin();
+  std::list< vgl_polygon<double> > :: const_iterator itr0=polys0_.begin();
+  std::list< vgl_polygon<double> > :: const_iterator itr1=polys1_.begin();
   for (; itr0 != polys0_.end(); ++itr0,++itr1) {
-    vcl_cout << "Poly View 0: " << *itr0 << vcl_endl 
-             << "Poly View 1: " << *itr1 << vcl_endl << vcl_endl;
+    std::cout << "Poly View 0: " << *itr0 << std::endl 
+             << "Poly View 1: " << *itr1 << std::endl << std::endl;
   }
 }

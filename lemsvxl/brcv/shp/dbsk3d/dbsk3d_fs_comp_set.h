@@ -5,8 +5,8 @@
 #ifndef _dbsk3d_fs_comp_set_h_
 #define _dbsk3d_fs_comp_set_h_
 
-#include <vcl_vector.h>
-#include <vcl_queue.h>
+#include <vector>
+#include <queue>
 
 #include <dbsk3d/dbsk3d_fs_comp.h>
 #include <dbsk3d/dbsk3d_fs_sheet_set.h>
@@ -14,7 +14,7 @@
 class dbsk3d_fs_comp_set
 {
 protected:
-  vcl_vector<dbsk3d_fs_comp*> comp_list_;
+  std::vector<dbsk3d_fs_comp*> comp_list_;
   dbsk3d_fs_sheet_set*        fs_ss_;
   int                         fs_comp_id_counter_;
 
@@ -38,7 +38,7 @@ public:
   }
 
   //####### Data Access #######  
-  vcl_vector<dbsk3d_fs_comp*>& comp_list() {
+  std::vector<dbsk3d_fs_comp*>& comp_list() {
     return comp_list_;
   }  
   dbsk3d_fs_comp* comp_list (unsigned int id) {
@@ -76,12 +76,12 @@ public:
   unsigned int label_shock_components ();
     void propagate_label_C (dbsk3d_fs_comp* C, dbsk3d_fs_sheet* inputS);
     void put_neighbor_S_to_queue (dbsk3d_fs_sheet* S, 
-                                  vcl_queue<dbsk3d_fs_sheet*>& sheet_queue);
+                                  std::queue<dbsk3d_fs_sheet*>& sheet_queue);
 
   //####### Sheet Component Operations #######
   void sort_shock_components ();
 
-  unsigned int delete_unspecified_comps (vcl_set<int>& ith_comp_list);
+  unsigned int delete_unspecified_comps (std::set<int>& ith_comp_list);
 };
 
 #endif

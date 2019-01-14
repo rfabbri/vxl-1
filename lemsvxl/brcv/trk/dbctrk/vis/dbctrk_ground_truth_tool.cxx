@@ -65,36 +65,36 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
 
        if( e.type == vgui_KEY_PRESS && e.key == 's' && vgui_SHIFT ){
-               static vcl_string filename="";
-               static vcl_string ext="*.*";
+               static std::string filename="";
+               static std::string ext="*.*";
 
                vgui_dialog inputfile("Load Ground Truth");
                inputfile.file("Ground Truth File Name",ext,filename);
                if(!inputfile.ask())
                     return true;
 
-         vcl_cout<<"\n reading ground truth file .... ";
-         vcl_cout<<"\n reading ground truth file .... ";
-               vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > >gmatches;
+         std::cout<<"\n reading ground truth file .... ";
+         std::cout<<"\n reading ground truth file .... ";
+               std::vector<std::pair<std::vector<int>,std::vector<int> > >gmatches;
                readcorrespondence(filename,gmatches);
-         vcl_cout<<"\n reading done ";
-         vcl_cout<<"\n reading done ";
+         std::cout<<"\n reading done ";
+         std::cout<<"\n reading done ";
 
                dbctrk_storage_sptr p,q;
-               vcl_vector<dbctrk_tracker_curve_sptr> tc1,tc2;
+               std::vector<dbctrk_tracker_curve_sptr> tc1,tc2;
                p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame));
                p->get_tracked_curves(tc1);
-         vcl_cout<<"\n the number of curves in frame 1 is "<<tc1.size();
-         vcl_cout<<"\n the number of curves in frame 1 is "<<tc1.size();
+         std::cout<<"\n the number of curves in frame 1 is "<<tc1.size();
+         std::cout<<"\n the number of curves in frame 1 is "<<tc1.size();
                q.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame+1));
                q->get_tracked_curves(tc2);
 
-         vcl_cout<<"\n the number of curves in frame 2 is "<<tc2.size();
-         vcl_cout<<"\n the number of curves in frame 2 is "<<tc2.size();
+         std::cout<<"\n the number of curves in frame 2 is "<<tc2.size();
+         std::cout<<"\n the number of curves in frame 2 is "<<tc2.size();
          
-               vcl_vector< vcl_pair<vcl_vector<int>,vcl_vector<int> > >::iterator iter;
-               vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
-               vcl_map<vcl_string, vgui_tableau_sptr>::iterator iters;
+               std::vector< std::pair<std::vector<int>,std::vector<int> > >::iterator iter;
+               std::vector< std::map<std::string, vgui_tableau_sptr> > seq=bvis1_manager::instance()->tableau_sequence();
+               std::map<std::string, vgui_tableau_sptr>::iterator iters;
                int frameno=0;
                for(unsigned int j=0;j<seq.size();j++,frameno++)
                 {  
@@ -107,7 +107,7 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
                      {
                       for(unsigned int k=0;k<(*iter).first.size();k++)
                         {
-                          vcl_cout<<k<<"\t"; 
+                          std::cout<<k<<"\t"; 
         float r,g,b;
                              if(frameno==0)
                              {
@@ -140,11 +140,11 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
      if( e.type == vgui_KEY_PRESS && e.key == 'e' && vgui_SHIFT ){
 
-     vcl_string filename="";
-     vcl_string filenameI="";
-     vcl_string filenameS="";
+     std::string filename="";
+     std::string filenameI="";
+     std::string filenameS="";
 
-     vcl_string ext="*.*";
+     std::string ext="*.*";
 
      vgui_dialog inputfile("Load Ground Truth");
      inputfile.file("Ground Truth File Name",ext,filename);
@@ -154,26 +154,26 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
      if(!inputfile.ask())
           return true;
         dbctrk_storage_sptr p;
-        vcl_vector<dbctrk_tracker_curve_sptr> tc1,tc2;
+        std::vector<dbctrk_tracker_curve_sptr> tc1,tc2;
         
         p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame));
         p->get_tracked_curves(tc1);
         p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame+1));
         p->get_tracked_curves(tc2);
 
-        vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > >gmatches;
+        std::vector<std::pair<std::vector<int>,std::vector<int> > >gmatches;
         readcorrespondence(filename,gmatches);
-        vcl_vector< vcl_pair<vcl_vector<int>,vcl_vector<int> > >::iterator iter;
+        std::vector< std::pair<std::vector<int>,std::vector<int> > >::iterator iter;
 
 
-        vcl_map<int,int> mapping;
+        std::map<int,int> mapping;
         vnl_matrix <double> R;
         vnl_matrix <double> Tbar;              
-        vcl_map<int,vcl_vector<double> > imap;
-        vcl_map<int,vcl_vector<double> > smap;
+        std::map<int,std::vector<double> > imap;
+        std::map<int,std::vector<double> > smap;
 
-        vcl_ofstream ofileI(filenameI.c_str());
-        vcl_ofstream ofileS(filenameS.c_str());
+        std::ofstream ofileI(filenameI.c_str());
+        std::ofstream ofileS(filenameS.c_str());
 
         for(iter=gmatches.begin();iter!=gmatches.end();iter++)
         {
@@ -181,8 +181,8 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
             {
                 for(unsigned int j=0;j<(*iter).first.size();j++)
                 {
-                    vcl_vector<double> icost;
-                    vcl_vector<double> scost;
+                    std::vector<double> icost;
+                    std::vector<double> scost;
                     ofileI<<tc1[(*iter).first[j]]->get_id()<<" ";
                     ofileS<<tc1[(*iter).first[j]]->get_id()<<" ";
                      for(unsigned int i=0;i<tc2.size();i++)
@@ -214,9 +214,9 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
  if( e.type == vgui_KEY_PRESS && e.key == 'k' && vgui_SHIFT ){
 
-     vcl_string filename="";
+     std::string filename="";
 
-     vcl_string ext="*.*";
+     std::string ext="*.*";
 
      vgui_dialog inputfile("Load Curves for cues");
      inputfile.file("Load curves",ext,filename);
@@ -224,11 +224,11 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
      if(!inputfile.ask())
           return true;
 
-     vcl_vector<int>  ids;
+     std::vector<int>  ids;
      load_curve_ids(filename,ids);
 
      dbctrk_storage_sptr p;
-     vcl_vector<dbctrk_tracker_curve_sptr> tc1,tc2;
+     std::vector<dbctrk_tracker_curve_sptr> tc1,tc2;
         
         p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame));
         p->get_tracked_curves(tc1);
@@ -254,9 +254,9 @@ dbctrk_ground_truth_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
 }
 bool
-dbctrk_ground_truth_tool::load_curve_ids(vcl_string filename,vcl_vector<int> & ids)
+dbctrk_ground_truth_tool::load_curve_ids(std::string filename,std::vector<int> & ids)
 {
-    vcl_ifstream ifile(filename.c_str());
+    std::ifstream ifile(filename.c_str());
     if(!ifile)
         return false;
 
@@ -268,39 +268,39 @@ dbctrk_ground_truth_tool::load_curve_ids(vcl_string filename,vcl_vector<int> & i
     }
     return true;
 }
-bool readcorrespondence(vcl_string filename,vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > >&corr)
+bool readcorrespondence(std::string filename,std::vector<std::pair<std::vector<int>,std::vector<int> > >&corr)
 {
-    vcl_ifstream ifile(filename.c_str());
+    std::ifstream ifile(filename.c_str());
     if(!ifile)
     {
-        vcl_cout<<"\n error opening the ground truth file ";
+        std::cout<<"\n error opening the ground truth file ";
         return false;
     }
     corr.clear();
 
-    vcl_string buffer;
+    std::string buffer;
     char tempbuffer[100];
     while(!ifile.eof())
     {
         ifile.getline(tempbuffer,100,'\n');
 
-        buffer=vcl_string(tempbuffer);
+        buffer=std::string(tempbuffer);
         int pos11=buffer.find_first_of("[",0);
         int pos12=buffer.find_first_of("]",0);
 
-        vcl_string s1;
+        std::string s1;
         if(pos11>0 || pos12>0)
             s1=buffer.substr(pos11,pos12-pos11);
         int pos21=buffer.find_first_of("[",pos12+1);
         int pos22=buffer.find_first_of("]",pos12+1);
-        vcl_string s2;
+        std::string s2;
         if(pos21>0 || pos22>0)
             s2=buffer.substr(pos21,pos22-pos21);
         
-        vcl_vector<vcl_string> vs2 = parseLineForNumbers(s2);
-        vcl_vector<vcl_string> vs1 = parseLineForNumbers(s1);
+        std::vector<std::string> vs2 = parseLineForNumbers(s2);
+        std::vector<std::string> vs1 = parseLineForNumbers(s1);
 
-        vcl_vector<int> ids1,ids2;
+        std::vector<int> ids1,ids2;
         for (unsigned int i=0;i<vs1.size();i++){
          ids1.push_back(atoi(vs1[i].c_str()));
         }
@@ -308,7 +308,7 @@ bool readcorrespondence(vcl_string filename,vcl_vector<vcl_pair<vcl_vector<int>,
     ids2.push_back(atoi(vs2[i].c_str()));
         }
 
-        vcl_vector<vcl_pair<vcl_vector<int>,vcl_vector<int> > >::iterator iter;
+        std::vector<std::pair<std::vector<int>,std::vector<int> > >::iterator iter;
     int flag=0;
         for(iter=corr.begin();iter!=corr.end();iter++)
         {
@@ -343,7 +343,7 @@ bool readcorrespondence(vcl_string filename,vcl_vector<vcl_pair<vcl_vector<int>,
         }
 
         if(flag==0)
-                corr.push_back(vcl_make_pair(ids1,ids2));
+                corr.push_back(std::make_pair(ids1,ids2));
 
         
     }
@@ -352,16 +352,16 @@ bool readcorrespondence(vcl_string filename,vcl_vector<vcl_pair<vcl_vector<int>,
     return true;
 }
 
-vcl_vector<vcl_string> parseLineForNumbers(vcl_string s)
+std::vector<std::string> parseLineForNumbers(std::string s)
 {
-  vcl_vector <vcl_string> vec;
+  std::vector <std::string> vec;
 
   if (s.size() > 0){
 
-    vcl_string numerics("0123456789.-+e");
-    vcl_string::size_type pos1=0,pos2=0;
+    std::string numerics("0123456789.-+e");
+    std::string::size_type pos1=0,pos2=0;
 
-    while((pos1=s.find_first_of(numerics,pos1)) != vcl_string::npos) {
+    while((pos1=s.find_first_of(numerics,pos1)) != std::string::npos) {
       pos2=s.find_first_not_of(numerics,pos1);
       vec.push_back(s.substr(pos1,pos2-pos1));
       pos1=pos2;
@@ -371,7 +371,7 @@ vcl_vector<vcl_string> parseLineForNumbers(vcl_string s)
 }
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_ground_truth_tool::name() const
 
 {

@@ -1,6 +1,6 @@
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <iostream>
+#include <sstream>
 
 //Be careful on the order here!
 #include <dbsk3d/dbsk3d_fs_vertex.h>
@@ -22,7 +22,7 @@
 //
 bool dbsk3d_output_object_info (SoPath* path)
 {
-  vcl_ostringstream ostrm;
+  std::ostringstream ostrm;
   bool object_found = false;
 
   //path->getTail() is the frist element got clicked!
@@ -33,7 +33,7 @@ bool dbsk3d_output_object_info (SoPath* path)
     fs_vertex_SoCube* FV_vis = (fs_vertex_SoCube*) hitObject;
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*)FV_vis->element();
     FV->getInfo (ostrm);
-    vcl_cout<< ostrm.str();
+    std::cout<< ostrm.str();
     object_found = true;
   }
   //fs_edge_SoLineSet
@@ -41,7 +41,7 @@ bool dbsk3d_output_object_info (SoPath* path)
     fs_edge_SoLineSet* FE_vis = (fs_edge_SoLineSet*) hitObject;
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*)FE_vis->element();
     FE->getInfo (ostrm);
-    vcl_cout<< ostrm.str();
+    std::cout<< ostrm.str();
     object_found = true;
   }
   //fs_face_SoFaceSet
@@ -49,7 +49,7 @@ bool dbsk3d_output_object_info (SoPath* path)
     fs_face_SoFaceSet* FF_vis = (fs_face_SoFaceSet*) hitObject;
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) FF_vis->element();
     FF->getInfo (ostrm);
-    vcl_cout<< ostrm.str();
+    std::cout<< ostrm.str();
     object_found = true;
   }  
   //fs_sheet_SoIndexedFaceSet
@@ -57,7 +57,7 @@ bool dbsk3d_output_object_info (SoPath* path)
     fs_sheet_SoIndexedFaceSet* FS_vis = (fs_sheet_SoIndexedFaceSet*) hitObject;
     dbsk3d_fs_sheet* FS = (dbsk3d_fs_sheet*) FS_vis->element();
     FS->getInfo (ostrm);
-    vcl_cout<< ostrm.str();
+    std::cout<< ostrm.str();
     object_found = true;
   }
   //ms_node_SoSphere
@@ -66,10 +66,10 @@ bool dbsk3d_output_object_info (SoPath* path)
     
     //if the object is from an IV file, this field will be NULL.
     if ((dbsk3d_ms_node*)MN_vis->element()) {
-      vcl_cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
-                ", id: "<< ((dbsk3d_ms_node*)MN_vis->element())->id() << vcl_endl;
+      std::cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
+                ", id: "<< ((dbsk3d_ms_node*)MN_vis->element())->id() << std::endl;
       ((dbsk3d_ms_node*)MN_vis->element())->getInfo (ostrm);
-      vcl_cout<< ostrm.str();
+      std::cout<< ostrm.str();
       object_found = true;
     }
   }
@@ -79,10 +79,10 @@ bool dbsk3d_output_object_info (SoPath* path)
 
     //if the object is from an IV file, this field will be NULL.
     if ( (dbsk3d_ms_curve*)MC_vis->element() ) {
-      vcl_cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
-                 ", id: "<< ((dbsk3d_ms_curve*)MC_vis->element())->id() << vcl_endl;
+      std::cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
+                 ", id: "<< ((dbsk3d_ms_curve*)MC_vis->element())->id() << std::endl;
       ((dbsk3d_ms_curve*)MC_vis->element())->getInfo (ostrm);
-      vcl_cout<< ostrm.str();
+      std::cout<< ostrm.str();
       object_found = true;
     }
   }
@@ -91,16 +91,16 @@ bool dbsk3d_output_object_info (SoPath* path)
     ms_sheet_SoIndexedFaceSet* MS_vis = (ms_sheet_SoIndexedFaceSet*) hitObject;
 
     if ( (dbsk3d_ms_sheet*) MS_vis->element() ) {
-      vcl_cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
-                 ", id: "<< ((dbsk3d_ms_sheet*)MS_vis->element())->id() << vcl_endl;
+      std::cout<< "\nSelected " << hitObject->getTypeId().getName().getString() <<
+                 ", id: "<< ((dbsk3d_ms_sheet*)MS_vis->element())->id() << std::endl;
       ((dbsk3d_ms_sheet*)MS_vis->element())->getInfo (ostrm);
-      vcl_cout<< ostrm.str();
+      std::cout<< ostrm.str();
       object_found = true;
     }
   }
 
   //if (!object_found)
-    //vcl_cout<< "\nSelected " << hitObject->getTypeId().getName().getString() << vcl_endl << vcl_endl;
+    //std::cout<< "\nSelected " << hitObject->getTypeId().getName().getString() << std::endl << std::endl;
   return object_found;
 }
 

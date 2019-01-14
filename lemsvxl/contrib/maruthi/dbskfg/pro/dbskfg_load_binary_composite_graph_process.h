@@ -21,8 +21,8 @@
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
-#include <vcl_set.h>
-#include <vcl_utility.h>
+#include <set>
+#include <utility>
 #include <vgl/vgl_point_2d.h>
 
 class dbsk2d_ishock_edge;
@@ -40,10 +40,10 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();
@@ -51,23 +51,23 @@ public:
   bool execute();
   bool finish();
 
-  vcl_map<unsigned int,dbskfg_composite_graph_sptr > get_cgraphs()
+  std::map<unsigned int,dbskfg_composite_graph_sptr > get_cgraphs()
   {return cgraphs_;}
 
-  vcl_map<unsigned int,double > get_cgraph_area()
+  std::map<unsigned int,double > get_cgraph_area()
   {return area_cgraphs_;}
 
-  vcl_map<unsigned int,double > get_cgraph_length()
+  std::map<unsigned int,double > get_cgraph_length()
   {return arc_length_cgraphs_;}
 
-  vcl_map<unsigned int,vgl_polygon<double> > get_polygons()
+  std::map<unsigned int,vgl_polygon<double> > get_polygons()
   {return polygons_;}
 
-  vcl_vector<unsigned int> get_frags_removed(){return frags_removed_;}
+  std::vector<unsigned int> get_frags_removed(){return frags_removed_;}
 
-  bool compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
-                     vcl_set<unsigned int>& contour_ids,
-                     vcl_pair<unsigned int,unsigned int>& image_size,
+  bool compute_graph(std::vector<vsol_spatial_object_2d_sptr>& contours,
+                     std::set<unsigned int>& contour_ids,
+                     std::pair<unsigned int,unsigned int>& image_size,
                      bool prune_degree_three_nodes=true);
   
   bool compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol);
@@ -77,13 +77,13 @@ public:
 
 private: 
   
-  void read_binary_file(vcl_string input_file, 
-                        vcl_map<unsigned int,
-                        vcl_vector< vsol_spatial_object_2d_sptr > >& geoms,
-                        vcl_map<unsigned int,vcl_set<unsigned int> >& con_ids);
+  void read_binary_file(std::string input_file, 
+                        std::map<unsigned int,
+                        std::vector< vsol_spatial_object_2d_sptr > >& geoms,
+                        std::map<unsigned int,std::set<unsigned int> >& con_ids);
 
   bool compute_composite_graph(vidpro1_vsol2D_storage_sptr output_vsol,
-                               vcl_set<unsigned int>& cons,
+                               std::set<unsigned int>& cons,
                                bool prune_degree_three_nodes=true,
                                bool outside_shock=false);
 
@@ -91,21 +91,21 @@ private:
 
   void sample_shock_link(
       dbsk2d_ishock_edge* edge,
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& left_curve,
-      vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& right_curve,
+      std::vector<std::pair<vgl_point_2d<double>,double > >& left_curve,
+      std::vector<std::pair<vgl_point_2d<double>,double > >& right_curve,
       dbsk2d_shock_graph_sptr pruned_graph,
       bool reverse);
 
   unsigned int image_ni_;
   unsigned int image_nj_;
 
-  vcl_map<unsigned int,dbskfg_composite_graph_sptr > cgraphs_;
-  vcl_map<unsigned int,double> area_cgraphs_;
-  vcl_map<unsigned int,double> arc_length_cgraphs_;
-  vcl_vector<unsigned int> frags_removed_;
-  vcl_map<int,vcl_string> key_map_;
-  vcl_map<vcl_pair<double,double>,double> kd_points_;
-  vcl_map<unsigned int,vgl_polygon<double> > polygons_;
+  std::map<unsigned int,dbskfg_composite_graph_sptr > cgraphs_;
+  std::map<unsigned int,double> area_cgraphs_;
+  std::map<unsigned int,double> arc_length_cgraphs_;
+  std::vector<unsigned int> frags_removed_;
+  std::map<int,std::string> key_map_;
+  std::map<std::pair<double,double>,double> kd_points_;
+  std::map<unsigned int,vgl_polygon<double> > polygons_;
 
 };
 

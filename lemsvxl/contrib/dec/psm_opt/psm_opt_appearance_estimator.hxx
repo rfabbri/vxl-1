@@ -1,14 +1,14 @@
 #ifndef psm_opt_appearance_estimator_txx_
 #define psm_opt_appearance_estimator_txx_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <psm/psm_apm_traits.h>
 
 #include "psm_opt_appearance_estimator.h"
 
 template<psm_apm_type APM>
-void psm_opt_appearance_estimator<APM>::compute_appearance(vcl_vector<typename psm_apm_traits<APM>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, typename psm_apm_traits<APM>::apm_datatype &model)
+void psm_opt_appearance_estimator<APM>::compute_appearance(std::vector<typename psm_apm_traits<APM>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, typename psm_apm_traits<APM>::apm_datatype &model)
 {
   const float min_sigma = 0.04f; 
 
@@ -21,7 +21,7 @@ void psm_opt_appearance_estimator<APM>::compute_appearance(vcl_vector<typename p
     // nothing to do.
     return;
   }
-  vcl_vector<float> obs_weights = vis;
+  std::vector<float> obs_weights = vis;
 
   const float epsilon = 1e-4f;
   const unsigned int max_its = 100;
@@ -44,7 +44,7 @@ void psm_opt_appearance_estimator<APM>::compute_appearance(vcl_vector<typename p
       }
 
       // compute delta weight for convergence check
-      float weight_delta = vcl_fabs(obs_weights[n] - new_obs_weight);
+      float weight_delta = std::fabs(obs_weights[n] - new_obs_weight);
       if (weight_delta > max_weight_change) {
         max_weight_change = weight_delta;
       }
@@ -53,13 +53,13 @@ void psm_opt_appearance_estimator<APM>::compute_appearance(vcl_vector<typename p
     // check for convergence
     if (max_weight_change < min_weight_change) {
       //if (nobs > 1) {
-        //vcl_cout << "EM converged in " << i << " iterations." << vcl_endl;
+        //std::cout << "EM converged in " << i << " iterations." << std::endl;
         //float total_prob = 0.0f;
         //for (unsigned int n=0; n<nobs; ++n) {
         //  total_prob += obs_weights[n];
         //}
-        //vcl_cout << "total prob for " << nobs << " observations = " << total_prob << vcl_endl;
-        //vcl_cout << "sigma = " << model.sigma() << ",  gauss_weight = " << model.gauss_weight() << vcl_endl;
+        //std::cout << "total prob for " << nobs << " observations = " << total_prob << std::endl;
+        //std::cout << "sigma = " << model.sigma() << ",  gauss_weight = " << model.gauss_weight() << std::endl;
       //}
       break;
     }

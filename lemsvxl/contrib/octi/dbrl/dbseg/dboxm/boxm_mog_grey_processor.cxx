@@ -8,7 +8,7 @@
 #include <bsta/bsta_mixture_fixed.h>
 #include <bsta/bsta_gaussian_indep.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Expected value
 boxm_apm_traits<BOXM_APM_MOG_GREY>::obs_datatype

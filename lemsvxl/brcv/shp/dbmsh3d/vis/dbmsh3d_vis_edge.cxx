@@ -2,7 +2,7 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
 

@@ -2,7 +2,7 @@
 //
 //: \file
 
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 #include "bcdg_point_projection.h"
 
 //: Constructor
@@ -14,7 +14,7 @@ bcdg_point_projection::bcdg_point_projection(
       bcdg_algo0::params* parm
     )
   : _time(t1), _point(p1), 
-    _depth(parm->epipole()->depth(p1,p2,vcl_abs(t2 - t1),parm->speed())),
+    _depth(parm->epipole()->depth(p1,p2,std::abs(t2 - t1),parm->speed())),
     _params(parm)
 {}
 

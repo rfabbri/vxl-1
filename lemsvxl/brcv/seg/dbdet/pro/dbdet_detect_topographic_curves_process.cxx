@@ -12,8 +12,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -42,12 +42,12 @@
 //: Constructor
 dbdet_detect_topographic_curves_process::dbdet_detect_topographic_curves_process()
 {
-  vcl_vector<vcl_string> gradient_operator_choices;
+  std::vector<std::string> gradient_operator_choices;
   gradient_operator_choices.push_back("Gaussian");       //0
   gradient_operator_choices.push_back("h0-operator");    //1
   gradient_operator_choices.push_back("h1-operator");    //2
 
-  vcl_vector<vcl_string> topographic_curve_choices;
+  std::vector<std::string> topographic_curve_choices;
   topographic_curve_choices.push_back("fuu=0");          //0
   topographic_curve_choices.push_back("fuv=0");          //1
   topographic_curve_choices.push_back("fvv=0");          //2
@@ -75,7 +75,7 @@ dbdet_detect_topographic_curves_process::dbdet_detect_topographic_curves_process
   topographic_curve_choices.push_back("theta_new(-)");    //19
 
 
-  vcl_vector<vcl_string> curve_classification_choices;
+  std::vector<std::string> curve_classification_choices;
   curve_classification_choices.push_back("Both (+) and (-)");  //0
   curve_classification_choices.push_back("(+) Only");          //1
   curve_classification_choices.push_back("(-) Only");          //2
@@ -90,7 +90,7 @@ dbdet_detect_topographic_curves_process::dbdet_detect_topographic_curves_process
       !parameters()->add( "Output implicit function"  , "-out_func" , false )
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -110,7 +110,7 @@ dbdet_detect_topographic_curves_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_detect_topographic_curves_process::name()
 {
   return "Compute Topographic Curves";
@@ -134,21 +134,21 @@ dbdet_detect_topographic_curves_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_detect_topographic_curves_process::get_input_type()
+std::vector< std::string > dbdet_detect_topographic_curves_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_detect_topographic_curves_process::get_output_type()
+std::vector< std::string > dbdet_detect_topographic_curves_process::get_output_type()
 {
   bool out_func;
   parameters()->get_value( "-out_func", out_func );
 
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   if (out_func) to_return.push_back( "image" );
   to_return.push_back( "edge_map" );
 
@@ -161,14 +161,14 @@ bool
 dbdet_detect_topographic_curves_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_detect_topographic_curves_process::execute() - not exactly one"
+    std::cout << "In dbdet_detect_topographic_curves_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Computing Topographic curve...";
-  vcl_cout.flush();
+  std::cout << "Computing Topographic curve...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -203,7 +203,7 @@ dbdet_detect_topographic_curves_process::execute()
   parameters()->get_value( "-out_func", out_func );
   parameters()->get_value( "-disp_vec", disp_vec );
   
-  double scale = vcl_pow(2.0, N);
+  double scale = std::pow(2.0, N);
 
   //image converted to double
   vil_image_view<double> I;
@@ -345,7 +345,7 @@ dbdet_detect_topographic_curves_process::execute()
         double sq_mag = ix[i]*ix[i]+iy[i]*iy[i];
 
         //use the gradient mag as the mask
-        m[i] = vcl_sqrt(sq_mag);
+        m[i] = std::sqrt(sq_mag);
 
         //compute F
         if (m[i]>1e-3){
@@ -379,7 +379,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F
         if (m[i]>1e-3){
@@ -405,7 +405,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F
         if (m[i]>1e-3){
@@ -429,7 +429,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F=det(H)
         f[i] = ixx[i]*iyy[i]-ixy[i]*ixy[i];
@@ -447,7 +447,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F=det(H)
         f[i] = ixx[i]*iyy[i]-ixy[i]*ixy[i];
@@ -455,16 +455,16 @@ dbdet_detect_topographic_curves_process::execute()
         //compute Fx and Fy from tan(theta)
         double theta;
         double den = (ixx[i]*ixx[i]+iyy[i]*iyy[i]-ixx[i]*iyy[i]+ixy[i]*ixy[i]);
-        if (vcl_fabs(den)>1e-3){
-          theta = vcl_atan(ixy[i]*(ixx[i]+iyy[i])/(den + 1e-10));
+        if (std::fabs(den)>1e-3){
+          theta = std::atan(ixy[i]*(ixx[i]+iyy[i])/(den + 1e-10));
         }
         else {
           theta = 0;
           degen[i] = true;
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -475,7 +475,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F=det(H)
         f[i] = ixx[i]*iyy[i]-ixy[i]*ixy[i];
@@ -483,16 +483,16 @@ dbdet_detect_topographic_curves_process::execute()
         //compute Fx and Fy from tan(theta)
         double theta;
         double den = (ix[i]*ixx[i]+iy[i]*ixy[i]);
-        if (vcl_fabs(den)>1e-3){
-          theta = vcl_atan((ix[i]*ixy[i]+iy[i]*iyy[i])/(den + 1e-10));
+        if (std::fabs(den)>1e-3){
+          theta = std::atan((ix[i]*ixy[i]+iy[i]*iyy[i])/(den + 1e-10));
         }
         else {
           theta = 0;
           degen[i] = true;
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -503,32 +503,32 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F=det(H)
         f[i] = ixx[i]*iyy[i]-ixy[i]*ixy[i];
 
         //compute Fx and Fy
         double theta;
-        if (vcl_fabs(ixx[i])>1e-5){
+        if (std::fabs(ixx[i])>1e-5){
           if (f[i]<=0)
-            theta = vcl_atan((ixy[i] + vcl_sqrt(-f[i]))/ixx[i]);
+            theta = std::atan((ixy[i] + std::sqrt(-f[i]))/ixx[i]);
           else {
             theta = 0;
             degen[i] = true;
           }
         }
         else {
-          if (vcl_fabs(ixy[i])>1e-5)
-            theta = vcl_atan(iyy[i]/ixy[i]/2);
+          if (std::fabs(ixy[i])>1e-5)
+            theta = std::atan(iyy[i]/ixy[i]/2);
           else {
             theta = 0;
             degen[i] = true;
           }
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -539,33 +539,33 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F=det(H)
         f[i] = ixx[i]*iyy[i]-ixy[i]*ixy[i];
 
         //compute Fx and Fy
         double theta;
-        if (vcl_fabs(ixx[i])>1e-5){
+        if (std::fabs(ixx[i])>1e-5){
           if (f[i]<=0)
-            theta = vcl_atan((ixy[i] - vcl_sqrt(-f[i]))/ixx[i]);
+            theta = std::atan((ixy[i] - std::sqrt(-f[i]))/ixx[i]);
           else {
             theta = 0;
             degen[i] = true;
           }
         }
         else {
-          if (vcl_fabs(ixy[i])>1e-5)
+          if (std::fabs(ixy[i])>1e-5)
             theta = vnl_math::pi_over_2; //instead of making theta+ and theta- the same at these points
-            //theta = vcl_atan(iyy[i]/ixy[i]/2);
+            //theta = std::atan(iyy[i]/ixy[i]/2);
           else {
             theta = 0;
             degen[i] = true;
           }
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -581,12 +581,12 @@ dbdet_detect_topographic_curves_process::execute()
         //compute F=lambda+
         double trace = (ixx[i]+iyy[i])/2;
 
-        f[i] = trace + vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace + std::sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         double Sq = ixx[i]*ixx[i]-2*ixx[i]*iyy[i]+iyy[i]*iyy[i]+4*ixy[i]*ixy[i];
         if (Sq>0){
-            fx[i] = ixxx[i]*vcl_sqrt(Sq)+ixyy[i]*vcl_sqrt(Sq)+ixx[i]*ixxx[i]-ixx[i]*ixyy[i]-iyy[i]*ixxx[i]+iyy[i]*ixyy[i]+4*ixy[i]*ixxy[i];
-            fy[i] = ixxy[i]*vcl_sqrt(Sq)+iyyy[i]*vcl_sqrt(Sq)+ixx[i]*ixxy[i]-ixx[i]*iyyy[i]-iyy[i]*ixxy[i]+iyy[i]*iyyy[i]+4*ixy[i]*ixyy[i];
+            fx[i] = ixxx[i]*std::sqrt(Sq)+ixyy[i]*std::sqrt(Sq)+ixx[i]*ixxx[i]-ixx[i]*ixyy[i]-iyy[i]*ixxx[i]+iyy[i]*ixyy[i]+4*ixy[i]*ixxy[i];
+            fy[i] = ixxy[i]*std::sqrt(Sq)+iyyy[i]*std::sqrt(Sq)+ixx[i]*ixxy[i]-ixx[i]*iyyy[i]-iyy[i]*ixxy[i]+iyy[i]*iyyy[i]+4*ixy[i]*ixyy[i];
         }
         else
           degen[i] = true;
@@ -599,17 +599,17 @@ dbdet_detect_topographic_curves_process::execute()
       //if (disp_vec) { //compute vector field of eigen vectors
         //  //compute Fx and Fy (+eigenvector components)
         //  double theta;
-        //  if (vcl_fabs(ixy[i])>1e-5){
-        //      theta = vcl_atan(((iyy[i]-ixx[i]) + vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+        //  if (std::fabs(ixy[i])>1e-5){
+        //      theta = std::atan(((iyy[i]-ixx[i]) + std::sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
         //  }
         //  else { //to add ixx[i]==iyy[i] degeneracy
-        //    if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
+        //    if (std::abs(ixx[i])>std::abs(iyy[i]))
         //      theta = 0;
         //    else
         //      theta = vnl_math::pi_over_2;
         //  }
-        //  fx[i] = -vcl_sin(theta);
-        //  fy[i] = vcl_cos(theta);
+        //  fx[i] = -std::sin(theta);
+        //  fy[i] = std::cos(theta);
         //}
       //}
 
@@ -626,12 +626,12 @@ dbdet_detect_topographic_curves_process::execute()
         //compute F=lambda-
         double trace = (ixx[i]+iyy[i])/2;
 
-        f[i] = trace - vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace - std::sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         double Sq = ixx[i]*ixx[i]-2*ixx[i]*iyy[i]+iyy[i]*iyy[i]+4*ixy[i]*ixy[i];
         if (Sq>0){
-            fx[i] = ixxx[i]*vcl_sqrt(Sq)+ixyy[i]*vcl_sqrt(Sq)-ixx[i]*ixxx[i]+ixx[i]*ixyy[i]+iyy[i]*ixxx[i]-iyy[i]*ixyy[i]-4*ixy[i]*ixxy[i];
-            fy[i] = ixxy[i]*vcl_sqrt(Sq)+iyyy[i]*vcl_sqrt(Sq)-ixx[i]*ixxy[i]+ixx[i]*iyyy[i]+iyy[i]*ixxy[i]-iyy[i]*iyyy[i]-4*ixy[i]*ixyy[i];
+            fx[i] = ixxx[i]*std::sqrt(Sq)+ixyy[i]*std::sqrt(Sq)-ixx[i]*ixxx[i]+ixx[i]*ixyy[i]+iyy[i]*ixxx[i]-iyy[i]*ixyy[i]-4*ixy[i]*ixxy[i];
+            fy[i] = ixxy[i]*std::sqrt(Sq)+iyyy[i]*std::sqrt(Sq)-ixx[i]*ixxy[i]+ixx[i]*iyyy[i]+iyy[i]*ixxy[i]-iyy[i]*iyyy[i]-4*ixy[i]*ixyy[i];
         }
         else
           degen[i] = true;
@@ -644,18 +644,18 @@ dbdet_detect_topographic_curves_process::execute()
       //if (disp_vec) { //compute vector field of eigen vectors
       //    //compute Fx and Fy (+eigenvector components)
       //    double theta;
-      //    if (vcl_fabs(ixy[i])>1e-5){
-      //        theta = vcl_atan(((iyy[i]-ixx[i]) - vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+      //    if (std::fabs(ixy[i])>1e-5){
+      //        theta = std::atan(((iyy[i]-ixx[i]) - std::sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
       //    }
       //    else { //to add ixx[i]==iyy[i] degeneracy
-      //      if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
+      //      if (std::abs(ixx[i])>std::abs(iyy[i]))
       //        theta = vnl_math::pi_over_2;
       //      else
       //        theta = 0;
       //    }
 
-      //    fx[i] = -vcl_sin(theta);
-      //    fy[i] = vcl_cos(theta);
+      //    fx[i] = -std::sin(theta);
+      //    fy[i] = std::cos(theta);
       //  }
 
       break;
@@ -670,24 +670,24 @@ dbdet_detect_topographic_curves_process::execute()
 
         //compute F=lambda (larger)
         double trace = (ixx[i]+iyy[i])/2;
-        f[i] = trace + vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace + vnl_math::sgn(trace)*std::sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         ////for computing the larger eigenvector
         //if (disp_vec) { //compute vector field of eigen vectors
         //  //compute Fx and Fy (larger eigenvector components)
         //  double theta;
-        //  if (vcl_fabs(ixy[i])>1e-5){
-        //      theta = vcl_atan(((iyy[i]-ixx[i]) + vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+        //  if (std::fabs(ixy[i])>1e-5){
+        //      theta = std::atan(((iyy[i]-ixx[i]) + vnl_math::sgn(trace)*std::sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
         //  }
         //  else { //to add ixx[i]==iyy[i] degeneracy
-        //    if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
+        //    if (std::abs(ixx[i])>std::abs(iyy[i]))
         //      theta = 0;
         //    else
         //      theta = vnl_math::pi_over_2;
         //  }
 
-        //  fx[i] = -vcl_sin(theta);
-        //  fy[i] = vcl_cos(theta);
+        //  fx[i] = -std::sin(theta);
+        //  fy[i] = std::cos(theta);
         //}
       }
 
@@ -707,24 +707,24 @@ dbdet_detect_topographic_curves_process::execute()
         //compute F=lambda smaller
         double trace = (ixx[i]+iyy[i])/2;
 
-        f[i] = trace - vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace - vnl_math::sgn(trace)*std::sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         ////for computing the smaller eigenvector
         //if (disp_vec) { //compute vector field of eigen vectors
         //  //compute Fx and Fy (smaller eigenvector components)
         //  double theta;
-        //  if (vcl_fabs(ixy[i])>1e-5){
-        //      theta = vcl_atan(((iyy[i]-ixx[i]) - vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+        //  if (std::fabs(ixy[i])>1e-5){
+        //      theta = std::atan(((iyy[i]-ixx[i]) - vnl_math::sgn(trace)*std::sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
         //  }
         //  else { //to add ixx[i]==iyy[i] degeneracy
-        //    if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
+        //    if (std::abs(ixx[i])>std::abs(iyy[i]))
         //      theta = vnl_math::pi_over_2;
         //    else
         //      theta = 0;
         //  }
 
-        //  fx[i] = -vcl_sin(theta);
-        //  fy[i] = vcl_cos(theta);
+        //  fx[i] = -std::sin(theta);
+        //  fy[i] = std::cos(theta);
         //}
       }
 
@@ -772,7 +772,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F= 
         f[i] = m[i];
@@ -788,15 +788,15 @@ dbdet_detect_topographic_curves_process::execute()
                     2*ix[i]*iy[i]*iy[i]*iy[i]*iyy[i]*iyy[i] -4*ixx[i]*ix[i]*ix[i]*ix[i]*ix[i]*iyy[i];
 
         double theta;
-        if (vcl_fabs(den)>1e-5 && s>0)
-          theta = vcl_atan((2*ixy[i]*ix[i]*ix[i]+2*ixy[i]*iy[i]*iy[i]+ixx[i]*ix[i]*ix[i]+ix[i]*iy[i]*iyy[i]-iy[i]*iy[i]*iyy[i]-iy[i]*ix[i]*ixy[i] + vcl_sqrt(s))/2/den);
+        if (std::fabs(den)>1e-5 && s>0)
+          theta = std::atan((2*ixy[i]*ix[i]*ix[i]+2*ixy[i]*iy[i]*iy[i]+ixx[i]*ix[i]*ix[i]+ix[i]*iy[i]*iyy[i]-iy[i]*iy[i]*iyy[i]-iy[i]*ix[i]*ixy[i] + std::sqrt(s))/2/den);
         else {
             theta = 0;
             degen[i] = true;
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -807,7 +807,7 @@ dbdet_detect_topographic_curves_process::execute()
       for(unsigned long i=0; i<F.size(); i++)
       {
         //compute gradient mag as the mask
-        m[i] = vcl_sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
+        m[i] = std::sqrt(ix[i]*ix[i]+iy[i]*iy[i]);
 
         //compute F= 
         f[i] = m[i];
@@ -823,15 +823,15 @@ dbdet_detect_topographic_curves_process::execute()
                     2*ix[i]*iy[i]*iy[i]*iy[i]*iyy[i]*iyy[i] -4*ixx[i]*ix[i]*ix[i]*ix[i]*ix[i]*iyy[i];
 
         double theta;
-        if (vcl_fabs(den)>1e-5 && s>0)
-          theta = vcl_atan((2*ixy[i]*ix[i]*ix[i]+2*ixy[i]*iy[i]*iy[i]+ixx[i]*ix[i]*ix[i]+ix[i]*iy[i]*iyy[i]-iy[i]*iy[i]*iyy[i]-iy[i]*ix[i]*ixy[i] - vcl_sqrt(s))/2/den);
+        if (std::fabs(den)>1e-5 && s>0)
+          theta = std::atan((2*ixy[i]*ix[i]*ix[i]+2*ixy[i]*iy[i]*iy[i]+ixx[i]*ix[i]*ix[i]+ix[i]*iy[i]*iyy[i]-iy[i]*iy[i]*iyy[i]-iy[i]*ix[i]*ixy[i] - std::sqrt(s))/2/den);
         else {
             theta = 0;
             degen[i] = true;
         }
 
-        fx[i] = -vcl_sin(theta);
-        fy[i] = vcl_cos(theta);
+        fx[i] = -std::sin(theta);
+        fy[i] = std::cos(theta);
 
       }
       break;
@@ -853,7 +853,7 @@ dbdet_detect_topographic_curves_process::execute()
       for (unsigned x = 0; x < F.ni(); x++){
         for (unsigned y = 0; y < F.nj(); y++){
           if (degenerate_pts(x,y)) continue; //do not output degenerate pts
-          double orientation = vcl_atan2(Fx(x,y), -Fy(x,y));
+          double orientation = std::atan2(Fx(x,y), -Fy(x,y));
           edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(x, y), orientation, Mask(x,y)));
         }
       }
@@ -863,7 +863,7 @@ dbdet_detect_topographic_curves_process::execute()
       for (unsigned x = 2*scale; x < F.ni()-2*scale; x++){
         for (unsigned y = 2*scale; y < F.nj()-2*scale; y++){
           if (degenerate_pts(x,y)) continue; //do not output degenerate pts
-          double orientation = vcl_atan2(Fx(x,y), -Fy(x,y));
+          double orientation = std::atan2(Fx(x,y), -Fy(x,y));
           edge_map->insert(new dbdet_edgel(vgl_point_2d<double>(x/scale, y/scale), orientation, Mask(x,y)));
         }
       }
@@ -872,8 +872,8 @@ dbdet_detect_topographic_curves_process::execute()
   else {
 
     //Now call the zero crossing code to get the subpixel curve tokens
-    vcl_vector<vgl_point_2d<double> > loc;
-    vcl_vector<double> orientation, mag;
+    std::vector<vgl_point_2d<double> > loc;
+    std::vector<double> orientation, mag;
 
     dbdet_zc_det ZC(dbdet_zc_det_params(thresh), Fx, Fy, F, Mask);
     ZC.apply(true, loc, orientation, mag);
@@ -887,7 +887,7 @@ dbdet_detect_topographic_curves_process::execute()
     }
 
     //for each curve locations, compute all the gradients to compute the new orientation
-    vcl_vector<double> Ixs, Iys, Ixxs, Ixys, Iyys, Ixxys, Ixyys, Ixxxs, Iyyys;
+    std::vector<double> Ixs, Iys, Ixxs, Ixys, Iyys, Ixxys, Ixyys, Ixxxs, Iyyys;
 
     switch (grad_op)
     {
@@ -933,8 +933,8 @@ dbdet_detect_topographic_curves_process::execute()
     }
         
     //Now, compute and update each curveloc with its new orientation
-    vcl_vector<double> curve_orientations(loc.size());
-    vcl_vector<bool> correct_subclass(loc.size(), true);
+    std::vector<double> curve_orientations(loc.size());
+    std::vector<bool> correct_subclass(loc.size(), true);
 
     switch(topo_curve_op)
     {
@@ -944,7 +944,7 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           //compute Fx and Fy
           double Fx = 2*Ixs[i]*Ixxs[i]*Ixxs[i] + 2*Ixs[i]*Ixys[i]*Ixys[i] + 2*Ixxs[i]*Iys[i]*Ixys[i] + 
@@ -953,7 +953,7 @@ dbdet_detect_topographic_curves_process::execute()
                       2*Ixs[i]*Iyys[i]*Ixys[i]  + 2*Ixs[i]*Iys[i]*Ixyys[i] + Ixxys[i]*Ixs[i]*Ixs[i] + Iyyys[i]*Iys[i]*Iys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
           //determine whether the located zero crossings are at a maxima or minima
           if (subclass>0){ //positive extrema or negative extrema only
@@ -972,7 +972,7 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           //compute Fx and Fy
           double Fx = Ixs[i]*Ixys[i]*Ixxs[i] -Iys[i]*Ixxs[i]*Ixxs[i] -Ixs[i]*Iys[i]*Ixxxs[i] -2*Iys[i]*Ixys[i]*Ixys[i] 
@@ -981,7 +981,7 @@ dbdet_detect_topographic_curves_process::execute()
                       -Iys[i]*Iys[i]*Ixyys[i] +2*Ixs[i]*Ixys[i]*Ixys[i] +Ixs[i]*Ixs[i]*Ixyys[i] +Ixs[i]*Iyys[i]*Iyys[i] +Ixs[i]*Iys[i]*Iyyys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
           //determine whether the located zero crossings are at a maxima or minima
           if (subclass>0){ //positive extrema or negative extrema only
@@ -1001,14 +1001,14 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           //compute Fx and Fy
           double Fx = Iys[i]*Iys[i]*Ixxxs[i]-2*Ixs[i]*Ixys[i]*Ixys[i]-2*Ixs[i]*Iys[i]*Ixxys[i]+2*Ixs[i]*Ixxs[i]*Iyys[i]+Ixs[i]*Ixs[i]*Ixxys[i];
           double Fy = 2*Iys[i]*Ixxs[i]*Iyys[i]+Iys[i]*Iys[i]*Ixxys[i]-2*Iys[i]*Ixys[i]*Ixys[i]-2*Ixs[i]*Iys[i]*Ixyys[i]+Ixs[i]*Ixs[i]*Iyyys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
           //determine whether the located zero crossings are at a maxima or minima
           if (subclass>0){ //positive extrema or negative extrema only
@@ -1024,18 +1024,18 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           //compute Fx and Fy
           double Fx = Ixxxs[i]*Iyys[i]+Ixxs[i]*Ixyys[i]-2*Ixys[i]*Ixxys[i];
           double Fy = Ixxys[i]*Iyys[i]+Ixxs[i]*Iyyys[i]-2*Ixys[i]*Ixyys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
           //determine whether the located zero crossings are at a maxima or minima
           if (subclass>0){ //positive extrema or negative extrema only
-            double theta = vcl_atan(Ixys[i]*(Ixxs[i]+Iyys[i])/(Ixxs[i]*Ixxs[i]+Iyys[i]*Iyys[i]-Ixxs[i]*Iyys[i]+Ixys[i]*Ixys[i]));
+            double theta = std::atan(Ixys[i]*(Ixxs[i]+Iyys[i])/(Ixxs[i]*Ixxs[i]+Iyys[i]*Iyys[i]-Ixxs[i]*Iyys[i]+Ixys[i]*Ixys[i]));
             double feee = sin(theta)*sin(theta)*sin(theta)*Ixxxs[i]-3*cos(theta)*sin(theta)*sin(theta)*Ixxys[i]+3*sin(theta)*Ixyys[i]*cos(theta)*cos(theta)-Iyyys[i]*cos(theta)*cos(theta)*cos(theta);
             double fses = -2*cos(theta)*sin(theta)*sin(theta)*Ixxys[i]+3*sin(theta)*Ixyys[i]*cos(theta)*cos(theta)-sin(theta)*Ixxxs[i]*cos(theta)*cos(theta)-sin(theta)*Ixyys[i]+Iyyys[i]*cos(theta)-Iyyys[i]*cos(theta)*cos(theta)*cos(theta);
          
@@ -1053,14 +1053,14 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
           if (Sq>0){
-              double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)+Ixxs[i]*Ixxxs[i]-Ixxs[i]*Ixyys[i]-Iyys[i]*Ixxxs[i]+Iyys[i]*Ixyys[i]+4*Ixys[i]*Ixxys[i];
-              double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)+Ixxs[i]*Ixxys[i]-Ixxs[i]*Iyyys[i]-Iyys[i]*Ixxys[i]+Iyys[i]*Iyyys[i]+4*Ixys[i]*Ixyys[i];
+              double Fx = Ixxxs[i]*std::sqrt(Sq)+Ixyys[i]*std::sqrt(Sq)+Ixxs[i]*Ixxxs[i]-Ixxs[i]*Ixyys[i]-Iyys[i]*Ixxxs[i]+Iyys[i]*Ixyys[i]+4*Ixys[i]*Ixxys[i];
+              double Fy = Ixxys[i]*std::sqrt(Sq)+Iyyys[i]*std::sqrt(Sq)+Ixxs[i]*Ixxys[i]-Ixxs[i]*Iyyys[i]-Iyys[i]*Ixxys[i]+Iyys[i]*Iyyys[i]+4*Ixys[i]*Ixyys[i];
               //save new orientation
-              curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+              curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
               //if del(H) is positive, lambda+ is the larger eigenvalue
               correct_subclass[i] = (subclass==0) || ((subclass==1) && (Ixxs[i]+Iyys[i])>0);
@@ -1074,14 +1074,14 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
           if (Sq>0){
-              double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)-Ixxs[i]*Ixxxs[i]+Ixxs[i]*Ixyys[i]+Iyys[i]*Ixxxs[i]-Iyys[i]*Ixyys[i]-4*Ixys[i]*Ixxys[i];
-              double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)-Ixxs[i]*Ixxys[i]+Ixxs[i]*Iyyys[i]+Iyys[i]*Ixxys[i]-Iyys[i]*Iyyys[i]-4*Ixys[i]*Ixyys[i];
+              double Fx = Ixxxs[i]*std::sqrt(Sq)+Ixyys[i]*std::sqrt(Sq)-Ixxs[i]*Ixxxs[i]+Ixxs[i]*Ixyys[i]+Iyys[i]*Ixxxs[i]-Iyys[i]*Ixyys[i]-4*Ixys[i]*Ixxys[i];
+              double Fy = Ixxys[i]*std::sqrt(Sq)+Iyyys[i]*std::sqrt(Sq)-Ixxs[i]*Ixxys[i]+Ixxs[i]*Iyyys[i]+Iyys[i]*Ixxys[i]-Iyys[i]*Iyyys[i]-4*Ixys[i]*Ixyys[i];
               //save new orientation
-              curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+              curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
 
               //if del(H) is negative, lambda- is the larger eigenvalue
               correct_subclass[i] = (subclass==0) || ((subclass==1) && (Ixxs[i]+Iyys[i])<0);
@@ -1095,15 +1095,15 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
           double s = vnl_math::sgn(Ixxs[i]+Iyys[i]);
           if (Sq>0){
-              double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)+ s*(Ixxs[i]*Ixxxs[i]-Ixxs[i]*Ixyys[i]-Iyys[i]*Ixxxs[i]+Iyys[i]*Ixyys[i]+4*Ixys[i]*Ixxys[i]);
-              double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)+ s*(Ixxs[i]*Ixxys[i]-Ixxs[i]*Iyyys[i]-Iyys[i]*Ixxys[i]+Iyys[i]*Iyyys[i]+4*Ixys[i]*Ixyys[i]);
+              double Fx = Ixxxs[i]*std::sqrt(Sq)+Ixyys[i]*std::sqrt(Sq)+ s*(Ixxs[i]*Ixxxs[i]-Ixxs[i]*Ixyys[i]-Iyys[i]*Ixxxs[i]+Iyys[i]*Ixyys[i]+4*Ixys[i]*Ixxys[i]);
+              double Fy = Ixxys[i]*std::sqrt(Sq)+Iyyys[i]*std::sqrt(Sq)+ s*(Ixxs[i]*Ixxys[i]-Ixxs[i]*Iyyys[i]-Iyys[i]*Ixxys[i]+Iyys[i]*Iyyys[i]+4*Ixys[i]*Ixyys[i]);
               //save new orientation
-              curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+              curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
           }
           else { 
             correct_subclass[i] = false;
@@ -1114,15 +1114,15 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
           double s = vnl_math::sgn(Ixxs[i]+Iyys[i]);
           if (Sq>0){
-              double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)+ s*(-Ixxs[i]*Ixxxs[i]+Ixxs[i]*Ixyys[i]+Iyys[i]*Ixxxs[i]-Iyys[i]*Ixyys[i]-4*Ixys[i]*Ixxys[i]);
-              double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)+ s*(-Ixxs[i]*Ixxys[i]+Ixxs[i]*Iyyys[i]+Iyys[i]*Ixxys[i]-Iyys[i]*Iyyys[i]-4*Ixys[i]*Ixyys[i]);
+              double Fx = Ixxxs[i]*std::sqrt(Sq)+Ixyys[i]*std::sqrt(Sq)+ s*(-Ixxs[i]*Ixxxs[i]+Ixxs[i]*Ixyys[i]+Iyys[i]*Ixxxs[i]-Iyys[i]*Ixyys[i]-4*Ixys[i]*Ixxys[i]);
+              double Fy = Ixxys[i]*std::sqrt(Sq)+Iyyys[i]*std::sqrt(Sq)+ s*(-Ixxs[i]*Ixxys[i]+Ixxs[i]*Iyyys[i]+Iyys[i]*Ixxys[i]-Iyys[i]*Iyyys[i]-4*Ixys[i]*Ixyys[i]);
               //save new orientation
-              curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+              curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
           }
           else { 
             correct_subclass[i] = false;
@@ -1133,13 +1133,13 @@ dbdet_detect_topographic_curves_process::execute()
         for (unsigned i=0; i<loc.size();i++)
         {
           //compute gradient magnitude
-          mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
+          mag[i] = std::sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Fx = 2*Ixxs[i]*Ixxxs[i]-2*Ixxs[i]*Ixyys[i]-2*Iyys[i]*Ixxxs[i]+2*Iyys[i]*Ixyys[i]+8*Ixys[i]*Ixxys[i];
           double Fy = 2*Ixxs[i]*Ixxys[i]-2*Ixxs[i]*Iyyys[i]-2*Iyys[i]*Ixxys[i]+2*Iyys[i]*Iyyys[i]+8*Ixys[i]*Ixyys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
           
         }
         break;
@@ -1153,7 +1153,7 @@ dbdet_detect_topographic_curves_process::execute()
           double Fy = Ixxys[i] + Iyyys[i];
 
           //save new orientation
-          curve_orientations[i] = dbdet_angle0To2Pi(vcl_atan2(Fx, -Fy));
+          curve_orientations[i] = dbdet_angle0To2Pi(std::atan2(Fx, -Fy));
           
         }
         break;
@@ -1197,11 +1197,11 @@ dbdet_detect_topographic_curves_process::execute()
     }
   }
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
   
-  //vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
-  //vcl_cout << "time taken for ZC det: " << zc_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+  //std::cout << "time taken for conv: " << conv_time << " msec" << std::endl;
+  //std::cout << "time taken for ZC det: " << zc_time << " msec" << std::endl;
+  std::cout << "#edgels = " << edge_map->num_edgels() << std::endl;
 
   // create the output storage classes
   if (out_func){

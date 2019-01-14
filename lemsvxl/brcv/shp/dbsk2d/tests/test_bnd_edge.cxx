@@ -16,7 +16,7 @@
 void test_bnd_edge_functions()
 {
 
-  vcl_cout << "In test_bnd_edge_functions()" << vcl_endl;
+  std::cout << "In test_bnd_edge_functions()" << std::endl;
 
   // test intersection with a cell
 

@@ -8,9 +8,9 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_cmath.h>
+#include<map>
+#include<set>
+#include<cmath>
 
 #include<vnl/vnl_diag_matrix.h>
 #include<vnl/vnl_matrix.h>
@@ -49,9 +49,9 @@ public:
 
 	virtual void b_read(vsl_b_istream& is) = 0;
 
-	virtual void write_dot_file( vcl_string const& filename ) = 0;
+	virtual void write_dot_file( std::string const& filename ) = 0;
 
-	virtual void write_dot_file_full( vcl_string const& filename ) = 0;
+	virtual void write_dot_file_full( std::string const& filename ) = 0;
 
 	unsigned classifier_id() const { return this->classifier_id_; }
 
@@ -69,43 +69,43 @@ public:
 
 	double mahalan_dist_factor() const { return this->mahalan_dist_factor_; }
 
-	vcl_map<unsigned, dsm_node_base_sptr> graph() const { return this->graph_; }
+	std::map<unsigned, dsm_node_base_sptr> graph() const { return this->graph_; }
 
-	vcl_map<unsigned, dsm_node_base_sptr>::iterator curr_node_itr() const { return this->curr_node_itr_; }
+	std::map<unsigned, dsm_node_base_sptr>::iterator curr_node_itr() const { return this->curr_node_itr_; }
 
-	vcl_map<unsigned, bool> frame_change_map() const { return this->frame_change_map_; }
+	std::map<unsigned, bool> frame_change_map() const { return this->frame_change_map_; }
 
-	vcl_map<unsigned, vcl_map<unsigned, vnl_vector<double> > > frame_mean_map() const { return this->frame_mean_map_; }
+	std::map<unsigned, std::map<unsigned, vnl_vector<double> > > frame_mean_map() const { return this->frame_mean_map_; }
 
-	vcl_map<unsigned, vcl_map<unsigned, vnl_matrix<double> > > frame_covar_map() const { return this->frame_covar_map_; }
+	std::map<unsigned, std::map<unsigned, vnl_matrix<double> > > frame_covar_map() const { return this->frame_covar_map_; }
 
-	vcl_map<unsigned, vcl_map<unsigned, vcl_map<unsigned, unsigned> > > frame_transition_table_map() const { return this->frame_transition_table_map_; }
+	std::map<unsigned, std::map<unsigned, std::map<unsigned, unsigned> > > frame_transition_table_map() const { return this->frame_transition_table_map_; }
 
-	vcl_map<unsigned, double> frame_max_prob_map() const { return this->frame_max_prob_map_; }
+	std::map<unsigned, double> frame_max_prob_map() const { return this->frame_max_prob_map_; }
 
-	vcl_map<unsigned, unsigned> frame_state_map() const { return this->frame_state_map_; }
+	std::map<unsigned, unsigned> frame_state_map() const { return this->frame_state_map_; }
 
-	vcl_map<unsigned, vcl_map<unsigned, double> > frame_mixture_weight_map() const { return this->frame_mixture_weight_map_; }
+	std::map<unsigned, std::map<unsigned, double> > frame_mixture_weight_map() const { return this->frame_mixture_weight_map_; }
 
-	vcl_map<unsigned, dsm_node_base_sptr>::const_iterator graph_begin(){return this->graph_.begin();}
+	std::map<unsigned, dsm_node_base_sptr>::const_iterator graph_begin(){return this->graph_.begin();}
 
-	vcl_map<unsigned, dsm_node_base_sptr>::const_iterator graph_end(){return this->graph_.end();}
+	std::map<unsigned, dsm_node_base_sptr>::const_iterator graph_end(){return this->graph_.end();}
 
-	vcl_map<unsigned,bool> frame_change_map_;
+	std::map<unsigned,bool> frame_change_map_;
 
-	vcl_map<unsigned, vcl_map<unsigned, vnl_vector<double> > > frame_mean_map_;
+	std::map<unsigned, std::map<unsigned, vnl_vector<double> > > frame_mean_map_;
 
-	vcl_map<unsigned, vcl_map<unsigned, vnl_matrix<double> > > frame_covar_map_;
+	std::map<unsigned, std::map<unsigned, vnl_matrix<double> > > frame_covar_map_;
 
-	vcl_map<unsigned, vcl_map< unsigned, vcl_map<unsigned, unsigned> > > frame_transition_table_map_;
+	std::map<unsigned, std::map< unsigned, std::map<unsigned, unsigned> > > frame_transition_table_map_;
 
-	vcl_map<unsigned, double> frame_max_prob_map_;
+	std::map<unsigned, double> frame_max_prob_map_;
 
 	//map a frame to a node id
-	vcl_map<unsigned, unsigned> frame_state_map_;
+	std::map<unsigned, unsigned> frame_state_map_;
 
-	// this has the form vcl_map<time, vcl_map<node_id, mixture weight> >
-	vcl_map<unsigned, vcl_map< unsigned, double> >frame_mixture_weight_map_;
+	// this has the form std::map<time, std::map<node_id, mixture weight> >
+	std::map<unsigned, std::map< unsigned, double> >frame_mixture_weight_map_;
 
 protected:
 
@@ -117,10 +117,10 @@ protected:
 	dsm_frame_clock* frame_clock_ptr_;
 
 	//graph is a map between node ids and node pointers
-	vcl_map<unsigned, dsm_node_base_sptr> graph_;
+	std::map<unsigned, dsm_node_base_sptr> graph_;
 	
 	//an iterator which points to the current node.
-	vcl_map<unsigned,dsm_node_base_sptr>::iterator curr_node_itr_;
+	std::map<unsigned,dsm_node_base_sptr>::iterator curr_node_itr_;
 
 	unsigned curr_node_id_;
 
@@ -143,10 +143,10 @@ protected:
 	//vnl_matrix<double> min_covar_;
 
 	//A set of node id's the target has visited.
-	vcl_set<unsigned> target_visited_;
+	std::set<unsigned> target_visited_;
 
 	//Protected MEMBER FUNCTIONS
-	virtual vcl_map<unsigned,dsm_node_base_sptr>::iterator add_node() = 0;
+	virtual std::map<unsigned,dsm_node_base_sptr>::iterator add_node() = 0;
 
 	virtual bool remove_node( unsigned const& node_id ) = 0;
 

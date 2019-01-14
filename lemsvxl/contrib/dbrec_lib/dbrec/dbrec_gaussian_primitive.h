@@ -43,18 +43,18 @@ public:
   }
 
   virtual bool equal(const dbrec_gaussian& other) const;
-  virtual vcl_ostream& print(vcl_ostream& out) const;
+  virtual std::ostream& print(std::ostream& out) const;
   void initialize_mask();
 
-  virtual vcl_string string_identifier() const { 
-    vcl_stringstream ss; ss << "gaussian_" << lambda0_ << "_" << lambda1_ << "_" << theta_;
+  virtual std::string string_identifier() const { 
+    std::stringstream ss; ss << "gaussian_" << lambda0_ << "_" << lambda1_ << "_" << theta_;
     if (bright_) ss << "_bright"; 
     else ss << "_dark"; 
     return ss.str(); }
 
-  virtual vcl_string string_identifier(float angle) const;
+  virtual std::string string_identifier(float angle) const;
 
-  virtual void visualize(bsvg_document& doc, float x, float y, float vis_rad, const vcl_string& color) const;
+  virtual void visualize(bsvg_document& doc, float x, float y, float vis_rad, const std::string& color) const;
 
   //: each part needs to have a direction vector
   void get_direction_vector(vnl_vector_fixed<float,2>& v) const;
@@ -98,7 +98,7 @@ public:
   friend class dbrec_parse_image_rot_inv_with_fg_map_visitor;
   friend class dbrec_rot_inv_gaussian_weibull_model_learner_visitor;
 
-  void set_models(const vcl_vector<dbrec_gaussian_appearance_model_sptr>& models) { models_ = models; }
+  void set_models(const std::vector<dbrec_gaussian_appearance_model_sptr>& models) { models_ = models; }
 
   //: the default for extraction method is normal which is when fast_ = false, set fast_ to true using this method if you want fast extraction 
   void set_extraction_method_to_fast() { fast_ = true; }
@@ -130,11 +130,11 @@ protected:
 
   //: there might be one or more models to interpret the strength of the operator, 
   //  these models should be learned during training and set before parsing
-  vcl_vector<dbrec_gaussian_appearance_model_sptr> models_;  // e.g. if only two models: class non-class appearance models 
+  std::vector<dbrec_gaussian_appearance_model_sptr> models_;  // e.g. if only two models: class non-class appearance models 
                                                            //      if four models: class-foreground, non-class-foreground, class-background, non-class background appearance models
                                                            //   CAUTION: the order of the models is important, the prior models vector of the image parser should also abide this ordering 
 
-  vcl_map<float, vbl_array_2d<bool> > masks_; // cache the masks of angles encountered so far for future use
+  std::map<float, vbl_array_2d<bool> > masks_; // cache the masks of angles encountered so far for future use
 };
 
 

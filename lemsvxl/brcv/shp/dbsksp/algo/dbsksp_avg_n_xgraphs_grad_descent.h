@@ -21,7 +21,7 @@
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <dbsksp/algo/dbsksp_xshock_directed_tree_sptr.h>
 #include <dbsksp/algo/dbsksp_edit_distance.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //==============================================================================
 // dbsksp_avg_n_xgraphs_grad_descent
@@ -42,8 +42,8 @@ public:
   // Data access----------------------------------------------------------------
 
   //: Set list of parent xgraphs
-  void set_parent_xgraphs(const vcl_vector<dbsksp_xshock_graph_sptr >& parent_xgraphs,
-                          const vcl_vector<double >& parent_weights)
+  void set_parent_xgraphs(const std::vector<dbsksp_xshock_graph_sptr >& parent_xgraphs,
+                          const std::vector<double >& parent_weights)
   {
     this->parent_xgraphs_ = parent_xgraphs;
     this->parent_weights_ = parent_weights;
@@ -69,19 +69,19 @@ public:
   void set_scurve_sample_ds(float ds) {this->scurve_sample_ds_ = ds;}
 
   //: Set base name to save intermediate data
-  void set_base_name(const vcl_string& base_name) { this->base_name_ = base_name;}
+  void set_base_name(const std::string& base_name) { this->base_name_ = base_name;}
 
 
   //: Average xgraph
   dbsksp_xshock_graph_sptr average_xgraph() const {return this->average_xgraph_;}
 
   ////: Computed distance to parent shapes
-  //void get_distance_parents_to_average(vcl_vector<double >& distance_parents_to_average) const
+  //void get_distance_parents_to_average(std::vector<double >& distance_parents_to_average) const
   //{
   //  distance_parents_to_average = this->distance_parent_to_avg_;
   //}
 
-  //void get_deform_cost_parents_to_average(vcl_vector<double >& deform_cost_parents_to_average) const
+  //void get_deform_cost_parents_to_average(std::vector<double >& deform_cost_parents_to_average) const
   //{
   //  deform_cost_parents_to_average = this->deform_cost_parent_to_avg_;
   //}
@@ -92,7 +92,7 @@ public:
   bool debugging() const {return this->base_name_ != ""; }
 
   //: Print debug info to a file
-  void print_debug_info(const vcl_string& str) const;
+  void print_debug_info(const std::string& str) const;
   
 
   // UTILITIES------------------------------------------------------------------
@@ -124,8 +124,8 @@ protected:
   // User-input-----------------------------------------------------------------
 
   //: The N parent xgraphs
-  vcl_vector<dbsksp_xshock_graph_sptr > parent_xgraphs_;
-  vcl_vector<double > parent_weights_;
+  std::vector<dbsksp_xshock_graph_sptr > parent_xgraphs_;
+  std::vector<double > parent_weights_;
 
 
   dbsksp_xshock_graph_sptr init_model_xgraph_;
@@ -142,7 +142,7 @@ protected:
   float distance_ratio_tol_;
 
   // base filename to save relevant data (mostly for debugging purpose)
-  vcl_string base_name_;
+  std::string base_name_;
 
   
   // Intermediate results-------------------------------------------------------
@@ -150,7 +150,7 @@ protected:
   int num_parents_;
 
   //: Tree constructed from the parent xgraph
-  vcl_vector<dbsksp_xshock_directed_tree_sptr > parent_trees_;
+  std::vector<dbsksp_xshock_directed_tree_sptr > parent_trees_;
 
   //: Model xgraph to be optimized
   dbsksp_xshock_graph_sptr model_xgraph_;
@@ -160,8 +160,8 @@ protected:
   unsigned model_pseudo_parent_eid_;
 
 
-  vcl_vector<vcl_vector<pathtable_key > > dart_corr_parent_to_model_;
-  vcl_vector<double > parent_contract_and_splice_cost_;
+  std::vector<std::vector<pathtable_key > > dart_corr_parent_to_model_;
+  std::vector<double > parent_contract_and_splice_cost_;
 
 
   // Ouput----------------------------------------------------------------------
@@ -170,8 +170,8 @@ protected:
   dbsksp_xshock_graph_sptr average_xgraph_;
 
   //: Distance the two original xgraph
-  vcl_vector<double > distance_parent_to_avg_;
-  vcl_vector<double > deform_cost_parent_to_avg_;
+  std::vector<double > distance_parent_to_avg_;
+  std::vector<double > deform_cost_parent_to_avg_;
 
   double init_avg_distance_;
   double cur_avg_distance_;

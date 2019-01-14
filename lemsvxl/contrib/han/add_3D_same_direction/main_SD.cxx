@@ -2,7 +2,7 @@
 // Ian Scott, Feb 2004.
 #include <testlib/testlib_test.h>
 #include <vgl/vgl_convex.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_matrix.h>
 
 #include <vnl/vnl_math.h>
@@ -15,13 +15,13 @@
 
 #include <vnl/vnl_double_3.h>
 #include <vul/vul_file.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <string>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 #include <vgl/algo/vgl_line_2d_regression.h>
 #include <vgl/algo/vgl_convex_hull_2d.h>
 #include <vgl/vgl_point_3d.h>
@@ -36,12 +36,12 @@ float mean_x1_,mean_x2;
 ///3-21-2007
 
 /*
-void print_bb_and_camera(vcl_string bb_dir)
+void print_bb_and_camera(std::string bb_dir)
 {
 
   
-  vcl_vector<vnl_double_3x4> cameras;
-  vcl_vector <int> nums_list;
+  std::vector<vnl_double_3x4> cameras;
+  std::vector <int> nums_list;
 int counter=0;
     
   
@@ -51,16 +51,16 @@ int counter=0;
     char tf[20];char f11[22]; 
   
 
-    vcl_string input_file_path=".";
+    std::string input_file_path=".";
     vul_file_iterator fn=input_file_path+"/*.con";//nframes_=5;
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
-      vcl_cout<<input_file<<vcl_endl;
+      std::string input_file = fn();
+      std::cout<<input_file<<std::endl;
       
-      vcl_string aaa=vul_file::strip_directory(input_file);
-      vcl_string nums1=vul_file::strip_extension(aaa);
-      vcl_cout<<nums1<<vcl_endl;
+      std::string aaa=vul_file::strip_directory(input_file);
+      std::string nums1=vul_file::strip_extension(aaa);
+      std::cout<<nums1<<std::endl;
       nums_list.push_back(atoi(nums1.c_str()));
 
       if (counter==0)  fram_start= atoi(nums1.c_str());
@@ -75,9 +75,9 @@ int counter=0;
 
 
   
-    vcl_string bb_file=bb_dir+"/bbox_cam_my.txt";
+    std::string bb_file=bb_dir+"/bbox_cam_my.txt";
   
-    vcl_ofstream bbout(bb_file.c_str());
+    std::ofstream bbout(bb_file.c_str());
   bbout << "Bounding Box Transform\n" << bb_xform_ << '\n';
 
 
@@ -115,12 +115,12 @@ return;
 */
 
 
-void print_bb_and_camera(vcl_vector <vgl_point_3d<double> > ppp)
+void print_bb_and_camera(std::vector <vgl_point_3d<double> > ppp)
 {
 
   
-  //vcl_vector<vnl_double_3x4> cameras(0,0);
-  vcl_vector <int> nums_list;
+  //std::vector<vnl_double_3x4> cameras(0,0);
+  std::vector <int> nums_list;
   int counter=0;
     
     int fram_start=1;
@@ -128,9 +128,9 @@ void print_bb_and_camera(vcl_vector <vgl_point_3d<double> > ppp)
     char tf[20];char f11[22]; 
 
   
-    vcl_string bb_file="./bbox_cam_my.txt";
+    std::string bb_file="./bbox_cam_my.txt";
   
-    vcl_ofstream bbout(bb_file.c_str());
+    std::ofstream bbout(bb_file.c_str());
 
     vnl_double_4x4 bb_xform(0.0);
     bb_xform(0,0)=1.0;
@@ -181,7 +181,7 @@ return;
 
 
 /////////////////////////////////////////////////////////////////////
-vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
+vnl_vector <int> min_max(std::vector <vgl_point_3d<double> > pts) {
 
   int max_z_index,min_z_index,max_x_index,min_x_index;
   double max_z=-10000.0,min_z=10000.0,max_x=-100000.0,min_x=100000.0;
@@ -202,7 +202,7 @@ vnl_vector <int> min_max(vcl_vector <vgl_point_3d<double> > pts) {
 }
 
 /////////////////////////////////////////////////////////////////////
-int find_near_point_SD(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
+int find_near_point_SD(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,
                              int start_i,int end_i,bool y_flag=true)
 {
 
@@ -231,16 +231,16 @@ int find_near_point_SD(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <doub
 struct p_list_set 
 {
    int probe_number;
-   vcl_vector <vnl_matrix <float>  >p_list;
+   std::vector <vnl_matrix <float>  >p_list;
    int class_id;
    float scale;
 };
 
 /////////////////////////////////////////////////////////////////////
-void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_set_)
+void save_points(std::string save_filename,std::vector <struct p_list_set> p_list_set_)
 {
   
-  vcl_ofstream out(save_filename.c_str());
+  std::ofstream out(save_filename.c_str());
 
   if(!out.is_open()){
     std::cerr<<"Cannot open the write selected probes file.\n";
@@ -250,65 +250,65 @@ void save_points(vcl_string save_filename,vcl_vector <struct p_list_set> p_list_
 
   out<<p_list_set_.size()<<"\n";
   for (unsigned i=0;i<p_list_set_.size();i++) {
-    out<<i<<" "<<p_list_set_[i].p_list.size()<<vcl_endl;
+    out<<i<<" "<<p_list_set_[i].p_list.size()<<std::endl;
     for( unsigned j=0;j<p_list_set_[i].p_list.size();j++){
-      out<<p_list_set_[i].p_list[j]<< vcl_endl ;
+      out<<p_list_set_[i].p_list[j]<< std::endl ;
     }
   }
-  out<<"from 3d detection"<<vcl_endl;
+  out<<"from 3d detection"<<std::endl;
   out.close();
   
 }
 
 ////////////////////////////////////////////////////////////////////
-//read_wrl_file_SD(float rev,vcl_vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
-read_wrl_file_SD(float rev,vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv,bool rotation=false){
-  vcl_ifstream in(argv.c_str());
+//read_wrl_file_SD(float rev,std::vector <vgl_point_3d<double> > & ptl,char* argv,bool rotation=false){
+read_wrl_file_SD(float rev,std::vector <vgl_point_3d<double> > & ptl,std::string argv,bool rotation=false){
+  std::ifstream in(argv.c_str());
   
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     exit(-4);
     return -1;
   }
   
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
   while (!in.eof()) {
 
     in>>hhh;
     if (hhh=="translation") {
       in>>x>>y>>z;
-      //vcl_cout<<x<<" "<<rev*x<<vcl_endl;
+      //std::cout<<x<<" "<<rev*x<<std::endl;
       vgl_point_3d<double> p3d(rev*x,y,z);
       ptl.push_back(p3d);
-      //vcl_cout<<p3d<<vcl_endl;
+      //std::cout<<p3d<<std::endl;
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
 
   return 1;
   if (!rotation) return 1;
 
-  vcl_vector<vnl_double_3> pts_z;
+  std::vector<vnl_double_3> pts_z;
   for (unsigned i=0;i<ptl.size();i++) {
     vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
     pts_z.push_back(R*p);
-   // vcl_cout<<R*p<<vcl_endl;
+   // std::cout<<R*p<<std::endl;
   }
 
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   ptl.clear();
 
   for (unsigned i=0;i<pts_z.size();i++) {
     vgl_point_3d <double> p(pts_z[i](0),pts_z[i](1),pts_z[i](2));
 
     ptl.push_back(p);
-    //vcl_cout<<p<<vcl_endl;
+    //std::cout<<p<<std::endl;
   }
- // vcl_cout<<"------------------------------------------------------"<<vcl_endl;
+ // std::cout<<"------------------------------------------------------"<<std::endl;
   in.close();
 
 return 1;
@@ -316,11 +316,11 @@ return 1;
 
 
 
-void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
-                vcl_vector<vgl_point_3d<double> > pts_3d,float red=0,float green=1,float blue=1)
+void write_vrml_2(std::ofstream& out,//const std::string& filename,
+                std::vector<vgl_point_3d<double> > pts_3d,float red=0,float green=1,float blue=1)
 {
 
-//  vcl_ofstream out(filename.c_str());
+//  std::ofstream out(filename.c_str());
 //    if(!out.is_open()){
 //      std::cerr<<"Cannot open the input file.\n";
 //      return;
@@ -365,7 +365,7 @@ void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
 
   for (unsigned i=0;i <pts_3d.size();i++) {
     //point_3d_mean_pts[i].set(scale_*point_3d_mean_pts[i].x(),scale_*point_3d_mean_pts[i].y(),scale_*point_3d_mean_pts[i].z());
-    //vcl_cout<<point_3d_mean_pts[i]<<vcl_endl;
+    //std::cout<<point_3d_mean_pts[i]<<std::endl;
 
 
 
@@ -393,18 +393,18 @@ void write_vrml_2(vcl_ofstream& out,//const vcl_string& filename,
   }
 
 
-  vcl_cout<<"#### write_vrml_2 end ####"<<vcl_endl;
+  std::cout<<"#### write_vrml_2 end ####"<<std::endl;
 }
 
 
 
 /////////////////////////////////////////////////////////////////////
-pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
-                     vcl_vector <vgl_point_3d<double> > &pts_r,
-                     vcl_vector <vgl_point_3d<double> > const &pts,
+pts_f_and_r_from_pts(std::vector <vgl_point_3d<double> > &pts_f,
+                     std::vector <vgl_point_3d<double> > &pts_r,
+                     std::vector <vgl_point_3d<double> > const &pts,
                      char choice)
 {
-  vcl_cout<<choice<<vcl_endl;
+  std::cout<<choice<<std::endl;
   //exit(1);
   float max_y=-100000,min_y=100000;
   float max_x=-100000,min_x=100000;
@@ -443,40 +443,40 @@ pts_f_and_r_from_pts(vcl_vector <vgl_point_3d<double> > &pts_f,
       flag_r=false; flag_f=true;
     }
     else {
-      vcl_cout<<"pts dividing error\n"<<vcl_endl;
+      std::cout<<"pts dividing error\n"<<std::endl;
       exit (-2);
     }
     if (pre_flag_r!=flag_r) 
-    {vcl_cout<<"***** switched"<<vcl_endl;
-    vcl_cerr<<"***** switched"<<vcl_endl;}
+    {std::cout<<"***** switched"<<std::endl;
+    std::cerr<<"***** switched"<<std::endl;}
 
     pre_flag_r=flag_r;
-    //vcl_cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<vcl_endl;
+    //std::cout<<(pts[i].y()-max_y)*(pts[i].y()-max_y)<<" "<<(pts[i].y()-min_y)*(pts[i].y()-min_y)<<std::endl;
   }
 
 
-  vcl_cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<vcl_endl;
+  std::cout<<pts_f.size()<<"+"<<pts_r.size()<<"="<<pts.size()<<std::endl;
   //exit(1);
 }
 
 /////////////////////////////////////////////////////////////////////
-read_bb_box_file_SD(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv){
-  vcl_ifstream in(argv.c_str());
+read_bb_box_file_SD(std::vector <vgl_point_3d<double> > & ptl,std::string argv){
+  std::ifstream in(argv.c_str());
   //in >> cam_matrix;
   if(in.fail()){
-    vcl_cerr << "Failed to read file "<<argv << vcl_endl;
+    std::cerr << "Failed to read file "<<argv << std::endl;
     return -1;
   }
 
   // in
-  vcl_string hhh="";
+  std::string hhh="";
   double x,y,z;
   double dummy;
-  //vcl_vector<vgl_point_3d<double> >ptl;
+  //std::vector<vgl_point_3d<double> >ptl;
 
   for (unsigned j=0;j<3;j++) {
     in >>hhh;
-    vcl_cout<<hhh<<vcl_endl;
+    std::cout<<hhh<<std::endl;
   }
 
   double temp;
@@ -495,7 +495,7 @@ read_bb_box_file_SD(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv){
   R[2][0]=RT[2][0];R[2][1]=RT[2][1];R[2][2]=RT[2][2];
 
   R.normalize_columns();
-  vcl_cout<<R<<vcl_endl;
+  std::cout<<R<<std::endl;
 
   while (!in.eof()) {
 
@@ -510,11 +510,11 @@ read_bb_box_file_SD(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv){
       in>>y>>z;
       vgl_point_3d<double> p3d(x,y,z);
       ptl.push_back(p3d);
-      vcl_cout<<p3d<<vcl_endl; 
+      std::cout<<p3d<<std::endl; 
       //exit(1);
     }
   }
-  vcl_cout<<"size: "<<ptl.size()<<vcl_endl;
+  std::cout<<"size: "<<ptl.size()<<std::endl;
   in.close();
   //exit(0);
   return 1;
@@ -524,7 +524,7 @@ read_bb_box_file_SD(vcl_vector <vgl_point_3d<double> > & ptl,vcl_string argv){
 //
 //find nearest point
 //
-float fnp(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
+float fnp(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
                              bool y_flag=false)
 {
 
@@ -551,7 +551,7 @@ float fnp(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float 
 }
 
 //
-float fnp_y(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
+float fnp_y(std::vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,float shift,
                              bool y_flag=false)
 {
 
@@ -577,9 +577,9 @@ float fnp_y(vcl_vector <vgl_point_3d<double> > pts,vgl_point_3d <double> pt,floa
   return min_t;
 }
 
-float shift_error(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                     vcl_vector <vgl_point_3d<double> > &pts_move,
-                     //vcl_vector <vgl_point_3d<double> > const &pts,
+float shift_error(std::vector <vgl_point_3d<double> > &pts_fix,
+                     std::vector <vgl_point_3d<double> > &pts_move,
+                     //std::vector <vgl_point_3d<double> > const &pts,
                      float shift)
 {
     float error=0;
@@ -595,9 +595,9 @@ float shift_error(vcl_vector <vgl_point_3d<double> > &pts_fix,
 }
 
 
-float shift_error_y(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                     vcl_vector <vgl_point_3d<double> > &pts_move,
-                     //vcl_vector <vgl_point_3d<double> > const &pts,
+float shift_error_y(std::vector <vgl_point_3d<double> > &pts_fix,
+                     std::vector <vgl_point_3d<double> > &pts_move,
+                     //std::vector <vgl_point_3d<double> > const &pts,
                      float shift)
 {
     float error=0;
@@ -612,8 +612,8 @@ float shift_error_y(vcl_vector <vgl_point_3d<double> > &pts_fix,
     return error;
 }
 
-float mean_shift(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                 vcl_vector <vgl_point_3d<double> > &pts_move)
+float mean_shift(std::vector <vgl_point_3d<double> > &pts_fix,
+                 std::vector <vgl_point_3d<double> > &pts_move)
 {
     float mean_x1=0.0,mean_x2=0.0;
     for (unsigned i=0;i<pts_fix.size();i++) {
@@ -626,13 +626,13 @@ float mean_shift(vcl_vector <vgl_point_3d<double> > &pts_fix,
     float shift=mean_x1/(float)pts_fix.size()-mean_x2/(float)pts_move.size();
    
 
-    vcl_cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<vcl_endl; 
+    std::cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<std::endl; 
     return shift;
 }
  
 
-float mean_shift_y(vcl_vector <vgl_point_3d<double> > &pts_fix,
-                 vcl_vector <vgl_point_3d<double> > &pts_move)
+float mean_shift_y(std::vector <vgl_point_3d<double> > &pts_fix,
+                 std::vector <vgl_point_3d<double> > &pts_move)
 {
     float mean_y1=0.0,mean_y2=0.0;
     for (unsigned i=0;i<pts_fix.size();i++) {
@@ -645,25 +645,25 @@ float mean_shift_y(vcl_vector <vgl_point_3d<double> > &pts_fix,
     float shift=mean_y1/(float)pts_fix.size()-mean_y2/(float)pts_move.size();
    
 
-    vcl_cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<vcl_endl; 
+    std::cout<<shift<<" "<<pts_fix.size()<<" "<<pts_move.size()<<std::endl; 
     return shift;
 }
 
 //rotation of points
-void rot_pts_SD(vcl_vector <vgl_point_3d<double> > &ptl,float rev=1.0) 
+void rot_pts_SD(std::vector <vgl_point_3d<double> > &ptl,float rev=1.0) 
 {
 
     vnl_double_3x3 rot=R;
-    vcl_cout<<rot<<vcl_endl;
+    std::cout<<rot<<std::endl;
     //vnl_double_3x3 inv_rot = rot.transpose();
     vnl_double_3x3 inv_rot = vnl_inverse(rot);
-    vcl_vector<vnl_double_3> pts_z;
+    std::vector<vnl_double_3> pts_z;
     for (unsigned i=0;i<ptl.size();i++) {
       vnl_double_3 p(ptl[i].x(),ptl[i].y(),ptl[i].z());
 
-      vcl_cout<<ptl[i]<<vcl_endl;
+      std::cout<<ptl[i]<<std::endl;
       pts_z.push_back(rot*p);
-      vcl_cout<<rot*p<<vcl_endl;
+      std::cout<<rot*p<<std::endl;
       ptl[i].set(rev*pts_z[i][0],pts_z[i][1],pts_z[i][2]);
     }
 }
@@ -675,8 +675,8 @@ int main(int argc, char* argv[])
 
   
   if(argc!=4){
-    //vcl_cout << "Usage: "<< argv[0] << " <wrl_file>"<< vcl_endl;
-   // vcl_cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< vcl_endl;
+    //std::cout << "Usage: "<< argv[0] << " <wrl_file>"<< std::endl;
+   // std::cout << "   or: "<< argv[0] << " <wrl_file> <front_wrl_file> <rear_wrl_file>"<< std::endl;
     //exit(0);
   }
 
@@ -684,22 +684,22 @@ int main(int argc, char* argv[])
 
   /////////////////////////////////////////
   /////////////////////////////////////////
-  vcl_vector<vgl_point_3d<double> >ptl0;
-  vcl_vector<vgl_point_3d<double> >pts_f0;
-  vcl_vector<vgl_point_3d<double> >pts_r0;
-  vcl_vector<vgl_point_3d<double> >ptl1;
-  vcl_vector<vgl_point_3d<double> >pts_f1;
-  vcl_vector<vgl_point_3d<double> >pts_r1;
-  vcl_vector<vgl_point_3d<double> >ptl2;
-  vcl_vector<vgl_point_3d<double> >pts_f2;
-  vcl_vector<vgl_point_3d<double> >pts_r2;
- vcl_vector<vgl_point_3d<double> >ptl3;
-  vcl_vector<vgl_point_3d<double> >pts_f3;
-  vcl_vector<vgl_point_3d<double> >pts_r3;
+  std::vector<vgl_point_3d<double> >ptl0;
+  std::vector<vgl_point_3d<double> >pts_f0;
+  std::vector<vgl_point_3d<double> >pts_r0;
+  std::vector<vgl_point_3d<double> >ptl1;
+  std::vector<vgl_point_3d<double> >pts_f1;
+  std::vector<vgl_point_3d<double> >pts_r1;
+  std::vector<vgl_point_3d<double> >ptl2;
+  std::vector<vgl_point_3d<double> >pts_f2;
+  std::vector<vgl_point_3d<double> >pts_r2;
+ std::vector<vgl_point_3d<double> >ptl3;
+  std::vector<vgl_point_3d<double> >pts_f3;
+  std::vector<vgl_point_3d<double> >pts_r3;
 
 
-  vcl_string in0="C:/CBB_/A2/3788/sel/correct_1_10-31-2006-02AM/";
-  vcl_string in1="C:/CBB_/A4000-4099/4071/sel/correct_1_10-31-2006-01PM/";
+  std::string in0="C:/CBB_/A2/3788/sel/correct_1_10-31-2006-02AM/";
+  std::string in1="C:/CBB_/A4000-4099/4071/sel/correct_1_10-31-2006-01PM/";
   
 
    in0="C:/CBB_/A2/3790/sel/correct_1_10-31-2006-02AM/";
@@ -708,9 +708,9 @@ int main(int argc, char* argv[])
   read_wrl_file_SD(1.0,ptl0,  in0+"del-AEC-all-1.wrl");
   read_wrl_file_SD(1.0,pts_f0,in0+"delf-AEC-1.wrl");
   read_wrl_file_SD(1.0,pts_r0,in0+"delr-AEC-1.wrl");
-  vcl_vector <vgl_point_3d<double> >  ppp0;
-  vcl_vector <vgl_point_3d<double> >  ppp1;
-  vcl_vector <vgl_point_3d<double> >  ppp1s;
+  std::vector <vgl_point_3d<double> >  ppp0;
+  std::vector <vgl_point_3d<double> >  ppp1;
+  std::vector <vgl_point_3d<double> >  ppp1s;
 
 
   
@@ -754,7 +754,7 @@ int main(int argc, char* argv[])
           min_err=err;
           min_sh=sh;
       }
-      vcl_cout<<sh<<": "<<err<<vcl_endl;
+      std::cout<<sh<<": "<<err<<std::endl;
   }
                      
   //move it
@@ -779,7 +779,7 @@ int main(int argc, char* argv[])
           min_err_y=err;
           min_sh_y=sh;
       }
-      vcl_cout<<sh<<": "<<err<<vcl_endl;
+      std::cout<<sh<<": "<<err<<std::endl;
   }
 
 
@@ -804,12 +804,12 @@ int main(int argc, char* argv[])
   }
 
 
-  vcl_string vrml_file ="del-AEC-all-1.wrl";
-      //vcl_string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
-      //vcl_string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
-      //vcl_string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
+  std::string vrml_file ="del-AEC-all-1.wrl";
+      //std::string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
+      //std::string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
+      //std::string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
 
-  vcl_ofstream vrml(vrml_file.c_str());
+  std::ofstream vrml(vrml_file.c_str());
   write_vrml_2(vrml,ptl2);
   write_vrml_2(vrml,ptl3,1.0,0.0,0.0);
 
@@ -826,12 +826,12 @@ int main(int argc, char* argv[])
   }
 
 
-  vcl_string vrml_filef ="delf-AEC-1.wrl";
-      //vcl_string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
-      //vcl_string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
-      //vcl_string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
+  std::string vrml_filef ="delf-AEC-1.wrl";
+      //std::string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
+      //std::string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
+      //std::string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
 
-  vcl_ofstream vrmlf(vrml_filef.c_str());
+  std::ofstream vrmlf(vrml_filef.c_str());
   write_vrml_2(vrmlf,ptl2);
   write_vrml_2(vrmlf,ptl3,1.0,0.0,0.0);
 
@@ -848,17 +848,17 @@ int main(int argc, char* argv[])
   }
 
 
- vcl_string   vrml_filer ="delr-AEC-1.wrl";
-      //vcl_string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
-      //vcl_string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
-      //vcl_string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
+ std::string   vrml_filer ="delr-AEC-1.wrl";
+      //std::string vrml_filef=out_file_dir+"//"+vr_dir+"//"+"delf-AEC-"+mode+".wrl";
+      //std::string vrml_filer=out_file_dir+"//"+vr_dir+"//"+"delr-AEC-"+mode+".wrl";
+      //std::string vrml_file3=out_file_dir+"//"+vr_dir+"//"+"del-AEC-all-"+mode+".wrl";
 
-  vcl_ofstream vrmlr(vrml_filer.c_str());
+  std::ofstream vrmlr(vrml_filer.c_str());
   write_vrml_2(vrmlr,ptl2);
   write_vrml_2(vrmlr,ptl3,1.0,0.0,0.0);
 
 
-  vcl_vector <vgl_point_3d <double> > ppppp;
+  std::vector <vgl_point_3d <double> > ppppp;
   ppppp.push_back(ppp0[0]);
   ppppp.push_back(ppp1s[0]);
   ppppp.push_back(ppp0[1]);

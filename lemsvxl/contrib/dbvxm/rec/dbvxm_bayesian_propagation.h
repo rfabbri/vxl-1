@@ -16,9 +16,9 @@
 #if !defined(_dbvxm_bayesian_propagation_H)
 #define _dbvxm_bayesian_propagation_H
 
-#include <vcl_vector.h>
-#include <vcl_utility.h>
-#include <vcl_string.h>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include <vil/vil_image_view.h>
 

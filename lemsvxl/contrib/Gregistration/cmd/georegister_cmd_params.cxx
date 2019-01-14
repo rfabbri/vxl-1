@@ -13,7 +13,7 @@
 
 //: Constructor
 georegister_cmd_params::
-georegister_cmd_params(vcl_string algo_name) : 
+georegister_cmd_params(std::string algo_name) : 
     dborl_algo_params(algo_name),
     tag_third_order_color_("Third_Order_Color"),
     tag_bg_modeling_("BG_Modeling"),
@@ -30,7 +30,7 @@ georegister_cmd_params(vcl_string algo_name) :
 
     // add the parameters of the third order color edge detector process
     dbdet_third_order_color_edge_detector_process pro1;
-    vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+    std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
     for(unsigned i=0; i<pars.size(); ++i)
     {
 	this->param_list_.push_back(convert_parameter_from_bpro1(tag_third_order_color_,

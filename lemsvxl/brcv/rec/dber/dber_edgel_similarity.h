@@ -15,7 +15,7 @@
 #ifndef _dber_edgel_similarity_h
 #define _dber_edgel_similarity_h
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_line_2d_sptr.h>
 
 #include <vil/vil_image_view.h>
@@ -36,13 +36,13 @@ class dber_edgel_similarity
   static double compute_current_cost(vsol_line_2d_sptr e1, vsol_line_2d_sptr e2, double sigma_square, double & max);
 
   //: compute the normalized current norm between two edgel sets 
-  static double current_norm(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square);
+  static double current_norm(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square);
 
   //: measure support for lines1 by lines2 wrt current edgel similarity measure
-  static double measure_support(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square);
+  static double measure_support(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square);
 
   //: get image sets for each edgel sets and prepare gradient images, etc.
-  void prepare_images(vcl_vector<vil_image_view<vxl_byte> >&set1, vcl_vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma);
+  void prepare_images(std::vector<vil_image_view<vxl_byte> >&set1, std::vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma);
 
   void update_histograms_from_all_planes(int x1, int y1, int x2, int y2, 
                                          bsta_histogram<float>& h1, 
@@ -59,11 +59,11 @@ protected:
   //  then prepare and save images in this class
 
   //: treat images coming from different frames separately
-  vcl_vector< vil_image_view<vxl_byte> > im1_views_;
-  vcl_vector< vil_image_view<vxl_byte> > im2_views_;
+  std::vector< vil_image_view<vxl_byte> > im1_views_;
+  std::vector< vil_image_view<vxl_byte> > im2_views_;
   //: gradients of each frame
-  vcl_vector< vil_image_view<float> > I1xs_, I1ys_;
-  vcl_vector< vil_image_view<float> > I2xs_, I2ys_;
+  std::vector< vil_image_view<float> > I1xs_, I1ys_;
+  std::vector< vil_image_view<float> > I2xs_, I2ys_;
   unsigned nplanes_;
 
 };

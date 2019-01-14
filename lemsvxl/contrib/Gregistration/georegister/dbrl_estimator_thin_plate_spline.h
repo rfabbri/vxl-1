@@ -1,8 +1,8 @@
 #ifndef _dbrl_estimator_point_thin_plate_spline_h_
 #define _dbrl_estimator_point_thin_plate_spline_h_
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include "dbrl_feature_sptr.h"
 #include "dbrl_correspondence.h"
 #include "dbrl_transformation_sptr.h"
@@ -15,19 +15,19 @@ class dbrl_estimator_point_thin_plate_spline: public dbrl_estimator
         virtual ~dbrl_estimator_point_thin_plate_spline(){};
 
         virtual
-            dbrl_transformation_sptr estimate( vcl_vector<dbrl_feature_sptr> f1,
-            vcl_vector<dbrl_feature_sptr> f2,
+            dbrl_transformation_sptr estimate( std::vector<dbrl_feature_sptr> f1,
+            std::vector<dbrl_feature_sptr> f2,
             dbrl_correspondence & M) const;
-        dbrl_transformation_sptr estimate_tps( vcl_vector<dbrl_feature_sptr> f1,
-            vcl_vector<dbrl_feature_sptr> f2) const;
+        dbrl_transformation_sptr estimate_tps( std::vector<dbrl_feature_sptr> f1,
+            std::vector<dbrl_feature_sptr> f2) const;
         virtual
-            double residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                            const vcl_vector<dbrl_feature_sptr>& f2,
+            double residual(const std::vector<dbrl_feature_sptr>& f1,
+                            const std::vector<dbrl_feature_sptr>& f2,
                             const dbrl_correspondence &M,
                             const dbrl_transformation_sptr& tform) const;
         void set_lambda1(double lambda1){lambda1_=lambda1;};
         void set_lambda2(double lambda2){lambda2_=lambda2;};
-        vnl_matrix<double> build_K(vcl_vector<dbrl_feature_sptr> &x , vcl_vector<dbrl_feature_sptr> &y) const;
+        vnl_matrix<double> build_K(std::vector<dbrl_feature_sptr> &x , std::vector<dbrl_feature_sptr> &y) const;
 
          //: Binary save self to stream.
   void b_write(vsl_b_ostream &os) const;
@@ -39,10 +39,10 @@ class dbrl_estimator_point_thin_plate_spline: public dbrl_estimator
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_estimator_point_thin_plate_spline";}
+  virtual std::string is_a() const {return "dbrl_estimator_point_thin_plate_spline";}
 
   virtual dbrl_estimator * clone() const;
     protected:

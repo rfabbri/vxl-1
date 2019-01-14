@@ -10,7 +10,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vcl_set.h>
+#include <set>
 #include <dbecl/dbecl_episeg_sptr.h>
 #include "bcdg_local_option_sptr.h"
 #include "bcdg_globals.h"
@@ -27,7 +27,7 @@ public:
   bcdg_finger_sptr next_finger(double, const bcdg_local_option_sptr&) const;
 
   //: Get the local options
-  vcl_vector<bcdg_local_option_sptr> local_options(bcdg_algo_params) const;
+  std::vector<bcdg_local_option_sptr> local_options(bcdg_algo_params) const;
 
   
 private:

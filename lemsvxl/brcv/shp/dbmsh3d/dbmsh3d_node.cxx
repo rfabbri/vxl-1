@@ -300,7 +300,7 @@ dbmsh3d_node* dbmsh3d_node::clone (dbmsh3d_mesh* M) const
   return N2;
 }
 
-void dbmsh3d_node::getInfo (vcl_ostringstream& ostrm)
+void dbmsh3d_node::getInfo (std::ostringstream& ostrm)
 {
   //not yet implemented.
   assert (0);
@@ -349,7 +349,7 @@ dbmsh3d_curve* dbmsh3d_node::find_C_containing_E_nv (const dbmsh3d_edge* E) cons
   return NULL;
 }
 
-void dbmsh3d_node::get_incident_Es_nv (vcl_set<void*>& incident_Es) const
+void dbmsh3d_node::get_incident_Es_nv (std::set<void*>& incident_Es) const
 {
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) cur->ptr();
@@ -360,7 +360,7 @@ void dbmsh3d_node::get_incident_Es_nv (vcl_set<void*>& incident_Es) const
 
 //: return false if any incident_E is found not in E_set 
 //  (skipping virtual curves).
-bool dbmsh3d_node::all_incident_Es_in_set_nv (vcl_set<dbmsh3d_edge*>& E_set) const
+bool dbmsh3d_node::all_incident_Es_in_set_nv (std::set<dbmsh3d_edge*>& E_set) const
 {
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_curve* C = (dbmsh3d_curve*) cur->ptr();

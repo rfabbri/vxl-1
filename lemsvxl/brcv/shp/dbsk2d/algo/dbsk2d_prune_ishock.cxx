@@ -149,9 +149,9 @@ void dbsk2d_prune_ishock::compute_shock_saliency(dbsk2d_ishock_elm* selm)
       thetaE=0;
 
       if (spa->nu()==1)
-        dOC = spa->Rr()*vcl_fabs(spa->ReTau() - spa->RsTau());
+        dOC = spa->Rr()*std::fabs(spa->ReTau() - spa->RsTau());
       else 
-        dOC = spa->Rl()*vcl_fabs(spa->LeTau() - spa->LsTau());
+        dOC = spa->Rl()*std::fabs(spa->LeTau() - spa->LsTau());
 
       if (R > MAX_RADIUS) {
         vgl_point_2d<double> start  = spa->getLFootPt(spa->LeTau());
@@ -176,9 +176,9 @@ void dbsk2d_prune_ishock::compute_shock_saliency(dbsk2d_ishock_elm* selm)
       thetaE=0;
 
       if (sla->nu()==1)
-        dOC = sla->R()*vcl_fabs(sla->LeTau() - sla->LsTau()) + (sla->ReTau() - sla->RsTau());
+        dOC = sla->R()*std::fabs(sla->LeTau() - sla->LsTau()) + (sla->ReTau() - sla->RsTau());
       else 
-        dOC = sla->R()*vcl_fabs(sla->ReTau() - sla->RsTau()) + (sla->LeTau() - sla->LsTau());
+        dOC = sla->R()*std::fabs(sla->ReTau() - sla->RsTau()) + (sla->LeTau() - sla->LsTau());
 
       vgl_point_2d<double> start, end;
       if (R > MAX_RADIUS) {
@@ -224,7 +224,7 @@ void dbsk2d_prune_ishock::compute_shock_saliency(dbsk2d_ishock_elm* selm)
       R  = saa->endTime();
       thetaE=0;
 
-      dOC = saa->Rr()*vcl_fabs(saa->ReTau() - saa->RsTau()) + saa->Rl()*vcl_fabs(saa->LeTau() - saa->LsTau());
+      dOC = saa->Rr()*std::fabs(saa->ReTau() - saa->RsTau()) + saa->Rl()*std::fabs(saa->LeTau() - saa->LsTau());
 
       if (R > MAX_RADIUS) {
         vgl_point_2d<double> start  = saa->getLFootPt(saa->LeTau());
@@ -266,7 +266,7 @@ void dbsk2d_prune_ishock::compute_shock_saliency(dbsk2d_ishock_elm* selm)
   double ps_dPnCost = shock_saliency_map[sedge->pSNode()->id()].dPnCost;
 
   //prune cost is the difference of lengths + the parents prune cost
-  dPnCost = vcl_fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
+  dPnCost = std::fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
 
   dbsk2d_assert (dOC>=0 && dNC>=0 && dPnCost>=0);
 
@@ -396,9 +396,9 @@ double dbsk2d_prune_ishock::splice_cost(dbsk2d_ishock_elm* selm)
       thetaE=0;
 
       if (spa->nu()==1)
-        dOC = spa->Rr()*vcl_fabs(spa->ReTau() - spa->RsTau());
+        dOC = spa->Rr()*std::fabs(spa->ReTau() - spa->RsTau());
       else 
-        dOC = spa->Rl()*vcl_fabs(spa->LeTau() - spa->LsTau());
+        dOC = spa->Rl()*std::fabs(spa->LeTau() - spa->LsTau());
 
       if (R > MAX_RADIUS) {
         vgl_point_2d<double> start  = spa->getLFootPt(spa->LeTau());
@@ -423,9 +423,9 @@ double dbsk2d_prune_ishock::splice_cost(dbsk2d_ishock_elm* selm)
       thetaE=0;
 
       if (sla->nu()==1)
-        dOC = sla->R()*vcl_fabs(sla->LeTau() - sla->LsTau()) + (sla->ReTau() - sla->RsTau());
+        dOC = sla->R()*std::fabs(sla->LeTau() - sla->LsTau()) + (sla->ReTau() - sla->RsTau());
       else 
-        dOC = sla->R()*vcl_fabs(sla->ReTau() - sla->RsTau()) + (sla->LeTau() - sla->LsTau());
+        dOC = sla->R()*std::fabs(sla->ReTau() - sla->RsTau()) + (sla->LeTau() - sla->LsTau());
 
       vgl_point_2d<double> start, end;
       if (R > MAX_RADIUS) {
@@ -471,7 +471,7 @@ double dbsk2d_prune_ishock::splice_cost(dbsk2d_ishock_elm* selm)
       R  = saa->endTime();
       thetaE=0;
 
-      dOC = saa->Rr()*vcl_fabs(saa->ReTau() - saa->RsTau()) + saa->Rl()*vcl_fabs(saa->LeTau() - saa->LsTau());
+      dOC = saa->Rr()*std::fabs(saa->ReTau() - saa->RsTau()) + saa->Rl()*std::fabs(saa->LeTau() - saa->LsTau());
 
       if (R > MAX_RADIUS) {
         vgl_point_2d<double> start  = saa->getLFootPt(saa->LeTau());
@@ -513,7 +513,7 @@ double dbsk2d_prune_ishock::splice_cost(dbsk2d_ishock_elm* selm)
   double ps_dPnCost = shock_saliency_map[sedge->pSNode()->id()].dPnCost;
 
   //prune cost is the difference of lengths + the parents prune cost
-  dPnCost = vcl_fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
+  dPnCost = std::fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
 
   dbsk2d_assert (dOC>=0 && dNC>=0 && dPnCost>=0);
 
@@ -530,8 +530,8 @@ void dbsk2d_prune_ishock::prune(double thresh)
   for (; curE != ishock_graph->all_edges().end(); curE++){
     dbsk2d_ishock_edge* curShock = (*curE);
     ordered_shock_list.insert(
-      vcl_pair<vcl_pair<double, int>, dbsk2d_ishock_elm*>(
-        vcl_pair<double, int>(curShock->endTime(),curShock->id()), 
+      std::pair<std::pair<double, int>, dbsk2d_ishock_elm*>(
+        std::pair<double, int>(curShock->endTime(),curShock->id()), 
         curShock)
     );
   }
@@ -541,14 +541,14 @@ void dbsk2d_prune_ishock::prune(double thresh)
   for (; curN != ishock_graph->all_nodes().end(); curN++){
     dbsk2d_ishock_node* curShock = (*curN);
     ordered_shock_list.insert(
-      vcl_pair<vcl_pair<double, int>, dbsk2d_ishock_elm*>(
-        vcl_pair<double, int>(curShock->endTime(),curShock->id()), 
+      std::pair<std::pair<double, int>, dbsk2d_ishock_elm*>(
+        std::pair<double, int>(curShock->endTime(),curShock->id()), 
         curShock)
     );
   }
 
   //1) compute saliences
-  vcl_multimap<vcl_pair<double, int>, dbsk2d_ishock_elm*>::iterator curS = ordered_shock_list.begin();
+  std::multimap<std::pair<double, int>, dbsk2d_ishock_elm*>::iterator curS = ordered_shock_list.begin();
   for (; curS != ordered_shock_list.end(); ++curS)
   {
     dbsk2d_ishock_elm* selm = curS->second;
@@ -641,8 +641,8 @@ void dbsk2d_prune_ishock::prune(double thresh)
 
 inline
 bool has_support(vgl_point_2d<double>& pt, vil_image_view<bool>& rbs_mask, int& off_x, int& off_y) {
- int x = (int)vcl_floor(pt.x()+0.5)-off_x;
- int y = (int)vcl_floor(pt.y()+0.5)-off_y;
+ int x = (int)std::floor(pt.x()+0.5)-off_x;
+ int y = (int)std::floor(pt.y()+0.5)-off_y;
  if (rbs_mask(x, y))
   return true;
  else
@@ -651,20 +651,20 @@ bool has_support(vgl_point_2d<double>& pt, vil_image_view<bool>& rbs_mask, int& 
 
 //: prune all the intrinsic shock edges which has samples not supported by the given set of boundaries
 //  pixel_range_in_mask_image: the neighborhood that is masked true in the image around each boundary pixel, e.g. 2 pixels
-void dbsk2d_prune_ishock::prune_based_on_support(vcl_vector<vsol_polyline_2d_sptr>& rbs, vsol_box_2d_sptr bbox, int pixel_range_in_mask_image)
+void dbsk2d_prune_ishock::prune_based_on_support(std::vector<vsol_polyline_2d_sptr>& rbs, vsol_box_2d_sptr bbox, int pixel_range_in_mask_image)
 {
   //: prepare the mask image for real boundaries for fast access
   int ni = int(bbox->width()+4*pixel_range_in_mask_image);
   int nj = int(bbox->height()+4*pixel_range_in_mask_image);
   vil_image_view<bool> rbs_mask(ni, nj, 1); 
-  int off_x = int(vcl_floor(bbox->get_min_x()-2*pixel_range_in_mask_image+0.5));
-  int off_y = int(vcl_floor(bbox->get_min_y()-2*pixel_range_in_mask_image+0.5));
+  int off_x = int(std::floor(bbox->get_min_x()-2*pixel_range_in_mask_image+0.5));
+  int off_y = int(std::floor(bbox->get_min_y()-2*pixel_range_in_mask_image+0.5));
   rbs_mask.fill(false);
 
   for (unsigned i = 0; i < rbs.size(); i++) 
     for (unsigned j = 0; j < rbs[i]->size(); j++) {
-      int x = (int)vcl_floor(rbs[i]->vertex(j)->x()+0.5)-off_x;
-      int y = (int)vcl_floor(rbs[i]->vertex(j)->y()+0.5)-off_y;
+      int x = (int)std::floor(rbs[i]->vertex(j)->x()+0.5)-off_x;
+      int y = (int)std::floor(rbs[i]->vertex(j)->y()+0.5)-off_y;
       rbs_mask(x, y) = true;
       for (int k = 1; k < pixel_range_in_mask_image; k++) {
         rbs_mask(x+k, y) = true;
@@ -689,7 +689,7 @@ void dbsk2d_prune_ishock::prune_based_on_support(vcl_vector<vsol_polyline_2d_spt
           else 
               temp1(i,j)=0;
           }
-  vcl_string name("d:\\projects\\temp\\temp-mask.tiff");
+  std::string name("d:\\projects\\temp\\temp-mask.tiff");
    vil_save(temp1,name.c_str());
 #endif
 
@@ -764,7 +764,7 @@ void dbsk2d_prune_ishock::compile_nodes()
       new_shock_node->set_id(cur_node->id());
       shock_graph->add_vertex(new_shock_node->cast_to_shock_node());
       ishock_to_shock_node_map.insert(
-        vcl_pair<int, dbsk2d_shock_node_sptr>(cur_node->id(), new_shock_node)
+        std::pair<int, dbsk2d_shock_node_sptr>(cur_node->id(), new_shock_node)
       );
     }
 
@@ -788,13 +788,13 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
   dbsk2d_shock_node_sptr end_node;
   dbsk2d_shock_edge_sptr new_edge;
   dbsk2d_ishock_edge* first_ishock_edge;
-  vcl_list<dbsk2d_ishock_edge*> shock_edges;
+  std::list<dbsk2d_ishock_edge*> shock_edges;
 
   dbsk2d_shock_ishock_node* cur_node = (dbsk2d_shock_ishock_node*)node.ptr();
   dbsk2d_ishock_node* cur_inode = cur_node->ishock_node();  
   
   if (cur_inode->id() == 49542 || cur_inode->id() == 44300 || cur_inode->id() == 49724 )
-    vcl_cout << "here!!\n";
+    std::cout << "here!!\n";
 
    // ozge added the following line, is this a problem?? TODO: ask Amir
    if (cur_inode->isHidden())
@@ -817,7 +817,7 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
     //ozge: added this check not to recreate an existing edge
     //      this check was necessary when this function is used in gap transform
     //      normally during pruning it is not necessary
-    vcl_map <int, dbsk2d_shock_edge_sptr>::iterator iter = ishock_to_shock_edge_map.find(first_ishock_edge->id());
+    std::map <int, dbsk2d_shock_edge_sptr>::iterator iter = ishock_to_shock_edge_map.find(first_ishock_edge->id());
     if (iter == ishock_to_shock_edge_map.end()) {
     
       //end_node = trace_to_target_node(cur_inode->cShock(), shock_edges);
@@ -837,7 +837,7 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
 
       //add it to the map
       ishock_to_shock_edge_map.insert(
-        vcl_pair<int, dbsk2d_shock_edge_sptr>(new_edge->id(), new_edge)
+        std::pair<int, dbsk2d_shock_edge_sptr>(new_edge->id(), new_edge)
       );
     }
   }
@@ -852,7 +852,7 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
     //ozge: added this check not to recreate an existing edge
     //      this check was necessary when this function is used in gap transform
     //      normally during pruning it is not necessary
-    vcl_map <int, dbsk2d_shock_edge_sptr>::iterator iter = ishock_to_shock_edge_map.find(first_ishock_edge->id());
+    std::map <int, dbsk2d_shock_edge_sptr>::iterator iter = ishock_to_shock_edge_map.find(first_ishock_edge->id());
     if (iter == ishock_to_shock_edge_map.end()) {
 
       end_node = trace_to_target_node(cur_inode->cShock2(), shock_edges);
@@ -869,7 +869,7 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
 
       //add it to the map
       ishock_to_shock_edge_map.insert(
-        vcl_pair<int, dbsk2d_shock_edge_sptr>(new_edge->id(), new_edge)
+        std::pair<int, dbsk2d_shock_edge_sptr>(new_edge->id(), new_edge)
       );
     }
   }
@@ -880,7 +880,7 @@ void dbsk2d_prune_ishock::compile_edges_of_node(dbsk2d_shock_node_sptr node)
 // compiling a list of edges that it traversed through
 dbsk2d_shock_node_sptr 
 dbsk2d_prune_ishock::trace_to_target_node(dbsk2d_ishock_edge* shock_edge, 
-                                          vcl_list<dbsk2d_ishock_edge*>& shock_edges)
+                                          std::list<dbsk2d_ishock_edge*>& shock_edges)
 {
   int edge_id = shock_edge->id();
 
@@ -914,7 +914,7 @@ dbsk2d_prune_ishock::trace_to_target_node(dbsk2d_ishock_edge* shock_edge,
     return 0;
 
   //now find dbsk2d_shock_node corresponding to this dbsk2d_ishock_node
-  vcl_map<int, dbsk2d_shock_node_sptr>::iterator nmap_iter = 
+  std::map<int, dbsk2d_shock_node_sptr>::iterator nmap_iter = 
     ishock_to_shock_node_map.find(target_node->id());
 
   if (nmap_iter != ishock_to_shock_node_map.end())

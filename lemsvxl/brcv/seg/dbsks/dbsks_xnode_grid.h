@@ -126,37 +126,37 @@ public:
   // The generated points are guaranteed to lie inside the grid
   bool sample_xy(double x0, double y0, int num_x_backward, int num_x_forward,
     int num_y_backward, int num_y_forward, 
-    vcl_vector<double >& xs, vcl_vector<double >& ys,
-    vcl_vector<int >& index_xs, vcl_vector<int >& index_ys);
+    std::vector<double >& xs, std::vector<double >& ys,
+    std::vector<int >& index_xs, std::vector<int >& index_ys);
 
   //: sample x
   bool sample_x(double ref_x, int num_x_backward, int num_x_forward,
-    vcl_vector<double >& x_vec, vcl_vector<int >& index_x_vec) const;
+    std::vector<double >& x_vec, std::vector<int >& index_x_vec) const;
 
   //: sample y
   bool sample_y(double ref_y, int num_y_backward, int num_y_forward,
-    vcl_vector<double >& y_vec, vcl_vector<int >& index_y_vec) const;
+    std::vector<double >& y_vec, std::vector<int >& index_y_vec) const;
 
   //: samples of psi on the grid around a given psi value "ref_psi"
   bool sample_psi(double ref_psi, int num_psi_backward, int num_psi_forward, 
-    vcl_vector<double >& psi_vec, vcl_vector<int >& index_psi_vec) const;
+    std::vector<double >& psi_vec, std::vector<int >& index_psi_vec) const;
 
   //: sample phi0
   bool sample_phi0(double ref_phi0, int num_phi0_backward, int num_phi0_forward,
-    vcl_vector<double >& phi0_vec, vcl_vector<int >& index_phi0_vec) const;
+    std::vector<double >& phi0_vec, std::vector<int >& index_phi0_vec) const;
   
   //: sample r
   bool sample_r(double ref_r, int num_r_backward, int num_r_forward,
-    vcl_vector<double >& r_vec, vcl_vector<int >& index_r_vec) const;
+    std::vector<double >& r_vec, std::vector<int >& index_r_vec) const;
 
   //: sample phi1
   bool sample_phi1(double ref_phi1, int num_phi1_backward, int num_phi1_forward,
-    vcl_vector<double >& phi1_vec, vcl_vector<int >& index_phi1_vec) const;
+    std::vector<double >& phi1_vec, std::vector<int >& index_phi1_vec) const;
 
   
 
   // Properties wrt the starting xnode ----------------------------------------- 
-  vcl_ostream& print(vcl_ostream& os);
+  std::ostream& print(std::ostream& os);
 
 public:
   //: x

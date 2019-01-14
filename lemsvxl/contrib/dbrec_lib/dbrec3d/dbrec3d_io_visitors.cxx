@@ -14,9 +14,9 @@
 
 
 //: XML write utility for dbrec3d
-void dbrec3d_xml_write_parts_and_contexts(vcl_string p_doc, vcl_string c_doc)
+void dbrec3d_xml_write_parts_and_contexts(std::string p_doc, std::string c_doc)
 {
-  vcl_vector<dbrec3d_part_sptr> parts = PARTS_MANAGER->get_all_parts();
+  std::vector<dbrec3d_part_sptr> parts = PARTS_MANAGER->get_all_parts();
  
   //write the parsts xml file
   dbrec3d_write_xml_visitor xml_writer;
@@ -27,7 +27,7 @@ void dbrec3d_xml_write_parts_and_contexts(vcl_string p_doc, vcl_string c_doc)
 }
 
 //: XML read utility for dbrec3d
-void dbrec3d_xml_parse_parts_and_contexts(vcl_string p_doc, vcl_string c_doc)
+void dbrec3d_xml_parse_parts_and_contexts(std::string p_doc, std::string c_doc)
 {
 
   //parse the parst xml file
@@ -44,7 +44,7 @@ dbrec3d_write_xml_visitor::dbrec3d_write_xml_visitor()
   part_data_ = p_data;
 }
 
-void dbrec3d_write_xml_visitor::write_hierarchy(vcl_vector<dbrec3d_part_sptr> &hierarchy, vcl_string& name)
+void dbrec3d_write_xml_visitor::write_hierarchy(std::vector<dbrec3d_part_sptr> &hierarchy, std::string& name)
 {
 
   for(unsigned i=0; i< hierarchy.size(); i++)
@@ -58,7 +58,7 @@ void dbrec3d_write_xml_visitor::write_hierarchy(vcl_vector<dbrec3d_part_sptr> &h
   root->append_text("\n");
   root->append_data(part_data_);
   root->append_text("\n");
-  vcl_ofstream os(name.c_str());
+  std::ofstream os(name.c_str());
   bxml_write(os,doc);
   os.close();
 }
@@ -68,7 +68,7 @@ void dbrec3d_write_xml_visitor::visit(dbrec3d_part_sptr part)
 {
   
   //: check if the part has been written before
-  vcl_set<unsigned>::iterator it = part_set_.find(part->type_id());
+  std::set<unsigned>::iterator it = part_set_.find(part->type_id());
   if (it == part_set_.end()) {
     //: just dump the part as a new data node
     bxml_data_sptr data = part->xml_element();
@@ -80,22 +80,22 @@ void dbrec3d_write_xml_visitor::visit(dbrec3d_part_sptr part)
   }
 }
 
-bool dbrec3d_parse_xml_visitor::parse_hierarchy(const vcl_string& name)
+bool dbrec3d_parse_xml_visitor::parse_hierarchy(const std::string& name)
 {
-  vcl_ifstream is(name.c_str());
+  std::ifstream is(name.c_str());
   if (!is) return false;
   bxml_document doc = bxml_read(is);
   bxml_element query("hierarchy");
   bxml_data_sptr hierarchy_root = bxml_find_by_name(doc.root_element(), query);
   if (!hierarchy_root) {
-    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name hierarchy!\n";
+    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name hierarchy!\n";
     return false;
   }
   bxml_element parts_query("parts");
   bxml_data_sptr parts_data = bxml_find_by_name(hierarchy_root, parts_query);
   bxml_element* parts_elm = dynamic_cast<bxml_element*>(parts_data.ptr());
   if (!parts_data || !parts_elm) {
-    vcl_cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name parts!\n";
+    std::cout << "dbrec_parse_hierarchy_xml::parse() - could not find the main node with name parts!\n";
     return false;
   }
 
@@ -115,7 +115,7 @@ bool dbrec3d_parse_xml_visitor::parse_hierarchy(const vcl_string& name)
 }
 
 bool dbrec3d_parse_xml_visitor::parse_composition_structure(bxml_data_sptr d,
-                                                            vcl_map<unsigned, vcl_pair<dbrec3d_part_sptr, bool> >& part_map)
+                                                            std::map<unsigned, std::pair<dbrec3d_part_sptr, bool> >& part_map)
 {
   bxml_element query("composition");
   bxml_data_sptr root = bxml_find_by_name(d, query);
@@ -127,7 +127,7 @@ bool dbrec3d_parse_xml_visitor::parse_composition_structure(bxml_data_sptr d,
   c_root->get_attribute("type_id", type_id);
   c_root->get_attribute("nchildren", nchildren);
   //: retrieve the part
-  vcl_map<unsigned, vcl_pair<dbrec3d_part_sptr, bool> >::iterator it = part_map.find(type_id);
+  std::map<unsigned, std::pair<dbrec3d_part_sptr, bool> >::iterator it = part_map.find(type_id);
   if (it == part_map.end())
     return false;
   dbrec3d_part_sptr p = it->second.first;
@@ -141,15 +141,15 @@ bool dbrec3d_parse_xml_visitor::parse_composition_structure(bxml_data_sptr d,
   for (bxml_element::const_data_iterator s_it = c_root->data_begin(); s_it != c_root->data_end(); s_it++) {
     if ((*s_it)->type() == bxml_data::TEXT) {
       bxml_text* t = dynamic_cast<bxml_text*>((*s_it).ptr());
-      vcl_stringstream text_d(t->data()); vcl_string buf;
-      vcl_vector<vcl_string> tokens;
+      std::stringstream text_d(t->data()); std::string buf;
+      std::vector<std::string> tokens;
       while (text_d >> buf) {
         tokens.push_back(buf);
       }
       if (tokens.size() != nchildren)
         continue;
       for (unsigned i = 0; i < nchildren; i++) {
-        vcl_stringstream ss2(tokens[i]); unsigned c_type;
+        std::stringstream ss2(tokens[i]); unsigned c_type;
         ss2 >> c_type;
         it = part_map.find(c_type);
         if (it == part_map.end())

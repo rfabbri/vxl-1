@@ -24,7 +24,7 @@ void cali_conic_info::b_read(vsl_b_istream &is){
   int size, set_size;
   short ver;
   
-  vcl_vector<vcl_vector<vsol_conic_2d_sptr> > list;
+  std::vector<std::vector<vsol_conic_2d_sptr> > list;
 
   if (!is)
     return;
@@ -48,9 +48,9 @@ void cali_conic_info::b_read(vsl_b_istream &is){
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: calib_conic_info::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: calib_conic_info::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream*/
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream*/
     return;
   }
  }

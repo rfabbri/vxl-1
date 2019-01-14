@@ -1,8 +1,8 @@
 #include "dbcvr_interp_cvmatch_process.h"
 
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -39,7 +39,7 @@ dbcvr_interp_cvmatch_process::dbcvr_interp_cvmatch_process()
       !parameters()->add( "Give higher to see less number of alignment lines after matching:" , "-NN" , 1 )  ||
       !parameters()->add( "Template size (1, 3, 5 or 11):" , "-template_size" , 1 )  ||
       !parameters()->add( "R:" , "-r1" , 10.0f ) ) {
-    vcl_cerr << "ERROR: Adding parameters in dbcvr_interp_cvmatch_process::dbcvr_interp_cvmatch_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in dbcvr_interp_cvmatch_process::dbcvr_interp_cvmatch_process()" << std::endl;
   }
 }
 
@@ -63,7 +63,7 @@ bool dbcvr_interp_cvmatch_process::execute()
   parameters()->get_value( "-deltagiven" , delta_given );
   float deltag=0;
   parameters()->get_value( "-delta" , deltag );
-  vcl_cout << "delta given is: " << deltag << vcl_endl; 
+  std::cout << "delta given is: " << deltag << std::endl; 
   int interpolation_type=0;
   parameters()->get_value( "-type" , interpolation_type );
   int template_size=0;
@@ -76,15 +76,15 @@ bool dbcvr_interp_cvmatch_process::execute()
   // get input storage class
   vidpro1_vsol2D_storage_sptr input_vsol1;
   input_vsol1.vertical_cast(input_data_[0][0]);
-  vcl_vector<vsol_point_2d_sptr> inp1;
+  std::vector<vsol_point_2d_sptr> inp1;
 
   vidpro1_vsol2D_storage_sptr input_vsol2;
   input_vsol2.vertical_cast(input_data_[0][1]);
-  vcl_vector<vsol_point_2d_sptr> inp2;
+  std::vector<vsol_point_2d_sptr> inp2;
 
   // The contour can either be a polyline producing an open contour 
   // or a polygon producing a close contour
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol1->all_data();
   bool closed1 = false;
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ )
   {
@@ -110,11 +110,11 @@ bool dbcvr_interp_cvmatch_process::execute()
           inp1.push_back(pt);
   } } } }
 
-  vcl_cout << "Original curve1 size: " << inp1.size() << vcl_endl;
+  std::cout << "Original curve1 size: " << inp1.size() << std::endl;
   if (closed1)
-    vcl_cout << "Original curve1 is a polygon, i.e. a closed curve\n";
+    std::cout << "Original curve1 is a polygon, i.e. a closed curve\n";
   else
-    vcl_cout << "Original curve1 is a polyline, i.e. an open curve\n";
+    std::cout << "Original curve1 is a polyline, i.e. an open curve\n";
 
   vsol_list = input_vsol2->all_data();
   bool closed2 = false;
@@ -142,11 +142,11 @@ bool dbcvr_interp_cvmatch_process::execute()
           inp2.push_back(pt);
   } } } }
 
-  vcl_cout << "Original curve2 size: " << inp2.size() << vcl_endl;
+  std::cout << "Original curve2 size: " << inp2.size() << std::endl;
   if (closed2)
-    vcl_cout << "Original curve2 is a polygon, i.e. a closed curve\n";
+    std::cout << "Original curve2 is a polygon, i.e. a closed curve\n";
   else
-    vcl_cout << "Original curve2 is a polyline, i.e. an open curve\n";
+    std::cout << "Original curve2 is a polyline, i.e. an open curve\n";
 
   //bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
   //bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
@@ -165,7 +165,7 @@ bool dbcvr_interp_cvmatch_process::execute()
   } 
   else if (interpolation_type == 2)
   {  // cubic
-    vcl_cout << "CUBIC INTERPOLATION NOT IMPLEMENTED" << vcl_endl;
+    std::cout << "CUBIC INTERPOLATION NOT IMPLEMENTED" << std::endl;
     return false;
   } 
   else if (interpolation_type == 3)
@@ -186,7 +186,7 @@ bool dbcvr_interp_cvmatch_process::execute()
   }
   else 
   {  //unknown
-    vcl_cout << "This type of interpolation is unknown\n";
+    std::cout << "This type of interpolation is unknown\n";
     return false;
   }
   
@@ -206,12 +206,12 @@ bool dbcvr_interp_cvmatch_process::execute()
       
   double len1 = curve1->length();
   double len2 = curve2->length();
-  vcl_cout << "length 1: " << len1 << vcl_endl; vcl_cout << "length 2: " << len2 << vcl_endl;
+  std::cout << "length 1: " << len1 << std::endl; std::cout << "length 2: " << len2 << std::endl;
       
-  double min_alignment_length = vcl_sqrt(vcl_pow(len1, 2)+vcl_pow(len2, 2));
+  double min_alignment_length = std::sqrt(std::pow(len1, 2)+std::pow(len2, 2));
   double max_alignment_length = len1+len2;
-  vcl_cout << "min alignment curve length: " << min_alignment_length << vcl_endl;
-  vcl_cout << "max alignment curve length: " << max_alignment_length << vcl_endl;
+  std::cout << "min alignment curve length: " << min_alignment_length << std::endl;
+  std::cout << "max alignment curve length: " << max_alignment_length << std::endl;
       
 #if 0
 //this variable is not used in the code.  PLEASE FIX!  -MM
@@ -223,11 +223,11 @@ bool dbcvr_interp_cvmatch_process::execute()
   //int max_n = (n1>n2?n1:n2);
   //delta = min_alignment_length/max_n;  // for now
       
-      /*vcl_cout << "min_alignment/max(n1, n2): " << delta << vcl_endl;
+      /*std::cout << "min_alignment/max(n1, n2): " << delta << std::endl;
       delta = min_alignment_length/((float)max_n/2.0);
-      vcl_cout << "min_alignment_length/((float)max_n/2.0: " << delta << vcl_endl;
+      std::cout << "min_alignment_length/((float)max_n/2.0: " << delta << std::endl;
       delta = min_alignment_length/((float)(n1+n2)/2.0);
-      vcl_cout << "min_alignment_length/((float)(n1+n2)/2.0: " << delta << vcl_endl;
+      std::cout << "min_alignment_length/((float)(n1+n2)/2.0: " << delta << std::endl;
       */
       
   
@@ -235,17 +235,17 @@ bool dbcvr_interp_cvmatch_process::execute()
   
   dbcvr_cv_cor_sptr sil_cor;
   if (closed_version_normal) {    // closed curve matching with oblique grid
-      vcl_cout << "In closed curve matching with oblique grid!!\n";
+      std::cout << "In closed curve matching with oblique grid!!\n";
       
       // I want k starting points on shorter curve
       double L1 = (len1<len2)?len1:len2;
       double L2 = (len1<len2)?len2:len1;
 
-      int k = static_cast<int>(vcl_ceil( L1/ ((L1+L2)/(n1+n2)) )); 
+      int k = static_cast<int>(std::ceil( L1/ ((L1+L2)/(n1+n2)) )); 
 
-      double delta_eta = (L1*L2)/( vcl_sqrt(vcl_pow(L1,2) + vcl_pow(L2,2)) * k );
+      double delta_eta = (L1*L2)/( std::sqrt(std::pow(L1,2) + std::pow(L2,2)) * k );
 
-      double delta = vcl_pow(L1*L1 + L2*L2, 0.5)/(n1>n2?n1:n2);  // for now
+      double delta = std::pow(L1*L1 + L2*L2, 0.5)/(n1>n2?n1:n2);  // for now
 
       dbcvr_clsd_interp_cvmatch_sptr clsdp = new dbcvr_clsd_interp_cvmatch(curve1, 
                                                                            curve2, 
@@ -262,14 +262,14 @@ bool dbcvr_interp_cvmatch_process::execute()
       curveMatch->setCurve1 (c1);
       curveMatch->setCurve2 (c2);
 
-      //vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< clsdp->finalCost(0) <<vcl_endl;
-      vcl_cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+      //std::cout<< std::endl<<"curve_2d matching cost: "<< clsdp->finalCost(0) <<std::endl;
+      std::cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
       assert(c1->size() == c2->size());
 
-      vcl_vector< vcl_pair<int,int> > map;
+      std::vector< std::pair<int,int> > map;
       for (int i = 0; i<c1->size(); i++) {
-        vcl_pair<int, int> p(i,i);
+        std::pair<int, int> p(i,i);
         map.push_back(p);
       }
       
@@ -278,7 +278,7 @@ bool dbcvr_interp_cvmatch_process::execute()
       sil_cor = new dbcvr_cv_cor(c1, c2, map, c1->size());
 
   } else if (closed_version_even) {
-      vcl_cout << "In closed curve matching with normal grid!!\n";
+      std::cout << "In closed curve matching with normal grid!!\n";
       
       double delta_s1 = len1/inp1.size();
       double delta_s2 = len2/inp2.size();
@@ -314,18 +314,18 @@ bool dbcvr_interp_cvmatch_process::execute()
         }
       }
 
-      vcl_vector<vsol_point_2d_sptr> out_curve1;
-      vcl_vector<vsol_point_2d_sptr> out_curve2;
+      std::vector<vsol_point_2d_sptr> out_curve1;
+      std::vector<vsol_point_2d_sptr> out_curve2;
 
-      vcl_vector< vcl_pair <int,int> > map = clsdp->finalMap(minIndex);
-      vcl_vector< vcl_pair <int,int> > map2;
+      std::vector< std::pair <int,int> > map = clsdp->finalMap(minIndex);
+      std::vector< std::pair <int,int> > map2;
       for (unsigned k = 0; k<map.size(); k++) {
         int i = map[k].first;
         int j = map[k].second;
-        //vcl_cout << "maps: " << i << " to " << j << vcl_endl;
-        //vcl_cout << "len1: " << vcl_fmod(i*delta_s1, len1) << " to " << vcl_fmod(j*delta_s2, len2) << vcl_endl;
-        out_curve1.push_back(curve1->point_at(vcl_fmod(i*delta_s1, len1)));
-        out_curve2.push_back(curve2->point_at(vcl_fmod(j*delta_s2, len2)));
+        //std::cout << "maps: " << i << " to " << j << std::endl;
+        //std::cout << "len1: " << std::fmod(i*delta_s1, len1) << " to " << std::fmod(j*delta_s2, len2) << std::endl;
+        out_curve1.push_back(curve1->point_at(std::fmod(i*delta_s1, len1)));
+        out_curve2.push_back(curve2->point_at(std::fmod(j*delta_s2, len2)));
         
       }
         
@@ -336,14 +336,14 @@ bool dbcvr_interp_cvmatch_process::execute()
       curveMatch->setCurve1 (c1);
       curveMatch->setCurve2 (c2);
 
-      //vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<vcl_endl;
-      vcl_cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+      //std::cout<< std::endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<std::endl;
+      std::cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
       assert(c1->size() == c2->size());
 
       map.clear();
       for (int i = 0; i<c1->size(); i+=NN) {
-        vcl_pair<int, int> p(i,i);
+        std::pair<int, int> p(i,i);
         map.push_back(p);
       }
       
@@ -352,7 +352,7 @@ bool dbcvr_interp_cvmatch_process::execute()
       sil_cor = new dbcvr_cv_cor(c1, c2, map, c1->size());
 
   } else if (open_even) {
-     vcl_cout << "In open curve matching using evenly sampled normal grid!\n";
+     std::cout << "In open curve matching using evenly sampled normal grid!\n";
 
      double delta_s1 = len1/(inp1.size()-1);
       double delta_s2 = len2/(inp2.size()-1);
@@ -368,10 +368,10 @@ bool dbcvr_interp_cvmatch_process::execute()
 
       double minCost = cvmatch->finalCost();
       
-      vcl_vector<vsol_point_2d_sptr> out_curve1;
-      vcl_vector<vsol_point_2d_sptr> out_curve2;
+      std::vector<vsol_point_2d_sptr> out_curve1;
+      std::vector<vsol_point_2d_sptr> out_curve2;
 
-      vcl_vector< vcl_pair <int,int> > map = *(cvmatch->finalMap());
+      std::vector< std::pair <int,int> > map = *(cvmatch->finalMap());
 
       delta_s1 = len1/(n1-1);  // there are n1-1 intervals (first and last points are also included in n1)
       delta_s2 = len2/(n2-1);
@@ -388,14 +388,14 @@ bool dbcvr_interp_cvmatch_process::execute()
       curveMatch->setCurve1 (c1);
       curveMatch->setCurve2 (c2);
 
-      //vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<vcl_endl;
-      vcl_cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+      //std::cout<< std::endl<<"curve_2d matching cost: "<< clsdp->finalCost() <<std::endl;
+      std::cout<< "cost: " << minCost << " time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
       assert(c1->size() == c2->size());
 
       map.clear();
       for (int i = 0; i<c1->size(); i+=NN) {
-        vcl_pair<int, int> p(i,i);
+        std::pair<int, int> p(i,i);
         map.push_back(p);
       }
       
@@ -409,19 +409,19 @@ bool dbcvr_interp_cvmatch_process::execute()
      THIS PART DOES OPEN CURVE MATCHING WITH INTERP CURVE CLASS SPECIFICALLY WRITTEN 
      TO DO OPEN CURVE MATCHING
      **************************************************************/
-      vcl_cout << "In open curve matching with OBLIQUE grid!\n";
+      std::cout << "In open curve matching with OBLIQUE grid!\n";
      
       double L1 = (len1<len2)?len1:len2;
       double L2 = (len1<len2)?len2:len1;
 
-      int k = static_cast<int>(vcl_ceil( L1/ ((L1+L2)/(n1+n2)) )); 
+      int k = static_cast<int>(std::ceil( L1/ ((L1+L2)/(n1+n2)) )); 
 
-      double delta_eta = (L1*L2)/( vcl_sqrt(vcl_pow(L1,2) + vcl_pow(L2,2)) * k );
+      double delta_eta = (L1*L2)/( std::sqrt(std::pow(L1,2) + std::pow(L2,2)) * k );
 
-      double delta = vcl_pow(L1*L1 + L2*L2, 0.5)/(n1>n2?n1:n2);  // for now
+      double delta = std::pow(L1*L1 + L2*L2, 0.5)/(n1>n2?n1:n2);  // for now
       if (delta_given) delta = deltag;
-      vcl_cout << "delta_ksi: " << delta << vcl_endl;
-      vcl_cout << "delta_eta: " << delta_eta << vcl_endl;
+      std::cout << "delta_ksi: " << delta << std::endl;
+      std::cout << "delta_eta: " << delta_eta << std::endl;
 
       //open_dpmatch_2d* newdp = new open_dpmatch_2d(curve1, curve2, (double)r1, delta, interpolation_order, back_step_size);  
       dbcvr_interp_cvmatch_sptr newdp = new dbcvr_interp_cvmatch(curve1, curve2, (double)r1, delta, delta_eta);
@@ -438,14 +438,14 @@ bool dbcvr_interp_cvmatch_process::execute()
       curveMatch->setCurve1 (c1);
       curveMatch->setCurve2 (c2);
 
-      vcl_cout<< vcl_endl<<"curve_2d matching cost: "<< newdp->finalCost() <<vcl_endl;
-      vcl_cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<vcl_endl;
+      std::cout<< std::endl<<"curve_2d matching cost: "<< newdp->finalCost() <<std::endl;
+      std::cout<< "matching time: "<< ((double)(time2-time1))/CLOCKS_PER_SEC << " seconds. " <<std::endl;
 
       assert(c1->size() == c2->size());
 
-      vcl_vector< vcl_pair<int,int> > map;
+      std::vector< std::pair<int,int> > map;
       for (int i = 0; i<c1->size(); i++) {
-        vcl_pair<int, int> p(i,i);
+        std::pair<int, int> p(i,i);
         map.push_back(p);
       }
       

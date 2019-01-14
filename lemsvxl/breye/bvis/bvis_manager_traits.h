@@ -4,7 +4,7 @@
 #ifdef VCL_NEEDS_PRAGMA_INTERFACE
 #pragma interface
 #endif
-#include <vcl_string.h>
+#include <string>
 #include <bpro/bpro_mview_process_manager.h>
 #include <vidpro/vidpro_process_manager.h>
 //:
@@ -22,7 +22,7 @@ class bvis_manager_traits<bvis_video_manager>
  public:
 
   //: String indicating the name of the manager
-  static vcl_string name() {return "bvis_video_manager";}
+  static std::string name() {return "bvis_video_manager";}
   static vidpro_process_manager* process_manager()
     {return vidpro_process_manager::instance();}
 };
@@ -40,7 +40,7 @@ class bvis_manager_traits<bvis_mview_manager>
  public:
 
   //: String indicating the name of the manager
-  static vcl_string name() {return "bvis_mview_manager";}
+  static std::string name() {return "bvis_mview_manager";}
   static bpro_mview_process_manager* process_manager()
     {return bpro_mview_process_manager::instance();}
 

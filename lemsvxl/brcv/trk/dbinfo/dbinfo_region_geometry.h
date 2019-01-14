@@ -26,8 +26,8 @@
 // \endverbatim
 //
 //-------------------------------------------------------------------------
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
@@ -36,7 +36,7 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <brip/brip_roi.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 class dbinfo_region_geometry : public vbl_ref_count
 {
@@ -50,7 +50,7 @@ class dbinfo_region_geometry : public vbl_ref_count
 
   //: Constructors/destructor
   dbinfo_region_geometry(const unsigned image_cols, const unsigned image_rows,
-                         vcl_vector<vsol_polygon_2d_sptr> const& track_boundary,
+                         std::vector<vsol_polygon_2d_sptr> const& track_boundary,
                          const float thresh = 0.9);
 
   //: From a single polygon
@@ -96,8 +96,8 @@ class dbinfo_region_geometry : public vbl_ref_count
     {assert(index<size());  return point_masks_[index];}
 
   //: Get the full sample point set and valid mask
-  inline vcl_vector<vgl_point_2d<float> > points(){return points_;}
-  inline vcl_vector<bool> masks(){return point_masks_;}
+  inline std::vector<vgl_point_2d<float> > points(){return points_;}
+  inline std::vector<bool> masks(){return point_masks_;}
 
   //:The centroid of the region
   vsol_point_2d_sptr cog() ;
@@ -118,17 +118,17 @@ class dbinfo_region_geometry : public vbl_ref_count
   //:Transform in place
   bool transform(vgl_h_matrix_2d<float> const& trans);
   
-  void print(vcl_ostream &strm=vcl_cout);
+  void print(std::ostream &strm=std::cout);
   
-  friend vcl_ostream &operator<<(vcl_ostream &, dbinfo_region_geometry const&);
-  friend vcl_ostream &operator<<(vcl_ostream &, dbinfo_region_geometry const*);
+  friend std::ostream &operator<<(std::ostream &, dbinfo_region_geometry const&);
+  friend std::ostream &operator<<(std::ostream &, dbinfo_region_geometry const*);
 
   // Binary I/O------------------------------------------------------------------
 
   //: Return a platform independent string identifying the class
-  vcl_string is_a() const {return vcl_string("dbinfo_region_geometry");}
+  std::string is_a() const {return std::string("dbinfo_region_geometry");}
   //: Return true if the argument matches the string identifying the class or any parent class
-  bool is_class(vcl_string const& cls) const
+  bool is_class(std::string const& cls) const
     { return cls==is_a();}
 
   //: Return IO version number;
@@ -151,9 +151,9 @@ class dbinfo_region_geometry : public vbl_ref_count
   bool sufficient_points_; //!< sufficient number of points inside the image
   unsigned image_cols_;//!< number of columns in image
   unsigned image_rows_;//!< number of rows in image
-  vcl_vector<bool> point_masks_;//!< false if point is outside image
-  vcl_vector<vgl_point_2d<float> > points_;//!< sample pixel locations 
-  vcl_vector<vsol_polygon_2d_sptr> boundaries_;//!< polygonal boundaries
+  std::vector<bool> point_masks_;//!< false if point is outside image
+  std::vector<vgl_point_2d<float> > points_;//!< sample pixel locations 
+  std::vector<vsol_polygon_2d_sptr> boundaries_;//!< polygonal boundaries
   };
 
 // inline functions
@@ -180,14 +180,14 @@ inline void vsl_b_read(vsl_b_istream &is, dbinfo_region_geometry* &rg)
   rg->b_read(is);
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_region_geometry const& rg)
+inline std::ostream &operator<<(std::ostream &strm, dbinfo_region_geometry const& rg)
 {
   dbinfo_region_geometry& non_const = const_cast<dbinfo_region_geometry&>(rg);
   non_const.print(strm);
   return strm;
 }
 
-inline vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_region_geometry const* rg)
+inline std::ostream &operator<<(std::ostream &strm, dbinfo_region_geometry const* rg)
 {
   if (rg)
     strm << *rg;
@@ -197,7 +197,7 @@ inline vcl_ostream &operator<<(vcl_ostream &strm, dbinfo_region_geometry const* 
 }
 
 //: Stream output operator for class pointer
-inline void vsl_print_summary(vcl_ostream& os, dbinfo_region_geometry const* rg)
+inline void vsl_print_summary(std::ostream& os, dbinfo_region_geometry const* rg)
 {
   os << rg;
 }

@@ -22,8 +22,8 @@
 #include <borld/borld_image_description_sptr.h>
 #include <borld/borld_evaluation.h>
 #include <bxml/bxml_document.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 
 class vox_eval_shock_patches
 {
@@ -70,16 +70,16 @@ private:
     dborl_index_sptr ind_;
 
     // The output file path
-    vcl_string output_file_;
+    std::string output_file_;
 
     // The vector of all threshold bxml elements
-    vcl_vector<bxml_data_sptr> thresholds_;
+    std::vector<bxml_data_sptr> thresholds_;
 
     // Vector of all stats at each threshold
-    vcl_vector<buld_exp_stat> stats_at_threshold_;
+    std::vector<buld_exp_stat> stats_at_threshold_;
 
     // Vector all query image description objects
-    vcl_vector< borld_image_description_sptr> query_ids_;
+    std::vector< borld_image_description_sptr> query_ids_;
 
     // Good practice make copy ctor and assign operator private
 

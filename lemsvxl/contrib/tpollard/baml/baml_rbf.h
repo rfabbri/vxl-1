@@ -8,9 +8,9 @@
 // \date 7/31/07
 
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <vector>
+#include <iostream>
 #include <vnl/vnl_vector.h>
 
 /*
@@ -45,10 +45,10 @@ protected:
   float color_peak_var_;
   float color_peak_scale_;
 
-  vcl_vector< vnl_vector<float> > light_nodes_;
-  vcl_vector<float> color_nodes_;
-  vcl_vector<float> std_nodes_;
-  vcl_vector<float> weight_nodes_;
+  std::vector< vnl_vector<float> > light_nodes_;
+  std::vector<float> color_nodes_;
+  std::vector<float> std_nodes_;
+  std::vector<float> weight_nodes_;
 
   float light_distance(
     const vnl_vector<float>& light1,

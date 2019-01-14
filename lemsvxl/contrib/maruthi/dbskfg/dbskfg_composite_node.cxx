@@ -4,7 +4,7 @@
 // \file
 
 #include <dbskfg/dbskfg_composite_node.h>
-#include <vcl_string.h>
+#include <string>
 
 
 dbskfg_composite_node::dbskfg_composite_node
@@ -25,14 +25,14 @@ dbskfg_composite_node::dbskfg_composite_node
 
 }
 
-void dbskfg_composite_node::print(vcl_ostream& os)
+void dbskfg_composite_node::print(std::ostream& os)
 {
-    vcl_string type = (node_type_ == dbskfg_composite_node::SHOCK_NODE)
+    std::string type = (node_type_ == dbskfg_composite_node::SHOCK_NODE)
         ?"SHOCK_NODE":"CONTOUR_NODE";
 
     os<<"Node Id: "<<id_<<" Type "<< type << " Degree "<<composite_degree_
-      <<vcl_endl;
-    os<<"Location: "<<pt_<<vcl_endl;
-    os<<vcl_endl;
+      <<std::endl;
+    os<<"Location: "<<pt_<<std::endl;
+    os<<std::endl;
 
 }

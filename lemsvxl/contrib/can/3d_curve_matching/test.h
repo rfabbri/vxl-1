@@ -1,10 +1,10 @@
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_algorithm.h>
-#include <vcl_iterator.h>
-#include <vcl_ctime.h>
-#include <vcl_fstream.h>
-#include <vcl_iomanip.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 
 #include "Point.h"
 #include "Curve.h"

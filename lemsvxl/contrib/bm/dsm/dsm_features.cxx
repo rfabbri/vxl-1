@@ -1,19 +1,19 @@
 //this is /contrib/bm/dsm/dsm_features.cxx
 #include"dsm_features.h"
 
-dsm_features::dsm_features(vcl_string const& neighborhood_xml_path):
+dsm_features::dsm_features(std::string const& neighborhood_xml_path):
 	neighborhood_xml_path_(neighborhood_xml_path),  neighborhood_valid_(false), features_valid_(false), dim_reduced_(false),octave_size_(6),
 		num_octaves_(1)
 {
 	this->parse_neighborhood_xml(neighborhood_xml_path);
 }//end dsm_features constructor
 
-bool dsm_features::parse_neighborhood_xml(vcl_string const& neighborhood_xml_path)
+bool dsm_features::parse_neighborhood_xml(std::string const& neighborhood_xml_path)
 {
 	//Open the XML document
 	if( neighborhood_xml_path.size() == 0 )
 	{
-		vcl_cerr << "dsm_features::parse_neighborhood_xml -- xml file path not set." << vcl_flush;
+		std::cerr << "dsm_features::parse_neighborhood_xml -- xml file path not set." << std::flush;
 		this->neighborhood_valid_ = false;
 		return false;
 	}
@@ -22,7 +22,7 @@ bool dsm_features::parse_neighborhood_xml(vcl_string const& neighborhood_xml_pat
 	bxml_document xml_doc = bxml_read(neighborhood_xml_path);
 	if( !xml_doc.root_element() )
 	{
-		vcl_cerr << "dsm_features::parse_neighborhood_xml -- xml root not found" << vcl_flush;
+		std::cerr << "dsm_features::parse_neighborhood_xml -- xml root not found" << std::flush;
 		this->neighborhood_valid_ = false;
 		return false;
 	}
@@ -30,7 +30,7 @@ bool dsm_features::parse_neighborhood_xml(vcl_string const& neighborhood_xml_pat
 	//Check the root is an element
 	if( xml_doc.root_element()->type() != bxml_data::ELEMENT )
 	{
-		vcl_cerr << "dsm_features::parse_neighborhood_xml -- paramse root is not an ELEMENT!" << vcl_flush;
+		std::cerr << "dsm_features::parse_neighborhood_xml -- paramse root is not an ELEMENT!" << std::flush;
 		this->neighborhood_valid_ = false;
 		return false;
 	}
@@ -38,7 +38,7 @@ bool dsm_features::parse_neighborhood_xml(vcl_string const& neighborhood_xml_pat
 	bxml_data_sptr root = xml_doc.root_element();
 	if(!root)
 	{
-		vcl_cerr << "dsm_features::parse_neighborhood_xml -- root tag not found!" << vcl_endl;
+		std::cerr << "dsm_features::parse_neighborhood_xml -- root tag not found!" << std::endl;
 		this->neighborhood_valid_ = false;
 		return false;
 	}
@@ -62,7 +62,7 @@ bool dsm_features::parse_neighborhood_xml(vcl_string const& neighborhood_xml_pat
 			tp->get_attribute("y",y);
 			vgl_point_2d<unsigned> target(x,y);
 			
-			vcl_vector<vgl_point_2d<unsigned> > neighbors;
+			std::vector<vgl_point_2d<unsigned> > neighbors;
 
 			for( bxml_element::const_data_iterator j = tp->data_begin(); j != tp->data_end(); ++j )
 			{
@@ -96,10 +96,10 @@ bool dsm_features::extract_sift_features(unsigned const& octave_size, unsigned c
 	unsigned nframes = video_stream.num_frames();
 
 	//load sift objects into memory for speed.
-	//vcl_cout << "Creating Dense sift objects..." << vcl_endl;
+	//std::cout << "Creating Dense sift objects..." << std::endl;
 	for( unsigned t = 0; t < nframes; ++t )
 	{
-		//vcl_cout << '\t' << (t/nframes)*100 << "% complete..." << vcl_endl;
+		//std::cout << '\t' << (t/nframes)*100 << "% complete..." << std::endl;
 		vil_image_view<vxl_byte> grey_img, curr_img;
 		video_stream.seek_frame(t);
 		vidl_convert_to_view(*video_stream.current_frame(),curr_img);
@@ -107,7 +107,7 @@ bool dsm_features::extract_sift_features(unsigned const& octave_size, unsigned c
 		vil_image_resource_sptr img_sptr = vil_new_image_resource_of_view(grey_img);
 		bapl_dense_sift_sptr dsift_sptr = new bapl_dense_sift(img_sptr, octave_size, num_octaves);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->neighborhood_.end();
 
 
@@ -120,7 +120,7 @@ bool dsm_features::extract_sift_features(unsigned const& octave_size, unsigned c
 			//vnl_vector<double> feature_vector = target_keypoint->descriptor().as_vector();
 			feature_vector.update(target_keypoint->descriptor().as_vector(),0);
 			this->lowe_keypoint_map_[t_itr->first][t] = target_keypoint;
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
 
 			unsigned tn_idx;
 			for( n_itr = t_itr->second.begin(), tn_idx = 1; n_itr != n_end; ++n_itr, ++tn_idx )
@@ -148,7 +148,7 @@ bool dsm_features::extract_dsift_features( float const& orientation )
 
 	for( unsigned t = 0; t < nframes; ++t )
 	{
-		vcl_cout << '\t' << (float(t)/nframes)*100 << "% complete..." << vcl_endl;
+		std::cout << '\t' << (float(t)/nframes)*100 << "% complete..." << std::endl;
 		vil_image_view<vxl_byte> curr_img;
 		video_stream.seek_frame(t);
 		vidl_convert_to_view(*video_stream.current_frame(),curr_img);
@@ -157,14 +157,14 @@ bool dsm_features::extract_dsift_features( float const& orientation )
 
 		dsift_sptr->set_img(grey_img);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->neighborhood_.end();
 
 		for( t_itr = this->neighborhood_.begin(); t_itr != t_end; ++t_itr )
 		{
 			vnl_vector<double> feature_vector = dsift_sptr->vnl_dsift(t_itr->first.x(), t_itr->first.y(), 0.0f);
 
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
 
 			unsigned tn_idx;
 			for( n_itr = t_itr->second.begin(),tn_idx = 1; n_itr != n_end; ++n_itr, ++tn_idx )
@@ -188,24 +188,24 @@ bool dsm_features::extract_intensity_ratio_features()
 
 	unsigned nframes = video_stream.num_frames();
 
-	vcl_cout << "Extracting Target Intensity Ratio Features..." << vcl_endl;
+	std::cout << "Extracting Target Intensity Ratio Features..." << std::endl;
 	for(unsigned t = 0; t < nframes; ++t)
 	{
-		vcl_cout << '\t' << "Frame Iteration " << (double(t)/nframes)*100 << "% complete." << vcl_endl;
+		std::cout << '\t' << "Frame Iteration " << (double(t)/nframes)*100 << "% complete." << std::endl;
 
 		vil_image_view<vxl_byte> grey_img, curr_img;
 		video_stream.seek_frame(t);
 		vidl_convert_to_view(*video_stream.current_frame(),curr_img);
 		vil_convert_planes_to_grey(curr_img, grey_img);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->neighborhood_.end();
 
 		for( t_itr = this->neighborhood_.begin(); t_itr != t_end; ++t_itr )
 		{
 			vnl_vector<double> feature_vector(t_itr->second.size()+1,0);
 			
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
 
 			feature_vector[0] = grey_img(t_itr->first.x(), t_itr->first.y());
 			
@@ -236,18 +236,18 @@ bool dsm_features::extract_intensity_features()
 
 	unsigned nframes = video_stream.num_frames();
 
-	vcl_cout << "Extracting Intensity Feature Vector..." << vcl_endl;
+	std::cout << "Extracting Intensity Feature Vector..." << std::endl;
 			
 	for( unsigned t = 0; t < nframes; ++t )
 	{
 
-		vcl_cout << '\t' << "Frame Iteration " << (double(t)/nframes)*100 << "% complete." << vcl_endl;
+		std::cout << '\t' << "Frame Iteration " << (double(t)/nframes)*100 << "% complete." << std::endl;
 		vil_image_view<vxl_byte> grey_img, curr_img;
 		video_stream.seek_frame(t);
 		vidl_convert_to_view(*video_stream.current_frame(),curr_img);
 		vil_convert_planes_to_grey(curr_img, grey_img);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->neighborhood_.end();
 
 		for( t_itr = this->neighborhood_.begin(); t_itr != t_end; ++t_itr )
@@ -255,13 +255,13 @@ bool dsm_features::extract_intensity_features()
 			vnl_vector<double> feature_vector(t_itr->second.size()+1,0);
 			feature_vector[0] = grey_img(t_itr->first.x(), t_itr->first.y());
 			
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator n_itr, n_end = t_itr->second.end();
 
 			unsigned feat_vect_idx;
 			for( n_itr = t_itr->second.begin(), feat_vect_idx = 1; n_itr != n_end; ++n_itr, ++feat_vect_idx )
 				feature_vector[feat_vect_idx] = double(grey_img(n_itr->x(),n_itr->y()));
 
-			vcl_vector<double> fv(feature_vector.begin(), feature_vector.end());
+			std::vector<double> fv(feature_vector.begin(), feature_vector.end());
 
 			this->feature_map_[t_itr->first][t] = feature_vector;
 		}//end target iteration
@@ -272,7 +272,7 @@ bool dsm_features::extract_intensity_features()
 
 bool dsm_features::reduce_dimensionality(unsigned const& ndims_to_keep)
 {
-	vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator
+	std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >, dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator
 		t_itr, t_end = this->feature_map_.end();
 
 
@@ -280,8 +280,8 @@ bool dsm_features::reduce_dimensionality(unsigned const& ndims_to_keep)
 	{
 		vnl_matrix<double> observations(t_itr->second.size(),t_itr->second.begin()->second.size());
 		
-		vcl_vector<unsigned> frame_idx_vector;
-		vcl_map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
+		std::vector<unsigned> frame_idx_vector;
+		std::map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
 		unsigned frame_idx;
 		for( f_itr = t_itr->second.begin(), frame_idx = 0; f_itr != f_end; ++f_itr, ++frame_idx )
 		{
@@ -303,7 +303,7 @@ bool dsm_features::reduce_dimensionality(unsigned const& ndims_to_keep)
 
 		vnl_matrix<double> reduced_features = observations*U_reduced;
 
-		vcl_vector<unsigned>::const_iterator fidx_itr, fidx_end = frame_idx_vector.end();
+		std::vector<unsigned>::const_iterator fidx_itr, fidx_end = frame_idx_vector.end();
 
 		//put the results of dimensionality reduction into reduced target/frame map.
 		unsigned reduced_row_idx;
@@ -316,14 +316,14 @@ bool dsm_features::reduce_dimensionality(unsigned const& ndims_to_keep)
 	return this->dim_reduced_;
 }//end dsm_features::reduce_dimensionality
 
-bool dsm_features::write_reduced_features_mfile(vcl_string const& filename) const
+bool dsm_features::write_reduced_features_mfile(std::string const& filename) const
 {
 	//THE 2D TARGET LOCATION IS THE FIRST COLUMN OF THE CELL
 	//THE NFRAMES X FEATURE DIM MATRIX IS THE SECOND COLUMN OF THE CELL
 	//THE NUMBER OF ROWS OF THE CELL CORRESPOND TO THE NUMBER OF TARGETS
 	if( this->dim_reduced_ == true )
 	{
-		vcl_ofstream os( filename.c_str(), vcl_ios::out );
+		std::ofstream os( filename.c_str(), std::ios::out );
 
 		vidl_image_list_istream video_stream(this->video_glob_);
 
@@ -343,7 +343,7 @@ bool dsm_features::write_reduced_features_mfile(vcl_string const& filename) cons
 		os << '\t' << "%img_seq(:,:,i) = rgb2gray(imread(strcat(video_path,filenames(i).name())));\n";
 		os << "%end\n\n";
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >,dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >,dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->reduced_feature_map_.end();
 
 		//TARGET INDEXING STARTS FROM 1!
@@ -353,7 +353,7 @@ bool dsm_features::write_reduced_features_mfile(vcl_string const& filename) cons
 			//1 is added to each coordinate because of indexing into the image in matlab coordinates.
 			os << "features{" <<target_idx << ",1} = [" << t_itr->first.x()+1 << ", " << t_itr->first.y()+1 << "];\n\n";
 
-			vcl_map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
+			std::map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
 			unsigned nframes = t_itr->second.size();
 			unsigned frame_idx;
 			os << "features{" << target_idx << ",2} = [";
@@ -389,7 +389,7 @@ bool dsm_features::write_reduced_features_mfile(vcl_string const& filename) cons
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dsm_features::write_reduced_features_mfile -- dim_reduced_ = false." << vcl_flush;
+		std::cerr << "ERROR: dsm_features::write_reduced_features_mfile -- dim_reduced_ = false." << std::flush;
 		return false;
 	}
 }//end dsm_features::write_reduced_features_mfile
@@ -421,7 +421,7 @@ void dsm_features::b_read(vsl_b_istream& is)
 				for( unsigned target_idx = 0; target_idx < this->num_targets_; ++target_idx )
 				{
 					vgl_point_2d<unsigned> target;
-					vcl_vector<vgl_point_2d<unsigned> >neighborhood;
+					std::vector<vgl_point_2d<unsigned> >neighborhood;
 					vsl_b_read(is, target);
 					for( unsigned neighbor_idx = 0; neighbor_idx < this->num_neighbors_; ++neighbor_idx )
 					{
@@ -487,7 +487,7 @@ void dsm_features::b_read(vsl_b_istream& is)
 		}//end case 1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm_features::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm_features::b_read() -- unknown version number." << std::flush;
 			return;
 		}//end default
 	}//end switch(v)
@@ -511,12 +511,12 @@ void dsm_features::b_write(vsl_b_ostream& os) const
 	if( this->neighborhood_valid_ )
 	{
 		//write the neighborhood
-		vcl_map<vgl_point_2d<unsigned>, vcl_vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator 
+		std::map<vgl_point_2d<unsigned>, std::vector<vgl_point_2d<unsigned> >, dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator 
 			tn_itr, tn_end = this->neighborhood_.end();
 		for( tn_itr = this->neighborhood_.begin(); tn_itr != tn_end; ++tn_itr )
 		{
 			vsl_b_write(os, tn_itr->first);
-			vcl_vector<vgl_point_2d<unsigned> >::const_iterator nv_itr, nv_end = tn_itr->second.end();
+			std::vector<vgl_point_2d<unsigned> >::const_iterator nv_itr, nv_end = tn_itr->second.end();
 			for( nv_itr = tn_itr->second.begin(); nv_itr != nv_end; ++nv_itr )
 				vsl_b_write(os,*nv_itr);
 		}//end neighborhood iteration
@@ -528,7 +528,7 @@ void dsm_features::b_write(vsl_b_ostream& os) const
 		unsigned ntargets = this->feature_map_.size();
 		vsl_b_write(os, ntargets);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> >,dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> >,dsm_vgl_point_2d_coord_compare<unsigned>  >::const_iterator
 			t_itr, t_end = this->feature_map_.end();
 
 		for( t_itr = this->feature_map_.begin(); t_itr != t_end; ++t_itr )
@@ -536,7 +536,7 @@ void dsm_features::b_write(vsl_b_ostream& os) const
 			vsl_b_write(os, t_itr->first);
 			unsigned nframes = t_itr->second.size();
 			vsl_b_write(os,nframes);
-			vcl_map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
+			std::map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
 
 			for( f_itr = t_itr->second.begin(); f_itr != f_end; ++f_itr )
 			{
@@ -552,7 +552,7 @@ void dsm_features::b_write(vsl_b_ostream& os) const
 		unsigned ntargets = this->reduced_feature_map_.size();
 		vsl_b_write(os, ntargets);
 
-		vcl_map<vgl_point_2d<unsigned>, vcl_map<unsigned, vnl_vector<double> > , dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
+		std::map<vgl_point_2d<unsigned>, std::map<unsigned, vnl_vector<double> > , dsm_vgl_point_2d_coord_compare<unsigned> >::const_iterator
 			t_itr, t_end = this->reduced_feature_map_.end();
 
 		for( t_itr = this->reduced_feature_map_.begin(); t_itr != t_end; ++t_itr )
@@ -560,7 +560,7 @@ void dsm_features::b_write(vsl_b_ostream& os) const
 			vsl_b_write(os, t_itr->first);
 			unsigned nframes = t_itr->second.size();
 			vsl_b_write(os, nframes);
-			vcl_map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
+			std::map<unsigned, vnl_vector<double> >::const_iterator f_itr, f_end = t_itr->second.end();
 		
 			for( f_itr = t_itr->second.begin(); f_itr != f_end; ++f_itr )
 			{

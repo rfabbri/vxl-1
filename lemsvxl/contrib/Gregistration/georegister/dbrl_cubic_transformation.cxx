@@ -6,8 +6,8 @@
 #include <vnl/io/vnl_io_vector.h>
 
 //: always takes homogeneous coordinates 
-dbrl_cubic_transformation::dbrl_cubic_transformation(vcl_vector<dbrl_clough_tocher_patch> patchesx,
-            vcl_vector<dbrl_clough_tocher_patch> patchesy):patchesx_(patchesx),patchesy_(patchesy)
+dbrl_cubic_transformation::dbrl_cubic_transformation(std::vector<dbrl_clough_tocher_patch> patchesx,
+            std::vector<dbrl_clough_tocher_patch> patchesy):patchesx_(patchesx),patchesy_(patchesy)
     {
     
     }
@@ -71,7 +71,7 @@ dbrl_cubic_transformation::map_dir(vnl_vector<double> & dir) const
         return dir;
     }
 
-void dbrl_cubic_transformation::print_transformation(vcl_ostream &os)
+void dbrl_cubic_transformation::print_transformation(std::ostream &os)
     {
     }
 
@@ -93,7 +93,7 @@ void dbrl_cubic_transformation::b_read(vsl_b_istream &is)
         case 1:
             break;
         default:
-            vcl_cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_rigid_transformation: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -101,7 +101,7 @@ short dbrl_cubic_transformation::version() const
     {
     return 1;
     }
-void dbrl_cubic_transformation::print_summary(vcl_ostream &os) const
+void dbrl_cubic_transformation::print_summary(std::ostream &os) const
 {
   
 }

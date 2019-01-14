@@ -34,11 +34,11 @@ vidpro_factorize_process::vidpro_factorize_process()
   // Set up the parameters for this process
   if( !parameters()->add( "No of frames in reconstruction" , "-num_input_frames" , (int)10 )
           ||(
-     !parameters()->add( "VRML Filename" , "-vrml_fname" , (vcl_string)"d://surfptsnew.txt" ) )
+     !parameters()->add( "VRML Filename" , "-vrml_fname" , (std::string)"d://surfptsnew.txt" ) )
         )
 
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro_factorize_process::vidpro_factorize_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro_factorize_process::vidpro_factorize_process()" << std::endl;
   }
 }
 
@@ -55,7 +55,7 @@ vidpro_process* vidpro_factorize_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro_factorize_process::name()
 {
   return "Reconstruct by Factorization";
@@ -89,12 +89,12 @@ parameters()->get_value("-num_input_frames",framenum);
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_factorize_process::get_input_type()
 {
   // this process looks for an image and vsol2D storage class
   // at each input frame
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   
   return to_return;
@@ -102,11 +102,11 @@ vidpro_factorize_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_factorize_process::get_output_type()
 {  
   // this process produces a vsol2D storage class
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol3D" );
  // to_return.push_back( "vsol2D" );
   return to_return;
@@ -118,23 +118,23 @@ bool
 vidpro_factorize_process::execute()
 {
 int num_of_frames;
-  vcl_string vrml_fname;
+  std::string vrml_fname;
   parameters()->get_value("-num_input_frames", num_of_frames);
   parameters()->get_value("-vrml_fname", vrml_fname );
-  vcl_vector<vcl_vector<vsol_point_2d_sptr > >  obs_matrix;
+  std::vector<std::vector<vsol_point_2d_sptr > >  obs_matrix;
   int no_pts;
   if (num_of_frames>2)
       {
   // verify that the number of input frames is correct
   if ( input_data_.size() != num_of_frames ){
-    vcl_cout << "In vidpro_factorize_process::execute() - not exactly one"
-             << " input frames" << vcl_endl;
+    std::cout << "In vidpro_factorize_process::execute() - not exactly one"
+             << " input frames" << std::endl;
     return false;
   }
   clear_output();
 
   // get images from the storage classes
-  vcl_vector<vidpro_vsol2D_storage_sptr> feat_pts(num_of_frames); 
+  std::vector<vidpro_vsol2D_storage_sptr> feat_pts(num_of_frames); 
   
   for (int i = 0; i<num_of_frames; i++)
       feat_pts[i].vertical_cast(input_data_[i][0]);
@@ -143,11 +143,11 @@ int num_of_frames;
 
 
   
-  vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator feat;
+  std::vector<vsol_spatial_object_2d_sptr>::const_iterator feat;
 
   
-  vcl_vector<vsol_spatial_object_2d_sptr> feat_sovec;
-  vcl_vector<vsol_point_2d_sptr> feat_pointvec;
+  std::vector<vsol_spatial_object_2d_sptr> feat_sovec;
+  std::vector<vsol_point_2d_sptr> feat_pointvec;
   
 
          feat_sovec = (feat_pts[num_of_frames-1])->all_data();
@@ -161,7 +161,7 @@ int num_of_frames;
      
 
      int j = 0;
-     vcl_cout<<i<<"Num of points"<<feat_sovec.size()<<"\n";
+     std::cout<<i<<"Num of points"<<feat_sovec.size()<<"\n";
      for (feat = feat_sovec.begin(); (j<no_pts); feat++)
          {
          feat_pointvec.push_back( feat->ptr()->cast_to_point()  );
@@ -174,14 +174,14 @@ int num_of_frames;
       }
   else
       {
-      vcl_ifstream ext_input(vrml_fname.c_str());
+      std::ifstream ext_input(vrml_fname.c_str());
       vul_awk readerx(ext_input);
       vul_awk readery(ext_input);
       ++readery;
       double xread;
       double yread;
       int endx, endy;
-      vcl_vector <vsol_point_2d_sptr> pts_in_ith_fr;
+      std::vector <vsol_point_2d_sptr> pts_in_ith_fr;
       int xptr,yptr;
       do
        {
@@ -228,24 +228,24 @@ int num_of_frames;
 
  bfac_reconstructor *Reconstructor = new bfac_reconstructor(obs_matrix, vrml_fname+".vrml"  );
   int * feat_indices = Reconstructor->get_indices();
-  vcl_vector <vsol_point_3d_sptr> output_3d= Reconstructor->get_reconst();
+  std::vector <vsol_point_3d_sptr> output_3d= Reconstructor->get_reconst();
   assert(output_3d.size() > 0);
-  vcl_vector<int> block_indices = Reconstructor->get_blocks();
+  std::vector<int> block_indices = Reconstructor->get_blocks();
 
   int count = 0;
    for (int m = 0; m<no_pts; m++)
-       {vcl_cout<<m<<"   "<<feat_indices[m];
+       {std::cout<<m<<"   "<<feat_indices[m];
         if (block_indices[count]==m)
             {
             count++;
-            vcl_cout<<"Block end";
+            std::cout<<"Block end";
             }
         
        }
 
-   vcl_cout<<"End\n";
+   std::cout<<"End\n";
     // create the output storage class
-  vcl_vector<vidpro_vsol2D_storage_sptr> output_vsol(num_of_frames);
+  std::vector<vidpro_vsol2D_storage_sptr> output_vsol(num_of_frames);
   for ( int i = 0; i<num_of_frames; i++)
    output_vsol[i] = vidpro_vsol2D_storage_new();
 
@@ -254,7 +254,7 @@ int num_of_frames;
 
   for (int j = 0; j<num_of_frames; j++)
   {
-      vcl_vector <vsol_point_2d_sptr> temp = obs_matrix[j];
+      std::vector <vsol_point_2d_sptr> temp = obs_matrix[j];
           for (int k = 0;k<output_3d.size(); k++ )
           output_vsol3d->add_object((vsol_spatial_object_3d *)(output_3d[k].ptr()),"3D point" );
       assert(temp.size()==no_pts);
@@ -264,7 +264,7 @@ int num_of_frames;
       {
             for (int i = 0; i<block_indices[m]; i++)
             {
-            output_vsol[j]->add_object(temp[feat_indices[i]].ptr(),"KL feature  point - group"+vcl_string(itoa(m,str,10)));
+            output_vsol[j]->add_object(temp[feat_indices[i]].ptr(),"KL feature  point - group"+std::string(itoa(m,str,10)));
             }
 #if 0
       for (int i = cutoff; i<no_pts; i++)

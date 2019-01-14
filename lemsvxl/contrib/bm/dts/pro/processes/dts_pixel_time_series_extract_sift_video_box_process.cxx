@@ -10,8 +10,8 @@
 //       xmin = xmax = ymin = ymax = 0
 //
 // Inputs: 
-//         1. video glob (vcl_string)
-//         2. time type (vcl_string)
+//         1. video glob (std::string)
+//         2. time type (std::string)
 //         2. xmin (unsigned)
 //         3. xmax (unsigned)
 //         4. ymin (unsigned)
@@ -33,7 +33,7 @@
 #include<dts/dts_pixel_time_series.h>
 #include<dts/dts_pixel_time_series_base_sptr.h>
 
-#include<vcl_vector.h>
+#include<vector>
 
 #include<vidl/vidl_convert.h>
 #include<vidl/vidl_image_list_istream.h>
@@ -53,12 +53,12 @@ bool dts_pixel_time_series_extract_sift_video_box_process_cons( bprb_func_proces
 {
     using namespace dts_pixel_time_series_extract_sift_video_box_process_globals;
 
-    vcl_vector<vcl_string> input_types_(n_inputs_);
-    vcl_vector<vcl_string> output_types_(n_outputs_);
+    std::vector<std::string> input_types_(n_inputs_);
+    std::vector<std::string> output_types_(n_outputs_);
 
     unsigned i = 0;
-    input_types_[i++] = "vcl_string";//video glob
-    input_types_[i++] = "vcl_string";//pixel type
+    input_types_[i++] = vcl_string";//video glob
+    input_types_[i++] = vcl_string";//pixel type
     input_types_[i++] = "unsigned";//xmin
     input_types_[i++] = "unsigned";//xmax
     input_types_[i++] = "unsigned";//ymin
@@ -84,18 +84,18 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
 
     if( pro.n_inputs() < n_inputs_ )
     {
-        vcl_cout << pro.name() 
+        std::cout << pro.name() 
             << " dts_extract_sift_video_box_proces: "
             << " The input number should be " 
             << n_inputs_ 
-            << vcl_endl;
+            << std::endl;
         return false;
     }
 
     //get inputs
     unsigned i = 0;
-    vcl_string video_glob = pro.get_input<vcl_string>(i++);
-    vcl_string pixel_type = pro.get_input<vcl_string>(i++);
+    std::string video_glob = pro.get_input<std::string>(i++);
+    std::string pixel_type = pro.get_input<std::string>(i++);
     unsigned xmin = pro.get_input<unsigned>(i++);
     unsigned xmax = pro.get_input<unsigned>(i++);
     unsigned ymin = pro.get_input<unsigned>(i++);
@@ -109,10 +109,10 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
 
     if( nframes == 0 )
     {
-        vcl_cerr << "---- Error ---- "
+        std::cerr << "---- Error ---- "
             << "dts_extract_sift_video_box_proces:\n"
             << "\tThe video stream has no frames.\n" 
-            << vcl_flush;
+            << std::flush;
         return false;
     }
 
@@ -128,8 +128,8 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
         for( unsigned frame = 0; frame < nframes; ++frame )
         {
 //#ifdef _DEBUG
-            vcl_cout << "Extracting SIFT frame: " << frame
-                     << " of " << nframes << vcl_endl;
+            std::cout << "Extracting SIFT frame: " << frame
+                     << " of " << nframes << std::endl;
 //#endif //_DEBUG
 
             vil_image_view<vxl_byte> curr_img;
@@ -157,8 +157,8 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
 				ymax == 0)
 			{
 #ifdef _DEBUG
-				vcl_cout << "Extracting SIFT at Every Pixel in the Frame "
-					     << "(" << frameWidth*frameHeight << "pixels)." << vcl_endl;
+				std::cout << "Extracting SIFT at Every Pixel in the Frame "
+					     << "(" << frameWidth*frameHeight << "pixels)." << std::endl;
 #endif //_DEBUG
 
 				for( unsigned x = 0; x < frameWidth; ++x )
@@ -171,19 +171,19 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
 			else
 			{
 #ifdef _DEBUG
-				vcl_cout << "Extracting SIFT in box: "
+				std::cout << "Extracting SIFT in box: "
 					     << "(xmin = " << xmin << ","
 						 << "xmax = " << xmax << ","
 						 << "ymin = " << ymin << ","
-						 << "ymax = " << ymax << ")" << vcl_endl;
+						 << "ymax = " << ymax << ")" << std::endl;
 #endif //_DEBUG
 
 				for( unsigned x = xmin; x <= xmax; ++x )
 					for( unsigned y = ymin; y <= ymax; ++y )
 					{
 #if 0
-						vcl_cout << "\tExtracting SIFT at pixel: (" 
-							<< x << ',' << y << ")" << vcl_endl;
+						std::cout << "\tExtracting SIFT at pixel: (" 
+							<< x << ',' << y << ")" << std::endl;
 #endif //_DEBUG
 						vnl_vector_fixed<double,128> feature(dsift.vnl_dsift(x,y));
 						dts_ptr->insert(vgl_point_2d<unsigned>(x,y),frame,feature);
@@ -200,10 +200,10 @@ bool dts_pixel_time_series_extract_sift_video_box_process( bprb_func_process& pr
     }
     else
     {
-        vcl_cerr << "----ERROR----\n"
+        std::cerr << "----ERROR----\n"
             << "\tdts_extract_sift_video_box_process: \n"
             << "\t\t Unknown pixel type, please augment.\n"
-            << vcl_flush;
+            << std::flush;
         return false;
     }
 

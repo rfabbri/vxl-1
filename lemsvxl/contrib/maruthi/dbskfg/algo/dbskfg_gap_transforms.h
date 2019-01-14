@@ -20,7 +20,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 class dbskfg_contour_node;
 class dbskfg_shock_link;
@@ -40,16 +40,16 @@ public:
     ~dbskfg_gap_transforms();
   
     // Called to detect all gaps
-    void detect_gaps(vcl_vector<dbskfg_transform_descriptor_sptr>& objects);
+    void detect_gaps(std::vector<dbskfg_transform_descriptor_sptr>& objects);
 
     // Called to detect all gaps
     void detect_gaps_single(
-        vcl_vector<dbskfg_transform_descriptor_sptr>& objects);
+        std::vector<dbskfg_transform_descriptor_sptr>& objects);
 
     // Detect gaps with single endpoint
     void detect_gaps_endpoint(
-        vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
-        vcl_vector<dbskfg_composite_node_sptr>& endpoints);
+        std::vector<dbskfg_transform_descriptor_sptr>& objects,
+        std::vector<dbskfg_composite_node_sptr>& endpoints);
 
     // Set ess completion parameter
     void set_ess_completion(double ess){ess_completion_ = ess;}
@@ -57,7 +57,7 @@ public:
     // Set alpha for weighting of contour and app cost
     void set_alpha(double alpha){alpha_ = alpha;}
 
-    void detect_gaps_knn(vcl_vector<dbskfg_transform_descriptor_sptr>& objects,
+    void detect_gaps_knn(std::vector<dbskfg_transform_descriptor_sptr>& objects,
                          unsigned int k);
 
   
@@ -98,18 +98,18 @@ private:
 
     // Helper function to detect gaps
     bool detect_gaps_helper(dbskfg_shock_link* slink,
-                            vcl_vector<dbskfg_transform_descriptor_sptr>
+                            std::vector<dbskfg_transform_descriptor_sptr>
                             & objects);
   
     // Helper function to detect gaps
     bool detect_gaps_helper(dbskfg_composite_node_sptr pt1,
                             dbskfg_composite_node_sptr pt2,
-                            vcl_vector<dbskfg_transform_descriptor_sptr>
+                            std::vector<dbskfg_transform_descriptor_sptr>
                             & objects);
 
     // Helper function to detect gaps
     void detect_gap_4_helper(dbskfg_contour_node* endpoint,
-                             vcl_vector<dbskfg_transform_descriptor_sptr>
+                             std::vector<dbskfg_transform_descriptor_sptr>
                              & objects);
     
     // Determine appearance_cost

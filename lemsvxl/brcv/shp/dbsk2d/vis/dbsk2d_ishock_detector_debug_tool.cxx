@@ -73,7 +73,7 @@ dbsk2d_ishock_detector_debug_tool::set_storage ( const bpro1_storage_sptr& stora
 }
 
 //: Return the name of this tool
-vcl_string dbsk2d_ishock_detector_debug_tool::name() const
+std::string dbsk2d_ishock_detector_debug_tool::name() const
 {
   return "Debug Shock Computation";
 }
@@ -85,7 +85,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
   if (sh_det_){
 
     if(clear_shocks(e)){
-      vcl_cout << "Clear all shocks." << vcl_endl;
+      std::cout << "Clear all shocks." << std::endl;
       sh_det_->clear();
 
       tableau()->post_redraw();
@@ -93,7 +93,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
     }
     
     if(re_init_shocks(e)){
-      vcl_cout << "Re-Initialize shocks: " << vcl_endl;
+      std::cout << "Re-Initialize shocks: " << std::endl;
       sh_det_->clear();
       sh_det_->initialize_shocks();
 
@@ -103,7 +103,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
     }
     
     if(prop_until_end(e)){
-      vcl_cout << "Propagate shocks." << vcl_endl;
+      std::cout << "Propagate shocks." << std::endl;
       sh_det_->propagate_shocks_without_merge();
 
       sh_det_->ishock_graph()->update_shocks();
@@ -114,8 +114,8 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
     if (init_shocks_within_cell(e)){
       if (sh_det_->cells().size()>0)
       {
-        vcl_cout << "Initialize: Cell (" << sh_det_->cur_row() << ", " 
-                 << sh_det_->cur_col() << ") " << vcl_endl;
+        std::cout << "Initialize: Cell (" << sh_det_->cur_row() << ", " 
+                 << sh_det_->cur_col() << ") " << std::endl;
 
         sh_det_->cell(sh_det_->cur_row(),sh_det_->cur_col()).initialize_shocks();
 
@@ -126,7 +126,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
     }
 
     if(next_prop(e)){
-      //vcl_cout << "Single Propagation: " ;
+      //std::cout << "Single Propagation: " ;
       sh_det_->propagate_next_active_shock();
 
       sh_det_->ishock_graph()->update_shocks();
@@ -135,7 +135,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
     }
     
     if(next_jump_prop(e)){
-      //vcl_cout << "Jump Propagation." << vcl_endl;
+      //std::cout << "Jump Propagation." << std::endl;
       sh_det_->propagate_a_bunch_of_shocks();
 
       sh_det_->ishock_graph()->update_shocks();
@@ -159,8 +159,8 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
           sh_det_->set_cur_row(bcurve->bnd_edge()->cells().front()->index().row);
           sh_det_->set_cur_col(bcurve->bnd_edge()->cells().front()->index().col);
         }
-        vcl_cout << "Current Cell: (" << sh_det_->cur_row() << ", " 
-                 << sh_det_->cur_col() << ")" << vcl_endl;
+        std::cout << "Current Cell: (" << sh_det_->cur_row() << ", " 
+                 << sh_det_->cur_col() << ")" << std::endl;
       }
     }
 
@@ -261,7 +261,7 @@ bool dbsk2d_ishock_detector_debug_tool::handle( const vgui_event & e,
 void dbsk2d_ishock_detector_debug_tool::get_popup( const vgui_popup_params& /*params*/, 
                                                    vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add(((disp_foots)?on:off)+"Display shock projections", 
             bvis1_tool_toggle, (void*)(&disp_foots) );

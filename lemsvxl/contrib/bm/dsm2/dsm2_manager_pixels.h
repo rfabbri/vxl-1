@@ -16,7 +16,7 @@
 #include<dsm2/dsm2_state_machine_base_sptr.h>
 #include<dsm2/dsm2_vgl_point_2d_coord_compare.h>
 
-#include<vcl_map.h>
+#include<map>
 
 #include<vgl/vgl_point_2d.h>
 
@@ -32,7 +32,7 @@ public:
 
 	virtual void b_read( vsl_b_istream& is );
 
-	vcl_map<vgl_point_2d<pixelT>, dsm2_state_machine_base_sptr,
+	std::map<vgl_point_2d<pixelT>, dsm2_state_machine_base_sptr,
 		dsm_vgl_point_2d_coord_compare<pixelT> > pixel_state_machine_map;
 };
 

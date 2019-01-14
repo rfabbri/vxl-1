@@ -26,12 +26,12 @@ bool bof_save_category_scene_raw_process_cons(bprb_func_process& pro)
 {
   using namespace bof_save_category_scene_raw_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; //bof_dir
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; //bof_dir
   input_types_[1] = "int"; //scene id
   
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -43,7 +43,7 @@ bool bof_save_category_scene_raw_process(bprb_func_process& pro)
   using namespace bof_save_category_scene_raw_process_globals;
   
   //get inputs
-  vcl_string bof_dir = pro.get_input<vcl_string>(0);
+  std::string bof_dir = pro.get_input<std::string>(0);
   int scene_id = pro.get_input<int>(1);
   
   bof_info info(bof_dir);
@@ -51,7 +51,7 @@ bool bof_save_category_scene_raw_process(bprb_func_process& pro)
   boxm_scene_base_sptr scene_base = info.load_category_scene(scene_id);
   typedef boct_tree<short, char> char_tree_type;
   boxm_scene<char_tree_type>* class_id_scene = dynamic_cast<boxm_scene<char_tree_type>*> (scene_base.as_pointer());
-  vcl_stringstream aux_scene_ss;
+  std::stringstream aux_scene_ss;
   aux_scene_ss << info.aux_dir(scene_id) << "/category_scene_" << scene_id << ".raw";
   boxm_save_scene_raw_general(*class_id_scene, aux_scene_ss.str(), 0);
 

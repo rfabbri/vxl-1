@@ -51,7 +51,7 @@ dbskfg_composite_graph_fileio::~dbskfg_composite_graph_fileio()
 //: load method
 void dbskfg_composite_graph_fileio::
 load_composite_graph(dbskfg_composite_graph_sptr composite_graph,
-                     vcl_string filename)
+                     std::string filename)
 {
     // Set composite_graph
     composite_graph_ = composite_graph;
@@ -66,11 +66,11 @@ load_composite_graph(dbskfg_composite_graph_sptr composite_graph,
 
     classify_nodes();
 
-    vcl_cout<<"Printing out vertices: "<<
-        composite_graph_->number_of_vertices()<<vcl_endl;
+    std::cout<<"Printing out vertices: "<<
+        composite_graph_->number_of_vertices()<<std::endl;
 
-    vcl_cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
-            <<vcl_endl;
+    std::cout<<"Printing out edges: "<<composite_graph_->number_of_edges()
+            <<std::endl;
 }
 
 // ----------------------------------------------------------------------------
@@ -80,8 +80,8 @@ void dbskfg_composite_graph_fileio::write_out(
     const vil_image_resource_sptr& image,
     unsigned int id_to_extract,
     double prune_threshold,
-    vcl_string output_prefix,
-    vcl_string output_folder
+    std::string output_prefix,
+    std::string output_folder
 )
 {
   
@@ -89,26 +89,26 @@ void dbskfg_composite_graph_fileio::write_out(
              vit != rag_graph->vertices_end(); ++vit)
     {
         // Create filename
-        vcl_stringstream xml_filename,image_filename;
+        std::stringstream xml_filename,image_filename;
         xml_filename   << "frag_graph_"<<(*vit)->id()<<".xml";
         image_filename << "frag_image_"<<(*vit)->id();
         
-        vcl_string output_string_xml = output_folder+"/"+
+        std::string output_string_xml = output_folder+"/"+
             output_prefix+"_"+xml_filename.str();
-        vcl_string output_string_image = output_folder+"/"+
+        std::string output_string_image = output_folder+"/"+
             output_prefix+"_"+image_filename.str();
 
         if ( (*vit)->id() == id_to_extract )
         {
                                 
             // Grab shock links from rag node
-            vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
+            std::map<unsigned int,dbskfg_shock_link*> shock_links;
             prune_rag_node(shock_links,*vit,prune_threshold);
             
             if ( shock_links.size() )
             {
 
-                vcl_cout<<"Writing out "<<output_string_xml<<vcl_endl;
+                std::cout<<"Writing out "<<output_string_xml<<std::endl;
                 write_rag_node(*vit,shock_links,output_string_xml);
 
                 if ( image )
@@ -128,8 +128,8 @@ void dbskfg_composite_graph_fileio::write_out(
     const dbskfg_rag_node_sptr& rag_node,
     const vil_image_resource_sptr& image,
     double prune_threshold,
-    vcl_string output_prefix,
-    vcl_string output_folder
+    std::string output_prefix,
+    std::string output_folder
 )
 {
     
@@ -137,17 +137,17 @@ void dbskfg_composite_graph_fileio::write_out(
                write_output_region(rag_node);
 
     // Create filename
-    // vcl_stringstream xml_filename,image_filename;
+    // std::stringstream xml_filename,image_filename;
     // xml_filename   << "frag_graph_"<<rag_node->id()<<".xml";
     // image_filename << "frag_image_"<<rag_node->id();
     
-    // vcl_string output_string_xml = output_folder+"/"+
+    // std::string output_string_xml = output_folder+"/"+
     //     output_prefix+"_"+xml_filename.str();
-    // vcl_string output_string_image = output_folder+"/"+
+    // std::string output_string_image = output_folder+"/"+
     //     output_prefix+"_"+image_filename.str();
                                 
     // Grab shock links from rag node
-    // vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
+    // std::map<unsigned int,dbskfg_shock_link*> shock_links;
     // prune_rag_node(shock_links,rag_node,prune_threshold);
             
     // if ( shock_links.size() )
@@ -163,7 +163,7 @@ void dbskfg_composite_graph_fileio::write_out(
     //     write_rag_node_one_file(rag_node,shock_links);
 
 
-        // vcl_cout<<"Writing out "<<output_string_xml<<vcl_endl;
+        // std::cout<<"Writing out "<<output_string_xml<<std::endl;
         // //  write_rag_node(rag_node,shock_links,output_string_xml);
         
         // if ( image )
@@ -190,16 +190,16 @@ void dbskfg_composite_graph_fileio::write_out(
 void dbskfg_composite_graph_fileio::write_out_transform(
     const dbskfg_transform_descriptor_sptr& transform,
     const vil_image_resource_sptr& image,
-    vcl_string filename)
+    std::string filename)
 {
 
     // ************ Determine polygon for image ***************************
 
     // Keep a vector all points
-    vcl_vector<vgl_point_2d<double> > points;
+    std::vector<vgl_point_2d<double> > points;
 
     // Convert all contours to vsol objects for easy rendering
-    vcl_vector<dbskfg_composite_link_sptr>::iterator lit;
+    std::vector<dbskfg_composite_link_sptr>::iterator lit;
 
     for ( lit = transform->contours_affected_.begin() ; 
           lit != transform->contours_affected_.end() ; ++lit )
@@ -211,7 +211,7 @@ void dbskfg_composite_graph_fileio::write_out_transform(
 
     for ( unsigned int i=0; i < transform->all_gaps_.size() ; ++i )
     {
-        vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
+        std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
             gap = transform->all_gaps_[i];
         
         dbskfg_composite_node_sptr node = gap.first;
@@ -255,7 +255,7 @@ void dbskfg_composite_graph_fileio::write_out_transform(
     }
 
     // create a ps file object
-    vcl_string psfile_name = filename;
+    std::string psfile_name = filename;
     vul_psfile psfile(psfile_name.c_str(), false);
 
 
@@ -310,7 +310,7 @@ void dbskfg_composite_graph_fileio::write_out_transform(
                 object->cast_to_curve()->cast_to_polyline();
             
             // collect vertices of the polyline
-            vcl_vector<vgl_point_2d<double > > pts;
+            std::vector<vgl_point_2d<double > > pts;
             
             for (unsigned int i = 1; i < polyline->size(); i++)
             {
@@ -331,7 +331,7 @@ void dbskfg_composite_graph_fileio::write_out_transform(
 
     for ( unsigned int i=0; i < transform->all_gaps_.size() ; ++i )
     {
-        vcl_pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
+        std::pair<dbskfg_composite_node_sptr,dbskfg_composite_node_sptr>
             gap = transform->all_gaps_[i];
         
         dbskfg_composite_node_sptr node = gap.first;
@@ -397,27 +397,27 @@ void dbskfg_composite_graph_fileio::write_out_transform(
 void dbskfg_composite_graph_fileio::write_out(
     const dbskfg_rag_graph_sptr& rag_graph,
     const vil_image_resource_sptr& image,
-    vcl_string output_prefix,
-    vcl_string output_folder,
+    std::string output_prefix,
+    std::string output_folder,
     double contour_threshold,
     double prune_threshold)
 {
 
     // Keep a vector and write a file for all fragments
-    vcl_vector<vcl_string> fragment_list;
+    std::vector<std::string> fragment_list;
 
     unsigned int frags_write=0;
     for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
              vit != rag_graph->vertices_end(); ++vit)
     {
         // Create filename
-        vcl_stringstream xml_filename,image_filename;
+        std::stringstream xml_filename,image_filename;
         xml_filename   << "frag_graph_"<<(*vit)->id()<<".xml";
         image_filename << "frag_image_"<<(*vit)->id();
         
-        vcl_string output_string_xml = output_folder+"/"+
+        std::string output_string_xml = output_folder+"/"+
             output_prefix+"_"+xml_filename.str();
-        vcl_string output_string_image = output_folder+"/"+
+        std::string output_string_image = output_folder+"/"+
             output_prefix+"_"+image_filename.str();
 
 
@@ -429,12 +429,12 @@ void dbskfg_composite_graph_fileio::write_out(
                 {
                     
                     // Grab shock links from rag node
-                    vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
+                    std::map<unsigned int,dbskfg_shock_link*> shock_links;
                     prune_rag_node(shock_links,*vit,prune_threshold);
 
                     if ( shock_links.size() )
                     {
-                        vcl_cout<<"Writing out "<<output_string_xml<<vcl_endl;
+                        std::cout<<"Writing out "<<output_string_xml<<std::endl;
                         write_rag_node(*vit,shock_links,output_string_xml);
                     
                         if ( image )
@@ -454,18 +454,18 @@ void dbskfg_composite_graph_fileio::write_out(
     }
 
     // write a file of all fragments
-    vcl_string fragment_file_name = output_folder + "/" + output_prefix+
+    std::string fragment_file_name = output_folder + "/" + output_prefix+
         "_fragment_list.txt";
-    vcl_ofstream fragment(fragment_file_name.c_str());
+    std::ofstream fragment(fragment_file_name.c_str());
     for ( unsigned int c=0; c < fragment_list.size() ; ++c)
     {
-        fragment<<fragment_list[c]<<vcl_endl;
+        fragment<<fragment_list[c]<<std::endl;
     }
     fragment.close();
 
 
-    vcl_cout<<"Writing out "<<frags_write<<" fragments out of a total of "
-            << rag_graph->number_of_vertices()<<vcl_endl;
+    std::cout<<"Writing out "<<frags_write<<" fragments out of a total of "
+            << rag_graph->number_of_vertices()<<std::endl;
 }
 
 
@@ -474,28 +474,28 @@ void dbskfg_composite_graph_fileio::write_out(
 void dbskfg_composite_graph_fileio::write_out(
     const dbskfg_rag_graph_sptr& rag_graph,
     const vil_image_resource_sptr& image,
-    vcl_string output_prefix,
-    vcl_string output_folder,
+    std::string output_prefix,
+    std::string output_folder,
     double contour_threshold,
     double prune_threshold,
     vgl_box_2d<double> bbox)
 {
 
     // Keep a vector and write a file for all fragments
-    vcl_vector<vcl_string> fragment_list;
+    std::vector<std::string> fragment_list;
 
     unsigned int frags_write=0;
     for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
              vit != rag_graph->vertices_end(); ++vit)
     {
         // Create filename
-        vcl_stringstream xml_filename,image_filename;
+        std::stringstream xml_filename,image_filename;
         xml_filename   << "frag_graph_"<<(*vit)->id()<<".xml";
         image_filename << "frag_image_"<<(*vit)->id();
         
-        vcl_string output_string_xml = output_folder+"/"+
+        std::string output_string_xml = output_folder+"/"+
             output_prefix+"_"+xml_filename.str();
-        vcl_string output_string_image = output_folder+"/"+
+        std::string output_string_image = output_folder+"/"+
             output_prefix+"_"+image_filename.str();
 
 
@@ -509,13 +509,13 @@ void dbskfg_composite_graph_fileio::write_out(
                     {
                     
                         // Grab shock links from rag node
-                        vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
+                        std::map<unsigned int,dbskfg_shock_link*> shock_links;
                         prune_rag_node(shock_links,*vit,prune_threshold);
 
                         if ( shock_links.size() )
                         {
-                            vcl_cout<<"Writing out "<<
-                                output_string_xml<<vcl_endl;
+                            std::cout<<"Writing out "<<
+                                output_string_xml<<std::endl;
                             write_rag_node(*vit,shock_links,output_string_xml);
                     
                             if ( image )
@@ -537,18 +537,18 @@ void dbskfg_composite_graph_fileio::write_out(
     }
 
     // write a file of all fragments
-    vcl_string fragment_file_name = output_folder + "/" + output_prefix+
+    std::string fragment_file_name = output_folder + "/" + output_prefix+
         "_fragment_list.txt";
-    vcl_ofstream fragment(fragment_file_name.c_str());
+    std::ofstream fragment(fragment_file_name.c_str());
     for ( unsigned int c=0; c < fragment_list.size() ; ++c)
     {
-        fragment<<fragment_list[c]<<vcl_endl;
+        fragment<<fragment_list[c]<<std::endl;
     }
     fragment.close();
 
 
-    vcl_cout<<"Writing out "<<frags_write<<" fragments out of a total of "
-            << rag_graph->number_of_vertices()<<vcl_endl;
+    std::cout<<"Writing out "<<frags_write<<" fragments out of a total of "
+            << rag_graph->number_of_vertices()<<std::endl;
 }
 
 
@@ -557,8 +557,8 @@ void dbskfg_composite_graph_fileio::write_out(
 void dbskfg_composite_graph_fileio::compile_nodes(
     const bxml_data_sptr& root_xml)
 {
-    vcl_vector<bxml_data_sptr> contour_points; // contour_points
-    vcl_vector<bxml_data_sptr> shock_nodes;    // shock_nodes
+    std::vector<bxml_data_sptr> contour_points; // contour_points
+    std::vector<bxml_data_sptr> shock_nodes;    // shock_nodes
 
     // Lets find contour points
     bxml_element* head=dbxml_algos::find_by_name(root_xml,"points");
@@ -634,8 +634,8 @@ void dbskfg_composite_graph_fileio::compile_nodes(
 void dbskfg_composite_graph_fileio::compile_links(
     const bxml_data_sptr& root_xml)
 {
-    vcl_vector<bxml_data_sptr> contour_links; // contour_points
-    vcl_vector<bxml_data_sptr> shock_links;    // shock_nodes
+    std::vector<bxml_data_sptr> contour_links; // contour_points
+    std::vector<bxml_data_sptr> shock_links;    // shock_nodes
 
     // Lets find contour points
     bxml_element* head=dbxml_algos::find_by_name(root_xml,"lines");
@@ -765,13 +765,13 @@ void dbskfg_composite_graph_fileio::compile_links(
 //: Write out image of rag node
 void dbskfg_composite_graph_fileio::write_rag_node_image(
     const dbskfg_rag_node_sptr& rag_node,
-    vcl_map<unsigned int,dbskfg_shock_link*>& 
+    std::map<unsigned int,dbskfg_shock_link*>& 
     shock_links,                     
     const vil_image_resource_sptr& image ,
-    vcl_string filename)
+    std::string filename)
 {
     // create a ps file object
-    vcl_string psfile_name = filename+".ps";
+    std::string psfile_name = filename+".ps";
     vul_psfile psfile(psfile_name.c_str(), false);
 
     // Get image view
@@ -796,7 +796,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_image(
     psfile.set_line_width(1.0f);
     psfile.set_fg_color(0.0f,1.0f,0.0f);
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links.begin() ; it != shock_links.end() ; ++it)
     {
         dbskfg_shock_link* slink = (*it).second;
@@ -832,7 +832,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_image(
     }
 
     // Draw shock rays
-    vcl_vector< vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> > >
+    std::vector< std::pair<vgl_point_2d<double>,vgl_point_2d<double> > >
         shock_rays = rag_node->determine_shock_rays(poly);
    
     psfile.set_line_width(2.0f);
@@ -860,18 +860,18 @@ void dbskfg_composite_graph_fileio::write_rag_node_image(
 // ----------------------------------------------------------------------------
 //: Prune rag node
 void dbskfg_composite_graph_fileio::
-prune_rag_node(vcl_map<unsigned int,dbskfg_shock_link*>& shock_links,
+prune_rag_node(std::map<unsigned int,dbskfg_shock_link*>& shock_links,
                dbskfg_rag_node_sptr rag_node,
                double prune_threshold)
 {
 
     // Grab shock links from rag node
-    vcl_map<unsigned int,dbskfg_shock_link*> prune_links=
+    std::map<unsigned int,dbskfg_shock_link*> prune_links=
         rag_node->get_shock_links();
 
     dbskfg_prune_composite_graph pruner(rag_node);
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator mits;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator mits;
     for ( mits=prune_links.begin() ; mits != prune_links.end() ; ++mits)
     {
         if ( pruner.splice_cost((*mits).first) > prune_threshold)
@@ -886,8 +886,8 @@ prune_rag_node(vcl_map<unsigned int,dbskfg_shock_link*>& shock_links,
 //: Write out all rag nodes
 void dbskfg_composite_graph_fileio::write_rag_node(
     const dbskfg_rag_node_sptr& rag_node,
-    vcl_map<unsigned int,dbskfg_shock_link*>& shock_links,
-    vcl_string filename)
+    std::map<unsigned int,dbskfg_shock_link*>& shock_links,
+    std::string filename)
 {
 
     // Create root element
@@ -952,21 +952,21 @@ void dbskfg_composite_graph_fileio::write_rag_node(
     shock_elm->append_text("   ");
 
     // Grab all points to put in contour nodes
-    vcl_map<vcl_string,vcl_pair<unsigned int,vgl_point_2d<double> > > 
+    std::map<std::string,std::pair<unsigned int,vgl_point_2d<double> > > 
         contour_map;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > contour_lines;
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::vector<std::pair<unsigned int,unsigned int> > contour_lines;
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         shock_map;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > shock_lines;
+    std::vector<std::pair<unsigned int,unsigned int> > shock_lines;
     
     // Create a mapping of each shock id to its corresponiding line pair
     // pair first left, second right
-    vcl_map<unsigned int,vcl_pair<unsigned int,unsigned int> > 
+    std::map<unsigned int,std::pair<unsigned int,unsigned int> > 
         shock_to_contour;
     
     unsigned int node_id=0;
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links.begin() ; it != shock_links.end() ; ++it)
     {
         dbskfg_shock_link *slink = (*it).second;
@@ -981,7 +981,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             if ( shock_map.count(slink->source()->id())== 0)
             {
                 shock_map[slink->source()->id()]=
-                    vcl_make_pair(node_id,
+                    std::make_pair(node_id,
                                   slink->source());
                 node_id++;
             }
@@ -992,7 +992,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             if ( shock_map.count(slink->target()->id())== 0)
             {
                 shock_map[slink->target()->id()]=
-                    vcl_make_pair(node_id,
+                    std::make_pair(node_id,
                                   slink->target());
                 node_id++;
             }
@@ -1003,7 +1003,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             vgl_point_2d<double> r_first_point= right_boundary.contour_.front();
             vgl_point_2d<double> r_last_point = right_boundary.contour_.back();
          
-            vcl_stringstream rstream_first,rstream_last,p_stream;
+            std::stringstream rstream_first,rstream_last,p_stream;
             rstream_first<< r_first_point;
             rstream_last << r_last_point;
             p_stream     << left_boundary.point_;
@@ -1011,26 +1011,26 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             // See if we should add right first point
             if ( contour_map.count(rstream_first.str())==0)
             {
-                contour_map[rstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_first.str()]=std::make_pair(node_id,
                                                                r_first_point);
                 node_id++;
             }
 
             if ( contour_map.count(rstream_last.str())==0)
             {
-                contour_map[rstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_last.str()]=std::make_pair(node_id,
                                                               r_last_point);
                 node_id++;
             }
        
             if ( contour_map.count(p_stream.str())==0)
             {
-                contour_map[p_stream.str()]=vcl_make_pair(
+                contour_map[p_stream.str()]=std::make_pair(
                     node_id,left_boundary.point_);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[rstream_first.str()].first,
                                      contour_map[rstream_last.str()].first));
 
@@ -1045,7 +1045,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             vgl_point_2d<double> l_first_point = left_boundary.contour_.front();
             vgl_point_2d<double> l_last_point  = left_boundary.contour_.back();
 
-            vcl_stringstream lstream_first,lstream_last,p_stream;
+            std::stringstream lstream_first,lstream_last,p_stream;
             lstream_first<< l_first_point;
             lstream_last << l_last_point;
             p_stream     << right_boundary.point_;
@@ -1053,28 +1053,28 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             // See if we should add right first point
             if ( contour_map.count(lstream_first.str())==0)
             {
-                contour_map[lstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_first.str()]=std::make_pair(node_id,
                                                                l_first_point);
                 node_id++;
             }
             
             if ( contour_map.count(lstream_last.str())==0)
             {
-                contour_map[lstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_last.str()]=std::make_pair(node_id,
                                                               l_last_point);
                 node_id++;
             }
 
             if ( contour_map.count(p_stream.str())==0)
             {
-                contour_map[p_stream.str()]= vcl_make_pair(
+                contour_map[p_stream.str()]= std::make_pair(
                     node_id,right_boundary.point_);
 
                 node_id++;
             }
 
             contour_lines.push_back(
-                vcl_make_pair(contour_map[lstream_first.str()].first,
+                std::make_pair(contour_map[lstream_first.str()].first,
                               contour_map[lstream_last.str()].first));
 
             shock_to_contour[slink->id()].first=
@@ -1090,8 +1090,8 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             vgl_point_2d<double> l_first_point= left_boundary.contour_.front();
             vgl_point_2d<double> l_last_point = left_boundary.contour_.back();
 
-            vcl_stringstream lstream_first,lstream_last;
-            vcl_stringstream rstream_first,rstream_last;
+            std::stringstream lstream_first,lstream_last;
+            std::stringstream rstream_first,rstream_last;
 
             lstream_first<< l_first_point;
             lstream_last << l_last_point;
@@ -1101,19 +1101,19 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             // See if we should add right first point
             if ( contour_map.count(lstream_first.str())==0)
             {
-                contour_map[lstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_first.str()]=std::make_pair(node_id,
                                                                l_first_point);
                 node_id++;
             }
             
             if ( contour_map.count(lstream_last.str())==0)
             {
-                contour_map[lstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_last.str()]=std::make_pair(node_id,
                                                               l_last_point);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[lstream_first.str()].first,
                                      contour_map[lstream_last.str()].first));
 
@@ -1123,19 +1123,19 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             // See if we should add right first point
             if ( contour_map.count(rstream_first.str())==0)
             {
-                contour_map[rstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_first.str()]=std::make_pair(node_id,
                                                                r_first_point);
                 node_id++;
             }
 
             if ( contour_map.count(rstream_last.str())==0)
             {
-                contour_map[rstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_last.str()]=std::make_pair(node_id,
                                                               r_last_point);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[rstream_first.str()].first,
                                      contour_map[rstream_last.str()].first));
 
@@ -1145,13 +1145,13 @@ void dbskfg_composite_graph_fileio::write_rag_node(
         }
         else if ( slink->shock_compute_type() == dbskfg_utilities::PP )
         {
-            vcl_stringstream r_pstream,l_pstream;
+            std::stringstream r_pstream,l_pstream;
             l_pstream     << left_boundary.point_;
             r_pstream     << right_boundary.point_;
 
             if ( contour_map.count(l_pstream.str())==0)
             {
-                contour_map[l_pstream.str()]= vcl_make_pair(
+                contour_map[l_pstream.str()]= std::make_pair(
                     node_id,left_boundary.point_);
 
                 node_id++;
@@ -1159,7 +1159,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
 
             if ( contour_map.count(r_pstream.str())==0)
             {
-                contour_map[r_pstream.str()]= vcl_make_pair(
+                contour_map[r_pstream.str()]= std::make_pair(
                     node_id,right_boundary.point_);
 
                 node_id++;
@@ -1180,7 +1180,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
              CONTOUR_NODE )
         {
             
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<slink->source()->pt();
            
             source_shock_id = contour_map[stream.str()].first;
@@ -1194,7 +1194,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
         if ( slink->target()->node_type() == dbskfg_composite_node::
              CONTOUR_NODE )
         {   
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<slink->target()->pt();
             
             target_shock_id = contour_map[stream.str()].first;
@@ -1205,7 +1205,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
             target_shock_id = shock_map[slink->target()->id()].first;
         }
         
-        shock_lines.push_back(vcl_make_pair(source_shock_id,target_shock_id));
+        shock_lines.push_back(std::make_pair(source_shock_id,target_shock_id));
 
 
     }
@@ -1214,7 +1214,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
     points_elm->append_text("\n            ");
 
     // Write out all points
-    vcl_map<vcl_string,vcl_pair<unsigned int,vgl_point_2d<double> > >::iterator 
+    std::map<std::string,std::pair<unsigned int,vgl_point_2d<double> > >::iterator 
         mit;
 
     unsigned int size=0;
@@ -1230,8 +1230,8 @@ void dbskfg_composite_graph_fileio::write_rag_node(
         points_elm->append_data(cnode_elm);
         cnode_elm->set_attribute("id",id);
 
-        vcl_stringstream xstream,ystream;
-        xstream<<vcl_fixed; ystream<<vcl_fixed;
+        std::stringstream xstream,ystream;
+        xstream<<std::fixed; ystream<<std::fixed;
         xstream.precision(10); ystream.precision(10);
         xstream<<point.x();  ystream<<point.y();
         
@@ -1257,7 +1257,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
     // Write out contour lines
     for ( unsigned int k=0; k < contour_lines.size() ; ++k)
     {
-        vcl_pair<unsigned int,unsigned int> line=
+        std::pair<unsigned int,unsigned int> line=
             contour_lines[k];
         bxml_data_sptr lnode = new bxml_element("contour_link");
         bxml_element *lnode_elm = dbxml_algos::cast_to_element(
@@ -1282,7 +1282,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
 
     nodes_elm->append_text("\n            ");
     size=0;
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         ::iterator cit;
     for ( cit = shock_map.begin() ; cit != shock_map.end() ; ++cit)
     {
@@ -1297,8 +1297,8 @@ void dbskfg_composite_graph_fileio::write_rag_node(
         snode_elm->set_attribute("id",id);
 
         // Grad x,y points
-        vcl_stringstream xstream,ystream;
-        xstream<<vcl_fixed; ystream<<vcl_fixed;
+        std::stringstream xstream,ystream;
+        xstream<<std::fixed; ystream<<std::fixed;
         xstream.precision(10); ystream.precision(10);
         xstream<<shock_node->pt().x();  ystream<<shock_node->pt().y();
 
@@ -1306,8 +1306,8 @@ void dbskfg_composite_graph_fileio::write_rag_node(
         snode_elm->set_attribute("y",ystream.str());
 
         // Grab radius
-        vcl_stringstream rad_stream;
-        rad_stream<<vcl_fixed; 
+        std::stringstream rad_stream;
+        rad_stream<<std::fixed; 
         rad_stream.precision(10);
         rad_stream<<shock_node->get_radius();
 
@@ -1334,7 +1334,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
     it = shock_links.begin();
     for ( unsigned int b=0 ; b < shock_lines.size() ; ++b)
     {
-        vcl_pair<unsigned int,unsigned int> lines=
+        std::pair<unsigned int,unsigned int> lines=
             shock_lines[b];
         bxml_data_sptr slink = new bxml_element("shock_link");
         bxml_element *slink_elm = dbxml_algos::cast_to_element(
@@ -1446,7 +1446,7 @@ void dbskfg_composite_graph_fileio::write_rag_node(
 //: Write out all rag nodes
 void dbskfg_composite_graph_fileio::write_rag_node_one_file(
     const dbskfg_rag_node_sptr& rag_node,
-    vcl_map<unsigned int,dbskfg_shock_link*>& shock_links)
+    std::map<unsigned int,dbskfg_shock_link*>& shock_links)
 {
    
     
@@ -1517,21 +1517,21 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
     shock_elm->append_text("   ");
 
     // Grab all points to put in contour nodes
-    vcl_map<vcl_string,vcl_pair<unsigned int,vgl_point_2d<double> > > 
+    std::map<std::string,std::pair<unsigned int,vgl_point_2d<double> > > 
         contour_map;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > contour_lines;
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::vector<std::pair<unsigned int,unsigned int> > contour_lines;
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         shock_map;
-    vcl_vector<vcl_pair<unsigned int,unsigned int> > shock_lines;
+    std::vector<std::pair<unsigned int,unsigned int> > shock_lines;
     
     // Create a mapping of each shock id to its corresponiding line pair
     // pair first left, second right
-    vcl_map<unsigned int,vcl_pair<unsigned int,unsigned int> > 
+    std::map<unsigned int,std::pair<unsigned int,unsigned int> > 
         shock_to_contour;
     
     unsigned int node_id=0;
 
-    vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+    std::map<unsigned int,dbskfg_shock_link*>::iterator it;
     for ( it=shock_links.begin() ; it != shock_links.end() ; ++it)
     {
         dbskfg_shock_link *slink = (*it).second;
@@ -1546,7 +1546,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             if ( shock_map.count(slink->source()->id())== 0)
             {
                 shock_map[slink->source()->id()]=
-                    vcl_make_pair(node_id,
+                    std::make_pair(node_id,
                                   slink->source());
                 node_id++;
             }
@@ -1557,7 +1557,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             if ( shock_map.count(slink->target()->id())== 0)
             {
                 shock_map[slink->target()->id()]=
-                    vcl_make_pair(node_id,
+                    std::make_pair(node_id,
                                   slink->target());
                 node_id++;
             }
@@ -1568,7 +1568,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             vgl_point_2d<double> r_first_point= right_boundary.contour_.front();
             vgl_point_2d<double> r_last_point = right_boundary.contour_.back();
          
-            vcl_stringstream rstream_first,rstream_last,p_stream;
+            std::stringstream rstream_first,rstream_last,p_stream;
             rstream_first<< r_first_point;
             rstream_last << r_last_point;
             p_stream     << left_boundary.point_;
@@ -1576,26 +1576,26 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             // See if we should add right first point
             if ( contour_map.count(rstream_first.str())==0)
             {
-                contour_map[rstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_first.str()]=std::make_pair(node_id,
                                                                r_first_point);
                 node_id++;
             }
 
             if ( contour_map.count(rstream_last.str())==0)
             {
-                contour_map[rstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_last.str()]=std::make_pair(node_id,
                                                               r_last_point);
                 node_id++;
             }
        
             if ( contour_map.count(p_stream.str())==0)
             {
-                contour_map[p_stream.str()]=vcl_make_pair(
+                contour_map[p_stream.str()]=std::make_pair(
                     node_id,left_boundary.point_);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[rstream_first.str()].first,
                                      contour_map[rstream_last.str()].first));
 
@@ -1610,7 +1610,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             vgl_point_2d<double> l_first_point = left_boundary.contour_.front();
             vgl_point_2d<double> l_last_point  = left_boundary.contour_.back();
 
-            vcl_stringstream lstream_first,lstream_last,p_stream;
+            std::stringstream lstream_first,lstream_last,p_stream;
             lstream_first<< l_first_point;
             lstream_last << l_last_point;
             p_stream     << right_boundary.point_;
@@ -1618,28 +1618,28 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             // See if we should add right first point
             if ( contour_map.count(lstream_first.str())==0)
             {
-                contour_map[lstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_first.str()]=std::make_pair(node_id,
                                                                l_first_point);
                 node_id++;
             }
             
             if ( contour_map.count(lstream_last.str())==0)
             {
-                contour_map[lstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_last.str()]=std::make_pair(node_id,
                                                               l_last_point);
                 node_id++;
             }
 
             if ( contour_map.count(p_stream.str())==0)
             {
-                contour_map[p_stream.str()]= vcl_make_pair(
+                contour_map[p_stream.str()]= std::make_pair(
                     node_id,right_boundary.point_);
 
                 node_id++;
             }
 
             contour_lines.push_back(
-                vcl_make_pair(contour_map[lstream_first.str()].first,
+                std::make_pair(contour_map[lstream_first.str()].first,
                               contour_map[lstream_last.str()].first));
 
             shock_to_contour[slink->id()].first=
@@ -1655,8 +1655,8 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             vgl_point_2d<double> l_first_point= left_boundary.contour_.front();
             vgl_point_2d<double> l_last_point = left_boundary.contour_.back();
 
-            vcl_stringstream lstream_first,lstream_last;
-            vcl_stringstream rstream_first,rstream_last;
+            std::stringstream lstream_first,lstream_last;
+            std::stringstream rstream_first,rstream_last;
 
             lstream_first<< l_first_point;
             lstream_last << l_last_point;
@@ -1666,19 +1666,19 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             // See if we should add right first point
             if ( contour_map.count(lstream_first.str())==0)
             {
-                contour_map[lstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_first.str()]=std::make_pair(node_id,
                                                                l_first_point);
                 node_id++;
             }
             
             if ( contour_map.count(lstream_last.str())==0)
             {
-                contour_map[lstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[lstream_last.str()]=std::make_pair(node_id,
                                                               l_last_point);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[lstream_first.str()].first,
                                      contour_map[lstream_last.str()].first));
 
@@ -1688,19 +1688,19 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             // See if we should add right first point
             if ( contour_map.count(rstream_first.str())==0)
             {
-                contour_map[rstream_first.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_first.str()]=std::make_pair(node_id,
                                                                r_first_point);
                 node_id++;
             }
 
             if ( contour_map.count(rstream_last.str())==0)
             {
-                contour_map[rstream_last.str()]=vcl_make_pair(node_id,
+                contour_map[rstream_last.str()]=std::make_pair(node_id,
                                                               r_last_point);
                 node_id++;
             }
 
-            contour_lines.push_back(vcl_make_pair
+            contour_lines.push_back(std::make_pair
                                     (contour_map[rstream_first.str()].first,
                                      contour_map[rstream_last.str()].first));
 
@@ -1710,13 +1710,13 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
         }
         else if ( slink->shock_compute_type() == dbskfg_utilities::PP )
         {
-            vcl_stringstream r_pstream,l_pstream;
+            std::stringstream r_pstream,l_pstream;
             l_pstream     << left_boundary.point_;
             r_pstream     << right_boundary.point_;
 
             if ( contour_map.count(l_pstream.str())==0)
             {
-                contour_map[l_pstream.str()]= vcl_make_pair(
+                contour_map[l_pstream.str()]= std::make_pair(
                     node_id,left_boundary.point_);
 
                 node_id++;
@@ -1724,7 +1724,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
 
             if ( contour_map.count(r_pstream.str())==0)
             {
-                contour_map[r_pstream.str()]= vcl_make_pair(
+                contour_map[r_pstream.str()]= std::make_pair(
                     node_id,right_boundary.point_);
 
                 node_id++;
@@ -1745,7 +1745,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
              CONTOUR_NODE )
         {
             
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<slink->source()->pt();
            
             source_shock_id = contour_map[stream.str()].first;
@@ -1759,7 +1759,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
         if ( slink->target()->node_type() == dbskfg_composite_node::
              CONTOUR_NODE )
         {   
-            vcl_stringstream stream;
+            std::stringstream stream;
             stream<<slink->target()->pt();
             
             target_shock_id = contour_map[stream.str()].first;
@@ -1770,7 +1770,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
             target_shock_id = shock_map[slink->target()->id()].first;
         }
         
-        shock_lines.push_back(vcl_make_pair(source_shock_id,target_shock_id));
+        shock_lines.push_back(std::make_pair(source_shock_id,target_shock_id));
 
 
     }
@@ -1779,7 +1779,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
     points_elm->append_text("\n            ");
 
     // Write out all points
-    vcl_map<vcl_string,vcl_pair<unsigned int,vgl_point_2d<double> > >::iterator 
+    std::map<std::string,std::pair<unsigned int,vgl_point_2d<double> > >::iterator 
         mit;
 
     unsigned int size=0;
@@ -1795,8 +1795,8 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
         points_elm->append_data(cnode_elm);
         cnode_elm->set_attribute("id",id);
 
-        vcl_stringstream xstream,ystream;
-        xstream<<vcl_fixed; ystream<<vcl_fixed;
+        std::stringstream xstream,ystream;
+        xstream<<std::fixed; ystream<<std::fixed;
         xstream.precision(10); ystream.precision(10);
         xstream<<point.x();  ystream<<point.y();
         
@@ -1822,7 +1822,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
     // Write out contour lines
     for ( unsigned int k=0; k < contour_lines.size() ; ++k)
     {
-        vcl_pair<unsigned int,unsigned int> line=
+        std::pair<unsigned int,unsigned int> line=
             contour_lines[k];
         bxml_data_sptr lnode = new bxml_element("contour_link");
         bxml_element *lnode_elm = dbxml_algos::cast_to_element(
@@ -1847,7 +1847,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
 
     nodes_elm->append_text("\n            ");
     size=0;
-    vcl_map<unsigned int,vcl_pair<unsigned int,dbskfg_composite_node_sptr> >
+    std::map<unsigned int,std::pair<unsigned int,dbskfg_composite_node_sptr> >
         ::iterator cit;
     for ( cit = shock_map.begin() ; cit != shock_map.end() ; ++cit)
     {
@@ -1862,8 +1862,8 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
         snode_elm->set_attribute("id",id);
 
         // Grad x,y points
-        vcl_stringstream xstream,ystream;
-        xstream<<vcl_fixed; ystream<<vcl_fixed;
+        std::stringstream xstream,ystream;
+        xstream<<std::fixed; ystream<<std::fixed;
         xstream.precision(10); ystream.precision(10);
         xstream<<shock_node->pt().x();  ystream<<shock_node->pt().y();
 
@@ -1871,8 +1871,8 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
         snode_elm->set_attribute("y",ystream.str());
 
         // Grab radius
-        vcl_stringstream rad_stream;
-        rad_stream<<vcl_fixed; 
+        std::stringstream rad_stream;
+        rad_stream<<std::fixed; 
         rad_stream.precision(10);
         rad_stream<<shock_node->get_radius();
 
@@ -1899,7 +1899,7 @@ void dbskfg_composite_graph_fileio::write_rag_node_one_file(
     it = shock_links.begin();
     for ( unsigned int b=0 ; b < shock_lines.size() ; ++b)
     {
-        vcl_pair<unsigned int,unsigned int> lines=
+        std::pair<unsigned int,unsigned int> lines=
             shock_lines[b];
         bxml_data_sptr slink = new bxml_element("shock_link");
         bxml_element *slink_elm = dbxml_algos::cast_to_element(
@@ -2021,7 +2021,7 @@ void dbskfg_composite_graph_fileio::classify_nodes()
             unsigned int contour_degree(0);
             dbskfg_composite_node::edge_iterator eit;
 
-            vcl_vector<dbskfg_composite_link_sptr> edges;
+            std::vector<dbskfg_composite_link_sptr> edges;
 
             for (eit = (*vit)->out_edges_begin(); 
                  eit != (*vit)->out_edges_end() ; ++eit)
@@ -2099,11 +2099,11 @@ void dbskfg_composite_graph_fileio::classify_nodes()
 //: Write out specific rag node
 void dbskfg_composite_graph_fileio::write_contour_composite_graph(
     dbskfg_composite_graph_sptr composite_graph,
-    vcl_string filename) 
+    std::string filename) 
 {
 
-    vcl_vector<vsol_spatial_object_2d_sptr> contour_objects;
-    vcl_vector<vsol_spatial_object_2d_sptr> shock_objects;
+    std::vector<vsol_spatial_object_2d_sptr> contour_objects;
+    std::vector<vsol_spatial_object_2d_sptr> shock_objects;
     for (dbskfg_composite_graph::edge_iterator eit =
              composite_graph->edges_begin();
          eit != composite_graph->edges_end(); ++eit)
@@ -2130,8 +2130,8 @@ void dbskfg_composite_graph_fileio::write_contour_composite_graph(
 
     }
 
-    vcl_string shock_filename=filename + "_shock.bnd";
-    vcl_string contour_filename=filename + "_contour.bnd";
+    std::string shock_filename=filename + "_shock.bnd";
+    std::string contour_filename=filename + "_contour.bnd";
     dbsk2d_file_io::save_bnd_v3_0(shock_filename,shock_objects);
     dbsk2d_file_io::save_bnd_v3_0(contour_filename,contour_objects);
 

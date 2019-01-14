@@ -18,8 +18,8 @@ int main(int argc, char** argv)
 
   // Make the process and add it to the list of program args
   bpro1_process_sptr process = new vidpro1_harris_corners_process();
-  process->set_input_names(vcl_vector<vcl_string>(1,"video"));
-  process->set_output_names(vcl_vector<vcl_string>(1,"corners"));
+  process->set_input_names(std::vector<std::string>(1,"video"));
+  process->set_output_names(std::vector<std::string>(1,"corners"));
   vorl1_manager::instance()->add_process_to_args(process);
 
   //===========================================================

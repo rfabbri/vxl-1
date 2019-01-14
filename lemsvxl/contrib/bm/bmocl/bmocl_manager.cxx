@@ -5,11 +5,11 @@
 //:
 // \file
 
-#include <vcl_utility.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <utility>
+#include <fstream>
+#include <sstream>
 #include <bocl/bocl_utils.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 
 //: Insure only one instance is created
@@ -54,25 +54,25 @@ bool bmocl_manager::initialize_cl()
   // Check the number of  available platforms
   status = clGetPlatformIDs(0,NULL,&num_platforms);
   if (status != CL_SUCCESS) {
-    vcl_cerr << "bocl_manager: clGetPlatformIDs (call 1) returned " << status << '\n';
+    std::cerr << "bocl_manager: clGetPlatformIDs (call 1) returned " << status << '\n';
     return false;
   }
   if (num_platforms == 0) {
-    vcl_cerr << "bocl_manager: 0 OpenCL platforms found!\n";
+    std::cerr << "bocl_manager: 0 OpenCL platforms found!\n";
     return false;
   }
   if (num_platforms > 1) {
-    vcl_cerr << "bocl_manager: warning: found " << num_platforms << "OpenCL platforms. Using the first\n";
+    std::cerr << "bocl_manager: warning: found " << num_platforms << "OpenCL platforms. Using the first\n";
   }
   // Get the first platform ID
   cl_platform_id platform_id[2];
   status = clGetPlatformIDs (num_platforms, platform_id, NULL);
   if (status != CL_SUCCESS) {
-    vcl_cerr << "bocl_manager: clGetPlatformIDs (call 2) returned " << status << '\n';
+    std::cerr << "bocl_manager: clGetPlatformIDs (call 2) returned " << status << '\n';
     return false;
   }
 
-  vcl_size_t ret_size;
+  std::size_t ret_size;
   
   bool gpu_found=false;
   bool cpu_found=false;
@@ -89,7 +89,7 @@ bool bmocl_manager::initialize_cl()
         clGetPlatformInfo(platform_id[i],CL_PLATFORM_NAME,sizeof(platform_name),platform_name,&ret_size);
 
       gpu_found=true;
-      vcl_cout<<"Found "<<numGPUs<<" GPUs"<<vcl_endl;
+      std::cout<<"Found "<<numGPUs<<" GPUs"<<std::endl;
       //use the second GPU if it's there...
       device = (numGPUs > 1)? gpus[1] : gpus[0];
       //device = gpus[0]; 
@@ -120,7 +120,7 @@ bool bmocl_manager::initialize_cl()
     return false;
   }
 
-  vcl_size_t device_list_size = 0;
+  std::size_t device_list_size = 0;
   // First, get the size of device list data
   status = clGetContextInfo(context_,
                             CL_CONTEXT_DEVICES,
@@ -137,7 +137,7 @@ bool bmocl_manager::initialize_cl()
   // Now allocate memory for device list based on the size we got earlier
   devices_ = (cl_device_id *)malloc(device_list_size);
   if (devices_==NULL) {
-    vcl_cout << "Failed to allocate memory (devices).\n";
+    std::cout << "Failed to allocate memory (devices).\n";
     return false;
   }
 
@@ -152,7 +152,7 @@ bool bmocl_manager::initialize_cl()
                        "clGetGetContextInfo failed."))
     return false;
 
-  vcl_size_t max_work_group_size = 0;
+  std::size_t max_work_group_size = 0;
   
   // Get device specific information
   char vendor[512];
@@ -170,7 +170,7 @@ bool bmocl_manager::initialize_cl()
 
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_GROUP_SIZE,
-                           sizeof(vcl_size_t),
+                           sizeof(std::size_t),
                            (void*)&max_work_group_size,
                            NULL);
 
@@ -179,7 +179,7 @@ bool bmocl_manager::initialize_cl()
                        "clGetDeviceInfo CL_DEVICE_MAX_WORK_GROUP_SIZE failed."))
     return false;
 
-  max_work_group_size_ =max_work_group_size/sizeof(vcl_size_t);
+  max_work_group_size_ =max_work_group_size/sizeof(std::size_t);
 
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS,
@@ -193,11 +193,11 @@ bool bmocl_manager::initialize_cl()
     return false;
 
 
-  max_work_item_sizes_ = (vcl_size_t*)malloc(max_dimensions_ * sizeof(vcl_size_t));
+  max_work_item_sizes_ = (std::size_t*)malloc(max_dimensions_ * sizeof(std::size_t));
 
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_ITEM_SIZES,
-                           sizeof(vcl_size_t) * max_dimensions_,
+                           sizeof(std::size_t) * max_dimensions_,
                            (void*)max_work_item_sizes_,
                            NULL);
 
@@ -284,7 +284,7 @@ bool bmocl_manager::initialize_cl()
     return false;
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_IMAGE2D_MAX_WIDTH,
-                           sizeof(vcl_size_t),
+                           sizeof(std::size_t),
                            (void *)&image2d_max_width_,
                            NULL);
 
@@ -294,7 +294,7 @@ bool bmocl_manager::initialize_cl()
     return false;
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_IMAGE2D_MAX_HEIGHT,
-                           sizeof(vcl_size_t),
+                           sizeof(std::size_t),
                            (void *)&image2d_max_height_,
                            NULL);
 
@@ -315,8 +315,8 @@ bool bmocl_manager::initialize_cl()
                        "clGetDeviceInfo CL_DEVICE_IMAGE_SUPPORT failed."))
     return false;
 
-  unsigned size = sizeof(vcl_size_t);
-  vcl_cout << " Context Description\n"
+  unsigned size = sizeof(std::size_t);
+  std::cout << " Context Description\n"
            << " Platform Name: "<<platform_name <<'\n'
            << " Device vendor: " << vendor << '\n' 
            << " Device extensions: " << extensions << 'n'
@@ -336,53 +336,53 @@ bool bmocl_manager::initialize_cl()
            << " Max 2D image height  " << image2d_max_height_ << '\n'
   ;
   for (unsigned id = 0; id<number_devices_; ++id)
-    vcl_cout << " Device id [" << id << "]: " << devices_[id] << '\n';
+    std::cout << " Device id [" << id << "]: " << devices_[id] << '\n';
   return true;
 }
 
-bool bmocl_manager::load_kernel_source(vcl_string const& path)
+bool bmocl_manager::load_kernel_source(std::string const& path)
 {
   prog_ = "";
-  vcl_ifstream is(path.c_str());
+  std::ifstream is(path.c_str());
   if (!is.is_open())
     return false;
   char temp[256];
-  vcl_ostringstream ostr;
+  std::ostringstream ostr;
   while (!is.eof()) {
     is.getline(temp, 256);
-    vcl_string s(temp);
+    std::string s(temp);
     ostr << s << '\n';
   }
   prog_ =  ostr.str();
   return prog_.size() > 0;
 }
 
-bool bmocl_manager::append_process_kernels(vcl_string const& path)
+bool bmocl_manager::append_process_kernels(std::string const& path)
 {
-  vcl_ifstream is(path.c_str());
+  std::ifstream is(path.c_str());
   if (!is.is_open())
     return false;
   char temp[256];
-  vcl_ostringstream ostr;
+  std::ostringstream ostr;
   while (!is.eof()) {
     is.getline(temp, 256);
-    vcl_string s(temp);
+    std::string s(temp);
     ostr << s << '\n';
   }
   prog_ += ostr.str();
   return true;
 }
 
-bool bmocl_manager::write_program(vcl_string const& path)
+bool bmocl_manager::write_program(std::string const& path)
 {
-  vcl_ofstream os(path.c_str());
+  std::ofstream os(path.c_str());
   if (!os.is_open())
     return false;
   os << prog_;
   return true;
 }
 
-void* bmocl_manager::allocate_host_mem(vcl_size_t size)
+void* bmocl_manager::allocate_host_mem(std::size_t size)
 {
 #if defined (_WIN32)
   return _aligned_malloc(size, 16);
@@ -393,10 +393,10 @@ void* bmocl_manager::allocate_host_mem(vcl_size_t size)
 #endif
 }
 
-int bmocl_manager::build_kernel_program(cl_program & program, vcl_string options)
+int bmocl_manager::build_kernel_program(cl_program & program, std::string options)
 {
   cl_int status = CL_SUCCESS;
-  vcl_size_t sourceSize[] = { this->prog_.size() };
+  std::size_t sourceSize[] = { this->prog_.size() };
   if (!sourceSize[0]) return SDK_FAILURE;
   if (program) {
     status = clReleaseProgram(program);
@@ -423,11 +423,11 @@ int bmocl_manager::build_kernel_program(cl_program & program, vcl_string options
                           NULL);
   if (!this->check_val(status, CL_SUCCESS, error_to_string(status)))
   {
-    vcl_size_t len;
+    std::size_t len;
     char buffer[2048];
     clGetProgramBuildInfo(program, this->devices_[0],
                           CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
-    vcl_printf("%s\n", buffer);
+    std::printf("%s\n", buffer);
     return SDK_FAILURE;
   }
   else

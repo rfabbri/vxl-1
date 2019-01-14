@@ -2,7 +2,7 @@
 //  
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 ///#include <vul/vul_timer.h>
@@ -70,9 +70,9 @@ gdt_welm* gdt_ws_manager::create_RF (const dbmsh3d_halfedge* heC,
   const double c = eC->length();
   const double a = vgl_distance (psrc->pt(), eC->eV()->pt());
   const double b = vgl_distance (psrc->pt(), eC->sV()->pt());
-  const double alpha0 = vcl_acos ((b*b + c*c - a*a) / (2*b*c));
-  const double nL = b * vcl_cos (alpha0);
-  const double nH = b * vcl_sin (alpha0);
+  const double alpha0 = std::acos ((b*b + c*c - a*a) / (2*b*c));
+  const double nL = b * std::cos (alpha0);
+  const double nH = b * std::sin (alpha0);
 
   gdt_welm* nRF = new gdt_welm (ITYPE_PSRC, stau, etau, heC, psrc, 
                                 nL, nH, NULL, psrc->dist());
@@ -131,8 +131,8 @@ gdt_welm* gdt_ws_manager::try_create_RF_to_eL (const gdt_welm* W,
   assert (stau < etau);
 
   //Compute (nL, nH) for the nRF Wavefront Element.
-  double rfL = W->edge()->len() * vcl_cos (alpha_cl);
-  double rfH = W->edge()->len() * vcl_sin (alpha_cl);
+  double rfL = W->edge()->len() * std::cos (alpha_cl);
+  double rfH = W->edge()->len() * std::sin (alpha_cl);
 
   //: use local orientation w.r.t. the left edge
   if (W->edge()->sV() != left_edge->sV())
@@ -183,8 +183,8 @@ gdt_welm* gdt_ws_manager::try_create_RF_to_eR (const gdt_welm* W,
   assert (stau < etau);
 
   //Compute (nL, nH) for the nRF Wavefront Element.
-  double rfL = W->edge()->len() * vcl_cos (alpha_cr);
-  double rfH = W->edge()->len() * vcl_sin (alpha_cr);
+  double rfL = W->edge()->len() * std::cos (alpha_cr);
+  double rfH = W->edge()->len() * std::sin (alpha_cr);
 
   //use local orientation w.r.t. the left edge
   if (W->edge()->eV() == right_edge->eV())
@@ -210,10 +210,10 @@ gdt_welm* gdt_ws_manager::try_create_RF_to_eR (const gdt_welm* W,
 
 // ######################   Qw   ######################
 
-vcl_multimap<double, gdt_welm*>::iterator 
+std::multimap<double, gdt_welm*>::iterator 
     gdt_ws_manager::_brute_force_find_in_Qw (gdt_welm* inputW) 
 {
-  vcl_multimap<double, gdt_welm*>::iterator it = Qw_.begin();
+  std::multimap<double, gdt_welm*>::iterator it = Qw_.begin();
   for (; it != Qw_.end(); it++) {
     gdt_welm* W = (*it).second;
     if (W == inputW)
@@ -226,7 +226,7 @@ void gdt_ws_manager::add_to_Qw (gdt_welm* W)
 {
   #if GDT_DEBUG_MSG
   if (n_verbose_>4) {
-    vul_printf (vcl_cerr, "      Add W simtime = %lf on edge %d to the front Qw.\n", 
+    vul_printf (std::cerr, "      Add W simtime = %lf on edge %d to the front Qw.\n", 
                  W->simT(), W->edge()->id());
   }
 
@@ -238,12 +238,12 @@ void gdt_ws_manager::add_to_Qw (gdt_welm* W)
   assert (W->is_final() == false);
   #endif
 
-  Qw_.insert (vcl_pair<double, gdt_welm*> (W->simT(), W));
+  Qw_.insert (std::pair<double, gdt_welm*> (W->simT(), W));
 }
 
 void gdt_ws_manager::remove_from_Qw (gdt_welm* W) 
 {
-  vcl_multimap<double, gdt_welm*>::iterator it = _find_in_Qw (W);
+  std::multimap<double, gdt_welm*>::iterator it = _find_in_Qw (W);
   assert (it != Qw_.end());
   Qw_.erase (it);
   it = _find_in_Qw (W);
@@ -262,10 +262,10 @@ bool gdt_ws_manager::try_remove_from_Qw (gdt_welm* W)
 
 // ######################   Qv   ######################
 
-vcl_multimap<double, gdt_active_vertex*>::iterator 
+std::multimap<double, gdt_active_vertex*>::iterator 
   gdt_ws_manager::_brute_force_find_in_Qv (const dbmsh3d_gdt_vertex_3d* v)
 {
-  vcl_multimap<double, gdt_active_vertex*>::iterator it = Qv_.begin();
+  std::multimap<double, gdt_active_vertex*>::iterator it = Qv_.begin();
   while (it != Qv_.end()) {
     gdt_active_vertex* va = (*it).second;
     if (va->v_ == v)
@@ -286,20 +286,20 @@ void gdt_ws_manager::add_to_Qv (gdt_active_vertex* va)
   if (n_verbose_>2) {
     char s1[32], s2[32];
     if (va->Wa_)
-      vcl_sprintf (s1, "Ia %d", va->Wa_->edge()->id());
+      std::sprintf (s1, "Ia %d", va->Wa_->edge()->id());
     else
-      vcl_sprintf (s1, "NULL");
+      std::sprintf (s1, "NULL");
     if (va->Wb_)
-      vcl_sprintf (s2, "Ib %d", va->Wb_->edge()->id());
+      std::sprintf (s2, "Ib %d", va->Wb_->edge()->id());
     else
-      vcl_sprintf (s2, "NULL");
+      std::sprintf (s2, "NULL");
 
-    vul_printf (vcl_cerr, "    Add vertex %d (%lf) with <%s, %s> to Qv.\n", 
+    vul_printf (std::cerr, "    Add vertex %d (%lf) with <%s, %s> to Qv.\n", 
                  va->v_->id(), va->v_->dist(), s1, s2);
   }
 #endif
 
-  Qv_.insert (vcl_pair<double, gdt_active_vertex*> (va->v_->dist(), va));
+  Qv_.insert (std::pair<double, gdt_active_vertex*> (va->v_->dist(), va));
 }
 
 // ######################   Qs2   ######################
@@ -315,26 +315,26 @@ void gdt_ws_manager::add_to_Qs2 (const gdt_welm* Wa, const gdt_welm* Wb, const d
   /*if (n_verbose_>2) {
     char s1[32], s2[32];
     if (va->Wa_)
-      vcl_sprintf (s1, "Ia %d", va->Wa_->edge()->id());
+      std::sprintf (s1, "Ia %d", va->Wa_->edge()->id());
     else
-      vcl_sprintf (s1, "NULL");
+      std::sprintf (s1, "NULL");
     if (va->Wb_)
-      vcl_sprintf (s2, "Ib %d", va->Wb_->edge()->id());
+      std::sprintf (s2, "Ib %d", va->Wb_->edge()->id());
     else
-      vcl_sprintf (s2, "NULL");
+      std::sprintf (s2, "NULL");
 
-    vul_printf (vcl_cerr, "    Add vertex %d (%lf) with <%s, %s> to Qv.\n", 
+    vul_printf (std::cerr, "    Add vertex %d (%lf) with <%s, %s> to Qv.\n", 
                  va->v_->id(), va->v_->dist(), s1, s2);
   }*/
 #endif
 
   gdt_2nd_shock_source* s2 = new gdt_2nd_shock_source (Wa, Wb, simtime);
-  Qs2_.insert (vcl_pair<double, gdt_2nd_shock_source*> (simtime, s2));
+  Qs2_.insert (std::pair<double, gdt_2nd_shock_source*> (simtime, s2));
 }
 
 bool gdt_ws_manager::_brute_force_remove_from_Qs2 (gdt_interval* I)
 {
-  vcl_multimap<double, gdt_2nd_shock_source*>::iterator s2it = Qs2_.begin();
+  std::multimap<double, gdt_2nd_shock_source*>::iterator s2it = Qs2_.begin();
   for (; s2it != Qs2_.end(); s2it++) {
     gdt_2nd_shock_source* S2 = (*s2it).second;
     if (S2->Wa_ == I || S2->Wb_ == I) {
@@ -347,10 +347,10 @@ bool gdt_ws_manager::_brute_force_remove_from_Qs2 (gdt_interval* I)
 
 // ######################   Qs   ######################
 
-vcl_multimap<double, gdt_shock*>::iterator 
+std::multimap<double, gdt_shock*>::iterator 
   gdt_ws_manager::_brute_force_find_in_Qs (gdt_shock* input_S) 
 {
-  vcl_multimap<double, gdt_shock*>::iterator it = Qs_.begin();
+  std::multimap<double, gdt_shock*>::iterator it = Qs_.begin();
   for (; it != Qs_.end(); it++) {
     gdt_shock* S = (*it).second;
     if (S == input_S)
@@ -370,29 +370,29 @@ void gdt_ws_manager::add_to_Qs (gdt_shock* S)
   if (n_verbose_>2) {
     char sprjE[32], sIa[32], sIb[32];
     if (S->prjE())
-      vcl_sprintf (sprjE, "%d", S->prjE()->id());
+      std::sprintf (sprjE, "%d", S->prjE()->id());
     else
-      vcl_sprintf (sprjE, "NULL");
+      std::sprintf (sprjE, "NULL");
     if (S->Wa())
-      vcl_sprintf (sIa, "%d", S->Wa()->edge()->id());
+      std::sprintf (sIa, "%d", S->Wa()->edge()->id());
     else
-      vcl_sprintf (sIa, "NULL");
+      std::sprintf (sIa, "NULL");
     if (S->Wb())
-      vcl_sprintf (sIb, "%d", S->Wb()->edge()->id());
+      std::sprintf (sIb, "%d", S->Wb()->edge()->id());
     else
-      vcl_sprintf (sIb, "NULL");
+      std::sprintf (sIb, "NULL");
 
-    vul_printf (vcl_cerr, "    Add S %d (v %d prjE %s) simtime=%f (Ia %s, Ib %s) to Qs.\n", 
+    vul_printf (std::cerr, "    Add S %d (v %d prjE %s) simtime=%f (Ia %s, Ib %s) to Qs.\n", 
                  S->id(), S->Snode()->id(), sprjE, S->simT(), sIa, sIb);
   }
 #endif
 
-  Qs_.insert (vcl_pair<double, gdt_shock*> (S->simT(), S));
+  Qs_.insert (std::pair<double, gdt_shock*> (S->simT(), S));
 }
 
 bool gdt_ws_manager::remove_from_Qs (gdt_shock* S) 
 {
-  vcl_multimap<double, gdt_shock*>::iterator it = _find_in_Qs (S); ///_brute_force_find_in_Qs (S)
+  std::multimap<double, gdt_shock*>::iterator it = _find_in_Qs (S); ///_brute_force_find_in_Qs (S)
   if (it != Qs_.end())
     Qs_.erase (it);
   ///it = _find_in_Qs (S);
@@ -406,19 +406,19 @@ void gdt_ws_manager::print_Qs2 ()
 
 void gdt_ws_manager::print_Qw ()
 {
-  vul_printf (vcl_cerr, "\nQw_: %d\n", (int) Qw_.size());
+  vul_printf (std::cerr, "\nQw_: %d\n", (int) Qw_.size());
 
-  vcl_multimap<double, gdt_welm*>::iterator it = Qw_.begin();
+  std::multimap<double, gdt_welm*>::iterator it = Qw_.begin();
   for (unsigned int i=0; it != Qw_.end(); it++, i++) {
     double simtime = (*it).first;
     gdt_welm* W = (*it).second;
-    vul_printf (vcl_cerr, "<%f, (%f, %f) on %d> ", 
+    vul_printf (std::cerr, "<%f, (%f, %f) on %d> ", 
                  simtime, W->stau(), W->etau(), W->edge()->id());
     if (i%2==1) 
-      vul_printf (vcl_cerr, "\n");
+      vul_printf (std::cerr, "\n");
     assert (W->is_final() == false);
   }
-  vul_printf (vcl_cerr, "\n\n");
+  vul_printf (std::cerr, "\n\n");
 }
 
 void gdt_ws_manager::print_Qv ()
@@ -427,17 +427,17 @@ void gdt_ws_manager::print_Qv ()
 
 void gdt_ws_manager::print_Qs ()
 {
-  vul_printf (vcl_cerr, "Qs_: %d\n", (int) Qs_.size());
+  vul_printf (std::cerr, "Qs_: %d\n", (int) Qs_.size());
 
-  vcl_multimap<double, gdt_shock*>::iterator it = Qs_.begin();
+  std::multimap<double, gdt_shock*>::iterator it = Qs_.begin();
   for (unsigned int i=0; it != Qs_.end(); it++, i++) {
     double simtime = (*it).first;
     gdt_shock* S = (*it).second;
-    vul_printf (vcl_cerr, "<%f, %d> ", simtime, S->id());
+    vul_printf (std::cerr, "<%f, %d> ", simtime, S->id());
     if (i%4==3) 
-      vul_printf (vcl_cerr, "\n");
+      vul_printf (std::cerr, "\n");
   }
-  vul_printf (vcl_cerr, "\n\n");
+  vul_printf (std::cerr, "\n\n");
 }
 
 // ##########################################################################
@@ -447,7 +447,7 @@ void gdt_ws_manager::print_Qs ()
 //  (including W) from the structure and Qw.
 void gdt_ws_manager::delete_I_subtree_from_structure_Qw (gdt_interval* W) 
 {
-  vcl_vector<gdt_interval*>::iterator it = W->nextIs().begin();
+  std::vector<gdt_interval*>::iterator it = W->nextIs().begin();
   while (it != W->nextIs().end()) {
     gdt_interval* nI = (*it);
 
@@ -480,7 +480,7 @@ void gdt_ws_manager::delete_W_from_structure (gdt_welm* W)
 
   W->edge()->_remove_activeI (W);
 
-  vcl_vector<gdt_interval*>::iterator it = W->nextIs().begin();
+  std::vector<gdt_interval*>::iterator it = W->nextIs().begin();
   while (it != W->nextIs().end()) {
     gdt_interval* nI = (*it);
 

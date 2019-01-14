@@ -22,20 +22,20 @@
 class dborl_evaluate_shock_sim_params : public dborl_algo_params
 {
 public:
-  vcl_string algo_abbreviation_;
+  std::string algo_abbreviation_;
   
   //io parameters  
-  dborl_parameter<vcl_string> input_dir_;    // passes the folder of the input object
-  dborl_parameter<vcl_string> input_name_;
+  dborl_parameter<std::string> input_dir_;    // passes the folder of the input object
+  dborl_parameter<std::string> input_name_;
 
-  dborl_parameter<vcl_string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
+  dborl_parameter<std::string> output_dir_;          // if written to this folder as opposed to object folder then the edge map gets associated to the input object
                                                     // if nothing is written here, nothing gets associated
 
   //parameter for the index file
-  dborl_parameter<vcl_string> index_filename_;
+  dborl_parameter<std::string> index_filename_;
 
   //: constructor
-  dborl_evaluate_shock_sim_params (vcl_string algo_name) : dborl_algo_params(algo_name) 
+  dborl_evaluate_shock_sim_params (std::string algo_name) : dborl_algo_params(algo_name) 
   { 
     algo_abbreviation_ = "evaluate_shock_sim";
 

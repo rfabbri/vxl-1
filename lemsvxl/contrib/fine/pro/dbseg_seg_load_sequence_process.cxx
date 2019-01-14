@@ -7,7 +7,7 @@
 #include <structure/dbseg_seg_storage_sptr.h>
 #include <vul/vul_file.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 //: Constructor
@@ -18,7 +18,7 @@ dbseg_seg_load_sequence_process() : bpro1_process(), num_frames_(0)
       !parameters()->add( "Segmentation list file:" , "-seg_list", bpro1_filepath("","*") )
         )
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 }
 
@@ -39,7 +39,7 @@ dbseg_seg_load_sequence_process::clone() const
 
 
 //: Return the name of the process
-vcl_string dbseg_seg_load_sequence_process::
+std::string dbseg_seg_load_sequence_process::
 name()
 {
     return "Load Segmentation Sequence";
@@ -56,10 +56,10 @@ clear_output(int resize)
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbseg_seg_load_sequence_process::
+std::vector< std::string > dbseg_seg_load_sequence_process::
 get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     // no input type required
     to_return.clear();
     return to_return;
@@ -67,10 +67,10 @@ get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string >dbseg_seg_load_sequence_process::
+std::vector< std::string >dbseg_seg_load_sequence_process::
 get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "seg" );
     return to_return;
 }
@@ -101,7 +101,7 @@ execute()
   // seg folder
   bpro1_filepath seg_folder_path;
   this->parameters()->get_value("-seg_folder" , seg_folder_path);
-  vcl_string seg_folder = seg_folder_path.path;
+  std::string seg_folder = seg_folder_path.path;
 
   // be smart: in case user enters a filename instead of a folder, extract the
   // folder containing the file
@@ -113,22 +113,22 @@ execute()
   // seg name list
   bpro1_filepath seg_list_path;
   this->parameters()->get_value("-seg_list" , seg_list_path);
-  //vcl_string seg_list = seg_list_path.path;
+  //std::string seg_list = seg_list_path.path;
 
   // parse the seg_list file to extract the list of file names
-  vcl_vector<vcl_string > seg_names;
+  std::vector<std::string > seg_names;
   
   // 2. parse the seg_list file to extract the names
-  vcl_ifstream fp(seg_list_path.path.c_str());
+  std::ifstream fp(seg_list_path.path.c_str());
   if (!fp) 
   {
-    vcl_cout<<"ERROR: Can't open " << seg_list_path.path << vcl_endl;
+    std::cout<<"ERROR: Can't open " << seg_list_path.path << std::endl;
     return false;
   }
 
   while (!fp.eof()) 
   {
-    vcl_string name;
+    std::string name;
     fp >> name;
     if (!name.empty())
     {
@@ -138,24 +138,24 @@ execute()
   fp.close();
 
 
-  vcl_cout << "Found " << seg_names.size() << " structures." << vcl_endl;
+  std::cout << "Found " << seg_names.size() << " structures." << std::endl;
   // 3. load segs in the files and push to the repository
   for (unsigned i = seg_names.size(); i > 0; --i)
   {
     // load the seg
-    vcl_string seg_file = seg_folder + "/" + seg_names[i-1];
+    std::string seg_file = seg_folder + "/" + seg_names[i-1];
 
     //vil_image_resource_sptr image_resource = vil_load_image_resource(image_file.c_str());
     
     dbseg_seg_object_base* seg_base = dbseg_seg_load_process::static_execute(seg_file);
     if (seg_names.size() > 9) {
         if (i % (seg_names.size() / 10) == 0) {
-            vcl_cout << i / (seg_names.size() / 10) << "%..";
+            std::cout << i / (seg_names.size() / 10) << "%..";
         }
     }
     if (!seg_base)
     {
-      vcl_cerr << "ERROR: can't load seg " << seg_file << ". Process canceled.\n";
+      std::cerr << "ERROR: can't load seg " << seg_file << ". Process canceled.\n";
       this->output_data_.clear();
       this->num_frames_ = 0;
       return false;
@@ -165,7 +165,7 @@ execute()
     dbseg_seg_storage_sptr seg_storage = dbseg_seg_storage_new();
     seg_storage->add_object(seg_base);
     //image_storage->set_image( image_resource );
-    output_data_.push_back(vcl_vector< bpro1_storage_sptr >(1,seg_storage));
+    output_data_.push_back(std::vector< bpro1_storage_sptr >(1,seg_storage));
     this->num_frames_++;
   }
   return true;   

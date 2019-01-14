@@ -10,7 +10,7 @@
 #include <vnl/vnl_math.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vsol/vsol_box_2d.h>
-#include <vcl_utility.h>
+#include <utility>
 
 
 // -----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ dbsksp_xshock_graph(dbsksp_xshock_graph& that)
   // 1. Create the nodes
   
   // iterate thru the nodes in the node list and create the nodes
-  vcl_map<unsigned int, dbsksp_xshock_node_sptr > node_list;
+  std::map<unsigned int, dbsksp_xshock_node_sptr > node_list;
   for(dbsksp_xshock_graph::vertex_iterator itr = that.vertices_begin(); itr != 
     that.vertices_end(); ++itr)
   {
@@ -38,13 +38,13 @@ dbsksp_xshock_graph(dbsksp_xshock_graph& that)
     
     // create the node
     dbsksp_xshock_node_sptr v = new dbsksp_xshock_node(id);
-    node_list.insert(vcl_make_pair(id, v));
+    node_list.insert(std::make_pair(id, v));
   }
 
   // 2. Create the edges
   
   // iterate thru the edges in the edge list and create the edges
-  vcl_map<unsigned int, dbsksp_xshock_edge_sptr > edge_list;
+  std::map<unsigned int, dbsksp_xshock_edge_sptr > edge_list;
   for(dbsksp_xshock_graph::edge_iterator itr = that.edges_begin(); itr != 
     that.edges_end();  ++itr)
   {
@@ -62,7 +62,7 @@ dbsksp_xshock_graph(dbsksp_xshock_graph& that)
 
     // create the edge
     dbsksp_xshock_edge_sptr this_e = new dbsksp_xshock_edge(source_sptr, target_sptr, id);
-    edge_list.insert(vcl_make_pair(id, this_e));
+    edge_list.insert(std::make_pair(id, this_e));
   }
 
   // 3. Add edges to the nodes and fill in info for shock node descriptors
@@ -75,7 +75,7 @@ dbsksp_xshock_graph(dbsksp_xshock_graph& that)
     dbsksp_xshock_node_sptr this_v = node_list[that_v->id()];
 
     // ii. Descriptor list
-    //vcl_list<dbsksp_shock_node_descriptor_sptr > desc_list = that_v->descriptor_list();
+    //std::list<dbsksp_shock_node_descriptor_sptr > desc_list = that_v->descriptor_list();
 
     for (dbsksp_xshock_node::edge_iterator eit = that_v->edges_begin(); eit != 
       that_v->edges_end(); ++eit)
@@ -99,13 +99,13 @@ dbsksp_xshock_graph(dbsksp_xshock_graph& that)
   }
 
   // insert all the nodes and edges to the shock graph
-  for (vcl_map<unsigned int, dbsksp_xshock_node_sptr >::iterator itr = node_list.begin();
+  for (std::map<unsigned int, dbsksp_xshock_node_sptr >::iterator itr = node_list.begin();
     itr != node_list.end(); ++itr)
   {
     this->add_vertex(itr->second);
   }
 
-  for (vcl_map<unsigned int, dbsksp_xshock_edge_sptr >::iterator itr = edge_list.begin();
+  for (std::map<unsigned int, dbsksp_xshock_edge_sptr >::iterator itr = edge_list.begin();
     itr != edge_list.end(); ++itr)
   {
     this->add_edge(itr->second);
@@ -411,7 +411,7 @@ compute_approx_bounding_box()
 //: Group the vertices by their depths
 // Example: vertex_bins[1] is a vector of all vertices with depth 1
 bool dbsksp_xshock_graph::
-group_vertices_by_depth(vcl_vector<vcl_vector<unsigned > >& vertex_bins)
+group_vertices_by_depth(std::vector<std::vector<unsigned > >& vertex_bins)
 {
   vertex_bins.clear();
 
@@ -542,7 +542,7 @@ insert_xshock_node(const dbsksp_xshock_edge_sptr& xe, double t)
   
   // shock tangent
   vgl_vector_2d<double > xv1_tangent = shock_geom.tangent_at(t * shock_geom.len());
-  double xv1_psi = vcl_atan2(xv1_tangent.y(), xv1_tangent.x());
+  double xv1_psi = std::atan2(xv1_tangent.y(), xv1_tangent.x());
 
   // phi angle
   double xv1_phi = (1-t) * xdesc0.phi_ + t * xdesc2.phi_;
@@ -775,7 +775,7 @@ insert_xshock_node_at_terminal_edge(const dbsksp_xshock_edge_sptr& xe, double sh
   vgl_point_2d<double > xv1_pt = xdesc0.pt() + shock_length * xdesc0.shock_tangent();
   vgl_vector_2d<double > xv1_tangent = xdesc0.shock_tangent();
   double xv1_phi = xdesc0.phi_;
-  double xv1_radius = xdesc0.radius_ - shock_length * vcl_cos(xdesc0.phi_);
+  double xv1_radius = xdesc0.radius_ - shock_length * std::cos(xdesc0.phi_);
 
   // prevent the radius from going negative
   if (xv1_radius < 0)
@@ -786,7 +786,7 @@ insert_xshock_node_at_terminal_edge(const dbsksp_xshock_edge_sptr& xe, double sh
   xv1->set_radius(xv1_radius);
   
   xdesc12->phi_ = xv1_phi;
-  xdesc12->psi_ = vcl_atan2(xv1_tangent.y(), xv1_tangent.x());
+  xdesc12->psi_ = std::atan2(xv1_tangent.y(), xv1_tangent.x());
 
   xdesc10->phi_ = vnl_math::pi - xv1_phi;
   xdesc10->psi_ = xdesc12->psi_ + vnl_math::pi;
@@ -815,7 +815,7 @@ insert_A_infty_branch(const dbsksp_xshock_node_sptr& xv,
   // only handle degree-2 node right now
   if (xv->degree() != 2) 
   {
-    vcl_cerr << "ERROR: add_A_infty_branch currently only handles degree-2 nodes.\n";
+    std::cerr << "ERROR: add_A_infty_branch currently only handles degree-2 nodes.\n";
     return 0;
   }
 
@@ -952,14 +952,14 @@ compute_vertex_depths(unsigned root_vertex_id)
 {
   this->root_vertex_id_ = root_vertex_id;
 
-  vcl_map<dbsksp_xshock_node_sptr, int > vertex_depth;
+  std::map<dbsksp_xshock_node_sptr, int > vertex_depth;
   
   // do an Euler tour of the graph (tree)
   dbsksp_xshock_node_sptr init_node = this->node_from_id(root_vertex_id);
   if (!init_node) return false;
 
   dbsksp_xshock_edge_sptr init_edge = *init_node->edges_begin();
-  vertex_depth.insert(vcl_make_pair(init_node, 0));
+  vertex_depth.insert(std::make_pair(init_node, 0));
 
   dbsksp_xshock_node_sptr cur_node = init_node;
   dbsksp_xshock_edge_sptr cur_edge = init_edge;
@@ -967,7 +967,7 @@ compute_vertex_depths(unsigned root_vertex_id)
 
   do
   {
-    vcl_map<dbsksp_xshock_node_sptr, int >::iterator it = vertex_depth.find(cur_node);
+    std::map<dbsksp_xshock_node_sptr, int >::iterator it = vertex_depth.find(cur_node);
     if (it != vertex_depth.end()) // found it!
     {
       cur_depth = it->second;
@@ -975,7 +975,7 @@ compute_vertex_depths(unsigned root_vertex_id)
     else // unknown vertex, set depth for it
     {
       ++cur_depth;
-      vertex_depth.insert(vcl_make_pair(cur_node, cur_depth));
+      vertex_depth.insert(std::make_pair(cur_node, cur_depth));
     }
 
     cur_node = cur_edge->opposite(cur_node);
@@ -984,7 +984,7 @@ compute_vertex_depths(unsigned root_vertex_id)
   while (cur_node != init_node || cur_edge != init_edge);
 
   // set the depths
-  for (vcl_map<dbsksp_xshock_node_sptr, int >::iterator it = vertex_depth.begin();
+  for (std::map<dbsksp_xshock_node_sptr, int >::iterator it = vertex_depth.begin();
     it != vertex_depth.end(); ++it)
   {
     it->first->set_depth(it->second);
@@ -995,8 +995,8 @@ compute_vertex_depths(unsigned root_vertex_id)
 
 // -----------------------------------------------------------------------------
 //: print info of the shock graph to an output stream
-vcl_ostream& dbsksp_xshock_graph::
-print(vcl_ostream & os) const
+std::ostream& dbsksp_xshock_graph::
+print(std::ostream & os) const
 {
   return os;
 }

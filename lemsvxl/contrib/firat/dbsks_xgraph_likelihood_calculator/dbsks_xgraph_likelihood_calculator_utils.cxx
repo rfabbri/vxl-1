@@ -8,7 +8,7 @@
 
 #include "dbsks_xgraph_likelihood_calculator_utils.h"
 
-#include <vcl_utility.h>
+#include <utility>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vil/vil_image_resource.h>
@@ -21,19 +21,19 @@
 
 
 bool dbsks_xgraph_likelihood_calculator_utils::
-load_edgemap_pyramid(vcl_vector<vcl_string >& list_edgemap_base_name,
-        vcl_vector<unsigned >& list_edgemap_width,
-        vcl_vector<double >& list_edgemap_scale,
-        const vcl_string& edgemap_folder,
-        const vcl_string& edgemap_ext,
-        const vcl_string& object_id,
+load_edgemap_pyramid(std::vector<std::string >& list_edgemap_base_name,
+        std::vector<unsigned >& list_edgemap_width,
+        std::vector<double >& list_edgemap_scale,
+        const std::string& edgemap_folder,
+        const std::string& edgemap_ext,
+        const std::string& object_id,
         double image_width)
 {
     //>> Load all edgemaps in the pyramid ........................................
-    vcl_cout << "\n>> Loading all edgemap images in the pyramid ... ";
+    std::cout << "\n>> Loading all edgemap images in the pyramid ... ";
 
     // regular expression to iterate thru edgemap files
-    vcl_string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
+    std::string edgemap_regexp = edgemap_folder + "/" + object_id +  "/" + object_id + "*" + edgemap_ext;
 
     // clean up any existing data
     list_edgemap_base_name.clear();
@@ -44,7 +44,7 @@ load_edgemap_pyramid(vcl_vector<vcl_string >& list_edgemap_base_name,
 
 
     // sort the edgemaps by their width, decreasing order
-    vcl_map<int, edgemap_level_info> map_width2info;
+    std::map<int, edgemap_level_info> map_width2info;
     for (vul_file_iterator fn = edgemap_regexp; fn; ++fn)
     {
         vil_image_resource_sptr img = vil_load_image_resource(fn());
@@ -57,14 +57,14 @@ load_edgemap_pyramid(vcl_vector<vcl_string >& list_edgemap_base_name,
             // note that "vul_file::strip_extension(...) will not work because
             // "edgemap_ext" may containt a dot ".", which will confuse the
             // vul_file::strip_extension(...) function
-            vcl_string fname = vul_file::strip_directory(fn());
+            std::string fname = vul_file::strip_directory(fn());
             info.base_name = fname.substr(0, fname.size()-edgemap_ext.size());
-            map_width2info.insert(vcl_make_pair(-info.width, info));
+            map_width2info.insert(std::make_pair(-info.width, info));
         }
     }
 
     // put the info back in the form we're familiar with
-    for (vcl_map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
+    for (std::map<int, edgemap_level_info>::iterator iter = map_width2info.begin();
             iter != map_width2info.end(); ++iter)
     {
         edgemap_level_info info = iter->second;
@@ -85,15 +85,15 @@ get_ccm_like_keeping_graph_size_fixed(dbsksp_xshock_graph_sptr& input_xgraph,
         dbdet_edgemap_sptr& actual_edgemap,
         dbsksp_xshock_graph_sptr& actual_xgraph,
         dbsks_xgraph_ccm_model_sptr& xgraph_ccm,
-        vcl_vector<vcl_string >& list_edgemap_base_name,
-        vcl_vector<double >& list_edgemap_scale,
-        const vcl_string& edgemap_folder,
-        const vcl_string& edgemap_ext,
-        const vcl_string& edgeorient_ext,
-        const vcl_string& object_id,
+        std::vector<std::string >& list_edgemap_base_name,
+        std::vector<double >& list_edgemap_scale,
+        const std::string& edgemap_folder,
+        const std::string& edgemap_ext,
+        const std::string& edgeorient_ext,
+        const std::string& object_id,
         double edgemap_log2_scale_ratio,
         dbsks_biarc_sampler* biarc_sampler_ptr,
-        vcl_map<int, dbsks_xshock_ccm_likelihood*>& ccm_like_db,
+        std::map<int, dbsks_xshock_ccm_likelihood*>& ccm_like_db,
         int precision,
         double cut_off_target_pyramid_scale)
 {
@@ -106,12 +106,12 @@ get_ccm_like_keeping_graph_size_fixed(dbsksp_xshock_graph_sptr& input_xgraph,
     actual_pyramid_scale = target_pyramid_scale;
 
     int map_index = precision*actual_pyramid_scale;
-    vcl_cout << "MAP INDEX: " << map_index << vcl_endl;
+    std::cout << "MAP INDEX: " << map_index << std::endl;
     if(map_index > cut_off_target_pyramid_scale*precision)
     {
         return 0;
     }
-    vcl_map<int, dbsks_xshock_ccm_likelihood*>::iterator elem_it = ccm_like_db.find(map_index);
+    std::map<int, dbsks_xshock_ccm_likelihood*>::iterator elem_it = ccm_like_db.find(map_index);
     if(elem_it == ccm_like_db.end())
     {
 
@@ -119,14 +119,14 @@ get_ccm_like_keeping_graph_size_fixed(dbsksp_xshock_graph_sptr& input_xgraph,
         double actual_edgemap_scale;
         {
             // scale of the "edgemap" which is different from the "image" scale by "edgemap_log2_scale_ratio"
-            double scale_ratio = vcl_pow(2.0, edgemap_log2_scale_ratio);
+            double scale_ratio = std::pow(2.0, edgemap_log2_scale_ratio);
             double target_edgemap_scale = target_pyramid_scale * scale_ratio;
 
             // find the edgemap closest to this scale
             vnl_vector<double > scale_diff(list_edgemap_scale.size(), vnl_numeric_traits<double >::maxval);
             for (unsigned k =0; k < scale_diff.size(); ++k)
             {
-                scale_diff[k] = vnl_math_abs(vcl_log(list_edgemap_scale[k] / target_edgemap_scale));
+                scale_diff[k] = vnl_math_abs(std::log(list_edgemap_scale[k] / target_edgemap_scale));
             }
             actual_edgemap_level = scale_diff.arg_min();
             actual_edgemap_scale = list_edgemap_scale[actual_edgemap_level];
@@ -137,15 +137,15 @@ get_ccm_like_keeping_graph_size_fixed(dbsksp_xshock_graph_sptr& input_xgraph,
         }
 
         // base-name for edge-related files
-        vcl_string base_name = list_edgemap_base_name[actual_edgemap_level];
+        std::string base_name = list_edgemap_base_name[actual_edgemap_level];
 
         // edgemap file
-        vcl_string edgemap_fname = base_name + edgemap_ext;
-        vcl_string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
+        std::string edgemap_fname = base_name + edgemap_ext;
+        std::string edgemap_file = edgemap_folder + "/" + object_id + "/" + edgemap_fname;
 
         // Name of edge orientation file
-        vcl_string edgeorient_fname = base_name + edgeorient_ext;
-        vcl_string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
+        std::string edgeorient_fname = base_name + edgeorient_ext;
+        std::string edgeorient_file = edgemap_folder + "/" + object_id + "/" + edgeorient_fname;
 
         // Load the edgel map/////////////////////////////////////////////////////////
         actual_edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
@@ -168,7 +168,7 @@ get_ccm_like_keeping_graph_size_fixed(dbsksp_xshock_graph_sptr& input_xgraph,
         //////////////////////////////////////////////////////////////////////////////
         actual_xgraph = input_xgraph;
         double adjusted_xgraph_size = target_xgraph_size * actual_pyramid_scale;
-        double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+        double cur_xgraph_size = std::sqrt(actual_xgraph->area());
         actual_xgraph->scale_up(0, 0, adjusted_xgraph_size / cur_xgraph_size);
         /*vsol_box_2d_sptr bbox_sptr = actual_xgraph->bounding_box();
         double min_x = bbox_sptr->get_min_x()-5;

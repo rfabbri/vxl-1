@@ -3,10 +3,10 @@
 #include <vil/algo/vil_threshold.h>
 #include <dbbgm/bbgm_wavelet.h>
 #include <vil/vil_save.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <fstream>
+#include <sstream>
 template <class T>
-bool specificitySensitivityCount(vil_image_view<T> truth,vil_image_view<T> test,float bg_thresh,vcl_string path)
+bool specificitySensitivityCount(vil_image_view<T> truth,vil_image_view<T> test,float bg_thresh,std::string path)
 {
 	  vil_image_view<bool> truth_thresh=new vil_image_view<bool>(truth.ni(),truth.nj(),1,1);
 	  vil_image_view<bool> test_thresh= new vil_image_view<bool>(test.ni(),test.nj(),1,1);
@@ -23,11 +23,11 @@ bool specificitySensitivityCount(vil_image_view<T> truth,vil_image_view<T> test,
 				 TN++;
 			 else
 				 TP++;
-	   vcl_fstream file_op;
+	   std::fstream file_op;
 	   vil_save(truth_thresh,(path+"truth.tiff").c_str());
 	   vil_save(test_thresh,(path+"test.tiff").c_str());
-	   file_op.open(path.c_str(),vcl_fstream::app);
-	   file_op<<TP/(TP+FN)<<" "<<TN/(FP+TN)<<vcl_endl;
+	   file_op.open(path.c_str(),std::fstream::app);
+	   file_op<<TP/(TP+FN)<<" "<<TN/(FP+TN)<<std::endl;
 	   file_op.close();
 	   return true;
 

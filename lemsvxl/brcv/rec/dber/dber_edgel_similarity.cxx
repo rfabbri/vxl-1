@@ -1,8 +1,8 @@
 #include <dber/dber_edgel_similarity.h>
 
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <cstdlib>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 #include <vsol/vsol_point_2d.h>
@@ -27,24 +27,24 @@ double dber_edgel_similarity::compute_current_cost(vsol_line_2d_sptr e1, vsol_li
   double angle1 = e1->tangent_angle();
   double angle2 = e2->tangent_angle();
   if (angle1 > 180.0f) 
-    angle1 = vcl_fmod(angle1 + 180.0f, double(360.0f));
+    angle1 = std::fmod(angle1 + 180.0f, double(360.0f));
   if (angle2 > 180.0f) 
-    angle1 = vcl_fmod(angle1 + 180.0f, double(360.0f));
+    angle1 = std::fmod(angle1 + 180.0f, double(360.0f));
 
-  double angle_dif = vcl_abs(angle1 - angle2);
+  double angle_dif = std::abs(angle1 - angle2);
   if (angle_dif > 90.0f)
     angle_dif = 180.0f - angle_dif;
-  //vcl_cout << "angle dif: " << angle_dif  << " degrees ";
-  double cos_angle = vcl_cos(angle_dif*vnl_math::pi/180.0f);
+  //std::cout << "angle dif: " << angle_dif  << " degrees ";
+  double cos_angle = std::cos(angle_dif*vnl_math::pi/180.0f);
   double dot_p = e1->length()*e2->length()*cos_angle;
   double spatial_dist = vgl_distance(mid1->get_p(), mid2->get_p());
-  double d = vcl_exp(-(spatial_dist*spatial_dist)/sigma_square);
+  double d = std::exp(-(spatial_dist*spatial_dist)/sigma_square);
   max = d;  // not considering orientations
   return d*dot_p;
 }
 
 //: measure norm between lines1 and lines2 wrt current-matching norm
-double dber_edgel_similarity::current_norm(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square) {
+double dber_edgel_similarity::current_norm(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square) {
   int s1 = l1.size();
   int s2 = l2.size();
   if (!s1 || !s2)
@@ -78,7 +78,7 @@ double dber_edgel_similarity::current_norm(vcl_vector<vsol_line_2d_sptr>& l1, vc
 }
 
 //: measure support for lines1 by lines2 wrt current edgel similarity measure
-double dber_edgel_similarity::measure_support(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square) {
+double dber_edgel_similarity::measure_support(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square) {
   int s1 = l1.size();
   int s2 = l2.size();
   if (!s1 || !s2)
@@ -98,8 +98,8 @@ double dber_edgel_similarity::measure_support(vcl_vector<vsol_line_2d_sptr>& l1,
 }
 
 //: get image sets for each edgel sets and prepare gradient images, etc.
-void dber_edgel_similarity::prepare_images(vcl_vector<vil_image_view<vxl_byte> >&set1, 
-                                           vcl_vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma) {
+void dber_edgel_similarity::prepare_images(std::vector<vil_image_view<vxl_byte> >&set1, 
+                                           std::vector<vil_image_view<vxl_byte> >&set2, float smoothing_sigma) {
 
   // for now, later will come from VJ's new class
   //nplanes_ = im1_->nplanes();
@@ -144,10 +144,10 @@ void dber_edgel_similarity::update_histograms_from_all_planes(int x1, int y1, in
     float Iy1 = I1ys_[i](x1, y1);
     float Ix2 = I2xs_[i](x2, y2);
     float Iy2 = I2ys_[i](x2, y2);
-    float ang1 = deg_rad*vcl_atan2(Iy1, Ix1) + 180.0f;
-    float ang2 = deg_rad*vcl_atan2(Iy2, Ix2) + 180.0f;
-    float mag1 = vcl_abs(Ix1)+vcl_abs(Iy1);
-    float mag2 = vcl_abs(Ix2)+vcl_abs(Iy2);
+    float ang1 = deg_rad*std::atan2(Iy1, Ix1) + 180.0f;
+    float ang2 = deg_rad*std::atan2(Iy2, Ix2) + 180.0f;
+    float mag1 = std::abs(Ix1)+std::abs(Iy1);
+    float mag2 = std::abs(Ix2)+std::abs(Iy2);
     h1.upcount(ang1, mag1); h2.upcount(ang2, mag2);
     jh.upcount(ang1, mag1, ang2, mag2);
   }
@@ -173,18 +173,18 @@ double dber_edgel_similarity::compute_cost(vsol_line_2d_sptr e1, vsol_line_2d_sp
   bsta_histogram<float> h1(range, bins), h2(range, bins);
   bsta_joint_histogram<float> jh(range, bins);
   
-  int x1 = (int)vcl_floor(midp1->x()+0.5);
-  int y1 = (int)vcl_floor(midp1->y()+0.5);
-  int x2 = (int)vcl_floor(midp2->x()+0.5);
-  int y2 = (int)vcl_floor(midp2->y()+0.5);
+  int x1 = (int)std::floor(midp1->x()+0.5);
+  int y1 = (int)std::floor(midp1->y()+0.5);
+  int x2 = (int)std::floor(midp2->x()+0.5);
+  int y2 = (int)std::floor(midp2->y()+0.5);
 
   //update_histograms_from_all_planes(x1, y1, x2, y2, h1, h2, jh);
   
   // all pixels on each ray, corresponds to all pixels on the second ray
   // collect correspondences in the histograms
   //TODO: check the image borders
-  int upper = (int)vcl_floor(radius+0.5);
-  int lower = (int)vcl_floor(-radius+0.5);
+  int upper = (int)std::floor(radius+0.5);
+  int lower = (int)std::floor(-radius+0.5);
   for(int i = 0; i<=upper; ++i)
     for (int j = 0; j<=upper; j++) 
       update_histograms_from_all_planes(x1, y1+i, x2, y2+j, h1, h2, jh);
@@ -205,7 +205,7 @@ double dber_edgel_similarity::compute_cost(vsol_line_2d_sptr e1, vsol_line_2d_sp
   float H12 = jh.entropy();
   float mi = H1 + H2 - H12;
   
-  vcl_cout << "mi: " << mi << vcl_endl;
+  std::cout << "mi: " << mi << std::endl;
   return mi;
 }
 

@@ -11,7 +11,7 @@
 //    
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <vul/vul_file.h>
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
@@ -52,10 +52,10 @@ bool bseg3d_threshold_world_process_cons(bprb_func_process& pro)
   // 4. nx (size of grids)
   // 5. ny 
   // 6. nz
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string";
-  input_types_[1] = "vcl_string";
-  input_types_[2] = "vcl_string";
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string";
+  input_types_[1] = vcl_string";
+  input_types_[2] = vcl_string";
   input_types_[3] = "float";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";
@@ -63,7 +63,7 @@ bool bseg3d_threshold_world_process_cons(bprb_func_process& pro)
 
 
   // 0. A voxel world 
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
 
   if (!pro.set_input_types(input_types_))
     return false;
@@ -85,13 +85,13 @@ bool bseg3d_threshold_world_process(bprb_func_process& pro)
   // check number of inputs
   if (pro.n_inputs() != n_inputs_)
   {
-    vcl_cout << pro.name() << "The number of inputs should be " << n_inputs_ << vcl_endl;
+    std::cout << pro.name() << "The number of inputs should be " << n_inputs_ << std::endl;
     return false;
   }
 
-  vcl_string grid_in_path = pro.get_input<vcl_string>(0);
-  vcl_string grid_out_path = pro.get_input<vcl_string>(1);
-  vcl_string mask_path = pro.get_input<vcl_string>(2);
+  std::string grid_in_path = pro.get_input<std::string>(0);
+  std::string grid_out_path = pro.get_input<std::string>(1);
+  std::string mask_path = pro.get_input<std::string>(2);
   float threshold = pro.get_input<float>(3);
   unsigned nx = pro.get_input<unsigned>(4);
   unsigned ny = pro.get_input<unsigned>(5);

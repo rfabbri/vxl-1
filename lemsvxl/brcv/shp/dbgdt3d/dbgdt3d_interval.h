@@ -5,9 +5,9 @@
 #ifndef _gdt_interval_h_
 #define _gdt_interval_h_
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <utility>
+#include <algorithm>
 #include <vgl/vgl_point_3d.h>
 
 #include <dbmsh3d/dbmsh3d_utils.h>
@@ -101,8 +101,8 @@ public:
 
 inline bool _is_I_overlapping (const gdt_ibase* I1, const gdt_ibase* I2)
 {
-  const double min = vcl_max (I1->stau(), I2->stau());
-  const double max = vcl_min (I1->etau(), I2->etau());
+  const double min = std::max (I1->stau(), I2->stau());
+  const double max = std::min (I1->etau(), I2->etau());
 
   if (min < max)
     return true;
@@ -128,7 +128,7 @@ protected:
   //: if flag true, this I is tied with prevI_ in the prev-next link
   bool prev_flag_;
 
-  vcl_vector<gdt_interval*> nextIs_;
+  std::vector<gdt_interval*> nextIs_;
 
   //: point pseudo-source
   dbmsh3d_gdt_vertex_3d*  psrc_;
@@ -160,7 +160,7 @@ public:
   dbmsh3d_gdt_vertex_3d* eV() const;
 
   bool _psrc_closer_to_Sv () const {    
-    return vcl_fabs (L_-stau_) < vcl_fabs (L_-etau_);
+    return std::fabs (L_-stau_) < std::fabs (L_-etau_);
   }
 
   //: edge's starting vertex S and ending vertex E
@@ -214,7 +214,7 @@ public:
     return nextIs_.size();
   }
 
-  vcl_vector<gdt_interval*>& nextIs() {
+  std::vector<gdt_interval*>& nextIs() {
     return nextIs_;
   }
   gdt_interval* nextI (const unsigned int i) const {
@@ -228,7 +228,7 @@ public:
     nextIs_.push_back ((gdt_interval*) nI);
   }
   void _remove_nextI (const gdt_interval* nI) {
-    vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+    std::vector<gdt_interval*>::iterator it = nextIs_.begin();
     for (; it != nextIs_.end(); it++) {
       gdt_interval* I = (*it);
       if (I == nI) {
@@ -239,7 +239,7 @@ public:
     assert (0);
   }
   bool is_nextI (const gdt_interval* nI) {
-    vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+    std::vector<gdt_interval*>::iterator it = nextIs_.begin();
     for (; it != nextIs_.end(); it++) {
       gdt_interval* I = (*it);
       if (I == nI)
@@ -250,7 +250,7 @@ public:
 
   //: Return true if this I has a nextI on given e
   bool _has_nextI_on_edge (const dbmsh3d_gdt_edge* e) {
-    vcl_vector<gdt_interval*>::iterator it = nextIs_.begin();
+    std::vector<gdt_interval*>::iterator it = nextIs_.begin();
     for (; it != nextIs_.end(); it++) {
       gdt_interval* I = (*it);
       if (I->edge() == e)
@@ -446,14 +446,14 @@ public:
 
 
   //: ====== getInfo ======
-  virtual void getInfo (vcl_ostringstream& ostrm);
+  virtual void getInfo (std::ostringstream& ostrm);
   
 #if GDT_ALGO_F //============================================
 protected:
   //: The children gdt_interval
   //  Needed for deleting sub-tree of propagation as a new updating comes
   //  in to a propagated tree of intervals.
-  ///vcl_vector<gdt_interval*> nexts_;
+  ///std::vector<gdt_interval*> nexts_;
 
   //: true: this I is associated with its reference edge, he->edge(), 
   //        i.e., need to maintain the both-way pointers

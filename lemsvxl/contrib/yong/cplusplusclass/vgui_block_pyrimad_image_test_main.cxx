@@ -1,6 +1,6 @@
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <sstream>
+#include <string>
 #include <vgui/vgui.h>
 #include <vnl/vnl_math.h>
 #include <vgui/vgui_image_tableau.h>
@@ -74,8 +74,8 @@ int main(int argc, char **argv)
 {
     int number_of_levels = 4;
     int current_level = number_of_levels - 1; // starting display from top level;
-    vcl_stringstream cur_layer_filename_SS;
-    vcl_string cur_layer_filename, cur_output_filename;
+    std::stringstream cur_layer_filename_SS;
+    std::string cur_layer_filename, cur_output_filename;
 
     for(; current_level >=0; current_level--)
     {
@@ -110,12 +110,12 @@ int main(int argc, char **argv)
             bool put_view_worked = bimgr->vil_image_resource::put_view(input_image);
             if (!put_view_worked)
             { //report trouble
-                vcl_cout << "Block image conversion failed." << vcl_endl;
+                std::cout << "Block image conversion failed." << std::endl;
                 return 0;
             }
             else
             {
-                vcl_cout << "Block image conversion succedd: " << cur_output_filename << vcl_endl;
+                std::cout << "Block image conversion succedd: " << cur_output_filename << std::endl;
             }
         }
     }
@@ -131,9 +131,9 @@ static unsigned number_of_levels = 4;
 static unsigned current_level_left = number_of_levels - 1; // current layer displayed on the left side, from 3 to 1.
 static unsigned current_zoomin_size = 4;    // size of blocks on the top layer;
 static unsigned current_level_right = current_zoomin_size - 1; // current layer displayed on the left side, from 2 to 0.
-static vcl_stringstream filename_SS;   
-static vcl_string cur_layer_filename_left;
-static vcl_string cur_layer_filename_right;
+static std::stringstream filename_SS;   
+static std::string cur_layer_filename_left;
+static std::string cur_layer_filename_right;
 static unsigned zooming_grid_i = 1;
 static unsigned zooming_grid_j = 1;
 static unsigned zooming_box_size = static_cast<unsigned>(pow(2.0,4.0+static_cast<double>(current_zoomin_size)));
@@ -179,7 +179,7 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
         float pointx, pointy;
         vgui_projection_inspector p_insp;
         p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-        int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+        int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
 
         current_mouse_x = intx;
         current_mouse_y = inty;
@@ -215,7 +215,7 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
         current_zoomin_size--;
         current_level_right = current_zoomin_size-1;
         zooming_box_size = static_cast<unsigned>(pow(2.0,4.0+static_cast<double>(current_zoomin_size)));
-        vcl_cout << "zooming box size: " << zooming_box_size << vcl_endl;
+        std::cout << "zooming box size: " << zooming_box_size << std::endl;
 
         zooming_grid_i = current_mouse_x/zooming_box_size;
         zooming_grid_j = current_mouse_y/zooming_box_size;
@@ -230,7 +230,7 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
         right_image_resource = blocked_image_resource(vil_load_image_resource(cur_layer_filename_right.c_str()));
         if (!right_image_resource) 
         {
-            vcl_cout << "Loading image failed: " << cur_layer_filename_right << vcl_endl;
+            std::cout << "Loading image failed: " << cur_layer_filename_right << std::endl;
             return 0;
         }
 
@@ -251,7 +251,7 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
         current_zoomin_size++;
         current_level_right = current_zoomin_size-1;
         zooming_box_size = static_cast<unsigned>(pow(2.0,4.0+static_cast<double>(current_zoomin_size)));
-        vcl_cout << "zooming box size: " << zooming_box_size << vcl_endl;
+        std::cout << "zooming box size: " << zooming_box_size << std::endl;
 
 
         zooming_grid_i = current_mouse_x/zooming_box_size;
@@ -267,7 +267,7 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
         right_image_resource = blocked_image_resource(vil_load_image_resource(cur_layer_filename_right.c_str()));
         if (!right_image_resource) 
         {
-            vcl_cout << "Loading image failed: " << cur_layer_filename_right << vcl_endl;
+            std::cout << "Loading image failed: " << cur_layer_filename_right << std::endl;
             return 0;
         }
 
@@ -285,9 +285,9 @@ struct my_pyrimad_zoom_tableau : public vgui_image_tableau
     return vgui_image_tableau::handle(e);
   }
 
-  vcl_string type_name() const
+  std::string type_name() const
   {
-    return vcl_string("my_pyrimad_zoom_tableau");      
+    return std::string("my_pyrimad_zoom_tableau");      
   }
 };
 //-------------------------------------------------------------
@@ -315,7 +315,7 @@ int main(int argc, char **argv)
     left_image_resource = vil_load_image_resource(cur_layer_filename_left.c_str());
     if (!left_image_resource) 
     {
-        vcl_cout << "Loading image failed: " << cur_layer_filename_left << vcl_endl;    
+        std::cout << "Loading image failed: " << cur_layer_filename_left << std::endl;    
         return 0;
     }
     left_image_view = left_image_resource->get_view();
@@ -329,7 +329,7 @@ int main(int argc, char **argv)
     right_image_resource = blocked_image_resource(vil_load_image_resource(cur_layer_filename_right.c_str()));
     if (!right_image_resource) 
     {
-        vcl_cout << "Loading image failed: " << cur_layer_filename_right << vcl_endl;
+        std::cout << "Loading image failed: " << cur_layer_filename_right << std::endl;
         return 0;
     }
 

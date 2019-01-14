@@ -15,12 +15,12 @@
 
 bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
 {
-  //vcl_cout << "parsing dbskr_extract_patch_params\n";
+  //std::cout << "parsing dbskr_extract_patch_params\n";
   bxml_element query("dbskr_extract_patch_params");
   bxml_data_sptr result = bxml_find_by_name(root, query);
   
   if (!result) {
-    vcl_cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node dbskr_extract_patch_params\n";
+    std::cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node dbskr_extract_patch_params\n";
     return false;
   }
 
@@ -28,7 +28,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result2 = bxml_find_by_name(result, query2);
 
   if (!result2) {
-    vcl_cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node patch_data\n";
+    std::cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node patch_data\n";
     return false;
   }
    
@@ -36,7 +36,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
   if (!data1)
     return false;
 
-  vcl_string start_depth_str, end_depth_str, depth_interval_str;
+  std::string start_depth_str, end_depth_str, depth_interval_str;
   data1->get_attribute("start_depth", start_depth_);
   data1->get_attribute("start_depth", start_depth_str);
   data1->get_attribute("end_depth", end_depth_);
@@ -44,7 +44,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
   data1->get_attribute("depth_interval", depth_interval_); 
   data1->get_attribute("depth_interval", depth_interval_str); 
   
-  vcl_string val;
+  std::string val;
   
   data1->get_attribute("extract_from_tree", val);
   extract_from_tree_ = val.compare("off") == 0 ? false: true; // if val = off then localize_edit = false
@@ -60,7 +60,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
   bxml_data_sptr result3 = bxml_find_by_name(result, query3);
 
   if (!result3) {
-    vcl_cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node patch_data_extra\n";
+    std::cout << "dbskr_extract_patch_params::parse_from_data() - could not find the node patch_data_extra\n";
     return false;
   }
    
@@ -69,7 +69,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
     return false;
 
   //: extra params needed for extraction from real images
-  vcl_string pruning_depth_str, sort_threshold_str, overlap_threshold_str;
+  std::string pruning_depth_str, sort_threshold_str, overlap_threshold_str;
   data2->get_attribute("pruning_depth", pruning_depth_);
   data2->get_attribute("pruning_depth", pruning_depth_str);
   data2->get_attribute("sort_threshold", sort_threshold_);
@@ -109,7 +109,7 @@ bool dbskr_extract_patch_params::parse_from_data(bxml_data_sptr root)
     output_file_postfix_ = output_file_postfix_ + "-pd-" + pruning_depth_str + "-st-" + sort_threshold_str + "-ot-" + overlap_threshold_str;
   }
 
-  //vcl_cout << "output_file_postfix: " << output_file_postfix_ << vcl_endl;
+  //std::cout << "output_file_postfix: " << output_file_postfix_ << std::endl;
 
   return true;
 }

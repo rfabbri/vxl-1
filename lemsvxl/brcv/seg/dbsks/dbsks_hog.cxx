@@ -25,7 +25,7 @@ bool dbsks_hog_boundary(vnl_vector<double >& hog,
 
   
   // List of patches to compute HOG of
-  vcl_vector<dbdet_arc_patch > patch_list(2*num_segments);
+  std::vector<dbdet_arc_patch > patch_list(2*num_segments);
 
   // Divide each boundary contour into equal-length segments, approximate each
   // with a circular arc, then compute histogram for each segment

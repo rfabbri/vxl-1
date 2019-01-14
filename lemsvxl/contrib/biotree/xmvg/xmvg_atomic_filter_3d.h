@@ -37,7 +37,7 @@ class xmvg_atomic_filter_3d
 };
 
 //template <class T>
-//void x_write(vcl_ostream& os, xmvg_atomic_filter_3d<T>& af, vcl_string name);
+//void x_write(std::ostream& os, xmvg_atomic_filter_3d<T>& af, std::string name);
 
 #endif
 

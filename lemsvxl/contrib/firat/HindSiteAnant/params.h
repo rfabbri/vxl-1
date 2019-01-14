@@ -58,8 +58,8 @@ double SMOOTH_EDGE_BONUS;
 unsigned CLOSEST_POINT_NEIGHBORHOOD;
 bool APPLY_COMBO_MATCH;
 // global matches, all states use this
-vcl_vector< pairwiseMatch > _matches;
+std::vector< pairwiseMatch > _matches;
 // global rotated curves, used for search states
-vcl_vector<bfrag_curve> _cList;
+std::vector<bfrag_curve> _cList;
 // original contours
-vcl_vector<bfrag_curve> _Contours;
+std::vector<bfrag_curve> _Contours;

@@ -46,7 +46,7 @@ vidpro1_compute_homography_2d_process::~vidpro1_compute_homography_2d_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_compute_homography_2d_process::name()
 {
   return "Compute Plane Homography";
@@ -70,9 +70,9 @@ vidpro1_compute_homography_2d_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_compute_homography_2d_process::get_input_type()
+std::vector< std::string > vidpro1_compute_homography_2d_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   to_return.push_back( "vsol2D" );
   return to_return;
@@ -80,9 +80,9 @@ vcl_vector< vcl_string > vidpro1_compute_homography_2d_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_compute_homography_2d_process::get_output_type()
+std::vector< std::string > vidpro1_compute_homography_2d_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "homog_2d" );
   return to_return;
 }
@@ -92,10 +92,10 @@ vcl_vector< vcl_string > vidpro1_compute_homography_2d_process::get_output_type(
 bool
 vidpro1_compute_homography_2d_process::execute()
 {
-  vcl_cout << "\n Perform Homography estimation between current frame and previous frame" << vcl_endl;
+  std::cout << "\n Perform Homography estimation between current frame and previous frame" << std::endl;
   if ( this->input_data_.size() != 1 )
   {
-    vcl_cout << "In vidpro1_compute_homography_2d_process::execute() - not exactly one"
+    std::cout << "In vidpro1_compute_homography_2d_process::execute() - not exactly one"
              << " input frames \n";
     return false;
   }
@@ -103,7 +103,7 @@ vidpro1_compute_homography_2d_process::execute()
 
   if (this->input_data_[0].size() != 3 )
   {
-    vcl_cout << "In vidpro1_compute_homography_2d_process::execute() - not exactly 2 vsol2Ds and 1 image"
+    std::cout << "In vidpro1_compute_homography_2d_process::execute() - not exactly 2 vsol2Ds and 1 image"
              << " in input frame \n";
   }
   // get input vsol points from storage class
@@ -112,12 +112,12 @@ vidpro1_compute_homography_2d_process::execute()
   to_storage.vertical_cast(input_data_[0][1]);
 
   // set up input data for computing homography using rrel library
-  vcl_vector< vgl_homg_point_2d< double > > from_pts;
-  vcl_vector< vgl_homg_point_2d< double > > to_pts;
+  std::vector< vgl_homg_point_2d< double > > from_pts;
+  std::vector< vgl_homg_point_2d< double > > to_pts;
 
   // from_points - points in previous frame
-  vcl_vector< vsol_spatial_object_2d_sptr > from_vsol = from_storage->all_data();
-  vcl_vector< vsol_spatial_object_2d_sptr >::iterator vsol_it;
+  std::vector< vsol_spatial_object_2d_sptr > from_vsol = from_storage->all_data();
+  std::vector< vsol_spatial_object_2d_sptr >::iterator vsol_it;
   for (vsol_it = from_vsol.begin(); vsol_it != from_vsol.end(); vsol_it ++)
   {
     if (! (*vsol_it)->cast_to_point())
@@ -128,7 +128,7 @@ vidpro1_compute_homography_2d_process::execute()
   }
 
   // to-points - tracked points in current frame
-  vcl_vector< vsol_spatial_object_2d_sptr > to_vsol = to_storage->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > to_vsol = to_storage->all_data();
   for (vsol_it = to_vsol.begin(); vsol_it != to_vsol.end(); vsol_it ++)
   {
     if (! (*vsol_it)->cast_to_point())
@@ -142,11 +142,11 @@ vidpro1_compute_homography_2d_process::execute()
   // check input and output validity
   if (from_pts.size() != to_pts.size())
   {
-    vcl_cout << "Number of from_pts is not the same as number of to_pts" << vcl_endl;
+    std::cout << "Number of from_pts is not the same as number of to_pts" << std::endl;
     return false;
   }
     
-  vcl_cout << "Number of pairs of points = " << from_pts.size() << vcl_endl;
+  std::cout << "Number of pairs of points = " << from_pts.size() << std::endl;
 
   //
   // Use RREL library to solve homography estimation problem
@@ -173,13 +173,13 @@ vidpro1_compute_homography_2d_process::execute()
 
   if (! success)
   {
-    vcl_cout << "RANSAC failed!!\n";
+    std::cout << "RANSAC failed!!\n";
     return false;
   }
   
-  vcl_cout << "RANSAC succeeded.\n"
-            << "estimate = " << ransam.params() << vcl_endl
-            << "scale = " << ransam.scale() << vcl_endl;
+  std::cout << "RANSAC succeeded.\n"
+            << "estimate = " << ransam.params() << std::endl
+            << "scale = " << ransam.scale() << std::endl;
 
   // construct homography matrix
   vnl_vector< double > params = ransam.params();
@@ -189,8 +189,8 @@ vidpro1_compute_homography_2d_process::execute()
   M[2][0]= params.get(6);   M[2][1]= params.get(7); M[2][2]= params.get(8);
  
   vgl_h_matrix_2d< double > H(M);
-  vcl_cout << "Homography matrix H = \n" << H << vcl_endl;
-  vcl_cout << "Det(H) = " << vnl_det(H.get_matrix()) << vcl_endl;
+  std::cout << "Homography matrix H = \n" << H << std::endl;
+  std::cout << "Det(H) = " << vnl_det(H.get_matrix()) << std::endl;
  
   // create the output storage class
   vidpro1_homog_2d_storage_sptr output_storage = vidpro1_homog_2d_storage_new();

@@ -89,7 +89,7 @@ activate()
     vidpro1_vsol2D_storage_sptr input_vsol;
     input_vsol.vertical_cast(storage);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+    std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
     for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
     {
       // get the first polyline or polygon
@@ -112,7 +112,7 @@ activate()
     bdgl_curve_algs::smooth_curve(this->preloaded_curve_, 1.0);
 
   }
-  vcl_cout << "\nMedial-livewire tool is activated!!!\n";
+  std::cout << "\nMedial-livewire tool is activated!!!\n";
 }
 
 //: Set the tableau to work with
@@ -125,14 +125,14 @@ set_tableau ( const vgui_tableau_sptr& tableau)
     return true;
   }
   
-  vcl_cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
+  std::cout << "NON vgui_image_tableau is set!! name is : " << tableau->type_name() << " \n";
   tableau_ = NULL;
   return false;
 }
 
 
 //: Return name of the tool
-vcl_string dbdet_medial_livewire_tool::
+std::string dbdet_medial_livewire_tool::
 name() const
 {
   return "Medial Livewire";
@@ -155,7 +155,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
     {
       this->handle_run_fast_mode();
       vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-        "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+        "," << this->mouse_curve.back().y() << ")" << std::endl;
     
       bvis1_manager::instance()->post_overlay_redraw();
       // start here
@@ -197,7 +197,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   // Event: choose initial seed point)
   if (!seed_picked && gesture_start(e)) 
   { 
-    vgui::out << "Initial seed selected" << vcl_endl;
+    vgui::out << "Initial seed selected" << std::endl;
     this->handle_pick_initial_seed();
     //do the following no matter what mode we are in
     bvis1_manager::instance()->post_overlay_redraw();
@@ -210,14 +210,14 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   if(gesture_increase_radius(e))
   {
     this->handle_change_radius(0.1);
-    vgui::out << "r =" << this->rad << vcl_endl;
+    vgui::out << "r =" << this->rad << std::endl;
     return false;
   }
 
   if(gesture_decrease_radius(e))
   {
     this->handle_change_radius(-0.1);
-    vgui::out << "r =" << this->rad << vcl_endl;
+    vgui::out << "r =" << this->rad << std::endl;
     return false;
   }
 
@@ -229,7 +229,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
      {      
        this->handle_mouse_motion(mouse_x, mouse_y);
        vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-         "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+         "," << this->mouse_curve.back().y() << ")" << std::endl;
        bvis1_manager::instance()->post_overlay_redraw();
      }
      return false;
@@ -248,7 +248,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   {
     this->handle_delete_end_segments();
     vgui::out << "last mouse point (x, y)=(" << this->mouse_curve.back().x() <<
-         "," << this->mouse_curve.back().y() << ")" << vcl_endl;
+         "," << this->mouse_curve.back().y() << ")" << std::endl;
     bvis1_manager::instance()->post_overlay_redraw();
     return false;
   }
@@ -267,7 +267,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   {
     this->handle_save_contour();
     bvis1_manager::instance()->post_overlay_redraw();
-    vcl_cout<<"We are at the end of the Save event"<<"\n";
+    std::cout<<"We are at the end of the Save event"<<"\n";
     return false;
   }   
 
@@ -292,7 +292,7 @@ handle_reset()
 bool dbdet_medial_livewire_tool::
 handle_pick_initial_seed()
 {
-  vcl_cout<<"We are in Event 1: picking initial seed pt"<<"\n";
+  std::cout<<"We are in Event 1: picking initial seed pt"<<"\n";
 
   if (! this->livewires_initialzed)
   {
@@ -304,8 +304,8 @@ handle_pick_initial_seed()
   if (!(mouse_x >= 0 && mouse_x < (int)image_sptr->ni() && 
     mouse_y >= 0 && mouse_y < (int)image_sptr->nj())) 
   {
-    vcl_cout << "Not a valid seed point on image!!\n";
-    vcl_cout << "Select a new seed point inside the image!!\n"; 
+    std::cout << "Not a valid seed point on image!!\n";
+    std::cout << "Select a new seed point inside the image!!\n"; 
     return false;
   }
 
@@ -314,13 +314,13 @@ handle_pick_initial_seed()
 
   if(fast_mode)
   {    
-    vcl_cout<< "We are in fast mode\n";
+    std::cout<< "We are in fast mode\n";
     seed_picked=true;
 
 
 
     //in fasst mode, simply display the preload mouse curve
-    vcl_cout<<"We are in fast mode"<<"\n";
+    std::cout<<"We are in fast mode"<<"\n";
     
     //start over, with a new set of mouse coor
     mouse_curve.clear();
@@ -349,7 +349,7 @@ handle_pick_initial_seed()
   else 
   {    
     //in Regular Mode, simply plot initial seed point
-    vcl_cout<<"We are in regular mode"<<"\n";
+    std::cout<<"We are in regular mode"<<"\n";
     
     //start over, with a new set of mouse coor
     mouse_curve.clear();
@@ -374,7 +374,7 @@ handle_pick_initial_seed()
   // livewires
   intsciss[0].compute_directions(seed_x[0], seed_y[0]);
   intsciss[1].compute_directions(seed_x[1], seed_y[1]);
-  vcl_cout << "Paths are computed...\n";
+  std::cout << "Paths are computed...\n";
 
 
   return false;
@@ -386,12 +386,12 @@ handle_pick_initial_seed()
 bool dbdet_medial_livewire_tool::
 handle_change_radius(double dr)
 {
-  vcl_cout << "\n---------------------------------------------\n";
-  vcl_cout << "Current radius = " << this->rad << vcl_endl;
+  std::cout << "\n---------------------------------------------\n";
+  std::cout << "Current radius = " << this->rad << std::endl;
   if ((this->rad + dr > 0)&&(this->rad + dr < 10))
     this->rad += dr;
-  vcl_cout << "New radius = " << this->rad << vcl_endl;
-  vcl_cout << "---------------------------------------------\n";
+  std::cout << "New radius = " << this->rad << std::endl;
+  std::cout << "---------------------------------------------\n";
   return false;
 }
 
@@ -409,7 +409,7 @@ handle_mouse_motion(double newx, double newy)
   double dy = newy - this->mouse_curve.back().y();
 
   //distance
-  double d = vcl_sqrt(dx*dx+dy*dy);
+  double d = std::sqrt(dx*dx+dy*dy);
 
   //if new mouse pt is too close or too far from the previous mouse point
   // then ignore event
@@ -430,15 +430,15 @@ handle_mouse_motion(double newx, double newy)
     //store new point in mouse_coor & mouse_curve
     mouse_curve.push_back(vgl_point_2d<double >(newx, newy));
 
-    double theta = vcl_atan2(dy,dx);
+    double theta = std::atan2(dy,dx);
     
     int curve_x[2];
     int curve_y[2];
     //Use tangent to plot 2 new points, to the left and right of the medial axis
-    curve_x[0] = static_cast<int>(newx+((vcl_cos(theta+(3.14/2)))*rad));
-    curve_y[0] = static_cast<int>(newy+((vcl_sin(theta+(3.14/2)))*rad));
-    curve_x[1] = static_cast<int>(newx+((vcl_cos(theta-(3.14/2)))*rad));
-    curve_y[1] = static_cast<int>(newy+((vcl_sin(theta-(3.14/2)))*rad));
+    curve_x[0] = static_cast<int>(newx+((std::cos(theta+(3.14/2)))*rad));
+    curve_y[0] = static_cast<int>(newy+((std::sin(theta+(3.14/2)))*rad));
+    curve_x[1] = static_cast<int>(newx+((std::cos(theta-(3.14/2)))*rad));
+    curve_y[1] = static_cast<int>(newy+((std::sin(theta-(3.14/2)))*rad));
     
     // check to ensure new pts are not the same as the seed pt!
     if (curve_x[0]==seed_x[0] && curve_y[0]==seed_y[0])
@@ -451,7 +451,7 @@ handle_mouse_motion(double newx, double newy)
     //(out determines whether new point is outside window)
     for(int i=0; i<2; i++)
     {
-      vcl_vector<vcl_pair<int, int > > coor;
+      std::vector<std::pair<int, int > > coor;
       bool out = intsciss[i].get_path(curve_x[i], curve_y[i], coor); 
       if (coor.size() > 0)
       {
@@ -576,23 +576,23 @@ handle_delete_end_segments()
 bool dbdet_medial_livewire_tool::
 handle_save_contour()
 {
-  vcl_cout<<"\nIn the Save event " <<"\n";
+  std::cout<<"\nIn the Save event " <<"\n";
   
   
-  vcl_string image_filename = ".con";
+  std::string image_filename = ".con";
   
   // pop up a dialog to ask for output file name
-  static vcl_string regexp = "*.*";
+  static std::string regexp = "*.*";
   vgui_dialog save_dl("Save contour");
   save_dl.inline_file("Filename: ", regexp, image_filename);
 
   if (save_dl.ask()) 
   {
     //open the file
-    vcl_ofstream fs2(image_filename.c_str()); 
+    std::ofstream fs2(image_filename.c_str()); 
     if (!fs2) 
     {
-      vcl_cout << "Problems in opening file: " << image_filename << "\n";
+      std::cout << "Problems in opening file: " << image_filename << "\n";
       return false;
     }
     else 
@@ -617,7 +617,7 @@ handle_save_contour()
       // finish saving the .con file
       fs2.close();
 
-      vcl_cout << "Contour written to the specified files!\n";    
+      std::cout << "Contour written to the specified files!\n";    
       seed_picked = false;
 
       // clear old data
@@ -711,9 +711,9 @@ handle_draw_overlay()
 //: this method is used to find a new seed point if user has dragged mouse outside of window
 // \TODO fix this function. Something is wrong.
 void dbdet_medial_livewire_tool::
-find_cost(const vcl_vector<vcl_pair<int,int> >& coor, 
+find_cost(const std::vector<std::pair<int,int> >& coor, 
           dbdet_lvwr& intsciss, 
-          vcl_vector< vgl_point_2d<double > >& contour, 
+          std::vector< vgl_point_2d<double > >& contour, 
           int& seedx, 
           int& seedy)
 {
@@ -762,7 +762,7 @@ find_cost(const vcl_vector<vcl_pair<int,int> >& coor,
   //store the new seed point in contour
   if (coor.size() != 0) 
   {
-    vcl_vector<vcl_pair<int, int> >::const_iterator q;
+    std::vector<std::pair<int, int> >::const_iterator q;
     int i = contour.size();
     bool start = false;
     for (q = coor.begin(); q != coor.end()-1; q++) 
@@ -808,7 +808,7 @@ init_livewires()
   }
   else 
   {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
   
@@ -871,16 +871,16 @@ get_intscissors_params(dbdet_lvwr_params* iparams, osl_canny_ox_params* params)
 bool dbdet_medial_livewire_tool::
 handle_run_fast_mode()
 {
-  vcl_cout << "Running fast mode ... ";
+  std::cout << "Running fast mode ... ";
   for (unsigned int i=1; i < this->preloaded_curve_.size(); ++i)
   {
     vgl_point_2d<double > new_pt = this->preloaded_curve_[i];
     this->handle_mouse_motion(new_pt.x(), new_pt.y());
   }
-  vcl_cout << "done.\n";
-  vcl_cout << "Number of pts in right contour = " << this->contour[0].size() << vcl_endl;
+  std::cout << "done.\n";
+  std::cout << "Number of pts in right contour = " << this->contour[0].size() << std::endl;
 
-  vcl_cout << "Number of pts in left contour = " << this->contour[1].size() << vcl_endl;
+  std::cout << "Number of pts in left contour = " << this->contour[1].size() << std::endl;
 
 
   return false;
@@ -1076,10 +1076,10 @@ handle_fast_mode(const vgui_event & e)
       theta=atan2(double(y2-y1),double(x2-x1));
 
       // use medial point and tangent to plot 2 new points, to the left & right of the medial axis
-      curve_x[0]=static_cast<int>(x1+((vcl_cos(theta+(3.14/2)))*rad));
-      curve_y[0]=static_cast<int>(y1+((vcl_sin(theta+(3.14/2)))*rad));
-      curve_x[1]=static_cast<int>(x1+((vcl_cos(theta-(3.14/2)))*rad));
-      curve_y[1]=static_cast<int>(y1+((vcl_sin(theta-(3.14/2)))*rad));
+      curve_x[0]=static_cast<int>(x1+((std::cos(theta+(3.14/2)))*rad));
+      curve_y[0]=static_cast<int>(y1+((std::sin(theta+(3.14/2)))*rad));
+      curve_x[1]=static_cast<int>(x1+((std::cos(theta-(3.14/2)))*rad));
+      curve_y[1]=static_cast<int>(y1+((std::sin(theta-(3.14/2)))*rad));
 
       //check to ensure new pts are not the same as the seed pt!
       if (curve_x[0]==seed_x[0] && curve_y[0]==seed_y[0])

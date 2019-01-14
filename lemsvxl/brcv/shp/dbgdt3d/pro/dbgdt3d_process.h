@@ -4,7 +4,7 @@
 #ifndef dbgdt3d_process_h_
 #define dbgdt3d_process_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <vul/vul_printf.h>
 
 #include <vgl/algo/vgl_h_matrix_3d.h>
@@ -87,7 +87,7 @@ public:
   }  
 
   //: ====== File I/O ======
-  bool load_ply2_gdt (vcl_string dirfile = "");
+  bool load_ply2_gdt (std::string dirfile = "");
 
   //: ====== Processing ======
   void reset_gdt_mesh () {

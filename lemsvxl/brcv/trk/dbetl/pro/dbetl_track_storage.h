@@ -19,26 +19,26 @@ public:
   dbetl_track_storage() : camera_(NULL) {}
   //: Destructor
   virtual ~dbetl_track_storage() {}
-  virtual vcl_string type() const { return "betl"; }
+  virtual std::string type() const { return "betl"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbetl_track_storage"; }
+  virtual std::string is_a() const { return "dbetl_track_storage"; }
 
   //: Set the point tracks
-  void set_tracks(const vcl_vector<vcl_vector<dbetl_point_track_sptr> >& tracks);
+  void set_tracks(const std::vector<std::vector<dbetl_point_track_sptr> >& tracks);
 
   //: Access the tracks
-  vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks() const;
+  std::vector<std::vector<dbetl_point_track_sptr> > tracks() const;
     
   //: Set the angles
-  void set_angles(const vcl_vector<double>& angles);
+  void set_angles(const std::vector<double>& angles);
 
   //: Access the angles
-  vcl_vector<double> angles() const;
+  std::vector<double> angles() const;
 
   //: Set the camera
   void set_camera(const dbetl_camera_sptr& camera);
@@ -48,10 +48,10 @@ public:
   
 private:
   //: The tracks
-  vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks_;
+  std::vector<std::vector<dbetl_point_track_sptr> > tracks_;
 
   //: The angles
-  vcl_vector<double> angles_;
+  std::vector<double> angles_;
 
   //: The camera
   dbetl_camera_sptr camera_;

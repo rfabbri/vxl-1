@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_iterator.h>
+#include <iostream>
+#include <iterator>
 #include <mw/algo/mw_qualitative_epipolar.h>
 #include <bmcsd/bmcsd_util.h>
 
@@ -46,7 +46,7 @@ basic_test()
   */
   /*
   vgl_box_2d<double> bbox(-30,30,-30,30);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(0,0));
   p0.push_back(new vsol_point_2d(2,1));
@@ -59,7 +59,7 @@ basic_test()
 //  epipole_finder.compute_epipolar_region();
 
 //  vgl_box_2d<double> bbox(-30+1000,30+1000,-30-31,30-31);
-//  vcl_vector<vsol_point_2d_sptr> p0,p1;
+//  std::vector<vsol_point_2d_sptr> p0,p1;
 
   /* Test case "valid sectors 1 non-degenerate translated"
   p0.push_back(new vsol_point_2d(0+1000,0-31));
@@ -79,7 +79,7 @@ basic_test()
   /*
   {
   vgl_box_2d<double> bbox(-100,100,-100,100);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(0,0));
   p0.push_back(new vsol_point_2d(1,1));
@@ -102,7 +102,7 @@ basic_test()
   /*
   {
   vgl_box_2d<double> bbox(-5000,5000,-4000,4000);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(647,627 ));
   p0.push_back(new vsol_point_2d(96,268  ));
@@ -134,7 +134,7 @@ basic_test()
   /*
   {
   vgl_box_2d<double> bbox(-5000,5000,-5000,5000);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(816.7    ,    57.6));
   p0.push_back(new vsol_point_2d(318.8    ,   448.8));
@@ -150,14 +150,14 @@ basic_test()
 
   bool retval = epipole_finder.compute_epipolar_region();
   if (!retval)
-    vcl_cout << "Error -- degeneracy encountered for this input\n";
+    std::cout << "Error -- degeneracy encountered for this input\n";
   else
     epipole_finder.print_polygons();
   }
   */
   {
   vgl_box_2d<double> bbox(-2000,2000,-4000,4000);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d( 199.216835042951, 86.8853870086034));
   p0.push_back(new vsol_point_2d( 206.647375990655, 134.123531366793));
@@ -179,7 +179,7 @@ basic_test()
 
   bool retval = epipole_finder.compute_epipolar_region();
   if (!retval)
-    vcl_cout << "Error -- degeneracy encountered for this input\n";
+    std::cout << "Error -- degeneracy encountered for this input\n";
   else
     epipole_finder.print_polygons();
   }
@@ -192,11 +192,11 @@ test_sectors()
 {
 
   // --------------------------
-  vcl_cout << "Test case 1\n";
+  std::cout << "Test case 1\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(1,1));
   p.push_back(new vsol_point_2d(0,0));
@@ -214,11 +214,11 @@ test_sectors()
 
 
   // --------------------------
-  vcl_cout << "Test case 1 translated\n";
+  std::cout << "Test case 1 translated\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(1+1000,1-31));
   p.push_back(new vsol_point_2d(0+1000,0-31));
@@ -236,12 +236,12 @@ test_sectors()
   }
     
   // --------------------------
-  vcl_cout << "Test case 2\n";
+  std::cout << "Test case 2\n";
 
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(0+1000,0-31));
   p.push_back(new vsol_point_2d(1+1000,1-31));
@@ -261,11 +261,11 @@ test_sectors()
   }
 
   // --------------------------
-  vcl_cout << "Test case 3a\n";
+  std::cout << "Test case 3a\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(0+1000,0-31));
   p.push_back(new vsol_point_2d(1+1000,-1-31));
@@ -285,11 +285,11 @@ test_sectors()
   }
   
   // --------------------------
-  vcl_cout << "Test case 3b\n";
+  std::cout << "Test case 3b\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(0 +1000, 0   -31));
   p.push_back(new vsol_point_2d(1 +1000,-1   -31));
@@ -298,7 +298,7 @@ test_sectors()
 
   mw_qualitative_epipolar::build_sectors(p,0,angle,outward);
 
-  // This behavior is dependent on the vcl_atan2 implementation
+  // This behavior is dependent on the std::atan2 implementation
   TEST("# angles is 3",angle.size(),3);
 
   // Behavior 1:
@@ -324,14 +324,14 @@ test_sectors()
   }
   
   // --------------------------
-  vcl_cout << "Test case 4\n";
+  std::cout << "Test case 4\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
-  vcl_vector<double> gt_angle;
-  vcl_vector<double> mag;
+  std::vector<double> gt_angle;
+  std::vector<double> mag;
 
   gt_angle.push_back(130); mag.push_back(900);
   gt_angle.push_back(17);  mag.push_back(0.1);
@@ -344,8 +344,8 @@ test_sectors()
   for (unsigned i=0; i < gt_angle.size(); ++i) {
     gt_angle[i] = vnl_math::pi*gt_angle[i]/180.0;
 
-    p.push_back(new vsol_point_2d(mag[i]*vcl_cos(gt_angle[i]) -1e5,
-                                  mag[i]*vcl_sin(gt_angle[i]) -3e3));
+    p.push_back(new vsol_point_2d(mag[i]*std::cos(gt_angle[i]) -1e5,
+                                  mag[i]*std::sin(gt_angle[i]) -3e3));
   }
   p.push_back(new vsol_point_2d(-1e5,-3e3));
 
@@ -357,8 +357,8 @@ test_sectors()
   TEST("# angles is 6",angle.size(),6);
 
 
-  vcl_vector<double> gt_angle_sorted;
-  vcl_vector<bool> gt_outward;
+  std::vector<double> gt_angle_sorted;
+  std::vector<bool> gt_outward;
   gt_angle_sorted.push_back(15); gt_outward.push_back(true);
   gt_angle_sorted.push_back(17); gt_outward.push_back(true);
   gt_angle_sorted.push_back(20); gt_outward.push_back(false);
@@ -381,25 +381,25 @@ test_partition()
 {
   void
   compare_lr_sets(
-      const vcl_set<unsigned> &l,
-      const vcl_set<unsigned> &r,
-      const vcl_set<unsigned> &l_gt,
-      const vcl_set<unsigned> &r_gt);
+      const std::set<unsigned> &l,
+      const std::set<unsigned> &r,
+      const std::set<unsigned> &l_gt,
+      const std::set<unsigned> &r_gt);
 
   // --------------------------
-  vcl_cout << "Test case 1\n";
+  std::cout << "Test case 1\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
+  std::vector<vsol_point_2d_sptr> p;
 
   p.push_back(new vsol_point_2d(1,1));
   p.push_back(new vsol_point_2d(0,0));
   p.push_back(new vsol_point_2d(1,-1));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,1,0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   l_gt.insert(0);
   r_gt.insert(2);
@@ -413,19 +413,19 @@ test_partition()
   }
   
   // --------------------------
-  vcl_cout << "Test case 1 translated\n";
+  std::cout << "Test case 1 translated\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
+  std::vector<vsol_point_2d_sptr> p;
 
   p.push_back(new vsol_point_2d(1+1000,1-31));
   p.push_back(new vsol_point_2d(0+1000,0-31));
   p.push_back(new vsol_point_2d(1+1000,-1-31));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,1,0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   l_gt.insert(0);
   r_gt.insert(2);
@@ -439,20 +439,20 @@ test_partition()
   }
   
   // --------------------------
-  vcl_cout << "Test case 2\n";
+  std::cout << "Test case 2\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
+  std::vector<vsol_point_2d_sptr> p;
 
   p.push_back(new vsol_point_2d(0+1000,0-31));
   p.push_back(new vsol_point_2d(1+1000,1-31));
   p.push_back(new vsol_point_2d(1+1000,-1-31));
   p.push_back(new vsol_point_2d(0+1000,1-31));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,0,0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   l_gt.insert(1);
   l_gt.insert(3);
@@ -467,20 +467,20 @@ test_partition()
   }
   
   // --------------------------
-  vcl_cout << "Test case 3a\n";
+  std::cout << "Test case 3a\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
+  std::vector<vsol_point_2d_sptr> p;
 
   p.push_back(new vsol_point_2d(0+1000,0-31));
   p.push_back(new vsol_point_2d(1+1000,-1-31));
   p.push_back(new vsol_point_2d(1+1000,1-31));
   p.push_back(new vsol_point_2d(1+1000,0-31));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,0,vnl_math::pi/2.0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   r_gt.insert(1);
   r_gt.insert(2);
@@ -495,22 +495,22 @@ test_partition()
   }
 
   // --------------------------
-  vcl_cout << "Test case 3b\n";
+  std::cout << "Test case 3b\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
-  vcl_vector<bool> outward;
-  vcl_vector<double> angle;
+  std::vector<vsol_point_2d_sptr> p;
+  std::vector<bool> outward;
+  std::vector<double> angle;
 
   p.push_back(new vsol_point_2d(0 +1000, 0   -31));
   p.push_back(new vsol_point_2d(1 +1000,-1   -31));
   p.push_back(new vsol_point_2d(1 +1000, 1   -31));
   p.push_back(new vsol_point_2d(-1 +1000, 0   -31));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,0,vnl_math::pi/2.0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   r_gt.insert(1);
   r_gt.insert(2);
@@ -525,12 +525,12 @@ test_partition()
   }
   
   // --------------------------
-  vcl_cout << "Test case 4\n";
+  std::cout << "Test case 4\n";
   {
-  vcl_vector<vsol_point_2d_sptr> p;
+  std::vector<vsol_point_2d_sptr> p;
 
-  vcl_vector<double> gt_angle;
-  vcl_vector<double> mag;
+  std::vector<double> gt_angle;
+  std::vector<double> mag;
 
   gt_angle.push_back(130); mag.push_back(900);
   gt_angle.push_back(17);  mag.push_back(0.1);
@@ -543,16 +543,16 @@ test_partition()
   for (unsigned i=0; i < gt_angle.size(); ++i) {
     gt_angle[i] = vnl_math::pi*gt_angle[i]/180.0;
 
-    p.push_back(new vsol_point_2d(mag[i]*vcl_cos(gt_angle[i]) -1e5,
-                                  mag[i]*vcl_sin(gt_angle[i]) -3e3));
+    p.push_back(new vsol_point_2d(mag[i]*std::cos(gt_angle[i]) -1e5,
+                                  mag[i]*std::sin(gt_angle[i]) -3e3));
   }
   p.push_back(new vsol_point_2d(-1e5,-3e3));
 
-  vcl_set<unsigned> l,r;
+  std::set<unsigned> l,r;
 
   mw_qualitative_epipolar::partition(p,p.size()-1,vnl_math::pi*170.0/180.0,true,l,r);
 
-  vcl_set<unsigned> l_gt,r_gt;
+  std::set<unsigned> l_gt,r_gt;
 
   l_gt.insert(3);
   l_gt.insert(5);
@@ -591,19 +591,19 @@ test_partition()
 
 void
 compare_lr_sets(
-    const vcl_set<unsigned> &l,
-    const vcl_set<unsigned> &r,
-    const vcl_set<unsigned> &l_gt,
-    const vcl_set<unsigned> &r_gt)
+    const std::set<unsigned> &l,
+    const std::set<unsigned> &r,
+    const std::set<unsigned> &l_gt,
+    const std::set<unsigned> &r_gt)
 {
   TEST("left set",l==l_gt,true);
   TEST("right set",r==r_gt,true);
-  vcl_cout << " Set l: ";
-  vcl_copy(l.begin(), l.end(), vcl_ostream_iterator<unsigned>(vcl_cout, " "));
-  vcl_cout << vcl_endl;
-   vcl_cout << " Set r: ";
-  vcl_copy(r.begin(), r.end(), vcl_ostream_iterator<unsigned>(vcl_cout, " "));
-  vcl_cout << vcl_endl;
+  std::cout << " Set l: ";
+  std::copy(l.begin(), l.end(), std::ostream_iterator<unsigned>(std::cout, " "));
+  std::cout << std::endl;
+   std::cout << " Set r: ";
+  std::copy(r.begin(), r.end(), std::ostream_iterator<unsigned>(std::cout, " "));
+  std::cout << std::endl;
 }
 
 
@@ -613,10 +613,10 @@ test_valid_sectors_by_partition()
 
 
   // --------------------------
-  vcl_cout << "Test case valid_sectors_1\n";
+  std::cout << "Test case valid_sectors_1\n";
   { 
   vgl_box_2d<double> bbox(-4,4,-3,3);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(0,0));
   p0.push_back(new vsol_point_2d(1,0));
@@ -649,10 +649,10 @@ test_valid_sectors_by_partition()
   }
 
   // --------------------------
-  vcl_cout << "Test case valid_sectors_2\n";
+  std::cout << "Test case valid_sectors_2\n";
   { 
   vgl_box_2d<double> bbox(-10,10,-10,10);
-  vcl_vector<vsol_point_2d_sptr> p0,p1;
+  std::vector<vsol_point_2d_sptr> p0,p1;
 
   p0.push_back(new vsol_point_2d(0,0));
   p0.push_back(new vsol_point_2d(1,1));
@@ -687,7 +687,7 @@ test_valid_sectors_by_partition()
   res = epipole_finder.valid_sector(3, 1, s1);
   TEST("p3 Sector 1 valid?",res,true);
   TEST("p3 Sector 1 on img 0 correspond to sector 0 on img 1?",0,s1);
-  vcl_cout << "s1: " << s1 << vcl_endl;
+  std::cout << "s1: " << s1 << std::endl;
 
   }
 

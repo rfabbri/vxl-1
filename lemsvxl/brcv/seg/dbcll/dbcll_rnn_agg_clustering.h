@@ -17,10 +17,10 @@
 // \endverbatim
 
 #include "dbcll_cluster_sptr.h"
-#include <vcl_vector.h>
-#include <vcl_set.h>
-#include <vcl_cstddef.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <set>
+#include <cstddef>
+#include <utility>
 
 //: represents a point in the cluster process when c1 merges with c2
 struct dbcll_trace_pt
@@ -41,12 +41,12 @@ class dbcll_remainder
 {
 public:
   // define a similarity, cluster pair
-  typedef vcl_pair<double,dbcll_cluster_sptr> sc_pair;
+  typedef std::pair<double,dbcll_cluster_sptr> sc_pair;
 
   //: return true if the heap is empty
   virtual bool empty() const = 0;
 
-  virtual vcl_size_t size() const = 0;
+  virtual std::size_t size() const = 0;
 
   virtual dbcll_cluster_sptr pop() = 0;
 
@@ -65,9 +65,9 @@ public:
 class dbcll_remainder_heap : public dbcll_remainder
 {
 public:
-  typedef vcl_vector<sc_pair> heap_container;
+  typedef std::vector<sc_pair> heap_container;
   typedef heap_container::iterator heap_iterator;
-  typedef vcl_vector<dbcll_cluster_sptr>::const_iterator citr;
+  typedef std::vector<dbcll_cluster_sptr>::const_iterator citr;
 
   //: Constructor
   dbcll_remainder_heap(const citr& begin, const citr& end);
@@ -75,7 +75,7 @@ public:
   //: return true if the heap is empty
   bool empty() const { return heap_.empty(); }
 
-  vcl_size_t size() const { return heap_.size(); }
+  std::size_t size() const { return heap_.size(); }
 
   void reseed(const dbcll_cluster_sptr& c);
 
@@ -104,8 +104,8 @@ private:
 class dbcll_remainder_set : public dbcll_remainder
 {
 public:
-  typedef vcl_set<dbcll_cluster_sptr> cluster_container;
-  typedef vcl_vector<dbcll_cluster_sptr>::const_iterator citr;
+  typedef std::set<dbcll_cluster_sptr> cluster_container;
+  typedef std::vector<dbcll_cluster_sptr>::const_iterator citr;
 
   //: Constructor
   dbcll_remainder_set(const citr& begin, const citr& end);
@@ -113,7 +113,7 @@ public:
   //: return true if the heap is empty
   bool empty() const { return clusters_.empty(); }
 
-  vcl_size_t size() const { return clusters_.size(); }
+  std::size_t size() const { return clusters_.size(); }
 
   dbcll_cluster_sptr pop();
 
@@ -134,12 +134,12 @@ private:
 
 //: Apply RNN Agglometerative clustering to these clusters up to threshold t
 void dbcll_rnn_agg_clustering(dbcll_remainder& remain, 
-                              vcl_vector<dbcll_cluster_sptr>& clusters,
+                              std::vector<dbcll_cluster_sptr>& clusters,
                               double t);
 
 //: Apply complete RNN Agglometerative clustering and return the trace
 void dbcll_rnn_agg_clustering(dbcll_remainder& remain, 
-                              vcl_vector<dbcll_trace_pt>& trace);
+                              std::vector<dbcll_trace_pt>& trace);
 
 
 

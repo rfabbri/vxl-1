@@ -9,7 +9,7 @@
 #include <boxm/boxm_simple_grey_processor.h>
 #include <vil/vil_math.h>
 #include <vil/vil_save.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 template <boxm_apm_type APM, class T_aux>
 class boxm_seg_length_functor

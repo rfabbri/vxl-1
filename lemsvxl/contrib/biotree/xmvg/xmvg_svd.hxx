@@ -3,7 +3,7 @@
 #define xmvg_svd_txx_
 //:
 // \file
-#include <vcl_cassert.h>
+#include <cassert>
 #include <xmvg/xmvg_svd.h>
 
 
@@ -27,7 +27,7 @@ vnl_vector<T> xmvg_svd<T>::xmvg_solve(vnl_vector<T> const& y)  const
   // fsm sanity check :
   if (y.size() != my_U_.rows())
   {
-    vcl_cerr << __FILE__ << ": size of rhs is incompatible with no. of rows in U_\n"
+    std::cerr << __FILE__ << ": size of rhs is incompatible with no. of rows in U_\n"
              << "y =" << y << '\n'
              << "m_=" << my_m_ << '\n'
              << "n_=" << my_n_ << '\n'
@@ -40,8 +40,8 @@ vnl_vector<T> xmvg_svd<T>::xmvg_solve(vnl_vector<T> const& y)  const
   if (my_U_.rows() < my_U_.columns()) {               // Augment y with extra rows of
     vnl_vector<T> yy(my_U_.rows(), T(0));          // zeros, so that it matches
     if (yy.size()<y.size()) { // fsm
-      vcl_cerr << "yy=" << yy << vcl_endl
-               << "y =" << y  << vcl_endl;
+      std::cerr << "yy=" << yy << std::endl
+               << "y =" << y  << std::endl;
       // the update() call on the next line will abort...
     }
     yy.update(y);                               // cols of u.transpose.

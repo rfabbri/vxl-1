@@ -55,16 +55,16 @@ void dbcl_image_classifier::classify()
 	unsigned cnt = 0;
     for( classifier_itr = this->target_classifier_map_.begin(); classifier_itr != classifier_end; ++classifier_itr, ++cnt )
 	{
-		vcl_cout << (cnt/num_classifiers)*100 << "% targets classified." << vcl_endl;
-		//vcl_cout << (classifier_itr - this->target_classifier_map_.begin()) / float(this->target_classifier_map_.size()) << "% of targets classified." << vcl_endl;
+		std::cout << (cnt/num_classifiers)*100 << "% targets classified." << std::endl;
+		//std::cout << (classifier_itr - this->target_classifier_map_.begin()) / float(this->target_classifier_map_.size()) << "% of targets classified." << std::endl;
         classifier_itr->second->classify();      
 	}
 
 }//end dbcl_image_classifier::draw_classifiers_vrml
 
-void dbcl_image_classifier::draw_classifiers_vrml( vcl_string result_glob )
+void dbcl_image_classifier::draw_classifiers_vrml( std::string result_glob )
 {
-    vcl_stringstream ss;
+    std::stringstream ss;
 
     target_classifier_map_type::const_iterator classifier_itr;
     target_classifier_map_type::const_iterator classifier_end = this->target_classifier_map_.end();
@@ -72,8 +72,8 @@ void dbcl_image_classifier::draw_classifiers_vrml( vcl_string result_glob )
     for( classifier_itr = this->target_classifier_map_.begin(); classifier_itr != classifier_end; ++classifier_itr )
     {
         ss << result_glob << "\\target_x_" << classifier_itr->first.x() << "_y" << classifier_itr->first.y() << ".wrl";
-        vcl_string filename = ss.str();
-        vcl_ofstream of( filename.c_str(), vcl_ios::out );
+        std::string filename = ss.str();
+        std::ofstream of( filename.c_str(), std::ios::out );
         dbcl_linear_classifier_vrml_view::vrml_view( of,classifier_itr->second );
     }
 

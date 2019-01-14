@@ -5,25 +5,25 @@
 
 
 #include "modrec_vehicle_parts.h"
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <fstream>
+#include <sstream>
 
 
 //: read the vehicle parts from a file
-vcl_map<vcl_string, vgl_polygon<double> >
-modrec_read_vehicle_parts(const vcl_string filename)
+std::map<std::string, vgl_polygon<double> >
+modrec_read_vehicle_parts(const std::string filename)
 {
-  vcl_map<vcl_string, vgl_polygon<double> > parts;
-  vcl_ifstream fh(filename.c_str());
+  std::map<std::string, vgl_polygon<double> > parts;
+  std::ifstream fh(filename.c_str());
 
   char c = fh.peek();
   vgl_polygon<double> poly;
-  vcl_string name = "";
+  std::string name = "";
   while(fh.good())
   {
-    vcl_string line;
-    vcl_getline(fh,line);
-    vcl_stringstream ss(line);
+    std::string line;
+    std::getline(fh,line);
+    std::stringstream ss(line);
     if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
     {
       if(name != "")
@@ -55,17 +55,17 @@ modrec_read_vehicle_parts(const vcl_string filename)
 
 //: write the vehicle parts to a file
 void
-modrec_write_vehicle_parts(const vcl_string filename,
-                           const vcl_map<vcl_string, vgl_polygon<double> >& parts)
+modrec_write_vehicle_parts(const std::string filename,
+                           const std::map<std::string, vgl_polygon<double> >& parts)
 {
-  typedef vcl_map<vcl_string, vgl_polygon<double> > pmap;
-  vcl_ofstream fh(filename.c_str());
+  typedef std::map<std::string, vgl_polygon<double> > pmap;
+  std::ofstream fh(filename.c_str());
   for(pmap::const_iterator itr = parts.begin(); itr != parts.end(); ++itr)
   {
     fh << itr->first << '\n';
     for(unsigned int i=0; i<itr->second.num_sheets(); ++i)
     {
-      const vcl_vector<vgl_point_2d<double> >& pts = itr->second[i];
+      const std::vector<vgl_point_2d<double> >& pts = itr->second[i];
       for(unsigned int j=0; j<pts.size(); ++j)
       {
         fh << pts[j].x()<<','<<pts[j].y()<<' ';
@@ -78,10 +78,10 @@ modrec_write_vehicle_parts(const vcl_string filename,
 
 
 //: write the vehicle parts as an SVG file
-void modrec_write_svg(const vcl_string& file,
-                      const vcl_map<vcl_string,vgl_polygon<double> >& paths)
+void modrec_write_svg(const std::string& file,
+                      const std::map<std::string,vgl_polygon<double> >& paths)
 {
-  vcl_ofstream fh(file.c_str());
+  std::ofstream fh(file.c_str());
   fh << "<?xml version=\"1.0\" standalone=\"no\"?>\n"
      << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n" 
      << "  \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"
@@ -91,10 +91,10 @@ void modrec_write_svg(const vcl_string& file,
   fh << "  <rect x=\"0\" y=\"0\" width=\"1000\" height=\"1000\" "
      << "fill=\"none\" stroke=\"black\" stroke-width=\"1px\" />\n";
 
-  typedef vcl_map<vcl_string,vgl_polygon<double> > path_map;
+  typedef std::map<std::string,vgl_polygon<double> > path_map;
   for(path_map::const_iterator itr = paths.begin(); itr != paths.end(); ++itr)
   {
-    const vcl_string& name = itr->first;
+    const std::string& name = itr->first;
     fh << "  <desc>"<<name<<"</desc>\n";
     const vgl_polygon<double>& poly = itr->second;
     for(unsigned int j=0; j<poly.num_sheets(); ++j){
@@ -106,7 +106,7 @@ void modrec_write_svg(const vcl_string& file,
     }
   }
 
-  fh << "</svg>" << vcl_endl;
+  fh << "</svg>" << std::endl;
   fh.close();
 }
 

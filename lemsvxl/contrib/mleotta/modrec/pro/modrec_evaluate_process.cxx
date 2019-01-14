@@ -16,7 +16,7 @@
 modrec_evaluate_process::modrec_evaluate_process()
 {
   if( !parameters()->add( "Number of classes" ,   "-num_classes" ,   (unsigned)3 ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -36,7 +36,7 @@ modrec_evaluate_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 modrec_evaluate_process::name()
 {
   return "Evaluate Segmentation";
@@ -60,9 +60,9 @@ modrec_evaluate_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > modrec_evaluate_process::get_input_type()
+std::vector< std::string > modrec_evaluate_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "image" );
 
@@ -71,9 +71,9 @@ vcl_vector< vcl_string > modrec_evaluate_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > modrec_evaluate_process::get_output_type()
+std::vector< std::string > modrec_evaluate_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -83,7 +83,7 @@ bool
 modrec_evaluate_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In modrec_evaluate_process::execute() - "
+    std::cout << "In modrec_evaluate_process::execute() - "
              << "not exactly one input frame \n";
     return false;
   }
@@ -148,7 +148,7 @@ bool
 modrec_evaluate_process::finish()
 {
 
-  vcl_cout << results_ << vcl_endl;
+  std::cout << results_ << std::endl;
 
   return true;
 }

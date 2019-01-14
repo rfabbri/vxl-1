@@ -7,7 +7,7 @@
 
 //: Constructor
 vox_detect_shock_patches_params::
-vox_detect_shock_patches_params(vcl_string algo_name) : 
+vox_detect_shock_patches_params(std::string algo_name) : 
     dborl_algo_params(algo_name)
 { 
 

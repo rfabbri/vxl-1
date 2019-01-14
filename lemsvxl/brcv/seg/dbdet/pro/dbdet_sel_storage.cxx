@@ -15,7 +15,7 @@ dbdet_sel_storage::version() const
 dbdet_edgel_chain_list&
 dbdet_sel_storage::all_groups_frags()
 {
-  vcl_list<dbdet_edgel_chain_list>::iterator l_it = c_groups_.begin();
+  std::list<dbdet_edgel_chain_list>::iterator l_it = c_groups_.begin();
   
   for(; l_it != c_groups_.end(); l_it++)
   {

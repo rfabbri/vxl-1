@@ -17,14 +17,14 @@
  *
 \*------------------------------------------------------------*/
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include "sheet_flow_io_v2.h"
 #include "circum.h"
 #include "barycentric.h"
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 
 /*------------------------------------------------------------*\
  * Function: LoadDataMBuck
@@ -1197,10 +1197,10 @@ bool save_fs_ply2 (char *pcInFile, char *pcOutFile, InputData *pInData,
   //: Open the *.fs file to write.
   FILE*   fp = fopen (pcOutFile, "w");
   if (fp == NULL) {
-    vul_printf (vcl_cout, "ERROR: Can't open file %s.\n", pcOutFile);
+    vul_printf (std::cout, "ERROR: Can't open file %s.\n", pcOutFile);
     return false; 
   }
-  vul_printf (vcl_cout, "\nsave_fs_ply2 (%s)\n", pcOutFile);
+  vul_printf (std::cout, "\nsave_fs_ply2 (%s)\n", pcOutFile);
   
   pShockData = NULL;
   if((pShockData = (ShockData*)

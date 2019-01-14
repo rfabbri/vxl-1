@@ -21,7 +21,7 @@
 //
 // \endverbatim 
 
-#include <vcl_map.h>
+#include <map>
 
 #include <dbsk2d/dbsk2d_ishock_elm.h>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
@@ -51,16 +51,16 @@ protected:
   };
 
   //: time ordered shock list 
-  vcl_multimap<vcl_pair<double, int>, dbsk2d_ishock_elm*> ordered_shock_list;
+  std::multimap<std::pair<double, int>, dbsk2d_ishock_elm*> ordered_shock_list;
   
   //: dbsk2d_ishock_elm ID to saliency_params mapping
-  vcl_map <int, saliency_params> shock_saliency_map;
+  std::map <int, saliency_params> shock_saliency_map;
 
   //: dbsk2d_ishock_node ID to dbsk2d_shock_node mapping
-  vcl_map <int, dbsk2d_shock_node_sptr> ishock_to_shock_node_map;
+  std::map <int, dbsk2d_shock_node_sptr> ishock_to_shock_node_map;
 
   //: dbsk2d_ishock_edge ID to dbsk2d_shock_edge mapping
-  vcl_map <int, dbsk2d_shock_edge_sptr> ishock_to_shock_edge_map;
+  std::map <int, dbsk2d_shock_edge_sptr> ishock_to_shock_edge_map;
 
   dbsk2d_ishock_graph_sptr ishock_graph;
   dbsk2d_shock_graph_sptr shock_graph;
@@ -90,7 +90,7 @@ public:
   void prune(double thresh);
 
   //: prune all the intrinsic shock edges which has samples not supported by the given set of boundaries
-  void prune_based_on_support(vcl_vector<vsol_polyline_2d_sptr>& rbs, vsol_box_2d_sptr bbox, int pixel_range_in_mask_image = 2);
+  void prune_based_on_support(std::vector<vsol_polyline_2d_sptr>& rbs, vsol_box_2d_sptr bbox, int pixel_range_in_mask_image = 2);
 
   //: compile the coarse shock graph from the pruned shock graph
   void compile_coarse_shock_graph();
@@ -112,7 +112,7 @@ public:
   //: trace from a given ishock edge to the next coarse level node while
   // compiling a list of edges that it traversed through
   dbsk2d_shock_node_sptr trace_to_target_node(dbsk2d_ishock_edge* shock_edge, 
-    vcl_list<dbsk2d_ishock_edge*>& shock_edges);
+    std::list<dbsk2d_ishock_edge*>& shock_edges);
 
   //: return cost for a certain id
   double dOC(int id){return shock_saliency_map[id].dOC;}

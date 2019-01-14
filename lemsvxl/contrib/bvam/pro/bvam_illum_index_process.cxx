@@ -31,8 +31,8 @@ bvam_illum_index_process::bvam_illum_index_process()
 
     input_data_.resize(4,brdb_value_sptr(0));
     input_types_.resize(4);
-    input_types_[0] = "vcl_string";
-    input_types_[1] = "vcl_string";
+    input_types_[0] = std::string";
+    input_types_[1] = std::string";
     input_types_[2] = "unsigned";
     input_types_[3] = "unsigned";
     //input_types_[3] = "bgeo_lvcs_sptr";
@@ -56,16 +56,16 @@ bool bvam_illum_index_process::execute()
         return false;
   
      //get the inputs
-    brdb_value_t<vcl_string>* input0 = 
-        static_cast<brdb_value_t<vcl_string>* >(input_data_[0].ptr());
+    brdb_value_t<std::string>* input0 = 
+        static_cast<brdb_value_t<std::string>* >(input_data_[0].ptr());
 
-    vcl_string map_type = input0->value();
+    std::string map_type = input0->value();
 
     //get the inputs
-    brdb_value_t<vcl_string>* input1 = 
-        static_cast<brdb_value_t<vcl_string>* >(input_data_[1].ptr());
+    brdb_value_t<std::string>* input1 = 
+        static_cast<brdb_value_t<std::string>* >(input_data_[1].ptr());
 
-    vcl_string nitf_image_path = input1->value();
+    std::string nitf_image_path = input1->value();
 
     brdb_value_t<unsigned>* input2 = 
         static_cast<brdb_value_t<unsigned>* >(input_data_[2].ptr());
@@ -85,16 +85,16 @@ bool bvam_illum_index_process::execute()
         vil_load_image_resource(nitf_image_path.c_str());
     if (!image)
     {
-        vcl_cout << "NITF image load failed in bvam_illum_index_process\n";
+        std::cout << "NITF image load failed in bvam_illum_index_process\n";
         return 0;
     }
 
-    vcl_string format = image->file_format();
-    vcl_string prefix = format.substr(0,4);
+    std::string format = image->file_format();
+    std::string prefix = format.substr(0,4);
     
     if (prefix != "nitf")
     {
-        vcl_cout << "source image is not NITF in bvam_illum_index_process\n";
+        std::cout << "source image is not NITF in bvam_illum_index_process\n";
         return 0;
     }
 
@@ -102,7 +102,7 @@ bool bvam_illum_index_process::execute()
     vil_nitf2_image *nitf_image = static_cast<vil_nitf2_image*>(image.ptr());
 
     //get NITF information
-     vcl_vector< vil_nitf2_image_subheader* > headers = nitf_image->get_image_headers();
+     std::vector< vil_nitf2_image_subheader* > headers = nitf_image->get_image_headers();
      vil_nitf2_image_subheader* hdr = headers[0];
 
      double sun_el;
@@ -111,8 +111,8 @@ bool bvam_illum_index_process::execute()
      bool success = hdr->get_sun_params(sun_el, sun_az);
 
      if(!success){
-       vcl_cerr << "error bvam_illum_index_process: failed to obtain illumination angles from nitf image"
-         << vcl_endl;
+       std::cerr << "error bvam_illum_index_process: failed to obtain illumination angles from nitf image"
+         << std::endl;
        return false;
      }
 
@@ -129,7 +129,7 @@ bool bvam_illum_index_process::execute()
 
 
 
-unsigned bvam_illum_index_process::bin_index(vcl_string map_type, double sun_el, double sun_az,
+unsigned bvam_illum_index_process::bin_index(std::string map_type, double sun_el, double sun_az,
                        unsigned num_lat, unsigned num_long)
 {
   unsigned bin_idx = 0;

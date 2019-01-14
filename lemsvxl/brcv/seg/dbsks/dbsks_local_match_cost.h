@@ -21,7 +21,7 @@
 #include <dbsksp/dbsksp_shock_node_sptr.h>
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
-#include <vcl_map.h>
+#include <map>
 #include <bgld/algo/bgld_circ_arc.h>
 #include <bgld/algo/bgld_biarc.h>
 
@@ -54,21 +54,21 @@ public:
 
   //: Convert a set of fragments for each edge to a configuration vector for the graph
   vnl_vector<double > convert_to_graph_params(
-    const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map);
+    const std::map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map);
 
   //: Convert a configuration vector to a list of twoshapelets associated with the edges
   void convert_to_twoshapelet_map(const vnl_vector<double >& x, 
-    vcl_map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map);
+    std::map<dbsksp_shock_edge_sptr, dbsksp_twoshapelet_sptr >& twoshapelet_map);
 
 
   //: Convert a configuration vector to a list of xnodes associated with the vertices
   void convert_to_xnode_map(const vnl_vector<double >& x,
-    vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
+    std::map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 
   //: Convert a configuration vector to a list of xnodes associated with the vertices
   void convert_to_circ_arc_list(const vnl_vector<double >& x,
-    vcl_vector<bgld_circ_arc >& arc_list);
+    std::vector<bgld_circ_arc >& arc_list);
 
 
   //: Cost value for each configuration of the graph

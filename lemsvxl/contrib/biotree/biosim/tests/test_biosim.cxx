@@ -4,7 +4,7 @@
 MAIN( test_biosim )
 {
   START ("Can's CT Simulation");
-  vcl_cout << "---Testing Default Constructor---" << vcl_endl;
+  std::cout << "---Testing Default Constructor---" << std::endl;
   biosim_ctsim ctsim;
   TEST_NEAR("pixel size", ctsim.pix_size(), 10, 1e-06);
   TEST_NEAR("source to origin distance", ctsim.src_org_d(), 40, 1e-06);
@@ -24,7 +24,7 @@ MAIN( test_biosim )
   TEST_NEAR("scan result", ctsim.data(128,128,180), 0.1, 1e-06);
   TEST_NEAR("scan result", ctsim.data(128,128,270), 0.04, 1e-06);
 
-  vcl_cout << "---Testing Constructor with Parameters---" << vcl_endl;
+  std::cout << "---Testing Constructor with Parameters---" << std::endl;
   double pixel_size = 10; 
   double source_origin_dist = 40;
   double source_sensor_distance = 160;
@@ -57,7 +57,7 @@ MAIN( test_biosim )
 //  ctsim2.scan("F:\\MyDocs\\Temp\\input.txt");
 //  ctsim2.write_data_2d("F:\\MyDocs\\Temp\\toy_data", "toy");
 
-//  vcl_cout << "---Testing Constructor from Dummy Scan of KK---" << vcl_endl;
+//  std::cout << "---Testing Constructor from Dummy Scan of KK---" << std::endl;
 //  xscan_dummy_scan scan(10, 40, 160, vnl_int_2(200, 200), vnl_double_2(100, 100),
 //      vgl_point_3d<double>(40.0, 0.0, 0.0), vnl_double_3(.0, .0, 1.), 
 //      2*vnl_math::pi/180, 5,  "dummy");

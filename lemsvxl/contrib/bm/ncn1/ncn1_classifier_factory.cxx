@@ -1,7 +1,7 @@
 //this is contrib/bm/ncn1_classifier_factory.cxx
 #include"ncn1_classifier_factory.h"
 
-ncn1_classifier_factory::ncn1_classifier_factory(registered_classifiers const& classifier_type, vcl_string const& xml_file)
+ncn1_classifier_factory::ncn1_classifier_factory(registered_classifiers const& classifier_type, std::string const& xml_file)
 {
     switch(classifier_type)
     {

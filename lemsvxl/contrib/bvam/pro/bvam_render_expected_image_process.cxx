@@ -24,7 +24,7 @@ bvam_render_expected_image_process::bvam_render_expected_image_process()
   input_types_.resize(4);
   input_types_[0] = "vpgl_camera_double_sptr";
   input_types_[1] = "bvam_voxel_world_sptr";
-  input_types_[2] = "vcl_string";
+  input_types_[2] = std::string";
   input_types_[3] = "unsigned";
 
   // process has 2 outputs:
@@ -52,9 +52,9 @@ bool bvam_render_expected_image_process::execute()
     static_cast<brdb_value_t<bvam_voxel_world_sptr>* >(input_data_[1].ptr());
   bvam_voxel_world_sptr world = input1->value();
   
-  brdb_value_t<vcl_string>* input2 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[2].ptr());
-  vcl_string voxel_type = input2->value();
+  brdb_value_t<std::string>* input2 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[2].ptr());
+  std::string voxel_type = input2->value();
 
   brdb_value_t<unsigned>* input3 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[3].ptr());

@@ -108,7 +108,7 @@ public:
   vnl_vector<double > alpha2_;
 
   //: Print grid information
-  vcl_ostream& print(vcl_ostream& os) const;
+  std::ostream& print(std::ostream& os) const;
 };
 
 

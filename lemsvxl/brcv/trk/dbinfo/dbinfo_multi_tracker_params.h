@@ -10,8 +10,8 @@
 //    Brown University
 //
 //-----------------------------------------------------------------------------
-#include <vcl_iosfwd.h>
-#include <vcl_iostream.h>
+#include <iosfwd>
+#include <iostream>
 class dbinfo_multi_tracker_params
 {
  public:
@@ -42,7 +42,7 @@ class dbinfo_multi_tracker_params
 
   bool SanityCheck();
   friend
-    vcl_ostream& operator<<(vcl_ostream& os,const dbinfo_multi_tracker_params& tp);
+    std::ostream& operator<<(std::ostream& os,const dbinfo_multi_tracker_params& tp);
  protected:
   void InitParams(int n_samples,
                   float search_radius,

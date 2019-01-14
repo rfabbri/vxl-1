@@ -12,7 +12,7 @@
 //
 // \Modifications 
 
-#include <vcl_string.h>
+#include <string>
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
@@ -35,7 +35,7 @@ class bvam_ekf_camera_optimize_process : public bprb_process
   //: Clone the process
   virtual bvam_ekf_camera_optimize_process* clone() const {return new bvam_ekf_camera_optimize_process(*this);}
 
-  vcl_string name(){return "BvamEkfCameraOptimize";}
+  std::string name(){return "BvamEkfCameraOptimize";}
 
   bool init() { return true; }
   bool execute();

@@ -6,12 +6,12 @@
 // 
 
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <det/det_cylinder_map.h>
 #include <det/edge_det_nonmaximum_suppression.h>
-#include <vcl_cstdlib.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdio.h>
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 #include <vnl/vnl_erf.h>
@@ -61,25 +61,25 @@ static void test_edge_det_nonmaximum_suppression()
   {
   create_2d_line_data_analytically_v2(angle, intc, cm);
   det_cylinder_map res_cm(suppress.apply(cm));
-  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
+  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
   char buffer[10];
   fname = fname + "angle=" + itoa(angle, buffer, 10) + ",c=" + itoa(intc, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   for(int j=margin+1; j<dim-(margin+1); j++)
   {
   for(int i=margin+1; i<dim-(margin+1); i++)
   {
   if(res_cm[i][j][1].strength_ > 10e-06)
   {
-  vcl_cout << i << ' ' << j << ' ';
-  vcl_cout << res_cm[i][j][1].strength_ << ' ';
-  vcl_cout << res_cm[i][j][1].location_ << '\n';
-  vcl_fprintf(fp, "%f %f\n", i+res_cm[i][j][1].location_.x(), j+res_cm[i][j][1].location_.y());
+  std::cout << i << ' ' << j << ' ';
+  std::cout << res_cm[i][j][1].strength_ << ' ';
+  std::cout << res_cm[i][j][1].location_ << '\n';
+  std::fprintf(fp, "%f %f\n", i+res_cm[i][j][1].location_.x(), j+res_cm[i][j][1].location_.y());
   }
   }
-  vcl_cout << '\n';
+  std::cout << '\n';
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
   }
   }*/
   /*
@@ -97,26 +97,26 @@ static void test_edge_det_nonmaximum_suppression()
   int centre_y = 10;
   create_2d_circle_data_analytically_v2(radius, centre_x, centre_y, cm);
   det_cylinder_map res_cm(suppress.apply(cm));
-  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
+  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
   char buffer[10];
   fname = fname + "radius=" + itoa(radius, buffer, 10) + ",center=" + itoa(centre_x, buffer, 10) + 
   "," + itoa(centre_y, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   for(int j=margin+1; j<dim-(margin+1); j++)
   {
   for(int i=margin+1; i<dim-(margin+1); i++)
   {
   if(res_cm[i][j][1].strength_ > 10e-6)
   {
-  vcl_cout << i << ' ' << j << ' ';
-  vcl_cout << res_cm[i][j][1].strength_ << ' ';
-  vcl_cout << res_cm[i][j][1].location_ << '\n';
-  vcl_fprintf(fp, "%f %f\n", i+res_cm[i][j][1].location_.x(), j+res_cm[i][j][1].location_.y());
+  std::cout << i << ' ' << j << ' ';
+  std::cout << res_cm[i][j][1].strength_ << ' ';
+  std::cout << res_cm[i][j][1].location_ << '\n';
+  std::fprintf(fp, "%f %f\n", i+res_cm[i][j][1].location_.x(), j+res_cm[i][j][1].location_.y());
   }
   }
-  vcl_cout << '\n';
+  std::cout << '\n';
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
   //     }
   //   }
   }*/
@@ -148,12 +148,12 @@ static void test_edge_det_nonmaximum_suppression()
   }
   }
 
-  vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
+  std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
   char buffer[10];
   fname = fname + "theta=" + itoa(theta, buffer, 10) +
   ",phi=" + itoa(phi, buffer, 10) +
   ",d=" + itoa(intd, buffer, 10) + ".txt";
-  FILE *fp = vcl_fopen(fname.data(),"w");
+  FILE *fp = std::fopen(fname.data(),"w");
   for(int k=(margin+1); k<dim-(margin+1); k++)
   {
   for(int j=(margin+1); j<dim-(margin+1); j++)
@@ -162,16 +162,16 @@ static void test_edge_det_nonmaximum_suppression()
   {
   if(res_cm[i][j][k].strength_ > maximum/2)
   {
-  vcl_cout << i << ' ' << j << ' ' << k << ' ';
-  vcl_cout << res_cm[i][j][k].strength_ << ' ';
-  vcl_cout << res_cm[i][j][k].location_ << '\n';
-  vcl_fprintf(fp, "%f %f %f\n", i+res_cm[i][j][k].location_.x(), j+res_cm[i][j][k].location_.y(), k+res_cm[i][j][k].location_.z());
+  std::cout << i << ' ' << j << ' ' << k << ' ';
+  std::cout << res_cm[i][j][k].strength_ << ' ';
+  std::cout << res_cm[i][j][k].location_ << '\n';
+  std::fprintf(fp, "%f %f %f\n", i+res_cm[i][j][k].location_.x(), j+res_cm[i][j][k].location_.y(), k+res_cm[i][j][k].location_.z());
   }
   }
   }
-  vcl_cout << '\n';
+  std::cout << '\n';
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
   }
   }
   }*/
@@ -201,11 +201,11 @@ static void test_edge_det_nonmaximum_suppression()
           }
         }
 /*
-        vcl_string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
+        std::string fname = "F:\\MyDocs\\projects\\BioTree\\daily_news_2006\\jan29\\subpixels_";
         char buffer[10];
         fname = fname + "radius=" + itoa(radius, buffer, 10) + ",theta=" + itoa(theta, buffer, 10) + 
           ",phi=" + itoa(phi, buffer, 10) + ".txt";
-        FILE *fp = vcl_fopen(fname.data(),"w");
+        FILE *fp = std::fopen(fname.data(),"w");
         for(int k=(margin+1); k<dim-(margin+1); k++)
         {
           for(int j=(margin+1); j<dim-(margin+1); j++)
@@ -214,16 +214,16 @@ static void test_edge_det_nonmaximum_suppression()
             {
               if(res_cm[i][j][k].strength_ > maximum/2)
               {
-                vcl_cout << i << ' ' << j << ' ' << k << ' ';
-                vcl_cout << res_cm[i][j][k].strength_ << ' ';
-                vcl_cout << res_cm[i][j][k].location_ << '\n';
-                vcl_fprintf(fp, "%f %f %f\n", i+res_cm[i][j][k].location_.x(), j+res_cm[i][j][k].location_.y(),  k+res_cm[i][j][k].location_.z());
+                std::cout << i << ' ' << j << ' ' << k << ' ';
+                std::cout << res_cm[i][j][k].strength_ << ' ';
+                std::cout << res_cm[i][j][k].location_ << '\n';
+                std::fprintf(fp, "%f %f %f\n", i+res_cm[i][j][k].location_.x(), j+res_cm[i][j][k].location_.y(),  k+res_cm[i][j][k].location_.z());
               }
             }
-            vcl_cout << '\n';
+            std::cout << '\n';
           }
         }
-        vcl_fclose(fp);
+        std::fclose(fp);
         */
       }
     }

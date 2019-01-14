@@ -11,7 +11,7 @@
 #include <mw/vis/mw_correspond_point_tool_basic.h>
 #include <bmcsd/bmcsd_discrete_corresp.h>
 
-#include <vcl_map.h>
+#include <map>
 
 class bgld_eulerspiral;
 
@@ -64,7 +64,7 @@ public:
   virtual ~mw_correspond_point_tool() {}
   
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events.
   virtual bool handle( const vgui_event & e, 
@@ -81,58 +81,58 @@ protected:
   vsol_line_2d_sptr selected_edgel_corresp_;
   vgui_style_sptr corresp_edges_style_;
   vgui_style_sptr wrongly_matched_edgels_style_;
-  vcl_vector<vgui_style_sptr> best_match_style_; 
-  vcl_string best_match_layer_; 
-  vcl_string corresp_edges_layer_; 
+  std::vector<vgui_style_sptr> best_match_style_; 
+  std::string best_match_layer_; 
+  std::string corresp_edges_layer_; 
 
-  vcl_list<bgui_vsol_soview2D_line_seg *> correspondents_soview_;
-  vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator > correspondents_idx_;
-  vcl_vector<vil_image_resource_sptr> images_;
+  std::list<bgui_vsol_soview2D_line_seg *> correspondents_soview_;
+  std::map<unsigned, std::list<bgui_vsol_soview2D_line_seg *>::iterator > correspondents_idx_;
+  std::vector<vil_image_resource_sptr> images_;
   bool lock_corresp_query_;
 
   unsigned p0_query_idx_;
   bgui_vsol_soview2D_line_seg *p0_query_soview_; //:< query-selected point in left view
   vgui_style_sptr p0_query_style_; 
-  vcl_string p0_query_layer_; 
+  std::string p0_query_layer_; 
 
   unsigned p1_query_idx_;
   bgui_vsol_soview2D_line_seg *p1_query_soview_; //:< query-selected point in left view
   vgui_style_sptr p1_query_style_; 
   //: if selected point in left view is a candidate, heres an iterator for it in the
   // correspondences list:
-  vcl_list<bmcsd_attributed_object>::iterator p1_query_itr_; 
+  std::list<bmcsd_attributed_object>::iterator p1_query_itr_; 
   bool p1_query_is_candidate_;
-  vcl_string p1_query_layer_; 
+  std::string p1_query_layer_; 
 
-  vcl_vector<bgui_vsol_soview2D_line_seg *> p0_corresp_soview_;
+  std::vector<bgui_vsol_soview2D_line_seg *> p0_corresp_soview_;
 
   // For manipulating ground-truth /  synthetic data
   bool synthetic_;
   bool synthetic_olympus_;
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  std::vector<std::vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
   bmcsd_discrete_corresp gt_; //:< ground-truth corresp.
-  vcl_vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
+  std::vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
   vgui_style_sptr es_style_;
-  vcl_string es_layer_; 
-  vcl_string srm_allcrvs_layer_; 
+  std::string es_layer_; 
+  std::string srm_allcrvs_layer_; 
   double srm_angle_;
   bdifd_camera srm_cam_;
   vnl_double_3x3 srm_K_;
   bdifd_3rd_order_point_3d srm_Prec_;
   bool  srm_display_full_; 
   bool  srm_display_es_; 
-  vcl_vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
+  std::vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
   vgui_style_sptr srm_allcrvs_style_;
 
-  vcl_vector<bgui_vsol_soview2D_polyline *> es_so_;
-  vcl_vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
+  std::vector<bgui_vsol_soview2D_polyline *> es_so_;
+  std::vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
 
-  vcl_vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
+  std::vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
 
   bgld_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
   vgui_style_sptr es_style_gt_;
-  vcl_string es_layer_gt_;
+  std::string es_layer_gt_;
   bgui_vsol_soview2D_polyline * es_so_gt_;
 
 

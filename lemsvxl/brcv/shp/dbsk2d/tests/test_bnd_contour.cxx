@@ -21,14 +21,14 @@
 void test_bnd_contour_functions()
 {
 
-  vcl_cout << "This is test_bnd_contour_functions()" << vcl_endl;
+  std::cout << "This is test_bnd_contour_functions()" << std::endl;
   
   // input points
   double x[] = { 0 , 1, 2, 3};
   double y[] = { 0 , 0, 0, 2};
 
   // construct vertices from these points
-  vcl_vector<dbsk2d_bnd_vertex_sptr > vertices;
+  std::vector<dbsk2d_bnd_vertex_sptr > vertices;
   for (unsigned int i = 0; i < 4; ++i)
   {
     dbsk2d_ishock_bpoint* bp = new dbsk2d_ishock_bpoint(x[i], y[i]);
@@ -36,7 +36,7 @@ void test_bnd_contour_functions()
   }
 
   // contruct list of edges
-  vcl_vector<dbsk2d_bnd_edge_sptr > edges;
+  std::vector<dbsk2d_bnd_edge_sptr > edges;
   for (unsigned int i = 0; i < 3; ++i)
   {
     dbsk2d_ishock_bpoint* bp1 = vertices[i]->bpoint();
@@ -78,36 +78,36 @@ void test_bnd_contour_functions()
   dbsk2d_bnd_edge_sptr newline2 = 
     dbsk2d_bnd_utils::new_line_between(newv, vertices[2]);
   
-  vcl_vector<dbsk2d_bnd_edge_sptr > newlines;
+  std::vector<dbsk2d_bnd_edge_sptr > newlines;
   newlines.push_back(newline1);
   newlines.push_back(newline2);
 
-  vcl_vector<signed char > directions;
+  std::vector<signed char > directions;
   directions.push_back(1);
   directions.push_back(1);
 
 
-  vcl_cout << "Before replacing edge[0] and edge[1] " << vcl_endl;
+  std::cout << "Before replacing edge[0] and edge[1] " << std::endl;
   for (int i = 0; i < contour->num_edges(); ++i)
   {
-    vcl_cout << "Edge ( " << i << " )  Dir = " << contour->dir(i) << vcl_endl;
+    std::cout << "Edge ( " << i << " )  Dir = " << contour->dir(i) << std::endl;
     dbsk2d_bnd_edge_sptr edge = contour->bnd_edge(i);
-    vcl_cout << "v1 = " << edge->bnd_v1()->point() << vcl_endl;
-    vcl_cout << "v2 = " << edge->bnd_v2()->point() << vcl_endl;
+    std::cout << "v1 = " << edge->bnd_v1()->point() << std::endl;
+    std::cout << "v2 = " << edge->bnd_v2()->point() << std::endl;
   }
 
   bool success = contour->replace_edges(newlines, directions, 
     edges[0], edges[1]);
 
-  vcl_cout << "\nAfter replacing edge[0] and edge[1] " << vcl_endl;
+  std::cout << "\nAfter replacing edge[0] and edge[1] " << std::endl;
   
-  vcl_cout << "Before replacing edge[0] and edge[1] " << vcl_endl;
+  std::cout << "Before replacing edge[0] and edge[1] " << std::endl;
   for (int i = 0; i < contour->num_edges(); ++i)
   {
-    vcl_cout << "Edge ( " << i << " )   Dir = " << contour->dir(i) << vcl_endl;
+    std::cout << "Edge ( " << i << " )   Dir = " << contour->dir(i) << std::endl;
     dbsk2d_bnd_edge_sptr edge = contour->bnd_edge(i);
-    vcl_cout << "v1 = " << edge->bnd_v1()->point() << vcl_endl;
-    vcl_cout << "v2 = " << edge->bnd_v2()->point() << vcl_endl;
+    std::cout << "v1 = " << edge->bnd_v1()->point() << std::endl;
+    std::cout << "v2 = " << edge->bnd_v2()->point() << std::endl;
   }
 
   // test the order of vertices after adding

@@ -1,7 +1,7 @@
 
 #include <slice/sliceFileManager.h>
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
+#include <ctime>
+#include <cstdlib>
 #include <vil/vil_save.h>
 #include <vil/vil_math.h>
 #include <vil/vil_convert.h>
@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
   if(argc != 3)
   {
-    vcl_cout << "Usage: " << argv[0] << " [vil3d file name] [output prefix ]\n ";
+    std::cout << "Usage: " << argv[0] << " [vil3d file name] [output prefix ]\n ";
     exit(-1);
   }
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
   for (int i = 0; i < img.nk(); i++)
   {
-          vcl_string num; vcl_stringstream s; s << i ; s >> num;
+          std::string num; std::stringstream s; s << i ; s >> num;
           if(i < 10) num = "0" + num; 
           if(i < 100) num = "0" + num; 
           num = argv[2] + num + ".tif";

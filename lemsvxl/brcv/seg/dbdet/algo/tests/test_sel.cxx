@@ -4,12 +4,12 @@
 
 #include <dbdet/sel/dbdet_curve_model.h>
 #include <dbdet/algo/dbdet_sel.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_vector.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
+#include <vector>
+#include <cstdlib>
+#include <string>
 
 //: Test the symbolic edge linker methods
 MAIN( test_sel )
@@ -39,8 +39,8 @@ MAIN( test_sel )
   double gamma_range_gt[] = {-0.5942, 1.7910, 0.5942, -1.7910};
 
   for (unsigned i=0; i<es1.cv_bundle[0].size(); i++){
-    test_passed = test_passed && vcl_fabs(es1.cv_bundle[0][i].x() - k_range_gt[i])<tolerance 
-                              && vcl_fabs(es1.cv_bundle[0][i].y() - gamma_range_gt[i])<tolerance;
+    test_passed = test_passed && std::fabs(es1.cv_bundle[0][i].x() - k_range_gt[i])<tolerance 
+                              && std::fabs(es1.cv_bundle[0][i].y() - gamma_range_gt[i])<tolerance;
   }
   TEST("Compute curve bundle from(eA-eB) at eA", test_passed, true);
 
@@ -48,8 +48,8 @@ MAIN( test_sel )
   double gamma_range_gt2[] = {0.5941, 1.7910, -0.5941, -1.7910};
 
   for (unsigned i=0; i<es2.cv_bundle[0].size(); i++){
-    test_passed = test_passed && vcl_fabs(es2.cv_bundle[0][i].x() - k_range_gt2[i])<tolerance 
-                              && vcl_fabs(es2.cv_bundle[0][i].y() - gamma_range_gt2[i])<tolerance;
+    test_passed = test_passed && std::fabs(es2.cv_bundle[0][i].x() - k_range_gt2[i])<tolerance 
+                              && std::fabs(es2.cv_bundle[0][i].y() - gamma_range_gt2[i])<tolerance;
   }
   TEST("Compute curve bundle from(eA-eB) at eB", test_passed, true);
 
@@ -58,8 +58,8 @@ MAIN( test_sel )
   double gamma_range_gt3[] = {-0.1492, 0.2990, 0.1492, -0.2990};
 
   for (unsigned i=0; i<es3.cv_bundle[0].size(); i++){
-    test_passed = test_passed && vcl_fabs(es3.cv_bundle[0][i].x() - k_range_gt3[i])<tolerance 
-                              && vcl_fabs(es3.cv_bundle[0][i].y() - gamma_range_gt3[i])<tolerance;
+    test_passed = test_passed && std::fabs(es3.cv_bundle[0][i].x() - k_range_gt3[i])<tolerance 
+                              && std::fabs(es3.cv_bundle[0][i].y() - gamma_range_gt3[i])<tolerance;
   }
   TEST("Compute curve bundle from a pair of edgels(eA-eC)", test_passed, true);
 
@@ -99,8 +99,8 @@ MAIN( test_sel )
   //double k_range_gt4[]     = { 0.0008,  0.1994,  0.0008, -0.0000, -0.0008, -0.1994, -0.0008,  0.0000};
   //double gamma_range_gt4[] = { 0.5942, -0.0000, -0.5941, -0.5953, -0.5942,  0.0000,  0.5941,  0.5953};
   //for (unsigned i=0; i<int_cb[0].size(); i++){
-  //  test_passed = test_passed && vcl_fabs(int_cb[0][i].x() - k_range_gt4[i])<tolerance 
-  //                            && vcl_fabs(int_cb[0][i].y() - gamma_range_gt4[i])<tolerance;
+  //  test_passed = test_passed && std::fabs(int_cb[0][i].x() - k_range_gt4[i])<tolerance 
+  //                            && std::fabs(int_cb[0][i].y() - gamma_range_gt4[i])<tolerance;
   //}
   //TEST("Testing curve bundle intersection between eA-eB and eB-eC at eB", test_passed, true);
 

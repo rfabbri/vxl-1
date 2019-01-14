@@ -21,8 +21,8 @@
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 
 #include <vnl/vnl_cost_function.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 
 
@@ -88,17 +88,17 @@ protected:
 
 
   // Intermediate variables ----------------------------------------------------
-  vcl_vector<dbsksp_xshock_node_sptr > active_nodes_; //set
-  vcl_vector<dbsksp_xshock_edge_sptr > active_edges_; //set
+  std::vector<dbsksp_xshock_node_sptr > active_nodes_; //set
+  std::vector<dbsksp_xshock_edge_sptr > active_edges_; //set
 
   // cache variables for fast access
-  vcl_vector<double* > x_ptr_;                        //set
+  std::vector<double* > x_ptr_;                        //set
   
   //// correspondence contributing to this cost function
-  //vcl_vector<vcl_vector<bool > > active_corr_;       //set
+  //std::vector<std::vector<bool > > active_corr_;       //set
   
   //: costs that are not affected by node
-  vcl_vector<float > fixed_deform_cost_; //set
+  std::vector<float > fixed_deform_cost_; //set
 };
 
 

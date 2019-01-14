@@ -15,11 +15,11 @@ unsigned long int biob_explicit_worldpt_roster::num_points() const{
   return points_.size();
 }
 
-void biob_explicit_worldpt_roster::x_write_this(vcl_ostream &os) {
+void biob_explicit_worldpt_roster::x_write_this(std::ostream &os) {
   vsl_basic_xml_element elm("biob_explicit_worldpt_roster");
   elm.add_attribute("num_points", (int) num_points());
   elm.x_write_open(os);
-  vcl_vector<worldpt> the_points = points();
+  std::vector<worldpt> the_points = points();
   for (unsigned long int i=0; i < num_points(); i++) {
     x_write(os, the_points[i], "biob_explicit_worldpt_roster_points");
   }

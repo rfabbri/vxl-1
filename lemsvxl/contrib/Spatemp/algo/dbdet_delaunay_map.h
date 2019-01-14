@@ -2,7 +2,7 @@
 #ifndef dbdet_delaunay_map_h
 #define dbdet_delaunay_map_h
 
-#include <vcl_map.h>
+#include <map>
 
 #include <Spatemp/algo/dbdet_temporal_model.h>
 #include <Spatemp/algo/dbdet_temporal_bundle.h>
@@ -58,27 +58,27 @@ protected:
 class dbdet_delaunay_map{
 
 public:
-    dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges,vcl_vector<bool> is_included);
+    dbdet_delaunay_map(std::vector<dbdet_edgel*> edges,std::vector<bool> is_included);
  
-    dbdet_delaunay_map(vcl_vector<dbdet_edgel*> edges);
+    dbdet_delaunay_map(std::vector<dbdet_edgel*> edges);
     ~dbdet_delaunay_map(){}
 
-    vcl_vector<dbdet_delaunay_edge> delaunay_edges_;
+    std::vector<dbdet_delaunay_edge> delaunay_edges_;
 
 
     void threshold_delaunay_edges(double t);
-    void compute_delaunay(vcl_vector<dbdet_edgel*> edges, vcl_vector<bool> ons);
+    void compute_delaunay(std::vector<dbdet_edgel*> edges, std::vector<bool> ons);
     void recompute_delaunay();
-    vcl_vector<int> get_neighbors(int id){return neighbor_map_[id];}
-    vcl_vector< vcl_vector<int> > neighbor_map_;
-    vcl_vector< vcl_vector<int> > triangle_map_;
-    vcl_vector<dbdet_delaunay_triangle> triangles_;
+    std::vector<int> get_neighbors(int id){return neighbor_map_[id];}
+    std::vector< std::vector<int> > neighbor_map_;
+    std::vector< std::vector<int> > triangle_map_;
+    std::vector<dbdet_delaunay_triangle> triangles_;
 
 
 protected:
 
-    vcl_vector<dbdet_edgel*> edges_;
-    vcl_vector<bool> is_included_;
+    std::vector<dbdet_edgel*> edges_;
+    std::vector<bool> is_included_;
 };
 
 

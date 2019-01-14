@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------------
 #include <sdet/sdet_harris_detector_params.h>
 #include <gevd/gevd_param_mixin.h>
-#include <vcl_iosfwd.h>
+#include <iosfwd>
 
 class brct_volume_processor_params : public gevd_param_mixin
 {
@@ -33,7 +33,7 @@ class brct_volume_processor_params : public gevd_param_mixin
 
   bool SanityCheck();
   friend
-    vcl_ostream& operator<<(vcl_ostream&, const brct_volume_processor_params&);
+    std::ostream& operator<<(std::ostream&, const brct_volume_processor_params&);
  protected:
   void InitParams(float xmin,
                   float xmax,

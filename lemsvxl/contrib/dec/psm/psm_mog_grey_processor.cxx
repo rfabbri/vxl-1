@@ -9,7 +9,7 @@
 #include <bsta/bsta_gaussian_indep.h>
 
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Return probability density of observing pixel values
 float psm_mog_grey_processor::prob_density(apm_datatype const& appear, obs_datatype const& obs)
@@ -105,7 +105,7 @@ void psm_mog_grey_processor::init_appearance(psm_apm_traits<PSM_APM_MOG_GREY>::o
 }
 
 
-void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
+void psm_mog_grey_processor::compute_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
 {
   static const unsigned int nmodes = psm_apm_traits<PSM_APM_MOG_GREY>::n_gaussian_modes_;
   const float min_var = min_sigma*min_sigma;
@@ -125,13 +125,13 @@ void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_AP
     return;
   }
   // use EM to refine estimate until convergence.
-  vcl_vector<vcl_vector<float> > mode_probs(nobs);
+  std::vector<std::vector<float> > mode_probs(nobs);
   for (unsigned int n=0; n<nobs; ++n) {
     for (unsigned int m=0; m<nmodes; ++m) {
       mode_probs[n].push_back(0.0f);
     }
   }
-  vcl_vector<float> mode_weight_sum(nmodes,0.0f);
+  std::vector<float> mode_weight_sum(nmodes,0.0f);
 
   // initialize parameters
   for (unsigned int m=0; m<nmodes; ++m) {
@@ -151,7 +151,7 @@ void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_AP
     for (unsigned int n=0; n<nobs; ++n) {
       // for each observation, assign probabilities to each mode of appearance model (and to a "previous cell")
       float total_prob = 0.0f;
-      vcl_vector<float> new_mode_probs(nmodes);
+      std::vector<float> new_mode_probs(nmodes);
       for (unsigned int m=0; m<nmodes; ++m) {
         // compute probability that nth data point was produced by mth mode
         const float new_mode_prob = vis[n] * model.distribution(m).prob_density(obs[n]) * model.weight(m);
@@ -164,7 +164,7 @@ void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_AP
       if (total_prob > 1e-6) {
         for (unsigned int m=0; m<nmodes; ++m) {
           new_mode_probs[m] /= total_prob;
-          const float weight_change = vcl_fabs(new_mode_probs[m] - mode_probs[n][m]);
+          const float weight_change = std::fabs(new_mode_probs[m] - mode_probs[n][m]);
           if (weight_change > max_weight_change) {
             max_weight_change = weight_change;
           }
@@ -183,7 +183,7 @@ void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_AP
     // update the mode parameters
     for (unsigned int m=0; m<nmodes; ++m) {
       mode_weight_sum[m] = 0.0f;
-      vcl_vector<float> obs_weights(obs.size());
+      std::vector<float> obs_weights(obs.size());
       for (unsigned int n=0; n<obs.size(); ++n) {
         obs_weights[n] = mode_probs[n][m];
         mode_weight_sum[m] += obs_weights[n];
@@ -247,7 +247,7 @@ void psm_mog_grey_processor::compute_appearance(vcl_vector<psm_apm_traits<PSM_AP
 }
 
 
-void psm_mog_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
+void psm_mog_grey_processor::update_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
 {
   static const unsigned int nmodes = psm_apm_traits<PSM_APM_MOG_GREY>::n_gaussian_modes_;
   const float min_var = min_sigma*min_sigma;
@@ -282,7 +282,7 @@ void psm_mog_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM
     float max_parameter_change = 0.0f; // to determine if we have converged
     // EXPECTATION
     // compute probabilities of the data points belonging to each mode
-    vcl_vector<vcl_vector<float> > mode_probs(obs.size());
+    std::vector<std::vector<float> > mode_probs(obs.size());
     for (unsigned int n=0; n<obs.size(); ++n) {
       float total_prob = 0.0f;
       for (unsigned int m=0; m<nmodes; ++m) {
@@ -300,11 +300,11 @@ void psm_mog_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM
     // MAXIMIZATION
     // computed the weighted means and variances for each mode based on the probabilities
     float total_weight_sum = 0.0f;
-    vcl_vector<float> mode_weight_sum(nmodes,0.0f);
+    std::vector<float> mode_weight_sum(nmodes,0.0f);
     // update the mode parameters
     for (unsigned int m=0; m<nmodes; ++m) {
       mode_weight_sum[m] = 0.0f;
-      vcl_vector<float> post_weights(obs.size());
+      std::vector<float> post_weights(obs.size());
       for (unsigned int n=0; n<obs.size(); ++n) {
         post_weights[n] = mode_probs[n][m] * weights[n];
         mode_weight_sum[m] += post_weights[n];
@@ -345,7 +345,7 @@ void psm_mog_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM
     }
     // check for convergence
     if (max_parameter_change <= max_converged_parameter_change) {
-      //vcl_cout << "converged after " << i << " iterations." << vcl_endl;
+      //std::cout << "converged after " << i << " iterations." << std::endl;
       break;
     }
   }
@@ -358,7 +358,7 @@ void psm_mog_grey_processor::update_appearance(vcl_vector<psm_apm_traits<PSM_APM
 
 
 
-void psm_mog_grey_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
+void psm_mog_grey_processor::finalize_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::apm_datatype &model, float min_sigma)
 {
   static const unsigned int nmodes = psm_apm_traits<PSM_APM_MOG_GREY>::n_gaussian_modes_;
   const float big_sigma = (float)vnl_math::sqrt1_2; // maximum possible std. dev for set of samples drawn from [0 1]
@@ -366,7 +366,7 @@ void psm_mog_grey_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_A
 
   const unsigned int nobs = obs.size();
   float expected_nobs = 0.0f;
-  vcl_vector<float>::const_iterator wit = weights.begin();
+  std::vector<float>::const_iterator wit = weights.begin();
   for (; wit != weights.end(); ++wit) {
     expected_nobs += *wit;
   }
@@ -386,7 +386,7 @@ void psm_mog_grey_processor::finalize_appearance(vcl_vector<psm_apm_traits<PSM_A
 
 
 
-void psm_mog_grey_processor::compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype &mean, float &variance)
+void psm_mog_grey_processor::compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_GREY>::obs_datatype &mean, float &variance)
 {
   const unsigned int nobs = obs.size();
   double w_sum = 0.0;
@@ -421,8 +421,8 @@ float psm_mog_grey_processor::sigma_norm_factor(float nobs)
   }
 
   // linearly interpolate between integer values
-  float nobs_floor = vcl_floor(nobs);
-  float nobs_ceil = vcl_ceil(nobs);
+  float nobs_floor = std::floor(nobs);
+  float nobs_ceil = std::ceil(nobs);
   float floor_weight = nobs_ceil - nobs;
   float norm_factor = (sigma_norm_factor((unsigned int)nobs_floor) * floor_weight) + (sigma_norm_factor((unsigned int)nobs_ceil) * (1.0f - floor_weight));
 

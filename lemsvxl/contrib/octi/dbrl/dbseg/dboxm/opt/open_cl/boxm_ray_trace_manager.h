@@ -1,9 +1,9 @@
 #ifndef boxm_ray_trace_manager_h_
 #define boxm_ray_trace_manager_h_
 
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <string>
+#include <iostream>
+#include <vector>
 #include "bcl_cl.h"
 #include <vnl/vnl_vector_fixed.h>
 #include <vbl/vbl_array_2d.h>
@@ -18,14 +18,14 @@
 template <class T>
 class boxm_ray_trace_manager : public opencl_manager<boxm_ray_trace_manager<T> >
 {
-  vcl_string prog_;
+  std::string prog_;
   boct_tree<short, T >* tree_;
 
   cl_command_queue command_queue_;
   cl_program program_;
   cl_kernel kernel_;
-  vcl_vector<vnl_vector_fixed<int, 4> > cell_input_;
-  vcl_vector<vnl_vector_fixed<float, 16>  > data_input_;
+  std::vector<vnl_vector_fixed<int, 4> > cell_input_;
+  std::vector<vnl_vector_fixed<float, 16>  > data_input_;
   vnl_vector_fixed<float, 4>  ray_origin_input_;
   vbl_array_2d<vnl_vector_fixed<float, 3> > ray_dir_input_;
   unsigned ni_;
@@ -93,21 +93,21 @@ class boxm_ray_trace_manager : public opencl_manager<boxm_ray_trace_manager<T> >
   cl_mem ray_dir_buf() {return ray_dir_buf_;}
   cl_mem camera_buf() {return camera_buf_;}
   cl_mem imgdims_buf() {return imgdims_buf_;}
-  vcl_size_t cell_array_size() const {return cell_input_.size();}
-  vcl_size_t cell_data_array_size() const {return data_input_.size();}
+  std::size_t cell_array_size() const {return cell_input_.size();}
+  std::size_t cell_data_array_size() const {return data_input_.size();}
 
-  vcl_size_t tree_result_size() const {return 2*cell_input_.size();}
+  std::size_t tree_result_size() const {return 2*cell_input_.size();}
   cl_int* tree_results() {return tree_results_;}
   void clear_tree_results();
   void set_dims(int ni,int nj){ni_=ni;nj_=nj;imgdims_[0]=ni_;imgdims_[1]=nj_;imgdims_[2]=0;imgdims_[3]=0;}
-  vcl_size_t n_rays() const {return ni_*nj_;}
-  vcl_size_t ray_rows() const {return ni_;}
-  vcl_size_t ray_cols() const {return nj_;}
+  std::size_t n_rays() const {return ni_*nj_;}
+  std::size_t ray_rows() const {return ni_;}
+  std::size_t ray_cols() const {return nj_;}
   cl_float* ray_results() {return ray_results_;}
   void clear_ray_results();
-  vcl_size_t n_ray_groups();
+  std::size_t n_ray_groups();
 
-  vcl_string program_source() const {return prog_;}
+  std::string program_source() const {return prog_;}
   cl_program program() {return program_;}
 
   void print_tree_input();
@@ -132,7 +132,7 @@ class boxm_ray_trace_manager : public opencl_manager<boxm_ray_trace_manager<T> >
 
   int build_kernel_program();
 
-  int create_kernel(vcl_string const& name);
+  int create_kernel(std::string const& name);
 
   cl_kernel kernel() {return kernel_;}
 
@@ -146,11 +146,11 @@ class boxm_ray_trace_manager : public opencl_manager<boxm_ray_trace_manager<T> >
 
   int cleanup_ray_processing();
 
-  bool load_kernel_source(vcl_string const& path);
-  bool append_process_kernels(vcl_string const& path);
-  bool write_program(vcl_string const& path);
-  bool load_tree(vcl_string const& path);
-  bool write_tree(vcl_string const& path);
+  bool load_kernel_source(std::string const& path);
+  bool append_process_kernels(std::string const& path);
+  bool write_program(std::string const& path);
+  bool load_tree(std::string const& path);
+  bool write_tree(std::string const& path);
   };
 
 #endif // boxm_ray_trace_manager_h_

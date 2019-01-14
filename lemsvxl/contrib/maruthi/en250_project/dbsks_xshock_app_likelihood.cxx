@@ -13,11 +13,11 @@
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_polygon.h>
 #include <vnl/vnl_math.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vgl/vgl_polygon_scan_iterator.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstring.h>
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <vnl/vnl_numeric_traits.h>
 
 // ============================================================================
@@ -26,7 +26,7 @@
 
 
 dbsks_xshock_app_likelihood::
-dbsks_xshock_app_likelihood(const vcl_string& queryImage)
+dbsks_xshock_app_likelihood(const std::string& queryImage)
     :dbsks_xshock_likelihood()
 {
 
@@ -35,7 +35,7 @@ dbsks_xshock_app_likelihood(const vcl_string& queryImage)
     bool status=false;
 
     // Load the model shock graph
-    vcl_string filePath("/home/maruthi/Desktop/en250proj/cartilageModel.xml");   
+    std::string filePath("/home/maruthi/Desktop/en250proj/cartilageModel.xml");   
     dbsksp_xshock_graph_sptr xg(0);
     x_read(filePath.c_str(), xg);
 
@@ -44,7 +44,7 @@ dbsks_xshock_app_likelihood(const vcl_string& queryImage)
     xg->compute_vertex_depths(2);
 
     // Load the training image
-    vcl_string imagePath
+    std::string imagePath
         ("/home/maruthi/Desktop/en250proj/SP971_3T_noscrew_023.png");
     vil_image_view<vxl_byte> imageView=vil_load(imagePath.c_str());
 
@@ -88,14 +88,14 @@ loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag)
 {
 
     //For this edge_id find the appearanceModel
-    vcl_vector<double> modelApp = appearance_model_[edge_id];
+    std::vector<double> modelApp = appearance_model_[edge_id];
 
     // For this fragment conver to a poly and then
     // scan polygon to computer descriptor
     bool status = false;
 
     vgl_polygon<double> queryFragment=convert_frag_to_poly(status,xfrag);
-    vcl_vector<double>  queryApp;
+    std::vector<double>  queryApp;
   
     if(status)
     {
@@ -169,11 +169,11 @@ f_whole_contour(unsigned edge_id,
 //: Likelihood of a xshock graph
 double dbsks_xshock_app_likelihood::
 loglike(const dbsksp_xshock_graph_sptr& xgraph, 
-  const vcl_vector<unsigned >& ignored_edges,bool verbose)
+  const std::vector<unsigned >& ignored_edges,bool verbose)
 {
 
     // Create a vector of apperance diagrams for each fragment
-    vcl_vector<double> fragAppearance;
+    std::vector<double> fragAppearance;
 
     // Bool compute cost
     bool flag=true;
@@ -186,7 +186,7 @@ loglike(const dbsksp_xshock_graph_sptr& xgraph,
         //For this edge_id find the appearanceModel
         dbsksp_xshock_edge_sptr xe = *eit;
         unsigned eid = xe->id();
-        vcl_vector<double> modelApp = appearance_model_[eid];
+        std::vector<double> modelApp = appearance_model_[eid];
       
         bool status=false;
 
@@ -234,12 +234,12 @@ loglike(const dbsksp_xshock_graph_sptr& xgraph,
 //: Likelihood of a xshock graph using whole contour matching
 double dbsks_xshock_app_likelihood::
 f_whole_contour(const dbsksp_xshock_graph_sptr& xgraph, 
-                const vcl_vector<unsigned >& ignored_edges, bool verbose)
+                const std::vector<unsigned >& ignored_edges, bool verbose)
 {
 
     double cost = loglike(xgraph,ignored_edges,verbose);
 
-    vcl_cout<<"cost of whole_contour with graph: "<<cost <<vcl_endl;
+    std::cout<<"cost of whole_contour with graph: "<<cost <<std::endl;
     return cost;
 
 }
@@ -274,7 +274,7 @@ convert_edge_to_poly(bool& status, dbsksp_xshock_edge_sptr shockEdge)
 
     //Create a polygon out of the fragment
     int num_pts_per_side = vnl_math_max((50 - 2)/2, 2);
-    vcl_vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_point_2d<double > > pts;
 
     // left boundary
     dbgl_biarc left_biarc;
@@ -295,7 +295,7 @@ convert_edge_to_poly(bool& status, dbsksp_xshock_edge_sptr shockEdge)
     else
     {
         status=true;
-        vcl_cerr<<"Left Biarc could not be sampled properly"<<vcl_endl;
+        std::cerr<<"Left Biarc could not be sampled properly"<<std::endl;
     }
 
     // end shock-point
@@ -319,7 +319,7 @@ convert_edge_to_poly(bool& status, dbsksp_xshock_edge_sptr shockEdge)
     else
     {
         status = true;
-        vcl_cerr<<"Right Biarc could not be sampled properly"<<vcl_endl;
+        std::cerr<<"Right Biarc could not be sampled properly"<<std::endl;
     }
 
     pts.push_back(xfrag.start().pt());
@@ -338,7 +338,7 @@ convert_frag_to_poly(bool& status,const dbsksp_xshock_fragment& xfrag)
     status = false;
     //Create a polygon out of the fragment
     int num_pts_per_side = vnl_math_max((50 - 2)/2, 2);
-    vcl_vector<vgl_point_2d<double > > pts;
+    std::vector<vgl_point_2d<double > > pts;
 
     // left boundary
     dbgl_biarc left_biarc;
@@ -359,7 +359,7 @@ convert_frag_to_poly(bool& status,const dbsksp_xshock_fragment& xfrag)
     else
     {
         status=true;
-        vcl_cerr<<"Left Biarc could not be sampled properly"<<vcl_endl;
+        std::cerr<<"Left Biarc could not be sampled properly"<<std::endl;
     }
 
     // end shock-point
@@ -383,7 +383,7 @@ convert_frag_to_poly(bool& status,const dbsksp_xshock_fragment& xfrag)
     else
     {
         status = true;
-        vcl_cerr<<"Right Biarc could not be sampled properly"<<vcl_endl;
+        std::cerr<<"Right Biarc could not be sampled properly"<<std::endl;
     }
 
     pts.push_back(xfrag.start().pt());
@@ -423,7 +423,7 @@ static int decreasing_compare(const void *x1, const void *x2)
 // -----------------------------------------------------------------------------
 // Compute variant on earth mover distance
 double dbsks_xshock_app_likelihood::emd
-(vcl_vector<double>& model, vcl_vector<double>& query)
+(std::vector<double>& model, std::vector<double>& query)
 {
     // take from bdgl_region_algs.cxx
     const unsigned int min_npts = 5;
@@ -447,8 +447,8 @@ double dbsks_xshock_app_likelihood::emd
     }
 
     //Sort the intensities in each region
-    vcl_qsort( (void*)I1, n1, sizeof(unsigned short), increasing_compare );
-    vcl_qsort( (void*)I2, n2, sizeof(unsigned short), decreasing_compare );
+    std::qsort( (void*)I1, n1, sizeof(unsigned short), increasing_compare );
+    std::qsort( (void*)I2, n2, sizeof(unsigned short), decreasing_compare );
   
     //Match up the smallest intensities in the smaller region with
     //the largest intensities in the larger region.  This provides a
@@ -457,9 +457,9 @@ double dbsks_xshock_app_likelihood::emd
     unsigned int n_smaller = n1; if (n2<n_smaller) n_smaller=n2;
     for (unsigned int i = 0; i<n_smaller; ++i)
     {
-        //vcl_cout<<"I1[i] "<<I1[i]<<" I2[i] "<<I2[i]<<vcl_endl;
+        //std::cout<<"I1[i] "<<I1[i]<<" I2[i] "<<I2[i]<<std::endl;
         double d = double(I1[i]) - double(I2[i]);
-        sum += vcl_sqrt(d*d);
+        sum += std::sqrt(d*d);
     }
   
     delete[] I1; 

@@ -59,7 +59,7 @@ public:
   virtual ~dbsk2d_ishock_barc(){}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a () const { return vcl_string("dbsk2d_ishock_barc"); }
+  virtual std::string is_a () const { return std::string("dbsk2d_ishock_barc"); }
 
   //: is this an inner arc? (inner arcs are always CCW)
   bool is_inner_arc() { return _nud==-1; }
@@ -137,7 +137,7 @@ public:
 
   virtual void reconnect(dbsk2d_ishock_bpoint* oldPt, dbsk2d_ishock_bpoint* newPt);
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
   virtual void compute_extrinsic_locus();
 };
 

@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -30,7 +30,7 @@ Lie_spoke_geodesic_process::Lie_spoke_geodesic_process()
         !parameters()->add( "Output contour file <filename...>" , "-output_transformations_file", bpro1_filepath("","*"))||
         !parameters()->add( "Use eno interpolation","-use-eno-interpolation",true))
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_spoke_geodesic_process::Lie_spoke_geodesic_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_spoke_geodesic_process::Lie_spoke_geodesic_process()" << std::endl;
         }
 
     }
@@ -56,7 +56,7 @@ bool Lie_spoke_geodesic_process::execute()
     clear_output();
 
     bpro1_filepath input_file,output_file,mean_file;
-    vcl_string file_path,inp1,out,mean_file_path;
+    std::string file_path,inp1,out,mean_file_path;
     bool use_eno;
     int num_samples_c1,num_samples_c2;
 
@@ -71,24 +71,24 @@ bool Lie_spoke_geodesic_process::execute()
     mean_file_path = mean_file.path;
     out = output_file.path;
 
-    vcl_ifstream infp(file_path.c_str());
-    vcl_ofstream outfp(out.c_str());
+    std::ifstream infp(file_path.c_str());
+    std::ofstream outfp(out.c_str());
 
    
 
     // construct the first curve
-    vcl_vector<vsol_point_2d_sptr> mean_samples;
+    std::vector<vsol_point_2d_sptr> mean_samples;
     loadCON(mean_file_path, mean_samples);
 
-    vcl_vector<vcl_vector<double> > angles_vec,scales_vec;
-    vcl_vector<vsol_point_2d_sptr> curve_samples;
+    std::vector<std::vector<double> > angles_vec,scales_vec;
+    std::vector<vsol_point_2d_sptr> curve_samples;
 
      //get all the contour files residing in the input directory
-    vcl_vector<vcl_string> file_names = get_all_files(file_path);
+    std::vector<std::string> file_names = get_all_files(file_path);
 
       for (unsigned int file_num = 0;file_num <file_names.size();file_num++)
         {
-        vcl_string inp2 = file_names[file_num];
+        std::string inp2 = file_names[file_num];
         // infp >> inp2;
 
         if(inp2.size() == 0)
@@ -96,11 +96,11 @@ bool Lie_spoke_geodesic_process::execute()
 
         curve_samples.clear();
 
-        vcl_cout << inp1 << vcl_endl;
-        vcl_cout << inp2 << vcl_endl;
+        std::cout << inp1 << std::endl;
+        std::cout << inp2 << std::endl;
 
         // construct the second curve
-        vcl_vector<vsol_point_2d_sptr> points;
+        std::vector<vsol_point_2d_sptr> points;
         loadCON(inp2, points);
         dbsol_interp_curve_2d curve;
         vnl_vector<double> samples;
@@ -142,7 +142,7 @@ bool Lie_spoke_geodesic_process::execute()
         curve_samples.push_back(curve_samples[0]);
         */
 
-        vcl_vector<double> angles,scales;
+        std::vector<double> angles,scales;
         compute_spoke_scales_angles(mean_samples,curve_samples,scales,angles);
 
         angles_vec.push_back(angles);
@@ -150,28 +150,28 @@ bool Lie_spoke_geodesic_process::execute()
 
         }
 
-    vcl_vector<double>mean_scales,mean_angles;
+    std::vector<double>mean_scales,mean_angles;
     double angle,scale,sum_ang;
 
     
     for (unsigned int i = 0;i<angles_vec.size();i++)
         {
         for (unsigned int j = 0;j<angles_vec[i].size();j++)
-            outfp << angles_vec[i][j] << vcl_endl;
+            outfp << angles_vec[i][j] << std::endl;
 
-        outfp << "end of shape angles: " << i << vcl_endl;
+        outfp << "end of shape angles: " << i << std::endl;
         }
 
     for (unsigned int i = 0;i<scales_vec.size();i++)
         {
         for (unsigned int j = 0;j<scales_vec[i].size();j++)
-            outfp << scales_vec[i][j] << vcl_endl;
+            outfp << scales_vec[i][j] << std::endl;
 
-        outfp << "end of shape scales: " << i << vcl_endl;
+        outfp << "end of shape scales: " << i << std::endl;
         }
 
 
-    vcl_vector< vsol_spatial_object_2d_sptr > contour;
+    std::vector< vsol_spatial_object_2d_sptr > contour;
     vsol_polyline_2d_sptr newpolyline = new vsol_polyline_2d (mean_samples);
     contour.push_back(newpolyline->cast_to_spatial_object());
 

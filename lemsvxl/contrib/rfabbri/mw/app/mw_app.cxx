@@ -5,8 +5,8 @@
 //\date Sat Apr 16 22:49:07 EDT 2005
 //
 
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 
 #include <vul/vul_file.h>
 #include <vgl/vgl_homg_point_3d.h>
@@ -70,17 +70,17 @@ mw_misc()
 {
   //---- Just testing 
 
-  vcl_vector<vgl_point_3d<double> > pts;
-  vcl_string fname("/home/rfabbri/work/ming-signal.dat");
+  std::vector<vgl_point_3d<double> > pts;
+  std::string fname("/home/rfabbri/work/ming-signal.dat");
   bool retval = myreadv(fname,pts);
   assert(retval);
 
   bgld_curve_shorten_3d(pts, 1, 1);
 
-  vcl_string out_name("/home/rfabbri/work/ming-signal-smoothed.dat");
+  std::string out_name("/home/rfabbri/work/ming-signal-smoothed.dat");
   retval =mywritev(out_name,pts);
   if (!retval)
-    vcl_cerr << "Could not write file " << out_name << vcl_endl;
+    std::cerr << "Could not write file " << out_name << std::endl;
   assert(retval);
 }
 
@@ -102,7 +102,7 @@ mw_load_current_working_repository()
 void 
 mw_load_mcs_instance()
 {
-  vcl_string data_dir="./";
+  std::string data_dir="./";
   bmcsd_util::camera_file_type cam_type;
 
   if (vul_file::exists(data_dir + "calib.intrinsic"))
@@ -116,21 +116,21 @@ mw_load_mcs_instance()
   bool retval = 
     bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
   bmcsd_stereo_instance_views all_instances_;
 
   retval = bmcsd_view_set::read_txt(
-      data_dir + vcl_string("/mcs_stereo_instances.txt"), 
+      data_dir + std::string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
-  vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
+  std::cout << "Instances:\n" << all_instances_ << std::endl;
 
   bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
-  vcl_cout << "Loading instance[" <<  instance_id << "]: " 
-    << one_instance_ << vcl_endl;
+  std::cout << "Loading instance[" <<  instance_id << "]: " 
+    << one_instance_ << std::endl;
 
-  vcl_vector<vcl_string> edgemaps_fnames, cfrags_fnames, cams_fnames, imgs_fnames;
+  std::vector<std::string> edgemaps_fnames, cfrags_fnames, cams_fnames, imgs_fnames;
 
   bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
 
@@ -182,11 +182,11 @@ mw_load_mcs_instance()
   /* XXX can uncomment this if desired; it works
   io_dialog.field("#views", ngrids_wanted);
   if (!io_dialog.ask()) {
-    vcl_cout << "Canceled\n";
+    std::cout << "Canceled\n";
     return;
   }
   */
-  vcl_cout << "Desired #views: " << ngrids_wanted << vcl_endl;
+  std::cout << "Desired #views: " << ngrids_wanted << std::endl;
 
   // add grid if only one present
   vgui_grid_tableau_sptr pgrid;
@@ -194,14 +194,14 @@ mw_load_mcs_instance()
 
   unsigned ngrids = 0;
 
-  vcl_cout << "Initial ngrids: " << ngrids << vcl_endl;
+  std::cout << "Initial ngrids: " << ngrids << std::endl;
   for (int i=0; i+1 < ngrids_wanted; ++i) {
     ngrids += 1;
     MANAGER->add_new_view(ngrids, false);
   }
   MANAGER->display_current_frame();
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
   // make curves active
   for (unsigned v=0; v < views.size(); ++v) {
@@ -220,22 +220,22 @@ void
 mw_load_current_working_repository_curve_tracing_tool()
 {
   // load a working repository
-  vcl_vector<vcl_string> edgemaps_fnames;
+  std::vector<std::string> edgemaps_fnames;
 
   /*
-  vcl_string data_dir = "./Downtown/video/";
+  std::string data_dir = "./Downtown/video/";
 
-  vcl_string rep_fname
+  std::string rep_fname
     = "instance1/rep/current.rep";
     */
 
-//  vcl_string data_dir = "/home/rfabbri/lib/data/right-dome-subset-local/";
-//  vcl_string data_dir = "/home/rfabbri/lib/data/dino/";
-//  vcl_string data_dir = "/home/rfabbri/lib/data/capitol-mcs-work/";
+//  std::string data_dir = "/home/rfabbri/lib/data/right-dome-subset-local/";
+//  std::string data_dir = "/home/rfabbri/lib/data/dino/";
+//  std::string data_dir = "/home/rfabbri/lib/data/capitol-mcs-work/";
 
-  vcl_string data_dir = "./";
+  std::string data_dir = "./";
 
-  vcl_string rep_fname
+  std::string rep_fname
     = "rep/current.rep";
 
   MANAGER->load_repository_from_file(data_dir + rep_fname);
@@ -247,19 +247,19 @@ mw_load_current_working_repository_curve_tracing_tool()
   bool retval = 
     bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
   bmcsd_stereo_instance_views all_instances_;
 
   retval = bmcsd_view_set::read_txt(
-      data_dir + vcl_string("/mcs_stereo_instances.txt"), 
+      data_dir + std::string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
-  vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
+  std::cout << "Instances:\n" << all_instances_ << std::endl;
 
   bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
-  vcl_cout << "Loading instance[" <<  instance_id << "]: " 
-    << one_instance_ << vcl_endl;
+  std::cout << "Loading instance[" <<  instance_id << "]: " 
+    << one_instance_ << std::endl;
   bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
 
   // Fill edgemaps with instances
@@ -280,10 +280,10 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   io_dialog.field("#views", ngrids_wanted);
   if (!io_dialog.ask()) {
-    vcl_cout << "Canceled\n";
+    std::cout << "Canceled\n";
     return;
   }
-  vcl_cout << "Desired #views: " << ngrids_wanted << vcl_endl;
+  std::cout << "Desired #views: " << ngrids_wanted << std::endl;
 
   // add grid if only one present
   vgui_grid_tableau_sptr pgrid;
@@ -291,7 +291,7 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   unsigned ngrids = 0;
 
-  vcl_cout << "Initial ngrids: " << ngrids << vcl_endl;
+  std::cout << "Initial ngrids: " << ngrids << std::endl;
   for (int i=0; i+1 < ngrids_wanted; ++i) {
     ngrids += 1;
     MANAGER->add_new_view(ngrids, false);
@@ -299,7 +299,7 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   MANAGER->display_current_frame();
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   assert (edgemaps_fnames.size()==0 || views.size() <= edgemaps_fnames.size());
@@ -315,14 +315,14 @@ mw_load_current_working_repository_curve_tracing_tool()
 
     // activate broken_vsols[i] with the largest possible i
 
-    vcl_string active_name;
+    std::string active_name;
     for (unsigned i=50; i != static_cast<unsigned>(-1); --i) {
-      vcl_ostringstream s;
+      std::ostringstream s;
       if (i != 0) {
         s << i;
       }
 
-      vcl_string putative_name = vcl_string("broken_vsols") + s.str();
+      std::string putative_name = std::string("broken_vsols") + s.str();
       vgui_tableau_sptr t = selector.get_tableau(putative_name);
       if (t) {
         active_name = putative_name;
@@ -338,7 +338,7 @@ mw_load_current_working_repository_curve_tracing_tool()
 
     // unset_visible all useless tableaux
     for (unsigned i=0; i < selector.child_names().size(); ++i) {
-      vcl_string name = selector.child_names()[i];
+      std::string name = selector.child_names()[i];
       if (v==0 || v == 1) {
         if (name != active_name && name != "mw_curve_tracer" &&
             name != "original_image" && 
@@ -377,19 +377,19 @@ mw_load_current_working_repository_edgel_tracing_tool()
   // load a working repository
 
   /*
-  vcl_string data_dir = "./Downtown/video/";
+  std::string data_dir = "./Downtown/video/";
 
-  vcl_string rep_fname
+  std::string rep_fname
     = "instance1/rep/current.rep";
     */
 
-//  vcl_string data_dir = "/home/rfabbri/lib/data/right-dome-subset-local/";
-//  vcl_string data_dir = "/home/rfabbri/lib/data/dino/";
-//  vcl_string data_dir = "/home/rfabbri/lib/data/capitol-mcs-work/";
+//  std::string data_dir = "/home/rfabbri/lib/data/right-dome-subset-local/";
+//  std::string data_dir = "/home/rfabbri/lib/data/dino/";
+//  std::string data_dir = "/home/rfabbri/lib/data/capitol-mcs-work/";
 
-  vcl_string data_dir = "./";
+  std::string data_dir = "./";
 
-  vcl_string rep_fname
+  std::string rep_fname
     = "rep/current-edgetracing.rep";
 
   MANAGER->load_repository_from_file(data_dir + rep_fname);
@@ -402,19 +402,19 @@ mw_load_current_working_repository_edgel_tracing_tool()
   bool retval = 
     bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
-  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  std::cout << "Dpath:\n" << dpath << std::endl;
   bmcsd_stereo_instance_views all_instances_;
 
   retval = bmcsd_view_set::read_txt(
-      data_dir + vcl_string("/mcs_stereo_instances.txt"), 
+      data_dir + std::string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
-  vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
+  std::cout << "Instances:\n" << all_instances_ << std::endl;
 
   bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
-  vcl_cout << "Loading instance[" <<  instance_id << "]: " 
-    << one_instance_ << vcl_endl;
+  std::cout << "Loading instance[" <<  instance_id << "]: " 
+    << one_instance_ << std::endl;
   bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
   
   // TODO dialog option to not load repos.
@@ -427,17 +427,17 @@ mw_load_current_working_repository_edgel_tracing_tool()
 
   io_dialog.field("#views", ngrids_wanted);
   if (!io_dialog.ask()) {
-    vcl_cout << "Canceled\n";
+    std::cout << "Canceled\n";
     return;
   }
-  vcl_cout << "Desired #views: " << ngrids_wanted << vcl_endl;
+  std::cout << "Desired #views: " << ngrids_wanted << std::endl;
 
   // add grid if only one present
   vgui_grid_tableau_sptr pgrid;
   pgrid.vertical_cast(vgui_find_below_by_type_name(MANAGER,"vgui_grid_tableau"));
 
   unsigned ngrids = 0;
-  vcl_cout << "Initial ngrids: " << ngrids << vcl_endl;
+  std::cout << "Initial ngrids: " << ngrids << std::endl;
   for (int i=0; i+1 < ngrids_wanted; ++i) {
     ngrids += 1;
     MANAGER->add_new_view(ngrids, false);
@@ -445,7 +445,7 @@ mw_load_current_working_repository_edgel_tracing_tool()
 
   MANAGER->display_current_frame();
 
-  vcl_vector< bvis1_view_tableau_sptr > views;
+  std::vector< bvis1_view_tableau_sptr > views;
   views = MANAGER->get_views();
 
   // make just a certain vsol visible, if any
@@ -456,16 +456,16 @@ mw_load_current_working_repository_edgel_tracing_tool()
     vgui_selector_tableau &selector = *(views[v]->selector());
 
     for (unsigned ii=0; ii < selector.child_names().size(); ++ii)
-      vcl_cout << selector.child_names()[ii] << "|" << vcl_endl;
+      std::cout << selector.child_names()[ii] << "|" << std::endl;
 
     // activate broken_vsols[i] with the largest possible i
 
-    vcl_string active_name;
+    std::string active_name;
     for (unsigned i=50; i != static_cast<unsigned>(-1); --i) {
-      vcl_ostringstream s;
+      std::ostringstream s;
       s << i;
 
-      vcl_string putative_name = vcl_string("vsol2D") + s.str();
+      std::string putative_name = std::string("vsol2D") + s.str();
       vgui_tableau_sptr t = selector.get_tableau(putative_name);
       if (t) {
         active_name = putative_name;
@@ -473,7 +473,7 @@ mw_load_current_working_repository_edgel_tracing_tool()
       }
     }
 
-    vcl_cout << "Activating : " << "[" << active_name << "]\n";
+    std::cout << "Activating : " << "[" << active_name << "]\n";
     selector.set_active(active_name);
     selector.active_to_top();
 
@@ -482,7 +482,7 @@ mw_load_current_working_repository_edgel_tracing_tool()
 
     // unset_visible all useless tableaux
     for (unsigned i=0; i < selector.child_names().size(); ++i) {
-      vcl_string name = selector.child_names()[i];
+      std::string name = selector.child_names()[i];
 //      if (v==0 || v == 1) {
 //        if (name != active_name && name != "mw_curve_tracer" &&
 //            name != "original_image" && 
@@ -527,7 +527,7 @@ mw_load_current_working_repository_edgel_tracing_tool()
 
 void
 load_cams_into_frames(
-    const vcl_vector<vcl_string> &cams_fnames, 
+    const std::vector<std::string> &cams_fnames, 
     bmcsd_util::camera_file_type cam_type)
 {
   for (unsigned v=0; v < cams_fnames.size(); ++v) {
@@ -557,19 +557,19 @@ test_point_reconstruct()
 {
    vgl_homg_point_2d<double> p1,p2,p3;
  
-   vcl_string fname1("curr/p1010049.jpg");
-   vcl_string fname2("curr/p1010053.jpg");
-   vcl_string fname3("curr/p1010069.jpg");
+   std::string fname1("curr/p1010049.jpg");
+   std::string fname2("curr/p1010053.jpg");
+   std::string fname3("curr/p1010069.jpg");
    // Reading cameras
    vpgl_perspective_camera <double> Pr1,Pr2,Pr3;
  
    if (!read_cam(fname1,fname2,&Pr1,&Pr2)) {
-      vcl_cerr << "epip_interactive: error reading cam\n";
+      std::cerr << "epip_interactive: error reading cam\n";
       return;
    }
  
    if (!read_cam(fname3,&Pr3)) {
-      vcl_cerr << "epip_interactive: error reading cam\n";
+      std::cerr << "epip_interactive: error reading cam\n";
       return;
    }
  
@@ -585,7 +585,7 @@ test_point_reconstruct()
    p2.set(1895,307);
  
    p3 = bmcsd_epipolar_point_transfer(p1,p2,f13,f23);
-   vcl_cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
+   std::cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  std::endl;
  
  
    // Now do by least squares and compare:
@@ -596,14 +596,14 @@ test_point_reconstruct()
  
    Pr1.get_rotation().as_h_matrix_3d().get(&Rc);
  
-   vcl_cout << "Rotation:\n" << Rc;
+   std::cout << "Rotation:\n" << Rc;
  
    // transpose and reduce to 3x3:
    for (unsigned i=0; i<3; ++i) for (unsigned j=0; j<3; ++j) {
       Rcs(i,j) = Rc(i,j);
       Rct(i,j) = Rc(j,i);
    }
-   vcl_cout << "Rotation transposed 3x3 :\n" << Rct;
+   std::cout << "Rotation transposed 3x3 :\n" << Rct;
  
  
    //
@@ -621,11 +621,11 @@ test_point_reconstruct()
  
  
    e11 = Rct*e11_cam;
-   vcl_cout << "E11:\n" << e11  << vcl_endl;
+   std::cout << "E11:\n" << e11  << std::endl;
    e12 = Rct*e12_cam;
-   vcl_cout << "E12:\n" << e12  << vcl_endl;
+   std::cout << "E12:\n" << e12  << std::endl;
    e13 = F1 = Rct*e13_cam;
-   vcl_cout << "E13:\n" << e13  << vcl_endl;
+   std::cout << "E13:\n" << e13  << std::endl;
  
    double x_scale, y_scale, u, v;
  
@@ -652,7 +652,7 @@ test_point_reconstruct()
    double d=vgl_homg_operators_3d<double>::perp_dist_squared(ray1,w_origin);
    
    // test distance of (0,0,0) to line
-   vcl_cout << "Distance: " << d << vcl_endl;
+   std::cout << "Distance: " << d << std::endl;
  
    //
    // Camera 2 : translate things to 3D common coordinate system
@@ -662,12 +662,12 @@ test_point_reconstruct()
  
    Pr2.get_rotation().as_h_matrix_3d().get(&Rc2);
  
-   vcl_cout << "Rotation2:\n" << Rc2;
+   std::cout << "Rotation2:\n" << Rc2;
  
    // transpose and reduce to 3x3:
    for (unsigned i=0; i<3; ++i) for (unsigned j=0; j<3; ++j)
       Rct2(i,j) = Rc2(j,i);
-   vcl_cout << "Rotation transposed 3x3  2 :\n" << Rct2;
+   std::cout << "Rotation transposed 3x3  2 :\n" << Rct2;
  
    vgl_point_3d<double> c2_pt = Pr2.get_camera_center();
  
@@ -679,11 +679,11 @@ test_point_reconstruct()
       e21_cam(1,0,0), e22_cam(0,1,0), e23_cam(0,0,1);
  
    e21 = Rct2*e21_cam;
-   vcl_cout << "E11:\n" << e21  << vcl_endl;
+   std::cout << "E11:\n" << e21  << std::endl;
    e22 = Rct2*e22_cam;
-   vcl_cout << "E12:\n" << e22  << vcl_endl;
+   std::cout << "E12:\n" << e22  << std::endl;
    e23 = F2 = Rct2*e23_cam;
-   vcl_cout << "E13:\n" << e23  << vcl_endl;
+   std::cout << "E13:\n" << e23  << std::endl;
  
    x_scale = Pr2.get_calibration().x_scale();
    y_scale = Pr2.get_calibration().y_scale();
@@ -706,12 +706,12 @@ test_point_reconstruct()
    d=vgl_homg_operators_3d<double>::perp_dist_squared(ray2,w_origin);
    
    // test distance of (0,0,0) to line
-   vcl_cout << "Distance 2: " << d << vcl_endl;
+   std::cout << "Distance 2: " << d << std::endl;
  
-   vcl_cout << "====================================" << vcl_endl;
+   std::cout << "====================================" << std::endl;
  
-   vcl_cout << "Gama1:\n" << gama1 << "\nGama2: \n" <<  gama2 << vcl_endl
-            << "c1:\n " << c1 << "\nc2:\n" << c2 << vcl_endl;
+   std::cout << "Gama1:\n" << gama1 << "\nGama2: \n" <<  gama2 << std::endl
+            << "c1:\n " << c1 << "\nc2:\n" << c2 << std::endl;
  
    // Least squares reconstr.
    vnl_matrix_fixed<double,3,2> A;
@@ -725,22 +725,22 @@ test_point_reconstruct()
    vnl_svd<double> svd(A);
    vnl_vector<double> lambda = svd.solve(c2-c1);
  
-   vcl_cout << "Lambda:\n" << lambda << vcl_endl;
-   vcl_cout << "Norm: " << svd.norm() << vcl_endl
-      << "Mynorm2:" << (A*lambda +c1 - c2).two_norm() << vcl_endl;
+   std::cout << "Lambda:\n" << lambda << std::endl;
+   std::cout << "Norm: " << svd.norm() << std::endl
+      << "Mynorm2:" << (A*lambda +c1 - c2).two_norm() << std::endl;
  
  
    bmcsd_vector_3d Cpt_v = c1 + lambda(0)*gama1;
    vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
-   vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
+   std::cout << "Reconstructed point: " << Cpt << std::endl;
  
    // Project to 3rd:
    vgl_homg_point_2d<double> p3_lsqr; 
  
    p3_lsqr = Pr3.project(Cpt);
-   vcl_cout << "Tranferred origin to 3rd view: \n" 
-      "Least squares: " << p3_lsqr.x()/p3_lsqr.w() << " " << p3_lsqr.y()/p3_lsqr.w() << vcl_endl
-   << "Epip Transfer: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
+   std::cout << "Tranferred origin to 3rd view: \n" 
+      "Least squares: " << p3_lsqr.x()/p3_lsqr.w() << " " << p3_lsqr.y()/p3_lsqr.w() << std::endl
+   << "Epip Transfer: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  std::endl;
  
    //=========== Tangents
  
@@ -751,38 +751,38 @@ test_point_reconstruct()
    bmcsd_vector_2d t1_img;
  
    t1 = T - dot_product(T, F1)*gama1;
-   vcl_cout << "t1: " << t1 << vcl_endl;
+   std::cout << "t1: " << t1 << std::endl;
  
    t1_cam = Rcs * t1; // 3rd component now 0
  
-   vcl_cout << "t1_cam: " << t1_cam << vcl_endl;
-   vcl_cout << "x,y scales: " << x_scale << " " << y_scale << vcl_endl;
+   std::cout << "t1_cam: " << t1_cam << std::endl;
+   std::cout << "x,y scales: " << x_scale << " " << y_scale << std::endl;
  
 
    t1_img[0] = t1_cam[0]*x_scale;
    t1_img[1] = t1_cam[1]*y_scale;
    t1_img.normalize();
  
-   vcl_cout << "t1_img: " << t1_img << vcl_endl;
+   std::cout << "t1_img: " << t1_img << std::endl;
  
-   vcl_cout << "p1: " << p1 << vcl_endl;
+   std::cout << "p1: " << p1 << std::endl;
  
-   vcl_cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << vcl_endl;
+   std::cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << std::endl;
  
-   vcl_cout << "================= Project point test: =======================" << vcl_endl;
+   std::cout << "================= Project point test: =======================" << std::endl;
  
    vgl_homg_point_3d<double> orig(0,0,0), other(53.3,0,0);
    vgl_homg_point_2d<double> aux;
  
    aux = Pr1.project(orig);
-   vcl_cout << "Origin in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << vcl_endl;
+   std::cout << "Origin in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << std::endl;
  
    aux = Pr1.project(other);
-   vcl_cout << "Other in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << vcl_endl;
+   std::cout << "Other in retina 1: " << aux.x()/aux.w() << "  " <<   aux.y()/aux.w() << std::endl;
  
  
-   vcl_cout << "\n\n\n";
-   vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
+   std::cout << "\n\n\n";
+   std::cout << "================= Tangent reconstruction: =======================" << std::endl;
  
    // Camera 1:
    bmcsd_vector_3d t1_cam_bkwd;
@@ -807,12 +807,12 @@ test_point_reconstruct()
  
    t2_world_bkwd = Rct2*t2_cam_bkwd;
  
-   vcl_cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << vcl_endl << vcl_endl;
-   vcl_cout << "Test t1 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << vcl_endl << vcl_endl;
+   std::cout << "Test t1 dot F1 zero: " << dot_product(t1_world_bkwd,F1) << std::endl << std::endl;
+   std::cout << "Test t1 dot F2 zero: " << dot_product(t2_world_bkwd,F2) << std::endl << std::endl;
  
    T_rec = vnl_cross_3d( vnl_cross_3d(t1_world_bkwd,gama1), vnl_cross_3d(t2_world_bkwd,gama2) );
  
-   vcl_cout << "T reconstructed: \n" << T_rec << vcl_endl;
+   std::cout << "T reconstructed: \n" << T_rec << std::endl;
 }
 
 
@@ -824,7 +824,7 @@ example_project()
    double t,theta, step=1;
    
    double sz=360/step;
-   vcl_vector< vgl_homg_point_3d<double> > Ps;
+   std::vector< vgl_homg_point_3d<double> > Ps;
    Ps.reserve((int) sz);
       
    for (theta=0; theta<360-step; theta+=step) {
@@ -847,11 +847,11 @@ example_project()
 
    for (unsigned i=0; i<Ps.size(); ++i) {
       vgl_point_2d<double> gama = P.project(Ps[i]);
-      vcl_cout << gama << vcl_endl;
+      std::cout << gama << std::endl;
    }
 
 
-   vcl_cout << "Done!" << vcl_endl;
+   std::cout << "Done!" << std::endl;
 }
 
 void
@@ -864,14 +864,14 @@ example_project_and_reconstruct()
 void
 example_project_and_reconstruct()
 {
-  vcl_ofstream fC_orig, fgama1,fgama2,fC_rec, ft;
+  std::ofstream fC_orig, fgama1,fgama2,fC_rec, ft;
 
   // Sample 3D circle
   double theta=0, step=0.01;
   
   double sz=360.0/step;
-  vcl_vector< vgl_homg_point_3d<double> > Ps;
-  vcl_vector<double> t;
+  std::vector< vgl_homg_point_3d<double> > Ps;
+  std::vector<double> t;
   Ps.reserve((int) sz);
   t.reserve((int) sz);
      
@@ -885,8 +885,8 @@ example_project_and_reconstruct()
      double z = 10;
      vgl_homg_point_3d<double> pt(x,y,10);
      Ps.push_back(pt);       
-     ft << t[i] << vcl_endl;
-     fC_orig << x << " " << y << " " << z << vcl_endl;
+     ft << t[i] << std::endl;
+     fC_orig << x << " " << y << " " << z << std::endl;
   }
 
   ft.close(); fC_orig.close();
@@ -895,7 +895,7 @@ example_project_and_reconstruct()
   rig.read("curr2/255-crop.jpg","curr2/261-crop.jpg");
 
 
-  vcl_vector <vsol_point_2d_sptr> gama1_img, gama2_img;
+  std::vector <vsol_point_2d_sptr> gama1_img, gama2_img;
 
   fgama1.open("/tmp/gama1.dat");
   fgama2.open("/tmp/gama2.dat");
@@ -906,22 +906,22 @@ example_project_and_reconstruct()
      vgl_point_2d<double> p2 = rig.cam[1].Pr_.project(Ps[i]);
      gama1_img.push_back(new vsol_point_2d(p1));
      gama2_img.push_back(new vsol_point_2d(p2));
-     fgama1 << p1.x() << " " << p1.y() << vcl_endl;
-     fgama2 << p2.x() << " " << p2.y() << vcl_endl;
+     fgama1 << p1.x() << " " << p1.y() << std::endl;
+     fgama2 << p2.x() << " " << p2.y() << std::endl;
   }
   fgama1.close();
   fgama2.close();
-  vcl_vector<bmcsd_vector_3d> C_rec;
+  std::vector<bmcsd_vector_3d> C_rec;
   rig.reconstruct_3d_curve(&C_rec,gama1_img,gama2_img);
 
   fC_rec.open("/tmp/C_rec.dat");
   for (unsigned i=0; i< C_rec.size(); ++i) {
-    fC_rec << C_rec[i][0] << " " << C_rec[i][1] << " " << C_rec[i][2] << vcl_endl;
+    fC_rec << C_rec[i][0] << " " << C_rec[i][1] << " " << C_rec[i][2] << std::endl;
   }
   fC_rec.close();
 
 
-  vcl_cout << "Done!" << vcl_endl;
+  std::cout << "Done!" << std::endl;
 }
 */
 
@@ -931,16 +931,16 @@ call_show_contours_process(char *fname)
 {
    bpro1_process_sptr pro= MANAGER->process_manager()->get_process_by_name("Show Contours");
 
-   vcl_set<bpro1_storage_sptr> modified;
+   std::set<bpro1_storage_sptr> modified;
 
    // set the parameter
-   vcl_string sfname(fname);
+   std::string sfname(fname);
    bpro1_filepath fp(sfname);
-   vcl_string pname("-image_filename");
+   std::string pname("-image_filename");
    pro->parameters()->set_value(pname,fp);
-   vcl_cout << sfname << vcl_endl;
+   std::cout << sfname << std::endl;
 
-   vcl_vector<vcl_string> out_name(pro->output_names());
+   std::vector<std::string> out_name(pro->output_names());
    out_name.push_back("image0");
    pro->set_output_names(out_name);
 
@@ -948,7 +948,7 @@ call_show_contours_process(char *fname)
    MANAGER->process_manager()->run_process_on_current_frame(pro, &modified);
 
    // update the display for any modified storage objects
-   for ( vcl_set<bpro1_storage_sptr>::iterator itr = modified.begin();
+   for ( std::set<bpro1_storage_sptr>::iterator itr = modified.begin();
          itr != modified.end(); ++itr ) {
      bvis1_manager::instance()->add_to_display(*itr);
    }
@@ -967,8 +967,8 @@ void
 test_point_reconstruct_rig()
 {
  
-   vcl_string fname1("curr/p1010049.jpg");
-   vcl_string fname2("curr/p1010053.jpg");
+   std::string fname1("curr/p1010049.jpg");
+   std::string fname2("curr/p1010053.jpg");
 
    bdifd_rig rig;
    rig.read(fname1,fname2);
@@ -992,7 +992,7 @@ test_point_reconstruct_rig()
    bmcsd_vector_3d Cpt_v;
    rig.reconstruct_point_lsqr(gama1,gama2,&Cpt_v);
 
-   vcl_cout << "Reconstructed point: " << Cpt_v << vcl_endl;
+   std::cout << "Reconstructed point: " << Cpt_v << std::endl;
 
 
    // Forward tangent projection
@@ -1010,11 +1010,11 @@ test_point_reconstruct_rig()
 
    rig.cam[0].world_to_img_vector(t1, &t1_img[0],&t1_img[1]);
 
-   vcl_cout << "t1_img: " << t1_img << vcl_endl;
+   std::cout << "t1_img: " << t1_img << std::endl;
  
-   vcl_cout << "p1: " << p1 << vcl_endl;
+   std::cout << "p1: " << p1 << std::endl;
  
-   vcl_cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << vcl_endl;
+   std::cout << "p1 + 88t1: \n" << p1.x()/p1.w() + 88*t1_img[0] << " " << p1.y()/p1.w() + 88*t1_img[1] << std::endl;
    
 
    // Tangent reconstruction
@@ -1027,7 +1027,7 @@ test_point_reconstruct_rig()
    rig.reconstruct_tangent(gama1,gama2,t1vgl,t2vgl, &T_rec);
    T_rec.normalize();
 
-   vcl_cout << "T reconstructed: \n" << T_rec << vcl_endl;
+   std::cout << "T reconstructed: \n" << T_rec << std::endl;
 }
 */
 
@@ -1035,7 +1035,7 @@ void
 mw_load_cvmatch_input()
 {
    // Repository loads curves and matrices
-   vcl_string fname_rep("c.rep");
+   std::string fname_rep("c.rep");
 }
 
 void
@@ -1049,7 +1049,7 @@ test_k_formula_circle_old()
 void
 test_k_formula_circle_old()
 {
-  vcl_ofstream 
+  std::ofstream 
     fC_orig, fgama1, fgama2, fgama1_img, fgama2_img, fC_rec, ft, ftt, fn, fk, fkdot,
     frec, frec_T, frec_N, frec_B, frec_K, frec_Kdot, frec_Tau, faux;
 
@@ -1057,8 +1057,8 @@ test_k_formula_circle_old()
   double theta=0, step=0.01;
   
   double sz=360.0/step;
-  vcl_vector< vgl_homg_point_3d<double> > Ps;
-  vcl_vector<double> t;
+  std::vector< vgl_homg_point_3d<double> > Ps;
+  std::vector<double> t;
   Ps.reserve((int) sz);
   t.reserve((int) sz);
      
@@ -1075,8 +1075,8 @@ test_k_formula_circle_old()
      double z = 0;
      vgl_homg_point_3d<double> pt(x,y,z);
      Ps.push_back(pt);       
-     ft << t[i] << vcl_endl;
-     fC_orig << x << " " << y << " " << z << vcl_endl;
+     ft << t[i] << std::endl;
+     fC_orig << x << " " << y << " " << z << std::endl;
   }
 
   ft.close(); fC_orig.close();
@@ -1087,30 +1087,30 @@ test_k_formula_circle_old()
 
 
   // Project all points ----------
-  vcl_vector <vsol_point_2d_sptr> gama1_img, gama2_img;
-  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  std::vector <vsol_point_2d_sptr> gama1_img, gama2_img;
+  std::vector <bmcsd_vector_3d> gama1,gama2;
   bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
-  fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
-  fgama2.open("/tmp/gama2.dat",vcl_ios::out | vcl_ios::binary);
+  fgama1.open("/tmp/gama1.dat",std::ios::out | std::ios::binary);
+  fgama2.open("/tmp/gama2.dat",std::ios::out | std::ios::binary);
   fgama1_img.open("/tmp/gama1_img.txt");
   fgama2_img.open("/tmp/gama2_img.txt");
   fC_orig.open("/tmp/C_orig2.txt");
-  fk.open("/tmp/k.dat",vcl_ios::out | vcl_ios::binary);
-  fkdot.open("/tmp/kdot.dat",vcl_ios::out | vcl_ios::binary);
-  ft.open("/tmp/t.dat",vcl_ios::out | vcl_ios::binary);
+  fk.open("/tmp/k.dat",std::ios::out | std::ios::binary);
+  fkdot.open("/tmp/kdot.dat",std::ios::out | std::ios::binary);
+  ft.open("/tmp/t.dat",std::ios::out | std::ios::binary);
   ftt.open("/tmp/ttext.txt");
-  fn.open("/tmp/n.dat",vcl_ios::out | vcl_ios::binary);
-  faux.open("/tmp/aux.dat",vcl_ios::out | vcl_ios::binary);
+  fn.open("/tmp/n.dat",std::ios::out | std::ios::binary);
+  faux.open("/tmp/aux.dat",std::ios::out | std::ios::binary);
 
-  frec.open("/tmp/rec.dat",vcl_ios::out | vcl_ios::binary);
-  frec_T.open("/tmp/rec_T.dat",vcl_ios::out | vcl_ios::binary);
-  frec_N.open("/tmp/rec_N.dat",vcl_ios::out | vcl_ios::binary);
-  frec_B.open("/tmp/rec_B.dat",vcl_ios::out | vcl_ios::binary);
-  frec_K.open("/tmp/rec_K.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Kdot.open("/tmp/rec_Kdot.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Tau.open("/tmp/rec_Tau.dat",vcl_ios::out | vcl_ios::binary);
+  frec.open("/tmp/rec.dat",std::ios::out | std::ios::binary);
+  frec_T.open("/tmp/rec_T.dat",std::ios::out | std::ios::binary);
+  frec_N.open("/tmp/rec_N.dat",std::ios::out | std::ios::binary);
+  frec_B.open("/tmp/rec_B.dat",std::ios::out | std::ios::binary);
+  frec_K.open("/tmp/rec_K.dat",std::ios::out | std::ios::binary);
+  frec_Kdot.open("/tmp/rec_Kdot.dat",std::ios::out | std::ios::binary);
+  frec_Tau.open("/tmp/rec_Tau.dat",std::ios::out | std::ios::binary);
 
   gama1_img.reserve(Ps.size()); gama2_img.reserve(Ps.size()); gama1.reserve(Ps.size()); gama2.reserve(Ps.size());
 
@@ -1128,16 +1128,16 @@ test_k_formula_circle_old()
      gama1.push_back(rig.cam[0].project(Pt_inhomg - rig.cam[0].c));
      gama2.push_back(rig.cam[1].project(Pt_inhomg - rig.cam[1].c));
 
-     fC_orig << rig.cam[0].F << " " << rig.cam[0].c << vcl_endl;
+     fC_orig << rig.cam[0].F << " " << rig.cam[0].c << std::endl;
 
-     fgama1_img << p1.x() << " " << p1.y() << vcl_endl;
-     fgama2_img << p2.x() << " " << p2.y() << vcl_endl;
+     fgama1_img << p1.x() << " " << p1.y() << std::endl;
+     fgama2_img << p2.x() << " " << p2.y() << std::endl;
 
-// LOSS IN PRECISION:    fgama1 << gama1[i] + rig.cam[0].c << vcl_endl;
-//     fgama1 << gama1[i] << vcl_endl;
+// LOSS IN PRECISION:    fgama1 << gama1[i] + rig.cam[0].c << std::endl;
+//     fgama1 << gama1[i] << std::endl;
      fgama1.write((char *)((gama1[i] + rig.cam[0].c).data_block()),3*sizeof(double));
 
-//     fgama2 << gama2[i] + rig.cam[1].c << vcl_endl;
+//     fgama2 << gama2[i] + rig.cam[1].c << std::endl;
      fgama2.write((char *)((gama2[i] + rig.cam[1].c).data_block()),3*sizeof(double));
 
      // Project curvatures of 3D points ----------
@@ -1167,13 +1167,13 @@ test_k_formula_circle_old()
 
 //     frame1.kdot /= dot_product(Frame.Gama,rig.cam[0].F);
 
-     //fk << frame.k << vcl_endl;
+     //fk << frame.k << std::endl;
      fk.write((char *)&(frame1.k),sizeof(double));
      ft.write((char *)(frame1.t.data_block()),3*sizeof(double));
      fkdot.write((char *)&(frame1.kdot),sizeof(double));
      fn.write((char *)(frame1.n.data_block()),3*sizeof(double));
      faux.write((char *)(Frame.N.data_block()),3*sizeof(double));
-//     ftt << frame.t << vcl_endl;
+//     ftt << frame.t << std::endl;
 
      // ------- RECONSTRUCTION ------------------------------------------------ 
 
@@ -1214,7 +1214,7 @@ test_k_formula_circle_old()
 void
 test_k_formula()
 {
-  vcl_ofstream 
+  std::ofstream 
     fC_orig, fgama1, fgama2, fgama1_img, fgama2_img, fC_rec, ft, ftt, fn, fk, fkdot,
     frec, frec_T, frec_N, frec_B, frec_K, frec_Kdot, frec_Tau, faux;
 
@@ -1222,8 +1222,8 @@ test_k_formula()
   double theta=0, step=0.06, range=3*360.0;
   
   double sz=range/step;
-  vcl_vector< vgl_homg_point_3d<double> > Ps;
-  vcl_vector<double> t;
+  std::vector< vgl_homg_point_3d<double> > Ps;
+  std::vector<double> t;
   Ps.reserve((int) sz);
   t.reserve((int) sz);
      
@@ -1240,8 +1240,8 @@ test_k_formula()
      double z = r*alpha*t[i];
      vgl_homg_point_3d<double> pt(x,y,z);
      Ps.push_back(pt);       
-     ft << t[i] << vcl_endl;
-     fC_orig << x << " " << y << " " << z << vcl_endl;
+     ft << t[i] << std::endl;
+     fC_orig << x << " " << y << " " << z << std::endl;
   }
 
   ft.close(); fC_orig.close();
@@ -1252,30 +1252,30 @@ test_k_formula()
 
 
   // Project all points ----------
-  vcl_vector <vsol_point_2d_sptr> gama1_img, gama2_img;
-  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  std::vector <vsol_point_2d_sptr> gama1_img, gama2_img;
+  std::vector <bmcsd_vector_3d> gama1,gama2;
   bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
-  fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
-  fgama2.open("/tmp/gama2.dat",vcl_ios::out | vcl_ios::binary);
+  fgama1.open("/tmp/gama1.dat",std::ios::out | std::ios::binary);
+  fgama2.open("/tmp/gama2.dat",std::ios::out | std::ios::binary);
   fgama1_img.open("/tmp/gama1_img.txt");
   fgama2_img.open("/tmp/gama2_img.txt");
   fC_orig.open("/tmp/C_orig2.txt");
-  fk.open("/tmp/k.dat",vcl_ios::out | vcl_ios::binary);
-  fkdot.open("/tmp/kdot.dat",vcl_ios::out | vcl_ios::binary);
-  ft.open("/tmp/t.dat",vcl_ios::out | vcl_ios::binary);
+  fk.open("/tmp/k.dat",std::ios::out | std::ios::binary);
+  fkdot.open("/tmp/kdot.dat",std::ios::out | std::ios::binary);
+  ft.open("/tmp/t.dat",std::ios::out | std::ios::binary);
   ftt.open("/tmp/ttext.txt");
-  fn.open("/tmp/n.dat",vcl_ios::out | vcl_ios::binary);
-  faux.open("/tmp/g1.dat",vcl_ios::out | vcl_ios::binary);
+  fn.open("/tmp/n.dat",std::ios::out | std::ios::binary);
+  faux.open("/tmp/g1.dat",std::ios::out | std::ios::binary);
 
-  frec.open("/tmp/rec.dat",vcl_ios::out | vcl_ios::binary);
-  frec_T.open("/tmp/rec_T.dat",vcl_ios::out | vcl_ios::binary);
-  frec_N.open("/tmp/rec_N.dat",vcl_ios::out | vcl_ios::binary);
-  frec_B.open("/tmp/rec_B.dat",vcl_ios::out | vcl_ios::binary);
-  frec_K.open("/tmp/rec_K.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Kdot.open("/tmp/rec_Kdot.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Tau.open("/tmp/rec_Tau.dat",vcl_ios::out | vcl_ios::binary);
+  frec.open("/tmp/rec.dat",std::ios::out | std::ios::binary);
+  frec_T.open("/tmp/rec_T.dat",std::ios::out | std::ios::binary);
+  frec_N.open("/tmp/rec_N.dat",std::ios::out | std::ios::binary);
+  frec_B.open("/tmp/rec_B.dat",std::ios::out | std::ios::binary);
+  frec_K.open("/tmp/rec_K.dat",std::ios::out | std::ios::binary);
+  frec_Kdot.open("/tmp/rec_Kdot.dat",std::ios::out | std::ios::binary);
+  frec_Tau.open("/tmp/rec_Tau.dat",std::ios::out | std::ios::binary);
 
   gama1_img.reserve(Ps.size()); gama2_img.reserve(Ps.size()); gama1.reserve(Ps.size()); gama2.reserve(Ps.size());
 
@@ -1293,10 +1293,10 @@ test_k_formula()
      gama1.push_back(rig.cam[0].project(Pt_inhomg - rig.cam[0].c));
      gama2.push_back(rig.cam[1].project(Pt_inhomg - rig.cam[1].c));
 
-     fC_orig << rig.cam[0].F << " " << rig.cam[0].c << vcl_endl;
+     fC_orig << rig.cam[0].F << " " << rig.cam[0].c << std::endl;
 
-     fgama1_img << p1.x() << " " << p1.y() << vcl_endl;
-     fgama2_img << p2.x() << " " << p2.y() << vcl_endl;
+     fgama1_img << p1.x() << " " << p1.y() << std::endl;
+     fgama2_img << p2.x() << " " << p2.y() << std::endl;
 
      fgama1.write((char *)((gama1[i] + rig.cam[0].c).data_block()),3*sizeof(double));
      fgama2.write((char *)((gama2[i] + rig.cam[1].c).data_block()),3*sizeof(double));
@@ -1329,14 +1329,14 @@ test_k_formula()
 
 //     frame1.kdot /= dot_product(Frame.Gama,rig.cam[0].F);
 
-     //fk << frame.k << vcl_endl;
+     //fk << frame.k << std::endl;
      fk.write((char *)&(frame1.k),sizeof(double));
      ft.write((char *)(frame1.t.data_block()),3*sizeof(double));
      fkdot.write((char *)&(frame1.kdot),sizeof(double));
      fn.write((char *)(frame1.n.data_block()),3*sizeof(double));
      double aux = rig.cam[0].speed(Frame);
      faux.write((char *)&aux,sizeof(double));
-//     ftt << frame.t << vcl_endl;
+//     ftt << frame.t << std::endl;
 
      // ------- RECONSTRUCTION ------------------------------------------------ 
 
@@ -1378,12 +1378,12 @@ void
 test_formulas_circle()
 {
   
-  vcl_vector<bdifd_3rd_order_point_3d> C;
-  vcl_vector<double> theta;
+  std::vector<bdifd_3rd_order_point_3d> C;
+  std::vector<double> theta;
 
   bdifd_analytic::circle_curve (2000, C, theta, 0, 0.01, 360);
 
-  vcl_vector <vsol_point_2d_sptr> gama1_img;
+  std::vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
 }
 
@@ -1391,13 +1391,13 @@ void
 test_formulas_helix()
 {
   
-  vcl_vector<bdifd_3rd_order_point_3d> C;
-  vcl_vector<double> theta;
+  std::vector<bdifd_3rd_order_point_3d> C;
+  std::vector<double> theta;
 
   bmcsd_vector_3d translation(0,0,0);
   bdifd_analytic::helix_curve(20, 1.0/4.0, translation, C, theta, 0, 0.06, 3*360);
 
-  vcl_vector <vsol_point_2d_sptr> gama1_img;
+  std::vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
 }
 
@@ -1405,14 +1405,14 @@ void
 test_formulas_space_curve1()
 {
   
-  vcl_vector<bdifd_3rd_order_point_3d> C;
-  vcl_vector<double> theta;
+  std::vector<bdifd_3rd_order_point_3d> C;
+  std::vector<double> theta;
 
   bmcsd_vector_3d translation(100,100,100);
 
   bdifd_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
 
-  vcl_vector <vsol_point_2d_sptr> gama1_img;
+  std::vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
 }
 */
@@ -1427,12 +1427,12 @@ test_formulas_space_curve1()
 // \param[out] gama1_img image of C in 1st camera
 void 
 test_formulas(
-  vcl_vector<bdifd_3rd_order_point_3d> &C,
-  vcl_vector<double> &theta,
-  vcl_vector <vsol_point_2d_sptr> &gama1_img
+  std::vector<bdifd_3rd_order_point_3d> &C,
+  std::vector<double> &theta,
+  std::vector <vsol_point_2d_sptr> &gama1_img
   )
 {
-  vcl_ofstream 
+  std::ofstream 
     fC_orig, fgama1, fgama2, fgama1_img, fgama2_img, fC_rec, ft, ftt, fn, fk, fkdot,
     frec, frec_T, frec_N, frec_B, frec_K, frec_Kdot, frec_Tau, faux, ftheta;
 
@@ -1443,39 +1443,39 @@ test_formulas(
   //
   // Project all points ----------
   //
-  vcl_vector <vsol_point_2d_sptr> gama2_img;
-  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  std::vector <vsol_point_2d_sptr> gama2_img;
+  std::vector <bmcsd_vector_3d> gama1,gama2;
   bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
-  fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
-  fgama2.open("/tmp/gama2.dat",vcl_ios::out | vcl_ios::binary);
+  fgama1.open("/tmp/gama1.dat",std::ios::out | std::ios::binary);
+  fgama2.open("/tmp/gama2.dat",std::ios::out | std::ios::binary);
   fgama1_img.open("/tmp/gama1_img.txt");
   fgama2_img.open("/tmp/gama2_img.txt");
 
-  fk.open("/tmp/k.dat",vcl_ios::out | vcl_ios::binary);
-  fkdot.open("/tmp/kdot.dat",vcl_ios::out | vcl_ios::binary);
-  ft.open("/tmp/t.dat",vcl_ios::out | vcl_ios::binary);
+  fk.open("/tmp/k.dat",std::ios::out | std::ios::binary);
+  fkdot.open("/tmp/kdot.dat",std::ios::out | std::ios::binary);
+  ft.open("/tmp/t.dat",std::ios::out | std::ios::binary);
   ftt.open("/tmp/ttext.txt");
-  fn.open("/tmp/n.dat",vcl_ios::out | vcl_ios::binary);
-  faux.open("/tmp/g1.dat",vcl_ios::out | vcl_ios::binary);
+  fn.open("/tmp/n.dat",std::ios::out | std::ios::binary);
+  faux.open("/tmp/g1.dat",std::ios::out | std::ios::binary);
 
-  frec.open("/tmp/rec.dat",vcl_ios::out | vcl_ios::binary);
-  frec_T.open("/tmp/rec_T.dat",vcl_ios::out | vcl_ios::binary);
-  frec_N.open("/tmp/rec_N.dat",vcl_ios::out | vcl_ios::binary);
-  frec_B.open("/tmp/rec_B.dat",vcl_ios::out | vcl_ios::binary);
-  frec_K.open("/tmp/rec_K.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Kdot.open("/tmp/rec_Kdot.dat",vcl_ios::out | vcl_ios::binary);
-  frec_Tau.open("/tmp/rec_Tau.dat",vcl_ios::out | vcl_ios::binary);
+  frec.open("/tmp/rec.dat",std::ios::out | std::ios::binary);
+  frec_T.open("/tmp/rec_T.dat",std::ios::out | std::ios::binary);
+  frec_N.open("/tmp/rec_N.dat",std::ios::out | std::ios::binary);
+  frec_B.open("/tmp/rec_B.dat",std::ios::out | std::ios::binary);
+  frec_K.open("/tmp/rec_K.dat",std::ios::out | std::ios::binary);
+  frec_Kdot.open("/tmp/rec_Kdot.dat",std::ios::out | std::ios::binary);
+  frec_Tau.open("/tmp/rec_Tau.dat",std::ios::out | std::ios::binary);
 
   assert(C.size() == theta.size());
 
   fC_orig.open("/tmp/FCenter.txt");
-  fC_orig << rig.cam[0].F << " " << rig.cam[0].c << vcl_endl;
+  fC_orig << rig.cam[0].F << " " << rig.cam[0].c << std::endl;
   fC_orig.close();
 
-  fC_orig.open("/tmp/Gama.dat",vcl_ios::out | vcl_ios::binary);
-  ftheta.open("/tmp/theta.dat",vcl_ios::out | vcl_ios::binary);
+  fC_orig.open("/tmp/Gama.dat",std::ios::out | std::ios::binary);
+  ftheta.open("/tmp/theta.dat",std::ios::out | std::ios::binary);
 
   gama1_img.reserve(C.size()); gama2_img.reserve(C.size()); gama1.reserve(C.size()); gama2.reserve(C.size());
 
@@ -1500,8 +1500,8 @@ test_formulas(
      gama1.push_back(rig.cam[0].project(Pt - rig.cam[0].c));
      gama2.push_back(rig.cam[1].project(Pt - rig.cam[1].c));
 
-     fgama1_img << p1.x() << " " << p1.y() << vcl_endl;
-     fgama2_img << p2.x() << " " << p2.y() << vcl_endl;
+     fgama1_img << p1.x() << " " << p1.y() << std::endl;
+     fgama2_img << p2.x() << " " << p2.y() << std::endl;
 
      fgama1.write((char *)((gama1[i] + rig.cam[0].c).data_block()),3*sizeof(double));
      fgama2.write((char *)((gama2[i] + rig.cam[1].c).data_block()),3*sizeof(double));
@@ -1559,35 +1559,35 @@ void
 test_geometry_numerics()
 {
   
-  vcl_vector<bdifd_3rd_order_point_3d> C;
-  vcl_vector<double> theta;
+  std::vector<bdifd_3rd_order_point_3d> C;
+  std::vector<double> theta;
 
   bmcsd_vector_3d translation(100,100,100);
   bdifd_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
 
 //  circle_curve (2000, C, theta, 0, 0.05, 360-0.05);
 
-  vcl_vector <vsol_point_2d_sptr> gama1_img;
+  std::vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
 
-  vcl_ofstream  fgama1_round;
+  std::ofstream  fgama1_round;
   fgama1_round.open("dat/gama1_round.txt");
 
   // round and remove dups
-  vcl_vector <vsol_point_2d_sptr> gama1_round;
+  std::vector <vsol_point_2d_sptr> gama1_round;
 
   gama1_round.reserve(gama1_img.size());
   gama1_img[0]->set_x(MW_ROUND(gama1_img[0]->x()));
   gama1_img[0]->set_y(MW_ROUND(gama1_img[0]->y()));
   gama1_round.push_back(gama1_img[0]);
-  fgama1_round << gama1_round[0]->x() << " " << gama1_round[0]->y() << vcl_endl;
+  fgama1_round << gama1_round[0]->x() << " " << gama1_round[0]->y() << std::endl;
 
   for (unsigned i=1; i<gama1_img.size(); ++i) {
     gama1_img[i]->set_x(MW_ROUND(gama1_img[i]->x()));
     gama1_img[i]->set_y(MW_ROUND(gama1_img[i]->y()));
     if (*gama1_img[i] != *gama1_round.back()) {
       gama1_round.push_back(gama1_img[i]);
-      fgama1_round << gama1_round.back()->x() << " " << gama1_round.back()->y() << vcl_endl;
+      fgama1_round << gama1_round.back()->x() << " " << gama1_round.back()->y() << std::endl;
     }
   }
 
@@ -1603,11 +1603,11 @@ test_geometry_numerics()
   // Sample points, tangents, curvatures, and output to files to be plotted in
   // Matlab
 
-  vcl_ofstream fgama1_geno, ftgt_geno,ft_angle_geno;
+  std::ofstream fgama1_geno, ftgt_geno,ft_angle_geno;
 
-  fgama1_geno.open("dat/gama1_geno.dat",vcl_ios::out | vcl_ios::binary);
-  ftgt_geno.open("dat/tgt_geno.dat",vcl_ios::out | vcl_ios::binary);
-  ft_angle_geno.open("dat/t_angle_geno.dat",vcl_ios::out | vcl_ios::binary);
+  fgama1_geno.open("dat/gama1_geno.dat",std::ios::out | std::ios::binary);
+  ftgt_geno.open("dat/tgt_geno.dat",std::ios::out | std::ios::binary);
+  ft_angle_geno.open("dat/t_angle_geno.dat",std::ios::out | std::ios::binary);
 
   double step=0.00001, t;
   for (double prct=0; prct<=1; prct+=step) {
@@ -1648,8 +1648,8 @@ test_geometry_numerics2()
 {
   double dummy,t;
 
-  vcl_vector<vsol_point_2d_sptr> pts;
-  (void) myreadv(vcl_string("dat/gama1-sm.dat"), pts);
+  std::vector<vsol_point_2d_sptr> pts;
+  (void) myreadv(std::string("dat/gama1-sm.dat"), pts);
 
   
   // Interpolate with GENO
@@ -1662,20 +1662,20 @@ test_geometry_numerics2()
   // Sample points, tangents, curvatures, and output to files to be plotted in
   // Matlab
 
-  vcl_ofstream fgama1_geno, fgama1_gcircle, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
+  std::ofstream fgama1_geno, fgama1_gcircle, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
                ft_delta, fk_delta, fkdot_delta, fgama1_g_super_sample;
 
-  fgama1_geno.open("dat/gama1_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fgama1_gcircle.open("dat/gama1_geno-circle-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fgama1_g_super_sample.open("dat/gama1_geno-super-sample-sm.dat",vcl_ios::out | vcl_ios::binary);
-  ftgt_geno.open("dat/tgt_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  ft_angle_geno.open("dat/t_angle_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fk_geno.open("dat/k_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fkdot_geno.open("dat/kdot_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  flen.open("dat/len_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fk_delta.open("dat/dk_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  ft_delta.open("dat/dt_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
-  fkdot_delta.open("dat/dkdot_geno-sm.dat",vcl_ios::out | vcl_ios::binary);
+  fgama1_geno.open("dat/gama1_geno-sm.dat",std::ios::out | std::ios::binary);
+  fgama1_gcircle.open("dat/gama1_geno-circle-sm.dat",std::ios::out | std::ios::binary);
+  fgama1_g_super_sample.open("dat/gama1_geno-super-sample-sm.dat",std::ios::out | std::ios::binary);
+  ftgt_geno.open("dat/tgt_geno-sm.dat",std::ios::out | std::ios::binary);
+  ft_angle_geno.open("dat/t_angle_geno-sm.dat",std::ios::out | std::ios::binary);
+  fk_geno.open("dat/k_geno-sm.dat",std::ios::out | std::ios::binary);
+  fkdot_geno.open("dat/kdot_geno-sm.dat",std::ios::out | std::ios::binary);
+  flen.open("dat/len_geno-sm.dat",std::ios::out | std::ios::binary);
+  fk_delta.open("dat/dk_geno-sm.dat",std::ios::out | std::ios::binary);
+  ft_delta.open("dat/dt_geno-sm.dat",std::ios::out | std::ios::binary);
+  fkdot_delta.open("dat/dkdot_geno-sm.dat",std::ios::out | std::ios::binary);
 
   // loop on original samples
   for (unsigned i=0; i<=gc.size(); ++i) {
@@ -1718,11 +1718,11 @@ test_geometry_numerics2()
       assert(c_i && c_i_min_1);
 
       dt    = gc_circle.interval(i)->tangent_angle_at(0) - gc_circle.interval(i-1)->tangent_angle_at(1);
-      dt    = vcl_fabs(dt);
+      dt    = std::fabs(dt);
       dk    = c_i->curvature_at(0) - c_i_min_1->curvature_at(1);
-      dk    = vcl_fabs(dk);
+      dk    = std::fabs(dk);
       dkdot = c_i->gamma() - c_i_min_1->gamma();
-      dkdot = vcl_fabs(dkdot);
+      dkdot = std::fabs(dkdot);
 
       kk = (c_i->curvature_at(0) + c_i_min_1->curvature_at(1))*0.5;
       kkdot = (c_i->gamma() + c_i_min_1->gamma())*0.5;
@@ -1786,11 +1786,11 @@ test_geometry_numerics2()
 void
 test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
 {
-  vcl_vector<vsol_point_2d_sptr> pts;
-  (void) myreadv(vcl_string("dat/gama1-sm.dat"), pts);
+  std::vector<vsol_point_2d_sptr> pts;
+  (void) myreadv(std::string("dat/gama1-sm.dat"), pts);
 
-  vcl_vector<double> t_angles;
-  (void) myread(vcl_string("dat/t_angle_el.dat"), t_angles);
+  std::vector<double> t_angles;
+  (void) myread(std::string("dat/t_angle_el.dat"), t_angles);
   
   // Interpolate with GENO
 
@@ -1844,7 +1844,7 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
     psi_pos = 1e-4;
     */
 
-  vcl_vector<double> grad;
+  std::vector<double> grad;
   for (unsigned i=0; i<n_iter_position; ++i) {
     if (pgc) 
       delete pgc;
@@ -1877,11 +1877,11 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
 void
 arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
 {
-  vcl_vector<vsol_point_2d_sptr> pts;
-  (void) myreadv(vcl_string("dat/gama1-sm.dat"), pts);
+  std::vector<vsol_point_2d_sptr> pts;
+  (void) myreadv(std::string("dat/gama1-sm.dat"), pts);
 
-  vcl_vector<double> t_angles;
-  (void) myread(vcl_string("dat/t_angle_el.dat"), t_angles);
+  std::vector<double> t_angles;
+  (void) myread(std::string("dat/t_angle_el.dat"), t_angles);
   
   // Interpolate with GENO
 
@@ -1915,7 +1915,7 @@ arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
     delta_norm = 0.01, 
     psi_pos = delta_norm/4;
 
-  vcl_vector<double> grad;
+  std::vector<double> grad;
   for (unsigned i=0; i<n_iter_position; ++i) {
     delete pgc;
 
@@ -1944,10 +1944,10 @@ arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
   write_geno_info_super_sample(*gc_circle,"posref-circle");
 
   // write gradient for last iteration
-  vcl_ofstream fgrad;
+  std::ofstream fgrad;
 
-  vcl_string fname("dat/grad-pos.dat");
-  fgrad.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  std::string fname("dat/grad-pos.dat");
+  fgrad.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   for (unsigned i=0; i<grad.size(); ++i) {
     fgrad.write((char *) &(grad[i]),sizeof(double));
@@ -1970,43 +1970,43 @@ write_geno_info(
     const char *ssuffix)
 {
 
-  vcl_string suf(ssuffix), fname, ext(".dat");
+  std::string suf(ssuffix), fname, ext(".dat");
 
   // write arc information
-  write_geno_arc_info(gc_circle, (suf+vcl_string("-arc")).c_str());
+  write_geno_arc_info(gc_circle, (suf+std::string("-arc")).c_str());
 
 
   assert(gc.order() == 3);
 
-  vcl_ofstream fgama1_geno, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
+  std::ofstream fgama1_geno, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
                ft_delta, fk_delta, fkdot_delta;
 
-  fname = vcl_string("dat/gama1_geno-") + suf + ext;
-  fgama1_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/gama1_geno-") + suf + ext;
+  fgama1_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/tgt_geno-") + suf + ext;
-  ftgt_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/tgt_geno-") + suf + ext;
+  ftgt_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/t_angle_geno-") + suf + ext;
-  ft_angle_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/t_angle_geno-") + suf + ext;
+  ft_angle_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/k_geno-") + suf + ext;
-  fk_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/k_geno-") + suf + ext;
+  fk_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/kdot_geno-") + suf + ext;
-  fkdot_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/kdot_geno-") + suf + ext;
+  fkdot_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/len_geno-") + suf + ext;
-  flen.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/len_geno-") + suf + ext;
+  flen.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dk_geno-") + suf + ext;
-  fk_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dk_geno-") + suf + ext;
+  fk_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dt_geno-") + suf + ext;
-  ft_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dt_geno-") + suf + ext;
+  ft_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dkdot_geno-") + suf + ext;
-  fkdot_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dkdot_geno-") + suf + ext;
+  fkdot_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   // loop on original samples
   for (unsigned i=0; i<=gc.size(); ++i) {
@@ -2050,14 +2050,14 @@ write_geno_info(
       assert(c_i && c_i_min_1);
 
       dt    = gc_circle.interval(i)->tangent_angle_at(0) - gc_circle.interval(i-1)->tangent_angle_at(1);
-      dt    = vcl_fabs(dt);
+      dt    = std::fabs(dt);
       if (dt > vnl_math::pi)
         dt = 2*vnl_math::pi - dt;
 
       dk    = c_i->curvature_at(0) - c_i_min_1->curvature_at(1);
-      dk    = vcl_fabs(dk);
+      dk    = std::fabs(dk);
       dkdot = c_i->gamma() - c_i_min_1->gamma();
-      dkdot = vcl_fabs(dkdot);
+      dkdot = std::fabs(dkdot);
 
       kk = (c_i->curvature_at(0) + c_i_min_1->curvature_at(1))*0.5;
       kkdot = (c_i->gamma() + c_i_min_1->gamma())*0.5;
@@ -2069,7 +2069,7 @@ write_geno_info(
       tgt_x = tgt_x / norm_t;
       tgt_y = tgt_y / norm_t;
 
-      t_angle = vcl_atan2(tgt_y, tgt_x);
+      t_angle = std::atan2(tgt_y, tgt_x);
       if (t_angle < 0)
         t_angle = 2*vnl_math::pi + t_angle;
     }
@@ -2108,39 +2108,39 @@ write_geno_arc_info(
     const bsold_geno_curve_2d &gc,
     const char *ssuffix)
 {
-  vcl_string suf(ssuffix), fname, ext(".dat");
+  std::string suf(ssuffix), fname, ext(".dat");
 
   assert(gc.order() == 2);
 
-  vcl_ofstream fgama1_geno, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
+  std::ofstream fgama1_geno, ftgt_geno,ft_angle_geno,fk_geno,fkdot_geno, flen,
                ft_delta, fk_delta, fkdot_delta;
 
-  fname = vcl_string("dat/gama1_geno-") + suf + ext;
-  fgama1_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/gama1_geno-") + suf + ext;
+  fgama1_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/tgt_geno-") + suf + ext;
-  ftgt_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/tgt_geno-") + suf + ext;
+  ftgt_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/t_angle_geno-") + suf + ext;
-  ft_angle_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/t_angle_geno-") + suf + ext;
+  ft_angle_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/k_geno-") + suf + ext;
-  fk_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/k_geno-") + suf + ext;
+  fk_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/kdot_geno-") + suf + ext;
-  fkdot_geno.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/kdot_geno-") + suf + ext;
+  fkdot_geno.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/len_geno-") + suf + ext;
-  flen.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/len_geno-") + suf + ext;
+  flen.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dk_geno-") + suf + ext;
-  fk_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dk_geno-") + suf + ext;
+  fk_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dt_geno-") + suf + ext;
-  ft_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dt_geno-") + suf + ext;
+  ft_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-  fname = vcl_string("dat/dkdot_geno-") + suf + ext;
-  fkdot_delta.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/dkdot_geno-") + suf + ext;
+  fkdot_delta.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   // loop on original samples
   for (unsigned i=0; i<=gc.size(); ++i) {
@@ -2184,12 +2184,12 @@ write_geno_arc_info(
       assert(c_i && c_i_min_1);
 
       dt    = gc.interval(i)->tangent_angle_at(0) - gc.interval(i-1)->tangent_angle_at(1);
-      dt    = vcl_fabs(dt);
+      dt    = std::fabs(dt);
       if (dt > vnl_math::pi)
         dt = 2*vnl_math::pi - dt;
 
       dk    = c_i->curvature_at(0) - c_i_min_1->curvature_at(1);
-      dk    = vcl_fabs(dk);
+      dk    = std::fabs(dk);
       dkdot = 0;
 
       kk = (c_i->curvature_at(0) + c_i_min_1->curvature_at(1))*0.5;
@@ -2202,7 +2202,7 @@ write_geno_arc_info(
       tgt_x = tgt_x / norm_t;
       tgt_y = tgt_y / norm_t;
 
-      t_angle = vcl_atan2(tgt_y, tgt_x);
+      t_angle = std::atan2(tgt_y, tgt_x);
       if (t_angle < 0)
         t_angle = 2*vnl_math::pi + t_angle;
     }
@@ -2234,12 +2234,12 @@ write_geno_arc_info(
 void
 write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix)
 {
-  vcl_ofstream fgama1_g_super_sample;
+  std::ofstream fgama1_g_super_sample;
 
-  vcl_string suf(suffix), fname, ext(".dat");
+  std::string suf(suffix), fname, ext(".dat");
 
-  fname = vcl_string("dat/gama1_geno-super-sample-") + suf + ext;
-  fgama1_g_super_sample.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+  fname = std::string("dat/gama1_geno-super-sample-") + suf + ext;
+  fgama1_g_super_sample.open(fname.c_str(),std::ios::out | std::ios::binary);
 
   // fine supersampling loop
   double step=0.00001, tcirc;
@@ -2264,15 +2264,15 @@ reproject_curve_sculpture()
 {
   // - read 3 contours
 
-   vcl_string fname1("curr2/261-crop.jpg");
-   vcl_string fname2("curr2/255-crop.jpg");
-   vcl_string fname3("curr2/257-crop.jpg");
+   std::string fname1("curr2/261-crop.jpg");
+   std::string fname2("curr2/255-crop.jpg");
+   std::string fname3("curr2/257-crop.jpg");
 
    bdifd_rig rig;
    rig.read(fname1,fname2);
 
    bool isopen;
-   vcl_vector<vsol_point_2d_sptr> points1, points2, 
+   std::vector<vsol_point_2d_sptr> points1, points2, 
 
    load_con_file("curr2/261-crop.con", points1, &isopen);
    load_con_file("curr2/255-crop.con", points2, &isopen);

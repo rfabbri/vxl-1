@@ -5,10 +5,10 @@
 #include<bsta/bsta_gauss_f1.h>
 #include<bsta/algo/bsta_gaussian_updater.h>
 
-#include<vcl_ctime.h>
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<ctime>
+#include<map>
+#include<set>
+#include<utility>
 
 
 //Forward declare the graph class so that it may be declared a
@@ -54,10 +54,10 @@ public:
 
 
 protected:
-    typedef vcl_map<unsigned,vcl_map<unsigned,vcl_map<unsigned,unsigned> > >
+    typedef std::map<unsigned,std::map<unsigned,std::map<unsigned,unsigned> > >
         transition_array;
 
-    typedef vcl_map<unsigned, double> time_scale_map;
+    typedef std::map<unsigned, double> time_scale_map;
 
     //Each node will be assigned a unique id.
     unsigned id_;
@@ -79,7 +79,7 @@ protected:
 
     bsta_gaussian_updater<bsta_gaussian_sphere<float,1> > updater_;
 
-    vcl_time_t sysTime_left_, sysTime_returned_;
+    std::time_t sysTime_left_, sysTime_returned_;
 
     //This will be the minimum time interval. This represents the units of trel.
     //The map will be indexed by the same means as the transition_array. 

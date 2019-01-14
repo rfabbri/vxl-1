@@ -36,24 +36,24 @@ protected:
   double _delta_s2;
 
   DPCostType        _DPCost;          //DPMap of cost: n*m array of double
-  DPMapType        _DPMap;          //DPMap of prev point vcl_map: n*m array of vcl_pair of index
+  DPMapType        _DPMap;          //DPMap of prev point std::map: n*m array of std::pair of index
   FinalMapType      _finalMap;        //alignment curve
-  vcl_vector<double>  _finalMapCost;      //cost on alignment curve
+  std::vector<double>  _finalMapCost;      //cost on alignment curve
   
   //: compute tangents and arclengths at each sample on the curves
-  vcl_vector<double>  _tangents_curve1;
-  vcl_vector<double>  _tangents_curve2;
+  std::vector<double>  _tangents_curve1;
+  std::vector<double>  _tangents_curve2;
 
-  vcl_vector<double>  _lengths_curve1;
-  vcl_vector<double>  _lengths_curve2;
+  std::vector<double>  _lengths_curve1;
+  std::vector<double>  _lengths_curve2;
 
   double          _finalCost;        //final cost
 
   double  _R;
   bool _normalized_stretch_cost;
   int _template_size;
-  vcl_vector<int> XOFFSET;
-  vcl_vector<int> YOFFSET;
+  std::vector<int> XOFFSET;
+  std::vector<int> YOFFSET;
 
 public:
 
@@ -63,7 +63,7 @@ public:
   DPCostType*        DPCost()      { return &_DPCost; }
   DPMapType*        DPMap()      { return &_DPMap; }
   FinalMapType*      finalMap()    { return &_finalMap; }
-  vcl_vector<double>*  finalMapCost() { return &_finalMapCost; }
+  std::vector<double>*  finalMapCost() { return &_finalMapCost; }
   double          finalCost()    { return _finalCost; }
   unsigned        finalMapSize() { return _finalMap.size();}
 
@@ -76,7 +76,7 @@ public:
     return (*finalMap())[i].second;
   }
 
-  vcl_string    _fileName1, _fileName2;
+  std::string    _fileName1, _fileName2;
   bsold_interp_curve_2d_sptr curve1() { return _curve1; }
   bsold_interp_curve_2d_sptr curve2() { return _curve2; }
   void setFinalMap (FinalMapType map) {

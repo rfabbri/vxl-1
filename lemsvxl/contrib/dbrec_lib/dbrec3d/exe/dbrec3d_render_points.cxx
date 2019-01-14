@@ -14,8 +14,8 @@
 
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string> loc_file("-loc_file", "locations filename", "");
-  vul_arg<vcl_string> scene_file("-scene", "scene filename", "");
+  vul_arg<std::string> loc_file("-loc_file", "locations filename", "");
+  vul_arg<std::string> scene_file("-scene", "scene filename", "");
   vul_arg_parse(argc, argv);
   
   // Create the scene

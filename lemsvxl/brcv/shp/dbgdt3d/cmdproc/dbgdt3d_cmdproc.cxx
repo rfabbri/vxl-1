@@ -1,9 +1,9 @@
 //: This is lemsvxlsrc/brcv/shp/dbmsh3d/vis/dbgdt3d_cmdproc.h
 //  Creation: Feb 12, 2007   Ming-Ching Chang
 
-#include <vcl_ctime.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <ctime>
+#include <cstdlib>
+#include <iostream>
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
@@ -84,10 +84,10 @@ SoSeparator* dbgdt3d_cmdproc_execute (dbgdt3d_pro_vis* gpv)
     int s_idx;
     if (dbmsh3d_cmd_s() == -1) {
       vnl_random idxrand;
-      idxrand.reseed ( (unsigned int) vcl_time(NULL));
+      idxrand.reseed ( (unsigned int) std::time(NULL));
       float r = (float) idxrand.drand32 (0, 1);
       unsigned int vsize = gpv->gdt_mesh()->vertexmap().size();
-      s_idx = (int) vcl_floor (r * vsize);
+      s_idx = (int) std::floor (r * vsize);
     }
     else
       s_idx = dbmsh3d_cmd_s();
@@ -102,7 +102,7 @@ SoSeparator* dbgdt3d_cmdproc_execute (dbgdt3d_pro_vis* gpv)
     if (dbgdt3d_cmd_gdt() == GDT_METHOD_I) { //1
       dbmsh3d_gdt_vertex_3d* src_vertex = (dbmsh3d_gdt_vertex_3d*) gpv->gdt_mesh()->vertexmap (s_idx);
       gpv->i_manager()->add_source_vertex (src_vertex);
-      vul_printf (vcl_cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
+      vul_printf (std::cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
                   0, src_vertex->id(), src_vertex->pt().x(), 
                   src_vertex->pt().y(), src_vertex->pt().z());
       //Draw the vertex 0 in a sphere
@@ -161,7 +161,7 @@ SoSeparator* dbgdt3d_cmdproc_execute (dbgdt3d_pro_vis* gpv)
     else if (dbgdt3d_cmd_gdt() == GDT_METHOD_F) {
       dbmsh3d_gdt_vertex_3d* src_vertex = (dbmsh3d_gdt_vertex_3d*) gpv->gdt_mesh()->vertexmap (s_idx);
       gpv->f_manager()->add_source_vertex (src_vertex);
-      vul_printf (vcl_cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
+      vul_printf (std::cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
                    0, src_vertex->id(),
                    src_vertex->pt().x(), 
                    src_vertex->pt().y(), 
@@ -217,7 +217,7 @@ SoSeparator* dbgdt3d_cmdproc_execute (dbgdt3d_pro_vis* gpv)
     else if (dbgdt3d_cmd_gdt() == GDT_METHOD_FS) {
       dbmsh3d_gdt_vertex_3d* src_vertex = (dbmsh3d_gdt_vertex_3d*) gpv->gdt_mesh()->vertexmap (s_idx);
       gpv->fs_manager()->add_source_vertex (src_vertex);
-      vul_printf (vcl_cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
+      vul_printf (std::cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
                    0, src_vertex->id(),
                    src_vertex->pt().x(), 
                    src_vertex->pt().y(), 
@@ -272,7 +272,7 @@ SoSeparator* dbgdt3d_cmdproc_execute (dbgdt3d_pro_vis* gpv)
     if (dbgdt3d_cmd_gdt() == GDT_METHOD_WS) {
       dbmsh3d_gdt_vertex_3d* src_vertex = (dbmsh3d_gdt_vertex_3d*) gpv->gdt_mesh()->vertexmap (s_idx);
       gpv->ws_manager()->add_source_vertex (src_vertex);
-      vul_printf (vcl_cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
+      vul_printf (std::cout, "Source_vertex[%d]: id[%d] (%lf, %lf, %lf)\n",
                    0, src_vertex->id(),
                    src_vertex->pt().x(), 
                    src_vertex->pt().y(), 

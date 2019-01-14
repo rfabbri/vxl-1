@@ -43,7 +43,7 @@
  *  #2: 18/03/98: Moved CopyIm3d_UCharToDouble to "3dUtils.c", F.Leymarie
 \*------------------------------------------------------------*/
 
-#include <vcl_cmath.h>
+#include <cmath>
 #include <stdio.h>
 
 #include "utils.h"

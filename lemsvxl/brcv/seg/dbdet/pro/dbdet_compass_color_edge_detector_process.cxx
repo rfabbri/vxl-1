@@ -12,8 +12,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vul/vul_timer.h>
 #include <vbl/vbl_array_2d.h>
 #include <vnl/vnl_math.h>
@@ -41,19 +41,19 @@
 //: Constructor
 dbdet_compass_color_edge_detector_process::dbdet_compass_color_edge_detector_process()
 {
-  vcl_vector<vcl_string> compass_signature_choices;
+  std::vector<std::string> compass_signature_choices;
   compass_signature_choices.push_back("Simple Histogram");    //0
   compass_signature_choices.push_back("Rayleigh Weighted Histogram");  //1
   compass_signature_choices.push_back("Gaussian Weighted Histogram");  //2
 
-  vcl_vector<vcl_string> histogram_distance_choices;
+  std::vector<std::string> histogram_distance_choices;
   histogram_distance_choices.push_back("Chi^2 Distance");             //0
   histogram_distance_choices.push_back("Bhattacharya Distance");      //1
   histogram_distance_choices.push_back("Earth Mover's Distance");     //2
   histogram_distance_choices.push_back("Independent Chi^2");          //3
   histogram_distance_choices.push_back("Independent EMD");            //4
 
-  vcl_vector<vcl_string> parabola_fit_type;
+  std::vector<std::string> parabola_fit_type;
   parabola_fit_type.push_back("3-point fit");      //0
   parabola_fit_type.push_back("9-point fit");      //1
 
@@ -68,7 +68,7 @@ dbdet_compass_color_edge_detector_process::dbdet_compass_color_edge_detector_pro
       !parameters()->add( "Output Strength"     , "-bout_str"      , false ) ||
       !parameters()->add( "Output Orientation Map", "-bout_ori"    , false )) 
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -88,7 +88,7 @@ dbdet_compass_color_edge_detector_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbdet_compass_color_edge_detector_process::name()
 {
   return "Compass Color Edge Detector";
@@ -112,18 +112,18 @@ dbdet_compass_color_edge_detector_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_compass_color_edge_detector_process::get_input_type()
+std::vector< std::string > dbdet_compass_color_edge_detector_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_compass_color_edge_detector_process::get_output_type()
+std::vector< std::string > dbdet_compass_color_edge_detector_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
 
   bool bout_str;
   parameters()->get_value( "-bout_str", bout_str );
@@ -141,14 +141,14 @@ bool
 dbdet_compass_color_edge_detector_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbdet_compass_color_edge_detector_process::execute() - not exactly one"
+    std::cout << "In dbdet_compass_color_edge_detector_process::execute() - not exactly one"
              << " input images \n";
     return false;
   }
   clear_output();
 
-  vcl_cout << "Compass Color edge detection...";
-  vcl_cout.flush();
+  std::cout << "Compass Color edge detection...";
+  std::cout.flush();
 
   // get image from the storage class
   vidpro1_image_storage_sptr frame_image;
@@ -158,7 +158,7 @@ dbdet_compass_color_edge_detector_process::execute()
 
   //make sure these images are one plane images
   if (col_image.nplanes() != 3){
-    vcl_cout << "In dbdet_compass_color_edge_detector_process::execute() - image must be trichromatic! \n";
+    std::cout << "In dbdet_compass_color_edge_detector_process::execute() - image must be trichromatic! \n";
     return false;
   }
 
@@ -196,7 +196,7 @@ dbdet_compass_color_edge_detector_process::execute()
   else
     edge_map = dbdet_detect_compass_color_edges(L, a, b, 1, Norient/2, signature_op, sigma, hist_dist_op, bSG_filter, thresh, hist_grad, bout_ori);
 
-  vcl_cout << "done!" << vcl_endl;
+  std::cout << "done!" << std::endl;
 
   // create the output storage class
   if (bout_str){

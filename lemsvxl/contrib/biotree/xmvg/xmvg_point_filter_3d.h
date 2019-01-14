@@ -40,6 +40,6 @@ class xmvg_point_filter_3d : public xmvg_atomic_filter_3d <double>
     xmvg_point_filter_descriptor descriptor_;
 };
 
-void x_write(vcl_ostream& os, xmvg_point_filter_3d pf);
+void x_write(std::ostream& os, xmvg_point_filter_3d pf);
 
 #endif

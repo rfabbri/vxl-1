@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_save.h>
@@ -16,11 +16,11 @@
 int main( int argc, char* argv[] )
 {  
   // Set these:
-  vcl_string root_img_dir = "e:\\brdf";
-  vcl_string output_dir = "e:\\dome_images";
+  std::string root_img_dir = "e:\\brdf";
+  std::string output_dir = "e:\\dome_images";
   int computer_index = 3; // Doug = 0, Isabel = 1, Lab = 2, Thom = 3
 
-  vcl_vector< vcl_string > day2_times;
+  std::vector< std::string > day2_times;
   day2_times.push_back( "745am" );
   day2_times.push_back( "830am" );
   day2_times.push_back( "7am" );
@@ -30,7 +30,7 @@ int main( int argc, char* argv[] )
   // Get the current day + material.
   for( vul_file_iterator f1= (root_img_dir+"\\*").c_str(); f1; ++f1 ){
 
-    vcl_string current_dir1( f1() );
+    std::string current_dir1( f1() );
     last_slash = last_underscore = 0;
     for( int i = 0; i < current_dir1.size(); i++ ){
       if( current_dir1[i] == '_' ) last_underscore = i;
@@ -38,7 +38,7 @@ int main( int argc, char* argv[] )
     }
     if( last_underscore <= last_slash ) continue;
 
-    vcl_string runtime_string;
+    std::string runtime_string;
     for( int i = last_slash+1; i < last_underscore; i++ )
       runtime_string += current_dir1[i];
     int day = 1;
@@ -46,7 +46,7 @@ int main( int argc, char* argv[] )
       if( runtime_string == day2_times[i] ) 
         day = 2;
 
-    vcl_string material_string;
+    std::string material_string;
     for( int i = last_underscore+1; i < current_dir1.size(); i++ )
       material_string += current_dir1[i];
     int material = 0;
@@ -56,7 +56,7 @@ int main( int argc, char* argv[] )
     // Get the rotation angle.
     for( vul_file_iterator f2= (current_dir1 + "\\*").c_str(); f2; ++f2 ){
           
-      vcl_string current_dir2( f2() );
+      std::string current_dir2( f2() );
       last_slash = last_period = 0;
       for( int i = 0; i < current_dir2.size(); i++ ){
         if( current_dir2[i] == '.' ) last_period = i;
@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
       }
       if( last_period > last_slash ) continue;
 
-      vcl_string rotation_string;
+      std::string rotation_string;
       for( int i = last_slash+1; i < current_dir2.size(); i++ )
         rotation_string += current_dir2[i];
       int rotation = atoi( rotation_string.c_str() );
@@ -72,7 +72,7 @@ int main( int argc, char* argv[] )
       // Get the camera.
       for( vul_file_iterator f3= (current_dir2 + "\\*").c_str(); f3; ++f3 ){
 
-        vcl_string current_dir3( f3() );
+        std::string current_dir3( f3() );
         last_slash = last_period = 0;
         for( int i = 0; i < current_dir3.size(); i++ ){
           if( current_dir3[i] == '.' ) last_period = i;
@@ -80,21 +80,21 @@ int main( int argc, char* argv[] )
         }
         if( last_period > last_slash ) continue;
 
-        vcl_string camera_string;
+        std::string camera_string;
         for( int i = last_slash+4; i < current_dir3.size(); i++ )
           camera_string += current_dir3[i];
         int relative_camera = atoi( camera_string.c_str() );
         int camera = (4*computer_index) + relative_camera + 1;
 
         // Get time + shutter speed.
-        vcl_string time;
-        vcl_vector< vcl_string > img_names;
-        vcl_vector<int> shutter_indices;
+        std::string time;
+        std::vector< std::string > img_names;
+        std::vector<int> shutter_indices;
         for( vul_file_iterator f4= (current_dir3 + "\\*").c_str(); f4; ++f4 ){
 
-          vcl_string current_file( f4() );
+          std::string current_file( f4() );
           int cf_ext_index = current_file.size()-4;
-          vcl_string cf_ext;
+          std::string cf_ext;
           cf_ext+=current_file[cf_ext_index]; cf_ext+=current_file[cf_ext_index+1];
           cf_ext+=current_file[cf_ext_index+2]; cf_ext+=current_file[cf_ext_index+3];
           if( cf_ext != ".bmp" ) continue;
@@ -118,7 +118,7 @@ int main( int argc, char* argv[] )
           for( int i = fifth_us+1; i < sixth_us; i++ )
             time += current_file[i];
 
-          vcl_string shutter_string;
+          std::string shutter_string;
           for( int i = seventh_us+1; i < current_file.size(); i++ ){
             if( current_file[i] == '.' ) break;
             shutter_string+= current_file[i];
@@ -137,7 +137,7 @@ int main( int argc, char* argv[] )
           else if( shutter_number == 256 ) shutter_index = 9;
           else if( shutter_number == 384 ) shutter_index = 10;
           else if( shutter_number == 0 ) shutter_index = 11;
-          else vcl_cerr << "ERROR: Unknown shutter number: " << shutter_number << '\n';
+          else std::cerr << "ERROR: Unknown shutter number: " << shutter_number << '\n';
                     
           if( shutter_index == 0 ) continue; // Simplest solution.
           img_names.push_back( current_file );
@@ -145,7 +145,7 @@ int main( int argc, char* argv[] )
         }
 
         // Now form the output image name.
-        vcl_stringstream png_name;
+        std::stringstream png_name;
         png_name << output_dir << "\\";
         if( material == 0 ) png_name << "00_calibration";
         else if( material == 1 ) png_name << "01_shingle";
@@ -164,17 +164,17 @@ int main( int argc, char* argv[] )
         else if( material == 14 ) png_name << "14_leaves";
         else if( material == 15 ) png_name << "15_tile_shade";
         else if( material == 16 ) png_name << "16_aluminum_shade";
-        else vcl_cerr << "ERROR: Unknown material: " << material << '\n';
+        else std::cerr << "ERROR: Unknown material: " << material << '\n';
         png_name << "\\" << day << time << '_';
         if( rotation == 0 ) png_name << "00";
         else if( rotation == 90 ) png_name << "0";
         png_name << rotation << '_';
         if( camera < 10 ) png_name << '0';
         png_name << camera << ".png";
-        vcl_cerr << png_name.str() << '\n';
+        std::cerr << png_name.str() << '\n';
 
         // Convert to png.
-        vcl_vector< vil_image_view<vxl_byte> > imgs;
+        std::vector< vil_image_view<vxl_byte> > imgs;
         for( int i = 0; i < img_names.size(); i++ )
           imgs.push_back( vil_load( img_names[i].c_str() ) );
         if( img_names.size() == 0 ) continue;

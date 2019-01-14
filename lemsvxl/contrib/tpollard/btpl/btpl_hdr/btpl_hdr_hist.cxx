@@ -4,13 +4,13 @@
 // Created : 09/1/07
 
 
-#include <vcl_iostream.h>
-//#include <vcl_stringstream.h>
-#include <vcl_fstream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <iostream>
+//#include <std::stringstream.h>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <vector>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
@@ -31,9 +31,9 @@
 
 void hdr_image_hist()
 {
-  vcl_string file_in = "E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\11808_1_06.tif";
-  vcl_string file_out = "E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\hdr_histo.txt";
-  vcl_ofstream ofs(file_out.c_str());
+  std::string file_in = "E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\11808_1_06.tif";
+  std::string file_out = "E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\hdr_histo.txt";
+  std::ofstream ofs(file_out.c_str());
 
   vil_image_view<float> hdr_im(vil_load(file_in.c_str()));
 
@@ -49,7 +49,7 @@ void hdr_image_hist()
   }
 
   //get the histogram of image
-  vcl_vector<double> histo;
+  std::vector<double> histo;
   unsigned nbins = 1000;
   vil_histogram(hdr_im, histo, min, max, nbins);
 
@@ -62,15 +62,15 @@ void hdr_image_hist()
 
 }
 
-void hdr_response_hist(vcl_string const &cam)
+void hdr_response_hist(std::string const &cam)
 {
  
   //main image directory
 
-  vcl_string img_dir = "E:\\dome_images\\00_calibration\\cropped_imgs\\png_11006";
+  std::string img_dir = "E:\\dome_images\\00_calibration\\cropped_imgs\\png_11006";
 
   //shutter speeds' files
-  vcl_vector<vcl_string> shutter_files;
+  std::vector<std::string> shutter_files;
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds.txt");
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds05.txt");
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds07.txt");
@@ -82,19 +82,19 @@ void hdr_response_hist(vcl_string const &cam)
   shutter_files.push_back("E:\\dome_images\\shutter_speed\\shutter_speeds32.txt");
   
     
-  vcl_stringstream ss_hdr_file;
-  vcl_stringstream ss_png_file;
+  std::stringstream ss_hdr_file;
+  std::stringstream ss_png_file;
   ss_hdr_file.clear();
   ss_png_file.clear();
   ss_hdr_file << "E:\\dome_images\\00_calibration\\cropped_imgs\\png_11006\\11006_1_" << cam << ".tif";
   ss_png_file <<  "E:\\dome_images\\00_calibration\\cropped_imgs\\png_11006\\11006_1_" << cam <<".png ";
-  vcl_string hdr_file = ss_hdr_file.str();
-  vcl_string png_file = ss_png_file.str();
-  vcl_string file_out = "E:\\dome_images\\test_hdr_analysis\\all_results\\hdr_response_histo.txt";
+  std::string hdr_file = ss_hdr_file.str();
+  std::string png_file = ss_png_file.str();
+  std::string file_out = "E:\\dome_images\\test_hdr_analysis\\all_results\\hdr_response_histo.txt";
 
-  vcl_string index_file = img_dir + "\\index_file_used.txt";
-  vcl_ifstream fs( index_file.c_str() );
-  vcl_vector<unsigned> indeces;
+  std::string index_file = img_dir + "\\index_file_used.txt";
+  std::ifstream fs( index_file.c_str() );
+  std::vector<unsigned> indeces;
   unsigned temp_ind = 0;
   for(unsigned i=0; i<16; i++)
   {
@@ -103,18 +103,18 @@ void hdr_response_hist(vcl_string const &cam)
   }
   
   unsigned cam_i = atoi(cam.c_str());
-  vcl_string shutter_file = shutter_files[indeces[cam_i - 1]];
+  std::string shutter_file = shutter_files[indeces[cam_i - 1]];
   
   //all
-  vcl_stringstream ss_out;
+  std::stringstream ss_out;
   ss_out.clear();
   ss_out<<"E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\10\\new_histos\\hdr_histo_cam" << cam << ".tif";
-  vcl_string image_out = ss_out.str();
-  vcl_ofstream ofs(file_out.c_str());
+  std::string image_out = ss_out.str();
+  std::ofstream ofs(file_out.c_str());
 
   //store shutter speeds
-  vcl_vector<float> ss;
-  vcl_ifstream ssfs( shutter_file.c_str() );
+  std::vector<float> ss;
+  std::ifstream ssfs( shutter_file.c_str() );
   float temp_ss = 0.0;
 
   for (unsigned i= 0; i <12; i++)
@@ -163,15 +163,15 @@ void hdr_response_hist(vcl_string const &cam)
   unsigned int ybins = 255;
   vil_image_view<float> hist_image(xbins, ybins);
 
-  vcl_vector<float> min; 
+  std::vector<float> min; 
   min.push_back(xmin);
   min.push_back(ymin);
 
-  vcl_vector<float> max; 
+  std::vector<float> max; 
   max.push_back(xmax);
   max.push_back(ymax);
 
-  vcl_vector<unsigned int> nbins;
+  std::vector<unsigned int> nbins;
   nbins.push_back(xbins);
   nbins.push_back(ybins);
 
@@ -213,11 +213,11 @@ void hdr_response_hist(vcl_string const &cam)
     png_image = vil_crop(png_strip, 0,widht, (img_num * height), height);
 
     //individual exposures
-   /* vcl_stringstream ss_out;
+   /* std::stringstream ss_out;
     ss_out.clear();
     ss_out<<"E:\\dome_images\\test_hdr_analysis\\all_results\\trian_lambda2\\18\\hdr_histo_cam9_im" << img_num << ".tif";
-    vcl_string image_out = ss_out.str();
-    vcl_ofstream ofs(file_out.c_str());*/
+    std::string image_out = ss_out.str();
+    std::ofstream ofs(file_out.c_str());*/
 
     bool success = false;
 
@@ -230,7 +230,7 @@ void hdr_response_hist(vcl_string const &cam)
         //check proper range
         if (vnl_math_isnan(ln_x_t))
         {
-          vcl_cerr<<"warning, data coordinate out of range\n";
+          std::cerr<<"warning, data coordinate out of range\n";
           continue;
         }
 
@@ -239,14 +239,14 @@ void hdr_response_hist(vcl_string const &cam)
         //histogram related 
         success = hist.update(data_temp);
         if(!success)
-          vcl_cerr<<"histogram update error at data " << i <<vcl_endl;
+          std::cerr<<"histogram update error at data " << i <<std::endl;
     
        
       }
     }
   // if no all 
   }
-  //vcl_cout << "max x: "<< xmax <<"\n" <<"min x: "<< xmin<< "\n"
+  //std::cout << "max x: "<< xmax <<"\n" <<"min x: "<< xmin<< "\n"
   // << " max y: "<< ymax << "\n" << " min y: "<< ymin <<"\n";
 
 

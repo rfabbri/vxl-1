@@ -1,7 +1,7 @@
 #include "ctspheres_app.h"
 #include "ctspheres_io.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bdifd/bdifd_rig.h>
 #include <mw/algo/mw_match_old.h>
@@ -28,12 +28,12 @@
 
 static void
 match_contours(
-  const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con,
-  const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_dt,
-  const vcl_vector<unsigned> &match,
+  const std::vector<std::vector<vsol_point_2d_sptr> >  &con,
+  const std::vector<std::vector<vsol_point_2d_sptr> >  &con_dt,
+  const std::vector<unsigned> &match,
   bdifd_rig &rig,
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_match,
-  vcl_vector<vcl_vector<bool> > &valid);
+  std::vector<std::vector<vsol_point_2d_sptr> >  &con_match,
+  std::vector<std::vector<bool> > &valid);
 
 static void 
 define_perturbation(
@@ -55,8 +55,8 @@ define_perturbation(
 static void
 mw_sphere_apparent_contour_do_a_camera_pair(
       bool read_params_from_file, bool write_info,
-      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const vcl_string &suffix,
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > &crv_3d
+      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const std::string &suffix,
+      std::vector<std::vector<bmcsd_vector_3d> > &crv_3d
       );
 
 //: reads 3D levelset image, trace 0-levelset at each slice, do matching
@@ -64,15 +64,15 @@ void
 match_and_reconstruct()
 {
 
-  vcl_vector<vil_image_view<float> > imgv;
+  std::vector<vil_image_view<float> > imgv;
   read_levelset(imgv);
 
   unsigned ni,nj;
   ni = imgv[0].ni();
   nj = imgv[0].nj();
 
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con;
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con_dt;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con_dt;
 
   trace_contours(imgv, con, 2);
   trace_contours(imgv, con_dt, 3);
@@ -81,13 +81,13 @@ match_and_reconstruct()
 
   // perform matching
 
-  vcl_vector<vsol_point_2d> m;
-  vcl_vector<vsol_point_2d> m_dt;
+  std::vector<vsol_point_2d> m;
+  std::vector<vsol_point_2d> m_dt;
 
   m.resize(con.size(),vsol_point_2d(0,0));
   m_dt.resize(con_dt.size(),vsol_point_2d(0,0));
 
-  vcl_cout << "Centroids slice t\n";
+  std::cout << "Centroids slice t\n";
   // compute centers of masses
   for (unsigned i=0; i<m.size(); ++i) {
     for (unsigned k=0; k<con[i].size(); ++k) {
@@ -100,7 +100,7 @@ match_and_reconstruct()
     printf("%g\t%g\n",m[i].x(), m[i].y());
   }
 
-  vcl_cout << "\nCentroids slice t+dt\n";
+  std::cout << "\nCentroids slice t+dt\n";
   // compute centers of masses
   for (unsigned i=0; i<m_dt.size(); ++i) {
     for (unsigned k=0; k<con_dt[i].size(); ++k) {
@@ -117,8 +117,8 @@ match_and_reconstruct()
 
   // match centers of masses
 
-  vcl_vector<unsigned> match;
-  vcl_vector<double> cost;
+  std::vector<unsigned> match;
+  std::vector<double> cost;
 
   match.resize(m.size());
 
@@ -149,7 +149,7 @@ match_and_reconstruct()
     printf("%d\t%g\n",match[i],cost[i]);
     for (unsigned j=0; j<m.size(); ++j) {
       if (i != j && match[i] == match[j])
-        vcl_cerr << "Error: duplicate match!\n";
+        std::cerr << "Error: duplicate match!\n";
     }
   }
 
@@ -169,7 +169,7 @@ match_and_reconstruct()
   delete P; 
   delete P_dt;
 
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con_match;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con_match;
   con_match.resize(con.size());
 
   for (unsigned i=0; i<con.size(); ++i) {
@@ -192,18 +192,18 @@ match_and_reconstruct()
     }
   }
 
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d;
 
-  vcl_ostringstream imgnumber; //:< number of first or central image
+  std::ostringstream imgnumber; //:< number of first or central image
   imgnumber << 2;
 
-  vcl_string prefix("ct-spheres/dat/reconstr-600x-");
-  vcl_string ext(".dat");
+  std::string prefix("ct-spheres/dat/reconstr-600x-");
+  std::string ext(".dat");
 
   for (unsigned i=0; i<con.size(); ++i) {
-    vcl_vector<bmcsd_vector_3d> crv_3d;
-    vcl_vector<bool> valid;
+    std::vector<bmcsd_vector_3d> crv_3d;
+    std::vector<bool> valid;
 
     rig.reconstruct_3d_occluding_contour(
         &crv_3d,
@@ -212,16 +212,16 @@ match_and_reconstruct()
         con_match[i]);
 
 
-    vcl_ostringstream contnumber;
+    std::ostringstream contnumber;
     contnumber << i;
 
 
-    vcl_string 
-      fname=prefix + imgnumber.str() + vcl_string("-") + contnumber.str() + ext;
+    std::string 
+      fname=prefix + imgnumber.str() + std::string("-") + contnumber.str() + ext;
 
-    fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+    fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-    vcl_cout << "writing: " << fname << vcl_endl;
+    std::cout << "writing: " << fname << std::endl;
     for (unsigned k=0; k<crv_3d.size(); ++k) {
       if (valid[k]) {
          fcrv_3d.write((char *)(crv_3d[k].data_block()),3*sizeof(double));
@@ -279,28 +279,28 @@ mw_sphere_apparent_contour_app_orientation(
   delete P; delete P_dt;
 
   bool write_info=false;
-  vcl_string suffix("-dummy"); //:< not used
+  std::string suffix("-dummy"); //:< not used
 
 
-  double hmin=vcl_numeric_limits<double>::infinity(), theta_min=0, phi_min=0;
+  double hmin=std::numeric_limits<double>::infinity(), theta_min=0, phi_min=0;
   bmcsd_vector_3d my_c_t; //:< perturbed vector
 
   unsigned long n=0;
   for (theta=0; theta<360; theta+=10)
     for (phi=0; phi<180; phi+=5) {
 
-      vcl_cout << "Iteration number: " << ++n << 
-          "  Theta: " << theta << "  Phi: " << phi  << "   (degrees)" << vcl_endl;
+      std::cout << "Iteration number: " << ++n << 
+          "  Theta: " << theta << "  Phi: " << phi  << "   (degrees)" << std::endl;
 
       define_perturbation(theta, phi, read_params_from_file, write_info, rig1, my_c_t);
 
       // MATCH + RECONSTRUCTION
 
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
+      std::vector<std::vector<bmcsd_vector_3d> > crv_3d_01;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix, crv_3d_01);
 
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
+      std::vector<std::vector<bmcsd_vector_3d> > crv_3d_12;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
 
@@ -314,15 +314,15 @@ mw_sphere_apparent_contour_app_orientation(
         phi_min = phi;
       }
 
-      vcl_cout << "h : " << vcl_sqrt(h) << vcl_endl;
-      vcl_cout << "hmin : " << vcl_sqrt(hmin) << vcl_endl;
-      vcl_cout << 
-        "Theta min: " << theta_min << "  Phi min: " << phi_min << vcl_endl;
+      std::cout << "h : " << std::sqrt(h) << std::endl;
+      std::cout << "hmin : " << std::sqrt(hmin) << std::endl;
+      std::cout << 
+        "Theta min: " << theta_min << "  Phi min: " << phi_min << std::endl;
 
     }
 
-  vcl_cout << 
-    "Theta min: " << theta_min << "  Phi min: " << phi_min << vcl_endl;
+  std::cout << 
+    "Theta min: " << theta_min << "  Phi min: " << phi_min << std::endl;
 }
 
 // Application to test *autocalibration* based on occluding contours of an
@@ -369,10 +369,10 @@ mw_sphere_apparent_contour_app_magnitude(
   delete P; delete P_dt;
 
   bool write_info=false;
-  vcl_string suffix("-dummy"); //:< not used
+  std::string suffix("-dummy"); //:< not used
 
 
-  double hmin=vcl_numeric_limits<double>::infinity(), mag_min=0, theta_min=0, phi_min=0;
+  double hmin=std::numeric_limits<double>::infinity(), mag_min=0, theta_min=0, phi_min=0;
   bmcsd_vector_3d my_c_t; //:< perturbed vector
 
 //  theta = 180;
@@ -384,19 +384,19 @@ mw_sphere_apparent_contour_app_magnitude(
   for (theta=0; theta<360; theta+=15)
     for (phi=180; phi>=0; phi-=10)
       for (mag=0.01; mag<4; mag+=0.15) {
-        vcl_cout << "-------------" << vcl_endl << vcl_endl;
-      vcl_cout << "Iteration number: " << ++n << "  mag(mm): " << mag << 
-          "  Theta: " << theta << "  Phi: " << phi  << "   (degrees)" << vcl_endl;
+        std::cout << "-------------" << std::endl << std::endl;
+      std::cout << "Iteration number: " << ++n << "  mag(mm): " << mag << 
+          "  Theta: " << theta << "  Phi: " << phi  << "   (degrees)" << std::endl;
 
       define_perturbation(theta, phi, read_params_from_file, write_info, rig1, my_c_t,mag);
 
       // MATCH + RECONSTRUCTION
 
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
+      std::vector<std::vector<bmcsd_vector_3d> > crv_3d_01;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix, crv_3d_01);
 
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
+      std::vector<std::vector<bmcsd_vector_3d> > crv_3d_12;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
 
@@ -411,19 +411,19 @@ mw_sphere_apparent_contour_app_magnitude(
         phi_min = phi;
       }
 
-      vcl_cout << "h : " << vcl_sqrt(h) << vcl_endl;
-      vcl_cout << "hmin : " << vcl_sqrt(hmin) << vcl_endl;
-      vcl_cout << 
-        "mag min: " << mag_min << vcl_endl;
-      vcl_cout << 
-        "Theta min: " << theta_min << "  Phi min: " << phi_min << vcl_endl;
+      std::cout << "h : " << std::sqrt(h) << std::endl;
+      std::cout << "hmin : " << std::sqrt(hmin) << std::endl;
+      std::cout << 
+        "mag min: " << mag_min << std::endl;
+      std::cout << 
+        "Theta min: " << theta_min << "  Phi min: " << phi_min << std::endl;
 
     }
 
-     vcl_cout << 
-        "FINAL mag min: " << mag_min << vcl_endl;
-      vcl_cout << 
-        "Theta min: " << theta_min << "  Phi min: " << phi_min << vcl_endl;
+     std::cout << 
+        "FINAL mag min: " << mag_min << std::endl;
+      std::cout << 
+        "Theta min: " << theta_min << "  Phi min: " << phi_min << std::endl;
 }
 
 
@@ -479,13 +479,13 @@ mw_sphere_apparent_contour_app1(
 
   // MATCH + RECONSTRUCTION
 
-  vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
+  std::vector<std::vector<bmcsd_vector_3d> > crv_3d_01;
 
-  vcl_string suffix("-cam01"); //:< cameras 0 and 1
+  std::string suffix("-cam01"); //:< cameras 0 and 1
   mw_sphere_apparent_contour_do_a_camera_pair
     (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix,crv_3d_01);
 
-  vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
+  std::vector<std::vector<bmcsd_vector_3d> > crv_3d_12;
   suffix = "-cam12"; //:< cameras 1 and 2 
   mw_sphere_apparent_contour_do_a_camera_pair
     (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
@@ -496,11 +496,11 @@ mw_sphere_apparent_contour_app1(
 void
 mw_sphere_apparent_contour_do_a_camera_pair(
       bool /*read_params_from_file*/, bool write_info,
-      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const vcl_string &suffix,
-      vcl_vector<vcl_vector<bmcsd_vector_3d> > &crv_3d
+      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const std::string &suffix,
+      std::vector<std::vector<bmcsd_vector_3d> > &crv_3d
       )
 {
-  vcl_string ext(".dat");
+  std::string ext(".dat");
 
   // find sphere_occluding_contour for each view
   bmcsd_vector_3d s0;
@@ -510,7 +510,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
   const double radius=5;
   double Gamma_radius, Gamma_radius2;
 
-  vcl_vector<bmcsd_vector_3d> Gamma;
+  std::vector<bmcsd_vector_3d> Gamma;
   bmcsd_vector_3d Gamma_center;
   bdifd_analytic::sphere_occluding_contour(
       radius, /* radius */
@@ -519,7 +519,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
       Gamma, Gamma_center, Gamma_radius);
 
 
-  vcl_vector<vsol_point_2d_sptr> xi; //:< image coordinates
+  std::vector<vsol_point_2d_sptr> xi; //:< image coordinates
   xi.resize(Gamma.size());
   for (unsigned i=0; i<Gamma.size(); ++i) {
     // - get image coordinates
@@ -529,7 +529,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
   }
 
 
-  vcl_vector<bmcsd_vector_3d> Gamma2;
+  std::vector<bmcsd_vector_3d> Gamma2;
   bmcsd_vector_3d Gamma_center2;
   bdifd_analytic::sphere_occluding_contour(
       radius, /* radius */
@@ -537,7 +537,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
       rig.cam[1].c, /* camera center */
       Gamma2, Gamma_center2, Gamma_radius2);
 
-  vcl_vector<vsol_point_2d_sptr> xi2; //:< image coordinates
+  std::vector<vsol_point_2d_sptr> xi2; //:< image coordinates
   xi2.resize(Gamma.size());
   for (unsigned i=0; i<Gamma2.size(); ++i) {
     // - get image coordinates
@@ -547,20 +547,20 @@ mw_sphere_apparent_contour_do_a_camera_pair(
   }
 
   if (write_info) {
-    mywritev(vcl_string("ct-spheres/dat/xi") + suffix + ext,xi);
-    mywritev(vcl_string("ct-spheres/dat/xi2") + suffix + ext,xi2);
-    mywritev(vcl_string("ct-spheres/dat/Gamma-occl") + suffix + ext,Gamma);
-    mywritev(vcl_string("ct-spheres/dat/Gamma2-occl") + suffix + ext,Gamma2);
+    mywritev(std::string("ct-spheres/dat/xi") + suffix + ext,xi);
+    mywritev(std::string("ct-spheres/dat/xi2") + suffix + ext,xi2);
+    mywritev(std::string("ct-spheres/dat/Gamma-occl") + suffix + ext,Gamma);
+    mywritev(std::string("ct-spheres/dat/Gamma2-occl") + suffix + ext,Gamma2);
 
 
     // Write contour generator #1's center, binormal (plane normal), and radius
     {
-        vcl_ofstream fGamma_p;
-        vcl_string fname = vcl_string("ct-spheres/dat/Gamma-occl-params-1") + suffix + ext;
+        std::ofstream fGamma_p;
+        std::string fname = std::string("ct-spheres/dat/Gamma-occl-params-1") + suffix + ext;
 
-        fGamma_p.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+        fGamma_p.open(fname.c_str(),std::ios::out | std::ios::binary);
         if (!fGamma_p) {
-          vcl_cerr << "myreadv: error, unable to open file" << vcl_endl; exit(1);
+          std::cerr << "myreadv: error, unable to open file" << std::endl; exit(1);
         }
         fGamma_p.write((char *)(Gamma_center.data_block()),3*sizeof(double));
         bmcsd_vector_3d nn = (rig.cam[0].c - s0).normalize();
@@ -572,30 +572,30 @@ mw_sphere_apparent_contour_do_a_camera_pair(
 
   // ======= MATCH =========
 
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con;
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con_dt;
-  vcl_vector<unsigned>contour_match_idx;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con_dt;
+  std::vector<unsigned>contour_match_idx;
   contour_match_idx.push_back(0);
 
   con.push_back(xi);
   con_dt.push_back(xi2);
 
 
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  con_match;
-  vcl_vector<vcl_vector<bool> > valid;
+  std::vector<std::vector<vsol_point_2d_sptr> >  con_match;
+  std::vector<std::vector<bool> > valid;
 
 
   match_contours(con, con_dt, contour_match_idx, rig, con_match, valid);
 
 
   // ==================== RECONSTRUCT and OUTPUT ================
-  vcl_ofstream 
+  std::ofstream 
     fcrv_3d,
     fcon, fcon_match, fvalid;
-  vcl_string prefix("ct-spheres/dat/analytic-reconstr-");
+  std::string prefix("ct-spheres/dat/analytic-reconstr-");
 
   // XXX  pass as argument
-  vcl_ostringstream imgnumber; //:< number of first or central image
+  std::ostringstream imgnumber; //:< number of first or central image
   imgnumber << 2;
 
   crv_3d.resize(1);
@@ -622,20 +622,20 @@ mw_sphere_apparent_contour_do_a_camera_pair(
 
 
     if (write_info) {
-      vcl_ostringstream contnumber;
+      std::ostringstream contnumber;
       contnumber << i;
 
-      vcl_string 
-        fname=prefix + imgnumber.str() + vcl_string("-") + contnumber.str() + suffix + ext;
+      std::string 
+        fname=prefix + imgnumber.str() + std::string("-") + contnumber.str() + suffix + ext;
 
-      fcrv_3d.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+      fcrv_3d.open(fname.c_str(),std::ios::out | std::ios::binary);
 
-      vcl_cout << "writing: " << fname << vcl_endl;
+      std::cout << "writing: " << fname << std::endl;
       for (unsigned k=0; k<crv_3d[0].size(); ++k) {
         if (valid[i][k]) {
            fcrv_3d.write((char *)(crv_3d[0][k].data_block()),3*sizeof(double));
         } else {
-  //        vcl_cout << "Not valid: " << i << k << vcl_endl;
+  //        std::cout << "Not valid: " << i << k << std::endl;
         }
       }
 
@@ -643,7 +643,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
     }
   }
 
-  vcl_vector<bmcsd_vector_3d> crv_valid;
+  std::vector<bmcsd_vector_3d> crv_valid;
 
   for (unsigned k=0; k<crv_3d[0].size(); ++k) {
     if (valid[0][k]) {
@@ -657,24 +657,24 @@ mw_sphere_apparent_contour_do_a_camera_pair(
 
   if (write_info) { // Only output the first contour match for debugging:
 
-    vcl_ostringstream contnumber;
+    std::ostringstream contnumber;
     contnumber << 0;
 
-    vcl_string 
-    fname = prefix + imgnumber.str() + vcl_string("-") + contnumber.str()
-       + vcl_string("-con") + suffix + ext;
+    std::string 
+    fname = prefix + imgnumber.str() + std::string("-") + contnumber.str()
+       + std::string("-con") + suffix + ext;
 
     mywritev(fname,con[0]);
 
-    fname = prefix + imgnumber.str() + vcl_string("-") + contnumber.str()
-       + vcl_string("-conmatch") + suffix + ext;
+    fname = prefix + imgnumber.str() + std::string("-") + contnumber.str()
+       + std::string("-conmatch") + suffix + ext;
 
     mywritev(fname,con_match[0]);
 
-    fname = prefix + imgnumber.str() + vcl_string("-") + contnumber.str()
-       + vcl_string("-valid") + suffix + ext;
+    fname = prefix + imgnumber.str() + std::string("-") + contnumber.str()
+       + std::string("-valid") + suffix + ext;
 
-    fvalid.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+    fvalid.open(fname.c_str(),std::ios::out | std::ios::binary);
 
     for (unsigned k=0; k<valid[0].size(); ++k) {
       double aux = (valid[0][k])?1.0:0.0;
@@ -688,12 +688,12 @@ mw_sphere_apparent_contour_do_a_camera_pair(
 
 void
 match_contours(
-  const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con,
-  const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_dt,
-  const vcl_vector<unsigned> &match,
+  const std::vector<std::vector<vsol_point_2d_sptr> >  &con,
+  const std::vector<std::vector<vsol_point_2d_sptr> >  &con_dt,
+  const std::vector<unsigned> &match,
   bdifd_rig &rig, //:< input
-  vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_match,
-  vcl_vector<vcl_vector<bool> > &valid
+  std::vector<std::vector<vsol_point_2d_sptr> >  &con_match,
+  std::vector<std::vector<bool> > &valid
     )
 {
 
@@ -756,9 +756,9 @@ define_perturbation(
     bmcsd_vector_3d &my_c_t, double magnitude)
 {
     if (read_params_from_file) {
-      vcl_ifstream fconf("ct-spheres/config/perturb.txt",vcl_ios::in);
+      std::ifstream fconf("ct-spheres/config/perturb.txt",std::ios::in);
       if (!fconf)
-        vcl_cerr << "Could not open file" << vcl_endl;
+        std::cerr << "Could not open file" << std::endl;
 
       fconf >> theta;
       fconf >> phi;
@@ -778,12 +778,12 @@ define_perturbation(
 
     if (write_info) {
       // write cam info
-      vcl_ofstream fcam;
-      vcl_string fname("ct-spheres/dat/analytic-reconstr-tmp-C-perturb.dat");
+      std::ofstream fcam;
+      std::string fname("ct-spheres/dat/analytic-reconstr-tmp-C-perturb.dat");
 
-      fcam.open(fname.c_str(),vcl_ios::out | vcl_ios::binary);
+      fcam.open(fname.c_str(),std::ios::out | std::ios::binary);
       if (!fcam) {
-        vcl_cerr << "myreadv: error, unable to open file name" << vcl_endl; exit(1);
+        std::cerr << "myreadv: error, unable to open file name" << std::endl; exit(1);
       }
       fcam.write((char *)(rig.cam[0].c.data_block()),3*sizeof(double));
       fcam.write((char *)(rig.cam[1].c.data_block()),3*sizeof(double));

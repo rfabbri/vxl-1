@@ -18,8 +18,8 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_cmath.h>
-#include <vcl_string.h>
+#include <cmath>
+#include <string>
 
 class biocts_Volume3D;
 
@@ -31,12 +31,12 @@ public:
   int ***data;
 
   biocts_Volume3D(int xdim=0, int ydim=0, int zdim=0);
-  biocts_Volume3D(vcl_string volumedatafile);
+  biocts_Volume3D(std::string volumedatafile);
 
   ~biocts_Volume3D();
 
   void rotate_volume(biocts_Volume3D* new_ob, double ang);
-  void saveVolumeInFile(vcl_string filename);
+  void saveVolumeInFile(std::string filename);
 };
 
 #endif

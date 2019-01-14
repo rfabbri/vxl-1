@@ -13,9 +13,9 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <bgui/bgui_selector_tableau.h>
 #include <bvis1/displayer/bvis1_image_displayer.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_arg.h>
-#include <vcl_cstdlib.h>
+#include <cstdlib>
 
 
 //: Utilities to use with xgraph detection

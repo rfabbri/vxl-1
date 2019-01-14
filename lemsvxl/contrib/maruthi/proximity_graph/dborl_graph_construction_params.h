@@ -29,7 +29,7 @@ class dborl_graph_construction_params : public dborl_algo_params
 public:
 
   //: Constructor
-  dborl_graph_construction_params(vcl_string algo_name);
+  dborl_graph_construction_params(std::string algo_name);
 
   // MEMBER VARIABLES
 
@@ -40,13 +40,13 @@ public:
   dborl_parameter<unsigned int>  graph_type_;
 
   //: Name of file that holds similarity matrix
-  dborl_parameter<vcl_string> exemplar_sim_matrix_;
+  dborl_parameter<std::string> exemplar_sim_matrix_;
   
   //: Name of file that holds a list of strings that represent exemplars
-  dborl_parameter<vcl_string> exemplar_label_file_;
+  dborl_parameter<std::string> exemplar_label_file_;
 
   //: Name of file that holds category names
-  dborl_parameter<vcl_string> exemplar_category_file_;
+  dborl_parameter<std::string> exemplar_category_file_;
 
   //: Beta needed for beta skeletons
   dborl_parameter<double> beta_;
@@ -62,11 +62,11 @@ public:
 
   //: Passes the folder of the dataset directory
   //: will write straight to the dataset folder
-  dborl_parameter<vcl_string> dataset_dir_;    
+  dborl_parameter<std::string> dataset_dir_;    
 
   //: Passes the folder of the output directory
   //: of where results should go
-  dborl_parameter<vcl_string> output_dir_;    
+  dborl_parameter<std::string> output_dir_;    
 
 };
 

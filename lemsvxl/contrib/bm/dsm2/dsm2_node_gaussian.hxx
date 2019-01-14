@@ -42,7 +42,7 @@ void dsm2_node_gaussian<gaussianT>::b_read( vsl_b_istream& is )
 		}//end case 1
 	default:
 		{
-			vcl_cerr << "ERROR: dsm2_node_gaussian_full::b_read() -- unknown version number." << vcl_flush;
+			std::cerr << "ERROR: dsm2_node_gaussian_full::b_read() -- unknown version number." << std::flush;
 			return;
 		}//end default
 	}//end switch(v)

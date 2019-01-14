@@ -1,9 +1,9 @@
 //BOUNDARY.CPP
 #include <extrautils/msgout.h>
 
-#include <vcl_cmath.h>
-#include <vcl_utility.h>
-#include <vcl_set.h>
+#include <cmath>
+#include <utility>
+#include <set>
 
 #include "ishock-common.h"
 #include "boundary.h"
@@ -45,21 +45,21 @@ void Boundary::Clear()
 
 void Boundary::clear_contours()
 {
-  //delete each contour in the vcl_list
+  //delete each contour in the std::list
   BContourListIterator curCon = contourList.begin();
   for (; curCon != contourList.end(); curCon++)
     delete *curCon;
 
-  //then clear the vcl_list
+  //then clear the std::list
   contourList.clear();
 }
 
 void Boundary::weedOutShortcontours()
 {
-  //delete vcl_list
+  //delete std::list
   BContourList saveList;
 
-  //delete each contour in the vcl_list
+  //delete each contour in the std::list
   BContourListIterator curCon = contourList.begin();
   for (; curCon != contourList.end(); curCon++)
     if ( (*curCon)->elms.size() > 10)
@@ -231,13 +231,13 @@ void Boundary::delBElement (BElement* belm)
   assert(belm);
   //delete all the shocks caused by this boundary element
   delBElementShockList(belm);
-  //Then remove this element from the boundary vcl_list
+  //Then remove this element from the boundary std::list
   BElmList.erase(belm->id());
 
   //We also need to remove it from the taintedBElmList if it exists there
   taintedBElmList.erase(belm->id());
 
-  //also remove it from the update vcl_list
+  //also remove it from the update std::list
   update_list.erase(belm->id());
 
   //and delete the element object
@@ -273,7 +273,7 @@ void Boundary::delBElementList ()
     BElmList.erase(curB, BElmList.end());
   }
 
-  //tainted vcl_list is invalid so clear it too
+  //tainted std::list is invalid so clear it too
   update_list.clear();
   taintedBElmList.clear();
 }
@@ -363,7 +363,7 @@ bool Boundary::delGUIElement (BElement* elm)
   }
 
   //insert all the neighboring elements of the current gui element into the
-  //tainted vcl_list before any of the shocks are deleted
+  //tainted std::list before any of the shocks are deleted
   BElementList neighboringBElms = getAllNeighboringBElementsFromAGUIElement(elm);
   BElementListIterator curB = neighboringBElms.begin();
   for (; curB!=neighboringBElms.end(); ++curB) {
@@ -460,7 +460,7 @@ void Boundary::moveGUIElement (BElement* belm, COORD_TYPE x, COORD_TYPE y)
 void Boundary::addBElement (BElement* elm)
 {
   BElmList.insert(ID_BElm_pair(elm->id(), elm));
-  //also add it to the plagued vcl_list
+  //also add it to the plagued std::list
   taintedBElmList.insert(ID_BElm_pair(elm->id(), elm));
 }
 
@@ -469,7 +469,7 @@ BPoint* Boundary::addGUIPoint (COORD_TYPE x, COORD_TYPE y, INPUT_TAN_TYPE tangen
 
   //1)Test if (x, y) is valid...
   if (!isPointValidInWorld(x,y)) {
-    vcl_cout << "BPoint Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<vcl_endl;
+    std::cout << "BPoint Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<std::endl;
     return NULL;
   }
   BPoint* newelm;
@@ -479,7 +479,7 @@ BPoint* Boundary::addGUIPoint (COORD_TYPE x, COORD_TYPE y, INPUT_TAN_TYPE tangen
   update_list.insert(ID_BElm_pair(newelm->id(), newelm));
 
   //Output points to save for debug...
-  //vcl_cout<< "("<<x<<" "<<y<<")\n";
+  //std::cout<< "("<<x<<" "<<y<<")\n";
   //MessageOut(2);
    return newelm;
 }
@@ -497,14 +497,14 @@ BElement* Boundary::addGUILine (COORD_TYPE sx, COORD_TYPE sy, COORD_TYPE ex, COO
   //if the line is zero length, just add a point
   if (BisEq(sx, ex) && BisEq(sy, ey)) {
     assert (0);
-    vcl_cout << "BLine becomes a BPoint" <<vcl_endl;
+    std::cout << "BLine becomes a BPoint" <<std::endl;
     return NULL;
     ///return addGUIPoint(sx, sy);
   }
 
   //2)Test if (sx, sy)-(ex, ey) is valid...
   if (!isPointValidInWorld(sx,sy) || !isPointValidInWorld(ex,ey)) {
-    vcl_cout << "BLine Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<vcl_endl;
+    std::cout << "BLine Outside Boundary World! BND_WORLD_SIZE= " << BND_WORLD_SIZE <<std::endl;
     return NULL;
   }
 
@@ -585,12 +585,12 @@ BElement* Boundary::addGUILineBetween (BPoint* spt, BPoint* ept)
       double l, k;
       //if spt is the starting point of this line
       if (lLine->s_pt() == spt){
-        dtheta = vcl_fabs(u- angle02Pi(lLine->U()+M_PI));
+        dtheta = std::fabs(u- angle02Pi(lLine->U()+M_PI));
         l = _distPointPoint(spt->pt(),lLine->e_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(lLine->e_pt()->pt(), spt->pt(), ept->pt());
       }
       else {
-        dtheta = vcl_fabs(u- lLine->U());
+        dtheta = std::fabs(u- lLine->U());
         l = _distPointPoint(spt->pt(),lLine->s_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(lLine->s_pt()->pt(), spt->pt(), ept->pt());
       }
@@ -608,12 +608,12 @@ BElement* Boundary::addGUILineBetween (BPoint* spt, BPoint* ept)
       double l, k;
       //if ept is the starting point of this line
       if (rLine->s_pt() == ept){
-        dtheta = vcl_fabs(u- rLine->U());
+        dtheta = std::fabs(u- rLine->U());
         l = _distPointPoint(ept->pt(),rLine->e_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(rLine->e_pt()->pt(), ept->pt(), spt->pt());
       }
       else {
-        dtheta = vcl_fabs(u- angle02Pi(rLine->U()+M_PI));
+        dtheta = std::fabs(u- angle02Pi(rLine->U()+M_PI));
         l = _distPointPoint(ept->pt(),rLine->s_pt()->pt());
         k = 1/getArcRadiusFromThreePoints(rLine->s_pt()->pt(), ept->pt(), spt->pt());
       }
@@ -708,7 +708,7 @@ BElement* Boundary::addGUILineBetween (BPoint* spt, BPoint* ept)
    return (BElement*)newelm;
 }
 
-void Boundary::addPolyLineBetween (BPoint* spt, BPoint* ept, vcl_vector<Point> pts, int id)
+void Boundary::addPolyLineBetween (BPoint* spt, BPoint* ept, std::vector<Point> pts, int id)
 {
   BPoint* prev_bpoint = spt;
   BPoint* next_bpoint = NULL;
@@ -736,7 +736,7 @@ BElement* Boundary::addGUIArc(COORD_TYPE sx, COORD_TYPE sy, COORD_TYPE ex, COORD
   //if the arc is zero length, just add a point
   if (BisEq(sx, ex) && BisEq(sy, ey)) {
     assert (0);
-    vcl_cout << "BArc becomes a BPoint" <<vcl_endl;
+    std::cout << "BArc becomes a BPoint" <<std::endl;
     return NULL;
     //return addGUIPoint(sx, sy);
   }
@@ -782,7 +782,7 @@ BElement* Boundary::addGUIArcBetween (BPoint* spt, BPoint* ept, Point center,
 
   //Trying to fit the arc in a box smaller than the accuracy of the input
   theta = theta/2;
-  double l = 2*r*vcl_sin(theta);
+  double l = 2*r*std::sin(theta);
   double w = l*l/r/8;
 
   //if (w < W_THRESHOLD){ //boundary estimation accuracy
@@ -880,8 +880,8 @@ void Boundary::addGUIBiArcBetween (BPoint* arc_start_pt, double SAngle,
   new_biArc.compute_other_stuff();
 
   Point mid = new_biArc.bi_arc_params.end1;
-  double R1 = vcl_fabs(new_biArc.bi_arc_params.radius1);
-  double R2 = vcl_fabs(new_biArc.bi_arc_params.radius2);
+  double R1 = std::fabs(new_biArc.bi_arc_params.radius1);
+  double R2 = std::fabs(new_biArc.bi_arc_params.radius2);
   int dir1 = new_biArc.bi_arc_params.dir1;
   int dir2 = new_biArc.bi_arc_params.dir2;
   double l1 = new_biArc.bi_arc_params.Length1;
@@ -1002,7 +1002,7 @@ void Boundary::PreProcessBoundary (void)
 {
   BPoint *bp1, *bp2;
 
-  vcl_cout<< "Boundary Preprocessing\n";
+  std::cout<< "Boundary Preprocessing\n";
 
   BElmListIterator i, j, temp;
 
@@ -1023,7 +1023,7 @@ void Boundary::PreProcessBoundary (void)
             //merge bp2 into bp1 and delete bp2
             mergeDuplicatePoints(bp1, bp2);
             temp=j; temp++;
-            //add this point to the deleted point vcl_list
+            //add this point to the deleted point std::list
             BElmToBeDeleted.push_back (bp2);
             delBElement(bp2);
             temp--; j=temp;
@@ -1035,7 +1035,7 @@ void Boundary::PreProcessBoundary (void)
       }//end switch
    }//end for i
 
-  //2)Go through the vcl_list again to remove them from BElmList
+  //2)Go through the std::list again to remove them from BElmList
   BElmVectorType::iterator it = BElmToBeDeleted.begin();
   for (; it!=BElmToBeDeleted.end(); ++it) {
     BElmList.erase ((*it)->id());
@@ -1111,30 +1111,30 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
 
   //To make it a less than O(N^2) operation, let's bin the points first
 
-  vcl_cout << "**********************************************" <<vcl_endl;
-  vcl_cout << "Edge Results Preprocessing for DT" << vcl_endl;
-  vcl_cout << "**********************************************" <<vcl_endl;
+  std::cout << "**********************************************" <<std::endl;
+  std::cout << "Edge Results Preprocessing for DT" << std::endl;
+  std::cout << "**********************************************" <<std::endl;
 
   //long sec1 = clock();
 
-  vcl_list<int> ** ImgBins;
-  ImgBins = new vcl_list<int> *[1001];
+  std::list<int> ** ImgBins;
+  ImgBins = new std::list<int> *[1001];
   for (int j=0; j<1001;j++)
-    ImgBins[j] = new vcl_list<int>[1001];
+    ImgBins[j] = new std::list<int>[1001];
 
   //long sec2 = clock();
 
-  //vcl_cout << "init Bins Time: "<<sec2-sec1<<" msec."<<vcl_endl;
-  vcl_cout << "Binning the Edge Points" << vcl_endl;
+  //std::cout << "init Bins Time: "<<sec2-sec1<<" msec."<<std::endl;
+  std::cout << "Binning the Edge Points" << std::endl;
 
-  //keep the elements to delete in this vcl_set
-  vcl_set<int> elmsToDel;
+  //keep the elements to delete in this std::set
+  std::set<int> elmsToDel;
 
   BElmListIterator i=BElmList.begin();
    for (; i!=BElmList.end(); i++) {
     BPoint* bp = (BPoint*)(i->second);
-    int x =  (int)vcl_floor (bp->pt().x);
-    int y =  (int)vcl_floor (bp->pt().y);
+    int x =  (int)std::floor (bp->pt().x);
+    int y =  (int)std::floor (bp->pt().y);
 
     if (x>=0 && y>=0){
       ImgBins[x][y].push_back(bp->id());
@@ -1164,8 +1164,8 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   }
   //long sec3 = clock();
 
-  vcl_cout << "Done Binning." << vcl_endl;
-  //vcl_cout << "Fill Bins Time: "<<sec3-sec2<<" msec."<<vcl_endl;
+  std::cout << "Done Binning." << std::endl;
+  //std::cout << "Fill Bins Time: "<<sec3-sec2<<" msec."<<std::endl;
 
   //Now the search space should be limited to a neighborhood of 9 bins only
   //let's do each bin seperately first
@@ -1173,7 +1173,7 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   for (int x=0; x<1000; x++){
     for (int y=0; y<1000; y++){
       if (ImgBins[x][y].size()>1){
-        vcl_list<int>::iterator m, n;
+        std::list<int>::iterator m, n;
         for (m = ImgBins[x][y].begin(); m!=ImgBins[x][y].end(); m++){
           n=m; n++;
           for (;n!=ImgBins[x][y].end(); n++){
@@ -1184,7 +1184,7 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
             double a2 = bp2->tangent();
 
             //do the angles agree?
-            if (_angle_vector_dot(a1,a2) > vcl_cos(2*angle_accuracy)){
+            if (_angle_vector_dot(a1,a2) > std::cos(2*angle_accuracy)){
               //are they really close?
               double dist = _distPointPoint(bp1->pt(), bp2->pt());
               if (dist <= position_accuracy){//dist <operator_length/2
@@ -1200,10 +1200,10 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   }
 
   //long sec4 = clock();
-  //vcl_cout << "Deciding duplicates Time: "<<sec4-sec3<<" msec."<<vcl_endl;
+  //std::cout << "Deciding duplicates Time: "<<sec4-sec3<<" msec."<<std::endl;
 
   //delete all the marked elements
-  vcl_set<int>::iterator k=elmsToDel.begin();
+  std::set<int>::iterator k=elmsToDel.begin();
    for (; k!=elmsToDel.end(); k++) {
     int ID = *k;
     BPoint* curBElm = (BPoint*)BElmList[ID];
@@ -1215,7 +1215,7 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   }
 
   //long sec5 = clock();
-  //vcl_cout << "Deleting duplicates Time: "<<sec5-sec4<<" msec."<<vcl_endl;
+  //std::cout << "Deleting duplicates Time: "<<sec5-sec4<<" msec."<<std::endl;
 
   //delete the bins
   for (int x=0; x<1001;x++){
@@ -1227,8 +1227,8 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   delete []ImgBins;
 
   //long sec6 = clock();
-  vcl_cout << "Done Cleaning." << vcl_endl;
-  //vcl_cout << "Deleting Bins Time: "<<sec6-sec5<<" msec."<<vcl_endl;
+  std::cout << "Done Cleaning." << std::endl;
+  //std::cout << "Deleting Bins Time: "<<sec6-sec5<<" msec."<<std::endl;
 
   //long sec7 = clock();
 
@@ -1247,7 +1247,7 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   }
 
   long sec8 = clock();
-  vcl_cout << "Setting up DT structures Time: "<<sec8-sec7<<" msec."<<vcl_endl;
+  std::cout << "Setting up DT structures Time: "<<sec8-sec7<<" msec."<<std::endl;
 
   edge_ref e;
   e = delaunay_build (sites, num_of_points);
@@ -1256,8 +1256,8 @@ void Boundary::PreProcessBoundaryForEdgeInput(double position_accuracy, double a
   //quad_enum(e, NULL, NULL);
 
   long sec10 = clock();
-  vcl_cout << "Initilization Time: "<<sec9-sec8<<" msec."<<vcl_endl;
-  vcl_cout << "Traversal Time: "<<sec10-sec9<<" msec."<<vcl_endl;
+  std::cout << "Initilization Time: "<<sec9-sec8<<" msec."<<std::endl;
+  std::cout << "Traversal Time: "<<sec10-sec9<<" msec."<<std::endl;
 
   //delete the DT structure
   delete []sites;
@@ -1271,7 +1271,7 @@ void Boundary::setRangeOfInfluence (BElement* elm)
 /*
    SLink* slist = elm->SElementList;
 
-   //go through the vcl_list and vcl_set bShow to GUI_RANGE_OF_INFLUENCE...
+   //go through the std::list and std::set bShow to GUI_RANGE_OF_INFLUENCE...
    while (slist != 0) {
       slist->se->bShow=GUI_RANGE_OF_INFLUENCE;
       //if (elm->type()!=BPOINT)
@@ -1393,60 +1393,60 @@ void Boundary::MessageOutBoundarySummaries (int wndid)
   //assert (nTotalBElms == nBP + nBL + nBA + 8 );
   //assert (nTotalBElms == nBP + nBL + nBA);
 
-   vcl_cout<<"Boundary Summaries" <<vcl_endl;
-   vcl_cout<<"# of Total Boundary Elements: "<< nTotalBElms <<vcl_endl;
-   vcl_cout<<"# of Total GUI BElements: "<< nTotalGUIElms
-     <<", total Non-GUI: "<< nTotalNonGUIElms <<vcl_endl;
-   vcl_cout<<"# of BPoints: " << nBP << " (GUI: " << nGUIBP
-     << ", Non-GUI: " << nNonGUIBP << ")" <<vcl_endl;
-   vcl_cout<<"# of BLines: "  << nBL << " (GUI: " << nGUIBL
-     << ", Non-GUI: " << nNonGUIBL << ")" <<vcl_endl;
-   vcl_cout<<"# of BArcs: "   << nBA << " (GUI: " << nGUIBA
-     << ", Non-GUI: " << nNonGUIBA << ")" <<vcl_endl;
+   std::cout<<"Boundary Summaries" <<std::endl;
+   std::cout<<"# of Total Boundary Elements: "<< nTotalBElms <<std::endl;
+   std::cout<<"# of Total GUI BElements: "<< nTotalGUIElms
+     <<", total Non-GUI: "<< nTotalNonGUIElms <<std::endl;
+   std::cout<<"# of BPoints: " << nBP << " (GUI: " << nGUIBP
+     << ", Non-GUI: " << nNonGUIBP << ")" <<std::endl;
+   std::cout<<"# of BLines: "  << nBL << " (GUI: " << nGUIBL
+     << ", Non-GUI: " << nNonGUIBL << ")" <<std::endl;
+   std::cout<<"# of BArcs: "   << nBA << " (GUI: " << nGUIBA
+     << ", Non-GUI: " << nNonGUIBA << ")" <<std::endl;
 
 }
 
 void Boundary::DebugPrintBoundaryList()
 {
-  vcl_cout <<vcl_endl;
-  vcl_cout << " ==== BOUNDARY LIST ====" <<vcl_endl;
-  vcl_cout<< "BoundaryList: " <<vcl_endl;
+  std::cout <<std::endl;
+  std::cout << " ==== BOUNDARY LIST ====" <<std::endl;
+  std::cout<< "BoundaryList: " <<std::endl;
   BElmListIterator elmPtr = BElmList.begin();
   for (; elmPtr != BElmList.end(); elmPtr++) {
     BElement* current = (elmPtr->second);
 
     switch (current->type()) {
-    case BPOINT:  vcl_cout<< "BPoint"; break;
-    case BLINE:    vcl_cout<< "BLine"; break;
-    case BARC:    vcl_cout<< "BArc"; break;
+    case BPOINT:  std::cout<< "BPoint"; break;
+    case BLINE:    std::cout<< "BLine"; break;
+    case BARC:    std::cout<< "BArc"; break;
     default: break;
     }
-    vcl_cout<< ", Bid: "<< current->id()<<vcl_endl;
+    std::cout<< ", Bid: "<< current->id()<<std::endl;
   }
 
-  vcl_cout <<" ========================" <<vcl_endl;
+  std::cout <<" ========================" <<std::endl;
 
 }
 
 void Boundary::DebugPrintTaintedBoundaryList()
 {
-  vcl_cout <<vcl_endl;
-  vcl_cout << " ==== TAINTED BOUNDARY LIST ====" <<vcl_endl;
-  vcl_cout<< "BoundaryList: " <<vcl_endl;
+  std::cout <<std::endl;
+  std::cout << " ==== TAINTED BOUNDARY LIST ====" <<std::endl;
+  std::cout<< "BoundaryList: " <<std::endl;
   BElmListIterator elmPtr = taintedBElmList.begin();
   for (; elmPtr != taintedBElmList.end(); elmPtr++) {
     BElement* current = (elmPtr->second);
 
     switch (current->type()) {
-    case BPOINT:  vcl_cout<< "BPoint"; break;
-    case BLINE:    vcl_cout<< "BLine"; break;
-    case BARC:    vcl_cout<< "BArc"; break;
+    case BPOINT:  std::cout<< "BPoint"; break;
+    case BLINE:    std::cout<< "BLine"; break;
+    case BARC:    std::cout<< "BArc"; break;
     default: break;
     }
-    vcl_cout<< ", Bid: "<< current->id()<<vcl_endl;
+    std::cout<< ", Bid: "<< current->id()<<std::endl;
   }
 
-  vcl_cout <<" ========================" <<vcl_endl;
+  std::cout <<" ========================" <<std::endl;
 
 }
 
@@ -1459,19 +1459,19 @@ void Boundary::DebugPrintBElementInfoFromID(int id)
 
 #ifndef _VISUALIZER_CMDLINE_
     //display info
-    current->getInfo(vcl_cout);
+    current->getInfo(std::cout);
 #endif
   }
   else
-    vcl_cout <<"INVALID BOUNDARY ID: "<<id<<vcl_endl;
+    std::cout <<"INVALID BOUNDARY ID: "<<id<<std::endl;
 }
 
 void Boundary::UpdateBoundary()
 {
   //recompute the extrinsic locus of all the elements that were changed
-  //the update vcl_list is maintained so that minimal recomputation of the
+  //the update std::list is maintained so that minimal recomputation of the
   //actual extrinsic locus is needed during computation
-  //TO Debate: Maintenance of this vcl_list might be too much time consuming
+  //TO Debate: Maintenance of this std::list might be too much time consuming
 
   BElmListIterator curB = update_list.begin();
   for (; curB!=update_list.end(); curB++) {
@@ -1479,6 +1479,6 @@ void Boundary::UpdateBoundary()
     curBElm->compute_extrinsic_locus();
   }
 
-  //clear vcl_list after it is drawn
+  //clear std::list after it is drawn
   update_list.clear();
 }

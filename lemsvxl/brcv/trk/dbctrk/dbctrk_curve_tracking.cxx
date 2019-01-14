@@ -3,10 +3,10 @@
 #include<dbctrk/dbctrk_curve_clustering.h>
 #include<dbctrk/dbctrk_tracker_curve_sptr.h>
 
-#include <vcl_iostream.h>
-#include <vcl_ostream.h>
-#include <vcl_fstream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <ostream>
+#include <fstream>
+#include <sstream>
 #include <vgl/vgl_polygon.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vsl/vsl_vector_io.h>
@@ -36,7 +36,7 @@ void dbctrk_curve_tracking_params::operator=(dbctrk_curve_tracking_params tp)
   cp=tp.cp;
 }
 //external functions
-vcl_ostream& operator<<(vcl_ostream& s, dbctrk_curve_tracking_params const& params)
+std::ostream& operator<<(std::ostream& s, dbctrk_curve_tracking_params const& params)
 {
   s <<"Is Clustering ? "<<params.clustering_
     <<"\n Transitive closure ?"<<params.transitive_closure
@@ -52,7 +52,7 @@ vcl_ostream& operator<<(vcl_ostream& s, dbctrk_curve_tracking_params const& para
     <<"\n matching params "<<params.mp;
   return s;
 }
-void dbctrk_curve_tracking_params::print_summary(vcl_ostream &os) const
+void dbctrk_curve_tracking_params::print_summary(std::ostream &os) const
 {
   os << *this;
 }
@@ -70,7 +70,7 @@ dbctrk_curve_tracking ::dbctrk_curve_tracking(dbctrk_curve_tracking_params &tp)
 
 void dbctrk_curve_tracking ::track()
 {
-  vcl_cout<<"-- testing batch tracking --\n";
+  std::cout<<"-- testing batch tracking --\n";
   // for all images:
   for (unsigned int t=0; t<input_curves_.size(); t++)
   {
@@ -86,7 +86,7 @@ dbctrk_tracker_curve_sptr dbctrk_curve_tracking ::get_output_curve(unsigned int 
 {
   if (frame_no >= output_curves_.size())
   {
-    vcl_cerr<<"\n frame "<<frame_no<<" doesn't exist\n";
+    std::cerr<<"\n frame "<<frame_no<<" doesn't exist\n";
     return 0;
   }
   else
@@ -96,9 +96,9 @@ dbctrk_tracker_curve_sptr dbctrk_curve_tracking ::get_output_curve(unsigned int 
 void dbctrk_curve_tracking ::get_reliable_curves(unsigned int frame_no,unsigned int window)
 {
   if (frame_no >= output_curves_.size())
-    vcl_cerr<<"\n frame "<<frame_no<<" doesn't exist\n";
+    std::cerr<<"\n frame "<<frame_no<<" doesn't exist\n";
   else if (frame_no<window)
-    vcl_cerr<<"\n cannot compute reliable curves for frame "<<frame_no<<", window size="<<window<<'\n';
+    std::cerr<<"\n cannot compute reliable curves for frame "<<frame_no<<", window size="<<window<<'\n';
   else
   {
     dbctrk_curve_matching_params mp_tc=tp_.mp;
@@ -122,7 +122,7 @@ void dbctrk_curve_tracking ::get_reliable_curves(unsigned int frame_no,unsigned 
             }
         }
         dbctrk_tracker_curve_sptr way1=output_curves_[prev_frame][i];
-        vcl_map<int,vcl_vector<dbctrk_tracker_curve_sptr> > way1_map,way2_map;
+        std::map<int,std::vector<dbctrk_tracker_curve_sptr> > way1_map,way2_map;
         way1_map[0].push_back(way1);
 
         found=true;
@@ -154,9 +154,9 @@ void dbctrk_curve_tracking ::get_reliable_curves(unsigned int frame_no,unsigned 
   }
 }
 
-void dbctrk_curve_tracking ::write_results(vcl_string filename)
+void dbctrk_curve_tracking ::write_results(std::string filename)
 {
-  vcl_ofstream ofile(filename.c_str());
+  std::ofstream ofile(filename.c_str());
   ofile<<"<\?xml version=\"1.0\" encoding=\"UTF-8\" \?>\n<vxl>\n"
        <<"<results video=\""<<filename<<"\" nframes=\""<<output_curves_.size()<<"\">";
   for (unsigned int i=0; i<output_curves_.size(); ++i)
@@ -165,7 +165,7 @@ void dbctrk_curve_tracking ::write_results(vcl_string filename)
     for (unsigned int j=0; j<output_curves_[i].size(); ++j)
       if (output_curves_[i][j]->isreliable_ && output_curves_[i][j]->match_id_ >0)
         ++cnt;
-    vcl_cout<<"\n frame no : "<<i <<" score : "<<cnt/output_curves_[i].size();
+    std::cout<<"\n frame no : "<<i <<" score : "<<cnt/output_curves_[i].size();
     ofile<<"<frame no=\""<<i<<"\" score=\""<<cnt/output_curves_[i].size()<<"\"/>";
   }
   ofile<<"</results>\n</vxl>\n";
@@ -174,10 +174,10 @@ void dbctrk_curve_tracking ::write_results(vcl_string filename)
 void dbctrk_curve_tracking ::track_frame(unsigned int frame)
 {
   dbctrk_tracker_curve_sptr                primitive;
-  vcl_vector< dbctrk_tracker_curve_sptr >  primitive_list;
+  std::vector< dbctrk_tracker_curve_sptr >  primitive_list;
 
   dbctrk_tracker_curve_sptr                primitive1;
-  vcl_vector< dbctrk_tracker_curve_sptr >  primitive_list1;
+  std::vector< dbctrk_tracker_curve_sptr >  primitive_list1;
   dbctrk_curve_matching                    matcher(tp_.mp);
 
   if (input_curves_.size()<=frame) return;
@@ -214,7 +214,7 @@ void dbctrk_curve_tracking ::track_frame(unsigned int frame)
       {
         primitive_list[i]->desc->assign_rgb_values(plane0[frame],plane1[frame],plane2[frame],3,dtimgs[frame],dtmaps[frame],i);
         primitive_list[i]->desc->compute_IHS_histograms(tp_.thetabins,tp_.r1,tp_.v1);
-  vcl_cout<<i<<" ";
+  std::cout<<i<<" ";
       }
   }
   else
@@ -223,7 +223,7 @@ void dbctrk_curve_tracking ::track_frame(unsigned int frame)
     primitive_list.clear();
     primitive_list1.clear();
 
-    vcl_cout<<"\n frame no i s"<<frame;
+    std::cout<<"\n frame no i s"<<frame;
     for (unsigned int i=0;i<input_curves_[frame].size();i++)
     {
       primitive = new dbctrk_tracker_curve();
@@ -247,18 +247,18 @@ void dbctrk_curve_tracking ::track_frame(unsigned int frame)
       {
          primitive_list[i]->desc->assign_rgb_values(plane0[frame],plane1[frame],plane2[frame],3,dtimgs[frame],dtmaps[frame],i);
          primitive_list[i]->desc->compute_IHS_histograms(tp_.thetabins,tp_.r1,tp_.v1);
-         vcl_cout<<i<<" ";
+         std::cout<<i<<" ";
       }
-    vcl_cout<<tp_<<"\n";
+    std::cout<<tp_<<"\n";
     
     // give the new and old curves to matcher to do the matching
   if(tp_.mp.matching_)
   {
-    vcl_cout<<"\n matching params are ";
-    vcl_cout<<"\n the no of curves entered "<<output_curves_[frame].size();
+    std::cout<<"\n matching params are ";
+    std::cout<<"\n the no of curves entered "<<output_curves_[frame].size();
     //: to match n and n-1 frame
     matcher.match(&output_curves_[frame],&output_curves_[frame-1]);
-    vcl_cout<<"\n matching done";
+    std::cout<<"\n matching done";
   //: if transitive closure over 3 frames i srequired then compute matches of n and n-2 frames
     //if(tp_.transitive_closure)
     //{
@@ -274,23 +274,23 @@ void dbctrk_curve_tracking ::track_frame(unsigned int frame)
     //}
 //    else
     {
-      vcl_cout<<"\n greedy assignment";
+      std::cout<<"\n greedy assignment";
       matcher.best_matches(&output_curves_[frame],&output_curves_[frame-1]);
       //matcher.greedy_and_closure(5,&output_curves_[frame],&output_curves_[frame-1]);
     }
     if (tp_.clustering_)
     {
 
-     vcl_cout<<"\n clustering params are ";
-     vcl_cout<<"\n  no_of_clusters"<<tp_.cp.no_of_clusters;
-     vcl_cout<<"\n  min_cost_threshold "<<tp_.cp.min_cost_threshold;
-     vcl_cout<<"\n  foreg_backg_threshold "<<tp_.cp.foreg_backg_threshold;
+     std::cout<<"\n clustering params are ";
+     std::cout<<"\n  no_of_clusters"<<tp_.cp.no_of_clusters;
+     std::cout<<"\n  min_cost_threshold "<<tp_.cp.min_cost_threshold;
+     std::cout<<"\n  foreg_backg_threshold "<<tp_.cp.foreg_backg_threshold;
      dbctrk_curve_clustering cl(tp_.cp);
      cl.cluster_curves(&output_curves_[frame]);
      cl.build_network(&output_curves_[frame]);
      cl.get_moving_objects(frame,moving_curves_);
      int t1=moving_curves_.size();
-     vcl_cout<<"\n the number of curve segmented is  "<<moving_curves_[t1-1].size();
+     std::cout<<"\n the number of curve segmented is  "<<moving_curves_[t1-1].size();
      frame_moving_curves_.push_back(moving_curves_);
 
     }
@@ -299,7 +299,7 @@ void dbctrk_curve_tracking ::track_frame(unsigned int frame)
   //  transitive closure : input window size=3,5
 
   }
-  vcl_cout<<"\n leaving track_frame";
+  std::cout<<"\n leaving track_frame";
 }
 short
 dbctrk_curve_tracking::version()
@@ -346,21 +346,21 @@ dbctrk_curve_tracking::b_read( vsl_b_istream& is )
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbctrk_curve_tracking::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbctrk_curve_tracking::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
-void dbctrk_curve_tracking :: write_clusters(vcl_string filename,int i)
+void dbctrk_curve_tracking :: write_clusters(std::string filename,int i)
 {
 
 
- vcl_ofstream f;
+ std::ofstream f;
  f.open(filename.c_str());
  if(!f)
   {
-   vcl_cerr<<"\n could not open the file to write ";
+   std::cerr<<"\n could not open the file to write ";
    return;
  }
  //header of the file
@@ -396,7 +396,7 @@ void dbctrk_curve_tracking :: write_clusters(vcl_string filename,int i)
     }
     f<<"[END PREVIOUS CURVE]\n";
 
-    vcl_map<int,int>:: iterator iter;
+    std::map<int,int>:: iterator iter;
     f<<"[BEGIN ALIGNMENT]\n";
     for(iter=moving_curves_[i][j]->get_best_match_prev()->mapping_.begin();
       iter!=moving_curves_[i][j]->get_best_match_prev()->mapping_.end();iter++)
@@ -422,7 +422,7 @@ void dbctrk_curve_tracking :: write_clusters(vcl_string filename,int i)
 
 }
 
-vcl_vector< dbctrk_tracker_curve_sptr> *dbctrk_curve_tracking ::get_output_curves(unsigned int frame_no)
+std::vector< dbctrk_tracker_curve_sptr> *dbctrk_curve_tracking ::get_output_curves(unsigned int frame_no)
 
 {
   if (frame_no >= output_curves_.size())
@@ -443,8 +443,8 @@ void dbctrk_curve_tracking ::obtain_tracks()
    dbctrk_tracker_curve_sptr curve=get_output_curve(i,j);
    if(curve->track_id_==-1)
    {
-     vcl_list<dbctrk_tracker_curve_sptr> tr;
-     vcl_list<dbctrk_tracker_curve_sptr>::iterator iter;
+     std::list<dbctrk_tracker_curve_sptr> tr;
+     std::list<dbctrk_tracker_curve_sptr>::iterator iter;
 
     level_order_traversal(curve,tr);
     if(tr.size()>0)
@@ -464,13 +464,13 @@ void dbctrk_curve_tracking ::set_tracking_params(dbctrk_curve_tracking_params &t
 }
 
 void dbctrk_curve_tracking ::write_tracks(dbctrk_tracker_curve_sptr curve,
-                                        vcl_string fname,
+                                        std::string fname,
                                         int min_length_of_track)
 {
-  vcl_map<int, vcl_list<dbctrk_tracker_curve_sptr> > track_;
-  vcl_map<int, vcl_list<dbctrk_tracker_curve_sptr> >::iterator  itrack;
-  vcl_list<dbctrk_tracker_curve_sptr> tr;
-  vcl_list<dbctrk_tracker_curve_sptr>::iterator iter;
+  std::map<int, std::list<dbctrk_tracker_curve_sptr> > track_;
+  std::map<int, std::list<dbctrk_tracker_curve_sptr> >::iterator  itrack;
+  std::list<dbctrk_tracker_curve_sptr> tr;
+  std::list<dbctrk_tracker_curve_sptr>::iterator iter;
 
   level_order_traversal(curve,tr);
   for (iter=tr.begin();iter!=tr.end();iter++)
@@ -478,7 +478,7 @@ void dbctrk_curve_tracking ::write_tracks(dbctrk_tracker_curve_sptr curve,
 
   if (int(track_.size())>min_length_of_track)
   {
-    vcl_ofstream f(fname.c_str());
+    std::ofstream f(fname.c_str());
     f<<"# CONTOUR_EDGE_MAP : canny+van-ducks\n"
      <<"# .cem files\n"
      <<"# Format :\n"
@@ -509,10 +509,10 @@ void dbctrk_curve_tracking ::write_tracks(dbctrk_tracker_curve_sptr curve,
   }
 }
 
-void dbctrk_curve_tracking ::level_order_traversal(dbctrk_tracker_curve_sptr curve,vcl_list<dbctrk_tracker_curve_sptr> & tr)
+void dbctrk_curve_tracking ::level_order_traversal(dbctrk_tracker_curve_sptr curve,std::list<dbctrk_tracker_curve_sptr> & tr)
 {
   tr.clear();
-  vcl_list<dbctrk_tracker_curve_sptr> q;
+  std::list<dbctrk_tracker_curve_sptr> q;
   if (!curve)
     return;
 
@@ -534,16 +534,16 @@ void dbctrk_curve_tracking ::level_order_traversal(dbctrk_tracker_curve_sptr cur
 }
 
 
-double dbctrk_curve_tracking::test_output(vcl_vector<vgl_point_2d<double> > points,int t)
+double dbctrk_curve_tracking::test_output(std::vector<vgl_point_2d<double> > points,int t)
 {
-  vcl_cout<<"\n"<<points.size()<<"\t"<<t;
+  std::cout<<"\n"<<points.size()<<"\t"<<t;
   vgl_polygon<double> plygn(points);
 
   double in=0,out=0;
-  vcl_cout<<"\n the size of the segmented curves "<<moving_curves_[t-1].size();
+  std::cout<<"\n the size of the segmented curves "<<moving_curves_[t-1].size();
   for(unsigned int i=0;i<moving_curves_[t-1].size();i++)
   {
-   vcl_cout<<moving_curves_[t-1].size();
+   std::cout<<moving_curves_[t-1].size();
    for(int j=0;j<moving_curves_[t-1][i]->desc->curve_->numPoints();j++)
    {
     if(plygn.contains(moving_curves_[t-1][i]->desc->curve_->point(j)))
@@ -566,8 +566,8 @@ bool dbctrk_curve_tracking::compute_chamfer_image(int frame)
 {
   if(frame>=(int)output_curves_.size())
      return false;
-  vcl_map<vsol_digital_curve_2d_sptr,int> curvewids;
-  vcl_vector<vsol_digital_curve_2d_sptr> curves;
+  std::map<vsol_digital_curve_2d_sptr,int> curvewids;
+  std::vector<vsol_digital_curve_2d_sptr> curves;
   for(unsigned int i=0;i<output_curves_[frame].size();i++)
     {
       curvewids[output_curves_[frame][i]->dc_]=i;
@@ -576,8 +576,8 @@ bool dbctrk_curve_tracking::compute_chamfer_image(int frame)
 
   int width=plane0[frame].ni();
   int height=plane0[frame].nj();
-  vcl_cout<<"\n width is "<<width;
-  vcl_cout<<"\n height is "<<height;
+  std::cout<<"\n width is "<<width;
+  std::cout<<"\n height is "<<height;
   bspid_curve_map map(curves, width, height);
 
   int ni = map.width();

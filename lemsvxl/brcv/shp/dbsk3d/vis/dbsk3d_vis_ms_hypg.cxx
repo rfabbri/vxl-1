@@ -1,7 +1,7 @@
 //: MingChing Chang 
 //  Nov 30, 2004
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/dbmsh3d_face.h>
 #include <dbsk3d/dbsk3d_fs_mesh.h>
@@ -26,7 +26,7 @@
 #include <Inventor/nodes/SoMaterial.h>
 
 void generate_shock_color_table (unsigned long seed, unsigned int size, 
-                                 vcl_vector<SbColor>& color_table)
+                                 std::vector<SbColor>& color_table)
 {
   color_table.clear();
 
@@ -61,7 +61,7 @@ SoSeparator* draw_ms_graph (dbmsh3d_graph* ms_graph,
     return root;
 
   //vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator SV_it = ms_graph->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator SV_it = ms_graph->vertexmap().begin();
   for (; SV_it != ms_graph->vertexmap().end(); SV_it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*SV_it).second;
     if (draw_only_selected && MN->selected() == false)
@@ -93,7 +93,7 @@ SoSeparator* draw_ms_graph (dbmsh3d_graph* ms_graph,
   ds->lineWidth.setValue (width);
   root->addChild( ds );
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
   for (; cit != ms_graph->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (draw_only_selected && MC->selected() == false)
@@ -147,7 +147,7 @@ SoSeparator* draw_ms_graph_flow (dbmsh3d_graph* ms_graph,
     return root;
 
   //vertices
-  vcl_map<int, dbmsh3d_vertex*>::iterator SV_it = ms_graph->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator SV_it = ms_graph->vertexmap().begin();
   for (; SV_it != ms_graph->vertexmap().end(); SV_it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*SV_it).second;
     switch (MN->n_type()) {
@@ -177,7 +177,7 @@ SoSeparator* draw_ms_graph_flow (dbmsh3d_graph* ms_graph,
   ds->lineWidth.setValue (curve_width);
   root->addChild( ds );
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
   for (; cit != ms_graph->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     switch (MC->c_type()) {
@@ -232,7 +232,7 @@ SoSeparator* draw_ms_graph_flow (dbmsh3d_graph* ms_graph,
 }
 
 SoSeparator* draw_ms_vertices_ctable (dbmsh3d_graph* G, 
-                                      const vcl_vector<SbColor>& ctable, 
+                                      const std::vector<SbColor>& ctable, 
                                       const float vertex_radius,
                                       const bool user_defined_class)
 {
@@ -241,7 +241,7 @@ SoSeparator* draw_ms_vertices_ctable (dbmsh3d_graph* G,
   if (G == NULL)
     return root;
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator SV_it = G->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator SV_it = G->vertexmap().begin();
   for (; SV_it != G->vertexmap().end(); SV_it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*SV_it).second;
     int id = MN->id();
@@ -253,7 +253,7 @@ SoSeparator* draw_ms_vertices_ctable (dbmsh3d_graph* G,
 }
 
 SoSeparator* draw_ms_curves_ctable (dbmsh3d_graph* ms_graph, 
-                                    const vcl_vector<SbColor>& ctable, const float width,
+                                    const std::vector<SbColor>& ctable, const float width,
                                     const bool idv, const bool show_id,
                                     const bool skip_non_match_vc, const bool user_defined_class)
 {
@@ -266,7 +266,7 @@ SoSeparator* draw_ms_curves_ctable (dbmsh3d_graph* ms_graph,
   ds->lineWidth.setValue (width);
   root->addChild( ds );
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
   for (; cit != ms_graph->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;    
     int id = MC->id();
@@ -284,7 +284,7 @@ SoSeparator* draw_ms_curves_ctable (dbmsh3d_graph* ms_graph,
 }
 
 SoSeparator* draw_ms_sheets_ctable (dbsk3d_ms_hypg* ms_hypg, 
-                                    const vcl_vector<SbColor>& ctable,
+                                    const std::vector<SbColor>& ctable,
                                     const float transp, const bool idv, const bool show_id,
                                     const bool user_defined_class)
 {
@@ -295,7 +295,7 @@ SoSeparator* draw_ms_sheets_ctable (dbsk3d_ms_hypg* ms_hypg,
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild( hints );
 
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
   for (; it != ms_hypg->sheetmap().end(); it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*it).second;
     int id = MS->id();
@@ -318,7 +318,7 @@ SoSeparator* draw_ms_sheets (dbsk3d_ms_hypg* ms_hypg,
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild( hints );
 
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
   for (; it != ms_hypg->sheetmap().end(); it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*it).second;
     root->addChild (draw_ms_sheet (MS, color, transp, idv, show_id, user_defined_class));
@@ -328,7 +328,7 @@ SoSeparator* draw_ms_sheets (dbsk3d_ms_hypg* ms_hypg,
 }
 
 SoSeparator* draw_ms_sheets_bnd_mesh_ctable (dbsk3d_ms_hypg* ms_hypg, const int option,
-                                             const vcl_vector<SbColor>& ctable, 
+                                             const std::vector<SbColor>& ctable, 
                                              const float transp, const bool user_defined_class)
 {
   SoSeparator* root = new SoSeparator;
@@ -337,7 +337,7 @@ SoSeparator* draw_ms_sheets_bnd_mesh_ctable (dbsk3d_ms_hypg* ms_hypg, const int 
   //Generate IFS on the bnd_mesh.
   ms_hypg->bnd_mesh()->build_IFS_mesh();
   
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
   for (; it != ms_hypg->sheetmap().end(); it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*it).second;
     int id = MS->id();
@@ -346,8 +346,8 @@ SoSeparator* draw_ms_sheets_bnd_mesh_ctable (dbsk3d_ms_hypg* ms_hypg, const int 
     // Gfaces: set of faces that completely sit on Gset (of points).
     // Gfaces2: set of faces that share 2 points in Gset.
     // Gfaces1: set of faces that share only 1 point in Gset.
-    vcl_set<dbmsh3d_vertex*> Gset;
-    vcl_set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
+    std::set<dbmsh3d_vertex*> Gset;
+    std::set<dbmsh3d_face*> Gfaces, Gfaces2, Gfaces1;
     MS->get_bnd_mesh_Fs (Gset, Gfaces, Gfaces2, Gfaces1);
 
     root->addChild (draw_ifs (Gset, Gfaces, color, true));
@@ -379,15 +379,15 @@ SoSeparator* draw_ms_sheets_cost (dbsk3d_ms_hypg* ms_hypg, const int option,
   root->addChild(hints);
 
   //Compute cost for each ms_sheet as # of associated generators.
-  vcl_multimap<float, dbmsh3d_sheet*> MS_mmap;
+  std::multimap<float, dbmsh3d_sheet*> MS_mmap;
   float min_cost = FLT_MAX;
   float max_cost = FLT_MIN;
 
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
   for (; it != ms_hypg->sheetmap().end(); it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*it).second;
     float cost = (float) MS->get_cost();
-    MS_mmap.insert (vcl_pair<float, dbmsh3d_sheet*>(cost, MS));
+    MS_mmap.insert (std::pair<float, dbmsh3d_sheet*>(cost, MS));
     if (cost < min_cost)
       min_cost = cost;
     if (cost > max_cost)
@@ -395,10 +395,10 @@ SoSeparator* draw_ms_sheets_cost (dbsk3d_ms_hypg* ms_hypg, const int option,
   }
 
   float range = max_cost - min_cost;
-  vul_printf (vcl_cout, "\tdraw_ms_sheets_cost(): %u ms_sheets, min = %.2f , max = %.2f , range = %.2f\n",
+  vul_printf (std::cout, "\tdraw_ms_sheets_cost(): %u ms_sheets, min = %.2f , max = %.2f , range = %.2f\n",
               ms_hypg->sheetmap().size(), min_cost, max_cost, range);
 
-  vcl_multimap<float, dbmsh3d_sheet*>::iterator mit = MS_mmap.begin();
+  std::multimap<float, dbmsh3d_sheet*>::iterator mit = MS_mmap.begin();
   for (int i=0; mit != MS_mmap.end(); mit++, i++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*mit).second;    
     //Assign pseudo color using the cost of this MS.
@@ -414,7 +414,7 @@ SoSeparator* draw_ms_sheets_cost (dbsk3d_ms_hypg* ms_hypg, const int option,
   return root;
 }
 
-SoSeparator* draw_ms_sheets_gdt (vcl_map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map, 
+SoSeparator* draw_ms_sheets_gdt (std::map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mesh_map, 
                                  const float transp)
 {
   SoSeparator* root = new SoSeparator;
@@ -422,7 +422,7 @@ SoSeparator* draw_ms_sheets_gdt (vcl_map <int, dbmsh3d_fmm_mesh*>& sheet_fmm_mes
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild (hints);
 
-  vcl_map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map.begin();
+  std::map<int, dbmsh3d_fmm_mesh*>::iterator it = sheet_fmm_mesh_map.begin();
   for (; it != sheet_fmm_mesh_map.end(); it++) {
     dbmsh3d_fmm_mesh* fmm_mesh = (*it).second;
     root->addChild (dbmsh3d_draw_fmm_mesh (fmm_mesh));
@@ -439,7 +439,7 @@ SoSeparator* draw_A3rib_bnd_link (dbmsh3d_graph* ms_graph, const SbColor& color)
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
   for (; cit != ms_graph->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
@@ -448,10 +448,10 @@ SoSeparator* draw_A3rib_bnd_link (dbmsh3d_graph* ms_graph, const SbColor& color)
     //Go through all V_vec of this A3Rib.
     for (unsigned int j=0; j<MC->V_vec().size(); j++) {
       dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) MC->V_vec(j);
-      vcl_set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
+      std::set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
 
       //draw line from this FV to each gene.
-      vcl_set<dbmsh3d_vertex*>::iterator git = Genes.begin();
+      std::set<dbmsh3d_vertex*>::iterator git = Genes.begin();
       while (git != Genes.end()) {
         const dbmsh3d_vertex* G = (*git);
         SoDrawStyle* drawStyle = new SoDrawStyle ();
@@ -469,7 +469,7 @@ SoSeparator* draw_A13axial_bnd_link (dbmsh3d_graph* ms_graph, const SbColor& col
 {
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_graph->edgemap().begin();
   for (; cit != ms_graph->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_AXIAL) 
@@ -478,10 +478,10 @@ SoSeparator* draw_A13axial_bnd_link (dbmsh3d_graph* ms_graph, const SbColor& col
     //Go through all V_vec of this A13Axial
     for (unsigned int j=0; j<MC->V_vec().size(); j++) {
       dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) MC->V_vec(j);
-      vcl_set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
+      std::set<dbmsh3d_vertex*> Genes = FV->get_Gs_from_FFs ();
 
       //draw line from this FV to each gene.
-      vcl_set<dbmsh3d_vertex*>::iterator git = Genes.begin();
+      std::set<dbmsh3d_vertex*>::iterator git = Genes.begin();
       while (git != Genes.end()) {
         const dbmsh3d_vertex* G = (*git);
         SoDrawStyle* drawStyle = new SoDrawStyle ();
@@ -505,7 +505,7 @@ SoSeparator* draw_A3_sect_tris (dbsk3d_ms_hypg* ms_hypg, const SbColor& A3_sect_
   hints->vertexOrdering = SoShapeHints::COUNTERCLOCKWISE;
   root->addChild (hints);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
   for (; cit != ms_hypg->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
@@ -542,17 +542,17 @@ SoSeparator* draw_A3_ridgebnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
                                       const SbColor& A3_ridgebnd_color_a,
                                       const SbColor& A3_ridgebnd_color_b)
 {  
-  vul_printf (vcl_cout, "draw_A3_ridgebnd_curves().\n");
+  vul_printf (std::cout, "draw_A3_ridgebnd_curves().\n");
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
   for (int i=0; cit != ms_hypg->edgemap().end(); cit++, i++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
       continue;
 
     //For each A3Rib, determine two ridge boundary curves.
-    vcl_vector<vgl_point_3d<double> > ridgebnd_curve_a, ridgebnd_curve_b;
+    std::vector<vgl_point_3d<double> > ridgebnd_curve_a, ridgebnd_curve_b;
     get_ridge_bnd_curves (MC, ridgebnd_curve_a, ridgebnd_curve_b);
     
     //For each A3-rib, draw the two ridgebnd curves.
@@ -560,7 +560,7 @@ SoSeparator* draw_A3_ridgebnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
     root->addChild (draw_polyline (ridgebnd_curve_b, width, A3_ridgebnd_color_b));
   }
 
-  vul_printf (vcl_cout, "done.\n");
+  vul_printf (std::cout, "done.\n");
   return root;
 }
 
@@ -569,10 +569,10 @@ SoSeparator* draw_A13_surfbnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
                                       const SbColor& A13_surfbnd_color_a,
                                       const SbColor& A13_surfbnd_color_b)
 {
-  vul_printf (vcl_cout, "draw_A13_surfbnd_curves().\n");
+  vul_printf (std::cout, "draw_A13_surfbnd_curves().\n");
   SoSeparator* root = new SoSeparator;
 
-  vcl_map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
+  std::map<int, dbmsh3d_sheet*>::iterator it = ms_hypg->sheetmap().begin();
   for (; it != ms_hypg->sheetmap().end(); it++) {
     dbsk3d_ms_sheet* MS = (dbsk3d_ms_sheet*) (*it).second;
 
@@ -587,7 +587,7 @@ SoSeparator* draw_A13_surfbnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
       if (MC->c_type() == C_TYPE_AXIAL) {
 
         //For each A13Axial, determine two cut-off patch boundary curves.
-        vcl_vector<vgl_point_3d<double> > surfbnd_curve_a, surfbnd_curve_b;
+        std::vector<vgl_point_3d<double> > surfbnd_curve_a, surfbnd_curve_b;
         get_curoff_patch_bnd_curves (MC, MS, surfbnd_curve_a, surfbnd_curve_b);
         
         //For each A3-rib, draw the two ridgebnd curves.
@@ -600,7 +600,7 @@ SoSeparator* draw_A13_surfbnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
     while (HE != MS->halfedge() && HE != NULL);    
   }
 
-  vul_printf (vcl_cout, "done.\n");
+  vul_printf (std::cout, "done.\n");
   return root;
 }
 
@@ -608,7 +608,7 @@ SoSeparator* draw_A13_surfbnd_curves (dbsk3d_ms_hypg* ms_hypg, const float& widt
 SoSeparator* draw_A3_ridge_vectors (dbsk3d_ms_hypg* ms_hypg, 
                                    const SbColor& color, const float& vector_len)
 {
-  vul_printf (vcl_cout, "draw_A3_ridge_vectors()\n");
+  vul_printf (std::cout, "draw_A3_ridge_vectors()\n");
 
   SoSeparator* root = new SoSeparator;
   //assign color
@@ -619,7 +619,7 @@ SoSeparator* draw_A3_ridge_vectors (dbsk3d_ms_hypg* ms_hypg,
   SoDrawStyle* drawStyle = new SoDrawStyle;
   drawStyle->lineWidth.setValue (3);
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
   for (; cit != ms_hypg->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
@@ -649,10 +649,10 @@ SoSeparator* draw_A3_ridge_vectors (dbsk3d_ms_hypg* ms_hypg,
       prevL = FE;
     }//end for j
     
-    vul_printf (vcl_cout, "shock curve %d \n", MC->id());
+    vul_printf (std::cout, "shock curve %d \n", MC->id());
   }//end for i
 
-  vul_printf (vcl_cout, "done.\n");
+  vul_printf (std::cout, "done.\n");
   return root;
 }
 
@@ -661,7 +661,7 @@ SoSeparator* draw_A3_ridge_vectors (dbsk3d_ms_hypg* ms_hypg,
 SoSeparator* draw_A3_ridge_pts (dbsk3d_ms_hypg* ms_hypg, 
                                 const float& radius, const SbColor& color)
 {  
-  vul_printf (vcl_cout, "draw_A3_ridge_curves(): totally %d shock curves.\n", ms_hypg->edgemap().size());
+  vul_printf (std::cout, "draw_A3_ridge_curves(): totally %d shock curves.\n", ms_hypg->edgemap().size());
 
   SoSeparator* root = new SoSeparator;
   //assign color
@@ -672,9 +672,9 @@ SoSeparator* draw_A3_ridge_pts (dbsk3d_ms_hypg* ms_hypg,
   SoDrawStyle* drawStyle = new SoDrawStyle;
   ///drawStyle->lineWidth.setValue (width);
 
-  vcl_vector< vgl_point_3d<double> > ridge_curve;
+  std::vector< vgl_point_3d<double> > ridge_curve;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
   for (; cit != ms_hypg->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
@@ -708,15 +708,15 @@ SoSeparator* draw_A3_ridge_pts (dbsk3d_ms_hypg* ms_hypg,
         ridge_curve.push_back (ridgePt);
       }
       else {
-        vul_printf (vcl_cout, "\n Error! ridgeV intersects no surface triangle!\n"); 
-        vul_printf (vcl_cout, "MC %d, A3RibElm %d, FF %d",
+        vul_printf (std::cout, "\n Error! ridgeV intersects no surface triangle!\n"); 
+        vul_printf (std::cout, "MC %d, A3RibElm %d, FF %d",
                      MC->id(), FE->id(), FF->id());
       }
 
       prevL = FE;
     }//end for j
     
-    vul_printf (vcl_cout, "shock curve %d \n", MC->id());
+    vul_printf (std::cout, "shock curve %d \n", MC->id());
     
     //visualize the ridge curve    
     ///root->addChild (draw_polyline (ridge_curve, width, color));
@@ -724,7 +724,7 @@ SoSeparator* draw_A3_ridge_pts (dbsk3d_ms_hypg* ms_hypg,
   }//end for i
 
 
-  vul_printf (vcl_cout, "done.\n");
+  vul_printf (std::cout, "done.\n");
   return root;
 }
 
@@ -733,7 +733,7 @@ SoSeparator* draw_A3_ridge_curves (dbsk3d_ms_hypg* ms_hypg,
                                    const float& radius, const SbColor& color,
                                    const float& width)
 {  
-  vul_printf (vcl_cout, "draw_A3_ridge_curves(): totally %d shock curves.\n", ms_hypg->edgemap().size());
+  vul_printf (std::cout, "draw_A3_ridge_curves(): totally %d shock curves.\n", ms_hypg->edgemap().size());
 
   SoSeparator* root = new SoSeparator;
   //assign color
@@ -744,9 +744,9 @@ SoSeparator* draw_A3_ridge_curves (dbsk3d_ms_hypg* ms_hypg,
   SoDrawStyle* drawStyle = new SoDrawStyle;
   drawStyle->lineWidth.setValue (width);
 
-  vcl_vector< vgl_point_3d<double> > ridge_curve;
+  std::vector< vgl_point_3d<double> > ridge_curve;
 
-  vcl_map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator cit = ms_hypg->edgemap().begin();
   for (; cit != ms_hypg->edgemap().end(); cit++) {
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) (*cit).second;
     if (MC->c_type() != C_TYPE_RIB) 
@@ -780,15 +780,15 @@ SoSeparator* draw_A3_ridge_curves (dbsk3d_ms_hypg* ms_hypg,
         ridge_curve.push_back (ridgePt);
       }
       else {
-        vul_printf (vcl_cout, "\n Error! ridgeV intersects no surface triangle!\n"); 
-        vul_printf (vcl_cout, "MC %d, A3RibElm %d, FF %d",
+        vul_printf (std::cout, "\n Error! ridgeV intersects no surface triangle!\n"); 
+        vul_printf (std::cout, "MC %d, A3RibElm %d, FF %d",
                      MC->id(), FE->id(), FF->id());
       }
 
       prevL = FE;
     }//end for j
     
-    vul_printf (vcl_cout, "shock curve %d \n", MC->id());
+    vul_printf (std::cout, "shock curve %d \n", MC->id());
     
     //visualize the ridge curve    
     root->addChild (draw_polyline (ridge_curve, width, color));
@@ -796,6 +796,6 @@ SoSeparator* draw_A3_ridge_curves (dbsk3d_ms_hypg* ms_hypg,
   }//end for i
 
 
-  vul_printf (vcl_cout, "done.\n");
+  vul_printf (std::cout, "done.\n");
   return root;
 }

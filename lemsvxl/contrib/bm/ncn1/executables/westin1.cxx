@@ -16,29 +16,29 @@ int main(int argc, char *argv[])
 
     if(argc < 2)
     {
-        vcl_cerr << "error westin1.exe::must provide input glob and output directory" << vcl_endl;
+        std::cerr << "error westin1.exe::must provide input glob and output directory" << std::endl;
         return 1;
     }
 
-    vcl_string video_glob = argv[1];
+    std::string video_glob = argv[1];
 
-    vcl_string result_dir = argv[2];
+    std::string result_dir = argv[2];
 
-    vcl_string entropy_bin_filename = result_dir + "\\entropy_cropped_view.bin";
+    std::string entropy_bin_filename = result_dir + "\\entropy_cropped_view.bin";
 
-    vcl_string entropy_matlab_filename = result_dir + "\\entropy_cropped_view.dat";
+    std::string entropy_matlab_filename = result_dir + "\\entropy_cropped_view.dat";
 
-    vcl_string resave_entropy_bin = result_dir + "\\entropy_resave.bin";
+    std::string resave_entropy_bin = result_dir + "\\entropy_resave.bin";
 
-    vcl_string resave_entropy_matlab = result_dir + "\\entropy_resave.dat";
+    std::string resave_entropy_matlab = result_dir + "\\entropy_resave.dat";
 
-    vcl_string pivot_pixel_candidate_filename = result_dir + "\\pivot_pixel_samples.dat";
+    std::string pivot_pixel_candidate_filename = result_dir + "\\pivot_pixel_samples.dat";
 
-    vcl_string neighborhood_mfilename = result_dir + "\\neighborhood.m";
+    std::string neighborhood_mfilename = result_dir + "\\neighborhood.m";
 
-    vcl_string feature_mfilename = result_dir + "\\features_mfile.m";
+    std::string feature_mfilename = result_dir + "\\features_mfile.m";
 
-    vcl_string reduced_feature_filename = result_dir + "\\reduced_features_mfile.m";
+    std::string reduced_feature_filename = result_dir + "\\reduced_features_mfile.m";
 
     ncn1_factory factory(video_glob,100,200,10);
 

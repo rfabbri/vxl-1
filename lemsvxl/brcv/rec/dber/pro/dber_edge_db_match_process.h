@@ -19,7 +19,7 @@
 #include <dber/pro/dber_edge_match_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process is for matching extrinsic shock graphs
 class dber_edge_db_match_process : public bpro1_process
@@ -28,15 +28,15 @@ public:
   dber_edge_db_match_process();
   virtual ~dber_edge_db_match_process() {}
   
-  virtual vcl_string name() {
+  virtual std::string name() {
     return "Match Edgel Sets Video";
   }
 
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  virtual vcl_vector< vcl_string > get_input_type();
-  virtual vcl_vector< vcl_string > get_output_type();
+  virtual std::vector< std::string > get_input_type();
+  virtual std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;

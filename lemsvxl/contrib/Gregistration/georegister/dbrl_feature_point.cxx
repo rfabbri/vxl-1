@@ -5,7 +5,7 @@
 #include "dbrl_rigid_transformation.h"
 #include "dbrl_translation.h"
 #include <vnl/io/vnl_io_vector.h>
-#include <vcl_string.h>
+#include <string>
 dbrl_feature_point::dbrl_feature_point()
     {
         
@@ -34,7 +34,7 @@ double dbrl_feature_point::distance(const dbrl_feature_sptr & pt)
             }
         else if(dbrl_feature_point_tangent *fpt=dynamic_cast<dbrl_feature_point_tangent*>(pt.ptr()))
             {
-                vcl_cout<<"\n NYI";
+                std::cout<<"\n NYI";
                 return 0;
             }
         else
@@ -42,7 +42,7 @@ double dbrl_feature_point::distance(const dbrl_feature_sptr & pt)
                 return 0;
             }
     }
-void dbrl_feature_point::print_feature(vcl_ostream &os)
+void dbrl_feature_point::print_feature(std::ostream &os)
     {
     os<<"\n point location is "<<location_;
     }
@@ -58,24 +58,24 @@ vnl_vector<double> dbrl_feature_point::location_homg() const
     }
 //: write feature
 void
-dbrl_feature_point::write( vcl_ostream& os ) const
+dbrl_feature_point::write( std::ostream& os ) const
 {
-  os << "POINT" << vcl_endl;
-  os << location_.size() << vcl_endl;
-  os << location_ <<vcl_endl;
+  os << "POINT" << std::endl;
+  os << location_.size() << std::endl;
+  os << location_ <<std::endl;
 }
 
 //: read  feature
 bool 
 dbrl_feature_point::
-read( vcl_istream& is)
+read( std::istream& is)
 {
-    vcl_string str;
-    vcl_getline( is, str );
+    std::string str;
+    std::getline( is, str );
     
     // The token should appear at the beginning of line
     if ( str.find( "POINT" ) != 0 ) {
-      vcl_cout<< "It is not a POINT. reading is aborted.\n" ;
+      std::cout<< "It is not a POINT. reading is aborted.\n" ;
       return false;
     }
   
@@ -119,7 +119,7 @@ dbrl_feature_point::b_read(vsl_b_istream &is)
             vsl_b_read(is, id_);
             break;
         default:
-            vcl_cerr << "dbrl_feature_point: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_feature_point: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -128,7 +128,7 @@ dbrl_feature_point::version() const
     {
     return 1;
     }
-void dbrl_feature_point::print_summary(vcl_ostream &os) const
+void dbrl_feature_point::print_summary(std::ostream &os) const
 {
   
 }

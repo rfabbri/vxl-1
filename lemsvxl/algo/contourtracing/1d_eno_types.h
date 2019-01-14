@@ -19,7 +19,7 @@
 
 
 #include <stdio.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <malloc.h>
 #include <string.h>
 #include "utils.h"

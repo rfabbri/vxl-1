@@ -1,7 +1,7 @@
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_cstdlib.h>
-#include <vcl_utility.h>
+#include <iostream>
+#include <cassert>
+#include <cstdlib>
+#include <utility>
 
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_matrix.h>
@@ -10,7 +10,7 @@
 
 int compare(const void * x1, const void *x2)
 {
-    return ( ((vcl_pair<int,double>*)x1)->second - ((vcl_pair<int,double>*)x2)->second );
+    return ( ((std::pair<int,double>*)x1)->second - ((std::pair<int,double>*)x2)->second );
 }
 bool compute_partial_derivatives(int n,double *x, double *y, double *z,double *fx, double *fy)
 {
@@ -21,19 +21,19 @@ bool compute_partial_derivatives(int n,double *x, double *y, double *z,double *f
     //fy=new double[n];
     for (int i=0;i<n;i++)
     {
-        vcl_pair<int,double> * distances=new vcl_pair<int,double>[n-1] ;
+        std::pair<int,double> * distances=new std::pair<int,double>[n-1] ;
         for(int j=0,cnt=0;j<n;j++)
         {
             if(i!=j)
             {
-                double dist=vcl_sqrt((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j]));
-                distances[cnt]=(vcl_make_pair(j,dist));
+                double dist=std::sqrt((x[i]-x[j])*(x[i]-x[j])+(y[i]-y[j])*(y[i]-y[j]));
+                distances[cnt]=(std::make_pair(j,dist));
                 cnt++;
             }
             
             
         }
-        qsort(distances,n-1,sizeof(vcl_pair<int,double>),compare);
+        qsort(distances,n-1,sizeof(std::pair<int,double>),compare);
         double Ri=distances[N].second;
         double *Wi=new double[N];
         for(int j=0;j<N;j++)
@@ -55,11 +55,11 @@ bool compute_partial_derivatives(int n,double *x, double *y, double *z,double *f
         vnl_svd<double> svd(A);
         vnl_vector<double> u=svd.solve(b);
 
-        //vcl_cout<<A;
-        ////vcl_cout<<b;
-        ////vcl_cout<<svd.W();
-        //vcl_cout<<"("<<x[i]<<","<<y[i]<<","<<z[i]<<")   ("<<u[3]<<" "<<u[4]<<")\n";
-        //vcl_cout<<"\n rank is "<<svd.rank();
+        //std::cout<<A;
+        ////std::cout<<b;
+        ////std::cout<<svd.W();
+        //std::cout<<"("<<x[i]<<","<<y[i]<<","<<z[i]<<")   ("<<u[3]<<" "<<u[4]<<")\n";
+        //std::cout<<"\n rank is "<<svd.rank();
 
         fx[i]=u[3];
         fy[i]=u[4];
@@ -84,8 +84,8 @@ bool compute_normal_derivatives(int n,XYZ p[], ITRIANGLE v[], int &ntri)
         double vabx=a.x-b.x;
         double vaby=a.y-b.y;
         
-        vabx/=vcl_sqrt(vabx*vabx+vaby*vaby);
-        vaby/=vcl_sqrt(vabx*vabx+vaby*vaby);
+        vabx/=std::sqrt(vabx*vabx+vaby*vaby);
+        vaby/=std::sqrt(vabx*vabx+vaby*vaby);
 
         double vacx=a.x-c.x;
         double vacy=a.y-c.y;
@@ -101,8 +101,8 @@ bool compute_normal_derivatives(int n,XYZ p[], ITRIANGLE v[], int &ntri)
         double vbax=b.x-a.x;
         double vbay=b.y-a.y;
 
-        vbcx/=vcl_sqrt(vbcx*vbcx+vbcy*vbcy);
-        vbcy/=vcl_sqrt(vbcx*vbcx+vbcy*vbcy);
+        vbcx/=std::sqrt(vbcx*vbcx+vbcy*vbcy);
+        vbcy/=std::sqrt(vbcx*vbcx+vbcy*vbcy);
 
         if(vbcx*vbay-vbcy*vbax<0)
             fbcn=(b.fx+c.fx)*vbcy/2-(b.fy+c.fy)*vbcx/2;
@@ -115,8 +115,8 @@ bool compute_normal_derivatives(int n,XYZ p[], ITRIANGLE v[], int &ntri)
         double vcbx=c.x-b.x;
         double vcby=c.y-b.y;
 
-        vcax/=vcl_sqrt(vcax*vcax+vcay*vcay);
-        vcay/=vcl_sqrt(vcax*vcax+vcay*vcay);
+        vcax/=std::sqrt(vcax*vcax+vcay*vcay);
+        vcay/=std::sqrt(vcax*vcax+vcay*vcay);
 
         if(vcax*vcby-vcay*vcbx<0)
             fcan=(a.fx+c.fx)*vcay/2-(a.fy+c.fy)*vcax/2;
@@ -126,7 +126,7 @@ bool compute_normal_derivatives(int n,XYZ p[], ITRIANGLE v[], int &ntri)
         //a.out();
         //b.out();
         //c.out();
-        //vcl_cout<<" "<<fabn<<" "<<fbcn<<" "<<fcan<<"\n";
+        //std::cout<<" "<<fabn<<" "<<fbcn<<" "<<fcan<<"\n";
 
         v[i].f12n=fabn;
         v[i].f23n=fbcn;

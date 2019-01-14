@@ -44,9 +44,9 @@ class det_edge_map
     //: construct a map from the edge detectors along x, y and z directions
     //: this map is used for the 3D maximum suppression along a line
     det_edge_map(unsigned nx, unsigned ny, unsigned nz, 
-      vcl_vector<xmvg_filter_response<double> > const& responses_x, 
-      vcl_vector<xmvg_filter_response<double> > const& responses_y, 
-      vcl_vector<xmvg_filter_response<double> > const& responses_z,
+      std::vector<xmvg_filter_response<double> > const& responses_x, 
+      std::vector<xmvg_filter_response<double> > const& responses_y, 
+      std::vector<xmvg_filter_response<double> > const& responses_z,
       double sharpening_coefficient=1.0);
 
     //: construct a map from the gradients along x, y and z directions
@@ -96,7 +96,7 @@ class det_edge_map
 };
 
 //: read from stream file
-vcl_istream& operator >> ( vcl_istream& stream, det_edge_map& map);
+std::istream& operator >> ( std::istream& stream, det_edge_map& map);
 
-vcl_ostream& operator << ( vcl_ostream& stream, const det_edge_map& map);
+std::ostream& operator << ( std::ostream& stream, const det_edge_map& map);
 #endif

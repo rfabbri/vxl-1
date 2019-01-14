@@ -15,9 +15,9 @@
 //
 // \endverbatim 
 
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <string>
+#include <vector>
+#include <utility>
 
 
 #include <dbskr/dbskr_tree.h>
@@ -29,8 +29,8 @@ class dbskr_align_shapes
 public:
 
     //: Constructor
-    dbskr_align_shapes(vcl_string model_filename,
-                       vcl_string query_filename,
+    dbskr_align_shapes(std::string model_filename,
+                       std::string query_filename,
                        bool elastic_splice_cost    = false, 
                        float scurve_sample_ds      = 5.0f, 
                        float scurve_interpolate_ds = 1.0f, 
@@ -64,19 +64,19 @@ private:
     double lambda_area_;
 
     // Loop all model shock files and keeps a mirrored version also
-    vcl_vector< vcl_pair<dbskr_tree_sptr,dbskr_tree_sptr> > model_trees_;
+    std::vector< std::pair<dbskr_tree_sptr,dbskr_tree_sptr> > model_trees_;
 
     // Load all query shock files and keeps a mirrored version also
-    vcl_vector< vcl_pair<dbskr_tree_sptr,dbskr_tree_sptr> > query_trees_;
+    std::vector< std::pair<dbskr_tree_sptr,dbskr_tree_sptr> > query_trees_;
 
     //: keep track of query polygons
-    vcl_vector<vgl_polygon<double> > query_polygons_;
+    std::vector<vgl_polygon<double> > query_polygons_;
 
     //: Keep track of width of shock graph for computing DC
-    vcl_vector<double> model_sg_bbox_width_;
+    std::vector<double> model_sg_bbox_width_;
 
     // Keep track of query
-    vcl_vector<double> query_sg_bbox_width_;
+    std::vector<double> query_sg_bbox_width_;
 
     // Keep track of whethe query is tree1 or tree 2
     // switch = true, means query is tree2
@@ -89,16 +89,16 @@ private:
     bool tree2_mirror_;
 
     // Shape matrix output
-    vcl_string shape_matrix_file_;
+    std::string shape_matrix_file_;
 
     // Dc correspondence file
-    vcl_string dc_file_;
+    std::string dc_file_;
 
     // Set up dc fil
     void set_up_dc_file();
 
     // Load model
-    void load_esf(vcl_string& filename,bool flag);
+    void load_esf(std::string& filename,bool flag);
 
     // Compute area/boundary
     vgl_polygon<double> compute_boundary(dbsk2d_shock_graph_sptr& sg);
@@ -107,9 +107,9 @@ private:
     double edit_distance(
         dbskr_tree_sptr& tree1,dbskr_tree_sptr& tree2,
         float test_curve_matching_R,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool switched=false,
         double prev_distance=1.0e6);
 
@@ -118,16 +118,16 @@ private:
         vgl_polygon<double>& query_poly,
         dbskr_tree_sptr& model_tree,
         dbskr_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list, 
-        vcl_ofstream& output_binary_file);
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list, 
+        std::ofstream& output_binary_file);
 
     vgl_point_2d<double> find_part_correspondences_qm(
         vgl_point_2d<double> query_pt,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list,
         bool flag,
         double width,
         double model_scale_ratio,
@@ -137,10 +137,10 @@ private:
         vgl_polygon<double>& query_poly,
         dbskr_tree_sptr& model_tree,
         dbskr_tree_sptr& query_tree,
-        vcl_vector<dbskr_scurve_sptr>& curve_list1,
-        vcl_vector<dbskr_scurve_sptr>& curve_list2,
-        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list, 
-        vcl_ofstream& output_binary_file);
+        std::vector<dbskr_scurve_sptr>& curve_list1,
+        std::vector<dbskr_scurve_sptr>& curve_list2,
+        std::vector< std::vector < std::pair <int,int> > >& map_list, 
+        std::ofstream& output_binary_file);
     
     // Make copy ctor private
     dbskr_align_shapes(const dbskr_align_shapes&);

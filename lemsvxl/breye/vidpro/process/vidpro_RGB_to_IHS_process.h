@@ -14,8 +14,8 @@
 // \endverbatim
 
 #include <bpro/bpro_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 //: Process that converts RGB image to IHS image
 class vidpro_RGB_to_IHS_process : public bpro_process {
@@ -30,10 +30,10 @@ public:
   virtual bpro_process* clone() const;
 
   //: Returns the name of this process
-  vcl_string name();
+  std::string name();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   int input_frames();
   int output_frames();

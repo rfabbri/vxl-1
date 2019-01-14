@@ -8,7 +8,7 @@
 
 //: Constructor
 vox_match_shock_graphs_params::
-vox_match_shock_graphs_params(vcl_string algo_name) : 
+vox_match_shock_graphs_params(std::string algo_name) : 
     dborl_algo_params(algo_name),
     edit_params_()
 { 

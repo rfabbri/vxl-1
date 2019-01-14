@@ -1,6 +1,6 @@
 #include "xmvg_composite_filter_descriptor.h"
 
-xmvg_composite_filter_descriptor::xmvg_composite_filter_descriptor(vcl_vector<xmvg_filter_descriptor> const& fds)
+xmvg_composite_filter_descriptor::xmvg_composite_filter_descriptor(std::vector<xmvg_filter_descriptor> const& fds)
 :fds_(fds)
 
     {

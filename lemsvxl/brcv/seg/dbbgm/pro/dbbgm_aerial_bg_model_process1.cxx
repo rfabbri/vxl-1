@@ -45,7 +45,7 @@ dbbgm_aerial_bg_model_process1::dbbgm_aerial_bg_model_process1(): model_(NULL)
                 //!parameters()->add( "Do you want to use a mask?" ,     "-ismask" ,   (bool)false       )||
                 )
           {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
     }
 
 }
@@ -58,7 +58,7 @@ dbbgm_aerial_bg_model_process1::~dbbgm_aerial_bg_model_process1()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_aerial_bg_model_process1::name()
 {
     return "Aerial BG model builder(DBSTA2)";
@@ -82,9 +82,9 @@ dbbgm_aerial_bg_model_process1::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_aerial_bg_model_process1::get_input_type()
+std::vector< std::string > dbbgm_aerial_bg_model_process1::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "image" );
     to_return.push_back( "dbbgm_image" );
 
@@ -93,9 +93,9 @@ vcl_vector< vcl_string > dbbgm_aerial_bg_model_process1::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_aerial_bg_model_process1::get_output_type()
+std::vector< std::string > dbbgm_aerial_bg_model_process1::get_output_type()
 {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //to_return.push_back( "dbbgm_image" );
     return to_return;
 }
@@ -106,7 +106,7 @@ bool
 dbbgm_aerial_bg_model_process1::execute()
 {
     if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_model_process::execute() - "
+    std::cout << "In dbbgm_model_process::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -142,7 +142,7 @@ dbbgm_aerial_bg_model_process1::execute()
   else if ( image_view.nplanes() == 1 ) {
     image_rsc = image_view;
   } else {
-    vcl_cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << std::endl;
     return false;
   }
 

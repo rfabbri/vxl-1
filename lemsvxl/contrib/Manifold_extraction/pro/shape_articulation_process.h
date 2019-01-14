@@ -22,7 +22,7 @@
 class shape_articulation_process : public bpro1_process 
 {
 protected:
-    vcl_vector<vsol_point_2d_sptr> closed_articulated_structure(vcl_vector<vsol_point_2d_sptr> final_points);
+    std::vector<vsol_point_2d_sptr> closed_articulated_structure(std::vector<vsol_point_2d_sptr> final_points);
 
 public:
   shape_articulation_process();
@@ -31,17 +31,17 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name() {
+  std::string name() {
     return "shape articulation";
   }
 
-  vcl_vector< vcl_string > get_input_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_input_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }
-  vcl_vector< vcl_string > get_output_type() {
-    vcl_vector< vcl_string > to_return;
+  std::vector< std::string > get_output_type() {
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
     return to_return;
   }

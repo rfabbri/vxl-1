@@ -10,13 +10,13 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_cstring.h>
+#include <string>
+#include <cstring>
 #include <bvis/bvis_gl_codec_sptr.h>
 #include <vidl1/vidl1_codec.h>
 #include <vil/vil_image_resource.h>
-#include <vcl_list.h>
-#include <vcl_vector.h>
+#include <list>
+#include <vector>
 
 //: This class treats the bvis_video_manager as a video and
 // produces images by rendering each frame into a buffer
@@ -39,11 +39,11 @@ class bvis_gl_codec :  public vidl1_codec
   // I/O
 
   //: Always returns NULL - this codec is for saving only
-  virtual vidl1_codec_sptr load(vcl_string const& fname, char mode = 'r' );
-  virtual bool save(vidl1_movie* movie, vcl_string const& fname);
-  virtual bool probe(vcl_string const& fname);
+  virtual vidl1_codec_sptr load(std::string const& fname, char mode = 'r' );
+  virtual bool save(vidl1_movie* movie, std::string const& fname);
+  virtual bool probe(std::string const& fname);
 
-  virtual vcl_string type() const {return "bvis2Manager";}
+  virtual std::string type() const {return "bvis2Manager";}
 
 
  protected:

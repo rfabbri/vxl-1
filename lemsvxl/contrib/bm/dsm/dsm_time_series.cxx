@@ -13,7 +13,7 @@ void dsm_time_series::b_write(vsl_b_ostream& os) const
 	unsigned time_series_size = this->time_series.size();
 	vsl_b_write(os, time_series_size);
 
-	vcl_map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end=this->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end=this->time_series.end();
 
 	for( ts_itr = this->time_series.begin(); ts_itr != ts_end; ++ts_itr )
 	{
@@ -54,21 +54,21 @@ void dsm_time_series::b_read(vsl_b_istream& is)
 		break;
 	default:
 		{
-			vcl_cerr << "ERROR: dsm_time_series::b_read() -- UNKNOWN VERSION NUMBER --" << vcl_flush;
+			std::cerr << "ERROR: dsm_time_series::b_read() -- UNKNOWN VERSION NUMBER --" << std::flush;
 			return;
 		}//end default
 	}//end switch
 }//end dsm_time_series::b_read
 
-bool dsm_time_series::write_txt( vcl_string const& filename )
+bool dsm_time_series::write_txt( std::string const& filename )
 {
 	//each row will be a data point 
 	//first column will be time
 	//next columns will be the feature vector
 
-	vcl_ofstream of( filename.c_str(), vcl_ios::out );
+	std::ofstream of( filename.c_str(), std::ios::out );
 
-	vcl_map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end=this->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::const_iterator ts_itr, ts_end=this->time_series.end();
 
 	for( ts_itr = this->time_series.begin(); ts_itr != ts_end; ++ts_itr )
 	{
@@ -90,7 +90,7 @@ bool dsm_time_series::write_txt( vcl_string const& filename )
 
 void dsm_time_series::insert( unsigned const& time, dsm_feature_sptr feature_sptr )
 {
-	vcl_map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = this->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = this->time_series.end();
 
 	ts_itr = this->time_series.find(time);
 
@@ -102,7 +102,7 @@ void dsm_time_series::insert( unsigned const& time, dsm_feature_sptr feature_spt
 
 unsigned dsm_time_series::ndims()
 {
-	vcl_map<unsigned, dsm_feature_sptr>::const_iterator t_itr = this->time_series.begin(), t_end = this->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::const_iterator t_itr = this->time_series.begin(), t_end = this->time_series.end();
 
 	unsigned ndim = t_itr->second->v.size();
 	++t_itr;
@@ -110,8 +110,8 @@ unsigned dsm_time_series::ndims()
 	{
 		if(ndim != t_itr->second->v.size())
 		{
-			vcl_cerr << "---- WARNING dsm_time_series::ndims() ----\n"
-				     << "\t NOT ALL FEATURES IN TIME SERIES HAVE THE SAME DIMENSION" << vcl_flush;
+			std::cerr << "---- WARNING dsm_time_series::ndims() ----\n"
+				     << "\t NOT ALL FEATURES IN TIME SERIES HAVE THE SAME DIMENSION" << std::flush;
 			return 0;
 		}
 	}
@@ -124,22 +124,22 @@ bool dsm_time_series::reduce_feature_dims(unsigned const& ndims2keep)
 	if(!original_dimension)
 		return false;
 
-	vcl_cout << "Reducing Time Series Dimension from " << original_dimension << " to " << ndims2keep << vcl_endl;
+	std::cout << "Reducing Time Series Dimension from " << original_dimension << " to " << ndims2keep << std::endl;
 
 	unsigned nobs = this->time_series.size();
 	vnl_matrix<double> observations(nobs, original_dimension);
 
-	vcl_map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = this->time_series.end();
+	std::map<unsigned, dsm_feature_sptr>::iterator ts_itr, ts_end = this->time_series.end();
 
 	for( ts_itr = this->time_series.begin(); ts_itr != ts_end; ++ts_itr )
 	{
-		unsigned row = nobs - vcl_distance(ts_itr,ts_end);
+		unsigned row = nobs - std::distance(ts_itr,ts_end);
 		observations.set_row(row,ts_itr->second->v);
 	}
 
 	//for(ts_itr = this->time_series.begin(); ts_itr != ts_end; ++ts_itr);
 	//{
-	//	unsigned row = nobs - vcl_distance(ts_itr,ts_end);
+	//	unsigned row = nobs - std::distance(ts_itr,ts_end);
 	//	observations.set_row(row,ts_itr->second->v);
 	//}//end time series iteration
 
@@ -160,7 +160,7 @@ bool dsm_time_series::reduce_feature_dims(unsigned const& ndims2keep)
 	//replace the original features with the reduced features
 	for( ts_itr = this->time_series.begin(); ts_itr != ts_end; ++ts_itr )
 	{
-		unsigned row = nobs - vcl_distance(ts_itr,ts_end);
+		unsigned row = nobs - std::distance(ts_itr,ts_end);
 		ts_itr->second->v = reduced_features.get_row(row);
 	}//end time series iteration
 

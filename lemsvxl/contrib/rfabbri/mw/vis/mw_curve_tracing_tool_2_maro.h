@@ -80,7 +80,7 @@ public:
   ~mw_curve_tracing_tool_2_maro();
   
   //: Returns the string name of this tool
-  vcl_string name() const;
+  std::string name() const;
 
   //: Handle events.
   bool handle( const vgui_event & e, 
@@ -110,11 +110,11 @@ protected:
   void clear_previous_selections();
 
   //: \see frame_v()
-  vcl_vector<int> frame_v_;
+  std::vector<int> frame_v_;
 
   unsigned nviews() const { return s_->nviews(); }
 
-  vcl_vector<sdetd_sel_storage_sptr> sels_; 
+  std::vector<sdetd_sel_storage_sptr> sels_; 
 
   // ------ GUI Members -------
 
@@ -139,7 +139,7 @@ protected:
   vgui_style_sptr cc_style_; 
 
   //: style for curve segts
-  vcl_vector<vgui_style_sptr> best_match_style_;
+  std::vector<vgui_style_sptr> best_match_style_;
   vgui_event_condition gesture0_;
 
   //: initial point in left curve segment
@@ -149,56 +149,56 @@ protected:
   vgui_soview2D_point *pn_; 
 
   //: selected curve segments in views #3 and up
-  vcl_vector<bgui_vsol_soview2D_polyline *> selected_crv_soviews_n_; 
+  std::vector<bgui_vsol_soview2D_polyline *> selected_crv_soviews_n_; 
 
   //: selected curve segment
   bgui_vsol_soview2D_polyline *curvelet_soview_;
 
   //: tableaux used to draw in each view 
-  vcl_vector<bgui_vsol2D_tableau_sptr> tab_;
+  std::vector<bgui_vsol2D_tableau_sptr> tab_;
 
   //: tableau used for retrieving selected curves
   bgui_vsol2D_tableau_sptr curve_tableau_current_;
 
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
+  std::list<bgui_vsol_soview2D_polyline *> crv_candidates_soviews_; 
 
   //: Index to vector designates other views; index 0 is 3rd view, index 1 is 4rth
   // view, and so forth.
-  vcl_vector<bgui_vsol_soview2D_polyline *> reproj_soview_;
-  vcl_vector<vcl_vector<bgui_vsol_soview2D_polyline *> > p_reproj_soviews_;
+  std::vector<bgui_vsol_soview2D_polyline *> reproj_soview_;
+  std::vector<std::vector<bgui_vsol_soview2D_polyline *> > p_reproj_soviews_;
 
-  vcl_list<vgui_soview2D_point *> intercept_pts_soviews_;
-  vcl_vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
+  std::list<vgui_soview2D_point *> intercept_pts_soviews_;
+  std::vector<vgui_soview2D_point *> all_intercept_pts_soviews_;
 
-  vcl_vector<vgui_soview2D_infinite_line *> ep0_soview_;
-  vcl_vector<vgui_soview2D_infinite_line *> epn_soview_;
-  vcl_vector<vgui_soview2D_infinite_line *> ep0_soview_2n_;
-  vcl_vector<vgui_soview2D_infinite_line *> epn_soview_2n_;
-  vcl_vector<vcl_list<vgui_soview2D_infinite_line *> > ep_soviews_;
-  vcl_list<vgui_soview2D_infinite_line *> ep_soviews_left_;
-  vcl_vector<vcl_list<vgui_soview2D_infinite_line *> > ep_soviews_2n_;
+  std::vector<vgui_soview2D_infinite_line *> ep0_soview_;
+  std::vector<vgui_soview2D_infinite_line *> epn_soview_;
+  std::vector<vgui_soview2D_infinite_line *> ep0_soview_2n_;
+  std::vector<vgui_soview2D_infinite_line *> epn_soview_2n_;
+  std::vector<std::list<vgui_soview2D_infinite_line *> > ep_soviews_;
+  std::list<vgui_soview2D_infinite_line *> ep_soviews_left_;
+  std::vector<std::list<vgui_soview2D_infinite_line *> > ep_soviews_2n_;
 
   //: best matches
-  vcl_list<bgui_vsol_soview2D_polyline *> crv_best_matches_soviews_; 
+  std::list<bgui_vsol_soview2D_polyline *> crv_best_matches_soviews_; 
 
 private: 
 
   //: retrieves the cameras from the repository
   void get_cameras();
-  void init_tableaux(vcl_vector< bvis1_view_tableau_sptr > &views);
+  void init_tableaux(std::vector< bvis1_view_tableau_sptr > &views);
 
   //: Get vsols in all views
-  void get_curves(vcl_vector< bvis1_view_tableau_sptr > &views);
+  void get_curves(std::vector< bvis1_view_tableau_sptr > &views);
 
   //: Tries to see if there is an active SEL storage in this view. If so, load the
-  // curve fragments and store them as polylines. Also fill up the sels_ vcl_vector
+  // curve fragments and store them as polylines. Also fill up the sels_ std::vector
   // with the storages, for use in children tool as needed.
   bool get_sels(const bvis1_view_tableau_sptr &view, 
-      vcl_vector< vsol_polyline_2d_sptr > *pcurves);
+      std::vector< vsol_polyline_2d_sptr > *pcurves);
 
   //: If there is an active VSOL storage with polylines in view v, load them.
   bool get_vsols( const bvis1_view_tableau_sptr &view, 
-      unsigned v, vcl_vector< vsol_polyline_2d_sptr > *pcurves) const;
+      unsigned v, std::vector< vsol_polyline_2d_sptr > *pcurves) const;
 
   bool handle_mouse_click( const vgui_event & e, const bvis1_view_tableau_sptr& view);
 
@@ -217,8 +217,8 @@ private:
   void update_display_for_epipolar_curve_pencil();
 
   void show_reprojections(unsigned crv2_id);
-  void add_episegs_to_tool(const vcl_vector< vsol_polyline_2d_sptr >  &vsols, unsigned frame);
-  void add_all_episegs_to_tool(const vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &broken_vsols) const;
+  void add_episegs_to_tool(const std::vector< vsol_polyline_2d_sptr >  &vsols, unsigned frame);
+  void add_all_episegs_to_tool(const std::vector<std::vector< vsol_polyline_2d_sptr > > &broken_vsols) const;
   void break_curves_into_episegs();
 
   void update_pn(const vsol_point_2d_sptr &pt);

@@ -2,7 +2,7 @@
 #ifndef dbdet_contour_fragment_h
 #define dbdet_contour_fragment_h
 
-#include <vcl_map.h>
+#include <map>
 
 #include <Spatemp/algo/dbdet_temporal_model.h>
 #include <Spatemp/algo/dbdet_temporal_bundle.h>
@@ -17,14 +17,14 @@ public:
     dbdet_contour_fragment();
     ~dbdet_contour_fragment(){}
 
-    //: int is the frame number and vcl_set<int> are the ids of member edges from that frame.
-    vcl_map<int,vcl_set<int> > grouping_;
-    vcl_list<dbdet_temporal_bundle *> chain_;
+    //: int is the frame number and std::set<int> are the ids of member edges from that frame.
+    std::map<int,std::set<int> > grouping_;
+    std::list<dbdet_temporal_bundle *> chain_;
     //: ref hypothesis
     dbdet_temporal_bundle *tb_;
 
 
-    vcl_vector<int> memids;
+    std::vector<int> memids;
 
     int id_;
 

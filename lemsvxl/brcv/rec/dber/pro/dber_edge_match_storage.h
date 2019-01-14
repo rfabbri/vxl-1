@@ -30,28 +30,28 @@ public:
   //: Destructor
   virtual ~dber_edge_match_storage();
 
-  virtual vcl_string type() const { return "edge_match"; }
+  virtual std::string type() const { return "edge_match"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dber_edge_match_storage"; }
+  virtual std::string is_a() const { return "dber_edge_match_storage"; }
 
   //: set the assignment
-  void set_assignement(vcl_vector<unsigned>& assign) { assign_ = assign; }
+  void set_assignement(std::vector<unsigned>& assign) { assign_ = assign; }
 
   //: get the assignment
-  vcl_vector<unsigned>& get_assignment(void) { return assign_; }
+  std::vector<unsigned>& get_assignment(void) { return assign_; }
 
   //: set lines
-  void set_lines1(vcl_vector<vsol_line_2d_sptr>& l) { lines1_ = l; }
-  void set_lines2(vcl_vector<vsol_line_2d_sptr>& l) { lines2_ = l; }
+  void set_lines1(std::vector<vsol_line_2d_sptr>& l) { lines1_ = l; }
+  void set_lines2(std::vector<vsol_line_2d_sptr>& l) { lines2_ = l; }
 
   //: get lines
-  vcl_vector<vsol_line_2d_sptr>& get_lines1(void) { return lines1_; }
-  vcl_vector<vsol_line_2d_sptr>& get_lines2(void) { return lines2_; }
+  std::vector<vsol_line_2d_sptr>& get_lines1(void) { return lines1_; }
+  std::vector<vsol_line_2d_sptr>& get_lines2(void) { return lines2_; }
 
   void set_dominant_dir1(vgl_line_2d<double> dir) { dominant_dir1_ = dir; }
   void set_dominant_dir2(vgl_line_2d<double> dir) { dominant_dir2_ = dir; }
@@ -61,8 +61,8 @@ public:
 
 private:
 
-  vcl_vector<vsol_line_2d_sptr> lines1_, lines2_;
-  vcl_vector<unsigned> assign_;
+  std::vector<vsol_line_2d_sptr> lines1_, lines2_;
+  std::vector<unsigned> assign_;
 
   vgl_line_2d<double> dominant_dir1_, dominant_dir2_;
 };

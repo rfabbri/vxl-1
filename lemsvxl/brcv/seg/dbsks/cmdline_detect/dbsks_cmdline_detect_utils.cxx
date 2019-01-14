@@ -33,7 +33,7 @@
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_file_matrix.h>
 #include <vul/vul_file_iterator.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>

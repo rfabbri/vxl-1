@@ -9,26 +9,26 @@
 //      
 // \endverbatim
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 #include "all_includes.h"
 #include "flimap_reader.h"
 
 //: I/O interface for reading an input .xyz file
-void flimap_reader::read_flimap_file(vcl_string flimap_file_path, vnl_matrix<double>& points){
-  vcl_ifstream file_inp;
+void flimap_reader::read_flimap_file(std::string flimap_file_path, vnl_matrix<double>& points){
+  std::ifstream file_inp;
   file_inp.clear();
   file_inp.open(flimap_file_path.c_str());
 
   char line_string_char[256];
 
-  vcl_vector<vcl_string> temp_pts;
+  std::vector<std::string> temp_pts;
 
   file_inp.getline(line_string_char,256);
   file_inp.getline(line_string_char,256);
 
-  vcl_vector<vnl_double_2x3> all_nums;
+  std::vector<vnl_double_2x3> all_nums;
 
   while(file_inp.eof()!=1){
     // Read one line at a time. First 3 entries are the world coordinates and next 3 entries are the RGB color elements.

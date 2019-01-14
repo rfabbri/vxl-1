@@ -20,7 +20,7 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vpl/vpl.h>
-#include <vcl_memory.h>
+#include <memory>
 
 
 static bool debug = false;
@@ -30,7 +30,7 @@ typedef boct_tree_cell<short, float> cell_type;
 void fill_edge3d_tree(boct_tree<short,float>* tree)
 {
   tree-> split();
-  vcl_vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
+  std::vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
   for (unsigned i= 0; i<4; i++)
   {
     leaves[i]->set_data(0.2f);
@@ -48,17 +48,17 @@ void fill_edge3d_tree(boct_tree<short,float>* tree)
         cc[j1].split();
     }
     //split children
-    vcl_vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
+    std::vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
   }
 }
 
-vcl_map<int,int> check_register_kernels(bvpl_kernel_vector_sptr kernel_vec, vcl_map <int, int> id_map)
+std::map<int,int> check_register_kernels(bvpl_kernel_vector_sptr kernel_vec, std::map <int, int> id_map)
 {
  
   bool result = true;
   
   //test that parts in the database are the same as kernels
-  vcl_map<int,int>::iterator map_it;
+  std::map<int,int>::iterator map_it;
   for(map_it=id_map.begin(); map_it!=id_map.end(); map_it++)
   {
     int kernel_id = (*map_it).first;
@@ -109,7 +109,7 @@ bool test_parts_and_contexts()
   vgl_vector_3d<unsigned> world_dim(1,1,1); //number of blocks in a scene
   
   boxm_scene<boct_tree<short, float> > scene(lvcs, origin, block_dim, world_dim);
-  vcl_string scene_path("./");
+  std::string scene_path("./");
   scene.set_paths(scene_path, "scene_in");
   
   boxm_block_iterator<boct_tree<short, float> >  iter =scene.iterator();
@@ -135,17 +135,17 @@ bool test_parts_and_contexts()
   
   //create parts scene
   boxm_scene<boct_tree<short, dbrec3d_part_instance > > *parts_scene = new boxm_scene<boct_tree<short, dbrec3d_part_instance > >(lvcs, origin, block_dim, world_dim);
-  vcl_string parts_scene_path("./");
+  std::string parts_scene_path("./");
   parts_scene->set_paths(parts_scene_path, "parts_scene");
   
   //converte scene
-  vcl_map <int, int> id_map;
+  std::map <int, int> id_map;
   dbrec3d_kernel_model model;
   int context_id = CONTEXT_MANAGER->register_context(scene_out,model,kernel_vec,parts_scene,id_map);
-  vcl_map<int,int>::iterator map_it;
+  std::map<int,int>::iterator map_it;
   for(map_it=id_map.begin(); map_it!=id_map.end(); map_it++)
   {
-    vcl_cout << (*map_it).first << ',' << (*map_it).second << vcl_endl;
+    std::cout << (*map_it).first << ',' << (*map_it).second << std::endl;
    
   }
   
@@ -175,8 +175,8 @@ bool test_parts_and_contexts()
    // bvpl_tree->print();
     //dbrec3d_tree->print();
     
-    vcl_vector<boct_tree_cell<short,bvpl_octree_sample<float> >* > bvpl_cells = bvpl_tree->leaf_cells_at_level(level);  
-    vcl_vector<boct_tree_cell<short,dbrec3d_part_instance >* > dbrec3d_cells = dbrec3d_tree->leaf_cells_at_level(level);  
+    std::vector<boct_tree_cell<short,bvpl_octree_sample<float> >* > bvpl_cells = bvpl_tree->leaf_cells_at_level(level);  
+    std::vector<boct_tree_cell<short,dbrec3d_part_instance >* > dbrec3d_cells = dbrec3d_tree->leaf_cells_at_level(level);  
     
     for( unsigned i = 0; i < bvpl_cells.size(); i++)
     {
@@ -187,14 +187,14 @@ bool test_parts_and_contexts()
       
       if(octree_sample.id_ < 0 ) // probably a border
       {
-        //vcl_cerr << "Warning negative id \n"; 
+        //std::cerr << "Warning negative id \n"; 
         continue;
       }
       
       dbrec3d_part_sptr part = PARTS_MANAGER->get_part(id_map[octree_sample.id_]);
       bvpl_kernel_sptr kernel= kernel_vec->kernels_[octree_sample.id_];
       
-      //vcl_cout << " Octree sample: " << octree_sample << "\n" << "part: " << part << vcl_endl;
+      //std::cout << " Octree sample: " << octree_sample << "\n" << "part: " << part << std::endl;
       //if( part_ins.location()> dbrec3d_tree->global_origin(part_cell)
       if( !(part->axis()== kernel->axis()) || !(part->angle()== kernel->angle()))
       {
@@ -227,8 +227,8 @@ bool test_parts_and_contexts()
     //bvpl_tree->print();
     //dbrec3d_tree->print();
     
-    vcl_vector<boct_tree_cell<short,bvpl_octree_sample<float> >* > bvpl_cells = bvpl_tree->leaf_cells_at_level(level);  
-    vcl_vector<boct_tree_cell<short,float>* > resp_cells = resp_tree->leaf_cells_at_level(level);  
+    std::vector<boct_tree_cell<short,bvpl_octree_sample<float> >* > bvpl_cells = bvpl_tree->leaf_cells_at_level(level);  
+    std::vector<boct_tree_cell<short,float>* > resp_cells = resp_tree->leaf_cells_at_level(level);  
     
     for( unsigned i = 0; i < bvpl_cells.size(); i++)
     {
@@ -238,13 +238,13 @@ bool test_parts_and_contexts()
             
       if(octree_sample.id_ < 0 ) // probably a border
       {
-        //vcl_cerr << "Warning negative id \n"; 
+        //std::cerr << "Warning negative id \n"; 
         continue;
       }
     
-      if(vcl_abs(resp_cell->data() - octree_sample.response_)>1e-7)    
+      if(std::abs(resp_cell->data() - octree_sample.response_)>1e-7)    
       {
-        vcl_cerr << resp_cell->data() << ',' << octree_sample.response_ << vcl_endl;
+        std::cerr << resp_cell->data() << ',' << octree_sample.response_ << std::endl;
         result = false;
       }
       

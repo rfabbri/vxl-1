@@ -70,7 +70,7 @@ int main(int argc, char** argv)
   vidl_iidc1394_params::valid_options options;
   vidl_dc1394_istream::valid_params(options);
   if(options.cameras.empty()){
-    vcl_cerr << "No cameras found" <<vcl_endl;
+    std::cerr << "No cameras found" <<std::endl;
     return -1;
   }
   vidl_iidc1394_params params;
@@ -78,10 +78,10 @@ int main(int argc, char** argv)
   params.node_ = options.cameras[0].node;
   params.video_mode_ = vidl_iidc1394_params::MODE_640x480_YUV422;
   params.frame_rate_ = vidl_iidc1394_params::FRAMERATE_15;
-  vcl_cout << "found camera: " << options.cameras[0].model << vcl_endl;
-  vcl_cout << "speed = "<<params.speed_<<vcl_endl;
+  std::cout << "found camera: " << options.cameras[0].model << std::endl;
+  std::cout << "speed = "<<params.speed_<<std::endl;
 
-  const vcl_vector< vidl_iidc1394_params::valid_options::valid_mode >& modes = options.cameras[0].modes;
+  const std::vector< vidl_iidc1394_params::valid_options::valid_mode >& modes = options.cameras[0].modes;
   bool find_mode = false;
   for(unsigned int i=0; i<modes.size(); ++i){
     if(modes[i].mode == params.video_mode_){
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
     }
   }
   if(!find_mode){
-    vcl_cerr << "Requested camera mode not supported" <<vcl_endl;
+    std::cerr << "Requested camera mode not supported" <<std::endl;
     return -1;
   }
 

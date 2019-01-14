@@ -13,9 +13,9 @@ enum MESSAGE_OPTION {
   MSG_VERBOSE=4,
 };
 
-#include <vcl_iostream.h>
-#define COUT vcl_cout
-#define MSGOUT(x) vcl_cout.flush();
+#include <iostream>
+#define COUT std::cout
+#define MSGOUT(x) std::cout.flush();
 //=======================================
 
 //#endif

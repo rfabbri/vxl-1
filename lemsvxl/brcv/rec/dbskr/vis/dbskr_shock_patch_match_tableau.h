@@ -115,9 +115,9 @@ protected:
   vsol_polygon_2d_sptr model_box_poly_;
   vsol_polygon_2d_sptr model_poly_, trans_model_poly_;
 
-  vcl_vector<vsol_polygon_2d_sptr> left_patches_;
-  vcl_vector<vsol_polygon_2d_sptr> right_patches_;
-  vcl_vector<vsol_polygon_2d_sptr> transformed_models_;
+  std::vector<vsol_polygon_2d_sptr> left_patches_;
+  std::vector<vsol_polygon_2d_sptr> right_patches_;
+  std::vector<vsol_polygon_2d_sptr> transformed_models_;
 
 public:
   vsol_box_2d_sptr detection_box_;

@@ -29,7 +29,7 @@ bool dbrec3d_find_pairs_process_cons(bprb_func_process& pro)
 {
   using namespace dbrec3d_find_pairs_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
   input_types_[i++] = "int"; //primitive id
   input_types_[i++] = "int"; //primitive id
@@ -48,9 +48,9 @@ bool dbrec3d_find_pairs_process_cons(bprb_func_process& pro)
   input_types_[i++] = "int"; //search-box xmax
   input_types_[i++] = "int"; //search-box ymax
   input_types_[i++] = "int"; //search-box zmax
-  input_types_[i++] = "vcl_string"; //composition scene path
+  input_types_[i++] = vcl_string"; //composition scene path
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "int"; //composition-context id
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -78,12 +78,12 @@ bool dbrec3d_find_pairs_process(bprb_func_process& pro)
   int xmax = pro.get_input<int>(i++);
   int ymax = pro.get_input<int>(i++);
   int zmax = pro.get_input<int>(i++);
-  vcl_string composition_scene_path = pro.get_input<vcl_string>(i++);
+  std::string composition_scene_path = pro.get_input<std::string>(i++);
   
-  vcl_cout << "mean: " << mean1 <<',' << mean2 <<',' << mean3 <<"\n"
+  std::cout << "mean: " << mean1 <<',' << mean2 <<',' << mean3 <<"\n"
   << "var: " << var1 << ',' << var2 << ',' << var3 << "\n"
   << "box-min: " << xmin <<',' << ymin <<',' << zmin << "\n"
-  << "box-max: " << xmax <<',' << ymax<<',' << zmax << vcl_endl;
+  << "box-max: " << xmax <<',' << ymax<<',' << zmax << std::endl;
   
   //composition model
   bsta_gauss_id3 dist_model(vnl_vector_fixed<double,3>(mean1, mean2, mean3),vnl_vector_fixed<double,3>(var1,var2,var3));
@@ -106,7 +106,7 @@ bool dbrec3d_find_pairs_process(bprb_func_process& pro)
   vnl_float_3 aux_axis;
   vgl_rotation_3d<float> pair_geometry = compositor.compute_rotation(part1->axis(), part1->aux_axis(), part2->axis(), part2->aux_axis(), aux_axis);
   
-  vcl_vector<int> children;
+  std::vector<int> children;
   children.push_back(part1->type_id());
   children.push_back(part2->type_id());
   float max_azimuthal; float min_azimuthal; float max_polar; float min_polar;
@@ -135,19 +135,19 @@ bool dbrec3d_find_pairs_process(bprb_func_process& pro)
   
   if(!composition_scene)
   {
-    vcl_cout << "Null composition scene\n";
+    std::cout << "Null composition scene\n";
     return false;
   }
   
 #ifdef DEBUG
-  vcl_cout << " Composition Scene has:\n"
+  std::cout << " Composition Scene has:\n"
   << "Max level: " << composition_scene->max_level()
-  << "Init Level: " << composition_scene->init_level() << vcl_endl;
+  << "Init Level: " << composition_scene->init_level() << std::endl;
   boxm_init_scene(*composition_scene);
-  vcl_cout << " Composition Scene has:\n"
+  std::cout << " Composition Scene has:\n"
   << "Finest level: " <<composition_scene->finest_level()
   << "Max level: " << composition_scene->max_level()
-  << "Init Level: " << composition_scene->init_level() << vcl_endl;
+  << "Init Level: " << composition_scene->init_level() << std::endl;
 #endif
   
   //detect instances of compositions

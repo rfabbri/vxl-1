@@ -51,7 +51,7 @@ class dbskr_extract_bnd_params
     bool fit_lines_;
     double rms_;              // for line fitting
 
-    vcl_string output_file_postfix_;
+    std::string output_file_postfix_;
 
     bool parse_from_data(bxml_data_sptr root);
     static bxml_element *create_default_document_data();

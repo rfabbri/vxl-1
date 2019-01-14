@@ -1,13 +1,13 @@
 #include "dbdet_sel_base.h"
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_cassert.h>
-#include <vcl_deque.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_algorithm.h>
-#include <vcl_queue.h>
+#include <iostream>
+#include <fstream>
+#include <cassert>
+#include <deque>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <queue>
 #include <vnl_cross.h>
 
 
@@ -28,14 +28,14 @@
 dbdet_EHT* dbdet_sel_base::construct_hyp_tree(dbdet_edgel* edge)
 {
   if (edge_link_graph_.cLinks.size()==0){
-    vcl_cout << "No Link Graph !" <<vcl_endl;
+    std::cout << "No Link Graph !" <<std::endl;
     return 0;
   }
 
 
  //construct 2 HTs: one in the forward direction and one in the reverse direction ????  by yuliang no forword
 //Modify: for each node, consider all the child links and parent links(exact the one linking parent node), as its child node
-  vcl_queue<dbdet_EHT_node*> BFS_queue;
+  std::queue<dbdet_EHT_node*> BFS_queue;
 
   //forward HT
   dbdet_EHT* HTF = new dbdet_EHT();
@@ -47,7 +47,7 @@ dbdet_EHT* dbdet_sel_base::construct_hyp_tree(dbdet_edgel* edge)
   int depth = 0; // comment by Yuliang, this is not the depth of the tree, but number of nodes actually
 
   //How far do we wanna go (if we don't hit a node)?
-  while (!BFS_queue.empty() && vcl_log10(double(depth))<3)
+  while (!BFS_queue.empty() && std::log10(double(depth))<3)
   {
     dbdet_EHT_node* cur_node = BFS_queue.front();
     BFS_queue.pop();
@@ -78,7 +78,7 @@ dbdet_EHT* dbdet_sel_base::construct_hyp_tree(dbdet_edgel* edge)
         double dx2 = (*lit)->ce->pt.x() - cur_node->e->pt.x();
         double dy2 = (*lit)->ce->pt.y() - cur_node->e->pt.y();
 
-        if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<SM_TH) //not consistent, but with lower TH to keep more Hypothesis by Yuliang ////////// Cosine Formula
+        if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<SM_TH) //not consistent, but with lower TH to keep more Hypothesis by Yuliang ////////// Cosine Formula
           continue;
       }
 
@@ -106,7 +106,7 @@ dbdet_EHT* dbdet_sel_base::construct_hyp_tree(dbdet_edgel* edge)
 		double dx2 = (*lit)->pe->pt.x() - cur_node->e->pt.x();
 		double dy2 = (*lit)->pe->pt.y() - cur_node->e->pt.y();
 
-		if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<SM_TH) //not consistent, but with lower TH to keep more Hypothesis by Yuliang
+		if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<SM_TH) //not consistent, but with lower TH to keep more Hypothesis by Yuliang
 		  continue;
       }
 
@@ -134,7 +134,7 @@ void dbdet_sel_base::construct_all_path_from_EHTs()
   //go over the contour fragment graph and form an EHT from every terminal node
   //validate each of the paths in the EHT
 
-  vcl_vector<dbdet_edgel_chain*> new_frags;
+  std::vector<dbdet_edgel_chain*> new_frags;
 
   //going over the edgemap instead so that an EHT only starts once from a node when there are two
   //contour fragments terminating there
@@ -159,7 +159,7 @@ void dbdet_sel_base::construct_all_path_from_EHTs()
       {
 
     	// edgel_chain: a path starting from the root and end at current node
-		vcl_vector<dbdet_edgel*>& edgel_chain = pit.get_cur_path();
+		std::vector<dbdet_edgel*>& edgel_chain = pit.get_cur_path();
 
 		dbdet_edgel* le = edgel_chain.back();
 
@@ -192,14 +192,14 @@ void dbdet_sel_base::construct_all_path_from_EHTs()
       delete EHT1;
     }
   }
-  vcl_cout<<"Finish constructing all hypothesis trees"<<vcl_endl;
+  std::cout<<"Finish constructing all hypothesis trees"<<std::endl;
   ////Now add all the new curve fragments into the CFG (as tentative fragments)
   //for (unsigned i=0; i<new_frags.size(); i++)
   //  curve_frag_graph_.insert_fragment(new_frags[i]);
 }
 
 //: perform a geometric consistency check to determine whether a given temp path is valid
-bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
+bool dbdet_sel_base::is_EHT_path_legal(std::vector<dbdet_edgel*>& edgel_chain)
 {
   //what makes a path legal?
   if(edgel_chain.size()==1)
@@ -210,7 +210,7 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
       dbdet_edgel* eE = edgel_chain.back();
       double dx1 = eE->pt.x() - eS->pt.x();
       double dy1 = eE->pt.y() - eS->pt.y();
-      double dist= vcl_sqrt(dx1*dx1+dy1*dy1);
+      double dist= std::sqrt(dx1*dx1+dy1*dy1);
       if(dist>5)
          return false;
    }
@@ -221,13 +221,13 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 	  dbdet_edgel* eE = edgel_chain[1];
 	  double dx1 = eE->pt.x() - eS->pt.x();
 	  double dy1 = eE->pt.y() - eS->pt.y();
-	  double dist= vcl_sqrt(dx1*dx1+dy1*dy1);
+	  double dist= std::sqrt(dx1*dx1+dy1*dy1);
 	  if(dist>2)
 	    return false;
   }
 
   // by Yuliang, construct two lists of end nodes from other Curve Fragments end points linking the end points of the path
-  vcl_vector<dbdet_edgel*> S_link_end_nodes, E_link_end_nodes;
+  std::vector<dbdet_edgel*> S_link_end_nodes, E_link_end_nodes;
 
   // (a) if a c1 polyarc bundle can form within it
   // (b) if it is c1 compatible with the end points
@@ -254,14 +254,14 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
     double dx2 = eS->pt.x() - pe->pt.x();
     double dy2 = eS->pt.y() - pe->pt.y();
 
-    cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+    cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
 
     if((*pcit)->edgels.size()>=3) // a little more globle check, in case of local zig-zag
     {
     	pe = (*pcit)->edgels[(*pcit)->edgels.size()-3];
     	dx2 = eS->pt.x() - pe->pt.x();
     	dy2 = eS->pt.y() - pe->pt.y();
-        cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+        cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
     }
   }
   dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[eS->id].begin();
@@ -274,13 +274,13 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
     double dx2 = eS->pt.x() - ce->pt.x();
     double dy2 = eS->pt.y() - ce->pt.y();
 
-    cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+    cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
     if((*ccit)->edgels.size()>=3) // a little more globle check, in case of local zig-zag
     {
     	ce = (*ccit)->edgels[2];
     	dx2 = eS->pt.x() - ce->pt.x();
     	dy2 = eS->pt.y() - ce->pt.y();
-        cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+        cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
     }
   }
   if (!cons) return false; //no good at the start point
@@ -307,14 +307,14 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 		double dx2 = pe->pt.x() - eE->pt.x();
 		double dy2 = pe->pt.y() - eE->pt.y();
 
-		cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+		cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
 
 	    if((*pcit)->edgels.size()>=3) // a little more globle check, in case of local zig-zag
 	    {
 	    	pe = (*pcit)->edgels[(*pcit)->edgels.size()-3];
 	    	dx2 = pe->pt.x() - eE->pt.x();
 	    	dy2 = pe->pt.y() - eE->pt.y();
-	    	cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+	    	cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
 	    }
 	  }
 	  ccit = curve_frag_graph_.cFrags[eE->id].begin();
@@ -327,14 +327,14 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 		double dx2 = ce->pt.x() - eE->pt.x();
 		double dy2 = ce->pt.y() - eE->pt.y();
 
-		cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+		cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
 
 	    if((*ccit)->edgels.size()>=3) // a little more globle check, in case of local zig-zag
 	    {
 	    	ce = (*ccit)->edgels[2];
 	    	dx2 = ce->pt.x() - eE->pt.x();
 	    	dy2 = ce->pt.y() - eE->pt.y();
-			cons = cons || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0;
+			cons = cons || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0;
 	    }
 	  }
 	  if (!cons) return false; //no good at the end point
@@ -365,14 +365,14 @@ bool dbdet_sel_base::is_EHT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 }
 
 //: New Quality Metric by Naman Kumar :: compute a path metric based on the Gap, Orientation, Strength and Size of the chain
-double dbdet_sel_base::compute_path_metric2(vcl_vector<dbdet_edgel*>& Pchain,
-                                           vcl_vector<dbdet_edgel*>& Tchain,
-                                           vcl_vector<dbdet_edgel*>& Cchain)
+double dbdet_sel_base::compute_path_metric2(std::vector<dbdet_edgel*>& Pchain,
+                                           std::vector<dbdet_edgel*>& Tchain,
+                                           std::vector<dbdet_edgel*>& Cchain)
 {
   double cost = 0.0;double ds=0;double dt=0;
 
   //construct an edgel chain out of all three chains
-  vcl_vector<dbdet_edgel*> chain;
+  std::vector<dbdet_edgel*> chain;
   if (Pchain.size())
     for (unsigned i=0; i<Pchain.size(); i++) chain.push_back(Pchain[i]);
   if (Tchain.size())
@@ -390,23 +390,23 @@ double dbdet_sel_base::compute_path_metric2(vcl_vector<dbdet_edgel*>& Pchain,
     eP = chain[i-1];
     s1=(eA)->strength;
     s2=(eP)->strength;
-    s=vcl_fabs(s1-s2);
+    s=std::fabs(s1-s2);
     //computing ds
     ds = vgl_distance(eA->pt, eP->pt);
     if(ds>1.0) a=2.0; else a=1.0;
     total_ds += ds;
     //computing dtheta
     double thc = dbdet_vPointPoint(eP->pt, eA->pt);
-    dt = vcl_fabs(thc-thp);
+    dt = std::fabs(thc-thp);
     dt = (dt>vnl_math::pi)? 2*vnl_math::pi-dt : dt;
-    cost += vcl_pow((s+dt + a*ds)/size, 2.0); 
+    cost += std::pow((s+dt + a*ds)/size, 2.0); 
     thp = thc;//saving the current vector for the next iteration
     dsp = ds;
   }
   return cost;
 }
 
-double dbdet_sel_base::compute_path_len(vcl_deque<dbdet_edgel*>& chain)
+double dbdet_sel_base::compute_path_len(std::deque<dbdet_edgel*>& chain)
 {
 	double total_ds = 0;
 	dbdet_edgel *eA=0, *eP=0;
@@ -420,7 +420,7 @@ double dbdet_sel_base::compute_path_len(vcl_deque<dbdet_edgel*>& chain)
 	  return total_ds;
 }
 
-double dbdet_sel_base::compute_path_len(vcl_vector<dbdet_edgel*>& chain)
+double dbdet_sel_base::compute_path_len(std::vector<dbdet_edgel*>& chain)
 {
 	double total_ds = 0;
 	dbdet_edgel *eA=0, *eP=0;
@@ -434,14 +434,14 @@ double dbdet_sel_base::compute_path_len(vcl_vector<dbdet_edgel*>& chain)
 	  return total_ds;
 }
 //: New Quality Metric by Yuliang Guo :: compute a path metric based on the Gap, Orientation normorlized by Size of the chain, weights trained by grid search
-double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
-                                           vcl_vector<dbdet_edgel*>& Tchain,
-                                           vcl_vector<dbdet_edgel*>& Cchain)
+double dbdet_sel_base::compute_path_metric3(std::vector<dbdet_edgel*>& Pchain,
+                                           std::vector<dbdet_edgel*>& Tchain,
+                                           std::vector<dbdet_edgel*>& Cchain)
 {
   double cost = 0.0;double ds=0;double dt=0;
 
   //construct an edgel chain out of all three chains
-  vcl_vector<dbdet_edgel*> chain;
+  std::vector<dbdet_edgel*> chain;
   if (Pchain.size())
     for (unsigned i=0; i<Pchain.size(); i++) chain.push_back(Pchain[i]);
   if (Tchain.size())
@@ -465,13 +465,13 @@ double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
 
     //compute dt: dir(i, i-1) - dir(i-1, i-2)
     double thc = dbdet_vPointPoint(eP->pt, eA->pt); // arc_tan2
-    dt = vcl_pow((vcl_cos(thc) - vcl_cos(thp)), 2) + vcl_pow((vcl_sin(thc) - vcl_sin(thp)), 2);
+    dt = std::pow((std::cos(thc) - std::cos(thp)), 2) + std::pow((std::sin(thc) - std::sin(thp)), 2);
 
     if(i==1)
     	dt=0;
-    cost += dt + a*vcl_pow(ds,2);
+    cost += dt + a*std::pow(ds,2);
     //compute dtheta: tangent(i) - tangent(i-1)
-    //double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
+    //double dtheta = std::pow((std::cos(eA->tangent) - std::cos(eP->tangent)), 2) + std::pow((std::sin(eA->tangent) - std::sin(eP->tangent)), 2);
     //cost += dtheta;
 
     thp = thc;//save the current vector for the next iteration
@@ -480,7 +480,7 @@ double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
   return cost;
 }
 
-double dbdet_sel_base::compute_path_metric3(vcl_deque<dbdet_edgel*>& chain)
+double dbdet_sel_base::compute_path_metric3(std::deque<dbdet_edgel*>& chain)
 {
   double cost = 0.0;double ds=0;double dt=0;
 
@@ -500,13 +500,13 @@ double dbdet_sel_base::compute_path_metric3(vcl_deque<dbdet_edgel*>& chain)
 
     //compute dt: dir(i, i-1) - dir(i-1, i-2)
     double thc = dbdet_vPointPoint(eP->pt, eA->pt); // arc_tan2
-    dt = vcl_pow((vcl_cos(thc) - vcl_cos(thp)), 2) + vcl_pow((vcl_sin(thc) - vcl_sin(thp)), 2);
+    dt = std::pow((std::cos(thc) - std::cos(thp)), 2) + std::pow((std::sin(thc) - std::sin(thp)), 2);
 
     if(i==1)
     	dt=0;
-    cost += dt + a*vcl_pow(ds,2);
+    cost += dt + a*std::pow(ds,2);
     //compute dtheta: tangent(i) - tangent(i-1)
-    //double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
+    //double dtheta = std::pow((std::cos(eA->tangent) - std::cos(eP->tangent)), 2) + std::pow((std::sin(eA->tangent) - std::sin(eP->tangent)), 2);
     //cost += dtheta;
 
     thp = thc;//save the current vector for the next iteration
@@ -535,7 +535,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
   //   Note: remember to search in both directions
 
   //go over all the links of the CFTG
-  vcl_vector<dbdet_edgel*> dummy_chain;
+  std::vector<dbdet_edgel*> dummy_chain;
    
   dbdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();
   for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++)
@@ -553,7 +553,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
     for(; f_it != cur_Link->cCFs.end(); f_it++)
       {
         dbdet_edgel_chain* edgel_chain = (*f_it);
-        vcl_vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(), edgel_chain->edgels.end());
+        std::vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(), edgel_chain->edgels.end());
 
         double path_cost = compute_path_metric2(dummy_chain, chain, dummy_chain);
         if (path_cost < min_cost){
@@ -578,7 +578,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
     else { //just comptue cost for this path
 
       dbdet_edgel_chain* edgel_chain = cur_Link->cCFs.front();
-      vcl_vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(), edgel_chain->edgels.end());
+      std::vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(), edgel_chain->edgels.end());
       cur_Link->cost = compute_path_metric2(dummy_chain, chain, dummy_chain);
     }
   }
@@ -603,8 +603,8 @@ void dbdet_sel_base::disambiguate_the_CFTG()
         dbdet_edgel_chain* edgel_chain1 = cur_Link->cCFs.front();
         dbdet_edgel_chain* edgel_chain2 = (*l_it2)->cCFs.front();
 
-        vcl_vector<dbdet_edgel*> chain1(edgel_chain1->edgels.begin(), edgel_chain1->edgels.end());
-        vcl_vector<dbdet_edgel*> chain2(edgel_chain2->edgels.begin(), edgel_chain2->edgels.end());
+        std::vector<dbdet_edgel*> chain1(edgel_chain1->edgels.begin(), edgel_chain1->edgels.end());
+        std::vector<dbdet_edgel*> chain2(edgel_chain2->edgels.begin(), edgel_chain2->edgels.end());
 
         double path_cost1 = compute_path_metric2(dummy_chain, chain1, dummy_chain);
         double path_cost2 = compute_path_metric2(dummy_chain, chain2, dummy_chain);
@@ -628,7 +628,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
 
   //go over list of Links and find any with degree > 1
   //these need to be disambiguated (gradient descent)
-  vcl_list<dbdet_CFTG_link*> GD_list;
+  std::list<dbdet_CFTG_link*> GD_list;
 
   //populate the map
   l_it = curve_frag_graph_.CFTG.Links.begin();
@@ -662,7 +662,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
 
     //now remove the other links connected to the end points of this link
     //clinks from eS
-    vcl_vector<dbdet_CFTG_link*> links_to_del;
+    std::vector<dbdet_CFTG_link*> links_to_del;
     l_it = curve_frag_graph_.CFTG.cLinks[cur_Link->eS->id].begin();
     for (; l_it != curve_frag_graph_.CFTG.cLinks[cur_Link->eS->id].end(); l_it++){
  
@@ -716,7 +716,7 @@ void dbdet_sel_base::disambiguate_the_CFTG()
   }
   curve_frag_graph_.CFTG.clear();
   curve_frag_graph_.CFTG.resize(edgemap_->edgels.size());
-   vcl_cout<<"Finish disambiguating the CFTG"<<vcl_endl;
+   std::cout<<"Finish disambiguating the CFTG"<<std::endl;
 }
 
 // Following part by Yuliang Guo.
@@ -760,7 +760,7 @@ for (unsigned i=0; i<edgemap_->edgels.size(); i++)
         curve_frag_graph_.extract_fragment(c2);
 
         //reverse the sequence of edgels
-        vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+        std::reverse(c2->edgels.begin(), c2->edgels.end());
         curve_frag_graph_.insert_fragment(c1);
         curve_frag_graph_.insert_fragment(c2);
       }
@@ -781,7 +781,7 @@ for (unsigned i=0; i<edgemap_->edgels.size(); i++)
         curve_frag_graph_.extract_fragment(c2);
 
         //reverse the sequence of edgels
-        vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+        std::reverse(c1->edgels.begin(), c1->edgels.end());
         curve_frag_graph_.insert_fragment(c1);
         curve_frag_graph_.insert_fragment(c2);
       }
@@ -849,7 +849,7 @@ void dbdet_sel_base::correct_CFG_topology()
         curve_frag_graph_.extract_fragment(c2);
 
         //reverse the sequence of edgels
-        vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+        std::reverse(c2->edgels.begin(), c2->edgels.end());
         curve_frag_graph_.insert_fragment(c1);
         curve_frag_graph_.insert_fragment(c2);
       }
@@ -871,7 +871,7 @@ void dbdet_sel_base::correct_CFG_topology()
         curve_frag_graph_.extract_fragment(c2);
 
         //reverse the sequence of edgels
-        vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+        std::reverse(c1->edgels.begin(), c1->edgels.end());
         curve_frag_graph_.insert_fragment(c1);
         curve_frag_graph_.insert_fragment(c2);
       }
@@ -928,7 +928,7 @@ void dbdet_sel_base::correct_CFG_topology()
  
         if(c1->edgels.back()!= eA){ 
             curve_frag_graph_.extract_fragment(c1); 
-            vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+            std::reverse(c1->edgels.begin(), c1->edgels.end());
             curve_frag_graph_.insert_fragment(c1);             
         }
         fit_1++;
@@ -938,7 +938,7 @@ void dbdet_sel_base::correct_CFG_topology()
             c2=*fit_2;
             if(c2->edgels.back()== eA){
                 curve_frag_graph_.extract_fragment(c2);     
-                vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+                std::reverse(c2->edgels.begin(), c2->edgels.end());
                 curve_frag_graph_.insert_fragment(c2);             
             }
 
@@ -965,7 +965,7 @@ void dbdet_sel_base::correct_CFG_topology()
 */
     // use the filter to prune out local problems again
     regular_contour_filter();
-    vcl_cout<<"Finish correcting the CFG topology"<<vcl_endl;
+    std::cout<<"Finish correcting the CFG topology"<<std::endl;
 }
 
 //June, 2012:: Make decision whether to merge two contours or not (by Naman Kumar) 
@@ -989,7 +989,7 @@ static bool is_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c
 			e4 = c2->edgels[j];
 			dx2 = e4->pt.x()-e3->pt.x();
 			dy2 = e4->pt.y()-e3->pt.y();
-			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+			SM_1 = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 
 			if(SM_1>=Theta_1)
 				return true;
@@ -1022,7 +1022,7 @@ static bool is_not_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chai
 			e4 = c2->edgels[j];
 			dx2 = e4->pt.x()-e3->pt.x();
 			dy2 = e4->pt.y()-e3->pt.y();
-			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+			SM_1 = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 
 			if(SM_1<0)
 				return true;
@@ -1057,7 +1057,7 @@ static double get_max_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel
 			e4 = c2->edgels[j];
 			dx2 = e4->pt.x()-e3->pt.x();
 			dy2 = e4->pt.y()-e3->pt.y();
-			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+			SM_1 = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 
 			if(SM_1>=max_con)
 				max_con = SM_1;
@@ -1091,7 +1091,7 @@ static double get_min_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel
 			e4 = c2->edgels[j];
 			dx2 = e4->pt.x()-e3->pt.x();
 			dy2 = e4->pt.y()-e3->pt.y();
-			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+			SM_1 = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 
 			if(SM_1<=min_con)
 				min_con = SM_1;
@@ -1131,7 +1131,7 @@ static double get_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_cha
         double dy1 = e2->pt.y()-e1->pt.y();
         double dx2 = e4->pt.x()-e3->pt.x();
         double dy2 = e4->pt.y()-e3->pt.y();
-        return (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+        return (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 }
 
 static bool share_same_ends(dbdet_edgel_chain *c1, dbdet_edgel_chain *c2)
@@ -1172,8 +1172,8 @@ void dbdet_sel_base::regular_contour_filter(){
 		double dy1 = c1->edgels[1]->pt.y() - c1->edgels.front()->pt.y();
 		double dx2 = c1->edgels.back()->pt.x() - c1->edgels[1]->pt.x();
 		double dy2 = c1->edgels.back()->pt.y() - c1->edgels[1]->pt.y();
-		double SM = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
-		double length = vcl_sqrt(dx1*dx1+dy1*dy1) + vcl_sqrt(dx2*dx2+dy2*dy2);
+		double SM = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
+		double length = std::sqrt(dx1*dx1+dy1*dy1) + std::sqrt(dx2*dx2+dy2*dy2);
 		if(length>10)// only consider local problems
 			continue;
 		if(SM<=0)
@@ -1212,12 +1212,12 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 {
 	int n1=0;
 	double d=0,dis=0,distance=0;
-	vcl_vector<dbdet_edgel*> new_chain0,new_chain2,new_chain3,new_chain6,new_chain33;
+	std::vector<dbdet_edgel*> new_chain0,new_chain2,new_chain3,new_chain6,new_chain33;
 	dbdet_edgel_chain* new_chain1=new dbdet_edgel_chain();dbdet_edgel_chain* new_chain4=new dbdet_edgel_chain();
 	dbdet_edgel_chain* test1=new dbdet_edgel_chain();dbdet_edgel_chain *chains=new dbdet_edgel_chain();
 	dbdet_edgel_chain* new_chain44=new dbdet_edgel_chain();
 	double gap_thres=gap_;
-	vcl_cout << "Construction of Hypothesis Tree is in Progress!! " << vcl_endl;
+	std::cout << "Construction of Hypothesis Tree is in Progress!! " << std::endl;
 	//Calculating number of edges which are having degree 1   	
 	for (int i=0; i<edgemap_->edgels.size(); i++)
 	{
@@ -1353,13 +1353,13 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 				//Checking Localization, Orientation,etc..
 				if(d1<cost1) // extended step need to satisfy cost threshold
 				{
-					vcl_vector<dbdet_edgel*> dummy_chain;
+					std::vector<dbdet_edgel*> dummy_chain;
 					// copy previous found path new_chain5 into temp edgel_chain
 					dbdet_edgel_chain* edgel_chain = new dbdet_edgel_chain();
 					for(int i=0;i<new_chain5->edgels.size();i++)
 						edgel_chain->edgels.push_back(new_chain5->edgels[i]);
 					edgel_chain->edgels.push_back(new_chain4->edgels[j]);
-					vcl_vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
+					std::vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
 					costc = compute_path_metric2(dummy_chain, chain, dummy_chain);
 					// check if the extended chain satisfy cost threshold
 					if(costc<cost)
@@ -1371,7 +1371,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 						double dy1 = ce->pt.y() - ed->pt.y();
 						double dx2 = ed->pt.x() - new_chain4->edgels[j]->pt.x();
 						double dy2 = ed->pt.y() - new_chain4->edgels[j]->pt.y();
-						double angle=((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2));
+						double angle=((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2));
 						if(d0<d9) {++eit1;continue;} // if distance to initial edge < distance to current edge, skip it: wrong direction of search
 						if(d8<d9 || angle<0){++eit1;continue;} // if distance to previous edge < distance to current edge, skip it: wrong direction of search
 						imp=new_chain4->edgels[j];
@@ -1468,7 +1468,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 
 	/*
 	/////////// Following process seems to have No effect
-	dbdet_edgel* edge1=0;dbdet_edgel* edge2=0;dbdet_edgel_chain *chain1=new dbdet_edgel_chain();vcl_list<dbdet_CFTG_link*> GD_list;
+	dbdet_edgel* edge1=0;dbdet_edgel* edge2=0;dbdet_edgel_chain *chain1=new dbdet_edgel_chain();std::list<dbdet_CFTG_link*> GD_list;
 	double p1=1.0;int p2=0,p3=0,p16=0;
 	dbdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();      
     for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++)
@@ -1569,7 +1569,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 							double dx1 = edge1->pt.x() - edge2->pt.x(), dy1 = edge1->pt.y() - edge2->pt.y();
 							double dx2=new_chain4->edgels[a]->pt.x()-edge1->pt.x();
 							double dy2=new_chain4->edgels[a]->pt.y()-edge1->pt.y();
-							if(d8<d9 || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0.4)
+							if(d8<d9 || ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<0.4)
 							{
 								++eit3;
 								continue;
@@ -1667,7 +1667,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 
 /*
   	// Add by Yuliang, a indicator shows edges participating in unambiguous frags and hypothesis trees
-	vcl_cout << "counting in participate edges" << vcl_endl;
+	std::cout << "counting in participate edges" << std::endl;
 
 	// count in hypothesis tree edges
 	dbdet_CFTG_link_list_iter it_8 = curve_frag_graph_.CFTG.Links.begin();
@@ -1684,23 +1684,23 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 				curve_frag_graph_.participate_edge_id.insert((*it_888)->id);
 		}
 	}
-	vcl_cout <<"participate edge count: " <<curve_frag_graph_.participate_edge_id.size() << vcl_endl;
+	std::cout <<"participate edge count: " <<curve_frag_graph_.participate_edge_id.size() << std::endl;
 
 */
 
 /*	std::set<int>::iterator it = curve_frag_graph_.participate_edge_id.begin();
 	for (; it!=curve_frag_graph_.participate_edge_id.end(); it++)
-		vcl_cout << (*it) << " ";
-	vcl_cout << vcl_endl;
+		std::cout << (*it) << " ";
+	std::cout << std::endl;
 */
 
-	vcl_cout << "Hypothesis Tree Constructed!!" << vcl_endl;	
+	std::cout << "Hypothesis Tree Constructed!!" << std::endl;	
 }
 
 // New Disambiguation Process by Naman Kumar
 void dbdet_sel_base::Disambiguation()
 {
-	vcl_cout << "Disambiguating the Hypothesis Tree!!" << vcl_endl;
+	std::cout << "Disambiguating the Hypothesis Tree!!" << std::endl;
 	dbdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();
 	for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++)
 	{
@@ -1708,9 +1708,9 @@ void dbdet_sel_base::Disambiguation()
         	int deg_S = curve_frag_graph_.CFTG.cLinks[(*l_it)->eS->id].size() + curve_frag_graph_.CFTG.pLinks[(*l_it)->eS->id].size();
         	dbdet_CFTG_link* cur_Link = (*l_it);
 		//Calculating the Cost        	
-		vcl_vector<dbdet_edgel*> dummy_chain;
+		std::vector<dbdet_edgel*> dummy_chain;
         	dbdet_edgel_chain* edgel_chain = cur_Link->cCFs.front();
-        	vcl_vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
+        	std::vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
 	 	cost = compute_path_metric2(dummy_chain, chain, dummy_chain);
         	//Degree = 1
         	if(deg_S==1) {curve_frag_graph_.insert_fragment((*l_it)->cCFs.front()); continue;}
@@ -1786,14 +1786,14 @@ void dbdet_sel_base::Post_Process()
 dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
 {
   if (edge_link_graph_.cLinks.size()==0){
-    vcl_cout << "No Link Graph !" <<vcl_endl;
+    std::cout << "No Link Graph !" <<std::endl;
     return 0;
   }
 
-  vcl_vector<dbdet_edgel*> dummy_chain;
-  vcl_map<int, dbdet_DEHT_node*> node_list; // a list all nodes involving in the tree
-  vcl_map<int, int> used_node; // frag of used nodes in constructing this tree
-  vcl_map<int, dbdet_DEHT_node*> pri_queue; // This has to use a priority queue, whose contents are sorted by the cost
+  std::vector<dbdet_edgel*> dummy_chain;
+  std::map<int, dbdet_DEHT_node*> node_list; // a list all nodes involving in the tree
+  std::map<int, int> used_node; // frag of used nodes in constructing this tree
+  std::map<int, dbdet_DEHT_node*> pri_queue; // This has to use a priority queue, whose contents are sorted by the cost
 
   //construct a Tree, assign the root
   dbdet_DEHT* Tree = new dbdet_DEHT();
@@ -1810,12 +1810,12 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
   //pri_queue.push(root1);
   pri_queue[root1->e->id] = root1;
   int num_node = 0;
-  while (!pri_queue.empty() && vcl_log10(double(num_node))<4)
+  while (!pri_queue.empty() && std::log10(double(num_node))<4)
   {
 
 	// Always propagate from the lowest cost
 	double min_cost = INF_COST;
-	vcl_map<int, dbdet_DEHT_node*>::iterator tit, min_tit;
+	std::map<int, dbdet_DEHT_node*>::iterator tit, min_tit;
 	for (tit = pri_queue.begin(); tit != pri_queue.end(); tit++ )
 	{
 		if(tit->second->path_cost < min_cost)
@@ -1845,7 +1845,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
     // explore in cLinks
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vcl_vector<dbdet_edgel*> connected_frag;
+    std::vector<dbdet_edgel*> connected_frag;
     if(curve_frag_graph_.pFrags[edge->id].size()>=1)
     {
     	int sz = curve_frag_graph_.pFrags[edge->id].front()->edgels.size();
@@ -1882,21 +1882,21 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
         double dy2 = (*lit)->ce->pt.y() - cur_node->e->pt.y();
 
         // if not consistent, skip it
-        if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0) //not consistent, but with lower TH to keep more Hypothesis by Yuliang ////////// Cosine Formula
+        if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<0) //not consistent, but with lower TH to keep more Hypothesis by Yuliang ////////// Cosine Formula
           continue;
       }
 
       // Check: is to update existing node or to add a new node
       // A node indicates its optimal path to the root via holding only one parent
-      vcl_vector<dbdet_edgel*> path1 = cur_node->path;
+      std::vector<dbdet_edgel*> path1 = cur_node->path;
       path1.push_back((*lit)->ce);
       // TODO: A:should not use normalized metric, B: use accumulative computation to improve efficiency
       double cost1 = dbdet_sel_base::compute_path_metric3(connected_frag,path1,dummy_chain);
       // if this a node with the same edgel already exist in the tree
       if(node_list.find((*lit)->ce->id)!=node_list.end()) {
-    	  //vcl_cout << "reach a previous added node" << vcl_endl;
+    	  //std::cout << "reach a previous added node" << std::endl;
     	  dbdet_DEHT_node* child_node = node_list[(*lit)->ce->id];
-    	  vcl_vector<dbdet_edgel*> path2 = child_node->path;
+    	  std::vector<dbdet_edgel*> path2 = child_node->path;
           // TODO: A:should not use normalized metric, B: use accumulative computation to improve efficiency
           double cost2 = dbdet_sel_base::compute_path_metric3(connected_frag,path2,dummy_chain);
           if(cost1>=cost2) // this path will not be considered
@@ -1947,21 +1947,21 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
 		double dy2 = (*lit)->pe->pt.y() - cur_node->e->pt.y();
 
         // if not consistent, skip it
-		if (((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0) //not consistent, but with lower TH to keep more Hypothesis by Yuliang
+		if (((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<0) //not consistent, but with lower TH to keep more Hypothesis by Yuliang
 		  continue;
       }
 
       // Check: is to update existing node or to add a new node
       // A node indicates its optimal path to the root via holding only one parent
-      vcl_vector<dbdet_edgel*> path1 = cur_node->path;
+      std::vector<dbdet_edgel*> path1 = cur_node->path;
       path1.push_back((*lit)->pe);
       // TODO: this need to be changed to a accumulate version to improve efficiency
       double cost1 = dbdet_sel_base::compute_path_metric3(connected_frag,path1,dummy_chain);
       // if this a node with the same edgel already exist in the tree
       if(node_list.find((*lit)->pe->id)!=node_list.end()) {
-    	  //vcl_cout << "reach a previous added node" << vcl_endl;
+    	  //std::cout << "reach a previous added node" << std::endl;
     	  dbdet_DEHT_node* child_node = node_list[(*lit)->pe->id];
-    	  vcl_vector<dbdet_edgel*> path2 = child_node->path;
+    	  std::vector<dbdet_edgel*> path2 = child_node->path;
           // TODO: this need to be changed to a accumulate version to improve efficiency
           double cost2 = dbdet_sel_base::compute_path_metric3(connected_frag,path2,dummy_chain);
           if(cost1>=cost2) // this path will not be considered
@@ -1974,7 +1974,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
       }
       //else add a new node with this edgel
       else {
-    	  //vcl_cout << "add a new node" << vcl_endl;
+    	  //std::cout << "add a new node" << std::endl;
 		  dbdet_DEHT_node* child_node = new dbdet_DEHT_node((*lit)->pe);
 		  cur_node->add_child(child_node); // modify links
     	  child_node->path = path1; // update path
@@ -1990,7 +1990,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
     // mark cur_node used, that is, all its neighborhood propagated
     used_node[cur_node->e->id] = 1;
   }
-  //vcl_cout << "Constructed dynamic tree, node list size: " << node_list.size() << vcl_endl;
+  //std::cout << "Constructed dynamic tree, node list size: " << node_list.size() << std::endl;
   //empty the bfs queue, in case the max number of nodes condition reached
   while (!pri_queue.empty())
 	  pri_queue.clear();
@@ -2003,11 +2003,11 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
   // Attach qualified paths to the participating edges
   //////////////////////////////////////////////////////
   // TODO: use a vector to hold costs for HypFrags to avoiding recomputing in later processes !!
-  vcl_map<int, dbdet_DEHT_node*>::iterator mit = node_list.begin();
+  std::map<int, dbdet_DEHT_node*>::iterator mit = node_list.begin();
   for (; mit!=node_list.end(); mit++) // it includes root node
   {
 	  dbdet_DEHT_node* cur_node =  mit->second;
-	  vcl_vector<dbdet_edgel*> path2add = cur_node->path;
+	  std::vector<dbdet_edgel*> path2add = cur_node->path;
 	  // A legal attached path to junction
 	  if(is_JCT_path_legal(path2add)) // short paths will not be considered
 	  {
@@ -2020,7 +2020,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
 	  // consider the best path to be the shortest path to a leaf node, that ends at a linked edge, it need to satisfy more restrict consistency check
 	  //if(cur_node->children.size()==0 && cur_node->path_cost < best_cost)
 	  int deg = curve_frag_graph_.cFrags[cur_node->e->id].size() + curve_frag_graph_.pFrags[cur_node->e->id].size();
-	  vcl_deque<dbdet_edgel*> vvv(cur_node->path.begin(), cur_node->path.end());
+	  std::deque<dbdet_edgel*> vvv(cur_node->path.begin(), cur_node->path.end());
 	  //double cur_len = compute_path_len(vvv);
 	  //if(cur_node->children.size()==0 && cur_len < best_cost && edge_link_graph_.linked[ cur_node->path.back()->id] && is_EHT_path_legal(path2add))
 	  if(cur_node->children.size()==0 && cur_node->path_cost < best_cost && edge_link_graph_.linked[ cur_node->path.back()->id] && is_EHT_path_legal(path2add))
@@ -2040,7 +2040,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
 
   }
 
-  //vcl_cout << "Attached paths from dynamic tree: " << count_path << vcl_endl;
+  //std::cout << "Attached paths from dynamic tree: " << count_path << std::endl;
   return Tree;
 }
 
@@ -2050,7 +2050,7 @@ void dbdet_sel_base::construct_all_DEHTs()
   //go over the contour fragment graph and form an EHT from every terminal node
   //validate each of the paths in the EHT
 
-  vcl_vector<dbdet_edgel_chain*> new_frags;
+  std::vector<dbdet_edgel_chain*> new_frags;
   curve_frag_graph_.edgels_having_attached_paths.assign(edgemap_->edgels.size(), 0);
 
   //construct DEHT rooted at each edge point
@@ -2079,7 +2079,7 @@ void dbdet_sel_base::construct_all_DEHTs()
     	curve_frag_graph_.best_free_end_paths[eA->id] = DEHT1->best_free_end_path;
     }
   }
-  vcl_cout<<"Finish constructing all dynamic hypothesis trees"<<vcl_endl;
+  std::cout<<"Finish constructing all dynamic hypothesis trees"<<std::endl;
 }
 
 //: resolving junction based on the attached hyp paths:
@@ -2107,7 +2107,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 		if(num_non_overlap_paths >=3)
 		{
 			curve_frag_graph_.junction_edgels[cur_eid] = 1;
-			//vcl_cout << "find a junction with non-overlapping paths: " << num_non_overlap_paths << vcl_endl;
+			//std::cout << "find a junction with non-overlapping paths: " << num_non_overlap_paths << std::endl;
 		}
 
 	}
@@ -2122,7 +2122,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 		int cur_eid = curve_frag_graph_.end_points[k]->id;
 		if(curve_frag_graph_.best_free_end_paths.find(cur_eid)==curve_frag_graph_.best_free_end_paths.end()) // skip end points without any qualified free end path
 			continue;
-		vcl_vector<dbdet_edgel*> best_path = curve_frag_graph_.best_free_end_paths[cur_eid];
+		std::vector<dbdet_edgel*> best_path = curve_frag_graph_.best_free_end_paths[cur_eid];
 
 		if(best_path.size()<min_subpath_len+1)
 			continue;
@@ -2140,13 +2140,13 @@ void dbdet_sel_base::resolve_junction_conflict()
 				if(HpyFrags_num>=2) // those junctions including >2 attach paths are already in the list, but still consider any additional attached path due to free end
 				{
 					// extract two sub-paths, from 0 to i, and from i to end
-					vcl_vector<dbdet_edgel*> edges_01;
+					std::vector<dbdet_edgel*> edges_01;
 					for (int j = 0; j<=i; j++)
 					{
 						edges_01.push_back(best_path[i-j]);
 					}
 
-					vcl_vector<dbdet_edgel*> edges_02;
+					std::vector<dbdet_edgel*> edges_02;
 					for (int j = i; j<best_path.size(); j++)
 					{
 						edges_02.push_back(best_path[j]);
@@ -2160,7 +2160,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 					for( clit1= curve_frag_graph_.HypFrags[best_path[i]->id].begin(); clit1!=curve_frag_graph_.HypFrags[best_path[i]->id].end(); clit1++)
 					{
 						dbdet_edgel_chain* path_1 = *clit1;
-						vcl_vector<dbdet_edgel*> edges_1;
+						std::vector<dbdet_edgel*> edges_1;
 						for (int j = 0; j< path_1->edgels.size(); j++)
 						{
 							edges_1.push_back(path_1->edgels[path_1->edgels.size()-1-j]);
@@ -2174,7 +2174,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 					if(add_subpath_1)
 					{
-						vcl_reverse(edges_01.begin(), edges_01.end());
+						std::reverse(edges_01.begin(), edges_01.end());
 						dbdet_edgel_chain* new_chain_01 = new dbdet_edgel_chain();
 						new_chain_01->append(edges_01);
 						curve_frag_graph_.HypFrags[best_path[i]->id].push_back(new_chain_01);
@@ -2182,7 +2182,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 					if(add_subpath_2)
 					{
-						vcl_reverse(edges_02.begin(), edges_02.end());
+						std::reverse(edges_02.begin(), edges_02.end());
 						dbdet_edgel_chain* new_chain_02 = new dbdet_edgel_chain();
 						new_chain_02->append(edges_02);
 						curve_frag_graph_.HypFrags[best_path[i]->id].push_back(new_chain_02);
@@ -2227,7 +2227,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 		check_jct_compatibility (cur_eid);
 	}
 
-	vcl_cout << "Suppress conflict junctions" << vcl_endl;
+	std::cout << "Suppress conflict junctions" << std::endl;
 
 	// extract curve fragments related to junctions
 	for (int i = 0 ; i< curve_frag_graph_.junction_edgels.size(); i++)
@@ -2247,7 +2247,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 			curve_frag_graph_.junction_edgels[i]=0; // update junction labels after cut
 	}
 
-	vcl_cout << "Extract junctions curve fragments" << vcl_endl;
+	std::cout << "Extract junctions curve fragments" << std::endl;
 
 
 	bool prune = true;
@@ -2262,7 +2262,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 	while (clit0!=curve_frag_graph_.frags.end())
 	{
 		dbdet_edgel_chain* cur_chain = *clit0;
-		vcl_vector <int> FP_jct_index;
+		std::vector <int> FP_jct_index;
 		for (int j = 1; j<cur_chain->edgels.size()-1; j++)
 		{
 			// if it is a false positive (FP) junction, save it to check later
@@ -2297,7 +2297,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 			if(joint_chain1->edgels.back()==joint_chain2->edgels.back()) // both the joint paths are from the same junction
 			{
-				//vcl_cout << "Found double FP T-junction:"<< cur_chain->edgels[j1]->id << " " << cur_chain->edgels[j2]->id << vcl_endl;
+				//std::cout << "Found double FP T-junction:"<< cur_chain->edgels[j1]->id << " " << cur_chain->edgels[j2]->id << std::endl;
 				//				   /  \
 				//				 /		\
 				//			  joint1   joint2
@@ -2311,12 +2311,12 @@ void dbdet_sel_base::resolve_junction_conflict()
 					//edge_link_graph_.linked[cur_chain->edgels[k]->id]=0;
 				clit0 --;
 				curve_frag_graph_.extract_fragment(cur_chain);// remove the pointer from the graph
-				vcl_vector<dbdet_edgel*> sub_path_1;
+				std::vector<dbdet_edgel*> sub_path_1;
 				for (int k = 0; k<=j1; k++)
 				{
 					sub_path_1.push_back(cur_chain->edgels[k]);
 				}
-				vcl_vector<dbdet_edgel*> sub_path_3;
+				std::vector<dbdet_edgel*> sub_path_3;
 				for (int k = j2; k<cur_chain->edgels.size(); k++)
 				{
 					sub_path_3.push_back(cur_chain->edgels[k]);
@@ -2340,7 +2340,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 		if(FP_jct_index.size()>0)
 		{
 			int j = FP_jct_index[0];
-			//vcl_cout << "Found a possible FP T-junction:"<< cur_chain->edgels[j]->id << vcl_endl;
+			//std::cout << "Found a possible FP T-junction:"<< cur_chain->edgels[j]->id << std::endl;
 			//			  joint
 			//				|
 			//				|
@@ -2350,14 +2350,14 @@ void dbdet_sel_base::resolve_junction_conflict()
 			dbdet_edgel_chain* joint_chain;
 			joint_chain = curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].front();
 			curve_frag_graph_.extract_fragment(joint_chain);
-			vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());// need to reverse because it's originally pointing outward
+			std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());// need to reverse because it's originally pointing outward
 
-			vcl_vector<dbdet_edgel*> sub_path_1;
+			std::vector<dbdet_edgel*> sub_path_1;
 			for (int k = 0; k<=j; k++)
 			{
 				sub_path_1.push_back(cur_chain->edgels[k]);
 			}
-			vcl_vector<dbdet_edgel*> sub_path_2;
+			std::vector<dbdet_edgel*> sub_path_2;
 			for (int k = j; k<cur_chain->edgels.size(); k++)
 			{
 				sub_path_2.push_back(cur_chain->edgels[k]);
@@ -2411,7 +2411,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						if(curve_frag_graph_.pFrags[eid_3].size()==0 && curve_frag_graph_.cFrags[eid_3].size()==1
 								&& curve_frag_graph_.cFrags[eid_3].front()->edgels.back()->id == jct1)
 						{
-							//vcl_cout << "found possible double cross between jct: "<<jct1 << " and jct: " << jct2 << vcl_endl;
+							//std::cout << "found possible double cross between jct: "<<jct1 << " and jct: " << jct2 << std::endl;
 							joint_chain2 = curve_frag_graph_.cFrags[eid_3].front();
 							cur_chain2 = *clit3;
 							intersect_j = k;
@@ -2426,14 +2426,14 @@ void dbdet_sel_base::resolve_junction_conflict()
 					// remove the joint_chain that cross over
 					if(is_cross_over(*clit3, joint_chain) && (*clit3)!=cur_chain)
 					{
-						//vcl_cout << "remove joint chain from jct1: "<<jct1 <<vcl_endl;
+						//std::cout << "remove joint chain from jct1: "<<jct1 <<std::endl;
 						// do not need to extract joint_chain which is already extracted
 
 						if(cur_chain2)
 						{
 							// make the remaining intersect point as true junction
 							curve_frag_graph_.extract_fragment(cur_chain2);
-							vcl_vector<dbdet_edgel*> vvv(cur_chain2->edgels.begin()+intersect_j, cur_chain2->edgels.end());
+							std::vector<dbdet_edgel*> vvv(cur_chain2->edgels.begin()+intersect_j, cur_chain2->edgels.end());
 							dbdet_edgel_chain* new_chain = new dbdet_edgel_chain();
 							new_chain->append(vvv);
 							cur_chain2->edgels.erase(cur_chain2->edgels.begin()+intersect_j+1, cur_chain2->edgels.end());
@@ -2444,7 +2444,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						clit0 --; // this will ensure to check cur_chain again in case there are other FP T-junctions coming afterwards
 						// A Special case:
 						// for the joint to delete, if there is another T junction in the middle, cut the joint chain, put the remaining portion back
-						vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+						std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
 						for(int kk = 1; kk<joint_chain->edgels.size()-1; kk++)
 						{
 							if(curve_frag_graph_.pFrags[joint_chain->edgels[kk]->id].size() + curve_frag_graph_.cFrags[joint_chain->edgels[kk]->id].size()>0)
@@ -2462,15 +2462,15 @@ void dbdet_sel_base::resolve_junction_conflict()
 					}
 					else if(joint_chain2 != 0 && intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
 					{
-						//vcl_cout << "remove joint chain 2 from jct1: "<<jct1 <<vcl_endl;
+						//std::cout << "remove joint chain 2 from jct1: "<<jct1 <<std::endl;
 						curve_frag_graph_.extract_fragment(joint_chain2);
 						// insert joint_chain back
-						vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+						std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
 						curve_frag_graph_.insert_fragment(joint_chain);
 						// make the remaining intersect point as true junction
 						clit0--;
 						curve_frag_graph_.extract_fragment(cur_chain);
-						vcl_vector<dbdet_edgel*> vvv(cur_chain->edgels.begin()+j, cur_chain->edgels.end());
+						std::vector<dbdet_edgel*> vvv(cur_chain->edgels.begin()+j, cur_chain->edgels.end());
 						dbdet_edgel_chain* new_chain = new dbdet_edgel_chain();
 						new_chain->append(vvv);
 						cur_chain->edgels.erase(cur_chain->edgels.begin()+j+1, cur_chain->edgels.end());
@@ -2494,17 +2494,17 @@ void dbdet_sel_base::resolve_junction_conflict()
 				double dy_1o =  sub_path_1[sz1-1]->pt.y() - sub_path_1[sz1-2]->pt.y();
 				double dx_o2 = sub_path_2[1]->pt.x() - sub_path_2[0]->pt.x();
 				double dy_o2 = sub_path_2[1]->pt.y() - sub_path_2[0]->pt.y();
-				double cos_12 = (dx_1o*dx_o2+dy_1o*dy_o2)/vcl_sqrt(dx_1o*dx_1o+dy_1o*dy_1o)/vcl_sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
+				double cos_12 = (dx_1o*dx_o2+dy_1o*dy_o2)/std::sqrt(dx_1o*dx_1o+dy_1o*dy_1o)/std::sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
 				double cos_21 = cos_12;
 
 				int szj = joint_chain->edgels.size();
 				double dx_jo = joint_chain->edgels[szj-1]->pt.x() - joint_chain->edgels[szj-2]->pt.x();
 				double dy_jo = joint_chain->edgels[szj-1]->pt.y() - joint_chain->edgels[szj-2]->pt.y();
-				double cos_j2 = (dx_jo*dx_o2+dy_jo*dy_o2)/vcl_sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/vcl_sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
-				double cos_j1 = (-dx_1o*dx_jo-dy_1o*dy_jo)/vcl_sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/vcl_sqrt(dx_1o*dx_1o+dy_1o*dy_1o);
+				double cos_j2 = (dx_jo*dx_o2+dy_jo*dy_o2)/std::sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/std::sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
+				double cos_j1 = (-dx_1o*dx_jo-dy_1o*dy_jo)/std::sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/std::sqrt(dx_1o*dx_1o+dy_1o*dy_1o);
 
-				//vcl_vector<dbdet_edgel*> dummy_path;
-				//vcl_vector<dbdet_edgel*> joint_path(joint_chain->edgels.begin(), joint_chain->edgels.end());
+				//std::vector<dbdet_edgel*> dummy_path;
+				//std::vector<dbdet_edgel*> joint_path(joint_chain->edgels.begin(), joint_chain->edgels.end());
 				//double cost_1 = compute_path_metric3(dummy_path, sub_path_1, dummy_path);
 				//double cost_2 = compute_path_metric3(dummy_path, sub_path_2, dummy_path);
 				//double cost_j = compute_path_metric3(dummy_path, joint_path, dummy_path);
@@ -2517,19 +2517,19 @@ void dbdet_sel_base::resolve_junction_conflict()
 					clit0 --;
 					curve_frag_graph_.extract_fragment(cur_chain);// remove the pointer from the graph, and delete
 					joint_chain->append(sub_path_2);
-					vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+					std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
 					curve_frag_graph_.insert_fragment(joint_chain);
 					//break;
 				}
 				// The case to choose joint over sub2
 				else if((cos_j1  > cos_21 + 0.1))// && sub_path_2.size()<5) || (sub_path_2.size()==2 && compute_path_len(sub_path_2)>2))
 				{
-					//vcl_cout << "solve FP T-junction" << vcl_endl;
+					//std::cout << "solve FP T-junction" << std::endl;
 					clit0 --;
 					curve_frag_graph_.extract_fragment(cur_chain);// remove the pointer from the graph, and delete
-					vcl_reverse(sub_path_1.begin(), sub_path_1.end());
+					std::reverse(sub_path_1.begin(), sub_path_1.end());
 					joint_chain->append(sub_path_1);
-					vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+					std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
 					curve_frag_graph_.insert_fragment(joint_chain);
 					//break;
 				}
@@ -2538,7 +2538,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 					clit0 --; // this will ensure to check cur_chain again in case there are other FP T-junctions coming afterwards
 					// A Special case:
 					// for the joint to delete, if there is another T junction in the middle, cut the joint chain, put the remaining portion back
-					vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+					std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
 					for(int kk = 1; kk<joint_chain->edgels.size()-1; kk++)
 					{
 						if(curve_frag_graph_.pFrags[joint_chain->edgels[kk]->id].size() + curve_frag_graph_.cFrags[joint_chain->edgels[kk]->id].size()>0)
@@ -2558,7 +2558,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 	}
 	}
 	refresh_linked_condition();
-	vcl_cout << "resolve junction conflict" << vcl_endl;
+	std::cout << "resolve junction conflict" << std::endl;
 
 }
 
@@ -2575,7 +2575,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		if(curve_frag_graph_.cFrags[cur_eid].size() + curve_frag_graph_.pFrags[cur_eid].size() != 1) // the case this end point has been linked in resolving junction
 			continue;
 
-		vcl_vector<dbdet_edgel*> best_path = curve_frag_graph_.best_paths[cur_eid];
+		std::vector<dbdet_edgel*> best_path = curve_frag_graph_.best_paths[cur_eid];
 		for (int i=1; i< best_path.size(); i++)
 		{
 			if(edge_link_graph_.linked[best_path[i]->id])
@@ -2593,8 +2593,8 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		dbdet_edgel_chain_list_iter clit1;
 		for(clit1=curve_frag_graph_.pFrags[cur_eid].begin(); clit1!=curve_frag_graph_.pFrags[cur_eid].end(); clit1++)
 		{
-			vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
-			vcl_reverse(curve_1.begin(), curve_1.end());
+			std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+			std::reverse(curve_1.begin(), curve_1.end());
 			// make sure curve_0 curve_1 both point out from cur_eid
 			if(is_overlapping(best_path, curve_1))
 			{
@@ -2604,7 +2604,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		}
 		for(clit1=curve_frag_graph_.cFrags[cur_eid].begin(); clit1!=curve_frag_graph_.cFrags[cur_eid].end(); clit1++)
 		{
-			vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+			std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
 			// make sure curve_0 curve_1 both point out from cur_eid
 			if(is_overlapping(best_path, curve_1))
 			{
@@ -2637,7 +2637,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		if(curve_frag_graph_.cFrags[cur_eid].size() + curve_frag_graph_.pFrags[cur_eid].size() != 1) // the case this end point has been linked in resolving junction
 			continue;
 
-		vcl_vector<dbdet_edgel*> best_path = curve_frag_graph_.best_free_end_paths[cur_eid];
+		std::vector<dbdet_edgel*> best_path = curve_frag_graph_.best_free_end_paths[cur_eid];
 		for (int i=1; i< best_path.size(); i++)
 		{
 			if(edge_link_graph_.linked[best_path[i]->id])
@@ -2654,8 +2654,8 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		dbdet_edgel_chain_list_iter clit1;
 		for(clit1=curve_frag_graph_.pFrags[cur_eid].begin(); clit1!=curve_frag_graph_.pFrags[cur_eid].end(); clit1++)
 		{
-			vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
-			vcl_reverse(curve_1.begin(), curve_1.end());
+			std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+			std::reverse(curve_1.begin(), curve_1.end());
 			// make sure curve_0 curve_1 both point out from cur_eid
 			if(is_overlapping(best_path, curve_1))
 			{
@@ -2665,7 +2665,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 		}
 		for(clit1=curve_frag_graph_.cFrags[cur_eid].begin(); clit1!=curve_frag_graph_.cFrags[cur_eid].end(); clit1++)
 		{
-			vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+			std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
 			// make sure curve_0 curve_1 both point out from cur_eid
 			if(is_overlapping(best_path, curve_1))
 			{
@@ -2689,7 +2689,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 
 
 	merge_non_jct_curve_frags(); // merge all the curve fragments, except at junctions
-	vcl_cout << "extract non-junction curve fragments" << vcl_endl;
+	std::cout << "extract non-junction curve fragments" << std::endl;
 
 }
 
@@ -2697,7 +2697,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 //: resolve paths conflict
 void dbdet_sel_base::resolve_paths_conflict()
 {
-	vcl_vector<dbdet_edgel*> dummy_path;
+	std::vector<dbdet_edgel*> dummy_path;
 
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -2749,12 +2749,12 @@ void dbdet_sel_base::resolve_paths_conflict()
 		{
 
 			int other_end_id1;
-			vcl_vector<dbdet_edgel*> path1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+			std::vector<dbdet_edgel*> path1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
 			if((*clit1)->edgels.front()->id == cur_eid)
 				other_end_id1 = (*clit1)->edgels.back()->id;
 			else
 			{
-				vcl_reverse(path1.begin(), path1.end());
+				std::reverse(path1.begin(), path1.end());
 				other_end_id1 = (*clit1)->edgels.front()->id;
 			}
 
@@ -2763,19 +2763,19 @@ void dbdet_sel_base::resolve_paths_conflict()
 			for (;clit2!=cur_jct_paths.end(); clit2++)
 			{
 				int other_end_id2;
-				vcl_vector<dbdet_edgel*> path2((*clit2)->edgels.begin(), (*clit2)->edgels.end());
+				std::vector<dbdet_edgel*> path2((*clit2)->edgels.begin(), (*clit2)->edgels.end());
 				if((*clit2)->edgels.front()->id == cur_eid)
 					other_end_id2 = (*clit2)->edgels.back()->id;
 				else
 				{
-					vcl_reverse(path2.begin(), path2.end());
+					std::reverse(path2.begin(), path2.end());
 					other_end_id2 = (*clit2)->edgels.front()->id;
 				}
 
 				//found the double links, remover the shorter path
 				if(other_end_id1==other_end_id2)
 				{
-					//vcl_cout << "remove double link other end: " << other_end_id1 << vcl_endl;
+					//std::cout << "remove double link other end: " << other_end_id1 << std::endl;
 					int len1 = compute_path_len(path1);
 					int len2 = compute_path_len(path2);
 
@@ -2882,13 +2882,13 @@ void dbdet_sel_base::resolve_paths_conflict()
 					if(cost1>cost2)
 					{
 						curve_frag_graph_.extract_fragment(*clit1);
-						//vcl_cout << "remove curve with eS:" << vvv1.front()->id << " eE:" << vvv1.back()->id << vcl_endl;
+						//std::cout << "remove curve with eS:" << vvv1.front()->id << " eE:" << vvv1.back()->id << std::endl;
 						break;
 					}
 					else
 					{
 						curve_frag_graph_.extract_fragment(*clit2);
-						//vcl_cout << "remove curve with eS:" << vvv2.front()->id << " eE:" << vvv2.back()->id << vcl_endl;
+						//std::cout << "remove curve with eS:" << vvv2.front()->id << " eE:" << vvv2.back()->id << std::endl;
 						break;
 					}
 				}
@@ -2954,7 +2954,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				if(c1->edgels.back()!= eA)
 				{
 					curve_frag_graph_.extract_fragment(c1);
-					vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+					std::reverse(c1->edgels.begin(), c1->edgels.end());
 					curve_frag_graph_.insert_fragment(c1);
 				}
 				dbdet_edgel_chain_list_iter fit_2 = fit_1;
@@ -2966,7 +2966,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 					c2=*fit_2;
 					if(c2->edgels.back()== eA){
 						curve_frag_graph_.extract_fragment(c2);
-						vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+						std::reverse(c2->edgels.begin(), c2->edgels.end());
 						curve_frag_graph_.insert_fragment(c2);
 					}
 
@@ -2999,7 +2999,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				{
 					if((*fit_1)!=c1 && (*fit_1)!=c2 && is_short_high_cost_curve_frag(*fit_1))
 					{
-						//vcl_cout << "remove a short curve at jct: " << i << vcl_endl;
+						//std::cout << "remove a short curve at jct: " << i << std::endl;
 						curve_frag_graph_.extract_fragment(*fit_1);
 					}
 				}
@@ -3027,7 +3027,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 			if(curve_frag_graph_.pFrags[cur_chain->edgels[j]->id].size() + curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].size() == 1)
 			{
 				dbdet_edgel_chain* joint_chain;
-				//vcl_cout << "deal joint_chain at: " <<  cur_chain->edgels[j]->id << vcl_endl;
+				//std::cout << "deal joint_chain at: " <<  cur_chain->edgels[j]->id << std::endl;
 
 				// extract the joint path
 				if(curve_frag_graph_.pFrags[cur_chain->edgels[j]->id].size() == 1)
@@ -3039,7 +3039,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				}
 				else
 				{
-					//vcl_cout<< "a FP T-jct at: " << cur_chain->edgels[j]->id << " start from: "<< cur_chain->edgels.front()->id << " end at: "<< cur_chain->edgels.back()->id << vcl_endl;
+					//std::cout<< "a FP T-jct at: " << cur_chain->edgels[j]->id << " start from: "<< cur_chain->edgels.front()->id << " end at: "<< cur_chain->edgels.back()->id << std::endl;
 					//this need to be considered, because after merging, some frags' order got reversed
 					joint_chain = curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].front();
 					if(cur_chain == joint_chain)
@@ -3049,15 +3049,15 @@ void dbdet_sel_base::resolve_paths_conflict()
 						j = cur_chain->edgels.size()-1-j;
 					}
 					curve_frag_graph_.extract_fragment(joint_chain);
-					vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());
+					std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());
 				}
 
 
 
-				vcl_vector<dbdet_edgel*> sub_path_1;
+				std::vector<dbdet_edgel*> sub_path_1;
 				for (int k = 0; k<=j; k++)
 					sub_path_1.push_back(cur_chain->edgels[k]);
-				vcl_vector<dbdet_edgel*> sub_path_2;
+				std::vector<dbdet_edgel*> sub_path_2;
 				for (int k = j; k<cur_chain->edgels.size(); k++)
 					sub_path_2.push_back(cur_chain->edgels[k]);
 
@@ -3070,7 +3070,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// CASE 1: if it is a single curve intersect itself, break it, remove the tail, OR if introduce new jct
 				if(cur_chain == joint_chain)
 				{
-					//vcl_cout << "case 1" << vcl_endl;
+					//std::cout << "case 1" << std::endl;
 					// cur_chain has already been extracted via extract_fragment(joint_chain)
 					if(sub_path_1.front()==sub_path_1.back())
 					{
@@ -3133,14 +3133,14 @@ void dbdet_sel_base::resolve_paths_conflict()
 				}
 
 
-				vcl_vector<dbdet_edgel*> joint_path(joint_chain->edgels.begin(), joint_chain->edgels.end());
+				std::vector<dbdet_edgel*> joint_path(joint_chain->edgels.begin(), joint_chain->edgels.end());
 				double cost_1 = compute_path_metric3(dummy_path, sub_path_1, dummy_path);
 				double cost_2 = compute_path_metric3(dummy_path, sub_path_2, dummy_path);
 				double cost_j = compute_path_metric3(dummy_path, joint_path, dummy_path);
-				vcl_vector<dbdet_edgel*> joint_path_rev = joint_path;
-				vcl_reverse(joint_path_rev.begin(), joint_path_rev.end());
-				vcl_vector<dbdet_edgel*> sub_path_1_rev = sub_path_1;
-				vcl_reverse(sub_path_1_rev.begin(), sub_path_1_rev.end());
+				std::vector<dbdet_edgel*> joint_path_rev = joint_path;
+				std::reverse(joint_path_rev.begin(), joint_path_rev.end());
+				std::vector<dbdet_edgel*> sub_path_1_rev = sub_path_1;
+				std::reverse(sub_path_1_rev.begin(), sub_path_1_rev.end());
 				int sz1 = sub_path_1.size();
 				int sz2 =sub_path_2.size();
 				int szj = joint_chain->edgels.size();
@@ -3149,20 +3149,20 @@ void dbdet_sel_base::resolve_paths_conflict()
 				double dy_1o =  sub_path_1[sz1-1]->pt.y() - sub_path_1[sz1-2]->pt.y();
 				double dx_o2 = sub_path_2[1]->pt.x() - sub_path_2[0]->pt.x();
 				double dy_o2 = sub_path_2[1]->pt.y() - sub_path_2[0]->pt.y();
-				double cos_12 = (dx_1o*dx_o2+dy_1o*dy_o2)/vcl_sqrt(dx_1o*dx_1o+dy_1o*dy_1o)/vcl_sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
+				double cos_12 = (dx_1o*dx_o2+dy_1o*dy_o2)/std::sqrt(dx_1o*dx_1o+dy_1o*dy_1o)/std::sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
 				double cos_21 = cos_12;
 
 				double dx_jo = joint_chain->edgels[szj-1]->pt.x() - joint_chain->edgels[szj-2]->pt.x();
 				double dy_jo = joint_chain->edgels[szj-1]->pt.y() - joint_chain->edgels[szj-2]->pt.y();
-				double cos_j2 = (dx_jo*dx_o2+dy_jo*dy_o2)/vcl_sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/vcl_sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
-				double cos_j1 = (-dx_1o*dx_jo-dy_1o*dy_jo)/vcl_sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/vcl_sqrt(dx_1o*dx_1o+dy_1o*dy_1o);
+				double cos_j2 = (dx_jo*dx_o2+dy_jo*dy_o2)/std::sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/std::sqrt(dx_o2*dx_o2+dy_o2*dy_o2);
+				double cos_j1 = (-dx_1o*dx_jo-dy_1o*dy_jo)/std::sqrt(dx_jo*dx_jo+dy_jo*dy_jo)/std::sqrt(dx_1o*dx_1o+dy_1o*dy_1o);
 
 
 
 				// CASE 2: start point of cur_chain also intersect joint_chain
 				if(start_on_joint_idx ==0 && end_on_joint_idx ==joint_chain->edgels.size()-1)
 				{
-					//vcl_cout << "case 2.1" << vcl_endl;
+					//std::cout << "case 2.1" << std::endl;
 					if(cos_j1 > -0.5 && joint_chain->edgels.size()>3) // case to keep both, form a close circle
 					{
 						clit0 --;
@@ -3170,7 +3170,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 						cur_chain->edgels.erase(cur_chain->edgels.begin(), cur_chain->edgels.begin()+j-1);
 						if(cur_chain->edgels.size()>2)
 							curve_frag_graph_.insert_fragment(cur_chain);
-						vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());
+						std::reverse(joint_chain->edgels.begin(), joint_chain->edgels.end());
 						joint_chain->append(sub_path_1);
 						curve_frag_graph_.insert_fragment(joint_chain);
 						break;
@@ -3189,7 +3189,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// start point of cur_chain intersect in the middle joint_chain
 				else if(start_on_joint_idx > 0 && start_on_joint_idx < joint_chain->edgels.size()-1)
 				{
-					//vcl_cout << "case 2.2" << vcl_endl;
+					//std::cout << "case 2.2" << std::endl;
 					clit0 --;
 					curve_frag_graph_.extract_fragment(cur_chain);
 					joint_chain->edgels.erase(joint_chain->edgels.begin()+start_on_joint_idx, joint_chain->edgels.end());
@@ -3200,7 +3200,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// CASE 3: end point of cur_chain also intersect joint_chain
 				else if(end_on_joint_idx ==0 && start_on_joint_idx ==joint_chain->edgels.size()-1)
 				{
-					//vcl_cout << "case 3.1" << vcl_endl;
+					//std::cout << "case 3.1" << std::endl;
 
 					if(cos_j2 > -0.5 && joint_chain->edgels.size()>3) // case to keep both, form a close circle
 					{
@@ -3219,7 +3219,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 					{
 						clit0 --;
 						curve_frag_graph_.extract_fragment(cur_chain);
-						vcl_reverse(sub_path_1.begin(), sub_path_1.end());
+						std::reverse(sub_path_1.begin(), sub_path_1.end());
 						joint_chain->append(sub_path_1);
 						curve_frag_graph_.insert_fragment(joint_chain);
 						break;
@@ -3229,10 +3229,10 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// end point of cur_chain intersect in the middle joint_chain
 				else if(end_on_joint_idx > 0 && end_on_joint_idx < joint_chain->edgels.size()-1)
 				{
-					//vcl_cout << "case 3.2" << vcl_endl;
+					//std::cout << "case 3.2" << std::endl;
 					clit0 --;
 					curve_frag_graph_.extract_fragment(cur_chain);
-					vcl_reverse(cur_chain->edgels.begin(), cur_chain->edgels.end()); // reverse the whole cur_chain
+					std::reverse(cur_chain->edgels.begin(), cur_chain->edgels.end()); // reverse the whole cur_chain
 					joint_chain->edgels.erase(joint_chain->edgels.begin()+end_on_joint_idx, joint_chain->edgels.end());
 					joint_chain->append(cur_chain->edgels);
 					curve_frag_graph_.insert_fragment(joint_chain);
@@ -3241,7 +3241,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// CASE 4: both ends of joint chain intersect cur_chain, joint_idx2 should > j
 				else if(joint_idx2>j)
 				{
-					//vcl_cout << "case 4" << vcl_endl;
+					//std::cout << "case 4" << std::endl;
 					//if((cos_j2 < -0.5 && joint_chain->edgels.size()<5))
 					// default is to remove joint_chain
 					break;
@@ -3249,7 +3249,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// CASE 5: if sub 1 and joint very close, but not intersect again
 				else if(is_overlapping(joint_path_rev, sub_path_1_rev))
 				{
-					//vcl_cout << "case 5" << vcl_endl;
+					//std::cout << "case 5" << std::endl;
 					if(sz1 < szj && sz1<10 && cost_j < cost_1 )
 					{
 						// choose j over sub 1
@@ -3277,12 +3277,12 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// CASE 6: if sub 2 and joint very close, but not intersect again
 				else if(is_overlapping(joint_path_rev, sub_path_2))
 				{
-					//vcl_cout << "case 6" << vcl_endl;
+					//std::cout << "case 6" << std::endl;
 					if(sz2<szj && sz2<10 && cost_j < cost_2 )
 					{
 						clit0 --;
 						curve_frag_graph_.extract_fragment(cur_chain);
-						vcl_reverse(sub_path_1.begin(), sub_path_1.end());
+						std::reverse(sub_path_1.begin(), sub_path_1.end());
 						joint_chain->append(sub_path_1);
 						curve_frag_graph_.insert_fragment(joint_chain);
 						break;
@@ -3306,7 +3306,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				// theoretically, previous stages have not considered junctions in the middle of unambiguous fragments
 				else if(szj > 5)
 				{
-					//vcl_cout << "case 7" << vcl_endl;
+					//std::cout << "case 7" << std::endl;
 					curve_frag_graph_.insert_fragment(joint_chain);
 					// break cur_chain to form a true junction
 					clit0 --;
@@ -3326,13 +3326,13 @@ void dbdet_sel_base::resolve_paths_conflict()
 
 	merge_non_jct_curve_frags(); // merge all the curve fragments, except at junctions
 */
-	vcl_cout << "resolve paths conflict" << vcl_endl;
+	std::cout << "resolve paths conflict" << std::endl;
 
 }
 
 
 //: perform a geometric consistency check to determine whether a given temp path is valid
-bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
+bool dbdet_sel_base::is_JCT_path_legal(std::vector<dbdet_edgel*>& edgel_chain)
 {
   //what makes a path legal?
   if(edgel_chain.size()==1)
@@ -3344,7 +3344,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
       dbdet_edgel* eE = edgel_chain.back();
       double dx1 = eE->pt.x() - eS->pt.x();
       double dy1 = eE->pt.y() - eS->pt.y();
-      double dist= vcl_sqrt(dx1*dx1+dy1*dy1);
+      double dist= std::sqrt(dx1*dx1+dy1*dy1);
       if(dist>3)
          return false;
    }
@@ -3355,13 +3355,13 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 	  dbdet_edgel* eE = edgel_chain.back();
 	  double dx1 = eE->pt.x() - eS->pt.x();
 	  double dy1 = eE->pt.y() - eS->pt.y();
-	  double dist= vcl_sqrt(dx1*dx1+dy1*dy1);
+	  double dist= std::sqrt(dx1*dx1+dy1*dy1);
 	  if(dist>3)
 	    return false;
   }*/
 
   // by Yuliang, construct two lists of end nodes from other Curve Fragments end points linking the end points of the path
-  vcl_vector<dbdet_edgel*> S_link_end_nodes, E_link_end_nodes;
+  std::vector<dbdet_edgel*> S_link_end_nodes, E_link_end_nodes;
 
   // (a) if a c1 polyarc bundle can form within it
   // (b) if it is c1 compatible with the end points
@@ -3389,7 +3389,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
     double dx2 = eS->pt.x() - pe->pt.x();
     double dy2 = eS->pt.y() - pe->pt.y();
 
-    cons = cons && ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>-0.9;
+    cons = cons && ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>-0.9;
   }
   dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[eS->id].begin();
   for ( ; ccit != curve_frag_graph_.cFrags[eS->id].end(); ccit++)
@@ -3401,7 +3401,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
     double dx2 = eS->pt.x() - ce->pt.x();
     double dy2 = eS->pt.y() - ce->pt.y();
 
-    cons = cons && ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>-0.9;
+    cons = cons && ((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>-0.9;
   }
   if (!cons) return false; //no good at the start point, and not long enough
 
@@ -3424,7 +3424,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 		double dx2 = pe->pt.x() - eE->pt.x();
 		double dy2 = pe->pt.y() - eE->pt.y();
 
-		double cos_angle = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+		double cos_angle = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 		cons = cons && (cos_angle > -0.9);
 	  }
 	  ccit = curve_frag_graph_.cFrags[eE->id].begin();
@@ -3437,7 +3437,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 		double dx2 = ce->pt.x() - eE->pt.x();
 		double dy2 = ce->pt.y() - eE->pt.y();
 
-		double cos_angle = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+		double cos_angle = (dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2);
 		cons = cons && (cos_angle > -0.9);
 	  }
 	  if (!cons) return false; //no good at the end point
@@ -3473,7 +3473,7 @@ bool dbdet_sel_base::is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain)
 //prune the set of attached paths to be non-overlapping with each other
 //the case that a junction locates at an end point is included
 ////////////////////////////////////////////////////////////////////////////////
-bool dbdet_sel_base::is_overlapping(vcl_vector<dbdet_edgel*> edges_1, vcl_vector<dbdet_edgel*> edges_2)
+bool dbdet_sel_base::is_overlapping(std::vector<dbdet_edgel*> edges_1, std::vector<dbdet_edgel*> edges_2)
 {
 	int nbr_limit = 6;
 	int sz1 = (edges_1.size()<nbr_limit)?edges_1.size():nbr_limit;
@@ -3499,7 +3499,7 @@ bool dbdet_sel_base::is_overlapping(vcl_vector<dbdet_edgel*> edges_1, vcl_vector
 			l++;
 		else
 		{
-			double dist = vgl_distance(edges_1[k]->pt, edges_2[l]->pt) + vcl_abs(edges_1[k]->tangent - edges_2[l]->tangent);
+			double dist = vgl_distance(edges_1[k]->pt, edges_2[l]->pt) + std::abs(edges_1[k]->tangent - edges_2[l]->tangent);
 			min_sum_dist += dist;
 			if(dist<1.5) // for Non-Subpixel edges, this is the same as the overlapping
 				num_very_close ++;
@@ -3529,9 +3529,9 @@ bool dbdet_sel_base::is_overlapping(vcl_vector<dbdet_edgel*> edges_1, vcl_vector
 		double dx2 = edges_2[j]->pt.x() - edges_2[0]->pt.x();
 		double dy2 = edges_2[j]->pt.y() - edges_2[0]->pt.y();
 
-		if(((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))>0.9)
+		if(((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))>0.9)
 			return true;
-		//if(((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0.7)
+		//if(((dx1*dx2 + dy1*dy2)/std::sqrt(dx1*dx1+dy1*dy1)/std::sqrt(dx2*dx2+dy2*dy2))<0.7)
 			//return false;
 		}
 	}
@@ -3566,8 +3566,8 @@ int dbdet_sel_base::check_a_junction(int edgel_id)
 			continue;
 		}
 
-		vcl_vector<dbdet_edgel*> edges_1(path_1->edgels.begin(), path_1->edgels.end());
-		vcl_reverse(edges_1.begin(), edges_1.end());
+		std::vector<dbdet_edgel*> edges_1(path_1->edgels.begin(), path_1->edgels.end());
+		std::reverse(edges_1.begin(), edges_1.end());
 		// if the path is extremely short, consider the its connected unambiguous cfrag
 		int last_eid = edges_1.back()->id;
 		if(edges_1.size()<=4 && curve_frag_graph_.cFrags[last_eid].size()+curve_frag_graph_.pFrags[last_eid].size()==1)
@@ -3593,7 +3593,7 @@ int dbdet_sel_base::check_a_junction(int edgel_id)
 	    dbdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[edgel_id].begin();
 	    for ( ; pcit != curve_frag_graph_.pFrags[edgel_id].end(); pcit++)
 	    {
-	        vcl_vector<dbdet_edgel*> connected_frag;
+	        std::vector<dbdet_edgel*> connected_frag;
 	    	int sz = (*pcit)->edgels.size();
 	    	for(int i=0; i< sz; i++) // just push two edges in
 	    		connected_frag.push_back((*pcit)->edgels[sz-1-i]);
@@ -3629,7 +3629,7 @@ int dbdet_sel_base::check_a_junction(int edgel_id)
 	    dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[edgel_id].begin();
 	    for ( ; ccit != curve_frag_graph_.cFrags[edgel_id].end(); ccit++)
 	    {
-	        vcl_vector<dbdet_edgel*> connected_frag;
+	        std::vector<dbdet_edgel*> connected_frag;
 	        int sz = (*ccit)->edgels.size();
 	    	for(int i=0; i< sz; i++) // just push two edges in
 	    		connected_frag.push_back((*ccit)->edgels[i]);
@@ -3689,7 +3689,7 @@ int dbdet_sel_base::check_a_junction(int edgel_id)
 		    }
 
 		    // check if the two paths are overlapping
-			vcl_vector<dbdet_edgel*> edges_2;
+			std::vector<dbdet_edgel*> edges_2;
 			for (int i = 0; i< path_2->edgels.size(); i++)
 			{
 				edges_2.push_back(path_2->edgels[path_2->edgels.size()-1-i]);
@@ -3746,8 +3746,8 @@ int dbdet_sel_base::check_a_junction(int edgel_id)
 void dbdet_sel_base::topologial_NMS(int edgel_id)
 {
 	int jct_nbr_limit = 5;
-	vcl_vector<dbdet_edgel*> dummy_chain;
-	vcl_set<int> end_ids_0;
+	std::vector<dbdet_edgel*> dummy_chain;
+	std::set<int> end_ids_0;
 	if (curve_frag_graph_.pFrags[edgel_id].size() + curve_frag_graph_.cFrags[edgel_id].size() >= 1) // jct and end point
 		 end_ids_0.insert(edgel_id);
 	// compute the cost of center junction
@@ -3760,7 +3760,7 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
 		int path_sz = (*clit0)->edgels.size();
 		if(path_sz>jct_nbr_limit)
 			path_sz = jct_nbr_limit;
-		vcl_vector<dbdet_edgel*> vvv((*clit0)->edgels.end()-path_sz, (*clit0)->edgels.end());
+		std::vector<dbdet_edgel*> vvv((*clit0)->edgels.end()-path_sz, (*clit0)->edgels.end());
 		best_cost += (compute_path_metric3(dummy_chain, vvv, dummy_chain)*(vvv.size()-1));
 		total_sz += (vvv.size()-1);
 		end_ids_0.insert((*clit0)->edgels.front()->id);
@@ -3775,7 +3775,7 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
 
     	if(curve_frag_graph_.junction_edgels[connect_id])
     	{
-    		vcl_set<int> end_ids_1;
+    		std::set<int> end_ids_1;
     		if (curve_frag_graph_.pFrags[connect_id].size() + curve_frag_graph_.cFrags[connect_id].size() >= 1) // jct and end point
     			 end_ids_1.insert(connect_id);
     		dbdet_edgel_chain_list_iter clit1;
@@ -3792,7 +3792,7 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
 					int path_sz = (*clit1)->edgels.size();
 					if(path_sz>jct_nbr_limit)
 						path_sz = jct_nbr_limit;
-					vcl_vector<dbdet_edgel*> vvv((*clit1)->edgels.end()-path_sz, (*clit1)->edgels.end());
+					std::vector<dbdet_edgel*> vvv((*clit1)->edgels.end()-path_sz, (*clit1)->edgels.end());
 					cur_cost += (compute_path_metric3(dummy_chain, vvv, dummy_chain)*(vvv.size()-1));
 					cur_total_sz += (vvv.size()-1);
 				}
@@ -3816,8 +3816,8 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
 void dbdet_sel_base::check_jct_compatibility (int edgel_id)
 {
 	int jct_nbr_limit = 5;
-	vcl_vector<dbdet_edgel*> dummy_chain;
-	vcl_set<int> end_ids_0;
+	std::vector<dbdet_edgel*> dummy_chain;
+	std::set<int> end_ids_0;
 	if (curve_frag_graph_.pFrags[edgel_id].size() + curve_frag_graph_.cFrags[edgel_id].size() >= 1) // jct and end point
 		 end_ids_0.insert(edgel_id);
 	// compute the cost of center junction
@@ -3830,7 +3830,7 @@ void dbdet_sel_base::check_jct_compatibility (int edgel_id)
 		int path_sz = (*clit0)->edgels.size();
 		if(path_sz>jct_nbr_limit)
 			path_sz = jct_nbr_limit;
-		vcl_vector<dbdet_edgel*> vvv((*clit0)->edgels.end()-path_sz, (*clit0)->edgels.end());
+		std::vector<dbdet_edgel*> vvv((*clit0)->edgels.end()-path_sz, (*clit0)->edgels.end());
 		best_cost += (compute_path_metric3(dummy_chain, vvv, dummy_chain)*(vvv.size()-1));
 		total_sz += (vvv.size()-1);
 		end_ids_0.insert((*clit0)->edgels.front()->id);
@@ -3843,7 +3843,7 @@ void dbdet_sel_base::check_jct_compatibility (int edgel_id)
 		if(!curve_frag_graph_.junction_edgels[i] || i==edgel_id)
 			continue;
 
-		vcl_set<int> end_ids_1;
+		std::set<int> end_ids_1;
 		if (curve_frag_graph_.pFrags[i].size() + curve_frag_graph_.cFrags[i].size() >= 1) // jct and end point
 			 end_ids_1.insert(i);
 		dbdet_edgel_chain_list_iter clit1;
@@ -3859,7 +3859,7 @@ void dbdet_sel_base::check_jct_compatibility (int edgel_id)
 				int path_sz = (*clit1)->edgels.size();
 				if(path_sz>jct_nbr_limit)
 					path_sz = jct_nbr_limit;
-				vcl_vector<dbdet_edgel*> vvv((*clit1)->edgels.end()-path_sz, (*clit1)->edgels.end());
+				std::vector<dbdet_edgel*> vvv((*clit1)->edgels.end()-path_sz, (*clit1)->edgels.end());
 				cur_cost += (compute_path_metric3(dummy_chain, vvv, dummy_chain)*(vvv.size()-1));
 				cur_total_sz += (vvv.size()-1);
 			}
@@ -3880,7 +3880,7 @@ void dbdet_sel_base::check_jct_compatibility (int edgel_id)
 
 void dbdet_sel_base::cut_jct_curve_fragment(int edgel_id)
 {
-	vcl_vector<dbdet_edgel*> dummy_chain;
+	std::vector<dbdet_edgel*> dummy_chain;
 	edge_link_graph_.linked[edgel_id] = 1;
 	dbdet_edgel_chain_list_iter clit0= curve_frag_graph_.HypFrags[edgel_id].begin();
 	for( ; clit0!=curve_frag_graph_.HypFrags[edgel_id].end(); clit0++)
@@ -3892,16 +3892,16 @@ void dbdet_sel_base::cut_jct_curve_fragment(int edgel_id)
 			if(curve_frag_graph_.junction_edgels[connect_id] || edge_link_graph_.linked[connect_id]) // if reach a junction edge, or linked edge, cut the path to here
 			{
 				(*clit0)->edgels.erase((*clit0)->edgels.begin(), (*clit0)->edgels.begin()+i);
-				vcl_vector<dbdet_edgel*> curve_0((*clit0)->edgels.begin(), (*clit0)->edgels.end());
-				vcl_reverse(curve_0.begin(), curve_0.end()); // make curve_0 point out from edgel_id
+				std::vector<dbdet_edgel*> curve_0((*clit0)->edgels.begin(), (*clit0)->edgels.end());
+				std::reverse(curve_0.begin(), curve_0.end()); // make curve_0 point out from edgel_id
 				///////////////////////////////////////////////////////////////////////////////////
 				// check if *clit0 overlaps with any existing curve fragment to edgel_id
 				bool found_overlapping = false;
 				dbdet_edgel_chain_list_iter clit1;
 				for(clit1=curve_frag_graph_.pFrags[edgel_id].begin(); clit1!=curve_frag_graph_.pFrags[edgel_id].end(); clit1++)
 				{
-					vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
-					vcl_reverse(curve_1.begin(), curve_1.end());
+					std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+					std::reverse(curve_1.begin(), curve_1.end());
 					// make sure curve_0 curve_1 both point out from edgel_id
 					if(is_overlapping(curve_0, curve_1))
 					{
@@ -3911,7 +3911,7 @@ void dbdet_sel_base::cut_jct_curve_fragment(int edgel_id)
 				}
 				for(clit1=curve_frag_graph_.cFrags[edgel_id].begin(); clit1!=curve_frag_graph_.cFrags[edgel_id].end(); clit1++)
 				{
-					vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+					std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
 					// make sure curve_0 curve_1 both point out from edgel_id
 					if(is_overlapping(curve_0, curve_1))
 					{
@@ -3930,11 +3930,11 @@ void dbdet_sel_base::cut_jct_curve_fragment(int edgel_id)
 				///////////////////////////////////////////////////////////////////////////////////
 				// check if *clit0 overlaps any existing curve fragment to connect_id
 				found_overlapping = false;
-				vcl_reverse(curve_0.begin(), curve_0.end()); // make curve_0 point out from connect_id
+				std::reverse(curve_0.begin(), curve_0.end()); // make curve_0 point out from connect_id
 				for(clit1=curve_frag_graph_.pFrags[connect_id].begin(); clit1!=curve_frag_graph_.pFrags[connect_id].end(); clit1++)
 				{
-					vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
-					vcl_reverse(curve_1.begin(), curve_1.end());
+					std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+					std::reverse(curve_1.begin(), curve_1.end());
 					// make sure curve_0 curve_1 both point out from connect_id
 					if(is_overlapping(curve_0, curve_1))
 					{
@@ -3944,7 +3944,7 @@ void dbdet_sel_base::cut_jct_curve_fragment(int edgel_id)
 				}
 				for(clit1=curve_frag_graph_.cFrags[connect_id].begin(); clit1!=curve_frag_graph_.cFrags[connect_id].end(); clit1++)
 				{
-					vcl_vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
+					std::vector<dbdet_edgel*> curve_1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
 					// make sure curve_0 curve_1 both point out from connect_id
 					if(is_overlapping(curve_0, curve_1))
 					{
@@ -3989,7 +3989,7 @@ void dbdet_sel_base::merge_non_jct_curve_frags()
 			curve_frag_graph_.extract_fragment(c2);
 
 			//reverse the sequence of edgels
-			vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+			std::reverse(c2->edgels.begin(), c2->edgels.end());
 		}
 		else if (curve_frag_graph_.pFrags[i].size()==1){
 			c1 =  curve_frag_graph_.pFrags[i].front();
@@ -4010,7 +4010,7 @@ void dbdet_sel_base::merge_non_jct_curve_frags()
 			curve_frag_graph_.extract_fragment(c2);
 
 			//reverse the sequence of edgels
-			vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+			std::reverse(c1->edgels.begin(), c1->edgels.end());
 		}
 
 		if ( !is_not_continue(c1, c2)){ //if two contours are all very short < 5 edges and are continuous, merge them anyway
@@ -4128,13 +4128,13 @@ bool dbdet_sel_base::is_short_high_cost_curve_frag(dbdet_edgel_chain* chain)
 //New version: we replaced end-to-end gap filling by end-to-non-end gap filling, but only link once. This is very risky.
 void dbdet_sel_base::pre_processing()
 {
-  //vcl_cout << "Pre-processing..." << vcl_endl;
+  //std::cout << "Pre-processing..." << std::endl;
 
   //prune_redundant_frags();
   //regular_contour_filter();
   correct_CFG_topology();
 
-  vcl_map<int, bool> explored;
+  std::map<int, bool> explored;
 
   for(unsigned i = 0; i < edgemap_->edgels.size(); i++)
   {
@@ -4176,7 +4176,7 @@ void dbdet_sel_base::pre_processing()
           //If the other end is also an end point
           double dx = eB->pt.x() - eA->pt.x();
           double dy = eB->pt.y() - eA->pt.y();
-          if(vcl_sqrt(dx * dx + dy * dy) < 1)
+          if(std::sqrt(dx * dx + dy * dy) < 1)
           {
             //For very short links joining two end points, fill the gap
             dbdet_edgel_chain* tmp_chain = new dbdet_edgel_chain();
@@ -4225,7 +4225,7 @@ void dbdet_sel_base::pre_processing()
           //If the other end is also an end point
           double dx = eB->pt.x() - eA->pt.x();
           double dy = eB->pt.y() - eA->pt.y();
-          if(vcl_sqrt(dx * dx + dy * dy) < 1)
+          if(std::sqrt(dx * dx + dy * dy) < 1)
           {
             //For very short links joining two end points, fill the gap
             dbdet_edgel_chain* tmp_chain = new dbdet_edgel_chain();
@@ -4256,7 +4256,7 @@ void dbdet_sel_base::pre_processing()
 void dbdet_sel_base::refresh_linked_condition()
 {
 
-	//vcl_cout << edge_link_graph_.linked[16104] << vcl_endl;
+	//std::cout << edge_link_graph_.linked[16104] << std::endl;
 	for(unsigned i = 0; i < edgemap_->edgels.size(); i++)
 	{
 	dbdet_edgel* eA = edgemap_->edgels[i];
@@ -4281,5 +4281,5 @@ void dbdet_sel_base::refresh_linked_condition()
 		if(edge_link_graph_.linked[eA->id] == 1)
 			count ++;
 	}
-	//vcl_cout << count << " out of " << edgemap_->edgels.size() << " edges are linked" << vcl_endl;
+	//std::cout << count << " out of " << edgemap_->edgels.size() << " edges are linked" << std::endl;
 }

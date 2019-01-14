@@ -1,8 +1,8 @@
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include<vcl_cstdio.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include<cstdio>
+#include <vector>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_polygon.h>
@@ -11,7 +11,7 @@
 #include <vpgl/algo/vpgl_camera_compute.h>
 #include <vpgl/algo/vpgl_optimize_camera.h>
 #include <vul/vul_awk.h>
-#include <vcl_iomanip.h>
+#include <iomanip>
 
 // AUTHOR
 //   Ricardo Fabbri  (rfabbri at lems  brown  edu) 
@@ -19,22 +19,22 @@
 //
 int main( int /*argc*/, char* /*argv*/[] )
 {  
-  vcl_string world_points_file( "world_pts.txt" );
-  vcl_string image_points_file( "image_pts.txt" );
-//  vcl_string camera_file( "calib_intrinsic_in.txt" );
-  vcl_string camera_out_file( "camera_refined.txt" );
-  vcl_string RC_in_file( "camera_RC.txt" );
-  vcl_string K_in_file( "camera_K.txt" );
-  vcl_string RC_out_file( "camera_RC_refined.txt" ); // rot and transl
-  vcl_string K_out_file( "camera_K.txt" );
-  vcl_string refined_world_points_file( "world_pts_refined.txt" );
+  std::string world_points_file( "world_pts.txt" );
+  std::string image_points_file( "image_pts.txt" );
+//  std::string camera_file( "calib_intrinsic_in.txt" );
+  std::string camera_out_file( "camera_refined.txt" );
+  std::string RC_in_file( "camera_RC.txt" );
+  std::string K_in_file( "camera_K.txt" );
+  std::string RC_out_file( "camera_RC_refined.txt" ); // rot and transl
+  std::string K_out_file( "camera_K.txt" );
+  std::string refined_world_points_file( "world_pts_refined.txt" );
 
   // Read the world points.
-  vcl_vector<vgl_point_3d<double> > world_points;
+  std::vector<vgl_point_3d<double> > world_points;
 
-  vcl_ifstream wpsifs( world_points_file.c_str() );
+  std::ifstream wpsifs( world_points_file.c_str() );
   if (!wpsifs) {
-    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    std::cerr << " Error opening file  " << world_points_file << std::endl;
     return 1;
   }
   vul_awk wps( wpsifs );
@@ -45,15 +45,15 @@ int main( int /*argc*/, char* /*argv*/[] )
   }
   unsigned num_world_points = world_points.size();
 
-  vcl_vector< vgl_homg_point_3d<double> > world_points_h;
+  std::vector< vgl_homg_point_3d<double> > world_points_h;
   for( unsigned p =0; p < num_world_points; p++ )
     world_points_h.push_back( vgl_homg_point_3d<double>(world_points[p] ) );
 
   // Read the image_points
-  vcl_vector<vgl_point_2d<double> > image_points;
-  vcl_ifstream ipsifs( image_points_file.c_str() );
+  std::vector<vgl_point_2d<double> > image_points;
+  std::ifstream ipsifs( image_points_file.c_str() );
   if (!ipsifs) {
-    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    std::cerr << " Error opening file  " << world_points_file << std::endl;
     return 1;
   }
   vul_awk ips( ipsifs );
@@ -114,48 +114,48 @@ int main( int /*argc*/, char* /*argv*/[] )
 
   vnl_matrix_fixed<double,3,3> k_vnl;
 
-  vcl_ifstream kifs( K_in_file.c_str() );
+  std::ifstream kifs( K_in_file.c_str() );
   if (!kifs) {
-    vcl_cerr << " Error opening file  " << K_in_file << vcl_endl;
+    std::cerr << " Error opening file  " << K_in_file << std::endl;
     return 1;
   }
 
   bool retval = k_vnl.read_ascii(kifs);
   if (!retval) {
-    vcl_cerr << " Error reading file  " << K_in_file << vcl_endl;
+    std::cerr << " Error reading file  " << K_in_file << std::endl;
     return 1;
   }
 
-  vcl_cout << "Read K: " << k_vnl << vcl_endl;
+  std::cout << "Read K: " << k_vnl << std::endl;
 
   vpgl_calibration_matrix<double> K(k_vnl);
 
   vnl_matrix_fixed<double,3,3> rot_matrix;
 
-  vcl_ifstream rotifs( RC_in_file.c_str() );
+  std::ifstream rotifs( RC_in_file.c_str() );
   if (!rotifs) {
-    vcl_cerr << " Error opening file  " << RC_in_file << vcl_endl;
+    std::cerr << " Error opening file  " << RC_in_file << std::endl;
     return 1;
   }
 
   retval = rot_matrix.read_ascii(rotifs);
   if (!retval) {
-    vcl_cerr << " Error reading file  " << RC_in_file << vcl_endl;
+    std::cerr << " Error reading file  " << RC_in_file << std::endl;
     return 1;
   }
 
-  vcl_cout << "Read R: " << rot_matrix << vcl_endl;
+  std::cout << "Read R: " << rot_matrix << std::endl;
 
   vgl_rotation_3d<double> Rot(rot_matrix);
 
   vnl_vector_fixed<double,3> c_v;
   retval = c_v.read_ascii(rotifs);
   if (!retval) {
-    vcl_cerr << " Error reading C from file  " << RC_in_file << vcl_endl;
+    std::cerr << " Error reading C from file  " << RC_in_file << std::endl;
     return 1;
   }
 
-  vcl_cout << "Read C: " << c_v << vcl_endl;
+  std::cout << "Read C: " << c_v << std::endl;
 
   vgl_point_3d<double> C(c_v[0],c_v[1],c_v[2]);
 
@@ -165,7 +165,7 @@ int main( int /*argc*/, char* /*argv*/[] )
 
   vpgl_perspective_camera<double>  refined_camera;
 
-  vcl_vector< vgl_point_2d<double> > exp_img_points;
+  std::vector< vgl_point_2d<double> > exp_img_points;
   for( unsigned dp = 0; dp < num_world_points; dp++ ){
     exp_img_points.push_back( image_points[dp] );
 
@@ -183,29 +183,29 @@ int main( int /*argc*/, char* /*argv*/[] )
 
     vgl_point_2d<double> proj_wp( proj_wp_h.x()/proj_wp_h.w(), proj_wp_h.y()/proj_wp_h.w() );
     float this_error = vgl_distance( proj_wp, image_points[wp] );
-    vcl_cerr << proj_wp << ' ' << this_error << '\n';
+    std::cerr << proj_wp << ' ' << this_error << '\n';
   }
-  vcl_cerr << "\n\n";
+  std::cerr << "\n\n";
 
 
   // Write to file.
-  vcl_ofstream cofs( camera_out_file.c_str() );
-  cofs << vcl_setprecision(20);
+  std::ofstream cofs( camera_out_file.c_str() );
+  cofs << std::setprecision(20);
   cofs << refined_camera.get_matrix();
 
-  vcl_ofstream c_rc_ofs( RC_out_file.c_str() );
-  c_rc_ofs << vcl_setprecision(20);
+  std::ofstream c_rc_ofs( RC_out_file.c_str() );
+  c_rc_ofs << std::setprecision(20);
 
   vgl_point_3d<double> cpt(refined_camera.camera_center());
   c_rc_ofs << refined_camera.get_rotation().as_matrix();
   c_rc_ofs <<  vnl_vector_fixed<double,3> (cpt.x(),cpt.y(),cpt.z()) << '\n';
 
   // Should be the same as the input one.
-  vcl_ofstream c_k_ofs( K_out_file.c_str() );
-  c_k_ofs << vcl_setprecision(20);
-  c_k_ofs << refined_camera.get_calibration().get_matrix() << vcl_endl;
+  std::ofstream c_k_ofs( K_out_file.c_str() );
+  c_k_ofs << std::setprecision(20);
+  c_k_ofs << refined_camera.get_calibration().get_matrix() << std::endl;
 
-  vcl_ofstream wpofs( refined_world_points_file.c_str() );
+  std::ofstream wpofs( refined_world_points_file.c_str() );
   for( unsigned wp = 0; wp < num_world_points; wp++ )
     wpofs << world_points[wp].x() << ' ' << world_points[wp].y() << ' ' << world_points[wp].z() << '\n';
 

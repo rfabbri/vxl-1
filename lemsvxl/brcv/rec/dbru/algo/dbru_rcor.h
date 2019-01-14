@@ -28,8 +28,8 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
-#include <vcl_vector.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <utility>
 #include <assert.h>
 
 #include <dbcvr/dbcvr_cv_cor_sptr.h>
@@ -56,12 +56,12 @@ protected:
 
   vgl_polygon<double> p1_, p2_; ///> corresponding polygons
 
-  vcl_vector<vcl_vector <int> > region1_, region2_;
+  std::vector<std::vector <int> > region1_, region2_;
   vbl_array_2d< vgl_point_2d<int> > region1_map_output_;
   vbl_array_2d< vgl_point_2d<float> > region1_map_output_float_;
   
   //: this vector holds the corresponding region point indices
-  vcl_vector<vcl_pair<unsigned, unsigned> > correspondences_;
+  std::vector<std::pair<unsigned, unsigned> > correspondences_;
 
   bool save_histograms_;
   bool save_float_;
@@ -72,8 +72,8 @@ protected:
   //: this vector holds the vote distribution in the second region, for each pixel in region1
   //  this vector will be cleared if save_histograms_ is false
   //  save_histograms_ is set to true only if histograms will be displayed via matching tool
-  vbl_array_2d < vcl_vector< vcl_pair< vgl_point_2d<int>, int > > > region1_histograms_;
-  vbl_array_2d < vcl_vector< vcl_pair< vgl_point_2d<float>, int > > > region1_histograms_float_;
+  vbl_array_2d < std::vector< std::pair< vgl_point_2d<int>, int > > > region1_histograms_;
+  vbl_array_2d < std::vector< std::pair< vgl_point_2d<float>, int > > > region1_histograms_float_;
 
   //: save the sillhouette contour/polygon correspondence if curve matching
   dbcvr_cv_cor_sptr sil_cor_;
@@ -116,10 +116,10 @@ public:
   vbl_array_2d< vgl_point_2d<float> >& get_map_float() { return region1_map_output_float_; }
   
   //: return correspondences between points by their ids
-  vcl_vector <vcl_pair< unsigned, unsigned> >& get_correspondences() { return correspondences_; }
+  std::vector <std::pair< unsigned, unsigned> >& get_correspondences() { return correspondences_; }
 
   //: return vote distribution histograms 
-  vbl_array_2d< vcl_vector< vcl_pair< vgl_point_2d<int>, int > > >& get_region1_histograms() { return region1_histograms_; }
+  vbl_array_2d< std::vector< std::pair< vgl_point_2d<int>, int > > >& get_region1_histograms() { return region1_histograms_; }
 
   int get_min_x() { return min1_x_; }
   int get_min_y() { return min1_y_; }
@@ -166,7 +166,7 @@ public:
   void set_save_histograms(bool val) { save_histograms_ = val; }
   void set_save_float(bool val) { save_float_ = val; }
   //: write the histogram of current pixel 
-  //bool write_histogram(int x, int y, vcl_string file_name);
+  //bool write_histogram(int x, int y, std::string file_name);
 };
 
 #endif // _dbru_rcor_h

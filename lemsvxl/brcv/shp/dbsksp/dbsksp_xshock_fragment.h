@@ -144,7 +144,7 @@ public:
   // I/O =======================================================================
   
   //: write info of the dbskbranch to an output stream
-  virtual void print(vcl_ostream & os){};
+  virtual void print(std::ostream & os){};
 
 protected:
   // starting and ending extrinsic shock descriptor

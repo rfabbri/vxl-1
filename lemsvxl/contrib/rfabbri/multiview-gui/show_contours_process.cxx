@@ -4,7 +4,7 @@
 
 #include "show_contours_process.h"
 #include "mw_util.h"
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -19,7 +19,7 @@
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 
-#include <vcl_cstring.h>
+#include <cstring>
 
 
 
@@ -28,7 +28,7 @@ show_contours_process::show_contours_process() : bpro1_process()
 {
   if( !parameters()->add( "Image file <filename...>" , "-image_filename" , bpro1_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -48,16 +48,16 @@ show_contours_process::clone() const
 
 
 //: Return the name of the process
-vcl_string show_contours_process::name()
+std::string show_contours_process::name()
 {
   return "Show Contours";
 }
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > show_contours_process::get_input_type()
+std::vector< std::string > show_contours_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // no input type required
   to_return.clear();
@@ -67,9 +67,9 @@ vcl_vector< vcl_string > show_contours_process::get_input_type()
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > show_contours_process::get_output_type()
+std::vector< std::string > show_contours_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "image" );
@@ -87,12 +87,12 @@ show_contours_process::execute()
 
    bpro1_filepath image_path;
    parameters()->get_value( "-image_filename" , image_path );
-   vcl_string image_filename = image_path.path;
+   std::string image_filename = image_path.path;
 
    // LOAD IMAGE
    vil_image_resource_sptr loaded_image = vil_load_image_resource( image_filename.c_str() );
    if( !loaded_image ) {
-     vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+     std::cerr << "Failed to load image file" << image_filename << std::endl;
      return false;
    }
    
@@ -104,19 +104,19 @@ show_contours_process::execute()
    
    // LOAD CON FILES
 
-   vcl_vector<vcl_string> con_fnames;
+   std::vector<std::string> con_fnames;
    if (!con_filenames(image_filename,con_fnames))
       return false;
 
    for (unsigned i=0; i< con_fnames.size(); ++i) {
-      vcl_vector<vsol_point_2d_sptr> points;
+      std::vector<vsol_point_2d_sptr> points;
       bool is_open;
 
-      vcl_cout << "Reading: " <<  con_fnames[i] << vcl_endl;
+      std::cout << "Reading: " <<  con_fnames[i] << std::endl;
       if (!load_con_file(con_fnames[i],points,&is_open))
          return false;
 
-      vcl_vector< vsol_spatial_object_2d_sptr > contours; //:< dummy; holds just 1 contour
+      std::vector< vsol_spatial_object_2d_sptr > contours; //:< dummy; holds just 1 contour
       if (is_open) {
         vsol_polyline_2d_sptr newContour = new vsol_polyline_2d (points);
         contours.push_back(newContour->cast_to_spatial_object());
@@ -132,10 +132,10 @@ show_contours_process::execute()
 
       // Output names
 
-      vcl_string vsol_name("vsol2D-");
+      std::string vsol_name("vsol2D-");
       vsol_name.append(con_fnames[i]);
 
-      vcl_vector<vcl_string> new_out_names(output_names());
+      std::vector<std::string> new_out_names(output_names());
       new_out_names.push_back(vsol_name);
       set_output_names(new_out_names);
    }
@@ -166,39 +166,39 @@ show_contours_process::output_frames()
 }
 
 bool show_contours_process::
-loadCON (vcl_string filename, float scale)
+loadCON (std::string filename, float scale)
 {
   // new vector to store the contours
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
   
   // vector to store the points
-  vcl_vector< vsol_point_2d_sptr > points;
+  std::vector< vsol_point_2d_sptr > points;
 
-  vcl_ifstream infp(filename.c_str(), vcl_ios::in);
+  std::ifstream infp(filename.c_str(), std::ios::in);
   bool isOpen_;
 
   if (!infp) {
-    vcl_cout << " Error opening file  " << filename << vcl_endl;
+    std::cout << " Error opening file  " << filename << std::endl;
     return false;
   }
 
   char lineBuffer[2000]; //200
   infp.getline(lineBuffer,2000);
-  if (vcl_strncmp(lineBuffer,"CONTOUR",7)) {
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be CONTOUR " << lineBuffer << vcl_endl;
+  if (std::strncmp(lineBuffer,"CONTOUR",7)) {
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be CONTOUR " << lineBuffer << std::endl;
     return false;
   }
 
   char openFlag[2000];
   infp.getline(openFlag,2000);
-  if (!vcl_strncmp(openFlag,"OPEN",4))
+  if (!std::strncmp(openFlag,"OPEN",4))
     isOpen_ = true;
-  else if (!vcl_strncmp(openFlag,"CLOSE",5))
+  else if (!std::strncmp(openFlag,"CLOSE",5))
     isOpen_ = false;
   else{
-    vcl_cerr << "Invalid File " << filename.c_str() << vcl_endl
-             << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+    std::cerr << "Invalid File " << filename.c_str() << std::endl
+             << "Should be OPEN/CLOSE " << openFlag << std::endl;
     return false;
   }
 

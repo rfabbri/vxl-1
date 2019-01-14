@@ -40,7 +40,7 @@ dbbgm_aerial_fg_uncertainity_detect_process1::dbbgm_aerial_fg_uncertainity_detec
      !parameters()->add( "Minimum Weight Threshold" ,    "-minweightthresh" ,    0.3f        ) ||
      !parameters()->add( "Radius of Uncertainity" ,    "-rad" ,    (int)2       )||
          !parameters()->add( "Use Mask" ,    "-ismask" ,    (bool)false       ) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__<< vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__<< std::endl;
   }
 }
 
@@ -60,7 +60,7 @@ dbbgm_aerial_fg_uncertainity_detect_process1::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbbgm_aerial_fg_uncertainity_detect_process1::name()
 {
   return "Aerial Foreground Detection Uncertainity (DBSTA2)";
@@ -84,9 +84,9 @@ dbbgm_aerial_fg_uncertainity_detect_process1::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbbgm_aerial_fg_uncertainity_detect_process1::get_input_type()
+std::vector< std::string > dbbgm_aerial_fg_uncertainity_detect_process1::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   to_return.push_back( "dbbgm_image" );
 
@@ -101,9 +101,9 @@ vcl_vector< vcl_string > dbbgm_aerial_fg_uncertainity_detect_process1::get_input
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbbgm_aerial_fg_uncertainity_detect_process1::get_output_type()
+std::vector< std::string > dbbgm_aerial_fg_uncertainity_detect_process1::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   
   return to_return;
@@ -115,7 +115,7 @@ bool
 dbbgm_aerial_fg_uncertainity_detect_process1::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cout << "In dbbgm_aerial_fg_uncertainity_detect_process1::execute() - "
+    std::cout << "In dbbgm_aerial_fg_uncertainity_detect_process1::execute() - "
              << "not exactly two input images \n";
     return false;
   }
@@ -155,7 +155,7 @@ dbbgm_aerial_fg_uncertainity_detect_process1::execute()
   else if ( image_view.nplanes() == 1 ) {
       image_rsc = image_view;
   } else {
-      vcl_cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << vcl_endl;
+      std::cerr << "Returning false. nplanes(): " << image_rsc.nplanes() << std::endl;
       return false;
   }
   vil_image_view<float> img=brip_vil_float_ops::convert_to_float(image_rsc);

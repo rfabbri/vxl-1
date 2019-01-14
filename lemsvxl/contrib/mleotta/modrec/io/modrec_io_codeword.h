@@ -19,6 +19,6 @@ void vsl_b_read(vsl_b_istream &is, modrec_codeword<n> & f);
 
 //: Print human readable summary of object to a stream
 template <unsigned n>
-void vsl_print_summary(vcl_ostream& os, const modrec_codeword<n> & f);
+void vsl_print_summary(std::ostream& os, const modrec_codeword<n> & f);
 
 #endif // modrec_io_codeword_h

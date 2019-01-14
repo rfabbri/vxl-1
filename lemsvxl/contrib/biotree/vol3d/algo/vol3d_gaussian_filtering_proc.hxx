@@ -18,13 +18,13 @@
 #include <bsta/bsta_otsu_threshold.h>
 
 #include <vxl_config.h>
-#include <vcl_map.h>
-#include <vcl_limits.h>
+#include <map>
+#include <limits>
 
 template <class T>
 vol3d_gaussian_filtering_proc<T>:: vol3d_gaussian_filtering_proc(
   vil3d_image_resource_sptr img_res_sptr,
-  vcl_vector<vol3d_gaussian_kernel_3d> &kernels)
+  std::vector<vol3d_gaussian_kernel_3d> &kernels)
   : img_res_sptr_(img_res_sptr),  kernels_(kernels)
 {
   
@@ -75,8 +75,8 @@ vol3d_gaussian_filtering_proc<T>::convert_to_vbl_array(vil3d_image_view_base_spt
   int y = max_y - min_y;
   int z = max_z - min_z;
   vbl_array_3d<double> volume(x, y, z);
-  min_val = vcl_numeric_limits<float >::max();
-  max_val = vcl_numeric_limits<float >::min();
+  min_val = std::numeric_limits<float >::max();
+  max_val = std::numeric_limits<float >::min();
 
   for (int k=0; k<z; k++) {
     for (int j=0; j<y; j++) {
@@ -114,8 +114,8 @@ vol3d_gaussian_filtering_proc<T>::radius_detection(int min_x, int min_y, int min
   int y = max_y - min_y;
   int z = max_z - min_z;
 
-  double min_val = vcl_numeric_limits<float >::max();
-  double max_val = vcl_numeric_limits<float >::min();
+  double min_val = std::numeric_limits<float >::max();
+  double max_val = std::numeric_limits<float >::min();
 
   vbl_array_3d<double> vol_array = convert_to_vbl_array(view_3d_,
                                                     min_x, min_y, min_z,
@@ -124,14 +124,14 @@ vol3d_gaussian_filtering_proc<T>::radius_detection(int min_x, int min_y, int min
 
   double avg = (min_val + max_val)/2;
 
-  vcl_vector<double> count;
+  std::vector<double> count;
   vil3d_image_view<T> img_3d = img_res_sptr_->get_view();
   vil3d_histogram(img_3d,count,min_val,max_val,max_val - min_val + 1);
 
   bsta_histogram<double> b_hist(min_val,max_val,count);
   bsta_otsu_threshold<double> b_thresh(b_hist);      
   unsigned int marcate = b_thresh.bin_threshold();
-  double std = vcl_sqrt(b_hist.variance(0,marcate));
+  double std = std::sqrt(b_hist.variance(0,marcate));
 
   vbl_array_3d<double> volume = convert_to_vbl_array(view_3d_, min_x, 
     min_y, min_z, max_x, max_y, max_z, min_val, max_val);
@@ -140,8 +140,8 @@ vol3d_gaussian_filtering_proc<T>::radius_detection(int min_x, int min_y, int min
 
 #if 1
   vil3d_image_view<unsigned char> radius_view(x, y, z);
-  vcl_ofstream of("C:\\test_images\\filters\\newcast35um_reconstructed\\results\\slice_rad.txt");
-  of << x << " " << y << " " << z << vcl_endl;
+  std::ofstream of("C:\\test_images\\filters\\newcast35um_reconstructed\\results\\slice_rad.txt");
+  of << x << " " << y << " " << z << std::endl;
   for (int k=0; k<z; k++) {
     for (int i=0; i<y; i++) {
       for (int j=0; j<x; j++) {
@@ -149,9 +149,9 @@ vol3d_gaussian_filtering_proc<T>::radius_detection(int min_x, int min_y, int min
         unsigned char &c = (radius_view(j,i,k));
         c = radius[j][i][k];
       }
-     of << vcl_endl;
+     of << std::endl;
    }
-  of << vcl_endl;
+  of << std::endl;
   }
 
   vil3d_save(radius_view, "C:\\test_images\\filters\\newcast35um_reconstructed\\results\\radius.gipl");
@@ -164,7 +164,7 @@ template <class T>
 void vol3d_gaussian_filtering_proc<T>:: execute()
 {
 
-  vcl_vector<xmvg_filter_response<double> > response_field_;
+  std::vector<xmvg_filter_response<double> > response_field_;
   
   int w = kernels_[0].width();
   unsigned p=0;
@@ -177,7 +177,7 @@ void vol3d_gaussian_filtering_proc<T>:: execute()
           response[t] = filter_val;
         }
         response_field_.push_back(response);
-        vcl_cout << p++ << '\n';
+        std::cout << p++ << '\n';
      }
    }   
   }
@@ -190,7 +190,7 @@ template <class T>
 void vol3d_gaussian_filtering_proc<T>::execute_with_rad_det(vil3d_image_resource_sptr radius_res_sptr)
 {
 
-  vcl_vector<xmvg_filter_response<double> > response_field_;
+  std::vector<xmvg_filter_response<double> > response_field_;
   
   int w = kernels_[0].width();
   unsigned p=0;
@@ -215,7 +215,7 @@ void vol3d_gaussian_filtering_proc<T>::execute_with_rad_det(vil3d_image_resource
           (radius.get_row3_count() == zdim));
   
   // create a vector of maps for already created kernels
-  vcl_vector<vcl_map<double, vol3d_gaussian_kernel_3d*> > kernel_hash(kernels_.size());
+  std::vector<std::map<double, vol3d_gaussian_kernel_3d*> > kernel_hash(kernels_.size());
   
   for (int k=0; k<img_res_sptr_->nk(); k++) {
     for (int j=0; j<img_res_sptr_->nj(); j++) {
@@ -225,7 +225,7 @@ void vol3d_gaussian_filtering_proc<T>::execute_with_rad_det(vil3d_image_resource
         for (unsigned int t = 0; t<kernels_.size(); t++) {
           if (r != 0) {
             vol3d_gaussian_kernel_3d *kernel;
-            vcl_map<double, vol3d_gaussian_kernel_3d*>::iterator iter = kernel_hash[t].find(r);
+            std::map<double, vol3d_gaussian_kernel_3d*>::iterator iter = kernel_hash[t].find(r);
             if (iter == kernel_hash[t].end()){
               // create a new kernel based on the radius, only direction is used from
               // the previously created kernel
@@ -245,7 +245,7 @@ void vol3d_gaussian_filtering_proc<T>::execute_with_rad_det(vil3d_image_resource
           response[t] = filter_val;
         }
         response_field_.push_back(response);
-        vcl_cout << p++ << '\n';
+        std::cout << p++ << '\n';
      }
    }   
   }
@@ -255,13 +255,13 @@ void vol3d_gaussian_filtering_proc<T>::execute_with_rad_det(vil3d_image_resource
 }
 
 template <class T>
-void x_write(vcl_ostream& os, vol3d_gaussian_filtering_proc<T> &proc)
+void x_write(std::ostream& os, vol3d_gaussian_filtering_proc<T> &proc)
 {
   vsl_basic_xml_element element("vol3d_gaussian_filtering_proc");
   element.x_write_open(os);
   
   // write the kernel values
-  vcl_vector<vol3d_gaussian_kernel_3d> kernels = proc.kernels();
+  std::vector<vol3d_gaussian_kernel_3d> kernels = proc.kernels();
   for (unsigned i=0; i < kernels.size(); i++) {
     xmvg_gaussian_filter_descriptor nnfd(kernels[i].sigma_r(), kernels[i].sigma_r()*2, 
       vgl_point_3d<double> (0, 0, 0), kernels[i].dir());
@@ -277,6 +277,6 @@ void x_write(vcl_ostream& os, vol3d_gaussian_filtering_proc<T> &proc)
 #undef VOL3D_GAUSSIAN_FILTERING_PROC_INSTANTIATE
 #define VOL3D_GAUSSIAN_FILTERING_PROC_INSTANTIATE(T) \
 template class vol3d_gaussian_filtering_proc<T>; \
-template void x_write(vcl_ostream &, vol3d_gaussian_filtering_proc<T> &) 
+template void x_write(std::ostream &, vol3d_gaussian_filtering_proc<T> &) 
 
 #endif

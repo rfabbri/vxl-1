@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_cassert.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <iostream>
 
 #include <vul/vul_sprintf.h>
 
@@ -73,13 +73,13 @@ vil_image_view_base_sptr bvis_gl_codec::get_view(int position, int x0, int w, in
 //: Put a section of pixels in function of the frame number, position and size.
 bool bvis_gl_codec::put_view(int /*position*/, const vil_image_view_base & /*im*/, int /*x0*/, int /*y0*/)
 {
-  vcl_cerr << "bvis_gl_codec::put_section not implemented\n";
+  std::cerr << "bvis_gl_codec::put_section not implemented\n";
   return false;
 }
 
 
 //: Load from a file name.
-vidl1_codec_sptr bvis_gl_codec::load(vcl_string const& fname, char mode)
+vidl1_codec_sptr bvis_gl_codec::load(std::string const& fname, char mode)
 {
   return NULL;
 }
@@ -87,14 +87,14 @@ vidl1_codec_sptr bvis_gl_codec::load(vcl_string const& fname, char mode)
 
 //: Supposed to check the validity of this codec for a special filename.
 // Not so well implemented for this codec.
-bool bvis_gl_codec::probe(vcl_string const& fname)
+bool bvis_gl_codec::probe(std::string const& fname)
 {
   return false;
 }
 
 
 //: Save the given video as a set of images of the default set type.
-bool bvis_gl_codec::save(vidl1_movie* movie, vcl_string const& fname)
+bool bvis_gl_codec::save(vidl1_movie* movie, std::string const& fname)
 {
   return false;
 }

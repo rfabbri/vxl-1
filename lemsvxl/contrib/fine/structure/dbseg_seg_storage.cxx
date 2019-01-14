@@ -5,9 +5,9 @@
 
 #include "dbseg_seg_storage.h"
 
-/*#include <vcl_utility.h>
-#include <vcl_algorithm.h>
-#include <vcl_cassert.h>
+/*#include <utility>
+#include <algorithm>
+#include <cassert>
 #include <vsl/vsl_map_io.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_line_2d.h>
@@ -130,9 +130,9 @@ dbseg_seg_storage::b_read(vsl_b_istream &is)
   }
 
   default:
-    vcl_cerr << "I/O ERROR: dbseg_seg_storage::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbseg_seg_storage::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -143,17 +143,17 @@ dbseg_seg_storage::b_read(vsl_b_istream &is)
 
 /*//: Add a vector of vsol2D objects to the group named \p which
 void
-dbseg_seg_storage::add_objects( const vcl_vector< vsol_spatial_object_2d_sptr >& objects,  
-                                    const vcl_string& which)
+dbseg_seg_storage::add_objects( const std::vector< vsol_spatial_object_2d_sptr >& objects,  
+                                    const std::string& which)
 {
   data_map::iterator result = vsol_map_.find( which );
 
   if( result == vsol_map_.end() ) {
-    typedef vcl_pair<vcl_string, vcl_vector<vsol_spatial_object_2d_sptr> > data_pair;
+    typedef std::pair<std::string, std::vector<vsol_spatial_object_2d_sptr> > data_pair;
     vsol_map_.insert( data_pair( which, objects ) );
   }
   else {
-    for( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator 
+    for( std::vector<vsol_spatial_object_2d_sptr>::const_iterator 
          it = objects.begin();  it != objects.end();  ++it )
       result->second.push_back( *it );
   }
@@ -165,7 +165,7 @@ void
 dbseg_seg_storage::add_object(dbseg_seg_object_base* object)
 {
     object_=object; //*which, object));
-    //vcl_cout << "area: " << object_->get_area(6) << vcl_endl;
+    //std::cout << "area: " << object_->get_area(6) << std::endl;
 }
 
 
@@ -198,14 +198,14 @@ dbseg_seg_storage::remove_object( const seg_object& object )
 /*
 //: Return a vector of all vsol objects in all groups
 // note that an object can be duplicated if it exists in separate groups
-vcl_vector< vsol_spatial_object_2d_sptr > 
+std::vector< vsol_spatial_object_2d_sptr > 
 dbseg_seg_storage::all_data() const
 {
-  vcl_vector<vsol_spatial_object_2d_sptr> all_data;
+  std::vector<vsol_spatial_object_2d_sptr> all_data;
   for( data_map::const_iterator it = vsol_map_.begin();
        it != vsol_map_.end();  ++it ) 
   {
-    for( vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator 
+    for( std::vector<vsol_spatial_object_2d_sptr>::const_iterator 
          it2 = it->second.begin();  it2 != it->second.end();  ++it2 )
     { 
       all_data.push_back( *it2 );
@@ -238,13 +238,13 @@ bpro1_storage* dbseg_seg_storage::merge(const bpro1_storage* sa,
        ++ita, ++itb ) 
   {
     //merge the names
-    const vcl_string& namea = ita->first, nameb = itb->first;
-    vcl_string merged_name = namea + '+' + nameb;
+    const std::string& namea = ita->first, nameb = itb->first;
+    std::string merged_name = namea + '+' + nameb;
 
     //merge the spatial object sets
-    vcl_vector<vsol_spatial_object_2d_sptr> sosa = ita->second,
+    std::vector<vsol_spatial_object_2d_sptr> sosa = ita->second,
       sosb = itb->second, merged_sos;
-    vcl_vector<vsol_spatial_object_2d_sptr>::const_iterator sita =
+    std::vector<vsol_spatial_object_2d_sptr>::const_iterator sita =
       sosa.begin(), sitb = sosb.begin();
     for(; (sita!=sosa.end())&&(sitb!=sosb.end()); ++sita, ++sitb)
       merged_sos.push_back(*sita);  merged_sos.push_back(*sitb);
@@ -255,9 +255,9 @@ bpro1_storage* dbseg_seg_storage::merge(const bpro1_storage* sa,
 }
 
 void dbseg_seg_storage::
-add_objects( const vcl_vector< vsol_spatial_object_2d_sptr >& objects ,
-             const vcl_vector< double > attributes, 
-             const vcl_string& which)
+add_objects( const std::vector< vsol_spatial_object_2d_sptr >& objects ,
+             const std::vector< double > attributes, 
+             const std::string& which)
 {
   assert(objects.size()==attributes.size());
 
@@ -268,11 +268,11 @@ add_objects( const vcl_vector< vsol_spatial_object_2d_sptr >& objects ,
   attribute_map::iterator result = attr_map_.find( which );
 
   if( result == attr_map_.end() ) {
-    typedef vcl_pair<vcl_string, vcl_vector<double> > attr_pair;
+    typedef std::pair<std::string, std::vector<double> > attr_pair;
     attr_map_.insert( attr_pair( which, attributes ) );
   }
   else {
-    for( vcl_vector<double>::const_iterator 
+    for( std::vector<double>::const_iterator 
          it = attributes.begin();  it != attributes.end();  ++it )
       result->second.push_back( *it );
   }
@@ -283,41 +283,41 @@ add_objects( const vcl_vector< vsol_spatial_object_2d_sptr >& objects ,
 void 
 dbseg_seg_storage::add_object( const vsol_spatial_object_2d_sptr& object, 
                                    const double attr,
-                                   const vcl_string& which)
+                                   const std::string& which)
 {
   this->add_object(object, which);
   attr_map_[which].push_back(attr);  
 }
 
 //: Return a vector of attributes in the group named \p which
-vcl_vector<double> dbseg_seg_storage::
-attributes_named(const vcl_string& which) const
+std::vector<double> dbseg_seg_storage::
+attributes_named(const std::string& which) const
 {
   if(!has_attributes_)
-    return vcl_vector<double>();
+    return std::vector<double>();
   
   attribute_map::const_iterator it = attr_map_.find( which );
 
   if( it == attr_map_.end() ) {
-    return vcl_vector< double >();//an empty vector of attributes
+    return std::vector< double >();//an empty vector of attributes
   }
   return it->second;
 }
 
 //: Return a vector of attributes associated with all vsol objects
-vcl_vector< double > dbseg_seg_storage::all_attributes() const
+std::vector< double > dbseg_seg_storage::all_attributes() const
 {
   if(!has_attributes_)
-    return vcl_vector<double>();
+    return std::vector<double>();
 
-  vcl_vector<double> all_data;
+  std::vector<double> all_data;
   if(attr_map_.size()==0)
     return all_data;
 
   for( attribute_map::const_iterator it = attr_map_.begin();
        it != attr_map_.end();  ++it ) 
   {
-    for( vcl_vector<double>::const_iterator 
+    for( std::vector<double>::const_iterator 
          it2 = it->second.begin();  it2 != it->second.end();  ++it2 )
     { 
       all_data.push_back( *it2 );

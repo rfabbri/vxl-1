@@ -1,7 +1,7 @@
 #include "mygui_yong_star_tableau2.h"
 
 
-#include <vcl_string.h>
+#include <string>
 #include <vgui/vgui_event.h>
 #include <vgui/vgui_easy2D_tableau.h>
 #include <vgui/vgui_style.h>
@@ -39,7 +39,7 @@ mygui_yong_star_tableau2::mygui_yong_star_tableau2(const char* n) : name_(n), st
 
 //-----------------------------------------------------------------------------
 
-vcl_string mygui_yong_star_tableau2::type_name() const
+std::string mygui_yong_star_tableau2::type_name() const
 {
   return "mygui_yong_star_tableau";
 }
@@ -54,12 +54,12 @@ bool mygui_yong_star_tableau2::handle(vgui_event const& e)
         float pointx, pointy;
         vgui_projection_inspector p_insp;
         p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-        int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+        int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
 
         // find out the highlighted star
         unsigned i = 0;
         
-        for (vcl_vector<yong_star_sptr>::iterator vit = this->star_list_.begin();    vit != this->star_list_.end(); vit++, i++)
+        for (std::vector<yong_star_sptr>::iterator vit = this->star_list_.begin();    vit != this->star_list_.end(); vit++, i++)
         {
             double x = (*vit)->center_x();
             double y = (*vit)->center_y();
@@ -94,7 +94,7 @@ bool mygui_yong_star_tableau2::handle(vgui_event const& e)
         float pointx, pointy;
         vgui_projection_inspector p_insp;
         p_insp.window_to_image_coordinates(e.wx, e.wy, pointx, pointy);
-        int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+        int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
 
         if(current_selected_star_ == -1)
         {
@@ -158,7 +158,7 @@ bool mygui_yong_star_tableau2::draw()
     this->clear();
 
     unsigned j = 0;
-    for (vcl_vector<yong_star_sptr>::iterator vit = this->star_list_.begin();    vit != this->star_list_.end(); vit++, j++)
+    for (std::vector<yong_star_sptr>::iterator vit = this->star_list_.begin();    vit != this->star_list_.end(); vit++, j++)
     {
         if(j == this->current_selected_star_)
         {
@@ -205,7 +205,7 @@ bool mygui_yong_star_tableau2::draw()
     return true;
 }
 
-bool mygui_yong_star_tableau2::set_star_list(vcl_vector<yong_star_sptr> list)
+bool mygui_yong_star_tableau2::set_star_list(std::vector<yong_star_sptr> list)
 {
     star_list_ = list;
     this->draw();

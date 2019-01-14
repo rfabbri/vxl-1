@@ -31,12 +31,12 @@ bool dbrec_pca_initialize_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_pca_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -46,7 +46,7 @@ bool dbrec_pca_initialize_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() != 0) {
-    vcl_cerr << "brec_create_hierarchy_process - invalid inputs\n";
+    std::cerr << "brec_create_hierarchy_process - invalid inputs\n";
     return false;
   }
   dbrec_pca_sptr ins = new dbrec_pca();
@@ -60,15 +60,15 @@ bool dbrec_pca_add_data_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_pca_sptr");
   input_types.push_back("vil_image_view_base_sptr");
-  input_types.push_back("vcl_string");
+  input_types.push_back(vcl_string");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -77,7 +77,7 @@ bool dbrec_pca_add_data_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 3) {
-    vcl_cerr << "dbrec_pca_add_data_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_add_data_process - invalid inputs\n";
     return false;
   }
 
@@ -90,14 +90,14 @@ bool dbrec_pca_add_data_process(bprb_func_process& pro)
   if (temp->pixel_format() != VIL_PIXEL_FORMAT_BYTE)
     return false;
   
-  vcl_string class_name = pro.get_input<vcl_string>(i++);
+  std::string class_name = pro.get_input<std::string>(i++);
   ps->add_image(img, class_name);
   if (!ps->check_data()) {
-    vcl_cout << "In dbrec_pca_add_data_process() -- the data is not consistent!\n";
+    std::cout << "In dbrec_pca_add_data_process() -- the data is not consistent!\n";
     return false;
   }
 
-  vcl_cout << "In dbrec_pca_add_data_process() -- added the image with no problems!\n";
+  std::cout << "In dbrec_pca_add_data_process() -- added the image with no problems!\n";
 
   return true;
 }
@@ -108,14 +108,14 @@ bool dbrec_pca_construct_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_pca_sptr");
   input_types.push_back("double"); // variance_proportion to explain, used to determine number of eigen values to return
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -124,7 +124,7 @@ bool dbrec_pca_construct_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_pca_construct_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_construct_process - invalid inputs\n";
     return false;
   }
 
@@ -134,7 +134,7 @@ bool dbrec_pca_construct_process(bprb_func_process& pro)
   double var_pro = pro.get_input<double>(i++);
   
   if (!ps->construct_basis_vectors(var_pro)) {
-    vcl_cout << "In dbrec_pca_construct_process() -- the basis vectors cannot be constructed!\n";
+    std::cout << "In dbrec_pca_construct_process() -- the basis vectors cannot be constructed!\n";
     return false;
   }
 
@@ -146,15 +146,15 @@ bool dbrec_pca_classify_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok = false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_pca_sptr");
   input_types.push_back("vil_image_view_base_sptr");
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
-  output_types.push_back("vcl_string");
+  std::vector<std::string> output_types;
+  output_types.push_back(vcl_string");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -163,7 +163,7 @@ bool dbrec_pca_classify_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() < 2) {
-    vcl_cerr << "dbrec_pca_construct_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_construct_process - invalid inputs\n";
     return false;
   }
 
@@ -176,14 +176,14 @@ bool dbrec_pca_classify_process(bprb_func_process& pro)
   if (temp->pixel_format() != VIL_PIXEL_FORMAT_BYTE)
     return false;
  
-  vcl_string out_str;
+  std::string out_str;
   if (!ps->classify_nn(img, out_str)) {
-    vcl_cout << "In dbrec_pca_classify_process() -- the input img cannot be classified!\n";
+    std::cout << "In dbrec_pca_classify_process() -- the input img cannot be classified!\n";
     return false;
   }
 
-  vcl_cout << "----- classified as: " << out_str << " ----\n"; 
-  pro.set_output_val<vcl_string>(0, out_str);
+  std::cout << "----- classified as: " << out_str << " ----\n"; 
+  pro.set_output_val<std::string>(0, out_str);
   return true;
 }
 
@@ -193,14 +193,14 @@ bool dbrec_bayesian_pca_initialize_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("int"); // n: nxn rectangular region will be extracted centered on each ground-truth polygon
   input_types.push_back("int"); // id of the descriptor to be used, pass 0 for normal PCA on 1-d coded image vector
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_bayesian_pca_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -210,7 +210,7 @@ bool dbrec_bayesian_pca_initialize_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() != 2) {
-    vcl_cerr << "dbrec_bayesian_pca_initialize_process - invalid inputs\n";
+    std::cerr << "dbrec_bayesian_pca_initialize_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -225,17 +225,17 @@ bool dbrec_bayesian_pca_initialize_process(bprb_func_process& pro)
 bool dbrec_bayesian_pca_add_data_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_bayesian_pca_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
-  input_types.push_back("vcl_string"); // path of the ground-truth polygons in the image
-  input_types.push_back("vcl_string"); // the type string of the polygons to be used for training
+  input_types.push_back(vcl_string"); // path of the ground-truth polygons in the image
+  input_types.push_back(vcl_string"); // the type string of the polygons to be used for training
   input_types.push_back("int"); // id of the class (e.g. for a 2 class problem, 0 for class instances and 1 for non-class instances)
   input_types.push_back("int"); // n: nxn rectangular region will be extracted centered on each ground-truth polygon
-  input_types.push_back("vcl_string"); // the output path to save the training image patches
+  input_types.push_back(vcl_string"); // the output path to save the training image patches
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -243,7 +243,7 @@ bool dbrec_bayesian_pca_add_data_process_cons(bprb_func_process& pro)
 bool dbrec_bayesian_pca_add_data_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 7) {
-    vcl_cerr << "dbrec_pca_add_data_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_add_data_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -254,7 +254,7 @@ bool dbrec_bayesian_pca_add_data_process(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_bayesian_pca_add_data_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_bayesian_pca_add_data_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -263,11 +263,11 @@ bool dbrec_bayesian_pca_add_data_process(bprb_func_process& pro)
   vil_image_view<float> img = *vil_convert_cast(float(), inp_img);
   vil_math_scale_values(img,1.0/255.0);
 
-  vcl_string gt_name = pro.get_input<vcl_string>(i++);
-  vcl_string gt_type = pro.get_input<vcl_string>(i++);
+  std::string gt_name = pro.get_input<std::string>(i++);
+  std::string gt_type = pro.get_input<std::string>(i++);
   int class_id = pro.get_input<int>(i++);
   int n = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   vsl_b_ifstream bif(gt_name);
   bvgl_changes_sptr gt_polys = new bvgl_changes();
@@ -276,12 +276,12 @@ bool dbrec_bayesian_pca_add_data_process(bprb_func_process& pro)
 
   pca_s->add_image_rectangles(img, n, gt_polys, gt_type, (char)class_id);
   if (!pca_s->check_data()) {
-    vcl_cout << "In dbrec_bayesian_pca_add_data_process() -- the data is not consistent!\n";
+    std::cout << "In dbrec_bayesian_pca_add_data_process() -- the data is not consistent!\n";
     return false;
   }
   pca_s->save_image_rectangles(output_path, n, (char)class_id);
 
-  vcl_cout << "In dbrec_bayesian_pca_add_data_process() -- added the image with no problems!\n";
+  std::cout << "In dbrec_bayesian_pca_add_data_process() -- added the image with no problems!\n";
 
   return true;
 }
@@ -290,7 +290,7 @@ bool dbrec_bayesian_pca_add_data_process(bprb_func_process& pro)
 bool dbrec_bayesian_pca_add_data_process2_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_bayesian_pca_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
   input_types.push_back("vil_image_view_base_sptr");  // input image mask (a bool image)
@@ -298,10 +298,10 @@ bool dbrec_bayesian_pca_add_data_process2_cons(bprb_func_process& pro)
   input_types.push_back("int"); // id of the class (e.g. for a 2 class problem, 0 for class instances and 1 for non-class instances)
   input_types.push_back("int"); // n: nxn rectangular region will be extracted centered on each ground-truth polygon
   input_types.push_back("int"); // the number of class rectangles to be randomly extracted from the designated pixels in the mask
-  input_types.push_back("vcl_string"); // the output path to save the training image patches
+  input_types.push_back(vcl_string"); // the output path to save the training image patches
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -309,7 +309,7 @@ bool dbrec_bayesian_pca_add_data_process2_cons(bprb_func_process& pro)
 bool dbrec_bayesian_pca_add_data_process2(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 8) {
-    vcl_cerr << "dbrec_pca_add_data_process2 - invalid inputs\n";
+    std::cerr << "dbrec_pca_add_data_process2 - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -320,7 +320,7 @@ bool dbrec_bayesian_pca_add_data_process2(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_bayesian_pca_add_data_process2() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_bayesian_pca_add_data_process2() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -340,16 +340,16 @@ bool dbrec_bayesian_pca_add_data_process2(bprb_func_process& pro)
   int class_id = pro.get_input<int>(i++);
   int n = pro.get_input<int>(i++);
   int cnt = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   pca_s->add_image_rectangles(img, n, img_mask, class_val, (char)class_id, cnt);
   if (!pca_s->check_data()) {
-    vcl_cout << "In dbrec_bayesian_pca_add_data_process2() -- the data is not consistent!\n";
+    std::cout << "In dbrec_bayesian_pca_add_data_process2() -- the data is not consistent!\n";
     return false;
   }
   pca_s->save_image_rectangles(output_path, n, (char)class_id);
 
-  vcl_cout << "In dbrec_bayesian_pca_add_data_process2() -- added the image with no problems!\n";
+  std::cout << "In dbrec_bayesian_pca_add_data_process2() -- added the image with no problems!\n";
 
   return true;
 }
@@ -358,14 +358,14 @@ bool dbrec_bayesian_pca_add_data_process2(bprb_func_process& pro)
 bool dbrec_bayesian_pca_construct_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_bayesian_pca_sptr");
   input_types.push_back("double"); // variance_proportion to explain, used to determine number of eigen values to return
   input_types.push_back("int"); // n: nxn rectangular region used as the image patch size
-  input_types.push_back("vcl_string"); // the output path to visualize the eigenvectors
+  input_types.push_back(vcl_string"); // the output path to visualize the eigenvectors
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -373,17 +373,17 @@ bool dbrec_bayesian_pca_construct_process_cons(bprb_func_process& pro)
 bool dbrec_bayesian_pca_construct_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 4) {
-    vcl_cerr << "dbrec_pca_construct_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_construct_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbrec_bayesian_pca_sptr ps = pro.get_input<dbrec_bayesian_pca_sptr>(i++);
   double var_pro = pro.get_input<double>(i++);
   int n = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   if (!ps->construct_basis_vectors(var_pro, n, output_path)) {
-    vcl_cout << "In dbrec_bayesian_pca_construct_process() -- the basis vectors cannot be constructed!\n";
+    std::cout << "In dbrec_bayesian_pca_construct_process() -- the basis vectors cannot be constructed!\n";
     return false;
   }
   
@@ -394,13 +394,13 @@ bool dbrec_bayesian_pca_construct_process(bprb_func_process& pro)
 bool dbrec_bayesian_pca_visualize_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_bayesian_pca_sptr");
   input_types.push_back("int"); // id of the class (e.g. for a 2 class problem, 0 for class instances and 1 for non-class instances)
-  input_types.push_back("vcl_string"); // the output path to plot the histograms
+  input_types.push_back(vcl_string"); // the output path to plot the histograms
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -408,16 +408,16 @@ bool dbrec_bayesian_pca_visualize_process_cons(bprb_func_process& pro)
 bool dbrec_bayesian_pca_visualize_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 3) {
-    vcl_cerr << "dbrec_pca_construct_process - invalid inputs\n";
+    std::cerr << "dbrec_pca_construct_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
   dbrec_bayesian_pca_sptr ps = pro.get_input<dbrec_bayesian_pca_sptr>(i++);
   int class_id = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   if (!ps->visualize_transformed_distributions(output_path, (char)class_id)) {
-    vcl_cout << "In dbrec_bayesian_pca_construct_process() -- the distributions in the transformed space cannot be visualized!\n";
+    std::cout << "In dbrec_bayesian_pca_construct_process() -- the distributions in the transformed space cannot be visualized!\n";
     return false;
   }
 
@@ -428,7 +428,7 @@ bool dbrec_bayesian_pca_visualize_process(bprb_func_process& pro)
 bool dbrec_bayesian_pca_classify_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_bayesian_pca_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
   input_types.push_back("vil_image_view_base_sptr");  // input image mask (shows the valid regions in the image
@@ -437,7 +437,7 @@ bool dbrec_bayesian_pca_classify_process_cons(bprb_func_process& pro)
   input_types.push_back("int"); // n: use nxn rectangular regions
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("vil_image_view_base_sptr");  // output posterior map
   ok = pro.set_output_types(output_types);
   return ok;
@@ -446,7 +446,7 @@ bool dbrec_bayesian_pca_classify_process_cons(bprb_func_process& pro)
 bool dbrec_bayesian_pca_classify_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 6) {
-    vcl_cerr << "dbrec_bayesian_pca_classify_process - invalid inputs\n";
+    std::cerr << "dbrec_bayesian_pca_classify_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -457,7 +457,7 @@ bool dbrec_bayesian_pca_classify_process(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_bayesian_pca_classify_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_bayesian_pca_classify_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -478,13 +478,13 @@ bool dbrec_bayesian_pca_classify_process(bprb_func_process& pro)
   vil_image_view<float> output_map(img.ni(), img.nj(), 1);
   output_map.fill(0.0f);
   if (!pca_s->classify_image_rectangles(img, img_mask, n, (char)class_id, class_prior, output_map)) {
-    vcl_cout << "In dbrec_bayesian_pca_classify_process() -- problems in classifying the image!\n";
+    std::cout << "In dbrec_bayesian_pca_classify_process() -- problems in classifying the image!\n";
     return false;
   }
 
   float min_value, max_value;
   vil_math_value_range(output_map, min_value, max_value);
-  vcl_cout << "\t \t in the output map, min_value: " << min_value << " max_value: " << max_value << vcl_endl;
+  std::cout << "\t \t in the output map, min_value: " << min_value << " max_value: " << max_value << std::endl;
   
   vil_image_view_base_sptr output_map_sptr = new vil_image_view<float>(output_map);
   pro.set_output_val<vil_image_view_base_sptr>(0, output_map_sptr);
@@ -500,12 +500,12 @@ bool dbrec_template_matching_initialize_process_cons(bprb_func_process& pro)
 {
   //inputs
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
 
   //output
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("dbrec_template_matching_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
@@ -515,7 +515,7 @@ bool dbrec_template_matching_initialize_process(bprb_func_process& pro)
 {
   // Sanity check
   if (pro.n_inputs() != 0) {
-    vcl_cerr << "dbrec_template_matching_initialize_process - invalid inputs\n";
+    std::cerr << "dbrec_template_matching_initialize_process - invalid inputs\n";
     return false;
   }
   dbrec_template_matching_sptr ins = new dbrec_template_matching();
@@ -527,17 +527,17 @@ bool dbrec_template_matching_initialize_process(bprb_func_process& pro)
 bool dbrec_template_matching_add_data_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_template_matching_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
-  input_types.push_back("vcl_string"); // path of the ground-truth polygons in the image
-  input_types.push_back("vcl_string"); // the type string of the polygons to be used for training
+  input_types.push_back(vcl_string"); // path of the ground-truth polygons in the image
+  input_types.push_back(vcl_string"); // the type string of the polygons to be used for training
   input_types.push_back("int"); // id of the class (e.g. for a 2 class problem, 0 for class instances and 1 for non-class instances)
   input_types.push_back("int"); // n: nxn rectangular region will be extracted centered on each ground-truth polygon
-  input_types.push_back("vcl_string"); // the output path to save the training image patches
+  input_types.push_back(vcl_string"); // the output path to save the training image patches
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -545,7 +545,7 @@ bool dbrec_template_matching_add_data_process_cons(bprb_func_process& pro)
 bool dbrec_template_matching_add_data_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 7) {
-    vcl_cerr << "dbrec_template_matching_add_data_process - invalid inputs\n";
+    std::cerr << "dbrec_template_matching_add_data_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -556,7 +556,7 @@ bool dbrec_template_matching_add_data_process(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_template_matching_add_data_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_template_matching_add_data_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -565,11 +565,11 @@ bool dbrec_template_matching_add_data_process(bprb_func_process& pro)
   vil_image_view<float> img = *vil_convert_cast(float(), inp_img);
   vil_math_scale_values(img,1.0/255.0);
 
-  vcl_string gt_name = pro.get_input<vcl_string>(i++);
-  vcl_string gt_type = pro.get_input<vcl_string>(i++);
+  std::string gt_name = pro.get_input<std::string>(i++);
+  std::string gt_type = pro.get_input<std::string>(i++);
   int class_id = pro.get_input<int>(i++);
   int n = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   vsl_b_ifstream bif(gt_name);
   bvgl_changes_sptr gt_polys = new bvgl_changes();
@@ -578,12 +578,12 @@ bool dbrec_template_matching_add_data_process(bprb_func_process& pro)
 
   tm_s->add_image_rectangles(img, n, gt_polys, gt_type, (char)class_id);
   if (!tm_s->check_data()) {
-    vcl_cout << "In dbrec_template_matching_add_data_process() -- the data is not consistent!\n";
+    std::cout << "In dbrec_template_matching_add_data_process() -- the data is not consistent!\n";
     return false;
   }
   tm_s->save_image_rectangles(output_path, n, (char)class_id);
 
-  vcl_cout << "In dbrec_template_matching_add_data_process() -- added the image with no problems!\n";
+  std::cout << "In dbrec_template_matching_add_data_process() -- added the image with no problems!\n";
 
   return true;
 }
@@ -592,7 +592,7 @@ bool dbrec_template_matching_add_data_process(bprb_func_process& pro)
 bool dbrec_template_matching_add_data_process2_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_template_matching_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
   input_types.push_back("vil_image_view_base_sptr");  // input image mask (a bool image)
@@ -600,10 +600,10 @@ bool dbrec_template_matching_add_data_process2_cons(bprb_func_process& pro)
   input_types.push_back("int"); // id of the class (e.g. for a 2 class problem, 0 for class instances and 1 for non-class instances)
   input_types.push_back("int"); // n: nxn rectangular region will be extracted centered on each ground-truth polygon
   input_types.push_back("int"); // the number of class rectangles to be randomly extracted from the designated pixels in the mask
-  input_types.push_back("vcl_string"); // the output path to save the training image patches
+  input_types.push_back(vcl_string"); // the output path to save the training image patches
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -611,7 +611,7 @@ bool dbrec_template_matching_add_data_process2_cons(bprb_func_process& pro)
 bool dbrec_template_matching_add_data_process2(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 8) {
-    vcl_cerr << "dbrec_template_matching_add_data_process2 - invalid inputs\n";
+    std::cerr << "dbrec_template_matching_add_data_process2 - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -622,7 +622,7 @@ bool dbrec_template_matching_add_data_process2(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_template_matching_add_data_process2() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_template_matching_add_data_process2() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -642,16 +642,16 @@ bool dbrec_template_matching_add_data_process2(bprb_func_process& pro)
   int class_id = pro.get_input<int>(i++);
   int n = pro.get_input<int>(i++);
   int cnt = pro.get_input<int>(i++);
-  vcl_string output_path = pro.get_input<vcl_string>(i++);
+  std::string output_path = pro.get_input<std::string>(i++);
 
   tm_s->add_image_rectangles(img, n, img_mask, class_val, (char)class_id, cnt);
   if (!tm_s->check_data()) {
-    vcl_cout << "In dbrec_template_matching_add_data_process2() -- the data is not consistent!\n";
+    std::cout << "In dbrec_template_matching_add_data_process2() -- the data is not consistent!\n";
     return false;
   }
   tm_s->save_image_rectangles(output_path, n, (char)class_id);
 
-  vcl_cout << "In dbrec_template_matching_add_data_process2() -- added the image with no problems!\n";
+  std::cout << "In dbrec_template_matching_add_data_process2() -- added the image with no problems!\n";
 
   return true;
 }
@@ -660,7 +660,7 @@ bool dbrec_template_matching_add_data_process2(bprb_func_process& pro)
 bool dbrec_template_matching_classify_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
-  vcl_vector<vcl_string> input_types;
+  std::vector<std::string> input_types;
   input_types.push_back("dbrec_template_matching_sptr");
   input_types.push_back("vil_image_view_base_sptr");  // input image
   input_types.push_back("vil_image_view_base_sptr");  // input image mask (shows the valid regions in the image
@@ -668,7 +668,7 @@ bool dbrec_template_matching_classify_process_cons(bprb_func_process& pro)
   input_types.push_back("int"); // n: use nxn rectangular regions
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
-  vcl_vector<vcl_string> output_types;
+  std::vector<std::string> output_types;
   output_types.push_back("vil_image_view_base_sptr");  // output posterior map
   ok = pro.set_output_types(output_types);
   return ok;
@@ -677,7 +677,7 @@ bool dbrec_template_matching_classify_process_cons(bprb_func_process& pro)
 bool dbrec_template_matching_classify_process(bprb_func_process& pro)
 {
   if (pro.n_inputs() < 5) {
-    vcl_cerr << "dbrec_bayesian_pca_classify_process - invalid inputs\n";
+    std::cerr << "dbrec_bayesian_pca_classify_process - invalid inputs\n";
     return false;
   }
   unsigned i = 0;
@@ -688,7 +688,7 @@ bool dbrec_template_matching_classify_process(bprb_func_process& pro)
     return false;
    vil_image_view<vxl_byte> orig_img(inp_img);
   if (orig_img.nplanes() == 3) {
-    vcl_cout << "In dbrec_template_matching_classify_process() -- converting input RGB image to grey scale!\n";
+    std::cout << "In dbrec_template_matching_classify_process() -- converting input RGB image to grey scale!\n";
     vil_image_view<vxl_byte> *out_img = new vil_image_view<vxl_byte>(inp_img->ni(),inp_img->nj());
     vil_convert_planes_to_grey<vxl_byte, vxl_byte>(*(inp_img.as_pointer()),*out_img);
     inp_img = out_img;
@@ -708,13 +708,13 @@ bool dbrec_template_matching_classify_process(bprb_func_process& pro)
   vil_image_view<float> output_map(img.ni(), img.nj(), 1);
   output_map.fill(0.0f);
   if (!tm_s->classify_image_rectangles(img, img_mask, n, (char)class_id, output_map)) {
-    vcl_cout << "In dbrec_bayesian_pca_classify_process() -- problems in classifying the image!\n";
+    std::cout << "In dbrec_bayesian_pca_classify_process() -- problems in classifying the image!\n";
     return false;
   }
 
   float min_value, max_value;
   vil_math_value_range(output_map, min_value, max_value);
-  vcl_cout << "\t \t in the output map, min_value: " << min_value << " max_value: " << max_value << vcl_endl;
+  std::cout << "\t \t in the output map, min_value: " << min_value << " max_value: " << max_value << std::endl;
   
   vil_image_view_base_sptr output_map_sptr = new vil_image_view<float>(output_map);
   pro.set_output_val<vil_image_view_base_sptr>(0, output_map_sptr);

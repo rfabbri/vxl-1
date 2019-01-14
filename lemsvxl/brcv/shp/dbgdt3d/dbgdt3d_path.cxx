@@ -1,8 +1,8 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbgdt3d/dbgdt3d_path.h>
@@ -117,7 +117,7 @@ vgl_point_3d<double> gdt_path::get_point (unsigned int i)
 
 void gdt_path::print_path ()
 {
-  vul_printf (vcl_cout, "Geodesic path: length %lf, to source %d\n", 
+  vul_printf (std::cout, "Geodesic path: length %lf, to source %d\n", 
                get_length(), get_closest_source()->id());
 
   double cumu_len = 0;
@@ -134,11 +134,11 @@ void gdt_path::print_path ()
       assert (cur_pt != prev_pt);
       double path_len = vgl_distance (prev_pt, cur_pt);
       cumu_len += path_len;
-      vul_printf (vcl_cout, "       len (%d-%d): %lf, cumulative len: %lf\n", i-1, i, path_len, cumu_len);
+      vul_printf (std::cout, "       len (%d-%d): %lf, cumulative len: %lf\n", i-1, i, path_len, cumu_len);
     }
 
     //: print the [i]-th point
-    vul_printf (vcl_cout, "     Point[%d] on edge %d with tau %lf, (%.2f, %.2f, %.2f)\n", 
+    vul_printf (std::cout, "     Point[%d] on edge %d with tau %lf, (%.2f, %.2f, %.2f)\n", 
                  i, I->edge()->id(), tau, 
                  cur_pt.x(), cur_pt.y(), cur_pt.z());
   }

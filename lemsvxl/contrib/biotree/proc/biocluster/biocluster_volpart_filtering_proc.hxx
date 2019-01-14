@@ -55,7 +55,7 @@ biocluster_volpart_filtering_proc<T,F>::biocluster_volpart_filtering_proc(
     xscan_scan const& scan, 
     vgl_box_3d<double> &box,   double resolution,
     vgl_box_3d<double> &outer_box,
-    vcl_string bin_scan_file,
+    std::string bin_scan_file,
     xmvg_composite_filter_3d<T, F> const & filter_3d,
     biob_worldpt_roster_sptr sample_roster,
     int verbose) 
@@ -129,7 +129,7 @@ biocluster_volpart_filtering_proc<T, F>:: biocluster_volpart_filtering_proc
     vgl_box_3d<double> &box,
     double resolution,
     vgl_box_3d<double> &outer_box,
-    vcl_string bin_scan_file,
+    std::string bin_scan_file,
     xmvg_composite_filter_3d<T, F> const& filter_3d,
     biob_worldpt_roster_sptr sample_roster,
     int verbose
@@ -205,7 +205,7 @@ biocluster_volpart_filtering_proc<T,F>:: ~biocluster_volpart_filtering_proc ()
 
 // Execute - execute filtering algorithm as currently configured.
 template<class T, class F>
-void biocluster_volpart_filtering_proc<T, F> :: execute(const vcl_vector<biob_worldpt_index> * which_samples)
+void biocluster_volpart_filtering_proc<T, F> :: execute(const std::vector<biob_worldpt_index> * which_samples)
 {
     // Get the problem size - number of points/view/filters
     unsigned npts = which_samples ? which_samples->size () : m_field->roster()->num_points();
@@ -317,12 +317,12 @@ void biocluster_volpart_filtering_proc<T, F> :: trace (bool cond, char* fmt, ...
         vsprintf (msg, fmt, vaMarker);
         
         // Display
-        vcl_cout << prefix << msg << vcl_endl;
+        std::cout << prefix << msg << std::endl;
     }
 }
 
 template<class T, class F>
-void x_write(vcl_ostream& os, biocluster_volpart_filtering_proc<T,F> &proc)
+void x_write(std::ostream& os, biocluster_volpart_filtering_proc<T,F> &proc)
 {
   vsl_basic_xml_element element("bioproc_filtering_proc");
   element.x_write_open(os);
@@ -340,7 +340,7 @@ void x_write(vcl_ostream& os, biocluster_volpart_filtering_proc<T,F> &proc)
 #undef BIOCLUSTER_VOLPART_FILTERING_PROC_INSTANTIATE
 #define BIOCLUSTER_VOLPART_FILTERING_PROC_INSTANTIATE(T, F) \
 template class biocluster_volpart_filtering_proc<T, F>;\
-template void x_write(vcl_ostream&, biocluster_volpart_filtering_proc<T, F> &)
+template void x_write(std::ostream&, biocluster_volpart_filtering_proc<T, F> &)
 
 #endif // BIOCLUSTER_VOLPART_FILTERING_PROC_TXX_
 

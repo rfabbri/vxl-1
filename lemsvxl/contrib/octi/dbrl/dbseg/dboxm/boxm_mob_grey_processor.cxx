@@ -8,7 +8,7 @@
 #include <bsta/bsta_mixture_fixed.h>
 #include <bsta/bsta_beta_f1.h>
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 //: Expected value
 boxm_apm_traits<BOXM_APM_MOB_GREY>::obs_datatype
@@ -50,7 +50,7 @@ bool boxm_mob_grey_processor::update( apm_datatype &appear,
   float init_variance = 0.008f;
   float g_thresh = 0.025f; // number of std devs from mean sample must be
 
-  float t_l_u = float(vcl_sqrt(1-4*init_variance)*0.5);
+  float t_l_u = float(std::sqrt(1-4*init_variance)*0.5);
   float lower = 0.5f-t_l_u;
   float upper = 0.5f+t_l_u;
 

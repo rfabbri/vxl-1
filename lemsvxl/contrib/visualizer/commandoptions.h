@@ -21,10 +21,10 @@
 #ifndef COMMANDOPTIONS_HEADER
 #define COMMANDOPTIONS_HEADER
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_exception.h>
-#include <vcl_sstream.h>
+#include <vector>
+#include <string>
+#include <exception>
+#include <sstream>
 
 class CommandOptions
 {
@@ -32,30 +32,30 @@ public:
   // register an option with pointer to variable, long and short argument names, a
   // description of the option and the name of the argument to the option
   template <typename T>
-  void register_option(T &par, vcl_string long_name, char short_name,
-           vcl_string des, vcl_string arg_name)
+  void register_option(T &par, std::string long_name, char short_name,
+           std::string des, std::string arg_name)
   {
     option_table.push_back(option(new updater<T>(par), long_name, short_name, des, arg_name));
   }
 
-  void register_flag(bool &par, vcl_string long_name, char short_name, vcl_string des)
+  void register_flag(bool &par, std::string long_name, char short_name, std::string des)
   {
     flag_table.push_back(flag(par, long_name, short_name, des));
   }
   
   template <typename T>
-  void register_argument(T &par, vcl_string name, vcl_string des)
+  void register_argument(T &par, std::string name, std::string des)
   {
     argument_table.push_back(argument(new updater<T>(par), name, des));
   }
 
   void process_command_line(int argc, const char * const *argv);
-  void process_command_line(const vcl_vector<vcl_string> &);
+  void process_command_line(const std::vector<std::string> &);
 
   ~CommandOptions()
   {
     // make sure dynamically allocated stuff is cleaned up
-    for (vcl_vector<updaterbase *>::iterator it = clean_up_table.begin();
+    for (std::vector<updaterbase *>::iterator it = clean_up_table.begin();
    it != clean_up_table.end(); ++it)
       delete (*it);
   }
@@ -64,19 +64,19 @@ public:
 private:
   // member helpers
     
-  vcl_string requirify(vcl_string s) 
+  std::string requirify(std::string s) 
   {
     return '<' + s + '>';
   }
-  vcl_string optionalify(vcl_string s) 
+  std::string optionalify(std::string s) 
   {
     return '[' + s + ']';
   }
 
-  vcl_string strip_path(vcl_string s);
+  std::string strip_path(std::string s);
 
-  void print_usage(vcl_string executable);
-  void print_help(vcl_string executable);
+  void print_usage(std::string executable);
+  void print_help(std::string executable);
   
   // private data structures
   // first a few classes for updating a variable from a stream
@@ -84,7 +84,7 @@ public:
   class updaterbase 
   {
   public:
-    virtual bool update(vcl_string s) = 0;
+    virtual bool update(std::string s) = 0;
   };
 private:
   template <typename T>
@@ -96,7 +96,7 @@ private:
     {}
 
     // update the contained variable through reference - return false upon failure
-    virtual bool update(vcl_string s)
+    virtual bool update(std::string s)
     {
       std::istringstream is(s);
       is >> var;
@@ -114,10 +114,10 @@ private:
   struct option 
   {
     updaterbase *par;
-    vcl_string long_name, des, arg_name;
+    std::string long_name, des, arg_name;
     char short_name;
 
-    option(updaterbase *p, vcl_string ln, char sn, vcl_string d, vcl_string an):
+    option(updaterbase *p, std::string ln, char sn, std::string d, std::string an):
       par(p), long_name(ln), des(d), arg_name(an), short_name(sn)
     {}
     option(const option &o):
@@ -129,10 +129,10 @@ private:
   struct flag
   {
     bool *par;
-    vcl_string long_name, des;
+    std::string long_name, des;
     char short_name;
     
-    flag(bool &p, vcl_string ln, char sn, vcl_string d):
+    flag(bool &p, std::string ln, char sn, std::string d):
       par(&p), long_name(ln), des(d), short_name(sn)
     {}
   };
@@ -141,9 +141,9 @@ private:
   struct argument
   {
     updaterbase *par;
-    vcl_string name, des;
+    std::string name, des;
     
-    argument(updaterbase *p, vcl_string n, vcl_string d):
+    argument(updaterbase *p, std::string n, std::string d):
       par(p), name(n), des(d)
     {}
     argument(const argument &a):
@@ -151,32 +151,32 @@ private:
     {}
   };
 
-  vcl_vector<option> option_table;
-  vcl_vector<flag> flag_table;
-  vcl_vector<argument> argument_table;
-  typedef vcl_vector<option>::iterator option_iterator;
-  typedef vcl_vector<flag>::iterator flag_iterator;
-  typedef vcl_vector<argument>::iterator argument_iterator;
+  std::vector<option> option_table;
+  std::vector<flag> flag_table;
+  std::vector<argument> argument_table;
+  typedef std::vector<option>::iterator option_iterator;
+  typedef std::vector<flag>::iterator flag_iterator;
+  typedef std::vector<argument>::iterator argument_iterator;
 
-  vcl_vector<updaterbase *> clean_up_table;
+  std::vector<updaterbase *> clean_up_table;
 };
 
-template <> class CommandOptions::updater<vcl_string>: public CommandOptions::updaterbase
+template <> class CommandOptions::updater<std::string>: public CommandOptions::updaterbase
 {
 public:
-  updater(vcl_string &par):
+  updater(std::string &par):
     var(par)
   {}
 
   // update the contained variable through reference - return false upon failure
-  virtual bool update(vcl_string s)
+  virtual bool update(std::string s)
   {
     var = s;
     return true;
   }
     
 private:
-  vcl_string &var;
+  std::string &var;
 };
   
 
@@ -184,7 +184,7 @@ private:
 class commandoptions_error: std::exception
 {
 public:
-  commandoptions_error(vcl_string s) throw(): msg(s)
+  commandoptions_error(std::string s) throw(): msg(s)
   {}
   ~commandoptions_error() throw()
   {}
@@ -195,7 +195,7 @@ public:
   }
   
 private:
-  vcl_string msg;
+  std::string msg;
 };
 
 

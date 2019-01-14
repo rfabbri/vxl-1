@@ -25,13 +25,13 @@ bool bof_load_p_xc_process_cons(bprb_func_process& pro)
 {
   using namespace bof_load_p_xc_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i = 0;
   input_types_[i++] = "bof_codebook_sptr" ;  //class containing the means
-  input_types_[i++] = "vcl_string"; // path to xml files containing the clusters for each classes
+  input_types_[i++] = vcl_string"; // path to xml files containing the clusters for each classes
   input_types_[i++] = "unsigned"; //number of categories
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   output_types_[0] = "bof_p_xc_sptr" ;
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
@@ -46,7 +46,7 @@ bool bof_load_p_xc_process(bprb_func_process& pro)
   //get inputs
   unsigned i = 0;
   bof_codebook_sptr codebook = pro.get_input<bof_codebook_sptr>(i++);
-  vcl_string xml_path = pro.get_input<vcl_string>(i++);
+  std::string xml_path = pro.get_input<std::string>(i++);
   unsigned ncategories = pro.get_input<unsigned>(i++);
   
   bof_labels_keypoint_joint *p_cx = new bof_labels_keypoint_joint(ncategories, codebook->means_.size());

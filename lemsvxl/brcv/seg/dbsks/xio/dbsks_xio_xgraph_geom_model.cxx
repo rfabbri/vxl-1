@@ -15,7 +15,7 @@
 #include <bxml/bxml_write.h>
 #include <bxml/bxml_find.h>
 
-#include <vcl_utility.h>
+#include <utility>
 
 
 
@@ -74,11 +74,11 @@ new_v1(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
   root->set_attribute("major_child_eid", xgraph_geom->major_child_eid());
 
   // Prepare space to store the xgraph geometry model
-  vcl_map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  vcl_map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
+  std::map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  std::map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
 
 
-  for (vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = map_edge2geom.begin(); 
+  for (std::map<unsigned, dbsks_xfrag_geom_model_sptr >::iterator mit = map_edge2geom.begin(); 
     mit != map_edge2geom.end(); ++mit)
   {
     // edge id
@@ -142,7 +142,7 @@ new_v1(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
   }
 
   // node info
-  for (vcl_map<unsigned, dbsks_xnode_geom_model_sptr >::iterator mit = 
+  for (std::map<unsigned, dbsks_xnode_geom_model_sptr >::iterator mit = 
     map_node2geom.begin(); mit != map_node2geom.end(); ++mit)
   {
     unsigned vid = mit->first;
@@ -197,10 +197,10 @@ new_v2(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
   root->set_attribute("graph_size", xgraph_geom->graph_size());
 
   // Prepare space to store the xgraph geometry model
-  const vcl_map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  const vcl_map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
+  const std::map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  const std::map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
 
-  for (vcl_map<unsigned, dbsks_xfrag_geom_model_sptr >::const_iterator mit = map_edge2geom.begin(); 
+  for (std::map<unsigned, dbsks_xfrag_geom_model_sptr >::const_iterator mit = map_edge2geom.begin(); 
     mit != map_edge2geom.end(); ++mit)
   {
     // edge id
@@ -266,8 +266,8 @@ new_v2(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
     bxml_element* elm_attr_data = dbxml_algos::append_element(xfrag_elm, new bxml_element("attr_data"));
     elm_attr_data->set_attribute("graph_size", xfrag_geom_model->graph_size_for_attr_data());
   
-    const vcl_map<vcl_string, vcl_vector<double > >& attr_data = xfrag_geom_model->attr_data();
-    for (vcl_map<vcl_string, vcl_vector<double > >::const_iterator iter = attr_data.begin();
+    const std::map<std::string, std::vector<double > >& attr_data = xfrag_geom_model->attr_data();
+    for (std::map<std::string, std::vector<double > >::const_iterator iter = attr_data.begin();
       iter != attr_data.end(); ++iter)
     {
       elm_attr_data->append_data(xml_new(iter->first, iter->second));
@@ -275,7 +275,7 @@ new_v2(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
   }
 
   // node info
-  for (vcl_map<unsigned, dbsks_xnode_geom_model_sptr >::const_iterator mit = 
+  for (std::map<unsigned, dbsks_xnode_geom_model_sptr >::const_iterator mit = 
     map_node2geom.begin(); mit != map_node2geom.end(); ++mit)
   {
     unsigned vid = mit->first;
@@ -313,8 +313,8 @@ new_v2(const dbsks_xgraph_geom_model_sptr& xgraph_geom)
     bxml_element* elm_attr_data = dbxml_algos::append_element(xnode_elm, new bxml_element("attr_data"));
     elm_attr_data->set_attribute("graph_size", xnode_geom_model->graph_size_for_attr_data());
   
-    const vcl_map<vcl_string, vcl_vector<double > >& attr_data = xnode_geom_model->attr_data();
-    for (vcl_map<vcl_string, vcl_vector<double > >::const_iterator iter = attr_data.begin();
+    const std::map<std::string, std::vector<double > >& attr_data = xnode_geom_model->attr_data();
+    for (std::map<std::string, std::vector<double > >::const_iterator iter = attr_data.begin();
       iter != attr_data.end(); ++iter)
     {
       elm_attr_data->append_data(xml_new(iter->first, iter->second));
@@ -336,8 +336,8 @@ parse_v1(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
   // Prepare space to store the xgraph geometry model
   xgraph_geom = new dbsks_xgraph_geom_model();
-  vcl_map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  vcl_map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
+  std::map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  std::map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
 
   // clean up existing data
   map_edge2geom.clear();
@@ -408,7 +408,7 @@ parse_v1(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
         !frag_elm->get_attribute("graph_size", graph_size)
       )
       {
-        vcl_cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << std::endl;
         return false;
       }
 
@@ -423,7 +423,7 @@ parse_v1(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
         min_r_end, max_r_end, 
         min_phi_end, max_phi_end,
         graph_size);
-      map_edge2geom.insert(vcl_make_pair(edge_id, xfrag_gm));
+      map_edge2geom.insert(std::make_pair(edge_id, xfrag_gm));
     }
     else if (elm->name() == "dbsks_xnode_geom_model")
     {
@@ -452,7 +452,7 @@ parse_v1(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 
         !xnode_elm->get_attribute("graph_size", graph_size))
       {
-        vcl_cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << std::endl;
         return false;
       }
 
@@ -460,7 +460,7 @@ parse_v1(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
       dbsks_xnode_geom_model_sptr xnode_geom = new dbsks_xnode_geom_model();
       xnode_geom->set_param_range(min_psi, max_psi, min_radius, max_radius, 
         min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
-      map_node2geom.insert(vcl_make_pair(vertex_id, xnode_geom));
+      map_node2geom.insert(std::make_pair(vertex_id, xnode_geom));
     }
   }
 
@@ -474,8 +474,8 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
   // Prepare space to store the xgraph geometry model
   xgraph_geom = new dbsks_xgraph_geom_model();
-  vcl_map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  vcl_map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
+  std::map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  std::map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
 
   // clean up existing data
   map_edge2geom.clear();
@@ -543,7 +543,7 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
         !frag_elm->get_attribute("graph_size", graph_size)
       )
       {
-        vcl_cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << std::endl;
         return false;
       }
 
@@ -558,7 +558,7 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
         min_r_end, max_r_end, 
         min_phi_end, max_phi_end,
         graph_size);
-      map_edge2geom.insert(vcl_make_pair(edge_id, xfrag_gm));
+      map_edge2geom.insert(std::make_pair(edge_id, xfrag_gm));
 
       // parse attr_data
       bxml_element* elm_attr_data = dbxml_algos::find_by_name(frag_elm, "attr_data");
@@ -579,12 +579,12 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
             continue;
 
           bxml_element* elm = dbxml_algos::cast_to_element(*idata);
-          vcl_string type = "";
+          std::string type = "";
           if (!elm->get_attribute("type", type) || type != "vector+double")
             continue;
 
-          vcl_string attr_name = elm->name();
-          vcl_vector<double > attr_values;
+          std::string attr_name = elm->name();
+          std::vector<double > attr_values;
           xml_parse(elm, attr_values);
 
           xfrag_gm->set_attr_data(attr_name, attr_values);
@@ -619,7 +619,7 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 
         !xnode_elm->get_attribute("graph_size", graph_size))
       {
-        vcl_cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << std::endl;
         return false;
       }
 
@@ -627,7 +627,7 @@ parse_v2(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
       dbsks_xnode_geom_model_sptr xnode_geom = new dbsks_xnode_geom_model();
       xnode_geom->set_param_range(min_psi, max_psi, min_radius, max_radius, 
         min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
-      map_node2geom.insert(vcl_make_pair(vertex_id, xnode_geom));
+      map_node2geom.insert(std::make_pair(vertex_id, xnode_geom));
     }
   }
 
@@ -642,26 +642,26 @@ bool dbsks_xio_xgraph_geom_model::
 parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
 
-    vcl_cout << vcl_endl << "Geom Model Parameters:" << vcl_endl;
-      vcl_cout << "-------------------------" << vcl_endl;
+    std::cout << std::endl << "Geom Model Parameters:" << std::endl;
+      std::cout << "-------------------------" << std::endl;
   double nkdiff_threshold_param;
   bxml_element* elm_nkdiff_threshold = dbxml_algos::find_by_name(param_root, "nkdiff_threshold");
   if (!elm_nkdiff_threshold)
     {
-      vcl_cout << "\nERROR: Missing '" << "nkdiff_threshold" << "' element in XML file.\n";
+      std::cout << "\nERROR: Missing '" << "nkdiff_threshold" << "' element in XML file.\n";
       return false;
     }
     else
     {
         xml_parse(elm_nkdiff_threshold, nkdiff_threshold_param);
-        vcl_cout << "Geom Nkdiff Threshold: " << nkdiff_threshold_param << vcl_endl;
+        std::cout << "Geom Nkdiff Threshold: " << nkdiff_threshold_param << std::endl;
     }
 
 
   // Prepare space to store the xgraph geometry model
   xgraph_geom = new dbsks_xgraph_geom_model();
-  vcl_map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
-  vcl_map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
+  std::map<unsigned int, dbsks_xfrag_geom_model_sptr >& map_edge2geom = xgraph_geom->map_edge2geom();
+  std::map<unsigned int, dbsks_xnode_geom_model_sptr >& map_node2geom = xgraph_geom->map_node2geom();
 
   // clean up existing data
   map_edge2geom.clear();
@@ -729,7 +729,7 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
         !frag_elm->get_attribute("graph_size", graph_size)
       )
       {
-        vcl_cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieving xfrag geom model params in " __FILE__ << std::endl;
         return false;
       }
 
@@ -745,7 +745,7 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
         min_phi_end, max_phi_end,
         graph_size);
       xfrag_gm->set_nkdiff_threshold(nkdiff_threshold_param);
-      map_edge2geom.insert(vcl_make_pair(edge_id, xfrag_gm));
+      map_edge2geom.insert(std::make_pair(edge_id, xfrag_gm));
 
       // parse attr_data
       bxml_element* elm_attr_data = dbxml_algos::find_by_name(frag_elm, "attr_data");
@@ -766,12 +766,12 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
             continue;
 
           bxml_element* elm = dbxml_algos::cast_to_element(*idata);
-          vcl_string type = "";
+          std::string type = "";
           if (!elm->get_attribute("type", type) || type != "vector+double")
             continue;
 
-          vcl_string attr_name = elm->name();
-          vcl_vector<double > attr_values;
+          std::string attr_name = elm->name();
+          std::vector<double > attr_values;
           xml_parse(elm, attr_values);
 
           xfrag_gm->set_attr_data(attr_name, attr_values);
@@ -806,7 +806,7 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
 
         !xnode_elm->get_attribute("graph_size", graph_size))
       {
-        vcl_cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << vcl_endl;
+        std::cout << "\nERROR: couldn't retrieve xnode geom model param in " __FILE__ << std::endl;
         return false;
       }
 
@@ -814,7 +814,7 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
       dbsks_xnode_geom_model_sptr xnode_geom = new dbsks_xnode_geom_model();
       xnode_geom->set_param_range(min_psi, max_psi, min_radius, max_radius,
         min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
-      map_node2geom.insert(vcl_make_pair(vertex_id, xnode_geom));
+      map_node2geom.insert(std::make_pair(vertex_id, xnode_geom));
     }
   }
 
@@ -831,7 +831,7 @@ parse_v2_1(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_model
 
 // -----------------------------------------------------------------------------
 //: Write xgraph geometry model to a stream
-bool x_write(vcl_ostream& os, const dbsks_xgraph_geom_model_sptr& xgraph_geom)
+bool x_write(std::ostream& os, const dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
   // start a new XML document
   bxml_document doc;
@@ -853,7 +853,7 @@ bool x_write(vcl_ostream& os, const dbsks_xgraph_geom_model_sptr& xgraph_geom)
 
 // -----------------------------------------------------------------------------
 //: load geometric model of a xgraph
-bool x_read(const vcl_string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom)
+bool x_read(const std::string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
   // House-cleaning
   xgraph_geom = 0;
@@ -863,7 +863,7 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geo
 
   if (!doc.root_element())
   {
-    vcl_cout << "\nERROR: couldn't read XML file: " << filepath << vcl_endl;
+    std::cout << "\nERROR: couldn't read XML file: " << filepath << std::endl;
     return false;
   }
 
@@ -872,14 +872,14 @@ bool x_read(const vcl_string& filepath, dbsks_xgraph_geom_model_sptr& xgraph_geo
 
   if (!root)
   {
-    vcl_cout << "ERROR: could not find node 'dbsks_xgraph_geom_model'.\n";
+    std::cout << "ERROR: could not find node 'dbsks_xgraph_geom_model'.\n";
     return false;
   }
   return xml_parse(root, xgraph_geom);  
 }
 
 //: load geometric model of a xgraph
-bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom)
+bool x_read(const std::string& filepath, const std::string& param_filepath, dbsks_xgraph_geom_model_sptr& xgraph_geom)
 {
   // House-cleaning
   xgraph_geom = 0;
@@ -889,7 +889,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
   if (!doc.root_element())
   {
-    vcl_cout << "\nERROR: couldn't read XML file: " << filepath << vcl_endl;
+    std::cout << "\nERROR: couldn't read XML file: " << filepath << std::endl;
     return false;
   }
 
@@ -898,7 +898,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
   if (!root)
   {
-    vcl_cout << "ERROR: could not find node 'dbsks_xgraph_geom_model'.\n";
+    std::cout << "ERROR: could not find node 'dbsks_xgraph_geom_model'.\n";
     return false;
   }
 
@@ -907,7 +907,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
     if (!param_doc.root_element())
     {
-      vcl_cout << "\nERROR: couldn't read XML file: " << param_filepath << vcl_endl;
+      std::cout << "\nERROR: couldn't read XML file: " << param_filepath << std::endl;
       return false;
     }
 
@@ -916,7 +916,7 @@ bool x_read(const vcl_string& filepath, const vcl_string& param_filepath, dbsks_
 
     if (!param_root)
     {
-      vcl_cout << "ERROR: could not find node 'geom_params'.\n";
+      std::cout << "ERROR: could not find node 'geom_params'.\n";
       return false;
     }
 
@@ -965,7 +965,7 @@ bool xml_parse(bxml_element* root, dbsks_xgraph_geom_model_sptr& xgraph_geom)
     return dbsks_xio_xgraph_geom_model::parse_v2(root, xgraph_geom);
     break;
   default:
-    vcl_cout << "\nERROR: Unknown dbsks_xgraph_geom_model XML version. Nothing parsed.\n";
+    std::cout << "\nERROR: Unknown dbsks_xgraph_geom_model XML version. Nothing parsed.\n";
     return false;
   }
 }
@@ -984,7 +984,7 @@ bool xml_parse(bxml_element* root, bxml_element* param_root, dbsks_xgraph_geom_m
     return dbsks_xio_xgraph_geom_model::parse_v2_1(root, param_root, xgraph_geom);
     break;
   default:
-    vcl_cout << "\nERROR: Unknown dbsks_xgraph_geom_model XML version. Nothing parsed.\n";
+    std::cout << "\nERROR: Unknown dbsks_xgraph_geom_model XML version. Nothing parsed.\n";
     return false;
   }
 }

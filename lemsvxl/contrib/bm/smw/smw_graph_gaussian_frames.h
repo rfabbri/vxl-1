@@ -2,7 +2,7 @@
 #ifndef SMW_GRAPH_GAUSSIAN_FRAMES_H_
 #define SMW_GRAPH_GAUSSIAN_FRAMES_H_
 
-//includes bsta_gauss_f1, vcl_map, vcl_set, vcl_utility
+//includes bsta_gauss_f1, std::map, std::set, vcl_utility
 //also using namespace node_typedefs
 #include<smw/smw_node_gaussian_frames.h>
 
@@ -12,7 +12,7 @@ namespace graph_typedefs{
 
     typedef smw_node_gaussian_frames node;
 
-    typedef vcl_map<node_id_type,node> graph;
+    typedef std::map<node_id_type,node> graph;
 
 };
 

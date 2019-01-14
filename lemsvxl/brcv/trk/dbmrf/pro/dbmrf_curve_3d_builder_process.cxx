@@ -13,7 +13,7 @@
 #include <bmrf/bmrf_curvel_3d.h>
 #include <bmrf/bmrf_curve_3d.h>
 
-#include <vcl_limits.h>
+#include <limits>
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_double_4.h>
 #include <vnl/vnl_det.h>
@@ -31,7 +31,7 @@ dbmrf_curve_3d_builder_process::dbmrf_curve_3d_builder_process() : bpro1_process
       !parameters()->add( "Bounding Box Inlier Fraction Z" ,  "-inlierZ",  1.0f ) ||
       !parameters()->add( "Reverse motion direction" ,        "-reverse",  false ) ||
       !parameters()->add( "Camera File",                    "-camera",  bpro1_filepath("","*")) ){
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   } 
 }
 
@@ -51,7 +51,7 @@ dbmrf_curve_3d_builder_process::clone() const
 
 
 //: Return the name of the process
-vcl_string
+std::string
 dbmrf_curve_3d_builder_process::name()
 {
   return "Build 3D Curves";
@@ -59,18 +59,18 @@ dbmrf_curve_3d_builder_process::name()
 
 
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbmrf_curve_3d_builder_process::get_input_type()
+std::vector< std::string > dbmrf_curve_3d_builder_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "bmrf" );
   return to_return;
 }
 
 
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbmrf_curve_3d_builder_process::get_output_type()
+std::vector< std::string > dbmrf_curve_3d_builder_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "curvel_3d" );
   return to_return;
 }
@@ -148,7 +148,7 @@ dbmrf_curve_3d_builder_process::finish()
   // load or create a camera for frame 0
   vnl_double_3x4 C;
   bool world_camera = false;
-  vcl_ifstream fp(camera_path.path.c_str());
+  std::ifstream fp(camera_path.path.c_str());
   if(fp.is_open()){
     fp >> C;
     fp.close();
@@ -199,7 +199,7 @@ dbmrf_curve_3d_builder_process::finish()
     // find the bottom of the bounding box
     builder.compute_bounding_box(inlier);
     vnl_double_4x4 bb_xform = builder.bb_xform();
-    double min_z = vcl_numeric_limits<double>::infinity();
+    double min_z = std::numeric_limits<double>::infinity();
     for(int i=0; i<8; ++i){ // for each corner
       vnl_double_4 corner = bb_xform*vnl_double_4(double(i/4),double((i/2)%2),double(i%2),1.0);
       double z = corner[2]/corner[3];
@@ -208,7 +208,7 @@ dbmrf_curve_3d_builder_process::finish()
     }
     // find a scale that puts the bottom of bounding box at z=0.0 
     double scale = (cam_height-0.0)/(cam_height - min_z );
-    vcl_cerr << "scale = " << scale << "  min z = " << min_z << vcl_endl;
+    std::cerr << "scale = " << scale << "  min z = " << min_z << std::endl;
     if(reverse)
       scale *= -1;
   
@@ -222,8 +222,8 @@ dbmrf_curve_3d_builder_process::finish()
     builder.compute_bounding_box(inlier, true);
 
 
-  vcl_set<bmrf_curve_3d_sptr> curves = builder.curves();
-  vcl_map<int,vnl_double_3x4> cameras = builder.cameras();
+  std::set<bmrf_curve_3d_sptr> curves = builder.curves();
+  std::map<int,vnl_double_3x4> cameras = builder.cameras();
   vgl_vector_3d<double> direction = builder.direction();
   vnl_double_4x4 bb_xform = builder.bb_xform(); 
 
@@ -236,10 +236,10 @@ dbmrf_curve_3d_builder_process::finish()
     output_data_[frame].push_back(output_curves);
   }
 
-  vcl_cout << "Bounding Box Transform\n" << bb_xform << vcl_endl;
-  for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = cameras.begin();
+  std::cout << "Bounding Box Transform\n" << bb_xform << std::endl;
+  for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = cameras.begin();
         C_itr != cameras.end();  ++C_itr )
-    vcl_cout << "Camera " << C_itr->first << "\n" << C_itr->second << vcl_endl;
+    std::cout << "Camera " << C_itr->first << "\n" << C_itr->second << std::endl;
 
   return true;
 }

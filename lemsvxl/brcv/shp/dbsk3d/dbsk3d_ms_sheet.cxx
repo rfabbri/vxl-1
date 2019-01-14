@@ -2,12 +2,12 @@
 //  MingChing Chang
 //  Nov 23, 2004.
 
-#include <vcl_cstdio.h>
-#include <vcl_algorithm.h>
-#include <vcl_queue.h>
-#include <vcl_set.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/dbsk3d_ms_sheet.h>
@@ -37,13 +37,13 @@ bool dbsk3d_ms_sheet::has_bnd_A3rib () const
   return false;
 }
 
-void dbsk3d_ms_sheet::get_incident_A3ribs (vcl_set<dbmsh3d_edge*>& A3_MCs) const
+void dbsk3d_ms_sheet::get_incident_A3ribs (std::set<dbmsh3d_edge*>& A3_MCs) const
 {
   //incomplete!
   get_bnd_A3ribs (A3_MCs);
 }
 
-void dbsk3d_ms_sheet::get_bnd_A3ribs (vcl_set<dbmsh3d_edge*>& A3_MCs) const
+void dbsk3d_ms_sheet::get_bnd_A3ribs (std::set<dbmsh3d_edge*>& A3_MCs) const
 {
   //Go through the bnd_curve list and see if there is any A3rib.
   //No need to check the internal_curves (can't be A3).
@@ -57,7 +57,7 @@ void dbsk3d_ms_sheet::get_bnd_A3ribs (vcl_set<dbmsh3d_edge*>& A3_MCs) const
   while (HE != halfedge_ && HE != NULL);
 }
 
-void dbsk3d_ms_sheet::get_incident_FEs (vcl_set<dbmsh3d_edge*>& incident_FE_set) const
+void dbsk3d_ms_sheet::get_incident_FEs (std::set<dbmsh3d_edge*>& incident_FE_set) const
 {
   //1) Add all fs_vertices of the bnd_curve
   dbmsh3d_halfedge* HE = halfedge_;
@@ -82,7 +82,7 @@ void dbsk3d_ms_sheet::get_incident_FEs (vcl_set<dbmsh3d_edge*>& incident_FE_set)
   }
 }
 
-void dbsk3d_ms_sheet::get_incident_FVs (vcl_set<dbmsh3d_vertex*>& incident_Vs) const
+void dbsk3d_ms_sheet::get_incident_FVs (std::set<dbmsh3d_vertex*>& incident_Vs) const
 {
   //1) Add all fs_vertices of the bnd_curve
   dbmsh3d_halfedge* HE = halfedge_;
@@ -109,20 +109,20 @@ void dbsk3d_ms_sheet::get_incident_FVs (vcl_set<dbmsh3d_vertex*>& incident_Vs) c
 
 //: Get all associated generators of this MS.
 //  If remove_A12_A3_Gs is specified, remove the generators of A12 and A3 elms.
-int dbsk3d_ms_sheet::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs,
+int dbsk3d_ms_sheet::get_asso_Gs (std::map<int, dbmsh3d_vertex*>& asso_Gs,
                                   const bool remove_A12_A3_Gs)
 {
   int count = 0;
-  vcl_set<void*> asgn_genes;
+  std::set<void*> asgn_genes;
 
   //1) Put int all assigned genes of each fs_face.
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*fit).second;
     dbmsh3d_vertex* G = FF->genes(0);
-    asso_Gs.insert (vcl_pair<int, dbmsh3d_vertex*>(G->id(), G));
+    asso_Gs.insert (std::pair<int, dbmsh3d_vertex*>(G->id(), G));
     G = FF->genes(1);
-    asso_Gs.insert (vcl_pair<int, dbmsh3d_vertex*>(G->id(), G));
+    asso_Gs.insert (std::pair<int, dbmsh3d_vertex*>(G->id(), G));
 
     //Also put possible assisnged genes of fs_edges and fs_vertices.
     dbmsh3d_halfedge* HE = FF->halfedge();
@@ -157,10 +157,10 @@ int dbsk3d_ms_sheet::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs,
   }
 
   //2) Put in all assigned genes of each FE and FV.
-  vcl_set<void*>::iterator it = asgn_genes.begin();
+  std::set<void*>::iterator it = asgn_genes.begin();
   for (; it != asgn_genes.end(); it++) {
     dbmsh3d_vertex* G = (dbmsh3d_vertex*) (*it);
-    asso_Gs.insert (vcl_pair<int, dbmsh3d_vertex*>(G->id(), G));
+    asso_Gs.insert (std::pair<int, dbmsh3d_vertex*>(G->id(), G));
   }
 
   return int (asso_Gs.size());
@@ -168,11 +168,11 @@ int dbsk3d_ms_sheet::get_asso_Gs (vcl_map<int, dbmsh3d_vertex*>& asso_Gs,
 
 
 //: Get the associated boundary mesh faces (triangles) of this fs_sheet.
-void dbsk3d_ms_sheet::get_bnd_mesh_Fs (vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<dbmsh3d_face*>& Gfaces,
-                                       vcl_set<dbmsh3d_face*>& Gfaces2, vcl_set<dbmsh3d_face*>& Gfaces1)
+void dbsk3d_ms_sheet::get_bnd_mesh_Fs (std::set<dbmsh3d_vertex*>& Gset, std::set<dbmsh3d_face*>& Gfaces,
+                                       std::set<dbmsh3d_face*>& Gfaces2, std::set<dbmsh3d_face*>& Gfaces1)
 {
-  vcl_vector<dbsk3d_fs_face*> fs_faces;
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::vector<dbsk3d_fs_face*> fs_faces;
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (; fit != facemap_.end(); fit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*fit).second;
     fs_faces.push_back (FF);
@@ -181,9 +181,9 @@ void dbsk3d_ms_sheet::get_bnd_mesh_Fs (vcl_set<dbmsh3d_vertex*>& Gset, vcl_set<d
 }
 
 //: Get the set of incident axials of this ms_sheet.
-void dbsk3d_ms_sheet::get_axial (vcl_set<dbmsh3d_edge*>& axial_set) const
+void dbsk3d_ms_sheet::get_axial (std::set<dbmsh3d_edge*>& axial_set) const
 {
-  vcl_vector<dbsk3d_ms_curve*> axial_vec;
+  std::vector<dbsk3d_ms_curve*> axial_vec;
   get_axial_bnd (axial_vec);
   for (unsigned int i=0; i<axial_vec.size(); i++)
     axial_set.insert (axial_vec[i]);
@@ -195,14 +195,14 @@ void dbsk3d_ms_sheet::get_axial (vcl_set<dbmsh3d_edge*>& axial_set) const
 }
 
 //: Get the set of boundary axials of this ms_sheet.
-int dbsk3d_ms_sheet::get_axial_bnd (vcl_vector<dbsk3d_ms_curve*>& axial_vec) const
+int dbsk3d_ms_sheet::get_axial_bnd (std::vector<dbsk3d_ms_curve*>& axial_vec) const
 {
   assert (axial_vec.empty());
   return _get_axial_chain (halfedge_, axial_vec);
 }
 
 //: Get the set of i-curve (pairs and loops) axials of this ms_sheet.
-int dbsk3d_ms_sheet::get_axial_icurve (vcl_vector<dbsk3d_ms_curve*>& axial_vec) const
+int dbsk3d_ms_sheet::get_axial_icurve (std::vector<dbsk3d_ms_curve*>& axial_vec) const
 {
   int count = 0;
   assert (axial_vec.empty());
@@ -222,9 +222,9 @@ int dbsk3d_ms_sheet::get_axial_icurve (vcl_vector<dbsk3d_ms_curve*>& axial_vec) 
 }
 
 //: Get the set of non-swallowtail incident axials of this ms_sheet.
-void dbsk3d_ms_sheet::get_axial_nonsw (vcl_set<dbmsh3d_edge*>& axial_set) const
+void dbsk3d_ms_sheet::get_axial_nonsw (std::set<dbmsh3d_edge*>& axial_set) const
 {
-  vcl_vector<dbsk3d_ms_curve*> axial_vec;
+  std::vector<dbsk3d_ms_curve*> axial_vec;
   get_axial_nonsw_bnd (axial_vec);
   for (unsigned int i=0; i<axial_vec.size(); i++)
     axial_set.insert (axial_vec[i]);
@@ -236,13 +236,13 @@ void dbsk3d_ms_sheet::get_axial_nonsw (vcl_set<dbmsh3d_edge*>& axial_set) const
 }
 
 //: Collect all boundary A13_ms_curves of MS (not including A13 swallowtails).
-int dbsk3d_ms_sheet::get_axial_nonsw_bnd (vcl_vector<dbsk3d_ms_curve*>& axial_vec) const
+int dbsk3d_ms_sheet::get_axial_nonsw_bnd (std::vector<dbsk3d_ms_curve*>& axial_vec) const
 {
   assert (axial_vec.empty());
   return _get_axial_nonsw_chain (halfedge_, axial_vec);
 }
 
-int dbsk3d_ms_sheet::get_axial_nonsw_icurve (vcl_vector<dbsk3d_ms_curve*>& axial_vec) const
+int dbsk3d_ms_sheet::get_axial_nonsw_icurve (std::vector<dbsk3d_ms_curve*>& axial_vec) const
 {
   int count = 0;
   assert (axial_vec.empty());
@@ -262,7 +262,7 @@ int dbsk3d_ms_sheet::get_axial_nonsw_icurve (vcl_vector<dbsk3d_ms_curve*>& axial
 }
 
 int dbsk3d_ms_sheet::_get_axial_chain (const dbmsh3d_halfedge* headHE, 
-                                       vcl_vector<dbsk3d_ms_curve*>& axial_set) const
+                                       std::vector<dbsk3d_ms_curve*>& axial_set) const
 {
   dbmsh3d_halfedge* HE = (dbmsh3d_halfedge*) headHE;
   assert (HE);
@@ -280,7 +280,7 @@ int dbsk3d_ms_sheet::_get_axial_chain (const dbmsh3d_halfedge* headHE,
 }
 
 int dbsk3d_ms_sheet::_get_axial_nonsw_chain (const dbmsh3d_halfedge* headHE, 
-                                             vcl_vector<dbsk3d_ms_curve*>& axial_set) const
+                                             std::vector<dbsk3d_ms_curve*>& axial_set) const
 {
   dbmsh3d_halfedge* HE = (dbmsh3d_halfedge*) headHE;
   assert (HE);
@@ -320,9 +320,9 @@ int dbsk3d_ms_sheet::_get_axial_nonsw_chain (const dbmsh3d_halfedge* headHE,
 }
 
 //: Get the set of incident axials of this ms_sheet incident to N.
-void dbsk3d_ms_sheet::get_axial_inc_N (const dbmsh3d_vertex* V, vcl_set<dbmsh3d_edge*>& axial_N_set) const
+void dbsk3d_ms_sheet::get_axial_inc_N (const dbmsh3d_vertex* V, std::set<dbmsh3d_edge*>& axial_N_set) const
 {
-  vcl_vector<dbsk3d_ms_curve*> axial_vec;
+  std::vector<dbsk3d_ms_curve*> axial_vec;
   get_axial_bnd (axial_vec);
   for (unsigned int i=0; i<axial_vec.size(); i++) {
     if (axial_vec[i]->is_V_incident (V))
@@ -337,13 +337,13 @@ void dbsk3d_ms_sheet::get_axial_inc_N (const dbmsh3d_vertex* V, vcl_set<dbmsh3d_
   }
 }
 
-void dbsk3d_ms_sheet::get_bndN_inc_axial (vcl_set<dbmsh3d_vertex*>& bnd_N_axial_set) const
+void dbsk3d_ms_sheet::get_bndN_inc_axial (std::set<dbmsh3d_vertex*>& bnd_N_axial_set) const
 {
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   get_bnd_Vs (vertices);
   for (unsigned int i=0; i<vertices.size(); i++) {
     dbmsh3d_vertex* V = vertices[i];
-    vcl_set<dbmsh3d_edge*> ICpairs;
+    std::set<dbmsh3d_edge*> ICpairs;
     get_ICpairs_inc_N (V, ICpairs);
     if (ICpairs.empty() == false)
       bnd_N_axial_set.insert (V);
@@ -352,7 +352,7 @@ void dbsk3d_ms_sheet::get_bndN_inc_axial (vcl_set<dbmsh3d_vertex*>& bnd_N_axial_
 
 
 void dbsk3d_ms_sheet::find_MCs_sharing_E (dbsk3d_ms_curve* inputMC, 
-                                          vcl_vector<dbsk3d_ms_curve*>& shared_MCs) const
+                                          std::vector<dbsk3d_ms_curve*>& shared_MCs) const
 {
   //Loop through all incident MCs and find the one sharing E with inputMC.
   dbmsh3d_halfedge* HE = halfedge_;
@@ -388,9 +388,9 @@ void dbsk3d_ms_sheet::find_MCs_sharing_E (dbsk3d_ms_curve* inputMC,
 }
 
 //: prune and pass associated generators to remaining shock curves.
-bool dbsk3d_ms_sheet::prune_pass_Gs (vcl_set<dbmsh3d_vertex*>& asso_Gs)
+bool dbsk3d_ms_sheet::prune_pass_Gs (std::set<dbmsh3d_vertex*>& asso_Gs)
 {
-  vul_printf (vcl_cout, "ERROR: prune_pass_Gs() not implemented!\n");
+  vul_printf (std::cout, "ERROR: prune_pass_Gs() not implemented!\n");
   assert (0);
   return true;
 }
@@ -406,7 +406,7 @@ void dbsk3d_ms_sheet::canonicalization ()
 
   //The check_integrity() will modify the traverse status, skip here.
   //if (check_integrity() == false) {
-    //vul_printf (vcl_cout, "MS %d canonicalization() error!");
+    //vul_printf (std::cout, "MS %d canonicalization() error!");
   //}
 }
 
@@ -444,7 +444,7 @@ bool dbsk3d_ms_sheet::move_rib_to_bnd_chain ()
 
 double dbsk3d_ms_sheet::compute_cost ()
 {
-  vcl_map<int, dbmsh3d_vertex*> asso_genes;
+  std::map<int, dbmsh3d_vertex*> asso_genes;
   cost_ = (float) get_asso_Gs (asso_genes, false);
   return cost_;
 }
@@ -461,7 +461,7 @@ double dbsk3d_ms_sheet::get_cost ()
 
 void dbsk3d_ms_sheet::mark_all_FFs_invalid ()
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+  std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
   for (; it != facemap_.end(); it++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
     FF->set_valid (false);
@@ -486,29 +486,29 @@ dbsk3d_ms_sheet* dbsk3d_ms_sheet::clone (dbmsh3d_hypg* HG2, dbmsh3d_mesh* M2)
 
 #define MAX_ELMS_INFO  30
 
-void dbsk3d_ms_sheet::getInfo (vcl_ostringstream& ostrm)
+void dbsk3d_ms_sheet::getInfo (std::ostringstream& ostrm)
 {
   char s[1024];
 
-  vcl_sprintf (s, "==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "Scaffold Sheet id: %d    ", id_); ostrm<<s;
+  std::sprintf (s, "==============================\n"); ostrm<<s;
+  std::sprintf (s, "Scaffold Sheet id: %d    ", id_); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n\n", result ? "pass." : "fail!"); ostrm<<s;
 
   //boundary ms_curves
-  vcl_sprintf (s, "# Boundary Scaffold Curves:"); ostrm<<s;
+  std::sprintf (s, "# Boundary Scaffold Curves:"); ostrm<<s;
   dbmsh3d_halfedge* HE = halfedge_;
   if (halfedge_) {
     do {
       dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) HE->edge();      
       if (MC->c_type() == C_TYPE_RIB)
-        vcl_sprintf (s, " R%d", MC->id());
+        std::sprintf (s, " R%d", MC->id());
       else if (MC->c_type() == C_TYPE_AXIAL)
-        vcl_sprintf (s, " A%d", MC->id());
+        std::sprintf (s, " A%d", MC->id());
       else if (MC->c_type() == C_TYPE_DEGE_AXIAL)
-        vcl_sprintf (s, " D%d", MC->id());
+        std::sprintf (s, " D%d", MC->id());
       else {
-        vcl_sprintf (s, " ERROR");
+        std::sprintf (s, " ERROR");
         assert (0);
       }
       ostrm<<s;
@@ -516,88 +516,88 @@ void dbsk3d_ms_sheet::getInfo (vcl_ostringstream& ostrm)
     }
     while (HE != halfedge_ && HE != NULL);
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
   
   //interior ms_curves
-  vcl_sprintf (s, "# Interior Scaffold Curves (%u chains): ", n_icurve_chains()); ostrm<<s;
+  std::sprintf (s, "# Interior Scaffold Curves (%u chains): ", n_icurve_chains()); ostrm<<s;
   for (dbmsh3d_ptr_node* cur = icurve_chain_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_halfedge* headHE = (dbmsh3d_halfedge*) cur->ptr();
     dbmsh3d_halfedge* HE = headHE;
     do {
       dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) HE->edge();   
       if (MC->c_type() == C_TYPE_RIB)
-        vcl_sprintf (s, " R%d", MC->id());
+        std::sprintf (s, " R%d", MC->id());
       else if (MC->c_type() == C_TYPE_AXIAL)
-        vcl_sprintf (s, " A%d", MC->id());
+        std::sprintf (s, " A%d", MC->id());
       else if (MC->c_type() == C_TYPE_DEGE_AXIAL)
-        vcl_sprintf (s, " D%d", MC->id());
+        std::sprintf (s, " D%d", MC->id());
       else {
-        vcl_sprintf (s, " ERROR");
+        std::sprintf (s, " ERROR");
         assert (0);
       }
       ostrm<<s;
       HE = HE->next();
     }
     while (HE != headHE && HE != NULL);
-    vcl_sprintf (s, ","); ostrm<<s;    
+    std::sprintf (s, ","); ostrm<<s;    
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 
   //ms_vertices
-  vcl_set<dbmsh3d_vertex*> incident_Vs;
+  std::set<dbmsh3d_vertex*> incident_Vs;
   get_incident_Vs (incident_Vs);
 
-  vcl_sprintf (s, "# Scaffold Vertices %u:", incident_Vs.size()); ostrm<<s;
-  vcl_set<dbmsh3d_vertex*>::iterator it = incident_Vs.begin();
+  std::sprintf (s, "# Scaffold Vertices %u:", incident_Vs.size()); ostrm<<s;
+  std::set<dbmsh3d_vertex*>::iterator it = incident_Vs.begin();
   for (; it != incident_Vs.end(); it++) {
     dbsk3d_ms_node* MN = (dbsk3d_ms_node*) (*it);
-    vcl_sprintf (s, " %d", MN->id()); ostrm<<s;
+    std::sprintf (s, " %d", MN->id()); ostrm<<s;
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
   
   //fs_faces
-  vcl_sprintf (s, "# fs_faces %u:", facemap_.size()); ostrm<<s;
-  vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+  std::sprintf (s, "# fs_faces %u:", facemap_.size()); ostrm<<s;
+  std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
   for (int i=0; fit != facemap_.end(); fit++, i++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*fit).second;
-    vcl_sprintf (s, " %d", FF->id()); ostrm<<s;
+    std::sprintf (s, " %d", FF->id()); ostrm<<s;
     if (i > MAX_ELMS_INFO) {
-      vcl_sprintf (s, " ..."); ostrm<<s;
+      std::sprintf (s, " ..."); ostrm<<s;
       break;
     }
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 
   //asso. generators.
-  vcl_map<int, dbmsh3d_vertex*> asso_Gs;
+  std::map<int, dbmsh3d_vertex*> asso_Gs;
   get_asso_Gs (asso_Gs);
-  vcl_sprintf (s, "# asso_Gs %u:", asso_Gs.size()); ostrm<<s;
-  vcl_map<int, dbmsh3d_vertex*>::iterator git = asso_Gs.begin();
+  std::sprintf (s, "# asso_Gs %u:", asso_Gs.size()); ostrm<<s;
+  std::map<int, dbmsh3d_vertex*>::iterator git = asso_Gs.begin();
   for (int i=0; git != asso_Gs.end(); git++, i++) {
     dbmsh3d_vertex* G = (*git).second;
-    vcl_sprintf (s, " %d", G->id()); ostrm<<s;
+    std::sprintf (s, " %d", G->id()); ostrm<<s;
     if (i > MAX_ELMS_INFO) {
-      vcl_sprintf (s, " ...");
+      std::sprintf (s, " ...");
       break;
     }
   }
-  vcl_sprintf (s, "\n\n"); ostrm<<s;
+  std::sprintf (s, "\n\n"); ostrm<<s;
 
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 //###############################################################
 //       dbsk3d_ms_sheet TEXT FILE I/O FUNCTIONS
 //###############################################################
 
-void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
+void ms_save_text_file (std::FILE* fp, dbsk3d_ms_sheet* MS)
 {
   dbmsh3d_ptr_node* cur;
-  vcl_fprintf (fp, " %d:\n", MS->id());
+  std::fprintf (fp, " %d:\n", MS->id());
 
   //1) Output the boundary chain of halfedges.
   unsigned int n_bnd_he = MS->n_bnd_Es ();
-  vcl_fprintf (fp, "\tbnd_curves %u:", n_bnd_he);
+  std::fprintf (fp, "\tbnd_curves %u:", n_bnd_he);
 
   //Avoid duplicate incidence of S-E by checking the pre HE.
   dbmsh3d_halfedge* preHE = NULL;
@@ -606,13 +606,13 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
     const dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) HE->edge();
       
     if (MC->c_type() == C_TYPE_RIB)
-      vcl_fprintf (fp, " R%d", MC->id());
+      std::fprintf (fp, " R%d", MC->id());
     else if (MC->c_type() == C_TYPE_AXIAL)
-      vcl_fprintf (fp, " A%d", MC->id());
+      std::fprintf (fp, " A%d", MC->id());
     else if (MC->c_type() == C_TYPE_DEGE_AXIAL)
-      vcl_fprintf (fp, " D%d", MC->id());
+      std::fprintf (fp, " D%d", MC->id());
     else {
-      vul_printf (vcl_cout, " ERROR");
+      vul_printf (std::cout, " ERROR");
       assert (0);
     }
 
@@ -620,11 +620,11 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
     HE = HE->next();
   }
   while (HE != MS->halfedge() && HE != NULL);
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
 
   //2) Output each chain of icurve (2-incident break curve).  
   unsigned int n_ICpairs = MS->n_IC_pairs();
-  vcl_fprintf (fp, "\ti_curve_pairs %u:", n_ICpairs);
+  std::fprintf (fp, "\ti_curve_pairs %u:", n_ICpairs);
 
   unsigned int count = 0;
   for (cur = MS->icurve_chain_list(); cur != NULL; cur = cur->next()) {
@@ -634,21 +634,21 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
 
     const dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) headHE->edge();
     if (MC->c_type() == C_TYPE_AXIAL)
-      vcl_fprintf (fp, " A%d", MC->id());
+      std::fprintf (fp, " A%d", MC->id());
     else if (MC->c_type() == C_TYPE_DEGE_AXIAL)
-      vcl_fprintf (fp, " D%d", MC->id());
+      std::fprintf (fp, " D%d", MC->id());
     else {
-      vul_printf (vcl_cout, " ERROR");
+      vul_printf (std::cout, " ERROR");
       assert (0);
     }
     count++;
   }
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
   assert (count == n_ICpairs);
 
   //3) Output each icurve loop (1-incident)
   unsigned int n_ICloops = MS->n_IC_loops();
-  vcl_fprintf (fp, "\ti_curve_loops %u:", n_ICloops);
+  std::fprintf (fp, "\ti_curve_loops %u:", n_ICloops);
 
   count = 0;
   for (cur = MS->icurve_chain_list(); cur != NULL; cur = cur->next()) {
@@ -657,7 +657,7 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
       continue;
 
     unsigned int n_loop = count_HEs_in_next_loop (headHE);
-    vcl_fprintf (fp, " %u:", n_loop);
+    std::fprintf (fp, " %u:", n_loop);
 
     unsigned int count_loop = 0;
     assert (headHE != NULL);
@@ -665,13 +665,13 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
     do {
       const dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) HE->edge();
       if (MC->c_type() == C_TYPE_RIB)
-        vcl_fprintf (fp, " R%d", MC->id());
+        std::fprintf (fp, " R%d", MC->id());
       else if (MC->c_type() == C_TYPE_AXIAL)
-        vcl_fprintf (fp, " A%d", MC->id());
+        std::fprintf (fp, " A%d", MC->id());
       else if (MC->c_type() == C_TYPE_DEGE_AXIAL)
-        vcl_fprintf (fp, " D%d", MC->id());
+        std::fprintf (fp, " D%d", MC->id());
       else {
-        vul_printf (vcl_cout, " ERROR, ");
+        vul_printf (std::cout, " ERROR, ");
         assert (0);
       }
       HE = HE->next();
@@ -681,74 +681,74 @@ void ms_save_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS)
     assert (count_loop == n_loop);
     count++;
   }
-  vcl_fprintf(fp, "\n");
+  std::fprintf(fp, "\n");
   assert (count == n_ICloops);
 
   //4) Output each fs_faces
-  vcl_fprintf (fp, "\tface_elms %u:", MS->facemap().size());
-  vcl_map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
+  std::fprintf (fp, "\tface_elms %u:", MS->facemap().size());
+  std::map<int, dbmsh3d_face*>::iterator it = MS->facemap().begin();
     for (; it != MS->facemap().end(); it++) {
       dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*it).second;
-    vcl_fprintf (fp, " %d", FF->id());
+    std::fprintf (fp, " %d", FF->id());
   }
-  vcl_fprintf (fp, "\n");
+  std::fprintf (fp, "\n");
 
   //5) Write shared face elements.
   int n_shared_Fs = MS->n_shared_Fs();
-  vcl_fprintf (fp, "\tshared_F %d:", n_shared_Fs);
+  std::fprintf (fp, "\tshared_F %d:", n_shared_Fs);
   for (dbmsh3d_ptr_node* cur = MS->shared_F_list(); cur != NULL; cur = cur->next()) {
     dbmsh3d_face* F = (dbmsh3d_face*) cur->ptr();
-    vcl_fprintf (fp, " %d", F->id());
+    std::fprintf (fp, " %d", F->id());
   }
-  vcl_fprintf (fp, "\n");
+  std::fprintf (fp, "\n");
 }
 
-void ms_load_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS,
+void ms_load_text_file (std::FILE* fp, dbsk3d_ms_sheet* MS,
                         dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_hypg* ms_hypg)
 {
   int id;
   char type;
-  vcl_fscanf (fp, " %d:\n", &id);
+  std::fscanf (fp, " %d:\n", &id);
   MS->set_id (id);
 
   //1) Read the bounary chain of halfedges.
   unsigned int nSC;
-  vcl_fscanf (fp, "\tbnd_curves %u:", &nSC);
+  std::fscanf (fp, "\tbnd_curves %u:", &nSC);
 
   for (unsigned int i=0; i<nSC; i++) {
-    vcl_fscanf (fp, " %c%d", &type, &id);
+    std::fscanf (fp, " %c%d", &type, &id);
 
     //Recover the connectivity.
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) ms_hypg->edgemap(id);
     assert (MC->c_type() == type);
     MS->connect_bnd_E_end (MC);
   }
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
 
   //2) Read each chain of icurve.
   unsigned int n_ICpairs;
-  vcl_fscanf (fp, "\ti_curve_pairs %u:", &n_ICpairs);
+  std::fscanf (fp, "\ti_curve_pairs %u:", &n_ICpairs);
 
   for (unsigned int i=0; i<n_ICpairs; i++) {
-    vcl_fscanf (fp, " %c%d", &type, &id);
+    std::fscanf (fp, " %c%d", &type, &id);
 
     //Recover the connectivity.
     dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) ms_hypg->edgemap(id);
     assert (MC->c_type() == type);
     MS->connect_icurve_pair_E (MC);
   }
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
   
   //3) Read each icurve loop (1-incident)
   unsigned int n_ICloops;
-  vcl_fscanf (fp, "\ti_curve_loops %u:", &n_ICloops);
+  std::fscanf (fp, "\ti_curve_loops %u:", &n_ICloops);
 
   for (unsigned int i=0; i<n_ICloops; i++) {
     unsigned int n;
-    vcl_fscanf (fp, " %u:", &n);
-    vcl_vector<dbmsh3d_edge*> icurve_loop_Es;
+    std::fscanf (fp, " %u:", &n);
+    std::vector<dbmsh3d_edge*> icurve_loop_Es;
     for (unsigned int j=0; j<n; j++) {
-      vcl_fscanf (fp, " %c%d", &type, &id);
+      std::fscanf (fp, " %c%d", &type, &id);
       //Recover the connectivity.
       dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) ms_hypg->edgemap(id);
       assert (MC->c_type() == type);
@@ -756,30 +756,30 @@ void ms_load_text_file (vcl_FILE* fp, dbsk3d_ms_sheet* MS,
     }
     MS->connect_icurve_loop_Es (icurve_loop_Es);    
   }
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
   assert (MS->n_icurve_chains() == n_ICpairs + n_ICloops);
 
 
   //4) Read each fs_faces
   int nP;
-  vcl_fscanf (fp, "\tface_elms %d:", &nP);
+  std::fscanf (fp, "\tface_elms %d:", &nP);
   for (int i=0; i<nP; i++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) fs_mesh->facemap(id);
     assert (FF->id() == id);
     MS->add_F (FF);
   }
-  vcl_fscanf(fp, "\n");
+  std::fscanf(fp, "\n");
   
   //5) Read shared face elements.
   int n_shared_Fs;
-  vcl_fscanf (fp, "\tshared_F %d:", &n_shared_Fs);
+  std::fscanf (fp, "\tshared_F %d:", &n_shared_Fs);
   for (int j=0; j<n_shared_Fs; j++) {
-    vcl_fscanf (fp, " %d", &id);
+    std::fscanf (fp, " %d", &id);
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) fs_mesh->facemap(id);
     MS->add_shared_F (FF);
   }  
-  vcl_fscanf (fp, "\n");
+  std::fscanf (fp, "\n");
 
   //Avoid MS->halfedge to be on the 3-incidence edges.
   fix_headHE_3_incidence (MS->halfedge());
@@ -828,9 +828,9 @@ int n_incidence_MC_MS (const dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS)
 }
 
 //: Merge a boundary loop (created during tracing) to the main boundary halfedge chain.
-bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const vcl_vector<dbmsh3d_edge*>& loop_bnd_Es)
+bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const std::vector<dbmsh3d_edge*>& loop_bnd_Es)
 {
-  vul_printf (vcl_cout, "    _insert_bnd_loop(): MS %d, loop_bnd_Es (%d edges).\n",
+  vul_printf (std::cout, "    _insert_bnd_loop(): MS %d, loop_bnd_Es (%d edges).\n",
               MS->id(), loop_bnd_Es.size());
   bool result = _verify_loop_bnd_Es (loop_bnd_Es);
   assert (result);
@@ -853,16 +853,16 @@ bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const vcl_vector<dbmsh3d_edge*>& loo
       //No need to use Es_sharing_V_check().
     }
     if (Vc==NULL)
-      vul_printf (vcl_cout, "V ERROR, ");
+      vul_printf (std::cout, "V ERROR, ");
     assert (Vc);
 
     //Find Vc in loop_bnd_Es, re-order it into reordered_Es[].
-    vcl_vector<dbmsh3d_edge*> reordered_Es;
+    std::vector<dbmsh3d_edge*> reordered_Es;
     result = _find_V_reorder_Es (Vc, loop_bnd_Es, reordered_Es);
 
     if (result) { //If Vc is found, perform the merging of this loop.
       #if DBMSH3D_DEBUG > 3
-      vul_printf (vcl_cout, "    insert edge into: V%d E%d V%d ...... V%d E%d V%d.\n\t", 
+      vul_printf (std::cout, "    insert edge into: V%d E%d V%d ...... V%d E%d V%d.\n\t", 
                   HE->edge()->other_V(Vc)->id(), HE->edge()->id(), Vc->id(), 
                   Vc->id(), nextHE->edge()->id(), nextHE->edge()->other_V(Vc)->id());
       #endif
@@ -871,7 +871,7 @@ bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const vcl_vector<dbmsh3d_edge*>& loo
       for (unsigned int i=0; i<reordered_Es.size(); i++) {   
         dbsk3d_ms_curve* MC = (dbsk3d_ms_curve*) reordered_Es[i];
         #if DBMSH3D_DEBUG > 3
-        vul_printf (vcl_cout, "E%d ", MC->id());
+        vul_printf (std::cout, "E%d ", MC->id());
         #endif
 
         assert (Es_sharing_V (iHE->edge(), MC));
@@ -896,7 +896,7 @@ bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const vcl_vector<dbmsh3d_edge*>& loo
           iHE = he3;          
         }
         else {
-          vul_printf (vcl_cout, "ERROR, ");
+          vul_printf (std::cout, "ERROR, ");
           assert (0);        
         }
       }
@@ -904,7 +904,7 @@ bool _insert_bnd_loop (dbsk3d_ms_sheet* MS, const vcl_vector<dbmsh3d_edge*>& loo
       assert (iHE->edge()->is_V_incident (Vc));
       assert (nextHE->edge()->is_V_incident (Vc));
       #if DBMSH3D_DEBUG > 3
-      vul_printf (vcl_cout, "\n");
+      vul_printf (std::cout, "\n");
       #endif
       return true;
     }    

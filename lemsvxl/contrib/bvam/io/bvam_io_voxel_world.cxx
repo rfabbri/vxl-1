@@ -23,7 +23,7 @@ void vsl_b_read(vsl_b_istream & is, bvam_voxel_world &world)
 }
 
 
-void vsl_print_summary(vcl_ostream &os, const bvam_voxel_world &world)
+void vsl_print_summary(std::ostream &os, const bvam_voxel_world &world)
 {
   bvam_world_params_sptr params = world.get_params();
   os << *params;
@@ -57,7 +57,7 @@ void vsl_b_read(vsl_b_istream& is, bvam_voxel_world* p)
    }
  }
 
- void vsl_print_summary(vcl_ostream& os, const bvam_voxel_world* &p)
+ void vsl_print_summary(std::ostream& os, const bvam_voxel_world* &p)
  {
    if (p==0)
      os << "NULL PTR";

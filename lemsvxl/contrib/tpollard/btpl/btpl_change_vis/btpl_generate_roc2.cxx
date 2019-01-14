@@ -1,8 +1,8 @@
-#include <vcl_string.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
-#include <vcl_sstream.h>
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include <sstream>
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_stream_fstream.h>
@@ -28,18 +28,18 @@
 
 int main()
 {
-  vcl_string true_dir = "d:/results/baghdad/roc/true";
-  vcl_string detection_dir = "d:\\results/baghdad/roc/mmog1";
-  vcl_ofstream roc_stream("d:\\results/baghdad/roc/roc_mmog1.txt");
+  std::string true_dir = "d:/results/baghdad/roc/true";
+  std::string detection_dir = "d:\\results/baghdad/roc/mmog1";
+  std::ofstream roc_stream("d:\\results/baghdad/roc/roc_mmog1.txt");
 
-  vcl_map<vcl_string, vcl_vector<vcl_string>> image_names;
-  vcl_vector<float> thresh;
+  std::map<std::string, std::vector<std::string>> image_names;
+  std::vector<float> thresh;
   for (unsigned p = 0; p < 1000; p= p+25)
     thresh.push_back(float(float(p)/1000));
   //...
 
   //iterate through scenes 
-  vcl_vector<vcl_string> scenes;
+  std::vector<std::string> scenes;
   scenes.push_back("hiafa");
   scenes.push_back("embassy");
   scenes.push_back("karkh");
@@ -47,8 +47,8 @@ int main()
   for (unsigned s= 0; s<scenes.size(); s++)
   {
 
-    vcl_string scan_dir = detection_dir + "\\" + scenes[s];
-    vcl_vector<vcl_string> names;
+    std::string scan_dir = detection_dir + "\\" + scenes[s];
+    std::vector<std::string> names;
 
     //iterate through changes dir, get all image names that we need to process
     for( vul_file_iterator fit = (scan_dir + "/*.*"); fit; ++fit ){
@@ -56,9 +56,9 @@ int main()
      
       if( vul_file::is_directory(fit()) )
         continue;
-      vcl_string image_name = fit();
+      std::string image_name = fit();
 
-      vcl_string file_ext = vul_file::extension(fit());
+      std::string file_ext = vul_file::extension(fit());
 
       //get extension
       if( file_ext !=  ".jpg" && file_ext != ".png" )
@@ -67,7 +67,7 @@ int main()
       names.push_back(vul_file::basename(fit()));
 
     }
-    image_names.insert(vcl_make_pair( scenes[s], names));
+    image_names.insert(std::make_pair( scenes[s], names));
   }
 
 
@@ -75,26 +75,26 @@ int main()
   //iterate through all threshold for each image
   for (unsigned n = 0; n< thresh.size(); n++)
   {
-    vcl_cerr << n << ' ';
+    std::cerr << n << ' ';
 
     unsigned long change_marked_change = 0;
     unsigned long change_marked_nonchange = 0;
     unsigned long nonchange_marked_nonchange = 0;
     unsigned long nonchange_marked_change = 0;
 
-    for (vcl_map<vcl_string, vcl_vector<vcl_string>>::iterator mip = image_names.begin();
+    for (std::map<std::string, std::vector<std::string>>::iterator mip = image_names.begin();
       mip != image_names.end(); mip++)
     {
 
-      vcl_string true_change_dir = true_dir + "\\" + mip->first;
-      vcl_string detected_changes_dir = detection_dir + "\\"  + mip->first;
+      std::string true_change_dir = true_dir + "\\" + mip->first;
+      std::string detected_changes_dir = detection_dir + "\\"  + mip->first;
 
-      vcl_vector<vcl_string> names = mip->second;
+      std::vector<std::string> names = mip->second;
 
-      for (vcl_vector<vcl_string>::iterator vit = names.begin(); vit !=names.end(); vit++)
+      for (std::vector<std::string>::iterator vit = names.begin(); vit !=names.end(); vit++)
       {
         
-        vcl_string prob_image = detected_changes_dir + "\\" + *vit;
+        std::string prob_image = detected_changes_dir + "\\" + *vit;
         //Read image containing probabilistic changes
         vil_image_view<vxl_byte> prob_change = vil_load( prob_image.c_str() ); 
 
@@ -102,7 +102,7 @@ int main()
         unsigned image_width = prob_change.ni();
 
         //Read image containing true changes
-        vcl_string true_change_file =  true_change_dir + "\\" + *vit;
+        std::string true_change_file =  true_change_dir + "\\" + *vit;
         true_change_file = vul_file::strip_extension( true_change_file );
         true_change_file += ".jpg";
         vil_image_view<vxl_byte> true_change = 
@@ -141,9 +141,9 @@ int main()
         }
 
         //save image: for debugging purpouses
-        //vcl_stringstream img_out_ss;
+        //std::stringstream img_out_ss;
         //img_out_ss << vul_file::strip_extension(fit()) <<'_' <<1<< ".png";
-        //vcl_string img_out = img_out_ss.str();
+        //std::string img_out = img_out_ss.str();
         //vil_save( detected_change, img_out.c_str()  );
       }
     }
@@ -155,6 +155,6 @@ int main()
       (double)(nonchange_marked_change+nonchange_marked_nonchange);
     roc_stream << percent_change_marked_change << "\t" <<
       percent_nonchange_marked_change << '\n';
-    vcl_cerr << '\n';
+    std::cerr << '\n';
   }
 }

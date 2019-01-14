@@ -42,15 +42,15 @@
 
 
 //: also prepares the command file
-bool prepare_param_files(vcl_string input_file_xml, vcl_string output_prefix, float min_val, float inc, float max_value)
+bool prepare_param_files(std::string input_file_xml, std::string output_prefix, float min_val, float inc, float max_value)
 {
   if (input_file_xml.compare("") == 0) {
-    vcl_cout << "input_file_xml not specified\n";
+    std::cout << "input_file_xml not specified\n";
     return false;
   }
 
   if (output_prefix.compare("") == 0) {
-    vcl_cout << "output_prefix not specified\n";
+    std::cout << "output_prefix not specified\n";
     return false;
   }
 
@@ -58,29 +58,29 @@ bool prepare_param_files(vcl_string input_file_xml, vcl_string output_prefix, fl
   params.input_param_filename_ = input_file_xml;
 
   if (!params.parse_input_xml()) {
-    vcl_cout << "could not parse file: " << params.input_param_filename_ << vcl_endl;
+    std::cout << "could not parse file: " << params.input_param_filename_ << std::endl;
     return false;
   }
 
-  vcl_ofstream of((output_prefix + "command.out").c_str());
+  std::ofstream of((output_prefix + "command.out").c_str());
   if (!of) {
-    vcl_cout << "cannot open file: " << output_prefix + "command.out" << vcl_endl;
+    std::cout << "cannot open file: " << output_prefix + "command.out" << std::endl;
     return false;
   }
-  vcl_string evaluation_file_base = params.evaluation_file();
+  std::string evaluation_file_base = params.evaluation_file();
 
-  vcl_string command_initial = "mpirun -np 42 -machinefile /vision/projects/kimia/categorization/99-db/orl-exps/hosts -nolocal";
+  std::string command_initial = "mpirun -np 42 -machinefile /vision/projects/kimia/categorization/99-db/orl-exps/hosts -nolocal";
   command_initial = command_initial + " /share/apps/lemsvxlnew/release/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match -x ";
   for (float thres = min_val; thres <= max_value; thres += inc) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << thres;
 
     params.detection_params_.sim_threshold_ = thres;
     params.evaluation_file = evaluation_file_base + "_" + ss.str() + ".xml";
     
-    vcl_string xml_name = output_prefix + ss.str() + ".xml";
+    std::string xml_name = output_prefix + ss.str() + ".xml";
     params.print_input_xml(xml_name);
-    of << command_initial + xml_name << vcl_endl;
+    of << command_initial + xml_name << std::endl;
   }
 
   of.close();
@@ -88,20 +88,20 @@ bool prepare_param_files(vcl_string input_file_xml, vcl_string output_prefix, fl
   return true;
 }
 
-bool prepare_param_files2(vcl_string input_file_xml, vcl_string output_prefix, float min_val, float inc, float max_value, int processor_cnt)
+bool prepare_param_files2(std::string input_file_xml, std::string output_prefix, float min_val, float inc, float max_value, int processor_cnt)
 {
   if (input_file_xml.compare("") == 0) {
-    vcl_cout << "input_file_xml not specified\n";
+    std::cout << "input_file_xml not specified\n";
     return false;
   }
 
   if (output_prefix.compare("") == 0) {
-    vcl_cout << "output_prefix not specified\n";
+    std::cout << "output_prefix not specified\n";
     return false;
   }
 
   if (processor_cnt < 0) {
-    vcl_cout << "np not specified\n";
+    std::cout << "np not specified\n";
     return false;
   }
 
@@ -109,40 +109,40 @@ bool prepare_param_files2(vcl_string input_file_xml, vcl_string output_prefix, f
   params.input_param_filename_ = input_file_xml;
 
   if (!params.parse_input_xml()) {
-    vcl_cout << "could not parse file: " << params.input_param_filename_ << vcl_endl;
+    std::cout << "could not parse file: " << params.input_param_filename_ << std::endl;
     return false;
   }
 
-  vcl_ofstream of((output_prefix + "command.out").c_str());
+  std::ofstream of((output_prefix + "command.out").c_str());
   if (!of) {
-    vcl_cout << "cannot open file: " << output_prefix + "command.out" << vcl_endl;
+    std::cout << "cannot open file: " << output_prefix + "command.out" << std::endl;
     return false;
   }
-  vcl_string evaluation_file_base = params.evaluation_file();
+  std::string evaluation_file_base = params.evaluation_file();
 
-  vcl_stringstream np;
+  std::stringstream np;
   np << processor_cnt;
 
-  vcl_string command_initial = "mpirun -np " + np.str() + " -machinefile /vision/projects/kimia/categorization/99-db/orl-exps/hosts -nolocal";
+  std::string command_initial = "mpirun -np " + np.str() + " -machinefile /vision/projects/kimia/categorization/99-db/orl-exps/hosts -nolocal";
   command_initial = command_initial + " /share/apps/lemsvxlnew/release/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match -x ";
   for (float thres = min_val; thres <= max_value; thres += inc) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << thres;
 
     params.detection_params_.sim_threshold_ = thres;
     params.evaluation_file = evaluation_file_base + "_" + ss.str() + ".xml";
     
-    vcl_string xml_name = output_prefix + ss.str() + ".xml";
+    std::string xml_name = output_prefix + ss.str() + ".xml";
     params.print_input_xml(xml_name);
     int total = 99*10;
-    int times = (int)vcl_ceil((float)total/processor_cnt);
-    vcl_cout << "total 990 and there are: " << processor_cnt << " processors so will run it: " << times << " times\n";
+    int times = (int)std::ceil((float)total/processor_cnt);
+    std::cout << "total 990 and there are: " << processor_cnt << " processors so will run it: " << times << " times\n";
     for (int i = 0; i < times; i++)
-      of << command_initial + xml_name << vcl_endl;
+      of << command_initial + xml_name << std::endl;
     
     params.compute_one_per_computer_ = false;
-    vcl_string xml_name2 = output_prefix + ss.str() + "_final.xml";
-    of << command_initial + xml_name2 << vcl_endl;
+    std::string xml_name2 = output_prefix + ss.str() + "_final.xml";
+    of << command_initial + xml_name2 << std::endl;
     params.print_input_xml(xml_name2);
   }
 
@@ -151,65 +151,65 @@ bool prepare_param_files2(vcl_string input_file_xml, vcl_string output_prefix, f
   return true;
 }
 
-bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_string legend_file, vcl_string plot_type, float min_val, float inc, float max_value)
+bool prepare_plot(std::string input_file_prefix, std::string output_file, std::string legend_file, std::string plot_type, float min_val, float inc, float max_value)
 {
   if (input_file_prefix.compare("") == 0) {
-    vcl_cout << "input_file_xml not specified\n";
+    std::cout << "input_file_xml not specified\n";
     return false;
   }
 
   if (output_file.compare("") == 0) {
-    vcl_cout << "output_prefix not specified\n";
+    std::cout << "output_prefix not specified\n";
     return false;
   }
 
   if (legend_file.compare("") == 0) {
-    vcl_cout << "legend_file not specified\n";
+    std::cout << "legend_file not specified\n";
     return false;
   }
 
   if (plot_type.compare("") == 0) {
-    vcl_cout << "plot_type not specified\n";
+    std::cout << "plot_type not specified\n";
     return false;
   }
 
-  vcl_vector<vcl_string> legends;
+  std::vector<std::string> legends;
   if (!parse_lines_from_file(legend_file, legends))
     return false;
 
-  vcl_vector<dborl_exp_stat_sptr> tmp;
-  vcl_vector<vcl_vector<dborl_exp_stat_sptr> > legend_stats(legends.size(), tmp);
+  std::vector<dborl_exp_stat_sptr> tmp;
+  std::vector<std::vector<dborl_exp_stat_sptr> > legend_stats(legends.size(), tmp);
 
-  //vcl_string input_files = input_file_prefix + "*.xml";
+  //std::string input_files = input_file_prefix + "*.xml";
   //for (vul_file_iterator fi(input_files); fi; ++fi)
   for (float thres = min_val; thres <= max_value; thres += inc) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << thres;
 
-    vcl_string input_file = input_file_prefix + ss.str() + ".xml";
-    vcl_cout << "will parse: " << input_file << vcl_endl;
+    std::string input_file = input_file_prefix + ss.str() + ".xml";
+    std::cout << "will parse: " << input_file << std::endl;
     if (!vul_file::exists(input_file)) {
-      vcl_cout << " does not exist!!\n";
+      std::cout << " does not exist!!\n";
       continue;
     }
 
-    vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
-    vcl_string algo_name;
+    std::map<std::string, dborl_exp_stat_sptr> category_statistics;
+    std::string algo_name;
     
     if (!parse_evaluation_file(input_file, category_statistics, algo_name)) {
-      vcl_cout << "problems in parsing: " << input_file << vcl_endl;
+      std::cout << "problems in parsing: " << input_file << std::endl;
       return false;
     }
-    vcl_cout << "parsed: " << input_file << vcl_endl;
-    for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
-      vcl_cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << vcl_endl;
+    std::cout << "parsed: " << input_file << std::endl;
+    for (std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
+      std::cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << std::endl;
     }
 
     //: find the stats of each legend
     for (unsigned i = 0; i < legends.size(); i++) {
-      vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
+      std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
       if (it != category_statistics.end()) {
-        //vcl_cout << "found: " << legends[i] << vcl_endl;
+        //std::cout << "found: " << legends[i] << std::endl;
         it->second->update_positive_count();
         it->second->update_negative_count();  // makes sense in categorization where FP + TN actually equals N-
         legend_stats[i].push_back(it->second);
@@ -218,39 +218,39 @@ bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_stri
 
   }
 
-  vcl_ofstream of(output_file.c_str());
+  std::ofstream of(output_file.c_str());
   if (!of)
     return false;
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    of << legends[i] << vcl_endl;
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    of << legends[i] << std::endl;
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
     if (plot_type.compare("roc") == 0) {
       dborl_evaluation_print_ROC_data(tmp, of);
-      of << "ROC EER:\n" << dborl_evaluation_ROC_EER(tmp) << vcl_endl;
+      of << "ROC EER:\n" << dborl_evaluation_ROC_EER(tmp) << std::endl;
     } else if (plot_type.compare("prc") == 0) {
       dborl_evaluation_print_PRC_data(tmp, of);
-      of << "PRC EER:\n" << dborl_evaluation_PRC_EER(tmp) << vcl_endl;
+      of << "PRC EER:\n" << dborl_evaluation_PRC_EER(tmp) << std::endl;
     } else if (plot_type.compare("rpc") == 0) {
       dborl_evaluation_print_RPC_data(tmp, of);
-      of << "RPC EER:\n" << dborl_evaluation_RPC_EER(tmp) << vcl_endl;
+      of << "RPC EER:\n" << dborl_evaluation_RPC_EER(tmp) << std::endl;
     } else {
-      vcl_cout << "unknown plot type!!\n";
+      std::cout << "unknown plot type!!\n";
       of.close();
       return false;
     }
-    //vcl_cout << legends[i] << " " << tmp[0]->TP_ << " " << tmp[0]->FP_ << " " << tmp[0]->TN_ << " " << tmp[0]->FN_ << vcl_endl;
+    //std::cout << legends[i] << " " << tmp[0]->TP_ << " " << tmp[0]->FP_ << " " << tmp[0]->TN_ << " " << tmp[0]->FN_ << std::endl;
   }
   
   of.close();
 
-  vcl_string no_ext = vul_file::strip_extension(output_file.c_str());
+  std::string no_ext = vul_file::strip_extension(output_file.c_str());
 
-  vcl_ofstream of2((no_ext + ".m").c_str());
+  std::ofstream of2((no_ext + ".m").c_str());
   if (!of2)
     return false;
 
@@ -258,12 +258,12 @@ bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_stri
   of2 << "set(gcf,'Color',[1,1,1]);\n";  // set figure background to white
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
-    vcl_vector<float> xs, ys;
+    std::vector<float> xs, ys;
     dborl_evaluation_get_ROC_data(tmp, xs, ys);
     float eer = dborl_evaluation_ROC_EER(tmp);
     of2 << "x = [";
@@ -288,12 +288,12 @@ bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_stri
   of2 << "set(gcf,'Color',[1,1,1]);\n";  // set figure background to white
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
-    vcl_vector<float> xs, ys;
+    std::vector<float> xs, ys;
     dborl_evaluation_get_PRC_data(tmp, xs, ys);
     float eer = dborl_evaluation_PRC_EER(tmp);
 
@@ -321,70 +321,70 @@ bool prepare_plot(vcl_string input_file_prefix, vcl_string output_file, vcl_stri
   return true;
 }
 
-bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, vcl_string output_file, vcl_string legend_file, vcl_string plot_type, float min_val, float inc, float max_value)
+bool prepare_plot2(std::string input_file_prefix, std::string input_file_prefix2, std::string output_file, std::string legend_file, std::string plot_type, float min_val, float inc, float max_value)
 {
   if (input_file_prefix.compare("") == 0) {
-    vcl_cout << "input_file_xml not specified\n";
+    std::cout << "input_file_xml not specified\n";
     return false;
   }
 
   if (input_file_prefix2.compare("") == 0) {
-    vcl_cout << "input_file_xml not specified\n";
+    std::cout << "input_file_xml not specified\n";
     return false;
   }
 
   if (output_file.compare("") == 0) {
-    vcl_cout << "output_prefix not specified\n";
+    std::cout << "output_prefix not specified\n";
     return false;
   }
 
   if (legend_file.compare("") == 0) {
-    vcl_cout << "legend_file not specified\n";
+    std::cout << "legend_file not specified\n";
     return false;
   }
 
   if (plot_type.compare("") == 0) {
-    vcl_cout << "plot_type not specified\n";
+    std::cout << "plot_type not specified\n";
     return false;
   }
 
-  vcl_vector<vcl_string> legends;
+  std::vector<std::string> legends;
   if (!parse_lines_from_file(legend_file, legends))
     return false;
 
-  vcl_vector<dborl_exp_stat_sptr> tmp;
-  vcl_vector<vcl_vector<dborl_exp_stat_sptr> > legend_stats(legends.size(), tmp);
+  std::vector<dborl_exp_stat_sptr> tmp;
+  std::vector<std::vector<dborl_exp_stat_sptr> > legend_stats(legends.size(), tmp);
 
-  //vcl_string input_files = input_file_prefix + "*.xml";
+  //std::string input_files = input_file_prefix + "*.xml";
   //for (vul_file_iterator fi(input_files); fi; ++fi)
   for (float thres = min_val; thres <= max_value; thres += inc) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << thres;
 
-    vcl_string input_file = input_file_prefix + ss.str() + ".xml";
-    vcl_cout << "will parse: " << input_file << vcl_endl;
+    std::string input_file = input_file_prefix + ss.str() + ".xml";
+    std::cout << "will parse: " << input_file << std::endl;
     if (!vul_file::exists(input_file)) {
-      vcl_cout << " does not exist!!\n";
+      std::cout << " does not exist!!\n";
       continue;
     }
 
-    vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
-    vcl_string algo_name;
+    std::map<std::string, dborl_exp_stat_sptr> category_statistics;
+    std::string algo_name;
     
     if (!parse_evaluation_file(input_file, category_statistics, algo_name)) {
-      vcl_cout << "problems in parsing: " << input_file << vcl_endl;
+      std::cout << "problems in parsing: " << input_file << std::endl;
       return false;
     }
-    vcl_cout << "parsed: " << input_file << vcl_endl;
-    for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
-      vcl_cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << vcl_endl;
+    std::cout << "parsed: " << input_file << std::endl;
+    for (std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
+      std::cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << std::endl;
     }
 
     //: find the stats of each legend
     for (unsigned i = 0; i < legends.size(); i++) {
-      vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
+      std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
       if (it != category_statistics.end()) {
-        //vcl_cout << "found: " << legends[i] << vcl_endl;
+        //std::cout << "found: " << legends[i] << std::endl;
         it->second->update_positive_count();
         it->second->update_negative_count();  // makes sense in categorization where FP + TN actually equals N-
         legend_stats[i].push_back(it->second);
@@ -395,33 +395,33 @@ bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, 
 
   unsigned cnt = 0;
   for (float thres = min_val; thres <= max_value; thres += inc, cnt++) {
-    vcl_stringstream ss;
+    std::stringstream ss;
     ss << thres;
 
-    vcl_string input_file2 = input_file_prefix2 + ss.str() + ".xml";
-    vcl_cout << "will parse: " << input_file2 << vcl_endl;
+    std::string input_file2 = input_file_prefix2 + ss.str() + ".xml";
+    std::cout << "will parse: " << input_file2 << std::endl;
     if (!vul_file::exists(input_file2)) {
-      vcl_cout << " does not exist!!\n";
+      std::cout << " does not exist!!\n";
       continue;
     }
 
-    vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
-    vcl_string algo_name;
+    std::map<std::string, dborl_exp_stat_sptr> category_statistics;
+    std::string algo_name;
     
     if (!parse_evaluation_file(input_file2, category_statistics, algo_name)) {
-      vcl_cout << "problems in parsing: " << input_file2 << vcl_endl;
+      std::cout << "problems in parsing: " << input_file2 << std::endl;
       return false;
     }
-    vcl_cout << "parsed: " << input_file2 << vcl_endl;
-    for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
-      vcl_cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << vcl_endl;
+    std::cout << "parsed: " << input_file2 << std::endl;
+    for (std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.begin(); it != category_statistics.end(); it++) {
+      std::cout << it->first << " " << (it->second)->TP_ << " " << (it->second)->FP_ << " " << (it->second)->TN_ << " " << (it->second)->FN_ << std::endl;
     }
 
     //: find the stats of each legend
     for (unsigned i = 0; i < legends.size(); i++) {
-      vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
+      std::map<std::string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(legends[i]);
       if (it != category_statistics.end()) {
-        //vcl_cout << "found: " << legends[i] << vcl_endl;
+        //std::cout << "found: " << legends[i] << std::endl;
         legend_stats[i][cnt]->increment_TP_by(it->second->TP_);
         legend_stats[i][cnt]->increment_FP_by(it->second->FP_);
         legend_stats[i][cnt]->increment_TN_by(it->second->TN_);
@@ -433,39 +433,39 @@ bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, 
 
   }
 
-  vcl_ofstream of(output_file.c_str());
+  std::ofstream of(output_file.c_str());
   if (!of)
     return false;
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    of << legends[i] << vcl_endl;
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    of << legends[i] << std::endl;
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
     if (plot_type.compare("roc") == 0) {
       dborl_evaluation_print_ROC_data(tmp, of);
-      of << "ROC EER:\n" << dborl_evaluation_ROC_EER(tmp) << vcl_endl;
+      of << "ROC EER:\n" << dborl_evaluation_ROC_EER(tmp) << std::endl;
     } else if (plot_type.compare("prc") == 0) {
       dborl_evaluation_print_PRC_data(tmp, of);
-      of << "PRC EER:\n" << dborl_evaluation_PRC_EER(tmp) << vcl_endl;
+      of << "PRC EER:\n" << dborl_evaluation_PRC_EER(tmp) << std::endl;
     } else if (plot_type.compare("rpc") == 0) {
       dborl_evaluation_print_RPC_data(tmp, of);
-      of << "RPC EER:\n" << dborl_evaluation_RPC_EER(tmp) << vcl_endl;
+      of << "RPC EER:\n" << dborl_evaluation_RPC_EER(tmp) << std::endl;
     } else {
-      vcl_cout << "unknown plot type!!\n";
+      std::cout << "unknown plot type!!\n";
       of.close();
       return false;
     }
-    //vcl_cout << legends[i] << " " << tmp[0]->TP_ << " " << tmp[0]->FP_ << " " << tmp[0]->TN_ << " " << tmp[0]->FN_ << vcl_endl;
+    //std::cout << legends[i] << " " << tmp[0]->TP_ << " " << tmp[0]->FP_ << " " << tmp[0]->TN_ << " " << tmp[0]->FN_ << std::endl;
   }
   
   of.close();
 
-  vcl_string no_ext = vul_file::strip_extension(output_file.c_str());
+  std::string no_ext = vul_file::strip_extension(output_file.c_str());
 
-  vcl_ofstream of2((no_ext + ".m").c_str());
+  std::ofstream of2((no_ext + ".m").c_str());
   if (!of2)
     return false;
 
@@ -473,12 +473,12 @@ bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, 
   of2 << "set(gcf,'Color',[1,1,1]);\n";  // set figure background to white
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
-    vcl_vector<float> xs, ys;
+    std::vector<float> xs, ys;
     dborl_evaluation_get_ROC_data(tmp, xs, ys);
     float eer = dborl_evaluation_ROC_EER(tmp);
     of2 << "x = [";
@@ -503,12 +503,12 @@ bool prepare_plot2(vcl_string input_file_prefix, vcl_string input_file_prefix2, 
   of2 << "set(gcf,'Color',[1,1,1]);\n";  // set figure background to white
 
   for (unsigned i = 0; i < legends.size(); i++) {
-    vcl_vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
+    std::vector<dborl_exp_stat_sptr> tmp = legend_stats[i];
     if (!tmp.size()) {
-      vcl_cout << "could not find " << legends[i] << " as a legend\n";
+      std::cout << "could not find " << legends[i] << " as a legend\n";
       continue;
     }
-    vcl_vector<float> xs, ys;
+    std::vector<float> xs, ys;
     dborl_evaluation_get_PRC_data(tmp, xs, ys);
     float eer = dborl_evaluation_PRC_EER(tmp);
 

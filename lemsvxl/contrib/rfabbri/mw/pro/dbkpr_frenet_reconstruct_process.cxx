@@ -11,7 +11,7 @@
 #include <vpgl/algo/vpgl_ba_fixed_k_lsqr.h>
 #include <vnl/algo/vnl_sparse_lm.h>
 #include <vnl/vnl_quaternion.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 
 #include <dbdet/pro/dbdet_keypoint_storage.h>
@@ -46,7 +46,7 @@ dbkpr_frenet_reconstruct_process::dbkpr_frenet_reconstruct_process()
       !parameters()->add( "Output edgemap" ,            "-blines" ,   true )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -66,7 +66,7 @@ dbkpr_frenet_reconstruct_process::clone() const
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbkpr_frenet_reconstruct_process::name()
 {
   return "Reconstruct Frenet Keypoints";
@@ -90,18 +90,18 @@ dbkpr_frenet_reconstruct_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbkpr_frenet_reconstruct_process::get_input_type()
+std::vector< std::string > dbkpr_frenet_reconstruct_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbkpr_frenet_reconstruct_process::get_output_type()
+std::vector< std::string > dbkpr_frenet_reconstruct_process::get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "keypoints_corr3d" );
 
   bool bvsol=false;
@@ -129,8 +129,8 @@ dbkpr_frenet_reconstruct_process::finish()
 {
 
   // cast the storage classes
-  vcl_vector<dbdet_keypoint_corr3d_sptr> all_corr3d;
-  vcl_vector<vpgl_perspective_camera<double> > cameras;
+  std::vector<dbdet_keypoint_corr3d_sptr> all_corr3d;
+  std::vector<vpgl_perspective_camera<double> > cameras;
   cameras.reserve(input_data_.size());
   for(unsigned int i=0; i<input_data_.size(); ++i){
     dbkpr_corr3d_storage_sptr frame_corr3d;
@@ -142,7 +142,7 @@ dbkpr_frenet_reconstruct_process::finish()
 
     pcam = vpgld_cast_to_perspective_camera(frame_corr3d->get_camera());
     if(!pcam) {
-      vcl_cerr << "Error: requires a perspective  camera" << vcl_endl;
+      std::cerr << "Error: requires a perspective  camera" << std::endl;
       return false;
     }
     cameras.push_back(*pcam);
@@ -156,7 +156,7 @@ dbkpr_frenet_reconstruct_process::finish()
     if (kpt) {
       dbdet_frenet_keypoint *fkpt = dynamic_cast<dbdet_frenet_keypoint *>( kpt.ptr() );
       if (!fkpt) {
-        vcl_cerr << "ERROR: Frenet keypoint required\n";
+        std::cerr << "ERROR: Frenet keypoint required\n";
         return false;
       }
       break;
@@ -176,17 +176,17 @@ dbkpr_frenet_reconstruct_process::finish()
   parameters()->get_value( "-gtol" , gtol );
 
   // collect the subset of points with more than 3 projections
-  vcl_vector<dbdet_keypoint_corr3d_sptr> some_corr3d;
+  std::vector<dbdet_keypoint_corr3d_sptr> some_corr3d;
   for(unsigned int i=0; i<all_corr3d.size(); ++i){
     if(all_corr3d[i]->size() >= (unsigned int)minproj)
       some_corr3d.push_back(new dbdet_keypoint_corr3d(*all_corr3d[i]));
   }
 
   // Get image_points, world_points in the proper format
-  vcl_vector<bdifd_3rd_order_point_2d> image_points;
-  vcl_vector<vgl_point_3d<double> > world_points;
-  vcl_vector<vcl_vector<bool> > mask(cameras.size(),
-                                     vcl_vector<bool>(some_corr3d.size(),false));
+  std::vector<bdifd_3rd_order_point_2d> image_points;
+  std::vector<vgl_point_3d<double> > world_points;
+  std::vector<std::vector<bool> > mask(cameras.size(),
+                                     std::vector<bool>(some_corr3d.size(),false));
 
   {
     for(unsigned int j=0; j<some_corr3d.size(); ++j)
@@ -206,38 +206,38 @@ dbkpr_frenet_reconstruct_process::finish()
   
   //---------- BUNDLE ADJUSTMENT CORE ------------------------------------------------------------
 
-  vcl_cout << "=============================================================\n";
-  vcl_cout << "Cameras BEFORE Differential-Geometric cost bundle adjustment:\n";
+  std::cout << "=============================================================\n";
+  std::cout << "Cameras BEFORE Differential-Geometric cost bundle adjustment:\n";
 
 
 
-  vcl_vector<vpgl_calibration_matrix<double> > Ks;
+  std::vector<vpgl_calibration_matrix<double> > Ks;
   vnl_vector<double> init_a = vpgl_ba_fixed_k_lsqr::create_param_vector(cameras);
   vnl_vector<double> init_b = vpgl_ba_fixed_k_lsqr::create_param_vector(world_points);
 
   for(unsigned int i=0; i<cameras.size(); ++i){
     Ks.push_back(cameras[i].get_calibration());
-    vcl_cout << "Camera:\n";
-    vcl_cout << cameras[i] << vcl_endl;
+    std::cout << "Camera:\n";
+    std::cout << cameras[i] << std::endl;
   }
 
-  vcl_cout << "\nReprojection errors BEFORE bundle adjustment: \n";
+  std::cout << "\nReprojection errors BEFORE bundle adjustment: \n";
 
 
   {
 
-    vcl_vector<bdifd_camera> ecam(nviews);
+    std::vector<bdifd_camera> ecam(nviews);
     for (unsigned iv=0; iv < nviews; ++iv)
       ecam[iv].set_p(cameras[iv]);
 
-    vcl_vector<double> dthetas;
+    std::vector<double> dthetas;
     double dpos_total=0;
     double dtheta_total=0;
   //  double dk_total=0;
   //  double dkdot_total=0;
     unsigned n_total=0;
     double dnormal_plus_total=0;
-    vcl_vector<bdifd_3rd_order_point_2d> pts;
+    std::vector<bdifd_3rd_order_point_2d> pts;
     pts.resize(nviews);
 
     for (unsigned ip=0; ip < some_corr3d.size(); ++ip) {
@@ -271,20 +271,20 @@ dbkpr_frenet_reconstruct_process::finish()
         }
       }
     }
-    dpos_total = vcl_sqrt(dpos_total);
+    dpos_total = std::sqrt(dpos_total);
     dtheta_total = dtheta_total/(double)n_total;
 
-    vcl_cout << "       Pos reproj error using DG: " << dpos_total << vcl_endl;
-    vcl_cout << "Theta reproj error using DG(rad): " << dtheta_total << vcl_endl;
-    vcl_cout << "           # valid reprojections: " << n_total << vcl_endl;
+    std::cout << "       Pos reproj error using DG: " << dpos_total << std::endl;
+    std::cout << "Theta reproj error using DG(rad): " << dtheta_total << std::endl;
+    std::cout << "           # valid reprojections: " << n_total << std::endl;
 
     unsigned dummy;
-    vcl_cout<< "       dtheta max: " << bmcsd_util::max(dthetas,dummy);
-    vcl_cout<< " (idx = " << dummy << "of " << dthetas.size() << ")" << vcl_endl;
-    vcl_cout<< "       dtheta min: " << bmcsd_util::min(dthetas,dummy) << vcl_endl;
-    vcl_cout<< "       dtheta avg: " << bmcsd_util::mean(dthetas) << vcl_endl;
+    std::cout<< "       dtheta max: " << bmcsd_util::max(dthetas,dummy);
+    std::cout<< " (idx = " << dummy << "of " << dthetas.size() << ")" << std::endl;
+    std::cout<< "       dtheta min: " << bmcsd_util::min(dthetas,dummy) << std::endl;
+    std::cout<< "       dtheta avg: " << bmcsd_util::mean(dthetas) << std::endl;
   }
-  vcl_cout << "\n\n";
+  std::cout << "\n\n";
 
 
 
@@ -298,7 +298,7 @@ dbkpr_frenet_reconstruct_process::finish()
   lm.set_trace(true);
   lm.set_verbose(verbose);
   if(!lm.minimize(a,b,c, true, usewgt)) {
-    vcl_cout << "No convergence...\n";
+    std::cout << "No convergence...\n";
 //    return false;
   }
   lm.diagnose_outcome();
@@ -320,9 +320,9 @@ dbkpr_frenet_reconstruct_process::finish()
   
   if(usewgt)
   {
-    vcl_cout << "Not yet coded\n";
+    std::cout << "Not yet coded\n";
     abort();
-    vcl_vector<double> weights = ba_func.weights();
+    std::vector<double> weights = ba_func.weights();
     const vnl_crs_index& crs = ba_func.residual_indices();
     typedef vnl_crs_index::sparse_vector::iterator sv_itr;
     for(unsigned int i=0; i<cameras.size(); ++i)
@@ -358,13 +358,13 @@ dbkpr_frenet_reconstruct_process::finish()
   }
   avg_dist /= (cameras.size()*(cameras.size()-1))/2.0;
   
-  vcl_vector<int> num_meaningful(some_corr3d.size());
+  std::vector<int> num_meaningful(some_corr3d.size());
   for(unsigned int k=0; k<some_corr3d.size(); ++k){
     num_meaningful[k] = some_corr3d[k]->size();
   }
   for(unsigned int i=0; i<cameras.size(); ++i){
     vgl_point_3d<double> c1 = cameras[i].camera_center();
-    vcl_vector<bool> meaningful(some_corr3d.size(),true);
+    std::vector<bool> meaningful(some_corr3d.size(),true);
     for(unsigned int j=i+1; j<cameras.size(); ++j){
       vgl_point_3d<double> c2 = cameras[j].camera_center();
       if(vgl_distance(c1,c2) < avg_dist*.1){
@@ -380,8 +380,8 @@ dbkpr_frenet_reconstruct_process::finish()
   }
   
   // remove all points without at least minproj meaningful projections
-  vcl_vector<dbdet_keypoint_corr3d_sptr> old_corr3d(some_corr3d); some_corr3d.clear(); 
-  vcl_vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
+  std::vector<dbdet_keypoint_corr3d_sptr> old_corr3d(some_corr3d); some_corr3d.clear(); 
+  std::vector<vgl_point_3d<double> > old_world_points(world_points); world_points.clear();
   for(unsigned int j=0; j<old_corr3d.size(); ++j)
     if(num_meaningful[j] >= minproj){
       some_corr3d.push_back(old_corr3d[j]);
@@ -422,7 +422,7 @@ dbkpr_frenet_reconstruct_process::finish()
   dbdet_edgemap_sptr edge_map;
 
   // edgels (vsol)
-  vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+  std::vector< vsol_spatial_object_2d_sptr > edgels;
 
 
 
@@ -459,11 +459,11 @@ dbkpr_frenet_reconstruct_process::finish()
 
       x = frenet_pt.gama[0];
       y = frenet_pt.gama[1];
-      dir = vcl_atan2(frenet_pt.t[1],frenet_pt.t[0]);
+      dir = std::atan2(frenet_pt.t[1],frenet_pt.t[0]);
 
       if (bvsol){
         if ( blines){
-          vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(dir)/2.0, vcl_sin(dir)/2.0), vgl_point_2d<double>(x,y));
+          vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(dir)/2.0, std::sin(dir)/2.0), vgl_point_2d<double>(x,y));
           edgels.push_back(newLine->cast_to_spatial_object());
         }
         else {
@@ -479,14 +479,14 @@ dbkpr_frenet_reconstruct_process::finish()
 
     // Output to repository
     if (bvsol){
-      vcl_cout << "N edgels: " << edgels.size() << vcl_endl;
+      std::cout << "N edgels: " << edgels.size() << std::endl;
       // create the output storage class
       vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
       output_vsol->add_objects(edgels,"bundle_adjusted_edgels");
       output_data_[i].push_back(output_vsol); //: TODO check this.
     }  
     else {
-      vcl_cout << "N edgels: " << edge_map->num_edgels() << vcl_endl;
+      std::cout << "N edgels: " << edge_map->num_edgels() << std::endl;
       // create the output storage class
       dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
       output_edgemap->set_edgemap(edge_map);
@@ -500,10 +500,10 @@ dbkpr_frenet_reconstruct_process::finish()
 
 
 
-  vcl_cout << "==========================================\n";
-  vcl_cout << "Cameras after bundle adjustment:\n";
+  std::cout << "==========================================\n";
+  std::cout << "Cameras after bundle adjustment:\n";
   for (unsigned i=0; i < cameras.size(); ++i) {
-    vcl_cout << cameras[i] << vcl_endl;
+    std::cout << cameras[i] << std::endl;
   }
 
 

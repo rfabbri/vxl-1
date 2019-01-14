@@ -11,12 +11,12 @@
 
 bool MS_valid_for_splice_xform (dbsk3d_ms_sheet* MS);
 
-bool get_2_A1A3s_from_axials (vcl_vector<dbsk3d_ms_curve*>& bnd_A13_MCs,
+bool get_2_A1A3s_from_axials (std::vector<dbsk3d_ms_curve*>& bnd_A13_MCs,
                               dbsk3d_ms_node*& A1A3_1, dbsk3d_ms_node*& A1A3_2);
 
 //: Remove the shared_E on the splicing curve MC during a splice xform.
 void splice_remove_MC_shared_Es (dbsk3d_ms_curve* MC, dbsk3d_ms_sheet* MS,
-                                 vcl_set<dbsk3d_ms_curve*>& modified_MC_set);
+                                 std::set<dbsk3d_ms_curve*>& modified_MC_set);
 
 //: Splice the two sheets together: merge the smaller to the larger sheet.
 //  delete the MC after the merge (but leave the ending MN's, will be deleted later).
@@ -28,7 +28,7 @@ void MS_splice_ms_sheets (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_curve* MC,
 bool MC_valid_for_A5_contract_xform (dbsk3d_ms_curve* MC);
 
 bool A5_valid_trim_M_U_V (dbsk3d_ms_curve* MC, dbsk3d_fs_vertex* & M, 
-                          vcl_set<dbmsh3d_face*>& Pset_to_prune);
+                          std::set<dbmsh3d_face*>& Pset_to_prune);
 
 //: Find a valid trimming path U-M for the A5 transform 
 //  avoiding pathes causing non-local changes of ms_hypg topo.
@@ -36,19 +36,19 @@ bool A5_find_trim_M_path (const dbsk3d_ms_curve* MC,
                           const dbsk3d_ms_curve* MC_S, const dbsk3d_ms_curve* MC_E, 
                           dbmsh3d_mesh* MSM, const bool b_extensive_search,
                           dbsk3d_fs_vertex*& M, dbsk3d_fs_vertex*& U, dbsk3d_fs_vertex*& V,
-                          vcl_vector<dbmsh3d_edge*>& UM_Evec, vcl_vector<dbmsh3d_edge*>& VM_Evec,
+                          std::vector<dbmsh3d_edge*>& UM_Evec, std::vector<dbmsh3d_edge*>& VM_Evec,
                           char& b_single_trim);
 
 //: Find a valid trimming path by avoiding pathes causing non-local changes of ms_hypg topo. 
 bool A5_get_trim_path (const dbsk3d_ms_curve* MC, const bool MC_s_side, const dbsk3d_ms_curve* rib_MC, 
                        dbmsh3d_mesh* MSM, const dbsk3d_fs_vertex* M, const bool b_extensive_search,
-                       dbsk3d_fs_vertex*& U, vcl_vector<dbmsh3d_edge*>& UM_Evec);
+                       dbsk3d_fs_vertex*& U, std::vector<dbmsh3d_edge*>& UM_Evec);
 
 void A5_get_trim_path_constraints (const dbsk3d_ms_curve* MC, const bool MC_s_side,
                                    const dbsk3d_ms_curve* rib_MC,
                                    const dbsk3d_fs_vertex* M, const dbsk3d_fs_vertex* U,
-                                   vcl_set<dbmsh3d_edge*>& avoid_Eset,
-                                   vcl_set<dbmsh3d_vertex*>& avoid_Vset);
+                                   std::set<dbmsh3d_edge*>& avoid_Eset,
+                                   std::set<dbmsh3d_vertex*>& avoid_Vset);
 
 //If the A3 curve is a loop, make U as the loop_vertex.
 void A5_contract_merge_rib_loop (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS, 
@@ -60,30 +60,30 @@ dbsk3d_ms_curve* A5_contract_merge_ribs (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_shee
                                          dbsk3d_ms_node* SVs, dbsk3d_ms_node* SVe, 
                                          dbsk3d_ms_curve* SCs, dbsk3d_ms_curve* SCe);
 
-dbsk3d_fs_edge* FF_to_trim_incident_to_otherMC (vcl_set<dbmsh3d_face*> FF_to_trim, 
+dbsk3d_fs_edge* FF_to_trim_incident_to_otherMC (std::set<dbmsh3d_face*> FF_to_trim, 
                                                 const dbsk3d_ms_curve* MC);
 
 //###### Functions Shared by A5 and A12A3-I Curve-Contract xforms ######
 
-bool FEs_all_on_rib (const vcl_vector<dbmsh3d_edge*>& Evec);
+bool FEs_all_on_rib (const std::vector<dbmsh3d_edge*>& Evec);
 
 void get_rib_trim_Evec (const dbsk3d_ms_node* MN, const dbsk3d_ms_curve* MC, 
-                        const dbmsh3d_vertex* U, vcl_vector<dbmsh3d_edge*>& Evec);
+                        const dbmsh3d_vertex* U, std::vector<dbmsh3d_edge*>& Evec);
 
-bool get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
-                          const vcl_vector<dbmsh3d_edge*>& bnd_Evec,
-                          vcl_vector<dbsk3d_fs_face*>& seedFF_vec);
+bool get_rib_trim_seedFF (const std::vector<dbmsh3d_edge*>& rib_Evec,
+                          const std::vector<dbmsh3d_edge*>& bnd_Evec,
+                          std::vector<dbsk3d_fs_face*>& seedFF_vec);
 
-bool A12A3I_get_rib_trim_seedFF (const vcl_vector<dbmsh3d_edge*>& rib_Evec,
-                                 const vcl_vector<dbmsh3d_edge*>& bnd_Evec,
+bool A12A3I_get_rib_trim_seedFF (const std::vector<dbmsh3d_edge*>& rib_Evec,
+                                 const std::vector<dbmsh3d_edge*>& bnd_Evec,
                                  const dbmsh3d_face* F_M,
-                                 vcl_vector<dbsk3d_fs_face*>& seedFF_vec);
+                                 std::vector<dbsk3d_fs_face*>& seedFF_vec);
 
 //: Perform trim xform on the fine-scale shock elements.
 void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, dbsk3d_ms_sheet* MS, 
-                         vcl_set<dbmsh3d_face*>& FF_to_trim);
+                         std::set<dbmsh3d_face*>& FF_to_trim);
 
-void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, vcl_set<dbmsh3d_face*>& FF_to_trim);
+void perform_trim_xform (dbsk3d_fs_mesh* fs_mesh, std::set<dbmsh3d_face*>& FF_to_trim);
 
 void _del_MC_from_MS (dbsk3d_ms_hypg* ms_hypg, dbsk3d_ms_sheet* MS, dbsk3d_ms_curve* MC);
 
@@ -99,19 +99,19 @@ bool A12A3I_valid_trim_M_U (dbsk3d_ms_sheet* tabMS, const dbsk3d_ms_curve* MC,
                             const dbsk3d_ms_curve* ribMC, const dbsk3d_ms_curve* aMC,
                             const dbsk3d_ms_node* NA14, const dbsk3d_ms_node* NA1A3, const dbmsh3d_face* F_M,
                             dbmsh3d_vertex*& M_final, dbmsh3d_vertex*& U_final, 
-                            bool& M_on_aMC, vcl_vector<dbmsh3d_edge*>& E_aMC, 
-                            vcl_vector<dbmsh3d_edge*>& UM_Evec_final, vcl_set<dbmsh3d_face*>& FF_to_trim);
+                            bool& M_on_aMC, std::vector<dbmsh3d_edge*>& E_aMC, 
+                            std::vector<dbmsh3d_edge*>& UM_Evec_final, std::set<dbmsh3d_face*>& FF_to_trim);
 
 //: Find a valid trimming path by avoiding pathes causing non-local changes of ms_hypg topo. 
 bool A12A3I_get_trim_path (const dbsk3d_ms_curve* MC, const dbsk3d_ms_curve* ribMC, 
                            dbsk3d_ms_sheet* tabMS, dbmsh3d_mesh* MSM, 
                            const dbmsh3d_vertex* M, const dbsk3d_ms_node* B, 
-                           dbmsh3d_vertex* & U, vcl_vector<dbmsh3d_edge*>& UA_Evec);
+                           dbmsh3d_vertex* & U, std::vector<dbmsh3d_edge*>& UA_Evec);
 
 void A12A3I_contract_trace_rib (dbsk3d_ms_hypg* ms_hypg, 
                                 dbsk3d_ms_sheet* tabMS, dbsk3d_ms_sheet* baseMS, 
                                 dbsk3d_ms_curve* MC, dbsk3d_ms_curve* ribMC, dbsk3d_ms_curve* aMC, 
-                                const dbmsh3d_vertex* M, const bool M_on_aMC, vcl_vector<dbmsh3d_edge*>& MA_Evec, 
+                                const dbmsh3d_vertex* M, const bool M_on_aMC, std::vector<dbmsh3d_edge*>& MA_Evec, 
                                 dbsk3d_ms_node* NA14, const dbsk3d_ms_node* otherN);
 
 //###### A15 Curve-Contract xform on ms_curve MC ######
@@ -132,20 +132,20 @@ bool MS_valid_for_A14_contract_xform (dbsk3d_ms_sheet* MS);
 
 //: Given a ms_node MN, try finding a ms_node MN2 for the transform.
 bool find_A1A3II_n_n_merge_N (const dbsk3d_ms_node* MN, dbsk3d_ms_node*& closest_MN2, 
-                              dbsk3d_ms_sheet*& baseMS, vcl_vector<dbmsh3d_edge*>& shortest_Evec);
+                              dbsk3d_ms_sheet*& baseMS, std::vector<dbmsh3d_edge*>& shortest_Evec);
 
 //###### A12A3-I Node-Curve Merge xform on ms_node MN and ms_curve MC ######
 
 //: Given a ms_node MN, try finding a ms_curve MC for the transform.
 bool find_A12A3I_n_c_merge_C (const dbsk3d_ms_node* MN1, dbsk3d_ms_curve*& MC2, 
                               dbsk3d_ms_sheet*& baseMS, dbmsh3d_vertex*& closestV, 
-                              vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                              std::vector<dbmsh3d_edge*>& shortest_Evec,
                               const int cmxth);
 
 //: Given a ms_curve MC, try finding a ms_node MN for the transform.
 bool find_A12A3I_c_n_merge_N (const dbsk3d_ms_curve* MC1, dbsk3d_ms_node*& closest_MN2, 
                               dbsk3d_ms_sheet*& baseMS, dbmsh3d_vertex*& closestV, 
-                              vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                              std::vector<dbmsh3d_edge*>& shortest_Evec,
                               const int cmxth);
 
 //###### A14 Curve-Curve Merge xform on ms_curves MC and MC2 ######
@@ -154,7 +154,7 @@ bool find_A12A3I_c_n_merge_N (const dbsk3d_ms_curve* MC1, dbsk3d_ms_node*& close
 bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC, dbsk3d_ms_curve*& MC2, 
                            dbsk3d_ms_sheet*& baseMS, 
                            dbmsh3d_vertex*& closest_V1, dbmsh3d_vertex*& closest_V2, 
-                           vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                           std::vector<dbmsh3d_edge*>& shortest_Evec,
                            const int cmxth);
 
 //###### A1A3-II Curve-Curve Merge xform on ms_curves MC and MC2 ######
@@ -162,7 +162,7 @@ bool find_A14_c_c_merge_C (const dbsk3d_ms_curve* MC, dbsk3d_ms_curve*& MC2,
 bool find_A1A3II_c_c_merge_C (const dbsk3d_ms_curve* MC, dbsk3d_ms_curve*& MC2, 
                               dbsk3d_ms_sheet*& baseMS, 
                               dbmsh3d_vertex*& closest_V1, dbmsh3d_vertex*& closest_V2, 
-                              vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                              std::vector<dbmsh3d_edge*>& shortest_Evec,
                               const int cmxth);
 
 //###### A1A5 Node-Curve Merge xform on ms_node MN and ms_curve MC ######
@@ -170,13 +170,13 @@ bool find_A1A3II_c_c_merge_C (const dbsk3d_ms_curve* MC, dbsk3d_ms_curve*& MC2,
 //: Given an A1A3 (or AmAn) node N, search for an A3 curve C to merge.
 bool find_A1A5_n_c_merge_C (const dbsk3d_ms_node* MN1, dbsk3d_ms_curve*& MC2, 
                             dbsk3d_ms_sheet*& baseMS, dbmsh3d_vertex*& closestV, 
-                            vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                            std::vector<dbmsh3d_edge*>& shortest_Evec,
                             const int cmxth);
 
 //: Given an A3 curve C, search for an A1A3 (or AmAn) node N to merge.
 bool find_A1A5_n_c_merge_N (const dbsk3d_ms_curve* MC1, dbsk3d_ms_node*& closest_MN2, 
                             dbsk3d_ms_sheet*& baseMS, dbmsh3d_vertex*& closestV, 
-                            vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                            std::vector<dbmsh3d_edge*>& shortest_Evec,
                             const int cmxth);
 
 //###### Functions shared by the merge transforms  ######
@@ -184,12 +184,12 @@ bool find_A1A5_n_c_merge_N (const dbsk3d_ms_curve* MC1, dbsk3d_ms_node*& closest
 //: The node-node merging operation
 void MN_MN_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_node* MN1, dbsk3d_ms_node* MN2,
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec);
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec);
 
 //: The node-curve merging operation
 void MN_MC_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_node* MN1, dbsk3d_ms_curve* MC2,               
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec,
                   const dbmsh3d_vertex* closest_V, dbsk3d_ms_curve*& MC2_add);
 
 //: return the newly created ms_curve.
@@ -199,7 +199,7 @@ dbsk3d_ms_curve* merge_MN_to_MC (dbsk3d_ms_hypg* MSH, dbsk3d_ms_node* MN1, dbsk3
 //: The curve-curve merging operation
 void MC_MC_merge (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* baseMS,
                   dbsk3d_ms_curve* MC1, dbsk3d_ms_curve* MC2, 
-                  const vcl_vector<dbmsh3d_edge*>& shortest_Evec,
+                  const std::vector<dbmsh3d_edge*>& shortest_Evec,
                   const dbmsh3d_vertex* closest_V1, const dbmsh3d_vertex* closest_V2,
                   dbsk3d_ms_curve*& MC1_add, dbsk3d_ms_curve*& MC2_add,
                   dbsk3d_ms_node*& MN_add);
@@ -222,20 +222,20 @@ void update_bnd_HE_MS_MSn_icurve (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
                                   dbsk3d_ms_curve* MC, dbsk3d_ms_curve* MC_add);
 
 void update_HE_single_IC_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
-                                vcl_vector<dbmsh3d_edge*>& icurve_otherN_N,
+                                std::vector<dbmsh3d_edge*>& icurve_otherN_N,
                                 dbmsh3d_vertex* otherN);
 
 void update_HE_general (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
-                        vcl_vector<vcl_vector<dbmsh3d_edge*> >& icurve_bndN_otherN,
-                        vcl_vector<dbmsh3d_edge*>& icurve_loop_E_heads,
+                        std::vector<std::vector<dbmsh3d_edge*> >& icurve_bndN_otherN,
+                        std::vector<dbmsh3d_edge*>& icurve_loop_E_heads,
                         dbmsh3d_vertex* bndN, dbmsh3d_vertex* endN);
 
 //Connect each icurve_loop_E_heads[i].
 void connect_breaking_HE_loop (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, 
                                dbmsh3d_halfedge* loop_HE_start, 
                                dbmsh3d_vertex* Ns, dbmsh3d_vertex* Ne,
-                               vcl_vector<dbmsh3d_halfedge*>& MS_HEs, 
-                               vcl_vector<dbmsh3d_halfedge*>& MSn_HEs);
+                               std::vector<dbmsh3d_halfedge*>& MS_HEs, 
+                               std::vector<dbmsh3d_halfedge*>& MSn_HEs);
 
 //: Update the boundary halfedges of MS and MSn for the case
 //  that the tabMC is an i-curve of MS.
@@ -244,7 +244,7 @@ void update_bnd_HE_MS_MSn_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
                                 dbsk3d_ms_curve* MC, dbsk3d_ms_curve* MC_add);
 
 bool merge_test_divide_MS (dbsk3d_ms_sheet* baseMS, 
-                           const vcl_vector<dbmsh3d_edge*>& shortest_Evec);
+                           const std::vector<dbmsh3d_edge*>& shortest_Evec);
 
 dbsk3d_ms_sheet* MN_MN_merge_divide_MS (dbsk3d_ms_hypg* MSH, dbsk3d_ms_sheet* MS, 
                                         dbsk3d_ms_node* MN1, dbsk3d_ms_curve* MC1, 
@@ -258,14 +258,14 @@ void split_S_check_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn);
 void check_split_3inc (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn, dbmsh3d_halfedge* HE);
 
 void get_dispatch_bnd_chain (dbsk3d_ms_sheet* MS, dbsk3d_ms_sheet* MSn,
-                             vcl_set<dbmsh3d_halfedge*>& IC_pair_to_split, 
-                             vcl_vector<dbmsh3d_halfedge*>& C_HEvec, 
-                             vcl_vector<dbmsh3d_halfedge*>& Co_HEvec, 
+                             std::set<dbmsh3d_halfedge*>& IC_pair_to_split, 
+                             std::vector<dbmsh3d_halfedge*>& C_HEvec, 
+                             std::vector<dbmsh3d_halfedge*>& Co_HEvec, 
                              dbmsh3d_vertex*& C_sV, dbmsh3d_vertex*& C_eV);
 
 void update_bnd_chain (dbsk3d_ms_sheet* MS, 
-                       vcl_vector<dbmsh3d_halfedge*>& C_HEvec, 
-                       vcl_vector<dbmsh3d_halfedge*>& C2_HEvec,
+                       std::vector<dbmsh3d_halfedge*>& C_HEvec, 
+                       std::vector<dbmsh3d_halfedge*>& C2_HEvec,
                        dbmsh3d_halfedge* otherC_HE_next);
 
 //###### Functions for special case involving two or more xforms ######

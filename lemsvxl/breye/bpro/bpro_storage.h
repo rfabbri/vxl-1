@@ -17,7 +17,7 @@
 // \endverbatim
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_string.h>
+#include <string>
 #include <vsl/vsl_fwd.h>
 #include <vsl/vsl_binary_loader.h>
 
@@ -28,19 +28,19 @@ public:
   virtual ~bpro_storage();
 
   //: Return a string that indicates the type of data
-  virtual vcl_string type() const = 0;
+  virtual std::string type() const = 0;
 
   //: Returns the name of this storage class instance
-  vcl_string name() const;
+  std::string name() const;
   //: Set the name of this storage class instance
-  void set_name(const vcl_string& name);
+  void set_name(const std::string& name);
   
   //: Implement this function if your storage class loads
   //  objects by base class pointer
   virtual void register_binary_io() const {}
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const = 0;
+  virtual std::string is_a() const = 0;
  
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const;
@@ -61,18 +61,18 @@ public:
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
   
 
 protected:
   //: Constructor
   bpro_storage();
   //: Constructor
-  bpro_storage(const vcl_string& name);
+  bpro_storage(const std::string& name);
 
 private:
   //: The name of this instance
-  vcl_string name_;
+  std::string name_;
 
 };
 
@@ -90,6 +90,6 @@ void vsl_add_to_binary_loader(const bpro_storage& b);
 
 
 //: Print an ASCII summary to the stream
-void vsl_print_summary(vcl_ostream &os, const bpro_storage* n);
+void vsl_print_summary(std::ostream &os, const bpro_storage* n);
 
 #endif // bpro_storage_h_

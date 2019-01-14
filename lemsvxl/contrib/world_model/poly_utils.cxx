@@ -19,13 +19,13 @@ vsol_polygon_3d_sptr poly_utils::move_points_to_plane(vsol_polygon_3d_sptr polyg
 
   plane = fitter.get_plane();
   } else {
-    vcl_cout << "NO FITTING" << vcl_endl;
+    std::cout << "NO FITTING" << std::endl;
     return 0;
   }
 
 
   // find the closest point on the plane and replace it for each point
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
   for (unsigned i=0; i<polygon->size(); i++) {
     vgl_homg_point_3d<double> hp(polygon->vertex(i)->x(), 
       polygon->vertex(i)->y(), polygon->vertex(i)->z());
@@ -37,14 +37,14 @@ vsol_polygon_3d_sptr poly_utils::move_points_to_plane(vsol_polygon_3d_sptr polyg
   return new_polygon;
 }
 
-vsol_polygon_3d_sptr poly_utils::move_points_to_plane(vcl_vector<vsol_point_3d_sptr> points)
+vsol_polygon_3d_sptr poly_utils::move_points_to_plane(std::vector<vsol_point_3d_sptr> points)
 {
   vgl_fit_plane_3d<double> fitter;
-  vcl_cout << "fitting----------------" << vcl_endl;
+  std::cout << "fitting----------------" << std::endl;
   for (unsigned i=0; i<points.size(); i++) {
     fitter.add_point(points[i]->x(), 
       points[i]->y(), points[i]->z());
-    vcl_cout << *(points[i]) << vcl_endl;
+    std::cout << *(points[i]) << std::endl;
   }
 
   vgl_homg_plane_3d<double> plane;
@@ -53,13 +53,13 @@ vsol_polygon_3d_sptr poly_utils::move_points_to_plane(vcl_vector<vsol_point_3d_s
   // fitter.fit();
   plane = fitter.get_plane();
   } else {
-    vcl_cout << "NO FITTING" << vcl_endl;
+    std::cout << "NO FITTING" << std::endl;
     return 0;
   }
 
 
   // find the closest point on the plane and replace it for each point
-  vcl_vector<vsol_point_3d_sptr> new_points;
+  std::vector<vsol_point_3d_sptr> new_points;
   for (unsigned i=0; i<points.size(); i++) {
     vgl_homg_point_3d<double> hp(points[i]->x(), points[i]->y(), points[i]->z());
     vgl_homg_point_3d<double> p = vgl_closest_point(plane, hp);

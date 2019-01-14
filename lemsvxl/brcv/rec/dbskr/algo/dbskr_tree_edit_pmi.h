@@ -50,17 +50,17 @@ protected:
   //: version returning paths
   virtual float maybe_left_splice_out_tree2_vec(int d1, int d2);
 
-  virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   //: for speed do the operations without vectors first
   virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2);
   
-  virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   //: for speed do the operations without vectors first
   virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2);
 
-  virtual vcl_vector<pathtable_key>& maybe_right_splice_out_tree1_vec(int a1, int d1, int d2);
+  virtual std::vector<pathtable_key>& maybe_right_splice_out_tree1_vec(int a1, int d1, int d2);
   virtual float maybe_right_splice_out_tree1(int a1, int d1, int d2);
-  virtual vcl_vector<pathtable_key>& maybe_right_splice_out_tree2_vec(int a2, int d2, int d1);
+  virtual std::vector<pathtable_key>& maybe_right_splice_out_tree2_vec(int a2, int d2, int d1);
   virtual float maybe_right_splice_out_tree2(int a2, int d2, int d1);
 
 

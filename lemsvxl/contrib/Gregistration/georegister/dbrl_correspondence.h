@@ -46,10 +46,10 @@ class dbrl_correspondence
         short version() const;
 
         //: Print an ascii summary to the stream
-        void print_summary(vcl_ostream &os) const;
+        void print_summary(std::ostream &os) const;
 
         //: Return a platform independent string identifying the class
-        virtual vcl_string is_a() const {return "dbrl_correspondence";}
+        virtual std::string is_a() const {return "dbrl_correspondence";}
     protected:
         vnl_matrix<double> M_;
         vnl_matrix<double> Mold_;
@@ -68,7 +68,7 @@ void vsl_b_write(vsl_b_ostream &os, const dbrl_correspondence p);
 //: Binary load dbrl_correspondence* from stream.
 void vsl_b_read(vsl_b_istream &is, dbrl_correspondence &p);
 
-inline void operator<<(vcl_ostream & os, dbrl_correspondence& M)
+inline void operator<<(std::ostream & os, dbrl_correspondence& M)
 {
         M.print_summary(os);
     }

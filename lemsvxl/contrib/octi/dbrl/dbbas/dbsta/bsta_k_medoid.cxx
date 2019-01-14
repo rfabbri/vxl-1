@@ -1,10 +1,10 @@
 #include "bsta_k_medoid.h"
 //:
 // \file
-#include <vcl_cmath.h> //for HUGE_VAL
-#include <vcl_algorithm.h> //for find
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <cmath> //for HUGE_VAL
+#include <algorithm> //for find
+#include <iostream>
+#include <cassert>
 
 bsta_k_medoid::bsta_k_medoid(const unsigned n_elements, bool verbose)
 {
@@ -18,8 +18,8 @@ bsta_k_medoid::bsta_k_medoid(const unsigned n_elements, bool verbose)
 // Is a element a medoid?
 bool bsta_k_medoid::is_medoid(const unsigned i) const
 {
-  vcl_vector<unsigned>::const_iterator result;
-  result = vcl_find(medoids_.begin(), medoids_.end(), i);
+  std::vector<unsigned>::const_iterator result;
+  result = std::find(medoids_.begin(), medoids_.end(), i);
   return result != medoids_.end();
 }
 
@@ -33,8 +33,8 @@ bool bsta_k_medoid::in_cluster(const unsigned i, const unsigned k) const
   if (is_medoid(i))
     return i==k;
 
-  vcl_vector<unsigned>::const_iterator result;
-  result = vcl_find(clusters_[k].begin(), clusters_[k].end(), i);
+  std::vector<unsigned>::const_iterator result;
+  result = std::find(clusters_[k].begin(), clusters_[k].end(), i);
   return result != clusters_[k].end();
 }
 
@@ -141,8 +141,8 @@ void bsta_k_medoid::form_clusters()
 //:replace medoid k with medoid j
 bool bsta_k_medoid::replace_medoid(const unsigned j, const unsigned k)
 {
-  vcl_vector<unsigned>::iterator result;
-  result = vcl_find(medoids_.begin(), medoids_.end(), k);
+  std::vector<unsigned>::iterator result;
+  result = std::find(medoids_.begin(), medoids_.end(), k);
   if (result == medoids_.end())
     return false;
   (*result) = j;
@@ -167,10 +167,10 @@ bool bsta_k_medoid::test_medoid_swap(unsigned& mj, unsigned& mk)
       {
         if (verbose_)
         {
-          vcl_cout << "\n===== Current Medoids(";
+          std::cout << "\n===== Current Medoids(";
           for (unsigned m = 0; m<this->k(); ++m)
-            vcl_cout << medoid(m) << ' ';
-          vcl_cout << ")\n"
+            std::cout << medoid(m) << ' ';
+          std::cout << ")\n"
                    << "Checking Swap " << j << "->" << medoid(k) << '\n';
         }
         double Sdc = 0;
@@ -190,7 +190,7 @@ bool bsta_k_medoid::test_medoid_swap(unsigned& mj, unsigned& mk)
 
         if (verbose_)
         {
-          vcl_cout << "Inter-element distance change " << Sdc << '\n'
+          std::cout << "Inter-element distance change " << Sdc << '\n'
                    << "Inter-medoid distance change " << med_dist << '\n'
                    << "Total change " << total << '\n';
         }
@@ -243,14 +243,14 @@ void bsta_k_medoid::do_clustering(const unsigned nk)
     form_clusters();
     if (verbose_)
     {
-      vcl_cout << "***Swapping " << mj << "->" << mk << "***\n";
+      std::cout << "***Swapping " << mj << "->" << mk << "***\n";
       for (unsigned k = 0; k<this->k(); ++k)
       {
-        vcl_cout << "Medoid[" << k << "] = " << medoid(k) << '\n'
+        std::cout << "Medoid[" << k << "] = " << medoid(k) << '\n'
                  << "with cluster\n";
         for (unsigned j = 0; j<size(k); ++j)
-          vcl_cout << clusters_[k][j] << ' ' ;
-        vcl_cout << '\n'
+          std::cout << clusters_[k][j] << ' ' ;
+        std::cout << '\n'
                  << "Total Cluster Distance = "
                  << total_distance(k)<< '\n';
       }

@@ -31,7 +31,7 @@
 int main(int argc, char** argv)
 {
   if(argc < 5){
-    vcl_cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin\n";
+    std::cout << "Usage: "<< argv[0] << "filename_base xmargin ymargin zmargin\n";
     return 1;
   }
 
@@ -60,44 +60,44 @@ int main(int argc, char** argv)
   double intensity;
 
   // create the parser and read the responses
-  vcl_string fbase = argv[1];
+  std::string fbase = argv[1];
   // read x edge responses
-  vcl_string fname = fbase + "_x_res.xml";
+  std::string fname = fbase + "_x_res.xml";
   proc_io_filter_xml_parser parser_x;
   if (!parse(fname, parser_x)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
+  std::vector<xmvg_filter_response<double> > responses_x = parser_x.responses();
   // read y edge responses
   fname = fbase + "_y_res.xml";
   proc_io_filter_xml_parser parser_y;
   if (!parse(fname, parser_y)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
+  std::vector<xmvg_filter_response<double> > responses_y = parser_y.responses();
   // read z edge responses
   fname = fbase + "_z_res.xml";
   proc_io_filter_xml_parser parser_z;
   if (!parse(fname, parser_z)) {
-    vcl_cout << "Exitting!" << vcl_endl;
+    std::cout << "Exitting!" << std::endl;
     return 1;
   }
-  vcl_vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
+  std::vector<xmvg_filter_response<double> > responses_z = parser_z.responses();
 
   int dimx = parser_x.dim_x();
   int dimy = parser_x.dim_y();
   int dimz = parser_x.dim_z();
-  vcl_cout << "dimx: " << dimx << vcl_endl;
-  vcl_cout << "dimy: " << dimy << vcl_endl;
-  vcl_cout << "dimz: " << dimz << vcl_endl;
+  std::cout << "dimx: " << dimx << std::endl;
+  std::cout << "dimy: " << dimy << std::endl;
+  std::cout << "dimz: " << dimz << std::endl;
 
   assert(dimx > 2*marginx && dimy > 2*marginy && dimz > 2*marginz);
 
   double sharpening_coefficient = 1.0;
   // temporarily filled with x responses to create the response vector
-  vcl_vector<xmvg_filter_response<double> > responses(responses_x);
+  std::vector<xmvg_filter_response<double> > responses(responses_x);
   int index = 0;
   for(int k=0;k<dimz;k++)
   {
@@ -108,8 +108,8 @@ int main(int argc, char** argv)
         double resp_x = responses_x[index][0] * sharpening_coefficient;
         double resp_y = responses_y[index][0] * sharpening_coefficient;
         double resp_z = responses_z[index][0];
-//        responses[index][0] = vcl_fabs(resp_z);
-        responses[index][0] = vcl_sqrt(vcl_pow(resp_x,2.0)+vcl_pow(resp_y,2.0)+vcl_pow(resp_z,2.0));
+//        responses[index][0] = std::fabs(resp_z);
+        responses[index][0] = std::sqrt(std::pow(resp_x,2.0)+std::pow(resp_y,2.0)+std::pow(resp_z,2.0));
         index++;
       }
     }
@@ -117,8 +117,8 @@ int main(int argc, char** argv)
 
   //write responses to a file for debugging reasons
 #if 0
-  FILE *fp = vcl_fopen("F:\\MyDocs\\Temp\\responses.txt", "w");
-  vcl_fprintf(fp, "%d %d %d\n", dimx, dimy, dimz);
+  FILE *fp = std::fopen("F:\\MyDocs\\Temp\\responses.txt", "w");
+  std::fprintf(fp, "%d %d %d\n", dimx, dimy, dimz);
   index = 0;
   for(int k=0;k<dimz;k++)
   {
@@ -127,13 +127,13 @@ int main(int argc, char** argv)
       for(int i=0;i<dimx;i++)
       {
         intensity = responses[index++][0];
-        vcl_fprintf(fp, "%f ", intensity);
+        std::fprintf(fp, "%f ", intensity);
       }
-      vcl_fprintf(fp,"\n");
+      std::fprintf(fp,"\n");
     }
-    vcl_fprintf(fp,"\n");
+    std::fprintf(fp,"\n");
   }
-  vcl_fclose(fp);
+  std::fclose(fp);
 #endif
           
   index=0;
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
     }
   }
 
-  vcl_cout << max_intensity << vcl_endl;
+  std::cout << max_intensity << std::endl;
 
   const size_t blocksize = responses.size();
   uint8_t * voxels = new uint8_t[blocksize];

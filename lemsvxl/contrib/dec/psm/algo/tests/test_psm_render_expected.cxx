@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
+#include <iostream>
+#include <string>
 
 #include <vgl/algo/vgl_rotation_3d.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -23,7 +23,7 @@ static void test_psm_render_expected()
   START("render_expected test");
 
   vgl_point_3d<float> corner(-220.0, -200.0, -35.0);
-  vcl_string storage_dir = "c:/research/psm/models/capitol_high";
+  std::string storage_dir = "c:/research/psm/models/capitol_high";
   vgl_point_3d<double> scene_origin(corner.x(),corner.y(),corner.z());
   double block_length = 512*0.75;
   psm_scene<psm_sample<PSM_APM_MOG_GREY> > scene(scene_origin,block_length,storage_dir);
@@ -38,12 +38,12 @@ static void test_psm_render_expected()
   scene.set_block_valid(vgl_point_3d<int>(-1,1,0),true);
 
   // load the camera from file
-  //vcl_string camera_filename = "c:/research/data/CapitolSiteHigh/cameras_KRT/camera_00000.txt";
-  vcl_string camera_filename = "c:/research/registration/output/capitol_high_train/flyover/cameras_KRT/camera_00307.txt";
-  //vcl_string camera_filename = "c:/research/psm/output/capitol_flythrough/camera_high.txt";
-  vcl_ifstream ifs(camera_filename.c_str());
+  //std::string camera_filename = "c:/research/data/CapitolSiteHigh/cameras_KRT/camera_00000.txt";
+  std::string camera_filename = "c:/research/registration/output/capitol_high_train/flyover/cameras_KRT/camera_00307.txt";
+  //std::string camera_filename = "c:/research/psm/output/capitol_flythrough/camera_high.txt";
+  std::ifstream ifs(camera_filename.c_str());
   if (!ifs.is_open()) {
-    vcl_cerr << "Failed to open file " << camera_filename << vcl_endl;
+    std::cerr << "Failed to open file " << camera_filename << std::endl;
     return;
   }
   vnl_matrix_fixed<double,3,3> K_matrix;

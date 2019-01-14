@@ -1,7 +1,7 @@
 #include "det_nonmaxium_suppression.h"
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <vgl/vgl_point_3d.h>
 #include <vnl/vnl_double_2.h>
 #include <vnl/algo/vnl_qr.h>
@@ -45,8 +45,8 @@ det_nonmaxium_suppression::det_nonmaxium_suppression(int n)
 }
 
 void det_nonmaxium_suppression::create_vertices(int n, 
-                                           vcl_vector<vbl_array_3d<int> > &vertice_map,
-                                           vcl_vector<vgl_point_3d<double> > &vertice)
+                                           std::vector<vbl_array_3d<int> > &vertice_map,
+                                           std::vector<vgl_point_3d<double> > &vertice)
 {
   // assert only odd number of voxels are in the suppression box
   assert( n%2 != 0 );
@@ -129,7 +129,7 @@ det_cylinder_map det_nonmaxium_suppression::apply(det_cylinder_map const& input,
           {
             vnl_double_2 subpixel = quadratic_interp_loc(proj);
 #if 0
-            if(vcl_sqrt(subpixel[0]*subpixel[0]+subpixel[1]*subpixel[1])>1)
+            if(std::sqrt(subpixel[0]*subpixel[0]+subpixel[1]*subpixel[1])>1)
             {
               //output(i,j,k).strength_ = input(i,j,k).strength_;
               output(i,j,k).strength_ = 0;
@@ -179,7 +179,7 @@ det_cylinder_map det_nonmaxium_suppression::apply(det_cylinder_map const& input,
                   break;
 
                 default:
-                  vcl_cerr<< "woophs, wrong axis\n";
+                  std::cerr<< "woophs, wrong axis\n";
               }
 #if 0
             }
@@ -224,7 +224,7 @@ det_cylinder_map det_nonmaxium_suppression::apply_with_radius(det_cylinder_map c
         vgl_vector_3d<double> dir = input(i, j, k).dir_;
         ///////////////////// GAmze
         int radius = radius_map(i, j, k);
-        n = 2.0 * vcl_floor(radius/vcl_sqrt(2.0))+1;
+        n = 2.0 * std::floor(radius/std::sqrt(2.0))+1;
         nv_ = n+1;
         int margin = (n-1)/2; 
         if ((radius == 0) || 
@@ -236,10 +236,10 @@ det_cylinder_map det_nonmaxium_suppression::apply_with_radius(det_cylinder_map c
           continue;
         } 
 
-        vcl_vector<vbl_array_3d<int> > vertice_map;
-        vcl_vector<vgl_point_3d<double> > vertice;
+        std::vector<vbl_array_3d<int> > vertice_map;
+        std::vector<vgl_point_3d<double> > vertice;
         create_vertices(n, vertice_map, vertice);
-        //vcl_cout << vcl_endl << "[" << i << "," << j << "," << k << "]" <<  vcl_endl;
+        //std::cout << std::endl << "[" << i << "," << j << "," << k << "]" <<  std::endl;
  
         vbl_array_3d<bool> intersect_flags = 
           det_nonmax_sup_helper::intersection_flags(dir, vertice, vertice_map);
@@ -264,7 +264,7 @@ det_cylinder_map det_nonmaxium_suppression::apply_with_radius(det_cylinder_map c
           {
             vnl_double_2 subpixel = quadratic_interp_loc(proj);
 #if 0
-            if(vcl_sqrt(subpixel[0]*subpixel[0]+subpixel[1]*subpixel[1])>1)
+            if(std::sqrt(subpixel[0]*subpixel[0]+subpixel[1]*subpixel[1])>1)
             {
               //output(i,j,k).strength_ = input(i,j,k).strength_;
               output(i,j,k).strength_ = 0;
@@ -316,7 +316,7 @@ det_cylinder_map det_nonmaxium_suppression::apply_with_radius(det_cylinder_map c
                   break;
 
                 default:
-                  vcl_cerr<< "woophs, wrong axis\n";
+                  std::cerr<< "woophs, wrong axis\n";
               }
 #if 0
             }

@@ -2,8 +2,8 @@
 // \file
 #include <dbetrk/vis/dbetrk_soview2D.h>
 #include <dbetrk/dbetrk_edge_sptr.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_soview2D.h>
 #include<dbetrk/dbetrk_edge.h>
@@ -27,8 +27,8 @@ dbetrk_soview2D::draw() const
 
 
 //: Print details about this ctrk_tracker_curve to the given stream.
-vcl_ostream&
-dbetrk_soview2D::print(vcl_ostream&s) const
+std::ostream&
+dbetrk_soview2D::print(std::ostream&s) const
 {
   return s << "[ a _edgetrk_ ]";
 }

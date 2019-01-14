@@ -3,7 +3,7 @@
 #include <vdgl/vdgl_edgel_chain.h>
 #include <vdgl/vdgl_digital_curve.h>
 #include <vdgl/vdgl_interpolator.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_map_io.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
@@ -88,18 +88,18 @@ void match_data::b_read(vsl_b_istream &is)
   break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
-vcl_string match_data::is_a() const
+std::string match_data::is_a() const
 {
-  return vcl_string("match_data");
+  return std::string("match_data");
 }
 
-bool match_data::is_class(vcl_string const& string) const
+bool match_data::is_class(std::string const& string) const
 {
   if(string==is_a())
     return true;
@@ -131,7 +131,7 @@ void vsl_b_read(vsl_b_istream &is,match_data * &p)
   else
     p = 0;
 }
-void match_data::print_summary(vcl_ostream &os) const
+void match_data::print_summary(std::ostream &os) const
 {
   os<<"\n the energy of the match is "<<this->energy_;
 }
@@ -180,9 +180,9 @@ void dbctrk_tracker_curve  ::init_set(vtol_edge_2d_sptr const& c,int id)
 
  
   ec=c->curve()->cast_to_vdgl_digital_curve()->get_interpolator()->get_edgel_chain();
-  vcl_vector<vsol_point_2d_sptr> vsolpoints;
+  std::vector<vsol_point_2d_sptr> vsolpoints;
   
-// vcl_cout<<"\n"<<ec->size();
+// std::cout<<"\n"<<ec->size();
   //subsampling the curves so as to cut the computational time short
   for (unsigned int i=0; i<ec->size(); )
   {
@@ -197,7 +197,7 @@ void dbctrk_tracker_curve  ::init_set(vtol_edge_2d_sptr const& c,int id)
 
 }
 
-void dbctrk_tracker_curve  ::init_set(vcl_vector<vgl_point_2d<double> > p,int id)
+void dbctrk_tracker_curve  ::init_set(std::vector<vgl_point_2d<double> > p,int id)
 {
   c_=0;
   id_=id;
@@ -223,7 +223,7 @@ void dbctrk_tracker_curve  ::init_set(vcl_vector<vgl_point_2d<double> > p,int id
 
   desc= new dbctrk_curve_description(ec);
 }
-void dbctrk_tracker_curve  ::init_set(dbctrk_tracker_curve_sptr c,vcl_vector<int> ks,int id)
+void dbctrk_tracker_curve  ::init_set(dbctrk_tracker_curve_sptr c,std::vector<int> ks,int id)
 {
   c_=0;
   id_=id;
@@ -252,7 +252,7 @@ void dbctrk_tracker_curve  ::init_set(dbctrk_tracker_curve_sptr c,vcl_vector<int
   }
   desc= new dbctrk_curve_description(ec_sub);
 }
-double dbctrk_tracker_curve::compute_mean(vcl_vector<double> t)
+double dbctrk_tracker_curve::compute_mean(std::vector<double> t)
 {
   double sum=0;
   for (unsigned int i=0; i<t.size(); ++i)
@@ -262,12 +262,12 @@ double dbctrk_tracker_curve::compute_mean(vcl_vector<double> t)
 }
 
 void dbctrk_tracker_curve
-        ::compute_transformation(vcl_vector<vgl_point_2d<double> > p,
-                                 vcl_vector<vgl_point_2d<double> > & transformed_curve,
+        ::compute_transformation(std::vector<vgl_point_2d<double> > p,
+                                 std::vector<vgl_point_2d<double> > & transformed_curve,
                                  vnl_matrix<double> R,vnl_matrix<double> T)
 {
-  vcl_vector<double> x;
-  vcl_vector<double> y;
+  std::vector<double> x;
+  std::vector<double> y;
 
   for (unsigned int i=0; i<p.size(); ++i)
   {
@@ -296,10 +296,10 @@ double dbctrk_tracker_curve ::compute_euclidean_distance(vnl_matrix<double> R,vn
   if(get_best_match_prev())
   {
   double cost=0;
-  vcl_map<int,int>::iterator iter;
-  vcl_vector<vgl_point_2d<double> > curve1;
-  vcl_vector<vgl_point_2d<double> > tcurve1;
-  vcl_vector<vgl_point_2d<double> > curve2;
+  std::map<int,int>::iterator iter;
+  std::vector<vgl_point_2d<double> > curve1;
+  std::vector<vgl_point_2d<double> > tcurve1;
+  std::vector<vgl_point_2d<double> > curve2;
   for(iter=get_best_match_prev()->mapping_.begin();
     iter!=get_best_match_prev()->mapping_.end();
     iter++)
@@ -321,7 +321,7 @@ double dbctrk_tracker_curve ::compute_euclidean_distance(vnl_matrix<double> R,vn
     double min_dist=1e6;
     for(unsigned int j=0;j<curve2.size();j++)
     {
-      double dist=vcl_sqrt((tcurve1[i].x()-curve2[j].x())*(tcurve1[i].x()-curve2[j].x())
+      double dist=std::sqrt((tcurve1[i].x()-curve2[j].x())*(tcurve1[i].x()-curve2[j].x())
                 +(tcurve1[i].y()-curve2[j].y())*(tcurve1[i].y()-curve2[j].y()));
       if(min_dist>dist)
       {
@@ -349,8 +349,8 @@ double dbctrk_tracker_curve ::compute_euclidean_distance_next(vnl_matrix<double>
   {
    double x1,y1,x2,y2;
    double dist=0;
-   vcl_map<int,int> alignment= get_best_match_next()->mapping_;
-   vcl_map<int,int>::iterator iter1;
+   std::map<int,int> alignment= get_best_match_next()->mapping_;
+   std::map<int,int>::iterator iter1;
    double H[2]={0,0};
    for (iter1 = alignment.begin(); iter1!=alignment.end(); iter1++)
    {
@@ -365,7 +365,7 @@ double dbctrk_tracker_curve ::compute_euclidean_distance_next(vnl_matrix<double>
 
    x2=get_best_match_next()->match_curve_set[0]->desc->curve_->point((*iter1).second).x();
    y2=get_best_match_next()->match_curve_set[0]->desc->curve_->point((*iter1).second).y();
-   dist+=vcl_sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+   dist+=std::sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
     
    }
 
@@ -487,24 +487,24 @@ void dbctrk_tracker_curve::b_read(vsl_b_istream &is)
     match_data_sptr temp=new match_data(this,this->prev_[i]);
     
     this->prev_[i]->match_curve_set[0]->next_.push_back(temp);
-//    vcl_cout<<"\n the frame num is "<<temp->match_curve_set[0]->frame_number;
-    vcl_sort(this->prev_[i]->match_curve_set[0]->next_.begin(),this->prev_[i]->match_curve_set[0]->next_.end(),less_cost());
+//    std::cout<<"\n the frame num is "<<temp->match_curve_set[0]->frame_number;
+    std::sort(this->prev_[i]->match_curve_set[0]->next_.begin(),this->prev_[i]->match_curve_set[0]->next_.end(),less_cost());
    }
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbctrk_tracker_curve::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
-vcl_string dbctrk_tracker_curve::is_a() const
+std::string dbctrk_tracker_curve::is_a() const
 {
-  return vcl_string("dbctrk_tracker_curve");
+  return std::string("dbctrk_tracker_curve");
 }
 
-bool dbctrk_tracker_curve::is_class(vcl_string const& string) const
+bool dbctrk_tracker_curve::is_class(std::string const& string) const
 {
   if(string==is_a())
     return true;
@@ -537,7 +537,7 @@ void vsl_b_read(vsl_b_istream &is, dbctrk_tracker_curve* &p)
     p = 0;
 }
 
-void dbctrk_tracker_curve::print_summary(vcl_ostream &os) const
+void dbctrk_tracker_curve::print_summary(std::ostream &os) const
 {
   os<<"\n the id of the curve is "<<this->id_;
 }

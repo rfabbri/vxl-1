@@ -15,7 +15,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/algo/dbmsh3d_mesh_bnd.h>
 
@@ -31,7 +31,7 @@ bool dbmsh3d_bnd_chain::is_V_incident_via_HE (const dbmsh3d_vertex* V)
 }
 
 //: Trace the bnd_chain into a polyline.
-void dbmsh3d_bnd_chain::trace_polyline (vcl_vector<vgl_point_3d<double> >& polyline_vertices)
+void dbmsh3d_bnd_chain::trace_polyline (std::vector<vgl_point_3d<double> >& polyline_vertices)
 {
   dbmsh3d_vertex *V, *Vo;
   polyline_vertices.clear();
@@ -52,7 +52,7 @@ void dbmsh3d_bnd_chain::trace_polyline (vcl_vector<vgl_point_3d<double> >& polyl
   Vo = HE0->edge()->other_V (V);
   polyline_vertices.push_back (Vo->pt());
 
-  vcl_vector<dbmsh3d_halfedge*>::iterator it = HE_list_.begin();
+  std::vector<dbmsh3d_halfedge*>::iterator it = HE_list_.begin();
   for (unsigned int i=0; i<HE_list_.size()-1; i++) {
     HE0 = HE_list (i);
     HE1 = HE_list (i+1);
@@ -90,13 +90,13 @@ void dbmsh3d_bnd_chain::trace_bnd_chain (dbmsh3d_halfedge* startHE)
 
 void dbmsh3d_bnd_chain_set::detect_bnd_chains ()
 {
-  vul_printf (vcl_cout, "  detect_bnd_chains():\n");
+  vul_printf (std::cout, "  detect_bnd_chains():\n");
 
   //Reset all mesh face traversing flags.
   mesh_->reset_traverse_f ();
 
   //Loop through all mesh faces and trace mesh boundary edges.
-  vcl_map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator it = mesh_->facemap().begin();
   for (; it != mesh_->facemap().end(); it++) {
     dbmsh3d_face* F = (*it).second;
     if (F->b_visited())
@@ -125,13 +125,13 @@ void dbmsh3d_bnd_chain_set::detect_bnd_chains ()
     }
   }
 
-  vul_printf (vcl_cout, "\t%u boundary chain created.\n", chainset_.size());
+  vul_printf (std::cout, "\t%u boundary chain created.\n", chainset_.size());
 }
 
 //: remove bnd_chain larger than n edges.
 void dbmsh3d_bnd_chain_set::remove_large_bnd_chain (unsigned int th)
 {
-  vcl_vector<dbmsh3d_bnd_chain*>::iterator it = chainset_.begin();
+  std::vector<dbmsh3d_bnd_chain*>::iterator it = chainset_.begin();
   while (it != chainset_.end()) {
     dbmsh3d_bnd_chain* BC = (*it);
     if (BC->num_edges() <= th) {
@@ -144,7 +144,7 @@ void dbmsh3d_bnd_chain_set::remove_large_bnd_chain (unsigned int th)
         it = chainset_.begin();
       }
       else {
-        vcl_vector<dbmsh3d_bnd_chain*>::iterator next = it;
+        std::vector<dbmsh3d_bnd_chain*>::iterator next = it;
         next--;
         chainset_.erase (it);
         it = ++next;

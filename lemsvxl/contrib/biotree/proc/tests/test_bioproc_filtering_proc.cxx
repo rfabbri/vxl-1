@@ -9,7 +9,7 @@
 // changed it to use xmvg_point_filter for testing
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <testlib/testlib_test.h>
 #include <xmvg/xmvg_point_filter_3d.h>
 #include <xmvg/xmvg_composite_filter_3d.h>
@@ -56,7 +56,7 @@ static void test_bioproc_filtering_proc(int argc, char* argv[] )
   // construct the filters
   xmvg_point_filter_3d f(fd);
 
-  vcl_vector<xmvg_point_filter_3d> filters;
+  std::vector<xmvg_point_filter_3d> filters;
   filters.push_back(f);
 
   xmvg_composite_filter_3d<double, xmvg_point_filter_3d> comp3d(filters);
@@ -73,7 +73,7 @@ static void test_bioproc_filtering_proc(int argc, char* argv[] )
   proc.execute();
 
   biob_worldpt_field<xmvg_filter_response<double> > & responses = proc.worldpt_field();
-  vcl_vector<xmvg_filter_response<double> > & field = responses.values();
+  std::vector<xmvg_filter_response<double> > & field = responses.values();
 
   // check response value
   biob_grid_worldpt_roster bgwr = static_cast<const biob_grid_worldpt_roster&>(*(responses.roster()));
@@ -85,7 +85,7 @@ static void test_bioproc_filtering_proc(int argc, char* argv[] )
 
     vgl_point_3d<double> pt3d = bgwr.point(i);
 
-    double R = vcl_sqrt(pt3d.x()*pt3d.x() + pt3d.y()*pt3d.y());
+    double R = std::sqrt(pt3d.x()*pt3d.x() + pt3d.y()*pt3d.y());
 
     double a = src_rot_dist;
     double b = sensor_src_dist;
@@ -97,12 +97,12 @@ static void test_bioproc_filtering_proc(int argc, char* argv[] )
 
     double value = 0;
 
-    if(R > a*l/vcl_sqrt(l*l + b*b))
-      value = I0*(int)vcl_ceil(10*(1-2*vcl_acos(a*l/vcl_sqrt(l*l + b*b)/R)/vnl_math::pi)) ;
+    if(R > a*l/std::sqrt(l*l + b*b))
+      value = I0*(int)std::ceil(10*(1-2*std::acos(a*l/std::sqrt(l*l + b*b)/R)/vnl_math::pi)) ;
     else
       value = I0*10;
 
-    vcl_cout << pt3d << "\n";
+    std::cout << pt3d << "\n";
     TEST_NEAR("testing reponse ", field[i][0], value, 1e-6);
   }
 }

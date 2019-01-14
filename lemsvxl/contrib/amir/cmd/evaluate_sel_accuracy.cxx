@@ -5,8 +5,8 @@
 #include "evaluate_sel_accuracy.h"
 
 #include <vnl/vnl_random.h>
-#include <vcl_iostream.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <algorithm>
 
 #include <pdf1d/pdf1d_calc_mean_var.h>
 
@@ -66,19 +66,19 @@ int main(int argc, char** argv)
 }
 
 dbdet_edgemap_sptr generate_circle_edgemap(double k, double dx, double dt, 
-                                           vcl_vector<dbdet_edgel*>& edgels, 
-                                           vcl_vector<curve_params>& GT)
+                                           std::vector<dbdet_edgel*>& edgels, 
+                                           std::vector<curve_params>& GT)
 {
   double R = 1/k;
-  int w = (int) vcl_ceil(4*R);
-  int h = (int) vcl_ceil(4*R);
+  int w = (int) std::ceil(4*R);
+  int h = (int) std::ceil(4*R);
 
   //center of the circle
   double cx = 2*R;
   double cy = 2*R;
 
   //number of edgels
-  int N = (int) vcl_floor(2*2*vnl_math::pi*R);
+  int N = (int) std::floor(2*2*vnl_math::pi*R);
 
   //resize this vector and the ground truth vector
   edgels.resize(N);
@@ -92,7 +92,7 @@ dbdet_edgemap_sptr generate_circle_edgemap(double k, double dx, double dt,
     double rand_dt = 2*dt*vrand.drand32(-1,1);
 
     double theta = (2*vnl_math::pi*i)/N;
-    vgl_point_2d<double> pt(cx+R*vcl_cos(theta)+rand_dx, cy+R*vcl_sin(theta)+rand_dy);
+    vgl_point_2d<double> pt(cx+R*std::cos(theta)+rand_dx, cy+R*std::sin(theta)+rand_dy);
 
     //add this randomly perturbed edgel to the edgemap
     edgels[i] = new dbdet_edgel(pt, theta+vnl_math::pi_over_2+rand_dt);
@@ -108,8 +108,8 @@ dbdet_edgemap_sptr generate_circle_edgemap(double k, double dx, double dt,
 }
 
 dbdet_edgemap_sptr generate_ES_edgemap(double k, double gamma, double dx, double dt, 
-                                       vcl_vector<dbdet_edgel*>& edgels, 
-                                       vcl_vector<curve_params>& GT)
+                                       std::vector<dbdet_edgel*>& edgels, 
+                                       std::vector<curve_params>& GT)
 {
   int w = 100;
   int h = 100;
@@ -156,13 +156,13 @@ dbdet_edgemap_sptr generate_ES_edgemap(double k, double gamma, double dx, double
 }
 
 dbdet_edgemap_sptr generate_ellipse_edgemap(double ka, double kb, double dx, double dt, 
-                                            vcl_vector<dbdet_edgel*>& edgels, 
-                                            vcl_vector<curve_params>& GT)
+                                            std::vector<dbdet_edgel*>& edgels, 
+                                            std::vector<curve_params>& GT)
 {
   double Ra = 1/ka;
   double Rb = 1/kb;
-  int w = (int) vcl_ceil(4*Rb);
-  int h = (int) vcl_ceil(4*Ra);
+  int w = (int) std::ceil(4*Rb);
+  int h = (int) std::ceil(4*Ra);
 
   dbdet_edgemap_sptr edgemap = new dbdet_edgemap(w, h);
 
@@ -172,8 +172,8 @@ dbdet_edgemap_sptr generate_ellipse_edgemap(double ka, double kb, double dx, dou
 dbdet_edgemap_sptr generate_circle_edgemap_by_edge_detection(double k, double noise)
 {
   double R = 1/k;
-  int w = (int) vcl_ceil(4*R);
-  int h = (int) vcl_ceil(4*R);
+  int w = (int) std::ceil(4*R);
+  int h = (int) std::ceil(4*R);
 
   dbdet_edgemap_sptr edgemap = new dbdet_edgemap(w, h);
 
@@ -184,15 +184,15 @@ dbdet_edgemap_sptr generate_ellipse_edgemap_by_edge_detection(double ka, double 
 {
   double Ra = 1/ka;
   double Rb = 1/kb;
-  int w = (int) vcl_ceil(4*Rb);
-  int h = (int) vcl_ceil(4*Ra);
+  int w = (int) std::ceil(4*Rb);
+  int h = (int) std::ceil(4*Ra);
 
   dbdet_edgemap_sptr edgemap = new dbdet_edgemap(w, h);
 
   return edgemap;
 }
 
-void compute_accuracy(vcl_vector<dbdet_edgel*>& edgels, vcl_vector<curve_params>& GT,
+void compute_accuracy(std::vector<dbdet_edgel*>& edgels, std::vector<curve_params>& GT,
                       curve_params& avg, curve_params& std, 
                       curve_params& avg_spread, curve_params& std_spread, 
                       curve_params& avg_error, curve_params& std_error)
@@ -224,13 +224,13 @@ void compute_accuracy(vcl_vector<dbdet_edgel*>& edgels, vcl_vector<curve_params>
       k_est(cvlet_cnt)     = estimates[1];
       gamma_est(cvlet_cnt) = estimates[2];
 
-      theta_spread(cvlet_cnt) = vcl_min(vcl_abs(estimates[0]-min_estimates[0]), vcl_abs(estimates[0]-max_estimates[0]));
-      k_spread(cvlet_cnt)     = vcl_min(vcl_abs(estimates[1]-min_estimates[1]), vcl_abs(estimates[1]-max_estimates[1]));
-      gamma_spread(cvlet_cnt) = vcl_min(vcl_abs(estimates[2]-min_estimates[2]), vcl_abs(estimates[2]-max_estimates[2]));
+      theta_spread(cvlet_cnt) = std::min(std::abs(estimates[0]-min_estimates[0]), std::abs(estimates[0]-max_estimates[0]));
+      k_spread(cvlet_cnt)     = std::min(std::abs(estimates[1]-min_estimates[1]), std::abs(estimates[1]-max_estimates[1]));
+      gamma_spread(cvlet_cnt) = std::min(std::abs(estimates[2]-min_estimates[2]), std::abs(estimates[2]-max_estimates[2]));
 
-      theta_error(cvlet_cnt) = vcl_abs(estimates[0]-GT[i].theta);
-      k_error(cvlet_cnt)     = vcl_abs(estimates[1]-GT[i].k);
-      gamma_error(cvlet_cnt) = vcl_abs(estimates[2]-GT[i].gamma);
+      theta_error(cvlet_cnt) = std::abs(estimates[0]-GT[i].theta);
+      k_error(cvlet_cnt)     = std::abs(estimates[1]-GT[i].k);
+      gamma_error(cvlet_cnt) = std::abs(estimates[2]-GT[i].gamma);
 
       cvlet_cnt++;
     }
@@ -255,12 +255,12 @@ void compute_accuracy(vcl_vector<dbdet_edgel*>& edgels, vcl_vector<curve_params>
 
 void Experiment1a()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 1a: " << vcl_endl;
-  vcl_cout << " k measurement accuracy without perturbations" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 1a: " << std::endl;
+  std::cout << " k measurement accuracy without perturbations" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.0;
@@ -275,8 +275,8 @@ void Experiment1a()
   for (double k=0.02; k<0.4; k+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -288,23 +288,23 @@ void Experiment1a()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment1b()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 1b: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of dx_sel" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 1b: " << std::endl;
+  std::cout << " k measurement accuracy as a function of dx_sel" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.0;
@@ -320,8 +320,8 @@ void Experiment1b()
   for (double dx_sel=0.02; dx_sel<0.4; dx_sel+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -333,23 +333,23 @@ void Experiment1b()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment1c()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 1c: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of dt_sel" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 1c: " << std::endl;
+  std::cout << " k measurement accuracy as a function of dt_sel" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.0;
@@ -365,8 +365,8 @@ void Experiment1c()
   for (double dt_sel=0.02; dt_sel<0.4; dt_sel+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -378,23 +378,23 @@ void Experiment1c()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment1d()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 1d: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of maxN" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 1d: " << std::endl;
+  std::cout << " k measurement accuracy as a function of maxN" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.0;
@@ -410,8 +410,8 @@ void Experiment1d()
   for (unsigned maxN=3; maxN<15; maxN++)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -423,23 +423,23 @@ void Experiment1d()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2a()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2a: " << vcl_endl;
-  vcl_cout << " k measurement accuracy with perturbations" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2a: " << std::endl;
+  std::cout << " k measurement accuracy with perturbations" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.1;
@@ -454,8 +454,8 @@ void Experiment2a()
   for (double k=0.02; k<0.4; k+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -467,23 +467,23 @@ void Experiment2a()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2b()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2b: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of dx_sel" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2b: " << std::endl;
+  std::cout << " k measurement accuracy as a function of dx_sel" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.1;
@@ -499,8 +499,8 @@ void Experiment2b()
   for (double dx_sel=0.02; dx_sel<0.4; dx_sel+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -512,23 +512,23 @@ void Experiment2b()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2c()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2c: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of dt_sel" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2c: " << std::endl;
+  std::cout << " k measurement accuracy as a function of dt_sel" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.1;
@@ -544,8 +544,8 @@ void Experiment2c()
   for (double dt_sel=0.02; dt_sel<0.4; dt_sel+=0.02)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -557,23 +557,23 @@ void Experiment2c()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2d()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2d: " << vcl_endl;
-  vcl_cout << " k measurement accuracy as a function of maxN" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2d: " << std::endl;
+  std::cout << " k measurement accuracy as a function of maxN" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.1;
@@ -589,8 +589,8 @@ void Experiment2d()
   for (unsigned maxN=3; maxN<15; maxN++)
   {
     //the ground truth and measurements for later comparison   
-    vcl_vector<dbdet_edgel*> edgels(0); 
-    vcl_vector<curve_params> GT(0);
+    std::vector<dbdet_edgel*> edgels(0); 
+    std::vector<curve_params> GT(0);
 
     dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -602,23 +602,23 @@ void Experiment2d()
     compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
     //report
-    vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-    vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-    vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-    vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+    std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+    std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+    std::cout << avg_error.k << " | " << std_error.k << " | ";
+    std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2e()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2e: " << vcl_endl;
-  vcl_cout << " k measurement accuracy with perturbations (syn vs sel)" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2e: " << std::endl;
+  std::cout << " k measurement accuracy with perturbations (syn vs sel)" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dt_syn = 0.1;
@@ -634,8 +634,8 @@ void Experiment2e()
     for (double dx_sel=0.02; dx_sel<0.4; dx_sel+=0.02)
     {
       //the ground truth and measurements for later comparison   
-      vcl_vector<dbdet_edgel*> edgels(0); 
-      vcl_vector<curve_params> GT(0);
+      std::vector<dbdet_edgel*> edgels(0); 
+      std::vector<curve_params> GT(0);
 
       dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -647,24 +647,24 @@ void Experiment2e()
       compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
       //report
-      vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-      vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-      vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-      vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+      std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+      std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+      std::cout << avg_error.k << " | " << std_error.k << " | ";
+      std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
     }
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 void Experiment2f()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 2f: " << vcl_endl;
-  vcl_cout << " k measurement accuracy with perturbations (syn vs sel)" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 2f: " << std::endl;
+  std::cout << " k measurement accuracy with perturbations (syn vs sel)" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT k | avg. k | std. k | avg. err. | std. err. | avg. spread | std. spread |" << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.1;
@@ -680,8 +680,8 @@ void Experiment2f()
     for (double dt_sel=0.02; dt_sel<0.4; dt_sel+=0.02)
     {
       //the ground truth and measurements for later comparison   
-      vcl_vector<dbdet_edgel*> edgels(0); 
-      vcl_vector<curve_params> GT(0);
+      std::vector<dbdet_edgel*> edgels(0); 
+      std::vector<curve_params> GT(0);
 
       dbdet_edgemap_sptr edgemap = generate_circle_edgemap(k, dx_syn, dt_syn, edgels, GT);
 
@@ -693,25 +693,25 @@ void Experiment2f()
       compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
       //report
-      vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-      vcl_cout << k << " | " << avg.k << " | " << std.k << " | ";
-      vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-      vcl_cout << avg_spread.k << " | " << std_spread.k << " |" << vcl_endl; 
+      std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+      std::cout << k << " | " << avg.k << " | " << std.k << " | ";
+      std::cout << avg_error.k << " | " << std_error.k << " | ";
+      std::cout << avg_spread.k << " | " << std_spread.k << " |" << std::endl; 
     }
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 
 void Experiment3a()
 {
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << " Accuracy Experiment 3a: " << vcl_endl;
-  vcl_cout << " k measurement accuracy without perturbations" << vcl_endl;
-  vcl_cout << "------------------------------------------" << vcl_endl;
-  vcl_cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT gamma | avg. gamma | std. gamma | avg. gamma err. | std. gamma err. | avg. gamma spread | std. gamma spread | avg. k err. | std. k err. | avg. k spread | std. k spread | avg. theta err. | std. theta err. | " << vcl_endl; 
-  vcl_cout.precision(3);
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << " Accuracy Experiment 3a: " << std::endl;
+  std::cout << " k measurement accuracy without perturbations" << std::endl;
+  std::cout << "------------------------------------------" << std::endl;
+  std::cout << "| dx_syn | dt_syn | dx_sel | dt_sel | nrad | maxN | GT gamma | avg. gamma | std. gamma | avg. gamma err. | std. gamma err. | avg. gamma spread | std. gamma spread | avg. k err. | std. k err. | avg. k spread | std. k spread | avg. theta err. | std. theta err. | " << std::endl; 
+  std::cout.precision(3);
 
   //parameters
   double dx_syn = 0.0;
@@ -727,8 +727,8 @@ void Experiment3a()
     for (double k=-0.3; k<0.4; k+=0.1)
     {
       //the ground truth and measurements for later comparison   
-      vcl_vector<dbdet_edgel*> edgels(0); 
-      vcl_vector<curve_params> GT(0);
+      std::vector<dbdet_edgel*> edgels(0); 
+      std::vector<curve_params> GT(0);
 
       dbdet_edgemap_sptr edgemap = generate_ES_edgemap(k, gamma, dx_syn, dt_syn, edgels, GT);
 
@@ -740,17 +740,17 @@ void Experiment3a()
       compute_accuracy(edgels, GT, avg, std, avg_spread, std_spread, avg_error, std_error);
 
       //report
-      vcl_cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
-      vcl_cout << gamma << " | " << avg.gamma << " | " << std.gamma << " | ";
-      vcl_cout << avg_error.gamma << " | " << std_error.gamma << " | ";
-      vcl_cout << avg_spread.gamma << " | " << std_spread.gamma << " |";
-      vcl_cout << avg_error.k << " | " << std_error.k << " | ";
-      vcl_cout << avg_spread.k << " | " << std_spread.k << " |";
-      vcl_cout << avg_error.theta << " | " << std_error.theta << " | " << vcl_endl; 
+      std::cout << "| " << dx_syn << " | " << dt_syn << " | " << dx_sel << " | " << dt_sel << " | " << nrad << " | " << maxN << " | ";
+      std::cout << gamma << " | " << avg.gamma << " | " << std.gamma << " | ";
+      std::cout << avg_error.gamma << " | " << std_error.gamma << " | ";
+      std::cout << avg_spread.gamma << " | " << std_spread.gamma << " |";
+      std::cout << avg_error.k << " | " << std_error.k << " | ";
+      std::cout << avg_spread.k << " | " << std_spread.k << " |";
+      std::cout << avg_error.theta << " | " << std_error.theta << " | " << std::endl; 
     }
   }
 
-  vcl_cout << "||------------------------------------------" << vcl_endl;
+  std::cout << "||------------------------------------------" << std::endl;
 }
 
 

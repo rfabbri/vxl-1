@@ -1,15 +1,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "bcal_euclidean_transformation.h"
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
+#include <iostream>
+#include <cassert>
 
 bool bcal_euclidean_transformation::is_valid(void) const
 {
   return trans_.size()!=0;
 }
 
-void bcal_euclidean_transformation::set_beat(vcl_vector<double> const& new_beat)
+void bcal_euclidean_transformation::set_beat(std::vector<double> const& new_beat)
 {
   vcsl_spatial_transformation::set_beat(new_beat);
 
@@ -45,11 +45,11 @@ vnl_vector<double> bcal_euclidean_transformation::execute(const vnl_vector<doubl
 vnl_vector<double> bcal_euclidean_transformation::inverse(const vnl_vector<double> &v, double /* time */) const
 {
   // not finished yet
-  vcl_cerr<<"\n bcal_euclidean_transformation::inverse() ----- not finished yet\n";
+  std::cerr<<"\n bcal_euclidean_transformation::inverse() ----- not finished yet\n";
   return v;
 }
 
-void bcal_euclidean_transformation::print(vcl_ostream& os)
+void bcal_euclidean_transformation::print(std::ostream& os)
 {
   for (unsigned int i=0; i<trans_.size(); i++){
     os << "\n the "<<i+1<<"-th transformation is:\n"<< trans_[i];

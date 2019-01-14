@@ -6,9 +6,9 @@
 #include "dbsks_xgraph_ccm_model.h"
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbsksp/dbsksp_xshock_graph.h>
-#include <vcl_cmath.h>
-#include <vcl_sstream.h>
-#include <vcl_utility.h>
+#include <cmath>
+#include <sstream>
+#include <utility>
 #include <vnl/vnl_math.h>
 #include <dbsks/dbsks_biarc_sampler.h>
 
@@ -138,7 +138,7 @@ build_biarc_sampler(dbsks_biarc_sampler& biarc_sampler) const
   biarc_sampler.clear();
 
   //> Construct a biarc sampler ................................................
-  vcl_cout << "\nConstructing a biarc sampler ...";
+  std::cout << "\nConstructing a biarc sampler ...";
 
   // Set parameters of biarc sampler
   dbsks_biarc_sampler_params bsp;
@@ -206,16 +206,16 @@ set_ccm_params(float edge_threshold, float tol_near_zero, float distance_thresho
 // each boundary fragment should be written in format "edgeid-sideid". E.g. "13-R" means
 // the right boundary fragment of edge 13.
 bool dbsks_xgraph_ccm_model::
-override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_desc_list)
+override_cfrag_with_constant_distribution(const std::vector<std::string >& cfrag_desc_list)
 {
   // 1. Parse the string description
-  vcl_vector<vcl_pair<unsigned int, int > > cfrag_list;
+  std::vector<std::pair<unsigned int, int > > cfrag_list;
   cfrag_list.reserve(cfrag_desc_list.size());
 
   // parse each description one by one
   for (unsigned i =0; i < cfrag_desc_list.size(); ++i)
   {
-    vcl_string cfrag_desc = cfrag_desc_list[i];
+    std::string cfrag_desc = cfrag_desc_list[i];
     
     // replace all the dashes "-" with space for ease of parsing
     for (unsigned j =0; j < cfrag_desc.size(); ++j)
@@ -227,7 +227,7 @@ override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_d
     }
 
     // parse the description
-    vcl_stringstream ss(cfrag_desc);
+    std::stringstream ss(cfrag_desc);
     unsigned edge_id;
     int side_id;
     
@@ -235,7 +235,7 @@ override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_d
     ss >> edge_id;
 
     // side id
-    vcl_string temp;
+    std::string temp;
     ss >> temp;
     if (temp == "L")
     {
@@ -249,7 +249,7 @@ override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_d
     {
       return false;
     }
-    cfrag_list.push_back(vcl_make_pair(edge_id, side_id));  
+    cfrag_list.push_back(std::make_pair(edge_id, side_id));  
   }
 
   // now modify the distribution of each bnd contour fragment
@@ -288,14 +288,14 @@ override_cfrag_with_constant_distribution(const vcl_vector<vcl_string >& cfrag_d
 // list of bfrags is concatenated in a list, with a delimitor of choice. Avoid 0-9, L, R, -.
 // Example: ...("13-R,13-L,4-L", ',');
 bool dbsks_xgraph_ccm_model::
-override_cfrag_with_constant_distribution(const vcl_string& concatenated_bfrag_descs, char delimiter)
+override_cfrag_with_constant_distribution(const std::string& concatenated_bfrag_descs, char delimiter)
 {
   // parse the concatenated bfrag descriptions into a vector
-  vcl_vector<vcl_string > cfrag_list_to_ignore;
+  std::vector<std::string > cfrag_list_to_ignore;
   cfrag_list_to_ignore.clear();
 
   // parse the corresponding parameter
-  vcl_string buffer = concatenated_bfrag_descs;
+  std::string buffer = concatenated_bfrag_descs;
   
   // replace 'delimiter' by space so that we can use standard parser
   for (unsigned i =0; i < buffer.length(); ++i)
@@ -307,10 +307,10 @@ override_cfrag_with_constant_distribution(const vcl_string& concatenated_bfrag_d
   }
   
   // parse the string using stringstream
-  vcl_stringstream ss;
+  std::stringstream ss;
   ss << buffer;
 
-  vcl_string cfrag_desc;
+  std::string cfrag_desc;
   while (ss >> cfrag_desc)
   {
     cfrag_list_to_ignore.push_back(cfrag_desc);
@@ -331,7 +331,7 @@ is_compatible(const dbsksp_xshock_graph_sptr& xgraph)
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit != 
     xgraph->edges_end(); ++eit)
   {
-    vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
+    std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
       this->map_edge2ccm().find((*eit)->id());
     if (mit == this->map_edge2ccm().end())
     {
@@ -348,7 +348,7 @@ is_compatible(const dbsksp_xshock_graph_sptr& xgraph)
 bool dbsks_xgraph_ccm_model::
 compute_cache_loglike_for_all_edges()
 {
-  for (vcl_map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
+  for (std::map<unsigned, dbsks_xfrag_ccm_model_sptr >::iterator mit = 
     this->map_edge2ccm_.begin(); mit != this->map_edge2ccm_.end(); ++mit)
   {
     dbsks_xfrag_ccm_model_sptr ccm = mit->second;

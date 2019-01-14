@@ -10,8 +10,8 @@ class dbrl_estimator_point_rigid
     virtual ~dbrl_estimator_point_rigid(){};
 
     virtual
-    dbrl_transformation_sptr estimate( vcl_vector<rgrl_feature_sptr> f1,
-                                       vcl_vector<rgrl_feature_sptr> f2,
+    dbrl_transformation_sptr estimate( std::vector<rgrl_feature_sptr> f1,
+                                       std::vector<rgrl_feature_sptr> f2,
                                        dbrl_correspondence M) ;
 
      //: Binary save self to stream.
@@ -24,10 +24,10 @@ class dbrl_estimator_point_rigid
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_estimator_point_rigid";}
+  virtual std::string is_a() const {return "dbrl_estimator_point_rigid";}
 
   virtual dbrl_estimator * clone() const;
     };

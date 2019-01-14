@@ -13,16 +13,16 @@
 #include "cluster_io.h"
 
 
-void merge(vcl_vector<unsigned>& c1, vcl_vector<unsigned>& c2)
+void merge(std::vector<unsigned>& c1, std::vector<unsigned>& c2)
 {
   if(c1.empty() || c2.empty()){
-    vcl_cout << "empty cluster" << vcl_endl;
+    std::cout << "empty cluster" << std::endl;
     return;
   }
-  vcl_vector<unsigned> tmp;
-  vcl_merge(c1.begin(), c1.end(),
+  std::vector<unsigned> tmp;
+  std::merge(c1.begin(), c1.end(),
             c2.begin(), c2.end(),
-            vcl_back_inserter(tmp));
+            std::back_inserter(tmp));
 
   if(tmp.front() == c1.front()){
     c1.swap(tmp);
@@ -33,8 +33,8 @@ void merge(vcl_vector<unsigned>& c1, vcl_vector<unsigned>& c2)
   }
 }
 
-bool less_size(const vcl_vector<unsigned>& v1,
-               const vcl_vector<unsigned>& v2)
+bool less_size(const std::vector<unsigned>& v1,
+               const std::vector<unsigned>& v2)
 {
   if(v1.size() == v2.size())
     return v1.front() < v2.front();
@@ -50,12 +50,12 @@ bool trace_sim_greater(const dbcll_trace_pt& t1,
 // The Main Function
 int main(int argc, char** argv)
 {
-  vul_arg<vcl_string>  a_trace_file("-trace", "path to trace file", "");
-  vul_arg<vcl_string>  a_cluster_out("-out", "path to output clusters index file", "");
+  vul_arg<std::string>  a_trace_file("-trace", "path to trace file", "");
+  vul_arg<std::string>  a_cluster_out("-out", "path to output clusters index file", "");
   vul_arg<double>      a_thresh("-thresh", "similarity theshold", .1);
   vul_arg_parse(argc, argv);
 
-  vcl_vector<dbcll_trace_pt> trace;
+  std::vector<dbcll_trace_pt> trace;
   read_trace(a_trace_file(),trace);
 
   unsigned max_idx=0;
@@ -65,14 +65,14 @@ int main(int argc, char** argv)
   }
 
   // construct the initial clusters
-  vcl_vector<vcl_vector<unsigned> > clusters(max_idx+1,vcl_vector<unsigned>(1,0));
+  std::vector<std::vector<unsigned> > clusters(max_idx+1,std::vector<unsigned>(1,0));
   for(unsigned i=0; i<=max_idx; ++i)
     clusters[i][0] = i;
 
   
-  vcl_cout << "initial cluster count: " << clusters.size() << vcl_endl;
+  std::cout << "initial cluster count: " << clusters.size() << std::endl;
 
-  vcl_stable_sort(trace.begin(), trace.end(), trace_sim_greater);
+  std::stable_sort(trace.begin(), trace.end(), trace_sim_greater);
 
   for(unsigned i=0; i<trace.size(); ++i){
     if(trace[i].sim >= -a_thresh())
@@ -82,15 +82,15 @@ int main(int argc, char** argv)
   }
 
 
-  vcl_vector<vcl_vector<unsigned> > valid_clusters;
+  std::vector<std::vector<unsigned> > valid_clusters;
   for(unsigned i=0; i<=max_idx; ++i)
     if(!clusters[i].empty())
       valid_clusters.push_back(clusters[i]);
 
   
-  vcl_cout << "final cluster count: " << valid_clusters.size() << vcl_endl;
+  std::cout << "final cluster count: " << valid_clusters.size() << std::endl;
 
-  vcl_sort(valid_clusters.begin(), valid_clusters.end(), less_size);
+  std::sort(valid_clusters.begin(), valid_clusters.end(), less_size);
 
   write_clusters(a_cluster_out(), valid_clusters);
 

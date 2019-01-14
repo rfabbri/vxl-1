@@ -3,11 +3,11 @@
 
 #include<dsm/dsm_ground_truth_sptr.h>
 
-#include<vcl_iostream.h>
-#include<vcl_iomanip.h>
-#include<vcl_map.h>
-#include<vcl_sstream.h>
-#include<vcl_string.h>
+#include<iostream>
+#include<iomanip>
+#include<map>
+#include<sstream>
+#include<string>
 
 #include<vil/vil_image_view.h>
 #include<vil/vil_save.h>
@@ -24,14 +24,14 @@ bool dsm_ground_truth_write_change_maps_classical_process_cons( bprb_func_proces
 {
 	using namespace dsm_ground_truth_write_change_maps_classical_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0; 
 	input_types_[i++] = "dsm_ground_truth_sptr";
 	input_types_[i++] = "unsigned";//ni
 	input_types_[i++] = "unsigned";//nj
-	input_types_[i++] = "vcl_string";//output directory
+	input_types_[i++] = vcl_string";//output directory
 
 	if(!pro.set_input_types(input_types_))
 		return false;
@@ -45,8 +45,8 @@ bool dsm_ground_truth_write_change_maps_classical_process(bprb_func_process& pro
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_ground_truth_write_change_maps_classical_process:"
-			     << "The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_ground_truth_write_change_maps_classical_process:"
+			     << "The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -55,7 +55,7 @@ bool dsm_ground_truth_write_change_maps_classical_process(bprb_func_process& pro
 	dsm_ground_truth_sptr gt_sptr = pro.get_input<dsm_ground_truth_sptr>(i++);
 	unsigned ni = pro.get_input<unsigned>(i++);
 	unsigned nj = pro.get_input<unsigned>(i++);
-	vcl_string result_dir = pro.get_input<vcl_string>(i++);
+	std::string result_dir = pro.get_input<std::string>(i++);
 
 	gt_sptr->save_change_maps_classical_tiff(ni,nj,result_dir);
 

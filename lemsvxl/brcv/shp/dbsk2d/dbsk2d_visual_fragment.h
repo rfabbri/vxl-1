@@ -13,7 +13,7 @@
 //   Amir Tamrakar 06/21/2005    Initial version.
 // \endverbatim
 
-#include <vcl_list.h>
+#include <list>
 #include <dbsk2d/dbsk2d_base_gui_geometry.h>
 
 #include <dbsk2d/dbsk2d_shock_node.h>

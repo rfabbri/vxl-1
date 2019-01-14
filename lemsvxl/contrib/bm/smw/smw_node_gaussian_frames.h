@@ -10,9 +10,9 @@
 #include<vbl/vbl_ref_count.h>
 #include<vbl/vbl_smart_ptr.hxx>
 
-#include<vcl_map.h>
-#include<vcl_set.h>
-#include<vcl_utility.h>
+#include<map>
+#include<set>
+#include<utility>
 
 //some global typedefs
 
@@ -24,11 +24,11 @@ namespace node_typedefs{
 
     typedef unsigned frequency_type;
 
-    typedef vcl_map<time_type,frequency_type> time_frequency_map;
+    typedef std::map<time_type,frequency_type> time_frequency_map;
    
-    typedef vcl_map<node_id_type,time_frequency_map> transition_table;
+    typedef std::map<node_id_type,time_frequency_map> transition_table;
 
-    typedef vcl_set<time_type> time_set;
+    typedef std::set<time_type> time_set;
 
     typedef bsta_gauss_f1 model;
 

@@ -5,7 +5,7 @@
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui.h>
 #include <biov/biov_examiner_tableau.h>
-#include <vcl_limits.h>
+#include <limits>
 
 #include <Inventor/nodes/SoGroup.h>
 #include <VolumeViz/nodes/SoVolumeRender.h>
@@ -63,10 +63,10 @@ int main (int argc,char *argv[])
 
     vbl_array_3d<double>vol = cyl_pyr.volume();
 
-    vcl_vector<double>volume_dat;
+    std::vector<double>volume_dat;
 
-    double min_val = vcl_numeric_limits<float >::max();
-    double max_val = vcl_numeric_limits<float >::min();
+    double min_val = std::numeric_limits<float >::max();
+    double max_val = std::numeric_limits<float >::min();
     double avg;
 
   for(int k=0;k<80;k++)

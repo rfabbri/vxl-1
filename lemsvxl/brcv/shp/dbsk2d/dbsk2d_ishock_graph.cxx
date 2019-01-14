@@ -464,7 +464,7 @@ dbsk2d_ishock_edge* dbsk2d_ishock_graph::cyclic_adj_pred(dbsk2d_ishock_edge* e, 
 
 
 void dbsk2d_ishock_graph::invalid_shocks(
-vcl_vector<dbsk2d_ishock_edge*>& shocks)
+std::vector<dbsk2d_ishock_edge*>& shocks)
 {
 
 
@@ -513,7 +513,7 @@ bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
         // {
         //     shocks_valid = false;
         //     #ifdef DEBUG_SHOCK_VERBOSE
-        //     vcl_cout << "S:" << sedge->id() << " wavefronts invalid. \n";
+        //     std::cout << "S:" << sedge->id() << " wavefronts invalid. \n";
         //     #endif
         //     break;
         // }
@@ -526,7 +526,7 @@ bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
             {
                 shocks_valid = false;
                 #ifdef DEBUG_SHOCK_VERBOSE
-                vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
+                std::cout << "S:" << sedge->id() << "did not intersect. \n";
                 #endif
             }
         }
@@ -538,7 +538,7 @@ bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
                 {
                     shocks_valid = false;
                     #ifdef DEBUG_SHOCK_VERBOSE
-                    vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
+                    std::cout << "S:" << sedge->id() << "did not intersect. \n";
                     #endif
                 }
             }
@@ -547,7 +547,7 @@ bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
     }
 
     //go through the edge_list and purge isolated vertices
-    vcl_vector<dbsk2d_ishock_node*> vert_to_del;
+    std::vector<dbsk2d_ishock_node*> vert_to_del;
     for (vertex_iterator curN = vertices_.begin(); 
          curN != vertices_.end(); curN++){
         dbsk2d_ishock_node* curNode = (*curN);
@@ -572,18 +572,18 @@ bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
     #ifdef DEBUG_SHOCK_VERBOSE
     if (shocks_valid)
     {
-        vcl_cout << "shocks validated!" << vcl_endl;
+        std::cout << "shocks validated!" << std::endl;
     }
     else
     {
-        vcl_cout << "shocks invalid!" << vcl_endl;
+        std::cout << "shocks invalid!" << std::endl;
     }
     #endif
 
     dbsk2d_assert(shocks_valid);
 
     if (!shocks_valid){
-        vcl_cout << "Shocks computation produced invalid shocks." <<vcl_endl;
+        std::cout << "Shocks computation produced invalid shocks." <<std::endl;
     }
 
     return shocks_valid;
@@ -609,24 +609,24 @@ void dbsk2d_ishock_graph::update_shocks()
 }
 
 //: Print an ascii summary to the stream
-void dbsk2d_ishock_graph::print_summary(vcl_ostream &os)
+void dbsk2d_ishock_graph::print_summary(std::ostream &os)
 {
-  os << "Shock Graph Summary:" << vcl_endl;
-  os << "# of nodes: " << number_of_nodes() << vcl_endl;
-  os << "# of edges: " << number_of_edges() << vcl_endl;
+  os << "Shock Graph Summary:" << std::endl;
+  os << "# of nodes: " << number_of_nodes() << std::endl;
+  os << "# of edges: " << number_of_edges() << std::endl;
 
   /*os << "E: ";
   
   for (edge_iterator curE = edges_.begin(); curE != edges_.end(); curE++){
     os << (*curE)->id() << " ";
   }
-  os << vcl_endl;
+  os << std::endl;
 
   os << "V: ";
   for (vertex_iterator curN = vertices_.begin(); curN != vertices_.end(); curN++)
     os << (*curN)->id() << " ";
 
-  os << vcl_endl;*/
+  os << std::endl;*/
 }
 
 

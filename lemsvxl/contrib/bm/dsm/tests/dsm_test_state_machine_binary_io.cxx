@@ -15,7 +15,7 @@
 
 #include"../io/dsm_io_state_machine.h"
 
-#include<vcl_string.h>
+#include<string>
 
 #include<vnl/vnl_random.h>
 
@@ -24,12 +24,12 @@
 template<int T>
 void test_state_machine_binary_io()
 {
-    vcl_string filename("test_dsm_state_machine_io.bin");
+    std::string filename("test_dsm_state_machine_io.bin");
     unsigned nclasses = 5;
     unsigned npts = 20;
     dsm_state_machine_base_sptr state_machine_sptr = new dsm_state_machine<T>(5051);
     vnl_random rand;
-    vcl_vector<vnl_vector<double> > observations;
+    std::vector<vnl_vector<double> > observations;
 
     for( unsigned i = 0; i < nclasses; ++i )
     {
@@ -45,7 +45,7 @@ void test_state_machine_binary_io()
         }//end point iteration
     }//end class iteration
 
-    vsl_b_ofstream os(filename.c_str(), vcl_ios::out|vcl_ios::binary);
+    vsl_b_ofstream os(filename.c_str(), std::ios::out|std::ios::binary);
     //state_machine_sptr->b_write(os);
     dsm_state_machine<T>* p1 = static_cast<dsm_state_machine<T>*>(state_machine_sptr.as_pointer());
     vsl_b_write(os,p1);
@@ -53,7 +53,7 @@ void test_state_machine_binary_io()
 
     dsm_state_machine_base_sptr state_machine_sptr2 = new dsm_state_machine<T>();
 
-    vsl_b_ifstream is(filename.c_str(), vcl_ios::in|vcl_ios::binary);
+    vsl_b_ifstream is(filename.c_str(), std::ios::in|std::ios::binary);
     //state_machine_sptr2->b_read(is);
     dsm_state_machine<T>* p2 = static_cast<dsm_state_machine<T>*>(state_machine_sptr2.as_pointer());
     vsl_b_read(is,p2);
@@ -66,11 +66,11 @@ void test_state_machine_binary_io()
     TEST_NEAR("TEST STATE MACHINE MAX PROB MATCH:", state_machine_sptr->max_prob(), state_machine_sptr2->max_prob(),.001);
     TEST_NEAR("TEST STATE MACHINE SIZES MATCH:", state_machine_sptr->size(), state_machine_sptr2->size(), 0.5);
     
-    vcl_map<unsigned, dsm_node_base_sptr> graph1, graph2;
+    std::map<unsigned, dsm_node_base_sptr> graph1, graph2;
     graph1 = state_machine_sptr->graph();
     graph2 = state_machine_sptr2->graph();
 
-    for( vcl_map<unsigned, dsm_node_base_sptr>::const_iterator itr = graph1.begin(); itr != graph1.end(); ++itr )
+    for( std::map<unsigned, dsm_node_base_sptr>::const_iterator itr = graph1.begin(); itr != graph1.end(); ++itr )
     {
         dsm_node_base_sptr node1 = itr->second;
         dsm_node_base_sptr node2 = graph2[itr->first];
@@ -86,8 +86,8 @@ void test_state_machine_binary_io()
                 TEST_NEAR("TEST WRITTEN COVARIANCE IS THE SAME AS READ:", node1_ptr->covariance()(i,j), node2_ptr->covariance()(i,j),0.00001);
     }//end graph iteration
 
-    vcl_map<unsigned,unsigned> fsm1 = state_machine_sptr->frame_state_map(), fsm2=state_machine_sptr2->frame_state_map();
-    for(vcl_map<unsigned,unsigned>::const_iterator itr = fsm1.begin(); itr != fsm1.end(); ++itr)
+    std::map<unsigned,unsigned> fsm1 = state_machine_sptr->frame_state_map(), fsm2=state_machine_sptr2->frame_state_map();
+    for(std::map<unsigned,unsigned>::const_iterator itr = fsm1.begin(); itr != fsm1.end(); ++itr)
     {
         TEST_NEAR("TEST FRAME STATE MAPS MATCH:", itr->second, fsm2[itr->first],.5);
     }

@@ -4,16 +4,16 @@
 
 #include<testlib/testlib_test.h>
 
-#include<vcl_string.h>
+#include<string>
 
 #include<vgl/vgl_point_3d.h>
 
 static void test_draw_box()
 {
     
-    vcl_string test_draw_box_filename = "test_draw_box.wrl";
+    std::string test_draw_box_filename = "test_draw_box.wrl";
 
-    vcl_ofstream os(test_draw_box_filename.c_str(),vcl_ios::out);
+    std::ofstream os(test_draw_box_filename.c_str(),std::ios::out);
 
     dvrml vrml_out(os);
 

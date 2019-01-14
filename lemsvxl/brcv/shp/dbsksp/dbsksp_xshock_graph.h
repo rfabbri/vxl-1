@@ -42,7 +42,7 @@ public:
   // DATA ACCESS ---------------------------------------------------------------
 
   //: Return the type identifier string
-  vcl_string is_a() const {return "dbsksp_xshock_graph"; }
+  std::string is_a() const {return "dbsksp_xshock_graph"; }
 
   //: unique id given to its element
   unsigned int next_available_id(){ return ++this->next_available_id_; }
@@ -90,7 +90,7 @@ public:
 
   //: Group the vertices by their depths
   // Example: vertex_bins[1] is a vector of all vertices with depth 1
-  bool group_vertices_by_depth(vcl_vector<vcl_vector<unsigned > >& vertex_bins);
+  bool group_vertices_by_depth(std::vector<std::vector<unsigned > >& vertex_bins);
 
 protected:
   //: Compute bounding box of the shock graph
@@ -170,7 +170,7 @@ public:
   bool compute_vertex_depths(unsigned root_vertex_id);
   
   //: print info of the shock graph to an output stream
-  vcl_ostream& print(vcl_ostream & os) const;
+  std::ostream& print(std::ostream & os) const;
 
 protected:
   //: unique id given to its element

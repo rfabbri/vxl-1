@@ -54,7 +54,7 @@ public:
     const vnl_vector<float>& light );
 
   // Storage for the ray voxels.
-  vcl_vector< bvaml_voxel* > voxels;
+  std::vector< bvaml_voxel* > voxels;
 
 protected:
 

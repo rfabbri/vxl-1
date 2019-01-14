@@ -31,8 +31,8 @@ public:
     const dbsksp_xshock_directed_tree_sptr& tree1, // original tree1
     const dbsksp_xshock_directed_tree_sptr& tree2,      // original tree2
     const dbsksp_xshock_directed_tree_sptr& model_tree, // model tree, to be optimized
-    const vcl_vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
-    const vcl_vector<pathtable_key >& correspondence2,  // correspondence between tree2 and model tree
+    const std::vector<pathtable_key >& correspondence1,  // correspondence between tree1 and model tree
+    const std::vector<pathtable_key >& correspondence2,  // correspondence between tree2 and model tree
     float scurve_matching_R,                            // parameter R in shock matching
     dbsksp_xgraph_model_using_L_alpha_phi_radius* const xgraph_model, // a model to modify the xgraph inside model_tree
     unsigned active_vid,                                // id of active node
@@ -73,16 +73,16 @@ protected:
   // Intermediate variables ----------------------------------------------------
   
   // correspondence contributing to this cost function
-  vcl_vector<bool > active_corr_[2];
+  std::vector<bool > active_corr_[2];
 
-  vcl_vector<dbsksp_xshock_node_sptr > active_nodes_;
-  vcl_vector<dbsksp_xshock_edge_sptr > active_edges_;
+  std::vector<dbsksp_xshock_node_sptr > active_nodes_;
+  std::vector<dbsksp_xshock_edge_sptr > active_edges_;
 
   //: Contract costs
   double contract_cost_[2];
 
   // cache variables for fast access
-  vcl_vector<double* > x_ptr_;
+  std::vector<double* > x_ptr_;
 
   // sum of costs external to this function's scope
   float external_cost_[2];  

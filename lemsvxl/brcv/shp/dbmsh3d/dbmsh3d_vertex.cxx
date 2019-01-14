@@ -15,8 +15,8 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <sstream>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbmsh3d/dbmsh3d_vertex.h>
@@ -37,7 +37,7 @@ unsigned int dbmsh3d_vertex::n_E_incidence () const
 }
 
 //: return false if any incident_E is found not in E_set.
-bool dbmsh3d_vertex::all_incident_Es_in_set (vcl_set<dbmsh3d_edge*>& E_set) const
+bool dbmsh3d_vertex::all_incident_Es_in_set (std::set<dbmsh3d_edge*>& E_set) const
 {
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) cur->ptr();
@@ -48,7 +48,7 @@ bool dbmsh3d_vertex::all_incident_Es_in_set (vcl_set<dbmsh3d_edge*>& E_set) cons
 }
 
 //: function to return all incident faces of this vertex
-int dbmsh3d_vertex::get_incident_Fs (vcl_set<dbmsh3d_face*>& face_set) const
+int dbmsh3d_vertex::get_incident_Fs (std::set<dbmsh3d_face*>& face_set) const
 {
   //: loop through all incident edges and put all faces into the set.
   for (dbmsh3d_ptr_node* cur = E_list_; cur != NULL; cur = cur->next()) {
@@ -263,16 +263,16 @@ void dbmsh3d_vertex::n_incE_types (int& nManifold, int& nRib, int& nAxial, int& 
     else if (E->e_type()==E_TYPE_DEGE_AXIAL)
       nDege++;
     else {
-      vul_printf (vcl_cout, "Warning: E %d type %c, ", id_, E->e_type());
+      vul_printf (std::cout, "Warning: E %d type %c, ", id_, E->e_type());
       ///assert (0);
     }
   }
 }
 
-void dbmsh3d_vertex::get_FEs_types (vcl_set<dbmsh3d_edge*>& manifold_E_set,
-                                    vcl_set<dbmsh3d_edge*>& rib_E_set,
-                                    vcl_set<dbmsh3d_edge*>& axial_E_set,                                      
-                                    vcl_set<dbmsh3d_edge*>& dege_E_set) const
+void dbmsh3d_vertex::get_FEs_types (std::set<dbmsh3d_edge*>& manifold_E_set,
+                                    std::set<dbmsh3d_edge*>& rib_E_set,
+                                    std::set<dbmsh3d_edge*>& axial_E_set,                                      
+                                    std::set<dbmsh3d_edge*>& dege_E_set) const
 {
   manifold_E_set.clear();
   rib_E_set.clear();
@@ -290,7 +290,7 @@ void dbmsh3d_vertex::get_FEs_types (vcl_set<dbmsh3d_edge*>& manifold_E_set,
     else if (E->e_type()==E_TYPE_DEGE_AXIAL)
       dege_E_set.insert (E);
     else {
-      vul_printf (vcl_cout, "Error FV %d get_FEs_types()!\n", id_);
+      vul_printf (std::cout, "Error FV %d get_FEs_types()!\n", id_);
       assert (0);
     }
   }
@@ -363,75 +363,75 @@ dbmsh3d_vertex* dbmsh3d_vertex::clone () const
   return V2;
 }
 
-void dbmsh3d_vertex::getInfo (vcl_ostringstream& ostrm) const
+void dbmsh3d_vertex::getInfo (std::ostringstream& ostrm) const
 {
   char s[1024];
 
-  vcl_sprintf (s, "\n==============================\n"); ostrm<<s;
-  vcl_sprintf (s, "dbmsh3d_vertex id: %d (%.12f, %.12f, %.12f)\n", id_,
+  std::sprintf (s, "\n==============================\n"); ostrm<<s;
+  std::sprintf (s, "dbmsh3d_vertex id: %d (%.12f, %.12f, %.12f)\n", id_,
                pt_.x(), pt_.y(), pt_.z()); ostrm<<s;
   bool result = check_integrity();
-  vcl_sprintf (s, "check_integrity: %s\n", result ? "pass." : "fail!"); ostrm<<s;
+  std::sprintf (s, "check_integrity: %s\n", result ? "pass." : "fail!"); ostrm<<s;
   
-  vcl_sprintf (s, "  topology type: "); ostrm<<s;
+  std::sprintf (s, "  topology type: "); ostrm<<s;
   VTOPO_TYPE type = detect_vtopo_type ();
   switch (type) {
   case BOGUS_VTOPO_TYPE:
-    vcl_sprintf (s, "BOGUS_VTOPO_TYPE"); ostrm<<s;
+    std::sprintf (s, "BOGUS_VTOPO_TYPE"); ostrm<<s;
   break;
   case VTOPO_ISOLATED:
-    vcl_sprintf (s, "VTOPO_ISOLATED"); ostrm<<s;
+    std::sprintf (s, "VTOPO_ISOLATED"); ostrm<<s;
   break;
   case VTOPO_EDGE_ONLY:
-    vcl_sprintf (s, "VTOPO_EDGE_ONLY"); ostrm<<s;
+    std::sprintf (s, "VTOPO_EDGE_ONLY"); ostrm<<s;
   break;
   case VTOPO_EDGE_JUNCTION:
-    vcl_sprintf (s, "VTOPO_EDGE_JUNCTION"); ostrm<<s;
+    std::sprintf (s, "VTOPO_EDGE_JUNCTION"); ostrm<<s;
   break;
   case VTOPO_2_MANIFOLD:
-    vcl_sprintf (s, "VTOPO_2_MANIFOLD"); ostrm<<s;
+    std::sprintf (s, "VTOPO_2_MANIFOLD"); ostrm<<s;
   break;
   case VTOPO_2_MANIFOLD_1RING:
-    vcl_sprintf (s, "VTOPO_2_MANIFOLD_1RING"); ostrm<<s;
+    std::sprintf (s, "VTOPO_2_MANIFOLD_1RING"); ostrm<<s;
   break;
   case VTOPO_NON_MANIFOLD:
-    vcl_sprintf (s, "VTOPO_NON_MANIFOLD"); ostrm<<s;
+    std::sprintf (s, "VTOPO_NON_MANIFOLD"); ostrm<<s;
   break;
   case VTOPO_NON_MANIFOLD_1RING:
-    vcl_sprintf (s, "VTOPO_NON_MANIFOLD_1RING"); ostrm<<s;
+    std::sprintf (s, "VTOPO_NON_MANIFOLD_1RING"); ostrm<<s;
   break;
   }
 
   
-  vcl_sprintf (s, "\n %u edge incidence.", n_E_incidence()); ostrm<<s;
+  std::sprintf (s, "\n %u edge incidence.", n_E_incidence()); ostrm<<s;
 
   //: the incident edges
-  vcl_set<void*> incident_Es;
+  std::set<void*> incident_Es;
   get_incident_Es (incident_Es);
-  vcl_sprintf (s, "\n %u incident edges (unordered): ", incident_Es.size()); ostrm<<s;
-  vcl_set<void*>::iterator it = incident_Es.begin();
+  std::sprintf (s, "\n %u incident edges (unordered): ", incident_Es.size()); ostrm<<s;
+  std::set<void*>::iterator it = incident_Es.begin();
   for (; it != incident_Es.end(); it++) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) (*it);
-    vcl_sprintf (s, "%d ", E->id()); ostrm<<s;
+    std::sprintf (s, "%d ", E->id()); ostrm<<s;
   }
 
   //: the ordered incident faces (for 2-manifold mesh)
-  vcl_vector<dbmsh3d_halfedge*> ordered_halfedges;
+  std::vector<dbmsh3d_halfedge*> ordered_halfedges;
   m2_get_ordered_HEs (ordered_halfedges);  
 
-  vcl_sprintf (s, "\n (2-manifold) %d ordered incident faces: ", ordered_halfedges.size()); ostrm<<s;
+  std::sprintf (s, "\n (2-manifold) %d ordered incident faces: ", ordered_halfedges.size()); ostrm<<s;
   for (unsigned int i=0; i<ordered_halfedges.size(); i++) {
     dbmsh3d_halfedge* HE = ordered_halfedges[i];
-    vcl_sprintf (s, "%d ", ((dbmsh3d_face*)HE->face())->id()); ostrm<<s;
+    std::sprintf (s, "%d ", ((dbmsh3d_face*)HE->face())->id()); ostrm<<s;
   }
   
-  vcl_sprintf (s, "\n (2-manifold) %d ordered incident edges: ", ordered_halfedges.size()); ostrm<<s;
+  std::sprintf (s, "\n (2-manifold) %d ordered incident edges: ", ordered_halfedges.size()); ostrm<<s;
   for (unsigned int i=0; i<ordered_halfedges.size(); i++) {
     dbmsh3d_halfedge* HE = ordered_halfedges[i];
-    vcl_sprintf (s, "%d ", HE->edge()->id()); ostrm<<s;
+    std::sprintf (s, "%d ", HE->edge()->id()); ostrm<<s;
   }
   
-  vcl_sprintf (s, "\n"); ostrm<<s;
+  std::sprintf (s, "\n"); ostrm<<s;
 }
 
 dbmsh3d_edge* dbmsh3d_vertex::get_valid_incident_E() const 
@@ -457,7 +457,7 @@ dbmsh3d_halfedge* dbmsh3d_vertex::get_1st_bnd_HE () const
 
 //: for 2-manifold mesh, return all incident halfedges (without duplicate pairs) in order
 //  return the last halfedge
-dbmsh3d_halfedge* dbmsh3d_vertex::m2_get_ordered_HEs (vcl_vector<dbmsh3d_halfedge*>& ordered_halfedges) const
+dbmsh3d_halfedge* dbmsh3d_vertex::m2_get_ordered_HEs (std::vector<dbmsh3d_halfedge*>& ordered_halfedges) const
 {
   dbmsh3d_halfedge* startHE = get_1st_bnd_HE();
   
@@ -520,7 +520,7 @@ bool dbmsh3d_vertex::m2_is_on_bnd (dbmsh3d_halfedge* inputHE) const
 //: return the sum_theta at this vertex
 double dbmsh3d_vertex::m2_sum_theta () const
 {
-  vcl_vector<dbmsh3d_halfedge*> ordered_halfedges;
+  std::vector<dbmsh3d_halfedge*> ordered_halfedges;
   dbmsh3d_halfedge* last_he = m2_get_ordered_HEs (ordered_halfedges);
   double sum_theta = 0;
 
@@ -545,13 +545,13 @@ dbmsh3d_edge* E_sharing_2V (const dbmsh3d_vertex* V1,
   return NULL;
 }
 
-dbmsh3d_face* find_F_sharing_Vs (vcl_vector<dbmsh3d_vertex*>& vertices)
+dbmsh3d_face* find_F_sharing_Vs (std::vector<dbmsh3d_vertex*>& vertices)
 {
   dbmsh3d_vertex* G = vertices[0];
-  vcl_set<dbmsh3d_face*> incident_faces;
+  std::set<dbmsh3d_face*> incident_faces;
   G->get_incident_Fs (incident_faces);
 
-  vcl_set<dbmsh3d_face*>::iterator it = incident_faces.begin();
+  std::set<dbmsh3d_face*>::iterator it = incident_faces.begin();
   for (unsigned int i=0; i<incident_faces.size(); i++) {
     dbmsh3d_face* F = (*it);
     if (F->all_bnd_Vs_incident (vertices))
@@ -620,10 +620,10 @@ dbmsh3d_edge* V_find_other_E (const dbmsh3d_vertex* V, const dbmsh3d_edge* input
   return NULL;
 }
 
-int n_E_V_incidence (vcl_set<void*>& incident_Es, const dbmsh3d_vertex* V)
+int n_E_V_incidence (std::set<void*>& incident_Es, const dbmsh3d_vertex* V)
 {
   int count = 0;
-  vcl_set<void*>::iterator it = incident_Es.begin();
+  std::set<void*>::iterator it = incident_Es.begin();
   for (; it != incident_Es.end(); it++) {
     dbmsh3d_edge* E = (dbmsh3d_edge*) (*it);
     if (E->vertices(0) == V)

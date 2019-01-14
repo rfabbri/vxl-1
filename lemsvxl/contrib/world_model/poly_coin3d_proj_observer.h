@@ -3,8 +3,8 @@
 
 #include "poly_observer.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_easy2D_tableau_sptr.h>
@@ -63,9 +63,9 @@ private:
   vgl_homg_plane_3d<double> proj_plane_;
   SoSeparator* root_;
   SoSelection* root_sel_;
-  vcl_map<obj_observable *, SoSeparator* > objects;
-  vcl_map<obj_observable *, dbmsh3d_mesh_mc* > meshes;
-  static vcl_vector<SoNode*> selected_nodes;
+  std::map<obj_observable *, SoSeparator* > objects;
+  std::map<obj_observable *, dbmsh3d_mesh_mc* > meshes;
+  static std::vector<SoNode*> selected_nodes;
 
   double start_x_, start_y_;
   bool left_button_down_, middle_button_down_;
@@ -73,7 +73,7 @@ private:
   int num_meshes_;
 
   obj_observable* find_selected_obs();
-  vcl_string create_mesh_name();
+  std::string create_mesh_name();
 };
 
 //: Create a smart-pointer to a vgui_easy2D_tableau tableau.

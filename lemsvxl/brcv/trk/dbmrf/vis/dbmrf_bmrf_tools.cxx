@@ -6,10 +6,10 @@
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 #include "dbmrf_bmrf_displayer.h"
-#include <vcl_iostream.h>
-#include <vcl_map.h>
-#include <vcl_limits.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <map>
+#include <limits>
+#include <fstream>
 #include <vgui/vgui.h> 
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_dialog.h>
@@ -36,7 +36,7 @@
 
 
 
-static void write_vrml_header(vcl_ofstream& str)
+static void write_vrml_header(std::ofstream& str)
 {
   str << "#VRML V2.0 utf8\n"
       << "Background {\n"
@@ -54,7 +54,7 @@ static void write_vrml_header(vcl_ofstream& str)
       << "}\n";
 }
 
-static void write_vrml_episeg( vcl_ofstream& str,
+static void write_vrml_episeg( std::ofstream& str,
                                const bmrf_epi_seg_sptr& seg, 
                                const bmrf_gamma_func_sptr& gamma,
                                double d_scale)
@@ -143,7 +143,7 @@ dbmrf_inspector_tool::~dbmrf_inspector_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbmrf_inspector_tool::name() const
 {
   return "Node Inspector"; 
@@ -200,35 +200,35 @@ dbmrf_inspector_tool::prune_directed()
 void 
 dbmrf_inspector_tool::print_arc_stats(const bmrf_node_sptr node) const
 {
-  vcl_cout << "gamma mean = " << node->gamma()->mean() <<vcl_endl;
-  vcl_cout << "probability = " << node->probability() <<vcl_endl;
-  vcl_cout << "-------------------------------------"<<vcl_endl;
+  std::cout << "gamma mean = " << node->gamma()->mean() <<std::endl;
+  std::cout << "probability = " << node->probability() <<std::endl;
+  std::cout << "-------------------------------------"<<std::endl;
   return;
 
   
-  vcl_map<double, double> results;
-  vcl_map<double, double> results2;
-  vcl_map<double, double> results3;
+  std::map<double, double> results;
+  std::map<double, double> results2;
+  std::map<double, double> results3;
   //double prob = curr_node_->probability();
   double sum = 0.0;
   for ( bmrf_node::arc_iterator a_itr = node->begin(); a_itr != node->end(); ++a_itr ){
     double int_var = 0.001; // intensity variance
-    results[(*a_itr)->probability()] = vcl_exp(-(*a_itr)->induced_match_error()/2.0 
+    results[(*a_itr)->probability()] = std::exp(-(*a_itr)->induced_match_error()/2.0 
                                                -(*a_itr)->avg_intensity_error()/(2.0*int_var));
     results2[(*a_itr)->probability()] = (*a_itr)->induced_gamma();
     double exp_gamma = (*a_itr)->to()->gamma()->mean();
     exp_gamma /= 1.0 + exp_gamma*(*a_itr)->time_step();
     results3[(*a_itr)->probability()] = exp_gamma;
-    sum += (*a_itr)->probability()*vcl_abs((*a_itr)->induced_gamma() - exp_gamma);
+    sum += (*a_itr)->probability()*std::abs((*a_itr)->induced_gamma() - exp_gamma);
     //results2[(*a_itr)->probability()] = (*a_itr)->avg_intensity_error();
     //results3[(*a_itr)->probability()] = (*a_itr)->induced_match_error();
   }
-  for ( vcl_map<double, double>::iterator itr = results.begin(); itr != results.end(); ++itr){
-    vcl_cout << itr->first << " \t- " << itr->second 
-             << " \t- " << results2[itr->first] << " \t- " << results2[itr->first]-results3[itr->first] << vcl_endl;
+  for ( std::map<double, double>::iterator itr = results.begin(); itr != results.end(); ++itr){
+    std::cout << itr->first << " \t- " << itr->second 
+             << " \t- " << results2[itr->first] << " \t- " << results2[itr->first]-results3[itr->first] << std::endl;
   }
-  vcl_cout << "sum = " << sum << vcl_endl;
-  vcl_cout << "-----------------------------------" << vcl_endl;
+  std::cout << "sum = " << sum << std::endl;
+  std::cout << "-----------------------------------" << std::endl;
 }
 
 
@@ -261,14 +261,14 @@ dbmrf_inspector_tool::handle( const vgui_event & e,
             if ( (*a_itr)->to()->frame_num() != frame )
               continue;
             double alpha_range = (*a_itr)->max_alpha() - (*a_itr)->min_alpha();
-            total_prob += alpha_range * vcl_exp(- (*a_itr)->avg_intensity_error()/(2.0*int_var));
+            total_prob += alpha_range * std::exp(- (*a_itr)->avg_intensity_error()/(2.0*int_var));
           }
           for ( bmrf_node::arc_iterator a_itr = curr_node_->begin(); 
                 a_itr != curr_node_->end();  ++a_itr ){
             if ( (*a_itr)->to()->frame_num() != frame )
               continue;
             double alpha_range = (*a_itr)->max_alpha() - (*a_itr)->min_alpha();
-            double prob = alpha_range * vcl_exp(- (*a_itr)->avg_intensity_error()/(2.0*int_var)) / total_prob;
+            double prob = alpha_range * std::exp(- (*a_itr)->avg_intensity_error()/(2.0*int_var)) / total_prob;
             neighbor_style_->rgba[0] = prob ;
             neighbor_style_->rgba[2] = 1.0;
             neighbor_style_->apply_all();  
@@ -308,15 +308,15 @@ dbmrf_inspector_tool::handle( const vgui_event & e,
   // Make VRML for current frame
   if( e.type == vgui_KEY_PRESS && e.key == 'v' ){  
     vgui_dialog save_vrml_dlg("Save VRML for this frame");
-    static vcl_string file_name = "";
-    static vcl_string ext = "*.wrl";
+    static std::string file_name = "";
+    static std::string ext = "*.wrl";
     save_vrml_dlg.file("File:", ext, file_name);
     if( !save_vrml_dlg.ask())
       return true;
 
-    vcl_ofstream vrml(file_name.c_str());
+    std::ofstream vrml(file_name.c_str());
     write_vrml_header(vrml);
-    for( vcl_map<bmrf_epi_seg_sptr, bmrf_node_sptr>::const_iterator itr = storage_->network()->begin(storage_->frame());
+    for( std::map<bmrf_epi_seg_sptr, bmrf_node_sptr>::const_iterator itr = storage_->network()->begin(storage_->frame());
          itr != storage_->network()->end(storage_->frame()); ++itr ){
       itr->second->probability();
       if(itr->second->gamma().ptr() != NULL)
@@ -351,9 +351,9 @@ dbmrf_inspector_tool::handle( const vgui_event & e,
           double error = alpha_range *( (*a_itr)->induced_match_error() 
                                       + (*a_itr)->avg_intensity_error()/int_var );
           total_error += error;
-          vcl_cout << "==== Error: " << error << "\t Prob: " << exp(-error/2.0) << vcl_endl;
-          vcl_cout << "==== Total Error: " << total_error 
-                   << "\t Total Prob: " << exp(-total_error/2.0) << vcl_endl;
+          std::cout << "==== Error: " << error << "\t Prob: " << exp(-error/2.0) << std::endl;
+          std::cout << "==== Total Error: " << total_error 
+                   << "\t Total Prob: " << exp(-total_error/2.0) << std::endl;
         }
         else
           total_error = 0.0;
@@ -430,7 +430,7 @@ void
 dbmrf_inspector_tool::get_popup( const vgui_popup_params& params, 
                                      vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((draw_epipolar_line_)?on:off)+"Epipolar Line", 
             bvis1_tool_toggle, (void*)(&draw_epipolar_line_) );
   menu.add( ((draw_intensity_)?on:off)+"Intensity", 
@@ -465,7 +465,7 @@ dbmrf_inspect_3d_tool::~dbmrf_inspect_3d_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbmrf_inspect_3d_tool::name() const
 {
   return "3D Curvel Inspector"; 
@@ -478,7 +478,7 @@ dbmrf_inspect_3d_tool::activate()
 {
   vgui_dialog storage_dialog("Select Reconstruction");
 
-  vcl_vector<vcl_string> choices = bvis1_manager::instance()
+  std::vector<std::string> choices = bvis1_manager::instance()
     ->repository()->get_all_storage_class_names("curvel_3d");
 
   int selection = -1;
@@ -516,10 +516,10 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
     if (!curr_curve_)
       return false;
       
-    //vcl_set<bmrf_node_sptr> nodes;
+    //std::set<bmrf_node_sptr> nodes;
     vgui_style_sptr line_style = vgui_style::new_style(1.0, 0.0, 0.0, 3.0, 1.0);
     line_style->apply_all();
-    vcl_vector<float> pos_x, pos_y;
+    std::vector<float> pos_x, pos_y;
     for ( bmrf_curve_3d::iterator itr = curr_curve_->begin();
           itr != curr_curve_->end();  ++itr )
     {
@@ -541,7 +541,7 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
     }
 
     vgui_soview2D_linestrip(pos_x.size(), &*pos_x.begin(), &*pos_y.begin()).draw();
-    //for ( vcl_set<bmrf_node_sptr>::iterator itr = nodes.begin();
+    //for ( std::set<bmrf_node_sptr>::iterator itr = nodes.begin();
     //      itr != nodes.end();  ++itr )
     //{   
     //  bgui_bmrf_epi_seg_soview2D((*itr)->epi_seg()).draw();
@@ -562,7 +562,7 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
 
     vgui_soview2D* curr_obj =  (vgui_soview2D*)tableau_->get_highlighted_soview();
     curr_node_ = NULL;
-    vcl_set<bmrf_curve_3d_sptr> all_curves, found_curves;
+    std::set<bmrf_curve_3d_sptr> all_curves, found_curves;
 
     if( curr_obj && curr_obj->type_name() == "bgui_bmrf_epi_seg_soview2D"){ 
       bgui_bmrf_epi_seg_soview2D* bmrf_object = (bgui_bmrf_epi_seg_soview2D*)curr_obj;
@@ -571,7 +571,7 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
       curvel_storage_->get_curvel_3d(all_curves);
       
       int curve_num = 1;
-      for ( vcl_set<bmrf_curve_3d_sptr>::iterator itr1 = all_curves.begin();
+      for ( std::set<bmrf_curve_3d_sptr>::iterator itr1 = all_curves.begin();
             itr1 != all_curves.end();  ++itr1, ++curve_num )
       {
         for ( bmrf_curve_3d::const_iterator itr2 = (*itr1)->begin();
@@ -579,7 +579,7 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
         {
           if ( (*itr2)->is_projection(curr_node_) ){
             found_curves.insert(*itr1);
-            vcl_cout << "found curve number " << curve_num << vcl_endl;
+            std::cout << "found curve number " << curve_num << std::endl;
             break;
           }
         }
@@ -587,17 +587,17 @@ dbmrf_inspect_3d_tool::handle( const vgui_event & e,
     }
     
     if( found_curves.size() > 1 )
-      vcl_cerr << "Warning found " << found_curves.size() << " matches" << vcl_endl;
+      std::cerr << "Warning found " << found_curves.size() << " matches" << std::endl;
     else if( found_curves.size() == 1 ){
       curr_curve_ = *(found_curves.begin());
       for ( bmrf_curve_3d::iterator itr = curr_curve_->begin();
             itr != curr_curve_->end();  ++itr )
       {
-        vcl_cout << (*itr)->num_projections(true) 
+        std::cout << (*itr)->num_projections(true) 
                  << " gamma = " << (*itr)->gamma_avg() 
-                 << " std = " << (*itr)->gamma_std() << vcl_endl;
+                 << " std = " << (*itr)->gamma_std() << std::endl;
       }
-      vcl_cout << vcl_endl;
+      std::cout << std::endl;
     }
     else
       curr_curve_ = NULL;
@@ -628,7 +628,7 @@ dbmrf_xform_tool::~dbmrf_xform_tool()
 
 
 //: Return the name of this tool
-vcl_string
+std::string
 dbmrf_xform_tool::name() const
 {
   return "Segment Transform";
@@ -679,10 +679,10 @@ dbmrf_xform_tool::handle( const vgui_event & e,
         double total_error = (*a_itr)->induced_match_error()/2.0
                             +(*a_itr)->avg_intensity_error()/(2.0*int_var);*/
         double alpha_range = (*a_itr)->max_alpha() - (*a_itr)->min_alpha();
-        sum += (gamma - exp_gamma)*(gamma - exp_gamma)/*vcl_exp(-total_error)*/*alpha_range;
+        sum += (gamma - exp_gamma)*(gamma - exp_gamma)/*std::exp(-total_error)*/*alpha_range;
       }
 
-      vcl_cout << gamma << '\t'<<prob<< '\t' << sum<< vcl_endl;
+      std::cout << gamma << '\t'<<prob<< '\t' << sum<< std::endl;
 
       cached_tableau_->post_overlay_redraw();
       return true;
@@ -712,11 +712,11 @@ dbmrf_xform_tool::handle( const vgui_event & e,
           init_s_ = s;
           init_a_ = a;
           double prob = node_->probability();
-          vcl_cout << "The best probability is " << prob << vcl_endl;
-          vcl_cout << "Selected "<< node_<<vcl_endl;
+          std::cout << "The best probability is " << prob << std::endl;
+          std::cout << "Selected "<< node_<<std::endl;
           double ri = node_->epi_seg()->avg_right_int();
           double li = node_->epi_seg()->avg_left_int();
-          vcl_cout << "avg left int = " << li << " \tavg right int = " << ri << vcl_endl;
+          std::cout << "avg left int = " << li << " \tavg right int = " << ri << std::endl;
           for ( bmrf_node::arc_iterator a_itr = node_->begin(); 
                 a_itr != node_->end(); ++a_itr ){
             if((*a_itr)->time_step() > 0){
@@ -724,11 +724,11 @@ dbmrf_xform_tool::handle( const vgui_event & e,
               double total_error = (*a_itr)->induced_match_error()/2.0
                                   +(*a_itr)->avg_intensity_error()/(2.0*int_var);
               double alpha_range = (*a_itr)->max_alpha() - (*a_itr)->min_alpha();
-              vcl_cout << (*a_itr)->induced_gamma() <<'\t'<< vcl_exp(-total_error)*alpha_range 
-                       << '\t' << (*a_itr)->probability()<< vcl_endl;
+              std::cout << (*a_itr)->induced_gamma() <<'\t'<< std::exp(-total_error)*alpha_range 
+                       << '\t' << (*a_itr)->probability()<< std::endl;
             }
           }
-          vcl_cout << "--------------------------" << vcl_endl;
+          std::cout << "--------------------------" << std::endl;
           for ( bmrf_node::arc_iterator a_itr = node_->begin(); 
                 a_itr != node_->end(); ++a_itr ){
             if((*a_itr)->time_step() < 0){
@@ -736,11 +736,11 @@ dbmrf_xform_tool::handle( const vgui_event & e,
               double total_error = (*a_itr)->induced_match_error()/2.0
                                   +(*a_itr)->avg_intensity_error()/(2.0*int_var);
               double alpha_range = (*a_itr)->max_alpha() - (*a_itr)->min_alpha();
-              vcl_cout << (*a_itr)->induced_gamma() <<'\t'<< vcl_exp(-total_error)*alpha_range 
-                       << '\t' << (*a_itr)->probability()<< vcl_endl;
+              std::cout << (*a_itr)->induced_gamma() <<'\t'<< std::exp(-total_error)*alpha_range 
+                       << '\t' << (*a_itr)->probability()<< std::endl;
             }
           }
-          vcl_cout << "--------------------------" << vcl_endl;
+          std::cout << "--------------------------" << std::endl;
           return true; 
         }
       }

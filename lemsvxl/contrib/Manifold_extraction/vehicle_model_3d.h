@@ -35,7 +35,7 @@ void transform_model(vnl_matrix<double>const& m1,vnl_matrix<double>const& m2,vnl
 
 void print_vrml();
 
-// void print_vrml(vcl_ofstream &ofstr);
+// void print_vrml(std::ofstream &ofstr);
     protected:
         vgl_box_3d <double> hood_,cab_,bed_;
 

@@ -2,15 +2,15 @@
 #include <dbskr/dbskr_dpmatch.h>
 #include <dbskr/dbskr_scurve.h>
 
-#define ALMOST_EQUAL(X,Y,Z)   ((vcl_fabs(X-Y) < Z) ? true : false)
+#define ALMOST_EQUAL(X,Y,Z)   ((std::fabs(X-Y) < Z) ? true : false)
 
 dbskr_localize_match::dbskr_localize_match(){
 
-  vcl_vector<int> a;
-  vcl_map <int, float> b;
-  vcl_vector< vcl_pair <int,int> > c;
-  vcl_vector <double> d;
-  vcl_vector <float> e;
+  std::vector<int> a;
+  std::map <int, float> b;
+  std::vector< std::pair <int,int> > c;
+  std::vector <double> d;
+  std::vector <float> e;
   dbskr_scurve_sptr c1,c2;
 
   _curve1 = c1;
@@ -45,21 +45,21 @@ dbskr_localize_match::dbskr_localize_match(){
 
 //dbskr_localize_match::dbskr_localize_match(dbskr_scurve_sptr c1, 
 //              dbskr_scurve_sptr c2,
-//              vcl_vector< vcl_pair <int,int> > initMap,
+//              std::vector< std::pair <int,int> > initMap,
 //              double sampleSize) {
 
 dbskr_localize_match::dbskr_localize_match(dbskr_scurve_sptr c1,
                                            dbskr_scurve_sptr c2, 
                                            dbskr_scurve_sptr dc1,
                                            dbskr_scurve_sptr dc2,
-                                           vcl_vector<int>& map1,
-                                           vcl_vector<int>& map2,
-                                           vcl_vector< vcl_pair<int,int> > initMap,
+                                           std::vector<int>& map1,
+                                           std::vector<int>& map2,
+                                           std::vector< std::pair<int,int> > initMap,
                                            float R) {
 
-  vcl_vector<int> a;
-  vcl_map <int, float> b;
-  vcl_vector <float> d;
+  std::vector<int> a;
+  std::map <int, float> b;
+  std::vector <float> d;
 
   _n=c1->num_points();
   _m=c2->num_points();
@@ -97,8 +97,8 @@ dbskr_localize_match::dbskr_localize_match(dbskr_scurve_sptr c1,
       printf("(%d %d) (%d %d) (%d %d)\n",p1,p2,ind1,ind2,map1[p1],map2[p2]);
       fflush(stdout);
     }*/
-    vcl_pair<int,int> p(map1[p1],map2[p2]);
-    _map[p]=vcl_pair<int,int>(0,0);
+    std::pair<int,int> p(map1[p1],map2[p2]);
+    _map[p]=std::pair<int,int>(0,0);
   }
   
 
@@ -122,7 +122,7 @@ dbskr_localize_match::dbskr_localize_match(dbskr_scurve_sptr c1,
   //: ozge changed to defaults
   //_numCostElems = numCostElems;
   _numCostElems = 3;
-  vcl_vector <double> v(_numCostElems,0);
+  std::vector <double> v(_numCostElems,0);
   _ds1=v;
   _ds2=v;
   _dt1=v;
@@ -142,7 +142,7 @@ void dbskr_localize_match::match(){
   int curr1,curr2;
 
   float cost;
-  vcl_pair <int,int> prevPt;
+  std::pair <int,int> prevPt;
 
   _finalMap.clear();
   prevPt.first=0;
@@ -195,8 +195,8 @@ void dbskr_localize_match::match(){
   if (cost < _currCostC1[curr1]){
     _currCostC1[curr1]=cost;
 
-    _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-    _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+    _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+    _map[std::pair<int,int>(curr1,curr2)].second=prev2;
     prevPt.first=prev1;
     prevPt.second=prev2;
   }
@@ -209,8 +209,8 @@ void dbskr_localize_match::match(){
   if (cost < _currCostC1[curr1]){
     _currCostC1[curr1]=cost;
 
-    _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-    _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+    _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+    _map[std::pair<int,int>(curr1,curr2)].second=prev2;
     prevPt.first=prev1;
     prevPt.second=prev2;
   }
@@ -228,8 +228,8 @@ void dbskr_localize_match::match(){
   if (cost < _currCostC2[curr2]){
     _currCostC2[curr2]=cost;
 
-    _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-    _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+    _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+    _map[std::pair<int,int>(curr1,curr2)].second=prev2;
     prevPt.first=prev1;
     prevPt.second=prev2;
   }
@@ -242,8 +242,8 @@ void dbskr_localize_match::match(){
   if (cost < _currCostC2[curr2]){
     _currCostC2[curr2]=cost;
 
-    _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-    _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+    _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+    _map[std::pair<int,int>(curr1,curr2)].second=prev2;
     prevPt.first=prev1;
     prevPt.second=prev2;
   }
@@ -279,8 +279,8 @@ void dbskr_localize_match::match(){
     if (cost < _finalCost){
       _finalCost=cost;
 
-      _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-      _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+      _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+      _map[std::pair<int,int>(curr1,curr2)].second=prev2;
        prevPt.first=prev1;
        prevPt.second=prev2;
     }
@@ -292,24 +292,24 @@ void dbskr_localize_match::match(){
     if (cost < _finalCost){
        _finalCost=cost;
        
-       _map[vcl_pair<int,int>(curr1,curr2)].first=prev1;
-       _map[vcl_pair<int,int>(curr1,curr2)].second=prev2;
+       _map[std::pair<int,int>(curr1,curr2)].first=prev1;
+       _map[std::pair<int,int>(curr1,curr2)].second=prev2;
        prevPt.first=prev1;
        prevPt.second=prev2;
     }
   }
 
-  _map[vcl_pair<int,int>(_c1Map[i],_c2Map[i])].first=prevPt.first;
-  _map[vcl_pair<int,int>(_c1Map[i],_c2Map[i])].second=prevPt.second;
+  _map[std::pair<int,int>(_c1Map[i],_c2Map[i])].first=prevPt.first;
+  _map[std::pair<int,int>(_c1Map[i],_c2Map[i])].second=prevPt.second;
 
   _finalMap.clear();
-  _finalMap.push_back(vcl_pair<int,int>(_c1Map[i],_c2Map[i]));
+  _finalMap.push_back(std::pair<int,int>(_c1Map[i],_c2Map[i]));
   int ii=numSamples-1;
   while(ii>0){
     int sz=_finalMap.size();
     int s1=_finalMap[sz-1].first;
     int s2=_finalMap[sz-1].second;
-    _finalMap.push_back(_map[vcl_pair<int,int>(s1,s2)]);
+    _finalMap.push_back(_map[std::pair<int,int>(s1,s2)]);
 
     ii--;
   }
@@ -321,7 +321,7 @@ float dbskr_localize_match::computeIntervalCost(int i, int ip,
   float cost,dF=0,dK=0;
 
 
-  //vcl_vector <float> ds1,ds2,dt1,dt2;
+  //std::vector <float> ds1,ds2,dt1,dt2;
   int k;
   _curve1->stretch_cost(i,ip,_ds1);
   _curve2->stretch_cost(j,jp,_ds2);

@@ -1,11 +1,11 @@
 #include "det_nonmax_sup_helper.h"
-#include <vcl_cmath.h>
-#include <vcl_iostream.h>
+#include <cmath>
+#include <iostream>
 
 vbl_array_3d<bool> det_nonmax_sup_helper::intersection_flags(
     vgl_vector_3d<double> const& dir, 
-    vcl_vector<vgl_point_3d<double> > const &vertice,
-    vcl_vector<vbl_array_3d<int> > const & vertice_index)
+    std::vector<vgl_point_3d<double> > const &vertice,
+    std::vector<vbl_array_3d<int> > const & vertice_index)
 {
 
   // 8 vertices
@@ -20,7 +20,7 @@ vbl_array_3d<bool> det_nonmax_sup_helper::intersection_flags(
   double b = dir.y();
   double c = dir.z();
 
-  vcl_vector<double> dist(vertice.size());
+  std::vector<double> dist(vertice.size());
 
   for(unsigned int l=0; l < vertice.size(); l++)
   {
@@ -83,7 +83,7 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
   double a = dir.x();
   double b = dir.y();
   double c = dir.z();
-  double factor = vcl_sqrt(a*a + b*b + c*c);
+  double factor = std::sqrt(a*a + b*b + c*c);
 
   a /= factor;
   b /= factor;
@@ -100,7 +100,7 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
       for(int bi = 0; bi<ny; bi++)
         for(int bj=0; bj<nz; bj++)
         {
-          vcl_vector<int> q; // a vector of intesected voxel indice.
+          std::vector<int> q; // a vector of intesected voxel indice.
           for(int bk =0; bk < nx; bk++) 
             if(intersect_flags[bk][bi][bj])
               q.push_back(bk);
@@ -111,14 +111,14 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
             double distance = a*(q[l] - (nx-1)/2 ) + 
               b*(bi - (ny -1)/2) + c*(bj - (nz - 1)/2);
 
-            dist_sum += vcl_sqrt(3.0)*0.5 - fabs(distance);
+            dist_sum += std::sqrt(3.0)*0.5 - fabs(distance);
           }
 
           proj[bi][bj] = 0.0;
 
           for(unsigned int l = 0; l < q.size(); l++)
           {
-            double distance = vcl_sqrt(3.0)*0.5 - 
+            double distance = std::sqrt(3.0)*0.5 - 
               fabs(a*(q[l] - (nx-1)/2 ) + b*(bi - (ny -1)/2) + 
                   c*(bj - (nz - 1)/2));
 
@@ -138,7 +138,7 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
       for(int bi = 0; bi<nx; bi++)
         for(int bj=0; bj<nz; bj++)
         {
-          vcl_vector<int> q;
+          std::vector<int> q;
           for(int bk =0; bk < ny; bk++) 
             if(intersect_flags[bi][bk][bj])
               q.push_back(bk);
@@ -149,14 +149,14 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
             double distance = a*(bi - (nx-1)/2 ) + 
               b*(q[l] - (ny -1)/2) + c*(bj - (nz - 1)/2);
 
-            dist_sum += vcl_sqrt(3.0)*0.5 - fabs(distance);
+            dist_sum += std::sqrt(3.0)*0.5 - fabs(distance);
           }
 
           proj[bi][bj] = 0.0;
           
           for(unsigned int l = 0; l < q.size(); l++)
           {
-            double distance = vcl_sqrt(3.0)*0.5 - 
+            double distance = std::sqrt(3.0)*0.5 - 
               fabs(a*(bi - (nx-1)/2 ) + b*(q[l] - (ny -1)/2) + 
                   c*(bj - (nz - 1)/2));
 
@@ -175,7 +175,7 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
       for(int bi = 0; bi<nx; bi++)
         for(int bj=0; bj<ny; bj++)
         {
-          vcl_vector<int> q; 
+          std::vector<int> q; 
           
           for(int bk =0; bk < nz; bk++) 
             if(intersect_flags[bi][bj][bk])
@@ -187,13 +187,13 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
             double distance = a*(bi - (nx-1)/2 ) + 
               b*(bj - (ny -1)/2) + c*(q[l] - (nz - 1)/2);
 
-            dist_sum += vcl_sqrt(3.0)*0.5 - fabs(distance);
+            dist_sum += std::sqrt(3.0)*0.5 - fabs(distance);
           }
 
           proj[bi][bj] = 0.0;
           for(unsigned int l = 0; l < q.size(); l++)
           {
-            double distance = vcl_sqrt(3.0)*0.5 - 
+            double distance = std::sqrt(3.0)*0.5 - 
               fabs(a*(bi - (nx-1)/2 ) + b*(bj - (ny -1)/2) + 
                   c*(q[l] - (nz - 1)/2));
 
@@ -209,7 +209,7 @@ vbl_array_2d<double> det_nonmax_sup_helper::proj_axis_plane(
       break;
 
     default:
-      vcl_cerr << "woophs, weird thing happened\n";
+      std::cerr << "woophs, weird thing happened\n";
 
   }
 
@@ -226,10 +226,10 @@ int det_nonmax_sup_helper::closest_axis(vgl_vector_3d<double> const & dir)
   double c = dir.z();
 
   int axis = 0;
-  if(vcl_fabs(a) >= vcl_fabs(b) && vcl_fabs(a) >= vcl_fabs(c))
+  if(std::fabs(a) >= std::fabs(b) && std::fabs(a) >= std::fabs(c))
     axis = 1; // projection along x-axis
   else
-    if(vcl_fabs(b) >= vcl_fabs(a) && vcl_fabs(b) >= vcl_fabs(c))
+    if(std::fabs(b) >= std::fabs(a) && std::fabs(b) >= std::fabs(c))
       axis = 2; // y axis
     else
       axis = 3; // z axis

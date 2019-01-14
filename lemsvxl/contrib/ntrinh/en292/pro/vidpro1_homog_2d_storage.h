@@ -28,7 +28,7 @@ public:
   virtual ~vidpro1_homog_2d_storage(){}
 
   //: Returns the type string "homog_2d"
-  virtual vcl_string type() const { return "homog_2d"; }
+  virtual std::string type() const { return "homog_2d"; }
 
   //: Return IO version number;
   short version() const;
@@ -44,7 +44,7 @@ public:
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "vidpro1_homog_2d_storage"; }
+  virtual std::string is_a() const { return "vidpro1_homog_2d_storage"; }
 
   //: Return homography matrix 
   vgl_h_matrix_2d< double > H(){ return H_; }

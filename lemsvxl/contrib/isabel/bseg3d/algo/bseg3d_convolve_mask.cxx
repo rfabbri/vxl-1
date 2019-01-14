@@ -2,7 +2,7 @@
 
 
 //bool bseg3d_convolve_mask::convolve_separable(bvxm_grid_base_sptr grid_in,
-//                                              vcl_vector<vcl_vector> operators,
+//                                              std::vector<std::vector> operators,
 //                                              bvxm_grid_base_sptr grid_out)
 //{
 //  //cast grids

@@ -5,7 +5,7 @@
 
 #include "dbsk2d_bnd_edge.h"
 
-#include <vcl_algorithm.h>
+#include <algorithm>
 
 #include <vgl/vgl_intersection.h>
 
@@ -219,15 +219,15 @@ merge_with(dbsk2d_bnd_edge & other)
     vtol_topology_object* t = other.superiors_list()->front();
     dbsk2d_bnd_contour_sptr contour = static_cast<dbsk2d_bnd_contour* >(t);
 
-    vcl_vector<signed char > directions(1, dir);
-    vcl_vector<dbsk2d_bnd_edge_sptr > new_edges(1, this);
+    std::vector<signed char > directions(1, dir);
+    std::vector<dbsk2d_bnd_edge_sptr > new_edges(1, this);
     contour->replace_edges(new_edges, directions, &other);
   }
 
   // replace `other' by `this', geographically
-  vcl_list<dbsk2d_bnd_cell* > cells = other.cells();
+  std::list<dbsk2d_bnd_cell* > cells = other.cells();
   other.unlink_from_cells();
-  for (vcl_list<dbsk2d_bnd_cell* >::iterator cit = cells.begin();
+  for (std::list<dbsk2d_bnd_cell* >::iterator cit = cells.begin();
     cit != cells.end(); ++cit)
   {
     (*cit)->add_bnd_edge(this);
@@ -343,12 +343,12 @@ unlink_from_cells()
 //: print
 // inherited. Need rewrite.
 void dbsk2d_bnd_edge::
-print(vcl_ostream &os) const
+print(std::ostream &os) const
 {
   os << "\n<" << this->is_a()<< " " <<(void const *)this << "> with id "<<
     this->get_id() << '\n';
-  vcl_string str = (this->is_a_point())? "Yes" : "No";
-  os << " * Is a point ? " << str << vcl_endl;
+  std::string str = (this->is_a_point())? "Yes" : "No";
+  os << " * Is a point ? " << str << std::endl;
   // two end vertices
   os << " * v1 = ";
   this->v1()->print(os);
@@ -388,10 +388,10 @@ print(vcl_ostream &os) const
 
 // -----------------------------------------------------------------------
 void dbsk2d_bnd_edge::
-print_cell_info(vcl_ostream &os) const
+print_cell_info(std::ostream &os) const
 {
   os << "Bnd cells: " << this->cells().size();
-  for (vcl_list<dbsk2d_bnd_cell* >::const_iterator cit = 
+  for (std::list<dbsk2d_bnd_cell* >::const_iterator cit = 
     this->cells().begin(); cit != this->cells().end(); ++cit)
   {
     dbsk2d_bnd_cell_sptr cell = *cit;

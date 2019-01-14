@@ -10,8 +10,8 @@
 
 //#include <eh.h>
 //#include <except.h>
-//#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+//#include <iostream>
+#include <cmath>
 #include <stdarg.h>
 #include <stdlib.h>
 //#include <string.h>

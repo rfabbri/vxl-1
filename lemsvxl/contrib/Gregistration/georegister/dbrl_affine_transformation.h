@@ -14,7 +14,7 @@ class dbrl_affine_transformation:public dbrl_transformation
         virtual bool transform();
         double frobenius_norm();
 
-        virtual void print_transformation(vcl_ostream &os);
+        virtual void print_transformation(std::ostream &os);
 
           // ==== Binary IO methods ======
 
@@ -29,10 +29,10 @@ class dbrl_affine_transformation:public dbrl_transformation
   short version() const;
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const;
+  void print_summary(std::ostream &os) const;
 
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const {return "dbrl_affine_transformation";}
+  virtual std::string is_a() const {return "dbrl_affine_transformation";}
 
 
 

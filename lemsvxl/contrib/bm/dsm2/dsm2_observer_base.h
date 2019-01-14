@@ -26,7 +26,7 @@ public:
 	virtual ~dsm2_observer_base() {}
 
 	virtual void update( dsm2_subject_base* s, 
-					vcl_string const& interest ) = 0;
+					std::string const& interest ) = 0;
 
 	virtual void b_read( vsl_b_istream& is ) = 0;
 

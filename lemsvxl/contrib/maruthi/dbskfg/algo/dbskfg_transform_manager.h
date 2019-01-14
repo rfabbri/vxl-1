@@ -18,8 +18,8 @@
 #include <dbskfg/dbskfg_rag_graph_sptr.h>
 #include <dbskfg/dbskfg_rag_node_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vcl_vector.h>
-#include <vcl_map.h>
+#include <vector>
+#include <map>
 #include <vil3d/vil3d_image_view.h>
 
 //: Form Composite Graph algorithm
@@ -58,19 +58,19 @@ public:
     void set_alpha(double alpha){alpha_ = alpha;}
 
     // Set output folder
-    void set_output_frag_folder(vcl_string folder){out_folder_= folder;}
+    void set_output_frag_folder(std::string folder){out_folder_= folder;}
 
     // Set output prefix
-    void set_output_prefix(vcl_string prefix){out_prefix_=prefix;}
+    void set_output_prefix(std::string prefix){out_prefix_=prefix;}
 
     // Start binary file output
-    void start_binary_file(vcl_string binary_file_output);
+    void start_binary_file(std::string binary_file_output);
 
     // Start binary file output
-    void start_region_file(vcl_string binary_file_output);
+    void start_region_file(std::string binary_file_output);
 
     // Start xml output
-    void start_xml_file(vcl_string xml_file_output);
+    void start_xml_file(std::string xml_file_output);
 
     // Get image
     vil_image_resource_sptr get_image()
@@ -94,10 +94,10 @@ public:
     double get_alpha(){return alpha_;}
 
     // Get output folder
-    vcl_string get_output_frag_folder(){return out_folder_;}
+    std::string get_output_frag_folder(){return out_folder_;}
 
     // Get output prefix
-    vcl_string get_output_prefix(){return out_prefix_;}
+    std::string get_output_prefix(){return out_prefix_;}
 
     // Get bxml document
     bxml_document& get_xml_file(){return xml_file_;}
@@ -112,13 +112,13 @@ public:
     void write_xml_file();
  
     // Gets the original gap map
-    vcl_map<vcl_string,unsigned int>& gap_map(){return gap_map_;}
+    std::map<std::string,unsigned int>& gap_map(){return gap_map_;}
 
     // Returns the map for storing existing gaps in root node
-    vcl_map<vcl_string,unsigned int>& old_gap_map(){return old_gap_map_;}
+    std::map<std::string,unsigned int>& old_gap_map(){return old_gap_map_;}
 
     // Gets all the tranforms that this singleton holds
-    vcl_vector<dbskfg_transform_descriptor_sptr>& objects()
+    std::vector<dbskfg_transform_descriptor_sptr>& objects()
     {return transforms_;}
 
     // Returns the transform for a specific id
@@ -126,11 +126,11 @@ public:
     {return transforms_[index];}
 
     // Returns whether point is endpoint
-    bool endpoint(vcl_string endpoint)
+    bool endpoint(std::string endpoint)
     {return loop_map_.count(endpoint) > 0;}
 
     // Returns whether endpoint pair exists
-    bool loop_pair(vcl_pair<vcl_string,vcl_string> pair1)
+    bool loop_pair(std::pair<std::string,std::string> pair1)
     {return loop_end_map_.count(pair1) > 0;}
 
     // Returns transform held by contour id
@@ -146,13 +146,13 @@ public:
 
     // Returns transform held by endpoints
     dbskfg_transform_descriptor_sptr& loop_by_endpoints(
-        vcl_pair<vcl_string,vcl_string> pair1)
+        std::pair<std::string,std::string> pair1)
     {
         return transforms_[loop_end_map_[pair1]];
     }
 
     // Returns transforms helds at this loop
-    dbskfg_transform_descriptor_sptr& loop_at_endpoint(vcl_string temp)
+    dbskfg_transform_descriptor_sptr& loop_at_endpoint(std::string temp)
     {return transforms_[loop_map_[temp]];}
 
     // Destroy singleton 
@@ -162,7 +162,7 @@ public:
     void update_transforms_conflicts();
 
     // Read in training data
-    void read_in_training_data(vcl_string filename);
+    void read_in_training_data(std::string filename);
 
     // Set beta0 for logitic function
     void set_beta0_logit(double beta0){logistic_beta0_ = beta0;}
@@ -174,35 +174,35 @@ public:
     double transform_probability(double gamma_norm,double k0_norm, 
                                  double length);
 
-    void find_transform(vcl_vector<dbskfg_composite_link_sptr>&
+    void find_transform(std::vector<dbskfg_composite_link_sptr>&
                         contour_links_to_remove,
                         dbskfg_transform_descriptor_sptr& grouped_transform);
 
 
-    void write_binary_transforms(vcl_string binary_file_output);
+    void write_binary_transforms(std::string binary_file_output);
 
 private:
 
     // Keep track of all transform objects
-    vcl_vector<dbskfg_transform_descriptor_sptr> transforms_;
+    std::vector<dbskfg_transform_descriptor_sptr> transforms_;
 
     // Store a loop map
-    vcl_map<vcl_string,unsigned int> loop_map_;
+    std::map<std::string,unsigned int> loop_map_;
 
     // Store all loops by contour id
-    vcl_map<unsigned int,unsigned int> loop_contour_map_;
+    std::map<unsigned int,unsigned int> loop_contour_map_;
 
     // Store all loops by id of contour remove
-    vcl_map<unsigned int,unsigned int> loop_segment_map_;
+    std::map<unsigned int,unsigned int> loop_segment_map_;
 
     // Stores all loops by endpoints
-    vcl_map< vcl_pair<vcl_string,vcl_string> , unsigned int> loop_end_map_;
+    std::map< std::pair<std::string,std::string> , unsigned int> loop_end_map_;
 
     // Store a gap map that is populated with contour ids 
-    vcl_map<vcl_string,unsigned int> gap_map_;
+    std::map<std::string,unsigned int> gap_map_;
 
     // Stores a map of all exisiting gaps
-    vcl_map<vcl_string,unsigned int> old_gap_map_;
+    std::map<std::string,unsigned int> old_gap_map_;
 
     //: store image
     vil_image_resource_sptr image_; 
@@ -226,19 +226,19 @@ private:
     vil3d_image_view<double> dist_volume_;
 
     // Keep output folder for fragments
-    vcl_string out_folder_;
+    std::string out_folder_;
 
     // Keep output prefix for fragments
-    vcl_string out_prefix_;
+    std::string out_prefix_;
 
     // Keep binary file
-    vcl_string output_binary_file_;
+    std::string output_binary_file_;
 
     // Keep binary file
-    vcl_string output_region_file_;
+    std::string output_region_file_;
 
     // Keep binary file
-    vcl_string xml_file_output_;
+    std::string xml_file_output_;
 
     //: First Coefficient of logistic function 
     double logistic_beta0_;

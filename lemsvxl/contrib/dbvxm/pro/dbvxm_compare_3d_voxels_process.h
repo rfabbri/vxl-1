@@ -16,8 +16,8 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
-#include <vcl_algorithm.h>
+#include <string>
+#include <algorithm>
 #include <bprb/bprb_process.h>
 
 #include <vil/vil_image_view.h>
@@ -36,7 +36,7 @@ class dbvxm_compare_3d_voxels_process : public bprb_process
   //: Clone the process
   virtual dbvxm_compare_3d_voxels_process* clone() const {return new dbvxm_compare_3d_voxels_process(*this);}
 
-  vcl_string name(){return "dbvxmCompare3DVoxelsProcess";}
+  std::string name(){return "dbvxmCompare3DVoxelsProcess";}
 
   bool init() { return true; }
   bool execute();

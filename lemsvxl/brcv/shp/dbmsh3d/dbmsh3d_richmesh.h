@@ -63,7 +63,7 @@ public:
   }
   
   virtual void clear_vertices () {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
     while (it != vertexmap_.end()) {
       dbmsh3d_richvertex* RV = (dbmsh3d_richvertex*) (*it).second;
       remove_vertex (RV);
@@ -89,7 +89,7 @@ public:
   
   //: function to disconnect & remove all faces from the facemap
   virtual void clear_faces () {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
     while (it != facemap_.end()) {
       dbmsh3d_richface* RF = (dbmsh3d_richface*) (*it).second;
       remove_face (RF);      
@@ -100,13 +100,13 @@ public:
 
   // =========== Other functions ==============
   // Print a summary of mesh properties
-  virtual void print_summary(vcl_ostream& str);  
+  virtual void print_summary(std::ostream& str);  
 
 };
 
 dbmsh3d_richmesh* clone_richmesh_ifs (dbmsh3d_mesh* M, 
-                                      const vcl_vector<vcl_string >& bkt_vplist,
-                                      const vcl_vector<vcl_string >& bkt_fplist);
+                                      const std::vector<std::string >& bkt_vplist,
+                                      const std::vector<std::string >& bkt_fplist);
 
 #endif //dbmsh3d_richmesh_h_
 

@@ -39,15 +39,15 @@ dbsk2d_ishock_gap_transform_tool::handle( const vgui_event & e,
         dbsk2d_ishock_belm* elm=reinterpret_cast<dbsk2d_ishock_belm*>
              (&(*current_));
 
-        vcl_vector<
-        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
+        std::vector<
+        std::pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
 
         detector.detect_gap1(elm,gap_pairs);
 
         dbsk2d_ishock_gap_transform transformer(isg,gap_pairs[0]);
 
         bool flag = transformer.execute_transform();
-        vcl_cout<<"Shock Computation Valid: "<<flag<<vcl_endl;
+        std::cout<<"Shock Computation Valid: "<<flag<<std::endl;
         if ( flag == false)
         {
               transformer.recompute_full_shock_graph();
@@ -60,7 +60,7 @@ dbsk2d_ishock_gap_transform_tool::handle( const vgui_event & e,
   return dbsk2d_ishock_highlight_tool::handle(e, view);
 }
 
-vcl_string
+std::string
 dbsk2d_ishock_gap_transform_tool::name() const
 {
   return "Gap Transform";

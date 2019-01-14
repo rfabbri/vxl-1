@@ -4,7 +4,7 @@
 // \file
 
 #include <vgui/vgui.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 //#include <dbskr/dbskr_compute_scurve.h>
 #include <dbskr/dbskr_scurve.h>
 
@@ -50,13 +50,13 @@ void
 dbskr_subgraph_scurve_tool::activate()
 {
   if (!tableau()) {
-    vcl_cout << " dbskr_subgraph_scurve_tool::activate() - tableau is not set!\n";
+    std::cout << " dbskr_subgraph_scurve_tool::activate() - tableau is not set!\n";
     return;
   }
 
   dbsk2d_shock_graph_sptr sg = tableau()->get_shock_graph();
   if( sg.ptr() == 0 ) {if (tableau()->get_shock_graph())
-    vcl_cout << "shock graph pointer is zero!\n";
+    std::cout << "shock graph pointer is zero!\n";
     return;
   }
 
@@ -69,7 +69,7 @@ dbskr_subgraph_scurve_tool::~dbskr_subgraph_scurve_tool()
 {
 }
 
-vcl_string
+std::string
 dbskr_subgraph_scurve_tool::name() const
 {
   return "Draw Subgraph Scurve Tool (from sampled coarse shock)";
@@ -85,7 +85,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
 
   if (e.type == vgui_MOTION)
   {
-    int intx = (int)vcl_floor(pointx), inty = (int)vcl_floor(pointy);
+    int intx = (int)std::floor(pointx), inty = (int)std::floor(pointy);
     vgui::out << "[" << intx << " " << inty << "] : (" << pointx << " " << pointy << ") \n";
   }
 
@@ -111,19 +111,19 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
       dbsk2d_shock_edge* sedge = dynamic_cast<dbsk2d_shock_edge*>(current_);
       if (sedge) {
         if (sedge->target()->degree() >= 3) { // use this node
-          vcl_cout << "Selected edge has a degree three target, using this node...\n";
+          std::cout << "Selected edge has a degree three target, using this node...\n";
           //get_scurves(sedge->target(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->target(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->target(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else if (sedge->source()->degree() >= 3) {
-          vcl_cout << "Selected edge has a degree three source, using this node...\n";
+          std::cout << "Selected edge has a degree three source, using this node...\n";
           //get_scurves(sedge->source(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->source(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->source(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
+          std::cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
         }
 
       } else {
@@ -135,7 +135,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, snode, depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected node is not a degree three node! Select another node!\n";
+          std::cout << "Selected node is not a degree three node! Select another node!\n";
         }
       }
     }
@@ -151,7 +151,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
     end_scurve_.clear();
 
     depth_ = depth_ + 1;
-    vcl_cout << "depth increased to " << depth_ << vcl_endl;
+    std::cout << "depth increased to " << depth_ << std::endl;
 
     if (current_){
       current_->getInfo();
@@ -160,19 +160,19 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
       dbsk2d_shock_edge* sedge = dynamic_cast<dbsk2d_shock_edge*>(current_);
       if (sedge) {
         if (sedge->target()->degree() >= 3) { // use this node
-          vcl_cout << "Selected edge has a degree three target, using this node...\n";
+          std::cout << "Selected edge has a degree three target, using this node...\n";
           //get_scurves(sedge->target(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->target(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->target(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else if (sedge->source()->degree() >= 3) {
-          vcl_cout << "Selected edge has a degree three source, using this node...\n";
+          std::cout << "Selected edge has a degree three source, using this node...\n";
           //get_scurves(sedge->source(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->source(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->source(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
+          std::cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
         }
 
       } else {
@@ -184,7 +184,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, snode, depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected node is not a degree three node! Select another node!\n";
+          std::cout << "Selected node is not a degree three node! Select another node!\n";
         }
       }
     }
@@ -201,9 +201,9 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
 
     if (depth_ > 1) {
       depth_ = depth_ - 1;
-      vcl_cout << "depth decreased to " << depth_ << vcl_endl;
+      std::cout << "depth decreased to " << depth_ << std::endl;
     } else 
-      vcl_cout << "depth is 1 already, not decreased!\n";
+      std::cout << "depth is 1 already, not decreased!\n";
 
     if (current_){
       current_->getInfo();
@@ -212,19 +212,19 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
       dbsk2d_shock_edge* sedge = dynamic_cast<dbsk2d_shock_edge*>(current_);
       if (sedge) {
         if (sedge->target()->degree() >= 3) { // use this node
-          vcl_cout << "Selected edge has a degree three target, using this node...\n";
+          std::cout << "Selected edge has a degree three target, using this node...\n";
           //get_scurves(sedge->target(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->target(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->target(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else if (sedge->source()->degree() >= 3) {
-          vcl_cout << "Selected edge has a degree three source, using this node...\n";
+          std::cout << "Selected edge has a degree three source, using this node...\n";
           //get_scurves(sedge->source(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
           get_scurves(sg, sedge->source(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, sedge->source(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
+          std::cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
         }
 
       } else {
@@ -236,7 +236,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
           if (draw_boundary_)
             poly_ = trace_boundary_from_subgraph(sg, snode, depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
         } else {
-          vcl_cout << "Selected node is not a degree three node! Select another node!\n";
+          std::cout << "Selected node is not a degree three node! Select another node!\n";
         }
       }
     }
@@ -252,7 +252,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
       end_scurve_.clear();
 
       depth_ = 1.0f;
-      vcl_cout << "depth is reset to 1\n";
+      std::cout << "depth is reset to 1\n";
 
       if (current_){
         current_->getInfo();
@@ -261,19 +261,19 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
         dbsk2d_shock_edge* sedge = dynamic_cast<dbsk2d_shock_edge*>(current_);
         if (sedge) {
           if (sedge->target()->degree() >= 3) { // use this node
-            vcl_cout << "Selected edge has a degree three target, using this node...\n";
+            std::cout << "Selected edge has a degree three target, using this node...\n";
             //get_scurves(sedge->target(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
             get_scurves(sg, sedge->target(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
             if (draw_boundary_)
               poly_ = trace_boundary_from_subgraph(sg, sedge->target(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
           } else if (sedge->source()->degree() >= 3) {
-            vcl_cout << "Selected edge has a degree three source, using this node...\n";
+            std::cout << "Selected edge has a degree three source, using this node...\n";
             //get_scurves(sedge->source(), 0, cur_scurves_, visited_nodes_, end_scurve_, depth_);
             get_scurves(sg, sedge->source(), cur_scurves_, end_scurve_, depth_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_);
             if (draw_boundary_)
               poly_ = trace_boundary_from_subgraph(sg, sedge->source(), depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
           } else {
-            vcl_cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
+            std::cout << "Selected edge does not have a degree three source or target! Select another edge with a degree three source or target or a degree three node!\n";
           }
 
         } else {
@@ -285,7 +285,7 @@ dbskr_subgraph_scurve_tool::handle( const vgui_event & e,
             if (draw_boundary_)
               poly_ = trace_boundary_from_subgraph(sg, snode, depth_, draw_with_circular_completions_, binterpolate_, subsample_, interpolate_ds_, subsample_ds_, poly_area_threshold_);
           } else {
-            vcl_cout << "Selected node is not a degree three node! Select another node!\n";
+            std::cout << "Selected node is not a degree three node! Select another node!\n";
           }
         }
       }
@@ -382,7 +382,7 @@ void
 dbskr_subgraph_scurve_tool::get_popup( const vgui_popup_params& params, 
                                           vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   menu.add( "Set interpolate ds", 
             bvis1_tool_set_param, (void*)(&interpolate_ds_) );

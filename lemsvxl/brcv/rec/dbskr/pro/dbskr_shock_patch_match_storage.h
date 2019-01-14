@@ -32,14 +32,14 @@ public:
   //: Destructor
   virtual ~dbskr_shock_patch_match_storage();
 
-  virtual vcl_string type() const { return "shock_patch_match"; }
+  virtual std::string type() const { return "shock_patch_match"; }
 
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
   
   //: Return a platform independent string identifying the class
-  virtual vcl_string is_a() const { return "dbskr_shock_patch_match_storage"; }
+  virtual std::string is_a() const { return "dbskr_shock_patch_match_storage"; }
 
   void set_match(dbskr_shock_patch_match_sptr m) { match_ = m; }
   dbskr_shock_patch_match_sptr get_match() { return match_; }
@@ -61,7 +61,7 @@ public:
   virtual unsigned version() const {return 1;}
 
   //: determine if this is the given class
-  virtual bool is_class(vcl_string const& cls) const
+  virtual bool is_class(std::string const& cls) const
    { return cls==is_a();}
   
   //: Binary save self to stream.

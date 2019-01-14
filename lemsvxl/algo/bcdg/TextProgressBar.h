@@ -3,42 +3,42 @@
 // 
 // This class is used to create a textual progress meter.
 
-#include <vcl_iostream.h>
-#include <vcl_string.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <string>
+#include <sstream>
 
 class TextProgressBar {
-  vcl_string itsLabel;
+  std::string itsLabel;
   unsigned int itsTotal;
-  vcl_ostream* itsOut;
+  std::ostream* itsOut;
   unsigned int itsCurrent;
 public:
   TextProgressBar(
-      vcl_string label = "Progress",
+      std::string label = "Progress",
       unsigned int total = 100, 
-      vcl_ostream* out = &vcl_cout, 
+      std::ostream* out = &std::cout, 
       unsigned int start = 0) :
     itsLabel(label), itsTotal(total), itsOut(out), itsCurrent(start) {}
 
   // Prints the new result directly to the screen
   void print() const {
-    *itsOut << currentStr() << vcl_flush;
+    *itsOut << currentStr() << std::flush;
   }
 
   // Prints the current percent
-  vcl_string currentStr() const {
+  std::string currentStr() const {
     if(itsCurrent == itsTotal)
       return finishStr();
     
-    vcl_ostringstream s;
+    std::ostringstream s;
     s << "\r" << itsLabel << ": " << percent() << "% (" << itsCurrent 
       << " / " << itsTotal << ")"; 
     return s.str();
   }
 
   // Returns the current percent string
-  vcl_string finishStr() const {
-    vcl_ostringstream s;
+  std::string finishStr() const {
+    std::ostringstream s;
     s << "\r" << itsLabel << ": 100% (" << itsTotal 
       << " / " << itsTotal << ")\n";
     return s.str();

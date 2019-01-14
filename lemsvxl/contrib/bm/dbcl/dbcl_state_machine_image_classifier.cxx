@@ -88,15 +88,15 @@ t_forget_(t_forget),prob_thresh_(prob_thresh),mahalan_dist_factor_(mahalan_dist_
 		//for( feature_itr = curr_target_sptr->feature_map_begin(); feature_itr != feature_end; ++feature_itr )
 		//{
 		//	vnl_vector<double> reduced_feature_vector = feature_itr->second->feature_vector_reduced();
-		//	sigma[0] = sigma[0] + vcl_pow( (reduced_feature_vector.get(0) - mean[0]) , 2);
-		//	sigma[1] = sigma[1] + vcl_pow( (reduced_feature_vector.get(1) - mean[1]) , 2);
+		//	sigma[0] = sigma[0] + std::pow( (reduced_feature_vector.get(0) - mean[0]) , 2);
+		//	sigma[1] = sigma[1] + std::pow( (reduced_feature_vector.get(1) - mean[1]) , 2);
 		//}
 
 		//for( target_feature_itr = curr_target_sptr->target_map_begin(); target_feature_itr!=target_feature_end; ++target_feature_itr )
 		//{
 		//	vnl_vector<double> reduced_target_vector = target_feature_itr->second->feature_vector_reduced();
-		//	sigma[0] = sigma[0] + vcl_pow( (reduced_target_vector.get(0) - mean[0]), 2);
-		//	sigma[1] = sigma[1] + vcl_pow( (reduced_target_vector.get(1) - mean[1]), 2);
+		//	sigma[0] = sigma[0] + std::pow( (reduced_target_vector.get(0) - mean[0]), 2);
+		//	sigma[1] = sigma[1] + std::pow( (reduced_target_vector.get(1) - mean[1]), 2);
 		//}
 
 		
@@ -163,7 +163,7 @@ void dbcl_state_machine_image_classifier::classify()
 	unsigned cnt = 0;
 	for( classifier_itr = this->classifier_map_.begin(); classifier_itr != classifier_end; ++classifier_itr, ++cnt )
 	{
-		vcl_cout << (cnt/num_classifiers)*100 << "% targets classified." << vcl_endl;
+		std::cout << (cnt/num_classifiers)*100 << "% targets classified." << std::endl;
 		classifier_itr->second->classify();
 	}
 

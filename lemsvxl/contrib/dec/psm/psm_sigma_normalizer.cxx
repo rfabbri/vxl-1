@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <vnl/vnl_vector_fixed.h>
 #include <vnl/vnl_gamma.h>
@@ -33,11 +33,11 @@ psm_sigma_normalizer::psm_sigma_normalizer(float under_estimation_probability) :
 
   // sanity check on probability
   if (under_estimation_probability < 1e-4) {
-    vcl_cout << "error : psm_sigma_normalizer : under_estimation_probability " << under_estimation_probability << " too low " << vcl_endl;
+    std::cout << "error : psm_sigma_normalizer : under_estimation_probability " << under_estimation_probability << " too low " << std::endl;
     return;
   }
   if (under_estimation_probability > (1 - 1e-4)) {
-    vcl_cout << "error : psm_sigma_normalizer : under_estimation_probability " << under_estimation_probability << " too high " << vcl_endl;
+    std::cout << "error : psm_sigma_normalizer : under_estimation_probability " << under_estimation_probability << " too high " << std::endl;
     return;
   }
 
@@ -53,7 +53,7 @@ psm_sigma_normalizer::psm_sigma_normalizer(float under_estimation_probability) :
     vnl_vector_fixed<double,1> x(1.0f);
     minimizer.minimize(x);
 
-    float unbias_constant = (float)vcl_sqrt((float)(n-1) / x[0]);
+    float unbias_constant = (float)std::sqrt((float)(n-1) / x[0]);
 
     unbias_const_[n] = unbias_constant;
 
@@ -68,8 +68,8 @@ float psm_sigma_normalizer::normalization_factor(float number_of_observations)
   }
 
   // linearly interpolate between integer values
-  float nobs_floor = vcl_floor(number_of_observations);
-  float nobs_ceil = vcl_ceil(number_of_observations);
+  float nobs_floor = std::floor(number_of_observations);
+  float nobs_ceil = std::ceil(number_of_observations);
   float floor_weight = nobs_ceil - number_of_observations;
   float norm_factor = (normalization_factor_int((unsigned int)nobs_floor) * floor_weight) + (normalization_factor_int((unsigned int)nobs_ceil) * (1.0f - floor_weight));
 
@@ -93,7 +93,7 @@ float psm_sigma_normalizer::normalization_factor_int(unsigned int number_of_obse
   return m/number_of_observations + b;
 }
 
-void psm_sigma_normalizer::compute_sample_mean_and_variance(vcl_vector<float> samples, vcl_vector<float> weights, float& mean, float& variance)
+void psm_sigma_normalizer::compute_sample_mean_and_variance(std::vector<float> samples, std::vector<float> weights, float& mean, float& variance)
 {
   const unsigned int nsamples = samples.size();
   const unsigned int dimension = 1;
@@ -137,24 +137,24 @@ void psm_sigma_normalizer::compute_sample_mean_and_variance(vcl_vector<float> sa
 
 
 
-void psm_sigma_normalizer::compute_sample_mean_and_variance(vcl_vector<float> samples, float &mean, float &variance)
+void psm_sigma_normalizer::compute_sample_mean_and_variance(std::vector<float> samples, float &mean, float &variance)
 {
-  vcl_vector<float> weights(samples.size(),1.0f);
+  std::vector<float> weights(samples.size(),1.0f);
   compute_sample_mean_and_variance(samples,weights,mean,variance);
 }
 
 
-void psm_sigma_normalizer::compute_normalized_mean_and_variance(vcl_vector<float> samples, float &mean, float &variance)
+void psm_sigma_normalizer::compute_normalized_mean_and_variance(std::vector<float> samples, float &mean, float &variance)
 {
   compute_sample_mean_and_variance(samples,mean,variance);
   float sigma_norm_factor = normalization_factor_int(samples.size());
   variance *= sigma_norm_factor*sigma_norm_factor;
 }
 
-void psm_sigma_normalizer::compute_normalized_mean_and_variance(vcl_vector<float> samples, vcl_vector<float> weights, float &mean, float &variance)
+void psm_sigma_normalizer::compute_normalized_mean_and_variance(std::vector<float> samples, std::vector<float> weights, float &mean, float &variance)
 {
   float weight_sum = 0.0f;
-  for (vcl_vector<float>::const_iterator it=weights.begin(); it!=weights.end(); ++it) {
+  for (std::vector<float>::const_iterator it=weights.begin(); it!=weights.end(); ++it) {
     weight_sum += *it;
   }
   compute_sample_mean_and_variance(samples,weights,mean,variance);

@@ -9,7 +9,7 @@
 #include "modrec_vehicle_state.h"
 
 #include <vnl/vnl_double_3.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 
 //: global count of unique tracks
@@ -81,9 +81,9 @@ modrec_circ_motion_predict(const modrec_vehicle_state& s, double t)
   w[1] = 0.0;
   w[2] += va*t;
   st.rotation = vgl_rotation_3d<double>(w);
-  bool no_rotate = vcl_abs(va) < 1e-8;
-  double da_x = no_rotate ? t*vcl_cos(a_z) : (vcl_sin(w[2])-vcl_sin(a_z))/va;
-  double da_y = no_rotate ? -t*vcl_sin(a_z) : (vcl_cos(w[2])-vcl_cos(a_z))/va;
+  bool no_rotate = std::abs(va) < 1e-8;
+  double da_x = no_rotate ? t*std::cos(a_z) : (std::sin(w[2])-std::sin(a_z))/va;
+  double da_y = no_rotate ? -t*std::sin(a_z) : (std::cos(w[2])-std::cos(a_z))/va;
   st.translation = vgl_vector_3d<double>(s.translation.x()+vt*da_x,
                                          s.translation.y()-vt*da_y, 0.0);
   st.t_velocity = vt;
@@ -99,8 +99,8 @@ modrec_circ_motion_predict(const modrec_vehicle_state& s, double t)
   if(C.rows() == C.cols() && (C.rows() == st.params.size()+8 || C.rows() == 8))
   {
     // compute F'*C*F without explicitly computing sparse matrix F
-    double dda_x = no_rotate ? -0.5*t*t*vcl_sin(a_z) : (t*vcl_cos(w[2])-da_x)/va;
-    double dda_y = no_rotate ? 0.5*t*t*vcl_cos(a_z) : (t*vcl_sin(w[2])+da_y)/va;
+    double dda_x = no_rotate ? -0.5*t*t*std::sin(a_z) : (t*std::cos(w[2])-da_x)/va;
+    double dda_y = no_rotate ? 0.5*t*t*std::cos(a_z) : (t*std::sin(w[2])+da_y)/va;
     C.set_row(2,0.0);
     C.set_row(3,0.0);
     C.set_row(4,0.0);
@@ -142,7 +142,7 @@ modrec_circ_motion_predict(const modrec_vehicle_state& s, double t)
       C(i,i) += 0.1/(s.num_frames+1);
   }
   else
-    vcl_cout << "covariance not correct size"<<vcl_endl;
+    std::cout << "covariance not correct size"<<std::endl;
 
   
   return st;
@@ -158,8 +158,8 @@ modrec_circ_motion_predict_position(const modrec_vehicle_state& s, double t)
   double w = s.rotation.as_rodrigues()[2];
   double a_z = w; 
   w += va*t;
-  double da_x = (va==0.0) ? t*vcl_cos(a_z) : (vcl_sin(w)-vcl_sin(a_z))/va;
-  double da_y = (va==0.0) ? -t*vcl_sin(a_z) : (vcl_cos(w)-vcl_cos(a_z))/va;
+  double da_x = (va==0.0) ? t*std::cos(a_z) : (std::sin(w)-std::sin(a_z))/va;
+  double da_y = (va==0.0) ? -t*std::sin(a_z) : (std::cos(w)-std::cos(a_z))/va;
   return vgl_vector_3d<double>(s.translation.x()+vt*da_x,
                                s.translation.y()-vt*da_y, 0.0);
 }
@@ -167,11 +167,11 @@ modrec_circ_motion_predict_position(const modrec_vehicle_state& s, double t)
 
 //: read a tracking result file
 unsigned int
-modrec_read_track_file(const vcl_string& filename, 
-                       vcl_string& vid_file, vcl_string& cam_file, vcl_string& model_type,
-                       vcl_map<unsigned int,vcl_vector<modrec_vehicle_state> >& state_map)
+modrec_read_track_file(const std::string& filename, 
+                       std::string& vid_file, std::string& cam_file, std::string& model_type,
+                       std::map<unsigned int,std::vector<modrec_vehicle_state> >& state_map)
 {
-  vcl_ifstream ifs(filename.c_str());
+  std::ifstream ifs(filename.c_str());
 
   // load model type
   ifs >> model_type;
@@ -196,7 +196,7 @@ modrec_read_track_file(const vcl_string& filename,
     
     char data[4096];
     ifs.getline(data,4096);
-    vcl_stringstream sdata(data);
+    std::stringstream sdata(data);
     
     vnl_vector_fixed<double,3> r;
     double tv,av;

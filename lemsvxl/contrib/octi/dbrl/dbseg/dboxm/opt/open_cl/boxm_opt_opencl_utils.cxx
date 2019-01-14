@@ -1,7 +1,7 @@
 
 #include "boxm_opt_opencl_utils.h"
 
-vcl_size_t RoundUp(int global_size,int group_size) 
+std::size_t RoundUp(int global_size,int group_size) 
 {
     int r = global_size % group_size;
     if(r == 0) 
@@ -12,9 +12,9 @@ vcl_size_t RoundUp(int global_size,int group_size)
         return global_size + group_size - r;
     }
 }
-vcl_string error_to_string(cl_int  status )
+std::string error_to_string(cl_int  status )
 {
-    vcl_string output="";
+    std::string output="";
  
     if( status ==0)output="CL_SUCCESS";
     else if( status  == CL_DEVICE_NOT_FOUND)  output="CL_DEVICE_NOT_FOUND"; 

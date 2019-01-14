@@ -15,10 +15,10 @@
 // \endverbatim
 
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_set.h>
-#include <vcl_string.h>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 
 #include <vbl/vbl_ref_count.h>
 #include <bpro/bpro_process_sptr.h>
@@ -36,7 +36,7 @@ public:
   //: Use this instead of constructor
   static T* instance();
   
-  bpro_process_sptr get_process_by_name( const vcl_string& name ) const;
+  bpro_process_sptr get_process_by_name( const std::string& name ) const;
 
    //: Call the finish function on the process 
   //virtual bool finish_process()=0;
@@ -46,7 +46,7 @@ public:
   void delete_last_process();
   void clear_process_queue();
 
-  vcl_vector <vcl_string> get_process_queue_list() const;
+  std::vector <std::string> get_process_queue_list() const;
 
   static void register_process( const bpro_process_sptr& sptr );
   
@@ -61,9 +61,9 @@ protected:
   void initialize();
   
 
-  static vcl_multimap< vcl_string , bpro_process_sptr > process_map;
+  static std::multimap< std::string , bpro_process_sptr > process_map;
 
-  vcl_vector< bpro_process_sptr > process_queue;
+  std::vector< bpro_process_sptr > process_queue;
 };
 
 #endif // bpro_process_manager_h_

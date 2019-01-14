@@ -97,9 +97,9 @@ dbvis1_polyg_select_img_tool::handle( const vgui_event & e,
 
       vidpro1_image_storage_sptr stor;
                         
-      vcl_vector <vcl_string > namesake;
+      std::vector <std::string > namesake;
       vsol_polygon_2d_sptr drawn(new vsol_polygon_2d( drawnvert ) );
-      vcl_vector<vsol_spatial_object_2d_sptr> select_img_pts;
+      std::vector<vsol_spatial_object_2d_sptr> select_img_pts;
       int count=0;
           
       stor.vertical_cast ( bvis1_manager::instance()->storage_from_tableau( tableau_) );
@@ -107,7 +107,7 @@ dbvis1_polyg_select_img_tool::handle( const vgui_event & e,
       
       vil_image_view<float> origedgemap = image_rsrc->get_view();
      // assert(stor->get_image_view()->pixel_format()==float)
-      vcl_cout<<origedgemap.ni()<<"   "<<origedgemap.nj()<<"\n";
+      std::cout<<origedgemap.ni()<<"   "<<origedgemap.nj()<<"\n";
      
 
 
@@ -136,7 +136,7 @@ dbvis1_polyg_select_img_tool::handle( const vgui_event & e,
                   for (int j = 0;j<origedgemap.nj(); j++)
                   {
                    //   if (origedgemap(i,j))
-                  //    vcl_cout<<origedgemap(i,j);
+                  //    std::cout<<origedgemap(i,j);
                   }
 #endif
       // image_tab = vgui_image_tableau_new(origedgemap);   
@@ -149,10 +149,10 @@ dbvis1_polyg_select_img_tool::handle( const vgui_event & e,
           vil_image_resource_sptr boundary_mask_img_rsrc =vil_new_image_resource_of_view(boundary_mask);
           
           char index[4];
-          vcl_string string_index = (vcl_string)itoa(sel_num_,index,10);
+          std::string string_index = (std::string)itoa(sel_num_,index,10);
 
-          vcl_string point_group_name(((vcl_string)"ROI_image")+string_index);
-          vcl_string mask_name(((vcl_string)"ROI_mask")+string_index);
+          std::string point_group_name(((std::string)"ROI_image")+string_index);
+          std::string mask_name(((std::string)"ROI_mask")+string_index);
          
           new_img_stor->set_image(newimg);
           new_img_stor->set_name(point_group_name);
@@ -221,7 +221,7 @@ dbvis1_polyg_select_img_tool::handle( const vgui_event & e,
 }
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbvis1_polyg_select_img_tool::name() const
 {
   return "Image ROI Selection";
@@ -241,7 +241,7 @@ void
 dbvis1_polyg_select_img_tool::get_popup( const vgui_popup_params& params, 
                                                                          vgui_menu &menu )
 {
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
   menu.add( ((form_mask)?on:off)+"Form Mask", 
                         bvis1_tool_toggle, (void*)(&form_mask) );
    menu.add( ((cleaning_curves)?on:off)+"Prune Curves", 

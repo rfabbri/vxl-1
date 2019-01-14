@@ -10,7 +10,7 @@
 #include <vdgl/vdgl_digital_curve.h>
 #include <vgui/vgui.h>
 #include <dbctrk/dbctrk_curve_clustering.h>
-#include <vcl_algorithm.h>
+#include <algorithm>
 #include <dbctrk/dbctrk_utils.h> 
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
@@ -85,7 +85,7 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
   vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
 
   int frame = view->frame();
-  vcl_vector<dbctrk_tracker_curve_sptr> tc;
+  std::vector<dbctrk_tracker_curve_sptr> tc;
   if ( e.type == vgui_KEY_PRESS && e.key == 'i' && vgui_SHIFT)
   {
   dbctrk_storage_sptr p;
@@ -103,7 +103,7 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
 
   if(!clustering.ask())
     return false;
-   vcl_vector<vgui_soview*> all_objects;
+   std::vector<vgui_soview*> all_objects;
    all_objects = tableau_->get_all();
    for(unsigned int i=0;i<all_objects.size();i++)
    {
@@ -130,7 +130,7 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
   }
   if ( e.type == vgui_KEY_PRESS && e.key == 'j' && vgui_SHIFT)
   {
-    vcl_sort(cl->clusters_.begin(),cl->clusters_.end(),less_size());
+    std::sort(cl->clusters_.begin(),cl->clusters_.end(),less_size());
     int cnt=0;
     for(unsigned int j=0;j<cl->clusters_.size();j++,cnt++)
     {
@@ -253,8 +253,8 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
     return false;
 
 
-  vcl_map<double,int> bestmatches;
-  vcl_map<double,int>::iterator itermatches;
+  std::map<double,int> bestmatches;
+  std::map<double,int>::iterator itermatches;
   int mini=-1;
 
   if(curr_curve_->get_best_match_prev())
@@ -321,7 +321,7 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
       tc.clear();
       p->get_tracked_curves(tc);
 
-      vcl_map<int,vcl_vector<dbctrk_tracker_curve_sptr> > groups;
+      std::map<int,std::vector<dbctrk_tracker_curve_sptr> > groups;
       for(unsigned int i=0;i<tc.size();i++)
       {
           if(tc[i]->group_id_>= 0)
@@ -337,13 +337,13 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
           }
       }
 
-      vcl_map<int,vcl_vector<dbctrk_tracker_curve_sptr> >::iterator iter;
+      std::map<int,std::vector<dbctrk_tracker_curve_sptr> >::iterator iter;
       for(iter=groups.begin();iter!=groups.end();iter++)
       {
-          vcl_cout<<iter->first<<" ";
+          std::cout<<iter->first<<" ";
                             float r,g,b;
           utils::set_rank_colors(iter->first,r,g,b);
-          vcl_cout<<"r="<<r<<","<<g<<","<<b<<"\n";
+          std::cout<<"r="<<r<<","<<g<<","<<b<<"\n";
 
           for(unsigned int i=0;i<(*iter).second.size();i++)
           {
@@ -360,7 +360,7 @@ dbctrk_clustering_process_tool::handle( const vgui_event & e,
 
  }
 if (e.type == vgui_KEY_PRESS && e.key == 'b' &&  vgui_SHIFT ) {
-        vcl_vector< vcl_map<vcl_string, vgui_tableau_sptr> > seq;//=bvis1_manager::instance()->tableau_sequence();
+        std::vector< std::map<std::string, vgui_tableau_sptr> > seq;//=bvis1_manager::instance()->tableau_sequence();
 
         vgui_dialog m_dlg("Show Group curves");
      dbctrk_storage_sptr p;
@@ -374,8 +374,8 @@ if (e.type == vgui_KEY_PRESS && e.key == 'b' &&  vgui_SHIFT ) {
         m_dlg.field("Group ID",groupid);
         if(!m_dlg.ask())
             return false;
-      vcl_map<int,vcl_vector<dbctrk_tracker_curve_sptr> > groups;
-      vcl_vector<vsol_spatial_object_2d_sptr> polylines;
+      std::map<int,std::vector<dbctrk_tracker_curve_sptr> > groups;
+      std::vector<vsol_spatial_object_2d_sptr> polylines;
       for(unsigned int i=0;i<tc.size();i++)
       {
           if(tc[i]->group_id_>= 0)
@@ -405,7 +405,7 @@ if ( e.type == vgui_KEY_PRESS && e.key == 'l' && vgui_SHIFT)
     p.vertical_cast(bvis1_manager::instance()->repository()->get_data_at("dbctrk",frame));
     tc.clear();
     p->get_tracked_curves(tc);
-    vcl_vector<vgui_soview*> all_objects;
+    std::vector<vgui_soview*> all_objects;
     all_objects = tableau_->get_all();
 
     for(unsigned int i=0;i<all_objects.size();i++)
@@ -426,7 +426,7 @@ if ( e.type == vgui_KEY_PRESS && e.key == 'l' && vgui_SHIFT)
 
 
 //: Return the name of this tool
-vcl_string 
+std::string 
 dbctrk_clustering_process_tool::name() const
 {
   return "visualize clustering";

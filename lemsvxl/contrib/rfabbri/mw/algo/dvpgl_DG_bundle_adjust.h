@@ -31,19 +31,19 @@ class dvpgl_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
  public:
   //: Constructor
   // \note image points are not homogeneous because they require finite points to measure projection error
-  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
-                        const vcl_vector<bdifd_3rd_order_point_2d>& image_points,
-                        const vcl_vector<vcl_vector<bool> >& mask,
+  dvpgl_DG_bundle_adj_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+                        const std::vector<bdifd_3rd_order_point_2d>& image_points,
+                        const std::vector<std::vector<bool> >& mask,
                         bool use_confidence_weights = true);
 
   /*
   //: Constructor
   //  Each image point is assigned an inverse covariance (error projector) matrix
   // \note image points are not homogeneous because they require finite points to measure projection error
-  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
-                        const vcl_vector<vgl_point_2d<double> >& image_points,
-                        const vcl_vector<vnl_matrix<double> >& inv_covars,
-                        const vcl_vector<vcl_vector<bool> >& mask,
+  dvpgl_DG_bundle_adj_lsqr(const std::vector<vpgl_calibration_matrix<double> >& K,
+                        const std::vector<vgl_point_2d<double> >& image_points,
+                        const std::vector<vnl_matrix<double> >& inv_covars,
+                        const std::vector<std::vector<bool> >& mask,
                         bool use_confidence_weights = true);
                         */
 
@@ -62,8 +62,8 @@ class dvpgl_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
 
   //: Compute the sparse Jacobian in block form.
   virtual void jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
-                          vcl_vector<vnl_matrix<double> >& A,
-                          vcl_vector<vnl_matrix<double> >& B);
+                          std::vector<vnl_matrix<double> >& A,
+                          std::vector<vnl_matrix<double> >& B);
 
   //: compute the Jacobian Bij
   void jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> const& bj,
@@ -90,30 +90,30 @@ class dvpgl_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
   
   //: Create the parameter vector \p a from a vector of cameras
   static vnl_vector<double> 
-    create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras);
+    create_param_vector(const std::vector<vpgl_perspective_camera<double> >& cameras);
   
   //: Create the parameter vector \p b from a vector of 3D points
   static vnl_vector<double> 
-    create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points);
+    create_param_vector(const std::vector<vgl_point_3d<double> >& world_points);
   
   void reset() { iteration_count_ = 0; for(unsigned int i=0; i<weights_.size(); ++i) weights_[i] = 1.0; }
   
   //: return the current weights
-  vcl_vector<double> weights() const { return weights_; }
+  std::vector<double> weights() const { return weights_; }
   
  protected:
   //: The fixed internal camera calibration
-  vcl_vector<vpgl_calibration_matrix<double> > K_;
+  std::vector<vpgl_calibration_matrix<double> > K_;
   //: The corresponding points in the image
-  vcl_vector<bdifd_3rd_order_point_2d> image_points_;
+  std::vector<bdifd_3rd_order_point_2d> image_points_;
   //: The Cholesky factored inverse covariances for each image point
-  vcl_vector<vnl_matrix<double> > factored_inv_covars_;
+  std::vector<vnl_matrix<double> > factored_inv_covars_;
   //: Flag to enable covariance weighted errors
   bool use_covars_;
   //: Flag to enable confidence weighting
   bool use_weights_;
   //: The corresponding points in the image
-  vcl_vector<double> weights_;
+  std::vector<double> weights_;
   int iteration_count_;
 };
 

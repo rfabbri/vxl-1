@@ -3,7 +3,7 @@
 
 #include "psm_scene_block_storage.h"
 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_point_3d.h>
 #include <hsds/hsds_fd_tree.h>
 
@@ -12,7 +12,7 @@ class psm_scene_block_storage_single : public psm_scene_block_storage<T>
 {
 public:
   //: constructor
-  psm_scene_block_storage_single(vcl_string storage_dir) : psm_scene_block_storage<T>(storage_dir), curr_block_valid_(false) {}
+  psm_scene_block_storage_single(std::string storage_dir) : psm_scene_block_storage<T>(storage_dir), curr_block_valid_(false) {}
 
   //: destructor
   virtual ~psm_scene_block_storage_single();

@@ -17,7 +17,7 @@ dbinfo_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
   // Return a NULL tableau if the types don't match
   if( storage->type() != this->type() )
     {
-      vcl_cout << "In dbinfo_osl_displayer::make_tableau -"
+      std::cout << "In dbinfo_osl_displayer::make_tableau -"
                << " types don't match\n";
       return NULL;
     }
@@ -32,12 +32,12 @@ dbinfo_osl_displayer::make_tableau( bpro1_storage_sptr storage) const
   dbinfo_osl_sptr osl = osl_storage->osl();
   if(osl->size()==0)
     return grid;
-  vcl_vector<vcl_string> clss = osl->classes();
+  std::vector<std::string> clss = osl->classes();
   unsigned col = 0;
-  for(vcl_vector<vcl_string>::iterator cit = clss.begin();
+  for(std::vector<std::string>::iterator cit = clss.begin();
       cit != clss.end()&&col<ncols; ++cit, ++col)
     {
-      vcl_vector<dbinfo_observation_sptr> protos;
+      std::vector<dbinfo_observation_sptr> protos;
       if(!osl->prototypes(*cit, protos))
         continue;
       unsigned np = protos.size();

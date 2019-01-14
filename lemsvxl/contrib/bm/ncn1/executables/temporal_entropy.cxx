@@ -13,21 +13,21 @@ int main(int argc, char* argv[])
 
     if(argc < 2)
     {
-        vcl_cerr << "error temporal_entropy.exe::must provide input glob and output directory" << vcl_endl;
+        std::cerr << "error temporal_entropy.exe::must provide input glob and output directory" << std::endl;
         return 1;
     }
 
-    vcl_string video_glob = argv[1];
+    std::string video_glob = argv[1];
 
-    vcl_string result_dir = argv[2];
+    std::string result_dir = argv[2];
 
-    vcl_cout << video_glob << vcl_endl;
+    std::cout << video_glob << std::endl;
 
-    vcl_cout << result_dir << vcl_endl;
+    std::cout << result_dir << std::endl;
 
-    vcl_string entropy_bin_filename = result_dir + "\\temporal_entropy.bin";
+    std::string entropy_bin_filename = result_dir + "\\temporal_entropy.bin";
 
-    vcl_string entropy_dat_filename = result_dir + "\\temporal_entropy.dat";
+    std::string entropy_dat_filename = result_dir + "\\temporal_entropy.dat";
 
     ncn1_factory factory(video_glob,100,200,10);
 

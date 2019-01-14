@@ -33,9 +33,9 @@
 #include <boxm/boxm_utils.h>
 #include <vpgl/bgeo/bgeo_lvcs_sptr.h>
 
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <fstream>
+#include <limits>
 #include <vil/vil_save.h>
 
 int convert_uncertainty_from_meters_to_pixels(float uncertainty,
@@ -44,7 +44,7 @@ int convert_uncertainty_from_meters_to_pixels(float uncertainty,
 {
   // estimate the offset search size in the image space
   vgl_box_3d<double> box_uncertainty(-uncertainty,-uncertainty,-uncertainty,uncertainty,uncertainty,uncertainty);
-  vcl_vector<vgl_point_3d<double> > box_uncertainty_corners = boxm_utils::corners_of_box_3d(box_uncertainty);
+  std::vector<vgl_point_3d<double> > box_uncertainty_corners = boxm_utils::corners_of_box_3d(box_uncertainty);
   vgl_box_2d<double>* roi_uncertainty = new vgl_box_2d<double>();
 
   for (unsigned i=0; i<box_uncertainty_corners.size(); i++) {
@@ -82,7 +82,7 @@ bool boxm_rpc_registration(boxm_scene_base_sptr scene_base,//<boct_tree<T_loc, T
                            float n_normal,
                            unsigned num_observations)
 {
-  double max_prob = vcl_numeric_limits<double>::min();
+  double max_prob = std::numeric_limits<double>::min();
   double best_offset_u = 0.0, best_offset_v = 0.0;
 
   typedef boct_tree<T_loc,T_data> tree_type;
@@ -97,9 +97,9 @@ bool boxm_rpc_registration(boxm_scene_base_sptr scene_base,//<boct_tree<T_loc, T
   int offset_lower_limit_v = -offset_search_size;
   int offset_upper_limit_u =  offset_search_size;
   int offset_upper_limit_v =  offset_search_size;
-  vcl_cout << "Estimating image offsets:" << vcl_endl;
+  std::cout << "Estimating image offsets:" << std::endl;
   for (int u=offset_lower_limit_u; u<=offset_upper_limit_u; u++) {
-    vcl_cout << '.';
+    std::cout << '.';
     for (int v=offset_lower_limit_v; v<=offset_upper_limit_v; v++) {
       // for each offset pair (u,v)
       double prob = 0.0;
@@ -125,14 +125,14 @@ bool boxm_rpc_registration(boxm_scene_base_sptr scene_base,//<boct_tree<T_loc, T
       }
     }
   }
-  vcl_cout << vcl_endl;
+  std::cout << std::endl;
 
-  vcl_cout << "Estimated changes in offsets (u,v)=(" << best_offset_u << ',' << best_offset_v << ')' << vcl_endl;
+  std::cout << "Estimated changes in offsets (u,v)=(" << best_offset_u << ',' << best_offset_v << ')' << std::endl;
    //local variables
-  vcl_ifstream file_inp;
-  vcl_ofstream file_out;
+  std::ifstream file_inp;
+  std::ofstream file_out;
   file_out.clear();
-  file_out.open("offsets.txt",vcl_ofstream::app);
+  file_out.open("offsets.txt",std::ofstream::app);
   file_out << best_offset_u << ' ' << best_offset_v << '\n';
   file_out.close();
 
@@ -218,7 +218,7 @@ bool boxm_rpc_registration(boxm_scene_base_sptr scene_base,//<boct_tree<T_loc, T
     camera_out = new vpgl_rational_camera<double>(cam_out_rational);
   }
   else {
-    vcl_cerr << "error: process expects camera to be a vpgl_rational_camera or vpgl_local_rational_camera.\n";
+    std::cerr << "error: process expects camera to be a vpgl_rational_camera or vpgl_local_rational_camera.\n";
     return false;
   }
 

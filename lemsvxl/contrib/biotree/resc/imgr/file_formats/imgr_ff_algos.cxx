@@ -1,6 +1,6 @@
 #include "imgr_ff_algos.h"
 #include <vil/vil_image_resource.h>
-#include <vcl_cmath.h>
+#include <cmath>
 
 dbil_bounded_image_view<double>* 
 imgr_ff_algos:: calibrate_image(vil_image_resource_sptr const &v,
@@ -43,7 +43,7 @@ imgr_ff_algos:: calibrate_image(vil_image_resource_sptr const &v,
     if(cd == 0 && bd == 0)
       data[l] = 0;
     else
-      data[l] = -vcl_log( cd / bd);
+      data[l] = -std::log( cd / bd);
       //data[l] = cd / bd * 65535 ;
   }
 

@@ -53,7 +53,7 @@ void dbskfg_extract_fragments::compute_first_graph(
     }
 
     // Grab output from shock computation
-    vcl_vector<bpro1_storage_sptr> shock_results;
+    std::vector<bpro1_storage_sptr> shock_results;
 
     shock_results = shock_pro.get_output();
 
@@ -77,7 +77,7 @@ void dbskfg_extract_fragments::compute_first_graph(
     bool status = cg_pro.execute();
     cg_pro.finish();
 
-    vcl_vector<bpro1_storage_sptr> cg_results;
+    std::vector<bpro1_storage_sptr> cg_results;
     cg_results = cg_pro.get_output();
 
     cg_pro.clear_input();
@@ -99,8 +99,8 @@ void dbskfg_extract_fragments::extract(
     double transform_thresh,
     double contour_ratio,
     double prune_thres,
-    vcl_string output_folder,
-    vcl_string output_prefix)
+    std::string output_folder,
+    std::string output_prefix)
 {
 
     if( !status_ )
@@ -124,7 +124,7 @@ void dbskfg_extract_fragments::extract(
     //     unsigned int n = transforms.apply_transforms(0.52,rag_graph_);
     //     transforms.destroy_transforms();
 
-    //     vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+    //     std::cout<<"Iteration: "<<iterations<<std::endl;
     //     iterations++;
         
     //     if ( n == 0 )
@@ -156,7 +156,7 @@ void dbskfg_extract_fragments::extract(
     //     unsigned int n = transforms.apply_transforms(0.2,rag_graph_);
     //     transforms.destroy_transforms();
 
-    //     vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+    //     std::cout<<"Iteration: "<<iterations<<std::endl;
     //     iterations++;
         
     //     if ( n == 0 )
@@ -193,8 +193,8 @@ void dbskfg_extract_fragments::extract_two(
     double transform_thresh,
     double contour_ratio,
     double prune_thres,
-    vcl_string output_folder,
-    vcl_string output_prefix)
+    std::string output_folder,
+    std::string output_prefix)
 {
 
     // First lets detect transforms
@@ -214,7 +214,7 @@ void dbskfg_extract_fragments::extract_two(
         unsigned int n = transforms.apply_transforms(0.5,rag_graph_);
         transforms.destroy_transforms();
 
-        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+        std::cout<<"Iteration: "<<iterations<<std::endl;
         iterations++;
         
         if ( n == 0 )
@@ -245,7 +245,7 @@ void dbskfg_extract_fragments::extract_two(
         unsigned int n = transforms.apply_transforms(0.52,rag_graph_);
         transforms.destroy_transforms();
 
-        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+        std::cout<<"Iteration: "<<iterations<<std::endl;
         iterations++;
         
         if ( n == 0 )
@@ -285,8 +285,8 @@ void dbskfg_extract_fragments::extract_three(
     double transform_thresh,
     double contour_ratio,
     double prune_thres,
-    vcl_string output_folder,
-    vcl_string output_prefix)
+    std::string output_folder,
+    std::string output_prefix)
 {
 
     // First lets detect transforms
@@ -306,7 +306,7 @@ void dbskfg_extract_fragments::extract_three(
         unsigned int n = transforms.apply_transforms(0.65,rag_graph_);
         transforms.destroy_transforms();
 
-        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+        std::cout<<"Iteration: "<<iterations<<std::endl;
         iterations++;
         
         if ( n == 0 )
@@ -338,7 +338,7 @@ void dbskfg_extract_fragments::extract_three(
         unsigned int n = transforms.apply_transforms(0.65,rag_graph_);
         transforms.destroy_transforms();
 
-        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+        std::cout<<"Iteration: "<<iterations<<std::endl;
         iterations++;
         
         if ( n == 0 )

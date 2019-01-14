@@ -4,7 +4,7 @@
 // \file
 
 #include "dbsks_shock_graph_stats.h"
-#include <vcl_utility.h>
+#include <utility>
 #include <vnl/vnl_math.h>
 #include <dbsksp/dbsksp_shock_graph.h>
 #include <dbsksp/dbsksp_shapelet.h>
@@ -30,11 +30,11 @@ clear()
 //: Compute the shock graph parameter statistics from a set of shock graphs
 // REQUIREMENT: all shock graphs have exactly the same topology
 bool dbsks_shock_graph_stats::
-compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
+compute_stats(const std::vector<dbsksp_shock_graph_sptr >& shock_graph_list)
 {
   if (shock_graph_list.empty())
   {
-    vcl_cout << "ERROR: shock_graph_list is empty! \n";
+    std::cout << "ERROR: shock_graph_list is empty! \n";
     return true;
   }
 
@@ -61,7 +61,7 @@ compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
   }
 
   // >> Collect corresponding shapelets from the set of shock graphs
-  vcl_map<unsigned int, vcl_vector<dbsksp_shapelet_sptr > > shapelet_bins;
+  std::map<unsigned int, std::vector<dbsksp_shapelet_sptr > > shapelet_bins;
   
   // create place holder for all the shapelets
   dbsksp_shock_graph_sptr shock_graph = shock_graph_list[0];
@@ -74,9 +74,9 @@ compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
     if (e->is_terminal_edge())
       continue;
 
-    vcl_vector<dbsksp_shapelet_sptr > empty_list;
-    vcl_map<unsigned int, vcl_vector<dbsksp_shapelet_sptr > >::iterator it = 
-      shapelet_bins.insert(shapelet_bins.end(), vcl_make_pair(e->id(), empty_list));
+    std::vector<dbsksp_shapelet_sptr > empty_list;
+    std::map<unsigned int, std::vector<dbsksp_shapelet_sptr > >::iterator it = 
+      shapelet_bins.insert(shapelet_bins.end(), std::make_pair(e->id(), empty_list));
     it->second.reserve(shock_graph_list.size());
   }
 
@@ -103,11 +103,11 @@ compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
       }
 
       // put shape fragment into appropriate bin
-      vcl_map<unsigned int, vcl_vector<dbsksp_shapelet_sptr > >::iterator it =
+      std::map<unsigned int, std::vector<dbsksp_shapelet_sptr > >::iterator it =
         shapelet_bins.find(e->id());
       if (it == shapelet_bins.end())
       {
-        vcl_cout << "ERROR: the shock graphs are not similar topologically.\n";
+        std::cout << "ERROR: the shock graphs are not similar topologically.\n";
         return false;
       }
       it->second.push_back(s);
@@ -115,12 +115,12 @@ compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
   }
 
   // Compute statistics within each bin separately
-  for (vcl_map<unsigned int, vcl_vector<dbsksp_shapelet_sptr > >::iterator it =
+  for (std::map<unsigned int, std::vector<dbsksp_shapelet_sptr > >::iterator it =
     shapelet_bins.begin(); it != shapelet_bins.end(); ++it)
   {
     dbsks_shapelet_stats stat;
     stat.compute_stats(it->second);
-    this->shapelet_stats_map_.insert(vcl_make_pair(it->first, stat));
+    this->shapelet_stats_map_.insert(std::make_pair(it->first, stat));
   }
 
   return true;
@@ -133,7 +133,7 @@ compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list)
 dbsks_shapelet_stats dbsks_shock_graph_stats::
 shapelet_stats(unsigned int edge_id) const
 {
-  vcl_map<unsigned int, dbsks_shapelet_stats >::const_iterator it = 
+  std::map<unsigned int, dbsks_shapelet_stats >::const_iterator it = 
     this->shapelet_stats_map_.find(edge_id);
   assert(it != this->shapelet_stats_map_.end());
 
@@ -230,23 +230,23 @@ build_shapelet_grid(unsigned int edge_id,
   //// phiA
   //double mean_phiA, var_phiA;
   //frag_stats.stats_phiA(mean_phiA, var_phiA);
-  //grid.min_phiA_ = mean_phiA - 2 * vcl_sqrt(var_phiA);
-  //grid.max_phiA_ = mean_phiA + 2 * vcl_sqrt(var_phiA);
+  //grid.min_phiA_ = mean_phiA - 2 * std::sqrt(var_phiA);
+  //grid.max_phiA_ = mean_phiA + 2 * std::sqrt(var_phiA);
   //grid.num_phiA_ = p.num_phiA;
 
 
   //// phiB
   //double mean_phiB, var_phiB;
   //frag_stats.stats_phiB(mean_phiB, var_phiB);
-  //grid.min_phiB_ = mean_phiB - 2 * vcl_sqrt(var_phiB);
-  //grid.max_phiB_ = mean_phiB + 2 * vcl_sqrt(var_phiB);
+  //grid.min_phiB_ = mean_phiB - 2 * std::sqrt(var_phiB);
+  //grid.max_phiB_ = mean_phiB + 2 * std::sqrt(var_phiB);
   //grid.num_phiB_ = p.num_phiB;
 
   //// m
   //double mean_m, var_m;
   //frag_stats.stats_m(mean_m, var_m);
-  //grid.min_m_ = mean_m - 2 * vcl_sqrt(var_m);
-  //grid.max_m_ = mean_m + 2 * vcl_sqrt(var_m);
+  //grid.min_m_ = mean_m - 2 * std::sqrt(var_m);
+  //grid.max_m_ = mean_m + 2 * std::sqrt(var_m);
   //grid.num_m_ = p.num_m;
 
   //// rA
@@ -254,11 +254,11 @@ build_shapelet_grid(unsigned int edge_id,
   //frag_stats.stats_log2_rA(mean_log2_rA, var_log2_rA);
   //
   //// adjust according to scaling parameter
-  //mean_log2_rA += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  //mean_log2_rA += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  //grid.ref_rA_ = vcl_exp(vnl_math::ln2 * mean_log2_rA);
-  //grid.min_log2_rA_ = - 2 * vcl_sqrt(var_log2_rA);
-  //grid.max_log2_rA_ = 2 * vcl_sqrt(var_log2_rA);
+  //grid.ref_rA_ = std::exp(vnl_math::ln2 * mean_log2_rA);
+  //grid.min_log2_rA_ = - 2 * std::sqrt(var_log2_rA);
+  //grid.max_log2_rA_ = 2 * std::sqrt(var_log2_rA);
   //grid.num_rA_ = p.num_rA;
 
   //// length
@@ -266,11 +266,11 @@ build_shapelet_grid(unsigned int edge_id,
   //frag_stats.stats_log2_len(mean_log2_len, var_log2_len);
 
   //// adjust according to scaling parameter
-  //mean_log2_len += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  //mean_log2_len += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  //grid.ref_len_ = vcl_exp(vnl_math::ln2 * mean_log2_len);
-  //grid.min_log2_len_ = - 2 * vcl_sqrt(var_log2_len);
-  //grid.max_log2_len_ = 2 * vcl_sqrt(var_log2_len);
+  //grid.ref_len_ = std::exp(vnl_math::ln2 * mean_log2_len);
+  //grid.min_log2_len_ = - 2 * std::sqrt(var_log2_len);
+  //grid.max_log2_len_ = 2 * std::sqrt(var_log2_len);
   //grid.num_len_ = p.num_len;
 
 
@@ -284,8 +284,8 @@ build_shapelet_grid(unsigned int edge_id,
   //frag_stats.stats_phiA(mean_phiA, var_phiA);
   //mean_phiA = sref->phi_start();
 
-  //grid.min_phiA_ = mean_phiA - 2 * vcl_sqrt(var_phiA);
-  //grid.max_phiA_ = mean_phiA + 2 * vcl_sqrt(var_phiA);
+  //grid.min_phiA_ = mean_phiA - 2 * std::sqrt(var_phiA);
+  //grid.max_phiA_ = mean_phiA + 2 * std::sqrt(var_phiA);
   //grid.num_phiA_ = p.num_phiA;
 
 
@@ -294,8 +294,8 @@ build_shapelet_grid(unsigned int edge_id,
   //frag_stats.stats_phiB(mean_phiB, var_phiB);
   //mean_phiB = sref->phi_end();
 
-  //grid.min_phiB_ = mean_phiB - 2 * vcl_sqrt(var_phiB);
-  //grid.max_phiB_ = mean_phiB + 2 * vcl_sqrt(var_phiB);
+  //grid.min_phiB_ = mean_phiB - 2 * std::sqrt(var_phiB);
+  //grid.max_phiB_ = mean_phiB + 2 * std::sqrt(var_phiB);
   //grid.num_phiB_ = p.num_phiB;
 
 
@@ -304,35 +304,35 @@ build_shapelet_grid(unsigned int edge_id,
   //frag_stats.stats_m(mean_m, var_m);
   //mean_m = sref->m_start();
 
-  //grid.min_m_ = mean_m - 4 * vcl_sqrt(var_m);
-  //grid.max_m_ = mean_m + 4 * vcl_sqrt(var_m);
+  //grid.min_m_ = mean_m - 4 * std::sqrt(var_m);
+  //grid.max_m_ = mean_m + 4 * std::sqrt(var_m);
   //grid.num_m_ = p.num_m;
 
   //// rA
   //double mean_log2_rA, var_log2_rA;
   //frag_stats.stats_log2_rA(mean_log2_rA, var_log2_rA);
   //
-  //mean_log2_rA = vcl_log(sref->radius_start()) / vnl_math::ln2;
+  //mean_log2_rA = std::log(sref->radius_start()) / vnl_math::ln2;
 
   //// adjust according to scaling parameter
-  ////mean_log2_rA += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  ////mean_log2_rA += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  //grid.ref_rA_ = vcl_exp(vnl_math::ln2 * mean_log2_rA);
-  //grid.min_log2_rA_ = - 4 * vcl_sqrt(var_log2_rA);
-  //grid.max_log2_rA_ = 4 * vcl_sqrt(var_log2_rA);
+  //grid.ref_rA_ = std::exp(vnl_math::ln2 * mean_log2_rA);
+  //grid.min_log2_rA_ = - 4 * std::sqrt(var_log2_rA);
+  //grid.max_log2_rA_ = 4 * std::sqrt(var_log2_rA);
   //grid.num_rA_ = p.num_rA;
 
   //// length
   //double mean_log2_len, var_log2_len;
   //frag_stats.stats_log2_len(mean_log2_len, var_log2_len);
 
-  //mean_log2_len = vcl_log(sref->len()) / vnl_math::ln2;
+  //mean_log2_len = std::log(sref->len()) / vnl_math::ln2;
   //// adjust according to scaling parameter
-  ////mean_log2_len += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  ////mean_log2_len += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  //grid.ref_len_ = vcl_exp(vnl_math::ln2 * mean_log2_len);
-  //grid.min_log2_len_ = - 4 * vcl_sqrt(var_log2_len);
-  //grid.max_log2_len_ = 4 * vcl_sqrt(var_log2_len);
+  //grid.ref_len_ = std::exp(vnl_math::ln2 * mean_log2_len);
+  //grid.min_log2_len_ = - 4 * std::sqrt(var_log2_len);
+  //grid.max_log2_len_ = 4 * std::sqrt(var_log2_len);
   //grid.num_len_ = p.num_len;
 
 
@@ -372,9 +372,9 @@ build_shapelet_grid(unsigned int edge_id,
   double span_log2_rA = (max_log2_rA - min_log2_rA);
 
   // adjust according to scaling parameter
-  mean_log2_rA += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  mean_log2_rA += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  grid.ref_rA_ = vcl_exp(vnl_math::ln2 * mean_log2_rA);
+  grid.ref_rA_ = std::exp(vnl_math::ln2 * mean_log2_rA);
   grid.min_log2_rA_ = - span_log2_rA / 2;
   grid.max_log2_rA_ = span_log2_rA / 2;
   grid.num_rA_ = p.num_rA;
@@ -388,9 +388,9 @@ build_shapelet_grid(unsigned int edge_id,
   double span_log2_len = (max_log2_len - min_log2_len);
 
   // adjust according to scaling parameter
-  mean_log2_len += vcl_log(target_graph_size / this->graph_size()) / vnl_math::ln2;
+  mean_log2_len += std::log(target_graph_size / this->graph_size()) / vnl_math::ln2;
 
-  grid.ref_len_ = vcl_exp(vnl_math::ln2 * mean_log2_len);
+  grid.ref_len_ = std::exp(vnl_math::ln2 * mean_log2_len);
   grid.min_log2_len_ = - span_log2_len;
   grid.max_log2_len_ = span_log2_len;
   grid.num_len_ = p.num_len;
@@ -404,8 +404,8 @@ build_shapelet_grid(unsigned int edge_id,
 
 // -----------------------------------------------------------------------------
 //: Print summary
-vcl_ostream& dbsks_shock_graph_stats::
-print(vcl_ostream& str) const
+std::ostream& dbsks_shock_graph_stats::
+print(std::ostream& str) const
 {
   return str;
 }

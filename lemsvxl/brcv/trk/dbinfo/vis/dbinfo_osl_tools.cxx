@@ -3,7 +3,7 @@
 // \file
 
 #include "dbinfo_osl_tools.h"
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vnl/vnl_numeric_traits.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -39,10 +39,10 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="/home/dec/images/*";
-    static vcl_string ext = "*.*";
-    static vcl_string cls = "";
-    static vcl_string doc = "";
+    static std::string image_file ="/home/dec/images/*";
+    static std::string ext = "*.*";
+    static std::string cls = "";
+    static std::string doc = "";
     vgui_dialog param_dlg("Add Prototype");
     param_dlg.field("Class", cls);
     param_dlg.field("Doc", doc);
@@ -51,7 +51,7 @@ public:
       return;
     if(tool_->load_prototype(image_file))
       if(!tool_->add_prototype(cls, doc))
-        vcl_cout << "prototype not successfully added\n";
+        std::cout << "prototype not successfully added\n";
   }
   dbinfo_osl_edit_tool* tool_;
 };
@@ -80,7 +80,7 @@ static vil_image_resource_sptr get_image()
   bpro1_storage_sptr sto = res->get_data("image");
   if(!sto)
     return (vil_image_resource*)0;
-  vcl_cout << "Image Storage Name " << sto->name() << '\n';
+  std::cout << "Image Storage Name " << sto->name() << '\n';
   vidpro1_image_storage_sptr image_storage;
   image_storage.vertical_cast(sto);
   if(!image_storage)
@@ -106,7 +106,7 @@ dbinfo_osl_edit_tool::~dbinfo_osl_edit_tool()
 
 
 //: Return the name of this tool
-vcl_string dbinfo_osl_edit_tool::name() const
+std::string dbinfo_osl_edit_tool::name() const
 {
   return "Edit OSL";
 }
@@ -147,7 +147,7 @@ void dbinfo_osl_edit_tool::activate()
   osl_ = osl_storage_->osl();
 }
 //------------------  OSL edit tool methods ---------------------------
-bool dbinfo_osl_edit_tool::load_prototype(vcl_string const& path)
+bool dbinfo_osl_edit_tool::load_prototype(std::string const& path)
 {
   image_ = vil_load_image_resource(path.c_str());
   if(!image_)
@@ -155,7 +155,7 @@ bool dbinfo_osl_edit_tool::load_prototype(vcl_string const& path)
   return true;
 }
 
-bool dbinfo_osl_edit_tool::add_prototype(vcl_string const& cls, vcl_string const& doc)
+bool dbinfo_osl_edit_tool::add_prototype(std::string const& cls, std::string const& doc)
 {
   //need a osl to add the prototype
   if(!osl_)
@@ -188,8 +188,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float dx = 1.0f;
     static float dr = 0.2f;
     static float ds = 0.1f;
@@ -220,25 +220,25 @@ public:
       return;
     if(!use_int&&!use_grad)
       {
-        vcl_cout << "must use at least one information channel\n";
+        std::cout << "must use at least one information channel\n";
         return;
       }
-    vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     if(tool_->load_query(image_file, expand, coef))
       if(!tool_->match_query(dx, dr, ds, da, ratio, thresh, Nobs,
                              use_int, use_grad, forward_and_reverse,
                              classes, match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     unsigned i = 0;
-    vcl_cout << "---Class Scores ---\n";
-    for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    std::cout << "---Class Scores ---\n";
+    for(std::vector<std::string>::iterator cit = classes.begin();
         cit != classes.end(); ++cit, ++i)
-      vcl_cout << *cit << " = " << match_scores[i] << '\n'<< vcl_flush;
+      std::cout << *cit << " = " << match_scores[i] << '\n'<< std::flush;
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -268,8 +268,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -304,9 +304,9 @@ public:
     param_dlg.checkbox("Forward and Reverse ", forward_and_reverse);
     if(!param_dlg.ask())
       return;
-    vcl_vector<vcl_string> classes;
-    vcl_vector<float> match_scores;
-    vcl_vector<vil_image_resource_sptr> match_images;
+    std::vector<std::string> classes;
+    std::vector<float> match_scores;
+    std::vector<vil_image_resource_sptr> match_images;
     if(tool_->load_query(image_file, expand, coef))
       if(!tool_->match_query_interval(xmin, xmax, ymin, ymax,
                                       theta_min, theta_max,
@@ -316,14 +316,14 @@ public:
                                       forward_and_reverse,
                                       classes, match_scores, match_images))
         {
-          vcl_cout << "query not successfully matched\n";
+          std::cout << "query not successfully matched\n";
           return;
         }
     unsigned i = 0;
-    vcl_cout << "---Class Scores ---\n";
-    for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+    std::cout << "---Class Scores ---\n";
+    for(std::vector<std::string>::iterator cit = classes.begin();
         cit != classes.end(); ++cit, ++i)
-      vcl_cout << *cit << " = " << match_scores[i] << '\n'<< vcl_flush;
+      std::cout << *cit << " = " << match_scores[i] << '\n'<< std::flush;
     unsigned n_match = match_images.size();
     if(n_match==0)
       return;
@@ -361,7 +361,7 @@ dbinfo_osl_match_tool::~dbinfo_osl_match_tool()
 
 
 //: Return the name of this tool
-vcl_string dbinfo_osl_match_tool::name() const
+std::string dbinfo_osl_match_tool::name() const
 {
   return "Match OSL";
 }
@@ -404,10 +404,10 @@ void dbinfo_osl_match_tool::activate()
   if(osl_storage_)
     osl_ = osl_storage_->osl();
   else
-    vcl_cout << "Failed to activate osl_tools\n";
+    std::cout << "Failed to activate osl_tools\n";
 }
 //------------------  OSL match tool methods ---------------------------
-bool dbinfo_osl_match_tool::load_query(vcl_string const& path,
+bool dbinfo_osl_match_tool::load_query(std::string const& path,
                                        const bool expand,
                                        const float coef)
 {
@@ -430,9 +430,9 @@ bool dbinfo_osl_match_tool::match_query(const float dx, const float dr,
                                         const unsigned Nob, 
                                         bool use_int, bool use_grad, 
                                         bool forward_and_reverse,
-                                        vcl_vector<vcl_string>& classes,
-                                        vcl_vector<float>& match_scores,
-                                        vcl_vector<vil_image_resource_sptr>& match_images){
+                                        std::vector<std::string>& classes,
+                                        std::vector<float>& match_scores,
+                                        std::vector<vil_image_resource_sptr>& match_images){
   //need a osl to add the prototype
   if(!osl_)
     return false;
@@ -442,7 +442,7 @@ bool dbinfo_osl_match_tool::match_query(const float dx, const float dr,
                                                         true, true, false);
   //for now use only the first prototype in each class (FIXME)
   classes = osl_->classes();
-  for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  for(std::vector<std::string>::iterator cit = classes.begin();
       cit != classes.end(); ++cit)
     {
       dbinfo_observation_sptr obsdb = osl_->prototype(*cit, 0);
@@ -495,9 +495,9 @@ bool dbinfo_osl_match_tool::match_query_interval(const float xmin, const float x
                                                  const unsigned n_intervals,
                                                  const float valid_thresh,
                                                  bool forward_and_reverse,
-                                                 vcl_vector<vcl_string>& classes,
-                                                 vcl_vector<float>& match_scores,
-                                                 vcl_vector<vil_image_resource_sptr>& match_images)
+                                                 std::vector<std::string>& classes,
+                                                 std::vector<float>& match_scores,
+                                                 std::vector<vil_image_resource_sptr>& match_images)
 {
   //need a osl to add the prototype
   if(!osl_)
@@ -508,7 +508,7 @@ bool dbinfo_osl_match_tool::match_query_interval(const float xmin, const float x
                                                         true, true, false);
   //for now use only the first prototype in each class (FIXME)
   classes = osl_->classes();
-  for(vcl_vector<vcl_string>::iterator cit = classes.begin();
+  for(std::vector<std::string>::iterator cit = classes.begin();
       cit != classes.end(); ++cit)
     {
       dbinfo_observation_sptr obsdb = osl_->prototype(*cit, 0);
@@ -566,8 +566,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static bool query = true;
     static bool expand = false;
     static float coef=0.6f;
@@ -579,7 +579,7 @@ public:
     if (!param_dlg.ask())
       return;
     if(!tool_->load(image_file, query, expand, coef))
-      vcl_cout << "Image not sucessfully loaded\n";
+      std::cout << "Image not sucessfully loaded\n";
   }
   dbinfo_osl_transform_tool* tool_;
 };
@@ -591,8 +591,8 @@ public:
     : tool_(tool) {}
   void execute()
   {
-    static vcl_string image_file ="c:/images/*";
-    static vcl_string ext = "*.*";
+    static std::string image_file ="c:/images/*";
+    static std::string ext = "*.*";
     static float xmin = -3.0f;
     static float xmax = 3.0f;
     static float ymin = -3.0f;
@@ -630,7 +630,7 @@ public:
                                max_info,
                                match_image))
       {
-        vcl_cout << "query not successfully transformed\n";
+        std::cout << "query not successfully transformed\n";
         return;
       }
 
@@ -665,7 +665,7 @@ dbinfo_osl_transform_tool::~dbinfo_osl_transform_tool()
 
 
 //: Return the name of this tool
-vcl_string dbinfo_osl_transform_tool::name() const
+std::string dbinfo_osl_transform_tool::name() const
 {
   return "Transform OSL";
 }
@@ -702,10 +702,10 @@ dbinfo_osl_transform_tool::handle( const vgui_event & e,
 
 void dbinfo_osl_transform_tool::activate()
 {
-  vcl_cout << "Transform tool active\n";
+  std::cout << "Transform tool active\n";
 }
 //------------------  OSL transform tool methods ---------------------------
-bool dbinfo_osl_transform_tool::load(vcl_string const& path,
+bool dbinfo_osl_transform_tool::load(std::string const& path,
                                      const bool query,
                                      const bool expand,
                                      const float coef)
@@ -739,7 +739,7 @@ transform_query(const float xmin, const float xmax,
 {
   if(!query_||!proto_)
     {
-      vcl_cout << "Missing image data \n";
+      std::cout << "Missing image data \n";
       return false;
     }
   // create a query observation from the image

@@ -129,7 +129,7 @@ activate()
   this->intsciss_.set_params(iparams);
   this->intsciss_.set_canny_params(canny_params);
 
-  vcl_cout << "\nLivewire tool is activated!!!\n";
+  std::cout << "\nLivewire tool is activated!!!\n";
 }
 
 
@@ -177,7 +177,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   if (!this->seed_picked_ && this->gesture_start(e)) 
   { 
     this->handle_pick_initial_seed(mouse_x, mouse_y);
-    vgui::out << "Initial seed selected" << vcl_endl;
+    vgui::out << "Initial seed selected" << std::endl;
 
     //do the following no matter what mode we are in
     bvis1_manager::instance()->post_overlay_redraw();
@@ -218,7 +218,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   {
     this->handle_delete_end_segments();
     vgui::out << "last contour pt(x,y)=(" << this->contour_.back().x() <<
-         "," << this->contour_.back().y() << ")" << vcl_endl;
+         "," << this->contour_.back().y() << ")" << std::endl;
     bvis1_manager::instance()->post_overlay_redraw();
     return false;
   }
@@ -237,7 +237,7 @@ handle( const vgui_event & e, const bvis1_view_tableau_sptr& view)
   {
     this->handle_save_contour();
     bvis1_manager::instance()->post_overlay_redraw();
-    vcl_cout<<"We are at the end of the Save event"<<"\n";
+    std::cout<<"We are at the end of the Save event"<<"\n";
     return false;
   }   
 
@@ -274,7 +274,7 @@ handle_manual_points(int mouse_x, int mouse_y)
 bool dbdet_image_seg_dlvwr_tool::
 handle_pick_initial_seed(int mouse_x, int mouse_y)
 {
-  vcl_cout<<"We are in Event 1: picking initial seed pt"<<"\n";
+  std::cout<<"We are in Event 1: picking initial seed pt"<<"\n";
 
   if (! this->lvwr_initialzed_)
   {
@@ -286,8 +286,8 @@ handle_pick_initial_seed(int mouse_x, int mouse_y)
   if (!(mouse_x >= 0 && mouse_x < (int)this->image_->ni() && 
     mouse_y >= 0 && mouse_y < (int)this->image_->nj())) 
   {
-    vcl_cout << "Not a valid seed point on image!!\n";
-    vcl_cout << "Select a new seed point inside the image!!\n"; 
+    std::cout << "Not a valid seed point on image!!\n";
+    std::cout << "Select a new seed point inside the image!!\n"; 
     return false;
   }
   
@@ -297,7 +297,7 @@ handle_pick_initial_seed(int mouse_x, int mouse_y)
   this->intsciss_.compute_optimal_paths(mouse_x, mouse_y);
   this->seed_picked_ = true;
   
-  vcl_cout << "Paths are computed...\n";
+  std::cout << "Paths are computed...\n";
   return false;
 }
 
@@ -358,7 +358,7 @@ handle_mouse_motion(double newx, double newy, int mode)
   vgui::out << "(x,y)=(" << free_x << "," << free_y << 
     ") endpoint=(" << endpoint.x() << "," << endpoint.y() <<") grad_cost=" << this->intsciss().grad_mag_cost(endpoint.x(), endpoint.y()) << 
     " log_cost= " << this->intsciss().log_cost(endpoint.x(), endpoint.y()) << 
-    " accum_cost= " << this->intsciss().accum_cost(endpoint.x(), endpoint.y()) << vcl_endl;
+    " accum_cost= " << this->intsciss().accum_cost(endpoint.x(), endpoint.y()) << std::endl;
   
 
   return false;
@@ -464,23 +464,23 @@ handle_delete_end_segments()
 //bool dbdet_image_seg_dlvwr_tool::
 //handle_save_contour()
 //{
-//  vcl_cout<<"\nIn the Save event " <<"\n";
+//  std::cout<<"\nIn the Save event " <<"\n";
 //  
 //  
-//  vcl_string image_filename = ".con";
+//  std::string image_filename = ".con";
 //  
 //  // pop up a dialog to ask for output file name
-//  static vcl_string regexp = "*.*";
+//  static std::string regexp = "*.*";
 //  vgui_dialog save_dl("Save contour");
 //  save_dl.inline_file("Filename: ", regexp, image_filename);
 //
 //  if (save_dl.ask()) 
 //  {
 //    //open the file
-//    vcl_ofstream fs2(image_filename.c_str()); 
+//    std::ofstream fs2(image_filename.c_str()); 
 //    if (!fs2) 
 //    {
-//      vcl_cout << "Problems in opening file: " << image_filename << "\n";
+//      std::cout << "Problems in opening file: " << image_filename << "\n";
 //      return false;
 //    }
 //    else 
@@ -498,7 +498,7 @@ handle_delete_end_segments()
 //      // finish saving the .con file
 //      fs2.close();
 //
-//      vcl_cout << "Contour written to the specified files!\n";    
+//      std::cout << "Contour written to the specified files!\n";    
 //      this->seed_picked_ = false;
 //
 //      // clear old data
@@ -516,7 +516,7 @@ handle_delete_end_segments()
 bool dbdet_image_seg_dlvwr_tool::
 handle_save_contour()
 {
-  vcl_cout<<"\nIn the Save event " <<"\n";
+  std::cout<<"\nIn the Save event " <<"\n";
    
   // pop up a dialog to ask whether user wantst to save the contour
   //bool save_contour = false;
@@ -525,7 +525,7 @@ handle_save_contour()
 
   if (save_dl.ask()) 
   {
-    vcl_vector<vsol_point_2d_sptr > pts;
+    std::vector<vsol_point_2d_sptr > pts;
     
     for (unsigned int i=0; i<this->contour_.size(); ++i) 
     {
@@ -658,7 +658,7 @@ init_livewire()
   }
   else 
   {
-    vcl_cerr << "Returning false. nplanes(): " << image_view.nplanes() << vcl_endl;
+    std::cerr << "Returning false. nplanes(): " << image_view.nplanes() << std::endl;
     return false;
   }
 

@@ -4,7 +4,7 @@
 #ifndef dbmsh3d_process_vis_h_
 #define dbmsh3d_process_vis_h_
 
-#include <vcl_string.h>
+#include <string>
 #include <dbmsh3d/pro/dbmsh3d_process.h>
 
 #include <Inventor/SbColor.h>
@@ -35,9 +35,9 @@ public:
   float vector_len_;
 
   //: The set of mesh vertex colors.
-  vcl_vector<SbColor> mesh_vertex_color_set_;
+  std::vector<SbColor> mesh_vertex_color_set_;
   //: The set of mesh face colors.
-  vcl_vector<SbColor> mesh_face_color_set_;
+  std::vector<SbColor> mesh_face_color_set_;
 
 public:
   //###### Constructor/Destructor ######
@@ -114,32 +114,32 @@ public:
 
   //###### Visualization Functions ######
   //: Compute mesh vertex color by the value. Result in mesh_vertex_color_set_[]
-  void compute_mesh_vertex_color_set (const vcl_vector<double>& values);
+  void compute_mesh_vertex_color_set (const std::vector<double>& values);
 
   //: Compute mesh face color by value using mesh_vertex_color_set_[].
   //  Result in mesh_face_color_set_[]
-  void compute_face_color_by_value (const vcl_vector<double>& values);
+  void compute_face_color_by_value (const std::vector<double>& values);
 
   //###### File Visualization ######  
-  bool load_g3d (vcl_string filename = "");
-  void save_g3d (vcl_string filename = "");
+  bool load_g3d (std::string filename = "");
+  void save_g3d (std::string filename = "");
 
-  SoSeparator* view_xyz (vcl_string filename = "", const int colorcode = 0);
-  SoSeparator* view_p3d (vcl_string filename = "", const int colorcode = 0);
-  SoSeparator* view_g3d (vcl_string filename = "");
+  SoSeparator* view_xyz (std::string filename = "", const int colorcode = 0);
+  SoSeparator* view_p3d (std::string filename = "", const int colorcode = 0);
+  SoSeparator* view_g3d (std::string filename = "");
 
-  SoSeparator* view_ply (vcl_string filename = "", bool b_shape_hints = false, 
+  SoSeparator* view_ply (std::string filename = "", bool b_shape_hints = false, 
                          const int colorcode = 0,
                          const bool b_draw_isolated_pts = true);
-  SoSeparator* view_ply2 (vcl_string filename = "", bool b_shape_hints = false, 
+  SoSeparator* view_ply2 (std::string filename = "", bool b_shape_hints = false, 
                           const int colorcode = 0,
                          const bool b_draw_isolated_pts = true);
 
-  SoSeparator* view_iv (vcl_string filename = "");
-  SoSeparator* view_wrl (vcl_string filename = "");
+  SoSeparator* view_iv (std::string filename = "");
+  SoSeparator* view_wrl (std::string filename = "");
 
   //Read the list file and view each file.
-  SoSeparator* vis_list_file (vcl_string filename, const int opion, const int vis_opion);
+  SoSeparator* vis_list_file (std::string filename, const int opion, const int vis_opion);
 };
 
 

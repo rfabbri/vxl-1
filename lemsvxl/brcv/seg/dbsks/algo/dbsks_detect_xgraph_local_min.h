@@ -25,9 +25,9 @@
 //#include <vnl/vnl_vector.h>
 //#include <vil/vil_image_resource_sptr.h>
 //#include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-//#include <vcl_map.h>
+#include <vector>
+#include <string>
+//#include <map>
 
 //: Run xgraph detection based on pyramid edgemap
 class dbsks_detect_xgraph_local_min
@@ -50,32 +50,32 @@ public:
   bool optimize_xgraph();
 
 public:
-  vcl_string object_id; // string id of the image running detection on
-  vcl_string edgemap_folder;
-  vcl_string edgemap_ext;
-  vcl_string edgeorient_ext;
+  std::string object_id; // string id of the image running detection on
+  std::string edgemap_folder;
+  std::string edgemap_ext;
+  std::string edgeorient_ext;
   double edgemap_log2_scale_ratio;
-  vcl_string xgraph_file;
-  vcl_string xgraph_geom_file;
-  vcl_string xgraph_ccm_file;
+  std::string xgraph_file;
+  std::string xgraph_geom_file;
+  std::string xgraph_ccm_file;
   
 
-  vcl_string work_folder;
+  std::string work_folder;
 
-  //vcl_vector<dbsks_det_desc_xgraph_sptr > output_det_list;
+  //std::vector<dbsks_det_desc_xgraph_sptr > output_det_list;
 
 protected:
 
   //> edgemap pyramid -----------------------------------------------------------
   
   //: list of edgemap file names for each level
-  vcl_vector<vcl_string > list_edgemap_base_name;
+  std::vector<std::string > list_edgemap_base_name;
 
   //: list of edgemap width for each level
-  vcl_vector<unsigned > list_edgemap_width;
+  std::vector<unsigned > list_edgemap_width;
 
   //: list of edge map scale (compared to original image) for each level
-  vcl_vector<double > list_edgemap_scale;
+  std::vector<double > list_edgemap_scale;
 
   // Components to build an xshock_ccm_likelihood calculator
   dbsksp_xshock_graph_sptr xgraph_prototype_;

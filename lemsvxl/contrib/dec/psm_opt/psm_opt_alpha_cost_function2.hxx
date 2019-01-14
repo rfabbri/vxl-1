@@ -1,8 +1,8 @@
 #ifndef psm_opt_alpha_cost_function2_txx_
 #define psm_opt_alpha_cost_function2_txx_
 
-#include <vcl_cmath.h>
-#include <vcl_vector.h>
+#include <cmath>
+#include <vector>
 
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
@@ -17,9 +17,9 @@
 
 
 template<psm_apm_type APM>
-psm_opt_alpha_cost_function2<APM>::psm_opt_alpha_cost_function2(psm_sample<APM> &cell, vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data,  double min_sigma)
+psm_opt_alpha_cost_function2<APM>::psm_opt_alpha_cost_function2(psm_sample<APM> &cell, std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> > const& data,  double min_sigma)
 : vnl_least_squares_function(1, data.size(), use_gradient), cell_(cell), data_(data), 
-damp_(0.5), alpha_deflate_(1e-5), maxP_(vcl_pow(vnl_math::one_over_sqrt2pi / min_sigma, (double)psm_apm_traits<APM>::obs_dim)) {}
+damp_(0.5), alpha_deflate_(1e-5), maxP_(std::pow(vnl_math::one_over_sqrt2pi / min_sigma, (double)psm_apm_traits<APM>::obs_dim)) {}
 
 template<psm_apm_type APM>
 void psm_opt_alpha_cost_function2<APM>::f(vnl_vector<double> const& x, vnl_vector<double>& fx)
@@ -29,14 +29,14 @@ void psm_opt_alpha_cost_function2<APM>::f(vnl_vector<double> const& x, vnl_vecto
     alpha = 0.0;
   }
 
-  typename vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
+  typename std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
   vnl_vector<double>::iterator fx_it = fx.begin();
 
   for (; data_it != data_.end(); ++data_it, ++fx_it) {
     *fx_it = 0.0;
     double PI =  data_it->PI_;
-    double pass_prob = vcl_exp(-alpha * data_it->seg_len_);
-    double pass_prob_diff = pass_prob - vcl_exp(-cell_.alpha * data_it->seg_len_);
+    double pass_prob = std::exp(-alpha * data_it->seg_len_);
+    double pass_prob_diff = pass_prob - std::exp(-cell_.alpha * data_it->seg_len_);
 
     double Pt = data_it->pre_ + PI*data_it->vis_ + pass_prob*data_it->vis_*(data_it->post_ - PI);
 
@@ -44,7 +44,7 @@ void psm_opt_alpha_cost_function2<APM>::f(vnl_vector<double> const& x, vnl_vecto
     *fx_it = (maxP_ - Pt);// / maxP_;
 
     if (*fx_it < 0.0){
-      vcl_cerr << vcl_endl << "ERROR: residual value " << *fx_it << "is less than 0" << vcl_endl;
+      std::cerr << std::endl << "ERROR: residual value " << *fx_it << "is less than 0" << std::endl;
       *fx_it = 0;
     }
 
@@ -54,11 +54,11 @@ void psm_opt_alpha_cost_function2<APM>::f(vnl_vector<double> const& x, vnl_vecto
       // penalize alpha values < 0
       *fx_it += x[0]*x[0];
     }
-    //vcl_cout << "fx = " << *fx_it;
+    //std::cout << "fx = " << *fx_it;
     //*fx_it *= (data_it->seg_len_*0.1);
-    //vcl_cout << "  fx scaled = " << *fx_it << vcl_endl;
+    //std::cout << "  fx scaled = " << *fx_it << std::endl;
   }
-  //vcl_cout << "f(" << x[0] << ") = " << fx << vcl_endl;
+  //std::cout << "f(" << x[0] << ") = " << fx << std::endl;
 }
 
 
@@ -70,7 +70,7 @@ void psm_opt_alpha_cost_function2<APM>::gradf(vnl_vector<double> const&x, vnl_ma
   if (alpha < 0.0) {
     alpha = 0.0;
   }
-  typename vcl_vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
+  typename std::vector<psm_opt_sample<typename psm_apm_traits<APM>::obs_datatype> >::const_iterator data_it = data_.begin();
 
   for (unsigned int i=0; i < get_number_of_residuals(); ++i, ++data_it) {
     // force alpha to be non-negative
@@ -79,8 +79,8 @@ void psm_opt_alpha_cost_function2<APM>::gradf(vnl_vector<double> const&x, vnl_ma
     }
     else {
       double PI = data_it->PI_;
-      double pass_prob = vcl_exp(-alpha * data_it->seg_len_);
-      double pass_prob_diff = pass_prob - vcl_exp(-cell_.alpha * data_it->seg_len_);
+      double pass_prob = std::exp(-alpha * data_it->seg_len_);
+      double pass_prob_diff = pass_prob - std::exp(-cell_.alpha * data_it->seg_len_);
       double Pt = data_it->pre_ + PI*data_it->vis_ + pass_prob*data_it->vis_*(data_it->post_ - PI);
 
       // compute d_f / d_Pt
@@ -97,7 +97,7 @@ void psm_opt_alpha_cost_function2<APM>::gradf(vnl_vector<double> const&x, vnl_ma
       J[i][0] = partial;
     }
   }
-  //vcl_cout << "J(" << x[0] << ")= " << J << vcl_endl;
+  //std::cout << "J(" << x[0] << ")= " << J << std::endl;
   return;
 }
 

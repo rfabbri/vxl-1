@@ -79,7 +79,7 @@ bfrag_Manager::quit()
         
 }
 
-int bfrag_Manager::addPuzzle( vcl_string fn ) {
+int bfrag_Manager::addPuzzle( std::string fn ) {
     //sore filename for later use
     PZ2fn = fn;
 
@@ -117,7 +117,7 @@ int bfrag_Manager::addPuzzle( vcl_string fn ) {
  * bfrag_File_Handling's loadPuzzle( vcl_Ssring ) function
  ********************************************************************************/
 
-int bfrag_Manager::loadPuzzle( vcl_string fn ) {
+int bfrag_Manager::loadPuzzle( std::string fn ) {
 
     //sore filename for later use
     PZ2fn = fn;
@@ -178,7 +178,7 @@ void bfrag_Manager::savePZ2(){
 }
 
 //save the current setup
-int bfrag_Manager::savePZ2as( vcl_string fn ){
+int bfrag_Manager::savePZ2as( std::string fn ){
 
     if( fn.size() == 0 ){
         //as if they hit cancel
@@ -186,7 +186,7 @@ int bfrag_Manager::savePZ2as( vcl_string fn ){
     }
 
     vgui_dialog note("Set Puzzle Note");
-    vcl_string newline;
+    std::string newline;
     note.field( "Add To Current Note:", newline );
     note.message( "(cancel to add nothing)" );
     if( note.ask() ){
@@ -201,8 +201,8 @@ int bfrag_Manager::savePZ2as( vcl_string fn ){
 
 
 //adds one piece
-int bfrag_Manager::addbfrag2D( vcl_string topConFn, vcl_string botConFn, 
-                               vcl_string topImageFn, vcl_string botImageFn, vcl_string name ){
+int bfrag_Manager::addbfrag2D( std::string topConFn, std::string botConFn, 
+                               std::string topImageFn, std::string botImageFn, std::string name ){
 
     //make sure topConFn != null
     if( topConFn.size() <= 4 ){
@@ -221,7 +221,7 @@ int bfrag_Manager::addbfrag2D( vcl_string topConFn, vcl_string botConFn,
     }
 
 
-    //vcl_cout << "MANAGER: adding a piece to the current piece list" << vcl_endl;
+    //std::cout << "MANAGER: adding a piece to the current piece list" << std::endl;
 
     int err = theBfrag2DManager->addPiece( topConFn, botConFn, topImageFn, botImageFn, name );
     if( err >= 0 ) {
@@ -246,8 +246,8 @@ void bfrag_Manager::displayAssembly(){
 
     //use checkbox
 
-    vcl_vector<vcl_string> choices;
-    vcl_vector< bool > whichBool;
+    std::vector<std::string> choices;
+    std::vector< bool > whichBool;
     //bool temp = false;
 
     vgui_dialog contourChooser( "Choose Pieces To Add To Assembly" );
@@ -276,7 +276,7 @@ void bfrag_Manager::displayAssembly(){
 
         /*
         for( int i = 0; i < whichBool.size(); i++ ){
-            vcl_cout << "which bool is: " << whichBool[i] << vcl_endl;     
+            std::cout << "which bool is: " << whichBool[i] << std::endl;     
         }
         */
 
@@ -301,7 +301,7 @@ void bfrag_Manager::displayContour(){
         return;
     }
 
-    vcl_vector<vcl_string> choices;
+    std::vector<std::string> choices;
     int which;
 
     vgui_dialog contourChooser( "Choose A Contour" );
@@ -341,7 +341,7 @@ void bfrag_Manager::setShell( vgui_shell_tableau_sptr s){
 
     theShell->add(theGrid);
 
-    //vcl_cout << "-----MANAGER: shell, viewer, bfrag2D_tableau are all setup-----" << vcl_endl;
+    //std::cout << "-----MANAGER: shell, viewer, bfrag2D_tableau are all setup-----" << std::endl;
 }
 
 void bfrag_Manager::displayAllTopImages( bool show ){
@@ -359,16 +359,16 @@ void bfrag_Manager::displayAllBotCurves( bool show ){
 
 //lets give this project a soul
 void bfrag_Manager::pairMatch(){
-    //vcl_cout << "--------------bfrag_Manager:: beginning the pairwise matching-----------------" << vcl_endl;
+    //std::cout << "--------------bfrag_Manager:: beginning the pairwise matching-----------------" << std::endl;
     
     //have the bfrag2DManager create a Curve<double,double> from our contour representation
     //for the top curves and set _Contours in PuzzleSolving to be that
-    vcl_vector<Curve<double,double> > bfragContours = theBfrag2DManager->getTopContoursForPuzzleSolving();
+    std::vector<Curve<double,double> > bfragContours = theBfrag2DManager->getTopContoursForPuzzleSolving();
     if( bfragContours.size() == 0 ){
-        vcl_cout << "bfrag_Manager: ABORTING pairwise matching, not enuf pieces loaded" << vcl_endl;
+        std::cout << "bfrag_Manager: ABORTING pairwise matching, not enuf pieces loaded" << std::endl;
         return;
     }
-    //vcl_cout << "bfrag_Manager received curves from bfrag2DManager of size: " << bfragContours.size() << vcl_endl;
+    //std::cout << "bfrag_Manager received curves from bfrag2DManager of size: " << bfragContours.size() << std::endl;
     _puzzleSolver->setContours( bfragContours );
     //_puzzleSolver->printContours();
     _puzzleSolver->preProcessCurves();
@@ -385,13 +385,13 @@ void bfrag_Manager::pairMatch(){
         int sec = (int)floor((diff/1000.0)) % 60;
         int mn = (int)floor((diff/60000.0)) % 60;
         int hr = (int)floor((diff/360000.0));
-        vcl_cout << "Pair Match running time: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << vcl_endl;
-        //vcl_cout << "____  " << (int)floor(diff/1000.0) << " seconds ____" << vcl_endl;
+        std::cout << "Pair Match running time: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << std::endl;
+        //std::cout << "____  " << (int)floor(diff/1000.0) << " seconds ____" << std::endl;
     //puzzleSolving->pairMatch()
     
     //OLD SORT: costs
     //pairMatchSortedCost_ = pairMatchResults_.cost;
-    //vcl_sort(pairMatchSortedCost_.begin(),pairMatchSortedCost_.end(),cost_ind_less());
+    //std::sort(pairMatchSortedCost_.begin(),pairMatchSortedCost_.end(),cost_ind_less());
     //NEW SORT: pairwiseMatches
     pairMatchResults_.sortPairwiseMatches();
     //pairMatchResults_.printPairwiseMatchesSortedNPS();
@@ -426,9 +426,9 @@ void bfrag_Manager::matchingIteration(){
         done_dl.ask();
         return;
     }
-    vcl_cout << "Matching Iteration: " << _curIteration << vcl_endl;
+    std::cout << "Matching Iteration: " << _curIteration << std::endl;
 
-    //vcl_cout << "_allStateVector size BEFORE search: " << _allStateVector.size() << vcl_endl;
+    //std::cout << "_allStateVector size BEFORE search: " << _allStateVector.size() << std::endl;
     //puzzleSolving->search( _allStateVector );
         clock_t start, end, diff;
         start = clock();
@@ -439,16 +439,16 @@ void bfrag_Manager::matchingIteration(){
         int sec = (int)floor((diff/1000.0)) % 60;
         int mn = (int)floor((diff/60000.0)) % 60;
         int hr = (int)floor((diff/360000.0));
-        vcl_cout << "Iteration running time of: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << vcl_endl;
-        //vcl_cout << "____  " << (int)floor(diff/1000.0) << " seconds ____" << vcl_endl;
+        std::cout << "Iteration running time of: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << std::endl;
+        //std::cout << "____  " << (int)floor(diff/1000.0) << " seconds ____" << std::endl;
     //puzzleSolving->search( _allStateVector );
-    //vcl_cout << "_allStateVector size AFTER search: " << _allStateVector.size() << vcl_endl;
+    //std::cout << "_allStateVector size AFTER search: " << _allStateVector.size() << std::endl;
 
 
     displayAllPuzzleSolutions();
     /*
     for( int i = 0; i < _allStateVector.size(); i++ ){
-        vcl_cout << "sanity check on AllStateVector[" << i << "]: ";
+        std::cout << "sanity check on AllStateVector[" << i << "]: ";
         _allStateVector[i].sanityCheckMatchesByIndexNPS();
     }
     */
@@ -491,7 +491,7 @@ void bfrag_Manager::displayAllPuzzleSolutions(){
     displaySolutions( &_allStateVector ); 
 };
 
-void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates){
+void bfrag_Manager::displaySolutions(std::vector<searchState> *theStates){
     if( theStates->size() == 0 ){
         vgui_dialog warn_dl("Error!");
         warn_dl.message( "Error: No solutions to display.  Run Puzzle Solving first." );
@@ -502,7 +502,7 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates){
     }
 
     searchState state;
-    gridWH_ = static_cast<int>(ceil(vcl_sqrt( (double) theStates->size() )));
+    gridWH_ = static_cast<int>(ceil(std::sqrt( (double) theStates->size() )));
     theBfrag2DManager->newGrid(gridWH_,gridWH_, -1, theStates->size() );
 
     for( unsigned w = 0; w < theStates->size(); w++ ){
@@ -511,7 +511,7 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates){
 
         //why do they do this!?
         if( state.nProcess == 0){
-            //vcl_cout << "************ state nProcess == 0 ************" << vcl_endl;
+            //std::cout << "************ state nProcess == 0 ************" << std::endl;
             theBfrag2DManager->redrawTableaux();
             break;
         }
@@ -573,11 +573,11 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates){
         //--------------my code----------------
         double px1,py1,px2,py2;
   
-        vcl_pair<double,double> cen1 = center(state.piece(state.new_edge.first));
+        std::pair<double,double> cen1 = center(state.piece(state.new_edge.first));
         px1 = cen1.first;
         py1 = cen1.second;
     
-        vcl_pair<double,double> cen2 = center(state.piece(state.new_edge.second));
+        std::pair<double,double> cen2 = center(state.piece(state.new_edge.second));
         px2 = cen2.first;
         py2 = cen2.second; 
     
@@ -660,7 +660,7 @@ void bfrag_Manager::removePair( unsigned which ){
 
 void bfrag_Manager::removeSelectedPairs(){
 
-    vcl_vector<int> selectedRows, selectedCols;
+    std::vector<int> selectedRows, selectedCols;
 #if 0
 //this variable is not used in the code.  PLEASE FIX!  -MM
     int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
@@ -670,22 +670,22 @@ void bfrag_Manager::removeSelectedPairs(){
 
     /*
     for( int i = 0; i < selectedRows.size(); i++ ){
-        vcl_cout << "[" << selectedCols[i] << "," << selectedRows[i] << "] -- " << (selectedRows[i]*gridWH_)+selectedCols[i] << vcl_endl;
+        std::cout << "[" << selectedCols[i] << "," << selectedRows[i] << "] -- " << (selectedRows[i]*gridWH_)+selectedCols[i] << std::endl;
     }
     */
 
     //this kinda sux, but i have to remove the last to the first . . .
-    vcl_vector<int> toDelete;
+    std::vector<int> toDelete;
     for( unsigned i = 0; i < selectedRows.size(); i++ ){
         toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
     }
     //now sort that so the largest comes first
-    vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+    std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
     for( unsigned i = 0; i < toDelete.size(); i++ ){
         //make sure then one were deleting actually exists...
             int junkint = pairMatchResults_._matches.size();
         if( (toDelete[i] < junkint) || (junkint < 0) ){
-            //vcl_cout << "now deleting: " << toDelete[i] << vcl_endl;
+            //std::cout << "now deleting: " << toDelete[i] << std::endl;
             pairMatchResults_._matches.erase( pairMatchResults_._matches.begin()+toDelete[i] + _firstDisplayedPiece );
 
         }
@@ -722,7 +722,7 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
 
     _firstDisplayedPiece = start-1;
 
-    gridWH_ = static_cast<int>(ceil(vcl_sqrt((double) howMany)));
+    gridWH_ = static_cast<int>(ceil(std::sqrt((double) howMany)));
     theBfrag2DManager->newGrid(gridWH_,gridWH_, pairMatchResults_._matches.size());
 
     int p1, p2;
@@ -739,10 +739,10 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
         
         XForm3x3 *pairXForm = new XForm3x3;
         regContour(c1,c2, pairMatchResults_._matches[i].pointMap, 0, pairXForm );
-        //vcl_cout << "xform for pair [" << i << "] is: " << vcl_endl;
+        //std::cout << "xform for pair [" << i << "] is: " << std::endl;
         //pairXForm.print();
 
-        matchedPairs_.push_back(vcl_pair<Curve<double,double>*,Curve<double,double>*>(c1,c2));
+        matchedPairs_.push_back(std::pair<Curve<double,double>*,Curve<double,double>*>(c1,c2));
 
         //add these two pieces in the same tableau on the grid
         theBfrag2DManager->addCurveAt(c1,i-(start-1));
@@ -765,9 +765,9 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
 }
 
 void bfrag_Manager::reorderPair( int from, int to ){
-    //vcl_cout << "manager reordering from: " << from << " to: " << to << vcl_endl;
+    //std::cout << "manager reordering from: " << from << " to: " << to << std::endl;
 
-    //vcl_cout << "COSTS BEFORE:" << vcl_endl;
+    //std::cout << "COSTS BEFORE:" << std::endl;
     //pairMatchResults_.printPairwiseMatchesSortedNPS();
     unsigned tounsigned = static_cast<unsigned>(to);
     if( tounsigned == 0 ){
@@ -781,10 +781,10 @@ void bfrag_Manager::reorderPair( int from, int to ){
         double diff = pairMatchResults_._matches[to].cost - pairMatchResults_._matches[to-1].cost;
         //new cost is right in between the target and the one before it
         //which puts this just before target, exactly what we want
-        //vcl_cout << "ORIG COST: " << pairMatchResults_._matches[from].cost << vcl_endl;
-        //vcl_cout << "BETTER COST: [" << pairMatchResults_._matches[to-1].cost << "] WORSE COST: [" << pairMatchResults_._matches[to].cost << "]" << vcl_endl;
-        //vcl_cout << "DIFF/2.0 (adjustment): " << diff/2.0 << vcl_endl;
-        //vcl_cout << "NEW SCORE: " << pairMatchResults_._matches[to].cost - diff/2.0 << vcl_endl;
+        //std::cout << "ORIG COST: " << pairMatchResults_._matches[from].cost << std::endl;
+        //std::cout << "BETTER COST: [" << pairMatchResults_._matches[to-1].cost << "] WORSE COST: [" << pairMatchResults_._matches[to].cost << "]" << std::endl;
+        //std::cout << "DIFF/2.0 (adjustment): " << diff/2.0 << std::endl;
+        //std::cout << "NEW SCORE: " << pairMatchResults_._matches[to].cost - diff/2.0 << std::endl;
 
         pairMatchResults_._matches[from].cost = pairMatchResults_._matches[to].cost - diff/2.0;
     }
@@ -826,7 +826,7 @@ void bfrag_Manager::displayNContours( int howMany, int start ){
         return;
     }
 
-    gridWH_ = static_cast<int>(ceil(vcl_sqrt((double) howMany)));
+    gridWH_ = static_cast<int>(ceil(std::sqrt((double) howMany)));
     theBfrag2DManager->newGrid(gridWH_,gridWH_, -9); //-9 single FRAG popup menu
 
     for( int i = start-1; i < numPuzzlePieces && i < (start-1)+howMany; i++ ){   
@@ -843,19 +843,19 @@ void bfrag_Manager::removeFragment( int which ){
 }
 
 void bfrag_Manager::removeSelectedFragments(){
-    vcl_vector<int> selectedRows, selectedCols;
+    std::vector<int> selectedRows, selectedCols;
 #if 0
 //this variable is not used in the code.  PLEASE FIX!  -MM
     int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
 #endif
 
     //this kinda sux, but i have to remove the last to the first . . .
-    vcl_vector<int> toDelete;
+    std::vector<int> toDelete;
     for( unsigned i = 0; i < selectedRows.size(); i++ ){
         toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
     }
     //now sort that so the largest comes first
-    vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+    std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
     for( unsigned i = 0; i < toDelete.size(); i++ ){
         //make sure then one were deleting actually exists...
         if( !(theBfrag2DManager->removeBfrag(toDelete[i])) ){
@@ -870,20 +870,20 @@ void bfrag_Manager::removeSelectedFragments(){
 }
 
 void bfrag_Manager::removeSelectedPuzzles(){
-    vcl_vector<int> selectedRows, selectedCols;
+    std::vector<int> selectedRows, selectedCols;
 #if 0
 //this variable is not used in the code.  PLEASE FIX!  -MM
     int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
 #endif
 
     //this kinda sux, but i have to remove the last to the first . . .
-    vcl_vector<int> toDelete;
+    std::vector<int> toDelete;
     for( unsigned i = 0; i < selectedRows.size(); i++ ){
         toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
     }
 
     //now sort that so the largest comes first
-    vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+    std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
 
     for( unsigned i = 0; i < toDelete.size(); i++ ){
         //make sure then one were deleting actually exists...
@@ -919,7 +919,7 @@ void bfrag_Manager::removePuzzle( int which ){
 }
 
 void bfrag_Manager::reorderPuzzle( int from, int to ){
-    //vcl_cout << "moving puzzle " << from << " to: " << to << vcl_endl;
+    //std::cout << "moving puzzle " << from << " to: " << to << std::endl;
 
     searchState removed = searchState(_allStateVector[from]);
     _allStateVector.erase( _allStateVector.begin() + from + _firstDisplayedPuzzle );
@@ -939,7 +939,7 @@ void bfrag_Manager::reorderPuzzle( int from, int to ){
 void bfrag_Manager::generatePuzzle(){
     vgui_dialog gen( "Generator..." );
     gen.message( "Automatic Puzzle File Generation" );
-    vcl_string frontContourDir, backContourDir, frontImageDir, backImageDir, blank;
+    std::string frontContourDir, backContourDir, frontImageDir, backImageDir, blank;
     gen.file( "Front Contour Directory ", blank, frontContourDir );
     gen.file( "Back Contour Directory ", blank, backContourDir );
     gen.file( "Front Image Directory ", blank, frontImageDir );

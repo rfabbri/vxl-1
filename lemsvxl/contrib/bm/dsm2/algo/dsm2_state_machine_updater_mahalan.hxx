@@ -24,8 +24,8 @@
 //		dsm2_node_base_sptr node_base_sptr(num_obs_ptr);
 //
 //		//insert the new node into the graph
-//		vcl_pair<vcl_map<unsigned, dsm2_node_base_sptr>::iterator, bool> ret;
-//		ret = state_machine_base_sptr->graph.insert(vcl_pair<unsigned,dsm2_node_base_sptr>
+//		std::pair<std::map<unsigned, dsm2_node_base_sptr>::iterator, bool> ret;
+//		ret = state_machine_base_sptr->graph.insert(std::pair<unsigned,dsm2_node_base_sptr>
 //										(state_machine_base_sptr->next_node_id++,node_base_sptr));
 //
 //		state_machine_base_sptr->curr_node_itr = ret.first;
@@ -35,8 +35,8 @@
 //		dsm2_feature<math_type,dimension>* feature_ptr = 
 //			static_cast<dsm2_feature<math_type,dimension>*>(feature_base_sptr.as_pointer());
 //
-//		vcl_map<double, vcl_map<unsigned, dsm2_node_base_sptr>::iterator > weight_node_map;
-//		vcl_map<unsigned, dsm2_node_base_sptr>::iterator most_prob_itr, 
+//		std::map<double, std::map<unsigned, dsm2_node_base_sptr>::iterator > weight_node_map;
+//		std::map<unsigned, dsm2_node_base_sptr>::iterator most_prob_itr, 
 //			g_itr, g_end = state_machine_base_sptr->graph.end();
 //
 //		for( g_itr = state_machine_base_sptr->graph.begin();
@@ -63,9 +63,9 @@
 //{
 //	node_base_sptr node_sptr = new node_class_type;
 //
-//	vcl_pair<graph_type_iterator,bool> ret = 
+//	std::pair<graph_type_iterator,bool> ret = 
 //		state_machine_base_sptr->graph.insert(
-//			vcl_pair<unsigned,node_base_sptr>(state_machine_base_sptr->next_node_id++, node_sptr) );
+//			std::pair<unsigned,node_base_sptr>(state_machine_base_sptr->next_node_id++, node_sptr) );
 //
 //	transition_class_type* transition_ptr = static_cast<transition_class_type*>(state_machine_base_sptr.as_pointer());
 //

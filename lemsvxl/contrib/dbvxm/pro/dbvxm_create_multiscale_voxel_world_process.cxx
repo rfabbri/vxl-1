@@ -7,9 +7,9 @@
 
 #include <brdb/brdb_value.h>
 #include <bprb/bprb_parameters.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_vector_3d.h>
@@ -31,42 +31,42 @@ dbvxm_create_multiscale_voxel_world_process::dbvxm_create_multiscale_voxel_world
   // parameters
   // world parameters are received as process parameters
 
-  if (!parameters()->add("Input Directory", "input_directory", vcl_string("./")))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+  if (!parameters()->add("Input Directory", "input_directory", std::string("./")))
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Corner X", "corner_x", (float)0.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Corner Y", "corner_y", (float)0.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Corner Z", "corner_z", (float)0.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Voxel Dimension in X", "voxel_dim_x", (unsigned int)10))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Voxel Dimension in Y", "voxel_dim_y", (unsigned int)10))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Voxel Dimension in Z", "voxel_dim_z", (unsigned int)10))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Voxel Length", "voxel_length", (float)1.0))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   // path to the lvcs file
-  if (!parameters()->add("LVCS Path", "lvcs", vcl_string("./")))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+  if (!parameters()->add("LVCS Path", "lvcs", std::string("./")))
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Minimum Occupancy Probability", "min_ocp_prob", 1e-5f))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Maximum Occupancy Probability", "max_ocp_prob", 1-1e-5f))
-    vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
   if (!parameters()->add("Maximum Scale", "max_scale", (unsigned) 0))
-      vcl_cerr << "ERROR: Adding parameters in " << __FILE__ << vcl_endl;
+      std::cerr << "ERROR: Adding parameters in " << __FILE__ << std::endl;
 
 }
 
@@ -84,18 +84,18 @@ dbvxm_create_multiscale_voxel_world_process::execute()
   if (!this->verify_inputs())
     return false;
 
-  vcl_string vox_dir;
-  if (!parameters()->get_value(vcl_string("input_directory"), vox_dir)) {
-    vcl_cout << "dbvxm_create_multiscale_voxel_world_process::execute() -- problem in retrieving parameter input_directory\n";
+  std::string vox_dir;
+  if (!parameters()->get_value(std::string("input_directory"), vox_dir)) {
+    std::cout << "dbvxm_create_multiscale_voxel_world_process::execute() -- problem in retrieving parameter input_directory\n";
     return false;
   }
 
   if (!vul_file::is_directory(vox_dir) || !vul_file::exists(vox_dir)) {
-    vcl_cerr << "In dbvxm_create_multiscale_voxel_world_process::execute() -- input directory is not valid!\n";
+    std::cerr << "In dbvxm_create_multiscale_voxel_world_process::execute() -- input directory is not valid!\n";
     return false;
   }
 
-  vcl_cout << "In dbvxm_create_multiscale_voxel_world_process::execute() -- input directory is: " << vox_dir << vcl_endl;
+  std::cout << "In dbvxm_create_multiscale_voxel_world_process::execute() -- input directory is: " << vox_dir << std::endl;
 
   float corner_x = parameters()->value<float>("corner_x");
   float corner_y = parameters()->value<float>("corner_y");
@@ -118,18 +118,18 @@ dbvxm_create_multiscale_voxel_world_process::execute()
     apm_type = bvxm_world_params::mog_grey;
 #endif // 0
 
-  vcl_string lvcs_path;
-  if (!parameters()->get_value(vcl_string("lvcs"), lvcs_path)) {
-    vcl_cout << "dbvxm_create_multiscale_voxel_world_process::execute() -- problem in retrieving parameter lvcs_path\n";
+  std::string lvcs_path;
+  if (!parameters()->get_value(std::string("lvcs"), lvcs_path)) {
+    std::cout << "dbvxm_create_multiscale_voxel_world_process::execute() -- problem in retrieving parameter lvcs_path\n";
     return false;
   }
 
   bgeo_lvcs_sptr lvcs = new bgeo_lvcs();
   if (lvcs_path != "") {
-    vcl_ifstream is(lvcs_path.c_str());
+    std::ifstream is(lvcs_path.c_str());
     if (!is)
     {
-      vcl_cerr << " Error opening file  " << lvcs_path << vcl_endl;
+      std::cerr << " Error opening file  " << lvcs_path << std::endl;
       return false;
     }
     lvcs->read(is);

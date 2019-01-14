@@ -4,8 +4,8 @@
 
 #include "bcal_zhang_camera_node.h"
 #include "bcal_camera.h"
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -14,7 +14,7 @@
 bcal_zhang_camera_node::bcal_zhang_camera_node(int id) : bcal_camera_node(id)
 {
   // build lens distortion model
-  vcl_vector<bool> flags(7, false);
+  std::vector<bool> flags(7, false);
   flags[0] = true;
   flags[1] = true;
   cam_ -> set_lens_model(flags);
@@ -28,7 +28,7 @@ bcal_zhang_camera_node::~bcal_zhang_camera_node()
   removeData();
 }
 
-void bcal_zhang_camera_node::set_beat(vcl_vector<double> const& new_beat)
+void bcal_zhang_camera_node::set_beat(std::vector<double> const& new_beat)
 {
   bcal_camera_node::set_beat(new_beat);
 
@@ -36,25 +36,25 @@ void bcal_zhang_camera_node::set_beat(vcl_vector<double> const& new_beat)
   if (point_lists_ptr_)
     this->removeData();
 
-  point_lists_ptr_ = new vcl_vector< vgl_homg_point_2d<double> > [num_views_];
+  point_lists_ptr_ = new std::vector< vgl_homg_point_2d<double> > [num_views_];
 }
 
 int bcal_zhang_camera_node::readData(const char *fname, int iView)
 {
-  vcl_ifstream  in(fname);
+  std::ifstream  in(fname);
 
   if (!in){
-    vcl_cout<<" cannot open the file: "<<fname << vcl_endl;
+    std::cout<<" cannot open the file: "<<fname << std::endl;
     return 1;
   }
 
   if (num_views_<=0){
-    vcl_cerr<<" not memory allocated for storing\n";
+    std::cerr<<" not memory allocated for storing\n";
     return 2;
   }
 
   if (num_views_<iView){
-    vcl_cerr<<"view index out of range of beat\n";
+    std::cerr<<"view index out of range of beat\n";
     return 3;
   }
 
@@ -80,7 +80,7 @@ int bcal_zhang_camera_node::removeData()
   return 0;
 }
 
-int bcal_zhang_camera_node::read_data(vcl_vector< vgl_homg_point_2d<double> > & plist, int iframe)
+int bcal_zhang_camera_node::read_data(std::vector< vgl_homg_point_2d<double> > & plist, int iframe)
 {
   point_lists_ptr_[iframe] = plist;
 

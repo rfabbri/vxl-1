@@ -1,6 +1,6 @@
 #include "geom_voxel_enumerator_from_box.h"
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <cmath>
+#include <algorithm>
 
 
 long longmax(long a, long b){
@@ -17,7 +17,7 @@ unsigned long get_begin(double box_min, double grid_min, double spacing){
 }
 
 unsigned long get_end(double box_max, double grid_max, double grid_min, double spacing){
-  long i = 1+ (long) vcl_ceil((box_max - grid_min)/spacing);
+  long i = 1+ (long) std::ceil((box_max - grid_min)/spacing);
   long j = (long) ((grid_max - grid_min)/spacing);
   return longmax(0, longmin(i,j));
 }

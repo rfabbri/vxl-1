@@ -1,7 +1,7 @@
 #ifndef psm_aux_scene_base_h_
 #define psm_aux_scene_base_h_
 
-#include <vcl_set.h>
+#include <set>
 #include <vbl/vbl_bounding_box.h>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
@@ -36,7 +36,7 @@ protected:
 typedef vbl_smart_ptr<psm_aux_scene_base> psm_aux_scene_base_sptr;
 
 //: output description of voxel world to stream.
-vcl_ostream&  operator<<(vcl_ostream& s, psm_aux_scene_base const& scene);
+std::ostream&  operator<<(std::ostream& s, psm_aux_scene_base const& scene);
 
 
 #endif

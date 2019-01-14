@@ -26,10 +26,10 @@ class dborl_curve_retrieval_params : public dborl_algo_params
 public:
   
   //: parameters from the example algo in ORL documentations for parameter handling
-  dborl_parameter<vcl_string> db_index_;
-  dborl_parameter<vcl_string> output_folder_;
+  dborl_parameter<std::string> db_index_;
+  dborl_parameter<std::string> output_folder_;
   //: will be concatanated at the end of the object names to find esf files e.g. 0.5-0.1.esf
-  dborl_parameter<vcl_string> input_ext_;
+  dborl_parameter<std::string> input_ext_;
 
   dborl_parameter<float> matching_R_;
   dborl_parameter<float> line_fit_rms_;  // only one of these should be true

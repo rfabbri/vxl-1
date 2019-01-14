@@ -7,7 +7,7 @@
 //
 
 #include "dbsksp_convert_xgraph_to_binary_mask_utils.h"
-#include <vcl_stack.h>
+#include <stack>
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <dbsksp/dbsksp_xshock_graph.h>
 
@@ -52,7 +52,7 @@ bool dbsksp_draw_binary_map(const dbsksp_xshock_graph_sptr& xgraph, vil_image_vi
             }
         }
     }
-    vcl_stack<int> xs, ys;
+    std::stack<int> xs, ys;
 
     xs.push(xgraph->all_nodes().front()->pt().x());
     ys.push(xgraph->all_nodes().front()->pt().y());

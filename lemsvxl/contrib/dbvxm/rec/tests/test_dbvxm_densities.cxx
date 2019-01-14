@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
 #include <vul/vul_file.h>
 
 #include <rec/dbvxm_fg_pair_density.h>

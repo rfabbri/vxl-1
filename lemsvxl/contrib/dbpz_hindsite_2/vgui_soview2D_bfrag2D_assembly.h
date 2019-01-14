@@ -39,14 +39,14 @@ public:
     void addPositionedPiece( vgui_soview2D_bfrag2D* in,
                              double *inMatrix );
 
-    vcl_vector< vgui_soview2D_bfrag2D* > getViews(){ return theViews; };
-    vcl_vector< double* > getMatrices(){ return theMatrices; };
+    std::vector< vgui_soview2D_bfrag2D* > getViews(){ return theViews; };
+    std::vector< double* > getMatrices(){ return theMatrices; };
 
 private:
 
-    vcl_vector< vgui_soview2D_bfrag2D* > theViews;
+    std::vector< vgui_soview2D_bfrag2D* > theViews;
     //also gunna need a parallel vector for the matricies!
-    vcl_vector< double* > theMatrices;
+    std::vector< double* > theMatrices;
 
 };
 

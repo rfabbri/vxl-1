@@ -3,8 +3,8 @@
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_composite_tableau.h>
 #include <bgui/bgui_image_tableau.h>
-#include <vcl_cmath.h>
-#include <vcl_fstream.h>
+#include <cmath>
+#include <fstream>
 
 #include <bgui3d/bgui3d.h>
 #include <bgui3d/bgui3d_project2d_tableau.h>
@@ -138,13 +138,13 @@ void buildScene(SoGroup *root, SoNode* vehicle)
   
   double alt, az;
   dbul_solar_position(71, 13.5 ,38.70876, -77.15572, alt, az);
-  vcl_cout << "altitude = " << alt << "  azimuth = " << az <<vcl_endl;
+  std::cout << "altitude = " << alt << "  azimuth = " << az <<std::endl;
   az = (360.0 - 16)*3.1415926/180.0 - az;
   //if(az < 0) az += 2*3.1415926;
-  vcl_cout << "azimuth is "<< az * 180.0/3.1415926<<" deg -  x:"<<vcl_cos(az)<<"  y:"<<vcl_sin(az)<<vcl_endl;
-  double xa = -vcl_cos(az)/vcl_tan(alt), ya = -vcl_sin(az)/vcl_tan(alt);
+  std::cout << "azimuth is "<< az * 180.0/3.1415926<<" deg -  x:"<<std::cos(az)<<"  y:"<<std::sin(az)<<std::endl;
+  double xa = -std::cos(az)/std::tan(alt), ya = -std::sin(az)/std::tan(alt);
   
-  vcl_cout << "xa:"<<xa<<"  ya:"<<ya<<" 1/tan(alt):"<<1.0/vcl_tan(alt)<<vcl_endl;
+  std::cout << "xa:"<<xa<<"  ya:"<<ya<<" 1/tan(alt):"<<1.0/std::tan(alt)<<std::endl;
   SoTransform* shadow_transform = new SoTransform;
   shadow_transform->setMatrix(SbMatrix(1.0, 0.0, 0.0, 0.0,
                                        0.0, 1.0, 0.0, 0.0,
@@ -261,7 +261,7 @@ vnl_double_3x4 make_camera()
   vnl_double_3x4 C;
   C.update(R);
   C.set_column(3, -R*t);
-  vcl_cout << "Camera = \n" <<K*C << vcl_endl;
+  std::cout << "Camera = \n" <<K*C << std::endl;
 
   return K*C;
 }
@@ -270,12 +270,12 @@ vnl_double_3x4 make_camera()
 int main(int argc, char** argv)
 {
   if(argc <3){
-    vcl_cout << "Please specify the path camera and image" << vcl_endl;
+    std::cout << "Please specify the path camera and image" << std::endl;
     return -1;
   }
-  vcl_string camera_file(argv[1]);
-  vcl_string image_file(argv[2]);
-  vcl_string vehicle_file = "";
+  std::string camera_file(argv[1]);
+  std::string image_file(argv[2]);
+  std::string vehicle_file = "";
   if(argc > 3)
     vehicle_file = argv[3];
   
@@ -294,12 +294,12 @@ int main(int argc, char** argv)
   if(vehicle_file != ""){
     vehicle = bgui3d_import_file(vehicle_file);
     if(vehicle)
-      vcl_cout << "loaded " << vehicle_file << vcl_endl;
+      std::cout << "loaded " << vehicle_file << std::endl;
   }
   buildScene(root, vehicle);
 
   vnl_double_3x4 camera;
-  vcl_fstream fh(camera_file.c_str());
+  std::fstream fh(camera_file.c_str());
   fh >> camera;
   fh.close();
   
@@ -316,7 +316,7 @@ int main(int argc, char** argv)
   camera = A * camera;
 
   
-  vcl_cout << camera << vcl_endl;
+  std::cout << camera << std::endl;
   // wrap the scene graph in a bgui3d tableau
   //bgui3d_project2d_tableau_new tab3d(camera, root);
   

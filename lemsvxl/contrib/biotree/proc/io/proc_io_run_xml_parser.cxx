@@ -3,12 +3,12 @@
 */
 #include "proc_io_run_xml_parser.h"
 
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
+#include <cstdio>
+#include <cassert>
+#include <sstream>
+#include <iostream>
 
-//#include <vcl_fstream.h>
+//#include <fstream>
 
 //-----
 //--- PARSER --
@@ -16,7 +16,7 @@
 template <typename T>
 void convert(const char* t, T& d)
 {
-  vcl_stringstream strm(t);
+  std::stringstream strm(t);
 
   strm >> d;
 
@@ -35,7 +35,7 @@ proc_io_run_xml_parser ::WriteIndent()
 //  putchar('\t');
 }
 void 
-proc_io_run_xml_parser ::cdataHandler(vcl_string name, vcl_string data)
+proc_io_run_xml_parser ::cdataHandler(std::string name, std::string data)
 {
   if (name.compare("log") == 0) {
     log_file_.assign(data);
@@ -80,11 +80,11 @@ void
 proc_io_run_xml_parser::handleAtts(const XML_Char** atts)
 {
 //   for (int i=0; atts[i]; i++) {
-//     vcl_cout << "Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//     std::cout << "Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       /*if (strcmp(atts[i],"width") ==0)
-        pInfo->setWidth(new vcl_string(atts[i+1]));
+        pInfo->setWidth(new std::string(atts[i+1]));
       else if (strcmp(atts[i],"height") ==0)
-        pInfo->setHeight(new vcl_string(atts[i+1]));*/
+        pInfo->setHeight(new std::string(atts[i+1]));*/
 //    }
 
 }
@@ -93,32 +93,32 @@ void
 proc_io_run_xml_parser::startElement(const char* name, const char** atts)
 {
  
-//  vcl_cout<< "element=" << name << vcl_endl; 
+//  std::cout<< "element=" << name << std::endl; 
 
   /*if (strcmp(name,"log") == 0){
     for (int i=0; atts[i]; i+=2) {
-      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "fname") == 0)
         convert(atts[i+1], log_file_);
     }
   }
   else if (strcmp(name,"scan") == 0){
     for (int i=0; atts[i]; i+=2) {
-      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "fname") == 0)
         convert(atts[i+1], scan_file_);
     }
   }
   else if (strcmp(name,"box") == 0){
     for (int i=0; atts[i]; i+=2) {
-      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "fname") == 0)
         convert(atts[i+1], box_file_);
     }
   }
   else */if (strcmp(name, "scale") == 0){
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       //scale_elm.add_attribute(atts[i], atts[i+1]);
       if (strcmp(atts[i], "x") == 0)
         convert(atts[i+1], scale_x_);
@@ -130,7 +130,7 @@ proc_io_run_xml_parser::startElement(const char* name, const char** atts)
   }
   else if (strcmp(name,"filter_spec") == 0){
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "rad") == 0)
         convert(atts[i+1], filter_radius_);
       else if (strcmp(atts[i], "len") == 0)
@@ -142,7 +142,7 @@ proc_io_run_xml_parser::startElement(const char* name, const char** atts)
   else if (strcmp(name,"orientation") == 0){
     double x, y, z;
     for (int i=0; atts[i]; i+=2) {
-//      vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
+//      std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
       if (strcmp(atts[i], "x") == 0) 
         convert(atts[i+1], x);
       else if (strcmp(atts[i], "y") == 0)

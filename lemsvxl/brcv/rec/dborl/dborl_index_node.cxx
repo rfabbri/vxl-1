@@ -15,7 +15,7 @@
 #include <dborl/dborl_object_base.h>
 
 //: return false if not all of the names in the name list are matched with a pointer
-bool dborl_index_node::fill_in_the_pointers(vcl_vector<dborl_object_base_sptr>& objects)
+bool dborl_index_node::fill_in_the_pointers(std::vector<dborl_object_base_sptr>& objects)
 {
   obj_list_.clear();
   obj_list_.assign(name_list_.size(), 0);
@@ -40,7 +40,7 @@ bool dborl_index_node::fill_in_the_pointers(vcl_vector<dborl_object_base_sptr>& 
 
 //: add path/<name>/ as the path of each object in the name list
 //  assuming a separate directory is created for each object with name <name>
-void dborl_index_node::fill_in_the_paths_using_names(vcl_string path)
+void dborl_index_node::fill_in_the_paths_using_names(std::string path)
 {
   path_list_.clear();
   for (unsigned i = 0; i < name_list_.size(); i++) {
@@ -63,7 +63,7 @@ void dborl_index_node::b_write()
 }
 
 //: not opening or closing the node tag!!!\n";
-void dborl_index_node::write_xml(vcl_ostream& os)
+void dborl_index_node::write_xml(std::ostream& os)
 {
   os << "\t<name>" << name_ << "</name>\n";
   os << "\t<objects>\n";

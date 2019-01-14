@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   vgui::init(argc, argv);
   vgui_menu menubar = histogrampick_menus::get_menu();
   unsigned w = 512, h = 512;
-  vcl_string title = "Histogram Picker";
+  std::string title = "Histogram Picker";
   vgui_window* win = vgui::produce_window(w, h, menubar, title);
   histogrampick_manager* bas = histogrampick_manager::instance();
   win->get_adaptor()->set_tableau(bas);

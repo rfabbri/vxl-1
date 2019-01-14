@@ -1,4 +1,4 @@
-#include <vcl_iostream.h>
+#include <iostream>
 
 #include <dbul/dbul_dir_file.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -52,17 +52,17 @@ int main(int argc, char** argv)
   dbmsh3d_mesh_mc M;
 
   if (argc == 1) {
-    vcl_cout << vcl_endl << "Usage: meshvis [in_file] [out_file]" << vcl_endl;
-    vcl_cout << vcl_endl << "  View .xyz .p3d .ply .ply2 .wrl .iv .off .m files." << vcl_endl;
-    vcl_cout << vcl_endl << "  Save optional mesh file specified in [out_file]." << vcl_endl;
+    std::cout << std::endl << "Usage: meshvis [in_file] [out_file]" << std::endl;
+    std::cout << std::endl << "  View .xyz .p3d .ply .ply2 .wrl .iv .off .m files." << std::endl;
+    std::cout << std::endl << "  Save optional mesh file specified in [out_file]." << std::endl;
   }
   else {
     //Use the Coin3d library to import VRML (wrl) or OpenInventor IV file.
     //For other mesh file, read it into our mesh data structure.
     bool view_vrml_iv = false;
-   vcl_string input_file = argv[1];
+   std::string input_file = argv[1];
 
-    vcl_string suffix = dbul_get_suffix (input_file);
+    std::string suffix = dbul_get_suffix (input_file);
     if (suffix == ".ply2")
       dbmsh3d_load_ply2 (&M, input_file.c_str());
     else if (suffix == ".ply")
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
       root->addChild (draw_M (&M, true)); 
 
       if (argc == 3) { //Save output file.
-        vcl_string out_file = argv[2];
+        std::string out_file = argv[2];
         suffix = dbul_get_suffix (out_file);
         if (suffix == ".ply2")
           dbmsh3d_save_ply2 (&M, out_file.c_str());

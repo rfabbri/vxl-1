@@ -15,7 +15,7 @@
 #include <vgui/vgui_menu.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui_range_map_params.h>
-#include <vcl_sstream.h>
+#include <sstream>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/vgui.h>
 #include <dbbgm/bbgm_viewer.h>
@@ -40,7 +40,7 @@ dbbgm_image_tableau(const bbgm_image_sptr& dimg)
   all_viewers_.push_back(new bbgm_variance_viewer);
   all_viewers_.push_back(new bbgm_weight_viewer);
 
-  vcl_vector<bbgm_viewer_sptr>::const_iterator itr = all_viewers_.begin();
+  std::vector<bbgm_viewer_sptr>::const_iterator itr = all_viewers_.begin();
   for(; itr != all_viewers_.end(); ++itr){
     if((*itr)->probe(dimg_)){
       this->set_active_viewer(*itr);
@@ -58,7 +58,7 @@ dbbgm_image_tableau::
 
 //-----------------------------------------------------------------------------
 
-vcl_string
+std::string
 dbbgm_image_tableau::
 type_name() const
 {
@@ -196,8 +196,8 @@ handle(vgui_event const &e)
   {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-    last_x_ = static_cast<int>(vcl_floor(ix+0.5));
-    last_y_ = static_cast<int>(vcl_floor(iy+0.5));
+    last_x_ = static_cast<int>(std::floor(ix+0.5));
+    last_y_ = static_cast<int>(std::floor(iy+0.5));
   }
   if(e.type==vgui_MOTION)
   {
@@ -232,13 +232,13 @@ handle(vgui_event const &e)
     if(last_x_ <0 || last_x_ >= (int)model->ni() || last_y_ <0 || last_y_ >= (int)model->nj())
       return bgui_image_tableau::handle(e);;
 
-    vcl_cout << "pixel ("<<last_x_<<", "<<last_y_<<")\n";
+    std::cout << "pixel ("<<last_x_<<", "<<last_y_<<")\n";
     const _dist& d = (*model)(last_x_,last_y_);
     for(unsigned int i=0; i<d.num_components(); ++i){
       const _component& c = d.distribution(i);
-      vcl_cout<< "weight= "<<d.weight(i)<<"\t mean("<<c.mean()<<")\t diag_covar("<<c.diag_covar()<<")\n";
+      std::cout<< "weight= "<<d.weight(i)<<"\t mean("<<c.mean()<<")\t diag_covar("<<c.diag_covar()<<")\n";
     }
-    vcl_cout << vcl_endl;
+    std::cout << std::endl;
     return bgui_image_tableau::handle(e);;
   }
   
@@ -321,16 +321,16 @@ class dbbgm_fail_color_command : public vgui_command
 
   void execute()
   {
-    vcl_stringstream color_istm;
+    std::stringstream color_istm;
     color_istm << tab_->fail_color_[0]<<' '
                << tab_->fail_color_[1]<<' '
                << tab_->fail_color_[2];
-    vcl_string color = color_istm.str();
+    std::string color = color_istm.str();
     vgui_dialog color_dlg("Select the Failure Color");
     color_dlg.inline_color("Failure Color", color);
     if(!color_dlg.ask())
       return;
-    vcl_stringstream color_ostm;
+    std::stringstream color_ostm;
     color_ostm << color;
     color_ostm >> tab_->fail_color_[0]
                >> tab_->fail_color_[1]
@@ -354,7 +354,7 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
   if(dimg_){
     vgui_menu view_menu;
 
-    vcl_vector<bbgm_viewer_sptr>::const_iterator itr = all_viewers_.begin();
+    std::vector<bbgm_viewer_sptr>::const_iterator itr = all_viewers_.begin();
     for(; itr != all_viewers_.end(); ++itr){
       if((*itr)->probe(dimg_))
         view_menu.add((*itr)->name(), new bbgm_viewer_command(this,*itr));
@@ -365,7 +365,7 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
       view_menu.separator();
       vgui_menu ind_menu;
       for(unsigned int i=0; i<nc; ++i){
-        vcl_stringstream num;
+        std::stringstream num;
         if(i==this->active_idx())
           num << "("<<i<<")";
         else
@@ -378,7 +378,7 @@ get_popup(const vgui_popup_params& params, vgui_menu &menu)
     view_menu.separator();
     view_menu.add("failure color", new dbbgm_fail_color_command(this));
 
-    vcl_string check = (color_space_YUV_)?"[x]":"[ ]";
+    std::string check = (color_space_YUV_)?"[x]":"[ ]";
     view_menu.add(check+" display YUV", new dbbgm_yuv_command(this));
     menu.add("Distribution Image", view_menu);
   }

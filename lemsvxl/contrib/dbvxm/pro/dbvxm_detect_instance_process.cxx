@@ -26,7 +26,7 @@ dbvxm_detect_instance_process::dbvxm_detect_instance_process()
   input_types_[0] = "bvxm_voxel_world_sptr";   // world
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "bvxm_voxel_world_sptr";   // object   (look for object in the world)
-  input_types_[3] = "vcl_string";
+  input_types_[3] = vcl_string";
   input_types_[4] = "unsigned";
   input_types_[5] = "unsigned";  // scale
 
@@ -81,9 +81,9 @@ bool dbvxm_detect_instance_process::execute()
     static_cast<brdb_value_t<bvxm_voxel_world_sptr>* >(input_data_[2].ptr());
   bvxm_voxel_world_sptr obj_world = input2->value();
 
-   brdb_value_t<vcl_string>* input3 =
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[3].ptr());
-  vcl_string voxel_type = input3->value();
+   brdb_value_t<std::string>* input3 =
+    static_cast<brdb_value_t<std::string>* >(input_data_[3].ptr());
+  std::string voxel_type = input3->value();
 
   brdb_value_t<unsigned>* input4 =
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -112,8 +112,8 @@ bool dbvxm_detect_instance_process::execute()
   parameters()->get_value("incz", incz);
 
   if (verbose) {
-    vcl_cout << "instance detection parameters to be used in this run:\n"
-             << "ni: " << ni << " nj: " << nj << " angle_int: " << angle_int << vcl_endl;
+    std::cout << "instance detection parameters to be used in this run:\n"
+             << "ni: " << ni << " nj: " << nj << " angle_int: " << angle_int << std::endl;
   }
 
   // if the world is not updated yet, we just return an empty image
@@ -143,10 +143,10 @@ bool dbvxm_detect_instance_process::execute()
   }
  
   if (verbose) {
-    vcl_cout << "detecting instance\n\tmain world dims: " << main_world->get_params()->num_voxels().x();
-    vcl_cout << " " << main_world->get_params()->num_voxels().y() << " " << main_world->get_params()->num_voxels().z() << "\n";
-    vcl_cout << "\tobj world dims: " << obj_world->get_params()->num_voxels().x();
-    vcl_cout << " " << obj_world->get_params()->num_voxels().y() << " " << obj_world->get_params()->num_voxels().z() << "\n";
+    std::cout << "detecting instance\n\tmain world dims: " << main_world->get_params()->num_voxels().x();
+    std::cout << " " << main_world->get_params()->num_voxels().y() << " " << main_world->get_params()->num_voxels().z() << "\n";
+    std::cout << "\tobj world dims: " << obj_world->get_params()->num_voxels().x();
+    std::cout << " " << obj_world->get_params()->num_voxels().y() << " " << obj_world->get_params()->num_voxels().z() << "\n";
   }
 
   //unsigned max_x = main_world->get_params()->num_voxels().x()-obj_world->get_params()->num_voxels().x();
@@ -202,7 +202,7 @@ bool dbvxm_detect_instance_process::execute()
       vil_save(*mix_exp_img, "./mixture_expected_img.png");
     }
     
-    vcl_cout << "color not implemented yet!\n";
+    std::cout << "color not implemented yet!\n";
     return false;
   }
   else if (voxel_type == "apm_mog_grey") {
@@ -221,8 +221,8 @@ bool dbvxm_detect_instance_process::execute()
       vil_save(*mix_exp_img, "./mixture_expected_img.png");
     }
 
-    vcl_cout << "entering exhaustive search\n";
-    vcl_cout.flush();
+    std::cout << "entering exhaustive search\n";
+    std::cout.flush();
     float best_x = 0, best_y = 0, best_z = 0;
     
     t2.mark();
@@ -232,22 +232,22 @@ bool dbvxm_detect_instance_process::execute()
         unsigned cor_z = 0;
           t.mark();
           vgl_point_3d<float> cor(m_x + (float)cor_x*voxel_length, m_y + (float)cor_y*voxel_length, m_z + (float)cor_z*voxel_length);
-          vcl_cout << "trying: " << cor << " " << " cor_x: " << cor_x << " cor_y: " << cor_y << " cor_z: " << cor_z << vcl_endl;
-          vcl_cout.flush();
+          std::cout << "trying: " << cor << " " << " cor_x: " << cor_x << " cor_y: " << cor_y << " cor_z: " << cor_z << std::endl;
+          std::cout.flush();
           obj_world->get_params()->set_corner(cor);
           
           vil_image_view_base_sptr obj_expected_img = new vil_image_view<vxl_byte>(ni,nj,1);
           vil_image_view<float> mask_img(obj_expected_img->ni(),obj_expected_img->nj(),1);
           if (!obj_world->expected_image<APM_MOG_GREY>(observation, obj_expected_img, mask_img, bin_index)) {
-            vcl_cout << "In dbvxm_detect_instance_process::execute() -- problems in creating expected image for obj world at corner: " << cor << vcl_endl;
+            std::cout << "In dbvxm_detect_instance_process::execute() -- problems in creating expected image for obj world at corner: " << cor << std::endl;
             return false;
           }
 
           //if (verbose) {
-          //  vcl_stringstream s_cx, s_cy, s_cz;
+          //  std::stringstream s_cx, s_cy, s_cz;
           //  s_cx << cor_x; s_cy << cor_y; s_cz << cor_z;
-          //  vcl_string obj_exp_name = "./obj_expected_img_cor_x_" + s_cx.str() + "_y_" + s_cy.str() + "_z_" + s_cz.str() + ".png";
-          //  vcl_cout << "saving obj exp img\n"; vcl_cout.flush();
+          //  std::string obj_exp_name = "./obj_expected_img_cor_x_" + s_cx.str() + "_y_" + s_cy.str() + "_z_" + s_cz.str() + ".png";
+          //  std::cout << "saving obj exp img\n"; std::cout.flush();
           //  vil_save(*obj_expected_img, obj_exp_name.c_str());
           //}
           
@@ -265,15 +265,15 @@ bool dbvxm_detect_instance_process::execute()
           bvxm_util::multiply_slabs(prob, weights, product);
           float this_prob = bvxm_util::sum_slab(product);
 
-          vcl_cout << "prob: " << this_prob << "\n";
+          std::cout << "prob: " << this_prob << "\n";
           if ( this_prob < 0 ) {
-            vcl_cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
+            std::cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
             return false;
           }
 
           mother_slab(cor_x, cor_y) = this_prob;
           //: prob value is in range [0.4, 0.5], stretch this to [0, 1]
-          float eq_prob = (this_prob-0.4f)/0.1f; vcl_cout << "equalized prob: " << eq_prob << "\n";
+          float eq_prob = (this_prob-0.4f)/0.1f; std::cout << "equalized prob: " << eq_prob << "\n";
           mother_slab_equalized(cor_x, cor_y) = eq_prob;
 
           if ( this_prob > best_prob ) { 
@@ -289,12 +289,12 @@ bool dbvxm_detect_instance_process::execute()
           }
 
           nimg_sptr = 0;  // to clear up space
-          vcl_cout << " took: " << t.real() / 1000.0f << " secs.\n";
+          std::cout << " took: " << t.real() / 1000.0f << " secs.\n";
         //}
       }
     }
 /*
-    vcl_cout << "making second pass around: " << best_x << " " << best_y << " " << best_z << "\n";
+    std::cout << "making second pass around: " << best_x << " " << best_y << " " << best_z << "\n";
     //: make a second refined pass around the best
     for (unsigned cor_x = best_x-1 < 0 ? 0 : best_x - 1; cor_x < best_x+1; cor_x += 1) {
       for (unsigned cor_y = best_y-1 < 0 ? 0 : best_y - 1; cor_y < best_y+1; cor_y += 1) {
@@ -305,13 +305,13 @@ bool dbvxm_detect_instance_process::execute()
 
           //vgl_point_3d<float> cor((float)cor_x, (float)cor_y, (float)cor_z);
           vgl_point_3d<float> cor(m_x + (float)cor_x*voxel_length, m_y + (float)cor_y*voxel_length, m_z + (float)cor_z*voxel_length);
-          vcl_cout << "trying: " << cor << " ";
+          std::cout << "trying: " << cor << " ";
           obj_world->get_params()->set_corner(cor);
           
           vil_image_view_base_sptr obj_expected_img = new vil_image_view<vxl_byte>(ni,nj,1);
           vil_image_view<float> mask_img(obj_expected_img->ni(),obj_expected_img->nj(),1);
           if (!obj_world->expected_image<APM_MOG_GREY>(observation, obj_expected_img, mask_img, bin_index)) {
-            vcl_cout << "In dbvxm_detect_instance_process::execute() -- problems in creating expected image for obj world at corner: " << cor << vcl_endl;
+            std::cout << "In dbvxm_detect_instance_process::execute() -- problems in creating expected image for obj world at corner: " << cor << std::endl;
             return false;
           }
 
@@ -330,9 +330,9 @@ bool dbvxm_detect_instance_process::execute()
           bvxm_util::multiply_slabs(prob, weights, product);
           float this_prob = bvxm_util::sum_slab(product);
 
-          vcl_cout << "prob: " << this_prob << "\n";
+          std::cout << "prob: " << this_prob << "\n";
           if ( this_prob < 0 ) {
-            vcl_cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
+            std::cout << "In bvxm_normalize_image_process::execute() -- prob is negative, Exiting!\n";
             return false;
           }
 
@@ -352,7 +352,7 @@ bool dbvxm_detect_instance_process::execute()
 */
   }
   else {
-    vcl_cout << "In bvxm_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
+    std::cout << "In bvxm_normalize_image_process::execute() -- input appearance model: " << voxel_type << " is not supported\n";
     return false;
   }
 
@@ -429,7 +429,7 @@ bool dbvxm_detect_instance_process::execute()
   output_data_[3] = output3;
 
 
-  vcl_cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
+  std::cout << " whole process took: " << t2.real() / (60*1000.0f) << " mins.\n";
 
   return true;
 }

@@ -1,5 +1,5 @@
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <iostream>
+#include <fstream>
 #include <dbdet/pro/dbdet_prune_curves_process.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -29,7 +29,7 @@ dbdet_prune_curves_process::dbdet_prune_curves_process() : bpro1_process()
      !parameters()->add( "region width (pixels): " , "-region_width" ,  5.0f ) 
      )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
   
 }
@@ -43,18 +43,18 @@ dbdet_prune_curves_process::clone() const
 }
 
 
-vcl_vector< vcl_string > dbdet_prune_curves_process::get_input_type()
+std::vector< std::string > dbdet_prune_curves_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   to_return.push_back( "vsol2D" );
   to_return.push_back( "image" );
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_prune_curves_process::get_output_type()
+std::vector< std::string > dbdet_prune_curves_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -72,9 +72,9 @@ bool dbdet_prune_curves_process::execute()
   parameters()->get_value("-region_width", region_width);
 
   // new vector to store the points
-  vcl_vector< vsol_spatial_object_2d_sptr > contours;
+  std::vector< vsol_spatial_object_2d_sptr > contours;
 
-  vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
+  std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->all_data();
   
   vidpro1_image_storage_sptr frame_image;
   frame_image.vertical_cast(input_data_[0][1]);
@@ -82,7 +82,7 @@ bool dbdet_prune_curves_process::execute()
   vil_image_view<vxl_byte> img = image_sptr->get_view();
   bool LAB = false;
   if( img.nplanes() != 3 ) {
-    vcl_cout << "image is not colored, using intensity differences!!!\n"; 
+    std::cout << "image is not colored, using intensity differences!!!\n"; 
   } else {
     LAB = true;
     convert_RGB_to_Lab(img, L_, A_, B_);
@@ -90,7 +90,7 @@ bool dbdet_prune_curves_process::execute()
   
   for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
   {
-    vcl_vector<vsol_point_2d_sptr> pts;
+    std::vector<vsol_point_2d_sptr> pts;
     bool closed = false;
     //POINT
     if( vsol_list[b]->cast_to_point() ) {
@@ -115,7 +115,7 @@ bool dbdet_prune_curves_process::execute()
       // CIRCULAR ARC
       else if (vsol_list[b]->cast_to_curve()->cast_to_conic())
       {
-        vcl_cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
+        std::cout << "CAUTION: This vsol member is a circular ARC and this process is NOT HANDLING circular arcs!!! Skipping it!\n";
         continue;
       }
     }
@@ -140,7 +140,7 @@ bool dbdet_prune_curves_process::execute()
       contours.push_back(vsol_list[b]);
   }
 
-  vcl_cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " curves out of " << input_vsol->all_data().size() << " curves\n"; 
+  std::cout << "Pruned " << input_vsol->all_data().size()-contours.size() << " curves out of " << input_vsol->all_data().size() << " curves\n"; 
   // create the output storage class
   vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
   output_vsol->add_objects(contours, "pruned");

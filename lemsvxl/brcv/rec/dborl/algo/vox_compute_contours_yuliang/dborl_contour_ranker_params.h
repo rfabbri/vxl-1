@@ -30,19 +30,19 @@ public:
   dborl_parameter<bool> save_fragments_;  
   dborl_parameter<bool> save_to_object_folder_;  // if both true deletes random segments and adds random line segments of total length perc_add_*total_length
   
-  dborl_parameter<vcl_string> input_object_name_;
-  dborl_parameter<vcl_string> input_object_dir_;    // passes the folder of the input object
-  dborl_parameter<vcl_string> input_extension_;     // extension of the input image
-  dborl_parameter<vcl_string> input_cem_suffix_;
+  dborl_parameter<std::string> input_object_name_;
+  dborl_parameter<std::string> input_object_dir_;    // passes the folder of the input object
+  dborl_parameter<std::string> input_extension_;     // extension of the input image
+  dborl_parameter<std::string> input_cem_suffix_;
 
-  dborl_parameter<vcl_string> output_extension_;
-  dborl_parameter<vcl_string> output_cem_suffix_;
-  dborl_parameter<vcl_string> output_cem_folder_;  // if written to this folder as opposed to object folder then the edge map gets associated to the input object
+  dborl_parameter<std::string> output_extension_;
+  dborl_parameter<std::string> output_cem_suffix_;
+  dborl_parameter<std::string> output_cem_folder_;  // if written to this folder as opposed to object folder then the edge map gets associated to the input object
                                                     // if nothing is written here, nothing gets associated
 
-  vcl_string algo_abbreviation_;
+  std::string algo_abbreviation_;
 
-  dborl_contour_ranker_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
+  dborl_contour_ranker_params(std::string algo_name) : dborl_algo_params(algo_name) { 
 
     algo_abbreviation_ = "cr";
   
@@ -66,7 +66,7 @@ public:
     
     //: add the parameters of the dbdet_third_order_edge_detector_process
     dbdet_contour_ranker_process pro;
-    vcl_vector<bpro1_param*> pars = pro.parameters()->get_param_list();
+    std::vector<bpro1_param*> pars = pro.parameters()->get_param_list();
     for (unsigned i = 0; i < pars.size(); i++) {
         param_list_.push_back(convert_parameter_from_bpro1(algo_abbreviation_, 
                                                            "[" + algo_abbreviation_ + "]",

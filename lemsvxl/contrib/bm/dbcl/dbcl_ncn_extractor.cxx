@@ -1,13 +1,13 @@
 //this is /contrib/bm/dbcl/dbcl_ncn_extractor.cxx
 #include"dbcl_ncn_extractor.h"
 
-dbcl_ncn_extractor::dbcl_ncn_extractor( vcl_string const& video_glob, vcl_vector<vgl_point_2d<unsigned> > const& target_points, 
+dbcl_ncn_extractor::dbcl_ncn_extractor( std::string const& video_glob, std::vector<vgl_point_2d<unsigned> > const& target_points, 
 						unsigned const& num_pivot_pixels, unsigned const& num_particles, unsigned const& num_neighbors )
 						:neighborhood_valid_(false),entropy_valid_(false),pivot_set_valid_(false)
 {
 	this->build_frame_map(video_glob);
 
-	vcl_vector<vgl_point_2d<unsigned> >::const_iterator target_itr, target_end;
+	std::vector<vgl_point_2d<unsigned> >::const_iterator target_itr, target_end;
 	target_end = target_points.end();
 
 	//create dummy neighborhood so we can store the targets in the neighborhood map.
@@ -15,7 +15,7 @@ dbcl_ncn_extractor::dbcl_ncn_extractor( vcl_string const& video_glob, vcl_vector
 	//been extracted
 	for( target_itr = target_points.begin(); target_itr != target_end; ++target_itr )
 	{
-		vcl_vector<vgl_point_2d<unsigned> > dummy_neighborhood;
+		std::vector<vgl_point_2d<unsigned> > dummy_neighborhood;
 		this->target_ncn_map_[*target_itr] = dummy_neighborhood;
 	}//end target iteration
 	
@@ -51,12 +51,12 @@ bool dbcl_ncn_extractor::build_ncn_no_entropy()
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::build_no_entropy() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::build_no_entropy() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dbcl_ncn_extractor::build_ncn_no_entropy()
 
-bool dbcl_ncn_extractor::load_video(vcl_string const& video_glob)
+bool dbcl_ncn_extractor::load_video(std::string const& video_glob)
 {
 	this->build_frame_map(video_glob);
 	this->calculate_temporal_entropy();
@@ -67,7 +67,7 @@ bool dbcl_ncn_extractor::load_video(vcl_string const& video_glob)
 void dbcl_ncn_extractor::calculate_temporal_entropy(unsigned const& nbins)
 {
 
-	vcl_cout << "Calculating Temproal Entropy..." << vcl_endl;
+	std::cout << "Calculating Temproal Entropy..." << std::endl;
 
 	this->temporal_entropy_.clear();
 
@@ -94,12 +94,12 @@ void dbcl_ncn_extractor::calculate_temporal_entropy(unsigned const& nbins)
 			}//end frame iteration
 			this->temporal_entropy_(i,j,0) = histogram.entropy();
 			entropy_sum+=temporal_entropy_(i,j,0);
-			vcl_cout << (float(nj*i + j)/float(ni*nj))*float(100) << "% complete " << vcl_endl;
+			std::cout << (float(nj*i + j)/float(ni*nj))*float(100) << "% complete " << std::endl;
 		}
 	}//end pixel iteration
 
 	//normalize
-	vcl_cout << "Normalizeing Temporal Entropy..." << vcl_endl;
+	std::cout << "Normalizeing Temporal Entropy..." << std::endl;
 	for( unsigned i = 0; i < ni; ++i )
 		for( unsigned j = 0; j < nj; ++j )
 			this->temporal_entropy_(i,j,0)/=entropy_sum;
@@ -112,7 +112,7 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 {
 	if( this->entropy_valid_ == true) //the temporal entropy needs to be calculated by this step
 	{
-		vcl_cout << "Sampling Pivot Pixels..." << vcl_endl;
+		std::cout << "Sampling Pivot Pixels..." << std::endl;
 
 		pivot_pixel_set_type pivot_pixel_set;
 
@@ -121,7 +121,7 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 		unsigned num_cols = this->temporal_entropy_.ni();
 		unsigned num_rows = this->temporal_entropy_.nj();
 
-		vcl_map<vgl_point_2d<unsigned>, double, dbcl_vgl_point_2d_dist_compare> particle_map;
+		std::map<vgl_point_2d<unsigned>, double, dbcl_vgl_point_2d_dist_compare> particle_map;
 		vgl_point_2d<unsigned> point;
 
 		//1. sample the temporal entropy to create a reduced particle map.
@@ -135,7 +135,7 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 				point.set(rand_indx / num_rows, rand_indx % num_rows);
 				particle_map[point] = this->temporal_entropy_(point.x(),point.y());
 				wsum += this->temporal_entropy_(point.x(),point.y());
-				vcl_cout << particle_map.size() << " out of " << this->num_particles_ << " chosen." << vcl_endl;
+				std::cout << particle_map.size() << " out of " << this->num_particles_ << " chosen." << std::endl;
 			}
 		}
 		else//the particle set is the whole image no need for stochastic particle selection.
@@ -148,14 +148,14 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 
 
 		//2. reweight each sample and simultaneously construct the cdf
-		vcl_map<vgl_point_2d<unsigned>,double,dbcl_vgl_point_2d_dist_compare >::iterator pmit;
-		vcl_map<vgl_point_2d<unsigned>,double,dbcl_vgl_point_2d_dist_compare >::iterator pmend = particle_map.end();
+		std::map<vgl_point_2d<unsigned>,double,dbcl_vgl_point_2d_dist_compare >::iterator pmit;
+		std::map<vgl_point_2d<unsigned>,double,dbcl_vgl_point_2d_dist_compare >::iterator pmend = particle_map.end();
 
 		//use the stl container so that we may use stl search.
 		//the find predicate should be > so that we find the position of the first element of the cdf which is less than
 		//the target
-		vcl_vector<double> cdf;
-		vcl_vector<vgl_point_2d<unsigned> > cdf_index;
+		std::vector<double> cdf;
+		std::vector<vgl_point_2d<unsigned> > cdf_index;
 
 		double cdf_tot = double(0.0);
 		for( pmit = particle_map.begin(); pmit != pmend; ++pmit )
@@ -170,14 +170,14 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 		//the binary search predicate will find the first element that is larget than the target
 
 		//3. Sample a unique set of size num_piv_pixels via inverse cdf method.
-		vcl_pair<vcl_set<vgl_point_2d<unsigned>,dbcl_vgl_point_2d_dist_compare>::iterator,bool> ret;
+		std::pair<std::set<vgl_point_2d<unsigned>,dbcl_vgl_point_2d_dist_compare>::iterator,bool> ret;
 
 		//ADD ELEMENTS VIA INVERSE CDF METHOD
 		while( pivot_pixel_set.size() < this->num_pivot_pixels_ )
 		{
 			double u = rand.drand64();
-			vcl_vector<double> target(1,u);
-			vcl_vector<double>::iterator search_itr = vcl_search(cdf.begin(),cdf.end(),target.begin(),target.end(),&dbcl_ncn_extractor::binary_search_predicate);
+			std::vector<double> target(1,u);
+			std::vector<double>::iterator search_itr = std::search(cdf.begin(),cdf.end(),target.begin(),target.end(),&dbcl_ncn_extractor::binary_search_predicate);
 			unsigned bin;
 			if( search_itr != cdf.end() )
 			{          
@@ -186,12 +186,12 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 				if( bin == cdf_index.size() )
 				{
 					bin = bin - 1;
-					//vcl_cout << "bin = " << bin << vcl_endl;
+					//std::cout << "bin = " << bin << std::endl;
 				}
 			}
 			else
 			{
-				vcl_cerr << "ERROR: dncn_factory::sample_pivot_pixels bin not found in inverse cdf method." << vcl_flush;
+				std::cerr << "ERROR: dncn_factory::sample_pivot_pixels bin not found in inverse cdf method." << std::flush;
 				return false;
 			}
 
@@ -199,9 +199,9 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 			point.set(cdf_index[bin].x(),cdf_index[bin].y());
 			ret = pivot_pixel_set.insert(point);
 			if( ret.second == true )
-				vcl_cout << vcl_setprecision(2) << vcl_fixed
+				std::cout << std::setprecision(2) << std::fixed
 				<< (float(pivot_pixel_set.size())/float(num_pivot_pixels_)) * 100 
-				<< "% pivot pixels sampled." << vcl_endl; 
+				<< "% pivot pixels sampled." << std::endl; 
 		}//end pivot_pixel_set iteration
 
 		this->pivot_pixel_set_ = pivot_pixel_set;
@@ -210,7 +210,7 @@ bool dbcl_ncn_extractor::sample_pivot_pixels()
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::sample_pivot_pixels() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::sample_pivot_pixels() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 
@@ -220,24 +220,24 @@ bool dbcl_ncn_extractor::extract_neighbors()
 {
 	if( this->pivot_set_valid_ == true )
 	{
-		vcl_cout << "Extracting Neighborhoods..." << vcl_endl;
+		std::cout << "Extracting Neighborhoods..." << std::endl;
 
 		unsigned num_frames = this->img_seq_.size();
 
 		target_ncn_map_type::iterator target_itr, target_end = this->target_ncn_map_.end();
-		vcl_map<unsigned, vil_image_resource_sptr>::const_iterator img_seq_itr, img_seq_end = this->img_seq_.end();
+		std::map<unsigned, vil_image_resource_sptr>::const_iterator img_seq_itr, img_seq_end = this->img_seq_.end();
 		pivot_pixel_set_type::const_iterator pivot_itr, pivot_end = this->pivot_pixel_set_.end();
 		vil_image_view<vxl_byte> img_view;
 
-		vcl_map<double, vgl_point_2d<unsigned> > mi_point_map; //declare outside of the loop so memory is preallocated
+		std::map<double, vgl_point_2d<unsigned> > mi_point_map; //declare outside of the loop so memory is preallocated
 		for( target_itr = this->target_ncn_map_.begin(); target_itr != target_end; ++target_itr )
 		{
 			vgl_point_2d<unsigned> curr_target = target_itr->first;
-			vcl_cout << "\t Extracting Neighborhood for target: " << curr_target << vcl_endl;
+			std::cout << "\t Extracting Neighborhood for target: " << curr_target << std::endl;
 
 			//1.(a) rank each pivot pixel candidate by joint entropy with the target.
 			//      we do this by calculating the joint entropy at each target with each pivot pixel candidate
-			//      then we associate the pivot pixel point with the mi value with a vcl_map.
+			//      then we associate the pivot pixel point with the mi value with a std::map.
 			//      because vcl_maps internally store keys in ascention, we may pick off the top ranking
 			//      candidates from the back of the map. The key will be the mi which will ensure ties are ignored 
 			//      and also frees us from using a customized ordering predicate.
@@ -263,11 +263,11 @@ bool dbcl_ncn_extractor::extract_neighbors()
 			}//end pivot pixel iteration
 
 			//2. Build the neighborhood by creating and filling in the appropriate data structures.
-			vcl_map<double, vgl_point_2d<unsigned> >::const_iterator mi_point_itr = mi_point_map.end();
+			std::map<double, vgl_point_2d<unsigned> >::const_iterator mi_point_itr = mi_point_map.end();
 			// end() is one pas the last element so go to last element
 			--mi_point_itr;
 
-			vcl_vector<vgl_point_2d<unsigned> > neighborhood;
+			std::vector<vgl_point_2d<unsigned> > neighborhood;
 			for( unsigned i = 0; i < this->num_neighbors_; ++i, --mi_point_itr )
 				neighborhood.push_back(mi_point_itr->second);
 
@@ -276,19 +276,19 @@ bool dbcl_ncn_extractor::extract_neighbors()
 
 		this->neighborhood_valid_ = true;
 
-		vcl_cout << "\t Done Extracting Neighborhoods..." << vcl_endl;
+		std::cout << "\t Done Extracting Neighborhoods..." << std::endl;
 
 		return true;
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::extract_neighborhors() : pixel_set_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::extract_neighborhors() : pixel_set_valid_ = false" << std::flush;
 		return false;
 	}
 
 }//end dbcl_ncn_extractor::extract_neighbors()
 
-void dbcl_ncn_extractor::load_entropy_bin(vcl_string const& filename)
+void dbcl_ncn_extractor::load_entropy_bin(std::string const& filename)
 {
     vsl_b_ifstream bis( filename.c_str() );
     vsl_b_read( bis,this->temporal_entropy_ );
@@ -298,11 +298,11 @@ void dbcl_ncn_extractor::load_entropy_bin(vcl_string const& filename)
 	this->extract_neighbors();
 }//end dbcl_ncn_extractor::load_entropy_bin
 
-bool dbcl_ncn_extractor::save_entropy_dat(vcl_string const& filename)
+bool dbcl_ncn_extractor::save_entropy_dat(std::string const& filename)
 {
 	if( this->entropy_valid_ == true )
 	{
-		vcl_ofstream os(filename.c_str(), vcl_ios::out);
+		std::ofstream os(filename.c_str(), std::ios::out);
 
 		unsigned ni = this->temporal_entropy_.ni();
 		unsigned nj = this->temporal_entropy_.nj();
@@ -319,12 +319,12 @@ bool dbcl_ncn_extractor::save_entropy_dat(vcl_string const& filename)
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::save_entropy_dat() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::save_entropy_dat() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dbcl_ncn_extractor::save_entropy_dat
 
-bool dbcl_ncn_extractor::save_entropy_bin(vcl_string const& filename)
+bool dbcl_ncn_extractor::save_entropy_bin(std::string const& filename)
 {
 	if( this->entropy_valid_ == true )
 	{
@@ -335,21 +335,21 @@ bool dbcl_ncn_extractor::save_entropy_bin(vcl_string const& filename)
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::save_entropy_bin() : entropy_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::save_entropy_bin() : entropy_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dbcl_ncn_extractor::save_entropy_bin
 
-bool dbcl_ncn_extractor::write_neighborhood_mfile(vcl_string const& filename)
+bool dbcl_ncn_extractor::write_neighborhood_mfile(std::string const& filename)
 {
 	if( this->neighborhood_valid_ == true )
 	{
-		vcl_ofstream os(filename.c_str(), vcl_ios::out);
+		std::ofstream os(filename.c_str(), std::ios::out);
 
 		os << "neighborhoods = cell(" << this->target_ncn_map_.size() << ", 2);\n";
 
 		target_ncn_map_type::const_iterator target_itr, target_end = this->target_ncn_map_.end();
-		vcl_vector<vgl_point_2d<unsigned> >::const_iterator neighborhood_itr, neighborhood_end;
+		std::vector<vgl_point_2d<unsigned> >::const_iterator neighborhood_itr, neighborhood_end;
 
 		//MATLAB INDEXING STARTS FROM 1!
 		unsigned cell_indx;
@@ -367,19 +367,19 @@ bool dbcl_ncn_extractor::write_neighborhood_mfile(vcl_string const& filename)
 	}
 	else
 	{
-		vcl_cerr << "ERROR: dbcl_ncn_extractor::write_neighborhood_mfile() : neighborhood_valid_ = false" << vcl_flush;
+		std::cerr << "ERROR: dbcl_ncn_extractor::write_neighborhood_mfile() : neighborhood_valid_ = false" << std::flush;
 		return false;
 	}
 }//end dbcl_ncn_extractor::write_neighborhood_mfile
 
 //PROTECTED MEMBER FUNCTIONS
-void dbcl_ncn_extractor::build_frame_map(vcl_string const& filename)
+void dbcl_ncn_extractor::build_frame_map(std::string const& filename)
 {
 	this->img_seq_.clear();
 	vidl_image_list_istream video_stream(filename);
 
 	unsigned num_frames = video_stream.num_frames();
-	vcl_map<unsigned, vil_image_resource_sptr> img_seq;
+	std::map<unsigned, vil_image_resource_sptr> img_seq;
 
 	for(unsigned t = 0 ; t < num_frames; ++t)
 	{

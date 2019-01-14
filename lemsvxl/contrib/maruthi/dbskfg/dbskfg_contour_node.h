@@ -45,7 +45,7 @@ public:
 
     /* virtual */ ~dbskfg_contour_node();
 
-    /* virtual */void print(vcl_ostream& os);
+    /* virtual */void print(std::ostream& os);
 
     // Methods    
     ContourType contour_node_type() { return contour_node_type_; }
@@ -66,7 +66,7 @@ public:
     void shock_links_affected(dbskfg_shock_link* shock_link);
 
     // Return shock links affected
-    vcl_vector<dbskfg_shock_link*> shocks_affected()
+    std::vector<dbskfg_shock_link*> shocks_affected()
     {return shocks_affected_;}
 
     void delete_shock(unsigned int id);
@@ -86,7 +86,7 @@ private:
     ContourType contour_node_type_;
 
     // Keep a vector of all shock links affected by this node
-    vcl_vector<dbskfg_shock_link*> shocks_affected_;
+    std::vector<dbskfg_shock_link*> shocks_affected_;
 
     // Make copy constructor private
     dbskfg_contour_node(const dbskfg_contour_node&);

@@ -12,7 +12,7 @@
 // \endverbatim
 
 #include <bvis1/bvis1_tool.h>
-#include <vcl_map.h>
+#include <map>
 #include <vgui/vgui_style_sptr.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_easy2D_tableau.h>
@@ -46,7 +46,7 @@ public:
   virtual ~dbctrk_inspector_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 
@@ -72,7 +72,7 @@ public:
   virtual ~dbctrk_foreground_background_tool();
 
   //: Return the name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Handle events
   virtual bool handle( const vgui_event & e, 

@@ -1,6 +1,6 @@
 #include "skyscan_view3d_menus.h"
 
-#include <vcl_cstdlib.h> // for vcl_exit()
+#include <cstdlib> // for std::exit()
 #include <vgui/vgui.h>
 #include <vgui/vgui_key.h>
 #include <vgui/vgui_menu.h>
@@ -9,7 +9,7 @@
 
 void skyscan_view3d_menus::quit_callback()
 {
-  vcl_exit(1);
+  std::exit(1);
 }
 
 void skyscan_view3d_menus::load_view_3d_callback()

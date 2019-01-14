@@ -13,7 +13,7 @@ dbetrk_edge::~dbetrk_edge()
 
 
 void
-dbetrk_edge::print_summary(vcl_ostream& os) const
+dbetrk_edge::print_summary(std::ostream& os) const
 {
   os << "Edge Node: ("<<point_.x()<<","<<point_.y()<<")";
   os << "Gradient : "<<grad_;
@@ -24,7 +24,7 @@ dbetrk_edge::print_summary(vcl_ostream& os) const
 }
 
 //: Print a summary of the edge node to a stream
-vcl_ostream& operator<< (vcl_ostream& os, dbetrk_edge const & k)
+std::ostream& operator<< (std::ostream& os, dbetrk_edge const & k)
 {
   k.print_summary(os);
   return os;
@@ -64,9 +64,9 @@ void dbetrk_edge::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbetrk_edge::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbetrk_edge::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }

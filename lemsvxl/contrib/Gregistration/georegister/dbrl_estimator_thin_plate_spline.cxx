@@ -16,22 +16,22 @@
 #include <dbnl/algo/dbnl_matrix_multiply.h>
 #include <georegister/dbrl_feature_point_tangent.h>
 
-dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate(vcl_vector<dbrl_feature_sptr> f1,
-                                                                          vcl_vector<dbrl_feature_sptr> f2,
+dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate(std::vector<dbrl_feature_sptr> f1,
+                                                                          std::vector<dbrl_feature_sptr> f2,
                                                                           dbrl_correspondence & M) const
 {
 dbrl_transformation_sptr  tps= estimate_tps(f1,f2);
 return tps;
 }
-dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate_tps(vcl_vector<dbrl_feature_sptr> f1,
-                                                                          vcl_vector<dbrl_feature_sptr> f2) const
+dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate_tps(std::vector<dbrl_feature_sptr> f1,
+                                                                          std::vector<dbrl_feature_sptr> f2) const
         
 {
     assert(f1.size()>0);
     assert(f2.size()>0);
     
-    vcl_vector<dbrl_feature_sptr> f1filtered;
-    vcl_vector<dbrl_feature_sptr> f2filtered;
+    std::vector<dbrl_feature_sptr> f1filtered;
+    std::vector<dbrl_feature_sptr> f2filtered;
 
     for(unsigned i=0;i<f1.size();i++)
         {
@@ -80,14 +80,14 @@ dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate_tps(vc
             for(int j=0;j<pt2->location().size();j++)
             {
                 pts2(i,j+1)=pt2->location()[j];
-                //vcl_cout<<pt2->location()[j]<<" ";
+                //std::cout<<pt2->location()[j]<<" ";
             }
         }
-            //vcl_cout<<"\n";
+            //std::cout<<"\n";
         }
 
-    //vcl_cout<<"pts1 :\n"<<pts1;
-    //vcl_cout<<"pts2 :\n"<<pts2;
+    //std::cout<<"pts1 :\n"<<pts1;
+    //std::cout<<"pts2 :\n"<<pts2;
     //: QR-decomposition of pts1
     vnl_qr<double> qr(pts2);
     vnl_matrix<double> Q=qr.Q();
@@ -148,7 +148,7 @@ dbrl_transformation_sptr dbrl_estimator_point_thin_plate_spline::estimate_tps(vc
     }
 //: function to build the kernel matrix 
 //:x and y would be different in order  to interpolate the warpping coefficients on the grid points
-vnl_matrix<double> dbrl_estimator_point_thin_plate_spline::build_K(vcl_vector<dbrl_feature_sptr> &x , vcl_vector<dbrl_feature_sptr> &y) const
+vnl_matrix<double> dbrl_estimator_point_thin_plate_spline::build_K(std::vector<dbrl_feature_sptr> &x , std::vector<dbrl_feature_sptr> &y) const
     {
     vnl_matrix<double> K(x.size(),y.size());
     double *f1x=new double[x.size()];
@@ -189,13 +189,13 @@ vnl_matrix<double> dbrl_estimator_point_thin_plate_spline::build_K(vcl_vector<db
                     double d2=(f1x[i]-f2x[j])*(f1x[i]-f2x[j])+(f1y[i]-f2y[j])*(f1y[i]-f2y[j]);
                     double d=0;
 
-                    //d=vcl_exp(-d2);
+                    //d=std::exp(-d2);
 
                     if(d2<1e-10)
                         d=0;
                     else
-                        d=d2*vcl_log(d2)/2;
-                        //d=vcl_exp(-d2/(2));
+                        d=d2*std::log(d2)/2;
+                        //d=std::exp(-d2/(2));
                     K(i,j)=d;
                     }
                 }
@@ -207,8 +207,8 @@ vnl_matrix<double> dbrl_estimator_point_thin_plate_spline::build_K(vcl_vector<db
             return K;
     }
 
-double dbrl_estimator_point_thin_plate_spline::residual(const vcl_vector<dbrl_feature_sptr>& f1,
-                                                        const vcl_vector<dbrl_feature_sptr>& f2,
+double dbrl_estimator_point_thin_plate_spline::residual(const std::vector<dbrl_feature_sptr>& f1,
+                                                        const std::vector<dbrl_feature_sptr>& f2,
                                                         const dbrl_correspondence & M,
                                                         const dbrl_transformation_sptr& tform) const
 
@@ -219,7 +219,7 @@ double dbrl_estimator_point_thin_plate_spline::residual(const vcl_vector<dbrl_fe
     assert(f2.size()>0);
     t->set_from_features(f1);
     t->transform();
-    vcl_vector<dbrl_feature_sptr> tformed_f1=t->get_to_features();
+    std::vector<dbrl_feature_sptr> tformed_f1=t->get_to_features();
     double residual=0;
     for(unsigned i=0;i<M.rows();i++)
         for(unsigned j=0;j<M.cols();j++)        
@@ -248,7 +248,7 @@ void dbrl_estimator_point_thin_plate_spline::b_read(vsl_b_istream &is)
             vsl_b_read(is, lambda2_);
             break;
         default:
-            vcl_cerr << "dbrl_estimator_point_thin_plate_spline: unknown I/O version " << ver << '\n';
+            std::cerr << "dbrl_estimator_point_thin_plate_spline: unknown I/O version " << ver << '\n';
         }
     }
 
@@ -256,7 +256,7 @@ short dbrl_estimator_point_thin_plate_spline::version() const
     {
     return 1;
     }
-void dbrl_estimator_point_thin_plate_spline::print_summary(vcl_ostream &os) const
+void dbrl_estimator_point_thin_plate_spline::print_summary(std::ostream &os) const
 {
   
 }

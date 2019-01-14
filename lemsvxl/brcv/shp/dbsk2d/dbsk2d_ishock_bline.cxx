@@ -5,7 +5,7 @@
 
 #include "dbsk2d_ishock_bline.h"
 
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <dbsk2d/dbsk2d_ishock_edge.h>
 #include <dbsk2d/dbsk2d_bnd_edge.h>
 
@@ -73,30 +73,30 @@ reconnect(dbsk2d_ishock_bpoint* oldPt, dbsk2d_ishock_bpoint* newPt)
 
 //: Return information about the object
 void dbsk2d_ishock_bline::
-getInfo (vcl_ostream& ostrm)
+getInfo (std::ostream& ostrm)
 {
   char s[1024];
 
   ostrm << "\n==============================\n";
   ostrm << "BL: [" << _id << "] Twin: [" << twinLine()->id() << "] s_pt: [";
   ostrm << s_pt()->id() << "] e_pt: [" << e_pt()->id() << "]\n";
-  vcl_sprintf (s, 
+  std::sprintf (s, 
     "S-E:(%.3f, %.3f)-(%.3f, %.3f)\n", 
     this->start().x(), 
     this->start().y(), 
     this->end().x(), 
     this->end().y()); 
   ostrm << s;
-  vcl_sprintf (s, "u: %.5f\n", _u); ostrm<<s;
-  vcl_sprintf (s, "n: %.5f (u+pi/2)\n", _n); ostrm<<s;
-  vcl_sprintf (s, "length: %.5f\n", _l); ostrm<<s;
-  vcl_sprintf (s, "bGUIElm: %s\n\n", _bGUIElm ? "yes" : "no"); ostrm<<s;
+  std::sprintf (s, "u: %.5f\n", _u); ostrm<<s;
+  std::sprintf (s, "n: %.5f (u+pi/2)\n", _n); ostrm<<s;
+  std::sprintf (s, "length: %.5f\n", _l); ostrm<<s;
+  std::sprintf (s, "bGUIElm: %s\n\n", _bGUIElm ? "yes" : "no"); ostrm<<s;
 
   //bnd_ishock_map
   bnd_ishock_map_iter curS = shock_map_.begin();
-  ostrm << "ShockMap: [" << id() << "]" << vcl_endl;
+  ostrm << "ShockMap: [" << id() << "]" << std::endl;
   for (; curS!=shock_map_.end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -104,9 +104,9 @@ getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* twL = twinLine();
-  ostrm << "Twin ShockMap: [" << twL->id() << "]" << vcl_endl;
+  ostrm << "Twin ShockMap: [" << twL->id() << "]" << std::endl;
   for (curS = twL->shock_map().begin(); curS!=twL->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -114,9 +114,9 @@ getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* sp = s_pt();
-  ostrm << "SPT ShockMap [" << sp->id() << "]" << vcl_endl;
+  ostrm << "SPT ShockMap [" << sp->id() << "]" << std::endl;
   for (curS = sp->shock_map().begin(); curS!=sp->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str()); 
     ostrm<<s;
@@ -124,9 +124,9 @@ getInfo (vcl_ostream& ostrm)
   ostrm << "\n";
 
   dbsk2d_ishock_belm* ep = e_pt();
-  ostrm << "EPT ShockMap [" << ep->id() << "]" << vcl_endl;
+  ostrm << "EPT ShockMap [" << ep->id() << "]" << std::endl;
   for (curS = ep->shock_map().begin(); curS!=ep->shock_map().end(); ++curS){
-    vcl_sprintf (s, "%.5f -> %d (%s)\n", 
+    std::sprintf (s, "%.5f -> %d (%s)\n", 
       curS->first.s_eta, curS->second->id(), 
       (curS->first).type_string().c_str());
     ostrm<<s;
@@ -180,7 +180,7 @@ getInfo (vcl_ostream& ostrm)
 
   ////\TODO need to add more stuffs here
   ////bnd_cells
-  //ostrm << "Bnd cells: [" << this->bnd_edge()->cells().size() << "]" << vcl_endl;
+  //ostrm << "Bnd cells: [" << this->bnd_edge()->cells().size() << "]" << std::endl;
   //ostrm << "\n";
 
   this->bnd_edge()->print_cell_info(ostrm);
@@ -201,9 +201,9 @@ compute_extrinsic_locus()
 
 int dbsk2d_ishock_bline::get_contour_id()
 {
-    const vcl_list< vtol_topology_object * > * 
+    const std::list< vtol_topology_object * > * 
         superiors  = bnd_edge_->superiors_list();
-    vcl_list<vtol_topology_object*>::const_iterator tit;
+    std::list<vtol_topology_object*>::const_iterator tit;
     tit=(*superiors).begin();
     return (*tit)->get_id();
 }

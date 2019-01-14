@@ -7,7 +7,7 @@
 //:
 // \file
 
-#include <vcl_utility.h>
+#include <utility>
 
 
 //: Insure only one instance is created
@@ -62,7 +62,7 @@ bool opencl_manager<T>::initialize_cl()
   {
     return false;
   }
-  vcl_size_t device_list_size = 0;
+  std::size_t device_list_size = 0;
   // First, get the size of device list data
   status = clGetContextInfo(context_,
                             CL_CONTEXT_DEVICES,
@@ -78,7 +78,7 @@ bool opencl_manager<T>::initialize_cl()
   // Now allocate memory for device list based on the size we got earlier
   devices_ = (cl_device_id *)malloc(device_list_size);
   if (devices_==NULL) {
-    vcl_cout << "Failed to allocate memory (devices).\n";
+    std::cout << "Failed to allocate memory (devices).\n";
     return false;
   }
 
@@ -93,11 +93,11 @@ bool opencl_manager<T>::initialize_cl()
                        "clGetGetContextInfo failed."))
     return false;
 
-  vcl_size_t max_work_group_size = 0;
+  std::size_t max_work_group_size = 0;
   // Get device specific information
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_GROUP_SIZE,
-                           sizeof(vcl_size_t),
+                           sizeof(std::size_t),
                            (void*)&max_work_group_size,
                            NULL);
 
@@ -106,7 +106,7 @@ bool opencl_manager<T>::initialize_cl()
                        "clGetDeviceInfo CL_DEVICE_MAX_WORK_GROUP_SIZE failed."))
     return false;
 
-  max_work_group_size_ = max_work_group_size/sizeof(vcl_size_t);
+  max_work_group_size_ = max_work_group_size/sizeof(std::size_t);
 
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS,
@@ -120,11 +120,11 @@ bool opencl_manager<T>::initialize_cl()
     return false;
 
 
-  max_work_item_sizes_ = (vcl_size_t*)malloc(max_dimensions_ * sizeof(vcl_size_t));
+  max_work_item_sizes_ = (std::size_t*)malloc(max_dimensions_ * sizeof(std::size_t));
 
   status = clGetDeviceInfo(devices_[0],
                            CL_DEVICE_MAX_WORK_ITEM_SIZES,
-                           sizeof(vcl_size_t) * max_dimensions_,
+                           sizeof(std::size_t) * max_dimensions_,
                            (void*)max_work_item_sizes_,
                            NULL);
 
@@ -209,8 +209,8 @@ bool opencl_manager<T>::initialize_cl()
                        CL_SUCCESS,
                        "clGetDeviceInfo CL_DEVICE_IMAGE_SUPPORT failed."))
     return false;
-  unsigned size = sizeof(vcl_size_t);
-  vcl_cout << "Context Description\n"
+  unsigned size = sizeof(std::size_t);
+  std::cout << "Context Description\n"
            << " Number of devices: " << number_devices_ << '\n'
            << " Number of compute units: " << max_compute_units_ << '\n'
            << " Maximum clock frequency: " << max_clock_freq_/1000.0 << " GHz\n"
@@ -224,7 +224,7 @@ bool opencl_manager<T>::initialize_cl()
            << " Preferred float vector length: " << vector_width_float_ << '\n'
            << " image support " << image_support_ << '\n';
   for (unsigned id = 0; id<number_devices_; ++id)
-    vcl_cout << " Device id [" << id << "]: " << devices_[id] << '\n';
+    std::cout << " Device id [" << id << "]: " << devices_[id] << '\n';
   return true;
 }
 

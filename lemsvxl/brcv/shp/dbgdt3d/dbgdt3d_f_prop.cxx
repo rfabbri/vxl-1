@@ -1,7 +1,7 @@
 //: Aug 19, 2005 MingChing Chang
 //  
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_math.h>
 #include <vul/vul_timer.h>
@@ -17,16 +17,16 @@ void gdt_f_manager_base::gdt_propagation (unsigned int n_total_iter)
   n_prop_iter_ = 0;
   vul_timer time;
 
-  vul_printf (vcl_cout, "\n====== Start face-based GDT computation. =====\n");
+  vul_printf (std::cout, "\n====== Start face-based GDT computation. =====\n");
 
   while (wavefront_.size() != 0 && n_prop_iter_ < n_total_iter) {
 
 #if GDT_DEBUG_MSG
     if (n_verbose_)
       if (n_prop_iter_ % 100 == 0)
-        vul_printf (vcl_cout, " %d", n_prop_iter_);
+        vul_printf (std::cout, " %d", n_prop_iter_);
     else if (n_verbose_>1)
-      vul_printf (vcl_cout, "\nIter %d, ", n_prop_iter_);
+      vul_printf (std::cout, "\nIter %d, ", n_prop_iter_);
 #endif
 
     gdt_propagate_one_step ();
@@ -34,7 +34,7 @@ void gdt_f_manager_base::gdt_propagation (unsigned int n_total_iter)
   }
 
   double prop_time = time.real();
-  vul_printf (vcl_cout, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
+  vul_printf (std::cout, "\n====== Totally %d iterations, %.3f seconds. =====\n", 
                (int) n_prop_iter_, prop_time/1000);
 }
 
@@ -44,12 +44,12 @@ void gdt_f_manager::gdt_propagate_one_step ()
 {
 #if GDT_DEBUG_MSG
   if (n_verbose_>1) {
-    vul_printf (vcl_cout, "Front %d: ", (int) wavefront_.size());
-    vcl_multimap<double, dbmsh3d_halfedge*>::iterator wit =  wavefront_.begin();
+    vul_printf (std::cout, "Front %d: ", (int) wavefront_.size());
+    std::multimap<double, dbmsh3d_halfedge*>::iterator wit =  wavefront_.begin();
     if (n_verbose_>2) {
       for (; wit != wavefront_.end(); wit++) {
         dbmsh3d_halfedge* cur_from_he = (*wit).second;
-        vul_printf (vcl_cout, "%d(%f) ", cur_from_he->edge()->id(), (float)(*wit).first);
+        vul_printf (std::cout, "%d(%f) ", cur_from_he->edge()->id(), (float)(*wit).first);
       }
     }
   }
@@ -57,7 +57,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
 
   ///////////////////////////////////////////////////////////////////
   //: Get the wavefront segment (edge) with minimal distance from the wavefront_
-  vcl_multimap<double, dbmsh3d_halfedge*>::iterator wit = wavefront_.begin();
+  std::multimap<double, dbmsh3d_halfedge*>::iterator wit = wavefront_.begin();
   dbmsh3d_halfedge* cur_from_he = (*wit).second;
   wavefront_.erase (wit); //: remove wit from the wavefront_
 
@@ -75,7 +75,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
     cur_he_ = dege_cur_I->dege_get_he_to_propagate (cur_from_he);
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cout, "\n==> Propagate degenerate edge %d.\n", cur_edge_->id());
+      vul_printf (std::cout, "\n==> Propagate degenerate edge %d.\n", cur_edge_->id());
 #endif
   }
   else
@@ -86,7 +86,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   if (cur_he_==NULL) {
 #if GDT_DEBUG_MSG
     if (n_verbose_>2)
-      vul_printf (vcl_cout, "\n==> Skip. No unpropagated face for edge %d.\n", cur_edge_->id());
+      vul_printf (std::cout, "\n==> Skip. No unpropagated face for edge %d.\n", cur_edge_->id());
 #endif
     return;
   }
@@ -94,7 +94,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
 
 #if GDT_DEBUG_MSG
   if (n_verbose_>1)
-    vul_printf (vcl_cout, "\n==> Propagating edge %d to face %d.\n", cur_edge_->id(), cur_face->id());
+    vul_printf (std::cout, "\n==> Propagating edge %d to face %d.\n", cur_edge_->id(), cur_face->id());
 #endif
 
   //: left: the edge incident with the sV of the current front
@@ -175,7 +175,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(C%d -> L%d and R%d)\n", cur_edge_->id(), left_edge_->id(), right_edge_->id());
+      vul_printf (std::cout, "(C%d -> L%d and R%d)\n", cur_edge_->id(), left_edge_->id(), right_edge_->id());
     else
       break;
 #endif
@@ -216,7 +216,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(L%d -> C%d and R%d)\n", left_edge_->id(), cur_edge_->id(), right_edge_->id());
+      vul_printf (std::cout, "(L%d -> C%d and R%d)\n", left_edge_->id(), cur_edge_->id(), right_edge_->id());
 #endif
 
     //:1) left_edge_ to cur_edge_
@@ -252,7 +252,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(R%d -> C%d and L%d)\n", right_edge_->id(), cur_edge_->id(), left_edge_->id());
+      vul_printf (std::cout, "(R%d -> C%d and L%d)\n", right_edge_->id(), cur_edge_->id(), left_edge_->id());
 #endif
 
     //:1) right_edge_ to cur_edge_
@@ -288,7 +288,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(C%d and L%d -> R%d)\n", cur_edge_->id(), left_edge_->id(), right_edge_->id());
+      vul_printf (std::cout, "(C%d and L%d -> R%d)\n", cur_edge_->id(), left_edge_->id(), right_edge_->id());
 #endif
 
     if (b_C_to_L_) {
@@ -357,7 +357,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(C%d and R%d -> L%d)\n", cur_edge_->id(), right_edge_->id(), left_edge_->id());
+      vul_printf (std::cout, "(C%d and R%d -> L%d)\n", cur_edge_->id(), right_edge_->id(), left_edge_->id());
 #endif
 
     if (b_C_to_R_) {
@@ -426,7 +426,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
   {
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(L%d and R%d -> C%d)\n", left_edge_->id(), right_edge_->id(), cur_edge_->id());
+      vul_printf (std::cout, "(L%d and R%d -> C%d)\n", left_edge_->id(), right_edge_->id(), cur_edge_->id());
 #endif
 
     if (b_L_to_R_) {
@@ -495,7 +495,7 @@ void gdt_f_manager::gdt_propagate_one_step ()
     //: propagation wave from 3 edges onto the sink face
 #if GDT_DEBUG_MSG
     if (n_verbose_>1)
-      vul_printf (vcl_cout, "(C%d and L%d and R%d -> sink)\n", 
+      vul_printf (std::cout, "(C%d and L%d and R%d -> sink)\n", 
                    cur_edge_->id(), left_edge_->id(), right_edge_->id());
 #endif
 
@@ -670,14 +670,14 @@ void gdt_f_manager::merge_propagate_edges (dbmsh3d_halfedge* he1,
 
   //: Need to remove the valid intervals from IS_1_existing
   //  remove the one with valid child intervals, so it will not be deleted.
-  vcl_map<double, gdt_ibase*>::iterator it = IS_1_existing.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = IS_1_existing.I_map()->begin();
   while (it != IS_1_existing.I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
     if (I->nextIs().size()) {
       //remove it from the map
       if (it != IS_1_existing.I_map()->begin()) {
-        vcl_map<double, gdt_ibase*>::iterator temp = it;
+        std::map<double, gdt_ibase*>::iterator temp = it;
         temp--;
         IS_1_existing.I_map()->erase (it);
         temp++;
@@ -701,7 +701,7 @@ void gdt_f_manager::merge_propagate_edges (dbmsh3d_halfedge* he1,
     if (I->nextIs().size()) {
       //remove it from the map
       if (it != IS_2_existing.I_map()->begin()) {
-        vcl_map<double, gdt_ibase*>::iterator temp = it;
+        std::map<double, gdt_ibase*>::iterator temp = it;
         temp--;
         IS_2_existing.I_map()->erase (it);
         temp++;

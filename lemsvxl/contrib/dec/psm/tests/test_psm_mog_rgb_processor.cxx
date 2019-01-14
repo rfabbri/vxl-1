@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 
-#include <vcl_vector.h>
+#include <vector>
 #include <vnl/vnl_random.h>
 #include <vil/vil_rgb.h>
 
@@ -15,8 +15,8 @@ static void test_psm_mog_rgb_processor()
 
   vnl_random randgen;
   {
-    vcl_vector<vil_rgb<float> > samples;
-    vcl_vector<float> weights;
+    std::vector<vil_rgb<float> > samples;
+    std::vector<float> weights;
 
     psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype model;
 
@@ -35,22 +35,22 @@ static void test_psm_mog_rgb_processor()
     psm_mog_rgb_processor::update_appearance(samples, weights, model, 0.1f);
 
     for (unsigned m=0; m<3; ++m) {
-      vcl_cout << "mode " << m << " weight = " << model.weight(m) << vcl_endl;
-      vcl_cout << "         mean = " << model.distribution(m).mean() << vcl_endl;
-      vcl_cout << "         var = " << model.distribution(m).covar() << vcl_endl;
+      std::cout << "mode " << m << " weight = " << model.weight(m) << std::endl;
+      std::cout << "         mean = " << model.distribution(m).mean() << std::endl;
+      std::cout << "         var = " << model.distribution(m).covar() << std::endl;
     }
 
     float p0 = psm_mog_rgb_processor::prob_density(model, vil_rgb<float>(0.2f, 0.6f, 0.85f));
     float p1 = psm_mog_rgb_processor::prob_density(model, vil_rgb<float>(0.65f, 0.12f, 0.84f));
 
-    vcl_cout << "p0 = " << p0 << vcl_endl;
-    vcl_cout << "p1 = " << p1 << vcl_endl;
+    std::cout << "p0 = " << p0 << std::endl;
+    std::cout << "p1 = " << p1 << std::endl;
   }
   {
-    vcl_cout << "Testing degenerate cases " << vcl_endl;
+    std::cout << "Testing degenerate cases " << std::endl;
 
-    vcl_vector<vil_rgb<float> > samples;
-    vcl_vector<float> weights;
+    std::vector<vil_rgb<float> > samples;
+    std::vector<float> weights;
 
 
     for (unsigned int n=0; n<10; ++n) {
@@ -65,16 +65,16 @@ static void test_psm_mog_rgb_processor()
     psm_mog_rgb_processor::update_appearance(samples, weights, model, 0.1f);
 
     for (unsigned m=0; m<3; ++m) {
-      vcl_cout << "mode " << m << " weight = " << model.weight(m) << vcl_endl;
-      vcl_cout << "         mean = " << model.distribution(m).mean() << vcl_endl;
-      vcl_cout << "         var = " << model.distribution(m).covar() << vcl_endl;
+      std::cout << "mode " << m << " weight = " << model.weight(m) << std::endl;
+      std::cout << "         mean = " << model.distribution(m).mean() << std::endl;
+      std::cout << "         var = " << model.distribution(m).covar() << std::endl;
     }
 
     float p0 = psm_mog_rgb_processor::prob_density(model, vil_rgb<float>(0.2f, 0.6f, 0.85f));
     float p1 = psm_mog_rgb_processor::prob_density(model, vil_rgb<float>(0.65f, 0.12f, 0.84f));
 
-    vcl_cout << "p0 = " << p0 << vcl_endl;
-    vcl_cout << "p1 = " << p1 << vcl_endl;
+    std::cout << "p0 = " << p0 << std::endl;
+    std::cout << "p1 = " << p1 << std::endl;
 
   }
 

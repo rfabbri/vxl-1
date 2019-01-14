@@ -8,40 +8,40 @@
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vehicle_model.h>
 #include <Lie_group_operations.h>
 #include <vsol/vsol_rectangle_2d_sptr.h>
 
-vcl_vector<vnl_matrix<double> >read_transformation_matrices(vcl_string trans_matrices_info,int num_matrices)
+std::vector<vnl_matrix<double> >read_transformation_matrices(std::string trans_matrices_info,int num_matrices)
     {
     int i;
-    vcl_vector<vnl_matrix<double> > transformation_matrices;
-    vcl_ifstream ifst(trans_matrices_info.c_str());
+    std::vector<vnl_matrix<double> > transformation_matrices;
+    std::ifstream ifst(trans_matrices_info.c_str());
 
     for (i = 0;i<num_matrices;i++)
         {
         vnl_matrix<double>TM(3,3,0.0);
         ifst >> TM;
-        vcl_cout << TM << vcl_endl;
+        std::cout << TM << std::endl;
         transformation_matrices.push_back(TM);
         }
     return transformation_matrices;
     }
 
-vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_models)
+std::vector<vehicle_model> read_models(std::string vehicle_model_info,int num_models)
     {
     int i,j,k;
     double x,y;
     char ch;
-    vcl_ifstream ifst(vehicle_model_info.c_str());
-    vcl_vector<vehicle_model> model_vec;
-    vcl_vector<vsol_rectangle_2d> box1,box2,box3;
+    std::ifstream ifst(vehicle_model_info.c_str());
+    std::vector<vehicle_model> model_vec;
+    std::vector<vsol_rectangle_2d> box1,box2,box3;
 
     vsol_point_2d p0,p1,p2,p3;
 
@@ -114,7 +114,7 @@ int perform_pca(vnl_matrix<double>alg)
     vnl_matrix<double>modified_alg(num_rows,num_elements);
     vnl_vector<double>alg_row;
 
-    vcl_vector<double> mean_vec(num_rows);
+    std::vector<double> mean_vec(num_rows);
 
     vnl_matrix<double>covariance_matrix(num_rows,num_rows,0.0);
 
@@ -131,7 +131,7 @@ int perform_pca(vnl_matrix<double>alg)
 
     vnl_matrix<double> u =  svd.U();
 
-    vcl_cout << u << vcl_endl;
+    std::cout << u << std::endl;
     return svd.rank();
     }
 
@@ -153,9 +153,9 @@ void set_values(vnl_matrix<double> &alg,vnl_matrix<double>g,int i)
 
 int main(int argc,char **argv)
     {
-    vcl_string vehicle_model_info = argv[1];
-    vcl_string debug_info_file = argv[2];
-    vcl_string intrinsic_mean_file = argv[3];
+    std::string vehicle_model_info = argv[1];
+    std::string debug_info_file = argv[2];
+    std::string intrinsic_mean_file = argv[3];
 
     int i,num_models = 7,r,c,num_rows = 3,num_cols = 3;
 
@@ -168,13 +168,13 @@ int main(int argc,char **argv)
 
     // vnl_matrix<double>alg(9,3*num_models,0.0);
 
-    vcl_ofstream debug_info(debug_info_file.c_str());
-    vcl_ofstream intrinsic_mean_info(intrinsic_mean_file.c_str());
+    std::ofstream debug_info(debug_info_file.c_str());
+    std::ofstream intrinsic_mean_info(intrinsic_mean_file.c_str());
 
-    vcl_vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
+    std::vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
 
     vehicle_model ref_model(model_vec[0].engine(),model_vec[0].body(),model_vec[0].rear());
-    vcl_vector<vnl_matrix<double> >G1_vec,G2_vec,G3_vec;
+    std::vector<vnl_matrix<double> >G1_vec,G2_vec,G3_vec;
 
     double tx,ty;
 
@@ -203,20 +203,20 @@ int main(int argc,char **argv)
         G2_vec.push_back(G2);
         G3_vec.push_back(G3);
 
-        /*debug_info <<" "<< i << "th model Group elements" << vcl_endl;
-        debug_info << "G1: "<<vcl_endl;
-        debug_info << G1 << vcl_endl;
-        debug_info << "G2: "<<vcl_endl;
-        debug_info << G2 << vcl_endl;
-        debug_info << "G3: "<<vcl_endl;
-        debug_info << G3 << vcl_endl;*/
+        /*debug_info <<" "<< i << "th model Group elements" << std::endl;
+        debug_info << "G1: "<<std::endl;
+        debug_info << G1 << std::endl;
+        debug_info << "G2: "<<std::endl;
+        debug_info << G2 << std::endl;
+        debug_info << "G3: "<<std::endl;
+        debug_info << G3 << std::endl;*/
 
 
-        debug_info << G1 << vcl_endl;
+        debug_info << G1 << std::endl;
 
-        debug_info << G2 << vcl_endl;
+        debug_info << G2 << std::endl;
 
-        debug_info << G3 << vcl_endl;
+        debug_info << G3 << std::endl;
 
         }
 
@@ -229,25 +229,25 @@ int main(int argc,char **argv)
     calculate_coupled_intrinsic_mean(G1_vec,G2_vec,G3_vec,M1_x2,M1_x4,IM_G1,IM_G2,IM_G3);
 
 
-    debug_info << "IM_G1: "<<vcl_endl;
-    debug_info << IM_G1 << vcl_endl;
-    debug_info << "IM_G2: "<<vcl_endl;
-    debug_info << IM_G2 << vcl_endl;
-    debug_info << "IM_G3: "<<vcl_endl;
-    debug_info << IM_G3 << vcl_endl;
+    debug_info << "IM_G1: "<<std::endl;
+    debug_info << IM_G1 << std::endl;
+    debug_info << "IM_G2: "<<std::endl;
+    debug_info << IM_G2 << std::endl;
+    debug_info << "IM_G3: "<<std::endl;
+    debug_info << IM_G3 << std::endl;
 
-    vcl_cout << "IM_G1: "<<vcl_endl;
-    vcl_cout << IM_G1 << vcl_endl;
-    vcl_cout << "IM_G2: "<<vcl_endl;
-    vcl_cout << IM_G2 << vcl_endl;
-    vcl_cout << "IM_G3: "<<vcl_endl;
-    vcl_cout << IM_G3 << vcl_endl;
+    std::cout << "IM_G1: "<<std::endl;
+    std::cout << IM_G1 << std::endl;
+    std::cout << "IM_G2: "<<std::endl;
+    std::cout << IM_G2 << std::endl;
+    std::cout << "IM_G3: "<<std::endl;
+    std::cout << IM_G3 << std::endl;
 
     vnl_vector<double> params;
 
-    debug_info << get_variance(G1_vec,IM_G1) << vcl_endl;
-    debug_info << get_variance(G2_vec,IM_G2) << vcl_endl;
-    debug_info << get_variance(G3_vec,IM_G3) << vcl_endl;
+    debug_info << get_variance(G1_vec,IM_G1) << std::endl;
+    debug_info << get_variance(G2_vec,IM_G2) << std::endl;
+    debug_info << get_variance(G3_vec,IM_G3) << std::endl;
 
     vnl_matrix<double> scale_values(6,num_models);
 
@@ -266,17 +266,17 @@ int main(int argc,char **argv)
         G2_vec[i] = G2_proj;
         G3_vec[i] = G3_proj;
 
-        debug_info << G1_vec[i] << vcl_endl;
-        debug_info << G2_vec[i] << vcl_endl;
-        debug_info << G3_vec[i] << vcl_endl;
+        debug_info << G1_vec[i] << std::endl;
+        debug_info << G2_vec[i] << std::endl;
+        debug_info << G3_vec[i] << std::endl;
         }
 
 
     /* for (i=0;i<num_models;i++)
     {
-    intrinsic_mean_info << G1_vec[i] << vcl_endl;
-    intrinsic_mean_info << G2_vec[i] << vcl_endl;
-    intrinsic_mean_info << G3_vec[i] << vcl_endl;
+    intrinsic_mean_info << G1_vec[i] << std::endl;
+    intrinsic_mean_info << G2_vec[i] << std::endl;
+    intrinsic_mean_info << G3_vec[i] << std::endl;
     }*/
 
     //perform pca on the 6D space formed by the scale values for the three boxes
@@ -298,7 +298,7 @@ int main(int argc,char **argv)
         scale_values.put(4,i,sx3);
         scale_values.put(5,i,sy3);
 
-        // debug_info << sx1 <<" " << sy1<<" " << sx2 <<" " <<  sy2 <<" " <<sx3 <<" " <<sy3 << vcl_endl;
+        // debug_info << sx1 <<" " << sy1<<" " << sx2 <<" " <<  sy2 <<" " <<sx3 <<" " <<sy3 << std::endl;
         }
 
     // perform_pca(scale_values);
@@ -347,7 +347,7 @@ int main(int argc,char **argv)
 
     // vnl_matrix<double>princp_geodesic = get_geodesic(G1_vec,initial_params,params_freeze,params);   
 
-    vcl_vector<vnl_matrix<double> >G_vec;
+    std::vector<vnl_matrix<double> >G_vec;
 
     for (i = 0;i<G1_vec.size();i++)
         {
@@ -375,12 +375,12 @@ int main(int argc,char **argv)
 
     vnl_matrix<double>princp_geodesic = get_geodesic_9x9(G_vec,initial_params,params_freeze,params);   
 
-    debug_info << "princp_geodesic:  "<<vcl_endl;
-    debug_info <<  princp_geodesic  <<vcl_endl;
+    debug_info << "princp_geodesic:  "<<std::endl;
+    debug_info <<  princp_geodesic  <<std::endl;
 
-    debug_info << "scalars associated with projections: " << vcl_endl;
-    vcl_cout  << params << vcl_endl;
-    debug_info << params << vcl_endl;
+    debug_info << "scalars associated with projections: " << std::endl;
+    std::cout  << params << std::endl;
+    debug_info << params << std::endl;
 
     return 0;
     }

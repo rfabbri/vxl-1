@@ -10,7 +10,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -32,7 +32,7 @@ Lie_contour_generate_geodesic_shapes::Lie_contour_generate_geodesic_shapes()
         !parameters()->add( "Contour file list <filename...>" , "-contour_file_list", bpro1_filepath("","*")) ||
         !parameters()->add( "Output contour file <filename...>" , "-output_contour_file", bpro1_filepath("","*")))
         {
-        vcl_cerr << "ERROR: Adding parameters in Lie_contour_generate_geodesic_shapes::Lie_contour_generate_geodesic_shapes()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in Lie_contour_generate_geodesic_shapes::Lie_contour_generate_geodesic_shapes()" << std::endl;
         }
 
     }
@@ -46,7 +46,7 @@ Lie_contour_generate_geodesic_shapes::clone() const
 
 
 
-double Lie_contour_generate_geodesic_shapes::compute_lie_cost(vcl_vector<vsol_point_2d_sptr> curve1_samples,vcl_vector<vsol_point_2d_sptr> curve2_samples )
+double Lie_contour_generate_geodesic_shapes::compute_lie_cost(std::vector<vsol_point_2d_sptr> curve1_samples,std::vector<vsol_point_2d_sptr> curve2_samples )
     {
     double lie_cost = 0,length_1,length_2,angle_1,angle_2,scale_comp,angle_comp;
 
@@ -55,35 +55,35 @@ double Lie_contour_generate_geodesic_shapes::compute_lie_cost(vcl_vector<vsol_po
         length_1 = curve1_samples[i]->distance(curve1_samples[i+1]);
         length_2 = curve2_samples[i]->distance(curve2_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
-        angle_2 = vcl_atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
+        angle_1 = std::atan2(curve1_samples[i+1]->y()-curve1_samples[i]->y(),curve1_samples[i+1]->x()-curve1_samples[i]->x());
+        angle_2 = std::atan2(curve2_samples[i+1]->y()-curve2_samples[i]->y(),curve2_samples[i+1]->x()-curve2_samples[i]->x());
 
-        length_1 = (vcl_fabs(length_1) < 1e-10) ? 1:length_1;
-        length_2 = (vcl_fabs(length_2) < 1e-10) ? 1:length_2;
+        length_1 = (std::fabs(length_1) < 1e-10) ? 1:length_1;
+        length_2 = (std::fabs(length_2) < 1e-10) ? 1:length_2;
 
-        scale_comp = vcl_log(length_2/length_1);
+        scale_comp = std::log(length_2/length_1);
         angle_comp = angle_2 - angle_1;
         lie_cost = lie_cost +  scale_comp*scale_comp + (angle_comp*angle_comp);
         }
-    lie_cost = vcl_sqrt(lie_cost);
+    lie_cost = std::sqrt(lie_cost);
 
     return lie_cost;
     }
 
-void Lie_contour_generate_geodesic_shapes::angles_scales(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2,
-                                             vcl_vector<double> &angles,vcl_vector<double> &scales)
+void Lie_contour_generate_geodesic_shapes::angles_scales(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2,
+                                             std::vector<double> &angles,std::vector<double> &scales)
     {
     double length_1,length_2,angle_1,angle_2,Lie_cost,min_lie_cost = 1e100;
     unsigned int min_lie_index;
-    vcl_vector <double> Lie_cost_vec;
+    std::vector <double> Lie_cost_vec;
 
-    vcl_vector<vsol_point_2d_sptr> curve2_augmented;
+    std::vector<vsol_point_2d_sptr> curve2_augmented;
 
     for (unsigned int j = 0;j<2;j++)
         for (unsigned int i = 0;i<curve2.size();i++)
             curve2_augmented.push_back(curve2[i]);
 
-    vcl_vector<vsol_point_2d_sptr> curve2_open_samples;
+    std::vector<vsol_point_2d_sptr> curve2_open_samples;
 
     for (unsigned int k = 0;k<curve2.size();k++)
         {
@@ -120,21 +120,21 @@ void Lie_contour_generate_geodesic_shapes::angles_scales(vcl_vector<vsol_point_2
         length_1 = curve1[i]->distance(curve1[i+1]);
         length_2 = curve2_open_samples[i]->distance(curve2_open_samples[i+1]);
 
-        angle_1 = vcl_atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
-        angle_2 = vcl_atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
+        angle_1 = std::atan2(curve1[i+1]->y()-curve1[i]->y(),curve1[i+1]->x()-curve1[i]->x());
+        angle_2 = std::atan2(curve2_open_samples[i+1]->y()-curve2_open_samples[i]->y(),curve2_open_samples[i+1]->x()-curve2_open_samples[i]->x());
 
 
 
         scales.push_back(length_2/length_1);
         angles.push_back( angle_2 - angle_1 );
-       // vcl_cout << "angles: " << angle_2 - angle_1 << vcl_endl;
+       // std::cout << "angles: " << angle_2 - angle_1 << std::endl;
         }
     }
 
-vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::transform_shape(vcl_vector<vsol_point_2d_sptr> curve,
-                                             vcl_vector<double> angles,vcl_vector<double> scales)
+std::vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::transform_shape(std::vector<vsol_point_2d_sptr> curve,
+                                             std::vector<double> angles,std::vector<double> scales)
     {
-    vcl_vector<vsol_point_2d_sptr> curve1,new_shape;
+    std::vector<vsol_point_2d_sptr> curve1,new_shape;
 
     for (unsigned int i = 0;i<curve.size();i++)
         {
@@ -202,8 +202,8 @@ for (unsigned int i = 0;i < angles.size();i++)
         pt1_x = curve1[i]->x() - pivot_x;
         pt1_y = curve1[i]->y() - pivot_y;
 
-        pt2_x = pt1_x*vcl_cos(thet) - pt1_y*vcl_sin(thet) + pivot_x;
-        pt2_y = pt1_x*vcl_sin(thet) + pt1_y*vcl_cos(thet) + pivot_y;
+        pt2_x = pt1_x*std::cos(thet) - pt1_y*std::sin(thet) + pivot_x;
+        pt2_y = pt1_x*std::sin(thet) + pt1_y*std::cos(thet) + pivot_y;
 
         vsol_point_2d_sptr pt = new vsol_point_2d(pt2_x,pt2_y);
         new_shape.push_back(pt);
@@ -215,30 +215,30 @@ for (unsigned int i = 0;i < angles.size();i++)
             x_val = curve1[j]->x() - pivot_x;
             y_val = curve1[j]->y() - pivot_y;
 
-            curve1[j]->set_x(x_val*vcl_cos(thet) - y_val*vcl_sin(thet) + pivot_x);
-            curve1[j]->set_y(x_val*vcl_sin(thet) + y_val*vcl_cos(thet) + pivot_y);
+            curve1[j]->set_x(x_val*std::cos(thet) - y_val*std::sin(thet) + pivot_x);
+            curve1[j]->set_y(x_val*std::sin(thet) + y_val*std::cos(thet) + pivot_y);
             }
         }
 
     return new_shape;
     }
 
-void Lie_contour_generate_geodesic_shapes::generate_values_along_geodesic(vcl_vector<double> angles,vcl_vector<double> scales,vcl_vector<double> &sample_angles,
-                                                                          vcl_vector<double> &sample_scales,double t)                                      
+void Lie_contour_generate_geodesic_shapes::generate_values_along_geodesic(std::vector<double> angles,std::vector<double> scales,std::vector<double> &sample_angles,
+                                                                          std::vector<double> &sample_scales,double t)                                      
     {
     for (unsigned int i = 0;i<angles.size();i++)
         sample_angles.push_back(t*angles[i]);
    
 
     for (unsigned int i = 0;i<scales.size();i++)
-        sample_scales.push_back(vcl_exp(t*vcl_log(scales[i])));
+        sample_scales.push_back(std::exp(t*std::log(scales[i])));
 
     }
 
-vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_articulated_structure(vcl_vector<vsol_point_2d_sptr> final_points)
+std::vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_articulated_structure(std::vector<vsol_point_2d_sptr> final_points)
                                                                                         
     {
-    vcl_vector<vsol_point_2d_sptr> closed_form;
+    std::vector<vsol_point_2d_sptr> closed_form;
 
     for (unsigned int i = 0;i<final_points.size();i++)
         {
@@ -246,7 +246,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
         closed_form.push_back(pt);
         }
 
-    vcl_vector<double> angle_2_vec,length_2_vec;
+    std::vector<double> angle_2_vec,length_2_vec;
     unsigned int num_points = final_points.size(),start_point;
     double initial_curve_length = 0,final_curve_length = 0,common_scale,scale,angle_2,diff_angle,gap_length,gap_x_comp,gap_y_comp;
     double length_2,pivot_x,pivot_y,scale_x,scale_y,thet;
@@ -254,7 +254,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
     double x_comp_r1_lb,x_comp_r1_ub,x_comp_r2_lb,x_comp_r2_ub,y_comp_lb,y_comp_ub;
 
   
-    ref_angle = vcl_atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
+    ref_angle = std::atan2((closed_form[num_points-1]->y() - closed_form[0]->y()),(closed_form[num_points-1]->x() - closed_form[0]->x()));
 
     if ((ref_angle > 0 )&& (ref_angle < vnl_math::pi/2))
         {
@@ -310,7 +310,7 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
 
     for (unsigned int i = 0;i<num_points-1;i++)
         {
-        angle_2 = vcl_atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
+        angle_2 = std::atan2(closed_form[i+1]->y()-closed_form[i]->y(),closed_form[i+1]->x()-closed_form[i]->x());
         length_2 = closed_form[i]->distance(closed_form[i+1]);
         angle_2_vec.push_back(angle_2);
         length_2_vec.push_back(length_2);
@@ -320,23 +320,23 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
                     num_x++;
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
                     num_y++;
                 }
             }
         }
 
     gap_length = closed_form[num_points-1]->distance(closed_form[0]);
-    gap_x_comp = gap_length*vcl_cos(ref_angle);
-    gap_y_comp = gap_length*vcl_sin(ref_angle);
+    gap_x_comp = gap_length*std::cos(ref_angle);
+    gap_y_comp = gap_length*std::sin(ref_angle);
 
-    length_add_x_comp = vcl_fabs(gap_x_comp)/num_x;
-    length_add_y_comp = vcl_fabs(gap_y_comp)/num_y;
+    length_add_x_comp = std::fabs(gap_x_comp)/num_x;
+    length_add_y_comp = std::fabs(gap_y_comp)/num_y;
 
 
 
@@ -349,17 +349,17 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
         if ((((angle_2 <= x_comp_r1_ub) && 
             (angle_2 >= x_comp_r1_lb)) || ((angle_2 <= x_comp_r2_ub)&&(angle_2 >= x_comp_r2_lb))))
             {
-            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(vcl_fabs(vcl_fabs(angle_2) - vnl_math::pi) < 1e-10))
+            if (((angle_2 >= y_comp_lb) && (angle_2 <= y_comp_ub))||(std::fabs(std::fabs(angle_2) - vnl_math::pi) < 1e-10))
                 {
-                if (vcl_fabs(vcl_cos(angle_2)) > 1e-10)
-                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*vcl_fabs(vcl_cos(angle_2)));
+                if (std::fabs(std::cos(angle_2)) > 1e-10)
+                    scale_x = 1 + length_add_x_comp/(length_2_vec[i-1]*std::fabs(std::cos(angle_2)));
 
-                if (vcl_fabs(vcl_sin(angle_2)) > 1e-10)
-                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*vcl_fabs(vcl_sin(angle_2)));
+                if (std::fabs(std::sin(angle_2)) > 1e-10)
+                    scale_y = 1 + length_add_y_comp/(length_2_vec[i-1]*std::fabs(std::sin(angle_2)));
                 }
             }
 
-     // scale = vcl_sqrt(scale_x*scale_x*vcl_cos(angle_2)*vcl_cos(angle_2) + scale_y*scale_y*vcl_sin(angle_2)*vcl_sin(angle_2));
+     // scale = std::sqrt(scale_x*scale_x*std::cos(angle_2)*std::cos(angle_2) + scale_y*scale_y*std::sin(angle_2)*std::sin(angle_2));
 
       pivot_x = closed_form[i-1]->x();
       pivot_y = closed_form[i-1]->y();
@@ -385,41 +385,41 @@ vcl_vector<vsol_point_2d_sptr> Lie_contour_generate_geodesic_shapes::closed_arti
     return closed_form;
     }
 
-void Lie_contour_generate_geodesic_shapes::save_shape(vcl_vector<vsol_point_2d_sptr> new_shape,vcl_string new_shapes_path,unsigned int i)
+void Lie_contour_generate_geodesic_shapes::save_shape(std::vector<vsol_point_2d_sptr> new_shape,std::string new_shapes_path,unsigned int i)
     {
     char* num = new char[4];
     num[0] = num[1] = num[2] = num[3] = '0';
     sprintf (num, "%d", i);
-    vcl_string num_str = num;
+    std::string num_str = num;
 
-    vcl_string fileName = new_shapes_path + num_str + ".txt";
+    std::string fileName = new_shapes_path + num_str + ".txt";
 
-  vcl_ofstream outfp(fileName.c_str());
+  std::ofstream outfp(fileName.c_str());
 
   assert(outfp != NULL);
-  outfp << "CONTOUR" << vcl_endl;
-  outfp << "OPEN" << vcl_endl;
-  outfp << new_shape.size() << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
+  outfp << "OPEN" << std::endl;
+  outfp << new_shape.size() << std::endl;
 
 
   for(int i=0; i<new_shape.size(); i++)
   {
-    outfp <<new_shape[i]->x() << " " << new_shape[i]->y() << " " << vcl_endl;
+    outfp <<new_shape[i]->x() << " " << new_shape[i]->y() << " " << std::endl;
   }
   outfp.close();
 
     }
 
-void Lie_contour_generate_geodesic_shapes::save_shape_as_image(vcl_vector<vsol_point_2d_sptr> new_shape,vcl_string new_shapes_path,unsigned int i)
+void Lie_contour_generate_geodesic_shapes::save_shape_as_image(std::vector<vsol_point_2d_sptr> new_shape,std::string new_shapes_path,unsigned int i)
     {
     char* num = new char[4];
     num[0] = num[1] = num[2] = num[3] = '0';
     sprintf (num, "%d", i);
-    vcl_string num_str = num;
+    std::string num_str = num;
     unsigned int rows = 200,cols = 200;
     double x,y;
 
-    vcl_string fileName = new_shapes_path + num_str + ".jpg";
+    std::string fileName = new_shapes_path + num_str + ".jpg";
 
     vil_image_resource_sptr res = vil_new_image_resource(rows,cols,1,VIL_PIXEL_FORMAT_BYTE);
     
@@ -452,7 +452,7 @@ bool Lie_contour_generate_geodesic_shapes::execute()
     clear_output();
 
     bpro1_filepath input_file,output_file;
-    vcl_string file_path,inp1,out,new_shapes_path = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\geodesic_shapes\\fish";
+    std::string file_path,inp1,out,new_shapes_path = "C:\\vehicle_models_3d\\curves\\99-database\\expt\\geodesic_shapes\\fish";
     int num_samples_c1,num_samples_c2;
 
     parameters()->get_value( "-contour_file_list" , input_file );
@@ -463,19 +463,19 @@ bool Lie_contour_generate_geodesic_shapes::execute()
     file_path = input_file.path;
     out = output_file.path;
 
-    vcl_ifstream infp(file_path.c_str());
-    vcl_ofstream outfp(out.c_str());
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> > curve_points;
+    std::ifstream infp(file_path.c_str());
+    std::ofstream outfp(out.c_str());
+    std::vector<std::vector<vsol_point_2d_sptr> > curve_points;
 
     while (1)
         {
-        vcl_string inp1;
+        std::string inp1;
         infp >> inp1;
 
         if(inp1.size() == 0)
             break;
 
-        vcl_vector<vsol_point_2d_sptr> points1;
+        std::vector<vsol_point_2d_sptr> points1;
         loadCON(inp1, points1);
         dbsol_interp_curve_2d curve1;
         vnl_vector<double> samples1;
@@ -483,7 +483,7 @@ bool Lie_contour_generate_geodesic_shapes::execute()
        
         double s;
 
-         vcl_vector<vsol_point_2d_sptr> curve1_samples;
+         std::vector<vsol_point_2d_sptr> curve1_samples;
 
         for (unsigned int i = 0;i<num_samples_c1;i++)
             {
@@ -497,7 +497,7 @@ bool Lie_contour_generate_geodesic_shapes::execute()
         }
 
 double cost,min_cost = 1e100,min_cost_index,t;
-vcl_vector<double>cost_vec;
+std::vector<double>cost_vec;
    
 for (unsigned int i = 0;i<curve_points.size();i++)
     {
@@ -516,14 +516,14 @@ for (unsigned int i = 0;i<cost_vec.size();i++)
         }
     }
 
-vcl_vector< vsol_spatial_object_2d_sptr > new_contour;
+std::vector< vsol_spatial_object_2d_sptr > new_contour;
 unsigned int count;
 double weight_1,weight_2;
 
 count = 0;
 for (unsigned i = 0;i< curve_points.size()-1;i++)
     {
-vcl_vector<double> angles_1,scales_1,angles_2,scales_2;
+std::vector<double> angles_1,scales_1,angles_2,scales_2;
 
  /*angles_scales(curve_points[min_cost_index],curve_points[i],angles_1,scales_1);
  angles_scales(curve_points[min_cost_index],curve_points[i+1],angles_2,scales_2);*/
@@ -535,23 +535,23 @@ vcl_vector<double> angles_1,scales_1,angles_2,scales_2;
      {
      weight_2 = 1 - weight_1;
 
-     vcl_vector <double> angles,scales;
+     std::vector <double> angles,scales;
 
  for (unsigned int j = 0;j<angles_1.size();j++)
      {
      angles.push_back(angles_1[j]*weight_1 + angles_2[j]*weight_2);
-     scales.push_back(vcl_pow(scales_1[j],weight_1)*vcl_pow(scales_2[j],weight_2));
+     scales.push_back(std::pow(scales_1[j],weight_1)*std::pow(scales_2[j],weight_2));
 
      }
 
  for ( t = 0;t<=1;t = t + 0.1)
      {
      count++;
-     vcl_vector<double> sample_angles,sample_scales;
+     std::vector<double> sample_angles,sample_scales;
 
  generate_values_along_geodesic(angles,scales,sample_angles,sample_scales,t);
- vcl_vector<vsol_point_2d_sptr> new_shape = transform_shape(curve_points[min_cost_index],sample_angles,sample_scales);
- vcl_vector<vsol_point_2d_sptr> closed_shape = closed_articulated_structure(new_shape);
+ std::vector<vsol_point_2d_sptr> new_shape = transform_shape(curve_points[min_cost_index],sample_angles,sample_scales);
+ std::vector<vsol_point_2d_sptr> closed_shape = closed_articulated_structure(new_shape);
 
  save_shape(closed_shape,new_shapes_path,count);
  save_shape_as_image(closed_shape,new_shapes_path,count);

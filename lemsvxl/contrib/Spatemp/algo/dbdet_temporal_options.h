@@ -2,14 +2,14 @@
 #ifndef dbdet_temporal_options_h
 #define dbdet_temporal_options_h
 
-#include <vcl_map.h>
+#include <map>
 #include <Spatemp/algo/dbdet_temporal_model.h>
 #include <Spatemp/algo/dbdet_temporal_bundle.h>
 
 //: class to store the temporal hypotheses for each edge
 //: temporal bundles should be able to distinguish between time 
 //: stamps of each bundle.
-typedef vcl_list<dbdet_temporal_bundle>::iterator biter;
+typedef std::list<dbdet_temporal_bundle>::iterator biter;
 class dbdet_temporal_options: public vbl_ref_count
 {
 
@@ -37,12 +37,12 @@ public:
     void print();
     //:
     dbdet_curvelet * refc_;
-    vcl_list<dbdet_temporal_bundle> list_options_;
-    vcl_list<dbdet_temporal_bundle> second_list_options_;
+    std::list<dbdet_temporal_bundle> list_options_;
+    std::list<dbdet_temporal_bundle> second_list_options_;
 
-    vcl_map<int, vcl_list<dbdet_temporal_bundle> > options_;
+    std::map<int, std::list<dbdet_temporal_bundle> > options_;
 
-    vcl_list<dbdet_temporal_bundle> st_bundles_;
+    std::list<dbdet_temporal_bundle> st_bundles_;
 
 protected:
     //: function to check it two options can be merged

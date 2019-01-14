@@ -1,7 +1,7 @@
 // This is brl/bseg/dbinfo/dbinfo_feature_capture_process.cxx
 #include "dbinfo_feature_capture_process.h"
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vtol/vtol_topology_object.h>
 #include <vtol/vtol_vertex.h>
 #include <vtol/vtol_edge.h>
@@ -27,7 +27,7 @@ bool dbinfo_feature_capture_process::execute()
     return false;
   if (this->get_N_input_images()!=1)
     {
-      vcl_cout << "In dbinfo_feature_capture_process::execute() -"
+      std::cout << "In dbinfo_feature_capture_process::execute() -"
                << " not exactly one input image\n";
       failure_ = true;
       return false;
@@ -42,7 +42,7 @@ bool dbinfo_feature_capture_process::execute()
       n_faces = tracked_faces_.size();
       if (!n_faces)
         {
-          vcl_cout << "In dbinfo_feature_capture_process::execute() -"
+          std::cout << "In dbinfo_feature_capture_process::execute() -"
                    << " no faces found in track file\n";
           failure_ = true;
         }
@@ -58,10 +58,10 @@ bool dbinfo_feature_capture_process::execute()
   vtol_face_2d_sptr f = tracked_faces_[face_index_];
   tracker_.set_capture_face(f);
   tracked_hist_.push_back(tracker_.capture_histograms());
-  vcl_vector<vtol_edge_sptr> edges;
+  std::vector<vtol_edge_sptr> edges;
   f->edges(edges);
   output_topo_objs_.clear();
-  for (vcl_vector<vtol_edge_sptr>::iterator eit = edges.begin();
+  for (std::vector<vtol_edge_sptr>::iterator eit = edges.begin();
        eit != edges.end(); eit++)
   {
     vtol_topology_object_sptr to = (*eit)->cast_to_edge();
@@ -75,10 +75,10 @@ bool dbinfo_feature_capture_process::finish()
   first_frame_ = true;
   face_index_ = 0;
   failure_ = false;
-  vcl_ofstream strm(hist_file_.c_str());
+  std::ofstream strm(hist_file_.c_str());
   if (!strm)
   {
-    vcl_cout << "In dbinfo_feature_capture_process::set_input_file() -"
+    std::cout << "In dbinfo_feature_capture_process::set_input_file() -"
              << " could not open file " << hist_file_ << '\n';
     return false;
   }
@@ -88,7 +88,7 @@ bool dbinfo_feature_capture_process::finish()
   int n_pix = tf->face()->Npix();
   float dia = tf->face()->Diameter();
   float r = tf->face()->AspectRatio();
-  vcl_vector<vcl_vector<float> > junk;
+  std::vector<std::vector<float> > junk;
   if(!dbinfo_io::write_histogram_data(start_frame_, n_pix, dia, r, 
                                     tracker_.intensity_hist_bins_,
                                     tracker_.gradient_dir_hist_bins_,
@@ -99,20 +99,20 @@ bool dbinfo_feature_capture_process::finish()
   return true;
 }
 
-bool dbinfo_feature_capture_process::set_input_file(vcl_string const& file_name)
+bool dbinfo_feature_capture_process::set_input_file(std::string const& file_name)
 {
   start_frame_ = 0;
   track_file_ = file_name;
   if (track_file_=="")
     return false;
-  vcl_ifstream str(track_file_.c_str());
+  std::ifstream str(track_file_.c_str());
   if (!str)
     {
-      vcl_cout << "In dbinfo_feature_capture_process::set_input_file() -"
+      std::cout << "In dbinfo_feature_capture_process::set_input_file() -"
                << " could not open file " << track_file_ << '\n';
       return false;
     }
-  vcl_vector<vgl_point_2d<double> > tracked_cogs;
+  std::vector<vgl_point_2d<double> > tracked_cogs;
   unsigned int n_frames = 0;
   if(!dbinfo_io::read_track_data(str, start_frame_, n_frames,
                                tracked_cogs, tracked_faces_))
@@ -125,7 +125,7 @@ bool dbinfo_feature_capture_process::set_input_file(vcl_string const& file_name)
   return true;
 }
 
-bool dbinfo_feature_capture_process::set_output_file(vcl_string const& file_name)
+bool dbinfo_feature_capture_process::set_output_file(std::string const& file_name)
 {
   hist_file_ = file_name;
   return true;

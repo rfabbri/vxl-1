@@ -1,8 +1,8 @@
 // MingChing Chang 040226
 // VISUALIZATION OF THE fine-scale shocks
 
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <bgld/bgld_triangle.h>
@@ -69,7 +69,7 @@ SoSeparator* vis_fc_i1_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_du
   //Index 1 critical points:
   // - our A12-2 sources.
   // - the intersection point of a Delaunay edge and its dual Voronoi facet.
-  vcl_vector<vgl_point_3d<double> > i1_critical_pts;
+  std::vector<vgl_point_3d<double> > i1_critical_pts;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -87,10 +87,10 @@ SoSeparator* vis_fc_i1_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_du
 
   //Go through all shock sheets and visualize all A12-2 sources.
   // - the mid_pt (G0, G1) is inside the sheet.  
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
   for (; pit != fs_mesh->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     FF->get_bnd_Vs (vertices);
 
     if (FF->contain_A12_2 (vertices)) {
@@ -104,7 +104,7 @@ SoSeparator* vis_fc_i1_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_du
 
   //Draw all critical points.
   draw_ptset_geom (root, i1_critical_pts);
-  vul_printf (vcl_cout, "# flow complex index-1 critical points: %d.\n", i1_critical_pts.size());
+  vul_printf (std::cout, "# flow complex index-1 critical points: %d.\n", i1_critical_pts.size());
   return root;
 }
 
@@ -116,7 +116,7 @@ SoSeparator* vis_fc_i2_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_li
   //Index 2 critical points:
   // - our A13-2 sources.
   // - the intersection point of a Delaunay facet and its dual Voronoi edge.
-  vcl_vector<vgl_point_3d<double> > i2_critical_pts;
+  std::vector<vgl_point_3d<double> > i2_critical_pts;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -128,7 +128,7 @@ SoSeparator* vis_fc_i2_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_li
   root->addChild(drawstyle);
 
   //Go through all shock links and visualize all A13-2 sources.
-  vcl_map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
+  std::map<int, dbmsh3d_edge*>::iterator it = fs_mesh->edgemap().begin();
   for (; it != fs_mesh->edgemap().end(); it++) {
     dbsk3d_fs_edge* FE = (dbsk3d_fs_edge*) (*it).second;  
     if (FE->b_inf())
@@ -147,7 +147,7 @@ SoSeparator* vis_fc_i2_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_li
 
   //Draw all critical points.
   draw_ptset_geom (root, i2_critical_pts);
-  vul_printf (vcl_cout, "# flow complex index-2 critical points: %d.\n", i2_critical_pts.size());
+  vul_printf (std::cout, "# flow complex index-2 critical points: %d.\n", i2_critical_pts.size());
   return root;
 }
 
@@ -159,7 +159,7 @@ SoSeparator* vis_fc_i3_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_no
   //Index 3 critical points:
   // - our A14-4 sources.
   // - the local maximum of distance functions.
-  vcl_vector<vgl_point_3d<double> > i3_critical_pts;
+  std::vector<vgl_point_3d<double> > i3_critical_pts;
 
   SoBaseColor* basecolor = new SoBaseColor;
   basecolor->rgb = color;
@@ -176,7 +176,7 @@ SoSeparator* vis_fc_i3_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_no
   root->addChild(drawstyle);
 
   //Go through all shock nodes and visualize all A14-4 sinks.
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = fs_mesh->vertexmap().begin();
   for (; it != fs_mesh->vertexmap().end(); it++) {
     dbsk3d_fs_vertex* FV = (dbsk3d_fs_vertex*) (*it).second;  
     if (FV->b_inf())
@@ -192,7 +192,7 @@ SoSeparator* vis_fc_i3_critical_pts (dbsk3d_fs_mesh* fs_mesh, const bool show_no
 
   //Draw all critical points.
   draw_ptset_geom (root, i3_critical_pts);
-  vul_printf (vcl_cout, "# flow complex index-3 critical points: %d.\n", i3_critical_pts.size());
+  vul_printf (std::cout, "# flow complex index-3 critical points: %d.\n", i3_critical_pts.size());
   return root;
 }
 
@@ -204,7 +204,7 @@ SoSeparator* vis_fs_gabriel_graph (dbsk3d_fs_mesh* fs_mesh, const float width,
   SoSeparator* root = new SoSeparator;
 
   //Gaberial edges: connecting 2 generators and containing A12-2 points.
-  vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > > g_edges;
+  std::vector<std::pair<vgl_point_3d<double>, vgl_point_3d<double> > > g_edges;
 
   //point size
   SoDrawStyle * drawstyle = new SoDrawStyle;
@@ -212,19 +212,19 @@ SoSeparator* vis_fs_gabriel_graph (dbsk3d_fs_mesh* fs_mesh, const float width,
   root->addChild (drawstyle);
 
   //Go through all shock sheets and draw all Gabriel edges (with A12-2 sources).
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
   for (; pit != fs_mesh->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     FF->get_bnd_Vs (vertices);
 
     if (FF->contain_A12_2 (vertices))
-      g_edges.push_back (vcl_pair<vgl_point_3d<double>, vgl_point_3d<double> > (FF->genes(0)->pt(), FF->genes(1)->pt()));
+      g_edges.push_back (std::pair<vgl_point_3d<double>, vgl_point_3d<double> > (FF->genes(0)->pt(), FF->genes(1)->pt()));
   }
 
   //Draw all Gaberial edges.
   root->addChild (draw_line_set (g_edges, color));
-  vul_printf (vcl_cout, "# Gabriel edges (correspond. to index-1 critical pts): %d.\n", g_edges.size());
+  vul_printf (std::cout, "# Gabriel edges (correspond. to index-1 critical pts): %d.\n", g_edges.size());
   return root;
 }
 
@@ -233,7 +233,7 @@ SoSeparator* vis_fs_A12_2_pts (dbsk3d_fs_mesh* fs_mesh, const float size,
 {
   SoSeparator* root = new SoSeparator;
   //Go through all shock sheets and draw all A12-2 sources.
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_mesh->facemap().begin();
   for (; pit != fs_mesh->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     if (FF->flow_type() == FF_FT_I_A12_2) {

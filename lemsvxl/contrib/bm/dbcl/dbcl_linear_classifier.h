@@ -21,7 +21,7 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_set.h>
+#include<set>
 
 #include<vnl/vnl_matrix.h>
 #include<vnl/vnl_inverse.h>

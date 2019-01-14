@@ -107,7 +107,7 @@ vul_arg<int>          dbsk3d_cmd_dels ("-dels", "Click to delete shock", 0);
 //  Command line parameter help file.
 //  Ming-Ching Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 
   //Print out help instructions.
   /*if (dbmsh3d_cmd_help() != -1) {
@@ -147,136 +147,136 @@ vul_arg<int>          dbsk3d_cmd_dels ("-dels", "Click to delete shock", 0);
 
 void usage_help_info() 
 {
-  vcl_cout << "\n  dbsk3d_cmd Usage Help.\n\n";
-  vcl_cout << "-hh 0  : this help.\n";
-  vcl_cout << "-hh 1  : 3D data visualization.\n";
-  vcl_cout << "-hh 2  : 3D data processing.\n";
-  vcl_cout << "-hh 3  : Shock computation.\n";
-  vcl_cout << "-hh 33 : Shock computation details.\n";
-  vcl_cout << "-hh 4  : Shock matching.\n";
-  vcl_cout << "-hh 44 : Shock matching details.\n";
-  vcl_cout << "-hh 5  : Geodesic computation.\n";
-  vcl_cout << "-hh 6  : Other computation.\n";
+  std::cout << "\n  dbsk3d_cmd Usage Help.\n\n";
+  std::cout << "-hh 0  : this help.\n";
+  std::cout << "-hh 1  : 3D data visualization.\n";
+  std::cout << "-hh 2  : 3D data processing.\n";
+  std::cout << "-hh 3  : Shock computation.\n";
+  std::cout << "-hh 33 : Shock computation details.\n";
+  std::cout << "-hh 4  : Shock matching.\n";
+  std::cout << "-hh 44 : Shock matching details.\n";
+  std::cout << "-hh 5  : Geodesic computation.\n";
+  std::cout << "-hh 6  : Other computation.\n";
 }
 
 void datavis_usage_help()
 {
-  vcl_cout << "\n  3D Data Visualization.\n\n";
+  std::cout << "\n  3D Data Visualization.\n\n";
 
-  vcl_cout << "*.iv   View an OpenInventor file (*.iv)\n";
-  vcl_cout << "*.g3d  View a color point cloud file (*.g3d)\n";
-  vcl_cout << "*.p3d  View a point cloud file (*.p3d)\n";
+  std::cout << "*.iv   View an OpenInventor file (*.iv)\n";
+  std::cout << "*.g3d  View a color point cloud file (*.g3d)\n";
+  std::cout << "*.p3d  View a point cloud file (*.p3d)\n";
   
-  vcl_cout << "*.fs   View a fine-scale medial scaffold file (*.fs).\n";
-  vcl_cout << "       Specify -v 1 to view both valid and pruned elements.\n";
-  vcl_cout << "       Specify -v 2 to view the Gene-to-Shock association.\n";
-  vcl_cout << "*.cms  View a coarse-scale shock hypergraph file (*.cms).\n";
-  vcl_cout << "*.sg   View a coarse-scale shock graph file (*.sg).\n";
+  std::cout << "*.fs   View a fine-scale medial scaffold file (*.fs).\n";
+  std::cout << "       Specify -v 1 to view both valid and pruned elements.\n";
+  std::cout << "       Specify -v 2 to view the Gene-to-Shock association.\n";
+  std::cout << "*.cms  View a coarse-scale shock hypergraph file (*.cms).\n";
+  std::cout << "*.sg   View a coarse-scale shock graph file (*.sg).\n";
 
-  vcl_cout << "\n  General options:\n\n";
-  vcl_cout << "-light 0 off, 1 on.\n";
-  vcl_cout << "-bg    0 black, 1 white.\n";
-  vcl_cout << "-id    Show object id: 1 vertex, 2 curve, 3 sheet, 4 vertex+curve, 5 all.\n";
-  vcl_cout << "-gsize Generator size in pixels, Def=1.\n";
-  vcl_cout << "-r     Vertex sphere radius. -r 0 to make them invisible.\n";
-  vcl_cout << "-rc    Cube radius. Def=0.01.\n";
+  std::cout << "\n  General options:\n\n";
+  std::cout << "-light 0 off, 1 on.\n";
+  std::cout << "-bg    0 black, 1 white.\n";
+  std::cout << "-id    Show object id: 1 vertex, 2 curve, 3 sheet, 4 vertex+curve, 5 all.\n";
+  std::cout << "-gsize Generator size in pixels, Def=1.\n";
+  std::cout << "-r     Vertex sphere radius. -r 0 to make them invisible.\n";
+  std::cout << "-rc    Cube radius. Def=0.01.\n";
 
-  vcl_cout << "\nYou can display multiple files by combining the options.\n";
-  vcl_cout << "For example, dbsk3d_cmd -ply2 a-surface.ply2 -p3d b.p3d.\n";
+  std::cout << "\nYou can display multiple files by combining the options.\n";
+  std::cout << "For example, dbsk3d_cmd -ply2 a-surface.ply2 -p3d b.p3d.\n";
   
-  vcl_cout << "\n  Output the result to a IV/VRML file.\n\n";
-  vcl_cout << "-oiv   Specify an *.iv file output.\n";
+  std::cout << "\n  Output the result to a IV/VRML file.\n\n";
+  std::cout << "-oiv   Specify an *.iv file output.\n";
 }
 
 void dataproc_usage_help() 
 {
-  vcl_cout << "\n  3D Data Processing.\n\n";
+  std::cout << "\n  3D Data Processing.\n\n";
 
-  vcl_cout << "-pp 1  Process the input file.\n";
-  vcl_cout << "    Specify the Translation, Scaling, and Rotation of the input.\n";
-  vcl_cout << "      -tx ? -ty ? -tz ? -rx ? -ry ? -rz ? -scale ? \n";
-  vcl_cout << "    -1stoct   Shift the input to the first octant.\n";
-  vcl_cout << "    -norm ?   Normalize the input to be within the given bounding box size.\n";
-  vcl_cout << "    -pert     Perturb the input by adding some noise.\n";
-  vcl_cout << "        ex: dbsk3d_cmd -pp para -pert 0.02\n";
-  vcl_cout << "    -sub      Subsample the input randomly.\n";
+  std::cout << "-pp 1  Process the input file.\n";
+  std::cout << "    Specify the Translation, Scaling, and Rotation of the input.\n";
+  std::cout << "      -tx ? -ty ? -tz ? -rx ? -ry ? -rz ? -scale ? \n";
+  std::cout << "    -1stoct   Shift the input to the first octant.\n";
+  std::cout << "    -norm ?   Normalize the input to be within the given bounding box size.\n";
+  std::cout << "    -pert     Perturb the input by adding some noise.\n";
+  std::cout << "        ex: dbsk3d_cmd -pp para -pert 0.02\n";
+  std::cout << "    -sub      Subsample the input randomly.\n";
 
-  vcl_cout << "\n-siv 1  Subsample the input IV file to a .p3d file.\n";
-  vcl_cout << "    Recursively subsample the IV file\n";
-  vcl_cout << "    -rth      Specify the threshold to stop.\n";
+  std::cout << "\n-siv 1  Subsample the input IV file to a .p3d file.\n";
+  std::cout << "    Recursively subsample the IV file\n";
+  std::cout << "    -rth      Specify the threshold to stop.\n";
 }
 
 void shock_usage_help() 
 {
-  vcl_cout << "\n  Shock Computation.\n\n";
+  std::cout << "\n  Shock Computation.\n\n";
 
-  vcl_cout << "All-in-one Computation:\n";
-  vcl_cout << "  -all 2 -f bones1 -th 3 -rmin 1.5 -r 0.02 -dx 14 -dy 14\n";
-  vcl_cout << "  -all 1 -f sheep -th 5 -rmin 3 -tab 15 -a5 5 -a15 3 -dx 100 -dy 100\n\n";
-  vcl_cout << "  -gui 0: no gui, 1: two views, 2: many views.\n";
+  std::cout << "All-in-one Computation:\n";
+  std::cout << "  -all 2 -f bones1 -th 3 -rmin 1.5 -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "  -all 1 -f sheep -th 5 -rmin 3 -tab 15 -a5 5 -a15 3 -dx 100 -dy 100\n\n";
+  std::cout << "  -gui 0: no gui, 1: two views, 2: many views.\n";
 
-  vcl_cout << "Step-by-step Computation:\n";
-  vcl_cout << "  -sphere     Add BndSphere for QHull Preprocessing.\n";
-  vcl_cout << "  -qhfs       Full shock recovery from QHull.\n";
-  vcl_cout << "  -th         Surface meshing threshold.\n";
-  vcl_cout << "      -rmin   Radius min for shock pruning.\n";
-  vcl_cout << "      ex: -th 1.2 -rmin 0.6 -f bone\n";
-  vcl_cout << "  -trans      MS hypergraph transition regularization.\n";
-  vcl_cout << "      -tab    Specify the A1A3 tab removal threshold.\n";
-  vcl_cout << "  -trasg      MS graph transition regularization.\n";
-  vcl_cout << "      -a5     Specify the A5 link elm threshold.\n";
-  vcl_cout << "      -a15    Specify the A15 link elm threshold.\n";
-  vcl_cout << "      ex: -sgtrans sheep-ht -a5 5 -a15 0.5 -dx 100 -dy 100.\n";
-  vcl_cout << "  -smo        MS graph smoothing.\n";
-  vcl_cout << "      ex: -smo 3 -f bone -r 0.02 -dx 14 -dy 14.\n";
-  vcl_cout << "  -recon      Show shock reconstruction.\n";
-  vcl_cout << "      1: A13, 2: A3. 3: both, 4-6 with file outputs.\n";
-  vcl_cout << "      ex: -recon 6 -f p2 -bg 1.\n";
-  vcl_cout << "          -ply2 p2-surface -g3d p2-tcurve -gsize 3 -bg 1 -light 0.\n";
+  std::cout << "Step-by-step Computation:\n";
+  std::cout << "  -sphere     Add BndSphere for QHull Preprocessing.\n";
+  std::cout << "  -qhfs       Full shock recovery from QHull.\n";
+  std::cout << "  -th         Surface meshing threshold.\n";
+  std::cout << "      -rmin   Radius min for shock pruning.\n";
+  std::cout << "      ex: -th 1.2 -rmin 0.6 -f bone\n";
+  std::cout << "  -trans      MS hypergraph transition regularization.\n";
+  std::cout << "      -tab    Specify the A1A3 tab removal threshold.\n";
+  std::cout << "  -trasg      MS graph transition regularization.\n";
+  std::cout << "      -a5     Specify the A5 link elm threshold.\n";
+  std::cout << "      -a15    Specify the A15 link elm threshold.\n";
+  std::cout << "      ex: -sgtrans sheep-ht -a5 5 -a15 0.5 -dx 100 -dy 100.\n";
+  std::cout << "  -smo        MS graph smoothing.\n";
+  std::cout << "      ex: -smo 3 -f bone -r 0.02 -dx 14 -dy 14.\n";
+  std::cout << "  -recon      Show shock reconstruction.\n";
+  std::cout << "      1: A13, 2: A3. 3: both, 4-6 with file outputs.\n";
+  std::cout << "      ex: -recon 6 -f p2 -bg 1.\n";
+  std::cout << "          -ply2 p2-surface -g3d p2-tcurve -gsize 3 -bg 1 -light 0.\n";
 
 }
 
 void shock_usage_detail()
 {
-  vcl_cout << "\n  Shock Computation Details.\n\n";
+  std::cout << "\n  Shock Computation Details.\n\n";
 
-  vcl_cout << "  -buck     Shock detection via bucketing.\n";
-  vcl_cout << "  -shock    Shock detection via flow sheet.\n";
+  std::cout << "  -buck     Shock detection via bucketing.\n";
+  std::cout << "  -shock    Shock detection via flow sheet.\n";
   //        dbsk3d_cmd -shock 2 -p3d aortepts
   
-  vcl_cout << "\nMore examples on all-in-one Computation:\n";
-  vcl_cout << "  -all 2 -f tetra2 -th 0.1 -rmin 0.01 -boxr 5 -dx 3 -dy 1\n";
-  vcl_cout << "  -all 2 -f box -th 3 -rmin 0.6 -mulseed 1\n";
-  vcl_cout << "  -all 2 -f bone -th 1.2 -rmin 0.6 -r 0.02 -dx 14 -dy 14\n";
-  vcl_cout << "  -all 2 -f bones1 -th 3 -rmin 1.5 -r 0.02 -dx 14 -dy 14\n";
-  vcl_cout << "  -all 1 -f sheep -th 5 -rmin 3 -tab 15 -a5 5 -a15 3 -dx 100 -dy 100\n";
-  vcl_cout << "  -all 1 -f sheep20k -th 5 -rmin 3 -dx 100 -dy 100\n";
-  vcl_cout << "  -all 1 -f pot6 -th 6 -rmin 3 -dx 60 -dy 100\n";
-  vcl_cout << "  -all 1 -f aorte -th 5 -rmin 1 -r 0.02 -dx 14 -dy 14\n";
-  vcl_cout << "  -all 1 -f pg3 -th 3 -rmin 1 -mulseed 1 -r 0.02 -dx 50 -dy 50\n";
-  vcl_cout << "  -all 1 -f k5 -th 3 -rmin 2 -mulseed 1 -r 0.02 -dx 100 -dy 100\n";
+  std::cout << "\nMore examples on all-in-one Computation:\n";
+  std::cout << "  -all 2 -f tetra2 -th 0.1 -rmin 0.01 -boxr 5 -dx 3 -dy 1\n";
+  std::cout << "  -all 2 -f box -th 3 -rmin 0.6 -mulseed 1\n";
+  std::cout << "  -all 2 -f bone -th 1.2 -rmin 0.6 -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "  -all 2 -f bones1 -th 3 -rmin 1.5 -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "  -all 1 -f sheep -th 5 -rmin 3 -tab 15 -a5 5 -a15 3 -dx 100 -dy 100\n";
+  std::cout << "  -all 1 -f sheep20k -th 5 -rmin 3 -dx 100 -dy 100\n";
+  std::cout << "  -all 1 -f pot6 -th 6 -rmin 3 -dx 60 -dy 100\n";
+  std::cout << "  -all 1 -f aorte -th 5 -rmin 1 -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "  -all 1 -f pg3 -th 3 -rmin 1 -mulseed 1 -r 0.02 -dx 50 -dy 50\n";
+  std::cout << "  -all 1 -f k5 -th 3 -rmin 2 -mulseed 1 -r 0.02 -dx 100 -dy 100\n";
 
-  vcl_cout << "\nMore examples on Surface meshing/shock pruning:\n";
-  vcl_cout << "  -th 0.001 -rmin -0.001 -boxr 5 -f tetra2 -dx 3 -dy 1\n";
-  vcl_cout << "  -th 3 -rmin 0.6 -f box -mulseed 1\n";
-  vcl_cout << "  -th 1.2 -rmin 0.6 -f bone -r 0.02 -dx 14 -dy 14\n";
-  vcl_cout << "  -th 5 -rmin 3 -f sheep -dx 100 -dx 100 -dy 100\n";
-  vcl_cout << "  -th 6 -rmin 3 -f pot6 -dx 60 -dy 100\n";
-  vcl_cout << "  -th 5 -rmin 3 -f aorte -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "\nMore examples on Surface meshing/shock pruning:\n";
+  std::cout << "  -th 0.001 -rmin -0.001 -boxr 5 -f tetra2 -dx 3 -dy 1\n";
+  std::cout << "  -th 3 -rmin 0.6 -f box -mulseed 1\n";
+  std::cout << "  -th 1.2 -rmin 0.6 -f bone -r 0.02 -dx 14 -dy 14\n";
+  std::cout << "  -th 5 -rmin 3 -f sheep -dx 100 -dx 100 -dy 100\n";
+  std::cout << "  -th 6 -rmin 3 -f pot6 -dx 60 -dy 100\n";
+  std::cout << "  -th 5 -rmin 3 -f aorte -r 0.02 -dx 14 -dy 14\n";
 
-  vcl_cout << "\nMore examples on MS graph transition.\n";
-  vcl_cout << "       ex:  -sgtrans k5 -a5 9 -dx 100 -dy 100\n";
-  vcl_cout << "            -sgtrans bones1-ht -dx 14 -dy 14 -valid 1\n";
-  vcl_cout << "            -sgtrans p2 -a15 1 -r 0.1 -dx 11 -dy 11\n";
+  std::cout << "\nMore examples on MS graph transition.\n";
+  std::cout << "       ex:  -sgtrans k5 -a5 9 -dx 100 -dy 100\n";
+  std::cout << "            -sgtrans bones1-ht -dx 14 -dy 14 -valid 1\n";
+  std::cout << "            -sgtrans p2 -a15 1 -r 0.1 -dx 11 -dy 11\n";
 }
 
 void shock_match_help()
 {
-  vcl_cout << "\n  Shock Matching Computation.\n\n";
-  vcl_cout << "-match 1  See examples:\n";
-  vcl_cout << "  -f1 bone\\bone-ht-gt-sm5.sg -f2 bone2\\bone2-ht-gt-sm5.sg -r 0.03\n";
-  vcl_cout << "  -f1 bones2\\bones2-ht-gt-sm5 -f2 bones1\\bones1-ht-gt-sm5 -r 0.1\n";
-  vcl_cout << "   You can turn -verbose 1 to debug.\n";
+  std::cout << "\n  Shock Matching Computation.\n\n";
+  std::cout << "-match 1  See examples:\n";
+  std::cout << "  -f1 bone\\bone-ht-gt-sm5.sg -f2 bone2\\bone2-ht-gt-sm5.sg -r 0.03\n";
+  std::cout << "  -f1 bones2\\bones2-ht-gt-sm5 -f2 bones1\\bones1-ht-gt-sm5 -r 0.1\n";
+  std::cout << "   You can turn -verbose 1 to debug.\n";
 
 //        dbsk3d_cmd -match 1 -f1 bones1-sm5.sg -f2 bones1p-sm5.sg -r 0.03
 //        D:\Projects\BrownEyes\lemsvxlsrc\brcv\rec\dbsk3dr\tests\data
@@ -314,9 +314,9 @@ void shock_match_detail()
 
 void geodesic_usage_help() 
 {
-  vcl_cout << "\n  Geodesic Computation.\n\n";
-  vcl_cout << "abc\n";
-  vcl_cout << "abc\n";
+  std::cout << "\n  Geodesic Computation.\n\n";
+  std::cout << "abc\n";
+  std::cout << "abc\n";
   
 //  E) Compute the geodesic distance transform on 2-manifold triangular meshes via FMM
 //     D:\ProjectData\3DDatabase\DataTest\geodesic
@@ -326,9 +326,9 @@ void geodesic_usage_help()
 
 void other_usage_help() 
 {
-  vcl_cout << "\n  Other Computation.\n\n";
-  vcl_cout << "abc\n";
-  vcl_cout << "abc\n";
+  std::cout << "\n  Other Computation.\n\n";
+  std::cout << "abc\n";
+  std::cout << "abc\n";
 //  E) Data Generating
 //
 //  E1)Generate a Parabolic Gutter P3D file

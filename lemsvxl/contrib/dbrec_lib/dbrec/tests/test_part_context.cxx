@@ -23,7 +23,7 @@ static void test_part_context()
 
   dbrec_part_ins_sptr pi1 = new dbrec_part_ins(1, 10.0f, 15.0f);
   dbrec_part_ins_sptr pi2 = new dbrec_part_ins(2, 20.0f, 35.0f);
-  vcl_vector<dbrec_part_ins_sptr> children; children.push_back(pi1); children.push_back(pi2);
+  std::vector<dbrec_part_ins_sptr> children; children.push_back(pi1); children.push_back(pi2);
   dbrec_composition_ins* pc1 = new dbrec_composition_ins(3, pi1->pt(), children);
   dbrec_composition_ins* pc2 = new dbrec_composition_ins(4, pi2->pt(), children);
   pc->add_part(pc1);
@@ -37,7 +37,7 @@ static void test_part_context()
   search_box.add(vgl_point_2d<float>(5.0f, 5.0f));
   search_box.add(vgl_point_2d<float>(40.0f, 40.0f));
 
-  vcl_vector<dbrec_part_ins_sptr> out;
+  std::vector<dbrec_part_ins_sptr> out;
   pc->query(search_box, out);
   TEST("context constructor", out.size(), 2);
 
@@ -54,7 +54,7 @@ static void test_part_context()
   //: test parsing an image
   vil_image_resource_sptr img_r = vil_load_image_resource("./test_vehicle.png");
   if (!img_r) {
-    vcl_cout << "problems loading test_vehicle.png";
+    std::cout << "problems loading test_vehicle.png";
     return;
   }
   vil_image_view_base_sptr inp_img = img_r->get_view();
@@ -74,7 +74,7 @@ static void test_part_context()
 
   //: we need a parse visitor here
   dbrec_hierarchy_sptr h = new dbrec_hierarchy; // just an empth dummy hierarchy to construct visitor instance
-  float class_prior = 0.15f; vcl_vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
+  float class_prior = 0.15f; std::vector<float> comp_priors; comp_priors.push_back(class_prior); comp_priors.push_back(1.0f-class_prior);
   dbrec_parse_image_visitor pv(h, img_scaled, class_prior, comp_priors, "");
   
   g1.accept(&pv);

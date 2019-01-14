@@ -17,8 +17,8 @@
 #define _dborl_archaeology_algo_h
 
 #include "dborl_archaeology_algo_params_sptr.h"
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <dborl/dborl_index_sptr.h>
 #include <dborl/dborl_index_node_sptr.h>
 #include <vil/vil_load.h>
@@ -37,7 +37,7 @@ public:
   bool initialize();
   bool process();
   bool finalize();
-  bool parse_index(vcl_string index_file);
+  bool parse_index(std::string index_file);
 
 protected:
   dborl_archaeology_algo_params_sptr params_;

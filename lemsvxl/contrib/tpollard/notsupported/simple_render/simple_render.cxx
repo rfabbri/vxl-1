@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <vpgl/vpgl_calibration_matrix.h>
 
 #include "simple_scene.h"
@@ -7,9 +7,9 @@
 //-------------------------------------------
 int main( int argc, char* argv[] )
 {
-  vcl_string image_directory( "f:\\images" );
-  vcl_string camera_file( "f:\\images\\cameras.txt" );
-  vcl_string light_file( "f:\\images\\lights.txt" );
+  std::string image_directory( "f:\\images" );
+  std::string camera_file( "f:\\images\\cameras.txt" );
+  std::string light_file( "f:\\images\\lights.txt" );
   int image_width = 400, image_height = 400;
   int num_images = 40;
 

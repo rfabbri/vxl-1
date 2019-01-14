@@ -20,7 +20,7 @@ dbcvr_open_space_cvmatch_even_grid(bsold_interp_curve_3d *c1, bsold_interp_curve
   template_size_ = template_size;
 }
 
-vcl_pair<double, FinalMapType*> dbcvr_open_space_cvmatch_even_grid::match()
+std::pair<double, FinalMapType*> dbcvr_open_space_cvmatch_even_grid::match()
 {
   // create cost object
     dbcvr_open_space_cvmatch_even_grid_cost cost_fnc(c1_, c2_, 
@@ -37,7 +37,7 @@ vcl_pair<double, FinalMapType*> dbcvr_open_space_cvmatch_even_grid::match()
     FinalMapType* fmap = dp_engine_->finalMap();
     double cost = dp_engine_->finalCost();
 
-    vcl_pair<double, FinalMapType*> match_result;
+    std::pair<double, FinalMapType*> match_result;
     match_result.first = cost;
     match_result.second = fmap;
 

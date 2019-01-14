@@ -28,15 +28,15 @@ bool bof_class_probability_process_cons(bprb_func_process& pro)
 {
   using namespace bof_class_probability_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
+  std::vector<std::string> input_types_(n_inputs_);
   unsigned i =0;
   input_types_[i++] = "bof_codebook_sptr"; //codebook containing the means
   input_types_[i++] = "bof_scene_categories_sptr"; //categories
   input_types_[i++] = "unsigned"; //class_id
-  input_types_[i++] = "vcl_string"; //path to save the results for objects (classification_dir)
+  input_types_[i++] = vcl_string"; //path to save the results for objects (classification_dir)
 
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -52,11 +52,11 @@ bool bof_class_probability_process(bprb_func_process& pro)
   bof_codebook_sptr codebook = pro.get_input<bof_codebook_sptr>(i++);
   bof_scene_categories_sptr categories = pro.get_input<bof_scene_categories_sptr>(i++);
   unsigned class_id = pro.get_input<unsigned>(i++);
-  vcl_string classification_dir = pro.get_input<vcl_string>(i++);
+  std::string classification_dir = pro.get_input<std::string>(i++);
   
   //read the clusters
-  vcl_string clusters_xml = vul_file::dirname(codebook->file_) + "/lowest_sse_means_info.xml" ;
-  vcl_vector< dbcll_euclidean_cluster_light<10> > clusters;
+  std::string clusters_xml = vul_file::dirname(codebook->file_) + "/lowest_sse_means_info.xml" ;
+  std::vector< dbcll_euclidean_cluster_light<10> > clusters;
   bof_class_codebook_util<10> cc_util(categories);
   cc_util.xml_read(clusters_xml, codebook->means_,clusters);
   

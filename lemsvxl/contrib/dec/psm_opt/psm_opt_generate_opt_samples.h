@@ -1,7 +1,7 @@
 #ifndef psm_opt_generate_opt_samples_h_
 #define psm_opt_generate_opt_samples_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -43,7 +43,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<typename psm_aux_traits<AUX>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<typename psm_aux_traits<AUX>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
     alpha_img_.fill(0.0f);
@@ -55,11 +55,11 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
 
     for (; cell_it != cells.end(); ++cell_it) {
       //if (cell_it->idx == 0x32f20000) {
-      //  vcl_cout << "debug_break" << vcl_endl;
+      //  std::cout << "debug_break" << std::endl;
       //}
       psm_sample<APM> &cell_value = block[*cell_it];
       // get aux value
@@ -81,7 +81,7 @@ public:
       }
 #ifdef PSM_OPT_USE_PROB_RANGE
       if(aux_value.pre_ > 1.0f) {
-        vcl_cout << "error: mean_pre = " << mean_pre << ", aux_value.pre_ = " << aux_value.pre_ << ", step_count = " << step_count_ << vcl_endl;
+        std::cout << "error: mean_pre = " << mean_pre << ", aux_value.pre_ = " << aux_value.pre_ << ", step_count = " << step_count_ << std::endl;
       }
 #endif
       // if cell is not fully contained in image, keep seg_len_ at 0.  This will preclude this image from being included in optimization of cells values.
@@ -103,16 +103,16 @@ public:
 #ifdef PSM_OPT_USE_PROB_RANGE
         float cell_PI = psm_apm_traits<APM>::apm_processor::prob_range(cell_value.appearance, cell_mean_obs - obs_range_, cell_mean_obs + obs_range_);
         if (!((cell_PI >= 0) && (cell_PI <= 1)) ) {
-          vcl_cout << vcl_endl << "cell_PI = " << cell_PI << vcl_endl;
-          vcl_cout << "  cell_obs = " << cell_mean_obs << vcl_endl;
-          vcl_cout << "  cell id = " << *cell_it << vcl_endl; 
+          std::cout << std::endl << "cell_PI = " << cell_PI << std::endl;
+          std::cout << "  cell_obs = " << cell_mean_obs << std::endl;
+          std::cout << "  cell id = " << *cell_it << std::endl; 
         }
 #else
         float cell_PI = psm_apm_traits<APM>::apm_processor::prob_density(cell_value.appearance, cell_mean_obs);
         if (!(cell_PI >= 0)) {
-          vcl_cout << "cell_PI = " << cell_PI << vcl_endl;
-          vcl_cout << "   cell_obs = " << cell_mean_obs << vcl_endl;
-          vcl_cout << "   cell id = " << *cell_it << vcl_endl;
+          std::cout << "cell_PI = " << cell_PI << std::endl;
+          std::cout << "   cell_obs = " << cell_mean_obs << std::endl;
+          std::cout << "   cell id = " << *cell_it << std::endl;
         }
 #endif
         // fill obs probability density image
@@ -131,8 +131,8 @@ public:
 #define PSM_DEBUG
 #ifdef PSM_DEBUG
     if (step_count_ == 100) {
-      vcl_cout << "saving debug images..";
-      vcl_string output_dir = "c:/research/psm/output/";
+      std::cout << "saving debug images..";
+      std::string output_dir = "c:/research/psm/output/";
       vil_save(alpha_img_,(output_dir + "alpha_img.tiff").c_str());
       vil_save(alpha_integral_,(output_dir + "alpha_integral.tiff").c_str());
       vil_save(pix_weights_,(output_dir + "pix_weights.tiff").c_str());
@@ -141,7 +141,7 @@ public:
       vil_save(vis_,(output_dir + "vis.tiff").c_str());
       vil_save(vis_end_,(output_dir + "vis_end.tiff").c_str());
       vil_save(obs_,(output_dir + "obs.tiff").c_str());
-      vcl_cout << "..done" << vcl_endl;
+      std::cout << "..done" << std::endl;
     }
 #endif
 
@@ -194,7 +194,7 @@ private:
   class image_exp_functor
   {
   public:
-    float operator()(float x)       const { return x<0?vcl_exp(x):1.0f; }
+    float operator()(float x)       const { return x<0?std::exp(x):1.0f; }
   };
 
 };
@@ -222,7 +222,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<typename psm_aux_traits<AUX>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> const& block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<typename psm_aux_traits<AUX>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
     alpha_img_.fill(0.0f);
@@ -233,7 +233,7 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     for (; cell_it != cells.end(); ++cell_it) {
  
       psm_sample<APM> &cell_value = block[*cell_it];
@@ -267,14 +267,14 @@ public:
 
 #ifdef PSM_DEBUG
     if (step_count_ == 100) {
-      vcl_cout << "saving debug images..";
-      vcl_string output_dir = "c:/research/psm/output/";
+      std::cout << "saving debug images..";
+      std::string output_dir = "c:/research/psm/output/";
       vil_save(alpha_img_,(output_dir + "alpha_img_post.tiff").c_str());
       vil_save(post_,(output_dir + "post.tiff").c_str());
       vil_save(PI_img_,(output_dir + "PI_img_post.tiff").c_str());
       vil_save(pass_prob_img_,(output_dir + "pass_prob_img.tiff").c_str());
       vil_save(occlusion_prob_img_,(output_dir + "occlusion_prob_img.tiff").c_str());
-      vcl_cout << "..done" << vcl_endl;
+      std::cout << "..done" << std::endl;
     }
 #endif
 
@@ -326,7 +326,7 @@ private:
   class image_exp_neg_functor
   {
   public:
-    float operator()(float x)       const { return x>0?vcl_exp(-x):1.0f; }
+    float operator()(float x)       const { return x>0?std::exp(-x):1.0f; }
   };
 
   //: Functor for subtracting image from 1 to get inverse probability
@@ -340,7 +340,7 @@ private:
 
 
 template <psm_apm_type APM, psm_aux_type AUX>
-void psm_opt_generate_opt_samples(psm_scene<APM> &scene, vpgl_camera<double> const* cam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> &img, vcl_string image_id, bool black_background = false)
+void psm_opt_generate_opt_samples(psm_scene<APM> &scene, vpgl_camera<double> const* cam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> &img, std::string image_id, bool black_background = false)
 {
   // create a temporary aux_scene
   // assuming greyscale image and scene here.  Need a map from appearance model -> aux_type to make this general.
@@ -348,32 +348,32 @@ void psm_opt_generate_opt_samples(psm_scene<APM> &scene, vpgl_camera<double> con
   psm_aux_scene_base_sptr aux_scene_ptr = scene.template get_aux_scene<AUX>(image_id);
 
   // first pass: traverse in forward direction, filling in "obs", "seg_len", "pre", and "vis" values
-  vcl_cout << "first pass.." << vcl_endl;
+  std::cout << "first pass.." << std::endl;
   psm_parallel_raytrace_function<psm_opt_generate_opt_samples_forward_functor<APM, AUX>, APM, AUX> raytrace_fn1(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false, false);
   psm_opt_generate_opt_samples_forward_functor<APM,AUX> fwd_functor(cam, img);
   raytrace_fn1.run(fwd_functor);
 
-  vcl_cout << "second pass.." << vcl_endl;
+  std::cout << "second pass.." << std::endl;
   // second pass: traverse in backwards direction, filling in "post" values
   psm_parallel_raytrace_function<psm_opt_generate_opt_samples_backward_functor<APM, AUX>, APM, AUX> raytrace_fn2(scene, aux_scene_ptr, cam, img.ni(), img.nj(), false, true);
   psm_opt_generate_opt_samples_backward_functor<APM,AUX> back_functor(cam, img);
 
   // for the middlebury datasets, the background is black - update background model accordingly
   if (black_background) {
-    vcl_cout << "using black background model" << vcl_endl;
+    std::cout << "using black background model" << std::endl;
     psm_apm_traits<APM>::obs_datatype black(0.0f);
     float background_std_dev = 4.0f/255;
     typename psm_apm_traits<APM>::apm_datatype background_apm(black, background_std_dev);
 
     float peak = psm_apm_traits<APM>::apm_processor::prob_density(background_apm,0.0f);
-    vcl_cout << "p(0) = " << peak <<  vcl_endl;
-    vcl_cout << "sigma = " << vnl_math::two_over_sqrtpi * vnl_math::sqrt1_2 / (2*peak) << vcl_endl;
+    std::cout << "p(0) = " << peak <<  std::endl;
+    std::cout << "sigma = " << vnl_math::two_over_sqrtpi * vnl_math::sqrt1_2 / (2*peak) << std::endl;
 
     back_functor.set_background_model(background_apm);
   }
 
   raytrace_fn2.run(back_functor);
-  vcl_cout << "done." << vcl_endl;
+  std::cout << "done." << std::endl;
 
   return;
 }

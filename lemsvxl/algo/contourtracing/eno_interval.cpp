@@ -18,7 +18,7 @@ static char *rcsid = "$Header: /vision/projects/cvsroot2svn/cvsroot/lemsvxlsrc/a
 #endif
 
 #include <stdio.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <limits.h>
 
 #include "1d_eno_types.h"

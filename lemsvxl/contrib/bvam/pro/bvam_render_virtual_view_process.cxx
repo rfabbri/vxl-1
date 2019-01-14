@@ -28,7 +28,7 @@ bvam_render_virtual_view_process::bvam_render_virtual_view_process()
   input_types_[1] = "vpgl_camera_double_sptr";
   input_types_[2] = "vpgl_camera_double_sptr";
   input_types_[3] = "bvam_voxel_world_sptr";
-  input_types_[4] = "vcl_string";
+  input_types_[4] = std::string";
   input_types_[5] = "unsigned";
 
   // process has 2 outputs:
@@ -65,9 +65,9 @@ bool bvam_render_virtual_view_process::execute()
     static_cast<brdb_value_t<bvam_voxel_world_sptr>* >(input_data_[3].ptr());
   bvam_voxel_world_sptr world = input3->value();
 
-  brdb_value_t<vcl_string>* input4 = 
-    static_cast<brdb_value_t<vcl_string>* >(input_data_[4].ptr());
-  vcl_string voxel_type = input4->value();
+  brdb_value_t<std::string>* input4 = 
+    static_cast<brdb_value_t<std::string>* >(input_data_[4].ptr());
+  std::string voxel_type = input4->value();
 
   brdb_value_t<unsigned>* input5 = 
     static_cast<brdb_value_t<unsigned>* >(input_data_[4].ptr());
@@ -92,7 +92,7 @@ bool bvam_render_virtual_view_process::execute()
       virtual_img = new vil_image_view<vil_rgb<unsigned char>>(img_og->ni(),img_og->nj(),img_og->nplanes());
       break;
     default:
-      vcl_cerr << "error: bvam_render_virtual_view_process: unknown pixel format " << img_og->pixel_format() << vcl_endl;
+      std::cerr << "error: bvam_render_virtual_view_process: unknown pixel format " << img_og->pixel_format() << std::endl;
       return false;
   }
 
@@ -103,7 +103,7 @@ bool bvam_render_virtual_view_process::execute()
      if (img_og->nplanes() == 3)
       result = world->virtual_view<APM_MOG_RGB>(obs_og,camera_virtual,virtual_img,*vis_prob_view, bin_index);
      else {
-       vcl_cerr<< "error: bvam_render_virtual_view_process: voxel_type(apm_mog_rgb) does not match, input image" << vcl_endl;
+       std::cerr<< "error: bvam_render_virtual_view_process: voxel_type(apm_mog_rgb) does not match, input image" << std::endl;
        return false;
      }
    }

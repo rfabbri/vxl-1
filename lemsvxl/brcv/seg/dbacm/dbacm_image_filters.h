@@ -53,8 +53,8 @@ class dbacm_power_functor
 {
 public:
   dbacm_power_functor(int p):p_(p){}
-  float operator()(float x) const {return vcl_pow(x, p_); }
-  double operator()(double x) const {return vcl_pow(x, p_); }
+  float operator()(float x) const {return std::pow(x, p_); }
+  double operator()(double x) const {return std::pow(x, p_); }
 private:
   int p_;
 };

@@ -26,14 +26,14 @@
 #include <dbskr/dbskr_sm_cor_sptr.h>
 
 
-#include <vcl_vector.h>
-#include <vcl_map.h>
-#include <vcl_string.h>
-#include <vcl_utility.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <utility>
 
 // first: node pair of tree1
 // second: node pair of tree2
-typedef vcl_pair<vcl_pair<int, int>, vcl_pair<int, int> > pathtable_key;
+typedef std::pair<std::pair<int, int>, std::pair<int, int> > pathtable_key;
 
 
 //: A class to compute the minimum edit distance between two shock graphs (trees)
@@ -69,7 +69,7 @@ public:
   void clear();
 
   //: set path table
-  void set_path_table(vcl_map<pathtable_key, float>& pathtable) 
+  void set_path_table(std::map<pathtable_key, float>& pathtable) 
   { pathtable_ = pathtable; }
   
   //: set root pick for second shock graph to be first in tree
@@ -96,7 +96,7 @@ protected:
 
 
   //:
-  void solve_incomplete_subproblems(vcl_vector<int>& a1_list, vcl_vector<int>& a2_list);
+  void solve_incomplete_subproblems(std::vector<int>& a1_list, std::vector<int>& a2_list);
   
   //: solve the problem such that a1 is the last dart in the ES of tree1
   //  and a2 is the last dart in ES of tree2 
@@ -135,38 +135,38 @@ protected:
   virtual float maybe_left_splice_out_tree2_vec(int d1, int d2);
 
   //: find the min deformation cost in matching branches starting with down pointing darts d1 and d2
-  float witht(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  float witht(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   
   //: for speed do the operations without vectors first
   float witht(int a1, int a2, int d1, int d2, int td1, int td2);
 
   //: compute cost of matching path in T1 from td1 through d1 
   //                   against path in T2 from td2 through d2
-  float match(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  float match(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   
   //: for speed do the operations without vectors first
   float match(int a1, int a2, int d1, int d2, int td1, int td2);
   
   //:
-  virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   
   //: for speed do the operations without vectors first
   virtual float merge_down_tree1(int a1, int a2, int d1, int d2, int td1, int td2);
   
   //:
-  virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, vcl_vector<pathtable_key>& vec);
+  virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2, std::vector<pathtable_key>& vec);
   
   //: for speed do the operations without vectors first
   virtual float merge_down_tree2(int a1, int a2, int d1, int d2, int td1, int td2);
 
   //:
-  virtual vcl_vector<pathtable_key>& maybe_right_splice_out_tree1_vec(int a1, int d1, int d2);
+  virtual std::vector<pathtable_key>& maybe_right_splice_out_tree1_vec(int a1, int d1, int d2);
   
   //:
   virtual float maybe_right_splice_out_tree1(int a1, int d1, int d2);
   
   //:
-  virtual vcl_vector<pathtable_key>& maybe_right_splice_out_tree2_vec(int a2, int d2, int d1);
+  virtual std::vector<pathtable_key>& maybe_right_splice_out_tree2_vec(int a2, int d2, int d1);
   
   //:
   virtual float maybe_right_splice_out_tree2(int a2, int d2, int d1);
@@ -192,26 +192,26 @@ protected:
   dbskr_directed_tree_sptr tree2_;
 
   //: 
-  vcl_map<pathtable_key, float> pathtable_;
+  std::map<pathtable_key, float> pathtable_;
 
   //: the vector to hold solutions of incomplete subproblems
-  vcl_vector<vcl_vector<float> > M_;
+  std::vector<std::vector<float> > M_;
   
   //: the vector to hold paths of solutions of incomplete subproblems
-  vcl_vector<vcl_vector< vcl_vector<pathtable_key> > > MP_;
+  std::vector<std::vector< std::vector<pathtable_key> > > MP_;
   
   //: the vector to hold paths solutions of complete subproblems
-  vcl_vector<float> C_;
-  vcl_vector<vcl_vector<pathtable_key> > CP_;
+  std::vector<float> C_;
+  std::vector<std::vector<pathtable_key> > CP_;
   
   //: the vector to hold solutions of front temporarily
-  vcl_vector<vcl_vector<float> > A_;
+  std::vector<std::vector<float> > A_;
   
   //: the vector to hold paths of solutions of front temporarily
-  vcl_vector<vcl_vector< vcl_vector<pathtable_key> > > AP_;
+  std::vector<std::vector< std::vector<pathtable_key> > > AP_;
 
   //: the map that holds the final mappings of dense shock curves 
-  vcl_map<pathtable_key, vcl_vector < vcl_pair <int,int> > > shock_curve_map_;  
+  std::map<pathtable_key, std::vector < std::pair <int,int> > > shock_curve_map_;  
 
   int root2_;
   int size1_, size2_;

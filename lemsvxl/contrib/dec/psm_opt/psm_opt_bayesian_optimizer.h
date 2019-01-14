@@ -1,8 +1,8 @@
 #ifndef psm_opt_bayesian_optimizer_h_
 #define psm_opt_bayesian_optimizer_h_
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #include <psm/psm_apm_traits.h>
 #include <psm/psm_aux_traits.h>
@@ -15,7 +15,7 @@ class psm_opt_bayesian_optimizer
 {
 public:
 
-  psm_opt_bayesian_optimizer(psm_scene<APM> &scene, vcl_vector<vcl_string> const& image_ids);
+  psm_opt_bayesian_optimizer(psm_scene<APM> &scene, std::vector<std::string> const& image_ids);
 
   ~psm_opt_bayesian_optimizer(){}
 
@@ -23,7 +23,7 @@ public:
 
 protected:
 
-  vcl_vector<vcl_string> image_ids_;
+  std::vector<std::string> image_ids_;
 
   psm_scene<APM> &scene_;
 

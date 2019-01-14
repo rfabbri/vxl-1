@@ -4,11 +4,11 @@
 #ifndef dbmsh3d_utils_h_
 #define dbmsh3d_utils_h_
 
-#include <vcl_cstdio.h>
-#include <vcl_climits.h>
-#include <vcl_cfloat.h>
-#include <vcl_cmath.h>
-#include <vcl_string.h>
+#include <cstdio>
+#include <climits>
+#include <cfloat>
+#include <cmath>
+#include <string>
 
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
@@ -51,7 +51,7 @@ public:
   }
 
   //: Ming: don't make this function virtual. It eats up 4 bytes of mem for each derived object!
-  virtual void getInfo (vcl_ostringstream& ostrm) {  }
+  virtual void getInfo (std::ostringstream& ostrm) {  }
 };
 
 //##########################################################

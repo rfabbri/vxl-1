@@ -38,7 +38,7 @@ public:
   virtual bool set_tableau ( const vgui_tableau_sptr& tableau );
   virtual bool set_storage ( const bpro1_storage_sptr& storage);
 
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
 
 
@@ -46,7 +46,7 @@ public:
   bool handle( const vgui_event & e, const bvis1_view_tableau_sptr& view ) ;
 
   
-  bool load_curve_ids(vcl_string filename,vcl_vector<int> & ids);
+  bool load_curve_ids(std::string filename,std::vector<int> & ids);
 
 
 protected:
@@ -57,13 +57,13 @@ protected:
   bgui_vsol2D_tableau_sptr tableau_;
   dbctrk_storage_sptr storage_;
 
-  vcl_vector<bgui_vsol_soview2D_edgel_curve*> dcs_;
+  std::vector<bgui_vsol_soview2D_edgel_curve*> dcs_;
 
 
 };
 
-bool readcorrespondence(vcl_string filename,vcl_vector<vcl_pair< vcl_vector<int>,vcl_vector<int>  > > & corr);
-vcl_vector<vcl_string> parseLineForNumbers(vcl_string s);
+bool readcorrespondence(std::string filename,std::vector<std::pair< std::vector<int>,std::vector<int>  > > & corr);
+std::vector<std::string> parseLineForNumbers(std::string s);
 
 #endif
 

@@ -5,7 +5,7 @@
  *************************************************************************/
 
 #include "bfrag_Manager.h"
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vil/vil_save.h>
@@ -103,16 +103,16 @@ bfrag_Manager::bfrag_Manager()
   images_to_use_fnames.push_back("D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/frag126/126b_front.jpg");
   images_to_use_fnames.push_back("D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/frag127/127b_front.jpg");*/
 /*
-  vcl_string folder = "D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/*";
-  vcl_string folder2 = "D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/";
-  vcl_vector<vcl_string> names;
+  std::string folder = "D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/*";
+  std::string folder2 = "D:/MyDocs/projects/PuzzleSolving/can_datasets/highland-b/";
+  std::vector<std::string> names;
   vul_file_iterator f(folder);
   ++f;
   ++f;
   while(f.filename() != NULL)
   {
-    vcl_string frag_folder = f.filename();
-    vcl_string temp = folder2;
+    std::string frag_folder = f.filename();
+    std::string temp = folder2;
     temp.append(frag_folder);
     temp.append("/");
     char digit1 = temp[temp.size()-4];
@@ -212,7 +212,7 @@ bfrag_Manager::quit()
         
 }
 
-int bfrag_Manager::addPuzzle( vcl_string fn ) {
+int bfrag_Manager::addPuzzle( std::string fn ) {
     //sore filename for later use
     PZ2fn = fn;
 
@@ -250,7 +250,7 @@ int bfrag_Manager::addPuzzle( vcl_string fn ) {
  * bfrag_File_Handling's loadPuzzle( vcl_Ssring ) function
  ********************************************************************************/
 
-int bfrag_Manager::loadPuzzle( vcl_string fn ) {
+int bfrag_Manager::loadPuzzle( std::string fn ) {
 
     //sore filename for later use
     PZ2fn = fn;
@@ -311,7 +311,7 @@ void bfrag_Manager::savePZ2(){
 }
 
 //save the current setup
-int bfrag_Manager::savePZ2as( vcl_string fn ){
+int bfrag_Manager::savePZ2as( std::string fn ){
 
     if( fn.size() == 0 ){
         //as if they hit cancel
@@ -319,7 +319,7 @@ int bfrag_Manager::savePZ2as( vcl_string fn ){
     }
 
     vgui_dialog note("Set Puzzle Note");
-    vcl_string newline;
+    std::string newline;
     note.field( "Add To Current Note:", newline );
     note.message( "(cancel to add nothing)" );
     if( note.ask() ){
@@ -334,8 +334,8 @@ int bfrag_Manager::savePZ2as( vcl_string fn ){
 
 
 //adds one piece
-int bfrag_Manager::addbfrag2D( vcl_string topConFn, vcl_string botConFn, 
-                               vcl_string topImageFn, vcl_string botImageFn, vcl_string name ){
+int bfrag_Manager::addbfrag2D( std::string topConFn, std::string botConFn, 
+                               std::string topImageFn, std::string botImageFn, std::string name ){
 
     //make sure topConFn != null
     if( topConFn.size() <= 4 ){
@@ -354,7 +354,7 @@ int bfrag_Manager::addbfrag2D( vcl_string topConFn, vcl_string botConFn,
     }
 
 
-    //vcl_cout << "MANAGER: adding a piece to the current piece list" << vcl_endl;
+    //std::cout << "MANAGER: adding a piece to the current piece list" << std::endl;
 
     int err = theBfrag2DManager->addPiece( topConFn, botConFn, topImageFn, botImageFn, name );
     if( err >= 0 ) {
@@ -379,8 +379,8 @@ void bfrag_Manager::displayAssembly(){
 
     //use checkbox
 
-    vcl_vector<vcl_string> choices;
-    vcl_vector< bool > whichBool;
+    std::vector<std::string> choices;
+    std::vector< bool > whichBool;
     //bool temp = false;
 
     vgui_dialog contourChooser( "Choose Pieces To Add To Assembly" );
@@ -409,7 +409,7 @@ void bfrag_Manager::displayAssembly(){
 
         /*
         for( int i = 0; i < whichBool.size(); i++ ){
-            vcl_cout << "which bool is: " << whichBool[i] << vcl_endl;     
+            std::cout << "which bool is: " << whichBool[i] << std::endl;     
         }
         */
 
@@ -430,7 +430,7 @@ void bfrag_Manager::displayContour(){
         return;
     }
 
-    vcl_vector<vcl_string> choices;
+    std::vector<std::string> choices;
     int which;
 
     vgui_dialog contourChooser( "Choose A Contour" );
@@ -470,7 +470,7 @@ void bfrag_Manager::setShell( vgui_shell_tableau_sptr s){
 
     theShell->add(theGrid);
 
-    //vcl_cout << "-----MANAGER: shell, viewer, bfrag2D_tableau are all setup-----" << vcl_endl;
+    //std::cout << "-----MANAGER: shell, viewer, bfrag2D_tableau are all setup-----" << std::endl;
 }
 
 void bfrag_Manager::displayAllTopImages( bool show ){
@@ -491,10 +491,10 @@ void bfrag_Manager::pairMatch()
 {
   //have the bfrag2DManager create a Curve<double,double> from our contour representation
   //for the top curves and set _Contours in PuzzleSolving to be that
-  vcl_vector<bfrag_curve> bfragContours = theBfrag2DManager->getTopContoursForPuzzleSolving();
+  std::vector<bfrag_curve> bfragContours = theBfrag2DManager->getTopContoursForPuzzleSolving();
   if( bfragContours.size() == 0 )
   {
-    vcl_cout << "bfrag_Manager: ABORTING pairwise matching, not enuf pieces loaded" << vcl_endl;
+    std::cout << "bfrag_Manager: ABORTING pairwise matching, not enuf pieces loaded" << std::endl;
     return;
   }
     
@@ -512,12 +512,12 @@ void bfrag_Manager::pairMatch()
   int sec = (int)floor((diff/1000.0)) % 60;
   int mn = (int)floor((diff/60000.0)) % 60;
   int hr = (int)floor((diff/360000.0));
-//  vcl_cout << "Pair Match running time: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << vcl_endl;
-  vcl_cout << "Pair Match Running Time: " << double(diff) / CLOCKS_PER_SEC << "seconds" << vcl_endl;
+//  std::cout << "Pair Match running time: " << hr << " hours, " << mn << " min, " << sec << " sec, " << mili << " miliseconds." << std::endl;
+  std::cout << "Pair Match Running Time: " << double(diff) / CLOCKS_PER_SEC << "seconds" << std::endl;
     
   //OLD SORT: costs
   //pairMatchSortedCost_ = pairMatchResults_.cost;
-  //vcl_sort(pairMatchSortedCost_.begin(),pairMatchSortedCost_.end(),cost_ind_less());
+  //std::sort(pairMatchSortedCost_.begin(),pairMatchSortedCost_.end(),cost_ind_less());
   //NEW SORT: pairwiseMatches
   pairMatchResults_.sortPairwiseMatches();
 
@@ -557,7 +557,7 @@ void bfrag_Manager::matchingIteration()
     done_dl.ask();
     return;
   }
-  vcl_cout << "Matching Iteration: " << _curIteration << vcl_endl;
+  std::cout << "Matching Iteration: " << _curIteration << std::endl;
   
   clock_t start, end, diff;
   start = clock();
@@ -568,9 +568,9 @@ void bfrag_Manager::matchingIteration()
   int sec = (int)floor((diff/1000.0)) % 60;
   int mn = (int)floor((diff/60000.0)) % 60;
   int hr = (int)floor((diff/360000.0));
-//  vcl_cout << "Iteration running time of: " << hr << " hours, " << mn << " min, " 
-//    << sec << " sec, " << mili << " miliseconds." << vcl_endl;
-  vcl_cout << "Puzzle Solving Iteration Time: " << double(diff) / CLOCKS_PER_SEC << "seconds" << vcl_endl;
+//  std::cout << "Iteration running time of: " << hr << " hours, " << mn << " min, " 
+//    << sec << " sec, " << mili << " miliseconds." << std::endl;
+  std::cout << "Puzzle Solving Iteration Time: " << double(diff) / CLOCKS_PER_SEC << "seconds" << std::endl;
   
   displayAllPuzzleSolutions();
 }
@@ -640,7 +640,7 @@ void bfrag_Manager::displayNPuzzleSolutions()
   displaySolutions( &_allStateVector ); 
 };
 
-void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates)
+void bfrag_Manager::displaySolutions(std::vector<searchState> *theStates)
 {
   if( theStates->size() == 0 )
   {
@@ -653,11 +653,11 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates)
   }
 
   // sort the states according to cost
-  vcl_cout << "Sorting the states according to cost" << vcl_endl;
-  vcl_sort( theStates->begin(), theStates->end(), search_state_sort() );
+  std::cout << "Sorting the states according to cost" << std::endl;
+  std::sort( theStates->begin(), theStates->end(), search_state_sort() );
 
   searchState state;
-  gridWH_ = static_cast<int>(ceil(vcl_sqrt( (double) theStates->size() )));
+  gridWH_ = static_cast<int>(ceil(std::sqrt( (double) theStates->size() )));
   theBfrag2DManager->newGrid(gridWH_,gridWH_, -1, theStates->size() );
 
   for( unsigned w = 0; w < theStates->size(); w++ )
@@ -665,7 +665,7 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates)
     state = (*theStates)[w];
     int state_id = state.state_id_;
     state.load_state_curves_list();
-    vcl_cout << w << ": tCost= " << state.tCost << vcl_endl;
+    std::cout << w << ": tCost= " << state.tCost << std::endl;
     //why do they do this!?
     if( state.nProcess == 0)
     {
@@ -734,11 +734,11 @@ void bfrag_Manager::displaySolutions(vcl_vector<searchState> *theStates)
     //--------------my code----------------
     double px1,py1,px2,py2;
 
-    vcl_pair<double,double> cen1 = center(state.piece(state.new_edge.first));
+    std::pair<double,double> cen1 = center(state.piece(state.new_edge.first));
     px1 = cen1.first;
     py1 = cen1.second;
 
-    vcl_pair<double,double> cen2 = center(state.piece(state.new_edge.second));
+    std::pair<double,double> cen2 = center(state.piece(state.new_edge.second));
     px2 = cen2.first;
     py2 = cen2.second; 
 
@@ -828,7 +828,7 @@ void bfrag_Manager::removePair( unsigned which ){
 
 void bfrag_Manager::removeSelectedPairs(){
 
-  vcl_vector<int> selectedRows, selectedCols;
+  std::vector<int> selectedRows, selectedCols;
 #if 0
   //this variable is not used in the code.  PLEASE FIX!  -MM
   int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
@@ -838,22 +838,22 @@ void bfrag_Manager::removeSelectedPairs(){
 
   /*
   for( int i = 0; i < selectedRows.size(); i++ ){
-  vcl_cout << "[" << selectedCols[i] << "," << selectedRows[i] << "] -- " << (selectedRows[i]*gridWH_)+selectedCols[i] << vcl_endl;
+  std::cout << "[" << selectedCols[i] << "," << selectedRows[i] << "] -- " << (selectedRows[i]*gridWH_)+selectedCols[i] << std::endl;
   }
   */
 
   //this kinda sux, but i have to remove the last to the first . . .
-  vcl_vector<int> toDelete;
+  std::vector<int> toDelete;
   for( unsigned i = 0; i < selectedRows.size(); i++ ){
     toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
   }
   //now sort that so the largest comes first
-  vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+  std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
   for( unsigned i = 0; i < toDelete.size(); i++ ){
     //make sure then one were deleting actually exists...
     int junkint = pairMatchResults_.matches_ez_list_.size();
     if( (toDelete[i] < junkint) || (junkint < 0) ){
-      //vcl_cout << "now deleting: " << toDelete[i] << vcl_endl;
+      //std::cout << "now deleting: " << toDelete[i] << std::endl;
       pairMatchResults_.matches_ez_list_.erase( pairMatchResults_.matches_ez_list_.begin()+toDelete[i] + _firstDisplayedPiece );
 
     }
@@ -895,7 +895,7 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
 
   _firstDisplayedPiece = start-1;
 
-  gridWH_ = static_cast<int>(ceil(vcl_sqrt((double) howMany)));
+  gridWH_ = static_cast<int>(ceil(std::sqrt((double) howMany)));
   theBfrag2DManager->newGrid(gridWH_,gridWH_, pairMatchResults_.matches_ez_list_.size());
 
   int p1, p2;
@@ -903,7 +903,7 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
   assert (start >= 0);
   int pairmatch_int = static_cast<int>(pairMatchResults_.matches_ez_list_.size());
 
-  //    FILE *fp = vcl_fopen("D:/MyDocs/projects/PuzzleSolving/Temp/matches.txt", "w");
+  //    FILE *fp = std::fopen("D:/MyDocs/projects/PuzzleSolving/Temp/matches.txt", "w");
 
   for( int i = start-1; i < pairmatch_int && i < (start-1)+howMany; i++ )
   {
@@ -915,15 +915,15 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
 
     XForm3x3 *pairXForm = new XForm3x3;
     regContour(c1,c2, _matches[index].pointMap, 0, pairXForm );
-    matchedPairs_.push_back(vcl_pair<bfrag_curve *, bfrag_curve *>(c1,c2));
+    matchedPairs_.push_back(std::pair<bfrag_curve *, bfrag_curve *>(c1,c2));
     // add these two pieces in the same tableau on the grid
     // draw the registered boundaries of the two pieces
     theBfrag2DManager->addCurveAt(c1,i-(start-1));
     theBfrag2DManager->addCurveAt(c2,i-(start-1));
 
-    vcl_cout << i << ": " << pairMatchResults_.matches_ez_list_[i].second << " " 
+    std::cout << i << ": " << pairMatchResults_.matches_ez_list_[i].second << " " 
       << _matches[index].whichCurves.first << " and " 
-      << _matches[index].whichCurves.second << vcl_endl;
+      << _matches[index].whichCurves.second << std::endl;
 
     //TEST
     //TURN OFF THE UPPER CONTOUR OR DONT USE THOSE CURVES AT ALL!!!!??
@@ -938,13 +938,13 @@ void bfrag_Manager::displayNPairs(int howMany, int start){
 
     delete pairXForm;
   }
-  //    vcl_fclose(fp);
+  //    std::fclose(fp);
 }
 
 void bfrag_Manager::reorderPair( int from, int to ){
-  //vcl_cout << "manager reordering from: " << from << " to: " << to << vcl_endl;
+  //std::cout << "manager reordering from: " << from << " to: " << to << std::endl;
 
-  //vcl_cout << "COSTS BEFORE:" << vcl_endl;
+  //std::cout << "COSTS BEFORE:" << std::endl;
   //pairMatchResults_.printPairwiseMatchesSortedNPS();
   unsigned tounsigned = static_cast<unsigned>(to);
   if( tounsigned == 0 )
@@ -965,10 +965,10 @@ void bfrag_Manager::reorderPair( int from, int to ){
     double diff = pairMatchResults_.matches_ez_list_[to].second - pairMatchResults_.matches_ez_list_[to-1].second;
     //new cost is right in between the target and the one before it
     //which puts this just before target, exactly what we want
-    //vcl_cout << "ORIG COST: " << pairMatchResults_._matches[from].cost << vcl_endl;
-    //vcl_cout << "BETTER COST: [" << pairMatchResults_._matches[to-1].cost << "] WORSE COST: [" << pairMatchResults_._matches[to].cost << "]" << vcl_endl;
-    //vcl_cout << "DIFF/2.0 (adjustment): " << diff/2.0 << vcl_endl;
-    //vcl_cout << "NEW SCORE: " << pairMatchResults_._matches[to].cost - diff/2.0 << vcl_endl;
+    //std::cout << "ORIG COST: " << pairMatchResults_._matches[from].cost << std::endl;
+    //std::cout << "BETTER COST: [" << pairMatchResults_._matches[to-1].cost << "] WORSE COST: [" << pairMatchResults_._matches[to].cost << "]" << std::endl;
+    //std::cout << "DIFF/2.0 (adjustment): " << diff/2.0 << std::endl;
+    //std::cout << "NEW SCORE: " << pairMatchResults_._matches[to].cost - diff/2.0 << std::endl;
 
     pairMatchResults_.matches_ez_list_[from].second = pairMatchResults_.matches_ez_list_[to].second - diff/2.0;
   }
@@ -1010,7 +1010,7 @@ void bfrag_Manager::displayNContours( int howMany, int start ){
     return;
   }
 
-  gridWH_ = static_cast<int>(ceil(vcl_sqrt((double) howMany)));
+  gridWH_ = static_cast<int>(ceil(std::sqrt((double) howMany)));
   theBfrag2DManager->newGrid(gridWH_,gridWH_, -9); //-9 single FRAG popup menu
 
   for( int i = start-1; i < numPuzzlePieces && i < (start-1)+howMany; i++ )
@@ -1025,19 +1025,19 @@ void bfrag_Manager::removeFragment( int which ){
 }
 
 void bfrag_Manager::removeSelectedFragments(){
-  vcl_vector<int> selectedRows, selectedCols;
+  std::vector<int> selectedRows, selectedCols;
 #if 0
   //this variable is not used in the code.  PLEASE FIX!  -MM
   int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
 #endif
 
   //this kinda sux, but i have to remove the last to the first . . .
-  vcl_vector<int> toDelete;
+  std::vector<int> toDelete;
   for( unsigned i = 0; i < selectedRows.size(); i++ ){
     toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
   }
   //now sort that so the largest comes first
-  vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+  std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
   for( unsigned i = 0; i < toDelete.size(); i++ ){
     //make sure then one were deleting actually exists...
     if( !(theBfrag2DManager->removeBfrag(toDelete[i])) ){
@@ -1052,20 +1052,20 @@ void bfrag_Manager::removeSelectedFragments(){
 }
 
 void bfrag_Manager::removeSelectedPuzzles(){
-  vcl_vector<int> selectedRows, selectedCols;
+  std::vector<int> selectedRows, selectedCols;
 #if 0
   //this variable is not used in the code.  PLEASE FIX!  -MM
   int howMany = theBfrag2DManager->getSelected(selectedCols, selectedRows);
 #endif
 
   //this kinda sux, but i have to remove the last to the first . . .
-  vcl_vector<int> toDelete;
+  std::vector<int> toDelete;
   for( unsigned i = 0; i < selectedRows.size(); i++ ){
     toDelete.push_back( ((selectedRows[i]*gridWH_)+selectedCols[i]) );
   }
 
   //now sort that so the largest comes first
-  vcl_sort(toDelete.begin(), toDelete.end(), intGreaterThan());
+  std::sort(toDelete.begin(), toDelete.end(), intGreaterThan());
 
   for( unsigned i = 0; i < toDelete.size(); i++ )
   {
@@ -1125,7 +1125,7 @@ void bfrag_Manager::showPuzzleCost(int index)
   vgui_dialog cost_box("Solution Cost is...");
   cost_box.set_cancel_button(false);
   char temp[1000];
-  vcl_sprintf(temp, "%f", _allStateVector[index + _firstDisplayedPuzzle].tCost);
+  std::sprintf(temp, "%f", _allStateVector[index + _firstDisplayedPuzzle].tCost);
   cost_box.message(temp);
   cost_box.ask();
 }
@@ -1136,8 +1136,8 @@ void bfrag_Manager::showPuzzleCosts()
   cost_box.set_cancel_button(false);
   for(unsigned i=0; i < _allStateVector.size(); i++)
   {
-    vcl_stringstream cost_message;
-    cost_message << "top-" << i+1 << ": " << _allStateVector[i + _firstDisplayedPuzzle].tCost << vcl_endl;
+    std::stringstream cost_message;
+    cost_message << "top-" << i+1 << ": " << _allStateVector[i + _firstDisplayedPuzzle].tCost << std::endl;
     cost_box.message(cost_message.str().c_str());
   }
   cost_box.ask();
@@ -1149,8 +1149,8 @@ void bfrag_Manager::updatePuzzleCost(int index)
   cost_box.message("All partial solution costs are as follows:\n");
   for(unsigned i=0; i < _allStateVector.size(); i++)
   {
-    vcl_stringstream cost_message;
-    cost_message << "top-" << i+1 << ": " << _allStateVector[i + _firstDisplayedPuzzle].tCost << vcl_endl;
+    std::stringstream cost_message;
+    cost_message << "top-" << i+1 << ": " << _allStateVector[i + _firstDisplayedPuzzle].tCost << std::endl;
     cost_box.message(cost_message.str().c_str());
   }
 
@@ -1166,7 +1166,7 @@ void bfrag_Manager::updatePuzzleCost(int index)
 void bfrag_Manager::updatePuzzleCosts()
 {
   vgui_dialog cost_box("Update Solution Costs...");
-  vcl_vector<double> new_costs;
+  std::vector<double> new_costs;
   new_costs.resize(_allStateVector.size());
 
   for(unsigned i=0; i < _allStateVector.size(); i++)
@@ -1174,7 +1174,7 @@ void bfrag_Manager::updatePuzzleCosts()
 
   for(unsigned i=0; i < _allStateVector.size(); i++)
   {
-    vcl_stringstream cost_message;
+    std::stringstream cost_message;
     cost_message << "top-" << i+1 << " current cost: " << _allStateVector[i + _firstDisplayedPuzzle].tCost << ", change to";
     cost_box.field(cost_message.str().c_str(), new_costs[i]);
   }
@@ -1191,7 +1191,7 @@ void bfrag_Manager::updatePuzzleCosts()
 void bfrag_Manager::generatePuzzle(){
   vgui_dialog gen( "Generator..." );
   gen.message( "Automatic Puzzle File Generation" );
-  vcl_string frontContourDir, backContourDir, frontImageDir, backImageDir, blank;
+  std::string frontContourDir, backContourDir, frontImageDir, backImageDir, blank;
   gen.file( "Front Contour Directory ", blank, frontContourDir );
   gen.file( "Back Contour Directory ", blank, backContourDir );
   gen.file( "Front Image Directory ", blank, frontImageDir );
@@ -1215,10 +1215,10 @@ void bfrag_Manager::generatePuzzle(){
 }
 
 
-void bfrag_Manager::get_image_filenames(vcl_string input)
+void bfrag_Manager::get_image_filenames(std::string input)
 {
   // open input file
-  vcl_ifstream in(input.c_str());
+  std::ifstream in(input.c_str());
   // create xml reader
   bxml_stream_read reader;
   bxml_data_sptr data;
@@ -1227,7 +1227,7 @@ void bfrag_Manager::get_image_filenames(vcl_string input)
   while(data = reader.next_element(in, depth))
   {
     bxml_element* elem = static_cast<bxml_element*>(data.ptr());
-    vcl_string att_name;
+    std::string att_name;
     if(elem->name() == "data")
     {
       unsigned id_no = 0;
@@ -1238,8 +1238,8 @@ void bfrag_Manager::get_image_filenames(vcl_string input)
         sprintf(id_name, "id%d", id_no);
         sprintf(path_name, "path%d", id_no);
         id_no++;
-        vcl_string no;
-        vcl_string path;
+        std::string no;
+        std::string path;
         elem->get_attribute(id_name, no);
         if(no != "")
         {
@@ -1254,15 +1254,15 @@ void bfrag_Manager::get_image_filenames(vcl_string input)
 
   for(unsigned i=0; i<FRAG_PATHS.size(); i++)
   {
-    vcl_string folder = FRAG_PATHS[i];
+    std::string folder = FRAG_PATHS[i];
     folder.append("/");
     // brackets are for putting variables out of scope
-    vcl_string ftype = folder;
+    std::string ftype = folder;
     ftype.append("*_front.jpg");
     vul_file_iterator f(ftype);
     if(f.filename() != NULL) // there is top imageben de optum
     {
-      vcl_string fname = folder;
+      std::string fname = folder;
       fname.append(f.filename());
       FRAG_PATHS[i] = fname;
     }
@@ -1276,7 +1276,7 @@ void bfrag_Manager::get_image_filenames(vcl_string input)
     images_to_use_resource.push_back(vil_load_image_resource(images_to_use_fnames[i].c_str()));
 }
 
-void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filename_images)
+void bfrag_Manager::load_xml(std::string filename, int chosen, std::string filename_images)
 {
   if(chosen == 0)
   {
@@ -1297,7 +1297,7 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
   int pos = filename.find_last_of("\\");
   filename.erase(pos, filename.size());
   _puzzleSolver->read_experiment_search_state_and_puzzle_solving_objects(filename, states_, false);
-  vcl_cout << "SEARCH STATES AND PUZZLE SOLVING OBJECT LOADED..." << vcl_endl;
+  std::cout << "SEARCH STATES AND PUZZLE SOLVING OBJECT LOADED..." << std::endl;
   // load pairs and partial solutions
   _originalPairMatchResults = states_[0];
   pairMatchResults_ = states_[0];
@@ -1332,7 +1332,7 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
     for( unsigned w = 0; w < states_.size(); w++ )
     {
       images_to_show[w].second = w;
-      vcl_cout << "Processing State " << w << vcl_endl;
+      std::cout << "Processing State " << w << std::endl;
 
       state = states_[w];
       vbl_array_2d<unsigned> num_contrib;
@@ -1353,9 +1353,9 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
         double minx = state.constr(i)->box_.min_x();
         double miny = state.constr(i)->box_.min_y();
         if(minx < offset_x)
-          offset_x = vcl_floor(minx);
+          offset_x = std::floor(minx);
         if(miny < offset_y)
-          offset_y = vcl_floor(miny);
+          offset_y = std::floor(miny);
         if(imsize_w < w)
           imsize_w = w;
         if(imsize_h < h)
@@ -1376,7 +1376,7 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
         int curve_index = state.process[i];
         vil_image_view<vxl_byte> im = vil_convert_cast(vxl_byte(), images_to_use_resource[curve_index]->get_view());
 
-        vcl_vector<vgl_point_2d<double> > curve = _Contours[curve_index].level3_;
+        std::vector<vgl_point_2d<double> > curve = _Contours[curve_index].level3_;
         vnl_matrix_fixed<double,3,3> trans = state.transform_list_[curve_index];
 
         vgl_polygon<double> polygon(curve);
@@ -1388,14 +1388,14 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
           {
             float xx = x;
             float yy = y;
-            int xxx = static_cast<int>(vcl_floor(xx+0.5f));
-            int yyy = static_cast<int>(vcl_floor(yy+0.5f));
+            int xxx = static_cast<int>(std::floor(xx+0.5f));
+            int yyy = static_cast<int>(std::floor(yy+0.5f));
 
             double new_x = xxx * trans(0,0) + yyy * trans(0,1) + trans(0,2);
             double new_y = xxx * trans(1,0) + yyy * trans(1,1) + trans(1,2);
 
-            int new_x_pos = static_cast<int> (vcl_floor(new_x + 0.5)) + offset_x;
-            int new_y_pos = static_cast<int> (vcl_floor(new_y + 0.5)) + offset_y;
+            int new_x_pos = static_cast<int> (std::floor(new_x + 0.5)) + offset_x;
+            int new_y_pos = static_cast<int> (std::floor(new_y + 0.5)) + offset_y;
 
             if(new_x_pos < 0 || new_y_pos < 0 || 
               new_x_pos >= images_to_show[w].first.ni() || new_y_pos >= images_to_show[w].first.nj())
@@ -1434,7 +1434,7 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
         int p = state.process[i];
       }
       num_contrib.clear();
-      vcl_pair<vgl_point_2d<int>, int> temp_offset;
+      std::pair<vgl_point_2d<int>, int> temp_offset;
       temp_offset.first = vgl_point_2d<int> (offset_x, offset_y);
       temp_offset.second = w;
       offsets_.push_back(temp_offset);
@@ -1466,53 +1466,53 @@ void bfrag_Manager::load_xml(vcl_string filename, int chosen, vcl_string filenam
   }
 }
 
-void bfrag_Manager::check_and_update_status_file(vcl_string foldername, int num_pieces_added)
+void bfrag_Manager::check_and_update_status_file(std::string foldername, int num_pieces_added)
 {
-  vcl_string filename = foldername;
+  std::string filename = foldername;
   filename.append("/status.txt");
-  FILE *fp = vcl_fopen(filename.c_str(), "r");
+  FILE *fp = std::fopen(filename.c_str(), "r");
   if(fp == NULL) // no status file present, so no update necessary
     return;
   else
   {
-    vcl_fclose(fp);
-    fp = vcl_fopen(filename.c_str(), "w");
-    vcl_fprintf(fp, "Number_of_Iterations_Finished: %d\n", num_pieces_added-1);
-    vcl_fprintf(fp, "Number_of_Pieces_Added_to_the_Puzzle: %d\n", num_pieces_added);
-    vcl_fclose(fp);
+    std::fclose(fp);
+    fp = std::fopen(filename.c_str(), "w");
+    std::fprintf(fp, "Number_of_Iterations_Finished: %d\n", num_pieces_added-1);
+    std::fprintf(fp, "Number_of_Pieces_Added_to_the_Puzzle: %d\n", num_pieces_added);
+    std::fclose(fp);
   }
 }
 
 void bfrag_Manager::check_and_update_assemblies_file(std::string foldername, int file_number)
 {
-  vcl_string filename = foldername;
+  std::string filename = foldername;
   // convert integer to string
   char buffer[32];
   itoa(file_number, buffer, 10);
   filename += "/";
   filename += buffer;
   filename += "frag_assembly.xml";
-  FILE *fp = vcl_fopen(filename.c_str(), "r");
+  FILE *fp = std::fopen(filename.c_str(), "r");
   if(fp == NULL) // no assembly file present, so no update necessary
     return;
   else
   {
-    vcl_fclose(fp);
+    std::fclose(fp);
     this->_puzzleSolver->write_frag_assemblies_in_xml(filename, this->states_);
   }
 }
 
-void bfrag_Manager::save_xml(vcl_string filename)
+void bfrag_Manager::save_xml(std::string filename)
 {
   if(_puzzleSolver == NULL)
-    vcl_cout << "PUZZLE SOLVING OBJECT IS EMPTY, NO OUTPUT WRITTEN..." << vcl_endl;
+    std::cout << "PUZZLE SOLVING OBJECT IS EMPTY, NO OUTPUT WRITTEN..." << std::endl;
   else
   {
     // replace \ with / in the filename
     while(1)
     {
       int pos = filename.find_last_of("\\");
-      if(pos == vcl_string::npos)
+      if(pos == std::string::npos)
         break;
       filename[pos] = '/';
     }
@@ -1523,6 +1523,6 @@ void bfrag_Manager::save_xml(vcl_string filename)
     check_and_update_status_file(filename, states_[0].nProcess);
     // If "N" pieces were added, the assembly xml filename starts with "N-2"
     check_and_update_assemblies_file(filename, states_[0].nProcess-2);
-    vcl_cout << "SEARCH STATES AND PUZZLE SOLVING OBJECT WRITTEN TO DISK..." << vcl_endl;
+    std::cout << "SEARCH STATES AND PUZZLE SOLVING OBJECT WRITTEN TO DISK..." << std::endl;
   }
 }

@@ -22,7 +22,7 @@ dbsk2d_xshock_edge::dbsk2d_xshock_edge(int id,
 dbsk2d_xshock_edge::dbsk2d_xshock_edge(int id, 
                                        dbsk2d_shock_node_sptr src_node, 
                                        dbsk2d_shock_node_sptr tgt_node,
-                                       vcl_vector<dbsk2d_xshock_sample_sptr > samples, 
+                                       std::vector<dbsk2d_xshock_sample_sptr > samples, 
                                        bool bIO):
   dbsk2d_shock_edge(src_node, tgt_node), bIO_(bIO), samples_(samples) 
 { 
@@ -56,7 +56,7 @@ void dbsk2d_xshock_edge::form_shock_fragment()
 
   //2.2) go along left contour
   //  This needs to be obtained from reconstruction (TODO!!)
-  vcl_vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
+  std::vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
   for( ; s_itr != samples_.end(); ++s_itr)
   {
     dbsk2d_xshock_sample_sptr cur_sample = (*s_itr);
@@ -67,7 +67,7 @@ void dbsk2d_xshock_edge::form_shock_fragment()
   fragment_->ex_pts().push_back(ex_pts_.back());
 
   //2.4) Go along the right contour
-  vcl_vector<dbsk2d_xshock_sample_sptr>::reverse_iterator rs_itr = samples_.rbegin();
+  std::vector<dbsk2d_xshock_sample_sptr>::reverse_iterator rs_itr = samples_.rbegin();
   for( ; rs_itr != samples_.rend(); ++rs_itr)
   {
     dbsk2d_xshock_sample_sptr cur_sample = (*rs_itr);
@@ -77,7 +77,7 @@ void dbsk2d_xshock_edge::form_shock_fragment()
 
 //: form shock fragment from this edge
 void dbsk2d_xshock_edge::get_fragment_boundary(
-    vcl_vector<vgl_point_2d<double> >& pts) 
+    std::vector<vgl_point_2d<double> >& pts) 
 {
     //2) Compile the polygon that represents this visual fragment
 
@@ -85,7 +85,7 @@ void dbsk2d_xshock_edge::get_fragment_boundary(
     pts.push_back(ex_pts_.front());
 
     //2.2) go along left contour
-    vcl_vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
+    std::vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
     for( ; s_itr != samples_.end(); ++s_itr)
     {
         dbsk2d_xshock_sample_sptr cur_sample = (*s_itr);
@@ -96,7 +96,7 @@ void dbsk2d_xshock_edge::get_fragment_boundary(
     pts.push_back(ex_pts_.back());
     
     //2.4) Go along the right contour
-    vcl_vector<dbsk2d_xshock_sample_sptr>::reverse_iterator rs_itr = 
+    std::vector<dbsk2d_xshock_sample_sptr>::reverse_iterator rs_itr = 
         samples_.rbegin();
     for( ; rs_itr != samples_.rend(); ++rs_itr)
     {
@@ -108,30 +108,30 @@ void dbsk2d_xshock_edge::get_fragment_boundary(
 //: return the extrinsic point on the shock
 vgl_point_2d<double> dbsk2d_xshock_edge::pt(double psi)
 {
-  return samples_[(int)vcl_floor(psi)]->pt;
+  return samples_[(int)std::floor(psi)]->pt;
 }
 
 //: return the radius
 double dbsk2d_xshock_edge::r (double psi) 
 { 
-  return samples_[(int)vcl_floor(psi)]->radius; 
+  return samples_[(int)std::floor(psi)]->radius; 
 }
 
 //: return the tangent
 double dbsk2d_xshock_edge::tangent (double psi)
 {
-  return samples_[(int)vcl_floor(psi)]->theta;
+  return samples_[(int)std::floor(psi)]->theta;
 }
 
 //: return the velocity
 double dbsk2d_xshock_edge::v  (double psi)
 {
-  return samples_[(int)vcl_floor(psi)]->speed;
+  return samples_[(int)std::floor(psi)]->speed;
 }
 
 //: return the phi parameter
 double dbsk2d_xshock_edge::phi (double psi)
 {
-  return vcl_acos(-1/samples_[(int)vcl_floor(psi)]->speed);
+  return std::acos(-1/samples_[(int)std::floor(psi)]->speed);
 }
 

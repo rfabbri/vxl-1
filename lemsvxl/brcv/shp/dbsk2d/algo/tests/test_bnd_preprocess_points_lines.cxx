@@ -11,7 +11,7 @@
 
 void test_remove_points_close_to_lines()
 {
-  vcl_cout << "In test_remove_points_close_to_lines()\n";
+  std::cout << "In test_remove_points_close_to_lines()\n";
 
   // construct an arc and a stand-alone point
   // arc
@@ -33,10 +33,10 @@ void test_remove_points_close_to_lines()
     dbsk2d_bnd_utils::new_stand_alone_point(pt);
 
   // list of arcs and points
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_lines;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_lines;
   bnd_lines.push_back(bnd_line1);
 
-  vcl_list<dbsk2d_bnd_edge_sptr > bnd_pts;
+  std::list<dbsk2d_bnd_edge_sptr > bnd_pts;
   bnd_pts.push_back(bnd_pt);
   
   //===============================================================================

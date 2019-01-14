@@ -1,21 +1,21 @@
 #include "bfac_factorization.h"
 #include <vsol/vsol_point_2d.h>
-#include <vcl_cassert.h>
+#include <cassert>
 #include <vsol/vsol_point_3d_sptr.h>
 #include <vnl/vnl_rational.h>
 
 #include <vsol/vsol_point_3d.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 
 
-bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr > > input_feature_pts, const vcl_string vrml_f_name)
+bfac_reconstructor::bfac_reconstructor( std::vector<std::vector<vsol_point_2d_sptr > > input_feature_pts, const std::string vrml_f_name)
 {
-    vcl_vector<vsol_point_3d_sptr> world_points;
+    std::vector<vsol_point_3d_sptr> world_points;
     unsigned int no_frames = input_feature_pts.size();
     assert(no_frames>0);
-    vcl_vector<vcl_vector<vsol_point_2d_sptr> >::const_iterator frame_iter = input_feature_pts.begin();
+    std::vector<std::vector<vsol_point_2d_sptr> >::const_iterator frame_iter = input_feature_pts.begin();
     unsigned int no_pts = (input_feature_pts[0]).size();
  
 
@@ -27,7 +27,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
     unsigned int no_pts_tracked = no_pts;
 
     meas_matrix.set_size(2*no_frames, no_pts);
-    vcl_cout<<"\n num of frames"<<no_frames<<"\n num of pts"<<no_pts<<"\n";
+    std::cout<<"\n num of frames"<<no_frames<<"\n num of pts"<<no_pts<<"\n";
     
     
         
@@ -36,7 +36,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
         assert(frame_iter!=input_feature_pts.end());
         double  centrx = 0.0;
         double  centry = 0.0;
-        vcl_vector<vsol_point_2d_sptr>::const_iterator  point_iter = frame_iter->begin() ;
+        std::vector<vsol_point_2d_sptr>::const_iterator  point_iter = frame_iter->begin() ;
         
         
         for (unsigned int j = 0; j<no_pts_tracked; j++)
@@ -57,7 +57,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
             meas_matrix[2*i][j] = (input_feature_pts[i][j]->x()) - centrx ;
             meas_matrix[(2*i)+1][j] = (input_feature_pts[i][j]->y() )  -centry ;
             point_iter++;
-          //  vcl_cout<< "x:  "<<meas_matrix[2*i][j]<< "y:  "<<meas_matrix[(2*i)+1][j]<<"      ";
+          //  std::cout<< "x:  "<<meas_matrix[2*i][j]<< "y:  "<<meas_matrix[(2*i)+1][j]<<"      ";
                 }
 
         frame_iter++;
@@ -68,7 +68,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
 
         vnl_svd<double> svd_decomp(meas_matrix);
         vnl_diag_matrix<double> SingValMat = svd_decomp.W();
-        vcl_cout<<"\nW="<<SingValMat<<"\n";
+        std::cout<<"\nW="<<SingValMat<<"\n";
         unsigned int n = no_pts;
         vnl_matrix<double> Vnx3 = svd_decomp.V().extract(n,3);
        // for (unsigned int i = 3; i<n; i++)
@@ -78,14 +78,14 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
         for (unsigned int m = 0; m<3; m++)
 
            
-            sigma_sqrt[m][m] = vcl_sqrt(SingValMat[m]);
-       vcl_cout<<sigma_sqrt<<"\n";
+            sigma_sqrt[m][m] = std::sqrt(SingValMat[m]);
+       std::cout<<sigma_sqrt<<"\n";
 
       //  vnl_matrix<double> world_pt_matrix = (Vnx3.transpose());
         vnl_matrix<double> world_pt_matrix = (sigma_sqrt)*(Vnx3.transpose());
     for (unsigned int i = 0; i<n ; i++) 
         world_points.push_back( new vsol_point_3d(world_pt_matrix[0][i] , world_pt_matrix[1][i] , world_pt_matrix[2][i]) );
-    vcl_ofstream vrml_f(vrml_f_name.c_str());
+    std::ofstream vrml_f(vrml_f_name.c_str());
     brct_algos::write_vrml_header(vrml_f);
     brct_algos::write_vrml_points(vrml_f, world_points);
  //   brct_algos::write_vrml_trailer(vrml_f);
@@ -94,7 +94,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
     vnl_matrix<double> VxVtr(n,n);
     VxVtr= Vnx3*(Vnx3.transpose());
     vnl_matrix<double> VxVtr_copy(VxVtr);
-    vcl_vector<vcl_pair<int,int > > permut;
+    std::vector<std::pair<int,int > > permut;
     vnl_matrix<double> dummy(1,1);
     vnl_matrix<double> test(4,4);
     test[0][0] = 3.0;
@@ -135,26 +135,26 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
 
      
    for (int m=0;  ((unsigned)m)<n; m++)
-       vcl_cout<<"mth in block sq mat: "<<m<<" idth in orig mat id[m]: " <<  id[m]<<"\t";
+       std::cout<<"mth in block sq mat: "<<m<<" idth in orig mat id[m]: " <<  id[m]<<"\t";
 
 //writing output to files
-   // vcl_cout<<"result is \n"<<VxVtr;
-   vcl_vector<vsol_point_3d_sptr> Q_matrix;
+   // std::cout<<"result is \n"<<VxVtr;
+   std::vector<vsol_point_3d_sptr> Q_matrix;
   
     for (unsigned int i = 0; i<n ; i++) 
         for (unsigned int j = 0; j<n ; j++) 
         Q_matrix.push_back( new vsol_point_3d(j , i, (VxVtr[i][j])*100.0) );
-    vcl_ofstream vrml_fQ((vrml_f_name+"_Q_.vrml").c_str());
+    std::ofstream vrml_fQ((vrml_f_name+"_Q_.vrml").c_str());
     brct_algos::write_vrml_header((vrml_fQ));
     brct_algos::write_vrml_points((vrml_fQ), Q_matrix);
     vrml_fQ.close();
     
-     vcl_vector<vsol_point_3d_sptr> Q_matrixsort;
+     std::vector<vsol_point_3d_sptr> Q_matrixsort;
     for (unsigned int i = 0; i<n ; i++) 
         for (unsigned int j = 0; j<n ; j++) 
         Q_matrixsort.push_back( new vsol_point_3d(j, i, 100.0*VxVtr_copy[i][j]));
 
-    vcl_ofstream vrml_fQsort((vrml_f_name+"_Q_sort.vrml").c_str());
+    std::ofstream vrml_fQsort((vrml_f_name+"_Q_sort.vrml").c_str());
     brct_algos::write_vrml_header((vrml_fQsort));
     brct_algos::write_vrml_points((vrml_fQsort), Q_matrixsort);
     vrml_fQsort.close();    
@@ -165,7 +165,7 @@ bfac_reconstructor::bfac_reconstructor( vcl_vector<vcl_vector<vsol_point_2d_sptr
 }
 
 
-vnl_matrix<double> bfac_reconstructor::matrix_block_segment(vnl_matrix<double> &Qwhole, vnl_matrix<double> &Qk, int iteration, vcl_vector<vcl_pair<int,int> > &permutations, int * ident)
+vnl_matrix<double> bfac_reconstructor::matrix_block_segment(vnl_matrix<double> &Qwhole, vnl_matrix<double> &Qk, int iteration, std::vector<std::pair<int,int> > &permutations, int * ident)
 {
 
 if (iteration==0)
@@ -209,8 +209,8 @@ else
                max_cost = cost;
                }
          }
-     permutations.push_back(vcl_pair<int,int> (k,max_index));
-     vcl_cout<<"Swap "<<k<<"  with "<<max_index<<" (starting from zero) \n";
+     permutations.push_back(std::pair<int,int> (k,max_index));
+     std::cout<<"Swap "<<k<<"  with "<<max_index<<" (starting from zero) \n";
      int temp_index;
      temp_index = ident[max_index];
      ident[max_index] = ident[k];
@@ -226,7 +226,7 @@ else
      Qwhole.set_row(k, temp);
      Qkp.set_row(k,temp);
 
-     //vcl_cout<<"Qkp in  iteration  "<<iteration<<"\n"<<Qkp;
+     //std::cout<<"Qkp in  iteration  "<<iteration<<"\n"<<Qkp;
      
      return matrix_block_segment(Qwhole, Qkp, iteration+1, permutations, ident);
      }
@@ -311,19 +311,19 @@ bfac_reconstructor::detect_blocks(vnl_matrix<double> &Qsorted)
 
 
     for (int i = 0; i<blocks.size(); i++)
-        vcl_cout<<i<<"th block     at  "<< blocks[i]<<"th feature"<<"\n";
+        std::cout<<i<<"th block     at  "<< blocks[i]<<"th feature"<<"\n";
     
 
     }
 
 
- vcl_vector<int>  bfac_reconstructor::get_blocks( )
+ std::vector<int>  bfac_reconstructor::get_blocks( )
     {
       return blocks;
     }
- vcl_vector <vsol_point_3d_sptr> bfac_reconstructor::get_reconst()
+ std::vector <vsol_point_3d_sptr> bfac_reconstructor::get_reconst()
  {
-     vcl_cout<<"vcl_vector <vsol_point_3d_sptr> bfac_reconstructor::get_reconst() TODO\n";
-     vcl_vector <vsol_point_3d_sptr> dummy;
+     std::cout<<"std::vector <vsol_point_3d_sptr> bfac_reconstructor::get_reconst() TODO\n";
+     std::vector <vsol_point_3d_sptr> dummy;
      return dummy;
  }

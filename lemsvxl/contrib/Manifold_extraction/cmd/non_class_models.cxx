@@ -6,40 +6,40 @@
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vehicle_model.h>
 #include <Lie_group_operations.h>
 #include <vsol/vsol_rectangle_2d_sptr.h>
 
-vcl_vector<vnl_matrix<double> >read_transformation_matrices(vcl_string trans_matrices_info,int num_matrices)
+std::vector<vnl_matrix<double> >read_transformation_matrices(std::string trans_matrices_info,int num_matrices)
     {
     int i;
-    vcl_vector<vnl_matrix<double> > transformation_matrices;
-    vcl_ifstream ifst(trans_matrices_info.c_str());
+    std::vector<vnl_matrix<double> > transformation_matrices;
+    std::ifstream ifst(trans_matrices_info.c_str());
 
     for (i = 0;i<num_matrices;i++)
         {
         vnl_matrix<double>TM(3,3,0.0);
         ifst >> TM;
-        vcl_cout << TM << vcl_endl;
+        std::cout << TM << std::endl;
         transformation_matrices.push_back(TM);
         }
     return transformation_matrices;
     }
 
-vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_models)
+std::vector<vehicle_model> read_models(std::string vehicle_model_info,int num_models)
     {
     int i,j,k;
     double x,y;
     char ch;
-    vcl_ifstream ifst(vehicle_model_info.c_str());
-    vcl_vector<vehicle_model> model_vec;
-    vcl_vector<vsol_rectangle_2d> box1,box2,box3;
+    std::ifstream ifst(vehicle_model_info.c_str());
+    std::vector<vehicle_model> model_vec;
+    std::vector<vsol_rectangle_2d> box1,box2,box3;
 
     vsol_point_2d p0,p1,p2,p3;
 
@@ -108,11 +108,11 @@ vcl_vector<vehicle_model> read_models(vcl_string vehicle_model_info,int num_mode
 
 int main(int argc,char **argv)
     {
-    vcl_string vehicle_model_info = argv[1];
-    vcl_string non_class_models = argv[2];
+    std::string vehicle_model_info = argv[1];
+    std::string non_class_models = argv[2];
     
 
-    vcl_ofstream non_class_models_info(non_class_models.c_str());
+    std::ofstream non_class_models_info(non_class_models.c_str());
 
     int i,num_models = 10;
 
@@ -124,10 +124,10 @@ int main(int argc,char **argv)
     vnl_matrix<double>g3(3,3,0.0);
 
     
-    vcl_vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
+    std::vector<vehicle_model> model_vec = read_models(vehicle_model_info,num_models);
 
     vehicle_model ref_model(model_vec[0].engine(),model_vec[0].body(),model_vec[0].rear());
-    vcl_vector<vnl_matrix<double> >G1_vec,G2_vec,G3_vec;
+    std::vector<vnl_matrix<double> >G1_vec,G2_vec,G3_vec;
 
     double tx,ty;
 
@@ -149,9 +149,9 @@ int main(int argc,char **argv)
         G3.put(1,2,G3.get(1,2)-ty);
 
        
-        non_class_models_info << G1 << vcl_endl;
-        non_class_models_info << G2 << vcl_endl;
-        non_class_models_info << G3 << vcl_endl;
+        non_class_models_info << G1 << std::endl;
+        non_class_models_info << G2 << std::endl;
+        non_class_models_info << G3 << std::endl;
 
         }
     return 0;

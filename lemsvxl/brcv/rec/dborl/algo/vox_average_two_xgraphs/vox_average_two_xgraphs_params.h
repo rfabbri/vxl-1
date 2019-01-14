@@ -29,31 +29,31 @@ class vox_average_two_xgraphs_params : public dborl_algo_params
 public:
 
   //: Constructor
-  vox_average_two_xgraphs_params(vcl_string algo_name);
+  vox_average_two_xgraphs_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
   //: Name of model to compare against
-  dborl_parameter<vcl_string> model_object_name_;
+  dborl_parameter<std::string> model_object_name_;
   
   //: Passes the folder of the model shock graph
-  dborl_parameter<vcl_string> model_object_dir_;    
+  dborl_parameter<std::string> model_object_dir_;    
 
   //: Name of query to compare against
-  dborl_parameter<vcl_string> query_object_name_;
+  dborl_parameter<std::string> query_object_name_;
   
   //: Passes the folder of the query shock graph
-  dborl_parameter<vcl_string> query_object_dir_;    
+  dborl_parameter<std::string> query_object_dir_;    
 
   
   // if written to this folder as opposed to object folder then the 
   // shock matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_average_xgraph_folder_;  
+  dborl_parameter<std::string> output_average_xgraph_folder_;  
 
   ////parameter for the index file
   ////Is a flat image database 
-  //dborl_parameter<vcl_string> index_filename_;
+  //dborl_parameter<std::string> index_filename_;
 
 
   // Process parameters

@@ -1,7 +1,7 @@
 // This is brl/brcv/rec/dbru/tests/test_osl.cxx
 #include <testlib/testlib_test.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
+#include <string>
+#include <iostream>
 #include <vpl/vpl.h>
 #include <vsl/vsl_binary_io.h>
 #include <vbl/vbl_array_1d.h>
@@ -40,29 +40,29 @@ static void test_osl(int argc, char* argv[])
     for(unsigned c = 0; c<cols; ++c)
       gimage(c,r) = r + c;
   vil_image_resource_sptr imgr = vil_new_image_resource_of_view(gimage);
-  vcl_cout << "created the image\n";
+  std::cout << "created the image\n";
   //Define a centered window
   vsol_point_2d_sptr p0 = new vsol_point_2d(10,10);
   vsol_point_2d_sptr p1 = new vsol_point_2d(20,10);
   vsol_point_2d_sptr p2 = new vsol_point_2d(20,20);
   vsol_point_2d_sptr p3 = new vsol_point_2d(10,20);
-  vcl_vector<vsol_point_2d_sptr> verts;
+  std::vector<vsol_point_2d_sptr> verts;
   verts.push_back(p0);   verts.push_back(p1);  verts.push_back(p2); 
   verts.push_back(p3); 
   vsol_polygon_2d_sptr poly2 = new vsol_polygon_2d(verts);
-  vcl_cout << "created the polygon\n";
-  vcl_vector<vsol_point_2d_sptr> verts2;
+  std::cout << "created the polygon\n";
+  std::vector<vsol_point_2d_sptr> verts2;
   verts2.push_back(p1); verts2.push_back(p3); verts2.push_back(p0);
   vsol_polygon_2d_sptr poly3 = new vsol_polygon_2d(verts2);
 
   dbinfo_observation_sptr obs = new dbinfo_observation(0, imgr, poly2, true, true, false);
   dbinfo_observation_sptr obs2 = new dbinfo_observation(0, imgr, poly3, true, true, false);
-  vcl_cout << "created the observation\n";
+  std::cout << "created the observation\n";
  //set the doc string
   obs->set_doc("An observation");
   obs2->set_doc("An observation222");
   // create an osl
-  vcl_vector<vcl_string> classes;
+  std::vector<std::string> classes;
 
   // test add_object
   dbru_object_sptr obj = new dbru_object(1000,0,0);
@@ -96,7 +96,7 @@ static void test_osl(int argc, char* argv[])
   //osl1->add_prototype("class2", obs);
   //TEST("dbru_osl::n_protos_in_class ", osl1->n_protos_in_class("class2"), 3);
   //TEST("dbru_osl::n_objects ", osl1->n_objects(), 3);
-  vcl_cout << *osl1 << '\n';
+  std::cout << *osl1 << '\n';
   
   //  Test Binary I/O
 
@@ -107,7 +107,7 @@ static void test_osl(int argc, char* argv[])
   vsl_b_ifstream bp_in3("test_obs_io.tmp");
   dbinfo_observation_sptr obs_in = new dbinfo_observation();
   obs_in->b_read(bp_in3);
-  vcl_cout << "Observation passed...\n";
+  std::cout << "Observation passed...\n";
 
   vsl_b_ofstream bp_out4("test_obj_io.tmp");
   obj2->b_write(bp_out4);
@@ -116,7 +116,7 @@ static void test_osl(int argc, char* argv[])
   vsl_b_ifstream bp_in4("test_obj_io.tmp");
   dbru_object_sptr obj_in = new dbru_object();
   obj_in->b_read(bp_in4);
-  vcl_cout << "Object passed...\n";
+  std::cout << "Object passed...\n";
   
 
   //Test writing the generic feature data pointer
@@ -126,14 +126,14 @@ static void test_osl(int argc, char* argv[])
   bp_out2.close();
 
   /*classes.push_back("class1");   classes.push_back("class2");
-  vcl_vector<vcl_vector<dbinfo_observation_sptr> > prototypes(2);
-  vcl_vector<dbinfo_observation_sptr> protos;
+  std::vector<std::vector<dbinfo_observation_sptr> > prototypes(2);
+  std::vector<dbinfo_observation_sptr> protos;
   protos.push_back(obs);
   prototypes[0]=protos;
   protos.push_back(obs);
   prototypes[1]=protos;
   dbru_osl_sptr osl = new dbru_osl(classes, prototypes);
-  vcl_cout << *osl << '\n';
+  std::cout << *osl << '\n';
   //  Test Binary I/O
   //Test writing the generic feature data pointer
   vsl_b_ofstream bp_out2("test_observation_io.tmp");
@@ -152,7 +152,7 @@ static void test_osl(int argc, char* argv[])
   vsl_b_read(bp_in2, *osl_in);
   bp_in2.close();
   if(osl_in)
-    vcl_cout << "recovered osl " << *osl_in << '\n';
+    std::cout << "recovered osl " << *osl_in << '\n';
 
   
   /*vpl_unlink ("test_osl_io.tmp");
@@ -161,14 +161,14 @@ static void test_osl(int argc, char* argv[])
       TEST("Binary read of osl  pointer failed ", true, false);
       return;
     }
-  vcl_vector<vcl_string> in_classes = osl_in->classes();
+  std::vector<std::string> in_classes = osl_in->classes();
   bool good = in_classes.size() == 2;
   if(good)
     good = in_classes[0]=="class1"&&in_classes[1]=="class2";
   TEST("Binary read of osl pointer ", good , true );
   //test remove prototype
   //osl_in->remove_prototype("class2", "An observation");
-  //vcl_vector<dbinfo_observation_sptr> protos2;
+  //std::vector<dbinfo_observation_sptr> protos2;
   //good = osl_in->prototypes("class2", protos2);
   //if(good)
   //  {

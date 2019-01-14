@@ -33,7 +33,7 @@ dbdet_temporal_curvature_velocity_model::dbdet_temporal_curvature_velocity_model
     double theta2=c2->ref_edgel->tangent;
     double x2=c2->ref_edgel->pt.x();
     double y2=c2->ref_edgel->pt.y();
-    if(vcl_fabs(theta2-theta1)<anglediff)
+    if(std::fabs(theta2-theta1)<anglediff)
     {
         dbdet_curve_model * m=c1->curve_model->intersect(c2->curve_model);
         if(m->bundle_is_valid())
@@ -44,16 +44,16 @@ dbdet_temporal_curvature_velocity_model::dbdet_temporal_curvature_velocity_model
 
             //: adding a covariance of 0.6 along the edge and 0.3 across the edge
             vnl_matrix_fixed<double,2,2> rmat(1);
-            rmat(0,0)=vcl_cos(theta2);
-            rmat(0,1)=-vcl_sin(theta2);
-            rmat(1,0)=vcl_sin(theta2);
-            rmat(1,1)=vcl_cos(theta2);
+            rmat(0,0)=std::cos(theta2);
+            rmat(0,1)=-std::sin(theta2);
+            rmat(1,0)=std::sin(theta2);
+            rmat(1,1)=std::cos(theta2);
 
             vnl_matrix_fixed<double,2,2> rmat_tpose(1);
-            rmat_tpose(0,0)=vcl_cos(theta2);
-            rmat_tpose(0,1)=vcl_sin(theta2);
-            rmat_tpose(1,0)=-vcl_sin(theta2);
-            rmat_tpose(1,1)=vcl_cos(theta2);
+            rmat_tpose(0,0)=std::cos(theta2);
+            rmat_tpose(0,1)=std::sin(theta2);
+            rmat_tpose(1,0)=-std::sin(theta2);
+            rmat_tpose(1,1)=std::cos(theta2);
 
             covar_=rmat_tpose*covar_*rmat;
             isvalid_=true;
@@ -99,7 +99,7 @@ dbdet_temporal_curvature_velocity_model::sqr_mahalanobis_dist(vnl_vector_fixed<d
 void
 dbdet_temporal_curvature_velocity_model::print_model()
 {
-vcl_cout<<" V0x= "<<mean_[0]<<" V0y= "<<mean_[1];//<<" k = "<<kmean <<" ksig= "<<ksig<<"";
+std::cout<<" V0x= "<<mean_[0]<<" V0y= "<<mean_[1];//<<" k = "<<kmean <<" ksig= "<<ksig<<"";
 }
 
 dbdet_temporal_curvature_velocity_model * intersect(dbdet_temporal_curvature_velocity_model & m1,dbdet_temporal_curvature_velocity_model & m2)
@@ -141,12 +141,12 @@ dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(dbdet
     
     if(t>0) 
     {
-        t_pos_infinity=beta/vcl_fabs(beta)*100000;
+        t_pos_infinity=beta/std::fabs(beta)*100000;
         t_neg_infinity=-t_pos_infinity;
     }
     else
     {
-        t_neg_infinity=beta/vcl_fabs(beta)*100000;
+        t_neg_infinity=beta/std::fabs(beta)*100000;
         t_pos_infinity=-t_neg_infinity;
     }
    
@@ -162,9 +162,9 @@ dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(doubl
     ref_curvelet=refc;
     isvalid_=false;
     iscomputed_=false;
-    if(vcl_fabs(b0)<vmax)
+    if(std::fabs(b0)<vmax)
     {
-    float v_wmax=vcl_sqrt(vmax*vmax-b0*b0);
+    float v_wmax=std::sqrt(vmax*vmax-b0*b0);
     if(dbdet_CC_curve_model_3d * ccmodel=dynamic_cast<dbdet_CC_curve_model_3d *> (ref_curvelet->curve_model))
     {    
         k=ccmodel->k;
@@ -173,7 +173,7 @@ dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(doubl
     tangent=ref_curvelet->ref_edgel->tangent;
 
     //: case when k nears zero
-    if(vcl_fabs(k)<0.05)
+    if(std::fabs(k)<0.05)
     {
         w1=w2=0;
         dw=v_wmax;
@@ -188,35 +188,35 @@ dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(doubl
     float wmin=0;
     if(bt<0 && k<0)
     {
-        btmax=vcl_min<float>(0,bt+dbt);
+        btmax=std::min<float>(0,bt+dbt);
         btmin=bt-dbt;
         isvalid_=true;
     }
     else if (bt>0 && k>0)
     {
-        btmin=vcl_max<float>(0,bt-dbt);
+        btmin=std::max<float>(0,bt-dbt);
         btmax=bt+dbt;
         isvalid_=true;
     }
     else if (bt>0 && k<0)
     {
         btmax=0;
-        btmin=vcl_min<float>(0,bt-dbt);
+        btmin=std::min<float>(0,bt-dbt);
         if(btmin<0)
             isvalid_=true;
     }   
     else if (bt<0 && k>0)
     {
         btmin=0;
-        btmax=vcl_max<float>(0,bt+dbt);
+        btmax=std::max<float>(0,bt+dbt);
         if(btmax>0)
             isvalid_=true;
     }
     
     if(isvalid_)
     {
-        wmax=vcl_max(vcl_min<float>(vcl_sqrt(btmax/k),v_wmax),vcl_max<float>(vcl_sqrt(btmin/k),-v_wmax));
-        wmin=vcl_min(vcl_min<float>(vcl_sqrt(btmax/k),v_wmax),vcl_max<float>(vcl_sqrt(btmin/k),-v_wmax));
+        wmax=std::max(std::min<float>(std::sqrt(btmax/k),v_wmax),std::max<float>(std::sqrt(btmin/k),-v_wmax));
+        wmin=std::min(std::min<float>(std::sqrt(btmax/k),v_wmax),std::max<float>(std::sqrt(btmin/k),-v_wmax));
 
         w1=(wmax+wmin)/2;
         w2=-w1;
@@ -237,16 +237,16 @@ betas[t]=beta;///t;
     
     if(t>0) 
     {
-        t_pos_infinity=beta/vcl_fabs(beta)*100000;
+        t_pos_infinity=beta/std::fabs(beta)*100000;
         t_neg_infinity=-t_pos_infinity;
     }
     else
     {
-        t_neg_infinity=beta/vcl_fabs(beta)*100000;
+        t_neg_infinity=beta/std::fabs(beta)*100000;
         t_pos_infinity=-t_neg_infinity;
     }
 }
-dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(dbdet_curvelet * refc, vcl_map<int,double> betamap,vcl_map<int,dbdet_curvelet*> cmap)
+dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(dbdet_curvelet * refc, std::map<int,double> betamap,std::map<int,dbdet_curvelet*> cmap)
 {
     ref_curvelet=refc;
     betas=betamap;
@@ -256,7 +256,7 @@ dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model(dbdet
     //    compute_w();
 
 }
-dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model( vcl_map<int,double> betamap)
+dbdet_temporal_normal_velocity_model::dbdet_temporal_normal_velocity_model( std::map<int,double> betamap)
 {
     betas=betamap;
     compute_betas();
@@ -281,8 +281,8 @@ dbdet_temporal_normal_velocity_model::is_model_intersect(dbdet_temporal_model * 
     {
         if(cvmodel->ref_curvelet==ref_curvelet)
         {
-            vcl_map<int,double>::iterator b_ref_iter;
-            vcl_map<int,double>::iterator b_iter;
+            std::map<int,double>::iterator b_ref_iter;
+            std::map<int,double>::iterator b_iter;
             bool flag=true;
             for(b_iter=cvmodel->betas.begin();b_iter!=cvmodel->betas.end();b_iter++)
             {
@@ -327,7 +327,7 @@ dbdet_temporal_normal_velocity_model::is_model_intersect(dbdet_temporal_model * 
 double
 dbdet_temporal_normal_velocity_model::avg_beta()
 {
-    vcl_map<int,double>::iterator iter=betas.begin();
+    std::map<int,double>::iterator iter=betas.begin();
     double avg=0.0;
     for(;iter!=betas.end();iter++)
     {
@@ -344,7 +344,7 @@ dbdet_temporal_normal_velocity_model::compute_betas()
     vnl_vector<double> be(betas.size());
 
     vnl_matrix<double> A(betas.size(),3);
-        vcl_map<int,double>::iterator  iter;
+        std::map<int,double>::iterator  iter;
     int cnt;
     for(iter=betas.begin(), cnt=0;iter!=betas.end();iter++,cnt++)
     {
@@ -368,7 +368,7 @@ dbdet_temporal_normal_velocity_model::compute_betas()
     }
 
     
-    //vcl_cout<<"solution of "<<A << " is " << M.nullvector();
+    //std::cout<<"solution of "<<A << " is " << M.nullvector();
     //vnl_vector<double> x(betas.size());
     //int cnt=0;
     //unsigned pivot=1000;
@@ -400,9 +400,9 @@ dbdet_temporal_normal_velocity_model::compute_beta_s(dbdet_temporal_normal_veloc
     double x0=ref_curvelet->ref_edgel->pt.x();
     double y0=ref_curvelet->ref_edgel->pt.y();
 
-    double s =vcl_sqrt((xn-x0)*(xn-x0)+(yn-y0)*(yn-y0));
+    double s =std::sqrt((xn-x0)*(xn-x0)+(yn-y0)*(yn-y0));
     if(s>=0.3){
-        if((xn-x0)*vcl_cos(ref_curvelet->ref_edgel->tangent)+(yn-y0)*vcl_sin(ref_curvelet->ref_edgel->tangent)>0)
+        if((xn-x0)*std::cos(ref_curvelet->ref_edgel->tangent)+(yn-y0)*std::sin(ref_curvelet->ref_edgel->tangent)>0)
             bs=(bn-b0)/s;
         else
             bs=(b0-bn)/s;
@@ -418,14 +418,14 @@ dbdet_temporal_normal_velocity_model::compute_beta_s(dbdet_temporal_normal_veloc
 bool dbdet_temporal_normal_velocity_model::compute_one_paramter_V()
 {  
     
-    //if(vcl_fabs(k)<0.005 || bt/k<0)
+    //if(std::fabs(k)<0.005 || bt/k<0)
     //{
     //    isvalid_=false;
     //    return false;
     //}
 
-    //w1=vcl_sqrt(bt/k);
-    //w2=-vcl_sqrt(bt/k);
+    //w1=std::sqrt(bt/k);
+    //w2=-std::sqrt(bt/k);
 
     double uc=160;
     double vc=120;
@@ -435,17 +435,17 @@ bool dbdet_temporal_normal_velocity_model::compute_one_paramter_V()
     double gx=(ref_curvelet->ref_edgel->pt.x()-uc)/s;
     double gy=(ref_curvelet->ref_edgel->pt.y()-vc)/s;
     
-    double r=2*vcl_sqrt(gx*gx+gy*gy);
+    double r=2*std::sqrt(gx*gx+gy*gy);
     double theta=ref_curvelet->ref_edgel->tangent;
 
     vnl_vector<float> g(3);
     g[0]=gx;g[1]=gy;g[2]=1;
 
     vnl_vector<float>  t(3);
-    t[0]=vcl_cos(tangent);t[1]=vcl_sin(tangent);t[2]=0;
+    t[0]=std::cos(tangent);t[1]=std::sin(tangent);t[2]=0;
 
     vnl_vector<float>  n(3);
-    n[0]=-vcl_sin(tangent);n[1]= vcl_cos(tangent);n[2]=0;
+    n[0]=-std::sin(tangent);n[1]= std::cos(tangent);n[2]=0;
 
     vnl_vector<float> gt1=w1*t+b0*n;
     vnl_vector<float> gt2=w2*t+b0*n;
@@ -515,7 +515,7 @@ bool dbdet_temporal_normal_velocity_model::compute_one_paramter_V()
     v1_2=Vs.get_column(1);
 
     //: getting the range on free paramter 
-    double psi=vcl_atan2(dot_product<float>(dtau,v1_1),dot_product<float>(dtau,v1_2));
+    double psi=std::atan2(dot_product<float>(dtau,v1_1),dot_product<float>(dtau,v1_2));
 
     if(b0>=0.2)
     {
@@ -577,7 +577,7 @@ bool dbdet_temporal_normal_velocity_model::compute_one_paramter_V()
 
     v2_1=Vs.get_column(0);
     v2_2=Vs.get_column(1);
-    psi=vcl_atan2(dot_product<float>(dtau,v2_1),dot_product<float>(dtau,v2_2));
+    psi=std::atan2(dot_product<float>(dtau,v2_1),dot_product<float>(dtau,v2_2));
 
     if(b0>=0.2)
     {
@@ -603,7 +603,7 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
 
     for(float phi1=phi1_min;phi1<=phi1_max;)
     {
-        vnl_vector<float> Vmean=v1_1*vcl_cos(phi1)+v1_2*vcl_sin(phi1);
+        vnl_vector<float> Vmean=v1_1*std::cos(phi1)+v1_2*std::sin(phi1);
 
 
         double theta_mean, phi_mean,r ;
@@ -613,9 +613,9 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
         f1t.push_back(theta_mean/vnl_math::pi_over_2);
         f1p.push_back(phi_mean/vnl_math::pi);
 
-        vnl_matrix<float> Vcov=vcl_cos(phi1)*vcl_cos(phi1)*v1_1v1_1
-                                +vcl_sin(phi1)*vcl_sin(phi1)*v1_2v1_2
-                                +2*vcl_cos(phi1)*vcl_sin(phi1)*v1_1v1_2;
+        vnl_matrix<float> Vcov=std::cos(phi1)*std::cos(phi1)*v1_1v1_1
+                                +std::sin(phi1)*std::sin(phi1)*v1_2v1_2
+                                +2*std::cos(phi1)*std::sin(phi1)*v1_1v1_2;
         vnl_vector<float> lambdas(3);
         vnl_matrix<float> Vs(3,3);
 
@@ -627,7 +627,7 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
     }
     for(float phi1=phi2_min;phi1<=phi2_max;)
     {
-        vnl_vector<float> Vmean=v2_1*vcl_cos(phi1)+v2_2*vcl_sin(phi1);
+        vnl_vector<float> Vmean=v2_1*std::cos(phi1)+v2_2*std::sin(phi1);
 
 
         double theta_mean, phi_mean,r ;
@@ -637,9 +637,9 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
         f2t.push_back(theta_mean/vnl_math::pi_over_2);
         f2p.push_back(phi_mean/vnl_math::pi);
 
-        vnl_matrix<float> Vcov=vcl_cos(phi1)*vcl_cos(phi1)*v2_1v2_1
-                                +vcl_sin(phi1)*vcl_sin(phi1)*v2_2v2_2
-                                +2*vcl_cos(phi1)*vcl_sin(phi1)*v2_1v2_2;
+        vnl_matrix<float> Vcov=std::cos(phi1)*std::cos(phi1)*v2_1v2_1
+                                +std::sin(phi1)*std::sin(phi1)*v2_2v2_2
+                                +2*std::cos(phi1)*std::sin(phi1)*v2_1v2_2;
         vnl_vector<float> lambdas(3);
         vnl_matrix<float> Vs(3,3);
 
@@ -651,9 +651,9 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
     }
     //    for(float phi1=0;phi1<=2*vnl_math::pi;)
     //{
-    //    vnl_vector<float> Vmean=v2_1*vcl_cos(phi1)+v2_2*vcl_sin(phi1);
+    //    vnl_vector<float> Vmean=v2_1*std::cos(phi1)+v2_2*std::sin(phi1);
 
-    //    double theta_mean=asin(vcl_fabs(Vmean(2)));
+    //    double theta_mean=asin(std::fabs(Vmean(2)));
     //    double phi_mean=atan2(Vmean(1),Vmean(0));
     //    if(phi_mean<0)
     //        phi_mean+=vnl_math::pi;
@@ -661,9 +661,9 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
     //    f2t.push_back(theta_mean/vnl_math::pi_over_2);
     //    f2p.push_back(phi_mean/vnl_math::pi);
 
-    //    vnl_matrix<float> Vcov=vcl_cos(phi1)*vcl_cos(phi1)*v2_1v2_1
-    //                            +vcl_sin(phi1)*vcl_sin(phi1)*v2_2v2_2
-    //                            +2*vcl_cos(phi1)*vcl_sin(phi1)*v2_1v2_2;
+    //    vnl_matrix<float> Vcov=std::cos(phi1)*std::cos(phi1)*v2_1v2_1
+    //                            +std::sin(phi1)*std::sin(phi1)*v2_2v2_2
+    //                            +2*std::cos(phi1)*std::sin(phi1)*v2_1v2_2;
     //    vnl_vector<float> lambdas(3);
     //    vnl_matrix<float> Vs(3,3);
 
@@ -675,9 +675,9 @@ void dbdet_temporal_normal_velocity_model::compute_2d_map()
     //        for(float phi=0;phi<=vnl_math::pi;)
     //        {
     //            vnl_vector<float> Vtest(3);
-    //            Vtest[0]=vcl_cos(theta)*vcl_cos(phi);
-    //            Vtest[1]=vcl_cos(theta)*vcl_sin(phi);
-    //            Vtest[2]=vcl_sin(theta);
+    //            Vtest[0]=std::cos(theta)*std::cos(phi);
+    //            Vtest[1]=std::cos(theta)*std::sin(phi);
+    //            Vtest[2]=std::sin(theta);
 
     //            if(dot_product(Vtest-Vmean,Vs.get_column(2))*dot_product(Vtest-Vmean,Vs.get_column(2))/(2*lambdas(2)*lambdas(2))<2)
     //            {
@@ -698,8 +698,8 @@ intersect(dbdet_temporal_normal_velocity_model * m1,dbdet_temporal_normal_veloci
     if(m1->is_model_intersect(m2,0.5))
     {
 
-        vcl_map<int,double> bmap=m1->betas;
-        vcl_map<int,double>::iterator iter=m2->betas.begin();
+        std::map<int,double> bmap=m1->betas;
+        std::map<int,double>::iterator iter=m2->betas.begin();
         for(;iter!=m2->betas.end();iter++)
             bmap[iter->first]=iter->second;
 
@@ -717,12 +717,12 @@ intersect(dbdet_temporal_normal_velocity_model * m1,dbdet_temporal_normal_veloci
 void
 dbdet_temporal_normal_velocity_model::print_model()
 {
-    vcl_map<int,double>::iterator iter=betas.begin();
+    std::map<int,double>::iterator iter=betas.begin();
     for(;iter!=betas.end();iter++)
-        vcl_cout<<iter->first<<" "<<iter->second<<"\n";
+        std::cout<<iter->first<<" "<<iter->second<<"\n";
 
-    double tx=vcl_cos(ref_curvelet->ref_edgel->tangent);
-    double ty=vcl_sin(ref_curvelet->ref_edgel->tangent);
+    double tx=std::cos(ref_curvelet->ref_edgel->tangent);
+    double ty=std::sin(ref_curvelet->ref_edgel->tangent);
 
     double nx=-ty;
     double ny=tx;
@@ -733,12 +733,12 @@ dbdet_temporal_normal_velocity_model::print_model()
     double yty1=w1*ty+b0*ny;
     double yty2=w2*ty+b0*ny;
 
-    vcl_cout<<ref_curvelet->ref_edgel->pt<<" "<<"["<<tx<<","<<ty<<"]"<<"["<<"["<<ytx1<<","<<yty1<<"]"<<"["<<ytx2<<","<<yty2<<"]";
-    vcl_cout<<"beta ="<<b0<<" bs="<<bs<<" beta_t ="<<bt<<" K= "<<k<<" dk="<<dk<<" w1=" <<w1<<" w2 =" <<w2<<" dw= "<<dw<<"\n";
+    std::cout<<ref_curvelet->ref_edgel->pt<<" "<<"["<<tx<<","<<ty<<"]"<<"["<<"["<<ytx1<<","<<yty1<<"]"<<"["<<ytx2<<","<<yty2<<"]";
+    std::cout<<"beta ="<<b0<<" bs="<<bs<<" beta_t ="<<bt<<" K= "<<k<<" dk="<<dk<<" w1=" <<w1<<" w2 =" <<w2<<" dw= "<<dw<<"\n";
     
     //for(unsigned i=0;i<2;i++)
-    //    vcl_cout<<"( "<<a[i]<<","<<b[i]<< ","<<c[i]<<") ";
-    vcl_cout<<")\n";
+    //    std::cout<<"( "<<a[i]<<","<<b[i]<< ","<<c[i]<<") ";
+    std::cout<<")\n";
 
 
 
@@ -766,8 +766,8 @@ dbdet_temporal_normal_velocity_model::compute_intersection(dbdet_curvelet * refc
         else
             return false;
 
-        double n1x=-vcl_sin(theta1);
-        double n1y=vcl_cos(theta1);
+        double n1x=-std::sin(theta1);
+        double n1y=std::cos(theta1);
 
         double x2=c->ref_edgel->pt.x();
         double y2=c->ref_edgel->pt.y();
@@ -790,28 +790,28 @@ dbdet_temporal_normal_velocity_model::compute_intersection(dbdet_curvelet * refc
             return false;
 
         //: TODO get a reasonable value.
-        if(vcl_fabs(k1-k2)>vcl_fabs(k1))
+        if(std::fabs(k1-k2)>std::fabs(k1))
             return false;
 
-        double theta_t=vcl_fmod(vcl_fabs(theta1-theta2),(2*vnl_math::pi));
+        double theta_t=std::fmod(std::fabs(theta1-theta2),(2*vnl_math::pi));
         double lb=1;
         if(theta_t>lb)
             return false;
 
-        double n2x=-vcl_sin(theta2);
-        double n2y=vcl_cos(theta2);
+        double n2x=-std::sin(theta2);
+        double n2y=std::cos(theta2);
 
-        double t2x=vcl_cos(theta2);
-        double t2y=vcl_sin(theta2);
+        double t2x=std::cos(theta2);
+        double t2y=std::sin(theta2);
 
-        if(vcl_fabs(k2)>0.001 )
+        if(std::fabs(k2)>0.001 )
         {
-            double s1= (-(n1y*t2x-n1x*t2y)+vcl_sqrt((n1y*t2x-n1x*t2y)*(n1y*t2x-n1x*t2y)+2*k2*(n1y*n2x-n1x*n2y)*(n1y*(x1-x2)-n1x*(y1-y2))))/(k2*(n1y*n2x-n1x*n2y));
-            double s2= (-(n1y*t2x-n1x*t2y)-vcl_sqrt((n1y*t2x-n1x*t2y)*(n1y*t2x-n1x*t2y)+2*k2*(n1y*n2x-n1x*n2y)*(n1y*(x1-x2)-n1x*(y1-y2))))/(k2*(n1y*n2x-n1x*n2y));
+            double s1= (-(n1y*t2x-n1x*t2y)+std::sqrt((n1y*t2x-n1x*t2y)*(n1y*t2x-n1x*t2y)+2*k2*(n1y*n2x-n1x*n2y)*(n1y*(x1-x2)-n1x*(y1-y2))))/(k2*(n1y*n2x-n1x*n2y));
+            double s2= (-(n1y*t2x-n1x*t2y)-std::sqrt((n1y*t2x-n1x*t2y)*(n1y*t2x-n1x*t2y)+2*k2*(n1y*n2x-n1x*n2y)*(n1y*(x1-x2)-n1x*(y1-y2))))/(k2*(n1y*n2x-n1x*n2y));
 
             if(s1>-s2min && s1<s2max)
             {
-                if(vcl_fabs(n1x)>0.5)
+                if(std::fabs(n1x)>0.5)
                     beta=(x2-x1 +t2x*s1+0.5*k2*n2x*s1*s1)/n1x;
                 else    
                     beta=(y2-y1 +t2y*s1+0.5*k2*n2y*s1*s1)/n1y;
@@ -819,7 +819,7 @@ dbdet_temporal_normal_velocity_model::compute_intersection(dbdet_curvelet * refc
             }
             else if(s2>-s2min && s2<s2max)
             {
-                if(vcl_fabs(n1x)>0.5)
+                if(std::fabs(n1x)>0.5)
                     beta=(x2-x1 +t2x*s2+0.5*k2*n2x*s2*s2)/n1x;
                 else    
                     beta=(y2-y1 +t2y*s2+0.5*k2*n2y*s2*s2)/n1y;
@@ -833,7 +833,7 @@ dbdet_temporal_normal_velocity_model::compute_intersection(dbdet_curvelet * refc
             double s=(n1y*(x1-x2)-n1x*(y1-y2))/(n1y*t2x-n1x*t2y);
             if(s>-s2min && 2<s2max)
             {
-            if(vcl_fabs(n1x)>0.5)
+            if(std::fabs(n1x)>0.5)
                 beta=(x2-x1+t2x*s)/n1x;
             else    
                 beta=(y2-y1+t2y*s)/n1y;
@@ -882,7 +882,7 @@ bool dbdet_3D_velocity_model::increment(float theta, float phi)
 
 void dbdet_3D_velocity_model::print()
 {
-    vcl_cout<<"\n"<<theta_phi_hist<<"\n";
+    std::cout<<"\n"<<theta_phi_hist<<"\n";
 }
 
 
@@ -897,14 +897,14 @@ vnl_vector<float>
 dbdet_second_order_velocity_model::compute_V_by_rho(dbdet_edgel* e,float s,double alpha)
 {
     float vmax=4.00;
-    float tx=vcl_cos(e->tangent);
-    float ty=vcl_sin(e->tangent);
+    float tx=std::cos(e->tangent);
+    float ty=std::sin(e->tangent);
     float x=(e->pt.x()-160)/s;
     float y=(e->pt.y()-120)/s;
 
-    double w=-b_/vcl_tan(e->tangent);
+    double w=-b_/std::tan(e->tangent);
 
-    if(vcl_fabs(w)>vmax)
+    if(std::fabs(w)>vmax)
         w=vmax;
     float r=(2*w*bs_+bt_+w*w*k_);
 
@@ -928,14 +928,14 @@ double dbdet_second_order_velocity_model::alphat(double alpha)
 }
 void dbdet_second_order_velocity_model::print_model()
 {
-    vcl_cout<<"(b="<<b_<<",k="<<k_<<",bt="<<bt_<<",bs_="<<bs_<<")";
+    std::cout<<"(b="<<b_<<",k="<<k_<<",bt="<<bt_<<",bs_="<<bs_<<")";
 }
 dbdet_spherical_histogram_sptr
 dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
 {
     vmax=4.00;
-    float tx=vcl_cos(e->tangent);
-    float ty=vcl_sin(e->tangent);
+    float tx=std::cos(e->tangent);
+    float ty=std::sin(e->tangent);
     vbl_array_2d<float> votes(21,21);
     votes.fill(0);
     dbdet_spherical_histogram_sptr hist_sphere=new dbdet_spherical_histogram() ;
@@ -949,10 +949,10 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
     ut[0]=-ty;ut[1]=tx;ut[2]=x*ty-y*tx;
     un[0]=-tx;un[1]=-ty;un[2]=x*tx+y*ty;
 
-    if( vcl_fabs(b_)>vmax)
+    if( std::fabs(b_)>vmax)
         return hist_sphere;
 
-    if(vcl_fabs(b_)<0.3)
+    if(std::fabs(b_)<0.3)
     {
         vnl_vector<float> ut_v(ut,3);
         vnl_matrix<float> D1=outer_product(ut_v,ut_v);
@@ -969,16 +969,16 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
         for(float psi=0;psi<2*vnl_math::pi;)
         {
 
-            float a1=v1(1)*vcl_cos(psi)+v2(1)*vcl_sin(psi);
-            float a2=v1(0)*vcl_cos(psi)+v2(0)*vcl_sin(psi);
-            float a3=v1(2)*vcl_cos(psi)+v2(2)*vcl_sin(psi);
+            float a1=v1(1)*std::cos(psi)+v2(1)*std::sin(psi);
+            float a2=v1(0)*std::cos(psi)+v2(0)*std::sin(psi);
+            float a3=v1(2)*std::cos(psi)+v2(2)*std::sin(psi);
 
-            float phi=vcl_atan2(a1,a2);
-            float theta=vcl_atan(a3/vcl_sqrt(a1*a1+a2*a2));
+            float phi=std::atan2(a1,a2);
+            float theta=std::atan(a3/std::sqrt(a1*a1+a2*a2));
             psi+=0.2;
 
-            int index_j=vcl_floor(20*(theta-theta_min)/vnl_math::pi);
-            int index_i=vcl_floor(20*(phi-phi_min)/(2*vnl_math::pi));
+            int index_j=std::floor(20*(theta-theta_min)/vnl_math::pi);
+            int index_i=std::floor(20*(phi-phi_min)/(2*vnl_math::pi));
             hist_sphere->update(theta,phi);
             //votes(index_i,index_j)=1;
         }
@@ -987,13 +987,13 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
     }
     else
     {
-        float wmax=vcl_sqrt(vmax*vmax-b_*b_);
+        float wmax=std::sqrt(vmax*vmax-b_*b_);
 
         float dbs2=0.1*0.1;
         float dk2=0.05*0.05;
         float dbt2=0.1*0.1;
 
-        float d=vcl_sqrt(x*x+y*y);
+        float d=std::sqrt(x*x+y*y);
         //: TODO also need to consider the case b=0;
         for(float w=-wmax;w<=wmax;)
         {
@@ -1001,27 +1001,27 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
             float m1=(2*b_/s*(w*ty+b_*tx)-r*y);
             float m2=(2*b_/s*(w*tx-b_*ty)-r*x);
             //: FIX the computation of dr.
-            float dr=vcl_sqrt(4*w*w*dbs2+dbt2+w*w*w*w*dk2);
-            float mag=vcl_sqrt(m1*m1+m2*m2);
+            float dr=std::sqrt(4*w*w*dbs2+dbt2+w*w*w*w*dk2);
+            float mag=std::sqrt(m1*m1+m2*m2);
 
-            float theta=vcl_atan(r/mag);
-            float phi=vcl_atan2(b_*m1,b_*m2);
+            float theta=std::atan(r/mag);
+            float phi=std::atan2(b_*m1,b_*m2);
 
-            float vx=vcl_cos(theta)*vcl_cos(phi);
-            float vy=vcl_cos(theta)*vcl_sin(phi);
-            float vz=vcl_sin(theta);
+            float vx=std::cos(theta)*std::cos(phi);
+            float vy=std::cos(theta)*std::sin(phi);
+            float vz=std::sin(theta);
 
 
             if((vx*ut[0]+vy*ut[1]+vz*ut[2])/b_>0)
             {
-                float theta_r=vcl_cos(theta)/mag*(vcl_cos(theta)+vcl_sin(theta)*(y*vcl_sin(phi)+x*vcl_cos(phi)));
-                float phi_r=(x*vcl_sin(phi)-y*vcl_cos(phi))/mag;
+                float theta_r=std::cos(theta)/mag*(std::cos(theta)+std::sin(theta)*(y*std::sin(phi)+x*std::cos(phi)));
+                float phi_r=(x*std::sin(phi)-y*std::cos(phi))/mag;
 
-                float sig_theta=vcl_min(vcl_fabs(theta_r*dr)/(2*d),(float)vnl_math::pi_over_2);
-                float sig_phi=vcl_min(vcl_fabs(phi_r*dr),(float)vnl_math::pi);
+                float sig_theta=std::min(std::fabs(theta_r*dr)/(2*d),(float)vnl_math::pi_over_2);
+                float sig_phi=std::min(std::fabs(phi_r*dr),(float)vnl_math::pi);
 
-                int index_j=vcl_floor(20*(theta-theta_min)/vnl_math::pi);
-                int index_i=vcl_floor(20*(phi-phi_min)/(2*vnl_math::pi));
+                int index_j=std::floor(20*(theta-theta_min)/vnl_math::pi);
+                int index_i=std::floor(20*(phi-phi_min)/(2*vnl_math::pi));
                 hist_sphere->update(theta,phi);
 
                 if(votes(index_i,index_j)==0)
@@ -1033,24 +1033,24 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
                     //    if(sigt>theta_min && sigt<(theta_min+vnl_math::pi))
                     //    {
 
-                    //        int index_j=vcl_floor(20*(sigt-theta_min)/vnl_math::pi);
+                    //        int index_j=std::floor(20*(sigt-theta_min)/vnl_math::pi);
 
                     //        for(float sigp=phi-sig_phi;sigp<=phi+sig_phi;)
                     //        {
                     //            //: mod here is not correct
                     //            if(sigp>phi_min && sigp<(phi_min+2*vnl_math::pi))
                     //            {
-                    //                int index_i=vcl_floor(20*(vcl_fmod(sigp,(float)vnl_math::pi)-phi_min)/(2*vnl_math::pi));
-                    //                float vx1=vcl_cos(sigt)*vcl_cos(sigp);
-                    //                float vy1=vcl_cos(sigt)*vcl_sin(sigp);
-                    //                float vz1=vcl_sin(sigt);
+                    //                int index_i=std::floor(20*(std::fmod(sigp,(float)vnl_math::pi)-phi_min)/(2*vnl_math::pi));
+                    //                float vx1=std::cos(sigt)*std::cos(sigp);
+                    //                float vy1=std::cos(sigt)*std::sin(sigp);
+                    //                float vz1=std::sin(sigt);
 
                     //                if((vx1*ut[0]+vy1*ut[1]+vz1*ut[2])/b_>0)
                     //                {
                     //                    float r=-(vx1*un[0]+vy1*un[1]+vz1*un[2])/(vx1*ut[0]+vy1*ut[1]+vz1*ut[2]);
 
                     //                    float w=r*b_;
-                    //                    if(vcl_fabs(w)<wmax && votes(index_i,index_j)==0)
+                    //                    if(std::fabs(w)<wmax && votes(index_i,index_j)==0)
                     //                    {                            
                     //                        //hist_sphere->update(sigt,sigp);
                     //                        //votes(index_i,index_j)++;
@@ -1078,8 +1078,8 @@ dbdet_second_order_velocity_model::computeV(dbdet_edgel* e,float s, float vmax)
                 votes(i,j)/=sum;
         }
     }
-    //vcl_cout<<"\n";
-    //vcl_cout<<votes;
+    //std::cout<<"\n";
+    //std::cout<<votes;
     
     //hist_sphere.print();
     return hist_sphere;

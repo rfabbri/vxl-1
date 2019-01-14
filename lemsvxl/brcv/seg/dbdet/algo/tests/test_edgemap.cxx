@@ -17,12 +17,12 @@
 
 #include <vdgl/vdgl_edgel.h>
 
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cmath>
 #include <vnl/vnl_math.h>
-#include <vcl_vector.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
+#include <vector>
+#include <cstdlib>
+#include <string>
 
 MAIN( test_edgemap )
 { 
@@ -32,9 +32,9 @@ MAIN( test_edgemap )
   //*******************************************************
   START (" Compare VXL third-order output edgemap with dbdet");
 
-  vcl_string root = testlib_root_dir();
-  vcl_string image_path = root + "/contrib/brl/bseg/sdet/tests/jar-closeup.tif";
-  vcl_cout << "Loading Image " << image_path << '\n';
+  std::string root = testlib_root_dir();
+  std::string image_path = root + "/contrib/brl/bseg/sdet/tests/jar-closeup.tif";
+  std::cout << "Loading Image " << image_path << '\n';
   vil_image_view<vxl_byte> img_grey = vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()));
 
   /////// Default Params ////////
@@ -56,7 +56,7 @@ MAIN( test_edgemap )
   sdet_third_order_edge_det_params my_params(sigma, thresh, N, parabola_fit, grad_op, conv_algo, adapt_thresh);
   sdet_third_order_edge_det my_det(my_params);
   my_det.apply(img_grey);
-  vcl_vector<vdgl_edgel>& my_edgels = my_det.edgels();
+  std::vector<vdgl_edgel>& my_edgels = my_det.edgels();
 
   //Convert the edge vector to compatible edge map
   dbdet_edgemap_sptr vxl_map;
@@ -68,11 +68,11 @@ MAIN( test_edgemap )
   }
 
   TEST("Num edges", lems_map->num_edgels() == vxl_map->num_edgels(), true);
-  vcl_cout << "  Num edges: (lems) = " << lems_map->num_edgels() << " , (vxl) = " << vxl_map->num_edgels() << "\n\n";
+  std::cout << "  Num edges: (lems) = " << lems_map->num_edgels() << " , (vxl) = " << vxl_map->num_edgels() << "\n\n";
 
   TEST("Size(W)", lems_map->width() == vxl_map->width(), true);
   TEST("Size(H)", lems_map->height() == vxl_map->height(), true);
-  vcl_cout << "  Size(W,H): (lems) = (" << lems_map->width() << "," << lems_map->height() <<
+  std::cout << "  Size(W,H): (lems) = (" << lems_map->width() << "," << lems_map->height() <<
                                    ") , (vxl) = (" << vxl_map->width() << "," <<vxl_map->height() << ") \n\n";
   TEST("lems-Map Equal vxl-Map \n  edgel tangent & strength \t\t", (*lems_map).AlmostEqual(*vxl_map , 0.0, 0.0), true);
 

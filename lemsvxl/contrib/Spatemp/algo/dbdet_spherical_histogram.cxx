@@ -23,7 +23,7 @@ dbdet_spherical_histogram::dbdet_spherical_histogram()
 
     for(unsigned i=0;i<theta_partitions_;i++)
     {
-        hist_[i]=vcl_vector<float>(phi_partitions_[i],0.0);
+        hist_[i]=std::vector<float>(phi_partitions_[i],0.0);
     }
 }
 
@@ -31,8 +31,8 @@ dbdet_spherical_histogram::dbdet_spherical_histogram()
 bool
 dbdet_spherical_histogram::update(float theta,float phi)
 {
-    int theta_index=vcl_floor(theta_partitions_*(theta-theta_min_)/(vnl_math::pi));
-    int phi_index=vcl_floor(phi_partitions_[theta_index]*(phi-phi_min_)/(2*vnl_math::pi));
+    int theta_index=std::floor(theta_partitions_*(theta-theta_min_)/(vnl_math::pi));
+    int phi_index=std::floor(phi_partitions_[theta_index]*(phi-phi_min_)/(2*vnl_math::pi));
     if(hist_[theta_index][phi_index]==0.0)
         hist_[theta_index][phi_index]=1;
 
@@ -45,9 +45,9 @@ void dbdet_spherical_histogram::print()
     {
         for(unsigned j=0;j<hist_[i].size();j++)
         {
-            vcl_cout<<hist_[i][j]<<" ";
+            std::cout<<hist_[i][j]<<" ";
         }
-        vcl_cout<<"\n";
+        std::cout<<"\n";
     }
 
 }

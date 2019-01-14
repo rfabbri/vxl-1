@@ -1,5 +1,5 @@
 #include "basegui_debugdisplayer.h"
-#include <vcl_cassert.h>
+#include <cassert>
 
 DebugDisplayer GDebugDisplayer;
 
@@ -30,7 +30,7 @@ void DebugDisplayer::debugTexts(wxTextCtrl** dt, int numWins_){
       delete _ostrms[cnt];
     }
 #if 0
-    _ostrms[cnt] = new vcl_ostream((vcl_streambuf*)_debugTexts[cnt]);
+    _ostrms[cnt] = new std::ostream((std::streambuf*)_debugTexts[cnt]);
 #endif
   }
 }
@@ -38,25 +38,25 @@ void DebugDisplayer::clear(int winId){
   assert(winId<_numWins);
   _debugTexts[winId]->Clear();
 }
-vcl_ostream* DebugDisplayer::ostrm(int winId){
+std::ostream* DebugDisplayer::ostrm(int winId){
   assert(winId<_numWins);
   return _ostrms[winId];
 }
-vcl_streambuf* DebugDisplayer::strmbuf(int winId){
+std::streambuf* DebugDisplayer::strmbuf(int winId){
   assert(winId<_numWins);
-  return (vcl_streambuf*)_debugTexts[winId];
+  return (std::streambuf*)_debugTexts[winId];
 }
 wxTextCtrl* DebugDisplayer::debugText(int winId){ 
   assert(winId<_numWins);
   return _debugTexts[winId];
 }
-void DebugDisplayer::disp(const vcl_string& msg, int winId){
+void DebugDisplayer::disp(const std::string& msg, int winId){
   assert(winId<_numWins);
   _debugTexts[winId]->AppendText(wxString(msg.c_str()));
   _notebook->SetSelection(winId);
   _notebook->Refresh();
 }
-void DebugDisplayer::status(const vcl_string& msg){
+void DebugDisplayer::status(const std::string& msg){
   _statusBar->SetStatusText(wxString(msg.c_str()));
   _statusBar->Refresh();
 }

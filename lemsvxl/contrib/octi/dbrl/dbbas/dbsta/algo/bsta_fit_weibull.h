@@ -15,7 +15,7 @@
 #include <dbsta/bsta_weibull.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/algo/vnl_brent_minimizer.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 class bsta_weibull_cost_function : public vnl_cost_function
 {

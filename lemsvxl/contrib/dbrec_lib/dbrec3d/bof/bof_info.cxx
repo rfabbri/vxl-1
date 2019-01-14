@@ -17,10 +17,10 @@
 #include  <bvpl/bvpl_octree/bvpl_global_taylor.h>
 
 //: Constructor - from global_pca or global_taylor xml info file and number of means. It also writes this class' info file
-bof_info::bof_info(vcl_string global_dir, vcl_string bof_dir)
+bof_info::bof_info(std::string global_dir, std::string bof_dir)
 {
   if(vul_file::exists(global_dir + "/pca_global_info.xml")){
-    vcl_cout << "Initializing BOF info from global PCA \n";
+    std::cout << "Initializing BOF info from global PCA \n";
     bvpl_global_pca<125> global_pca(global_dir);
     path_out_ = bof_dir;
     aux_dirs_= global_pca.aux_dirs();
@@ -28,15 +28,15 @@ bof_info::bof_info(vcl_string global_dir, vcl_string bof_dir)
     training_scenes_ = global_pca.training_scenes();
     scenes_.clear();
     for (unsigned i =0; i<aux_dirs_.size(); i++) {
-      vcl_stringstream proj_scene_ss;
+      std::stringstream proj_scene_ss;
       proj_scene_ss << aux_dirs_[i] << "/proj_pca_scene_" << i << ".xml";
       scenes_.push_back(proj_scene_ss.str());
     }
     xml_write();
   }
   else if(vul_file::exists(global_dir + "/taylor_global_info.xml")){
-    vcl_cout << "Initializing BOF info from global Taylor \n";
-    const vcl_string kernel_names[10] = {"I0", "Ix", "Iy", "Iz", "Ixx", "Iyy", "Izz", "Ixy", "Ixz", "Iyz" };
+    std::cout << "Initializing BOF info from global Taylor \n";
+    const std::string kernel_names[10] = {"I0", "Ix", "Iy", "Iz", "Ixx", "Iyy", "Izz", "Ixy", "Ixz", "Iyz" };
     bvpl_global_taylor<double, 10> global_taylor(global_dir, kernel_names);
     path_out_ = bof_dir;
     aux_dirs_= global_taylor.aux_dirs();
@@ -44,39 +44,39 @@ bof_info::bof_info(vcl_string global_dir, vcl_string bof_dir)
     //training_scenes_ = global_pca.training_scenes();
     scenes_.clear();
     for (unsigned i =0; i<aux_dirs_.size(); i++) {
-      vcl_stringstream proj_scene_ss;
+      std::stringstream proj_scene_ss;
       proj_scene_ss << aux_dirs_[i] << "/proj_taylor_scene_" << i << ".xml";
       scenes_.push_back(proj_scene_ss.str());
     }
     xml_write();
   }
   else
-      vcl_cerr << "Could not find global info file \n";
+      std::cerr << "Could not find global info file \n";
 }
 
 //: Constructor - from xml info file
-bof_info::bof_info(vcl_string bof_dir)
+bof_info::bof_info(std::string bof_dir)
 {
   path_out_ = bof_dir;
-  vcl_ifstream xml_ifs(xml_path().c_str());
+  std::ifstream xml_ifs(xml_path().c_str());
   if(!xml_ifs.is_open()){
-    vcl_cerr << "Error: bvpl_discover_pca_kernels - could not open xml info file: " << xml_path() << " \n";
+    std::cerr << "Error: bvpl_discover_pca_kernels - could not open xml info file: " << xml_path() << " \n";
     throw;
   }
   bxml_document doc = bxml_read(xml_ifs);
   bxml_element query("bof_info");
   bxml_data_sptr root = bxml_find_by_name(doc.root_element(), query);
   if (!root) {
-    vcl_cerr << "Error: bof_info - could not parse xml root\n";
+    std::cerr << "Error: bof_info - could not parse xml root\n";
     throw;
   }
 
   //Parse scenes
   bxml_element scenes_query("scene");
-  vcl_vector<bxml_data_sptr> scenes_data = bxml_find_all_with_name(root, scenes_query);
+  std::vector<bxml_data_sptr> scenes_data = bxml_find_all_with_name(root, scenes_query);
   
   unsigned nscenes = scenes_data.size();
-  vcl_cout<<"Number of scenes " << nscenes<< "\n";
+  std::cout<<"Number of scenes " << nscenes<< "\n";
 
   scenes_.clear();
   scenes_.resize(nscenes);
@@ -97,12 +97,12 @@ bof_info::bof_info(vcl_string bof_dir)
     scenes_elm->get_attribute("path", scenes_[id]);
     scenes_elm->get_attribute("aux_dir", aux_dirs_[id]);
     scenes_elm->get_attribute("cell_length" , finest_cell_length_[id]);
-    vcl_cout << "Scene " << id << " is " << scenes_[id] << "\n";
+    std::cout << "Scene " << id << " is " << scenes_[id] << "\n";
     
   }  
   
   //bxml_element category_query("category");
-//  vcl_vector<bxml_data_sptr> category_data = bxml_find_all_with_name(root, category_query);
+//  std::vector<bxml_data_sptr> category_data = bxml_find_all_with_name(root, category_query);
 //  unsigned num_cat = category_data.size();
 //  
 //  categories_.clear();
@@ -113,7 +113,7 @@ bof_info::bof_info(vcl_string bof_dir)
 //  for (unsigned ci=0; ci<num_cat; ci++) {
 //    bxml_element* category_elm = dynamic_cast<bxml_element*>(category_data[ci].ptr());
 //    int id = -1;
-//    vcl_string name;
+//    std::string name;
 //    unsigned n = 0;
 //    category_elm->get_attribute("id", id);
 //    if(id<0)
@@ -122,19 +122,19 @@ bof_info::bof_info(vcl_string bof_dir)
 //    category_elm->get_attribute("nscenes", n);
 //    
 //    //read out the scenes
-//    vcl_vector<unsigned> s_id;
+//    std::vector<unsigned> s_id;
 //    for (bxml_element::const_data_iterator s_it = category_elm->data_begin(); s_it != category_elm->data_end(); s_it++) {
 //      if ((*s_it)->type() == bxml_data::TEXT) {
 //        bxml_text* t = dynamic_cast<bxml_text*>((*s_it).ptr());
-//        vcl_stringstream text_d(t->data()); vcl_string buf;
-//        vcl_vector<vcl_string> tokens;
+//        std::stringstream text_d(t->data()); std::string buf;
+//        std::vector<std::string> tokens;
 //        while (text_d >> buf) {
 //          tokens.push_back(buf);
 //        }
 //        if (tokens.size() != n)
 //          continue;
 //        for (unsigned i = 0; i < n; i++) {
-//          vcl_stringstream ss2(tokens[i]); int s_type_id;
+//          std::stringstream ss2(tokens[i]); int s_type_id;
 //          ss2 >> s_type_id;
 //          s_id.push_back(s_type_id);
 //        }
@@ -144,7 +144,7 @@ bof_info::bof_info(vcl_string bof_dir)
 //    categories_[id] = s_id;
 //    category_names_[id] = name;
 //    
-//    vcl_cout << "Category: " << id << ", whith name: " << name << " has: " <<n <<" scenes aasocited with it \n";
+//    std::cout << "Category: " << id << ", whith name: " << name << " has: " <<n <<" scenes aasocited with it \n";
 //  }  
   
   bxml_element* train_elm = dynamic_cast<bxml_element*>(bxml_find_by_name(root, bxml_element("training_scenes")).ptr());
@@ -157,17 +157,17 @@ bof_info::bof_info(vcl_string bof_dir)
   for (bxml_element::const_data_iterator s_it = train_elm->data_begin(); s_it != train_elm->data_end(); s_it++) {
     if ((*s_it)->type() == bxml_data::TEXT) {
       bxml_text* t = dynamic_cast<bxml_text*>((*s_it).ptr());
-      vcl_stringstream text_d(t->data()); vcl_string buf;
-      vcl_vector<vcl_string> tokens;
+      std::stringstream text_d(t->data()); std::string buf;
+      std::vector<std::string> tokens;
       while (text_d >> buf) {
         tokens.push_back(buf);
       }
       if (tokens.size() != n_train_scenes)
         continue;
       for (unsigned i = 0; i < n_train_scenes; i++) {
-        vcl_stringstream ss2(tokens[i]); int s_type_id;
+        std::stringstream ss2(tokens[i]); int s_type_id;
         ss2 >> s_type_id;
-        vcl_cout << "Scene: " << s_type_id << " is used for training \n";
+        std::cout << "Scene: " << s_type_id << " is used for training \n";
         training_scenes_[s_type_id]=true;
       }
       break;
@@ -179,25 +179,25 @@ bof_info::bof_info(vcl_string bof_dir)
 void bof_info::init_category_scenes(char label)
 {
   
-  vcl_cout << "Initializing " << aux_dirs_.size() << " category scenes \n";
+  std::cout << "Initializing " << aux_dirs_.size() << " category scenes \n";
   for(unsigned i = 0; i < aux_dirs_.size(); i++)
   {
     boxm_scene_base_sptr valid_scene_base = load_valid_scene(i);
     boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
     if (!valid_scene){
-      vcl_cerr << "Error in bof_info::init_category_scene: Could not cast valid scene \n";
+      std::cerr << "Error in bof_info::init_category_scene: Could not cast valid scene \n";
       return;
     }
     
-    vcl_stringstream scene_ss;
+    std::stringstream scene_ss;
     scene_ss << "category_scene_" << i ;
-    vcl_string scene_path = aux_dirs_[i] + "/" + scene_ss.str() + ".xml";
+    std::string scene_path = aux_dirs_[i] + "/" + scene_ss.str() + ".xml";
     
-    vcl_cout << "Initializing " << scene_path << "\n";
+    std::cout << "Initializing " << scene_path << "\n";
 
    
     if(!vul_file::exists(scene_path)){
-      vcl_cout<< "Scene: " << scene_path << " does not exist, initializing -xml and data" << vcl_endl;
+      std::cout<< "Scene: " << scene_path << " does not exist, initializing -xml and data" << std::endl;
       typedef boct_tree<short,char > tree_type;
       boxm_scene<boct_tree<short, char> > *scene =
       new boxm_scene<boct_tree<short, char> >(valid_scene->lvcs(), valid_scene->origin(), valid_scene->block_dim(), valid_scene->world_dim(), valid_scene->max_level(), valid_scene->init_level());
@@ -216,7 +216,7 @@ boxm_scene_base_sptr bof_info::load_feature_scene (int scene_id)
 {
   if(scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
-    vcl_cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << vcl_endl;
+    std::cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << std::endl;
     return NULL;
   }  
   //load scene
@@ -230,7 +230,7 @@ boxm_scene_base_sptr bof_info::load_feature_scene (int scene_id)
     scene->load_scene(scene_parser);
     scene_base = scene;
   }else {
-    vcl_cerr << "Error in bof_info::load_feature_scene: Invalid apperance model:" << scene_base->appearence_model() << vcl_endl;
+    std::cerr << "Error in bof_info::load_feature_scene: Invalid apperance model:" << scene_base->appearence_model() << std::endl;
     return NULL;
   }
   
@@ -243,13 +243,13 @@ boxm_scene_base_sptr bof_info::load_valid_scene (int scene_id)
 {
   if(scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
-    vcl_cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << vcl_endl;
+    std::cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << std::endl;
     return NULL;
   }  
   //load scene
   boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
   boxm_scene_parser aux_parser;
-  vcl_stringstream aux_scene_ss;
+  std::stringstream aux_scene_ss;
   aux_scene_ss << aux_dirs_[scene_id] << "/valid_scene_" << scene_id << ".xml";
   aux_scene_base->load_scene(aux_scene_ss.str(), aux_parser);
   
@@ -259,7 +259,7 @@ boxm_scene_base_sptr bof_info::load_valid_scene (int scene_id)
     aux_scene->load_scene(aux_parser);
     aux_scene_base = aux_scene;
   }else {
-    vcl_cerr << "Error in bvpl_global_pca::load_aux_scene: Invalid apperance model" << vcl_endl;
+    std::cerr << "Error in bvpl_global_pca::load_aux_scene: Invalid apperance model" << std::endl;
     return NULL;
   }
   
@@ -272,13 +272,13 @@ boxm_scene_base_sptr bof_info::load_train_scene (int scene_id)
 {
   if(scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
-    vcl_cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << vcl_endl;
+    std::cerr << "Error in bvpl_global_pca::load_scene: Invalid scene id" << std::endl;
     return NULL;
   }  
   //load scene
   boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
   boxm_scene_parser aux_parser;
-  vcl_stringstream aux_scene_ss;
+  std::stringstream aux_scene_ss;
   aux_scene_ss << aux_dirs_[scene_id] << "/train_scene_" << scene_id << ".xml";
   aux_scene_base->load_scene(aux_scene_ss.str(), aux_parser);
   
@@ -288,7 +288,7 @@ boxm_scene_base_sptr bof_info::load_train_scene (int scene_id)
     aux_scene->load_scene(aux_parser);
     aux_scene_base = aux_scene;
   }else {
-    vcl_cerr << "Error in bvpl_global_pca::load_aux_scene: Invalid apperance model" << vcl_endl;
+    std::cerr << "Error in bvpl_global_pca::load_aux_scene: Invalid apperance model" << std::endl;
     return NULL;
   }
   
@@ -301,27 +301,27 @@ boxm_scene_base_sptr bof_info::load_category_scene (int scene_id)
 {
   if(scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
-    vcl_cerr << "Error in bof_info::load_category_scene: Invalid scene id" << vcl_endl;
+    std::cerr << "Error in bof_info::load_category_scene: Invalid scene id" << std::endl;
     return NULL;
     }  
   
     //base class scene
     boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
   
-    vcl_stringstream aux_scene_ss;
+    std::stringstream aux_scene_ss;
     aux_scene_ss << aux_dirs_[scene_id] << "/category_scene_" << scene_id << ".xml";
   
     
     if(!vul_file::exists(aux_scene_ss.str())){
-      vcl_cout<< "Scene: " << aux_scene_ss.str() << " does not exist, initializing -xml and data" << vcl_endl;
+      std::cout<< "Scene: " << aux_scene_ss.str() << " does not exist, initializing -xml and data" << std::endl;
       
       boxm_scene_base_sptr valid_scene_base = load_valid_scene(scene_id);
       boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
       if (!valid_scene){
-        vcl_cerr << "Error in bof_info::load_category_scene: Could not cast valid scene \n";
+        std::cerr << "Error in bof_info::load_category_scene: Could not cast valid scene \n";
         return NULL;
       }
-      vcl_stringstream scene_ss;
+      std::stringstream scene_ss;
       scene_ss << "category_scene_" << scene_id ;
       boxm_scene<boct_tree<short, char> > *aux_scene =
       new boxm_scene<boct_tree<short, char> >(valid_scene->lvcs(), valid_scene->origin(), valid_scene->block_dim(), valid_scene->world_dim(), valid_scene->max_level(), valid_scene->init_level());
@@ -344,7 +344,7 @@ boxm_scene_base_sptr bof_info::load_category_scene (int scene_id)
         aux_scene->load_scene(aux_parser);
         aux_scene_base = aux_scene;
       }else {
-        vcl_cerr << "Error in bof_info::load_category_scene: Invalid apperance model" << vcl_endl;
+        std::cerr << "Error in bof_info::load_category_scene: Invalid apperance model" << std::endl;
         return NULL;
       }
     }
@@ -357,27 +357,27 @@ boxm_scene_base_sptr bof_info::load_cluster_id_scene (int scene_id)
 {
   if(scene_id<0 || scene_id>((int)scenes_.size() -1))
   {
-    vcl_cerr << "Error in bof_info::load_cluster_id_scene: Invalid scene id" << vcl_endl;
+    std::cerr << "Error in bof_info::load_cluster_id_scene: Invalid scene id" << std::endl;
     return NULL;
   }  
   
   //base class scene
   boxm_scene_base_sptr aux_scene_base = new boxm_scene_base();
   
-  vcl_stringstream aux_scene_ss;
+  std::stringstream aux_scene_ss;
   aux_scene_ss << aux_dirs_[scene_id] << "/cluster_id_scene_" << scene_id << ".xml";
   
   
   if(!vul_file::exists(aux_scene_ss.str())){
-    vcl_cout<< "Scene: " << aux_scene_ss.str() << " does not exist, initializing -xml and data" << vcl_endl;
+    std::cout<< "Scene: " << aux_scene_ss.str() << " does not exist, initializing -xml and data" << std::endl;
     
     boxm_scene_base_sptr valid_scene_base = load_valid_scene(scene_id);
     boxm_scene<boct_tree<short, bool> >* valid_scene = dynamic_cast<boxm_scene<boct_tree<short, bool> >*> (valid_scene_base.as_pointer());
     if (!valid_scene){
-      vcl_cerr << "Error in bof_info::load_cluster_id_scene: Could not cast valid scene \n";
+      std::cerr << "Error in bof_info::load_cluster_id_scene: Could not cast valid scene \n";
       return NULL;
     }
-    vcl_stringstream scene_ss;
+    std::stringstream scene_ss;
     scene_ss << "cluster_id_scene_" << scene_id ;
     boxm_scene<boct_tree<short, short> > *aux_scene =
     new boxm_scene<boct_tree<short, short> >(valid_scene->lvcs(), valid_scene->origin(), valid_scene->block_dim(), valid_scene->world_dim(), valid_scene->max_level(), 1);
@@ -399,7 +399,7 @@ boxm_scene_base_sptr bof_info::load_cluster_id_scene (int scene_id)
       aux_scene->load_scene(aux_parser);
       aux_scene_base = aux_scene;
     }else {
-      vcl_cerr << "Error in bof_info::load_cluster_id_scene: Invalid apperance model" << vcl_endl;
+      std::cerr << "Error in bof_info::load_cluster_id_scene: Invalid apperance model" << std::endl;
       return NULL;
     }
   }
@@ -418,7 +418,7 @@ void bof_info::xml_write()
   //write the scenes
   for(unsigned i =0; i<scenes_.size(); i++) 
   {
-    vcl_cout << "Here too" <<vcl_endl;
+    std::cout << "Here too" <<std::endl;
     bxml_element* scenes_elm = new bxml_element("scene");
     scenes_elm->append_text("\n");
     scenes_elm->set_attribute("id", i);
@@ -437,10 +437,10 @@ void bof_info::xml_write()
 //    
 //    category_elm->set_attribute("id", ci);
 //    category_elm->set_attribute("name", category_names_[ci]);
-//    const vcl_vector<unsigned> &s_idx = categories_[ci];
+//    const std::vector<unsigned> &s_idx = categories_[ci];
 //    category_elm->set_attribute("nscenes", s_idx.size());
 //    
-//    vcl_stringstream ss;
+//    std::stringstream ss;
 //    for (unsigned i = 0; i< s_idx.size(); i++) {
 //      ss << s_idx[i] << " ";
 //    }
@@ -454,7 +454,7 @@ void bof_info::xml_write()
   bxml_element* train_elm = new bxml_element("training_scenes");
   train_elm->append_text("\n");
   
-  vcl_stringstream ss;
+  std::stringstream ss;
   unsigned ts = 0;
   
   for (unsigned i = 0; i< training_scenes_.size(); i++) {
@@ -473,7 +473,7 @@ void bof_info::xml_write()
   
   
   //write to disk  
-  vcl_ofstream os(xml_path().c_str());
+  std::ofstream os(xml_path().c_str());
   bxml_write(os, doc);
   os.close();  
 }

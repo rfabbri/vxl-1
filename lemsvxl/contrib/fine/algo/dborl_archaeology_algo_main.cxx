@@ -24,8 +24,8 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vil/vil_load.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_new.h>
@@ -48,7 +48,7 @@
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_generator.h>
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_file.h>
 
 #include "dborl_contour_tracer_params.h"
@@ -59,8 +59,8 @@
 
 #include "dborl_archaeology_algo_params_sptr.h"
 #include "dborl_archaeology_algo_params.h"
-#include <vcl_string.h>
-#include <vcl_vector.h>
+#include <string>
+#include <vector>
 #include <dborl/dborl_index_sptr.h>
 #include <dborl/dborl_index_node_sptr.h>
 #include <vil/vil_load.h>
@@ -84,7 +84,7 @@ int main (int argc, char *argv[])
 
   // always print the params file if an executable to work with ORL web interface
   if (!params->print_params_xml(params->print_params_file()))
-    vcl_cout << "problems in writing params file to: " << params->print_params_file() << vcl_endl;
+    std::cout << "problems in writing params file to: " << params->print_params_file() << std::endl;
 
   if (params->exit_with_no_processing() || params->print_params_only())
     return 0;
@@ -94,9 +94,9 @@ int main (int argc, char *argv[])
     return 0;
 
   // 1) load the input shock3d file 1 (a pair of .cms and .fs files)
-  vcl_string input_ctracer = params->input_dir_() + "/" + params->input_name_() + params->input_extension_();
+  std::string input_ctracer = params->input_dir_() + "/" + params->input_name_() + params->input_extension_();
   if (!vul_file::exists(input_ctracer)) {
-    vcl_cout << "Cannot find image files : " << input_ctracer << "\n";
+    std::cout << "Cannot find image files : " << input_ctracer << "\n";
     return 0;
   }
 

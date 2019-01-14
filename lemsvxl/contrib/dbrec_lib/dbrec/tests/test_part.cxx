@@ -21,14 +21,14 @@ static void test_part()
   dbrec_part_sptr p3 = new dbrec_part(*p1);
   TEST("copy constructor", p3->type(), p1->type());
 
-  vcl_vector<dbrec_part_sptr> parts;
+  std::vector<dbrec_part_sptr> parts;
   parts.push_back(p1);
   parts.push_back(p2);
   dbrec_composition c_p1(ins->new_type(), parts, new dbrec_or_compositor, 10.0f); // constructed with default compositor which does nothing most of the time
   dbrec_part_sptr c_p2 = new dbrec_composition(c_p1);
   TEST("composition copy constructor", c_p2->type(), c_p1.type());
-  vcl_cout << "printing c_p2:\n";
-  vcl_cout << *c_p2;
+  std::cout << "printing c_p2:\n";
+  std::cout << *c_p2;
 
   dbrec_composition* c_p3 = new dbrec_composition(c_p1);
   TEST("composition copy constructor", c_p3->size(), c_p1.size());
@@ -36,7 +36,7 @@ static void test_part()
   parts.push_back(c_p3); // so c_p3 is now handled by a smart pointer and will be deleted properly
   dbrec_composition c_p4(ins->new_type(), parts, new dbrec_or_compositor, 10.0f);
   TEST("add children", c_p4.size(), 3);
-  vcl_cout << c_p4;
+  std::cout << c_p4;
 
   dbrec_part_sptr c_p3_sptr = c_p3;
   TEST("sameness test", c_p2->same_part(c_p3_sptr), true);

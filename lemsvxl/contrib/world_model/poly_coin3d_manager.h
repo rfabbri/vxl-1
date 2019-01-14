@@ -74,7 +74,7 @@ private:
   obj_observable* obj_;
 
   obj_observable* my_obj;
-  vcl_list<obj_observable* >objects;
+  std::list<obj_observable* >objects;
   vsol_polygon_2d_sptr poly2d; 
   float mouse_start_x, mouse_start_y;
   float cur_pointx, cur_pointy;
@@ -90,9 +90,9 @@ private:
   vpgl_perspective_camera<double> get_camera(SoCamera* camera,
                                              SbViewportRegion viewport);
 
-  vil_image_resource_sptr load_image(vcl_string filename);
+  vil_image_resource_sptr load_image(std::string filename);
 
-  void load_cameras(vcl_string cam_file1, vcl_string cam_file2,
+  void load_cameras(std::string cam_file1, std::string cam_file2,
                     vpgl_proj_camera<double> * &cam1,
                     vpgl_proj_camera<double> * &cam2);
                   /*vpgl_proj_camera<double>* &proj_cam1,
@@ -100,7 +100,7 @@ private:
                   vpgl_perspective_camera<double> * &persp_cam1,
                   vpgl_perspective_camera<double> * &persp_cam2);*/
 
-  dbmsh3d_face* create_face(dbmsh3d_mesh& mesh, vcl_vector<vgl_point_3d<double> > &vertex_list);
+  dbmsh3d_face* create_face(dbmsh3d_mesh& mesh, std::vector<vgl_point_3d<double> > &vertex_list);
   
   obj_observable* find_polygon_in_3D(unsigned id, 
                                      vsol_polygon_3d_sptr& poly,

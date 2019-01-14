@@ -26,7 +26,7 @@ void boxm_gradient_scene_to_pc(boxm_scene<boct_tree<short, vnl_vector_fixed< flo
                                float norm_thresh = 0.0);
 
 //: Converts a vector of cells containing gradient information to a point cloud of normals
-void boxm_cell_data_to_pcd(vcl_vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > const &cells, 
+void boxm_cell_data_to_pcd(std::vector<boct_cell_data<short, vnl_vector_fixed<float,10> > > const &cells, 
                            pcl::PointCloud<pcl::PointNormal>::Ptr cloud);
 
 #endif

@@ -19,7 +19,7 @@
 #include <dbsk2d/dbsk2d_exception.h>
 #include <dbsk2d/dbsk2d_fuzzy_boolean.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include <vnl/vnl_math.h>
 
 //: is z between x and y ?
@@ -48,9 +48,9 @@ inline double angle0To2Pi (double angle)
 {
   double a;
   if (angle>=2*vnl_math::pi)
-    a = vcl_fmod (angle,vnl_math::pi*2);
+    a = std::fmod (angle,vnl_math::pi*2);
   else if (angle < 0)
-    a = (2*vnl_math::pi+ vcl_fmod (angle,2*vnl_math::pi));
+    a = (2*vnl_math::pi+ std::fmod (angle,2*vnl_math::pi));
   else 
     a= angle;
 
@@ -144,7 +144,7 @@ inline bool _validStartEnd0To2PiEPIncld (double v, double start, double end)
 inline void _round (float& value, double epsilon)
 {
   double ep = 1/epsilon;
-  value = (float) ( vcl_floor((double)value*ep+0.5)/ep);
+  value = (float) ( std::floor((double)value*ep+0.5)/ep);
 
   //int i;
   //ftol(value/epsilon,&i); return((double)i);
@@ -153,7 +153,7 @@ inline void _round (float& value, double epsilon)
 inline void _round (double& value, double epsilon)
 {
   double ep = 1/epsilon;
-  value = ( vcl_floor (value*ep+0.5))/ep;
+  value = ( std::floor (value*ep+0.5))/ep;
 
   //int i;
   //ftol(value/epsilon,&i); return((double)i);
@@ -164,7 +164,7 @@ inline void Bround (double& value) { _round (value, B_EPSILON); }
 
 inline double _angle_vector_dot( double angle1, double angle2)
 {
-  return vcl_cos(angle1)*vcl_cos(angle2)+vcl_sin(angle1)*vcl_sin(angle2);
+  return std::cos(angle1)*std::cos(angle2)+std::sin(angle1)*std::sin(angle2);
 }
 
 // include other utils

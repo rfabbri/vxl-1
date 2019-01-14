@@ -1,9 +1,9 @@
 //This is vidpro/process/vidpro_load_edg_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
 
 #include <vidpro/process/vidpro_load_edg_process.h>
 #include <vsol/vsol_point_2d.h>
@@ -20,7 +20,7 @@ vidpro_load_edg_process::vidpro_load_edg_process() : bpro_process()
       !parameters()->add( "Load as Lines" ,            "-blines" ,   true )  ||
       !parameters()->add( "Scale" ,                    "-scale" ,   1.0 ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -49,18 +49,18 @@ bool vidpro_load_edg_process::execute()
   parameters()->get_value( "-blines" , blines );
   parameters()->get_value( "-scale" , scale );
   
-  vcl_string input_file = input.path;
+  std::string input_file = input.path;
 
   //1)If file open fails, return.
-  vcl_ifstream infp(input_file.c_str(), vcl_ios::in);
+  std::ifstream infp(input_file.c_str(), std::ios::in);
 
   if (!infp){
-    vcl_cout << " Error opening file  " << input_file.c_str() << vcl_endl;
+    std::cout << " Error opening file  " << input_file.c_str() << std::endl;
     return false;
   }
 
   // vector to store the egdels
-  vcl_vector< vsol_spatial_object_2d_sptr > edgels;
+  std::vector< vsol_spatial_object_2d_sptr > edgels;
 
   //2)Read in each line
   while (infp.getline(lineBuffer,1024)) {
@@ -89,7 +89,7 @@ bool vidpro_load_edg_process::execute()
 
     if (bSubPixel){
       if (blines){
-        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(dir)/2.0, vcl_sin(dir)/2.0), vgl_point_2d<double>(x,y));
+        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(dir)/2.0, std::sin(dir)/2.0), vgl_point_2d<double>(x,y));
         edgels.push_back(newLine->cast_to_spatial_object());
       }
       else {
@@ -99,7 +99,7 @@ bool vidpro_load_edg_process::execute()
     }
     else {
       if (blines){
-        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(idir), vcl_sin(idir)), vgl_point_2d<double>((double)ix, (double)iy));
+        vsol_line_2d_sptr newLine = new vsol_line_2d(vgl_vector_2d<double>(std::cos(idir), std::sin(idir)), vgl_point_2d<double>((double)ix, (double)iy));
         edgels.push_back(newLine->cast_to_spatial_object());
       }
       else {

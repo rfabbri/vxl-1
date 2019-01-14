@@ -8,7 +8,7 @@
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>
 #include <bxml/bxml_find.h>
-#include <vcl_fstream.h>
+#include <fstream>
 
 
 
@@ -24,13 +24,13 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v3();
 
 
 //: Write a list of xshock detection to a stream
-bool x_write_v3(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_write_v3(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 //: Write a list of xshock detection to a stream
-bool x_write_v2(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_write_v2(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 //: Write a list of xshock detection to a stream
-bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
+bool x_write_v1(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list);
 
 
 
@@ -39,8 +39,8 @@ bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 //==============================================================================
 
 
-const vcl_string det_list_tag = "xgraph_det_list";
-const vcl_string xshock_det_tag = "xshock_det";
+const std::string det_list_tag = "xgraph_det_list";
+const std::string xshock_det_tag = "xshock_det";
 
 
 //==============================================================================
@@ -49,7 +49,7 @@ const vcl_string xshock_det_tag = "xshock_det";
 
 
 //: latest version of xshock_det_record
-dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const vcl_string& version)
+dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const std::string& version)
 {
   if (version == "1")
     return dbsks_xshock_det_record_new_v1();
@@ -67,10 +67,10 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new(const vcl_string& versi
 dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v1()
 {
   dbsks_xshock_det_record_sptr params = new bpro1_parameters();
-  params->add("object_name", "object_name", vcl_string(""));
-  params->add("model_category", "model_category", vcl_string(""));
-  params->add("screenshot", "screenshot", vcl_string(""));
-  params->add("xgraph_xml", "xgraph_xml", vcl_string(""));
+  params->add("object_name", "object_name", std::string(""));
+  params->add("model_category", "model_category", std::string(""));
+  params->add("screenshot", "screenshot", std::string(""));
+  params->add("xgraph_xml", "xgraph_xml", std::string(""));
   params->add("confidence", "confidence", double(0));
   params->add("xgraph_scale", "xgraph_scale", double(1));
   params->add("bbox_xmin", "bbox_xmin", double(0));
@@ -86,8 +86,8 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v1()
 dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v2()
 {
   dbsks_xshock_det_record_sptr params = dbsks_xshock_det_record_new_v1();
-  params->add("unmatched_weight", "unmatched_weight", vcl_string("[]"));
-  params->add("wcm_confidence", "wcm_confidence", vcl_string("[]"));
+  params->add("unmatched_weight", "unmatched_weight", std::string("[]"));
+  params->add("wcm_confidence", "wcm_confidence", std::string("[]"));
   return params;
 }
 
@@ -97,7 +97,7 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v2()
 dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v3()
 {
   dbsks_xshock_det_record_sptr params = dbsks_xshock_det_record_new_v2();
-  params->add("bnd_screenshot", "bnd_screenshot", vcl_string(""));
+  params->add("bnd_screenshot", "bnd_screenshot", std::string(""));
   return params;
 }
 
@@ -108,9 +108,9 @@ dbsks_xshock_det_record_sptr dbsks_xshock_det_record_new_v3()
 
 // -----------------------------------------------------------------------------
 //: Write a list of xshock detection to a stream
-bool x_write(vcl_string filepath, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_write(std::string filepath, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
-  vcl_ofstream file(filepath.c_str(), vcl_ios_out);
+  std::ofstream file(filepath.c_str(), std::ios::out);
   if (x_write(file, xshock_det_list))
   {
     file.close();
@@ -127,14 +127,14 @@ bool x_write(vcl_string filepath, const vcl_vector<dbsks_xshock_det_record_sptr 
 
 // -----------------------------------------------------------------------------
 //: Write a list of xshock detection to a stream
-bool x_write(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_write(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
   return x_write_v3(os, xshock_det_list);
 }
 
 
 //: Write a list of xshock detection to a stream
-bool x_write_v3(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_write_v3(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element(det_list_tag);
@@ -145,9 +145,9 @@ bool x_write_v3(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
   // Extract a list of parameter name in a detection record
   dbsks_xshock_det_record_sptr det_record_template = dbsks_xshock_det_record_new_v3();
-  vcl_vector<bpro1_param* > template_params = det_record_template->get_param_list();
+  std::vector<bpro1_param* > template_params = det_record_template->get_param_list();
 
-  vcl_vector<vcl_string > param_names;
+  std::vector<std::string > param_names;
   for (unsigned i =0; i < template_params.size(); ++i)
   {
     param_names.push_back(template_params[i]->name());
@@ -166,11 +166,11 @@ bool x_write_v3(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
     // append each parameter as an element
     for (unsigned i =0; i < param_names.size(); ++i)
     {
-      vcl_string param_name = param_names[i];
-      vcl_string param_value = "";
+      std::string param_name = param_names[i];
+      std::string param_value = "";
 
       // locate the pointer to this parameter in the record
-      vcl_map<vcl_string, bpro1_param* >::iterator iter = 
+      std::map<std::string, bpro1_param* >::iterator iter = 
         xshock_det_record->get_param_map().find(param_name);
       if (iter != xshock_det_record->get_param_map().end())
       {
@@ -192,7 +192,7 @@ bool x_write_v3(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
 // -----------------------------------------------------------------------------
 //: Write a list of xshock detection to a stream
-bool x_write_v2(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_write_v2(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element(det_list_tag);
@@ -203,9 +203,9 @@ bool x_write_v2(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
   // Extract a list of parameter name in a detection record
   dbsks_xshock_det_record_sptr det_record_template = dbsks_xshock_det_record_new();
-  vcl_vector<bpro1_param* > template_params = det_record_template->get_param_list();
+  std::vector<bpro1_param* > template_params = det_record_template->get_param_list();
 
-  vcl_vector<vcl_string > param_names;
+  std::vector<std::string > param_names;
   for (unsigned i =0; i < template_params.size(); ++i)
   {
     param_names.push_back(template_params[i]->name());
@@ -224,16 +224,16 @@ bool x_write_v2(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
     // append each parameter as an element
     for (unsigned i =0; i < param_names.size(); ++i)
     {
-      vcl_string param_name = param_names[i];
+      std::string param_name = param_names[i];
 
       // locate the pointer to this parameter in the record
-      vcl_map<vcl_string, bpro1_param* >::iterator iter = 
+      std::map<std::string, bpro1_param* >::iterator iter = 
         xshock_det_record->get_param_map().find(param_name);
       if (iter == xshock_det_record->get_param_map().end())
         continue;
 
       // get paramter as a string
-      vcl_string param_value = iter->second->value_str();
+      std::string param_value = iter->second->value_str();
 
       // create xml element for this parameter
       bxml_element* param_elm = new bxml_element(param_name);
@@ -248,7 +248,7 @@ bool x_write_v2(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
 // -----------------------------------------------------------------------------
 //: Write a list of xshock detection to a stream - version 1
-bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_write_v1(std::ostream& os, const std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
   bxml_document doc;
   bxml_element *root = new bxml_element(det_list_tag);
@@ -259,9 +259,9 @@ bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
   // Extract a list of parameter name in a detection record
   dbsks_xshock_det_record_sptr det_record_template = dbsks_xshock_det_record_new_v1();
-  vcl_vector<bpro1_param* > template_params = det_record_template->get_param_list();
+  std::vector<bpro1_param* > template_params = det_record_template->get_param_list();
 
-  vcl_vector<vcl_string > param_names;
+  std::vector<std::string > param_names;
   for (unsigned i =0; i < template_params.size(); ++i)
   {
     param_names.push_back(template_params[i]->name());
@@ -280,16 +280,16 @@ bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
     // append each parameter as an element
     for (unsigned i =0; i < param_names.size(); ++i)
     {
-      vcl_string param_name = param_names[i];
+      std::string param_name = param_names[i];
 
       // locate the pointer to this parameter in the record
-      vcl_map<vcl_string, bpro1_param* >::iterator iter = 
+      std::map<std::string, bpro1_param* >::iterator iter = 
         xshock_det_record->get_param_map().find(param_name);
       if (iter == xshock_det_record->get_param_map().end())
         continue;
 
       // get paramter as a string
-      vcl_string param_value = iter->second->value_str();
+      std::string param_value = iter->second->value_str();
 
       // create xml element for this parameter
       bxml_element* param_elm = new bxml_element(param_name);
@@ -305,7 +305,7 @@ bool x_write_v1(vcl_ostream& os, const vcl_vector<dbsks_xshock_det_record_sptr >
 
 
 //: load a list of xshock detection
-bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
+bool x_read(const std::string& filepath, std::vector<dbsks_xshock_det_record_sptr >& xshock_det_list)
 {
   xshock_det_list.clear();
 
@@ -313,7 +313,7 @@ bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr 
   bxml_document doc = bxml_read(filepath);
   if (!doc.root_element())
   {
-    vcl_cout << "\nERROR: couldn't read XML file: " << filepath << vcl_endl;
+    std::cout << "\nERROR: couldn't read XML file: " << filepath << std::endl;
     return false;
   }
 
@@ -323,12 +323,12 @@ bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr 
 
   if (!result)
   {
-    vcl_cout << "ERROR: could not find node 'xgraph_det_list'.\n";
+    std::cout << "ERROR: could not find node 'xgraph_det_list'.\n";
     return false;
   }
 
   bxml_element* root = static_cast<bxml_element* >(result.ptr());
-  vcl_string version = "";
+  std::string version = "";
   if (!root->get_attribute("version", version))
   {
     version = "1"; // initial version, no version in header
@@ -355,30 +355,30 @@ bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr 
       dbsks_xshock_det_record_sptr xml_record = dbsks_xshock_det_record_new(version);
 
       // retrieve values for each parameter of the record
-      vcl_map<vcl_string, bpro1_param* >& param_map = xml_record->get_param_map();
-      for (vcl_map<vcl_string, bpro1_param* >::iterator iter = param_map.begin();
+      std::map<std::string, bpro1_param* >& param_map = xml_record->get_param_map();
+      for (std::map<std::string, bpro1_param* >::iterator iter = param_map.begin();
         iter != param_map.end(); ++iter)
       {
-        vcl_string param_name = iter->first;
+        std::string param_name = iter->first;
         
 
 
         bxml_data_sptr temp = bxml_find_by_name(xshock_det_elm, bxml_element(param_name));
         if (!temp || temp->type() != bxml_data::ELEMENT)
         {
-          vcl_cout << "\nWarning: xml record in file " << filepath 
+          std::cout << "\nWarning: xml record in file " << filepath 
             << " does not contain value for parameter: " 
-            << param_name << vcl_endl;
+            << param_name << std::endl;
           continue;
         }
         bxml_element* param_elm = static_cast<bxml_element* >(temp.ptr());
 
         // there should be only one data items in this element and that is the
         // value of the parameter (in text format)
-        vcl_string param_value = "";
+        std::string param_value = "";
         if (param_elm->num_data() > 1)
         {
-          vcl_cout << "\nERROR: #data items in parameter-value field is not 1.\n";
+          std::cout << "\nERROR: #data items in parameter-value field is not 1.\n";
           continue;
         }
         if (param_elm->num_data() == 1)
@@ -393,20 +393,20 @@ bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr 
         }
 
         // special handling for string parameters
-        if (xml_record->valid_parameter_type(param_name, vcl_string("")))
+        if (xml_record->valid_parameter_type(param_name, std::string("")))
         {
           // special handling for "screenshot" because the automatic parse cut the string short when 
           // contains space and it does not preserve ">" and "<"
           if (param_name == "screenshot")
           {
             // replace "<" with "&lt;" and ">" with "&gt;"
-            vcl_string::size_type found;
-            while ( (found = param_value.find("<")) != vcl_string::npos)
+            std::string::size_type found;
+            while ( (found = param_value.find("<")) != std::string::npos)
             {
               param_value = param_value.replace(found, 1, "&lt;");
             }
 
-            while ( (found = param_value.find(">")) != vcl_string::npos)
+            while ( (found = param_value.find(">")) != std::string::npos)
             {
               param_value = param_value.replace(found, 1, "&gt;");
             }
@@ -426,7 +426,7 @@ bool x_read(const vcl_string& filepath, vcl_vector<dbsks_xshock_det_record_sptr 
         {
           if (!iter->second->parse_value_str(param_value))
           {
-            vcl_cout << "\nERROR: parameter \"" << param_name 
+            std::cout << "\nERROR: parameter \"" << param_name 
               << "\" has wrong type in xml file.\n";
             continue;
           }

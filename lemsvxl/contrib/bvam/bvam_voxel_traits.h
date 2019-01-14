@@ -44,7 +44,7 @@ public:
   //:Datatype of the occupancy probabilities
   typedef float voxel_datatype;
 
-  static inline vcl_string filename_prefix(){ return "ocp"; }
+  static inline std::string filename_prefix(){ return "ocp"; }
   static inline bool is_multibin() { return false; }
   static inline voxel_datatype initial_val() { return 0.01f; }
 
@@ -61,7 +61,7 @@ public:
   typedef bvam_mog_grey_processor::obs_mathtype obs_mathtype;
 
 
-  static inline vcl_string filename_prefix() { return "apm_mog_grey"; }
+  static inline std::string filename_prefix() { return "apm_mog_grey"; }
   static inline bool is_multibin() { return true; }
   static inline voxel_datatype initial_val() 
   { 
@@ -82,7 +82,7 @@ public:
   typedef bvam_mog_rgb_processor::obs_datatype obs_datatype;
   typedef bvam_mog_rgb_processor::obs_mathtype obs_mathtype;
 
-  static inline vcl_string filename_prefix(){ return "apm_mog_rgb"; }
+  static inline std::string filename_prefix(){ return "apm_mog_rgb"; }
   static inline bool is_multibin() { return true; }
   static inline voxel_datatype initial_val() 
   { 
@@ -99,7 +99,7 @@ public:
   //:Datatype of the occupancy probabilities
   typedef float voxel_datatype;
 
-  static inline vcl_string filename_prefix() { return "edges"; }
+  static inline std::string filename_prefix() { return "edges"; }
   static inline bool is_multibin() { return false; }
   static inline voxel_datatype initial_val() { return 1.0f; }
 

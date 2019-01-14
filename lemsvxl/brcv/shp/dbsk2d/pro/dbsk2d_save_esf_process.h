@@ -17,7 +17,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
 
 //: This process is for saving extrinsic shock graphs as .esf files
 class dbsk2d_save_esf_process : public bpro1_process
@@ -26,15 +26,15 @@ public:
   dbsk2d_save_esf_process();
   virtual ~dbsk2d_save_esf_process() {}
   
-  vcl_string name() {
+  std::string name() {
     return "Save .ESF File";
   }
 
   //: Clone the process
   virtual bpro1_process* clone() const;
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
   
   int input_frames() {
     return 1;
@@ -48,7 +48,7 @@ public:
     return true;
   }
 
-  bool save_extrinsic_shock_graph (vcl_string filename);
+  bool save_extrinsic_shock_graph (std::string filename);
 
 };
 

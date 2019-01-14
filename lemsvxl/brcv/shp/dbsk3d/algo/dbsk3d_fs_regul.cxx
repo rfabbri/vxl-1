@@ -2,7 +2,7 @@
 //  Dec 1, 2006.
 //  MingChing Chang
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 
 #include <dbsk3d/algo/dbsk3d_fs_regul.h>
@@ -13,21 +13,21 @@
 bool dbsk3d_fs_regul::trim_bnd_A122_FFs (const float rmin_ratio)
 {
   const double rmin_th = rmin_ratio * fs_ss_->fs_mesh()->median_A122_dist();    
-  vul_printf (vcl_cout, "\ntrim_bnd_A122_FFs(): rmin_th = %f (rmin_ratio = %.2f),\n",
+  vul_printf (std::cout, "\ntrim_bnd_A122_FFs(): rmin_th = %f (rmin_ratio = %.2f),\n",
               rmin_th, rmin_ratio);
 
-  vul_printf (vcl_cout, "  Splice xform on valid A12-2 fs_faces (Gabriel edges): ");
+  vul_printf (std::cout, "  Splice xform on valid A12-2 fs_faces (Gabriel edges): ");
 
   //Find out all boundary fs_faces with Gabriel edges > rmin_th.
   //Prune them and pass genes. to adjacent FF's.
   unsigned int count = 0;
-  vcl_map<int, dbmsh3d_face*>::iterator pit = fs_ss_->fs_mesh()->facemap().begin();
+  std::map<int, dbmsh3d_face*>::iterator pit = fs_ss_->fs_mesh()->facemap().begin();
   for (; pit != fs_ss_->fs_mesh()->facemap().end(); pit++) {
     dbsk3d_fs_face* FF = (dbsk3d_fs_face*) (*pit).second;
     if (FF->b_valid() == false)
       continue;
 
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     FF->get_bnd_Vs (vertices);
     if (FF->contain_A12_2 (vertices) == false)
       continue; //Skip all that not containing A13-2 pts.
@@ -37,7 +37,7 @@ bool dbsk3d_fs_regul::trim_bnd_A122_FFs (const float rmin_ratio)
 
     //fs_face FF is of type A12-2.
     #if DBMSH3D_DEBUG>2
-    vul_printf (vcl_cout, "%d ", FF->id());
+    vul_printf (std::cout, "%d ", FF->id());
     #endif
     count++;
 
@@ -45,7 +45,7 @@ bool dbsk3d_fs_regul::trim_bnd_A122_FFs (const float rmin_ratio)
     FF_prune_pass_Gs (FF);
   }
 
-  vul_printf (vcl_cout, "\n    Totally %u A12-2 fs_faces splice-transformed (pruned).\n", count);
+  vul_printf (std::cout, "\n    Totally %u A12-2 fs_faces splice-transformed (pruned).\n", count);
 
   return count == 0;
 }
@@ -55,7 +55,7 @@ bool dbsk3d_fs_regul::trim_bnd_A122_FFs (const float rmin_ratio)
 //  Cost = nFF * deltaA.
 void dbsk3d_fs_regul::run_shock_regul (const float reg_th, const bool reasgn_lost_genes)
 {
-  vul_printf (vcl_cout, "\nrun_shock_regul(): reg_th = %f on %u shock sheets.", 
+  vul_printf (std::cout, "\nrun_shock_regul(): reg_th = %f on %u shock sheets.", 
               reg_th, fs_ss_->sheetmap().size());
 
   //Initialize the sheet queue for greedy iteration.
@@ -66,12 +66,12 @@ void dbsk3d_fs_regul::run_shock_regul (const float reg_th, const bool reasgn_los
 
   fs_mesh()->detect_valid_FE_type ();
 
-  vul_printf (vcl_cout, "\n  After early regularization, remaining %u shock sheets\n", 
+  vul_printf (std::cout, "\n  After early regularization, remaining %u shock sheets\n", 
               fs_ss_->sheetmap().size());
 
   if (reasgn_lost_genes) {
     //Check the assignment of all generators.
-    vcl_vector<dbmsh3d_vertex*> unasgn_genes;
+    std::vector<dbmsh3d_vertex*> unasgn_genes;
     fs_mesh()->check_all_G_asgn (unasgn_genes); 
 
     if (unasgn_genes.size() != 0) {
@@ -94,9 +94,9 @@ void dbsk3d_fs_regul::run_shock_regul (const float reg_th, const bool reasgn_los
 
   bool r = fs_ss_->check_integrity();
   if (r)
-    vul_printf (vcl_cout, "\t  Check fs_ss integrity: success!\n\n");
+    vul_printf (std::cout, "\t  Check fs_ss integrity: success!\n\n");
   else
-    vul_printf (vcl_cout, "\t  Check fs_ss integrity: fail!\n\n");
+    vul_printf (std::cout, "\t  Check fs_ss integrity: fail!\n\n");
 }
 
 // #################################################################
@@ -104,14 +104,14 @@ void dbsk3d_fs_regul::run_shock_regul (const float reg_th, const bool reasgn_los
 //: Initialize the sheet queue for greedy regularization.
 void dbsk3d_fs_regul::init_regul_sheet_queue (const float reg_th)
 {
-  vul_printf (vcl_cout, "\ninit_regul_sheet_queue(): reg_th %f.\n", reg_th);
-  vul_printf (vcl_cout, "\ttotal shock sheets: %u\n", fs_ss_->sheetmap().size());
+  vul_printf (std::cout, "\ninit_regul_sheet_queue(): reg_th %f.\n", reg_th);
+  vul_printf (std::cout, "\ttotal shock sheets: %u\n", fs_ss_->sheetmap().size());
 
   //Put all shock-sheet-tabs with cost less then cost_th to the queue.
   unsigned int n_S_interior = 0;
   unsigned int n_S_unbounded = 0;
 
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss_->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss_->sheetmap().begin();
   for (; it != fs_ss_->sheetmap().end(); it++) {
     dbsk3d_fs_sheet* S = (*it).second;
 
@@ -131,17 +131,17 @@ void dbsk3d_fs_regul::init_regul_sheet_queue (const float reg_th)
     }
   }
 
-  vul_printf (vcl_cout, "\t# interior shock sheets: %u\n", n_S_interior);
-  vul_printf (vcl_cout, "\t# unbounded outside shock sheets: %u\n", n_S_unbounded);
-  vul_printf (vcl_cout, "\t# fs_sheets in queue to be regularized: %u\n", fs_sheet_queue_.size());
+  vul_printf (std::cout, "\t# interior shock sheets: %u\n", n_S_interior);
+  vul_printf (std::cout, "\t# unbounded outside shock sheets: %u\n", n_S_unbounded);
+  vul_printf (std::cout, "\t# fs_sheets in queue to be regularized: %u\n", fs_sheet_queue_.size());
 }
 
 void dbsk3d_fs_regul::greedy_shock_regul (const float reg_th)
 {
-  vul_printf (vcl_cout, "\nrun_greedy_regularization(): queue size %u.\n", fs_sheet_queue_.size());
+  vul_printf (std::cout, "\nrun_greedy_regularization(): queue size %u.\n", fs_sheet_queue_.size());
 
   unsigned int n_splice_xform = 0;  
-  vcl_multimap<float, dbsk3d_fs_sheet*>::iterator it = fs_sheet_queue_.begin();
+  std::multimap<float, dbsk3d_fs_sheet*>::iterator it = fs_sheet_queue_.begin();
   while (it != fs_sheet_queue_.end()) {    
     dbsk3d_fs_sheet* S = (*it).second;
     fs_sheet_queue_.erase (it); //Remove link from queue.
@@ -153,8 +153,8 @@ void dbsk3d_fs_regul::greedy_shock_regul (const float reg_th)
     //Go through each shock patch FF and each A13-shock-link FE of S, 
     //and check if S is valid for a splice transform.
     //Make a list of sheets to splice (S with smaller id in the front).
-    vcl_list<vcl_pair<int, int> > S_to_splice;
-    vcl_vector<dbsk3d_fs_edge*> C_Lset;
+    std::list<std::pair<int, int> > S_to_splice;
+    std::vector<dbsk3d_fs_edge*> C_Lset;
     if (S_valid_splice_xform (S, S_to_splice, C_Lset)) {
       S_3d_splice_xform (S, S_to_splice, C_Lset, reg_th);
       n_splice_xform++;
@@ -163,7 +163,7 @@ void dbsk3d_fs_regul::greedy_shock_regul (const float reg_th)
     it = fs_sheet_queue_.begin(); //For the next iteration.
   }
 
-  vul_printf (vcl_cout, "  %u early greedy splice xforms on fs_sheets performed.\n\n", n_splice_xform);
+  vul_printf (std::cout, "  %u early greedy splice xforms on fs_sheets performed.\n\n", n_splice_xform);
 }
 
 // #################################################################
@@ -182,8 +182,8 @@ void dbsk3d_fs_regul::greedy_shock_regul (const float reg_th)
 //  that possibly contains self-A5 swallow tail.
 
 void dbsk3d_fs_regul::S_3d_splice_xform (dbsk3d_fs_sheet* S, 
-                                         vcl_list<vcl_pair<int, int> >& S_to_splice,
-                                         vcl_vector<dbsk3d_fs_edge*>& C_Lset,
+                                         std::list<std::pair<int, int> >& S_to_splice,
+                                         std::vector<dbsk3d_fs_edge*>& C_Lset,
                                          const float reg_th)
 {  
   if (C_Lset.size() == 0) {
@@ -201,7 +201,7 @@ void dbsk3d_fs_regul::S_3d_splice_xform (dbsk3d_fs_sheet* S,
 
   //Splicing each pair (S1, S2) of the S_to_splice list. 
   while (S_to_splice.size() != 0) {
-    vcl_list<vcl_pair<int, int> >::iterator lit = S_to_splice.begin();
+    std::list<std::pair<int, int> >::iterator lit = S_to_splice.begin();
     int S1id = (*lit).first;
     int S2id = (*lit).second;
     dbsk3d_fs_sheet* S1 = fs_ss_->sheetmap (S1id);
@@ -214,7 +214,7 @@ void dbsk3d_fs_regul::S_3d_splice_xform (dbsk3d_fs_sheet* S,
 
     //Splicing S1 and S2 together.
     #if DBMSH3D_DEBUG > 2
-    vul_printf (vcl_cout, "\tS %d: splice sheets %d and %d together.\n", 
+    vul_printf (std::cout, "\tS %d: splice sheets %d and %d together.\n", 
                 S->id(), S1->id(), S2->id());
     #endif
 

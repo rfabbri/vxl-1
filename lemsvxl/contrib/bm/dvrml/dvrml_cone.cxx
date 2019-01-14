@@ -2,7 +2,7 @@
 
 #include"dvrml_cone.h"
 
-void dvrml_cone::draw( vcl_ostream& os )
+void dvrml_cone::draw( std::ostream& os )
 {
     os << '#' << this->shape() << '\n'
        << "Transform{\n"

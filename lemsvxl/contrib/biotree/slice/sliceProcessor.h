@@ -1,16 +1,16 @@
 #if !defined(SLICE_PROCESSOR_H_)
 #define SLICE_PROCESSOR_H_ 
 
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 template <class T> class sliceProcessor{
   public:
-    virtual vcl_vector<T*> process(const vcl_vector< vcl_vector<T*> >& slice_sets, int w, int h, int slice) = 0;
+    virtual std::vector<T*> process(const std::vector< std::vector<T*> >& slice_sets, int w, int h, int slice) = 0;
     virtual const int nstreams() const = 0;
     virtual const int nslices() const = 0;
     virtual const int noutputs() const = 0;
-    virtual const vcl_string name() const = 0;
+    virtual const std::string name() const = 0;
   protected:
   private:
 };
@@ -18,11 +18,11 @@ template <class T> class sliceProcessor{
 class dummySliceProcessor : public sliceProcessor<float>
 {
   public:
-    virtual vcl_vector<float*> process(const vcl_vector< vcl_vector<float*> >& slice_sets, int w, int h, int slice);
+    virtual std::vector<float*> process(const std::vector< std::vector<float*> >& slice_sets, int w, int h, int slice);
     virtual const int nstreams() const { return 1;}
     virtual const int nslices() const{ return 3;}
     virtual const int noutputs() const{ return 1;}
-    virtual const vcl_string name() const{ return vcl_string("dummySliceProcessor");}
+    virtual const std::string name() const{ return std::string("dummySliceProcessor");}
   protected:
   private:
 };

@@ -19,8 +19,8 @@ bool dsm_extract_intensity_feature_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_extract_intensity_feature_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 	
 	unsigned i = 0;
 	input_types_[i++] = "vil_image_view_base_sptr";// the target image
@@ -45,7 +45,7 @@ bool dsm_extract_intensity_feature_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_extract_intensity_feature_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_extract_intensity_feature_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -58,8 +58,8 @@ bool dsm_extract_intensity_feature_process(bprb_func_process& pro)
 
 	if( vil_base_sptr->nplanes() > 1 || vil_base_sptr->pixel_format() == VIL_PIXEL_FORMAT_RGB_BYTE )
 	{
-		vcl_cout << "---- ERROR: dsm_extract_intensity_feature_process ----\n"
-			     << "\t Please provide a grey scale image. " << vcl_endl;
+		std::cout << "---- ERROR: dsm_extract_intensity_feature_process ----\n"
+			     << "\t Please provide a grey scale image. " << std::endl;
 		return false;
 	}
 

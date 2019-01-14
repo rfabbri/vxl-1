@@ -16,10 +16,10 @@
 #include<vgl/vgl_distance.h>
 #include<vgl/vgl_point_2d.h>
 
-#include<vcl_cstdlib.h>
-#include<vcl_map.h>
-#include<vcl_string.h>
-#include<vcl_utility.h>
+#include<cstdlib>
+#include<map>
+#include<string>
+#include<utility>
 
 #include<vil/vil_image_view.h>
 #include<vil/vil_load.h>
@@ -81,8 +81,8 @@ namespace dsm_utilities
 	//: input[1] = filename of the tiff image which serves as 
         //:   prediction result with values 0 for no change 255 for change
 	vnl_matrix<double> compute_confusion_matrix( 
-            vcl_string const& img_gt_filename, 
-            vcl_string const& img_prediction_filename);
+            std::string const& img_gt_filename, 
+            std::string const& img_prediction_filename);
 
 	//: function to evaluate confusion matrix of binary change 
         //: detection classification

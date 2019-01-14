@@ -4,7 +4,7 @@
 #include "base_filedir.h"
 
 // "c:\abc\def.esf"
-vcl_string getFileBaseName(vcl_string fname) {
+std::string getFileBaseName(std::string fname) {
   int l1,l2;
   l1=fname.find_last_of ('\\');
   l2=fname.find_last_of ('.');
@@ -12,14 +12,14 @@ vcl_string getFileBaseName(vcl_string fname) {
 }
 
 // "c:\abc\def"
-vcl_string getDirBaseName(vcl_string fname) {
+std::string getDirBaseName(std::string fname) {
   int l2;
   l2=fname.find_last_of('.');
   return fname.substr (0, l2);
 }
 
 // "c:\abc"
-vcl_string getDirName(vcl_string fname) {
+std::string getDirName(std::string fname) {
   int l2;
   l2=fname.find_last_of('\\');
   return fname.substr (0, l2);

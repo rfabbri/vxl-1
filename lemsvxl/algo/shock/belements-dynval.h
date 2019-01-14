@@ -3,8 +3,8 @@
 
 #include "belements.h"
 #include "dyn-val.h"
-#include <vcl_iostream.h>
-#include <vcl_cstdio.h>
+#include <iostream>
+#include <cstdio>
 
 //#############################################################
 //     DYN_VAL
@@ -21,7 +21,7 @@ public:
   virtual ~BPoint_DynVal ();
 
   PointIVRegion* pointIV() { return &_pointIV;  }
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 
@@ -40,7 +40,7 @@ public:
   virtual BLine_DynVal* twinLine(char dummy='0') { return (BLine_DynVal*) _twinLine; }
 
   virtual void reconnect(BPoint* oldPt, BPoint* newPt);
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 

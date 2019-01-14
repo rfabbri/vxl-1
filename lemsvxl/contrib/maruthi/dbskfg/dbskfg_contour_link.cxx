@@ -27,7 +27,7 @@ dbskfg_contour_link::~dbskfg_contour_link()
 
 void dbskfg_contour_link::delete_shock(unsigned int id)
 {
-    vcl_vector<dbskfg_shock_link*>::iterator it;
+    std::vector<dbskfg_shock_link*>::iterator it;
     for ( it = shocks_affected_.begin() ; it != shocks_affected_.end(); ++it)
     {
         if ( (*it)->id() == id )
@@ -47,7 +47,7 @@ void dbskfg_contour_link::delete_shock(unsigned int id)
 void dbskfg_contour_link::shock_links_affected(dbskfg_shock_link* shock_link)
 {
     bool add_link=true;
-    vcl_vector<dbskfg_shock_link*>::iterator it;
+    std::vector<dbskfg_shock_link*>::iterator it;
     for ( it = shocks_affected_.begin() ; it != shocks_affected_.end(); ++it)
     {
         if ( (*it)->id() == shock_link->id() )
@@ -67,25 +67,25 @@ void dbskfg_contour_link::shock_links_affected(dbskfg_shock_link* shock_link)
         
 }
 
-void dbskfg_contour_link::print(vcl_ostream& os)
+void dbskfg_contour_link::print(std::ostream& os)
 {
     this->dbskfg_composite_link::print(os);
     os<<"Source Id: "
             << this->source()->id() 
             << " Target id: "
             << this->target()->id()
-            << vcl_endl;
+            << std::endl;
     dbskfg_contour_node* cnode=dynamic_cast<dbskfg_contour_node*>
         (&(*this->source()));
-    os<<"Original Contour Id: "<<contour_id_<<vcl_endl;
+    os<<"Original Contour Id: "<<contour_id_<<std::endl;
     os<<"Shocks Affected: ";
     for (unsigned int i=0; i < shocks_affected_.size(); ++i)
     {
         os<<shocks_affected_[i]->id()<<" ";
 
     }
-    os<<vcl_endl;
-    os<<vcl_endl;
+    os<<std::endl;
+    os<<std::endl;
 
 
 }

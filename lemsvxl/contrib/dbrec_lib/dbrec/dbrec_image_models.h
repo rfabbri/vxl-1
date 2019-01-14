@@ -18,7 +18,7 @@
 #define _dbrec_image_models_h_
 
 #include <vbl/vbl_ref_count.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <bsta/bsta_weibull.h>
 #include <vil/vil_image_view.h>
 #include <dbrec/dbrec_image_models_sptr.h>
@@ -102,14 +102,14 @@ protected:
 
 class dbrec_indep_prior_model : public dbrec_prior_model {
 public:
-  dbrec_indep_prior_model(const vcl_vector<dbrec_prior_model_sptr>& models) : models_(models) {}
+  dbrec_indep_prior_model(const std::vector<dbrec_prior_model_sptr>& models) : models_(models) {}
   dbrec_indep_prior_model(dbrec_prior_model_sptr model1, dbrec_prior_model_sptr model2) { models_.push_back(model1); models_.push_back(model2); }
 
   //: The prior at this location
   virtual float prior(unsigned i, unsigned j) const;
 
 protected:
-  vcl_vector<dbrec_prior_model_sptr> models_;
+  std::vector<dbrec_prior_model_sptr> models_;
 };
 
 

@@ -25,8 +25,8 @@
 #include <dbrec/dbrec_part_sptr.h>
 #include <dbrec/dbrec_part_context_sptr.h>
 #include <vil/vil_image_view.h>
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 //: during training, an instance of this selection measure should be created, it collects contexts from all the training images and makes the necessary measurements
 //
@@ -37,7 +37,7 @@
 //
 class dbrec_part_selection_measure : public dbfs_measure {
 public:
-  dbrec_part_selection_measure(const vcl_vector<dbrec_part_sptr>& parts, int class_cnt);
+  dbrec_part_selection_measure(const std::vector<dbrec_part_sptr>& parts, int class_cnt);
 
   //: measure the areas for the parts
   //  only the pixels which are true in the valid_region_mask are used in the measures, 
@@ -51,7 +51,7 @@ public:
   float mutual_info_class_average(int feature_id);  // I(C, F=f)
 
   int get_class_cnt() const { return class_cnt_; }
-  vcl_vector<dbrec_part_sptr>& get_parts() { return parts_; }
+  std::vector<dbrec_part_sptr>& get_parts() { return parts_; }
 
 protected:
   //: cache the total regions and the total object regions for the parts
@@ -60,11 +60,11 @@ protected:
   int class_cnt_;
   float total_training_area_; // the total area of the training images seen
 
-  vcl_vector<dbrec_part_sptr> parts_;   
+  std::vector<dbrec_part_sptr> parts_;   
   //                            area_obj, total_area
-  vcl_vector<vcl_map<int, vcl_pair<float, float> > > areas_;  // for each class and for each part cache the area measures
+  std::vector<std::map<int, std::pair<float, float> > > areas_;  // for each class and for each part cache the area measures
   //      area_obj in class, total_class_area
-  vcl_vector<vcl_pair<float, float> > class_areas_;  // total area of images from each class
+  std::vector<std::pair<float, float> > class_areas_;  // total area of images from each class
   
 };
 
@@ -82,15 +82,15 @@ public:
 class dbrec_part_selector {
 public:
   //: the hierarchy makes sure that the selected parts for a class are the parts that were populated for that class
-  dbrec_part_selector(dbrec_part_selection_measure_sptr sm, unsigned selection_algo_type, vcl_vector<dbrec_part_sptr>& parts, dbrec_hierarchy_sptr h, int class_cnt);
+  dbrec_part_selector(dbrec_part_selection_measure_sptr sm, unsigned selection_algo_type, std::vector<dbrec_part_sptr>& parts, dbrec_hierarchy_sptr h, int class_cnt);
 
   //: return the top k features in the set, just a wrapper around the selector's corresponding method
-  void get_top_features(int class_id, int k, vcl_vector<dbrec_part_sptr>& best_features); 
+  void get_top_features(int class_id, int k, std::vector<dbrec_part_sptr>& best_features); 
 
 protected:
   dbrec_hierarchy_sptr h_;
   dbfs_selector_sptr sel_;
-  vcl_map<int, dbrec_part_sptr> part_map_;  // keep a map for fast access
+  std::map<int, dbrec_part_sptr> part_map_;  // keep a map for fast access
 };
 
 // Binary io, NOT IMPLEMENTED, signatures defined to use dbrec_part_selection_measure as a brdb_value

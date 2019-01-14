@@ -13,8 +13,8 @@
 // \endverbatim
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 //: Derived video process class that initializes a dbsta_mixture_model
 class dbbgm_init_model_process : public bpro1_process {
@@ -27,16 +27,16 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   //: Returns a vector of strings with suggested names for output classes
-  vcl_vector< vcl_string > suggest_output_names();
+  std::vector< std::string > suggest_output_names();
 
   bool execute();
   bool finish();

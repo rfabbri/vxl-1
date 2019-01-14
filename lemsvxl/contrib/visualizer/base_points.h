@@ -1,11 +1,11 @@
 #ifndef  POINTS_H
 #define  POINTS_H
 
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 
-#include <vcl_cassert.h>
-#include <vcl_cmath.h>
+#include <cassert>
+#include <cmath>
 
 template <class coord_type>
 class Point2D
@@ -172,7 +172,7 @@ inline Point2D<point_type> operator*(const Point2D<point_type> pt, mul_type val)
 inline Point2D<point_type> operator/(const Point2D<point_type> pt, div_type val)
   {
     if (val ==0)
-        vcl_cout<<" Error: <Point2D operator/> Division by 0"<<vcl_endl;
+        std::cout<<" Error: <Point2D operator/> Division by 0"<<std::endl;
     return Point2D<point_type>(pt.getX()/val, pt.getY()/val);
    }
 
@@ -207,7 +207,7 @@ inline Point2D<point1_type> operator-(Point2D<point1_type> pt1, Point2D<point2_t
 /*------------------------------------------------------------*/
     
     template <class point_type>    
-inline vcl_ostream& operator<<(vcl_ostream &os, const Point2D<point_type> pt)
+inline std::ostream& operator<<(std::ostream &os, const Point2D<point_type> pt)
   {
     os<<" ["<<pt.getX()<<", "<<pt.getY()<<"] ";
     return os;

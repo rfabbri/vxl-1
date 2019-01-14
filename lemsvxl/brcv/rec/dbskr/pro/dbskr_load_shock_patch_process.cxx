@@ -16,7 +16,7 @@ dbskr_load_shock_patch_process::dbskr_load_shock_patch_process() : bpro1_process
   if( !parameters()->add( "Shock patch storage file <*-strg.bin>" , "-filepath", 
     bpro1_filepath("","-strg.bin") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -41,7 +41,7 @@ dbskr_load_shock_patch_process::clone() const
 
 // -----------------------------------------------------------------------------
 //: Return the name of the process
-vcl_string dbskr_load_shock_patch_process::name()
+std::string dbskr_load_shock_patch_process::name()
 {
   return "Load Shock Patch Storage";
 }
@@ -50,9 +50,9 @@ vcl_string dbskr_load_shock_patch_process::name()
 
 // -----------------------------------------------------------------------------
 //: Returns a vector of strings describing the input types to this process
-vcl_vector< vcl_string > dbskr_load_shock_patch_process::get_input_type()
+std::vector< std::string > dbskr_load_shock_patch_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // no input type required
   to_return.clear();
   return to_return;
@@ -60,9 +60,9 @@ vcl_vector< vcl_string > dbskr_load_shock_patch_process::get_input_type()
 
 // -----------------------------------------------------------------------------
 //: Returns a vector of strings describing the output types of this process
-vcl_vector< vcl_string > dbskr_load_shock_patch_process::get_output_type()
+std::vector< std::string > dbskr_load_shock_patch_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   // output type
   to_return.push_back( "shock_patch" );

@@ -3,7 +3,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <vcl_cstdio.h>
+#include <cstdio>
 #include <vnl/vnl_math.h>
 #include <dbsol/dbsol_interp_curve_2d.h>
 #include <dbsol/algo/dbsol_curve_algs.h>
@@ -24,7 +24,7 @@ double spoke_curve_fixAngleMPiPi (double a)
 }
 
 
-  vsol_point_2d_sptr compute_centroid(vcl_vector<vsol_point_2d_sptr> contour)
+  vsol_point_2d_sptr compute_centroid(std::vector<vsol_point_2d_sptr> contour)
     {
     double cx = 0,cy = 0;
     unsigned int num_points = contour.size();
@@ -41,8 +41,8 @@ double spoke_curve_fixAngleMPiPi (double a)
      return cp;
     }
 
-void compute_spoke_scales_angles(vcl_vector<vsol_point_2d_sptr> contour,vcl_vector<vsol_point_2d_sptr> ref_contour,
-                                                       vcl_vector<double> &scales,vcl_vector<double> &angles)
+void compute_spoke_scales_angles(std::vector<vsol_point_2d_sptr> contour,std::vector<vsol_point_2d_sptr> ref_contour,
+                                                       std::vector<double> &scales,std::vector<double> &angles)
      {
      double cx = 0,cy = 0,ref_cx = 0,ref_cy = 0,dist,ref_dist,angle,ref_angle;
      //contour and ref_contour must have the same number of points
@@ -59,25 +59,25 @@ void compute_spoke_scales_angles(vcl_vector<vsol_point_2d_sptr> contour,vcl_vect
          dist = contour[i]->distance(cp);
          ref_dist = ref_contour[i]->distance(ref_cp);
 
-         angle = vcl_atan2(contour[i]->y() - cp->y(),contour[i]->x() - cp->x());
-         ref_angle = vcl_atan2(ref_contour[i]->y() - ref_cp->y(),ref_contour[i]->x() - ref_cp->x());
+         angle = std::atan2(contour[i]->y() - cp->y(),contour[i]->x() - cp->x());
+         ref_angle = std::atan2(ref_contour[i]->y() - ref_cp->y(),ref_contour[i]->x() - ref_cp->x());
 
-         if (vcl_fabs(ref_dist) > 1e-10)
-         scales.push_back(vcl_log(dist/ref_dist));
+         if (std::fabs(ref_dist) > 1e-10)
+         scales.push_back(std::log(dist/ref_dist));
          else
-             scales.push_back(vcl_log(dist));
+             scales.push_back(std::log(dist));
          
          angles.push_back(spoke_curve_fixAngleMPiPi(angle - ref_angle));
          }
 
      }
 
-  vcl_vector<vsol_point_2d_sptr> transform_spoke_shape(vcl_vector<vsol_point_2d_sptr> contour,vcl_vector<double> scales,
-                                                      vcl_vector<double> angles)
+  std::vector<vsol_point_2d_sptr> transform_spoke_shape(std::vector<vsol_point_2d_sptr> contour,std::vector<double> scales,
+                                                      std::vector<double> angles)
     {
     double x,y,cx=0,cy=0,stretched_x,stretched_y,rotated_x,rotated_y;
 
-    vcl_vector<vsol_point_2d_sptr> mean_shape;
+    std::vector<vsol_point_2d_sptr> mean_shape;
     unsigned int num_points = contour.size();
 
     for (unsigned int i=0;i<num_points;i++)
@@ -97,8 +97,8 @@ void compute_spoke_scales_angles(vcl_vector<vsol_point_2d_sptr> contour,vcl_vect
          stretched_x = scales[i]*x;
          stretched_y = scales[i]*y;
 
-         rotated_x = stretched_x*vcl_cos(angles[i]) - stretched_y*vcl_sin(angles[i]);
-         rotated_y = stretched_x*vcl_sin(angles[i]) + stretched_y*vcl_cos(angles[i]);
+         rotated_x = stretched_x*std::cos(angles[i]) - stretched_y*std::sin(angles[i]);
+         rotated_y = stretched_x*std::sin(angles[i]) + stretched_y*std::cos(angles[i]);
 
          rotated_x += cx;
          rotated_y += cy;
@@ -110,45 +110,45 @@ void compute_spoke_scales_angles(vcl_vector<vsol_point_2d_sptr> contour,vcl_vect
     return mean_shape;
     }
 
-double compute_lie_spoke_cost(vcl_vector<vsol_point_2d_sptr> curve1,vcl_vector<vsol_point_2d_sptr> curve2)
+double compute_lie_spoke_cost(std::vector<vsol_point_2d_sptr> curve1,std::vector<vsol_point_2d_sptr> curve2)
     {
 
     assert(curve1.size() == curve2.size());
 
     double cost = 0;
-     vcl_vector<double> scales,angles;
+     std::vector<double> scales,angles;
      compute_spoke_scales_angles(curve1,curve2,scales,angles);
 
      for (unsigned int i=0;i<scales.size();i++)
      cost = cost +  scales[i]*scales[i] + angles[i]*angles[i];
 
-     cost = vcl_sqrt(cost);
+     cost = std::sqrt(cost);
      return cost;
     }
 
-void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
+void loadCON(std::string fileName, std::vector<vsol_point_2d_sptr> &points)
     {
-    vcl_ifstream infp(fileName.c_str());
+    std::ifstream infp(fileName.c_str());
     char magicNum[200];
 
     infp.getline(magicNum,200);
     if (strncmp(magicNum,"CONTOUR",7))
         {
-        vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-        vcl_cerr << "Should be CONTOUR " << magicNum << vcl_endl;
+        std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+        std::cerr << "Should be CONTOUR " << magicNum << std::endl;
         exit(1);
         }
 
     char openFlag[200];
     infp.getline(openFlag,200);
     if (!strncmp(openFlag,"OPEN",4))
-        vcl_cout << "Open Curve\n" << vcl_endl;
+        std::cout << "Open Curve\n" << std::endl;
     else if (!strncmp(openFlag,"CLOSE",5))
-        vcl_cout << "Closed Curve\n" << vcl_endl;
+        std::cout << "Closed Curve\n" << std::endl;
     else
         {
-        vcl_cerr << "Invalid File " << fileName.c_str() << vcl_endl;
-        vcl_cerr << "Should be OPEN/CLOSE " << openFlag << vcl_endl;
+        std::cerr << "Invalid File " << fileName.c_str() << std::endl;
+        std::cerr << "Should be OPEN/CLOSE " << openFlag << std::endl;
         exit(1);
         }
 
@@ -159,32 +159,32 @@ void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
     for (i=0;i<numOfPoints;i++)
         {
         infp >> x >> y;
-        vcl_cout << "x: " << x << "y: " << y << vcl_endl;
+        std::cout << "x: " << x << "y: " << y << std::endl;
         points.push_back(new vsol_point_2d(x, y));
         }
     infp.close();
     }
 
-void writeCON(vcl_string fileName,vcl_vector<vsol_point_2d_sptr> points)
+void writeCON(std::string fileName,std::vector<vsol_point_2d_sptr> points)
 {
 unsigned int numpoints = points.size();
 
-  vcl_ofstream outfp(fileName.c_str());
+  std::ofstream outfp(fileName.c_str());
   assert(outfp != NULL);
-  outfp << "CONTOUR" << vcl_endl;
-  outfp << "OPEN" << vcl_endl;
-  outfp << numpoints << vcl_endl;
+  outfp << "CONTOUR" << std::endl;
+  outfp << "OPEN" << std::endl;
+  outfp << numpoints << std::endl;
 
   for(int i=0; i<numpoints; i++)
   {
-    outfp << points[i]->x() << " " << points[i]->y() << " " << vcl_endl;
+    outfp << points[i]->x() << " " << points[i]->y() << " " << std::endl;
   }
   outfp.close();
 }
 
-vcl_vector<vcl_string> get_all_files(vcl_string file_path)
+std::vector<std::string> get_all_files(std::string file_path)
     {
-    vcl_vector<vcl_string> files;
+    std::vector<std::string> files;
 
     for (vul_file_iterator fn=file_path+"\\*.con"; fn; ++fn)
         {

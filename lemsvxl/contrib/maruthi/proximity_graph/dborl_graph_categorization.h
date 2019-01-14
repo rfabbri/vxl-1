@@ -29,11 +29,11 @@ public:
     ~dborl_graph_categorization(){};
 
     // Construct Graph
-    void graph_categorize(vcl_string xml_graph_file,
-                          vcl_string exemplar_dataset_file,
-                          vcl_string query_dataset_file,
-                          vcl_string query_label_file,
-                          vcl_string stats_file,
+    void graph_categorize(std::string xml_graph_file,
+                          std::string exemplar_dataset_file,
+                          std::string query_dataset_file,
+                          std::string query_label_file,
+                          std::string stats_file,
                           double beta);
 
                        
@@ -42,23 +42,23 @@ private:
 
 
     // Read files 
-    void read_files( vcl_string exemplar_dataset_file,
-                     vcl_string query_dataset_file,
-                     vcl_string query_label_file);
+    void read_files( std::string exemplar_dataset_file,
+                     std::string query_dataset_file,
+                     std::string query_label_file);
 
     // Read graph
-    void read_graph( vcl_string xml_graph_file,
-                     vcl_string query_name);
+    void read_graph( std::string xml_graph_file,
+                     std::string query_name);
 
     void rebuild_graph(vnl_matrix<double>& total_matrix, double beta);
 
-    vcl_string perform_categorization();
+    std::string perform_categorization();
 
     // Number of nodes
     unsigned int number_of_nodes_;
 
     // List of query names
-    vcl_vector<vcl_string> queries_;
+    std::vector<std::string> queries_;
 
     // List of similarity matrices
     vnl_matrix<double> query_sim_matrix_;
@@ -67,7 +67,7 @@ private:
     vnl_matrix<double> exemplar_sim_matrix_;
 
     // Define a vector of vertex objects
-    vcl_vector<dborl_proximity_graph::Vertex> vertex_objects_;
+    std::vector<dborl_proximity_graph::Vertex> vertex_objects_;
 
     // Define proximity graph
     dborl_proximity_graph::Undirected_Graph proximity_graph_;

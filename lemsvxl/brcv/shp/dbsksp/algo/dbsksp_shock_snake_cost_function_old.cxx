@@ -123,7 +123,7 @@ double chord_length,
 external_energy_function_(fnt),
 lambda_(internal_external_energy_ratio),
 start_(start),
-shock_tangent_start_(vgl_vector_2d<double >(vcl_cos(theta0), vcl_sin(theta0))),
+shock_tangent_start_(vgl_vector_2d<double >(std::cos(theta0), std::sin(theta0))),
 phi_start_(phi_start),
 radius_start_(radius_start),
 chord_length_(chord_length)
@@ -145,7 +145,7 @@ dbsksp_half_shapelet_cost_function(const vnl_vector<double >& fixed_params,
 external_energy_function_(fnt),
 lambda_(internal_external_energy_ratio),
 start_(vgl_point_2d<double >(fixed_params[0], fixed_params[1])),
-shock_tangent_start_(vgl_vector_2d<double >(vcl_cos(fixed_params[2]), vcl_sin(fixed_params[2]))),
+shock_tangent_start_(vgl_vector_2d<double >(std::cos(fixed_params[2]), std::sin(fixed_params[2]))),
 phi_start_(fixed_params[3]),
 radius_start_(fixed_params[4]),
 chord_length_(fixed_params[5])
@@ -171,9 +171,9 @@ get_shapelet(const vnl_vector<double >& x)
   double phi1 = x[0];
   double m0 = x[1];
   double len = this->chord_length_;
-  double alpha0 = vcl_asin(m0*vcl_sin(phi0));
+  double alpha0 = std::asin(m0*std::sin(phi0));
   vgl_vector_2d<double > chord_dir = rotated(this->shock_tangent_start_, -alpha0);
-  double theta0 = vcl_atan2(chord_dir.y(), chord_dir.x());
+  double theta0 = std::atan2(chord_dir.y(), chord_dir.x());
   return new dbsksp_shapelet(x0, y0, theta0, r0, phi0, phi1, m0, len);
 }
 
@@ -191,7 +191,7 @@ get_fixed_params(const dbsksp_shock_edge_sptr& e,
   fixed_params[0] = node->pt().x();
   fixed_params[1] = node->pt().y();
   vgl_vector_2d<double > chord_dir = rotated(e->chord_dir(node), node->descriptor(e)->alpha);
-  fixed_params[2] = vcl_atan2(chord_dir.y(), chord_dir.x());
+  fixed_params[2] = std::atan2(chord_dir.y(), chord_dir.x());
   fixed_params[3] = node->descriptor(e)->phi;
   fixed_params[4] = node->radius();
   fixed_params[5] = e->chord_length();
@@ -279,9 +279,9 @@ get_shapelet(const vnl_vector<double >& x)
   double phi1 = x[0];
   double m0 = x[1];
   double len = x[2];
-  double alpha0 = vcl_asin(m0*vcl_sin(phi0));
+  double alpha0 = std::asin(m0*std::sin(phi0));
   vgl_vector_2d<double > chord_dir = rotated(this->shock_tangent_start_, -alpha0);
-  double theta0 = vcl_atan2(chord_dir.y(), chord_dir.x());
+  double theta0 = std::atan2(chord_dir.y(), chord_dir.x());
   return dbsksp_shapelet(x0, y0, theta0, r0, phi0, phi1, m0, len);
 }
 

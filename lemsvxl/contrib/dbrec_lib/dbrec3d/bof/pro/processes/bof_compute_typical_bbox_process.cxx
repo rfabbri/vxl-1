@@ -25,10 +25,10 @@ bool bof_compute_typical_bbox_process_cons(bprb_func_process& pro)
 {
   using namespace bof_compute_typical_bbox_process_globals ;
   
-  vcl_vector<vcl_string> input_types_(n_inputs_);
-  input_types_[0] = "vcl_string"; // bof_path, where bof_info.xml and bof_category_info.xml are
+  std::vector<std::string> input_types_(n_inputs_);
+  input_types_[0] = vcl_string"; // bof_path, where bof_info.xml and bof_category_info.xml are
   
-  vcl_vector<vcl_string> output_types_(n_outputs_);
+  std::vector<std::string> output_types_(n_outputs_);
   
   return pro.set_input_types(input_types_) && pro.set_output_types(output_types_);
 }
@@ -40,7 +40,7 @@ bool bof_compute_typical_bbox_process(bprb_func_process& pro)
   using namespace bof_compute_typical_bbox_process_globals;
   
   //get inputs
-  vcl_string bof_path = pro.get_input<vcl_string>(0);
+  std::string bof_path = pro.get_input<std::string>(0);
   
   bof_scene_categories categories(bof_path);
   categories.bounding_box_statictics();

@@ -15,7 +15,7 @@
 
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_utils.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bvis1/bvis1_tool_sptr.h>
 #include <bvis1/bvis1_tool.h>
 #include <vgl/vgl_distance.h>
@@ -29,7 +29,7 @@ private:
 protected:
   dbcvr_cvmatch_sptr curvematch_;
   dbcvr_cv_cor_sptr cv_cor_;
-  vcl_vector<vsol_point_2d_sptr> curve1_pts_, curve2_pts_;
+  std::vector<vsol_point_2d_sptr> curve1_pts_, curve2_pts_;
   bvis1_tool_sptr active_tool_sptr;
 
   vbl_array_2d<int> ColorArray_;
@@ -50,12 +50,12 @@ public:
   void set_curvematch (dbcvr_cvmatch_sptr new_curvematch) {
     curvematch_ = new_curvematch;
     size_ = (curvematch_->finalMap())->size();
-    vcl_vector<double>* costs = curvematch_->finalMapCost();
-    vcl_cout << "printing costs along the alignment curve: \n";
+    std::vector<double>* costs = curvematch_->finalMapCost();
+    std::cout << "printing costs along the alignment curve: \n";
     for (int i = costs->size()-1; i >= 0; i--) {
-      vcl_cout << (*costs)[i] << " ";
+      std::cout << (*costs)[i] << " ";
     }
-    vcl_cout << "\n";
+    std::cout << "\n";
   }
 
   void set_curve_cor (dbcvr_cv_cor_sptr new_curve_cor);
@@ -71,15 +71,15 @@ public:
   void get_popup(const vgui_popup_params& params, vgui_menu &menu);
 
 protected:
-  void DrawPointMatching(vcl_vector<vgl_point_2d<double> >& pts1, vcl_vector<vgl_point_2d<double> >& pts2, 
+  void DrawPointMatching(std::vector<vgl_point_2d<double> >& pts1, std::vector<vgl_point_2d<double> >& pts2, 
                         double OffsetX1, double OffsetY1, double OffsetX2, double OffsetY2, bool show_matching_lines);
   void DrawCurveMatching (bsol_intrinsic_curve_2d_sptr curve1, 
                 bsol_intrinsic_curve_2d_sptr curve2, FinalMapType* fmap, 
                 double OffsetX1, double OffsetY1, double OffsetX2, double OffsetY2,
                 bool bShowMatchingLines);
 
-  void DrawCurves(vcl_vector<vsol_point_2d_sptr>& curve1_pts, 
-                  vcl_vector<vsol_point_2d_sptr>& curve2_pts,
+  void DrawCurves(std::vector<vsol_point_2d_sptr>& curve1_pts, 
+                  std::vector<vsol_point_2d_sptr>& curve2_pts,
                   double OffsetX1, double OffsetY1, double OffsetX2, double OffsetY2, bool open_cv_match);
 
 };

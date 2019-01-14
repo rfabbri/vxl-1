@@ -7,7 +7,7 @@
 dbmsh3d_gdt_edge::~dbmsh3d_gdt_edge () 
 {
   //: go through each interval and disconnect its prev-next connectivity
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   for (; it != interval_section_.I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
     assert (!I->is_dummy());
@@ -15,7 +15,7 @@ dbmsh3d_gdt_edge::~dbmsh3d_gdt_edge ()
     if (I->prev_flag())
       untie_prevI_nextI (I->prevI(), I);
 
-    vcl_vector<gdt_interval*>::iterator nit = I->nextIs().begin();
+    std::vector<gdt_interval*>::iterator nit = I->nextIs().begin();
     while (nit != I->nextIs().end()) {
       gdt_interval* nI = *nit;
       
@@ -103,7 +103,7 @@ dbmsh3d_halfedge* dbmsh3d_gdt_edge::get_he_to_propagate (dbmsh3d_halfedge* cur_f
 //  Degenerate intervals are not in it! Degenerate I's prev_ is reserved for other use!
 void dbmsh3d_gdt_edge::attach_IS () 
 {
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   for (; it != interval_section_.I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -132,7 +132,7 @@ void dbmsh3d_gdt_edge::attach_IS ()
 void dbmsh3d_gdt_edge::attach_IS (gdt_interval_section* IS)
 {
   assert (interval_section_.I_map()->size()==0);
-  vcl_map<double, gdt_ibase*>::iterator it = IS->I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = IS->I_map()->begin();
   while (it != IS->I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -150,7 +150,7 @@ void dbmsh3d_gdt_edge::attach_IS (gdt_interval_section* IS)
           tie_prevI_nextI (I->prevI(), I);
 
     IS->I_map()->erase (it);
-    interval_section_.I_map()->insert (vcl_pair<double, gdt_ibase*>(I->stau(), I));
+    interval_section_.I_map()->insert (std::pair<double, gdt_ibase*>(I->stau(), I));
 
     it = IS->I_map()->begin();
   }
@@ -158,7 +158,7 @@ void dbmsh3d_gdt_edge::attach_IS (gdt_interval_section* IS)
 
 void dbmsh3d_gdt_edge::detach_IS_to (gdt_interval_section* IS)
 {
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   while (it != interval_section_.I_map()->end()) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -192,7 +192,7 @@ void dbmsh3d_gdt_edge::detach_IS_to (gdt_interval_section* IS)
 gdt_interval* dbmsh3d_gdt_edge::get_dist_at_tau (const double& input_tau, double& geodesic_dist)
 {
   //: loop through interval_section and find the I containing input_tau
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   for (; it != interval_section_.I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -215,7 +215,7 @@ void dbmsh3d_gdt_edge::get_min_max_distance (double& min_dist, double& max_dist)
   min_dist = GDT_HUGE;
   max_dist = 0;
 
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   for (; it != interval_section_.I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 
@@ -231,11 +231,11 @@ void dbmsh3d_gdt_edge::get_min_max_distance (double& min_dist, double& max_dist)
 
 //: Given the query_dist, there exists at almost two points with the given geodesic distance
 void dbmsh3d_gdt_edge::get_gdt_points (const double gdt_dist, 
-                                       vcl_pair<gdt_interval*, double>& gdt_point_1,
-                                       vcl_pair<gdt_interval*, double>& gdt_point_2)
+                                       std::pair<gdt_interval*, double>& gdt_point_1,
+                                       std::pair<gdt_interval*, double>& gdt_point_2)
 {
   //: go through all intervals and query tau from given distance
-  vcl_map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
+  std::map<double, gdt_ibase*>::iterator it = interval_section_.I_map()->begin();
   for (; it != interval_section_.I_map()->end(); it++) {
     gdt_interval* I = (gdt_interval*) (*it).second;
 

@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <vcl_cmath.h>
+#include <cmath>
 #include "utils.h"
 #include "redt.h"
 #include "graphics.h"
@@ -10,7 +10,7 @@
 //#include "postscript.h"
 #include "ContourTracing.h"
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vil/vil_image_view.h>
 
 /* Writes the Tracer data directly from a file */
@@ -83,7 +83,7 @@ void writeTracerToFile2(char *contour_file_name, int height, int width,  Tracer 
 //input: unsigned char** img_, int width, int height
 //\return number of points traced.
 int contour_tracing (unsigned char* _img, int width, int height, double _sigma, 
-                     vcl_vector<vsol_point_2d_sptr>& points, char* input_file_name)
+                     std::vector<vsol_point_2d_sptr>& points, char* input_file_name)
 {
 
   // Chris Added: 
@@ -111,7 +111,7 @@ int contour_tracing (unsigned char* _img, int width, int height, double _sigma,
   
   int size = height*width;
   if (size == 0){
-    vcl_cout<< "Invalid Width:"<<width<< " or Height: "<<height<< vcl_endl;
+    std::cout<< "Invalid Width:"<<width<< " or Height: "<<height<< std::endl;
     return 0;
   }
 
@@ -297,7 +297,7 @@ detectContour (void)
   return nPoints_;
 }
 
-vcl_vector<vsol_point_2d_sptr>& ContourTracing::getResult (void)
+std::vector<vsol_point_2d_sptr>& ContourTracing::getResult (void)
 {
   return points_;
 }

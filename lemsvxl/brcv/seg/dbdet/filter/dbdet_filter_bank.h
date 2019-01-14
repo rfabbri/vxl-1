@@ -1,7 +1,7 @@
 #include <vnl/vnl_matrix.h>
 #include <vil/vil_image_view.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 
 #ifndef _DBDET_FILTER_BANK_H_
 #define _DBDET_FILTER_BANK_H_
@@ -30,15 +30,15 @@ public:
 
 class dbdet_filter_bank {
 
-  vcl_vector<dbdet_filter_2d> filters;
+  std::vector<dbdet_filter_2d> filters;
   int filtersMaxSize;
 public:
 
-  dbdet_filter_bank(vcl_string baseDir);
+  dbdet_filter_bank(std::string baseDir);
 
   int numFilters();
 
-  vcl_vector<vil_image_view<double> > decompose(vil_image_view<vil_rgb<vxl_byte> > image);
+  std::vector<vil_image_view<double> > decompose(vil_image_view<vil_rgb<vxl_byte> > image);
 };
 
 #endif

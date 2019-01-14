@@ -4,8 +4,8 @@
 // \file
 
 #include <float.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_command.h>
@@ -123,11 +123,11 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
   int num_hits = vgui_utils::leave_pick_mode();
 
   // get all hits
-  vcl_vector<vcl_vector<unsigned> > hits;
+  std::vector<std::vector<unsigned> > hits;
   vgui_utils::process_hits(num_hits, ptr, hits);
 
   // for each hit get the name of the soview if it is
-  // being managed by this vcl_list
+  // being managed by this std::list
   //
   // Each hit from a display list has two entries. The first is the id
   // of the display list, and the second is the id of the soview. See
@@ -135,17 +135,17 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
   // belongs to this display list iff the first hit number is this
   // list's id.
 
-  vcl_vector<GLuint> my_hits;
+  std::vector<GLuint> my_hits;
 
-  for (vcl_vector<vcl_vector<unsigned> >::iterator i=hits.begin();
+  for (std::vector<std::vector<unsigned> >::iterator i=hits.begin();
     i != hits.end(); ++i)
   {
-    vcl_vector<unsigned> const& names = *i;
+    std::vector<unsigned> const& names = *i;
     dbsk2d_assert( names.size() == 1 );
     my_hits.push_back( names[0] );
   }
 
-  //vcl_cout << "my_hits.size() = " << my_hits.size() << vcl_endl; 
+  //std::cout << "my_hits.size() = " << my_hits.size() << std::endl; 
 
   if( my_hits.size() == 1 ) 
   {
@@ -161,7 +161,7 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
     // is equivalent to 2 pixels on the screen
     pi.window_to_image_coordinates(0, 2, dx,dy);
 
-    // vcl_cout << "getting closest" << vcl_endl; 
+    // std::cout << "getting closest" << std::endl; 
 
     float smallest = FLT_MAX;
     unsigned int smallest_i = 0;
@@ -220,11 +220,11 @@ dbsk2d_base_gui_geometry* dbsk2d_shock_tableau::select( int ax , int ay )
 
       }
       else {
-        //vcl_cout << "Error" << vcl_endl;
+        //std::cout << "Error" << std::endl;
       }
 
     }
-    //vcl_cout<< "smallest_i: " << smallest_i << vcl_endl; 
+    //std::cout<< "smallest_i: " << smallest_i << std::endl; 
     return (dbsk2d_base_gui_geometry *) (long) my_hits[ smallest_i ];
   }
   return NULL;
@@ -513,10 +513,10 @@ void dbsk2d_shock_tableau::draw_shock_render()
         glLineWidth (1.0);
         glBegin( GL_LINE_STRIP );
         vgl_point_2d<double> ex_pt1 = _translatePoint(xsample->pt, 
-                                        xsample->theta+vcl_acos(-1/xsample->speed), 
+                                        xsample->theta+std::acos(-1/xsample->speed), 
                                         xsample->radius);
         vgl_point_2d<double> ex_pt2 = _translatePoint(xsample->pt, 
-                                        xsample->theta-vcl_acos(-1/xsample->speed), 
+                                        xsample->theta-std::acos(-1/xsample->speed), 
                                         xsample->radius);
 
         glVertex2f(ex_pt1.x(), ex_pt1.y());
@@ -631,7 +631,7 @@ void dbsk2d_shock_tableau::draw_shock_fragments_render()
 
     //traverse the descriptor list and draw the shock fragments for the 
     //degenerate descriptors
-    vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
+    std::list<dbsk2d_shock_node_descriptor>::iterator p_itr = snode->descriptor_list().begin();
     for (; p_itr != snode->descriptor_list().end(); ++ p_itr){
       dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
  
@@ -694,7 +694,7 @@ void
 dbsk2d_shock_tableau::get_popup(const vgui_popup_params& params, vgui_menu &menu)
 {
   vgui_menu submenu;
-  vcl_string on = "[x] ", off = "[ ] ";
+  std::string on = "[x] ", off = "[ ] ";
 
   submenu.add( ((display_boundary_)?on:off)+"Draw Boundary", 
                new dbsk2d_shock_tableau_toggle_command(this, &display_boundary_));

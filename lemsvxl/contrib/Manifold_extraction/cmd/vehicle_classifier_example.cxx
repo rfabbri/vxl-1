@@ -8,14 +8,14 @@
 #include <vnl/vnl_complexify.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vgl/vgl_box_2d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vbl/vbl_array_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_cassert.h>
-#include <vcl_string.h>
-#include <vcl_iostream.h>
-#include <vcl_fstream.h>
+#include <cassert>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <vgui/vgui.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_dialog.h>
@@ -116,11 +116,11 @@ struct vehic_mod_vnl_least_squares_function:public vnl_least_squares_function
         s3x = params[i++];
         thet = params[i++];
 
-        vcl_cout <<"model parameters while in the optimization process: " <<vcl_endl;
+        std::cout <<"model parameters while in the optimization process: " <<std::endl;
 
         for (int i = 0;i<params.size();i++)
             {
-            vcl_cout << params[i]<<vcl_endl;
+            std::cout << params[i]<<std::endl;
             }
 
         s1y = s1x;
@@ -133,22 +133,22 @@ struct vehic_mod_vnl_least_squares_function:public vnl_least_squares_function
 
         set_transformation_matrices(m1,m2,m3,ref_model_,s1x,t1x,s1y,t1y,s2x,s2y,s3x,s3y);
 
-        vcl_cout << "reference model: " << vcl_endl;
-        vcl_cout << ref_model_ << vcl_endl;
+        std::cout << "reference model: " << std::endl;
+        std::cout << ref_model_ << std::endl;
 
 
         vehicle_model trans_model = transform_model(ref_model_,m1,m2,m3);
         vehicle_model rot_model = rotate_model(trans_model,thet);
 
-        vcl_cout << " model after transformation " << vcl_endl;
-        vcl_cout << trans_model << vcl_endl;
+        std::cout << " model after transformation " << std::endl;
+        std::cout << trans_model << std::endl;
 
         vil_image_view< unsigned char > given_image = img_sptr_->get_view();
         vil_image_view< unsigned char > rot_model_image = draw_model(rot_model,img_sptr_->ni(),img_sptr_->nj());
 
 
 
-        vcl_string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\drawn_images\\drawn_1.png";
+        std::string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\drawn_images\\drawn_1.png";
         //save the transformed model image for debugging purposes
         vil_save(rot_model_image,filename.c_str());
 
@@ -165,9 +165,9 @@ void get_residuals(vil_image_view<unsigned char> given_image,vehicle_model rot_m
     double diff,val1x,val2x,val3x,val1y,val2y,val3y;
     unsigned int count =0;
 
-    vcl_string res_vec_file = "C:\\pradeep\\Manifold_extraction\\3_box_model\\res_vec.txt";
+    std::string res_vec_file = "C:\\pradeep\\Manifold_extraction\\3_box_model\\res_vec.txt";
 
-    vcl_ofstream ofst(res_vec_file.c_str());
+    std::ofstream ofst(res_vec_file.c_str());
 
     val1x = (rot_model.engine().centroid_x() - (ref_model_.engine().centroid_x()+10 ));
     val2x = (rot_model.body().centroid_x() -  (ref_model_.body().centroid_x()+10));
@@ -193,26 +193,26 @@ void get_residuals(vil_image_view<unsigned char> given_image,vehicle_model rot_m
     //        val2 = trans_model_image(i,j);
     //        diff = abs(val1 - val2);
     //        if (diff > 0)
-    //            ofst << " i " << i <<" j " <<j<<vcl_endl;
+    //            ofst << " i " << i <<" j " <<j<<std::endl;
     //        
     //        diff_image(i,j) = abs(given_image(i,j) - trans_model_image(i,j));
     //        residuals[count] = diff;
     //
     //     //   residuals[count] = diff;
-    //     //   ofst << residuals[count] << vcl_endl;
-    //     //   ofst << diff_image(i,j) << vcl_endl;
+    //     //   ofst << residuals[count] << std::endl;
+    //     //   ofst << diff_image(i,j) << std::endl;
     //        count++;
     //
     //        }   
     //    }
 
     //for debugging purposes
-    //vcl_cout <<" rms value of residual vector: " << vcl_endl;
-    //vcl_cout << residuals.rms()<<vcl_endl;
+    //std::cout <<" rms value of residual vector: " << std::endl;
+    //std::cout << residuals.rms()<<std::endl;
 
 
     //save the transformed model image for debugging purposes
-    //vcl_string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\drawn_images\\diff_image_1.png";
+    //std::string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\drawn_images\\diff_image_1.png";
     //vil_save(diff_image,filename.c_str());
     ofst.close();
 
@@ -238,7 +238,7 @@ vil_image_view< unsigned char > get_edge_image(vil_image_resource_sptr img_sptr)
 
     // Canny edge detector execution
     osl_canny_ox detector(canny_params);
-    vcl_list<osl_edge*>  edges;
+    std::list<osl_edge*>  edges;
 
     // =========================================
     detector.detect_edges(img, &edges);
@@ -251,8 +251,8 @@ vil_image_view< unsigned char > get_edge_image(vil_image_resource_sptr img_sptr)
         osl_edgel_chain * ec=(osl_edgel_chain *)edges.front();
         for(unsigned i=0;i<ec->size();i++)
             {
-            unsigned int x = (unsigned int)vcl_floor(ec->GetY(i));
-            unsigned int y = (unsigned int)vcl_floor(ec->GetX(i));
+            unsigned int x = (unsigned int)std::floor(ec->GetY(i));
+            unsigned int y = (unsigned int)std::floor(ec->GetX(i));
 
             // location of edge
             binary_edge_img(x,y)=0;                     
@@ -267,7 +267,7 @@ vehicle_model get_optimal_model(vil_image_resource_sptr img_sptr,vehicle_model r
 
     vil_image_view<unsigned char> edge_img = get_edge_image(img_sptr);
 
-    vcl_string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\edge_images\\edge_1.png";
+    std::string filename = "C:\\pradeep\\Manifold_extraction\\3_box_model\\edge_images\\edge_1.png";
     //save the edge image for debugging purposes
     vil_save(edge_img,filename.c_str());
 
@@ -283,14 +283,14 @@ vehicle_model get_optimal_model(vil_image_resource_sptr img_sptr,vehicle_model r
     lm.set_trace(true);
     lm.minimize_without_gradient(parameters);
 
-    vcl_cout <<"converged parameter values: " <<vcl_endl;
+    std::cout <<"converged parameter values: " <<std::endl;
 
     for (int i = 0;i<parameters.size();i++)
         {
-        vcl_cout << parameters[i]<<vcl_endl;
+        std::cout << parameters[i]<<std::endl;
         }
 
-    lm.diagnose_outcome(vcl_cout);
+    lm.diagnose_outcome(std::cout);
 
     vehicle_model M;
     return M;
@@ -298,12 +298,12 @@ vehicle_model get_optimal_model(vil_image_resource_sptr img_sptr,vehicle_model r
 
 int main(int argc,char **argv)
     {
-    vcl_string class_A_mask_images = argv[1];
-    vcl_string class_B_mask_images = argv[2];
-    vcl_string debug_info_file = argv[3];
+    std::string class_A_mask_images = argv[1];
+    std::string class_B_mask_images = argv[2];
+    std::string debug_info_file = argv[3];
 
 
-    vcl_ofstream debug_info(debug_info_file.c_str());
+    std::ofstream debug_info(debug_info_file.c_str());
 
     int my_argc = 1;
     char ** my_argv = new char*[argc+1];
@@ -322,9 +322,9 @@ int main(int argc,char **argv)
 
     vehicle_model ref_model(starting_box1,starting_box2,starting_box3);
 
-    vcl_vector<vil_image_resource_sptr> class_A;
-    vcl_vector<vil_image_resource_sptr> class_B;
-    vcl_string image_name;
+    std::vector<vil_image_resource_sptr> class_A;
+    std::vector<vil_image_resource_sptr> class_B;
+    std::string image_name;
 
     for (vul_file_iterator fn=class_A_mask_images+"/*.png"; fn; ++fn) {
         image_name = fn();
@@ -365,15 +365,15 @@ set_transformation_matrices(m1,m2,m3,ref_model,s1x,t1x,s1y,t1y,s2x,s2y,s3x,s3y);
 
 vehicle_model OM = get_optimal_model(class_A[0],ref_model,parameters);
 
-debug_info <<"model parameters: " <<vcl_endl;
+debug_info <<"model parameters: " <<std::endl;
 
 for (i = 0;i<parameters.size();i++)
     {
-    debug_info << parameters[i]<<vcl_endl;
+    debug_info << parameters[i]<<std::endl;
     }
 
-debug_info << "optimal model :" << vcl_endl;
-debug_info << OM << vcl_endl;
+debug_info << "optimal model :" << std::endl;
+debug_info << OM << std::endl;
 
 
 return 0;

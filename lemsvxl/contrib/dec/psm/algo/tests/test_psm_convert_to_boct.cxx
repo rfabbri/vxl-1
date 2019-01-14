@@ -12,7 +12,7 @@
 #include <psm/algo/psm_render_expected_aa.h>
 
 #include <hsds/hsds_fd_tree.h>
-#include <vcl_vector.h>
+#include <vector>
 
 
 #include <vil/vil_image_view.h>
@@ -32,7 +32,7 @@ void gen_synthetic_psm_scene_root_only(psm_scene_base_sptr &scene)
   // Simple scene with only root node
   vgl_point_3d<double> simpleorigin(0.0, 0.0, 0.0);
   double simpleblock_len = 1.0;
-  vcl_string simple_storage_dir = "./simple_synthetic_scene_test";
+  std::string simple_storage_dir = "./simple_synthetic_scene_test";
   vul_file::make_directory(simple_storage_dir);
 
   scene = new psm_scene<PSM_APM_MOG_GREY>(simpleorigin, simpleblock_len, simple_storage_dir, bgeo_lvcs_sptr(), 9);
@@ -77,7 +77,7 @@ void gen_synthetic_psm_scene_root_only(psm_scene_base_sptr &scene)
   // create scene
   vgl_point_3d<double> origin(0.0, 0.0, 0.0);
   double block_len = 1.0;
-  vcl_string storage_dir = "./synthetic_scene_test";
+  std::string storage_dir = "./synthetic_scene_test";
   vul_file::make_directory(storage_dir);
 
   scene = new psm_scene<PSM_APM_MOG_GREY>(origin, block_len, storage_dir, 9);
@@ -131,7 +131,7 @@ void convert_psm_scene_toboxm_scene()
 {
   vgl_point_3d<double> origin(-180,-160,-75);
   double block_len = 358.4;
-  vcl_string storage_dir = "D:/vj/data/CapitolSiteHigh/psm";
+  std::string storage_dir = "D:/vj/data/CapitolSiteHigh/psm";
   int max_levels=10;
    psm_scene<PSM_APM_MOG_GREY> * scene_ptr =new psm_scene<PSM_APM_MOG_GREY>(origin, block_len, storage_dir, max_levels);
    boxm_scene<boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > > *boxmscene
@@ -143,9 +143,9 @@ void convert_psm_scene_toboxm_scene()
 
 bool test_conversion(psm_scene<PSM_APM_MOG_GREY> * scene_ptr, boxm_scene<boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > > *boxmscene)
 {
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene_ptr->valid_blocks();
-    vcl_cout<<"# of blocks" << valid_blocks.size()<<vcl_endl;
-    vcl_set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> > valid_blocks = scene_ptr->valid_blocks();
+    std::cout<<"# of blocks" << valid_blocks.size()<<std::endl;
+    std::set<vgl_point_3d<int>, vgl_point_3d_cmp<int> >::iterator vbit = valid_blocks.begin();
 
     int minx=10000; int miny=10000;  int minz=10000;
     int maxx=-10000;int maxy=-10000; int maxz=-10000;
@@ -158,9 +158,9 @@ bool test_conversion(psm_scene<PSM_APM_MOG_GREY> * scene_ptr, boxm_scene<boct_tr
         if(vbit->z()<minz)            minz=vbit->z();
         if(vbit->z()>maxz)            maxz=vbit->z();
     }
-    vcl_cout<<"min/max xyz" <<minx<<" "<<maxx<<" "<<miny<<" "
-                            <<maxy<<" "<<minz<<" "<<maxz<<vcl_endl;
-    vcl_cout.flush();
+    std::cout<<"min/max xyz" <<minx<<" "<<maxx<<" "<<miny<<" "
+                            <<maxy<<" "<<minz<<" "<<maxz<<std::endl;
+    std::cout.flush();
 
     if(maxx-minx<0 || maxy-miny<0 || maxz-minz<0)
         return false;
@@ -173,7 +173,7 @@ bool test_conversion(psm_scene<PSM_APM_MOG_GREY> * scene_ptr, boxm_scene<boct_tr
         boxmscene->load_block((*vbit).x()-minx,(*vbit).y()-miny,(*vbit).z()-minz);
         boxm_block<boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> > > * boxmblock=boxmscene->get_active_block();
         boct_tree<short,boxm_sample<BOXM_APM_MOG_GREY> > * tree=boxmblock->get_tree();
-        vcl_cout<<"# of leaf nodes "<<tree->leaf_cells().size()<<vcl_endl;
+        std::cout<<"# of leaf nodes "<<tree->leaf_cells().size()<<std::endl;
         //: iterating over cells in a block 
         for (; block_it != block.end(); ++block_it) {
             hsds_fd_tree_node_index<3> cell_index=block_it->first;
@@ -200,13 +200,13 @@ START ("Conversion");
 convert_psm_scene_toboxm_scene();
 vgl_point_3d<double> origin(-180,-160,-75);
 double block_len = 358.4;
-vcl_string storage_dir = "D:/vj/data/CapitolSiteHigh/psm";
+std::string storage_dir = "D:/vj/data/CapitolSiteHigh/psm";
 int max_levels=10;
 psm_scene<PSM_APM_MOG_GREY> * scene_ptr =new psm_scene<PSM_APM_MOG_GREY>(origin, block_len, storage_dir, max_levels);
 boxm_scene<boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > > boxmscene1;
 boxmscene1.load_scene("D:/vj/data/CapitolSiteHigh/boxm/scene.xml");
 if(test_conversion(scene_ptr,&boxmscene1))
- vcl_cout<<"PASSED \n";
+ std::cout<<"PASSED \n";
 
   SUMMARY();
 

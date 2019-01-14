@@ -26,7 +26,7 @@
 #include <vil1/vil1_memory_image_of.h>
 #include <vil/vil_convert.h>
 #include <sdet/sdet_harris_detector_params.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vsol/vsol_point_2d.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <sdet/sdet_detector_params.h>
@@ -43,13 +43,13 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
   
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();

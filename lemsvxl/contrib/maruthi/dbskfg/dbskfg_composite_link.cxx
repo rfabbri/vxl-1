@@ -5,7 +5,7 @@
 
 #include <dbskfg/dbskfg_composite_link.h>
 #include <dbskfg/dbskfg_composite_node.h>
-#include <vcl_string.h>
+#include <string>
 
 dbskfg_composite_link::dbskfg_composite_link
 (dbskfg_composite_node_sptr source,
@@ -20,10 +20,10 @@ dbskfg_composite_link::dbskfg_composite_link
 }
 
 
-void dbskfg_composite_link::print(vcl_ostream& os)
+void dbskfg_composite_link::print(std::ostream& os)
 {
-    vcl_string type;
+    std::string type;
     type=(link_type_ == CONTOUR_LINK)?"CONTOUR":"SHOCK";
-    os<<"Link Type: "<< type <<" Id: "<<id_<<vcl_endl;
+    os<<"Link Type: "<< type <<" Id: "<<id_<<std::endl;
 
 }

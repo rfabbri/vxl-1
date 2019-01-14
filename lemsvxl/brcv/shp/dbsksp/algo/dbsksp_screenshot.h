@@ -18,7 +18,7 @@
 #include <vil/vil_image_view.h>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <vil/vil_rgb.h>
-#include <vcl_vector.h>
+#include <vector>
 #include <vgl/vgl_line_segment_2d.h>
 
 
@@ -46,7 +46,7 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
 bool dbsksp_screenshot_binary(const dbsksp_xshock_graph_sptr& xgraph,
                        vil_image_view<vxl_byte >& screenshot,
                        int contour_radius,// = 1, // total width = 3
-					   vcl_vector<vgl_point_2d<int > >& points
+					   std::vector<vgl_point_2d<int > >& points
                        );
 
 

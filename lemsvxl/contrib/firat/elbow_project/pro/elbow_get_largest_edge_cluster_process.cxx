@@ -23,7 +23,7 @@ elbow_get_largest_edge_cluster_process()
 	if( 	!parameters()->add( "Grid spacing (h)" , "-h", double(1))
 			|| !parameters()->add( "Strength threshold" , "-str", double(10.0)))
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -44,17 +44,17 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string elbow_get_largest_edge_cluster_process::
+std::string elbow_get_largest_edge_cluster_process::
 name()
 {
 	return "Compute largest edge cluster";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > elbow_get_largest_edge_cluster_process::
+std::vector< std::string > elbow_get_largest_edge_cluster_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_edges");
 	to_return.push_back("3d_dataset");
 	return to_return;
@@ -62,10 +62,10 @@ get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > elbow_get_largest_edge_cluster_process::
+std::vector< std::string > elbow_get_largest_edge_cluster_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	to_return.push_back("3d_edges");
 	return to_return;
 }
@@ -103,15 +103,15 @@ execute()
 
 	dbdet_third_order_3d_edge_storage_sptr in_edg_storage;
 	in_edg_storage.vertical_cast(input_data_[0][0]);
-	vcl_vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
-	vcl_vector<dbdet_3d_edge_sptr> in_edg_strong;
+	std::vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
+	std::vector<dbdet_3d_edge_sptr> in_edg_strong;
 	dbdet_keep_strong_edges(in_edg,	in_edg_strong, str, false);
 
 	elbow_vil3d_storage_sptr data_storage;
 	data_storage.vertical_cast(input_data_[0][1]);
 	vil3d_image_view<double>& image = data_storage->image();
 
-	vcl_vector<dbdet_3d_edge_sptr> out_edg;
+	std::vector<dbdet_3d_edge_sptr> out_edg;
 	elbow_get_largest_edge_cluster(in_edg_strong, out_edg,	image.ni(), image.nj(), image.nk(), h);
 
 	dbdet_third_order_3d_edge_storage_sptr out_edge_storage = dbdet_third_order_3d_edge_storage_new();
@@ -120,7 +120,7 @@ execute()
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

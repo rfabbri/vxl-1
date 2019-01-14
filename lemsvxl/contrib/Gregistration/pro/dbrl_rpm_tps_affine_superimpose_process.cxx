@@ -50,7 +50,7 @@ dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process
         !parameters()->add( "From Match Sets", "-from_match_set" , (bool) true )
         ) 
         {
-        vcl_cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process()" << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in dbrl_rpm_tps_affine_superimpose_process::dbrl_rpm_tps_affine_superimpose_process()" << std::endl;
         }
 
     }
@@ -63,7 +63,7 @@ dbrl_rpm_tps_affine_superimpose_process::~dbrl_rpm_tps_affine_superimpose_proces
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_rpm_tps_affine_superimpose_process::name()
     {
     return "RPM TPS affine superimpose";
@@ -87,9 +87,9 @@ dbrl_rpm_tps_affine_superimpose_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_input_type()
+std::vector< std::string > dbrl_rpm_tps_affine_superimpose_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     parameters()->get_value("-from_points",from_points_);
     parameters()->get_value("-from_match_set",from_match_set_);
     if(from_points_ && from_match_set_)
@@ -108,9 +108,9 @@ vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_input_type
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_rpm_tps_affine_superimpose_process::get_output_type()
+std::vector< std::string > dbrl_rpm_tps_affine_superimpose_process::get_output_type()
     {  
-    vcl_vector<vcl_string > to_return;
+    std::vector<std::string > to_return;
     //to_return.push_back( "image" );
     to_return.push_back( "dbrl_match_set" );
     //to_return.push_back( "vsol2D" );
@@ -125,7 +125,7 @@ bool
 dbrl_rpm_tps_affine_superimpose_process::execute()
     {
     if ( input_data_.size() != 1 ){
-        vcl_cout << "In dbrl_rpm_tps_affine_superimpose_process::execute() - "
+        std::cout << "In dbrl_rpm_tps_affine_superimpose_process::execute() - "
             << "not exactly two input images \n";
         return false;
         }
@@ -146,8 +146,8 @@ for(unsigned i=0;i<input_data_[0].size();i++)
 
 if(from_points_)
     {
-    vcl_vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
-    vcl_vector<dbrl_feature_sptr> feature_list;
+    std::vector< dbrl_id_point_2d_sptr > list = frame_pts->points();
+    std::vector<dbrl_feature_sptr> feature_list;
 
     for(int i=0;i<static_cast<int>(list.size());i++)
         {
@@ -211,8 +211,8 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
 
 
             double T=Tinit;
-            vcl_vector<dbrl_feature_sptr> xformed_pivot=m->get_feature_set1();
-            vcl_vector<dbrl_feature_sptr> xformed_curr=m->get_feature_set2();
+            std::vector<dbrl_feature_sptr> xformed_pivot=m->get_feature_set1();
+            std::vector<dbrl_feature_sptr> xformed_curr=m->get_feature_set2();
 
             dbrl_rpm_affine *affinerpm=new dbrl_rpm_affine(tpsaffineparams,xformed_pivot,xformed_curr);
             dbrl_estimator_point_affine* affine_est= new dbrl_estimator_point_affine();
@@ -237,7 +237,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
                     tpsrpm->rpm_at(T,M,tps_est,tform,xformed_pivot,xformed_curr,tpsparams.initlambda1()*T,tpsparams.initlambda2()*T);
                     T*=tpsparams.annealrate();
                     }
-                vcl_cout<<"\n Temparutre is "<<T;
+                std::cout<<"\n Temparutre is "<<T;
                 }
             //: in order to solve multiple effects.
             M.binarize(0.51);
@@ -245,7 +245,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             tps_est->set_lambda1(0.0);
             tps_est->set_lambda2(0.0);
 
-            vcl_vector<dbrl_feature_sptr> f1xform=m->get_feature_set1();
+            std::vector<dbrl_feature_sptr> f1xform=m->get_feature_set1();
             tpsrpm->normalize_point_set(M.M(),f1xform );
             tform=tps_est->estimate(f1xform,m->get_feature_set2(),M);
             dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -255,13 +255,13 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             xformed_curr=tpstform->get_to_features();
             m->set_mapped_features(xformed_pivot,xformed_curr);
             tps_storage->set_match_set(m);
-            tpstform->print_transformation(vcl_cout);      
+            tpstform->print_transformation(std::cout);      
             //: setting grid
-            vcl_vector<dbrl_feature_sptr> grid_pts=generate_grid();
+            std::vector<dbrl_feature_sptr> grid_pts=generate_grid();
             //: build K for the grid
-            vcl_vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
+            std::vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
                         vidpro1_vsol2D_storage_sptr grid_storage=vidpro1_vsol2D_storage_new();
             vidpro1_vsol2D_storage_sptr warped_grid_storage=vidpro1_vsol2D_storage_new();
 
@@ -273,7 +273,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
         parameters()->get_value("-upscale",scale);
         vil_image_view<unsigned char> img((int)scale,(int)scale,1);
         img.fill(0);
-        vcl_vector<vsol_spatial_object_2d_sptr> xformedpoints;
+        std::vector<vsol_spatial_object_2d_sptr> xformedpoints;
         vidpro1_vsol2D_storage_sptr xformedpoints_storage=vidpro1_vsol2D_storage_new();
         for(int p=0;p<static_cast<int>(xformed_curr.size());p++)
             {
@@ -287,7 +287,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             
             xformedpoints.push_back(ptvsol->cast_to_spatial_object());
             }
-        vcl_string pointsetname=vul_sprintf("points%i",i);
+        std::string pointsetname=vul_sprintf("points%i",i);
         xformedpoints_storage->add_objects(xformedpoints,pointsetname);
         vidpro1_image_storage_sptr img_storage = vidpro1_image_storage_new();
         img_storage->set_image(vil_new_image_resource_of_view(img));
@@ -304,7 +304,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
     else{
 
         static int pivot_frame_no=(int)(point_set_list_.size()/2);
-        vcl_vector<vcl_vector<dbrl_feature_sptr> > xformed_point_set_list=point_set_list_;
+        std::vector<std::vector<dbrl_feature_sptr> > xformed_point_set_list=point_set_list_;
 
         //: computing CM for pivot frame
         vnl_vector<double> cm_p=center_of_mass(point_set_list_[pivot_frame_no]);
@@ -358,14 +358,14 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
                     tpsrpm->rpm_at(T,*M,tps_est,tform,xformed_point_set_list[pivot_frame_no],xformed_point_set_list[i],tpsparams.initlambda1()*T,tpsparams.initlambda2()*T);
                     T*=tpsparams.annealrate();
                     }
-                vcl_cout<<"\n Temparutre is "<<T;
+                std::cout<<"\n Temparutre is "<<T;
                 }
             //: in order to solve multiple effects.
             //M->binarize(0.51);
             //: retreiving final transform
             tps_est->set_lambda1(0.0);
             tps_est->set_lambda2(0.0);
-            vcl_vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
+            std::vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
             tpsrpm->normalize_point_set(M->M(),f1xform );
             tform=tps_est->estimate(f1xform,point_set_list_[i],*M);
             dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -377,13 +377,13 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             match_set->set_original_features(point_set_list_[pivot_frame_no],point_set_list_[i]);
             match_set->set_mapped_features(xformed_point_set_list[pivot_frame_no],xformed_point_set_list[i]);
             tps_storage->set_match_set(match_set);
-            tpstform->print_transformation(vcl_cout);      
+            tpstform->print_transformation(std::cout);      
             //: setting grid
-            vcl_vector<dbrl_feature_sptr> grid_pts=generate_grid();
+            std::vector<dbrl_feature_sptr> grid_pts=generate_grid();
             //: build K for the grid
-            vcl_vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
+            std::vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
 
             //:  adding grid lines 
             grid_storage->add_objects(draw_grid(grid_pts,100,100),"grid");
@@ -420,12 +420,12 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
                     tpsrpm->rpm_at(T,*M,tps_est,tform,xformed_point_set_list[pivot_frame_no],xformed_point_set_list[i],tpsparams.initlambda1()*T,tpsparams.initlambda2()*T);
                     T*=tpsparams.annealrate();
                     }
-                vcl_cout<<"\n temperature is "<<T;
+                std::cout<<"\n temperature is "<<T;
                 }
             //M->binarize(0.51);
             tps_est->set_lambda1(0.0);
             tps_est->set_lambda2(0.0);
-            vcl_vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
+            std::vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
             tpsrpm->normalize_point_set(M->M(),f1xform );
             tform=tps_est->estimate(f1xform,point_set_list_[i],*M);
             dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -439,14 +439,14 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             match_set->set_mapped_features(xformed_point_set_list[pivot_frame_no],xformed_point_set_list[i]);
             tps_storage->set_match_set(match_set);
 
-            tpstform->print_transformation(vcl_cout);
+            tpstform->print_transformation(std::cout);
             //: setting grid
-            vcl_vector<dbrl_feature_sptr> grid_pts=generate_grid();
+            std::vector<dbrl_feature_sptr> grid_pts=generate_grid();
             //: build K for the grid
-            vcl_vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
+            std::vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
 
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
 
             //:  adding grid points
             //grid_storage->add_objects(vsol_grid_pts,"grid");
@@ -474,7 +474,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             //M->binarize(0.51);
             tps_est->set_lambda1(0.0);
             tps_est->set_lambda2(0.0);
-            vcl_vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
+            std::vector<dbrl_feature_sptr> f1xform=point_set_list_[pivot_frame_no];
             tpsrpm->normalize_point_set(M->M(),f1xform );
             tform=tps_est->estimate(f1xform,point_set_list_[i],*M);
             dbrl_thin_plate_spline_transformation * tpstform=dynamic_cast<dbrl_thin_plate_spline_transformation *> (tform.ptr());
@@ -488,14 +488,14 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             match_set->set_mapped_features(xformed_point_set_list[pivot_frame_no],xformed_point_set_list[i]);
             tps_storage->set_match_set(match_set);
 
-            tpstform->print_transformation(vcl_cout);
+            tpstform->print_transformation(std::cout);
             //: setting grid
-            vcl_vector<dbrl_feature_sptr> grid_pts=generate_grid();
+            std::vector<dbrl_feature_sptr> grid_pts=generate_grid();
             //: build K for the grid
-            vcl_vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
+            std::vector<dbrl_feature_sptr> warped_grid_pts=warp_grid(tpstform,grid_pts);
 
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
-            vcl_vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_grid_pts=feature_to_vsol(grid_pts);
+            std::vector<vsol_spatial_object_2d_sptr> vsol_warped_grid_pts=feature_to_vsol(warped_grid_pts);
 
             //:  adding grid points
             //grid_storage->add_objects(vsol_grid_pts,"grid");
@@ -511,7 +511,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
         parameters()->get_value("-upscale",scale);
         vil_image_view<unsigned char> img((int)scale,(int)scale,1);
         img.fill(0);
-        vcl_vector<vsol_spatial_object_2d_sptr> xformedpoints;
+        std::vector<vsol_spatial_object_2d_sptr> xformedpoints;
         vidpro1_vsol2D_storage_sptr xformedpoints_storage=vidpro1_vsol2D_storage_new();
         for(int p=0;p<static_cast<int>(xformed_point_set_list[i].size());p++)
             {
@@ -524,7 +524,7 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
             vsol_point_2d_sptr ptvsol=new vsol_point_2d(x*scale,y*scale);
             xformedpoints.push_back(ptvsol->cast_to_spatial_object());
             }
-        vcl_string pointsetname=vul_sprintf("points%i",i);
+        std::string pointsetname=vul_sprintf("points%i",i);
         xformedpoints_storage->add_objects(xformedpoints,pointsetname);
         vidpro1_image_storage_sptr img_storage = vidpro1_image_storage_new();
         img_storage->set_image(vil_new_image_resource_of_view(img));
@@ -540,14 +540,14 @@ dbrl_rpm_tps_affine_superimpose_process::finish()
 
         }
 }
-vcl_cout<<"\nThe time taken to compute match set is: "<<timerec.all();
+std::cout<<"\nThe time taken to compute match set is: "<<timerec.all();
     return true;
     }
 
 
-    vcl_vector<vsol_spatial_object_2d_sptr> dbrl_rpm_tps_affine_superimpose_process::feature_to_vsol(vcl_vector<dbrl_feature_sptr> & f)
+    std::vector<vsol_spatial_object_2d_sptr> dbrl_rpm_tps_affine_superimpose_process::feature_to_vsol(std::vector<dbrl_feature_sptr> & f)
         {
-        vcl_vector<vsol_spatial_object_2d_sptr> vpts;
+        std::vector<vsol_spatial_object_2d_sptr> vpts;
         for(unsigned i=0;i<f.size();i++)
             if(dbrl_feature_point* pt=dynamic_cast<dbrl_feature_point*>(f[i].ptr()))
                 {
@@ -559,9 +559,9 @@ vcl_cout<<"\nThe time taken to compute match set is: "<<timerec.all();
         }
 
 
-    vnl_vector<double> dbrl_rpm_tps_affine_superimpose_process::center_of_mass(vcl_vector<dbrl_feature_sptr> & f)
+    vnl_vector<double> dbrl_rpm_tps_affine_superimpose_process::center_of_mass(std::vector<dbrl_feature_sptr> & f)
         {
-        vcl_vector<vsol_spatial_object_2d_sptr> vpts;
+        std::vector<vsol_spatial_object_2d_sptr> vpts;
         double cx=0.0;
         double cy=0.0;
 
@@ -576,9 +576,9 @@ vcl_cout<<"\nThe time taken to compute match set is: "<<timerec.all();
         return p;
         }
 
-    vcl_vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_superimpose_process::generate_grid()
+    std::vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_superimpose_process::generate_grid()
         {
-        vcl_vector<dbrl_feature_sptr> grid_pts;    
+        std::vector<dbrl_feature_sptr> grid_pts;    
         for(int i=0;i<100;i++)
                 for(int j=0;j<100;j++)
                     {
@@ -590,7 +590,7 @@ vcl_cout<<"\nThe time taken to compute match set is: "<<timerec.all();
         }
 
 
-    vcl_vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_superimpose_process::warp_grid(dbrl_thin_plate_spline_transformation * tpstform,vcl_vector<dbrl_feature_sptr> &f)
+    std::vector<dbrl_feature_sptr> dbrl_rpm_tps_affine_superimpose_process::warp_grid(dbrl_thin_plate_spline_transformation * tpstform,std::vector<dbrl_feature_sptr> &f)
         {
         tpstform->build_K(f);
         tpstform->set_from_features(f);
@@ -599,11 +599,11 @@ vcl_cout<<"\nThe time taken to compute match set is: "<<timerec.all();
         }
 
 
-    vcl_vector<vsol_spatial_object_2d_sptr> dbrl_rpm_tps_affine_superimpose_process::draw_grid(vcl_vector<dbrl_feature_sptr> grid_pts, int rows, int cols)
+    std::vector<vsol_spatial_object_2d_sptr> dbrl_rpm_tps_affine_superimpose_process::draw_grid(std::vector<dbrl_feature_sptr> grid_pts, int rows, int cols)
         {
             //: drawing horizontal lines
 
-            vcl_vector<vsol_spatial_object_2d_sptr> lines;
+            std::vector<vsol_spatial_object_2d_sptr> lines;
             for(int i=0;i<rows-1;i++)
                 {
                 for(int j=0;j<cols-1;j++)

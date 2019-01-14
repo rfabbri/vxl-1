@@ -1,10 +1,10 @@
 //This is brcv/seg/dbdet/pro/dbdet_load_cvlet_map_process.cxx
 
-#include <vcl_iostream.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
-#include <vcl_cmath.h>
-#include <vcl_algorithm.h>
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 
@@ -31,24 +31,24 @@ dbdet_load_cvlet_map_process::dbdet_load_cvlet_map_process() : bpro1_process(), 
 #endif
       )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
-vcl_string dbdet_load_cvlet_map_process::name() 
+std::string dbdet_load_cvlet_map_process::name() 
 {
   return "Load .CVLET File";
 }
 
-vcl_vector< vcl_string > dbdet_load_cvlet_map_process::get_input_type() 
+std::vector< std::string > dbdet_load_cvlet_map_process::get_input_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > dbdet_load_cvlet_map_process::get_output_type() 
+std::vector< std::string > dbdet_load_cvlet_map_process::get_output_type() 
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "sel");
   to_return.push_back( "edge_map");
   return to_return;
@@ -66,7 +66,7 @@ bool dbdet_load_cvlet_map_process::execute()
 {
   bpro1_filepath input;
   parameters()->get_value( "-cvlet_input" , input);
-  vcl_string input_file_path = input.path;
+  std::string input_file_path = input.path;
 
   int num_of_files = 0;
 
@@ -75,7 +75,7 @@ bool dbdet_load_cvlet_map_process::execute()
   // make sure that input_file_path is sane
   if (input_file_path == "") { return false; }
 
-  //vcl_cout << vul_file::dirname(input_file_path);
+  //std::cout << vul_file::dirname(input_file_path);
 
   // test if fname is a directory
   if (vul_file::is_directory(input_file_path))
@@ -83,7 +83,7 @@ bool dbdet_load_cvlet_map_process::execute()
     vul_file_iterator fn=input_file_path+"/*.cvlet*";
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
+      std::string input_file = fn();
       load_cvlet_file(input_file);
       num_of_files++;
     }
@@ -92,7 +92,7 @@ bool dbdet_load_cvlet_map_process::execute()
     num_frames_ = num_of_files;
   }
   else {
-    vcl_string input_file = input_file_path;
+    std::string input_file = input_file_path;
     bool successful = load_cvlet_file(input_file);
     num_frames_ = 1;
 
@@ -101,12 +101,12 @@ bool dbdet_load_cvlet_map_process::execute()
   }
 
   //reverse the order of the objects so that they come out in the right order
-  vcl_reverse(output_data_.begin(),output_data_.end());
+  std::reverse(output_data_.begin(),output_data_.end());
 
   return true;
 }
 
-bool dbdet_load_cvlet_map_process::load_cvlet_file(vcl_string input_file)
+bool dbdet_load_cvlet_map_process::load_cvlet_file(std::string input_file)
 {
   // edge_map 
   dbdet_edgemap_sptr edge_map;
@@ -123,12 +123,12 @@ bool dbdet_load_cvlet_map_process::load_cvlet_file(vcl_string input_file)
   output_sel->set_EM(edge_map);
 
   //finally add it to the output data
-  vcl_vector< bpro1_storage_sptr > output_storage_set;
+  std::vector< bpro1_storage_sptr > output_storage_set;
   output_storage_set.push_back(output_sel);
   output_storage_set.push_back(output_edgemap);
   output_data_.push_back(output_storage_set);
 
-  vcl_cout << "Loaded: " << input_file.c_str() << ".\n";
+  std::cout << "Loaded: " << input_file.c_str() << ".\n";
 
   return true;
 }

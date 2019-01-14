@@ -15,7 +15,7 @@
 #include <pcl/point_types.h>
 #include <pcl/features/fpfh.h>
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vnl/vnl_vector_fixed.h>
 
@@ -33,7 +33,7 @@ void dbrec3d_compute_pcl_fpfh_features(pcl::PointCloud<pcl::PointNormal>::Ptr cl
 //: Put the data inside the point cloud into a stl vector.
 //  This only cares about the data and not the 3-d location
 void dbrec3d_pcd_to_vnl_vector(pcl::PointCloud<pcl::FPFHSignature33>::Ptr cloud,
-                               vcl_vector<vnl_vector_fixed<double, 33> > &features);
+                               std::vector<vnl_vector_fixed<double, 33> > &features);
 
 
 

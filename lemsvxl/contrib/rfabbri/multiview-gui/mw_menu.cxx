@@ -24,7 +24,7 @@
 #include <dbdet/vis/dbdet_livewire_tool.h>
 
 
-#include <vcl_iostream.h>
+#include <iostream>
 
 mw_menu::mw_menu()
 {

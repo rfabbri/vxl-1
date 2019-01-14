@@ -22,16 +22,16 @@ vidreg_tracker::~vidreg_tracker()
 
 
 //: Returns a vector of track ID / feature pairs from the last frame
-vcl_vector<vcl_pair<unsigned long, rgrl_feature_sptr> >
+std::vector<std::pair<unsigned long, rgrl_feature_sptr> >
 vidreg_tracker::current_tracks() const
 {
-  vcl_vector<vcl_pair<unsigned long, rgrl_feature_sptr> > tracks;
+  std::vector<std::pair<unsigned long, rgrl_feature_sptr> > tracks;
 
-  typedef vcl_map<rgrl_feature_sptr, unsigned long> Tmap;
+  typedef std::map<rgrl_feature_sptr, unsigned long> Tmap;
   for(Tmap::const_iterator ti = last_features_map_.begin();
       ti!=last_features_map_.end(); ++ti)
   {
-    tracks.push_back(vcl_pair<unsigned long, rgrl_feature_sptr>(ti->second,ti->first));
+    tracks.push_back(std::pair<unsigned long, rgrl_feature_sptr>(ti->second,ti->first));
   }
   return tracks;
 }
@@ -39,9 +39,9 @@ vidreg_tracker::current_tracks() const
 
 void
 vidreg_tracker::process_frame(const rgrl_match_set_sptr& match_set,
-                              const vcl_map<rgrl_feature_sptr, double>& weight_map)
+                              const std::map<rgrl_feature_sptr, double>& weight_map)
 {
-  typedef vcl_map<rgrl_feature_sptr, unsigned long> Tmap;
+  typedef std::map<rgrl_feature_sptr, unsigned long> Tmap;
   Tmap curr_features_map;
 
   typedef rgrl_match_set::from_iterator from_iter;
@@ -54,7 +54,7 @@ vidreg_tracker::process_frame(const rgrl_match_set_sptr& match_set,
     if ( fitr.empty() )  continue;
     rgrl_feature_sptr from_feature = fitr.from_feature();
 
-    vcl_map<rgrl_feature_sptr, double>::const_iterator f = weight_map.find(from_feature);
+    std::map<rgrl_feature_sptr, double>::const_iterator f = weight_map.find(from_feature);
     if(f == weight_map.end() || f->second < 1.0)
       continue;
 
@@ -97,7 +97,7 @@ void
 vidreg_track_filter::push_frame(const Tvec& tracks)
 {
   queue_.push_back(tracks);
-  vcl_vector<bool> observed(counts_.size(),false);
+  std::vector<bool> observed(counts_.size(),false);
   for(Tvec::const_iterator i=tracks.begin(); i!=tracks.end(); ++i){
     if(i->first >= counts_.size()){
       observed.resize(i->first+1,false);
@@ -132,7 +132,7 @@ vidreg_track_filter::pop_frame(Tvec& tracks)
     if(new_track_ids_[i->first] == 0)
       new_track_ids_[i->first] = next_track_id_++;
 
-    tracks.push_back(vcl_pair<unsigned long, rgrl_feature_sptr>
+    tracks.push_back(std::pair<unsigned long, rgrl_feature_sptr>
                            (new_track_ids_[i->first], i->second));
   }
 

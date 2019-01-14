@@ -14,7 +14,7 @@
 //
 // \endverbatim
 
-#include <vcl_string.h>
+#include <string>
 #include <dbsk2d/dbsk2d_ishock_elm.h>
 
 //: This class is a key to the bnd_ishock_map
@@ -47,7 +47,7 @@ public:
   bool is_right_type() const { return type==RIGHT || type==RIGHTCONTACT; }
 
   //: return a string describing the shock type
-  vcl_string type_string() const;
+  std::string type_string() const;
 
   //: strict weak ordering 
   // order by smaller eta (fuzzy)

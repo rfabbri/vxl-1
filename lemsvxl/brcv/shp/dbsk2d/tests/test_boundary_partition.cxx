@@ -16,7 +16,7 @@
 // : test partitioning a boundary into equal-size rectangular cells
 void test_boundary_partition()
 {
-  vcl_cout << "In test_boundary_partition()\n";
+  std::cout << "In test_boundary_partition()\n";
 
   // input a point and two lines
   
@@ -48,18 +48,18 @@ void test_boundary_partition()
   boundary->partition_into_cells(false, false, 1e-5);
 
 #ifdef _DEBUG
-  vcl_cout << "boundary->num_cols()=" << boundary->num_cols() << vcl_endl;
-  vcl_cout << "boundary->num_rows()=" << boundary->num_rows() << vcl_endl;
-  vcl_cout << "boundary->cell_h()= " << boundary->cell_h() << vcl_endl;
-  vcl_cout << "boundary->cell_w()= " << boundary->cell_w() << vcl_endl;
-  vcl_cout << "boundary->cell(0, 0)->num_bnd_edges()= " << 
-    boundary->cell(0, 0)->num_bnd_edges() << vcl_endl;
-  vcl_cout << "boundary->cell(0, 1)->num_bnd_edges()=" <<
-    boundary->cell(0, 1)->num_bnd_edges() << vcl_endl;
-  vcl_cout << "boundary->cell(1, 0)->num_bnd_edges()=" << 
-    boundary->cell(1, 0)->num_bnd_edges() << vcl_endl;
-  vcl_cout << "boundary->cell(1, 1)->num_bnd_edges()= " << 
-    boundary->cell(1, 1)->num_bnd_edges() << vcl_endl;
+  std::cout << "boundary->num_cols()=" << boundary->num_cols() << std::endl;
+  std::cout << "boundary->num_rows()=" << boundary->num_rows() << std::endl;
+  std::cout << "boundary->cell_h()= " << boundary->cell_h() << std::endl;
+  std::cout << "boundary->cell_w()= " << boundary->cell_w() << std::endl;
+  std::cout << "boundary->cell(0, 0)->num_bnd_edges()= " << 
+    boundary->cell(0, 0)->num_bnd_edges() << std::endl;
+  std::cout << "boundary->cell(0, 1)->num_bnd_edges()=" <<
+    boundary->cell(0, 1)->num_bnd_edges() << std::endl;
+  std::cout << "boundary->cell(1, 0)->num_bnd_edges()=" << 
+    boundary->cell(1, 0)->num_bnd_edges() << std::endl;
+  std::cout << "boundary->cell(1, 1)->num_bnd_edges()= " << 
+    boundary->cell(1, 1)->num_bnd_edges() << std::endl;
 #endif
 
   // Test result of partitioning
@@ -80,7 +80,7 @@ void test_boundary_partition()
 // that they actually intersect
 void test_boundary_partition_tight()
 {
-  vcl_cout << "In test_boundary_partition_tight()\n";
+  std::cout << "In test_boundary_partition_tight()\n";
   
 
   // new boundary
@@ -93,7 +93,7 @@ void test_boundary_partition_tight()
   vgl_point_2d<double > p11(0, 0);
   vgl_point_2d<double > p12(2.5, 2.5);
 
-  vcl_list<dbsk2d_bnd_cell_sptr > cell_list1;
+  std::list<dbsk2d_bnd_cell_sptr > cell_list1;
   boundary->compute_cell_membership_of_line(p11, p12, cell_list1);
   TEST("Cell membership of line-tight - non degenerate", cell_list1.size(), 3);
 
@@ -127,7 +127,7 @@ void test_boundary_partition_tight()
   TEST("Insert line into cells with fuzzy -test1", line1->cells().size(), 3);
 
   boundary->clear_cells();
-  tol = vcl_sqrt(2.0)/4 * 1.00001;
+  tol = std::sqrt(2.0)/4 * 1.00001;
   boundary->insert_line_into_cells_tight(line1, tol);
   TEST("Insert line into cells with fuzzy -test2", line1->cells().size(), 4);
 

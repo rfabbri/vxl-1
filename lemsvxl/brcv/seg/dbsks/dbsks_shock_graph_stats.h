@@ -15,10 +15,10 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
-#include <vcl_map.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
 #include <dbsksp/dbsksp_shock_graph_sptr.h>
 #include <dbsks/dbsks_shapelet_grid.h>
 #include <dbsks/dbsks_shapelet_stats.h>
@@ -82,7 +82,7 @@ public:
 
   //: Compute the shock graph parameter statistics from a set of shock graphs
   // REQUIREMENT: all shock graphs have exactly the same topology
-  bool compute_stats(const vcl_vector<dbsksp_shock_graph_sptr >& shock_graph_list);
+  bool compute_stats(const std::vector<dbsksp_shock_graph_sptr >& shock_graph_list);
 
 
   //: Return statistics of one fragment
@@ -101,7 +101,7 @@ public:
     double target_graph_size = 0) const;
 
   //: Print summary
-  vcl_ostream& print(vcl_ostream& str) const;
+  std::ostream& print(std::ostream& str) const;
 
 
   // Member variables ----------------------------------------------------------
@@ -115,7 +115,7 @@ protected:
   double graph_size_;
 
   // A mapping between the edge id and the statistics of its corresponding fragment
-  vcl_map<unsigned int, dbsks_shapelet_stats > shapelet_stats_map_;
+  std::map<unsigned int, dbsks_shapelet_stats > shapelet_stats_map_;
 };
 
 

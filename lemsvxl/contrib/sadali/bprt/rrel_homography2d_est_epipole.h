@@ -14,13 +14,13 @@ class rrel_homography2d_est_epipole : public rrel_homography2d_est
  public:
 
   //: Constructor from vgl_homg_point_2d's
-  rrel_homography2d_est_epipole( const vcl_vector< vgl_homg_point_2d<double> > & from_pts,
-                             const vcl_vector< vgl_homg_point_2d<double> > & to_pts,
+  rrel_homography2d_est_epipole( const std::vector< vgl_homg_point_2d<double> > & from_pts,
+                             const std::vector< vgl_homg_point_2d<double> > & to_pts,
                              vgl_homg_point_2d<double> from_epi, vgl_homg_point_2d<double> to_epi);
 
   //: Constructor from vnl_vectors
-  rrel_homography2d_est_epipole( const vcl_vector< vnl_vector<double> > & from_pts,
-                             const vcl_vector< vnl_vector<double> > & to_pts, 
+  rrel_homography2d_est_epipole( const std::vector< vnl_vector<double> > & from_pts,
+                             const std::vector< vnl_vector<double> > & to_pts, 
                              vnl_vector<double> from_epi,vnl_vector<double>to_epi);
 
   //: Destructor.
@@ -28,7 +28,7 @@ class rrel_homography2d_est_epipole : public rrel_homography2d_est
 
   
 virtual bool
- fit_from_minimal_set( const vcl_vector<int>& point_indices,
+ fit_from_minimal_set( const std::vector<int>& point_indices,
                                                vnl_vector<double>& params ) const;
 
 

@@ -18,7 +18,7 @@ vidpro_RGB_to_CIELab_process::vidpro_RGB_to_CIELab_process()
 {
   if( !parameters()->add( "Output component images", "-bComps", true ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,27 +37,27 @@ vidpro_RGB_to_CIELab_process::clone() const
 }
 
 //: Returns the name of this process
-vcl_string 
+std::string 
 vidpro_RGB_to_CIELab_process::name()
 { 
   return "RGB to CIE-Lab"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_RGB_to_CIELab_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > 
+std::vector< std::string > 
 vidpro_RGB_to_CIELab_process::get_output_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
 
   bool bComps;
   parameters()->get_value( "-bComps", bComps);
@@ -93,8 +93,8 @@ bool
 vidpro_RGB_to_CIELab_process::execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In vidpro_RGB_to_CIELab_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In vidpro_RGB_to_CIELab_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 
@@ -107,7 +107,7 @@ vidpro_RGB_to_CIELab_process::execute()
 
   //make sure the image is an rgb image
   if (col_image.nplanes() != 3){
-    vcl_cout << "In vidpro_RGB_to_CIELab_process::execute() - image must be RGB! \n";
+    std::cout << "In vidpro_RGB_to_CIELab_process::execute() - image must be RGB! \n";
     return false;
   }
 
@@ -171,13 +171,13 @@ void vidpro_RGB_to_CIELab_process::rgb2lab(double R, double G, double B, double 
   double var_G = (G/255.0);   //G = From 0 to 255
   double var_B = (B/255.0);   //B = From 0 to 255
 
-  if ( var_R > 0.04045 ) var_R = vcl_pow( (var_R+0.055)/1.055, 2.4);
+  if ( var_R > 0.04045 ) var_R = std::pow( (var_R+0.055)/1.055, 2.4);
   else                   var_R = var_R /12.92;
 
-  if ( var_G > 0.04045 ) var_G = vcl_pow( (var_G+0.055)/1.055, 2.4);
+  if ( var_G > 0.04045 ) var_G = std::pow( (var_G+0.055)/1.055, 2.4);
   else                   var_G = var_G /12.92;
 
-  if ( var_B > 0.04045 ) var_B = vcl_pow( (var_B+0.055)/1.055, 2.4);
+  if ( var_B > 0.04045 ) var_B = std::pow( (var_B+0.055)/1.055, 2.4);
   else                   var_B = var_B /12.92;
 
   double X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805;
@@ -191,13 +191,13 @@ void vidpro_RGB_to_CIELab_process::rgb2lab(double R, double G, double B, double 
   double var_Y = Y * 100.0/100.000;
   double var_Z = Z * 100.0/108.883;
 
-  if ( var_X > 0.008856 ) var_X = vcl_pow(var_X, 1.0/3.0);
+  if ( var_X > 0.008856 ) var_X = std::pow(var_X, 1.0/3.0);
   else                    var_X = 7.787 * var_X + 16.0/116.0;
 
-  if ( var_Y > 0.008856 ) var_Y = vcl_pow(var_Y ,1.0/3.0);
+  if ( var_Y > 0.008856 ) var_Y = std::pow(var_Y ,1.0/3.0);
   else                    var_Y = 7.787 * var_Y + 16.0/ 116.0;
 
-  if ( var_Z > 0.008856 ) var_Z = vcl_pow(var_Z, 1.0/3.0);
+  if ( var_Z > 0.008856 ) var_Z = std::pow(var_Z, 1.0/3.0);
   else                    var_Z = 7.787 * var_Z + 16.0/ 116.0;
 
   //Finally

@@ -34,14 +34,14 @@ public:
   //: This is called when the tool is activated
   virtual void activate();
 
-  vcl_string name() const;
+  std::string name() const;
 
   virtual void get_popup( const vgui_popup_params& params, vgui_menu &menu );
 #if 0
   void get_scurves(dbsk2d_shock_node_sptr start_node, dbsk2d_shock_edge_sptr parent_edge, 
-                   vcl_vector<dbskr_scurve_sptr>& cur_scurves,
-                   vcl_vector<dbsk2d_shock_node_sptr>& visited_nodes, 
-                   vcl_vector<bool>& end_lines, int depth = 1);
+                   std::vector<dbskr_scurve_sptr>& cur_scurves,
+                   std::vector<dbsk2d_shock_node_sptr>& visited_nodes, 
+                   std::vector<bool>& end_lines, int depth = 1);
 #endif
   void draw_scurves();
   void draw_an_scurve(dbskr_scurve_sptr cur_scurve, 
@@ -56,9 +56,9 @@ protected:
   vgui_event_condition reset_depth;
   vgui_event_condition switch_drawing;
 
-  vcl_vector<dbskr_scurve_sptr> cur_scurves_; ///< this is the scurve formed from the selected edges
-  //vcl_vector<dbsk2d_shock_node_sptr> visited_nodes_;
-  vcl_vector<bool> end_scurve_; // will be drawn in yellow if the scurve is right at the end
+  std::vector<dbskr_scurve_sptr> cur_scurves_; ///< this is the scurve formed from the selected edges
+  //std::vector<dbsk2d_shock_node_sptr> visited_nodes_;
+  std::vector<bool> end_scurve_; // will be drawn in yellow if the scurve is right at the end
 
   bool draw_boundary_;
   vsol_polygon_2d_sptr poly_;

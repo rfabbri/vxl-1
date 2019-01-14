@@ -62,7 +62,7 @@ void bcdg_3d_reconstructor::reconstruct(const bcdg_global_option* glob) {
   vnl_matrix<double> A(2*nviews, 4, 0.0);
 
   unsigned int v = 0;
-  for ( vcl_map<int,vnl_double_3x4>::const_iterator C_itr = C_.begin();
+  for ( std::map<int,vnl_double_3x4>::const_iterator C_itr = C_.begin();
         C_itr != C_.end();  ++C_itr ) {
     const int f = C_itr->first;
     const vnl_double_3x4 cam = C_itr->second;

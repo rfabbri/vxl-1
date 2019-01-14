@@ -2,9 +2,9 @@
 
 
 #include "dbdet_xio_seg3d_info_parser.h"
-#include <vcl_cstdlib.h>
-#include <vcl_cstring.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
 
 
 // ============================================================================
@@ -15,17 +15,17 @@ startElement(const char* name, const char** atts)
   this->opened_elements_stack_.push_back(name);
   ++ this->depth_;
 
-  vcl_cout<< "element=" << name << vcl_endl; 
+  std::cout<< "element=" << name << std::endl; 
   for (int i=0; atts[i]; i+=2)
   {
-    vcl_cout << "  Attr=" << atts[i] << "->" << atts[i+1] << vcl_endl;
-    if (vcl_strcmp(atts[i], "frame_index") == 0)
+    std::cout << "  Attr=" << atts[i] << "->" << atts[i+1] << std::endl;
+    if (std::strcmp(atts[i], "frame_index") == 0)
     {
-      this->frame_index_ = vcl_atoi(atts[i+1]);
+      this->frame_index_ = std::atoi(atts[i+1]);
     }
-    else if (vcl_strcmp(atts[i], "contour_index") == 0)
+    else if (std::strcmp(atts[i], "contour_index") == 0)
     {
-      this->contour_index_ = vcl_atoi(atts[i+1]);
+      this->contour_index_ = std::atoi(atts[i+1]);
     }
   }  
 }
@@ -51,18 +51,18 @@ charData(const XML_Char* s, int len)
   if (len==0 || len <= leading_space)
      return;  // called with whitespace between elements
   this->char_data_.append(s+leading_space, len - leading_space);
-  vcl_cout << "(" << vcl_string(s, len) << ")";
+  std::cout << "(" << std::string(s, len) << ")";
 }
 
 
 // ============================================================================
 void dbdet_seg3d_info_xml_parser::
-handle_char_data(const vcl_string& element, const vcl_string& char_data)
+handle_char_data(const std::string& element, const std::string& char_data)
 {
   // process the data differently depending on the type of ``element"
   if (element == "volume_segmentation")
   {
-    vcl_cout << "Finished parsing xml file." << vcl_endl;
+    std::cout << "Finished parsing xml file." << std::endl;
   }    
   else if (element == "image_folder")
   {

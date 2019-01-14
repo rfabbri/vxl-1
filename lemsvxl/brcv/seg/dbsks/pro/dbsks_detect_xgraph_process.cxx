@@ -14,10 +14,10 @@ dbsks_detect_xgraph_process()
 {
   if ( 
     !parameters()->add("Prefix of record-keeping files: ", "tmp_prefix", 
-    vcl_string("D:/vision/data/symseg/temp/tmp") )
+    std::string("D:/vision/data/symseg/temp/tmp") )
     )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
 }
 
@@ -37,26 +37,26 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbsks_detect_xgraph_process::
+std::string dbsks_detect_xgraph_process::
 name()
 { 
   return "Detect xgraph"; 
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbsks_detect_xgraph_process::
+std::vector< std::string > dbsks_detect_xgraph_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbsks_detect_xgraph_process::
+std::vector< std::string > dbsks_detect_xgraph_process::
 get_output_type()
 {
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   return to_return;
 }
 
@@ -80,8 +80,8 @@ bool dbsks_detect_xgraph_process::
 execute()
 {
   if ( input_data_.size() != 1 ){
-    vcl_cerr << "In dbsks_detect_xgraph_process::execute() - "
-             << "not exactly one input images" << vcl_endl;
+    std::cerr << "In dbsks_detect_xgraph_process::execute() - "
+             << "not exactly one input images" << std::endl;
     return false;
   }
 

@@ -7,8 +7,8 @@
 //=========================================================================
 
 #include "modrec_vehicle_fit_video.h"
-#include <vcl_limits.h>
-#include <vcl_cstdlib.h>
+#include <limits>
+#include <cstdlib>
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_intersection.h>
 #include <modrec/modrec_vehicle_tracker.h>
@@ -182,21 +182,21 @@ compute_all_opt_terms(const modrec_pca_vehicle& mesh,
     projector_.project(camera_,mesh,rotation,translation,sun_dir_,options_,num_pc_);
   else
     projector_.reproject(camera_,mesh,rotation,translation,sun_dir_,options_,num_pc_);
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = projector_.contours();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = projector_.parts();
+  const std::vector<std::vector<vgl_point_2d<double> > >& contours = projector_.contours();
+  const std::vector<std::vector<vgl_point_2d<double> > >& parts = projector_.parts();
   
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jc = projector_.contours_jacobians();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jp = projector_.parts_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jc = projector_.contours_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jp = projector_.parts_jacobians();
       
   compute_curve_opt_terms(contours, Jc, edge_map_, M, b, total_weight, wgt_residual);
   compute_curve_opt_terms(parts, Jp, edge_map_, M, b, total_weight, wgt_residual);
   
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& silhouette = projector_.silhouette();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jsil = projector_.silhouette_jacobians();
-  const vcl_vector<bool>& is_shadow = projector_.silhouette_shadow();
+  const std::vector<std::vector<vgl_point_2d<double> > >& silhouette = projector_.silhouette();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jsil = projector_.silhouette_jacobians();
+  const std::vector<bool>& is_shadow = projector_.silhouette_shadow();
   
-  vcl_vector<vcl_vector<vgl_point_2d<double> > > shadow;
-  vcl_vector<vcl_vector<vnl_matrix<double> > > Js;
+  std::vector<std::vector<vgl_point_2d<double> > > shadow;
+  std::vector<std::vector<vnl_matrix<double> > > Js;
   for(unsigned int i=0; i<silhouette.size(); ++i){
     if(is_shadow[i]){
       shadow.push_back(silhouette[i]);
@@ -216,8 +216,8 @@ compute_all_opt_terms(const modrec_pca_vehicle& mesh,
                       num_contour_total,
                       num_part_match,
                       num_part_total);
-  vcl_cout << "coverage = " << double(num_contour_match+num_part_match)/
-  (num_contour_total+num_part_total) << vcl_endl;
+  std::cout << "coverage = " << double(num_contour_match+num_part_match)/
+  (num_contour_total+num_part_total) << std::endl;
 #endif
 }
 
@@ -231,8 +231,8 @@ compute_all_residuals(const modrec_pca_vehicle& mesh,
                       double& wgt_residual)
 {
   projector_.reproject(camera_,mesh,rotation,translation,sun_dir_,options_,num_pc_);
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& contours = projector_.contours();
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& parts = projector_.parts();
+  const std::vector<std::vector<vgl_point_2d<double> > >& contours = projector_.contours();
+  const std::vector<std::vector<vgl_point_2d<double> > >& parts = projector_.parts();
   
   compute_curve_residuals(contours, edge_map_, total_weight, wgt_residual);
   compute_curve_residuals(parts, edge_map_, total_weight, wgt_residual);
@@ -241,17 +241,17 @@ compute_all_residuals(const modrec_pca_vehicle& mesh,
 
 //: Compute silhouette errors
 void modrec_vehicle_fit_video::
-compute_silhouette_errors(const vcl_vector<vgl_point_2d<double> >& pts,
-                          const vcl_vector<vgl_vector_2d<double> >& norms,
+compute_silhouette_errors(const std::vector<vgl_point_2d<double> >& pts,
+                          const std::vector<vgl_vector_2d<double> >& norms,
                           const vgl_polygon<double>& silhouette,
-                                vcl_vector<double>& errors)
+                                std::vector<double>& errors)
 {
   assert(pts.size() == norms.size());
   if(silhouette.num_sheets() == 0)
     return;
-  const vcl_vector<vgl_point_2d<double> >& tgt = silhouette[0];
+  const std::vector<vgl_point_2d<double> >& tgt = silhouette[0];
   errors.clear();
-  errors.resize(pts.size(),vcl_numeric_limits<double>::infinity());
+  errors.resize(pts.size(),std::numeric_limits<double>::infinity());
   
   for(unsigned int i=0; i<pts.size(); ++i){
     const vgl_point_2d<double>& pt = pts[i];
@@ -281,7 +281,7 @@ compute_silhouette_errors(const vcl_vector<vgl_point_2d<double> >& pts,
       
       // test for closest point
       double d = dot_product(n,(pi-pt));
-      if(vcl_abs(d) > vcl_abs(errors[i]))
+      if(std::abs(d) > std::abs(errors[i]))
         continue;
       
       errors[i] = d;
@@ -310,11 +310,11 @@ compute_silhouette_errors(const vcl_vector<vgl_point_2d<double> >& pts,
       
       // test for closest point
       double d = dot_product(n,(pi-pt));
-      if(vcl_abs(d) > vcl_abs(errors[i]))
+      if(std::abs(d) > std::abs(errors[i]))
         continue;
       
       // reset this match to infinity to disable it
-      errors[i] = vcl_numeric_limits<double>::infinity();
+      errors[i] = std::numeric_limits<double>::infinity();
       break;
     }
   }
@@ -330,10 +330,10 @@ double modrec_vehicle_fit_video::estimate_initial_scale(const modrec_pca_vehicle
   
   projector_.project(camera_,mesh,rotation,translation,vgl_vector_3d<double>(0,0,0),options_,num_pc_);
   
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jc = projector_.contours_jacobians();
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Jp = projector_.parts_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jc = projector_.contours_jacobians();
+  const std::vector<std::vector<vnl_matrix<double> > >& Jp = projector_.parts_jacobians();
   
-  vcl_vector<vcl_vector<vnl_matrix<double> > > J(Jc);
+  std::vector<std::vector<vnl_matrix<double> > > J(Jc);
   J.insert(J.end(), Jp.begin(), Jp.end());
   
   return modrec_vehicle_fit::estimate_initial_scale(sigma,J);
@@ -345,17 +345,17 @@ double modrec_vehicle_fit_video::
 compute_silhouette_opt_terms(vnl_matrix<double>& M, 
                              vnl_vector<double>& b)
 {  
-  const vcl_vector<vcl_vector<vgl_point_2d<double> > >& sil = projector_.silhouette();
+  const std::vector<std::vector<vgl_point_2d<double> > >& sil = projector_.silhouette();
   
   // abort if predicted or detected silhouettes are not found
   if(silhouette_.num_sheets() != 1 || sil.empty())
     return 0.0;
   
   // compute the silhouette points and normal vectors
-  vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vgl_vector_2d<double> > norms;
+  std::vector<vgl_point_2d<double> > pts;
+  std::vector<vgl_vector_2d<double> > norms;
   for(unsigned int i=0; i<sil.size(); ++i){
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     vgl_vector_2d<double> n1(0,0), n2(0,0);
@@ -371,12 +371,12 @@ compute_silhouette_opt_terms(vnl_matrix<double>& M,
   }
   
   // compute the error vectors
-  vcl_vector<double> errors;
+  std::vector<double> errors;
   compute_silhouette_errors(pts,norms,silhouette_,errors);
   
   
-  const vcl_vector<vcl_vector<vnl_matrix<double> > >& Js = projector_.silhouette_jacobians();
-  const vcl_vector<bool>& is_shadow = projector_.silhouette_shadow();
+  const std::vector<std::vector<vnl_matrix<double> > >& Js = projector_.silhouette_jacobians();
+  const std::vector<bool>& is_shadow = projector_.silhouette_shadow();
 
   double residual = 0.0;
   double total_weight = 0.0;
@@ -388,7 +388,7 @@ compute_silhouette_opt_terms(vnl_matrix<double>& M,
     if(is_shadow[i]) // give less weight to shadow boundaries
       weight /= 10.0;
     weight = weight*weight;
-    const vcl_vector<vgl_point_2d<double> >& si = sil[i];
+    const std::vector<vgl_point_2d<double> >& si = sil[i];
     if(si.size() < 2)
       continue;
     for(unsigned int j=0; j<si.size(); ++j){
@@ -428,7 +428,7 @@ compute_prior(const modrec_pca_vehicle& mesh,
      prior_inv_covar_.cols() != M.cols()+2 ||
      prior_inv_covar_.rows() != M.rows()+2 )
   {
-    vcl_cerr << "prior data not the correct size, using default prior"<<vcl_endl;
+    std::cerr << "prior data not the correct size, using default prior"<<std::endl;
     modrec_vehicle_fit::compute_prior(mesh,translation,rotation,M,b);
   }
   
@@ -514,8 +514,8 @@ apply_solution(const vnl_vector<double>& soln,
     a_velocity_ += soln[num_params_+1];
   }
   else {
-    vcl_cerr << "velocities not found in the solution" <<vcl_endl;
-    vcl_exit(0);
+    std::cerr << "velocities not found in the solution" <<std::endl;
+    std::exit(0);
   }
 }
 
@@ -746,14 +746,14 @@ update_posterior_covariance(const modrec_pca_vehicle& mesh,
   M /= total_weight;
     
   if(track_with_silhouette_){
-    vcl_cout << "adding in silhouette terms"<<vcl_endl;
+    std::cout << "adding in silhouette terms"<<std::endl;
     compute_silhouette_opt_terms(M,b);
   }
   
-  //vcl_cout << "divide by "<<old_mest * old_mest<<vcl_endl;
+  //std::cout << "divide by "<<old_mest * old_mest<<std::endl;
   M /= old_mest * old_mest * 4;
   
-  //vcl_cout <<"M=\n"<<M<<vcl_endl;
+  //std::cout <<"M=\n"<<M<<std::endl;
   // add in the prior 
   M = rotate_covariance(R.inverse(), M);
   
@@ -936,11 +936,11 @@ modrec_vehicle_fit_video::correct_state(modrec_vehicle_state& state)
   update_posterior_covariance(vehicle_,t,R,state.covar,state.num_frames);
   ++state.num_frames;
 
-  vcl_cout << "num frames = "<<state.num_frames<<vcl_endl;
-  vcl_cout << "velocity = "<<state.t_velocity<<" angular = "<<state.a_velocity<<vcl_endl;
-  vcl_cout << "est velocity = "<<30*(R.inverse()*(t-state.last_translation)).x()
-           <<" est angular = "<<30*(R.as_rodrigues()[2]-state.last_rotation.as_rodrigues()[2])<<vcl_endl;
-  //vcl_cout << "final state covar =\n" << state.covar << vcl_endl;
+  std::cout << "num frames = "<<state.num_frames<<std::endl;
+  std::cout << "velocity = "<<state.t_velocity<<" angular = "<<state.a_velocity<<std::endl;
+  std::cout << "est velocity = "<<30*(R.inverse()*(t-state.last_translation)).x()
+           <<" est angular = "<<30*(R.as_rodrigues()[2]-state.last_rotation.as_rodrigues()[2])<<std::endl;
+  //std::cout << "final state covar =\n" << state.covar << std::endl;
   
   
   return true;

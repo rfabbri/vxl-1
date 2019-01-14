@@ -1,6 +1,6 @@
 #ifndef ERF_INV_H
 #define ERF_INV_H
-#include <vcl_cmath.h>
+#include <cmath>
 
 
 
@@ -24,16 +24,16 @@ inline double erfinv(double P)
     SIGMA=sgn(X);
     if ((X<-1)||(X>1))
       {
-        vcl_cout<<" erfinv: argument out of bounds. Argument ="<<X<<vcl_endl;
+        std::cout<<" erfinv: argument out of bounds. Argument ="<<X<<std::endl;
         return 0;
        }
     
-    Z=vcl_fabs(X);
+    Z=std::fabs(X);
     if (Z>.85) 
       {
         A=1-Z;
         B=Z;
-        W=vcl_sqrt(-vcl_log(A+A*B));
+        W=std::sqrt(-std::log(A+A*B));
         if (W>=2.5) 
           {
             if (W>=4.) 

@@ -50,7 +50,7 @@ vsl_b_read(vsl_b_istream &is, bsta_mixture_fixed<comp_,s>& m)
 //: Print summary
 template <class comp_, unsigned s>
 void
-vsl_print_summary(vcl_ostream &os, const bsta_mixture_fixed<comp_,s>& m)
+vsl_print_summary(std::ostream &os, const bsta_mixture_fixed<comp_,s>& m)
 {
   unsigned size = m.num_components();
   os << "mixture with "<<size<<" components\n";

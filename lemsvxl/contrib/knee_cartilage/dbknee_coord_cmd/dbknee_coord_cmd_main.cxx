@@ -116,10 +116,10 @@ int main (int argc, char **argv)
   // Compute coordinate system
   vul_arg<int > compute_cs("-compute_cs", 
     "Set to 1 to compute cylinder based coordinate system", 0); 
-  vul_arg<vcl_string > data_file("-data_file", "Input data file", "");
-  vul_arg<vcl_string > input_file_format("-format", "Input file format", "");
-  vul_arg<vcl_string > param_file("-param_file", "Parameter file", "");
-  vul_arg<vcl_string > output_file("-out_file", "Output file", "");
+  vul_arg<std::string > data_file("-data_file", "Input data file", "");
+  vul_arg<std::string > input_file_format("-format", "Input file format", "");
+  vul_arg<std::string > param_file("-param_file", "Parameter file", "");
+  vul_arg<std::string > output_file("-out_file", "Output file", "");
   vul_arg<int > show_gui("-show_gui", "Visualize results", 1);
 
   
@@ -127,7 +127,7 @@ int main (int argc, char **argv)
   // compute points of center bands on the mesh
   vul_arg<int > compute_bands("-compute_bands", 
     "Compute points of the center bands", 0);
-  vul_arg<vcl_string > band_file("-band_file",
+  vul_arg<std::string > band_file("-band_file",
     "Name of file to save band points.",
     "cartilage_band_points_local_coord.pc");
 
@@ -135,9 +135,9 @@ int main (int argc, char **argv)
   // separate cartilage mesh into inner and outer surface
   vul_arg<int > inner_outer("-inner_outer", 
     "Separate mesh into inner and outer surfaces", 0);
-  vul_arg<vcl_string > inner_mesh_file("-inner_mesh_file", 
+  vul_arg<std::string > inner_mesh_file("-inner_mesh_file", 
     "Name of inner mesh file", "inner_surface.ply");
-  vul_arg<vcl_string > outer_mesh_file("-outer_mesh_file", 
+  vul_arg<std::string > outer_mesh_file("-outer_mesh_file", 
     "Name of outer mesh file", "outer_surface.ply");
  
 
@@ -146,10 +146,10 @@ int main (int argc, char **argv)
   // crop a mesh using cylinder coordinates
   vul_arg<int > crop_cyl("-crop_cyl", 
     "Crop a mesh using cylinder coordinate system", 0);
-  vul_arg<vcl_string > cs_file("-cs_file", "Coordinate system parameter file", "");
-  vul_arg<vcl_vector<double > > cyl_angle_list("-cyl_angle_list", 
+  vul_arg<std::string > cs_file("-cs_file", "Coordinate system parameter file", "");
+  vul_arg<std::vector<double > > cyl_angle_list("-cyl_angle_list", 
     "List of cylindrical angles, in CCW order, determing the regions", 
-    vcl_vector<double >());
+    std::vector<double >());
   vul_arg<double > band_width_ratio("-band_width_ratio", 
     "Ratio of the cartilage bands' width compared to overall width", 0.2);
 
@@ -163,8 +163,8 @@ int main (int argc, char **argv)
 
 
   // pure visualization commands
-  vul_arg<vcl_string > view_mesh("-view_mesh", "Mesh to visualize", "");
-  vul_arg<vcl_string > view_cs("-view_cs", "View cylindrical coordinate system", "");
+  vul_arg<std::string > view_mesh("-view_mesh", "Mesh to visualize", "");
+  vul_arg<std::string > view_cs("-view_cs", "View cylindrical coordinate system", "");
   
 
 
@@ -174,10 +174,10 @@ int main (int argc, char **argv)
 
 
   // ================== SOME APPLICATION RELATED VARIABLES ==================
-  vcl_string ApplicationTitle = "LEMS 3D Visualizer";
+  std::string ApplicationTitle = "LEMS 3D Visualizer";
 
   //: ================== VARIABLES ==================
-  vcl_string dir_prefix = "";      //File prefix
+  std::string dir_prefix = "";      //File prefix
   
   VIS_COLOR_CODE bg_colorcode = COLOR_BLACK;
   VIS_COLOR_CODE gene_colorcode = COLOR_WHITE;
@@ -231,12 +231,12 @@ int main (int argc, char **argv)
     // determine file name
     if (data_file() == "")
     {
-      vcl_cerr << "An input data file is required to proceed."
+      std::cerr << "An input data file is required to proceed."
         << "Use '-data_file' option for input data file.\n";
       return RUN_RESULT_NO_PROCESS;
     }
 
-    vcl_cout << "Input data file = " << data_file() << vcl_endl;
+    std::cout << "Input data file = " << data_file() << std::endl;
 
     // determine the file format
     if (input_file_format() == "")
@@ -257,7 +257,7 @@ int main (int argc, char **argv)
     {
       if ( !bndvis->load_p3d(data_file()) )
       {
-        vcl_cerr << "ERROR: Could not load .p3d file " 
+        std::cerr << "ERROR: Could not load .p3d file " 
           << data_file() << ".\n";
         return RUN_RESULT_FILE_READ_ERROR;
       }
@@ -266,14 +266,14 @@ int main (int argc, char **argv)
     {
       if ( !bndvis->load_ply(data_file()) )
       {
-        vcl_cerr << "ERROR: Could not load .ply file " 
+        std::cerr << "ERROR: Could not load .ply file " 
           << data_file() << ".\n";
         return RUN_RESULT_FILE_READ_ERROR;
       }
     }
     else // Unknow format --> Stop the program
     {
-      vcl_cerr << "ERROR: Invalid file format. Quit now.\n";
+      std::cerr << "ERROR: Invalid file format. Quit now.\n";
       return RUN_RESULT_NO_PROCESS;
     } 
 
@@ -284,19 +284,19 @@ int main (int argc, char **argv)
     
     if (param_file() == "")
     {
-      vcl_cerr << "ERROR: No parameter file specified.\n";
+      std::cerr << "ERROR: No parameter file specified.\n";
       return RUN_RESULT_NO_PROCESS;
     }
-    vcl_cout << "Parameter file = " << param_file() << vcl_endl;
+    std::cout << "Parameter file = " << param_file() << std::endl;
 
 
     /////////////////////////////////////////////////////////////
-    vcl_map<vcl_string, double > param_map;
+    std::map<std::string, double > param_map;
     dbknee_read_coord_param_file(param_file(), param_map);
 
     if (param_map.empty())
     {
-      vcl_cerr << "ERROR: parameter file is either non-existent or empty.\n";
+      std::cerr << "ERROR: parameter file is either non-existent or empty.\n";
       return RUN_RESULT_NO_PROCESS;
     }
 
@@ -309,10 +309,10 @@ int main (int argc, char **argv)
     
     dbknee_cylinder_based_coord coord;
     coord.set_point_set(bndvis->mesh());
-    vcl_cout << "Cropping box = " << coord_params.cropping_box << vcl_endl;
+    std::cout << "Cropping box = " << coord_params.cropping_box << std::endl;
     coord.set_cropping_box(coord_params.cropping_box);
 
-    vcl_cout << "Notch point = " << coord_params.notch_point << vcl_endl;
+    std::cout << "Notch point = " << coord_params.notch_point << std::endl;
     coord.set_notch_point(coord_params.notch_point);
 
 
@@ -329,7 +329,7 @@ int main (int argc, char **argv)
       output_file.value_ = vul_file::strip_extension(param_file()) + "_output.txt";
     }
     // open file for writing
-    vcl_ofstream outfp(output_file().c_str(), vcl_ios_out);
+    std::ofstream outfp(output_file().c_str(), std::ios::out);
     coord.print(outfp);
     outfp.close();  
 
@@ -344,7 +344,7 @@ int main (int argc, char **argv)
     
     ///////////////////////////////////////////////////////////////////////////
     // temporary - a hack to save the cropped point set to a file
-    // vcl_string cropped_point_file = "cropped_point_set_local_coords.pc";
+    // std::string cropped_point_file = "cropped_point_set_local_coords.pc";
     // dbknee_compute_write_local_coords_to_file(coord, bndshockvis->bnd_set(),
     //  cropped_point_file);
     ///////////////////////////////////////////////////////////////////////////
@@ -424,21 +424,21 @@ int main (int argc, char **argv)
     dbmsh3d_mesh mesh;
 
     dbmsh3d_load_ply(&mesh, data_file().c_str());
-    mesh.print_summary(vcl_cout);
+    mesh.print_summary(std::cout);
 
     dbknee_cylinder_based_coord coord;
     coord.load_from_cs_file(cs_file());
     vgl_point_3d<double > axis_origin = coord.origin();
     vgl_vector_3d<double > axis_dir = coord.z_axis();
 
-    vcl_cout << "Separating the cartilage into inner and outer meshes.\n";
+    std::cout << "Separating the cartilage into inner and outer meshes.\n";
     dbknee_separate_inner_outer_surfaces(mesh, 
                                           axis_origin,
                                           axis_dir,
                                           inner_mesh,
                                           outer_mesh);
 
-    vcl_cout << "Writing inner and outer meshes to files.\n";
+    std::cout << "Writing inner and outer meshes to files.\n";
     dbmsh3d_save_ply(&inner_mesh, inner_mesh_file().c_str(), false);
     dbmsh3d_save_ply(&outer_mesh, outer_mesh_file().c_str(), false);
   }
@@ -458,7 +458,7 @@ int main (int argc, char **argv)
     dbmsh3d_load(&mesh, data_file().c_str());
 
     // retrieve the angles
-    vcl_vector<double > crop_angles = cyl_angle_list();
+    std::vector<double > crop_angles = cyl_angle_list();
 
     // crop the mesh into regions and save the mesh
 
@@ -495,18 +495,18 @@ int main (int argc, char **argv)
         bot_z_min, bot_z_max, theta_min, theta_max);
 
       // write them out
-      vcl_string base_name = vul_file::strip_extension(data_file().c_str());
-      vcl_stringstream top_stream;
+      std::string base_name = vul_file::strip_extension(data_file().c_str());
+      std::stringstream top_stream;
       top_stream << base_name 
         << "_top_width_" << band_width_ratio()
-        << "_theta_" << vcl_abs(theta_min_degree) << "_" << vcl_abs(theta_max_degree)
+        << "_theta_" << std::abs(theta_min_degree) << "_" << std::abs(theta_max_degree)
         << ".ply";
       dbmsh3d_save_ply(&top_mesh, top_stream.str().c_str(), false);
 
-      vcl_stringstream bot_stream;
+      std::stringstream bot_stream;
       bot_stream << base_name 
         << "_bot_width_" << band_width_ratio()
-        << "_theta_" << vcl_abs(theta_min_degree) << "_" << vcl_abs(theta_max_degree)
+        << "_theta_" << std::abs(theta_min_degree) << "_" << std::abs(theta_max_degree)
         << ".ply";
       dbmsh3d_save_ply(&bot_mesh, bot_stream.str().c_str(), false);
     }  
@@ -532,21 +532,21 @@ int main (int argc, char **argv)
     // i. Load the meshes
     dbmsh3d_richmesh richmesh;
 
-    vcl_cout << "\n\nLoad mesh file = " << data_file() << vcl_endl;
+    std::cout << "\n\nLoad mesh file = " << data_file() << std::endl;
 
     // list of properties to load
-    vcl_vector<vcl_string > vertex_prop_list;
+    std::vector<std::string > vertex_prop_list;
     vertex_prop_list.push_back("verror_abs");
 
-    vcl_vector<vcl_string > face_prop_list;
+    std::vector<std::string > face_prop_list;
     face_prop_list.clear();
 
     ///////////////////////////////
     dbmsh3d_load_ply(&richmesh, data_file().c_str(), vertex_prop_list, face_prop_list);
     ///////////////////////////////
 
-    vcl_cout << "done.\n";
-    vcl_cout << "#v[ " << richmesh.num_vertices() 
+    std::cout << "done.\n";
+    std::cout << "#v[ " << richmesh.num_vertices() 
       << " ], #f[ " << richmesh.facemap().size() << " ]\n";
 
 
@@ -559,9 +559,9 @@ int main (int argc, char **argv)
     {
       if (vb->is_a() != "dbmsh3d_richvertex")
       {
-        vcl_cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
-        vcl_cerr << "Current vertex type: " << vb->is_a() << vcl_endl;
-        vcl_cerr << "Quit now. \n";
+        std::cerr << "Error: loaded mesh needs to have vertices of type dbmsh3d_richvertex \n";
+        std::cerr << "Current vertex type: " << vb->is_a() << std::endl;
+        std::cerr << "Quit now. \n";
         return 1;
       }
       dbmsh3d_richvertex* v = static_cast<dbmsh3d_richvertex*>(vb);
@@ -584,7 +584,7 @@ int main (int argc, char **argv)
     }      
 
     // write output table to a file
-    vcl_fstream outfile(output_file().c_str(), vcl_ios_out);
+    std::fstream outfile(output_file().c_str(), std::ios::out);
     outfile << "id radius theta z thickness\n";
     output_table.print(outfile);
     outfile.close();
@@ -655,7 +655,7 @@ int main (int argc, char **argv)
   // ==========================================================================
   
   if (show_gui() == 0) {
-    vcl_cout << "Show gui = " << show_gui() << vcl_endl;
+    std::cout << "Show gui = " << show_gui() << std::endl;
     //: Don't show the GUI Window.
     return RUN_RESULT_SUCCESS;
   }

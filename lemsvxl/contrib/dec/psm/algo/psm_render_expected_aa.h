@@ -1,7 +1,7 @@
 #ifndef psm_render_expected_aa_h_
 #define psm_render_expected_aa_h_
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <hsds/hsds_fd_tree.h>
 #include <psm/psm_scene.h>
@@ -44,7 +44,7 @@ public:
   }
 
   //: accumulate 
-  inline bool step_cells(vgl_point_3d<int> &block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, vcl_vector<hsds_fd_tree_node_index<3> > &cells)
+  inline bool step_cells(vgl_point_3d<int> &block_idx, hsds_fd_tree<psm_sample<APM>,3> &block, hsds_fd_tree<psm_aux_traits<PSM_AUX_NULL>::sample_datatype,3> &aux_block, std::vector<hsds_fd_tree_node_index<3> > &cells)
   {
     ++step_count_;
 
@@ -57,7 +57,7 @@ public:
     psm_cube_face_list visible_faces;
 
     // project each cell into the image
-    vcl_vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
+    std::vector<hsds_fd_tree_node_index<3> >::iterator cell_it = cells.begin();
     for (; cell_it != cells.end(); ++cell_it) {
       psm_sample<APM> const& cell_value = block[*cell_it];
       if (cell_value.alpha > 0.001) {
@@ -80,7 +80,7 @@ public:
 
      /*
      if (step_count_ == 15) {
-       vcl_cout << vcl_endl << "saving debug images" << vcl_endl;
+       std::cout << std::endl << "saving debug images" << std::endl;
        vil_save(vis_,"c:/research/psm/output/vis.tiff");
        vil_save(color_aa_weights_,"c:/research/psm/output/pix_weights.tiff");
        vil_save(cell_expected_img_,"c:/research/psm/output/cell_expected.tiff");
@@ -132,7 +132,7 @@ private:
   class image_exp_functor
   {
   public:
-    float operator()(float x)       const { return x<0?vcl_exp(x):1.0f; }
+    float operator()(float x)       const { return x<0?std::exp(x):1.0f; }
   };
 
 };
@@ -158,7 +158,7 @@ public:
 template <psm_apm_type APM>
 void psm_render_expected(psm_scene<APM> &scene, vpgl_camera<double> const* cam, vil_image_view<typename psm_apm_traits<APM>::obs_datatype> &expected, vil_image_view<float> &mask, bool use_black_background = false)
 {
-  vcl_cout << "render expected: use_black_background = " << use_black_background << vcl_endl;
+  std::cout << "render expected: use_black_background = " << use_black_background << std::endl;
   
   psm_parallel_raytrace_function<psm_render_expected_functor<APM>, APM> raytrace_fn(scene, cam, expected.ni(), expected.nj(), false);
 

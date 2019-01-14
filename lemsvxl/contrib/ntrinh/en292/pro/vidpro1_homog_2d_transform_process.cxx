@@ -61,7 +61,7 @@ vidpro1_homog_2d_transform_process::vidpro1_homog_2d_transform_process() : bpro1
       !parameters()->add( "Line y1=" , "-ht_y1" , (float)20)
     ) 
   {
-    vcl_cerr << "ERROR: Adding parameters in vidpro1_klt_process::vidpro1_klt_process()" << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in vidpro1_klt_process::vidpro1_klt_process()" << std::endl;
   }
   else
   {    
@@ -76,7 +76,7 @@ vidpro1_homog_2d_transform_process::~vidpro1_homog_2d_transform_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 vidpro1_homog_2d_transform_process::name()
 {
   return "Homography 2D Transform";
@@ -101,9 +101,9 @@ vidpro1_homog_2d_transform_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_homog_2d_transform_process::get_input_type()
+std::vector< std::string > vidpro1_homog_2d_transform_process::get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   // to_return.push_back( "vsol2D" );
   to_return.push_back( "homog_2d" );
   return to_return;
@@ -111,9 +111,9 @@ vcl_vector< vcl_string > vidpro1_homog_2d_transform_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_homog_2d_transform_process::get_output_type()
+std::vector< std::string > vidpro1_homog_2d_transform_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "vsol2D" );
   return to_return;
 }
@@ -123,10 +123,10 @@ vcl_vector< vcl_string > vidpro1_homog_2d_transform_process::get_output_type()
 bool
 vidpro1_homog_2d_transform_process::execute()
 {
-  vcl_cout << "\nPerform homography transform on vsol2D objects" << vcl_endl;
+  std::cout << "\nPerform homography transform on vsol2D objects" << std::endl;
   if ( this->input_data_.size() != 1 )
   {
-    vcl_cout << "In vidpro1_homog_2d_transform_process::execute() - not exactly one"
+    std::cout << "In vidpro1_homog_2d_transform_process::execute() - not exactly one"
              << " input frames \n";
     return false;
   }
@@ -137,14 +137,14 @@ vidpro1_homog_2d_transform_process::execute()
   homog_2d_storage.vertical_cast(input_data_[0][0]);
   vgl_h_matrix_2d< double > H = homog_2d_storage->H();
 
-  vcl_cout << "Homography matrix H = \n" << H << vcl_endl;
-  vcl_cout << "Det(H) = " << vnl_det(H.get_matrix()) << vcl_endl;
+  std::cout << "Homography matrix H = \n" << H << std::endl;
+  std::cout << "Det(H) = " << vnl_det(H.get_matrix()) << std::endl;
 
   H = H * this->H();
   this->set_H(H);
   
   // Now we've got the homography matrix, apply it to the vsol2D line
-  vcl_cout << "Apply homography to vsol2D line \n";
+  std::cout << "Apply homography to vsol2D line \n";
   
   // a hack for now
   // coordinate of a rectangle
@@ -159,7 +159,7 @@ vidpro1_homog_2d_transform_process::execute()
   vsol_point_2d_sptr p2(new vsol_point_2d(x1, y1));
   vsol_point_2d_sptr p3(new vsol_point_2d(x1, y0));
 
-  vcl_vector< vsol_point_2d_sptr > pt_list;
+  std::vector< vsol_point_2d_sptr > pt_list;
   pt_list.push_back(p0);
   pt_list.push_back(p1);
   pt_list.push_back(p2);
@@ -191,12 +191,12 @@ vidpro1_homog_2d_transform_process::execute()
 
   //if (! brip_vil_float_ops::homography(im_view_float, H_inv, return_im_view, true, 0.0f))
   //{
-  //  vcl_cout << "Homography transform failed" << vcl_endl;
+  //  std::cout << "Homography transform failed" << std::endl;
   //  return false;
   //}
   //
-  //vcl_cout << "Homography succeeded " << vcl_endl;
-  //return_im_view.print(vcl_cout);
+  //std::cout << "Homography succeeded " << std::endl;
+  //return_im_view.print(std::cout);
  
   //// create the output storage class
   //vidpro1_image_storage_sptr output_storage = vidpro1_image_storage_new();

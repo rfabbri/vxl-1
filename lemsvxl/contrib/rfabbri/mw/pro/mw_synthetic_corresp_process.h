@@ -9,8 +9,8 @@
 //
 
 #include <bpro1/bpro1_process.h>
-#include <vcl_vector.h>
-#include <vcl_string.h>
+#include <vector>
+#include <string>
 #include <vgl/vgl_fwd.h>
 #include <dbdet/dbdet_keypoint_corr3d_sptr.h>
 
@@ -36,33 +36,33 @@ public:
   //: Clone the process
   virtual bpro1_process* clone() const;
 
-  vcl_string name();
+  std::string name();
 
   int input_frames();
   int output_frames();
 
-  vcl_vector< vcl_string > get_input_type();
-  vcl_vector< vcl_string > get_output_type();
+  std::vector< std::string > get_input_type();
+  std::vector< std::string > get_output_type();
 
   bool execute();
   bool finish();
 
 protected:
 
-  vcl_vector<vpgl_perspective_camera<double> *> pcam_;
-  vcl_vector<vgl_point_3d<double> > vgl_pts_;
-  vcl_vector<vpgl_perspective_camera<double> *> pcam_ini_;
-  vcl_vector<vgl_point_3d<double> > vgl_pts_ini_;
-  vcl_vector<unsigned> pt_id_;
-  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_;
+  std::vector<vpgl_perspective_camera<double> *> pcam_;
+  std::vector<vgl_point_3d<double> > vgl_pts_;
+  std::vector<vpgl_perspective_camera<double> *> pcam_ini_;
+  std::vector<vgl_point_3d<double> > vgl_pts_ini_;
+  std::vector<unsigned> pt_id_;
+  std::vector<std::vector<bdifd_3rd_order_point_2d> > crv2d_;
   unsigned nviews_;
 
   void define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &nrows);
-  void  generate_corr_pts(vcl_vector<dbdet_keypoint_corr3d_sptr> &corr_pts);
+  void  generate_corr_pts(std::vector<dbdet_keypoint_corr3d_sptr> &corr_pts);
   void initialize_poses(
     const vpgl_calibration_matrix<double> &K, 
-    vcl_vector<vpgl_perspective_camera<double> *> &pcam_ini,
-    vcl_vector<vgl_point_3d<double> > &vgl_pts_ini
+    std::vector<vpgl_perspective_camera<double> *> &pcam_ini,
+    std::vector<vgl_point_3d<double> > &vgl_pts_ini
     ) const;
 };
 

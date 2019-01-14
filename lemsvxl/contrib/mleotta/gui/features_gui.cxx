@@ -76,7 +76,7 @@ class vidreg_features_filter : public dbpro_filter
         output(0, f);
         return DBPRO_VALID;
       }
-      vcl_cerr << "features failed!"<<vcl_endl;
+      std::cerr << "features failed!"<<std::endl;
       return DBPRO_INVALID;
     }
   private:
@@ -90,8 +90,8 @@ class vidreg_match_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<vidreg_salient_group_sptr>));
-      vcl_vector<vidreg_salient_group_sptr> fixed_groups = input<vcl_vector<vidreg_salient_group_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<vidreg_salient_group_sptr>));
+      std::vector<vidreg_salient_group_sptr> fixed_groups = input<std::vector<vidreg_salient_group_sptr> >(0);
 
       assert(input_type_id(1) == typeid(vidreg_feature_group_sptr));
       vidreg_feature_group_sptr last_features = input<vidreg_feature_group_sptr>(1);
@@ -99,9 +99,9 @@ class vidreg_match_filter : public dbpro_filter
       assert(input_type_id(2) == typeid(vidreg_feature_group_sptr));
       vidreg_feature_group_sptr new_features = input<vidreg_feature_group_sptr>(2);
 
-      assert(input_type_id(3) == typeid(vcl_vector<rgrl_transformation_sptr>));
-      vcl_vector<rgrl_transformation_sptr> xforms =
-      input<vcl_vector<rgrl_transformation_sptr> >(3);
+      assert(input_type_id(3) == typeid(std::vector<rgrl_transformation_sptr>));
+      std::vector<rgrl_transformation_sptr> xforms =
+      input<std::vector<rgrl_transformation_sptr> >(3);
 
       if(!new_features || !last_features){
         return DBPRO_WAIT;
@@ -110,7 +110,7 @@ class vidreg_match_filter : public dbpro_filter
 
       if(matcher_.assisted_match(xforms, *last_features, *new_features)){
       //if(matcher_.match(fixed_groups, *last_features, *new_features)){
-        vcl_vector<vidreg_salient_group_sptr> groups = matcher_.salient_groups();
+        std::vector<vidreg_salient_group_sptr> groups = matcher_.salient_groups();
         output(0, groups);
         return DBPRO_VALID;
       }
@@ -128,8 +128,8 @@ class vidreg_reconstruct_filter : public dbpro_sink
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<vidreg_salient_group_sptr>));
-      vcl_vector<vidreg_salient_group_sptr> groups = input<vcl_vector<vidreg_salient_group_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<vidreg_salient_group_sptr>));
+      std::vector<vidreg_salient_group_sptr> groups = input<std::vector<vidreg_salient_group_sptr> >(0);
 
       if(groups.size() < 2){
         return DBPRO_VALID;
@@ -149,9 +149,9 @@ class vidreg_tracker_filter : public dbpro_filter
     //: Execute this process
     dbpro_signal execute()
     {
-      assert(input_type_id(0) == typeid(vcl_vector<vidreg_salient_group_sptr>));
-      vcl_vector<vidreg_salient_group_sptr> groups
-          = input<vcl_vector<vidreg_salient_group_sptr> >(0);
+      assert(input_type_id(0) == typeid(std::vector<vidreg_salient_group_sptr>));
+      std::vector<vidreg_salient_group_sptr> groups
+          = input<std::vector<vidreg_salient_group_sptr> >(0);
 
       tracker_.process_frame(groups[1]->matches()[0],groups[1]->weight_map());
 
@@ -178,7 +178,7 @@ class vidreg_track_f_filter : public dbpro_filter
   
       if(timestamp > this->timestamp_){
 
-        typedef vcl_vector<vcl_pair<unsigned long, rgrl_feature_sptr> > Tvec;
+        typedef std::vector<std::pair<unsigned long, rgrl_feature_sptr> > Tvec;
 
         this->timestamp_ = timestamp;
         if(this->last_signal_ != DBPRO_EOS){
@@ -246,7 +246,7 @@ int main(int argc, char** argv)
   graph["fmatch"]      = new vidreg_match_filter();
   //graph["recon"]       = new vidreg_reconstruct_filter();
   graph["f_delay"]     = new dbpro_delay(1,vidreg_feature_group_sptr(NULL));
-  graph["m_delay"]     = new dbpro_delay(1,vcl_vector<vidreg_salient_group_sptr>(0));
+  graph["m_delay"]     = new dbpro_delay(1,std::vector<vidreg_salient_group_sptr>(0));
   graph["null_sink"]   = new dbpro_null_sink();
 
   graph["track"]       = new vidreg_tracker_filter();
@@ -262,7 +262,7 @@ int main(int argc, char** argv)
   graph["xml_xform_w"]       = new vidreg_xml_write_xform_filter();
   graph["xml_xform_source"]  = new dbpro_xio_source();
   graph["xml_xform_r"]       = new vidreg_xml_read_xform_filter();
-  graph["x_delay"]           = new dbpro_delay(1,vcl_vector<rgrl_transformation_sptr>(0));
+  graph["x_delay"]           = new dbpro_delay(1,std::vector<rgrl_transformation_sptr>(0));
   graph["track_read_try"]    = new dbpro_try_option();
   graph["xml_track_w"]       = new vidreg_xml_write_tracks_filter();
   graph["xml_track_sink"]    = new dbpro_xio_sink();

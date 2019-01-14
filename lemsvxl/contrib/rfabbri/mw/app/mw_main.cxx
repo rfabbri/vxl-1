@@ -156,7 +156,7 @@ int main(int argc, char** argv)
   mw_menu menubar;
   vgui_menu menu_holder = menubar.setup_menu(); 
   unsigned w = 2048, h = 1000;
-  vcl_string title = "Brown Eyes";
+  std::string title = "Brown Eyes";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   

@@ -29,7 +29,7 @@ dbdet_lowe_keypoint::normalize_descriptor(double max_comp)
 
 static inline float gaussian( float x, float y)
 {
-  return vcl_exp(-((x*x)+(y*y))/(128.0f));
+  return std::exp(-((x*x)+(y*y))/(128.0f));
 }
 
 //: compute the descriptor
@@ -44,7 +44,7 @@ dbdet_lowe_keypoint::compute_descriptor(const bil_scale_image<float>& scale_grad
   unsigned int num_lvl = scale_grad_dir.levels();
   int first_oct = scale_grad_dir.first_octave();
 
-  double log2_scale = vcl_log(scale_/init_scale)/vcl_log(2.0)-first_oct;
+  double log2_scale = std::log(scale_/init_scale)/std::log(2.0)-first_oct;
   unsigned int index = (unsigned int)(log2_scale*num_lvl +0.5);
   int oct = index/num_lvl;
   unsigned int lvl = index%num_lvl;
@@ -65,18 +65,18 @@ dbdet_lowe_keypoint::compute_descriptor(const bil_scale_image<float>& scale_grad
     for (int hj=0; hj<4; ++hj){
       for (int i=4*hi; i<4*(hi+1); ++i){
         for (int j=4*hj; j<4*(hj+1); ++j){
-          double x = ( (i-7.5)*vcl_cos(orientation_)
-                      -(j-7.5)*vcl_sin(orientation_)) * rel_scale;
-          double y = ( (i-7.5)*vcl_sin(orientation_)
-                      +(j-7.5)*vcl_cos(orientation_)) * rel_scale;
+          double x = ( (i-7.5)*std::cos(orientation_)
+                      -(j-7.5)*std::sin(orientation_)) * rel_scale;
+          double y = ( (i-7.5)*std::sin(orientation_)
+                      +(j-7.5)*std::cos(orientation_)) * rel_scale;
           for(int c=0; c<4; ++c){
             int xc = int(x+key_x) + c/2;
             int yc = int(y+key_y) + c%2;
             if ( xc>=0 && xc<int(grad_orient.ni()) &&
                  yc>=0 && yc<int(grad_orient.nj()) ){
 
-              float interp_x = 1.0f - vcl_fabs( x+key_x - float(xc) );
-              float interp_y = 1.0f - vcl_fabs( y+key_y - float(yc) );
+              float interp_x = 1.0f - std::fabs( x+key_x - float(xc) );
+              float interp_y = 1.0f - std::fabs( y+key_y - float(yc) );
               double weight = grad_mag(xc,yc) * interp_x * interp_y
                             * gaussian((xc-key_x)/rel_scale, (yc-key_y)/rel_scale);
               float orient = grad_orient(xc,yc)-float(orientation_)+pi;
@@ -126,9 +126,9 @@ dbdet_lowe_keypoint::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_lowe_keypoint::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_lowe_keypoint::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -153,7 +153,7 @@ dbdet_lowe_keypoint::clone() const
 
 //: Print an ascii summary to the stream
 void
-dbdet_lowe_keypoint::print_summary(vcl_ostream &os) const
+dbdet_lowe_keypoint::print_summary(std::ostream &os) const
 {
   os << "dbdet_lowe_keypoint("<<x()<<", "<<y()<<", "<<scale_<<", "<<orientation_<<")";
 }

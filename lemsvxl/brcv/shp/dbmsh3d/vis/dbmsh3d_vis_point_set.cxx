@@ -2,7 +2,7 @@
 //  MingChing Chang
 //  May 03, 2005.
 
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_utils.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_backpt.h>
@@ -19,7 +19,7 @@
 
 //######################################################################
 
-void draw_ptset_geom (SoSeparator* root, const vcl_vector<vgl_point_3d<double> >& points)
+void draw_ptset_geom (SoSeparator* root, const std::vector<vgl_point_3d<double> >& points)
 {
   //Put in the point cloud coordinates.
   SoCoordinate3 * coord3 = new SoCoordinate3;
@@ -32,7 +32,7 @@ void draw_ptset_geom (SoSeparator* root, const vcl_vector<vgl_point_3d<double> >
   root->addChild(ps);
 }
 
-void draw_idpts_geom (SoSeparator* root, const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts)
+void draw_idpts_geom (SoSeparator* root, const std::vector<std::pair<int, vgl_point_3d<double> > >& idpts)
 {
   //Put in the point cloud coordinates.
   SoCoordinate3 * coord3 = new SoCoordinate3;
@@ -46,7 +46,7 @@ void draw_idpts_geom (SoSeparator* root, const vcl_vector<vcl_pair<int, vgl_poin
 }
 
 void draw_oriented_ptset_geom (SoSeparator* root, 
-        const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts)
+        const std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts)
 {
   //Put in the point cloud coordinates.
   SoCoordinate3 * coord3 = new SoCoordinate3;
@@ -62,7 +62,7 @@ void draw_oriented_ptset_geom (SoSeparator* root,
 
 //: draw all normal lines in a single SoIndexedLineSet object.
 void draw_oriented_ptset_normal_geom (SoSeparator* root, 
-        const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts,
+        const std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts,
         const float normal_len)
 {
   unsigned int nVertices = ori_pts.size() * 2;
@@ -99,7 +99,7 @@ void draw_oriented_ptset_normal_geom (SoSeparator* root,
   root->addChild (indexedLineSet);
 }
 
-SoSeparator* draw_ptset (const vcl_vector<vgl_point_3d<double> >& pts, 
+SoSeparator* draw_ptset (const std::vector<vgl_point_3d<double> >& pts, 
                           const int colorcode, const float size)
 {
   SoSeparator* root = new SoSeparator;
@@ -118,7 +118,7 @@ SoSeparator* draw_ptset (const vcl_vector<vgl_point_3d<double> >& pts,
   return root;
 }
 
-SoSeparator* draw_idpts (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts, 
+SoSeparator* draw_idpts (const std::vector<std::pair<int, vgl_point_3d<double> > >& idpts, 
                          const int colorcode, const float size)
 {
   SoSeparator* root = new SoSeparator;
@@ -138,7 +138,7 @@ SoSeparator* draw_idpts (const vcl_vector<vcl_pair<int, vgl_point_3d<double> > >
 }
 
 SoSeparator* draw_oriented_ptset (
-                const vcl_vector<vcl_pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts, 
+                const std::vector<std::pair<vgl_point_3d<double>, vgl_vector_3d<double> > >& ori_pts, 
                 const int point_colorcode, const int normal_colorcode, const float normal_len,
                 const float point_size, const float normal_width)
 {
@@ -176,7 +176,7 @@ void draw_pt_set_geom (SoSeparator* root, dbmsh3d_pt_set* pt_set)
 {
   //Put in the point cloud coordinates.
   SoCoordinate3 * coord3 = new SoCoordinate3;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
   for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* V = (*it).second;
     coord3->point.set1Value (i, V->pt().x(), V->pt().y(), V->pt().z());
@@ -192,7 +192,7 @@ void draw_pt_set_geom_unmeshed (SoSeparator* root, dbmsh3d_pt_set* pt_set)
 {
   //Put in the point cloud coordinates.
   SoCoordinate3 * coord3 = new SoCoordinate3;
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
   int count = 0;
   for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* V = (*it).second;
@@ -244,7 +244,7 @@ SoSeparator* draw_ptset_idv(dbmsh3d_pt_set* pt_set,
   SbColor color = color_from_code (colorcode);
 
   if (user_defined_class) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
     for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
       dbmsh3d_vertex* v = (*it).second;
       SoSeparator* sep = draw_vertex_vispt_SoCube (v, color, size);
@@ -252,7 +252,7 @@ SoSeparator* draw_ptset_idv(dbmsh3d_pt_set* pt_set,
     }
   }
   else {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
     for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
       dbmsh3d_vertex* v = (*it).second;
       SoSeparator* sep = draw_vertex_SoCube (v, color, size);
@@ -264,7 +264,7 @@ SoSeparator* draw_ptset_idv(dbmsh3d_pt_set* pt_set,
 }
 
 SoSeparator* draw_pt_set_color (dbmsh3d_pt_set* pt_set,
-                                const vcl_vector<SbColor>& color_set,
+                                const std::vector<SbColor>& color_set,
                                 const float size,
                                 const bool user_defined_class)
 {
@@ -278,7 +278,7 @@ SoSeparator* draw_pt_set_color (dbmsh3d_pt_set* pt_set,
   assert (pt_set->vertexmap().size() == color_set.size());
 
   if (user_defined_class) {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
     for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
       dbmsh3d_vertex* v = (*it).second;
       SoSeparator* sep = new SoSeparator;
@@ -298,7 +298,7 @@ SoSeparator* draw_pt_set_color (dbmsh3d_pt_set* pt_set,
     }  
   }
   else {  
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
     for (int i=0; it != pt_set->vertexmap().end(); it++, i++) {
       dbmsh3d_vertex* v = (*it).second;
       SoSeparator* sep = new SoSeparator;
@@ -323,20 +323,20 @@ SoSeparator* draw_pt_set_color (dbmsh3d_pt_set* pt_set,
 
 // ============================== G3D ==============================
 
-bool dbmsh3d_load_g3d (dbmsh3d_pt_set* pt_set, vcl_vector<SbColor>& gene_color_set, const char* file)
+bool dbmsh3d_load_g3d (dbmsh3d_pt_set* pt_set, std::vector<SbColor>& gene_color_set, const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen(file, "r")) == NULL) {
-    vul_printf (vcl_cout, "Can't open input G3d file %s\n", file);
+  if ((fp = std::fopen(file, "r")) == NULL) {
+    vul_printf (std::cout, "Can't open input G3d file %s\n", file);
     return false; 
   }
 
   int iID;
-  vcl_fscanf (fp, "%d\n", &iID);
+  std::fscanf (fp, "%d\n", &iID);
 
   unsigned int iNumGenes;
-  vcl_fscanf (fp, "%u\n", &iNumGenes);
-  vul_printf (vcl_cout, "%u points\n", iNumGenes);
+  std::fscanf (fp, "%u\n", &iNumGenes);
+  vul_printf (std::cout, "%u points\n", iNumGenes);
 
   double x, y, z;
   float col[3];
@@ -344,7 +344,7 @@ bool dbmsh3d_load_g3d (dbmsh3d_pt_set* pt_set, vcl_vector<SbColor>& gene_color_s
   for (unsigned int i=0; i < iNumGenes; i++) {
     dbmsh3d_vertex *ptGene = pt_set->_new_vertex ();
 
-    vcl_fscanf (fp, "%lf %lf %lf %f %f %f\n", &x, &y, &z, &col[0], &col[1], &col[2]);
+    std::fscanf (fp, "%lf %lf %lf %f %f %f\n", &x, &y, &z, &col[0], &col[1], &col[2]);
     ptGene->get_pt().set (x, y, z);
     SbColor c (col[0], col[1], col[2]);
     gene_color_set.push_back (c);
@@ -361,19 +361,19 @@ bool dbmsh3d_load_g3d (dbmsh3d_pt_set* pt_set, vcl_vector<SbColor>& gene_color_s
 bool dbmsh3d_save_g3d (dbmsh3d_pt_set* pt_set, const char* file)
 {
   FILE* fp;
-  if ((fp = vcl_fopen(file, "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open input G3d file %s\n", file);
+  if ((fp = std::fopen(file, "w")) == NULL) {
+    vul_printf (std::cout, "Can't open input G3d file %s\n", file);
     return false; 
   }
 
-  vul_printf (vcl_cout, "Saving %s...\n", file);
-  vcl_fprintf (fp, "%d\n", 3);
-  vcl_fprintf (fp, "%u\n", pt_set->vertexmap().size());
+  vul_printf (std::cout, "Saving %s...\n", file);
+  std::fprintf (fp, "%d\n", 3);
+  std::fprintf (fp, "%u\n", pt_set->vertexmap().size());
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
   for (unsigned int i=0; it != pt_set->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
-    vcl_fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
+    std::fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
                  v->pt().x(), v->pt().y(), v->pt().z(), 1.0f, 1.0f, 1.0f);
   }
 
@@ -381,24 +381,24 @@ bool dbmsh3d_save_g3d (dbmsh3d_pt_set* pt_set, const char* file)
   return true;
 }
 
-bool dbmsh3d_save_g3d (dbmsh3d_pt_set* pt_set, vcl_vector<SbColor>& gene_color_set, const char* file)
+bool dbmsh3d_save_g3d (dbmsh3d_pt_set* pt_set, std::vector<SbColor>& gene_color_set, const char* file)
 {
   assert (pt_set->vertexmap().size() == gene_color_set.size());
 
   FILE* fp;
-  if ((fp = vcl_fopen(file, "w")) == NULL) {
-    vul_printf (vcl_cout, "Can't open input G3d file %s\n", file);
+  if ((fp = std::fopen(file, "w")) == NULL) {
+    vul_printf (std::cout, "Can't open input G3d file %s\n", file);
     return false; 
   }
 
-  vul_printf (vcl_cout, "Saving %s...\n", file);
-  vcl_fprintf (fp, "%d\n", 3);
-  vcl_fprintf (fp, "%u\n", pt_set->vertexmap().size());
+  vul_printf (std::cout, "Saving %s...\n", file);
+  std::fprintf (fp, "%d\n", 3);
+  std::fprintf (fp, "%u\n", pt_set->vertexmap().size());
 
-  vcl_map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
+  std::map<int, dbmsh3d_vertex*>::iterator it = pt_set->vertexmap().begin();
   for (unsigned int i=0; it != pt_set->vertexmap().end(); it++, i++) {
     dbmsh3d_vertex* v = (*it).second;
-    vcl_fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
+    std::fprintf (fp, "%.16f %.16f %.16f %f %f %f\n", 
                  v->pt().x(), v->pt().y(), v->pt().z(), 
                  gene_color_set[i][0], gene_color_set[i][1], gene_color_set[i][2]); ///1.0f, 1.0f, 1.0f);
   }

@@ -34,7 +34,7 @@ public:
   virtual ~dbinfo_osl_edit_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -51,9 +51,9 @@ public:
   virtual void activate();
   //:Tool utilities
   //: create a new prototype from an image snippet
-  bool load_prototype(vcl_string const& path);
+  bool load_prototype(std::string const& path);
   //: add the prototype to the osl and display it in the grid
-  bool add_prototype(vcl_string const& path, vcl_string const& doc);
+  bool add_prototype(std::string const& path, std::string const& doc);
 protected:
   vgui_event_condition gesture_lift_;
   vgui_event_condition gesture_drop_;
@@ -81,7 +81,7 @@ public:
   virtual ~dbinfo_osl_match_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -98,7 +98,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the osl
-  bool load_query(vcl_string const& path, const bool expand = false,
+  bool load_query(std::string const& path, const bool expand = false,
                   const float coef = 0.6f);
   //: match the query against the osl
   bool match_query(const float dx, const float dr,
@@ -106,9 +106,9 @@ public:
                    const float ratio, const float valid_thresh,
                    const unsigned Nob, bool use_int, bool use_grad,
                    bool forward_and_reverse,
-                   vcl_vector<vcl_string>& classes,
-                   vcl_vector<float>& match_scores,
-                   vcl_vector<vil_image_resource_sptr>& match_images);
+                   std::vector<std::string>& classes,
+                   std::vector<float>& match_scores,
+                   std::vector<vil_image_resource_sptr>& match_images);
 
   //: match the query against the osl in transform intervals
   bool match_query_interval(const float xmin, const float xmax,
@@ -119,9 +119,9 @@ public:
                             const unsigned n_intervals,
                             const float valid_thresh,
                             bool forward_and_reverse,
-                            vcl_vector<vcl_string>& classes,
-                            vcl_vector<float>& match_scores,
-                            vcl_vector<vil_image_resource_sptr>& match_images);
+                            std::vector<std::string>& classes,
+                            std::vector<float>& match_scores,
+                            std::vector<vil_image_resource_sptr>& match_images);
 protected:
   vgui_event_condition gesture_lift_;
   vgui_event_condition gesture_drop_;
@@ -149,7 +149,7 @@ public:
   virtual ~dbinfo_osl_transform_tool();
 
   //: Returns the string name of this tool
-  virtual vcl_string name() const;
+  virtual std::string name() const;
 
   //: Set the tableau to work with
   virtual bool set_tableau( const vgui_tableau_sptr& tableau );
@@ -166,7 +166,7 @@ public:
   virtual void activate();
   //:Tool utilities
   //: load a query to match against the osl
-  bool load(vcl_string const& path,
+  bool load(std::string const& path,
             const bool query = true,
             const bool expand = false,
             const float coef = 0.6f);

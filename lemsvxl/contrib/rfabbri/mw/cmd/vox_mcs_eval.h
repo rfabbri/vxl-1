@@ -24,18 +24,18 @@ public:
   bmcsd_stereo_instance_views all_instances_;
   bmcsd_stereo_instance_views one_instance_;
   
-  vcl_vector<double> distance_threshold_list_;
-  vcl_vector<double> dtheta_threshold_list_;
-  vcl_vector<double> min_samples_per_curve_frag_list_;
+  std::vector<double> distance_threshold_list_;
+  std::vector<double> dtheta_threshold_list_;
+  std::vector<double> min_samples_per_curve_frag_list_;
   bool prune_by_length_;
-  vcl_vector<unsigned> min_inliers_per_view_list_;
-  vcl_vector<unsigned> min_total_inliers_list_;
+  std::vector<unsigned> min_inliers_per_view_list_;
+  std::vector<unsigned> min_total_inliers_list_;
   bool use_curvelets_;
-  vcl_vector<unsigned> min_num_inlier_edgels_per_curvelet_list_;
-  vcl_vector<double> min_first_to_second_best_ratio_list_;
-  vcl_vector<double> lonely_threshold_list_;
-  vcl_vector<double> min_epiangle_list_;
-  vcl_vector<unsigned> min_epipolar_overlap_list_;
+  std::vector<unsigned> min_num_inlier_edgels_per_curvelet_list_;
+  std::vector<double> min_first_to_second_best_ratio_list_;
+  std::vector<double> lonely_threshold_list_;
+  std::vector<double> min_epiangle_list_;
+  std::vector<unsigned> min_epipolar_overlap_list_;
 
   void read_cams();
   void read_frame_data();

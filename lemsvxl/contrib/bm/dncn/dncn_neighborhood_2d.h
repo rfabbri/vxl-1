@@ -4,14 +4,14 @@
 
 #include<vbl/vbl_ref_count.h>
 
-#include<vcl_vector.h>
+#include<vector>
 
 #include<vgl/vgl_point_2d.h>
 
 class dncn_neighborhood_2d: public vbl_ref_count
 {
 public:
-    typedef vcl_vector<vgl_point_2d<unsigned> > neighborhood_type;
+    typedef std::vector<vgl_point_2d<unsigned> > neighborhood_type;
 
     dncn_neighborhood_2d(){}
 

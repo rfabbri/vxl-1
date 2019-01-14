@@ -197,19 +197,19 @@ DirectSelection::DirectSelection
 DirectSelection::~DirectSelection(){}
   
 void DirectSelection::_initHandleFromGeom(){
-  vcl_vector<Point2D<double> > pts;
+  std::vector<Point2D<double> > pts;
   if(_selectedGeom->getPoints_(pts)==0){
-    vcl_cout << "Non-supported geom-obj selected." << vcl_endl;
+    std::cout << "Non-supported geom-obj selected." << std::endl;
     return;
   }
   if(handles.size()>0) {
-    for(vcl_vector<HandleGeom*>::iterator itr=handles.begin() ;
+    for(std::vector<HandleGeom*>::iterator itr=handles.begin() ;
   itr!=handles.end() ; itr++){
       delete (*itr);
     }
     handles.clear();
   }
-  for(vcl_vector<Point2D<double> >::iterator itr=pts.begin() ;
+  for(std::vector<Point2D<double> >::iterator itr=pts.begin() ;
       itr!=pts.end() ; itr++){
 #if 1
     HandleGeom *geom = new HandleGeom(*itr);
@@ -225,13 +225,13 @@ void DirectSelection::propagateHandleToGeom(){
     if(!handles[cnt]->selected())
       continue;
     if(! _selectedGeom->setPoint_(cnt,handles[cnt]->origin())){
-      vcl_cout << "Propagation failed. Aborting the process." << vcl_endl;
+      std::cout << "Propagation failed. Aborting the process." << std::endl;
       return;
     }
   }
 }
 void DirectSelection::setFlag(bool flag_, const HandleGeom* hg_){
-  for(vcl_vector<HandleGeom*>::iterator itr=handles.begin() ;
+  for(std::vector<HandleGeom*>::iterator itr=handles.begin() ;
       itr!=handles.end() ; itr++){
     if(hg_==NULL || (*itr)==hg_){
       (*itr)->selected(flag_);
@@ -240,7 +240,7 @@ void DirectSelection::setFlag(bool flag_, const HandleGeom* hg_){
   return;
 }
 bool DirectSelection::selected(){
-  for(vcl_vector<HandleGeom*>::iterator itr=handles.begin();
+  for(std::vector<HandleGeom*>::iterator itr=handles.begin();
       itr!=handles.end() ; itr++){
     if((*itr)->selected()){
       return true;
@@ -251,7 +251,7 @@ bool DirectSelection::selected(){
 
 void DirectSelection::moveHandles(const Point2D<double>& offset_){
   bool moved=false;
-  for(vcl_vector<HandleGeom*>::iterator itr=handles.begin();
+  for(std::vector<HandleGeom*>::iterator itr=handles.begin();
       itr!=handles.end() ; itr++){
     if((*itr)->selected()){
       Point2D<double> prevOrig((*itr)->origin());
@@ -282,9 +282,9 @@ void SelectionTool::_initSelectionObj(GraphicsNode*selected_){
 DrawingTool::Result SelectionTool::_selectGeom
 (const Point2D<double>& coord_)
 {
-  vcl_vector<HitRecord> hits;
+  std::vector<HitRecord> hits;
   view->hitTest(hits,coord_,3);
-  for(vcl_vector<HitRecord>::iterator itr=hits.begin() ;
+  for(std::vector<HitRecord>::iterator itr=hits.begin() ;
       itr!=hits.end(); itr++){
     AffineNode *ag=dynamic_cast<AffineNode*>(itr->hit_object);
     if(!ag)
@@ -348,10 +348,10 @@ void GroupSelectionTool::_initSelectionObj(GraphicsNode*selected_){
 DrawingTool::Result GroupSelectionTool::_selectHandles
 (const Point2D<double>& coord_)
 {
-  vcl_vector<HitRecord> hits;
+  std::vector<HitRecord> hits;
   view->hitTest(hits,coord_,3);
   bool handled=false;
-  for(vcl_vector<HitRecord>::iterator itr=hits.begin() ;
+  for(std::vector<HitRecord>::iterator itr=hits.begin() ;
       itr!=hits.end(); itr++){
     HandleGeom *hg=dynamic_cast<HandleGeom*>(itr->hit_object);
     if(hg){
@@ -472,10 +472,10 @@ void DirectSelectionTool::_initSelectionObj(GraphicsNode*selected_){
 
 DrawingTool::Result DirectSelectionTool::_selectHandles(const Point2D<double>& coord_)
 {
-  vcl_vector<HitRecord> hits;
+  std::vector<HitRecord> hits;
   view->hitTest(hits,coord_,3);
   bool handled=false;
-  for(vcl_vector<HitRecord>::iterator itr=hits.begin() ;
+  for(std::vector<HitRecord>::iterator itr=hits.begin() ;
       itr!=hits.end(); itr++){
     HandleGeom *hg=dynamic_cast<HandleGeom*>(itr->hit_object);
     if(hg){

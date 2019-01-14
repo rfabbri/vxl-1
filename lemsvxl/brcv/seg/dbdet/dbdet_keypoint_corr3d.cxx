@@ -6,7 +6,7 @@
 #include "dbdet_keypoint.h"
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_map_io.h>
-#include <vcl_iostream.h>
+#include <iostream>
 
 
 //: Return the keypoint that corresponds in the give view
@@ -14,7 +14,7 @@
 dbdet_keypoint_sptr
 dbdet_keypoint_corr3d::in_view(int view_index) const
 {
-  vcl_map<int, dbdet_keypoint_sptr>::const_iterator fitr = view_map_.find(view_index);
+  std::map<int, dbdet_keypoint_sptr>::const_iterator fitr = view_map_.find(view_index);
   if(fitr == view_map_.end())
     return dbdet_keypoint_sptr(NULL);
   
@@ -27,7 +27,7 @@ dbdet_keypoint_corr3d::in_view(int view_index) const
 void
 dbdet_keypoint_corr3d::add_correspondence(const dbdet_keypoint_sptr& kp, int view)
 {
-  view_map_.insert(vcl_pair<int, dbdet_keypoint_sptr>(view, kp));
+  view_map_.insert(std::pair<int, dbdet_keypoint_sptr>(view, kp));
 }
 
 
@@ -46,11 +46,11 @@ dbdet_keypoint_corr3d::remove_correspondence(int view)
 bool 
 dbdet_keypoint_corr3d::merge(const dbdet_keypoint_corr3d& other)
 {
-  vcl_map<int, dbdet_keypoint_sptr> merged_map(view_map_);
-  for( vcl_map<int, dbdet_keypoint_sptr>::const_iterator itr = other.view_map_.begin();
+  std::map<int, dbdet_keypoint_sptr> merged_map(view_map_);
+  for( std::map<int, dbdet_keypoint_sptr>::const_iterator itr = other.view_map_.begin();
        itr != other.view_map_.end();  ++itr )
   {
-    vcl_pair<vcl_map<int, dbdet_keypoint_sptr>::iterator,bool> v = merged_map.insert(*itr);
+    std::pair<std::map<int, dbdet_keypoint_sptr>::iterator,bool> v = merged_map.insert(*itr);
     if(!v.second){
       if(v.first->second != itr->second)
         return false;
@@ -94,9 +94,9 @@ dbdet_keypoint_corr3d::b_read(vsl_b_istream &is)
     break;
 
   default:
-    vcl_cerr << "I/O ERROR: dbdet_keypoint_corr3d::b_read(vsl_b_istream&)\n"
+    std::cerr << "I/O ERROR: dbdet_keypoint_corr3d::b_read(vsl_b_istream&)\n"
              << "           Unknown version number "<< ver << '\n';
-    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    is.is().clear(std::ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
 }
@@ -121,7 +121,7 @@ dbdet_keypoint_corr3d::clone() const
 
 //: Print an ascii summary to the stream
 void
-dbdet_keypoint_corr3d::print_summary(vcl_ostream &os) const
+dbdet_keypoint_corr3d::print_summary(std::ostream &os) const
 {
   os << "dbdet_keypoint_corr3d("<<x()<<", "<<y()<<", "<<z()<<")";
 }
@@ -130,7 +130,7 @@ dbdet_keypoint_corr3d::print_summary(vcl_ostream &os) const
 
 //==============================================
 //: Stream summary output for base class pointer
-void vsl_print_summary(vcl_ostream& os,const dbdet_keypoint_corr3d* k)
+void vsl_print_summary(std::ostream& os,const dbdet_keypoint_corr3d* k)
 {
   if (k)
     k->print_summary(os);

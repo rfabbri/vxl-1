@@ -1,8 +1,8 @@
 #include "obj_observable.h"
 #include "poly_utils.h"
 
-#include <vcl_iostream.h>
-#include <vcl_sstream.h>
+#include <iostream>
+#include <sstream>
 #include <vnl/vnl_math.h>
 #include <vgl/algo/vgl_fit_plane_3d.h>
 #include <vgl/vgl_closest_point.h>
@@ -33,24 +33,24 @@ obj_observable::obj_observable(vsol_polygon_3d_sptr poly, double dist)
 obj_observable::~obj_observable()
 {
   notify_observers("delete");
-  vcl_vector<vgui_observer*> observers;
+  std::vector<vgui_observer*> observers;
   get_observers(observers);
   for (unsigned i=0; i<observers.size(); i++) {
     detach(observers[i]);
   }
 }
 
-void obj_observable::notify_observers(vcl_string message_type)
+void obj_observable::notify_observers(std::string message_type)
 {
   vgui_message msg;
   msg.from = this;
-  msg.data = new vcl_string(message_type);
+  msg.data = new std::string(message_type);
   this->notify(msg);
 }
 
 OBS_FACE_LABEL obj_observable::get_face_label(unsigned face_id) 
 {
-  vcl_map<unsigned, OBS_FACE_LABEL>::iterator it = labels_.find(face_id);
+  std::map<unsigned, OBS_FACE_LABEL>::iterator it = labels_.find(face_id);
   if (it != labels_.end()) 
     return (it->second);
   return (None);
@@ -63,9 +63,9 @@ void obj_observable::extrude(int face_id)
     if (face) {
       if (object_->facemap().size() == 1) {
         dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) object_->facemap(face_id);
-        vcl_vector<dbmsh3d_vertex*> vertices;
+        std::vector<dbmsh3d_vertex*> vertices;
         vsol_polygon_3d_sptr poly = this->extract_face(face, vertices);
-        vcl_map<int, vsol_polygon_3d_sptr> inner_faces = this->extract_inner_faces(face);
+        std::map<int, vsol_polygon_3d_sptr> inner_faces = this->extract_inner_faces(face);
         delete object_;
         object_ = new dbmsh3d_mesh_mc();
         // the first polygon is always the outer one
@@ -77,7 +77,7 @@ void obj_observable::extrude(int face_id)
     } else 
       current_extr_face = 0;
    }
-  //vcl_cout << "FACES====>" << vcl_endl;
+  //std::cout << "FACES====>" << std::endl;
   //this->print_faces();
 }                         
 
@@ -90,7 +90,7 @@ void obj_observable::extrude(int face_id)
 void obj_observable::set_object(vsol_polygon_3d_sptr poly, double dist)
 {
   object_ = new dbmsh3d_mesh_mc;
-  vcl_map<int, vsol_polygon_3d_sptr> inner_faces;
+  std::map<int, vsol_polygon_3d_sptr> inner_faces;
   create_mesh_HE(poly, dist, inner_faces);
 
   notify_observers("new");
@@ -119,9 +119,9 @@ void obj_observable::replace(dbmsh3d_mesh_mc* obj)
 //: returns a list of polygons, if there are inner faces, there are 
 // more than one polygon, otherwise it is always one
 vsol_polygon_3d_sptr obj_observable::extract_face(dbmsh3d_face_mc* face, 
-                                             vcl_vector<dbmsh3d_vertex*> &vertices) {
+                                             std::vector<dbmsh3d_vertex*> &vertices) {
   
-  vcl_vector<vsol_point_3d_sptr> v_list;
+  std::vector<vsol_point_3d_sptr> v_list;
   dbmsh3d_halfedge* cur_he = (dbmsh3d_halfedge*) face->halfedge();
   move_points_to_plane(face);
 
@@ -131,10 +131,10 @@ vsol_polygon_3d_sptr obj_observable::extract_face(dbmsh3d_face_mc* face,
     dbmsh3d_vertex* vertex = (dbmsh3d_vertex*) Es_sharing_V  (cur_he->edge(), next_he->edge());
 
     vertices.push_back(vertex);
-    //vcl_cout << "vertex " << vertex->id() << " between " << 
-    //  cur_he->edge()->id() << " and " << next_he->edge()->id() << vcl_endl;
+    //std::cout << "vertex " << vertex->id() << " between " << 
+    //  cur_he->edge()->id() << " and " << next_he->edge()->id() << std::endl;
     vgl_point_3d<double> p = vertex->get_pt();
-    //vcl_cout << i++ << " " << p << vcl_endl;
+    //std::cout << i++ << " " << p << std::endl;
     v_list.push_back(new vsol_point_3d (p.x(), p.y(), p.z()));
     cur_he = (dbmsh3d_halfedge*) cur_he->next();
   } while (cur_he != face->halfedge());
@@ -144,16 +144,16 @@ vsol_polygon_3d_sptr obj_observable::extract_face(dbmsh3d_face_mc* face,
 
 }
 
-vcl_map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(dbmsh3d_face_mc* face)
+std::map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(dbmsh3d_face_mc* face)
 {
   // now, add the inner polygons
-  vcl_map<int, dbmsh3d_halfedge*> set_he = face->get_mc_halfedges();
-  vcl_map<int, vsol_polygon_3d_sptr> polygons;
-  vcl_map<int, dbmsh3d_halfedge*>::iterator it = set_he.begin();
+  std::map<int, dbmsh3d_halfedge*> set_he = face->get_mc_halfedges();
+  std::map<int, vsol_polygon_3d_sptr> polygons;
+  std::map<int, dbmsh3d_halfedge*>::iterator it = set_he.begin();
   while (it != set_he.end()) {
     dbmsh3d_halfedge* he = it->second;
     dbmsh3d_halfedge* HE = he;
-    vcl_vector<vsol_point_3d_sptr> v_list;
+    std::vector<vsol_point_3d_sptr> v_list;
 
     do {
       dbmsh3d_halfedge* next_he = (dbmsh3d_halfedge*) HE->next();
@@ -171,10 +171,10 @@ vcl_map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(dbmsh3d_f
   return polygons;
 }
 
-vcl_map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(int face_id)
+std::map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(int face_id)
 {
   dbmsh3d_face_mc* face = (dbmsh3d_face_mc*)object_->facemap(face_id);
-  vcl_map<int, vsol_polygon_3d_sptr> polys;
+  std::map<int, vsol_polygon_3d_sptr> polys;
   if (face) {
     polys = extract_inner_faces(face);
   }
@@ -184,20 +184,20 @@ vcl_map<int, vsol_polygon_3d_sptr> obj_observable::extract_inner_faces(int face_
 vsol_polygon_3d_sptr obj_observable::extract_face(unsigned i)
 {
   dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) object_->facemap(i);
-  vcl_vector<dbmsh3d_vertex*> vertices;
+  std::vector<dbmsh3d_vertex*> vertices;
   vsol_polygon_3d_sptr poly = extract_face(face, vertices);
   return poly;
 }
 
-vcl_map<int, vsol_polygon_3d_sptr> obj_observable::extract_faces() 
+std::map<int, vsol_polygon_3d_sptr> obj_observable::extract_faces() 
 {
-  vcl_map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
-  vcl_map<int, vsol_polygon_3d_sptr> faces;
+  std::map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
+  std::map<int, vsol_polygon_3d_sptr> faces;
  
   for (; it != object_->facemap().end(); it++) {
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it).second;
-    //vcl_cout << "face " << face->id() << vcl_endl;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    //std::cout << "face " << face->id() << std::endl;
+    std::vector<dbmsh3d_vertex*> vertices;
     vsol_polygon_3d_sptr poly = this->extract_face(face, vertices);
     faces[face->id()] = poly;
   }
@@ -217,9 +217,9 @@ void obj_observable::create_interior()
 void obj_observable::move(vsol_polygon_3d_sptr poly)
 {
   if (object_->facemap().size() == 1) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it).second;
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     vsol_polygon_3d_sptr old_poly = extract_face(face, vertices);
 
     for(unsigned i=0; i<poly->size(); i++) {
@@ -234,12 +234,12 @@ void obj_observable::move(vsol_polygon_3d_sptr poly)
 void obj_observable::move_normal_dir(double dist)
 {
   if (object_->facemap().size() == 1) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
+    std::map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it).second;
     //vgl_vector_3d<double> normal = face->compute_normal();
     //normal /= normal.length();
 
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     vsol_polygon_3d_sptr poly = extract_face(face, vertices);
     vgl_vector_3d<double> normal = poly->normal();
     //normal /= normal.length();
@@ -256,7 +256,7 @@ void obj_observable::move_normal_dir(double dist)
 void obj_observable::move_extr_face(double dist) 
 {
   if (current_extr_face) {
-    vcl_vector<dbmsh3d_vertex*> vertices;
+    std::vector<dbmsh3d_vertex*> vertices;
     vsol_polygon_3d_sptr polygon = extract_face(current_extr_face, vertices);
     // at this point, the halfedges already sorted in extract_face
 
@@ -269,7 +269,7 @@ void obj_observable::move_extr_face(double dist)
       v->set_pt (vgl_point_3d<double> (v->get_pt().x() + dist*normal.x() , 
             v->get_pt().y() + dist*normal.y(), 
             v->get_pt().z() + dist*normal.z()));
-      //vcl_cout << "new v=" << v->get_pt() << vcl_endl;
+      //std::cout << "new v=" << v->get_pt() << std::endl;
 
       }
     move_points_to_plane(current_extr_face);
@@ -285,13 +285,13 @@ void obj_observable::divide_face(unsigned face_id,
 {
 
   dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) object_->facemap(face_id);  
-  vcl_vector<dbmsh3d_halfedge *> halfedges;
+  std::vector<dbmsh3d_halfedge *> halfedges;
   if (face == 0) {
     print_faces();
-    vcl_cerr << "Face " << face_id << " is not found in the facemap" << vcl_endl;
+    std::cerr << "Face " << face_id << " is not found in the facemap" << std::endl;
   }
   face->get_bnd_HEs(halfedges);
-  vcl_vector<dbmsh3d_vertex *> vertices;
+  std::vector<dbmsh3d_vertex *> vertices;
   extract_face(face, vertices);
   // create 2 new vertices
   dbmsh3d_vertex* v1 = (dbmsh3d_vertex*) object_->_new_vertex ();
@@ -306,11 +306,11 @@ void obj_observable::divide_face(unsigned face_id,
   dbmsh3d_edge* edge1=0;
   dbmsh3d_edge* edge2=0;
 
-  //vcl_cout << "p1=" << p1 << " p2=" << p2 << vcl_endl;
-  //vcl_cout << "l1=" << l1 << vcl_endl;
-  //vcl_cout << "l2=" << l2 << vcl_endl;
-  //vcl_cout << "l3=" << l3 << vcl_endl;
-  //vcl_cout << "l4=" << l4 << vcl_endl;
+  //std::cout << "p1=" << p1 << " p2=" << p2 << std::endl;
+  //std::cout << "l1=" << l1 << std::endl;
+  //std::cout << "l2=" << l2 << std::endl;
+  //std::cout << "l3=" << l3 << std::endl;
+  //std::cout << "l4=" << l4 << std::endl;
   for (unsigned i=0; i<halfedges.size(); i++) {
     dbmsh3d_halfedge* he = (dbmsh3d_halfedge*) halfedges[i];
     dbmsh3d_edge* edge = he->edge();
@@ -321,7 +321,7 @@ void obj_observable::divide_face(unsigned face_id,
 
 
     vgl_homg_line_3d_2_points<double> line(sp, ep);
-    //vcl_cout << "edge" << edge->id() << " s=" << s->get_pt() << "e =" << e->get_pt() << vcl_endl;
+    //std::cout << "edge" << edge->id() << " s=" << s->get_pt() << "e =" << e->get_pt() << std::endl;
 
    double d1 = vgl_distance(vgl_homg_point_3d<double>(l1), line);
    double d2 = vgl_distance(vgl_homg_point_3d<double>(l2), line);
@@ -344,7 +344,7 @@ void obj_observable::divide_face(unsigned face_id,
   }
 
   if (edge1 == 0 || edge2 == 0) {
-    vcl_cerr << "obj_observable::divide_face -- edges are not found in polygon " << vcl_endl;
+    std::cerr << "obj_observable::divide_face -- edges are not found in polygon " << std::endl;
     return;
   }
 
@@ -430,9 +430,9 @@ int obj_observable::find_closest_face(vgl_point_3d<double> point)
 {
   int index = -1;
   double dmin = 1e26;
-  vcl_cout << "dmin=" << dmin << vcl_endl;
-  vcl_map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
-  vcl_map<int, vsol_polygon_3d_sptr> faces;
+  std::cout << "dmin=" << dmin << std::endl;
+  std::map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
+  std::map<int, vsol_polygon_3d_sptr> faces;
  
   for (; it != object_->facemap().end(); it++) {
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it).second;
@@ -442,19 +442,19 @@ int obj_observable::find_closest_face(vgl_point_3d<double> point)
       dmin = d;
       index = face->id();
     }
-    vcl_cout << face->id() << " dmin=" << dmin << vcl_endl;
+    std::cout << face->id() << " dmin=" << dmin << std::endl;
   }
   return index;
 }
 void obj_observable::create_mesh_HE(vsol_polygon_3d_sptr polygon,
                                     double dist,
-                                    vcl_map<int, vsol_polygon_3d_sptr> inner_faces)
+                                    std::map<int, vsol_polygon_3d_sptr> inner_faces)
 {
   polygon = poly_utils::move_points_to_plane(polygon);
 
   unsigned n = polygon->size();
 
-  vcl_vector<dbmsh3d_vertex* > v_list(2*n);
+  std::vector<dbmsh3d_vertex* > v_list(2*n);
   unsigned next_index, next_index_ext;
 
   // first create the vertices
@@ -484,7 +484,7 @@ void obj_observable::create_mesh_HE(vsol_polygon_3d_sptr polygon,
   }
 
   // create the edges of parallel faces 
-  vcl_vector<dbmsh3d_edge* > e_list(2*n);
+  std::vector<dbmsh3d_edge* > e_list(2*n);
   for (unsigned i=0; i<2*n; i++) {
     next_index = i + 1;
     if (next_index == n)
@@ -503,7 +503,7 @@ void obj_observable::create_mesh_HE(vsol_polygon_3d_sptr polygon,
   }
   
   // re-aatach the inner faces
-  vcl_map<int, vsol_polygon_3d_sptr>::iterator iter = inner_faces.begin();
+  std::map<int, vsol_polygon_3d_sptr>::iterator iter = inner_faces.begin();
   while (iter != inner_faces.end()) {
     attach_inner_face(f0->id(), iter->second);
     iter++;
@@ -518,7 +518,7 @@ void obj_observable::create_mesh_HE(vsol_polygon_3d_sptr polygon,
   current_extr_face = f1; 
     
   // create the in between edges and faces
-  vcl_vector<dbmsh3d_edge* > e_btw_list(n);
+  std::vector<dbmsh3d_edge* > e_btw_list(n);
   for (unsigned i=0; i<n; i++) {
     dbmsh3d_edge* e = object_->add_new_edge (v_list[i], v_list[n+i]);
     e_btw_list[i] = e;
@@ -555,14 +555,14 @@ void obj_observable::attach_inner_face(unsigned face_id, vsol_polygon_3d_sptr po
     outer_face->add_mc_halfedge(he);
     notify_observers("update");
   } else {
-    vcl_cerr << "obj_observable::attach_inner_face() -- outer face id is not valid" << vcl_endl;
+    std::cerr << "obj_observable::attach_inner_face() -- outer face id is not valid" << std::endl;
   }
 }
 
 //: given the vgui_soview2d id, checks if that polygon is one of the faces,
 // if found returns the face id
 bool obj_observable::is_poly_in(unsigned id, unsigned& index){
-  vcl_map<unsigned, unsigned>::iterator iter = ids_.begin();
+  std::map<unsigned, unsigned>::iterator iter = ids_.begin();
   while (iter != ids_.end()) {
     if (iter->second == id) {
       index = iter->first;
@@ -579,15 +579,15 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
   vgl_point_3d<double> center = F->compute_center_pt();
   dbmsh3d_face_mc* cur_face = F;
  /* if (M->facemap().size() > 1) {
-    vcl_vector<dbmsh3d_edge*> inc_edges;
+    std::vector<dbmsh3d_edge*> inc_edges;
     F->get_incident_edges (inc_edges);
     dbmsh3d_edge* first_edge = inc_edges[0];
     vgl_vector_3d<double> face_normal = cur_face->compute_normal(center, first_edge, first_edge->sV());
     face_normal /= face_normal.length();
-    vcl_vector<dbmsh3d_face*> incident_faces;
+    std::vector<dbmsh3d_face*> incident_faces;
     for (unsigned i=0; i<inc_edges.size(); i++) {
       dbmsh3d_edge* edge = inc_edges[i];
-      vcl_vector<dbmsh3d_face*> faces;
+      std::vector<dbmsh3d_face*> faces;
       edge->get_incident_faces(faces);
       
       for (unsigned j=0; j<faces.size(); j++) {
@@ -614,7 +614,7 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
       dbmsh3d_face_mc* inc_face = (dbmsh3d_face_mc*) incident_faces[i];
       // check with all the edges, if the incident face share this edge, 
       //trying to find the edge between the current face and the given face
-      vcl_vector<dbmsh3d_edge*> inc_edges;
+      std::vector<dbmsh3d_edge*> inc_edges;
       dbmsh3d_edge* edge;
       cur_face->get_incident_edges (inc_edges);
       for (unsigned j=0; j<inc_edges.size(); j++) {
@@ -625,7 +625,7 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
       }
 
       if (edge == 0) {
-        vcl_cout << "ERROR: incident face is not found, in extrude_face" << vcl_endl;
+        std::cout << "ERROR: incident face is not found, in extrude_face" << std::endl;
         return 0;
       }
 
@@ -650,7 +650,7 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
     }
   // there is only one face, so we will extrude iT anyway
   } else {*/
-    /*vcl_vector<dbmsh3d_edge*> inc_edges;
+    /*std::vector<dbmsh3d_edge*> inc_edges;
     cur_face->get_incident_edges (inc_edges);
     for (unsigned j=0; j<inc_edges.size(); j++) {
       dbmsh3d_edge* edge = inc_edges[j];
@@ -672,8 +672,8 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
       else 
         cur_face = f1;
     }*/
-  vcl_vector<dbmsh3d_vertex*> v_list;
-  vcl_vector<dbmsh3d_edge*> e_vert_list;
+  std::vector<dbmsh3d_vertex*> v_list;
+  std::vector<dbmsh3d_edge*> e_vert_list;
   dbmsh3d_halfedge* he = (dbmsh3d_halfedge*) cur_face->halfedge();
   dbmsh3d_vertex* s = he->s_vertex();
   dbmsh3d_vertex* v0 = (dbmsh3d_vertex*) M->_new_vertex ();
@@ -701,7 +701,7 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
   }
 
   // create th new top face
-  vcl_vector<dbmsh3d_edge* > e_hor_list;
+  std::vector<dbmsh3d_edge* > e_hor_list;
   dbmsh3d_face_mc* new_face = M->_new_mc_face();
   M->_add_face (new_face);
   for (unsigned i=0; i < v_list.size(); i++) {
@@ -736,10 +736,10 @@ dbmsh3d_face_mc* obj_observable::extrude_face(dbmsh3d_mesh_mc* M, dbmsh3d_face_m
   
   //}
   new_face->_sort_bnd_HEs_chain();
-  vcl_ostringstream oss;
+  std::ostringstream oss;
   new_face->getInfo(oss);
 
-  vcl_cout << oss.str().c_str();
+  std::cout << oss.str().c_str();
   return new_face;
 }
 
@@ -749,7 +749,7 @@ vgl_homg_plane_3d<double> obj_observable::get_plane_of_face(unsigned face_id)
 
   dbmsh3d_face* face = object_->facemap(face_id);
   
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
   vgl_fit_plane_3d<double> fitter;
   for (unsigned i=0; i<face->vertices().size(); i++) {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) face->vertices(i);
@@ -766,22 +766,22 @@ vgl_homg_plane_3d<double> obj_observable::get_plane_of_face(unsigned face_id)
   //fitter.fit();
   plane = fitter.get_plane();
   } else {
-    vcl_cout << "NO FITTING" << vcl_endl;
+    std::cout << "NO FITTING" << std::endl;
   }
   
   return plane;
 }
 void obj_observable::print_faces()
 {
-  vcl_ostringstream oss;
-  vcl_map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
+  std::ostringstream oss;
+  std::map<int, dbmsh3d_face*>::iterator it = object_->facemap().begin();
  
   for (; it != object_->facemap().end(); it++) {
     dbmsh3d_face_mc* face = (dbmsh3d_face_mc*) (*it).second;
     //face->_sort_halfedges_circular();
     face->getInfo(oss);
   }
-  vcl_cout << oss.str().c_str();
+  std::cout << oss.str().c_str();
 }
 
 void obj_observable::move_points_to_plane(dbmsh3d_face_mc* face)
@@ -792,7 +792,7 @@ void obj_observable::move_points_to_plane(dbmsh3d_face_mc* face)
   vgl_homg_plane_3d<double> plane = get_plane_of_face(face->id());
 
   // find the closest point on the plane and replace it for each point
-  vcl_vector<vsol_point_3d_sptr> points;
+  std::vector<vsol_point_3d_sptr> points;
   for (unsigned i=0; i<face->vertices().size(); i++) {
     dbmsh3d_vertex* v = (dbmsh3d_vertex*) face->vertices(i);
     vgl_homg_point_3d<double> hp(v->get_pt().x(), v->get_pt().y(), v->get_pt().z());
@@ -832,7 +832,7 @@ vgl_point_3d<double> fit_sphere_to_corner(vgl_point_3d<double> P1, vgl_vector_3d
   double a = p1.a();
   double b = p1.b();
   double c = p1.c();
-  double trans_d = (x1+x2).length();//vcl_sqrt(d*d + r*r);
+  double trans_d = (x1+x2).length();//std::sqrt(d*d + r*r);
   vgl_plane_3d<double> tplane1(a, b, c, -1*trans_d);
   vgl_vector_3d<double> N1 = tplane1.normal();
   double d1 = vgl_distance_origin(tplane1);
@@ -842,7 +842,7 @@ vgl_point_3d<double> fit_sphere_to_corner(vgl_point_3d<double> P1, vgl_vector_3d
   b = p2.b();
   c = p2.c();
 
-  trans_d = (-1*d*p2.normal() + r*p2.normal()).length(); //vcl_sqrt(d*d + r*r);
+  trans_d = (-1*d*p2.normal() + r*p2.normal()).length(); //std::sqrt(d*d + r*r);
   vgl_plane_3d<double> tplane2(a, b, c, -1*trans_d);
   vgl_vector_3d<double> N2= tplane2.normal();
   double d2 = vgl_distance_origin(tplane2);
@@ -852,7 +852,7 @@ vgl_point_3d<double> fit_sphere_to_corner(vgl_point_3d<double> P1, vgl_vector_3d
   b = p3.b();
   c = p3.c();
 
-  trans_d = (-1*d*p3.normal() + r*p3.normal()).length(); //vcl_sqrt(d*d + r*r);
+  trans_d = (-1*d*p3.normal() + r*p3.normal()).length(); //std::sqrt(d*d + r*r);
   vgl_plane_3d<double> tplane3(a, b, c, trans_d);
   vgl_vector_3d<double> N3 = tplane3.normal();
   double d3 = vgl_distance_origin(tplane3);
@@ -901,21 +901,21 @@ void obj_observable::shrink_mesh(dbmsh3d_mesh_mc* mesh, double r)
 {
   mesh->orient_face_normals();
 
-  vcl_map<int, dbmsh3d_vertex* > vertices = mesh->vertexmap();
-  vcl_vector<vgl_point_3d<double> > new_vertices;
-  vcl_map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
+  std::map<int, dbmsh3d_vertex* > vertices = mesh->vertexmap();
+  std::vector<vgl_point_3d<double> > new_vertices;
+  std::map<int, dbmsh3d_vertex* >::iterator v_it = vertices.begin();
   while (v_it != vertices.end()) {
     dbmsh3d_vertex* vertex = (dbmsh3d_vertex*) v_it->second;
     vgl_homg_point_3d<double> p(vertex->get_pt());
-    vcl_cout << "old vertex->" << p << vcl_endl;
+    std::cout << "old vertex->" << p << std::endl;
     // find the faces incident to this vertex
-    vcl_set<dbmsh3d_face*> inc_faces;
+    std::set<dbmsh3d_face*> inc_faces;
     vertex->get_incident_Fs(inc_faces);
     if (inc_faces.size() < 3) {
-      vcl_cerr << "The number of planes < 3!!!!!!!!!!!" << vcl_endl;
+      std::cerr << "The number of planes < 3!!!!!!!!!!!" << std::endl;
     }
 
-    vcl_set<dbmsh3d_face*>::iterator it = inc_faces.begin();
+    std::set<dbmsh3d_face*>::iterator it = inc_faces.begin();
 
     while (it != inc_faces.end()) {
       dbmsh3d_face_mc* face1 = (dbmsh3d_face_mc*) *it;
@@ -933,7 +933,7 @@ void obj_observable::shrink_mesh(dbmsh3d_mesh_mc* mesh, double r)
       n3 /= n3.length();
       it++;
       vgl_point_3d<double> v = fit_sphere_to_corner(p, -1*n1, p, -1*n2, p , -1*n3, r);      
-      vcl_cout << "New vertex->" << v << vcl_endl;
+      std::cout << "New vertex->" << v << std::endl;
       new_vertices.push_back(v);
     }
     v_it++;

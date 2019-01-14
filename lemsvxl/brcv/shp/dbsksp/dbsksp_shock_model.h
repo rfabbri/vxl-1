@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <vcl_map.h>
+#include <map>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_int_4.h>
 #include <dbsksp/dbsksp_shock_graph_sptr.h>
@@ -105,8 +105,8 @@ public:
   // edge correspondences with another shock graph of the same topology
   void get_free_params(const dbsksp_shock_graph_sptr& that_graph, 
     vnl_vector<double >& params,
-    const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map,
-    const vcl_map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map);
+    const std::map<dbsksp_shock_edge_sptr, dbsksp_shock_edge_sptr>& edge_map,
+    const std::map<dbsksp_shock_node_sptr, dbsksp_shock_node_sptr>& node_map);
 
   //: index of reference direction variable in the parameter vector
   int param_index_of_ref_dir() const;
@@ -252,15 +252,15 @@ public:
   virtual void update_num_params();
 
   //: get the selection vector. 1 when selected, 0 when not
-  vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 > params_selection() const {return this->selection_; }
-  void set_params_selection(const vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 >& selection )
+  std::map<dbsksp_shock_edge_sptr, vnl_int_4 > params_selection() const {return this->selection_; }
+  void set_params_selection(const std::map<dbsksp_shock_edge_sptr, vnl_int_4 >& selection )
   {this->selection_ = selection; }
   //
 
 protected:
 
   // order: m, L, source_phi, target_phi
-  vcl_map<dbsksp_shock_edge_sptr, vnl_int_4 > selection_;
+  std::map<dbsksp_shock_edge_sptr, vnl_int_4 > selection_;
 
 };
 

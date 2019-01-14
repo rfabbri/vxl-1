@@ -8,7 +8,7 @@
 //\date Wed Apr 26 22:12:55 EDT 2006
 //
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
@@ -29,7 +29,7 @@
 class mw_subpixel_point_set {
 public:
 
-  mw_subpixel_point_set(const vcl_vector<vsol_point_2d_sptr> &pts);
+  mw_subpixel_point_set(const std::vector<vsol_point_2d_sptr> &pts);
 
   ~mw_subpixel_point_set() {};
 
@@ -55,7 +55,7 @@ public:
 
   //: points represented by index into input point set vector.
   //cells[row][col][point_idx]
-  const vcl_vector< vcl_vector< vcl_vector<unsigned> > > & cells() const { return cells_; }
+  const std::vector< std::vector< std::vector<unsigned> > > & cells() const { return cells_; }
 
   unsigned npts()  const { return pt_.size(); }
   unsigned nrows() const { return nrows_; }
@@ -65,8 +65,8 @@ public:
   bool is_bucketed() const { return cells_.size() != 0; }
 
 protected:
-  const vcl_vector<vsol_point_2d_sptr> &pt_;
-  vcl_vector< vcl_vector< vcl_vector<unsigned> > > cells_;
+  const std::vector<vsol_point_2d_sptr> &pt_;
+  std::vector< std::vector< std::vector<unsigned> > > cells_;
   unsigned nrows_;     //:< size of the bucketing grid
   unsigned ncols_;     //:< size of the bucketing grid
   unsigned nrad_;      //:< radius of neighborhood for searches

@@ -11,7 +11,7 @@
 #include <vbl/vbl_array_2d.h>
 #include <vgl/vgl_vector_3d.h>
 #include <vgl/vgl_point_3d.h>
-#include <vcl_vector.h>
+#include <vector>
 #include "det_cylinder_map.h"
 
 class det_nonmax_sup_helper
@@ -22,8 +22,8 @@ class det_nonmax_sup_helper
     //Here we assume cutting plane goes throught the origin 
 static vbl_array_3d<bool> intersection_flags(
     vgl_vector_3d<double> const& dir, 
-    vcl_vector<vgl_point_3d<double> > const &vertice,
-    vcl_vector<vbl_array_3d<int> > const & vertice_index);
+    std::vector<vgl_point_3d<double> > const &vertice,
+    std::vector<vbl_array_3d<int> > const & vertice_index);
 
 static vbl_array_2d<double> proj_axis_plane(
     det_cylinder_map const & input,

@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <vcl_iostream.h>
-#include <vcl_vector.h>
+#include <iostream>
+#include <vector>
 #include <vul/vul_file.h>
 
 #include <vgl/vgl_vector_3d.h>
@@ -18,7 +18,7 @@ static void test_voxel_world()
 {
   START("bvam_voxel_world test");
 
-  vcl_string model_dir("./test_world_dir");
+  std::string model_dir("./test_world_dir");
   vul_file::make_directory(model_dir);
 
   vgl_point_3d<float> grid_corner(2170.0, -1480.0, -30.0);
@@ -45,11 +45,11 @@ static void test_voxel_world()
   world.init_world(init_ocp,init_apm);*/
 
   //camera for frame 0
-  //vcl_string cam_file = "./cameras/frame_00000.txt";
+  //std::string cam_file = "./cameras/frame_00000.txt";
   // run the executable for the test file from lemsvxl/build/contrib/bvam/tests/  to find the following cam file
-  /*vcl_string cam_file = "frame_00000.txt";
+  /*std::string cam_file = "frame_00000.txt";
 
-  vcl_ifstream cam_ifstream(cam_file.c_str());
+  std::ifstream cam_ifstream(cam_file.c_str());
   vpgl_proj_camera<double>* camera = new vpgl_proj_camera<double>();
   cam_ifstream >> *camera;
 

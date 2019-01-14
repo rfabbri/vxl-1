@@ -14,7 +14,7 @@
 #include <dbetl/dbetl_camera_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <becld/becld_episeg_sptr.h>
-#include <vcl_vector.h>
+#include <vector>
  
 //: A class to perform the tracking
 class dbetl_tracker{
@@ -27,7 +27,7 @@ public:
   //: Set the current image
   void set_image(const vil_image_resource_sptr& image) { image_ = image; }
   //: Set the current episegs
-  void set_episegs(const vcl_vector<becld_episeg_sptr>& episegs) { episegs_ = episegs; }
+  void set_episegs(const std::vector<becld_episeg_sptr>& episegs) { episegs_ = episegs; }
 
   //: Combine all new points with existing tracks
   void track();
@@ -35,13 +35,13 @@ public:
   void track(unsigned int index);
 
   //: Return the current tracks
-  vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks() const { return tracks_; }
+  std::vector<std::vector<dbetl_point_track_sptr> > tracks() const { return tracks_; }
 
   //: Create all the points 
   void create_points();
 
   //: Create all the points at a given angle
-  void create_points(double angle, vcl_vector<dbetl_point_2d_sptr>& points) const;
+  void create_points(double angle, std::vector<dbetl_point_2d_sptr>& points) const;
 
 private:
   //: The current camera to associate with new points
@@ -51,13 +51,13 @@ private:
   vil_image_resource_sptr image_;
 
   //: The current vector of episegs to extract points from
-  vcl_vector<becld_episeg_sptr> episegs_;
+  std::vector<becld_episeg_sptr> episegs_;
 
   //: The ordered set of tracks
-  vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks_;
+  std::vector<std::vector<dbetl_point_track_sptr> > tracks_;
 
   //: The ordered set of epipolar profiles
-  vcl_vector<vcl_vector<dbetl_point_2d_sptr> > curr_pts_;
+  std::vector<std::vector<dbetl_point_2d_sptr> > curr_pts_;
 
   //: The minimum angle for a track
   double min_angle_;

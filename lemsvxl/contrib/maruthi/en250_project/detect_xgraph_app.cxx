@@ -11,20 +11,20 @@
 #include <dbsks/dbsks_detect_xgraph.cxx>
 #include <vil/vil_load.h>
 #include <vil/vil_convert.h>
-#include <vcl_iostream.h>
-#include <vcl_utility.h>
-#include <vcl_cmath.h>
+#include <iostream>
+#include <utility>
+#include <cmath>
 #include <vul/vul_timer.h>
 
 
 //: Detect an object, represented as a shock graph, in an image by apperance
-bool detect_xgraph_using_app(const vcl_string& image_file,
-                             const vcl_string& xgraph_file,
-                             const vcl_string& xgraph_geom_file,
-                             const vcl_vector<double >& xgraph_scales,
+bool detect_xgraph_using_app(const std::string& image_file,
+                             const std::string& xgraph_file,
+                             const std::string& xgraph_geom_file,
+                             const std::vector<double >& xgraph_scales,
                              int det_window_width,
                              int det_window_height,
-                             vcl_vector<dbsks_det_desc_xgraph_sptr >
+                             std::vector<dbsks_det_desc_xgraph_sptr >
                              & output_det_list)
 {
 
@@ -37,14 +37,14 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
     // Load the shock graph
     dbsksp_xshock_graph_sptr xgraph = 0;
 
-    vcl_cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
+    std::cout << "Loading xshock_graph XML file: " << xgraph_file << "...";
     if ( x_read(xgraph_file, xgraph) )
     {
-        vcl_cout << "Succeeded.\n";
+        std::cout << "Succeeded.\n";
     }
     else
     {
-        vcl_cout << "Failed.\n";
+        std::cout << "Failed.\n";
         return false;
     } 
 
@@ -52,29 +52,29 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
     dbsks_xgraph_geom_model_sptr xgraph_geom = 0;
     if (!x_read(xgraph_geom_file, xgraph_geom))
     {
-        vcl_cout << "ERROR: Couldn't load xgraph geometric model from file " 
-                 << xgraph_geom_file << vcl_endl;
+        std::cout << "ERROR: Couldn't load xgraph geometric model from file " 
+                 << xgraph_geom_file << std::endl;
         return false;
     }
 
     output_det_list.clear();
     if (xgraph_scales.empty())
     {
-        vcl_cout << "\nERROR: no scale was specified. Nothing was run.\n";
+        std::cout << "\nERROR: no scale was specified. Nothing was run.\n";
         return false;
     }
 
 
     //////////////////////////////////////////////////////////////////////////
     //>>> Detect xgraphs
-    vcl_cout << ">> Detecting xgraph in image at multiple scales...";
-    vcl_vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
-    double def_scale = vcl_sqrt(xgraph->area());
+    std::cout << ">> Detecting xgraph in image at multiple scales...";
+    std::vector<dbsks_det_desc_xgraph_sptr > raw_det_list;
+    double def_scale = std::sqrt(xgraph->area());
   
     for (unsigned i =0; i < xgraph_scales.size(); ++i)
     {
-        vcl_cout << "\n>>>> Processing xgraph scale = " 
-                 << xgraph_scales[i] << vcl_endl;
+        std::cout << "\n>>>> Processing xgraph scale = " 
+                 << xgraph_scales[i] << std::endl;
 
         double xgraph_scale = xgraph_scales[i];
 
@@ -85,7 +85,7 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
         //and bottles: 130;
         //double scaled_up_factor = 1.0;
 
-        vcl_vector<dbsks_det_desc_xgraph_sptr > dets;
+        std::vector<dbsks_det_desc_xgraph_sptr > dets;
         detect_xgraph_using_app(image_file,
                                 xgraph,
                                 xgraph_geom,
@@ -108,16 +108,16 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
 
         raw_det_list.insert(raw_det_list.end(), dets.begin(), dets.end());
     }
-    vcl_cout << "\n    Number of detection before non-max suppression: " 
-             << raw_det_list.size() << vcl_endl;
+    std::cout << "\n    Number of detection before non-max suppression: " 
+             << raw_det_list.size() << std::endl;
 
     //>>> Non-max suppression across detection results form different scales
     double min_overlap_ratio_for_rejection = 0.3;
     dbsks_det_nms_using_polygon(raw_det_list, output_det_list, 
                                 min_overlap_ratio_for_rejection);
 
-    vcl_cout << "\n----Number of detection after non-max suppression: " 
-             << output_det_list.size() << vcl_endl; 
+    std::cout << "\n----Number of detection after non-max suppression: " 
+             << output_det_list.size() << std::endl; 
 
 
 
@@ -128,13 +128,13 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
 
 
 
-bool detect_xgraph_using_app(const vcl_string& image_file,
+bool detect_xgraph_using_app(const std::string& image_file,
                              const dbsksp_xshock_graph_sptr& xgraph,
                              const dbsks_xgraph_geom_model_sptr& xgraph_geom,
                              double xgraph_scale,
                              int det_window_width,
                              int det_window_height,
-                             vcl_vector<dbsks_det_desc_xgraph_sptr >
+                             std::vector<dbsks_det_desc_xgraph_sptr >
                              & output_det_list)
 {
 
@@ -154,20 +154,20 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
     dbsks_xshock_app_likelihood app_like(image_file);
 
     //>> Scale the shock graph to desired scale
-    vcl_cout << "\n>>Scaling the xgraph to specified scale ...";
-    double cur_scale = vcl_sqrt(xgraph->area());
+    std::cout << "\n>>Scaling the xgraph to specified scale ...";
+    double cur_scale = std::sqrt(xgraph->area());
     dbsksp_xshock_graph_sptr scaled_xgraph = 
         new dbsksp_xshock_graph(*xgraph);
     scaled_xgraph->similarity_transform( 
         (*scaled_xgraph->vertices_begin())->pt(), 0, 0, 0, xgraph_scale 
         / cur_scale);
     scaled_xgraph->update_all_degree_1_nodes();
-    vcl_cout << "done\n";
+    std::cout << "done\n";
 
 
     //>> Compute all windows (rectangular boxes) necessary to 
     // cover the whole image
-    vcl_cout << 
+    std::cout << 
      "\n>>Computing sliding (rectangular) windows to cover the whole image ...";
   
     // maximum size for a detection window
@@ -175,7 +175,7 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
     int max_height = det_window_height; //512;
 
     // list of windows to run detection on
-    vcl_vector<vgl_box_2d<int > > windows;
+    std::vector<vgl_box_2d<int > > windows;
     dbsks_compute_detection_windows(max_width, 
                                     max_height, 
                                     512, 
@@ -184,31 +184,31 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
 
 
     // Print out list of windows
-    vcl_cout << "\n  Total number of windows to run on = " << 
+    std::cout << "\n  Total number of windows to run on = " << 
         windows.size() << "\n";
     for (unsigned iw =0; iw < windows.size(); ++iw)
     {
         vgl_box_2d<int > window = windows[iw];
-        vcl_cout << "  window " << iw << ": xmin=" << window.min_x() 
+        std::cout << "  window " << iw << ": xmin=" << window.min_x() 
                  << " ymin=" << window.min_y() 
                  << " xmax=" << window.max_x()
                  << " ymax=" << window.max_y() << "\n";
     }
-    vcl_cout.flush();
+    std::cout.flush();
 
     //>> Detect objects within each window
-    vcl_cout << "\n>> Detecting objects in all computed windows ...";
-    vcl_vector<dbsks_det_desc_xgraph_sptr > det_list;
+    std::cout << "\n>> Detecting objects in all computed windows ...";
+    std::vector<dbsks_det_desc_xgraph_sptr > det_list;
     det_list.clear();
 
     for (unsigned iw =0; iw < windows.size(); ++iw)
     {
         vgl_box_2d<int > window = windows[iw];
-        vcl_cout << "\n>>>> Window index = " << iw 
+        std::cout << "\n>>>> Window index = " << iw 
                  << " xmin=" << window.min_x() 
                  << " ymin=" << window.min_y() 
                  << " xmax=" << window.max_x()
-                 << " ymax=" << window.max_y() << vcl_endl;
+                 << " ymax=" << window.max_y() << std::endl;
     
         // xshock detection engine
         dbsks_xshock_detector engine;
@@ -239,18 +239,18 @@ bool detect_xgraph_using_app(const vcl_string& image_file,
             /////////////////////////////////////////////////////
         } // solution
     } // iw
-    vcl_cout << "\n    Number of detection before non-max suppression: " 
-             << det_list.size() << vcl_endl;
+    std::cout << "\n    Number of detection before non-max suppression: " 
+             << det_list.size() << std::endl;
 
     //>> Non-max supression on the boundary polygon
-    vcl_cout << "\n    Non-max suppression based on boundary polygon box: ...";
+    std::cout << "\n    Non-max suppression based on boundary polygon box: ...";
     dbsks_det_nms_using_polygon(det_list, 
                                 output_det_list, 
                                 min_overlap_ratio_for_rejection);
 
   
-    vcl_cout << "\n    Number of detection after non-max suppression: " 
-             << output_det_list.size() << vcl_endl; 
+    std::cout << "\n    Number of detection after non-max suppression: " 
+             << output_det_list.size() << std::endl; 
 
     return true;
 

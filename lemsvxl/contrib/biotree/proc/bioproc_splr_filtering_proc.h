@@ -23,18 +23,18 @@ class  bioproc_splr_filtering_proc
                            double resolution,
                            vgl_box_3d<double> outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file="",
+                           std::string bin_scan_file="",
                            unsigned start_index=0, unsigned period=1);
     bioproc_splr_filtering_proc(imgr_scan_images_resource const & scan_image,
                            vgl_box_3d<double> box,
                            double resolution,
                            vgl_box_3d<double>  outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file="",
+                           std::string bin_scan_file="",
                            unsigned start_index=0, unsigned period=1);
 
     //: compute responses--if file ptr provided, write computed responses
-    void execute(vcl_ofstream * outputfile = 0);
+    void execute(std::ofstream * outputfile = 0);
 
     biob_worldpt_field<xmvg_filter_response<T> > & response_field();
 
@@ -82,10 +82,10 @@ class  bioproc_splr_filtering_proc
     void imgr();
 
     //: helper function to get image resource from binary file
-    void set_up_imgr_from_bin(vcl_string bin_scan_file);
+    void set_up_imgr_from_bin(std::string bin_scan_file);
 };
 
 template< class T, class F>
-void x_write(vcl_ostream &os, bioproc_splr_filtering_proc<T, F> &proc);
+void x_write(std::ostream &os, bioproc_splr_filtering_proc<T, F> &proc);
 
 #endif

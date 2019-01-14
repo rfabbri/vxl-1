@@ -1,7 +1,7 @@
 #ifndef __TBS_UTILS_DP_DEF__
 #define __TBS_UTILS_DP_DEF__
 
-#include <vcl_vector.h>
+#include <vector>
 
 #include "Point.h"
 #include "extern_params.h"
@@ -160,7 +160,7 @@ template<class floatType>
 
 */
 
-//map<vcl_string, vcl_vector<vcl_string> > readParamters(int argc, char *argv[]);
+//map<std::string, std::vector<std::string> > readParamters(int argc, char *argv[]);
 
 #endif
 

@@ -12,12 +12,12 @@
 #include <xscan/xscan_uniform_orbit.h>
 #include <xmvg/io/xmvg_io_composite_filter_2d.h>
 #include <vsl/vsl_basic_xml_element.h>
-#include <vcl_vector.h>
-#include <vcl_list.h>
+#include <vector>
+#include <list>
 #include <vnl/xio/vnl_xio_quaternion.hxx>
 
 template<class T, class F>
-void bioproc_splr_filtering_proc<T, F>:: set_up_imgr_from_bin(vcl_string bin_scan_file){
+void bioproc_splr_filtering_proc<T, F>:: set_up_imgr_from_bin(std::string bin_scan_file){
     vsl_b_ifstream is(bin_scan_file.data());
     imgr_bounded_image_view_3d<unsigned short> * v3d = new imgr_bounded_image_view_3d<unsigned short>();
     v3d->b_read(is);
@@ -31,7 +31,7 @@ bioproc_splr_filtering_proc<T, F>:: bioproc_splr_filtering_proc(
                            double resolution,
                            vgl_box_3d<double> outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file,
+                           std::string bin_scan_file,
                            unsigned start_index, unsigned period)
 : scan_(scan), box_(box), outer_box_(outer_box), filter_3d_(filter_3d), 
   resolution_(resolution), splr_(scan_, &filter_3d_, box, resolution_, start_index, period),
@@ -51,7 +51,7 @@ bioproc_splr_filtering_proc<T, F>:: bioproc_splr_filtering_proc(
                            double resolution,
                            vgl_box_3d<double> outer_box,
                            xmvg_composite_filter_3d<T, F> const& filter_3d,
-                           vcl_string bin_scan_file,
+                           std::string bin_scan_file,
                            unsigned start_index, unsigned period)
 : scan_(scan_images.get_scan()), box_(box), outer_box_(outer_box), filter_3d_(filter_3d), 
   resolution_(resolution), splr_(scan_, &filter_3d_, box, resolution_, start_index, period),
@@ -80,7 +80,7 @@ template<class T, class F>
 void bioproc_splr_filtering_proc<T,F>::imgr(){
   imgr_scan_resource_sptr resc = imgr_scan_resource_io::read_resource(scan_);
   if(!resc){
-    vcl_cerr << "******** (bioproc_splr_filtering_proc.hxx) FAILED TO READ IMAGE RESOURCE ************\n";
+    std::cerr << "******** (bioproc_splr_filtering_proc.hxx) FAILED TO READ IMAGE RESOURCE ************\n";
   }
   else {
     view_3d_ = resc->get_bounded_view(outer_box_);
@@ -88,7 +88,7 @@ void bioproc_splr_filtering_proc<T,F>::imgr(){
 }
 
 template<class T, class F>
-void bioproc_splr_filtering_proc<T, F> :: execute(vcl_ofstream * outputfile){
+void bioproc_splr_filtering_proc<T, F> :: execute(std::ofstream * outputfile){
   /* Go through the representatives.  For each one, compute the splats
      (and compute responses for the corresponding representees)
   */
@@ -99,7 +99,7 @@ void bioproc_splr_filtering_proc<T, F> :: execute(vcl_ofstream * outputfile){
     //get next point index; if necessary, compute splat
     biob_worldpt_index pti = iter->next();
     if (++counter % 100 == 0){
-      vcl_cout << "(bioproc_splr_filtering_proc) point " << counter << "\n";
+      std::cout << "(bioproc_splr_filtering_proc) point " << counter << "\n";
     }
     xmvg_filter_response<T> response(filter_3d_.size(), T(0));
     for(orbit_index t = 0; t < scan_.scan_size(); t++){
@@ -124,7 +124,7 @@ void bioproc_splr_filtering_proc<T, F> :: execute(vcl_ofstream * outputfile){
 //: x_write should be called after execute() method is executed, because the 
 // response values are undefined before that 
 template<class T, class F>
-void x_write(vcl_ostream &os, bioproc_splr_filtering_proc<T, F> &proc) {
+void x_write(std::ostream &os, bioproc_splr_filtering_proc<T, F> &proc) {
   vsl_basic_xml_element element("bioproc_splr_filtering_proc");
   element.x_write_open(os);
   
@@ -141,7 +141,7 @@ void x_write(vcl_ostream &os, bioproc_splr_filtering_proc<T, F> &proc) {
 #undef BIOPROC_SPLR_FILTERING_PROC_INSTANTIATE
 #define BIOPROC_SPLR_FILTERING_PROC_INSTANTIATE(T, F) \
 template class bioproc_splr_filtering_proc<T, F>; \
-template void x_write(vcl_ostream &, bioproc_splr_filtering_proc<T, F> &); \
+template void x_write(std::ostream &, bioproc_splr_filtering_proc<T, F> &); \
 SPLR_BASIC_PIZZA_SLICE_SPLAT_COLLECTION_INSTANTIATE(T, F ) \
 
 

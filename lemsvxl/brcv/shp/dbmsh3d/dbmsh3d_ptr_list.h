@@ -4,7 +4,7 @@
 #ifndef dbmsh3d_ptr_list_h_
 #define dbmsh3d_ptr_list_h_
 
-#include <vcl_set.h>
+#include <set>
 
 class dbmsh3d_ptr_node
 {
@@ -46,7 +46,7 @@ public:
 };
 
 //: return size of the list.
-inline unsigned int get_all_ptrs (const dbmsh3d_ptr_node* head, vcl_set<void*>& ptrs)
+inline unsigned int get_all_ptrs (const dbmsh3d_ptr_node* head, std::set<void*>& ptrs)
 {
   unsigned int count = 0;
   dbmsh3d_ptr_node* cur = (dbmsh3d_ptr_node*) head;

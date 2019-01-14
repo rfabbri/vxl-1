@@ -25,7 +25,7 @@ void bof_util::random_label_for_training(int scene_id, int block_i, int block_j,
   
   if(!(valid_scene && train_scene))
   {
-    vcl_cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << vcl_endl;
+    std::cerr << "Error in bof_util::random_label_for_training: Could not cast scenes" << std::endl;
     return;
   }
   
@@ -35,7 +35,7 @@ void bof_util::random_label_for_training(int scene_id, int block_i, int block_j,
   
   //get the cells for this block
   if(!(valid_scene->valid_index(block_i, block_j, block_k) && train_scene->valid_index(block_i, block_j, block_k))){
-    vcl_cerr << "In bof_util::random_label_for_training: Invalid block" << vcl_endl;
+    std::cerr << "In bof_util::random_label_for_training: Invalid block" << std::endl;
     return;
   }
   
@@ -48,8 +48,8 @@ void bof_util::random_label_for_training(int scene_id, int block_i, int block_j,
   train_tree->init_cells(false);
   
   //get leaf cells
-  vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
-  vcl_vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
+  std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
+  std::vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
   
   float tree_ncells = valid_leaves.size();
   unsigned long tree_nsamples = (unsigned long)tree_ncells*fraction;
@@ -77,7 +77,7 @@ void bof_util::random_label_for_training(int scene_id, int block_i, int block_j,
 //: Samples randomnly 10-d features (from those scenes labeled for training). 
 // The randomly selected features are returned in a vector
 void bof_util::sample_from_train(int scene_id, int block_i, int block_j, int block_k, double fraction,
-                                  vcl_vector<vnl_vector_fixed<double,10> > &features)
+                                  std::vector<vnl_vector_fixed<double,10> > &features)
 {
   if(!info_.training_scenes_[scene_id])
     return;
@@ -99,7 +99,7 @@ void bof_util::sample_from_train(int scene_id, int block_i, int block_j, int blo
   
   if(!(feature_scene && valid_scene /*&& train_scene*/))
   {
-    vcl_cerr << "Error in bof_util::sample_from_train: Could not cast scenes" << vcl_endl;
+    std::cerr << "Error in bof_util::sample_from_train: Could not cast scenes" << std::endl;
     return;
   }
   
@@ -110,7 +110,7 @@ void bof_util::sample_from_train(int scene_id, int block_i, int block_j, int blo
   
   //get the cells for this block
   if(!(feature_scene->valid_index(block_i, block_j, block_k) && valid_scene->valid_index(block_i, block_j, block_k) /*&& train_scene->valid_index(block_i, block_j, block_k)*/)){
-    vcl_cerr << "In bof_util::sample_from_train: Invalid block" << vcl_endl;
+    std::cerr << "In bof_util::sample_from_train: Invalid block" << std::endl;
     return;
   }
   
@@ -124,9 +124,9 @@ void bof_util::sample_from_train(int scene_id, int block_i, int block_j, int blo
   //bool_tree_type* train_tree = train_scene->get_block(block_i, block_j, block_k)->get_tree();
   
   //get leaf cells
-  vcl_vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells();
-  vcl_vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
-  //vcl_vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
+  std::vector<feature_cell_type *> feature_leaves = feature_tree->leaf_cells();
+  std::vector<bool_cell_type *> valid_leaves = valid_tree->leaf_cells();
+  //std::vector<bool_cell_type *> train_leaves = train_tree->leaf_cells();
   
   features.clear();
   float tree_ncells = valid_leaves.size();
@@ -150,19 +150,19 @@ void bof_util::sample_from_train(int scene_id, int block_i, int block_j, int blo
 }
 
 
-double bof_util::parse_variance_from_xml_cluster(vcl_string xml_file)
+double bof_util::parse_variance_from_xml_cluster(std::string xml_file)
 {
   
-  vcl_ifstream xml_ifs(xml_file.c_str());
+  std::ifstream xml_ifs(xml_file.c_str());
   if(!xml_ifs.is_open()){
-    vcl_cerr << "Error: could not open xml info file: " << xml_file << " \n";
+    std::cerr << "Error: could not open xml info file: " << xml_file << " \n";
     return -1.0;
   }
   bxml_document doc = bxml_read(xml_ifs);
   bxml_element root_query("dbcll_clusters");
   bxml_data_sptr root = bxml_find_by_name(doc.root_element(), root_query);
   if (!root) {
-    vcl_cerr << "Error: bof_info - could not parse xml root\n";
+    std::cerr << "Error: bof_info - could not parse xml root\n";
     return -1.0;
   }
   
@@ -182,7 +182,7 @@ double bof_util::parse_variance_from_xml_cluster(vcl_string xml_file)
 //: Binary save parameters to stream.
 void vsl_b_write(vsl_b_ostream & , bof_feature_vector const & )
 {
-  vcl_cerr << "Error: Trying to save but binary io not implemented\n";
+  std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
@@ -190,13 +190,13 @@ void vsl_b_write(vsl_b_ostream & , bof_feature_vector const & )
 //: Binary load parameters from stream.
 void vsl_b_read(vsl_b_istream & , bof_feature_vector & )
 {
-  vcl_cerr << "Error: Trying to save but binary io not implemented\n";
+  std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
-void vsl_print_summary(vcl_ostream & , const bof_feature_vector & )
+void vsl_print_summary(std::ostream & , const bof_feature_vector & )
 {
-  vcl_cerr << "Error: Trying to save but binary io not implemented\n";
+  std::cerr << "Error: Trying to save but binary io not implemented\n";
   return;
 }
 
@@ -227,7 +227,7 @@ void vsl_b_write(vsl_b_ostream& os, const bof_feature_vector* &p)
   }
 }
 
-void vsl_print_summary(vcl_ostream& os, const bof_feature_vector* &p)
+void vsl_print_summary(std::ostream& os, const bof_feature_vector* &p)
 {
   if (p==0)
     os << "NULL PTR";

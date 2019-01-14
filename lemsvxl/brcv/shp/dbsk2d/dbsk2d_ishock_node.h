@@ -22,7 +22,7 @@
 #include <dbsk2d/dbsk2d_ishock_edge.h>
 
 // Useful type definitions
-typedef vcl_list<vcl_pair<double, dbsk2d_ishock_belm*> > ishock_node_belm_list;
+typedef std::list<std::pair<double, dbsk2d_ishock_belm*> > ishock_node_belm_list;
 typedef ishock_node_belm_list::iterator ishock_node_belm_list_iter;
 
 //: Intrinsic shock node class
@@ -115,7 +115,7 @@ public:
   //-----------------------------------------------------------------------------
   virtual void compute_extrinsic_locus();
 
-  virtual void getInfo (vcl_ostream& ostrm);
+  virtual void getInfo (std::ostream& ostrm);
 };
 
 #endif // dbsk2d_ishock_node_h_

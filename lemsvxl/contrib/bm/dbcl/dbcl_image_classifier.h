@@ -25,7 +25,7 @@ class dbcl_image_classifier
 {
 public:
 
-    typedef vcl_map<vgl_point_2d<unsigned>, dbcl_classifier_sptr, dncn_less_than > target_classifier_map_type;
+    typedef std::map<vgl_point_2d<unsigned>, dbcl_classifier_sptr, dncn_less_than > target_classifier_map_type;
 
     dbcl_image_classifier(){}
 
@@ -48,7 +48,7 @@ public:
 	unsigned target(){ return this->target_; }
 
     //visualize
-    void draw_classifiers_vrml( vcl_string result_glob );
+    void draw_classifiers_vrml( std::string result_glob );
 
 private:
     target_classifier_map_type target_classifier_map_;

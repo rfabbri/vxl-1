@@ -22,7 +22,7 @@
 //: Interpolate an extrinsic fragment using at most 3 shapelets
 void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descriptor& start,
                                         const dbsksp_xshock_node_descriptor& end,
-                                        vcl_vector<dbsksp_shapelet_sptr >& list_shapelet);
+                                        std::vector<dbsksp_shapelet_sptr >& list_shapelet);
 
 
 // Should move this function to bgld/algo
@@ -46,14 +46,14 @@ dbsksp_shapelet_sptr dbsksp_interp_xfrag_with_zero_chord_using_one_shapelet(cons
 void dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(int num_intervals,
                                                                const dbsksp_xshock_node_descriptor& start_xdesc,
                                                                const dbsksp_xshock_node_descriptor& end_xdesc,
-                                                               vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+                                                               std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 //: Compute extrinsic samples of a shock fragment
 // The samples are equally spaced along the left boundary biarc
 void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals,
                                                                const dbsksp_xshock_node_descriptor& start_xdesc,
                                                                const dbsksp_xshock_node_descriptor& end_xdesc,
-                                                               vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+                                                               std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 
 //: Compute sample of an xshock fragment given a ratio parameter [0, 1]
@@ -66,7 +66,7 @@ bool dbsksp_compute_xfrag_sample_with_min_kdiff(const dbsksp_xshock_fragment& xf
 // require n > 0
 // the return sample list includes start and end-samples
 bool dbsksp_divide_xfrag_into_2_power_n_fragments(const dbsksp_xshock_fragment& xfrag, int n,
-                                                vcl_vector<dbsksp_xshock_node_descriptor >& list_xsample);
+                                                std::vector<dbsksp_xshock_node_descriptor >& list_xsample);
 
 
 

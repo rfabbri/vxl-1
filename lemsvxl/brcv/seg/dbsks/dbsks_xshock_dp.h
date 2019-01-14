@@ -25,7 +25,7 @@
 #include <dbsksp/dbsksp_xshock_fragment.h>
 
 
-#include <vcl_map.h>
+#include <map>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix.h>
 #include <vbl/vbl_array_1d.h>
@@ -93,7 +93,7 @@ public:
   //: Compute node visisting schedule
   void compute_node_visit_schedule(const dbsksp_xshock_graph_sptr& xgraph,
     unsigned root_vid,
-    vcl_vector<dbsksp_xshock_node_sptr >& node_visit_schedule);
+    std::vector<dbsksp_xshock_node_sptr >& node_visit_schedule);
   
 
   //: Run DP on the given graph
@@ -110,7 +110,7 @@ protected:
   //: Compute node visit schedule for a subtree
   void compute_subtree_node_visit_schedule_recursive(
     const dbsksp_xshock_node_sptr& subtree_root,
-    vcl_vector<dbsksp_xshock_node_sptr >& node_visit_schedule);
+    std::vector<dbsksp_xshock_node_sptr >& node_visit_schedule);
 
   //: Optimize a degree-2 node
   void optimize_degree_2_node(const dbsksp_xshock_node_sptr& xv, 
@@ -190,12 +190,12 @@ public:
 
   //: compute globally optimal graph
   bool find_xgraph_state_global_optimum(unsigned root_vid, 
-    vcl_map<unsigned, int >& xgraph_state, float& opt_cost);
+    std::map<unsigned, int >& xgraph_state, float& opt_cost);
 
   //: Compute locally optimal xgraphs
   bool find_xgraph_state_local_optimum(unsigned root_vid, 
-    vcl_vector<vcl_map<unsigned, int> >& list_xgraph_state,
-    vcl_vector<float >& list_cost);
+    std::vector<std::map<unsigned, int> >& list_xgraph_state,
+    std::vector<float >& list_cost);
 
   //: Trace the state of the root node that correspond to the global optimum
   bool compute_root_state_global_optimum_(unsigned root_vid,
@@ -203,18 +203,18 @@ public:
 
   //: Trace the states of the root node that correspond to optima with a spatial cell grid
   bool compute_root_state_local_optimum_(unsigned root_vid, 
-    vcl_vector<int >& opt_state, vcl_vector<float >& opt_cost);
+    std::vector<int >& opt_state, std::vector<float >& opt_cost);
 
   //: Find the root node's states that are local optimum wrt to all params of the root node
-  bool compute_root_state_of_local_min_all_root_params(vcl_vector<int >& list_root_state, 
-    vcl_vector<float >& list_graph_cost,
+  bool compute_root_state_of_local_min_all_root_params(std::vector<int >& list_root_state, 
+    std::vector<float >& list_graph_cost,
     int kernel_radius = 1);
 
 
   // Trace solution ------------------------------------------------------------------
 
   //: Trace the graph configuration given specific state of the root node
-  bool trace_solution_from_root_state(int root_state, vcl_map<unsigned, int >& sol_node2state);
+  bool trace_solution_from_root_state(int root_state, std::map<unsigned, int >& sol_node2state);
 
 protected:
   //: Recursively trace out the optimal states of the nodes in a branch given 
@@ -225,7 +225,7 @@ protected:
   // map_node2state is where optimal nodes of this branch will be APPENDED to
   bool trace_optimal_child_state_recursive(const dbsksp_xshock_node_sptr& xv_root,
     const dbsksp_xshock_edge_sptr& xe_parent, int root_state,
-    vcl_map<unsigned, int >& map_node2state);
+    std::map<unsigned, int >& map_node2state);
 
   // Low-level optimization ----------------------------------------------------
   
@@ -268,7 +268,7 @@ public:
   // I/O functions -------------------------------------------------------------
 
   //: Print Optimization results to a stream
-  vcl_ostream& print_summary(vcl_ostream& str) const;
+  std::ostream& print_summary(std::ostream& str) const;
 
 
   // DP data structure ---------------------------------------------------------
@@ -277,7 +277,7 @@ public:
   unsigned int major_child_eid_;
   
   //: a grid associated with each node
-  vcl_map<unsigned int, dbsks_xnode_grid >* map_xnode_grid;
+  std::map<unsigned int, dbsks_xnode_grid >* map_xnode_grid;
 
   //: a geometric model for the graph
   dbsks_xgraph_geom_model_sptr xgraph_geom;
@@ -285,43 +285,43 @@ public:
   
   //: A mapping from the id of a node (key, unsigned int) to a grid (grid2d_float)
   // containing the optimal cost for each state of that node
-  vcl_map<unsigned int, grid2d_float > map_opt_cost; // for both degree-2 and degree-3 node
+  std::map<unsigned int, grid2d_float > map_opt_cost; // for both degree-2 and degree-3 node
 
   //: A mapping from the id of a degree-2, non-root node (key, unsigned int) to a
   // grid (grid2d_int) containing its (only) child's state associated with the optimal cost
   // at that degree-2 node.
-  vcl_map<unsigned int, grid2d_int > map_opt_child; // only for degree-2 node
+  std::map<unsigned int, grid2d_int > map_opt_child; // only for degree-2 node
 
   //: A mapping from the id of a degree-3, non-root node (key, unsigned int) to a
   // grid (grid2d_int) containing the states of its 1st child (map_opt_child1) and
   // 2nd child (map_opt_child2) associated with the optimal cost at that degree-3 node
-  vcl_map<unsigned int, grid2d_int > map_opt_child1; // only for degree-3 node
-  vcl_map<unsigned int, grid2d_int > map_opt_child2; // only for degree-3 node
+  std::map<unsigned int, grid2d_int > map_opt_child1; // only for degree-3 node
+  std::map<unsigned int, grid2d_int > map_opt_child2; // only for degree-3 node
 
   //: A mapping from the id of a degree-3 node (key, unsigned int) to a
   // grid (grid2d_int) containing indices of the angle phi1 that correspond to the
   // optimal cost at that degree-3 node
-  vcl_map<unsigned int, grid2d_int > map_opt_phi1; // only for degree-3 node
+  std::map<unsigned int, grid2d_int > map_opt_phi1; // only for degree-3 node
   
   //: This mapping is for the root node. It maps from the ids of the root's children
   // to the optimal states of those children that correspond to the optimal cost
   // at the root. The "key" of this map has different meaning from the other maps in this class.
   // It is the id of the CHILD, NOT the parent (as in the other maps). The id of
   // the root node is unique, saved in root_vid;
-  vcl_map<unsigned int, grid2d_int > map_opt_child_of_root;
+  std::map<unsigned int, grid2d_int > map_opt_child_of_root;
 
   //: a map of minimum costs corresponding to nodes that have been processed but 
   // whose parent nodes have not been processed
-  vcl_map<unsigned int, float > map_node_to_min_cost_;
+  std::map<unsigned int, float > map_node_to_min_cost_;
 
   ////: a map to look up minimum sub-tree cost for each position of the selected node
   //// key: id of node
   //// value: an matrix of sub-tree costs for each position node
-  //vcl_map<unsigned int, vnl_matrix<float > > map_node_to_min_cost_matrix_;
+  //std::map<unsigned int, vnl_matrix<float > > map_node_to_min_cost_matrix_;
 
   //: a list of solutions
-  vcl_vector<vcl_map<unsigned int, int> > list_opt_xgraph_state;
-  vcl_vector<float > list_opt_cost;
+  std::vector<std::map<unsigned int, int> > list_opt_xgraph_state;
+  std::vector<float > list_opt_cost;
 
 public:
   //: Likelihood calculator for each fragment

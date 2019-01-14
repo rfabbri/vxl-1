@@ -4,8 +4,8 @@
 // \file
 
 #include "dbsksp_xshock_node_descriptor.h"
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <algorithm>
+#include <utility>
 #include <vnl/vnl_math.h>
 #include <bnld/bnld_angle.h>
 #include <vgl/vgl_distance.h>
@@ -49,10 +49,10 @@ dbsksp_xshock_node_descriptor(const vgl_point_2d<double >& pt,
 
   // ii. shock tangent angle - orthogonal to the line connecting two boundary points
   vgl_vector_2d<double > shock_tangent = rotated(bnd_pt_right - pt, this->phi_);
-  this->psi_ = vcl_atan2(shock_tangent.y(), shock_tangent.x());
+  this->psi_ = std::atan2(shock_tangent.y(), shock_tangent.x());
 
   // iii. shock point
-  this->pt_ = centre(bnd_pt_left, bnd_pt_right) - shock_tangent * vcl_cos(this->phi_);
+  this->pt_ = centre(bnd_pt_left, bnd_pt_right) - shock_tangent * std::cos(this->phi_);
 
   // iv. radius
   this->radius_ = vgl_distance(bnd_pt_right, this->pt_);
@@ -67,7 +67,7 @@ dbsksp_xshock_node_descriptor(const vgl_point_2d<double >& pt,
                               const vgl_vector_2d<double >& tangent, double phi, double radius)
 {
   this->pt_ = pt;
-  this->psi_ = vcl_atan2(tangent.y(), tangent.x());
+  this->psi_ = std::atan2(tangent.y(), tangent.x());
   this->phi_ = phi;
   this->radius_ = radius;
 }
@@ -85,14 +85,14 @@ set(const vgl_point_2d<double >& bnd_pt_left,
   vgl_vector_2d<double > tangent = normalized(v);
 
   // radius is related to distance between two boundary points and phi
-  double radius = v.length() / vcl_sin(phi);
+  double radius = v.length() / std::sin(phi);
 
   // shock point is computed from chordal point (mid point of chord) and tangent
   vgl_point_2d<double > chordal_pt = centre(bnd_pt_left, bnd_pt_right);
-  vgl_point_2d<double > shock_pt = chordal_pt - vcl_cos(phi) * radius * tangent;
+  vgl_point_2d<double > shock_pt = chordal_pt - std::cos(phi) * radius * tangent;
 
   // put everything together
-  this->set(shock_pt.x(), shock_pt.y(), vcl_atan2(tangent.y(), tangent.x()), phi, radius); 
+  this->set(shock_pt.x(), shock_pt.y(), std::atan2(tangent.y(), tangent.x()), phi, radius); 
   return;
 }
 
@@ -102,7 +102,7 @@ set(const vgl_point_2d<double >& bnd_pt_left,
 vgl_vector_2d<double > dbsksp_xshock_node_descriptor::
 shock_tangent() const
 {
-  return vgl_vector_2d<double >(vcl_cos(this->psi_), vcl_sin(this->psi_));
+  return vgl_vector_2d<double >(std::cos(this->psi_), std::sin(this->psi_));
 }
 
 
@@ -111,7 +111,7 @@ shock_tangent() const
 void dbsksp_xshock_node_descriptor::
 set_shock_tangent(vgl_vector_2d<double > t)
 {
-  this->psi_ = vcl_atan2(t.y(), t.x());
+  this->psi_ = std::atan2(t.y(), t.x());
 }
 
 
@@ -131,7 +131,7 @@ vgl_point_2d<double > dbsksp_xshock_node_descriptor::
 bnd_pt_left() const
 {
   double a = this->psi_ + this->phi_;
-  return this->pt_ + this->radius_*vgl_vector_2d<double >(vcl_cos(a), vcl_sin(a));
+  return this->pt_ + this->radius_*vgl_vector_2d<double >(std::cos(a), std::sin(a));
   
 }
 
@@ -142,14 +142,14 @@ vgl_point_2d<double > dbsksp_xshock_node_descriptor::
 bnd_pt_right() const
 {
   double a = this->psi_ - this->phi_;
-  return this->pt_ + this->radius_*vgl_vector_2d<double >(vcl_cos(a), vcl_sin(a));
+  return this->pt_ + this->radius_*vgl_vector_2d<double >(std::cos(a), std::sin(a));
 }
 
 //: Mid-pt of line segment connecting two boundary points
 vgl_point_2d<double > dbsksp_xshock_node_descriptor::
 bnd_mid_pt() const
 {
-  double d = this->radius() * vcl_cos(this->phi());
+  double d = this->radius() * std::cos(this->phi());
   return this->pt() + d * this->shock_tangent();
 }
 
@@ -160,7 +160,7 @@ vgl_vector_2d<double > dbsksp_xshock_node_descriptor::
 bnd_tangent_left() const
 {
   double angle = this->psi_ + this->phi_ - vnl_math::pi_over_2;
-  return vgl_vector_2d<double >(vcl_cos(angle), vcl_sin(angle));
+  return vgl_vector_2d<double >(std::cos(angle), std::sin(angle));
 }
 
 
@@ -170,7 +170,7 @@ vgl_vector_2d<double > dbsksp_xshock_node_descriptor::
 bnd_tangent_right() const
 {
   double angle = this->psi_ - this->phi_ + vnl_math::pi_over_2;
-  return vgl_vector_2d<double >(vcl_cos(angle), vcl_sin(angle));
+  return vgl_vector_2d<double >(std::cos(angle), std::sin(angle));
 }
 
 
@@ -188,7 +188,7 @@ opposite_xnode() const
 // ----------------------------------------------------------------------------
 //: Print description of the xnode to an output stream
 void dbsksp_xshock_node_descriptor::
-print(vcl_ostream& os) const
+print(std::ostream& os) const
 {
   os << "dbsksp_xshock_node_descriptor"
     << " x[ " << this->pt().x() << " ]"

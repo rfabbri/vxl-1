@@ -8,17 +8,17 @@
 #include <testlib/testlib_test.h>
 #include <xmvg/xmvg_gaussian_filter_descriptor.h>
 #include <xmvg/xmvg_gaussian_filter_3d.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_double_3.h>
 #include <vbl/vbl_array_3d.h>
-#include <vcl_ctime.h>
+#include <ctime>
 
 static void test_xmvg_gaussian_filter()
 {
-  vcl_cout << "---test descriptor---" << vcl_endl;
+  std::cout << "---test descriptor---" << std::endl;
   // Filter at the centre and along the z-axis
-  vcl_cout << "Along z-axis" << vcl_endl;
+  std::cout << "Along z-axis" << std::endl;
   double sigma_r = 0.04;
   double length = 0.1;
   vgl_point_3d<double> centre(0.0, 0.0, 0.0);
@@ -34,9 +34,9 @@ static void test_xmvg_gaussian_filter()
   TEST("box test centroid test", gfd.box().centroid(), vgl_point_3d<double>(0.0,0.0,0.0));
   TEST_NEAR("rotation angle test", gfd.rotation_angle(), 0, 1e-06);
   TEST("rotation axis test", gfd.rotation_axis(), vnl_double_3(0.0, 0.0, 0.0));
-//  vcl_cout << "---test filter 3d line integral---" << vcl_endl;
+//  std::cout << "---test filter 3d line integral---" << std::endl;
 
-  vcl_cout << "---test filter 3d splat---" << vcl_endl;
+  std::cout << "---test filter 3d splat---" << std::endl;
   // construct the initial camera
   xmvg_source source;
   vnl_double_3x3 m(0.0);
@@ -75,12 +75,12 @@ static void test_xmvg_gaussian_filter()
   
   xmvg_perspective_camera<double> cam_rot = xmvg_perspective_camera<double>::postmultiply(cam, tr);
   clock_t t1,t2;
-  t1 = vcl_clock();
+  t1 = std::clock();
   xmvg_atomic_filter_2d<double> res(f.splat(vgl_point_3d<double> (0.0, 0.0, 0.0), cam_rot));
-  t2 = vcl_clock();
+  t2 = std::clock();
   double tt = (double)(t2-t1) / CLOCKS_PER_SEC;
-  vcl_cout << "Elapsed time is: " << tt << vcl_endl;
-  vcl_cout << "Splat size is: " << res.size() << vcl_endl;
+  std::cout << "Elapsed time is: " << tt << std::endl;
+  std::cout << "Splat size is: " << res.size() << std::endl;
 
   TEST("splat result x-size test", res.size().get(0), 111);
   TEST("splat result y-size test", res.size().get(1), 105);
@@ -96,26 +96,26 @@ static void test_xmvg_gaussian_filter()
   for(int i=0; i<sx; i++)
     for(int j=0; j<sy; j++)
       sum += res.weights().get(i,j);
-  vcl_cout << "Weights sum before eliminating residue: " << res.weights_sum() << vcl_endl;
-  vcl_cout << "Weights sum after eliminating residue: " << sum << vcl_endl;
+  std::cout << "Weights sum before eliminating residue: " << res.weights_sum() << std::endl;
+  std::cout << "Weights sum after eliminating residue: " << sum << std::endl;
   TEST_NEAR("eliminating splat residue test", sum, 0, 1e-09);
 
   //write as ppm to view
 //  FILE *fp;
-//  fp = vcl_fopen("F:\\MyDocs\\Temp\\file.ppm", "w");
-//  vcl_fprintf(fp,"P3\n%d %d\n5000\n", sx, sy);
+//  fp = std::fopen("F:\\MyDocs\\Temp\\file.ppm", "w");
+//  std::fprintf(fp,"P3\n%d %d\n5000\n", sx, sy);
 //  for(int j=0; j<sy; j++)
 //  {
 //    for(int i=0; i<sx; i++)
 //    {
 //      if(res.weights().get(i,j) < 0)
-//        vcl_fprintf(fp, "%d %d %d ", 0, 0, int(-10000*res.weights().get(i,j)));
+//        std::fprintf(fp, "%d %d %d ", 0, 0, int(-10000*res.weights().get(i,j)));
 //      else
-//        vcl_fprintf(fp, "%d %d %d ", int(10000*res.weights().get(i,j)), 0, 0);
+//        std::fprintf(fp, "%d %d %d ", int(10000*res.weights().get(i,j)), 0, 0);
 //    }
-//    vcl_fprintf(fp, "\n");
+//    std::fprintf(fp, "\n");
 //  } 
-//  vcl_fclose(fp);
+//  std::fclose(fp);
 }
 
 TESTMAIN(test_xmvg_gaussian_filter);

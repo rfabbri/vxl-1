@@ -27,8 +27,8 @@
 //uncomment this line if you wish to trace the steps in a verbose manner
 //#define DEBUG_SHOCK_VERBOSE
 
-typedef vcl_pair<dbsk2d_ishock_belm*, dbsk2d_ishock_belm*> wf_pair;
-typedef vcl_set<wf_pair > wf_pairs_list;
+typedef std::pair<dbsk2d_ishock_belm*, dbsk2d_ishock_belm*> wf_pair;
+typedef std::set<wf_pair > wf_pairs_list;
 
 //: This class contains the algorithm to compute intrinsic shocks from a boundary class
 //

@@ -1,11 +1,11 @@
 #ifndef  POINTS_H
 #define  POINTS_H
 
-#include <vcl_iostream.h>
+#include <iostream>
 //using namespace std;
-//#include <vcl_vector.h>
-//#include <vcl_cassert.h>
-//#include <vcl_cmath.h>
+//#include <vector>
+//#include <cassert>
+//#include <cmath>
 
 template <class coord_type>
 class Point2D
@@ -129,8 +129,8 @@ class Point2D
             coord_type rot_x=0;
             coord_type rot_y=0;
 
-            rot_x  = ( _x*vcl_cos(angle)+_y*vcl_sin(angle));
-            rot_y  = (-_x*vcl_sin(angle)+_y*vcl_cos(angle));
+            rot_x  = ( _x*std::cos(angle)+_y*std::sin(angle));
+            rot_y  = (-_x*std::sin(angle)+_y*std::cos(angle));
 
             _x = rot_x;
             _y = rot_y;
@@ -143,7 +143,7 @@ class Point2D
 
         double magnitude() const
           {
-            return (vcl_sqrt(_x*_x+_y*_y));
+            return (std::sqrt(_x*_x+_y*_y));
            }
    };
 
@@ -172,7 +172,7 @@ inline Point2D<point_type> operator*(const Point2D<point_type> pt, mul_type val)
 inline Point2D<point_type> operator/(const Point2D<point_type> pt, div_type val)
   {
     if (val ==0)
-        vcl_cout<<" Error: <Point2D operator/> Division by 0"<<vcl_endl;
+        std::cout<<" Error: <Point2D operator/> Division by 0"<<std::endl;
     return Point2D<point_type>(pt.getX()/val, pt.getY()/val);
    }
 
@@ -207,7 +207,7 @@ inline Point2D<point1_type> operator-(Point2D<point1_type> pt1, Point2D<point2_t
 /*------------------------------------------------------------*/
     
     template <class point_type>    
-inline vcl_ostream & operator<< (vcl_ostream & os, const Point2D<point_type> pt)
+inline std::ostream & operator<< (std::ostream & os, const Point2D<point_type> pt)
   {
     os<<" ["<<pt.getX()<<", "<<pt.getY()<<"] ";
     return os;

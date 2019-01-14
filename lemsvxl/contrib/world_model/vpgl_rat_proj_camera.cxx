@@ -39,7 +39,7 @@ void vpgl_rat_proj_camera::compute()
   vgl_box_3d<double> vol(pmin, pmax);
   //pcc_ = vpgl_perspective_camera_compute();
   vpgl_perspective_camera_compute::compute(rat_cam_, vol, persp_cam_, t_);
-  vcl_cout << persp_cam_;
+  std::cout << persp_cam_;
 }
 
 //: Project a point in world coordinates onto the image plane.

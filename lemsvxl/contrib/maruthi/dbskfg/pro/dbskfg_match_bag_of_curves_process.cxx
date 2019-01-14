@@ -28,13 +28,13 @@ dbskfg_match_bag_of_curves_process::dbskfg_match_bag_of_curves_process()
         !parameters()->add( "Output folder:", 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
-                            "-output_prefix", vcl_string(""))||
+                            "-output_prefix", std::string(""))||
         !parameters()->add( "Template size: " , "-template_size" , 3 )  ||
         !parameters()->add( "R:" , "-r1" , 10.0f ) 
         )
 
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -51,25 +51,25 @@ dbskfg_match_bag_of_curves_process::clone() const
     return new dbskfg_match_bag_of_curves_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_match_bag_of_curves_process::name()
 {
     return "Match Bag of Curves";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_bag_of_curves_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
     
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_match_bag_of_curves_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.clear();
     return to_return;
 }
@@ -88,20 +88,20 @@ bool dbskfg_match_bag_of_curves_process::execute()
 {
     bpro1_filepath model_folder_filepath;
     this->parameters()->get_value("-model_folder", model_folder_filepath);
-    vcl_string model_dir = model_folder_filepath.path;
+    std::string model_dir = model_folder_filepath.path;
     
     bpro1_filepath query_folder_filepath;
     this->parameters()->get_value("-query_folder", query_folder_filepath);
-    vcl_string query_dir = query_folder_filepath.path;
+    std::string query_dir = query_folder_filepath.path;
 
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
 
-    vcl_string output_prefix;
+    std::string output_prefix;
     parameters()->get_value("-output_prefix", output_prefix);
  
-    vcl_string output_file = output_folder+"/"+output_prefix;
+    std::string output_file = output_folder+"/"+output_prefix;
 
     int template_size=0; 
     parameters()->get_value( "-template_size" , template_size );
@@ -113,8 +113,8 @@ bool dbskfg_match_bag_of_curves_process::execute()
     //Load contours
 
     // Create output storage
-    vcl_vector<bpro1_storage_sptr> model_contour;
-    vcl_vector<bpro1_storage_sptr> query_contour;
+    std::vector<bpro1_storage_sptr> model_contour;
+    std::vector<bpro1_storage_sptr> query_contour;
 
     load_contours(model_contour,model_folder_filepath);
     load_contours(query_contour,query_folder_filepath);
@@ -124,10 +124,10 @@ bool dbskfg_match_bag_of_curves_process::execute()
     vidpro1_vsol2D_storage_sptr model_contour_storage = 
         vidpro1_vsol2D_storage_new();
     model_contour_storage.vertical_cast(model_contour[0]);
-    vcl_vector< vsol_spatial_object_2d_sptr > model_vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > model_vsol_list = 
         model_contour_storage
         ->all_data();
-    vcl_vector<bsol_intrinsic_curve_2d_sptr> model_curves;
+    std::vector<bsol_intrinsic_curve_2d_sptr> model_curves;
 
     for ( unsigned int i=0; i < model_vsol_list.size() ; ++i)
     {
@@ -149,10 +149,10 @@ bool dbskfg_match_bag_of_curves_process::execute()
     vidpro1_vsol2D_storage_sptr query_contour_storage = 
         vidpro1_vsol2D_storage_new();
     query_contour_storage.vertical_cast(query_contour[0]);
-    vcl_vector< vsol_spatial_object_2d_sptr > query_vsol_list = 
+    std::vector< vsol_spatial_object_2d_sptr > query_vsol_list = 
         query_contour_storage
         ->all_data();
-    vcl_vector<bsol_intrinsic_curve_2d_sptr> query_curves;
+    std::vector<bsol_intrinsic_curve_2d_sptr> query_curves;
 
     for ( unsigned int i=0; i < query_vsol_list.size() ; ++i)
     {
@@ -217,23 +217,23 @@ bool dbskfg_match_bag_of_curves_process::execute()
             double final_cost=(cost1<cost2)?cost1:cost2;
             binary_sim_matrix[m][q]=final_cost;                   
             
-            vcl_cout<<"Curve Matching Cost: "<<final_cost
+            std::cout<<"Curve Matching Cost: "<<final_cost
                     <<" min("
                     <<cost1
                     <<","
                     <<cost2
                     <<")"
-                    <<vcl_endl;
+                    <<std::endl;
         }
     }
 
-    vcl_string output_binary_file = output_file + 
+    std::string output_binary_file = output_file + 
         "_contour_similarity_matrix.bin";
 
-    vcl_ofstream binary_sim_file;
+    std::ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file.c_str(),
-                         vcl_ios::out | 
-                         vcl_ios::binary);
+                         std::ios::out | 
+                         std::ios::binary);
 
     //********************* Write model curves first *****************
     double model_curves_numb=model_curves.size();
@@ -327,7 +327,7 @@ bool dbskfg_match_bag_of_curves_process::finish()
 }
 
 void dbskfg_match_bag_of_curves_process::load_contours(
-    vcl_vector<bpro1_storage_sptr>&
+    std::vector<bpro1_storage_sptr>&
     vsol_contour,
     bpro1_filepath& input)
 {

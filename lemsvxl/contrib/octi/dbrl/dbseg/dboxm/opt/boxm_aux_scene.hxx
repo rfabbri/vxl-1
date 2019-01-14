@@ -5,15 +5,15 @@
 #include "boxm_aux_traits.h"
 
 #include <vpl/vpl.h>
-#include <vcl_cassert.h>
+#include <cassert>
 
 template <class T_loc, class T, class T_AUX>
 boxm_aux_scene<T_loc,T,T_AUX>::boxm_aux_scene(boxm_scene<tree_type>* scene,
-                                              vcl_string storage_suffix, 
+                                              std::string storage_suffix, 
                                               tree_creation_type type)
 : aux_scene_(0)
 {
-  vcl_string aux_storage_dir;
+  std::string aux_storage_dir;
   aux_storage_dir_ = scene->path();
   aux_scene_ = new boxm_scene<aux_tree_type >(scene->lvcs(), scene->origin(), scene->block_dim(), scene->world_dim(), scene->save_internal_nodes());
   aux_scene_->set_path(aux_storage_dir_,  storage_suffix);
@@ -62,7 +62,7 @@ template <class T_loc, class T, class T_AUX>
 boct_tree_cell_reader<T_loc, T_AUX>* boxm_aux_scene<T_loc,T,T_AUX>::get_block_incremental(vgl_point_3d<int> block_idx)
 {
   if (aux_scene_) {
-    vcl_string path=aux_scene_->gen_block_path(block_idx.x(), block_idx.y(), block_idx.z());
+    std::string path=aux_scene_->gen_block_path(block_idx.x(), block_idx.y(), block_idx.z());
     boct_tree_cell_reader<T_loc, T_AUX>* reader = new boct_tree_cell_reader<T_loc, T_AUX>(path);
     reader->begin();
     return reader;
@@ -79,7 +79,7 @@ void boxm_aux_scene<T_loc,T,T_AUX>::clean_scene()
   iter.begin();
   while (!iter.end()) {
     if (aux_scene_->discover_block(iter.index().x(),iter.index().y(),iter.index().z())) {
-      vcl_string filename=aux_scene_->gen_block_path(iter.index().x(),iter.index().y(),iter.index().z());
+      std::string filename=aux_scene_->gen_block_path(iter.index().x(),iter.index().y(),iter.index().z());
       vpl_unlink(filename.c_str());
       iter++;
     }

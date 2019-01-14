@@ -19,7 +19,7 @@
 #include <dbskfg/dbskfg_composite_link_sptr.h>
 #include <rsdl/rsdl_kd_tree_sptr.h>
 #include <rsdl/rsdl_kd_tree.h>
-#include <vcl_string.h>
+#include <string>
 #include <vnl/vnl_double_2.h>
 
 //: 
@@ -58,7 +58,7 @@ public:
   // --------------------------------------------------------------------------
 
   //: Return the type identifier string
-  vcl_string is_a() const {return "dbskfg_composite_graph"; }
+  std::string is_a() const {return "dbskfg_composite_graph"; }
 
   //: Returns shock node based on id
   dbskfg_composite_node_sptr find_node(unsigned int id);
@@ -79,7 +79,7 @@ public:
   rsdl_kd_tree_sptr get_kd_tree(){return kd_tree_;}
 
   //: set outer shock radisu
-  void set_outer_shock_radius(vcl_vector<double>& radius)
+  void set_outer_shock_radius(std::vector<double>& radius)
   {outer_shock_radius_=radius;}
 
   // get nearest radius
@@ -87,8 +87,8 @@ public:
   {
       rsdl_point test_pt(vnl_double_2(pt.x(),pt.y()));
 
-      vcl_vector<rsdl_point> closest_points;
-      vcl_vector<int> indices;
+      std::vector<rsdl_point> closest_points;
+      std::vector<int> indices;
 
       kd_tree_->n_nearest(test_pt,1,closest_points,indices);
       return outer_shock_radius_[indices.front()];
@@ -103,12 +103,12 @@ private:
 
   bool construct_locus_;
 
-  vcl_map<unsigned int,dbskfg_composite_node_sptr> all_nodes_;
-  vcl_map<unsigned int,dbskfg_composite_link_sptr> all_links_;
+  std::map<unsigned int,dbskfg_composite_node_sptr> all_nodes_;
+  std::map<unsigned int,dbskfg_composite_link_sptr> all_links_;
 
   rsdl_kd_tree_sptr kd_tree_;
 
-  vcl_vector<double> outer_shock_radius_;
+  std::vector<double> outer_shock_radius_;
 
 };
 

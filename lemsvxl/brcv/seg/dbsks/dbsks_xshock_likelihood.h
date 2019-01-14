@@ -40,7 +40,7 @@ public:
   // Utilities ----------------------------------------------------------------
 
   //: Return platform-independent name of the class
-  virtual vcl_string is_a() const { return "dbsks_xshock_likelihood"; }
+  virtual std::string is_a() const { return "dbsks_xshock_likelihood"; }
 
   //: Likelihood of a xshock fragment
   virtual double loglike(unsigned edge_id, const dbsksp_xshock_fragment& xfrag) const = 0;
@@ -53,7 +53,7 @@ public:
 
   //: Likelihood of a xshock graph
   virtual double loglike_xgraph(const dbsksp_xshock_graph_sptr& xgraph, 
-    const vcl_vector<unsigned >& ignored_edges, bool verbose) const;
+    const std::vector<unsigned >& ignored_edges, bool verbose) const;
 
 protected:
 };

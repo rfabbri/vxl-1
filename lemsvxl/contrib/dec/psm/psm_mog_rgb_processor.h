@@ -49,15 +49,15 @@ public:
 
   static void psm_mog_rgb_processor::init_appearance(psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype const& mean, float variance, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model);
 
-  static void compute_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& pre, vcl_vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
+  static void compute_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& pre, std::vector<float> const& vis, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
 
-  static void update_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
+  static void update_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
 
-  static void finalize_appearance(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
+  static void finalize_appearance(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, psm_apm_traits<PSM_APM_MOG_RGB>::apm_datatype &model, float min_sigma = 0.1f);
 
 private:
 
-  static void compute_gaussian_params(vcl_vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, vcl_vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &covar);
+  static void compute_gaussian_params(std::vector<psm_apm_traits<PSM_APM_MOG_RGB>::obs_datatype> const& obs, std::vector<float> const& weights, vnl_vector_fixed<float,3> &mean, vnl_vector_fixed<float,3> &covar);
  
   static float sigma_norm_factor(unsigned int nobs);
 

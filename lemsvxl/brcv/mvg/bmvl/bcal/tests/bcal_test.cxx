@@ -5,14 +5,14 @@
 #include <bmvl/bcal/bcal_camera_graph.h>
 #include <bmvl/bcal/bcal_euclidean_transformation.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
-#include <vcl_fstream.h>
+#include <string>
+#include <cassert>
+#include <fstream>
 #include <testlib/testlib_test.h>
 
 static void testing_graph()
 {
-  vcl_cout<<"\n--------------testing graph -------------\n";
+  std::cout<<"\n--------------testing graph -------------\n";
   bcal_camera_graph<bcal_calibrate_plane, bcal_zhang_camera_node, bcal_euclidean_transformation> cg;
 
   // add three vertex from source point.
@@ -21,12 +21,12 @@ static void testing_graph()
   cg.add_vertex(source_id);
   cg.add_vertex(source_id);
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 }
 
-static void testing_linear_calibration(vcl_string const& directory)
+static void testing_linear_calibration(std::string const& directory)
 {
-  vcl_cout<<"\n--------------testing calibration -------------\n";
+  std::cout<<"\n--------------testing calibration -------------\n";
 
   bcal_camera_graph<bcal_calibrate_plane, bcal_zhang_camera_node, bcal_euclidean_transformation> cg;
 
@@ -38,7 +38,7 @@ static void testing_linear_calibration(vcl_string const& directory)
   int source_id = cg.get_source_id();
 
   // create time beats.
-  vcl_vector<double> t_beats(5);
+  std::vector<double> t_beats(5);
   t_beats[0] = 0;
   t_beats[1] = 1;
   t_beats[2] = 2;
@@ -53,7 +53,7 @@ static void testing_linear_calibration(vcl_string const& directory)
   assert(trans);
   trans->set_beat(t_beats);
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 
   // read feature point for each view
   cg.get_vertex(camID)->readData((directory+"/data/data1.txt").c_str() , 0);
@@ -63,36 +63,36 @@ static void testing_linear_calibration(vcl_string const& directory)
   cg.get_vertex(camID)->readData((directory+"/data/data5.txt").c_str() , 4);
 
   // do the calibration
-  vcl_cout<<"\n\nlinear calibration..............\n\n ";
+  std::cout<<"\n\nlinear calibration..............\n\n ";
   bcal_zhang_linear_calibrate lc;
   lc.setCameraGraph(&cg);
   lc.calibrate();
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 }
 
-static void testing_brown_stereo_grid_camera(vcl_string const& fname)
+static void testing_brown_stereo_grid_camera(std::string const& fname)
 {
-  vcl_cout<<"\n--------------testing brown camera -------------\n";
+  std::cout<<"\n--------------testing brown camera -------------\n";
 
 
   //
   // following block is used for reading the model data
   //
-  vcl_ifstream  in(fname.c_str());
+  std::ifstream  in(fname.c_str());
 
   if (!in){
-    vcl_cerr<<"cannot open the file: "<<fname << vcl_endl;
+    std::cerr<<"cannot open the file: "<<fname << std::endl;
   }
 
   int num_points = 0;
   if (in.eof()){
-    vcl_cerr<<"wrong file! at least number of points in the calibration board are needed\n";
+    std::cerr<<"wrong file! at least number of points in the calibration board are needed\n";
   }
 
   in >> num_points;
-  vcl_cout << "num_points = " << num_points << '\n';
-  vcl_vector<vgl_homg_point_2d<double> > pts(num_points);
+  std::cout << "num_points = " << num_points << '\n';
+  std::vector<vgl_homg_point_2d<double> > pts(num_points);
 
   for (int i=0; i<num_points; i++) {
     double u, v; in >> u >> v;
@@ -114,9 +114,9 @@ static void testing_brown_stereo_grid_camera(vcl_string const& fname)
   // add a camera with 7 views into a graph
   int nviews = 0;
   in >> nviews;
-  vcl_cout << "nviews = " << nviews << '\n';
+  std::cout << "nviews = " << nviews << '\n';
 
-  vcl_vector<double> t_beats(nviews);
+  std::vector<double> t_beats(nviews);
   for (int i=0; i<nviews; i++)
     t_beats[i] = i;
 
@@ -128,7 +128,7 @@ static void testing_brown_stereo_grid_camera(vcl_string const& fname)
   assert(trans);
   trans->set_beat(t_beats);
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 
 
   //
@@ -136,7 +136,7 @@ static void testing_brown_stereo_grid_camera(vcl_string const& fname)
   //
 
   for (int i=0; i<nviews; i++){
-    vcl_vector<vgl_homg_point_2d<double> > features(num_points);
+    std::vector<vgl_homg_point_2d<double> > features(num_points);
     for (int j = 0; j<num_points; j++) {
       double u, v; in>>u>>v;
       features[j] = vgl_homg_point_2d<double>(u, v);
@@ -145,17 +145,17 @@ static void testing_brown_stereo_grid_camera(vcl_string const& fname)
   }
 
   // do the calibration
-  vcl_cout<<"\n\nlinear calibration..............\n\n";
+  std::cout<<"\n\nlinear calibration..............\n\n";
   bcal_zhang_linear_calibrate lc;
   lc.setCameraGraph(&cg);
   lc.calibrate();
 
-  cg.print(vcl_cout);
+  cg.print(std::cout);
 }
 
 static void bcal_test(int argc, char* argv[])
 {
-  vcl_string directory = argc>1 ? argv[1] : ".";
+  std::string directory = argc>1 ? argv[1] : ".";
   testing_graph();
 
   testing_linear_calibration(directory);

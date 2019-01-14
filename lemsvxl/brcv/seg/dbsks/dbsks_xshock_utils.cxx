@@ -10,8 +10,8 @@
 #include <vsol/vsol_point_2d.h>
 #include <bnld/bnld_angle.h>
 #include <vnl/vnl_math.h>
-#include <vcl_utility.h>
-#include <vcl_algorithm.h>
+#include <utility>
+#include <algorithm>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_hungarian_algorithm.h>
 //// -----------------------------------------------------------------------------
@@ -104,11 +104,11 @@
 bool dbsks_adjust_to_standard_scale(double standard_scale,
                                double cur_scale,
                                const vil_image_view<float >& cur_edgemap,
-                               const vcl_vector<vsol_polyline_2d_sptr >& cur_polyline_list,
+                               const std::vector<vsol_polyline_2d_sptr >& cur_polyline_list,
                                const vil_image_view<float >& cur_edge_angle,
                                double& scaled_up_factor,
                                vil_image_view<float >& new_edgemap,
-                               vcl_vector<vsol_polyline_2d_sptr >& new_polyline_list,
+                               std::vector<vsol_polyline_2d_sptr >& new_polyline_list,
                                vil_image_view<float >& new_edge_angle)
 {
 
@@ -129,11 +129,11 @@ bool dbsks_adjust_to_standard_scale(double standard_scale,
 bool dbsks_adjust_to_standard_scale_sparse(double standard_scale,
                                double cur_scale,
                                const vil_image_view<float >& cur_edgemap,
-                               const vcl_vector<vsol_polyline_2d_sptr >& cur_polyline_list,
+                               const std::vector<vsol_polyline_2d_sptr >& cur_polyline_list,
                                const vil_image_view<float >& cur_edge_angle,
                                double& scaled_up_factor,
                                vil_image_view<float >& new_edgemap,
-                               vcl_vector<vsol_polyline_2d_sptr >& new_polyline_list,
+                               std::vector<vsol_polyline_2d_sptr >& new_polyline_list,
                                vil_image_view<float >& new_edge_angle)
 {
   int scaling_up = vnl_math::rnd(standard_scale / cur_scale);
@@ -194,11 +194,11 @@ bool dbsks_adjust_to_standard_scale_sparse(double standard_scale,
 bool dbsks_adjust_to_standard_scale_dense(double standard_scale,
                                double cur_scale,
                                const vil_image_view<float >& cur_edgemap,
-                               const vcl_vector<vsol_polyline_2d_sptr >& cur_polyline_list,
+                               const std::vector<vsol_polyline_2d_sptr >& cur_polyline_list,
                                const vil_image_view<float >& cur_edge_angle,
                                double& scaled_up_factor,
                                vil_image_view<float >& new_edgemap,
-                               vcl_vector<vsol_polyline_2d_sptr >& new_polyline_list,
+                               std::vector<vsol_polyline_2d_sptr >& new_polyline_list,
                                vil_image_view<float >& new_edge_angle)
 {
   // assumption:
@@ -371,7 +371,7 @@ vnl_vector<double > dbsks_compute_angle_minmax(const vnl_vector<double >& angles
   }
 
   // sort the angles
-  vcl_sort(x.begin(), x.end());
+  std::sort(x.begin(), x.end());
 
   // find the maximum difference between adjacent elements
   vnl_vector<double > diff(x.size());
@@ -407,7 +407,7 @@ vnl_vector<double > dbsks_compute_angle_minmax(const vnl_vector<double >& angles
   return x;
 }
 
-bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_image_view<vxl_byte >& source_image, vcl_vector<vgl_point_2d<int > >& points, vil_image_view<vxl_byte >& screenshot_image)
+bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_image_view<vxl_byte >& source_image, std::vector<vgl_point_2d<int > >& points, vil_image_view<vxl_byte >& screenshot_image)
 {
 	points.clear();
     screenshot_image.set_size(source_image.ni(),source_image.nj());
@@ -422,7 +422,7 @@ bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_
 		dbsksp_xshock_node_sptr xv = *vit;
 		//dbsksp_xshock_node_sptr xv = xgraph->node_from_id(xgraph->root_vertex_id());
 
-		vcl_vector<vil_chord> region;
+		std::vector<vil_chord> region;
 		vil_flood_fill8(screenshot_image, xv->pt().x(), xv->pt().y(), vxl_byte(0), vxl_byte(255), region);
 
 		for (int c = 0; c < region.size(); c++)
@@ -441,17 +441,17 @@ bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_
 	return true;
 }
 
-vcl_vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(vcl_vector<vgl_point_2d<int > >& points, const vil_image_view<vxl_byte >& source_image)
+std::vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(std::vector<vgl_point_2d<int > >& points, const vil_image_view<vxl_byte >& source_image)
 {
 	vnl_matrix <double> appearance_id_matrix_1 (21, 21, 0);
 	vnl_matrix <double> appearance_id_matrix_2 (21, 21, 0);
 
-	vcl_vector<vnl_matrix<double> > two_matrix;
-	//vcl_vector <double> dist_V;
-	//vcl_vector <double> int_sum_V;
-	//vcl_vector <double> int_sub_V;
+	std::vector<vnl_matrix<double> > two_matrix;
+	//std::vector <double> dist_V;
+	//std::vector <double> int_sum_V;
+	//std::vector <double> int_sub_V;
 
-	//vcl_cout << "\n compute appearce id matrix \n";
+	//std::cout << "\n compute appearce id matrix \n";
 	for(int i = 0; i< points.size(); i++)
 	{
 		for(int j = i+1; j<points.size(); j++)
@@ -482,13 +482,13 @@ vcl_vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(vcl_vector<vg
 
 
 //  Compute the shape distance from shape 1 to shape 2.  Translat shape 1. No rotation. No change of scale
-double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const dbsksp_xshock_graph_sptr& xgraph2, vcl_vector<vgl_point_2d<int > >& mask_points1, vcl_vector<vgl_point_2d<int > >& mask_points2)
+double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const dbsksp_xshock_graph_sptr& xgraph2, std::vector<vgl_point_2d<int > >& mask_points1, std::vector<vgl_point_2d<int > >& mask_points2)
 {
 
 // save the points from silhouettes boundary
-	vcl_vector<vgl_point_2d<int > > points_1; // compute later using translated values
+	std::vector<vgl_point_2d<int > > points_1; // compute later using translated values
 
-	vcl_vector<vgl_point_2d<int > > points_2;
+	std::vector<vgl_point_2d<int > > points_2;
 
 	for (dbsksp_xshock_graph::edge_iterator eit = xgraph2->edges_begin(); eit !=xgraph2->edges_end(); ++eit)
 	{
@@ -570,7 +570,7 @@ double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const 
 	double dist = HungarianClassTest.GetTotalCost();
 
 // normalize by the number of matched points
-	return dist/vcl_min(points_1.size(), points_2.size());
+	return dist/std::min(points_1.size(), points_2.size());
 }
 
 

@@ -1,7 +1,7 @@
 #include <dber/dber_utilities.h>
 #include <dber/dber_edgel_similarity.h>
-#include <vcl_cstdlib.h>
-#include <vcl_iostream.h>
+#include <cstdlib>
+#include <iostream>
 
 #include <vul/vul_timer.h>
 
@@ -18,7 +18,7 @@
 
 
 //:  scale all edgels in lines2 so that widhts are equal
-void dber_utilities::scale_lines(vcl_vector<vsol_line_2d_sptr>& l, double scale_factor) {
+void dber_utilities::scale_lines(std::vector<vsol_line_2d_sptr>& l, double scale_factor) {
     
   for (unsigned i = 0; i<l.size(); i++) {
     vsol_point_2d_sptr p0 = l[i]->p0();
@@ -36,7 +36,7 @@ void dber_utilities::scale_lines(vcl_vector<vsol_line_2d_sptr>& l, double scale_
   }
 }
 
-void dber_utilities::translate_lines(vcl_vector<vsol_line_2d_sptr>& l, double x, double y) 
+void dber_utilities::translate_lines(std::vector<vsol_line_2d_sptr>& l, double x, double y) 
 {
   vgl_vector_2d<double> trans(x, y);
   for (unsigned i = 0; i<l.size(); i++) {
@@ -47,7 +47,7 @@ void dber_utilities::translate_lines(vcl_vector<vsol_line_2d_sptr>& l, double x,
 }
 
 // multiply centers by length, and find weighted average
-vsol_point_2d_sptr dber_utilities::center_of_gravity(vcl_vector<vsol_line_2d_sptr>& l)
+vsol_point_2d_sptr dber_utilities::center_of_gravity(std::vector<vsol_line_2d_sptr>& l)
 {
   double xc=0, yc=0;
   double tlength = 0;
@@ -65,7 +65,7 @@ vsol_point_2d_sptr dber_utilities::center_of_gravity(vcl_vector<vsol_line_2d_spt
   return gc;
 }
 
-vsol_box_2d_sptr dber_utilities::get_box(vcl_vector<vsol_line_2d_sptr>& l) {
+vsol_box_2d_sptr dber_utilities::get_box(std::vector<vsol_line_2d_sptr>& l) {
   
   vsol_box_2d_sptr box = new vsol_box_2d();
   for (unsigned i = 0 ; i < l.size() ; i++ ) 
@@ -78,7 +78,7 @@ vsol_box_2d_sptr dber_utilities::get_box(vcl_vector<vsol_line_2d_sptr>& l) {
 
 //: translate lines2 so that translation is optimal
 // randomly choose translations within a neigborhood of centers and maximize support
-void dber_utilities::optimize_translation(vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2, double sigma_square) 
+void dber_utilities::optimize_translation(std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2, double sigma_square) 
 {
   dber_cost_func c(2, l1, l2);
   c.set_sigma_square(sigma_square);
@@ -89,9 +89,9 @@ void dber_utilities::optimize_translation(vcl_vector<vsol_line_2d_sptr>& l1, vcl
   minimizer.set_max_iterations(150);
 
   vnl_vector<double> x(2, 0);
-  vcl_cout << "Start cost " << c.f(x) << '\n';
+  std::cout << "Start cost " << c.f(x) << '\n';
   minimizer.minimize(x);
-  vcl_cout << "End cost " << c.f(x) << "trans x: " << x[0] << " trans y: " << x[1] << vcl_endl;
+  std::cout << "End cost " << c.f(x) << "trans x: " << x[0] << " trans y: " << x[1] << std::endl;
   
   // translate lines2
   dber_utilities::translate_lines(l2, x[0], x[1]);
@@ -107,12 +107,12 @@ vgl_line_2d<double> dber_utilities::find_dominant_dir(vsol_polygon_2d_sptr poly,
   }
 
   reg.fit_constrained(center_x, center_y);
-  vcl_cout << "error in fitting: " << reg.get_rms_error() << vcl_endl;
+  std::cout << "error in fitting: " << reg.get_rms_error() << std::endl;
   return reg.get_line();
 }
 
 //: rotate the lines about the given center point
-void dber_utilities::rotate_lines(vcl_vector<vsol_line_2d_sptr>& l, vgl_h_matrix_2d<double> H, double xc, double yc) 
+void dber_utilities::rotate_lines(std::vector<vsol_line_2d_sptr>& l, vgl_h_matrix_2d<double> H, double xc, double yc) 
 {
   for (unsigned i = 0; i<l.size(); i++) {
     vsol_point_2d_sptr p0 = l[i]->p0();
@@ -131,7 +131,7 @@ void dber_utilities::rotate_lines(vcl_vector<vsol_line_2d_sptr>& l, vgl_h_matrix
   }
 }
 
-dber_cost_func::dber_cost_func(unsigned number_of_parameters, vcl_vector<vsol_line_2d_sptr>& l1, vcl_vector<vsol_line_2d_sptr>& l2):
+dber_cost_func::dber_cost_func(unsigned number_of_parameters, std::vector<vsol_line_2d_sptr>& l1, std::vector<vsol_line_2d_sptr>& l2):
   vnl_cost_function(number_of_parameters), lines1_(l1), lines2_(l2),
   no_params_(number_of_parameters), sigma_square_(1.0f)
 {
@@ -140,7 +140,7 @@ dber_cost_func::dber_cost_func(unsigned number_of_parameters, vcl_vector<vsol_li
   // we get a 1 for each edgel pair, plus the number of support from edgels
   // in the vicinity, assume a constant say 10 neighbors at max
   maxval_ = (lines1_.size() > lines2_.size() ? lines1_.size() : lines2_.size())*10;
-  vcl_cout << " maxval_: " << maxval_ << vcl_endl;
+  std::cout << " maxval_: " << maxval_ << std::endl;
 }
 
 // the cost function for optimization. In this application,
@@ -151,7 +151,7 @@ double
 dber_cost_func::f(vnl_vector<double> const& x)
 { 
   // translate lines2
-  vcl_vector<vsol_line_2d_sptr> new_l2(lines2_);
+  std::vector<vsol_line_2d_sptr> new_l2(lines2_);
   dber_utilities::translate_lines(new_l2, x[0], x[1]);
 
   //double c = maxval_-dber_utilities::measure_support(lines1_, new_l2, sigma_square_);

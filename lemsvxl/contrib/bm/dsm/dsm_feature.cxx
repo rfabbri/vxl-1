@@ -25,9 +25,9 @@ void dsm_feature::b_read(vsl_b_istream& is)
         break;
     default:
         {
-            vcl_cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
+            std::cerr << "----I/O ERROR: dsm_feature::b_read ----\n"
 				     << "	 UNKNOWN VERSION NUMBER " << v << "\n";
-			is.is().clear(vcl_ios::badbit); //set an unrecoverable IO error on stream
+			is.is().clear(std::ios::badbit); //set an unrecoverable IO error on stream
 			return;
         }//end default
     }//end switch

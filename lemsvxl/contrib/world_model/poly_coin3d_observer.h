@@ -3,8 +3,8 @@
 
 #include "poly_observer.h"
 #include "obj_observable.h"
-#include <vcl_map.h>
-#include <vcl_vector.h>
+#include <map>
+#include <vector>
 
 #include <vgui/vgui_observer.h>
 #include <vgui/vgui_easy2D_tableau_sptr.h>
@@ -73,10 +73,10 @@ private:
   vgl_homg_plane_3d<double> proj_plane_;
   SoSeparator* root_;
   SoSelection* root_sel_;
-  vcl_map<obj_observable *, SoSeparator* > objects;
-  vcl_map<obj_observable *, dbmsh3d_mesh_mc* > meshes;
-  static vcl_vector<SoNode*> selected_nodes;
-  static vcl_vector<const SoPickedPoint*> picked_points;
+  std::map<obj_observable *, SoSeparator* > objects;
+  std::map<obj_observable *, dbmsh3d_mesh_mc* > meshes;
+  static std::vector<SoNode*> selected_nodes;
+  static std::vector<const SoPickedPoint*> picked_points;
   obj_observable *obs_picked_;
 
   SoNode* node_selected_;
@@ -85,7 +85,7 @@ private:
   double start_x_, start_y_;
   bool left_button_down_, middle_button_down_;
   bool divide_mode_;
-  vcl_vector<vgl_point_3d<double> > div_pts_;
+  std::vector<vgl_point_3d<double> > div_pts_;
   int div_idx_;
   int face_id;
   int num_meshes_;
@@ -95,7 +95,7 @@ private:
   bool find_intersection_points(int face_id, vgl_point_3d<double> i1, vgl_point_3d<double> i2,
     vgl_point_3d<double> &p1, vgl_point_3d<double>& l1, vgl_point_3d<double>& l2,
     vgl_point_3d<double> &p2, vgl_point_3d<double>& l3, vgl_point_3d<double>& l4);
-  vcl_string create_mesh_name();
+  std::string create_mesh_name();
   void get_vertices_xyz(vsol_polygon_3d_sptr poly3d, 
                                           double **x, double **y, double **z);
 };

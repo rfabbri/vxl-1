@@ -3,7 +3,7 @@
 #define dbrl_match_set_displayer_h_
 
 
-#include <vcl_string.h>
+#include <string>
 #include <bvis1/bvis1_displayer.h>
 
 #include <vgui/vgui_tableau_sptr.h>
@@ -16,7 +16,7 @@ public:
   dbrl_match_set_displayer(){}
 
   //: Return type string "dbbgm_distribution_image"
-  virtual vcl_string type() const { return "dbrl_match_set"; }
+  virtual std::string type() const { return "dbrl_match_set"; }
 
   //: Create a tableau if the storage object is of type "dbrl_match_set"
   virtual vgui_tableau_sptr make_tableau( bpro1_storage_sptr ) const;

@@ -61,7 +61,7 @@ dbrl_compute_amir_curvelets_process::~dbrl_compute_amir_curvelets_process()
 
 
 //: Return the name of this process
-vcl_string
+std::string
 dbrl_compute_amir_curvelets_process::name()
     {
     return "Computing Amir Curvelets";
@@ -86,9 +86,9 @@ dbrl_compute_amir_curvelets_process::output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_compute_amir_curvelets_process::get_input_type()
+std::vector< std::string > dbrl_compute_amir_curvelets_process::get_input_type()
     {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back( "vsol2D" );
         to_return.push_back( "image" );
 
@@ -97,9 +97,9 @@ vcl_vector< vcl_string > dbrl_compute_amir_curvelets_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_compute_amir_curvelets_process::get_output_type()
+std::vector< std::string > dbrl_compute_amir_curvelets_process::get_output_type()
     {  
-        vcl_vector<vcl_string > to_return;
+        std::vector<std::string > to_return;
         to_return.push_back( "sel" );
         to_return.push_back( "vsol2D" );
         //to_return.push_back( "sel" );
@@ -116,19 +116,19 @@ bool
 dbrl_compute_amir_curvelets_process::execute()
     {
         if ( input_data_.size() != 1 ){
-            vcl_cout << "In dbrl_compute_amir_curvelets_process::execute() - "
+            std::cout << "In dbrl_compute_amir_curvelets_process::execute() - "
                 << "not exactly two input images \n";
             return false;
         }
         // get image from the storage class
         vidpro1_vsol2D_storage_sptr input_vsol;
         input_vsol.vertical_cast(input_data_[0][0]);
-        vcl_vector<vcl_string> groups=input_vsol->groups();
-        vcl_vector< vsol_line_2d_sptr > alllines;
+        std::vector<std::string> groups=input_vsol->groups();
+        std::vector< vsol_line_2d_sptr > alllines;
         for (unsigned c=0;c<groups.size();c++)
         {
-            vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->data_named(groups[c]);
-            vcl_vector< vsol_line_2d_sptr > lines;
+            std::vector< vsol_spatial_object_2d_sptr > vsol_list = input_vsol->data_named(groups[c]);
+            std::vector< vsol_line_2d_sptr > lines;
             for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) {
                 if( vsol_list[b]->cast_to_curve()){
                     //LINE
@@ -158,7 +158,7 @@ dbrl_compute_amir_curvelets_process::finish()
     }
 
 
-bool dbrl_compute_amir_curvelets_process::compute_curvelets_from_edges(vcl_vector<vsol_line_2d_sptr> lines)
+bool dbrl_compute_amir_curvelets_process::compute_curvelets_from_edges(std::vector<vsol_line_2d_sptr> lines)
 {
     static int nrad;
     static double dx;
@@ -176,19 +176,19 @@ bool dbrl_compute_amir_curvelets_process::compute_curvelets_from_edges(vcl_vecto
         parameters()->get_value( "-ncols", ncols);
     } 
     else {
-        vcl_cout << "Using image size for the grid\n";
+        std::cout << "Using image size for the grid\n";
         // get image from the storage class
         vidpro1_image_storage_sptr frame_image;
         frame_image.vertical_cast(get_input(0)[1]);
         if (!frame_image) {
-            vcl_cout << "Error: no image in input storages\n";
+            std::cout << "Error: no image in input storages\n";
             return  false;
         }
         vil_image_resource_sptr image_sptr = frame_image->get_image();
         ncols = image_sptr->ni();
         nrows = image_sptr->nj();
-        vcl_cout << "Nrows: " << nrows;
-        vcl_cout << "  Ncols: " << ncols << vcl_endl;
+        std::cout << "Nrows: " << nrows;
+        std::cout << "  Ncols: " << ncols << std::endl;
     }
 
     parameters()->get_value( "-nrad", nrad);
@@ -199,7 +199,7 @@ bool dbrl_compute_amir_curvelets_process::compute_curvelets_from_edges(vcl_vecto
     parameters()->get_value( "-max_size_to_group", max_size_to_group );
 
 
-    vcl_vector<dbdet_edgel* > all_edgels;
+    std::vector<dbdet_edgel* > all_edgels;
 
     //convert from vsol2D to edgels
     for (unsigned int b = 0 ; b < lines.size() ; b++ ) {
@@ -228,8 +228,8 @@ bool dbrl_compute_amir_curvelets_process::compute_curvelets_from_edges(vcl_vecto
     //perform local edgel grouping
     dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
 
-    vcl_vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
-    vcl_vector<dbrl_feature_point_tangent_curvature *> edges;
+    std::vector<dbdet_edgel*> edgels=edge_linker->get_edgels();
+    std::vector<dbrl_feature_point_tangent_curvature *> edges;
     for(unsigned i=0;i<edgels.size();i++)
     {
         dbrl_feature_point_tangent_curvature * pt;

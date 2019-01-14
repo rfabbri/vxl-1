@@ -4,7 +4,7 @@
 #ifndef dbsk3d_ms_algos_h_
 #define dbsk3d_ms_algos_h_
 
-#include <vcl_vector.h>
+#include <vector>
 #include <dbsk3d/dbsk3d_ms_hypg.h>
 
 void count_ms_vertices (dbmsh3d_graph* SG, int& nA1A3, int& nA14, int& nDegeA1A3, int& nDegeA14, int& nLV);
@@ -14,18 +14,18 @@ void count_ms_curves (dbmsh3d_graph* SG, int& nA3, int& nA13, int& nDege, int& n
 
 //###### Check Integrity ######
 
-bool check_integrity (vcl_set<dbsk3d_ms_sheet*> SS_set,
-                      vcl_set<dbsk3d_ms_curve*> SC_set,
-                      vcl_set<dbsk3d_ms_node*> SV_set);
+bool check_integrity (std::set<dbsk3d_ms_sheet*> SS_set,
+                      std::set<dbsk3d_ms_curve*> SC_set,
+                      std::set<dbsk3d_ms_node*> SV_set);
 
 int get_SS_P_n_SCxforms (dbsk3d_ms_hypg* ms_hypg, const int n_xform_th,
-                         vcl_vector<vcl_pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*> >& SS_P_n_SCxforms);
+                         std::vector<std::pair<dbsk3d_ms_sheet*, dbsk3d_fs_face*> >& SS_P_n_SCxforms);
 
 bool get_FF_incident_MCs (const dbsk3d_fs_face* FF, 
-                          vcl_set<dbmsh3d_edge*>& incident_Es, 
-                          vcl_set<dbsk3d_ms_curve*>& P_incident_SCs);
+                          std::set<dbmsh3d_edge*>& incident_Es, 
+                          std::set<dbsk3d_ms_curve*>& P_incident_SCs);
 
-dbsk3d_ms_curve* find_MC_containing_E (vcl_set<dbmsh3d_edge*>& incident_Es, 
+dbsk3d_ms_curve* find_MC_containing_E (std::set<dbmsh3d_edge*>& incident_Es, 
                                        dbsk3d_fs_edge* inputE);
 
 //###### Smooth Rib Curves ######

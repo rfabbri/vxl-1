@@ -19,8 +19,8 @@ bool dsm_extract_intensity_ratio_feature_process_cons(bprb_func_process& pro)
 {
 	using namespace dsm_extract_intensity_ratio_feature_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "dsm_target_neighborhood_map_sptr";
@@ -47,7 +47,7 @@ bool dsm_extract_intensity_ratio_feature_process(bprb_func_process& pro)
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_extract_intensity_ratio_feature_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_extract_intensity_ratio_feature_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}	
 
@@ -61,8 +61,8 @@ bool dsm_extract_intensity_ratio_feature_process(bprb_func_process& pro)
 	
 	if( vil_base_sptr->nplanes() > 1 || vil_base_sptr->pixel_format() == VIL_PIXEL_FORMAT_RGB_BYTE )
 	{
-		vcl_cout << "---- ERROR: dsm_extract_intensity_ratio_feature_process ----\n"
-			     << "\t Please provide a grey scale image. " << vcl_endl;
+		std::cout << "---- ERROR: dsm_extract_intensity_ratio_feature_process ----\n"
+			     << "\t Please provide a grey scale image. " << std::endl;
 		return false;
 	}
 
@@ -71,8 +71,8 @@ bool dsm_extract_intensity_ratio_feature_process(bprb_func_process& pro)
 
 	if( t_itr == target_neighborhood_map_sptr->target_neighborhood_map_.end() )
 	{
-		vcl_cout << "---- ERROR: dsm_extract_intensity_ratio_feature_process ----\n"
-			<< "\t Target (" << target_x << "," << target_y << ") not found in the target/neighborhood map. " << vcl_endl;
+		std::cout << "---- ERROR: dsm_extract_intensity_ratio_feature_process ----\n"
+			<< "\t Target (" << target_x << "," << target_y << ") not found in the target/neighborhood map. " << std::endl;
 		return false;
 	}
 
@@ -80,7 +80,7 @@ bool dsm_extract_intensity_ratio_feature_process(bprb_func_process& pro)
 
 	vnl_vector<double> intensity_ratio(t_itr->second.size());
 
-	vcl_vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = t_itr->second.end();
+	std::vector<vgl_point_2d<unsigned> >::const_iterator nitr, nend = t_itr->second.end();
 
 	double target_intensity = img_view(t_itr->first.x(), t_itr->first.y());
 

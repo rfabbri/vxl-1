@@ -2,7 +2,7 @@
 #define boxm_quad_scan_iterator_h_
 //:
 // \file
-#include <vcl_vector.h>
+#include <vector>
 
 #include <vgl/vgl_region_scan_iterator.h>
 #include <vgl/vgl_polygon_scan_iterator.h>

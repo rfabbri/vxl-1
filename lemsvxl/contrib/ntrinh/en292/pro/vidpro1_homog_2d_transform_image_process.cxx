@@ -27,12 +27,12 @@ vidpro1_homog_2d_transform_image_process() : bpro1_process()
   this->H_.set_identity();
   /*if( !parameters()->add( "Image file <filename...>" , "-image_filename" , bpro1_filepath("","*") ))
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }*/
 
   if( !parameters()->add( "Video file <filename...>" , "-video_filename", bpro1_filepath("","*") ) )
   {
-    vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+    std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
   }
   this->my_movie_ = 0;
   this->frame_num_ = 0;
@@ -47,7 +47,7 @@ vidpro1_homog_2d_transform_image_process::
 
 
 //: Return the name of this process
-vcl_string vidpro1_homog_2d_transform_image_process::
+std::string vidpro1_homog_2d_transform_image_process::
 name()
 {
   return "Image Homography Transformation";
@@ -72,19 +72,19 @@ output_frames()
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > vidpro1_homog_2d_transform_image_process::
+std::vector< std::string > vidpro1_homog_2d_transform_image_process::
 get_input_type()
 {
-  vcl_vector< vcl_string > to_return;
+  std::vector< std::string > to_return;
   to_return.push_back( "homog_2d" );
   to_return.push_back( "image" ); // image whose size will be the size of the new image
   return to_return;
 }
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > vidpro1_homog_2d_transform_image_process::get_output_type()
+std::vector< std::string > vidpro1_homog_2d_transform_image_process::get_output_type()
 {  
-  vcl_vector<vcl_string > to_return;
+  std::vector<std::string > to_return;
   to_return.push_back( "image" );
   return to_return;
 }
@@ -94,10 +94,10 @@ vcl_vector< vcl_string > vidpro1_homog_2d_transform_image_process::get_output_ty
 bool
 vidpro1_homog_2d_transform_image_process::execute()
 {
-  vcl_cout << "\n Compute homography transformation of an image" << vcl_endl;
+  std::cout << "\n Compute homography transformation of an image" << std::endl;
   if ( this->input_data_.size() != 1 )
   {
-    vcl_cout << "In vidpro1_homog_2d_transform_image_process::execute() - not exactly one"
+    std::cout << "In vidpro1_homog_2d_transform_image_process::execute() - not exactly one"
              << " input frames \n";
     return false;
   }
@@ -109,15 +109,15 @@ vidpro1_homog_2d_transform_image_process::execute()
   
   vgl_h_matrix_2d< double > H = homog_2d_storage->H();
 
-  vcl_cout << "Homography matrix H = \n" << H << vcl_endl;
-  vcl_cout << "Det(H) = " << vnl_det(H.get_matrix()) << vcl_endl;
+  std::cout << "Homography matrix H = \n" << H << std::endl;
+  std::cout << "Det(H) = " << vnl_det(H.get_matrix()) << std::endl;
   
 
   H = H * this->H();
   this->set_H(H);
 
   // Now we've got the homography matrix, apply it to the image of the current frame.
-  vcl_cout << "Apply homography to the current image \n";
+  std::cout << "Apply homography to the current image \n";
   
   // option 1 - from an storage image
   //// get input image from storage class
@@ -130,24 +130,24 @@ vidpro1_homog_2d_transform_image_process::execute()
   //bpro1_filepath image_path;
   //parameters()->get_value( "-image_filename" , image_path );
 
-  //vcl_string image_filename = image_path.path;
+  //std::string image_filename = image_path.path;
   //vil_image_resource_sptr im_resource = vil_load_image_resource( image_filename.c_str() );
   //if( !im_resource ) {
-  //  vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
+  //  std::cerr << "Failed to load image file" << image_filename << std::endl;
   //  return false;
   //}
 
   // option 3 - from a video clip in file
   bpro1_filepath video_path;
   parameters()->get_value( "-video_filename" , video_path );
-  vcl_string video_filename = video_path.path;
+  std::string video_filename = video_path.path;
 
   
   if (!this->my_movie_)
   {
     this->my_movie_ = vidl1_io::load_movie(video_filename.c_str());
     if (! this->my_movie_) {
-      vcl_cerr << "Failed to load movie file: "<< video_filename << vcl_endl;
+      std::cerr << "Failed to load movie file: "<< video_filename << std::endl;
       return false;
     }
     this->frame_num_ = 0;
@@ -179,11 +179,11 @@ vidpro1_homog_2d_transform_image_process::execute()
   vil_image_view< float > fg_view = vil_image_view< float >(bg_resource->ni(), bg_resource->nj());
   if (! brip_vil_float_ops::homography(im_view_float, H, fg_view, true, 0.0f))
   {
-    vcl_cout << "Homography transform failed" << vcl_endl;
+    std::cout << "Homography transform failed" << std::endl;
     return false;
   }
-  vcl_cout << "Homography succeeded " << vcl_endl;
-  fg_view.print(vcl_cout);
+  std::cout << "Homography succeeded " << std::endl;
+  fg_view.print(std::cout);
  
   // background image
   // convert to grey image
@@ -206,10 +206,10 @@ vidpro1_homog_2d_transform_image_process::execute()
   vil_image_view< float > im_mask_image(bg_resource->ni(), bg_resource->nj());
   if (! brip_vil_float_ops::homography(im_mask_world, H, im_mask_image, true, 0.0f))
   {
-    vcl_cout << "Creating mask failed \n";
+    std::cout << "Creating mask failed \n";
     return false;
   }
-  vcl_cout << "Image mask created \n";
+  std::cout << "Image mask created \n";
 
   // Now combine foreground and background image
   // Since the background dominates the image, we will just modify the background image

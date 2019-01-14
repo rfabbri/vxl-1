@@ -18,10 +18,10 @@
 // \endverbatim
 //
 
-#include <vcl_cassert.h>
+#include <cassert>
 
-#include <vcl_map.h>
-#include <vcl_utility.h>
+#include <map>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_pt_set.h>
 #include <dbmsh3d/dbmsh3d_face.h>
@@ -36,10 +36,10 @@ class dbmsh3d_ifs_mesh : public dbmsh3d_pt_set
 {
 protected:
   //: Dynamic mesh face data structure.
-  vcl_map<int, dbmsh3d_face*> facemap_;
+  std::map<int, dbmsh3d_face*> facemap_;
 
   //: traversal position of next face
-  vcl_map<int, dbmsh3d_face* >::iterator face_traversal_pos_;
+  std::map<int, dbmsh3d_face* >::iterator face_traversal_pos_;
 
   int face_id_counter_;
 
@@ -52,8 +52,8 @@ public:
   //: copy constructor
   dbmsh3d_ifs_mesh (const dbmsh3d_ifs_mesh& ifs_mesh) : dbmsh3d_pt_set () {
     face_id_counter_ = 0;
-    vcl_map<int, dbmsh3d_face*> fmap = ifs_mesh.facemap_;
-    vcl_map<int, dbmsh3d_face*>::iterator face_it = fmap.begin();
+    std::map<int, dbmsh3d_face*> fmap = ifs_mesh.facemap_;
+    std::map<int, dbmsh3d_face*>::iterator face_it = fmap.begin();
     while (face_it != fmap.end()) {
       dbmsh3d_face* face = face_it->second;
       dbmsh3d_face* new_face = new dbmsh3d_face(*face);
@@ -63,7 +63,7 @@ public:
   }
 
   void _clear_facemap () {    
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
     for (; it != facemap_.end(); it++)
       _del_face ((*it).second);
     facemap_.clear();
@@ -84,17 +84,17 @@ public:
   }
 
   //###### Data access functions ######
-  vcl_map<int, dbmsh3d_face*>& facemap() {
+  std::map<int, dbmsh3d_face*>& facemap() {
     return facemap_;
   }
   dbmsh3d_face* facemap (const int i) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.find (i);
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.find (i);
     if (it == facemap_.end())
       return NULL;
     return (*it).second;
   }
   bool contain_F (const int fid) {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.find (fid);
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.find (fid);
     return it != facemap_.end();
   }
 
@@ -157,7 +157,7 @@ public:
     delete F;
   }
   void _add_face (const dbmsh3d_face* F) {
-    facemap_.insert (vcl_pair<int, dbmsh3d_face*>(F->id(), (dbmsh3d_face*) F));
+    facemap_.insert (std::pair<int, dbmsh3d_face*>(F->id(), (dbmsh3d_face*) F));
   }
 
   //###### Other functions ######
@@ -183,7 +183,7 @@ public:
   void delete_unmeshed_pts ();
 
   unsigned int count_unmeshed_pts () {
-    vcl_map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
+    std::map<int, dbmsh3d_vertex*>::iterator it = vertexmap_.begin();
     unsigned int count=0;
     for (; it != vertexmap_.end(); it++) {
       dbmsh3d_vertex* V = (*it).second;
@@ -202,10 +202,10 @@ public:
 class dbmsh3d_mesh : public dbmsh3d_ifs_mesh
 {
 protected:
-  vcl_map<int, dbmsh3d_edge* > edgemap_;
+  std::map<int, dbmsh3d_edge* > edgemap_;
 
   // traversal iterator
-  vcl_map<int, dbmsh3d_edge* >::iterator edge_traversal_pos_;
+  std::map<int, dbmsh3d_edge* >::iterator edge_traversal_pos_;
 
   int     edge_id_counter_;
 
@@ -223,11 +223,11 @@ public:
   }
 
   //: Construct a mesh from a set of faces (and vertices therein).
-  dbmsh3d_mesh (vcl_map<int, dbmsh3d_face*>& Fmap,
+  dbmsh3d_mesh (std::map<int, dbmsh3d_face*>& Fmap,
                 const bool del_elm_destruct = false) :
       dbmsh3d_ifs_mesh () 
   {    
-    vcl_map<int, dbmsh3d_face*>::iterator fit = Fmap.begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = Fmap.begin();
     for (; fit != Fmap.end(); fit++) {
       dbmsh3d_face* F = (*fit).second;
       _add_face (F);
@@ -245,7 +245,7 @@ public:
       }
 
       //Add all vertices of F
-      vcl_vector<dbmsh3d_vertex*> vertices;
+      std::vector<dbmsh3d_vertex*> vertices;
       F->get_bnd_Vs(vertices);
       for (unsigned int i=0; i<vertices.size(); i++) {
         dbmsh3d_vertex* V = vertices[i];
@@ -258,7 +258,7 @@ public:
 
   void clear_edges () {
     edge_id_counter_ = 0; 
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.begin();
     while (it != edgemap_.end()) {
       dbmsh3d_edge* E = (*it).second;
       remove_edge (E);
@@ -285,11 +285,11 @@ public:
   }
 
   //###### Data Access Functions ######
-  vcl_map<int, dbmsh3d_edge*>& edgemap() {
+  std::map<int, dbmsh3d_edge*>& edgemap() {
     return edgemap_;
   }
   dbmsh3d_edge* edgemap (const int i) {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (i);
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (i);
     if (it == edgemap_.end())
       return NULL;
     return (*it).second;
@@ -306,7 +306,7 @@ public:
   }
   
   bool contain_e (const int eid) {
-    vcl_map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (eid);
+    std::map<int, dbmsh3d_edge*>::iterator it = edgemap_.find (eid);
     return it != edgemap_.end();
   }
 
@@ -348,7 +348,7 @@ public:
     delete E;
   }
   void _add_edge (dbmsh3d_edge* E) {
-    edgemap_.insert (vcl_pair<int, dbmsh3d_edge*>(E->id(), E));
+    edgemap_.insert (std::pair<int, dbmsh3d_edge*>(E->id(), E));
   }
 
   void add_edge_incidence (dbmsh3d_edge* E) {
@@ -362,7 +362,7 @@ public:
   }
 
   void add_edge_incidence_check (dbmsh3d_edge* E) {
-    edgemap_.insert (vcl_pair<int, dbmsh3d_edge*>(E->id(), E));
+    edgemap_.insert (std::pair<int, dbmsh3d_edge*>(E->id(), E));
     dbmsh3d_vertex* sV = E->sV();
     sV->check_add_incident_E (E);
     dbmsh3d_vertex* eV = E->eV();
@@ -405,7 +405,7 @@ public:
 
   //: function to disconnect & remove all faces from the facemap
   virtual void clear_faces () {
-    vcl_map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator it = facemap_.begin();
     while (it != facemap_.end()) {
       dbmsh3d_face* F = (*it).second;
       remove_face (F);      
@@ -418,7 +418,7 @@ public:
   void remove_F_complete (dbmsh3d_face* F);
   void remove_E_complete (dbmsh3d_edge* E);
 
-  dbmsh3d_face* add_new_face (const vcl_vector<dbmsh3d_edge*>& ordered_edges);
+  dbmsh3d_face* add_new_face (const std::vector<dbmsh3d_edge*>& ordered_edges);
 
   //###### Connectivity Recovery Functions ######
   //: Build the Modified Half-edge datastructure from the IndexedFaceSet representation.
@@ -450,7 +450,7 @@ public:
   }
 
   void reset_traverse_v () {
-    vcl_map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
+    std::map<int, dbmsh3d_vertex*>::iterator vit = vertexmap_.begin();
     for (; vit != vertexmap_.end(); vit++) {
       dbmsh3d_vertex* V = (*vit).second;
       V->set_i_visited (0);
@@ -458,7 +458,7 @@ public:
     i_traverse_flag_ = 1;
   }
   void reset_traverse_e () {
-    vcl_map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
+    std::map<int, dbmsh3d_edge*>::iterator eit = edgemap_.begin();
     for (; eit != edgemap_.end(); eit++) {
       dbmsh3d_edge* E = (*eit).second;
       E->set_i_visited (0);
@@ -466,7 +466,7 @@ public:
     i_traverse_flag_ = 1;
   }
   void reset_traverse_f () {
-    vcl_map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
+    std::map<int, dbmsh3d_face*>::iterator fit = facemap_.begin();
     for (; fit != facemap_.end(); fit++) {
       dbmsh3d_face* F = (*fit).second;
       F->set_i_visited (0);
@@ -485,7 +485,7 @@ public:
   virtual dbmsh3d_pt_set* clone ();
 
   // Print a summary of mesh properties
-  virtual void print_summary (vcl_ostream& str);
+  virtual void print_summary (std::ostream& str);
   void print_topo_summary (void);
   
   //: return if the mesh is a 2-manifold
@@ -511,11 +511,11 @@ public:
 
 dbmsh3d_mesh* clone_mesh_ifs (dbmsh3d_mesh* M);
 
-dbmsh3d_face* add_F_to_M (vcl_vector<int>& vids, dbmsh3d_mesh* M);
+dbmsh3d_face* add_F_to_M (std::vector<int>& vids, dbmsh3d_mesh* M);
 
-dbmsh3d_face* add_F_to_M_check_topo (vcl_vector<int>& vids, dbmsh3d_mesh* M);
+dbmsh3d_face* add_F_to_M_check_topo (std::vector<int>& vids, dbmsh3d_mesh* M);
 
-void add_M_faces_to_IFSset (dbmsh3d_mesh* M, vcl_vector<vcl_vector<int> >& faces);
+void add_M_faces_to_IFSset (dbmsh3d_mesh* M, std::vector<std::vector<int> >& faces);
 
 void bmsh3d_mesh_print_object_size ();
 

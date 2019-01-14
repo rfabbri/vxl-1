@@ -15,7 +15,7 @@
 #include <vgl/vgl_box_2d.h>
 #include <vgl/vgl_box_3d.h>
 
-#include <vcl_fstream.h>
+#include <fstream>
 #include <vnl/vnl_double_3.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
@@ -59,9 +59,9 @@ class data_manager
         SoBaseColor* point_colors() const { return p_colors_; }
     SoCoordinate3* point_coords() const { return p_coords_; }
 
-vcl_vector<unsigned int> selection() const { return selection_; }
+std::vector<unsigned int> selection() const { return selection_; }
 
-void set_selection(const vcl_vector<unsigned int>& s) { selection_ = s; }
+void set_selection(const std::vector<unsigned int>& s) { selection_ = s; }
 
 void set_bounding_box_hood(const vgl_point_3d<double>& min_pt,const vgl_point_3d<double>& max_pt)
     {bounding_box_hood_.set_min_point(min_pt);
@@ -134,7 +134,7 @@ void draw_rect(vsol_rectangle_2d const& rect,vgui_style_sptr style);
     SbVec3f cab_mean_;
     SbVec3f bed_mean_;
 
-    vcl_vector<unsigned int> selection_;
+    std::vector<unsigned int> selection_;
     vgl_box_3d<double> bounding_box_hood_;
     vgl_box_3d<double> bounding_box_cab_;
     vgl_box_3d<double> bounding_box_bed_;
@@ -216,7 +216,7 @@ void buildScene(SoGroup *root)
 void data_manager::read_file()
     {
     vgui_dialog vrml_dlg("Load ASCII LIDAR file");
-    static vcl_string filename = "", ext = "*.xyz";
+    static std::string filename = "", ext = "*.xyz";
     static unsigned int start = 0;
     static unsigned int n_pts = 500000;
     vrml_dlg.file("LIDAR file",ext, filename);
@@ -225,7 +225,7 @@ void data_manager::read_file()
     if(!vrml_dlg.ask())
         return;
 
-    vcl_ifstream fh(filename.c_str());
+    std::ifstream fh(filename.c_str());
     if(fh.is_open()){
         //check for lvcs
         char c;
@@ -233,7 +233,7 @@ void data_manager::read_file()
         if(c=='#')
             {
             double lat=0, lon=0, elev=0;
-            vcl_string buf;
+            std::string buf;
             fh >> buf;//skip lvcs
             fh >> buf;
             if(buf=="lat:")
@@ -244,7 +244,7 @@ void data_manager::read_file()
             fh >> buf;
             if(buf=="elev:")
                 fh >> elev;
-            vcl_cout << "\nGeographic Origin: lat:" << lat << " lon:" 
+            std::cout << "\nGeographic Origin: lat:" << lat << " lon:" 
                 << lon << " elev(meters):" << elev << '\n';
             fh.ignore(1024,'\n');
             }
@@ -270,7 +270,7 @@ void data_manager::read_file()
             colors[i][2] /= 255.0f;
             ++i;
             }
-    vcl_cout << "max intensity: "<<val<<vcl_endl;
+    std::cout << "max intensity: "<<val<<std::endl;
     p_coords_->point.setValues(0, i, coords);
     p_coords_->point.deleteValues(i);
     p_colors_->rgb.setValues(0, i, colors);
@@ -288,7 +288,7 @@ selection_.clear();
 void data_manager::read_vrml_file()
     {
     vgui_dialog vrml_dlg("Load vrml file");
-    static vcl_string filename = "", ext = "*.wrl";
+    static std::string filename = "", ext = "*.wrl";
 
     vrml_dlg.file("vrml file",ext, filename);
 
@@ -319,7 +319,7 @@ void data_manager::read_vrml_file()
 void data_manager::save_selection()
     {
     vgui_dialog save_dlg("Save Selection");
-    static vcl_string filename = "", ext = "*.xyz";
+    static std::string filename = "", ext = "*.xyz";
     static bool vrml = false, recenter=false;
     save_dlg.file("File",ext, filename);
     save_dlg.checkbox("Save as VRML",vrml);
@@ -372,7 +372,7 @@ out.closeFile();
 newroot->unref();
     }
 else{
-    vcl_ofstream fh(filename.c_str());
+    std::ofstream fh(filename.c_str());
     fh.precision(10);
     if(fh.is_open()){
         for(unsigned int i=0; i<selection_.size(); ++i){
@@ -395,7 +395,7 @@ void data_manager::save_bounding_box()
     double centroid_y_cab,centroid_y_bed,centroid_z_bed,centroid_z_cab;
 
     vgui_dialog save_dlg("Save bounding box");
-    static vcl_string filename = " ", ext = "*.txt";
+    static std::string filename = " ", ext = "*.txt";
     bool vrml;
 
     save_dlg.file("File",ext, filename);
@@ -477,24 +477,24 @@ void data_manager::save_bounding_box()
 
     bb_bed.set_centroid_y(centroid_y_bed + max_y_cab - min_y_bed);
 
-    vcl_vector<vgl_point_3d<double> >centroids;
+    std::vector<vgl_point_3d<double> >centroids;
 
-    vcl_cout << "bb_hood "<< bb_hood << vcl_endl; 
-    vcl_cout << "bb_cab "<< bb_cab << vcl_endl; 
-    vcl_cout << "bb_bed "<< bb_bed << vcl_endl; 
+    std::cout << "bb_hood "<< bb_hood << std::endl; 
+    std::cout << "bb_cab "<< bb_cab << std::endl; 
+    std::cout << "bb_bed "<< bb_bed << std::endl; 
 
 
     centroids.push_back(bb_hood.centroid());
     centroids.push_back(bb_cab.centroid());
     centroids.push_back(bb_bed.centroid());
 
-    vcl_vector<vgl_box_3d<double> >b_boxes;
+    std::vector<vgl_box_3d<double> >b_boxes;
 
     b_boxes.push_back(bb_hood);
     b_boxes.push_back(bb_cab);
     b_boxes.push_back(bb_bed);
 
-    vcl_ofstream ofstr(filename.c_str());
+    std::ofstream ofstr(filename.c_str());
 
     if (vrml)
         {
@@ -538,12 +538,12 @@ void data_manager::save_bounding_box()
 
     else
         {
-        ofstr << "bounding box hood: "<< vcl_endl;
-        ofstr << bb_hood << vcl_endl;
-        ofstr << "bounding box cab: "<< vcl_endl;
-        ofstr << bb_cab << vcl_endl;
-        ofstr << "bounding box bed: "<< vcl_endl;
-        ofstr << bb_bed << vcl_endl;
+        ofstr << "bounding box hood: "<< std::endl;
+        ofstr << bb_hood << std::endl;
+        ofstr << "bounding box cab: "<< std::endl;
+        ofstr << bb_cab << std::endl;
+        ofstr << "bounding box bed: "<< std::endl;
+        ofstr << bb_bed << std::endl;
         }
 
     }
@@ -585,10 +585,10 @@ class select_points_tableau : public vgui_tableau
 
 
             SoCoordinate3 * coords = data_manager::instance()->point_coords();
-            vcl_auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
+            std::auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
             bool inverted_camera = (dynamic_cast<bgui3d_project2d_tableau*>(tab3d_.ptr()) == 0);
             vpgl_perspective_camera<double>* pcam = cam->cast_to_perspective_camera();
-            vcl_vector<unsigned int> selection = data_manager::instance()->selection();
+            std::vector<unsigned int> selection = data_manager::instance()->selection();
             int num_pts = selection.size();
 
             glColor3f(0,1,0);
@@ -613,7 +613,7 @@ class select_points_tableau : public vgui_tableau
 
         float ix, iy;
         vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-        //vgui_projection_inspector().print(vcl_cout);
+        //vgui_projection_inspector().print(std::cout);
 
         double x_min,y_min,z_min,x_max,y_max,z_max;
 
@@ -640,7 +640,7 @@ if(e.type == vgui_MOUSE_DOWN && draw_mode_){
     }
 if(e.type == vgui_MOUSE_UP && draw_mode_){
     draw_mode_ = false;  
-    vcl_auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
+    std::auto_ptr<vpgl_proj_camera<double> > cam = tab3d_->camera();
     bool inverted_camera = (dynamic_cast<bgui3d_project2d_tableau*>(tab3d_.ptr()) == 0);
 
     vpgl_perspective_camera<double>* pcam = cam->cast_to_perspective_camera();
@@ -653,8 +653,8 @@ vnl_double_4 P1 = P.get_row(0);
 vnl_double_4 P2 = P.get_row(1);
 vnl_double_4 P3 = P.get_row(2);
 
-if(x1 > last_x) vcl_swap(x1,last_x);
-if(y1 > last_y) vcl_swap(y1,last_y);
+if(x1 > last_x) std::swap(x1,last_x);
+if(y1 > last_y) std::swap(y1,last_y);
 
 vnl_double_4 B1 = P1 - double(x1)*P3;
 vnl_double_4 B2 = double(last_x)*P3 - P1;
@@ -663,7 +663,7 @@ vnl_double_4 B4 = double(last_y)*P3 - P2;
 
 SoCoordinate3 * coords = data_manager::instance()->point_coords();
 int num_pts = coords->point.getNum();
-vcl_vector<unsigned int> selection;
+std::vector<unsigned int> selection;
 for(int i=0; i<num_pts; ++i){
     const SbVec3f& pt = coords->point[i];
     vnl_double_4 X(pt[0],pt[1],pt[2],1);
@@ -680,9 +680,9 @@ for(int i=0; i<num_pts; ++i){
 double min_x =1e50,min_y =1e50,min_z=1e50,max_x=-1e50,max_y=-1e50,max_z=-1e50;
 int pt_num;
 
-vcl_string txt_file = "C:\\Lidar_data\\vehicles\\b_box_points.txt";
+std::string txt_file = "C:\\Lidar_data\\vehicles\\b_box_points.txt";
 
-vcl_ofstream ofstr(txt_file.c_str());
+std::ofstream ofstr(txt_file.c_str());
 
 SbVec3f mean(0,0,0);
 
@@ -698,7 +698,7 @@ for (int i =0;i<selection.size();i++)
     pt_num = selection[i];
     const SbVec3f& pt = coords->point[pt_num] - mean;
 
-    ofstr << pt[0] <<" "<< pt[1] << " " <<pt[2] << vcl_endl;
+    ofstr << pt[0] <<" "<< pt[1] << " " <<pt[2] << std::endl;
 
     if (min_x > pt[0])
         min_x = pt[0];
@@ -733,7 +733,7 @@ if (b_box_hood)
     {
     data_manager::instance()->set_bounding_box_hood(min_pt,max_pt);
     data_manager::instance()->set_hood_mean(mean);
-    vcl_cout << "bounding box hood: " <<vcl_endl;
+    std::cout << "bounding box hood: " <<std::endl;
 
     }
 
@@ -741,23 +741,23 @@ if (b_box_cab)
     {
     data_manager::instance()->set_bounding_box_cab(min_pt,max_pt);
     data_manager::instance()->set_cab_mean(mean);
-    vcl_cout << "bounding box cab: " <<vcl_endl;
+    std::cout << "bounding box cab: " <<std::endl;
     }
 
 if (b_box_bed)
     {
     data_manager::instance()->set_bounding_box_bed(min_pt,max_pt);
     data_manager::instance()->set_bed_mean(mean);
-    vcl_cout << "bounding box bed: " <<vcl_endl;
+    std::cout << "bounding box bed: " <<std::endl;
 
     }
-vcl_cout << "min point" << min_pt << vcl_endl;
-vcl_cout << "max point" << max_pt << vcl_endl;
-vcl_cout << mean[0] << " " << mean[1] << " " << mean[2] << vcl_endl;
+std::cout << "min point" << min_pt << std::endl;
+std::cout << "max point" << max_pt << std::endl;
+std::cout << mean[0] << " " << mean[1] << " " << mean[2] << std::endl;
 
 data_manager::instance()->set_selection(selection);
 vgui::out << "selected "<<selection.size()<<" points\n";
-vcl_cout<< "selected "<<selection.size()<<" points\n";
+std::cout<< "selected "<<selection.size()<<" points\n";
 
 
 
@@ -825,7 +825,7 @@ int main(int argc, char** argv)
     vgui::init(argc, argv);
 
 vgui_dialog load_dlg("load file");
-  static vcl_string filename = "", ext = "*.wrl";
+  static std::string filename = "", ext = "*.wrl";
   
   load_dlg.file("File",ext, filename);
   

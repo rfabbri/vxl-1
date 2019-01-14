@@ -21,10 +21,10 @@
 //
 //-------------------------------------------------------------------------
 
-#include <vcl_vector.h>
-#include <vcl_sstream.h>
-#include <vcl_iostream.h>
-#include <vcl_ctime.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 #include <vul/vul_printf.h>
 #include <testlib/testlib_test.h>
 
@@ -44,10 +44,10 @@ MAIN( dbasn_test_random_graph )
 {
   testlib_test_start("Grad. Asgn. on random graphs.");
 
-  vcl_cout <<"Graph G with nodes: "<< G_N_NODE << ", connectivity percentage: "<< G_LINK_CONN << vcl_endl;
-  vcl_cout <<"Match with Sub-graph g with nodes: "<< SUB_G_N << vcl_endl;
-  vcl_cout <<"Noise: " << L_NOISE << vcl_endl;
-  vcl_cout <<"Repeat test for " << N_TEST << " times."<< vcl_endl;
+  std::cout <<"Graph G with nodes: "<< G_N_NODE << ", connectivity percentage: "<< G_LINK_CONN << std::endl;
+  std::cout <<"Match with Sub-graph g with nodes: "<< SUB_G_N << std::endl;
+  std::cout <<"Noise: " << L_NOISE << std::endl;
+  std::cout <<"Repeat test for " << N_TEST << " times."<< std::endl;
 
   unsigned int incorrect = 0;
   unsigned int total_bad = 0;
@@ -65,7 +65,7 @@ MAIN( dbasn_test_random_graph )
     //Testing simple graph matching
     dbasn_gradasgn GA;
     dbasn_params params; //Use the default parameters. 
-    vcl_cout<< params;
+    std::cout<< params;
     ///GA.setup_GA_params (G, g, params);
     GA.set_G (G);
     GA.set_g (g);
@@ -86,7 +86,7 @@ MAIN( dbasn_test_random_graph )
       if (i != GA.labelGg(labelg[i])) 
         bad++;
     }
-    vcl_cout<<" Test # " << count << ": " << bad <<" bad matches out of " << SUB_G_N <<vcl_endl;
+    std::cout<<" Test # " << count << ": " << bad <<" bad matches out of " << SUB_G_N <<std::endl;
 
     total_bad += bad;
     if (bad != 0)
@@ -97,7 +97,7 @@ MAIN( dbasn_test_random_graph )
     delete labelg;
   }
 
-  vul_printf (vcl_cout, "\n Out of %d graph matching tests, %d fails, %d bad matches.\n\n",
+  vul_printf (std::cout, "\n Out of %d graph matching tests, %d fails, %d bad matches.\n\n",
               N_TEST, incorrect, total_bad);
   TEST("# of incorrect matches (should be 0) ", incorrect, 0);
   

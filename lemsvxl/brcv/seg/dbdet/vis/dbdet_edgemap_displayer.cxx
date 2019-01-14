@@ -3,8 +3,8 @@
 //:
 // \file
 
-#include <vcl_vector.h>
-#include <vcl_iostream.h>
+#include <vector>
+#include <iostream>
 
 #include "dbdet_edgemap_displayer.h"
 #include <dbdet/pro/dbdet_edgemap_storage.h>

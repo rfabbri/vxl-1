@@ -1,4 +1,4 @@
-#include <vcl_string.h>
+#include <string>
 #include <vbl/vbl_array_3d.hxx>
 #include <vgl/io/vgl_io_point_3d.h>
 #include <dboxm/boxm_block.hxx>

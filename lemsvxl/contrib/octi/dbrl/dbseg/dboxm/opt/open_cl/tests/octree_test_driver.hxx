@@ -3,14 +3,14 @@
 
 #include "octree_test_driver.h"
 
-#include <vcl_fstream.h>
-#include <vcl_iomanip.h>
-#include <vcl_sstream.h>
-#include <vcl_ctime.h>
-#include <vcl_cmath.h>
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
-#include <vcl_cassert.h>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
 
 template <class T>
 int
@@ -44,7 +44,7 @@ void octree_test_driver<T>::set_buffers()
 }
 
 template <class T>
-int octree_test_driver<T>::create_kernel(vcl_string const& kernel_name)
+int octree_test_driver<T>::create_kernel(std::string const& kernel_name)
 {
   if (cl_manager_->create_kernel(kernel_name)!=SDK_SUCCESS)
     return SDK_FAILURE;
@@ -200,16 +200,16 @@ int octree_test_driver<T>::run_tree_test_kernels()
     return SDK_FAILURE;
   }
 
-  vcl_size_t globalThreads[]= {cl_manager_->n_ray_groups()*
+  std::size_t globalThreads[]= {cl_manager_->n_ray_groups()*
                                cl_manager_->group_size()};
-  vcl_size_t localThreads[] = {cl_manager_->group_size()};
+  std::size_t localThreads[] = {cl_manager_->group_size()};
 
   if (used_local_memory_ > cl_manager_->total_local_memory())
   {
-    vcl_cout << "Unsupported: Insufficient local memory on device.\n";
+    std::cout << "Unsupported: Insufficient local memory on device.\n";
     return SDK_FAILURE;
   }
-  //  vcl_cout << "Local memory used: " << usedLocalMemory << '\n';
+  //  std::cout << "Local memory used: " << usedLocalMemory << '\n';
 
   status = clEnqueueNDRangeKernel(command_queue_,
                                   cl_manager_->kernel(),
@@ -325,13 +325,13 @@ int octree_test_driver<T>::run_ray_trace_test_kernels()
     return SDK_FAILURE;
   }
 
-  vcl_size_t globalThreads[]= {cl_manager_->n_ray_groups()*
+  std::size_t globalThreads[]= {cl_manager_->n_ray_groups()*
                                cl_manager_->group_size()};
-  vcl_size_t localThreads[] = {cl_manager_->group_size()};
+  std::size_t localThreads[] = {cl_manager_->group_size()};
 
   if (used_local_memory_ > cl_manager_->total_local_memory())
   {
-    vcl_cout << "Unsupported: Insufficient local memory on device.\n";
+    std::cout << "Unsupported: Insufficient local memory on device.\n";
     return SDK_FAILURE;
   }
     status = clGetCommandQueueInfo(command_queue_,CL_QUEUE_CONTEXT,0,NULL,0);
@@ -457,12 +457,12 @@ int octree_test_driver<T>::run_ray_creation_test_kernels()
     return SDK_FAILURE;
   }
 
-  vcl_size_t globalThreads[]= {RoundUp(cl_manager_->n_rays(),64)};
-  vcl_size_t localThreads[] = {64};
+  std::size_t globalThreads[]= {RoundUp(cl_manager_->n_rays(),64)};
+  std::size_t localThreads[] = {64};
 
   if (used_local_memory_ > cl_manager_->total_local_memory())
   {
-    vcl_cout << "Unsupported: Insufficient local memory on device.\n";
+    std::cout << "Unsupported: Insufficient local memory on device.\n";
     return SDK_FAILURE;
   }
   cl_event ceEvent;
@@ -576,8 +576,8 @@ octree_test_driver<T>::~octree_test_driver()
 template <class T>
 void octree_test_driver<T>::print_kernel_usage_info()
 {
-  vcl_cout << "Used Local Memory: " << used_local_memory_ << '\n'
-           << "Kernel Vetted Work Group Size: " << kernel_work_group_size_ << vcl_endl;
+  std::cout << "Used Local Memory: " << used_local_memory_ << '\n'
+           << "Kernel Vetted Work Group Size: " << kernel_work_group_size_ << std::endl;
 }
 
 #undef OCTREE_TEST_DRIVER_INSTANTIATE

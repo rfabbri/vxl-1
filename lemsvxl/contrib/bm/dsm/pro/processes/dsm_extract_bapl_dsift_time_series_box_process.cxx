@@ -26,15 +26,15 @@ bool dsm_extract_bapl_dsift_time_series_box_process_cons( bprb_func_process& pro
 {
 	using namespace dsm_extract_bapl_dsift_time_series_box_process_globals;
 
-	vcl_vector<vcl_string> input_types_(n_inputs_);
-	vcl_vector<vcl_string> output_types_(n_outputs_);
+	std::vector<std::string> input_types_(n_inputs_);
+	std::vector<std::string> output_types_(n_outputs_);
 
 	unsigned i = 0;
 	input_types_[i++] = "unsigned";//xmin
 	input_types_[i++] = "unsigned";//xmax
 	input_types_[i++] = "unsigned";//ymin
 	input_types_[i++] = "unsigned";//ymax
-	input_types_[i++] = "vcl_string";//image glob
+	input_types_[i++] = vcl_string";//image glob
 
 	output_types_[0] = "dsm_pixel_time_series_map_sptr";
 
@@ -53,7 +53,7 @@ bool dsm_extract_bapl_dsift_time_series_box_process( bprb_func_process& pro )
 
 	if( pro.n_inputs() < n_inputs_ )
 	{
-		vcl_cout << pro.name() << " dsm_extract_bapl_dsift_time_series_box_process: The input number should be " << n_inputs_ << vcl_endl;
+		std::cout << pro.name() << " dsm_extract_bapl_dsift_time_series_box_process: The input number should be " << n_inputs_ << std::endl;
 		return false;
 	}
 
@@ -63,7 +63,7 @@ bool dsm_extract_bapl_dsift_time_series_box_process( bprb_func_process& pro )
 	unsigned xmax = pro.get_input<unsigned>(i++);
 	unsigned ymin = pro.get_input<unsigned>(i++);
 	unsigned ymax = pro.get_input<unsigned>(i++);
-	vcl_string img_glob = pro.get_input<vcl_string>(i++);
+	std::string img_glob = pro.get_input<std::string>(i++);
 
 	vidl_image_list_istream video_stream(img_glob);
 
@@ -71,7 +71,7 @@ bool dsm_extract_bapl_dsift_time_series_box_process( bprb_func_process& pro )
 
 	if(nframes == 0)
 	{
-		vcl_cerr << "---- Error dsm_extract_bapl_dsift_time_series_box_process: The video stream is invalid. ----" << vcl_flush;
+		std::cerr << "---- Error dsm_extract_bapl_dsift_time_series_box_process: The video stream is invalid. ----" << std::flush;
 		return false;
 	}
 
@@ -79,7 +79,7 @@ bool dsm_extract_bapl_dsift_time_series_box_process( bprb_func_process& pro )
 
 	for( unsigned frame = 0; frame < nframes; ++frame ) 
 	{
-		vcl_cout << "Processing Frame: " << frame << vcl_endl;
+		std::cout << "Processing Frame: " << frame << std::endl;
 		vil_image_view<vxl_byte> curr_img;
 		video_stream.seek_frame(frame);
 		vidl_convert_to_view(*video_stream.current_frame(), curr_img);
@@ -101,7 +101,7 @@ bool dsm_extract_bapl_dsift_time_series_box_process( bprb_func_process& pro )
 		for(unsigned x = xmin; x <= xmax; x++)
 			for(unsigned y = ymin; y <= ymax; y++)
 			{
-				vcl_cout << "\tExtracting Sift at pixel: (" << x << "," << y << ")" << vcl_endl;
+				std::cout << "\tExtracting Sift at pixel: (" << x << "," << y << ")" << std::endl;
 				dsm_feature_sptr feature_sptr = new dsm_feature(dsift.vnl_dsift(x,y),frame);
 				pixel_time_series_map_sptr->insert(vgl_point_2d<unsigned>(x,y),frame,feature_sptr);
 			}//end pixel iteration

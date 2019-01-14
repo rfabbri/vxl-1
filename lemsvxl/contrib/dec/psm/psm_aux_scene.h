@@ -1,8 +1,8 @@
 #ifndef psm_aux_scene_h_
 #define psm_aux_scene_h_
 
-#include <vcl_string.h>
-#include <vcl_set.h>
+#include <string>
+#include <set>
 #include <vgl/vgl_point_3d.h>
 #include <hsds/hsds_fd_tree.h>
 #include <hsds/hsds_fd_tree_incremental_reader.h>
@@ -32,7 +32,7 @@ public:
   ~psm_aux_scene() { delete block_storage_; }
 
   //: constructor
-  psm_aux_scene(vgl_point_3d<double> origin, double block_len, vcl_string storage_dir)
+  psm_aux_scene(vgl_point_3d<double> origin, double block_len, std::string storage_dir)
     : psm_aux_scene_base(origin, block_len), block_storage_(new psm_scene_block_storage_single<sample_datatype>(storage_dir)) 
   { 
     // discover blocks already on disk
@@ -51,7 +51,7 @@ public:
   void init_block(vgl_point_3d<int> block_idx, unsigned int block_level);
 
   //: access storage dir
-  vcl_string storage_dir(){return block_storage_->storage_directory();}
+  std::string storage_dir(){return block_storage_->storage_directory();}
 
   //: return auxillary sample type
   virtual psm_aux_type aux_type() const {return AUX_T;}

@@ -54,24 +54,24 @@ public:
 
 
   //: Set the edge label image from a set of polylines
-  void set_edge_labels(const vcl_vector<vsol_polyline_2d_sptr >& contours); 
+  void set_edge_labels(const std::vector<vsol_polyline_2d_sptr >& contours); 
 
   // Utilities -----------------------------------------------------------------
 
   //: Image cost of a contour (an ordered set of oriented points) given the shape's 
   // complete boundary
-  float f_whole_contour(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-    const vcl_vector<int >& orient_channel, double contour_length,
+  float f_whole_contour(const std::vector<int >& x, const std::vector<int >& y, 
+    const std::vector<int >& orient_channel, double contour_length,
     const vgl_polygon<double >& boundary);
 
   //: Cost of unmatched edges
-  float cost_unmatched_edges(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-    const vcl_vector<int >& orient_channel, double contour_length,
+  float cost_unmatched_edges(const std::vector<int >& x, const std::vector<int >& y, 
+    const std::vector<int >& orient_channel, double contour_length,
     const vgl_polygon<double >& shape_boundary);
 
   //: Cost due to switching between linked contours (to avoid spurious edges)
-  float cost_switching_linked_contours(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-    const vcl_vector<int >& orient_channel);
+  float cost_switching_linked_contours(const std::vector<int >& x, const std::vector<int >& y, 
+    const std::vector<int >& orient_channel);
 
 
   
@@ -87,14 +87,14 @@ protected:
   //: An image containing contour labels of all edges in the image. A value of
   // 0 corresponds to no contour (background).
   vil_image_view<unsigned > edge_label_;
-  vcl_map<unsigned, vsol_polyline_2d_sptr > map_label2contour_;
+  std::map<unsigned, vsol_polyline_2d_sptr > map_label2contour_;
 
   //////////////////////////////////
   // old version - no longer used
   //: Image cost of a contour (an ordered set of oriented points) given the shape's 
   // complete boundary
-  float f_whole_contour_v1(const vcl_vector<int >& x, const vcl_vector<int >& y, 
-    const vcl_vector<int >& orient_channel, double contour_length,
+  float f_whole_contour_v1(const std::vector<int >& x, const std::vector<int >& y, 
+    const std::vector<int >& orient_channel, double contour_length,
     const vgl_polygon<double >& boundary);
 
   

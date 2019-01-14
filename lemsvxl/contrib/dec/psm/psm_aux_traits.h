@@ -1,7 +1,7 @@
 #ifndef psm_aux_traits_h_
 #define psm_aux_traits_h_
 
-#include <vcl_string.h>
+#include <string>
 #include "psm_vis_implicit_sample.h"
 #include "psm_update_sample.h"
 #include "psm_dcdf_implicit_sample.h"
@@ -32,7 +32,7 @@ class psm_aux_traits<PSM_AUX_VIS_IMPLICIT>
 public:
   typedef psm_vis_implicit_sample sample_datatype;
 
-  static vcl_string storage_subdir() { return "vis_implicit"; }
+  static std::string storage_subdir() { return "vis_implicit"; }
 
 };
 
@@ -42,7 +42,7 @@ class psm_aux_traits<PSM_AUX_DCDF_IMPLICIT_GREY>
 public:
   typedef psm_dcdf_implicit_sample<float> sample_datatype;
 
-  static vcl_string storage_subdir() { return "dcdf_implicit"; }
+  static std::string storage_subdir() { return "dcdf_implicit"; }
 
 };
 
@@ -52,7 +52,7 @@ class psm_aux_traits<PSM_AUX_DCDF_IMPLICIT_RGB>
 public:
   typedef psm_dcdf_implicit_sample<vil_rgb<float> > sample_datatype;
 
-  static vcl_string storage_subdir() { return "dcdf_implicit"; }
+  static std::string storage_subdir() { return "dcdf_implicit"; }
 };
 
 template<>
@@ -61,7 +61,7 @@ class psm_aux_traits<PSM_AUX_UPDATE>
 public:
   typedef psm_update_sample sample_datatype;
 
-  static vcl_string storage_subdir() { return "update_work";}
+  static std::string storage_subdir() { return "update_work";}
 };
 
 
@@ -73,7 +73,7 @@ class psm_aux_traits<PSM_AUX_NULL>
 public:
   typedef float sample_datatype;
 
-  static vcl_string storage_subdir() { return "null"; }
+  static std::string storage_subdir() { return "null"; }
 
 };
 

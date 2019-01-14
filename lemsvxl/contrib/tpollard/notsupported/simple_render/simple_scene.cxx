@@ -20,16 +20,16 @@
 //--------------------------------------------
 bool 
 simple_scene::render( 
-  vcl_vector< vpgl_proj_camera<double> > cameras,
-  vcl_vector< vgl_vector_3d<double> > lights,
-  vcl_string image_directory,
-  vcl_string camera_file,
-  vcl_string light_file )
+  std::vector< vpgl_proj_camera<double> > cameras,
+  std::vector< vgl_vector_3d<double> > lights,
+  std::string image_directory,
+  std::string camera_file,
+  std::string light_file )
 {
   // Check that the directory is good and create file names.
-  vcl_vector< vcl_string > image_files;
+  std::vector< std::string > image_files;
   for( int i = 0; i < static_cast<int>(cameras.size()); i++ ){
-    vcl_stringstream new_file_name;
+    std::stringstream new_file_name;
     new_file_name << image_directory << "\\";
     if( i < 10 ) new_file_name << "000" << i;
     else if( i < 100 ) new_file_name << "00" << i;
@@ -38,12 +38,12 @@ simple_scene::render(
     new_file_name << ".tif";
     image_files.push_back( new_file_name.str() );
   }
-  vcl_ofstream camera_stream( camera_file.c_str() );
-  vcl_ofstream light_stream( light_file.c_str() );
+  std::ofstream camera_stream( camera_file.c_str() );
+  std::ofstream light_stream( light_file.c_str() );
 
   // Now render an image for each camera.
   for( int f = 0; f < static_cast<int>(cameras.size()); f++ ){
-    vcl_cerr << "\nRendering Image " << f << " with camera:\n" <<
+    std::cerr << "\nRendering Image " << f << " with camera:\n" <<
       cameras[f].get_matrix() << '\n';
     
     vil_image_view<vxl_byte> new_image( image_width_, image_height_ ); // maybe backwards
@@ -93,9 +93,9 @@ simple_scene::render(
 bool 
 simple_scene::render_360(
   int num_views,
-  vcl_string image_directory,
-  vcl_string camera_file,
-  vcl_string light_file,
+  std::string image_directory,
+  std::string camera_file,
+  std::string light_file,
   bool random_views )
 {
   vgl_point_3d<double> cam_start( 0, 100, 50 );
@@ -107,8 +107,8 @@ simple_scene::render_360(
   new_K.set_principal_point( 
     vgl_point_2d<double>( image_width_/2.0, image_height_/2.0 ) );
 
-  vcl_vector< vgl_vector_3d<double> > lights;
-  vcl_vector< vpgl_proj_camera<double> > cameras;
+  std::vector< vgl_vector_3d<double> > lights;
+  std::vector< vpgl_proj_camera<double> > cameras;
 
   for( int f = 0; f < num_views; f++ ){
 

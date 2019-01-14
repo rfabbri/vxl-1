@@ -31,7 +31,7 @@ class vox_match_shock_graphs_params : public dborl_algo_params
 public:
 
   //: Constructor
-  vox_match_shock_graphs_params(vcl_string algo_name);
+  vox_match_shock_graphs_params(std::string algo_name);
 
   // MEMBER VARIABLES
   
@@ -54,42 +54,42 @@ public:
   dborl_parameter<bool> save_to_object_folder_;  
   
   //: Name of model to compare against
-  dborl_parameter<vcl_string> model_object_name_;
+  dborl_parameter<std::string> model_object_name_;
   
   //: Passes the folder of the model shock graph
-  dborl_parameter<vcl_string> model_object_dir_;    
+  dborl_parameter<std::string> model_object_dir_;    
 
   //: Name of query to compare against
-  dborl_parameter<vcl_string> query_object_name_;
+  dborl_parameter<std::string> query_object_name_;
   
   //: Passes the folder of the query shock graph
-  dborl_parameter<vcl_string> query_object_dir_;    
+  dborl_parameter<std::string> query_object_dir_;    
 
   //: Passes the folder of where the query objects can live
-  dborl_parameter<vcl_string> query_assoc_dir_;
+  dborl_parameter<std::string> query_assoc_dir_;
 
   //: extension of the folder where shock patches can be found
-  dborl_parameter<vcl_string> input_shock_patch_extension_;     
+  dborl_parameter<std::string> input_shock_patch_extension_;     
 
   // Decide if writing out normalized or unnormalized costs
   dborl_parameter<bool> write_matching_norm_;  
 
   //: extension of the output for output shock patches
-  dborl_parameter<vcl_string> output_match_extension_;     
+  dborl_parameter<std::string> output_match_extension_;     
 
   // if written to this folder as opposed to object folder then the 
   // shock matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_shock_match_folder_;  
+  dborl_parameter<std::string> output_shock_match_folder_;  
 
   // if written to this folder as opposed to object folder then the 
   // shock matches gets associated to the input object.
   // if nothing is written here, nothing gets associated
-  dborl_parameter<vcl_string> output_shock_patch_match_folder_;  
+  dborl_parameter<std::string> output_shock_patch_match_folder_;  
 
   //parameter for the index file
   //Is a flat image database 
-  dborl_parameter<vcl_string> index_filename_;
+  dborl_parameter<std::string> index_filename_;
 
 };
 

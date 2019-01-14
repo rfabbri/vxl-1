@@ -1,7 +1,7 @@
 #include "xscan_uniform_orbit.h"
-#include <vcl_cstdlib.h>
-#include <vcl_cmath.h>
-#include <vcl_string.h>
+#include <cstdlib>
+#include <cmath>
+#include <string>
 #include <vsl/vsl_basic_xml_element.h>
 #include <vnl/xio/vnl_xio_quaternion.h>
 #include <vnl/xio/vnl_xio_vector_fixed.h>
@@ -29,10 +29,10 @@ vgl_h_matrix_3d<double> xscan_uniform_orbit::global_transform(const orbit_index 
   vnl_double_3x3 r0_m = r0_.rotation_matrix_transpose();
   vnl_double_3x3 irot_m = irot.rotation_matrix_transpose();
 
-  vcl_cout << "rotation axis is" << irot.rotation_matrix_transpose() << '\n';
+  std::cout << "rotation axis is" << irot.rotation_matrix_transpose() << '\n';
 
 
-  vcl_cout << r0_m * irot_m << '\n';
+  std::cout << r0_m * irot_m << '\n';
 #endif
   vnl_double_3x3 R = r_i.rotation_matrix_transpose();
 
@@ -49,7 +49,7 @@ vgl_h_matrix_3d<double> xscan_uniform_orbit::global_transform(const orbit_index 
 //
 // input and output
 //
-vcl_ostream& xscan_uniform_orbit::output (vcl_ostream& stream) const
+std::ostream& xscan_uniform_orbit::output (std::ostream& stream) const
 {
   stream.precision(15);
   stream << "xscan_uniform_orbit\n";
@@ -61,13 +61,13 @@ vcl_ostream& xscan_uniform_orbit::output (vcl_ostream& stream) const
   return stream;
 }
 
-vcl_istream& xscan_uniform_orbit::input (vcl_istream& stream)
+std::istream& xscan_uniform_orbit::input (std::istream& stream)
 {
-  vcl_string str;
+  std::string str;
   stream >> str;
   if(str != "xscan_uniform_orbit"){
-    vcl_cerr << "incorrect istream for xscan_uniform_orbit\n";
-    vcl_exit(1);
+    std::cerr << "incorrect istream for xscan_uniform_orbit\n";
+    std::exit(1);
   }
   stream >> str >> rot_;
   stream >> str >> t_ ;
@@ -77,17 +77,17 @@ vcl_istream& xscan_uniform_orbit::input (vcl_istream& stream)
   return stream;
 }
 
-vcl_ostream& operator << (vcl_ostream& stream, const xscan_uniform_orbit& orbit) 
+std::ostream& operator << (std::ostream& stream, const xscan_uniform_orbit& orbit) 
 {
   return orbit.output(stream);
 }
 
-vcl_istream& operator >> (vcl_istream& stream, xscan_uniform_orbit& orbit) 
+std::istream& operator >> (std::istream& stream, xscan_uniform_orbit& orbit) 
 {
   return orbit.input(stream);
 }
 
-void x_write(vcl_ostream& os, xscan_uniform_orbit orbit, vcl_string name)
+void x_write(std::ostream& os, xscan_uniform_orbit orbit, std::string name)
 {
   vsl_basic_xml_element element(name);
   element.x_write_open(os);

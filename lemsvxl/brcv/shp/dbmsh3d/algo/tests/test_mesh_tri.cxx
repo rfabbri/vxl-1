@@ -18,10 +18,10 @@
 //  all D:\Projects\BrownEyes\lemsvxlsrc\brcv\shp\dbmsh3d\tests\data
 
 
-#include <vcl_cstdio.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
-#include <vcl_cassert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cassert>
 
 #include <testlib/testlib_test.h>
 
@@ -29,7 +29,7 @@
 
 MAIN_ARGS( test_mesh_tri )
 {
-  vcl_string dir_base;
+  std::string dir_base;
   if ( argc >= 2 ) {
       dir_base = argv[1];
       #ifdef VCL_WIN32

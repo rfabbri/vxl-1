@@ -16,7 +16,7 @@
 
 //: Constructor
 vox_third_order_edge_det_params::
-vox_third_order_edge_det_params(vcl_string algo_name) :
+vox_third_order_edge_det_params(std::string algo_name) :
 dborl_algo_params(algo_name),
 tag_gray_edge_detection_("Edge_Detection_Gray"),
 tag_color_edge_detection_("Edge_Detection_Color"),
@@ -114,7 +114,7 @@ tag_prune_contours_("Prune_Contours")
 
     //: add the parameters of the dbdet_third_order_edge_detector_process
     dbdet_third_order_edge_detector_process pro1;
-    vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
+    std::vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
     for (unsigned i = 0; i < pars.size(); i++)
     {
         param_list_.push_back(

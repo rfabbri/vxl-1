@@ -1,5 +1,5 @@
 #include "CEDT.h"
-#include <vcl_ostream.h>
+#include <ostream>
 #include <vnl/vnl_math.h>
 
 //Contour-based Distance Transform (CEDT)
@@ -258,7 +258,7 @@ void CEDT::AddAWaveFront(int x, int y, int src_label, double d, int dir, bool in
   OWFList()->insert(T_ID_WF_pair(T_ID_pair(newWF->Dist(), newWF->ID()), newWF));
 
   //put the new wavefront into the update list
-  update_list.insert(vcl_pair<int, WaveFront*>(newWF->ID(), newWF));
+  update_list.insert(std::pair<int, WaveFront*>(newWF->ID(), newWF));
 }
 
 bool CEDT::IsWaveFrontOnBoundaryLimit(WaveFront* WF)
@@ -287,8 +287,8 @@ bool CEDT::IsLocationOutsideTheGrid(int x, int y)
 POINT_LOCATION CEDT::LocationOfAPoint(Point2D<double> pt)
 {
   //compute distances to nearest grid line
-  double dx = vcl_fabs(pt.getX() - round(pt.getX()));
-  double dy = vcl_fabs(pt.getY() - round(pt.getY()));
+  double dx = std::fabs(pt.getX() - round(pt.getX()));
+  double dy = std::fabs(pt.getY() - round(pt.getY()));
 
   if (dx<EI && dy<EI)
     return GRID;
@@ -340,8 +340,8 @@ void CEDT::InitializeWaveFrontsFromAnElement(BPoint* bp)
   //wavefronts at various surrounding grid locations
   switch (cur_grid_relative_loc){
     case CELL:
-      for (i= (int)vcl_floor (pt.getX()); i<= (int)vcl_ceil (pt.getX()); i++){
-        for (j= (int)vcl_floor (pt.getY()); j<= (int)vcl_ceil (pt.getY()); j++){
+      for (i= (int)std::floor (pt.getX()); i<= (int)std::ceil (pt.getX()); i++){
+        for (j= (int)std::floor (pt.getY()); j<= (int)std::ceil (pt.getY()); j++){
           //compute the distance from the source to the grid point
           dist = bp->distFromPoint(Point(i, j));
           //compute the initial discrete direction of the ray
@@ -351,8 +351,8 @@ void CEDT::InitializeWaveFrontsFromAnElement(BPoint* bp)
       }
       break;
     case HORIZ_GRID:
-      for (i= (int)vcl_floor (pt.getX()); i<= (int)vcl_ceil (pt.getX()); i++){
-        for (j= (int)vcl_floor (pt.getY())-1; j<= (int)vcl_floor (pt.getY())+1; j++){
+      for (i= (int)std::floor (pt.getX()); i<= (int)std::ceil (pt.getX()); i++){
+        for (j= (int)std::floor (pt.getY())-1; j<= (int)std::floor (pt.getY())+1; j++){
           //compute the distance from the source to the grid point
           dist = bp->distFromPoint(Point(i, j));
           //compute the initial discrete direction of the ray
@@ -362,8 +362,8 @@ void CEDT::InitializeWaveFrontsFromAnElement(BPoint* bp)
       }
       break;
     case VERT_GRID:
-      for (i= (int)vcl_floor (pt.getX())-1; i<= (int)vcl_floor (pt.getX())+1; i++){
-        for (j= (int)vcl_floor (pt.getY()); j<= (int)vcl_ceil (pt.getY()); j++){
+      for (i= (int)std::floor (pt.getX())-1; i<= (int)std::floor (pt.getX())+1; i++){
+        for (j= (int)std::floor (pt.getY()); j<= (int)std::ceil (pt.getY()); j++){
           //compute the distance from the source to the grid point
           dist = bp->distFromPoint(Point(i, j));
           //compute the initial discrete direction of the ray
@@ -373,9 +373,9 @@ void CEDT::InitializeWaveFrontsFromAnElement(BPoint* bp)
       }
       break;
     case GRID:
-      for (i= (int)vcl_floor (pt.getX())-1; i<= (int)vcl_floor (pt.getX())+1; i++){
-        for (j= (int)vcl_floor (pt.getY())-1; j<= (int)vcl_floor (pt.getY())+1; j++){
-          if (!(i== vcl_floor (pt.getX()) && j== vcl_floor (pt.getY()))){
+      for (i= (int)std::floor (pt.getX())-1; i<= (int)std::floor (pt.getX())+1; i++){
+        for (j= (int)std::floor (pt.getY())-1; j<= (int)std::floor (pt.getY())+1; j++){
+          if (!(i== std::floor (pt.getX()) && j== std::floor (pt.getY()))){
             //compute the distance from the source to the grid point
             dist = bp->distFromPoint(Point(i, j));
             //compute the initial discrete direction of the ray
@@ -407,11 +407,11 @@ void CEDT::InitializeWaveFrontsFromAnElement(BLine* bl)
   sy =  vnl_math_min( s_pt.getY(), e_pt.getY());
   ey =  vnl_math_max( s_pt.getY(), e_pt.getY());
 
-  double cos_theta = vcl_cos(bl->U());
-  double sin_theta = vcl_sin(bl->U());
+  double cos_theta = std::cos(bl->U());
+  double sin_theta = std::sin(bl->U());
 
   if (cos_theta!=0){
-    for (i= (int)vcl_floor (sx); i<= (int)vcl_ceil (ex); i++){
+    for (i= (int)std::floor (sx); i<= (int)std::ceil (ex); i++){
       double k = (i-s_pt.getX())/cos_theta;
       //now compute y corrdinate at this x grid line
       double y = k*sin_theta + s_pt.getY();
@@ -419,21 +419,21 @@ void CEDT::InitializeWaveFrontsFromAnElement(BLine* bl)
       //now init above and below the current y
 
       //compute the distance from the source to the grid point
-      dist = bl->distFromPoint(Point(i,  vcl_floor (y)));
+      dist = bl->distFromPoint(Point(i,  std::floor (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(bl->dirFromPoint(Point(i,  vcl_floor (y))));
-      AddAWaveFront(i, (int)vcl_floor (y), bl->id(), dist, dir, true);
+      dir = convertToDiscreteDir(bl->dirFromPoint(Point(i,  std::floor (y))));
+      AddAWaveFront(i, (int)std::floor (y), bl->id(), dist, dir, true);
 
-      dist = bl->distFromPoint(Point(i,  vcl_ceil (y)));
+      dist = bl->distFromPoint(Point(i,  std::ceil (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(bl->dirFromPoint(Point(i,  vcl_ceil (y))));
-      AddAWaveFront(i, (int)vcl_ceil (y), bl->id(), dist, dir, true);
+      dir = convertToDiscreteDir(bl->dirFromPoint(Point(i,  std::ceil (y))));
+      AddAWaveFront(i, (int)std::ceil (y), bl->id(), dist, dir, true);
 
     }
   }
 
   if (sin_theta!=0){
-    for (j= (int)vcl_floor (sy); j<= (int)vcl_ceil (ey); j++){
+    for (j= (int)std::floor (sy); j<= (int)std::ceil (ey); j++){
       double k = (j-s_pt.getY())/sin_theta;
       //now compute y corrdinate at this x grid line
       double x = k*cos_theta + s_pt.getX();
@@ -441,15 +441,15 @@ void CEDT::InitializeWaveFrontsFromAnElement(BLine* bl)
       //now init left and right the current x
 
       //compute the distance from the source to the grid point
-      dist = bl->distFromPoint(Point( vcl_floor (x), j));
+      dist = bl->distFromPoint(Point( std::floor (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(bl->dirFromPoint(Point( vcl_floor (x), j)));
-      AddAWaveFront( (int)vcl_floor (x), j, bl->id(), dist, dir, true);
+      dir = convertToDiscreteDir(bl->dirFromPoint(Point( std::floor (x), j)));
+      AddAWaveFront( (int)std::floor (x), j, bl->id(), dist, dir, true);
 
-      dist = bl->distFromPoint(Point( vcl_ceil (x), j));
+      dist = bl->distFromPoint(Point( std::ceil (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(bl->dirFromPoint(Point( vcl_ceil (x), j)));
-      AddAWaveFront( (int)vcl_ceil (x), j, bl->id(), dist, dir, true);
+      dir = convertToDiscreteDir(bl->dirFromPoint(Point( std::ceil (x), j)));
+      AddAWaveFront( (int)std::ceil (x), j, bl->id(), dist, dir, true);
 
     }
   }
@@ -473,93 +473,93 @@ void CEDT::InitializeWaveFrontsFromAnElement(BArc* ba)
   double sy = ba->center().y - R;
   double ey = ba->center().y + R;
 
-  for (i= (int)vcl_floor (sx); i<= (int)vcl_ceil (ex); i++){
+  for (i= (int)std::floor (sx); i<= (int)std::ceil (ex); i++){
     double ratio = (i-C.x)/R;
-    if (vcl_fabs(ratio)>1) continue;
+    if (std::fabs(ratio)>1) continue;
 
     //two possible solutions
-    double theta1 = angle02Pi(vcl_acos(ratio));
-    double theta2 = angle02Pi(-vcl_acos(ratio));
+    double theta1 = angle02Pi(std::acos(ratio));
+    double theta2 = angle02Pi(-std::acos(ratio));
 
     if (_validStartEnd0To2Pi(theta1, s_angle, e_angle)){
       //now compute y corrdinate at this x grid line
-      double y = R*vcl_sin(theta1) + C.y;
+      double y = R*std::sin(theta1) + C.y;
 
       //now init above and below the current y
 
       //compute the distance from the source to the grid point
-      dist = ba->distFromPoint(Point(i,  vcl_floor (y)));
+      dist = ba->distFromPoint(Point(i,  std::floor (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  vcl_floor (y))));
-      AddAWaveFront(i,  (int)vcl_floor (y), ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  std::floor (y))));
+      AddAWaveFront(i,  (int)std::floor (y), ba->id(), dist, dir, true);
 
-      dist = ba->distFromPoint(Point(i,  vcl_ceil (y)));
+      dist = ba->distFromPoint(Point(i,  std::ceil (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  vcl_ceil (y))));
-      AddAWaveFront(i,  (int)vcl_ceil (y), ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  std::ceil (y))));
+      AddAWaveFront(i,  (int)std::ceil (y), ba->id(), dist, dir, true);
     }
 
     if (_validStartEnd0To2Pi(theta2, s_angle, e_angle)){
       //now compute y corrdinate at this x grid line
-      double y = R*vcl_sin(theta2) + C.y;
+      double y = R*std::sin(theta2) + C.y;
 
       //now init above and below the current y
 
       //compute the distance from the source to the grid point
-      dist = ba->distFromPoint(Point(i,  vcl_floor (y)));
+      dist = ba->distFromPoint(Point(i,  std::floor (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  vcl_floor (y))));
-      AddAWaveFront(i, (int)vcl_floor (y), ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  std::floor (y))));
+      AddAWaveFront(i, (int)std::floor (y), ba->id(), dist, dir, true);
 
-      dist = ba->distFromPoint(Point(i,  vcl_ceil (y)));
+      dist = ba->distFromPoint(Point(i,  std::ceil (y)));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  vcl_ceil (y))));
-      AddAWaveFront(i, (int)vcl_ceil (y), ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point(i,  std::ceil (y))));
+      AddAWaveFront(i, (int)std::ceil (y), ba->id(), dist, dir, true);
     }
   }
 
-  for (j= (int)vcl_floor (sy); j<= (int)vcl_ceil (ey); j++){
+  for (j= (int)std::floor (sy); j<= (int)std::ceil (ey); j++){
     double ratio = (j-C.y)/R;
-    if (vcl_fabs(ratio)>1) continue;
+    if (std::fabs(ratio)>1) continue;
 
     //two possible solutions
-    double theta1 = angle02Pi(vcl_asin(ratio));
-    double theta2 = angle02Pi(M_PI-vcl_asin(ratio));
+    double theta1 = angle02Pi(std::asin(ratio));
+    double theta2 = angle02Pi(M_PI-std::asin(ratio));
 
     if (_validStartEnd0To2Pi(theta1, s_angle, e_angle)){
       //now compute y corrdinate at this x grid line
-      double x = R*vcl_cos(theta1) + C.x;
+      double x = R*std::cos(theta1) + C.x;
 
       //now init left and right the current x
 
       //compute the distance from the source to the grid point
-      dist = ba->distFromPoint(Point( vcl_floor (x), j));
+      dist = ba->distFromPoint(Point( std::floor (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point( vcl_floor (x), j)));
-      AddAWaveFront( (int)vcl_floor (x), j, ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point( std::floor (x), j)));
+      AddAWaveFront( (int)std::floor (x), j, ba->id(), dist, dir, true);
 
-      dist = ba->distFromPoint(Point( vcl_ceil (x), j));
+      dist = ba->distFromPoint(Point( std::ceil (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point( vcl_ceil (x), j)));
-      AddAWaveFront( (int)vcl_ceil (x), j, ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point( std::ceil (x), j)));
+      AddAWaveFront( (int)std::ceil (x), j, ba->id(), dist, dir, true);
     }
 
     if (_validStartEnd0To2Pi(theta2, s_angle, e_angle)){
       //now compute y corrdinate at this x grid line
-      double x = R*vcl_cos(theta2) + C.x;
+      double x = R*std::cos(theta2) + C.x;
 
       //now init left and right the current x
 
       //compute the distance from the source to the grid point
-      dist = ba->distFromPoint(Point( vcl_floor (x), j));
+      dist = ba->distFromPoint(Point( std::floor (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point( vcl_floor (x), j)));
-      AddAWaveFront( (int)vcl_floor (x), j, ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point( std::floor (x), j)));
+      AddAWaveFront( (int)std::floor (x), j, ba->id(), dist, dir, true);
 
-      dist = ba->distFromPoint(Point( vcl_ceil (x), j));
+      dist = ba->distFromPoint(Point( std::ceil (x), j));
       //compute the initial discrete direction of the ray
-      dir = convertToDiscreteDir(ba->dirFromPoint(Point( vcl_ceil (x), j)));
-      AddAWaveFront( (int)vcl_ceil (x), j, ba->id(), dist, dir, true);
+      dir = convertToDiscreteDir(ba->dirFromPoint(Point( std::ceil (x), j)));
+      AddAWaveFront( (int)std::ceil (x), j, ba->id(), dist, dir, true);
     }
 
 
@@ -668,7 +668,7 @@ WaveFront::WaveFront(int x, int y, int id, int src_label, double d, int dir, boo
 
 WaveFront::~WaveFront(){}
 
-void WaveFront::getInfo (vcl_ostream& ostrm)
+void WaveFront::getInfo (std::ostream& ostrm)
 {
   /*
   wxString s, buf;

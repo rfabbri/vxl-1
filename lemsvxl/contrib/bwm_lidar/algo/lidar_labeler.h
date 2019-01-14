@@ -56,10 +56,10 @@ public:
                                  const lidar_labeling_params params,
                                  const double min_elev,
                                  const double max_elev,
-                                 const vcl_string input_path,
+                                 const std::string input_path,
                                  vil_image_view<int>& labeled);
   static void join_buildings_and_vegetation(vil_image_view<int>& bld, vil_image_view<int>& veg, vil_image_view<int>& joined);
-  static void save_classification_image(const vcl_string out_path, const vnl_matrix<int>& classification);
+  static void save_classification_image(const std::string out_path, const vnl_matrix<int>& classification);
 };
 
 #endif

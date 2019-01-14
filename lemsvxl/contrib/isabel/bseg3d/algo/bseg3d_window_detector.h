@@ -35,14 +35,14 @@ private:
 
 public:
   template <unsigned dim>
-  float difference_probability(vcl_vector<gauss_type> region1,vcl_vector<gauss_type> region2);
+  float difference_probability(std::vector<gauss_type> region1,std::vector<gauss_type> region2);
 
 };
 
 
 
 template <unsigned dim>
-float bseg3d_window_detector::difference_probability(vcl_vector<gauss_type> region1,vcl_vector<gauss_type> region2)
+float bseg3d_window_detector::difference_probability(std::vector<gauss_type> region1,std::vector<gauss_type> region2)
 {
   vnl_vector_fixed<float, dim> mu1;
   vnl_matrix<float> cov1(region1.size(),region1.size(),float(0));

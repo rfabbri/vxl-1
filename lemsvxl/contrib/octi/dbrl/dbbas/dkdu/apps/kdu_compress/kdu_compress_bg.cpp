@@ -1158,7 +1158,7 @@ void
           assert(comp->remaining_lines > 0);
           comp->remaining_lines--;
           comp->compressor.push(comp->line,true);
-		  //vcl_cout<<comp->remaining_lines<<" lines left\n";
+		  //std::cout<<comp->remaining_lines<<" lines left\n";
         }
     }
 }
@@ -1335,7 +1335,7 @@ bool kdu_compress_bg(const bbgm_image_of<bgm_mix>* from,bbgm_image_of<bgm_mix>* 
   //rv_codestream.change_appearance(transpose,vflip,hflip);
   kdu_roi_image *roi_source = create_roi_source(rv_codestream,args);
   if (param_args.show_unrecognized(pretty_cout) != 0)
-    { vcl_cout<< "There were unrecognized command line arguments!\0"; }
+    { std::cout<< "There were unrecognized command line arguments!\0"; }
 
   // Now we are ready for sample data processing.
   bbgm_io bg_reader(from,to,nLevels);

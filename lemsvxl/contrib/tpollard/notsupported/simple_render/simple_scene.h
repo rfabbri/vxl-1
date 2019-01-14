@@ -7,7 +7,7 @@
 // \author Thomas Pollard
 // \date 04/17/06
 
-#include <vcl_string.h>
+#include <string>
 #include <vgl/vgl_point_3d.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_proj_camera.h>
@@ -28,19 +28,19 @@ public:
 
   // Render the scene with all of the provided cameras.
   bool render( 
-    vcl_vector< vpgl_proj_camera<double> > cameras,
-    vcl_vector< vgl_vector_3d<double> > lights,
-    vcl_string image_directory,
-    vcl_string camera_file,
-    vcl_string light_file );
+    std::vector< vpgl_proj_camera<double> > cameras,
+    std::vector< vgl_vector_3d<double> > lights,
+    std::string image_directory,
+    std::string camera_file,
+    std::string light_file );
 
   // Render views of the scene in a circle around the world origin with the camera
   // pointed at the origin.
   bool render_360(
     int num_views,
-    vcl_string image_directory,
-    vcl_string camera_file,
-    vcl_string light_file,
+    std::string image_directory,
+    std::string camera_file,
+    std::string light_file,
     bool random_views = false );
 
   // Rendering parameters:

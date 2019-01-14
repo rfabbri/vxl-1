@@ -2,8 +2,8 @@
 //: MingChing Chang
 //  Dec 08, 2006        Creation
 
-#include <vcl_algorithm.h>
-#include <vcl_iostream.h>
+#include <algorithm>
+#include <iostream>
 #include <vul/vul_printf.h>
 #include <dbsk3d/dbsk3d_fs_comp_set.h>
 
@@ -11,13 +11,13 @@
 
 unsigned int dbsk3d_fs_comp_set::label_shock_components ()
 {
-  vul_printf (vcl_cout, "\nlabel_shock_components(): totally %u sheets.\n", 
+  vul_printf (std::cout, "\nlabel_shock_components(): totally %u sheets.\n", 
               fs_ss_->sheetmap().size());
   fs_comp_id_counter_ = 0;
 
   //Assume all fs_sheets are initially unvisited.
   //Reset all fs_sheet's fs_face FF.sid.
-  vcl_map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss_->sheetmap().begin();
+  std::map<int, dbsk3d_fs_sheet*>::iterator it = fs_ss_->sheetmap().begin();
   for (; it != fs_ss_->sheetmap().end(); it++) {
     dbsk3d_fs_sheet* S = (*it).second;
     assert (S->b_visited() == false);
@@ -41,7 +41,7 @@ unsigned int dbsk3d_fs_comp_set::label_shock_components ()
     }
   }
 
-  vul_printf (vcl_cout, "  Totally %d shock-components built.\n", fs_comp_id_counter_);
+  vul_printf (std::cout, "  Totally %d shock-components built.\n", fs_comp_id_counter_);
   return fs_comp_id_counter_;
 }
 
@@ -51,7 +51,7 @@ void dbsk3d_fs_comp_set::propagate_label_C (dbsk3d_fs_comp* C, dbsk3d_fs_sheet* 
 {  
   unsigned int nS = 1; //Initially shock component C should contain inputS.
   assert (inputS->b_visited());
-  vcl_queue<dbsk3d_fs_sheet*> sheet_queue;  
+  std::queue<dbsk3d_fs_sheet*> sheet_queue;  
 
   //Put all incident unvisited sheets of inputS to the sheet_queue.
   put_neighbor_S_to_queue (inputS, sheet_queue);
@@ -74,7 +74,7 @@ void dbsk3d_fs_comp_set::propagate_label_C (dbsk3d_fs_comp* C, dbsk3d_fs_sheet* 
   }
 
   #if DBMSH3D_DEBUG>2
-  vul_printf (vcl_cout, "component C %d has %d sheets.\n", C->id(), nS);
+  vul_printf (std::cout, "component C %d has %d sheets.\n", C->id(), nS);
   #endif
 }
 
@@ -83,7 +83,7 @@ void dbsk3d_fs_comp_set::propagate_label_C (dbsk3d_fs_comp* C, dbsk3d_fs_sheet* 
 //  looking for neighboring sheets across A13 (or dege. A1n) shock links.
 //
 void dbsk3d_fs_comp_set::put_neighbor_S_to_queue (dbsk3d_fs_sheet* inputS, 
-                                                  vcl_queue<dbsk3d_fs_sheet*>& sheet_queue)
+                                                  std::queue<dbsk3d_fs_sheet*>& sheet_queue)
 {
   //Go through each shock-patch-elm FF of inputS.
   for (dbmsh3d_ptr_node* cur = inputS->FF_list(); cur != NULL; cur = cur->next()) {
@@ -129,44 +129,44 @@ bool fs_comp_greater (const dbsk3d_fs_comp* C1, const dbsk3d_fs_comp* C2)
 
 void dbsk3d_fs_comp_set::sort_shock_components ()
 {
-  vul_printf (vcl_cout, "sort_shock_components(): total %u fs_comps.\n", comp_list_.size());  
+  vul_printf (std::cout, "sort_shock_components(): total %u fs_comps.\n", comp_list_.size());  
 
   //Compute the cost (size) of each shock component
   for (unsigned int i=0; i<comp_list_.size(); i++) {
     dbsk3d_fs_comp* C = comp_list_[i];
     C->compute_cost ();
     if (i<N_SHOCK_COMP_TO_PRINT)
-      vul_printf (vcl_cout, "\t%2d-th component (id %2d) has %d assigned genes\n", 
+      vul_printf (std::cout, "\t%2d-th component (id %2d) has %d assigned genes\n", 
                    i, C->id(), C->cost());
   }
 
   //Sort the components according to their costs in descending order.
-  vcl_sort (comp_list_.begin(), comp_list_.end(), fs_comp_greater);
-  vul_printf (vcl_cout, "After Sorting...\n");
+  std::sort (comp_list_.begin(), comp_list_.end(), fs_comp_greater);
+  vul_printf (std::cout, "After Sorting...\n");
 
   for (unsigned int i=0; i<comp_list_.size(); i++) {
     dbsk3d_fs_comp* C = comp_list_[i];
     C->set_id (i); //Reset C's id to be ordered.
     if (i<N_SHOCK_COMP_TO_PRINT)
-      vul_printf (vcl_cout, "\t%2d-th Component (id %2d) has %d assigned genes\n", 
+      vul_printf (std::cout, "\t%2d-th Component (id %2d) has %d assigned genes\n", 
                    i, C->id(), C->cost());
   }
 
   #if DBMSH3D_DEBUG >= 1
-  vul_printf (vcl_cout, "\n List of shock sheets of all shock components...\n");
+  vul_printf (std::cout, "\n List of shock sheets of all shock components...\n");
   //Print all fs_sheets of each component.
   for (unsigned int i=0; i<comp_list_.size(); i++) {
     dbsk3d_fs_comp* C = comp_list_[i];
-    vul_printf (vcl_cout, "\t%2d-th Component (id %2d) has %u fs_sheets: ", 
+    vul_printf (std::cout, "\t%2d-th Component (id %2d) has %u fs_sheets: ", 
                 i, C->id(), C->fs_sheets().size());
     for (unsigned int j=0; j<C->fs_sheets().size(); j++) {
       dbsk3d_fs_sheet* S = C->fs_sheets(j);
-      vul_printf (vcl_cout, "%d ", S->id());
+      vul_printf (std::cout, "%d ", S->id());
     }
-    vul_printf (vcl_cout, "\n");
+    vul_printf (std::cout, "\n");
   }
   #endif
-  vul_printf (vcl_cout, "\n");
+  vul_printf (std::cout, "\n");
 }
 
 //: Detele all shock elements and sheets for unspecified component.
@@ -176,7 +176,7 @@ void dbsk3d_fs_comp_set::sort_shock_components ()
 //    - mark all shock elements of the unspecified component to be invalid.
 //  Delete all invalid patch, link, and node elements of fs_mesh.
 //: return remaining shock-sheet-elements.
-unsigned int dbsk3d_fs_comp_set::delete_unspecified_comps (vcl_set<int>& ith_comp_list)
+unsigned int dbsk3d_fs_comp_set::delete_unspecified_comps (std::set<int>& ith_comp_list)
 {
   if (comp_list_.size() == 0)
     return 0;
@@ -203,7 +203,7 @@ unsigned int dbsk3d_fs_comp_set::delete_unspecified_comps (vcl_set<int>& ith_com
       dbsk3d_fs_comp* C = comp_list_[i];
       if (ith_comp_list.find (i) == ith_comp_list.end()) {
         //Delete all shock sheets in C from fs_ss_
-        vcl_vector<dbsk3d_fs_sheet*>::iterator it = C->fs_sheets().begin();
+        std::vector<dbsk3d_fs_sheet*>::iterator it = C->fs_sheets().begin();
         for (; it != C->fs_sheets().end(); it++) {
           dbsk3d_fs_sheet* S = (*it);
           fs_ss_->remove_fs_sheet (S);

@@ -13,7 +13,7 @@
 dbskfg_save_composite_graph_process::dbskfg_save_composite_graph_process()
 {
     if(!parameters()->add( 
-           "Output File Prefix:" ,  "-file_prefix" ,vcl_string("")) ||
+           "Output File Prefix:" ,  "-file_prefix" ,std::string("")) ||
        !parameters()->add( "Output folder:" , 
                            "-output_folder", bpro1_filepath("", "")) ||
        !parameters()->add( 
@@ -21,7 +21,7 @@ dbskfg_save_composite_graph_process::dbskfg_save_composite_graph_process()
        !parameters()->add( 
            "Contour Ratio:" ,  "-con_ratio" ,  (double) 0.5f ))
     {
-        vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+        std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
     }
 
 }
@@ -38,25 +38,25 @@ dbskfg_save_composite_graph_process::clone() const
     return new dbskfg_save_composite_graph_process(*this);
 }
 
-vcl_string
+std::string
 dbskfg_save_composite_graph_process::name()
 {
     return "Save Composite Graph";
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_save_composite_graph_process::get_input_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     to_return.push_back("composite_graph");
     return to_return;
 
 }
 
-vcl_vector< vcl_string >
+std::vector< std::string >
 dbskfg_save_composite_graph_process::get_output_type()
 {
-    vcl_vector< vcl_string > to_return;
+    std::vector< std::string > to_return;
     return to_return;
 }
 
@@ -79,9 +79,9 @@ bool dbskfg_save_composite_graph_process::execute()
   
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
-    vcl_string output_folder = output_folder_filepath.path;
+    std::string output_folder = output_folder_filepath.path;
 
-    vcl_string output_prefix;
+    std::string output_prefix;
     parameters()->get_value("-file_prefix", output_prefix);
     double prune_thres(1.0f);
     parameters()->get_value( "-prune_thres" , prune_thres);

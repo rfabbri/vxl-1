@@ -21,7 +21,7 @@ dbdet_3d_edge_save_process()
 	if( !parameters()->add( "Edge file" , "-edgefile",
 			bpro1_filepath("")) )
 	{
-		vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
+		std::cerr << "ERROR: Adding parameters in " __FILE__ << std::endl;
 	}
 }
 
@@ -42,27 +42,27 @@ clone() const
 }
 
 //: Returns the name of this process
-vcl_string dbdet_3d_edge_save_process::
+std::string dbdet_3d_edge_save_process::
 name()
 {
 	return "Save 3D edges";
 }
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbdet_3d_edge_save_process::
+std::vector< std::string > dbdet_3d_edge_save_process::
 get_input_type()
 {
-	vcl_vector< vcl_string > to_return;
+	std::vector< std::string > to_return;
 	to_return.push_back("3d_edges");
 	return to_return;
 }
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbdet_3d_edge_save_process::
+std::vector< std::string > dbdet_3d_edge_save_process::
 get_output_type()
 {
-	vcl_vector<vcl_string > to_return;
+	std::vector<std::string > to_return;
 	return to_return;
 }
 
@@ -96,13 +96,13 @@ execute()
 
 	dbdet_third_order_3d_edge_storage_sptr in_edg_storage;
 	in_edg_storage.vertical_cast(input_data_[0][0]);
-	vcl_vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
+	std::vector<dbdet_3d_edge_sptr>& in_edg = in_edg_storage->edgemap();
 
 	dbdet_save_3d_edges(in_edg, edgefile.path);
 
 	double time_taken = t.real()/1000.0;
 	t.mark();
-	vcl_cout << "************ Time taken: "<< time_taken <<" sec" << vcl_endl;
+	std::cout << "************ Time taken: "<< time_taken <<" sec" << std::endl;
 
 	return true;
 }

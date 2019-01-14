@@ -1,7 +1,7 @@
 #ifndef boxm_compute_scene_statistics_h
 #define boxm_compute_scene_statistics_h
 #include <boxm/boxm_scene.h>
-#include <vcl_iostream.h>
+#include <iostream>
 #include <bsta/bsta_histogram.h>
 
 template <class T_loc, class T_data>
@@ -25,21 +25,21 @@ bool compute_scene_statistics(boxm_scene<boct_tree<T_loc, T_data > >& scene, bst
     int fin_level = tree->finest_level();
     for (int level = n_levels-1; level>=fin_level; --level)
     {
-      vcl_vector<cell_type *> cells_at_level =
+      std::vector<cell_type *> cells_at_level =
         tree->leaf_cells_at_level(static_cast<unsigned>(level));
       level_hist.upcount(static_cast<float>(level),
                          static_cast<float>(cells_at_level.size()));
     }
-    vcl_vector<cell_type *> leaves = tree->leaf_cells();
+    std::vector<cell_type *> leaves = tree->leaf_cells();
     n_leaves = leaves.size();
-    for (typename vcl_vector<cell_type *>::iterator cit = leaves.begin(); cit != leaves.end(); ++cit)
+    for (typename std::vector<cell_type *>::iterator cit = leaves.begin(); cit != leaves.end(); ++cit)
     {
       T_data data = (*cit)->data();
       vgl_box_3d<double> bb = tree->cell_bounding_box(*cit);
       double dx = bb.width(), dy = bb.height(), dz = bb.depth();
-      double diag = vcl_sqrt(dx*dx + dy*dy + dz*dz);
+      double diag = std::sqrt(dx*dx + dy*dy + dz*dz);
       double alpha = data.alpha;
-      double omega = 1.0 - vcl_exp(-alpha*diag);
+      double omega = 1.0 - std::exp(-alpha*diag);
       omega_hist.upcount(static_cast<float>(omega), 1.0f);
 
       if (scene.appearence_model() == BOXM_APM_SIMPLE_GREY)

@@ -5,7 +5,7 @@
 #include <dbskfg/algo/dbskfg_compute_sift.h>
 #include <dbsk2d/dbsk2d_utils.h>
 #include <vil/vil_bilin_interp.h>
-#include <vcl_cstring.h>
+#include <cstring>
 #include <vl/mathop.h>
 
 dbskfg_compute_sift::dbskfg_compute_sift
@@ -225,7 +225,7 @@ void dbskfg_compute_sift::compute_descriptors(
     double const st0    = sin (angle0) ;
     double const ct0    = cos (angle0) ;
     double const SBP    = magnif * radius + vnl_math::eps;
-    int    const W      = vcl_floor
+    int    const W      = std::floor
         (sqrt(2.0) * SBP * (spatial_bins + 1) / 2.0 + 0.5) ;
 
     int const binto = 1 ;                          /* bin angle0-stride */
@@ -252,11 +252,11 @@ void dbskfg_compute_sift::compute_descriptors(
     vl_sift_pix blue_descr[angle_bins*spatial_bins*spatial_bins];
 
     /* clear descriptor */
-    vcl_memset(red_descr, 0, 
+    std::memset(red_descr, 0, 
                sizeof(vl_sift_pix) * angle_bins*spatial_bins*spatial_bins) ;
-    vcl_memset(green_descr, 0, 
+    std::memset(green_descr, 0, 
                sizeof(vl_sift_pix) * angle_bins*spatial_bins*spatial_bins) ;
-    vcl_memset(blue_descr, 0, 
+    std::memset(blue_descr, 0, 
                sizeof(vl_sift_pix) * angle_bins*spatial_bins*spatial_bins) ;
 
     /* Center the scale space and the descriptor on the current keypoint.
@@ -330,11 +330,11 @@ void dbskfg_compute_sift::compute_descriptors(
 
             /* The sample will be distributed in 8 adjacent bins.
                We start from the ``lower-left'' bin. */
-            int         binx = (int)vcl_floor (nx - 0.5) ;
-            int         biny = (int)vcl_floor (ny - 0.5) ;
-            int         bint_red   = (int)vcl_floor (nt_red) ;
-            int         bint_green = (int)vcl_floor (nt_green) ;
-            int         bint_blue  = (int)vcl_floor (nt_blue) ;
+            int         binx = (int)std::floor (nx - 0.5) ;
+            int         biny = (int)std::floor (ny - 0.5) ;
+            int         bint_red   = (int)std::floor (nt_red) ;
+            int         bint_green = (int)std::floor (nt_green) ;
+            int         bint_blue  = (int)std::floor (nt_blue) ;
             vl_sift_pix rbinx = nx - (binx + 0.5) ;
             vl_sift_pix rbiny = ny - (biny + 0.5) ;
             vl_sift_pix rbint_red   = nt_red   - bint_red ;
@@ -359,21 +359,21 @@ void dbskfg_compute_sift::compute_descriptors(
                         {
                             vl_sift_pix red_weight = win
                                 * red_mod
-                                * vcl_abs (1 - dbinx - rbinx)
-                                * vcl_abs (1 - dbiny - rbiny)
-                                * vcl_abs (1 - dbint - rbint_red) ;
+                                * std::abs (1 - dbinx - rbinx)
+                                * std::abs (1 - dbiny - rbiny)
+                                * std::abs (1 - dbint - rbint_red) ;
 
                             vl_sift_pix green_weight = win
                                 * green_mod
-                                * vcl_abs (1 - dbinx - rbinx)
-                                * vcl_abs (1 - dbiny - rbiny)
-                                * vcl_abs (1 - dbint - rbint_green) ;
+                                * std::abs (1 - dbinx - rbinx)
+                                * std::abs (1 - dbiny - rbiny)
+                                * std::abs (1 - dbint - rbint_green) ;
 
                             vl_sift_pix blue_weight = win
                                 * blue_mod
-                                * vcl_abs (1 - dbinx - rbinx)
-                                * vcl_abs (1 - dbiny - rbiny)
-                                * vcl_abs (1 - dbint - rbint_blue) ;
+                                * std::abs (1 - dbinx - rbinx)
+                                * std::abs (1 - dbiny - rbiny)
+                                * std::abs (1 - dbint - rbint_blue) ;
 
 
                             int red_offset=

@@ -8,8 +8,8 @@
 #include <vil/vil_stream_fstream.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_save.h>
-#include <vcl_iostream.h>
-#include <vcl_limits.h>
+#include <iostream>
+#include <limits>
 
 float read_little_endian_float(vil_stream* vs)
 {
@@ -23,8 +23,8 @@ float read_little_endian_float(vil_stream* vs)
     return 0;
 
 #if VXL_BIG_ENDIAN 
-      vcl_swap(buf.bytes[0], buf.bytes[3]);
-      vcl_swap(buf.bytes[1], buf.bytes[2]);
+      std::swap(buf.bytes[0], buf.bytes[3]);
+      std::swap(buf.bytes[1], buf.bytes[2]);
 #endif
 
   return buf.f;
@@ -68,7 +68,7 @@ int main(int argc, char ** argv)
 
   if(argc < 3)
   {
-    vcl_cout << "usage: "<<argv[0] << " input.spe output\n";
+    std::cout << "usage: "<<argv[0] << " input.spe output\n";
     exit(1);
   }
 
@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
 
   if(!spe->ok())
   {
-    vcl_cout << "opening file fails\n";
+    std::cout << "opening file fails\n";
     exit(2);
   }
 
@@ -85,7 +85,7 @@ int main(int argc, char ** argv)
   unsigned xdim = x_dim(spe);
   unsigned ydim = y_dim(spe);
 
-  vcl_cout << "data type: " << type << " size (" << xdim <<", "<< ydim << ")\n";
+  std::cout << "data type: " << type << " size (" << xdim <<", "<< ydim << ")\n";
   
   vil_image_view<vxl_uint_16> image(xdim, ydim, 1);
 
@@ -99,9 +99,9 @@ int main(int argc, char ** argv)
 
   float * data = new float[xdim*ydim];
   
-  float min_value=vcl_numeric_limits<float>::max();
+  float min_value=std::numeric_limits<float>::max();
   
-  float max_value=vcl_numeric_limits<float>::min();
+  float max_value=std::numeric_limits<float>::min();
   
   for(unsigned long pos = 0; pos < xdim*ydim; pos ++ )
   {
@@ -124,7 +124,7 @@ int main(int argc, char ** argv)
         break;
 
       default:
-        vcl_cout << "pixel format is not implemented yet\n";
+        std::cout << "pixel format is not implemented yet\n";
         break;
     }
 

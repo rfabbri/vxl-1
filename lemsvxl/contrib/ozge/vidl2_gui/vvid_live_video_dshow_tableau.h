@@ -54,7 +54,7 @@ class vvid_live_video_dshow_tableau : public vgui_image_tableau
   vvid_live_video_dshow_tableau(int node, int pixel_sample_interval,
                                 vidl_istream *istream);
   ~vvid_live_video_dshow_tableau();
-  vcl_string type_name() const;
+  std::string type_name() const;
 
   //:video camera properties
   //void set_camera_params(const vidl_dshow_istream_params& cp);
@@ -64,8 +64,8 @@ class vvid_live_video_dshow_tableau : public vgui_image_tableau
   // ? int get_current() { return cam_.get_current(); }
   // ? void set_current(int current) { cam_.set_current(current); }
   
-  //vcl_string current_capability_desc() { return cam_.current_capability_desc(); }
-  //vcl_vector<vcl_string> get_capability_descriptions() { return cam_.get_capability_descriptions(); }
+  //std::string current_capability_desc() { return cam_.current_capability_desc(); }
+  //std::vector<std::string> get_capability_descriptions() { return cam_.get_capability_descriptions(); }
 
   //:live video processing
   //bool attach_live_video();
@@ -74,7 +74,7 @@ class vvid_live_video_dshow_tableau : public vgui_image_tableau
   void stop_live_video();
 
   //:live capture methods
-  //void start_capture(vcl_string const & video_file_name) { cam_.start_capture(video_file_name); }
+  //void start_capture(std::string const & video_file_name) { cam_.start_capture(video_file_name); }
   //bool stop_capture() { return cam_.stop_capture(); }
   //: collection state, i.e. is live and capturing frames
   bool get_video_live() const { return live_; }
@@ -92,8 +92,8 @@ class vvid_live_video_dshow_tableau : public vgui_image_tableau
   void get_camera_rgb_image(vil_image_view<vxl_byte>& im,
                         int pix_sample_interval = 1);
 
-  vcl_vector< vgl_homg_point_2d<double> >& get_image_pts() { return img_pts_; } 
-  void get_image_pts(vcl_vector< vgl_homg_point_2d<double> >& pts) { pts = img_pts_; } 
+  std::vector< vgl_homg_point_2d<double> >& get_image_pts() { return img_pts_; } 
+  void get_image_pts(std::vector< vgl_homg_point_2d<double> >& pts) { pts = img_pts_; } 
   void clear_image_pts() { img_pts_.clear(); }
 
   // return current cached images with no resampling
@@ -136,7 +136,7 @@ class vvid_live_video_dshow_tableau : public vgui_image_tableau
   vgui_event_condition gesture_draw;
   vgui_style_sptr style_;
 
-  vcl_vector< vgl_homg_point_2d<double> > img_pts_;
+  std::vector< vgl_homg_point_2d<double> > img_pts_;
 };
 
 struct vvid_live_video_dshow_tableau_new : public vvid_live_video_dshow_tableau_sptr

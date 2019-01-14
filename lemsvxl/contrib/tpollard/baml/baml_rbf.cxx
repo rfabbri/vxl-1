@@ -3,7 +3,7 @@
 
 #include "baml_rbf.h"
 
-#include <vcl_cassert.h>
+#include <cassert>
 
 /*
 //--------------------------------------------
@@ -78,7 +78,7 @@ baml_rbf::update(
   const vnl_vector<float>& light )
 {
   // Get all samples within the inner nbhd radius.
-  vcl_vector<int> inner_neighbors;
+  std::vector<int> inner_neighbors;
   for( int l = 0; l < light_nodes_.size(); l++ ){
     float ld = light_distance( light, light_nodes_[l] );
     if( ld < inner_nbhd_rad_ ) inner_neighbors.push_back(l);

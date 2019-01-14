@@ -16,7 +16,7 @@
 
 #include <dbgrl/dbgrl_vertex.h>
 #include <vgl/vgl_point_2d.h>
-#include <vcl_ostream.h>
+#include <ostream>
 
 class dbskfg_composite_link;
 
@@ -43,7 +43,7 @@ public:
     virtual ~dbskfg_composite_node(){};
 
     // Print out information about the node
-    virtual void print(vcl_ostream& os);
+    virtual void print(std::ostream& os);
 
     //: Return node type method
     //: inline function

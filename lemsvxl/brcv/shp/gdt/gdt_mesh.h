@@ -5,9 +5,9 @@
 #ifndef gdt_mesh_h_
 #define gdt_mesh_h_
 
-#include <vcl_map.h>
-#include <vcl_algorithm.h>
-#include <vcl_utility.h>
+#include <map>
+#include <algorithm>
+#include <utility>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <gdt/gdt_vertex.h>
